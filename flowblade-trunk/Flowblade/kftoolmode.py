@@ -72,6 +72,13 @@ OVERLAY_BG = (0.0, 0.0, 0.0, 0.8)
 OVERLAY_DRAW_COLOR = (0.0, 0.0, 0.0, 0.8)
 EDIT_AREA_HEIGHT = 200
 
+
+# Editor states
+KF_DRAG = 0
+POSITION_DRAG = 1
+KF_DRAG_DISABLED = 2
+
+
 edit_data = None
 _kf_editor = None
 
@@ -91,8 +98,11 @@ def mouse_press(event, frame):
     y = event.y
 
     # If we have clip being edited and its edit area is hit, we do not need to init data.
-    if _clip_is_being_edited() and _clip_edit_area_hit(x, y):
+    if _kf_editor != None and _kf_editor.overlay_area_hit(x, y):
+        _handle_edit_mouse_press(event)
         return
+
+    # Attempt to init kf tool deit on some clip
     
     # Get pressed track
     track = tlinewidgets.get_track(y)  
@@ -125,8 +135,7 @@ def mouse_press(event, frame):
                  "clip_start_in_timeline":track.clip_start(clip_index),
                  "clip":clip,
                  "track":track,
-                 "mouse_start_x":x,
-                 "mouse_start_y":y}
+                 "initializing":True}
 
 
     # Init for volume editing if volume filter available
@@ -143,7 +152,7 @@ def mouse_press(event, frame):
                 # Volume is one of these MLT multipart filters, so we chose this way to find the editable property in filter.
                 try:
                     if ep.args["exptype"] == "multipart_keyframe":
-                        _init_for_editable_property(ep)
+                        edit_data["editable_property"] = ep
                         global _kf_editor
                         _kf_editor = TLineKeyFrameEditor(ep, True)
                 except:
@@ -151,15 +160,20 @@ def mouse_press(event, frame):
                     
     tlinewidgets.set_edit_mode_data(edit_data)
     updater.repaint_tline()
-    
+
+def _handle_edit_mouse_press(event):
+    _kf_editor.press_event(event)
         
 def mouse_move(x, y, frame, state):
-    pass
-    
+    if _kf_editor != None and edit_data != None and edit_data["initializing"] != True:
+        _kf_editor.motion_notify_event(x, y, state)
+
 def mouse_release(x, y, frame, state):
-    #global edit_data#, pressed_on_selected, drag_disabled
-    #edit_data = None
-    pass
+    if _kf_editor != None and edit_data != None and edit_data["initializing"] != True:
+        _kf_editor.release_event(x, y)
+        
+    if edit_data != None: 
+        edit_data["initializing"] = False
 
 # -------------------------------------------- edit 
 def _clip_is_being_edited():
@@ -170,30 +184,33 @@ def _clip_is_being_edited():
     
     return True
 
+"""
 def _clip_edit_area_hit(x, y):
     return False
+"""
 
 def _set_no_clip_edit_data():
     # set edit data to reflect that no clip is being edited currently.
-    global edit_data 
+    global edit_data, _kf_editor
     edit_data = {"draw_function":_tline_overlay,
                  "clip_index":-1,
                  "track":None,
                  "mouse_start_x":-1,
                  "mouse_start_y":-1}
+    _kf_editor = None
 
     tlinewidgets.set_edit_mode_data(edit_data)
 
-
+"""
 def _init_for_editable_property(editable_property):
     edit_data["editable_property"] = editable_property
     adjustment = editable_property.get_input_range_adjustment()
     edit_data["lower"] = adjustment.get_lower()
     edit_data["upper"] = adjustment.get_upper()
-    
+"""
     
 # ----------------------------------------------------------------------- draw
-def _tline_overlay(cr, pos):
+def _tline_overlay(cr):
     if _clip_is_being_edited() == False:
         return
         
@@ -253,7 +270,7 @@ class TLineKeyFrameEditor:
         self.keyframes = [(0, 0.0)]
         self.active_kf_index = 0
 
-        self.parent_editor = self
+        self.parent_editor = self # we need to drop this for direct reference, not needed here
 
         self.frame_scale = tlinewidgets.KFToolFrameScale(FRAME_SCALE_LINES)
 
@@ -271,6 +288,14 @@ class TLineKeyFrameEditor:
         print "kfsstr:", keyframes_str
         self.keyframes = self.keyframe_parser(keyframes_str, out_to_in_func)
 
+    def overlay_area_hit(self, tx, ty):
+        x, y, w, h = self.allocation
+        if tx >= x and tx <= x + w:
+            if ty >= y and ty <= y + h:
+                return True
+        
+        return False
+            
     def get_kf_info(self):
         return (self.active_kf_index, len(self.keyframes))
         
@@ -285,16 +310,20 @@ class TLineKeyFrameEditor:
                              active_width)
 
     def _get_frame_for_panel_pos(self, panel_x):
-        active_width = self.widget.get_allocation().width - 2 * END_PAD
-        clip_panel_x = panel_x - END_PAD
-        norm_pos = float(clip_panel_x) / float(active_width)
+        rx, ry, rw, rh = self._get_edit_area_rect()
+        clip_panel_x = panel_x - rx
+        norm_pos = float(clip_panel_x) / float(rw)
         return int(norm_pos * self.clip_length) + self.clip_in
 
     def _get_value_for_panel_y(self, panel_y):
+        rx, ry, rw, rh = self._get_edit_area_rect()
+        editable_property = edit_data["editable_property"] 
         adjustment = editable_property.get_input_range_adjustment()
         lower = adjustment.get_lower()
         upper = adjustment.get_upper()
-        x, y, w, h = self.allocation
+        value_range = upper - lower
+        pos_fract = (ry + rh - panel_y) / rh
+        return pos_fract * value_range + lower
         
     def _get_panel_y_for_value(self, value):
         editable_property = edit_data["editable_property"] 
@@ -303,7 +332,6 @@ class TLineKeyFrameEditor:
         upper = adjustment.get_upper()
         value_range = upper - lower
         value_fract = (value - lower) / value_range
-        print value_fract
         return self._get_lower_y() - (self._get_lower_y() - self._get_upper_y()) * value_fract
 
     def _get_lower_y(self):
@@ -319,7 +347,6 @@ class TLineKeyFrameEditor:
         u = self._get_upper_y()
         return u + (l - u) / 2
         
-
     def _set_clip_frame(self, panel_x):
         self.current_clip_frame = self._get_frame_for_panel_pos(panel_x)
     
@@ -364,7 +391,7 @@ class TLineKeyFrameEditor:
         cr.set_source_rgb(*CURVE_COLOR)
         cr.set_line_width(1.0)
         
-        # value curves need to clipped into edit area
+        # Value curves need to clipped into edit area
         cr.save()
         ex, ey, ew, eh = self._get_edit_area_rect()
         cr.rectangle(ex, ey, ew, eh)
@@ -451,6 +478,7 @@ class TLineKeyFrameEditor:
         
         # 0
         y = self._get_panel_y_for_value(0.0)
+        #print y
         cr.set_line_width(1.0)
         cr.set_source_rgb(*FRAME_SCALE_LINES)
         cr.move_to(xs, y)
@@ -466,6 +494,7 @@ class TLineKeyFrameEditor:
         
         # 100
         y = self._get_panel_y_for_value(100)
+        #print y
         cr.set_source_rgb(*FRAME_SCALE_LINES)
         cr.move_to(xs, y)
         cr.line_to(xe, y)
@@ -506,7 +535,7 @@ class TLineKeyFrameEditor:
         PangoCairo.update_layout(cr, layout)
         PangoCairo.show_layout(cr, layout)
         
-    def _press_event(self, event):
+    def press_event(self, event):
         """
         Mouse button callback
         """
@@ -523,14 +552,17 @@ class TLineKeyFrameEditor:
         self.drag_on = True
 
         lx = self._legalize_x(event.x)
-        hit_kf = self._key_frame_hit(lx, event.y)
+        ly = self._legalize_y(event.y)
+        hit_kf = self._key_frame_hit(lx, ly)
 
         if hit_kf == None: # nothing was hit
+            print "no hit"
             self.current_mouse_action = POSITION_DRAG
             self._set_clip_frame(lx)
             self.parent_editor.clip_editor_frame_changed(self.current_clip_frame)
-            self.widget.queue_draw()
+            updater.repaint_tline()
         else: # some keyframe was pressed
+            print "kf hit"
             self.active_kf_index = hit_kf
             frame, value = self.keyframes[hit_kf]
             self.current_clip_frame = frame
@@ -549,46 +581,50 @@ class TLineKeyFrameEditor:
                     self.drag_max = next_frame - 1
                 except:
                     self.drag_max = self.clip_length
-            self.widget.queue_draw()
+            updater.repaint_tline()
 
-    def _motion_notify_event(self, x, y, state):
+    def motion_notify_event(self, x, y, state):
         """
         Mouse move callback
         """
         lx = self._legalize_x(x)
+        ly = self._legalize_y(y)
         
         if self.current_mouse_action == POSITION_DRAG:
             self._set_clip_frame(lx)
             self.parent_editor.clip_editor_frame_changed(self.current_clip_frame)
         elif self.current_mouse_action == KF_DRAG:
             frame = self._get_drag_frame(lx)
-            self.set_active_kf_frame(frame)
+            value = self._get_value_for_panel_y(ly)
+            self.set_active_kf_frame_and_value(frame, value)
             self.current_clip_frame = frame
             self.parent_editor.keyframe_dragged(self.active_kf_index, frame)
             self.parent_editor.active_keyframe_changed()
 
-        self.widget.queue_draw()
+        updater.repaint_tline()
         
-    def _release_event(self, event):
+    def release_event(self, x,y):
         """
         Mouse release callback.
         """
-        lx = self._legalize_x(event.x)
-
+        lx = self._legalize_x(x)
+        ly = self._legalize_y(y)
+        
         if self.current_mouse_action == POSITION_DRAG:
             self._set_clip_frame(lx)
             self.parent_editor.clip_editor_frame_changed(self.current_clip_frame)
             self.parent_editor.update_slider_value_display(self.current_clip_frame)
         elif self.current_mouse_action == KF_DRAG:
             frame = self._get_drag_frame(lx)
-            self.set_active_kf_frame(frame)
+            value = self._get_value_for_panel_y(ly)
+            self.set_active_kf_frame_and_value(frame, value)
             self.current_clip_frame = frame
             self.parent_editor.keyframe_dragged(self.active_kf_index, frame)
             self.parent_editor.active_keyframe_changed()
             self.parent_editor.update_property_value()
             self.parent_editor.update_slider_value_display(frame)   
 
-        self.widget.queue_draw()
+        updater.repaint_tline()
         self.current_mouse_action = None
         
         self.drag_on = False
@@ -597,14 +633,23 @@ class TLineKeyFrameEditor:
         """
         Get x in pixel range between end pads.
         """
-        w = self.widget.get_allocation().width
-        if x < END_PAD:
-            return END_PAD
-        elif x > w - END_PAD:
-            return w - END_PAD
+        rx, ry, rw, rh = self._get_edit_area_rect()
+        if x < rx:
+            return rx
+        elif x > rx + rw:
+            return rx + rw
         else:
             return x
     
+    def _legalize_y(self, y):
+        rx, ry, rw, rh = self._get_edit_area_rect()
+        if y < ry:
+            return ry
+        elif y > ry + rh:
+            return ry + rh
+        else:
+            return y
+
     def _force_current_in_frame_range(self):
         if self.current_clip_frame < self.clip_in:
             self.current_clip_frame = self.clip_in
@@ -644,24 +689,27 @@ class TLineKeyFrameEditor:
         for i in range(0, len(self.keyframes)):
             frame, val = self.keyframes[i]
             frame_x = self._get_panel_pos_for_frame(frame)
-            frame_y = KF_Y + 6
+            value_y = self._get_panel_y_for_value(val)
+            print val, y, value_y
             if((abs(x - frame_x) < KF_HIT_WIDTH)
-                and (abs(y - frame_y) < KF_HIT_WIDTH)):
+                and (abs(y - value_y) < KF_HIT_WIDTH)):
                 return i
             
         return None
 
     def oor_start_kf_hit(self, x, y):
+        test_y = self._get_center_y()
         test_x = OUT_OF_RANGE_ICON_PAD - OUT_OF_RANGE_KF_ICON_HALF * 2
-        if y >= KF_Y and y <= KF_Y + 12: # 12 icon size
+        if y >= test_y and y <= test_y + 12: # 12 icon size
             if x >= test_x and x <= test_x + 12:
                 return True
         
         return False
 
     def oor_end_kf_hit(self, x, y):
-        w = self.widget.get_allocation().width
+        x, y, w, h = self._get_edit_area_rect()
         test_x = w - OUT_OF_RANGE_ICON_PAD
+        test_y = self._get_center_y()
         if y >= KF_Y and y <= KF_Y + 12: # 12 icon size
             if x >= test_x and x <= test_x + 12:
                 return True
@@ -701,23 +749,21 @@ class TLineKeyFrameEditor:
             self.active_kf_index = 0
         self._set_pos_to_active_kf()
 
+    """
     def set_next_active(self):
-        """
-        Activates next keyframe or keeps last active to stay in range.
-        """
+
         self.active_kf_index += 1
         if self.active_kf_index > (len(self.keyframes) - 1):
             self.active_kf_index = len(self.keyframes) - 1
         self._set_pos_to_active_kf()
         
     def set_prev_active(self):
-        """
-        Activates previous keyframe or keeps first active to stay in range.
-        """
+
         self.active_kf_index -= 1
         if self.active_kf_index < 0:
             self.active_kf_index = 0
         self._set_pos_to_active_kf()
+    """
     
     def _set_pos_to_active_kf(self):
         frame, value = self.keyframes[self.active_kf_index]
@@ -770,6 +816,10 @@ class TLineKeyFrameEditor:
         frame, val = self.keyframes.pop(self.active_kf_index)
         self.keyframes.insert(self.active_kf_index,(new_frame, val))
 
+    def set_active_kf_frame_and_value(self, new_frame, new_value):
+        frame, val = self.keyframes.pop(self.active_kf_index)
+        self.keyframes.insert(self.active_kf_index,(new_frame, new_value))
+        
     def _show_oor_before_menu(self, widget, event):
         menu = oor_before_menu
         guiutils.remove_children(menu)
@@ -848,4 +898,39 @@ class TLineKeyFrameEditor:
         item.show()
         return item
 
+    # ------------------------------------------------------ original parent editor stuff
+    def clip_editor_frame_changed(self, clip_frame):
+        #self.seek_tline_frame(clip_frame)
+        #self.buttons_row.set_frame(clip_frame)
+        pass
 
+    def update_slider_value_display(self, frame):
+        # This is called after frame changed or mouse release to update
+        # slider value without causing 'changed' signal to update keyframes.
+        """
+        if self.editable_property.value_changed_ID != DISCONNECTED_SIGNAL_HANDLER:
+            self.slider.get_adjustment().handler_block(self.editable_property.value_changed_ID)
+
+        new_value = _get_frame_value(frame, self.clip_editor.keyframes)
+        self.editable_property.adjustment.set_value(new_value)
+        if self.editable_property.value_changed_ID != DISCONNECTED_SIGNAL_HANDLER:
+            self.slider.get_adjustment().handler_unblock(self.editable_property.value_changed_ID)
+        """
+
+    def active_keyframe_changed(self):
+        pass
+        """
+        frame = self.clip_editor.current_clip_frame
+        keyframes = self.clip_editor.keyframes
+        value = _get_frame_value(frame, keyframes)
+        self.slider.set_value(value)
+        self.buttons_row.set_frame(frame)
+        self.seek_tline_frame(frame)
+        self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
+        """
+    
+    def update_property_value(self):
+        edit_data["editable_property"].write_out_keyframes(self.keyframes)
+        
+    def keyframe_dragged(self, active_kf, frame):
+        pass

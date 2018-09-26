@@ -1269,7 +1269,7 @@ class EditorWindow:
         elif mode == editorstate.CUT:
             cursor = self.get_own_cursor(display, CUT_CURSOR, 1, 8)
         elif mode == editorstate.KF_TOOL:
-            cursor = self.get_own_cursor(display, KF_TOOL_CURSOR, 1, 8)
+            cursor = self.get_own_cursor(display, KF_TOOL_CURSOR, 1, 0)
         else:
             cursor = Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR)
         

@@ -1202,10 +1202,11 @@ def draw_cut_overlay(cr, data):
     pass
 
 def draw_kftool_overlay(cr, data):
+    # This is bit different because editing happens on overlay, which needs to much more complex and code part of tool module.
     if data == None:
         return
-    draw_function = data["draw_function"]
-    draw_function(cr, pos)
+    draw_function = data["draw_function"] # this is kftoolmode._tline_overlay(cr)
+    draw_function(cr)
     
 def draw_compositor_trim(cr, data):
     clip_in = data["clip_in"]
@@ -2750,17 +2751,11 @@ class KFToolFrameScale:
         if big_tick_step != -1:
             count = int(seq.get_length() / big_tick_step)
             for i in range(1, count):
-                print "big tc"
                 x = math.floor((math.floor(i * big_tick_step) + to_seconds_fix_add) * pix_per_frame \
                     - pos * pix_per_frame) + 0.5 
                 cr.move_to(x, ytop)
                 cr.line_to(x, ybottom)
                 cr.stroke()
-
-                #cr.move_to(x, 100)
-                #text = utils.get_tc_string(int((math.floor(i * big_tick_step)) + to_seconds_fix_add))
-                #cr.show_text(text)
-                    
         else:
             if tc_draw_step != small_tick_step:
                 start = int(view_start_frame / tc_draw_step)
@@ -2774,16 +2769,9 @@ class KFToolFrameScale:
                     x = math.floor((math.floor(i * tc_draw_step) + to_seconds_fix_add) * pix_per_frame \
                         - pos * pix_per_frame) + 0.5
                     
-                    print "tc:", x, ytop, ybottom
                     cr.move_to(x, ytop)
                     cr.line_to(x, ybottom)
                     cr.stroke()
-                    
-                    #cr.move_to(x, 100)
-                    #text = utils.get_tc_string(int(math.floor((float(i) * tc_draw_step) + to_seconds_fix_add)))
-                    #cr.show_text(text)
-                    
-
             else:
                 # Get draw range in steps from 0
                 start = int(view_start_frame / small_tick_step)
@@ -2792,19 +2780,10 @@ class KFToolFrameScale:
                 # +1 to ensure coverage
                 end = int(view_end_frame / small_tick_step) + 1 
                 for i in range(start, end):
-                    print "small"
                     x = math.floor(i * small_tick_step * pix_per_frame - pos * pix_per_frame) + 0.5 
                     cr.move_to(x, ytop)
                     cr.line_to(x, ybottom)
                     cr.stroke()
-                
-                    #cr.move_to(x, 100)
-                    #text = utils.get_tc_string(int(round(float(i) * float(tc_draw_step))))
-                    #cr.show_text(text)
-                
-            
-            
-
 
 
 class TimeLineScroller(Gtk.HScrollbar):
