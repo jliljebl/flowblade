@@ -21,13 +21,15 @@
 """
 Module handles Keyframe tool functionality
 """
-from gi.repository import Pango, PangoCairo
+from gi.repository import Pango, PangoCairo, Gtk
 
 import cairo
 
 import cairoarea
 from editorstate import current_sequence
 from editorstate import PLAYER
+import gui
+import guiutils
 import propertyedit
 import propertyparse
 import respaths
@@ -41,14 +43,17 @@ NON_ACTIVE_KF_ICON = None
 
 CLIP_EDITOR_WIDTH = 250 
 CLIP_EDITOR_HEIGHT = 21
-END_PAD = 28
-TOP_PAD = 18
+END_PAD = 8
+TOP_PAD = 23
 HEIGHT_PAD_PIXELS_TOTAL = 44
-OUT_OF_RANGE_ICON_PAD = 22
+OUT_OF_RANGE_ICON_PAD = 27
 OUT_OF_RANGE_KF_ICON_HALF = 6
-OUT_OF_RANGE_NUMBER_Y = 5
-OUT_OF_RANGE_NUMBER_X_START = 3
-OUT_OF_RANGE_NUMBER_X_END_PAD = 9
+OUT_OF_RANGE_NUMBER_X_START = 7
+OUT_OF_RANGE_NUMBER_X_END_PAD = 14
+
+KF_ICON_Y_PAD = -6
+KF_TEXT_PAD = -6
+KF_LOWER_OFF = 11
 
 BUTTON_WIDTH = 26
 BUTTON_HEIGHT = 24
@@ -79,6 +84,9 @@ KF_DRAG = 0
 POSITION_DRAG = 1
 KF_DRAG_DISABLED = 2
 
+hamburger_menu = Gtk.Menu()
+oor_before_menu = Gtk.Menu()
+oor_after_menu = Gtk.Menu()
 
 edit_data = None
 _kf_editor = None
@@ -139,7 +147,7 @@ def mouse_press(event, frame):
         _handle_edit_mouse_press(event)
         return
 
-    # Attempt to init kf tool deit on some clip
+    # Attempt to init kf tool editing on some clip
     
     # Get pressed track
     track = tlinewidgets.get_track(y)  
@@ -252,14 +260,6 @@ class TLineKeyFrameEditor:
     """
 
     def __init__(self, editable_property, use_clip_in=True):
-        """
-        self.widget = cairoarea.CairoDrawableArea2( CLIP_EDITOR_WIDTH, 
-                                                    CLIP_EDITOR_HEIGHT, 
-                                                    self._draw)
-        self.widget.press_func = self._press_event
-        self.widget.motion_notify_func = self._motion_notify_event
-        self.widget.release_func = self._release_event
-        """
         
         self.clip_length = editable_property.get_clip_length() - 1
         print self.clip_length  
@@ -280,7 +280,9 @@ class TLineKeyFrameEditor:
         self.active_kf_index = 0
 
         self.frame_scale = tlinewidgets.KFToolFrameScale(FRAME_SCALE_LINES)
-
+        
+        self.media_frame_txt = _("Media Frame: ")
+        self.volume_kfs_text = _("Volume Keyframes")
         self.current_mouse_action = None
         self.drag_on = False # Used to stop updating pos here if pos change is initiated here.
         self.drag_min = -1
@@ -291,8 +293,9 @@ class TLineKeyFrameEditor:
         editable_property.value.strip('"')
         self.set_keyframes(editable_property.value, editable_property.get_in_value)     
 
+        self._set_pos_to_active_kf()
+
     def set_keyframes(self, keyframes_str, out_to_in_func):
-        print "kfsstr:", keyframes_str
         self.keyframes = self.keyframe_parser(keyframes_str, out_to_in_func)
 
     def overlay_area_hit(self, tx, ty):
@@ -383,35 +386,15 @@ class TLineKeyFrameEditor:
         self._draw_edit_area_borders(cr)
 
         # Top row
-        cr.set_source_surface(HAMBURGER_ICON, x, y)
-        cr.paint()
-        cr.set_source_surface(CLOSE_ICON, x + w - 14, y + 2)
+        cr.set_source_surface(HAMBURGER_ICON, x + 4.5, y + 4)
         cr.paint()
 
         # Frame scale and value lines
         self.frame_scale.draw(cr, edit_data["clip_start_in_timeline"], self.clip_length, self._get_upper_y(), self._get_lower_y())
         self._draw_value_lines(cr, x, w)
 
-        # Draw value curve
         kf_positions = self.get_clip_kfs_and_positions()
         
-        cr.set_source_rgb(*CURVE_COLOR)
-        cr.set_line_width(1.0)
-        
-        # Value curves need to clipped into edit area
-        cr.save()
-        ex, ey, ew, eh = self._get_edit_area_rect()
-        cr.rectangle(ex, ey, ew, eh)
-        cr.clip() 
-        for i in range(0, len(kf_positions)):
-            kf, frame, kf_index, kf_pos_x, kf_pos_y = kf_positions[i]
-            if i == 0:
-                cr.move_to(kf_pos_x, kf_pos_y)
-            else:
-                cr.line_to(kf_pos_x, kf_pos_y)
-        cr.stroke()
-        cr.restore()
-                                
         # Draw keyframes
         for i in range(0, len(kf_positions)):
             kf, frame, kf_index, kf_pos_x, kf_pos_y = kf_positions[i]
@@ -429,32 +412,54 @@ class TLineKeyFrameEditor:
             cr.set_source_surface(icon, kf_pos_x - 6, kf_pos_y - 6) # -6 to get kf bitmap center on calculated pixel
             cr.paint()
 
-        # Draw out-of-range kf icons kf counts
-        before_kfs = len(self.get_out_of_range_before_kfs())
-        after_kfs = len(self.get_out_of_range_after_kfs())
+        cr.set_source_rgb(*CURVE_COLOR)
+        cr.set_line_width(1.0)
         
-        KF_ICON_Y_PAD = -6
-        KF_TEXT_PAD = -7
-        if before_kfs > 0:
-            cr.set_source_surface(NON_ACTIVE_KF_ICON, x + OUT_OF_RANGE_ICON_PAD - OUT_OF_RANGE_KF_ICON_HALF * 2, self._get_center_y() + KF_ICON_Y_PAD)
-            cr.paint()
-            self.draw_kf_count_number(cr, before_kfs, x + OUT_OF_RANGE_NUMBER_X_START, self._get_center_y() + KF_TEXT_PAD)
-        if after_kfs > 0:
-            cr.set_source_surface(NON_ACTIVE_KF_ICON, x + w - OUT_OF_RANGE_ICON_PAD, self._get_center_y() + KF_ICON_Y_PAD)
-            cr.paint()
-            self.draw_kf_count_number(cr, after_kfs, x + w - OUT_OF_RANGE_NUMBER_X_END_PAD, self._get_center_y() + KF_TEXT_PAD)
+        # Draw value cirves,they need to clipped into edit area
+        cr.save()
+        ex, ey, ew, eh = self._get_edit_area_rect()
+        cr.rectangle(ex, ey, ew, eh)
+        cr.clip() 
+        for i in range(0, len(kf_positions)):
+            kf, frame, kf_index, kf_pos_x, kf_pos_y = kf_positions[i]
+            if i == 0:
+                cr.move_to(kf_pos_x, kf_pos_y)
+            else:
+                cr.line_to(kf_pos_x, kf_pos_y)
+        cr.stroke()
+        cr.restore()
+        
+        # Draw out-of-range kf icons kf counts
+        if w > 55: # dont draw on too small editors
+            before_kfs = len(self.get_out_of_range_before_kfs())
+            after_kfs = len(self.get_out_of_range_after_kfs())
+            
+
+            kfy = self._get_lower_y() + KF_LOWER_OFF
+            if before_kfs > 0:
+                cr.set_source_surface(NON_ACTIVE_KF_ICON, x + OUT_OF_RANGE_ICON_PAD - OUT_OF_RANGE_KF_ICON_HALF * 2, kfy + KF_ICON_Y_PAD)
+                cr.paint()
+                self._draw_text(cr, str(before_kfs), x + OUT_OF_RANGE_NUMBER_X_START, kfy + KF_TEXT_PAD)
+            if after_kfs > 0:
+                cr.set_source_surface(NON_ACTIVE_KF_ICON, x + w - OUT_OF_RANGE_ICON_PAD, kfy + KF_ICON_Y_PAD)
+                cr.paint()
+                self._draw_text(cr, str(after_kfs), x + w - OUT_OF_RANGE_NUMBER_X_END_PAD, kfy + KF_TEXT_PAD)
         
         # Draw frame pointer
         try:
             panel_pos = self._get_panel_pos()
         except ZeroDivisionError: # math fails for 1 frame clip
             panel_pos = END_PAD
-        cr.set_line_width(2.0)
-        cr.set_source_rgb(*POINTER_COLOR)
-        cr.move_to(panel_pos, 0)
-        cr.line_to(panel_pos, CLIP_EDITOR_HEIGHT)
+        cr.set_line_width(1.0)
+        cr.set_source_rgb(*FRAME_SCALE_LINES_BRIGHT)
+        cr.move_to(panel_pos, 0 + 13)
+        cr.line_to(panel_pos, h - 13)
         cr.stroke()
 
+        if w > 165: # dont draw on too small editors
+            self._draw_text(cr, self.volume_kfs_text, -1, y + 4, True, x, w)
+            self._draw_text(cr, self.media_frame_txt + str(self.current_clip_frame), -1, kfy - 8, True, x, w)
+            
     def _draw_edit_area_borders(self, cr):
         x, y, w, h = self._get_edit_area_rect()
         cr.set_source_rgb(*FRAME_SCALE_LINES)
@@ -469,7 +474,7 @@ class TLineKeyFrameEditor:
         return (x + END_PAD, uy, active_width - 1, ly - uy)
         
     def _draw_value_lines(self, cr, x, w):
-        # Audio hard coded value lines (if extend this to work on arbitrary kf properties, we need something else for those)
+        # Audio hard coded value lines
         TEXT_X_OFF = 4
         TEXT_X_OFF_END = -28
         TEXT_Y_OFF = 4
@@ -513,6 +518,21 @@ class TLineKeyFrameEditor:
         cr.show_text(text)
         cr.move_to(xe + TEXT_X_OFF_END, y - TEXT_Y_OFF)
         cr.show_text(text)
+
+    def _draw_text(self, cr, txt, x, y, centered=False, tline_x=-1, w=-1):
+        layout = PangoCairo.create_layout(cr)
+        layout.set_text(txt, -1)
+        desc = Pango.FontDescription("Sans 8")
+        layout.set_font_description(desc)
+
+        if centered == True:
+            lw, lh = layout.get_pixel_size()
+            x = w/2 - lw/2 + tline_x
+
+        cr.move_to(x, y)
+        cr.set_source_rgb(*FRAME_SCALE_LINES_BRIGHT)
+        PangoCairo.update_layout(cr, layout)
+        PangoCairo.show_layout(cr, layout)
         
     def get_clip_kfs_and_positions(self):
         kf_positions = []
@@ -530,31 +550,23 @@ class TLineKeyFrameEditor:
 
         return kf_positions
             
-    def draw_kf_count_number(self, cr, count, x, y):
-        # Draw track name
-        layout = PangoCairo.create_layout(cr)
-        layout.set_text(str(count), -1)
-        desc = Pango.FontDescription("Sans 8")
-        layout.set_font_description(desc)
-
-        cr.move_to(x, y)
-        cr.set_source_rgb(0.9, 0.9, 0.9)
-        PangoCairo.update_layout(cr, layout)
-        PangoCairo.show_layout(cr, layout)
-        
     def press_event(self, event):
         """
         Mouse button callback
         """
-        # Chcek if kf icon before or after clip range have been pressed
-        if self.oor_start_kf_hit(event.x, event.y):
-            self._show_oor_before_menu(self.widget, event)
+        # Check if menu icons hit
+        if self._oor_start_kf_hit(event.x, event.y) == True:
+            self._show_oor_before_menu(gui.tline_canvas.widget, event)
             return
 
-        if self.oor_end_kf_hit(event.x, event.y):
-            self._show_oor_after_menu(self.widget, event)
+        if self._oor_end_kf_hit(event.x, event.y) == True:
+            self._show_oor_after_menu(gui.tline_canvas.widget, event)
             return
-        
+
+        if self._hamburger_hit(event.x, event.y) == True:
+            self._show_hamburger_menu(gui.tline_canvas.widget, event)
+            return
+            
         # Handle clip range mouse events
         self.drag_on = True
 
@@ -563,17 +575,14 @@ class TLineKeyFrameEditor:
         hit_kf = self._key_frame_hit(lx, ly)
 
         if hit_kf == None: # nothing was hit
-            print "no hit"
             self.current_mouse_action = POSITION_DRAG
             self._set_clip_frame(lx)
             self.clip_editor_frame_changed(self.current_clip_frame)
             updater.repaint_tline()
         else: # some keyframe was pressed
-            print "kf hit"
             self.active_kf_index = hit_kf
             frame, value = self.keyframes[hit_kf]
             self.current_clip_frame = frame
-            #self.active_keyframe_changed()
             if hit_kf == 0:
                 self.current_mouse_action = KF_DRAG_DISABLED
             else:
@@ -702,25 +711,31 @@ class TLineKeyFrameEditor:
             
         return None
 
-    def oor_start_kf_hit(self, x, y):
-        test_y = self._get_center_y()
-        test_x = OUT_OF_RANGE_ICON_PAD - OUT_OF_RANGE_KF_ICON_HALF * 2
-        if y >= test_y and y <= test_y + 12: # 12 icon size
-            if x >= test_x and x <= test_x + 12:
+    def _area_hit(self, tx, ty, x, y, w, h):
+        if ty >= y and ty <= y + h: # 12 icon size
+            if tx >= x and tx <= x + w:
                 return True
-        
+            
         return False
-
-    def oor_end_kf_hit(self, x, y):
-        x, y, w, h = self._get_edit_area_rect()
-        test_x = w - OUT_OF_RANGE_ICON_PAD
-        test_y = self._get_center_y()
-        if y >= KF_Y and y <= KF_Y + 12: # 12 icon size
-            if x >= test_x and x <= test_x + 12:
-                return True
         
-        return False
+    def _oor_start_kf_hit(self, x, y):
+        rx, ry, rw, rh = self.allocation
+        kfy = self._get_lower_y() + KF_LOWER_OFF
+        area_y = kfy + KF_ICON_Y_PAD
+        area_x = rx + OUT_OF_RANGE_ICON_PAD - OUT_OF_RANGE_KF_ICON_HALF * 2
+        return self._area_hit(x, y, area_x, area_y, 12, 12)
 
+    def _oor_end_kf_hit(self, x, y):
+        rx, ry, rw, rh = self.allocation
+        kfy = self._get_lower_y() + KF_LOWER_OFF
+        area_x = rx + rw - OUT_OF_RANGE_ICON_PAD
+        area_y = kfy + KF_ICON_Y_PAD
+        return self._area_hit(x, y, area_x, area_y, 12, 12)
+
+    def _hamburger_hit(self, x, y):
+        rx, ry, rw, rh = self.allocation
+        return self._area_hit(x, y, rx + 4.5, ry + 4, 12, 12)
+        
     def add_keyframe(self, frame):
         kf_index_on_frame = self.frame_has_keyframe(frame)
         if kf_index_on_frame != -1:
@@ -753,22 +768,6 @@ class TLineKeyFrameEditor:
         if self.active_kf_index < 0:
             self.active_kf_index = 0
         self._set_pos_to_active_kf()
-
-    """
-    def set_next_active(self):
-
-        self.active_kf_index += 1
-        if self.active_kf_index > (len(self.keyframes) - 1):
-            self.active_kf_index = len(self.keyframes) - 1
-        self._set_pos_to_active_kf()
-        
-    def set_prev_active(self):
-
-        self.active_kf_index -= 1
-        if self.active_kf_index < 0:
-            self.active_kf_index = 0
-        self._set_pos_to_active_kf()
-    """
     
     def _set_pos_to_active_kf(self):
         frame, value = self.keyframes[self.active_kf_index]
@@ -860,7 +859,20 @@ class TLineKeyFrameEditor:
 
         menu.add(self._get_menu_item(_("Delete all Keyframes after Clip Range"), self._oor_menu_item_activated, "delete_all_after" ))
         menu.popup(None, None, None, None, event.button, event.time)
-        
+
+    def _show_hamburger_menu(self, widget, event):
+        menu = hamburger_menu
+        guiutils.remove_children(menu)
+
+        menu.add(self._get_menu_item(_("ccccc all but first Keyframe before Clip Range"), self._oor_menu_item_activated, "fgffsg" ))
+        sep = Gtk.SeparatorMenuItem()
+        sep.show()
+        menu.add(sep)
+
+        menu.add(self._get_menu_item(_("Seccccccct Keyframe at Frame 0 to value of next Keyframe"), self._oor_menu_item_activated, "fgfgf" ))
+
+        menu.popup(None, None, None, None, event.button, event.time)
+
     def _oor_menu_item_activated(self, widget, data):
         if data == "delete_all_before":
             keep_doing = True
