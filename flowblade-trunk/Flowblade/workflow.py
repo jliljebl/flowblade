@@ -235,7 +235,7 @@ def _get_workflow_tool_menu_item(callback, tool_id, tool_name, tool_icon_file, p
     hbox.pack_start(guiutils.pad_label(4, 4), False, False, 0)
     hbox.pack_start(tool_name_label, False, False, 0)
     hbox.show_all()
-    hbox.set_sensitive(tool_active)
+    #hbox.set_sensitive(tool_active)
     item = Gtk.MenuItem()
     item.add(hbox)
     item.show()
