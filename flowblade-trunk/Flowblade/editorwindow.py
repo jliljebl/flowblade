@@ -350,16 +350,6 @@ class EditorWindow:
                     <menuitem action='AddMediaClip'/>
                     <menuitem action='AddImageSequence'/>
                     <separator/>
-                    <menu action='BinMenu'>
-                        <menuitem action='AddBin'/>
-                        <menuitem action='DeleteBin'/>
-                    </menu>
-                    <menu action='SequenceMenu'>
-                        <menuitem action='AddSequence'/>
-                        <menuitem action='EditSequence'/>
-                        <menuitem action='DeleteSequence'/>
-                    </menu>
-                    <separator/>
                     <menuitem action='CreateColorClip'/>
                     <menu action='PatternProducersMenu'>
                         <menuitem action='CreateNoiseClip'/>
@@ -371,6 +361,16 @@ class EditorWindow:
                         <menuitem action='CreateSelectionCompound'/>
                         <menuitem action='CreateSequenceCompound'/>
                         <menuitem action='AudioSyncCompoundClip'/>
+                    </menu>
+                    <separator/>
+                    <menu action='BinMenu'>
+                        <menuitem action='AddBin'/>
+                        <menuitem action='DeleteBin'/>
+                    </menu>
+                    <menu action='SequenceMenu'>
+                        <menuitem action='AddSequence'/>
+                        <menuitem action='EditSequence'/>
+                        <menuitem action='DeleteSequence'/>
                     </menu>
                     <separator/>
                     <menuitem action='ImportProjectMedia'/>
