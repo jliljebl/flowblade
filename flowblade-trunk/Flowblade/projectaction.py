@@ -1166,7 +1166,7 @@ def _display_file_info(media_file):
     try:
         num = info["fps_num"]
         den = info["fps_den"]
-        fps = float(num/den) 
+        fps = utils.get_fps_str_with_two_decimals(str(float(num/den)))
     except:
         fps = _("N/A")
     

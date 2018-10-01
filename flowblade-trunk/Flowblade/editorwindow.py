@@ -520,7 +520,6 @@ class EditorWindow:
         compositor_editor_panel = guiutils.set_margins(compositeeditor.widgets.value_edit_frame, 0, 0, 4, 0)
 
         compositors_hbox = Gtk.HBox()
-        #compositors_hbox.set_border_width(5)
         compositors_hbox.pack_start(compositor_editor_panel, True, True, 0)
 
         compositors_vbox = Gtk.VBox()

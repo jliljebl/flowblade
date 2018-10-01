@@ -2011,7 +2011,9 @@ def get_profile_info_text(profile):
         str_list.append(_("Interlaced"))
 
     str_list.append("\n")
-    str_list.append(_("Fps: ") + str(profile.fps()))
+    
+    fps_str = utils.get_fps_str_with_two_decimals(str(profile.fps()))
+    str_list.append(_("Fps: ") + fps_str)
     pix_asp = float(profile.sample_aspect_num()) / profile.sample_aspect_den()
     pa_str =  "%.2f" % pix_asp
     str_list.append(", " + _("Pixel Aspect: ") + pa_str)

@@ -98,6 +98,14 @@ class LaunchThread(threading.Thread):
 def fps():
     return editorstate.PROJECT().profile.fps()
 
+def get_fps_str_with_two_decimals(fps_str):
+    fps_sides = fps_str.split(".")
+    try:
+        decimals = fps_sides[1][0:2]
+    except:
+        decimals = fps_sides[1]
+    return fps_sides[0] + "." + decimals
+    
 def clip_length_string(length):
     """ 
     Returns length string for length in frames.
