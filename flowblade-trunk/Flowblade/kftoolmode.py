@@ -26,10 +26,12 @@ from gi.repository import Pango, PangoCairo, Gtk
 import cairo
 
 import cairoarea
+import edit
 from editorstate import current_sequence
 from editorstate import PLAYER
 import gui
 import guiutils
+import mltfilters
 import propertyedit
 import propertyparse
 import respaths
@@ -78,11 +80,15 @@ OVERLAY_BG = (0.0, 0.0, 0.0, 0.8)
 OVERLAY_DRAW_COLOR = (0.0, 0.0, 0.0, 0.8)
 EDIT_AREA_HEIGHT = 200
 
+# Edit types
+VOLUME_KF_EDIT = 0
+BRIGHTNESS_KF_EDIT = 1
 
 # Editor states
 KF_DRAG = 0
 POSITION_DRAG = 1
 KF_DRAG_DISABLED = 2
+KF_DRAG_FRAME_ZERO_KF = 3
 
 hamburger_menu = Gtk.Menu()
 oor_before_menu = Gtk.Menu()
@@ -90,6 +96,8 @@ oor_after_menu = Gtk.Menu()
 
 edit_data = None
 _kf_editor = None
+
+_playhead_follow_kf = True
 
 # -------------------------------------------------- init
 def load_icons():
@@ -100,7 +108,7 @@ def load_icons():
     ACTIVE_KF_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_active.png")
     NON_ACTIVE_KF_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_not_active.png")    
 
-def init_tool_for_clip(clip, track):
+def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT):
     clip_index = track.clips.index(clip)
 
     # Save data needed to do the keyframe edits.
@@ -112,30 +120,71 @@ def init_tool_for_clip(clip, track):
                  "track":track,
                  "initializing":True}
 
+    if edit_type == VOLUME_KF_EDIT:
+        ep = _get_volume_editable_property(clip, track, clip_index)
+        if ep == None:
+            filter_info = mltfilters.get_volume_filters_info()
+            data = {"clip":clip, 
+                    "filter_info":filter_info,
+                    "filter_edit_done_func":_filter_create_dummy_func}
+            action = edit.add_multipart_filter_action(data)
+            action.do_edit()
+            ep = _get_volume_editable_property(clip, track, clip_index)
 
-    # Init for volume editing if volume filter available
+        edit_data["editable_property"] = ep
+        global _kf_editor
+        _kf_editor = TLineKeyFrameEditor(ep, True, VOLUME_KF_EDIT)
+        
+    elif edit_type == BRIGHTNESS_KF_EDIT:
+        ep = _get_brightness_editable_property(clip, track, clip_index)
+        if ep == None:
+            """
+            filter_info = mltfilters.get_volume_filters_info()
+            data = {"clip":clip, 
+                    "filter_info":filter_info,
+                    "filter_edit_done_func":_filter_create_dummy_func}
+            action = edit.add_multipart_filter_action(data)
+            action.do_edit()
+            ep = _get_volume_editable_property(clip, track, clip_index)
+            """
+            
+        edit_data["editable_property"] = ep
+        global _kf_editor
+        _kf_editor = TLineKeyFrameEditor(ep, True, BRIGHTNESS_KF_EDIT)
+        
+    tlinewidgets.set_edit_mode_data(edit_data)
+    updater.repaint_tline()
+
+def _get_volume_editable_property(clip, track, clip_index):
+    return _get_multipart_keyframe_ep_from_service(clip, track, clip_index, "volume")
+
+def _get_brightness_editable_property(clip, track, clip_index):
+    return _get_multipart_keyframe_ep_from_service(clip, track, clip_index, "brightness")
+    
+def _get_multipart_keyframe_ep_from_service(clip, track, clip_index, mlt_service_id):
     for i in range(0, len(clip.filters)):
         filter_object = clip.filters[i]
-        if filter_object.info.mlt_service_id == "volume":
+        if filter_object.info.mlt_service_id == mlt_service_id:
             editable_properties = propertyedit.get_filter_editable_properties(
                                                            clip, 
                                                            filter_object,
                                                            i,
                                                            track,
                                                            clip_index)
-            for ep in editable_properties:                
+            for ep in editable_properties:          
                 # Volume is one of these MLT multipart filters, so we chose this way to find the editable property in filter.
                 try:
                     if ep.args["exptype"] == "multipart_keyframe":
-                        edit_data["editable_property"] = ep
-                        global _kf_editor
-                        _kf_editor = TLineKeyFrameEditor(ep, True)
+                        return ep
                 except:
                     pass
                     
-    tlinewidgets.set_edit_mode_data(edit_data)
-    updater.repaint_tline()
-    
+    return None
+
+
+def _filter_create_dummy_func(obj1, obj2):
+    pass
+
 # ---------------------------------------------- mouse events
 def mouse_press(event, frame):
 
@@ -191,6 +240,10 @@ def mouse_release(x, y, frame, state):
         edit_data["initializing"] = False
 
 # -------------------------------------------- edit 
+def delete_active_keyframe():
+    if _kf_editor != None and edit_data != None and edit_data["initializing"] != True:
+        _kf_editor.delete_active_keyframe()
+
 def _clip_is_being_edited():
     if edit_data == None:
         return False
@@ -259,9 +312,10 @@ class TLineKeyFrameEditor:
         def update_property_value(self)
     """
 
-    def __init__(self, editable_property, use_clip_in=True):
+    def __init__(self, editable_property, use_clip_in, edit_type):
         
         self.clip_length = editable_property.get_clip_length() - 1
+        self.edit_type = edit_type
         print self.clip_length  
         # Some filters start keyframes from *MEDIA* frame 0
         # Some filters or compositors start keyframes from *CLIP* frame 0
@@ -283,6 +337,8 @@ class TLineKeyFrameEditor:
         
         self.media_frame_txt = _("Media Frame: ")
         self.volume_kfs_text = _("Volume Keyframes")
+        self.brightness_kfs_text = _("Brightness Keyframes")
+        
         self.current_mouse_action = None
         self.drag_on = False # Used to stop updating pos here if pos change is initiated here.
         self.drag_min = -1
@@ -417,6 +473,7 @@ class TLineKeyFrameEditor:
         
         # Draw value cirves,they need to clipped into edit area
         cr.save()
+        cr.set_line_width(2.0)
         ex, ey, ew, eh = self._get_edit_area_rect()
         cr.rectangle(ex, ey, ew, eh)
         cr.clip() 
@@ -434,7 +491,6 @@ class TLineKeyFrameEditor:
             before_kfs = len(self.get_out_of_range_before_kfs())
             after_kfs = len(self.get_out_of_range_after_kfs())
             
-
             kfy = self._get_lower_y() + KF_LOWER_OFF
             if before_kfs > 0:
                 cr.set_source_surface(NON_ACTIVE_KF_ICON, x + OUT_OF_RANGE_ICON_PAD - OUT_OF_RANGE_KF_ICON_HALF * 2, kfy + KF_ICON_Y_PAD)
@@ -457,7 +513,11 @@ class TLineKeyFrameEditor:
         cr.stroke()
 
         if w > 165: # dont draw on too small editors
-            self._draw_text(cr, self.volume_kfs_text, -1, y + 4, True, x, w)
+            if self.edit_type == VOLUME_KF_EDIT:
+                text = self.volume_kfs_text
+            else:
+                text = self.brightness_kfs_text
+            self._draw_text(cr, text, -1, y + 4, True, x, w)
             self._draw_text(cr, self.media_frame_txt + str(self.current_clip_frame), -1, kfy - 8, True, x, w)
             
     def _draw_edit_area_borders(self, cr):
@@ -487,38 +547,83 @@ class TLineKeyFrameEditor:
                               cairo.FONT_SLANT_NORMAL,
                               cairo.FONT_WEIGHT_NORMAL)
         cr.set_font_size(12)
-        
-        # 0
-        y = self._get_panel_y_for_value(0.0)
-        #print y
-        cr.set_line_width(1.0)
-        cr.set_source_rgb(*FRAME_SCALE_LINES)
-        cr.move_to(xs, y)
-        cr.line_to(xe, y)
-        cr.stroke()
-        
-        cr.set_source_rgb(*FRAME_SCALE_LINES_BRIGHT)
-        text = "0"
-        cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF)
-        cr.show_text(text)
-        cr.move_to(xe + TEXT_X_OFF_END + 16, y - TEXT_Y_OFF)
-        cr.show_text(text)
-        
-        # 100
-        y = self._get_panel_y_for_value(100)
-        #print y
-        cr.set_source_rgb(*FRAME_SCALE_LINES)
-        cr.move_to(xs, y)
-        cr.line_to(xe, y)
-        cr.stroke()
-        
-        cr.set_source_rgb(*FRAME_SCALE_LINES_BRIGHT)
-        text = "100"
-        cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF)
-        cr.show_text(text)
-        cr.move_to(xe + TEXT_X_OFF_END, y - TEXT_Y_OFF)
-        cr.show_text(text)
 
+        # TODO: Do this in a more general way if we ever use this tool to edit other than "volume" and "brightness".
+        if self.edit_type == VOLUME_KF_EDIT:
+            # 0
+            y = self._get_panel_y_for_value(0.0)
+            cr.set_line_width(1.0)
+            cr.set_source_rgb(*FRAME_SCALE_LINES)
+            cr.move_to(xs, y)
+            cr.line_to(xe, y)
+            cr.stroke()
+            
+            cr.set_source_rgb(*FRAME_SCALE_LINES_BRIGHT)
+            text = "0"
+            cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF)
+            cr.show_text(text)
+            cr.move_to(xe + TEXT_X_OFF_END + 16, y - TEXT_Y_OFF)
+            cr.show_text(text)
+            
+            # 100
+            y = self._get_panel_y_for_value(100)
+            cr.set_source_rgb(*FRAME_SCALE_LINES)
+            cr.move_to(xs, y)
+            cr.line_to(xe, y)
+            cr.stroke()
+            
+            cr.set_source_rgb(*FRAME_SCALE_LINES_BRIGHT)
+            text = "100"
+            cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF)
+            cr.show_text(text)
+            cr.move_to(xe + TEXT_X_OFF_END, y - TEXT_Y_OFF)
+            cr.show_text(text)
+        elif self.edit_type == BRIGHTNESS_KF_EDIT:
+            # 0
+            y = self._get_panel_y_for_value(0.0)
+            cr.set_line_width(1.0)
+            cr.set_source_rgb(*FRAME_SCALE_LINES)
+            cr.move_to(xs, y)
+            cr.line_to(xe, y)
+            cr.stroke()
+            
+            cr.set_source_rgb(*FRAME_SCALE_LINES_BRIGHT)
+            text = "0"
+            cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF)
+            cr.show_text(text)
+            cr.move_to(xe + TEXT_X_OFF_END + 16, y - TEXT_Y_OFF)
+            cr.show_text(text)
+
+            # 50
+            #XOFF_END_50 = -5
+            y = self._get_panel_y_for_value(50)
+            cr.set_line_width(1.0)
+            cr.set_source_rgb(*FRAME_SCALE_LINES)
+            cr.move_to(xs, y)
+            cr.line_to(xe, y)
+            cr.stroke()
+            
+            cr.set_source_rgb(*FRAME_SCALE_LINES_BRIGHT)
+            text = "50"
+            cr.move_to(xs + TEXT_X_OFF, y + 4)
+            cr.show_text(text)
+            cr.move_to(xe + TEXT_X_OFF_END + 6, y + 4)
+            cr.show_text(text)
+            
+            # 100
+            y = self._get_panel_y_for_value(100) 
+            cr.set_source_rgb(*FRAME_SCALE_LINES)
+            cr.move_to(xs, y)
+            cr.line_to(xe, y)
+            cr.stroke()
+            
+            cr.set_source_rgb(*FRAME_SCALE_LINES_BRIGHT)
+            text = "100"
+            cr.move_to(xs + TEXT_X_OFF, y + 13)
+            cr.show_text(text)
+            cr.move_to(xe + TEXT_X_OFF_END, y + 13)
+            cr.show_text(text)
+            
     def _draw_text(self, cr, txt, x, y, centered=False, tline_x=-1, w=-1):
         layout = PangoCairo.create_layout(cr)
         layout.set_text(txt, -1)
@@ -574,30 +679,31 @@ class TLineKeyFrameEditor:
         ly = self._legalize_y(event.y)
         hit_kf = self._key_frame_hit(lx, ly)
 
-        if hit_kf == None: # nothing was hit
-            self.current_mouse_action = POSITION_DRAG
-            self._set_clip_frame(lx)
-            self.clip_editor_frame_changed(self.current_clip_frame)
-            updater.repaint_tline()
+        if hit_kf == None: # nothing was hit, add new keyframe and set it active
+            frame =  self._get_frame_for_panel_pos(lx)
+            value = self._get_value_for_panel_y(ly)
+            self.add_keyframe(frame, value)
+            hit_kf = self.active_kf_index 
         else: # some keyframe was pressed
             self.active_kf_index = hit_kf
-            frame, value = self.keyframes[hit_kf]
-            self.current_clip_frame = frame
-            if hit_kf == 0:
-                self.current_mouse_action = KF_DRAG_DISABLED
-            else:
-                self.current_mouse_action = KF_DRAG
-                
-                self.drag_start_x = event.x
-                
-                prev_frame, val = self.keyframes[hit_kf - 1]
-                self.drag_min = prev_frame  + 1
-                try:
-                    next_frame, val = self.keyframes[hit_kf + 1]
-                    self.drag_max = next_frame - 1
-                except:
-                    self.drag_max = self.clip_length
-            updater.repaint_tline()
+            
+        frame, value = self.keyframes[hit_kf]
+        self.current_clip_frame = frame
+        if hit_kf == 0:
+            self.current_mouse_action = KF_DRAG_DISABLED
+        else:
+            self.current_mouse_action = KF_DRAG
+            
+            self.drag_start_x = event.x
+            
+            prev_frame, val = self.keyframes[hit_kf - 1]
+            self.drag_min = prev_frame  + 1
+            try:
+                next_frame, val = self.keyframes[hit_kf + 1]
+                self.drag_max = next_frame - 1
+            except:
+                self.drag_max = self.clip_length
+        updater.repaint_tline()
 
     def motion_notify_event(self, x, y, state):
         """
@@ -704,7 +810,6 @@ class TLineKeyFrameEditor:
             frame, val = self.keyframes[i]
             frame_x = self._get_panel_pos_for_frame(frame)
             value_y = self._get_panel_y_for_value(val)
-            print val, y, value_y
             if((abs(x - frame_x) < KF_HIT_WIDTH)
                 and (abs(y - value_y) < KF_HIT_WIDTH)):
                 return i
@@ -736,7 +841,7 @@ class TLineKeyFrameEditor:
         rx, ry, rw, rh = self.allocation
         return self._area_hit(x, y, rx + 4.5, ry + 4, 12, 12)
         
-    def add_keyframe(self, frame):
+    def add_keyframe(self, frame, value):
         kf_index_on_frame = self.frame_has_keyframe(frame)
         if kf_index_on_frame != -1:
             # Trying add on top of existing keyframe makes it active
@@ -746,12 +851,12 @@ class TLineKeyFrameEditor:
         for i in range(0, len(self.keyframes)):
             kf_frame, kf_value = self.keyframes[i]
             if kf_frame > frame:
-                prev_frame, prev_value = self.keyframes[i - 1]
-                self.keyframes.insert(i, (frame, prev_value))
+                #prev_frame, prev_value = self.keyframes[i - 1]
+                self.keyframes.insert(i, (frame, value))
                 self.active_kf_index = i
                 return
-        prev_frame, prev_value = self.keyframes[len(self.keyframes) - 1]
-        self.keyframes.append((frame, prev_value))
+        #prev_frame, prev_value = self.keyframes[len(self.keyframes) - 1]
+        self.keyframes.append((frame, value))
         self.active_kf_index = len(self.keyframes) - 1
 
     def print_keyframes(self):
@@ -769,6 +874,8 @@ class TLineKeyFrameEditor:
             self.active_kf_index = 0
         self._set_pos_to_active_kf()
     
+        updater.repaint_tline()
+            
     def _set_pos_to_active_kf(self):
         frame, value = self.keyframes[self.active_kf_index]
         self.current_clip_frame = frame
@@ -826,6 +933,10 @@ class TLineKeyFrameEditor:
         
     def _show_oor_before_menu(self, widget, event):
         menu = oor_before_menu
+        self._build_oor_before_menu(menu)
+        menu.popup(None, None, None, None, event.button, event.time)
+
+    def _build_oor_before_menu(self, menu):
         guiutils.remove_children(menu)
         before_kfs = len(self.get_out_of_range_before_kfs())
 
@@ -846,10 +957,12 @@ class TLineKeyFrameEditor:
             item.set_sensitive(False)
             menu.add(item)
 
-        menu.popup(None, None, None, None, event.button, event.time)
-
     def _show_oor_after_menu(self, widget, event):
         menu = oor_before_menu
+        self._build_oor_after_menu(menu)
+        menu.popup(None, None, None, None, event.button, event.time)
+
+    def _build_oor_after_menu(self, menu):
         guiutils.remove_children(menu)
         after_kfs = self.get_out_of_range_after_kfs()
         
@@ -858,18 +971,55 @@ class TLineKeyFrameEditor:
             return
 
         menu.add(self._get_menu_item(_("Delete all Keyframes after Clip Range"), self._oor_menu_item_activated, "delete_all_after" ))
-        menu.popup(None, None, None, None, event.button, event.time)
-
+        
     def _show_hamburger_menu(self, widget, event):
         menu = hamburger_menu
         guiutils.remove_children(menu)
 
-        menu.add(self._get_menu_item(_("ccccc all but first Keyframe before Clip Range"), self._oor_menu_item_activated, "fgffsg" ))
+        edit_volume = self._get_menu_item(_("Edit Volume Keyframes"), self._oor_menu_item_activated, "edit_volume" )
+        if self.edit_type == VOLUME_KF_EDIT:
+            edit_volume.set_sensitive(False)
+        menu.add(edit_volume)
+
+        edit_volume = self._get_menu_item(_("Edit Brightness Keyframes"), self._oor_menu_item_activated, "edit_brightness" )
+        if self.edit_type == BRIGHTNESS_KF_EDIT:
+            edit_volume.set_sensitive(False)
+        menu.add(edit_volume)
+
         sep = Gtk.SeparatorMenuItem()
         sep.show()
         menu.add(sep)
 
-        menu.add(self._get_menu_item(_("Seccccccct Keyframe at Frame 0 to value of next Keyframe"), self._oor_menu_item_activated, "fgfgf" ))
+        leading_menu_item = Gtk.MenuItem(_("Leading Keyframes"))
+        leading_menu = Gtk.Menu()
+        self._build_oor_before_menu(leading_menu)
+        leading_menu_item.set_submenu(leading_menu)
+        leading_menu_item.show_all()
+        menu.add(leading_menu_item)
+        
+        trailing_menu_item = Gtk.MenuItem(_("Trailing Keyframes"))
+        trailing_menu = Gtk.Menu()
+        self._build_oor_after_menu(trailing_menu)
+        trailing_menu_item.set_submenu(trailing_menu)
+        trailing_menu_item.show_all()
+        menu.add(trailing_menu_item)
+        
+        sep = Gtk.SeparatorMenuItem()
+        sep.show()
+        menu.add(sep)
+        
+        playhead_follow_item = Gtk.CheckMenuItem()
+        playhead_follow_item.set_label(_("Playhead Follows Dragged Keyframe"))
+        playhead_follow_item.set_active(_playhead_follow_kf)
+        playhead_follow_item.connect("activate", self._oor_menu_item_activated, "playhead_follows")
+        playhead_follow_item.show()
+        menu.add(playhead_follow_item)
+        
+        sep = Gtk.SeparatorMenuItem()
+        sep.show()
+        menu.add(sep)
+        
+        menu.add(self._get_menu_item(_("Exit Keyframe Tool"), self._oor_menu_item_activated, "exit" ))
 
         menu.popup(None, None, None, None, event.button, event.time)
 
@@ -888,7 +1038,6 @@ class TLineKeyFrameEditor:
         elif data == "zero_next":
             frame_zero, frame_zero_value = self.keyframes[0]
             frame, value = self.keyframes[1]
-            print value
             self.keyframes.pop(0)
             self.keyframes.insert(0, (frame_zero, value))
             self.update_property_value()
@@ -907,7 +1056,8 @@ class TLineKeyFrameEditor:
                     delete_done = True
                 if delete_done:
                     break
-        self.widget.queue_draw()
+                    
+        updater.repaint_tline()
         
     def _get_menu_item(self, text, callback, data):
         item = Gtk.MenuItem(text)

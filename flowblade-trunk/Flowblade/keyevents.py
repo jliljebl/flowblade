@@ -36,6 +36,7 @@ from editorstate import current_sequence
 from editorstate import PLAYER
 from editorstate import timeline_visible
 import keyframeeditor
+import kftoolmode
 import medialog
 import menuactions
 import modesetting
@@ -319,10 +320,13 @@ def _handle_tline_key_event(event):
             tlineaction.resync_button_pressed()
             return True
         if action == 'delete':
-            # Clip selection and compositor selection are mutually exclusive, 
-            # so max one one these will actually delete something
-            tlineaction.splice_out_button_pressed()
-            compositormodes.delete_current_selection()
+            if editorstate.EDIT_MODE() == editorstate.KF_TOOL:
+                kftoolmode.delete_active_keyframe()
+            else:
+                # Clip selection and compositor selection are mutually exclusive, 
+                # so max one one these will actually delete something
+                tlineaction.splice_out_button_pressed()
+                compositormodes.delete_current_selection()
         if action == 'to_start':
             if PLAYER().is_playing():
                 monitorevent.stop_pressed()

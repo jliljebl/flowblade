@@ -48,6 +48,7 @@ from editorstate import current_sequence
 from editorstate import get_track
 from editorstate import PROJECT
 from editorstate import PLAYER
+import kftoolmode
 import mlttransitions
 import modesetting
 import movemodes
@@ -623,11 +624,11 @@ def _delete_all_clip_markers(data):
 
 def _volume_keyframes(data):
     clip, track, item_id, item_data = data
-    modesetting.kftool_mode_from_popup_menu(clip, track)
+    modesetting.kftool_mode_from_popup_menu(clip, track, kftoolmode.VOLUME_KF_EDIT)
     
 def _brightness_keyframes(data):
-    pass
-                  
+    clip, track, item_id, item_data = data
+    modesetting.kftool_mode_from_popup_menu(clip, track, kftoolmode.BRIGHTNESS_KF_EDIT)
 
 # Functions to handle popup menu selections for strings 
 # set as activation messages in guicomponents.py

@@ -345,7 +345,7 @@ def kftool_mode_pressed():
     tlinewidgets.set_edit_mode(None, tlinewidgets.draw_kftool_overlay)
     movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
 
-def kftool_mode_from_popup_menu(clip, track):
+def kftool_mode_from_popup_menu(clip, track, edit_type):
     stop_looping()
     current_sequence().clear_hidden_track()
 
@@ -353,7 +353,7 @@ def kftool_mode_from_popup_menu(clip, track):
     editorstate.edit_mode = editorstate.KF_TOOL
         
     tlinewidgets.set_edit_mode(None, tlinewidgets.draw_kftool_overlay)
-    movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
+    movemodes.clear_selected_clips() # Entering this edit mode clears selection 
 
-    kftoolmode.init_tool_for_clip(clip, track)
+    kftoolmode.init_tool_for_clip(clip, track, edit_type)
     gui.editor_window.set_cursor_to_mode()
