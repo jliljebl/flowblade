@@ -521,7 +521,7 @@
         <group>Color</group>
         <property name="Hue" args="range_in=0,360">0.0</property>
     </filter>
-    <filter id="frei0r.brightness"  mlt_drop_version="0.9.1">
+    <filter id="frei0r.brightness" mlt_drop_version="0.9.1">
         <name>Brightness</name>
         <group>Color</group>
         <property name="Brightness" args="range_in=-100,100">0.5</property>

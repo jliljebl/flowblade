@@ -91,6 +91,7 @@ old_filters = []
 
 # We need this to mute clips
 _volume_filter_info = None
+_brightness_filter_info = None # for kf tool
 
 def _load_icons():
     global FILTER_DEFAULT_ICON
@@ -379,12 +380,12 @@ def load_filters_xml(services):
         filter_info = FilterInfo(f_node)
 
         if filter_info.mlt_drop_version != "":
-            if editorstate.mlt_version_is_equal_or_greater(filter_info.mlt_drop_version):
+            if not editorstate.mlt_version_is_equal_or_greater(filter_info.mlt_drop_version):
                 print filter_info.name + " dropped, MLT version too high for this filter."
                 continue
 
         if filter_info.mlt_min_version != "":
-            if not editorstate.mlt_version_is_equal_or_greater(filter_info.mlt_min_version):
+            if editorstate.mlt_version_is_equal_or_greater(filter_info.mlt_min_version):
                 print filter_info.name + " dropped, MLT version too low for this filter."
                 continue
 
@@ -398,6 +399,10 @@ def load_filters_xml(services):
             global _volume_filter_info
             _volume_filter_info = filter_info
 
+        if filter_info.mlt_service_id == "brightness": # TODO: maybe add general search fuction for these, if we need a third one this is becoming a bit silly
+            global _brightness_filter_info
+            _brightness_filter_info = filter_info
+            
         # Add filter compositor filters or filter groups
         if filter_info.group == COMPOSITOR_FILTER_GROUP:
             global compositor_filters
@@ -494,6 +499,9 @@ def get_audio_filters_groups():
 def get_volume_filters_info():
     return _volume_filter_info
 
+def get_brightness_filter_info():
+    return _brightness_filter_info
+    
 def detach_all_filters(clip):
     for f in clip.filters:
         if isinstance(f, FilterObject):

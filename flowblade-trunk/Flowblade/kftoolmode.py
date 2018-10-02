@@ -138,15 +138,14 @@ def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT):
     elif edit_type == BRIGHTNESS_KF_EDIT:
         ep = _get_brightness_editable_property(clip, track, clip_index)
         if ep == None:
-            """
-            filter_info = mltfilters.get_volume_filters_info()
+
+            filter_info = mltfilters.get_brightness_filter_info()
             data = {"clip":clip, 
                     "filter_info":filter_info,
                     "filter_edit_done_func":_filter_create_dummy_func}
             action = edit.add_multipart_filter_action(data)
             action.do_edit()
-            ep = _get_volume_editable_property(clip, track, clip_index)
-            """
+            ep = _get_brightness_editable_property(clip, track, clip_index)
             
         edit_data["editable_property"] = ep
         global _kf_editor
