@@ -201,8 +201,8 @@ COMPOSITOR_CLIP_SELECTED = (0.5, 0.5, 0.7, 0.8)
 BLANK_CLIP_COLOR_GRAD = (1, 0.6, 0.6, 0.65, 1)
 BLANK_CLIP_COLOR_GRAD_L = (0, 0.6, 0.6, 0.65, 1)
 
-BLANK_CLIP_COLOR_SELECTED_GRAD = (1, 0.80, 0.80, 0.80, 1)
-BLANK_CLIP_COLOR_SELECTED_GRAD_L = (0, 0.80, 0.80, 0.80, 1)
+BLANK_CLIP_COLOR_SELECTED_GRAD = (1, 0.50, 0.50, 0.50, 1)
+BLANK_CLIP_COLOR_SELECTED_GRAD_L = (0, 0.50, 0.50, 0.5, 1)
 
 SINGLE_TRACK_TRANSITION_SELECTED = (0.8, 0.8, 1.0)
 
@@ -1692,7 +1692,6 @@ class TimeLineCanvas:
                         cr.set_source_rgb(*AUDIO_CLIP_SELECTED_COLOR)
                 
                 # Clip bg
-                #cr.rectangle(scale_in, y, scale_length, track_height)
                 self.create_round_rect_path(cr, scale_in, y, scale_length, track_height)
                 cr.fill()
 
@@ -1870,11 +1869,6 @@ class TimeLineCanvas:
             self.create_round_rect_path(cr, scale_in,
                                          y, scale_length, 
                                          track_height)
-            """
-            cr.rectangle(scale_in + 0.5,
-                         y + 0.5, scale_length, 
-                         track_height)
-            """
             cr.stroke()
         
             # No further drawing for blank clips
