@@ -667,7 +667,8 @@ class TLineKeyFrameEditor:
             kf_positions.append((self.keyframes[i], frame, i, kf_pos_x, kf_pos_y))
 
         return kf_positions
-            
+    
+    # ----------------------------------------------------------- mouse events
     def press_event(self, event):
         """
         Mouse button callback
@@ -703,7 +704,7 @@ class TLineKeyFrameEditor:
         frame, value = self.keyframes[hit_kf]
         self.current_clip_frame = frame
         if hit_kf == 0:
-            self.current_mouse_action = KF_DRAG_DISABLED
+            self.current_mouse_action = KF_DRAG_FRAME_ZERO_KF
         else:
             self.current_mouse_action = KF_DRAG
             
@@ -728,8 +729,10 @@ class TLineKeyFrameEditor:
         if self.current_mouse_action == POSITION_DRAG:
             self._set_clip_frame(lx)
             self.clip_editor_frame_changed(self.current_clip_frame)
-        elif self.current_mouse_action == KF_DRAG:
+        elif self.current_mouse_action == KF_DRAG or self.current_mouse_action == KF_DRAG_FRAME_ZERO_KF:
             frame = self._get_drag_frame(lx)
+            if self.current_mouse_action == KF_DRAG_FRAME_ZERO_KF:
+                frame = 0
             value = self._get_value_for_panel_y(ly)
             self.set_active_kf_frame_and_value(frame, value)
             if _playhead_follow_kf == True:
@@ -749,8 +752,10 @@ class TLineKeyFrameEditor:
             self._set_clip_frame(lx)
             self.clip_editor_frame_changed(self.current_clip_frame)
             self.update_slider_value_display(self.current_clip_frame)
-        elif self.current_mouse_action == KF_DRAG:
+        elif self.current_mouse_action == KF_DRAG or self.current_mouse_action == KF_DRAG_FRAME_ZERO_KF:
             frame = self._get_drag_frame(lx)
+            if self.current_mouse_action == KF_DRAG_FRAME_ZERO_KF:
+                frame = 0
             value = self._get_value_for_panel_y(ly)
             self.set_active_kf_frame_and_value(frame, value)
             if _playhead_follow_kf == True:
