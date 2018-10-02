@@ -36,34 +36,6 @@ be used for adding fade-ins and fade outs, so this dedicated module is needed.
 _dissolve_property_klasses = ["OpacityInGeomKeyframeProperty", "KeyFrameHCSTransitionProperty"]
 
 # -------------------------------------------------------------- module interface
-def add_default_fades(compositor, clip):
-    # Default fades are not aplied to auto fade compositors
-    if compositor.transition.info.auto_fade_compositor == True:
-        return
-        
-    keyframe_property, property_klass, keyframes = _get_kfproperty_klass_and_keyframes(compositor, clip)
-
-    if keyframe_property == None:
-        return
-        
-    fade_in_length, fade_out_length = _get_default_fades_lengths(property_klass)
-    print fade_in_length, 
-    if fade_in_length > 0:
-        if fade_in_length <= clip.clip_length():
-            keyframes = _add_default_fade_in(keyframe_property, property_klass, keyframes, fade_in_length)
-        else:
-            _show_defaults_length_error_dialog()
-            return
-            
-    if fade_out_length > 0:
-        if fade_out_length + fade_in_length + 1 <= clip.clip_length():
-            keyframes = _add_default_fade_out(keyframe_property, property_klass, keyframes, fade_out_length, clip)
-        else:
-            _show_defaults_length_error_dialog()
-            return
-
-    keyframe_property.write_out_keyframes(keyframes)
-
 def add_fade_in(compositor, fade_in_length):
     clip = _get_compositor_clip(compositor)
     keyframe_property, property_klass, keyframes = _get_kfproperty_klass_and_keyframes(compositor, clip)
@@ -134,7 +106,7 @@ def _get_kfproperty_klass_and_keyframes(compositor, clip):
                 keyframe_property = ep
                 keyframes = propertyparse.geom_keyframes_value_string_to_opacity_kf_array(keyframe_property.value, keyframe_property.get_in_value)
                 break
-            if property_klass == "KeyFrameHCSTransitionProperty": # Blend
+            if property_klass == "KeyFrameHCSTransitionProperty" and compositor.transition.info.mlt_service_id != "affine": # Blend, and we exclude Transform
                 keyframe_property = ep
                 keyframes = propertyparse.single_value_keyframes_string_to_kf_array(keyframe_property.value, keyframe_property.get_in_value)
                 break
