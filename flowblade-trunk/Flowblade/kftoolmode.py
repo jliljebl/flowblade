@@ -305,14 +305,20 @@ def _tline_overlay(cr):
         return
         
     track = edit_data["track"]
-    ty = tlinewidgets._get_track_y(track.id)
     cx_start = tlinewidgets._get_frame_x(edit_data["clip_start_in_timeline"])
     clip = track.clips[edit_data["clip_index"]]
     cx_end = tlinewidgets._get_frame_x(track.clip_start(edit_data["clip_index"]) + clip.clip_out - clip.clip_in + 1)  # +1 because out inclusive
-    height = EDIT_AREA_HEIGHT
-    cy_start = ty - height/2
     
-    _kf_editor.set_allocation(cx_start, cy_start, cx_end - cx_start, height)
+    ty_bottom = tlinewidgets._get_track_y(1) + current_sequence().tracks[1].height
+    ty_top = tlinewidgets._get_track_y(len(current_sequence().tracks) - 2) - 6 # -6 is hand correction, no idea why the math isn't getting correct pos top most track
+    ty_top_bottom_edge = ty_top + EDIT_AREA_HEIGHT
+    off_step = float(ty_bottom - ty_top_bottom_edge) / float(len(current_sequence().tracks) - 2)
+    ty_off = off_step * float(track.id - 1)
+    ty = ty_bottom - ty_off
+    cy_start = ty - EDIT_AREA_HEIGHT
+
+    _kf_editor.set_allocation(cx_start, cy_start, cx_end - cx_start, EDIT_AREA_HEIGHT)
+    _kf_editor.source_track_center = tlinewidgets._get_track_y(track.id) + current_sequence().tracks[track.id].height / 2.0
     _kf_editor.draw(cr)
 
 
@@ -355,6 +361,8 @@ class TLineKeyFrameEditor:
         self.active_kf_index = 0
 
         self.frame_scale = tlinewidgets.KFToolFrameScale(FRAME_SCALE_LINES)
+        
+        self.source_track_center = 0 # set externally
         
         self.media_frame_txt = _("Media Frame: ")
         self.volume_kfs_text = _("Volume Keyframes")
@@ -429,11 +437,13 @@ class TLineKeyFrameEditor:
         x, y, w, h = self.allocation
         return  y + TOP_PAD
     
+    """
     def _get_center_y(self):
         l = self._get_lower_y()
         u = self._get_upper_y()
         return u + (l - u) / 2
-        
+    """
+
     def _set_clip_frame(self, panel_x):
         self.current_clip_frame = self._get_frame_for_panel_pos(panel_x)
     
@@ -521,6 +531,14 @@ class TLineKeyFrameEditor:
                 cr.set_source_surface(NON_ACTIVE_KF_ICON, x + w - OUT_OF_RANGE_ICON_PAD, kfy + KF_ICON_Y_PAD)
                 cr.paint()
                 self._draw_text(cr, str(after_kfs), x + w - OUT_OF_RANGE_NUMBER_X_END_PAD, kfy + KF_TEXT_PAD)
+        
+        # Draw source triangle
+        cr.move_to(x + 1, self.source_track_center - 8)
+        cr.line_to(x + 9, self.source_track_center)
+        cr.line_to(x + 1, self.source_track_center + 8)
+        cr.close_path()
+        cr.set_source_rgb(*FRAME_SCALE_LINES_BRIGHT)
+        cr.fill()
         
         # Draw frame pointer
         try:

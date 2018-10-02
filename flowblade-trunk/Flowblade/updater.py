@@ -473,16 +473,6 @@ def update_seqence_info_text():
         prog_len = 0
     tc_info = utils.get_tc_string(prog_len)
 
-    """
-    profile_desc = editorstate.current_sequence().profile.description()
-
-
-        
-    if editorpersistance.prefs.show_sequence_profile:
-        gui.editor_window.monitor_source.set_text(name + "  -  " + profile_desc + "  -  " + tc_info)
-    else:
-        gui.editor_window.monitor_source.set_text(name + "  -  " + tc_info)
-    """
     gui.editor_window.monitor_source.set_text(name + "  -  " + tc_info)
     range_info = _get_marks_range_info_text(PLAYER().producer.mark_in, PLAYER().producer.mark_out)
     gui.editor_window.info1.set_text(range_info)
@@ -544,14 +534,6 @@ def set_and_display_monitor_media_file(media_file):
     selected for display by double clicking or drag'n'drop
     """
     editorstate._monitor_media_file = media_file
-    #display_clip_in_monitor(clip_monitor_currently_active = True)
-    
-    # !!???!! I'm not understandung this after new monitor switch, see if we have problems here
-    # If we're already displaying clip monitor, then already button is down we call display_clip_in_monitor(..)
-    # directly, but dont save position because we're not displaying now.
-    #
-    # If we're displaying sequence we do programmatical click on "Clip" button 
-    # to display clip via it's signal listener.
     
     if editorstate.timeline_visible() == True: # This was changed
         display_clip_in_monitor(clip_monitor_currently_active = True)
@@ -642,9 +624,3 @@ def set_transition_render_edit_menu_items_sensitive(range_start, range_end):
         render_transition.set_sensitive(False)
         render_fade.set_sensitive(False)
 
-"""
-# ------------------------------------------------ notebook
-def switch_notebook_panel(index):
-    gui.middle_notebook.set_current_page(index)
-
-"""
