@@ -341,7 +341,8 @@ def kftool_mode_pressed():
 
     # Box tool is implemeted as sub mode of OVERWRITE_MOVE
     editorstate.edit_mode = editorstate.KF_TOOL
-        
+    kftoolmode.enter_mode = None
+    
     tlinewidgets.set_edit_mode(None, tlinewidgets.draw_kftool_overlay)
     movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
 
@@ -350,6 +351,7 @@ def kftool_mode_from_popup_menu(clip, track, edit_type):
     current_sequence().clear_hidden_track()
 
     # Box tool is implemeted as sub mode of OVERWRITE_MOVE
+    kftoolmode.enter_mode = editorstate.edit_mode 
     editorstate.edit_mode = editorstate.KF_TOOL
         
     tlinewidgets.set_edit_mode(None, tlinewidgets.draw_kftool_overlay)

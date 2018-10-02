@@ -95,6 +95,7 @@ oor_before_menu = Gtk.Menu()
 oor_after_menu = Gtk.Menu()
 
 edit_data = None
+enter_mode = None
 _kf_editor = None
 
 _playhead_follow_kf = True
@@ -197,6 +198,14 @@ def _get_multipart_keyframe_ep_from_service(clip, track, clip_index, mlt_service
     return None
 
 
+def exit_tool():
+    _set_no_clip_edit_data()
+    global enter_mode
+    if enter_mode != None:
+        gui.editor_window.kf_tool_exit_to_mode(enter_mode)
+        enter_mode = None
+    updater.repaint_tline()
+        
 def _filter_create_dummy_func(obj1, obj2):
     pass
 
@@ -218,8 +227,7 @@ def mouse_press(event, frame):
 
     # Selecting empty clears selection
     if track == None:
-        _set_no_clip_edit_data()
-        updater.repaint_tline()
+        exit_tool()
         return    
     
     # Get pressed clip index
@@ -227,16 +235,12 @@ def mouse_press(event, frame):
 
     # Selecting empty clears selection
     if clip_index == -1:
-        #clear_selected_clips()
-        #pressed_on_selected = False
-        _set_no_clip_edit_data()
-        updater.repaint_tline()
+        exit_tool()
         return
 
     clip = track.clips[clip_index]
 
     init_tool_for_clip(clip, track)
-
 
 def _handle_edit_mouse_press(event):
     _kf_editor.press_event(event)
@@ -329,7 +333,6 @@ class TLineKeyFrameEditor:
         
         self.clip_length = editable_property.get_clip_length() - 1
         self.edit_type = edit_type
-        print self.clip_length  
         # Some filters start keyframes from *MEDIA* frame 0
         # Some filters or compositors start keyframes from *CLIP* frame 0
         # Filters starting from *MEDIA* 0 need offset 

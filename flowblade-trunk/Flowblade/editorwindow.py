@@ -1103,6 +1103,36 @@ class EditorWindow:
         # First active tool is the default tool. So we need to always have atleast one tool available.
         self.change_tool(editorpersistance.prefs.active_tools[0])
 
+    def kf_tool_exit_to_mode(self, mode): # Kf tool can be entered from popup menu and it exists to mode it was started in.
+        tool_id = None
+        if mode == editorstate.INSERT_MOVE:
+            tool_id = appconsts.TLINE_TOOL_INSERT
+        elif mode == editorstate.OVERWRITE_MOVE:
+            if editorstate.overwrite_mode_box == False:
+                tool_id = appconsts.TLINE_TOOL_OVERWRITE
+            else:
+                tool_id = appconsts.TLINE_TOOL_BOX
+        elif mode == editorstate.ONE_ROLL_TRIM or mode == editorstate.ONE_ROLL_TRIM_NO_EDIT:
+            if editorstate.trim_mode_ripple == False: # this was not touched on entering KF tool
+                tool_id = appconsts.TLINE_TOOL_TRIM
+            else:
+                tool_id = appconsts.TLINE_TOOL_RIPPLE_TRIM
+        elif mode == editorstate.TWO_ROLL_TRIM or mode == editorstate.TWO_ROLL_TRIM_NO_EDIT:
+            tool_id = appconsts.TLINE_TOOL_ROLL
+        elif mode == editorstate.SLIDE_TRIM or mode == editorstate.SLIDE_TRIM_NO_EDIT:
+            tool_id = appconsts.TLINE_TOOL_SLIP
+        elif mode == editorstate.MULTI_MOVE:
+            tool_id = appconsts.TLINE_TOOL_SPACER
+        elif mode == editorstate.CUT:
+            tool_id = appconsts.TLINE_TOOL_CUT
+        elif mode == editorstate.KF_TOOL:
+            tool_id = appconsts.TLINE_TOOL_KFTOOL
+
+        if tool_id != None:
+            self.change_tool(tool_id)
+        else:
+            print "kf_tool_exit_to_mode(): NO TOOL_ID!" # This should not happen, but lets print info instead of crashing if we get here
+       
     def change_tool(self, tool_id):
         if tool_id == appconsts.TLINE_TOOL_INSERT:
             self.handle_insert_move_mode_button_press()
