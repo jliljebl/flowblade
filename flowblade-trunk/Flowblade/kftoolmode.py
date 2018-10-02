@@ -143,7 +143,7 @@ def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT):
             data = {"clip":clip, 
                     "filter_info":filter_info,
                     "filter_edit_done_func":_filter_create_dummy_func}
-            action = edit.add_multipart_filter_action(data)
+            action = edit.add_filter_action(data)
             action.do_edit()
             ep = _get_brightness_editable_property(clip, track, clip_index)
             
@@ -158,7 +158,24 @@ def _get_volume_editable_property(clip, track, clip_index):
     return _get_multipart_keyframe_ep_from_service(clip, track, clip_index, "volume")
 
 def _get_brightness_editable_property(clip, track, clip_index):
-    return _get_multipart_keyframe_ep_from_service(clip, track, clip_index, "brightness")
+    for i in range(0, len(clip.filters)):
+        filter_object = clip.filters[i]
+        if filter_object.info.mlt_service_id == "brightness":
+            editable_properties = propertyedit.get_filter_editable_properties(
+                                                           clip, 
+                                                           filter_object,
+                                                           i,
+                                                           track,
+                                                           clip_index)
+            for ep in editable_properties:          
+                # Volume is one of these MLT multipart filters, so we chose this way to find the editable property in filter.
+                try:
+                    if ep.name == "level":
+                        return ep
+                except:
+                    pass
+                    
+    return None
     
 def _get_multipart_keyframe_ep_from_service(clip, track, clip_index, mlt_service_id):
     for i in range(0, len(clip.filters)):
@@ -170,8 +187,7 @@ def _get_multipart_keyframe_ep_from_service(clip, track, clip_index, mlt_service
                                                            i,
                                                            track,
                                                            clip_index)
-            for ep in editable_properties:          
-                # Volume is one of these MLT multipart filters, so we chose this way to find the editable property in filter.
+            for ep in editable_properties:
                 try:
                     if ep.args["exptype"] == "multipart_keyframe":
                         return ep
@@ -202,8 +218,6 @@ def mouse_press(event, frame):
 
     # Selecting empty clears selection
     if track == None:
-        #clear_selected_clips()
-        #pressed_on_selected = False
         _set_no_clip_edit_data()
         updater.repaint_tline()
         return    
@@ -718,8 +732,9 @@ class TLineKeyFrameEditor:
             frame = self._get_drag_frame(lx)
             value = self._get_value_for_panel_y(ly)
             self.set_active_kf_frame_and_value(frame, value)
-            self.current_clip_frame = frame
-            self.clip_editor_frame_changed(self.current_clip_frame)
+            if _playhead_follow_kf == True:
+                self.current_clip_frame = frame
+                self.clip_editor_frame_changed(self.current_clip_frame)
 
         updater.repaint_tline()
         
@@ -738,8 +753,9 @@ class TLineKeyFrameEditor:
             frame = self._get_drag_frame(lx)
             value = self._get_value_for_panel_y(ly)
             self.set_active_kf_frame_and_value(frame, value)
-            self.current_clip_frame = frame
-            self.clip_editor_frame_changed(self.current_clip_frame)
+            if _playhead_follow_kf == True:
+                self.current_clip_frame = frame
+                self.clip_editor_frame_changed(self.current_clip_frame)
             self.update_property_value()
             self.update_slider_value_display(frame)   
 
@@ -1018,7 +1034,7 @@ class TLineKeyFrameEditor:
         sep.show()
         menu.add(sep)
         
-        menu.add(self._get_menu_item(_("Exit Keyframe Tool"), self._oor_menu_item_activated, "exit" ))
+        menu.add(self._get_menu_item(_("Exit Edit"), self._oor_menu_item_activated, "exit" ))
 
         menu.popup(None, None, None, None, event.button, event.time)
 
@@ -1055,7 +1071,17 @@ class TLineKeyFrameEditor:
                     delete_done = True
                 if delete_done:
                     break
-                    
+        elif data == "edit_brightness":
+            init_tool_for_clip(edit_data["clip"] , edit_data["track"], BRIGHTNESS_KF_EDIT)
+        elif data == "edit_volume":
+            init_tool_for_clip(edit_data["clip"] , edit_data["track"], VOLUME_KF_EDIT)
+        elif data == "exit":
+            _set_no_clip_edit_data()
+        elif data == "playhead_follows":
+            global _playhead_follow_kf
+            _playhead_follow_kf = widget.get_active()
+            
+            
         updater.repaint_tline()
         
     def _get_menu_item(self, text, callback, data):
