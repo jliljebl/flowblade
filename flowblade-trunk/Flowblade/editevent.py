@@ -323,7 +323,7 @@ def tline_canvas_mouse_pressed(event, frame):
     # Handle mouse button presses depending which button was pressed and
     # editor state.
     # RIGHT BUTTON: seek frame or display clip menu if not dragging clip end
-    if (event.button == 3 and EDIT_MODE() != editorstate.CLIP_END_DRAG):
+    if (event.button == 3 and EDIT_MODE() != editorstate.CLIP_END_DRAG and EDIT_MODE() != editorstate.KF_TOOL):
         if ((not editorstate.current_is_active_trim_mode()) and timeline_visible()):
             if not(event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                 success = display_clip_menu_pop_up(event.y, event, frame)
@@ -400,7 +400,7 @@ def tline_canvas_mouse_moved(x, y, frame, button, state):
         return
 
     # Handle timeline position setting with right mouse button
-    if button == 3 and EDIT_MODE() != editorstate.CLIP_END_DRAG and EDIT_MODE() != editorstate.COMPOSITOR_EDIT:
+    if button == 3 and EDIT_MODE() != editorstate.CLIP_END_DRAG and EDIT_MODE() != editorstate.COMPOSITOR_EDIT and EDIT_MODE() != editorstate.KF_TOOL:
         if not timeline_visible():
             return
         PLAYER().seek_frame(frame)
@@ -431,7 +431,7 @@ def tline_canvas_mouse_released(x, y, frame, button, state):
         return
 
     # Handle timeline position setting with right mouse button
-    if button == 3 and EDIT_MODE() != editorstate.CLIP_END_DRAG and EDIT_MODE() != editorstate.COMPOSITOR_EDIT:
+    if button == 3 and EDIT_MODE() != editorstate.CLIP_END_DRAG and EDIT_MODE() != editorstate.COMPOSITOR_EDIT and EDIT_MODE() != editorstate.KF_TOOL:
         if not timeline_visible():
             return
         PLAYER().seek_frame(frame)

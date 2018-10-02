@@ -484,7 +484,7 @@ class TLineKeyFrameEditor:
         cr.set_source_rgb(*CURVE_COLOR)
         cr.set_line_width(1.0)
         
-        # Draw value cirves,they need to clipped into edit area
+        # Draw value curves,they need to be clipped into edit area
         cr.save()
         cr.set_line_width(2.0)
         ex, ey, ew, eh = self._get_edit_area_rect()
@@ -499,7 +499,7 @@ class TLineKeyFrameEditor:
         cr.stroke()
         cr.restore()
         
-        # Draw out-of-range kf icons kf counts
+        # Draw out-of-range kf icons and kf counts
         if w > 55: # dont draw on too small editors
             before_kfs = len(self.get_out_of_range_before_kfs())
             after_kfs = len(self.get_out_of_range_after_kfs())
@@ -525,6 +525,7 @@ class TLineKeyFrameEditor:
         cr.line_to(panel_pos, h - 13)
         cr.stroke()
 
+        # Draw title
         if w > 165: # dont draw on too small editors
             if self.edit_type == VOLUME_KF_EDIT:
                 text = self.volume_kfs_text
@@ -687,10 +688,24 @@ class TLineKeyFrameEditor:
             return
             
         # Handle clip range mouse events
-        self.drag_on = True
+        self.drag_on = True # ??!? not needed here?
 
         lx = self._legalize_x(event.x)
         ly = self._legalize_y(event.y)
+        
+        if event.button == 3:
+            self.current_mouse_action = POSITION_DRAG
+            frame = self._get_drag_frame(lx)
+            self.current_clip_frame = frame
+            self.clip_editor_frame_changed(self.current_clip_frame)
+
+            self.drag_start_x = event.x
+            self.drag_min = self.clip_in
+            self.drag_max = self.clip_in + self.clip_length
+                
+            updater.repaint_tline()
+            return
+            
         hit_kf = self._key_frame_hit(lx, ly)
 
         if hit_kf == None: # nothing was hit, add new keyframe and set it active
@@ -717,6 +732,7 @@ class TLineKeyFrameEditor:
                 self.drag_max = next_frame - 1
             except:
                 self.drag_max = self.clip_length
+                
         updater.repaint_tline()
 
     def motion_notify_event(self, x, y, state):
@@ -727,8 +743,10 @@ class TLineKeyFrameEditor:
         ly = self._legalize_y(y)
         
         if self.current_mouse_action == POSITION_DRAG:
-            self._set_clip_frame(lx)
+            frame = self._get_drag_frame(lx)
+            self.current_clip_frame = frame
             self.clip_editor_frame_changed(self.current_clip_frame)
+            updater.repaint_tline()
         elif self.current_mouse_action == KF_DRAG or self.current_mouse_action == KF_DRAG_FRAME_ZERO_KF:
             frame = self._get_drag_frame(lx)
             if self.current_mouse_action == KF_DRAG_FRAME_ZERO_KF:
@@ -749,9 +767,10 @@ class TLineKeyFrameEditor:
         ly = self._legalize_y(y)
         
         if self.current_mouse_action == POSITION_DRAG:
-            self._set_clip_frame(lx)
+            frame = self._get_drag_frame(lx)
+            self.current_clip_frame = frame
             self.clip_editor_frame_changed(self.current_clip_frame)
-            self.update_slider_value_display(self.current_clip_frame)
+            updater.repaint_tline()
         elif self.current_mouse_action == KF_DRAG or self.current_mouse_action == KF_DRAG_FRAME_ZERO_KF:
             frame = self._get_drag_frame(lx)
             if self.current_mouse_action == KF_DRAG_FRAME_ZERO_KF:
@@ -1098,8 +1117,6 @@ class TLineKeyFrameEditor:
     # ------------------------------------------------------ original parent editor stuff
     def clip_editor_frame_changed(self, clip_frame):
         self.seek_tline_frame(clip_frame)
-        #self.buttons_row.set_frame(clip_frame)
-        pass
 
     def seek_tline_frame(self, clip_frame):
         PLAYER().seek_frame(self.clip_tline_pos + clip_frame - self.clip_in)
