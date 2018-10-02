@@ -350,7 +350,6 @@ def kftool_mode_from_popup_menu(clip, track, edit_type):
     stop_looping()
     current_sequence().clear_hidden_track()
 
-    # Box tool is implemeted as sub mode of OVERWRITE_MOVE
     kftoolmode.enter_mode = editorstate.edit_mode 
     editorstate.edit_mode = editorstate.KF_TOOL
         

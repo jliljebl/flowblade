@@ -63,7 +63,7 @@ KF_Y = 5
 CENTER_LINE_Y = 11
 POS_ENTRY_W = 38
 POS_ENTRY_H = 20
-KF_HIT_WIDTH = 4
+KF_HIT_WIDTH = 8
 KF_DRAG_THRESHOLD = 3
 
 # Colors
@@ -154,6 +154,11 @@ def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT):
         
     tlinewidgets.set_edit_mode_data(edit_data)
     updater.repaint_tline()
+
+def update_clip_frame(tline_frame):
+    if _kf_editor != None and edit_data != None and edit_data["initializing"] != True:
+        clip_frame = tline_frame - edit_data["clip_start_in_timeline"]
+        _kf_editor.set_and_display_clip_frame(clip_frame)
 
 def _get_volume_editable_property(clip, track, clip_index):
     return _get_multipart_keyframe_ep_from_service(clip, track, clip_index, "volume")
@@ -524,8 +529,8 @@ class TLineKeyFrameEditor:
             panel_pos = END_PAD
         cr.set_line_width(1.0)
         cr.set_source_rgb(*FRAME_SCALE_LINES_BRIGHT)
-        cr.move_to(panel_pos, 0 + 13)
-        cr.line_to(panel_pos, h - 13)
+        cr.move_to(panel_pos, ey - 8)
+        cr.line_to(panel_pos, ey + eh + 8)
         cr.stroke()
 
         # Draw title

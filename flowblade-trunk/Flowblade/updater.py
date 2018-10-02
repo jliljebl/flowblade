@@ -36,6 +36,7 @@ from editorstate import PLAYER
 from editorstate import PROJECT
 from editorstate import timeline_visible
 import editorpersistance
+import kftoolmode
 import monitorevent
 import utils
 import respaths
@@ -574,6 +575,8 @@ def update_frame_displayers(frame):
     norm_pos = frame / float(producer_length) 
     gui.pos_bar.set_normalized_pos(norm_pos)
 
+    kftoolmode.update_clip_frame(frame)
+    
     gui.tline_scale.widget.queue_draw()
     gui.tline_canvas.widget.queue_draw()
     gui.big_tc.queue_draw()
