@@ -25,6 +25,7 @@ from gi.repository import Pango, PangoCairo, Gtk
 
 import cairo
 
+import appconsts
 import cairoarea
 import edit
 from editorstate import current_sequence
@@ -121,6 +122,11 @@ def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT):
                  "track":track,
                  "initializing":True}
 
+    # Always brightness keyframes for media types that contain no audio.
+    if edit_data["clip"].media_type != appconsts.VIDEO or  edit_data["clip"].media_type != appconsts.AUDIO:
+         edit_type = BRIGHTNESS_KF_EDIT
+    
+    # Init for edit type
     if edit_type == VOLUME_KF_EDIT:
         ep = _get_volume_editable_property(clip, track, clip_index)
         if ep == None:
@@ -309,6 +315,7 @@ def _tline_overlay(cr):
     clip = track.clips[edit_data["clip_index"]]
     cx_end = tlinewidgets._get_frame_x(track.clip_start(edit_data["clip_index"]) + clip.clip_out - clip.clip_in + 1)  # +1 because out inclusive
     
+    # Get y position for clip's track
     ty_bottom = tlinewidgets._get_track_y(1) + current_sequence().tracks[1].height
     ty_top = tlinewidgets._get_track_y(len(current_sequence().tracks) - 2) - 6 # -6 is hand correction, no idea why the math isn't getting correct pos top most track
     ty_top_bottom_edge = ty_top + EDIT_AREA_HEIGHT
@@ -317,12 +324,10 @@ def _tline_overlay(cr):
     ty = ty_bottom - ty_off
     cy_start = ty - EDIT_AREA_HEIGHT
 
+    # Set draw params and draw
     _kf_editor.set_allocation(cx_start, cy_start, cx_end - cx_start, EDIT_AREA_HEIGHT)
     _kf_editor.source_track_center = tlinewidgets._get_track_y(track.id) + current_sequence().tracks[track.id].height / 2.0
     _kf_editor.draw(cr)
-
-
-
 
 
 # ----------------------------------------------------- editor objects
@@ -1041,19 +1046,21 @@ class TLineKeyFrameEditor:
         menu = hamburger_menu
         guiutils.remove_children(menu)
 
-        edit_volume = self._get_menu_item(_("Edit Volume Keyframes"), self._oor_menu_item_activated, "edit_volume" )
-        if self.edit_type == VOLUME_KF_EDIT:
-            edit_volume.set_sensitive(False)
-        menu.add(edit_volume)
+        if edit_data["track"].type == appconsts.VIDEO:
+            if edit_data["clip"].media_type == appconsts.VIDEO:
+                edit_volume = self._get_menu_item(_("Edit Volume Keyframes"), self._oor_menu_item_activated, "edit_volume" )
+                if self.edit_type == VOLUME_KF_EDIT:
+                    edit_volume.set_sensitive(False)
+                menu.add(edit_volume)
 
-        edit_volume = self._get_menu_item(_("Edit Brightness Keyframes"), self._oor_menu_item_activated, "edit_brightness" )
-        if self.edit_type == BRIGHTNESS_KF_EDIT:
-            edit_volume.set_sensitive(False)
-        menu.add(edit_volume)
+                edit_brightness = self._get_menu_item(_("Edit Brightness Keyframes"), self._oor_menu_item_activated, "edit_brightness" )
+                if self.edit_type == BRIGHTNESS_KF_EDIT:
+                    edit_brightness.set_sensitive(False)
+                menu.add(edit_brightness)
 
-        sep = Gtk.SeparatorMenuItem()
-        sep.show()
-        menu.add(sep)
+            sep = Gtk.SeparatorMenuItem()
+            sep.show()
+            menu.add(sep)
 
         leading_menu_item = Gtk.MenuItem(_("Leading Keyframes"))
         leading_menu = Gtk.Menu()
