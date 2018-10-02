@@ -123,7 +123,7 @@ def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT):
                  "initializing":True}
 
     # Always brightness keyframes for media types that contain no audio.
-    if edit_data["clip"].media_type != appconsts.VIDEO or  edit_data["clip"].media_type != appconsts.AUDIO:
+    if not(edit_data["clip"].media_type == appconsts.VIDEO or edit_data["clip"].media_type != appconsts.AUDIO):
          edit_type = BRIGHTNESS_KF_EDIT
     
     # Init for edit type
@@ -1011,8 +1011,9 @@ class TLineKeyFrameEditor:
         before_kfs = len(self.get_out_of_range_before_kfs())
 
         if before_kfs == 0:
-            # hit detection is active even if the kf icon is not displayed
-            return
+            item = self._get_menu_item(_("No Edit Actions currently available"), self._oor_menu_item_activated, "noop" )
+            item.set_sensitive(False)
+            menu.add(item)
 
         if before_kfs > 1:
             menu.add(self._get_menu_item(_("Delete all but first Keyframe before Clip Range"), self._oor_menu_item_activated, "delete_all_before" ))
@@ -1020,12 +1021,9 @@ class TLineKeyFrameEditor:
             sep.show()
             menu.add(sep)
 
-        if len(self.keyframes) > 1:
+        if len(self.keyframes) > 1 and before_kfs > 0:
             menu.add(self._get_menu_item(_("Set Keyframe at Frame 0 to value of next Keyframe"), self._oor_menu_item_activated, "zero_next" ))
-        elif before_kfs == 1:
-            item = self._get_menu_item(_("No Edit Actions currently available"), self._oor_menu_item_activated, "noop" )
-            item.set_sensitive(False)
-            menu.add(item)
+
 
     def _show_oor_after_menu(self, widget, event):
         menu = oor_before_menu
