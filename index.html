@@ -1,7 +1,14 @@
  <!DOCTYPE html>
+ <!DOCTYPE html>
 <html class="client-nojs" lang="ru" dir="ltr">
-<head>
 <meta charset="UTF-8"/>
+<head>
+<link href="http://fonts.googleapis.com/css?family=Coming+Soon|Ubuntu" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="style-slider.css"/>
+<script src="ism-2.2.min.js"></script>
+</head>
+<body>
+<div class='container'>
 	<title>Flowblade - Бесплатный и легковесный видеоредактор</title>
 	<link rel="stylesheet" href="style.css">
 	<script src="jquery.js"></script> 
@@ -15,144 +22,72 @@
 		$("#includedFooter").load("footer.html"); 
 		});
 	</script> 
-</head>
+	<div id="includedHeader"></div>
 
-<body>
-
-<!-- Header -->
-
-<div id="includedHeader"></div>
-
-<!-- hero image -->
-
-<div id ="hero-box">
-<img id ="hero-img-box" src="webres/flowblade_text_FINAL_WHITE_with_icon_2.png">
-<p id ="hero-text-box">Бесплатный и легковесный видеоредактор</p>
+<div class="ism-slider" data-interval="10000" data-radios="false" data-radio_type="thumbnail" id="flowblade-slider">
+  <ol>
+    <li>
+      <img src="webres/slide1.png">
+      <div class="ism-caption ism-caption-0">Быстрый, точный, стабильный</div>
+      <div class="ism-caption ism-caption-1" data-delay='200'>Flowblade - многодорожечный нелинейный видеоредактор, выпущенный под лицензией GPL3. Поможет, как новичку, так и опытному пользователю воплотить в жизнь свои творческие идеи, по созданию видеороликов.</div>
+    </li>
+    <li>
+      <img src="webres/slide2.png">
+      <div class="ism-caption ism-caption-0">Поддерживает все кодеки</div>
+      <div class="ism-caption ism-caption-1" data-delay='200'>Flowblade поддерживает все кодеки, которые в целом могут быть доступны в системе Linux, так как, он работает в качестве интерфейса для библиотеки FFMPEG. При запуске в терминале, мы видим сообщение о том, что для работы, нам доступны: 165 форматов, 99 видеокодеков и 73 звуковых кодеков.</div>
+    </li>
+    <li>
+      <img src="webres/slide3.png">
+      <div class="ism-caption ism-caption-0">Содержит полезные инструменты</div>
+      <div class="ism-caption ism-caption-1">Набор стандартных инструментов редактирования в сочетании с принятой в Flowblade концепцией постоянной вставки или «магнитного монтажного стола», как называют некоторые, облегчают добавление, перемещение и обрезку клипов.</div>
+    </li>
+    <li>
+      <img src="webres/slide4.png">
+      <div class="ism-caption ism-caption-0">Композиторы и эффекты</div>
+      <div class="ism-caption ism-caption-1">Объединяйте и смешивайте видео, изображения и звук с помощью мощных инструментов. Тонируйте видеоролики в соответствии с вашим видением и изменяйте звук, для получения того настроения, которое вы хотите передать.</div>
+    </li>
+    <li>
+      <img src="webres/slide5.png">
+      <div class="ism-caption ism-caption-0">Инструмент Эффекты G'MIC</div>
+      <div class="ism-caption ism-caption-1" href="" target="_self">G'MIC - это мощная технология фильтрации изображений с открытым исходным кодом, которую Flowblade предоставляет в виде отдельного инструмента. Смотрите демонстрационное <a href="https://vimeo.com/157364651">видео</a>.</a>
+    </li>
+    <li>
+      <img src="webres/slide6.png">
+      <div class="ism-caption ism-caption-0">Синхронизация</div>
+      <div class="ism-caption ism-caption-1">Синхронизируйте ваши видеоклипы со звуковыми клипами или с клипами на других дорожках. Если синхронизация нарушена,  можно легко синхронизировать их повторно.</div>
+    </li>
+    <li>
+      <img src="webres/slide7.png">
+      <div class="ism-caption ism-caption-0">Режим прокси</div>
+      <div class="ism-caption ism-caption-1">Если у вас слабый компьютер, слишком медленный внешний накопитель или видеоролики храняться на сетевом сервере, для комфортного редактирования, вы всегда можете выбрать Режим прокси.</div>
+    </li>
+    <li>
+      <img src="webres/slide8.png">
+      <div class="ism-caption ism-caption-0">Заключение</div>
+      <div class="ism-caption ism-caption-1">В этом слайд-шоу представленны только основные возможности, а их количество растёт с каждым релизом, поэтому перечислять их все не имеет смысла. Но есть смысл установить Flowblade на свой компьютер и попробовать все возможности в деле.</div>
+    </li>
+  </ol>
 </div>
 
-<!-- row  -->
 
+
+<!-- row  -->
 <div class="black-bg" >
 <div class="content-box">
 
 <div class="front-text">
-Быстрый, точный, стабильный
-</div>
 
-<p class="centered-text-normal">
-Flowblade - многодорожечный нелинейный видеоредактор, выпущенный под лицензией <b>GPL3</b>. Flowblade поможет, как новичку, так и опытному пользователю воплотить свои творческие идеи, по созданию видеороликов в жизнь.
-</p>
-
-
-<img src="webres/computer.jpg" width="500px" class="centered-block paddingtop">
-
-
-</div>
-</div>
-
-<!-- row  -->
-<div class="black-bg" >
-<div class="content-box">
-
-<div class="front-text">
-Поддержка всех кодеков
-</div>
-
-<p class="centered-text-normal">
-Flowblade поддерживает все кодеки, которые в целом могут быть доступны в системе Linux, так как, он работает в качестве интерфейса для библиотеки FFMPEG. При запуске в терминале, мы видим сообщение о том, что для работы, нам доступны: 161 формат, 94 видеокодека и 70 звуковых кодеков.
-</p>
-
-</div>
-</div>
-
-<!-- row  -->
-
-<div class="black-bg" >
-<div class="content-box">
-
-<div class="front-text">
-Расширенный рабочий процесс монтажного стола
 </div>
 
 <div class="column-wrap">
 
 <div class="column2">
-<p class="centered-text-normal">
-Набор стандартных средств редактирования в сочетании с принятой в Flowblade концепцией постоянной вставки - или «магнитного монтажного стола», как называют некоторые, - облегчают добавление, перемещение и обрезку клипов.
-</p>
-</div>
 
-<div class="column2">
-<img src="webres/cursors.png" height="155px">
-</div>
-
-<div class="clearfix"/>
-
-</div>
-
-</div>
-</div>
-
-<!-- row  -->
-<div class="black-bg" >
-<div class="content-box">
-
-<div class="front-text">
-Композит, смешение, эффекты, анимация
-</div>
-
-<div class="column-wrap">
-
-<div class="column2">
-<img src="webres/compositing_tools.png" height="135px">
-</div>
-
-<div class="column2">
-<p class="centered-text-normal">
-Объединяйте и смешивайте видео, изображения и звук с помощью мощных инструментов. Тонируйте видеоролики в соответствии с вашим видением и изменяйте звук, для получения того настроения, которое вы хотите выразить.
-</p>
-</div>
-
-<div class="clearfix"/>
-
-</div>
-</div>
-
-
-<!-- row  -->
-<div class="black-bg" >
-<div class="content-box">
-
-<div class="front-text">
-Инструмент G'MIC
-</div>
-
-<p class="centered-text-normal">
-G'MIC - это мощная технология фильтрации изображений с открытым исходным кодом, которую Flowblade предоставляет в виде отдельного инструмента. Смотрите демонстрационное <a href="https://vimeo.com/157364651">видео</a>.
-</p>
-
-</div>
-</div>
-
-<!-- row  -->
-<div class="black-bg" >
-<div class="content-box">
-
-<div class="front-text">
-Скриншоты
-</div>
-
-<div class="column-wrap">
-
-<div class="column2">
-<a href="https://raw.githubusercontent.com/jliljebl/flowblade/master/flowblade-trunk/docs/Screenshot-1-4-dark.png">
-<img src="webres/Screenshot-1-4-dark.jpg" height="190px" >
 </a>
 </div>
 
 <div class="column2">
-<a href="https://raw.githubusercontent.com/jliljebl/flowblade/master/flowblade-trunk/docs/Screenshot-0-18.png">
-<img src="webres/Screenshot-0-18.jpg" height="190px">
+
 </a>
 </div>
 
@@ -192,4 +127,3 @@ G'MIC - это мощная технология фильтрации изобр
 <!-- end content -->
 </body>
 </html> 
-
