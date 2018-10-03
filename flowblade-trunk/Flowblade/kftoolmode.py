@@ -1094,14 +1094,24 @@ class TLineKeyFrameEditor:
 
     def _build_oor_after_menu(self, menu):
         guiutils.remove_children(menu)
-        after_kfs = self.get_out_of_range_after_kfs()
-        
+        after_kfs = len(self.get_out_of_range_after_kfs())
+
         if after_kfs == 0:
-            # hit detection is active even if the kf icon is not displayed
+            item = self._get_menu_item(_("No Edit Actions currently available"), self._oor_menu_item_activated, "noop" )
+            item.set_sensitive(False)
+            menu.add(item)
             return
 
-        menu.add(self._get_menu_item(_("Delete all Keyframes after Clip Range"), self._oor_menu_item_activated, "delete_all_after" ))
-        
+        if self.edit_type == BRIGHTNESS_KF_EDIT:
+            menu.add(self._get_menu_item(_("Delete all Keyframes after Clip Range"), self._oor_menu_item_activated, "delete_all_after" ))
+        elif self.edit_type == VOLUME_KF_EDIT:
+            if after_kfs > 1:
+                menu.add(self._get_menu_item(_("Delete all but last Keyframe after Clip Range"), self._oor_menu_item_activated, "delete_all_but_last_after" ))
+            else:
+                item = self._get_menu_item(_("No Edit Actions currently available"), self._oor_menu_item_activated, "noop" )
+                item.set_sensitive(False)
+                menu.add(item)
+
     def _show_hamburger_menu(self, widget, event):
         menu = hamburger_menu
         guiutils.remove_children(menu)
