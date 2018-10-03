@@ -1177,6 +1177,21 @@ class TLineKeyFrameEditor:
                         keep_doing = False 
                 except:
                     keep_doing = False
+        
+        elif data == "delete_all_but_last_after":
+        
+            keep_doing = True
+            index = 1
+            while keep_doing:
+                try:
+                    frame, value = self.keyframes[index]
+                    if frame > self.clip_in + self.clip_length and index < (len(self.keyframes) - 1):
+                        self.keyframes.pop(index)
+                    else:
+                        index += 1
+                except:
+                    keep_doing = False
+                    
         elif data == "zero_next":
             frame_zero, frame_zero_value = self.keyframes[0]
             frame, value = self.keyframes[1]
