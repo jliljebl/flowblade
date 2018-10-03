@@ -368,6 +368,10 @@ class TLineKeyFrameEditor:
         self.frame_scale = tlinewidgets.KFToolFrameScale(FRAME_SCALE_LINES)
         
         self.source_track_center = 0 # set externally
+
+        self.edit_value = None
+        self.mouse_x = -1
+        self.mouse_y = -1
         
         self.media_frame_txt = _("Media Frame: ")
         self.volume_kfs_text = _("Volume Keyframes")
@@ -564,7 +568,11 @@ class TLineKeyFrameEditor:
                 text = self.brightness_kfs_text
             self._draw_text(cr, text, -1, y + 4, True, x, w)
             self._draw_text(cr, self.media_frame_txt + str(self.current_clip_frame), -1, kfy - 8, True, x, w)
-            
+
+        # Value value info
+        if self.edit_value != None:
+            self._draw_value_text_box(cr, self.mouse_x,self.mouse_y, str(self.edit_value))
+    
     def _draw_edit_area_borders(self, cr):
         x, y, w, h = self._get_edit_area_rect()
         cr.set_source_rgb(*FRAME_SCALE_LINES)
@@ -683,7 +691,39 @@ class TLineKeyFrameEditor:
         cr.set_source_rgb(*FRAME_SCALE_LINES_BRIGHT)
         PangoCairo.update_layout(cr, layout)
         PangoCairo.show_layout(cr, layout)
-        
+
+    def _draw_value_text_box(self, cr, x, y, text):
+        x = int(x)
+        y = int(y)
+        cr.set_source_rgb(1, 1, 1)
+        cr.select_font_face ("sans-serif",
+                         cairo.FONT_SLANT_NORMAL,
+                         cairo.FONT_WEIGHT_NORMAL)
+        cr.set_font_size(13)
+
+        x_bearing, y_bearing, width, height, x_advance, y_advance = cr.text_extents(text)
+
+        x1 = x - 3.5
+        y1 = y + 4.5
+        x2 = x + width + 5.5
+        y2 = y - height - 4.5
+
+        cr.move_to(x1, y1)
+        cr.line_to(x1, y2)
+        cr.line_to(x2, y2)
+        cr.line_to(x2, y1)
+        cr.close_path()
+        cr.set_source_rgb(0.1, 0.1, 0.1)
+        cr.fill_preserve()
+
+        cr.set_line_width(1.0)
+        cr.set_source_rgb(0.7, 0.7, 0.7)
+        cr.stroke()
+
+        cr.move_to(x, y)
+        cr.set_source_rgb(0.8, 0.8, 0.8)
+        cr.show_text(text) 
+    
     def get_clip_kfs_and_positions(self):
         kf_positions = []
         for i in range(0, len(self.keyframes)):
@@ -723,17 +763,20 @@ class TLineKeyFrameEditor:
 
         lx = self._legalize_x(event.x)
         ly = self._legalize_y(event.y)
-        
+
+        self.mouse_x = lx
+        self.mouse_y = ly
+
         if event.button == 3:
             self.current_mouse_action = POSITION_DRAG
+            
+            self.drag_min = self.clip_in
+            self.drag_max = self.clip_in + self.clip_length
+            
             frame = self._get_drag_frame(lx)
             self.current_clip_frame = frame
             self.clip_editor_frame_changed(self.current_clip_frame)
-
-            self.drag_start_x = event.x
-            self.drag_min = self.clip_in
-            self.drag_max = self.clip_in + self.clip_length
-                
+            
             updater.repaint_tline()
             return
             
@@ -748,13 +791,12 @@ class TLineKeyFrameEditor:
             self.active_kf_index = hit_kf
             
         frame, value = self.keyframes[hit_kf]
+        self.edit_value = value
         self.current_clip_frame = frame
         if hit_kf == 0:
             self.current_mouse_action = KF_DRAG_FRAME_ZERO_KF
         else:
             self.current_mouse_action = KF_DRAG
-            
-            self.drag_start_x = event.x
             
             prev_frame, val = self.keyframes[hit_kf - 1]
             self.drag_min = prev_frame  + 1
@@ -772,6 +814,9 @@ class TLineKeyFrameEditor:
         """
         lx = self._legalize_x(x)
         ly = self._legalize_y(y)
+
+        self.mouse_x = lx
+        self.mouse_y = ly
         
         if self.current_mouse_action == POSITION_DRAG:
             frame = self._get_drag_frame(lx)
@@ -782,7 +827,8 @@ class TLineKeyFrameEditor:
             frame = self._get_drag_frame(lx)
             if self.current_mouse_action == KF_DRAG_FRAME_ZERO_KF:
                 frame = 0
-            value = self._get_value_for_panel_y(ly)
+            value = round(self._get_value_for_panel_y(ly))
+            self.edit_value = value
             self.set_active_kf_frame_and_value(frame, value)
             if _playhead_follow_kf == True:
                 self.current_clip_frame = frame
@@ -796,6 +842,11 @@ class TLineKeyFrameEditor:
         """
         lx = self._legalize_x(x)
         ly = self._legalize_y(y)
+
+        self.mouse_x = lx
+        self.mouse_y = ly
+
+        self.edit_value = None
         
         if self.current_mouse_action == POSITION_DRAG:
             frame = self._get_drag_frame(lx)
@@ -806,7 +857,7 @@ class TLineKeyFrameEditor:
             frame = self._get_drag_frame(lx)
             if self.current_mouse_action == KF_DRAG_FRAME_ZERO_KF:
                 frame = 0
-            value = self._get_value_for_panel_y(ly)
+            value = round(self._get_value_for_panel_y(ly))
             self.set_active_kf_frame_and_value(frame, value)
             if _playhead_follow_kf == True:
                 self.current_clip_frame = frame
