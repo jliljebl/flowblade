@@ -91,6 +91,8 @@ POSITION_DRAG = 1
 KF_DRAG_DISABLED = 2
 KF_DRAG_FRAME_ZERO_KF = 3
 
+DRAG_MIN_Y = 4 # to make strt value slightly macnetic, makes easier to move position without changing value
+
 hamburger_menu = Gtk.Menu()
 oor_before_menu = Gtk.Menu()
 oor_after_menu = Gtk.Menu()
@@ -378,7 +380,6 @@ class TLineKeyFrameEditor:
         self.brightness_kfs_text = _("Brightness Keyframes")
         
         self.current_mouse_action = None
-        self.drag_on = False # Used to stop updating pos here if pos change is initiated here.
         self.drag_min = -1
         self.drag_max = -1
 
@@ -757,12 +758,12 @@ class TLineKeyFrameEditor:
         if self._hamburger_hit(event.x, event.y) == True:
             self._show_hamburger_menu(gui.tline_canvas.widget, event)
             return
-            
-        # Handle clip range mouse events
-        self.drag_on = True # ??!? not needed here?
 
         lx = self._legalize_x(event.x)
         ly = self._legalize_y(event.y)
+
+        self.value_drag_on = False
+        self.mouse_start_y = ly
 
         self.mouse_x = lx
         self.mouse_y = ly
@@ -815,6 +816,9 @@ class TLineKeyFrameEditor:
         lx = self._legalize_x(x)
         ly = self._legalize_y(y)
 
+        if abs(self.mouse_start_y - ly) > DRAG_MIN_Y:
+            self.value_drag_on = True
+
         self.mouse_x = lx
         self.mouse_y = ly
         
@@ -827,9 +831,12 @@ class TLineKeyFrameEditor:
             frame = self._get_drag_frame(lx)
             if self.current_mouse_action == KF_DRAG_FRAME_ZERO_KF:
                 frame = 0
-            value = round(self._get_value_for_panel_y(ly))
-            self.edit_value = value
-            self.set_active_kf_frame_and_value(frame, value)
+            if self.value_drag_on == True:
+                value = round(self._get_value_for_panel_y(ly))
+                self.edit_value = value
+                self.set_active_kf_frame_and_value(frame, value)
+            else:
+                self.set_active_kf_frame_and_value(frame, self.edit_value)
             if _playhead_follow_kf == True:
                 self.current_clip_frame = frame
                 self.clip_editor_frame_changed(self.current_clip_frame)
@@ -843,11 +850,12 @@ class TLineKeyFrameEditor:
         lx = self._legalize_x(x)
         ly = self._legalize_y(y)
 
+        if abs(self.mouse_start_y - ly) < DRAG_MIN_Y:
+            value_drag_on = True
+            
         self.mouse_x = lx
         self.mouse_y = ly
 
-        self.edit_value = None
-        
         if self.current_mouse_action == POSITION_DRAG:
             frame = self._get_drag_frame(lx)
             self.current_clip_frame = frame
@@ -857,18 +865,21 @@ class TLineKeyFrameEditor:
             frame = self._get_drag_frame(lx)
             if self.current_mouse_action == KF_DRAG_FRAME_ZERO_KF:
                 frame = 0
-            value = round(self._get_value_for_panel_y(ly))
-            self.set_active_kf_frame_and_value(frame, value)
+            if self.value_drag_on == True:
+                value = round(self._get_value_for_panel_y(ly))
+                self.set_active_kf_frame_and_value(frame, value)
+            else:
+                self.set_active_kf_frame_and_value(frame, self.edit_value)
             if _playhead_follow_kf == True:
                 self.current_clip_frame = frame
                 self.clip_editor_frame_changed(self.current_clip_frame)
             self.update_property_value()
             self.update_slider_value_display(frame)   
 
+        self.edit_value = None
+        
         updater.repaint_tline()
         self.current_mouse_action = None
-        
-        self.drag_on = False
         
     def _legalize_x(self, x):
         """
