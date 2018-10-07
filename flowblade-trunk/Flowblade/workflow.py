@@ -238,6 +238,7 @@ def _get_workflow_tool_menu_item(callback, tool_id, tool_name, tool_icon_file, p
     #hbox.set_sensitive(tool_active)
     item = Gtk.MenuItem()
     item.add(hbox)
+    item.set_tooltip_markup(_TOOL_TIPS[tool_id])
     item.show()
     
     item.set_submenu(_get_workflow_tool_submenu(callback, tool_id, position))

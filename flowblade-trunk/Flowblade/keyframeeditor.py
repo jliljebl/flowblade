@@ -505,6 +505,9 @@ class ClipKeyFrameEditor:
         self.active_kf_index += 1
         if self.active_kf_index > (len(self.keyframes) - 1):
             self.active_kf_index = len(self.keyframes) - 1
+        
+        if self.active_kf_index > (len(self.keyframes) - 1 - len(self.get_out_of_range_after_kfs())):
+            self.active_kf_index = (len(self.keyframes) - 1 - len(self.get_out_of_range_after_kfs()))
         self._set_pos_to_active_kf()
         
     def set_prev_active(self):
@@ -514,6 +517,10 @@ class ClipKeyFrameEditor:
         self.active_kf_index -= 1
         if self.active_kf_index < 0:
             self.active_kf_index = 0
+            
+        if self.active_kf_index < len(self.get_out_of_range_before_kfs()):
+            self.active_kf_index = len(self.get_out_of_range_before_kfs())
+
         self._set_pos_to_active_kf()
     
     def _set_pos_to_active_kf(self):
