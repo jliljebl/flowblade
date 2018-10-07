@@ -19,8 +19,6 @@
 """
 
 """
-Handles or passes on mouse edit events from timeline.
-
 Handles edit mode setting.
 """
 

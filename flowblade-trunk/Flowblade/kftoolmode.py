@@ -805,7 +805,7 @@ class TLineKeyFrameEditor:
                 next_frame, val = self.keyframes[hit_kf + 1]
                 self.drag_max = next_frame - 1
             except:
-                self.drag_max = self.clip_length
+                self.drag_max = self.clip_in + self.clip_length
                 
         updater.repaint_tline()
 

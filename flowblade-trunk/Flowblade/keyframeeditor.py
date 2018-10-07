@@ -306,7 +306,7 @@ class ClipKeyFrameEditor:
         """
         Mouse button callback
         """
-        # Chcek if kf icon before or after clip range have been pressed
+        # Check if kf icon before or after clip range have been pressed
         if self.oor_start_kf_hit(event.x, event.y):
             self._show_oor_before_menu(self.widget, event)
             return
@@ -326,7 +326,7 @@ class ClipKeyFrameEditor:
             self._set_clip_frame(lx)
             self.parent_editor.clip_editor_frame_changed(self.current_clip_frame)
             self.widget.queue_draw()
-        else: # some keyframe was pressed
+        else: # some keyframe was pressed         
             self.active_kf_index = hit_kf
             frame, value = self.keyframes[hit_kf]
             self.current_clip_frame = frame
@@ -344,9 +344,10 @@ class ClipKeyFrameEditor:
                     next_frame, val = self.keyframes[hit_kf + 1]
                     self.drag_max = next_frame - 1
                 except:
-                    self.drag_max = self.clip_length
-            self.widget.queue_draw()
+                    self.drag_max = self.clip_in + self.clip_length
 
+            self.widget.queue_draw()
+            
     def _motion_notify_event(self, x, y, state):
         """
         Mouse move callback
@@ -482,8 +483,8 @@ class ClipKeyFrameEditor:
         self.keyframes.append((frame, prev_value))
         self.active_kf_index = len(self.keyframes) - 1
 
-    def print_keyframes(self):
-        print "clip edit keyframes:"
+    def print_keyframes(self, msg="no_msg"):
+        print msg, "clip edit keyframes:"
         for i in range(0, len(self.keyframes)):
             print self.keyframes[i]
         
@@ -617,7 +618,6 @@ class ClipKeyFrameEditor:
         elif data == "zero_next":
             frame_zero, frame_zero_value = self.keyframes[0]
             frame, value = self.keyframes[1]
-            print value
             self.keyframes.pop(0)
             self.keyframes.insert(0, (frame_zero, value))
             self.parent_editor.update_property_value()
