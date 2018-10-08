@@ -39,13 +39,13 @@ import respaths
 import tlinewidgets
 import updater
 
-CLOSE_ICON = None
+# Icons
 HAMBURGER_ICON = None
 ACTIVE_KF_ICON = None
 NON_ACTIVE_KF_ICON = None
 
-CLIP_EDITOR_WIDTH = 250 
-CLIP_EDITOR_HEIGHT = 21
+# Draw params
+EDIT_AREA_HEIGHT = 200
 END_PAD = 8
 TOP_PAD = 23
 HEIGHT_PAD_PIXELS_TOTAL = 44
@@ -58,12 +58,7 @@ KF_ICON_Y_PAD = -6
 KF_TEXT_PAD = -6
 KF_LOWER_OFF = 11
 
-BUTTON_WIDTH = 26
-BUTTON_HEIGHT = 24
-KF_Y = 5
-CENTER_LINE_Y = 11
-POS_ENTRY_W = 38
-POS_ENTRY_H = 20
+# Kf edit params
 KF_HIT_WIDTH = 8
 KF_DRAG_THRESHOLD = 3
 
@@ -74,12 +69,8 @@ LIGHT_MULTILPLIER = 1.14
 DARK_MULTIPLIER = 0.74
 FRAME_SCALE_LINES = (0.07, 0.22, 0.07)
 FRAME_SCALE_LINES_BRIGHT = (0.2, 0.6, 0.2)
-
 CURVE_COLOR = (0.71, 0.13, 0.64)
-
 OVERLAY_BG = (0.0, 0.0, 0.0, 0.8)
-OVERLAY_DRAW_COLOR = (0.0, 0.0, 0.0, 0.8)
-EDIT_AREA_HEIGHT = 200
 
 # Edit types
 VOLUME_KF_EDIT = 0
@@ -88,7 +79,7 @@ BRIGHTNESS_KF_EDIT = 1
 # Editor states
 KF_DRAG = 0
 POSITION_DRAG = 1
-KF_DRAG_DISABLED = 2
+KF_DRAG_DISABLED = 2 # Not used currently
 KF_DRAG_FRAME_ZERO_KF = 3
 
 DRAG_MIN_Y = 4 # to make strt value slightly macnetic, makes easier to move position without changing value
@@ -105,9 +96,8 @@ _playhead_follow_kf = True
 
 # -------------------------------------------------- init
 def load_icons():
-    global CLOSE_ICON, HAMBURGER_ICON, ACTIVE_KF_ICON, NON_ACTIVE_KF_ICON
+    global HAMBURGER_ICON, ACTIVE_KF_ICON, NON_ACTIVE_KF_ICON
 
-    CLOSE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "close_match.png")
     HAMBURGER_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger.png")
     ACTIVE_KF_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_active.png")
     NON_ACTIVE_KF_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_not_active.png")    
@@ -282,11 +272,6 @@ def _clip_is_being_edited():
     
     return True
 
-"""
-def _clip_edit_area_hit(x, y):
-    return False
-"""
-
 def _set_no_clip_edit_data():
     # set edit data to reflect that no clip is being edited currently.
     global edit_data, _kf_editor
@@ -299,15 +284,7 @@ def _set_no_clip_edit_data():
 
     tlinewidgets.set_edit_mode_data(edit_data)
 
-"""
-def _init_for_editable_property(editable_property):
-    edit_data["editable_property"] = editable_property
-    adjustment = editable_property.get_input_range_adjustment()
-    edit_data["lower"] = adjustment.get_lower()
-    edit_data["upper"] = adjustment.get_upper()
-"""
-    
-# ----------------------------------------------------------------------- draw
+# ----------------------------------------------------------------------- draw callback from tlinewidgets.py
 def _tline_overlay(cr):
     if _clip_is_being_edited() == False:
         return
@@ -332,20 +309,8 @@ def _tline_overlay(cr):
     _kf_editor.draw(cr)
 
 
-# ----------------------------------------------------- editor objects
+# ----------------------------------------------------- editor object
 class TLineKeyFrameEditor:
-    """
-    GUI component used to add, move and remove keyframes 
-    inside a single clip. It is used as a component inside a parent editor and
-    needs the parent editor to write out keyframe values.
-    
-    Parent editor must implement callback interface:
-        def clip_editor_frame_changed(self, frame)
-        def active_keyframe_changed(self)
-        def keyframe_dragged(self, active_kf, frame)
-        def update_slider_value_display(self, frame)
-        def update_property_value(self)
-    """
 
     def __init__(self, editable_property, use_clip_in, edit_type):
         
@@ -390,84 +355,31 @@ class TLineKeyFrameEditor:
 
         self._set_pos_to_active_kf()
 
+    # ---------------------------------------------------- data in
     def set_keyframes(self, keyframes_str, out_to_in_func):
         self.keyframes = self.keyframe_parser(keyframes_str, out_to_in_func)
-
-    def overlay_area_hit(self, tx, ty):
-        x, y, w, h = self.allocation
-        if tx >= x and tx <= x + w:
-            if ty >= y and ty <= y + h:
-                return True
-        
-        return False
-            
-    def get_kf_info(self):
-        return (self.active_kf_index, len(self.keyframes))
-        
-    def _get_panel_pos(self):
-        return self._get_panel_pos_for_frame(self.current_clip_frame) 
-
-    def _get_panel_pos_for_frame(self, frame):
-        x, y, width, h = self.allocation
-        active_width = width - 2 * END_PAD
-        disp_frame = frame - self.clip_in 
-        return x + END_PAD + int((float(disp_frame) / float(self.clip_length)) * 
-                             active_width)
-
-    def _get_frame_for_panel_pos(self, panel_x):
-        rx, ry, rw, rh = self._get_edit_area_rect()
-        clip_panel_x = panel_x - rx
-        norm_pos = float(clip_panel_x) / float(rw)
-        return int(norm_pos * self.clip_length) + self.clip_in
-
-    def _get_value_for_panel_y(self, panel_y):
-        rx, ry, rw, rh = self._get_edit_area_rect()
-        editable_property = edit_data["editable_property"] 
-        adjustment = editable_property.get_input_range_adjustment()
-        lower = adjustment.get_lower()
-        upper = adjustment.get_upper()
-        value_range = upper - lower
-        pos_fract = (ry + rh - panel_y) / rh
-        return pos_fract * value_range + lower
-        
-    def _get_panel_y_for_value(self, value):
-        editable_property = edit_data["editable_property"] 
-        adjustment = editable_property.get_input_range_adjustment()
-        lower = adjustment.get_lower()
-        upper = adjustment.get_upper()
-        value_range = upper - lower
-        value_fract = (value - lower) / value_range
-        return self._get_lower_y() - (self._get_lower_y() - self._get_upper_y()) * value_fract
-
-    def _get_lower_y(self):
-        x, y, w, h = self.allocation
-        return y + TOP_PAD + h - HEIGHT_PAD_PIXELS_TOTAL
-
-    def _get_upper_y(self):
-        x, y, w, h = self.allocation
-        return  y + TOP_PAD
-    
-    """
-    def _get_center_y(self):
-        l = self._get_lower_y()
-        u = self._get_upper_y()
-        return u + (l - u) / 2
-    """
-
-    def _set_clip_frame(self, panel_x):
-        self.current_clip_frame = self._get_frame_for_panel_pos(panel_x)
-    
-    def move_clip_frame(self, delta):
-        self.current_clip_frame = self.current_clip_frame + delta
-        self._force_current_in_frame_range()
-
-    def set_and_display_clip_frame(self, clip_frame):
-        self.current_clip_frame = clip_frame
-        self._force_current_in_frame_range()
 
     def set_allocation(self, x, y, w, h):
         self.allocation = (x, y, w, h)
 
+    # ------------------------------------------------------ tline seek
+    def clip_editor_frame_changed(self, clip_frame):
+        self.seek_tline_frame(clip_frame)
+
+    def seek_tline_frame(self, clip_frame):
+        PLAYER().seek_frame(self.clip_tline_pos + clip_frame - self.clip_in)
+    
+    # ------------------------------------------------------ value write out
+    def update_property_value(self):
+        edit_data["editable_property"].write_out_keyframes(self.keyframes)
+
+    # ------------------------------------------------------- debug
+    def print_keyframes(self):
+        print "clip edit keyframes:"
+        for i in range(0, len(self.keyframes)):
+            print self.keyframes[i]
+            
+    # ----------------------------------------------------------------- Draw
     def draw(self, cr):
         """
         Callback for repaint from CairoDrawableArea.
@@ -580,13 +492,6 @@ class TLineKeyFrameEditor:
         cr.rectangle(x, y, w, h)
         cr.stroke()
 
-    def _get_edit_area_rect(self):
-        x, y, w, h = self.allocation
-        active_width = w - 2 * END_PAD
-        ly = self._get_lower_y()
-        uy = self._get_upper_y()
-        return (x + END_PAD, uy, active_width - 1, ly - uy)
-        
     def _draw_value_lines(self, cr, x, w):
         # Audio hard coded value lines
         TEXT_X_OFF = 4
@@ -724,23 +629,7 @@ class TLineKeyFrameEditor:
         cr.move_to(x, y)
         cr.set_source_rgb(0.8, 0.8, 0.8)
         cr.show_text(text) 
-    
-    def get_clip_kfs_and_positions(self):
-        kf_positions = []
-        for i in range(0, len(self.keyframes)):
-            frame, value = self.keyframes[i]
 
-            try:
-                kf_pos_x = self._get_panel_pos_for_frame(frame)
-            except ZeroDivisionError: # math fails for 1 frame clip
-                kf_pos_x = END_PAD
-                
-            kf_pos_y = self._get_panel_y_for_value(value)
-            
-            kf_positions.append((self.keyframes[i], frame, i, kf_pos_x, kf_pos_y))
-
-        return kf_positions
-    
     # ----------------------------------------------------------- mouse events
     def press_event(self, event):
         """
@@ -874,39 +763,28 @@ class TLineKeyFrameEditor:
                 self.current_clip_frame = frame
                 self.clip_editor_frame_changed(self.current_clip_frame)
             self.update_property_value()
-            self.update_slider_value_display(frame)   
 
         self.edit_value = None
         
         updater.repaint_tline()
         self.current_mouse_action = None
-        
-    def _legalize_x(self, x):
-        """
-        Get x in pixel range between end pads.
-        """
-        rx, ry, rw, rh = self._get_edit_area_rect()
-        if x < rx:
-            return rx
-        elif x > rx + rw:
-            return rx + rw
-        else:
-            return x
-    
-    def _legalize_y(self, y):
-        rx, ry, rw, rh = self._get_edit_area_rect()
-        if y < ry:
-            return ry
-        elif y > ry + rh:
-            return ry + rh
-        else:
-            return y
 
-    def _force_current_in_frame_range(self):
-        if self.current_clip_frame < self.clip_in:
-            self.current_clip_frame = self.clip_in
-        if self.current_clip_frame > self.clip_in + self.clip_length:
-            self.current_clip_frame = self.clip_in + self.clip_length
+    # --------------------------------------------------------------- keyframes funcs
+    def get_clip_kfs_and_positions(self):
+        kf_positions = []
+        for i in range(0, len(self.keyframes)):
+            frame, value = self.keyframes[i]
+
+            try:
+                kf_pos_x = self._get_panel_pos_for_frame(frame)
+            except ZeroDivisionError: # math fails for 1 frame clip
+                kf_pos_x = END_PAD
+                
+            kf_pos_y = self._get_panel_y_for_value(value)
+            
+            kf_positions.append((self.keyframes[i], frame, i, kf_pos_x, kf_pos_y))
+
+        return kf_positions
 
     def get_out_of_range_before_kfs(self):
         # returns Keyframes before current clip start
@@ -926,53 +804,6 @@ class TLineKeyFrameEditor:
                 kfs.append(self.keyframes[i])
         return kfs
                 
-    def _get_drag_frame(self, panel_x):
-        """
-        Get x in range available for current drag.
-        """
-        frame = self._get_frame_for_panel_pos(panel_x)
-        if frame < self.drag_min:
-            frame = self.drag_min
-        if frame > self.drag_max:
-            frame = self.drag_max
-        return frame
-    
-    def _key_frame_hit(self, x, y):
-        for i in range(0, len(self.keyframes)):
-            frame, val = self.keyframes[i]
-            frame_x = self._get_panel_pos_for_frame(frame)
-            value_y = self._get_panel_y_for_value(val)
-            if((abs(x - frame_x) < KF_HIT_WIDTH)
-                and (abs(y - value_y) < KF_HIT_WIDTH)):
-                return i
-            
-        return None
-
-    def _area_hit(self, tx, ty, x, y, w, h):
-        if ty >= y and ty <= y + h: # 12 icon size
-            if tx >= x and tx <= x + w:
-                return True
-            
-        return False
-        
-    def _oor_start_kf_hit(self, x, y):
-        rx, ry, rw, rh = self.allocation
-        kfy = self._get_lower_y() + KF_LOWER_OFF
-        area_y = kfy + KF_ICON_Y_PAD
-        area_x = rx + OUT_OF_RANGE_ICON_PAD - OUT_OF_RANGE_KF_ICON_HALF * 2
-        return self._area_hit(x, y, area_x, area_y, 12, 12)
-
-    def _oor_end_kf_hit(self, x, y):
-        rx, ry, rw, rh = self.allocation
-        kfy = self._get_lower_y() + KF_LOWER_OFF
-        area_x = rx + rw - OUT_OF_RANGE_ICON_PAD
-        area_y = kfy + KF_ICON_Y_PAD
-        return self._area_hit(x, y, area_x, area_y, 12, 12)
-
-    def _hamburger_hit(self, x, y):
-        rx, ry, rw, rh = self.allocation
-        return self._area_hit(x, y, rx + 4.5, ry + 4, 12, 12)
-        
     def add_keyframe(self, frame, value):
         kf_index_on_frame = self.frame_has_keyframe(frame)
         if kf_index_on_frame != -1:
@@ -991,11 +822,6 @@ class TLineKeyFrameEditor:
         self.keyframes.append((frame, value))
         self.active_kf_index = len(self.keyframes) - 1
 
-    def print_keyframes(self):
-        print "clip edit keyframes:"
-        for i in range(0, len(self.keyframes)):
-            print self.keyframes[i]
-        
     def delete_active_keyframe(self):
         if self.active_kf_index == 0:
             # keyframe frame 0 cannot be removed
@@ -1007,12 +833,15 @@ class TLineKeyFrameEditor:
         self._set_pos_to_active_kf()
     
         updater.repaint_tline()
-            
+
+    def set_and_display_clip_frame(self, clip_frame):
+        self.current_clip_frame = clip_frame
+        self._force_current_in_frame_range()
+                
     def _set_pos_to_active_kf(self):
         frame, value = self.keyframes[self.active_kf_index]
         self.current_clip_frame = frame
         self._force_current_in_frame_range()
-        self.update_slider_value_display(self.current_clip_frame)   
             
     def frame_has_keyframe(self, frame):
         """
@@ -1062,7 +891,144 @@ class TLineKeyFrameEditor:
     def set_active_kf_frame_and_value(self, new_frame, new_value):
         frame, val = self.keyframes.pop(self.active_kf_index)
         self.keyframes.insert(self.active_kf_index,(new_frame, new_value))
+                
+    # ------------------------------------------------- coordinates spaces
+    def _get_edit_area_rect(self):
+        x, y, w, h = self.allocation
+        active_width = w - 2 * END_PAD
+        ly = self._get_lower_y()
+        uy = self._get_upper_y()
+        return (x + END_PAD, uy, active_width - 1, ly - uy)
+    
+    def _get_panel_pos(self):
+        return self._get_panel_pos_for_frame(self.current_clip_frame) 
+
+    def _get_panel_pos_for_frame(self, frame):
+        x, y, width, h = self.allocation
+        active_width = width - 2 * END_PAD
+        disp_frame = frame - self.clip_in 
+        return x + END_PAD + int((float(disp_frame) / float(self.clip_length)) * 
+                             active_width)
+
+    def _get_frame_for_panel_pos(self, panel_x):
+        rx, ry, rw, rh = self._get_edit_area_rect()
+        clip_panel_x = panel_x - rx
+        norm_pos = float(clip_panel_x) / float(rw)
+        return int(norm_pos * self.clip_length) + self.clip_in
+
+    def _get_value_for_panel_y(self, panel_y):
+        rx, ry, rw, rh = self._get_edit_area_rect()
+        editable_property = edit_data["editable_property"] 
+        adjustment = editable_property.get_input_range_adjustment()
+        lower = adjustment.get_lower()
+        upper = adjustment.get_upper()
+        value_range = upper - lower
+        pos_fract = (ry + rh - panel_y) / rh
+        return pos_fract * value_range + lower
         
+    def _get_panel_y_for_value(self, value):
+        editable_property = edit_data["editable_property"] 
+        adjustment = editable_property.get_input_range_adjustment()
+        lower = adjustment.get_lower()
+        upper = adjustment.get_upper()
+        value_range = upper - lower
+        value_fract = (value - lower) / value_range
+        return self._get_lower_y() - (self._get_lower_y() - self._get_upper_y()) * value_fract
+
+    def _get_lower_y(self):
+        x, y, w, h = self.allocation
+        return y + TOP_PAD + h - HEIGHT_PAD_PIXELS_TOTAL
+
+    def _get_upper_y(self):
+        x, y, w, h = self.allocation
+        return  y + TOP_PAD
+
+    def _legalize_x(self, x):
+        """
+        Get x in pixel range between end pads.
+        """
+        rx, ry, rw, rh = self._get_edit_area_rect()
+        if x < rx:
+            return rx
+        elif x > rx + rw:
+            return rx + rw
+        else:
+            return x
+    
+    def _legalize_y(self, y):
+        rx, ry, rw, rh = self._get_edit_area_rect()
+        if y < ry:
+            return ry
+        elif y > ry + rh:
+            return ry + rh
+        else:
+            return y
+
+    # ------------------------------------------------- frames
+    def _force_current_in_frame_range(self):
+        if self.current_clip_frame < self.clip_in:
+            self.current_clip_frame = self.clip_in
+        if self.current_clip_frame > self.clip_in + self.clip_length:
+            self.current_clip_frame = self.clip_in + self.clip_length
+
+    def _get_drag_frame(self, panel_x):
+        """
+        Get x in range available for current drag.
+        """
+        frame = self._get_frame_for_panel_pos(panel_x)
+        if frame < self.drag_min:
+            frame = self.drag_min
+        if frame > self.drag_max:
+            frame = self.drag_max
+        return frame
+    
+    # ----------------------------------------------------- hit testing
+    def _key_frame_hit(self, x, y):
+        for i in range(0, len(self.keyframes)):
+            frame, val = self.keyframes[i]
+            frame_x = self._get_panel_pos_for_frame(frame)
+            value_y = self._get_panel_y_for_value(val)
+            if((abs(x - frame_x) < KF_HIT_WIDTH)
+                and (abs(y - value_y) < KF_HIT_WIDTH)):
+                return i
+            
+        return None
+
+    def _area_hit(self, tx, ty, x, y, w, h):
+        if ty >= y and ty <= y + h: # 12 icon size
+            if tx >= x and tx <= x + w:
+                return True
+            
+        return False
+        
+    def _oor_start_kf_hit(self, x, y):
+        rx, ry, rw, rh = self.allocation
+        kfy = self._get_lower_y() + KF_LOWER_OFF
+        area_y = kfy + KF_ICON_Y_PAD
+        area_x = rx + OUT_OF_RANGE_ICON_PAD - OUT_OF_RANGE_KF_ICON_HALF * 2
+        return self._area_hit(x, y, area_x, area_y, 12, 12)
+
+    def _oor_end_kf_hit(self, x, y):
+        rx, ry, rw, rh = self.allocation
+        kfy = self._get_lower_y() + KF_LOWER_OFF
+        area_x = rx + rw - OUT_OF_RANGE_ICON_PAD
+        area_y = kfy + KF_ICON_Y_PAD
+        return self._area_hit(x, y, area_x, area_y, 12, 12)
+
+    def _hamburger_hit(self, x, y):
+        rx, ry, rw, rh = self.allocation
+        return self._area_hit(x, y, rx + 4.5, ry + 4, 12, 12)
+        
+
+    def overlay_area_hit(self, tx, ty):
+        x, y, w, h = self.allocation
+        if tx >= x and tx <= x + w:
+            if ty >= y and ty <= y + h:
+                return True
+        
+        return False
+
+    # ------------------------------------------------------------ menus
     def _show_oor_before_menu(self, widget, event):
         menu = oor_before_menu
         self._build_oor_before_menu(menu)
@@ -1232,40 +1198,4 @@ class TLineKeyFrameEditor:
         item.show()
         return item
 
-    # ------------------------------------------------------ original parent editor stuff
-    def clip_editor_frame_changed(self, clip_frame):
-        self.seek_tline_frame(clip_frame)
 
-    def seek_tline_frame(self, clip_frame):
-        PLAYER().seek_frame(self.clip_tline_pos + clip_frame - self.clip_in)
-        
-    def update_slider_value_display(self, frame):
-        # This is called after frame changed or mouse release to update
-        # slider value without causing 'changed' signal to update keyframes.
-        """
-        if self.editable_property.value_changed_ID != DISCONNECTED_SIGNAL_HANDLER:
-            self.slider.get_adjustment().handler_block(self.editable_property.value_changed_ID)
-
-        new_value = _get_frame_value(frame, self.clip_editor.keyframes)
-        self.editable_property.adjustment.set_value(new_value)
-        if self.editable_property.value_changed_ID != DISCONNECTED_SIGNAL_HANDLER:
-            self.slider.get_adjustment().handler_unblock(self.editable_property.value_changed_ID)
-        """
-
-    def active_keyframe_changed(self):
-        pass
-        """
-        frame = self.clip_editor.current_clip_frame
-        keyframes = self.clip_editor.keyframes
-        value = _get_frame_value(frame, keyframes)
-        self.slider.set_value(value)
-        self.buttons_row.set_frame(frame)
-        self.seek_tline_frame(frame)
-        self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
-        """
-    
-    def update_property_value(self):
-        edit_data["editable_property"].write_out_keyframes(self.keyframes)
-        
-    def keyframe_dragged(self, active_kf, frame):
-        pass
