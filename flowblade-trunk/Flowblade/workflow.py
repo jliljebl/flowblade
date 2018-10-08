@@ -61,7 +61,8 @@ def init_data():
                     appconsts.TLINE_TOOL_BOX:           (_("Box"), "overwrite_cursor_box.png"),
                     appconsts.TLINE_TOOL_RIPPLE_TRIM:   (_("Ripple Trim"), "oneroll_cursor_ripple.png"),
                     appconsts.TLINE_TOOL_CUT:           (_("Cut"), "cut_cursor.png"),
-                    appconsts.TLINE_TOOL_KFTOOL:        (_("Keyframe"), "kftool_cursor.png")
+                    appconsts.TLINE_TOOL_KFTOOL:        (_("Keyframe"), "kftool_cursor.png"),
+                    appconsts.TLINE_TOOL_MULTI_TRIM:    (_("Multitrim"), "multitrim_cursor.png")
                   }
                   
     _TOOL_TIPS =  { appconsts.TLINE_TOOL_INSERT:        _("<b>Left Mouse</b> to move and insert single clip between clips.\n<b>CTRL + Left Mouse</b> to select and move clip range.\n<b>Left Mouse</b> on clip ends to trim clip length."),
@@ -73,7 +74,8 @@ def init_data():
                     appconsts.TLINE_TOOL_BOX:           _("<b>1. Left Mouse</b> to draw a box to select a group of clips.\n<b>2. Left Mouse</b> inside the box to move selected clips forward or backward."), 
                     appconsts.TLINE_TOOL_RIPPLE_TRIM:   _("<b>Left Mouse</b> to trim closest clip end and move all clips after it to maintain sync, overwrites not allowed.\n<b>Left or Right Arrow Key</b> + <b>Enter Key</b> to do the edit using keyboard."), 
                     appconsts.TLINE_TOOL_CUT:           _("<b>Left Mouse</b> to cut clip under cursor.\n<b>CTRL + Left Mouse</b> to cut clips on all tracks at cursor position."), 
-                    appconsts.TLINE_TOOL_KFTOOL:        _("Click <b>Left Mouse</b> on Clip to init Volume Keyframe editing, Brightness for media with no audio data.\n<b>Left Mouse</b> to create or drag keyframes.\n<b>Delete Key</b> to delete active Keyframe.")
+                    appconsts.TLINE_TOOL_KFTOOL:        _("Click <b>Left Mouse</b> on Clip to init Volume Keyframe editing, Brightness for media with no audio data.\n<b>Left Mouse</b> to create or drag keyframes.\n<b>Delete Key</b> to delete active Keyframe."),
+                    appconsts.TLINE_TOOL_MULTI_TRIM:    _("Multitrim")
                   }
 #----------------------------------------------------- workflow presets
 def _set_workflow_STANDARD():
@@ -203,7 +205,7 @@ def workflow_menu_launched(widget, event):
     guiutils.add_separetor(_workflow_menu)
     
     # Active tools
-    non_active_tools = range(1, 11) # we have 10 tools currently
+    non_active_tools = range(1, 12) # we have 11 tools currently
     for i in range(0, len(editorpersistance.prefs.active_tools)):#  tool_id in _TOOLS_DATA:
         tool_id = editorpersistance.prefs.active_tools[i]
         tool_name, tool_icon_file = _TOOLS_DATA[tool_id]
@@ -235,7 +237,6 @@ def _get_workflow_tool_menu_item(callback, tool_id, tool_name, tool_icon_file, p
     hbox.pack_start(guiutils.pad_label(4, 4), False, False, 0)
     hbox.pack_start(tool_name_label, False, False, 0)
     hbox.show_all()
-    #hbox.set_sensitive(tool_active)
     item = Gtk.MenuItem()
     item.add(hbox)
     item.set_tooltip_markup(_TOOL_TIPS[tool_id])

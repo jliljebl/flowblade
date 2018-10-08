@@ -318,6 +318,15 @@ def slide_trim_mode_init(x, y):
     success = trimmodes.set_slide_mode(track, press_frame)
     return success
 
+
+# -------------------------------------- multi trim mode
+def multitrim_mode_pressed():
+    stop_looping()
+    editorstate.edit_mode = editorstate.MULTI_TRIM
+    tlinewidgets.set_edit_mode(None, None) # No overlays are drawn in this edit mode
+    movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
+    updater.set_trim_mode_gui()
+    
 # -------------------------------------- cut mode
 def cut_mode_pressed():
     #print "cut_mode_pressed"

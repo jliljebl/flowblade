@@ -593,7 +593,8 @@ def open_clip_in_effects_editor(data):
 # ----------------------------------------- edit modes
 def set_trim_mode_gui():
     """
-    Called when user selects trim mode
+    Called when user selects trim mode.
+    This does not actually set GUI, just makes sure we are displaying timeline since we are ready to strart trimmng sometring in it.
     """
     display_sequence_in_monitor()
 

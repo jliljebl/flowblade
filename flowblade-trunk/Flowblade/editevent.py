@@ -50,6 +50,7 @@ import medialog
 import modesetting
 import movemodes
 import multimovemode
+import multitrimmode
 import syncsplitevent
 import tlinewidgets
 import trimmodes
@@ -625,6 +626,10 @@ CUT_FUNCS = [cutmode.mouse_press,
 KFTOOL_FUNCS = [kftoolmode.mouse_press,
                 kftoolmode.mouse_move,
                 kftoolmode.mouse_release]
+MULTI_TRIM_FUNCS = [multitrimmode.mouse_press,
+                    multitrimmode.mouse_move,
+                    multitrimmode.mouse_release]
+
 
 # (mode -> mouse handler function list) table
 EDIT_MODE_FUNCS = {editorstate.INSERT_MOVE:INSERT_MOVE_FUNCS,
@@ -639,5 +644,6 @@ EDIT_MODE_FUNCS = {editorstate.INSERT_MOVE:INSERT_MOVE_FUNCS,
                    editorstate.MULTI_MOVE:MULTI_MOVE_FUNCS,
                    editorstate.CLIP_END_DRAG:CLIP_END_DRAG_FUNCS,
                    editorstate.CUT:CUT_FUNCS,
-                   editorstate.KF_TOOL:KFTOOL_FUNCS}
+                   editorstate.KF_TOOL:KFTOOL_FUNCS,
+                   editorstate.MULTI_TRIM:MULTI_TRIM_FUNCS}
 

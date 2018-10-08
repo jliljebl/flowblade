@@ -2821,9 +2821,10 @@ class ToolSelector(ImageMenuLaunch):
                                             appconsts.TLINE_TOOL_BOX: 7,
                                             appconsts.TLINE_TOOL_RIPPLE_TRIM: 3,
                                             appconsts.TLINE_TOOL_CUT: 8,
-                                            appconsts.TLINE_TOOL_KFTOOL: 9
+                                            appconsts.TLINE_TOOL_KFTOOL: 9,
+                                            appconsts.TLINE_TOOL_MULTI_TRIM: 10
                                      }
-   
+
     def set_tool_pixbuf(self, tool_id):
         surface_index = self.TOOL_ID_TO_SURFACE_INDEX[tool_id]
         self.set_pixbuf(surface_index)
