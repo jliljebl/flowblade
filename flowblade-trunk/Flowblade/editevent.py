@@ -336,7 +336,7 @@ def tline_canvas_mouse_pressed(event, frame):
             PLAYER().seek_frame(frame)
         return
     # LEFT BUTTON + CTRL: Select new trimmed clip in one roll trim mode
-    #  This is not that relevant anymore with context sensitive cursor, look to remove.
+    # This is not that relevant anymore with context sensitive cursor, look to remove.
     elif ((event.button == 1 
           and (event.get_state() & Gdk.ModifierType.CONTROL_MASK)
           and EDIT_MODE() == editorstate.ONE_ROLL_TRIM) or 

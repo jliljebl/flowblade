@@ -281,6 +281,8 @@ pos = 0 # Current left most frame in timeline display
 # Cursor communicates current pointer contest to user.
 pointer_context = appconsts.POINTER_CONTEXT_NONE
 DRAG_SENSITIVITY_AREA_WIDTH_PIX = 10
+MULTI_TRIM_ROLL_SENSITIVITY_AREA_WIDTH_PIX = 8
+MULTI_TRIM_SLIP_SENSITIVITY_AREA_WIDTH_PIX = 14
 
 # ref to singleton TimeLineCanvas instance for mode setting and some position
 # calculations.
@@ -1491,7 +1493,6 @@ class TimeLineCanvas:
 
         clip_start_frame = track.clip_start(clip_index)
         clip_end_frame = track.clip_start(clip_index + 1)
-        
         # INSERT, OVEWRITE
         if (EDIT_MODE() == editorstate.INSERT_MOVE or EDIT_MODE() == editorstate.OVERWRITE_MOVE) and editorstate.overwrite_mode_box == False:
             if abs(x - _get_frame_x(clip_start_frame)) < DRAG_SENSITIVITY_AREA_WIDTH_PIX:
@@ -1511,6 +1512,21 @@ class TimeLineCanvas:
             boxmove.box_selection_data != None):
             if boxmove.box_selection_data.is_hit(x, y):
                 return appconsts.POINTER_CONTEXT_BOX_SIDEWAYS
+        # MULTI TRIM
+        elif EDIT_MODE() == editorstate.MULTI_TRIM:
+            clip_start_frame_x = _get_frame_x(clip_start_frame)
+            clip_end_frame_x = _get_frame_x(clip_end_frame)
+            clip_center_x = (clip_end_frame_x - clip_start_frame_x) / 2 + clip_start_frame_x
+            if abs(x - clip_start_frame_x) < MULTI_TRIM_ROLL_SENSITIVITY_AREA_WIDTH_PIX:
+                return appconsts.POINTER_CONTEXT_MULTI_ROLL
+            elif abs(x - clip_end_frame_x) < MULTI_TRIM_ROLL_SENSITIVITY_AREA_WIDTH_PIX:
+                return appconsts.POINTER_CONTEXT_MULTI_ROLL
+            elif abs(x - clip_center_x) < MULTI_TRIM_SLIP_SENSITIVITY_AREA_WIDTH_PIX:
+                return appconsts.POINTER_CONTEXT_MULTI_SLIP
+            elif abs(frame - clip_start_frame) < abs(frame - clip_end_frame):
+                return appconsts.POINTER_CONTEXT_TRIM_LEFT
+            else:
+                return appconsts.POINTER_CONTEXT_TRIM_RIGHT
                 
         return appconsts.POINTER_CONTEXT_NONE
             
