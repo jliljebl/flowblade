@@ -54,12 +54,15 @@ last_from_trimmed = False
 # Function that sets edit mode when exiting with click on empty
 set_exit_mode_func = None
 
+# Edit complete callback used to get back to multitrimmode.py when trims inited from there.
+edit_complete_callback = None
+
 # Function that sets <X>_NO_EDIT mode that displays trim cursor but no edit is under way.
 #
 # This is used e.g. when user clicks empty and preference is to stay in trim mode, 
 # so active edit is exited to <X>_NO_EDIT mode.
 #
-# This function is set when trim modes are entered to be to the "edit init func for" the entered trim mode.
+# This function is set when trim modes are entered.
 set_no_edit_mode_func = None
 
 # Sub modes for handling mouse vs. keyboard edits
@@ -583,6 +586,9 @@ def oneroll_trim_release(x, y, frame, state):
 
     _do_one_roll_trim_edit(frame)
 
+    if edit_complete_callback != None:
+        edit_complete_callback() # get back to MULTI_TRIM mode because we inited edit from there
+
 def _do_one_roll_trim_edit(frame):
     # Get legal edit delta and set to edit mode data for overlay draw
     global edit_data
@@ -1075,6 +1081,9 @@ def tworoll_trim_release(x, y, frame, state):
     
     _do_two_roll_edit(frame)
 
+    if edit_complete_callback != None:
+        edit_complete_callback() # get back to MULTI_TRIM mode because we inited edit from there
+
 def tworoll_play_pressed():
     current_sequence().hide_hidden_clips()
     PLAYER().start_loop_playback(edit_data["edit_frame"], loop_half_length, edit_data["track_object"].get_length())
@@ -1362,7 +1371,10 @@ def slide_trim_release(x, y, frame, state):
     display_frame = _update_slide_trim_for_mouse_frame(frame)
     PLAYER().seek_frame(display_frame)
     _do_slide_edit()
-    
+
+    if edit_complete_callback != None:
+        edit_complete_callback() # get back to MULTI_TRIM mode because we inited edit from there
+
 def _update_slide_trim_for_mouse_frame(frame):
     global edit_data
     clip = edit_data["clip"]
