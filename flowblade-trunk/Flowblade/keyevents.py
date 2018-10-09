@@ -41,6 +41,7 @@ import medialog
 import menuactions
 import modesetting
 import monitorevent
+import multitrimmode
 # Apr-2017 - SvdB
 import shortcuts
 import re
@@ -250,6 +251,10 @@ def _handle_tline_key_event(event):
         elif action == 'enter_edit':
             trimmodes.enter_pressed()
             return True
+
+
+    if editorstate.EDIT_MODE() == editorstate.MULTI_TRIM:
+        multitrimmode.enter_pressed()
 
     # Key bindings for MOVE MODES and _NO_EDIT modes
     if editorstate.current_is_move_mode() or editorstate.current_is_active_trim_mode() == False:

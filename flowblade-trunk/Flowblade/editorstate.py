@@ -110,6 +110,8 @@ use_xdg = False
 # Cursor position and sensitivity
 cursor_on_tline = False
 cursor_is_tline_sensitive = True
+last_mouse_x = -1 # This is only used by multitrimmode.py 
+last_mouse_y = -1 # This is only used by multitrimmode.py 
 
 # Flag for running JACK audio server. If this is on when SDLConsumer created in mltplayer.py
 # jack rack filter will bw attached to it
@@ -265,6 +267,14 @@ def clear_trim_clip_cache():
     global _trim_clips_cache
     _trim_clips_cache = {}
 
+
+# Called from tline "motion_notify_event" when drag is not on.
+# This is only used by multitrimmode.py to have data to enter trims with keyboard correctly
+def set_mouse_current_non_drag_pos(x, y):
+    global last_mouse_x, last_mouse_y
+    last_mouse_x = x
+    last_mouse_y = y
+    
 """
 def get_sdl_version(): # This ain't true anymore, 6.6.0 has both available
     if mlt_version_is_equal_or_greater_correct("6.4.2") == True:

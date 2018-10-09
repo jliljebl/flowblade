@@ -1514,6 +1514,7 @@ class TimeLineCanvas:
                 return appconsts.POINTER_CONTEXT_BOX_SIDEWAYS
         # MULTI TRIM
         elif EDIT_MODE() == editorstate.MULTI_TRIM:
+            editorstate.set_mouse_current_non_drag_pos(x, y)
             clip_start_frame_x = _get_frame_x(clip_start_frame)
             clip_end_frame_x = _get_frame_x(clip_end_frame)
             clip_center_x = (clip_end_frame_x - clip_start_frame_x) / 2 + clip_start_frame_x
