@@ -524,10 +524,13 @@ class ClipKeyFrameEditor:
         self._set_pos_to_active_kf()
     
     def _set_pos_to_active_kf(self):
-        frame, value = self.keyframes[self.active_kf_index]
-        self.current_clip_frame = frame
-        self._force_current_in_frame_range()
-        self.parent_editor.update_slider_value_display(self.current_clip_frame)   
+        try:
+            frame, value = self.keyframes[self.active_kf_index]
+            self.current_clip_frame = frame
+            self._force_current_in_frame_range()
+            self.parent_editor.update_slider_value_display(self.current_clip_frame)   
+        except:
+            pass # This can fail if no keyframes exist in edit range but then we will just do nothing
             
     def frame_has_keyframe(self, frame):
         """

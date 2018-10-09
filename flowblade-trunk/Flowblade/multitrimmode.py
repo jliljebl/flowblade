@@ -30,8 +30,6 @@ import tlinewidgets
 import trimmodes
 import updater
 
-_last_mouse_x = -1
-_last_mouse_y = -1
 
 _mouse_edit_context = appconsts.POINTER_CONTEXT_NONE
 
@@ -51,7 +49,7 @@ def mouse_release(x, y, frame, state):
 
 # ------------------------------------------------------- keyboard events
 def enter_pressed():
-    # we enter keyboard trim
+    # With Enter key we enter keyboard trim on current pointer context
     x = editorstate.last_mouse_x
     y = editorstate.last_mouse_y
     frame = tlinewidgets.get_frame(x)
@@ -73,7 +71,7 @@ def _enter_trim_mode_edit(x, y, frame):
     if _mouse_edit_context == appconsts.POINTER_CONTEXT_TRIM_LEFT or _mouse_edit_context ==  appconsts.POINTER_CONTEXT_TRIM_RIGHT:
         success = modesetting.oneroll_trim_mode_init(x, y)
         if not success:
-            # this should not happen (because we have pointer context) but in case we somehow do hit this, lets just get back to MULTI_TRIM
+            # this should not happen (because we have pointer context) but in case we somehow do hit this, lets just get back to MULTI_TRIM mode
             _edit_completed()
             return
         
@@ -81,7 +79,7 @@ def _enter_trim_mode_edit(x, y, frame):
     elif _mouse_edit_context == appconsts.POINTER_CONTEXT_MULTI_ROLL:
         success = modesetting.tworoll_trim_mode_init(x, y)
         if not success:
-            # this should not happen (because we have pointer context) but in case we somehow do hit this, lets just get back to MULTI_TRIM
+            # this should not happen (because we have pointer context) but in case we somehow do hit this, lets just get back to MULTI_TRIM mode
             _edit_completed()
             return
     
@@ -89,7 +87,7 @@ def _enter_trim_mode_edit(x, y, frame):
     elif  _mouse_edit_context == appconsts.POINTER_CONTEXT_MULTI_SLIP:
         success = modesetting.slide_trim_mode_init(x, y)
         if not success:
-            # this should not happen (because we have pointer context) but in case we somehow do hit this, lets just get back to MULTI_TRIM
+            # this should not happen (because we have pointer context) but in case we somehow do hit this, lets just get back to MULTI_TRIM mode
             _edit_completed()
             return
     
@@ -97,11 +95,11 @@ def _enter_trim_mode_edit(x, y, frame):
                 
 def _edit_completed():
     """
-    Called after exit xcompleted in trimmodes.py
+    Called after edit completed in trimmodes.py
     """
     trimmodes.edit_complete_callback = None
   
-    # Get back to MULTI_TRIM mode after doing the edit in press position context dependent trim mode
+    # Get back to MULTI_TRIM mode after doing the edit
     editorstate.edit_mode = editorstate.MULTI_TRIM
     tlinewidgets.set_edit_mode(None, None) # No overlays are drawn in this edit mode
     updater.set_trim_mode_gui()
