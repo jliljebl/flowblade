@@ -691,6 +691,15 @@ class ClipEditorButtonsRow(Gtk.HBox):
         self.next_frame_button.connect("clicked", lambda w,e: editor_parent.next_frame_pressed(), None)
         self.kf_to_prev_frame_button.connect("clicked", lambda w,e: editor_parent.move_kf_prev_frame_pressed(), None)
         self.kf_to_next_frame_button.connect("clicked", lambda w,e: editor_parent.move_kf_next_frame_pressed(), None)
+
+        self.add_button.set_tooltip_text(_("Add Keyframe"))
+        self.delete_button.set_tooltip_text(_("Delete Keyframe"))
+        self.prev_kf_button.set_tooltip_text(_("Previous Keyframe"))
+        self.next_kf_button.set_tooltip_text(_("Next Keyframe")) 
+        self.prev_frame_button.set_tooltip_text(_("Previous Frame"))
+        self.next_frame_button.set_tooltip_text(_("Next Frame"))
+        self.kf_to_prev_frame_button.set_tooltip_text(_("Move Keyframe 1 Frame Back"))
+        self.kf_to_next_frame_button.set_tooltip_text(_("Move Keyframe 1 Frame Forward"))
         
         # Position entry
         self.kf_pos_label = Gtk.Label()
