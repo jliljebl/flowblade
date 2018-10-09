@@ -233,12 +233,11 @@ def _handle_tline_key_event(event):
     if action == 'log_range':
         medialog.log_range_clicked()
         return True
-    """
-    THis may need rethinking
+
     if action == 'toggle_ripple':
         gui.editor_window.toggle_trim_ripple_mode()
         return True
-    """
+
     
     # Key bindings for keyboard trimming
     if editorstate.current_is_active_trim_mode() == True:

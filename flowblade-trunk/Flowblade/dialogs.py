@@ -1484,7 +1484,7 @@ def _get_dynamic_kb_shortcuts_panel(xml_file):
     tools_vbox.pack_start(_get_dynamic_kb_row(root_node, "edit_mode_spacer"), False, False, 0)
     tools_vbox.pack_start(_get_dynamic_kb_row(root_node, "edit_mode_box"), False, False, 0)
     tools_vbox.pack_start(_get_kb_row(_("Keypad 1-7"), _("Same as 1-7")), False, False, 0)
-    tools_vbox.pack_start(_get_kb_row(_("R"), _("Trim Tool Ripple Mode On/Off")), False, False, 0)
+    tools_vbox.pack_start(_get_kb_row(_("R"), _("Toggle Trim / Ripple Trim Tools")), False, False, 0)
     tools = guiutils.get_named_frame(_("Tools"), tools_vbox)
 
     geom_vbox = Gtk.VBox()

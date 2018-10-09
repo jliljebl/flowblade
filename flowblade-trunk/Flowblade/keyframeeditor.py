@@ -680,12 +680,17 @@ class ClipEditorButtonsRow(Gtk.HBox):
         self.next_kf_button = guiutils.get_image_button("next_kf.png", BUTTON_WIDTH, BUTTON_HEIGHT)
         self.prev_frame_button = guiutils.get_image_button("kf_edit_prev_frame.png", BUTTON_WIDTH, BUTTON_HEIGHT)
         self.next_frame_button = guiutils.get_image_button("kf_edit_next_frame.png", BUTTON_WIDTH, BUTTON_HEIGHT)
+        self.kf_to_prev_frame_button = guiutils.get_image_button("kf_edit_kf_to_prev_frame.png", BUTTON_WIDTH, BUTTON_HEIGHT)
+        self.kf_to_next_frame_button = guiutils.get_image_button("kf_edit_kf_to_next_frame.png", BUTTON_WIDTH, BUTTON_HEIGHT)
+        
         self.add_button.connect("clicked", lambda w,e: editor_parent.add_pressed(), None)
         self.delete_button.connect("clicked", lambda w,e: editor_parent.delete_pressed(), None)
         self.prev_kf_button.connect("clicked", lambda w,e: editor_parent.prev_pressed(), None)
         self.next_kf_button.connect("clicked", lambda w,e: editor_parent.next_pressed(), None)
         self.prev_frame_button.connect("clicked", lambda w,e: editor_parent.prev_frame_pressed(), None)
         self.next_frame_button.connect("clicked", lambda w,e: editor_parent.next_frame_pressed(), None)
+        self.kf_to_prev_frame_button.connect("clicked", lambda w,e: editor_parent.move_kf_prev_frame_pressed(), None)
+        self.kf_to_next_frame_button.connect("clicked", lambda w,e: editor_parent.move_kf_next_frame_pressed(), None)
         
         # Position entry
         self.kf_pos_label = Gtk.Label()
@@ -700,6 +705,8 @@ class ClipEditorButtonsRow(Gtk.HBox):
         self.pack_start(self.delete_button, False, False, 0)
         self.pack_start(self.prev_kf_button, False, False, 0)
         self.pack_start(self.next_kf_button, False, False, 0)
+        self.pack_start(self.kf_to_prev_frame_button, False, False, 0)
+        self.pack_start(self.kf_to_next_frame_button, False, False, 0)
         self.pack_start(self.prev_frame_button, False, False, 0)
         self.pack_start(self.next_frame_button, False, False, 0)
         self.pack_start(guiutils.pad_label(4,4), False, False, 0)
@@ -963,7 +970,19 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
     def next_frame_pressed(self):
         self.clip_editor.move_clip_frame(1)
         self.update_editor_view()
-    
+
+    def move_kf_next_frame_pressed(self):
+        current_frame = self.clip_editor.get_active_kf_frame()
+        self.clip_editor.active_kf_pos_entered(current_frame + 1)
+        self.update_property_value()
+        self.update_editor_view()
+
+    def move_kf_prev_frame_pressed(self):
+        current_frame = self.clip_editor.get_active_kf_frame()
+        self.clip_editor.active_kf_pos_entered(current_frame - 1)
+        self.update_property_value()
+        self.update_editor_view()
+        
     def pos_entry_enter_hit(self, entry):
         val = entry.get_text() #error handl?
         self.clip_editor.active_kf_pos_entered(int(val))
@@ -1092,6 +1111,22 @@ class GeometryEditor(AbstractKeyFrameEditor):
         self.update_editor_view_with_frame(frame)
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
         self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+
+    def move_kf_next_frame_pressed(self):
+        current_frame = self.clip_editor.get_active_kf_frame()
+        self.clip_editor.active_kf_pos_entered(current_frame + 1)
+        current_frame = self.clip_editor.get_active_kf_frame()
+        self.update_property_value()
+        self.update_editor_view()
+        self.seek_tline_frame(current_frame)
+        
+    def move_kf_prev_frame_pressed(self):
+        current_frame = self.clip_editor.get_active_kf_frame()
+        self.clip_editor.active_kf_pos_entered(current_frame - 1)
+        current_frame = self.clip_editor.get_active_kf_frame()
+        self.update_property_value()
+        self.update_editor_view()
+        self.seek_tline_frame(current_frame)
         
     def slider_value_changed(self, adjustment):
         value = adjustment.get_value()
