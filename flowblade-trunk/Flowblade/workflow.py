@@ -79,7 +79,7 @@ def init_data():
                   }
 #----------------------------------------------------- workflow presets
 def _set_workflow_STANDARD():
-    editorpersistance.prefs.active_tools = [2, 6, 8, 4, 5, 7]
+    editorpersistance.prefs.active_tools = [2, 11, 6, 1, 9, 10] # appconsts.TLINE_TOOL_ID_<X> values
     editorpersistance.prefs.dnd_action = appconsts.DND_ALWAYS_OVERWRITE
     editorpersistance.prefs.box_for_empty_press_in_overwrite_tool = True
     editorpersistance.save()
@@ -87,7 +87,7 @@ def _set_workflow_STANDARD():
     modesetting.set_default_edit_mode()
 
 def _set_workflow_FILM_STYLE():
-    editorpersistance.prefs.active_tools = [1, 2, 3, 4, 5, 6, 7]
+    editorpersistance.prefs.active_tools = [1, 2, 3, 4, 5, 6, 7]  # appconsts.TLINE_TOOL_ID_<X> values
     editorpersistance.prefs.dnd_action = appconsts.DND_OVERWRITE_NON_V1
     editorpersistance.prefs.box_for_empty_press_in_overwrite_tool = False
     editorpersistance.save()
