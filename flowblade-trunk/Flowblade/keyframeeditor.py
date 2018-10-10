@@ -848,7 +848,7 @@ class AbstractKeyFrameEditor(Gtk.VBox):
         # updating once more is wrong
         if self.clip_editor.drag_on == True:
             return
-        
+
         # update clipeditor pos
         clip_frame = tline_frame - self.clip_tline_pos + self.clip_in
         self.clip_editor.set_and_display_clip_frame(clip_frame)
@@ -1008,6 +1008,7 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         self.buttons_row.set_frame(frame)
         if seek_tline == True:
             self.seek_tline_frame(frame)
+        self.update_slider_value_display(frame) # NOTE!!!!!!!!!! Added for 2.0, observe if adds crashes
         self.queue_draw()
 
     def connect_to_update_on_release(self):

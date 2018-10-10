@@ -616,7 +616,7 @@ class FadeLengthEditor(Gtk.HBox):
         updater.repaint_tline()
     
     def display_tline_frame(self, frame):
-        pass # we don't seem to need this afte all, panel gets recreated after cpompositor length change
+        pass # we don't seem to need this after all, panel gets recreated after compositor length change
         
 def _get_fade_length_editor(editable_property):
     return FadeLengthEditor(editable_property)
