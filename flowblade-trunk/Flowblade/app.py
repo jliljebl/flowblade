@@ -365,6 +365,9 @@ def main(root_path):
     # In PositionNumericalEntries we are using Gtk.Entry objects in a way that works us nicely, but is somehow "error" for Gtk, so we just kill this.
     Gtk.Settings.get_default().set_property("gtk-error-bell", False)
     
+    # Show first run worflow info dialog.
+    GObject.timeout_add(500, show_worflow_info_dialog)
+                
     # Launch gtk+ main loop
     Gtk.main()
 
@@ -777,8 +780,6 @@ def show_splash_screen():
 
     splash_screen.set_resizable(False)
 
-    #dialog = workflow.WorkflowDialog()
-
     while(Gtk.events_pending()):
         Gtk.main_iteration()
 
@@ -786,6 +787,11 @@ def destroy_splash_screen():
     splash_screen.destroy()
     GObject.source_remove(splash_timeout_id)
 
+
+def show_worflow_info_dialog():
+    worflow_info_dialog = workflow.WorkflowDialog()
+    return False
+    
 # ------------------------------------------------------- small screens
 def _set_draw_params():
     if editorstate.screen_size_small_width() == True:

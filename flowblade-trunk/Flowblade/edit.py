@@ -1485,6 +1485,7 @@ def _ripple_trim_blanks_redo(self, reverse_delta=False):
     _ripple_trim_compositors_move(self, applied_delta)
 
 def _ripple_trim_compositors_move(self, delta):
+    print "llllllllll"
     comp_ids = self.multi_data.moved_compositors_destroy_ids
     tracks_compositors = _get_tracks_compositors_list()
     track_moved = self.multi_data.track_affected
