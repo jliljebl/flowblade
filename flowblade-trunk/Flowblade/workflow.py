@@ -375,7 +375,7 @@ def _TLINE_TOOL_OVERWRITE_box_selection_pref(check_menu_item):
 class WorkflowDialog(Gtk.Dialog):
 
     def __init__(self):
-        Gtk.Dialog.__init__(self, _("Welcome To Flowblade 2"),  gui.editor_window.window,
+        Gtk.Dialog.__init__(self, _("Workflow First Run Wizard"),  gui.editor_window.window,
                                 Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                                 (_("Select Preset Workflow and Continue").encode('utf-8'), Gtk.ResponseType.ACCEPT))
         
@@ -386,39 +386,46 @@ class WorkflowDialog(Gtk.Dialog):
         self.selection = self.STANDARD_PRESET 
         
         
-        info_label_text_1 = _("<b>Welcome to Flowblade 2.0</b>") # + str(data.clip_tline_media_offset - data.media_offset_frames) + _(" frames.")
+        info_label_text_1 = _("<b>Welcome to Flowblade 2.0</b>")
         info_label_1 = Gtk.Label(info_label_text_1)
         info_label_1.set_use_markup(True)
 
 
-        info_label_text_2 = _("<b>Flowblade 2.0</b> comes with with configurable workflow.")
+        info_label_text_2 = _("<b>Flowblade 2.0</b> comes with a configurable workflow.")
         info_label_2 = Gtk.Label(info_label_text_2)
         info_label_2.set_use_markup(True)
 
         INDENT = "    "
-        info_label_text_6 = INDENT + u"\u2022" + _(" You can select which tools you want to use and the order they are presented.\n") + \
-                            INDENT + u"\u2022" + _(" Many timeline edit behaviours are configurable.\n") + \
-                            INDENT + u"\u2022" + _(" Two workflow presets with selection of tools and behaviours are availabe.")
+        info_label_text_6 = INDENT + u"\u2022" + _(" You can select which <b>tools</b> you want to use.\n") + \
+                            INDENT + u"\u2022" + _(" Many timeline edit <b>behaviours</b> are configurable.\n")
+
         info_label_6 = Gtk.Label(info_label_text_6)
-        
+        info_label_6.set_use_markup(True)
+
         info_label_text_3 = _("<b>Select Workflow Preset</b>")
         info_label_3 = Gtk.Label(info_label_text_3)
         info_label_3.set_use_markup(True)
+        guiutils.set_margins(info_label_3, 0, 4, 0, 0)
+            
+        info_label_text_7 = _("You can change and configure individual tools and behaviours <b>anytime</b>")
+        info_label_7 = Gtk.Label(info_label_text_7)
+        info_label_7.set_use_markup(True)
         
-        info_label_text_4 = _("You can change Preset or activate and configure individual tools and behaviours anytime by pressing ")
+        info_label_text_4 = _(" by pressing ")
         info_label_4 = Gtk.Label(info_label_text_4)
-
+        info_label_4.set_use_markup(True)
+        
         icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "workflow.png")
     
         info_label_text_5 = _(" icon.")
         info_label_5 = Gtk.Label(info_label_text_5)
         
-        workflow_name = _("<b>1) Standard</b>")
-        stadard_preset_workflow_text_1 = _("Standard workflow has the <b>Move</b> tool as default tool\nand presents a workflow similar to most available video editors.")
+        workflow_name = _("<b>Standard</b>")
+        stadard_preset_workflow_text_1 = _("Standard workflow has the <b>Move</b> tool as default tool\nand presents a workflow\nsimilar to most video editors.")
         workflow_select_item_1 = self.get_workflow_select_item(self.STANDARD_PRESET, workflow_name, stadard_preset_workflow_text_1)
 
-        workflow_name = _("<b>1) Film Style</b>")
-        filmstyle_preset_workflow_text_2 = _("Film Style workflow has the <b>Insert</b> tool as default tool\nand employs insert style editing. This is the workflow in previous versions of the application.")
+        workflow_name = _("<b>Film Style</b>")
+        filmstyle_preset_workflow_text_2 = _("Film Style workflow has the <b>Insert</b> tool as default tool\nand employs insert style editing.\nThis is the workflow in previous versions of the application.")
         workflow_select_item_2 = self.get_workflow_select_item(self.FILM_STYLE_PRESET, workflow_name, filmstyle_preset_workflow_text_2)
         
         self.workflow_items = [workflow_select_item_1, workflow_select_item_2]
@@ -433,8 +440,9 @@ class WorkflowDialog(Gtk.Dialog):
         panel_vbox.pack_start(guiutils.get_centered_box([info_label_3]), False, False, 0)
         panel_vbox.pack_start(workflow_select_item_1, False, False, 0)
         panel_vbox.pack_start(workflow_select_item_2, False, False, 0)
-        panel_vbox.pack_start(guiutils.get_pad_label(24, 24), False, False, 0)
-        panel_vbox.pack_start(guiutils.get_left_justified_box([info_label_4, icon, info_label_5]), False, False, 0)
+        panel_vbox.pack_start(guiutils.get_pad_label(24, 48), False, False, 0)
+        panel_vbox.pack_start(guiutils.get_centered_box([info_label_7]), False, False, 0)
+        panel_vbox.pack_start(guiutils.get_centered_box([info_label_4, icon, info_label_5]), False, False, 0)
         panel_vbox.pack_start(guiutils.get_pad_label(24, 24), False, False, 0)
 
         alignment = dialogutils.get_alignment2(panel_vbox)
@@ -448,13 +456,15 @@ class WorkflowDialog(Gtk.Dialog):
     def get_workflow_select_item(self, item_number, workflow_name, item_text):
         name = Gtk.Label(workflow_name)
         name.set_use_markup(True)
+        guiutils.set_margins(name, 0, 8, 0, 0)
         label = Gtk.Label(item_text)
         label.set_use_markup(True)
+        label.set_justify(Gtk.Justification.CENTER)
 
         item_vbox = Gtk.VBox(False, 2)
         item_vbox.pack_start(guiutils.get_centered_box([name]), False, False, 0)
         item_vbox.pack_start(guiutils.get_centered_box([label]), False, False, 0)
-        guiutils.set_margins(item_vbox, 8, 8, 8, 8)
+        guiutils.set_margins(item_vbox, 12, 18, 12, 12)
      
         widget = Gtk.EventBox()
         widget.connect("button-press-event", lambda w,e: self.selected_callback(w, item_number))
