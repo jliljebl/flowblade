@@ -43,15 +43,22 @@ import modesetting
 import respaths
 import updater
 
+
+STANDARD_PRESET = 0
+FILM_STYLE_PRESET = 1
+
+SELECTED_BG = Gdk.RGBA(0.1, 0.31, 0.58,1.0)
+        
 # Timeline tools data
 _TOOLS_DATA = None
 _TOOL_TIPS = None
+_PREFS_TOOL_TIPS = None
 
 _tools_menu = Gtk.Menu()
 _workflow_menu = Gtk.Menu()
 
 def init_data():
-    global _TOOLS_DATA, _TOOL_TIPS
+    global _TOOLS_DATA, _TOOL_TIPS, _PREFS_TOOL_TIPS
     _TOOLS_DATA = { appconsts.TLINE_TOOL_INSERT:        (_("Insert"), "insertmove_cursor.png"),
                     appconsts.TLINE_TOOL_OVERWRITE:     (_("Move"), "overwrite_cursor.png"),
                     appconsts.TLINE_TOOL_TRIM:          (_("Trim"), "oneroll_cursor.png"),
@@ -77,6 +84,10 @@ def init_data():
                     appconsts.TLINE_TOOL_KFTOOL:        _("Click <b>Left Mouse</b> on Clip to init Volume Keyframe editing, Brightness for media with no audio data.\n<b>Left Mouse</b> to create or drag keyframes.\n<b>Delete Key</b> to delete active Keyframe."),
                     appconsts.TLINE_TOOL_MULTI_TRIM:    _("Multitrim")
                   }
+
+    _PREFS_TOOL_TIPS = {"editorpersistance.prefs.box_for_empty_press_in_overwrite_tool":       _("<b>\nLeft Mouse Drag</b> to draw a box to select a group of clips and move\nthe selected clips forward or backward.")}
+    
+    
 #----------------------------------------------------- workflow presets
 def _set_workflow_STANDARD():
     editorpersistance.prefs.active_tools = [2, 11, 6, 1, 9, 10] # appconsts.TLINE_TOOL_ID_<X> values
@@ -133,7 +144,7 @@ def _get_image_menu_item(tool_icon_file, text, callback, tool_id):
     item.set_always_show_image(True)
     item.set_use_stock(False)
     item.set_label(text)
-    item.set_tooltip_markup(_TOOL_TIPS[tool_id])
+    item.set_tooltip_markup(_get_tooltip_text(tool_id))
     item.show()
     return item
     
@@ -239,7 +250,7 @@ def _get_workflow_tool_menu_item(callback, tool_id, tool_name, tool_icon_file, p
     hbox.show_all()
     item = Gtk.MenuItem()
     item.add(hbox)
-    item.set_tooltip_markup(_TOOL_TIPS[tool_id])
+    item.set_tooltip_markup(_get_tooltip_text(tool_id))
     item.show()
     
     item.set_submenu(_get_workflow_tool_submenu(callback, tool_id, position))
@@ -263,6 +274,16 @@ def _build_radio_menu_items_group(menu, labels, msgs, callback, active_index):
             radio_item.set_active(True)
         
         radio_item.connect("activate", callback, (None, msgs[i]))
+
+def _get_tooltip_text(tool_id):
+    text = _TOOL_TIPS[tool_id]
+    
+    # Add individual extensions based on current prefs
+    if tool_id == appconsts.TLINE_TOOL_OVERWRITE:
+        if editorpersistance.prefs.box_for_empty_press_in_overwrite_tool == True:
+            text += _PREFS_TOOL_TIPS["editorpersistance.prefs.box_for_empty_press_in_overwrite_tool"]
+
+    return text
 
 def _get_workflow_tool_submenu(callback, tool_id, position):
     sub_menu = Gtk.Menu()
@@ -378,13 +399,8 @@ class WorkflowDialog(Gtk.Dialog):
         Gtk.Dialog.__init__(self, _("Workflow First Run Wizard"),  gui.editor_window.window,
                                 Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                                 (_("Select Preset Workflow and Continue").encode('utf-8'), Gtk.ResponseType.ACCEPT))
-        
-        self.SELECTED_BG = Gdk.RGBA(0.1, 0.31, 0.58,1.0)
-        
-        self.STANDARD_PRESET = 0
-        self.FILM_STYLE_PRESET = 1
-        self.selection = self.STANDARD_PRESET 
-        
+
+        self.selection = STANDARD_PRESET 
         
         info_label_text_1 = _("<b>Welcome to Flowblade 2.0</b>")
         info_label_1 = Gtk.Label(info_label_text_1)
@@ -422,11 +438,11 @@ class WorkflowDialog(Gtk.Dialog):
         
         workflow_name = _("<b>Standard</b>")
         stadard_preset_workflow_text_1 = _("Standard workflow has the <b>Move</b> tool as default tool\nand presents a workflow\nsimilar to most video editors.")
-        workflow_select_item_1 = self.get_workflow_select_item(self.STANDARD_PRESET, workflow_name, stadard_preset_workflow_text_1)
+        workflow_select_item_1 = self.get_workflow_select_item(STANDARD_PRESET, workflow_name, stadard_preset_workflow_text_1)
 
         workflow_name = _("<b>Film Style</b>")
         filmstyle_preset_workflow_text_2 = _("Film Style workflow has the <b>Insert</b> tool as default tool\nand employs insert style editing.\nThis is the workflow in previous versions of the application.")
-        workflow_select_item_2 = self.get_workflow_select_item(self.FILM_STYLE_PRESET, workflow_name, filmstyle_preset_workflow_text_2)
+        workflow_select_item_2 = self.get_workflow_select_item(FILM_STYLE_PRESET, workflow_name, filmstyle_preset_workflow_text_2)
         
         self.workflow_items = [workflow_select_item_1, workflow_select_item_2]
 
@@ -482,11 +498,16 @@ class WorkflowDialog(Gtk.Dialog):
 
     def set_item_color(self, widget):
         if widget.item_number == self.selection:
-            widget.override_background_color(Gtk.StateType.NORMAL, self.SELECTED_BG)
+            widget.override_background_color(Gtk.StateType.NORMAL, SELECTED_BG)
         else:
             widget.override_background_color(Gtk.StateType.NORMAL, gui.get_bg_color())
 
     def done(self, dialog, response_id):
+        if self.selection == STANDARD_PRESET:
+            _set_workflow_STANDARD()
+        else:
+            _set_workflow_FILM_STYLE()
+            
         dialog.destroy()
 
     def selected_callback(self, w, item_number):
