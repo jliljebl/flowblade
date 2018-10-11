@@ -795,18 +795,19 @@ def show_worflow_info_dialog():
 # ------------------------------------------------------- small screens
 def _set_draw_params():
     if editorstate.screen_size_small_width() == True:
-        appconsts.NOTEBOOK_WIDTH = 450
-        editorwindow.MONITOR_AREA_WIDTH = 450
+        appconsts.NOTEBOOK_WIDTH = 400
+        editorwindow.MONITOR_AREA_WIDTH = 400
         editorwindow.MEDIA_MANAGER_WIDTH = 100
         
     if editorstate.screen_size_small_height() == True:
         appconsts.TOP_ROW_HEIGHT = 10
         projectinfogui.PROJECT_INFO_PANEL_HEIGHT = 140
+        tlinewidgets.HEIGHT = 252
         
     if editorstate.screen_size_large_height() == True:
         keyframeeditcanvas.GEOMETRY_EDITOR_HEIGHT = 300
 
-    if editorstate.SCREEN_WIDTH < 1153 and editorstate.SCREEN_HEIGHT < 865:
+    if editorstate.SCREEN_WIDTH < 1153 or editorstate.SCREEN_HEIGHT < 865:
         editorwindow.MONITOR_AREA_WIDTH = 400
         positionbar.BAR_WIDTH = 100
 

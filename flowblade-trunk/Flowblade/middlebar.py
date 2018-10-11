@@ -51,6 +51,8 @@ MIDDLE_ROW_HEIGHT = 30 # height of middle row gets set here
 BUTTON_HEIGHT = 28 # middle edit buttons row
 BUTTON_WIDTH = 48 # middle edit buttons row
 
+NORMAL_WIDTH = 1420
+
 def _show_buttons_TC_LEFT_layout(widget):
     global w
     w = gui.editor_window
@@ -207,7 +209,7 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
     buttons_row.pack_start(w.big_TC, False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
     buttons_row.pack_start(w.tool_selector.widget, False, True, 0)
-    if editorstate.SCREEN_WIDTH > 1279:
+    if editorstate.SCREEN_WIDTH > NORMAL_WIDTH:
         buttons_row.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
         buttons_row.pack_start(_get_tools_buttons(), False, True, 0)
         buttons_row.pack_start(guiutils.get_pad_label(150, 10), False, True, 0)
@@ -245,7 +247,7 @@ def fill_with_TC_MIDDLE_pattern(buttons_row, window):
     left_panel.pack_start(_get_undo_buttons_panel(), False, True, 0)
     left_panel.pack_start(guiutils.get_pad_label(10, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
     left_panel.pack_start(_get_zoom_buttons_panel(), False, True, 0)
-    if editorstate.SCREEN_WIDTH > 1279:
+    if editorstate.SCREEN_WIDTH > NORMAL_WIDTH:
         left_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
         left_panel.pack_start(_get_tools_buttons(), False, True, 0)
         left_panel.pack_start(guiutils.get_pad_label(50, 10), False, True, 10) # to left and right panel same size for centering
@@ -279,7 +281,7 @@ def fill_with_COMPONETS_CENTERED_pattern(buttons_row, window):
     buttons_row.pack_start(w.big_TC, False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
     buttons_row.pack_start(w.tool_selector.widget, False, True, 0)
-    if editorstate.SCREEN_WIDTH > 1279:
+    if editorstate.SCREEN_WIDTH > NORMAL_WIDTH:
         buttons_row.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
         buttons_row.pack_start(_get_tools_buttons(), False, True, 0)
         #buttons_row.pack_start(guiutils.get_pad_label(120, 10), False, True, 0)
