@@ -366,7 +366,7 @@ def main(root_path):
     Gtk.Settings.get_default().set_property("gtk-error-bell", False)
     
     # Show first run worflow info dialog.
-    GObject.timeout_add(500, show_worflow_info_dialog)
+    #GObject.timeout_add(500, show_worflow_info_dialog)
                 
     # Launch gtk+ main loop
     Gtk.main()

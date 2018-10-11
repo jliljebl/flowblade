@@ -365,10 +365,7 @@ def _workflow_menu_callback(widget, data):
             pass
     
     editorpersistance.save()
-    """ MAYBE ADD BACK
-    elif msg == "pointer_sensitive_item":
-        editorstate.cursor_is_tline_sensitive = widget.get_active()
-    """
+
 
 # ------------------------------------------------------------- keyboard shortcuts
 def tline_tool_keyboard_selected(event):
