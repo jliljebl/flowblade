@@ -798,7 +798,7 @@ class EditorWindow:
 
 
         # Menu box
-        # menubar size 348, 28 if w want to center someting her with set_size_request
+        # menubar size 348, 28 if we want to center something here with set_size_request
         self.menubar.set_margin_bottom(4)
         menu_vbox = Gtk.HBox(False, 0)
         menu_vbox.pack_start(guiutils.get_right_justified_box([self.menubar]), False, False, 0)
@@ -1103,7 +1103,7 @@ class EditorWindow:
         #self.clip_editor_b.set_tooltip_text(_("Display Monitor Clip"))
 
     def set_default_edit_tool(self):
-        # First active tool is the default tool. So we need to always have atleast one tool available.
+        # First active tool is the default tool. So we need to always have at least one tool available.
         self.change_tool(editorpersistance.prefs.active_tools[0])
 
     def kf_tool_exit_to_mode(self, mode): # Kf tool can be entered from popup menu and it exists to mode it was started in.

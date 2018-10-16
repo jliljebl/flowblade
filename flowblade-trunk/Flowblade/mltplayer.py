@@ -375,7 +375,7 @@ class Player:
         self.consumer.stop()
         self.producer.set_speed(0)
         self.producer.seek(start_frame)
-        time.sleep(0.5) # We need to be at correct frame before starting rendering or firts frame may get dropped
+        time.sleep(0.5) # We need to be at correct frame before starting rendering or first frame may get dropped
         self.render_start_frame = start_frame
         self.render_stop_frame = stop_frame
         self.consumer = render_consumer

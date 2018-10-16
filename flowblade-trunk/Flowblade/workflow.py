@@ -191,11 +191,11 @@ def workflow_menu_launched(widget, event):
 
     dnd_item = Gtk.MenuItem.new_with_label(_("Drag'n'Drop Action"))
     dnd_item.show()
-    
+
     dnd_menu = Gtk.Menu()
     labels = [_("Always Overwrite Blanks"), _("Overwrite Blanks on non-V1 Tracks"), _("Always Insert")]
     msgs = ["always overwrite", "overwrite nonV1", "always insert"]
-    active_index =  editorpersistance.prefs.dnd_action  #appconsts values corrspond with order here
+    active_index =  editorpersistance.prefs.dnd_action  #appconsts values correspond with order here
     _build_radio_menu_items_group(dnd_menu, labels, msgs, _workflow_menu_callback, active_index)
 
     dnd_item.set_submenu(dnd_menu)

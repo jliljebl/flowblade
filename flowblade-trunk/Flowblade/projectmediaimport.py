@@ -176,7 +176,7 @@ def _create_info_dialog():
 
 # ----------------------------------------------------------- main
 def main(root_path, filename):
-    # This the main for launched process, this is reached via 'flowblademediaimport' laucher file
+    # This the main for launched process, this is reached via 'flowblademediaimport' launcher file
     gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
     print "GTK+ version:", gtk_version
     editorstate.gtk_version = gtk_version
@@ -208,7 +208,7 @@ def main(root_path, filename):
             
     repo = mlt.Factory().init()
 
-    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
+    # Set numeric locale to use "." as radix, MLT initializes this to OS locale and this causes bugs 
     locale.setlocale(locale.LC_NUMERIC, 'C')
 
     # Check for codecs and formats on the system

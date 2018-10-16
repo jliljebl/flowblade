@@ -341,7 +341,7 @@ class ColorGradeBandCorrection:
         # Convert saved and editor hue, saturation ranges to one used 
         # to generate look-up tables 
         saturation = (saturation - 0.5) * 2.0
-        # Negative saturation means addding complementary color
+        # Negative saturation means adding complementary color
         if saturation < 0.0:
             saturation = abs(saturation)
             hue = hue + 0.5

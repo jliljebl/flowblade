@@ -187,7 +187,7 @@ class QueueRunnerThread(threading.Thread):
         
         # Update view for render end
         Gdk.threads_enter()
-        batch_window.reload_queue() # item may havee added to queue while rendering
+        batch_window.reload_queue() # item may have added to queue while rendering
         batch_window.render_queue_stopped()
         Gdk.threads_leave()
                     
@@ -198,7 +198,7 @@ class QueueRunnerThread(threading.Thread):
         self.running = False
         self.thread_running = False
         
-        batch_window.reload_queue() # item may havee added to queue while rendering
+        batch_window.reload_queue() # item may have added to queue while rendering
 
 
 class BatchRenderDBUSService(dbus.service.Object):
@@ -346,7 +346,7 @@ def main(root_path, force_launch=False):
             
     repo = mlt.Factory().init()
 
-    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
+    # Set numeric locale to use "." as radix, MLT initializes this to OS locale and this causes bugs 
     locale.setlocale(locale.LC_NUMERIC, 'C')
 
     # Check for codecs and formats on the system
@@ -1131,7 +1131,7 @@ def single_render_main(root_path):
 
     repo = mlt.Factory().init()
 
-    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
+    # Set numeric locale to use "." as radix, MLT initializes this to OS locale and this causes bugs 
     locale.setlocale(locale.LC_NUMERIC, 'C')
 
     # Check for codecs and formats on the system

@@ -60,9 +60,9 @@ GEOMETRY_OPACITY_KF ="geom_opac_kf"                         # frame=x/y:widthxhe
 GEOM_IN_AFFINE_FILTER = "geom_in_affine_filt"               # x/y:widthxheight:opacity
 GEOM_IN_AFFINE_FILTER_V2 =  "geom_in_affine_filt_v2"        # x/y:widthxheight:opacity
 AFFINE_SCALE = "affine_scale"                               # special property to get the 1/ x that the filter wants
-KEYFRAME_HCS = "keyframe_hcs"                               # frame=value(;frame=value) HCS = half comma separeted
-KEYFRAME_HCS_TRANSITION = "keyframe_hcs_transition"         # frame=value(;frame=value) HCS = half comma separeted, used to edit transitions
-MULTIPART_KEYFRAME_HCS = "multipart_keyframe"               # frame=value(;frame=value) series of mlt.Filter objects that get their properties set, HCS = half comma separeted
+KEYFRAME_HCS = "keyframe_hcs"                               # frame=value(;frame=value) HCS = half comma separated
+KEYFRAME_HCS_TRANSITION = "keyframe_hcs_transition"         # frame=value(;frame=value) HCS = half comma separated, used to edit transitions
+MULTIPART_KEYFRAME_HCS = "multipart_keyframe"               # frame=value(;frame=value) series of mlt.Filter objects that get their properties set, HCS = half comma separated
 FREI_POSITION_HCS = "frei_pos_hcs"                          # frame=x:y
 FREI_GEOM_HCS_TRANSITION = "frei_geom_hcs";                 # time=x:y:x_scale:y_scale:rotation:mix
 COLOR = "color"                                             # #rrggbb
@@ -434,7 +434,7 @@ class TransitionEditableProperty(AbstractProperty):
 class NonMltEditableProperty(AbstractProperty):
     """
     A wrapper for editable persistent properties that do not write out values to MLT objects.
-    Values of these are used to compute valuse that _are_ written to MLT.
+    Values of these are used to compute values that _are_ written to MLT.
     """
     def __init__(self, prop, args_str, clip, filter_index, non_mlt_property_index):
         AbstractProperty.__init__(self, args_str)

@@ -441,7 +441,7 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
             if end_frame > motion_producer.get_length() - 1:
                 end_frame = motion_producer.get_length() - 1
             
-            wait_for_producer_stop = False # consumer wont stop automatically and needs to stopped explicitly
+            wait_for_producer_stop = False # consumer wont stop automatically and needs to be stopped explicitly
 
         # Launch render
         global motion_renderer, motion_progress_update
@@ -538,7 +538,7 @@ def _render_reverse_clip_dialog_callback(dialog, response_id, fb_widgets, media_
             if start_frame < 0:
                 start_frame = 0
             
-            wait_for_producer_stop = False # consumer wont stop automatically and needs to stopped explicitly
+            wait_for_producer_stop = False # consumer wont stop automatically and needs to be stopped explicitly
 
         # Launch render
         global motion_renderer, motion_progress_update
@@ -571,7 +571,7 @@ def _REVERSE_render_stop(dialog, response_id):
     
 # ----------------------------------------------------------------------- single track transition render 
 def render_single_track_transition_clip(transition_producer, encoding_option_index, quality_option_index, file_ext, transition_render_complete_cb, window_text):
-    # Set render complete callback to availble render stop callback using global variable
+    # Set render complete callback to available render stop callback using global variable
     global transition_render_done_callback
     transition_render_done_callback = transition_render_complete_cb
 

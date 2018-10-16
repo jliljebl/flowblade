@@ -886,7 +886,7 @@ class Titler(Gtk.Window):
         self.view_editor.active_layer.update_rect = True
         _titler_data.active_layer.update_pango_layout()
 
-        # We only wnat to update layer list data model when this called after user typing 
+        # We only want to update layer list data model when this called after user typing 
         if update_layers_list:
             self.layer_list.fill_data_model()
 

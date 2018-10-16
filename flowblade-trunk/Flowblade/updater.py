@@ -354,14 +354,14 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
         saved_timeline_pos = PLAYER().current_frame()
         editorstate.tline_shadow_frame = saved_timeline_pos
 
-    # If we're already displaying monitor clip we stop consumer 
-    # to supress timeline flashing between monitor clips
+    # If we're already displaying monitor clip we stop consumer
+    # to suppress timeline flashing between monitor clips
     if clip_monitor_currently_active == False:
         editorstate.PLAYER().consumer.stop()
 
     # Clear old clip
     current_sequence().clear_hidden_track()
-    
+
     # Create and display clip on hidden track
     if MONITOR_MEDIA_FILE().type == appconsts.PATTERN_PRODUCER or MONITOR_MEDIA_FILE().type == appconsts.IMAGE_SEQUENCE:
         # pattern producer or image sequence
@@ -418,7 +418,7 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
     gui.pos_bar.widget.grab_focus()
     gui.media_list_view.widget.queue_draw()
     
-    # feature removed curently
+    # feature removed currently
     #if editorpersistance.prefs.auto_play_in_clip_monitor == True:
     #    PLAYER().start_playback()
     
@@ -541,7 +541,7 @@ def set_and_display_monitor_media_file(media_file):
         display_clip_in_monitor()
 
 
-# --------------------------------------- frame displayes
+# --------------------------------------- frame displayers
 def update_frame_displayers(frame):
     """
     Display frame position in position bar and time code display.

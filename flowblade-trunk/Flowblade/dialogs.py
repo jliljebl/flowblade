@@ -1356,7 +1356,7 @@ def keyboard_shortcuts_dialog(parent_window, callback):
     
     scroll_hold_panel = Gtk.HBox()
 
-    diff_label = guiutils.bold_label(_("Diffence to 'Flowblade Default' Presets:"))
+    diff_label = guiutils.bold_label(_("Difference to 'Flowblade Default' Presets:"))
 
     diff_data = Gtk.Label()
     diff_data.set_line_wrap(True)

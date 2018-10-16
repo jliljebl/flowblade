@@ -297,7 +297,7 @@ def update_kfeditors_positions():
 
 
 def _compositor_uses_fade_buttons(compositor):
-    # we hard coded compositors using fade buttons here because adding data in compostors.xml may have had some backwards compatiblity issues.
+    # we hard coded compositors using fade buttons here because adding data in compostors.xml may have had some backward compatibility issues.
     if compositor.transition.info.name  == "##opacity":
         return True
     elif compositor.transition.info.name  == "##pict_in_pict":

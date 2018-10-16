@@ -55,7 +55,7 @@ import updater
 
 M_PI = math.pi
 
-REF_LINE_Y = 250 # Y pos of tracks are relative to this. This is recalculated on initilization, so value here is irrelevent.
+REF_LINE_Y = 250 # Y pos of tracks are relative to this. This is recalculated on initialization, so value here is irrelevant.
 
 WIDTH = 430 # this has no effect if smaller then editorwindow.NOTEBOOK_WIDTH + editorwindow.MONITOR_AREA_WIDTH
 HEIGHT = appconsts.TLINE_HEIGHT # defines window min height together with editorwindow.TOP_ROW_HEIGHT
@@ -1871,7 +1871,7 @@ class TimeLineCanvas:
                                              cairo.FONT_WEIGHT_NORMAL)
                         cr.set_font_size(9)
                         cr.move_to(scale_in + TEXT_X, y + track_height - 2)
-                        try: # This is needed for backwards compability
+                        try: # This is needed for backwards compatibility
                              # Projects saved before adding this feature do not have sync_diff attribute
                             cr.show_text(str(clip.sync_diff))
                         except:

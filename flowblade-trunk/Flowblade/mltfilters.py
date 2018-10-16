@@ -168,7 +168,7 @@ class FilterInfo:
         self.property_args = propertyparse.node_list_to_args_dict(p_node_list)
     
         # Multipart property describes how filters are created and edited when filter 
-        # constists of multiple filters.
+        # consists of multiple filters.
         # There 0 or 1 of these in the info object.
         node_list = filter_node.getElementsByTagName(MULTIPART_PROPERTY)
         if len(node_list) == 1:
@@ -296,7 +296,7 @@ class MultipartFilterObject:
         self.value = kf_str
 
     def create_filters_for_keyframes(self, keyframes, mlt_profile):
-        for i in range(0, len(keyframes) - 1): # Theres one less filter parts than keyframes
+        for i in range(0, len(keyframes) - 1): # There's one less filter parts than keyframes
             mlt_filter = mlt.Filter(mlt_profile, str(self.info.mlt_service_id))
             mltrefhold.hold_ref(mlt_filter)
             self.mlt_filters.append(mlt_filter)
@@ -331,7 +331,7 @@ class MultipartFilterObject:
         return self._parse_string_to_keyframes(self.value)
         
     def _parse_string_to_keyframes(self, kf_string):
-        # returs list of (frame, value) tuples
+        # returns list of (frame, value) tuples
         value = kf_string.strip('"') # for some reason we have to use " around values or something broke
         parts = value.split(";")
         kfs = []
@@ -399,7 +399,7 @@ def load_filters_xml(services):
             global _volume_filter_info
             _volume_filter_info = filter_info
 
-        if filter_info.mlt_service_id == "brightness": # TODO: maybe add general search fuction for these, if we need a third one this is becoming a bit silly
+        if filter_info.mlt_service_id == "brightness": # TODO: maybe add general search function for these, if we need a third one this is becoming a bit silly
             global _brightness_filter_info
             _brightness_filter_info = filter_info
             

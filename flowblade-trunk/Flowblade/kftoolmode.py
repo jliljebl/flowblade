@@ -440,7 +440,7 @@ class TLineKeyFrameEditor:
         cr.restore()
         
         # Draw out-of-range kf icons and kf counts
-        if w > 55: # dont draw on too small editors
+        if w > 55: # don't draw on too small editors
             before_kfs = len(self.get_out_of_range_before_kfs())
             after_kfs = len(self.get_out_of_range_after_kfs())
             
@@ -474,7 +474,7 @@ class TLineKeyFrameEditor:
         cr.stroke()
 
         # Draw title
-        if w > 165: # dont draw on too small editors
+        if w > 165: # don't draw on too small editors
             if self.edit_type == VOLUME_KF_EDIT:
                 text = self.volume_kfs_text
             else:

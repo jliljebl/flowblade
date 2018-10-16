@@ -929,9 +929,9 @@ def _open_files_dialog_cb(file_select, response_id):
         return
     if len(filenames) == 0:
         return
-    
-    # We're disallowing opening .mlt or .xml files as media beause MLTs behaviour of overwriten project profile properties
-    # when opening MLT XML files as nedia
+
+    # We're disallowing opening .mlt or .xml files as media because MLTs behaviour of overwritten project profile properties
+    # when opening MLT XML files as media
     # Underlying reason: https://github.com/mltframework/mlt/issues/212
     mlt_files_deleted = False
     for i in range(len(filenames) - 1, -1, -1):
@@ -988,7 +988,7 @@ def _add_image_sequence_callback(dialog, response_id, data):
         resource_name_str = utils.get_img_seq_resource_name(frame_file, False)
 
     # detect highest file
-    # FIX: this fails if two similarily numbered sequences in same dir and both have same substring in frame name
+    # FIX: this fails if two similarly numbered sequences in same dir and both have same substring in frame name
     onlyfiles = [ f for f in listdir(folder) if isfile(join(folder,f)) ]
     highest_number_part = int(number_part)
     for f in onlyfiles:
@@ -1737,7 +1737,7 @@ def _get_sequence_import_range(import_seq):
     return (start_track_range, end_track_range)
 
 def _update_gui_after_sequence_import(): # This copied  with small modifications into projectaction.py for sequence imports, update there too if needed...yeah.
-    updater.update_tline_scrollbar() # Slider needs to adjust to possily new program length.
+    updater.update_tline_scrollbar() # Slider needs to adjust to possibly new program length.
                                      # This REPAINTS TIMELINE as a side effect.
     updater.clear_kf_editor()
 

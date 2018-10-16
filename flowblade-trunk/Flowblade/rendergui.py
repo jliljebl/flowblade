@@ -458,7 +458,7 @@ def _get_rendered_reverse_clip_length(media_file, range_combo, speed):
 # ----------------------------------------------------------- widgets
 class RenderQualitySelector():
     """
-    Component displays quality option relevant for encoding slection.
+    Component displays quality option relevant for encoding selection.
     """
     def __init__(self):
         self.widget = Gtk.ComboBoxText()

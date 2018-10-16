@@ -451,8 +451,8 @@ def effect_selection_changed(use_current_filter_index=False):
         keyframe_editor_widgets = []
         return
     
-    # "changed" get's called twice when adding filter and selecting last
-    # so we use this do this only once 
+    # "changed" gets called twice when adding filter and selecting last
+    # so we use/do this only once
     if block_changed_update == True:
         return
 

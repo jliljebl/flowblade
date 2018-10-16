@@ -100,7 +100,7 @@ def overwrite_move_mode_pressed():
     current_sequence().clear_hidden_track()
 
     editorstate.edit_mode = editorstate.OVERWRITE_MOVE
-    # Box tool is implemeted as sub mode of OVERWRITE_MOVE so this false
+    # Box tool is implemented as sub mode of OVERWRITE_MOVE so this false
     editorstate.overwrite_mode_box = False
     tlinewidgets.set_edit_mode(None, tlinewidgets.draw_overwrite_overlay)
 
@@ -113,7 +113,7 @@ def box_mode_pressed():
     stop_looping()
     current_sequence().clear_hidden_track()
     
-    # Box tool is implemeted as sub mode of OVERWRITE_MOVE
+    # Box tool is implemented as sub mode of OVERWRITE_MOVE
     editorstate.edit_mode = editorstate.OVERWRITE_MOVE
     editorstate.overwrite_mode_box = True
     boxmove.clear_data()
@@ -333,7 +333,7 @@ def cut_mode_pressed():
     stop_looping()
     current_sequence().clear_hidden_track()
 
-    # Box tool is implemeted as sub mode of OVERWRITE_MOVE
+    # Box tool is implemented as sub mode of OVERWRITE_MOVE
     editorstate.edit_mode = editorstate.CUT
         
     tlinewidgets.set_edit_mode(None, tlinewidgets.draw_cut_overlay)
@@ -346,7 +346,7 @@ def kftool_mode_pressed():
     stop_looping()
     current_sequence().clear_hidden_track()
 
-    # Box tool is implemeted as sub mode of OVERWRITE_MOVE
+    # Box tool is implemented as sub mode of OVERWRITE_MOVE
     editorstate.edit_mode = editorstate.KF_TOOL
     kftoolmode.enter_mode = None
     

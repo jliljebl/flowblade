@@ -408,7 +408,7 @@ class EditAction:
         do_autofollow_redo(self.compositor_autofollow_data)
         
     def _update_gui(self): # This copied  with small modifications into projectaction.py for sequence imports, update there too if needed...yeah.
-        updater.update_tline_scrollbar() # Slider needs to adjust to possily new program length.
+        updater.update_tline_scrollbar() # Slider needs to adjust to possibly new program length.
                                          # This REPAINTS TIMELINE as a side effect.
         if self.clear_effects_editor_for_multitrack_edit == False:
             if current_sequence().clip_is_in_sequence(clipeffectseditor.clip) == True:
@@ -1089,7 +1089,7 @@ def _overwrite_move_redo(self):
 
 #----------------- BOX OVERWRITE MOVE
 # "box_selection_data","delta"
-# Lifts clips from track and overwrites part of track with them for multple tracks
+# Lifts clips from track and overwrites part of track with them for multiple tracks
 # Move  compositors contained by selection too.
 def box_overwrite_move_action(data):
     action = EditAction(_box_overwrite_move_undo, _box_overwrite_move_redo, data)
@@ -1110,7 +1110,7 @@ def _box_overwrite_move_undo(self):
         comp.move(-self.delta)
         
 def _box_overwrite_move_redo(self):
-    # Create data for track overwite moves
+    # Create data for track overwrite moves
     if not hasattr(self, "track_moves"):
         self.track_moves = []
         for track_selection in self.box_selection_data.track_selections:
@@ -1125,7 +1125,7 @@ def _box_overwrite_move_redo(self):
                 self.track_moves.append(track_move_data)
 
     else:
-        # This may not be necessery...but its going in to make sure move_data is always same
+        # This may not be necessary...but its going in to make sure move_data is always same
         for move_data in self.track_moves:
             move_data.pop("removed_clips")
 
@@ -1469,7 +1469,7 @@ def _ripple_trim_blanks_redo(self, reverse_delta=False):
         
         if edit_op == appconsts.MULTI_NOOP: # no blank clip on this track is not changed
             continue
-        elif edit_op == appconsts.MULTI_TRIM: #longer available blank than max_backwards, lenth is changed
+        elif edit_op == appconsts.MULTI_TRIM: #longer available blank than max_backwards, length is changed
             blank_length = track.clips[trim_blank_index].clip_length()
             _remove_clip(track, trim_blank_index) 
             _insert_blank(track, trim_blank_index, blank_length + applied_delta)
@@ -1589,7 +1589,7 @@ def _set_clip_length_redo(self):
     self.orig_clip_out = self.clip.clip_out
     _remove_clip(self.track, self.index)
     _insert_clip(self.track, self.clip, self.index,
-                 self.clip.clip_in,  self.clip.clip_in + self.length - 1) # -1, out is inclusive and we're usin length here
+                 self.clip.clip_in,  self.clip.clip_in + self.length - 1) # -1, out is inclusive and we're using length here
 
 # ----------------------------------- CLIP END DRAG ON BLANK
 # "track","index","clip","blank_clip_length","delta"
@@ -1930,7 +1930,7 @@ def _delete_compositor_undo(self):
 
 def _delete_compositor_redo(self):
     # Compositors are recreated continually in sequnece.restack_compositors() and cannot be identified for undo/redo using object identity 
-    # so these ids must be  preserved for all succesive versions of a compositor.
+    # so these ids must be  preserved for all successive versions of a compositor.
     if self.first_do == True:
         self.destroy_id = self.compositor.destroy_id
         self.first_do = False
@@ -1957,7 +1957,7 @@ def _move_compositor_undo(self):
 
 def _move_compositor_redo(self):
     # Compositors are recreated continually in sequence.restack_compositors() and cannot be identified for undo/redo using object identity 
-    # so these ids must be  preserved for all succesive versions of a compositor.
+    # so these ids must be  preserved for all successive versions of a compositor.
     if self.first_do == True:
         self.destroy_id = self.compositor.destroy_id
         self.orig_in = self.compositor.clip_in
@@ -2218,7 +2218,7 @@ def _clear_sync_redo(self):
     # Clear child sync data
     self.child_clip.sync_data = None
 
-    # Claer resync data
+    # Clear resync data
     resync.clip_sync_cleared(self.child_clip)
     
 # --------------------------------------- MUTE CLIP
@@ -2270,7 +2270,7 @@ def _trim_end_over_blanks_undo(self):
 
 def _trim_end_over_blanks_redo(self):
     # Remove blanks
-    self.removed_lengths = _remove_consecutive_blanks(self.track, self.clip_index + 1) # +1, we're streching clip over blank are starting at NEXT index
+    self.removed_lengths = _remove_consecutive_blanks(self.track, self.clip_index + 1) # +1, we're stretching clip over blank are starting at NEXT index
     total_length = 0
     for length in self.removed_lengths:
         total_length = total_length + length

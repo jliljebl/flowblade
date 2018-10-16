@@ -165,7 +165,7 @@ class ProfileSelector():
 
 class RenderQualitySelector():
     """
-    Component displays quality option relevant for encoding slection.
+    Component displays quality option relevant for encoding selection.
     """
     def __init__(self):
         self.widget = Gtk.ComboBoxText()

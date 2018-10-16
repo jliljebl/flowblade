@@ -213,7 +213,7 @@ def create_editable_property_for_affine_blend(clip, editable_properties):
     ep.y_scale = filter(lambda ep: ep.name == "y scale", editable_properties)[0]
     ep.rotation = filter(lambda ep: ep.name == "rotation", editable_properties)[0]
     ep.opacity = filter(lambda ep: ep.name == "opacity", editable_properties)[0]
-    # Screen width and height are needeed for frei0r conversions
+    # Screen width and height are needed for frei0r conversions
     ep.profile_width = current_sequence().profile.width()
     ep.profile_height = current_sequence().profile.height()
     # duck type methods, using opacity is not meaningful, any property with clip member could do

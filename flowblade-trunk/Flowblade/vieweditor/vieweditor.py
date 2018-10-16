@@ -213,7 +213,7 @@ class ViewEditor(Gtk.Frame):
 
 
         if self.bg_buf is not None:
-            # MLT Provides images in which R <-> B are swiched from what Cairo wants them,
+            # MLT Provides images in which R <-> B are switched from what Cairo wants them,
             # so use numpy to switch them and to create a modifiable buffer for Cairo
             
             # Create cairo surface

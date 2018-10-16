@@ -219,7 +219,7 @@ def main(root_path, force_launch=False):
 
     repo = mlt.Factory().init()
 
-    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
+    # Set numeric locale to use "." as radix, MLT initializes this to OS locale and this causes bugs 
     locale.setlocale(locale.LC_NUMERIC, 'C')
 
     # Check for codecs and formats on the system

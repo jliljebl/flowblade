@@ -155,7 +155,7 @@ def cut_pressed():
         clip_start_in_tline = track.clip_start(index)
         clip_frame = tline_frame - clip_start_in_tline + clip.clip_in
 
-        # Dont edit if frame on cut.
+        # Don't edit if frame on cut.
         if clip_frame == clip.clip_in:
             continue
 
@@ -180,7 +180,7 @@ def sequence_split_pressed():
     # just asked for. The intention of this is to provide some more background
     # information
     heading = _("Split to new Sequence at Playhead Position")
-    info = _("Do you realy want to split this sequence into two?\nThis will create a new sequence receiving righthand content of your currently active sequence. Also the same content will be removed from your currently active sequence.\nThe newly created sequence will be opened.\n\n Continue?")
+    info = _("Do you really want to split this sequence into two?\nThis will create a new sequence receiving righthand content of your currently active sequence. Also the same content will be removed from your currently active sequence.\nThe newly created sequence will be opened.\n\n Continue?")
     dialogutils.warning_confirmation(split_confirmed, heading, info, gui.editor_window.window)
 
 def split_confirmed(dialog, response_id):
@@ -301,7 +301,7 @@ def _collect_compositors_for_split(playhead):
     # first: the compositor lies completely before the playhead position
     # we do not have to deal with those and leave them untouched
     # compositor.clip_out < playhead position
-    # second: the compositor lies completly behind the playhead position
+    # second: the compositor lies completely behind the playhead position
     # the compositor needs to be removed from the split sequence and needs to
     # be moved to the newly created one. we need to create a duplicate and modify
     # its clip_in and clip_out properties. basically this formula should apply:
@@ -337,9 +337,9 @@ def _collect_compositors_for_split(playhead):
         new_compositor.transition.set_tracks(old_compositor.transition.a_track, old_compositor.transition.b_track)
         new_compositor.obey_autofollow = old_compositor.obey_autofollow
         new_compositors.append(new_compositor)
-    
+
     # done with collecting all new necessary compositors
-    # now we remove the compositors that are completly after playhead positions
+    # now we remove the compositors that are completely after playhead positions
     # cut compositors have already been reduces in length
     for index in range(0, len(compositors_to_remove)):
         old_compositor = compositors_to_remove[index]
@@ -381,7 +381,7 @@ def splice_out_button_pressed():
 
     # A single clip delete can trigger a special clip cover delete
     # See if such delete should be attempted.
-    # Exit if done succesfully, do normal splice out and report if failed
+    # Exit if done successfully, do normal splice out and report if failed
     cover_delete_failed = False
     if editorpersistance.prefs.trans_cover_delete == True:
         if movemodes.selected_range_out == movemodes.selected_range_in:
@@ -526,10 +526,10 @@ def ripple_delete_button_pressed():
     if available_from_range_in < delete_range_length or available_from_range_out < delete_range_length:
         overwrite_track = ripple_data.get_overwrite_data(delete_range_length)
         primary_txt = _("Can't do Ripple Delete!")
-        secondary_txt = _("Seleted Ripple Delete would cause an overwrite and that is not permitted for this edit action.\n\nOverwrite would happen on at track <b>") + utils.get_track_name(overwrite_track, current_sequence()) + "</b>."
+        secondary_txt = _("Selected Ripple Delete would cause an overwrite and that is not permitted for this edit action.\n\nOverwrite would happen on at track <b>") + utils.get_track_name(overwrite_track, current_sequence()) + "</b>."
         parent_window = gui.editor_window.window
         dialogutils.info_message(primary_txt, secondary_txt, parent_window)
-        return 
+        return
 
     # Do ripple delete
     data = {"track":track,
@@ -1016,7 +1016,7 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
     to_clip = transition_data["to_clip"]
 
     # Get values to build transition render sequence
-    # Divide transition lenght between clips, odd frame goes to from_clip 
+    # Divide transition length between clips, odd frame goes to from_clip
     real_length = length + 1 # first frame is 100% from clip frame so we are going to have to drop that
     to_part = real_length / 2
     from_part = real_length - to_part
@@ -1205,12 +1205,12 @@ def _check_transition_handles(from_req, from_handle, to_req, to_handle, length):
                             SPACE_TAB + _("Available <b>") + str(to_handle) + _("</b> frame(s), ") + \
                             SPACE_TAB + _("Required <b>") + str(to_req) + _("</b> frame(s) ")
 
-        
+
         img = Gtk.Image.new_from_file ((respaths.IMAGE_PATH + "transition_wrong.png"))
         img2 = Gtk.Image.new_from_file ((respaths.IMAGE_PATH + "transition_right.png"))
         img2.set_margin_bottom(24)
 
-        label1 = Gtk.Label(_("Current situation, not enought media overlap:"))
+        label1 = Gtk.Label(_("Current situation, not enough media overlap:"))
         label1.set_margin_bottom(12)
         label2 = Gtk.Label(_("You need more media overlap:"))
         label2.set_margin_bottom(12)

@@ -124,7 +124,7 @@ def mouse_release(x, y, frame):
     updater.repaint_tline()
 
 def _exit_to_overwrite():
-    # If we entered box mode from overwite mode empty click, this is used to enter back into overwrite mode.
+    # If we entered box mode from overwrite mode empty click, this is used to enter back into overwrite mode.
     global entered_from_overwrite
     entered_from_overwrite = False
     editorstate.overwrite_mode_box = False

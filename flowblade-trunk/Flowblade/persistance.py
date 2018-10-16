@@ -145,7 +145,7 @@ def save_project(project, file_path, changed_profile_desc=None):
     project_proxy_mode = s_proj.proxy_data.proxy_mode
     proxy_path_dict = {}
 
-    # Replace media file objects with pickleable copys
+    # Replace media file objects with pickleable copies
     media_files = {}
     for k, v in s_proj.media_files.iteritems():
         s_media_file = copy.copy(v)
@@ -503,7 +503,7 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
     # Create and connect compositors.
     mlt_compositors = []
     for py_compositor in seq.compositors:
-            # Keeping backwards compability
+            # Keeping backwards compatibility
             if SAVEFILE_VERSION < 3:
                 FIX_N_TO_3_COMPOSITOR_COMPABILITY(py_compositor, SAVEFILE_VERSION)
             if not hasattr(py_compositor, "obey_autofollow"): # "obey_autofollow" attr was added for 1.16
@@ -614,7 +614,7 @@ def fill_track_mlt(mlt_track, py_track):
         if append_created == True:
             append_clip(mlt_track, mlt_clip, clip.clip_in, clip.clip_out)
 
-        # Save refences to recreate sync relations after all clips loaded
+        # Save references to recreate sync relations after all clips loaded
         global all_clips, sync_clips
         all_clips[mlt_clip.id] = mlt_clip
         if mlt_clip.sync_data != None:
@@ -747,7 +747,7 @@ def get_img_seq_relative_path(project_file_path, asset_path):
     return NOT_FOUND # no relative path found
         
     
-# ------------------------------------------------------- backwards compability
+# ------------------------------------------------------- backwards compatibility
 def FIX_N_TO_3_COMPOSITOR_COMPABILITY(compositor, SAVEFILE_VERSION):
     if SAVEFILE_VERSION == 1:
         FIX_1_TO_2_BACKWARDS_COMPOSITOR_COMPABILITY(compositor)
@@ -755,7 +755,7 @@ def FIX_N_TO_3_COMPOSITOR_COMPABILITY(compositor, SAVEFILE_VERSION):
     FIX_2_TO_N_BACKWARDS_COMPOSITOR_COMPABILITY(compositor)
     
 def FIX_1_TO_2_BACKWARDS_COMPOSITOR_COMPABILITY(compositor):
-    # fix SAVEFILE_VERSION 1 -> N compability issue with x,y -> x/y in compositors
+    # fix SAVEFILE_VERSION 1 -> N compatibility issue with x,y -> x/y in compositors
     new_properties = []
     for prop in compositor.transition.properties:
         name, value, prop_type = prop
@@ -768,7 +768,7 @@ def FIX_2_TO_N_BACKWARDS_COMPOSITOR_COMPABILITY(compositor):
 
 def FIX_1_TO_N_BACKWARDS_FILTER_COMPABILITY(py_filter):
     # This is only called on "affine" filters
-    # fix SAVEFILE_VERSION 1 -> N compability issue with x,y -> x/y in compositors
+    # fix SAVEFILE_VERSION 1 -> N compatibility issue with x,y -> x/y in compositors
     new_properties = []
     for prop in py_filter.properties:
         name, value, prop_type = prop

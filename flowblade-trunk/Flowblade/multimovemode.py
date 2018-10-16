@@ -60,7 +60,7 @@ class MultimoveData:
     def _build_move_data(self):
         tracks = current_sequence().tracks
 
-        # Look at all tracks exept hidden and black
+        # Look at all tracks except hidden and black
         # Get per track:
         # * maximum length edit can be done backwards before an overwrite happens
         # * indexes of blanks that are trimmed and/or added/removed,

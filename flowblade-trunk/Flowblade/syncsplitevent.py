@@ -150,15 +150,15 @@ def _set_sync_parent_clip(event, frame):
         return
 
     # Parent and child can't be on the same track.
-    # Now that all parent clips must be on track V1 this is no longer shoild be possible.
+    # Now that all parent clips must be on track V1 this should no longer be possible.
     if parent_track == child_clip_track:
         print "parent_track == child_clip_track"
         return
-        
+
     parent_clip = parent_track.clips[parent_clip_index]
-    
+
     # These cannot be chained.
-    # Now that all parent clips must be on track V1 this is no longer shoild be possible.
+    # Now that all parent clips must be on track V1 this should no longer be possible.
     if parent_clip.sync_data != None:
         print "parent_clip.sync_data != None"
         return
@@ -202,7 +202,7 @@ def resync_selected():
     # Selection not valid after resync action
     movemodes.clear_selected_clips()
 
-    # Chack if synced clips have same or consecutive parent clips
+    # Check if synced clips have same or consecutive parent clips
     all_same_or_consecutive = True
     master_id = -1
     current_master_clip = -1

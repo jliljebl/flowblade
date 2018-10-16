@@ -254,7 +254,7 @@ def main(root_path):
     repo.producers().set('qtext', None, 0)
     repo.producers().set('kdenlivetitle', None, 0)
 
-    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs.
+    # Set numeric locale to use "." as radix, MLT initializes this to OS locale and this causes bugs.
     locale.setlocale(locale.LC_NUMERIC, 'C')
 
     # Check for codecs and formats on the system.
@@ -330,7 +330,7 @@ def main(root_path):
     # Every running instance has unique autosave file which is deleted at exit
     set_instance_autosave_id()
 
-    # Existance of autosave file hints that program was exited abnormally.
+    # Existence of autosave file hints that program was exited abnormally.
     if check_crash == True and len(autosave_files) > 0:
         if len(autosave_files) == 1:
             GObject.timeout_add(10, autosave_recovery_dialog)
@@ -396,7 +396,7 @@ def monkeypatch_callbacks():
     editevent.display_clip_menu_pop_up = clipmenuaction.display_clip_menu
     editevent.compositor_menu_item_activated = clipmenuaction._compositor_menu_item_activated
     
-    # Posionbar in gmic.py doesnot need trimmodes.py dependency and is avoided 
+    # Posionbar in gmic.py does not need trimmodes.py dependency and is avoided 
     positionbar.trimmodes_set_no_edit_trim_mode = trimmodes.set_no_edit_trim_mode
 
     # Snapping is done in a separate module but needs some tlinewidgets state info
@@ -545,7 +545,7 @@ def init_sequence_gui():
 def init_editor_state():
     """
     Called after project load or changing current sequence 
-    to initalize editor state.
+    to initialize editor state.
     """
     render.fill_out_profile_widgets()
 

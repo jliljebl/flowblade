@@ -785,7 +785,7 @@
         
         However, if set to these values later it works.
         
-        Workaround is that we initilize it with hard coded values
+        Workaround is that we initialize it with hard coded values
     -->
     <filter id="avfilter.perspective">
         <name>Perspective</name>

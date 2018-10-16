@@ -19,7 +19,7 @@
 """
 
 """
-Module contains objects that wrap mlt.Transition objects used to mix video betweeen
+Module contains objects that wrap mlt.Transition objects used to mix video between
 two tracks.
 """
 import copy

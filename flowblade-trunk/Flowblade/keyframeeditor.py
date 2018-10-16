@@ -23,7 +23,7 @@ Module contains GUI widgets used to edit keyframed properties in filters and
 compositors.
 
 NOTE: All the editors are composites of smaller objects (so that similar 
-but slighly different editors can be made in the future). There are a lots 
+but slightly different editors can be made in the future). There are a lots 
 of callbacks to parent objects, this makes the design difficult to follow.
 """
 
@@ -659,7 +659,7 @@ class ClipKeyFrameEditor:
 class ClipEditorButtonsRow(Gtk.HBox):
     """
     Row of buttons used to navigate and add keyframes and frame 
-    entry box for active keyframe. Parent editor must implemnt interface
+    entry box for active keyframe. Parent editor must implement interface
     defined by methods:
         editor_parent.add_pressed()
         editor_parent.delete_pressed()
@@ -800,7 +800,7 @@ class AbstractKeyFrameEditor(Gtk.VBox):
     def __init__(self, editable_property, use_clip_in=True, slider_switcher=None):
         # editable_property is KeyFrameProperty
         GObject.GObject.__init__(self)
-        self.initializing = True # Hack against too early for on slider listner
+        self.initializing = True # Hack against too early for on slider listener
         
         self.set_homogeneous(False)
         self.set_spacing(2)
@@ -840,7 +840,7 @@ class AbstractKeyFrameEditor(Gtk.VBox):
         self.slider = slider
         self.spin = spin
 
-        self.initializing = False # Hack against too early for on slider listner
+        self.initializing = False # Hack against too early for on slider listener
 
     def display_tline_frame(self, tline_frame):
         # This is called after timeline current frame changed. 

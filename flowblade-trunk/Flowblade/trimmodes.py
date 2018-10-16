@@ -105,7 +105,7 @@ def _get_trim_limits(cut_frame, from_clip, to_clip):
     """
     # This is too complex now that roll is handled separately, could be reworked.
     # "both_start", and "both_end" are no longer correct names for range variables since only one clip is
-    # needed taken into account when calculating legel trim range.
+    # needed taken into account when calculating legal trim range.
     trim_limits = {}
 
     if from_clip == None:
@@ -538,7 +538,7 @@ def oneroll_trim_press(event, frame, x=None, y=None):
             if editorpersistance.prefs.empty_click_exits_trims == True:
                 set_exit_mode_func(True) # further mouse events are handled at editevent.py
             else:
-                set_no_edit_mode_func() # no furter mouse events will come here
+                set_no_edit_mode_func() # no further mouse events will come here
         else:
             submode = MOUSE_EDIT_ON # to stop entering keyboard edits until mouse released
             if not editorpersistance.prefs.quick_enter_trims:
@@ -768,7 +768,7 @@ class RippleData:
     def _build_ripple_data(self):
         tracks = current_sequence().tracks
 
-        # Look at all tracks exept hidden and black
+        # Look at all tracks except hidden and black
         # Get per track:
         # * maximum length trim can be done backwards or forwards before an overwrite happens
         # * indexes of blanks that are trimmed and/or added/removed,
