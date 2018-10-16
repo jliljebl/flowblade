@@ -63,9 +63,9 @@
         <property name="Operation" args="editor=combobox exptype=default cbopts=Overwrite:0.0,Max:0.3,Min:0.5,Add:0.7,Subtract:1.0">0.0</property>
     </filter>
     <filter id="frei0r.spillsupress">
-        <name>Spill Supress</name>
+        <name>Spill Suppress</name>
         <group>Alpha</group>  
-        <property name="supresstype" args="editor=combobox displayname=Supress exptype=default cbopts=Green:0.0,Blue:1.0">0.0</property>
+        <property name="supresstype" args="editor=combobox displayname=Suppress exptype=default cbopts=Green:0.0,Blue:1.0">0.0</property>
     </filter>
     <filter id="lumakey">
         <name>Luma Key</name>
@@ -218,7 +218,7 @@
         <property name="0" args="range_in=1,300 range_out=1,300 editor=ladspa_slider displayname=Roomsize">75.75</property>
         <property name="1" args="range_in=0.1,30 range_out=0.1,30 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Reverb!time(s)">7.575</property>
         <property name="2" args="range_in=0,100 range_out=0,1 editor=ladspa_slider displayname=Damping">0.5</property>
-        <property name="3" args="range_in=0,100 range_out=0,1 editor=ladspa_slider displayname=Input!bandwith">0.75</property>
+        <property name="3" args="range_in=0,100 range_out=0,1 editor=ladspa_slider displayname=Input!bandwidth">0.75</property>
         <property name="4" args="range_in=-70,0 range_out=-70,0 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Dry!signal!level(dB)">-70.0</property>
         <property name="5" args="range_in=-70,0 range_out=-70,0 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Early!reflection!level(dB)">0.0</property>
         <property name="6" args="range_in=-70,0 range_out=-70,0 editor=ladspa_slider step=0.1 scale_digits=1 displayname=Tail!level(dB)">-17.5</property>

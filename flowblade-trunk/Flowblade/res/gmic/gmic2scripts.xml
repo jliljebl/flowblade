@@ -1081,7 +1081,7 @@
     </gmicscript>
     
     <gmicscript>
-        <name>Unknow</name>
+        <name>Unknown</name>
         <group>Film Emulate Add Grain</group>
         <script>-fx_emulate_grain 4,1,0.2,100,0,0,1,0,0,0,0,0</script>
     </gmicscript>
