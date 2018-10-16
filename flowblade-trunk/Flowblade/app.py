@@ -88,7 +88,6 @@ import resync
 import sequence
 import shortcuts
 import snapping
-# Sep-2018 - SvdB - added threading to stop running threads when exiting the application
 import threading
 import titler
 import tlinewidgets
@@ -100,9 +99,6 @@ import undo
 import updater
 import utils
 import workflow
-
-
-import jackaudio
 
 AUTOSAVE_DIR = appconsts.AUTOSAVE_DIR
 AUTOSAVE_FILE = "autosave/autosave"
@@ -154,7 +150,6 @@ def main(root_path):
     except:
         editorstate.mlt_version = "0.0.99" # magic string for "not found"
 
-
     #print "SDL version:", str(editorstate.get_sdl_version())
     
     # passing -xdg as a flag will change the user_dir location with XDG_CONFIG_HOME
@@ -166,6 +161,7 @@ def main(root_path):
 
     # Create hidden folders if not present
     user_dir = utils.get_hidden_user_dir_path()
+
     print "User dir:",user_dir
     if not os.path.exists(user_dir):
         os.mkdir(user_dir)
