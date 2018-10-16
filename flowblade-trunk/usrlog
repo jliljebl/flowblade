@@ -1,0 +1,70 @@
+setup.py:#!/usr/bin/env python
+
+flowblade:#!/usr/bin/env python
+flowblade:if launch_dir == "/usr/bin":
+flowblade:    modules_path = "/usr/share/flowblade/Flowblade"
+flowblade:        modules_path = "/usr/share/pyshared/Flowblade"
+flowblade:    if launch_dir == "/usr/bin":'
+
+copyrights: Public License version 3 can be found in "/usr/share/common-licenses/GPL-3".
+
+Flowblade/res/help/ru/tools.html:Команды в основном встроены в двоичный файл <b>/usr/bin/gmic</b> поэтому для получения доступа к большему количеству команд, вам скорее всего потребуется обновить двоичный файл в вашей системе.
+
+Flowblade/res/help/en/tools.html:Commands are mostly embedded in the <b>/usr/bin/gmic</b> binary itself, so to have access to more commands you will mostly need to upgrade the binary in your system.
+
+Flowblade/phantom2d/serverlaunch:#!/usr/bin/env python
+
+Flowblade/translations.py:        # Use /usr/share/locale first if available and running from installation
+Flowblade/translations.py:        if os.path.isfile("/usr/share/locale/fi/LC_MESSAGES/flowblade.mo"): # fi is the translation controlled by program author
+Flowblade/translations.py:            print "Found translations at /usr/share/locale, using those."
+Flowblade/translations.py:            locale_path = "/usr/share/locale/"
+Flowblade/translations.py:            print "Translations at /usr/share/locale were not found, using program root directory translations."
+Flowblade/translations.py:            print "Translations at " + locale_file + " were not found, using /usr/share/locale translations."
+Flowblade/translations.py:            locale_path = "/usr/share/locale/"
+Flowblade/launch/flowbladeaudiorender:#!/usr/bin/env python
+Flowblade/launch/flowbladeclapperless:#!/usr/bin/env python
+Flowblade/launch/flowbladebatch:#!/usr/bin/env python
+Flowblade/launch/flowbladephantom:#!/usr/bin/env bash
+Flowblade/launch/flowbladesinglerender:#!/usr/bin/env python
+Flowblade/launch/flowbladegmic:#!/usr/bin/env python
+Flowblade/launch/flowbladenatron:#!/usr/bin/env python
+Flowblade/launch/flowblademedialinker:#!/usr/bin/env python
+Flowblade/launch/flowblademediaimport:#!/usr/bin/env python
+Binary file Flowblade/locale/cs/LC_MESSAGES/flowblade.mo matches
+Flowblade/locale/cs/LC_MESSAGES/flowblade.po:"G'Mic binary was not present at <b>/usr/bin/gmic</b>.\n"
+Flowblade/locale/cs/LC_MESSAGES/flowblade.po:"Spustitelný soubor G'Mic nebyl přítomen v <b>/usr/bin/gmic</b>.\n"
+Binary file Flowblade/locale/zh_CN/LC_MESSAGES/flowblade.mo matches
+Flowblade/locale/zh_CN/LC_MESSAGES/flowblade.po:"G'Mic binary was not present at <b>/usr/bin/gmic</b>.\n"
+Flowblade/locale/zh_CN/LC_MESSAGES/flowblade.po:"G'Mic库文件目前不在<b>/usr/bin/gmic</b>.\n"
+Binary file Flowblade/locale/fi/LC_MESSAGES/flowblade.mo matches
+Flowblade/locale/fi/LC_MESSAGES/flowblade.po:"G'Mic binary was not present at <b>/usr/bin/gmic</b>.\n"
+Flowblade/locale/fi/LC_MESSAGES/flowblade.po:"G'Mic ohjelmaa ei löytynyt paikasta <b>/usr/bin/gmic</b>.\n"
+Binary file Flowblade/locale/ru/LC_MESSAGES/flowblade.mo matches
+Flowblade/locale/ru/LC_MESSAGES/flowblade.po:"G'Mic binary was not present at <b>/usr/bin/gmic</b>.\n"
+Flowblade/locale/ru/LC_MESSAGES/flowblade.po:"Отсутствует модуль G'Mic по адресу.<b>/usr/bin/gmic</b>.\n"
+Flowblade/locale/es/LC_MESSAGES/flowblade.po:"G'Mic binary was not present at <b>/usr/bin/gmic</b>.\n"
+Binary file Flowblade/locale/hu/LC_MESSAGES/flowblade.mo matches
+Flowblade/locale/hu/LC_MESSAGES/flowblade.po:"G'Mic binary was not present at <b>/usr/bin/gmic</b>.\n"
+Flowblade/locale/hu/LC_MESSAGES/flowblade.po:"A G'Mic program nem található a <b>/usr/bin/gmic</b> útvonalon.\n"
+Flowblade/locale/copy_to_usr:echo "Copying all compiled translation files languages to /usr/share/locale"
+Flowblade/locale/copy_to_usr:   COPY_FILE="/usr/share/locale/"$LANG"/LC_MESSAGES/flowblade.mo"
+Binary file Flowblade/locale/pl/LC_MESSAGES/flowblade.mo matches
+Flowblade/locale/pl/LC_MESSAGES/flowblade.po:"G'Mic binary was not present at <b>/usr/bin/gmic</b>.\n"
+Flowblade/locale/pl/LC_MESSAGES/flowblade.po:"Binarny G'Mic nie jest obecny w <b>/usr/bin/gmic</b>.\n"
+Binary file Flowblade/locale/de/LC_MESSAGES/flowblade.mo matches
+Flowblade/locale/de/LC_MESSAGES/flowblade.po:"Zoom Ein \t\t- Mausrad rollen\n"
+Flowblade/locale/de/LC_MESSAGES/flowblade.po:"Zoom Aus \t\t- Mausrad rollen\n"
+Flowblade/locale/de/LC_MESSAGES/flowblade.po:"G'Mic binary was not present at <b>/usr/bin/gmic</b>.\n"
+Flowblade/locale/de/LC_MESSAGES/flowblade.po:"G'Mic wurde unter <b>/usr/bin/gmic</b> nicht gefunden.\n"
+Flowblade/locale/it/LC_MESSAGES/flowblade.po:"G'Mic binary was not present at <b>/usr/bin/gmic</b>.\n"
+Flowblade/locale/fr/LC_MESSAGES/flowblade.po:"G'Mic binary was not present at <b>/usr/bin/gmic</b>.\n"
+Flowblade/locale/Flowblade/flowblade.pot:"G'Mic binary was not present at <b>/usr/bin/gmic</b>.\n"
+Binary file Flowblade/translations.pyc matches
+Flowblade/tools/gmic.py:    if os.path.exists("/usr/bin/gmic") == True:
+Flowblade/tools/gmic.py:        secondary_txt = _("G'Mic binary was not present at <b>/usr/bin/gmic</b>.\nInstall G'MIC to use this tool.")
+Flowblade/tools/clapperless.py:#!/usr/bin/env python
+Binary file Flowblade/tools/gmic.pyc matches
+docs/KNOWN_ISSUES.md:#### 7. MLT 6.4.0 crashes with terminal output: "ERROR: /usr/lib/python2.7/dist-packages/_mlt.x86_64-linux-gnu.so: undefined symbol: _ZNK3Mlt7Profile8is_validEv"
+docs/GDB.md:run /usr/bin/flowblade
+docs/RELEASE_NOTES.md:  * Use translations at /usr/share/locale if available
+installdata/flowblade:application/vnd.flowblade-project; /usr/bin/flowblade '%s'; test=test -n "$DISPLAY"; priority=5

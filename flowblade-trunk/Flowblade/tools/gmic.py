@@ -98,7 +98,7 @@ _hamburger_menu = Gtk.Menu()
 
 #-------------------------------------------------- launch and inits
 def test_availablity():
-    if os.path.exists("/usr/bin/gmic") == True:
+    if os.path.exists("/usr/bin/gmic") == True or os.path.exists("/app/bin/gmic") == True: # File system and flatpak
         print "G'MIC found"
         global _gmic_found
         _gmic_found = True
