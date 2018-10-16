@@ -1,0 +1,18 @@
+<replacements>
+
+    <!-- This file contains a list of replacement relationships. Some 
+         FilterInfo objects are not made available to user for FilterObject
+         creation if defined MLT services are available -->
+
+    <replacementrelation>
+        <useservice id="frei0r.coloradj_RGB" name="Color Adjustment"></useservice>
+        <dropservice id="frei0r.coloradj_RGB" name="RGB Adjustment"></dropservice>
+        <dropservice id="frei0r.hueshift0r" name="Hue"></dropservice>
+    </replacementrelation>
+
+    <replacementrelation>
+        <useservice id="lumaliftgaingamma" name="Lift Gain Gamma"></useservice>
+        <dropservice id="gamma" name="Gamma"></dropservice>
+    </replacementrelation>
+    
+</replacements>

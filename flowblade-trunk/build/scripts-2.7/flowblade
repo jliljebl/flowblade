@@ -1,0 +1,89 @@
+#!/usr/bin/python
+
+"""
+    Flowblade Movie Editor is a nonlinear video editor.
+    Copyright 2012 Janne Liljeblad.
+
+    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+
+    Flowblade Movie Editor is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Flowblade Movie Editor is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
+import os
+import sys
+
+print "FLOWBLADE MOVIE EDITOR 1.16"
+print "---------------------------"
+
+
+# Get launch script dir
+launch_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
+
+setup_prefix = os.path.normpath(sys.exec_prefix)
+
+print "Launch script dir:", launch_dir, "setup prefix", setup_prefix
+
+# Update sys.path to include modules
+# When running on distro
+if launch_dir == "/usr/bin":
+    print "Running from installation..."
+    modules_path = "/usr/share/flowblade/Flowblade"
+    if not os.path.isdir(modules_path):
+        modules_path = "/usr/share/pyshared/Flowblade"
+    print "modules path:", modules_path
+# When running in flatpak or setup.py created install
+elif launch_dir == setup_prefix + "/bin":
+    print "Running from installation..."
+    modules_path = setup_prefix + "/share/flowblade/Flowblade"
+    if not os.path.isdir(modules_path):
+        modules_path =  setup_prefix + "/share/pyshared/Flowblade"
+    print "modules path:", modules_path
+# When running in filesystem
+else:
+    print "Running from filesystem..."
+    modules_path = launch_dir + "/Flowblade"
+
+sys.path.insert(0, modules_path)
+sys.path.insert(0, modules_path + "/vieweditor")
+sys.path.insert(0, modules_path + "/tools")
+
+# Check that we have MLT, missing is fatal.
+try:
+    import mlt
+    try:
+        mlt_version = mlt.LIBMLT_VERSION
+        print "MLT found, version:", mlt_version
+    except:
+        print "MLT found but version info not available. MLT probably too old to work reliably..."
+except Exception, err:
+    print "MLT not found, exiting..."
+    print "ERROR:", err
+    sys.exit(1)
+
+# Get app.py module and set info which type of installation is running
+try:
+    import app
+    import editorstate
+    if launch_dir == "/usr/bin" or launch_dir == setup_prefix + "/bin":
+        editorstate.app_running_from = editorstate.RUNNING_FROM_INSTALLATION
+    else:
+        editorstate.app_running_from = editorstate.RUNNING_FROM_DEV_VERSION
+except Exception, err:
+    print "Failed to import module app.py to launch Flowblade!"
+    print "ERROR:", err
+    print "Installation was assumed to be at:", modules_path
+    sys.exit(1)
+
+# Launch application
+app.main(modules_path)
