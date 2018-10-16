@@ -30,9 +30,7 @@ print "---------------------------"
 # Get launch script dir
 launch_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
 
-setup_prefix = os.path.normpath(sys.exec_prefix)
-
-print "Launch script dir:", launch_dir, "setup prefix", setup_prefix
+print "Launch script dir:", launch_dir
 
 # Update sys.path to include modules
 # When running on distro
@@ -42,12 +40,12 @@ if launch_dir == "/usr/bin":
     if not os.path.isdir(modules_path):
         modules_path = "/usr/share/pyshared/Flowblade"
     print "modules path:", modules_path
-# When running in flatpak or setup.py created install
-elif launch_dir == setup_prefix + "/bin":
+# When running in flatpak
+elif launch_dir == "/app/bin":
     print "Running from installation..."
-    modules_path = setup_prefix + "/share/flowblade/Flowblade"
+    modules_path = "/app/share/flowblade/Flowblade"
     if not os.path.isdir(modules_path):
-        modules_path =  setup_prefix + "/share/pyshared/Flowblade"
+        modules_path = "/app/share/pyshared/Flowblade"
     print "modules path:", modules_path
 # When running in filesystem
 else:
@@ -75,7 +73,7 @@ except Exception, err:
 try:
     import app
     import editorstate
-    if launch_dir == "/usr/bin" or launch_dir == setup_prefix + "/bin":
+    if launch_dir == "/usr/bin" or launch_dir == "/app/bin":
         editorstate.app_running_from = editorstate.RUNNING_FROM_INSTALLATION
     else:
         editorstate.app_running_from = editorstate.RUNNING_FROM_DEV_VERSION

@@ -21,7 +21,6 @@
 import gettext
 import locale
 import os
-import sys
 
 import respaths
 import editorpersistance
@@ -46,18 +45,16 @@ def init_languages():
     if (language):
         langs += language.split(":")
 
-    setup_prefix = os.path.normpath(sys.prefix)
-
     if editorstate.app_running_from == editorstate.RUNNING_FROM_INSTALLATION:
         # Use /usr/share/locale first if available and running from installation
         # Look for installed translation in distro install
         if os.path.isfile("/usr/share/locale/fi/LC_MESSAGES/flowblade.mo"): # fi is the translation controlled by program author
             print "Found translations at /usr/share/locale, using those."
             locale_path = "/usr/share/locale/"
-        #  Look for installed translations in flatpak/ set up install 
-        elif os.path.isfile(setup_prefix + "/share/flowblade/Flowblade/locale/fi/LC_MESSAGES/flowblade.mo"): # fi is the translation controlled by program author
-            print "Found translations at " + setup_prefix + "/app/share/flowblade/Flowblade/locale using those."
-            locale_path = setup_prefix + "/share/flowblade/Flowblade/locale"
+        #  Look for installed translations in flatpak install 
+        elif os.path.isfile("/app/share/flowblade/Flowblade/locale/fi/LC_MESSAGES/flowblade.mo"): # fi is the translation controlled by program author
+            print "Found translations at /usr/share/locale, using those."
+            locale_path = "app/share/flowblade/Flowblade/locale"
         else:
             print "Translations at /usr/share/locale were not found, using program root directory translations."
             locale_path = respaths.LOCALE_PATH
