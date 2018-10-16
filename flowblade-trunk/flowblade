@@ -73,7 +73,7 @@ except Exception, err:
 try:
     import app
     import editorstate
-    if launch_dir == "/usr/bin" or launch_dir == "/app/bin": # TODO: add Flatpak value and info print
+    if launch_dir == "/usr/bin" or launch_dir == "/app/bin":
         editorstate.app_running_from = editorstate.RUNNING_FROM_INSTALLATION
     else:
         editorstate.app_running_from = editorstate.RUNNING_FROM_DEV_VERSION
