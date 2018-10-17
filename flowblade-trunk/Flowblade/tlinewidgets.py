@@ -1402,6 +1402,10 @@ class TimeLineCanvas:
 
         self.widget.leave_notify_func = leave_notify_listener
         self.widget.enter_notify_func = enter_notify_listener
+
+        self.mouse_scroll_listener = mouse_scroll_listener
+        self.leave_notify_listener = leave_notify_listener
+        self.enter_notify_listener = enter_notify_listener
         
         # Edit mode
         self.edit_mode_data = None
@@ -1530,7 +1534,25 @@ class TimeLineCanvas:
                 return appconsts.POINTER_CONTEXT_TRIM_RIGHT
                 
         return appconsts.POINTER_CONTEXT_NONE
-            
+
+    def connect_mouse_events(self):
+        self.widget.press_func = self._press_event
+        self.widget.motion_notify_func = self._motion_notify_event
+        self.widget.release_func = self._release_event
+
+        self.widget.mouse_scroll_func = self.mouse_scroll_listener
+        self.widget.leave_notify_func = self.leave_notify_listener
+        self.widget.enter_notify_func = self.enter_notify_listener
+        
+    def disconnect_mouse_events(self):
+        self.widget.press_func = self.widget._press
+        self.widget.motion_notify_func = self.widget._motion_notify
+        self.widget.release_func = self.widget._release
+
+        self.widget.mouse_scroll_func = None
+        self.widget.leave_notify_func = self.widget._leave
+        self.widget.enter_notify_func = self.widget._enter
+        
     #----------------------------------------- DRAW
     def _draw(self, event, cr, allocation):
         x, y, w, h = allocation
@@ -1949,35 +1971,6 @@ class TimeLineCanvas:
 
                 cr.fill()
                 cr.restore()
-    
-            """
-            # Emboss
-            if scale_length > EMBOSS_MIN:
-                # Corner points
-                left = scale_in + 1.5
-                up = y + 1.5
-                right = left + scale_length - 2.0
-                down = up + track_height - 2.0
-                
-                # Draw lines
-                cr.set_source_rgb(0.75, 0.43, 0.79)
-                cr.move_to(left, down)
-                cr.line_to(left, up)
-                cr.stroke()
-                
-                cr.move_to(left, up)
-                cr.line_to(right, up)
-                cr.stroke()
-                
-                cr.set_source_rgb(0.47, 0.28, 0.51)
-                cr.move_to(right, up)
-                cr.line_to(right, down)
-                cr.stroke()
-                
-                cr.move_to(right, down)
-                cr.line_to(left, down)
-                cr.stroke()
-            """
             
             # Draw text and filter, sync icons
             if scale_length > TEXT_MIN:

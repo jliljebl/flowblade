@@ -174,6 +174,7 @@ class LoadThread(threading.Thread):
             render.set_saved_gui_selections(selections)
         updater.set_info_icon(None)
         dialog.destroy()
+        gui.tline_canvas.connect_mouse_events() # mouse events dutring load cause crashes because there is no data to handle
         Gdk.threads_leave()
 
         ticker.stop_ticker()
@@ -395,6 +396,7 @@ def _close_dialog_callback(dialog, response_id):
     app.open_project(new_project)
     
 def actually_load_project(filename, block_recent_files=False):
+    gui.tline_canvas.disconnect_mouse_events() # mouse events dutring load cause crashes because there is no data to handle
     load_launch = LoadThread(filename, block_recent_files)
     load_launch.start()
 
