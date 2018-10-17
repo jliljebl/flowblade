@@ -138,7 +138,7 @@ def cut_pressed():
         if track.active == False:
             continue
         
-        if editevent.track_lock_check_and_user_info(track, cut_pressed, "cut"): # so the other tracks get cut...
+        if dialogutils.track_lock_check_and_user_info(track): # so the other tracks get cut...
            continue 
 
         # Get index and clip
@@ -375,7 +375,7 @@ def splice_out_button_pressed():
     
     track = get_track(movemodes.selected_track)
 
-    if editevent.track_lock_check_and_user_info(track, splice_out_button_pressed, "splice out"):
+    if dialogutils.track_lock_check_and_user_info(track):
         movemodes.clear_selection_values()
         return
 
@@ -487,7 +487,7 @@ def lift_button_pressed():
                          
     track = get_track(movemodes.selected_track)
 
-    if editevent.track_lock_check_and_user_info(track, lift_button_pressed, "lift"):
+    if dialogutils.track_lock_check_and_user_info(track):
         movemodes.clear_selection_values()
         return
 
@@ -545,7 +545,7 @@ def ripple_delete_button_pressed():
 def insert_button_pressed():
     track = current_sequence().get_first_active_track()
 
-    if editevent.track_lock_check_and_user_info(track, insert_button_pressed, "insert"):
+    if dialogutils.track_lock_check_and_user_info(track):
         return
 
     tline_pos =_current_tline_frame()
@@ -561,7 +561,7 @@ def insert_button_pressed():
 def append_button_pressed():
     track = current_sequence().get_first_active_track()
 
-    if editevent.track_lock_check_and_user_info(track, append_button_pressed, "insert"):
+    if dialogutils.track_lock_check_and_user_info(track):
         return
 
     tline_pos = track.get_length()
@@ -584,7 +584,7 @@ def three_point_overwrite_pressed():
 
     # Get data
     track = get_track(movemodes.selected_track)
-    if editevent.track_lock_check_and_user_info(track, three_point_overwrite_pressed, "3 point overwrite"):
+    if dialogutils.track_lock_check_and_user_info(track):
         return
     
     range_start_frame = track.clip_start(movemodes.selected_range_in)
@@ -629,7 +629,7 @@ def three_point_overwrite_pressed():
 def range_overwrite_pressed():
     # Get data
     track = current_sequence().get_first_active_track()
-    if editevent.track_lock_check_and_user_info(track, range_overwrite_pressed, "range overwrite"):
+    if dialogutils.track_lock_check_and_user_info(track):
         return
 
     # Get over clip and check it overwrite range area

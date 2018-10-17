@@ -70,7 +70,7 @@ def display_clip_menu(y, event, frame):
     if clip_index == -1:
         return False
     # Can't do anything to clips in locked tracks
-    if editevent.track_lock_check_and_user_info(track, display_clip_menu, "clip context menu"):
+    if dialogutils.track_lock_check_and_user_info(track):
         return False
     
     # Display popup

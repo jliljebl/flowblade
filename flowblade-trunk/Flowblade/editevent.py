@@ -483,7 +483,7 @@ def tline_effect_drop(x, y):
         return
     if track.id < 1 or track.id >= (len(current_sequence().tracks) - 1):
         return 
-    if track_lock_check_and_user_info(track):
+    if dialogutils.track_lock_check_and_user_info(track):
         modesetting.set_default_edit_mode()
         return
         
@@ -498,9 +498,9 @@ def tline_media_drop(media_file, x, y, use_marks=False):
         return
     if track.id < 1 or track.id >= (len(current_sequence().tracks) - 1):
         return 
-    if track_lock_check_and_user_info(track):
+    if dialogutils.track_lock_check_and_user_info(track):
         #modesetting.set_default_edit_mode()
-        # Info
+        # TODO: Info
         return
         
     modesetting.stop_looping()
@@ -557,7 +557,7 @@ def tline_range_item_drop(rows, x, y):
         return
     if track.id < 1 or track.id >= (len(current_sequence().tracks) - 1):
         return 
-    if track_lock_check_and_user_info(track):
+    if dialogutils.track_lock_check_and_user_info(track):
         modesetting.set_default_edit_mode()
         return
         
@@ -566,18 +566,7 @@ def tline_range_item_drop(rows, x, y):
     modesetting.set_default_edit_mode()
     do_multiple_clip_insert(track, clips, frame)
 
-# ------------------------------------ track locks handling
-def track_lock_check_and_user_info(track, calling_function="this ain't used anymore", actionname="this ain't used anymore"):
-    if track.edit_freedom == appconsts.LOCKED:
-        track_name = utils.get_track_name(track, current_sequence())
 
-        # No edits on locked tracks.
-        primary_txt = _("Can't edit a locked track")
-        secondary_txt = _("Track ") + track_name + _(" is locked. Unlock track to edit it.")
-        dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
-        return True
-
-    return False
 
 
 # ------------------------------------ function tables
