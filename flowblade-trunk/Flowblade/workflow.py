@@ -72,8 +72,8 @@ def init_data():
                     appconsts.TLINE_TOOL_MULTI_TRIM:    (_("Multitrim"), "multitrim_cursor.png")
                   }
                   
-    _TOOL_TIPS =  { appconsts.TLINE_TOOL_INSERT:        _("<b>Left Mouse</b> to move and insert single clip between clips.\n<b>CTRL + Left Mouse</b> to select and move clip range.\n<b>Left Mouse</b> on clip ends to trim clip length."),
-                    appconsts.TLINE_TOOL_OVERWRITE:     _("<b>Left Mouse</b> to move clip into new position.\n<b>CTRL + Left Mouse</b> to select and move clip range into new position.\n<b>Left Mouse</b> on clip ends to trim clip length."),
+    _TOOL_TIPS =  { appconsts.TLINE_TOOL_INSERT:        _("<b>Left Mouse</b> to move and insert single clip between clips.\n<b>CTRL + Left Mouse</b> to select and move clip range.\n\n<b>Left Mouse</b> on clip ends to trim clip length."),
+                    appconsts.TLINE_TOOL_OVERWRITE:     _("<b>Left Mouse</b> to move clip into new position.\n<b>CTRL + Left Mouse</b> to select and move clip range into new position.\n\n<b>Left Mouse</b> on clip ends to trim clip length."),
                     appconsts.TLINE_TOOL_TRIM:          _("<b>Left Mouse</b> to trim closest clip end.\n<b>Left or Right Arrow Key</b> + <b>Enter Key</b> to do the edit using keyboard."), 
                     appconsts.TLINE_TOOL_ROLL:          _("<b>Left Mouse</b> to move closest edit point between 2 clips.\n<b>Left or Right Arrow Key</b> + <b>Enter Key</b> to do the edit using keyboard."), 
                     appconsts.TLINE_TOOL_SLIP:          _("<b>Left Mouse</b> to move clip contents within clip.\n<b>Left or Right Arrow Key</b> + <b>Enter Key</b> to do the edit using keyboard."), 
@@ -82,10 +82,10 @@ def init_data():
                     appconsts.TLINE_TOOL_RIPPLE_TRIM:   _("<b>Left Mouse</b> to trim closest clip end and move all clips after it to maintain sync, overwrites not allowed.\n<b>Left or Right Arrow Key</b> + <b>Enter Key</b> to do the edit using keyboard."), 
                     appconsts.TLINE_TOOL_CUT:           _("<b>Left Mouse</b> to cut clip under cursor.\n<b>CTRL + Left Mouse</b> to cut clips on all tracks at cursor position."), 
                     appconsts.TLINE_TOOL_KFTOOL:        _("Click <b>Left Mouse</b> on Clip to init Volume Keyframe editing, Brightness for media with no audio data.\n<b>Left Mouse</b> to create or drag keyframes.\n<b>Delete Key</b> to delete active Keyframe."),
-                    appconsts.TLINE_TOOL_MULTI_TRIM:    _("Multitrim")
+                    appconsts.TLINE_TOOL_MULTI_TRIM:    _("Position cursor near or on clip edges for <b>Trim</b> and <b>Roll</b> edits.\nPosition cursor on clip center for <b>Slip</b> edit.\nDrag with <b>Left Mouse</b> to do edits.\n\n<b>Enter Key</b> to start keyboard edit, <b>Left or Right Arrow Key</b> to move edit point.\n<b>Enter Key</b> to complete keyboard edit.")
                   }
 
-    _PREFS_TOOL_TIPS = {"editorpersistance.prefs.box_for_empty_press_in_overwrite_tool":       _("<b>\nLeft Mouse Drag</b> to draw a box to select a group of clips and move\nthe selected clips forward or backward.")}
+    _PREFS_TOOL_TIPS = {"editorpersistance.prefs.box_for_empty_press_in_overwrite_tool":       _("<b>\n\nLeft Mouse Drag</b> to draw a box to select a group of clips and move\nthe selected clips forward or backward.")}
     
     
 #----------------------------------------------------- workflow presets
