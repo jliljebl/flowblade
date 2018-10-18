@@ -543,7 +543,6 @@ def oneroll_trim_press(event, frame, x=None, y=None):
     if not _pressed_on_one_roll_active_area(frame):
         track = tlinewidgets.get_track(y)
         if dialogutils.track_lock_check_and_user_info(track):
-            print "track_lock_check_and_user_info no success"
             success = False # track is locked 
         else:
             success = set_oneroll_mode(track, frame) # attempt init
@@ -1252,6 +1251,12 @@ def set_slide_mode(track, current_frame):
     if track == None:
         return None
 
+    if track.id < 1 or (track.id >= len(current_sequence().tracks) - 1):
+        return False
+
+    if dialogutils.track_lock_check_and_user_info(track):
+        return False
+        
     if current_frame > track.get_length() - 1:
         return False
 
@@ -1338,7 +1343,12 @@ def _set_slide_mode_edit_data(track, edit_frame):
 
 def _attempt_reinit_slide(x, y, frame):
     track = tlinewidgets.get_track(y)
-    success = set_slide_mode(track, frame)
+    
+    if dialogutils.track_lock_check_and_user_info(track):
+        success = False # track is locked 
+    else:
+        success = set_slide_mode(track, frame) # attempt init
+
     if not success:
         if editorpersistance.prefs.empty_click_exits_trims == True:
             set_exit_mode_func(True) # further mouse events are handled at editevent.py
@@ -1382,6 +1392,11 @@ def slide_trim_press(event, frame, x=None, y=None):
         _attempt_reinit_slide(x, y, frame)
         return
 
+    track = tlinewidgets.get_track(y)
+    if dialogutils.track_lock_check_and_user_info(track):
+        set_no_edit_mode_func()
+        return
+        
     global submode
     submode = MOUSE_EDIT_ON
     
