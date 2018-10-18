@@ -394,6 +394,9 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     if track.id < 1 or (track.id >= len(current_sequence().tracks) - 1):
         return False
 
+    if dialogutils.track_lock_check_and_user_info(track):
+        return False
+
     if current_frame == -1: # from button, ctrl + mouse calls with frame
         current_frame = PLAYER().producer.frame() + 1 # +1 because cut frame selects previous clip
 
@@ -416,7 +419,7 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
         to_side_being_edited = editing_to_clip
 
     _set_edit_data(track, edit_frame, True)
-
+    
     # Init ripple data if needed
     global ripple_data
     ripple_data = None
@@ -501,6 +504,9 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
 def oneroll_trim_press(event, frame, x=None, y=None):
     """
     User presses mouse when in one roll mode.
+    
+    
+    ARE WE HITTING THIS ANY MORE BECAUSE ALWAYS QUICK ENTER ?????????!
     """
     global mouse_disabled, submode
 
@@ -511,7 +517,10 @@ def oneroll_trim_press(event, frame, x=None, y=None):
 
     if not _pressed_on_edited_track(y):
         track = tlinewidgets.get_track(y)
-        success = set_oneroll_mode(track, frame)
+        if dialogutils.track_lock_check_and_user_info(track):
+            success = False # track is locked 
+        else:
+            success = set_oneroll_mode(track, frame) # attempt init
         if not success:
             if editorpersistance.prefs.empty_click_exits_trims == True:
                 set_exit_mode_func(True) # further mouse events are handled at editevent.py
@@ -533,7 +542,11 @@ def oneroll_trim_press(event, frame, x=None, y=None):
         
     if not _pressed_on_one_roll_active_area(frame):
         track = tlinewidgets.get_track(y)
-        success = set_oneroll_mode(track, frame)
+        if dialogutils.track_lock_check_and_user_info(track):
+            print "track_lock_check_and_user_info no success"
+            success = False # track is locked 
+        else:
+            success = set_oneroll_mode(track, frame) # attempt init
         if not success:
             if editorpersistance.prefs.empty_click_exits_trims == True:
                 set_exit_mode_func(True) # further mouse events are handled at editevent.py
