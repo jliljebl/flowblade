@@ -933,7 +933,13 @@ def set_tworoll_mode(track, current_frame = -1):
     """     
     if track == None:
         return False
-    
+
+    if track.id < 1 or (track.id >= len(current_sequence().tracks) - 1):
+        return False
+        
+    if dialogutils.track_lock_check_and_user_info(track):
+        return False
+        
     current_frame_trim_view_fix = 0
     if current_frame == -1:
         current_frame = PLAYER().producer.frame() + 1 # +1 because cut frame selects previous clip
@@ -1039,6 +1045,11 @@ def tworoll_trim_press(event, frame, x=None, y=None):
         _attempt_reinit_tworoll(x, y, frame)
         return
 
+    track = tlinewidgets.get_track(y)
+    if dialogutils.track_lock_check_and_user_info(track):
+        set_no_edit_mode_func()
+        return
+
     global edit_data, submode
     submode = MOUSE_EDIT_ON
 
@@ -1048,7 +1059,10 @@ def tworoll_trim_press(event, frame, x=None, y=None):
 
 def _attempt_reinit_tworoll(x, y, frame):
         track = tlinewidgets.get_track(y)
-        success = set_tworoll_mode(track, frame)
+        if dialogutils.track_lock_check_and_user_info(track):
+            success = False # track is locked 
+        else:
+            success = set_tworoll_mode(track, frame) # attempt init
         if not success:
             if editorpersistance.prefs.empty_click_exits_trims == True:
                 set_exit_mode_func(True) # further mouse events are handled at editevent.py
