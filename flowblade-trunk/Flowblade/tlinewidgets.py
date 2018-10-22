@@ -1514,6 +1514,7 @@ class TimeLineCanvas:
         # BOX
         elif (EDIT_MODE() == editorstate.OVERWRITE_MOVE and editorstate.overwrite_mode_box == True and 
             boxmove.box_selection_data != None):
+
             if boxmove.box_selection_data.is_hit(x, y):
                 return appconsts.POINTER_CONTEXT_BOX_SIDEWAYS
         # MULTI TRIM
