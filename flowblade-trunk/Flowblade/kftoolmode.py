@@ -27,7 +27,7 @@ import cairo
 
 import appconsts
 import cairoarea
-import dialiogutils
+import dialogutils
 import edit
 from editorstate import current_sequence
 from editorstate import PLAYER
