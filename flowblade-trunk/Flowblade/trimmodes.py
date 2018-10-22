@@ -878,6 +878,9 @@ class RippleData:
         track_edit_ops = []
         for i in range(1, len(tracks) - 1):
             track = tracks[i]
+            if track.edit_freedom == appconsts.LOCKED:
+                track_edit_ops.append(appconsts.MULTI_NOOP)
+                continue
             track_delta = track_max_deltas[i - 1]
             if track_delta == 0:
                 track_edit_ops.append(appconsts.MULTI_ADD_TRIM)
