@@ -443,7 +443,6 @@ def _move_mode_pressed(event, frame):
         return
         
     # Check locking for pressed track
-    # This ain't used crrently!!!!!
     if _track_is_locked(track):
         clear_selected_clips()
         pressed_on_selected = False

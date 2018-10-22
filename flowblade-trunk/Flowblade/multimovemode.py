@@ -21,6 +21,7 @@
 from gi.repository import Gdk
 
 import appconsts
+import dialogutils
 import edit
 from editorstate import current_sequence
 import tlinewidgets
@@ -184,6 +185,11 @@ class MultimoveData:
         for i in range(1, len(tracks) - 1):
             track = tracks[i]
             track_delta = track_max_deltas[i - 1]
+            
+            if track.edit_freedom == appconsts.LOCKED:
+                track_edit_ops.append(appconsts.MULTI_NOOP)
+                continue
+                
             if track_delta == 0:
                 track_edit_ops.append(appconsts.MULTI_ADD_TRIM)
             elif track_delta == MAX_DELTA:
@@ -230,6 +236,10 @@ def mouse_press(event, frame):
     # Get pressed track
     track = tlinewidgets.get_track(y)  
     if track == None:
+        mouse_disabled = True
+        return
+
+    if dialogutils.track_lock_check_and_user_info(track):
         mouse_disabled = True
         return
 
