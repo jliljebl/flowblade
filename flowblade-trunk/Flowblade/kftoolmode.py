@@ -27,6 +27,7 @@ import cairo
 
 import appconsts
 import cairoarea
+import dialiogutils
 import edit
 from editorstate import current_sequence
 from editorstate import PLAYER
@@ -219,20 +220,25 @@ def mouse_press(event, frame):
     y = event.y
 
     # If we have clip being edited and its edit area is hit, we do not need to init data.
+    # If editor open we disregard track locking until it is closed.
     if _kf_editor != None and _kf_editor.overlay_area_hit(x, y):
         _handle_edit_mouse_press(event)
         return
 
-    # Attempt to init kf tool editing on some clip
-    
     # Get pressed track
     track = tlinewidgets.get_track(y)  
-
+    
     # Selecting empty clears selection
     if track == None:
         exit_tool()
         return    
-    
+
+    # No edits for locked tracks
+    if dialogutils.track_lock_check_and_user_info(track):
+        _set_no_clip_edit_data()
+        return
+        
+    # Attempt to init kf tool editing on some clip
     # Get pressed clip index
     clip_index = current_sequence().get_clip_index(track, frame)
 
