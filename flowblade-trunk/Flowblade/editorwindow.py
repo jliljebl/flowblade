@@ -1273,7 +1273,10 @@ class EditorWindow:
             if editorstate.overwrite_mode_box == False:
                 cursor = self.get_own_cursor(display, OVERWRITE_CURSOR, 0, 0)
             else:
-                cursor = self.get_own_cursor(display, OVERWRITE_BOX_CURSOR, 6, 15)
+                if boxmove.entered_from_overwrite == False:
+                    cursor = self.get_own_cursor(display, OVERWRITE_BOX_CURSOR, 6, 15)
+                else:
+                    cursor = self.get_own_cursor(display, OVERWRITE_CURSOR, 0, 0)
         elif mode == editorstate.TWO_ROLL_TRIM:
             cursor = self.get_own_cursor(display, TWOROLL_NO_EDIT_CURSOR, 11, 9) 
         elif mode == editorstate.TWO_ROLL_TRIM_NO_EDIT:

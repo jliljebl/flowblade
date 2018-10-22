@@ -436,7 +436,6 @@ def tline_canvas_mouse_released(x, y, frame, button, state):
         if not timeline_visible():
             return
         PLAYER().seek_frame(frame)
-        #clipeffectseditor.update_kfeditors_sliders(frame)  # NOTE!!!!!!!!!! Changed for 2.0, observe if adds crashes
     # Handle mouse button edits
     elif button == 1 or button == 3:
         mode_funcs = EDIT_MODE_FUNCS[EDIT_MODE()]
