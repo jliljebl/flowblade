@@ -353,3 +353,5 @@ class EditorPreferences:
         self.box_for_empty_press_in_overwrite_tool = False
         self.scroll_horizontal_dir_up_forward = True
         self.kf_edit_init_affects_playhead = True
+        self.show_tool_tooltips = True
+        

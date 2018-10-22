@@ -144,7 +144,8 @@ def _get_image_menu_item(tool_icon_file, text, callback, tool_id):
     item.set_always_show_image(True)
     item.set_use_stock(False)
     item.set_label(text)
-    item.set_tooltip_markup(_get_tooltip_text(tool_id))
+    if editorpersistance.prefs.show_tool_tooltips:
+        item.set_tooltip_markup(_get_tooltip_text(tool_id))
     item.show()
     return item
     
@@ -195,7 +196,7 @@ def workflow_menu_launched(widget, event):
     dnd_menu = Gtk.Menu()
     labels = [_("Always Overwrite Blanks"), _("Overwrite Blanks on non-V1 Tracks"), _("Always Insert")]
     msgs = ["always overwrite", "overwrite nonV1", "always insert"]
-    active_index =  editorpersistance.prefs.dnd_action  #appconsts values corrspond with order here
+    active_index = editorpersistance.prefs.dnd_action  #appconsts values corrspond with order here
     _build_radio_menu_items_group(dnd_menu, labels, msgs, _workflow_menu_callback, active_index)
 
     dnd_item.set_submenu(dnd_menu)
@@ -208,6 +209,14 @@ def workflow_menu_launched(widget, event):
     autofollow_item.show()
 
     behaviours_menu.append(autofollow_item)
+
+    show_tooltips_item = Gtk.CheckMenuItem()
+    show_tooltips_item.set_label(_("Show Tooltips for Tools"))
+    show_tooltips_item.set_active(editorpersistance.prefs.show_tool_tooltips)
+    show_tooltips_item.connect("activate", _workflow_menu_callback, (None, "tooltips"))
+    show_tooltips_item.show()
+
+    behaviours_menu.append(show_tooltips_item)
     
     behaviours_item.set_submenu(behaviours_menu)
     _workflow_menu.add(behaviours_item)
@@ -250,7 +259,8 @@ def _get_workflow_tool_menu_item(callback, tool_id, tool_name, tool_icon_file, p
     hbox.show_all()
     item = Gtk.MenuItem()
     item.add(hbox)
-    item.set_tooltip_markup(_get_tooltip_text(tool_id))
+    if editorpersistance.prefs.show_tool_tooltips:
+        item.set_tooltip_markup(_get_tooltip_text(tool_id))
     item.show()
     
     item.set_submenu(_get_workflow_tool_submenu(callback, tool_id, position))
@@ -327,8 +337,6 @@ def _get_workflow_tool_submenu(callback, tool_id, position):
     return sub_menu
     
 def _workflow_menu_callback(widget, data):
-    #print data
-    #print editorpersistance.prefs.active_tools
     tool_id, msg = data
 
     if msg == "activity":
@@ -355,6 +363,8 @@ def _workflow_menu_callback(widget, data):
         editorpersistance.prefs.dnd_action = appconsts.DND_OVERWRITE_NON_V1
     elif  msg == "always insert":
         editorpersistance.prefs.dnd_action = appconsts.DND_ALWAYS_INSERT
+    elif  msg ==  "tooltips":
+        editorpersistance.prefs.show_tool_tooltips = widget.get_active()
     else:
         try:
             pos = int(msg)
