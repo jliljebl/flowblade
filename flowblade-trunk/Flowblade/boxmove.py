@@ -43,6 +43,7 @@ def clear_data():
      
 def mouse_press(event, frame):
     global edit_data, box_selection_data
+
     if box_selection_data == None: # mouse action is to select
         press_point = (event.x, event.y)
         

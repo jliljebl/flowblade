@@ -272,6 +272,7 @@ def overwrite_move_press(event, frame):
     """
     User presses mouse when in overwrite move mode.
     """
+    # This happens when we already have a box selection and now are trying to move it
     if editorstate.overwrite_mode_box == True:
         boxmove.mouse_press(event, frame)
         return
@@ -281,7 +282,7 @@ def overwrite_move_press(event, frame):
     _move_mode_pressed(event, frame)
     
     global edit_data
-    if (not(edit_data == None)):
+    if edit_data != None:
         edit_data["over_in"] = -1
         edit_data["over_out"] = -1
         
@@ -297,6 +298,7 @@ def overwrite_move_press(event, frame):
             editorstate.overwrite_mode_box = True
             boxmove.entered_from_overwrite = True
             boxmove.clear_data()
+            # This happens when we start drawing a box
             boxmove.mouse_press(event, frame)
 
 def overwrite_move_move(x, y, frame, state):
@@ -337,13 +339,15 @@ def overwrite_move_release(x, y, frame, state):
     """
     User releases mouse when in overwrite move mode.
     """
+    global edit_data, drag_disabled    
     if editorstate.overwrite_mode_box == True:
         boxmove.mouse_release(x, y, frame)
+        edit_data = None
         return
-        
-    global edit_data, drag_disabled    
+
     if drag_disabled:
         drag_disabled = False
+        edit_data = None
         return   
     if edit_data == None:
         return
@@ -364,6 +368,7 @@ def overwrite_move_release(x, y, frame, state):
     
     # Moved clips are completely out of displayable track area, can't do edit.
     if over_out  < 1:
+        edit_data = None
         return
         
     # Autocorrect moved clips to be fully on displayable track area
@@ -425,13 +430,14 @@ def _move_mode_pressed(event, frame):
     # Get pressed track
     track = tlinewidgets.get_track(y)  
 
-    # Selecting empty clears selection
-    if track == None:
+    # Selecting empty clears selection and prevents from setting edit data since we cannot have it.
+    # Exitance of edit_data is also used to determine if we should enter box mode so we need to not have it if we're not hitting clip
+    if track == None or track.id < 1 or track.id > len(current_sequence().tracks) - 2: # -2 because topmost hidden track
         clear_selected_clips()
         pressed_on_selected = False
         updater.repaint_tline()
         return    
-    
+
     # Get pressed clip index
     clip_index = current_sequence().get_clip_index(track, frame)
 
