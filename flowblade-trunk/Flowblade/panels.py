@@ -45,17 +45,7 @@ MEDIA_PANEL_MAX_ROWS = 8
 MEDIA_PANEL_DEFAULT_ROWS = 2
 
 
-def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hamburger_launch_pressed, filtering_cb):
-    # Create buttons and connect signals
-    """
-    add_media_b = Gtk.Button(_("Add"))
-    del_media_b = Gtk.Button(_("Delete"))    
-    add_media_b.connect("clicked", add_cb, None)
-    del_media_b.connect("clicked", del_cb, None)
-    add_media_b.set_tooltip_text(_("Add Media File to Bin"))
-    del_media_b.set_tooltip_text(_("Delete Media File from Bin"))
-    """
-    
+def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hamburger_launch_pressed, filtering_cb):   
     hamburger_launcher = guicomponents.HamburgerPressLaunch(hamburger_launch_pressed)
     guiutils.set_margins(hamburger_launcher.widget, 2, 0, 4, 12)
 
@@ -77,19 +67,22 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hambu
     files_filter_launcher.widget.set_tooltip_text(_("Visible Media File types."))
     gui.media_view_filter_selector = files_filter_launcher
 
+    bin_info = guicomponents.BinInfoPanel()
+    
     buttons_box = Gtk.HBox(False,1)
     buttons_box.pack_start(hamburger_launcher.widget, False, False, 0)
     buttons_box.pack_start(guiutils.get_pad_label(4, 4), False, False, 0)
     buttons_box.pack_start(columns_launcher.widget, False, False, 0)
     buttons_box.pack_start(files_filter_launcher.widget, False, False, 0)
     buttons_box.pack_start(Gtk.Label(), True, True, 0)
+    buttons_box.pack_start(bin_info, False, False, 0)
+    #buttons_box.pack_start(Gtk.Label(), True, True, 0)
 
     panel = Gtk.VBox()
     panel.pack_start(media_list_view, True, True, 0)
     panel.pack_start(buttons_box, False, True, 0)
 
-    
-    return panel
+    return (panel, bin_info)
 
 def get_bins_tree_panel(bin_list_view):   
     panel = Gtk.VBox()

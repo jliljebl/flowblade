@@ -584,8 +584,7 @@ def show_text_in_edit_area(text):
     widgets.value_edit_frame.add(scroll_window)
 
     widgets.value_edit_box = scroll_window
-    
-        
+
 def clear_effects_edit_panel():
     widgets.value_edit_frame.remove(widgets.value_edit_box)
     label = Gtk.Label()

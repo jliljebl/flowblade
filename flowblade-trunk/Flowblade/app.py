@@ -509,6 +509,7 @@ def init_project_gui():
     gui.bin_list_view.fill_data_model()
     selection = gui.bin_list_view.treeview.get_selection()
     selection.select_path("0")
+    gui.editor_window.bin_info.display_bin_info()
 
     # Display sequences in "Project" tab
     gui.sequence_list_view.fill_data_model()

@@ -469,16 +469,17 @@ class EditorWindow:
         self.media_scroll_window.set_size_request(guicomponents.MEDIA_OBJECT_WIDGET_WIDTH * 2 + 70, guicomponents.MEDIA_OBJECT_WIDGET_HEIGHT)
         self.media_scroll_window.show_all()
 
-        media_panel = panels.get_media_files_panel(
-                                self.media_scroll_window,
-                                lambda w,e: projectaction.add_media_files(), 
-                                lambda w,e: projectaction.delete_media_files(),
-                                projectaction.columns_count_launch_pressed,
-                                projectaction.hamburger_pressed,  # lambda w,e: proxyediting.create_proxy_files_pressed(),
-                                projectaction.media_filtering_select_pressed)
+        media_panel, bin_info = panels.get_media_files_panel(
+                                    self.media_scroll_window,
+                                    lambda w,e: projectaction.add_media_files(), 
+                                    lambda w,e: projectaction.delete_media_files(),
+                                    projectaction.columns_count_launch_pressed,
+                                    projectaction.hamburger_pressed,  # lambda w,e: proxyediting.create_proxy_files_pressed(),
+                                    projectaction.media_filtering_select_pressed)
         guiutils.set_margins(media_panel, 6, 6, 4, 6)
         self.media_panel = media_panel
-
+        self.bin_info = bin_info
+        
         # Smallest screens always get bins in same panel as media, others get top level project panel if selected
         if top_level_project_panel() == True:
             self.mm_paned = Gtk.HBox()

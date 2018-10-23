@@ -842,12 +842,65 @@ class CompositorInfoPanel(Gtk.HBox):
         self.source_track_value.set_use_markup(True)
 
     def set_enabled(self, value):
-        pass
-        #self.source_track.set_sensitive(value)
-        #self.destination_track.set_sensitive(value)
-        #self.length.set_sensitive(value)
+        pass # Seek and destroy callsites
 
 
+# -------------------------------------------- compositor info
+class BinInfoPanel(Gtk.HBox):
+    def __init__(self):
+        GObject.GObject.__init__(self)
+        self.set_homogeneous(False)
+
+        if editorstate.screen_size_small_height() == True:
+            font_desc = "sans bold 8"
+        else:
+            font_desc = "sans bold 9"
+            
+        self.bin_name = Gtk.Label()
+
+        self.bin_name.modify_font(Pango.FontDescription(font_desc))
+        self.bin_name.set_sensitive(False)
+                       
+        self.items = Gtk.Label()
+        self.items_value = Gtk.Label()
+
+        self.items.modify_font(Pango.FontDescription(font_desc))
+        self.items_value.modify_font(Pango.FontDescription(font_desc))
+        self.items.set_sensitive(False)
+        self.items_value.set_sensitive(False)
+        
+        info_col_2 = Gtk.HBox()
+        info_col_2.pack_start(self.bin_name, False, True, 0)
+        info_col_2.pack_start(Gtk.Label(), True, True, 0)
+
+        info_col_3 = Gtk.HBox()
+        info_col_3.pack_start(self.items, False, False, 0)
+        info_col_3.pack_start(self.items_value, False, False, 0)
+        info_col_3.pack_start(Gtk.Label(), True, True, 0)
+
+        PAD_HEIGHT = 2
+        self.pack_start(guiutils.pad_label(24, 4), False, False, 0)
+        self.pack_start(info_col_2, False, False, 0)
+        self.pack_start(guiutils.pad_label(12, 4), False, False, 0)
+        self.pack_start(info_col_3, False, False, 0)
+        self.pack_start(Gtk.Label(), True, True, 0)
+
+        self.set_spacing(4)
+
+    def display_bin_info(self):        
+        self.bin_name.set_text("<b>" + editorstate.PROJECT().c_bin.name + "</b>")
+        self.items.set_text(_("<b>Items:</b>") + " ")
+        self.items_value.set_text(str(len(editorstate.PROJECT().c_bin.file_ids)))
+        
+        self._set_use_mark_up()
+
+    def _set_use_mark_up(self):
+        self.bin_name.set_use_markup(True)
+        self.items.set_use_markup(True)
+        self.items_value.set_use_markup(True)
+
+
+        
 # -------------------------------------------- media select panel
 class MediaPanel():
 

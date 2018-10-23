@@ -242,6 +242,7 @@ class AddMediaFilesThread(threading.Thread):
 
         normal_cursor = Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR) #RTL
         gui.editor_window.window.get_window().set_cursor(normal_cursor)
+        gui.editor_window.bin_info.display_bin_info()
         Gdk.threads_leave()
 
         if len(duplicates) > 0:
@@ -1088,14 +1089,14 @@ def delete_media_files(force_delete=False):
     for i in bin_indexes:
         current_bin().file_ids.pop(i)
     update_current_bin_files_count()
-        
+    
     # Delete from project
     for file_id in file_ids:
         PROJECT().media_files.pop(file_id)
 
     gui.media_list_view.fill_data_model()
-
     _enable_save()
+    gui.editor_window.bin_info.display_bin_info()
 
 def _proxy_delete_warning_callback(dialog, response_id):
     dialog.destroy()
@@ -1373,6 +1374,7 @@ def add_new_bin():
     model, iterator = selection.get_selected()
     selection.select_path(str(len(model)-1))
     _enable_save()
+    gui.editor_window.bin_info.display_bin_info()
 
 def delete_selected_bin():
     """
@@ -1402,6 +1404,7 @@ def delete_selected_bin():
     # Set first bin selected, listener 'bin_selection_changed' updates editorstate.project.c_bin
     selection.select_path("0")
     _enable_save()
+    gui.editor_window.bin_info.display_bin_info()
                   
 def bin_name_edited(cell, path, new_text, user_data):
     """
@@ -1415,6 +1418,7 @@ def bin_name_edited(cell, path, new_text, user_data):
     liststore[path][column] = new_text
     PROJECT().bins[int(path)].name = new_text
     _enable_save()
+    gui.editor_window.bin_info.display_bin_info()
 
 def update_current_bin_files_count():
     # Get index for selected bin
@@ -1446,6 +1450,7 @@ def bin_selection_changed(selection):
     # Set current and display
     PROJECT().c_bin = PROJECT().bins[row]
     gui.media_list_view.fill_data_model()
+    gui.editor_window.bin_info.display_bin_info()
     
 def move_files_to_bin(new_bin, bin_indexes):
     # If we're moving clips to bin that they're already in, do nothing.
@@ -1466,6 +1471,13 @@ def move_files_to_bin(new_bin, bin_indexes):
     gui.media_list_view.fill_data_model()
     gui.bin_list_view.fill_data_model()
 
+    # We need to select current gin again to show it selected in GUI
+    selection = gui.bin_list_view.treeview.get_selection()
+    model, iterator = selection.get_selected()
+    c_bin_index = PROJECT().bins.index(PROJECT().c_bin)
+    selection.select_path(str(c_bin_index))
+    
+    gui.editor_window.bin_info.display_bin_info()
     
     
 # ------------------------------------ sequences
