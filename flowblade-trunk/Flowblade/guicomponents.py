@@ -956,7 +956,48 @@ class MediaPanel():
                     self.selected_objects.append(media_object)
                     media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
                     self.last_ctrl_selected_media_object = media_object
-                    return                
+                    return
+            elif (event.get_state() & Gdk.ModifierType.SHIFT_MASK) and len(self.selected_objects) > 0:
+                # Get data on current selection and pressed media object
+                first_selected = -1
+                last_selected = -1
+                pressed_widget = -1
+                for i in range(0, len(current_bin().file_ids)):
+                    file_id = current_bin().file_ids[i]
+                    m_file = PROJECT().media_files[file_id]
+                    m_obj = self.widget_for_mediafile[m_file]
+                    if m_obj in self.selected_objects:
+                        selected = True
+                    else:
+                        selected = False
+                    
+                    if selected and first_selected == -1:
+                        first_selected = i
+                    if selected:
+                        last_selected = i
+                    if media_object == m_obj:
+                        pressed_widget = i
+                
+                # Get new selection range
+                if pressed_widget < first_selected:
+                    sel_range = (pressed_widget, first_selected)
+                elif pressed_widget > last_selected:
+                    sel_range = (last_selected, pressed_widget)
+                else:
+                    sel_range = (pressed_widget, pressed_widget)
+                    
+                self.clear_selection()
+                
+                # Select new range
+                start, end = sel_range
+                for i in range(start, end + 1):
+                    file_id = current_bin().file_ids[i]
+                    m_file = PROJECT().media_files[file_id]
+                    m_obj = self.widget_for_mediafile[m_file]
+                    
+                    self.selected_objects.append(m_obj)
+                    m_obj.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
+                    
             else:
                 self.clear_selection()
                 media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
