@@ -1313,6 +1313,18 @@ def bins_panel_popup_requested(event):
 
     bin_menu.add(guiutils.get_menu_item(_("Add Bin"), _bin_menu_item_selected, ("add bin", None)))
     bin_menu.add(guiutils.get_menu_item(_("Delete Selected Bin"), _bin_menu_item_selected, ("delete bin", None)))
+
+    guiutils.add_separetor(bin_menu)
+    
+    move_menu_item = Gtk.MenuItem(_("Move Bin").encode('utf-8'))
+    move_menu = Gtk.Menu()
+    move_menu.add(guiutils.get_menu_item(_("Up"), _bin_menu_item_selected, ("up bin", None)))
+    move_menu.add(guiutils.get_menu_item(_("Down"), _bin_menu_item_selected, ("down bin", None)))
+    move_menu.add(guiutils.get_menu_item(_("First"), _bin_menu_item_selected, ("first bin", None)))
+    move_menu.add(guiutils.get_menu_item(_("Last"), _bin_menu_item_selected, ("last bin", None)))
+    move_menu_item.set_submenu(move_menu)
+    bin_menu.add(move_menu_item)
+    move_menu_item.show()
     
     bin_menu.popup(None, None, None, None, event.button, event.time)    
 
@@ -1322,7 +1334,35 @@ def _bin_menu_item_selected(widget, data):
         add_new_bin()
     elif msg == "delete bin":
         delete_selected_bin()
+    elif msg == "up bin":
+        c_index = PROJECT().bins.index(PROJECT().c_bin)
+        if c_index == 0 or len(PROJECT().bins) == 1:
+            return
+        _move_bin(c_index, c_index - 1)
+    elif msg == "down bin":
+        c_index = PROJECT().bins.index(PROJECT().c_bin)
+        if c_index >= len(PROJECT().bins) - 1:
+            return # already last
+        _move_bin(c_index, c_index + 1)
+    elif msg == "first bin":
+        c_index = PROJECT().bins.index(PROJECT().c_bin)
+        if c_index == 0 or len(PROJECT().bins) == 1:
+            return
+        _move_bin(c_index, 0)
+    elif msg == "last bin":
+        c_index = PROJECT().bins.index(PROJECT().c_bin)
+        if c_index >= len(PROJECT().bins) - 1:
+            return # already last
+        _move_bin(c_index, len(PROJECT().bins) - 1)
 
+def _move_bin(pop_index, insert_index):
+    PROJECT().bins.pop(pop_index)
+    PROJECT().bins.insert(insert_index, PROJECT().c_bin)
+    gui.bin_list_view.fill_data_model()
+    selection = gui.bin_list_view.treeview.get_selection()
+    model, iterator = selection.get_selected()
+    selection.select_path(str(insert_index))
+    
 def add_new_bin():
     """
     Adds new unnamed bin and sets it selected 
