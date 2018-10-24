@@ -114,16 +114,7 @@ def cut_pressed():
         updater.display_sequence_in_monitor()   
 
     # Disable whencut action when it cut clash with ongoing edits
-    if EDIT_MODE() == editorstate.ONE_ROLL_TRIM or EDIT_MODE() == editorstate.TWO_ROLL_TRIM or EDIT_MODE() == editorstate.SLIDE_TRIM:
-        return
-
-    if EDIT_MODE() == editorstate.MULTI_MOVE and multimovemode.edit_data != None:
-        return
-
-    if EDIT_MODE() == editorstate.MULTI_MOVE and multimovemode.edit_data != None:
-        return
-        
-    if boxmove.box_selection_data != None:
+    if _can_do_cut() == False:
         return
     
     # Get cut frame
@@ -169,6 +160,22 @@ def cut_pressed():
    
     updater.repaint_tline()
 
+def cut_all_pressed():
+    print "cut all"
+
+def _can_do_cut():
+    # Disable whencut action when it cut clash with ongoing edits
+    if EDIT_MODE() == editorstate.ONE_ROLL_TRIM or EDIT_MODE() == editorstate.TWO_ROLL_TRIM or EDIT_MODE() == editorstate.SLIDE_TRIM:
+        return False
+    if EDIT_MODE() == editorstate.MULTI_MOVE and multimovemode.edit_data != None:
+        return False
+    if EDIT_MODE() == editorstate.MULTI_MOVE and multimovemode.edit_data != None:
+        return False
+    if boxmove.box_selection_data != None:
+        return False
+    
+    return True
+        
 def sequence_split_pressed():
     """
     Intention of this method is to split a sequence at the current position,

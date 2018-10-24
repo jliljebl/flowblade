@@ -227,18 +227,19 @@ def _handle_tline_key_event(event):
     if action == 'cut':
         tlineaction.cut_pressed()
         return True
+    if action == 'cut_all':
+        tlineaction.cut_all_pressed()
+        return True
     if action == 'sequence_split':
         tlineaction.sequence_split_pressed()
         return True
     if action == 'log_range':
         medialog.log_range_clicked()
         return True
-
     if action == 'toggle_ripple':
         gui.editor_window.toggle_trim_ripple_mode()
         return True
 
-    
     # Key bindings for keyboard trimming
     if editorstate.current_is_active_trim_mode() == True:
         if action == 'prev_frame':

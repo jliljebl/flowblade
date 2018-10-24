@@ -144,14 +144,18 @@ def get_shortcuts_xml_root_node(xml_file):
 
 def get_shortcut_info(root, code):
     events = root.getiterator('event')
+
     for event in events:
         if event.get('code') == code:
-            return (_key_names[event.text], _get_mod_string(event) + _keyboard_action_names[code]) 
+            mod_name = _get_mod_string(event)
+            if mod_name != "":
+                mod_name = mod_name + " + "
+            return (mod_name + _key_names[event.text], _keyboard_action_names[code]) 
     
     return (None, None)
 
 def _get_mod_string(event):
-    mod = event.get("modifier")
+    mod = event.get("modifiers")
     if mod == "Any" or mod == None:
         return ""
     
@@ -194,7 +198,8 @@ def _set_keyboard_action_names():
     _keyboard_action_names['to_end'] = _("Go To End")
     _keyboard_action_names['3_point_overwrite'] = _("3 Point Overwrite")
     _keyboard_action_names['toggle_ripple'] = _("Trim Tool Ripple Mode On/Off")
-    _keyboard_action_names['cut'] = _("Cut Clip")
+    _keyboard_action_names['cut'] = _("Cut Active Tracks")
+    _keyboard_action_names['cut_all'] = _("Cut All Tracks")
     _keyboard_action_names['edit_mode_insert'] = _("Insert")
     _keyboard_action_names['edit_mode_overwrite'] =  _("Overwrite")
     _keyboard_action_names['edit_mode_trim'] =  _("Trim")
@@ -207,7 +212,6 @@ def _set_keyboard_action_names():
     _keyboard_action_names['switch_monitor'] = _("Switch Monitor Source")
     _keyboard_action_names['add_marker'] = _("Add Mark")
     _keyboard_action_names['enter_edit'] =  _("Complete Keyboard Trim Edit")
-    _keyboard_action_names['sequence_split'] = ("Sequence Split")
 
 
 def _set_key_names():
@@ -266,4 +270,4 @@ def _set_key_names():
     _mod_names["ALT"] = _("Alt")
     _mod_names["SHIFT"] =  _("Shift")
     _mod_names["ALT+SHIFT"] = _("Alt + Shift")
-    _mod_names["CONTROL"] = _("Control")
+    _mod_names["CTRL"] = _("Control")

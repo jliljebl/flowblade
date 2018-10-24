@@ -80,7 +80,8 @@
     <event code='to_end' name='Go To End'>end</event>
     <event code='3_point_overwrite' name='Three Point Overwrite'>t</event>
     <event code='toggle_ripple' name='Toggle Ripple Mode'>r</event>
-    <event code='cut' name='Cut'>x</event>
+    <event code='cut' name='Cut Active Tracks'>x</event>
+    <event code='cut_all' name='Cut All Tracks' modifiers='SHIFT'>x</event>
     <event code='edit_mode_insert' name='Change Edit Mode to Insert'>1</event>
     <event code='edit_mode_insert' name='Change Edit Mode to Insert'>kp_1</event>
     <event code='edit_mode_insert' name='Change Edit Mode to Insert'>kp_end</event>
@@ -107,6 +108,5 @@
     <event code='switch_monitor' name='Switch Monitor Display'>tab</event>
     <event code='add_marker' name='Add Marker'>m</event>
     <event code='enter_edit' name='Enter Editing Mode'>return</event>
-    <event code='sequence_split' name='Sequence Split'>y</event>
   </shortcuts>
 </flowblade>
