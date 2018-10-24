@@ -375,11 +375,12 @@ class EditorWindow:
                         <menuitem action='AddSequence'/>
                         <menuitem action='EditSequence'/>
                         <menuitem action='DeleteSequence'/>
+                        <separator/>
+                        <menuitem action='CombineSequences'/>
+                        <menuitem action='SequenceSplit'/>
                     </menu>
                     <separator/>
                     <menuitem action='ImportProjectMedia'/>
-                    <menuitem action='CombineSequences'/>
-                    <menuitem action='SequenceSplit'/>
                     <separator/>
                     <menuitem action='LogClipRange'/>
                     <separator/>

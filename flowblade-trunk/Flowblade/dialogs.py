@@ -1886,7 +1886,10 @@ def tline_audio_sync_dialog(callback, data):
     dialog.connect('response', callback, data)
     dialog.show_all()
 
-
+def no_audio_dialog(track):
+    dialogutils.warning_message(_("Can't put an audio clip on a video track."), 
+                            _("Track ")+ utils.get_track_name(track, editorstate.current_sequence()) + _(" is a video track and can't display audio only material."),
+                            gui.editor_window.window)
 
 
         

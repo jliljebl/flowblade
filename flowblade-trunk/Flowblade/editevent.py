@@ -35,6 +35,7 @@ import clipenddragmode
 import compositeeditor
 import compositormodes
 import cutmode
+import dialogs
 import dialogutils
 import edit
 import editorstate
@@ -219,9 +220,7 @@ def _get_insert_index(track, tline_pos):
     return index
 
 def _display_no_audio_on_video_msg(track):
-    dialogutils.warning_message(_("Can't put an audio clip on a video track."), 
-                            _("Track ")+ utils.get_track_name(track, current_sequence()) + _(" is a video track and can't display audio only material."),
-                            gui.editor_window.window)
+    dialogs.no_audio_dialog(track)
 
 
 # ------------------------------------ timeline mouse events
