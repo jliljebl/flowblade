@@ -379,10 +379,9 @@ class EditorWindow:
                     <separator/>
                     <menuitem action='ImportProjectMedia'/>
                     <menuitem action='CombineSequences'/>
+                    <menuitem action='SequenceSplit'/>
                     <separator/>
                     <menuitem action='LogClipRange'/>
-                    <separator/>
-                    <menuitem action='SequenceSplit'/>
                     <separator/>
                     <menuitem action='RecreateMediaIcons'/>
                     <menuitem action='RemoveUnusedMedia'/>
