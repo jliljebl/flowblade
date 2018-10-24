@@ -151,7 +151,7 @@ def _create_buttons(editor_window):
     editor_window.edit_buttons = glassbuttons.GlassButtonsGroup(32, 23, 2, 5, 5)
     editor_window.edit_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "dissolve.png"), tlineaction.add_transition_pressed)
     editor_window.edit_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "cut.png"), tlineaction.cut_pressed)
-    tooltips = [_("Add Rendered Transition - 2 clips selected\nAdd Rendered Fade - 1 clip selected"), _("Cut - X")]
+    tooltips = [_("Add Rendered Transition - 2 clips selected\nAdd Rendered Fade - 1 clip selected"), _("Cut Active Tracks - X\nCut All Tracks - Shift + X")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons, tooltips)
     editor_window.edit_buttons.no_decorations = no_decorations
         

@@ -113,7 +113,7 @@ def cut_pressed():
     if not timeline_visible():
         updater.display_sequence_in_monitor()   
 
-    # Disable whencut action when it cut clash with ongoing edits
+    # Disable cut action when it clashes with ongoing edits
     if _can_do_cut() == False:
         return
     
@@ -161,10 +161,15 @@ def cut_pressed():
     updater.repaint_tline()
 
 def cut_all_pressed():
-    print "cut all"
-
+    # Disable cut action when it clashes with ongoing edits
+    if _can_do_cut() == False:
+        return
+        
+    tline_frame = PLAYER().current_frame()
+    movemodes.clear_selected_clips()
+    cutmode.cut_all_tracks(tline_frame)
+    
 def _can_do_cut():
-    # Disable whencut action when it cut clash with ongoing edits
     if EDIT_MODE() == editorstate.ONE_ROLL_TRIM or EDIT_MODE() == editorstate.TWO_ROLL_TRIM or EDIT_MODE() == editorstate.SLIDE_TRIM:
         return False
     if EDIT_MODE() == editorstate.MULTI_MOVE and multimovemode.edit_data != None:

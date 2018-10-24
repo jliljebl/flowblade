@@ -64,7 +64,6 @@ def cut_single_track(event, frame):
 def cut_all_tracks(frame):
     tracks_cut_data = []
 
-
     for i in range(1, len(current_sequence().tracks) - 1):
         if current_sequence().tracks[i].edit_freedom == appconsts.LOCKED:
             tracks_cut_data.append(None) # Don't cut locked tracks.
