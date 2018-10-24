@@ -95,7 +95,7 @@ def key_down(widget, event):
 
     # Insert shortcut keys need more focus then timeline shortcuts.
     # these may already have been handled in timeline focus events
-    was_handled = _handle_extended_tline_focus_events(event)
+    was_handled = _handle_extended_monitor_focus_events(event)
     if was_handled:
         # Stop event handling here
         return True
@@ -361,16 +361,15 @@ def _handle_tline_key_event(event):
 
     return False
 
-def _handle_extended_tline_focus_events(event):
-    # This function was added to fix to a bug long time ago but the rationale for "extended_tline_focus_events" has been forgotten, but probably still exists
+def _handle_extended_monitor_focus_events(event):
+    # This function was added to get a subset of events only to work when monitor has focus
     # Apr-2017 - SvdB - For keyboard shortcuts
     action = _get_shortcut_action(event)
 
     # We're dropping monitor window in 2 window mode as part of timeline focus
     #    TODO:        gui.sequence_editor_b.has_focus() or
     #        gui.clip_editor_b.has_focus()):
-    if not(_timeline_has_focus() or gui.monitor_switch.widget.has_focus() or
-            gui.pos_bar.widget.has_focus()):
+    if not(gui.monitor_switch.widget.has_focus() or gui.pos_bar.widget.has_focus()):
         return False
 
     if action == '3_point_overwrite':

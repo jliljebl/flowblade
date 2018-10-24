@@ -915,7 +915,8 @@ class MediaPanel():
         self.monitor_indicator = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "monitor_indicator.png")
         self.last_event_time = 0.0
         self.last_ctrl_selected_media_object = None
-        
+        self.double_click_release = False # needed to get focus over to pos bar after double click, issa complicated.
+            
         global has_proxy_icon, is_proxy_icon, graphics_icon, imgseq_icon, audio_icon, pattern_icon, profile_warning_icon
         has_proxy_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "has_proxy_indicator.png")
         is_proxy_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "is_proxy_indicator.png")
@@ -930,11 +931,12 @@ class MediaPanel():
 
     def media_object_selected(self, media_object, widget, event):
         if event.type == Gdk.EventType._2BUTTON_PRESS:
-            widget.grab_focus()
+            self.double_click_release = True
             self.clear_selection()
             media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
             self.selected_objects.append(media_object)
             self.widget.queue_draw()
+            gui.pos_bar.widget.grab_focus()
             GLib.idle_add(self.double_click_cb, media_object.media_file)
             return
 
@@ -946,6 +948,7 @@ class MediaPanel():
         self.last_event_time = now
 
         widget.grab_focus()
+
         if event.button == 1:
             if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                 
@@ -997,7 +1000,6 @@ class MediaPanel():
                     
                     self.selected_objects.append(m_obj)
                     m_obj.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
-                    
             else:
                 self.clear_selection()
                 media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
@@ -1015,8 +1017,12 @@ class MediaPanel():
         if self.last_ctrl_selected_media_object == media_object:
             self.last_ctrl_selected_media_object = None
             return
+        
+        if not self.double_click_release:
+            widget.grab_focus()
+        else:
+            self.double_click_release = False # after double click we want bos bar to have focus
             
-        widget.grab_focus()
         if event.button == 1:
             if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                 # remove from selected if already there
