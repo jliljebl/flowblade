@@ -248,15 +248,14 @@ def append_log_events():
     for le in log_events:
         clips.append(get_log_event_clip(le))
     
-    track = editorstate.current_sequence().get_first_active_track() # audio tracks??!!??
+    track = editorstate.current_sequence().get_first_active_track()
 
     # Can't put audio media on video track
     for new_clip in clips:
         if ((new_clip.media_type == appconsts.AUDIO)
-           and (track.type == appconsts.VIDEO)):        
+           and (track.type == appconsts.VIDEO)):
             dialogs.no_audio_dialog(track)
             return
-
 
     data = {"track":track,
             "clips":clips}

@@ -48,6 +48,8 @@ def mouse_release(x, y, frame, state):
 # ---------------------------------------------- cut actions
 def cut_single_track(event, frame):
     track = tlinewidgets.get_track(event.y)
+    if track == None or track.id == 0 or track.id == len(current_sequence().tracks) - 1:
+        return
 
     if dialogutils.track_lock_check_and_user_info(track):
         return
