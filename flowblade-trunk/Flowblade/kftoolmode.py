@@ -227,9 +227,9 @@ def mouse_press(event, frame):
 
     # Get pressed track
     track = tlinewidgets.get_track(y)  
-    
+
     # Selecting empty clears selection
-    if track == None:
+    if track == None or track.id == 0 or track.id == len(current_sequence().tracks) - 1:
         exit_tool()
         return    
 
