@@ -574,7 +574,7 @@ def _get_wipe_selector(editable_property):
     
     combo_box.connect("changed", editable_property.combo_selection_changed, keys)
     use_preset_luma_combo.connect("changed", _wipe_preset_combo_changed, editable_property, widgets)
-    dialog.connect('response', _wipe_lumafile_dialog_response, editable_property, widgets)
+    user_luma_select.connect('file-set', _wipe_lumafile_dialog_response, editable_property, widgets)
     
     return editor_pane
 
@@ -636,11 +636,14 @@ def _wipe_preset_combo_changed(widget, ep, widgets):
         combo_box.set_sensitive(True)
         ep.combo_selection_changed(combo_box, keys)
 
-def _wipe_lumafile_dialog_response(dialog, response_id, ep, widgets):
+def _wipe_lumafile_dialog_response(button, ep, widgets):
     combo_box, use_preset_luma_combo, user_luma_select, user_luma_label, keys = widgets
     file_name = user_luma_select.get_filename()
+
     if file_name != None:
+        ep.combo_selection_changed(combo_box, keys)
         ep.write_value(file_name)
+
 
 def _get_file_select_editor(editable_property):
     """
