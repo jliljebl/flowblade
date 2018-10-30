@@ -1523,7 +1523,7 @@ class TimeLineCanvas:
             clip_start_frame_x = _get_frame_x(clip_start_frame)
             clip_end_frame_x = _get_frame_x(clip_end_frame)
             clip_center_x = (clip_end_frame_x - clip_start_frame_x) / 2 + clip_start_frame_x
-            if abs(x - clip_start_frame_x) < MULTI_TRIM_ROLL_SENSITIVITY_AREA_WIDTH_PIX:
+            if abs(x - clip_start_frame_x) < MULTI_TRIM_ROLL_SENSITIVITY_AREA_WIDTH_PIX + 4: # +4, somehow we were getting non-symmetrical areas of sensitivity on different sides of cut, so this was added as quick'n'dirty fix without finding out the root cause.
                 return appconsts.POINTER_CONTEXT_MULTI_ROLL
             elif abs(x - clip_end_frame_x) < MULTI_TRIM_ROLL_SENSITIVITY_AREA_WIDTH_PIX:
                 return appconsts.POINTER_CONTEXT_MULTI_ROLL
