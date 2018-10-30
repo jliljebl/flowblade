@@ -33,6 +33,7 @@ import editorpersistance
 import editorstate
 import gui
 import guiutils
+import respaths
 
 trimmodes_set_no_edit_trim_mode = None # This monkey patched in app.py to avoid unncessary dependencies in gmic.py
 
@@ -50,9 +51,8 @@ SELECTED_RANGE_COLOR = (0.85, 0.85, 0.85, 0.75)
 DARK_LINE_COLOR = (0.9, 0.9, 0.9)
 DARK_BG_COLOR = (0.3, 0.3, 0.3)
 DARK_DISABLED_BG_COLOR = (0.1, 0.1, 0.1)
-DARK_SELECTED_RANGE_COLOR = (0.5, 0.5, 0.5)
+DARK_SELECTED_RANGE_COLOR = (0.4, 0.4, 0.4)
 SPEED_TEST_COLOR = (0.5, 0.5, 0.5)
-POINTER_COLOR = (1, 0.3, 0.3)
 END_PAD = 6 # empty area at both ends in pixels
 MARK_CURVE = 5
 MARK_LINE_WIDTH = 4
@@ -83,6 +83,8 @@ class PositionBar:
 
         self.handle_trimmodes = handle_trimmodes
 
+        self.POINTER_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "posbarpointer.png")
+    
         if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
             global LINE_COLOR, DISABLED_BG_COLOR, SELECTED_RANGE_COLOR, MARK_COLOR
             LINE_COLOR = DARK_LINE_COLOR
@@ -178,11 +180,8 @@ class PositionBar:
         # Draw position pointer
         if self.disabled:
             return
-        cr.set_line_width(2.0)
-        cr.set_source_rgb(*POINTER_COLOR)
-        cr.move_to(self._pos + 0.5, 0)
-        cr.line_to(self._pos + 0.5, BAR_HEIGHT)
-        cr.stroke()
+        cr.set_source_surface(self.POINTER_ICON, self._pos - 3, 0)
+        cr.paint()
 
         # This only needed when this widget is used in main app, 
         # for gmic.py process self.handle_trimmodes == False.
