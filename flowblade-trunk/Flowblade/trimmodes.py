@@ -459,8 +459,8 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     # made to do things that are needed in trim.
     if _trimmed_clip_is_blank():
         set_exit_mode_func()
-        primary_txt = _("Can't ONE ROLL TRIM blank clips.")
-        secondary_txt = _("You can use MOVE OVERWRITE or TWO ROLL TRIM edits instead\nto get the desired change.")
+        primary_txt = _("Can't use Trim tool on blank clips.")
+        secondary_txt = _("You can use <b>Move</b> or <b>Roll</b> tools instead.")
         dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
         return False
         
@@ -1026,8 +1026,8 @@ def set_tworoll_mode(track, current_frame = -1):
     return True
 
 def _tworoll_init_failed_window():
-    primary_txt = _("Initializing TWO ROLL TRIM failed")
-    secondary_txt = _("You are attempting TWO ROLL TRIM at a position in the timeline\nwhere it can't be performed.")
+    primary_txt = _("Initializing Roll tool failed")
+    secondary_txt = _("You are attempting a roll trim at a position in the timeline\nwhere it can't be performed.")
     dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
 
 def tworoll_trim_press(event, frame, x=None, y=None):
