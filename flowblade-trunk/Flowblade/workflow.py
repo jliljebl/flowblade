@@ -448,7 +448,7 @@ class WorkflowDialog(Gtk.Dialog):
         workflow_select_item_1 = self.get_workflow_select_item(STANDARD_PRESET, workflow_name, stadard_preset_workflow_text_1)
 
         workflow_name = _("<b>Film Style</b>")
-        filmstyle_preset_workflow_text_2 = _("Film Style workflow has the <b>Insert</b> tool as default tool\nand employs insert style editing.\nThis is the workflow in previous versions of the application.")
+        filmstyle_preset_workflow_text_2 = _("Film Style workflow has the <b>Insert</b> tool as default tool\nand employs insert style editing.\nThis was the workflow in previous versions of the application.")
         workflow_select_item_2 = self.get_workflow_select_item(FILM_STYLE_PRESET, workflow_name, filmstyle_preset_workflow_text_2)
         
         self.workflow_items = [workflow_select_item_1, workflow_select_item_2]

@@ -354,4 +354,4 @@ class EditorPreferences:
         self.scroll_horizontal_dir_up_forward = True
         self.kf_edit_init_affects_playhead = True
         self.show_tool_tooltips = True
-        
+        self.workflow_dialog_last_version_shown = "0.0.1"

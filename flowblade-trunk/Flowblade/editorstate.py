@@ -98,7 +98,7 @@ SCREEN_WIDTH = -1
 # Runtime environment data
 gtk_version = None
 mlt_version = None
-appversion = "0.10"
+appversion = "1.16.0"
 RUNNING_FROM_INSTALLATION = 0
 RUNNING_FROM_DEV_VERSION = 1
 app_running_from = RUNNING_FROM_INSTALLATION
@@ -199,8 +199,23 @@ def mlt_version_is_equal_or_greater(test_version):
     
     return False
 
-def mlt_version_is_equal_or_greater_correct(test_version):
+def mlt_version_is_greater_correct(test_version):
     runtime_ver = mlt_version.split(".")
+    test_ver = test_version.split(".")
+    
+    if runtime_ver[0] > test_ver[0]:
+        return True
+    elif runtime_ver[0] == test_ver[0]:
+        if runtime_ver[1] > test_ver[1]:
+            return True
+        elif runtime_ver[1] == test_ver[1]:
+            if  runtime_ver[2] >  test_ver[2]:
+                return True
+    
+    return False
+
+def runtime_version_greater_then_test_version(test_version, runtime_version):
+    runtime_ver = runtime_version.split(".")
     test_ver = test_version.split(".")
     
     if runtime_ver[0] > test_ver[0]:

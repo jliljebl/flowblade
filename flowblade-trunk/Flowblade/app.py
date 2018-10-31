@@ -129,7 +129,9 @@ def main(root_path):
     # DEBUG: Direct output to log file if log file set
     if _log_file != None:
         log_print_output_to_file()
-    
+
+    print "Application version: " + editorstate.appversion
+
     # Print OS, Python version and GTK+ version
     try:
         os_release_file = open("/etc/os-release","r")
@@ -233,7 +235,7 @@ def main(root_path):
     editorstate.SCREEN_WIDTH = scr_w
     editorstate.SCREEN_HEIGHT = scr_h
 
-    print scr_w, scr_h
+    print "Screen size:", scr_w, "x", scr_h
     print "Small height:", editorstate.screen_size_small_height()
     print "Small width:",  editorstate.screen_size_small_width()
 
@@ -319,8 +321,8 @@ def main(root_path):
     # Get existing autosave files
     autosave_files = get_autosave_files()
 
-    # Clear splash
-    if ((editorpersistance.prefs.display_splash_screen == True) and len(autosave_files) == 0):
+    # Show splash
+    if ((editorpersistance.prefs.display_splash_screen == True) and len(autosave_files) == 0) and not editorstate.runtime_version_greater_then_test_version(editorpersistance.prefs.workflow_dialog_last_version_shown, editorstate.appversion):
         global splash_timeout_id
         splash_timeout_id = GLib.timeout_add(2600, destroy_splash_screen)
         splash_screen.show_all()
@@ -358,12 +360,13 @@ def main(root_path):
     #    global sdl2_timeout_id
     #    sdl2_timeout_id = GObject.timeout_add(1500, create_sdl_2_consumer)
     
-    # In PositionNumericalEntries we are using Gtk.Entry objects in a way that works us nicely, but is somehow "error" for Gtk, so we just kill this.
+    # In PositionNumericalEntries we are using Gtk.Entry objects in a way that works for us nicely, but is somehow "error" for Gtk, so we just kill this.
     Gtk.Settings.get_default().set_property("gtk-error-bell", False)
     
-    # Show first run worflow info dialog.
-    #GObject.timeout_add(500, show_worflow_info_dialog)
-                
+    # Show first run worflow info dialog if not shown for this version of application.
+    if editorstate.runtime_version_greater_then_test_version(editorpersistance.prefs.workflow_dialog_last_version_shown, editorstate.appversion):
+        GObject.timeout_add(500, show_worflow_info_dialog)
+        
     # Launch gtk+ main loop
     Gtk.main()
 
@@ -786,6 +789,9 @@ def destroy_splash_screen():
 
 
 def show_worflow_info_dialog():
+    editorpersistance.prefs.workflow_dialog_last_version_shown = editorstate.appversion
+    editorpersistance.save()
+    
     worflow_info_dialog = workflow.WorkflowDialog()
     return False
     
