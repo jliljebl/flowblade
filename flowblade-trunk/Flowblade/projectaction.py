@@ -898,7 +898,7 @@ def media_panel_popup_requested(event):
     
     guiutils.remove_children(panel_menu)
 
-    panel_menu.add(guiutils.get_menu_item(_("Add Media Clip..."), _media_panel_menu_item_selected, "add media", ))
+    panel_menu.add(guiutils.get_menu_item(_("Add Video, Audio or Image..."), _media_panel_menu_item_selected, "add media", ))
     panel_menu.add(guiutils.get_menu_item(_("Add Image Sequence..."), _media_panel_menu_item_selected, "add image sequence"))
     
     panel_menu.popup(None, None, None, None, event.button, event.time)
