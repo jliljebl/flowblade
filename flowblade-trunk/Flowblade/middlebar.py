@@ -255,7 +255,9 @@ def fill_with_TC_MIDDLE_pattern(buttons_row, window):
         left_panel.pack_start(guiutils.get_pad_label(60, 10), False, True, 10) # to left and right panel same size for centering
     left_panel.pack_start(Gtk.Label(), True, True, 0)
 
-    middle_panel = Gtk.HBox(False, 0) 
+    middle_panel = Gtk.HBox(False, 0)
+    middle_panel.pack_start(w.worflow_launch.widget, False, True, 0)
+    middle_panel.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) 
     middle_panel.pack_start(w.big_TC, False, True, 0)
     middle_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
     middle_panel.pack_start(w.tool_selector.widget, False, True, 0)
@@ -278,6 +280,8 @@ def fill_with_COMPONETS_CENTERED_pattern(buttons_row, window):
     global w
     w = window
     buttons_row.pack_start(Gtk.Label(), True, True, 0)
+    buttons_row.pack_start(w.worflow_launch.widget, False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) 
     buttons_row.pack_start(w.big_TC, False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
     buttons_row.pack_start(w.tool_selector.widget, False, True, 0)
