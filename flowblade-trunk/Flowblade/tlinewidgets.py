@@ -1909,15 +1909,13 @@ class TimeLineCanvas:
             if clip.sync_data != None:
                 self.sync_children.append((clip, track, scale_in))
 
-            # Draw audio level data, except for IMAGE_SEQUENCE clips
+            # Draw audio level data if needed.
             # Init data rendering if data needed and not available
             if clip.waveform_data == None and editorstate.display_all_audio_levels == True and clip.media_type != appconsts.IMAGE_SEQUENCE and clip.media_type != appconsts.PATTERN_PRODUCER:
                  clip.waveform_data = audiowaveformrenderer.get_waveform_data(clip)
             # Draw data if available large enough scale
             if clip.waveform_data != None and scale_length > FILL_MIN:
                 r, g, b = clip_bg_col
-                #r, g, b =  (0.62, 0.38, 0.7)
-                #cr.set_source_rgb(r * 0.9, g * 0.9, b * 0.9)
                 cr.set_source_rgb(r * 1.9, g * 1.9, b * 1.9)
                 
                 cr.save()
