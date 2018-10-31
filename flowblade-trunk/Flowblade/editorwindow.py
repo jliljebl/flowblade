@@ -404,7 +404,6 @@ class EditorWindow:
                     <separator/>
                     <menuitem action='Titler'/>
                     <menuitem action='GMIC'/>
-                    <menuitem action='NatronAnimations'/>
                     <separator/>
                     <menuitem action='MediaLink'/>
                 </menu>

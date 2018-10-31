@@ -191,7 +191,7 @@ def _create_buttons(editor_window):
     editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_mixer.png"), audiomonitoring.show_audio_monitor)
     editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_titler.png"), titler.show_titler)
     editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_gmic.png"), gmic.launch_gmic)
-    editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_natron.png"), toolnatron.launch_natron_animations_tool)
+    #editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_natron.png"), toolnatron.launch_natron_animations_tool)
     editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_renderqueue.png"), lambda :batchrendering.launch_batch_rendering())
     tooltips = [_("Audio Mixer"), _("Titler"), _("G'Mic Effects"), _("Natron Animations"), _("Batch Render Queue")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.tools_buttons, tooltips)
