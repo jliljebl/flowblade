@@ -188,7 +188,7 @@ def workflow_menu_launched(widget, event):
     _build_radio_menu_items_group(delete_menu, labels, msgs, _workflow_menu_callback, 0)
 
     delete_item.set_submenu(delete_menu)
-    behaviours_menu.add(delete_item)
+    #behaviours_menu.add(delete_item)
 
     dnd_item = Gtk.MenuItem.new_with_label(_("Drag'n'Drop Action"))
     dnd_item.show()
@@ -338,7 +338,7 @@ def _get_workflow_tool_submenu(callback, tool_id, position):
     
 def _workflow_menu_callback(widget, data):
     tool_id, msg = data
-
+    
     if msg == "activity":
         if widget.get_active() == False:
             editorpersistance.prefs.active_tools.remove(tool_id)
@@ -365,6 +365,10 @@ def _workflow_menu_callback(widget, data):
         editorpersistance.prefs.dnd_action = appconsts.DND_ALWAYS_INSERT
     elif  msg ==  "tooltips":
         editorpersistance.prefs.show_tool_tooltips = widget.get_active()
+    elif msg == "delete lift" and widget.get_active() == True:
+        print "lift"
+    elif msg == "delete splice" and widget.get_active() == True:
+        print "splice"
     else:
         try:
             pos = int(msg)
