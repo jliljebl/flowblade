@@ -368,7 +368,7 @@ def _view_prefs_panel():
     tracks_combo.set_active(prefs.double_track_hights)
 
     top_row_layout = Gtk.ComboBoxText()
-    top_row_layout.append_text(_("3 panels if width (1450px+) awailable"))
+    top_row_layout.append_text(_("3 panels if width (1450px+) available"))
     top_row_layout.append_text(_("2 panels always"))
     top_row_layout.set_active(prefs.top_row_layout)
         

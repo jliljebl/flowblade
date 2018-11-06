@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-06 20:13+0200\n"
+"POT-Creation-Date: 2018-11-06 20:18+0200\n"
 "PO-Revision-Date: 2017-04-15 18:47+0800\n"
 "Last-Translator: wu <laowudebox@126.com>\n"
 "Language-Team: Language LANGUAGE\n"
@@ -5979,7 +5979,7 @@ msgid "Double for HiDPI - 100px, 50px"
 msgstr ""
 
 #: preferenceswindow.py:371
-msgid "3 panels if width (1450px+) awailable"
+msgid "3 panels if width (1450px+) available"
 msgstr ""
 
 #: preferenceswindow.py:372
