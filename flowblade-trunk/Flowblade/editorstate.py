@@ -264,7 +264,7 @@ def screen_size_small_height():
         return False
 
 def screen_size_large_height():
-    if SCREEN_HEIGHT > 1050:
+    if SCREEN_HEIGHT > 1048:
         return True
     else:
         return False
