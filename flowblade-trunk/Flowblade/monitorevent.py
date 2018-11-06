@@ -67,6 +67,8 @@ def play_pressed():
         movemodes.play_pressed()
     elif EDIT_MODE() == editorstate.KF_TOOL:
         movemodes.play_pressed()
+    elif EDIT_MODE() == editorstate.MULTI_TRIM:
+        movemodes.play_pressed()
         
 def stop_pressed():
     if current_is_move_mode():
@@ -84,6 +86,8 @@ def stop_pressed():
     elif EDIT_MODE() == editorstate.SLIDE_TRIM_NO_EDIT:
         movemodes.stop_pressed()
     elif EDIT_MODE() == editorstate.KF_TOOL:
+        movemodes.stop_pressed()
+    elif EDIT_MODE() == editorstate.MULTI_TRIM:
         movemodes.stop_pressed()
         
 def next_pressed():
