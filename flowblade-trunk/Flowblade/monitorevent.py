@@ -89,7 +89,7 @@ def stop_pressed():
         movemodes.stop_pressed()
     elif EDIT_MODE() == editorstate.MULTI_TRIM:
         movemodes.stop_pressed()
-        
+
 def next_pressed():
     if current_is_move_mode():
         movemodes.next_pressed()

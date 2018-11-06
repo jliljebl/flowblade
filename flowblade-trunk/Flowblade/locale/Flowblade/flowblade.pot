@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-05 19:54+0200\n"
+"POT-Creation-Date: 2018-11-06 17:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -5011,7 +5011,7 @@ msgid "Ripple Delete"
 msgstr ""
 
 #: middlebar.py:163
-msgid "Delete Range"
+msgid "Range Delete"
 msgstr ""
 
 #: middlebar.py:170
@@ -6654,17 +6654,17 @@ msgstr ""
 msgid "Use Default Profile:"
 msgstr ""
 
-#: monitorevent.py:304
+#: monitorevent.py:308
 msgid "On some systems Trim View may update slowly"
 msgstr ""
 
-#: monitorevent.py:305
+#: monitorevent.py:309
 msgid ""
 "<b>Trim View</b> works best with SSDs and relatively powerful processors.\n"
 "\n"
 msgstr ""
 
-#: monitorevent.py:306
+#: monitorevent.py:310
 msgid ""
 "Select <b>'Trim View Off'</b> or<b>'Trim View Single Side Edits Only'</b> "
 "options\n"

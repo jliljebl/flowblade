@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Flowblade 1.16\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-05 19:54+0200\n"
+"POT-Creation-Date: 2018-11-06 17:46+0200\n"
 "PO-Revision-Date: 2018-03-06 11:31+0300\n"
 "Last-Translator: Николай Смольянинов <smolianinow.colya2016@yandex.ru>\n"
 "Language-Team: vk.com/flowblade\n"
@@ -5166,8 +5166,8 @@ msgstr "Удалить принудительно"
 
 #: middlebar.py:163
 #, fuzzy
-msgid "Delete Range"
-msgstr "Удалить "
+msgid "Range Delete"
+msgstr "Удалить принудительно"
 
 #: middlebar.py:170
 #, fuzzy
@@ -6892,11 +6892,11 @@ msgstr "Сборка остановлена!"
 msgid "Use Default Profile:"
 msgstr "Используйте профиль по умолчанию:"
 
-#: monitorevent.py:304
+#: monitorevent.py:308
 msgid "On some systems Trim View may update slowly"
 msgstr "В некоторых системах Просмотр обрезки обновляется медленно"
 
-#: monitorevent.py:305
+#: monitorevent.py:309
 msgid ""
 "<b>Trim View</b> works best with SSDs and relatively powerful processors.\n"
 "\n"
@@ -6905,7 +6905,7 @@ msgstr ""
 "мощными процессорами.\n"
 "\n"
 
-#: monitorevent.py:306
+#: monitorevent.py:310
 msgid ""
 "Select <b>'Trim View Off'</b> or<b>'Trim View Single Side Edits Only'</b> "
 "options\n"
@@ -7726,6 +7726,10 @@ msgstr ""
 #, fuzzy
 msgid "Exit Edit"
 msgstr "Правка"
+
+#, fuzzy
+#~ msgid "Delete Range"
+#~ msgstr "Удалить "
 
 #~ msgid "Add Media Clip..."
 #~ msgstr "Добавить клип..."

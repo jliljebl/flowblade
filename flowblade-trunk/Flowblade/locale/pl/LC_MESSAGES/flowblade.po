@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-05 19:54+0200\n"
+"POT-Creation-Date: 2018-11-06 17:46+0200\n"
 "PO-Revision-Date: 2017-05-27 08:50+0200\n"
 "Last-Translator: Stanislaw Polak <polak@icsr.agh.edu.pl>\n"
 "Language-Team: Polish\n"
@@ -5162,8 +5162,8 @@ msgstr "Wymuszenie usunięcia"
 
 #: middlebar.py:163
 #, fuzzy
-msgid "Delete Range"
-msgstr "Usuń"
+msgid "Range Delete"
+msgstr "Wymuszenie usunięcia"
 
 #: middlebar.py:170
 #, fuzzy
@@ -6888,11 +6888,11 @@ msgstr "Renderowanie zatrzymało się!"
 msgid "Use Default Profile:"
 msgstr "Użyj profilu domyślnego:"
 
-#: monitorevent.py:304
+#: monitorevent.py:308
 msgid "On some systems Trim View may update slowly"
 msgstr "W niektórych systemach przycinanie widoku może się aktualizować powoli"
 
-#: monitorevent.py:305
+#: monitorevent.py:309
 msgid ""
 "<b>Trim View</b> works best with SSDs and relatively powerful processors.\n"
 "\n"
@@ -6901,7 +6901,7 @@ msgstr ""
 "stosunkowo mocnych procesorów.\n"
 "\n"
 
-#: monitorevent.py:306
+#: monitorevent.py:310
 msgid ""
 "Select <b>'Trim View Off'</b> or<b>'Trim View Single Side Edits Only'</b> "
 "options\n"
@@ -7721,6 +7721,10 @@ msgstr ""
 #, fuzzy
 msgid "Exit Edit"
 msgstr "Edytuj"
+
+#, fuzzy
+#~ msgid "Delete Range"
+#~ msgstr "Usuń"
 
 #~ msgid "Add Media Clip..."
 #~ msgstr "Dodaj klip multimedialny..."

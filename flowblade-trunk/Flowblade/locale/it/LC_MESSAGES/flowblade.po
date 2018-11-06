@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Floblade Italian Translation 0.14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-05 19:54+0200\n"
+"POT-Creation-Date: 2018-11-06 17:46+0200\n"
 "PO-Revision-Date: 2014-09-15 23:42+0100\n"
 "Last-Translator: Massimo Stella <info@massimostella.it>\n"
 "Language-Team: Italiano\n"
@@ -5333,8 +5333,8 @@ msgstr "Forza Cancellazione"
 
 #: middlebar.py:163
 #, fuzzy
-msgid "Delete Range"
-msgstr "Elimina "
+msgid "Range Delete"
+msgstr "Forza Cancellazione"
 
 #: middlebar.py:170
 #, fuzzy
@@ -7118,17 +7118,17 @@ msgstr "Calcolo Completato!"
 msgid "Use Default Profile:"
 msgstr "Profilo Predefinito"
 
-#: monitorevent.py:304
+#: monitorevent.py:308
 msgid "On some systems Trim View may update slowly"
 msgstr ""
 
-#: monitorevent.py:305
+#: monitorevent.py:309
 msgid ""
 "<b>Trim View</b> works best with SSDs and relatively powerful processors.\n"
 "\n"
 msgstr ""
 
-#: monitorevent.py:306
+#: monitorevent.py:310
 msgid ""
 "Select <b>'Trim View Off'</b> or<b>'Trim View Single Side Edits Only'</b> "
 "options\n"
@@ -7944,6 +7944,10 @@ msgstr ""
 #, fuzzy
 msgid "Exit Edit"
 msgstr "Modifica"
+
+#, fuzzy
+#~ msgid "Delete Range"
+#~ msgstr "Elimina "
 
 #~ msgid "Add Media Clip..."
 #~ msgstr "Aggiungi Clip..."

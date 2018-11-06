@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-05 19:54+0200\n"
+"POT-Creation-Date: 2018-11-06 17:46+0200\n"
 "PO-Revision-Date: 2014-02-21 12:08+0200\n"
 "Last-Translator: David Gámiz Jiménez <david.gamiz@gmail.com>\n"
 "Language-Team: David Gamiz Jimenez\n"
@@ -5350,8 +5350,8 @@ msgstr "Forzar eliminación"
 
 #: middlebar.py:163
 #, fuzzy
-msgid "Delete Range"
-msgstr "Borrar "
+msgid "Range Delete"
+msgstr "Forzar eliminación"
 
 #: middlebar.py:170
 #, fuzzy
@@ -7122,17 +7122,17 @@ msgstr "¡Renderizado completo!"
 msgid "Use Default Profile:"
 msgstr "Perfil por Defecto"
 
-#: monitorevent.py:304
+#: monitorevent.py:308
 msgid "On some systems Trim View may update slowly"
 msgstr ""
 
-#: monitorevent.py:305
+#: monitorevent.py:309
 msgid ""
 "<b>Trim View</b> works best with SSDs and relatively powerful processors.\n"
 "\n"
 msgstr ""
 
-#: monitorevent.py:306
+#: monitorevent.py:310
 msgid ""
 "Select <b>'Trim View Off'</b> or<b>'Trim View Single Side Edits Only'</b> "
 "options\n"
@@ -7946,6 +7946,10 @@ msgstr ""
 #, fuzzy
 msgid "Exit Edit"
 msgstr "Editar"
+
+#, fuzzy
+#~ msgid "Delete Range"
+#~ msgstr "Borrar "
 
 #~ msgid "Add Media Clip..."
 #~ msgstr "Añadir Clip de Medios..."

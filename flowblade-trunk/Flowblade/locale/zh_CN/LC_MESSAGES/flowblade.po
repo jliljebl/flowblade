@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-05 19:54+0200\n"
+"POT-Creation-Date: 2018-11-06 17:46+0200\n"
 "PO-Revision-Date: 2017-04-15 18:47+0800\n"
 "Last-Translator: wu <laowudebox@126.com>\n"
 "Language-Team: Language LANGUAGE\n"
@@ -5192,8 +5192,8 @@ msgstr "强制删除"
 
 #: middlebar.py:163
 #, fuzzy
-msgid "Delete Range"
-msgstr "删除"
+msgid "Range Delete"
+msgstr "强制删除"
 
 #: middlebar.py:170
 #, fuzzy
@@ -6890,11 +6890,11 @@ msgstr "已停止着色"
 msgid "Use Default Profile:"
 msgstr "使用默认简介"
 
-#: monitorevent.py:304
+#: monitorevent.py:308
 msgid "On some systems Trim View may update slowly"
 msgstr "在某些系统上，修剪视图可能更新较慢"
 
-#: monitorevent.py:305
+#: monitorevent.py:309
 msgid ""
 "<b>Trim View</b> works best with SSDs and relatively powerful processors.\n"
 "\n"
@@ -6902,7 +6902,7 @@ msgstr ""
 "<b>修剪视图</b>在SSD硬盘和相对高性能处理器上会效果更好些。\n"
 "\n"
 
-#: monitorevent.py:306
+#: monitorevent.py:310
 msgid ""
 "Select <b>'Trim View Off'</b> or<b>'Trim View Single Side Edits Only'</b> "
 "options\n"
@@ -7716,6 +7716,10 @@ msgstr ""
 #, fuzzy
 msgid "Exit Edit"
 msgstr "编辑"
+
+#, fuzzy
+#~ msgid "Delete Range"
+#~ msgstr "删除"
 
 #~ msgid "Add Media Clip..."
 #~ msgstr "添加媒体切片..."

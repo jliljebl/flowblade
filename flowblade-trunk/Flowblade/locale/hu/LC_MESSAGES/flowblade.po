@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-05 19:54+0200\n"
+"POT-Creation-Date: 2018-11-06 17:46+0200\n"
 "PO-Revision-Date: 2017-03-24 08:40+0100\n"
 "Last-Translator: Péter Gábor <ptrg@freemail.hu>\n"
 "Language-Team: \n"
@@ -5220,8 +5220,8 @@ msgstr "Törlés mindenképpen"
 
 #: middlebar.py:163
 #, fuzzy
-msgid "Delete Range"
-msgstr "Törölhető a(z) "
+msgid "Range Delete"
+msgstr "Törlés mindenképpen"
 
 #: middlebar.py:170
 #, fuzzy
@@ -6932,11 +6932,11 @@ msgstr "Renderelés leállítva!"
 msgid "Use Default Profile:"
 msgstr "Alapértelmezett profil használata:"
 
-#: monitorevent.py:304
+#: monitorevent.py:308
 msgid "On some systems Trim View may update slowly"
 msgstr "Egyes rendszereken a vágás nézete lassan frissülhet"
 
-#: monitorevent.py:305
+#: monitorevent.py:309
 msgid ""
 "<b>Trim View</b> works best with SSDs and relatively powerful processors.\n"
 "\n"
@@ -6945,7 +6945,7 @@ msgstr ""
 "legjobban.\n"
 "\n"
 
-#: monitorevent.py:306
+#: monitorevent.py:310
 #, fuzzy
 msgid ""
 "Select <b>'Trim View Off'</b> or<b>'Trim View Single Side Edits Only'</b> "
@@ -7761,6 +7761,10 @@ msgstr ""
 #, fuzzy
 msgid "Exit Edit"
 msgstr "Szerkesztés"
+
+#, fuzzy
+#~ msgid "Delete Range"
+#~ msgstr "Törölhető a(z) "
 
 #~ msgid "Add Media Clip..."
 #~ msgstr "Média klip hozzáadása..."

@@ -160,7 +160,7 @@ def _create_buttons(editor_window):
     editor_window.edit_buttons_3.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "lift.png"), tlineaction.lift_button_pressed)
     editor_window.edit_buttons_3.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "ripple_delete.png"), tlineaction.ripple_delete_button_pressed)
     editor_window.edit_buttons_3.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "delete_range.png"), tlineaction.delete_range_button_pressed)
-    tooltips = [_("Splice Out - Delete"), _("Lift"), _("Ripple Delete"), _("Delete Range")]
+    tooltips = [_("Splice Out - Delete"), _("Lift"), _("Ripple Delete"), _("Range Delete")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons_3, tooltips)
     editor_window.edit_buttons_3.no_decorations = no_decorations
 
