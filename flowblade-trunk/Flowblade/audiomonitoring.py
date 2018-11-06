@@ -113,7 +113,7 @@ def init(profile):
 
     global CONTROL_SLOT_H, METER_SLOT_H, METER_LIGHTS, METER_HEIGHT
     if editorstate.screen_size_small_height() == True:
-        if editorstate.SCREEN_HEIGHT > 898:
+        if editorstate.SCREEN_HEIGHT > 902:
             METER_SLOT_H = 300
             CONTROL_SLOT_H = 240
             METER_LIGHTS = 100
