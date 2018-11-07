@@ -1432,8 +1432,6 @@ class TimeLineCanvas:
         """
         Mouse move callback
         """
-        #if EDIT_MODE() == editorstate.CUT:
-        #    cutmode.
         
         if (not self.drag_on) and editorstate.cursor_is_tline_sensitive == True:
             self.set_pointer_context(x, y)

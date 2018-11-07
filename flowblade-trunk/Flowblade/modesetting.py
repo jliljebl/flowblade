@@ -163,14 +163,8 @@ def oneroll_trim_no_edit_press(event, frame):
     """
     success = oneroll_trim_mode_init(event.x, event.y)
     if success:
-        # If not quick enter, disable edit until mouse released
-        if not editorpersistance.prefs.quick_enter_trims:
-            tlinewidgets.trim_mode_in_non_active_state = True
-            editorstate.timeline_mouse_disabled = True
-         # If preference is quick enter, call mouse move handler immediately 
-         # to move edit point to where mouse is
-        else:
-            trimmodes.oneroll_trim_move(event.x, event.y, frame, None)
+        trimmodes.oneroll_trim_move(event.x, event.y, frame, None)
+        # additional mouse move and release handled at trimmodes
     else:
         if editorpersistance.prefs.empty_click_exits_trims == True:
             set_default_edit_mode(True)
@@ -192,11 +186,6 @@ def oneroll_trim_mode_init(x, y):
     track = tlinewidgets.get_track(y)
     if track == None:
         return False
-
-    # Feature disabled for now
-    #if track_lock_check_and_user_info(track, oneroll_trim_mode_init, "one roll trim mode"):
-    #    set_default_edit_mode()
-    #    return False
 
     stop_looping() 
     editorstate.edit_mode = editorstate.ONE_ROLL_TRIM
@@ -247,10 +236,6 @@ def tworoll_trim_mode_init(x, y):
     track = tlinewidgets.get_track(y)
     if track == None:
         return False
-    
-    #if track_lock_check_and_user_info(track, tworoll_trim_mode_init, "two roll trim mode",):
-    #    set_default_edit_mode()
-    #    return False
 
     stop_looping()
     editorstate.edit_mode = editorstate.TWO_ROLL_TRIM

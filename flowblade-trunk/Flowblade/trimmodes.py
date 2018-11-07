@@ -452,18 +452,20 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     else:
         edit_data["trim_limits"]["ripple_display_end"] = -1
         edit_data["trim_limits"]["ripple_display_start"] = -1
-            
-    current_sequence().clear_hidden_track()
 
     # Cant't trim a blank clip. Blank clips are special in MLT and can't be
     # made to do things that are needed in trim.
     if _trimmed_clip_is_blank():
-        set_exit_mode_func()
+        ripple_data = None
+        edit_data = None
+        gui.tline_canvas.drag_on = False
         primary_txt = _("Can't use Trim tool on blank clips.")
         secondary_txt = _("You can use <b>Move</b> or <b>Roll</b> tools instead.")
         dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
         return False
-        
+
+    current_sequence().clear_hidden_track()
+    
     # Give timeline widget needed data
     if editorstate.trim_mode_ripple == False:
         tlinewidgets.set_edit_mode(edit_data,
@@ -505,11 +507,10 @@ def oneroll_trim_press(event, frame, x=None, y=None):
     """
     User presses mouse when in one roll mode.
     
-    
-    ARE WE HITTING THIS ANY MORE BECAUSE ALWAYS QUICK ENTER ?????????!
+    WE ARE HITTING THIS FROM MULTITRIM ONLY, NOT TRIM TOOL because we remove non-quick enter edits.
     """
     global mouse_disabled, submode
-
+    
     # We need this to enter with keyboard action from multitrimmode.py
     if x == None:
         x = event.x
@@ -517,7 +518,7 @@ def oneroll_trim_press(event, frame, x=None, y=None):
 
     if not _pressed_on_edited_track(y):
         track = tlinewidgets.get_track(y)
-        if dialogutils.track_lock_check_and_user_info(track):
+        if track == None or dialogutils.track_lock_check_and_user_info(track):
             success = False # track is locked 
         else:
             success = set_oneroll_mode(track, frame) # attempt init
@@ -528,16 +529,8 @@ def oneroll_trim_press(event, frame, x=None, y=None):
                 set_no_edit_mode_func() # further mouse events are handled at editevent.py
         else:
             submode = MOUSE_EDIT_ON # to stop entering keyboard edits until mouse released
-            if not editorpersistance.prefs.quick_enter_trims:
-                # new trim inited, editing non-active until release
-                tlinewidgets.trim_mode_in_non_active_state = True
-                gui.tline_canvas.widget.queue_draw()
-                gui.editor_window.set_tline_cursor(editorstate.ONE_ROLL_TRIM_NO_EDIT)
-                mouse_disabled = True
-            else:
-                # new trim inited, active immediately
-                oneroll_trim_move(x, y, frame, None)
-                gui.tline_canvas.widget.queue_draw()
+            oneroll_trim_move(x, y, frame, None)
+            gui.tline_canvas.widget.queue_draw()
         return
         
     if not _pressed_on_one_roll_active_area(frame):
@@ -546,23 +539,17 @@ def oneroll_trim_press(event, frame, x=None, y=None):
             success = False # track is locked 
         else:
             success = set_oneroll_mode(track, frame) # attempt init
+        
         if not success:
             if editorpersistance.prefs.empty_click_exits_trims == True:
                 set_exit_mode_func(True) # further mouse events are handled at editevent.py
             else:
                 set_no_edit_mode_func() # no furter mouse events will come here
+            submode = NOTHING_ON 
         else:
             submode = MOUSE_EDIT_ON # to stop entering keyboard edits until mouse released
-            if not editorpersistance.prefs.quick_enter_trims:
-                # new trim inited, editing non-active until release
-                tlinewidgets.trim_mode_in_non_active_state = True
-                gui.tline_canvas.widget.queue_draw()
-                gui.editor_window.set_tline_cursor(editorstate.ONE_ROLL_TRIM_NO_EDIT)
-                mouse_disabled = True
-            else:
-                # new trim inited, active immediately
-                oneroll_trim_move(x, y, frame, None)
-                gui.tline_canvas.widget.queue_draw()
+            oneroll_trim_move(x, y, frame, None)
+            gui.tline_canvas.widget.queue_draw()
         return
 
     # Get legal edit delta and set to edit mode data for overlay draw

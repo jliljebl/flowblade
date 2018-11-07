@@ -1098,9 +1098,6 @@ class EditorWindow:
         self.monitor_source.set_tooltip_text(_("Current Sequence / Clip name and length"))
     
         self.pos_bar.widget.set_tooltip_text(_("Sequence / Media current position"))
-        
-        #self.sequence_editor_b.set_tooltip_text(_("Display Current Sequence on Timeline"))
-        #self.clip_editor_b.set_tooltip_text(_("Display Monitor Clip"))
 
     def set_default_edit_tool(self):
         # First active tool is the default tool. So we need to always have atleast one tool available.
