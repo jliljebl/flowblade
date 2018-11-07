@@ -212,11 +212,7 @@ def tworoll_trim_no_edit_init():
 def tworoll_trim_no_edit_press(event, frame):
     success = tworoll_trim_mode_init(event.x, event.y)
     if success:
-        if not editorpersistance.prefs.quick_enter_trims:
-            tlinewidgets.trim_mode_in_non_active_state = True
-            editorstate.timeline_mouse_disabled = True
-        else:
-            trimmodes.tworoll_trim_move(event.x, event.y, frame, None)
+        trimmodes.tworoll_trim_move(event.x, event.y, frame, None)
     else:
         if editorpersistance.prefs.empty_click_exits_trims == True:
             set_default_edit_mode(True)
@@ -261,12 +257,8 @@ def slide_trim_no_edit_init():
 def slide_trim_no_edit_press(event, frame):
     success = slide_trim_mode_init(event.x, event.y)
     if success:
-        if not editorpersistance.prefs.quick_enter_trims:
-            tlinewidgets.trim_mode_in_non_active_state = True
-            editorstate.timeline_mouse_disabled = True
-        else:
-            trimmodes.edit_data["press_start"] = frame
-            trimmodes.slide_trim_move(event.x, event.y, frame, None)
+        trimmodes.edit_data["press_start"] = frame
+        trimmodes.slide_trim_move(event.x, event.y, frame, None)
     else:
         if editorpersistance.prefs.empty_click_exits_trims == True:
             set_default_edit_mode(True)

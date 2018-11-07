@@ -1058,17 +1058,9 @@ def _attempt_reinit_tworoll(x, y, frame):
             else:
                 set_no_edit_mode_func() # further mouse events are handled at editevent.py
         else:
-            if not editorpersistance.prefs.quick_enter_trims:
-                # new trim inited, editing non-active until release
-                global mouse_disabled
-                tlinewidgets.trim_mode_in_non_active_state = True
-                gui.tline_canvas.widget.queue_draw()
-                gui.editor_window.set_tline_cursor(editorstate.TWO_ROLL_TRIM_NO_EDIT)
-                mouse_disabled = True
-            else:
-                # new trim inited, active immediately
-                tworoll_trim_move(x, y, frame, None)
-                gui.tline_canvas.widget.queue_draw()
+            # new trim inited, active immediately
+            tworoll_trim_move(x, y, frame, None)
+            gui.tline_canvas.widget.queue_draw()
                 
 def tworoll_trim_move(x, y, frame, state):
     """
@@ -1345,18 +1337,11 @@ def _attempt_reinit_slide(x, y, frame):
         else:
             set_no_edit_mode_func() # further mouse events are handled at editevent.py
     else:
-        if not editorpersistance.prefs.quick_enter_trims:
-            gui.tline_canvas.widget.queue_draw()
-            gui.editor_window.set_tline_cursor(editorstate.SLIDE_TRIM_NO_EDIT)
-            tlinewidgets.trim_mode_in_non_active_state = True
-            global mouse_disabled
-            mouse_disabled = True
-        else:
-            # new trim inited, active immediately
-            global edit_data
-            edit_data["press_start"] = frame
-            slide_trim_move(x, y, frame, None)
-            gui.tline_canvas.widget.queue_draw()
+        # new trim inited, active immediately
+        global edit_data
+        edit_data["press_start"] = frame
+        slide_trim_move(x, y, frame, None)
+        gui.tline_canvas.widget.queue_draw()
 
 def slide_trim_press(event, frame, x=None, y=None):
     global edit_data
