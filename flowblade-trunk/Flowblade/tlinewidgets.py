@@ -1493,6 +1493,11 @@ class TimeLineCanvas:
             # This gets none always after track, which may not be what we want
             return appconsts.POINTER_CONTEXT_NONE
 
+        try:
+            clip = track.clips[clip_index]
+        except:
+            return  appconsts.POINTER_CONTEXT_NONE # We probably should not hit this
+
         clip_start_frame = track.clip_start(clip_index)
         clip_end_frame = track.clip_start(clip_index + 1)
         # INSERT, OVEWRITE
@@ -1506,8 +1511,12 @@ class TimeLineCanvas:
         # TRIM
         elif EDIT_MODE() == editorstate.ONE_ROLL_TRIM or EDIT_MODE() == editorstate.ONE_ROLL_TRIM_NO_EDIT:
             if abs(frame - clip_start_frame) < abs(frame - clip_end_frame):
+                if clip.is_blanck_clip == True:
+                     return appconsts.POINTER_CONTEXT_NONE
                 return appconsts.POINTER_CONTEXT_TRIM_LEFT
             else:
+                if clip.is_blanck_clip == True:
+                     return appconsts.POINTER_CONTEXT_NONE
                 return appconsts.POINTER_CONTEXT_TRIM_RIGHT
         # BOX
         elif (EDIT_MODE() == editorstate.OVERWRITE_MOVE and editorstate.overwrite_mode_box == True and 
@@ -1526,10 +1535,16 @@ class TimeLineCanvas:
             elif abs(x - clip_end_frame_x) < MULTI_TRIM_ROLL_SENSITIVITY_AREA_WIDTH_PIX:
                 return appconsts.POINTER_CONTEXT_MULTI_ROLL
             elif abs(x - clip_center_x) < MULTI_TRIM_SLIP_SENSITIVITY_AREA_WIDTH_PIX:
+                if clip.is_blanck_clip == True:
+                     return appconsts.POINTER_CONTEXT_NONE
                 return appconsts.POINTER_CONTEXT_MULTI_SLIP
             elif abs(frame - clip_start_frame) < abs(frame - clip_end_frame):
+                if clip.is_blanck_clip == True:
+                     return appconsts.POINTER_CONTEXT_NONE
                 return appconsts.POINTER_CONTEXT_TRIM_LEFT
             else:
+                if clip.is_blanck_clip == True:
+                     return appconsts.POINTER_CONTEXT_NONE
                 return appconsts.POINTER_CONTEXT_TRIM_RIGHT
                 
         return appconsts.POINTER_CONTEXT_NONE
