@@ -388,6 +388,7 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     """
     Sets one roll mode
     """
+    print "set_oneroll_mode"
     if track == None:
         return False
 
@@ -509,6 +510,7 @@ def oneroll_trim_press(event, frame, x=None, y=None):
     
     WE ARE HITTING THIS FROM MULTITRIM ONLY, NOT TRIM TOOL because we remove non-quick enter edits.
     """
+    print "oneroll_trim_press"
     global mouse_disabled, submode
     
     # We need this to enter with keyboard action from multitrimmode.py
@@ -552,11 +554,14 @@ def oneroll_trim_press(event, frame, x=None, y=None):
             gui.tline_canvas.widget.queue_draw()
         return
 
+    print "pressed on actove area, MOUSE_EDIT_ON"
     # Get legal edit delta and set to edit mode data for overlay draw
     global edit_data
     frame = _legalize_one_roll_trim(frame, edit_data["trim_limits"])
     edit_data["selected_frame"] = frame
 
+    submode = MOUSE_EDIT_ON 
+            
     PLAYER().seek_frame(frame)
 
 def oneroll_trim_move(x, y, frame, state):
@@ -919,7 +924,7 @@ class RippleData:
 def set_tworoll_mode(track, current_frame = -1):
     """
     Sets two roll mode
-    """     
+    """
     if track == None:
         return False
 
@@ -1059,6 +1064,8 @@ def _attempt_reinit_tworoll(x, y, frame):
                 set_no_edit_mode_func() # further mouse events are handled at editevent.py
         else:
             # new trim inited, active immediately
+            global submode
+            submode = MOUSE_EDIT_ON
             tworoll_trim_move(x, y, frame, None)
             gui.tline_canvas.widget.queue_draw()
                 
@@ -1338,7 +1345,8 @@ def _attempt_reinit_slide(x, y, frame):
             set_no_edit_mode_func() # further mouse events are handled at editevent.py
     else:
         # new trim inited, active immediately
-        global edit_data
+        global edit_data, submode
+        submode = MOUSE_EDIT_ON
         edit_data["press_start"] = frame
         slide_trim_move(x, y, frame, None)
         gui.tline_canvas.widget.queue_draw()

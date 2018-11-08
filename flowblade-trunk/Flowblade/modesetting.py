@@ -161,10 +161,12 @@ def oneroll_trim_no_edit_press(event, frame):
     Mouse press while in ONE_ROLL_TRIM_NO_EDIT attempts to init edit and 
     move to ONE_ROLL_TRIM mode.
     """
+    print "oneroll_trim_no_edit_press"
     success = oneroll_trim_mode_init(event.x, event.y)
     if success:
         trimmodes.oneroll_trim_move(event.x, event.y, frame, None)
-        # additional mouse move and release handled at trimmodes
+        trimmodes.submode = trimmodes.MOUSE_EDIT_ON
+        # additional mouse move and release handled at trimmodes because successful init editorstate.edit_mode = editorstate.ONE_ROLL_TRIM
     else:
         if editorpersistance.prefs.empty_click_exits_trims == True:
             set_default_edit_mode(True)
@@ -213,6 +215,8 @@ def tworoll_trim_no_edit_press(event, frame):
     success = tworoll_trim_mode_init(event.x, event.y)
     if success:
         trimmodes.tworoll_trim_move(event.x, event.y, frame, None)
+        trimmodes.submode = trimmodes.MOUSE_EDIT_ON
+        # additional mouse move and release handled at trimmodes because successful init editorstate.edit_mode = editorstate.TWO_ROLL_TRIM
     else:
         if editorpersistance.prefs.empty_click_exits_trims == True:
             set_default_edit_mode(True)
@@ -259,6 +263,7 @@ def slide_trim_no_edit_press(event, frame):
     if success:
         trimmodes.edit_data["press_start"] = frame
         trimmodes.slide_trim_move(event.x, event.y, frame, None)
+        trimmodes.submode = trimmodes.MOUSE_EDIT_ON
     else:
         if editorpersistance.prefs.empty_click_exits_trims == True:
             set_default_edit_mode(True)

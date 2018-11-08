@@ -43,14 +43,16 @@ FF_REW_SPEED = 3.0
 
 
 JKL_SPEEDS = [-32.0, -16.0, -8.0, -1.0, 0.0, 1.0, 3.0, 5.0, 8.0]
-#JKL_SPEEDS = [-32.0, -16.0, -8.0, -1.0, -0.2, 0.0, 0.2, 1.0, 3.0, 5.0, 8.0]
 JKL_STOPPED_INDEX = 4
 
 # ---------------------------------------- playback
 # Some events have different meanings depending on edit mode and
 # are handled in either movemodes.py or trimmodes.py modules depending 
 # on edit mode.
-def play_pressed():
+def play_pressed():    
+    if editorstate.current_is_active_trim_mode() and trimmodes.submode != trimmodes.NOTHING_ON:
+        return
+
     if current_is_move_mode():
         movemodes.play_pressed()
     elif EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
