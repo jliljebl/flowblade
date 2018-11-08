@@ -335,6 +335,28 @@ def tline_canvas_mouse_pressed(event, frame):
             trimmodes.set_no_edit_trim_mode()
             PLAYER().seek_frame(frame)
         return
+    # LEFT BUTTON: Select new trimmed clip in active one roll trim mode	with sensitive cursor.
+    elif (event.button == 1 and EDIT_MODE() == editorstate.ONE_ROLL_TRIM):	
+        track = tlinewidgets.get_track(event.y)	
+        if track == None:	
+            if editorpersistance.prefs.empty_click_exits_trims == True:	
+                modesetting.set_default_edit_mode(True)	
+            return	
+        success = trimmodes.set_oneroll_mode(track, frame)	
+        if (not success) and editorpersistance.prefs.empty_click_exits_trims == True:	
+            modesetting.set_default_edit_mode(True)	
+            return	
+            	
+        if trimmodes.edit_data["to_side_being_edited"] == True:	
+            pointer_context = appconsts.POINTER_CONTEXT_TRIM_LEFT	
+        else:	
+            pointer_context = appconsts.POINTER_CONTEXT_TRIM_RIGHT	
+        gui.editor_window.set_tline_cursor_to_context(pointer_context)	
+        gui.editor_window.set_tool_selector_to_mode()	
+        if not editorpersistance.prefs.quick_enter_trims:	
+            editorstate.timeline_mouse_disabled = True	
+        else:	
+            trimmodes.oneroll_trim_move(event.x, event.y, frame, None)
     elif event.button == 2:
         updater.zoom_project_length()
     # LEFT BUTTON: Handle left mouse button edits by passing event to current edit mode

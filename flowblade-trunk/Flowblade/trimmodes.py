@@ -388,7 +388,6 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     """
     Sets one roll mode
     """
-    print "set_oneroll_mode"
     if track == None:
         return False
 
@@ -510,7 +509,6 @@ def oneroll_trim_press(event, frame, x=None, y=None):
     
     WE ARE HITTING THIS FROM MULTITRIM ONLY, NOT TRIM TOOL because we remove non-quick enter edits.
     """
-    print "oneroll_trim_press"
     global mouse_disabled, submode
     
     # We need this to enter with keyboard action from multitrimmode.py
@@ -554,7 +552,6 @@ def oneroll_trim_press(event, frame, x=None, y=None):
             gui.tline_canvas.widget.queue_draw()
         return
 
-    print "pressed on actove area, MOUSE_EDIT_ON"
     # Get legal edit delta and set to edit mode data for overlay draw
     global edit_data
     frame = _legalize_one_roll_trim(frame, edit_data["trim_limits"])
