@@ -1814,7 +1814,7 @@ class TimeLineCanvas:
                     cr.save()
                     try: # paint thumbnail
                         thumb_img = clip_thumbnails[clip.path]
-                        cr.rectangle(scale_in + 4, y + 3.5, scale_length - 8, track_height - 6)
+                        self.create_round_rect_path(cr, scale_in + 5, y + 4.5, scale_length - 10, track_height - 8, 3.0)
                         cr.clip()
                         cr.set_source_surface(thumb_img,scale_in, y - 20)
                         cr.paint()
@@ -2189,8 +2189,7 @@ class TimeLineCanvas:
         cr.set_line_width(4.0)
         cr.stroke()
 
-    def create_round_rect_path(self, cr, x, y, width, height):
-        radius = 4.0
+    def create_round_rect_path(self, cr, x, y, width, height, radius=4.0):
         degrees = M_PI / 180.0
 
         cr.new_sub_path()
