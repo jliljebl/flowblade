@@ -112,9 +112,13 @@ def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT):
                  "initializing":True}
 
     # Always brightness keyframes for media types that contain no audio.
-    if not(edit_data["clip"].media_type == appconsts.VIDEO or edit_data["clip"].media_type != appconsts.AUDIO):
-         edit_type = BRIGHTNESS_KF_EDIT
+    if edit_data["clip"].media_type != appconsts.VIDEO and edit_data["clip"].media_type != appconsts.AUDIO:
+        edit_type = BRIGHTNESS_KF_EDIT
     
+    # If
+    if track.type == appconsts.AUDIO and not(edit_data["clip"].media_type != appconsts.VIDEO and edit_data["clip"].media_type != appconsts.AUDIO):
+        edit_type = VOLUME_KF_EDIT
+        
     # Init for edit type
     if edit_type == VOLUME_KF_EDIT:
         ep = _get_volume_editable_property(clip, track, clip_index)

@@ -161,7 +161,6 @@ def oneroll_trim_no_edit_press(event, frame):
     Mouse press while in ONE_ROLL_TRIM_NO_EDIT attempts to init edit and 
     move to ONE_ROLL_TRIM mode.
     """
-    print "oneroll_trim_no_edit_press"
     success = oneroll_trim_mode_init(event.x, event.y)
     if success:
         trimmodes.oneroll_trim_move(event.x, event.y, frame, None)
@@ -283,10 +282,6 @@ def slide_trim_mode_init(x, y):
     track = tlinewidgets.get_track(y)
     if track == None:
         return False
-    
-    #if track_lock_check_and_user_info(track, tworoll_trim_mode_init, "two roll trim mode"):
-    #    set_default_edit_mode()
-    #    return False
 
     stop_looping()
     editorstate.edit_mode = editorstate.SLIDE_TRIM
@@ -311,7 +306,6 @@ def multitrim_mode_pressed():
     
 # -------------------------------------- cut mode
 def cut_mode_pressed():
-    #print "cut_mode_pressed"
     stop_looping()
     current_sequence().clear_hidden_track()
 
@@ -320,8 +314,6 @@ def cut_mode_pressed():
         
     tlinewidgets.set_edit_mode(None, tlinewidgets.draw_cut_overlay)
     movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
-    
-    #_set_move_mode()
 
 # -------------------------------------- kftool mode
 def kftool_mode_pressed():
