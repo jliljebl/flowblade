@@ -350,12 +350,15 @@ class SequenceListView(ImageTextTextListView):
     GUI component displaying list of sequences in project
     """
 
-    def __init__(self, seq_name_edited_cb, sequence_popup_cb):
+    def __init__(self, seq_name_edited_cb, sequence_popup_cb, double_click_cb):
         ImageTextTextListView.__init__(self)
         self.sequence_popup_cb = sequence_popup_cb
         self.treeview.connect('button-press-event', self._button_press_event)
         self.scroll.set_shadow_type(Gtk.ShadowType.NONE)
 
+        self.double_click_cb = double_click_cb
+        self.double_click_counter = 0 # We get 2 events for double click, we use this to only do one callback
+        
         # Icon path
         self.icon_path = respaths.IMAGE_PATH + "sequence.png"
 
@@ -387,7 +390,12 @@ class SequenceListView(ImageTextTextListView):
     def _button_press_event(self, widget, event):
         if event.button == 3:
             self.sequence_popup_cb(event)
-
+        # Double click handled separately
+        if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
+            self.double_click_counter += 1
+            if self.double_click_counter == 2:
+                self.double_click_counter = 0
+                self.double_click_cb()
 
 class MediaListView(ImageTextTextListView):
     """

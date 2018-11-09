@@ -575,7 +575,8 @@ class EditorWindow:
         # Project Panel
         # Sequence list
         self.sequence_list_view = guicomponents.SequenceListView(   projectaction.sequence_name_edited,
-                                                                    projectaction.sequence_panel_popup_requested)
+                                                                    projectaction.sequence_panel_popup_requested,
+                                                                    projectaction.sequence_list_double_click_done)
         seq_panel = panels.get_sequences_panel(
                              self.sequence_list_view,
                              lambda w,e: projectaction.change_edit_sequence(),

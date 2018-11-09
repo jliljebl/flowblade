@@ -1572,6 +1572,17 @@ def delete_selected_sequence():
                                  _("This operation can not be undone. Sequence will be permanently lost."), 
                                  gui.editor_window.window)
 
+def sequence_list_double_click_done():
+    selection = gui.sequence_list_view.treeview.get_selection()
+    model, iter = selection.get_selected()
+    (model, rows) = selection.get_selected_rows()
+    row = max(rows[0])
+    
+    c_seq_index = PROJECT().sequences.index(PROJECT().c_seq)
+    
+    if c_seq_index != row:
+        change_edit_sequence()
+
 def _delete_confirm_callback(dialog, response_id):
     if response_id != Gtk.ResponseType.ACCEPT:
         dialog.destroy()
