@@ -450,7 +450,6 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
             media_file.path = get_img_seq_media_path(media_file.path, _load_file_path)
             
         # This fixes Media Relinked projects with SAVEFILE_VERSION < 4:
-        # Remove 2018
         if (not(hasattr(media_file,  "is_proxy_file"))):
             FIX_N_TO_4_MEDIA_FILE_COMPATIBILITY(media_file)
         # This attr was added for 1.8. It is not computed for older projects.
