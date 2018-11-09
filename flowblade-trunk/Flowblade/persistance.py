@@ -153,7 +153,7 @@ def save_project(project, file_path, changed_profile_desc=None):
         # Because of MLT misfeature of changing project profile when loading MLT XML files we need to create new modified XML files when
         # saving to change profile.
         # Underlying reason: https://github.com/mltframework/mlt/issues/212
-        if changed_profile_desc != None and s_media_file.path != None and utils.is_mlt_xml_file(s_media_file.path) == True:
+        if changed_profile_desc != None and hasattr(s_media_file, "path") and s_media_file.path != None and utils.is_mlt_xml_file(s_media_file.path) == True:
             new_xml_file_path = _save_changed_xml_file(s_media_file, new_profile)
             _xml_new_paths_for_profile_change[s_media_file.path] = new_xml_file_path
             s_media_file.path = new_xml_file_path
