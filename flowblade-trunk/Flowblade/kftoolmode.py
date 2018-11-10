@@ -536,6 +536,20 @@ class TLineKeyFrameEditor:
             cr.show_text(text)
             cr.move_to(xe + TEXT_X_OFF_END + 16, y - TEXT_Y_OFF)
             cr.show_text(text)
+
+            # 50
+            y = self._get_panel_y_for_value(50)
+            cr.set_source_rgb(*FRAME_SCALE_LINES)
+            cr.move_to(xs, y)
+            cr.line_to(xe, y)
+            cr.stroke()
+
+            cr.set_source_rgb(*FRAME_SCALE_LINES_BRIGHT)
+            text = "50"
+            cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF + 8)
+            cr.show_text(text)
+            cr.move_to(xe + TEXT_X_OFF_END + 6, y - TEXT_Y_OFF + 8)
+            cr.show_text(text)
             
             # 100
             y = self._get_panel_y_for_value(100)
@@ -546,10 +560,11 @@ class TLineKeyFrameEditor:
             
             cr.set_source_rgb(*FRAME_SCALE_LINES_BRIGHT)
             text = "100"
-            cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF)
+            cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF + 17)
             cr.show_text(text)
-            cr.move_to(xe + TEXT_X_OFF_END, y - TEXT_Y_OFF)
+            cr.move_to(xe + TEXT_X_OFF_END, y - TEXT_Y_OFF + 17)
             cr.show_text(text)
+            
         elif self.edit_type == BRIGHTNESS_KF_EDIT:
             # 0
             y = self._get_panel_y_for_value(0.0)

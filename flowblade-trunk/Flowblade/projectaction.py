@@ -56,7 +56,9 @@ from editorstate import current_sequence
 from editorstate import current_bin
 from editorstate import PROJECT
 from editorstate import MONITOR_MEDIA_FILE
+from editorstate import EDIT_MODE
 import editorpersistance
+import kftoolmode
 import medialinker
 import movemodes
 import mltprofiles
@@ -322,6 +324,8 @@ def _not_matching_media_info_callback(dialog, response_id, media_file):
     profile = mltprofiles.get_profile_for_index(match_profile_index)
         
     if response_id == Gtk.ResponseType.ACCEPT:
+        if EDIT_MODE() == editorstate.KF_TOOL:
+            kftoolmode.exit_tool()
         # Save in hidden and open
         match_profile_index = mltprofiles.get_closest_matching_profile_index(media_file.info)
         profile = mltprofiles.get_profile_for_index(match_profile_index)

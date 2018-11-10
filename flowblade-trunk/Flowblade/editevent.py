@@ -479,10 +479,10 @@ def tline_media_drop(media_file, x, y, use_marks=False):
         #modesetting.set_default_edit_mode()
         # TODO: Info
         return
-        
 
-    
     modesetting.stop_looping()
+    if EDIT_MODE() == editorstate.KF_TOOL:
+        kftoolmode.exit_tool()
 
     frame = tlinewidgets.get_frame(x)
     
