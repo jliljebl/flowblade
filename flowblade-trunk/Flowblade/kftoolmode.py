@@ -66,6 +66,7 @@ KF_DRAG_THRESHOLD = 3
 # Colors
 FRAME_SCALE_LINES = (0.07, 0.22, 0.07)
 FRAME_SCALE_LINES_BRIGHT = (0.2, 0.6, 0.2)
+TEXT_COLOR = (0.6, 0.6, 0.6) 
 CURVE_COLOR = (0.71, 0.13, 0.64)
 OVERLAY_BG = (0.0, 0.0, 0.0, 0.8)
 
@@ -97,7 +98,7 @@ def load_icons():
 
     HAMBURGER_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger.png")
     ACTIVE_KF_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_active.png")
-    NON_ACTIVE_KF_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_not_active.png")    
+    NON_ACTIVE_KF_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_not_active_tool.png")    
 
 def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT):
     clip_index = track.clips.index(clip)
@@ -115,7 +116,7 @@ def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT):
     if edit_data["clip"].media_type != appconsts.VIDEO and edit_data["clip"].media_type != appconsts.AUDIO:
         edit_type = BRIGHTNESS_KF_EDIT
     
-    # If
+    # Volume keyframes on audio track for video and audio
     if track.type == appconsts.AUDIO and not(edit_data["clip"].media_type != appconsts.VIDEO and edit_data["clip"].media_type != appconsts.AUDIO):
         edit_type = VOLUME_KF_EDIT
         
@@ -156,7 +157,7 @@ def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT):
 
 def update_clip_frame(tline_frame):
     if _kf_editor != None and edit_data != None and edit_data["initializing"] != True:
-        clip_frame = tline_frame - edit_data["clip_start_in_timeline"]
+        clip_frame = tline_frame - edit_data["clip_start_in_timeline"] + edit_data["clip"].clip_in
         _kf_editor.set_and_display_clip_frame(clip_frame)
 
 def _get_volume_editable_property(clip, track, clip_index):
@@ -410,6 +411,30 @@ class TLineKeyFrameEditor:
 
         kf_positions = self.get_clip_kfs_and_positions()
         
+        # Draw value curves,they need to be clipped into edit area
+        cr.set_source_rgb(*CURVE_COLOR)
+        cr.set_line_width(1.0)
+
+        cr.save()
+        cr.set_line_width(2.0)
+        ex, ey, ew, eh = self._get_edit_area_rect()
+        cr.rectangle(ex, ey, ew, eh)
+        cr.clip() 
+        for i in range(0, len(kf_positions)):
+            kf, frame, kf_index, kf_pos_x, kf_pos_y = kf_positions[i]
+            if i == 0:
+                cr.move_to(kf_pos_x, kf_pos_y)
+            else:
+                cr.line_to(kf_pos_x, kf_pos_y)
+        # If last kf before clip end, continue value curve to end
+        kf, frame, kf_index, kf_pos_x, kf_pos_y = kf_positions[-1]
+        if kf_pos_x < ex + ew:
+            cr.move_to(kf_pos_x, kf_pos_y)
+            cr.line_to(ex + ew, kf_pos_y)
+        
+        cr.stroke()
+        cr.restore()
+
         # Draw keyframes
         for i in range(0, len(kf_positions)):
             kf, frame, kf_index, kf_pos_x, kf_pos_y = kf_positions[i]
@@ -427,24 +452,6 @@ class TLineKeyFrameEditor:
             cr.set_source_surface(icon, kf_pos_x - 6, kf_pos_y - 6) # -6 to get kf bitmap center on calculated pixel
             cr.paint()
 
-        cr.set_source_rgb(*CURVE_COLOR)
-        cr.set_line_width(1.0)
-        
-        # Draw value curves,they need to be clipped into edit area
-        cr.save()
-        cr.set_line_width(2.0)
-        ex, ey, ew, eh = self._get_edit_area_rect()
-        cr.rectangle(ex, ey, ew, eh)
-        cr.clip() 
-        for i in range(0, len(kf_positions)):
-            kf, frame, kf_index, kf_pos_x, kf_pos_y = kf_positions[i]
-            if i == 0:
-                cr.move_to(kf_pos_x, kf_pos_y)
-            else:
-                cr.line_to(kf_pos_x, kf_pos_y)
-        cr.stroke()
-        cr.restore()
-        
         # Draw out-of-range kf icons and kf counts
         if w > 55: # dont draw on too small editors
             before_kfs = len(self.get_out_of_range_before_kfs())
@@ -461,11 +468,11 @@ class TLineKeyFrameEditor:
                 self._draw_text(cr, str(after_kfs), x + w - OUT_OF_RANGE_NUMBER_X_END_PAD, kfy + KF_TEXT_PAD)
         
         # Draw source triangle
-        cr.move_to(x + 1, self.source_track_center - 8)
-        cr.line_to(x + 9, self.source_track_center)
-        cr.line_to(x + 1, self.source_track_center + 8)
+        cr.move_to(x - 6, self.source_track_center - 8)
+        cr.line_to(x + 3, self.source_track_center)
+        cr.line_to(x - 6, self.source_track_center + 8)
         cr.close_path()
-        cr.set_source_rgb(*FRAME_SCALE_LINES_BRIGHT)
+        cr.set_source_rgb(*TEXT_COLOR)
         cr.fill()
         
         # Draw frame pointer
@@ -480,11 +487,11 @@ class TLineKeyFrameEditor:
         cr.stroke()
 
         # Draw title
-        if w > 165: # dont draw on too small editors
+        if w > 55: # dont draw on too small editors
             if self.edit_type == VOLUME_KF_EDIT:
-                text = self.volume_kfs_text
+                text = edit_data["editable_property"].clip.name + " - " + self.volume_kfs_text
             else:
-                text = self.brightness_kfs_text
+                text = edit_data["editable_property"].clip.name + " - " + self.brightness_kfs_text
             self._draw_text(cr, text, -1, y + 4, True, x, w)
             self._draw_text(cr, self.media_frame_txt + str(self.current_clip_frame), -1, kfy - 8, True, x, w)
 
@@ -594,13 +601,16 @@ class TLineKeyFrameEditor:
         layout.set_text(txt, -1)
         desc = Pango.FontDescription("Sans 8")
         layout.set_font_description(desc)
-
+        lw, lh = layout.get_pixel_size()
+            
         if centered == True:
-            lw, lh = layout.get_pixel_size()
             x = w/2 - lw/2 + tline_x
 
+        if lw > w:
+            return
+
         cr.move_to(x, y)
-        cr.set_source_rgb(*FRAME_SCALE_LINES_BRIGHT)
+        cr.set_source_rgb(*TEXT_COLOR)
         PangoCairo.update_layout(cr, layout)
         PangoCairo.show_layout(cr, layout)
 
@@ -668,7 +678,6 @@ class TLineKeyFrameEditor:
             
             self.drag_min = self.clip_in
             self.drag_max = self.clip_in + self.clip_length
-            
             frame = self._get_drag_frame(lx)
             self.current_clip_frame = frame
             self.clip_editor_frame_changed(self.current_clip_frame)
@@ -680,14 +689,14 @@ class TLineKeyFrameEditor:
 
         if hit_kf == None: # nothing was hit, add new keyframe and set it active
             frame =  self._get_frame_for_panel_pos(lx)
-            value = self._get_value_for_panel_y(ly)
+            value = round(self._get_value_for_panel_y(ly))
             self.add_keyframe(frame, value)
             hit_kf = self.active_kf_index 
         else: # some keyframe was pressed
             self.active_kf_index = hit_kf
             
         frame, value = self.keyframes[hit_kf]
-        self.edit_value = value
+        self.edit_value = round(value)
         self.current_clip_frame = frame
         if hit_kf == 0:
             self.current_mouse_action = KF_DRAG_FRAME_ZERO_KF
@@ -774,7 +783,7 @@ class TLineKeyFrameEditor:
         
         updater.repaint_tline()
         self.current_mouse_action = None
-
+        
     # --------------------------------------------------------------- keyframes funcs
     def get_clip_kfs_and_positions(self):
         kf_positions = []
@@ -909,12 +918,12 @@ class TLineKeyFrameEditor:
     def _get_panel_pos(self):
         return self._get_panel_pos_for_frame(self.current_clip_frame) 
 
-    def _get_panel_pos_for_frame(self, frame):
+    def _get_panel_pos_for_frame(self, clip_frame):
         x, y, width, h = self.allocation
         active_width = width - 2 * END_PAD
-        disp_frame = frame - self.clip_in 
+        disp_frame = clip_frame - self.clip_in 
         return x + END_PAD + int((float(disp_frame) / float(self.clip_length)) * 
-                             active_width)
+                             float(active_width))
 
     def _get_frame_for_panel_pos(self, panel_x):
         rx, ry, rw, rh = self._get_edit_area_rect()
@@ -976,7 +985,7 @@ class TLineKeyFrameEditor:
             self.current_clip_frame = self.clip_in
         if self.current_clip_frame > self.clip_in + self.clip_length:
             self.current_clip_frame = self.clip_in + self.clip_length
-
+        
     def _get_drag_frame(self, panel_x):
         """
         Get x in range available for current drag.
