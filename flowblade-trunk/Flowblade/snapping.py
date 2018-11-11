@@ -80,6 +80,9 @@ def mouse_edit_ended():
 
 #------------------------------------------- utils funcs
 def _get_track_above(track):
+    #if track == None:
+    #    return None # 
+        
     if track.id < len(current_sequence().tracks) - 2:
         return current_sequence().tracks[track.id  + 1]
     else:

@@ -204,7 +204,7 @@ def _get_multipart_keyframe_ep_from_service(clip, track, clip_index, mlt_service
 
 
 def exit_tool():
-    _set_no_clip_edit_data()
+    set_no_clip_edit_data()
     global enter_mode
     if enter_mode != None:
         gui.editor_window.kf_tool_exit_to_mode(enter_mode)
@@ -236,7 +236,7 @@ def mouse_press(event, frame):
 
     # No edits for locked tracks
     if dialogutils.track_lock_check_and_user_info(track):
-        _set_no_clip_edit_data()
+        set_no_clip_edit_data()
         return
         
     # Attempt to init kf tool editing on some clip
@@ -279,7 +279,7 @@ def _clip_is_being_edited():
     
     return True
 
-def _set_no_clip_edit_data():
+def set_no_clip_edit_data():
     # set edit data to reflect that no clip is being edited currently.
     global edit_data, _kf_editor
     edit_data = {"draw_function":_tline_overlay,
@@ -1068,7 +1068,7 @@ class TLineKeyFrameEditor:
         guiutils.remove_children(menu)
         before_kfs = len(self.get_out_of_range_before_kfs())
 
-        if before_kfs == 0:
+        if before_kfs == 0 or (before_kfs == 1 and len(self.keyframes) == 1):
             item = self._get_menu_item(_("No Edit Actions currently available"), self._oor_menu_item_activated, "noop" )
             item.set_sensitive(False)
             menu.add(item)
@@ -1214,7 +1214,7 @@ class TLineKeyFrameEditor:
         elif data == "edit_volume":
             init_tool_for_clip(edit_data["clip"] , edit_data["track"], VOLUME_KF_EDIT)
         elif data == "exit":
-            _set_no_clip_edit_data()
+            set_no_clip_edit_data()
         elif data == "playhead_follows":
             global _playhead_follow_kf
             _playhead_follow_kf = widget.get_active()
