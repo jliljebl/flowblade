@@ -80,8 +80,8 @@ def mouse_edit_ended():
 
 #------------------------------------------- utils funcs
 def _get_track_above(track):
-    #if track == None:
-    #    return None # 
+    if track == None:
+        return None # Clip is being dragged outside of tracks area
         
     if track.id < len(current_sequence().tracks) - 2:
         return current_sequence().tracks[track.id  + 1]
@@ -89,12 +89,18 @@ def _get_track_above(track):
         return None
         
 def _get_track_below(track):
+    if track == None:
+        return None  # Clip is being dragged outside of tracks area
+        
     if track.id > 1:
         return current_sequence().tracks[track.id  - 1]
     else:
         return None
 
 def _get_track_snapped_x(track, x, frame, frame_x):
+    if track == None:  # Clip is being dragged outside of tracks area
+        return -1
+
     closest_cut_frame = current_sequence().get_closest_cut_frame(track.id, frame)
     if closest_cut_frame == -1:
         return -1
