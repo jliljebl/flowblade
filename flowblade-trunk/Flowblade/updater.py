@@ -352,6 +352,7 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
     if clip_monitor_currently_active == False:
         global saved_timeline_pos
         saved_timeline_pos = PLAYER().current_frame()
+        print "saved_timeline_pos", saved_timeline_pos
         editorstate.tline_shadow_frame = saved_timeline_pos
 
     # If we're already displaying monitor clip we stop consumer 
@@ -439,13 +440,7 @@ def display_sequence_in_monitor():
     """
     if PLAYER() == None: # this method gets called too early when initializing, hack fix.
         return
-    
-    # If this gets called without user having pressed 'Timeline' button we'll 
-    # programmatically press it to recall this method to have the correct button down.
-    #if gui.sequence_editor_b.get_active() == False:
-    #    gui.sequence_editor_b.set_active(True)
-    #    return
-        
+           
     editorstate._timeline_displayed = True
 
     # Clear hidden track that has been displaying monitor clip
@@ -535,10 +530,10 @@ def set_and_display_monitor_media_file(media_file):
     """
     editorstate._monitor_media_file = media_file
     
-    if editorstate.timeline_visible() == True: # This was changed
-        display_clip_in_monitor(clip_monitor_currently_active = True)
-    else:
+    if editorstate.timeline_visible() == True:
         display_clip_in_monitor()
+    else:
+        display_clip_in_monitor(clip_monitor_currently_active = True)
 
 
 # --------------------------------------- frame displayes
