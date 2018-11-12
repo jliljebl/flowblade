@@ -925,7 +925,7 @@ class MediaPanel():
         self.last_ctrl_selected_media_object = None
         
         self.double_click_release = False # needed to get focus over to pos bar after double click, usually media object grabs focus
-        self.double_click_counter = 0 # needed to pass only one event, double init for monitor could possibly somewhat unstable but surely worse performance.
+        self.double_click_counter = 0 # needed to pass only one event, double init for monitor click possibly somewhat unstable
         
         global has_proxy_icon, is_proxy_icon, graphics_icon, imgseq_icon, audio_icon, pattern_icon, profile_warning_icon
         has_proxy_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "has_proxy_indicator.png")
@@ -940,21 +940,17 @@ class MediaPanel():
         return self.selected_objects
 
     def media_object_selected(self, media_object, widget, event):
-        if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
-            self.double_click_counter += 1
-            if self.double_click_counter == 2:
-                self.double_click_counter = 0
+        if event.type == Gdk.EventType._2BUTTON_PRESS:
+            print "doubleclick"
+            self.double_click_release = True
+            self.clear_selection()
+            media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
+            self.selected_objects.append(media_object)
+            self.widget.queue_draw()
+            gui.pos_bar.widget.grab_focus()
+            GLib.idle_add(self.double_click_cb, media_object.media_file)
+            return
 
-                self.double_click_release = True
-                self.clear_selection()
-                media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
-                self.selected_objects.append(media_object)
-                self.widget.queue_draw()
-                gui.pos_bar.widget.grab_focus()
-                GLib.idle_add(self.double_click_cb, media_object.media_file)
-                return
-        return
-        
         # HACK! We're using event times to exclude double events when icon is pressed
         now = time.time()
         if (now - self.last_event_time) < 0.05:
