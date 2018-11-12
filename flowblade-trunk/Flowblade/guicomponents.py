@@ -925,7 +925,7 @@ class MediaPanel():
         self.last_ctrl_selected_media_object = None
         
         self.double_click_release = False # needed to get focus over to pos bar after double click, usually media object grabs focus
-        self.double_click_counter = 0 # needed to pass only one event, double init for monitor click possibly somewhat unstable but surely worse performance.
+        self.double_click_counter = 0 # needed to pass only one event, double init for monitor could possibly somewhat unstable but surely worse performance.
         
         global has_proxy_icon, is_proxy_icon, graphics_icon, imgseq_icon, audio_icon, pattern_icon, profile_warning_icon
         has_proxy_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "has_proxy_indicator.png")
