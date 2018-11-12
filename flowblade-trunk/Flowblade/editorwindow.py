@@ -454,7 +454,7 @@ class EditorWindow:
         self.bins_panel.set_size_request(MEDIA_MANAGER_WIDTH, 10) # this component is always expanded, so 10 for minimum size ok
 
         self.media_list_view = guicomponents.MediaPanel(projectaction.media_file_menu_item_selected,
-                                                        updater.set_and_display_monitor_media_file,
+                                                        projectaction.media_panel_double_click,
                                                         projectaction.media_panel_popup_requested)
     
     

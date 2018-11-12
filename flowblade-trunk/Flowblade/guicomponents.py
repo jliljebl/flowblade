@@ -925,7 +925,6 @@ class MediaPanel():
         self.last_ctrl_selected_media_object = None
         
         self.double_click_release = False # needed to get focus over to pos bar after double click, usually media object grabs focus
-        self.double_click_counter = 0 # needed to pass only one event, double init for monitor click possibly somewhat unstable
         
         global has_proxy_icon, is_proxy_icon, graphics_icon, imgseq_icon, audio_icon, pattern_icon, profile_warning_icon
         has_proxy_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "has_proxy_indicator.png")
@@ -941,7 +940,6 @@ class MediaPanel():
 
     def media_object_selected(self, media_object, widget, event):
         if event.type == Gdk.EventType._2BUTTON_PRESS:
-            print "doubleclick"
             self.double_click_release = True
             self.clear_selection()
             media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())

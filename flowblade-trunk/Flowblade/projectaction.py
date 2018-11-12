@@ -88,7 +88,9 @@ save_icon_remove_event_id = None
 force_overwrite = False
 force_proxy = False
 
-#_xml_render_player = None
+# This is needed to pass only one event for double click, double init for monitor click possibly somewhat unstable
+_media_panel_double_click_counter = 0
+
 
 #--------------------------------------- worker threads
 class LoadThread(threading.Thread):
@@ -912,7 +914,14 @@ def _media_panel_menu_item_selected(widget, msg):
         add_media_files()
     elif msg == "add image sequence":
         add_image_sequence()
-    
+
+def media_panel_double_click(media_file):
+    global _media_panel_double_click_counter
+    _media_panel_double_click_counter += 1
+    if _media_panel_double_click_counter == 2:
+        _media_panel_double_click_counter = 0
+        updater.set_and_display_monitor_media_file(media_file)
+            
 def add_media_files(this_call_is_retry=False):
     """
     User selects a media file to added to current bin.
