@@ -352,7 +352,6 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
     if clip_monitor_currently_active == False:
         global saved_timeline_pos
         saved_timeline_pos = PLAYER().current_frame()
-        print "saved_timeline_pos", saved_timeline_pos
         editorstate.tline_shadow_frame = saved_timeline_pos
 
     # If we're already displaying monitor clip we stop consumer 

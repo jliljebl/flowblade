@@ -804,10 +804,16 @@ class EditorWindow:
         menu_vbox = Gtk.HBox(False, 0)
         menu_vbox.pack_start(guiutils.get_right_justified_box([self.menubar]), False, False, 0)
         menu_vbox.pack_start(Gtk.Label(), True, True, 0)
-        menu_vbox.pack_start(self.monitor_source, False, False, 0)
-        menu_vbox.pack_start(guiutils.pad_label(24, 10), False, False, 0)
-        menu_vbox.pack_start(self.info1, False, False, 0)
-        
+        if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
+            menu_vbox.pack_start(self.monitor_source, False, False, 0)
+            menu_vbox.pack_start(guiutils.pad_label(24, 10), False, False, 0)
+            menu_vbox.pack_start(self.info1, False, False, 0)
+        else:
+            top_row_window_2 = Gtk.HBox(False, 0)
+            top_row_window_2.pack_start(Gtk.Label(), True, True, 0)
+            top_row_window_2.pack_start(self.monitor_source, False, False, 0)
+            top_row_window_2.pack_start(guiutils.pad_label(24, 10), False, False, 0)
+            top_row_window_2.pack_start(self.info1, False, False, 0)
         # Pane
         pane = Gtk.VBox(False, 1)
         pane.pack_start(menu_vbox, False, True, 0)
@@ -843,6 +849,7 @@ class EditorWindow:
         # Show Monitor Window in two window mode
         if editorpersistance.prefs.global_layout != appconsts.SINGLE_WINDOW:
             pane2 = Gtk.VBox(False, 1)
+            pane2.pack_start(top_row_window_2, False, False, 0)
             pane2.pack_start(monitor_frame, True, True, 0)
             
             # Set pane and show window
