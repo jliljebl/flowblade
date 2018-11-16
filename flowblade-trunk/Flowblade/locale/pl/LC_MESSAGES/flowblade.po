@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-15 12:44+0200\n"
-"PO-Revision-Date: 2017-05-27 08:50+0200\n"
+"POT-Creation-Date: 2018-11-16 10:13+0200\n"
+"PO-Revision-Date: 2018-11-15 12:12+0200\n"
 "Last-Translator: Stanislaw Polak <polak@icsr.agh.edu.pl>\n"
 "Language-Team: Polish\n"
 "Language: pl\n"
@@ -211,28 +211,24 @@ msgid "Render Proxy Files For Selected Media"
 msgstr "Renderuj pliki Proxy dla wybranych multimediów"
 
 #: projectaction.py:858
-#, fuzzy
 msgid "Select All"
-msgstr "Wybierz plik"
+msgstr "Wybierz Wszystkie"
 
 #: projectaction.py:859
-#, fuzzy
 msgid "Select None"
-msgstr "Wybrane"
+msgstr "Nie wybieraj żadnego"
 
 #: projectaction.py:861
-#, fuzzy
 msgid "Move Selected Media To Bin"
-msgstr "Przenieś wybrane pozycje do grupy"
+msgstr "Przenieś wybrane multimedia do pojemnika"
 
 #: projectaction.py:864
-#, fuzzy
 msgid "No Target Bins"
-msgstr "Plik docelowy:"
+msgstr "Brak docelowych pojemników"
 
 #: projectaction.py:907 editorwindow.py:236
 msgid "Add Video, Audio or Image..."
-msgstr ""
+msgstr "Dodaj Wideo, Audio lub Obraz"
 
 #: projectaction.py:908 editorwindow.py:237
 msgid "Add Image Sequence..."
@@ -324,19 +320,16 @@ msgid "Save Sequence Compound Clip"
 msgstr "Zapisz klip złożony sekwencji"
 
 #: projectaction.py:1328 editorwindow.py:240
-#, fuzzy
 msgid "Add Bin"
-msgstr "Dodaj przenikanie"
+msgstr "Dodaj pojemnik"
 
 #: projectaction.py:1329 editorwindow.py:241
-#, fuzzy
 msgid "Delete Selected Bin"
-msgstr "Usuń wybrane"
+msgstr "Usuń wybrany pojemnik"
 
 #: projectaction.py:1333
-#, fuzzy
 msgid "Move Bin"
-msgstr "Przesuń w dół"
+msgstr "Przesuń pojemnik"
 
 #: projectaction.py:1335 editorwindow.py:938
 msgid "Up"
@@ -348,11 +341,11 @@ msgstr "Na dole"
 
 #: projectaction.py:1337
 msgid "First"
-msgstr ""
+msgstr "Pierwszy"
 
 #: projectaction.py:1338
 msgid "Last"
-msgstr ""
+msgstr "Ostatni"
 
 #: projectaction.py:1397
 msgid "Can't remove a non-empty bin"
@@ -385,19 +378,16 @@ msgstr ""
 "nową sekwencję, w razie potrzeby."
 
 #: projectaction.py:1518 editorwindow.py:243
-#, fuzzy
 msgid "Add New Sequence"
-msgstr "Dodaj sekwencję zdjęć..."
+msgstr "Dodaj nową sekwencję"
 
 #: projectaction.py:1519 editorwindow.py:244
-#, fuzzy
 msgid "Edit Selected Sequence"
-msgstr "Utwórz sekwencję"
+msgstr "Edytuj wybraną sekwencję"
 
 #: projectaction.py:1520 editorwindow.py:245
-#, fuzzy
 msgid "Delete Selected Sequence"
-msgstr "Usuń zaznaczony element"
+msgstr "Usuń wybraną sekwencję"
 
 #: projectaction.py:1584
 msgid ""
@@ -505,11 +495,11 @@ msgstr "Dodaj klip monitora"
 
 #: editorwindow.py:210 shortcuts.py:190
 msgid "Append"
-msgstr "Dołącz"
+msgstr "Dołączanie"
 
 #: editorwindow.py:211 shortcuts.py:189 shortcuts.py:203 workflow.py:62
 msgid "Insert"
-msgstr "Wstaw"
+msgstr "Wstawianie (Insert)"
 
 #: editorwindow.py:212
 msgid "Three Point Overwrite"
@@ -524,9 +514,8 @@ msgid "Cut Clip"
 msgstr "Przetnij klip"
 
 #: editorwindow.py:215 tlineaction.py:194
-#, fuzzy
 msgid "Split to new Sequence at Playhead Position"
-msgstr "Wstaw sekwencję w pozycji głowicy"
+msgstr "Podziel na nową sekwencję w pozycji głowicy"
 
 #: editorwindow.py:216 guicomponents.py:1833 translations.py:520
 #: middlebar.py:163 workflow.py:186
@@ -614,14 +603,12 @@ msgid "Create Color Clip..."
 msgstr "Utwórz klip koloru..."
 
 #: editorwindow.py:239
-#, fuzzy
 msgid "Bin"
-msgstr "Pojemniki"
+msgstr "Pojemnik"
 
 #: editorwindow.py:242
-#, fuzzy
 msgid "Sequence"
-msgstr "Sekwencja:"
+msgstr "Sekwencja"
 
 #: editorwindow.py:246
 msgid "Create Pattern Producer"
@@ -782,39 +769,32 @@ msgid "Compositors"
 msgstr "Kompozytory"
 
 #: editorwindow.py:639
-#, fuzzy
 msgid "Prev Frame - Arrow Left"
-msgstr "Przycinanie poprzedniej klatki"
+msgstr "Poprzednia klatka - Strzałka w lewo"
 
 #: editorwindow.py:639
-#, fuzzy
 msgid "Next Frame - Arrow Right"
-msgstr "Przycinanie następnej klatki"
+msgstr "Następna klatka - Strzałka w prawo"
 
 #: editorwindow.py:639
-#, fuzzy
 msgid "Play - Space"
-msgstr "Wyb. przestrzeni"
+msgstr "Odtwarzanie - Spacja"
 
 #: editorwindow.py:639
-#, fuzzy
 msgid "Stop - Space"
-msgstr "Wyb. przestrzeni"
+msgstr "Zatrzymanie - Spacja"
 
 #: editorwindow.py:639
-#, fuzzy
 msgid "Mark In - I"
-msgstr "Początek zaznaczenia"
+msgstr "Znacznik początkowy - I"
 
 #: editorwindow.py:639
-#, fuzzy
 msgid "Mark Out - O"
-msgstr "Koniec zaznaczenia"
+msgstr "Znacznik końcowy - O"
 
 #: editorwindow.py:639
-#, fuzzy
 msgid "Clear Marks"
-msgstr "Usuń filtry"
+msgstr "Usuń znaczniki"
 
 #: editorwindow.py:639 dialogs.py:1475
 msgid "To Mark In"
@@ -903,32 +883,28 @@ msgid "Timeline current frame timecode"
 msgstr "Czas bieżącej klatki na osi czasu"
 
 #: editorwindow.py:1102
-#, fuzzy
 msgid "Select view mode: Video / Vectorscope/ RGBParade"
 msgstr "Wybierz tryb wyświetlania: Wideo/Wektoroskop/Parada RGB"
 
 #: editorwindow.py:1103
 msgid "Set trim view and match frames"
-msgstr ""
+msgstr "Ustaw widok przycinania oraz dopasowywanie klatek"
 
 #: editorwindow.py:1105
-#, fuzzy
 msgid "Sequence / Media current frame timecode"
-msgstr "Podgląd czasu bieżącej sekwencji klatek/multimediów"
+msgstr "Podgląd kodu czasowej aktualnej klatki sekwencji / multimediów"
 
 #: editorwindow.py:1106
-#, fuzzy
 msgid "Current Sequence / Clip name and length"
-msgstr "Nazwa bieżąco oglądanej sekwencji/multimediów"
+msgstr "Nazwa oraz długość bieżąco oglądanej sekwencji / klipu"
 
 #: editorwindow.py:1108
-#, fuzzy
 msgid "Sequence / Media current position"
-msgstr "Aktualna pozycja oglądanej sekwencji/multimediów"
+msgstr "Aktualna pozycja oglądanej sekwencji / multimediów"
 
 #: editorwindow.py:1394
 msgid "In / Out / Marked Length"
-msgstr ""
+msgstr "Początkowy / Końcowy / Zaznaczona długość"
 
 #: clipeffectseditor.py:74
 msgid "Clip Filters Stack"
@@ -951,7 +927,6 @@ msgid "Clip being edited"
 msgstr "Edytowany klip"
 
 #: clipeffectseditor.py:251
-#, fuzzy
 msgid "Clip Filter Stack"
 msgstr "Stos filtrów klipu"
 
@@ -968,14 +943,12 @@ msgid "Toggle all Filters On/Off"
 msgstr "Przełącz wszystkie filtry w pozycję włącz/wyłącz"
 
 #: clipeffectseditor.py:444
-#, fuzzy
 msgid "No Clip"
-msgstr "Załaduj klip"
+msgstr "Brak klipu"
 
 #: clipeffectseditor.py:450
-#, fuzzy
 msgid "Clip Has No Filters"
-msgstr "Usuń filtry"
+msgstr "Klip nie ma filtrów"
 
 #: clipeffectseditor.py:546
 msgid "No editable parameters"
@@ -1404,7 +1377,7 @@ msgstr "Wymuszenie usunięcia"
 
 #: dialogs.py:862
 msgid "Open last autosave?"
-msgstr "Otwórzyć ostatni plik autozapisu?"
+msgstr "Otworzyć ostatni plik autozapisu?"
 
 #: dialogs.py:863
 msgid ""
@@ -1439,7 +1412,7 @@ msgstr "Otwórz automatycznie zapisany projekt"
 
 #: dialogs.py:884
 msgid "Open a autosave file?"
-msgstr "Otwórzyc plik autozapisu? "
+msgstr "Otworzyć plik autozapisu? "
 
 #: dialogs.py:885
 msgid ""
@@ -1502,8 +1475,8 @@ msgid ""
 " When reducing the number of tracks the top Video track and/or bottom Audio "
 "track will be removed\n"
 msgstr ""
-" Podczas zmniejszania liczby ścieżek górna ścieżka wideo i/lub dolna ścieżka "
-"Audiozostaną usunięte\n"
+" Podczas zmniejszania liczby ścieżek górna ścieżka Wideo i/lub dolna ścieżka "
+"Audio zostaną usunięte\n"
 
 #: dialogs.py:952 dialogs.py:1703
 msgid ""
@@ -1626,8 +1599,8 @@ msgid ""
 "'</b> into a clip. Here is some info on how <b>Alpha Filters</b> work on "
 "Flowblade:"
 msgstr ""
-" do klipu. Oto kilka informacji o tym, jak działają <b>Filtry alfa</b> w "
-"programie Flowblade:"
+"</b>  do klipu. Oto kilka informacji o tym, jak działają <b>Filtry alfa</b> "
+"w programie Flowblade:"
 
 #: dialogs.py:1196
 msgid " <b>Alpha Filters</b> work by modifying image's alpha channel.\n"
@@ -1638,8 +1611,8 @@ msgid ""
 " To see the effect of <b>Alpha Filter</b> you need composite this clip on "
 "track below by adding a <b>Compositor like 'Dissolve'</b> into this clip.\n"
 msgstr ""
-"Aby zobaczyć efekt <b>Filtra alfa</b>, musisz zastosować do tego klipu, "
-"naścieżce poniżej, <b>Kompozytora, takiego jak 'Rozpuszczanie'</b>.\n"
+"Aby zobaczyć efekt <b>Filtra alfa</b>, musisz zastosować do tego klipu, na "
+"ścieżce poniżej, <b>Kompozytora, takiego jak 'Rozpuszczanie'</b>.\n"
 
 #: dialogs.py:1198
 msgid " <b>Alpha Filters</b> on clips on <b>Track V1</b> have no effect."
@@ -1873,7 +1846,7 @@ msgstr ""
 
 #: dialogs.py:1488
 msgid "Toggle Trim / Ripple Trim Tools"
-msgstr ""
+msgstr "Przełącz narzędzia Przycinanie / Przycinanie wypełniające"
 
 #: dialogs.py:1492
 msgid "Move Source Video Left 1px"
@@ -1916,42 +1889,36 @@ msgid "Keep Aspect Ratio in Affine Blend scaling"
 msgstr "Zachowaj proporcje obrazu podczas skalowania przenikania afinicznego"
 
 #: dialogs.py:1498
-#, fuzzy
 msgid "Shift + Left Arrow "
-msgstr "Ctl + strzałka w lewo"
+msgstr "Shift + Strzałka w lewo"
 
 #: dialogs.py:1498
-#, fuzzy
 msgid "Scale Down"
-msgstr "Skala"
+msgstr "Zmniejsz skalę"
 
 #: dialogs.py:1499
-#, fuzzy
 msgid "Shift + Right Arrow"
-msgstr "Ctrl + strzałka w prawo"
+msgstr "Shift + Strzałka w prawo"
 
 #: dialogs.py:1499
-#, fuzzy
 msgid "Scale Up"
-msgstr "Skala"
+msgstr "Zwiększ skalę"
 
 #: dialogs.py:1500
-#, fuzzy
 msgid "Shift + Control + Left Arrow "
-msgstr "Ctl + strzałka w lewo"
+msgstr "Shift + Strzałka w lewo"
 
 #: dialogs.py:1500
 msgid "Scale Down More"
-msgstr ""
+msgstr "Bardziej zmniejsz skalę"
 
 #: dialogs.py:1501
-#, fuzzy
 msgid "Shift + Control + Right Arrow"
-msgstr "Ctrl + strzałka w prawo"
+msgstr "Shift + Strzałka w prawo"
 
 #: dialogs.py:1501
 msgid "Scale Up More"
-msgstr ""
+msgstr "Bardziej zwiększ skalę"
 
 #: dialogs.py:1502 shortcuts.py:271
 msgid "Shift"
@@ -2190,12 +2157,10 @@ msgid "<b>Track: </b>"
 msgstr "<b>Ścieżka: </b>"
 
 #: guicomponents.py:817
-#, fuzzy
 msgid "<b>Source:</b>"
 msgstr "<b>Ścieżka źródłowa:</b>"
 
 #: guicomponents.py:818
-#, fuzzy
 msgid "<b>Destination:</b>"
 msgstr "<b>Ścieżka docelowa:</b>"
 
@@ -2204,13 +2169,12 @@ msgid "<b>Length:</b>"
 msgstr "<b>Długość:</b>"
 
 #: guicomponents.py:900
-#, fuzzy
 msgid "<b>Items:</b>"
-msgstr "<b>Ścieżka źródłowa:</b>"
+msgstr "<b>Elementy:</b>"
 
 #: guicomponents.py:1093
 msgid "Right Click to Add Media."
-msgstr ""
+msgstr "Kliknij prawym przyciskiem w celu dodania multimediów"
 
 #: guicomponents.py:1360 guicomponents.py:1364
 msgid "Lock Track"
@@ -2355,14 +2319,12 @@ msgid "Edit"
 msgstr "Edytuj"
 
 #: guicomponents.py:1821 kftoolmode.py:351
-#, fuzzy
 msgid "Volume Keyframes"
-msgstr "Panorama względem klatki kluczowej"
+msgstr "Siła głosu klatki kluczowej"
 
 #: guicomponents.py:1825 kftoolmode.py:352
-#, fuzzy
 msgid "Brightness Keyframes"
-msgstr "Jaskrawość względem klatki kluczowej"
+msgstr "Jasność klatki kluczowej"
 
 #: guicomponents.py:1838
 msgid "Set Clip Length..."
@@ -2644,9 +2606,8 @@ msgid "Delete Effect"
 msgstr "Usuń efekt"
 
 #: guicomponents.py:2678 guicomponents.py:2698
-#, fuzzy
 msgid "Close Editor"
-msgstr "Edytor Geometrii"
+msgstr "Zamknij edytor"
 
 #: guicomponents.py:2688
 msgid "Save Compositor Values"
@@ -2765,9 +2726,8 @@ msgid "7 Columns"
 msgstr "7 kolumn"
 
 #: guicomponents.py:2994
-#, fuzzy
 msgid "Display Timeline / Clip on Monitor"
-msgstr "Wyświetl w monitorze klipu"
+msgstr "Wyświetlaj oś czasu / klip w monitorze klipu"
 
 #: movemodes.py:616
 msgid "Can't do edit on a locked track"
@@ -2779,12 +2739,11 @@ msgstr " jest zablokowana, odblokuj ścieżkę, aby móc ją edytować.\n"
 
 #: panels.py:55
 msgid "Number of Media File columns."
-msgstr ""
+msgstr "Liczba kolumn plików multimedialnych."
 
 #: panels.py:67
-#, fuzzy
 msgid "Visible Media File types."
-msgstr "Ścieżka  brakującego pliku multimedialnego"
+msgstr "Widoczne typy plików multimedialnych."
 
 #: panels.py:91
 msgid "Bins"
@@ -2816,6 +2775,7 @@ msgid ""
 "A <b>Sequence</b> is the full contents of the timeline creating a program, a "
 "movie."
 msgstr ""
+"<b>Sekwencja</b> jest pełną zawartością osi czasu tworzącej program, film."
 
 #: panels.py:117
 msgid "Select folder for new thumbnails."
@@ -2830,7 +2790,7 @@ msgid ""
 " still be available,\n"
 "this only affects thumnails that are created for new media.\n"
 msgstr ""
-"nadal dostępne,\n"
+" nadal dostępne,\n"
 "dotyczy to tylko miniatur, utworzonych dla nowych multimediów.\n"
 
 #: panels.py:120
@@ -3371,7 +3331,7 @@ msgstr "Odcień"
 #: translations.py:181 translations.py:404 translations.py:408
 #: translations.py:409
 msgid "Brightness"
-msgstr "Jaskrawość"
+msgstr "Jasność"
 
 #: translations.py:182 translations.py:602
 msgid "Sepia"
@@ -3539,7 +3499,7 @@ msgstr "Koloryzacja"
 
 #: translations.py:231
 msgid "Brightness Keyframed"
-msgstr "Jaskrawość względem klatki kluczowej"
+msgstr "Jasność względem klatki kluczowej"
 
 #: translations.py:232
 msgid "RGB Adjustment"
@@ -4020,15 +3980,15 @@ msgstr "Czas trwania"
 
 #: translations.py:391
 msgid "Bright. up"
-msgstr "Zwiększenie jaskrawości"
+msgstr "Zwiększenie jasności"
 
 #: translations.py:392
 msgid "Bright. down"
-msgstr "Zmniejszenie jaskrawości"
+msgstr "Zmniejszenie jasności"
 
 #: translations.py:393
 msgid "Bright. dur."
-msgstr "Czas jaskrawości"
+msgstr "Czas jasności"
 
 #: translations.py:394
 msgid "Develop up"
@@ -4144,11 +4104,11 @@ msgstr "Oświetlenie krawędzi"
 
 #: translations.py:442
 msgid "Edge Brightness"
-msgstr "Jaskrawość krawędzi"
+msgstr "Jasność krawędzi"
 
 #: translations.py:443
 msgid "Non-Edge Brightness"
-msgstr "Jaskrawość nie-krawędzi"
+msgstr "Jasność nie-krawędzi"
 
 #: translations.py:444
 msgid "Spatial"
@@ -4509,7 +4469,7 @@ msgstr "Trójkąt"
 
 #: translations.py:568 shortcuts.py:209 workflow.py:68
 msgid "Box"
-msgstr "Pudełko"
+msgstr "Pudełko (Box)"
 
 #: translations.py:569 translations.py:583
 msgid "Diamond"
@@ -4613,7 +4573,7 @@ msgstr "Czerwony zielony"
 
 #: translations.py:606
 msgid "YellowBlue"
-msgstr "Żółty niebieki"
+msgstr "Żółty niebieski"
 
 #: translations.py:607
 msgid "Esses"
@@ -5005,43 +4965,38 @@ msgstr "Wyrównanie"
 
 #: keyframeeditor.py:590 kftoolmode.py:1077
 msgid "Delete all but first Keyframe before Clip Range"
-msgstr ""
+msgstr "Usuń wszystkie ale pierwsza klatka kluczowa przed zakresem klipu"
 
 #: keyframeeditor.py:596 kftoolmode.py:1083
 msgid "Set Keyframe at Frame 0 to value of next Keyframe"
-msgstr ""
+msgstr "Ustaw klatkę kluczową w klatce 0 na wartość następnej klatki kluczowej"
 
 #: keyframeeditor.py:598 kftoolmode.py:1072 kftoolmode.py:1096
 #: kftoolmode.py:1107
 msgid "No Edit Actions currently available"
-msgstr ""
+msgstr "Aktualnie brak dostępnych akcji edycji"
 
 #: keyframeeditor.py:613 kftoolmode.py:1102
 msgid "Delete all Keyframes after Clip Range"
-msgstr ""
+msgstr "Usuń wszystkie klatki kluczowe po zakresie klipu"
 
 #: keyframeeditor.py:695
-#, fuzzy
 msgid "Add Keyframe"
-msgstr "Panorama względem klatki kluczowej"
+msgstr "Dodaj klatkę kluczową"
 
 #: keyframeeditor.py:696
-#, fuzzy
 msgid "Delete Keyframe"
-msgstr "Panorama względem klatki kluczowej"
+msgstr "Usuń klatkę kluczową"
 
 #: keyframeeditor.py:697
-#, fuzzy
 msgid "Previous Keyframe"
-msgstr "Panorama względem klatki kluczowej"
+msgstr "Poprzednia klatka kluczowa"
 
 #: keyframeeditor.py:698
-#, fuzzy
 msgid "Next Keyframe"
-msgstr "Następna klatka"
+msgstr "Następna klatka kluczowa"
 
 #: keyframeeditor.py:699
-#, fuzzy
 msgid "Previous Frame"
 msgstr "Poprzednia klatka"
 
@@ -5050,13 +5005,12 @@ msgid "Next Frame"
 msgstr "Następna klatka"
 
 #: keyframeeditor.py:701
-#, fuzzy
 msgid "Move Keyframe 1 Frame Back"
-msgstr "W przód o 10 klatek"
+msgstr "Przesuń klatkę kluczową o 1 klatkę wstecz"
 
 #: keyframeeditor.py:702
 msgid "Move Keyframe 1 Frame Forward"
-msgstr ""
+msgstr "Przesuń klatkę kluczową o 1 klatkę w przód"
 
 #: keyframeeditor.py:750
 msgid "View:"
@@ -5107,107 +5061,89 @@ msgid "Height:"
 msgstr "Wysokość:"
 
 #: keyframeeditor.py:1362
-#, fuzzy
 msgid "X scale:"
-msgstr "skala x: "
+msgstr "Skala X: "
 
 #: keyframeeditor.py:1363
-#, fuzzy
 msgid "Y scale:"
-msgstr "skala x: "
+msgstr "Skala Y: "
 
 #: keyframeeditor.py:1364
-#, fuzzy
 msgid "Rotation:"
-msgstr "rotacja:"
+msgstr "Rotacja:"
 
 #: middlebar.py:147
-#, fuzzy
 msgid "Zoom In - Mouse Middle Scroll"
-msgstr "Akcja środkowego przycisku przewijania:"
+msgstr "Przybliżenie - przewijanie środkowego przycisku myszy"
 
 #: middlebar.py:147
 msgid "Zoom Out - Mouse Middle Scroll"
-msgstr ""
+msgstr "Oddalenie - przewijanie środkowego przycisku myszy"
 
 #: middlebar.py:147
 msgid "Zoom Length - Mouse Middle Click"
-msgstr ""
+msgstr "Wielkość transfokacji (zoom) - kliknięcie środkowego przycisku myszy"
 
 #: middlebar.py:154
-#, fuzzy
 msgid ""
 "Add Rendered Transition - 2 clips selected\n"
 "Add Rendered Fade - 1 clip selected"
 msgstr ""
 "Dodanie wyrenderowanego przejścia - wybrane 2 klipy\n"
 "Dodanie wyrenderowanego zanikania - wybrany 1 klip\n"
-"Cięcie - X"
+"Rozcięcie - X"
 
 #: middlebar.py:154
 msgid ""
 "Cut Active Tracks - X\n"
 "Cut All Tracks - Shift + X"
 msgstr ""
+"Przytnij aktywne ścieżki - X\n"
+"Przytnij wszystkie ścieżki - Shift + X"
 
 #: middlebar.py:163
-#, fuzzy
 msgid "Splice Out - Delete"
-msgstr "Wyrzuć sklejkę (Splice Out)"
+msgstr "Wyrzuć sklejkę (Splice Out) - Delete"
 
 #: middlebar.py:163
-#, fuzzy
 msgid "Ripple Delete"
-msgstr "Wymuszenie usunięcia"
+msgstr "Usuwanie wypełniające"
 
 #: middlebar.py:163
-#, fuzzy
 msgid "Range Delete"
-msgstr "Wymuszenie usunięcia"
+msgstr "Usunięcie zakresu"
 
 #: middlebar.py:170
-#, fuzzy
 msgid "Resync Selected"
-msgstr ""
-"Resynchronizacja wybranego\n"
-"Wyodrębnij dźwięk"
+msgstr "Resynchronizacja wybranego"
 
 #: middlebar.py:179
-#, fuzzy
 msgid "Overwrite Range"
-msgstr "Nadpisz"
+msgstr "Nadpisz zakres"
 
 #: middlebar.py:179
-#, fuzzy
 msgid "Overwrite Clip - T"
-msgstr "Nadpisz"
+msgstr "Nadpisz klip - T"
 
 #: middlebar.py:179
 msgid "Insert Clip - Y"
-msgstr ""
+msgstr "Wstaw klip - Y"
 
 #: middlebar.py:179
 msgid "Append Clip - U"
-msgstr ""
+msgstr "Dołącz klip - U"
 
 #: middlebar.py:186
-#, fuzzy
 msgid "Undo - Ctrl + Z"
-msgstr ""
-"Cofnij - Ctrl + Z\n"
-"Ponów - Ctrl + Y"
+msgstr "Cofnij - Ctrl + Z"
 
 #: middlebar.py:186
-#, fuzzy
 msgid "Redo - Ctrl + Y"
-msgstr ""
-"Cofnij - Ctrl + Z\n"
-"Ponów - Ctrl + Y"
+msgstr "Ponów - Ctrl + Y"
 
 #: middlebar.py:196
-#, fuzzy
 msgid "G'Mic Effects"
-msgstr "Efekty G'MIC"
+msgstr "Efekty G'Mic"
 
 #: middlebar.py:202
 msgid ""
@@ -5334,12 +5270,19 @@ msgid ""
 "A <b>Project</b> contains one or more <b>Sequences</b> of edited media and a "
 "collection of media files stored in <b>Bins.</b>"
 msgstr ""
+"<b>Projekt</b> zawiera jedną lub więcej <b>Sekwencji</b> edytowanych "
+"multimediów oraz kolekcję plików multimedialnych przechowywanych w "
+"<b>Pojemnikach.</b>"
 
 #: projectinfogui.py:81
+#, fuzzy
 msgid ""
 "<b>Profile</b> determines frame rate per second, image size in pixels and "
 "pixel aspect ratio for all <b>Sequences</b> in <b>Project</b> ."
 msgstr ""
+"<b>Profil</b> określa liczbę klatek na sekundę, rozmiar obrazu w pikselach "
+"oraz współczynnik proporcji pikseli dla wszystkich <b>Sekwencji</b> w "
+"<b>Projekcie</b>."
 
 #: projectinfogui.py:134
 msgid "Path"
@@ -5414,8 +5357,8 @@ msgid ""
 "Project and Render Profile FPS values are not same. Rendered file may have A/"
 "V sync issues."
 msgstr ""
-"Wartości FPS projektu i profilu renderowania nie są takie same. Renderowany "
-"plik może mieć wartość A/Problemy synchronizacji V."
+"Wartości projektu oraz renderowanego profilu FPS nie są takie same. "
+"Renderowany plik może mieć problemy z synchronizacją A/V."
 
 #: rendergui.py:96
 msgid "Render range not defined!"
@@ -5820,11 +5763,11 @@ msgstr "Przewijanie w poziomie, Ctrl aby powiększać"
 
 #: preferenceswindow.py:197
 msgid "Scroll Up Forward"
-msgstr ""
+msgstr "Przewijanie w górę do przodu"
 
 #: preferenceswindow.py:198
 msgid "Scroll Down Forward"
-msgstr ""
+msgstr "Przewiń w dół do przodu"
 
 #: preferenceswindow.py:206
 msgid "Graphics default length:"
@@ -5839,13 +5782,13 @@ msgid "Mouse Middle Button Scroll Action:"
 msgstr "Akcja środkowego przycisku przewijania:"
 
 #: preferenceswindow.py:211
-#, fuzzy
 msgid "Mouse Horizontal Scroll Direction:"
-msgstr "Akcja środkowego przycisku przewijania:"
+msgstr "Kierunek poziomego przewijania myszą:"
 
 #: preferenceswindow.py:212
 msgid "Move Playhead to Clip start on keyframe edit init"
 msgstr ""
+"Przenieś głowicę na początek klipu na edycję początkową klatki kluczowej"
 
 #: preferenceswindow.py:213
 msgid "Hide file extensions when importing Clips"
@@ -5906,7 +5849,7 @@ msgstr ""
 
 #: preferenceswindow.py:295
 msgid "Move Timeline to follow Playback"
-msgstr ""
+msgstr "Przesuń oś czasu, aby śledzić odtwarzanie"
 
 #: preferenceswindow.py:332
 msgid "Glass"
@@ -5917,14 +5860,12 @@ msgid "Simple"
 msgstr "Proste"
 
 #: preferenceswindow.py:334
-#, fuzzy
 msgid "No Decorations"
-msgstr "Czas trwania"
+msgstr "Bez dekoracji"
 
 #: preferenceswindow.py:338
-#, fuzzy
 msgid "Flowblade Theme"
-msgstr "Render wsadowy Flowblade'a"
+msgstr "Motyw Flowblade'a"
 
 #: preferenceswindow.py:339
 msgid "Dark Theme"
@@ -5952,11 +5893,11 @@ msgstr "Podwójne dla HiDPI - 100px, 50px"
 
 #: preferenceswindow.py:371
 msgid "3 panels if width (1450px+) available"
-msgstr ""
+msgstr "3 panele jeżeli jest osiągalna szerokość 1450px+"
 
 #: preferenceswindow.py:372
 msgid "2 panels always"
-msgstr ""
+msgstr "Zawsze 2 panele"
 
 #: preferenceswindow.py:376
 msgid "Application window mode:"
@@ -5998,7 +5939,7 @@ msgstr "Pokaż pełne nazwy plików"
 
 #: preferenceswindow.py:388
 msgid "Top row layout:"
-msgstr ""
+msgstr "Układ górnego rzędu:"
 
 #: preferenceswindow.py:420
 msgid ""
@@ -6094,7 +6035,7 @@ msgstr "Aktualnie renderowany:"
 
 #: tools/batchrendering.py:638 tools/batchrendering.py:1295 proxyediting.py:366
 msgid "Elapsed:"
-msgstr "Upłynąło:"
+msgstr "Upłynęło:"
 
 #: tools/batchrendering.py:649
 msgid "Items Rendered:"
@@ -6349,7 +6290,7 @@ msgid ""
 "<b>Rerendering proxies currently not possible!</b>\n"
 "Change to 'Use Original Media' mode to rerender proxies."
 msgstr ""
-"<b>Renderowani proxy obecnie nie jest możliwe!</b>\n"
+"<b>Renderowanie proxy obecnie nie jest możliwe!</b>\n"
 "Zmień tryb na 'Używaj oryginalnych nośników', aby renderować proxy."
 
 #: proxyediting.py:463
@@ -6382,6 +6323,13 @@ msgid ""
 "\n"
 " Continue?"
 msgstr ""
+"Czy naprawdę chcesz podzielić tę sekwencję na dwie?\n"
+"To stworzy nową sekwencję otrzymującą prawostronną treść twojejaktualnie "
+"aktywnej sekwencja. Również ta sama treść zostanie usunięta z "
+"twojegoaktualnie aktywnej sekwencji.\n"
+"Nowo utworzona sekwencja zostanie otwarta.\n"
+"\n"
+"Kontynuować?"
 
 #: tlineaction.py:418
 msgid "Fade/Transition cover delete failed!"
@@ -6397,7 +6345,7 @@ msgstr ""
 
 #: tlineaction.py:540
 msgid "Can't do Ripple Delete!"
-msgstr ""
+msgstr "Nie mogę wykonać usunęcia wypełniającego!"
 
 #: tlineaction.py:541
 msgid ""
@@ -6406,6 +6354,10 @@ msgid ""
 "\n"
 "Overwrite would happen on at track <b>"
 msgstr ""
+"Wybrane usunięcia wypełniającego spowodowałby nadpisanie, a to nie jest "
+"dozwolonedla tej akcji edycji.\n"
+"\n"
+"Nadpisywanie nastąpi na ścieżce <b>"
 
 #: tlineaction.py:592
 msgid "No Clips are selected!"
@@ -7143,33 +7095,31 @@ msgstr "Trójpunktowe nadpisanie"
 
 #: shortcuts.py:200
 msgid "Trim Tool Ripple Mode On/Off"
-msgstr "Włącz/wyłącz tryb falowania dla narzędzia przycinania"
+msgstr "Włącz/wyłącz tryb wypełniania dla narzędzia przycinania"
 
 #: shortcuts.py:201
-#, fuzzy
 msgid "Cut Active Tracks"
-msgstr "Aktywuj wszystkie ścieżki"
+msgstr "Przytnij aktywne ścieżki"
 
 #: shortcuts.py:202
-#, fuzzy
 msgid "Cut All Tracks"
-msgstr "Aktywuj wszystkie ścieżki"
+msgstr "Przytnij wszystkie ścieżki"
 
 #: shortcuts.py:205 workflow.py:64
 msgid "Trim"
-msgstr "Przytnij"
+msgstr "Przycinanie (Trim)"
 
 #: shortcuts.py:206 workflow.py:65
 msgid "Roll"
-msgstr "Rolka"
+msgstr "Rolka (Roll)"
 
 #: shortcuts.py:207 workflow.py:66
 msgid "Slip"
-msgstr "Poślizg"
+msgstr "Poślizg (Slip)"
 
 #: shortcuts.py:208 workflow.py:67
 msgid "Spacer"
-msgstr "Rozpórka"
+msgstr "Rozpórka (Spacer)"
 
 #: shortcuts.py:212
 msgid "Switch Monitor Source"
@@ -7284,7 +7234,7 @@ msgstr "Nie można wykonać żądanej edycji."
 #: clipmenuaction.py:401
 msgid "Next clip does not have enough material to cover blank area"
 msgstr ""
-"następny klip nie ma wystarczającej ilości materiału, aby pokryć pusty obszar"
+"Następny klip nie ma wystarczającej ilości materiału, aby pokryć pusty obszar"
 
 #: dialogutils.py:91
 msgid "Confirm"
@@ -7299,27 +7249,24 @@ msgid " is locked. Unlock track to edit it."
 msgstr " jest zablokowana, odblokuj ścieżkę, aby ją edytować."
 
 #: trimmodes.py:462
-#, fuzzy
 msgid "Can't use Trim tool on blank clips."
-msgstr ""
-"Nie można używać  PRZYCINANIE JEDNOROLKOWE w stosunku do pustych klipów"
+msgstr "Nie można używać narzędzia Przycinanie w stosunku do pustych klipów"
 
 #: trimmodes.py:463
 msgid "You can use <b>Move</b> or <b>Roll</b> tools instead."
 msgstr ""
+"Zamiast niego możesz użyć narzędzi <b>Przesuwanie</b> lub <b>Rolka</b>."
 
 #: trimmodes.py:1018
-#, fuzzy
 msgid "Initializing Roll tool failed"
-msgstr "Inicjalizacja DWUROLKOWE PRZYCINANIE nie powiodła się"
+msgstr "Inicjalizacja narzędzia rolki nie powiodła się"
 
 #: trimmodes.py:1019
-#, fuzzy
 msgid ""
 "You are attempting a roll trim at a position in the timeline\n"
 "where it can't be performed."
 msgstr ""
-"Próbujesz zastosować DWUROLKOWE PRZYCINANIE na pozycji linii czasu,\n"
+"Próbujesz zastosować przycinanie rolkowe na pozycji linii czasu,\n"
 "gdzie jest to niewykonalne."
 
 #: menuactions.py:124
@@ -7368,24 +7315,20 @@ msgid "Image type:"
 msgstr "Typ obrazu:"
 
 #: tools/natronanimations.py:168
-#, fuzzy
 msgid "Text Animation"
-msgstr "Animacje Natron"
+msgstr "Animacja tekstu"
 
 #: tools/natronanimations.py:169
-#, fuzzy
 msgid "Background"
-msgstr "W tył"
+msgstr "Tło"
 
 #: tools/natronanimationswindow.py:285
-#, fuzzy
 msgid "Preview Frame"
 msgstr "Poprzednia klatka"
 
 #: tools/natronanimationswindow.py:302
-#, fuzzy
 msgid "Frame:"
-msgstr "Klatki:"
+msgstr "Klatka:"
 
 #: tools/natronanimationswindow.py:303
 msgid "1"
@@ -7393,76 +7336,63 @@ msgstr ""
 
 #: tools/natronanimationswindow.py:354
 msgid "Natron Render Format:"
-msgstr ""
+msgstr "Format renderowania Natrona:"
 
 #: tools/natronanimationswindow.py:368
-#, fuzzy
 msgid "Set Frames Folder for valid render"
-msgstr ""
-"Aby renderowanie było prawidłowe, wstaw znacznik początkowy, końcowy oraz "
-"określ folder klatek"
+msgstr "Ustaw folder klatek dla prawidłowego renderowania"
 
 #: tools/natronanimationswindow.py:406 tools/natronanimationswindow.py:668
-#, fuzzy
 msgid "Load Animation"
-msgstr "Animacje Natron"
+msgstr "Załaduj animacje"
 
 #: tools/natronanimationswindow.py:408 tools/natronanimationswindow.py:669
-#, fuzzy
 msgid "Save Animation"
-msgstr "Animacje Natron"
+msgstr "Zapisz animacje"
 
 #: tools/natronanimationswindow.py:671
 msgid "Natron Webpage"
-msgstr ""
+msgstr "Strona WWW programu Natron"
 
 #: tools/natronanimationswindow.py:702
-#, fuzzy
 msgid "Save Natron Animation Values As"
-msgstr "Animacje Natron"
+msgstr "Zapisz wartości animacje Natron-a jako"
 
 #: tools/natronanimationswindow.py:725
-#, fuzzy
 msgid "Load Animation Data"
-msgstr "Animacje Natron"
+msgstr "Załaduj dane animacji"
 
 #: tools/natronanimationswindow.py:752
-#, fuzzy
 msgid "Render starting..."
-msgstr "Rozpoczęto renderowanie:"
+msgstr "Rozpoczęto renderowanie..."
 
 #: tools/natronanimationswindow.py:792
-#, fuzzy
 msgid "Rendering preview for frame "
-msgstr "Podgląd dla klatki:"
+msgstr "Renderowanie podgląd dla klatki "
 
 #: tools/natronanimationswindow.py:817
-#, fuzzy
 msgid "Render complete."
-msgstr "Renderowanie zakończone!"
+msgstr "Renderowanie zakończone."
 
 #: workflow.py:63
-#, fuzzy
 msgid "Move"
-msgstr "Przesuń w górę"
+msgstr "Przesuwanie (Move)"
 
 #: workflow.py:69
 msgid "Ripple Trim"
-msgstr ""
+msgstr "Przycinanie wypełniające (Ripple Trim)"
 
 #: workflow.py:70
-#, fuzzy
 msgid "Cut"
-msgstr "Licz"
+msgstr "Rozcięcie (Cut)"
 
 #: workflow.py:71
-#, fuzzy
 msgid "Keyframe"
-msgstr "Panorama względem klatki kluczowej"
+msgstr "Klatka kluczowa (Keyframe)"
 
 #: workflow.py:72
 msgid "Multitrim"
-msgstr ""
+msgstr "Wieloprzycinanie (Multitrim)"
 
 #: workflow.py:75
 msgid ""
@@ -7471,6 +7401,11 @@ msgid ""
 "\n"
 "<b>Left Mouse</b> on clip ends to trim clip length."
 msgstr ""
+"<b>Lewy przycisk myszy</b>, aby przenieść i wstawić pojedynczy klip pomiędzy "
+"klipy.\n"
+"<b>CTRL + lewy przycisk myszy</b>, aby wybrać oraz  przesunąć zakres klipu.\n"
+"\n"
+"<b>Lewy przycisk myszy</b> na końcach klipów, aby przyciąć długość klipu."
 
 #: workflow.py:76
 msgid ""
@@ -7479,6 +7414,11 @@ msgid ""
 "\n"
 "<b>Left Mouse</b> on clip ends to trim clip length."
 msgstr ""
+"<b>Lewy przycisk myszy</b>, aby przenieść klip do nowej pozycji.\n"
+"<b>CTRL + lewy przycisk myszy</b>, aby wybrać oraz przesunąć zakres klipu do "
+"nowej pozycji.\n"
+"\n"
+"<b>Lewy przycisk myszy</b> na końcach klipów, aby przyciąć długość klipu."
 
 #: workflow.py:77
 msgid ""
@@ -7486,6 +7426,9 @@ msgid ""
 "<b>Left or Right Arrow Key</b> + <b>Enter Key</b> to do the edit using "
 "keyboard."
 msgstr ""
+"<b>Lewy przycisk myszy</b>, aby przyciąć najbliższy koniec klipu.\n"
+"<b>Lewy lub prawy klawisz strzałki</b> + <b>Klawisz Enter</b>, aby wykonać "
+"edycję za pomocą klawiatury."
 
 #: workflow.py:78
 msgid ""
@@ -7493,6 +7436,10 @@ msgid ""
 "<b>Left or Right Arrow Key</b> + <b>Enter Key</b> to do the edit using "
 "keyboard."
 msgstr ""
+"<b>Lewy klawisz myszy </b>, aby przesunąć najbliższy punkt edycji pomiędzy "
+"dwoma klipami.\n"
+"<b>Lewy lub prawy klawisz strzałki</b> + <b>Klawisz Enter</b>, aby wykonać "
+"edycję za pomocą klawiatury."
 
 #: workflow.py:79
 msgid ""
@@ -7500,6 +7447,9 @@ msgid ""
 "<b>Left or Right Arrow Key</b> + <b>Enter Key</b> to do the edit using "
 "keyboard."
 msgstr ""
+"<b>Lewy klawisz myszy</b>, aby przenieść zawartość klipu w obrębie klipu.\n"
+"<b>Lewy lub prawy klawisz strzałki</b> + <b>Klawisz Enter</b>, aby wykonać "
+"edycję za pomocą klawiatury."
 
 #: workflow.py:80
 msgid ""
@@ -7508,6 +7458,11 @@ msgid ""
 "<b>CTRL + Left Mouse</b> to move clip under cursor and all clips after it "
 "<b>on the same track</b> forward or backward, overwrites not allowed."
 msgstr ""
+"<b>Lewy klawisz myszy</b>, aby przesunąć klip pod kursorem oraz wszystkie "
+"klipy po nim, do przodu lub do tyłu, nadpisywanie niedozwolone.\n"
+"<b>CTRL + lewy przycisk myszy</b>, aby przenieść klip pod kursorem oraz "
+"wszystkie klipy po nim <b>na tej samej ścieżce</b> do przodu lub do tyłu, "
+"nadpisywanie niedozwolone."
 
 #: workflow.py:81
 msgid ""
@@ -7515,6 +7470,10 @@ msgid ""
 "<b>2. Left Mouse</b> inside the box to move selected clips forward or "
 "backward."
 msgstr ""
+"<b>1. Lewy przycisk myszy</b>, aby narysować prostokąt w celu wybrania grupy "
+"klipów.\n"
+"<b>2. Lewy przycisk myszy</b> wewnątrz prostokąta, aby przenieść wybrane "
+"klipy do przodu lub do tyłu."
 
 #: workflow.py:82
 msgid ""
@@ -7523,12 +7482,20 @@ msgid ""
 "<b>Left or Right Arrow Key</b> + <b>Enter Key</b> to do the edit using "
 "keyboard."
 msgstr ""
+"<b>Lewy przycisk myszy</b>, aby przyciąć najbliższy koniec klipu i przenieść "
+"wszystkie klipy za nim w celu zachowania synchronizacji, nadpisywanie "
+"niedozwolone.\n"
+"<b>Lewy lub prawy klawisz strzałki</b> + <b>Klawisz Enter</b>, aby wykonać "
+"edycję za pomocąklawiatury."
 
 #: workflow.py:83
 msgid ""
 "<b>Left Mouse</b> to cut clip under cursor.\n"
 "<b>CTRL + Left Mouse</b> to cut clips on all tracks at cursor position."
 msgstr ""
+"<b>Lewy klawisz myszy</b>, aby uciąć klip pod kursorem.\n"
+"<b>CTRL + lewy przycisk myszy</b>, aby uciąć klipy na wszystkich ścieżkach w "
+"pozycji kursora."
 
 #: workflow.py:84
 msgid ""
@@ -7537,6 +7504,11 @@ msgid ""
 "<b>Left Mouse</b> to create or drag keyframes.\n"
 "<b>Delete Key</b> to delete active Keyframe."
 msgstr ""
+"Kliknij <b>Lewy przycisk myszy</b> na klipie, aby zainicjować edycję "
+"głośności oraz jasności klatek kluczowych dla multimediów bez danych "
+"dźwiękowych.\n"
+"<b>Lewy klawisz myszy</ b> do tworzenia lub przeciągania klatek kluczowych.\n"
+"<b>Klawisz  Delete</b>, aby usunąć aktywną klatkę kluczową."
 
 #: workflow.py:85
 msgid ""
@@ -7549,6 +7521,14 @@ msgid ""
 "move edit point.\n"
 "<b>Enter Key</b> to complete keyboard edit."
 msgstr ""
+"Ustaw kursor w pobliżu lub na krawędziach klipu dla edycji <b>Przycinanie</"
+"b> oraz <b>Rolka</b>\n"
+"Ustaw kursor na środku klipu, aby edytować <b>Poślizg</b>.\n"
+"Przeciągnij za pomocą <b>Lewy klawisz myszy</b>, aby wprowadzić zmiany.\n"
+"\n"
+"<b>Klawisz Enter </ b>, aby rozpocząć edycję llawiaturą, <b>Klawisz strzałki "
+"w lewo lub w prawo </b>, aby przenieś punkt edycji.\n"
+"<b>Klawisz Enter</b>, aby zakończyć edycję klawiaturą."
 
 #: workflow.py:88
 msgid ""
@@ -7557,44 +7537,45 @@ msgid ""
 "Left Mouse Drag</b> to draw a box to select a group of clips and move\n"
 "the selected clips forward or backward."
 msgstr ""
+"<b>\n"
+"\n"
+"Przeciągnięcie lewym klawiszem myszy</b>, aby narysować prostokąt w celu "
+"wybrania grupy klipów oraz przeniesienia\n"
+"wybranych klipów do przodu lub do tyłu."
 
 #: workflow.py:158
 msgid "Workflow Presets"
-msgstr ""
+msgstr "Predefiniowane ustawienia obiegu pracy"
 
 #: workflow.py:163
 msgid "Standard"
-msgstr ""
+msgstr "Standardowy"
 
 #: workflow.py:167
 msgid "Film Style"
-msgstr ""
+msgstr "Styl filmowy"
 
 #: workflow.py:177
 msgid "Behaviours"
-msgstr ""
+msgstr "Zachowania"
 
 #: workflow.py:182
-#, fuzzy
 msgid "Default Delete Action"
-msgstr "Usuń wybrane"
+msgstr "Domyślna akcja kasowania"
 
 #: workflow.py:193
 msgid "Drag'n'Drop Action"
-msgstr ""
+msgstr "Akcja Przeciągnij i upuść"
 
 #: workflow.py:197
-#, fuzzy
 msgid "Always Overwrite Blanks"
-msgstr "Nadpisywanie pustych miejsc"
+msgstr "Zawsze nadpisuj puste miejsca"
 
 #: workflow.py:197
-#, fuzzy
 msgid "Overwrite Blanks on non-V1 Tracks"
-msgstr "Nadpisywanie pustych miejsc"
+msgstr "Nadpisywanie pustych miejsc na ścieżkach nie V1"
 
 #: workflow.py:197
-#, fuzzy
 msgid "Always Insert"
 msgstr "Zawsze wstawianie"
 
@@ -7604,67 +7585,69 @@ msgstr "Automatyczne podążanie za kompozytorami"
 
 #: workflow.py:214
 msgid "Show Tooltips for Tools"
-msgstr ""
+msgstr "Pokazuj dymki dla narzędzi"
 
 #: workflow.py:302
-#, fuzzy
 msgid "Tool Active"
-msgstr "Przełącz aktywne"
+msgstr "Narzędzie aktywne"
 
 #: workflow.py:310
-#, fuzzy
 msgid "Set Position"
-msgstr "Pozycja"
+msgstr "Ustaw pozycję"
 
 #: workflow.py:330
 msgid "Do Box Selection and Box Move from empty press"
 msgstr ""
+"Zaznaczanie prostokątne oraz przenoszenie treści obszaru po naciśnięciu "
+"pustego miejsca"
 
 #: workflow.py:410
 msgid "Workflow First Run Wizard"
-msgstr ""
+msgstr "Kreator pierwszego uruchomienia obiegu pracy"
 
 #: workflow.py:412
 msgid "Select Preset Workflow and Continue"
-msgstr ""
+msgstr "Wybierz wstępnie zdefiniowany obieg pracy oraz kontynuuj"
 
 #: workflow.py:416
 msgid "<b>Welcome to Flowblade 2.0</b>"
-msgstr ""
+msgstr "<b>Witaj w Flowblade 2.0</b>"
 
 #: workflow.py:421
 msgid "<b>Flowblade 2.0</b> comes with a configurable workflow."
-msgstr ""
+msgstr "<b>Flowblade 2.0</b> ma konfigurowalny obieg pracy."
 
 #: workflow.py:426
 msgid " You can select which <b>tools</b> you want to use.\n"
-msgstr ""
+msgstr " Możesz wybrać, które <b>narzędzia</b> chcesz użyć.\n"
 
 #: workflow.py:427
 msgid " Many timeline edit <b>behaviours</b> are configurable.\n"
 msgstr ""
+" Wiele opcji edycji <b>zachowań</ b> na osi czasu można konfigurować.\n"
 
 #: workflow.py:432
 msgid "<b>Select Workflow Preset</b>"
-msgstr ""
+msgstr "<b>Wybierz ustawienia predefiniowanego obiegu pracy</b>"
 
 #: workflow.py:437
 msgid ""
 "You can change and configure individual tools and behaviours <b>anytime</b>"
 msgstr ""
+"Możesz zmieniać i konfigurować poszczególne narzędzia i zachowania <b>w "
+"każdej chwili</b>"
 
 #: workflow.py:441
 msgid " by pressing "
-msgstr ""
+msgstr " naciskając "
 
 #: workflow.py:447
 msgid " icon."
-msgstr ""
+msgstr " ikonę."
 
 #: workflow.py:450
-#, fuzzy
 msgid "<b>Standard</b>"
-msgstr "<b>Cień</b>"
+msgstr "<b>Standardowy</b>"
 
 #: workflow.py:451
 msgid ""
@@ -7672,11 +7655,14 @@ msgid ""
 "and presents a workflow\n"
 "similar to most video editors."
 msgstr ""
+"Standardowy obieg pracy ma narzędzie <b>Przenoszenie</b> jako domyślne "
+"narzędzie\n"
+"oraz przedstawia obieg pracy\n"
+"podobnie do większości edytorów wideo."
 
 #: workflow.py:454
-#, fuzzy
 msgid "<b>Film Style</b>"
-msgstr "<b>Szkic</b>"
+msgstr "<b>Styl filmowy</b>"
 
 #: workflow.py:455
 msgid ""
@@ -7684,43 +7670,42 @@ msgid ""
 "and employs insert style editing.\n"
 "This was the workflow in previous versions of the application."
 msgstr ""
+"Obieg pracy stylu filmowego ma narzędzie <b>Wstawianie</b> jako domyślne "
+"narzędzie\n"
+"oraz stosuje edycję stylu wstawiania.\n"
+"Ten obieg pracy był stosowany w poprzednich wersjach aplikacji."
 
 #: kftoolmode.py:350
-#, fuzzy
 msgid "Media Frame: "
-msgstr "Ścieżka multimediów:"
+msgstr "Klatka  multimediów: "
 
 #: kftoolmode.py:1105
 msgid "Delete all but last Keyframe after Clip Range"
-msgstr ""
+msgstr "Usuń wszystkie ale ostatnia klatka kluczowa po zakresie klipu"
 
 #: kftoolmode.py:1117
 msgid "Edit Volume Keyframes"
-msgstr ""
+msgstr "Edycja głośności ramek kluczowych"
 
 #: kftoolmode.py:1122
-#, fuzzy
 msgid "Edit Brightness Keyframes"
-msgstr "Jaskrawość względem klatki kluczowej"
+msgstr "Edycja jasności klatek kluczowych"
 
 #: kftoolmode.py:1131
-#, fuzzy
 msgid "Leading Keyframes"
-msgstr "Panorama względem klatki kluczowej"
+msgstr "Wiodące klatki kluczowe"
 
 #: kftoolmode.py:1138
-#, fuzzy
 msgid "Trailing Keyframes"
-msgstr "Panorama względem klatki kluczowej"
+msgstr "Końcowe klatki kluczowe"
 
 #: kftoolmode.py:1150
 msgid "Playhead Follows Dragged Keyframe"
-msgstr ""
+msgstr "Pozycja głowicy podąża za przeciąganą ramką kluczową"
 
 #: kftoolmode.py:1160
-#, fuzzy
 msgid "Exit Edit"
-msgstr "Edytuj"
+msgstr "Wyjście z edycji"
 
 #, fuzzy
 #~ msgid "Delete Range"
