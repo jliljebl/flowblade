@@ -469,7 +469,6 @@ def effect_selection_changed(use_current_filter_index=False):
     except:
         filter_index = 0
 
-    # This isused when reiniting filter panel after every edit,
     # use_current_filter_index == False is used when user changes edited filter or clip.
     if use_current_filter_index == True:
         filter_index = current_filter_index

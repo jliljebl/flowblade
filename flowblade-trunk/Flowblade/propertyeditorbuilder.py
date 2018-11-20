@@ -77,9 +77,9 @@ SCALE_DIGITS = "scale_digits"                               # Number of decimal 
 
 # We need to use globals to change slider -> kf editor and back because the data does not (can not) exist anywhere else. FilterObject.properties are just tuples and EditableProperty objects
 # are created deterministically from those and FilterObject.info.property_args data. So we need to save data here on change request to make the change happen.
-# This data needs to erased always after use.
+# This data needs to be erased always after use.
 changing_slider_to_kf_property_name = None
-re_init_editors_for_slider_type_change_func = None # monkeypatched in
+re_init_editors_for_slider_type_change_func = None # monkeypatched in, it is clipeffectseditor.effect_selection_changed
 
 def _p(name):
     try:
@@ -149,11 +149,7 @@ def _get_two_column_editor_row(name, editor_widget):
     
 def _get_slider_row(editable_property, slider_name=None, compact=False):
     slider_editor = SliderEditor(editable_property, slider_name=None, compact=False)
-    
-    # This has now already been used if existed and has to be deleted.
-    global changing_slider_to_kf_property_name
-    changing_slider_to_kf_property_name = None
-    
+
     # We need to tag this somehow and add lambda to pass frame events so that this can be to set get frame events
     # in clipeffectseditor.py.
     if slider_editor.editor_type == KEYFRAME_EDITOR:
@@ -167,7 +163,10 @@ class SliderEditor:
     def __init__(self, editable_property, slider_name=None, compact=False):
 
         self.vbox = Gtk.VBox(False)
-        is_multi_kf = (editable_property.value.find(";") != -1)
+        # We are using value here as flag if this is beinfg edited by slider as a single value or by keyframe editor as changing value
+        # If we find "=" this means that value is keyframe expression
+        is_multi_kf = (editable_property.value.find("=") != -1)
+
         if changing_slider_to_kf_property_name == editable_property.name or is_multi_kf == True:
             eq_index = editable_property.value.find("=")
             
@@ -179,6 +178,11 @@ class SliderEditor:
                             
             editable_property = editable_property.get_as_KeyFrameHCSFilterProperty()
             self.init_for_kf_editor(editable_property)
+            
+            # This has now already been used if existed and has to be deleted.
+            if changing_slider_to_kf_property_name == editable_property.name:
+                global changing_slider_to_kf_property_name
+                changing_slider_to_kf_property_name = None
         else:
             self.init_for_slider(editable_property, slider_name, compact)
         
@@ -250,15 +254,21 @@ class SliderEditor:
             
             eq_index = self.editable_property.value.find("=")  + 1
             first_kf_val = val[eq_index:len(val)]
+
+            #  We need to turn editable property value and type  back to what it was before user selected to go kf editing
+            # so that it gets edited with slider on next init.
+            info = self.editable_property._get_filter_object().info #.__dict__
+            p_name, p_value, p_original_type = info.properties[self.editable_property.property_index]
             
-            #  We need to turn editable prperty value and type(original type) back to what it was before user selected to go kf editing
-            if self.editable_property.prop_orig_type == appconsts.PROP_INT:
-                self.editable_property.type = appconsts.PROP_INT 
-                self.editable_property.write_filter_object_property(str(int(first_kf_val)))
-                #self.editable_property.typ
-            elif self.editable_property.prop_orig_type == appconsts.PROP_FLOAT:
+            if p_original_type == appconsts.PROP_INT:
+                self.editable_property.type = appconsts.PROP_INT
+                int_str_val = str(int(first_kf_val))
+                self.editable_property.write_filter_object_property(int_str_val)
+                self.editable_property.value = str(int(first_kf_val))
+            elif p_original_type == appconsts.PROP_FLOAT:
                 self.editable_property.type = appconsts.PROP_FLOAT 
                 self.editable_property.write_filter_object_property(str(float(first_kf_val)))
+                self.editable_property.value = str(float(first_kf_val))
             else:
                 self.editable_property.write_filter_object_property("0=" + str(float(first_kf_val)))
 
