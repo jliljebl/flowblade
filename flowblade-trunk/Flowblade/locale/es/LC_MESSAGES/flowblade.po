@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-16 10:13+0200\n"
+"POT-Creation-Date: 2018-11-20 12:44+0200\n"
 "PO-Revision-Date: 2014-02-21 12:08+0200\n"
 "Last-Translator: David Gámiz Jiménez <david.gamiz@gmail.com>\n"
 "Language-Team: David Gamiz Jimenez\n"
@@ -992,25 +992,25 @@ msgstr "Copiar los Clips"
 msgid "Clip Has No Filters"
 msgstr "Filtros de limpieza"
 
-#: clipeffectseditor.py:546
+#: clipeffectseditor.py:545
 msgid "No editable parameters"
 msgstr "Parámetros no editables"
 
-#: clipeffectseditor.py:634
+#: clipeffectseditor.py:633
 #, fuzzy
 msgid "_effect_values"
 msgstr "Restablecer Valores"
 
-#: clipeffectseditor.py:669
+#: clipeffectseditor.py:668
 msgid "Saved Filter data not applicaple for this Filter!"
 msgstr ""
 
-#: clipeffectseditor.py:670 compositeeditor.py:357
+#: clipeffectseditor.py:669 compositeeditor.py:357
 #, fuzzy
 msgid "Saved data is for "
 msgstr "Guardado como "
 
-#: clipeffectseditor.py:670
+#: clipeffectseditor.py:669
 #, fuzzy
 msgid "current edited Filter is "
 msgstr "Actual archivo multimedia:"
@@ -1057,8 +1057,8 @@ msgstr "Nuevo Proyecto"
 #: dialogs.py:1069 dialogs.py:1097 dialogs.py:1223 dialogs.py:1262
 #: dialogs.py:1276 dialogs.py:1290 dialogs.py:1304 dialogs.py:1318
 #: dialogs.py:1332 dialogs.py:1347 dialogs.py:1582 dialogs.py:1699
-#: dialogs.py:1747 dialogs.py:1862 propertyeditorbuilder.py:538
-#: propertyeditorbuilder.py:654 propertyeditorbuilder.py:688 rendergui.py:48
+#: dialogs.py:1747 dialogs.py:1862 propertyeditorbuilder.py:548
+#: propertyeditorbuilder.py:664 propertyeditorbuilder.py:698 rendergui.py:48
 #: rendergui.py:103 rendergui.py:117 rendergui.py:134 rendergui.py:1053
 #: preferenceswindow.py:45 tools/batchrendering.py:974 proxyediting.py:431
 #: tlineaction.py:1540 patternproducer.py:353 patternproducer.py:386
@@ -1070,8 +1070,8 @@ msgstr "Cancelar"
 
 #: dialogs.py:57 dialogs.py:223 dialogs.py:266 dialogs.py:332 dialogs.py:486
 #: dialogs.py:612 dialogs.py:731 dialogs.py:744 dialogs.py:1583
-#: propertyeditorbuilder.py:539 propertyeditorbuilder.py:655
-#: propertyeditorbuilder.py:689 rendergui.py:104 preferenceswindow.py:46
+#: propertyeditorbuilder.py:549 propertyeditorbuilder.py:665
+#: propertyeditorbuilder.py:699 rendergui.py:104 preferenceswindow.py:46
 #: tools/batchrendering.py:400 tools/gmic.py:414 dialogutils.py:44
 #: dialogutils.py:65 dialogutils.py:78 dialogutils.py:93
 #: tools/natronanimationswindow.py:728
@@ -2622,8 +2622,8 @@ msgstr ""
 msgid "Show Full Paths"
 msgstr ""
 
-#: guicomponents.py:2118 propertyeditorbuilder.py:717
-#: propertyeditorbuilder.py:772 tools/toolsencoding.py:343
+#: guicomponents.py:2118 propertyeditorbuilder.py:727
+#: propertyeditorbuilder.py:782 tools/toolsencoding.py:343
 msgid "Progressive"
 msgstr "Paradigma de Disciplina"
 
@@ -3307,8 +3307,8 @@ msgstr "Filtro de Audio"
 msgid "Blur"
 msgstr "Efecto borroso(Blur:"
 
-#: translations.py:121 translations.py:548 propertyeditorbuilder.py:732
-#: propertyeditorbuilder.py:787
+#: translations.py:121 translations.py:548 propertyeditorbuilder.py:742
+#: propertyeditorbuilder.py:797
 msgid "Distort"
 msgstr "Distorsionar"
 
@@ -5130,66 +5130,66 @@ msgstr "Wipe"
 msgid "Color Dip"
 msgstr "Dip color"
 
-#: propertyeditorbuilder.py:368
+#: propertyeditorbuilder.py:378
 msgid "Size/Height"
 msgstr "Tamaño / Altura"
 
-#: propertyeditorbuilder.py:404
+#: propertyeditorbuilder.py:414
 #, fuzzy
 msgid "Width"
 msgstr "Ancho:"
 
-#: propertyeditorbuilder.py:533
+#: propertyeditorbuilder.py:543
 #, fuzzy
 msgid "Preset Luma"
 msgstr "Mantenga Luma"
 
-#: propertyeditorbuilder.py:534
+#: propertyeditorbuilder.py:544
 #, fuzzy
 msgid "User Luma"
 msgstr "Usuario "
 
-#: propertyeditorbuilder.py:536
+#: propertyeditorbuilder.py:546
 #, fuzzy
 msgid "Select Luma File"
 msgstr "Selecciona archivo de filigrana"
 
-#: propertyeditorbuilder.py:545
+#: propertyeditorbuilder.py:555
 msgid "Wipe Luma files"
 msgstr ""
 
-#: propertyeditorbuilder.py:551
+#: propertyeditorbuilder.py:561
 #, fuzzy
 msgid "Luma File:"
 msgstr "Luma Fórmula"
 
-#: propertyeditorbuilder.py:652
+#: propertyeditorbuilder.py:662
 #, fuzzy
 msgid "Select File"
 msgstr "Seleccionar Carpeta"
 
-#: propertyeditorbuilder.py:686
+#: propertyeditorbuilder.py:696
 #, fuzzy
 msgid "Select Image Producing File"
 msgstr "Seleccionar archivo de proyecto"
 
-#: propertyeditorbuilder.py:717 propertyeditorbuilder.py:772
+#: propertyeditorbuilder.py:727 propertyeditorbuilder.py:782
 msgid "Nothing"
 msgstr "Nada"
 
-#: propertyeditorbuilder.py:717 propertyeditorbuilder.py:772
+#: propertyeditorbuilder.py:727 propertyeditorbuilder.py:782
 msgid "Deinterlace"
 msgstr "Deinterlace"
 
-#: propertyeditorbuilder.py:717 propertyeditorbuilder.py:772
+#: propertyeditorbuilder.py:727 propertyeditorbuilder.py:782
 msgid "Both"
 msgstr "Tanto "
 
-#: propertyeditorbuilder.py:726 propertyeditorbuilder.py:781
+#: propertyeditorbuilder.py:736 propertyeditorbuilder.py:791
 msgid "Force"
 msgstr "La fuerza"
 
-#: propertyeditorbuilder.py:731 propertyeditorbuilder.py:786
+#: propertyeditorbuilder.py:741 propertyeditorbuilder.py:796
 msgid "Align"
 msgstr "Alinear"
 
