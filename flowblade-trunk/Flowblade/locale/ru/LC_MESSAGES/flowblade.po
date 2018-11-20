@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Flowblade 2.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-11-06 20:18+0200\n"
-"PO-Revision-Date: 2018-11-15 00:26+0300\n"
+"PO-Revision-Date: 2018-11-20 03:12+0300\n"
 "Last-Translator: Николай Смольянинов <smolianinow.colya2016@yandex.ru>\n"
 "Language-Team: vk.com/flowblade\n"
 "Language: ru_RU\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 2.2\n"
+"X-Generator: Poedit 1.8.11\n"
 
 #: app.py:834
 msgid "Too small screen for this application."
@@ -734,7 +734,7 @@ msgstr "Перелинковщик медиа"
 
 #: editorwindow.py:276
 msgid "_Help"
-msgstr "_Помощь"
+msgstr "_Справка"
 
 #: editorwindow.py:277
 msgid "Contents"
@@ -2478,15 +2478,15 @@ msgstr "Показать полные пути"
 #: guicomponents.py:2109 propertyeditorbuilder.py:717
 #: propertyeditorbuilder.py:772 tools/toolsencoding.py:343
 msgid "Progressive"
-msgstr "Прогрессивное кодирование"
+msgstr "Прогрессивная"
 
 #: guicomponents.py:2111 tools/toolsencoding.py:345
 msgid "Interlaced"
-msgstr "Чересстрочное"
+msgstr "Чересстрочная"
 
 #: guicomponents.py:2116 tools/toolsencoding.py:348
 msgid "Fps: "
-msgstr "Кадров/с: "
+msgstr "к/с: "
 
 #: guicomponents.py:2119 tools/toolsencoding.py:351
 msgid "Pixel Aspect: "
@@ -3132,7 +3132,7 @@ msgstr "Искажения"
 
 #: translations.py:122
 msgid "Alpha"
-msgstr "Обработка Альфа"
+msgstr "Альфа"
 
 #: translations.py:123
 msgid "Movement"
@@ -3160,7 +3160,7 @@ msgstr "Альфа градиент"
 
 #: translations.py:132
 msgid "Crop"
-msgstr "Альфа маска"
+msgstr "Кадрирование"
 
 #: translations.py:133
 msgid "Alpha Shape"
@@ -3192,7 +3192,7 @@ msgstr "Изменение шага"
 
 #: translations.py:142
 msgid "Distort - Barry's Satan"
-msgstr "Искажение - Барри Сатана"
+msgstr "Искажение - Barry's Satan"
 
 #: translations.py:143
 msgid "Frequency Shift - Bode/Moog"
@@ -3244,7 +3244,7 @@ msgstr "Шумовой клапан"
 
 #: translations.py:155
 msgid "Bandpass"
-msgstr "Полоса пропускания"
+msgstr "Полосовой фильтр"
 
 #: translations.py:156
 msgid "Pitchscaler - High Quality"
@@ -3288,7 +3288,7 @@ msgstr "Угольный карандаш"
 
 #: translations.py:167
 msgid "Glow"
-msgstr "Свечение"
+msgstr "Сияние"
 
 #: translations.py:168
 msgid "Old Film"
@@ -3316,7 +3316,7 @@ msgstr "Оттенки серого"
 
 #: translations.py:177 translations.py:403 translations.py:405
 msgid "Contrast"
-msgstr "Контрастность"
+msgstr "Контраст"
 
 #: translations.py:178 translations.py:406 mlttransitions.py:152
 msgid "Saturation"
@@ -3329,7 +3329,7 @@ msgstr "Инвертирование"
 
 #: translations.py:180 translations.py:407 mlttransitions.py:148
 msgid "Hue"
-msgstr "Цветовой тон"
+msgstr "Тон"
 
 #: translations.py:181 translations.py:404 translations.py:408
 #: translations.py:409
@@ -3374,7 +3374,7 @@ msgstr "Техниколор"
 
 #: translations.py:192
 msgid "Primaries"
-msgstr "Цветовые компоненты"
+msgstr "Основные цвета"
 
 #: translations.py:193
 msgid "Color Distance"
@@ -3406,7 +3406,7 @@ msgstr "Вертикальное выравнивание"
 
 #: translations.py:202
 msgid "Edge Glow"
-msgstr "Блеск краёв"
+msgstr "Свечение контура"
 
 #: translations.py:203
 msgid "Sobel"
@@ -3438,7 +3438,7 @@ msgstr "Нервозность"
 
 #: translations.py:212
 msgid "Freeze"
-msgstr "Заморозить"
+msgstr "Замораживание"
 
 #: translations.py:214 translations.py:433
 msgid "Rotate"
@@ -3450,7 +3450,7 @@ msgstr "Скос/Сдвиг"
 
 #: translations.py:216
 msgid "Translate"
-msgstr "Смещение"
+msgstr "Translate"
 
 #: translations.py:219
 msgid "Color Select"
@@ -3482,7 +3482,7 @@ msgstr "Цветовые полутона"
 
 #: translations.py:226
 msgid "Dither"
-msgstr "Дитеринг"
+msgstr "Дизеринг"
 
 #: translations.py:227
 msgid "Vignette"
@@ -3494,7 +3494,7 @@ msgstr "Рельеф"
 
 #: translations.py:229
 msgid "3 Point Balance"
-msgstr "Трёхточечный баланс"
+msgstr "Баланс по трём точкам"
 
 #: translations.py:230
 msgid "Colorize"
@@ -3506,7 +3506,7 @@ msgstr "Яркость по ключевым кадрам"
 
 #: translations.py:232
 msgid "RGB Adjustment"
-msgstr "Регулировка RGB"
+msgstr "Коррекция RGB"
 
 #: translations.py:233
 msgid "Color Tap"
@@ -3526,11 +3526,11 @@ msgstr "Газетная бумага"
 
 #: translations.py:239
 msgid "Luma Key"
-msgstr "Яркостная рир-проекция"
+msgstr "Яркостная рирпроекция"
 
 #: translations.py:240
 msgid "Chroma Key"
-msgstr "Цветовая рир-проекция"
+msgstr "Цветовая рирпроекция"
 
 #: translations.py:241
 msgid "Affine"
@@ -3562,7 +3562,7 @@ msgstr "Уровень/Гамма/Усиление/Цвет"
 
 #: translations.py:249
 msgid "Color Channel Mixer"
-msgstr "Микширование каналов"
+msgstr "Color Channel Mixer"
 
 #: translations.py:250
 msgid "Lens Correction AV"
@@ -3650,7 +3650,7 @@ msgstr "Баланс"
 
 #: translations.py:277
 msgid "Pitch Shift"
-msgstr "Высота тона"
+msgstr "Транспонирование"
 
 #: translations.py:278
 msgid "Buffer Size"
@@ -3755,7 +3755,7 @@ msgstr "Резонанс"
 
 #: translations.py:316
 msgid "Passes"
-msgstr "Пропуск"
+msgstr "Проход"
 
 #: translations.py:317
 msgid "Error Rate"
@@ -3783,7 +3783,7 @@ msgstr "Уровень прямого сигнала (дБ)"
 
 #: translations.py:324
 msgid "Early reflection level(dB)"
-msgstr "Уровень ранних отражений (дБ)"
+msgstr "Начальный уровень отражения (дБ)"
 
 #: translations.py:325
 msgid "Tail level(dB)"
@@ -3907,7 +3907,7 @@ msgstr "Эффект обрезания (Гц)"
 
 #: translations.py:364
 msgid "Rate"
-msgstr "Частота"
+msgstr "Темп"
 
 #: translations.py:366
 msgid "Sift"
@@ -4216,11 +4216,11 @@ msgstr "Подавлять"
 
 #: translations.py:481 translations.py:608
 msgid "Horizontal"
-msgstr "Горизонтально"
+msgstr "По горизонтали"
 
 #: translations.py:482 translations.py:609
 msgid "Vertical"
-msgstr "Вертикально"
+msgstr "По вертикали"
 
 #: translations.py:483
 msgid "Type"
@@ -4320,7 +4320,7 @@ msgstr "Тип смешения"
 
 #: translations.py:515
 msgid "Key Color"
-msgstr "Ключевой цвет"
+msgstr "Основной цвет"
 
 #: translations.py:516
 msgid "Pre-Level"
@@ -4412,11 +4412,11 @@ msgstr "Синий канал: Усиление синего"
 
 #: translations.py:539
 msgid "Center X"
-msgstr "Сдвиг по X"
+msgstr "Центр по X:"
 
 #: translations.py:540
 msgid "Center Y"
-msgstr "Сдвиг по Y"
+msgstr "Центр по Y:"
 
 #: translations.py:541
 msgid "Quad Distortion"
@@ -4953,7 +4953,7 @@ msgstr "Выключено"
 
 #: propertyeditorbuilder.py:717 propertyeditorbuilder.py:772
 msgid "Deinterlace"
-msgstr "Деинтерлейсинг"
+msgstr "Деинтерлейс"
 
 #: propertyeditorbuilder.py:717 propertyeditorbuilder.py:772
 msgid "Both"
@@ -5038,15 +5038,15 @@ msgstr "Сброс геометрии"
 
 #: keyframeeditor.py:779
 msgid "Geometry to Original Aspect Ratio"
-msgstr "Геометрия в исходные значения пропорций"
+msgstr "Геометрия к исходному соотношению сторон"
 
 #: keyframeeditor.py:780
 msgid "Center Horizontal"
-msgstr "Центр по горизонтали"
+msgstr "Центрировать по горизонтали"
 
 #: keyframeeditor.py:781
 msgid "Center Vertical"
-msgstr "Центр по вертикали"
+msgstr "Центрировать по вертикали"
 
 #: keyframeeditor.py:1324 keyframeeditor.py:1360
 msgid "X:"
@@ -5514,7 +5514,7 @@ msgstr "Пользовательский"
 
 #: rendergui.py:697 tools/toolsencoding.py:72
 msgid "Preset File type"
-msgstr "Выбор предустановки"
+msgstr "Предустановленный"
 
 #: rendergui.py:714 rendergui.py:790 rendergui.py:906
 msgid "Use Project Profile:"
@@ -5786,9 +5786,8 @@ msgid "Mouse Horizontal Scroll Direction:"
 msgstr "Движение колёсика мыши для прокрутки по горизонтали:"
 
 #: preferenceswindow.py:212
-#, fuzzy
 msgid "Move Playhead to Clip start on keyframe edit init"
-msgstr "Переместить Playhead в начало клипа на ключевом кадре"
+msgstr "Перемещать курсор воспроизведения в начало клипа на ключевом кадре"
 
 #: preferenceswindow.py:213
 msgid "Hide file extensions when importing Clips"
@@ -6100,7 +6099,7 @@ msgstr "Проект/Последовательность"
 
 #: tools/batchrendering.py:879
 msgid "Status"
-msgstr "Статус"
+msgstr "Состояние"
 
 #: tools/batchrendering.py:880
 msgid "Render File"
@@ -6818,7 +6817,7 @@ msgid "Rendering video, "
 msgstr "Собирается видео, "
 
 #: tools/gmic.py:1283
-#, fuzzy, python-format
+#, python-format
 msgid "% done"
 msgstr "% готово"
 
