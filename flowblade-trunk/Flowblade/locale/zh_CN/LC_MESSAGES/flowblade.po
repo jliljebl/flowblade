@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-20 12:44+0200\n"
+"POT-Creation-Date: 2018-11-22 21:32+0200\n"
 "PO-Revision-Date: 2017-04-15 18:47+0800\n"
 "Last-Translator: wu <laowudebox@126.com>\n"
 "Language-Team: Language LANGUAGE\n"
@@ -6553,6 +6553,11 @@ msgstr "<b>褪色长度:</b>"
 #: tlineaction.py:1316
 msgid "Clip is too short!"
 msgstr "视频切片太短！"
+
+#: tlineaction.py:1537
+#, fuzzy
+msgid "Rerender all Rendered Transitions / Fades"
+msgstr "渲染过渡切片"
 
 #: tlineaction.py:1581
 #, fuzzy

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Flowblade 2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-20 12:44+0200\n"
+"POT-Creation-Date: 2018-11-22 21:32+0200\n"
 "PO-Revision-Date: 2018-11-20 03:12+0300\n"
 "Last-Translator: Николай Смольянинов <smolianinow.colya2016@yandex.ru>\n"
 "Language-Team: vk.com/flowblade\n"
@@ -6487,6 +6487,11 @@ msgstr "<b>Длительность затемнения:</b> "
 #: tlineaction.py:1316
 msgid "Clip is too short!"
 msgstr "Слишком короткий клип!"
+
+#: tlineaction.py:1537
+#, fuzzy
+msgid "Rerender all Rendered Transitions / Fades"
+msgstr "Пересборка всех собранных переходов и затемнений "
 
 #: tlineaction.py:1581
 msgid "Rendering item "

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Floblade Italian Translation 0.14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-20 12:44+0200\n"
+"POT-Creation-Date: 2018-11-22 21:32+0200\n"
 "PO-Revision-Date: 2014-09-15 23:42+0100\n"
 "Last-Translator: Massimo Stella <info@massimostella.it>\n"
 "Language-Team: Italiano\n"
@@ -6727,6 +6727,11 @@ msgstr "<b>Lunghezza dissolvenza:</b> "
 #: tlineaction.py:1316
 msgid "Clip is too short!"
 msgstr "Clip troppo corta!"
+
+#: tlineaction.py:1537
+#, fuzzy
+msgid "Rerender all Rendered Transitions / Fades"
+msgstr "Calcolo della Transizione"
 
 #: tlineaction.py:1581
 #, fuzzy

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-20 12:44+0200\n"
+"POT-Creation-Date: 2018-11-22 21:32+0200\n"
 "PO-Revision-Date: 2018-11-15 12:12+0200\n"
 "Last-Translator: Stanislaw Polak <polak@icsr.agh.edu.pl>\n"
 "Language-Team: Polish\n"
@@ -6491,6 +6491,11 @@ msgstr "<b>Długość zanikania:</b> "
 #: tlineaction.py:1316
 msgid "Clip is too short!"
 msgstr "Klip jest za krótki!"
+
+#: tlineaction.py:1537
+#, fuzzy
+msgid "Rerender all Rendered Transitions / Fades"
+msgstr "Renderuj wszystkie wyrenderowane przejścia oraz zanikania"
 
 #: tlineaction.py:1581
 msgid "Rendering item "

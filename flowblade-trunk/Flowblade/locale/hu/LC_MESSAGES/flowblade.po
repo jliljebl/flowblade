@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-20 12:44+0200\n"
+"POT-Creation-Date: 2018-11-22 21:32+0200\n"
 "PO-Revision-Date: 2017-03-24 08:40+0100\n"
 "Last-Translator: Péter Gábor <ptrg@freemail.hu>\n"
 "Language-Team: \n"
@@ -6589,6 +6589,11 @@ msgstr "<b>Halványodás hossza:</b>"
 #: tlineaction.py:1316
 msgid "Clip is too short!"
 msgstr "A klip túl rövid!"
+
+#: tlineaction.py:1537
+#, fuzzy
+msgid "Rerender all Rendered Transitions / Fades"
+msgstr "Átmenet klip renderelése"
 
 #: tlineaction.py:1581
 #, fuzzy

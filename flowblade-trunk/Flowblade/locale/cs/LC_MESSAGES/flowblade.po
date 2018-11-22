@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-20 12:44+0200\n"
+"POT-Creation-Date: 2018-11-22 21:32+0200\n"
 "PO-Revision-Date: 2018-05-05 14:53+0200\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -6515,6 +6515,11 @@ msgstr "<b>Délka prolínání: </b>"
 #: tlineaction.py:1316
 msgid "Clip is too short!"
 msgstr "Záběr je příliš krátký!"
+
+#: tlineaction.py:1537
+#, fuzzy
+msgid "Rerender all Rendered Transitions / Fades"
+msgstr "Vykreslit všechny vykreslované přechody a stíny"
 
 #: tlineaction.py:1581
 msgid "Rendering item "

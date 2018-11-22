@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-20 12:44+0200\n"
+"POT-Creation-Date: 2018-11-22 21:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -6324,6 +6324,10 @@ msgstr ""
 
 #: tlineaction.py:1316
 msgid "Clip is too short!"
+msgstr ""
+
+#: tlineaction.py:1537
+msgid "Rerender all Rendered Transitions / Fades"
 msgstr ""
 
 #: tlineaction.py:1581
