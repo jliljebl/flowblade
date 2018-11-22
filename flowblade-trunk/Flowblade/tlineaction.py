@@ -1534,7 +1534,7 @@ class ReRenderderAllWindow:
         self.rerender_list = rerender_list
         self.rendered_items = []
         self.encoding_selections = encoding_selections
-        self.dialog = Gtk.Dialog("Rerender all Rendered Transitions / Fades",
+        self.dialog = Gtk.Dialog(_("Rerender all Rendered Transitions / Fades").encode('utf-8'),
                          gui.editor_window.window,
                          Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                          (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT))
