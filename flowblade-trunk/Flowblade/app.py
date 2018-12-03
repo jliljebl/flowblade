@@ -672,6 +672,7 @@ def change_current_sequence(index):
     selection = gui.sequence_list_view.treeview.get_selection()
     selected_index = editorstate.project.sequences.index(editorstate.current_sequence())
     selection.select_path(str(selected_index))
+
     start_autosave()
 
     updater.set_timeline_height()
