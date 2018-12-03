@@ -120,7 +120,7 @@ def init_module():
                 _("Diagonal 1"):"wipe_diagonal_1.png",
                 _("Diagonal 2"):"wipe_diagonal_2.png",
                 _("Diagonal 3"):"wipe_diagonal_3.png",
-                _("Diagonal 4"):"wipe_diagonal_4.png",
+                _("Diagonal 4"):"wipe_diagonal_4.pgm",
                 _("Checkerboard"):"checkerboard_small.pgm"}
 
     # name -> mlt_compositor_transition_infos key dict.
