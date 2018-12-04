@@ -192,7 +192,6 @@ class Player:
         self.ticker.stop_ticker()
         self.producer.set_speed(0)
         updater.update_frame_displayers(self.producer.frame())
-        updater.maybe_autocenter()
 
     def start_loop_playback(self, cut_frame, loop_half_length, track_length):
         self.loop_start = cut_frame - loop_half_length

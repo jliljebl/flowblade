@@ -92,6 +92,8 @@ def stop_pressed():
     elif EDIT_MODE() == editorstate.MULTI_TRIM:
         movemodes.stop_pressed()
 
+    updater.maybe_autocenter()
+
 def next_pressed():
     if current_is_move_mode():
         movemodes.next_pressed()
