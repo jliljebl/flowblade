@@ -565,8 +565,8 @@ class ClipKeyFrameEditor:
             next_frame, val = self.keyframes[self.active_kf_index + 1]
             next_frame -= 1
         except:
-            next_frame = self.clip_length - 1
-        
+            next_frame = self.clip_in + self.clip_length
+
         frame = max(frame, prev_frame)
         frame = min(frame, next_frame)
 
@@ -991,13 +991,7 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         self.clip_editor.active_kf_pos_entered(current_frame - 1)
         self.update_property_value()
         self.update_editor_view()
-        
-    def pos_entry_enter_hit(self, entry):
-        val = entry.get_text() #error handl?
-        self.clip_editor.active_kf_pos_entered(int(val))
-        self.update_editor_view()
-        self.update_property_value()
-    
+
     def keyframe_dragged(self, active_kf, frame):
         pass
 
