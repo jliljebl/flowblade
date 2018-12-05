@@ -880,10 +880,8 @@ class Sequence:
         Returns frame of next cut in active tracks relative to timeline.
         """
         cut_frame = -1
-        for i in range(1, len(self.tracks)):
+        for i in range(1, len(self.tracks) - 1):
             track = self.tracks[i]
-            if track.active == False:
-                continue
             
             # Get index and clip
             index = track.get_clip_index_at(tline_frame)
@@ -910,10 +908,9 @@ class Sequence:
         Returns frame of next cut in active tracks relative to timeline.
         """
         cut_frame = -1
-        for i in range(1, len(self.tracks)):
+        for i in range(1, len(self.tracks) - 1):
             track = self.tracks[i]
-            if track == False:
-                continue
+            #print track.get_producer().get_length()
             
             # Get index and clip start
             index = track.get_clip_index_at(tline_frame)
@@ -923,21 +920,24 @@ class Sequence:
             if clip_start_frame == tline_frame:
                 index = index - 1
             
-            # Check index is good
-            try:
-                clip = track.clips[index]            
-            except Exception:
-                continue # index not good clip
-            
             # Get prev cut frame
-            next_cut_frame = track.clip_start(index)
+            try:
+                clip = track.clips[index]
+                prev_cut_frame = track.clip_start(index)
+            except Exception:
+                try:
+                    if index == len(track.clips):
+                        clip = track.clips[index - 1]
+                        prev_cut_frame = track.clip_start(index)
+                except Exception:
+                    continue
             
             # Set cut frame
             if cut_frame == -1:
-                cut_frame = next_cut_frame
-            elif next_cut_frame > cut_frame:
-                cut_frame = next_cut_frame
-                
+                cut_frame = prev_cut_frame
+            elif prev_cut_frame > cut_frame:
+                cut_frame = prev_cut_frame
+            
         return cut_frame
     
     def get_closest_cut_frame(self, track_id, frame):
