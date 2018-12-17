@@ -1,6 +1,8 @@
 
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
+**Project on Christmas break. You can leave Issues and comments as usual, will try to get back once action resumes in January.**
+
 **Contents:**
   1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
   1. [Features](https://github.com/jliljebl/flowblade#features)
