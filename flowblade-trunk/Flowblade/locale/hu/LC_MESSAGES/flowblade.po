@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-06 19:09+0200\n"
+"POT-Creation-Date: 2019-01-03 19:11+0200\n"
 "PO-Revision-Date: 2017-03-24 08:40+0100\n"
 "Last-Translator: Péter Gábor <ptrg@freemail.hu>\n"
 "Language-Team: \n"
@@ -3050,6 +3050,10 @@ msgstr "Jelenet építése: "
 #: persistance.py:467
 msgid "Loading icons"
 msgstr "Ikonok betöltése"
+
+#: persistance.py:712 persistance.py:732
+msgid "Relative file search for "
+msgstr ""
 
 #: projectdata.py:75
 msgid "untitled"

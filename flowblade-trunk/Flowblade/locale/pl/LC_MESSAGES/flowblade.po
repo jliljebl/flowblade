@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-06 19:09+0200\n"
+"POT-Creation-Date: 2019-01-03 19:11+0200\n"
 "PO-Revision-Date: 2018-11-15 12:12+0200\n"
 "Last-Translator: Stanislaw Polak <polak@icsr.agh.edu.pl>\n"
 "Language-Team: Polish\n"
@@ -2975,6 +2975,10 @@ msgstr "Tworzenie sekwencji "
 #: persistance.py:467
 msgid "Loading icons"
 msgstr "Wczytywanie ikon"
+
+#: persistance.py:712 persistance.py:732
+msgid "Relative file search for "
+msgstr ""
 
 #: projectdata.py:75
 msgid "untitled"

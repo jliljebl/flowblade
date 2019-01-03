@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Flowblade 2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-06 19:09+0200\n"
+"POT-Creation-Date: 2019-01-03 19:11+0200\n"
 "PO-Revision-Date: 2018-11-27 23:32+0300\n"
 "Last-Translator: Николай Смольянинов <smolianinow.colya2016@yandex.ru>\n"
 "Language-Team: vk.com/flowblade\n"
@@ -2975,6 +2975,10 @@ msgstr "Построение последовательности "
 #: persistance.py:467
 msgid "Loading icons"
 msgstr "Загрузка миниатюр"
+
+#: persistance.py:712 persistance.py:732
+msgid "Relative file search for "
+msgstr ""
 
 #: projectdata.py:75
 msgid "untitled"

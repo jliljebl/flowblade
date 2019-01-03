@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-06 19:09+0200\n"
+"POT-Creation-Date: 2019-01-03 19:11+0200\n"
 "PO-Revision-Date: 2014-02-21 12:08+0200\n"
 "Last-Translator: David Gámiz Jiménez <david.gamiz@gmail.com>\n"
 "Language-Team: David Gamiz Jimenez\n"
@@ -3156,6 +3156,10 @@ msgstr "Secuencia Building "
 #: persistance.py:467
 msgid "Loading icons"
 msgstr "Cargando iconos"
+
+#: persistance.py:712 persistance.py:732
+msgid "Relative file search for "
+msgstr ""
 
 #: projectdata.py:75
 msgid "untitled"

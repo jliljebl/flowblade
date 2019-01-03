@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-06 19:09+0200\n"
+"POT-Creation-Date: 2019-01-03 19:11+0200\n"
 "PO-Revision-Date: 2018-05-05 14:53+0200\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -2993,6 +2993,10 @@ msgstr "Sestavuje se sekvence "
 #: persistance.py:467
 msgid "Loading icons"
 msgstr "Načítají se ikony"
+
+#: persistance.py:712 persistance.py:732
+msgid "Relative file search for "
+msgstr ""
 
 #: projectdata.py:75
 msgid "untitled"
