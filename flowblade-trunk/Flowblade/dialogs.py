@@ -282,7 +282,7 @@ def save_project_as_dialog(callback, current_name, open_dir, parent=None):
                                    (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
                                     _("Save").encode('utf-8'), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.SAVE)
-    dialog.set_current_name(current_name)
+    dialog.set_current_name(current_name.encode('utf-8'))
     dialog.set_do_overwrite_confirmation(True)
     if open_dir != None:
         dialog.set_current_folder(open_dir)
