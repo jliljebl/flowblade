@@ -126,7 +126,7 @@ class LoadThread(threading.Thread):
             self._error_stop(dialog, ticker)
             Gdk.threads_enter()
             primary_txt = _("Media asset was missing!")
-            secondary_txt = _("Path of missing asset:") + "\n   <b>" + e.value  + "</b>\n\n" + \
+            secondary_txt = _("Path of missing asset:") + "\n   <b>" + e.value.decode('utf-8') + "</b>\n\n" + \
                             _("Relative search for replacement file in sub folders of project file failed.") + "\n\n" + \
                             _("To load the project you will need to either:") + "\n" + \
                             u"\u2022" + " " + _("Open project in 'Media Relinker' tool to relink media assets to new files, or") + "\n" + \
@@ -150,7 +150,7 @@ class LoadThread(threading.Thread):
             return
         except persistance.ProjectProfileNotFoundError as e:
             self._error_stop(dialog, ticker)
-            primary_txt = _("Profile with Description: '") + e.value + _("' was not found on load!")
+            primary_txt = _("Profile with Description: '") + e.value.decode('utf-8')  + _("' was not found on load!")
             secondary_txt = _("It is possible to load the project by creating a User Profile with exactly the same Description\nas the missing profile. ") + "\n\n" + \
                             _("User Profiles can be created by selecting 'Edit->Profiles Manager'.")
             dialogutils.warning_message(primary_txt, secondary_txt, None, is_info=False)
