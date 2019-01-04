@@ -349,7 +349,7 @@ def _export_file_name_dialog(callback, project_name, dialog_title):
                                    _("Export").encode('utf-8'), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.SAVE)
     project_name = project_name.strip(".flb")
-    dialog.set_current_name(project_name + ".xml")
+    dialog.set_current_name(project_name.encode('utf-8') + ".xml")
     dialog.set_do_overwrite_confirmation(True)
 
     dialog.set_select_multiple(False)
@@ -1263,7 +1263,7 @@ def export_edl_dialog(callback, parent_window, project_name):
                                    _("Export").encode('utf-8'), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.SAVE)
     project_name = project_name.rstrip(".flb")
-    dialog.set_current_name(project_name + ".edl")
+    dialog.set_current_name(project_name.encode('utf-8') + ".edl")
     dialog.set_do_overwrite_confirmation(True)
 
     dialog.set_select_multiple(False)

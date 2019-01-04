@@ -583,7 +583,7 @@ class SnaphotSaveThread(threading.Thread):
             
             # Message
             Gdk.threads_enter()
-            dialog.media_copy_info.set_text(copy_txt + "... " +  file_name)
+            dialog.media_copy_info.set_text(copy_txt + "... " +  file_name.decode('utf-8'))
             Gdk.threads_leave()
             
             # Other media types than image sequences

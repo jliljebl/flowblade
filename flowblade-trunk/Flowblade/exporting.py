@@ -97,7 +97,7 @@ def _edl_xml_render_done(data):
     mlt_parse = MLTXMLToEDLParse(get_edl_temp_xml_path(), current_sequence())
     edl_contents = mlt_parse.create_edl()
     f = open(edl_path, 'w')
-    f.write(edl_contents)
+    f.write(edl_contents.encode('utf-8'))
     f.close()
 
 
