@@ -34,7 +34,7 @@ install_data = [('share/applications', ['installdata/io.github.jliljebl.Flowblad
 flowblade_package_data = ['res/filters/*.xml','res/filters/wipes/*','res/img/*',
                           'res/profiles/*','res/render/renderencoding.xml',
                           'res/patternproducer/*','res/help/*','res/help/ru/*','res/help/en/*','locale/Flowblade/*',
-                          'res/proxyprofiles/*','res/darktheme/*','launch/*','res/gmic/*','res/shortcuts/*']
+                          'res/proxyprofiles/*','res/darktheme/*','launch/*','res/gmic/*',
                           'res/shortcuts/*','res/css/*','res/css/sass/*','res/css/assets/*']
 
 locale_files = []
