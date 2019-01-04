@@ -535,7 +535,7 @@ def _change_project_profile_callback(dialog, response_id, profile_combo, out_fol
         folder = (u"/" + ou.lstrip(u"file:/"))
         name = project_name_entry.get_text().decode('utf-8')
         profile = mltprofiles.get_profile_for_index(profile_combo.get_active())
-        path = folder + u"/" + name
+        path = (folder + u"/" + name).encode('utf-8')
 
         PROJECT().update_media_lengths_on_load = True # saved version needs to do this
         old_name = PROJECT().name
