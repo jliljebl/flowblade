@@ -28,14 +28,14 @@ install_data = [('share/applications', ['installdata/io.github.jliljebl.Flowblad
                 ('share/appdata', ['installdata/io.github.jliljebl.Flowblade.appdata.xml']),
                 ('share/icons/hicolor/128x128/apps', ['installdata/io.github.jliljebl.Flowblade.png']),
                 ('share/mime/packages',['installdata/io.github.jliljebl.Flowblade.xml']),
-                ('lib/mime/packages',['installdata/flowblade']),
+                ('share/mime/packages',['installdata/flowblade']),
                 ('share/man/man1',['installdata/flowblade.1'])]
 
 flowblade_package_data = ['res/filters/*.xml','res/filters/wipes/*','res/img/*',
                           'res/profiles/*','res/render/renderencoding.xml',
-                          'res/patternproducer/*','res/help/*','locale/Flowblade/*',
-                          'res/proxyprofiles/*','res/darktheme/*','launch/*','res/gmic/*',
-                          'res/shortcuts/*','res/css/*','res/css/assests/*','res/css/sass/*']
+                          'res/patternproducer/*','res/help/*','res/help/ru/*','res/help/en/*','locale/Flowblade/*',
+                          'res/proxyprofiles/*','res/darktheme/*','launch/*','res/gmic/*','res/shortcuts/*']
+                          'res/shortcuts/*','res/css/*','res/css/sass/*','res/css/assets/*']
 
 locale_files = []
 for filepath in glob.glob("Flowblade/locale/*/LC_MESSAGES/*"):
