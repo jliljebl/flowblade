@@ -39,6 +39,7 @@ import mltenv
 import mltprofiles
 import mlttransitions
 import mltfilters
+import processutils
 import renderconsumer
 import respaths
 import translations
@@ -185,7 +186,8 @@ def main():
     mlttransitions.init_module()
 
     repo = mlt.Factory().init()
-
+    processutils.prepare_mlt_repo(repo)
+    
     # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
     locale.setlocale(locale.LC_NUMERIC, 'C')
 

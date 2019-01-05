@@ -173,7 +173,8 @@ def main(root_path, force_launch=False):
 
     # We need mlt fpr profiles handling
     repo = mlt.Factory().init()
-
+    processutils.prepare_mlt_repo(repo)
+    
     # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
     locale.setlocale(locale.LC_NUMERIC, 'C')
 

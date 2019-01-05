@@ -53,8 +53,7 @@ else:
     modules_path = launch_dir + "/Flowblade"
 
 sys.path.insert(0, modules_path)
-sys.path.insert(0, modules_path + "/vieweditor")
-sys.path.insert(0, modules_path + "/tools")
+
 
 # Check that we have MLT, missing is fatal.
 try:
@@ -71,8 +70,13 @@ except Exception, err:
 
 # Get app.py module and set info which type of installation is running
 try:
+
+    import processutils
+    processutils.update_sys_path(modules_path)
+    
     import app
     import editorstate
+
     if launch_dir == "/usr/bin" or launch_dir == "/app/bin":
         editorstate.app_running_from = editorstate.RUNNING_FROM_INSTALLATION
     else:

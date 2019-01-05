@@ -41,6 +41,7 @@ import mlttransitions
 import mltfilters
 import patternproducer
 import persistance
+import processutils
 import respaths
 import renderconsumer
 import translations
@@ -207,7 +208,8 @@ def main(root_path, filename):
             gui.apply_gtk_css()
             
     repo = mlt.Factory().init()
-
+    processutils.prepare_mlt_repo(repo)
+    
     # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
     locale.setlocale(locale.LC_NUMERIC, 'C')
 

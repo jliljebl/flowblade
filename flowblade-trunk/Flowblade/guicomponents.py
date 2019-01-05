@@ -27,6 +27,9 @@ import copy
 import math
 import time
 
+import gi
+gi.require_version('PangoCairo', '1.0')
+
 from gi.repository import GObject
 from gi.repository import GdkPixbuf
 from gi.repository import Gtk
