@@ -21,6 +21,7 @@
 """
 Module contains GUI update routines.
 """
+import time
 
 from gi.repository import Gtk
 from gi.repository import Gdk
@@ -122,21 +123,21 @@ def refresh_player(e):
 
 # --------------------------------- window 
 def window_resized():
-    # This can get async called from window "size-allocate" signal 
-    # during project load before project.c_seq has been build
-    if not(hasattr(editorstate.project, "c_seq")):
-        return
-    if editorstate.project.c_seq == None:
-        return
 
-    # Resize track heights so that all tracks are displayed
-    current_sequence().resize_tracks_to_fit(gui.tline_canvas.widget.get_allocation())
-    
-    # Place clips in the middle of timeline canvas after window resize
-    tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
+    try:
+        # Resize track heights so that all tracks are displayed
+        current_sequence().resize_tracks_to_fit(gui.tline_canvas.widget.get_allocation())
+        
+        # Place clips in the middle of timeline canvas after window resize
+        tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
 
-    gui.tline_column.init_listeners() # hit areas for track switches need to be recalculated
-    repaint_tline()
+        gui.tline_column.init_listeners() # hit areas for track switches need to be recalculated
+        repaint_tline()
+    except:
+        # we might not have editorstate.project.c_seq
+        print "updater.window_resized() failed, retry..."
+        time.sleep(0.2)
+        window_resized()
 
 # --------------------------------- timeline
 # --- REPAINT
