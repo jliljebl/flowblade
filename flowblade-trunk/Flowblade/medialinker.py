@@ -434,7 +434,7 @@ def _set_button_pressed():
 
 def _set_relink_path(media_asset):
     file_name = os.path.basename(media_asset.orig_path)
-    dialogs.media_file_dialog(_("Select Media File To Relink To") + " " + file_name, 
+    dialogs.media_file_dialog(_("Select Media File To Relink To") + " " + file_name.decode('utf-8'), 
                                 _select_relink_path_dialog_callback, False, 
                                 media_asset, linker_window, last_media_dir)
 
