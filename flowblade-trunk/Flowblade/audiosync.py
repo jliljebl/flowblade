@@ -99,7 +99,7 @@ def _read_offsets(idstr):
     
     _files_offsets = {}
     for line in file_lines:
-        tokens = line.split(" ")
+        tokens = line.split(clapperless.MAGIC_SEPARATOR)
         _files_offsets[tokens[0]] = tokens[1]
     
     os.remove(offsets_file)
