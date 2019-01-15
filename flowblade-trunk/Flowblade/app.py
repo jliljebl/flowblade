@@ -116,6 +116,7 @@ splash_timeout_id = -1
 exit_timeout_id = -1
 window_resize_id = -1
 window_state_id = -1
+resize_timeout_id = -1
 
 _log_file = None
 
