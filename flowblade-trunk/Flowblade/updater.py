@@ -123,20 +123,20 @@ def refresh_player(e):
 
 # --------------------------------- window 
 def window_resized():
-    try:
-        # Resize track heights so that all tracks are displayed
-        current_sequence().resize_tracks_to_fit(gui.tline_canvas.widget.get_allocation())
-        
-        # Place clips in the middle of timeline canvas after window resize
-        tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
+    #try:
+    # Resize track heights so that all tracks are displayed
+    current_sequence().resize_tracks_to_fit(gui.tline_canvas.widget.get_allocation())
+    
+    # Place clips in the middle of timeline canvas after window resize
+    tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
 
-        gui.tline_column.init_listeners() # hit areas for track switches need to be recalculated
-        repaint_tline()
-    except:
-        # we might not have editorstate.project.c_seq or all tracks available when loading project and we hit here, just retry.
-        print "updater.window_resized() failed, retry..."
-        time.sleep(0.2)
-        window_resized()
+    gui.tline_column.init_listeners() # hit areas for track switches need to be recalculated
+    repaint_tline()
+    #except:
+    # we might not have editorstate.project.c_seq or all tracks available when loading project and we hit here, just retry.
+    #print "updater.window_resized() failed, retry..."
+    #time.sleep(0.2)
+    #window_resized()
 
 # --------------------------------- timeline
 # --- REPAINT

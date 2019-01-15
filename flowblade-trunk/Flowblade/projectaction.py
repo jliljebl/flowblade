@@ -1545,10 +1545,10 @@ def _add_new_sequence_dialog_callback(dialog, response_id, widgets):
     name_entry, tracks_select, open_check = widgets
     
     # Get dialog data 
-    name = name_entry.get_text()
-
+    name = name_entry.get_text().decode('utf-8')
     if len(name) == 0:
-        name = _("sequence_") + str(PROJECT().next_seq_number)
+        name = (_("sequence_") + str(PROJECT().next_seq_number)).decode('utf-8')
+
     v_tracks, a_tracks = tracks_select.get_tracks()
     open_right_away = open_check.get_active()
     
