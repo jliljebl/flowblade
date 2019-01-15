@@ -636,10 +636,7 @@ def open_project(new_project):
     editorstate.transition_length = -1
     editorstate.clear_trim_clip_cache()
     audiomonitoring.init_for_project_load()
-    updater.window_resized()
 
-    gui.editor_window.window.handler_unblock(window_resize_id)
-    gui.editor_window.window.handler_unblock(window_state_id)
     start_autosave()
 
     if new_project.update_media_lengths_on_load == True:
@@ -649,7 +646,18 @@ def open_project(new_project):
     editorstate.trim_mode_ripple = False
 
     updater.set_timeline_height()
-        
+
+    gui.editor_window.window.handler_unblock(window_resize_id)
+    gui.editor_window.window.handler_unblock(window_state_id)
+
+    global resize_timeout_id
+    resize_timeout_id = GLib.timeout_add(500, _do_window_resized_update)
+
+def _do_window_resized_update():
+    splash_screen.destroy()
+    GObject.source_remove(resize_timeout_id)
+    updater.window_resized()
+    
 def change_current_sequence(index):
     stop_autosave()
     editorstate.project.c_seq = editorstate.project.sequences[index]
@@ -786,7 +794,6 @@ def show_splash_screen():
 def destroy_splash_screen():
     splash_screen.destroy()
     GObject.source_remove(splash_timeout_id)
-
 
 def show_worflow_info_dialog():
     editorpersistance.prefs.workflow_dialog_last_version_shown = editorstate.appversion
