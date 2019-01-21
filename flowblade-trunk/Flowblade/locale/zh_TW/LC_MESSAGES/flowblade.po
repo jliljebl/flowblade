@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-03 19:11+0200\n"
+"POT-Creation-Date: 2019-01-21 12:48+0200\n"
 "PO-Revision-Date: 2018-12-31 10:20+0800\n"
 "Last-Translator: Steve Nian <sdnian@gmail.com>\n"
 "Language-Team: Chinese (traditional)\n"
@@ -16,23 +16,23 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: app.py:835
+#: app.py:842
 msgid "Too small screen for this application."
 msgstr "畫面太小無法執行此應用程式"
 
-#: app.py:838
+#: app.py:845
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr "此應用程式的最小螢幕解析度為 1152 x 768。\n"
 
-#: app.py:839
+#: app.py:846
 msgid "Your screen dimensions are "
 msgstr "你的螢幕解析度是 "
 
-#: app.py:872 projectaction.py:391 projectaction.py:705
+#: app.py:879 projectaction.py:391 projectaction.py:705
 msgid "Project has not been saved previously"
 msgstr "先前的專案尚未儲存"
 
-#: app.py:873 projectaction.py:392 projectaction.py:706
+#: app.py:880 projectaction.py:392 projectaction.py:706
 msgid "Save project with File -> Save As before closing."
 msgstr "在結束之前，從 檔案 -> 另存新檔 來儲存專案。"
 
@@ -188,7 +188,7 @@ msgstr ""
 msgid "Render launch failed!"
 msgstr "渲染啟動失敗！"
 
-#: projectaction.py:830 projectaction.py:844 tools/batchrendering.py:303
+#: projectaction.py:830 projectaction.py:844 tools/batchrendering.py:304
 msgid "Error message: "
 msgstr "錯誤訊息："
 
@@ -279,11 +279,11 @@ msgstr "' 的資料夾作為縮略圖資料夾"
 msgid "N/A"
 msgstr "N/A"
 
-#: projectaction.py:1176 guicomponents.py:2171
+#: projectaction.py:1176 guicomponents.py:2174
 msgid "Yes"
 msgstr "是"
 
-#: projectaction.py:1178 guicomponents.py:2173
+#: projectaction.py:1178 guicomponents.py:2176
 msgid "No"
 msgstr "否"
 
@@ -299,7 +299,7 @@ msgstr "挑選_"
 msgid "Save Selection Compound Clip"
 msgstr "儲存挑選合成剪輯"
 
-#: projectaction.py:1301 projectaction.py:1534 projectaction.py:1551
+#: projectaction.py:1301 projectaction.py:1536 projectaction.py:1552
 #: projectdata.py:212 tlineaction.py:273
 msgid "sequence_"
 msgstr "序列_"
@@ -352,11 +352,11 @@ msgstr "無法刪除最後一個容器"
 msgid "There must always exist at least one bin."
 msgstr "必須至少存在一個容器。"
 
-#: projectaction.py:1503
+#: projectaction.py:1505
 msgid "Selected sequence is already being edited"
 msgstr "選擇的序列已被編輯"
 
-#: projectaction.py:1504
+#: projectaction.py:1506
 msgid ""
 "Select another sequence. Press Add -button to create a\n"
 "new sequence if needed."
@@ -364,37 +364,37 @@ msgstr ""
 "選擇另外的序列。如果需要，按 新增新的序列 來創建\n"
 "新的序列。"
 
-#: projectaction.py:1518 editorwindow.py:243
+#: projectaction.py:1520 editorwindow.py:243
 msgid "Add New Sequence"
 msgstr "新增新的序列"
 
-#: projectaction.py:1519 editorwindow.py:244
+#: projectaction.py:1521 editorwindow.py:244
 msgid "Edit Selected Sequence"
 msgstr "編輯選擇的序列"
 
-#: projectaction.py:1520 editorwindow.py:245
+#: projectaction.py:1522 editorwindow.py:245
 msgid "Delete Selected Sequence"
 msgstr "刪除選擇的序列"
 
-#: projectaction.py:1584
+#: projectaction.py:1586
 msgid ""
 "Are you sure you want to delete\n"
 "sequence '"
 msgstr "你確定要刪除序列 '"
 
-#: projectaction.py:1584
+#: projectaction.py:1586
 msgid "'?"
 msgstr "' 嗎？"
 
-#: projectaction.py:1585
+#: projectaction.py:1587
 msgid "This operation can not be undone. Sequence will be permanently lost."
 msgstr "此操作無法撤消，序列將永久丟失。"
 
-#: projectaction.py:1611
+#: projectaction.py:1613
 msgid "Can't remove last sequence"
 msgstr "無法移除最後的序列"
 
-#: projectaction.py:1612
+#: projectaction.py:1614
 msgid "There must always exist at least one sequence."
 msgstr "至少必須總是存在一個序列。"
 
@@ -502,7 +502,7 @@ msgstr "裁切片段"
 msgid "Split to new Sequence at Playhead Position"
 msgstr "在播放頭位置拆分為新序列"
 
-#: editorwindow.py:216 guicomponents.py:1833 translations.py:522
+#: editorwindow.py:216 guicomponents.py:1836 translations.py:522
 #: middlebar.py:163 workflow.py:186
 msgid "Lift"
 msgstr "提升"
@@ -511,7 +511,7 @@ msgstr "提升"
 msgid "Splice Out"
 msgstr "剪接出來"
 
-#: editorwindow.py:218 guicomponents.py:1454 guicomponents.py:1555
+#: editorwindow.py:218 guicomponents.py:1457 guicomponents.py:1558
 msgid "Resync"
 msgstr "重新同步"
 
@@ -527,7 +527,7 @@ msgstr "新增單軌轉換"
 msgid "Add Single Track Fade"
 msgstr "新增單軌淡入淡出"
 
-#: editorwindow.py:222 guicomponents.py:1478 guicomponents.py:1526
+#: editorwindow.py:222 guicomponents.py:1481 guicomponents.py:1529
 msgid "Clear Filters"
 msgstr "清除濾鏡"
 
@@ -672,8 +672,8 @@ msgid "Project Info"
 msgstr "專案資訊"
 
 #: editorwindow.py:265 editorwindow.py:622 rendergui.py:172 rendergui.py:320
-#: tools/batchrendering.py:877 tools/gmic.py:803
-#: tools/natronanimationswindow.py:385
+#: tools/batchrendering.py:879 tools/gmic.py:805
+#: tools/natronanimationswindow.py:386
 msgid "Render"
 msgstr "渲染"
 
@@ -705,15 +705,15 @@ msgstr "字幕器"
 msgid "Audio Mixer"
 msgstr "音訊混音器"
 
-#: editorwindow.py:273 tools/gmic.py:863 toolsintegration.py:124
+#: editorwindow.py:273 tools/gmic.py:865 toolsintegration.py:124
 msgid "G'MIC Effects"
 msgstr "G'MIC 特效"
 
-#: editorwindow.py:274 middlebar.py:196 tools/natronanimationswindow.py:449
+#: editorwindow.py:274 tools/natronanimationswindow.py:450
 msgid "Natron Animations"
 msgstr "Natron 動畫"
 
-#: editorwindow.py:275 medialinker.py:179
+#: editorwindow.py:275 medialinker.py:180
 msgid "Media Relinker"
 msgstr "媒體重新連接器"
 
@@ -995,11 +995,11 @@ msgstr "新專案"
 #: dialogs.py:1747 dialogs.py:1862 propertyeditorbuilder.py:548
 #: propertyeditorbuilder.py:664 propertyeditorbuilder.py:698 rendergui.py:48
 #: rendergui.py:103 rendergui.py:117 rendergui.py:134 rendergui.py:1053
-#: preferenceswindow.py:45 tools/batchrendering.py:974 proxyediting.py:431
+#: preferenceswindow.py:45 tools/batchrendering.py:976 proxyediting.py:431
 #: tlineaction.py:1540 patternproducer.py:353 patternproducer.py:386
-#: patternproducer.py:417 tools/gmic.py:389 tools/gmic.py:413 tools/gmic.py:542
+#: patternproducer.py:417 tools/gmic.py:391 tools/gmic.py:415 tools/gmic.py:544
 #: dialogutils.py:98 dialogutils.py:158 exporting.py:437
-#: tools/natronanimationswindow.py:704 tools/natronanimationswindow.py:727
+#: tools/natronanimationswindow.py:705 tools/natronanimationswindow.py:728
 msgid "Cancel"
 msgstr "取消"
 
@@ -1007,9 +1007,9 @@ msgstr "取消"
 #: dialogs.py:612 dialogs.py:731 dialogs.py:744 dialogs.py:1583
 #: propertyeditorbuilder.py:549 propertyeditorbuilder.py:665
 #: propertyeditorbuilder.py:699 rendergui.py:104 preferenceswindow.py:46
-#: tools/batchrendering.py:400 tools/gmic.py:414 dialogutils.py:44
+#: tools/batchrendering.py:402 tools/gmic.py:416 dialogutils.py:44
 #: dialogutils.py:65 dialogutils.py:78 dialogutils.py:93
-#: tools/natronanimationswindow.py:728
+#: tools/natronanimationswindow.py:729
 msgid "OK"
 msgstr "確定"
 
@@ -1046,8 +1046,8 @@ msgid "New Profile"
 msgstr "新專案"
 
 #: dialogs.py:132 dialogs.py:187 rendergui.py:665 preferenceswindow.py:115
-#: preferenceswindow.py:118 tools/gmic.py:748 tools/toolsencoding.py:40
-#: tools/natronanimationswindow.py:318
+#: preferenceswindow.py:118 tools/gmic.py:750 tools/toolsencoding.py:40
+#: tools/natronanimationswindow.py:319
 msgid "Select Folder"
 msgstr "選擇資料夾"
 
@@ -1108,8 +1108,8 @@ msgid "Save Project As"
 msgstr "另存專案為"
 
 #: dialogs.py:283 dialogs.py:308 dialogs.py:395 dialogs.py:453 dialogs.py:475
-#: rendergui.py:118 tools/batchrendering.py:975 tools/gmic.py:390
-#: tools/natronanimationswindow.py:705
+#: rendergui.py:118 tools/batchrendering.py:977 tools/gmic.py:392
+#: tools/natronanimationswindow.py:706
 msgid "Save"
 msgstr "存檔"
 
@@ -1310,7 +1310,7 @@ msgstr "格式"
 msgid "Render Options"
 msgstr "渲染選項"
 
-#: dialogs.py:729 guicomponents.py:1995
+#: dialogs.py:729 guicomponents.py:1998
 msgid "File Properties"
 msgstr "檔案屬性"
 
@@ -1496,7 +1496,7 @@ msgstr "開啟編輯："
 msgid "Rename New Media Object"
 msgstr "更改新的媒體物件名稱"
 
-#: dialogs.py:1042 dialogs.py:1070 dialogs.py:1124 guicomponents.py:1990
+#: dialogs.py:1042 dialogs.py:1070 dialogs.py:1124 guicomponents.py:1993
 msgid "Rename"
 msgstr "更名"
 
@@ -1504,7 +1504,7 @@ msgstr "更名"
 msgid "New Name:"
 msgstr "新的名稱："
 
-#: dialogs.py:1067 guicomponents.py:1579 guicomponents.py:1933
+#: dialogs.py:1067 guicomponents.py:1582 guicomponents.py:1936
 msgid "Rename Clip"
 msgstr "更改剪輯片段名稱"
 
@@ -1544,7 +1544,7 @@ msgstr ""
 msgid "New Marker"
 msgstr "新標記"
 
-#: dialogs.py:1138 dialogs.py:1160 guicomponents.py:2578
+#: dialogs.py:1138 dialogs.py:1160 guicomponents.py:2581
 msgid "Add Marker"
 msgstr "新增標記"
 
@@ -1627,7 +1627,7 @@ msgstr "套用"
 msgid "Rerender Transition"
 msgstr "重新渲染轉場"
 
-#: dialogs.py:1291 dialogs.py:1305 guicomponents.py:1503
+#: dialogs.py:1291 dialogs.py:1305 guicomponents.py:1506
 msgid "Rerender"
 msgstr "重新渲染"
 
@@ -1643,7 +1643,7 @@ msgstr "重新渲染全部的轉場和淡化"
 msgid "Rerender All"
 msgstr "全部重新渲染"
 
-#: dialogs.py:1330 guicomponents.py:1722
+#: dialogs.py:1330 guicomponents.py:1725
 msgid "Add Fade"
 msgstr "新增淡化"
 
@@ -1907,9 +1907,9 @@ msgstr "幾何編輯器"
 msgid "Sequence Watermark"
 msgstr "序列浮水印"
 
-#: dialogs.py:1535 tools/titler.py:514 proxyediting.py:422 medialinker.py:155
-#: tools/gmic.py:834 tools/gmic.py:925 diskcachemanagement.py:149
-#: tools/natronanimationswindow.py:411 tools/natronanimationswindow.py:673
+#: dialogs.py:1535 tools/titler.py:514 proxyediting.py:422 medialinker.py:156
+#: tools/gmic.py:836 tools/gmic.py:927 diskcachemanagement.py:149
+#: tools/natronanimationswindow.py:412 tools/natronanimationswindow.py:674
 msgid "Close"
 msgstr "關閉"
 
@@ -2036,7 +2036,7 @@ msgid "Compositor Auto Fades Group"
 msgstr "合成器自動淡化群組"
 
 #: dialogs.py:1762 dialogs.py:1773 panels.py:338 panels.py:396 panels.py:433
-#: panels.py:530 tools/gmic.py:733
+#: panels.py:530 tools/gmic.py:735
 msgid "Length:"
 msgstr "長度："
 
@@ -2092,608 +2092,608 @@ msgstr " 是視訊軌道，無法顯示純音訊的材料。"
 msgid "Empty"
 msgstr "空"
 
-#: guicomponents.py:383
+#: guicomponents.py:386
 msgid "active"
 msgstr "作用中"
 
-#: guicomponents.py:669
+#: guicomponents.py:672
 msgid "default"
 msgstr "預設"
 
-#: guicomponents.py:684
+#: guicomponents.py:687
 msgid "Autosave created "
 msgstr "自動保存建立 "
 
-#: guicomponents.py:684
+#: guicomponents.py:687
 msgid " ago."
 msgstr " 以前。"
 
-#: guicomponents.py:703
+#: guicomponents.py:706
 msgid "Clip:"
 msgstr "剪輯："
 
-#: guicomponents.py:713
+#: guicomponents.py:716
 msgid "Track:"
 msgstr "軌："
 
-#: guicomponents.py:734
+#: guicomponents.py:737
 msgid "<b>Clip: </b>"
 msgstr "<b>剪輯： </b>"
 
-#: guicomponents.py:736
+#: guicomponents.py:739
 msgid "<b>Track: </b>"
 msgstr "<b>軌： </b>"
 
-#: guicomponents.py:817
+#: guicomponents.py:820
 msgid "<b>Source:</b>"
 msgstr "<b>來源：</b>"
 
-#: guicomponents.py:818
+#: guicomponents.py:821
 msgid "<b>Destination:</b>"
 msgstr "<b>目的：</b>"
 
-#: guicomponents.py:819
+#: guicomponents.py:822
 msgid "<b>Length:</b>"
 msgstr "<b>長度：</b>"
 
-#: guicomponents.py:900
+#: guicomponents.py:903
 msgid "<b>Items:</b>"
 msgstr "<b>項目：</b>"
 
-#: guicomponents.py:1093
+#: guicomponents.py:1096
 msgid "Right Click to Add Media."
 msgstr "按右鍵加入媒體。"
 
-#: guicomponents.py:1360 guicomponents.py:1364
+#: guicomponents.py:1363 guicomponents.py:1367
 msgid "Lock Track"
 msgstr "鎖住軌道"
 
-#: guicomponents.py:1361 guicomponents.py:1365
+#: guicomponents.py:1364 guicomponents.py:1368
 msgid "Unlock Track"
 msgstr "解鎖軌道"
 
-#: guicomponents.py:1370
+#: guicomponents.py:1373
 msgid "Large Height"
 msgstr "較大高度"
 
-#: guicomponents.py:1375
+#: guicomponents.py:1378
 msgid "Normal Height"
 msgstr "正常高度"
 
-#: guicomponents.py:1401 guicomponents.py:1505 guicomponents.py:1547
+#: guicomponents.py:1404 guicomponents.py:1508 guicomponents.py:1550
 msgid "Open in Filters Editor"
 msgstr "在濾鏡編輯器打開"
 
-#: guicomponents.py:1408 guicomponents.py:1549 guicomponents.py:1993
+#: guicomponents.py:1411 guicomponents.py:1552 guicomponents.py:1996
 msgid "Open in Clip Monitor"
 msgstr "在剪輯顯示器中打開"
 
-#: guicomponents.py:1421 middlebar.py:170
+#: guicomponents.py:1424 middlebar.py:170
 msgid "Split Audio"
 msgstr "拆分音訊"
 
-#: guicomponents.py:1429
+#: guicomponents.py:1432
 msgid "Split Audio Synched"
 msgstr "拆分音訊同步"
 
-#: guicomponents.py:1436 guicomponents.py:1563
+#: guicomponents.py:1439 guicomponents.py:1566
 msgid "Display Audio Level"
 msgstr "顯示音訊波形"
 
-#: guicomponents.py:1439 guicomponents.py:1566
+#: guicomponents.py:1442 guicomponents.py:1569
 msgid "Clear Waveform"
 msgstr "清除波形"
 
-#: guicomponents.py:1442
+#: guicomponents.py:1445
 msgid "Select Clip to Audio Sync With..."
 msgstr "選擇剪輯到音訊同步與..."
 
-#: guicomponents.py:1455 guicomponents.py:1556
+#: guicomponents.py:1458 guicomponents.py:1559
 msgid "Clear Sync Relation"
 msgstr "清除同步關係"
 
-#: guicomponents.py:1457 guicomponents.py:1558
+#: guicomponents.py:1460 guicomponents.py:1561
 msgid "Select Sync Parent Clip..."
 msgstr "選擇同步父剪輯片段..."
 
-#: guicomponents.py:1483 guicomponents.py:1582
+#: guicomponents.py:1486 guicomponents.py:1585
 msgid "Clip Info"
 msgstr "剪輯片段資訊"
 
-#: guicomponents.py:1533
+#: guicomponents.py:1536
 msgid "Strech Prev Clip to Cover"
 msgstr "延伸前面剪輯片段來覆蓋"
 
-#: guicomponents.py:1534
+#: guicomponents.py:1537
 msgid "Strech Next Clip to Cover"
 msgstr "延伸後面剪輯片段來覆蓋"
 
-#: guicomponents.py:1536 guicomponents.py:1612 guicomponents.py:1830
-#: guicomponents.py:1991 guicomponents.py:2042 panels.py:96 tools/titler.py:208
-#: tools/batchrendering.py:1042 shortcuts.py:235
+#: guicomponents.py:1539 guicomponents.py:1615 guicomponents.py:1833
+#: guicomponents.py:1994 guicomponents.py:2045 panels.py:96 tools/titler.py:208
+#: tools/batchrendering.py:1044 shortcuts.py:235
 msgid "Delete"
 msgstr "刪除"
 
-#: guicomponents.py:1598
+#: guicomponents.py:1601
 msgid "Open In Compositor Editor"
 msgstr "在合成編輯器打開"
 
-#: guicomponents.py:1600
+#: guicomponents.py:1603
 msgid "Sync with Origin Clip"
 msgstr "同步原來的剪輯"
 
-#: guicomponents.py:1603
+#: guicomponents.py:1606
 msgid "Obey Auto Follow"
 msgstr "服從自動更隨"
 
-#: guicomponents.py:1616 guicomponents.py:1637
+#: guicomponents.py:1619 guicomponents.py:1640
 msgid "Add Filter"
 msgstr "新增濾鏡"
 
-#: guicomponents.py:1659
+#: guicomponents.py:1662
 msgid "Add Compositor"
 msgstr "新增合成器"
 
-#: guicomponents.py:1690
+#: guicomponents.py:1693
 msgid "Blenders"
 msgstr "混合器"
 
-#: guicomponents.py:1706
+#: guicomponents.py:1709
 msgid "Alpha Combiners"
 msgstr "Alpha 組合"
 
-#: guicomponents.py:1742
+#: guicomponents.py:1745
 msgid "Show Match Frame"
 msgstr "顯示匹配影格"
 
-#: guicomponents.py:1746
+#: guicomponents.py:1749
 msgid "First Frame in Monitor"
 msgstr "在顯示器中的首個影格"
 
-#: guicomponents.py:1751
+#: guicomponents.py:1754
 msgid "Last Frame in Monitor"
 msgstr "在顯示器中的最後影格"
 
-#: guicomponents.py:1758
+#: guicomponents.py:1761
 msgid "First Frame on Timeline"
 msgstr "在時間軸中的首個影格"
 
-#: guicomponents.py:1763
+#: guicomponents.py:1766
 msgid "Last Frame on Timeline"
 msgstr "在時間軸中的最後影格"
 
-#: guicomponents.py:1770 guicomponents.py:2791
+#: guicomponents.py:1773 guicomponents.py:2794
 msgid "Clear Match Frame"
 msgstr "清除匹配影格"
 
-#: guicomponents.py:1780
+#: guicomponents.py:1783
 msgid "Select"
 msgstr "選擇"
 
-#: guicomponents.py:1784
+#: guicomponents.py:1787
 msgid "All Clips After"
 msgstr "後面的全部剪輯片段"
 
-#: guicomponents.py:1789
+#: guicomponents.py:1792
 msgid "All Clips Before"
 msgstr "前面的全部剪輯片段"
 
-#: guicomponents.py:1799
+#: guicomponents.py:1802
 msgid "Export To Tool"
 msgstr "匯出到工具"
 
-#: guicomponents.py:1816 panels.py:97
+#: guicomponents.py:1819 panels.py:97
 msgid "Edit"
 msgstr "編輯"
 
-#: guicomponents.py:1821 kftoolmode.py:351
+#: guicomponents.py:1824 kftoolmode.py:351
 msgid "Volume Keyframes"
 msgstr "音量關鍵影格"
 
-#: guicomponents.py:1825 kftoolmode.py:352
+#: guicomponents.py:1828 kftoolmode.py:352
 msgid "Brightness Keyframes"
 msgstr "亮度關鍵影格"
 
-#: guicomponents.py:1838
+#: guicomponents.py:1841
 msgid "Set Clip Length..."
 msgstr "設定剪輯片段長度..."
 
-#: guicomponents.py:1841
+#: guicomponents.py:1844
 msgid "Stretch Over Next Blank"
 msgstr "延伸到下個空白"
 
-#: guicomponents.py:1844
+#: guicomponents.py:1847
 msgid "Stretch Over Prev Blank"
 msgstr "延伸到前個空白"
 
-#: guicomponents.py:1851
+#: guicomponents.py:1854
 msgid "Clone Filters"
 msgstr "克隆濾鏡"
 
-#: guicomponents.py:1855
+#: guicomponents.py:1858
 msgid "From Next Clip"
 msgstr "從下個剪輯片段"
 
-#: guicomponents.py:1860
+#: guicomponents.py:1863
 msgid "From Previous Clip"
 msgstr "從前個剪輯片段"
 
-#: guicomponents.py:1869 guicomponents.py:1889
+#: guicomponents.py:1872 guicomponents.py:1892
 msgid "Mute"
 msgstr "靜音"
 
-#: guicomponents.py:1873 guicomponents.py:1893
+#: guicomponents.py:1876 guicomponents.py:1896
 msgid "Unmute"
 msgstr "取消靜音"
 
-#: guicomponents.py:1879 guicomponents.py:1910
+#: guicomponents.py:1882 guicomponents.py:1913
 msgid "Mute Audio"
 msgstr "音訊靜音"
 
-#: guicomponents.py:1904
+#: guicomponents.py:1907
 msgid "Mute Video"
 msgstr "視訊靜音"
 
-#: guicomponents.py:1921
+#: guicomponents.py:1924
 msgid "Mute All"
 msgstr "全部靜音"
 
-#: guicomponents.py:1931
+#: guicomponents.py:1934
 msgid "Properties"
 msgstr "屬性"
 
-#: guicomponents.py:1941
+#: guicomponents.py:1944
 msgid "Clip Color"
 msgstr "剪輯片段色彩"
 
-#: guicomponents.py:1943
+#: guicomponents.py:1946
 msgid "Default"
 msgstr "預設"
 
-#: guicomponents.py:1944 translations.py:507 translations.py:596
+#: guicomponents.py:1947 translations.py:507 translations.py:596
 msgid "Red"
 msgstr "紅"
 
-#: guicomponents.py:1945 translations.py:508 translations.py:591
+#: guicomponents.py:1948 translations.py:508 translations.py:591
 #: translations.py:597
 msgid "Green"
 msgstr "綠"
 
-#: guicomponents.py:1946 translations.py:509 translations.py:592
+#: guicomponents.py:1949 translations.py:509 translations.py:592
 #: translations.py:598
 msgid "Blue"
 msgstr "藍"
 
-#: guicomponents.py:1947
+#: guicomponents.py:1950
 msgid "Orange"
 msgstr "橙"
 
-#: guicomponents.py:1948
+#: guicomponents.py:1951
 msgid "Brown"
 msgstr "棕"
 
-#: guicomponents.py:1949
+#: guicomponents.py:1952
 msgid "Olive"
 msgstr "橄欖"
 
-#: guicomponents.py:1955
+#: guicomponents.py:1958
 msgid "Markers"
 msgstr "標記"
 
-#: guicomponents.py:1968
+#: guicomponents.py:1971
 msgid "No Clip Markers"
 msgstr "沒有剪輯短片標記"
 
-#: guicomponents.py:1972
+#: guicomponents.py:1975
 msgid "Add Clip Marker At Playhead Position"
 msgstr "在播放頭位置添加剪輯標記"
 
-#: guicomponents.py:1973
+#: guicomponents.py:1976
 msgid "Delete Clip Marker At Playhead Position"
 msgstr "在播放頭位置刪除剪輯標記"
 
-#: guicomponents.py:1975
+#: guicomponents.py:1978
 msgid "Delete All Clip Markers"
 msgstr "刪除所有剪輯標記"
 
-#: guicomponents.py:2000 guicomponents.py:2040
+#: guicomponents.py:2003 guicomponents.py:2043
 msgid "Render Slow/Fast Motion File"
 msgstr "渲染 快/慢 動作檔案"
 
-#: guicomponents.py:2002
+#: guicomponents.py:2005
 msgid "Render Reverse Motion File"
 msgstr "渲染倒轉運動檔案"
 
-#: guicomponents.py:2004
+#: guicomponents.py:2007
 msgid "Render Proxy File"
 msgstr "渲染代理檔案"
 
-#: guicomponents.py:2027
+#: guicomponents.py:2030
 msgid "Toggle Active"
 msgstr "切換啟用狀態"
 
-#: guicomponents.py:2028
+#: guicomponents.py:2031
 msgid "Reset Values"
 msgstr "重置值"
 
-#: guicomponents.py:2030
+#: guicomponents.py:2033
 msgid "Move Up"
 msgstr "向上移動"
 
-#: guicomponents.py:2031
+#: guicomponents.py:2034
 msgid "Move Down"
 msgstr "向下移動"
 
-#: guicomponents.py:2039
+#: guicomponents.py:2042
 msgid "Display In Clip Monitor"
 msgstr "顯示在剪輯顯示器"
 
-#: guicomponents.py:2041
+#: guicomponents.py:2044
 msgid "Toggle Star"
 msgstr "切換星號"
 
-#: guicomponents.py:2049 medialinker.py:135
+#: guicomponents.py:2052 medialinker.py:136
 msgid "Set File Relink Path"
 msgstr "設定檔案重新連結路徑"
 
-#: guicomponents.py:2050 medialinker.py:137
+#: guicomponents.py:2053 medialinker.py:138
 msgid "Delete File Relink Path"
 msgstr "刪除檔案重新連結路徑"
 
-#: guicomponents.py:2052
+#: guicomponents.py:2055
 msgid "Show Full Paths"
 msgstr "顯示完整路徑"
 
-#: guicomponents.py:2118 propertyeditorbuilder.py:727
+#: guicomponents.py:2121 propertyeditorbuilder.py:727
 #: propertyeditorbuilder.py:782 tools/toolsencoding.py:343
 msgid "Progressive"
 msgstr "循序式掃瞄"
 
-#: guicomponents.py:2120 tools/toolsencoding.py:345
+#: guicomponents.py:2123 tools/toolsencoding.py:345
 msgid "Interlaced"
 msgstr "交錯式掃瞄"
 
-#: guicomponents.py:2125 tools/toolsencoding.py:348
+#: guicomponents.py:2128 tools/toolsencoding.py:348
 msgid "Fps: "
 msgstr "每秒顯示張數："
 
-#: guicomponents.py:2128 tools/toolsencoding.py:351
+#: guicomponents.py:2131 tools/toolsencoding.py:351
 msgid "Pixel Aspect: "
 msgstr "像素長寬比："
 
-#: guicomponents.py:2135
+#: guicomponents.py:2138
 msgid "Description:"
 msgstr "描述："
 
-#: guicomponents.py:2137
+#: guicomponents.py:2140
 msgid "Dimensions:"
 msgstr "解析度比例："
 
-#: guicomponents.py:2139
+#: guicomponents.py:2142
 msgid "Frames per second:"
 msgstr "每秒顯示張數："
 
-#: guicomponents.py:2141 tools/titler.py:334
+#: guicomponents.py:2144 tools/titler.py:334
 msgid "Size:"
 msgstr "大小："
 
-#: guicomponents.py:2143
+#: guicomponents.py:2146
 msgid "Pixel aspect ratio: "
 msgstr "像素長寬比："
 
-#: guicomponents.py:2145 profilesmanager.py:138
+#: guicomponents.py:2148 profilesmanager.py:138
 msgid "Progressive:"
 msgstr "循序式掃瞄："
 
-#: guicomponents.py:2432
+#: guicomponents.py:2435
 msgid "Video:"
 msgstr "視訊："
 
-#: guicomponents.py:2437
+#: guicomponents.py:2440
 msgid "Audio:"
 msgstr "音訊："
 
-#: guicomponents.py:2442
+#: guicomponents.py:2445
 msgid "Number of Tracks:"
 msgstr "軌道數量："
 
-#: guicomponents.py:2485
+#: guicomponents.py:2488
 msgid "Frames:"
 msgstr "影格："
 
-#: guicomponents.py:2575
+#: guicomponents.py:2578
 msgid "No Markers"
 msgstr "沒有標記"
 
-#: guicomponents.py:2579
+#: guicomponents.py:2582
 msgid "Delete Marker"
 msgstr "刪除標記"
 
-#: guicomponents.py:2581
+#: guicomponents.py:2584
 msgid "Delete All Markers"
 msgstr "刪除全部標記"
 
-#: guicomponents.py:2589
+#: guicomponents.py:2592
 msgid "Maximize Tracks"
 msgstr "最大化軌道"
 
-#: guicomponents.py:2590
+#: guicomponents.py:2593
 msgid "Maximize Video Tracks"
 msgstr "最大化視訊軌道"
 
-#: guicomponents.py:2591
+#: guicomponents.py:2594
 msgid "Maximize Audio Tracks"
 msgstr "最大化音訊軌道"
 
-#: guicomponents.py:2593
+#: guicomponents.py:2596
 msgid "Minimize Tracks"
 msgstr "最小化軌道"
 
-#: guicomponents.py:2595
+#: guicomponents.py:2598
 msgid "Activate All Tracks"
 msgstr "啟用全部軌道"
 
-#: guicomponents.py:2596
+#: guicomponents.py:2599
 msgid "Activate Only Current Top Active Track"
 msgstr "僅啟用當前上層作用軌道"
 
-#: guicomponents.py:2598
+#: guicomponents.py:2601
 msgid "Vertical Shrink Timeline"
 msgstr "垂直收縮時間軸"
 
-#: guicomponents.py:2626
+#: guicomponents.py:2629
 msgid "Display Clip Media Thumbnails"
 msgstr "顯示剪輯媒體縮圖"
 
-#: guicomponents.py:2635
+#: guicomponents.py:2638
 msgid "Snapping On"
 msgstr "開啟對齊吸附"
 
-#: guicomponents.py:2644
+#: guicomponents.py:2647
 msgid "Display All Audio Levels"
 msgstr "顯示全部音訊波形"
 
-#: guicomponents.py:2647
+#: guicomponents.py:2650
 msgid "Display Audio Levels On Request"
 msgstr "顯示要求的音訊波形"
 
-#: guicomponents.py:2668
+#: guicomponents.py:2671
 msgid "Save Effect Values"
 msgstr "儲存特效值"
 
-#: guicomponents.py:2669
+#: guicomponents.py:2672
 msgid "Load Effect Values"
 msgstr "載入特效值"
 
-#: guicomponents.py:2670
+#: guicomponents.py:2673
 msgid "Reset Effect Values"
 msgstr "重置特效值"
 
-#: guicomponents.py:2674
+#: guicomponents.py:2677
 msgid "Delete Effect"
 msgstr "刪除特效值"
 
-#: guicomponents.py:2678 guicomponents.py:2698
+#: guicomponents.py:2681 guicomponents.py:2701
 msgid "Close Editor"
 msgstr "關閉編輯器"
 
-#: guicomponents.py:2688
+#: guicomponents.py:2691
 msgid "Save Compositor Values"
 msgstr "儲存合成器數值"
 
-#: guicomponents.py:2689
+#: guicomponents.py:2692
 msgid "Load Compositor Values"
 msgstr "載入合成器數值"
 
-#: guicomponents.py:2690
+#: guicomponents.py:2693
 msgid "Reset Compositor Values"
 msgstr "重置合成器數量"
 
-#: guicomponents.py:2694
+#: guicomponents.py:2697
 msgid "Delete Compositor"
 msgstr "刪除合成器"
 
-#: guicomponents.py:2707
+#: guicomponents.py:2710
 msgid "Image"
 msgstr "影像"
 
-#: guicomponents.py:2709
+#: guicomponents.py:2712
 msgid "Vectorscope"
 msgstr "向量示波器"
 
-#: guicomponents.py:2711
+#: guicomponents.py:2714
 msgid "RGB Parade"
 msgstr "RGB Parade"
 
-#: guicomponents.py:2715
+#: guicomponents.py:2718
 msgid "Overlay Opacity"
 msgstr "疊加不透明度"
 
-#: guicomponents.py:2720
+#: guicomponents.py:2723
 msgid "100%"
 msgstr "100%"
 
-#: guicomponents.py:2725
+#: guicomponents.py:2728
 msgid "80%"
 msgstr "80%"
 
-#: guicomponents.py:2730
+#: guicomponents.py:2733
 msgid "50%"
 msgstr "50%"
 
-#: guicomponents.py:2735
+#: guicomponents.py:2738
 msgid "20%"
 msgstr "20%"
 
-#: guicomponents.py:2740
+#: guicomponents.py:2743
 msgid "0%"
 msgstr "0%"
 
-#: guicomponents.py:2760
+#: guicomponents.py:2763
 msgid "Trim View On"
 msgstr "修剪視圖開啟"
 
-#: guicomponents.py:2765
+#: guicomponents.py:2768
 msgid "Trim View Single Side Edits Only"
 msgstr "修剪視圖僅單面編輯"
 
-#: guicomponents.py:2770
+#: guicomponents.py:2773
 msgid "Trim View Off"
 msgstr "修剪視圖關閉"
 
-#: guicomponents.py:2786
+#: guicomponents.py:2789
 msgid "Set Current Clip Frame Match Frame"
 msgstr "設定當前剪輯影格匹配影格"
 
-#: guicomponents.py:2804
+#: guicomponents.py:2807
 msgid "All Files"
 msgstr "全部檔案"
 
-#: guicomponents.py:2808
+#: guicomponents.py:2811
 msgid "Video Files"
 msgstr "視訊檔案"
 
-#: guicomponents.py:2812
+#: guicomponents.py:2815
 msgid "Audio Files"
 msgstr "音訊檔案"
 
-#: guicomponents.py:2816
+#: guicomponents.py:2819
 msgid "Graphics Files"
 msgstr "繪圖檔案"
 
-#: guicomponents.py:2820
+#: guicomponents.py:2823
 msgid "Image Sequences"
 msgstr "影像序列"
 
-#: guicomponents.py:2824
+#: guicomponents.py:2827
 msgid "Pattern Producers"
 msgstr "圖案產生器"
 
-#: guicomponents.py:2837
+#: guicomponents.py:2840
 msgid "2 Columns"
 msgstr "2 列"
 
-#: guicomponents.py:2842
+#: guicomponents.py:2845
 msgid "3 Columns"
 msgstr "3 列"
 
-#: guicomponents.py:2847
+#: guicomponents.py:2850
 msgid "4 Columns"
 msgstr "4 列"
 
-#: guicomponents.py:2852
+#: guicomponents.py:2855
 msgid "5 Columns"
 msgstr "5 列"
 
-#: guicomponents.py:2857
+#: guicomponents.py:2860
 msgid "6 Columns"
 msgstr "6 列"
 
-#: guicomponents.py:2862
+#: guicomponents.py:2865
 msgid "7 Columns"
 msgstr "7 列"
 
-#: guicomponents.py:2994
+#: guicomponents.py:2997
 msgid "Display Timeline / Clip on Monitor"
 msgstr "在顯示器顯示 時間軸/剪輯片段"
 
@@ -2804,7 +2804,7 @@ msgstr "路徑："
 msgid "Image Size:"
 msgstr "影像大小："
 
-#: panels.py:228 tools/batchrendering.py:1014
+#: panels.py:228 tools/batchrendering.py:1016
 msgid "Frames Per Second:"
 msgstr "每秒顯示張數："
 
@@ -2836,11 +2836,11 @@ msgstr "最佳設定檔："
 msgid "Matches Project Profile:"
 msgstr "符合專案設定檔："
 
-#: panels.py:258 tools/gmic.py:731
+#: panels.py:258 tools/gmic.py:733
 msgid "Mark In:"
 msgstr "標記起點："
 
-#: panels.py:259 tools/gmic.py:732
+#: panels.py:259 tools/gmic.py:734
 msgid "Mark Out:"
 msgstr "標記終點："
 
@@ -5534,7 +5534,7 @@ msgstr "設定參數"
 msgid "Close Manager"
 msgstr "關閉管理員"
 
-#: profilesmanager.py:72 tools/batchrendering.py:661
+#: profilesmanager.py:72 tools/batchrendering.py:663
 msgid "Delete Selected"
 msgstr "刪除選擇"
 
@@ -5630,7 +5630,7 @@ msgstr "您現在可以使用新設定檔來創建新專案。"
 msgid "Confirm user profile delete"
 msgstr "確認刪除使用者設定檔"
 
-#: profilesmanager.py:280 tools/batchrendering.py:744
+#: profilesmanager.py:280 tools/batchrendering.py:746
 msgid "This operation cannot be undone."
 msgstr "此操作無法撤消。"
 
@@ -5917,120 +5917,120 @@ msgstr "渲染線程："
 msgid "Allow Frame Dropping"
 msgstr "允許影格丟棄"
 
-#: tools/batchrendering.py:302
+#: tools/batchrendering.py:303
 msgid "Render Item Project File Copy failed!"
 msgstr "渲染專案項目檔案複製失敗！"
 
-#: tools/batchrendering.py:371 tools/batchrendering.py:761
+#: tools/batchrendering.py:373 tools/batchrendering.py:763
 msgid "Error loading render queue items!"
 msgstr "錯誤載入渲染佇列項目！"
 
-#: tools/batchrendering.py:372 tools/batchrendering.py:762
+#: tools/batchrendering.py:374 tools/batchrendering.py:764
 msgid "Message:\n"
 msgstr "訊息：\n"
 
-#: tools/batchrendering.py:390
+#: tools/batchrendering.py:392
 msgid "Batch Render Queue already running!"
 msgstr "批次渲染佇列已經在執行中！"
 
-#: tools/batchrendering.py:392
+#: tools/batchrendering.py:394
 msgid "Batch Render Queue application was detected in session dbus."
 msgstr "在 dbus 會話中批次渲染佇列應用程式被偵測到。"
 
-#: tools/batchrendering.py:414
+#: tools/batchrendering.py:416
 msgid "Application is rendering and cannot be closed!"
 msgstr "應用程式正在渲染中，無法關閉！"
 
-#: tools/batchrendering.py:415
+#: tools/batchrendering.py:417
 msgid "Stop rendering before closing the application."
 msgstr "在關閉此應用程式前先停止渲染。"
 
-#: tools/batchrendering.py:447
+#: tools/batchrendering.py:449
 msgid " datafile load failed with "
 msgstr " 資料檔案載入失敗與"
 
-#: tools/batchrendering.py:453
+#: tools/batchrendering.py:455
 msgid " project file load failed with "
 msgstr " 專案檔案載入失敗與"
 
-#: tools/batchrendering.py:573
+#: tools/batchrendering.py:575
 msgid "Queued"
 msgstr "佇列"
 
-#: tools/batchrendering.py:575
+#: tools/batchrendering.py:577
 msgid "Rendering"
 msgstr "渲染中"
 
-#: tools/batchrendering.py:577
+#: tools/batchrendering.py:579
 msgid "Finished"
 msgstr "完成"
 
-#: tools/batchrendering.py:579
+#: tools/batchrendering.py:581
 msgid "Unqueued"
 msgstr "未佇列"
 
-#: tools/batchrendering.py:581
+#: tools/batchrendering.py:583
 msgid "Aborted"
 msgstr "取消"
 
-#: tools/batchrendering.py:636 tools/batchrendering.py:1293
+#: tools/batchrendering.py:638 tools/batchrendering.py:1293
 msgid "Estimated Left:"
 msgstr "預估尚餘："
 
-#: tools/batchrendering.py:637
+#: tools/batchrendering.py:639
 msgid "Current Render:"
 msgstr "目前渲染："
 
-#: tools/batchrendering.py:638 tools/batchrendering.py:1295 proxyediting.py:366
+#: tools/batchrendering.py:640 tools/batchrendering.py:1295 proxyediting.py:366
 msgid "Elapsed:"
 msgstr "經過時間："
 
-#: tools/batchrendering.py:649
+#: tools/batchrendering.py:651
 msgid "Items Rendered:"
 msgstr "渲染的項目："
 
-#: tools/batchrendering.py:651
+#: tools/batchrendering.py:653
 msgid "Render Started:"
 msgstr "渲染開始："
 
-#: tools/batchrendering.py:657
+#: tools/batchrendering.py:659
 msgid "Not Rendering"
 msgstr "未渲染"
 
-#: tools/batchrendering.py:665
+#: tools/batchrendering.py:667
 msgid "Delete Finished"
 msgstr "刪除已完成"
 
-#: tools/batchrendering.py:670
+#: tools/batchrendering.py:672
 msgid "Reload Queue"
 msgstr "重新載入佇列"
 
-#: tools/batchrendering.py:681 tools/batchrendering.py:1305
+#: tools/batchrendering.py:683 tools/batchrendering.py:1305
 msgid "Stop Render"
 msgstr "停止渲染"
 
-#: tools/batchrendering.py:717
+#: tools/batchrendering.py:719
 msgid "Flowblade Batch Render"
 msgstr "Flowblade 批次渲染"
 
-#: tools/batchrendering.py:743
+#: tools/batchrendering.py:745
 msgid "Delete "
 msgstr "從渲染佇列刪除 "
 
-#: tools/batchrendering.py:743
+#: tools/batchrendering.py:745
 msgid " item(s) from render queue?"
 msgstr " 個項目？"
 
-#: tools/batchrendering.py:774
+#: tools/batchrendering.py:776
 msgid "Multiple items with same render target file!"
 msgstr "多個項目有相同的渲染目的檔案！"
 
-#: tools/batchrendering.py:776
+#: tools/batchrendering.py:778
 msgid ""
 "Later items will render on top of earlier items if this queue is rendered.\n"
 msgstr "如果此佇列渲染，後面的項目將覆蓋掉較早的項目。\n"
 
-#: tools/batchrendering.py:777
+#: tools/batchrendering.py:779
 msgid ""
 "Delete or unqueue some items with same paths:\n"
 "\n"
@@ -6038,67 +6038,67 @@ msgstr ""
 "刪除或取消具有相同路徑的佇列項目：\n"
 "\n"
 
-#: tools/batchrendering.py:779
+#: tools/batchrendering.py:781
 msgid " items with path: "
 msgstr " 個項目的路徑： "
 
-#: tools/batchrendering.py:878
+#: tools/batchrendering.py:880
 msgid "Project/Sequence"
 msgstr "專案/序列"
 
-#: tools/batchrendering.py:879
+#: tools/batchrendering.py:881
 msgid "Status"
 msgstr "狀態"
 
-#: tools/batchrendering.py:880
+#: tools/batchrendering.py:882
 msgid "Render File"
 msgstr "渲染檔案"
 
-#: tools/batchrendering.py:881
+#: tools/batchrendering.py:883
 msgid "Render Time"
 msgstr "渲染時間"
 
-#: tools/batchrendering.py:972
+#: tools/batchrendering.py:974
 msgid "Save Render Item Project As"
 msgstr "儲存渲染項目的專案為 "
 
-#: tools/batchrendering.py:1008
+#: tools/batchrendering.py:1010
 msgid "Encoding:"
 msgstr "編碼："
 
-#: tools/batchrendering.py:1009
+#: tools/batchrendering.py:1011
 msgid "Quality:"
 msgstr "質量："
 
-#: tools/batchrendering.py:1010
+#: tools/batchrendering.py:1012
 msgid "Audio Encoding:"
 msgstr "音訊編碼："
 
-#: tools/batchrendering.py:1011
+#: tools/batchrendering.py:1013
 msgid "Use User Args:"
 msgstr "使用使用者參數："
 
-#: tools/batchrendering.py:1012 tools/natronanimationswindow.py:294
+#: tools/batchrendering.py:1014 tools/natronanimationswindow.py:295
 msgid "Start:"
 msgstr "開始："
 
-#: tools/batchrendering.py:1013 tools/natronanimationswindow.py:296
+#: tools/batchrendering.py:1015 tools/natronanimationswindow.py:297
 msgid "End:"
 msgstr "結束："
 
-#: tools/batchrendering.py:1015
+#: tools/batchrendering.py:1017
 msgid "Render Profile Name:"
 msgstr "渲染設定檔名稱："
 
-#: tools/batchrendering.py:1016
+#: tools/batchrendering.py:1018
 msgid "Render Profile:"
 msgstr "渲染設定檔："
 
-#: tools/batchrendering.py:1032 tools/batchrendering.py:1040
+#: tools/batchrendering.py:1034 tools/batchrendering.py:1042
 msgid "Render Properties"
 msgstr "渲染內容"
 
-#: tools/batchrendering.py:1039
+#: tools/batchrendering.py:1041
 msgid "Save Item Project As..."
 msgstr "儲存項目專案為..."
 
@@ -6166,8 +6166,8 @@ msgstr "使用原始媒體"
 msgid "Creating Proxy Files"
 msgstr "創建代理檔案"
 
-#: proxyediting.py:355 tools/gmic.py:801 shortcuts.py:192
-#: tools/natronanimationswindow.py:383
+#: proxyediting.py:355 tools/gmic.py:803 shortcuts.py:192
+#: tools/natronanimationswindow.py:384
 msgid "Stop"
 msgstr "停止"
 
@@ -6495,71 +6495,71 @@ msgstr ""
 "如果可能，最大化或調整應用程式視窗大小\n"
 "以獲得更多的軌道空間。"
 
-#: medialinker.py:105
+#: medialinker.py:106
 msgid "Load Project For Relinking"
 msgstr "載入專案進行重新連結"
 
-#: medialinker.py:113
+#: medialinker.py:114
 msgid "Original Media Missing:"
 msgstr "原始媒體遺失："
 
-#: medialinker.py:114
+#: medialinker.py:115
 msgid "Original Media Found:"
 msgstr "發現原始媒體："
 
-#: medialinker.py:117
+#: medialinker.py:118
 msgid "Project:"
 msgstr "專案："
 
-#: medialinker.py:118
+#: medialinker.py:119
 msgid "<not loaded>"
 msgstr "<未載入>"
 
-#: medialinker.py:141
+#: medialinker.py:142
 msgid "Display Missing Media Files"
 msgstr "顯示遺失的媒體檔案"
 
-#: medialinker.py:142
+#: medialinker.py:143
 msgid "Display Found Media Files"
 msgstr "顯示發現的媒體檔案"
 
-#: medialinker.py:153
+#: medialinker.py:154
 msgid "Save Relinked Project As..."
 msgstr "另存重新連接的專案..."
 
-#: medialinker.py:270
+#: medialinker.py:271
 msgid "Missing Media File Path"
 msgstr "遺失的媒體檔案路徑"
 
-#: medialinker.py:271
+#: medialinker.py:272
 msgid "Found Media File Path"
 msgstr "找到的媒體檔案路徑"
 
-#: medialinker.py:275
+#: medialinker.py:276
 msgid "Media File Re-link Path"
 msgstr "媒體檔案重新連結路徑"
 
-#: medialinker.py:436
+#: medialinker.py:437
 msgid "Select Media File To Relink To"
 msgstr "選擇媒體檔案來重新連結到"
 
-#: medialinker.py:476
+#: medialinker.py:477
 msgid "<b>Original path:</b> "
 msgstr "<b>原來路徑：</b> "
 
-#: medialinker.py:479
+#: medialinker.py:480
 msgid "<b>Relink path:</b> "
 msgstr "<b>重新連結路徑：</b> "
 
-#: medialinker.py:488
+#: medialinker.py:489
 msgid "Media Asset Paths"
 msgstr "媒體資產路徑"
 
-#: medialinker.py:525
+#: medialinker.py:526
 msgid "Relinked version of the Project saved!"
 msgstr "已儲存重新連結版本的專案！"
 
-#: medialinker.py:526
+#: medialinker.py:527
 msgid ""
 "To test the project, close this tool and open the relinked version in "
 "Flowblade."
@@ -6621,11 +6621,11 @@ msgstr "移動 1："
 msgid "Move 2:"
 msgstr "移動 2："
 
-#: tools/gmic.py:113
+#: tools/gmic.py:114
 msgid "G'Mic not found!"
 msgstr "未發現 G'MIC！"
 
-#: tools/gmic.py:114
+#: tools/gmic.py:115
 msgid ""
 "G'Mic binary was not present at <b>/usr/bin/gmic</b>.\n"
 "Install G'MIC to use this tool."
@@ -6633,136 +6633,136 @@ msgstr ""
 "在 <b>/usb/bin/gmic</b> 中未發現 G'MIC 執行檔。\n"
 "安裝 G'MIC 以使用此工具。"
 
-#: tools/gmic.py:294
+#: tools/gmic.py:296
 msgid "Select Video Media"
 msgstr "選擇視訊媒體"
 
-#: tools/gmic.py:369 tools/gmic.py:770 tools/natronanimationswindow.py:340
+#: tools/gmic.py:371 tools/gmic.py:772 tools/natronanimationswindow.py:341
 msgid "not set"
 msgstr "未設定"
 
-#: tools/gmic.py:387
+#: tools/gmic.py:389
 msgid "Save Gmic Script As"
 msgstr "儲存 Gmic 腳本為"
 
-#: tools/gmic.py:411
+#: tools/gmic.py:413
 msgid "Load Gmic Script"
 msgstr "載入 Gmic 腳本"
 
-#: tools/gmic.py:539
+#: tools/gmic.py:541
 msgid "Video Encoding Settings"
 msgstr "視訊編碼設定"
 
-#: tools/gmic.py:543
+#: tools/gmic.py:545
 msgid "Set Encoding"
 msgstr "設定編碼"
 
-#: tools/gmic.py:588 tools/gmic.py:922
+#: tools/gmic.py:590 tools/gmic.py:924
 msgid "Load Clip"
 msgstr "載入剪輯片段"
 
-#: tools/gmic.py:592
+#: tools/gmic.py:594
 msgid "no clip loaded"
 msgstr "沒有剪輯片段載入"
 
-#: tools/gmic.py:617 tools/natronanimationswindow.py:263
+#: tools/gmic.py:619 tools/natronanimationswindow.py:264
 msgid "no preview"
 msgstr "沒有預覽"
 
-#: tools/gmic.py:664
+#: tools/gmic.py:666
 msgid "Preview"
 msgstr "預覽"
 
-#: tools/gmic.py:691
+#: tools/gmic.py:693
 msgid "Add to Script"
 msgstr "加入腳本"
 
-#: tools/gmic.py:751 tools/natronanimationswindow.py:321
+#: tools/gmic.py:753 tools/natronanimationswindow.py:322
 msgid "Frames Folder:"
 msgstr "影像資料夾："
 
-#: tools/gmic.py:762 tools/natronanimationswindow.py:332
+#: tools/gmic.py:764 tools/natronanimationswindow.py:333
 msgid "Encode Video"
 msgstr "編碼視訊"
 
-#: tools/gmic.py:767 tools/natronanimationswindow.py:337
+#: tools/gmic.py:769 tools/natronanimationswindow.py:338
 msgid "Encoding settings"
 msgstr "編碼設定"
 
-#: tools/gmic.py:786
+#: tools/gmic.py:788
 msgid "Set Mark In, Mark Out and Frames Folder for valid render"
 msgstr "設定標記起始位置及影像資料夾以進行有效渲染"
 
-#: tools/gmic.py:829
+#: tools/gmic.py:831
 msgid "Load Script"
 msgstr "載入腳本"
 
-#: tools/gmic.py:831
+#: tools/gmic.py:833
 msgid "Save Script"
 msgstr "儲存腳本"
 
-#: tools/gmic.py:890
+#: tools/gmic.py:892
 msgid "frames"
 msgstr "影像"
 
-#: tools/gmic.py:908 tools/natronanimationswindow.py:577
+#: tools/gmic.py:910 tools/natronanimationswindow.py:578
 msgid " no video file"
 msgstr " 沒有視訊檔"
 
-#: tools/gmic.py:910 tools/natronanimationswindow.py:579
+#: tools/gmic.py:912 tools/natronanimationswindow.py:580
 msgid " render video file"
 msgstr " 渲染視訊檔"
 
-#: tools/gmic.py:911 tools/natronanimationswindow.py:580
+#: tools/gmic.py:913 tools/natronanimationswindow.py:581
 msgid " frame(s),"
 msgstr " 影格,"
 
-#: tools/gmic.py:923
+#: tools/gmic.py:925
 msgid "G'Mic Webpage"
 msgstr "G'Mic 網頁"
 
-#: tools/gmic.py:1097
+#: tools/gmic.py:1099
 msgid "Rendering preview..."
 msgstr "渲染預覽..."
 
-#: tools/gmic.py:1129 tools/natronanimationswindow.py:821
+#: tools/gmic.py:1131 tools/natronanimationswindow.py:822
 msgid "Preview for frame: "
 msgstr "影格預覽： "
 
-#: tools/gmic.py:1130 tools/natronanimationswindow.py:822
+#: tools/gmic.py:1132 tools/natronanimationswindow.py:823
 msgid ", render time: "
 msgstr ", 渲染時間： "
 
-#: tools/gmic.py:1198
+#: tools/gmic.py:1200
 msgid "Waiting for frames write to complete..."
 msgstr "等待影格寫入完成..."
 
-#: tools/gmic.py:1211
+#: tools/gmic.py:1213
 msgid "Rendering frame: "
 msgstr "渲染影格： "
 
-#: tools/gmic.py:1241
+#: tools/gmic.py:1243
 msgid "Render error!"
 msgstr "渲染錯誤！"
 
-#: tools/gmic.py:1283
+#: tools/gmic.py:1285
 msgid "Rendering video, "
 msgstr "渲染視訊，"
 
-#: tools/gmic.py:1283
+#: tools/gmic.py:1285
 #, python-format
 msgid "% done"
 msgstr "完成 %"
 
-#: tools/gmic.py:1293
+#: tools/gmic.py:1295
 msgid "Render complete!"
 msgstr "渲染完成！"
 
-#: tools/gmic.py:1303 tools/natronanimationswindow.py:853
+#: tools/gmic.py:1305 tools/natronanimationswindow.py:854
 msgid "Writing clip frame: "
 msgstr "寫入剪輯影格： "
 
-#: tools/gmic.py:1315
+#: tools/gmic.py:1317
 msgid "Render stopped!"
 msgstr "渲染停止！"
 
@@ -6955,7 +6955,7 @@ msgstr "快/慢動作"
 msgid "Reverse"
 msgstr "倒轉"
 
-#: projectmediaimport.py:142
+#: projectmediaimport.py:143
 msgid "Loading Media Import Project"
 msgstr "載入媒體匯入專案"
 
@@ -7235,55 +7235,55 @@ msgstr "文字動畫"
 msgid "Background"
 msgstr "背景"
 
-#: tools/natronanimationswindow.py:285
+#: tools/natronanimationswindow.py:286
 msgid "Preview Frame"
 msgstr "預覽影格"
 
-#: tools/natronanimationswindow.py:302
+#: tools/natronanimationswindow.py:303
 msgid "Frame:"
 msgstr "影格："
 
-#: tools/natronanimationswindow.py:303
+#: tools/natronanimationswindow.py:304
 msgid "1"
 msgstr "1"
 
-#: tools/natronanimationswindow.py:354
+#: tools/natronanimationswindow.py:355
 msgid "Natron Render Format:"
 msgstr "Natron 渲染格式："
 
-#: tools/natronanimationswindow.py:368
+#: tools/natronanimationswindow.py:369
 msgid "Set Frames Folder for valid render"
 msgstr "設定影格資料夾以進行有效渲染"
 
-#: tools/natronanimationswindow.py:406 tools/natronanimationswindow.py:668
+#: tools/natronanimationswindow.py:407 tools/natronanimationswindow.py:669
 msgid "Load Animation"
 msgstr "載入動畫"
 
-#: tools/natronanimationswindow.py:408 tools/natronanimationswindow.py:669
+#: tools/natronanimationswindow.py:409 tools/natronanimationswindow.py:670
 msgid "Save Animation"
 msgstr "儲存動畫"
 
-#: tools/natronanimationswindow.py:671
+#: tools/natronanimationswindow.py:672
 msgid "Natron Webpage"
 msgstr "Natron 網頁"
 
-#: tools/natronanimationswindow.py:702
+#: tools/natronanimationswindow.py:703
 msgid "Save Natron Animation Values As"
 msgstr "保存 Natron 動畫的值為"
 
-#: tools/natronanimationswindow.py:725
+#: tools/natronanimationswindow.py:726
 msgid "Load Animation Data"
 msgstr "載入動畫資料"
 
-#: tools/natronanimationswindow.py:752
+#: tools/natronanimationswindow.py:753
 msgid "Render starting..."
 msgstr "渲染開始..."
 
-#: tools/natronanimationswindow.py:792
+#: tools/natronanimationswindow.py:793
 msgid "Rendering preview for frame "
 msgstr "渲染影格的預覽 "
 
-#: tools/natronanimationswindow.py:817
+#: tools/natronanimationswindow.py:818
 msgid "Render complete."
 msgstr "渲染完成。"
 
