@@ -512,7 +512,7 @@ def _save_backup_snapshot_dialog_callback(dialog, response_id, project_folder, n
         name = name_entry.get_text().decode('utf-8')
         dialog.destroy()
         
-        GLib.idle_add(lambda : _do_snapshot_save(root_path + "/", name))
+        GLib.idle_add(lambda : _do_snapshot_save(root_path.decode('utf-8') + "/", name))
 
     else:
         dialog.destroy()
@@ -639,7 +639,7 @@ class SnaphotSaveThread(threading.Thread):
         Gdk.threads_enter()
         dialog.media_copy_info.set_text(copy_txt + "    " +  u"\u2713")
         Gdk.threads_leave()
-        
+
         save_path = self.root_folder_path + self.project_name
 
         persistance.snapshot_paths = asset_paths
