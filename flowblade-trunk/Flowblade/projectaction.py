@@ -498,7 +498,7 @@ def save_backup_snapshot():
     name = parts[0] + datetime.datetime.now().strftime("-%y%m%d") + ".flb"
     dialogs.save_backup_snapshot(name, _save_backup_snapshot_dialog_callback)
 
-def _save_backup_snapshot_dialog_callback(dialog, response_id, project_folder, name_entry):  
+def _save_backup_snapshot_dialog_callback(dialog, response_id, project_folder, name_entry):
     if response_id == Gtk.ResponseType.ACCEPT:
 
         root_path = project_folder.get_filenames()[0]
@@ -509,7 +509,7 @@ def _save_backup_snapshot_dialog_callback(dialog, response_id, project_folder, n
             dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
             return
 
-        name = name_entry.get_text()
+        name = name_entry.get_text().decode('utf-8')
         dialog.destroy()
         
         GLib.idle_add(lambda : _do_snapshot_save(root_path + "/", name))
