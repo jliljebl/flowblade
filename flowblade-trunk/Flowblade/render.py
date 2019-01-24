@@ -450,7 +450,8 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
         motion_renderer.start()
 
         title = _("Rendering Motion Clip")
-        text = _("<b>Motion Clip File: </b>") + write_file
+        text = _("<b>Motion Clip File: </b>") + write_file.decode('utf-8')
+
         progress_bar = Gtk.ProgressBar()
         dialog = rendergui.clip_render_progress_dialog(_FB_render_stop, title, text, progress_bar, gui.editor_window.window)
 
@@ -547,7 +548,7 @@ def _render_reverse_clip_dialog_callback(dialog, response_id, fb_widgets, media_
         motion_renderer.start()
 
         title = _("Rendering Reverse Clip")
-        text = _("<b>Motion Clip File: </b>") + write_file
+        text = _("<b>Motion Clip File: </b>") + write_file.decode('utf-8')
         progress_bar = Gtk.ProgressBar()
         dialog = rendergui.clip_render_progress_dialog(_FB_render_stop, title, text, progress_bar, gui.editor_window.window)
 
