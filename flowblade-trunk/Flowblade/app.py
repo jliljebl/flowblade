@@ -655,7 +655,6 @@ def open_project(new_project):
     resize_timeout_id = GLib.timeout_add(500, _do_window_resized_update)
 
 def _do_window_resized_update():
-    splash_screen.destroy()
     GObject.source_remove(resize_timeout_id)
     updater.window_resized()
     
