@@ -2,7 +2,7 @@
 
 | **Debian/Ubuntu package name** | **Description** | **Archlinux packages** | **Solus packages** |
 |:-------------------------------|:----------------|:--------------|:---------------|
-| python-gi | GTK3 Python bindings | pygtk | ??? |
+| python-gi | GTK3 Python bindings | pygtk | python-gobject |
 | mlt | | | (compile from source¹) |
 | python-mlt | MLT python bindings, this pulls in MLT | mlt-python-bindings | (comes with mlt sources²) |
 | python-dbus | dbus python bindings | python2-dbus | python-dbus |
@@ -22,6 +22,7 @@
 | | | | cairo |
 
 ¹ Version supplied by package manager lacks python bindings. Needs `{sox,frei0r,libexif,movit,sdl1,sdl1-image,alsa-lib,pulseaudio}-devel` to build.
+
 ² Patch `src/swig/python/build` to use `python2` instead of `python`, then run `configure` with `--swig-languages=python`. Before running `make install`, add `cp python/_mlt.so python/mlt.py python/mlt_wrap.o '$(prefix)/lib/python2.7/'` to `src/swig/Makefile`'s `install` rule.
 
 # Dropped  Dependencies #
