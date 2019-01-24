@@ -590,6 +590,7 @@ class SnaphotSaveThread(threading.Thread):
             if media_file.type != appconsts.IMAGE_SEQUENCE:
                 media_file_copy = media_folder + file_name.decode('utf-8')
 
+                # TEST THIS SOMEHOW FOR UNICODE PROBLEMS
                 if media_file_copy in asset_paths.values(): # Create different filename for files 
                                                              # that have same basename but different path
                     file_name = get_snapshot_unique_name(media_file.path, file_name)
@@ -624,7 +625,8 @@ class SnaphotSaveThread(threading.Thread):
                     # Only producer clips are affected
                     if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):
                         directory, file_name = os.path.split(clip.path)
-                        clip_file_copy = media_folder + file_name
+                        clip_file_copy = media_folder + file_name.decode('utf-8')
+                        
                         if not os.path.isfile(clip_file_copy):
                             directory, file_name = os.path.split(clip.path)
                             Gdk.threads_enter()
