@@ -36,4 +36,3 @@
 | python-gnome2 |  0.6   |  1.2 |
 | python-gobject-2 |  0.6   |  1.2 |
 | python-cairo |  0.6   |  1.6 |
-.
