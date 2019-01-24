@@ -19,7 +19,7 @@
 | gir1.2-gtk-3.0 | Gtk toolkit | gtk3 | libgtk-3 |
 | gir1.2-pango-1.0 | Pango text lib | pango | pango |
 | gir1.2-gdkpixbuf-2.0 | Image support | gdk-pixbuf2 | gdk-pixbuf |
-| | | | cairo |
+| cairo | 2D graphics library | cairo | cairo |
 
 ¹ Version supplied by package manager lacks python bindings. Needs `{sox,frei0r,libexif,movit,sdl1,sdl1-image,alsa-lib,pulseaudio}-devel` to build.
 
