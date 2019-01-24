@@ -3,8 +3,8 @@
 | **Debian/Ubuntu package name** | **Description** | **Archlinux packages** | **Solus packages** |
 |:-------------------------------|:----------------|:--------------|:---------------|
 | python-gi | GTK3 Python bindings | pygtk | python-gobject |
-| mlt | | | (compile from source¹) |
-| python-mlt | MLT python bindings, this pulls in MLT | mlt-python-bindings | (comes with mlt sources²) |
+| mlt | Multimedia framework | mlt | (compile from source¹) |
+| python-mlt | MLT python bindings | mlt-python-bindings | (comes with mlt sources²) |
 | python-dbus | dbus python bindings | python2-dbus | python-dbus |
 | libmlt-data | Some image and text resources for MLT | mlt, sdl_image | mlt, sdl1-image |
 | python >= 2.7 < 3 | Language and interpreter | python2 | python |
