@@ -98,7 +98,7 @@ SCREEN_WIDTH = -1
 # Runtime environment data
 gtk_version = None
 mlt_version = None
-appversion = "1.16.0"
+appversion = "2.0.0"
 RUNNING_FROM_INSTALLATION = 0
 RUNNING_FROM_DEV_VERSION = 1
 app_running_from = RUNNING_FROM_INSTALLATION

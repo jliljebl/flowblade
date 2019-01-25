@@ -488,8 +488,8 @@ def about_dialog(parent_window):
     # Application tab
     img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
     flow_label = Gtk.Label(label="Flowblade Movie Editor")
-    ver_label = Gtk.Label(label="1.16.0")
-    janne_label = Gtk.Label(label="Copyright 2018 Janne Liljeblad and contributors")
+    ver_label = Gtk.Label(label="2.0.0")
+    janne_label = Gtk.Label(label="Copyright 2019 Janne Liljeblad and contributors")
     page_label = Gtk.Label(label=_("Project page:") + " " + "<a href=\"https://github.com/jliljebl/flowblade\">https://github.com/jliljebl/flowblade</a>")
     page_label.set_use_markup(True)
     flow_label.modify_font(Pango.FontDescription("sans bold 14"))
