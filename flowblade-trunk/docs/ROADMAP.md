@@ -20,7 +20,7 @@
 
 
 
-##MLT + Frei0r
+## MLT + Frei0r
 - **New display MLT service or method**. SDL1.2 is eventually going away. SDL2 or some GStremer sink as base for a new consumer, also Issues #309 #329 
 - add to all *alpha filters* compositing methods **union, intersection, difference and exclusion.**  Requires MLT and Frei0r contribution.
 - **Animated Image to Alpha**, combines two images sources using luma information from a third source, probably a frame sequence
@@ -28,7 +28,7 @@
 * Porter-Duff MLT transition
 * full affine transform filter with user settable anchor point.
 
-##Stability
+## Stability
   * update and test GDB trace creation instructions document
 * collect more data with GDB from affected systems
 * bisect if reproduces, try to get some hypothesis if not reproducable
@@ -46,7 +46,7 @@ GitHub project Issue tab functionality modifed to work as a forum, Google+ is go
 * copy some data from Google+ forum
 
 
-#LATER
+# LATER
 
 - Gimp, Inkscape, Audacity, Krita examined as **Timeline Container Clip** media creator programs
 - **GPU Rendering** MLT already contains support for GPU rendering for certain filters
