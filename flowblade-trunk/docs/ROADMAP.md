@@ -14,7 +14,7 @@
 ## Application
 - **Automatic Timeline Rendering** The only way to provide smooth playback in all circumstances is to do some form of timeline rendering. There are some ideas here that will be attempted, but cannot be quaranteed to work beforehand.
 * **Rotomask**
-- fully Configurable Keyboard Shortcuts
+* fully Configurable Keyboard Shortcuts
 * some key parts need expanded code comments.
 * multiscript tool
 
