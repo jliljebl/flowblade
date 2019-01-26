@@ -861,199 +861,199 @@
     <gmicscript>
         <name>Fuji 3510 - Constclip</name>
         <group>Film Emulate Print</group>
-        <script>-gimp_emulate_film_print 1,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_print 1,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji 3510 - Constlmap</name>
         <group>Film Emulate Print</group>
-        <script>-gimp_emulate_film_print 2,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_print 2,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji 3510 - Cuspclip</name>
         <group>Film Emulate Print</group>
-        <script>-gimp_emulate_film_print 3,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_print 3,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji 3513 - Constclip</name>
         <group>Film Emulate Print</group>
-        <script>-gimp_emulate_film_print 4,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_print 4,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji 3513 - Constlmap</name>
         <group>Film Emulate Print</group>
-        <script>-gimp_emulate_film_print 5,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_print 5,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji 3513 - Cuspclip</name>
         <group>Film Emulate Print</group>
-        <script>-gimp_emulate_film_print 6,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_print 6,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Kodak 2383 - Constclip</name>
         <group>Film Emulate Print</group>
-        <script>-gimp_emulate_film_print 7,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_print 7,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Kodak 2383 - Constlmap</name>
         <group>Film Emulate Print</group>
-        <script>-gimp_emulate_film_print 8,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_print 8,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Kodak 2383 - Cuspclip</name>
         <group>Film Emulate Print</group>
-        <script>-gimp_emulate_film_print 9,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_print 9,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Kodak 2393 - Constclip</name>
         <group>Film Emulate Print</group>
-        <script>-gimp_emulate_film_print 10,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_print 10,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Kodak 2393 - Constlmap</name>
         <group>Film Emulate Print</group>
-        <script>-gimp_emulate_film_print 11,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_print 11,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Kodak 2393 - Cuspclip</name>
         <group>Film Emulate Print</group>
-        <script>-gimp_emulate_film_print 12,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_print 12,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Agfa Ultra Color</name>
         <group>Film Emulate Negative Color</group>
-        <script>-gimp_emulate_film_negative_color 1,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_color 1,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Agfa Vista 200</name>
         <group>Film Emulate Negative Color</group>
-        <script>-gimp_emulate_film_negative_color 2,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_color 2,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji Superia 200</name>
         <group>Film Emulate Negative Color</group>
-        <script>-gimp_emulate_film_negative_color 3,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_color 3,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Fuji Superia HG 1600</name>
         <group>Film Emulate Negative Color</group>
-        <script>-gimp_emulate_film_negative_color 4,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_color 4,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji Superia Reala 100</name>
         <group>Film Emulate Negative Color</group>
-        <script>-gimp_emulate_film_negative_color 5,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_color 5,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji Superia X-Tra 800</name>
         <group>Film Emulate Negative Color</group>
-        <script>-gimp_emulate_film_negative_color 6,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_color 6,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Kodak Elite 100 XPRO</name>
         <group>Film Emulate Negative Color</group>
-        <script>-gimp_emulate_film_negative_color 7,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_color 7,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Kodak Elite Color 200</name>
         <group>Film Emulate Negative Color</group>
-        <script>-gimp_emulate_film_negative_color 8,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_color 8,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Kodak Elite Color 400</name>
         <group>Film Emulate Negative Color</group>
-        <script>-gimp_emulate_film_negative_color 9,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_color 9,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Kodak Portra 160 NC</name>
         <group>Film Emulate Negative Color</group>
-        <script>-gimp_emulate_film_negative_color 10,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_color 10,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Kodak Porta 160 VC</name>
         <group>Film Emulate Negative Color</group>
-        <script>-gimp_emulate_film_negative_color 11,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_color 11,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Lomography Redscale 100</name>
         <group>Film Emulate Negative Color</group>
-        <script>-gimp_emulate_film_negative_color 12,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_color 12,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji 160C</name>
         <group>Film Emulate Negative New</group>
-        <script>-gimp_emulate_film_negative_new 1,1,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_new 1,100,1,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji 400H</name>
         <group>Film Emulate Negative New</group>
-        <script>-gimp_emulate_film_negative_new 2,1,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_new 2,100,1,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji 800Z</name>
         <group>Film Emulate Negative New</group>
-        <script>-gimp_emulate_film_negative_new 3,1,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_new 3,100,1,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji Ilford HP5</name>
         <group>Film Emulate Negative New</group>
-        <script>-gimp_emulate_film_negative_new 4,1,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_new 4,100,1,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Kodak Potra 160</name>
         <group>Film Emulate Negative New</group>
-        <script>-gimp_emulate_film_negative_new 5,1,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_new 5,100,1,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Kodak Porta 400</name>
         <group>Film Emulate Negative New</group>
-        <script>-gimp_emulate_film_negative_new 6,1,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_new 6,100,1,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Kodak Potra 800</name>
         <group>Film Emulate Negative New</group>
-        <script>-gimp_emulate_film_negative_new 7,1,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_new 7,100,1,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Kodak TMAX 3200</name>
         <group>Film Emulate Negative New</group>
-        <script>-gimp_emulate_film_negative_new 8,1,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_new 8,100,1,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Kodak TRI-X 400</name>
         <group>Film Emulate Negative New</group>
-        <script>-gimp_emulate_film_negative_new 9,1,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_new 9,100,1,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
@@ -1089,1381 +1089,1381 @@
     <gmicscript>
         <name>Agfa APX 100</name>
         <group>Film Emulate BW</group>
-        <script>-gimp_emulate_film_bw 1,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_bw 1,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Agfa APX 100</name>
         <group>Film Emulate BW</group>
-        <script>-gimp_emulate_film_bw 2,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_bw 2,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji Neopan 1600</name>
         <group>Film Emulate BW</group>
-        <script>-gimp_emulate_film_bw 3,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_bw 3,100,0,1,0,0,0,0,0</script>
     </gmicscript>
  
      <gmicscript>
         <name>Fuji Neopan 1600 Actos 100</name>
         <group>Film Emulate BW</group>
-        <script>-gimp_emulate_film_bw 4,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_bw 4,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
      <gmicscript>
         <name>Ilford Delta 100</name>
         <group>Film Emulate BW</group>
-        <script>-gimp_emulate_film_bw 5,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_bw 5,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
      <gmicscript>
         <name>Ilford Delta 3200</name>
         <group>Film Emulate BW</group>
-        <script>-gimp_emulate_film_bw 6,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_bw 6,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
      <gmicscript>
         <name>Ilford Delta 400</name>
         <group>Film Emulate BW</group>
-        <script>-gimp_emulate_film_bw 7,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_bw 7,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
      <gmicscript>
         <name>Ilford FP4 Plus 125</name>
         <group>Film Emulate BW</group>
-        <script>-gimp_emulate_film_bw 8,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_bw 8,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
      <gmicscript>
         <name>Ilford FP4 Plus 400</name>
         <group>Film Emulate BW</group>
-        <script>-gimp_emulate_film_bw 9,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_bw 9,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
      <gmicscript>
         <name>Ilford HPS 800</name>
         <group>Film Emulate BW</group>
-        <script>-gimp_emulate_film_bw 10,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_bw 10,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
      <gmicscript>
         <name>Ilford PAN F Plus 50</name>
         <group>Film Emulate BW</group>
-        <script>-gimp_emulate_film_bw 11,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_bw 11,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
      <gmicscript>
         <name>Ilford XP2</name>
         <group>Film Emulate BW</group>
-        <script>-gimp_emulate_film_bw 12,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_bw 12,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
      <gmicscript>
         <name>Kodak BW 400 CN</name>
         <group>Film Emulate BW</group>
-        <script>-gimp_emulate_film_bw 13,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_bw 13,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
      <gmicscript>
         <name>Kodak HIE HS Infra</name>
         <group>Film Emulate BW</group>
-        <script>-gimp_emulate_film_bw 14,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_bw 14,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
      <gmicscript>
         <name>Kodak T-MAX 100</name>
         <group>Film Emulate BW</group>
-        <script>-gimp_emulate_film_bw 15,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_bw 15,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
      <gmicscript>
         <name>Kodak T-MAX 3200</name>
         <group>Film Emulate BW</group>
-        <script>-gimp_emulate_film_bw 16,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_bw 16,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
      <gmicscript>
         <name>Kodak T-MAX 400</name>
         <group>Film Emulate BW</group>
-        <script>-gimp_emulate_film_bw 17,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_bw 17,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
      <gmicscript>
         <name>Kodak Tri-X 400</name>
         <group>Film Emulate BW</group>
-        <script>-gimp_emulate_film_bw 18,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_bw 18,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
      <gmicscript>
         <name>Polaroid 664</name>
         <group>Film Emulate BW</group>
-        <script>-gimp_emulate_film_bw 19,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_bw 19,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
      <gmicscript>
         <name>Polaroid 667</name>
         <group>Film Emulate BW</group>
-        <script>-gimp_emulate_film_bw 20,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_bw 20,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
      <gmicscript>
         <name>Polaroid 672</name>
         <group>Film Emulate BW</group>
-        <script>-gimp_emulate_film_bw 21,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_bw 21,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
      <gmicscript>
         <name>Rollei IR 400</name>
         <group>Film Emulate BW</group>
-        <script>-gimp_emulate_film_bw 22,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_bw 22,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
      <gmicscript>
         <name>Rollei Ortho 25</name>
         <group>Film Emulate BW</group>
-        <script>-gimp_emulate_film_bw 23,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_bw 23,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
      <gmicscript>
         <name>Rollei Retro 100 Tonal</name>
         <group>Film Emulate BW</group>
-        <script>-gimp_emulate_film_bw 24,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_bw 24,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
      <gmicscript>
         <name>Rollei Retro 80s</name>
         <group>Film Emulate BW</group>
-        <script>-gimp_emulate_film_bw 25,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_bw 25,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji Ilford Delta 3200</name>
         <group>Film Emulate Negative Old</group>
-        <script>-gimp_emulate_film_negative_old 1,1,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_old 1,100,1,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Fuji Neopan 1600</name>
         <group>Film Emulate Negative Old</group>
-        <script>-gimp_emulate_film_negative_old 2,1,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_old 2,100,1,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji Superia 100</name>
         <group>Film Emulate Negative Old</group>
-        <script>-gimp_emulate_film_negative_old 3,1,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_old 3,100,1,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji Superia 400</name>
         <group>Film Emulate Negative Old</group>
-        <script>-gimp_emulate_film_negative_old 4,1,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_old 4,100,1,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji Superia 800</name>
         <group>Film Emulate Negative Old</group>
-        <script>-gimp_emulate_film_negative_old 5,1,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_old 5,100,1,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji Superia 1600</name>
         <group>Film Emulate Negative Old</group>
-        <script>-gimp_emulate_film_negative_old 6,1,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_old 6,100,1,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Kodak Potra 160 NC</name>
         <group>Film Emulate Negative Old</group>
-        <script>-gimp_emulate_film_negative_old 7,1,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_old 7,100,1,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Kodak Potra 160 VC</name>
         <group>Film Emulate Negative Old</group>
-        <script>-gimp_emulate_film_negative_old 8,1,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_old 8,100,1,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Kodak Potra 400 NC</name>
         <group>Film Emulate Negative Old</group>
-        <script>-gimp_emulate_film_negative_old 9,1,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_old 9,100,1,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Kodak Potra 160 UC</name>
         <group>Film Emulate Negative Old</group>
-        <script>-gimp_emulate_film_negative_old 10,1,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_old 10,100,1,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Kodak Potra 400 VC</name>
         <group>Film Emulate Negative Old</group>
-        <script>-gimp_emulate_film_negative_old 11,1,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_negative_old 11,100,1,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid PX-100UV+Cold--</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 1,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 1,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Polaroid PX-100UV+Cold-</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 2,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 2,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid PX-100UV+Cold</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 3,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 3,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid PX-100UV+Cold+</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 4,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 4,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid PX-100UV+Cold++</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 5,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 5,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Polaroid PX-100UV+Cold+++</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 6,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 6,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid PX-100UV+Warm--</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 7,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 7,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid PX-100UV+Warm-</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 8,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 8,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid PX-100UV+Warm</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 9,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 9,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Polaroid PX-100UV+Warm+</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 10,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 10,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Polaroid PX-100UV+Warm++</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 11,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 11,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Polaroid PX-100UV+Warm+++</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 12,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 12,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Polaroid PX-680--</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 13,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 13,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Polaroid PX-680-</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 14,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 14,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid PX-680</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 15,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 15,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Polaroid PX-680+</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 16,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 16,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Polaroid PX-680++</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 17,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 17,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Polaroid PX-680 Cold--</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 18,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 18,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Polaroid PX-680 Cold-</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 19,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 19,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
 
     <gmicscript>
         <name>Polaroid PX-680 Cold</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 20,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 20,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Polaroid PX-680 Cold+</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 21,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 21,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Polaroid PX-680 Cold++</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 22,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 22,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Polaroid PX-680 Cold++a</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 23,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 23,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Polaroid PX-680 Warm--</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 24,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 24,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Polaroid PX-680 Warm-</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 25,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 25,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Polaroid PX-680 Warm</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 26,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 26,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid PX-680 Warm+</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 27,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 27,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid PX-680 Warm++</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 28,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 28,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid PX-70--</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 29,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 29,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid PX-70-</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 30,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 30,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid PX-70</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 31,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 31,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid PX-70+</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 32,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 32,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid PX-70++</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 33,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 33,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid PX-70+++</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 34,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 34,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid PX-70 Cold--</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 35,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 35,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid PX-70 Cold-</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 36,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 36,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid PX-70 Cold</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 37,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 37,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid PX-70 Cold+</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 38,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 38,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid PX-70 Cold++</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 39,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 39,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid PX-70 Warm--</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 40,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 40,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid PX-70 Warm-</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 41,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 41,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid PX-70 Warm</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 42,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 42,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid PX-70 Warm+</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 43,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 43,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Polaroid PX-70 Warm++</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 44,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 44,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid Time Zero (Expired)---</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 45,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 45,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid Time Zero (Expired)--</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 46,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 46,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid Time Zero (Expired)-</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 47,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 47,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid Time Zero (Expired)</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 48,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 48,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid Time Zero (Expired)+</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 49,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 49,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid Time Zero (Expired)++</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 50,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 50,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid Time Zero (Expired) Cold---</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 51,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 51,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid Time Zero (Expired) Cold--</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 52,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 52,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid Time Zero (Expired) Cold-</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 53,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 53,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid Time Zero (Expired) Cold</name>
         <group>Film Emulate Instant Consumer</group>
-        <script>-gimp_emulate_film_instant_consumer 54,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_consumer 54,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-100c--</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 1,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 1,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-100c-</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 2,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 2,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-100c</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 3,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 3,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-100c+</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 4,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 4,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-100c++</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 5,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 5,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-100c++a</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 6,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 6,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-100c+++</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 7,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 7,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-100c Cool--</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 8,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 8,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-100c Cool-</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 9,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 9,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-100c Cool</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 10,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 10,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-100c Cool+</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 11,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 11,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-100c Cool++</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 12,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 12,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-100c Negative--</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 13,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 13,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-100c Negative-</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 14,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 14,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-100c Negative</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 15,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 15,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-100c Negative+</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 16,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 16,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-100c Negative++</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 17,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 17,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-100c Negative++a</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 18,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 18,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-100c Negative+++</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 19,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 19,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-3000b--</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 20,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 20,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-3000b-</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 21,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 21,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-3000b</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 22,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 22,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-3000b+</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 23,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 23,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-3000b++</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 24,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 24,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-3000b+++</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 25,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 25,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-3000b HC</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 26,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 26,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-3000b Negative--</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 27,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 27,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-3000b Negative-</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 28,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 28,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-3000b Negative</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 29,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 29,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-3000b Negative+</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 30,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 30,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-3000b Negative++</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 31,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 31,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-3000b Negative+++</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 32,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 32,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji FP-3000b Negative Early</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 33,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 33,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 665--</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 34,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 34,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 665-</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 35,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 35,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 665</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 36,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 36,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 665+</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 37,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 37,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 665++</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 38,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 38,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 665 Negative-</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 39,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 39,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 665 Negative</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 40,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 40,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 665 Negative+</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 41,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 41,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 665 Negative HC</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 42,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 42,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 669--</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 43,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 43,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 669-</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 44,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 44,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 669</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 45,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 45,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 669+</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 46,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 46,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 669++</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 47,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 47,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 669+++</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 48,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 48,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 669 Cold--</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 49,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 49,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 669 Cold-</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 50,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 50,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 669 Cold</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 51,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 51,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 669 Cold+</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 52,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 52,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 690--</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 53,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 53,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 690-</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 54,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 54,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 690</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 55,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 55,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 690+</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 56,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 56,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 690++</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 57,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 57,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 690 Cold--</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 58,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 58,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 690 Cold-</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 59,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 59,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 690 Cold</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 60,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 60,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     <gmicscript>
         <name>Polaroid 690 Cold+</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 61,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 61,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 690 Cold++</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 62,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 62,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 690 Warm--</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 63,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 63,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 690 Warm-</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 64,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 64,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 690 Warm</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 65,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 65,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 690 Warm+</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 66,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 66,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Polaroid 690 Warm++</name>
         <group>Film Emulate Instant Pro</group>
-        <script>-gimp_emulate_film_instant_pro 67,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_instant_pro 67,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Agfa Precisa 100</name>
         <group>Film Emulate Slide</group>
-        <script>-gimp_emulate_film_colorslide 1,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_colorslide 1,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Fuji Astia 100F</name>
         <group>Film Emulate Slide</group>
-        <script>-gimp_emulate_film_colorslide 2,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_colorslide 2,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Fuji FP 100C</name>
         <group>Film Emulate Slide</group>
-        <script>-gimp_emulate_film_colorslide 3,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_colorslide 3,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Fuji Provia 100F</name>
         <group>Film Emulate Slide</group>
-        <script>-gimp_emulate_film_colorslide 4,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_colorslide 4,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Fuji Provia 400F</name>
         <group>Film Emulate Slide</group>
-        <script>-gimp_emulate_film_colorslide 5,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_colorslide 5,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Fuji Provia 400FX</name>
         <group>Film Emulate Slide</group>
-        <script>-gimp_emulate_film_colorslide 6,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_colorslide 6,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Fuji Sensia 100</name>
         <group>Film Emulate Slide</group>
-        <script>-gimp_emulate_film_colorslide 7,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_colorslide 7,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Fuji Superia 200 XPRO</name>
         <group>Film Emulate Slide</group>
-        <script>-gimp_emulate_film_colorslide 8,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_colorslide 8,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Fuji Velvia 50</name>
         <group>Film Emulate Slide</group>
-        <script>-gimp_emulate_film_colorslide 9,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_colorslide 9,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Generic Fuji Astia 100</name>
         <group>Film Emulate Slide</group>
-        <script>-gimp_emulate_film_colorslide 10,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_colorslide 10,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Generic Fuji Provia 100</name>
         <group>Film Emulate Slide</group>
-        <script>-gimp_emulate_film_colorslide 11,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_colorslide 11,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Generic Fuji Velvia 100</name>
         <group>Film Emulate Slide</group>
-        <script>-gimp_emulate_film_colorslide 12,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_colorslide 12,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Generic Kodachrome 64</name>
         <group>Film Emulate Slide</group>
-        <script>-gimp_emulate_film_colorslide 13,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_colorslide 13,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Generic Kodak Ektachrome 100 VS</name>
         <group>Film Emulate Slide</group>
-        <script>-gimp_emulate_film_colorslide 14,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_colorslide 14,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Kodak E-100 GX Ektachrome 100</name>
         <group>Film Emulate Slide</group>
-        <script>-gimp_emulate_film_colorslide 15,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_colorslide 15,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Kodak Ektachrome 100 VS</name>
         <group>Film Emulate Slide</group>
-        <script>-gimp_emulate_film_colorslide 16,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_colorslide 16,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Kodak Elite Chrome 200</name>
         <group>Film Emulate Slide</group>
-        <script>-gimp_emulate_film_colorslide 17,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_colorslide 17,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Kodak Elite Chrome 400</name>
         <group>Film Emulate Slide</group>
-        <script>-gimp_emulate_film_colorslide 18,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_colorslide 18,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Kodak Elite ExtraColor 100</name>
         <group>Film Emulate Slide</group>
-        <script>-gimp_emulate_film_colorslide 19,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_colorslide 19,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Kodak Kodachrome 200</name>
         <group>Film Emulate Slide</group>
-        <script>-gimp_emulate_film_colorslide 20,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_colorslide 20,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Kodak Kodachrome 25</name>
         <group>Film Emulate Slide</group>
-        <script>-gimp_emulate_film_colorslide 21,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_colorslide 21,100,0,1,0,0,0,0,0</script>
     </gmicscript>
         
     <gmicscript>
         <name>Kodak Kodachrome 64</name>
         <group>Film Emulate Slide</group>
-        <script>-gimp_emulate_film_colorslide 22,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_colorslide 22,100,0,1,0,0,0,0,0</script>
     </gmicscript>
         
     <gmicscript>
         <name>Lomography X-Pro Slide 200</name>
         <group>Film Emulate Slide</group>
-        <script>-gimp_emulate_film_colorslide 23,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_colorslide 23,100,0,1,0,0,0,0,0</script>
     </gmicscript>
         
     <gmicscript>
         <name>Polaroid 669</name>
         <group>Film Emulate Slide</group>
-        <script>-gimp_emulate_film_colorslide 24,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_colorslide 24,100,0,1,0,0,0,0,0</script>
     </gmicscript>
         
     <gmicscript>
         <name>Polaroid 690</name>
         <group>Film Emulate Slide</group>
-        <script>-gimp_emulate_film_colorslide 25,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_colorslide 25,100,0,1,0,0,0,0,0</script>
     </gmicscript>
         
     <gmicscript>
         <name>Polaroid Polachrome</name>
         <group>Film Emulate Slide</group>
-        <script>-gimp_emulate_film_colorslide 26,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_colorslide 26,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>60s</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 1,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 1,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>60s faded</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 2,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 2,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>60s faded alt</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 3,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 3,100,0,1,0,0,0,0,0</script>
     </gmicscript>
         
     <gmicscript>
         <name>Black and White</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 4,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 4,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Color - rich</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 5,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 5,100,0,1,0,0,0,0,0</script>
     </gmicscript>
         
     <gmicscript>
         <name>Faded</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 6,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 6,100,0,1,0,0,0,0,0</script>
     </gmicscript>
         
     <gmicscript>
         <name>Faded alt</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 7,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 7,100,0,1,0,0,0,0,0</script>
     </gmicscript>
         
     <gmicscript>
         <name>Faded analog</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 8,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 8,100,0,1,0,0,0,0,0</script>
     </gmicscript>
         
     <gmicscript>
         <name>Faded extreme</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 9,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 9,100,0,1,0,0,0,0,0</script>
     </gmicscript>
         
     <gmicscript>
         <name>Faded vivid</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 10,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 10,100,0,1,0,0,0,0,0</script>
     </gmicscript>
         
     <gmicscript>
         <name>Hong Kong</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 11,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 11,100,0,1,0,0,0,0,0</script>
     </gmicscript>
         
     <gmicscript>
         <name>Light blown</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 12,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 12,100,0,1,0,0,0,0,0</script>
     </gmicscript>
         
     <gmicscript>
         <name>Lomo</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 13,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 13,100,0,1,0,0,0,0,0</script>
     </gmicscript>
         
     <gmicscript>
         <name>Natural vivid</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 14,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 14,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Nostalgic</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 15,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 15,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Purple</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 16,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 16,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Retro</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 17,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 17,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Summer</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 18,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 18,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Summer alt</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 19,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 19,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Sunny</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 20,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 20,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Sunny alt</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 21,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 21,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Sunny warm</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 22,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 22,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Sunny rich</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 23,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 23,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Super warm</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 24,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 24,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Super warm rich</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 25,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 25,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Sutro FX</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 26,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 26,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Vibrant</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 27,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 27,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Vibrant alien</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 28,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 28,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Vintage</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 29,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 29,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Vintage alt</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 30,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 30,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Vintage brighter</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 31,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 31,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Warm</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 32,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 32,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Warm yellow</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 33,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 33,100,0,1,0,0,0,0,0</script>
     </gmicscript>
   
     <gmicscript>
         <name>Alien green</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 4,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 4,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     <gmicscript>
         <name>Bleach bypass</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 6,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 6,100,0,1,0,0,0,0,0</script>
     </gmicscript>
         
     <gmicscript>
         <name>Blue mono</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 7,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 7,100,0,1,0,0,0,0,0</script>
     </gmicscript>
 
     <gmicscript>
         <name>Expired fade</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 14,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 14,100,0,1,0,0,0,0,0</script>
     </gmicscript>
         
     <gmicscript>
         <name>Expired polaroid</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 15,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 15,100,0,1,0,0,0,0,0</script>
     </gmicscript>
         
     <gmicscript>
         <name>Extreme</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 16,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 16,100,0,1,0,0,0,0,0</script>
     </gmicscript>
         
     <gmicscript>
         <name>Fade</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 17,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 17,100,0,1,0,0,0,0,0</script>
     </gmicscript>
         
     <gmicscript>
         <name>Faux infrared</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 18,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 18,100,0,1,0,0,0,0,0</script>
     </gmicscript>
         
     <gmicscript>
         <name>Golden</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 19,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 19,100,0,1,0,0,0,0,0</script>
     </gmicscript>
         
     <gmicscript>
         <name>Golden bright</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 20,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 20,100,0,1,0,0,0,0,0</script>
     </gmicscript>
         
     <gmicscript>
         <name>Golden fade</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 21,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 21,100,0,1,0,0,0,0,0</script>
     </gmicscript>
         
     <gmicscript>
         <name>Golden mono</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 22,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 22,100,0,1,0,0,0,0,0</script>
     </gmicscript>
         
     <gmicscript>
         <name>Golden vibrant</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 23,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 23,100,0,1,0,0,0,0,0</script>
     </gmicscript>
         
     <gmicscript>
         <name>Green mono</name>
         <group>Film Emulate FX</group>
-        <script>-gimp_emulate_film_various 24,1,0,1,0,0,0,0,0</script>
+        <script>-gimp_emulate_film_various 24,100,0,1,0,0,0,0,0</script>
     </gmicscript>
     
     
