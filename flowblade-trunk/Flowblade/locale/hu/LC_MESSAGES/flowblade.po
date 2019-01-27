@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-21 12:48+0200\n"
+"POT-Creation-Date: 2019-01-27 19:49+0200\n"
 "PO-Revision-Date: 2017-03-24 08:40+0100\n"
 "Last-Translator: Péter Gábor <ptrg@freemail.hu>\n"
 "Language-Team: \n"
@@ -17,23 +17,23 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.5.4\n"
 
-#: app.py:842
+#: app.py:841
 msgid "Too small screen for this application."
 msgstr "Túl kicsi a képernyő az alkalmazás számára."
 
-#: app.py:845
+#: app.py:844
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr "A minimális képernyőfelbontás ezen alkalmazás számára 1152 x 768.\n"
 
-#: app.py:846
+#: app.py:845
 msgid "Your screen dimensions are "
 msgstr "Az ön képernyőjének felbontása "
 
-#: app.py:879 projectaction.py:391 projectaction.py:705
+#: app.py:878 projectaction.py:391 projectaction.py:709
 msgid "Project has not been saved previously"
 msgstr "A projekt korábban még nem volt mentve"
 
-#: app.py:880 projectaction.py:392 projectaction.py:706
+#: app.py:879 projectaction.py:392 projectaction.py:710
 msgid "Save project with File -> Save As before closing."
 msgstr ""
 "Mentse a projektet a Fájl -> Mentés másként menüpont használatával mielőtt "
@@ -139,48 +139,48 @@ msgstr "A projekt média összetevőinek másolása"
 msgid "Saving project file"
 msgstr "Projekt fájl mentése"
 
-#: projectaction.py:718
+#: projectaction.py:722
 msgid "Project not found on disk"
 msgstr "A projekt nem található a lemezen"
 
-#: projectaction.py:719
+#: projectaction.py:723
 msgid "Project can't be loaded."
 msgstr "A projekt nem tölthető be."
 
-#: projectaction.py:727
+#: projectaction.py:731
 msgid "Project has not been saved since it was opened."
 msgstr "A projekt még nem volt mentve a megnyitás óta."
 
-#: projectaction.py:732
+#: projectaction.py:736
 msgid "Project was saved less than a minute ago."
 msgstr "A projekt kevesebb mint egy perce volt mentve"
 
-#: projectaction.py:735
+#: projectaction.py:739
 msgid "Project was saved one minute ago."
 msgstr "A projekt egy perce volt mentve."
 
-#: projectaction.py:737
+#: projectaction.py:741
 msgid "Project was saved "
 msgstr "A projekt mentése "
 
-#: projectaction.py:737
+#: projectaction.py:741
 msgid " minutes ago."
 msgstr " perce történt."
 
-#: projectaction.py:744
+#: projectaction.py:748
 #, fuzzy
 msgid "Render target file exists!"
 msgstr "Renderelendő tartomány nincs meghatározva!"
 
-#: projectaction.py:745
+#: projectaction.py:749
 msgid "Confirm overwriting existing file."
 msgstr ""
 
-#: projectaction.py:751
+#: projectaction.py:755
 msgid "Project is currently using proxy media!"
 msgstr ""
 
-#: projectaction.py:752
+#: projectaction.py:756
 msgid ""
 "Rendering from proxy media will produce worse quality than rendering from "
 "original media.\n"
@@ -189,79 +189,79 @@ msgid ""
 "Select 'Confirm' to render from proxy media anyway."
 msgstr ""
 
-#: projectaction.py:829
+#: projectaction.py:833
 msgid "Render launch failed!"
 msgstr "Nem sikerült elindítani a renderelést!"
 
-#: projectaction.py:830 projectaction.py:844 tools/batchrendering.py:304
+#: projectaction.py:834 projectaction.py:848 tools/batchrendering.py:304
 msgid "Error message: "
 msgstr "Hibaüzenet: "
 
-#: projectaction.py:843
+#: projectaction.py:847
 msgid "Adding item to render queue failed!"
 msgstr "Nem sikerült hozzáadni az elemet a renderelés várólistájához!"
 
-#: projectaction.py:856
+#: projectaction.py:860
 msgid "Render Proxy Files For Selected Media"
 msgstr "Helyettesítő fájlok renderelése a kiválasztott média számára"
 
-#: projectaction.py:858
+#: projectaction.py:862
 #, fuzzy
 msgid "Select All"
 msgstr "Fájl választása"
 
-#: projectaction.py:859
+#: projectaction.py:863
 #, fuzzy
 msgid "Select None"
 msgstr "Kiválasztás"
 
-#: projectaction.py:861
+#: projectaction.py:865
 #, fuzzy
 msgid "Move Selected Media To Bin"
 msgstr "Kijelölt elemek csoportba helyezése"
 
-#: projectaction.py:864
+#: projectaction.py:868
 #, fuzzy
 msgid "No Target Bins"
 msgstr "Célfájl:"
 
-#: projectaction.py:907 editorwindow.py:236
+#: projectaction.py:911 editorwindow.py:236
 msgid "Add Video, Audio or Image..."
 msgstr ""
 
-#: projectaction.py:908 editorwindow.py:237
+#: projectaction.py:912 editorwindow.py:237
 msgid "Add Image Sequence..."
 msgstr "Képsorozat hozzáadása..."
 
-#: projectaction.py:936
+#: projectaction.py:940
 msgid "Open.."
 msgstr "Megnyitás..."
 
-#: projectaction.py:961
+#: projectaction.py:965
 msgid "Opening .mlt or .xml file as media was disallowed!"
 msgstr ""
 
-#: projectaction.py:962
+#: projectaction.py:966
 msgid ""
 "Because of current MLT behaviour of overwriting projct properties when "
 "opening MLT XML files\n"
 "it is not allowed to open these files as media."
 msgstr ""
 
-#: projectaction.py:982
+#: projectaction.py:986
 msgid "No file was selected"
 msgstr "Nem lett fájl kiválasztva"
 
-#: projectaction.py:982
+#: projectaction.py:986
 msgid "Select a numbered file to add an Image Sequence to Project."
 msgstr ""
 "Válasszon egy sorszámozott fájlt, hogy képsorozatot adjon a projekthez."
 
-#: projectaction.py:990
+#: projectaction.py:994
 msgid "Not a sequence file!"
 msgstr "Nem jelenetfájl!"
 
-#: projectaction.py:990
+#: projectaction.py:994
 msgid ""
 "Selected file does not have a number part in it,\n"
 "so it can't be an image sequence file."
@@ -269,107 +269,107 @@ msgstr ""
 "A kiválasztott fájl nem tartalmaz számot a nevében,\n"
 "így nem is lehet képsorozat része."
 
-#: projectaction.py:1041
+#: projectaction.py:1045
 msgid "Can't make home folder thumbnails folder"
 msgstr "A \"Saját mappa\" nem állítható be a bélyegképek mappájaként"
 
-#: projectaction.py:1042 dialogs.py:440
+#: projectaction.py:1046 dialogs.py:440
 msgid "Please create and select some other folder then '"
 msgstr "Hozzon létre és válasszon egy másik mappát e helyett '"
 
-#: projectaction.py:1043
+#: projectaction.py:1047
 msgid "' as thumbnails folder"
 msgstr "' a bélyegképek számára"
 
-#: projectaction.py:1161 projectaction.py:1163 projectaction.py:1172
-#: projectaction.py:1180 projectaction.py:1187 clipmenuaction.py:147
+#: projectaction.py:1165 projectaction.py:1167 projectaction.py:1176
+#: projectaction.py:1184 projectaction.py:1191 clipmenuaction.py:147
 #: clipmenuaction.py:149
 msgid "N/A"
 msgstr "N/A"
 
-#: projectaction.py:1176 guicomponents.py:2174
+#: projectaction.py:1180 guicomponents.py:2174
 msgid "Yes"
 msgstr "Igen"
 
-#: projectaction.py:1178 guicomponents.py:2176
+#: projectaction.py:1182 guicomponents.py:2176
 msgid "No"
 msgstr "Nem"
 
-#: projectaction.py:1233
+#: projectaction.py:1237
 msgid "Select Project for Media Import"
 msgstr "Projektfájl kiválasztása média importálásához"
 
-#: projectaction.py:1253
+#: projectaction.py:1257
 #, fuzzy
 msgid "selection_"
 msgstr "Kiválasztott betöltése"
 
-#: projectaction.py:1254
+#: projectaction.py:1258
 msgid "Save Selection Compound Clip"
 msgstr ""
 
-#: projectaction.py:1301 projectaction.py:1536 projectaction.py:1552
+#: projectaction.py:1305 projectaction.py:1540 projectaction.py:1556
 #: projectdata.py:212 tlineaction.py:273
 msgid "sequence_"
 msgstr "jelenet_"
 
-#: projectaction.py:1302
+#: projectaction.py:1306
 #, fuzzy
 msgid "Save Sequence Compound Clip"
 msgstr "Képsorozatból álló klip hozzáadása"
 
-#: projectaction.py:1328 editorwindow.py:240
+#: projectaction.py:1332 editorwindow.py:240
 #, fuzzy
 msgid "Add Bin"
 msgstr "Vegyítés hozzáadása"
 
-#: projectaction.py:1329 editorwindow.py:241
+#: projectaction.py:1333 editorwindow.py:241
 #, fuzzy
 msgid "Delete Selected Bin"
 msgstr "Kijelölt törlése"
 
-#: projectaction.py:1333
+#: projectaction.py:1337
 #, fuzzy
 msgid "Move Bin"
 msgstr "Mozgatás lefelé"
 
-#: projectaction.py:1335 editorwindow.py:938
+#: projectaction.py:1339 editorwindow.py:938
 msgid "Up"
 msgstr "Fel"
 
-#: projectaction.py:1336 editorwindow.py:942
+#: projectaction.py:1340 editorwindow.py:942
 msgid "Down"
 msgstr "Le"
 
-#: projectaction.py:1337
+#: projectaction.py:1341
 msgid "First"
 msgstr ""
 
-#: projectaction.py:1338
+#: projectaction.py:1342
 msgid "Last"
 msgstr ""
 
-#: projectaction.py:1397
+#: projectaction.py:1401
 msgid "Can't remove a non-empty bin"
 msgstr "Nem üres rekeszek nem törölhetők"
 
-#: projectaction.py:1398
+#: projectaction.py:1402
 msgid "You must remove all files from the bin before deleting it."
 msgstr "Törölnie kell minden fájlt a rekeszből a rekesz törlése előtt."
 
-#: projectaction.py:1406
+#: projectaction.py:1410
 msgid "Can't remove last bin"
 msgstr "Az utolsó rekesz nem törölhető"
 
-#: projectaction.py:1407
+#: projectaction.py:1411
 msgid "There must always exist at least one bin."
 msgstr "Legalább egy rekesznek léteznie kell."
 
-#: projectaction.py:1505
+#: projectaction.py:1509
 msgid "Selected sequence is already being edited"
 msgstr "A kiválasztott jelenet már szerkesztés alatt áll"
 
-#: projectaction.py:1506
+#: projectaction.py:1510
 msgid ""
 "Select another sequence. Press Add -button to create a\n"
 "new sequence if needed."
@@ -377,22 +377,22 @@ msgstr ""
 "Válasszon egy másik jelenetet. Kattintson a hozzáadás gombra\n"
 "új jelenet létrehozásához."
 
-#: projectaction.py:1520 editorwindow.py:243
+#: projectaction.py:1524 editorwindow.py:243
 #, fuzzy
 msgid "Add New Sequence"
 msgstr "Képsorozat hozzáadása..."
 
-#: projectaction.py:1521 editorwindow.py:244
+#: projectaction.py:1525 editorwindow.py:244
 #, fuzzy
 msgid "Edit Selected Sequence"
 msgstr "Jelenet létrehozása"
 
-#: projectaction.py:1522 editorwindow.py:245
+#: projectaction.py:1526 editorwindow.py:245
 #, fuzzy
 msgid "Delete Selected Sequence"
 msgstr "Kijelölt elem törlése"
 
-#: projectaction.py:1586
+#: projectaction.py:1590
 msgid ""
 "Are you sure you want to delete\n"
 "sequence '"
@@ -400,19 +400,19 @@ msgstr ""
 "Biztosan törölni akarja\n"
 "a jelenetet: '"
 
-#: projectaction.py:1586
+#: projectaction.py:1590
 msgid "'?"
 msgstr "'?"
 
-#: projectaction.py:1587
+#: projectaction.py:1591
 msgid "This operation can not be undone. Sequence will be permanently lost."
 msgstr "Ez a művelet nem vonható vissza. A jelenet véglegesen elvész."
 
-#: projectaction.py:1613
+#: projectaction.py:1617
 msgid "Can't remove last sequence"
 msgstr "Az utolsó jelenet nem törölhető"
 
-#: projectaction.py:1614
+#: projectaction.py:1618
 msgid "There must always exist at least one sequence."
 msgstr "Mindig kell léteznie legalább egy jelenetnek."
 
@@ -3135,11 +3135,11 @@ msgstr "<b>Estimated time left: </b>"
 msgid "Render Complete!"
 msgstr "Renderelés kész!"
 
-#: render.py:387 render.py:488
+#: render.py:387 render.py:489
 msgid "A File with given path exists!"
 msgstr "Egy fájl már létezik az adott útvonallal!"
 
-#: render.py:388 render.py:489
+#: render.py:388 render.py:490
 msgid ""
 "It is not allowed to render Motion Files with same paths as existing files.\n"
 "Select another name for file."
@@ -3152,17 +3152,17 @@ msgstr ""
 msgid "Rendering Motion Clip"
 msgstr "Mozgás klip renderelése"
 
-#: render.py:453 render.py:550
+#: render.py:453 render.py:551
 #, fuzzy
 msgid "<b>Motion Clip File: </b>"
 msgstr "<b>Kimeneti fájl: </b>"
 
-#: render.py:549
+#: render.py:550
 #, fuzzy
 msgid "Rendering Reverse Clip"
 msgstr "Átmenet klip renderelése"
 
-#: render.py:599
+#: render.py:600
 msgid "Rendering Transition Clip"
 msgstr "Átmenet klip renderelése"
 
@@ -5065,20 +5065,20 @@ msgstr "Kényszerítés"
 msgid "Align"
 msgstr "Igazítás"
 
-#: keyframeeditor.py:590 kftoolmode.py:1077
+#: keyframeeditor.py:590 kftoolmode.py:1096
 msgid "Delete all but first Keyframe before Clip Range"
 msgstr ""
 
-#: keyframeeditor.py:596 kftoolmode.py:1083
+#: keyframeeditor.py:596 kftoolmode.py:1102
 msgid "Set Keyframe at Frame 0 to value of next Keyframe"
 msgstr ""
 
-#: keyframeeditor.py:598 kftoolmode.py:1072 kftoolmode.py:1096
-#: kftoolmode.py:1107
+#: keyframeeditor.py:598 kftoolmode.py:1091 kftoolmode.py:1115
+#: kftoolmode.py:1126
 msgid "No Edit Actions currently available"
 msgstr ""
 
-#: keyframeeditor.py:613 kftoolmode.py:1102
+#: keyframeeditor.py:613 kftoolmode.py:1121
 msgid "Delete all Keyframes after Clip Range"
 msgstr ""
 
@@ -7739,34 +7739,34 @@ msgstr ""
 msgid "Media Frame: "
 msgstr "Média útvonala:"
 
-#: kftoolmode.py:1105
+#: kftoolmode.py:1124
 msgid "Delete all but last Keyframe after Clip Range"
 msgstr ""
 
-#: kftoolmode.py:1117
+#: kftoolmode.py:1136
 msgid "Edit Volume Keyframes"
 msgstr ""
 
-#: kftoolmode.py:1122
+#: kftoolmode.py:1141
 #, fuzzy
 msgid "Edit Brightness Keyframes"
 msgstr "Fényesség (kulcsképkockákhoz igazítva)"
 
-#: kftoolmode.py:1131
+#: kftoolmode.py:1150
 #, fuzzy
 msgid "Leading Keyframes"
 msgstr "Egyensúly (kulcsképkockákhoz igazítva)"
 
-#: kftoolmode.py:1138
+#: kftoolmode.py:1157
 #, fuzzy
 msgid "Trailing Keyframes"
 msgstr "Egyensúly (kulcsképkockákhoz igazítva)"
 
-#: kftoolmode.py:1150
+#: kftoolmode.py:1169
 msgid "Playhead Follows Dragged Keyframe"
 msgstr ""
 
-#: kftoolmode.py:1160
+#: kftoolmode.py:1179
 #, fuzzy
 msgid "Exit Edit"
 msgstr "Szerkesztés"

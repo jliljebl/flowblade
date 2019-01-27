@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-21 12:48+0200\n"
+"POT-Creation-Date: 2019-01-27 19:49+0200\n"
 "PO-Revision-Date: 2018-12-31 10:20+0800\n"
 "Last-Translator: Steve Nian <sdnian@gmail.com>\n"
 "Language-Team: Chinese (traditional)\n"
@@ -16,23 +16,23 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: app.py:842
+#: app.py:841
 msgid "Too small screen for this application."
 msgstr "畫面太小無法執行此應用程式"
 
-#: app.py:845
+#: app.py:844
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr "此應用程式的最小螢幕解析度為 1152 x 768。\n"
 
-#: app.py:846
+#: app.py:845
 msgid "Your screen dimensions are "
 msgstr "你的螢幕解析度是 "
 
-#: app.py:879 projectaction.py:391 projectaction.py:705
+#: app.py:878 projectaction.py:391 projectaction.py:709
 msgid "Project has not been saved previously"
 msgstr "先前的專案尚未儲存"
 
-#: app.py:880 projectaction.py:392 projectaction.py:706
+#: app.py:879 projectaction.py:392 projectaction.py:710
 msgid "Save project with File -> Save As before closing."
 msgstr "在結束之前，從 檔案 -> 另存新檔 來儲存專案。"
 
@@ -131,47 +131,47 @@ msgstr "複製專案媒體資產"
 msgid "Saving project file"
 msgstr "儲存專案檔案"
 
-#: projectaction.py:718
+#: projectaction.py:722
 msgid "Project not found on disk"
 msgstr "在磁碟中未發現專案"
 
-#: projectaction.py:719
+#: projectaction.py:723
 msgid "Project can't be loaded."
 msgstr "專案無法載入。"
 
-#: projectaction.py:727
+#: projectaction.py:731
 msgid "Project has not been saved since it was opened."
 msgstr "專案自從開啟後尚未存檔。"
 
-#: projectaction.py:732
+#: projectaction.py:736
 msgid "Project was saved less than a minute ago."
 msgstr "專案在一分鐘內儲存。"
 
-#: projectaction.py:735
+#: projectaction.py:739
 msgid "Project was saved one minute ago."
 msgstr "專案在一分鐘前已儲存。"
 
-#: projectaction.py:737
+#: projectaction.py:741
 msgid "Project was saved "
 msgstr "專案已儲存"
 
-#: projectaction.py:737
+#: projectaction.py:741
 msgid " minutes ago."
 msgstr " 分鐘以前。"
 
-#: projectaction.py:744
+#: projectaction.py:748
 msgid "Render target file exists!"
 msgstr "渲染的目的檔案已存在！"
 
-#: projectaction.py:745
+#: projectaction.py:749
 msgid "Confirm overwriting existing file."
 msgstr "確認覆寫現有檔案。"
 
-#: projectaction.py:751
+#: projectaction.py:755
 msgid "Project is currently using proxy media!"
 msgstr "專案目前使用代理媒體！"
 
-#: projectaction.py:752
+#: projectaction.py:756
 msgid ""
 "Rendering from proxy media will produce worse quality than rendering from "
 "original media.\n"
@@ -184,55 +184,55 @@ msgstr ""
 "\n"
 "無論如何，從代理媒體選擇 '確認' 來渲染。"
 
-#: projectaction.py:829
+#: projectaction.py:833
 msgid "Render launch failed!"
 msgstr "渲染啟動失敗！"
 
-#: projectaction.py:830 projectaction.py:844 tools/batchrendering.py:304
+#: projectaction.py:834 projectaction.py:848 tools/batchrendering.py:304
 msgid "Error message: "
 msgstr "錯誤訊息："
 
-#: projectaction.py:843
+#: projectaction.py:847
 msgid "Adding item to render queue failed!"
 msgstr "增加項目到渲染佇列失敗！"
 
-#: projectaction.py:856
+#: projectaction.py:860
 msgid "Render Proxy Files For Selected Media"
 msgstr "為選取的媒體渲染代理檔案"
 
-#: projectaction.py:858
+#: projectaction.py:862
 msgid "Select All"
 msgstr "全選"
 
-#: projectaction.py:859
+#: projectaction.py:863
 msgid "Select None"
 msgstr "全不選"
 
-#: projectaction.py:861
+#: projectaction.py:865
 msgid "Move Selected Media To Bin"
 msgstr "移動選擇的媒體到容器"
 
-#: projectaction.py:864
+#: projectaction.py:868
 msgid "No Target Bins"
 msgstr "沒有目標容器"
 
-#: projectaction.py:907 editorwindow.py:236
+#: projectaction.py:911 editorwindow.py:236
 msgid "Add Video, Audio or Image..."
 msgstr "新增視訊、音訊、影像..."
 
-#: projectaction.py:908 editorwindow.py:237
+#: projectaction.py:912 editorwindow.py:237
 msgid "Add Image Sequence..."
 msgstr "新增連續影像..."
 
-#: projectaction.py:936
+#: projectaction.py:940
 msgid "Open.."
 msgstr "開啟.."
 
-#: projectaction.py:961
+#: projectaction.py:965
 msgid "Opening .mlt or .xml file as media was disallowed!"
 msgstr "開啟 .mlt 或 .xml 檔案作為媒體是不允許的！"
 
-#: projectaction.py:962
+#: projectaction.py:966
 msgid ""
 "Because of current MLT behaviour of overwriting projct properties when "
 "opening MLT XML files\n"
@@ -241,19 +241,19 @@ msgstr ""
 "由於開啟 MLT XML 檔案時，目前 MLT 覆寫專案屬性的行為，\n"
 "它不允許開啟這些檔案當作媒體。"
 
-#: projectaction.py:982
+#: projectaction.py:986
 msgid "No file was selected"
 msgstr "未選擇檔案"
 
-#: projectaction.py:982
+#: projectaction.py:986
 msgid "Select a numbered file to add an Image Sequence to Project."
 msgstr "選擇一個編號的檔案來加入影像序列到專案。"
 
-#: projectaction.py:990
+#: projectaction.py:994
 msgid "Not a sequence file!"
 msgstr "不是序列檔案！"
 
-#: projectaction.py:990
+#: projectaction.py:994
 msgid ""
 "Selected file does not have a number part in it,\n"
 "so it can't be an image sequence file."
@@ -261,102 +261,102 @@ msgstr ""
 "選擇的檔案沒有包含數字的部分，\n"
 "所以它不能作為影像序列的檔案。"
 
-#: projectaction.py:1041
+#: projectaction.py:1045
 msgid "Can't make home folder thumbnails folder"
 msgstr "無法讓個人資料夾作為縮略圖資料夾"
 
-#: projectaction.py:1042 dialogs.py:440
+#: projectaction.py:1046 dialogs.py:440
 msgid "Please create and select some other folder then '"
 msgstr "請創建並選擇其他不同於 '"
 
-#: projectaction.py:1043
+#: projectaction.py:1047
 msgid "' as thumbnails folder"
 msgstr "' 的資料夾作為縮略圖資料夾"
 
-#: projectaction.py:1161 projectaction.py:1163 projectaction.py:1172
-#: projectaction.py:1180 projectaction.py:1187 clipmenuaction.py:147
+#: projectaction.py:1165 projectaction.py:1167 projectaction.py:1176
+#: projectaction.py:1184 projectaction.py:1191 clipmenuaction.py:147
 #: clipmenuaction.py:149
 msgid "N/A"
 msgstr "N/A"
 
-#: projectaction.py:1176 guicomponents.py:2174
+#: projectaction.py:1180 guicomponents.py:2174
 msgid "Yes"
 msgstr "是"
 
-#: projectaction.py:1178 guicomponents.py:2176
+#: projectaction.py:1182 guicomponents.py:2176
 msgid "No"
 msgstr "否"
 
-#: projectaction.py:1233
+#: projectaction.py:1237
 msgid "Select Project for Media Import"
 msgstr "選擇專案來匯入媒體"
 
-#: projectaction.py:1253
+#: projectaction.py:1257
 msgid "selection_"
 msgstr "挑選_"
 
-#: projectaction.py:1254
+#: projectaction.py:1258
 msgid "Save Selection Compound Clip"
 msgstr "儲存挑選合成剪輯"
 
-#: projectaction.py:1301 projectaction.py:1536 projectaction.py:1552
+#: projectaction.py:1305 projectaction.py:1540 projectaction.py:1556
 #: projectdata.py:212 tlineaction.py:273
 msgid "sequence_"
 msgstr "序列_"
 
-#: projectaction.py:1302
+#: projectaction.py:1306
 msgid "Save Sequence Compound Clip"
 msgstr "儲存序列合成剪輯"
 
-#: projectaction.py:1328 editorwindow.py:240
+#: projectaction.py:1332 editorwindow.py:240
 msgid "Add Bin"
 msgstr "新增容器"
 
-#: projectaction.py:1329 editorwindow.py:241
+#: projectaction.py:1333 editorwindow.py:241
 msgid "Delete Selected Bin"
 msgstr "刪除選擇的容器"
 
-#: projectaction.py:1333
+#: projectaction.py:1337
 msgid "Move Bin"
 msgstr "移動容器"
 
-#: projectaction.py:1335 editorwindow.py:938
+#: projectaction.py:1339 editorwindow.py:938
 msgid "Up"
 msgstr "上"
 
-#: projectaction.py:1336 editorwindow.py:942
+#: projectaction.py:1340 editorwindow.py:942
 msgid "Down"
 msgstr "下"
 
-#: projectaction.py:1337
+#: projectaction.py:1341
 msgid "First"
 msgstr "最前面"
 
-#: projectaction.py:1338
+#: projectaction.py:1342
 msgid "Last"
 msgstr "最後面"
 
-#: projectaction.py:1397
+#: projectaction.py:1401
 msgid "Can't remove a non-empty bin"
 msgstr "無法刪除非空的容器"
 
-#: projectaction.py:1398
+#: projectaction.py:1402
 msgid "You must remove all files from the bin before deleting it."
 msgstr "在刪除之前，您必須從容器中刪除所有檔案。"
 
-#: projectaction.py:1406
+#: projectaction.py:1410
 msgid "Can't remove last bin"
 msgstr "無法刪除最後一個容器"
 
-#: projectaction.py:1407
+#: projectaction.py:1411
 msgid "There must always exist at least one bin."
 msgstr "必須至少存在一個容器。"
 
-#: projectaction.py:1505
+#: projectaction.py:1509
 msgid "Selected sequence is already being edited"
 msgstr "選擇的序列已被編輯"
 
-#: projectaction.py:1506
+#: projectaction.py:1510
 msgid ""
 "Select another sequence. Press Add -button to create a\n"
 "new sequence if needed."
@@ -364,37 +364,37 @@ msgstr ""
 "選擇另外的序列。如果需要，按 新增新的序列 來創建\n"
 "新的序列。"
 
-#: projectaction.py:1520 editorwindow.py:243
+#: projectaction.py:1524 editorwindow.py:243
 msgid "Add New Sequence"
 msgstr "新增新的序列"
 
-#: projectaction.py:1521 editorwindow.py:244
+#: projectaction.py:1525 editorwindow.py:244
 msgid "Edit Selected Sequence"
 msgstr "編輯選擇的序列"
 
-#: projectaction.py:1522 editorwindow.py:245
+#: projectaction.py:1526 editorwindow.py:245
 msgid "Delete Selected Sequence"
 msgstr "刪除選擇的序列"
 
-#: projectaction.py:1586
+#: projectaction.py:1590
 msgid ""
 "Are you sure you want to delete\n"
 "sequence '"
 msgstr "你確定要刪除序列 '"
 
-#: projectaction.py:1586
+#: projectaction.py:1590
 msgid "'?"
 msgstr "' 嗎？"
 
-#: projectaction.py:1587
+#: projectaction.py:1591
 msgid "This operation can not be undone. Sequence will be permanently lost."
 msgstr "此操作無法撤消，序列將永久丟失。"
 
-#: projectaction.py:1613
+#: projectaction.py:1617
 msgid "Can't remove last sequence"
 msgstr "無法移除最後的序列"
 
-#: projectaction.py:1614
+#: projectaction.py:1618
 msgid "There must always exist at least one sequence."
 msgstr "至少必須總是存在一個序列。"
 
@@ -3025,11 +3025,11 @@ msgstr "<b>預計剩下的時間： </b>"
 msgid "Render Complete!"
 msgstr "渲染完成！"
 
-#: render.py:387 render.py:488
+#: render.py:387 render.py:489
 msgid "A File with given path exists!"
 msgstr "指定路徑的檔案已經存在！"
 
-#: render.py:388 render.py:489
+#: render.py:388 render.py:490
 msgid ""
 "It is not allowed to render Motion Files with same paths as existing files.\n"
 "Select another name for file."
@@ -3041,15 +3041,15 @@ msgstr ""
 msgid "Rendering Motion Clip"
 msgstr "渲染動作剪輯片段"
 
-#: render.py:453 render.py:550
+#: render.py:453 render.py:551
 msgid "<b>Motion Clip File: </b>"
 msgstr "<b>動作剪輯片段檔案： </b>"
 
-#: render.py:549
+#: render.py:550
 msgid "Rendering Reverse Clip"
 msgstr "渲染倒帶剪輯片段"
 
-#: render.py:599
+#: render.py:600
 msgid "Rendering Transition Clip"
 msgstr "渲染轉場剪輯片段"
 
@@ -4931,20 +4931,20 @@ msgstr "強制"
 msgid "Align"
 msgstr "對齊"
 
-#: keyframeeditor.py:590 kftoolmode.py:1077
+#: keyframeeditor.py:590 kftoolmode.py:1096
 msgid "Delete all but first Keyframe before Clip Range"
 msgstr "在剪輯範圍之前刪除第一個以外的關鍵影格"
 
-#: keyframeeditor.py:596 kftoolmode.py:1083
+#: keyframeeditor.py:596 kftoolmode.py:1102
 msgid "Set Keyframe at Frame 0 to value of next Keyframe"
 msgstr "將第 0 影格的關鍵影格設置為下一個關鍵影格的值"
 
-#: keyframeeditor.py:598 kftoolmode.py:1072 kftoolmode.py:1096
-#: kftoolmode.py:1107
+#: keyframeeditor.py:598 kftoolmode.py:1091 kftoolmode.py:1115
+#: kftoolmode.py:1126
 msgid "No Edit Actions currently available"
 msgstr "目前沒有可用的編輯操作"
 
-#: keyframeeditor.py:613 kftoolmode.py:1102
+#: keyframeeditor.py:613 kftoolmode.py:1121
 msgid "Delete all Keyframes after Clip Range"
 msgstr "剪輯範圍後刪除所有關鍵影格"
 
@@ -7568,30 +7568,30 @@ msgstr ""
 msgid "Media Frame: "
 msgstr "媒體影格： "
 
-#: kftoolmode.py:1105
+#: kftoolmode.py:1124
 msgid "Delete all but last Keyframe after Clip Range"
 msgstr "在剪輯範圍之後刪除最後一個以外的關鍵影格"
 
-#: kftoolmode.py:1117
+#: kftoolmode.py:1136
 msgid "Edit Volume Keyframes"
 msgstr "編輯音量關鍵影格"
 
-#: kftoolmode.py:1122
+#: kftoolmode.py:1141
 msgid "Edit Brightness Keyframes"
 msgstr "編輯亮度關鍵影格"
 
-#: kftoolmode.py:1131
+#: kftoolmode.py:1150
 msgid "Leading Keyframes"
 msgstr "載入關鍵影格"
 
-#: kftoolmode.py:1138
+#: kftoolmode.py:1157
 msgid "Trailing Keyframes"
 msgstr "尾隨關鍵影格"
 
-#: kftoolmode.py:1150
+#: kftoolmode.py:1169
 msgid "Playhead Follows Dragged Keyframe"
 msgstr "播放頭跟隨拖動的關鍵影格"
 
-#: kftoolmode.py:1160
+#: kftoolmode.py:1179
 msgid "Exit Edit"
 msgstr "結束編輯"

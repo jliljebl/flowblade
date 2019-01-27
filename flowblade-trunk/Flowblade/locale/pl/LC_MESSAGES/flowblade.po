@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-21 12:48+0200\n"
+"POT-Creation-Date: 2019-01-27 19:49+0200\n"
 "PO-Revision-Date: 2018-11-15 12:12+0200\n"
 "Last-Translator: Stanislaw Polak <polak@icsr.agh.edu.pl>\n"
 "Language-Team: Polish\n"
@@ -17,23 +17,23 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
-#: app.py:842
+#: app.py:841
 msgid "Too small screen for this application."
 msgstr "Zbyt mały ekran dla tej aplikacji."
 
-#: app.py:845
+#: app.py:844
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr "Minimalne wymiary ekranu dla tej aplikacji to 1152 x 768.\n"
 
-#: app.py:846
+#: app.py:845
 msgid "Your screen dimensions are "
 msgstr "Wymiary twojego ekranu to "
 
-#: app.py:879 projectaction.py:391 projectaction.py:705
+#: app.py:878 projectaction.py:391 projectaction.py:709
 msgid "Project has not been saved previously"
 msgstr "Projekt nie został wcześniej zapisany"
 
-#: app.py:880 projectaction.py:392 projectaction.py:706
+#: app.py:879 projectaction.py:392 projectaction.py:710
 msgid "Save project with File -> Save As before closing."
 msgstr "Przed zamknięciem, zapisz projekt za pomocą Plik -> Zapisz jako."
 
@@ -139,47 +139,47 @@ msgstr "Kopiowanie zasobów multimedialnych projektu"
 msgid "Saving project file"
 msgstr "Zapisywanie pliku projektu"
 
-#: projectaction.py:718
+#: projectaction.py:722
 msgid "Project not found on disk"
 msgstr "Nie znaleziono projektu na dysku"
 
-#: projectaction.py:719
+#: projectaction.py:723
 msgid "Project can't be loaded."
 msgstr "Nie można załadować projektu."
 
-#: projectaction.py:727
+#: projectaction.py:731
 msgid "Project has not been saved since it was opened."
 msgstr "Od czasu jego otwarcia projekt nie został zapisany."
 
-#: projectaction.py:732
+#: projectaction.py:736
 msgid "Project was saved less than a minute ago."
 msgstr "Projekt został zapisany mniej niż minutę temu."
 
-#: projectaction.py:735
+#: projectaction.py:739
 msgid "Project was saved one minute ago."
 msgstr "Projekt został zapisany minutę temu."
 
-#: projectaction.py:737
+#: projectaction.py:741
 msgid "Project was saved "
 msgstr "Projekt został zapisany "
 
-#: projectaction.py:737
+#: projectaction.py:741
 msgid " minutes ago."
 msgstr " minut temu."
 
-#: projectaction.py:744
+#: projectaction.py:748
 msgid "Render target file exists!"
 msgstr "Plik docelowy renderowani już istnieje!"
 
-#: projectaction.py:745
+#: projectaction.py:749
 msgid "Confirm overwriting existing file."
 msgstr "Potwierdź nadpisanie istniejącego pliku."
 
-#: projectaction.py:751
+#: projectaction.py:755
 msgid "Project is currently using proxy media!"
 msgstr "Projekt obecnie korzysta z mediów proxy!"
 
-#: projectaction.py:752
+#: projectaction.py:756
 msgid ""
 "Rendering from proxy media will produce worse quality than rendering from "
 "original media.\n"
@@ -194,55 +194,55 @@ msgstr ""
 "\n"
 "Wybierz 'Potwierdź', aby zrezygnować z renderowania z mediów proxy."
 
-#: projectaction.py:829
+#: projectaction.py:833
 msgid "Render launch failed!"
 msgstr "Renderowanie nie powiodło się!"
 
-#: projectaction.py:830 projectaction.py:844 tools/batchrendering.py:304
+#: projectaction.py:834 projectaction.py:848 tools/batchrendering.py:304
 msgid "Error message: "
 msgstr "Komunikat o błędzie: "
 
-#: projectaction.py:843
+#: projectaction.py:847
 msgid "Adding item to render queue failed!"
 msgstr "Dodawanie elementu do kolejki renderowania nie powiodło się!"
 
-#: projectaction.py:856
+#: projectaction.py:860
 msgid "Render Proxy Files For Selected Media"
 msgstr "Renderuj pliki Proxy dla wybranych multimediów"
 
-#: projectaction.py:858
+#: projectaction.py:862
 msgid "Select All"
 msgstr "Wybierz Wszystkie"
 
-#: projectaction.py:859
+#: projectaction.py:863
 msgid "Select None"
 msgstr "Nie wybieraj żadnego"
 
-#: projectaction.py:861
+#: projectaction.py:865
 msgid "Move Selected Media To Bin"
 msgstr "Przenieś wybrane multimedia do pojemnika"
 
-#: projectaction.py:864
+#: projectaction.py:868
 msgid "No Target Bins"
 msgstr "Brak docelowych pojemników"
 
-#: projectaction.py:907 editorwindow.py:236
+#: projectaction.py:911 editorwindow.py:236
 msgid "Add Video, Audio or Image..."
 msgstr "Dodaj Wideo, Audio lub Obraz"
 
-#: projectaction.py:908 editorwindow.py:237
+#: projectaction.py:912 editorwindow.py:237
 msgid "Add Image Sequence..."
 msgstr "Dodaj sekwencję zdjęć..."
 
-#: projectaction.py:936
+#: projectaction.py:940
 msgid "Open.."
 msgstr "Otwórz.."
 
-#: projectaction.py:961
+#: projectaction.py:965
 msgid "Opening .mlt or .xml file as media was disallowed!"
 msgstr "Otwarcie pliku .mlt lub .xml jako multimediów było niedozwolone!"
 
-#: projectaction.py:962
+#: projectaction.py:966
 msgid ""
 "Because of current MLT behaviour of overwriting projct properties when "
 "opening MLT XML files\n"
@@ -252,19 +252,19 @@ msgstr ""
 "projektu, podczas otwierania plików MLT XML\n"
 "nie wolno otwierać tych plików jako multimediów."
 
-#: projectaction.py:982
+#: projectaction.py:986
 msgid "No file was selected"
 msgstr "Nie wybrano żadnego pliku"
 
-#: projectaction.py:982
+#: projectaction.py:986
 msgid "Select a numbered file to add an Image Sequence to Project."
 msgstr "Wybierz numerowany plik, aby dodać sekwencję obrazów do projektu."
 
-#: projectaction.py:990
+#: projectaction.py:994
 msgid "Not a sequence file!"
 msgstr "Nie jest plikem sekwencji!"
 
-#: projectaction.py:990
+#: projectaction.py:994
 msgid ""
 "Selected file does not have a number part in it,\n"
 "so it can't be an image sequence file."
@@ -272,104 +272,104 @@ msgstr ""
 "Wybrany plik nie posiada numerów,\n"
 "więc nie może on być plikiem sekwencji obrazów."
 
-#: projectaction.py:1041
+#: projectaction.py:1045
 msgid "Can't make home folder thumbnails folder"
 msgstr "Nie można utworzyć folderu miniatur"
 
-#: projectaction.py:1042 dialogs.py:440
+#: projectaction.py:1046 dialogs.py:440
 msgid "Please create and select some other folder then '"
 msgstr "Proszę utworzyć i wybrać inny folder niż '"
 
-#: projectaction.py:1043
+#: projectaction.py:1047
 msgid "' as thumbnails folder"
 msgstr "' jako folder miniatur"
 
-#: projectaction.py:1161 projectaction.py:1163 projectaction.py:1172
-#: projectaction.py:1180 projectaction.py:1187 clipmenuaction.py:147
+#: projectaction.py:1165 projectaction.py:1167 projectaction.py:1176
+#: projectaction.py:1184 projectaction.py:1191 clipmenuaction.py:147
 #: clipmenuaction.py:149
 msgid "N/A"
 msgstr "Niedostępny"
 
-#: projectaction.py:1176 guicomponents.py:2174
+#: projectaction.py:1180 guicomponents.py:2174
 msgid "Yes"
 msgstr "Tak"
 
-#: projectaction.py:1178 guicomponents.py:2176
+#: projectaction.py:1182 guicomponents.py:2176
 msgid "No"
 msgstr "Nie"
 
-#: projectaction.py:1233
+#: projectaction.py:1237
 msgid "Select Project for Media Import"
 msgstr "Wybierz projekt dla importu multimediów"
 
-#: projectaction.py:1253
+#: projectaction.py:1257
 msgid "selection_"
 msgstr "wybór_"
 
-#: projectaction.py:1254
+#: projectaction.py:1258
 msgid "Save Selection Compound Clip"
 msgstr "Zapisz klip złożony wybranych"
 
-#: projectaction.py:1301 projectaction.py:1536 projectaction.py:1552
+#: projectaction.py:1305 projectaction.py:1540 projectaction.py:1556
 #: projectdata.py:212 tlineaction.py:273
 msgid "sequence_"
 msgstr "sekwencja_"
 
-#: projectaction.py:1302
+#: projectaction.py:1306
 msgid "Save Sequence Compound Clip"
 msgstr "Zapisz klip złożony sekwencji"
 
-#: projectaction.py:1328 editorwindow.py:240
+#: projectaction.py:1332 editorwindow.py:240
 msgid "Add Bin"
 msgstr "Dodaj pojemnik"
 
-#: projectaction.py:1329 editorwindow.py:241
+#: projectaction.py:1333 editorwindow.py:241
 msgid "Delete Selected Bin"
 msgstr "Usuń wybrany pojemnik"
 
-#: projectaction.py:1333
+#: projectaction.py:1337
 msgid "Move Bin"
 msgstr "Przesuń pojemnik"
 
-#: projectaction.py:1335 editorwindow.py:938
+#: projectaction.py:1339 editorwindow.py:938
 msgid "Up"
 msgstr "Na górze"
 
-#: projectaction.py:1336 editorwindow.py:942
+#: projectaction.py:1340 editorwindow.py:942
 msgid "Down"
 msgstr "Na dole"
 
-#: projectaction.py:1337
+#: projectaction.py:1341
 msgid "First"
 msgstr "Pierwszy"
 
-#: projectaction.py:1338
+#: projectaction.py:1342
 msgid "Last"
 msgstr "Ostatni"
 
-#: projectaction.py:1397
+#: projectaction.py:1401
 msgid "Can't remove a non-empty bin"
 msgstr "Nie można usunąć niepustego pojemnika"
 
-#: projectaction.py:1398
+#: projectaction.py:1402
 msgid "You must remove all files from the bin before deleting it."
 msgstr ""
 "Przed usunięciem pojemnika należy usunąć wszystkie znajdujące się w nim "
 "pliki."
 
-#: projectaction.py:1406
+#: projectaction.py:1410
 msgid "Can't remove last bin"
 msgstr "Nie można usunąć ostatniego pojemnika"
 
-#: projectaction.py:1407
+#: projectaction.py:1411
 msgid "There must always exist at least one bin."
 msgstr "Zawsze musi istnieć, co najmniej, jeden pojemnik."
 
-#: projectaction.py:1505
+#: projectaction.py:1509
 msgid "Selected sequence is already being edited"
 msgstr "Wybrana sekwencja jest już edytowana"
 
-#: projectaction.py:1506
+#: projectaction.py:1510
 msgid ""
 "Select another sequence. Press Add -button to create a\n"
 "new sequence if needed."
@@ -377,19 +377,19 @@ msgstr ""
 "Wybierz inną sekwencję. Naciśnij przycisk Dodaj, aby utworzyć \n"
 "nową sekwencję, w razie potrzeby."
 
-#: projectaction.py:1520 editorwindow.py:243
+#: projectaction.py:1524 editorwindow.py:243
 msgid "Add New Sequence"
 msgstr "Dodaj nową sekwencję"
 
-#: projectaction.py:1521 editorwindow.py:244
+#: projectaction.py:1525 editorwindow.py:244
 msgid "Edit Selected Sequence"
 msgstr "Edytuj wybraną sekwencję"
 
-#: projectaction.py:1522 editorwindow.py:245
+#: projectaction.py:1526 editorwindow.py:245
 msgid "Delete Selected Sequence"
 msgstr "Usuń wybraną sekwencję"
 
-#: projectaction.py:1586
+#: projectaction.py:1590
 msgid ""
 "Are you sure you want to delete\n"
 "sequence '"
@@ -397,19 +397,19 @@ msgstr ""
 "Jesteś pewny, że chcesz usunąć\n"
 "sekwencję '"
 
-#: projectaction.py:1586
+#: projectaction.py:1590
 msgid "'?"
 msgstr "?"
 
-#: projectaction.py:1587
+#: projectaction.py:1591
 msgid "This operation can not be undone. Sequence will be permanently lost."
 msgstr "Tej operacji nie można cofnąć. Sekwencja zostanie trwale usunięta."
 
-#: projectaction.py:1613
+#: projectaction.py:1617
 msgid "Can't remove last sequence"
 msgstr "Nie można usunąć ostatniej sekwencji"
 
-#: projectaction.py:1614
+#: projectaction.py:1618
 msgid "There must always exist at least one sequence."
 msgstr "Zawsze musi istnieć, co najmniej, jedna sekwencja."
 
@@ -3060,11 +3060,11 @@ msgstr "<b>Przewidywany czas: </b>"
 msgid "Render Complete!"
 msgstr "Zakończono renderowanie!"
 
-#: render.py:387 render.py:488
+#: render.py:387 render.py:489
 msgid "A File with given path exists!"
 msgstr "Plik o podanej ścieżce już istnieje!"
 
-#: render.py:388 render.py:489
+#: render.py:388 render.py:490
 msgid ""
 "It is not allowed to render Motion Files with same paths as existing files.\n"
 "Select another name for file."
@@ -3077,15 +3077,15 @@ msgstr ""
 msgid "Rendering Motion Clip"
 msgstr "Renderowanie klipu ruchu"
 
-#: render.py:453 render.py:550
+#: render.py:453 render.py:551
 msgid "<b>Motion Clip File: </b>"
 msgstr "<b>Plik klipu ruchu: </b>"
 
-#: render.py:549
+#: render.py:550
 msgid "Rendering Reverse Clip"
 msgstr "Renderowanie klipu wstecznego"
 
-#: render.py:599
+#: render.py:600
 msgid "Rendering Transition Clip"
 msgstr "Renderowanie klipu przejść"
 
@@ -4967,20 +4967,20 @@ msgstr "Wymuś"
 msgid "Align"
 msgstr "Wyrównanie"
 
-#: keyframeeditor.py:590 kftoolmode.py:1077
+#: keyframeeditor.py:590 kftoolmode.py:1096
 msgid "Delete all but first Keyframe before Clip Range"
 msgstr "Usuń wszystkie ale pierwsza klatka kluczowa przed zakresem klipu"
 
-#: keyframeeditor.py:596 kftoolmode.py:1083
+#: keyframeeditor.py:596 kftoolmode.py:1102
 msgid "Set Keyframe at Frame 0 to value of next Keyframe"
 msgstr "Ustaw klatkę kluczową w klatce 0 na wartość następnej klatki kluczowej"
 
-#: keyframeeditor.py:598 kftoolmode.py:1072 kftoolmode.py:1096
-#: kftoolmode.py:1107
+#: keyframeeditor.py:598 kftoolmode.py:1091 kftoolmode.py:1115
+#: kftoolmode.py:1126
 msgid "No Edit Actions currently available"
 msgstr "Aktualnie brak dostępnych akcji edycji"
 
-#: keyframeeditor.py:613 kftoolmode.py:1102
+#: keyframeeditor.py:613 kftoolmode.py:1121
 msgid "Delete all Keyframes after Clip Range"
 msgstr "Usuń wszystkie klatki kluczowe po zakresie klipu"
 
@@ -7688,31 +7688,31 @@ msgstr ""
 msgid "Media Frame: "
 msgstr "Klatka  multimediów: "
 
-#: kftoolmode.py:1105
+#: kftoolmode.py:1124
 msgid "Delete all but last Keyframe after Clip Range"
 msgstr "Usuń wszystkie ale ostatnia klatka kluczowa po zakresie klipu"
 
-#: kftoolmode.py:1117
+#: kftoolmode.py:1136
 msgid "Edit Volume Keyframes"
 msgstr "Edycja głośności ramek kluczowych"
 
-#: kftoolmode.py:1122
+#: kftoolmode.py:1141
 msgid "Edit Brightness Keyframes"
 msgstr "Edycja jasności klatek kluczowych"
 
-#: kftoolmode.py:1131
+#: kftoolmode.py:1150
 msgid "Leading Keyframes"
 msgstr "Wiodące klatki kluczowe"
 
-#: kftoolmode.py:1138
+#: kftoolmode.py:1157
 msgid "Trailing Keyframes"
 msgstr "Końcowe klatki kluczowe"
 
-#: kftoolmode.py:1150
+#: kftoolmode.py:1169
 msgid "Playhead Follows Dragged Keyframe"
 msgstr "Pozycja głowicy podąża za przeciąganą ramką kluczową"
 
-#: kftoolmode.py:1160
+#: kftoolmode.py:1179
 msgid "Exit Edit"
 msgstr "Wyjście z edycji"
 
