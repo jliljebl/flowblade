@@ -410,7 +410,7 @@ class TLineKeyFrameEditor:
         self._draw_value_lines(cr, x, w)
 
         kf_positions = self.get_clip_kfs_and_positions()
-        
+
         # Draw value curves,they need to be clipped into edit area
         cr.set_source_rgb(*CURVE_COLOR)
         cr.set_line_width(1.0)
@@ -422,17 +422,22 @@ class TLineKeyFrameEditor:
         cr.clip() 
         for i in range(0, len(kf_positions)):
             kf, frame, kf_index, kf_pos_x, kf_pos_y = kf_positions[i]
+            if kf_pos_x < -10000:
+                kf_pos_x = -10000
+            if kf_pos_x > 10000:
+                kf_pos_x = 10000
             if i == 0:
                 cr.move_to(kf_pos_x, kf_pos_y)
             else:
                 cr.line_to(kf_pos_x, kf_pos_y)
+        cr.stroke()
         # If last kf before clip end, continue value curve to end
         kf, frame, kf_index, kf_pos_x, kf_pos_y = kf_positions[-1]
         if kf_pos_x < ex + ew:
             cr.move_to(kf_pos_x, kf_pos_y)
             cr.line_to(ex + ew, kf_pos_y)
-        
-        cr.stroke()
+            cr.stroke()
+
         cr.restore()
 
         # Draw keyframes
