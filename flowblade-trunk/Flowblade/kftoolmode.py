@@ -787,8 +787,11 @@ class TLineKeyFrameEditor:
             if self.value_drag_on == True:
                 value = round(self._get_value_for_panel_y(ly))
                 self.set_active_kf_frame_and_value(frame, value)
+                self.hack_fix_for_zero_one_keyframe_problem()
             else:
                 self.set_active_kf_frame_and_value(frame, self.edit_value)
+                self.hack_fix_for_zero_one_keyframe_problem()
+
             if _playhead_follow_kf == True:
                 self.current_clip_frame = frame
                 self.clip_editor_frame_changed(self.current_clip_frame)
@@ -921,7 +924,18 @@ class TLineKeyFrameEditor:
     def set_active_kf_frame_and_value(self, new_frame, new_value):
         frame, val = self.keyframes.pop(self.active_kf_index)
         self.keyframes.insert(self.active_kf_index,(new_frame, new_value))
-                
+
+    def hack_fix_for_zero_one_keyframe_problem(self):
+        # This is a quick, ugly fix for bug where having volume keyframes in frames 0 and 1 mutes the whole clip.
+        # Look to fix underlying problem.
+        try:
+            kf1, val1 = self.keyframes[0]
+            kf2, val2 = self.keyframes[1]
+            if kf1 == 0 and kf2 == 1 and self.edit_type == VOLUME_KF_EDIT:
+                self.keyframes.pop(1)
+        except:
+            pass
+
     # ------------------------------------------------- coordinates spaces
     def _get_edit_area_rect(self):
         x, y, w, h = self.allocation
