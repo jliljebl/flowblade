@@ -422,6 +422,7 @@ class TLineKeyFrameEditor:
         cr.clip() 
         for i in range(0, len(kf_positions)):
             kf, frame, kf_index, kf_pos_x, kf_pos_y = kf_positions[i]
+            # this trying to get rid of some draw artifacts by limiting x positions
             if kf_pos_x < -10000:
                 kf_pos_x = -10000
             if kf_pos_x > 10000:
