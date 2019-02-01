@@ -338,7 +338,6 @@ class ImageTextImageListView(Gtk.VBox):
         self.treeview.append_column(self.text_col_1)
         self.treeview.append_column(self.icon_col_2)
 
-        # Build widget graph and display
         self.scroll.add(self.treeview)
         self.pack_start(self.scroll, True, True, 0)
         self.scroll.show_all()
@@ -484,7 +483,7 @@ class FilterListView(ImageTextImageListView):
         if not(selection_cb == None):
             tree_sel = self.treeview.get_selection()
             tree_sel.connect("changed", selection_cb)
-
+        
     def fill_data_model(self, filter_group):
         self.storemodel.clear()
         for i in range(0, len(filter_group)):

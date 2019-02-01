@@ -416,6 +416,9 @@ class EditorWindow:
           </menubar>
         </ui>"""
         
+        self.fblade_theme_fix_panels = []
+        self.fblade_theme_fix_panels_darker = []
+        
         # Create global action group            
         action_group = Gtk.ActionGroup('WindowActions')
         action_group.add_actions(menu_actions, user_data=None)
@@ -519,6 +522,8 @@ class EditorWindow:
         
         self.effects_panel = guiutils.set_margins(effects_vbox, 8, 0, 7, 2)
         
+        self.fblade_theme_fix_panels.append(self.effects_panel)
+        
         # Compositors panel
         action_row = compositeeditor.get_compositor_clip_panel()
         compositor_editor_panel = guiutils.set_margins(compositeeditor.widgets.value_edit_frame, 0, 0, 4, 0)
@@ -532,6 +537,8 @@ class EditorWindow:
         
         self.compositors_panel = guiutils.set_margins(compositors_vbox, 2, 2, 2, 2) 
 
+        self.fblade_theme_fix_panels.append(self.compositors_panel)
+        
         # Render panel
         try:
             render.create_widgets()
@@ -561,17 +568,21 @@ class EditorWindow:
             render_hbox.pack_start(render_panel_right, True, True, 0)
 
         render_panel = guiutils.set_margins(render_hbox, 2, 6, 8, 6)
+        self.fblade_theme_fix_panels.append(render_panel)
 
         # Range Log panel
         media_log_events_list_view = medialog.get_media_log_list_view()   
         events_panel = medialog.get_media_log_events_panel(media_log_events_list_view)
+        #self.fblade_theme_fix_panels.append(events_panel)
 
         media_log_vbox = Gtk.HBox()
         media_log_vbox.pack_start(events_panel, True, True, 0)
-        
+        self.fblade_theme_fix_panels.append(media_log_vbox)
+
         media_log_panel = guiutils.set_margins(media_log_vbox, 6, 6, 6, 6)
         self.media_log_events_list_view = media_log_events_list_view
-
+        self.fblade_theme_fix_panels.append(media_log_panel)
+        
         # Project Panel
         # Sequence list
         self.sequence_list_view = guicomponents.SequenceListView(   projectaction.sequence_name_edited,
@@ -630,7 +641,7 @@ class EditorWindow:
         pos_bar_frame.set_margin_top(4)
         pos_bar_frame.set_margin_bottom(4)
         pos_bar_frame.set_margin_left(6)
-    
+        
         # Play buttons row
         self._create_monitor_buttons()
         self._create_monitor_row_widgets()
@@ -653,6 +664,8 @@ class EditorWindow:
         player_buttons_row.pack_start(self.view_mode_select.widget, False, False, 0)
         player_buttons_row.set_margin_bottom(2)
 
+        self.fblade_theme_fix_panels_darker.append(player_buttons_row)
+        
         # Switch / pos bar row
         sw_pos_hbox = Gtk.HBox(False, 1)
         sw_pos_hbox.pack_start(pos_bar_frame, True, True, 0)
@@ -818,6 +831,8 @@ class EditorWindow:
         pane = Gtk.VBox(False, 1)
         pane.pack_start(menu_vbox, False, True, 0)
         pane.pack_start(self.app_v_paned, True, True, 0)
+
+        self.fblade_theme_fix_panels_darker.append(pane)
         
         # Tooltips
         self._add_tool_tips()

@@ -251,8 +251,8 @@ button {
   button separator {
     margin: 4px 1px; }
   button.flat, button.sidebar-button {
-    border-color: transparent;
-    background-color: transparent;
+    border-color: #222a3c;
+    background-color: #222a3c;
     background-image: none;
     transition: none; }
     button.flat:hover, button.sidebar-button:hover {
@@ -1375,6 +1375,7 @@ window.csd > .titlebar:not(headerbar):backdrop {
   padding-right: 4px; }
 
 treeview.view {
+  background-color: rgba(16, 19, 30, 1.0);
   border-left-color: rgba(211, 218, 227, 0.15);
   border-top-color: rgba(0, 0, 0, 0.1); }
   * {
