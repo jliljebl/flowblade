@@ -252,8 +252,10 @@ def apply_gtk_css():
     if Gtk.get_major_version() == 3 and Gtk.get_minor_version() >= 22:
         print "Gtk version is " + gtk_version + ", Flowblade theme is available."
     else:
-        print "Gtk version is " + gtk_version + ", Flowblade theme only available for Gtk 3.22"
-        return
+        print "Gtk version is " + gtk_version + ", Flowblade theme only available for Gtk >= 3.22"
+        editorpersistance.prefs.theme = appconsts.LIGHT_THEME
+        editorpersistance.save()
+        return False
         
     provider = Gtk.CssProvider.new()
     display = Gdk.Display.get_default()
@@ -261,3 +263,4 @@ def apply_gtk_css():
     Gtk.StyleContext.add_provider_for_screen (screen, provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
     provider.load_from_path(respaths.ROOT_PATH + "/res/css/gtk-flowblade-dark.css")
 
+    return True
