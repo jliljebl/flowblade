@@ -19,7 +19,7 @@ On some systems double clicking may not work and you need to install <b>.deb</b>
 	<li>	<p>Open terminal in the directory you saved the  downloaded <b>.deb</b> file. Give command:	</li>
 </ul>
 
-    sudo apt install ./flowblade-.0.0-1_all.deb
+    sudo apt install ./flowblade-2.0.0-1_all.deb
 
 
 ### Installing Flatpak from Flathub
