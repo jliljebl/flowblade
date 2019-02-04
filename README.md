@@ -4,7 +4,7 @@
 
 **New release 2.0 out now.**
 
-**[Installing new version.](https://github.com/jliljebl/flowblade#installing-flowblade)**
+**[Installing new version.](https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/INSTALLING.md)**
 
 **[Release notes.](./flowblade-trunk/docs/RELEASE_NOTES.md)**
 
