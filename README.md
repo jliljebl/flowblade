@@ -39,7 +39,7 @@ Flowblade offers a configurable workflow - toolset, its order, default tool and 
 
 **Image compositing:**
 
-  * 6 compositors. Mix, zoom, move and rotate source video with keyframed animation tools
+  * 10 compositors. Mix, zoom, move and rotate source video with keyframed animation tools
   * 19 blends. Stardand image blend modes like Add, Hardlight and Overlay are available
   * 40+ pattern wipes. 
 
