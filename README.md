@@ -22,9 +22,10 @@
 
 Flowblade is a **multitrack non-linear video editor** for Linux released under **GPL 3 license**.
 
-Flowblade is designed to provide a fast, precise and robust editing experience. Flowblade employs a film-style insert editing model as workflow. In insert editing clips are generally placed tightly after other clips when they are inserted on the timeline. Edits are fine tuned by trimming in and out points of clips or by cutting and deleting parts of clips.
+With Flowblade Movie Editor you can compose movies from video clips, audio clips and graphics files. Clips can be cut at the desired frames, filters can be added to clips, and you can create multilayer composite images using compositor objects.
 
-Flowblade provides powerful tools to mix and filter video and audio.
+Flowblade offers a configurable workflow - toolset, its order, default tool and certain timeline behaviours are user settable.
+
 
 # Features
 
