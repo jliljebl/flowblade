@@ -31,8 +31,7 @@ Flowblade offers a configurable workflow - toolset, its order, default tool and 
 
 **Editing:**
 
-  * 4 move tools
-  * 3 trim tools
+  * 11 editing tools, 9 of which can be selected to the working set
   * 4 methods to insert / overwrite / append clips on the timeline
   * Drag'n'Drop clips on the timeline
   * Clip and compositor parenting with other clips
