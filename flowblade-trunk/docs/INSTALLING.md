@@ -9,7 +9,7 @@
 ### Installing deb package
 
 #### Step 1. Download and install .deb 
-**First download .deb file** for Flowblade 1.16 from <a href="https://github.com/jliljebl/flowblade/releases">here.</a>
+**First download .deb file** for Flowblade 2.0 from <a href="https://github.com/jliljebl/flowblade/releases">here.</a>
 
 Double click on <b>.deb</b> file to install it. 
 
@@ -19,17 +19,8 @@ On some systems double clicking may not work and you need to install <b>.deb</b>
 	<li>	<p>Open terminal in the directory you saved the  downloaded <b>.deb</b> file. Give command:	</li>
 </ul>
 
-    sudo dpkg -i ./flowblade-1.16.0-1_all.deb
+    sudo apt install ./flowblade-.0.0-1_all.deb
 
-
-#### OPTIONAL Step 2. Give some additional commands on terminal
-
-You may need to give some additional commands on terminal:
-<ul>
-	<li>Force install all dependencies with command:</li>
-</ul>
-
-    sudo apt-get install -f
 
 ### Installing Flatpak from Flathub
 
@@ -50,6 +41,8 @@ flatpak install --from https://flathub.org/repo/appstream/io.github.jliljebl.Flo
 ```bash
 flatpak run io.github.jliljebl.Flowblade
 ```
+**NOTE: Flatpak releases can sometimes be a bit lagging after other releases**
+
 
 ### Installing from your OS repository
 
@@ -83,7 +76,7 @@ Flowblade is currently a 100% script application, and all the dependencies shoul
   * Extract archive into a folder of your choosing
   * Install dependencies. See [Dependencies](DEPENDENCIES.md) doc for more information.
   * If you have Flowblade installed in your system, you probably have the dependencies installed, unless some new ones have been added.
-  * Launch by running script *.../flowblade-1.16.0/flowblade* that was created in the folder where archive was unpacked.
+  * Launch by running script *.../flowblade-2.0.0/flowblade* that was created in the folder where archive was unpacked.
   * Note that if you have Flowblade installed yu will need use full path to repository version or navigate to the folder containing launch script and use command "./flowblade" to launch repository version instead of installed version.
 
 
