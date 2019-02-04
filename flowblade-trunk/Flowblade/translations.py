@@ -54,7 +54,7 @@ def init_languages():
         #  Look for installed translations in flatpak install 
         elif os.path.isfile("/app/share/flowblade/Flowblade/locale/fi/LC_MESSAGES/flowblade.mo"): # fi is the translation controlled by program author
             print "Found translations at /app/share/flowblade/Flowblade/locale, using those."
-            locale_path = "app/share/flowblade/Flowblade/locale"
+            locale_path = "/app/share/flowblade/Flowblade/locale"
         else:
             print "Translations at /usr/share/locale were not found, using program root directory translations."
             locale_path = respaths.LOCALE_PATH
