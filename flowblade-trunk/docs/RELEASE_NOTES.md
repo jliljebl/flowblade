@@ -138,7 +138,7 @@ Russian translation update **Николай Смольянинов.**
 
 Polish translation update by **Stanisław Polak.**
 
-Berman translation update by **Martin Gansser.**
+German translation update by **Martin Gansser.**
 
 ### Refactoring
 Some worst modules were cut in half and object naming was somewhat improved.
