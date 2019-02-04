@@ -148,7 +148,7 @@ Unused imports were removed using pyflakes analysis.
 
 ## Future directions
 
-This release took longer then would have been liked for various reasons, but mainly because the feature set was larger then usually and getting a release out of at least reasonable quility took some effort.
+This release took longer then would have been liked for various reasons, but mainly because the feature set was larger then usually and getting a release out of at least reasonable quality took some effort.
 
 We will be doing 2 more releases this year with feature sets that will be adjusted to make sure that we have some nice incremental steps forward. There is an updated roadmap for larger development directions thought to be important right now and Issues list has quite a few items that need addressing. 
 
