@@ -3,7 +3,7 @@
 
 ## Flowblade 2.0
 
-Date: Februaby 4, 2019
+Date: February 4, 2019
 
 **Flowblade 2.0** comes with the largest changes to workflow and UX since the very first releases.
 
