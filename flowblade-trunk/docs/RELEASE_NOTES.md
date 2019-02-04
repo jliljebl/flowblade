@@ -48,7 +48,7 @@ Flowblade 2.0 solves this issue by presenting a configurable workflow that enabl
 
 Four new tools have been added to selection of tools that user has available when deciding on their preferred toolset.
 
-  * **Keyframe tool** enables eediting Volume and Brightness keyframes on the timeline with overlay curves editor.
+  * **Keyframe tool** enables editing Volume and Brightness keyframes on the timeline with overlay curves editor.
  
   * **Multitrim** tool combines Trim, Roll and Slip tool into a single tool that comminicates the available edit action with context sensitive cursor changes.
  
