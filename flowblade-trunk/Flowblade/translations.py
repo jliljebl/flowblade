@@ -251,7 +251,8 @@ def load_filters_translations():
     filter_names["Lens Correction AV"] = _("Lens Correction AV")
     filter_names["Perspective"] = _("Perspective")
     filter_names["Translate"] = _("Translate")
-    
+    filter_names["Lut3D"] = _("Lut3D")
+
     # param names
     global param_names
 
@@ -542,7 +543,9 @@ def load_filters_translations():
     param_names["Center Y"] = _("Center Y")
     param_names["Quad Distortion"] = _("Quad Distortion")
     param_names["Double Quad Distortion"] = _("Double Quad Distortion")
-
+    param_names["Level"] = _("Level")
+    param_names["Select .cube file"] = _("Select .cube file")
+    
     # param names for compositors
     param_names["Opacity"] = _("Opacity")
     param_names["Shear X"] = _("Shear X")

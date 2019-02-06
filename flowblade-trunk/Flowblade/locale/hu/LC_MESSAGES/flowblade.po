@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-03 12:09+0200\n"
+"POT-Creation-Date: 2019-02-06 13:16+0200\n"
 "PO-Revision-Date: 2017-03-24 08:40+0100\n"
 "Last-Translator: Péter Gábor <ptrg@freemail.hu>\n"
 "Language-Team: \n"
@@ -521,7 +521,7 @@ msgstr "Klip elvágása"
 msgid "Split to new Sequence at Playhead Position"
 msgstr "Képsorozat importálása a lejátszási pozícióba"
 
-#: editorwindow.py:216 guicomponents.py:1835 translations.py:522
+#: editorwindow.py:216 guicomponents.py:1835 translations.py:523
 #: middlebar.py:163 workflow.py:186
 msgid "Lift"
 msgstr "Kiemelés"
@@ -621,7 +621,7 @@ msgstr "Jelenet:"
 msgid "Create Pattern Producer"
 msgstr "Minta előállító létrehozása"
 
-#: editorwindow.py:247 translations.py:404 patternproducer.py:66
+#: editorwindow.py:247 translations.py:405 patternproducer.py:66
 msgid "Noise"
 msgstr "Zaj"
 
@@ -2440,17 +2440,17 @@ msgstr "Klip színe"
 msgid "Default"
 msgstr "Alapértelmezett"
 
-#: guicomponents.py:1946 translations.py:507 translations.py:596
+#: guicomponents.py:1946 translations.py:508 translations.py:599
 msgid "Red"
 msgstr "Vörös"
 
-#: guicomponents.py:1947 translations.py:508 translations.py:591
-#: translations.py:597
+#: guicomponents.py:1947 translations.py:509 translations.py:594
+#: translations.py:600
 msgid "Green"
 msgstr "Zöld"
 
-#: guicomponents.py:1948 translations.py:509 translations.py:592
-#: translations.py:598
+#: guicomponents.py:1948 translations.py:510 translations.py:595
+#: translations.py:601
 msgid "Blue"
 msgstr "Kék"
 
@@ -2826,7 +2826,7 @@ msgstr "Hiányzó médiafájl útvonala"
 msgid "Bins"
 msgstr "Rekeszek"
 
-#: panels.py:95 translations.py:589 translations.py:617 mlttransitions.py:138
+#: panels.py:95 translations.py:592 translations.py:620 mlttransitions.py:138
 #: tools/titler.py:207
 msgid "Add"
 msgstr "Hozzáadás"
@@ -3182,7 +3182,7 @@ msgstr ""
 ".\n"
 "Csak a V1 sávon található klipekhez lehet igazítani."
 
-#: translations.py:116 translations.py:425
+#: translations.py:116 translations.py:426
 msgid "Color"
 msgstr "Szín"
 
@@ -3198,12 +3198,12 @@ msgstr "Hang"
 msgid "Audio Filter"
 msgstr "Hangszűrő"
 
-#: translations.py:120 translations.py:173 translations.py:390
-#: translations.py:467
+#: translations.py:120 translations.py:173 translations.py:391
+#: translations.py:468
 msgid "Blur"
 msgstr "Elmosás"
 
-#: translations.py:121 translations.py:550 propertyeditorbuilder.py:742
+#: translations.py:121 translations.py:553 propertyeditorbuilder.py:742
 #: propertyeditorbuilder.py:797
 msgid "Distort"
 msgstr "Torzítás"
@@ -3220,7 +3220,7 @@ msgstr "Mozgás"
 msgid "Transform"
 msgstr "Átalakítás"
 
-#: translations.py:125 translations.py:486
+#: translations.py:125 translations.py:487
 msgid "Edge"
 msgstr "Körvonal"
 
@@ -3244,7 +3244,7 @@ msgstr "Levágás (crop)"
 msgid "Alpha Shape"
 msgstr "Alfa alakzat"
 
-#: translations.py:135 translations.py:275
+#: translations.py:135 translations.py:276
 msgid "Volume"
 msgstr "Hangerő"
 
@@ -3392,29 +3392,29 @@ msgstr "Szemcsés"
 msgid "Grayscale"
 msgstr "Szürkeárnyalatok"
 
-#: translations.py:177 translations.py:405 translations.py:407
+#: translations.py:177 translations.py:406 translations.py:408
 msgid "Contrast"
 msgstr "Kontraszt"
 
-#: translations.py:178 translations.py:408 mlttransitions.py:152
+#: translations.py:178 translations.py:409 mlttransitions.py:152
 msgid "Saturation"
 msgstr "Telítettség"
 
-#: translations.py:179 translations.py:389 translations.py:441
-#: translations.py:466 translations.py:553 translations.py:557
+#: translations.py:179 translations.py:390 translations.py:442
+#: translations.py:467 translations.py:556 translations.py:560
 msgid "Invert"
 msgstr "Megfordítás"
 
-#: translations.py:180 translations.py:409 mlttransitions.py:148
+#: translations.py:180 translations.py:410 mlttransitions.py:148
 msgid "Hue"
 msgstr "Árnyalat"
 
-#: translations.py:181 translations.py:406 translations.py:410
-#: translations.py:411
+#: translations.py:181 translations.py:407 translations.py:411
+#: translations.py:412
 msgid "Brightness"
 msgstr "Fényesség"
 
-#: translations.py:182 translations.py:604
+#: translations.py:182 translations.py:607
 msgid "Sepia"
 msgstr "Szépia"
 
@@ -3426,7 +3426,7 @@ msgstr "Színárnyalás"
 msgid "White Balance"
 msgstr "Fehéregyensúly"
 
-#: translations.py:185 translations.py:491
+#: translations.py:185 translations.py:492
 msgid "Levels"
 msgstr "Szintek"
 
@@ -3458,7 +3458,7 @@ msgstr "Elsődleges színek"
 msgid "Color Distance"
 msgstr "Színtávolság"
 
-#: translations.py:194 translations.py:427 translations.py:432
+#: translations.py:194 translations.py:428 translations.py:433
 msgid "Threshold"
 msgstr "Küszöb"
 
@@ -3470,7 +3470,7 @@ msgstr "Hullámok"
 msgid "Lens Correction"
 msgstr "Lencse korrekció"
 
-#: translations.py:198 translations.py:439
+#: translations.py:198 translations.py:440
 msgid "Flip"
 msgstr "Átfordítás"
 
@@ -3494,7 +3494,7 @@ msgstr "Sobel"
 msgid "Denoise"
 msgstr "Zajszűrés"
 
-#: translations.py:206 translations.py:514
+#: translations.py:206 translations.py:515
 msgid "Sharpness"
 msgstr "Élesség"
 
@@ -3518,7 +3518,7 @@ msgstr "Ideges"
 msgid "Freeze"
 msgstr "Merevítés"
 
-#: translations.py:214 translations.py:435
+#: translations.py:214 translations.py:436
 msgid "Rotate"
 msgstr "Forgatás"
 
@@ -3652,1108 +3652,1117 @@ msgstr "Lencse korrekció"
 msgid "Perspective"
 msgstr ""
 
-#: translations.py:259 translations.py:442
+#: translations.py:254
+msgid "Lut3D"
+msgstr ""
+
+#: translations.py:260 translations.py:443
 msgid "Position"
 msgstr "Pozíció"
 
-#: translations.py:260
+#: translations.py:261
 msgid "Grad width"
 msgstr "Átmenet szélessége"
 
-#: translations.py:261 translations.py:273 translations.py:436
+#: translations.py:262 translations.py:274 translations.py:437
 msgid "Tilt"
 msgstr "Döntés"
 
-#: translations.py:262 translations.py:588
+#: translations.py:263 translations.py:591
 msgid "Min"
 msgstr "Min"
 
-#: translations.py:263 translations.py:587
+#: translations.py:264 translations.py:590
 msgid "Max"
 msgstr "Max"
 
-#: translations.py:264 translations.py:462
+#: translations.py:265 translations.py:463
 msgid "Left"
 msgstr "Balra"
 
-#: translations.py:265 translations.py:463
+#: translations.py:266 translations.py:464
 msgid "Right"
 msgstr "Jobbra"
 
-#: translations.py:266 translations.py:464
+#: translations.py:267 translations.py:465
 msgid "Top"
 msgstr "Fent"
 
-#: translations.py:267 translations.py:465
+#: translations.py:268 translations.py:466
 msgid "Bottom"
 msgstr "Lent"
 
-#: translations.py:268
+#: translations.py:269
 msgid "Shape"
 msgstr "Alakzat"
 
-#: translations.py:269
+#: translations.py:270
 msgid "Pos X"
 msgstr "X Poz. "
 
-#: translations.py:270
+#: translations.py:271
 msgid "Pos Y"
 msgstr "Y Poz."
 
-#: translations.py:271
+#: translations.py:272
 msgid "Size X"
 msgstr "X méret"
 
-#: translations.py:272
+#: translations.py:273
 msgid "Size Y"
 msgstr "Y méret"
 
-#: translations.py:274
+#: translations.py:275
 msgid "Trans. Width"
 msgstr "Átm. szélesség"
 
-#: translations.py:276 translations.py:277
+#: translations.py:277 translations.py:278
 msgid "Left/Right"
 msgstr "Bal/jobb"
 
-#: translations.py:278 translations.py:281 translations.py:284
-#: translations.py:286 translations.py:290 translations.py:294
-#: translations.py:295 translations.py:306 translations.py:308
-#: translations.py:311 translations.py:314 translations.py:317
-#: translations.py:320 translations.py:328 translations.py:336
-#: translations.py:340 translations.py:342 translations.py:358
-#: translations.py:362 translations.py:365 translations.py:367
-#: translations.py:369 translations.py:371 translations.py:377
-#: translations.py:384
+#: translations.py:279 translations.py:282 translations.py:285
+#: translations.py:287 translations.py:291 translations.py:295
+#: translations.py:296 translations.py:307 translations.py:309
+#: translations.py:312 translations.py:315 translations.py:318
+#: translations.py:321 translations.py:329 translations.py:337
+#: translations.py:341 translations.py:343 translations.py:359
+#: translations.py:363 translations.py:366 translations.py:368
+#: translations.py:370 translations.py:372 translations.py:378
+#: translations.py:385
 msgid "Dry/Wet"
 msgstr "Száraz/Nedves"
 
-#: translations.py:279
+#: translations.py:280
 msgid "Pitch Shift"
 msgstr "Hangmagasság eltolás"
 
-#: translations.py:280
+#: translations.py:281
 msgid "Buffer Size"
 msgstr "Pufferméret"
 
-#: translations.py:282
+#: translations.py:283
 msgid "Decay Time(samples)"
 msgstr "Lecsengés hossza (mintavételek)"
 
-#: translations.py:283
+#: translations.py:284
 msgid "Knee Point(dB)"
 msgstr "Sarokpont (dB)"
 
-#: translations.py:285
+#: translations.py:286
 msgid "Frequency shift"
 msgstr "Frekvencia eltolás"
 
-#: translations.py:287
+#: translations.py:288
 msgid "Low Gain(dB)"
 msgstr "Mély jelszint (dB)"
 
-#: translations.py:288
+#: translations.py:289
 msgid "Mid Gain(dB)"
 msgstr "Közép jelszint (dB)"
 
-#: translations.py:289
+#: translations.py:290
 msgid "High Gain(dB)"
 msgstr "Magas jelszint (dB)"
 
-#: translations.py:291
+#: translations.py:292
 msgid "Oscillation period(s)"
 msgstr "Oszcilláció periódusa (s)"
 
-#: translations.py:292
+#: translations.py:293
 msgid "Oscillation depth(ms)"
 msgstr "Oszcilláció mélysége (ms)"
 
-#: translations.py:293
+#: translations.py:294
 msgid "Feedback%"
 msgstr "Visszacsatolás %"
 
-#: translations.py:296
+#: translations.py:297
 msgid "Random seed"
 msgstr "Véletlenszám-generátor kezdőértéke"
 
-#: translations.py:297
+#: translations.py:298
 msgid "Input Gain(dB)"
 msgstr "Bemenő jelszint (dB)"
 
-#: translations.py:298
+#: translations.py:299
 msgid "Feedback(%)"
 msgstr "Visszacsatolás (%)"
 
-#: translations.py:299
+#: translations.py:300
 msgid "Number of taps"
 msgstr "Érintések száma"
 
-#: translations.py:300
+#: translations.py:301
 msgid "First Delay(s)"
 msgstr "Első késleltetés (s)"
 
-#: translations.py:301
+#: translations.py:302
 msgid "Delay Range(s)"
 msgstr "Késleltetés tartománya (s)"
 
-#: translations.py:302
+#: translations.py:303
 msgid "Delay Change"
 msgstr "Késleltetés változása"
 
-#: translations.py:303
+#: translations.py:304
 msgid "Delay Random(%)"
 msgstr "Késleltetés véletlenszerűsége (%)"
 
-#: translations.py:304
+#: translations.py:305
 msgid "Amplitude Change"
 msgstr "Amplitúdó változása"
 
-#: translations.py:305
+#: translations.py:306
 msgid "Amplitude Random(%)"
 msgstr "Amplitúdó véletlenszerűsége (%)"
 
-#: translations.py:307 translations.py:370 translations.py:416
-#: translations.py:448
+#: translations.py:308 translations.py:371 translations.py:417
+#: translations.py:449
 msgid "Amount"
 msgstr "Mérték"
 
-#: translations.py:309
+#: translations.py:310
 msgid "Drive"
 msgstr "Felülvezérlés"
 
-#: translations.py:310
+#: translations.py:311
 msgid "Skew"
 msgstr "Döntés"
 
-#: translations.py:312 translations.py:315
+#: translations.py:313 translations.py:316
 msgid "Cutoff Frequency(Hz)"
 msgstr "Vágási frekvencia (Hz)"
 
-#: translations.py:313 translations.py:316
+#: translations.py:314 translations.py:317
 msgid "Resonance"
 msgstr "Rezonancia"
 
-#: translations.py:318
+#: translations.py:319
 msgid "Passes"
 msgstr "Menetek"
 
-#: translations.py:319
+#: translations.py:320
 msgid "Error Rate"
 msgstr "Hibaarány"
 
-#: translations.py:321
+#: translations.py:322
 msgid "Roomsize"
 msgstr "Helyiség mérete"
 
-#: translations.py:322
+#: translations.py:323
 msgid "Reverb time(s)"
 msgstr "Visszhangok száma"
 
-#: translations.py:323 translations.py:360
+#: translations.py:324 translations.py:361
 msgid "Damping"
 msgstr "Csillapítás"
 
-#: translations.py:324
+#: translations.py:325
 msgid "Input bandwith"
 msgstr "Bemenő sávszélesség"
 
-#: translations.py:325
+#: translations.py:326
 msgid "Dry signal level(dB)"
 msgstr "Száraz jel szintje (dB)"
 
-#: translations.py:326
+#: translations.py:327
 msgid "Early reflection level(dB)"
 msgstr "Kezdeti visszaverődési szint (dB)"
 
-#: translations.py:327
+#: translations.py:328
 msgid "Tail level(dB)"
 msgstr "Végszint (dB)"
 
-#: translations.py:329
+#: translations.py:330
 msgid "LF keyfilter(Hz)"
 msgstr "LF kulcsszűrő (Hz)"
 
-#: translations.py:330
+#: translations.py:331
 msgid "HF keyfilter(Hz)"
 msgstr "HF kulcsszűrő (Hz)"
 
-#: translations.py:331
+#: translations.py:332
 msgid "Threshold(dB)"
 msgstr "Küszöbérték (dB)"
 
-#: translations.py:332
+#: translations.py:333
 msgid "Attack(ms)"
 msgstr "Felerősödés (ms)"
 
-#: translations.py:333
+#: translations.py:334
 msgid "Hold(ms)"
 msgstr "Tartás (ms)"
 
-#: translations.py:334
+#: translations.py:335
 msgid "Decay(ms)"
 msgstr "Lecsengés (ms)"
 
-#: translations.py:335
+#: translations.py:336
 msgid "Range(dB)"
 msgstr "Tartomány (dB)"
 
-#: translations.py:337
+#: translations.py:338
 msgid "Center Frequency(Hz)"
 msgstr "Középfrekvencia (Hz)"
 
-#: translations.py:338
+#: translations.py:339
 msgid "Bandwidth(Hz)"
 msgstr "Sávszélesség (Hz)"
 
-#: translations.py:339
+#: translations.py:340
 msgid "Stages"
 msgstr "Szakaszok"
 
-#: translations.py:341
+#: translations.py:342
 msgid "Pitch-coefficient"
 msgstr "Hangmagasság-együttható"
 
-#: translations.py:343
+#: translations.py:344
 msgid "50Hz gain"
 msgstr "50Hz jelszint"
 
-#: translations.py:344
+#: translations.py:345
 msgid "100Hz gain"
 msgstr "100Hz jelszint"
 
-#: translations.py:345
+#: translations.py:346
 msgid "156Hz gain"
 msgstr "156Hz jelszint"
 
-#: translations.py:346
+#: translations.py:347
 msgid "220Hz gain"
 msgstr "220Hz jelszint"
 
-#: translations.py:347
+#: translations.py:348
 msgid "311Hz gain"
 msgstr "311Hz jelszint"
 
-#: translations.py:348
+#: translations.py:349
 msgid "440Hz gain"
 msgstr "440Hz jelszint"
 
-#: translations.py:349
+#: translations.py:350
 msgid "622Hz gain"
 msgstr "622Hz jelszint"
 
-#: translations.py:350
+#: translations.py:351
 msgid "880Hz gain"
 msgstr "880Hz jelszint"
 
-#: translations.py:351
+#: translations.py:352
 msgid "1250Hz gain"
 msgstr "1250Hz jelszint"
 
-#: translations.py:352
+#: translations.py:353
 msgid "1750Hz gain"
 msgstr "1750Hz jelszint"
 
-#: translations.py:353
+#: translations.py:354
 msgid "2500Hz gain"
 msgstr "2500Hz jelszint"
 
-#: translations.py:354
+#: translations.py:355
 msgid "3500Hz gain"
 msgstr "3500Hz jelszint"
 
-#: translations.py:355
+#: translations.py:356
 msgid "5000Hz gain"
 msgstr "5000Hz jelszint"
 
-#: translations.py:356
+#: translations.py:357
 msgid "100000Hz gain"
 msgstr "100000Hz jelszint"
 
-#: translations.py:357
+#: translations.py:358
 msgid "200000Hz gain"
 msgstr "200000Hz jelszint"
 
-#: translations.py:359
+#: translations.py:360
 msgid "Reverb time"
 msgstr "Visszhang idő"
 
-#: translations.py:361 translations.py:364
+#: translations.py:362 translations.py:365
 msgid "Dry/Wet mix"
 msgstr "Száraz/Nedves keverés"
 
-#: translations.py:363
+#: translations.py:364
 msgid "Effect cutoff(Hz)"
 msgstr "Határfrekvencia (Hz)"
 
-#: translations.py:366
+#: translations.py:367
 msgid "Rate"
 msgstr "Sebesség"
 
-#: translations.py:368
+#: translations.py:369
 msgid "Sift"
 msgstr "Eltolás"
 
-#: translations.py:372
+#: translations.py:373
 msgid "Year"
 msgstr "Év"
 
-#: translations.py:373
+#: translations.py:374
 msgid "RPM"
 msgstr "Fordulatszám (RPM)"
 
-#: translations.py:374
+#: translations.py:375
 msgid "Surface warping"
 msgstr "Felület vetemedése"
 
-#: translations.py:375
+#: translations.py:376
 msgid "Cracle"
 msgstr "Ropogás"
 
-#: translations.py:376
+#: translations.py:377
 msgid "Wear"
 msgstr "Kopás"
 
-#: translations.py:378
+#: translations.py:379
 msgid "Number of voices"
 msgstr "Hangok száma"
 
-#: translations.py:379
+#: translations.py:380
 msgid "Delay base(ms)"
 msgstr "Késleltetés (ms)"
 
-#: translations.py:380
+#: translations.py:381
 msgid "Voice separation(ms)"
 msgstr "Hang szétválasztása (ms)"
 
-#: translations.py:381
+#: translations.py:382
 msgid "Detune(%)"
 msgstr "Elhangolás (%)"
 
-#: translations.py:382
+#: translations.py:383
 msgid "Oscillation frequency(Hz)"
 msgstr "Oszcilláció frekvenciája (Hz)"
 
-#: translations.py:383
+#: translations.py:384
 msgid "Output attenuation(dB)"
 msgstr "Kimeneti csillapítás (dB)"
 
-#: translations.py:385
+#: translations.py:386
 msgid "X Scatter"
 msgstr "X szórás"
 
-#: translations.py:386
+#: translations.py:387
 msgid "Y Scatter"
 msgstr "Y szórás"
 
-#: translations.py:387
+#: translations.py:388
 msgid "Scale"
 msgstr "Nyújtás"
 
-#: translations.py:388
+#: translations.py:389
 msgid "Mix"
 msgstr "Keverés"
 
-#: translations.py:391
+#: translations.py:392
 msgid "Delta"
 msgstr "Delta"
 
-#: translations.py:392
+#: translations.py:393
 msgid "Duration"
 msgstr "Időtartam"
 
-#: translations.py:393
+#: translations.py:394
 msgid "Bright. up"
 msgstr "Fényesség fel"
 
-#: translations.py:394
+#: translations.py:395
 msgid "Bright. down"
 msgstr "Fényesség le"
 
-#: translations.py:395
+#: translations.py:396
 msgid "Bright. dur."
 msgstr "Fény. időtartama"
 
-#: translations.py:396
+#: translations.py:397
 msgid "Develop up"
 msgstr "Fejlődés fel"
 
-#: translations.py:397
+#: translations.py:398
 msgid "Develop down"
 msgstr "Fejlödés le"
 
-#: translations.py:398
+#: translations.py:399
 msgid "Develop dur."
 msgstr "Fejlődés hossza"
 
-#: translations.py:399
+#: translations.py:400
 msgid "Triplevel"
 msgstr "Ugrásszint"
 
-#: translations.py:400
+#: translations.py:401
 msgid "Difference Space"
 msgstr "Köztes tér"
 
-#: translations.py:401
+#: translations.py:402
 msgid "Block width"
 msgstr "Blokk szélessége"
 
-#: translations.py:402
+#: translations.py:403
 msgid "Block height"
 msgstr "Blokk magassága"
 
-#: translations.py:403 translations.py:449
+#: translations.py:404 translations.py:450
 msgid "Size"
 msgstr "Méret"
 
-#: translations.py:412
+#: translations.py:413
 msgid "U"
 msgstr "U (sárga-kék)"
 
-#: translations.py:413
+#: translations.py:414
 msgid "V"
 msgstr "V (türkizkék-vörös)"
 
-#: translations.py:414 translations.py:421
+#: translations.py:415 translations.py:422
 msgid "Black"
 msgstr "Fekete"
 
-#: translations.py:415 translations.py:422
+#: translations.py:416 translations.py:423
 msgid "White"
 msgstr "Fehér"
 
-#: translations.py:417
+#: translations.py:418
 msgid "Neutral Color"
 msgstr "Semleges szín"
 
-#: translations.py:418 translations.py:419
+#: translations.py:419 translations.py:420
 msgid "Input"
 msgstr "Bemenet"
 
-#: translations.py:420
+#: translations.py:421
 msgid "Gamma"
 msgstr "Gamma"
 
-#: translations.py:423
+#: translations.py:424
 msgid "Num"
 msgstr "Szám"
 
-#: translations.py:424
+#: translations.py:425
 msgid "Dist. weight"
 msgstr "Táv. súlyozás"
 
-#: translations.py:426
+#: translations.py:427
 msgid "Variance"
 msgstr "Eltérés"
 
-#: translations.py:428
+#: translations.py:429
 msgid "Red Saturation"
 msgstr "Vörös telítettség"
 
-#: translations.py:429
+#: translations.py:430
 msgid "Yellow Saturation"
 msgstr "Sárga telítettség"
 
-#: translations.py:430
+#: translations.py:431
 msgid "Factor"
 msgstr "Faktor"
 
-#: translations.py:431
+#: translations.py:432
 msgid "Source color"
 msgstr "Forrásszín"
 
-#: translations.py:433
+#: translations.py:434
 msgid "Amplitude"
 msgstr "Amplitúdó"
 
-#: translations.py:434
+#: translations.py:435
 msgid "Frequency"
 msgstr "Frekvencia"
 
-#: translations.py:437
+#: translations.py:438
 msgid "Center Correct"
 msgstr "Középpont korrekciója"
 
-#: translations.py:438
+#: translations.py:439
 msgid "Edges Correct"
 msgstr "Szélek korrekciója"
 
-#: translations.py:440
+#: translations.py:441
 msgid "Axis"
 msgstr "Tengely"
 
-#: translations.py:443
+#: translations.py:444
 msgid "Edge Lightning"
 msgstr "Élek világossága"
 
-#: translations.py:444
+#: translations.py:445
 msgid "Edge Brightness"
 msgstr "Élek fényessége"
 
-#: translations.py:445
+#: translations.py:446
 msgid "Non-Edge Brightness"
 msgstr "Területek fényessége"
 
-#: translations.py:446
+#: translations.py:447
 msgid "Spatial"
 msgstr "Térbeliség"
 
-#: translations.py:447
+#: translations.py:448
 msgid "Temporal"
 msgstr "Időbeliség"
 
-#: translations.py:450
+#: translations.py:451
 msgid "Border width"
 msgstr "Szegély szélessége"
 
-#: translations.py:451
+#: translations.py:452
 msgid "Phase Incr."
 msgstr "Fázis növ."
 
-#: translations.py:452
+#: translations.py:453
 msgid "Zoom"
 msgstr "Nagyítás"
 
-#: translations.py:453
+#: translations.py:454
 msgid "Freeze Frame"
 msgstr "Képkocka merevítése"
 
-#: translations.py:454
+#: translations.py:455
 msgid "Freeze After"
 msgstr "Merevítés utána"
 
-#: translations.py:455
+#: translations.py:456
 msgid "Freeze Before"
 msgstr "Merevítés előtte"
 
-#: translations.py:456
+#: translations.py:457
 msgid "Angle"
 msgstr "Szög"
 
-#: translations.py:457 translations.py:460 translations.py:461
+#: translations.py:458 translations.py:461 translations.py:462
 msgid "transition.geometry"
 msgstr "átmenet.geometria"
 
-#: translations.py:458 translations.py:548
+#: translations.py:459 translations.py:551
 msgid "Shear X"
 msgstr "Nyírás X"
 
-#: translations.py:459 translations.py:549
+#: translations.py:460 translations.py:552
 msgid "Shear Y"
 msgstr "Nyírás Y"
 
-#: translations.py:468 translations.py:469 translations.py:547
-#: translations.py:551
+#: translations.py:469 translations.py:470 translations.py:550
+#: translations.py:554
 msgid "Opacity"
 msgstr "Átlátszatlanság"
 
-#: translations.py:470
+#: translations.py:471
 msgid "Rotate X"
 msgstr "Forgatás X"
 
-#: translations.py:471
+#: translations.py:472
 msgid "Rotate Y"
 msgstr "Forgatás Y"
 
-#: translations.py:472
+#: translations.py:473
 msgid "Rotate Z"
 msgstr "Forgatás Z"
 
-#: translations.py:474
+#: translations.py:475
 msgid "Edge Mode"
 msgstr "Élek módja"
 
-#: translations.py:475
+#: translations.py:476
 msgid "Sel. Space"
 msgstr "Terület kij."
 
-#: translations.py:476
+#: translations.py:477
 msgid "Operation"
 msgstr "Művelet"
 
-#: translations.py:477 translations.py:580
+#: translations.py:478 translations.py:583
 msgid "Hard"
 msgstr "Erős"
 
-#: translations.py:478
+#: translations.py:479
 msgid "Selection subspace"
 msgstr "Altér kiválasztása"
 
-#: translations.py:479
+#: translations.py:480
 msgid "R/A/Hue"
 msgstr "R/A/Árnyalat"
 
-#: translations.py:480
+#: translations.py:481
 msgid "G/B/Chroma"
 msgstr "G/B/Színesség"
 
-#: translations.py:481
+#: translations.py:482
 msgid "B/I/I"
 msgstr "B/I/I"
 
-#: translations.py:482
+#: translations.py:483
 msgid "Supress"
 msgstr "Elnyomás"
 
-#: translations.py:483 translations.py:610
+#: translations.py:484 translations.py:613
 msgid "Horizontal"
 msgstr "Vízszintes"
 
-#: translations.py:484 translations.py:611
+#: translations.py:485 translations.py:614
 msgid "Vertical"
 msgstr "Függőleges"
 
-#: translations.py:485
+#: translations.py:486
 msgid "Type"
 msgstr "Típus"
 
-#: translations.py:487
+#: translations.py:488
 msgid "Dot Radius"
 msgstr "Pontátmérő"
 
-#: translations.py:488
+#: translations.py:489
 msgid "Cyan Angle"
 msgstr "Türkizkék eltérítés"
 
-#: translations.py:489
+#: translations.py:490
 msgid "Magenta Angle"
 msgstr "Lila eltérítés"
 
-#: translations.py:490
+#: translations.py:491
 msgid "Yellow Angle"
 msgstr "Sárga eltérítés"
 
-#: translations.py:492
+#: translations.py:493
 msgid "Matrix Type"
 msgstr "Mátrix típusa"
 
-#: translations.py:493
+#: translations.py:494
 msgid "Aspect"
 msgstr "Arány"
 
-#: translations.py:494
+#: translations.py:495
 msgid "Center Size"
 msgstr "Középső rész mérete"
 
-#: translations.py:495
+#: translations.py:496
 msgid "Azimuth"
 msgstr "Irányszög (Azimut)"
 
-#: translations.py:496 translations.py:501
+#: translations.py:497 translations.py:502
 msgid "Lightness"
 msgstr "Világosság"
 
-#: translations.py:497
+#: translations.py:498
 msgid "Bump Height"
 msgstr "Kiemelkedés"
 
-#: translations.py:498
+#: translations.py:499
 msgid "Gray"
 msgstr "Szürke"
 
-#: translations.py:499
+#: translations.py:500
 msgid "Split Preview"
 msgstr "Előnézet leválasztása"
 
-#: translations.py:500
+#: translations.py:501
 msgid "Source on Left"
 msgstr "Forrás bal oldalon"
 
-#: translations.py:502
+#: translations.py:503
 msgid "Channel"
 msgstr "Csatorna"
 
-#: translations.py:503
+#: translations.py:504
 msgid "Input black level"
 msgstr "Bemeneti fekete szint"
 
-#: translations.py:504
+#: translations.py:505
 msgid "Input white level"
 msgstr "Bemeneti fehér szint"
 
-#: translations.py:505
+#: translations.py:506
 msgid "Black output"
 msgstr "Fekete kimenet"
 
-#: translations.py:506
+#: translations.py:507
 msgid "White output"
 msgstr "Fehér kimenet"
 
-#: translations.py:510
+#: translations.py:511
 msgid "Action"
 msgstr "Művelet"
 
-#: translations.py:511
+#: translations.py:512
 msgid "Keep Luma"
 msgstr "Fényesség megtartása"
 
-#: translations.py:512
+#: translations.py:513
 msgid "Luma Formula"
 msgstr "Fényesség formula"
 
-#: translations.py:513 tools/natronanimations.py:170
+#: translations.py:514 tools/natronanimations.py:170
 msgid "Effect"
 msgstr "Effekt"
 
-#: translations.py:515
+#: translations.py:516
 msgid "Blend Type"
 msgstr "Vegyítés típusa"
 
-#: translations.py:517
+#: translations.py:518
 msgid "Key Color"
 msgstr "Szín kulcs"
 
-#: translations.py:518
+#: translations.py:519
 msgid "Pre-Level"
 msgstr "Elő-szint"
 
-#: translations.py:519
+#: translations.py:520
 msgid "Post-Level"
 msgstr "Utó-szint"
 
-#: translations.py:520
+#: translations.py:521
 msgid "Slope"
 msgstr "Dőlésszög"
 
-#: translations.py:521
+#: translations.py:522
 msgid "Luma Band"
 msgstr "Fényesség sáv"
 
-#: translations.py:523
+#: translations.py:524
 msgid "Gain"
 msgstr "Jelszint"
 
-#: translations.py:524
+#: translations.py:525
 msgid "Input White Level"
 msgstr "Bemeneti fehér szint"
 
-#: translations.py:525
+#: translations.py:526
 msgid "Input Black Level"
 msgstr "Bemeneti fekete szint"
 
-#: translations.py:526
+#: translations.py:527
 msgid "Black Output"
 msgstr "Fekete kimenet"
 
-#: translations.py:527
+#: translations.py:528
 msgid "White Output"
 msgstr "Fehér kimenet"
 
-#: translations.py:528
+#: translations.py:529
 msgid "Rows"
 msgstr "Sorok"
 
-#: translations.py:529
+#: translations.py:530
 msgid "Columns"
 msgstr "Oszlopok"
 
-#: translations.py:530
+#: translations.py:531
 msgid "Color Temperature"
 msgstr "Színhőmérsklet"
 
-#: translations.py:531
+#: translations.py:532 translations.py:547
 msgid "Select .cube file"
 msgstr ".cube fájl választása"
 
-#: translations.py:532
+#: translations.py:533
 msgid "Red Ch. Red Gain"
 msgstr ""
 
-#: translations.py:533
+#: translations.py:534
 #, fuzzy
 msgid "Red Ch. Green Gain"
 msgstr "Vörös-Zöld"
 
-#: translations.py:534
+#: translations.py:535
 msgid "Red Ch. Blue Gain"
 msgstr ""
 
-#: translations.py:535
+#: translations.py:536
 msgid "Green Ch. Red Gain"
 msgstr ""
 
-#: translations.py:536
+#: translations.py:537
 msgid "Green Ch. Green Gain"
 msgstr ""
 
-#: translations.py:537
+#: translations.py:538
 msgid "Green Ch. Blue Gain"
 msgstr ""
 
-#: translations.py:538
+#: translations.py:539
 msgid "Blue Ch. Red Gain"
 msgstr ""
 
-#: translations.py:539
+#: translations.py:540
 msgid "Blue Ch. Green Gain"
 msgstr ""
 
-#: translations.py:540
+#: translations.py:541
 msgid "Blue Ch. Blue Gain"
 msgstr ""
 
-#: translations.py:541
+#: translations.py:542
 #, fuzzy
 msgid "Center X"
 msgstr "Középső rész mérete"
 
-#: translations.py:542
+#: translations.py:543
 #, fuzzy
 msgid "Center Y"
 msgstr "Középső rész mérete"
 
-#: translations.py:543
+#: translations.py:544
 #, fuzzy
 msgid "Quad Distortion"
 msgstr "Torzítás"
 
-#: translations.py:544
+#: translations.py:545
 msgid "Double Quad Distortion"
 msgstr ""
 
-#: translations.py:552 translations.py:556
+#: translations.py:546
+#, fuzzy
+msgid "Level"
+msgstr "Szintek"
+
+#: translations.py:555 translations.py:559
 msgid "Wipe Type"
 msgstr "Áttolás típusa"
 
-#: translations.py:554 translations.py:558
+#: translations.py:557 translations.py:561
 msgid "Softness"
 msgstr "Lágyság"
 
-#: translations.py:555
+#: translations.py:558
 msgid "Wipe Amount"
 msgstr "Áttolás mértéke"
 
-#: translations.py:559
+#: translations.py:562
 #, fuzzy
 msgid "Fade Out Length"
 msgstr "Eltűnés"
 
-#: translations.py:560
+#: translations.py:563
 #, fuzzy
 msgid "Fade In Length"
 msgstr "Előtűnés"
 
-#: translations.py:561
+#: translations.py:564
 #, fuzzy
 msgid "Wipe Direction"
 msgstr "Lencse korrekció"
 
-#: translations.py:562
+#: translations.py:565
 #, fuzzy
 msgid "Blend Mode"
 msgstr "Vegyítés típusa"
 
-#: translations.py:566 translations.py:572
+#: translations.py:569 translations.py:575
 msgid "Shave"
 msgstr "Borotválás"
 
-#: translations.py:567
+#: translations.py:570
 msgid "Rectangle"
 msgstr "Téglalap"
 
-#: translations.py:568
+#: translations.py:571
 msgid "Ellipse"
 msgstr "Ellipszis"
 
-#: translations.py:569
+#: translations.py:572
 msgid "Triangle"
 msgstr "Háromszög"
 
-#: translations.py:570 shortcuts.py:209 workflow.py:68
+#: translations.py:573 shortcuts.py:209 workflow.py:68
 msgid "Box"
 msgstr "Téglalap"
 
-#: translations.py:571 translations.py:585
+#: translations.py:574 translations.py:588
 msgid "Diamond"
 msgstr "Gyémánt"
 
-#: translations.py:573
+#: translations.py:576
 msgid "Shrink Hard"
 msgstr "Összehúzódás erősen"
 
-#: translations.py:574
+#: translations.py:577
 msgid "Shrink Soft"
 msgstr "Összehúzódás lágyan"
 
-#: translations.py:575
+#: translations.py:578
 msgid "Grow Hard"
 msgstr "Növekedés erősen"
 
-#: translations.py:576
+#: translations.py:579
 msgid "Grow Soft"
 msgstr "Növekedés lágyan"
 
-#: translations.py:577
+#: translations.py:580
 msgid "RGB"
 msgstr "RGB"
 
-#: translations.py:578
+#: translations.py:581
 msgid "ABI"
 msgstr "ABI"
 
-#: translations.py:579
+#: translations.py:582
 msgid "HCI"
 msgstr "HCI"
 
-#: translations.py:581
+#: translations.py:584
 msgid "Fat"
 msgstr "Kövér"
 
-#: translations.py:582
+#: translations.py:585
 msgid "Normal"
 msgstr "Normál"
 
-#: translations.py:583
+#: translations.py:586
 msgid "Skinny"
 msgstr "Vékony"
 
-#: translations.py:584
+#: translations.py:587
 msgid "Ellipsoid"
 msgstr "Ellipszoid"
 
-#: translations.py:586 shortcuts.py:204
+#: translations.py:589 shortcuts.py:204
 msgid "Overwrite"
 msgstr "Felülírás"
 
-#: translations.py:590 mlttransitions.py:155
+#: translations.py:593 mlttransitions.py:155
 msgid "Subtract"
 msgstr "Kivonás"
 
-#: translations.py:593
+#: translations.py:596
 msgid "Sharper"
 msgstr "Élesebb"
 
-#: translations.py:594
+#: translations.py:597
 msgid "Fuzzier"
 msgstr "Tompább"
 
-#: translations.py:595
+#: translations.py:598
 msgid "Luma"
 msgstr "Fényesség"
 
-#: translations.py:599
+#: translations.py:602
 msgid "Add Constant"
 msgstr "Állandó hozzáadása"
 
-#: translations.py:600
+#: translations.py:603
 msgid "Change Gamma"
 msgstr "Gamma változtatása"
 
-#: translations.py:601 translations.py:619 mlttransitions.py:150
+#: translations.py:604 translations.py:622 mlttransitions.py:150
 msgid "Multiply"
 msgstr "Szorzás"
 
-#: translations.py:602
+#: translations.py:605
 msgid "XPro"
 msgstr "XPro"
 
-#: translations.py:603
+#: translations.py:606
 msgid "OldPhoto"
 msgstr "Régi fénykép"
 
-#: translations.py:605
+#: translations.py:608
 msgid "Heat"
 msgstr "Hő"
 
-#: translations.py:606
+#: translations.py:609
 msgid "XRay"
 msgstr "Röntgen"
 
-#: translations.py:607
+#: translations.py:610
 msgid "RedGreen"
 msgstr "Vörös-Zöld"
 
-#: translations.py:608
+#: translations.py:611
 msgid "YellowBlue"
 msgstr "Sárga-Kék"
 
-#: translations.py:609
+#: translations.py:612
 msgid "Esses"
 msgstr "Esses"
 
-#: translations.py:612
+#: translations.py:615
 msgid "Shadows"
 msgstr "Árnyékok"
 
-#: translations.py:613
+#: translations.py:616
 msgid "Midtones"
 msgstr "Középszínek"
 
-#: translations.py:614
+#: translations.py:617
 msgid "Highlights"
 msgstr "Világos színek"
 
-#: translations.py:615
+#: translations.py:618
 #, fuzzy
 msgid "Forward"
 msgstr "Előre gyorsabban"
 
-#: translations.py:616
+#: translations.py:619
 #, fuzzy
 msgid "Backward"
 msgstr "Visszafelé gyorsabban"
 
-#: translations.py:618
+#: translations.py:621
 #, fuzzy
 msgid "Saturate"
 msgstr "Telítettség"
 
-#: translations.py:620 mlttransitions.py:153
+#: translations.py:623 mlttransitions.py:153
 msgid "Screen"
 msgstr "Kivetítés"
 
-#: translations.py:621 mlttransitions.py:151
+#: translations.py:624 mlttransitions.py:151
 msgid "Overlay"
 msgstr "Rávetítés"
 
-#: translations.py:622 mlttransitions.py:141
+#: translations.py:625 mlttransitions.py:141
 msgid "Darken"
 msgstr "Sötétítés"
 
-#: translations.py:623 mlttransitions.py:149
+#: translations.py:626 mlttransitions.py:149
 msgid "Lighten"
 msgstr "Világosítás"
 
-#: translations.py:624
+#: translations.py:627
 #, fuzzy
 msgid "ColorDodge"
 msgstr "Szín"
 
-#: translations.py:625
+#: translations.py:628
 #, fuzzy
 msgid "Colorburn"
 msgstr "Szín"
 
-#: translations.py:626 mlttransitions.py:147
+#: translations.py:629 mlttransitions.py:147
 msgid "Hardlight"
 msgstr "Erős megvilágítás"
 
-#: translations.py:627 mlttransitions.py:154
+#: translations.py:630 mlttransitions.py:154
 msgid "Softlight"
 msgstr "Lágy megvilágítás"
 
-#: translations.py:628 mlttransitions.py:142
+#: translations.py:631 mlttransitions.py:142
 msgid "Difference"
 msgstr "Különbség"
 
-#: translations.py:629
+#: translations.py:632
 msgid "Exclusion"
 msgstr ""
 
-#: translations.py:630
+#: translations.py:633
 msgid "HSLHue"
 msgstr ""
 
-#: translations.py:631
+#: translations.py:634
 #, fuzzy
 msgid "HSLSaturation"
 msgstr "Telítettség"
 
-#: translations.py:632
+#: translations.py:635
 #, fuzzy
 msgid "HSLColor"
 msgstr "Szín"
 
-#: translations.py:633
+#: translations.py:636
 msgid "HSLLuminosity"
 msgstr ""
 
