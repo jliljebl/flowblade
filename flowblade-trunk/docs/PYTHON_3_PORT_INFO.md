@@ -1,4 +1,6 @@
-| **Ubuntu package name** | **Description** | Python 3 available |
+# PYTHON# STAUS OF DEPENDECIES
+
+| **Ubuntu package name** | **Description** | **Python 3 available** |
 |:-------------------------------|:----------------|:--------------|
 | python-gi | GTK3 Python bindings | **YES, python3-gi**  |
 | python-mlt | MLT python bindings, this pulls in MLT | **NO** |
