@@ -13,7 +13,7 @@
 | python-pil | PIL image manipulation library | **YES, python-pil is Pillow fork and should work** |
 | librsvg2-common | svg support | **NOT PYTHON**  |
 | gmic | framework for image processing | **NOT PYTHON**  |
-| gir1.2-glib-2.0 | Glib | UNKNOWN|
-| gir1.2-gtk-3.0 | Gtk toolkit | UNKNOWN |
-| gir1.2-pango-1.0 | Pango text lib | UNKNOWN |
-| gir1.2-gdkpixbuf-2.0 | Image support | UNKNOWN |
+| gir1.2-glib-2.0 | Glib | **YES, this is same for Python 3 and used by python3-gi package**|
+| gir1.2-gtk-3.0 | Gtk toolkit | **YES, this is same for Python 3 and used by python3-gi package** |
+| gir1.2-pango-1.0 | Pango text lib | **YES, this is same for Python 3 and used by python3-gi package** |
+| gir1.2-gdkpixbuf-2.0 | Image support | **YES, this is same for Python 3 and used by python3-gi package** |
