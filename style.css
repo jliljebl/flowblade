@@ -25,8 +25,8 @@ html {
 
 body {
 
-	font-size: 15px;
-	line-height: 15px;
+	font-size: 16px;
+	line-height: 16px;
 	font-family: Arial,Helvetica,sans-serif;
 	color: #444;
 	background-color: #ffffff; 
@@ -347,20 +347,20 @@ h1{
 	font-size:32px;
 	margin-top: 50px;
 	margin-bottom:10px;
-	color:#555555;
+	color:#333333;
 }
 
 h2{
 	font-size:32px;
 	margin-top: 40px;
 	margin-bottom:10px;
-	color:#555555;
+	color:#333333;
 }
 h3{
 	font-size:22px;
 	margin-top: 50px;
 	margin-bottom:0px;
-	color:#555555;
+	color:#333333;
 }
 h4{
 	font-size: 24px;
@@ -372,14 +372,14 @@ h4{
 	margin-top:10px;
 	margin-bottom:0px;
 	font-size:18px;
-	color:#555555;
+	color:#333333;
 }
 h5{
 	margin-top:5px;
 	font-size:16px;
 	margin-bottom:0px;
 	margin-left:15px;
-	color:#555555;
+	color:#333333;
 }
  h6{
 	font-size:14px;
