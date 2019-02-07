@@ -1,4 +1,4 @@
-# PYTHON 3 STATUS OF DEPENDECIES
+# PYTHON 3 STATUS OF DEPENDENCIES
 
 | **Ubuntu package name** | **Description** | **Python 3 available** |
 |:-------------------------------|:----------------|:--------------|
