@@ -22,6 +22,7 @@
 Module manages undo and redo stacks and executes edit actions from them
 on user requests.
 """
+import time
 import editorstate
 
 set_post_undo_redo_edit_mode = None # This is set at startup to avoid circular imports
