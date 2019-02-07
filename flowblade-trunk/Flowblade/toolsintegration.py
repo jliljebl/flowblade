@@ -17,6 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
+from __future__ import print_function
 from gi.repository import GObject
 
 import copy
@@ -86,7 +87,7 @@ class ToolIntegrator:
         new_instance.do_export()
         
     def do_export(self):
-        print self.__class__.__name__ + " does not implement do_export()"
+        print(self.__class__.__name__ + " does not implement do_export()")
          
     def render_program(self, program_file, write_file, render_data, progress_callback, completion_callback):
         new_instance = copy.deepcopy(self)
@@ -106,13 +107,13 @@ class ToolIntegrator:
         self.ticker.stop_ticker()
         
     def start_render(self):
-        print self.__class__.__name__ + " does not implement start_render()"
+        print(self.__class__.__name__ + " does not implement start_render()")
 
     def stop_render(self):
-        print self.__class__.__name__ + " does not implement start_render()"
+        print(self.__class__.__name__ + " does not implement start_render()")
         
     def render_tick(self):
-        print self.__class__.__name__ + " does not implement render_tick()"
+        print(self.__class__.__name__ + " does not implement render_tick()")
         
     def create_render_ticker(self):
         self.render_ticker = utils.Ticker(self.render_tick, 1.0)
@@ -149,10 +150,10 @@ class NatronIntegrator(ToolIntegrator):
         # Blocks until render complete
         toolnatron.render_program(self.write_file, self.frame_name, self.program_file , self.writer, self.frame_in, self.frame_out)
         self.stop_render_ticker()
-        print "renedirng done"
+        print("renedirng done")
 
     def render_tick(self):
-        print "tick"
+        print("tick")
 
 
 class SlowMoIntegrator(ToolIntegrator):
