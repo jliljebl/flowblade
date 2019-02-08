@@ -26,6 +26,8 @@ import os
 import threading
 import time
 
+from gi.repository import Gdk
+
 import appconsts
 import dialogutils
 import editorpersistance
