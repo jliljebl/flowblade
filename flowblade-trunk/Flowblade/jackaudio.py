@@ -26,6 +26,8 @@ import os
 import threading
 import time
 
+from gi.repository import Gdk
+
 import appconsts
 import dialogutils
 import editorpersistance
@@ -169,7 +171,7 @@ class JackAudioManagerDialog:
         vbox.pack_start(props_frame, False, False, 0)
         vbox.pack_start(onoff_frame, False, False, 0)
 
-        #alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
+        alignment = Gtk.Alignment.new(0.5, 0.5, 1.0, 1.0)
         alignment.set_padding(12, 12, 12, 12)
         alignment.add(vbox)
 

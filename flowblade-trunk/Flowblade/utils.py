@@ -155,7 +155,7 @@ def get_tc_frame_with_fps(frame_str, frames_per_sec):
     # calculate corresponding frame
     try:
         times = frame_str.split(":", 4)
-    except expression as identifier:
+    except Exception:
         return 0
 
     # now we calculate the sum of frames that would sum up at corresponding

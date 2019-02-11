@@ -31,6 +31,7 @@ gi.require_version('PangoCairo', '1.0')
 from gi.repository import Gtk, Gdk
 from gi.repository import GLib
 
+import appconsts
 import editorstate
 import editorpersistance
 import gui

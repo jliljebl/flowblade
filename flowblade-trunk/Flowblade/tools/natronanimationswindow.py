@@ -55,6 +55,7 @@ import mlttransitions
 import mltfilters
 import natronanimations
 import positionbar
+import processutils
 import propertyedit
 import propertyeditorbuilder
 import renderconsumer
