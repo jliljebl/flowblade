@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-06 13:16+0200\n"
-"PO-Revision-Date: 2019-02-06 09:17+0100\n"
+"POT-Creation-Date: 2019-02-11 18:18+0200\n"
+"PO-Revision-Date: 2019-02-09 16:17+0100\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "Language: cs\n"
@@ -62,8 +62,8 @@ msgstr "Pro nahrání projektu budete potřebovat:"
 msgid ""
 "Open project in 'Media Relinker' tool to relink media assets to new files, or"
 msgstr ""
-"Otevřít projekt v nástroji Znovuspojovač záznamů pro opětovné spojení "
-"položek záznamů s novými soubory, nebo"
+"Otevřít projekt v nástroji pro nové odkazování na záznamy pro svázání "
+"záznamů s novými soubory, nebo"
 
 #: projectaction.py:133
 msgid "Place a file with the same exact name and path on the hard drive"
@@ -71,7 +71,7 @@ msgstr "Umístěte falešný soubor s přesně stejným názvem a cestou na pevn
 
 #: projectaction.py:134
 msgid "Open project in Media Relinker tool"
-msgstr "Otevřít projekt v nástroji Znovuspojovač záznamů"
+msgstr "Otevřít projekt v nástroji pro odkazování záznamů"
 
 #: projectaction.py:153
 msgid "Profile with Description: '"
@@ -168,7 +168,7 @@ msgstr " minutami."
 
 #: projectaction.py:748
 msgid "Render target file exists!"
-msgstr "Cílový soubor se zpracováním existuje!"
+msgstr "Cílový soubor zpracování existuje!"
 
 #: projectaction.py:749
 msgid "Confirm overwriting existing file."
@@ -186,12 +186,12 @@ msgid ""
 "\n"
 "Select 'Confirm' to render from proxy media anyway."
 msgstr ""
-"Zpracování z náhradního záznamu vytvoří horší jakost než zpracování z "
-"původního záznamu.\n"
+"Udělání z náhradního záznamu vytvoří horší jakost než udělání z původního "
+"záznamu.\n"
 "Převést za použití původního záznamu ve správci  náhradních záznamů pro "
 "lepší jakost.\n"
 "\n"
-"Vyberte Potvrdit, aby se přesto provedlo zpracování z náhradního záznamu."
+"Vyberte Potvrdit, aby se přesto provedlo udělání z náhradního záznamu."
 
 #: projectaction.py:833
 msgid "Render launch failed!"
@@ -207,7 +207,7 @@ msgstr "Přidání položky do řady ke zpracování se nezdařilo!"
 
 #: projectaction.py:860
 msgid "Render Proxy Files For Selected Media"
-msgstr "Udělat náhradní soubory pro vybraná multimédia"
+msgstr "Udělat náhradní soubory pro vybrané záznamy"
 
 #: projectaction.py:862
 msgid "Select All"
@@ -494,7 +494,7 @@ msgstr "Přidat náhled záběru"
 
 #: editorwindow.py:210 shortcuts.py:190
 msgid "Append"
-msgstr "Připojit"
+msgstr "Připojení"
 
 #: editorwindow.py:211 shortcuts.py:189 shortcuts.py:203 workflow.py:62
 msgid "Insert"
@@ -510,7 +510,7 @@ msgstr "Přepsání rozsahu"
 
 #: editorwindow.py:214
 msgid "Cut Clip"
-msgstr "Rozdělit záběr"
+msgstr "Stříhat záběr"
 
 #: editorwindow.py:215 tlineaction.py:194
 msgid "Split to new Sequence at Playhead Position"
@@ -647,7 +647,7 @@ msgstr "Z nynějšího úryvku"
 
 #: editorwindow.py:255
 msgid "Audio Sync Merge Clip From 2 Media Items "
-msgstr "Seřízení zvuku sloučeného záběru ze dvou položek záznamů"
+msgstr "Seřízení zvuku záběru sloučeného ze dvou záznamů"
 
 #: editorwindow.py:256
 msgid "Import Media From Project..."
@@ -689,19 +689,19 @@ msgstr "Informace o projektu"
 #: tools/batchrendering.py:879 tools/gmic.py:805
 #: tools/natronanimationswindow.py:386
 msgid "Render"
-msgstr "Vykreslit"
+msgstr "Zpracování"
 
 #: editorwindow.py:266
 msgid "Add To Batch Render Queue..."
-msgstr "Přidat do řady dávkového vykreslování…"
+msgstr "Přidat do řady dávkového zpracování…"
 
 #: editorwindow.py:267 middlebar.py:196
 msgid "Batch Render Queue"
-msgstr "Řada dávkového vykreslování"
+msgstr "Řada dávkového zpracování"
 
 #: editorwindow.py:268
 msgid "Rerender All Rendered Transitions And Fades "
-msgstr "Vykreslit všechny vykreslované přechody a stíny"
+msgstr "Zpracovat všechny vykreslované přechody a stíny"
 
 #: editorwindow.py:269
 msgid "Render Timeline"
@@ -729,7 +729,7 @@ msgstr "Natron animace"
 
 #: editorwindow.py:275 medialinker.py:180
 msgid "Media Relinker"
-msgstr "Znovuspojovač záznamů"
+msgstr "Odkazovač na záznamy"
 
 #: editorwindow.py:276
 msgid "_Help"
@@ -829,7 +829,7 @@ msgstr "Časový kód ve středu"
 
 #: editorwindow.py:936
 msgid "Components Centered"
-msgstr "Součástky vystředěny"
+msgstr "Součásti vystředěny"
 
 #: editorwindow.py:950
 msgid "Tabs Position"
@@ -885,7 +885,7 @@ msgstr "Vybrat režim zobrazení: Video / Vectorscope / RGBParade"
 
 #: editorwindow.py:1118
 msgid "Set trim view and match frames"
-msgstr "Nastavit pohled na stříhání a přizpůsobit rámečky"
+msgstr "Nastavit zobrazení zkrácení a přizpůsobení snímků"
 
 #: editorwindow.py:1120
 msgid "Sequence / Media current frame timecode"
@@ -901,7 +901,7 @@ msgstr "Nynější poloha úryvku/záznamu"
 
 #: editorwindow.py:1409
 msgid "In / Out / Marked Length"
-msgstr "Začátek / Konec / označená délka"
+msgstr "Začátek / konec / označená délka"
 
 #: clipeffectseditor.py:74
 msgid "Clip Filters Stack"
@@ -1015,7 +1015,7 @@ msgstr "Nový projekt"
 #: dialogutils.py:98 dialogutils.py:158 exporting.py:437
 #: tools/natronanimationswindow.py:705 tools/natronanimationswindow.py:728
 msgid "Cancel"
-msgstr "Storno"
+msgstr "Zrušit"
 
 #: dialogs.py:57 dialogs.py:223 dialogs.py:266 dialogs.py:332 dialogs.py:486
 #: dialogs.py:612 dialogs.py:731 dialogs.py:744 dialogs.py:1583
@@ -1202,7 +1202,7 @@ msgstr "Stránka projektu:"
 
 #: dialogs.py:514
 msgid "Upstream:"
-msgstr "Ke zdroji:"
+msgstr "Projekty:"
 
 #: dialogs.py:517
 msgid "Tools:"
@@ -1270,7 +1270,7 @@ msgstr "Spuštěno z: "
 
 #: dialogs.py:659
 msgid " AVAILABLE"
-msgstr "DOSTUPNÉ"
+msgstr " DOSTUPNÉ"
 
 #: dialogs.py:661
 msgid " NOT AVAILABLE, "
@@ -1781,7 +1781,7 @@ msgstr "Šipka vlevo "
 
 #: dialogs.py:1455
 msgid "Prev Frame Trim Edit"
-msgstr "Stříhat předchozí snímek"
+msgstr "Zkrátit předchozí snímek"
 
 #: dialogs.py:1456 dialogs.py:1493 shortcuts.py:227
 msgid "Right Arrow"
@@ -1789,7 +1789,7 @@ msgstr "Šipka vpravo"
 
 #: dialogs.py:1456
 msgid "Next Frame Trim Edit"
-msgstr "Stříhat další snímek"
+msgstr "Zkrátit další snímek"
 
 #: dialogs.py:1457 dialogs.py:1469
 msgid "Control + Left Arrow "
@@ -1797,7 +1797,7 @@ msgstr "Ctrl+šipka vlevo"
 
 #: dialogs.py:1457
 msgid "Back 10 Frames Trim Edit"
-msgstr "Stříhat 10 snímků zpět"
+msgstr "Zkrátit o 10 snímků zpět"
 
 #: dialogs.py:1458 dialogs.py:1470
 msgid "Control + Right Arrow"
@@ -1805,7 +1805,7 @@ msgstr "Ctrl+šipka vpravo"
 
 #: dialogs.py:1458
 msgid "Forward 10 Frames Trim Edit"
-msgstr "Stříhat 10 snímků vpřed"
+msgstr "Zkrátit o 10 snímků vpřed"
 
 #: dialogs.py:1469
 msgid "Move Back 10 Frames"
@@ -1841,7 +1841,7 @@ msgstr "R"
 
 #: dialogs.py:1488
 msgid "Toggle Trim / Ripple Trim Tools"
-msgstr "Přepnout nástroje pro stříhání/stříhání a posunutí"
+msgstr "Přepnout nástroje pro zkrácení/zkrácení tažením a posunutí"
 
 #: dialogs.py:1492
 msgid "Move Source Video Left 1px"
@@ -1955,7 +1955,7 @@ msgstr "Odstranit vodoznak"
 
 #: dialogs.py:1546 menuactions.py:151
 msgid "Not Set"
-msgstr "Není nastaveno"
+msgstr "Nenastaveno"
 
 #: dialogs.py:1580
 msgid "Select Watermark File"
@@ -1983,8 +1983,7 @@ msgstr "Změnit na profil souboru"
 
 #: dialogs.py:1658
 msgid "A video file was loaded that does not match the Project Profile!"
-msgstr ""
-"Byl nahrán soubor s obrazovým záznamem, který neodpovídá profilu projektu!"
+msgstr "Byl nahrán obrazový soubor, který neodpovídá profilu projektu!"
 
 #: dialogs.py:1666
 msgid "File Profile:"
@@ -2423,7 +2422,7 @@ msgstr "Smazat všechny značky záběru"
 
 #: guicomponents.py:2002 guicomponents.py:2042
 msgid "Render Slow/Fast Motion File"
-msgstr "Udělat soubor se zpomaleným/zrychleným pohybem"
+msgstr "Udělat soubor s pomalým/rychlým pohybem"
 
 #: guicomponents.py:2004
 msgid "Render Reverse Motion File"
@@ -2459,11 +2458,11 @@ msgstr "Přepnout označení hvězdou"
 
 #: guicomponents.py:2051 medialinker.py:136
 msgid "Set File Relink Path"
-msgstr "Nastavit cestu pro opětovné spojení souboru"
+msgstr "Nastavit cestu nového odkazu na soubor"
 
 #: guicomponents.py:2052 medialinker.py:138
 msgid "Delete File Relink Path"
-msgstr "Smazat cestu pro opětovné spojení souboru"
+msgstr "Smazat cestu nového odkazu na soubor"
 
 #: guicomponents.py:2054
 msgid "Show Full Paths"
@@ -2484,7 +2483,7 @@ msgstr "Sním./s: "
 
 #: guicomponents.py:2130 tools/toolsencoding.py:351
 msgid "Pixel Aspect: "
-msgstr "Poměr stran pixelu: "
+msgstr "Strana obrazového bodu: "
 
 #: guicomponents.py:2137
 msgid "Description:"
@@ -2504,7 +2503,7 @@ msgstr "Velikost:"
 
 #: guicomponents.py:2145
 msgid "Pixel aspect ratio: "
-msgstr "Poměr stran pixelu: "
+msgstr "Poměr stran obrazového bodu (pixelu): "
 
 #: guicomponents.py:2147 profilesmanager.py:138
 msgid "Progressive:"
@@ -2656,15 +2655,15 @@ msgstr "0 %"
 
 #: guicomponents.py:2762
 msgid "Trim View On"
-msgstr "Pohled na stříhání zapnut"
+msgstr "Zobrazení zkrácení zapnuto"
 
 #: guicomponents.py:2767
 msgid "Trim View Single Side Edits Only"
-msgstr "Režim úprav s jedním oknem v pohledu na stříhání"
+msgstr "Režim úprav s jedním oknem v zobrazení zkrácení"
 
 #: guicomponents.py:2772
 msgid "Trim View Off"
-msgstr "Pohled na stříhání vypnut"
+msgstr "Zobrazení zkrácení vypnuto"
 
 #: guicomponents.py:2788
 msgid "Set Current Clip Frame Match Frame"
@@ -3567,7 +3566,7 @@ msgstr "Perspektiva"
 
 #: translations.py:254
 msgid "Lut3D"
-msgstr ""
+msgstr "Lut3D"
 
 #: translations.py:260 translations.py:443
 msgid "Position"
@@ -4424,13 +4423,12 @@ msgid "Double Quad Distortion"
 msgstr "Dvojité čtvercové zkreslení"
 
 #: translations.py:546
-#, fuzzy
 msgid "Level"
-msgstr "Úrovně"
+msgstr "Úroveň"
 
 #: translations.py:555 translations.py:559
 msgid "Wipe Type"
-msgstr "Typ papíru (stírání)"
+msgstr "Typ stírání"
 
 #: translations.py:557 translations.py:561
 msgid "Softness"
@@ -4450,7 +4448,7 @@ msgstr "Délka postupného zesílení (postupný náběh)"
 
 #: translations.py:564
 msgid "Wipe Direction"
-msgstr "Překlopit směr"
+msgstr "Směr stírání"
 
 #: translations.py:565
 msgid "Blend Mode"
@@ -4862,7 +4860,7 @@ msgstr "Přechod"
 
 #: mlttransitions.py:132
 msgid "Wipe Clip Length"
-msgstr "Délka záběru stírání obrazu"
+msgstr "Délka záběru stírání"
 
 #: mlttransitions.py:139
 msgid "Burn"
@@ -4906,7 +4904,7 @@ msgstr "Alfa do vstupu"
 
 #: mlttransitions.py:188
 msgid "Wipe"
-msgstr "Setření"
+msgstr "Stírání"
 
 #: mlttransitions.py:189
 msgid "Color Dip"
@@ -5081,15 +5079,15 @@ msgstr "Otočení:"
 
 #: middlebar.py:147
 msgid "Zoom In - Mouse Middle Scroll"
-msgstr "Přiblížení - posouvání prostředního kolečka myši"
+msgstr "Přiblížit - otáčet prostředním kolečkem myši"
 
 #: middlebar.py:147
 msgid "Zoom Out - Mouse Middle Scroll"
-msgstr "Oddálení - posouvání prostředního kolečka myši"
+msgstr "Oddálit - otáčet prostředním kolečkem myši"
 
 #: middlebar.py:147
 msgid "Zoom Length - Mouse Middle Click"
-msgstr "Velikost zvětšení - klepnutí prostředním kolečkem myši"
+msgstr "Velikost zvětšení - klepnout prostředním kolečkem myši"
 
 #: middlebar.py:154
 msgid ""
@@ -5097,15 +5095,15 @@ msgid ""
 "Add Rendered Fade - 1 clip selected"
 msgstr ""
 "Přidat přechod - vybrány dva záběry\n"
-"Přidat prolínání - vybrán jeden záběr\n"
+"Přidat prolínání - vybrán jeden záběr"
 
 #: middlebar.py:154
 msgid ""
 "Cut Active Tracks - X\n"
 "Cut All Tracks - Shift + X"
 msgstr ""
-"Rozdělit činné stopy - X\n"
-"Rozdělit všechny stopy - Shift+X"
+"Stříhat na činných stopách - X\n"
+"Stříhat na všech stopách - Shift+X"
 
 #: middlebar.py:163
 msgid "Splice Out - Delete"
@@ -5113,15 +5111,15 @@ msgstr "Vystřihnout - Delete"
 
 #: middlebar.py:163
 msgid "Ripple Delete"
-msgstr "Vytáhnout"
+msgstr "Vytáhnout (smazat a posunout)"
 
 #: middlebar.py:163
 msgid "Range Delete"
-msgstr "Smazání rozsahu"
+msgstr "Smazat rozsah"
 
 #: middlebar.py:170
 msgid "Resync Selected"
-msgstr "Znovusladit vybrané"
+msgstr "Seřídit znovu vybrané"
 
 #: middlebar.py:179
 msgid "Overwrite Range"
@@ -5387,11 +5385,11 @@ msgstr "Uložit argumenty pro zpracování jako"
 
 #: rendergui.py:169
 msgid "Render Slow/Fast Motion Video File"
-msgstr "Udělat soubor se zpomaleným/zrychleným pohybem obrazu"
+msgstr "Zpracovat soubor se zpomaleným/zrychleným pohybem obrazu"
 
 #: rendergui.py:174 rendergui.py:322
 msgid "Source Media File: "
-msgstr "Zdrojový multimediální soubor: "
+msgstr "Zdrojový záznam: "
 
 #: rendergui.py:181 rendergui.py:182 rendergui.py:329 rendergui.py:330
 msgid "<b>not set</b>"
@@ -5451,7 +5449,7 @@ msgstr "Délka zpracovaného záběru:"
 
 #: rendergui.py:317
 msgid "Render Reverse Motion Video File"
-msgstr "Udělat soubor s obráceným pohybem obrazu"
+msgstr "Udělat obrazový soubor s obráceným pohybem obrazu"
 
 #: rendergui.py:465 tools/toolsencoding.py:172
 msgid "Select Render quality"
@@ -5704,7 +5702,7 @@ msgstr "Žádné automatické ukládání"
 
 #: preferenceswindow.py:122
 msgid "1 min"
-msgstr "1 minuta"
+msgstr "1 minutu"
 
 #: preferenceswindow.py:122
 msgid "2 min"
@@ -5748,7 +5746,7 @@ msgstr "Pamatovat si poslední adresář pro zpracování"
 
 #: preferenceswindow.py:141
 msgid "Autosave for crash recovery every:"
-msgstr "Uložit pro obnovení po pádu každých:"
+msgstr "Automaticky uložit pro obnovení po pádu každou:"
 
 #: preferenceswindow.py:142
 msgid "Rendered Clips folder:"
@@ -5926,7 +5924,7 @@ msgstr "Požadavek na vzhled, ikony a barvy:"
 
 #: preferenceswindow.py:381
 msgid "Theme detection fail fallback colors:"
-msgstr "Záložní barvy při selhání rozpoznání vzhledu:"
+msgstr "Záložní barvy při chybějícím tématu vzhledu:"
 
 #: preferenceswindow.py:382
 msgid "Default audio levels display:"
@@ -6031,7 +6029,7 @@ msgstr "Zbývá odhadem:"
 
 #: tools/batchrendering.py:639
 msgid "Current Render:"
-msgstr "Nyní je vykreslováno:"
+msgstr "Nyní se zpracovává:"
 
 #: tools/batchrendering.py:640 tools/batchrendering.py:1295 proxyediting.py:366
 msgid "Elapsed:"
@@ -6345,7 +6343,7 @@ msgstr ""
 
 #: tlineaction.py:540
 msgid "Can't do Ripple Delete!"
-msgstr "Nelze vytáhnout!"
+msgstr "Nelze vytáhnout (smazat a posunout)!"
 
 #: tlineaction.py:541
 msgid ""
@@ -6354,8 +6352,8 @@ msgid ""
 "\n"
 "Overwrite would happen on at track <b>"
 msgstr ""
-"Vybrané vytažení (smazání) by zapříčinilo přepsání a to není pro tuto "
-"činnost úpravy dovoleno.\n"
+"Vybrané vytažení (smazání a posunutí) by zapříčinilo přepsání a to není pro "
+"tuto činnost úpravy dovoleno.\n"
 "\n"
 "K přepsání by došlo při stopě <b>"
 
@@ -6491,7 +6489,7 @@ msgstr "Záběr je příliš krátký!"
 
 #: tlineaction.py:1537
 msgid "Rerender all Rendered Transitions / Fades"
-msgstr "Vykreslit všechny vykreslované přechody/prolínání"
+msgstr "Zpracovat všechny vykreslované přechody/prolínání"
 
 #: tlineaction.py:1581
 msgid "Rendering item "
@@ -6565,7 +6563,7 @@ msgstr ""
 
 #: medialinker.py:106
 msgid "Load Project For Relinking"
-msgstr "Nahrát projekt pro opětovné spojení"
+msgstr "Nahrát projekt pro udělání nových odkazů"
 
 #: medialinker.py:114
 msgid "Original Media Missing:"
@@ -6593,7 +6591,7 @@ msgstr "Zobrazit nalezené soubory záznamů"
 
 #: medialinker.py:154
 msgid "Save Relinked Project As..."
-msgstr "Uložit znovuspojený projekt jako..."
+msgstr "Uložit projekt s novými odkazy jako..."
 
 #: medialinker.py:271
 msgid "Missing Media File Path"
@@ -6605,11 +6603,11 @@ msgstr "Cesta k nalezenému souboru záznamu"
 
 #: medialinker.py:276
 msgid "Media File Re-link Path"
-msgstr "Cesta k opětovně spojenému souboru záznamu"
+msgstr "Cesta nového odkazu na soubor se záznamem"
 
 #: medialinker.py:437
 msgid "Select Media File To Relink To"
-msgstr "Vybrat soubor záznamu pro opětovné spojení"
+msgstr "Vybrat soubor se záznamem pro udělání nových odkazů"
 
 #: medialinker.py:477
 msgid "<b>Original path:</b> "
@@ -6617,7 +6615,7 @@ msgstr "<b>Původní umístění:</b>"
 
 #: medialinker.py:480
 msgid "<b>Relink path:</b> "
-msgstr "<b>Cesta pro opětovné spojení: </b>"
+msgstr "<b>Cesta nového odkazu: </b>"
 
 #: medialinker.py:489
 msgid "Media Asset Paths"
@@ -6625,15 +6623,15 @@ msgstr "Cesty k položkám se záznamy"
 
 #: medialinker.py:526
 msgid "Relinked version of the Project saved!"
-msgstr "Opětovně spojená verze projektu uložena!"
+msgstr "Verze projektu s novými odkazy uložena!"
 
 #: medialinker.py:527
 msgid ""
 "To test the project, close this tool and open the relinked version in "
 "Flowblade."
 msgstr ""
-"K vyzkoušení projektu tento nástroj zavřete a opětovně spojenou verzi "
-"otevřete ve Flowblade."
+"K vyzkoušení projektu tento nástroj zavřete a verzi s novými odkazy otevřete "
+"ve Flowblade."
 
 #: patternproducer.py:351
 msgid "Create Color Clip"
@@ -6779,11 +6777,11 @@ msgstr "snímky"
 
 #: tools/gmic.py:910 tools/natronanimationswindow.py:578
 msgid " no video file"
-msgstr "žádný videosoubor"
+msgstr "žádný obrazový soubor"
 
 #: tools/gmic.py:912 tools/natronanimationswindow.py:580
 msgid " render video file"
-msgstr " vykreslit videosoubor"
+msgstr " udělat obrazový soubor"
 
 #: tools/gmic.py:913 tools/natronanimationswindow.py:581
 msgid " frame(s),"
@@ -6844,14 +6842,14 @@ msgstr "Použít výchozí profil:"
 
 #: monitorevent.py:312
 msgid "On some systems Trim View may update slowly"
-msgstr "Na některých systémech se pohled na stříhání může aktualizovat pomalu"
+msgstr "Na některých systémech se zobrazeni zkrácení může aktualizovat pomalu"
 
 #: monitorevent.py:313
 msgid ""
 "<b>Trim View</b> works best with SSDs and relatively powerful processors.\n"
 "\n"
 msgstr ""
-"<b>Pohled na stříhání</b> pracuje nejlépe s SSD a poměrně silnými "
+"<b>Zobrazení zkrácení</b> pracuje nejlépe s SSD a poměrně silnými "
 "procesory.\n"
 "\n"
 
@@ -6861,8 +6859,8 @@ msgid ""
 "options\n"
 "if performance is not satisfactory."
 msgstr ""
-"Vyberte volby <b>Pohled na stříhání vypnut</b> nebo<b>Režim úprav s jedním "
-"oknem v pohledu na stříhání</b\n"
+"Vyberte volby <b>Zobrazení zkrácení vypnuto</b> nebo<b>Režim úprav s jedním "
+"oknem v zobrazení zkrácení</b\n"
 "pokud není výkon uspokojivý."
 
 #: compositorfades.py:242
@@ -7099,31 +7097,31 @@ msgstr "Tříbodové přepsání"
 
 #: shortcuts.py:200
 msgid "Trim Tool Ripple Mode On/Off"
-msgstr "Režim zkrácení tažením a posunutí nástrojem na stříhání zapnut/vypnut"
+msgstr "Režim zkrácení tažením a posunutí zapnut/vypnut"
 
 #: shortcuts.py:201
 msgid "Cut Active Tracks"
-msgstr "Vyjmout činné stopy"
+msgstr "Stříhat na činných stopách"
 
 #: shortcuts.py:202
 msgid "Cut All Tracks"
-msgstr "Vyjmout všechny stopy"
+msgstr "Stříhat na všech stopách"
 
 #: shortcuts.py:205 workflow.py:64
 msgid "Trim"
-msgstr "Stříhání"
+msgstr "Zkrátit"
 
 #: shortcuts.py:206 workflow.py:65
 msgid "Roll"
-msgstr "Svinutí"
+msgstr "Svinout"
 
 #: shortcuts.py:207 workflow.py:66
 msgid "Slip"
-msgstr "Skluz"
+msgstr "Klouzat"
 
 #: shortcuts.py:208 workflow.py:67
 msgid "Spacer"
-msgstr "Vymezovač"
+msgstr "Odstup"
 
 #: shortcuts.py:212
 msgid "Switch Monitor Source"
@@ -7135,7 +7133,7 @@ msgstr "Přidat značku"
 
 #: shortcuts.py:214
 msgid "Complete Keyboard Trim Edit"
-msgstr "Úplná klávesnice (stříhání a úpravy)"
+msgstr "Úplná klávesnice (zkrácení a upravování)"
 
 #: shortcuts.py:223
 msgid "SPACE"
@@ -7251,7 +7249,7 @@ msgstr " je zamknuta. Odemkněte stopu, aby mohla být upravována."
 
 #: trimmodes.py:462
 msgid "Can't use Trim tool on blank clips."
-msgstr "Nelze použít nástroj na stříhání na prázdné záběry."
+msgstr "Nelze použít nástroj na zkrácení na prázdné záběry."
 
 #: trimmodes.py:463
 msgid "You can use <b>Move</b> or <b>Roll</b> tools instead."
@@ -7267,7 +7265,7 @@ msgid ""
 "You are attempting a roll trim at a position in the timeline\n"
 "where it can't be performed."
 msgstr ""
-"Pokoušíte se provést svinovací stříhání v poloze na časové ose, kde toto\n"
+"Pokoušíte se provést svinovací zkrácení v poloze na časové ose, kde toto\n"
 "nelze provést."
 
 #: menuactions.py:124
@@ -7338,7 +7336,7 @@ msgstr "1"
 
 #: tools/natronanimationswindow.py:355
 msgid "Natron Render Format:"
-msgstr "Formát vykreslení Natron:"
+msgstr "Formát zpracování Natron:"
 
 #: tools/natronanimationswindow.py:369
 msgid "Set Frames Folder for valid render"
@@ -7346,7 +7344,7 @@ msgstr "Nastavit složku snímků pro platný vykreslovač"
 
 #: tools/natronanimationswindow.py:407 tools/natronanimationswindow.py:669
 msgid "Load Animation"
-msgstr "Načíst animaci"
+msgstr "Nahrát animaci"
 
 #: tools/natronanimationswindow.py:409 tools/natronanimationswindow.py:670
 msgid "Save Animation"
@@ -7358,7 +7356,7 @@ msgstr "Internetová stránka Natron"
 
 #: tools/natronanimationswindow.py:703
 msgid "Save Natron Animation Values As"
-msgstr "Uložit hodnoty Natron animace jako"
+msgstr "Uložit hodnoty animace Natron jako"
 
 #: tools/natronanimationswindow.py:726
 msgid "Load Animation Data"
@@ -7366,27 +7364,27 @@ msgstr "Nahrát data animace"
 
 #: tools/natronanimationswindow.py:753
 msgid "Render starting..."
-msgstr "Vykreslování zahájeno…"
+msgstr "Zpracování zahájeno…"
 
 #: tools/natronanimationswindow.py:793
 msgid "Rendering preview for frame "
-msgstr "Vykreslování náhledu snímku "
+msgstr "Zpracování náhledu snímku "
 
 #: tools/natronanimationswindow.py:818
 msgid "Render complete."
-msgstr "Vykreslení dokončeno!"
+msgstr "Zpracování dokončeno."
 
 #: workflow.py:63
 msgid "Move"
-msgstr "Posunout"
+msgstr "Posunutí"
 
 #: workflow.py:69
 msgid "Ripple Trim"
-msgstr "Stříhat a posunout"
+msgstr "Zkrácení tažením a posunutí"
 
 #: workflow.py:70
 msgid "Cut"
-msgstr "Rozdělit"
+msgstr "Stříhání"
 
 #: workflow.py:71
 msgid "Keyframe"
@@ -7394,7 +7392,7 @@ msgstr "Klíčový snímek"
 
 #: workflow.py:72
 msgid "Multitrim"
-msgstr "Vícenásobné stříhání"
+msgstr "Vícenásobné zkrácení"
 
 #: workflow.py:75
 msgid ""
@@ -7407,7 +7405,7 @@ msgstr ""
 "záběry.\n"
 "<b>Ctrl+levé tlačítko myši</b> pro vybrání a posunutí rozsahu záběru.\n"
 "\n"
-"<b>Levé tlačítko myši</b> na koncích záběrů pro zastřihnutí délky záběru."
+"<b>Levé tlačítko myši</b> na koncích záběrů pro zkrácení délky záběru."
 
 #: workflow.py:76
 msgid ""
@@ -7420,7 +7418,7 @@ msgstr ""
 "<b>Ctrl+levé tlačítko myši</b> pro vybrání a posunutí rozsahu záběru do nové "
 "polohy.\n"
 "\n"
-"<b>Levé tlačítko myši</b> na koncích záběrů pro zastřihnutí délky záběru."
+"<b>Levé tlačítko myši</b> na koncích záběrů pro zkrácení délky záběru."
 
 #: workflow.py:77
 msgid ""
@@ -7428,7 +7426,7 @@ msgid ""
 "<b>Left or Right Arrow Key</b> + <b>Enter Key</b> to do the edit using "
 "keyboard."
 msgstr ""
-"<b>Levé tlačítko myši</b> pro zastřihnutí nejbližšího konce záběru.\n"
+"<b>Levé tlačítko myši</b> pro zkrácení nejbližšího konce záběru.\n"
 "<b>Levá nebo pravá klávesa šipky</b> + <b>klávesa Enter</b> pro udělání "
 "úpravy za pomoci klávesnice."
 
@@ -7484,8 +7482,8 @@ msgid ""
 "<b>Left or Right Arrow Key</b> + <b>Enter Key</b> to do the edit using "
 "keyboard."
 msgstr ""
-"<b>Levé tlačítko myši</b> pro zastřihnutí nejbližšího konce záběru a "
-"posunutí všech záběrů za ním pro udržení seřízení. Přepsání není dovoleno.\n"
+"<b>Levé tlačítko myši</b> pro zkrácení nejbližšího konce záběru a posunutí "
+"všech záběrů za ním pro udržení seřízení. Přepsání není dovoleno.\n"
 "<b>Levá nebo pravá klávesa šipky</b> + <b>klávesa Enter</b> pro udělání "
 "úpravy za pomoci klávesnice."
 
@@ -7494,9 +7492,9 @@ msgid ""
 "<b>Left Mouse</b> to cut clip under cursor.\n"
 "<b>CTRL + Left Mouse</b> to cut clips on all tracks at cursor position."
 msgstr ""
-"<b>Levé tlačítko myši</b> pro rozdělení záběru pod ukazatelem.\n"
-"<b>Ctrl+levé tlačítko myši</b> pro rozdělení záběrů na všech stopách v "
-"poloze ukazatele."
+"<b>Levé tlačítko myši</b> pro stříhání (rozdělení) záběru pod ukazatelem.\n"
+"<b>Ctrl+levé tlačítko myši</b> pro stříhání (rozdělení) záběrů na všech "
+"stopách v poloze ukazatele."
 
 #: workflow.py:84
 msgid ""
@@ -7521,7 +7519,7 @@ msgid ""
 "move edit point.\n"
 "<b>Enter Key</b> to complete keyboard edit."
 msgstr ""
-"Umístěte ukazatel blízko nebo na krajích záběrů pro úpravy <b>stříhání</b> a "
+"Umístěte ukazatel blízko nebo na krajích záběrů pro úpravy <b>zkrácení</b> a "
 "<b>svinutí</b>.\n"
 "Umístěte ukazatel na střed záběru pro úpravu <b>Skluz</b>.\n"
 "Táhněte <b>levým tlačítkem myši</b> pro udělání úprav.\n"
@@ -7549,7 +7547,7 @@ msgstr "Přednastavené pracovní postupy"
 
 #: workflow.py:163
 msgid "Standard"
-msgstr "Standard"
+msgstr "Standardní"
 
 #: workflow.py:167
 msgid "Film Style"
@@ -7573,7 +7571,7 @@ msgstr "Vždy přepsat prázdná místa"
 
 #: workflow.py:197
 msgid "Overwrite Blanks on non-V1 Tracks"
-msgstr "Přepsat prázdná místa stop které nejsou v1"
+msgstr "Přepsat prázdná místa stop, vyjma V1"
 
 #: workflow.py:197
 msgid "Always Insert"
