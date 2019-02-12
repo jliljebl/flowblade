@@ -35,7 +35,7 @@ flowblade_package_data = ['res/filters/*.xml','res/filters/wipes/*','res/img/*',
                           'res/profiles/*','res/render/renderencoding.xml',
                           'res/patternproducer/*','res/help/*','locale/Flowblade/*',
                           'res/proxyprofiles/*','res/darktheme/*','launch/*','res/gmic/*',
-                          'res/shortcuts/*','res/css/*','res/css/assests/*','res/css/sass/*']
+                          'res/shortcuts/*','res/css/*','res/css/assets/*','res/css/sass/*']
 
 locale_files = []
 for filepath in glob.glob("Flowblade/locale/*/LC_MESSAGES/*"):
