@@ -42,7 +42,7 @@ if launch_dir == "/usr/bin":
     print "modules path:", modules_path
 # When running in flatpak
 elif launch_dir == "/app/bin":
-    print "Running from installation..."
+    print "Running from Flatpak installation..."
     modules_path = "/app/share/flowblade/Flowblade"
     if not os.path.isdir(modules_path):
         modules_path = "/app/share/pyshared/Flowblade"
