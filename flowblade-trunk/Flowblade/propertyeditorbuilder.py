@@ -666,14 +666,18 @@ def _get_file_select_editor(editable_property):
     dialog.set_action(Gtk.FileChooserAction.OPEN)
     dialog.set_select_multiple(False)
 
-    file_types_args_list = editable_property.args[FILE_TYPES].split(".")
-    file_types_args_list = file_types_args_list[1:len(file_types_args_list)]
-    file_filter = Gtk.FileFilter()
-    for file_type in file_types_args_list:
-        file_filter.add_pattern("*." + file_type)
-    file_filter.set_name("Accepted Files")
-    
-    dialog.add_filter(file_filter)
+    try:
+        file_types_args_list = editable_property.args[FILE_TYPES].split(".")
+        file_types_args_list = file_types_args_list[1:len(file_types_args_list)]
+        file_filter = Gtk.FileFilter()
+        for file_type in file_types_args_list:
+            file_filter.add_pattern("*." + file_type)
+        file_filter.set_name("Accepted Files")
+        
+        dialog.add_filter(file_filter)
+    except:
+        # missing crashes but we will interpret it as decition to add no fil filter
+        pass
         
     file_select_button = Gtk.FileChooserButton.new_with_dialog(dialog)
     file_select_button.set_size_request(210, 28)

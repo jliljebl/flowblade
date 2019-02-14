@@ -37,7 +37,17 @@
         <property name="Transition width" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Trans.!Width">0=0.2</property>
         <property name="Min" args="editor=no_editor exptype=keyframe_hcs">0=0</property>
         <property name="Max" args="editor=no_editor exptype=keyframe_hcs">0=1</property>
-        <property name="Operation" args="editor=no_editor">0.0</property>
+        <property name="Operation" args="editor=combobox exptype=default cbopts=Writeonclear:0.0,Maximum:0.22,Minimum:0.44,Add:0.66,Sutract:1.0">0.0</property>
+    </filter>
+    <filter id="shape">
+      <name>File Luma</name>
+      <group>Alpha</group>  
+      <property name="mix" args="range_in=0.0,100.0 range_out=0,100 editor=slider displayname=Threshold">25.65</property>
+      <property name="softness" args="range_in=0.0,100.0 editor=slider displayname=Softness">0</property>
+      <property name="invert" args="editor=booleancheckbox displayname=Invert">0</property>
+      <property name="use_luminance" args="editor=no_editor">1</property>
+      <property name="resource" args="editor=file_select exptype=file_resource displayname=Select!luma!file">""</property>
+      <property name="use_mix" args="editor=no_editor">1</property>
     </filter>
    <filter id="frei0r.alpha0ps">
         <name>Alpha Modify</name>
@@ -115,7 +125,15 @@
         <name>Swap Channels</name>
         <group>Audio</group>
     </filter>
-
+    <filter id="dynamic_loudness">
+        <name>Normalize</name>
+        <group>Audio</group>
+        <property name="target_loudness" args="range_in=-50,-10 range_out=-50,-10 editor=ladspa_slider displayname=Target!Loudness">-23.0</property>
+        <property name="window" args="range_in=1,20 range_out=1,20 editor=ladspa_slider displayname=Anylysis!Length">10</property>
+        <property name="max_gain" args="range_in=0,30 range_out=0,30 editor=ladspa_slider displayname=Max!Gain">15.0</property>
+        <property name="min_gain" args="range_in=-30,0 range_out=-30,0 editor=ladspa_slider displayname=Min!Gain">-15.0</property>
+        <property name="max_rate" args="editor=no_editor">3.0</property>
+    </filter>
 
 
     <!-- AUDIO FILTER -->
@@ -325,7 +343,7 @@
         <property name="5" args="range_in=-20,0 range_out=-20,0 step=0.1 scale_digits=1 editor=ladspa_slider displayname=Output!attenuation(dB)">0.0</property>
         <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1</property>
     </filter>
-   
+
 
 
     <!-- ARTISTIC -->
@@ -382,6 +400,16 @@
         <property name="aspect" args="editor=keyframe_editor exptype=keyframe_hcs range_in=-100,100 displayname=Aspect">0=0.5</property>
         <property name="clearCenter" args="editor=keyframe_editor exptype=keyframe_hcs range_in=0,100 displayname=Center!Size">0=0.5</property>
         <property name="soft" args="editor=keyframe_editor exptype=keyframe_hcs range_in=0,100 displayname=Softness">0=0.2</property>
+    </filter>
+    <filter id="vignette">
+        <name>Vignette Advanced</name>
+        <group>Artistic</group>
+        <property name="smooth" args="range_in=0,100 range_out=0,1 displayname=Smooth">0.8</property>
+        <property name="radius" args="range_in=0,100 range_out=0,1 displayname=Radius">0.2</property>
+        <property name="x" args="range_in=0,100 range_out=0,1 displayname=X">0.5</property>
+        <property name="y" args="range_in=0,100 range_out=0,1 displayname=Y">0.5</property>
+        <property name="opacity" args="range_in=0,100 range_out=0,1 displayname=Opacity">0.0</property>
+        <property name="mode" args="editor=combobox displayname=Fade exptype=default cbopts=Linear:0.0,Cos:1.0">1.0</property>
     </filter>
     <filter id="frei0r.emboss">
         <name>Emboss</name>
