@@ -74,6 +74,7 @@ import rendergui
 import sequence
 import undo
 import updater
+import userfolders
 import utils
 
 media_panel_popup_menu = Gtk.Menu()
@@ -331,7 +332,7 @@ def _not_matching_media_info_callback(dialog, response_id, media_file):
         # Save in hidden and open
         match_profile_index = mltprofiles.get_closest_matching_profile_index(media_file.info)
         profile = mltprofiles.get_profile_for_index(match_profile_index)
-        path = utils.get_hidden_user_dir_path() + "/" + PROJECT().name
+        path = userfolders.get_cache_dir() + "/" + PROJECT().name
         PROJECT().update_media_lengths_on_load = True
         
         persistance.save_project(PROJECT(), path, profile.description()) #<----- HERE
