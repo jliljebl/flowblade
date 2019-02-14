@@ -56,6 +56,7 @@ import syncsplitevent
 import tlinewidgets
 import tlineaction
 import updater
+import userfolders
 import utils
 
 _match_frame_writer = None
@@ -513,7 +514,7 @@ class MatchFrameWriter:
         clip_path = self.clip.path
 
         # Create consumer
-        matchframe_new_path = utils.get_hidden_user_dir_path() + appconsts.MATCH_FRAME_NEW
+        matchframe_new_path = userfolders.get_cache_dir() + appconsts.MATCH_FRAME_NEW
         consumer = mlt.Consumer(PROJECT().profile, "avformat", matchframe_new_path)
         consumer.set("real_time", 0)
         consumer.set("vcodec", "png")
@@ -538,7 +539,7 @@ class MatchFrameWriter:
             time.sleep(0.1)
 
         # Copy to match frame
-        matchframe_path = utils.get_hidden_user_dir_path() + appconsts.MATCH_FRAME
+        matchframe_path = userfolders.get_cache_dir() + appconsts.MATCH_FRAME
         shutil.copyfile(matchframe_new_path, matchframe_path)
 
         # Update timeline data           

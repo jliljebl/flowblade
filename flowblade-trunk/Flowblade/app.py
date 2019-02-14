@@ -159,13 +159,14 @@ def main(root_path):
     
     # passing -xdg as a flag will change the user_dir location with XDG_CONFIG_HOME
     # For full xdg-app support all the launch processes need to add this too, currently not impl.
+    # NOT USED CURRENTLY
     force_xdg = False
     for arg in sys.argv:
         if arg.lower() == "-xdg":
             force_xdg = True
             
     # Create user folders if need and determine if were using xdg or dotfile userf folders.
-    userfolders.init(force_xdg)
+    userfolders.init()
 
     # Get user dir
     user_dir = utils.get_hidden_user_dir_path()

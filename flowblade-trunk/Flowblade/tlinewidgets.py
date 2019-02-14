@@ -50,6 +50,7 @@ import respaths
 import sequence
 import snapping
 import trimmodes
+import userfolders
 import utils
 import updater
 
@@ -2201,7 +2202,7 @@ class TimeLineCanvas:
 
     def create_match_frame_image_surface(self):
         # Create non-scaled icon
-        matchframe_path = utils.get_hidden_user_dir_path() + appconsts.MATCH_FRAME
+        matchframe_path = userfolders.get_cache_dir() + appconsts.MATCH_FRAME
         icon = cairo.ImageSurface.create_from_png(matchframe_path)
 
         # Create and return scaled icon

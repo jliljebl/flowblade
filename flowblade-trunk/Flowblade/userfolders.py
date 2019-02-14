@@ -40,7 +40,7 @@ _xdg_data_dir = None
 _xdg_cache_dir = None
 
 # --------------------------------------------------------- interface
-def init(force_xdg):
+def init():
     global _dot_dir, _xdg_config_dir, _xdg_data_dir, _xdg_cache_dir
     _dot_dir = os.getenv("HOME") + "/.flowblade/"
     

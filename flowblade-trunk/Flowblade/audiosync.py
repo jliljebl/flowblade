@@ -55,6 +55,7 @@ import renderconsumer
 import respaths
 import tlinewidgets
 import updater
+import userfolders
 import utils
 
 _tline_sync_data = None # Compound clip and tline clip sync functions can't pass the same data througn clapperless so 
@@ -77,7 +78,7 @@ def _write_offsets(video_file_path, audio_file_path, completed_callback):
     fps = str(int(utils.fps() + 0.5))
     idstr = _get_offset_file_idstr(video_file_path, audio_file_path)
 
-    FLOG = open(utils.get_hidden_user_dir_path() + "log_clapperless", 'w')
+    FLOG = open(userfolders.get_cache_dir() + "log_clapperless", 'w')
     
     # clapperless.py computes offsets and writes them to file clapperless.OFFSETS_DATA_FILE
     p = subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladeclapperless", video_file_path, audio_file_path, "--rate", fps, "--idstr", idstr], stdin=FLOG, stdout=FLOG, stderr=FLOG)
@@ -92,7 +93,7 @@ def _get_offset_file_idstr(file_1, file_2):
     return md5.new(file_1 + file_2).hexdigest()
     
 def _read_offsets(idstr):
-    offsets_file = utils.get_hidden_user_dir_path() + clapperless.OFFSETS_DATA_FILE + "_"+ idstr
+    offsets_file = userfolders.get_cache_dir() + clapperless.OFFSETS_DATA_FILE + "_"+ idstr
     with open(offsets_file) as f:
         file_lines = f.readlines()
     file_lines = [x.rstrip("\n") for x in file_lines]
