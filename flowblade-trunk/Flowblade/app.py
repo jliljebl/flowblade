@@ -93,7 +93,6 @@ import threading
 import titler
 import tlinewidgets
 import toolsintegration
-import toolnatron
 import trimmodes
 import translations
 import undo
@@ -277,10 +276,8 @@ def main(root_path):
 
     # Check for tools and init tools integration.
     gmic.test_availablity()
-    toolnatron.init()
     toolsintegration.init()
-    #toolsintegration.test()
-    
+
     # Create player object.
     create_player()
 

@@ -25,13 +25,11 @@ import os
 import appconsts
 from editorstate import PROJECT
 import gmic
-import toolnatron
 import render
 import utils
 
 _tools = []
 _render_items = []
-#_active_integrators = []
 test_timeout_id = None
            
 # --------------------------------------------------- interface
@@ -39,9 +37,6 @@ def init():
     
     if gmic.gmic_available():
         _tools.append(GMICIntegrator())
-
-    if toolnatron.natron_available():
-        _tools.append(NatronIntegrator())
         
     _tools.append(SlowMoIntegrator())
     _tools.append(ReverseIntegrator())
@@ -54,17 +49,6 @@ def get_export_integrators():
     
     return export_integrators
 
-
-def test():
-    global test_timeout_id
-    test_timeout_id = GObject.timeout_add(4000, _do_test)
-
-def _do_test():
-    GObject.source_remove(test_timeout_id)
-    
-    natroninteg = NatronIntegrator()
-    natroninteg.render_program("/home/janne/test/natrontest.ntp", "/home/janne/test/natrontestout", ("Write2",0,100), None, None)
-    
 # --------------------------------------------------- integrator classes
 class ToolIntegrator:
     
@@ -126,35 +110,6 @@ class GMICIntegrator(ToolIntegrator):
     def do_export(self):
         gmic.launch_gmic(self.data) # tuple (clip, track)
             
-
-class NatronIntegrator(ToolIntegrator):
-    def __init__(self):
-        ToolIntegrator.__init__(self, _("Natron"), [appconsts.VIDEO], True)
-
-    def do_export(self):
-        clip, track = self.data
-        toolnatron.export_clip(clip)
-
-    def start_render(self):
-        name, ext = os.path.splitext(self.program_file)
-        self.frame_name = name.split("/")[-1].lower()
-        self.writer, self.frame_in, self.frame_out = self.render_data
-        
-        launch_thread = utils.LaunchThread(None, self.render_launch)
-        launch_thread.start()
-        
-        self.launch_render_ticker()
-
-    def render_launch(self, data):
-        # Blocks until render complete
-        toolnatron.render_program(self.write_file, self.frame_name, self.program_file , self.writer, self.frame_in, self.frame_out)
-        self.stop_render_ticker()
-        print "renedirng done"
-
-    def render_tick(self):
-        print "tick"
-
-
 class SlowMoIntegrator(ToolIntegrator):
     
     def __init__(self):

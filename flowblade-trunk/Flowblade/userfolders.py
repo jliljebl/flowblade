@@ -91,8 +91,7 @@ def _create_dot_dirs():
         os.mkdir(user_dir + appconsts.MATCH_FRAME_DIR)
     if not os.path.exists(user_dir + appconsts.TRIM_VIEW_DIR):
         os.mkdir(user_dir + appconsts.TRIM_VIEW_DIR)
-    if not os.path.exists(user_dir + appconsts.NATRON_DIR):
-        os.mkdir(user_dir + appconsts.NATRON_DIR)
+
 
 
 
@@ -118,8 +117,6 @@ def _create_xdg_dirs():
         os.mkdir(user_dir + appconsts.MATCH_FRAME_DIR)
     if not os.path.exists(user_dir + appconsts.TRIM_VIEW_DIR):
         os.mkdir(user_dir + appconsts.TRIM_VIEW_DIR)
-    if not os.path.exists(user_dir + appconsts.NATRON_DIR):
-        os.mkdir(user_dir + appconsts.NATRON_DIR)
     if not os.path.exists(utils.get_hidden_screenshot_dir_path()):
         os.mkdir(utils.get_hidden_screenshot_dir_path())
     if not os.path.exists(user_dir + appconsts.AUDIO_LEVELS_DIR):

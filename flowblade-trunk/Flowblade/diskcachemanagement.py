@@ -169,7 +169,6 @@ def _get_disk_dir_panels():
     panels = []
     panels.append(DiskFolderManagementPanel("audiolevels", _("Audio Levels Data"), RECREATE_WARNING))
     panels.append(DiskFolderManagementPanel("gmic", _("G'Mic Tool Session Data"), NO_WARNING))
-    panels.append(DiskFolderManagementPanel("natron", _("Natron Clip Export Data"), NO_WARNING))
     panels.append(DiskFolderManagementPanel("rendered_clips", _("Rendered Files"), PROJECT_DATA_WARNING))
     panels.append(DiskFolderManagementPanel("thumbnails", _("Thumbnails"), RECREATE_WARNING))
     panels.append(DiskFolderManagementPanel("user_profiles", _("User Created Custom Profiles"), PROJECT_DATA_WARNING))
