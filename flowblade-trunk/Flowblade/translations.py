@@ -252,6 +252,7 @@ def load_filters_translations():
     filter_names["Perspective"] = _("Perspective")
     filter_names["Translate"] = _("Translate")
     filter_names["Lut3D"] = _("Lut3D")
+    filter_names["Normalize"] = _("Normalize")
 
     # param names
     global param_names
@@ -563,7 +564,10 @@ def load_filters_translations():
     param_names["Fade In Length"] = _("Fade In Length")
     param_names["Wipe Direction"] = _("Wipe Direction")
     param_names["Blend Mode"] = _("Blend Mode")
-    
+    param_names["Target Loudness"] = _("Blend Mode")
+    param_names["Analysis Length"] = _("Analysis Length")
+    param_names["Max Gain"] = _("Max Gain")
+    param_names["Min Mode"] = _("Min Mode")
     # Combo options
     global combo_options
     combo_options["Shave"] = _("Shave")
