@@ -225,6 +225,7 @@ def load_filters_translations():
     filter_names["Color Halftone"]= _("Color Halftone")
     filter_names["Dither"]= _("Dither")
     filter_names["Vignette"]= _("Vignette")
+    filter_names["Vignette Advanced"]= _("Vignette Advanced")
     filter_names["Emboss"]= _("Emboss")
     filter_names["3 Point Balance"]= _("3 Point Balance")
     filter_names["Colorize"]= _("Colorize")
@@ -570,7 +571,9 @@ def load_filters_translations():
     param_names["Max Gain"] = _("Max Gain")
     param_names["Min Mode"] = _("Min Mode")
     param_names["Select file"] = _("Select file")
-    
+    param_names["Smooth"] = _("Smooth")
+    param_names["Radius"] = _("Radius")
+    param_names["Fade"] = _("Fade")
     # Combo options
     global combo_options
     combo_options["Shave"] = _("Shave")
@@ -641,4 +644,6 @@ def load_filters_translations():
     combo_options["HSLSaturation"] = _("HSLSaturation")
     combo_options["HSLColor"] = _("HSLColor")
     combo_options["HSLLuminosity"] = _("HSLLuminosity")
-     
+    combo_options["Cos"] = _("Cos")
+    combo_options["Linear"] = _("Linear")
+

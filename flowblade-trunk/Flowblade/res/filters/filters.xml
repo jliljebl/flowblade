@@ -406,8 +406,8 @@
         <group>Artistic</group>
         <property name="smooth" args="range_in=0,100 range_out=0,1 displayname=Smooth">0.8</property>
         <property name="radius" args="range_in=0,100 range_out=0,1 displayname=Radius">0.2</property>
-        <property name="x" args="range_in=0,100 range_out=0,1 displayname=X">0.5</property>
-        <property name="y" args="range_in=0,100 range_out=0,1 displayname=Y">0.5</property>
+        <property name="x" args="range_in=0,100 range_out=0,1 displayname=Pos!X">0.5</property>
+        <property name="y" args="range_in=0,100 range_out=0,1 displayname=Pos!Y">0.5</property>
         <property name="opacity" args="range_in=0,100 range_out=0,1 displayname=Opacity">0.0</property>
         <property name="mode" args="editor=combobox displayname=Fade exptype=default cbopts=Linear:0.0,Cos:1.0">1.0</property>
     </filter>
