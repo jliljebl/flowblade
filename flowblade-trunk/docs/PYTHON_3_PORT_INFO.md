@@ -3,7 +3,7 @@
 | **Ubuntu package name** | **Description** | **Python 3 available** |
 |:-------------------------------|:----------------|:--------------|
 | python-gi | GTK3 Python bindings | **YES, python3-gi**  |
-| python-mlt | MLT python bindings, this pulls in MLT | **YES, not testetd** https://github.com/mltframework/mlt/issues/410|
+| python-mlt | MLT python bindings, this pulls in MLT | **YES, not tested** https://github.com/mltframework/mlt/issues/410|
 | python-dbus | dbus python bindings | **YES, python3-dbus** |
 | libmlt-data | Some image and text resources for MLT |**NOT PYTHON** |
 | frei0r-plugins | Additional video filters | **NOT PYTHON** |
