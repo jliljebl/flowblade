@@ -52,6 +52,7 @@ import propertyparse
 import respaths
 import renderconsumer
 import translations
+import userfolders
 import utils
 
 linker_window = None
@@ -62,8 +63,8 @@ media_assets = []
 NO_PROJECT_AT_LAUNCH = "##&&noproject&&##"
 
 def display_linker(filename=NO_PROJECT_AT_LAUNCH):
-    print "Launching Media Re-linker"
-    FLOG = open(utils.get_hidden_user_dir_path() + "log_media_relinker", 'w')
+    print "Launching Media Relinker"
+    FLOG = open(userfolders.get_cache_dir() + "log_media_relinker", 'w')
     subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowblademedialinker", filename], stdin=FLOG, stdout=FLOG, stderr=FLOG)
 
 
