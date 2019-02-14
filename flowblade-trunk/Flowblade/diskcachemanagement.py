@@ -27,8 +27,7 @@ import os
 import dialogutils
 import gui
 import guiutils
-import utils
-
+import userfolders
 
 NO_WARNING = 0
 RECREATE_WARNING = 1
@@ -81,7 +80,8 @@ class DiskFolderManagementPanel:
         self.vbox.pack_start(row, False, False, 0)
 
     def get_cache_folder(self):
-        return utils.get_hidden_user_dir_path() + "/" + self.folder
+        cf = userfolders.get_cache_dir() + self.folder
+        return cf
 
     def get_folder_files(self):
         cache_folder = self.get_cache_folder()

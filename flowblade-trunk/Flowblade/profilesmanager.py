@@ -35,7 +35,7 @@ import guiutils
 import mltprofiles
 import render
 import respaths
-import utils
+import userfolders
 
 PROFILES_WIDTH = 480
 PROFILES_HEIGHT = 600
@@ -252,7 +252,7 @@ def _save_profile_clicked(widgets, user_profiles_view):
     file_contents += "display_aspect_num=" + d_rate_num.get_text() + "\n"
     file_contents += "display_aspect_den=" + d_rate_dem.get_text() + "\n"
 
-    profile_path = utils.get_hidden_user_dir_path() + mltprofiles.USER_PROFILES_DIR + profile_file_name
+    profile_path = userfolders.get_data_dir() + mltprofiles.USER_PROFILES_DIR + profile_file_name
 
     if os.path.exists(profile_path):
         dialogutils.warning_message(_("Profile '") +  description.get_text() + _("' already exists!"), \
@@ -292,7 +292,7 @@ def _profiles_delete_confirm_callback(dialog, response_id, data):
     for i in delete_indexes:
         pname, profile = mltprofiles.get_user_profiles()[i]
         profile_file_name = pname.lower().replace(os.sep, "_").replace(" ","_")
-        profile_path = utils.get_hidden_user_dir_path() + mltprofiles.USER_PROFILES_DIR + profile_file_name
+        profile_path = userfolders.get_data_dir() + mltprofiles.USER_PROFILES_DIR + profile_file_name
         print profile_path
         try:
             os.remove(profile_path)

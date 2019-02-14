@@ -106,8 +106,6 @@ def _create_xdg_dirs():
     # Data
     if not os.path.exists(user_dir + mltprofiles.USER_PROFILES_DIR):
         os.mkdir(user_dir + mltprofiles.USER_PROFILES_DIR)
-    if not os.path.exists(user_dir + appconsts.AUDIO_LEVELS_DIR):
-        os.mkdir(user_dir + appconsts.AUDIO_LEVELS_DIR)
     if not os.path.exists(user_dir + AUTOSAVE_DIR):
         os.mkdir(user_dir + AUTOSAVE_DIR)
     if not os.path.exists(user_dir + BATCH_DIR):
@@ -124,7 +122,8 @@ def _create_xdg_dirs():
         os.mkdir(user_dir + appconsts.NATRON_DIR)
     if not os.path.exists(utils.get_hidden_screenshot_dir_path()):
         os.mkdir(utils.get_hidden_screenshot_dir_path())
-
+    if not os.path.exists(user_dir + appconsts.AUDIO_LEVELS_DIR):
+        os.mkdir(user_dir + appconsts.AUDIO_LEVELS_DIR)
 
 
 

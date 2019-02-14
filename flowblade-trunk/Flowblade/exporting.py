@@ -40,6 +40,7 @@ import gui
 import guiutils
 import renderconsumer
 import utils
+import userfolders
 
 REEL_NAME_HASH_8_NUMBER = 1
 REEL_NAME_FILE_NAME_START = 2
@@ -100,9 +101,8 @@ def _edl_xml_render_done(data):
     f.write(edl_contents.encode('utf-8'))
     f.close()
 
-
 def get_edl_temp_xml_path():
-    return utils.get_hidden_user_dir_path() + "edl_temp_xml.xml"
+    return userfolders.get_cache_dir() + "edl_temp_xml.xml"
 
 
 class MLTXMLToEDLParse:
