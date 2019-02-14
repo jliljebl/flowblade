@@ -22,7 +22,7 @@
 Module creates GUI editors for editable mlt properties.
 """
 
-from gi.repository import Gtk, Gdk, GObject
+from gi.repository import Gtk, Gdk, GObject, GLib
 
 import cairo
 
@@ -676,12 +676,14 @@ def _get_file_select_editor(editable_property):
         
         dialog.add_filter(file_filter)
     except:
-        # missing crashes but we will interpret it as decition to add no fil filter
+        # we will interpret missing it as decition to add no fil filter
         pass
         
     file_select_button = Gtk.FileChooserButton.new_with_dialog(dialog)
     file_select_button.set_size_request(210, 28)
-    
+    if hasattr(editable_property, "value") and editable_property.value != '' and editable_property.value != '""':
+        file_select_button.set_uri(GLib.filename_to_uri(editable_property.value))
+
     file_select_label = Gtk.Label(editable_property.get_display_name())
 
     editor_row = Gtk.HBox(False, 2)

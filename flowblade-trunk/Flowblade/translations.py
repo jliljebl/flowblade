@@ -253,7 +253,8 @@ def load_filters_translations():
     filter_names["Translate"] = _("Translate")
     filter_names["Lut3D"] = _("Lut3D")
     filter_names["Normalize"] = _("Normalize")
-
+    filter_names["File Luma to Alpha"] = _("File Luma to Alpha") 
+    
     # param names
     global param_names
 
@@ -568,6 +569,8 @@ def load_filters_translations():
     param_names["Analysis Length"] = _("Analysis Length")
     param_names["Max Gain"] = _("Max Gain")
     param_names["Min Mode"] = _("Min Mode")
+    param_names["Select file"] = _("Select file")
+    
     # Combo options
     global combo_options
     combo_options["Shave"] = _("Shave")
