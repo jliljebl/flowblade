@@ -46,6 +46,7 @@ import mlttransitions
 import miscdataobjects
 import propertyparse
 import resync
+import userfolders
 import utils
 
 # Unpickleable attributes for all objects
@@ -374,7 +375,7 @@ def _save_changed_xml_file(s_media_file, new_profile):
     
     new_xml_text = xml_text[0:in_index] + new_profile_node + xml_text[out_index:len(xml_text)]
 
-    folder = editorpersistance.prefs.render_folder
+    folder = userfolders.get_render_dir()
     uuid_str = md5.new(str(os.urandom(32))).hexdigest()
     new_xml_file_path = folder + "/"+ uuid_str + ".xml"
 

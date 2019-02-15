@@ -931,13 +931,6 @@ def add_media_files(this_call_is_retry=False):
     """
     User selects a media file to added to current bin.
     """
-    # User needs to select thumbnail folder when promted to complete action
-    if editorpersistance.prefs.thumbnail_folder == None:
-        if this_call_is_retry == True:
-            return
-        dialogs.select_thumbnail_dir(select_thumbnail_dir_callback, gui.editor_window.window, os.path.expanduser("~"), True)
-        return
-
     dialogs.media_file_dialog(_("Open.."), _open_files_dialog_cb, True)
 
 def _open_files_dialog_cb(file_select, response_id):
@@ -1036,33 +1029,6 @@ def _add_image_sequence_callback(dialog, response_id, data):
 def open_rendered_file(rendered_file_path):
     add_media_thread = AddMediaFilesThread([rendered_file_path])
     add_media_thread.start()
-
-def select_thumbnail_dir_callback(dialog, response_id, data):
-    file_select, retry_add_media = data
-    folder = file_select.get_filenames()[0]
-    dialog.destroy()
-    if response_id == Gtk.ResponseType.YES:
-        if folder ==  os.path.expanduser("~"):
-            dialogutils.warning_message(_("Can't make home folder thumbnails folder"), 
-                                    _("Please create and select some other folder then \'") + 
-                                    os.path.expanduser("~") + _("\' as thumbnails folder"), 
-                                    gui.editor_window.window)
-        else:
-            editorpersistance.prefs.thumbnail_folder = folder
-            editorpersistance.save()
-    
-    if retry_add_media == True:
-        add_media_files(True)
-
-def select_render_clips_dir_callback(dialog, response_id, file_select):
-    folder = file_select.get_filenames()[0]
-    dialog.destroy()
-    if response_id == Gtk.ResponseType.YES:
-        if folder ==  os.path.expanduser("~"):
-            dialogs.rendered_clips_no_home_folder_dialog()
-        else:
-            editorpersistance.prefs.render_folder = folder
-            editorpersistance.save()
 
 def delete_media_files(force_delete=False):
     """
@@ -1267,7 +1233,7 @@ def _do_create_selection_compound_clip(dialog, response_id, name_entry):
     media_name = name_entry.get_text()
     
     # Create unique file path in hidden render folder
-    folder = editorpersistance.prefs.render_folder
+    folder = userfolders.get_render_dir()
     uuid_str = md5.new(str(os.urandom(32))).hexdigest()
     write_file = folder + "/"+ uuid_str + ".xml"
 
@@ -1312,7 +1278,7 @@ def _do_create_sequence_compound_clip(dialog, response_id, name_entry):
         return
 
     media_name = name_entry.get_text()
-    folder = editorpersistance.prefs.render_folder
+    folder = userfolders.get_render_dir()
     write_file = folder + "/"+ media_name + ".xml"
 
     dialog.destroy()

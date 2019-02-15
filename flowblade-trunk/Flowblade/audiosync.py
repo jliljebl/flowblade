@@ -88,8 +88,6 @@ def _write_offsets(video_file_path, audio_file_path, completed_callback):
     GLib.idle_add(completed_callback, (video_file_path, audio_file_path, idstr))
 
 def _get_offset_file_idstr(file_1, file_2):
-    # Create unique file path in hidden render folder
-    folder = editorpersistance.prefs.render_folder
     return md5.new(file_1 + file_2).hexdigest()
     
 def _read_offsets(idstr):
@@ -311,7 +309,7 @@ def _do_create_sync_compound_clip(dialog, response_id, data):
     dialog.destroy()
     
     # Create unique file path in hidden render folder
-    folder = editorpersistance.prefs.render_folder
+    folder = userfolders.get_render_dir()
     uuid_str = md5.new(str(os.urandom(32))).hexdigest()
     write_file = folder + "/"+ uuid_str + ".xml"
     

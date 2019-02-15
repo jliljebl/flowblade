@@ -36,6 +36,7 @@ from editorstate import PROJECT
 import gui
 import mltrefhold
 import respaths
+import userfolders
 import utils
 
 # Pattern producer types
@@ -226,7 +227,7 @@ class BinColorClip(AbstractBinClip):
         cr.fill()
 
         file_name =  md5.new(self.gdk_color_str + str(width) + str(height)).hexdigest()      
-        write_file_path = utils.get_hidden_user_dir_path() + appconsts.RENDERED_CLIPS_DIR + "/" + file_name + ".png"
+        write_file_path = userfolders.get_render_dir() + "/" + file_name + ".png"
         surface.write_to_png(write_file_path)
         
         producer = mlt.Producer(profile, write_file_path)

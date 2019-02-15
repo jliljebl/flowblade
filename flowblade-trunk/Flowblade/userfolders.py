@@ -22,6 +22,9 @@ import gi
 from gi.repository import GLib
 import os
 
+
+import appconsts
+
 USING_DOT_DIRS = 0
 USING_XDG_DIRS = 1
 
@@ -59,9 +62,13 @@ def get_data_dir():
 
 def get_cache_dir():
     return _dot_dir
+
+def get_render_dir():
+    return get_data_dir() + appconsts.RENDERED_CLIPS_DIR
+
+def get_hidden_screenshot_dir_path():
+    return get_cache_dir() + "screenshot/"
     
-
-
 # ---------------------------------------------------------------- internal functions
 def _get_dot_dir_path():
     return os.getenv("HOME") + "/.flowblade/"
@@ -103,10 +110,27 @@ def _create_xdg_dirs():
     # Data stuff that can break projects and cannot be regerated by app
     if not os.path.exists(user_dir + mltprofiles.USER_PROFILES_DIR):
         os.mkdir(user_dir + mltprofiles.USER_PROFILES_DIR)
-    # rendered_clips dir is made in app.py line 180...ish
-
+    # rendered_clips dir was made in app.py line 180...ish
+    # now we need to do it here, because prefs have no longer influence
+    """
+    def create_rendered_clips_folder_if_needed(user_dir):
+        if prefs.render_folder == None:
+            render_folder = user_dir + appconsts.RENDERED_CLIPS_DIR
+            if not os.path.exists(render_folder + "/"):
+                os.mkdir(render_folder + "/")
+            prefs.render_folder = render_folder
+    """
         
     # Cache, stuff that can be regerated by app or is transient
+    """
+    # now we need to do this here, because prefs have no longer influence
+    def create_thumbs_folder_if_needed(user_dir):
+    if prefs.thumbnail_folder == None:
+        thumbs_folder = user_dir + appconsts.THUMBNAILS_DIR
+        if not os.path.exists(thumbs_folder + "/"):
+            os.mkdir(thumbs_folder + "/")
+        prefs.thumbnail_folder = thumbs_folder
+    """
     if not os.path.exists(user_dir + AUTOSAVE_DIR):
         os.mkdir(user_dir + AUTOSAVE_DIR)
     if not os.path.exists(user_dir + appconsts.GMIC_DIR):

@@ -259,7 +259,7 @@ def add_render_item(flowblade_project, render_path, args_vals_list, mark_in, mar
 
 # ------------------------------------------------------- file utils
 def init_dirs_if_needed():
-    user_dir = utils.get_hidden_user_dir_path()
+    user_dir = userfolders.get_cache_dir()
 
     if not os.path.exists(user_dir + BATCH_DIR):
         os.mkdir(user_dir + BATCH_DIR)
@@ -269,10 +269,10 @@ def init_dirs_if_needed():
         os.mkdir(get_projects_dir())
 
 def get_projects_dir():
-    return utils.get_hidden_user_dir_path() + PROJECTS_DIR
+    return userfolders.get_cache_dir() + PROJECTS_DIR
 
 def get_datafiles_dir():
-    return utils.get_hidden_user_dir_path() + DATAFILES_DIR
+    return userfolders.get_cache_dir() + DATAFILES_DIR
 
 def get_identifier_from_path(file_path):
     start = file_path.rfind("/")
@@ -280,7 +280,7 @@ def get_identifier_from_path(file_path):
     return file_path[start + 1:end]
 
 def _get_pid_file_path():
-    user_dir = utils.get_hidden_user_dir_path()
+    user_dir = userfolders.get_cache_dir()
     return user_dir + PID_FILE
     
 def destroy_for_identifier(identifier):
@@ -311,7 +311,7 @@ def launch_batch_rendering():
         print "flowblade.movie.editor.batchrender dbus service exists, batch rendering already running"
         _show_single_instance_info()
     else:
-        FLOG = open(utils.get_hidden_user_dir_path() + "log_batch_render", 'w')
+        FLOG = open(userfolders.get_cache_dir() + "log_batch_render", 'w')
         subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladebatch"], stdin=FLOG, stdout=FLOG, stderr=FLOG)
 
 def main(root_path, force_launch=False):
@@ -323,7 +323,10 @@ def main(root_path, force_launch=False):
         editorstate.mlt_version = mlt.LIBMLT_VERSION
     except:
         editorstate.mlt_version = "0.0.99" # magic string for "not found"
-        
+
+    # Get XDG paths etc.
+    userfolders.init()
+
     # Set paths.
     respaths.set_paths(root_path)
 
@@ -434,7 +437,7 @@ class RenderQueue:
     def load_render_items(self):
         self.queue = []
         self.error_status = None
-        user_dir = utils.get_hidden_user_dir_path()
+        user_dir = userfolders.get_cache_dir()
         data_files_dir = user_dir + DATAFILES_DIR
         data_files = [ f for f in listdir(data_files_dir) if isfile(join(data_files_dir,f)) ]
         for data_file_name in data_files:
@@ -1060,7 +1063,7 @@ def _get_menu_item(text, callback, data, sensitive=True):
 
 # --------------------------------------------------- single item render
 def add_single_render_item(flowblade_project, render_path, args_vals_list, mark_in, mark_out, render_data):
-    hidden_dir = utils.get_hidden_user_dir_path()
+    hidden_dir = userfolders.get_cache_dir()
         
     timestamp = datetime.datetime.now()
 
@@ -1095,7 +1098,7 @@ class SingleRenderLaunchThread(threading.Thread):
     
     def run(self):      
         # Launch render process and wait for it to end
-        FLOG = open(utils.get_hidden_user_dir_path() + "log_single_render", 'w')
+        FLOG = open(userfolders.get_cache_dir() + "log_single_render", 'w')
         process = subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladesinglerender"], stdin=FLOG, stdout=FLOG, stderr=FLOG)
         process.wait()
 
@@ -1108,7 +1111,10 @@ def single_render_main(root_path):
         editorstate.mlt_version = mlt.LIBMLT_VERSION
     except:
         editorstate.mlt_version = "0.0.99" # magic string for "not found"
-        
+    
+    # Get XDG paths etc.
+    userfolders.init()
+    
     # Set paths.
     respaths.set_paths(root_path)
 
@@ -1164,7 +1170,7 @@ class SingleRenderThread(threading.Thread):
         threading.Thread.__init__(self)
     
     def run(self):      
-        hidden_dir = utils.get_hidden_user_dir_path()
+        hidden_dir = userfolders.get_cache_dir()
 
         try:
             data_file_path = hidden_dir + CURRENT_RENDER_RENDER_ITEM

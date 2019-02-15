@@ -259,19 +259,6 @@ def get_graphics_default_in_out_length():
     out_fr = in_fr + int(prefs.default_grfx_length) - 1 # -1, out inclusive
     return (in_fr, out_fr, prefs.default_grfx_length)
 
-def create_thumbs_folder_if_needed(user_dir):
-    if prefs.thumbnail_folder == None:
-        thumbs_folder = user_dir + appconsts.THUMBNAILS_DIR
-        if not os.path.exists(thumbs_folder + "/"):
-            os.mkdir(thumbs_folder + "/")
-        prefs.thumbnail_folder = thumbs_folder
-
-def create_rendered_clips_folder_if_needed(user_dir):
-    if prefs.render_folder == None:
-        render_folder = user_dir + appconsts.RENDERED_CLIPS_DIR
-        if not os.path.exists(render_folder + "/"):
-            os.mkdir(render_folder + "/")
-        prefs.render_folder = render_folder
 
 class EditorPreferences:
     """
@@ -290,7 +277,7 @@ class EditorPreferences:
         self.default_profile_name = 10 # index of default profile
         self.auto_play_in_clip_monitor = False  # DEPRECATED, NOT USER SETTABLE ANYMORE
         self.auto_center_on_play_stop = False
-        self.thumbnail_folder = None
+        self.thumbnail_folder = None # DEPRECATED, this set XDG variables now
         self.hidden_profile_names = []
         self.display_splash_screen = True
         self.auto_move_after_edit = False
@@ -305,7 +292,7 @@ class EditorPreferences:
         self.app_v_paned_position = 500 # Paned get/set position value
         self.top_paned_position = 600 # Paned get/set position value
         self.mm_paned_position = 260 # Paned get/set position value
-        self.render_folder = None
+        self.render_folder = None  # DEPRECATED, this set XDG variables now
         self.show_sequence_profile = True
         self.buttons_style = GLASS_STYLE
         self.dark_theme = False # DEPRECATED, "theme" used instead

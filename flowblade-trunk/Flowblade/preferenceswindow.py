@@ -34,8 +34,6 @@ PREFERENCES_WIDTH = 730
 PREFERENCES_HEIGHT = 440
 PREFERENCES_LEFT = 410
 
-select_thumbnail_dir_callback = None # app.py sets at start up
-select_render_clips_dir_callback = None # app.py sets at start up
 
 def preferences_dialog():
 
@@ -45,7 +43,7 @@ def preferences_dialog():
                     (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
                     _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
 
-    gen_opts_panel, gen_opts_widgets = _general_options_panel(_thumbs_select_clicked, _renders_select_clicked)
+    gen_opts_panel, gen_opts_widgets = _general_options_panel()
     edit_prefs_panel, edit_prefs_widgets = _edit_prefs_panel()
     playback_prefs_panel, playback_prefs_widgets  = _playback_prefs_panel()
     view_pres_panel, view_pref_widgets = _view_prefs_panel()
@@ -73,12 +71,6 @@ def preferences_dialog():
     dialog.set_transient_for(gui.editor_window.window)
     dialog.show_all()
 
-def _thumbs_select_clicked(widget):
-    dialogs.select_thumbnail_dir(select_thumbnail_dir_callback, gui.editor_window.window, editorpersistance.prefs.thumbnail_folder, False)
-
-def _renders_select_clicked(widget):
-    dialogs.select_rendred_clips_dir(select_render_clips_dir_callback, gui.editor_window.window, editorpersistance.prefs.render_folder)
-
 def _preferences_dialog_callback(dialog, response_id, all_widgets):
     if response_id == Gtk.ResponseType.ACCEPT:
         editorpersistance.update_prefs_from_widgets(all_widgets)
@@ -91,7 +83,7 @@ def _preferences_dialog_callback(dialog, response_id, all_widgets):
 
     dialog.destroy()
 
-def _general_options_panel(folder_select_clicked_cb, render_folder_select_clicked_cb):
+def _general_options_panel():
     prefs = editorpersistance.prefs
 
     # Widgets
@@ -112,12 +104,6 @@ def _general_options_panel(folder_select_clicked_cb, render_folder_select_clicke
     undo_max_spin.set_adjustment(spin_adj)
     undo_max_spin.set_numeric(True)
 
-    folder_select = Gtk.Button(_("Select Folder")) # thumbnails
-    folder_select.connect("clicked" , folder_select_clicked_cb)
-
-    render_folder_select = Gtk.Button(_("Select Folder"))
-    render_folder_select.connect("clicked" , render_folder_select_clicked_cb)
-
     autosave_combo = Gtk.ComboBoxText()
     AUTO_SAVE_OPTS = ((-1, _("No Autosave")),(1, _("1 min")),(2, _("2 min")),(5, _("5 min")))
 
@@ -136,10 +122,8 @@ def _general_options_panel(folder_select_clicked_cb, render_folder_select_clicke
     row1 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Default Profile:")), default_profile_combo, PREFERENCES_LEFT))
     row2 = _row(guiutils.get_checkbox_row_box(open_in_last_opened_check, Gtk.Label(label=_("Remember last media directory"))))
     row3 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Undo stack size:")), undo_max_spin, PREFERENCES_LEFT))
-    row4 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Thumbnail folder:")), folder_select, PREFERENCES_LEFT))
     row5 = _row(guiutils.get_checkbox_row_box(open_in_last_rendered_check, Gtk.Label(label=_("Remember last render directory"))))
     row6 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Autosave for crash recovery every:")), autosave_combo, PREFERENCES_LEFT))
-    row8 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Rendered Clips folder:")), render_folder_select, PREFERENCES_LEFT))
     row9 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Media look-up order on load:")), load_order_combo, PREFERENCES_LEFT))
 
     vbox = Gtk.VBox(False, 2)
@@ -148,8 +132,6 @@ def _general_options_panel(folder_select_clicked_cb, render_folder_select_clicke
     vbox.pack_start(row2, False, False, 0)
     vbox.pack_start(row5, False, False, 0)
     vbox.pack_start(row3, False, False, 0)
-    vbox.pack_start(row4, False, False, 0)
-    vbox.pack_start(row8, False, False, 0)
     vbox.pack_start(row9, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
 

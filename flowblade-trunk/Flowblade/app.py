@@ -176,8 +176,6 @@ def main(root_path):
         respaths.apply_dark_theme()
     if editorpersistance.prefs.display_all_audio_levels == False:
         editorstate.display_all_audio_levels = False
-    editorpersistance.create_thumbs_folder_if_needed(userfolders.get_cache_dir())
-    editorpersistance.create_rendered_clips_folder_if_needed(userfolders.get_data_dir())
 
     editorpersistance.save()
 
@@ -356,9 +354,6 @@ def main(root_path):
 
 # ----------------------------------- callback setting
 def monkeypatch_callbacks():
-    # Prefences setting
-    preferenceswindow.select_thumbnail_dir_callback = projectaction.select_thumbnail_dir_callback
-    preferenceswindow.select_render_clips_dir_callback = projectaction.select_render_clips_dir_callback
 
     # We need to do this on app start-up or
     # we'll get circular imports with projectaction->mltplayer->render->projectaction

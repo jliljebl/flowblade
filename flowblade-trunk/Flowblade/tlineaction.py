@@ -926,14 +926,6 @@ def add_transition_pressed(retry_from_render_folder_select=False):
         _no_audio_tracks_mixing_info()
         return
 
-    if editorpersistance.prefs.render_folder == None:
-        if retry_from_render_folder_select == True:
-            return
-        dialogs.select_rendred_clips_dir(_add_transition_render_folder_select_callback,
-                                         gui.editor_window.window,
-                                         editorpersistance.prefs.render_folder)
-        return
-
     if clip_count == 2:
         _do_rendered_transition(track)
     else:
@@ -980,22 +972,6 @@ def get_transition_data_for_clips(track, from_clip, to_clip):
                        "to_handle":to_handle,
                        "max_length":max_length}
     return transition_data
-
-def _add_transition_render_folder_select_callback(dialog, response_id, file_select):
-    try:
-        folder = file_select.get_filenames()[0]
-    except:
-        dialog.destroy()
-        return
-
-    dialog.destroy()
-    if response_id == Gtk.ResponseType.YES:
-        if folder ==  os.path.expanduser("~"):
-            dialogs.rendered_clips_no_home_folder_dialog()
-        else:
-            editorpersistance.prefs.render_folder = folder
-            editorpersistance.save()
-            add_transition_pressed(True)
 
 def _add_transition_dialog_callback(dialog, response_id, selection_widgets, transition_data):
     if response_id != Gtk.ResponseType.ACCEPT:
@@ -1589,7 +1565,7 @@ class ReRenderderAllWindow:
 
         # Dreate render consumer
         profile = PROJECT().profile
-        folder = editorpersistance.prefs.render_folder
+        folder = userfolders.get_render_dir()
         file_name = md5.new(str(os.urandom(32))).hexdigest()
         self.write_file = folder + "/"+ file_name + file_ext
         consumer = renderconsumer.get_render_consumer_for_encoding_and_quality(self.write_file, profile, encoding_option_index, quality_option_index)

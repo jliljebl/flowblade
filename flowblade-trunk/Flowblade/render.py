@@ -34,9 +34,6 @@ import os
 import time
 import threading
 
-# SvdB - Render Folder from Preferences is not copied to Render panel #337
-# SvdB - Added appconsts for the RENDERED_CLIPS_DIR value
-import appconsts
 import dialogutils
 import editorstate
 from editorstate import current_sequence
@@ -51,6 +48,7 @@ import mltrefhold
 import renderconsumer
 import rendergui
 import sequence
+import userfolders
 import utils
 
 # User defined render agrs file extension
@@ -201,13 +199,10 @@ def set_default_values_for_widgets(movie_name_too=False):
     widgets.encoding_panel.encoding_selector.widget.set_active(0)
     if movie_name_too == True:
         widgets.file_panel.movie_name.set_text("movie")
-    # SvdB - Render Folder from Preferences is not copied to Render panel #337
-    # Default render path is ~/.flowblade/rendered_clips. If this is not changed by the user
-    # we will use the HOME directory
-    if editorpersistance.prefs.render_folder != str(utils.get_hidden_user_dir_path()) + appconsts.RENDERED_CLIPS_DIR:
-        widgets.file_panel.out_folder.set_current_folder(editorpersistance.prefs.render_folder)
-    else:
-        widgets.file_panel.out_folder.set_current_folder(os.path.expanduser("~") + "/")
+
+    # Default render path is ~/
+    widgets.file_panel.out_folder.set_current_folder(os.path.expanduser("~") + "/")
+
     widgets.args_panel.use_args_check.set_active(False)
     widgets.profile_panel.use_project_profile_check.set_active(True)
 
@@ -579,7 +574,7 @@ def render_single_track_transition_clip(transition_producer, encoding_option_ind
     # Profile
     profile = PROJECT().profile
 
-    folder = editorpersistance.prefs.render_folder
+    folder = userfolders.get_render_dir()
 
     file_name = md5.new(str(os.urandom(32))).hexdigest()
     write_file = folder + "/"+ file_name + file_ext

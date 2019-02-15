@@ -425,42 +425,6 @@ def get_unique_name_for_audio_levels_file(media_file_path, profile):
     fps_str = str(profile.description())
     file_name = md5.new(media_file_path + size_str + fps_str).hexdigest()
     return file_name
-    
-def get_hidden_user_dir_path():
-    return os.getenv("HOME") + "/.flowblade/"
-
-def get_phantom_disk_cache_folder():
-    return get_hidden_user_dir_path() +  appconsts.PHANTOM_DIR + "/" + appconsts.PHANTOM_DISK_CACHE_DIR
-
-def get_hidden_screenshot_dir_path():
-    return get_hidden_user_dir_path() + "screenshot/"
-
-def get_config_folder():
-    if editorstate.use_xdg:
-        return xdg_config_home()
-    else:
-        return get_hidden_user_dir_path()
-
-def get_data_folder():
-    if editorstate.use_xdg:
-        return xdg_data_home()
-    else:
-        return get_hidden_user_dir_path()
-        
-def get_cache_folder():   
-    if editorstate.use_xdg:
-        return xdg_cache_home()
-    else:
-        return get_hidden_user_dir_path()
-
-def xdg_config_home():
-    return os.path.join(GLib.get_user_config_dir(), "flowblade")
-    
-def xdg_data_home():
-    return os.path.join(GLib.get_user_data_dir(), "flowblade")
-
-def xdg_cache_home():
-    return os.path.join(GLib.get_user_cache_dir(), "flowblade")
 
 def get_img_seq_glob_lookup_name(asset_file_name):
     parts1 = asset_file_name.split("%")
