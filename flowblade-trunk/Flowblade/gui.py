@@ -29,7 +29,8 @@ import pickle
 import appconsts
 import editorpersistance
 import respaths
-import utils
+import userfolders
+
 
 # Editor window
 editor_window = None
@@ -235,7 +236,7 @@ def load_current_colors():
     _button_colors = Gdk.RGBA(*button)
 
 def _colors_data_path():
-    return utils.get_hidden_user_dir_path() + _CURRENT_THEME_COLORS_FILE
+    return userfolders.get_cache_dir() + _CURRENT_THEME_COLORS_FILE
   
 def _print_widget(widget): # debug
     path_str = widget.get_path().to_string()

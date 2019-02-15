@@ -24,12 +24,13 @@ MLT framework profiles.
 import os
 import mlt
 
+import appconsts
 import editorpersistance
 import respaths
-import utils
+import userfolders
 
 # Inside hidden user folder
-USER_PROFILES_DIR = "user_profiles/"
+USER_PROFILES_DIR = appconsts.USER_PROFILES_DIR
 DEFAULT_DEFAULT_PROFILE = "DV/DVD PAL"
 
 # List of mlt profiles
@@ -45,7 +46,7 @@ def load_profile_list():
     """
     global _profile_list,_factory_profiles, _hidden_factory_profiles, _user_profiles, _proxy_profiles
 
-    user_profiles_dir = utils.get_hidden_user_dir_path() + USER_PROFILES_DIR
+    user_profiles_dir = userfolders.get_data_dir() + USER_PROFILES_DIR
     _user_profiles = _load_profiles_list(user_profiles_dir)
     _load_factory_profiles()
 

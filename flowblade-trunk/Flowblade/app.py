@@ -167,9 +167,6 @@ def main(root_path):
     # Create user folders if need and determine if were using xdg or dotfile userf folders.
     userfolders.init()
 
-    # Get user dir
-    user_dir = utils.get_hidden_user_dir_path()
-
     # Set paths.
     respaths.set_paths(root_path)
 
@@ -179,8 +176,8 @@ def main(root_path):
         respaths.apply_dark_theme()
     if editorpersistance.prefs.display_all_audio_levels == False:
         editorstate.display_all_audio_levels = False
-    editorpersistance.create_thumbs_folder_if_needed(user_dir)
-    editorpersistance.create_rendered_clips_folder_if_needed(user_dir)
+    editorpersistance.create_thumbs_folder_if_needed(userfolders.get_cache_dir())
+    editorpersistance.create_rendered_clips_folder_if_needed(userfolders.get_data_dir())
 
     editorpersistance.save()
 
@@ -689,7 +686,7 @@ def autosave_recovery_dialog():
 
 def autosave_dialog_callback(dialog, response):
     dialog.destroy()
-    autosave_file = utils.get_hidden_user_dir_path() + AUTOSAVE_DIR + get_autosave_files()[0]
+    autosave_file = userfolders.get_cache_dir() + AUTOSAVE_DIR + get_autosave_files()[0]
     if response == Gtk.ResponseType.OK:
         global loaded_autosave_file
         loaded_autosave_file = autosave_file
@@ -703,7 +700,7 @@ def autosaves_many_recovery_dialog():
     now = time.time()
     autosaves = []
     for a_file_name in autosaves_file_names:
-        autosave_path = utils.get_hidden_user_dir_path() + AUTOSAVE_DIR + a_file_name
+        autosave_path = userfolders.get_cache_dir() + AUTOSAVE_DIR + a_file_name
         autosave_object = utils.EmptyClass()
         autosave_object.age = now - os.stat(autosave_path).st_mtime
         autosave_object.path = autosave_path
@@ -739,11 +736,11 @@ def start_autosave():
 
     print "Autosave started..."
     autosave_timeout_id = GObject.timeout_add(autosave_delay_millis, do_autosave)
-    autosave_file = utils.get_hidden_user_dir_path() + get_instance_autosave_file()
+    autosave_file = userfolders.get_cache_dir() + get_instance_autosave_file()
     persistance.save_project(editorstate.PROJECT(), autosave_file)
 
 def get_autosave_files():
-    autosave_dir = utils.get_hidden_user_dir_path() + AUTOSAVE_DIR
+    autosave_dir = userfolders.get_cache_dir() + AUTOSAVE_DIR
     return os.listdir(autosave_dir)
 
 def stop_autosave():
@@ -754,7 +751,7 @@ def stop_autosave():
     autosave_timeout_id = -1
 
 def do_autosave():
-    autosave_file = utils.get_hidden_user_dir_path() + get_instance_autosave_file()
+    autosave_file = userfolders.get_cache_dir() + get_instance_autosave_file()
     persistance.save_project(editorstate.PROJECT(), autosave_file)
     return True
 
@@ -920,7 +917,7 @@ def _app_destroy():
         pass
     # Delete autosave file
     try:
-        os.remove(utils.get_hidden_user_dir_path() + get_instance_autosave_file())
+        os.remove(userfolders.get_cache_dir() + get_instance_autosave_file())
     except:
         print "Delete autosave file FAILED"
 

@@ -21,7 +21,8 @@
 """
 Module handles saving and loading data that is related to the editor and not any particular project.
 """
-
+import gi
+gi.require_version('Gtk', '3.0') 
 from gi.repository import Gtk
 
 import os
@@ -29,6 +30,7 @@ import pickle
 
 import appconsts
 import mltprofiles
+import userfolders
 import utils
 
 PREFS_DOC = "prefs"
@@ -51,8 +53,8 @@ def load():
     """
     If docs fail to load, new ones are created and saved.
     """
-    prefs_file_path = utils.get_hidden_user_dir_path() + PREFS_DOC
-    recents_file_path = utils.get_hidden_user_dir_path() + RECENT_DOC
+    prefs_file_path = userfolders.get_config_dir() + PREFS_DOC
+    recents_file_path = userfolders.get_config_dir() + RECENT_DOC
 
     global prefs, recent_projects
     try:
@@ -107,8 +109,8 @@ def save():
     """
     Write out prefs and recent_projects files 
     """
-    prefs_file_path = utils.get_hidden_user_dir_path() + PREFS_DOC
-    recents_file_path = utils.get_hidden_user_dir_path() + RECENT_DOC
+    prefs_file_path = userfolders.get_config_dir()+ PREFS_DOC
+    recents_file_path = userfolders.get_config_dir() + RECENT_DOC
     
     write_file = file(prefs_file_path, "wb")
     pickle.dump(prefs, write_file)
@@ -124,7 +126,7 @@ def add_recent_project_path(path):
         recent_projects.projects.pop(-1)
         
     # Reject autosaves.
-    autosave_dir = utils.get_hidden_user_dir_path() + appconsts.AUTOSAVE_DIR
+    autosave_dir = userfolders.get_cache_dir() + appconsts.AUTOSAVE_DIR
     file_save_dir = os.path.dirname(path) + "/"        
     if file_save_dir == autosave_dir:
         return
@@ -140,7 +142,7 @@ def add_recent_project_path(path):
 
 def remove_non_existing_recent_projects():
     # Remove non-existing projects from recents list
-    recents_file_path = utils.get_hidden_user_dir_path() + RECENT_DOC
+    recents_file_path = userfolders.get_config_dir() + RECENT_DOC
     remove_list = []
     for proj_path in recent_projects.projects:
         if os.path.isfile(proj_path) == False:

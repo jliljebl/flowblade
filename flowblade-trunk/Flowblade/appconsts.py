@@ -144,9 +144,10 @@ CONVERTING_TO_USE_ORIGINAL_MEDIA = 3
 
 # Autosave directory relative path
 AUTOSAVE_DIR = "autosave/"
-AUDIO_LEVELS_DIR = "audiolevels/"
 
 # Hidden media folders
+# NOTE: We have not been fully consistant with the ending forward slashes.
+AUDIO_LEVELS_DIR = "audiolevels/"
 THUMBNAILS_DIR = "thumbnails"
 RENDERED_CLIPS_DIR = "rendered_clips"
 GMIC_DIR = "gmic"
@@ -156,6 +157,8 @@ MATCH_FRAME_DIR = "match_frame"
 MATCH_FRAME = MATCH_FRAME_DIR + "/match_frame.png"
 MATCH_FRAME_NEW = MATCH_FRAME_DIR + "/match_frame_new.png"
 TRIM_VIEW_DIR = "trim_view"
+USER_PROFILES_DIR = "user_profiles/"
+USER_PROFILES_DIR_NO_SLASH = "user_profiles"
 
 # Luma bands
 SHADOWS = 0

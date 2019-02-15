@@ -22,8 +22,6 @@ import gi
 from gi.repository import GLib
 import os
 
-import editorstate
-
 USING_DOT_DIRS = 0
 USING_XDG_DIRS = 1
 
@@ -102,15 +100,15 @@ def _create_xdg_dirs():
     if not os.path.exists(user_dir):
         os.mkdir(user_dir)
 
-    # Data
+    # Data stuff that can break projects and cannot be regerated by app
     if not os.path.exists(user_dir + mltprofiles.USER_PROFILES_DIR):
         os.mkdir(user_dir + mltprofiles.USER_PROFILES_DIR)
+    # rendered_clips dir is made in app.py line 180...ish
+
+        
+    # Cache, stuff that can be regerated by app or is transient
     if not os.path.exists(user_dir + AUTOSAVE_DIR):
         os.mkdir(user_dir + AUTOSAVE_DIR)
-    if not os.path.exists(user_dir + BATCH_DIR):
-        os.mkdir(user_dir + BATCH_DIR)
-        
-    # Cache
     if not os.path.exists(user_dir + appconsts.GMIC_DIR):
         os.mkdir(user_dir + appconsts.GMIC_DIR)
     if not os.path.exists(user_dir + appconsts.MATCH_FRAME_DIR):
@@ -121,7 +119,8 @@ def _create_xdg_dirs():
         os.mkdir(utils.get_hidden_screenshot_dir_path())
     if not os.path.exists(user_dir + appconsts.AUDIO_LEVELS_DIR):
         os.mkdir(user_dir + appconsts.AUDIO_LEVELS_DIR)
-
+    if not os.path.exists(user_dir + BATCH_DIR):
+        os.mkdir(user_dir + BATCH_DIR)
 
 
 

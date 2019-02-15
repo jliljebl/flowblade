@@ -167,10 +167,10 @@ def show_disk_management_dialog():
 
 def _get_disk_dir_panels():
     panels = []
-    panels.append(DiskFolderManagementPanel("audiolevels", _("Audio Levels Data"), RECREATE_WARNING))
-    panels.append(DiskFolderManagementPanel("gmic", _("G'Mic Tool Session Data"), NO_WARNING))
-    panels.append(DiskFolderManagementPanel("rendered_clips", _("Rendered Files"), PROJECT_DATA_WARNING))
-    panels.append(DiskFolderManagementPanel("thumbnails", _("Thumbnails"), RECREATE_WARNING))
-    panels.append(DiskFolderManagementPanel("user_profiles", _("User Created Custom Profiles"), PROJECT_DATA_WARNING))
+    panels.append(DiskFolderManagementPanel(appconsts.AUDIO_LEVELS_DIR, _("Audio Levels Data"), RECREATE_WARNING))
+    panels.append(DiskFolderManagementPanel(appconsts.GMIC_DIR, _("G'Mic Tool Session Data"), NO_WARNING))
+    panels.append(DiskFolderManagementPanel(appconsts.RENDERED_CLIPS_DIR, _("Rendered Files"), PROJECT_DATA_WARNING))
+    panels.append(DiskFolderManagementPanel(appconsts.THUMBNAILS_DIR, _("Thumbnails"), RECREATE_WARNING))
+    panels.append(DiskFolderManagementPanel(appcossts.USER_PROFILES_DIR_NO_SLASH, _("User Created Custom Profiles"), PROJECT_DATA_WARNING))
 
     return panels

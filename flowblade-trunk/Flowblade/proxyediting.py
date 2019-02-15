@@ -654,7 +654,7 @@ def _get_proxy_profile(project):
     file_contents += "display_aspect_num=" + str(project_profile.display_aspect_num()) + "\n"
     file_contents += "display_aspect_den=" + str(project_profile.display_aspect_den()) + "\n"
 
-    proxy_profile_path = utils.get_hidden_user_dir_path() + "temp_proxy_profile"
+    proxy_profile_path = userfolders.get_cache_folder() + "temp_proxy_profile"
     profile_file = open(proxy_profile_path, "w")
     profile_file.write(file_contents)
     profile_file.close()
@@ -688,7 +688,7 @@ def _create_proxy_render_folder_select_callback(dialog, response_id, file_select
 # ----------------------------------------------------------- changing proxy modes
 def _convert_to_proxy_project():    
     editorstate.PROJECT().proxy_data.proxy_mode = appconsts.CONVERTING_TO_USE_PROXY_MEDIA
-    conv_temp_project_path = utils.get_hidden_user_dir_path() + "proxy_conv.flb"
+    conv_temp_project_path = userfolders.get_cache_folder() + "proxy_conv.flb"
     manager_window.convert_progress_bar.set_text(_("Converting Project to Use Proxy Media"))
     
     mark_in = editorstate.PROJECT().c_seq.tractor.mark_in
@@ -701,7 +701,7 @@ def _convert_to_proxy_project():
 
 def _convert_to_original_media_project():
     editorstate.PROJECT().proxy_data.proxy_mode = appconsts.CONVERTING_TO_USE_ORIGINAL_MEDIA
-    conv_temp_project_path = utils.get_hidden_user_dir_path() + "proxy_conv.flb"
+    conv_temp_project_path = userfolders.get_cache_folder() + "proxy_conv.flb"
     manager_window.convert_progress_bar.set_text(_("Converting to Use Original Media"))
 
     mark_in = editorstate.PROJECT().c_seq.tractor.mark_in
@@ -719,7 +719,7 @@ def _auto_re_convert_after_proxy_render_in_proxy_mode():
     # Save to temp to convert to using original media
     project = editorstate.PROJECT()
     project.proxy_data.proxy_mode = appconsts.CONVERTING_TO_USE_ORIGINAL_MEDIA
-    conv_temp_project_path = utils.get_hidden_user_dir_path() + "proxy_conv.flb"
+    conv_temp_project_path = userfolders.get_cache_folder() + "proxy_conv.flb"
     persistance.save_project(editorstate.PROJECT(), conv_temp_project_path)
     project.proxy_data.proxy_mode = appconsts.USE_ORIGINAL_MEDIA
 
@@ -760,6 +760,7 @@ def _converting_proxy_mode_done():
     gui.media_list_view.widget.queue_draw()
     gui.tline_left_corner.update_gui()
     set_menu_to_proxy_state()
+    
 
 class ProxyProjectLoadThread(threading.Thread):
 
