@@ -1,5 +1,7 @@
 # PYTHON 3 STATUS OF DEPENDENCIES
 
+tl;dr: All dependencies are Python 3 compatible although __python-mlt__ might not be adequately tested.
+
 | **Ubuntu package name** | **Description** | **Python 3 available** |
 |:-------------------------------|:----------------|:--------------|
 | python-gi | GTK3 Python bindings | **YES, python3-gi**  |
@@ -17,3 +19,7 @@
 | gir1.2-gtk-3.0 | Gtk toolkit | **YES, this is same for Python 3 and used by python3-gi package** |
 | gir1.2-pango-1.0 | Pango text lib | **YES, this is same for Python 3 and used by python3-gi package** |
 | gir1.2-gdkpixbuf-2.0 | Image support | **YES, this is same for Python 3 and used by python3-gi package** |
+
+
+# PYTHON 3 STATUS OF THIS REPO
+[flake8](http://flake8.pycqa.org) flags 61 files as containing __E999 SyntaxError: invalid syntax__ (`flake8 . --select=E999`)
