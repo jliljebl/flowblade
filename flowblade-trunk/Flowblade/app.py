@@ -154,16 +154,6 @@ def main(root_path):
     except:
         editorstate.mlt_version = "0.0.99" # magic string for "not found"
 
-    #print "SDL version:", str(editorstate.get_sdl_version())
-    
-    # passing -xdg as a flag will change the user_dir location with XDG_CONFIG_HOME
-    # For full xdg-app support all the launch processes need to add this too, currently not impl.
-    # NOT USED CURRENTLY
-    force_xdg = False
-    for arg in sys.argv:
-        if arg.lower() == "-xdg":
-            force_xdg = True
-            
     # Create user folders if need and determine if were using xdg or dotfile userf folders.
     userfolders.init()
 
