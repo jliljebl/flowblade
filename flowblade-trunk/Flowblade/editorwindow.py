@@ -753,7 +753,8 @@ class EditorWindow:
         # Timeline column
         self.tline_column = tlinewidgets.TimeLineColumn(
                             trackaction.track_active_switch_pressed,
-                            trackaction.track_center_pressed)
+                            trackaction.track_center_pressed,
+                            trackaction.track_double_click)
 
         # Timeline editpanel
         self.tline_canvas = tlinewidgets.TimeLineCanvas(

@@ -1459,6 +1459,10 @@ def _get_dynamic_kb_shortcuts_panel(xml_file):
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "enter_edit"), False, False, 0)
     tline = guiutils.get_named_frame(_("Timeline"), tline_vbox)
 
+    track_head_vbox = Gtk.VBox()
+    track_head_vbox.pack_start(_get_kb_row(_("Mouse Double Click"), _("Toggle Track Height")), False, False, 0)
+    track_head = guiutils.get_named_frame(_("Track Head Column"), track_head_vbox)
+    
     play_vbox = Gtk.VBox()
     play_vbox.pack_start(_get_dynamic_kb_row(root_node, "play_pause"), False, False, 0)
     play_vbox.pack_start(_get_dynamic_kb_row(root_node, "slower"), False, False, 0)
@@ -1506,6 +1510,8 @@ def _get_dynamic_kb_shortcuts_panel(xml_file):
     panel.pack_start(tools, False, False, 0)
     panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
     panel.pack_start(tline, False, False, 0)
+    panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
+    panel.pack_start(track_head, False, False, 0)
     panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
     panel.pack_start(play, False, False, 0)
     panel.pack_start(guiutils.pad_label(12,12), False, False, 0)

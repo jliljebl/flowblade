@@ -2231,13 +2231,14 @@ class TimeLineColumn:
     GUI component for displaying and editing track parameters.
     """
 
-    def __init__(self, active_listener, center_listener):
+    def __init__(self, active_listener, center_listener, double_click_listener):
         # Init widget
         self.widget = cairoarea.CairoDrawableArea2( COLUMN_WIDTH, 
                                                     HEIGHT, 
                                                     self._draw)
         self.widget.press_func = self._press_event
-        
+ 
+        self.double_click_listener = double_click_listener       
         self.active_listener = active_listener
         self.center_listener = center_listener
         self.init_listeners()
@@ -2273,6 +2274,13 @@ class TimeLineColumn:
         """
         Mouse button callback
         """
+        if event.type == Gdk.EventType._2BUTTON_PRESS:
+            for tester in self.track_testers:
+                if tester.is_hit(event.y):
+                    self.double_click_listener(tester.data.track)
+                    return
+            return
+         
         self.event = event
         for tester in self.track_testers:
             tester.data.x = event.x # pack x value to go
@@ -2818,3 +2826,10 @@ class ValueTester:
     def call_listener_if_hit(self, value):
         if value >= self.start and value <= self.end:
             self.listener(self.data)
+
+    def is_hit(self, value):
+        if value >= self.start and value <= self.end:
+            return True
+        else:
+            return False
+            

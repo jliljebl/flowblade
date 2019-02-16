@@ -176,6 +176,13 @@ def track_active_switch_pressed(data):
         guicomponents.display_tracks_popup_menu(data.event, data.track, \
                                                 _track_menu_item_activated)
 
+def track_double_click(track_id):
+    track = get_track(track_id) # data.track is index, not object
+    if track.height == appconsts.TRACK_HEIGHT_NORMAL:
+        set_track_small_height(track_id)
+    else:
+        set_track_normal_height(track_id)
+    
 def track_center_pressed(data):
     if data.event.button == 1:
         # handle possible mute icon presses
