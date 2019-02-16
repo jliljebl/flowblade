@@ -337,8 +337,6 @@ def main(root_path):
     if editorstate.runtime_version_greater_then_test_version(editorpersistance.prefs.workflow_dialog_last_version_shown, editorstate.appversion):
         GObject.timeout_add(500, show_worflow_info_dialog)
 
-    GObject.timeout_add(500, show_worflow_info_dialog)
-        
     # Launch gtk+ main loop
     Gtk.main()
 

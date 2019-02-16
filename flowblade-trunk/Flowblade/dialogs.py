@@ -798,6 +798,9 @@ def recreate_icons_progress_dialog():
 
 def update_media_lengths_progress_dialog():
     return _text_info_prograss_dialog(_("Update media lengths data"))
+
+def audio_sync_active_dialog():
+    return _text_info_prograss_dialog(_("Comparing Audio Data..."))
     
 def _text_info_prograss_dialog(title):
     dialog = Gtk.Window(Gtk.WindowType.TOPLEVEL)

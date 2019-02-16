@@ -62,6 +62,8 @@ _tline_sync_data = None # Compound clip and tline clip sync functions can't pass
                          # we use this global to save data as needed for tline sync function.
                          # The data flow is a bit haed to follow here, this needs tobe refactored.
 
+_compare_dialog_thread = None
+
 class ClapperlesLaunchThread(threading.Thread):
     def __init__(self, video_file, audio_file, completed_callback):
         threading.Thread.__init__(self)
@@ -159,6 +161,10 @@ def select_sync_clip_mouse_pressed(event, frame):
     gdk_window = gui.tline_display.get_parent_window();
     gdk_window.set_cursor(Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR))
     
+    global _compare_dialog_thread
+    _compare_dialog_thread = AudioCompareActiveThread()
+    _compare_dialog_thread.start()
+    
     # This or GUI freezes, we really can't do Popen.wait() in a Gtk thread
     clapperless_thread = ClapperlesLaunchThread(_tline_sync_data.origin_clip.path, sync_clip.path, _tline_sync_offsets_computed_callback)
     clapperless_thread.start()
@@ -167,7 +173,7 @@ def select_sync_clip_mouse_pressed(event, frame):
     movemodes.clear_selected_clips()
 
     updater.repaint_tline()
-
+    
 def _get_sync_tline_clip(event, frame):
     sync_track = tlinewidgets.get_track(event.y)
 
@@ -189,6 +195,9 @@ def _get_sync_tline_clip(event, frame):
     
 def _tline_sync_offsets_computed_callback(clapperless_data):
     print "Clapperless done for tline sync"
+    
+    global _compare_dialog_thread
+    _compare_dialog_thread.compare_done()
     
     file_path_1, file_path_2, idstr = clapperless_data
     files_offsets = _read_offsets(idstr)
@@ -281,6 +290,10 @@ def create_audio_sync_compound_clip():
     else:
         print  "2 video files, video audio assignments determined by selection order"
 
+    global _compare_dialog_thread
+    _compare_dialog_thread = AudioCompareActiveThread()
+    _compare_dialog_thread.start()
+    
     # This or GUI freezes, we really can't do Popen.wait() in a Gtk thread
     clapperless_thread = ClapperlesLaunchThread(video_file.path, audio_file.path, _compound_offsets_complete)
     clapperless_thread.start()
@@ -288,6 +301,9 @@ def create_audio_sync_compound_clip():
 def _compound_offsets_complete(data):
     print "Clapperless done for compound clip"
 
+    global _compare_dialog_thread
+    _compare_dialog_thread.compare_done()
+    
     video_file_path, audio_file_path, idstr = data
     files_offsets = _read_offsets(idstr)
     sync_data = (files_offsets, data)
@@ -348,3 +364,33 @@ def _do_create_sync_compound_clip(dialog, response_id, data):
     # render MLT XML, callback in projectaction.py creates media object
     render_player = renderconsumer.XMLCompoundRenderPlayer(write_file, media_name, projectaction._xml_compound_render_done_callback, tractor)
     render_player.start()
+
+
+
+class AudioCompareActiveThread(threading.Thread):
+    
+    def __init__(self):
+        threading.Thread.__init__(self)
+        self.running = True
+        
+    def run(self):
+
+        Gdk.threads_enter()
+        dialog = dialogs.audio_sync_active_dialog()
+        dialog.progress_bar.set_pulse_step(0.2)
+        time.sleep(0.1)
+        Gdk.threads_leave()
+
+        while self.running:
+            dialog.progress_bar.pulse()
+            time.sleep(0.2)
+                
+        PROJECT().update_media_lengths_on_load = False
+        
+        Gdk.threads_enter()
+        dialog.destroy()
+        Gdk.threads_leave()
+    
+    def compare_done(self):
+        self.running = False
+
