@@ -58,7 +58,7 @@ def unlock_track(track_index):
 def set_track_normal_height(track_index):
     track = get_track(track_index)
     track.height = appconsts.TRACK_HEIGHT_NORMAL
-    
+
     # Check that new height tracks can be displayed and cancel if not.
     new_h = current_sequence().get_tracks_height()
     allocation = gui.tline_canvas.widget.get_allocation()

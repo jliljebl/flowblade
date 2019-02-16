@@ -139,6 +139,7 @@ def repaint_tline():
     Repaints timeline canvas and scale
     """
     gui.tline_canvas.widget.queue_draw()
+    gui.tline_column.widget.queue_draw()
     gui.tline_scale.widget.queue_draw()
 
 # --- SCROLL AND LENGTH EVENTS
