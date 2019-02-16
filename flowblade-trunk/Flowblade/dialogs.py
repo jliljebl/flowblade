@@ -1343,7 +1343,7 @@ def fade_edit_dialog(callback, transition_data):
 def keyboard_shortcuts_dialog(parent_window, callback):
     dialog = Gtk.Dialog(_("Keyboard Shortcuts"),
                         parent_window,
-                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
                         _("Apply").encode('utf-8'), Gtk.ResponseType.ACCEPT))
 
