@@ -48,6 +48,8 @@ STANDARD_PRESET = 0
 FILM_STYLE_PRESET = 1
 
 SELECTED_BG = Gdk.RGBA(0.1, 0.31, 0.58,1.0)
+WHITE_TEXT = Gdk.RGBA(0.9, 0.9, 0.9,1.0)
+DARK_TEXT = Gdk.RGBA(0.1, 0.1, 0.1,1.0)
         
 # Timeline tools data
 _TOOLS_DATA = None
@@ -510,8 +512,12 @@ class WorkflowDialog(Gtk.Dialog):
     def set_item_color(self, widget):
         if widget.item_number == self.selection:
             widget.override_background_color(Gtk.StateType.NORMAL, SELECTED_BG)
+            if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
+                widget.override_color(Gtk.StateType.NORMAL, WHITE_TEXT)
         else:
             widget.override_background_color(Gtk.StateType.NORMAL, gui.get_bg_color())
+            if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
+                widget.override_color(Gtk.StateType.NORMAL, DARK_TEXT)
 
     def done(self, dialog, response_id):
         if self.selection == STANDARD_PRESET:
