@@ -411,9 +411,6 @@ def get_displayed_image_render_path():
 def get_displayed_image_path():
     return userfolders.get_hidden_screenshot_dir_path() + "screenshot_1.png"
 
-def _screenshot_frame_changed(adjustment):
-    _update_displayed_image(int(adjustment.get_value()))
-
 def render_screen_shot(frame, render_path, vcodec):
     producer = current_sequence().tractor   
     

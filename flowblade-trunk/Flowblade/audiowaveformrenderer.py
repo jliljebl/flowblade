@@ -147,27 +147,6 @@ class AudioRenderLaunchThread(threading.Thread):
         updater.repaint_tline()
         Gdk.threads_leave()
 
-def set_waveform_displayer_clip_from_popup(data):
-    clip, track, item_id, item_data = data
-
-    global frames_cache
-    if clip.path in frames_cache:
-        frame_levels = frames_cache[clip.path]
-        clip.waveform_data = frame_levels
-        return
-
-    cache_file_path = userfolders.get_cache_dir() + appconsts.AUDIO_LEVELS_DIR + _get_unique_name_for_media(clip.path)
-    if os.path.isfile(cache_file_path):
-        f = open(cache_file_path)
-        frame_levels = pickle.load(f)
-        frames_cache[clip.path] = frame_levels
-        clip.waveform_data = frame_levels
-        return
-    
-    global waveform_thread
-    waveform_thread = WaveformCreator(clip, track.height, dialog)
-    waveform_thread.start()
-
 
 # --------------------------------------------------------- rendering
 def main():
