@@ -188,6 +188,7 @@ def _set_keyboard_action_names():
     _keyboard_action_names['next_frame'] = _("Next Frame")
     _keyboard_action_names['insert'] = _("Insert")
     _keyboard_action_names['append'] =  _("Append")
+    _keyboard_action_names['append_from_bin'] = _("Append Selected Media From Bin")
     _keyboard_action_names['slower'] = _("Backwards Faster")
     _keyboard_action_names['stop'] = _("Stop")
     _keyboard_action_names['faster'] =  _("Forward Faster")
@@ -219,6 +220,7 @@ def _set_key_names():
     # Start with an empty slate
     _key_names = {}
     _key_names['i'] = "I"
+    _key_names['a'] = "A"
     _key_names['o'] = "O"
     _key_names['space'] = _("SPACE")
     _key_names['down'] = _("Down Arrow")

@@ -69,6 +69,7 @@
     <event code='insert' name='Insert' modifiers='SHIFT'>y</event>
     <event code='append' name='Append'>u</event>
     <event code='append' name='Append' modifiers='SHIFT'>u</event>
+    <event code='append_from_bin' name='Append Selected Media From Bin'>a</event>
     <event code='slower' name='Slower'>j</event>
     <event code='stop' name='Stop'>k</event>
     <event code='faster' name='Faster'>l</event>

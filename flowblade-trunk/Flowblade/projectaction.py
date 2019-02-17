@@ -884,8 +884,11 @@ def hamburger_pressed(widget, event):
     hamburger_menu.add(move_menu_item)
     move_menu_item.show()
     
+    guiutils.add_separetor(hamburger_menu)
+    hamburger_menu.add(guiutils.get_menu_item(_("Append All Media to Timeline"), _hamburger_menu_item_selected, "append all"))
+    hamburger_menu.add(guiutils.get_menu_item(_("Append Selected Media to Timeline"), _hamburger_menu_item_selected, "append selected"))
+    
     hamburger_menu.popup(None, None, None, None, event.button, event.time)
-
 
 def _hamburger_menu_item_selected(widget, msg):
     if msg == "render proxies":
@@ -894,6 +897,10 @@ def _hamburger_menu_item_selected(widget, msg):
         gui.media_list_view.select_all()
     elif msg == "select none":
         gui.media_list_view.clear_selection()
+    elif msg == "append all":
+        append_all_media_clips_into_timeline()
+    elif msg == "append selected":
+        append_selected_media_clips_into_timeline()
     else:
         target_bin_index = int(msg)
         
@@ -1289,6 +1296,48 @@ def _do_create_sequence_compound_clip(dialog, response_id, name_entry):
 def _get_compound_clip_default_name_date_str():
     return str(datetime.date.today()) + "_" + time.strftime("%H%M%S")
 
+def append_all_media_clips_into_timeline():
+    media_files = []
+    for file_id in PROJECT().c_bin.file_ids:
+        media_files.append(PROJECT().media_files[file_id])
+    
+    _append_media_files(media_files)
+
+def append_selected_media_clips_into_timeline():
+    selection = gui.media_list_view.get_selected_media_objects()
+    media_files = []
+    for mobj in selection:
+        media_files.append(mobj.media_file)
+    _append_media_files(media_files)
+
+def _append_media_files(media_files):
+    clips = []
+    for media_file in media_files:
+    
+        new_clip = current_sequence().create_file_producer_clip(media_file.path, None, False, media_file.ttl)
+        new_clip.clip_in = 0
+        new_clip.clip_out = new_clip.get_length() - 1
+        if new_clip.media_type == appconsts.IMAGE:
+            in_fr, out_fr, default_grfx_length = editorpersistance.get_graphics_default_in_out_length()
+            new_clip.clip_in = in_fr
+            new_clip.clip_out = out_fr
+
+        clips.append(new_clip)
+
+    track = editorstate.current_sequence().get_first_active_track()
+
+    # Can't put audio media on video track
+    for new_clip in clips:
+        if ((new_clip.media_type == appconsts.AUDIO)
+           and (track.type == appconsts.VIDEO)):
+            dialogs.no_audio_dialog(track)
+            return
+
+    data = {"track":track,
+            "clips":clips}
+
+    action = edit.append_media_log_action(data)
+    action.do_edit()
 
 # ------------------------------------ bins
 def bins_panel_popup_requested(event):

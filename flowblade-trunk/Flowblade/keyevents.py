@@ -102,23 +102,6 @@ def key_down(widget, event):
 
     # Pressing timeline button obivously leaves user expecting
     # to have focus in timeline
-    """
-    TODO: this needs something
-    if gui.sequence_editor_b.has_focus():
-        _handle_tline_key_event(event)
-        # Stop event handling here
-        return True
-    """
-    
-    # Clip button or posbar focus with clip displayed leaves playback keyshortcuts available
-    """
-    if (gui.clip_editor_b.has_focus()
-        TODO: this needs something
-        or (gui.pos_bar.widget.is_focus() and (not timeline_visible()))):
-        _handle_clip_key_event(event)
-        # Stop event handling here
-        return True
-    """
     if gui.monitor_switch.widget.has_focus() and timeline_visible():
         _handle_tline_key_event(event)
         return True
@@ -309,6 +292,9 @@ def _handle_tline_key_event(event):
         if action == 'append':
             tlineaction.append_button_pressed()
             return True
+        if action == 'append_from_bin':
+            projectaction.append_selected_media_clips_into_timeline()
+            return True
         if action == 'slower':
             monitorevent.j_pressed()
             return True
@@ -397,7 +383,10 @@ def _handle_extended_monitor_focus_events(event):
     if action == 'switch_monitor':
         updater.switch_monitor_display()
         return True
-    
+    if action == 'append_from_bin':
+        projectaction.append_selected_media_clips_into_timeline()
+        return True
+
     tool_was_selected = workflow.tline_tool_keyboard_selected(event)
     if tool_was_selected == True:
         return True

@@ -56,6 +56,7 @@ def set_waveform_displayer_clip_from_popup(data):
     if clip.path in frames_cache:
         frame_levels = frames_cache[clip.path]
         clip.waveform_data = frame_levels
+        updater.repaint_tline()
         return
 
     cache_file_path = userfolders.get_cache_dir() + appconsts.AUDIO_LEVELS_DIR + _get_unique_name_for_media(clip.path)
@@ -64,6 +65,7 @@ def set_waveform_displayer_clip_from_popup(data):
         frame_levels = pickle.load(f)
         frames_cache[clip.path] = frame_levels
         clip.waveform_data = frame_levels
+        updater.repaint_tline()
         return
 
     progress_bar = Gtk.ProgressBar()
