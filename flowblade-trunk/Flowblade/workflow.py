@@ -132,6 +132,18 @@ def get_tline_tool_popup_menu(launcher, event, callback):
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
 
+def get_tline_tool_working_set():
+    tools = []
+    
+    kb_shortcut_number = 1
+    for tool_id in editorpersistance.prefs.active_tools:
+        tool_name, tool_icon_file = _TOOLS_DATA[tool_id]
+        tools.append((tool_name, kb_shortcut_number))
+
+        kb_shortcut_number = kb_shortcut_number + 1
+
+    return tools
+    
 def _tools_menu_hidden(tools_menu, menu_items):
     # needed to make number 1-6 work elsewhere in the application
     for menu_item in menu_items:

@@ -909,7 +909,6 @@ def _hamburger_menu_item_selected(widget, msg):
             media_bin_indexes.append(selected_object.bin_index)
         
         move_files_to_bin(target_bin_index, media_bin_indexes)
-        #print target_bin_inxdex, media_bin_indexes
 
 def media_panel_popup_requested(event):
     panel_menu = media_panel_popup_menu

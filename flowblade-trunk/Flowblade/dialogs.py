@@ -1343,7 +1343,7 @@ def fade_edit_dialog(callback, transition_data):
     _default_behaviour(dialog)
     dialog.show_all()
 
-def keyboard_shortcuts_dialog(parent_window, callback):
+def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, callback):
     dialog = Gtk.Dialog(_("Keyboard Shortcuts"),
                         parent_window,
                         Gtk.DialogFlags.DESTROY_WITH_PARENT,
@@ -1381,7 +1381,7 @@ def keyboard_shortcuts_dialog(parent_window, callback):
     content_panel.pack_start(guiutils.get_left_justified_box([diff_label]), False, False, 0)
     content_panel.pack_start(diff_sw, False, False, 0)
 
-    scroll_window = _display_keyboard_schortcuts(editorpersistance.prefs.shortcuts, scroll_hold_panel)
+    scroll_window = _display_keyboard_schortcuts(editorpersistance.prefs.shortcuts, get_tool_list_func(), scroll_hold_panel)
 
     shortcuts_combo.connect('changed', lambda w:_shorcuts_selection_changed(w, scroll_hold_panel, diff_data, dialog))
     
@@ -1400,12 +1400,12 @@ def _shorcuts_selection_changed(combo, scroll_hold_panel, diff_data, dialog):
     diff_data.set_text(shortcuts.get_diff_to_defaults(selected_xml))
     dialog.show_all()
 
-def _display_keyboard_schortcuts(xml_file, scroll_hold_panel):
+def _display_keyboard_schortcuts(xml_file, tool_set, scroll_hold_panel):
     widgets = scroll_hold_panel.get_children()
     if len(widgets) != 0:
         scroll_hold_panel.remove(widgets[0])
 
-    shorcuts_panel = _get_dynamic_kb_shortcuts_panel(xml_file)
+    shorcuts_panel = _get_dynamic_kb_shortcuts_panel(xml_file, tool_set)
 
     pad_panel = Gtk.HBox()
     pad_panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
@@ -1420,7 +1420,7 @@ def _display_keyboard_schortcuts(xml_file, scroll_hold_panel):
     scroll_hold_panel.pack_start(sw, False, False, 0)
     return sw
 
-def _get_dynamic_kb_shortcuts_panel(xml_file):   
+def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):   
     root_node = shortcuts.get_shortcuts_xml_root_node(xml_file)
     
     general_vbox = Gtk.VBox()
@@ -1485,15 +1485,9 @@ def _get_dynamic_kb_shortcuts_panel(xml_file):
     play = guiutils.get_named_frame(_("Playback"), play_vbox)
 
     tools_vbox = Gtk.VBox()
-    tools_vbox.pack_start(_get_dynamic_kb_row(root_node, "edit_mode_insert"), False, False, 0)
-    tools_vbox.pack_start(_get_dynamic_kb_row(root_node, "edit_mode_overwrite"), False, False, 0)
-    tools_vbox.pack_start(_get_dynamic_kb_row(root_node, "edit_mode_trim"), False, False, 0)
-    tools_vbox.pack_start(_get_dynamic_kb_row(root_node, "edit_mode_roll"), False, False, 0)
-    tools_vbox.pack_start(_get_dynamic_kb_row(root_node, "edit_mode_slip"), False, False, 0)
-    tools_vbox.pack_start(_get_dynamic_kb_row(root_node, "edit_mode_spacer"), False, False, 0)
-    tools_vbox.pack_start(_get_dynamic_kb_row(root_node, "edit_mode_box"), False, False, 0)
-    tools_vbox.pack_start(_get_kb_row(_("Keypad 1-7"), _("Same as 1-7")), False, False, 0)
-    tools_vbox.pack_start(_get_kb_row(_("R"), _("Toggle Trim / Ripple Trim Tools")), False, False, 0)
+    for tool_name, kb_shortcut in tool_set:
+            tools_vbox.pack_start(_get_kb_row(tool_name, kb_shortcut), False, False, 0)
+    tools_vbox.pack_start(_get_kb_row(_("Keypad 1-9"), _("Same as 1-9")), False, False, 0)
     tools = guiutils.get_named_frame(_("Tools"), tools_vbox)
 
     geom_vbox = Gtk.VBox()
