@@ -133,6 +133,20 @@ def get_current_gui_selections():
     selections["folder"] = widgets.file_panel.out_folder.get_current_folder()
     selections["name"] = widgets.file_panel.movie_name.get_text()
     selections["range"] = widgets.range_cb.get_active()
+    selections["use_project_profile"] = widgets.profile_panel.use_project_profile_check.get_active()
+    if widgets.args_panel.use_args_check.get_active() == True:
+        if widgets.args_panel.text_buffer == None:
+            buf = widgets.args_panel.opts_view.get_buffer() 
+
+        else:
+            buf = widgets.args_panel.text_buffer
+            
+        buf_text = buf.get_text( buf.get_start_iter(), 
+                                 buf.get_end_iter(), 
+                                 include_hidden_chars=True)
+        selections["render_args"] = buf_text
+    else:
+        selections["render_args"] = None
     return selections
 
 def set_saved_gui_selections(selections):

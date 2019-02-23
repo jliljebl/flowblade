@@ -118,6 +118,9 @@ def save_project(project, file_path, changed_profile_desc=None):
     """
     print "Saving project..."  # + os.path.basename(file_path)
     
+    # We are gathering some data into project properties on save, this way we don't need to edit multiple code points on property changes.
+    project.update_p_props_for_save()
+    
     # Get shallow copy
     s_proj = copy.copy(project)
     
