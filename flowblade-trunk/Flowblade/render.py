@@ -133,11 +133,12 @@ def get_current_gui_selections():
     selections["folder"] = widgets.file_panel.out_folder.get_current_folder()
     selections["name"] = widgets.file_panel.movie_name.get_text()
     selections["range"] = widgets.range_cb.get_active()
+    selections["markinmarkout"] = (PROJECT().c_seq.tractor.mark_in, PROJECT().c_seq.tractor.mark_out)
     selections["use_project_profile"] = widgets.profile_panel.use_project_profile_check.get_active()
+    selections["render_profile"] = widgets.profile_panel.out_profile_combo.widget.get_active()
     if widgets.args_panel.use_args_check.get_active() == True:
         if widgets.args_panel.text_buffer == None:
-            buf = widgets.args_panel.opts_view.get_buffer() 
-
+            buf = widgets.args_panel.opts_view.get_buffer()
         else:
             buf = widgets.args_panel.text_buffer
             
@@ -157,6 +158,23 @@ def set_saved_gui_selections(selections):
     widgets.file_panel.out_folder.set_current_folder(selections["folder"])
     widgets.file_panel.movie_name.set_text(selections["name"])
     widgets.range_cb.set_active(selections["range"])
+    try:
+        # These were added later so we may not have the data
+        if selections["range"] == 1:
+            mark_in, mark_out = selections["markinmarkout"]
+            PROJECT().c_seq.tractor.mark_in = mark_in
+            PROJECT().c_seq.tractor.mark_out = mark_out
+        widgets.profile_panel.use_project_profile_check.set_active(selections["use_project_profile"] )
+        widgets.profile_panel.out_profile_combo.widget.set_active(selections["render_profile"] )
+        if selections["render_args"] != None:
+            widgets.args_panel.use_args_check.set_active(True)
+            if widgets.args_panel.text_buffer == None:
+                buf = widgets.args_panel.opts_view.get_buffer()
+            else:
+                buf = widgets.args_panel.text_buffer
+            buf.set_text(selections["render_args"])
+    except:
+        pass
     
 def get_file_path():
     folder = widgets.file_panel.out_folder.get_filenames()[0]        
