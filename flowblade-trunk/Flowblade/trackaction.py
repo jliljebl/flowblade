@@ -32,6 +32,7 @@ import edit
 from editorstate import get_track
 from editorstate import current_sequence
 from editorstate import PROJECT
+from editorstate import PLAYER
 import snapping
 import tlinewidgets
 import updater
@@ -158,6 +159,10 @@ def _audio_levels_item_activated(widget, msg):
         updater.repaint_tline()
     elif msg == "snapping":
         snapping.snapping_on = widget.get_active()
+    elif msg == "scrubbing":
+        editorstate.audio_scrubbing = widget.get_active()
+        PLAYER().set_scrubbing(widget.get_active())
+        
     else: # media thumbnails
         editorstate.display_clip_media_thumbnails = widget.get_active()
         updater.repaint_tline()

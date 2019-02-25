@@ -2594,21 +2594,9 @@ def get_all_tracks_popup_menu(event, callback):
     menu.popup(None, None, None, None, event.button, event.time)
 
 def get_audio_levels_popup_menu(event, callback):
-    # needs renaming
+    # needs renaming, we have more stuff here now
     menu = levels_menu
     guiutils.remove_children(menu)
-
-
-    """
-    ponter_sensitive_item = Gtk.CheckMenuItem()
-    ponter_sensitive_item.set_label(_("Tool Cursor Context Sensitive"))
-    ponter_sensitive_item.set_active(editorstate.cursor_is_tline_sensitive)
-    ponter_sensitive_item.connect("activate", callback, "pointer_sensitive_item")
-
-    menu.append(ponter_sensitive_item) 
-    
-    _add_separetor(menu)
-    """
 
     thumbs_item = Gtk.CheckMenuItem()
     thumbs_item.set_label(_("Display Clip Media Thumbnails"))
@@ -2628,6 +2616,15 @@ def get_audio_levels_popup_menu(event, callback):
     
     _add_separetor(menu)
 
+    scrub_item = Gtk.CheckMenuItem()
+    scrub_item.set_label(_("Audio scrubbing"))
+    scrub_item.set_active(editorstate.audio_scrubbing)
+    scrub_item.connect("activate", callback, "scrubbing")
+
+    menu.append(scrub_item)
+    
+    _add_separetor(menu)
+    
     allways_item = Gtk.RadioMenuItem()
     allways_item.set_label(_("Display All Audio Levels"))
     menu.append(allways_item)

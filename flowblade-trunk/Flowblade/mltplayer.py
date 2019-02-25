@@ -111,6 +111,12 @@ class Player:
         self.connect_and_start()
     """
     
+    def set_scrubbing(self, scrubbing_active):
+        if scrubbing_active == True:
+            self.consumer.set("scrub_audio", 1)
+        else:
+            self.consumer.set("scrub_audio", 0)
+            
     def set_sdl_xwindow(self, widget):
         """
         Connects SDL output to display widget's xwindow
