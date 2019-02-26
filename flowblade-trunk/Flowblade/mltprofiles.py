@@ -196,6 +196,8 @@ def get_closest_matching_profile_index(producer_info):
         
         if width == prof_width and height == prof_height:
             match_score = match_score + 1000
+        if (width * 2) < prof_width or (height * 2) < prof_height:
+            match_score = match_score - 500
         if fps == prof_fps:
             match_score = match_score + 100
         if fps_2 == prof_fps_2: # We added this as a fix later for #290, fix might have been done some other way
