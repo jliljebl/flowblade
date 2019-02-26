@@ -63,9 +63,7 @@ _project_properties_default_values = {appconsts.P_PROP_TLINE_SHRINK_VERTICAL:Fal
                                       appconsts.P_PROP_ANIM_GROUP_FADE_OUT:-1, # not used, dropped feature (auto fades on creation)
                                       appconsts.P_PROP_LAST_RENDER_SELECTIONS: None, # tuple for last render selections data
                                       appconsts.P_PROP_TRANSITION_ENCODING: None,  # tuple for last renderered transition render selections data
-                                      appconsts.P_PROP_AUTO_FOLLOW: False,  # Global compositor auto follow
-                                      appconsts.P_PROP_RENDER_ARGS:None, # renders args data if used
-                                      appconsts.P_PROP_USE_PROFILE:True} # Use Project Profile checkbox
+                                      appconsts.P_PROP_AUTO_FOLLOW: False} # Global compositor auto follow
 
 class Project:
     """
@@ -302,9 +300,6 @@ class Project:
 
     def set_project_property(self, property_name, value):
         self.project_properties[property_name] = value
-
-    def update_p_props_for_save(self):
-        pass
 
             
 class MediaFile:
