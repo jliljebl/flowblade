@@ -488,21 +488,21 @@
         <name>Grayscale</name>
         <group>Color</group>
     </filter>
-    <!---
     <filter id="frei0r.cairogradient">
-        <name>Cairogradient</name>
+        <name>Gradient Tint</name>
         <group>Color</group>
-        <property name="pattern" args="editor=combobox exptype=default cbopts=Linear:gradient_linear,Radial:gradient_radial">gradient_linear</property>
-        <property name="start x" args="editor=no_editor exptype=frei_pos_hcs">0=0.5;200=0.0</property>
-        <property name="end x" args="editor=no_editor exptype=frei_pos_hcs">0=0.5;200=1.0</property>
-        <property name="start color" args="editor=color_select exptype=color displayname=Start!Color">#ffffff</property>
-        <property name="start opacity" args="editor=slider range_in=0,100">0.5</property>
-        <property name="end color" args="editor=color_select exptype=color displayname=End!Color">#000000</property>
-        <property name="end opacity" args="editor=slider range_in=0,100">0.5</property>
-        <property name="blend mode" args="editor=combobox displayname=Blend!Mode exptype=default cbopts=Normal:normal,Add:add,Saturate:saturate,Multiply:multiply,Screen:screen,Overlay:overlay,Darken:darken,Lighten:lighten,ColorDodge:colordodge,Colorburn:colorburn,Hardlight:hardlight,Softlight:softlight,Difference:difference,Exclusion:exclusion,HSLHue:hslhue,HSLSaturation:hslsaturation,HSLColor:hslcolor,HSLLuminosity:hslluminosity">normal</property>
-        <property name="offset" args="editor=slider range_in=0,100">0.0</property>
+        <property name="1" args="editor=color_select exptype=cairo_color displayname=Start!Color">#ffffff</property>
+        <property name="3" args="editor=color_select exptype=cairo_color displayname=End!Color">#000000</property>
+        <property name="10" args="editor=combobox displayname=Blend!Mode exptype=default cbopts=Normal:normal,Add:add,Saturate:saturate,Multiply:multiply,Screen:screen,Overlay:overlay,Darken:darken,Lighten:lighten,ColorDodge:colordodge,Colorburn:colorburn,Hardlight:hardlight,Softlight:softlight,Difference:difference,Exclusion:exclusion,HSLHue:hslhue,HSLSaturation:hslsaturation,HSLColor:hslcolor,HSLLuminosity:hslluminosity">normal</property>
+        <property name="2" args="editor=slider range_in=0,100 displayname=Start!Opacity">0.5</property>
+        <property name="4" args="editor=slider range_in=0,100 displayname=End!Opacity">0.5</property>
+        <property name="5" args="editor=slider range_in=0,100 displayname=Start!X">0.5</property>
+        <property name="6" args="editor=slider range_in=0,100 displayname=Start!Y">0.8</property>
+        <property name="7" args="editor=slider range_in=0,100 displayname=End!X">0.5</property>
+        <property name="8" args="editor=slider range_in=0,100 displayname=End!Y">0.2</property>
+           <property name="0" args="editor=combobox displayname=Gradient!Type exptype=default cbopts=Linear:gradient_linear,Radial:gradient_radial">gradient_linear</property>
+        <property name="9" args="editor=slider range_in=0,100 displayname=Radial!Offset">0.0</property>
     </filter>
-    -->
     <filter id="frei0r.contrast0r">
         <name>Contrast</name>
         <group>Color</group>

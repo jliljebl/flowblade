@@ -66,6 +66,7 @@ MULTIPART_KEYFRAME_HCS = "multipart_keyframe"               # frame=value(;frame
 FREI_POSITION_HCS = "frei_pos_hcs"                          # frame=x:y
 FREI_GEOM_HCS_TRANSITION = "frei_geom_hcs";                 # time=x:y:x_scale:y_scale:rotation:mix
 COLOR = "color"                                             # #rrggbb
+CAIRO_COLOR = "cairo_color"                                             # #rrggbb but displayed as r and b switched
 LUT_TABLE = "lut_table"                                     # val;val;val;val;...;val
 WIPE_RESOURCE = "wipe_resource"                             # /path/to/resource.pgm
 FILE_RESOURCE = "file_resource"                             # /path/to/somefile
@@ -703,10 +704,11 @@ class KeyFrameHCSTransitionProperty(TransitionEditableProperty):
 class ColorProperty(EditableProperty):
     """
     Gives value as gdk color for gui and writes out color as 
-    different type of hex to mlt 
+    different type of hex to mlt.
     """
     
     def get_value_as_gdk_color(self):
+        # NOT USED ?!?
         raw_r, raw_g, raw_b = utils.hex_to_rgb(self.value)
         return Gdk.Color(red=(float(raw_r)/255.0),
                              green=(float(raw_g)/255.0),
@@ -724,6 +726,34 @@ class ColorProperty(EditableProperty):
                         utils.int_to_hex_str(int(raw_b * 255.0))
         self.write_value(val_str)
 
+
+class CairoColorProperty(EditableProperty):
+    """
+    Gives value as gdk color for gui and writes out color as 
+    different type of hex to mlt, for uses R and B switched,
+    there is something gone wrom
+    """
+    
+    def get_value_as_gdk_color(self):
+        # NOT USED ?!?
+        raw_r, raw_g, raw_b = utils.hex_to_rgb(self.value)
+        return Gdk.Color(red=(float(raw_b)/255.0),
+                             green=(float(raw_g)/255.0),
+                             blue=(float(raw_r)/255.0))
+
+    def get_value_rgba(self):
+        raw_r, raw_g, raw_b = utils.hex_to_rgb(self.value)
+        return (float(raw_b)/255.0, float(raw_g)/255.0, float(raw_r)/255.0, 1.0)
+
+    def color_selected(self, color_button):
+        color = color_button.get_color()
+        raw_r, raw_g, raw_b = color.to_floats()
+        val_str = "#" + utils.int_to_hex_str(int(raw_b * 255.0)) + \
+                        utils.int_to_hex_str(int(raw_g * 255.0)) + \
+                        utils.int_to_hex_str(int(raw_r * 255.0))
+        self.write_value(val_str)
+
+
 class WipeResourceProperty(TransitionEditableProperty):
     """
     Converts user combobox selections to absolute paths containing wipe
@@ -736,7 +766,8 @@ class WipeResourceProperty(TransitionEditableProperty):
         key = keys[combo_box.get_active()]
         res_path = mlttransitions.get_wipe_resource_path(key)
         self.write_value(str(res_path))
-        
+
+
 class FileResourceProperty(EditableProperty):
     """
     A file path as property value set from file chooser dialog callback.
@@ -747,7 +778,8 @@ class FileResourceProperty(EditableProperty):
             self.write_value(unicode(str(res_path), "utf-8"))
         else:
             self.write_value(unicode(str(""), "utf-8"))
-        
+
+
 class MultipartKeyFrameProperty(AbstractProperty):
     
     def __init__(self, params):
@@ -841,6 +873,7 @@ EDITABLE_PROPERTY_CREATORS = { \
     KEYFRAME_HCS_TRANSITION: lambda params : KeyFrameHCSTransitionProperty(params),
     MULTIPART_KEYFRAME_HCS: lambda params : MultipartKeyFrameProperty(params),
     COLOR: lambda params : ColorProperty(params),
+    CAIRO_COLOR: lambda params : CairoColorProperty(params),
     GEOMETRY_OPACITY_KF: lambda params : KeyFrameGeometryOpacityProperty(params),
     GEOM_IN_AFFINE_FILTER: lambda params : AffineFilterGeomProperty(params),
     GEOM_IN_AFFINE_FILTER_V2: lambda params :AffineFilterGeomPropertyV2(params),
