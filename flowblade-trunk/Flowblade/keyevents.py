@@ -41,6 +41,7 @@ import medialog
 import menuactions
 import modesetting
 import monitorevent
+import movemodes
 import multitrimmode
 # Apr-2017 - SvdB
 import shortcuts
@@ -235,7 +236,20 @@ def _handle_tline_key_event(event):
             trimmodes.enter_pressed()
             return True
 
-
+    if editorstate.EDIT_MODE() == editorstate.OVERWRITE_MOVE:
+        if action == 'nudge_back':
+            movemodes.nudge_selection(-1)
+            return True
+        elif action == 'nudge_forward':
+            movemodes.nudge_selection(1)
+            return True
+        elif action == 'nudge_back_10':
+            movemodes.nudge_selection(-10)
+            return True
+        elif action == 'nudge_forward_10':
+            movemodes.nudge_selection(10)
+            return True
+    
     if editorstate.EDIT_MODE() == editorstate.MULTI_TRIM:
         multitrimmode.enter_pressed()
 
@@ -397,6 +411,7 @@ def _handle_extended_monitor_focus_events(event):
 def _get_shortcut_action(event):
     # Get the name of the key pressed
     key_name = Gdk.keyval_name(event.keyval).lower()
+
     # Check if this key is in the dictionary.
     state = event.get_state()
     # Now we have a key and a key state we need to check if it is a shortcut.

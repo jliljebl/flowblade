@@ -411,6 +411,57 @@ def overwrite_move_release(x, y, frame, state):
     updater.repaint_tline()
 
 
+def nudge_selection(delta):
+    global selected_track, selected_range_in, selected_range_out
+    # Can't do this in middle of mouse edit
+    if edit_data != None:
+        return
+    if drag_disabled != False:
+        return
+
+    # We need a selection for this
+    if selected_track == -1:
+        return
+    
+    # Collect edit data
+    track = current_sequence().tracks[selected_track]
+    selection_in_frame = track.clip_start(selected_range_in)
+    over_in = selection_in_frame + delta
+    # Can't move stuff off timeline
+    if over_in < 0:
+        return
+    moving_length = 0
+    for i in range(selected_range_in, selected_range_out + 1):
+        clip = track.clips[i]
+        clip_length = clip.clip_out - clip.clip_in + 1
+        moving_length += clip_length     
+    over_out = over_in + moving_length
+    
+    # We need to save this data because edit auto clears selection
+    selected_clips_count = selected_range_out - selected_range_in + 1
+    orig_selected_track = selected_track
+    
+    data = {"track":track,
+            "over_in":over_in,
+            "over_out":over_out,
+            "selected_range_in":selected_range_in,
+            "selected_range_out":selected_range_out,
+            "move_edit_done_func":move_edit_done}
+            
+    action = edit.overwrite_move_action(data)
+    action.do_edit()
+
+    # Re-select moved clips
+    new_sel_start = track.get_clip_index_at(over_in)
+    new_sel_end = new_sel_start + selected_clips_count - 1
+    selected_track = orig_selected_track
+    selected_range_in = new_sel_start
+    selected_range_out = new_sel_end
+    set_range_selection(orig_selected_track, new_sel_start, new_sel_end, True)
+        
+    updater.repaint_tline()
+            
+
 # ------------------------------------- MOVE MODES EVENTS
 def _move_mode_pressed(event, frame):
     """

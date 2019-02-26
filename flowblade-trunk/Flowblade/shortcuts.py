@@ -213,7 +213,10 @@ def _set_keyboard_action_names():
     _keyboard_action_names['switch_monitor'] = _("Switch Monitor Source")
     _keyboard_action_names['add_marker'] = _("Add Mark")
     _keyboard_action_names['enter_edit'] =  _("Complete Keyboard Trim Edit")
-
+    _keyboard_action_names['nudge_back'] =  _("Nudge Move Selection Back 1 Frame")
+    _keyboard_action_names['nudge_forward'] =  _("Nudge Move Selection Forward 1 Frame")
+    _keyboard_action_names['nudge_back_10'] =  _("Nudge Move Selection Back 10 Frames")
+    _keyboard_action_names['nudge_forward_10'] =  _("Nudge Move Selection Forward 10 Frames")
 
 def _set_key_names():
     global _key_names, _mod_names
@@ -268,7 +271,9 @@ def _set_key_names():
     _key_names['return'] = _("ENTER")
     _key_names['y'] = ("Y")
     _key_names['equal'] = _("=")
-
+    _key_names['comma'] = _(",")
+    _key_names['period'] = _(".")
+    
     _mod_names["ALT"] = _("Alt")
     _mod_names["SHIFT"] =  _("Shift")
     _mod_names["ALT+SHIFT"] = _("Alt + Shift")

@@ -109,5 +109,9 @@
     <event code='switch_monitor' name='Switch Monitor Display'>tab</event>
     <event code='add_marker' name='Add Marker'>m</event>
     <event code='enter_edit' name='Enter Editing Mode'>return</event>
+    <event code='nudge_back' name='Nudge Move Selection Back 1 Frame'>comma</event>
+    <event code='nudge_forward' name='Nudge Move Selection Forward 1 Frame'>period</event>
+    <event code='nudge_back_10' name='Nudge Move Selection Back 10 Frames'  modifiers='CTRL'>comma</event>
+    <event code='nudge_forward_10' name='Nudge Move Selection Forward 10 Frames' modifiers='CTRL'>period</event>
   </shortcuts>
 </flowblade>
