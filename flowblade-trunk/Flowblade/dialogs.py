@@ -1433,6 +1433,7 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     general_vbox.pack_start(_get_kb_row(_("Control + Y"), _("Redo")), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("Control + O"), _("Open Project")), False, False, 0)
     general_vbox.pack_start(_get_dynamic_kb_row(root_node, "switch_monitor"), False, False, 0)
+    general_vbox.pack_start(_get_dynamic_kb_row(root_node, "open_next"), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("Control + L"), _("Log Marked Clip Range")), False, False, 0)
     general_vbox.pack_start(_get_dynamic_kb_row(root_node, "zoom_in"), False, False, 0)
     general_vbox.pack_start(_get_dynamic_kb_row(root_node, "zoom_out"), False, False, 0)

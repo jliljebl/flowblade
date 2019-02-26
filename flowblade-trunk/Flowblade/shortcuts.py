@@ -217,7 +217,8 @@ def _set_keyboard_action_names():
     _keyboard_action_names['nudge_forward'] =  _("Nudge Move Selection Forward 1 Frame")
     _keyboard_action_names['nudge_back_10'] =  _("Nudge Move Selection Back 10 Frames")
     _keyboard_action_names['nudge_forward_10'] =  _("Nudge Move Selection Forward 10 Frames")
-
+    _keyboard_action_names['open_next'] =  _("Open Next Media Item In Monitor")
+    
 def _set_key_names():
     global _key_names, _mod_names
     # Start with an empty slate
@@ -235,6 +236,7 @@ def _set_key_names():
     _key_names['j'] = "J"
     _key_names['k'] = "K"
     _key_names['l'] = "L"
+    _key_names['n'] = "N"
     _key_names['g'] = "G"
     _key_names['s'] = "S"
     _key_names['delete'] = _("Delete")

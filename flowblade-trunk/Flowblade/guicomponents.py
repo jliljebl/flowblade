@@ -1053,6 +1053,11 @@ class MediaPanel():
         for media_file in media_files:
             self.selected_objects.append(self.widget_for_mediafile[media_file])
 
+    def update_selected_bg_colors(self):
+        bg_color = gui.get_selected_bg_color()
+        for media_object in self.selected_objects:
+            media_object.widget.override_background_color(Gtk.StateType.NORMAL, bg_color)
+
     def empty_pressed(self, widget, event):
         self.clear_selection()
         if event.button == 3:

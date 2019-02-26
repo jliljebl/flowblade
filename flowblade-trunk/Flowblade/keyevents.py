@@ -101,6 +101,10 @@ def key_down(widget, event):
         # Stop event handling here
         return True
 
+    was_handled = _handle_configurable_global_events(event)
+    if was_handled:
+        return True
+        
     # Pressing timeline button obivously leaves user expecting
     # to have focus in timeline
     if gui.monitor_switch.widget.has_focus() and timeline_visible():
@@ -451,6 +455,14 @@ def _get_shortcut_action(event):
     # We didn't find an action, so return nothing 
     return 'None'
 
+def _handle_configurable_global_events(event):
+    action = _get_shortcut_action(event)
+    if action == 'open_next':
+        projectaction.open_next_media_item_in_monitor()
+        return True
+
+    return False
+    
 def _handle_clip_key_event(event):
     # Key bindings for MOVE MODES
     if editorstate.current_is_move_mode():

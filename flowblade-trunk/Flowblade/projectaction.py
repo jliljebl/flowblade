@@ -1093,6 +1093,30 @@ def _proxy_delete_warning_callback(dialog, response_id):
     if response_id == Gtk.ResponseType.OK:
         delete_media_files(True)
 
+def open_next_media_item_in_monitor():
+    # Get id for next media file
+    selection = gui.media_list_view.get_selected_media_objects()
+    if len(selection) < 1:
+        try: # Nothing selected, get first media item
+            next_media_file_id = current_bin().file_ids[0]
+        except:
+            return # bin is empty
+    else: # Get next media item from selection
+        current_media_file_id = selection[0].media_file.id
+        next_media_index = current_bin().file_ids.index(current_media_file_id) + 1
+        if next_media_index == len(current_bin().file_ids):
+            next_media_index = 0
+        
+        next_media_file_id = current_bin().file_ids[next_media_index]
+    
+    # Get media file, select it and show in monitor
+    media_file = PROJECT().media_files[next_media_file_id]
+    
+    gui.media_list_view.select_media_file(media_file)
+    gui.media_list_view.update_selected_bg_colors()
+    updater.set_and_display_monitor_media_file(media_file)
+    gui.pos_bar.widget.grab_focus()
+            
 def display_media_file_rename_dialog(media_file):
     dialogs.new_media_name_dialog(media_file_name_edited, media_file)
 
@@ -1864,8 +1888,6 @@ def media_file_menu_item_selected(widget, data):
         delete_media_files()
     if item_id == "Render Proxy File":
         proxyediting.create_proxy_menu_item_selected(media_file)
-    #if item_id == "Project Profile":
-    #    change_profile_to_match_media(media_file)
 
 def _select_treeview_on_pos_and_return_row_and_column_title(event, treeview):
     selection = treeview.get_selection()

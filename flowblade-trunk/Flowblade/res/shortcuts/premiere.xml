@@ -114,5 +114,6 @@
     <event code='nudge_forward' name='Nudge Move Selection Forward 1 Frame'>period</event>
     <event code='nudge_back_10' name='Nudge Move Selection Back 10 Frames'  modifiers='CTRL'>comma</event>
     <event code='nudge_forward_10' name='Nudge Move Selection Forward 10 Frames' modifiers='CTRL'>period</event>
+    <event code='open_next' name='Open Next Media Item In Monitor' modifiers='ALT'>n</event>
   </shortcuts>
 </flowblade>
