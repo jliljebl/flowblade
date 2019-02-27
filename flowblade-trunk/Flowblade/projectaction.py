@@ -23,6 +23,7 @@ Module handles user actions that are not edits on the current sequence.
 Load, save, add media file, etc...
 """
 
+import copy
 import datetime
 import glob
 import md5
@@ -55,6 +56,7 @@ import editorstate
 from editorstate import current_sequence
 from editorstate import current_bin
 from editorstate import PROJECT
+from editorstate import PLAYER
 from editorstate import MONITOR_MEDIA_FILE
 from editorstate import EDIT_MODE
 import editorpersistance
@@ -1297,6 +1299,14 @@ def _sequence_xml_compound_render_done_callback(data):
     add_media_thread = AddMediaFilesThread([filename], media_name)
     add_media_thread.start()
 
+def _xml_freeze_compound_render_done_callback(filename, media_name):
+    # Remove freeze filter
+    current_sequence().tractor.detach(current_sequence().tractor.freeze_filter)
+    delattr(current_sequence().tractor, "freeze_filter")
+    
+    add_media_thread = AddMediaFilesThread([filename], media_name)
+    add_media_thread.start()
+
 def create_sequence_compound_clip():
     # lets's just set something unique-ish 
     default_name = _("sequence_") + _get_compound_clip_default_name_date_str() + ".xml"
@@ -1316,6 +1326,36 @@ def _do_create_sequence_compound_clip(dialog, response_id, name_entry):
     render_player = renderconsumer.XMLRenderPlayer(write_file, _sequence_xml_compound_render_done_callback, (write_file, media_name))
     render_player.start()
 
+def create_sequence_freeze_frame_compound_clip():
+    # lets's just set something unique-ish 
+    default_name = _("frame_") + utils.get_tc_string_with_fps_for_filename(PLAYER().current_frame(), utils.fps()) + ".xml"
+    dialogs.compound_clip_name_dialog(_do_create_sequence_freeze_frame_compound_clip, default_name, _("Save Freeze Frame Sequence Compound Clip"))
+
+def _do_create_sequence_freeze_frame_compound_clip(dialog, response_id, name_entry):
+    if response_id != Gtk.ResponseType.ACCEPT:
+        dialog.destroy()
+        return
+    
+    media_name = name_entry.get_text()
+    folder = userfolders.get_render_dir()
+    write_file = folder + "/"+ media_name + ".xml"
+
+    dialog.destroy()
+    
+    freezed_tractor = current_sequence().tractor 
+
+    freeze_filter = mlt.Filter(PROJECT().profile, "freeze")
+    freeze_filter.set("frame", str(PLAYER().current_frame()))
+    freeze_filter.set("freeze_after", "0") 
+    freeze_filter.set("freeze_before", "0") 
+
+    freezed_tractor.attach(freeze_filter)
+    freezed_tractor.freeze_filter = freeze_filter # pack to go so it can be detached and attr removed
+
+    # Render compound clip as MLT XML file
+    render_player = renderconsumer.XMLCompoundRenderPlayer(write_file, media_name, _xml_freeze_compound_render_done_callback, freezed_tractor)
+    render_player.start()
+    
 def _get_compound_clip_default_name_date_str():
     return str(datetime.date.today()) + "_" + time.strftime("%H%M%S")
 

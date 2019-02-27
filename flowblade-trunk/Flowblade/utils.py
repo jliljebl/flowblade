@@ -188,6 +188,17 @@ def get_tc_string_with_fps(frame, frames_per_sec):
     mins = mins % 60
     return "%02d:%02d:%02d:%02d" % (hours, mins, sec, fr)
 
+def get_tc_string_with_fps_for_filename(frame, frames_per_sec):
+    frames_per_sec = int(round(frames_per_sec))
+
+    fr = frame % frames_per_sec
+    sec = frame / frames_per_sec
+    mins = sec / 60
+    sec = sec % 60
+    hours = mins / 60
+    mins = mins % 60
+    return "%02d-%02d-%02d-%02d" % (hours, mins, sec, fr)
+    
 def get_time_str_for_sec_float(sec):
     mins = sec / 60
     sec = sec % 60
