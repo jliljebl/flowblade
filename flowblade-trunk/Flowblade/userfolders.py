@@ -20,6 +20,8 @@
 import gi
 
 from gi.repository import GLib
+import distutils
+from distutils import dir_util, file_util
 import os
 
 
@@ -51,7 +53,7 @@ def init():
     _xdg_data_dir = os.path.join(GLib.get_user_data_dir(), "flowblade")
     _xdg_cache_dir = os.path.join(GLib.get_user_cache_dir(), "flowblade")
 
-    # Tsting 
+    # Testing 
     print _xdg_config_dir
     print _xdg_data_dir
     print _xdg_cache_dir
@@ -70,9 +72,9 @@ def init():
     # testing
     _user_dirs = USING_DOT_DIRS
 
-
     if _user_dirs == USING_XDG_DIRS:
         success = _maybe_create_xdg_dirs()
+        _copy_data_from_dot_folders_xdg_folders()
         print success
 
     return error
@@ -84,7 +86,10 @@ def get_config_dir():
         return _dot_dir
 
 def get_data_dir():
-    return _dot_dir
+    if _user_dirs == USING_XDG_DIRS:
+        return _xdg_data_dir + "/"
+    else:
+        return _dot_dir
 
 def get_cache_dir():
     if _user_dirs == USING_XDG_DIRS:
@@ -131,8 +136,6 @@ def _create_dot_dirs():
 
 def _maybe_create_xdg_dirs():
 
-
-            
     try:
         # ---------------------- CONFIG
         # Prefs and recents files
@@ -142,18 +145,15 @@ def _maybe_create_xdg_dirs():
 
         # --------------------- DATA
         # Data stuff that can break projects and cannot be regerated by app
-        #if not os.path.exists(user_dir + mltprofiles.USER_PROFILES_DIR):
-        #    os.mkdir(user_dir + mltprofiles.USER_PROFILES_DIR)
-        # rendered_clips dir was made in app.py line 180...ish
-        # now we need to do it here, because prefs have no longer influence
-        """
-        def create_rendered_clips_folder_if_needed(user_dir):
-            if prefs.render_folder == None:
-                render_folder = user_dir + appconsts.RENDERED_CLIPS_DIR
-                if not os.path.exists(render_folder + "/"):
-                    os.mkdir(render_folder + "/")
-                prefs.render_folder = render_folder
-        """
+        # Data root folder
+        if not os.path.exists(_xdg_data_dir):
+            print "CREATED XDG DATA DIR."
+            os.mkdir(_xdg_data_dir)
+        # Data individual folders
+        if not os.path.exists(get_data_dir() + appconsts.USER_PROFILES_DIR):
+            os.mkdir(get_data_dir() + appconsts.USER_PROFILES_DIR)
+        if not os.path.exists(get_render_dir()):
+            os.mkdir(get_render_dir())
         
         #----------------- CACHE
         # Stuff that can be regerated by app or is transient
@@ -178,11 +178,30 @@ def _maybe_create_xdg_dirs():
             os.mkdir(get_cache_dir() + appconsts.BATCH_DIR)
         if not os.path.exists(get_hidden_screenshot_dir_path()):
             os.mkdir(get_hidden_screenshot_dir_path())
+            
         return True
+        
     except Exception as e:
         print str(e)
         return False
 
 
+def _copy_data_from_dot_folders_xdg_folders():
+    # ---------------------- CONFIG
+    file_util.copy_file(_dot_dir + "prefs", get_config_dir() + "prefs", verbose=1)
+    file_util.copy_file(_dot_dir + "recent", get_config_dir() + "recent", verbose=1)
+    
+    # --------------------- DATA
+    dir_util.copy_tree(_dot_dir + appconsts.USER_PROFILES_DIR, get_data_dir() + appconsts.USER_PROFILES_DIR, verbose=0)
+    dir_util.copy_tree(_dot_dir + appconsts.RENDERED_CLIPS_DIR, get_render_dir(), verbose=1)
+    
+    # --------------------- CACHE
+    dir_util.copy_tree(_dot_dir + appconsts.AUTOSAVE_DIR, get_cache_dir() + appconsts.AUTOSAVE_DIR, verbose=1)
+    dir_util.copy_tree(_dot_dir + appconsts.THUMBNAILS_DIR, get_cache_dir() + appconsts.THUMBNAILS_DIR, verbose=1)
+    dir_util.copy_tree(_dot_dir + appconsts.GMIC_DIR, get_cache_dir() + appconsts.GMIC_DIR, verbose=1)
+    dir_util.copy_tree(_dot_dir + appconsts.MATCH_FRAME_DIR, get_cache_dir() + appconsts.MATCH_FRAME_DIR, verbose=1)
+    dir_util.copy_tree(_dot_dir + appconsts.AUDIO_LEVELS_DIR, get_cache_dir() + appconsts.AUDIO_LEVELS_DIR, verbose=1)
+    dir_util.copy_tree(_dot_dir + appconsts.TRIM_VIEW_DIR, get_cache_dir() + appconsts.TRIM_VIEW_DIR, verbose=1)
+    dir_util.copy_tree(_dot_dir + appconsts.BATCH_DIR, get_cache_dir() + appconsts.BATCH_DIR, verbose=1)
 
-        
+
