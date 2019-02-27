@@ -25,14 +25,13 @@ import os
 
 import appconsts
 
-USING_DOT_DIRS = 0
+USING_DOT_DIRS = 0 # This is only used during testing and if user forces .dot dirs.
 USING_XDG_DIRS = 1
 
 _user_dirs = USING_DOT_DIRS
 
 _xdg_prefs_file_exists = False
 _dot_prefs_file_exists = False
-
 
 _dot_dir = None
 
@@ -42,6 +41,9 @@ _xdg_cache_dir = None
 
 # --------------------------------------------------------- interface
 def init():
+    error = None
+    
+    # Get user folder locations
     global _dot_dir, _xdg_config_dir, _xdg_data_dir, _xdg_cache_dir
     _dot_dir = os.getenv("HOME") + "/.flowblade/"
     
@@ -49,19 +51,46 @@ def init():
     _xdg_data_dir = os.path.join(GLib.get_user_data_dir(), "flowblade")
     _xdg_cache_dir = os.path.join(GLib.get_user_cache_dir(), "flowblade")
 
-    global _xdg_prefs_file_exists, _dot_prefs_file_exists
+    # Tsting 
+    print _xdg_config_dir
+    print _xdg_data_dir
+    print _xdg_cache_dir
 
+    # Determine what wxists in system
+    global _xdg_prefs_file_exists, _dot_prefs_file_exists
+    # We consider existance _dot_prefs_file_exists to mean tha an earlier installation exists.
     _dot_prefs_file_exists = os.path.exists(_dot_dir + "prefs" )
     _xdg_prefs_file_exists = os.path.exists(_xdg_config_dir + "/prefs")
+    
+    global _user_dirs
+    # If clean install we use xdg dirs and never will use dot folders
+    if _dot_prefs_file_exists == False:
+        _user_dirs = USING_XDG_DIRS
+    
+    # testing
+    _user_dirs = USING_DOT_DIRS
+
+
+    if _user_dirs == USING_XDG_DIRS:
+        success = _maybe_create_xdg_dirs()
+        print success
+
+    return error
 
 def get_config_dir():
-    return _dot_dir
+    if _user_dirs == USING_XDG_DIRS:
+        return _xdg_config_dir + "/"
+    else:
+        return _dot_dir
 
 def get_data_dir():
     return _dot_dir
 
 def get_cache_dir():
-    return _dot_dir
+    if _user_dirs == USING_XDG_DIRS:
+        return _xdg_cache_dir + "/"
+    else:
+        return _dot_dir
 
 def get_render_dir():
     return get_data_dir() + appconsts.RENDERED_CLIPS_DIR
@@ -100,53 +129,59 @@ def _create_dot_dirs():
 
 
 
-def _create_xdg_dirs():
+def _maybe_create_xdg_dirs():
 
 
-    # Config dirs
-    if not os.path.exists(user_dir):
-        os.mkdir(user_dir)
+            
+    try:
+        # ---------------------- CONFIG
+        # Prefs and recents files
+        if not os.path.exists(_xdg_config_dir):
+            print "CREATED XDG CONFIG DIR."
+            os.mkdir(_xdg_config_dir)
 
-    # Data stuff that can break projects and cannot be regerated by app
-    if not os.path.exists(user_dir + mltprofiles.USER_PROFILES_DIR):
-        os.mkdir(user_dir + mltprofiles.USER_PROFILES_DIR)
-    # rendered_clips dir was made in app.py line 180...ish
-    # now we need to do it here, because prefs have no longer influence
-    """
-    def create_rendered_clips_folder_if_needed(user_dir):
-        if prefs.render_folder == None:
-            render_folder = user_dir + appconsts.RENDERED_CLIPS_DIR
-            if not os.path.exists(render_folder + "/"):
-                os.mkdir(render_folder + "/")
-            prefs.render_folder = render_folder
-    """
+        # --------------------- DATA
+        # Data stuff that can break projects and cannot be regerated by app
+        #if not os.path.exists(user_dir + mltprofiles.USER_PROFILES_DIR):
+        #    os.mkdir(user_dir + mltprofiles.USER_PROFILES_DIR)
+        # rendered_clips dir was made in app.py line 180...ish
+        # now we need to do it here, because prefs have no longer influence
+        """
+        def create_rendered_clips_folder_if_needed(user_dir):
+            if prefs.render_folder == None:
+                render_folder = user_dir + appconsts.RENDERED_CLIPS_DIR
+                if not os.path.exists(render_folder + "/"):
+                    os.mkdir(render_folder + "/")
+                prefs.render_folder = render_folder
+        """
         
-    # Cache, stuff that can be regerated by app or is transient
-    """
-    # now we need to do this here, because prefs have no longer influence
-    def create_thumbs_folder_if_needed(user_dir):
-    if prefs.thumbnail_folder == None:
-        thumbs_folder = user_dir + appconsts.THUMBNAILS_DIR
-        if not os.path.exists(thumbs_folder + "/"):
-            os.mkdir(thumbs_folder + "/")
-        prefs.thumbnail_folder = thumbs_folder
-    """
-    if not os.path.exists(user_dir + AUTOSAVE_DIR):
-        os.mkdir(user_dir + AUTOSAVE_DIR)
-    if not os.path.exists(user_dir + appconsts.GMIC_DIR):
-        os.mkdir(user_dir + appconsts.GMIC_DIR)
-    if not os.path.exists(user_dir + appconsts.MATCH_FRAME_DIR):
-        os.mkdir(user_dir + appconsts.MATCH_FRAME_DIR)
-    if not os.path.exists(user_dir + appconsts.TRIM_VIEW_DIR):
-        os.mkdir(user_dir + appconsts.TRIM_VIEW_DIR)
-    if not os.path.exists(utils.get_hidden_screenshot_dir_path()):
-        os.mkdir(utils.get_hidden_screenshot_dir_path())
-    if not os.path.exists(user_dir + appconsts.AUDIO_LEVELS_DIR):
-        os.mkdir(user_dir + appconsts.AUDIO_LEVELS_DIR)
-    if not os.path.exists(user_dir + BATCH_DIR):
-        os.mkdir(user_dir + BATCH_DIR)
-
-
+        #----------------- CACHE
+        # Stuff that can be regerated by app or is transient
+        # Cache root folder
+        if not os.path.exists(_xdg_cache_dir):
+            print "CREATED XDG CACHE DIR."
+            os.mkdir(_xdg_cache_dir)
+        # Cache individual folders
+        if not os.path.exists(get_cache_dir() + appconsts.AUTOSAVE_DIR):
+            os.mkdir(get_cache_dir() + appconsts.AUTOSAVE_DIR)
+        if not os.path.exists(get_cache_dir() + appconsts.THUMBNAILS_DIR):
+            os.mkdir(get_cache_dir() + appconsts.THUMBNAILS_DIR)
+        if not os.path.exists(get_cache_dir() + appconsts.GMIC_DIR):
+            os.mkdir(get_cache_dir() + appconsts.GMIC_DIR)
+        if not os.path.exists(get_cache_dir() + appconsts.MATCH_FRAME_DIR):
+            os.mkdir(get_cache_dir() + appconsts.MATCH_FRAME_DIR)
+        if not os.path.exists(get_cache_dir() + appconsts.AUDIO_LEVELS_DIR):
+            os.mkdir(get_cache_dir() + appconsts.AUDIO_LEVELS_DIR)
+        if not os.path.exists(get_cache_dir() + appconsts.TRIM_VIEW_DIR):
+            os.mkdir(get_cache_dir() + appconsts.TRIM_VIEW_DIR)
+        if not os.path.exists(get_cache_dir() + appconsts.BATCH_DIR):
+            os.mkdir(get_cache_dir() + appconsts.BATCH_DIR)
+        if not os.path.exists(get_hidden_screenshot_dir_path()):
+            os.mkdir(get_hidden_screenshot_dir_path())
+        return True
+    except Exception as e:
+        print str(e)
+        return False
 
 
 

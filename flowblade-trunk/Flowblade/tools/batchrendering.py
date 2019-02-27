@@ -269,6 +269,7 @@ def init_dirs_if_needed():
     if not os.path.exists(get_projects_dir()):
         os.mkdir(get_projects_dir())
 
+
 def get_projects_dir():
     return userfolders.get_cache_dir() + PROJECTS_DIR
 
@@ -316,8 +317,6 @@ def launch_batch_rendering():
         subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladebatch"], stdin=FLOG, stdout=FLOG, stderr=FLOG)
 
 def main(root_path, force_launch=False):
-    init_dirs_if_needed()
-    
     gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
     editorstate.gtk_version = gtk_version
     try:
@@ -327,7 +326,8 @@ def main(root_path, force_launch=False):
 
     # Get XDG paths etc.
     userfolders.init()
-
+    init_dirs_if_needed()
+    
     # Set paths.
     respaths.set_paths(root_path)
 

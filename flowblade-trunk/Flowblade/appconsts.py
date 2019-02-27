@@ -159,6 +159,7 @@ MATCH_FRAME_NEW = MATCH_FRAME_DIR + "/match_frame_new.png"
 TRIM_VIEW_DIR = "trim_view"
 USER_PROFILES_DIR = "user_profiles/"
 USER_PROFILES_DIR_NO_SLASH = "user_profiles"
+BATCH_DIR = "batchrender/"
 
 # Luma bands
 SHADOWS = 0
