@@ -337,6 +337,14 @@ def main(root_path):
     if editorstate.runtime_version_greater_then_test_version(editorpersistance.prefs.workflow_dialog_last_version_shown, editorstate.appversion):
         GObject.timeout_add(500, show_worflow_info_dialog)
 
+    # Handle userfolders init error and data copy.
+    if userfolders.get_init_error() != None:
+        GObject.timeout_add(500, show_user_folders_init_error_dialog, userfolders.get_init_error())
+    elif userfolders.data_copy_needed():
+        GObject.timeout_add(500, show_user_folders_copy_dialog)
+    else:
+        print "No user folders actions needed."
+
     # Launch gtk+ main loop
     Gtk.main()
 
@@ -768,7 +776,24 @@ def show_worflow_info_dialog():
     
     worflow_info_dialog = workflow.WorkflowDialog()
     return False
-    
+
+# ------------------------------------------------------- userfolders dialogs
+def show_user_folders_init_error_dialog(error_msg):
+    # not done
+    print error_msg, " user folder XDG init error"
+    return False
+
+def show_user_folders_copy_dialog():
+    dialog = dialogs.xdg_copy_dialog()
+    copy_thread = userfolders.XDGCopyThread(dialog, _xdg_copy_completed_callback)
+    copy_thread.start()
+    return False
+
+def _xdg_copy_completed_callback(dialog):
+    Gdk.threads_enter()
+    dialog.destroy()
+    Gdk.threads_leave()
+
 # ------------------------------------------------------- small screens
 def _set_draw_params():
     if editorstate.screen_size_small_width() == True:

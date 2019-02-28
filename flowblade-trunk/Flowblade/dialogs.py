@@ -89,6 +89,19 @@ def new_project_dialog(callback):
     out_profile_combo.connect('changed', lambda w: _new_project_profile_changed(w, profile_info_box))
     dialog.show_all()
 
+def xdg_copy_dialog():
+    dialog = Gtk.Dialog(_("New Project"), gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT, 
+                        None)
+    primary_txt = _("Copying user data to XDG folders")
+    secondary_txt = _("This can take up to a few minutes, please wait...")
+    panel = dialogutils.get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info=True)
+    alignment = dialogutils.get_default_alignment(panel)
+    dialogutils.set_outer_margins(dialog.vbox)
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialog.show_all()
+    return dialog
+
 def _new_project_profile_changed(combo_box, profile_info_box):
     profile = mltprofiles.get_profile_for_index(combo_box.get_active())
 
