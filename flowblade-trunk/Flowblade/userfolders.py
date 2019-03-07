@@ -93,7 +93,6 @@ def init():
         _maybe_create_dot_dirs()
         return error
     
-    
     #_user_dirs = USING_DOT_DIRS #  Testing
     _user_dirs = USING_XDG_DIRS
      

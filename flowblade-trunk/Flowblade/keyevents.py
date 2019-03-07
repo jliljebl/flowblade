@@ -46,6 +46,7 @@ import multitrimmode
 # Apr-2017 - SvdB
 import shortcuts
 import re
+import rotomask
 import tlineaction
 import tlinewidgets
 import trimmodes
@@ -150,10 +151,10 @@ def key_down(widget, event):
         menuactions.toggle_fullscreen()
         return True
 
-    #debug
+    #debug.test help 
     if event.keyval == Gdk.KEY_F12:
         if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-            tlineaction.ripple_delete_button_pressed()
+            rotomask.show_rotomask()
         return True
 
     # Key event was not handled here.
