@@ -37,7 +37,9 @@ import gui
 import guicomponents
 import guiutils
 import dialogutils
+import keyframeeditor
 import projectaction
+import propertyparse
 import respaths
 import positionbar
 import utils
@@ -66,13 +68,17 @@ ALIGN_LEFT = 0
 ALIGN_CENTER = 1
 ALIGN_RIGHT = 2
 
-def show_rotomask():
+def show_rotomask(mlt_filter, editable_properties):
     #global _titler_data
     #if _titler_data == None:
     #    _titler_data = TitlerData()
     print "lllllllllllll"
+    
+    kf_json_prop = filter(lambda ep: ep.name == "spline", editable_properties)[0]
+    kf_editor = keyframeeditor.RotoMaskKeyFrameEditor(kf_json_prop, propertyparse.rotomask_json_value_string_to_kf_array)
+        
     global _rotomask
-    _rotomask = RotoMaskEditor()
+    _rotomask = RotoMaskEditor(kf_editor)
     #_rotomask.load_titler_data()
     _rotomask.show_current_frame()
 
@@ -89,7 +95,7 @@ def rotomask_destroy():
             
 # ---------------------------------------------------------- editor
 class RotoMaskEditor(Gtk.Window):
-    def __init__(self):
+    def __init__(self, kf_editor):
         GObject.GObject.__init__(self)
         self.set_title(_("RotoMaskEditor"))
         self.connect("delete-event", lambda w, e:close_rotomask())
@@ -105,6 +111,8 @@ class RotoMaskEditor(Gtk.Window):
             VIEW_EDITOR_WIDTH = 680
             
         self.block_updates = False
+        
+        self.kf_editor = kf_editor
         
         self.view_editor = vieweditor.ViewEditor(PLAYER().profile, VIEW_EDITOR_WIDTH, VIEW_EDITOR_HEIGHT)
         #self.view_editor.active_layer_changed_listener = self.active_layer_changed
@@ -142,11 +150,6 @@ class RotoMaskEditor(Gtk.Window):
         pos_bar_frame.add(self.pos_bar.widget)
         pos_bar_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
         pos_bar_frame.set_valign(Gtk.Align.CENTER)
-
-
-
-
-
         
         adj = Gtk.Adjustment(float(0), float(0), float(3000), float(1))
         self.x_pos_spin = Gtk.SpinButton()
@@ -214,6 +217,7 @@ class RotoMaskEditor(Gtk.Window):
         
         editor_panel = Gtk.VBox()
         editor_panel.pack_start(self.view_editor, True, True, 0)
+        editor_panel.pack_start(kf_editor, False, False, 0)
         editor_panel.pack_start(timeline_box, False, False, 0)
         editor_panel.pack_start(guiutils.get_in_centering_alignment(view_editor_editor_buttons_row), False, False, 0)
         editor_panel.pack_start(guiutils.pad_label(2, 24), True, True, 0)

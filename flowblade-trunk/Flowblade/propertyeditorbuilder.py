@@ -25,6 +25,7 @@ Module creates GUI editors for editable mlt properties.
 from gi.repository import Gtk, Gdk, GObject, GLib
 
 import cairo
+import json
 
 import appconsts
 import cairoarea
@@ -37,6 +38,7 @@ import mltfilters
 import mlttransitions
 import propertyparse
 import respaths
+import rotomask
 import translations
 import updater
 import utils
@@ -67,6 +69,7 @@ IMAGE_MEDIA_FILE_SELECTOR = "image_media_file_select"       # File selector butt
 FILE_TYPES = "file_types"                                   # list of files types with "." chracters, like ".png.tga.bmp"
 FADE_LENGTH = "fade_length"                                 # Autofade compositors fade length
 TEXT_ENTRY = "text_entry"                                   # Text editor
+ROTOMASK = "rotomask"                                       # Displays info and lauches rotomask window
 NO_EDITOR = "no_editor"                                     # No editor displayed for property
 
 COMPOSITE_EDITOR_BUILDER = "composite_properties"           # Creates a single row editor for multiple properties of composite transition
@@ -846,6 +849,33 @@ def _create_color_lgg_editor(filt, editable_properties):
     vbox.no_separator = True
     return vbox
 
+def _create_rotomask_editor(filt, editable_properties):
+    kf_json_prop = filter(lambda ep: ep.name == "spline", editable_properties)[0]
+    json_obj = json.loads(kf_json_prop.value)
+    print json_obj
+    for kf in json_obj:
+        print kf
+        kf_obj = json_obj[kf]
+        for point in kf_obj:
+            print "---------POINT"
+            print "handle1", point[0]
+            print "point", point[1]
+            print "handle2", point[1]
+            
+
+        
+    lauch_button = Gtk.Button(_("Lauch Rotomask editor"))
+    lauch_button.connect("clicked", lambda b:_roto_lauch_pressed(filt, editable_properties))
+    
+    vbox = Gtk.VBox(False, 4)
+    vbox.pack_start(lauch_button, False, False, 0)
+    vbox.pack_start(Gtk.Label(), True, True, 0)
+    vbox.no_separator = True
+    return vbox
+
+def _roto_lauch_pressed(filt, editable_properties):
+    rotomask.show_rotomask(filt, editable_properties)
+
 def _get_force_combo_index(deinterlace, progressive):
     # These correspond to hardcoded values ["Nothing","Progressive","Deinterlace","Both"] above
     if int(deinterlace.value) == 0:
@@ -962,6 +992,7 @@ EDITOR_ROW_CREATORS = { \
     CR_CURVES: lambda filt, editable_properties:_create_crcurves_editor(filt, editable_properties),
     COLOR_BOX: lambda filt, editable_properties:_create_colorbox_editor(filt, editable_properties),
     COLOR_LGG: lambda filt, editable_properties:_create_color_lgg_editor(filt, editable_properties),
+    ROTOMASK: lambda filt, editable_properties:_create_rotomask_editor(filt, editable_properties),
     TEXT_ENTRY: lambda ep: _get_text_entry(ep),
     }
 

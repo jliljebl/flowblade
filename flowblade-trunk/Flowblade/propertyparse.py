@@ -24,6 +24,7 @@ Modules provides functions that:
 - build value strings from property tuples.
 """
 from gi.repository import Gtk
+import json
 
 import appconsts
 from editorstate import current_sequence
@@ -49,7 +50,7 @@ def node_list_to_properties_array(node_list):
     properties = []
     for node in node_list:
         p_name = node.getAttribute(NAME)
-        p_value = node.firstChild.nodeValue
+        p_value = node.firstChild.nodeValue # Crash here, is 'exptype' set in string value param args in filters.xml?
         p_type = _property_type(p_value)
         properties.append((p_name, p_value, p_type))
     return properties
@@ -134,7 +135,7 @@ def get_args_num_value(val_str):
                 return current_sequence().profile.height()
     return None
 
-# ------------------------------------------ kf editor values strings to kfs funcs
+# ------------------------------------------ kf editor values strings to kf arrays funcs
 def single_value_keyframes_string_to_kf_array(keyframes_str, out_to_in_func):
     new_keyframes = []
     keyframes_str = keyframes_str.strip('"') # expression have sometimes quotes that need to go away
@@ -203,6 +204,25 @@ def rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_
 
     return new_keyframes
 
+
+def rotomask_json_value_string_to_kf_array(keyframes_str, out_to_in_func):
+    new_keyframes = []
+    json_obj = json.loads(keyframes_str)
+    print json_obj
+    for kf in json_obj:
+        print kf
+        kf_obj = json_obj[kf]
+        for point in kf_obj:
+            print "---------POINT"
+            print "handle1", point[0]
+            print "point", point[1]
+            print "handle2", point[1]
+            
+        add_kf = (int(kf), kf_obj)
+        new_keyframes.append(add_kf)
+        
+    return new_keyframes
+    
 def create_editable_property_for_affine_blend(clip, editable_properties):
     # Build a custom object that duck types for TransitionEditableProperty to use in editor
     ep = utils.EmptyClass()

@@ -70,6 +70,7 @@ CAIRO_COLOR = "cairo_color"                                             # #rrggb
 LUT_TABLE = "lut_table"                                     # val;val;val;val;...;val
 WIPE_RESOURCE = "wipe_resource"                             # /path/to/resource.pgm
 FILE_RESOURCE = "file_resource"                             # /path/to/somefile
+ROTO_JSON = "roto_json"                                     # JSON string of keyframes and values
 PLAIN_STRING = "plain_string"                               # String is just string, for text input
 NOT_PARSED = "not_parsed"                                   # A write out value is not parsed from value
 NOT_PARSED_TRANSITION = "not_parsed_transition"             # A write out value is not parsed from value in transition object
@@ -676,6 +677,19 @@ class KeyFrameHCSFilterProperty(EditableProperty):
         self.write_value(val_str)
 
 
+class RotoJSONProperty(EditableProperty):
+
+    def write_out_keyframes(self, keyframes):
+        """
+        val_str = ""
+        for kf in keyframes:
+            frame, val = kf
+            val_str += str(frame) + "=" + str(self.get_out_value(val)) + ";"
+        
+        val_str = val_str.strip(";")
+        self.write_value(val_str)
+        """
+
 class KeyFrameHCSTransitionProperty(TransitionEditableProperty):
     """
     Coverts array of keyframe tuples to string of type "0=0.2;123=0.143"
@@ -879,6 +893,7 @@ EDITABLE_PROPERTY_CREATORS = { \
     GEOM_IN_AFFINE_FILTER_V2: lambda params :AffineFilterGeomPropertyV2(params),
     WIPE_RESOURCE : lambda params : WipeResourceProperty(params),
     FILE_RESOURCE : lambda params :FileResourceProperty(params),
+    ROTO_JSON  : lambda params :RotoJSONProperty(params),
     LUT_TABLE : lambda params  : LUTTableProperty(params),
     NOT_PARSED : lambda params : EditableProperty(params), # This should only be used with params that have editor=NO_EDITOR
     NOT_PARSED_TRANSITION : lambda params : TransitionEditableProperty(params), # This should only be used with params that have editor=NO_EDITOR
