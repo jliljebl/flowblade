@@ -144,7 +144,9 @@ class ClipKeyFrameEditor:
         self.drag_on = False # Used to stop updating pos here if pos change is initiated here.
         self.drag_min = -1
         self.drag_max = -1
-        
+
+        self.mouse_listener = None #This is special service for RotoMaskKeyFrameEditor, not used by other editors
+
         # init icons if needed
         global ACTIVE_KF_ICON, NON_ACTIVE_KF_ICON
         if ACTIVE_KF_ICON == None:
@@ -366,6 +368,9 @@ class ClipKeyFrameEditor:
 
         self.widget.queue_draw()
         
+        if self.mouse_listener != None:
+            self.mouse_listener.mouse_pos_change_done()
+        
     def _release_event(self, event):
         """
         Mouse release callback.
@@ -387,7 +392,10 @@ class ClipKeyFrameEditor:
 
         self.widget.queue_draw()
         self.current_mouse_action = None
-        
+
+        if self.mouse_listener != None:
+            self.mouse_listener.mouse_pos_change_done()
+            
         self.drag_on = False
         
     def _legalize_x(self, x):
@@ -1318,6 +1326,7 @@ class RotoMaskKeyFrameEditor(Gtk.VBox):
         self.clip_tline_pos = editable_property.get_clip_tline_pos()
 
         self.clip_editor = ClipKeyFrameEditor(editable_property, self, use_clip_in)
+        self.clip_editor.mouse_listener = self
         """
         Callbacks from ClipKeyFrameEditor:
         def clip_editor_frame_changed(self, frame)
@@ -1325,7 +1334,8 @@ class RotoMaskKeyFrameEditor(Gtk.VBox):
         def keyframe_dragged(self, active_kf, frame)
         def update_slider_value_display(self, frame)
         
-        These may be implemented here or in extending classes KeyframeEditor and GeometryEditor
+        Via clip_editor.mouse_listener
+        def mouse_pos_change_done(self)
         """
         
         # Some filters start keyframes from *MEDIA* frame 0
@@ -1337,7 +1347,6 @@ class RotoMaskKeyFrameEditor(Gtk.VBox):
         else:
             self.clip_in = 0
     
-
         self.initializing = False # Hack against too early for on slider listner
         
         self.clip_editor.keyframe_parser = keyframe_parser
@@ -1354,7 +1363,10 @@ class RotoMaskKeyFrameEditor(Gtk.VBox):
         self.pack_start(clip_editor_row, False, False, 0)
         self.pack_start(self.buttons_row, False, False, 0)
 
-        self.active_keyframe_changed() # to do update gui to current values
+    def set_parent_editor(self, parent):
+        # parent implements callback:
+        #      parent.update_view(timeline_frame)
+        self.parent = parent
 
     def active_keyframe_changed(self):
         frame = self.clip_editor.current_clip_frame
@@ -1363,7 +1375,16 @@ class RotoMaskKeyFrameEditor(Gtk.VBox):
         self.buttons_row.set_frame(frame)
         self.seek_tline_frame(frame)
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
+        self.parent.update_view()
 
+    def update_slider_value_display(self, clip_frame):
+        # we don't have slider but this gets called from ClipKeyFrameEditor
+        pass
+    
+    def mouse_pos_change_done(self):
+        # we make ClipKeyFrameEditor call this to update parent view
+        self.parent.update_view()
+        
     def clip_editor_frame_changed(self, clip_frame):
         self.seek_tline_frame(clip_frame)
         self.buttons_row.set_frame(clip_frame)
@@ -1373,44 +1394,52 @@ class RotoMaskKeyFrameEditor(Gtk.VBox):
         self.update_editor_view()
         self.update_property_value()
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
-        
+        self.parent.update_view()
+                
     def delete_pressed(self):
         self.clip_editor.delete_active_keyframe()
         self.update_editor_view()
         self.update_property_value()
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
-        
+        self.parent.update_view()
+                
     def next_pressed(self):
         self.clip_editor.set_next_active()
         self.update_editor_view()
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
+        self.parent.update_view()
         
     def prev_pressed(self):
         self.clip_editor.set_prev_active()
         self.update_editor_view()
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
-
+        self.parent.update_view()
+        
     def prev_frame_pressed(self):
         self.clip_editor.move_clip_frame(-1)
         self.update_editor_view()
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
+        self.parent.update_view()
         
     def next_frame_pressed(self):
         self.clip_editor.move_clip_frame(1)
         self.update_editor_view()
-
+        self.parent.update_view()
+                
     def move_kf_next_frame_pressed(self):
         current_frame = self.clip_editor.get_active_kf_frame()
         self.clip_editor.active_kf_pos_entered(current_frame + 1)
         self.update_property_value()
         self.update_editor_view()
-
+        self.parent.update_view()
+            
     def move_kf_prev_frame_pressed(self):
         current_frame = self.clip_editor.get_active_kf_frame()
         self.clip_editor.active_kf_pos_entered(current_frame - 1)
         self.update_property_value()
         self.update_editor_view()
-
+        self.parent.update_view()
+            
     def keyframe_dragged(self, active_kf, frame):
         pass
 
@@ -1452,8 +1481,6 @@ class RotoMaskKeyFrameEditor(Gtk.VBox):
     def seek_tline_frame(self, clip_frame):
         PLAYER().seek_frame(self.clip_tline_pos + clip_frame - self.clip_in)
     
-    def update_editor_view(self, seek_tline=True):
-        print "update_editor_view not implemented"
         
 # ----------------------------------------------------------------- POSITION NUMERICAL ENTRY WIDGET
 class PositionNumericalEntries(Gtk.HBox):

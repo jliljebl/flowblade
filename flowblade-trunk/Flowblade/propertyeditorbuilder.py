@@ -850,20 +850,6 @@ def _create_color_lgg_editor(filt, editable_properties):
     return vbox
 
 def _create_rotomask_editor(filt, editable_properties):
-    kf_json_prop = filter(lambda ep: ep.name == "spline", editable_properties)[0]
-    json_obj = json.loads(kf_json_prop.value)
-    print json_obj
-    for kf in json_obj:
-        print kf
-        kf_obj = json_obj[kf]
-        for point in kf_obj:
-            print "---------POINT"
-            print "handle1", point[0]
-            print "point", point[1]
-            print "handle2", point[1]
-            
-
-        
     lauch_button = Gtk.Button(_("Lauch Rotomask editor"))
     lauch_button.connect("clicked", lambda b:_roto_lauch_pressed(filt, editable_properties))
     

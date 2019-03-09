@@ -113,6 +113,7 @@ class RotoMaskEditor(Gtk.Window):
         self.block_updates = False
         
         self.kf_editor = kf_editor
+        self.kf_editor.set_parent_editor(self)
         
         self.view_editor = vieweditor.ViewEditor(PLAYER().profile, VIEW_EDITOR_WIDTH, VIEW_EDITOR_HEIGHT)
         #self.view_editor.active_layer_changed_listener = self.active_layer_changed
@@ -140,70 +141,18 @@ class RotoMaskEditor(Gtk.Window):
         self.tc_display = guicomponents.MonitorTCDisplay()
         self.tc_display.use_internal_frame = True
         self.tc_display.widget.set_valign(Gtk.Align.CENTER)
-        
-        self.pos_bar = positionbar.PositionBar()
-        self.pos_bar.set_listener(self.position_listener)
-        self.pos_bar.update_display_from_producer(PLAYER().producer)
-        self.pos_bar.mouse_release_listener = self.pos_bar_mouse_released
 
-        pos_bar_frame = Gtk.Frame()
-        pos_bar_frame.add(self.pos_bar.widget)
-        pos_bar_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
-        pos_bar_frame.set_valign(Gtk.Align.CENTER)
-        
-        adj = Gtk.Adjustment(float(0), float(0), float(3000), float(1))
-        self.x_pos_spin = Gtk.SpinButton()
-        self.x_pos_spin.set_adjustment(adj)
-        self.x_pos_spin.connect("changed", self._position_value_changed)
-        self.x_pos_spin.connect("key-press-event", self._key_pressed_on_widget)
-        adj = Gtk.Adjustment(float(0), float(0), float(3000), float(1))
-        self.y_pos_spin = Gtk.SpinButton()
-        self.y_pos_spin.set_adjustment(adj)
-        self.y_pos_spin.connect("changed", self._position_value_changed)
-        self.y_pos_spin.connect("key-press-event", self._key_pressed_on_widget)
-        
-
-        next_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "next_frame_s.png")
-        prev_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "prev_frame_s.png")
-        prev_frame = Gtk.Button()
-        prev_frame.set_image(prev_icon)
-        prev_frame.connect("clicked", lambda w:self._prev_frame_pressed())
-        next_frame = Gtk.Button()
-        next_frame.set_image(next_icon)
-        next_frame.connect("clicked", lambda w:self._next_frame_pressed())
 
         self.scale_selector = vieweditor.ScaleSelector(self)
 
         timeline_box = Gtk.HBox()
         timeline_box.pack_start(self.tc_display.widget, False, False, 0)
-        timeline_box.pack_start(guiutils.pad_label(12, 12), False, False, 0)
-        timeline_box.pack_start(pos_bar_frame, True, True, 0)
-        timeline_box.pack_start(guiutils.pad_label(12, 12), False, False, 0)
-        timeline_box.pack_start(prev_frame, False, False, 0)
-        timeline_box.pack_start(next_frame, False, False, 0)
-        timeline_box.pack_start(self.guides_toggle, False, False, 0)
+        timeline_box.pack_start(Gtk.Label(), True, True, 0)
         timeline_box.pack_start(self.scale_selector, False, False, 0)
         timeline_box.set_margin_top(6)
         timeline_box.set_margin_bottom(6)
-        
-        positions_box = Gtk.HBox()
-        positions_box.pack_start(Gtk.Label(), True, True, 0)
-        positions_box.pack_start(Gtk.Label(label="X:"), False, False, 0)
-        positions_box.pack_start(self.x_pos_spin, False, False, 0)
-        positions_box.pack_start(guiutils.pad_label(40, 5), False, False, 0)
-        positions_box.pack_start(Gtk.Label(label="Y:"), False, False, 0)
-        positions_box.pack_start(self.y_pos_spin, False, False, 0)
-        positions_box.pack_start(guiutils.pad_label(40, 5), False, False, 0)
-        positions_box.pack_start(center_h, False, False, 0)
-        positions_box.pack_start(center_v, False, False, 0)
-        positions_box.pack_start(Gtk.Label(), True, True, 0)
 
-        view_editor_editor_buttons_row = Gtk.HBox()
-        view_editor_editor_buttons_row.pack_start(positions_box, False, False, 0)
-        view_editor_editor_buttons_row.pack_start(Gtk.Label(), True, True, 0)
-
-
-        exit_b = guiutils.get_sized_button(_("Cancel"), 150, 32)
+        exit_b = guiutils.get_sized_button(_("Cancel Edit"), 150, 32)
         exit_b.connect("clicked", lambda w:close_rotomask())
         save_rotodata_b = guiutils.get_sized_button(_("Save Rotomask Data"), 150, 32)
         save_rotodata_b.connect("clicked", lambda w:self._save_rotodata_pressed())
@@ -219,7 +168,6 @@ class RotoMaskEditor(Gtk.Window):
         editor_panel.pack_start(self.view_editor, True, True, 0)
         editor_panel.pack_start(kf_editor, False, False, 0)
         editor_panel.pack_start(timeline_box, False, False, 0)
-        editor_panel.pack_start(guiutils.get_in_centering_alignment(view_editor_editor_buttons_row), False, False, 0)
         editor_panel.pack_start(guiutils.pad_label(2, 24), True, True, 0)
         editor_panel.pack_start(editor_buttons_row, False, False, 0)
 
@@ -231,21 +179,32 @@ class RotoMaskEditor(Gtk.Window):
         self.add(alignment)
 
         self.view_editor.clear_layers()
-        #self._update_gui_with_active_layer_data()
+        self.rot_mask_layer = vieweditorlayer.RotoMaskEditLayer(self.view_editor, self.kf_editor.clip_editor)
+        self.view_editor.add_layer(self.rot_mask_layer)
+        self.view_editor.activate_layer(0)
         
+        #self._update_gui_with_active_layer_data()
+
+
         self.show_all()
+        
+        self.kf_editor.active_keyframe_changed()
 
         self.connect("size-allocate", lambda w, e:self.window_resized())
         self.connect("window-state-event", lambda w, e:self.window_resized())
+
+        self.window_resized()
+                
+    def update_view(self):
+        # Callback from kf_editor
+        self.show_current_frame()
 
     def show_current_frame(self):
         frame = PLAYER().current_frame()
         length = PLAYER().producer.get_length()
         rgbdata = PLAYER().seek_and_get_rgb_frame(frame)
         self.view_editor.set_screen_rgb_data(rgbdata)
-        self.pos_bar.set_normalized_pos(float(frame)/float(length))
         self.tc_display.set_frame(frame)
-        self.pos_bar.widget.queue_draw()
         self._update_active_layout()
 
     def window_resized(self):
@@ -254,8 +213,11 @@ class RotoMaskEditor(Gtk.Window):
 
     def scale_changed(self, new_scale):
         self.view_editor.set_scale_and_update(new_scale)
+        self.rot_mask_layer.update_shape()
         self.view_editor.edit_area.queue_draw()
 
+
+        
     """ REMOVE
     def write_current_frame(self):
         self.view_editor.write_out_layers = True
@@ -264,12 +226,6 @@ class RotoMaskEditor(Gtk.Window):
     def position_listener(self, normalized_pos, length):
         frame = normalized_pos * length
         self.tc_display.set_frame(int(frame))
-        self.pos_bar.widget.queue_draw()
-
-    def pos_bar_mouse_released(self, normalized_pos, length):
-        frame = int(normalized_pos * length)
-        PLAYER().seek_frame(frame)
-        self.show_current_frame()
 
     def _save_rotodata_pressed(self):
         pass
@@ -384,6 +340,7 @@ class RotoMaskEditor(Gtk.Window):
         self._update_active_layout()
 
     def _update_active_layout(self, fill_layers_data_if_needed=True):
+        self.view_editor.edit_area.queue_draw()
         pass
         """
         if self.block_updates:

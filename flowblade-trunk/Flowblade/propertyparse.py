@@ -204,24 +204,23 @@ def rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_
 
     return new_keyframes
 
-
 def rotomask_json_value_string_to_kf_array(keyframes_str, out_to_in_func):
     new_keyframes = []
     json_obj = json.loads(keyframes_str)
-    print json_obj
     for kf in json_obj:
-        print kf
+        #print kf
         kf_obj = json_obj[kf]
+        """
         for point in kf_obj:
             print "---------POINT"
             print "handle1", point[0]
             print "point", point[1]
-            print "handle2", point[1]
-            
+            print "handle2", point[2]
+        """
         add_kf = (int(kf), kf_obj)
         new_keyframes.append(add_kf)
-        
-    return new_keyframes
+
+    return sorted(new_keyframes, key=lambda kf_tuple: kf_tuple[0]) 
     
 def create_editable_property_for_affine_blend(clip, editable_properties):
     # Build a custom object that duck types for TransitionEditableProperty to use in editor

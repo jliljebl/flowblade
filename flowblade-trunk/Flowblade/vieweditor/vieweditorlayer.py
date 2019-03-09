@@ -122,7 +122,6 @@ class AbstactEditorLayer:
 
         return angle
 
-    
     def mouse_pressed(self):
         print "AbstactEditorLayer.mouse_pressed not overridden in" + self.__class__
         sys.exit(1)
@@ -144,6 +143,8 @@ class AbstactEditorLayer:
     def draw(self, cr, write_out_layers, draw_overlays):
         print "AbstactEditorLayer.draw not overridden in" + self.__class__
         sys.exit(1)
+
+
 
 class SimpleRectEditLayer(AbstactEditorLayer):
     
@@ -226,6 +227,7 @@ class SimpleRectEditLayer(AbstactEditorLayer):
             self.edit_point_shape.draw_points(cr, self.view_editor)
 
 
+
 class TextEditLayer(SimpleRectEditLayer):
     def __init__(self, view_editor, text_layout):
         # text_layout is titler.PangoLayout
@@ -256,3 +258,67 @@ class TextEditLayer(SimpleRectEditLayer):
             self.edit_point_shape.update_rect_size(w, h)
             self.update_rect = False
         SimpleRectEditLayer.draw(self, cr, write_out_layers, draw_overlays)
+
+
+
+class RotoMaskEditLayer(AbstactEditorLayer):
+    
+    def __init__(self, view_editor, clip_editor):
+        AbstactEditorLayer.__init__(self, view_editor)
+        self.edit_point_shape = vieweditorshape.RotoMaskEditShape(view_editor, clip_editor)
+        self.edit_point_shape.update_shape()
+ 
+        self.ACTIVE_COLOR = (1.0,0.55,0.55,1)
+        self.NOT_ACTIVE_COLOR = (0.2,0.2,0.2,1)
+
+    
+    # ----------------------------------------------------- mouse events
+    def mouse_pressed(self):
+        self.edit_point_shape.save_start_pos()
+        """
+        if self.edit_mode == MOVE_MODE:
+            if self.last_press_hit_point != None:
+                self.last_press_hit_point.save_start_pos()
+                self.edit_type = HANDLE_EDIT
+                self.guide_1, self.guide_2 = self.edit_point_shape.get_handle_guides(self.last_press_hit_point)
+            else:
+                self.edit_type = MOVE_EDIT
+        else: # ROTATE_MODE
+            self.roto_mid = self.edit_point_shape.get_mid_point()
+        """
+    def mouse_dragged(self):
+        """
+        delta = self.get_mouse_delta()
+        if self.edit_mode == MOVE_MODE:
+            if self.edit_type == HANDLE_EDIT:
+                self._update_corner_edit(delta)
+            else:
+                self.edit_point_shape.translate_from_move_start(delta)
+        else: # ROTATE_MODE
+            angle_change = self.get_current_mouse_rotation(self.roto_mid)
+            self.edit_point_shape.rotate_from_move_start(self.roto_mid, angle_change)
+        """
+        pass
+        
+    def mouse_released(self):
+        """
+        delta = self.get_mouse_delta()
+        """
+        pass
+
+
+    def update_shape(self):
+        self.edit_point_shape.update_shape()
+
+    # --------------------------------------------- state changes
+    def frame_changed(self):
+        print "RotoMaskEditLayer.frame_changed"
+
+    def mode_changed(self):
+        print "RotoMaskEditLayer.mode_changed"
+        
+    # -------------------------------------------- draw
+    def draw(self, cr, write_out_layers, draw_overlays):
+        print "RotoMaskEditLayer.draw"
+        cr.set_source_rgba(*self.ACTIVE_COLOR)
+        self.edit_point_shape.draw_line_shape(cr, self.view_editor)

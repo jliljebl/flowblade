@@ -277,3 +277,41 @@ class SimpleRectEditShape(EditPointShape):
         return (guide_1, guide_2)
         
 
+
+class RotoMaskEditShape(EditPointShape):
+    """
+    A Bezier spline creating a closed area.
+    """
+    def __init__(self, view_editor, clip_editor):
+        EditPointShape.__init__(self)
+        self.clip_editor = clip_editor
+        self.view_editor = view_editor
+        self.update_shape()
+
+    def update_shape(self):
+        print "update_shape"
+        self.edit_points = []
+        keyframe = self.clip_editor.keyframes[0]
+        kf, curve_points = keyframe
+        
+        for p in curve_points:
+            handle_point = p[1]
+            x, y = handle_point
+            ep = EditPoint(*self.view_editor.normalized_movie_coord_to_panel_coord((x, y)))
+            self.edit_points.append(ep)
+             
+    def draw_points(self, cr, view_editor):
+        for ep in self.edit_points:
+            ep.draw(cr, view_editor)
+    
+    def draw_line_shape(self, cr, view_editor):
+        print "RotoMaskEditShape.draw_line_shape"
+        x, y = self.edit_points[0].x, self.edit_points[0].y
+        cr.move_to(x, y)
+        for i in range(1, len(self.edit_points)):
+            x, y =  self.edit_points[i].x, self.edit_points[i].y
+            print x, y
+            cr.line_to(x, y)
+        cr.close_path()
+        cr.stroke()
+        
