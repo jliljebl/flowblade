@@ -73,6 +73,7 @@ import mltprofiles
 import mlttransitions
 import modesetting
 import movemodes
+import multitrimmode
 import persistance
 import positionbar
 import preferenceswindow
@@ -387,6 +388,8 @@ def monkeypatch_callbacks():
 
     propertyeditorbuilder.show_rotomask_func = rotomask.show_rotomask
     
+    
+    multitrimmode.set_default_mode_func = modesetting.set_default_edit_mode
     # These provide clues for further module refactoring 
 
 # ---------------------------------- SDL2 consumer

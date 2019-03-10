@@ -339,11 +339,10 @@ def tline_canvas_mouse_pressed(event, frame):
     elif (event.button == 1 and EDIT_MODE() == editorstate.ONE_ROLL_TRIM):	
         track = tlinewidgets.get_track(event.y)	
         if track == None:	
-            if editorpersistance.prefs.empty_click_exits_trims == True:	
-                modesetting.set_default_edit_mode(True)	
+            modesetting.set_default_edit_mode(True)	
             return	
         success = trimmodes.set_oneroll_mode(track, frame)	
-        if (not success) and editorpersistance.prefs.empty_click_exits_trims == True:	
+        if not success:
             modesetting.set_default_edit_mode(True)	
             return	
             	

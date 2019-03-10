@@ -523,10 +523,7 @@ def oneroll_trim_press(event, frame, x=None, y=None):
         else:
             success = set_oneroll_mode(track, frame) # attempt init
         if not success:
-            if editorpersistance.prefs.empty_click_exits_trims == True:
-                set_exit_mode_func(True) # further mouse events are handled at editevent.py
-            else:
-                set_no_edit_mode_func() # further mouse events are handled at editevent.py
+            set_exit_mode_func(True) # further mouse events are handled at editevent.py
         else:
             submode = MOUSE_EDIT_ON # to stop entering keyboard edits until mouse released
             oneroll_trim_move(x, y, frame, None)
@@ -541,10 +538,7 @@ def oneroll_trim_press(event, frame, x=None, y=None):
             success = set_oneroll_mode(track, frame) # attempt init
         
         if not success:
-            if editorpersistance.prefs.empty_click_exits_trims == True:
-                set_exit_mode_func(True) # further mouse events are handled at editevent.py
-            else:
-                set_no_edit_mode_func() # no furter mouse events will come here
+            set_exit_mode_func(True) # further mouse events are handled at editevent.py
             submode = NOTHING_ON 
         else:
             submode = MOUSE_EDIT_ON # to stop entering keyboard edits until mouse released
@@ -1055,10 +1049,7 @@ def _attempt_reinit_tworoll(x, y, frame):
         else:
             success = set_tworoll_mode(track, frame) # attempt init
         if not success:
-            if editorpersistance.prefs.empty_click_exits_trims == True:
-                set_exit_mode_func(True) # further mouse events are handled at editevent.py
-            else:
-                set_no_edit_mode_func() # further mouse events are handled at editevent.py
+            set_exit_mode_func(True) # further mouse events are handled at editevent.py
         else:
             # new trim inited, active immediately
             global submode
@@ -1336,10 +1327,7 @@ def _attempt_reinit_slide(x, y, frame):
         success = set_slide_mode(track, frame) # attempt init
 
     if not success:
-        if editorpersistance.prefs.empty_click_exits_trims == True:
-            set_exit_mode_func(True) # further mouse events are handled at editevent.py
-        else:
-            set_no_edit_mode_func() # further mouse events are handled at editevent.py
+        set_exit_mode_func(True) # further mouse events are handled at editevent.py
     else:
         # new trim inited, active immediately
         global edit_data, submode
@@ -1362,10 +1350,7 @@ def slide_trim_press(event, frame, x=None, y=None):
         return
     
     if frame > tlinewidgets.get_track(y).get_length():
-        if editorpersistance.prefs.empty_click_exits_trims == True:
-            set_exit_mode_func(True) # further mouse events are handled at editevent.py
-        else:
-            set_no_edit_mode_func() # further mouse events are handled at editevent.py
+        set_exit_mode_func(True) # further mouse events are handled at editevent.py
         return
 
     if not _pressed_on_slide_active_area(frame):

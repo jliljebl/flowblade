@@ -347,7 +347,7 @@ def _get_workflow_tool_submenu(callback, tool_id, position):
         pref_item.show()
         sub_menu.add(pref_item)
         guiutils.add_separetor(sub_menu)
-        
+
     return sub_menu
     
 def _workflow_menu_callback(widget, data):
@@ -414,7 +414,6 @@ def tline_tool_keyboard_selected(event):
 def _TLINE_TOOL_OVERWRITE_box_selection_pref(check_menu_item):
     editorpersistance.prefs.box_for_empty_press_in_overwrite_tool = check_menu_item.get_active()
     editorpersistance.save()
-
 
 
 
