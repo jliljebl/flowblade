@@ -413,41 +413,6 @@ def save_env_data_dialog(callback):
     dialog.connect('response', callback)
     dialog.show()
 
-def select_thumbnail_dir(callback, parent_window, current_dir_path, retry_open_media):
-    panel, file_select = panels.get_thumbnail_select_panel(current_dir_path)
-    cancel_str = _("Cancel").encode('utf-8')
-    ok_str = _("Ok").encode('utf-8')
-    dialog = Gtk.Dialog(_("Select Thumbnail Folder"),
-                        parent_window,
-                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (cancel_str, Gtk.ResponseType.CANCEL,
-                        ok_str, Gtk.ResponseType.YES))
-
-    dialog.vbox.pack_start(panel, True, True, 0)
-    dialogutils.set_outer_margins(dialog.vbox)
-    _default_behaviour(dialog)
-    dialog.connect('response', callback, (file_select, retry_open_media))
-    dialog.show_all()
-
-def select_rendred_clips_dir(callback, parent_window, current_dir_path, context_data=None):
-    panel, file_select = panels.get_render_folder_select_panel(current_dir_path)
-    cancel_str = _("Cancel").encode('utf-8')
-    ok_str = _("Ok").encode('utf-8')
-    dialog = Gtk.Dialog(_("Select Thumbnail Folder"),
-                        parent_window,
-                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (cancel_str, Gtk.ResponseType.CANCEL,
-                        ok_str, Gtk.ResponseType.YES))
-
-    dialog.vbox.pack_start(panel, True, True, 0)
-    dialogutils.set_outer_margins(dialog.vbox)
-    _default_behaviour(dialog)
-    if context_data == None:
-        dialog.connect('response', callback, file_select)
-    else:
-        dialog.connect('response', callback, file_select, context_data)
-    dialog.show_all()
-
 def rendered_clips_no_home_folder_dialog():
     dialogutils.warning_message(_("Can't make home folder render clips folder"),
                             _("Please create and select some other folder then \'") +
