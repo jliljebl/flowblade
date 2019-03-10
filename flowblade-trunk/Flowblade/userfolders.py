@@ -91,7 +91,7 @@ def init():
         _dot_dir_was_forced = True
         _user_dirs = USING_DOT_DIRS
         _maybe_create_dot_dirs()
-        return error
+        return
     
     #_user_dirs = USING_DOT_DIRS #  Testing
     _user_dirs = USING_XDG_DIRS
