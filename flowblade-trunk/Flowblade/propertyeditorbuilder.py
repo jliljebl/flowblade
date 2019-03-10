@@ -38,7 +38,6 @@ import mltfilters
 import mlttransitions
 import propertyparse
 import respaths
-import rotomask
 import translations
 import updater
 import utils
@@ -83,6 +82,7 @@ SCALE_DIGITS = "scale_digits"                               # Number of decimal 
 # This data needs to be erased always after use.
 changing_slider_to_kf_property_name = None
 re_init_editors_for_slider_type_change_func = None # monkeypatched in, it is clipeffectseditor.effect_selection_changed
+show_rotomask_func =  None # monkeypatched in, it is rotomask.py, gmic won't lauch if we import
 
 def _p(name):
     try:
@@ -860,7 +860,7 @@ def _create_rotomask_editor(filt, editable_properties):
     return vbox
 
 def _roto_lauch_pressed(filt, editable_properties):
-    rotomask.show_rotomask(filt, editable_properties)
+    show_rotomask_func(filt, editable_properties)
 
 def _get_force_combo_index(deinterlace, progressive):
     # These correspond to hardcoded values ["Nothing","Progressive","Deinterlace","Both"] above

@@ -86,6 +86,7 @@ import render
 import renderconsumer
 import respaths
 import resync
+import rotomask
 import sequence
 import shortcuts
 import snapping
@@ -384,6 +385,8 @@ def monkeypatch_callbacks():
     # Callback to reinit to change slider <-> kf editor
     propertyeditorbuilder.re_init_editors_for_slider_type_change_func = clipeffectseditor.effect_selection_changed
 
+    propertyeditorbuilder.show_rotomask_func = rotomask.show_rotomask
+    
     # These provide clues for further module refactoring 
 
 # ---------------------------------- SDL2 consumer
