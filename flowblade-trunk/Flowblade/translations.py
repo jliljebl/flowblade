@@ -255,6 +255,7 @@ def load_filters_translations():
     filter_names["Lut3D"] = _("Lut3D")
     filter_names["Normalize"] = _("Normalize")
     filter_names["File Luma to Alpha"] = _("File Luma to Alpha") 
+    filter_names["Gradient Tint"] = _("Gradient Tint")
     
     # param names
     global param_names
@@ -574,6 +575,18 @@ def load_filters_translations():
     param_names["Smooth"] = _("Smooth")
     param_names["Radius"] = _("Radius")
     param_names["Fade"] = _("Fade")
+    param_names["Start Opacity"] = _("Start Opacity")
+    param_names["End Opacity"] = _("End Opacity")
+    param_names["End Color"] = _("End Color")
+    param_names["Start Color"] = _("Start Color")
+    param_names["Start X"] = _("Start X")
+    param_names["Start Y"] = _("Start Y")
+    param_names["End Y"] = _("End Y")
+    param_names["End X"] = _("End X")
+    param_names["Gradient Type"] = _("Gradient Type")
+    param_names["Radial Offset"] = _("Radial Offset")
+    
+    
     # Combo options
     global combo_options
     combo_options["Shave"] = _("Shave")
@@ -646,4 +659,4 @@ def load_filters_translations():
     combo_options["HSLLuminosity"] = _("HSLLuminosity")
     combo_options["Cos"] = _("Cos")
     combo_options["Linear"] = _("Linear")
-
+    combo_options["Radial"] = _("Radial")
