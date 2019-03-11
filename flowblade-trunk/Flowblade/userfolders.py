@@ -127,6 +127,7 @@ def data_copy_needed():
 
 def get_init_error():
     return _init_error
+
 # ---------------------------------------------------------------- internal functions
 def _maybe_create_dot_dirs():
 

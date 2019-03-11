@@ -255,7 +255,11 @@ def _playback_prefs_panel():
     ffwd_rev_caps_spin = Gtk.SpinButton()
     ffwd_rev_caps_spin.set_adjustment(spin_adj)
     ffwd_rev_caps_spin.set_numeric(True)
-    
+
+    loop_clips = Gtk.CheckButton()
+    loop_clips.set_active(prefs.loop_clips)
+
+     
     # Layout
     #row1 = _row(guiutils.get_checkbox_row_box(auto_play_in_clip_monitor, Gtk.Label(label=_("Autoplay new Clips in Clip Monitor"))))
     row2 = _row(guiutils.get_checkbox_row_box(auto_center_on_stop, Gtk.Label(label=_("Center Current Frame on Playback Stop"))))
@@ -273,11 +277,12 @@ def _playback_prefs_panel():
     row15.set_tooltip_text(_("Speed of Forward / Reverse will be multiplied by this value if Ctrl Key is held (Only using KEYS)."))
     row16 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Fast Forward / Reverse Speed for Caps Lock Key:")), ffwd_rev_caps_spin, PREFERENCES_LEFT))
     row16.set_tooltip_text(_("Speed of Forward / Reverse will be multiplied by this value if Caps Lock is set (Only using KEYS)."))
-
     row17 = _row(guiutils.get_checkbox_row_box(follow_move_range, Gtk.Label(label=_("Move Timeline to follow Playback"))))
+    row18 = _row(guiutils.get_checkbox_row_box(loop_clips, Gtk.Label(label=_("Loop Media Clips on Monitor"))))
     
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row17, False, False, 0)
+    vbox.pack_start(row18, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
     vbox.pack_start(row13, False, False, 0)
     # Jul-2016 - SvdB - For play_pause button
@@ -286,6 +291,7 @@ def _playback_prefs_panel():
     vbox.pack_start(row14, False, False, 0)
     vbox.pack_start(row15, False, False, 0)
     vbox.pack_start(row16, False, False, 0)
+
     vbox.pack_start(Gtk.Label(), True, True, 0)
 
     guiutils.set_margins(vbox, 12, 0, 12, 12)
@@ -294,7 +300,7 @@ def _playback_prefs_panel():
     # Apr-2017 - SvdB - Added ffwd / rev values
     return vbox, (auto_center_on_stop, 
                   play_pause_button, auto_center_on_updown,
-                  ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range)
+                  ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips)
                   
 def _view_prefs_panel():
     prefs = editorpersistance.prefs

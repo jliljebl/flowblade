@@ -202,7 +202,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     gfx_length_spin, cover_delete, mouse_scroll_action, hide_file_ext_button, hor_scroll_dir, kf_edit_playhead_move = edit_prefs_widgets
     
     auto_center_check, play_pause_button, auto_center_on_updown, \
-    ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range = playback_prefs_widgets
+    ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips = playback_prefs_widgets
     
     use_english, disp_splash, buttons_style, theme, theme_combo, audio_levels_combo, \
     window_mode_combo, full_names, double_track_hights, top_row_layout = view_prefs_widgets
@@ -230,6 +230,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.ffwd_rev_shift = int(ffwd_rev_shift_spin.get_adjustment().get_value())
     prefs.ffwd_rev_ctrl = int(ffwd_rev_ctrl_spin.get_adjustment().get_value())
     prefs.ffwd_rev_caps = int(ffwd_rev_caps_spin.get_adjustment().get_value())
+    prefs.loop_clips = loop_clips.get_active()
     
     prefs.use_english_always = use_english.get_active()
     prefs.display_splash_screen = disp_splash.get_active()
@@ -344,3 +345,5 @@ class EditorPreferences:
         self.kf_edit_init_affects_playhead = True
         self.show_tool_tooltips = True
         self.workflow_dialog_last_version_shown = "0.0.1"
+        self.loop_clips = False
+
