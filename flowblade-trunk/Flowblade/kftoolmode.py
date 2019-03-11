@@ -85,12 +85,15 @@ DRAG_MIN_Y = 4 # to make strt value slightly macnetic, makes easier to move posi
 hamburger_menu = Gtk.Menu()
 oor_before_menu = Gtk.Menu()
 oor_after_menu = Gtk.Menu()
-
+value_snapping_menu = Gtk.Menu()
+ 
 edit_data = None
 enter_mode = None
 _kf_editor = None
 
 _playhead_follow_kf = True
+
+_snapping = 1
 
 # -------------------------------------------------- init
 def load_icons():
@@ -758,6 +761,10 @@ class TLineKeyFrameEditor:
                 frame = 0
             if self.value_drag_on == True:
                 value = round(self._get_value_for_panel_y(ly))
+                if _snapping == 2:
+                    value = round(value / 2) * 2
+                elif  _snapping == 5:
+                    value = round(value / 5.0) * 5
                 self.edit_value = value
                 self.set_active_kf_frame_and_value(frame, value)
             else:
@@ -792,6 +799,10 @@ class TLineKeyFrameEditor:
                 frame = 0
             if self.value_drag_on == True:
                 value = round(self._get_value_for_panel_y(ly))
+                if _snapping == 2:
+                    value = round(value / 2) * 2
+                elif  _snapping == 5:
+                    value = round(value / 5) * 5
                 self.set_active_kf_frame_and_value(frame, value)
                 self.hack_fix_for_zero_one_keyframe_problem()
             else:
@@ -1172,6 +1183,36 @@ class TLineKeyFrameEditor:
         playhead_follow_item.connect("activate", self._oor_menu_item_activated, "playhead_follows")
         playhead_follow_item.show()
         menu.add(playhead_follow_item)
+
+        value_snapping_item = Gtk.MenuItem(_("Value Snapping"))
+        value_snapping_menu = Gtk.Menu()
+        guiutils.remove_children(value_snapping_menu)
+
+        first_item = Gtk.RadioMenuItem()
+        first_item.set_label("1")
+        if _snapping == 1:
+            first_item.set_active(True)
+        first_item.show()
+        value_snapping_menu.append(first_item)
+        first_item.connect("activate", self._oor_menu_item_activated, "1")
+
+        radio_item = Gtk.RadioMenuItem.new_with_label([first_item], "2")
+        if _snapping == 2:
+            radio_item.set_active(True)
+        radio_item.connect("activate", self._oor_menu_item_activated, "2")
+        value_snapping_menu.append(radio_item)
+        radio_item.show()
+
+        radio_item = Gtk.RadioMenuItem.new_with_label([first_item], "5")
+        if _snapping == 5:
+            radio_item.set_active(True)
+        radio_item.connect("activate", self._oor_menu_item_activated, "5")
+        value_snapping_menu.append(radio_item)
+        radio_item.show()
+
+        value_snapping_item.set_submenu(value_snapping_menu)
+        value_snapping_item.show_all()
+        menu.add(value_snapping_item)
         
         sep = Gtk.SeparatorMenuItem()
         sep.show()
@@ -1182,6 +1223,8 @@ class TLineKeyFrameEditor:
         menu.popup(None, None, None, None, event.button, event.time)
 
     def _oor_menu_item_activated(self, widget, data):
+        global _snapping
+        
         if data == "delete_all_before":
             keep_doing = True
             while keep_doing:
@@ -1238,8 +1281,13 @@ class TLineKeyFrameEditor:
         elif data == "playhead_follows":
             global _playhead_follow_kf
             _playhead_follow_kf = widget.get_active()
-            
-            
+        elif data == "1":
+            _snapping = 1
+        elif data == "2":
+            _snapping = 2
+        elif data == "5":
+            _snapping = 5
+
         updater.repaint_tline()
         
     def _get_menu_item(self, text, callback, data):
