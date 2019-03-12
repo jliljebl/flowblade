@@ -69,10 +69,6 @@ ALIGN_CENTER = 1
 ALIGN_RIGHT = 2
 
 def show_rotomask(mlt_filter, editable_properties):
-    #global _titler_data
-    #if _titler_data == None:
-    #    _titler_data = TitlerData()
-    print "lllllllllllll"
     
     kf_json_prop = filter(lambda ep: ep.name == "spline", editable_properties)[0]
     kf_editor = keyframeeditor.RotoMaskKeyFrameEditor(kf_json_prop, propertyparse.rotomask_json_value_string_to_kf_array)
@@ -182,9 +178,6 @@ class RotoMaskEditor(Gtk.Window):
         self.rot_mask_layer = vieweditorlayer.RotoMaskEditLayer(self.view_editor, self.kf_editor.clip_editor)
         self.view_editor.add_layer(self.rot_mask_layer)
         self.view_editor.activate_layer(0)
-        
-        #self._update_gui_with_active_layer_data()
-
 
         self.show_all()
         

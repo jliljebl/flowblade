@@ -268,7 +268,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
         self.edit_point_shape = vieweditorshape.RotoMaskEditShape(view_editor, clip_editor)
         self.edit_point_shape.update_shape()
  
-        self.ACTIVE_COLOR = (1.0,0.55,0.55,1)
+        self.ACTIVE_COLOR = (0.0,1.0,0.55,1)
         self.NOT_ACTIVE_COLOR = (0.2,0.2,0.2,1)
 
     
