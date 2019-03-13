@@ -963,6 +963,7 @@ class TLineKeyFrameEditor:
                 self.active_kf_index = i
                 return
         #prev_frame, prev_value = self.keyframes[len(self.keyframes) - 1]
+        print "lllll"
         self.keyframes.append((frame, value))
         self.active_kf_index = len(self.keyframes) - 1
 
@@ -975,7 +976,8 @@ class TLineKeyFrameEditor:
         if self.active_kf_index < 0:
             self.active_kf_index = 0
         self._set_pos_to_active_kf()
-    
+        self.update_property_value()
+        
         updater.repaint_tline()
 
     def set_and_display_clip_frame(self, clip_frame):
