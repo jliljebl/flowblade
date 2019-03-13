@@ -27,6 +27,7 @@ import cairo
 
 import appconsts
 import cairoarea
+import clipeffectseditor
 import dialogutils
 import edit
 from editorstate import current_sequence
@@ -106,6 +107,10 @@ def load_icons():
     NON_ACTIVE_KF_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_not_active_tool.png")    
 
 def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT, param_data=None):
+    # These can produce data for same objects we choose not to commit to updating
+    # clipeffectseditor/kftool with events from each other.
+    clipeffectseditor.clear_clip()
+    
     clip_index = track.clips.index(clip)
 
     # Save data needed to do the keyframe edits.
@@ -163,12 +168,23 @@ def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT, param_data=None):
     else: #  edit_type == PARAM_KF_EDIT 
         property_name, filter_object, filter_index, disp_name = param_data
         ep = _get_param_editable_property(property_name, clip, track, clip_index, filter_object, filter_index)
+
+        # create kf in frame 0 if value PROP_INT or PROP_FLOAT and kf expression
+        eq_index = ep.value.find("=")
+        if eq_index == -1:
+            new_value = "0=" + ep.value
+            ep.value = new_value
+            ep.write_filter_object_property(new_value)
+
+        # Turn into keyframe property
+        ep = ep.get_as_KeyFrameHCSFilterProperty()
+        
         edit_data["editable_property"] = ep
-        print ep.input_range
+
         filter_param_name = filter_object.info.name + ":" + disp_name
         global _kf_editor
         _kf_editor = TLineKeyFrameEditor(ep, True, PARAM_KF_EDIT, filter_param_name)
-        
+
     tlinewidgets.set_edit_mode_data(edit_data)
     updater.repaint_tline()
 
@@ -1241,7 +1257,7 @@ class TLineKeyFrameEditor:
                 for prop in filt.properties:
                     p_name, p_val, p_type = prop
                     args_str = filt.info.property_args[p_name]
-                    print args_str
+
                     args_dict = propertyparse.args_string_to_args_dict(args_str)
                     try:
                         editor = args_dict["editor"]
@@ -1264,7 +1280,6 @@ class TLineKeyFrameEditor:
                         item_text = filt.info.name  + ": " +  disp_name
                         param_item = self._get_menu_item(item_text, self._param_edit_item_activated, param_data)
                         params_menu.add(param_item)
-                        print "Can kftooledit:",  filt.info.name, disp_name, range_in, i
                         
             if editable_params_exist == False:
                 params_menu_item.set_sensitive(False)
@@ -1409,7 +1424,6 @@ class TLineKeyFrameEditor:
 
     def _param_edit_item_activated(self,  widget, data):
         init_tool_for_clip(edit_data["clip"],  edit_data["track"], PARAM_KF_EDIT, data)
-        print data
 
     def _get_menu_item(self, text, callback, data):
         item = Gtk.MenuItem(text)
