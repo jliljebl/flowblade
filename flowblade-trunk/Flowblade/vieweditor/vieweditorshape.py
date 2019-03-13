@@ -286,11 +286,14 @@ class RotoMaskEditShape(EditPointShape):
         EditPointShape.__init__(self)
         self.handles1 =  []
         self.handles2 =  []
-        self.clip_editor = clip_editor
-        self.view_editor = view_editor
+        self.clip_editor = clip_editor # This is keyframeeditor.ClipKeyFrameEditor
+        self.view_editor = view_editor # This is viewEditor.ViewEditor
         self.update_shape(0)
 
-    def update_shape(self, frame):
+    def update_shape(self, tline_frame):
+        # We're not using timeline frame for shape , we're using clip frame.
+        frame = self.clip_editor.current_clip_frame
+
         self.edit_points = []
         self.handles1 =  []
         self.handles2 =  []
@@ -310,11 +313,13 @@ class RotoMaskEditShape(EditPointShape):
             ep = EditPoint(*self.view_editor.normalized_movie_coord_to_panel_coord((x, y)))
             self.handles2.append(ep)
         
+        kf, points0 = self.clip_editor.keyframes[0]
+        
     def get_curve_points_for_frame(self, current_frame):
         # We're replicating stuff from mlt file filter_rotoscoping.c to make sure out GUI matches the results.
         keyframes = self.clip_editor.keyframes
     
-        # gat keyframe range containing current_frame
+        # Get keyframe range containing current_frame
         index = 0
         keyframe, curve_points = keyframes[index]
         try:
@@ -339,7 +344,7 @@ class RotoMaskEditShape(EditPointShape):
 
         # time in range 0 - 1 between frame_1, frame_2 range like in filter_rotoscoping.c
         t = ( current_frame - frame_1 ) / ( frame_2 - frame_1 + 1 )
-         
+
         # Get point values  for current frame
         current_frame_curve_points = [] # array of [handle_point1, curve_point, handle_point2] arrays
         for i in range(0, len(curve_points)):

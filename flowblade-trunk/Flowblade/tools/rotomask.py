@@ -91,7 +91,7 @@ def rotomask_destroy():
             
 # ---------------------------------------------------------- editor
 class RotoMaskEditor(Gtk.Window):
-    def __init__(self, kf_editor):
+    def __init__(self, kf_editor): # kf_editor is keyframeeditor.RotoMaskKeyFrameEditor
         GObject.GObject.__init__(self)
         self.set_title(_("RotoMaskEditor"))
         self.connect("delete-event", lambda w, e:close_rotomask())
@@ -193,12 +193,12 @@ class RotoMaskEditor(Gtk.Window):
         self.show_current_frame()
 
     def show_current_frame(self):
-        frame = PLAYER().current_frame()
+        tline_frame = PLAYER().current_frame()
         length = PLAYER().producer.get_length()
-        rgbdata = PLAYER().seek_and_get_rgb_frame(frame)
+        rgbdata = PLAYER().seek_and_get_rgb_frame(tline_frame)
         self.view_editor.set_screen_rgb_data(rgbdata)
-        self.view_editor.update_layers_for_frame(frame)
-        self.tc_display.set_frame(frame)
+        self.view_editor.update_layers_for_frame(tline_frame)
+        self.tc_display.set_frame(tline_frame)
         self._update_active_layout()
 
     def window_resized(self):
@@ -207,8 +207,8 @@ class RotoMaskEditor(Gtk.Window):
 
     def scale_changed(self, new_scale):
         self.view_editor.set_scale_and_update(new_scale)
-        frame = PLAYER().current_frame()
-        self.view_editor.update_layers_for_frame(frame)
+        tline_frame = PLAYER().current_frame()
+        self.view_editor.update_layers_for_frame(tline_frame)
         self.view_editor.edit_area.queue_draw()
 
 

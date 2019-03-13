@@ -211,10 +211,10 @@ class ViewEditor(Gtk.Frame):
         out[b] = buf[r]
         self.bg_buf = out
 
-    def update_layers_for_frame(self, frame):
+    def update_layers_for_frame(self, tline_frame):
         for editorlayer in self.edit_layers:
             if editorlayer.visible:
-                editorlayer.frame_changed(frame)
+                editorlayer.frame_changed(tline_frame)
 
     def _draw(self, event, cr, allocation):
         print "_veieditor.cdrw"
