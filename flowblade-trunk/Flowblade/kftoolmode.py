@@ -1247,6 +1247,7 @@ class TLineKeyFrameEditor:
                         editor = args_dict["editor"]
                     except:
                         editor = "slider"
+                        
                     try:
                         disp_name = args_dict["displayname"]
                     except:

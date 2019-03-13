@@ -52,7 +52,7 @@ class AbstactEditorLayer:
         self.mouse_released_listener = None
     
     # --------------------------------------------- state changes
-    def frame_changed(self):
+    def frame_changed(self, frame):
         pass # override to react to frame change
 
     def mode_changed(self):
@@ -266,7 +266,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
     def __init__(self, view_editor, clip_editor):
         AbstactEditorLayer.__init__(self, view_editor)
         self.edit_point_shape = vieweditorshape.RotoMaskEditShape(view_editor, clip_editor)
-        self.edit_point_shape.update_shape()
+        self.edit_point_shape.update_shape(0)
  
         self.ACTIVE_COLOR = (0.0,1.0,0.55,1)
         self.NOT_ACTIVE_COLOR = (0.2,0.2,0.2,1)
@@ -306,13 +306,10 @@ class RotoMaskEditLayer(AbstactEditorLayer):
         """
         pass
 
-
-    def update_shape(self):
-        self.edit_point_shape.update_shape()
-
     # --------------------------------------------- state changes
-    def frame_changed(self):
-        print "RotoMaskEditLayer.frame_changed"
+    def frame_changed(self, frame):
+        self.edit_point_shape.update_shape(frame)
+        print "RotoMaskEditLayer.frame_changed", frame
 
     def mode_changed(self):
         print "RotoMaskEditLayer.mode_changed"

@@ -284,16 +284,18 @@ class RotoMaskEditShape(EditPointShape):
     """
     def __init__(self, view_editor, clip_editor):
         EditPointShape.__init__(self)
+        self.handles1 =  []
+        self.handles2 =  []
         self.clip_editor = clip_editor
         self.view_editor = view_editor
-        self.update_shape()
+        self.update_shape(0)
 
-    def update_shape(self):
+    def update_shape(self, frame):
         self.edit_points = []
         self.handles1 =  []
         self.handles2 =  []
-        keyframe = self.clip_editor.keyframes[0]
-        kf, curve_points = keyframe
+
+        curve_points = self.get_curve_points_for_frame(frame)
         
         for p in curve_points:
             x, y = p[1]
@@ -308,6 +310,56 @@ class RotoMaskEditShape(EditPointShape):
             ep = EditPoint(*self.view_editor.normalized_movie_coord_to_panel_coord((x, y)))
             self.handles2.append(ep)
         
+    def get_curve_points_for_frame(self, current_frame):
+        # We're replicating stuff from mlt file filter_rotoscoping.c to make sure out GUI matches the results.
+        keyframes = self.clip_editor.keyframes
+    
+        # gat keyframe range containing current_frame
+        index = 0
+        keyframe, curve_points = keyframes[index]
+        try:
+            keyframe_next, curve_points2 = keyframes[index + 1]
+        except:
+            return curve_points
+        
+        keyframe = int(keyframe)
+        keyframe_next = int(keyframe_next)
+        
+        while(keyframe < current_frame and len(keyframes) > index + 2):
+            index += 1
+            keyframe, curve_points = keyframes[index]
+            keyframe_next, curve_points2 = keyframes[index + 1]
+            
+            keyframe = int(keyframe)
+            keyframe_next = int(keyframe_next)
+        
+        frame_1 = float(keyframe)
+        frame_2 = float(keyframe_next)
+        current_frame = float(current_frame)
+
+        # time in range 0 - 1 between frame_1, frame_2 range like in filter_rotoscoping.c
+        t = ( current_frame - frame_1 ) / ( frame_2 - frame_1 + 1 )
+         
+        # Get point values  for current frame
+        current_frame_curve_points = [] # array of [handle_point1, curve_point, handle_point2] arrays
+        for i in range(0, len(curve_points)):
+            hch_array = []
+            for j in range(0, 3):
+                pa = curve_points[i][j]
+                pb = curve_points2[i][j]
+                value_point = self.lerp(pa, pb, t)
+                hch_array.append(value_point)
+            current_frame_curve_points.append(hch_array)
+            
+        return current_frame_curve_points
+
+    def lerp(self, pa, pb, t):
+        pax, pay = pa
+        pbx, pby = pb
+        x = pax + ( pbx - pax ) * t;
+        y = pay + ( pby - pay ) * t;
+        return (x, y)
+
     def draw_points(self, cr, view_editor):
         for ep in self.edit_points:
             ep.draw(cr, view_editor)
@@ -334,3 +386,6 @@ class RotoMaskEditShape(EditPointShape):
             cr.line_to( self.handles2[i].x, self.handles2[i].y)
 
             cr.stroke()
+
+
+

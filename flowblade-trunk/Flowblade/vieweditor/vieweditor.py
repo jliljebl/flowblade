@@ -195,10 +195,7 @@ class ViewEditor(Gtk.Frame):
     def normalized_movie_coord_to_panel_coord(self, movie_point):
         norm_movie_x, norm_movie_y = movie_point
         origo_x, origo_y = self.origo
-        
-        
-        print self.scale
-        
+
         panel_x = norm_movie_x * self.profile_w * self.scale * self.aspect_ratio + origo_x
         panel_y = norm_movie_y * self.profile_h * self.scale + origo_y
         return (panel_x, panel_y)
@@ -213,6 +210,11 @@ class ViewEditor(Gtk.Frame):
         out[r] = buf[b]
         out[b] = buf[r]
         self.bg_buf = out
+
+    def update_layers_for_frame(self, frame):
+        for editorlayer in self.edit_layers:
+            if editorlayer.visible:
+                editorlayer.frame_changed(frame)
 
     def _draw(self, event, cr, allocation):
         print "_veieditor.cdrw"

@@ -175,8 +175,8 @@ class RotoMaskEditor(Gtk.Window):
         self.add(alignment)
 
         self.view_editor.clear_layers()
-        self.rot_mask_layer = vieweditorlayer.RotoMaskEditLayer(self.view_editor, self.kf_editor.clip_editor)
-        self.view_editor.add_layer(self.rot_mask_layer)
+        self.roto_mask_layer = vieweditorlayer.RotoMaskEditLayer(self.view_editor, self.kf_editor.clip_editor)
+        self.view_editor.add_layer(self.roto_mask_layer)
         self.view_editor.activate_layer(0)
 
         self.show_all()
@@ -197,6 +197,7 @@ class RotoMaskEditor(Gtk.Window):
         length = PLAYER().producer.get_length()
         rgbdata = PLAYER().seek_and_get_rgb_frame(frame)
         self.view_editor.set_screen_rgb_data(rgbdata)
+        self.view_editor.update_layers_for_frame(frame)
         self.tc_display.set_frame(frame)
         self._update_active_layout()
 
@@ -206,7 +207,8 @@ class RotoMaskEditor(Gtk.Window):
 
     def scale_changed(self, new_scale):
         self.view_editor.set_scale_and_update(new_scale)
-        self.rot_mask_layer.update_shape()
+        frame = PLAYER().current_frame()
+        self.view_editor.update_layers_for_frame(frame)
         self.view_editor.edit_area.queue_draw()
 
 
