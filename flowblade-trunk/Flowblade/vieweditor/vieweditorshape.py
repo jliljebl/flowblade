@@ -291,7 +291,7 @@ class RotoMaskEditShape(EditPointShape):
         self.update_shape(0)
 
     def update_shape(self, tline_frame):
-        # We're not using timeline frame for shape , we're using clip frame.
+        # We're not using timeline frame for shape, we're using clip frame.
         frame = self.clip_editor.current_clip_frame
 
         self.edit_points = []
@@ -316,7 +316,7 @@ class RotoMaskEditShape(EditPointShape):
         kf, points0 = self.clip_editor.keyframes[0]
         
     def get_curve_points_for_frame(self, current_frame):
-        # We're replicating stuff from mlt file filter_rotoscoping.c to make sure out GUI matches the results.
+        # We're replicating stuff from MLT file filter_rotoscoping.c to make sure out GUI matches the results there.
         keyframes = self.clip_editor.keyframes
     
         # Get keyframe range containing current_frame
