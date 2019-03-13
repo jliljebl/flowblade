@@ -668,11 +668,14 @@ class TLineKeyFrameEditor:
             cr.move_to(xe + TEXT_X_OFF_END, y + 13)
             cr.show_text(text)
         else:
-            p_min, p_max = edit_data["editable_property"].input_range
-            p_half = (p_max - p_min) / 2
+            editable_property = edit_data["editable_property"] 
+            adjustment = editable_property.get_input_range_adjustment()
+            lower = adjustment.get_lower()
+            upper = adjustment.get_upper()
+            half = (upper - lower) / 2 + lower
             
             # Min
-            y = self._get_panel_y_for_value(p_min)
+            y = self._get_panel_y_for_value(lower)
             cr.set_line_width(1.0)
             cr.set_source_rgb(*FRAME_SCALE_LINES)
             cr.move_to(xs, y)
@@ -680,35 +683,35 @@ class TLineKeyFrameEditor:
             cr.stroke()
             
             cr.set_source_rgb(*FRAME_SCALE_LINES_BRIGHT)
-            text = str(p_min)
+            text = str(lower)
             cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF)
             cr.show_text(text)
             cr.move_to(xe + TEXT_X_OFF_END + 16, y - TEXT_Y_OFF)
             cr.show_text(text)
 
             # Half
-            y = self._get_panel_y_for_value(p_half)
+            y = self._get_panel_y_for_value(half)
             cr.set_source_rgb(*FRAME_SCALE_LINES)
             cr.move_to(xs, y)
             cr.line_to(xe, y)
             cr.stroke()
 
             cr.set_source_rgb(*FRAME_SCALE_LINES_BRIGHT)
-            text = str(p_half)
+            text = str(half)
             cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF + 8)
             cr.show_text(text)
             cr.move_to(xe + TEXT_X_OFF_END + 6, y - TEXT_Y_OFF + 8)
             cr.show_text(text)
             
             # Max
-            y = self._get_panel_y_for_value(p_max)
+            y = self._get_panel_y_for_value(upper)
             cr.set_source_rgb(*FRAME_SCALE_LINES)
             cr.move_to(xs, y)
             cr.line_to(xe, y)
             cr.stroke()
             
             cr.set_source_rgb(*FRAME_SCALE_LINES_BRIGHT)
-            text = str(p_max)
+            text = str(upper)
             cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF + 17)
             cr.show_text(text)
             cr.move_to(xe + TEXT_X_OFF_END, y - TEXT_Y_OFF + 17)
@@ -962,8 +965,7 @@ class TLineKeyFrameEditor:
                 self.keyframes.insert(i, (frame, value))
                 self.active_kf_index = i
                 return
-        #prev_frame, prev_value = self.keyframes[len(self.keyframes) - 1]
-        print "lllll"
+
         self.keyframes.append((frame, value))
         self.active_kf_index = len(self.keyframes) - 1
 
