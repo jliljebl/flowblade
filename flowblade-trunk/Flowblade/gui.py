@@ -19,7 +19,7 @@
 """
 
 """
-Module holds references to GUI widgets.
+Module holds references to GUI widgets and offers some helper fuctions used in GUI creation.
 """
 
 from gi.repository import Gtk, Gdk
@@ -38,14 +38,14 @@ editor_window = None
 # Menu
 editmenu = None
 
-# Project data lists
+# Project data lists and related views.
 media_list_view = None
 bin_list_view = None
 bin_panel = None
 sequence_list_view = None
 effect_stack_list_view = None
 
-middle_notebook = None # This is now the only notebook, update name sometime
+middle_notebook = None # This is now the only notebook, maybe update name sometime
 project_info_vbox = None
 
 effect_select_list_view = None

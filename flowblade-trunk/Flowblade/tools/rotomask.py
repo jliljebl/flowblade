@@ -48,6 +48,9 @@ import vieweditorlayer
 
 _rotomask = None
 
+KF_EDIT_MODE = 0
+MOVE_EDIT_MODE = 1
+
 VIEW_EDITOR_WIDTH = 815
 VIEW_EDITOR_HEIGHT = 620
 
@@ -105,7 +108,10 @@ class RotoMaskEditor(Gtk.Window):
         if editorstate.screen_size_small_height() == True:
             global VIEW_EDITOR_WIDTH
             VIEW_EDITOR_WIDTH = 680
-            
+        
+        
+        self.edit_mode = KF_EDIT_MODE
+        
         self.block_updates = False
         
         self.kf_editor = kf_editor
@@ -125,24 +131,27 @@ class RotoMaskEditor(Gtk.Window):
         add_del_box.pack_start(add_b, True, True, 0)
         add_del_box.pack_start(del_b, True, True, 0)
 
-        center_h_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "center_horizontal.png")
-        center_v_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "center_vertical.png")
-        center_h = Gtk.Button()
-        center_h.set_image(center_h_icon)
-        center_h.connect("clicked", lambda w:self._center_h_pressed())
-        center_v = Gtk.Button()
-        center_v.set_image(center_v_icon)
-        center_v.connect("clicked", lambda w:self._center_v_pressed())
-
         self.tc_display = guicomponents.MonitorTCDisplay()
         self.tc_display.use_internal_frame = True
         self.tc_display.widget.set_valign(Gtk.Align.CENTER)
 
-
+        kf_mode_img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "roto_kf_edit_mode.png")
+        move_mode_img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "roto_move_mode.png")
+        self.kf_mode_button = Gtk.ToggleButton()
+        self.kf_mode_button.set_image(kf_mode_img)
+        self.kf_mode_button.set_active(True)
+        self.kf_mode_button.connect("clicked", self._kf_mode_clicked)
+        self.move_mode_button = Gtk.ToggleButton()
+        self.move_mode_button.set_image(move_mode_img)
+        self.move_mode_button.connect("clicked", self._move_mode_clicked)
+        
         self.scale_selector = vieweditor.ScaleSelector(self)
 
         timeline_box = Gtk.HBox()
         timeline_box.pack_start(self.tc_display.widget, False, False, 0)
+        timeline_box.pack_start(Gtk.Label(), True, True, 0)
+        timeline_box.pack_start(self.kf_mode_button, False, False, 0)
+        timeline_box.pack_start(self.move_mode_button, False, False, 0)
         timeline_box.pack_start(Gtk.Label(), True, True, 0)
         timeline_box.pack_start(self.scale_selector, False, False, 0)
         timeline_box.set_margin_top(6)
@@ -162,9 +171,9 @@ class RotoMaskEditor(Gtk.Window):
         
         editor_panel = Gtk.VBox()
         editor_panel.pack_start(self.view_editor, True, True, 0)
-        editor_panel.pack_start(kf_editor, False, False, 0)
         editor_panel.pack_start(timeline_box, False, False, 0)
-        editor_panel.pack_start(guiutils.pad_label(2, 24), True, True, 0)
+        editor_panel.pack_start(kf_editor, False, False, 0)
+        editor_panel.pack_start(guiutils.pad_label(2, 12), True, True, 0)
         editor_panel.pack_start(editor_buttons_row, False, False, 0)
 
         editor_row = Gtk.HBox()
@@ -212,7 +221,28 @@ class RotoMaskEditor(Gtk.Window):
         self.view_editor.edit_area.queue_draw()
 
 
-        
+    def _kf_mode_clicked(self, kf_button):
+        if self.edit_mode == KF_EDIT_MODE and kf_button.get_active() == False:
+            kf_button.set_active(True) 
+            print "over ride"
+        elif  kf_button.get_active() == False:
+            print "event from changing in _move_mode_clicked"
+        else:
+            self.edit_mode = KF_EDIT_MODE
+            self.move_mode_button.set_active(False)
+            print "change"
+    
+    def _move_mode_clicked(self, move_button):
+        if self.edit_mode == MOVE_EDIT_MODE and move_button.get_active() == False:
+            move_button.set_active(True) 
+            print "over ride"
+        elif  move_button.get_active() == False:
+            print "event from changing in _kf_mode_clicked"
+        else:
+            self.edit_mode = MOVE_EDIT_MODE
+            self.kf_mode_button.set_active(False) 
+            print "change"
+            
     """ REMOVE
     def write_current_frame(self):
         self.view_editor.write_out_layers = True

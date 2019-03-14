@@ -366,7 +366,7 @@ def _get_affine_filt_geom_sliders(ep):
     scr_width = PROJECT().profile.width()
     scr_height = PROJECT().profile.width()
 
-    # "0=0,0:SCREENSIZE:100"
+    # value str format "0=0,0:SCREENSIZE:100"
     frame_value = ep.value.split("=")
     tokens = frame_value[1].split(":")
     pos_tokens = tokens[0].split("/")
@@ -389,7 +389,6 @@ def _get_affine_filt_geom_sliders(ep):
     h_slider.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_width))
     h_spin.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_width))
 
-    
     vbox = Gtk.VBox(False, 4)
     vbox.pack_start(x_row, True, True, 0)
     vbox.pack_start(y_row, True, True, 0)
@@ -401,7 +400,7 @@ def _get_affine_filt_geom_sliders_2(ep):
     scr_width = PROJECT().profile.width()
     scr_height = PROJECT().profile.height()
 
-    # "0=0,0:SCREENSIZE:100"
+    # value str format "0=0,0:SCREENSIZE:100"
     frame_value = ep.value.split("=")
     tokens = frame_value[1].split(":")
     pos_tokens = tokens[0].split("/")
@@ -410,12 +409,10 @@ def _get_affine_filt_geom_sliders_2(ep):
     x_adj = Gtk.Adjustment(float(pos_tokens[0]), float(-scr_width), float(scr_width), float(1))
     y_adj = Gtk.Adjustment(float(pos_tokens[1]), float(-scr_height), float(scr_height), float(1))
     xs_adj = Gtk.Adjustment(float(size_tokens[0]), float(10), float(scr_width * 3), float(1))
-    #ys_adj = Gtk.Adjustment(float(size_tokens[1]), float(10), float(scr_height * 3), float(1))
 
     x_slider, x_spin, x_row =  _get_affine_slider("X", x_adj)
     y_slider, y_spin, y_row =  _get_affine_slider("Y", y_adj)
     xs_slider, xs_spin, xs_row =  _get_affine_slider(_("Width"), xs_adj)
-    #ys_slider, ys_spin, ys_row =  _get_affine_slider(_("Height"), ys_adj)
 
     all_sliders = (x_slider, y_slider, xs_slider)
 
@@ -425,14 +422,11 @@ def _get_affine_filt_geom_sliders_2(ep):
     y_spin.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_height))
     xs_slider.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_height))
     xs_spin.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_height))
-    #ys_slider.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders))
-    #ys_spin.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders))
     
     vbox = Gtk.VBox(False, 4)
     vbox.pack_start(x_row, True, True, 0)
     vbox.pack_start(y_row, True, True, 0)
     vbox.pack_start(xs_row, True, True, 0)
-    #vbox.pack_start(ys_row, True, True, 0)
 
     return vbox
     
@@ -454,7 +448,6 @@ def _get_affine_slider(name, adjustment):
 
     return (hslider, spin, _get_two_column_editor_row(name, hbox))
 
-
 def _get_text_entry(editable_property):
     entry = Gtk.Entry.new()
     entry.set_text(editable_property.value)
@@ -462,8 +455,6 @@ def _get_text_entry(editable_property):
 
     hbox = Gtk.HBox(False, 4)
     hbox.pack_start(entry, True, True, 0)
-    #hbox.pack_start(Gtk.Label(), False, False, 4)
-
 
     return _get_two_column_editor_row(editable_property.get_display_name(), hbox)
 
@@ -679,7 +670,7 @@ def _get_file_select_editor(editable_property):
         
         dialog.add_filter(file_filter)
     except:
-        # we will interpret missing it as decition to add no fil filter
+        # we will interpret missing as decision to add no file filter
         pass
         
     file_select_button = Gtk.FileChooserButton.new_with_dialog(dialog)

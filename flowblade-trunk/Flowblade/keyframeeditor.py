@@ -676,7 +676,7 @@ class ClipEditorButtonsRow(Gtk.HBox):
         editor_parent.prev_frame_pressed()
         editor_parent.next_frame_pressed()
     """
-    def __init__(self, editor_parent):
+    def __init__(self, editor_parent, centered_buttons=False):
         GObject.GObject.__init__(self)
         self.set_homogeneous(False)
         self.set_spacing(2)
@@ -718,6 +718,8 @@ class ClipEditorButtonsRow(Gtk.HBox):
         self.kf_info_label.set_text("1/1")
         
         # Build row
+        if centered_buttons:
+            self.pack_start(Gtk.Label(), True, True, 0)
         self.pack_start(self.add_button, False, False, 0)
         self.pack_start(self.delete_button, False, False, 0)
         self.pack_start(self.prev_kf_button, False, False, 0)
@@ -728,10 +730,16 @@ class ClipEditorButtonsRow(Gtk.HBox):
         self.pack_start(self.next_frame_button, False, False, 0)
         self.pack_start(guiutils.pad_label(4,4), False, False, 0)
         self.pack_start(self.kf_info_label, False, False, 0)
-        self.pack_start(Gtk.Label(), True, True, 0)
+        if not centered_buttons:
+            self.pack_start(Gtk.Label(), True, True, 0)
+        else:
+            self.pack_start(guiutils.pad_label(4,4), False, False, 0)
         self.pack_start(self.kf_pos_label, False, False, 0)
-        self.pack_start(guiutils.get_pad_label(1, 10), False, False, 0)
-
+        if centered_buttons:
+            self.pack_start(Gtk.Label(), True, True, 0)
+        else:
+            self.pack_start(guiutils.get_pad_label(1, 10), False, False, 0)
+            
     def set_frame(self, frame):
         frame_str = utils.get_tc_string(frame)
         self.kf_pos_label.set_text(frame_str)
@@ -1329,13 +1337,13 @@ class RotoMaskKeyFrameEditor(Gtk.VBox):
         self.clip_editor.mouse_listener = self
         """
         Callbacks from ClipKeyFrameEditor:
-        def clip_editor_frame_changed(self, frame)
-        def active_keyframe_changed(self)
-        def keyframe_dragged(self, active_kf, frame)
-        def update_slider_value_display(self, frame)
+            def clip_editor_frame_changed(self, frame)
+            def active_keyframe_changed(self)
+            def keyframe_dragged(self, active_kf, frame)
+            def update_slider_value_display(self, frame)
         
         Via clip_editor.mouse_listener
-        def mouse_pos_change_done(self)
+            def mouse_pos_change_done(self)
         """
         
         # Some filters start keyframes from *MEDIA* frame 0
@@ -1358,7 +1366,7 @@ class RotoMaskKeyFrameEditor(Gtk.VBox):
         clip_editor_row.pack_start(self.clip_editor.widget, True, True, 0)
         clip_editor_row.pack_start(guiutils.pad_label(4, 4), False, False, 0)
         
-        self.buttons_row = ClipEditorButtonsRow(self)
+        self.buttons_row = ClipEditorButtonsRow(self, True)
         
         self.pack_start(clip_editor_row, False, False, 0)
         self.pack_start(self.buttons_row, False, False, 0)
