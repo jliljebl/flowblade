@@ -205,18 +205,14 @@ def rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_
     return new_keyframes
 
 def rotomask_json_value_string_to_kf_array(keyframes_str, out_to_in_func):
+    print "---------------------------------------------keyframes_str IN---------------------------------------"
+    print keyframes_str
+    
+    
     new_keyframes = []
     json_obj = json.loads(keyframes_str)
     for kf in json_obj:
-        #print kf
         kf_obj = json_obj[kf]
-        """
-        for point in kf_obj:
-            print "---------POINT"
-            print "handle1", point[0]
-            print "point", point[1]
-            print "handle2", point[2]
-        """
         add_kf = (int(kf), kf_obj)
         new_keyframes.append(add_kf)
 

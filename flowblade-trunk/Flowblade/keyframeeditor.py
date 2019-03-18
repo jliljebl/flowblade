@@ -1459,7 +1459,7 @@ class RotoMaskKeyFrameEditor(Gtk.VBox):
         if seek_tline == True:
             self.seek_tline_frame(frame)
         self.queue_draw()
-        
+
     def update_property_value(self):
         self.editable_property.write_out_keyframes(self.clip_editor.keyframes)
 

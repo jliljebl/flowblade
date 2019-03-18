@@ -27,6 +27,7 @@ extending AbstractProperty class for editing. These wrappers convert
 edit inputs into mlt property values (that effect how sequence is displayed)
 and python side values (that are persistant).
 """
+import json
 
 from gi.repository import Gtk, Gdk
 
@@ -680,15 +681,21 @@ class KeyFrameHCSFilterProperty(EditableProperty):
 class RotoJSONProperty(EditableProperty):
 
     def write_out_keyframes(self, keyframes):
-        """
-        val_str = ""
-        for kf in keyframes:
-            frame, val = kf
-            val_str += str(frame) + "=" + str(self.get_out_value(val)) + ";"
+        val_str = "{"
+        for kf_obj in keyframes:
+            kf, points = kf_obj
+            val_str += '"' + str(kf) + '"' + ':'
+            val_str += json.dumps(points) + ","
         
-        val_str = val_str.strip(";")
+        val_str = val_str.rstrip(",")
+        val_str += "}"
+
+        #print self.name
+        #print "---------------------------------------------keyframes_str OUT---------------------------------------"
+        #print " write_out_keyframes val_str", val_str
+        
         self.write_value(val_str)
-        """
+
 
 class KeyFrameHCSTransitionProperty(TransitionEditableProperty):
     """

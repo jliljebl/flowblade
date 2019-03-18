@@ -284,8 +284,9 @@ class RotoMaskEditShape(EditPointShape):
     """
     def __init__(self, view_editor, clip_editor):
         EditPointShape.__init__(self)
-        self.handles1 =  []
-        self.handles2 =  []
+        self.curve_points = [] # panel coords, not movie coods or normalized movie coords
+        self.handles1 =  [] # panel coords, not movie coods or normalized movie coords
+        self.handles2 =  [] # panel coords, not movie coods or normalized movie coords
         self.clip_editor = clip_editor # This is keyframeeditor.ClipKeyFrameEditor
         self.view_editor = view_editor # This is viewEditor.ViewEditor
         self.update_shape(0)
@@ -294,46 +295,54 @@ class RotoMaskEditShape(EditPointShape):
         # We're not using timeline frame for shape, we're using clip frame.
         frame = self.clip_editor.current_clip_frame
 
-        self.edit_points = []
+        self.edit_points = [] # all points
+
+        self.curve_points = []
         self.handles1 =  []
         self.handles2 =  []
 
-        curve_points = self.get_curve_points_for_frame(frame)
+        bezier_points = self.get_bezier_points_for_frame(frame)
         
-        for p in curve_points:
+        for p in bezier_points:
+            # curve point 
             x, y = p[1]
             ep = EditPoint(*self.view_editor.normalized_movie_coord_to_panel_coord((x, y)))
+            self.curve_points.append(ep)
             self.edit_points.append(ep)
 
+            # handle 1
             x, y = p[0]
             ep = EditPoint(*self.view_editor.normalized_movie_coord_to_panel_coord((x, y)))
             self.handles1.append(ep)
-
+            self.edit_points.append(ep)
+            
+            # handle 2
             x, y = p[2]
             ep = EditPoint(*self.view_editor.normalized_movie_coord_to_panel_coord((x, y)))
             self.handles2.append(ep)
-        
+            self.edit_points.append(ep)
+
         kf, points0 = self.clip_editor.keyframes[0]
         
-    def get_curve_points_for_frame(self, current_frame):
+    def get_bezier_points_for_frame(self, current_frame):
         # We're replicating stuff from MLT file filter_rotoscoping.c to make sure out GUI matches the results there.
         keyframes = self.clip_editor.keyframes
-    
+
         # Get keyframe range containing current_frame
         index = 0
-        keyframe, curve_points = keyframes[index]
+        keyframe, bz_points = keyframes[index]
         try:
-            keyframe_next, curve_points2 = keyframes[index + 1]
+            keyframe_next, bz_points2 = keyframes[index + 1]
         except:
-            return curve_points
+            return bz_points
         
         keyframe = int(keyframe)
         keyframe_next = int(keyframe_next)
         
         while(keyframe < current_frame and len(keyframes) > index + 2):
             index += 1
-            keyframe, curve_points = keyframes[index]
-            keyframe_next, curve_points2 = keyframes[index + 1]
+            keyframe, bz_points = keyframes[index]
+            keyframe_next, bz_points2 = keyframes[index + 1]
             
             keyframe = int(keyframe)
             keyframe_next = int(keyframe_next)
@@ -346,17 +355,17 @@ class RotoMaskEditShape(EditPointShape):
         t = ( current_frame - frame_1 ) / ( frame_2 - frame_1 + 1 )
 
         # Get point values  for current frame
-        current_frame_curve_points = [] # array of [handle_point1, curve_point, handle_point2] arrays
-        for i in range(0, len(curve_points)):
+        current_frame_bezier_points = [] # array of [handle_point1, curve_point, handle_point2] arrays
+        for i in range(0, len(bz_points)):
             hch_array = []
             for j in range(0, 3):
-                pa = curve_points[i][j]
-                pb = curve_points2[i][j]
+                pa = bz_points[i][j]
+                pb = bz_points2[i][j]
                 value_point = self.lerp(pa, pb, t)
                 hch_array.append(value_point)
-            current_frame_curve_points.append(hch_array)
+            current_frame_bezier_points.append(hch_array)
             
-        return current_frame_curve_points
+        return current_frame_bezier_points
 
     def lerp(self, pa, pb, t):
         pax, pay = pa
@@ -366,31 +375,60 @@ class RotoMaskEditShape(EditPointShape):
         return (x, y)
 
     def draw_points(self, cr, view_editor):
-        for ep in self.edit_points:
+        for ep in self.curve_points:
             ep.draw(cr, view_editor)
     
     def draw_line_shape(self, cr, view_editor):
-        cr.move_to(self.edit_points[0].x, self.edit_points[0].y)
-        for i in range(0, len(self.edit_points)):
+        cr.move_to(self.curve_points[0].x, self.curve_points[0].y)
+        for i in range(0, len(self.curve_points)):
             next_point_index = i + 1
-            if next_point_index == len(self.edit_points):
+            if next_point_index == len(self.curve_points):
                 next_point_index = 0
             cr.curve_to(    self.handles2[i].x,
                             self.handles2[i].y,
                             self.handles1[next_point_index].x,
                             self.handles1[next_point_index].y,
-                            self.edit_points[next_point_index].x,
-                            self.edit_points[next_point_index].y)
+                            self.curve_points[next_point_index].x,
+                            self.curve_points[next_point_index].y)
         cr.close_path()
         cr.stroke()
         
         cr.set_source_rgba(1,0,0,1)
-        for i in range(0, len(self.edit_points)):
+        for i in range(0, len(self.curve_points)):
             cr.move_to(self.handles1[i].x, self.handles1[i].y)
-            cr.line_to(self.edit_points[i].x, self.edit_points[i].y)
+            cr.line_to(self.curve_points[i].x, self.curve_points[i].y)
             cr.line_to( self.handles2[i].x, self.handles2[i].y)
 
             cr.stroke()
 
 
+    # ------------------------------------------------------------- saving edits
+    def convert_shape_coords_and_update_clip_editor_keyframes(self):
+        clip_editor_keyframes = []
+        frame_shape = self._get_converted_frame_shape()
+        self.clip_editor.set_active_kf_value(frame_shape)
+     
+    def _get_converted_frame_shape(self):
+        frame_shape_array = []
+        for i in range(0, len(self.curve_points)):
+            hph_array = []
+            cp = self.curve_points[i]
+            hp1 = self.handles1[i]
+            hp2 = self.handles2[i]
+            # order is [handle1, curve_point, handle2]
+            hph_array.append(self.get_point_as_normalized_array(hp1))
+            hph_array.append(self.get_point_as_normalized_array(cp))
+            hph_array.append(self.get_point_as_normalized_array(hp2))
+            
+            frame_shape_array.append(hph_array)
+        
+        return frame_shape_array
 
+    def get_point_as_normalized_array(self, edit_point):
+        np  = self.view_editor.panel_coord_to_normalized_movie_coord((edit_point.x, edit_point.y))
+        nx, ny = np
+        return [nx, ny]
+
+        
+        
+        

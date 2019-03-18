@@ -80,6 +80,11 @@ class AbstactEditorLayer:
         self.mouse_rotation_last = 0.0
         self.mouse_pressed()
 
+    def convert_saved_points_to_panel_points(self):
+        # RotoMaskEditLayer wants to handle everything in panel coords
+        self.mouse_start_point = self.view_editor.movie_coord_to_panel_coord(self.mouse_start_point)
+        self.mouse_current_point = self.view_editor.movie_coord_to_panel_coord(self.mouse_current_point)
+
     def handle_mouse_drag(self, p):
         self.mouse_current_point = p
         self.mouse_dragged()
@@ -263,59 +268,65 @@ class TextEditLayer(SimpleRectEditLayer):
 
 class RotoMaskEditLayer(AbstactEditorLayer):
     
-    def __init__(self, view_editor, clip_editor):
+    def __init__(self, view_editor, clip_editor, editable_property, rotomask_editor):
         AbstactEditorLayer.__init__(self, view_editor)
+        self.view_editor = view_editor
+        
+        self.editable_property = editable_property
+        self.clip_editor = clip_editor
+        self.rotomask_editor = rotomask_editor
+
         self.edit_point_shape = vieweditorshape.RotoMaskEditShape(view_editor, clip_editor)
         self.edit_point_shape.update_shape(0)
 
         self.ACTIVE_COLOR = (0.0,1.0,0.55,1)
         self.NOT_ACTIVE_COLOR = (0.2,0.2,0.2,1)
 
-    
+        self.edit_mode = MOVE_MODE
+
     # ----------------------------------------------------- mouse events
+    def hit(self, p):
+        if self.edit_mode == MOVE_MODE:
+            # This has whole edit area active for doing move edits
+            return True
+            
     def mouse_pressed(self):
         self.edit_point_shape.save_start_pos()
-        """
+
         if self.edit_mode == MOVE_MODE:
-            if self.last_press_hit_point != None:
-                self.last_press_hit_point.save_start_pos()
-                self.edit_type = HANDLE_EDIT
-                self.guide_1, self.guide_2 = self.edit_point_shape.get_handle_guides(self.last_press_hit_point)
-            else:
-                self.edit_type = MOVE_EDIT
-        else: # ROTATE_MODE
-            self.roto_mid = self.edit_point_shape.get_mid_point()
-        """
+            pass
+        
     def mouse_dragged(self):
-        """
-        delta = self.get_mouse_delta()
+        # delta is given in movie coords, RotoMaskEditShape uses panel coords (because it need to do complex drawing in those) so we have to convert delta.
+        mdx, mdy = self.view_editor.movie_coord_to_panel_coord(self.get_mouse_delta()) # panel coords mouse delta 
+        odx, ody = self.view_editor.movie_coord_to_panel_coord((0, 0)) # movio origo in panel points
+        delta = (mdx - odx, mdy - ody) # panel coords mouse delta - movio origo in panel points get delta in panel points
+
         if self.edit_mode == MOVE_MODE:
-            if self.edit_type == HANDLE_EDIT:
-                self._update_corner_edit(delta)
-            else:
-                self.edit_point_shape.translate_from_move_start(delta)
-        else: # ROTATE_MODE
-            angle_change = self.get_current_mouse_rotation(self.roto_mid)
-            self.edit_point_shape.rotate_from_move_start(self.roto_mid, angle_change)
-        """
-        pass
+            self.edit_point_shape.translate_from_move_start(delta)
         
     def mouse_released(self):
-        """
-        delta = self.get_mouse_delta()
-        """
-        pass
+        # delta is given in movie coords, RotoMaskEditShape uses panel coords  (because it need to do complex drawing in those) so we have to convert delta.
+        mdx, mdy = self.view_editor.movie_coord_to_panel_coord(self.get_mouse_delta())
+        odx, ody = self.view_editor.movie_coord_to_panel_coord((0, 0))
+        delta = (mdx - odx, mdy - ody)
+        
+        if self.edit_mode == MOVE_MODE:
+            self.edit_point_shape.translate_from_move_start(delta)
+            self.edit_point_shape.convert_shape_coords_and_update_clip_editor_keyframes()
+            
+            self.editable_property.write_out_keyframes(self.clip_editor.keyframes)
+
+        self.rotomask_editor.show_current_frame()
 
     # --------------------------------------------- state changes
     def frame_changed(self, tline_frame):
         self.edit_point_shape.update_shape(tline_frame)
-        print "RotoMaskEditLayer.frame_changed", tline_frame
 
     def mode_changed(self):
-        print "RotoMaskEditLayer.mode_changed"
+        pass
         
     # -------------------------------------------- draw
     def draw(self, cr, write_out_layers, draw_overlays):
-        print "RotoMaskEditLayer.draw"
         cr.set_source_rgba(*self.ACTIVE_COLOR)
         self.edit_point_shape.draw_line_shape(cr, self.view_editor)

@@ -118,7 +118,6 @@ class RotoMaskEditor(Gtk.Window):
         self.kf_editor.set_parent_editor(self)
         
         self.view_editor = vieweditor.ViewEditor(PLAYER().profile, VIEW_EDITOR_WIDTH, VIEW_EDITOR_HEIGHT)
-        #self.view_editor.active_layer_changed_listener = self.active_layer_changed
         
         self.guides_toggle = vieweditor.GuidesViewToggle(self.view_editor)
         
@@ -184,7 +183,7 @@ class RotoMaskEditor(Gtk.Window):
         self.add(alignment)
 
         self.view_editor.clear_layers()
-        self.roto_mask_layer = vieweditorlayer.RotoMaskEditLayer(self.view_editor, self.kf_editor.clip_editor)
+        self.roto_mask_layer = vieweditorlayer.RotoMaskEditLayer(self.view_editor, self.kf_editor.clip_editor, kf_editor.editable_property, self)
         self.view_editor.add_layer(self.roto_mask_layer)
         self.view_editor.activate_layer(0)
 

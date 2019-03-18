@@ -199,7 +199,15 @@ class ViewEditor(Gtk.Frame):
         panel_x = norm_movie_x * self.profile_w * self.scale * self.aspect_ratio + origo_x
         panel_y = norm_movie_y * self.profile_h * self.scale + origo_y
         return (panel_x, panel_y)
-        
+    
+    def panel_coord_to_normalized_movie_coord(self, panel_point):
+        px, py = panel_point
+        origo_x, origo_y = self.origo
+        nx = float(px - origo_x) / (self.profile_w * self.scale)
+        ny = float(py - origo_y) / (self.profile_h * self.scale)
+        return (nx, ny)
+    
+    
     # --------------------------------------------------- drawing
     def set_screen_rgb_data(self, screen_rgb_data):
         buf = np.fromstring(screen_rgb_data, dtype=np.uint8)
