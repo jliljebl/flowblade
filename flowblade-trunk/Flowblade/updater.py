@@ -23,6 +23,7 @@ Module contains GUI update routines.
 """
 import time
 
+from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
 
@@ -123,14 +124,21 @@ def refresh_player(e):
 
 # --------------------------------- window 
 def window_resized():
-    # Resize track heights so that all tracks are displayed
-    current_sequence().resize_tracks_to_fit(gui.tline_canvas.widget.get_allocation())
-    
-    # Place clips in the middle of timeline canvas after window resize
-    tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
+    try:
+        # Resize track heights so that all tracks are displayed
+        current_sequence().resize_tracks_to_fit(gui.tline_canvas.widget.get_allocation())
+        
+        # Place clips in the middle of timeline canvas after window resize
+        tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
 
-    gui.tline_column.init_listeners() # hit areas for track switches need to be recalculated
-    repaint_tline()
+        gui.tline_column.init_listeners() # hit areas for track switches need to be recalculated
+        repaint_tline()
+        print "window resized"
+        return False
+    except:
+        GObject.timeout_add(200, window_resized)
+        print "window resized FAILED"
+        return False
 
 # --------------------------------- timeline
 # --- REPAINT

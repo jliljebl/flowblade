@@ -388,7 +388,6 @@ def monkeypatch_callbacks():
 
     propertyeditorbuilder.show_rotomask_func = rotomask.show_rotomask
     
-    
     multitrimmode.set_default_mode_func = modesetting.set_default_edit_mode
     # These provide clues for further module refactoring 
 
