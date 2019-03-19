@@ -68,6 +68,8 @@ ALIGN_LEFT = 0
 ALIGN_CENTER = 1
 ALIGN_RIGHT = 2
 
+
+# ------------------------------------------- module interface
 def show_rotomask(mlt_filter, editable_properties):
     
     kf_json_prop = filter(lambda ep: ep.name == "spline", editable_properties)[0]
@@ -75,7 +77,6 @@ def show_rotomask(mlt_filter, editable_properties):
         
     global _rotomask
     _rotomask = RotoMaskEditor(kf_editor)
-    #_rotomask.load_titler_data()
     _rotomask.show_current_frame()
 
 def close_rotomask():
@@ -188,7 +189,7 @@ class RotoMaskEditor(Gtk.Window):
 
         self.connect("size-allocate", lambda w, e:self.window_resized())
         self.connect("window-state-event", lambda w, e:self.window_resized())
-
+        self.connect("key-press-event", self.key_down)
         self.window_resized()
                 
     def update_view(self):
@@ -202,7 +203,7 @@ class RotoMaskEditor(Gtk.Window):
         self.view_editor.set_screen_rgb_data(rgbdata)
         self.view_editor.update_layers_for_frame(tline_frame)
         self.tc_display.set_frame(tline_frame)
-        self._update_active_layout()
+        self.view_editor.edit_area.queue_draw()
 
     def window_resized(self):
         scale = self.scale_selector.get_current_scale()
@@ -240,64 +241,6 @@ class RotoMaskEditor(Gtk.Window):
     def _save_rotodata_pressed(self):
         pass
 
-    def _key_pressed_on_widget(self, widget, event):
-        # update layer for enter on size spin
-        if widget == self.size_spin and event.keyval == Gdk.KEY_Return:
-            self.size_spin.update()
-            self._update_active_layout()
-            return True
-
-        # update layer for enter on x, y, angle
-        if ((event.keyval == Gdk.KEY_Return) and ((widget == self.x_pos_spin) or
-            (widget == self.y_pos_spin) or (widget == self.rotation_spin))):
-            self.x_pos_spin.update()
-            self.y_pos_spin.update()
-            self.rotation_spin.update()
-            _titler_data.active_layer.x = self.x_pos_spin.get_value()
-            _titler_data.active_layer.y = self.y_pos_spin.get_value()
-            self._update_editor_layer_pos()
-            self.view_editor.edit_area.queue_draw()
-            return True
-
-        return False
-
-    def _update_editor_layer_pos(self):
-        shape = self.view_editor.active_layer.edit_point_shape
-        shape.translate_points_to_pos(_titler_data.active_layer.x, 
-                                      _titler_data.active_layer.y, 0)
-
-    """
-    def _add_layer_pressed(self):
-        global _titler_data
-        _titler_data.add_layer()
-        
-        view_editor_layer = vieweditorlayer.TextEditLayer(self.view_editor, _titler_data.active_layer.pango_layout)
-        view_editor_layer.mouse_released_listener  = self._editor_layer_mouse_released
-        self.view_editor.edit_layers.append(view_editor_layer)
-        
-        self.layer_list.fill_data_model()
-        self._activate_layer(len(_titler_data.layers) - 1)
-        
-    def _del_layer_pressed(self):
-        # we always need 1 layer
-        if len(_titler_data.layers) < 2:
-            return
-
-        #active_index = _titler_data.get_active_layer_index()
-        _titler_data.layers.remove(_titler_data.active_layer)
-        self.view_editor.edit_layers.remove(self.view_editor.active_layer)
-        self.layer_list.fill_data_model()
-        self._activate_layer(0)
-    
-    def _layer_visibility_toggled(self, layer_index):
-        toggled_visible = (self.view_editor.edit_layers[layer_index].visible == False)
-        self.view_editor.edit_layers[layer_index].visible = toggled_visible
-        _titler_data.layers[layer_index].visible = toggled_visible
-        self.layer_list.fill_data_model()
-
-        self.view_editor.edit_area.queue_draw()
-    """
-
     def _prev_frame_pressed(self):
         PLAYER().seek_delta(-1)
         self.show_current_frame()
@@ -306,96 +249,11 @@ class RotoMaskEditor(Gtk.Window):
         PLAYER().seek_delta(1)
         self.show_current_frame()
 
+    def key_down(self, widget, event):
+        #  Handle non-timeline delete 
+        if event.keyval == Gdk.KEY_Delete:
+            self.roto_mask_layer.delete_selected_point()
+            return True
 
-    def _editor_layer_mouse_released(self):
-        p = self.view_editor.active_layer.edit_point_shape.edit_points[0]
-        
-        """
-        self.block_updates = True
-
-        self.x_pos_spin.set_value(p.x)
-        self.y_pos_spin.set_value(p.y)
-        
-        _titler_data.active_layer.x = p.x
-        _titler_data.active_layer.y = p.y
-
-        self.block_updates = False
-        """
-
-    def _edit_value_changed(self, widget):
-        self._update_active_layout()
-
-    def _update_active_layout(self, fill_layers_data_if_needed=True):
-        self.view_editor.edit_area.queue_draw()
-        pass
-        """
-        if self.block_updates:
-            return
-
-        global _titler_data
-        buf = self.text_view.get_buffer()
-        text = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), include_hidden_chars=True)
-        if text != _titler_data.active_layer.text:
-            update_layers_list = True
-        else:
-            update_layers_list = False
-
-        _titler_data.active_layer.text = text
-        
-        family = self.font_families[self.font_select.get_active()]
-        _titler_data.active_layer.font_family = family.get_name()
-
-        _titler_data.active_layer.font_size = self.size_spin.get_value_as_int()
-        
-        face = FACE_REGULAR
-        if self.bold_font.get_active() and self.italic_font.get_active():
-            face = FACE_BOLD_ITALIC
-        elif self.italic_font.get_active():
-            face = FACE_ITALIC
-        elif self.bold_font.get_active():
-            face = FACE_BOLD
-        _titler_data.active_layer.font_face = face
-        
-        align = ALIGN_LEFT
-        if self.center_align.get_active():
-            align = ALIGN_CENTER
-        elif  self.right_align.get_active():
-             align = ALIGN_RIGHT
-        _titler_data.active_layer.alignment = align
-
-        color = self.color_button.get_color()
-        r, g, b = utils.hex_to_rgb(color.to_string())
-        new_color = (r/65535.0, g/65535.0, b/65535.0, 1.0)        
-        _titler_data.active_layer.color_rgba = new_color
-        _titler_data.active_layer.fill_on = self.fill_on.get_active()
-        
-        # OUTLINE
-        color = self.out_line_color_button.get_color()
-        r, g, b = utils.hex_to_rgb(color.to_string())
-        new_color2 = (r/65535.0, g/65535.0, b/65535.0, 1.0)    
-        _titler_data.active_layer.outline_color_rgba = new_color2
-        _titler_data.active_layer.outline_on = self.outline_on.get_active()
-        _titler_data.active_layer.outline_width = self.out_line_size_spin.get_value()
-
-        
-        # SHADOW
-        color = self.shadow_color_button.get_color()
-        r, g, b = utils.hex_to_rgb(color.to_string())
-        a = self.shadow_opa_spin.get_value() / 100.0
-        new_color3 = (r/65535.0, g/65535.0, b/65535.0)  
-        _titler_data.active_layer.shadow_color_rgb = new_color3
-        _titler_data.active_layer.shadow_on = self.shadow_on.get_active()
-        _titler_data.active_layer.shadow_opacity = self.shadow_opa_spin.get_value()
-        _titler_data.active_layer.shadow_xoff = self.shadow_xoff_spin.get_value()
-        _titler_data.active_layer.shadow_yoff = self.shadow_yoff_spin.get_value()
-                
-        self.view_editor.active_layer.update_rect = True
-        _titler_data.active_layer.update_pango_layout()
-
-        # We only wnat to update layer list data model when this called after user typing 
-        if update_layers_list:
-            self.layer_list.fill_data_model()
-
-        self.view_editor.edit_area.queue_draw()
-        """
-
+        # Key event was not handled here.
+        return False

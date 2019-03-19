@@ -331,20 +331,36 @@ class RotoMaskEditShape(EditPointShape):
         self.handles2 =  [] # panel coords, not movie coods or normalized movie coords
         
         self.handles_for_curve_point = {}
-        
+
+        self.selected_point_array = None
+        self.selected_point_index = -1
+            
         self.clip_editor = clip_editor # This is keyframeeditor.ClipKeyFrameEditor
         self.view_editor = view_editor # This is viewEditor.ViewEditor
-        self.update_shape(0)
+        self.update_shape()
 
-    def update_shape(self, tline_frame):
+    def delete_selected_point(self):
+        if self.selected_point_index == -1:
+            return
+
+        for kf_tuple in self.clip_editor.keyframes:
+            keyframe, bz_points = kf_tuple
+            bz_points.pop(self.selected_point_index) 
+        
+        self.selected_point_array = None
+        self.selected_point_index = -1
+    
+        self.update_shape()
+
+    def update_shape(self):
         # We're not using timeline frame for shape, we're using clip frame.
         frame = self.clip_editor.current_clip_frame
 
         self.edit_points = [] # all points
 
-        self.curve_points = []
-        self.handles1 = []
-        self.handles2 = []
+        del self.curve_points[:] # we want to array obj to be the same for maintaining point selections after this method has been called
+        del self.handles1[:]
+        del self.handles2[:]
 
         self.handles_for_curve_point = {}
         
@@ -371,8 +387,32 @@ class RotoMaskEditShape(EditPointShape):
             
             self.handles_for_curve_point[cp] = (hp1, hp2)
 
-        kf, points0 = self.clip_editor.keyframes[0]
+        # Keep point selection alive
+        if self.selected_point_array != None:
+            self.selected_point_array[self.selected_point_index].selected = True 
 
+    def save_selected_point_data(self, selected_point):
+        # These points get re-created all the time and we need to save data on which point was selectes
+        if selected_point in self.curve_points:
+            self.selected_point_array = self.curve_points
+            self.selected_point_index = self.curve_points.index(selected_point)
+        elif selected_point in self.handles1:
+            self.selected_point_array = self.handles1
+            self.selected_point_index = self.handles1.index(selected_point)
+        elif selected_point in self.handles2:
+            self.selected_point_array = self.handles2
+            self.selected_point_index = self.handles2.index(selected_point)
+        else:
+            self.selected_point_array = None
+            self.selected_point_index = -1
+
+    def clear_selection(self):
+        for p in self.edit_points:
+            p.selected = False
+
+            self.selected_point_array = None
+            self.selected_point_index = -1
+    
     def get_bezier_points_for_frame(self, current_frame):
         # We're replicating stuff from MLT file filter_rotoscoping.c to make sure out GUI matches the results there.
         keyframes = self.clip_editor.keyframes
@@ -445,7 +485,6 @@ class RotoMaskEditShape(EditPointShape):
             cr.line_to( self.handles2[i].x, self.handles2[i].y)
 
             cr.stroke()
-
 
     # ------------------------------------------------------------- saving edits
     def convert_shape_coords_and_update_clip_editor_keyframes(self):
