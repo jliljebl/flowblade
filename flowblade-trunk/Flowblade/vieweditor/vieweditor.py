@@ -225,7 +225,6 @@ class ViewEditor(Gtk.Frame):
                 editorlayer.frame_changed(tline_frame)
 
     def _draw(self, event, cr, allocation):
-        print "_veieditor.cdrw"
         x, y, w, h = allocation
         
         # Draw bg

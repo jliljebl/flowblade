@@ -26,6 +26,13 @@ import viewgeom
 # Edit modes
 MOVE_MODE = 0
 ROTATE_MODE = 1
+
+ROTO_POINT_MODE = 0
+ROTO_MOVE_MODE = 1
+
+ROTO_NO_EDIT = 0
+ROTO_POINT_MOVE_EDIT = 1
+
     
 # Edit types, used as kind of subtypes of modes if needed, e.g. MOVE_MODE can have MOVE_EDIT or HANDLE_EDIT 
 NO_EDIT = 0 # mouse hit meaningless
@@ -62,6 +69,7 @@ class AbstactEditorLayer:
     def hit(self, p):
         """
         Test hit AND save hit point or clear hit point if only area hit.
+        TODO: This isn't really "abstract" in anyway, move up inheritance chain.
         """
         self.last_press_hit_point = self.edit_point_shape.get_edit_point(p)
         if self.last_press_hit_point != None:
@@ -282,19 +290,34 @@ class RotoMaskEditLayer(AbstactEditorLayer):
         self.ACTIVE_COLOR = (0.0,1.0,0.55,1)
         self.NOT_ACTIVE_COLOR = (0.2,0.2,0.2,1)
 
-        self.edit_mode = MOVE_MODE
+        self.edit_mode = ROTO_POINT_MODE
 
     # ----------------------------------------------------- mouse events
     def hit(self, p):
-        if self.edit_mode == MOVE_MODE:
-            # This has whole edit area active for doing move edits
+        self.last_pressed_edit_point = None
+        if self.edit_mode == ROTO_POINT_MODE:
+            # we get this as movie coord point, but rotomask stuff is running on pamel points, need to convert
+            ep = self.edit_point_shape.get_edit_point(self.view_editor.movie_coord_to_panel_coord(p))
+            if ep == None:
+                return False
+    
+            self.last_pressed_edit_point = ep
             return True
-            
+
+        elif self.edit_mode == ROTO_MOVE_MODE:
+            # This mode has whole edit area active.
+            return True
+        
+        #there are no other modes
+        
     def mouse_pressed(self):
         self.edit_point_shape.save_start_pos()
-
-        if self.edit_mode == MOVE_MODE:
+        
+        if self.edit_mode == ROTO_MOVE_MODE:
             pass
+        elif self.edit_mode == ROTO_POINT_MODE:
+            if self.last_pressed_edit_point != None:
+                self.last_pressed_edit_point.selected = True
         
     def mouse_dragged(self):
         # delta is given in movie coords, RotoMaskEditShape uses panel coords (because it need to do complex drawing in those) so we have to convert delta.
@@ -302,21 +325,40 @@ class RotoMaskEditLayer(AbstactEditorLayer):
         odx, ody = self.view_editor.movie_coord_to_panel_coord((0, 0)) # movio origo in panel points
         delta = (mdx - odx, mdy - ody) # panel coords mouse delta - movio origo in panel points get delta in panel points
 
-        if self.edit_mode == MOVE_MODE:
+        if self.edit_mode == ROTO_MOVE_MODE:
             self.edit_point_shape.translate_from_move_start(delta)
-        
+        elif self.edit_mode == ROTO_POINT_MODE:
+            if self.last_pressed_edit_point != None:
+                if self.last_pressed_edit_point.display_type == vieweditorshape.ROTO_HANDLE_POINT:
+                    self.last_pressed_edit_point.translate_from_move_start(delta)
+                else: # curve point
+                    hp1, hp2 = self.edit_point_shape.handles_for_curve_point[self.last_pressed_edit_point]
+                    self.last_pressed_edit_point.translate_from_move_start(delta)
+                    hp1.translate_from_move_start(delta)
+                    hp2.translate_from_move_start(delta)
+                    
     def mouse_released(self):
         # delta is given in movie coords, RotoMaskEditShape uses panel coords  (because it need to do complex drawing in those) so we have to convert delta.
         mdx, mdy = self.view_editor.movie_coord_to_panel_coord(self.get_mouse_delta())
         odx, ody = self.view_editor.movie_coord_to_panel_coord((0, 0))
         delta = (mdx - odx, mdy - ody)
         
-        if self.edit_mode == MOVE_MODE:
+        if self.edit_mode == ROTO_MOVE_MODE:
             self.edit_point_shape.translate_from_move_start(delta)
-            self.edit_point_shape.convert_shape_coords_and_update_clip_editor_keyframes()
-            
-            self.editable_property.write_out_keyframes(self.clip_editor.keyframes)
+        elif self.edit_mode == ROTO_POINT_MODE:
+            if self.last_pressed_edit_point != None:
+                if self.last_pressed_edit_point.display_type == vieweditorshape.ROTO_HANDLE_POINT:
+                    self.last_pressed_edit_point.translate_from_move_start(delta)
+                else: # curve point
+                    hp1, hp2 = self.edit_point_shape.handles_for_curve_point[self.last_pressed_edit_point]
+                    self.last_pressed_edit_point.translate_from_move_start(delta)
+                    hp1.translate_from_move_start(delta)
+                    hp2.translate_from_move_start(delta)
+                    
+                self.last_pressed_edit_point.selected = False
 
+        self.edit_point_shape.convert_shape_coords_and_update_clip_editor_keyframes()
+        self.editable_property.write_out_keyframes(self.clip_editor.keyframes)
         self.rotomask_editor.show_current_frame()
 
     # --------------------------------------------- state changes
@@ -330,3 +372,5 @@ class RotoMaskEditLayer(AbstactEditorLayer):
     def draw(self, cr, write_out_layers, draw_overlays):
         cr.set_source_rgba(*self.ACTIVE_COLOR)
         self.edit_point_shape.draw_line_shape(cr, self.view_editor)
+
+        self.edit_point_shape.draw_points(cr, self.view_editor)

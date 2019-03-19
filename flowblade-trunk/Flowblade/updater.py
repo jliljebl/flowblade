@@ -133,7 +133,7 @@ def window_resized():
 
         gui.tline_column.init_listeners() # hit areas for track switches need to be recalculated
         repaint_tline()
-        print "window resized"
+
         return False
     except:
         GObject.timeout_add(200, window_resized)

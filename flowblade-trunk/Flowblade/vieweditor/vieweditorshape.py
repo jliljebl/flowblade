@@ -26,6 +26,8 @@ MOVE_HANDLE = 0
 ROTATE_HANDLE = 1
 CONTROL_POINT = 2
 INVISIBLE_POINT = 3
+ROTO_CURVE_POINT = 4
+ROTO_HANDLE_POINT = 5
 
 # handle size
 EDIT_POINT_SIDE_HALF = 4
@@ -34,6 +36,10 @@ EDIT_POINT_SIDE_HALF = 4
 LINE_NORMAL = 0
 LINE_DASH = 1
 
+# colors
+ROTO_CURVE_POINT_COLOR = (0.9, 0.9, 0.9, 1)
+ROTO_HANDLE_POINT_COLOR = (0.8, 0.2, 0.2, 1)
+            
 class EditPoint:
     """
     A point that user can move on the screen to edit image data.
@@ -91,6 +97,42 @@ class EditPoint:
             x, y = view_editor.movie_coord_to_panel_coord((self.x, self.y))
             cr.rectangle(x - 4, y - 4, 8, 8)
             cr.fill()
+
+
+
+class RotoMaskEditPoint(EditPoint):
+    def __init__(self, point_type, x=0, y=0):
+        EditPoint.__init__(self, x, y)
+        self.display_type = point_type
+        self.selected = None
+
+    def hit(self, test_p, view_scale=1.0):
+       
+        test_x, test_y = test_p
+      
+        if((test_x >= self.x - EDIT_POINT_SIDE_HALF) 
+            and (test_x <= self.x + EDIT_POINT_SIDE_HALF) 
+            and (test_y >= self.y - EDIT_POINT_SIDE_HALF)
+            and (test_y <= self.y + EDIT_POINT_SIDE_HALF)):
+            return True
+
+        return False
+        
+    def draw(self, cr, view_editor):
+        if self.display_type == ROTO_CURVE_POINT:
+            cr.set_source_rgba(*ROTO_CURVE_POINT_COLOR)
+        else:
+            cr.set_source_rgba(*ROTO_HANDLE_POINT_COLOR)
+            
+        x, y = self.x, self.y
+        cr.rectangle(x - 4, y - 4, 8, 8)
+        cr.fill()
+
+        if self.selected:
+            cr.set_source_rgba(0,0,0,1)
+            cr.rectangle(x - 4, y - 4, 8, 8)
+            cr.stroke()
+
 
 class EditPointShape:
     """
@@ -287,6 +329,9 @@ class RotoMaskEditShape(EditPointShape):
         self.curve_points = [] # panel coords, not movie coods or normalized movie coords
         self.handles1 =  [] # panel coords, not movie coods or normalized movie coords
         self.handles2 =  [] # panel coords, not movie coods or normalized movie coords
+        
+        self.handles_for_curve_point = {}
+        
         self.clip_editor = clip_editor # This is keyframeeditor.ClipKeyFrameEditor
         self.view_editor = view_editor # This is viewEditor.ViewEditor
         self.update_shape(0)
@@ -298,32 +343,36 @@ class RotoMaskEditShape(EditPointShape):
         self.edit_points = [] # all points
 
         self.curve_points = []
-        self.handles1 =  []
-        self.handles2 =  []
+        self.handles1 = []
+        self.handles2 = []
 
+        self.handles_for_curve_point = {}
+        
         bezier_points = self.get_bezier_points_for_frame(frame)
         
         for p in bezier_points:
             # curve point 
             x, y = p[1]
-            ep = EditPoint(*self.view_editor.normalized_movie_coord_to_panel_coord((x, y)))
-            self.curve_points.append(ep)
-            self.edit_points.append(ep)
+            cp = RotoMaskEditPoint(ROTO_CURVE_POINT, *self.view_editor.normalized_movie_coord_to_panel_coord((x, y)))
+            self.curve_points.append(cp)
+            self.edit_points.append(cp)
 
             # handle 1
             x, y = p[0]
-            ep = EditPoint(*self.view_editor.normalized_movie_coord_to_panel_coord((x, y)))
-            self.handles1.append(ep)
-            self.edit_points.append(ep)
+            hp1 = RotoMaskEditPoint(ROTO_HANDLE_POINT, *self.view_editor.normalized_movie_coord_to_panel_coord((x, y)))
+            self.handles1.append(hp1)
+            self.edit_points.append(hp1)
             
             # handle 2
             x, y = p[2]
-            ep = EditPoint(*self.view_editor.normalized_movie_coord_to_panel_coord((x, y)))
-            self.handles2.append(ep)
-            self.edit_points.append(ep)
+            hp2 = RotoMaskEditPoint(ROTO_HANDLE_POINT, *self.view_editor.normalized_movie_coord_to_panel_coord((x, y)))
+            self.handles2.append(hp2)
+            self.edit_points.append(hp2)
+            
+            self.handles_for_curve_point[cp] = (hp1, hp2)
 
         kf, points0 = self.clip_editor.keyframes[0]
-        
+
     def get_bezier_points_for_frame(self, current_frame):
         # We're replicating stuff from MLT file filter_rotoscoping.c to make sure out GUI matches the results there.
         keyframes = self.clip_editor.keyframes
@@ -373,10 +422,6 @@ class RotoMaskEditShape(EditPointShape):
         x = pax + ( pbx - pax ) * t;
         y = pay + ( pby - pay ) * t;
         return (x, y)
-
-    def draw_points(self, cr, view_editor):
-        for ep in self.curve_points:
-            ep.draw(cr, view_editor)
     
     def draw_line_shape(self, cr, view_editor):
         cr.move_to(self.curve_points[0].x, self.curve_points[0].y)

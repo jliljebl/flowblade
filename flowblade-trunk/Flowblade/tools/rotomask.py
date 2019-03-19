@@ -48,9 +48,6 @@ import vieweditorlayer
 
 _rotomask = None
 
-KF_EDIT_MODE = 0
-MOVE_EDIT_MODE = 1
-
 VIEW_EDITOR_WIDTH = 815
 VIEW_EDITOR_HEIGHT = 620
 
@@ -109,9 +106,6 @@ class RotoMaskEditor(Gtk.Window):
             global VIEW_EDITOR_WIDTH
             VIEW_EDITOR_WIDTH = 680
         
-        
-        self.edit_mode = KF_EDIT_MODE
-        
         self.block_updates = False
         
         self.kf_editor = kf_editor
@@ -138,7 +132,7 @@ class RotoMaskEditor(Gtk.Window):
         move_mode_img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "roto_move_mode.png")
         self.kf_mode_button = Gtk.ToggleButton()
         self.kf_mode_button.set_image(kf_mode_img)
-        self.kf_mode_button.set_active(True)
+        self.kf_mode_button.set_active(True) # we start with vieweditorlayer.ROTO_POINT_MODE edit mode
         self.kf_mode_button.connect("clicked", self._kf_mode_clicked)
         self.move_mode_button = Gtk.ToggleButton()
         self.move_mode_button.set_image(move_mode_img)
@@ -183,6 +177,7 @@ class RotoMaskEditor(Gtk.Window):
         self.add(alignment)
 
         self.view_editor.clear_layers()
+        # NOTE: we start with vieweditorlayer.ROTO_POINT_MODE edit mode, see __init()__
         self.roto_mask_layer = vieweditorlayer.RotoMaskEditLayer(self.view_editor, self.kf_editor.clip_editor, kf_editor.editable_property, self)
         self.view_editor.add_layer(self.roto_mask_layer)
         self.view_editor.activate_layer(0)
@@ -221,49 +216,29 @@ class RotoMaskEditor(Gtk.Window):
 
 
     def _kf_mode_clicked(self, kf_button):
-        if self.edit_mode == KF_EDIT_MODE and kf_button.get_active() == False:
-            kf_button.set_active(True) 
-            print "over ride"
+        if self.roto_mask_layer.edit_mode == vieweditorlayer.ROTO_POINT_MODE and kf_button.get_active() == False:
+            kf_button.set_active(True) # we untoggled by clicking which is not allowed, untoggle happens whenthe other mode is selected. We set the untoggled button back to being active.
         elif  kf_button.get_active() == False:
-            print "event from changing in _move_mode_clicked"
-        else:
-            self.edit_mode = KF_EDIT_MODE
+            pass # this event is redundant, we always get two events when changing modes
+        elif self.roto_mask_layer.edit_mode != vieweditorlayer.ROTO_POINT_MODE:
+            self.roto_mask_layer.edit_mode = vieweditorlayer.ROTO_POINT_MODE
             self.move_mode_button.set_active(False)
-            print "change"
     
     def _move_mode_clicked(self, move_button):
-        if self.edit_mode == MOVE_EDIT_MODE and move_button.get_active() == False:
-            move_button.set_active(True) 
-            print "over ride"
-        elif  move_button.get_active() == False:
-            print "event from changing in _kf_mode_clicked"
-        else:
-            self.edit_mode = MOVE_EDIT_MODE
-            self.kf_mode_button.set_active(False) 
-            print "change"
-            
-    """ REMOVE
-    def write_current_frame(self):
-        self.view_editor.write_out_layers = True
-        self.show_current_frame()
-    """
+        if self.roto_mask_layer.edit_mode == vieweditorlayer.ROTO_MOVE_MODE and move_button.get_active() == False:
+            move_button.set_active(True)  # we untoggled by clicking which is not allowed, untoggle happens whenthe other mode is selected. We set the untoggled button back to being active. 
+        elif move_button.get_active() == False:
+            pass # this event is redundant, we always get two events when changing modes
+        elif self.roto_mask_layer.edit_mode != vieweditorlayer.ROTO_MOVE_MODE:
+            self.roto_mask_layer.edit_mode = vieweditorlayer.ROTO_MOVE_MODE
+            self.kf_mode_button.set_active(False)
+
     def position_listener(self, normalized_pos, length):
         frame = normalized_pos * length
         self.tc_display.set_frame(int(frame))
 
     def _save_rotodata_pressed(self):
         pass
-        # pasas
-
-
-
-    def _clear_layers_pressed(self):
-        # INFOWINDOW
-        # CONFIRM WINDOW HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        global _titler_data
-        _titler_data = TitlerData()
-        self.load_titler_data()
-
 
     def _key_pressed_on_widget(self, widget, event):
         # update layer for enter on size spin
@@ -346,19 +321,6 @@ class RotoMaskEditor(Gtk.Window):
 
         self.block_updates = False
         """
-
-
-    def _position_value_changed(self, widget):
-        # mouse release when layer is moved causes this method to be called,
-        # but we don't want to do any additinal updates here for that event
-        # This is only used when user presses arrows in position spins.
-        if self.block_updates:
-            return
-
-        _titler_data.active_layer.x = self.x_pos_spin.get_value()
-        _titler_data.active_layer.y = self.y_pos_spin.get_value()
-        self._update_editor_layer_pos()
-        self.view_editor.edit_area.queue_draw()
 
     def _edit_value_changed(self, widget):
         self._update_active_layout()
