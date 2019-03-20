@@ -455,7 +455,7 @@ class RotoMaskEditShape(EditPointShape):
         forward = forward.get_multiplied_vec(0.3)
         back = back.get_multiplied_vec(0.3)
         
-        return (forward.end_point, back.end_point)
+        return (back.end_point, forward.end_point)
 
     def save_selected_point_data(self, selected_point):
         # These points get re-created all the time and we need to save data on which point was selectes
