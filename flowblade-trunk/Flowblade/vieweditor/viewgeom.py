@@ -241,6 +241,10 @@ class Vec(Line):
 
         return get_vec_for_points(self.start_point, (new_end_x, new_end_y))
 
+    def get_distance_vec(self, p):
+        npp = self.get_normal_projection_point(p)
+        return get_vec_for_points(npp, p)
+
     def is_zero_length(self):
         if self.start_point == self.end_point:
             return True
@@ -250,6 +254,19 @@ class Vec(Line):
     def set_zero_length(self):
         self.end_point = self.start_point
 
+    def point_is_between(self, p):
+        reverse = get_vec_for_points(self.end_point, self.start_point)
+        pp = self.get_normal_projection_point(p)
+
+        start_to_pp = get_vec_for_points(self.start_point, pp)
+        end_to_pp = get_vec_for_points(self.end_point, pp)
+
+        if(self.get_direction() == start_to_pp.get_direction() and
+            reverse.get_direction() == end_to_pp.get_direction()):
+            return True
+
+        return False
+    
 def get_isp_for_vert_and_non_vert(vertical, non_vertical):
     is_y = non_vertical.m * vertical.x_icept + non_vertical.b
     return (vertical.x_icept, is_y)

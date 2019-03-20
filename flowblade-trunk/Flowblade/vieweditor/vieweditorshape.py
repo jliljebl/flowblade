@@ -339,6 +339,23 @@ class RotoMaskEditShape(EditPointShape):
         self.view_editor = view_editor # This is viewEditor.ViewEditor
         self.update_shape()
 
+    def add_point(self, index, p):
+        if index == -1:
+            return
+    
+        x, y = p
+        add_cp = RotoMaskEditPoint(ROTO_CURVE_POINT, x, y)
+        self.curve_points.insert(index, add_cp)
+        hp1, hp2 = self.get_straight_line_handle_places(index)
+    
+        hch = [ self.view_editor.panel_coord_to_normalized_movie_coord(hp1), 
+                self.view_editor.panel_coord_to_normalized_movie_coord(p), 
+                self.view_editor.panel_coord_to_normalized_movie_coord(hp2)]
+
+        for kf_tuple in self.clip_editor.keyframes:
+            keyframe, bz_points = kf_tuple
+            bz_points.insert(index, hch) 
+
     def delete_selected_point(self):
         if self.selected_point_index == -1:
             return
@@ -390,6 +407,55 @@ class RotoMaskEditShape(EditPointShape):
         # Keep point selection alive
         if self.selected_point_array != None:
             self.selected_point_array[self.selected_point_index].selected = True 
+
+
+    def get_point_insert_seq(self, p):
+        # Return index of first curve point in the curve seqment that is closest to given point.
+        seq_index = -1
+        closest_dist = 10000000000.0
+        for i in range(0, len(self.curve_points)):
+            dist = self.get_point_dist_from_seq(p, i)
+            if dist >= 0 and dist < closest_dist:
+                closest_dist = dist
+                seq_index = i
+        
+        return seq_index
+
+    def get_point_dist_from_seq(self, p, seq_index):
+        start = self.curve_points[seq_index].get_pos()
+
+        if seq_index < len(self.curve_points) - 1:
+            end = self.curve_points[seq_index + 1].get_pos()
+        else:
+            end = self.curve_points[0].get_pos()
+        
+        seq = viewgeom.get_vec_for_points(start, end)
+
+        if seq.point_is_between(p) == True:
+            dist = seq.get_distance_vec(p)
+            return abs(dist.get_length())
+        else:
+            return -1
+
+    def get_straight_line_handle_places(self, cp_index):
+        prev_i = cp_index - 1
+        next_i = cp_index + 1
+        if next_i == len(self.curve_points):
+            next_i = 0
+        if prev_i < 0:
+            prev_i = len(self.curve_points) - 1
+        
+        prev_p = self.curve_points[prev_i].get_pos()
+        next_p = self.curve_points[next_i].get_pos()
+        p = self.curve_points[cp_index].get_pos()
+        
+        forward = viewgeom.get_vec_for_points(p, next_p)
+        back =  viewgeom.get_vec_for_points(p, prev_p)
+        
+        forward = forward.get_multiplied_vec(0.3)
+        back = back.get_multiplied_vec(0.3)
+        
+        return (forward.end_point, back.end_point)
 
     def save_selected_point_data(self, selected_point):
         # These points get re-created all the time and we need to save data on which point was selectes

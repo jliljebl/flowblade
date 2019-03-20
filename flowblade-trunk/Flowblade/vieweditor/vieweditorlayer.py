@@ -295,6 +295,8 @@ class RotoMaskEditLayer(AbstactEditorLayer):
     # ----------------------------------------------------- mouse events
     def hit(self, p):
         self.last_pressed_edit_point = None
+        self.mouse_press_panel_point = self.view_editor.movie_coord_to_panel_coord(p) #V This needed when adding new curve points
+
         if self.edit_mode == ROTO_POINT_MODE:
             # we get this as movie coord point, but rotomask stuff is running on pamel points, need to convert
             ep = self.edit_point_shape.get_edit_point(self.view_editor.movie_coord_to_panel_coord(p))
@@ -315,12 +317,18 @@ class RotoMaskEditLayer(AbstactEditorLayer):
         if self.edit_mode == ROTO_MOVE_MODE:
             pass
         elif self.edit_mode == ROTO_POINT_MODE:
+            # Point pressed, we are mopving it
             if self.last_pressed_edit_point != None:
                 self.edit_point_shape.clear_selection()
                 self.last_pressed_edit_point.selected = True
                 self.edit_point_shape.save_selected_point_data(self.last_pressed_edit_point)
+            # No point hit attempt to add a point.
             else:
                 self.edit_point_shape.clear_selection()
+                seq_index = self.edit_point_shape.get_point_insert_seq(self.mouse_press_panel_point)
+                print "seq_index", seq_index
+                if seq_index != -1:
+                    self.add_edit_point(seq_index, self.mouse_press_panel_point)
         
     def mouse_dragged(self):
         # delta is given in movie coords, RotoMaskEditShape uses panel coords (because it needs to do complex drawing in those) so we have to convert mouse delta.
@@ -365,6 +373,12 @@ class RotoMaskEditLayer(AbstactEditorLayer):
         self.rotomask_editor.show_current_frame()
 
     # --------------------------------------------- edit events
+    def add_edit_point(self, index, p):
+        self.edit_point_shape.add_point(index, p)
+
+        self.editable_property.write_out_keyframes(self.clip_editor.keyframes)
+        self.rotomask_editor.show_current_frame() #  callback for full update
+        
     def delete_selected_point(self):
         self.edit_point_shape.delete_selected_point()
 
