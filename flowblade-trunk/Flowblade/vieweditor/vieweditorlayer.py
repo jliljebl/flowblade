@@ -326,13 +326,12 @@ class RotoMaskEditLayer(AbstactEditorLayer):
             else:
                 self.edit_point_shape.clear_selection()
                 seq_index = self.edit_point_shape.get_point_insert_seq(self.mouse_press_panel_point)
-                print "seq_index", seq_index
                 if seq_index != -1:
-                    seq_index += 1
-                    if seq_index == len(self.edit_point_shape.curve_points):
-                        seq_index = 0
+                    insert_index = seq_index + 1
+                    if insert_index == len(self.edit_point_shape.curve_points):
+                        insert_index = 0
                         
-                    self.add_edit_point(seq_index, self.mouse_press_panel_point)
+                    self.add_edit_point(insert_index, self.mouse_press_panel_point)
         
     def mouse_dragged(self):
         # delta is given in movie coords, RotoMaskEditShape uses panel coords (because it needs to do complex drawing in those) so we have to convert mouse delta.
