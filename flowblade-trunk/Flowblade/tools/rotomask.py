@@ -70,13 +70,13 @@ ALIGN_RIGHT = 2
 
 
 # ------------------------------------------- module interface
-def show_rotomask(mlt_filter, editable_properties):
+def show_rotomask(mlt_filter, editable_properties, editor_widgets):
     
     kf_json_prop = filter(lambda ep: ep.name == "spline", editable_properties)[0]
     kf_editor = keyframeeditor.RotoMaskKeyFrameEditor(kf_json_prop, propertyparse.rotomask_json_value_string_to_kf_array)
         
     global _rotomask
-    _rotomask = RotoMaskEditor(kf_editor)
+    _rotomask = RotoMaskEditor(kf_editor, editor_widgets)
     _rotomask.show_current_frame()
 
 def close_rotomask():
@@ -92,7 +92,7 @@ def rotomask_destroy():
             
 # ---------------------------------------------------------- editor
 class RotoMaskEditor(Gtk.Window):
-    def __init__(self, kf_editor): # kf_editor is keyframeeditor.RotoMaskKeyFrameEditor
+    def __init__(self, kf_editor, editor_widgets): # kf_editor is keyframeeditor.RotoMaskKeyFrameEditor
         GObject.GObject.__init__(self)
         self.set_title(_("RotoMaskEditor"))
         self.connect("delete-event", lambda w, e:close_rotomask())
@@ -162,11 +162,23 @@ class RotoMaskEditor(Gtk.Window):
         editor_buttons_row.pack_start(guiutils.pad_label(24, 2), False, False, 0)
         editor_buttons_row.pack_start(exit_b, False, False, 0)
         editor_buttons_row.pack_start(save_rotodata_b, False, False, 0)
+
+        prop_editor_row1 = Gtk.HBox()
+        prop_editor_row1.pack_start(editor_widgets[0], True, True, 0)
+        prop_editor_row1.pack_start(editor_widgets[3], True, True, 0)
+        prop_editor_row1.pack_start(editor_widgets[4], True, True, 0)
+
+        prop_editor_row2 = Gtk.HBox()
+        prop_editor_row2.pack_start(editor_widgets[1], True, True, 0)
+        prop_editor_row2.pack_start(editor_widgets[2], True, True, 0)
         
         editor_panel = Gtk.VBox()
         editor_panel.pack_start(self.view_editor, True, True, 0)
         editor_panel.pack_start(timeline_box, False, False, 0)
         editor_panel.pack_start(kf_editor, False, False, 0)
+        editor_panel.pack_start(guiutils.pad_label(2, 12), True, True, 0)
+        editor_panel.pack_start(prop_editor_row1, False, False, 0)
+        editor_panel.pack_start(prop_editor_row2, False, False, 0)
         editor_panel.pack_start(guiutils.pad_label(2, 12), True, True, 0)
         editor_panel.pack_start(editor_buttons_row, False, False, 0)
 

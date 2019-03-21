@@ -96,11 +96,11 @@
    <filter id="rotoscoping">
         <name>Rotoscope</name>
         <group>Alpha</group>   
-        <property name="mode" args="editor=no_editor exptype=not_parsed">alpha</property>
-        <property name="alpha_operation" args="editor=no_editor exptype=not_parsed">clear</property>
-        <property name="invert" args="editor=no_editor">0</property>
-        <property name="feather" args="editor=no_editor">0</property>
-        <property name="feather_passes" args="editor=no_editor">1</property>
+        <property name="mode" args="editor=no_editor exptype=not_parsed exptype=not_parsed cbopts=Alpha:alpha,Luma:luma,RGB:rgb displayname=Mode">alpha</property>
+        <property name="alpha_operation" args="editor=no_editor exptype=not_parsed cbopts=Clear:clear,Add:add,Subtract:sub displayname=Alpha!Mode">clear</property>
+        <property name="invert" args="editor=no_editor displayname=Invert">0</property>
+        <property name="feather" args="editor=no_editor range_in=0,20 range_out=0,20 displayname=Feather">0</property>
+        <property name="feather_passes" args="editor=no_editor range_in=1,5 range_out=1,5 displayname=Feather!Passes">1</property>
         <property name="spline" args="editor=no_editor exptype=roto_json">{
         "000": [
             [
