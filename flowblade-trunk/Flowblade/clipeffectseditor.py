@@ -145,7 +145,14 @@ def set_clip(new_clip, new_track, new_index):
     widgets.clip_info.display_clip_info(clip, track, clip_index)
     set_enabled(True)
     update_stack_view()
-    effect_selection_changed() # This may get called twice
+
+    if len(clip.filters) > 0:
+        path = str(len(clip.filters) - 1)
+        # Causes edit_effect_selected() called as it is the "change" listener
+        widgets.effect_stack_view.treeview.get_selection().select_path(path)
+    else:
+        effect_selection_changed()
+
     gui.middle_notebook.set_current_page(filters_notebook_index) # 2 == index of clipeditor page in notebook
 
 def effect_select_row_double_clicked(treeview, tree_path, col):
@@ -284,14 +291,12 @@ def add_currently_selected_effect():
     # Check we have clip
     if clip == None:
         return
-        
+    
     filter_info = get_selected_filter_info()
     action = get_filter_add_action(filter_info, clip)
     action.do_edit() # gui update in callback from EditAction object.
     
     updater.repaint_tline()
-
-    filter_info = get_selected_filter_info()
 
 def get_filter_add_action(filter_info, target_clip):
     if filter_info.multipart_filter == False:
@@ -605,7 +610,7 @@ def filter_edit_done(edited_clip, index=-1):
     # Select row in effect stack view and so display corresponding effect editor panel.
     if not(index < 0):
         widgets.effect_stack_view.treeview.get_selection().select_path(str(index))
-    else: # no effects after edit, clear effect editor panel  
+    else: # no effects after edit, clear effect editor panel
         clear_effects_edit_panel()
 
 def display_kfeditors_tline_frame(frame):
