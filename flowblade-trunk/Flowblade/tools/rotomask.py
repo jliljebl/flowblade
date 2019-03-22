@@ -140,6 +140,7 @@ class RotoMaskEditor(Gtk.Window):
         self.move_mode_button.connect("clicked", self._move_mode_clicked)
         
         self.scale_selector = vieweditor.ScaleSelector(self)
+        self.view_editor.scale_select = self.scale_selector
 
         timeline_box = Gtk.HBox()
         timeline_box.pack_start(self.tc_display.widget, False, False, 0)

@@ -21,7 +21,7 @@
 import numpy as np
 print "numpy version:", np.version.version
 
-from gi.repository import Gtk, GObject
+from gi.repository import Gtk, GObject, Gdk
 
 import cairoarea
 import cairo
@@ -54,7 +54,8 @@ class ViewEditor(Gtk.Frame):
         self.edit_area.press_func = self._press_event
         self.edit_area.motion_notify_func = self._motion_notify_event
         self.edit_area.release_func = self._release_event
-        
+        self.edit_area.mouse_scroll_func = self._mouse_scroll_listener
+                
         self.scroll_window = Gtk.ScrolledWindow()
         self.scroll_window.add_with_viewport(self.edit_area)
         self.scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
@@ -62,6 +63,8 @@ class ViewEditor(Gtk.Frame):
         self.scroll_window.set_size_request(scroll_width, scroll_height)  # +2 to not show scrollbars
         self.add(self.scroll_window)
 
+        self.scale_select = None # Set from outside
+    
         self.edit_layers = []
         self.active_layer = None
         self.edit_target_layer = None
@@ -172,6 +175,22 @@ class ViewEditor(Gtk.Frame):
             self.edit_area.queue_draw()
         self.edit_target_layer = None
     
+    
+    def _mouse_scroll_listener(self, event):
+        if self.scale_select != None:
+            active_index = self.scale_select.combo.get_active()
+            if event.direction == Gdk.ScrollDirection.UP:
+                active_index = active_index - 1
+                if active_index < 0:
+                    active_index = 0
+            else:
+                active_index = active_index + 1
+                if active_index > 7:
+                    active_index = 7
+            self.scale_select.combo.set_active(active_index)
+
+        return True
+        
     # -------------------------------------------- coord conversions
     def panel_coord_to_movie_coord(self, panel_point):
         panel_x, panel_y = panel_point

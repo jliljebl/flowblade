@@ -718,7 +718,7 @@ class EffectValuesSaveData:
         if isinstance(self.info, filter_info.__class__):
             return self.info.__dict__ == filter_info.__dict__
         return False
-        
+
     def set_effect_values(self, filter_object):
         if self.multipart_filter == True:
             filter_object.value = self.value

@@ -451,6 +451,7 @@ class Titler(Gtk.Window):
         next_frame.connect("clicked", lambda w:self._next_frame_pressed())
 
         self.scale_selector = vieweditor.ScaleSelector(self)
+        self.view_editor.scale_select = self.scale_selector
 
         timeline_box = Gtk.HBox()
         timeline_box.pack_start(self.tc_display.widget, False, False, 0)
