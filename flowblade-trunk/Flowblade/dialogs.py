@@ -45,6 +45,7 @@ import renderconsumer
 import respaths
 import shortcuts
 import utils
+import workflow
 
 
 def new_project_dialog(callback):
@@ -1371,10 +1372,9 @@ def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, callback):
     dialog.connect('response', callback, shortcuts_combo)
     dialog.show_all()
  
- 
 def _shorcuts_selection_changed(combo, scroll_hold_panel, diff_data, dialog):
     selected_xml = shortcuts.shortcut_files[combo.get_active()]
-    _display_keyboard_schortcuts(selected_xml, scroll_hold_panel)
+    _display_keyboard_schortcuts(selected_xml, workflow.get_tline_tool_working_set(), scroll_hold_panel)
     diff_data.set_text(shortcuts.get_diff_to_defaults(selected_xml))
     dialog.show_all()
 
