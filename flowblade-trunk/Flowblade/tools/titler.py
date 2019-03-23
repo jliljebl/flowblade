@@ -706,7 +706,7 @@ class Titler(Gtk.Window):
         self.view_editor.edit_layers.append(view_editor_layer)
         
         self.layer_list.fill_data_model()
-        self._activate_layer(len(_titler_data.layers) - 1)
+        self._activate_layer(len(_titler_data.layers) - 1, True)
         
     def _del_layer_pressed(self):
         # we always need 1 layer
@@ -779,11 +779,15 @@ class Titler(Gtk.Window):
         self._update_gui_with_active_layer_data()
         _titler_data.active_layer.update_pango_layout()
 
-    def _activate_layer(self, layer_index):
+    def _activate_layer(self, layer_index, is_new_layer=False):
         global _titler_data
         _titler_data.active_layer = _titler_data.layers[layer_index]
         
-        self._update_gui_with_active_layer_data()
+        if not is_new_layer:
+            self._update_gui_with_active_layer_data() # Update GUI with layer data
+        else:
+            self._update_active_layout_font_properties() # Update layer font properties with current GUI values.
+
         _titler_data.active_layer.update_pango_layout()
         self.view_editor.activate_layer(layer_index)
         self.view_editor.active_layer.update_rect = True
@@ -820,7 +824,7 @@ class Titler(Gtk.Window):
     def _edit_value_changed(self, widget):
         self._update_active_layout()
 
-    def _update_active_layout(self, fill_layers_data_if_needed=True):
+    def _update_active_layout(self):
         if self.block_updates:
             return
 
@@ -833,7 +837,16 @@ class Titler(Gtk.Window):
             update_layers_list = False
 
         _titler_data.active_layer.text = text
-        
+
+        self._update_active_layout_font_properties()
+
+        # We only wnat to update layer list data model when this called after user typing 
+        if update_layers_list:
+            self.layer_list.fill_data_model()
+
+        self.view_editor.edit_area.queue_draw()
+
+    def _update_active_layout_font_properties(self):
         family = self.font_families[self.font_select.get_active()]
         _titler_data.active_layer.font_family = family.get_name()
 
@@ -869,7 +882,6 @@ class Titler(Gtk.Window):
         _titler_data.active_layer.outline_on = self.outline_on.get_active()
         _titler_data.active_layer.outline_width = self.out_line_size_spin.get_value()
 
-        
         # SHADOW
         color = self.shadow_color_button.get_color()
         r, g, b = utils.hex_to_rgb(color.to_string())
@@ -883,12 +895,6 @@ class Titler(Gtk.Window):
                 
         self.view_editor.active_layer.update_rect = True
         _titler_data.active_layer.update_pango_layout()
-
-        # We only wnat to update layer list data model when this called after user typing 
-        if update_layers_list:
-            self.layer_list.fill_data_model()
-
-        self.view_editor.edit_area.queue_draw()
 
     def _update_gui_with_active_layer_data(self):
         if _filling_layer_list:
