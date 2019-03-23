@@ -77,6 +77,7 @@
     <event code='log_range' name='Log Range'>g</event>
     <event code='resync' name='Resynchronization'>s</event>
     <event code='delete' name='Delete'>delete</event>
+    <event code='lift' name='Lift' modifiers='CTRL'>delete</event>
     <event code='to_start' name='Go To Start'>home</event>
     <event code='to_end' name='Go To End'>end</event>
     <event code='3_point_overwrite' name='Three Point Overwrite'>t</event>

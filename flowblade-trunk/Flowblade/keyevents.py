@@ -337,6 +337,9 @@ def _handle_tline_key_event(event):
                 # so max one one these will actually delete something
                 tlineaction.splice_out_button_pressed()
                 compositormodes.delete_current_selection()
+        if action == 'lift':
+            tlineaction.lift_button_pressed()
+            return True
         if action == 'to_start':
             if PLAYER().is_playing():
                 monitorevent.stop_pressed()

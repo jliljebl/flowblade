@@ -195,6 +195,7 @@ def _set_keyboard_action_names():
     _keyboard_action_names['log_range'] = _("Log Marked Clip Range")
     _keyboard_action_names['resync'] = _("Resync selected Clip or Compositor")
     _keyboard_action_names['delete'] = _("Delete Selected Item")
+    _keyboard_action_names['lift'] = _("Lift Selected Item")
     _keyboard_action_names['to_start'] = _("Go To Start")
     _keyboard_action_names['to_end'] = _("Go To End")
     _keyboard_action_names['3_point_overwrite'] = _("3 Point Overwrite")
