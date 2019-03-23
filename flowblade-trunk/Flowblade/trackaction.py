@@ -31,6 +31,7 @@ import gui
 import guicomponents
 import editorstate
 import edit
+import editorpersistance
 from editorstate import get_track
 from editorstate import current_sequence
 from editorstate import PROJECT
@@ -175,7 +176,8 @@ def _audio_levels_item_activated(widget, msg):
     elif msg == "snapping":
         snapping.snapping_on = widget.get_active()
     elif msg == "scrubbing":
-        editorstate.audio_scrubbing = widget.get_active()
+        editorpersistance.prefs.audio_scrubbing = widget.get_active()
+        editorpersistance.save()
         PLAYER().set_scrubbing(widget.get_active())
         
     else: # media thumbnails

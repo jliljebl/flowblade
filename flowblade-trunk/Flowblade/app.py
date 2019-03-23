@@ -346,7 +346,7 @@ def main(root_path):
         GObject.timeout_add(500, show_user_folders_copy_dialog)
     else:
         print "No user folders actions needed."
-
+    
     # Launch gtk+ main loop
     Gtk.main()
 
@@ -634,6 +634,9 @@ def open_project(new_project):
     global resize_timeout_id
     resize_timeout_id = GLib.timeout_add(500, _do_window_resized_update)
 
+    # Set scrubbing
+    editorstate.player.set_scrubbing(editorpersistance.prefs.audio_scrubbing)
+    
 def _do_window_resized_update():
     GObject.source_remove(resize_timeout_id)
     updater.window_resized()

@@ -85,6 +85,7 @@ class Player:
         self.consumer.set("resize", 1)
         self.consumer.set("progressive", 1)
 
+
         # Hold ref to switch back from rendering
         self.sdl_consumer = self.consumer 
 

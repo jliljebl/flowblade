@@ -2623,7 +2623,7 @@ def get_audio_levels_popup_menu(event, callback):
 
     scrub_item = Gtk.CheckMenuItem()
     scrub_item.set_label(_("Audio scrubbing"))
-    scrub_item.set_active(editorstate.audio_scrubbing)
+    scrub_item.set_active(editorpersistance.prefs.audio_scrubbing)
     scrub_item.connect("activate", callback, "scrubbing")
 
     menu.append(scrub_item)

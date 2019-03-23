@@ -346,4 +346,5 @@ class EditorPreferences:
         self.show_tool_tooltips = True
         self.workflow_dialog_last_version_shown = "0.0.1"
         self.loop_clips = False
+        self.audio_scrubbing = False
 

@@ -122,7 +122,7 @@ attach_jackrack = False
 project_is_loading = False
 
 # Audio Scrubbing
-audio_scrubbing = True
+#audio_scrubbing = True
 
 # Audio levels display mode, False means that audio levels are displayed on request
 display_all_audio_levels = True
