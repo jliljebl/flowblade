@@ -222,7 +222,7 @@ class EditorWindow:
             ('Timeline', None, _('Timeline')),
             ('FiltersOff', None, _('All Filters Off'), None, None, lambda a:tlineaction.all_filters_off()),
             ('FiltersOn', None, _('All Filters On'), None, None, lambda a:tlineaction.all_filters_on()),
-            ('SyncCompositors', None, _('Sync All Compositors'), None, None, lambda a:tlineaction.sync_all_compositors()),
+            ('SyncCompositors', None, _('Sync All Compositors'), '<alt>S', None, lambda a:tlineaction.sync_all_compositors()),
             ('CompositorsFadesDefaults', None, _('Set Compositor Auto Fades...'), None, None, lambda a:tlineaction.set_compositors_fades_defaults()),
             ('ChangeSequenceTracks', None, _('Change Sequence Tracks Count...'), None, None, lambda a:projectaction.change_sequence_track_count()),
             ('Watermark', None, _('Watermark...'), None, None, lambda a:menuactions.edit_watermark()),
