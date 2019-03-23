@@ -60,7 +60,7 @@ TEXT_LAYER_LIST_WIDTH = 300
 TEXT_LAYER_LIST_HEIGHT = 150
 
 TEXT_VIEW_WIDTH = 300
-TEXT_VIEW_HEIGHT = 275
+TEXT_VIEW_HEIGHT = 200
 
 DEFAULT_FONT_SIZE = 25
 
@@ -329,8 +329,6 @@ class Titler(Gtk.Window):
         buttons_box.pack_start(self.fill_on, False, False, 0)
         buttons_box.pack_start(Gtk.Label(), True, True, 0)
 
-        outline_label = Gtk.Label(_("<b>Outline</b>"))
-        outline_label.set_use_markup(True)
         outline_size = Gtk.Label(_("Size:"))
         
         self.out_line_color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(red=0.3, green=0.3, blue=0.3, alpha=1.0))
@@ -347,8 +345,6 @@ class Titler(Gtk.Window):
         self.outline_on.connect("toggled", self._edit_value_changed)
         
         outline_box = Gtk.HBox()
-        outline_box.pack_start(outline_label, False, False, 0)
-        outline_box.pack_start(guiutils.pad_label(15, 1), False, False, 0)
         outline_box.pack_start(outline_size, False, False, 0)
         outline_box.pack_start(guiutils.pad_label(2, 1), False, False, 0)
         outline_box.pack_start(self.out_line_size_spin, False, False, 0)
@@ -358,8 +354,6 @@ class Titler(Gtk.Window):
         outline_box.pack_start(self.outline_on, False, False, 0)
         outline_box.pack_start(Gtk.Label(), True, True, 0)
 
-        shadow_label = Gtk.Label(_("<b>Shadow</b>"))
-        shadow_label.set_use_markup(True)
         shadow_opacity_label = Gtk.Label(_("Opacity:"))
         shadow_xoff = Gtk.Label(_("X Off:"))
         shadow_yoff = Gtk.Label(_("Y Off:"))
@@ -390,8 +384,6 @@ class Titler(Gtk.Window):
         self.shadow_color_button.connect("color-set", self._edit_value_changed)
 
         shadow_box_1 = Gtk.HBox()
-        shadow_box_1.pack_start(shadow_label, False, False, 0)
-        shadow_box_1.pack_start(guiutils.pad_label(15, 1), False, False, 0)
         shadow_box_1.pack_start(shadow_opacity_label, False, False, 0)
         shadow_box_1.pack_start(self.shadow_opa_spin, False, False, 0)
         shadow_box_1.pack_start(guiutils.pad_label(15, 1), False, False, 0)
@@ -472,8 +464,6 @@ class Titler(Gtk.Window):
         positions_box.pack_start(guiutils.pad_label(40, 5), False, False, 0)
         positions_box.pack_start(Gtk.Label(label="Y:"), False, False, 0)
         positions_box.pack_start(self.y_pos_spin, False, False, 0)
-        #positions_box.pack_start(Gtk.Label(label=_("Angle")), False, False, 0)
-        #positions_box.pack_start(self.rotation_spin, False, False, 0)
         positions_box.pack_start(guiutils.pad_label(40, 5), False, False, 0)
         positions_box.pack_start(center_h, False, False, 0)
         positions_box.pack_start(center_v, False, False, 0)
@@ -488,14 +478,21 @@ class Titler(Gtk.Window):
         controls_panel_2.pack_start(scroll_frame, True, True, 0)
         controls_panel_2.pack_start(font_main_row, False, False, 0)
         controls_panel_2.pack_start(buttons_box, False, False, 0)
-        controls_panel_2.pack_start(guiutils.pad_label(40, 1), False, False, 0)
-        controls_panel_2.pack_start(outline_box, False, False, 0)
-        controls_panel_2.pack_start(guiutils.pad_label(40, 1), False, False, 0)
-        controls_panel_2.pack_start(shadow_box_1, False, False, 0)
-        controls_panel_2.pack_start(shadow_box_2, False, False, 0)
+
+        controls_panel_3 = Gtk.VBox()
+        controls_panel_3.pack_start(outline_box, False, False, 0)
+
+        controls_panel_4 = Gtk.VBox()
+        controls_panel_4.pack_start(shadow_box_1, False, False, 0)
+        controls_panel_4.pack_start(shadow_box_2, False, False, 0)
         
         controls_panel = Gtk.VBox()
-        controls_panel.pack_start(guiutils.get_named_frame(_("Active Layer"),controls_panel_2), True, True, 0)
+        controls_panel.pack_start(guiutils.get_named_frame(_("Layer Text"),controls_panel_2), True, True, 0)
+        controls_panel.pack_start(guiutils.pad_label(1, 24), False, False, 0)
+        controls_panel.pack_start(guiutils.get_named_frame(_("Outline"),controls_panel_3), False, False, 0)
+        controls_panel.pack_start(guiutils.pad_label(1, 24), False, False, 0)
+        controls_panel.pack_start(guiutils.get_named_frame(_("Shadow"),controls_panel_4), False, False, 0)
+        controls_panel.pack_start(guiutils.pad_label(1, 24), False, False, 0)
         controls_panel.pack_start(guiutils.get_named_frame(_("Layers"),controls_panel_1), False, False, 0)
  
         view_editor_editor_buttons_row = Gtk.HBox()
@@ -532,7 +529,7 @@ class Titler(Gtk.Window):
         editor_panel.pack_start(self.view_editor, True, True, 0)
         editor_panel.pack_start(timeline_box, False, False, 0)
         editor_panel.pack_start(guiutils.get_in_centering_alignment(view_editor_editor_buttons_row), False, False, 0)
-        editor_panel.pack_start(guiutils.pad_label(2, 24), True, True, 0)
+        editor_panel.pack_start(guiutils.pad_label(2, 24), False, False, 0)
         editor_panel.pack_start(editor_buttons_row, False, False, 0)
 
         editor_row = Gtk.HBox()

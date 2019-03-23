@@ -180,7 +180,7 @@ class RotoMaskEditor(Gtk.Window):
         editor_panel.pack_start(guiutils.pad_label(2, 12), True, True, 0)
         editor_panel.pack_start(prop_editor_row1, False, False, 0)
         editor_panel.pack_start(prop_editor_row2, False, False, 0)
-        editor_panel.pack_start(guiutils.pad_label(2, 12), True, True, 0)
+        editor_panel.pack_start(guiutils.pad_label(2, 12), False, False, 0)
         editor_panel.pack_start(editor_buttons_row, False, False, 0)
 
         editor_row = Gtk.HBox()
