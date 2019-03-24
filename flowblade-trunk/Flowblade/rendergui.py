@@ -789,7 +789,7 @@ class RenderArgsPanel():
         
         self.use_project_label = Gtk.Label(label=_("Use Project Profile:"))
         self.use_args_label = Gtk.Label(label=_("Render using args:"))
-        self.text_buffer = None # only used for small screen heights with dialog for setting agrs, but this value is tested to determine where to get agrs if set
+        self.text_buffer = None # only used for small screen heights with dialog for setting args, but this value is tested to determine where to get args from.
         
         self.use_args_check = Gtk.CheckButton()
         self.use_args_check.connect("toggled", self.use_args_toggled)

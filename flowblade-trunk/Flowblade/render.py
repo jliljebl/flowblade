@@ -187,10 +187,10 @@ def get_file_path():
             extension = "." +  widgets.args_panel.ext_entry.get_text()
         else:
             # Small height with dialog args setting
-            ext_str = widgets.args_panel.args_edit_window.ext_entry.get_text()
-            if ext_str == "":
-                # dialog is closed
-                print "yyyyyyyyy"
+            try:
+                ext_str = widgets.args_panel.args_edit_window.ext_entry.get_text()
+            except:
+                # args edit window was never opened, so requested value not available/set, use default extension
                 ext_str = widgets.args_panel.ext
             extension = "." + ext_str
     return folder + "/" + filename + extension
