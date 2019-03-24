@@ -658,7 +658,7 @@ def range_overwrite_pressed():
     if mark_in_frame != -1 and mark_out_frame != -1:
         range_length = mark_out_frame - mark_in_frame + 1 # end is incl.
         if over_clip.mark_in == -1:
-            # This actually never hit because mark in and mark out seem to first and last frame if nothing set
+            # This actually should never be hit because mark in and mark out seem to first and last frame if nothing set
             show_three_point_edit_not_defined()
             return
 

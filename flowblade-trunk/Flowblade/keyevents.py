@@ -304,6 +304,9 @@ def _handle_tline_key_event(event):
         if action == '3_point_overwrite':
             tlineaction.three_point_overwrite_pressed()
             return True
+        if action == 'overwrite_range':
+            tlineaction.range_overwrite_pressed()
+            return True
         if action == 'insert':
             if not (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                 tlineaction.insert_button_pressed()
@@ -384,6 +387,8 @@ def _handle_extended_monitor_focus_events(event):
     if action == '3_point_overwrite':
         tlineaction.three_point_overwrite_pressed()
         return True
+    if action == 'overwrite_range':
+        tlineaction.range_overwrite_pressed()
     if action == 'insert':
         tlineaction.insert_button_pressed()
         return True
