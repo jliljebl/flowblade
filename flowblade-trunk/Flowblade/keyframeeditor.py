@@ -194,10 +194,6 @@ class ClipKeyFrameEditor:
         x, y, w, h = allocation
         active_width = w - 2 * END_PAD
         active_height = h - 2 * TOP_PAD      
-
-        #cr.set_source_rgb(1,0,0)
-        #cr.rectangle(0, 0, w, h)
-        #cr.fill()
         
         # Draw clip bg  
         cr.set_source_rgb(*CLIP_EDITOR_BG_COLOR)
@@ -474,6 +470,7 @@ class ClipKeyFrameEditor:
         return False
 
     def add_keyframe(self, frame):
+        # NOTE: This makes added keyframe the active keyframe too.
         kf_index_on_frame = self.frame_has_keyframe(frame)
         if kf_index_on_frame != -1:
             # Trying add on top of existing keyframe makes it active

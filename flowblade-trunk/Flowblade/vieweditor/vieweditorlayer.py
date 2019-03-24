@@ -17,7 +17,6 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
-
 import sys
 
 import vieweditorshape
@@ -287,6 +286,9 @@ class RotoMaskEditLayer(AbstactEditorLayer):
         self.edit_point_shape = vieweditorshape.RotoMaskEditShape(view_editor, clip_editor)
         self.edit_point_shape.update_shape()
 
+        self.block_shape_update = False # We're getting a difficult to kill "size-allocate" event when adding new kf for mouse press,
+                                        # and this is used to block it from recreating edit shape in middle of mouse edit, bit hacky but works fine.
+        
         self.ACTIVE_COLOR = (0.0,1.0,0.55,1)
         self.NOT_ACTIVE_COLOR = (0.2,0.2,0.2,1)
 
@@ -298,11 +300,11 @@ class RotoMaskEditLayer(AbstactEditorLayer):
         self.mouse_press_panel_point = self.view_editor.movie_coord_to_panel_coord(p) #V This needed when adding new curve points
 
         if self.edit_mode == ROTO_POINT_MODE:
-            # we get this as movie coord point, but rotomask stuff is running on pamel points, need to convert
+            # Hit test comes as movie coord point, but rotomask stuff is running on pamel points, need to convert
             ep = self.edit_point_shape.get_edit_point(self.view_editor.movie_coord_to_panel_coord(p))
             self.last_pressed_edit_point = ep
-            # we want to get "mouse_pressed()" below always called from vieweditor so we always return True for hit
-            # self.last_pressed_edit_point is now None if we didn't hit anything and we use info
+            # We want to get "mouse_pressed()" below always called from vieweditor so we always return True for hit.
+            # self.last_pressed_edit_point is now None if we didn't hit anything and we use info to determine what ediy to do.
             return True
 
         elif self.edit_mode == ROTO_MOVE_MODE:
@@ -312,18 +314,27 @@ class RotoMaskEditLayer(AbstactEditorLayer):
         #there are no other modes
         
     def mouse_pressed(self):
+        self.block_shape_update = True
         self.edit_point_shape.save_start_pos()
+
+        # Rotomask always adds keyframe on current frame if any changes are done.
+        # Maybe make user settable?
+        if self.clip_editor.get_active_kf_frame() != self.clip_editor.current_clip_frame:
+            self.clip_editor.add_keyframe(self.clip_editor.current_clip_frame)
+            self.edit_point_shape.convert_shape_coords_and_update_clip_editor_keyframes()
+            self.editable_property.write_out_keyframes(self.clip_editor.keyframes)
         
         if self.edit_mode == ROTO_MOVE_MODE:
             pass
         elif self.edit_mode == ROTO_POINT_MODE:
-            # Point pressed, we are mopving it
+            # Point pressed, we are moving it
             if self.last_pressed_edit_point != None:
                 self.edit_point_shape.clear_selection()
                 self.last_pressed_edit_point.selected = True
                 self.edit_point_shape.save_selected_point_data(self.last_pressed_edit_point)
             # No point hit attempt to add a point.
             else:
+                self.block_shape_update = False
                 self.edit_point_shape.clear_selection()
                 seq_index = self.edit_point_shape.get_point_insert_seq(self.mouse_press_panel_point)
                 if seq_index != -1:
@@ -332,8 +343,9 @@ class RotoMaskEditLayer(AbstactEditorLayer):
                         insert_index = 0
                         
                     self.add_edit_point(insert_index, self.mouse_press_panel_point)
-        
+                
     def mouse_dragged(self):
+        self.block_shape_update = False
         # delta is given in movie coords, RotoMaskEditShape uses panel coords (because it needs to do complex drawing in those) so we have to convert mouse delta.
         mdx, mdy = self.view_editor.movie_coord_to_panel_coord(self.get_mouse_delta()) # panel coords mouse delta 
         odx, ody = self.view_editor.movie_coord_to_panel_coord((0, 0)) # movie origo in panel points
@@ -391,6 +403,9 @@ class RotoMaskEditLayer(AbstactEditorLayer):
 
     # --------------------------------------------- state changes
     def frame_changed(self, tline_frame):
+        if self.block_shape_update == True:
+            return
+
         self.edit_point_shape.update_shape()
 
     def mode_changed(self):

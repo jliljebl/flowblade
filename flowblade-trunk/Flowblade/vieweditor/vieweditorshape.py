@@ -408,7 +408,6 @@ class RotoMaskEditShape(EditPointShape):
         if self.selected_point_array != None:
             self.selected_point_array[self.selected_point_index].selected = True 
 
-
     def get_point_insert_seq(self, p):
         # Return index of first curve point in the curve seqment that is closest to given point.
         seq_index = -1
