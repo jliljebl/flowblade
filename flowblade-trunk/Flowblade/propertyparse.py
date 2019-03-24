@@ -310,6 +310,12 @@ def get_frei0r_cairo_position(pos, screen_dim):
     range_pos = pos + screen_dim * 2.0
     return range_pos / pix_range
 
+def get_on_off_txt_for_int(int_val):
+    if int_val == 0:
+        return _("Off")
+    else:
+        return _("On")
+
 #------------------------------------------------------ util funcs
 def _property_type(value_str):
     """

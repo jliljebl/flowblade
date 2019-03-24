@@ -70,13 +70,13 @@ ALIGN_RIGHT = 2
 
 
 # ------------------------------------------- module interface
-def show_rotomask(mlt_filter, editable_properties, editor_widgets):
+def show_rotomask(mlt_filter, editable_properties, editor_widgets, value_labels):
     
     kf_json_prop = filter(lambda ep: ep.name == "spline", editable_properties)[0]
     kf_editor = keyframeeditor.RotoMaskKeyFrameEditor(kf_json_prop, propertyparse.rotomask_json_value_string_to_kf_array)
         
     global _rotomask
-    _rotomask = RotoMaskEditor(kf_editor, editor_widgets)
+    _rotomask = RotoMaskEditor(kf_editor, editor_widgets, value_labels)
     _rotomask.show_current_frame()
 
 def close_rotomask():
@@ -92,7 +92,7 @@ def rotomask_destroy():
             
 # ---------------------------------------------------------- editor
 class RotoMaskEditor(Gtk.Window):
-    def __init__(self, kf_editor, editor_widgets): # kf_editor is keyframeeditor.RotoMaskKeyFrameEditor
+    def __init__(self, kf_editor, editor_widgets, value_labels): # kf_editor is keyframeeditor.RotoMaskKeyFrameEditor
         GObject.GObject.__init__(self)
         self.set_title(_("RotoMaskEditor"))
         self.connect("delete-event", lambda w, e:close_rotomask())
@@ -108,9 +108,11 @@ class RotoMaskEditor(Gtk.Window):
             VIEW_EDITOR_WIDTH = 680
         
         self.block_updates = False
-        
+
         self.kf_editor = kf_editor
         self.kf_editor.set_parent_editor(self)
+
+        self.value_labels = value_labels
         
         self.view_editor = vieweditor.ViewEditor(PLAYER().profile, VIEW_EDITOR_WIDTH, VIEW_EDITOR_HEIGHT)
         
@@ -165,20 +167,28 @@ class RotoMaskEditor(Gtk.Window):
         editor_buttons_row.pack_start(save_rotodata_b, False, False, 0)
 
         prop_editor_row1 = Gtk.HBox()
-        prop_editor_row1.pack_start(editor_widgets[0], True, True, 0)
-        prop_editor_row1.pack_start(editor_widgets[3], True, True, 0)
-        prop_editor_row1.pack_start(editor_widgets[4], True, True, 0)
-
+        prop_editor_row1.pack_start(Gtk.Label(), True, True, 0)
+        prop_editor_row1.pack_start(editor_widgets[0], False, False, 0)
+        prop_editor_row1.pack_start(guiutils.pad_label(24, 20), False, False, 0)
+        prop_editor_row1.pack_start(editor_widgets[3], False, False, 0)
+        prop_editor_row1.pack_start(guiutils.pad_label(24, 20), False, False, 0)
+        prop_editor_row1.pack_start(editor_widgets[4], False, False, 0)
+        prop_editor_row1.pack_start(Gtk.Label(), True, True, 0)
+        
         prop_editor_row2 = Gtk.HBox()
-        prop_editor_row2.pack_start(editor_widgets[1], True, True, 0)
-        prop_editor_row2.pack_start(editor_widgets[2], True, True, 0)
+        prop_editor_row2.pack_start(Gtk.Label(), True, True, 0)
+        prop_editor_row2.pack_start(editor_widgets[1], False, False, 0)
+        prop_editor_row2.pack_start(guiutils.pad_label(24, 20), False, False, 0)
+        prop_editor_row2.pack_start(editor_widgets[2], False, False, 0)
+        prop_editor_row2.pack_start(Gtk.Label(), True, True, 0)
         
         editor_panel = Gtk.VBox()
         editor_panel.pack_start(self.view_editor, True, True, 0)
         editor_panel.pack_start(timeline_box, False, False, 0)
         editor_panel.pack_start(kf_editor, False, False, 0)
-        editor_panel.pack_start(guiutils.pad_label(2, 12), True, True, 0)
+        editor_panel.pack_start(guiutils.pad_label(2, 12), False, False, 0)
         editor_panel.pack_start(prop_editor_row1, False, False, 0)
+        editor_panel.pack_start(guiutils.pad_label(2, 12), False, False, 0)
         editor_panel.pack_start(prop_editor_row2, False, False, 0)
         editor_panel.pack_start(guiutils.pad_label(2, 12), False, False, 0)
         editor_panel.pack_start(editor_buttons_row, False, False, 0)
@@ -228,7 +238,11 @@ class RotoMaskEditor(Gtk.Window):
         self.view_editor.update_layers_for_frame(tline_frame)
         self.view_editor.edit_area.queue_draw()
 
-
+    def update_effects_editor_value_labels(self):
+        self.value_labels[0].set_text(str(len(self.kf_editor.clip_editor.keyframes)))
+        kf, curve_points = self.kf_editor.clip_editor.keyframes[0] # We always have one
+        self.value_labels[1].set_text(str(len(curve_points)))
+    
     def _kf_mode_clicked(self, kf_button):
         if self.roto_mask_layer.edit_mode == vieweditorlayer.ROTO_POINT_MODE and kf_button.get_active() == False:
             kf_button.set_active(True) # we untoggled by clicking which is not allowed, untoggle happens whenthe other mode is selected. We set the untoggled button back to being active.

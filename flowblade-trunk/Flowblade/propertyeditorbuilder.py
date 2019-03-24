@@ -136,11 +136,6 @@ def get_filter_extra_editor_rows(filt, editable_properties):
     return rows
 
 
-def _get_on_off_txt_for_int(int_val):
-    if int_val == 0:
-        return _("Off")
-    else:
-        return _("On")
 
     
 # ------------------------------------------------- gui builders
@@ -338,7 +333,46 @@ def _get_ladspa_slider_row(editable_property, slider_name=None):
     vbox.pack_start(top_row, True, True, 0)
     vbox.pack_start(hbox, False, False, 0)
     return vbox
+
+def _get_no_kf_slider_row(editable_property, slider_name=None, compact=False):
+    adjustment = editable_property.get_input_range_adjustment()
+
+    hslider = Gtk.HScale()
+    hslider.set_adjustment(adjustment)
+    hslider.set_draw_value(False)
+    hslider.connect("button-release-event", lambda w, e: _ladspa_slider_update(editable_property, adjustment))
     
+    spin = Gtk.SpinButton()
+    spin.set_numeric(True)
+    spin.set_adjustment(adjustment)
+    spin.connect("button-release-event", lambda w, e: _ladspa_slider_update(editable_property, adjustment))
+
+    _set_digits(editable_property, hslider, spin)
+
+    if slider_name == None:
+        name = editable_property.get_display_name()
+    else:
+        name = slider_name
+
+    hbox = Gtk.HBox(False, 4)
+    if compact:
+        name_label = Gtk.Label(label=name + ":")
+        hbox.pack_start(name_label, False, False, 4)
+    hbox.pack_start(hslider, True, True, 0)
+    hbox.pack_start(spin, False, False, 4)
+
+    vbox = Gtk.VBox(False)
+    if compact:
+        vbox.pack_start(hbox, False, False, 0)
+    else:
+        top_right_h = Gtk.HBox()
+        top_right_h.pack_start(Gtk.Label(), True, True, 0)            
+        top_row = _get_two_column_editor_row(name, top_right_h)
+        
+        vbox.pack_start(top_row, True, True, 0)
+        vbox.pack_start(hbox, False, False, 0)
+            
+    return vbox
 
 def _get_clip_frame_slider(editable_property):
     # Exceptionally we set the edit range here,
@@ -853,19 +887,24 @@ def _create_rotomask_editor(filt, editable_properties):
     
     invert_prop = filter(lambda ep: ep.name == "invert", editable_properties)[0]
     invert_editor =  _get_boolean_check_box_row(invert_prop)
-    
+    invert_editor.set_size_request(130, 20)
+
     feather_prop = filter(lambda ep: ep.name == "feather", editable_properties)[0]
-    feather_editor =  _get_slider_row(feather_prop)
+    feather_editor = _get_no_kf_slider_row(feather_prop, slider_name=None, compact=True)
+    feather_editor.set_size_request(450, 20)
 
     feather_passes_prop = filter(lambda ep: ep.name == "feather_passes", editable_properties)[0]
-    feather_passes_editor = _get_slider_row(feather_passes_prop)
-
+    feather_passes_editor = _get_no_kf_slider_row(feather_passes_prop, slider_name=None, compact=True)
+    feather_passes_editor.set_size_request(450, 20)
+    
     alpha_operation_prop = filter(lambda ep: ep.name == "alpha_operation", editable_properties)[0]
     alpha_operation_editor = _get_combo_box_row(alpha_operation_prop)
-      
+    alpha_operation_editor.set_size_request(270, 20)
+    
     mode_prop = filter(lambda ep: ep.name == "mode", editable_properties)[0]
     mode_editor = _get_combo_box_row(mode_prop)
-       
+    mode_editor.set_size_request(270, 20)
+
     property_editor_widgets.append(invert_editor)
     property_editor_widgets.append(feather_editor)
     property_editor_widgets.append(feather_passes_editor)
@@ -875,28 +914,32 @@ def _create_rotomask_editor(filt, editable_properties):
     kf_json_prop = filter(lambda ep: ep.name == "spline", editable_properties)[0]
     kf_editor = keyframeeditor.RotoMaskKeyFrameEditor(kf_json_prop, propertyparse.rotomask_json_value_string_to_kf_array)
 
-    kf_row = guiutils.get_left_justified_box( [guiutils.pad_label(12, 12), guiutils.bold_label(_("Keyframes") + ": "), Gtk.Label(str(len(kf_editor.clip_editor.keyframes)))])
-    inv_row = guiutils.get_left_justified_box( [guiutils.pad_label(12, 12), guiutils.bold_label(invert_prop.get_display_name() + ": "), Gtk.Label(_get_on_off_txt_for_int(invert_prop.value))])
+    kfs_value_label = Gtk.Label(str(len(kf_editor.clip_editor.keyframes)))
+    inv_value_label = Gtk.Label(propertyparse.get_on_off_txt_for_int(invert_prop.value))
+
+    kf_row = guiutils.get_left_justified_box([guiutils.pad_label(12, 12), guiutils.bold_label(_("Keyframes") + ": "), kfs_value_label])
     
     kf, curve_points = kf_editor.clip_editor.keyframes[0]
-    cps_row = guiutils.get_left_justified_box( [guiutils.pad_label(12, 12), guiutils.bold_label(_("Curve Points") + ": "), Gtk.Label(str(len(curve_points)))])
+    curve_points_value_label = Gtk.Label(str(len(curve_points)))
+    cps_row = guiutils.get_left_justified_box([guiutils.pad_label(12, 12), guiutils.bold_label(_("Curve Points") + ": "), curve_points_value_label])
+
+    value_labels = [kfs_value_label, curve_points_value_label]
 
     lauch_button = Gtk.Button(_("Lauch Rotomask editor"))
-    lauch_button.connect("clicked", lambda b:_roto_lauch_pressed(filt, editable_properties, property_editor_widgets))
+    lauch_button.connect("clicked", lambda b:_roto_lauch_pressed(filt, editable_properties, property_editor_widgets, value_labels))
     
     vbox = Gtk.VBox(False, 4)
     vbox.pack_start(guiutils.bold_label(_("Rotoscope info")), False, False, 0)
     vbox.pack_start(kf_row, False, False, 0)
     vbox.pack_start(cps_row, False, False, 0)
-    vbox.pack_start(inv_row, False, False, 0)
     vbox.pack_start(guiutils.pad_label(12, 12), False, False, 0)
     vbox.pack_start(lauch_button, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
     vbox.no_separator = True
     return vbox
 
-def _roto_lauch_pressed(filt, editable_properties, property_editor_widgets):
-    show_rotomask_func(filt, editable_properties, property_editor_widgets)
+def _roto_lauch_pressed(filt, editable_properties, property_editor_widgets, value_labels):
+    show_rotomask_func(filt, editable_properties, property_editor_widgets, value_labels)
 
 def _get_force_combo_index(deinterlace, progressive):
     # These correspond to hardcoded values ["Nothing","Progressive","Deinterlace","Both"] above

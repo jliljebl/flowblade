@@ -283,6 +283,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
         self.clip_editor = clip_editor
         self.rotomask_editor = rotomask_editor
 
+
         self.edit_point_shape = vieweditorshape.RotoMaskEditShape(view_editor, clip_editor)
         self.edit_point_shape.update_shape()
 
@@ -385,21 +386,24 @@ class RotoMaskEditLayer(AbstactEditorLayer):
                 
         self.edit_point_shape.convert_shape_coords_and_update_clip_editor_keyframes()
         self.editable_property.write_out_keyframes(self.clip_editor.keyframes)
-        self.rotomask_editor.show_current_frame()
 
+        self.rotomask_editor.show_current_frame()
+        self.rotomask_editor.update_effects_editor_value_labels()
+        
     # --------------------------------------------- edit events
     def add_edit_point(self, index, p):
         self.edit_point_shape.add_point(index, p)
 
         self.editable_property.write_out_keyframes(self.clip_editor.keyframes)
         self.rotomask_editor.show_current_frame() #  callback for full update
+        self.rotomask_editor.update_effects_editor_value_labels()
         
     def delete_selected_point(self):
         self.edit_point_shape.delete_selected_point()
 
         self.editable_property.write_out_keyframes(self.clip_editor.keyframes)
         self.rotomask_editor.show_current_frame() #  callback for full update
-        
+        self.rotomask_editor.update_effects_editor_value_labels()
 
     # --------------------------------------------- state changes
     def frame_changed(self, tline_frame):
@@ -417,3 +421,5 @@ class RotoMaskEditLayer(AbstactEditorLayer):
         self.edit_point_shape.draw_line_shape(cr, self.view_editor)
 
         self.edit_point_shape.draw_points(cr, self.view_editor)
+
+

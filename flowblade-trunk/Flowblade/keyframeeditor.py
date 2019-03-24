@@ -1400,14 +1400,16 @@ class RotoMaskKeyFrameEditor(Gtk.VBox):
         self.update_property_value()
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
         self.parent.update_view()
-                
+        self.parent.update_effects_editor_value_labels()
+        
     def delete_pressed(self):
         self.clip_editor.delete_active_keyframe()
         self.update_editor_view()
         self.update_property_value()
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
         self.parent.update_view()
-                
+        self.parent.update_effects_editor_value_labels()
+
     def next_pressed(self):
         self.clip_editor.set_next_active()
         self.update_editor_view()
