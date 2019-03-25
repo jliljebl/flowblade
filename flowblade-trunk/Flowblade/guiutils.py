@@ -127,7 +127,15 @@ def get_two_row_box(widget1, widget2):
     box.pack_start(top, False, False, 4)
     box.pack_start(widget2, False, False, 0)
     return box
-    
+
+def get_right_expand_box(widget1, widget2, center_pad=False):
+    hbox = Gtk.HBox()
+    hbox.pack_start(widget1, False, True, 0)
+    if center_pad:
+        hbox.pack_start(pad_label(4,4), False, True, 0)
+    hbox.pack_start(widget2, True, True, 0)
+    return hbox
+
 def get_image_button(img_file_name, width, height):
     button = Gtk.Button()
     icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + img_file_name)        

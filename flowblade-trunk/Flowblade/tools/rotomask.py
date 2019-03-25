@@ -51,11 +51,13 @@ _rotomask = None
 VIEW_EDITOR_WIDTH = 815
 VIEW_EDITOR_HEIGHT = 620
 
+"""
 TEXT_LAYER_LIST_WIDTH = 300
 TEXT_LAYER_LIST_HEIGHT = 150
 
 TEXT_VIEW_WIDTH = 300
 TEXT_VIEW_HEIGHT = 275
+
 
 DEFAULT_FONT_SIZE = 25
 
@@ -67,7 +69,7 @@ FACE_BOLD_ITALIC = "Bold Italic"
 ALIGN_LEFT = 0
 ALIGN_CENTER = 1
 ALIGN_RIGHT = 2
-
+"""
 
 # ------------------------------------------- module interface
 def show_rotomask(mlt_filter, editable_properties, editor_widgets, value_labels):
@@ -118,6 +120,7 @@ class RotoMaskEditor(Gtk.Window):
         
         self.guides_toggle = vieweditor.GuidesViewToggle(self.view_editor)
         
+        """
         add_b = Gtk.Button(_("Add"))
         del_b = Gtk.Button(_("Delete"))
         add_b.connect("clicked", lambda w:self._add_layer_pressed())
@@ -126,7 +129,8 @@ class RotoMaskEditor(Gtk.Window):
         add_del_box = Gtk.HBox(True,1)
         add_del_box.pack_start(add_b, True, True, 0)
         add_del_box.pack_start(del_b, True, True, 0)
-
+        """
+        
         self.tc_display = guicomponents.MonitorTCDisplay()
         self.tc_display.use_internal_frame = True
         self.tc_display.widget.set_valign(Gtk.Align.CENTER)
@@ -154,20 +158,23 @@ class RotoMaskEditor(Gtk.Window):
         timeline_box.set_margin_top(6)
         timeline_box.set_margin_bottom(6)
 
-        exit_b = guiutils.get_sized_button(_("Cancel Edit"), 150, 32)
-        exit_b.connect("clicked", lambda w:close_rotomask())
-        save_rotodata_b = guiutils.get_sized_button(_("Save Rotomask Data"), 150, 32)
+        mask_type_label = Gtk.Label(_("Mask Type:"))
+        mask_type_combo_box = Gtk.ComboBoxText()
+        mask_type_combo_box.append_text(_("Curve Mask"))
+        mask_type_combo_box.append_text(_("Line Mask"))
+        mask_type_combo_box.set_active(0)
+
+        #exit_b = guiutils.get_sized_button(_("Cancel Edit"), 150, 32)
+        #exit_b.connect("clicked", lambda w:close_rotomask())
+        save_rotodata_b = guiutils.get_sized_button(_("Close Tool"), 150, 32)
         save_rotodata_b.connect("clicked", lambda w:self._save_rotodata_pressed())
         
-        editor_buttons_row = Gtk.HBox()
-        editor_buttons_row.pack_start(Gtk.Label(), True, True, 0)
-        editor_buttons_row.pack_start(guiutils.pad_label(24, 2), False, False, 0)
-        editor_buttons_row.pack_start(guiutils.pad_label(24, 2), False, False, 0)
-        editor_buttons_row.pack_start(exit_b, False, False, 0)
-        editor_buttons_row.pack_start(save_rotodata_b, False, False, 0)
-
         prop_editor_row1 = Gtk.HBox()
         prop_editor_row1.pack_start(Gtk.Label(), True, True, 0)
+        prop_editor_row1.pack_start(mask_type_label, False, False, 0)
+        prop_editor_row1.pack_start(guiutils.pad_label(4, 4), False, False, 0)
+        prop_editor_row1.pack_start(mask_type_combo_box, False, False, 0)
+        prop_editor_row1.pack_start(guiutils.pad_label(24, 20), False, False, 0)
         prop_editor_row1.pack_start(editor_widgets[0], False, False, 0)
         prop_editor_row1.pack_start(guiutils.pad_label(24, 20), False, False, 0)
         prop_editor_row1.pack_start(editor_widgets[3], False, False, 0)
@@ -181,6 +188,13 @@ class RotoMaskEditor(Gtk.Window):
         prop_editor_row2.pack_start(guiutils.pad_label(24, 20), False, False, 0)
         prop_editor_row2.pack_start(editor_widgets[2], False, False, 0)
         prop_editor_row2.pack_start(Gtk.Label(), True, True, 0)
+
+        editor_buttons_row = Gtk.HBox()
+        editor_buttons_row.pack_start(Gtk.Label(), True, True, 0)
+        editor_buttons_row.pack_start(guiutils.pad_label(24, 2), False, False, 0)
+        editor_buttons_row.pack_start(guiutils.pad_label(24, 2), False, False, 0)
+        #editor_buttons_row.pack_start(exit_b, False, False, 0)
+        editor_buttons_row.pack_start(save_rotodata_b, False, False, 0)
         
         editor_panel = Gtk.VBox()
         editor_panel.pack_start(self.view_editor, True, True, 0)

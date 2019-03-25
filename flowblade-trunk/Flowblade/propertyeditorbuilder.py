@@ -503,19 +503,22 @@ def _get_text_entry(editable_property):
 def _entry_contentents_changed(entry, editable_property):
      editable_property.value = entry.get_text()
  
-def _get_boolean_check_box_row(editable_property):
+def _get_boolean_check_box_row(editable_property, compact=False):
     check_button = Gtk.CheckButton()
     check_button.set_active(editable_property.value == "1")
     check_button.connect("toggled", editable_property.boolean_button_toggled)
     
-    hbox = Gtk.HBox(False, 4)
+    if compact:
+        return guiutils.get_right_expand_box(Gtk.Label(editable_property.get_display_name() + ":"), check_button, True)
+    else:
+        hbox = Gtk.HBox(False, 4)
 
-    hbox.pack_start(check_button, False, False, 4)
-    hbox.pack_start(Gtk.Label(), True, True, 0)
-    
-    return _get_two_column_editor_row(editable_property.get_display_name(), hbox)
+        hbox.pack_start(check_button, False, False, 4)
+        hbox.pack_start(Gtk.Label(), True, True, 0)
+        
+        return _get_two_column_editor_row(editable_property.get_display_name(), hbox)
 
-def _get_combo_box_row(editable_property):
+def _get_combo_box_row(editable_property, compact=False):
     combo_box = Gtk.ComboBoxText()
             
     # Parse options and fill combo box
@@ -536,7 +539,10 @@ def _get_combo_box_row(editable_property):
     
     combo_box.connect("changed", editable_property.combo_selection_changed, values)  
 
-    return _get_two_column_editor_row(editable_property.get_display_name(), combo_box)
+    if compact:
+        return guiutils.get_right_expand_box(Gtk.Label(editable_property.get_display_name() + ":"), combo_box, True)
+    else:
+        return _get_two_column_editor_row(editable_property.get_display_name(), combo_box)
 
 def _get_color_selector(editable_property):
     gdk_color = editable_property.get_value_rgba()
@@ -886,7 +892,7 @@ def _create_rotomask_editor(filt, editable_properties):
     property_editor_widgets = []
     
     invert_prop = filter(lambda ep: ep.name == "invert", editable_properties)[0]
-    invert_editor =  _get_boolean_check_box_row(invert_prop)
+    invert_editor =  _get_boolean_check_box_row(invert_prop, True)
     invert_editor.set_size_request(130, 20)
 
     feather_prop = filter(lambda ep: ep.name == "feather", editable_properties)[0]
@@ -898,11 +904,11 @@ def _create_rotomask_editor(filt, editable_properties):
     feather_passes_editor.set_size_request(450, 20)
     
     alpha_operation_prop = filter(lambda ep: ep.name == "alpha_operation", editable_properties)[0]
-    alpha_operation_editor = _get_combo_box_row(alpha_operation_prop)
+    alpha_operation_editor = _get_combo_box_row(alpha_operation_prop, True)
     alpha_operation_editor.set_size_request(270, 20)
     
     mode_prop = filter(lambda ep: ep.name == "mode", editable_properties)[0]
-    mode_editor = _get_combo_box_row(mode_prop)
+    mode_editor = _get_combo_box_row(mode_prop, True)
     mode_editor.set_size_request(270, 20)
 
     property_editor_widgets.append(invert_editor)
