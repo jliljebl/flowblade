@@ -45,31 +45,13 @@ import positionbar
 import utils
 import vieweditor
 import vieweditorlayer
+import vieweditorshape
 
 _rotomask = None
 
 VIEW_EDITOR_WIDTH = 815
 VIEW_EDITOR_HEIGHT = 620
 
-"""
-TEXT_LAYER_LIST_WIDTH = 300
-TEXT_LAYER_LIST_HEIGHT = 150
-
-TEXT_VIEW_WIDTH = 300
-TEXT_VIEW_HEIGHT = 275
-
-
-DEFAULT_FONT_SIZE = 25
-
-FACE_REGULAR = "Regular"
-FACE_BOLD = "Bold"
-FACE_ITALIC = "Italic"
-FACE_BOLD_ITALIC = "Bold Italic"
-
-ALIGN_LEFT = 0
-ALIGN_CENTER = 1
-ALIGN_RIGHT = 2
-"""
 
 # ------------------------------------------- module interface
 def show_rotomask(mlt_filter, editable_properties, editor_widgets, value_labels):
@@ -163,6 +145,7 @@ class RotoMaskEditor(Gtk.Window):
         mask_type_combo_box.append_text(_("Curve Mask"))
         mask_type_combo_box.append_text(_("Line Mask"))
         mask_type_combo_box.set_active(0)
+        mask_type_combo_box.connect("changed", self.mask_type_selection_changed)  
 
         #exit_b = guiutils.get_sized_button(_("Cancel Edit"), 150, 32)
         #exit_b.connect("clicked", lambda w:close_rotomask())
@@ -224,11 +207,22 @@ class RotoMaskEditor(Gtk.Window):
         
         self.kf_editor.active_keyframe_changed()
 
-        self.connect("size-allocate", lambda w, e:self.window_resized())
+        #self.connect("size-allocate", lambda w, e:self.window_resized())
         self.connect("window-state-event", lambda w, e:self.window_resized())
         self.connect("key-press-event", self.key_down)
         self.window_resized()
-                
+
+    def mask_type_selection_changed(self, combo_box):
+        if combo_box.get_active() == 0:
+            self.roto_mask_layer.edit_point_shape.set_mask_type(vieweditorshape.CURVE_MASK)
+        else:
+            self.roto_mask_layer.edit_point_shape.set_mask_type(vieweditorshape.LINE_MASK)
+
+        self.roto_mask_layer.edit_point_shape.convert_shape_coords_and_update_clip_editor_keyframes()
+        self.roto_mask_layer.editable_property.write_out_keyframes(self.roto_mask_layer.edit_point_shape.clip_editor.keyframes)
+        
+        self.show_current_frame()
+
     def update_view(self):
         # Callback from kf_editor
         self.show_current_frame()

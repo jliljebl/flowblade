@@ -363,7 +363,9 @@ class RotoMaskEditLayer(AbstactEditorLayer):
                     self.last_pressed_edit_point.translate_from_move_start(delta)
                     hp1.translate_from_move_start(delta)
                     hp2.translate_from_move_start(delta)
-                    
+    
+        self.edit_point_shape.maybe_force_line_mask()
+    
     def mouse_released(self):
         # delta is given in movie coords, RotoMaskEditShape uses panel coords  (because it needs to do complex drawing in those) so we have to convert mouse delta.
         mdx, mdy = self.view_editor.movie_coord_to_panel_coord(self.get_mouse_delta())
@@ -383,7 +385,10 @@ class RotoMaskEditLayer(AbstactEditorLayer):
                     hp2.translate_from_move_start(delta)
             else:
                 return # no edit point moved, no update needed
-                
+        
+        
+        self.edit_point_shape.maybe_force_line_mask()
+        
         self.edit_point_shape.convert_shape_coords_and_update_clip_editor_keyframes()
         self.editable_property.write_out_keyframes(self.clip_editor.keyframes)
 
@@ -394,12 +399,16 @@ class RotoMaskEditLayer(AbstactEditorLayer):
     def add_edit_point(self, index, p):
         self.edit_point_shape.add_point(index, p)
 
+        self.edit_point_shape.maybe_force_line_mask()
+
         self.editable_property.write_out_keyframes(self.clip_editor.keyframes)
         self.rotomask_editor.show_current_frame() #  callback for full update
         self.rotomask_editor.update_effects_editor_value_labels()
         
     def delete_selected_point(self):
         self.edit_point_shape.delete_selected_point()
+
+        self.edit_point_shape.maybe_force_line_mask()
 
         self.editable_property.write_out_keyframes(self.clip_editor.keyframes)
         self.rotomask_editor.show_current_frame() #  callback for full update
@@ -417,7 +426,6 @@ class RotoMaskEditLayer(AbstactEditorLayer):
         
     # -------------------------------------------- draw
     def draw(self, cr, write_out_layers, draw_overlays):
-        cr.set_source_rgba(*self.ACTIVE_COLOR)
         self.edit_point_shape.draw_line_shape(cr, self.view_editor)
 
         self.edit_point_shape.draw_points(cr, self.view_editor)

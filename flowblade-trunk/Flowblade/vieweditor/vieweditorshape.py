@@ -37,9 +37,14 @@ LINE_NORMAL = 0
 LINE_DASH = 1
 
 # colors
+ROTO_CURVE_COLOR = (0.54, 0.09, 0.73, 1)
+HANDLE_LINES_COLOR = (0.81, 0.85, 0.17, 1)
 ROTO_CURVE_POINT_COLOR = (0.9, 0.9, 0.9, 1)
 ROTO_HANDLE_POINT_COLOR = (0.8, 0.2, 0.2, 1)
-            
+# Roto mask types
+CURVE_MASK = 0
+LINE_MASK = 1
+
 class EditPoint:
     """
     A point that user can move on the screen to edit image data.
@@ -105,9 +110,12 @@ class RotoMaskEditPoint(EditPoint):
         EditPoint.__init__(self, x, y)
         self.display_type = point_type
         self.selected = None
+        self.mask_type = CURVE_MASK
 
     def hit(self, test_p, view_scale=1.0):
-       
+        if self.mask_type == LINE_MASK and self.display_type == ROTO_HANDLE_POINT:
+            return False # With LINE_MASK handles are not user draggable.
+            
         test_x, test_y = test_p
       
         if((test_x >= self.x - EDIT_POINT_SIDE_HALF) 
@@ -119,10 +127,13 @@ class RotoMaskEditPoint(EditPoint):
         return False
         
     def draw(self, cr, view_editor):
+        if self.mask_type == LINE_MASK and self.display_type == ROTO_HANDLE_POINT:
+            return 
+
         if self.display_type == ROTO_CURVE_POINT:
-            cr.set_source_rgba(*ROTO_CURVE_POINT_COLOR)
+            cr.set_source_rgba(*ROTO_CURVE_COLOR)
         else:
-            cr.set_source_rgba(*ROTO_HANDLE_POINT_COLOR)
+            cr.set_source_rgba(*HANDLE_LINES_COLOR)
             
         x, y = self.x, self.y
         cr.rectangle(x - 4, y - 4, 8, 8)
@@ -326,6 +337,9 @@ class RotoMaskEditShape(EditPointShape):
     """
     def __init__(self, view_editor, clip_editor):
         EditPointShape.__init__(self)
+        
+        self.mask_type = CURVE_MASK
+                
         self.curve_points = [] # panel coords, not movie coods or normalized movie coords
         self.handles1 =  [] # panel coords, not movie coods or normalized movie coords
         self.handles2 =  [] # panel coords, not movie coods or normalized movie coords
@@ -370,6 +384,7 @@ class RotoMaskEditShape(EditPointShape):
         self.update_shape()
 
     def update_shape(self):
+        print "update_shape"
         # We're not using timeline frame for shape, we're using clip frame.
         frame = self.clip_editor.current_clip_frame
 
@@ -408,6 +423,9 @@ class RotoMaskEditShape(EditPointShape):
         if self.selected_point_array != None:
             self.selected_point_array[self.selected_point_index].selected = True 
 
+        self.maybe_force_line_mask()
+        self.set_points_mask_type_data()
+        
     def get_point_insert_seq(self, p):
         # Return index of first curve point in the curve seqment that is closest to given point.
         seq_index = -1
@@ -436,6 +454,24 @@ class RotoMaskEditShape(EditPointShape):
         else:
             return -1
 
+    def set_mask_type(self, mask_type):
+        print "mask_type", mask_type
+        self.mask_type = mask_type
+        self.maybe_force_line_mask()
+        self.set_points_mask_type_data()
+
+    def set_points_mask_type_data(self):
+        for ep in self.edit_points:
+            ep.mask_type = self.mask_type 
+
+    def maybe_force_line_mask(self):
+        if self.mask_type == LINE_MASK: 
+            # Makes all lines between curve points straight
+            for i in range(0, len(self.curve_points)):
+                hp1, hp2 = self.get_straight_line_handle_places(i)
+                self.handles1[i].set_pos(hp1)
+                self.handles2[i].set_pos(hp2)
+            
     def get_straight_line_handle_places(self, cp_index):
         prev_i = cp_index - 1
         next_i = cp_index + 1
@@ -529,6 +565,7 @@ class RotoMaskEditShape(EditPointShape):
         return (x, y)
     
     def draw_line_shape(self, cr, view_editor):
+        cr.set_source_rgba(*ROTO_CURVE_COLOR)
         cr.move_to(self.curve_points[0].x, self.curve_points[0].y)
         for i in range(0, len(self.curve_points)):
             next_point_index = i + 1
@@ -543,7 +580,10 @@ class RotoMaskEditShape(EditPointShape):
         cr.close_path()
         cr.stroke()
         
-        cr.set_source_rgba(1,0,0,1)
+        if self.mask_type == LINE_MASK:
+            return
+
+        cr.set_source_rgba(*HANDLE_LINES_COLOR)
         for i in range(0, len(self.curve_points)):
             cr.move_to(self.handles1[i].x, self.handles1[i].y)
             cr.line_to(self.curve_points[i].x, self.curve_points[i].y)
