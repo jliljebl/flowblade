@@ -337,13 +337,18 @@ class RotoMaskEditLayer(AbstactEditorLayer):
             else:
                 self.block_shape_update = False
                 self.edit_point_shape.clear_selection()
-                seq_index = self.edit_point_shape.get_point_insert_seq(self.mouse_press_panel_point)
-                if seq_index != -1:
-                    insert_index = seq_index + 1
-                    if insert_index == len(self.edit_point_shape.curve_points):
-                        insert_index = 0
-                        
-                    self.add_edit_point(insert_index, self.mouse_press_panel_point)
+                if len(self.edit_point_shape.curve_points) > 1:
+                    seq_index = self.edit_point_shape.get_point_insert_seq(self.mouse_press_panel_point)
+                    if seq_index != -1:
+                        insert_index = seq_index + 1
+                        if insert_index == len(self.edit_point_shape.curve_points):
+                            insert_index = 0
+                elif len(self.edit_point_shape.curve_points) == 1:
+                    insert_index = 1
+                else:
+                    insert_index = 0
+
+                self.add_edit_point(insert_index, self.mouse_press_panel_point)
                 
     def mouse_dragged(self):
         self.block_shape_update = False

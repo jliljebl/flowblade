@@ -360,7 +360,11 @@ class RotoMaskEditShape(EditPointShape):
         x, y = p
         add_cp = RotoMaskEditPoint(ROTO_CURVE_POINT, x, y)
         self.curve_points.insert(index, add_cp)
-        hp1, hp2 = self.get_straight_line_handle_places(index)
+        if len(self.curve_points) > 1:
+            hp1, hp2 = self.get_straight_line_handle_places(index)
+        else:
+            hp1 = (x, y + 30)
+            hp2 = (x + 30, y)
     
         hch = [ self.view_editor.panel_coord_to_normalized_movie_coord(hp1), 
                 self.view_editor.panel_coord_to_normalized_movie_coord(p), 
@@ -565,20 +569,22 @@ class RotoMaskEditShape(EditPointShape):
         return (x, y)
     
     def draw_line_shape(self, cr, view_editor):
-        cr.set_source_rgba(*ROTO_CURVE_COLOR)
-        cr.move_to(self.curve_points[0].x, self.curve_points[0].y)
-        for i in range(0, len(self.curve_points)):
-            next_point_index = i + 1
-            if next_point_index == len(self.curve_points):
-                next_point_index = 0
-            cr.curve_to(    self.handles2[i].x,
-                            self.handles2[i].y,
-                            self.handles1[next_point_index].x,
-                            self.handles1[next_point_index].y,
-                            self.curve_points[next_point_index].x,
-                            self.curve_points[next_point_index].y)
-        cr.close_path()
-        cr.stroke()
+        print "len(self.curve_points)", len(self.curve_points), len(self.handles1), len(self.handles2)
+        if len(self.curve_points) > 1:
+            cr.set_source_rgba(*ROTO_CURVE_COLOR)
+            cr.move_to(self.curve_points[0].x, self.curve_points[0].y)
+            for i in range(0, len(self.curve_points)):
+                next_point_index = i + 1
+                if next_point_index == len(self.curve_points):
+                    next_point_index = 0
+                cr.curve_to(    self.handles2[i].x,
+                                self.handles2[i].y,
+                                self.handles1[next_point_index].x,
+                                self.handles1[next_point_index].y,
+                                self.curve_points[next_point_index].x,
+                                self.curve_points[next_point_index].y)
+            cr.close_path()
+            cr.stroke()
         
         if self.mask_type == LINE_MASK:
             return
@@ -587,7 +593,7 @@ class RotoMaskEditShape(EditPointShape):
         for i in range(0, len(self.curve_points)):
             cr.move_to(self.handles1[i].x, self.handles1[i].y)
             cr.line_to(self.curve_points[i].x, self.curve_points[i].y)
-            cr.line_to( self.handles2[i].x, self.handles2[i].y)
+            cr.line_to(self.handles2[i].x, self.handles2[i].y)
 
             cr.stroke()
 
