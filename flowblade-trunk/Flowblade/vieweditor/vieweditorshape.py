@@ -351,6 +351,13 @@ class RotoMaskEditShape(EditPointShape):
             
         self.clip_editor = clip_editor # This is keyframeeditor.ClipKeyFrameEditor
         self.view_editor = view_editor # This is viewEditor.ViewEditor
+
+        if len(clip_editor.keyframes) > 2:
+            self.closed = True
+        else:
+            self.closed = False
+        
+
         self.update_shape()
 
     def add_point(self, index, p):
@@ -385,6 +392,9 @@ class RotoMaskEditShape(EditPointShape):
         self.selected_point_array = None
         self.selected_point_index = -1
     
+        if len(bz_points) < 3:
+            self.closed = False # 2 points can't create a closed polygon/curve
+
         self.update_shape()
 
     def update_shape(self):
@@ -468,8 +478,8 @@ class RotoMaskEditShape(EditPointShape):
         for ep in self.edit_points:
             ep.mask_type = self.mask_type 
 
-    def maybe_force_line_mask(self):
-        if self.mask_type == LINE_MASK: 
+    def maybe_force_line_mask(self, force=False):
+        if self.mask_type == LINE_MASK or force: 
             # Makes all lines between curve points straight
             for i in range(0, len(self.curve_points)):
                 hp1, hp2 = self.get_straight_line_handle_places(i)
@@ -570,32 +580,45 @@ class RotoMaskEditShape(EditPointShape):
     
     def draw_line_shape(self, cr, view_editor):
         print "len(self.curve_points)", len(self.curve_points), len(self.handles1), len(self.handles2)
-        if len(self.curve_points) > 1:
-            cr.set_source_rgba(*ROTO_CURVE_COLOR)
-            cr.move_to(self.curve_points[0].x, self.curve_points[0].y)
+        if self.closed == True:
+            if len(self.curve_points) > 1:
+                cr.set_source_rgba(*ROTO_CURVE_COLOR)
+                cr.move_to(self.curve_points[0].x, self.curve_points[0].y)
+                for i in range(0, len(self.curve_points)):
+                    next_point_index = i + 1
+                    if next_point_index == len(self.curve_points):
+                        next_point_index = 0
+                    cr.curve_to(    self.handles2[i].x,
+                                    self.handles2[i].y,
+                                    self.handles1[next_point_index].x,
+                                    self.handles1[next_point_index].y,
+                                    self.curve_points[next_point_index].x,
+                                    self.curve_points[next_point_index].y)
+                cr.close_path()
+                cr.stroke()
+            
+            if self.mask_type == LINE_MASK:
+                return
+
+            cr.set_source_rgba(*HANDLE_LINES_COLOR)
             for i in range(0, len(self.curve_points)):
-                next_point_index = i + 1
-                if next_point_index == len(self.curve_points):
-                    next_point_index = 0
-                cr.curve_to(    self.handles2[i].x,
-                                self.handles2[i].y,
-                                self.handles1[next_point_index].x,
-                                self.handles1[next_point_index].y,
-                                self.curve_points[next_point_index].x,
-                                self.curve_points[next_point_index].y)
-            cr.close_path()
-            cr.stroke()
-        
-        if self.mask_type == LINE_MASK:
-            return
+                cr.move_to(self.handles1[i].x, self.handles1[i].y)
+                cr.line_to(self.curve_points[i].x, self.curve_points[i].y)
+                cr.line_to(self.handles2[i].x, self.handles2[i].y)
 
-        cr.set_source_rgba(*HANDLE_LINES_COLOR)
-        for i in range(0, len(self.curve_points)):
-            cr.move_to(self.handles1[i].x, self.handles1[i].y)
-            cr.line_to(self.curve_points[i].x, self.curve_points[i].y)
-            cr.line_to(self.handles2[i].x, self.handles2[i].y)
-
-            cr.stroke()
+                cr.stroke()
+        else:
+            if len(self.curve_points) > 1:
+                cr.set_source_rgba(*ROTO_CURVE_COLOR)
+                cr.move_to(self.curve_points[0].x, self.curve_points[0].y)
+                for i in range(0, len(self.curve_points)):
+                    cr.line_to(self.curve_points[i].x, self.curve_points[i].y)
+                
+                cr.stroke()
+    
+    def draw_curve_points(self, cr, view_editor):
+        for ep in self.curve_points:
+            ep.draw(cr, view_editor)
 
     # ------------------------------------------------------------- saving edits
     def convert_shape_coords_and_update_clip_editor_keyframes(self):

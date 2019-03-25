@@ -328,28 +328,39 @@ class RotoMaskEditLayer(AbstactEditorLayer):
         if self.edit_mode == ROTO_MOVE_MODE:
             pass
         elif self.edit_mode == ROTO_POINT_MODE:
-            # Point pressed, we are moving it
             if self.last_pressed_edit_point != None:
-                self.edit_point_shape.clear_selection()
-                self.last_pressed_edit_point.selected = True
-                self.edit_point_shape.save_selected_point_data(self.last_pressed_edit_point)
+                if self.edit_point_shape.closed == False:
+                    if self.edit_point_shape.curve_points.index(self.last_pressed_edit_point) == 0:
+                        self.edit_point_shape.closed = True
+                        self.edit_point_shape.maybe_force_line_mask(True) # We start with line mask curve points
+                else:
+                    # Point pressed, we are moving it
+                    self.edit_point_shape.clear_selection()
+                    self.last_pressed_edit_point.selected = True
+                    self.edit_point_shape.save_selected_point_data(self.last_pressed_edit_point)
             # No point hit attempt to add a point.
             else:
-                self.block_shape_update = False
-                self.edit_point_shape.clear_selection()
-                if len(self.edit_point_shape.curve_points) > 1:
-                    seq_index = self.edit_point_shape.get_point_insert_seq(self.mouse_press_panel_point)
-                    if seq_index != -1:
-                        insert_index = seq_index + 1
-                        if insert_index == len(self.edit_point_shape.curve_points):
-                            insert_index = 0
-                elif len(self.edit_point_shape.curve_points) == 1:
-                    insert_index = 1
-                else:
-                    insert_index = 0
+                if self.edit_point_shape.closed == True:
+                    #Closed curve, try add point in between existing points
+                    self.block_shape_update = False
+                    self.edit_point_shape.clear_selection()
+                    if len(self.edit_point_shape.curve_points) > 1:
+                        seq_index = self.edit_point_shape.get_point_insert_seq(self.mouse_press_panel_point)
+                        if seq_index != -1:
+                            insert_index = seq_index + 1
+                            if insert_index == len(self.edit_point_shape.curve_points):
+                                insert_index = 0
+                    elif len(self.edit_point_shape.curve_points) == 1:
+                        insert_index = 1
+                    else:
+                        insert_index = 0
 
-                self.add_edit_point(insert_index, self.mouse_press_panel_point)
-                
+                    self.add_edit_point(insert_index, self.mouse_press_panel_point)
+                else:
+                    # Open curve, add point last
+                    self.block_shape_update = False
+                    self.add_edit_point(len(self.edit_point_shape.curve_points), self.mouse_press_panel_point)
+                    
     def mouse_dragged(self):
         self.block_shape_update = False
         # delta is given in movie coords, RotoMaskEditShape uses panel coords (because it needs to do complex drawing in those) so we have to convert mouse delta.
@@ -432,7 +443,9 @@ class RotoMaskEditLayer(AbstactEditorLayer):
     # -------------------------------------------- draw
     def draw(self, cr, write_out_layers, draw_overlays):
         self.edit_point_shape.draw_line_shape(cr, self.view_editor)
-
-        self.edit_point_shape.draw_points(cr, self.view_editor)
+        if self.edit_point_shape.closed == True:
+            self.edit_point_shape.draw_points(cr, self.view_editor)
+        else:
+            self.edit_point_shape.draw_curve_points(cr, self.view_editor)
 
 
