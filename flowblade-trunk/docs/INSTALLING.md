@@ -21,6 +21,11 @@ On some systems double clicking may not work and you need to install <b>.deb</b>
 
     sudo apt install ./flowblade-2.0.0-1_all.deb
 
+OR if you have Debian buster+, or Ubuntu 19.04+
+
+You can just apt-get install flowblade
+
+See: https://packages.debian.org/search?keywords=flowblade and https://launchpad.net/ubuntu/+source/flowblade
 
 ### Installing Flatpak from Flathub
 
