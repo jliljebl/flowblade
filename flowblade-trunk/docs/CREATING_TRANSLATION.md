@@ -40,9 +40,7 @@ msgstr ""
 ```bash
 ./compile_language LANGUAGE_CODE
 ```
-  * Launch by running script .../flowblade-trunk/flowblade that was created when you downloaded the repository version. (You may need to set it executable first)
-
-
+  * Launch by running script ``../flowblade-trunk/flowblade`` that was created when you downloaded the repository version. (You may need to set it executable first)
 
 ### 4. Contributing a translation
 Send the created ``flowblade.po`` file to janne.liljeblad@gmail.com or submit a Github pull request. Please mention words Flowblade, translation and the LANGUAGE_CODE in the subject line. Translation will be in the next release.
