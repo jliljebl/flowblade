@@ -258,6 +258,7 @@ class EditPointShape:
         for ep in self.edit_points:
             ep.display_type = INVISIBLE_POINT
 
+
 class SimpleRectEditShape(EditPointShape):
     """
     A rect with four corner points.
@@ -352,7 +353,8 @@ class RotoMaskEditShape(EditPointShape):
         self.clip_editor = clip_editor # This is keyframeeditor.ClipKeyFrameEditor
         self.view_editor = view_editor # This is viewEditor.ViewEditor
 
-        if len(clip_editor.keyframes) > 2:
+        keyframe, bz_points = clip_editor.keyframes[0]
+        if len(bz_points) > 2:
             self.closed = True
         else:
             self.closed = False

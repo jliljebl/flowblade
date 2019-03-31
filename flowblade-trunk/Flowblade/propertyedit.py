@@ -691,8 +691,8 @@ class RotoJSONProperty(EditableProperty):
         val_str += "}"
 
         #print self.name
-        #print "---------------------------------------------keyframes_str OUT---------------------------------------"
-        #print " write_out_keyframes val_str", val_str
+        print "---------------------------------------------keyframes_str OUT---------------------------------------"
+        print " write_out_keyframes val_str", val_str
         
         self.write_value(val_str)
 
