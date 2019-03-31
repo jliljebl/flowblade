@@ -62,6 +62,7 @@ from editorstate import EDIT_MODE
 import editorpersistance
 import kftoolmode
 import medialinker
+import modesetting
 import movemodes
 import mltprofiles
 import persistance
@@ -759,7 +760,15 @@ def do_rendering():
             secondary_txt = _("Rendering from proxy media will produce worse quality than rendering from original media.\nConvert to using original media in Proxy Manager for best quality.\n\nSelect 'Confirm' to render from proxy media anyway.")
             dialogutils.warning_confirmation(_proxy_confirm_dialog_callback, primary_txt, secondary_txt, gui.editor_window.window, data=None, is_info=False, use_confirm_text=True)
             return
-            
+
+    # We need to exit active trim modes or the hidden trim clip gets rendered.
+    if EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
+        modesetting.oneroll_trim_no_edit_init()
+    elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
+        modesetting.tworoll_trim_no_edit_init()
+    elif EDIT_MODE() == editorstate.SLIDE_TRIM:
+        modesetting.slide_trim_no_edit_init()
+    
     global force_overwrite, force_proxy
     force_overwrite = False
     force_proxy = False
