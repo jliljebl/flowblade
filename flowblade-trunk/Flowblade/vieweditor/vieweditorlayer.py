@@ -367,7 +367,6 @@ class RotoMaskEditLayer(AbstactEditorLayer):
                     self.block_shape_update = False
 
                     if len(self.edit_point_shape.curve_points) > 1:
-                        print "JDJDJDJJD"
                         self.add_edit_point(len(self.edit_point_shape.curve_points), self.mouse_press_panel_point, False)
                         self.edit_point_shape.maybe_force_line_mask(True)
                         self.edit_point_shape.convert_shape_coords_and_update_clip_editor_keyframes()

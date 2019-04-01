@@ -18,30 +18,17 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import copy
-import os
-import pickle
-import threading
-
-import time
-
-from gi.repository import Gtk, Gdk, GdkPixbuf
+from gi.repository import Gtk, Gdk
 from gi.repository import GLib, GObject
-from gi.repository import Pango
-from gi.repository import PangoCairo
 
-import toolsdialogs
 from editorstate import PLAYER
 import editorstate
 import gui
 import guicomponents
 import guiutils
-import dialogutils
 import keyframeeditor
-import projectaction
 import propertyparse
 import respaths
-import positionbar
 import utils
 import vieweditor
 import vieweditorlayer
@@ -56,7 +43,7 @@ VIEW_EDITOR_HEIGHT = 620
 # ------------------------------------------- module interface
 def show_rotomask(mlt_filter, editable_properties, property_editor_widgets_create_func, value_labels):
     
-    # Create keyframe editor for spline
+    # Create custom keyframe editor for spline
     kf_json_prop = filter(lambda ep: ep.name == "spline", editable_properties)[0]
     kf_editor = keyframeeditor.RotoMaskKeyFrameEditor(kf_json_prop, propertyparse.rotomask_json_value_string_to_kf_array)
 
@@ -104,6 +91,8 @@ def _write_val_and_update_editor(ep, value_str):
 class RotoMaskEditor(Gtk.Window):
     def __init__(self, kf_editor, property_editor_widgets_create_func, value_labels): # kf_editor is keyframeeditor.RotoMaskKeyFrameEditor
         GObject.GObject.__init__(self)
+        self.set_modal(True)
+        self.set_transient_for(gui.editor_window.window)
         self.set_title(_("RotoMaskEditor"))
         self.connect("delete-event", lambda w, e:close_rotomask())
         
@@ -221,6 +210,7 @@ class RotoMaskEditor(Gtk.Window):
         
         self.kf_editor.active_keyframe_changed()
 
+        self.connect("size-allocate", lambda w, e:self.window_resized())
         self.connect("window-state-event", lambda w, e:self.window_resized())
         self.connect("key-press-event", self.key_down)
         self.window_resized()
