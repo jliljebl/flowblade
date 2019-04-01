@@ -384,7 +384,6 @@ class RotoMaskEditShape(EditPointShape):
                 self.view_editor.panel_coord_to_normalized_movie_coord(p), 
                 self.view_editor.panel_coord_to_normalized_movie_coord(hp2)]
 
-        print hch
         for kf_tuple in self.clip_editor.keyframes:
             keyframe, bz_points = kf_tuple
             bz_points.insert(index, hch) 
@@ -406,7 +405,6 @@ class RotoMaskEditShape(EditPointShape):
         self.update_shape()
 
     def update_shape(self):
-        print "update_shape"
         # We're not using timeline frame for shape, we're using clip frame.
         frame = self.clip_editor.current_clip_frame
 
@@ -477,7 +475,6 @@ class RotoMaskEditShape(EditPointShape):
             return -1
 
     def set_mask_type(self, mask_type):
-        print "mask_type", mask_type
         self.mask_type = mask_type
         self.maybe_force_line_mask()
         self.set_points_mask_type_data()
@@ -587,7 +584,6 @@ class RotoMaskEditShape(EditPointShape):
         return (x, y)
     
     def draw_line_shape(self, cr, view_editor):
-        print "len(self.curve_points)", len(self.curve_points), len(self.handles1), len(self.handles2)
         if self.closed == True:
             if len(self.curve_points) > 1:
                 cr.set_source_rgba(*ROTO_CURVE_COLOR)

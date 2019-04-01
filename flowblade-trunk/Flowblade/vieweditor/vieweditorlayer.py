@@ -365,8 +365,17 @@ class RotoMaskEditLayer(AbstactEditorLayer):
                 else:
                     # Open curve, add point last
                     self.block_shape_update = False
-                    self.add_edit_point(len(self.edit_point_shape.curve_points), self.mouse_press_panel_point)
-                    
+
+                    if len(self.edit_point_shape.curve_points) > 1:
+                        print "JDJDJDJJD"
+                        self.add_edit_point(len(self.edit_point_shape.curve_points), self.mouse_press_panel_point, False)
+                        self.edit_point_shape.maybe_force_line_mask(True)
+                        self.edit_point_shape.convert_shape_coords_and_update_clip_editor_keyframes()
+                        self.editable_property.write_out_keyframes(self.clip_editor.keyframes)
+                        self.rotomask_editor.show_current_frame()
+                    else:
+                        self.add_edit_point(len(self.edit_point_shape.curve_points), self.mouse_press_panel_point)
+                        
     def mouse_dragged(self):
         self.block_shape_update = False
         # delta is given in movie coords, RotoMaskEditShape uses panel coords (because it needs to do complex drawing in those) so we have to convert mouse delta.
@@ -418,13 +427,14 @@ class RotoMaskEditLayer(AbstactEditorLayer):
         self.rotomask_editor.update_effects_editor_value_labels()
         
     # --------------------------------------------- edit events
-    def add_edit_point(self, index, p):
+    def add_edit_point(self, index, p, show_current_frame=True):
         self.edit_point_shape.add_point(index, p)
 
         self.edit_point_shape.maybe_force_line_mask()
 
         self.editable_property.write_out_keyframes(self.clip_editor.keyframes)
-        self.rotomask_editor.show_current_frame() #  callback for full update
+        if show_current_frame:
+            self.rotomask_editor.show_current_frame() #  callback for full update
         self.rotomask_editor.update_effects_editor_value_labels()
         
     def delete_selected_point(self):
