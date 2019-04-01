@@ -330,9 +330,15 @@ class RotoMaskEditLayer(AbstactEditorLayer):
         elif self.edit_mode == ROTO_POINT_MODE:
             if self.last_pressed_edit_point != None:
                 if self.edit_point_shape.closed == False:
-                    if self.edit_point_shape.curve_points.index(self.last_pressed_edit_point) == 0:
+                    if (self.edit_point_shape.curve_points.index(self.last_pressed_edit_point) == 0 and
+                        len(self.edit_point_shape.curve_points) > 2):
                         self.edit_point_shape.closed = True
                         self.edit_point_shape.maybe_force_line_mask(True) # We start with line mask curve points
+                    else:
+                        # Point pressed, we are moving it
+                        self.edit_point_shape.clear_selection()
+                        self.last_pressed_edit_point.selected = True
+                        self.edit_point_shape.save_selected_point_data(self.last_pressed_edit_point)
                 else:
                     # Point pressed, we are moving it
                     self.edit_point_shape.clear_selection()

@@ -889,6 +889,39 @@ def _create_color_lgg_editor(filt, editable_properties):
     return vbox
 
 def _create_rotomask_editor(filt, editable_properties):
+
+    property_editor_widgets_create_func = lambda: _create_rotomask_property_editor_widgets(editable_properties)
+
+    kf_json_prop = filter(lambda ep: ep.name == "spline", editable_properties)[0]
+    kf_editor = keyframeeditor.RotoMaskKeyFrameEditor(kf_json_prop, propertyparse.rotomask_json_value_string_to_kf_array)
+
+    kfs_value_label = Gtk.Label(str(len(kf_editor.clip_editor.keyframes)))
+
+    kf_row = guiutils.get_left_justified_box([guiutils.pad_label(12, 12), guiutils.bold_label(_("Keyframes") + ": "), kfs_value_label])
+    
+    kf, curve_points = kf_editor.clip_editor.keyframes[0]
+    curve_points_value_label = Gtk.Label(str(len(curve_points)))
+    cps_row = guiutils.get_left_justified_box([guiutils.pad_label(12, 12), guiutils.bold_label(_("Curve Points") + ": "), curve_points_value_label])
+
+    value_labels = [kfs_value_label, curve_points_value_label]
+
+    lauch_button = Gtk.Button(_("Lauch Rotomask editor"))
+    lauch_button.connect("clicked", lambda b:_roto_lauch_pressed(filt, editable_properties, property_editor_widgets_create_func, value_labels))
+    
+    vbox = Gtk.VBox(False, 4)
+    vbox.pack_start(guiutils.bold_label(_("Rotoscope info")), False, False, 0)
+    vbox.pack_start(kf_row, False, False, 0)
+    vbox.pack_start(cps_row, False, False, 0)
+    vbox.pack_start(guiutils.pad_label(12, 12), False, False, 0)
+    vbox.pack_start(lauch_button, False, False, 0)
+    vbox.pack_start(Gtk.Label(), True, True, 0)
+    vbox.no_separator = True
+    return vbox
+
+def _roto_lauch_pressed(filt, editable_properties, property_editor_widgets_create_func, value_labels):
+    show_rotomask_func(filt, editable_properties, property_editor_widgets_create_func, value_labels)
+
+def _create_rotomask_property_editor_widgets(editable_properties):
     property_editor_widgets = []
     
     invert_prop = filter(lambda ep: ep.name == "invert", editable_properties)[0]
@@ -917,35 +950,7 @@ def _create_rotomask_editor(filt, editable_properties):
     property_editor_widgets.append(alpha_operation_editor)
     property_editor_widgets.append(mode_editor)
 
-    kf_json_prop = filter(lambda ep: ep.name == "spline", editable_properties)[0]
-    kf_editor = keyframeeditor.RotoMaskKeyFrameEditor(kf_json_prop, propertyparse.rotomask_json_value_string_to_kf_array)
-
-    kfs_value_label = Gtk.Label(str(len(kf_editor.clip_editor.keyframes)))
-    inv_value_label = Gtk.Label(propertyparse.get_on_off_txt_for_int(invert_prop.value))
-
-    kf_row = guiutils.get_left_justified_box([guiutils.pad_label(12, 12), guiutils.bold_label(_("Keyframes") + ": "), kfs_value_label])
-    
-    kf, curve_points = kf_editor.clip_editor.keyframes[0]
-    curve_points_value_label = Gtk.Label(str(len(curve_points)))
-    cps_row = guiutils.get_left_justified_box([guiutils.pad_label(12, 12), guiutils.bold_label(_("Curve Points") + ": "), curve_points_value_label])
-
-    value_labels = [kfs_value_label, curve_points_value_label]
-
-    lauch_button = Gtk.Button(_("Lauch Rotomask editor"))
-    lauch_button.connect("clicked", lambda b:_roto_lauch_pressed(filt, editable_properties, property_editor_widgets, value_labels))
-    
-    vbox = Gtk.VBox(False, 4)
-    vbox.pack_start(guiutils.bold_label(_("Rotoscope info")), False, False, 0)
-    vbox.pack_start(kf_row, False, False, 0)
-    vbox.pack_start(cps_row, False, False, 0)
-    vbox.pack_start(guiutils.pad_label(12, 12), False, False, 0)
-    vbox.pack_start(lauch_button, False, False, 0)
-    vbox.pack_start(Gtk.Label(), True, True, 0)
-    vbox.no_separator = True
-    return vbox
-
-def _roto_lauch_pressed(filt, editable_properties, property_editor_widgets, value_labels):
-    show_rotomask_func(filt, editable_properties, property_editor_widgets, value_labels)
+    return property_editor_widgets
 
 def _get_force_combo_index(deinterlace, progressive):
     # These correspond to hardcoded values ["Nothing","Progressive","Deinterlace","Both"] above

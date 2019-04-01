@@ -54,13 +54,13 @@ VIEW_EDITOR_HEIGHT = 620
 
 
 # ------------------------------------------- module interface
-def show_rotomask(mlt_filter, editable_properties, editor_widgets, value_labels):
+def show_rotomask(mlt_filter, editable_properties, property_editor_widgets_create_func, value_labels):
     
     kf_json_prop = filter(lambda ep: ep.name == "spline", editable_properties)[0]
     kf_editor = keyframeeditor.RotoMaskKeyFrameEditor(kf_json_prop, propertyparse.rotomask_json_value_string_to_kf_array)
         
     global _rotomask
-    _rotomask = RotoMaskEditor(kf_editor, editor_widgets, value_labels)
+    _rotomask = RotoMaskEditor(kf_editor, property_editor_widgets_create_func, value_labels)
     _rotomask.show_current_frame()
 
 def close_rotomask():
@@ -76,7 +76,7 @@ def rotomask_destroy():
             
 # ---------------------------------------------------------- editor
 class RotoMaskEditor(Gtk.Window):
-    def __init__(self, kf_editor, editor_widgets, value_labels): # kf_editor is keyframeeditor.RotoMaskKeyFrameEditor
+    def __init__(self, kf_editor, property_editor_widgets_create_func, value_labels): # kf_editor is keyframeeditor.RotoMaskKeyFrameEditor
         GObject.GObject.__init__(self)
         self.set_title(_("RotoMaskEditor"))
         self.connect("delete-event", lambda w, e:close_rotomask())
@@ -91,6 +91,8 @@ class RotoMaskEditor(Gtk.Window):
             global VIEW_EDITOR_WIDTH
             VIEW_EDITOR_WIDTH = 680
         
+        editor_widgets = property_editor_widgets_create_func()
+        
         self.block_updates = False
 
         self.kf_editor = kf_editor
@@ -101,18 +103,7 @@ class RotoMaskEditor(Gtk.Window):
         self.view_editor = vieweditor.ViewEditor(PLAYER().profile, VIEW_EDITOR_WIDTH, VIEW_EDITOR_HEIGHT)
         
         self.guides_toggle = vieweditor.GuidesViewToggle(self.view_editor)
-        
-        """
-        add_b = Gtk.Button(_("Add"))
-        del_b = Gtk.Button(_("Delete"))
-        add_b.connect("clicked", lambda w:self._add_layer_pressed())
-        del_b.connect("clicked", lambda w:self._del_layer_pressed())
-        add_del_box = Gtk.HBox()
-        add_del_box = Gtk.HBox(True,1)
-        add_del_box.pack_start(add_b, True, True, 0)
-        add_del_box.pack_start(del_b, True, True, 0)
-        """
-        
+
         self.tc_display = guicomponents.MonitorTCDisplay()
         self.tc_display.use_internal_frame = True
         self.tc_display.widget.set_valign(Gtk.Align.CENTER)
@@ -147,8 +138,6 @@ class RotoMaskEditor(Gtk.Window):
         mask_type_combo_box.set_active(0)
         mask_type_combo_box.connect("changed", self.mask_type_selection_changed)  
 
-        #exit_b = guiutils.get_sized_button(_("Cancel Edit"), 150, 32)
-        #exit_b.connect("clicked", lambda w:close_rotomask())
         save_rotodata_b = guiutils.get_sized_button(_("Close Tool"), 150, 32)
         save_rotodata_b.connect("clicked", lambda w:self._save_rotodata_pressed())
         
@@ -176,7 +165,6 @@ class RotoMaskEditor(Gtk.Window):
         editor_buttons_row.pack_start(Gtk.Label(), True, True, 0)
         editor_buttons_row.pack_start(guiutils.pad_label(24, 2), False, False, 0)
         editor_buttons_row.pack_start(guiutils.pad_label(24, 2), False, False, 0)
-        #editor_buttons_row.pack_start(exit_b, False, False, 0)
         editor_buttons_row.pack_start(save_rotodata_b, False, False, 0)
         
         editor_panel = Gtk.VBox()
@@ -207,7 +195,6 @@ class RotoMaskEditor(Gtk.Window):
         
         self.kf_editor.active_keyframe_changed()
 
-        #self.connect("size-allocate", lambda w, e:self.window_resized())
         self.connect("window-state-event", lambda w, e:self.window_resized())
         self.connect("key-press-event", self.key_down)
         self.window_resized()
@@ -274,7 +261,7 @@ class RotoMaskEditor(Gtk.Window):
         self.tc_display.set_frame(int(frame))
 
     def _save_rotodata_pressed(self):
-        pass
+        close_rotomask()
 
     def _prev_frame_pressed(self):
         PLAYER().seek_delta(-1)

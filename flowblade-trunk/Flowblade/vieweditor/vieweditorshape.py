@@ -375,10 +375,16 @@ class RotoMaskEditShape(EditPointShape):
             hp1 = (x, y + 30)
             hp2 = (x + 30, y)
     
+        add_hp1 = RotoMaskEditPoint(ROTO_CURVE_POINT, *hp1)
+        add_hp2 = RotoMaskEditPoint(ROTO_CURVE_POINT, *hp2)
+        self.handles1.insert(index, add_hp1)
+        self.handles2.insert(index, add_hp2)
+            
         hch = [ self.view_editor.panel_coord_to_normalized_movie_coord(hp1), 
                 self.view_editor.panel_coord_to_normalized_movie_coord(p), 
                 self.view_editor.panel_coord_to_normalized_movie_coord(hp2)]
 
+        print hch
         for kf_tuple in self.clip_editor.keyframes:
             keyframe, bz_points = kf_tuple
             bz_points.insert(index, hch) 
