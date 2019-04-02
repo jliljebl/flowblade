@@ -38,9 +38,9 @@ LINE_DASH = 1
 
 # colors
 ROTO_CURVE_COLOR = (0.54, 0.09, 0.73, 1)
-HANDLE_LINES_COLOR = (0.81, 0.85, 0.17, 1)
+HANDLE_LINES_COLOR = (0.71, 0.75, 0.10, 1)
 ROTO_CURVE_POINT_COLOR = (0.9, 0.9, 0.9, 1)
-ROTO_HANDLE_POINT_COLOR = (0.8, 0.2, 0.2, 1)
+ROTO_HANDLE_POINT_COLOR = (0.62, 0.26, 0.26, 1)
 # Roto mask types
 CURVE_MASK = 0
 LINE_MASK = 1
@@ -133,7 +133,7 @@ class RotoMaskEditPoint(EditPoint):
         if self.display_type == ROTO_CURVE_POINT:
             cr.set_source_rgba(*ROTO_CURVE_COLOR)
         else:
-            cr.set_source_rgba(*HANDLE_LINES_COLOR)
+            cr.set_source_rgba(*ROTO_HANDLE_POINT_COLOR)
             
         x, y = self.x, self.y
         cr.rectangle(x - 4, y - 4, 8, 8)

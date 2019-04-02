@@ -222,7 +222,7 @@ class ViewEditor(Gtk.Frame):
     def panel_coord_to_normalized_movie_coord(self, panel_point):
         px, py = panel_point
         origo_x, origo_y = self.origo
-        nx = float(px - origo_x) / (self.profile_w * self.scale)
+        nx = float(px - origo_x) / (self.profile_w * self.scale  * self.aspect_ratio)
         ny = float(py - origo_y) / (self.profile_h * self.scale)
         return (nx, ny)
     

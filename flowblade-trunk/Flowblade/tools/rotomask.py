@@ -245,6 +245,8 @@ class RotoMaskEditor(Gtk.Window):
 
     def scale_changed(self, new_scale):
         self.view_editor.set_scale_and_update(new_scale)
+        self.roto_mask_layer.edit_point_shape.update_shape()
+        
         tline_frame = PLAYER().current_frame()
         self.view_editor.update_layers_for_frame(tline_frame)
         self.view_editor.edit_area.queue_draw()

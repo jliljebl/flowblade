@@ -416,6 +416,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
             else:
                 return # no edit point moved, no update needed
         
+        self.last_pressed_edit_point = None
         
         self.edit_point_shape.maybe_force_line_mask()
         
