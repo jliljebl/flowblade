@@ -30,7 +30,8 @@ To create a translation you should probably first install the repository version
 
   * A folder named with the LANGUAGE_CODE for your language can be found in the ``/locale`` folder
   * Inside that folder is a ``/LC_MESSAGES`` folder in which there is a file called ``flowblade.po``. This is the file used to create the translation.
-  * Open the file ``flowblade.po`` in a text editor. Translations are given by writing the the translations inside quotes on lines staring with text ``msgstr``. To traslate the menu item *Open...* you would need to fill the ``msgstr`` in example below:
+  * You can use program **Poedit** (or **Poedit2**) to edit the ``flowblade.po`` file. These applications often compile the translation on save too, and if not, use the compile command below.
+  * **or** you can open the file ``flowblade.po`` in a text editor. Translations are given by writing the the translations inside quotes on lines staring with text ``msgstr``. To traslate the menu item *Open...* you would need to fill the ``msgstr`` in example below:
 ```bash
 #: useraction.py:489
 msgid "Open.."
