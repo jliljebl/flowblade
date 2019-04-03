@@ -241,10 +241,15 @@ class Vec(Line):
 
         return get_vec_for_points(self.start_point, (new_end_x, new_end_y))
 
-    def get_distance_vec(self, p):
+    def get_normal_projection_distance_vec(self, p):
         npp = self.get_normal_projection_point(p)
         return get_vec_for_points(npp, p)
-
+    
+    def get_minimum_end_point_distance(self, p):
+        to_start = distance(self.start_point, p)
+        to_end = distance(self.end_point, p)
+        return min(to_start, to_end)
+    
     def is_zero_length(self):
         if self.start_point == self.end_point:
             return True

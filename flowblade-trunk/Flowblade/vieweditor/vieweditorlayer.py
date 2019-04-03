@@ -347,13 +347,13 @@ class RotoMaskEditLayer(AbstactEditorLayer):
             # No point hit attempt to add a point.
             else:
                 if self.edit_point_shape.closed == True:
-                    #Closed curve, try add point in between existing points
+                    # Closed curve, try add point in between existing points
                     self.block_shape_update = False
                     self.edit_point_shape.clear_selection()
                     if len(self.edit_point_shape.curve_points) > 1:
-                        seq_index = self.edit_point_shape.get_point_insert_seq(self.mouse_press_panel_point)
-                        if seq_index != -1:
-                            insert_index = seq_index + 1
+                        side_index = self.edit_point_shape.get_point_insert_side(self.mouse_press_panel_point)
+                        if side_index != -1:
+                            insert_index = side_index + 1
                             if insert_index == len(self.edit_point_shape.curve_points):
                                 insert_index = 0
                     elif len(self.edit_point_shape.curve_points) == 1:

@@ -445,7 +445,10 @@ class RotoMaskEditShape(EditPointShape):
 
         self.maybe_force_line_mask()
         self.set_points_mask_type_data()
-        
+
+    """
+    OLD ALGO FOR GETTING SEQ TO PLACE POINT IN BETWEEN
+    KEEP AROUND FOR COMPARISON
     def get_point_insert_seq(self, p):
         # Return index of first curve point in the curve seqment that is closest to given point.
         seq_index = -1
@@ -473,6 +476,66 @@ class RotoMaskEditShape(EditPointShape):
             return abs(dist.get_length())
         else:
             return -1
+    """
+
+    def get_point_insert_side(self, p):
+        # We need possibility to have a closed polygon for this to be meaningful
+        if len(self.curve_points) < 3:
+            return -1
+        
+        # "between" meas in area defined by normal lines going through seg
+        between_sides = self.get_between_sides_in_distance_order(p)
+        sides_in_distance_order = self.get_sides_in_end_point_distance_order(p)
+        
+        #print "between_seqs", between_seqs
+        #print "seq_in_distance_order", seq_in_distance_order
+        
+        i0, d0 = sides_in_distance_order[0]
+        i1, d1 = sides_in_distance_order[1]
+        i2, d2 = sides_in_distance_order[2]
+        
+        # If point not between any seq, return closest seq
+        if len(between_sides) == 0:
+            return i0
+        
+        # If closest between seq among two closest seqs return that
+        ci, cd = between_sides[0]
+        if ci == i0:
+            return ci
+        if ci == i1:
+            return ci
+
+        # Return closest, between seq is on opposite side
+        # NOTE: This algorithm DOES NOT behave perfectly on all shapes of maskes.
+        return i0
+        
+    def get_side_for_index(self, side_index):
+        start = self.curve_points[side_index].get_pos()
+
+        if side_index < len(self.curve_points) - 1:
+            end = self.curve_points[side_index + 1].get_pos()
+        else:
+            end = self.curve_points[0].get_pos()
+        
+        return viewgeom.get_vec_for_points(start, end)
+        
+    def get_between_sides_in_distance_order(self, p):
+        between_sides = []
+        for i in range(0, len(self.curve_points)):
+            side = self.get_side_for_index(i)
+            if side.point_is_between(p) == True:
+                dist = side.get_normal_projection_distance_vec(p)
+                between_sides.append((i, dist.get_length()))
+        return sorted(between_sides, key = lambda x: float(x[1]))
+
+    def get_sides_in_end_point_distance_order(self, p):
+        sides = []
+        for i in range(0, len(self.curve_points)):
+            side = self.get_side_for_index(i)
+            d = side.get_minimum_end_point_distance(p)
+            sides.append((i, d))
+
+        return sorted(sides, key = lambda x: float(x[1]))
 
     def set_mask_type(self, mask_type):
         self.mask_type = mask_type
