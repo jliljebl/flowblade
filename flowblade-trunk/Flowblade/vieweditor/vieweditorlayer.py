@@ -283,6 +283,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
         self.clip_editor = clip_editor
         self.rotomask_editor = rotomask_editor
 
+        self.allow_adding_points = True
 
         self.edit_point_shape = vieweditorshape.RotoMaskEditShape(view_editor, clip_editor)
         self.edit_point_shape.update_shape()
@@ -347,6 +348,9 @@ class RotoMaskEditLayer(AbstactEditorLayer):
             # No point hit attempt to add a point.
             else:
                 if self.edit_point_shape.closed == True:
+                    if self.allow_adding_points == False:
+                        return
+                    
                     # Closed curve, try add point in between existing points
                     self.block_shape_update = False
                     self.edit_point_shape.clear_selection()

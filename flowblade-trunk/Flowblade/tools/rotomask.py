@@ -153,6 +153,11 @@ class RotoMaskEditor(Gtk.Window):
         mask_type_combo_box.set_active(0)
         mask_type_combo_box.connect("changed", self.mask_type_selection_changed)  
 
+        allow_adding_check = Gtk.CheckButton()
+        allow_adding_check.set_active(True)
+        allow_adding_check.connect("toggled", self.allow_adding_toggled)
+        allow_adding_label = Gtk.Label(_("Add points to closed masks"))
+        
         save_rotodata_b = guiutils.get_sized_button(_("Close Tool"), 150, 32)
         save_rotodata_b.connect("clicked", lambda w:self._save_rotodata_pressed())
         
@@ -177,9 +182,11 @@ class RotoMaskEditor(Gtk.Window):
         prop_editor_row2.pack_start(Gtk.Label(), True, True, 0)
 
         editor_buttons_row = Gtk.HBox()
+        editor_buttons_row.pack_start(allow_adding_check, False, False, 0)
+        editor_buttons_row.pack_start(guiutils.pad_label(4, 2), False, False, 0)
+        editor_buttons_row.pack_start(allow_adding_label, False, False, 0)
         editor_buttons_row.pack_start(Gtk.Label(), True, True, 0)
-        editor_buttons_row.pack_start(guiutils.pad_label(24, 2), False, False, 0)
-        editor_buttons_row.pack_start(guiutils.pad_label(24, 2), False, False, 0)
+        #editor_buttons_row.pack_start(guiutils.pad_label(24, 2), False, False, 0)
         editor_buttons_row.pack_start(save_rotodata_b, False, False, 0)
         
         editor_panel = Gtk.VBox()
@@ -225,6 +232,9 @@ class RotoMaskEditor(Gtk.Window):
         self.roto_mask_layer.editable_property.write_out_keyframes(self.roto_mask_layer.edit_point_shape.clip_editor.keyframes)
         
         self.show_current_frame()
+
+    def allow_adding_toggled(self, check_box):
+        self.roto_mask_layer.allow_adding_points = check_box.get_active()
 
     def update_view(self):
         # Callback from kf_editor
