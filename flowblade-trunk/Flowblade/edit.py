@@ -1554,7 +1554,6 @@ def _trim_end_redo(self):
 def trim_last_clip_end_action(data): 
     action = EditAction(_trim_last_clip_end_undo,_trim_last_clip_end_redo, data)
     action.exit_active_trimmode_on_edit = False
-    action.update_hidden_track_blank = False
     return action
 
 def _trim_last_clip_end_undo(self):

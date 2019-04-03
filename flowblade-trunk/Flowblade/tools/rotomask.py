@@ -156,7 +156,7 @@ class RotoMaskEditor(Gtk.Window):
         allow_adding_check = Gtk.CheckButton()
         allow_adding_check.set_active(True)
         allow_adding_check.connect("toggled", self.allow_adding_toggled)
-        allow_adding_label = Gtk.Label(_("Add points to closed masks"))
+        allow_adding_label = Gtk.Label(_("Allow to add points to closed masks"))
         
         save_rotodata_b = guiutils.get_sized_button(_("Close Tool"), 150, 32)
         save_rotodata_b.connect("clicked", lambda w:self._save_rotodata_pressed())

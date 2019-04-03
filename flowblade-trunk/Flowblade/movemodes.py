@@ -385,7 +385,7 @@ def overwrite_move_release(x, y, frame, state):
             "move_edit_done_func":move_edit_done}
             
     # Do edit. Use different actions depending on if 
-    # clip is moved to a differrent track
+    # clip is moved to a different track
     if track == to_track:
         # Do edit if were moving and clips have moved
         if (edit_data["move_on"] == True and (press_frame != frame)):
