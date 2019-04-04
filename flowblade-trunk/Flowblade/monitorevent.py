@@ -71,6 +71,8 @@ def play_pressed():
         movemodes.play_pressed()
     elif EDIT_MODE() == editorstate.MULTI_TRIM:
         movemodes.play_pressed()
+    elif EDIT_MODE() == editorstate.CUT:
+        movemodes.play_pressed()
         
 def stop_pressed():
     if current_is_move_mode():
@@ -91,7 +93,9 @@ def stop_pressed():
         movemodes.stop_pressed()
     elif EDIT_MODE() == editorstate.MULTI_TRIM:
         movemodes.stop_pressed()
-
+    elif EDIT_MODE() == editorstate.CUT:
+        movemodes.stop_pressed()
+        
     updater.maybe_autocenter()
 
 def next_pressed():
