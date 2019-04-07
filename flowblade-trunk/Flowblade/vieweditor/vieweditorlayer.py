@@ -346,6 +346,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
                     self.edit_point_shape.clear_selection()
                     self.last_pressed_edit_point.selected = True
                     self.edit_point_shape.save_selected_point_data(self.last_pressed_edit_point)
+
             # No point hit attempt to add a point.
             else:
                 if self.edit_point_shape.closed == True:
@@ -367,6 +368,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
                         insert_index = 0
 
                     self.add_edit_point(insert_index, self.mouse_press_panel_point)
+                    self.edit_point_shape.set_curve_point_as_selected(insert_index)
                 else:
                     # Open curve, add point last
                     self.edit_point_shape.block_shape_updates = False
@@ -384,6 +386,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
             
     def mouse_dragged(self):
         self.edit_point_shape.block_shape_updates = False
+        
         # delta is given in movie coords, RotoMaskEditShape uses panel coords (because it needs to do complex drawing in those) so we have to convert mouse delta.
         mdx, mdy = self.view_editor.movie_coord_to_panel_coord(self.get_mouse_delta()) # panel coords mouse delta 
         odx, ody = self.view_editor.movie_coord_to_panel_coord((0, 0)) # movie origo in panel points
@@ -404,6 +407,8 @@ class RotoMaskEditLayer(AbstactEditorLayer):
         self.edit_point_shape.maybe_force_line_mask()
 
     def mouse_released(self):
+        self.edit_point_shape.block_shape_updates = False
+
         # delta is given in movie coords, RotoMaskEditShape uses panel coords  (because it needs to do complex drawing in those) so we have to convert mouse delta.
         mdx, mdy = self.view_editor.movie_coord_to_panel_coord(self.get_mouse_delta())
         odx, ody = self.view_editor.movie_coord_to_panel_coord((0, 0))
@@ -429,7 +434,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
         
         self.edit_point_shape.convert_shape_coords_and_update_clip_editor_keyframes()
         self.editable_property.write_out_keyframes(self.clip_editor.keyframes)
-
+        
         self.rotomask_editor.show_current_frame()
         self.rotomask_editor.update_effects_editor_value_labels()
         self.clip_editor.widget.queue_draw()

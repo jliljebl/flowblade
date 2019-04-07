@@ -407,6 +407,7 @@ class RotoMaskEditShape(EditPointShape):
         self.update_shape()
 
     def update_shape(self):
+        
         if self.block_shape_updates == True:
             return
 
@@ -591,6 +592,12 @@ class RotoMaskEditShape(EditPointShape):
             self.selected_point_array = None
             self.selected_point_index = -1
 
+    def set_curve_point_as_selected(self, index):
+        self.clear_selection()
+        self.curve_points[index].selected = True
+        self.selected_point_array = self.curve_points
+        self.selected_point_index = index
+            
     def clear_selection(self):
         for p in self.edit_points:
             p.selected = False
