@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-31 21:21+0300\n"
+"POT-Creation-Date: 2019-04-07 18:44+0300\n"
 "PO-Revision-Date: 2018-11-15 12:12+0200\n"
 "Last-Translator: Stanislaw Polak <polak@icsr.agh.edu.pl>\n"
 "Language-Team: Polish\n"
@@ -5089,22 +5089,22 @@ msgstr "Wymuś"
 msgid "Align"
 msgstr "Wyrównanie"
 
-#: propertyeditorbuilder.py:926
+#: propertyeditorbuilder.py:900
 #, fuzzy
 msgid "Keyframes"
 msgstr "Klatka kluczowa (Keyframe)"
 
-#: propertyeditorbuilder.py:930
+#: propertyeditorbuilder.py:904
 #, fuzzy
 msgid "Curve Points"
 msgstr "Krzywe"
 
-#: propertyeditorbuilder.py:934
-msgid "Lauch Rotomask editor"
+#: propertyeditorbuilder.py:908
+msgid "Lauch RotoMask editor"
 msgstr ""
 
-#: propertyeditorbuilder.py:938
-msgid "Rotoscope info"
+#: propertyeditorbuilder.py:912
+msgid "RotoMask info"
 msgstr ""
 
 #: keyframeeditor.py:595 kftoolmode.py:1206
@@ -6992,11 +6992,11 @@ msgstr "Renderowanie zatrzymało się!"
 msgid "Use Default Profile:"
 msgstr "Użyj profilu domyślnego:"
 
-#: monitorevent.py:312
+#: monitorevent.py:316
 msgid "On some systems Trim View may update slowly"
 msgstr "W niektórych systemach przycinanie widoku może się aktualizować powoli"
 
-#: monitorevent.py:313
+#: monitorevent.py:317
 msgid ""
 "<b>Trim View</b> works best with SSDs and relatively powerful processors.\n"
 "\n"
@@ -7005,7 +7005,7 @@ msgstr ""
 "stosunkowo mocnych procesorów.\n"
 "\n"
 
-#: monitorevent.py:314
+#: monitorevent.py:318
 msgid ""
 "Select <b>'Trim View Off'</b> or<b>'Trim View Single Side Edits Only'</b> "
 "options\n"

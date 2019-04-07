@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Floblade Italian Translation 0.14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-31 21:21+0300\n"
-"PO-Revision-Date: 2019-03-31 14:01+0200\n"
+"POT-Creation-Date: 2019-04-07 18:44+0300\n"
+"PO-Revision-Date: 2019-04-07 10:24+0200\n"
 "Last-Translator: Enrico Bella <enricobe@hotmail.com>\n"
 "Language-Team: Italiano\n"
 "Language: it\n"
@@ -205,7 +205,7 @@ msgstr "Messaggio di errore: "
 
 #: projectaction.py:859
 msgid "Adding item to render queue failed!"
-msgstr "Impossibile aggiungere alla coda dei render!"
+msgstr "Impossibile aggiungere l'elemento alla coda!"
 
 #: projectaction.py:872
 msgid "Render Proxy Files For Selected Media"
@@ -529,7 +529,7 @@ msgstr "Crea nuova Sequenza dalla posizione attuale"
 #: editorwindow.py:215 dialogs.py:1428 guicomponents.py:1840
 #: translations.py:527 workflow.py:200
 msgid "Lift"
-msgstr "Solleva"
+msgstr "Elimina"
 
 #: editorwindow.py:216 dialogs.py:1427 workflow.py:200
 msgid "Splice Out"
@@ -569,7 +569,7 @@ msgstr "Attiva tutti i filtri"
 
 #: editorwindow.py:225
 msgid "Sync All Compositors"
-msgstr ""
+msgstr "Sincronizza tutti compositor"
 
 #: editorwindow.py:226
 msgid "Set Compositor Auto Fades..."
@@ -609,7 +609,7 @@ msgstr "Progetto"
 
 #: editorwindow.py:237
 msgid "Create Color Clip..."
-msgstr "Crea Clip Colore..."
+msgstr "Crea clip colore..."
 
 #: editorwindow.py:238
 msgid "Bin"
@@ -621,7 +621,7 @@ msgstr "Sequenza"
 
 #: editorwindow.py:245
 msgid "Create Pattern Producer"
-msgstr "Crea Pattern di Produzione"
+msgstr "Crea pattern di produzione"
 
 #: editorwindow.py:246 translations.py:409 patternproducer.py:67
 msgid "Noise"
@@ -703,7 +703,7 @@ msgstr "Esporta"
 
 #: editorwindow.py:265
 msgid "Add To Batch Render Queue..."
-msgstr "Aggiungi alla coda di rendering..."
+msgstr "Aggiungi alla coda di esportazione..."
 
 #: editorwindow.py:266 middlebar.py:194
 msgid "Batch Render Queue"
@@ -839,7 +839,7 @@ msgstr "Elementi centrati"
 
 #: editorwindow.py:949
 msgid "Tabs Position"
-msgstr "Posizione schede"
+msgstr "Posizione Schede"
 
 #: editorwindow.py:974
 msgid "Monitor Playback Interpolation"
@@ -1076,7 +1076,7 @@ msgstr "Nuovo Profilo"
 #: dialogs.py:146 dialogs.py:201 rendergui.py:665 tools/gmic.py:752
 #: tools/toolsencoding.py:40
 msgid "Select Folder"
-msgstr "Seleziona Cartella"
+msgstr "Seleziona cartella"
 
 #: dialogs.py:150 dialogs.py:205 rendergui.py:669 tools/toolsencoding.py:44
 msgid "Folder:"
@@ -1178,7 +1178,7 @@ msgstr "Salva i dati dell'Ambiente di runtime"
 
 #: dialogs.py:418
 msgid "Can't make home folder render clips folder"
-msgstr "La cartella Home non può essere usata per i file di render"
+msgstr "La cartella Home non può essere usata per le esportazioni"
 
 #: dialogs.py:419
 msgid "Please create and select some other folder then '"
@@ -1186,7 +1186,7 @@ msgstr "Creare e selezionare una cartella differente da '"
 
 #: dialogs.py:420
 msgid "' as render clips folder"
-msgstr "' come cartella per i file di render"
+msgstr "' come cartella per le esportazioni"
 
 #: dialogs.py:424 dialogs.py:445
 msgid "Save project '"
@@ -1410,7 +1410,7 @@ msgstr "NON sarà possibile recuperare in futuro questo salvataggio automatico."
 
 #: dialogs.py:855 dialogs.py:899
 msgid "Continue with default 'untitled' project"
-msgstr "Prosegure con il progetto predefinito 'senza titolo'"
+msgstr "Prosegui con il progetto predefinito 'senza titolo'"
 
 #: dialogs.py:856
 msgid "Open Autosaved Project"
@@ -1490,21 +1490,21 @@ msgstr ""
 msgid ""
 " It is recommended that you save Project before completing this operation\n"
 msgstr ""
-"* Si raccomanda di salvare il Progetto prima di lanciare questa operazione\n"
+"Si raccomanda di salvare il progetto prima di lanciare questa operazione\n"
 
 #: dialogs.py:935 dialogs.py:1693
 msgid " There is no Undo for this operation\n"
-msgstr "* L'operazione non può essere annullata\n"
+msgstr "L'operazione non può essere annullata\n"
 
 #: dialogs.py:936 dialogs.py:1694
 msgid " Current Undo Stack will be destroyed\n"
-msgstr "* La cronologia delle operazioni verrà distrutta\n"
+msgstr "La cronologia delle operazioni verrà distrutta\n"
 
 #: dialogs.py:937
 msgid ""
 " All Clips and Compositors on deleted Tracks will be permanently destroyed"
 msgstr ""
-"* Tutte le clip e i compositing sulle tracce rimosse saranno permanentemente "
+"Tutte le clip e i compositing sulle tracce rimosse saranno permanentemente "
 "distrutti"
 
 #: dialogs.py:959
@@ -1672,7 +1672,7 @@ msgstr "Rielabora Transizione"
 
 #: dialogs.py:1273 dialogs.py:1287 guicomponents.py:1510
 msgid "Rerender"
-msgstr "Elaborazione completata"
+msgstr "Rielabora"
 
 #: dialogs.py:1284
 msgid "Rerender Fade"
@@ -1696,7 +1696,7 @@ msgstr "Seleziona Cartella:"
 
 #: dialogs.py:1341
 msgid "Diffence to 'Flowblade Default' Presets:"
-msgstr ""
+msgstr "Differenza dal profilo predefinito di Flowblade:"
 
 #: dialogs.py:1405
 msgid "Control + N"
@@ -2697,7 +2697,7 @@ msgstr "0%"
 
 #: guicomponents.py:2750
 msgid "Trim View On"
-msgstr ""
+msgstr "Vista Taglio On"
 
 #: guicomponents.py:2755
 msgid "Trim View Single Side Edits Only"
@@ -2705,7 +2705,7 @@ msgstr ""
 
 #: guicomponents.py:2760
 msgid "Trim View Off"
-msgstr ""
+msgstr "Vista Taglio Off"
 
 #: guicomponents.py:2776
 msgid "Set Current Clip Frame Match Frame"
@@ -3017,7 +3017,7 @@ msgstr "Seleziona l'area da esportare"
 
 #: render.py:225
 msgid "Reset all render options to defaults"
-msgstr "Reimposta tutte le opzioni di calcolo a predefinite"
+msgstr "Reimposta le impostazioni predefinite"
 
 #: render.py:226
 msgid "Begin Rendering"
@@ -4353,7 +4353,7 @@ msgstr ""
 
 #: translations.py:528
 msgid "Gain"
-msgstr ""
+msgstr "Guadagno"
 
 #: translations.py:529
 msgid "Input White Level"
@@ -4479,7 +4479,7 @@ msgstr "Durata della clip:"
 #: translations.py:572
 #, fuzzy
 msgid "Max Gain"
-msgstr "Guadagno medi(dB)"
+msgstr "Guadagno"
 
 #: translations.py:573
 #, fuzzy
@@ -5098,22 +5098,22 @@ msgstr "Forza"
 msgid "Align"
 msgstr "Allinea"
 
-#: propertyeditorbuilder.py:926
+#: propertyeditorbuilder.py:900
 #, fuzzy
 msgid "Keyframes"
 msgstr "Fotogramma chiave"
 
-#: propertyeditorbuilder.py:930
+#: propertyeditorbuilder.py:904
 #, fuzzy
 msgid "Curve Points"
 msgstr "Curve libere"
 
-#: propertyeditorbuilder.py:934
-msgid "Lauch Rotomask editor"
+#: propertyeditorbuilder.py:908
+msgid "Lauch RotoMask editor"
 msgstr ""
 
-#: propertyeditorbuilder.py:938
-msgid "Rotoscope info"
+#: propertyeditorbuilder.py:912
+msgid "RotoMask info"
 msgstr ""
 
 #: keyframeeditor.py:595 kftoolmode.py:1206
@@ -5255,7 +5255,7 @@ msgstr ""
 
 #: middlebar.py:162
 msgid "Splice Out - Delete"
-msgstr ""
+msgstr "Estrai - Elimina"
 
 #: middlebar.py:162
 #, fuzzy
@@ -5264,20 +5264,19 @@ msgstr "Shift + Control + Freccia sinistra "
 
 #: middlebar.py:162
 msgid "Ripple Delete"
-msgstr ""
+msgstr "Elimina e unisci"
 
 #: middlebar.py:162
 msgid "Range Delete"
-msgstr ""
+msgstr "Elimina intervallo"
 
 #: middlebar.py:169
 msgid "Resync Selected"
 msgstr "Resync selezionato"
 
 #: middlebar.py:178 shortcuts.py:202
-#, fuzzy
 msgid "Overwrite Range"
-msgstr "Sovrascrivi"
+msgstr "Sovrascrivi intervallo"
 
 #: middlebar.py:178
 msgid "Overwrite Clip - T"
@@ -5481,8 +5480,9 @@ msgid "Layer Text"
 msgstr "Livelli"
 
 #: tools/titler.py:492
+#, fuzzy
 msgid "Outline"
-msgstr ""
+msgstr "<b>Bordo</b>"
 
 #: tools/titler.py:494
 #, fuzzy
@@ -5893,7 +5893,7 @@ msgstr "Dimensione cronologia Annulla:"
 
 #: preferenceswindow.py:125
 msgid "Remember last render directory"
-msgstr "Ricorda l'ultima cartella di render"
+msgstr "Ricorda l'ultima cartella di esportazione"
 
 #: preferenceswindow.py:126
 msgid "Autosave for crash recovery every:"
@@ -5913,11 +5913,11 @@ msgstr "Scorrimento orizzontale, Control per lo zoom"
 
 #: preferenceswindow.py:179
 msgid "Scroll Up Forward"
-msgstr ""
+msgstr "Scroll verso l'alto va avanti"
 
 #: preferenceswindow.py:180
 msgid "Scroll Down Forward"
-msgstr ""
+msgstr "Scroll verso il basso va avanti"
 
 #: preferenceswindow.py:188
 msgid "Graphics default length:"
@@ -5925,7 +5925,7 @@ msgstr "Lunghezza predefinita delle grafiche:"
 
 #: preferenceswindow.py:190
 msgid "Cover Transition/Fade clips on delete if possible"
-msgstr "Se possibile, copri transizioni/dissolvenze all'eliminazione"
+msgstr "Se possibile, copri transizioni/dissolvenze quando vengono eliminate"
 
 #: preferenceswindow.py:192
 msgid "Mouse Middle Button Scroll Action:"
@@ -6097,8 +6097,9 @@ msgid ""
 "Changing these values may cause problems with playback and rendering.\n"
 "The safe values are Render Threads:1, Allow Frame Dropping: No."
 msgstr ""
-"Cambiare questi valori può creare problemi di riproduzione e esportazione.\n"
-"Valori sicuri Thread di elaborazione: 1, Permetti scarto fotogrammi: No."
+"Cambiare questi valori può creare problemi di riproduzione ed esportazione.\n"
+"I valor più sicuri sono 1 thread di elaborazione e Permetti scarto "
+"fotogrammi: No."
 
 #: preferenceswindow.py:419
 msgid "Between 1 and the number of CPU Cores"
@@ -6310,15 +6311,15 @@ msgstr "Elaborazione massiva di Flowblade"
 
 #: proxyediting.py:241
 msgid "Project Image Size"
-msgstr "Dimensione immagine del progetto"
+msgstr "Risoluzione del progetto"
 
 #: proxyediting.py:242
 msgid "Half Project Image Size"
-msgstr "Metà della dimensione immagine del progetto"
+msgstr "Metà della risoluzione del progetto"
 
 #: proxyediting.py:243
 msgid "Quarter Project Image Size"
-msgstr "Un quarto della dimensione immagine del progetto"
+msgstr "Un quarto della risoluzione del progetto"
 
 #: proxyediting.py:259
 msgid "Proxy Encoding"
@@ -6492,7 +6493,7 @@ msgstr ""
 
 #: tlineaction.py:540
 msgid "Can't do Ripple Delete!"
-msgstr ""
+msgstr "Elimina e unisci impossibile!"
 
 #: tlineaction.py:541
 msgid ""
@@ -6501,6 +6502,10 @@ msgid ""
 "\n"
 "Overwrite would happen on at track <b>"
 msgstr ""
+"Elezionare Elimina e unisci causerebbe una sovrascrittura e ciò non è "
+"permesso.\n"
+"\n"
+"La sovrascrittura avverrebbe sulla traccia <b>"
 
 #: tlineaction.py:592
 msgid "No Clips are selected!"
@@ -6985,11 +6990,11 @@ msgstr "Elaborazione interrotta!"
 msgid "Use Default Profile:"
 msgstr "Profilo Predefinito:"
 
-#: monitorevent.py:312
+#: monitorevent.py:316
 msgid "On some systems Trim View may update slowly"
 msgstr "Su alcuni sistemi la Trim View potrebbe essere lenta"
 
-#: monitorevent.py:313
+#: monitorevent.py:317
 msgid ""
 "<b>Trim View</b> works best with SSDs and relatively powerful processors.\n"
 "\n"
@@ -6998,7 +7003,7 @@ msgstr ""
 "performanti.\n"
 "\n"
 
-#: monitorevent.py:314
+#: monitorevent.py:318
 msgid ""
 "Select <b>'Trim View Off'</b> or<b>'Trim View Single Side Edits Only'</b> "
 "options\n"
@@ -7229,7 +7234,7 @@ msgstr "Sovrascrittura 3 Punti"
 
 #: shortcuts.py:203
 msgid "Trim Tool Ripple Mode On/Off"
-msgstr ""
+msgstr "On/Off modalità Unisci dello strumento Taglia"
 
 #: shortcuts.py:204
 msgid "Cut Active Tracks"
@@ -7241,7 +7246,7 @@ msgstr "Taglia tutte le tracce"
 
 #: shortcuts.py:208 workflow.py:66
 msgid "Trim"
-msgstr ""
+msgstr "Taglia"
 
 #: shortcuts.py:209 workflow.py:67
 msgid "Roll"
@@ -7482,7 +7487,7 @@ msgstr "Movimento"
 
 #: workflow.py:71
 msgid "Ripple Trim"
-msgstr ""
+msgstr "Taglia e unisci"
 
 #: workflow.py:72
 msgid "Cut"
@@ -7694,7 +7699,7 @@ msgstr "Wizard al primo avvio"
 
 #: workflow.py:425
 msgid "Select Preset Workflow and Continue"
-msgstr "Seleziona Workflow predefinito e Continua"
+msgstr "Seleziona workflow e continua"
 
 #: workflow.py:429
 msgid "<b>Welcome to Flowblade 2.0</b>"
@@ -7716,13 +7721,13 @@ msgstr " Molti <b>comportamenti</b> della timeline sono configurabili.\n"
 
 #: workflow.py:445
 msgid "<b>Select Workflow Preset</b>"
-msgstr "<b>Seleziona Workflow predefiniti</b>"
+msgstr "<b>Seleziona tra i workflow predefiniti</b>"
 
 #: workflow.py:450
 msgid ""
 "You can change and configure individual tools and behaviours <b>anytime</b>"
 msgstr ""
-"Puoi cambiare e configurare gli strumenti e i comportamento <b>in ogni "
+"Puoi cambiare e configurare gli strumenti e i comportamenti <b>in ogni "
 "momento</b>"
 
 #: workflow.py:454
@@ -7757,8 +7762,8 @@ msgid ""
 "and employs insert style editing.\n"
 "This was the workflow in previous versions of the application."
 msgstr ""
-"Il workflow Stile Film ha lo stromento <b>Inserisci</b> come\n"
-"predefinito e usa uno stile basato su esso.\n"
+"Il workflow Stile Film usa lo strumento <b>Inserisci</b> come\n"
+"predefinito e uno stile basato su esso.\n"
 "Era il workflow delle precedenti versioni dell'applicazione."
 
 #: kftoolmode.py:398
@@ -7808,6 +7813,9 @@ msgstr "Esci"
 #~ msgid "' as thumbnails folder"
 #~ msgstr "' per le miniature"
 
+#~ msgid "JACK Audio..."
+#~ msgstr "JACK Audio..."
+
 #~ msgid "Natron Animations"
 #~ msgstr "Animazioni Natron"
 
@@ -7816,6 +7824,9 @@ msgstr "Esci"
 
 #~ msgid "R"
 #~ msgstr "R"
+
+#~ msgid "Toggle Trim / Ripple Trim Tools"
+#~ msgstr "Strumenti Taglia / Taglia e unisci"
 
 #~ msgid "Select folder for new thumbnails."
 #~ msgstr "Seleziona cartella per le nuove miniature."
@@ -7841,14 +7852,14 @@ msgstr "Esci"
 #~ msgstr "Seleziona cartella per le clip esportate."
 
 #~ msgid "Old rendered clips in this or other projects will"
-#~ msgstr "I vecchi render di questo o altri progetti saranno"
+#~ msgstr "Le vecchie esportazioni di questo o altri progetti saranno"
 
 #~ msgid ""
 #~ " still be available,\n"
 #~ "this only affects rendered files that are created from now on.\n"
 #~ msgstr ""
 #~ " ancora disponibili,\n"
-#~ "questo avrà effetto solo sui render creati da ora in avanti.\n"
+#~ "questo avrà effetto solo sulle prossime elaborazioni.\n"
 
 #~ msgid ""
 #~ "\n"
