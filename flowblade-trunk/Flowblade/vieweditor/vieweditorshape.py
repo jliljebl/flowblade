@@ -359,6 +359,8 @@ class RotoMaskEditShape(EditPointShape):
         else:
             self.closed = False
         
+        self.block_shape_updates = False # We're getting a difficult to kill "size-allocate"., "window-resized" events and have to manage manually when updates to shape are allowed.
+                                        # and this is used to block it from recreating edit shape in middle of mouse edit, bit hacky but works fine.
 
         self.update_shape()
 
@@ -405,6 +407,9 @@ class RotoMaskEditShape(EditPointShape):
         self.update_shape()
 
     def update_shape(self):
+        if self.block_shape_updates == True:
+            return
+
         # We're not using timeline frame for shape, we're using clip frame.
         frame = self.clip_editor.current_clip_frame
 
@@ -486,9 +491,6 @@ class RotoMaskEditShape(EditPointShape):
         # "between" meas in area defined by normal lines going through seg
         between_sides = self.get_between_sides_in_distance_order(p)
         sides_in_distance_order = self.get_sides_in_end_point_distance_order(p)
-        
-        #print "between_seqs", between_seqs
-        #print "seq_in_distance_order", seq_in_distance_order
         
         i0, d0 = sides_in_distance_order[0]
         i1, d1 = sides_in_distance_order[1]
@@ -595,7 +597,13 @@ class RotoMaskEditShape(EditPointShape):
 
             self.selected_point_array = None
             self.selected_point_index = -1
-    
+
+    def get_selected_point(self):
+        if self.selected_point_array != None:
+            return self.selected_point_array[self.selected_point_index]
+        else:
+            return None
+            
     def get_bezier_points_for_frame(self, current_frame):
         # We're replicating stuff from MLT file filter_rotoscoping.c to make sure out GUI matches the results there.
         keyframes = self.clip_editor.keyframes

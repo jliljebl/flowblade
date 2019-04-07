@@ -288,8 +288,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
         self.edit_point_shape = vieweditorshape.RotoMaskEditShape(view_editor, clip_editor)
         self.edit_point_shape.update_shape()
 
-        self.block_shape_update = False # We're getting a difficult to kill "size-allocate" event when adding new kf for mouse press,
-                                        # and this is used to block it from recreating edit shape in middle of mouse edit, bit hacky but works fine.
+        #self.block_shape_update = False 
         
         self.ACTIVE_COLOR = (0.0,1.0,0.55,1)
         self.NOT_ACTIVE_COLOR = (0.2,0.2,0.2,1)
@@ -316,16 +315,18 @@ class RotoMaskEditLayer(AbstactEditorLayer):
         #there are no other modes
         
     def mouse_pressed(self):
-        self.block_shape_update = True
+
+        self.edit_point_shape.block_shape_updates = True
         self.edit_point_shape.save_start_pos()
 
         # Rotomask always adds keyframe on current frame if any changes are done.
         # Maybe make user settable?
         if self.clip_editor.get_active_kf_frame() != self.clip_editor.current_clip_frame:
+            self.edit_point_shape.save_selected_point_data(self.last_pressed_edit_point)
             self.clip_editor.add_keyframe(self.clip_editor.current_clip_frame)
             self.edit_point_shape.convert_shape_coords_and_update_clip_editor_keyframes()
             self.editable_property.write_out_keyframes(self.clip_editor.keyframes)
-        
+
         if self.edit_mode == ROTO_MOVE_MODE:
             pass
         elif self.edit_mode == ROTO_POINT_MODE:
@@ -352,7 +353,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
                         return
                     
                     # Closed curve, try add point in between existing points
-                    self.block_shape_update = False
+                    self.edit_point_shape.block_shape_updates = False
                     self.edit_point_shape.clear_selection()
                     if len(self.edit_point_shape.curve_points) > 1:
                         side_index = self.edit_point_shape.get_point_insert_side(self.mouse_press_panel_point)
@@ -368,7 +369,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
                     self.add_edit_point(insert_index, self.mouse_press_panel_point)
                 else:
                     # Open curve, add point last
-                    self.block_shape_update = False
+                    self.edit_point_shape.block_shape_updates = False
 
                     if len(self.edit_point_shape.curve_points) > 1:
                         self.add_edit_point(len(self.edit_point_shape.curve_points), self.mouse_press_panel_point, False)
@@ -378,9 +379,11 @@ class RotoMaskEditLayer(AbstactEditorLayer):
                         self.rotomask_editor.show_current_frame()
                     else:
                         self.add_edit_point(len(self.edit_point_shape.curve_points), self.mouse_press_panel_point)
-                        
+
+        self.clip_editor.widget.queue_draw()
+            
     def mouse_dragged(self):
-        self.block_shape_update = False
+        self.edit_point_shape.block_shape_updates = False
         # delta is given in movie coords, RotoMaskEditShape uses panel coords (because it needs to do complex drawing in those) so we have to convert mouse delta.
         mdx, mdy = self.view_editor.movie_coord_to_panel_coord(self.get_mouse_delta()) # panel coords mouse delta 
         odx, ody = self.view_editor.movie_coord_to_panel_coord((0, 0)) # movie origo in panel points
@@ -399,7 +402,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
                     hp2.translate_from_move_start(delta)
     
         self.edit_point_shape.maybe_force_line_mask()
-    
+
     def mouse_released(self):
         # delta is given in movie coords, RotoMaskEditShape uses panel coords  (because it needs to do complex drawing in those) so we have to convert mouse delta.
         mdx, mdy = self.view_editor.movie_coord_to_panel_coord(self.get_mouse_delta())
@@ -429,6 +432,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
 
         self.rotomask_editor.show_current_frame()
         self.rotomask_editor.update_effects_editor_value_labels()
+        self.clip_editor.widget.queue_draw()
         
     # --------------------------------------------- edit events
     def add_edit_point(self, index, p, show_current_frame=True):
@@ -452,9 +456,6 @@ class RotoMaskEditLayer(AbstactEditorLayer):
 
     # --------------------------------------------- state changes
     def frame_changed(self, tline_frame):
-        if self.block_shape_update == True:
-            return
-
         self.edit_point_shape.update_shape()
 
     def mode_changed(self):
