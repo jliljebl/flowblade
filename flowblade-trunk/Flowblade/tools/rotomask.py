@@ -154,7 +154,7 @@ class RotoMaskEditor(Gtk.Window):
         mask_type_combo_box.connect("changed", self.mask_type_selection_changed)  
 
         allow_adding_check = Gtk.CheckButton()
-        allow_adding_check.set_active(True)
+        allow_adding_check.set_active(False) # This shows value of self.roto_mask_layer.allow_adding_points, False is default
         allow_adding_check.connect("toggled", self.allow_adding_toggled)
         allow_adding_label = Gtk.Label(_("Allow to add points to closed masks"))
         

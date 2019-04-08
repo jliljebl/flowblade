@@ -283,7 +283,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
         self.clip_editor = clip_editor
         self.rotomask_editor = rotomask_editor
 
-        self.allow_adding_points = True
+        self.allow_adding_points = False
 
         self.edit_point_shape = vieweditorshape.RotoMaskEditShape(view_editor, clip_editor)
         self.edit_point_shape.update_shape()
