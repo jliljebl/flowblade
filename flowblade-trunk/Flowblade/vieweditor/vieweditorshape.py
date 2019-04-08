@@ -410,7 +410,6 @@ class RotoMaskEditShape(EditPointShape):
         self.update_shape()
 
     def update_shape(self):
-        
         if self.block_shape_updates == True:
             return
 
@@ -619,6 +618,7 @@ class RotoMaskEditShape(EditPointShape):
         keyframes = self.clip_editor.keyframes
 
         # if current_frame after last keyframe, use last kayframe for values, no continued interpolation
+
         last_keyframe = 0
         for kf_tuple in self.clip_editor.keyframes:
             keyframe, bz_points = kf_tuple
@@ -627,30 +627,22 @@ class RotoMaskEditShape(EditPointShape):
         
         if current_frame > last_keyframe:
             current_frame = last_keyframe
-        
+
         # Get keyframe range containing current_frame
-        index = 0
-        keyframe, bz_points = keyframes[index]
-        try:
-            keyframe_next, bz_points2 = keyframes[index + 1]
-        except:
+        if len(keyframes) < 2:
+            keyframe, bz_points = keyframes[0]
             return bz_points
-        
-        keyframe = int(keyframe)
-        keyframe_next = int(keyframe_next)
-        
-        while(keyframe < current_frame and len(keyframes) > index + 2):
-            index += 1
-            keyframe, bz_points = keyframes[index]
-            keyframe_next, bz_points2 = keyframes[index + 1]
-            
-            keyframe = int(keyframe)
-            keyframe_next = int(keyframe_next)
+
+        for i in range(0, len(keyframes) - 1):
+            keyframe, bz_points = keyframes[i]
+            keyframe_next, bz_points2 = keyframes[i + 1] # were quaranteed to have at least 2 keyframes when getting here
+            if current_frame >= keyframe and current_frame < keyframe_next:
+                break
         
         frame_1 = float(keyframe)
         frame_2 = float(keyframe_next)
         current_frame = float(current_frame)
-
+        
         # time in range 0 - 1 between frame_1, frame_2 range like in filter_rotoscoping.c
         t = ( current_frame - frame_1 ) / ( frame_2 - frame_1 + 1 )
 
