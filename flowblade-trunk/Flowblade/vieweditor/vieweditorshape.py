@@ -618,6 +618,16 @@ class RotoMaskEditShape(EditPointShape):
         # We're replicating stuff from MLT file filter_rotoscoping.c to make sure out GUI matches the results there.
         keyframes = self.clip_editor.keyframes
 
+        # if current_frame after last keyframe, use last kayframe for values, no continued interpolation
+        last_keyframe = 0
+        for kf_tuple in self.clip_editor.keyframes:
+            keyframe, bz_points = kf_tuple
+            if keyframe > last_keyframe:
+                last_keyframe = keyframe
+        
+        if current_frame > last_keyframe:
+            current_frame = last_keyframe
+        
         # Get keyframe range containing current_frame
         index = 0
         keyframe, bz_points = keyframes[index]
