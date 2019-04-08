@@ -248,6 +248,12 @@ class RotoMaskEditor(Gtk.Window):
         self.tc_display.set_frame(tline_frame)
         self.view_editor.edit_area.queue_draw()
 
+    """
+    def size_allocate(self):
+        print "size_allocate"
+        #self.connect("size-allocate", lambda w, e:self.window_resized())
+    """
+
     def window_resized(self):
         scale = self.scale_selector.get_current_scale()
         self.scale_changed(scale)

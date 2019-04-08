@@ -315,7 +315,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
         #there are no other modes
         
     def mouse_pressed(self):
-
+        self.view_editor.edit_area_update_blocked = True
         self.edit_point_shape.block_shape_updates = True
         self.edit_point_shape.save_start_pos()
 
@@ -438,7 +438,8 @@ class RotoMaskEditLayer(AbstactEditorLayer):
         self.rotomask_editor.show_current_frame()
         self.rotomask_editor.update_effects_editor_value_labels()
         self.clip_editor.widget.queue_draw()
-        
+        self.view_editor.edit_area_update_blocked = False
+
     # --------------------------------------------- edit events
     def add_edit_point(self, index, p, show_current_frame=True):
         self.edit_point_shape.add_point(index, p)

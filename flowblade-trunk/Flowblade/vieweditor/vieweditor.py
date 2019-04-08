@@ -50,6 +50,9 @@ class ViewEditor(Gtk.Frame):
         self.write_out_layers = False
         self.write_file_path = None
 
+
+        self.edit_area_update_blocked = False
+    
         self.edit_area = cairoarea.CairoDrawableArea2(int(self.scaled_screen_width + MIN_PAD * 2), self.profile_h + MIN_PAD * 2, self._draw)
         self.edit_area.press_func = self._press_event
         self.edit_area.motion_notify_func = self._motion_notify_event
@@ -57,10 +60,18 @@ class ViewEditor(Gtk.Frame):
         self.edit_area.mouse_scroll_func = self._mouse_scroll_listener
                 
         self.scroll_window = Gtk.ScrolledWindow()
+        
+        # HOLY JEESUS, GTK somehow auto scrolls to top left when mouse pressed after contained widget size change!???! We need to restore position manually.
+        self.scroll_window.get_vscrollbar().connect("change-value", self._vscroll_done)
+        self.scroll_window.get_hscrollbar().connect("change-value", self._hscroll_done)
+        self.last_h_scroll = 0.0
+        self.last_v_scroll = 0.0
+        
         self.scroll_window.add_with_viewport(self.edit_area)
         self.scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         self.scroll_window.show_all()
         self.scroll_window.set_size_request(scroll_width, scroll_height)  # +2 to not show scrollbars
+        self.scroll_window.set_overlay_scrolling(False)
         self.add(self.scroll_window)
 
         self.scale_select = None # Set from outside
@@ -76,6 +87,15 @@ class ViewEditor(Gtk.Frame):
 
         self.set_scale_and_update(1.0)
 
+
+    def _vscroll_done(self, gtk_range, scroll, value):
+        # HOLY JEESUS, GTK somehow auto scrolls to top left when mouse pressed after contained widget size change!???! We need to restore position manually.
+        self.last_v_scroll = value
+        
+    def _hscroll_done(self, gtk_range, scroll, value):
+        # HOLY JEESUS, GTK somehow auto scrolls to top left when mouse pressed after contained widget size change!???! We need to restore position manually.
+        self.last_h_scroll = value
+        
     def write_layers_to_png(self, save_path):
         self.write_out_layers = True
         self.write_file_path = save_path
@@ -105,6 +125,9 @@ class ViewEditor(Gtk.Frame):
         self.scaled_screen_height = self.scale * self.profile_h
 
     def set_edit_area_size_and_origo(self):
+        if self.edit_area_update_blocked:
+            return
+
         alloc = self.scroll_window.get_allocation()
         x, y, scroll_w, scroll_h = alloc.x, alloc.y, alloc.width, alloc.height
 
@@ -133,11 +156,19 @@ class ViewEditor(Gtk.Frame):
             self.origo = (int(origo_x), int(origo_y))
             self.edit_area.set_size_request(int(new_w), int(new_h))
 
+        # HOLY JEESUS, GTK somehow auto scrolls to top left when mouse pressed after contained widget size change!???! We need to restore position manually.
+        self.last_h_scroll = self.scroll_window.get_hscrollbar().get_adjustment().get_value()
+        self.last_v_scroll = self.scroll_window.get_vscrollbar().get_adjustment().get_value()
+        
     # ----------------------------------------------------- mouse events
     def _press_event(self, event):
         """
         Mouse press callback
         """
+        # HOLY JEESUS, GTK somehow auto scrolls to top left when mouse pressed after contained widget size change!???! We need to restore position manually.
+        self.scroll_window.get_hscrollbar().get_adjustment().set_value(self.last_h_scroll)
+        self.scroll_window.get_vscrollbar().get_adjustment().set_value(self.last_v_scroll)
+
         self.edit_target_layer = None
         p = self.panel_coord_to_movie_coord((event.x, event.y))
         if self.active_layer.hit(p):
@@ -180,11 +211,11 @@ class ViewEditor(Gtk.Frame):
         if self.scale_select != None:
             active_index = self.scale_select.combo.get_active()
             if event.direction == Gdk.ScrollDirection.UP:
-                active_index = active_index - 1
+                active_index = active_index + 1
                 if active_index < 0:
                     active_index = 0
             else:
-                active_index = active_index + 1
+                active_index = active_index - 1
                 if active_index > 7:
                     active_index = 7
             self.scale_select.combo.set_active(active_index)
