@@ -270,9 +270,12 @@ class SliderEditor:
             
             if p_original_type == appconsts.PROP_INT:
                 self.editable_property.type = appconsts.PROP_INT
-                int_str_val = str(int(first_kf_val))
+                try:
+                    int_str_val = str(int(first_kf_val))
+                except:
+                    int_str_val = str(float(first_kf_val))
                 self.editable_property.write_filter_object_property(int_str_val)
-                self.editable_property.value = str(int(first_kf_val))
+                self.editable_property.value = int_str_val
             elif p_original_type == appconsts.PROP_FLOAT:
                 self.editable_property.type = appconsts.PROP_FLOAT 
                 self.editable_property.write_filter_object_property(str(float(first_kf_val)))
