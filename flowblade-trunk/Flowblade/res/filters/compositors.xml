@@ -84,7 +84,9 @@
         <property name="automatic" args="editor=no_editor">1</property>
         <property name="force_track" args="editor=no_editor">0</property>
     </compositortransition>
-
+    <compositortransition mlt_service="matte">
+        <name>##matte</name>
+    </compositortransition>
 
 
     <!-- AUTOFADES -->

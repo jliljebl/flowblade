@@ -136,7 +136,8 @@ def init_module():
                              (_("Affine Blend"), "##affineblend"),
                              (_("Blend"), "##blend"),
                              (_("Wipe Clip Length"),"##wipe"),
-                             (_("Transform"),"##affine")]
+                             (_("Transform"),"##affine"),
+                             (_("LumaToAlpha"),"##matte")]
 
     compositors = sorted(unsorted_compositors, key=lambda comp: comp[0])   
 
@@ -262,6 +263,8 @@ class CompositorTransition:
             self._set_luma_service_default_values()
         elif self.info.mlt_service_id == "region":
             self._set_region_service_default_values()
+        elif self.info.mlt_service_id == "matte":
+            pass
         else:
             self._set_blend_service_default_values()
         
