@@ -161,7 +161,9 @@ def _get_slider_row(editable_property, slider_name=None, compact=False):
     if slider_editor.editor_type == KEYFRAME_EDITOR:
         slider_editor.vbox.is_kf_editor = True      
         slider_editor.vbox.display_tline_frame = lambda tline_frame:slider_editor.kfeditor.display_tline_frame(tline_frame)
-        
+        slider_editor.vbox.update_slider_value_display = lambda frame:slider_editor.kfeditor.update_slider_value_display(frame)
+        slider_editor.vbox.update_clip_pos = lambda:slider_editor.kfeditor.update_clip_pos()
+
     return slider_editor.vbox
     
 
