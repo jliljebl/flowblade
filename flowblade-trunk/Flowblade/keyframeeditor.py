@@ -872,12 +872,15 @@ class AbstractKeyFrameEditor(Gtk.VBox):
         # We'll need to update some values to get keyframes on correct positions again
         self.editable_property.update_clip_index()
         self.clip_tline_pos = self.editable_property.get_clip_tline_pos()
+    
         if self.use_clip_in == True:
             self.clip_in = self.editable_property.clip.clip_in
         else:
             self.clip_in = 0
         self.clip_editor.clip_in = self.editable_property.clip.clip_in
 
+        self.clip_editor.widget.queue_draw()
+        
     def update_slider_value_display(self, frame):
         # This is called after frame changed or mouse release to update
         # slider value without causing 'changed' signal to update keyframes.
@@ -930,7 +933,9 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         orig_tline_frame = PLAYER().current_frame()
 
         self.active_keyframe_changed() # to do update gui to current values
+                                       # This also seeks tline frame to frame 0, thus value was saved in the line above
 
+        # If we do not want to seek to kf 0 or clip start we, need seek back to original tline frame
         if editorpersistance.prefs.kf_edit_init_affects_playhead == False:
             self.display_tline_frame(orig_tline_frame)
             PLAYER().seek_frame(orig_tline_frame)
@@ -1085,7 +1090,9 @@ class GeometryEditor(AbstractKeyFrameEditor):
 
         orig_tline_frame = PLAYER().current_frame()
         self.active_keyframe_changed() # to do update gui to current values
+                                       # This also seeks tline frame to frame 0, thus value was saved in the line above
 
+        # If we do not want to seek to kf 0 or clip start we, need seek back to original tline frame
         if editorpersistance.prefs.kf_edit_init_affects_playhead == False:
             self.display_tline_frame(orig_tline_frame)
             PLAYER().seek_frame(orig_tline_frame)
@@ -1484,6 +1491,7 @@ class RotoMaskKeyFrameEditor(Gtk.VBox):
         else:
             self.clip_in = 0
         self.clip_editor.clip_in = self.editable_property.clip.clip_in
+        self.clip_editor.widget.queue_draw()
 
     def seek_tline_frame(self, clip_frame):
         PLAYER().seek_frame(self.clip_tline_pos + clip_frame - self.clip_in)

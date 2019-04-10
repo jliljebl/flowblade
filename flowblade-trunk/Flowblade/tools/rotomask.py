@@ -116,8 +116,7 @@ class RotoMaskEditor(Gtk.Window):
         self.value_labels = value_labels
         
         self.view_editor = vieweditor.ViewEditor(PLAYER().profile, VIEW_EDITOR_WIDTH, VIEW_EDITOR_HEIGHT)
-        
-        self.guides_toggle = vieweditor.GuidesViewToggle(self.view_editor)
+        self.view_editor.draw_safe_area = False
 
         self.tc_display = guicomponents.MonitorTCDisplay()
         self.tc_display.use_internal_frame = True

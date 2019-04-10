@@ -337,7 +337,7 @@ class EditAction:
     def undo(self):
         PLAYER().stop_playback()
 
-        # HACK, see above.
+        # HACK, see above in __init()__
         if self.stop_for_edit:
             PLAYER().consumer.stop()
 
@@ -364,7 +364,7 @@ class EditAction:
     def redo(self):
         PLAYER().stop_playback()
 
-        # HACK, see above.
+        # HACK, see above in __init()__
         if self.stop_for_edit:
             PLAYER().consumer.stop()
 

@@ -61,7 +61,7 @@ class ViewEditor(Gtk.Frame):
                 
         self.scroll_window = Gtk.ScrolledWindow()
         
-        # HOLY JEESUS, GTK somehow auto scrolls to top left when mouse pressed after contained widget size change!???! We need to restore position manually.
+        # GTK somehow auto scrolls to top left when mouse pressed first after contained widget size change!???! We need to restore position manually.
         self.scroll_window.get_vscrollbar().connect("change-value", self._vscroll_done)
         self.scroll_window.get_hscrollbar().connect("change-value", self._hscroll_done)
         self.last_h_scroll = 0.0
@@ -89,11 +89,11 @@ class ViewEditor(Gtk.Frame):
 
 
     def _vscroll_done(self, gtk_range, scroll, value):
-        # HOLY JEESUS, GTK somehow auto scrolls to top left when mouse pressed after contained widget size change!???! We need to restore position manually.
+        # GTK somehow auto scrolls to top left when mouse pressed after contained widget size change!???! We need to restore position manually.
         self.last_v_scroll = value
         
     def _hscroll_done(self, gtk_range, scroll, value):
-        # HOLY JEESUS, GTK somehow auto scrolls to top left when mouse pressed after contained widget size change!???! We need to restore position manually.
+        # GTK somehow auto scrolls to top left when mouse pressed after contained widget size change!???! We need to restore position manually.
         self.last_h_scroll = value
         
     def write_layers_to_png(self, save_path):
@@ -156,7 +156,7 @@ class ViewEditor(Gtk.Frame):
             self.origo = (int(origo_x), int(origo_y))
             self.edit_area.set_size_request(int(new_w), int(new_h))
 
-        # HOLY JEESUS, GTK somehow auto scrolls to top left when mouse pressed after contained widget size change!???! We need to restore position manually.
+        # GTK somehow auto scrolls to top left when mouse pressed after contained widget size change!???! We need to restore position manually.
         self.last_h_scroll = self.scroll_window.get_hscrollbar().get_adjustment().get_value()
         self.last_v_scroll = self.scroll_window.get_vscrollbar().get_adjustment().get_value()
         
@@ -261,6 +261,8 @@ class ViewEditor(Gtk.Frame):
     
     # --------------------------------------------------- drawing
     def set_screen_rgb_data(self, screen_rgb_data):
+        # MLT Provides images in which R <-> B are swiched from what Cairo wants them,
+        # so use numpy to switch them and to create a modifiable buffer for Cairo
         buf = np.fromstring(screen_rgb_data, dtype=np.uint8)
         buf.shape = (self.profile_h + 1, self.profile_w, 4) # +1 in h, seemeed to need it
         out = np.copy(buf)
@@ -285,9 +287,7 @@ class ViewEditor(Gtk.Frame):
 
 
         if self.bg_buf is not None:
-            # MLT Provides images in which R <-> B are swiched from what Cairo wants them,
-            # so use numpy to switch them and to create a modifiable buffer for Cairo
-            
+
             # Create cairo surface
             stride = cairo.ImageSurface.format_stride_for_width(cairo.FORMAT_RGB24, self.profile_w)
             surface = cairo.ImageSurface.create_for_data(self.bg_buf, cairo.FORMAT_RGB24, self.profile_w, self.profile_h, stride)
