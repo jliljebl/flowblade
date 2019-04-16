@@ -30,6 +30,7 @@ import boxmove
 import dialogutils
 import editorpersistance # Jul-2016 - SvdB - For play/pause button
 import editorstate
+import clipeffectseditor
 import dnd
 import edit
 from editorstate import current_sequence
@@ -393,8 +394,7 @@ def overwrite_move_release(x, y, frame, state):
             action = edit.overwrite_move_action(data)
             action.do_edit()
 
-            if editorpersistance.prefs.kf_edit_init_affects_playhead == True:
-                PLAYER().seek_frame(over_in, False)
+            PLAYER().seek_frame(over_in, False)
         else:
             _move_mode_released()
     else: # Moved to different track
