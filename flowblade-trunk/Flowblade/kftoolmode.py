@@ -65,8 +65,8 @@ KF_HIT_WIDTH = 8
 KF_DRAG_THRESHOLD = 3
 
 # Colors
-FRAME_SCALE_LINES = (0.07, 0.22, 0.07)
-FRAME_SCALE_LINES_BRIGHT = (0.2, 0.6, 0.2)
+FRAME_SCALE_LINES = (0.07, 0.07, 0.22)
+FRAME_SCALE_LINES_BRIGHT = (0.2, 0.2, 0.6)
 TEXT_COLOR = (0.6, 0.6, 0.6) 
 CURVE_COLOR = (0.71, 0.13, 0.64)
 OVERLAY_BG = (0.0, 0.0, 0.0, 0.8)
@@ -132,6 +132,8 @@ def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT, param_data=None):
         # Volume keyframes on audio track for video and audio
         if track.type == appconsts.AUDIO and not(edit_data["clip"].media_type != appconsts.VIDEO and edit_data["clip"].media_type != appconsts.AUDIO):
             edit_type = VOLUME_KF_EDIT
+
+    global _kf_editor
         
     # Init for edit type
     if edit_type == VOLUME_KF_EDIT:
@@ -146,7 +148,7 @@ def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT, param_data=None):
             ep = _get_volume_editable_property(clip, track, clip_index)
 
         edit_data["editable_property"] = ep
-        global _kf_editor
+
         _kf_editor = TLineKeyFrameEditor(ep, True, VOLUME_KF_EDIT)
         
     elif edit_type == BRIGHTNESS_KF_EDIT:
@@ -162,7 +164,7 @@ def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT, param_data=None):
             ep = _get_brightness_editable_property(clip, track, clip_index)
             
         edit_data["editable_property"] = ep
-        global _kf_editor
+
         _kf_editor = TLineKeyFrameEditor(ep, True, BRIGHTNESS_KF_EDIT)
         
     else: #  edit_type == PARAM_KF_EDIT 
@@ -182,7 +184,7 @@ def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT, param_data=None):
         edit_data["editable_property"] = ep
 
         filter_param_name = filter_object.info.name + ":" + disp_name
-        global _kf_editor
+
         _kf_editor = TLineKeyFrameEditor(ep, True, PARAM_KF_EDIT, filter_param_name)
 
     tlinewidgets.set_edit_mode_data(edit_data)
