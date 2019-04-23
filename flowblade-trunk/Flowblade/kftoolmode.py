@@ -522,7 +522,7 @@ class TLineKeyFrameEditor:
             scale_length = clip_length * pix_per_frame
             scale_in = clip_start_frame * pix_per_frame
             
-            y_pad = 0
+            y_pad = TOP_PAD
             bar_height = eh
             
             # Draw all frames only if pixels per frame > 2, otherwise
