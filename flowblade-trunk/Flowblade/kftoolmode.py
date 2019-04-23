@@ -24,6 +24,7 @@ Module handles Keyframe tool functionality
 from gi.repository import Pango, PangoCairo, Gtk
 
 import cairo
+import math
 
 import appconsts
 import cairoarea
@@ -70,7 +71,12 @@ FRAME_SCALE_LINES_BRIGHT = (0.2, 0.2, 0.6)
 TEXT_COLOR = (0.6, 0.6, 0.6) 
 CURVE_COLOR = (0.71, 0.13, 0.64)
 OVERLAY_BG = (0.0, 0.0, 0.0, 0.8)
-VALUE_AREA_COLOR = (0.07, 0.07, 0.22, 0.5)
+VALUE_AREA_COLOR = (0.07, 0.07, 0.22, 0.65)
+SOURCE_TRIANGLE_COLOR = (0.19, 0.32, 0.57)
+SOURCE_TRIANGLE_OUTLINE_COLOR = (0.9, 0.9, 0.9)
+SCALE_LINES_TEXT_COLOR = (0.9, 0.9, 0.9)
+CLIP_OUTLINE_COLOR = (0.7, 0.7, 0.5, 0.22)
+AUDIO_LEVELS_COLOR = (0.4, 0.4, 0.4, 0.4)
 
 # Edit types
 VOLUME_KF_EDIT = 0
@@ -457,6 +463,31 @@ class TLineKeyFrameEditor:
         cr.set_source_surface(HAMBURGER_ICON, x + 4.5, y + 4)
         cr.paint()
 
+        # Draw clip out line
+        clip = edit_data["clip"]
+        track = edit_data["track"]
+
+        pix_per_frame = tlinewidgets.pix_per_frame
+        pos = tlinewidgets.pos
+        
+        clip_start_in_tline = edit_data["clip_start_in_timeline"]
+        clip_start_frame = clip_start_in_tline - pos
+    
+        clip_in = clip.clip_in
+        clip_out = clip.clip_out
+        clip_length = clip_out - clip_in + 1 # +1 because in and out both inclusive
+        scale_length = clip_length * pix_per_frame
+        scale_in = clip_start_frame * pix_per_frame
+        
+        clip_outline_y = tlinewidgets._get_track_y(track.id)
+         
+        self.create_round_rect_path(cr, scale_in,
+                                     clip_outline_y, scale_length, 
+                                     track.height)
+        cr.set_source_rgba(*CLIP_OUTLINE_COLOR)
+        cr.set_line_width(2.0)
+        cr.fill()
+            
         # Frame scale and value lines
         self.frame_scale.draw(cr, edit_data["clip_start_in_timeline"], self.clip_length, self._get_upper_y(), self._get_lower_y())
         self._draw_value_lines(cr, x, w)
@@ -465,11 +496,11 @@ class TLineKeyFrameEditor:
 
         # Draw value curves,they need to be clipped into edit area
         cr.set_source_rgb(*CURVE_COLOR)
-        cr.set_line_width(1.0)
+        #cr.set_line_width(1.0)
 
         cr.save()
 
-        cr.set_line_width(2.0)
+        cr.set_line_width(3.0)
         ex, ey, ew, eh = self._get_edit_area_rect()
         cr.rectangle(ex, ey, ew, eh)
         cr.clip() 
@@ -503,25 +534,10 @@ class TLineKeyFrameEditor:
         cr.fill()
 
         # Maybe draw audio levels
-        clip = edit_data["clip"]
         if self.edit_type == VOLUME_KF_EDIT and clip.is_blanck_clip == False and clip.waveform_data != None:
 
-            cr.set_source_rgba(0.4,0.4,0.4, 0.4)
-            
-            track = edit_data["track"]
-
-            pix_per_frame = tlinewidgets.pix_per_frame
-            pos = tlinewidgets.pos
-            
-            clip_start_in_tline = edit_data["clip_start_in_timeline"]
-            clip_start_frame = clip_start_in_tline - pos
+            cr.set_source_rgba(*AUDIO_LEVELS_COLOR)
         
-            clip_in = clip.clip_in
-            clip_out = clip.clip_out
-            clip_length = clip_out - clip_in + 1 # +1 because in and out both inclusive
-            scale_length = clip_length * pix_per_frame
-            scale_in = clip_start_frame * pix_per_frame
-            
             y_pad = TOP_PAD
             bar_height = eh
             
@@ -594,12 +610,25 @@ class TLineKeyFrameEditor:
                 self._draw_text(cr, str(after_kfs), x + w - OUT_OF_RANGE_NUMBER_X_END_PAD, kfy + KF_TEXT_PAD)
         
         # Draw source triangle
-        cr.move_to(x - 6, self.source_track_center - 8)
-        cr.line_to(x + 3, self.source_track_center)
-        cr.line_to(x - 6, self.source_track_center + 8)
+        cr.set_line_width(2.0)
+        cr.move_to(x - 8, self.source_track_center - 8)
+        cr.line_to(x + 1, self.source_track_center)
+        cr.line_to(x - 8, self.source_track_center + 8)
         cr.close_path()
-        cr.set_source_rgb(*TEXT_COLOR)
-        cr.fill()
+        cr.set_source_rgb(*SOURCE_TRIANGLE_COLOR)
+        cr.fill_preserve()
+        cr.set_source_rgb(*SOURCE_TRIANGLE_OUTLINE_COLOR)
+        cr.stroke()
+
+        cr.move_to(x + w + 8, self.source_track_center - 8)
+        cr.line_to(x + w - 1, self.source_track_center)
+        cr.line_to(x + w + 8, self.source_track_center + 8)
+        cr.close_path()
+        cr.set_source_rgb(*SOURCE_TRIANGLE_COLOR)
+        cr.set_source_rgb(*SOURCE_TRIANGLE_COLOR)
+        cr.fill_preserve()
+        cr.set_source_rgb(*SOURCE_TRIANGLE_OUTLINE_COLOR)
+        cr.stroke()
         
         # Draw frame pointer
         try:
@@ -623,6 +652,9 @@ class TLineKeyFrameEditor:
             self._draw_text(cr, text, -1, y + 4, True, x, w)
             self._draw_text(cr, self.media_frame_txt + str(self.current_clip_frame), -1, kfy - 8, True, x, w)
 
+        # Value texts
+        self._draw_value_texts(cr, x, w)
+     
         # Value value info
         if self.edit_value != None:
             self._draw_value_text_box(cr, self.mouse_x,self.mouse_y, str(self.edit_value))
@@ -635,18 +667,9 @@ class TLineKeyFrameEditor:
 
     def _draw_value_lines(self, cr, x, w):
         # Audio hard coded value lines
-        TEXT_X_OFF = 4
-        TEXT_X_OFF_END = -28
-        TEXT_Y_OFF = 4
-        
         active_width = w - 2 * END_PAD
         xs = x + END_PAD
         xe = xs + active_width
-
-        cr.select_font_face ("sans-serif",
-                              cairo.FONT_SLANT_NORMAL,
-                              cairo.FONT_WEIGHT_NORMAL)
-        cr.set_font_size(12)
 
         if self.edit_type == VOLUME_KF_EDIT:
             # 0
@@ -657,26 +680,12 @@ class TLineKeyFrameEditor:
             cr.line_to(xe, y)
             cr.stroke()
             
-            cr.set_source_rgb(*FRAME_SCALE_LINES_BRIGHT)
-            text = "0"
-            cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF)
-            cr.show_text(text)
-            cr.move_to(xe + TEXT_X_OFF_END + 16, y - TEXT_Y_OFF)
-            cr.show_text(text)
-
             # 50
             y = self._get_panel_y_for_value(50)
             cr.set_source_rgb(*FRAME_SCALE_LINES)
             cr.move_to(xs, y)
             cr.line_to(xe, y)
             cr.stroke()
-
-            cr.set_source_rgb(*FRAME_SCALE_LINES_BRIGHT)
-            text = "50"
-            cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF + 8)
-            cr.show_text(text)
-            cr.move_to(xe + TEXT_X_OFF_END + 6, y - TEXT_Y_OFF + 8)
-            cr.show_text(text)
             
             # 100
             y = self._get_panel_y_for_value(100)
@@ -684,13 +693,6 @@ class TLineKeyFrameEditor:
             cr.move_to(xs, y)
             cr.line_to(xe, y)
             cr.stroke()
-            
-            cr.set_source_rgb(*FRAME_SCALE_LINES_BRIGHT)
-            text = "100"
-            cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF + 17)
-            cr.show_text(text)
-            cr.move_to(xe + TEXT_X_OFF_END, y - TEXT_Y_OFF + 17)
-            cr.show_text(text)
             
         elif self.edit_type == BRIGHTNESS_KF_EDIT:
             # 0
@@ -700,29 +702,14 @@ class TLineKeyFrameEditor:
             cr.move_to(xs, y)
             cr.line_to(xe, y)
             cr.stroke()
-            
-            cr.set_source_rgb(*FRAME_SCALE_LINES_BRIGHT)
-            text = "0"
-            cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF)
-            cr.show_text(text)
-            cr.move_to(xe + TEXT_X_OFF_END + 16, y - TEXT_Y_OFF)
-            cr.show_text(text)
 
             # 50
-            #XOFF_END_50 = -5
             y = self._get_panel_y_for_value(50)
             cr.set_line_width(1.0)
             cr.set_source_rgb(*FRAME_SCALE_LINES)
             cr.move_to(xs, y)
             cr.line_to(xe, y)
             cr.stroke()
-            
-            cr.set_source_rgb(*FRAME_SCALE_LINES_BRIGHT)
-            text = "50"
-            cr.move_to(xs + TEXT_X_OFF, y + 4)
-            cr.show_text(text)
-            cr.move_to(xe + TEXT_X_OFF_END + 6, y + 4)
-            cr.show_text(text)
             
             # 100
             y = self._get_panel_y_for_value(100) 
@@ -731,12 +718,6 @@ class TLineKeyFrameEditor:
             cr.line_to(xe, y)
             cr.stroke()
             
-            cr.set_source_rgb(*FRAME_SCALE_LINES_BRIGHT)
-            text = "100"
-            cr.move_to(xs + TEXT_X_OFF, y + 13)
-            cr.show_text(text)
-            cr.move_to(xe + TEXT_X_OFF_END, y + 13)
-            cr.show_text(text)
         else:
             editable_property = edit_data["editable_property"] 
             adjustment = editable_property.get_input_range_adjustment()
@@ -751,8 +732,102 @@ class TLineKeyFrameEditor:
             cr.move_to(xs, y)
             cr.line_to(xe, y)
             cr.stroke()
+
+            # Half
+            y = self._get_panel_y_for_value(half)
+            cr.set_source_rgb(*FRAME_SCALE_LINES)
+            cr.move_to(xs, y)
+            cr.line_to(xe, y)
+            cr.stroke()
             
-            cr.set_source_rgb(*FRAME_SCALE_LINES_BRIGHT)
+            # Max
+            y = self._get_panel_y_for_value(upper)
+            cr.set_source_rgb(*FRAME_SCALE_LINES)
+            cr.move_to(xs, y)
+            cr.line_to(xe, y)
+            cr.stroke()
+
+    def _draw_value_texts(self, cr, x, w):
+        # Audio hard coded value lines
+        TEXT_X_OFF = 4
+        TEXT_X_OFF_END = -28
+        TEXT_Y_OFF = 4
+        
+        active_width = w - 2 * END_PAD
+        xs = x + END_PAD
+        xe = xs + active_width
+
+        cr.select_font_face ("sans-serif",
+                              cairo.FONT_SLANT_NORMAL,
+                              cairo.FONT_WEIGHT_NORMAL)
+        cr.set_font_size(12)
+        cr.set_source_rgb(*SCALE_LINES_TEXT_COLOR)
+            
+        if self.edit_type == VOLUME_KF_EDIT:
+            # 0
+            y = self._get_panel_y_for_value(0.0)
+            
+            text = "0"
+            cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF)
+            cr.show_text(text)
+            cr.move_to(xe + TEXT_X_OFF_END + 16, y - TEXT_Y_OFF)
+            cr.show_text(text)
+
+            # 50
+            y = self._get_panel_y_for_value(50)
+
+            text = "50"
+            cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF + 8)
+            cr.show_text(text)
+            cr.move_to(xe + TEXT_X_OFF_END + 6, y - TEXT_Y_OFF + 8)
+            cr.show_text(text)
+            
+            # 100
+            y = self._get_panel_y_for_value(100)
+            
+            text = "100"
+            cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF + 17)
+            cr.show_text(text)
+            cr.move_to(xe + TEXT_X_OFF_END, y - TEXT_Y_OFF + 17)
+            cr.show_text(text)
+            
+        elif self.edit_type == BRIGHTNESS_KF_EDIT:
+            # 0
+            y = self._get_panel_y_for_value(0.0)
+            text = "0"
+            cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF)
+            cr.show_text(text)
+            cr.move_to(xe + TEXT_X_OFF_END + 16, y - TEXT_Y_OFF)
+            cr.show_text(text)
+
+            # 50
+            y = self._get_panel_y_for_value(50)
+            
+            text = "50"
+            cr.move_to(xs + TEXT_X_OFF, y + 4)
+            cr.show_text(text)
+            cr.move_to(xe + TEXT_X_OFF_END + 6, y + 4)
+            cr.show_text(text)
+            
+            # 100
+            y = self._get_panel_y_for_value(100) 
+            
+            text = "100"
+            cr.move_to(xs + TEXT_X_OFF, y + 13)
+            cr.show_text(text)
+            cr.move_to(xe + TEXT_X_OFF_END, y + 13)
+            cr.show_text(text)
+        else:
+
+            editable_property = edit_data["editable_property"] 
+            adjustment = editable_property.get_input_range_adjustment()
+            lower = adjustment.get_lower()
+            upper = adjustment.get_upper()
+            half = (upper - lower) / 2 + lower
+            
+            # Min
+            y = self._get_panel_y_for_value(lower)
+            
             text = str(lower)
             cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF)
             cr.show_text(text)
@@ -761,12 +836,7 @@ class TLineKeyFrameEditor:
 
             # Half
             y = self._get_panel_y_for_value(half)
-            cr.set_source_rgb(*FRAME_SCALE_LINES)
-            cr.move_to(xs, y)
-            cr.line_to(xe, y)
-            cr.stroke()
 
-            cr.set_source_rgb(*FRAME_SCALE_LINES_BRIGHT)
             text = str(half)
             cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF + 8)
             cr.show_text(text)
@@ -775,18 +845,13 @@ class TLineKeyFrameEditor:
             
             # Max
             y = self._get_panel_y_for_value(upper)
-            cr.set_source_rgb(*FRAME_SCALE_LINES)
-            cr.move_to(xs, y)
-            cr.line_to(xe, y)
-            cr.stroke()
             
-            cr.set_source_rgb(*FRAME_SCALE_LINES_BRIGHT)
             text = str(upper)
             cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF + 17)
             cr.show_text(text)
             cr.move_to(xe + TEXT_X_OFF_END, y - TEXT_Y_OFF + 17)
             cr.show_text(text)
-
+            
     def _draw_text(self, cr, txt, x, y, centered=False, tline_x=-1, w=-1):
         layout = PangoCairo.create_layout(cr)
         layout.set_text(txt, -1)
@@ -837,6 +902,16 @@ class TLineKeyFrameEditor:
         cr.set_source_rgb(0.8, 0.8, 0.8)
         cr.show_text(text) 
 
+    def create_round_rect_path(self, cr, x, y, width, height, radius=4.0):
+        degrees = math.pi / 180.0
+
+        cr.new_sub_path()
+        cr.arc(x + width - radius, y + radius, radius, -90 * degrees, 0 * degrees)
+        cr.arc(x + width - radius, y + height - radius, radius, 0 * degrees, 90 * degrees)
+        cr.arc(x + radius, y + height - radius, radius, 90 * degrees, 180 * degrees)
+        cr.arc(x + radius, y + radius, radius, 180 * degrees, 270 * degrees)
+        cr.close_path()
+        
     # ----------------------------------------------------------- mouse events
     def press_event(self, event):
         """
