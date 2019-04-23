@@ -1642,7 +1642,7 @@ class TimeLineCanvas:
         # Get clip indexes for clips overlapping first and last displayed frame.
         start = track.get_clip_index_at(int(pos))
         end = track.get_clip_index_at(int(pos + width / pix_per_frame))
-        #print start, end
+
         width_frames = float(width) / pix_per_frame
 
         # Add 1 to end because range() last index exclusive 
@@ -1670,7 +1670,7 @@ class TimeLineCanvas:
                 
         # Draw clips in draw range
         for i in range(start, end):
-            #print "track :", track.id, "index:", i
+
             clip = track.clips[i]
 
             # Get clip frame values

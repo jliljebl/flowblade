@@ -468,6 +468,7 @@ class TLineKeyFrameEditor:
         cr.set_line_width(1.0)
 
         cr.save()
+
         cr.set_line_width(2.0)
         ex, ey, ew, eh = self._get_edit_area_rect()
         cr.rectangle(ex, ey, ew, eh)
@@ -500,7 +501,64 @@ class TLineKeyFrameEditor:
 
         cr.set_source_rgba(*VALUE_AREA_COLOR)
         cr.fill()
+
+        # Maybe draw audio levels
+        clip = edit_data["clip"]
+        if self.edit_type == VOLUME_KF_EDIT and clip.is_blanck_clip == False and clip.waveform_data != None:
+
+            cr.set_source_rgba(0.4,0.4,0.4, 0.4)
+            
+            track = edit_data["track"]
+
+            pix_per_frame = tlinewidgets.pix_per_frame
+            pos = tlinewidgets.pos
+            
+            clip_start_in_tline = edit_data["clip_start_in_timeline"]
+            clip_start_frame = clip_start_in_tline - pos
         
+            clip_in = clip.clip_in
+            clip_out = clip.clip_out
+            clip_length = clip_out - clip_in + 1 # +1 because in and out both inclusive
+            scale_length = clip_length * pix_per_frame
+            scale_in = clip_start_frame * pix_per_frame
+            
+            y_pad = 0
+            bar_height = eh
+            
+            # Draw all frames only if pixels per frame > 2, otherwise
+            # draw only every other or fewer frames
+            draw_pix_per_frame = tlinewidgets.pix_per_frame
+            if draw_pix_per_frame < 2:
+                draw_pix_per_frame = 2
+                step = int(2 / pix_per_frame)
+                if step < 1:
+                    step = 1
+            else:
+                step = 1
+
+            # Draw only frames in display
+            draw_first = clip_in
+            draw_last = clip_out + 1
+            if clip_start_frame < 0:
+                draw_first = int(draw_first - clip_start_frame)
+
+            # Get media frame 0 position in screen pixels
+            media_start_pos_pix = scale_in - clip_in * pix_per_frame
+            
+            # Draw level bar for each frame in draw range
+            for f in range(draw_first, draw_last, step):
+                try:
+                    xf = media_start_pos_pix + f * pix_per_frame
+                    hf = bar_height * clip.waveform_data[f]
+                    if h < 1:
+                        h = 1
+                    cr.rectangle(xf, y + y_pad + (bar_height - hf), draw_pix_per_frame, hf)
+                except:
+                    # This is just dirty fix a when 23.98 fps does not work
+                    break
+
+            cr.fill()
+
         cr.restore()
 
         # Draw keyframes
@@ -590,7 +648,6 @@ class TLineKeyFrameEditor:
                               cairo.FONT_WEIGHT_NORMAL)
         cr.set_font_size(12)
 
-        # TODO: Do this in a more general way if we ever use this tool to edit other than "volume" and "brightness".
         if self.edit_type == VOLUME_KF_EDIT:
             # 0
             y = self._get_panel_y_for_value(0.0)
