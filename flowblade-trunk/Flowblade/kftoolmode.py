@@ -70,6 +70,7 @@ FRAME_SCALE_LINES_BRIGHT = (0.2, 0.2, 0.6)
 TEXT_COLOR = (0.6, 0.6, 0.6) 
 CURVE_COLOR = (0.71, 0.13, 0.64)
 OVERLAY_BG = (0.0, 0.0, 0.0, 0.8)
+VALUE_AREA_COLOR = (0.07, 0.07, 0.22, 0.5)
 
 # Edit types
 VOLUME_KF_EDIT = 0
@@ -482,14 +483,24 @@ class TLineKeyFrameEditor:
                 cr.move_to(kf_pos_x, kf_pos_y)
             else:
                 cr.line_to(kf_pos_x, kf_pos_y)
-        cr.stroke()
         # If last kf before clip end, continue value curve to end
         kf, frame, kf_index, kf_pos_x, kf_pos_y = kf_positions[-1]
         if kf_pos_x < ex + ew:
             cr.move_to(kf_pos_x, kf_pos_y)
             cr.line_to(ex + ew, kf_pos_y)
-            cr.stroke()
+        else:
+            cr.line_to(ex + ew, kf_pos_y)
+            
+        cr.stroke_preserve()
+        
+        cr.line_to(ex + ew, ey + eh)
+        cr.line_to(ex, ey + eh)
+        cr.line_to(ex, ey)
+        cr.line_to(ex, ey)
 
+        cr.set_source_rgba(*VALUE_AREA_COLOR)
+        cr.fill()
+        
         cr.restore()
 
         # Draw keyframes
