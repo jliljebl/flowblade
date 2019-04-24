@@ -69,14 +69,14 @@ KF_DRAG_THRESHOLD = 3
 FRAME_SCALE_LINES = (0.4, 0.4, 0.6) #(0.07, 0.07, 0.32)
 FRAME_SCALE_LINES_BRIGHT = (0.2, 0.2, 0.6)
 TEXT_COLOR = (0.6, 0.6, 0.6) 
-CURVE_COLOR = (0.71, 0.13, 0.64)
+CURVE_COLOR = (0.71, 0.13, 0.64, 1.0) # (0.19, 0.69, 0.15, 1) #
 OVERLAY_BG = (0.0, 0.0, 0.0, 0.8)
-VALUE_AREA_COLOR = (0.27, 0.27, 0.62, 0.65)
+VALUE_AREA_COLOR = (0.27, 0.27, 0.62, 0.85)
 SOURCE_TRIANGLE_COLOR = (0.19, 0.32, 0.57)
 SOURCE_TRIANGLE_OUTLINE_COLOR = (0.9, 0.9, 0.9)
 SCALE_LINES_TEXT_COLOR = (0.9, 0.9, 0.9)
 CLIP_OUTLINE_COLOR = (0.7, 0.7, 0.5, 0.22)
-AUDIO_LEVELS_COLOR = (0.4, 0.68, 0.4, 0.4)
+AUDIO_LEVELS_COLOR = (0.4, 0.68, 0.4, 0.26)
 
 # Edit types
 VOLUME_KF_EDIT = 0
@@ -494,45 +494,11 @@ class TLineKeyFrameEditor:
 
         kf_positions = self.get_clip_kfs_and_positions()
 
-        # Draw value curves,they need to be clipped into edit area
-        cr.set_source_rgb(*CURVE_COLOR)
-        #cr.set_line_width(1.0)
-
+        # Draw value curves, area fill and audio levels,they need to be clipped into edit area
         cr.save()
 
-        cr.set_line_width(3.0)
         ex, ey, ew, eh = self._get_edit_area_rect()
-        cr.rectangle(ex, ey, ew, eh)
-        cr.clip() 
-        for i in range(0, len(kf_positions)):
-            kf, frame, kf_index, kf_pos_x, kf_pos_y = kf_positions[i]
-            # this trying to get rid of some draw artifacts by limiting x positions
-            if kf_pos_x < -10000:
-                kf_pos_x = -10000
-            if kf_pos_x > 10000:
-                kf_pos_x = 10000
-            if i == 0:
-                cr.move_to(kf_pos_x, kf_pos_y)
-            else:
-                cr.line_to(kf_pos_x, kf_pos_y)
-        # If last kf before clip end, continue value curve to end
-        kf, frame, kf_index, kf_pos_x, kf_pos_y = kf_positions[-1]
-        if kf_pos_x < ex + ew:
-            cr.move_to(kf_pos_x, kf_pos_y)
-            cr.line_to(ex + ew, kf_pos_y)
-        else:
-            cr.line_to(ex + ew, kf_pos_y)
-            
-        cr.stroke_preserve()
         
-        cr.line_to(ex + ew, ey + eh)
-        cr.line_to(ex, ey + eh)
-        cr.line_to(ex, ey)
-        cr.line_to(ex, ey)
-
-        cr.set_source_rgba(*VALUE_AREA_COLOR)
-        cr.fill()
-
         # Maybe draw audio levels
         if self.edit_type == VOLUME_KF_EDIT and clip.is_blanck_clip == False and clip.waveform_data != None:
 
@@ -575,6 +541,43 @@ class TLineKeyFrameEditor:
 
             cr.fill()
 
+        # Draw value curve and area fill
+        cr.set_source_rgba(*CURVE_COLOR)
+        cr.set_line_width(3.0)
+
+        cr.rectangle(ex, ey, ew, eh)
+        cr.clip() 
+        for i in range(0, len(kf_positions)):
+            kf, frame, kf_index, kf_pos_x, kf_pos_y = kf_positions[i]
+            # this trying to get rid of some draw artifacts by limiting x positions
+            if kf_pos_x < -10000:
+                kf_pos_x = -10000
+            if kf_pos_x > 10000:
+                kf_pos_x = 10000
+            if i == 0:
+                cr.move_to(kf_pos_x, kf_pos_y)
+            else:
+                cr.line_to(kf_pos_x, kf_pos_y)
+        # If last kf before clip end, continue value curve to end
+        kf, frame, kf_index, kf_pos_x, kf_pos_y = kf_positions[-1]
+        if kf_pos_x < ex + ew:
+            cr.move_to(kf_pos_x, kf_pos_y)
+            cr.line_to(ex + ew, kf_pos_y)
+        else:
+            cr.line_to(ex + ew, kf_pos_y)
+            
+        cr.stroke_preserve()
+        #cr.stroke()
+        
+        
+        cr.line_to(ex + ew, ey + eh)
+        cr.line_to(ex, ey + eh)
+        cr.line_to(ex, ey)
+        cr.line_to(ex, ey)
+
+        cr.set_source_rgba(*VALUE_AREA_COLOR)
+        cr.fill()
+        
         cr.restore()
 
         # Draw keyframes
