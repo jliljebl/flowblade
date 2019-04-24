@@ -404,7 +404,7 @@ def render_frame_buffer_clip(media_file, default_range_render=False):
 def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, media_file):
     if response_id == Gtk.ResponseType.ACCEPT:
         # speed, filename folder
-        speed = float(int(fb_widgets.hslider.get_value())) / 100.0
+        speed = float(int(fb_widgets.adjustment.get_value())) / 100.0
         file_name = fb_widgets.file_name.get_text()
         filenames = fb_widgets.out_folder.get_filenames()
         folder = filenames[0]
