@@ -1049,7 +1049,6 @@ class EditorWindow:
     def _update_top_row(self, show_all=False):
         self.top_row_hbox.pack_end(audiomonitoring.get_master_meter(), False, False, 0)
 
-
         if show_all:
             self.window.show_all()
         
