@@ -309,6 +309,26 @@ def _view_prefs_panel():
     force_english_check = Gtk.CheckButton()
     force_english_check.set_active(prefs.use_english_always)
 
+    force_language_combo = Gtk.ComboBoxText()
+    force_language_combo.append_text(_("None"))
+    force_language_combo.append_text(_("English"))
+    force_language_combo.append_text(_("Chinese, Simplified"))
+    force_language_combo.append_text(_("Chinese, Traditional"))
+    force_language_combo.append_text(_("Czech"))
+    force_language_combo.append_text(_("French"))
+    force_language_combo.append_text(_("German"))
+    force_language_combo.append_text(_("Hungarian"))
+    force_language_combo.append_text(_("Italian"))
+    force_language_combo.append_text(_("Polish"))
+    force_language_combo.append_text(_("Russian"))
+    force_language_combo.append_text(_("Spanish"))
+    force_language_combo.append_text(_("Ukranian"))
+    # THIS NEEDS TO BE UPDATED WHEN LANGUAGES ARE ADDED!!!
+    lang_list = ["None","English","zh_CN","zh_TW","cs","fr","de","hu","it","pl","ru","es","uk"]
+    active_index = lang_list.index(prefs.force_language)
+    force_language_combo.set_active(active_index)
+    force_language_combo.lang_codes = lang_list
+    
     display_splash_check = Gtk.CheckButton()
     display_splash_check.set_active(prefs.display_splash_screen)
 
@@ -362,7 +382,8 @@ def _view_prefs_panel():
         
     # Layout
     row00 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Application window mode:")), window_mode_combo, PREFERENCES_LEFT))
-    row0 = _row(guiutils.get_checkbox_row_box(force_english_check, Gtk.Label(label=_("Use English texts on localized OS"))))
+    #row0 = _row(guiutils.get_checkbox_row_box(force_english_check, Gtk.Label(label=_("Use English texts on localized OS"))))
+    row9 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Force Language:")), force_language_combo, PREFERENCES_LEFT))
     row1 = _row(guiutils.get_checkbox_row_box(display_splash_check, Gtk.Label(label=_("Display splash screen"))))
     row2 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Buttons style:")), buttons_combo, PREFERENCES_LEFT))
     row3 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Theme request, icons and colors:")), dark_combo, PREFERENCES_LEFT))
@@ -377,7 +398,8 @@ def _view_prefs_panel():
 
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row00, False, False, 0)
-    vbox.pack_start(row0, False, False, 0)
+    #vbox.pack_start(row0, False, False, 0)
+    vbox.pack_start(row9, False, False, 0)
     vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
     vbox.pack_start(row3, False, False, 0)
@@ -392,7 +414,7 @@ def _view_prefs_panel():
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
     # Feb-2017 - SvdB - Added code for full file names
-    return vbox, (force_english_check, display_splash_check, buttons_combo, dark_combo, theme_combo, audio_levels_combo, 
+    return vbox, (force_language_combo, display_splash_check, buttons_combo, dark_combo, theme_combo, audio_levels_combo, 
                   window_mode_combo, show_full_file_names, tracks_combo, top_row_layout)
 
 def _performance_panel():

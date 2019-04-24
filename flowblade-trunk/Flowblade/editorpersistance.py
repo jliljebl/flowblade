@@ -204,7 +204,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     auto_center_check, play_pause_button, auto_center_on_updown, \
     ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips = playback_prefs_widgets
     
-    use_english, disp_splash, buttons_style, theme, theme_combo, audio_levels_combo, \
+    force_language_combo, disp_splash, buttons_style, theme, theme_combo, audio_levels_combo, \
     window_mode_combo, full_names, double_track_hights, top_row_layout = view_prefs_widgets
 
     # Jan-2017 - SvdB
@@ -232,7 +232,8 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.ffwd_rev_caps = int(ffwd_rev_caps_spin.get_adjustment().get_value())
     prefs.loop_clips = loop_clips.get_active()
     
-    prefs.use_english_always = use_english.get_active()
+    prefs.use_english_always = False # DEPRECATED, "force_language" used instead
+    prefs.force_language = force_language_combo.lang_codes[force_language_combo.get_active()]
     prefs.display_splash_screen = disp_splash.get_active()
     prefs.buttons_style = buttons_style.get_active() # styles enum values and widget indexes correspond
 
@@ -293,7 +294,7 @@ class EditorPreferences:
         self.app_v_paned_position = 500 # Paned get/set position value
         self.top_paned_position = 600 # Paned get/set position value
         self.mm_paned_position = 260 # Paned get/set position value
-        self.render_folder = None  # DEPRECATED, this set XDG variables now
+        self.render_folder = None  # DEPRECATED, this set by XDG variables now
         self.show_sequence_profile = True
         self.buttons_style = GLASS_STYLE
         self.dark_theme = False # DEPRECATED, "theme" used instead
@@ -306,7 +307,7 @@ class EditorPreferences:
         self.jack_frequency = 48000 # not used 
         self.jack_output_type = appconsts.JACK_OUT_AUDIO # not used
         self.media_load_order = appconsts.LOAD_ABSOLUTE_FIRST
-        self.use_english_always = False
+        self.use_english_always = False # DEPRECATED, "force_language" used instead
         self.theme_fallback_colors = 4 # index of gui._THEME_COLORS
         self.display_all_audio_levels = True
         self.overwrite_clip_drop = True # DEPRECATED, "dnd_action" used instead
@@ -347,4 +348,5 @@ class EditorPreferences:
         self.workflow_dialog_last_version_shown = "0.0.1"
         self.loop_clips = False
         self.audio_scrubbing = False
+        self.force_language = "None"
 

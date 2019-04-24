@@ -48,11 +48,12 @@ def init_languages():
     if editorstate.app_running_from == editorstate.RUNNING_FROM_INSTALLATION:
         # Use /usr/share/locale first if available and running from installation
         # Look for installed translation in distro install
-        if os.path.isfile("/usr/share/locale/fi/LC_MESSAGES/flowblade.mo"): # fi is the translation controlled by program author
+        # Were using Russian as test language
+        if os.path.isfile("/usr/share/locale/ru/LC_MESSAGES/flowblade.mo"): # fi is the translation controlled by program author
             print "Found translations at /usr/share/locale, using those."
             locale_path = "/usr/share/locale/"
         #  Look for installed translations in flatpak install 
-        elif os.path.isfile("/app/share/flowblade/Flowblade/locale/fi/LC_MESSAGES/flowblade.mo"): # fi is the translation controlled by program author
+        elif os.path.isfile("/app/share/flowblade/Flowblade/locale/ru/LC_MESSAGES/flowblade.mo"): # fi is the translation controlled by program author
             print "Found translations at /app/share/flowblade/Flowblade/locale, using those."
             locale_path = "/app/share/flowblade/Flowblade/locale"
         else:
@@ -60,7 +61,8 @@ def init_languages():
             locale_path = respaths.LOCALE_PATH
     else:
         # Use translations in program folder first if NOT running from installation
-        locale_file = respaths.LOCALE_PATH + "fi/LC_MESSAGES/flowblade.mo"
+        # Were using Russian as test language
+        locale_file = respaths.LOCALE_PATH + "ru/LC_MESSAGES/flowblade.mo"
         if os.path.isfile(locale_file): # fi is the translation controlled by program author
             print "Found translations at " +  respaths.LOCALE_PATH + ", using those."
             locale_path = respaths.LOCALE_PATH
@@ -74,8 +76,19 @@ def init_languages():
     # Get the language to use
     global lang
     if editorpersistance.prefs.use_english_always == True:
+        lang_code = "English"
+        editorpersistance.prefs.use_english_always = False
+        editorpersistance.prefs.force_language = "English"
+        editorpersistance.save()
+    else:
+        lang_code = editorpersistance.prefs.force_language
+    
+    if editorpersistance.prefs.force_language == "English":
         print "Force use English."
         lang = gettext.translation(APP_NAME, locale_path, languages=["dummy"], fallback=True)
+    elif editorpersistance.prefs.force_language != "None":
+        print "Force use ", editorpersistance.prefs.force_language
+        lang = gettext.translation(APP_NAME, locale_path, languages=[str(editorpersistance.prefs.force_language)], fallback=True)
     else:
         print "Use OS locale language."
         lang = gettext.translation(APP_NAME, locale_path, languages=langs, fallback=True)
