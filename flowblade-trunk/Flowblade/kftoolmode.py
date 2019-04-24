@@ -69,14 +69,14 @@ KF_DRAG_THRESHOLD = 3
 FRAME_SCALE_LINES = (0.4, 0.4, 0.6) #(0.07, 0.07, 0.32)
 FRAME_SCALE_LINES_BRIGHT = (0.2, 0.2, 0.6)
 TEXT_COLOR = (0.6, 0.6, 0.6) 
-CURVE_COLOR = (0.71, 0.13, 0.64, 1.0) # (0.19, 0.69, 0.15, 1) #
+CURVE_COLOR = (0.97, 0.97, 0.30, 1)#(0.71, 0.13, 0.64, 1.0) # (0.19, 0.69, 0.15, 1) #
 OVERLAY_BG = (0.0, 0.0, 0.0, 0.8)
 VALUE_AREA_COLOR = (0.27, 0.27, 0.62, 0.85)
 SOURCE_TRIANGLE_COLOR = (0.19, 0.32, 0.57)
 SOURCE_TRIANGLE_OUTLINE_COLOR = (0.9, 0.9, 0.9)
 SCALE_LINES_TEXT_COLOR = (0.9, 0.9, 0.9)
 CLIP_OUTLINE_COLOR = (0.7, 0.7, 0.5, 0.22)
-AUDIO_LEVELS_COLOR = (0.4, 0.68, 0.4, 0.26)
+AUDIO_LEVELS_COLOR = (0.4, 0.4, 0.68, 0.20)
 
 # Edit types
 VOLUME_KF_EDIT = 0
@@ -526,15 +526,16 @@ class TLineKeyFrameEditor:
 
             # Get media frame 0 position in screen pixels
             media_start_pos_pix = scale_in - clip_in * pix_per_frame
+            mid_y = y + y_pad + eh / 2.0
             
             # Draw level bar for each frame in draw range
             for f in range(draw_first, draw_last, step):
                 try:
                     xf = media_start_pos_pix + f * pix_per_frame
-                    hf = bar_height * clip.waveform_data[f]
+                    hf = bar_height * clip.waveform_data[f] * 0.5
                     if h < 1:
                         h = 1
-                    cr.rectangle(xf, y + y_pad + (bar_height - hf), draw_pix_per_frame, hf)
+                    cr.rectangle(xf, mid_y - hf, draw_pix_per_frame, hf * 2.0)
                 except:
                     # This is just dirty fix a when 23.98 fps does not work
                     break
@@ -565,18 +566,8 @@ class TLineKeyFrameEditor:
             cr.line_to(ex + ew, kf_pos_y)
         else:
             cr.line_to(ex + ew, kf_pos_y)
-            
-        cr.stroke_preserve()
-        #cr.stroke()
-        
-        
-        cr.line_to(ex + ew, ey + eh)
-        cr.line_to(ex, ey + eh)
-        cr.line_to(ex, ey)
-        cr.line_to(ex, ey)
-
-        cr.set_source_rgba(*VALUE_AREA_COLOR)
-        cr.fill()
+    
+        cr.stroke()
         
         cr.restore()
 
