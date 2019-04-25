@@ -61,6 +61,66 @@
     </gmicscript>
 
     <gmicscript>
+        <name>Aurora</name>
+        <group>Artistic</group>
+        <script>-gcd_aurora 6,1,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Grid Hexagonal</name>
+        <group>Pattern</group>
+        <script>-fx_imagegrid_hexagonal 32,0.1,1</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Anguish</name>
+        <group>Artistic</group>
+        <script>-samj_Angoisse_en 1,5,0,5,100,2,4,1,250</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Blockism</name>
+        <group>Artistic</group>
+        <script>-fx_blockism 3,1.6,0.5,50,0.5,64,0,1,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Bokeh</name>
+        <group>Photographic</group>
+        <script>-fx_bokeh 3,8,0,30,8,4,0.3,0.2,210,210,80,160,0.7,30,20,20,1,2,170,130,20,110,0.15,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Cut Out</name>
+        <group>Artistic</group>
+        <script>-fx_cutout 4,0.5,4,1</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Wiremap</name>
+        <group>Pattern</group>
+        <script>-gcd_wiremap 100,100,0.5,0.5,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Fraeky BW</name>
+        <group>Black and White</group>
+        <script>-fx_freaky_bw 90,20,0,0,0,0</script>
+    </gmicscript>
+ 
+    <gmicscript>
+        <name>Warhol</name>
+        <group>Artistic</group>
+        <script>-warhol 3,3,2,40</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Grid Triangular</name>
+        <group>Pattern</group>
+        <script>-fx_imagegrid_triangular 10,18,0,0,0,0,255</script>
+    </gmicscript>
+
+    <gmicscript>
         <name>Polygonize</name>
         <group>Geometric</group>
         <script>-fx_polygonize 300,10,10,10,10,0,0,0,255,0</script>
