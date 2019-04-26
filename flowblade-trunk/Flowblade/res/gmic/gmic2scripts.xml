@@ -85,6 +85,36 @@
     </gmicscript>
 
     <gmicscript>
+        <name>Rodilius</name>
+        <group>Artistic</group>
+        <script>-rodilius 10,10,300,5,30,1</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Graphic Novel</name>
+        <group>Artistic</group>
+        <script>-fx_graphic_novelfxl 0,2,6,5,20,0,0.62,14,0,1,0.5,0.78,1.92,0,0,12,1,1,1,0.5,0.8,1.28,1.25,2,0,0.15,14,0,1,0.5,0.45,2,0,1,0,1,1,1,0.5,0.45,1</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Dream Smooth</name>
+        <group>Artistic</group>
+        <script>-fx_dreamsmooth 3,1,1,0.8,0,0.8,1,24,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Vector Painting</name>
+        <group>Artistic</group>
+        <script>-fx_vector_painting 9</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Make Squiggly</name>
+        <group>Artistic</group>
+        <script>-fx_Squiggly 2,12,0.8,0,0.5,1,0,0,3,0.2,0.4,0,1,1</script>
+    </gmicscript>
+
+    <gmicscript>
         <name>Bokeh</name>
         <group>Photographic</group>
         <script>-fx_bokeh 3,8,0,30,8,4,0.3,0.2,210,210,80,160,0.7,30,20,20,1,2,170,130,20,110,0.15,0</script>
@@ -108,6 +138,18 @@
         <script>-fx_freaky_bw 90,20,0,0,0,0</script>
     </gmicscript>
  
+     <gmicscript>
+        <name>Threshold Etch</name>
+        <group>Black and White</group>
+        <script>-fx_gcd_etch 125,153,171,185,0.1,50,80,50,10,15,12,20,0,10.3,1,0</script>
+    </gmicscript>
+ 
+      <gmicscript>
+        <name>Boost Chroma</name>
+        <group>Basic</group>
+        <script>-fx_boost_chroma 50,0</script>
+    </gmicscript>
+
     <gmicscript>
         <name>Warhol</name>
         <group>Artistic</group>
@@ -120,6 +162,18 @@
         <script>-fx_imagegrid_triangular 10,18,0,0,0,0,255</script>
     </gmicscript>
 
+    <gmicscript>
+        <name>Dices</name>
+        <group>Pattern</group>
+        <script>-fx_dices 2,24,0</script>
+    </gmicscript>
+
+    <gmicscript>
+        <name>Tiled Random Shifts</name>
+        <group>Transform</group>
+        <script>-fx_shift_tiles 10,10,10,1</script>
+    </gmicscript>
+    
     <gmicscript>
         <name>Polygonize</name>
         <group>Geometric</group>
@@ -186,6 +240,12 @@
         <script>-fx_poster_edges 20,60,5,0,10,0,0,0</script>
     </gmicscript>
 
+    <gmicscript>
+        <name>Difference of Gaussians</name>
+        <group>Edges</group>
+        <script>-fx_dog 1.4,1.5,0,0,1</script>
+    </gmicscript>
+    
     <gmicscript>
         <name>Delaunay</name>
         <group>Geometric</group>
@@ -269,6 +329,13 @@
         <group>Artistic</group>
         <script>-fx_local_orientation 0,0,100,0,0,0</script>
     </gmicscript>
+
+    <gmicscript>
+        <name>YAG Effect</name>
+        <group>Artistic</group>
+        <script>-fx_yag_soften 0,0</script>
+    </gmicscript>
+
 
     <gmicscript>
         <name>Laplacian</name>
