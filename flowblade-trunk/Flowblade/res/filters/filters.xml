@@ -55,8 +55,8 @@
         <property name="Display" args="editor=no_editor">0.0</property>
         <property name="Display input alpha" args="editor=no_editor">0</property>
         <property name="Operation" args="editor=combobox exptype=default cbopts=Shave:0.21,Shrink!Hard:0.36,Shrink!Soft:0.50,Grow!Hard:0.64,Grow!Soft:0.79">0.21</property>
-        <property name="Threshold" args="editor=no_editor exptype=singlekeyframe">0=0.5</property>
-        <property name="Shrink/grow amount" args="range_in=0,100 range_out=0,1 exptype=singlekeyframe displayname=Amount">0=0.5</property>
+        <property name="Threshold" args="editor=no_editor">0.5</property>
+        <property name="Shrink/grow amount" args="range_in=0,100 range_out=0,1 displayname=Amount">0.5</property>
         <property name="Invert" args="editor=booleancheckbox displayname=Invert">0</property>
    </filter>
     <filter id="frei0r.select0r">
@@ -65,9 +65,9 @@
         <property name="Color to select" args="editor=color_select exptype=color displayname=Color">#00ff00</property>
         <property name="Invert selection"  args="editor=booleancheckbox displayname=Invert">0</property>
         <property name="Selection subspace" args="editor=combobox exptype=default cbopts=RGB:0.0,ABI:0.5,HCI:1.0">0.0</property>
-        <property name="Delta R / A / Hue" args="range_in=0,100 exptype=singlekeyframe displayname=R/A/Hue">0=0.2</property>
-        <property name="Delta G / B / Chroma" args="range_in=0,100 exptype=singlekeyframe displayname=G/B/Chroma">0=0.2</property>
-        <property name="Delta B / I / I" args="range_in=0,100 exptype=singlekeyframe displayname=B/I/I">0=0.2</property>
+        <property name="Delta R / A / Hue" args="range_in=0,100 displayname=R/A/Hue">0.2</property>
+        <property name="Delta G / B / Chroma" args="range_in=0,100 displayname=G/B/Chroma">0.2</property>
+        <property name="Delta B / I / I" args="range_in=0,100 displayname=B/I/I">0.2</property>
         <property name="Edge mode" args="editor=combobox exptype=default cbopts=Hard:0.0,Fat:0.35,Normal:0.60,Skinny:1.0 displayname=Edge!Mode">0.0</property>
         <property name="Subspace shape" args="editor=combobox displayname=Sel.!Space exptype=default cbopts=Box:0.0,Ellipsoid:0.5,Diamond:1.0">0.0</property>
         <property name="Operation" args="editor=combobox exptype=default cbopts=Overwrite:0.0,Max:0.3,Min:0.5,Add:0.7,Subtract:1.0">0.0</property>
@@ -500,12 +500,12 @@
     <filter id="frei0r.contrast0r">
         <name>Contrast</name>
         <group>Color</group>
-        <property name="Contrast" args="exptype=singlekeyframe range_in=-50,150 range_out=0.0,2.0 step=1.0">"0=0.5"</property>
+        <property name="Contrast" args="range_in=-50,150 range_out=0.0,2.0 step=1.0">0.5</property>
     </filter>
     <filter id="frei0r.saturat0r">
         <name>Saturation</name>
         <group>Color</group>
-        <property name="Saturation" args="exptype=singlekeyframe range_in=-20,40 range_out=0.0,0.375">"0=0.125"</property>
+        <property name="Saturation" args="range_in=-20,40 range_out=0.0,0.375">0.125</property>
     </filter>
     <filter id="invert">
         <name>Invert</name>
@@ -598,18 +598,18 @@
         <group>Color</group>
         <property name="Channel" args="displayname=Channel editor=combobox exptype=default cbopts=Luma:0.3,Red:0.0,Green:0.1,Blue:0.2">0.3</property>
         <property name="Show histogram" args="editor=no_editor">0</property>
-        <property name="Input black level" args="range_in=0,255 exptype=singlekeyframe">0=0</property>
-        <property name="Input white level" args="range_in=0,255 exptype=singlekeyframe">0=1</property>
-        <property name="Gamma" args="range_in=0,100 exptype=singlekeyframe">0=0.25</property>
-        <property name="Black output" args="range_in=0,255 exptype=singlekeyframe">0=0</property>
-        <property name="White output" args="range_in=0,255 exptype=singlekeyframe">0=1</property>
+        <property name="Input black level" args="range_in=0,255">0</property>
+        <property name="Input white level" args="range_in=0,255">1</property>
+        <property name="Gamma" args="range_in=0,100">0.25</property>
+        <property name="Black output" args="range_in=0,255">0</property>
+        <property name="White output" args="range_in=0,255">1</property>
     </filter>
    <filter id="frei0r.coloradj_RGB">
         <name>RGB Adjustment</name>
         <group>Color</group>
-        <property name="R" args="range_in=-50,50 exptype=singlekeyframe displayname=Red">0=0.5</property>
-        <property name="G" args="range_in=-50,50 exptype=singlekeyframe displayname=Green">0=0.5</property>
-        <property name="B" args="range_in=-50,50 exptype=singlekeyframe displayname=Blue">0=0.5</property>
+        <property name="R" args="range_in=-50,50 displayname=Red">0.5</property>
+        <property name="G" args="range_in=-50,50 displayname=Green">0.5</property>
+        <property name="B" args="range_in=-50,50 displayname=Blue">0.5</property>
         <property name="Action" args="displayname=Action editor=combobox exptype=default cbopts=Add!Constant:0.0,Change!Gamma:0.5,Multiply:1.0">0.0</property>
         <property name="Keep luma" args="editor=booleancheckbox displayname=Keep!Luma">1</property>
         <property name="Alpha controlled" args="editor=no_editor">0</property>
@@ -757,7 +757,7 @@
         <group>Color Effect</group>
         <property name="Map black to" args="editor=color_select exptype=color displayname=Black">#000000</property>
         <property name="Map white to" args="editor=color_select exptype=color displayname=White">#ff8080</property>
-        <property name="Tint amount" args="exptype=singlekeyframe range_in=0,100 displayname=Amount">0=0.25</property>
+        <property name="Tint amount" args="range_in=0,100 displayname=Amount">0.25</property>
     </filter>
    <filter id="frei0r.colorize">
         <name>Colorize</name>
@@ -858,14 +858,14 @@
     <filter id="frei0r.hqdn3d">
         <name>Denoise</name>
         <group>Fix</group>
-        <property name="Spatial" args="range_in=0,100 exptype=singlekeyframe">0=0.5</property>
-        <property name="Temporal"  args="range_in=0,100 exptype=singlekeyframe">0=0</property>
+        <property name="Spatial" args="range_in=0,100">0.5</property>
+        <property name="Temporal"  args="range_in=0,100">0</property>
     </filter>
     <filter id="frei0r.sharpness">
         <name>Sharpness</name>
         <group>Fix</group>
-        <property name="Amount" args="range_in=0,100 exptype=singlekeyframe">0=0.5</property>
-        <property name="Size" args="range_in=0,100 exptype=singlekeyframe">0=0.5</property>
+        <property name="Amount" args="range_in=0,100">0.5</property>
+        <property name="Size" args="range_in=0,100">0.5</property>
     </filter>
     <filter id="frei0r.letterb0xed">
         <name>Letterbox</name>

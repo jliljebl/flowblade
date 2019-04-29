@@ -169,7 +169,6 @@ def _get_slider_row(editable_property, slider_name=None, compact=False):
 
 class SliderEditor:
     def __init__(self, editable_property, slider_name=None, compact=False):
-
         self.vbox = Gtk.VBox(False)
         # We are using value here as flag if this is beinfg edited by slider as a single value or by keyframe editor as changing value
         # If we find "=" this means that value is keyframe expression
