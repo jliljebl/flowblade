@@ -183,13 +183,13 @@ def _filter_stack_menu_item_selected(widget, data):
         toggle_filter_active(row)
     if item_id == "reset":
         reset_filter_values()
-    if item_id == "moveup":
+    if item_id == "movedown":
         delete_row = row
         insert_row = row + 2
         if insert_row > len(clip.filters):
             insert_row = len(clip.filters)
         do_stack_move(insert_row, delete_row)
-    if item_id == "movedown":
+    if item_id == "moveup":
         delete_row = row + 1
         insert_row = row - 1
         if insert_row < 0:
