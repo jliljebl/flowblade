@@ -273,14 +273,15 @@ class SliderEditor:
                     int_str_val = str(int(first_kf_val))
                 except:
                     int_str_val = str(float(first_kf_val))
-                self.editable_property.write_filter_object_property(int_str_val)
-                self.editable_property.value = int_str_val
+
+                self.editable_property.write_value(int_str_val)
             elif p_original_type == appconsts.PROP_FLOAT:
                 self.editable_property.type = appconsts.PROP_FLOAT 
-                self.editable_property.write_filter_object_property(str(float(first_kf_val)))
-                self.editable_property.value = str(float(first_kf_val))
+
+                self.editable_property.write_value(str(float(first_kf_val)))
             else:
-                self.editable_property.write_filter_object_property("0=" + str(float(first_kf_val)))
+
+                self.editable_property.write_value("0=" + str(float(first_kf_val)))
 
             re_init_editors_for_slider_type_change_func()
 

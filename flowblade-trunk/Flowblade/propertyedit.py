@@ -55,7 +55,7 @@ NORMALIZED_FLOAT = "NORMALIZED_FLOAT"                       # range 0.0 - 1.0
 #  PROP_EXPRESSION values, e.g. "exptype=keyframe_hcs"      parsed output
 DEFAULT = "default"                                         # value     (str(int), str(float) or str(str))
 DEFAULT_TRANSITION = "default_transition"                   # value     (str(int), str(float) or str(str))
-SINGLE_KEYFRAME = "singlekeyframe"                          # 0=value
+SINGLE_KEYFRAME = "singlekeyframe"                          # DEPRECATED, were juat presenting standart slider for these now. This kept for back wards compatibility.
 OPACITY_IN_GEOM_SINGLE_KF = "opacity_in_geom_kf_single"     # 0=0/0:SCREEN_WIDTHxSCREEN_HEIGHT:opacity
 OPACITY_IN_GEOM_KF = "opacity_in_geom_kf"                   # frame=0/0:SCREEN_WIDTHxSCREEN_HEIGHT:opacity (kf_str;kf_str;kf_str;...;kf_str)
 GEOMETRY_OPACITY_KF ="geom_opac_kf"                         # frame=x/y:widthxheight:opacity
