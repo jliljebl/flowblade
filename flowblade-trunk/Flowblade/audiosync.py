@@ -24,6 +24,7 @@ Application module.
 Handles application initialization, shutdown, opening projects, autosave and changing
 sequences.
 """
+from __future__ import print_function
 import datetime
 import md5
 import mlt
@@ -76,7 +77,7 @@ class ClapperlesLaunchThread(threading.Thread):
 
 # ------------------------------------------------------- module funcs
 def _write_offsets(video_file_path, audio_file_path, completed_callback):
-    print "Starting clapperless analysis..."
+    print("Starting clapperless analysis...")
     fps = str(int(utils.fps() + 0.5))
     idstr = _get_offset_file_idstr(video_file_path, audio_file_path)
 
@@ -117,7 +118,7 @@ def init_select_tline_sync_clip(popup_data):
 
     if not (track.clips[clip_index] == clip):
         # This should never happen 
-        print "big fu at init_select_tline_sync_clip(...)"
+        print("big fu at init_select_tline_sync_clip(...)")
         return
 
     gdk_window = gui.tline_display.get_parent_window();
@@ -194,7 +195,7 @@ def _get_sync_tline_clip(event, frame):
     return sync_track.clips[sync_clip_index]
     
 def _tline_sync_offsets_computed_callback(clapperless_data):
-    print "Clapperless done for tline sync"
+    print("Clapperless done for tline sync")
     
     global _compare_dialog_thread
     _compare_dialog_thread.compare_done()
@@ -288,7 +289,7 @@ def create_audio_sync_compound_clip():
     elif video_file.type == appconsts.AUDIO and audio_file.type == appconsts.VIDEO:
         video_file, audio_file = audio_file, video_file
     else:
-        print  "2 video files, video audio assignments determined by selection order"
+        print("2 video files, video audio assignments determined by selection order")
 
     global _compare_dialog_thread
     _compare_dialog_thread = AudioCompareActiveThread()
@@ -299,7 +300,7 @@ def create_audio_sync_compound_clip():
     clapperless_thread.start()
     
 def _compound_offsets_complete(data):
-    print "Clapperless done for compound clip"
+    print("Clapperless done for compound clip")
 
     global _compare_dialog_thread
     _compare_dialog_thread.compare_done()
@@ -344,7 +345,7 @@ def _do_create_sync_compound_clip(dialog, response_id, data):
     
     # Get offset
     offset = files_offsets[audio_file]
-    print audio_file, offset
+    print(audio_file, offset)
     
     # Add clips
     if offset > 0:

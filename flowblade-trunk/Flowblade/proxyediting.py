@@ -17,6 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
+from __future__ import print_function
 
 import glob
 from PIL import Image
@@ -75,7 +76,7 @@ class ProxyRenderRunnerThread(threading.Thread):
         proxy_encoding = _get_proxy_encoding()
         self.current_render_file_path = None
         
-        print "proxy render started, items: " + str(len(self.files_to_render)) + ", dim: " + str(proxy_w) + "x" + str(proxy_h)
+        print("proxy render started, items: " + str(len(self.files_to_render)) + ", dim: " + str(proxy_w) + "x" + str(proxy_h))
         
         for media_file in self.files_to_render:
             if self.aborted == True:
@@ -145,7 +146,7 @@ class ProxyRenderRunnerThread(threading.Thread):
                 progress_window.update_render_progress(0, media_file.name, items, len(self.files_to_render), elapsed)
                 Gdk.threads_leave()
             else:
-                print "proxy render aborted"
+                print("proxy render aborted")
                 render_thread.shutdown()
                 break
 
@@ -163,7 +164,7 @@ class ProxyRenderRunnerThread(threading.Thread):
         if editorstate.PROJECT().proxy_data.proxy_mode == appconsts.USE_PROXY_MEDIA:
             _auto_re_convert_after_proxy_render_in_proxy_mode()
         
-        print "proxy render done"
+        print("proxy render done")
 
     def _create_img_seq_proxy(self, media_file, proxy_w, proxy_h, items, start):
         now = time.time()
@@ -192,7 +193,7 @@ class ProxyRenderRunnerThread(threading.Thread):
                 im.thumbnail(size, Image.ANTIALIAS)
                 im.save(copyfolder + "/" + orig_file_name, "PNG")
             except IOError:
-                print "proxy img seq frame failed for '%s'" % orig_path
+                print("proxy img seq frame failed for '%s'" % orig_path)
 
             done = done + 1
         
@@ -760,7 +761,7 @@ class ProxyProjectLoadThread(threading.Thread):
             sequence.set_track_counts(project)
             Gdk.threads_leave()
         except persistance.FileProducerNotFoundError as e:
-            print "did not find file:", e
+            print("did not find file:", e)
 
         pulse_runner.running = False
         time.sleep(0.3) # need to be sure pulse_runner has stopped

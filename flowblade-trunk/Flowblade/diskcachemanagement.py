@@ -17,6 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
+from __future__ import print_function
 
 from gi.repository import Gtk
 
@@ -134,7 +135,7 @@ class DiskFolderManagementPanel:
         self.destroy_data()
     
     def destroy_data(self):
-        print "deleting ", self.folder
+        print("deleting ", self.folder)
         
         files = self.get_folder_files()
         for f in files:

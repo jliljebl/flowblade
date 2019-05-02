@@ -21,6 +21,7 @@
 """
 This module handles the less central actions inited by user from menu.
 """
+from __future__ import print_function
 
 
 
@@ -116,7 +117,7 @@ def environment():
 def quick_reference():
     try:
         url = "file://" + respaths.HELP_DOC
-        print url 
+        print(url) 
         #webbrowser.open('http://code.google.com/p/flowblade/wiki/FlowbladeReference')
         webbrowser.open(url)
     except:
@@ -151,7 +152,7 @@ def _watermark_remove_callback(button, widgets):
     current_sequence().remove_watermark()
       
 def toggle_fullscreen():
-    print "toggle_fullscreen"
+    print("toggle_fullscreen")
     if editorstate.fullscreen == False:
        gui.editor_window.window.fullscreen()
        editorstate.fullscreen = True

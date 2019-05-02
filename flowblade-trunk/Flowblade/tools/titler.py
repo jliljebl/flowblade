@@ -17,6 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
+from __future__ import print_function
 
 import copy
 import os
@@ -255,7 +256,7 @@ class Titler(Gtk.Window):
         font_map = PangoCairo.font_map_get_default()
         unsorted_families = font_map.list_families()
         if len(unsorted_families) == 0:
-            print "No font families found in system! Titler will not work."
+            print("No font families found in system! Titler will not work.")
         self.font_families = sorted(unsorted_families, key=lambda family: family.get_name())
         self.font_family_indexes_for_name = {}
         combo = Gtk.ComboBoxText()

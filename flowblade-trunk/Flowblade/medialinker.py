@@ -17,6 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
+from __future__ import print_function
 
 import glob
 import mlt
@@ -63,7 +64,7 @@ media_assets = []
 NO_PROJECT_AT_LAUNCH = "##&&noproject&&##"
 
 def display_linker(filename=NO_PROJECT_AT_LAUNCH):
-    print "Launching Media Relinker"
+    print("Launching Media Relinker")
     FLOG = open(userfolders.get_cache_dir() + "log_media_relinker", 'w')
     subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowblademedialinker", filename], stdin=FLOG, stdout=FLOG, stderr=FLOG)
 
@@ -388,7 +389,7 @@ def _update_media_assets():
             new_assets.append(MediaAsset(media_file.path, media_file.type))
             asset_paths[media_file.path] = media_file.path
         except:
-            print "failed loading:", media_file
+            print("failed loading:", media_file)
             
     for seq in target_project.sequences:
         # Clip media assets
@@ -569,7 +570,7 @@ def _relink_project_media_paths():
 # ----------------------------------------------------------- main
 def main(root_path, filename):
     gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
-    print "GTK+ version:", gtk_version
+    print("GTK+ version:", gtk_version)
     editorstate.gtk_version = gtk_version
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION

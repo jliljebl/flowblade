@@ -27,6 +27,7 @@ extending AbstractProperty class for editing. These wrappers convert
 edit inputs into mlt property values (that effect how sequence is displayed)
 and python side values (that are persistant).
 """
+from __future__ import print_function
 import json
 
 from gi.repository import Gtk, Gdk
@@ -295,7 +296,7 @@ class AbstractProperty:
         self.write_value(val)
         
     def color_selected(self, color_button):
-        print "color_selected() not overridden"
+        print("color_selected() not overridden")
 
     def combo_selection_changed(self, combo_box, values):
         value = values[combo_box.get_active()]
@@ -305,14 +306,14 @@ class AbstractProperty:
         """
         This has to be overridden by all extending classes.
         """
-        print "write_value() not overridden"
+        print("write_value() not overridden")
     
     def write_out_keyframes(self, keyframes):
         """
         This has to be overridden by extending classes 
         edited with keyframe editor.
         """
-        print "write_out_keyframes() not overridden"
+        print("write_out_keyframes() not overridden")
         
     def get_clip_length(self):
         return self.clip.clip_out - self.clip.clip_in + 1

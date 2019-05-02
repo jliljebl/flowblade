@@ -17,6 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
+from __future__ import print_function
 
 from gi.repository import Gdk
 
@@ -219,7 +220,7 @@ class MultimoveData:
                 return track
         
         # We should never get here and we allow this to crash
-        print "getting failed ripple delete track info in get_overwrite_data() failed"
+        print("getting failed ripple delete track info in get_overwrite_data() failed")
         return None
             
 def mouse_press(event, frame):

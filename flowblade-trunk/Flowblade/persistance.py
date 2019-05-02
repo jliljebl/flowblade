@@ -25,6 +25,7 @@ Main functionality of the module is to replace unpickleable
 SwigPyObject MLT objects with pickleable python objects for save, 
 and then create MLT objects from pickled objects when project is loaded.
 """
+from __future__ import print_function
 
 import copy
 import glob
@@ -116,7 +117,7 @@ def save_project(project, file_path, changed_profile_desc=None):
     """
     Creates pickleable project object
     """
-    print "Saving project..."  # + os.path.basename(file_path)
+    print("Saving project...")  # + os.path.basename(file_path)
     
     # Get shallow copy
     s_proj = copy.copy(project)
@@ -407,7 +408,7 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
     if(not hasattr(project, "SAVEFILE_VERSION")):
         project.SAVEFILE_VERSION = 1 # first save files did not have this
     # SvdB - Feb-2017 - Removed project.name from print. It causes problems with non-latin characters, in some cases. Not sure why, yet.
-    print "Loading Project, SAVEFILE_VERSION:", project.SAVEFILE_VERSION
+    print("Loading Project, SAVEFILE_VERSION:", project.SAVEFILE_VERSION)
 
     # Set MLT profile. NEEDS INFO USER ON MISSING PROFILE!!!!!
     project.profile = mltprofiles.get_profile(project.profile_desc)
@@ -600,8 +601,8 @@ def fill_track_mlt(mlt_track, py_track):
             mlt_clip.__dict__.update(clip.__dict__)
             append_created = False
         else: # This is just for info, if this ever happens crash will happen.
-            print "Could not recognize clip, dict:"
-            print clip.__dict__
+            print("Could not recognize clip, dict:")
+            print(clip.__dict__)
 
         mlt_clip.selected = False # This transient state gets saved and 
                                    # we want everything unselected to begin with

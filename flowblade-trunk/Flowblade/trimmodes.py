@@ -21,6 +21,7 @@
 """
 Module handles user edit events for trim, roll and slip trim modes. 
 """
+from __future__ import print_function
 
 import appconsts
 import dialogutils
@@ -827,7 +828,7 @@ class RippleData:
                                 closest_blank_distance = blank_last_frame - self.trim_frame 
                                 closest_blank_index = i
                         else:
-                            print "_build_ripple_data(): supposedly unreachable case hit"
+                            print("_build_ripple_data(): supposedly unreachable case hit")
                         
                     
                     # Case: no blanks found on track

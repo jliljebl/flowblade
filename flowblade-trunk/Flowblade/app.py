@@ -24,6 +24,7 @@ Application module.
 Handles application initialization, shutdown, opening projects, autosave and changing
 sequences.
 """
+from __future__ import print_function
 try:
     import pgi
     pgi.install_as_gi()
@@ -134,7 +135,7 @@ def main(root_path):
     if _log_file != None:
         log_print_output_to_file()
 
-    print "Application version: " + editorstate.appversion
+    print("Application version: " + editorstate.appversion)
 
     # Print OS, Python version and GTK+ version
     try:
@@ -142,14 +143,14 @@ def main(root_path):
         os_text = os_release_file.read()
         s_index = os_text.find("PRETTY_NAME=")
         e_index = os_text.find("\n", s_index)
-        print "OS: " + os_text[s_index + 13:e_index - 1]
+        print("OS: " + os_text[s_index + 13:e_index - 1])
     except:
         pass
 
-    print "Python", sys.version
+    print("Python", sys.version)
 
     gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
-    print "GTK+ version:", gtk_version
+    print("GTK+ version:", gtk_version)
     editorstate.gtk_version = gtk_version
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION
@@ -210,9 +211,9 @@ def main(root_path):
     editorstate.SCREEN_WIDTH = scr_w
     editorstate.SCREEN_HEIGHT = scr_h
 
-    print "Screen size:", scr_w, "x", scr_h
-    print "Small height:", editorstate.screen_size_small_height()
-    print "Small width:",  editorstate.screen_size_small_width()
+    print("Screen size:", scr_w, "x", scr_h)
+    print("Small height:", editorstate.screen_size_small_height())
+    print("Small width:",  editorstate.screen_size_small_width())
 
     _set_draw_params()
 
@@ -319,7 +320,7 @@ def main(root_path):
     # File in assoc_file_path is opened after very short delay.
     if not(check_crash == True and len(autosave_files) > 0):
         if assoc_file_path != None:
-            print "Launch assoc file:", assoc_file_path
+            print("Launch assoc file:", assoc_file_path)
             global assoc_timeout_id
             assoc_timeout_id = GObject.timeout_add(10, open_assoc_file)
 
@@ -345,7 +346,7 @@ def main(root_path):
     elif userfolders.data_copy_needed():
         GObject.timeout_add(500, show_user_folders_copy_dialog)
     else:
-        print "No user folders actions needed."
+        print("No user folders actions needed.")
     
     # Launch gtk+ main loop
     Gtk.main()
@@ -608,7 +609,7 @@ def open_project(new_project):
     # Delete autosave file after it has been loaded
     global loaded_autosave_file
     if loaded_autosave_file != None:
-        print "Deleting", loaded_autosave_file
+        print("Deleting", loaded_autosave_file)
         os.remove(loaded_autosave_file)
         loaded_autosave_file = None
 
@@ -714,7 +715,7 @@ def autosaves_many_recovery_dialog():
 def autosaves_many_dialog_callback(dialog, response, autosaves_view, autosaves):
     if response == Gtk.ResponseType.OK:
         autosave_file = autosaves[autosaves_view.get_selected_indexes_list()[0]].path # Single selection, 1 quaranteed to exist
-        print "autosave_file", autosave_file
+        print("autosave_file", autosave_file)
         global loaded_autosave_file
         loaded_autosave_file = autosave_file
         dialog.destroy()
@@ -735,7 +736,7 @@ def start_autosave():
     time_min = 1 # hard coded, probably no need to make configurable
     autosave_delay_millis = time_min * 60 * 1000
 
-    print "Autosave started..."
+    print("Autosave started...")
     autosave_timeout_id = GObject.timeout_add(autosave_delay_millis, do_autosave)
     autosave_file = userfolders.get_cache_dir() + get_instance_autosave_file()
     persistance.save_project(editorstate.PROJECT(), autosave_file)
@@ -788,7 +789,7 @@ def show_worflow_info_dialog():
 # ------------------------------------------------------- userfolders dialogs
 def show_user_folders_init_error_dialog(error_msg):
     # not done
-    print error_msg, " user folder XDG init error"
+    print(error_msg, " user folder XDG init error")
     return False
 
 def show_user_folders_copy_dialog():
@@ -883,7 +884,7 @@ def _shutdown_dialog_callback(dialog, response_id):
         return
 
     # --- APP SHUT DOWN --- #
-    print "Exiting app..."
+    print("Exiting app...")
     # Sep-2018 - SvdB - Stop wave form threads
     for thread_termination in threading.enumerate():
         # We only terminate threads with a 'process', as these are launched
@@ -937,7 +938,7 @@ def _app_destroy():
     try:
         os.remove(userfolders.get_cache_dir() + get_instance_autosave_file())
     except:
-        print "Delete autosave file FAILED"
+        print("Delete autosave file FAILED")
 
     # Exit gtk main loop.
     Gtk.main_quit()

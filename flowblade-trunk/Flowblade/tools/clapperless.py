@@ -23,6 +23,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import print_function
 import logging, time, struct, subprocess, sys, os, array, argparse
 import tempfile, hashlib, re
 import numpy
@@ -347,7 +348,7 @@ def process_files(args):
 
 def main():
     args = cl_parser()
-    print args.idstr
+    print(args.idstr)
     
     offsets_output = process_files(args)
 

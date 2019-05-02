@@ -17,6 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
+from __future__ import print_function
 
 import datetime
 
@@ -205,7 +206,7 @@ class QueueRunnerThread(threading.Thread):
 
 class BatchRenderDBUSService(dbus.service.Object):
     def __init__(self):
-        print "dbus service init"
+        print("dbus service init")
         bus_name = dbus.service.BusName('flowblade.movie.editor.batchrender', bus=dbus.SessionBus())
         dbus.service.Object.__init__(self, bus_name, '/flowblade/movie/editor/batchrender')
 
@@ -310,7 +311,7 @@ def copy_project(render_item, file_name):
 def launch_batch_rendering():
     bus = dbus.SessionBus()
     if bus.name_has_owner('flowblade.movie.editor.batchrender'):
-        print "flowblade.movie.editor.batchrender dbus service exists, batch rendering already running"
+        print("flowblade.movie.editor.batchrender dbus service exists, batch rendering already running")
         _show_single_instance_info()
     else:
         FLOG = open(userfolders.get_cache_dir() + "log_batch_render", 'w')

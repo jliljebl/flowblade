@@ -21,6 +21,7 @@
 """
 This module handles functionality presented in Profiles Manager window.
 """
+from __future__ import print_function
 
 
 from gi.repository import Gtk
@@ -293,12 +294,12 @@ def _profiles_delete_confirm_callback(dialog, response_id, data):
         pname, profile = mltprofiles.get_user_profiles()[i]
         profile_file_name = pname.lower().replace(os.sep, "_").replace(" ","_")
         profile_path = userfolders.get_data_dir() + mltprofiles.USER_PROFILES_DIR + profile_file_name
-        print profile_path
+        print(profile_path)
         try:
             os.remove(profile_path)
         except:
             # This really should not happen
-            print "removed user profile already gone ???"
+            print("removed user profile already gone ???")
 
     mltprofiles.load_profile_list()
     user_profiles_view.fill_data_model(mltprofiles.get_user_profiles())

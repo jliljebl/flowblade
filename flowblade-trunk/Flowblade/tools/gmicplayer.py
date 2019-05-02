@@ -21,6 +21,7 @@
 """
 Clip player used to select frames for preview and range selection.
 """
+from __future__ import print_function
 
 
 import mlt
@@ -171,7 +172,7 @@ class FramesRangeWriter:
         self.frame_producer.set_speed(1)
         self.consumer.start()
 
-        print "Rendering frames range"
+        print("Rendering frames range")
                 
         while self.running: # set false at shutdown() for abort
             if self.frame_producer.frame() >= mark_out:

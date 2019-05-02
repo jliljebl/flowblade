@@ -23,6 +23,7 @@ Modeule handles displaying tool meni, tool keyboard shortuts and workflow config
 and setting relevant timeline behaviours.
 
 """
+from __future__ import print_function
 
 import gi
 gi.require_version('Gtk', '3.0')
@@ -380,9 +381,9 @@ def _workflow_menu_callback(widget, data):
     elif  msg ==  "tooltips":
         editorpersistance.prefs.show_tool_tooltips = widget.get_active()
     elif msg == "delete lift" and widget.get_active() == True:
-        print "lift"
+        print("lift")
     elif msg == "delete splice" and widget.get_active() == True:
-        print "splice"
+        print("splice")
     else:
         try:
             pos = int(msg)

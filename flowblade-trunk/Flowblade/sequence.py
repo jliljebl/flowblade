@@ -22,6 +22,7 @@
 Module contains class Sequence that is the multitrack media object being edited
 by the application. A project has 1-n of these.
 """
+from __future__ import print_function
 
 import mlt
 import os
@@ -406,7 +407,7 @@ class Sequence:
         producer.media_type = get_media_type(path)
 
         if producer.media_type == FILE_DOES_NOT_EXIST:
-            print "file does not exist"
+            print("file does not exist")
             return None
 
         self.add_clip_attr(producer)
@@ -868,7 +869,7 @@ class Sequence:
                 # This shold not happen because track heights should be set up so that minimized app 
                 # has enough space to display all tracks.
                 # Yet it happens sometimes, meh.
-                print "sequence.resize_tracks_to_fit (): could not make tracks fit in timeline vertical space"
+                print("sequence.resize_tracks_to_fit (): could not make tracks fit in timeline vertical space")
                 fix_next = False
             else:
                 self.tracks[1 + count].height = TRACK_HEIGHT_SMALL
@@ -1042,15 +1043,15 @@ class Sequence:
                     clip.waveform_data = None
 
     def print_all(self):
-        print "------------------------######"
+        print("------------------------######")
         for i in range(0, len(self.tracks)):
-            print "TRACK:", i
+            print("TRACK:", i)
             self.print_track(i)
 
     def print_track(self, track_id):
         track = self.tracks[track_id]
 
-        print "PYTHON"
+        print("PYTHON")
         for i in range(0, len(track.clips)):
             clip = track.clips[i]
             if clip.is_blank():
@@ -1058,21 +1059,21 @@ class Sequence:
             else:
                 msg = clip.name
      
-            print i, ": id:", clip.id, " in:",clip.clip_in," out:", \
-            clip.clip_out, msg
+            print(i, ": id:", clip.id, " in:",clip.clip_in," out:", \
+            clip.clip_out, msg)
 
-        print "MLT"
+        print("MLT")
         for i in range(0, track.count()):
             clip = track.get_clip(i)
-            print i, " in:", clip.get_in()," out:", clip.get_out()
+            print(i, " in:", clip.get_in()," out:", clip.get_out())
 
 
     def print_compositors(self):
         for compositor in self.compositors:
-            print "---"
-            print compositor.name
-            print "a_track:" , compositor.transition.a_track
-            print "b_track:" , compositor.transition.b_track
+            print("---")
+            print(compositor.name)
+            print("a_track:" , compositor.transition.a_track)
+            print("b_track:" , compositor.transition.b_track)
 
 # ------------------------------------------------ module util methods
 def get_media_type(file_path):

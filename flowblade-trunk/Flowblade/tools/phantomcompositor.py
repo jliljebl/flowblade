@@ -17,6 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
+from __future__ import print_function
 import os
 import subprocess
 import sys
@@ -69,7 +70,7 @@ def launch_phantom():
                         + " profile" + " " + _get_underscored_profile() \
                         + " cachefolder "  + userfolders.get_cache_dir() + appconsts.PHANTOM_DIR + "/" + appconsts.PHANTOM_DISK_CACHE_DIR], shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
 
-    print "Phantom2D launched"
+    print("Phantom2D launched")
 
 def _get_underscored_profile():
     return editorstate.PROJECT().profile_desc.replace (" ", "_")

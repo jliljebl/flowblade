@@ -21,6 +21,7 @@
 """
 Module contains main editor window object.
 """
+from __future__ import print_function
 import cairo
 
 from gi.repository import Gtk
@@ -542,7 +543,7 @@ class EditorWindow:
             render.create_widgets()
             render_panel_left = rendergui.get_render_panel_left(render.widgets)
         except IndexError:
-            print "No rendering options found"
+            print("No rendering options found")
             render_panel_left = None
 
         # 'None' here means that no possible rendering options were available
@@ -1153,7 +1154,7 @@ class EditorWindow:
         if tool_id != None:
             self.change_tool(tool_id)
         else:
-            print "kf_tool_exit_to_mode(): NO TOOL_ID!" # This should not happen, but lets print info instead of crashing if we get here
+            print("kf_tool_exit_to_mode(): NO TOOL_ID!") # This should not happen, but lets print info instead of crashing if we get here
        
     def change_tool(self, tool_id):
         if tool_id == appconsts.TLINE_TOOL_INSERT:
@@ -1180,7 +1181,7 @@ class EditorWindow:
             self.handle_multitrim_mode_button_press()
         else:
             # We should not hit this
-            print "editorwindow.change_tool() else: hit!"
+            print("editorwindow.change_tool() else: hit!")
             return 
         
         gui.editor_window.set_tool_selector_to_mode()
@@ -1385,9 +1386,9 @@ class EditorWindow:
         self.set_cursor_to_mode()
 
     def top_paned_resized(self, w, req):
-        print self.app_v_paned.get_position()
-        print self.top_paned.get_position()
-        print self.mm_paned.get_position()
+        print(self.app_v_paned.get_position())
+        print(self.top_paned.get_position())
+        print(self.mm_paned.get_position())
 
     def _create_monitor_row_widgets(self):
         if editorstate.screen_size_small_height() == True:
@@ -1407,5 +1408,5 @@ class EditorWindow:
         self.info1.set_tooltip_text(_("In / Out / Marked Length"))
         
 def _this_is_not_used():
-    print "THIS WAS USED!!!!!"
+    print("THIS WAS USED!!!!!")
 

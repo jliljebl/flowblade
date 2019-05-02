@@ -23,6 +23,7 @@ Handles or passes on mouse edit events from timeline.
 
 Handles edit mode setting.
 """
+from __future__ import print_function
 
 import os
 
@@ -279,7 +280,7 @@ def tline_canvas_mouse_pressed(event, frame):
     if EDIT_MODE() == editorstate.CLIP_END_DRAG:
         modesetting.set_default_edit_mode()
         # This shouldn't happen unless for some reason mouse release didn't hit clipenddragmode listener.
-        print "EDIT_MODE() == editorstate.CLIP_END_DRAG at mouse press!"
+        print("EDIT_MODE() == editorstate.CLIP_END_DRAG at mouse press!")
 
     #  Check if match frame close is hit
     if editorstate.current_is_move_mode() and timeline_visible():

@@ -21,6 +21,7 @@
 """
 Module contains classes and build methods to create GUI objects.
 """
+from __future__ import print_function
 
 import cairo
 import copy
@@ -265,7 +266,7 @@ class BinTreeView(Gtk.VBox):
                 self.storemodel.append(row_data)
                 
             except GObject.GError, exc:
-                print "can't load icon", exc
+                print("can't load icon", exc)
         
         self.scroll.queue_draw()
         
@@ -469,7 +470,7 @@ class BinListView(ImageTextTextListView):
                 self.storemodel.append(row_data)
                 self.scroll.queue_draw()
             except GObject.GError, exc:
-                print "can't load icon", exc
+                print("can't load icon", exc)
 
 
 class FilterListView(ImageTextImageListView):
@@ -2872,7 +2873,7 @@ def get_shorcuts_selector():
         shortcuts_combo.set_active(current_pref_index)
     else:
         # Something is wrong, the pref shortcut file is not preset in the system.
-        print "Shortcut file in editprpersistance.pref.shortcuts not found!"
+        print("Shortcut file in editprpersistance.pref.shortcuts not found!")
         shortcuts_combo.set_active(0)
 
     return shortcuts_combo

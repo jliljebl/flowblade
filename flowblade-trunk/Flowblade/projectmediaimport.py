@@ -17,6 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
+from __future__ import print_function
 
 import mlt
 import locale
@@ -117,7 +118,7 @@ def get_imported_media():
     return files_list
     
 def write_files(filename):
-    print "Starting media import..."
+    print("Starting media import...")
     FLOG = open(userfolders.get_cache_dir() + "log_media_import", 'w')
     p = subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowblademediaimport", filename], stdin=FLOG, stdout=FLOG, stderr=FLOG)
     p.wait()
@@ -180,7 +181,7 @@ def _create_info_dialog():
 def main(root_path, filename):
     # This the main for launched process, this is reached via 'flowblademediaimport' laucher file
     gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
-    print "GTK+ version:", gtk_version
+    print("GTK+ version:", gtk_version)
     editorstate.gtk_version = gtk_version
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION

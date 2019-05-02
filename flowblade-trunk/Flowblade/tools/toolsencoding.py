@@ -17,6 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
+from __future__ import print_function
 
 from gi.repository import Gtk
 from gi.repository import GObject
@@ -383,7 +384,7 @@ def get_args_vals_list_for_render_data(render_data):
     return args_vals_list
 
 def get_encoding_desc(args_vals_list):
-    print args_vals_list
+    print(args_vals_list)
     vcodec = ""
     vb = ""
     for arg_val in args_vals_list:

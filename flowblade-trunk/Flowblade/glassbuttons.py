@@ -17,6 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
+from __future__ import print_function
 
 import cairo
 import math
@@ -132,16 +133,16 @@ class AbstractGlassButtons:
         cr.close_path ()
 
     def _press_event(self, event):
-        print "_press_event not impl"
+        print("_press_event not impl")
 
     def _motion_notify_event(self, x, y, state):
-        print "_motion_notify_event not impl"
+        print("_motion_notify_event not impl")
 
     def _release_event(self, event):
-        print "_release_event not impl"
+        print("_release_event not impl")
 
     def _draw(self, event, cr, allocation):
-        print "_draw not impl"
+        print("_draw not impl")
 
     def _get_hit_code(self, x, y):
         button_x = self.button_x

@@ -17,9 +17,10 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
+from __future__ import print_function
 
 import numpy as np
-print "numpy version:", np.version.version
+print("numpy version:", np.version.version)
 
 from gi.repository import Gtk, GObject, Gdk
 

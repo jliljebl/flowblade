@@ -17,6 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
+from __future__ import print_function
 import sys
 
 import vieweditorshape
@@ -135,15 +136,15 @@ class AbstactEditorLayer:
         return angle
 
     def mouse_pressed(self):
-        print "AbstactEditorLayer.mouse_pressed not overridden in" + self.__class__
+        print("AbstactEditorLayer.mouse_pressed not overridden in" + self.__class__)
         sys.exit(1)
         
     def mouse_dragged(self):
-        print "AbstactEditorLayer.mouse_dragged not overridden in" + self.__class__
+        print("AbstactEditorLayer.mouse_dragged not overridden in" + self.__class__)
         sys.exit(1)
         
     def mouse_released(self):
-        print "AbstactEditorLayer.mouse_released not overridden in" + self.__class__
+        print("AbstactEditorLayer.mouse_released not overridden in" + self.__class__)
         sys.exit(1)
 
     def get_mouse_delta(self):
@@ -153,7 +154,7 @@ class AbstactEditorLayer:
 
     # -------------------------------------------- draw
     def draw(self, cr, write_out_layers, draw_overlays):
-        print "AbstactEditorLayer.draw not overridden in" + self.__class__
+        print("AbstactEditorLayer.draw not overridden in" + self.__class__)
         sys.exit(1)
 
 

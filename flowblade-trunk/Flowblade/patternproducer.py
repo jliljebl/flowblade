@@ -21,6 +21,7 @@
 Module is used to create pattern producer media objects for bins and 
 corresponding mlt.Producers for timeline. 
 """
+from __future__ import print_function
 import cairo
 import copy
 import md5
@@ -202,10 +203,10 @@ class AbstractBinClip: # not extends projectdata.MediaFile? too late, too late. 
         return True # these are created to match project profile
 
     def create_mlt_producer(self, profile):
-        print "create_mlt_producer not implemented"
+        print("create_mlt_producer not implemented")
 
     def create_icon(self):
-        print "patter producer create_icon() not implemented"
+        print("patter producer create_icon() not implemented")
 
 class BinColorClip(AbstractBinClip):
     """

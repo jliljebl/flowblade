@@ -21,6 +21,7 @@
 """
 Module handles saving and loading data that is related to the editor and not any particular project.
 """
+from __future__ import print_function
 import gi
 gi.require_version('Gtk', '3.0') 
 from gi.repository import Gtk
@@ -103,7 +104,7 @@ def load():
         prefs = current_prefs
         write_file = file(prefs_file_path, "wb")
         pickle.dump(prefs, write_file)
-        print "prefs updated to new version, new param count:", len(prefs.__dict__)
+        print("prefs updated to new version, new param count:", len(prefs.__dict__))
 
 def save():
     """

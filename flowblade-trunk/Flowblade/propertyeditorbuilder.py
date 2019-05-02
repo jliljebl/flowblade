@@ -21,6 +21,7 @@
 """
 Module creates GUI editors for editable mlt properties.
 """
+from __future__ import print_function
 
 from gi.repository import Gtk, Gdk, GObject, GLib
 
@@ -115,7 +116,7 @@ def get_transition_extra_editor_rows(compositor, editable_properties):
             editor_row = create_func(compositor, editable_properties)
             rows.append(editor_row)
         except KeyError:
-            print "get_transition_extra_editor_rows fail with:" + editor_name
+            print("get_transition_extra_editor_rows fail with:" + editor_name)
 
     return rows
 
@@ -131,7 +132,7 @@ def get_filter_extra_editor_rows(filt, editable_properties):
             editor_row = create_func(filt, editable_properties)
             rows.append(editor_row)
         except KeyError:
-            print "get_filter_extra_editor_rows fail with:" + editor_name
+            print("get_filter_extra_editor_rows fail with:" + editor_name)
 
     return rows
 

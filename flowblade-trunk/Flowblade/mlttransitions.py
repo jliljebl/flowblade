@@ -22,6 +22,7 @@
 Module contains objects that wrap mlt.Transition objects used to mix video betweeen
 two tracks.
 """
+from __future__ import print_function
 import copy
 import mlt
 import os
@@ -418,12 +419,12 @@ def load_compositors_xml(transitions):
     """
     compositors_doc = xml.dom.minidom.parse(respaths.COMPOSITORS_XML_DOC)
 
-    print "Loading transitions..."
+    print("Loading transitions...")
     compositor_nodes = compositors_doc.getElementsByTagName(COMPOSITOR)
     for c_node in compositor_nodes:
         compositor_info = CompositorTransitionInfo(c_node)
         if (not compositor_info.mlt_service_id in transitions) and len(transitions) > 0:
-            print "MLT transition " + compositor_info.mlt_service_id + " not found."
+            print("MLT transition " + compositor_info.mlt_service_id + " not found.")
             global not_found_transitions
             not_found_transitions.append(compositor_info)
             continue

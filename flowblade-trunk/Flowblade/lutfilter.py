@@ -17,6 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
+from __future__ import print_function
 import copy
 
 CR_BASIS = [[-0.5,  1.5, -1.5,  0.5],
@@ -387,7 +388,7 @@ class ColorGradeBandCorrection:
         
     def print_table(self, table):
         for i in range(0, len(table)):
-            print str(i) + ":" + str(table[i])
+            print(str(i) + ":" + str(table[i]))
 
 
 class ColorGradeFilter:

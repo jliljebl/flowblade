@@ -17,6 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
+from __future__ import print_function
 from gi.repository import Gdk
 from gi.repository import Gtk, GLib
 
@@ -920,7 +921,7 @@ class MatchSurfaceCreator(threading.Thread):
     def run(self):
         # Create new producer to get mlt frame data
         while _producer == None:
-            print "MatchSurfaceCreator: waiting for _producer"
+            print("MatchSurfaceCreator: waiting for _producer")
             time.sleep(0.01)
             
         image_producer = _producer.cut(int(self.match_frame), int(self.match_frame))

@@ -21,6 +21,7 @@
 """
 Module contains objects used to capture project data.
 """
+from __future__ import print_function
 import cairo
 import datetime
 import mlt
@@ -109,7 +110,7 @@ class Project:
         thumbnailer.set_context(self.profile)
 
     def add_image_sequence_media_object(self, resource_path, name, length, ttl):
-        print resource_path
+        print(resource_path)
         media_object = self.add_media_file(resource_path)
         media_object.length = length
         media_object.name = name
@@ -339,7 +340,7 @@ class MediaFile:
         try:
             self.icon = self._create_image_surface(self.icon_path)
         except:
-            print "failed to make icon from:", self.icon_path
+            print("failed to make icon from:", self.icon_path)
             self.icon_path = respaths.IMAGE_PATH + FALLBACK_THUMB
             self.icon = self._create_image_surface(self.icon_path)
 

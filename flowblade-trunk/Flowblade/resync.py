@@ -17,6 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
+from __future__ import print_function
 
 import appconsts
 from editorstate import current_sequence
@@ -135,7 +136,7 @@ def get_resync_data_list_for_clip_list(clips_list):
     
 def print_sync_children():
     for child_clip, track in sync_children.iteritems():
-        print child_clip.id
+        print(child_clip.id)
         
         
         

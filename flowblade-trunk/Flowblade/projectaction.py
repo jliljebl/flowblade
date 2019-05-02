@@ -22,6 +22,7 @@
 Module handles user actions that are not edits on the current sequence.
 Load, save, add media file, etc...
 """
+from __future__ import print_function
 
 import copy
 import datetime
@@ -126,7 +127,7 @@ class LoadThread(threading.Thread):
             editorstate.project_is_loading = False
 
         except persistance.FileProducerNotFoundError as e:
-            print "did not find a file"
+            print("did not find a file")
             self._error_stop(dialog, ticker)
             Gdk.threads_enter()
             primary_txt = _("Media asset was missing!")
@@ -229,7 +230,7 @@ class AddMediaFilesThread(threading.Thread):
                     PROJECT().add_media_file(new_file, self.compound_clip_name)
                     succes_new_file = new_file
                 except projectdata.ProducerNotValidError as err:
-                    print err.__str__()
+                    print(err.__str__())
                     dialogs.not_valid_producer_dialog(err.value, gui.editor_window.window)
             
             Gdk.threads_enter()
@@ -268,7 +269,7 @@ class UpdateMediaLengthsThread(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        print "Updating media lengths:"
+        print("Updating media lengths:")
 
         Gdk.threads_enter()
         dialog = dialogs.update_media_lengths_progress_dialog()
@@ -283,7 +284,7 @@ class UpdateMediaLengthsThread(threading.Thread):
         
                 producer = mlt.Producer(PROJECT().profile, str(media_file.path))
                 if producer.is_valid() == False:
-                    print "not valid producer"
+                    print("not valid producer")
                     continue
 
                 length = producer.get_length()
@@ -295,7 +296,7 @@ class UpdateMediaLengthsThread(threading.Thread):
         dialog.destroy()
         Gdk.threads_leave()
         
-        print "Updating media lengths done."
+        print("Updating media lengths done.")
         
 def _duplicates_info(duplicates):
     primary_txt = _("Media files already present in project were opened!")
@@ -1164,7 +1165,7 @@ def _display_file_info(media_file):
     try:
         img = guiutils.get_gtk_image_from_file(media_file.icon_path, 300)
     except:
-        print "_display_file_info() failed to get thumbnail"
+        print("_display_file_info() failed to get thumbnail")
     
     vcodec = info["vcodec"]
     acodec = info["acodec"]
