@@ -5,13 +5,13 @@ tl;dr: All dependencies are Python 3 compatible although __python-mlt__ might no
 | **Ubuntu package name** | **Description** | **Python 3 available** |
 |:-------------------------------|:----------------|:--------------|
 | python-gi | GTK3 Python bindings | **YES, python3-gi**  |
-| python-mlt | MLT python bindings, this pulls in MLT | **YES, not tested** https://github.com/mltframework/mlt/issues/410|
+| python-mlt | MLT python bindings, this pulls in MLT | **YES** |
 | python-dbus | dbus python bindings | **YES, python3-dbus** |
 | libmlt-data | Some image and text resources for MLT |**NOT PYTHON** |
 | frei0r-plugins | Additional video filters | **NOT PYTHON** |
 | swh-plugins | Additional audio filters | **NOT PYTHON**  |
 | python-gi-cairo | Gi Cairo bindings | **YES, python3-gi-cairo** |
-| python-numpy | Math and arrays library |  **YES, >= 1.5.0** |
+| python-numpy | Math and arrays library |  **YES** |
 | python-pil | PIL image manipulation library | **YES, python-pil is Pillow fork and should work** |
 | librsvg2-common | svg support | **NOT PYTHON**  |
 | gmic | framework for image processing | **NOT PYTHON**  |
