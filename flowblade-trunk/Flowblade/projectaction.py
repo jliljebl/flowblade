@@ -1564,6 +1564,8 @@ def move_files_to_bin(new_bin, bin_indexes):
     if PROJECT().bins[new_bin] == current_bin():
         return
 
+    source_bin_index = PROJECT().bins.index(PROJECT().c_bin) # this gets reset to 0 and it is just easier to save and set again
+    
     # Delete from current bin
     moved_ids = []
     bin_indexes.sort()
@@ -1580,9 +1582,7 @@ def move_files_to_bin(new_bin, bin_indexes):
 
     # We need to select current gin again to show it selected in GUI
     selection = gui.bin_list_view.treeview.get_selection()
-    model, iterator = selection.get_selected()
-    c_bin_index = PROJECT().bins.index(PROJECT().c_bin)
-    selection.select_path(str(c_bin_index))
+    selection.select_path(str(source_bin_index))
     
     gui.editor_window.bin_info.display_bin_info()
     
