@@ -332,4 +332,5 @@ def kftool_mode_from_popup_menu(clip, track, edit_type):
     kftoolmode.set_no_clip_edit_data()
 
     kftoolmode.init_tool_for_clip(clip, track, edit_type)
+    kftoolmode.edit_data["initializing"] = False
     gui.editor_window.set_cursor_to_mode()

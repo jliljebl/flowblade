@@ -933,7 +933,7 @@ class TLineKeyFrameEditor:
         self.mouse_x = lx
         self.mouse_y = ly
 
-        if event.button == 3:
+        if event.button == 3: # right mouse
             self.current_mouse_action = POSITION_DRAG
             
             self.drag_min = self.clip_in
