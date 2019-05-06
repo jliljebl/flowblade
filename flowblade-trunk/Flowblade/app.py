@@ -338,7 +338,7 @@ def main(root_path):
     # Show first run worflow info dialog if not shown for this version of application.
     if editorstate.runtime_version_greater_then_test_version(editorpersistance.prefs.workflow_dialog_last_version_shown, editorstate.appversion):
         GObject.timeout_add(500, show_worflow_info_dialog)
-
+        
     # Handle userfolders init error and data copy.
     if userfolders.get_init_error() != None:
         GObject.timeout_add(500, show_user_folders_init_error_dialog, userfolders.get_init_error())
