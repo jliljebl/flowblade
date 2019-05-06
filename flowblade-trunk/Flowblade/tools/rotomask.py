@@ -308,6 +308,18 @@ class RotoMaskEditor(Gtk.Window):
         if event.keyval == Gdk.KEY_Delete:
             self.roto_mask_layer.delete_selected_point()
             return True
+            
+        if event.keyval == Gdk.KEY_Left:
+            PLAYER().seek_delta(-1)
+            tline_frame = PLAYER().current_frame()
+            self.kf_editor.display_tline_frame(tline_frame) # this updates everything
+            return True
 
+        if event.keyval == Gdk.KEY_Right:
+            PLAYER().seek_delta(1)
+            tline_frame = PLAYER().current_frame()
+            self.kf_editor.display_tline_frame(tline_frame) # this updates everything
+            return True
+            
         # Key event was not handled here.
         return False
