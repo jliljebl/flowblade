@@ -56,7 +56,7 @@ def get_snapped_x(x, track, edit_data):
     elif EDIT_MODE() == editorstate.COMPOSITOR_EDIT:
         track = current_sequence().tracks[compositormodes.compositor.transition.b_track - 1]
         if compositormodes.sub_mode == compositormodes.TRIM_EDIT:
-            if compositormodes.edit_data["trim_is_clip_in"] == False: # THis has differnt out frame semantics then clips, +1 makes the same function work in this case.
+            if compositormodes.edit_data["trim_is_clip_in"] == False: # This has different out frame semantics then clips, +1 makes the same function work in this case.
                 frame = frame + 1
             return _object_end_drag_snap(x, track, frame, edit_data)
         elif compositormodes.sub_mode == compositormodes.MOVE_EDIT:
