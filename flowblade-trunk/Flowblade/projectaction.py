@@ -431,6 +431,8 @@ def _save_project_in_last_saved_path():
         dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window, is_info=False)
         return
 
+    editorpersistance.add_recent_project_path(PROJECT().last_save_path)
+    editorpersistance.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)
     PROJECT().events.append(projectdata.ProjectEvent(projectdata.EVENT_SAVED, PROJECT().last_save_path))
     
     global save_icon_remove_event_id
