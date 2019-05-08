@@ -312,13 +312,15 @@ class RotoMaskEditor(Gtk.Window):
         if event.keyval == Gdk.KEY_Left:
             PLAYER().seek_delta(-1)
             tline_frame = PLAYER().current_frame()
-            self.kf_editor.display_tline_frame(tline_frame) # this updates everything
+            self.kf_editor.display_tline_frame(tline_frame)
+            self.show_current_frame()
             return True
 
         if event.keyval == Gdk.KEY_Right:
             PLAYER().seek_delta(1)
             tline_frame = PLAYER().current_frame()
-            self.kf_editor.display_tline_frame(tline_frame) # this updates everything
+            self.kf_editor.display_tline_frame(tline_frame)
+            self.show_current_frame()
             return True
             
         # Key event was not handled here.
