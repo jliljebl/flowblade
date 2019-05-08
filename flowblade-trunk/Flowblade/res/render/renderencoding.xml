@@ -94,9 +94,9 @@
     <encodingoption name="Apple ProRes 4:2:2 / .mov" extension="mov" audiodesc=" pcm" type="av" resize="True" qgroup="variablenooption">
         <profile args="f=mov acodec=pcm_s16le ac=2 vcodec=prores vb=0 g=0 bf=0 threads=1 vprofile=2" />
     </encodingoption>
-    <!---
-    <encodingoption name="WebM V9 - alpha / .webm" extension="webm" audiodesc=" opus" type="av" resize="True" qgroup="qgroup2">
-        <profile args="f=webm acodec=libopus ac=2 vcodec=libvpx-vp9 threads=1 speed=4 tile-columns=0 frame-parallel=0 g=9999 aq-mode=0" />
+    <!--
+    <encodingoption name="WebM V8 - alpha / .webm" extension="webm" audiodesc=" opus" type="av" resize="True" qgroup="qgroup2">
+        <profile args="f=webm acodec=libopus ac=2 vcodec=libvpx pix_fmt=yuva420p alpha_mode=1" />
     </encodingoption>
     -->
 
