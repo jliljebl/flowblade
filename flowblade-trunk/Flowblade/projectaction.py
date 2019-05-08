@@ -1752,11 +1752,15 @@ def _change_track_count_dialog_callback(dialog, response_id, tracks_select):
     dialog.destroy()
 
     cur_seq_index = PROJECT().sequences.index(PROJECT().c_seq)
+    
+    if len(PROJECT().c_seq.tracks[-1].clips) == 1: # Remove hidden hack trick blank so that is does not get copied 
+        edit._remove_clip(PROJECT().c_seq.tracks[-1], 0)
+
     new_seq = sequence.create_sequence_clone_with_different_track_count(PROJECT().c_seq, v_tracks, a_tracks)
     PROJECT().sequences.insert(cur_seq_index, new_seq)
     PROJECT().sequences.pop(cur_seq_index + 1)
     app.change_current_sequence(cur_seq_index)
-
+    
 def combine_sequences():
     dialogs.combine_sequences_dialog(_combine_sequences_dialog_callback)
 
