@@ -13,7 +13,7 @@
         <property name="Tilt" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs">0=0.5</property>
         <property name="Min" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs">0=0</property>
         <property name="Max" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs">0=1</property>
-        <property name="Operation" args="editor=combobox exptype=default cbopts=Overwrite:0.0,Max:0.3,Min:0.5,Add:0.7,Subtract:1.0">0.0</property>
+        <property name="Operation" args="editor=combobox exptype=default cbopts=Overwrite:0.0,Add:0.7,Subtract:1.0">0.0</property>
     </filter>
     <filter id="frei0r.mask0mate">
         <name>Crop</name>
@@ -37,7 +37,7 @@
         <property name="Transition width" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Trans.!Width">0=0.2</property>
         <property name="Min" args="editor=no_editor exptype=keyframe_hcs">0=0</property>
         <property name="Max" args="editor=no_editor exptype=keyframe_hcs">0=1</property>
-        <property name="Operation" args="editor=combobox exptype=default cbopts=Overwrite:0.0,Max:0.3,Min:0.5,Add:0.7,Subtract:1.0">0.0</property>
+        <property name="Operation" args="editor=combobox exptype=default cbopts=Overwrite:0.0,Add:0.7,Subtract:1.0">0.0</property>
     </filter>
     <filter id="shape">
       <name>File Luma to Alpha</name>
