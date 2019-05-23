@@ -27,7 +27,7 @@
     </filter>
     <filter id="frei0r.alphaspot">
         <name>Alpha Shape</name>
-        <group>Alpha</group>  
+        <group>Alpha</group>
         <property name="Shape" args="editor=combobox exptype=default cbopts=Rectangle:0.0,Ellipse:0.32,Triangle:0.68,Diamond:1.0">0.0</property>
         <property name="Position X" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Pos!X">0=0.5</property>
         <property name="Position Y" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Pos!Y">0=0.5</property>
