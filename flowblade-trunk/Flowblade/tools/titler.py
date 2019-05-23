@@ -173,7 +173,7 @@ class TitlerData:
         save_data = copy.deepcopy(self)
         for layer in save_data.layers:
             layer.pango_layout = None
-        write_file = file(save_file_path, "wb")
+        write_file = open(save_file_path, "wb")
         pickle.dump(save_data, write_file)
    
     def create_pango_layouts(self):
