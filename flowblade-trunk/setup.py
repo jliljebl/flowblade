@@ -52,5 +52,5 @@ setup(  name='flowblade',
         scripts=['flowblade'],
         packages=['Flowblade','Flowblade/tools','Flowblade/vieweditor'],
         package_data={'Flowblade':flowblade_package_data + locale_files},
-        data_files=install_data)
-
+        data_files=install_data,
+        use_2to3=True)
