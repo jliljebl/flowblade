@@ -539,11 +539,11 @@ class BatchRenderItemData:
 
     def save(self):
         item_path = get_datafiles_dir() + self.generate_identifier() + ".renderitem"
-        item_write_file = file(item_path, "wb")
+        item_write_file = open(item_path, "wb")
         pickle.dump(self, item_write_file)
 
     def save_as_single_render_item(self, item_path):
-        item_write_file = file(item_path, "wb")
+        item_write_file = open(item_path, "wb")
         pickle.dump(self, item_write_file)
 
     def delete_from_queue(self):
