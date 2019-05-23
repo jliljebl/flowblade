@@ -169,9 +169,9 @@ def _get_disk_dir_panels():
     panels = []
     panels.append(DiskFolderManagementPanel(appconsts.AUDIO_LEVELS_DIR, _("Audio Levels Data"), RECREATE_WARNING))
     panels.append(DiskFolderManagementPanel(appconsts.GMIC_DIR, _("G'Mic Tool Session Data"), NO_WARNING))
-    # FIXME: code assumes that all these are in samo root folder, not anymore, 
+    # FIXME: code assumes that all these are in same root folder, not anymore, 
     #panels.append(DiskFolderManagementPanel(appconsts.RENDERED_CLIPS_DIR, _("Rendered Files"), PROJECT_DATA_WARNING))
     panels.append(DiskFolderManagementPanel(appconsts.THUMBNAILS_DIR, _("Thumbnails"), RECREATE_WARNING))
-    panels.append(DiskFolderManagementPanel(appcossts.USER_PROFILES_DIR_NO_SLASH, _("User Created Custom Profiles"), PROJECT_DATA_WARNING))
+    panels.append(DiskFolderManagementPanel(appconsts.USER_PROFILES_DIR_NO_SLASH, _("User Created Custom Profiles"), PROJECT_DATA_WARNING))
 
     return panels
