@@ -148,7 +148,7 @@ class WaveformCreator(threading.Thread):
 
         if not self.abort:
             self.clip.waveform_data = frame_levels
-            write_file = file(self.file_cache_path, "wb")
+            write_file = open(self.file_cache_path, "wb")
             pickle.dump(frame_levels, write_file)
 
             Gdk.threads_enter()
@@ -214,4 +214,3 @@ def _waveform_render_progress_dialog(callback, title, text, progress_bar, parent
     dialog.connect('response', callback)
     dialog.show()
     return dialog
-
