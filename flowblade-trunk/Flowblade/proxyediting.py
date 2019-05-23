@@ -42,7 +42,7 @@ import render
 import renderconsumer
 import sequence
 import utils
-
+import userfolders
 
 manager_window = None
 progress_window = None
