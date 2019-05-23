@@ -222,7 +222,7 @@ class WaveformCreator(threading.Thread):
             frame_levels[frame] = float(val)
             self.last_rendered_frame = frame
 
-        write_file = file(self.file_cache_path, "wb")
+        write_file = open(self.file_cache_path, "wb")
         pickle.dump(frame_levels, write_file)
 
     def _get_temp_producer(self, clip_path, profile):
@@ -237,7 +237,3 @@ class WaveformCreator(threading.Thread):
         self.clip_media_length = temp_producer.get_length()
 
         return temp_producer
-
-
-
-
