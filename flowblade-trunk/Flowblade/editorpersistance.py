@@ -62,7 +62,7 @@ def load():
         prefs = pickle.load(f)
     except:
         prefs = EditorPreferences()
-        write_file = file(prefs_file_path, "wb")
+        write_file = open(prefs_file_path, "wb")
         pickle.dump(prefs, write_file)
 
     # Override deprecated preferences to default values.
@@ -78,7 +78,7 @@ def load():
     except:
         recent_projects = utils.EmptyClass()
         recent_projects.projects = []
-        write_file = file(recents_file_path, "wb")
+        write_file = open(recents_file_path, "wb")
         pickle.dump(recent_projects, write_file)
 
     # Remove non-existing projects from recents list
@@ -90,7 +90,7 @@ def load():
     if len(remove_list) > 0:
         for proj_path in remove_list:
             recent_projects.projects.remove(proj_path)
-        write_file = file(recents_file_path, "wb")
+        write_file = open(recents_file_path, "wb")
         pickle.dump(recent_projects, write_file)
         
     # Versions of program may have different prefs objects and 
@@ -101,7 +101,7 @@ def load():
     if len(prefs.__dict__) != len(current_prefs.__dict__):
         current_prefs.__dict__.update(prefs.__dict__)
         prefs = current_prefs
-        write_file = file(prefs_file_path, "wb")
+        write_file = open(prefs_file_path, "wb")
         pickle.dump(prefs, write_file)
         print "prefs updated to new version, new param count:", len(prefs.__dict__)
 
@@ -112,10 +112,10 @@ def save():
     prefs_file_path = userfolders.get_config_dir()+ PREFS_DOC
     recents_file_path = userfolders.get_config_dir() + RECENT_DOC
     
-    write_file = file(prefs_file_path, "wb")
+    write_file = open(prefs_file_path, "wb")
     pickle.dump(prefs, write_file)
 
-    write_file = file(recents_file_path, "wb")
+    write_file = open(recents_file_path, "wb")
     pickle.dump(recent_projects, write_file)
 
 def add_recent_project_path(path):
@@ -151,7 +151,7 @@ def remove_non_existing_recent_projects():
     if len(remove_list) > 0:
         for proj_path in remove_list:
             recent_projects.projects.remove(proj_path)
-        write_file = file(recents_file_path, "wb")
+        write_file = open(recents_file_path, "wb")
         pickle.dump(recent_projects, write_file)
         
 def fill_recents_menu_widget(menu_item, callback):
