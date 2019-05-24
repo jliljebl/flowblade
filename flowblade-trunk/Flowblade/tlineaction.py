@@ -66,6 +66,7 @@ import respaths
 import sequence
 import syncsplitevent
 import updater
+import userfolders
 import utils
 
 

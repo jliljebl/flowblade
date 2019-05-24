@@ -24,6 +24,7 @@ from os import listdir
 from os.path import isfile, join
 import os
 
+import appconsts
 import dialogutils
 import gui
 import guiutils
