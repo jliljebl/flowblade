@@ -26,6 +26,8 @@ import os
 import threading
 
 import appconsts
+import mltprofiles
+import utils
 
 USING_DOT_DIRS = 0 # This is only used during testing and if user forces .dot dirs.
 USING_XDG_DIRS = 1
@@ -137,10 +139,10 @@ def _maybe_create_dot_dirs():
         os.mkdir(user_dir)
     if not os.path.exists(user_dir + mltprofiles.USER_PROFILES_DIR):
         os.mkdir(user_dir + mltprofiles.USER_PROFILES_DIR)
-    if not os.path.exists(user_dir + AUTOSAVE_DIR):
-        os.mkdir(user_dir + AUTOSAVE_DIR)
-    if not os.path.exists(user_dir + BATCH_DIR):
-        os.mkdir(user_dir + BATCH_DIR)
+    if not os.path.exists(user_dir + appconsts.AUTOSAVE_DIR):
+        os.mkdir(user_dir + appconsts.AUTOSAVE_DIR)
+    if not os.path.exists(user_dir + appconsts.BATCH_DIR):
+        os.mkdir(user_dir + appconsts.BATCH_DIR)
     if not os.path.exists(user_dir + appconsts.AUDIO_LEVELS_DIR):
         os.mkdir(user_dir + appconsts.AUDIO_LEVELS_DIR)
     if not os.path.exists(utils.get_hidden_screenshot_dir_path()):
