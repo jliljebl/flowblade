@@ -23,6 +23,7 @@ import sys
 
 from gi.repository import Gtk
 
+import appconsts
 import dialogutils
 import editorstate
 import guiutils
