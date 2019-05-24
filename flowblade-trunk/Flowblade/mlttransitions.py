@@ -168,11 +168,6 @@ def init_module():
     alpha_combiners = [ (_("Alpha XOR"),"##alphaxor"),
                         (_("Alpha Out"),"##alphaout"),
                         (_("Alpha In"),"##alphain")]
-
-    """ These ain't doing correct Porter-Duff
-                        (_("Alpha Over"),"##alphaover"),
-                        (_("Alpha Atop"),"##alphaatop")]
-    """
                         
     for comp in compositors:
         name, comp_type = comp
