@@ -33,7 +33,7 @@
   * Individual Alpha Combiners **Alpha XOR**, **Alpha Out**, **Alpha In** replaced with a single **Porter-Duff** Compositor with all appropriate ops supported
   * **LumatoAlpha** Compositor extended with standard alpha combining operations ops, see above
 
-##Tracks Compositing
+## Tracks Compositing
 
   * **Auto  Compositing**  mode added, in  which compositing is done in more common the bottom-up order.  This kills all manual composite target track handling
   * Current way named **Top Down Compositing**
