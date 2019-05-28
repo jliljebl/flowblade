@@ -17,7 +17,7 @@ We should look for ways to make application more approachable for beginner users
 * multiscript tool, Cairo + GEGL + MLT ( + GMIC?)
 
 ## Compositing
-See document **[Compositing 2 doc](./Compositing_2.md)**
+See document **[Compositing 2 doc](./COMPOSITING_2.md)**
 
 
 ## Tools
