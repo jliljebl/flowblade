@@ -1,51 +1,44 @@
 # FLOWBLADE ROADMAP
 
-# FIRST
+
+## Technology updates
+* **Python3 port**. This is coming for 2.4
+* **Moving video display forward from SDL 1.2** Target is that 2.8 comes with this, late 2019 - early 2020
+
+## Project "Ethel"
+We should look for ways to make application more approachable for beginner users.
+
+* **Drag'n'Drop source panel for Filers and Compositors**. We don't need this but many users seem to prefer it.
+* **Trakcs auto compositioning** This has been proven to work on MLT and we should make it at least optional, see below.
+* **Menus update** We can probably improve discoverability by adding and rearranging some menu items
 
 ## Application
-- **Automatic Timeline Rendering** The only way to provide smooth playback in all circumstances is to do some form of timeline rendering and there are some ideas here that will be attempted.
-* **Rotomask**
-* fully Configurable Keyboard Shortcuts
-* some key parts need expanded code comments.
-* multiscript tool
+- **Automatic Timeline Rendering** The only way to provide smooth playback in all circumstances. 
+* multiscript tool, Cairo + GEGL + MLT ( + GMIC?)
 
-## MLT + Frei0r
-* **New display MLT service or method**. SDL1.2 is eventually going away. SDL2 or some GStremer sink as base for a new consumer, also Issues #309 #329 
-* add to all *alpha filters* compositing methods **union, intersection, difference and exclusion.**  Requires MLT and Frei0r contribution.
-* **Animated Image to Alpha**, combines two images sources using luma information from a third source, probably a frame sequence
-* Image producer that doesn't lose data before affine transform is applied.
-* Porter-Duff MLT transition
-* full affine transform filter with user settable anchor point.
+## Compositing
+See document **Compositing2+**
 
-## Stability
-* update and test GDB trace creation instructions document
-* collect more data with GDB from affected systems
-* bisect if reproduces, try to get some hypothesis if not reproducable
 
-## Communications
-#### Flowblade contributing documentation
+## Tools
+* G'MIC pamater names and descriptions displayed on request, data exists we just need to extract it  somehow
+* Rotomask Rotate mode
+* Rotomask help-create Box ja Ellipse shapes from menu
+* Titler Rotate Mode
+* Titler text animations with motion blur
 
-  * contributing code document 
+## Communications + code 
   * code overview doc
+  * contributing code document 
+  * improived code comments
 
-#### Forum
-GitHub project Issue tab functionality modifed to work as a forum, Google+ is going away.
+## Possible later developments
 
-* Labels used to create subject categories
-* copy some data from Google+ forum
-
-# LATER
-
-* Gimp, Inkscape, Audacity, Krita examined as **Timeline Container Clip** media creator programs
-* **GPU Rendering** MLT already contains support for GPU rendering for certain filters
+* Gimp, Inkscape, Audacity, Krita examined as Timeline Container Clip media creator programs
+* GPU Rendering, MLT already contains support for GPU rendering for certain filters
 * subbuses or virtual channels to help with mixing.
 * jack integration
 * a 5.1 surround audio track mixing
-* **Audio scratching** on timeline. #95
-* **Track filters stack** for both video and audio tracks.
-* **Selective Filter Application**, this function allows user to apply any filter only inside an area defined by alpha filters. This can currently be simulated with two clips. Requires MLT contribution.
-* Contribute **filters for MLT**. Spotligt, affine transform filter seem most interesting. Frei0r is not an adequate platform for some of these. may require using Cairo.
+- zig-zag layout auto audio splice out with handles
+* configurable keyboard shortcuts
 
-# 2.x SERIES AND PYTHON3
-
-There will be 4-7 releases to essitially complete feature list here, then on to Python 3 port which will be Flowblade 3. 
