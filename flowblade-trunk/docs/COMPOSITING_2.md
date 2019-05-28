@@ -15,9 +15,7 @@
 
 	Ops called LIGHTEN, DARKEN (or min, max) are excluded, to be fully useful they would require every alpha filter to have opacity parameter.
 
-  * Some new alpha filters added:
-	* **Alpha Blur**
-       * **Alpha Levels**	
+  * Some new alpha filters added: **Alpha Blur**, **Alpha Levels**.
 
 
 ## Compositors
