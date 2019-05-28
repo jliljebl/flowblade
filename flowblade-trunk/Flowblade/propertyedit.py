@@ -333,7 +333,7 @@ class AbstractProperty:
     
 class EditableProperty(AbstractProperty):
     """
-    A wrapper for mltfilter.FilterObject.properties array property tuple 
+    A wrapper for a mltfilter.FilterObject.properties array property tuple 
     and related data that converts user input to 
     property values.
 

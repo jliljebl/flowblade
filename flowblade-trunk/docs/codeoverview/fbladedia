@@ -1,0 +1,51 @@
+@startuml
+
+scale 1400 width
+
+
+[*] --> app.py : startup
+
+app.py --> editorwindow.py : creates
+
+app.py --> [*] : shutdown
+
+editorwindow.py --> GUI : creates
+
+GUI --> EventsHandling : listener callbacks
+GUI : components accessed from gui.py
+
+state EventsHandling {
+	[*] --> ActionModules : clicks, selections
+	ActionModules : clipmenuaction.py
+	ActionModules : projecaction.py
+	ActionModules : tlineaction.py
+	ActionModules : ...
+	|| 
+	[*] --> editevent.py : timeline mouse events
+	editevent.py --> ToolModules : forwards mouse events
+	ToolModules : trimmodes.py
+	ToolModules : movemodes.py
+}
+
+
+EventsHandling --> edit.py : creates EditAction object
+
+edit.py --> DATA : modifies
+
+DATA : sequence.py
+DATA : projectdata.py
+
+EventsHandling --> mltplayer.py
+mltplayer.py : seek, play, stop playback
+
+EventsHandling --> updater.py : update GUI after data is modified
+
+updater.py --> GUI : update
+
+mltplayer.py -r-> updater.py : do GUI update
+
+GUI --> DATA : presents
+
+editorpersistance.py -u-> DATA : saves, loads
+
+@enduml

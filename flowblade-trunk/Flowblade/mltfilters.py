@@ -240,7 +240,7 @@ class FilterObject:
         else:
              self.mlt_filter.set("disable", str(1))
     
-    def reset_values(self,  mlt_profile=None, clip=None): #multipartfilters need profile and clip
+    def reset_values(self,  mlt_profile=None, clip=None): # multipartfilters need profile and clip
         for i in range(0, len(self.properties)):
             name, o_value, prop_type = self.info.properties[i]
             name, value, prop_type = self.properties[i]
@@ -437,7 +437,6 @@ def clone_filter_object(filter_object, mlt_profile):
     return clone
 
 def replace_services(services):
-    # this has gotta be a bullshit way to do this
     
     replacements_doc = xml.dom.minidom.parse(respaths.REPLACEMENTS_XML_DOC)
 
