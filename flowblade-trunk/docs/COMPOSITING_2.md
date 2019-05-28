@@ -7,11 +7,11 @@
 
   * All shape creating Alpha filters to support the standard alpha combining operations:
 
-	OVERWRITE
-	ADD
-	SUBTRACK
-	INTERSECT
-	EXCLUDE
+	* OVERWRITE
+	* ADD
+	* SUBTRACK
+	* INTERSECT
+	* EXCLUDE
 
 	Ops called LIGHTEN, DARKEN (or min, max) are excluded, to be fully useful they would require every alpha filter to have opacity parameter.
 
