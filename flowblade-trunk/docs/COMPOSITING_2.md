@@ -29,7 +29,7 @@
   * New **Wipe In** and **Wipe Out** Compositors gets same auto placement as **Fade In** and  **Fade Out** 
   *  **Wipe Out** get **Reverse** param set true
   * Individual Alpha Combiners **Alpha XOR**, **Alpha Out**, **Alpha In** replaced with a single **Porter-Duff** Compositor with all appropriate ops supported
-  * **LumatoAlpha** Compositor extended with standard alpha combining operations ops, see above
+  * **LumaToAlpha** Compositor extended with standard alpha combining operations ops, see above
 
 ## Tracks Compositing
 
