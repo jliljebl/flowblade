@@ -35,7 +35,7 @@
 
   * **Auto  Compositing**  mode added, in  which compositing is done in more common the bottom-up order.  This kills all manual composite target track handling
   * Current way named **Top Down Compositing**
-  * User can switch between these modes but we not quarantee results staying the same
+  * User can switch between these modes but we do not quarantee results staying the same
 
 
 
