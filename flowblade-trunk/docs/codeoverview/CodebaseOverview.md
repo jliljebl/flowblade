@@ -10,7 +10,7 @@ Particular attention is given to intentions behind taken design decisions. Taken
 
 Diagrams are created with PlantUML Ubuntu package from the text files present in this directory.
 
-Chanpter 2. "Viewpoints" presents different points of view into the code base and Chapter 3 "Conclusions" gives some opinions current state and future directions.
+Chanpter 2. "Viewpoints" presents different points of view into the code base and Chapter 3 "Conclusions" gives some opinions on current state and future directions.
 
 ## 2. Viewpoints
 
