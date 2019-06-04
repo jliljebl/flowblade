@@ -47,7 +47,7 @@ Since we are keeping two data structures at all times 100% synced we need to tak
 * *propertyedit.EditableProperty.write_value()*
 * *propertyedit.TransitionEditableProperty.write_value()*
 
-The reaasoning behind the approach:
+The reasoning behind the approach:
 * constraining access to MLT data structures and separating clearly Python and MLT data structures was considered cleaner and more maintainable then an approach in which the line of separation would be unclear between the two data structures
 * about 50% less Python FFI calls
 * save and load using *picle()* requires this
@@ -86,7 +86,7 @@ This diagram attempts to show the smallest possible view describing application 
 
 The question to ask here is if we need to refactor this program or not? The answer in my view is no.
 
-We have been able to add new features and fix bugs with low level of regressions. The level of regressions we get certainly below what would necessitate trying to modularize application further and to try to write a comprehensive enough test suit to combat regressions.
+We have been able to add new features and fix bugs with low level of regressions. The level of regressions we get is certainly below what would necessitate trying to modularize application further and to try to write a comprehensive enough test suit to combat regressions.
 
 Often the  defense against regressions is writing application in style where unnecessary structure is avoided and interconnections between modules is knowingly avoided if at all possible. From maintainability point of view it is better to be boring then clever.
 
