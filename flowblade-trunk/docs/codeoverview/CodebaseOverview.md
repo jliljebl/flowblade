@@ -17,7 +17,7 @@ Chanpter 2. "Viewpoints" presents different points of view into the code base an
 ### 2.1 Module design
 ![diagram 2.1](./modulesdia.png  "diagram 2.1")
 
-The main approach to structuring the Flowblade code base is simply that **modules are considered to be divided into three categories** based on number of other *internal* modules they import:
+The main approach to structuring the Flowblade code base is simply that **modules are considered to be divided into three categories** based on number of *internal* modules they import:
   * **Root Modules** import a large part of total number of modules
   * **Functional Modules** import all modules required achieve the function
   * **Leaf Modules** only import external modules (which offer clear defined interface and do not make the code base structurally more complex)
