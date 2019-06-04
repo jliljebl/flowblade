@@ -15,7 +15,7 @@ Chanpter 2. "Viewpoints" presents different points of view into the code base an
 ## 2. Viewpoints
 
 ### 2.1 Module design
-![diagram 2.1](/home/janne/codes/docs/Flowblade/plantuml/modulesdia.png  "diagram 2.1")
+![diagram 2.1](./modulesdia.png  "diagram 2.1")
 
 The main approach to structuring the Flowblade code base is simply that **modules are considered to be divided into three categories** based on number of other *internal* modules they import:
   * **Root modules** import a large part of total number of modules
@@ -33,7 +33,7 @@ Each new clearly defined functionality should be added by creating a new module 
   * *Success:* We rarely get regressions when adding new functionality or fixing bugs.
 
 ### 2.2 Data Structures
-![Data Structure](/home/janne/codes/docs/Flowblade/plantuml/datadia.png)
+![Data Structure](./datadia.png)
 Flowblade maintains at all times two 100% synced data structures: Python data structures that are mainly described in *sequence.py* and *projectsdata.py* and MLT data structures that are managed via Swig objects described in extension *mlt.py*
 
 Python data structures that are considered authoritative over MLT data structures.
@@ -53,7 +53,7 @@ The reaasoning behind the approach:
 * save and load using *picle()* requires this
 
 ### 2.3 Filter editing Pipeline
-![Data Structure](/home/janne/codes/docs/Flowblade/plantuml/filtersdia.png)
+![Data Structure](./filtersdia.png)
 
 The conceptual approach taken in filter editing related code is to view the whole process as a data modifying **pipeline.**
 
@@ -72,7 +72,7 @@ The downside is very likely that the code communicates quite badly this approach
 For anyone interested in understanding this functionality the best thing to do would probably be to go through the diagram above while reading the related code (which is given in the notes on the left, notes on the right give some additional information on each step).
 
 ### 2.4 Minimal Viable Diagram
-![Minimal viable diagram](/home/janne/codes/docs/Flowblade/plantuml/fbladedia.png)
+![Minimal viable diagram](./fbladedia.png)
 
 This diagram attempts to show the smallest possible view describing application life cycle and main editing actions.
 * *smalltext.py* names are Python modules
