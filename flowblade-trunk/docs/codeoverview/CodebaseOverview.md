@@ -18,8 +18,8 @@ Chanpter 2. "Viewpoints" presents different points of view into the code base an
 ![diagram 2.1](./modulesdia.png  "diagram 2.1")
 
 The main approach to structuring the Flowblade code base is simply that **modules are considered to be divided into three categories** based on number of other *internal* modules they import:
-  * **Root modules** import a large part of total number of modules
-  * **Functional modules** import all modules required achieve the function
+  * **Root Modules** import a large part of total number of modules
+  * **Functional Modules** import all modules required achieve the function
   * **Leaf Modules** only import external modules (which offer clear defined interface and do not make the code base structurally more complex)
 
 The goal of the design is to have the maximum amount of code in the Leaf Modules and to have as little as possible interdependence between Functional Modules.
@@ -36,11 +36,11 @@ Each new clearly defined functionality should be added by creating a new module 
 ![Data Structure](./datadia.png)
 Flowblade maintains at all times two 100% synced data structures: Python data structures that are mainly described in *sequence.py* and *projectsdata.py* and MLT data structures that are managed via Swig objects described in extension *mlt.py*
 
-Python data structures that are considered authoritative over MLT data structures.
+Python data structures are considered authoritative over MLT data structures.
 
 User edits Python data structures. GUI presents view into Python data structures *except* with monitor view which displays the output of MLT tractor producer.
 
-Python data structures are copied into MLT data a structures that create the viewable and renderable media output. MLT data structures are destroyed on save and recreated on load.
+Python data structures are copied into MLT data structures that create the viewable and renderable media output. MLT data structures are destroyed on save and recreated on load.
 
 Since we are keeping two data structures at all times 100% synced we need to take extra care that at no point do the data structures deviate. This is done by constraining writing to both data structures into very few code locales, main ones being:
 * *edit.py* lines 50 - 90 (marked *atomic edit ops*)
@@ -92,7 +92,7 @@ Often the  defense against regressions is writing application in style where unn
 
 ### 3.2 Future directions
 
-There is a number of ways we could look to improve the code base structurally:
+There are number of ways we could look to improve the code base structurally:
 * drop as much as possible code into Leaf Modules
 * remove imports from modules by creating new smaller modules with fewer or zero (internal) imports
 * *editorstate.py* could made smaller by taking same multimodule state into smaller modules like maybe *monitorstate.py* and leaving only the truly global state in *editorstate.py*
@@ -100,4 +100,4 @@ There is a number of ways we could look to improve the code base structurally:
 * expand this document with some further view points
 * because Python does not have multi-module package structure dividing modules in multiple folders would only be done for readability reasons but this can be considered down the line
 
-We accept quality pull requests against this document. You can suggest expansions on areas you feel could use further clarification by creating an *Issue.*
+We accept correct pull requests against this document. You can suggest expansions on areas you feel could use further clarification by creating a GitHub *Issue.*
