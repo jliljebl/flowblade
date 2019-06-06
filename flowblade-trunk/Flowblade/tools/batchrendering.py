@@ -621,6 +621,8 @@ def get_render_range(render_item):
     else: # both start and end defined
         start_frame = render_item.mark_in
         end_frame = render_item.mark_out
+        if render_item.length - 2 < end_frame:
+            end_frame = render_item.length - 2
         wait_for_stop_render = False
     
     return (start_frame, end_frame, wait_for_stop_render)

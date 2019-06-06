@@ -69,7 +69,7 @@ def _load_profiles_list(dir_path):
         profile.file_path = file_path
         load_profiles.append([profile.description(), profile])
 
-        print profile.description(), fname
+        #print profile.description(), fname
 
         # Feb-2017 - SvdB - Filter out duplicate profiles based on profile name
         for enu_count, prof in enumerate(load_profiles):
@@ -178,7 +178,7 @@ def get_closest_matching_profile_index(producer_info):
     fps_den = producer_info["fps_den"]
     progressive = producer_info["progressive"]
     fps = round(float(float(fps_num)/float(fps_den)), 1)
-    fps_2 = round(float(float(fps_num)/float(fps_den)), 2) # We added as a fix later for #290, fix might have been done some other way
+    fps_2 = round(float(float(fps_num)/float(fps_den)), 2) # We added as a fix later for #290
     
     # We calculate match score for all available profiles and return 
     # the one with the highest score
@@ -194,15 +194,15 @@ def get_closest_matching_profile_index(producer_info):
         prof_fps_den = profile.frame_rate_den()
         prof_progressive = profile.progressive()
         prof_fps = round(float(float(prof_fps_num)/float(prof_fps_den)), 1)
-        prof_fps_2 = round(float(float(prof_fps_num)/float(prof_fps_den)), 2) # We added this as a fix later for #290, fix might have been done some other way
+        prof_fps_2 = round(float(float(prof_fps_num)/float(prof_fps_den)), 2) # We added this as a fix later for #290
         
         if width == prof_width and height == prof_height:
             match_score = match_score + 1000
-        if (width * 2) < prof_width or (height * 2) < prof_height:
+        if (width * 2) < prof_width or (height * 2) < prof_height: # We some time got matches where given profile was hugely different size if other properties matched
             match_score = match_score - 500
         if fps == prof_fps:
             match_score = match_score + 100
-        if fps_2 == prof_fps_2: # We added this as a fix later for #290, fix might have been done some other way
+        if fps_2 == prof_fps_2: # We added this as a fix later for #290
             match_score = match_score + 5
         if prof_progressive: # prefer progressive always
             match_score = match_score + 10
