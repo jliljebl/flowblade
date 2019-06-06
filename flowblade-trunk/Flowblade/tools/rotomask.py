@@ -155,7 +155,7 @@ class RotoMaskEditor(Gtk.Window):
         allow_adding_check = Gtk.CheckButton()
         allow_adding_check.set_active(False) # This shows value of self.roto_mask_layer.allow_adding_points, False is default
         allow_adding_check.connect("toggled", self.allow_adding_toggled)
-        allow_adding_label = Gtk.Label(_("Allow to add points to closed masks"))
+        allow_adding_label = Gtk.Label(_("Allow to add / delete points to closed masks"))
         
         save_rotodata_b = guiutils.get_sized_button(_("Close Tool"), 150, 32)
         save_rotodata_b.connect("clicked", lambda w:self._save_rotodata_pressed())
@@ -247,12 +247,6 @@ class RotoMaskEditor(Gtk.Window):
         self.tc_display.set_frame(tline_frame)
         self.view_editor.edit_area.queue_draw()
 
-    """
-    def size_allocate(self):
-        print "size_allocate"
-        #self.connect("size-allocate", lambda w, e:self.window_resized())
-    """
-
     def window_resized(self):
         scale = self.scale_selector.get_current_scale()
         self.scale_changed(scale)
@@ -306,8 +300,9 @@ class RotoMaskEditor(Gtk.Window):
     def key_down(self, widget, event):
         #  Handle non-timeline delete 
         if event.keyval == Gdk.KEY_Delete:
-            self.roto_mask_layer.delete_selected_point()
-            return True
+            if self.roto_mask_layer.allow_adding_points == True: # allow_adding_points controls deleting too
+                self.roto_mask_layer.delete_selected_point()
+                return True
             
         if event.keyval == Gdk.KEY_Left:
             PLAYER().seek_delta(-1)
