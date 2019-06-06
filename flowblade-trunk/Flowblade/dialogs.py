@@ -1489,6 +1489,12 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     geom_vbox.pack_start(_get_kb_row(_("Shift"), _("Snap to X or Y of drag start point")), False, False, 0)
     geom = guiutils.get_named_frame(_("Geometry Editor"), geom_vbox)
 
+    roto_vbox = Gtk.VBox()
+    roto_vbox.pack_start(_get_kb_row(_("Delete"), _("Deletes Selected Handle")), False, False, 0)
+    roto_vbox.pack_start(_get_kb_row(_("Left Arrow "), _("Previous Frame")), False, False, 0)
+    roto_vbox.pack_start(_get_kb_row(_("Right Arrow"), _("Next Frame")), False, False, 0)
+    roto = guiutils.get_named_frame(_("RotoMask Editor"), roto_vbox)
+    
     panel = Gtk.VBox()
     panel.pack_start(tools, False, False, 0)
     panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
@@ -1501,7 +1507,9 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     panel.pack_start(general, False, False, 0)
     panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
     panel.pack_start(geom, False, False, 0)
-
+    panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
+    panel.pack_start(roto, False, False, 0)
+    
     return panel
 
 def _get_dynamic_kb_row(root_node, code):
