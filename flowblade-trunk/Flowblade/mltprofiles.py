@@ -69,6 +69,8 @@ def _load_profiles_list(dir_path):
         profile.file_path = file_path
         load_profiles.append([profile.description(), profile])
 
+        print profile.description(), fname
+
         # Feb-2017 - SvdB - Filter out duplicate profiles based on profile name
         for enu_count, prof in enumerate(load_profiles):
             for prof_idx, prof_name in enumerate(prof):

@@ -1,8 +1,8 @@
-description=HD 1080p 23.98 fps
-frame_rate_num=24000
-frame_rate_den=1001
-width=1920
-height=1080
+description=2.5K QHD 1440p 50 fps
+frame_rate_num=50
+frame_rate_den=1
+width=2560
+height=1440
 progressive=1
 sample_aspect_num=1
 sample_aspect_den=1

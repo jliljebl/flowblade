@@ -1,5 +1,5 @@
-description=HD 1080p 23.98 fps
-frame_rate_num=24000
+description=HD 1080p 59.94 fps
+frame_rate_num=60000
 frame_rate_den=1001
 width=1920
 height=1080
