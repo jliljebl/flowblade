@@ -725,5 +725,6 @@ class EffectValuesSaveData:
          
         filter_object.properties = copy.deepcopy(self.properties)
         filter_object.non_mlt_properties = copy.deepcopy(self.non_mlt_properties)
+        filter_object.update_mlt_filter_properties_all()
          
     
