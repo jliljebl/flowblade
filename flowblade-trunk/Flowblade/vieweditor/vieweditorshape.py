@@ -413,6 +413,7 @@ class RotoMaskEditShape(EditPointShape):
         if self.block_shape_updates == True:
             return
 
+
         # We're not using timeline frame for shape, we're using clip frame.
         frame = self.clip_editor.current_clip_frame
 
@@ -614,25 +615,28 @@ class RotoMaskEditShape(EditPointShape):
             return None
             
     def get_bezier_points_for_frame(self, current_frame):
+
         # We're replicating stuff from MLT file filter_rotoscoping.c to make sure out GUI matches the results there.
         keyframes = self.clip_editor.keyframes
+        
+        # If single keyframe, just return values of that 
+        if len(keyframes) < 2:
+            keyframe, bz_points = keyframes[0]
+            return bz_points
 
         # if current_frame after last keyframe, use last kayframe for values, no continued interpolation
-
         last_keyframe = 0
         for kf_tuple in self.clip_editor.keyframes:
             keyframe, bz_points = kf_tuple
             if keyframe > last_keyframe:
                 last_keyframe = keyframe
         
-        if current_frame > last_keyframe:
-            current_frame = last_keyframe
-
+        # More of the last keyframe value fix, code below this block isn't getting the value for last kf and frames after that right
+        l_keyframe, l_bz_points = self.clip_editor.keyframes[-1]       
+        if current_frame >= last_keyframe:
+            return l_bz_points
+        
         # Get keyframe range containing current_frame
-        if len(keyframes) < 2:
-            keyframe, bz_points = keyframes[0]
-            return bz_points
-
         for i in range(0, len(keyframes) - 1):
             keyframe, bz_points = keyframes[i]
             keyframe_next, bz_points2 = keyframes[i + 1] # were quaranteed to have at least 2 keyframes when getting here
