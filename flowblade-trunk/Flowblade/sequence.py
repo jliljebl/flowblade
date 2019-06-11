@@ -862,22 +862,23 @@ class Sequence:
 
     def resize_tracks_to_fit(self, allocation):
         x, y, w, panel_height = allocation.x, allocation.y, allocation.width, allocation.height
-        count = 0
+        track_id = 1
         fix_next = True
         while(fix_next):
             tracks_height = self.get_tracks_height()
             if tracks_height < panel_height:
                 fix_next = False
-            elif count + 1 == self.first_video_index:
+            elif track_id == self.first_video_index:
+                # V1 should stay large and everything should still fit
+                track_id += 1
+                continue
+            elif track_id == len(self.tracks) - 2:
                 # This shold not happen because track heights should be set up so that minimized app 
-                # has enough space to display all tracks.
-                # Yet it happens sometimes, meh.
-                print "sequence.resize_tracks_to_fit (): could not make tracks fit in timeline vertical space"
                 fix_next = False
+                print "sequence.resize_tracks_to_fit (): could not make tracks fit in timeline vertical space"
             else:
-                self.tracks[1 + count].height = TRACK_HEIGHT_SMALL
-                self.tracks[len(self.tracks) - 2 - count].height = TRACK_HEIGHT_SMALL
-                count += 1
+                self.tracks[track_id].height = TRACK_HEIGHT_SMALL
+                track_id += 1
 
     def find_next_cut_frame(self, tline_frame):
         """
