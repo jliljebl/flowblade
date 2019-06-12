@@ -109,6 +109,7 @@ class RotoMaskEditor(Gtk.Window):
         editor_widgets = property_editor_widgets_create_func()
         
         self.block_updates = False
+        self.mask_create_freeze = False # We are not allowing user to change acrive kf when creating mask
 
         self.kf_editor = kf_editor
         self.kf_editor.set_parent_editor(self)
@@ -220,6 +221,8 @@ class RotoMaskEditor(Gtk.Window):
         self.connect("key-press-event", self.key_down)
         self.window_resized()
 
+        self.update_mask_create_freeze_gui()
+
     def mask_type_selection_changed(self, combo_box):
         if combo_box.get_active() == 0:
             self.roto_mask_layer.edit_point_shape.set_mask_type(vieweditorshape.CURVE_MASK)
@@ -320,3 +323,14 @@ class RotoMaskEditor(Gtk.Window):
             
         # Key event was not handled here.
         return False
+
+    def update_mask_create_freeze_gui(self):
+        if self.roto_mask_layer.edit_point_shape.closed == True:
+            self.mask_create_freeze = False
+        elif len(self.roto_mask_layer.edit_point_shape.curve_points) == 0:
+            self.mask_create_freeze = False
+        else:
+            self.mask_create_freeze = True
+
+        self.kf_editor.set_active(not self.mask_create_freeze)
+                

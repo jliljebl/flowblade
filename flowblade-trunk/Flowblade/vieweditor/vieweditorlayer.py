@@ -285,7 +285,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
 
         self.allow_adding_points = False
 
-        self.edit_point_shape = vieweditorshape.RotoMaskEditShape(view_editor, clip_editor)
+        self.edit_point_shape = vieweditorshape.RotoMaskEditShape(view_editor, clip_editor, rotomask_editor)
         self.edit_point_shape.update_shape()
 
         #self.block_shape_update = False 
@@ -336,6 +336,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
                         len(self.edit_point_shape.curve_points) > 2):
                         self.edit_point_shape.closed = True
                         self.edit_point_shape.maybe_force_line_mask(True) # We start with line mask curve points
+                        self.rotomask_editor.update_mask_create_freeze_gui() # Shape closed unfreeze GUI
                     else:
                         # Point pressed, we are moving it
                         self.edit_point_shape.clear_selection()
@@ -381,6 +382,8 @@ class RotoMaskEditLayer(AbstactEditorLayer):
                         self.rotomask_editor.show_current_frame()
                     else:
                         self.add_edit_point(len(self.edit_point_shape.curve_points), self.mouse_press_panel_point)
+                    
+                    self.rotomask_editor.update_mask_create_freeze_gui() 
 
         self.clip_editor.widget.queue_draw()
             

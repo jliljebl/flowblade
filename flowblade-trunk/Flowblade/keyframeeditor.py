@@ -73,6 +73,7 @@ GEOM_EDITOR_SIZES = [GEOM_EDITOR_SIZE_LARGE, GEOM_EDITOR_SIZE_MEDIUM, GEOM_EDITO
 # Colors
 POINTER_COLOR = (1, 0.3, 0.3)
 CLIP_EDITOR_BG_COLOR = (0.7, 0.7, 0.7)
+CLIP_EDITOR_NOT_ACTIVE_BG_COLOR = (0.4, 0.4, 0.4)
 LIGHT_MULTILPLIER = 1.14
 DARK_MULTIPLIER = 0.74
 
@@ -116,7 +117,9 @@ class ClipKeyFrameEditor:
         self.widget.release_func = self._release_event
 
         self.clip_length = editable_property.get_clip_length() - 1
-        
+
+        self.active = True
+    
         # Some filters start keyframes from *MEDIA* frame 0
         # Some filters or compositors start keyframes from *CLIP* frame 0
         # Filters starting from *MEDIA* 0 need offset 
@@ -197,6 +200,8 @@ class ClipKeyFrameEditor:
         
         # Draw clip bg  
         cr.set_source_rgb(*CLIP_EDITOR_BG_COLOR)
+        if self.active == False:
+            cr.set_source_rgb(*CLIP_EDITOR_NOT_ACTIVE_BG_COLOR)
         cr.rectangle(END_PAD, TOP_PAD, active_width, active_height)
         cr.fill()
 
@@ -313,6 +318,9 @@ class ClipKeyFrameEditor:
             self._show_oor_after_menu(self.widget, event)
             return
         
+        if self.active == False:
+            return
+        
         # Handle clip range mouse events
         self.drag_on = True
 
@@ -350,6 +358,9 @@ class ClipKeyFrameEditor:
         """
         Mouse move callback
         """
+        if self.active == False:
+            return
+            
         lx = self._legalize_x(x)
         
         if self.current_mouse_action == POSITION_DRAG:
@@ -371,6 +382,9 @@ class ClipKeyFrameEditor:
         """
         Mouse release callback.
         """
+        if self.active == False:
+            return
+
         lx = self._legalize_x(event.x)
 
         if self.current_mouse_action == POSITION_DRAG:
@@ -660,6 +674,9 @@ class ClipKeyFrameEditor:
         return item
         
 
+    def set_active(self, active):
+        self.active = active
+ 
 # ----------------------------------------------------------- buttons objects
 class ClipEditorButtonsRow(Gtk.HBox):
     """
@@ -745,6 +762,15 @@ class ClipEditorButtonsRow(Gtk.HBox):
         active_index, total = info
         self.kf_info_label.set_text(str(active_index + 1) + "/" + str(total))
 
+    def set_active(self, active):
+        self.add_button.set_sensitive(active)
+        self.delete_button.set_sensitive(active)
+        self.prev_kf_button.set_sensitive(active)
+        self.next_kf_button.set_sensitive(active)
+        self.prev_frame_button.set_sensitive(active)
+        self.next_frame_button.set_sensitive(active)
+        self.kf_to_prev_frame_button.set_sensitive(active)
+        self.kf_to_next_frame_button.set_sensitive(active)
 
 class GeometryEditorButtonsRow(Gtk.HBox):
     def __init__(self, editor_parent):
@@ -1496,7 +1522,11 @@ class RotoMaskKeyFrameEditor(Gtk.VBox):
     def seek_tline_frame(self, clip_frame):
         PLAYER().seek_frame(self.clip_tline_pos + clip_frame - self.clip_in)
     
-        
+    def set_active(self, active):
+        self.buttons_row.set_active(active)
+        self.clip_editor.set_active(active)
+        self.clip_editor.widget.queue_draw()
+
 # ----------------------------------------------------------------- POSITION NUMERICAL ENTRY WIDGET
 class PositionNumericalEntries(Gtk.HBox):
     

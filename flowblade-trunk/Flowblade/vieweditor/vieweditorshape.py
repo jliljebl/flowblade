@@ -339,7 +339,7 @@ class RotoMaskEditShape(EditPointShape):
     """
     A Bezier spline creating a closed area.
     """
-    def __init__(self, view_editor, clip_editor):
+    def __init__(self, view_editor, clip_editor, rotomask_editor):
         EditPointShape.__init__(self)
         
         self.mask_type = CURVE_MASK
@@ -355,7 +355,8 @@ class RotoMaskEditShape(EditPointShape):
             
         self.clip_editor = clip_editor # This is keyframeeditor.ClipKeyFrameEditor
         self.view_editor = view_editor # This is viewEditor.ViewEditor
-
+        self.rotomask_editor = rotomask_editor
+        
         keyframe, bz_points = clip_editor.keyframes[0]
         if len(bz_points) > 2:
             self.closed = True
@@ -406,6 +407,7 @@ class RotoMaskEditShape(EditPointShape):
     
         if len(bz_points) < 3:
             self.closed = False # 2 points can't create a closed polygon/curve
+            self.rotomask_editor.update_mask_create_freeze_gui() # Freeze GUI
 
         self.update_shape()
 
