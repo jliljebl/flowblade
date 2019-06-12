@@ -591,7 +591,19 @@ class ClipKeyFrameEditor:
 
         self.set_active_kf_frame(frame)
         self.current_clip_frame = frame    
+    
+    def maybe_set_first_kf_in_clip_area_active(self):
+        index = 0
+        for kf in self.keyframes:
+            kf_frame, val = kf
         
+            if kf_frame >= self.clip_in:
+                 self.active_kf_index = index
+                 self._set_pos_to_active_kf()
+                 break
+                 
+            index += 1
+    
     def set_active_kf_frame(self, new_frame):
         frame, val = self.keyframes.pop(self.active_kf_index)
         self.keyframes.insert(self.active_kf_index,(new_frame, val))

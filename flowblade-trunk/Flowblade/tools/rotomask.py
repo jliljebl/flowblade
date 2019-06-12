@@ -221,6 +221,8 @@ class RotoMaskEditor(Gtk.Window):
         self.connect("key-press-event", self.key_down)
         self.window_resized()
 
+        self.kf_editor.clip_editor.maybe_set_first_kf_in_clip_area_active()
+
         self.update_mask_create_freeze_gui()
 
     def mask_type_selection_changed(self, combo_box):
