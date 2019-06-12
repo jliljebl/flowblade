@@ -332,5 +332,5 @@ class RotoMaskEditor(Gtk.Window):
         else:
             self.mask_create_freeze = True
 
-        self.kf_editor.set_active(not self.mask_create_freeze)
+        self.kf_editor.set_editor_sensitive(not self.mask_create_freeze)
                 
