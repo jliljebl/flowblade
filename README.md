@@ -2,11 +2,7 @@
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
 
-**New release 2.0 out now.**
-
-**[Installing new version.](https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/INSTALLING.md)**
-
-**[Release notes.](./flowblade-trunk/docs/RELEASE_NOTES.md)**
+**Project on summer break. Activity resumes in August.**
 
  
 **Contents:**
@@ -65,7 +61,7 @@ Flowblade offers a configurable workflow - toolset, its order, default tool and 
 
 **Latest release:** Flowblade Movie Editor 2.0 was released on february 2019.
 
-**Next release:** Flowblade Movie Editor 2.2 is planned for release in June 2019.
+**Next release:** Flowblade Movie Editor 2.2 is planned for release in August 2019.
 
 # Installing Flowblade
 
