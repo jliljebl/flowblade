@@ -5,19 +5,19 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Flowblade 2.0\n"
+"Project-Id-Version: Flowblade 2.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-06-24 18:22+0300\n"
-"PO-Revision-Date: 2019-01-25 17:06+0300\n"
+"PO-Revision-Date: 2019-06-24 20:48+0300\n"
 "Last-Translator: Николай Смольянинов <smolianinow.colya2016@yandex.ru>\n"
 "Language-Team: vk.com/flowblade\n"
-"Language: ru_RU\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; chrset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 1.8.11\n"
+"X-Generator: Poedit 2.2.1\n"
 
 #: app.py:841
 msgid "Too small screen for this application."
@@ -25,7 +25,7 @@ msgstr "Недостаточное разрешение экрана."
 
 #: app.py:844
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
-msgstr "Разрешение экрана должно быть не ниже 1152 х 768.\n"
+msgstr "Минимальное разрешение экрана должно быть не ниже 1152 х 768.\n"
 
 #: app.py:845
 msgid "Your screen dimensions are "
@@ -33,7 +33,7 @@ msgstr "Ваше разрешение экрана "
 
 #: app.py:878 projectaction.py:395 projectaction.py:715
 msgid "Project has not been saved previously"
-msgstr "Проект не сохранён"
+msgstr "Проект не был сохранён"
 
 #: app.py:879 projectaction.py:396 projectaction.py:716
 msgid "Save project with File -> Save As before closing."
@@ -41,7 +41,7 @@ msgstr "Сохраните проект перед закрытием (Файл 
 
 #: projectaction.py:132
 msgid "Media asset was missing!"
-msgstr "Утеряны медиафайлы!"
+msgstr "Медиафайлы утеряны!"
 
 #: projectaction.py:133
 msgid "Path of missing asset:"
@@ -87,14 +87,13 @@ msgid ""
 "the same Description\n"
 "as the missing profile. "
 msgstr ""
-"Можно загрузить проект путём создания профиля с тем же содержанием, что "
-"было\n"
+"Можно загрузить проект путём создания профиля с тем же содержимым, что было\n"
 " в утерянном профиле. "
 
 #: projectaction.py:159
 msgid "User Profiles can be created by selecting 'Edit->Profiles Manager'."
 msgstr ""
-"Профили пользователей можно создать через меню «Правка ⇨ Менеджер профилей»."
+"Пользовательские профили создаются через меню «Правка ⇨ Менеджер профилей»."
 
 #: projectaction.py:166
 msgid "Opening"
@@ -129,7 +128,7 @@ msgid ""
 "When saving a back-up snapshot of the project, the selected folder\n"
 "has to be empty."
 msgstr ""
-"При сохранении резервной копии проекта, выбираемая папка\n"
+"Для сохранения резервной копии проекта, выбиранная папка\n"
 "должна быть пустой."
 
 #: projectaction.py:568
@@ -146,11 +145,11 @@ msgstr "Проект не найден"
 
 #: projectaction.py:729
 msgid "Project can't be loaded."
-msgstr "Невозможно загрузить проект."
+msgstr "Не удалось загрузить проект."
 
 #: projectaction.py:737
 msgid "Project has not been saved since it was opened."
-msgstr "Открыт несохранённый проект."
+msgstr "Открытый проект не был сохранён."
 
 #: projectaction.py:742
 msgid "Project was saved less than a minute ago."
@@ -228,14 +227,12 @@ msgid "No Target Bins"
 msgstr "Нет целевых корзин"
 
 #: projectaction.py:901
-#, fuzzy
 msgid "Append All Media to Timeline"
-msgstr "Вставить отображаемые участки на монтажный стол"
+msgstr "Добавить все клипы на монтажный стол"
 
 #: projectaction.py:902
-#, fuzzy
 msgid "Append Selected Media to Timeline"
-msgstr "Отправить выбранное медиа в корзину"
+msgstr "Добавить выбранные клипы на монтажный стол"
 
 #: projectaction.py:931 editorwindow.py:235
 msgid "Add Video, Audio or Image..."
@@ -251,7 +248,7 @@ msgstr "Открыть.."
 
 #: projectaction.py:978
 msgid "Opening .mlt or .xml file as media was disallowed!"
-msgstr "Не удаётся открыть файл  .mlt или .xml в качестве носителя!"
+msgstr "Не удаётся открыть файл .mlt или .xml в качестве носителя!"
 
 #: projectaction.py:979
 msgid ""
@@ -259,7 +256,7 @@ msgid ""
 "opening MLT XML files\n"
 "it is not allowed to open these files as media."
 msgstr ""
-"Из-за текущего поведения MLT переписывания свойств проекта при открытии "
+"Из-за текущего поведения MLT переписывающего свойства проекта при открытии "
 "файлов MLT \n"
 " XML запрещено открывать эти файлы в качестве носителя."
 
@@ -319,14 +316,13 @@ msgid "Save Sequence Compound Clip"
 msgstr "Сохранить последовательность составного клипа"
 
 #: projectaction.py:1342
-#, fuzzy
 msgid "frame_"
-msgstr "кадра(ов)"
+msgstr "кадр_"
 
 #: projectaction.py:1343
 #, fuzzy
 msgid "Save Freeze Frame Sequence Compound Clip"
-msgstr "Сохранить последовательность составного клипа"
+msgstr "Сохранить стоп-кадр последовательности соединение клип"
 
 #: projectaction.py:1422 editorwindow.py:239
 msgid "Add Bin"
@@ -358,7 +354,7 @@ msgstr "Вниз"
 
 #: projectaction.py:1491
 msgid "Can't remove a non-empty bin"
-msgstr "Ошибка удаления корзины"
+msgstr "Ошибка при удалении корзины"
 
 #: projectaction.py:1492
 msgid "You must remove all files from the bin before deleting it."
@@ -370,7 +366,7 @@ msgstr "Нельзя удалить последнюю корзину"
 
 #: projectaction.py:1501
 msgid "There must always exist at least one bin."
-msgstr "В проекте всегда должна быть хотя бы одна корзина."
+msgstr "Всегда должна оставаться хотя бы одна корзина."
 
 #: projectaction.py:1599
 msgid "Selected sequence is already being edited"
@@ -401,7 +397,7 @@ msgid ""
 "Are you sure you want to delete\n"
 "sequence '"
 msgstr ""
-"Вы уверены, что хотите удалить\n"
+"Уверены, что хотите удалить\n"
 "последовательность '"
 
 #: projectaction.py:1680
@@ -410,7 +406,7 @@ msgstr "'?"
 
 #: projectaction.py:1681
 msgid "This operation can not be undone. Sequence will be permanently lost."
-msgstr "Эта операция не может быть отменена. Последовательность будет утеряна."
+msgstr "Эту операцию невозможно отменить. Последовательность будет утеряна."
 
 #: projectaction.py:1707
 msgid "Can't remove last sequence"
@@ -418,7 +414,7 @@ msgstr "Нельзя удалить последнюю последовател�
 
 #: projectaction.py:1708
 msgid "There must always exist at least one sequence."
-msgstr "Должно быть, не менее одной последовательности."
+msgstr "Всегда должна оставаться хотя бы одна последовательность."
 
 #: editorwindow.py:189
 msgid "_File"
@@ -458,7 +454,7 @@ msgstr "MLT XML"
 
 #: editorwindow.py:198
 msgid "EDL"
-msgstr "Монтажный лист"
+msgstr "Монтажный лист (EDL)"
 
 #: editorwindow.py:199
 msgid "Current Frame"
@@ -656,7 +652,7 @@ msgstr "Из текущей последовательности"
 #: editorwindow.py:254
 #, fuzzy
 msgid "From Current Sequence With Freeze Frame at Playhead Position"
-msgstr "Разрезать последовательность по курсору"
+msgstr "Из текущей последовательности со стоп-кадром в позиции воспроизведения"
 
 #: editorwindow.py:255
 msgid "Audio Sync Merge Clip From 2 Media Items "
@@ -892,9 +888,8 @@ msgid "Set trim view and match frames"
 msgstr "Просмотр обрезки и соответствия кадров"
 
 #: editorwindow.py:1118
-#, fuzzy
 msgid "Sequence / Media current frame timecode"
-msgstr "Тайм-код текущего кадра последовательности/медиа в предпросмотре"
+msgstr "Тайм-код текущего кадра Последовательности/Медиа"
 
 #: editorwindow.py:1119
 msgid "Current Sequence / Clip name and length"
@@ -942,7 +937,7 @@ msgstr "Удалить эффект из стека эффектов клипа"
 
 #: clipeffectseditor.py:261
 msgid "Toggle all Filters On/Off"
-msgstr "Включить/выключить все эффекты"
+msgstr "Вкл./Выкл. все эффекты"
 
 #: clipeffectseditor.py:449
 msgid "No Clip"
@@ -966,11 +961,11 @@ msgstr "Сохранённые данные не применимы для эт�
 
 #: clipeffectseditor.py:674 compositeeditor.py:357
 msgid "Saved data is for "
-msgstr "Сохраненные данные для "
+msgstr "Сохранённые данные для "
 
 #: clipeffectseditor.py:674
 msgid "current edited Filter is "
-msgstr "текущего отредактированного эффекта "
+msgstr "текущего изменённого эффекта "
 
 #: compositeeditor.py:67 compositeeditor.py:166
 msgid "No Compositor"
@@ -994,7 +989,7 @@ msgstr "_параметры_композитора"
 
 #: compositeeditor.py:356
 msgid "Saved Compositor data not applicaple for this compositor!"
-msgstr "Сохранённые данные не применимы для этого композитора!"
+msgstr "Сохранённые данные неприменимы к этому композитору!"
 
 #: compositeeditor.py:357
 msgid ", current compositor is "
@@ -1044,11 +1039,11 @@ msgstr "Дорожки"
 
 #: dialogs.py:97
 msgid "Copying user data to XDG folders"
-msgstr ""
+msgstr "Копирование пользовательских данных в папки XDG"
 
 #: dialogs.py:98
 msgid "This can take up to a few minutes, please wait..."
-msgstr ""
+msgstr "Это может занять несколько минут, подождите..."
 
 #: dialogs.py:123 dialogs.py:181
 msgid "Change Project Profile"
@@ -1063,8 +1058,8 @@ msgid ""
 "Project Profile can only changed by saving a version\n"
 "with different profile."
 msgstr ""
-"Профиль проекта изменится только сохранением версии\n"
-"другого профиля."
+"Изменение профиля проекта возможно, только после\n"
+"сохранения текущего варианта профиля."
 
 #: dialogs.py:144
 msgid "New Profile"
@@ -1175,7 +1170,7 @@ msgstr "Сохранение данных переменного окружен�
 
 #: dialogs.py:418
 msgid "Can't make home folder render clips folder"
-msgstr "Не удалось создать папку сборки клипов в домашней папке"
+msgstr "Невозможно создать папку сборки клипов в домашней папке"
 
 #: dialogs.py:419
 msgid "Please create and select some other folder then '"
@@ -1223,7 +1218,7 @@ msgstr "Разработчики:"
 
 #: dialogs.py:532
 msgid "Contributors:"
-msgstr "Авторы:"
+msgstr "Вкладчики:"
 
 #: dialogs.py:562
 msgid "Translations by:"
@@ -1351,7 +1346,7 @@ msgstr "Обновление данных о длительности медиа
 
 #: dialogs.py:782
 msgid "Comparing Audio Data..."
-msgstr ""
+msgstr "Сравнение звуковых данных..."
 
 #: dialogs.py:821
 msgid "Are you sure you want to delete these media files?"
@@ -1524,7 +1519,7 @@ msgstr "Имя последовательности:"
 
 #: dialogs.py:998
 msgid "Open For Editing:"
-msgstr "Открыть для редактирования:"
+msgstr "Открыть для правки:"
 
 #: dialogs.py:1021
 msgid "Rename New Media Object"
@@ -1596,7 +1591,7 @@ msgstr "Имя маркера клипа в "
 
 #: dialogs.py:1170
 msgid "Alpha Filters Info"
-msgstr "Информация о работе с эффектами альфа"
+msgstr "Сведения о работе с эффектами альфа"
 
 #: dialogs.py:1174
 msgid "You are adding <b>Alpha Filter '"
@@ -1607,8 +1602,9 @@ msgid ""
 "'</b> into a clip. Here is some info on how <b>Alpha Filters</b> work on "
 "Flowblade:"
 msgstr ""
-"'</b> в клип. Ниже предоставлена некоторая информация о том,\n"
-"как  <b>эффекты альфа</b> работают в Flowblade:"
+"'</b> в клип. Ниже предоставлены некоторые сведения о том, как <b>эффекты "
+"альфа</b>\n"
+"работают в Flowblade:"
 
 #: dialogs.py:1178
 msgid " <b>Alpha Filters</b> work by modifying image's alpha channel.\n"
@@ -1774,9 +1770,8 @@ msgid "DELETE"
 msgstr "DEL"
 
 #: dialogs.py:1428
-#, fuzzy
 msgid "Control + DELETE"
-msgstr "Ctrl + L"
+msgstr "Ctrl + Delete"
 
 #: dialogs.py:1435
 msgid "Control + C"
@@ -1828,16 +1823,15 @@ msgstr "Вперёд на 10 кадров"
 
 #: dialogs.py:1452
 msgid "Mouse Double Click"
-msgstr ""
+msgstr "Двойной щелчок мыши"
 
 #: dialogs.py:1452
-#, fuzzy
 msgid "Toggle Track Height"
-msgstr "Высота дорожек:"
+msgstr "Изменить высоту дорожки"
 
 #: dialogs.py:1453
 msgid "Track Head Column"
-msgstr ""
+msgstr "Область столбцов дорожек"
 
 #: dialogs.py:1462
 msgid "Move Back 10 Frames"
@@ -1860,14 +1854,12 @@ msgid "Playback"
 msgstr "Воспроизведение"
 
 #: dialogs.py:1475
-#, fuzzy
 msgid "Keypad 1-9"
-msgstr "Клавиши 1-7"
+msgstr "Клавиши 1-9"
 
 #: dialogs.py:1475
-#, fuzzy
 msgid "Same as 1-9"
-msgstr "Аналогично 1-7"
+msgstr "То же, что 1-9"
 
 #: dialogs.py:1479
 msgid "Move Source Video Left 1px"
@@ -1962,6 +1954,7 @@ msgstr "Удалить"
 
 #: dialogs.py:1493
 #, fuzzy
+#| msgid "Delete Selected Bin"
 msgid "Deletes Selected Handle"
 msgstr "Удалить выбранную корзину"
 
@@ -1974,9 +1967,8 @@ msgid "Next Frame"
 msgstr "Следующий кадр"
 
 #: dialogs.py:1496
-#, fuzzy
 msgid "RotoMask Editor"
-msgstr "Закрыть редактор"
+msgstr "Редактор блуждающей маски"
 
 #: dialogs.py:1530
 msgid "Sequence Watermark"
@@ -2481,7 +2473,7 @@ msgstr "Собрать прокси"
 
 #: guicomponents.py:2020
 msgid "Toggle Active"
-msgstr "Переключатель активен"
+msgstr "Вкл/Выкл эффект"
 
 #: guicomponents.py:2021
 msgid "Reset Values"
@@ -2489,11 +2481,11 @@ msgstr "Сбросить параметры"
 
 #: guicomponents.py:2023
 msgid "Move Up"
-msgstr "Переместить вверх"
+msgstr "Поднять"
 
 #: guicomponents.py:2024
 msgid "Move Down"
-msgstr "Переместить вниз"
+msgstr "Опустить"
 
 #: guicomponents.py:2032
 msgid "Display In Clip Monitor"
@@ -2621,9 +2613,8 @@ msgid "Snapping On"
 msgstr "Привязка"
 
 #: guicomponents.py:2625
-#, fuzzy
 msgid "Audio scrubbing"
-msgstr "Кодирование звука:"
+msgstr "Очистка звука"
 
 #: guicomponents.py:2634
 msgid "Display All Audio Levels"
@@ -2771,7 +2762,7 @@ msgstr "7 Столбцов"
 
 #: guicomponents.py:2984
 msgid "Display Timeline / Clip on Monitor"
-msgstr "Просмотр клипа с Монтажного стола / из «Медиа»"
+msgstr "Просмотр клипа с Монтажного стола / из Медиа"
 
 #: movemodes.py:668
 msgid "Can't do edit on a locked track"
@@ -2974,7 +2965,7 @@ msgstr "Загрузка миниатюр"
 
 #: persistance.py:713 persistance.py:733
 msgid "Relative file search for "
-msgstr "Относительный поиск файла"
+msgstr "Относительный поиск файла "
 
 #: projectdata.py:76
 msgid "untitled"
@@ -3191,11 +3182,11 @@ msgstr "Изменение шага"
 
 #: translations.py:155
 msgid "Distort - Barry's Satan"
-msgstr "Искажение - Barry's Satan"
+msgstr "Искажение (Barry's Satan)"
 
 #: translations.py:156
 msgid "Frequency Shift - Bode/Moog"
-msgstr "Смещение частоты - Bode/Moog"
+msgstr "Смещение частоты (Bode/Moog)"
 
 #: translations.py:157
 msgid "Equalize - DJ 3-band"
@@ -3203,7 +3194,7 @@ msgstr "Эквалайзер (трёхполосный)"
 
 #: translations.py:158
 msgid "Flanger - DJ"
-msgstr "Фленджер - DJ"
+msgstr "Фланжер (DJ)"
 
 #: translations.py:159
 msgid "Declipper"
@@ -3215,19 +3206,19 @@ msgstr "Delayorama"
 
 #: translations.py:161
 msgid "Distort - Diode Processor"
-msgstr "Искажение - Диодный процессор"
+msgstr "Искажение (Диодный процессор)"
 
 #: translations.py:162
 msgid "Distort - Foldover"
-msgstr "Искажение - Наложение спектров"
+msgstr "Искажение (Наложение спектров)"
 
 #: translations.py:163
 msgid "Highpass - Butterworth"
-msgstr "ФВЧ - Баттерворта"
+msgstr "ФВЧ (Баттерворта)"
 
 #: translations.py:164
 msgid "Lowpass - Butterworth"
-msgstr "ФНЧ - Баттерворта"
+msgstr "ФНЧ (Баттерворта)"
 
 #: translations.py:165
 msgid "GSM Simulator"
@@ -3235,7 +3226,7 @@ msgstr "GSM симулятор"
 
 #: translations.py:166
 msgid "Reverb - GVerb"
-msgstr "Реверберация - GVerb"
+msgstr "Реверберация (GVerb)"
 
 #: translations.py:167
 msgid "Noise Gate"
@@ -3259,7 +3250,7 @@ msgstr "Реверберация (пластина)"
 
 #: translations.py:172
 msgid "Distort - Pointer cast"
-msgstr "Искажение - Указатель поворота"
+msgstr "Искажение (Указатель поворота)"
 
 #: translations.py:173
 msgid "Rate Shifter"
@@ -3271,7 +3262,7 @@ msgstr "Смещение сигнала"
 
 #: translations.py:175
 msgid "Distort - Sinus Wavewrap"
-msgstr "Искажение - Оборот волны"
+msgstr "Искажение (Оборот волны)"
 
 #: translations.py:176
 msgid "Vinyl Effect"
@@ -3279,7 +3270,7 @@ msgstr "Виниловая пластинка"
 
 #: translations.py:177
 msgid "Chorus - Multivoice"
-msgstr "Хор - Мультиголос"
+msgstr "Хорус (Мультиголос)"
 
 #: translations.py:179
 msgid "Charcoal"
@@ -3488,9 +3479,8 @@ msgid "Vignette"
 msgstr "Виньетирование"
 
 #: translations.py:241
-#, fuzzy
 msgid "Vignette Advanced"
-msgstr "Виньетирование"
+msgstr "Виньетирование (расширенное)"
 
 #: translations.py:242
 msgid "Emboss"
@@ -3578,21 +3568,19 @@ msgstr "Перспектива"
 
 #: translations.py:268
 msgid "Lut3D"
-msgstr ""
+msgstr "Lut3D"
 
 #: translations.py:269
-#, fuzzy
 msgid "Normalize"
-msgstr "Обычный"
+msgstr "Нормализация"
 
 #: translations.py:270
 msgid "File Luma to Alpha"
-msgstr ""
+msgstr "Файл каше в Альфа"
 
 #: translations.py:271
-#, fuzzy
 msgid "Gradient Tint"
-msgstr "Ширина градиента"
+msgstr "Градиентная заливка"
 
 #: translations.py:277 translations.py:460
 msgid "Position"
@@ -4173,7 +4161,7 @@ msgstr "Угол"
 
 #: translations.py:475 translations.py:478 translations.py:479
 msgid "transition.geometry"
-msgstr "Изменение геометрии"
+msgstr "изменение геометрии"
 
 #: translations.py:476 translations.py:568
 msgid "Shear X"
@@ -4434,11 +4422,11 @@ msgstr "Синий канал: Усиление синего"
 
 #: translations.py:559
 msgid "Center X"
-msgstr "Центр по X:"
+msgstr "Центр по X"
 
 #: translations.py:560
 msgid "Center Y"
-msgstr "Центр по Y:"
+msgstr "Центр по Y"
 
 #: translations.py:561
 msgid "Quad Distortion"
@@ -4449,9 +4437,8 @@ msgid "Double Quad Distortion"
 msgstr "Двойная дисторсия квадрата"
 
 #: translations.py:563
-#, fuzzy
 msgid "Level"
-msgstr "Уровни"
+msgstr "Уровень"
 
 #: translations.py:572 translations.py:576
 msgid "Wipe Type"
@@ -4482,80 +4469,68 @@ msgid "Blend Mode"
 msgstr "Режим смешения"
 
 #: translations.py:584
-#, fuzzy
 msgid "Analysis Length"
-msgstr "Длительность:"
+msgstr "Длительность анализа"
 
 #: translations.py:585
-#, fuzzy
 msgid "Max Gain"
-msgstr "Усиление"
+msgstr "Максимальное усиление"
 
 #: translations.py:586
-#, fuzzy
 msgid "Min Mode"
-msgstr "Оконный режим"
+msgstr "Минимальный режим"
 
 #: translations.py:587
-#, fuzzy
 msgid "Select file"
-msgstr "Выберите Файл"
+msgstr "Выберите файл"
 
 #: translations.py:588
 msgid "Smooth"
-msgstr ""
+msgstr "Плавность"
 
 #: translations.py:589
-#, fuzzy
 msgid "Radius"
-msgstr "Точка радиуса"
+msgstr "Радиус"
 
 #: translations.py:591
-#, fuzzy
 msgid "Start Opacity"
-msgstr "Непрозрачность"
+msgstr "Непрозрачность начальной точки"
 
 #: translations.py:592
-#, fuzzy
 msgid "End Opacity"
-msgstr "Непрозрачность"
+msgstr "Непрозрачность конечной точки"
 
 #: translations.py:593
-#, fuzzy
 msgid "End Color"
-msgstr "Цвет"
+msgstr "Цвет конечной точки"
 
 #: translations.py:594
-#, fuzzy
 msgid "Start Color"
-msgstr "Выбрать цвет:"
+msgstr "Цвет начальной точки"
 
 #: translations.py:595
-#, fuzzy
 msgid "Start X"
-msgstr "Начало:"
+msgstr "Начальная точка по X"
 
 #: translations.py:596
-#, fuzzy
 msgid "Start Y"
-msgstr "Начало:"
+msgstr "Начальная точка по Y"
 
 #: translations.py:597
 msgid "End Y"
-msgstr ""
+msgstr "Конечная точка по Y"
 
 #: translations.py:598
 msgid "End X"
-msgstr ""
+msgstr "Конечная точка по X"
 
 #: translations.py:599
-#, fuzzy
 msgid "Gradient Type"
-msgstr "Тип вытеснения"
+msgstr "Вид градиента"
 
 #: translations.py:600
 msgid "Radial Offset"
-msgstr ""
+msgstr "Радиальное смещение"
 
 #: translations.py:605 translations.py:611
 msgid "Shave"
@@ -4766,17 +4741,16 @@ msgid "HSLLuminosity"
 msgstr "HSL яркость"
 
 #: translations.py:673
-#, fuzzy
 msgid "Cos"
-msgstr "Закрыть"
+msgstr "Косинус"
 
 #: translations.py:674
 msgid "Linear"
-msgstr ""
+msgstr "Линейно"
 
 #: translations.py:675
 msgid "Radial"
-msgstr ""
+msgstr "Радиально"
 
 #: mlttransitions.py:81
 msgid "Burst"
@@ -4812,7 +4786,7 @@ msgstr "Облако"
 
 #: mlttransitions.py:89
 msgid "Cross"
-msgstr ""
+msgstr "Крест"
 
 #: mlttransitions.py:90
 msgid "Diagonal 1"
@@ -4832,11 +4806,11 @@ msgstr "По диагонали 4"
 
 #: mlttransitions.py:94
 msgid "Flower"
-msgstr ""
+msgstr "Цветок"
 
 #: mlttransitions.py:95
 msgid "Fogg"
-msgstr ""
+msgstr "ФОГ"
 
 #: mlttransitions.py:96
 msgid "Free Curves"
@@ -4848,11 +4822,11 @@ msgstr "Свободные полосы"
 
 #: mlttransitions.py:98
 msgid "Heart"
-msgstr ""
+msgstr "Сердце"
 
 #: mlttransitions.py:99
 msgid "Honeycomb"
-msgstr ""
+msgstr "Медовые соты"
 
 #: mlttransitions.py:100
 msgid "Horizontal From Center"
@@ -4868,7 +4842,7 @@ msgstr "Линия справа"
 
 #: mlttransitions.py:103
 msgid "Paint"
-msgstr ""
+msgstr "Краска"
 
 #: mlttransitions.py:104
 msgid "Patches"
@@ -4876,11 +4850,11 @@ msgstr "Пятна неправильной формы"
 
 #: mlttransitions.py:105
 msgid "Puzzle"
-msgstr ""
+msgstr "Пазл"
 
 #: mlttransitions.py:106
 msgid "Rays"
-msgstr ""
+msgstr "Лучи"
 
 #: mlttransitions.py:107
 msgid "Rectangle Bars"
@@ -4895,9 +4869,8 @@ msgid "Rectangle From Out"
 msgstr "Прямоугольник внутрь"
 
 #: mlttransitions.py:110
-#, fuzzy
 msgid "Rectangles"
-msgstr "Прямоугольник"
+msgstr "Прямоугольники"
 
 #: mlttransitions.py:111
 msgid "Rings"
@@ -4960,9 +4933,8 @@ msgid "Stripes Vertical"
 msgstr "Полосы (вертикальные)"
 
 #: mlttransitions.py:126
-#, fuzzy
 msgid "Torn frame"
-msgstr " кадров."
+msgstr "Рваная рамка"
 
 #: mlttransitions.py:127
 msgid "Vertical Bottom to Top"
@@ -4978,7 +4950,7 @@ msgstr "Линия сверху"
 
 #: mlttransitions.py:130
 msgid "Wood"
-msgstr ""
+msgstr "Дерево"
 
 #: mlttransitions.py:133 mlttransitions.py:189
 msgid "Dissolve"
@@ -5005,9 +4977,8 @@ msgid "Wipe Clip Length"
 msgstr "Вытеснение"
 
 #: mlttransitions.py:140
-#, fuzzy
 msgid "LumaToAlpha"
-msgstr "Альфа"
+msgstr "Каше в Альфа"
 
 #: mlttransitions.py:146
 msgid "Burn"
@@ -5067,23 +5038,23 @@ msgstr "Ширина"
 
 #: propertyeditorbuilder.py:590
 msgid "Preset Luma"
-msgstr "Программный файл"
+msgstr "Программный каше"
 
 #: propertyeditorbuilder.py:591
 msgid "User Luma"
-msgstr "Файл пользователя"
+msgstr "Каше пользователя"
 
 #: propertyeditorbuilder.py:593
 msgid "Select Luma File"
-msgstr "Выберите файл"
+msgstr "Выберите файл каше"
 
 #: propertyeditorbuilder.py:602
 msgid "Wipe Luma files"
-msgstr "Файлы вытеснения"
+msgstr "Файлы каше для вытеснения"
 
 #: propertyeditorbuilder.py:608
 msgid "Luma File:"
-msgstr "Файл вытеснения:"
+msgstr "Файл каше:"
 
 #: propertyeditorbuilder.py:709
 msgid "Select File"
@@ -5091,8 +5062,9 @@ msgstr "Выберите Файл"
 
 #: propertyeditorbuilder.py:749
 #, fuzzy
+#| msgid "Select Project File"
 msgid "Select Image Producing File"
-msgstr "Выберите файл для создания изображений"
+msgstr "Выберите файл проекта"
 
 #: propertyeditorbuilder.py:780 propertyeditorbuilder.py:835
 msgid "Nothing"
@@ -5115,22 +5087,20 @@ msgid "Align"
 msgstr "Выравнивание"
 
 #: propertyeditorbuilder.py:905
-#, fuzzy
 msgid "Keyframes"
-msgstr "Ключевой кадр"
+msgstr "Ключевые кадры"
 
 #: propertyeditorbuilder.py:909
-#, fuzzy
 msgid "Curve Points"
-msgstr "Кривые"
+msgstr "Точки кривой"
 
 #: propertyeditorbuilder.py:913
 msgid "Lauch RotoMask editor"
-msgstr ""
+msgstr "Открыть редактор блуждающей маски"
 
 #: propertyeditorbuilder.py:917
 msgid "RotoMask info"
-msgstr ""
+msgstr "Информация о блуждающей маске"
 
 #: keyframeeditor.py:621 kftoolmode.py:1345
 msgid "Delete all but first Keyframe before Clip Range"
@@ -5266,9 +5236,8 @@ msgid "Splice Out - Delete"
 msgstr "Удалить со вставкой (Delete)"
 
 #: middlebar.py:162
-#, fuzzy
 msgid "Lift - Control + Delete"
-msgstr "Shift + Control + Стрелка влево "
+msgstr "Удалить без вставки (Control + Delete)"
 
 #: middlebar.py:162
 msgid "Ripple Delete"
@@ -5483,19 +5452,16 @@ msgid "Clear All"
 msgstr "Очистить всё"
 
 #: tools/titler.py:490
-#, fuzzy
 msgid "Layer Text"
-msgstr "Слои"
+msgstr "Текстовый слой"
 
 #: tools/titler.py:492
-#, fuzzy
 msgid "Outline"
-msgstr "<b>Контур</b>"
+msgstr "Контур"
 
 #: tools/titler.py:494
-#, fuzzy
 msgid "Shadow"
-msgstr "Тени"
+msgstr "Тень"
 
 #: tools/titler.py:496
 msgid "Layers"
@@ -5574,9 +5540,8 @@ msgid "Source Mark In to Mark Out"
 msgstr "Участок оригинального клипа"
 
 #: rendergui.py:241
-#, fuzzy
 msgid "Rendered Length:"
-msgstr "Длительность клипа на выходе:"
+msgstr "Длительность на выходе:"
 
 #: rendergui.py:270 rendergui.py:417
 msgid "Source Mark In: "
@@ -6015,61 +5980,60 @@ msgid "Move Timeline to follow Playback"
 msgstr "Следовать за курсором монтажного стола во время воспроизведения"
 
 #: preferenceswindow.py:281
-#, fuzzy
 msgid "Loop Media Clips on Monitor"
-msgstr "Открыть клип в мониторе"
+msgstr "Цикличное воспроизведение при просмотре из Медиа"
 
 #: preferenceswindow.py:313
 msgid "None"
-msgstr ""
+msgstr "Не выбран"
 
 #: preferenceswindow.py:314
 msgid "English"
-msgstr ""
+msgstr "English"
 
 #: preferenceswindow.py:315
 msgid "Chinese, Simplified"
-msgstr ""
+msgstr "简体字"
 
 #: preferenceswindow.py:316
 msgid "Chinese, Traditional"
-msgstr ""
+msgstr "繁體字"
 
 #: preferenceswindow.py:317
 msgid "Czech"
-msgstr ""
+msgstr "Čeština"
 
 #: preferenceswindow.py:318
 msgid "French"
-msgstr ""
+msgstr "Française"
 
 #: preferenceswindow.py:319
 msgid "German"
-msgstr ""
+msgstr "Deutsch"
 
 #: preferenceswindow.py:320
 msgid "Hungarian"
-msgstr ""
+msgstr "Magyar"
 
 #: preferenceswindow.py:321
 msgid "Italian"
-msgstr ""
+msgstr "Italiano"
 
 #: preferenceswindow.py:322
 msgid "Polish"
-msgstr ""
+msgstr "Polszczyzna"
 
 #: preferenceswindow.py:323
 msgid "Russian"
-msgstr ""
+msgstr "Русский"
 
 #: preferenceswindow.py:324
 msgid "Spanish"
-msgstr ""
+msgstr "Español"
 
 #: preferenceswindow.py:325
 msgid "Ukranian"
-msgstr ""
+msgstr "Українська"
 
 #: preferenceswindow.py:340
 msgid "Glass"
@@ -6125,7 +6089,7 @@ msgstr "Оконный режим:"
 
 #: preferenceswindow.py:386
 msgid "Force Language:"
-msgstr ""
+msgstr "Язык приложения:"
 
 #: preferenceswindow.py:387
 msgid "Display splash screen"
@@ -6585,7 +6549,7 @@ msgstr "Для выполнения этой операции нужно выб�
 
 #: tlineaction.py:712 tlineaction.py:1779
 msgid "3 point edit not defined!"
-msgstr "Трёхточечная перезапись невозможна!"
+msgstr "Перезапись по трём точкам невозможна!"
 
 #: tlineaction.py:713 tlineaction.py:737
 msgid ""
@@ -6593,7 +6557,7 @@ msgid ""
 "to perform this edit."
 msgstr ""
 "Для выполнения изменений определите участок монтажного стола,\n"
-"установив метки в начале и в конце участка."
+"установив точки в начале и в конце участка."
 
 #: tlineaction.py:736
 msgid "Timeline Range not set!"
@@ -6709,7 +6673,7 @@ msgstr "Слишком короткий клип!"
 
 #: tlineaction.py:1514
 msgid "Rerender all Rendered Transitions / Fades"
-msgstr "Пересборка всех переходов и затемнений "
+msgstr "Пересборка всех переходов и затемнений"
 
 #: tlineaction.py:1558
 msgid "Rendering item "
@@ -6763,8 +6727,7 @@ msgid ""
 "additional Mark In on Timeline or Clip to perform this edit."
 msgstr ""
 "Для выполнения данного действия, установите начало и конец участка\n"
-"на монтажном столе или в мониторе и установите начало участка на\n"
-"монтажном столе или в мониторе ."
+"на монтажном столе или в мониторе."
 
 #: trackaction.py:83
 msgid "Not enough vertical space on Timeline to expand track"
@@ -7078,9 +7041,9 @@ msgid ""
 "options\n"
 "if performance is not satisfactory."
 msgstr ""
-"Выберите параметры <b>Посмотреть обрезку от</b> или <b>Просмотреть обрезку "
+"Выберите параметр <b>Выключить просмотр обрезки</b> или <b>Просмотр обрезки "
 "только со стороны правки,</b>\n"
-"если производительность не удовлетворительна."
+"если будут выявлены проблемы с производительностью."
 
 #: compositorfades.py:242
 msgid "Clip too short!"
@@ -7276,9 +7239,8 @@ msgid "Prev Frame"
 msgstr "Предыдущий кадр"
 
 #: shortcuts.py:191
-#, fuzzy
 msgid "Append Selected Media From Bin"
-msgstr "Отправить выбранное медиа в корзину"
+msgstr "Добавить выбранные из корзины клипы"
 
 #: shortcuts.py:192
 msgid "Backwards Faster"
@@ -7299,7 +7261,7 @@ msgstr "Удалить выбранный элемент"
 #: shortcuts.py:198
 #, fuzzy
 msgid "Lift Selected Item"
-msgstr "Удалить выбранный элемент"
+msgstr "Поднять выбранный элемент"
 
 #: shortcuts.py:199
 msgid "Go To Start"
@@ -7354,28 +7316,24 @@ msgid "Complete Keyboard Trim Edit"
 msgstr "Вся клавиатура (обрезка и редактирование)"
 
 #: shortcuts.py:218
-#, fuzzy
 msgid "Nudge Move Selection Back 1 Frame"
-msgstr "На 10 кадров назад"
+msgstr "Сдвинуть выбранное назад на 1 кадр"
 
 #: shortcuts.py:219
-#, fuzzy
 msgid "Nudge Move Selection Forward 1 Frame"
-msgstr "На 10 кадров вперёд"
+msgstr "Сдвинуть выбранное вперёд на 1 кадр"
 
 #: shortcuts.py:220
-#, fuzzy
 msgid "Nudge Move Selection Back 10 Frames"
-msgstr "На 10 кадров назад"
+msgstr "Сдвинуть выбранное назад на 10 кадров"
 
 #: shortcuts.py:221
-#, fuzzy
 msgid "Nudge Move Selection Forward 10 Frames"
-msgstr "На 10 кадров вперёд"
+msgstr "Сдвинуть выбранное вперёд на 10 кадров"
 
 #: shortcuts.py:222
 msgid "Open Next Media Item In Monitor"
-msgstr ""
+msgstr "Открыть следующий клип в мониторе"
 
 #: shortcuts.py:231
 msgid "SPACE"
@@ -7455,11 +7413,11 @@ msgstr "="
 
 #: shortcuts.py:278
 msgid ","
-msgstr ""
+msgstr ","
 
 #: shortcuts.py:279
 msgid "."
-msgstr ""
+msgstr "."
 
 #: shortcuts.py:281
 msgid "Alt"
@@ -7531,11 +7489,11 @@ msgid ""
 "for this application was not found."
 msgstr ""
 "К сожалению, источник веб-страниц, содержащий справочную\n"
-" информацию для этого приложения, не найден."
+"информацию к этому приложению, не найден."
 
 #: exporting.py:376
 msgid "Sequence is too short"
-msgstr "Слишком короткая последовательность"
+msgstr "Недостаточная длительность последовательности"
 
 #: exporting.py:376
 msgid "Sequence needs to be at least 2 frames long to allow frame export."
@@ -7732,7 +7690,7 @@ msgstr ""
 "<b>\n"
 "\n"
 "Левой кнопкой мыши</b> выделите область элементов в рамку и переместите\n"
-" выделенную область вперёд или назад."
+"выделенную область вперёд или назад."
 
 #: workflow.py:173
 msgid "Workflow Presets"
@@ -7864,15 +7822,15 @@ msgstr ""
 "работы использовался в предыдущих версиях приложения."
 
 #: workflow.py:471
-#, fuzzy
 msgid "<b>Keep Existing Worflow</b>"
-msgstr "<b>Выберите предустановленный режим работы</b>"
+msgstr "<b>Сохранить режим работы</b>"
 
 #: workflow.py:472
+#, fuzzy
 msgid ""
 "Select this if you have installed new version and wish to keep your existing "
 "workflow."
-msgstr ""
+msgstr "Выберете для сохранения существующего режима работы в новой версии."
 
 #: kftoolmode.py:407
 msgid "Media Frame: "
@@ -7884,16 +7842,15 @@ msgstr "Удалить все ключевые кадры за клипом, к�
 
 #: kftoolmode.py:1384
 msgid "Edit Volume Keyframes"
-msgstr "Изменить громкость по ключевым кадрам"
+msgstr "Громкость по ключевым кадрам"
 
 #: kftoolmode.py:1389
 msgid "Edit Brightness Keyframes"
-msgstr "Изменить яркость по ключевым кадрам"
+msgstr "Яркость по ключевым кадрам"
 
 #: kftoolmode.py:1395
-#, fuzzy
 msgid "Edit Other Filter Parameters"
-msgstr "Без параметров"
+msgstr "Параметры прочих эффектов"
 
 #: kftoolmode.py:1437
 msgid "Leading Keyframes"
@@ -7909,6 +7866,7 @@ msgstr "Автосопровождение курсора ключевого к�
 
 #: kftoolmode.py:1462
 #, fuzzy
+#| msgid "Snapping On"
 msgid "Value Snapping"
 msgstr "Привязка"
 
@@ -7917,178 +7875,25 @@ msgid "Exit Edit"
 msgstr "Выход из редактирования"
 
 #: tools/rotomask.py:96
-#, fuzzy
 msgid "RotoMaskEditor"
-msgstr "Закрыть редактор"
+msgstr "Редактор блуждающей маски"
 
 #: tools/rotomask.py:149
-#, fuzzy
 msgid "Mask Type:"
-msgstr "Тип:"
+msgstr "Тип маски:"
 
 #: tools/rotomask.py:151
-#, fuzzy
 msgid "Curve Mask"
-msgstr "Кривые"
+msgstr "Кривые по точкам"
 
 #: tools/rotomask.py:152
 msgid "Line Mask"
-msgstr ""
+msgstr "Прямые по точкам"
 
 #: tools/rotomask.py:159
 msgid "Allow to add / delete points in closed masks"
-msgstr ""
+msgstr "Разрешить добавлять/удалять точки в закрытых масках"
 
 #: tools/rotomask.py:161
-#, fuzzy
 msgid "Close Tool"
 msgstr "Закрыть"
-
-#~ msgid "Use English texts on localized OS"
-#~ msgstr "Английский язык независимо от локализации ОС"
-
-#~ msgid "Can't make home folder thumbnails folder"
-#~ msgstr "Невозможно создать папку миниатюр в домашней папке"
-
-#~ msgid "' as thumbnails folder"
-#~ msgstr "' В папку миниатюр"
-
-#~ msgid "JACK Audio..."
-#~ msgstr "Аудиоразъём..."
-
-#~ msgid "Natron Animations"
-#~ msgstr "Анимация Natron"
-
-#~ msgid "Select Thumbnail Folder"
-#~ msgstr "Папка миниатюр"
-
-#~ msgid "R"
-#~ msgstr "R"
-
-#~ msgid "Toggle Trim / Ripple Trim Tools"
-#~ msgstr "Переключить инструменты Обрезка/ Обрезка со сдвигом"
-
-#~ msgid "Select folder for new thumbnails."
-#~ msgstr "Выберите папку для новых миниатюр."
-
-#~ msgid "Old thumbnails in this or other projects will"
-#~ msgstr "Старые миниатюры в этом или в других проектах"
-
-#~ msgid ""
-#~ " still be available,\n"
-#~ "this only affects thumnails that are created for new media.\n"
-#~ msgstr ""
-#~ " по-прежнему доступны,\n"
-#~ "но влияют только на миниатюры, которые сейчас создаются\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "Setting your home folder as thumbnails folder is not allowed."
-#~ msgstr ""
-#~ "\n"
-#~ "Выбор домашней папки в качестве папки миниатюр не допускается."
-
-#~ msgid "Select folder for rendered clips."
-#~ msgstr "Выберите папку для сборки клипов."
-
-#~ msgid "Old rendered clips in this or other projects will"
-#~ msgstr "Старые файлы в этом или в других проектах"
-
-#~ msgid ""
-#~ " still be available,\n"
-#~ "this only affects rendered files that are created from now on.\n"
-#~ msgstr ""
-#~ " по-прежнему доступны,\n"
-#~ "но влияют только на файлы, которые сейчас создаются.\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "Setting your home folder as folder for rendered clips is not allowed."
-#~ msgstr ""
-#~ "\n"
-#~ "Нельзя выбрать домашнюю папку в качестве папки для сборки клипов."
-
-#~ msgid "Hatched 1"
-#~ msgstr "Штрих-код 1"
-
-#~ msgid "Hatched 2"
-#~ msgstr "Штрих-код 2"
-
-#~ msgid "Hourglass"
-#~ msgstr "Песочные часы"
-
-#~ msgid "Puddles"
-#~ msgstr "Лужи"
-
-#~ msgid "Arch"
-#~ msgstr "Фрактал"
-
-#~ msgid "<b>Shadow</b>"
-#~ msgstr "<b>Тень</b>"
-
-#~ msgid "Active Layer"
-#~ msgstr "Активный слой"
-
-#~ msgid "Thumbnail folder:"
-#~ msgstr "Папка миниатюр:"
-
-#~ msgid "Rendered Clips folder:"
-#~ msgstr "Папка для сборки клипов:"
-
-#~ msgid "Natron Clip Export Data"
-#~ msgstr "Данные экспорта клипа Natron"
-
-#~ msgid "Rendered Files"
-#~ msgstr "Сборка файлов"
-
-#~ msgid "Natron"
-#~ msgstr "Natron"
-
-#~ msgid "Text Animation"
-#~ msgstr "Анимация текста"
-
-#~ msgid "Background"
-#~ msgstr "Фон"
-
-#~ msgid "Preview Frame"
-#~ msgstr "Предпросмотр кадра"
-
-#~ msgid "Frame:"
-#~ msgstr "Кадр:"
-
-#~ msgid "1"
-#~ msgstr "1"
-
-#, fuzzy
-#~ msgid "Natron Render Format:"
-#~ msgstr "Natron Render Формат:"
-
-#, fuzzy
-#~ msgid "Set Frames Folder for valid render"
-#~ msgstr "Установить папку кадров для действительной сборки"
-
-#~ msgid "Load Animation"
-#~ msgstr "Загрузить анимацию"
-
-#~ msgid "Save Animation"
-#~ msgstr "Сохранить анимацию"
-
-#~ msgid "Natron Webpage"
-#~ msgstr "Домашняя страница Natron"
-
-#, fuzzy
-#~ msgid "Save Natron Animation Values As"
-#~ msgstr "Сохранить значения анимации Natron As"
-
-#, fuzzy
-#~ msgid "Load Animation Data"
-#~ msgstr "Загрузить анимационные данные"
-
-#~ msgid "Render starting..."
-#~ msgstr "Начало сборки..."
-
-#~ msgid "Rendering preview for frame "
-#~ msgstr "Подготовка кадра к предпросмотру "
-
-#~ msgid "Render complete."
-#~ msgstr "Сборка завершена."
