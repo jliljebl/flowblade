@@ -427,7 +427,7 @@ def create_gui():
     updater.set_clip_edit_mode_callback = modesetting.set_clip_monitor_edit_mode
     updater.load_icons()
 
-    # Notebook indexes are differn for 1 and 2 window layouts
+    # Notebook indexes are different for 1 and 2 window layouts
     if editorpersistance.prefs.global_layout != appconsts.SINGLE_WINDOW:
         medialog.range_log_notebook_index = 0
         compositeeditor.compositor_notebook_index = 2
