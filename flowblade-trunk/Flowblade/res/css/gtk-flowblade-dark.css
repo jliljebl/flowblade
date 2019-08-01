@@ -247,6 +247,7 @@ button {
   padding: 2px 6px;
   color: #D3DAE3;
   border-color: #070915;
+  background-image: none;
   background-color: #222a3c; }
   button separator {
     margin: 4px 1px; }
@@ -299,7 +300,8 @@ button {
     padding-right: 5px; }
   button.text-button {
     padding-left: 12px;
-    padding-right: 12px; }
+    padding-right: 12px;
+    background-color: #222a3c;  }
   button.text-button.image-button {
     padding-left: 5px;
     padding-right: 5px; }

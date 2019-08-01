@@ -261,7 +261,7 @@ def apply_gtk_css():
     provider = Gtk.CssProvider.new()
     display = Gdk.Display.get_default()
     screen = display.get_default_screen()
-    Gtk.StyleContext.add_provider_for_screen (screen, provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
+    Gtk.StyleContext.add_provider_for_screen (screen, provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
     provider.load_from_path(respaths.ROOT_PATH + "/res/css/gtk-flowblade-dark.css")
 
     return True
