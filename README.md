@@ -1,9 +1,5 @@
 
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
-
-
-**Project on summer break. Activity resumes in August.**
-
  
 **Contents:**
   1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
