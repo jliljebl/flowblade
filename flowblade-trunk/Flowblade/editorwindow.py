@@ -414,8 +414,8 @@ class EditorWindow:
           </menubar>
         </ui>"""
         
-        self.fblade_theme_fix_panels = []
-        self.fblade_theme_fix_panels_darker = []
+        self.fblade_theme_fix_panels = [] # ??? remove
+        self.fblade_theme_fix_panels_darker = [] # ??? remove
         
         # Create global action group            
         action_group = Gtk.ActionGroup('WindowActions')
@@ -770,10 +770,17 @@ class EditorWindow:
         dnd.connect_tline(self.tline_canvas.widget, editevent.tline_effect_drop,  
                           editevent.tline_media_drop)
 
+
+        tool_dock = workflow.get_tline_tool_dock()
+
         # Timeline middle row
         tline_hbox_2 = Gtk.HBox()
+
         tline_hbox_2.pack_start(self.tline_column.widget, False, False, 0)
         tline_hbox_2.pack_start(self.tline_canvas.widget, True, True, 0)
+        tline_hbox_2.pack_start(guiutils.get_pad_label(8,4), False, False, 0)
+        tline_hbox_2.pack_start(tool_dock, False, False, 0)
+
         
         # Bottom row filler
         self.left_corner = guicomponents.TimeLineLeftBottom()
@@ -965,6 +972,26 @@ class EditorWindow:
         tabs_menu_item.set_submenu(tabs_menu)
         menu.append(tabs_menu_item)
 
+
+        tool_selector_menu_item = Gtk.MenuItem(_("Tool Selection").encode('utf-8'))
+        tool_selector_menu =  Gtk.Menu()
+        tools_middlebar = Gtk.RadioMenuItem()
+        tools_middlebar.set_label( _("Middlebar Menu").encode('utf-8'))
+        #tools_middlebar.connect("activate", lambda w: self._show_tabs_up(w))
+        tool_selector_menu.append(tools_middlebar)
+        
+        tools_dock = Gtk.RadioMenuItem.new_with_label([tabs_up], _("Dock").encode('utf-8'))
+        #tools_dock.connect("activate", lambda w: self._show_tabs_down(w))
+
+        if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
+            tools_middlebar.set_active(True)
+        else:
+            tools_dock.set_active(True)
+
+        tool_selector_menu.append(tools_dock)
+        tool_selector_menu_item.set_submenu(tool_selector_menu)
+        menu.append(tool_selector_menu_item)
+        
         sep = Gtk.SeparatorMenuItem()
         menu.append(sep)
         
@@ -1241,9 +1268,9 @@ class EditorWindow:
         updater.set_trim_mode_gui()
 
     def mode_selector_pressed(self, selector, event):
-        workflow.get_tline_tool_popup_menu(selector, event, self.tool_selector_item_activated)
+        workflow.get_tline_tool_popup_menu(event, self.tool_selector_item_activated)
     
-    def tool_selector_item_activated(self, selector, tool):
+    def tool_selector_item_activated(self, source_widget, tool):
         if tool == appconsts.TLINE_TOOL_INSERT:
             self.handle_insert_move_mode_button_press()
         if tool == appconsts.TLINE_TOOL_OVERWRITE:

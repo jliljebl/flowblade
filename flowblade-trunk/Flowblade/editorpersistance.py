@@ -349,4 +349,4 @@ class EditorPreferences:
         self.loop_clips = False
         self.audio_scrubbing = False
         self.force_language = "None"
-
+        self.tools_selection = appconsts.TOOL_SELECTOR_IS_MENU
