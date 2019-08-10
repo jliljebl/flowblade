@@ -757,6 +757,7 @@ class ClipEditorButtonsRow(Gtk.HBox):
             self.pack_start(Gtk.Label(), True, True, 0)
         self.pack_start(self.add_button, False, False, 0)
         self.pack_start(self.delete_button, False, False, 0)
+        self.pack_start(guiutils.pad_label(24,4), False, False, 0)
         self.pack_start(self.prev_kf_button, False, False, 0)
         self.pack_start(self.next_kf_button, False, False, 0)
         self.pack_start(self.kf_to_prev_frame_button, False, False, 0)
