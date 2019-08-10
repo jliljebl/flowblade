@@ -63,6 +63,7 @@ import editorwindow
 import gmic
 import gui
 import keyevents
+import keyframeeditor
 import keyframeeditcanvas
 import kftoolmode
 import medialog
@@ -389,6 +390,9 @@ def monkeypatch_callbacks():
     propertyeditorbuilder.show_rotomask_func = rotomask.show_rotomask
     
     multitrimmode.set_default_mode_func = modesetting.set_default_edit_mode
+    
+    keyframeeditor.add_fade_in_func = compositeeditor._add_fade_in_pressed
+    keyframeeditor.add_fade_out_func = compositeeditor._add_fade_out_pressed
     # These provide clues for further module refactoring 
 
 # ---------------------------------- SDL2 consumer

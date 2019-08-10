@@ -89,6 +89,10 @@ NON_ACTIVE_KF_ICON = None
 # Magic value to signify disconnected signal handler 
 DISCONNECTED_SIGNAL_HANDLER = -9999999
 
+# Callbacks to compositeeditor.py, monkeypatched at startup
+add_fade_in_func = None
+add_fade_out_func = None
+
 actions_menu = Gtk.Menu()
 oor_before_menu = Gtk.Menu()
 oor_after_menu = Gtk.Menu()
@@ -715,6 +719,8 @@ class ClipEditorButtonsRow(Gtk.HBox):
         self.next_frame_button = guiutils.get_image_button("kf_edit_next_frame.png", BUTTON_WIDTH, BUTTON_HEIGHT)
         self.kf_to_prev_frame_button = guiutils.get_image_button("kf_edit_kf_to_prev_frame.png", BUTTON_WIDTH, BUTTON_HEIGHT)
         self.kf_to_next_frame_button = guiutils.get_image_button("kf_edit_kf_to_next_frame.png", BUTTON_WIDTH, BUTTON_HEIGHT)
+        self.add_fade_in_button = guiutils.get_image_button("add_fade_in.png", BUTTON_WIDTH, BUTTON_HEIGHT)
+        self.add_fade_out_button = guiutils.get_image_button("add_fade_out.png", BUTTON_WIDTH, BUTTON_HEIGHT)
         
         self.add_button.connect("clicked", lambda w,e: editor_parent.add_pressed(), None)
         self.delete_button.connect("clicked", lambda w,e: editor_parent.delete_pressed(), None)
@@ -724,6 +730,8 @@ class ClipEditorButtonsRow(Gtk.HBox):
         self.next_frame_button.connect("clicked", lambda w,e: editor_parent.next_frame_pressed(), None)
         self.kf_to_prev_frame_button.connect("clicked", lambda w,e: editor_parent.move_kf_prev_frame_pressed(), None)
         self.kf_to_next_frame_button.connect("clicked", lambda w,e: editor_parent.move_kf_next_frame_pressed(), None)
+        self.add_fade_in_button.connect("clicked", lambda w,e: add_fade_in_func(), None)
+        self.add_fade_out_button.connect("clicked", lambda w,e: add_fade_out_func(), None)
 
         self.add_button.set_tooltip_text(_("Add Keyframe"))
         self.delete_button.set_tooltip_text(_("Delete Keyframe"))
@@ -733,6 +741,8 @@ class ClipEditorButtonsRow(Gtk.HBox):
         self.next_frame_button.set_tooltip_text(_("Next Frame"))
         self.kf_to_prev_frame_button.set_tooltip_text(_("Move Keyframe 1 Frame Back"))
         self.kf_to_next_frame_button.set_tooltip_text(_("Move Keyframe 1 Frame Forward"))
+        self.add_fade_in_button.set_tooltip_text(_("Add Fade In"))
+        self.add_fade_out_button.set_tooltip_text(_("Add Fade Out"))
         
         # Position entry
         self.kf_pos_label = Gtk.Label()
@@ -753,13 +763,18 @@ class ClipEditorButtonsRow(Gtk.HBox):
         self.pack_start(self.kf_to_next_frame_button, False, False, 0)
         self.pack_start(self.prev_frame_button, False, False, 0)
         self.pack_start(self.next_frame_button, False, False, 0)
-        self.pack_start(guiutils.pad_label(4,4), False, False, 0)
-        self.pack_start(self.kf_info_label, False, False, 0)
+        self.pack_start(guiutils.pad_label(24,4), False, False, 0)
+        self.pack_start(self.add_fade_in_button, False, False, 0)
+        self.pack_start(self.add_fade_out_button, False, False, 0)
         if not centered_buttons:
             self.pack_start(Gtk.Label(), True, True, 0)
         else:
             self.pack_start(guiutils.pad_label(4,4), False, False, 0)
+            
+        self.pack_start(self.kf_info_label, False, False, 0)
+        self.pack_start(guiutils.pad_label(24,4), False, False, 0) 
         self.pack_start(self.kf_pos_label, False, False, 0)
+        
         if centered_buttons:
             self.pack_start(Gtk.Label(), True, True, 0)
         else:
