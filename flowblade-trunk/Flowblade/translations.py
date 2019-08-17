@@ -598,8 +598,12 @@ def load_filters_translations():
     param_names["End X"] = _("End X")
     param_names["Gradient Type"] = _("Gradient Type")
     param_names["Radial Offset"] = _("Radial Offset")
-    
-    
+    param_names["Feather Passes"] = _("Feather Passes")
+    param_names["Alpha Mode"] = _("Alpha Mode")
+    param_names["Feather"] = _("Feather")
+    param_names["Mode"] = _("Mode")
+    param_names["Invert"] = _("Invert")
+
     # Combo options
     global combo_options
     combo_options["Shave"] = _("Shave")
@@ -673,3 +677,7 @@ def load_filters_translations():
     combo_options["Cos"] = _("Cos")
     combo_options["Linear"] = _("Linear")
     combo_options["Radial"] = _("Radial")
+    combo_options["Clear"] = _("Clear")
+    combo_options["Add"] = _("Add")
+    combo_options["Subtract"] = _("Subtract")
+    combo_options["Alpha"] = _("Alpha")

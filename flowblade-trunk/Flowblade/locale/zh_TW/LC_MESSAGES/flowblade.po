@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-24 18:22+0300\n"
+"POT-Creation-Date: 2019-08-17 19:05+0300\n"
 "PO-Revision-Date: 2018-12-31 10:20+0800\n"
 "Last-Translator: Steve Nian <sdnian@gmail.com>\n"
 "Language-Team: Chinese (traditional)\n"
@@ -16,23 +16,23 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: app.py:841
+#: app.py:845
 msgid "Too small screen for this application."
 msgstr "畫面太小無法執行此應用程式"
 
-#: app.py:844
+#: app.py:848
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr "此應用程式的最小螢幕解析度為 1152 x 768。\n"
 
-#: app.py:845
+#: app.py:849
 msgid "Your screen dimensions are "
 msgstr "你的螢幕解析度是 "
 
-#: app.py:878 projectaction.py:395 projectaction.py:715
+#: app.py:882 projectaction.py:395 projectaction.py:715
 msgid "Project has not been saved previously"
 msgstr "先前的專案尚未儲存"
 
-#: app.py:879 projectaction.py:396 projectaction.py:716
+#: app.py:883 projectaction.py:396 projectaction.py:716
 msgid "Save project with File -> Save As before closing."
 msgstr "在結束之前，從 檔案 -> 另存新檔 來儲存專案。"
 
@@ -949,7 +949,7 @@ msgstr "_effect_values"
 msgid "Saved Filter data not applicaple for this Filter!"
 msgstr "保存的濾鏡數據不適用於此濾鏡！"
 
-#: clipeffectseditor.py:674 compositeeditor.py:357
+#: clipeffectseditor.py:674 compositeeditor.py:331
 msgid "Saved data is for "
 msgstr "保存資料用於 "
 
@@ -965,23 +965,15 @@ msgstr "沒有合成器"
 msgid "Destination Track:"
 msgstr "目的軌道："
 
-#: compositeeditor.py:209
-msgid "Add Fade In"
-msgstr "增加淡入"
-
-#: compositeeditor.py:212
-msgid "Add Fade Out"
-msgstr "增加淡出"
-
-#: compositeeditor.py:325
+#: compositeeditor.py:299
 msgid "_compositor_values"
 msgstr "_compositor_values"
 
-#: compositeeditor.py:356
+#: compositeeditor.py:330
 msgid "Saved Compositor data not applicaple for this compositor!"
 msgstr "保存的合成數據不適用於這個合成器！"
 
-#: compositeeditor.py:357
+#: compositeeditor.py:331
 msgid ", current compositor is "
 msgstr "，目前的合成器是 "
 
@@ -1939,11 +1931,11 @@ msgstr "刪除"
 msgid "Deletes Selected Handle"
 msgstr "刪除選擇的容器"
 
-#: dialogs.py:1494 keyframeeditor.py:732
+#: dialogs.py:1494 keyframeeditor.py:740
 msgid "Previous Frame"
 msgstr "前一影格"
 
-#: dialogs.py:1495 keyframeeditor.py:733 shortcuts.py:188
+#: dialogs.py:1495 keyframeeditor.py:741 shortcuts.py:188
 msgid "Next Frame"
 msgstr "下一影格"
 
@@ -2392,17 +2384,17 @@ msgstr "剪輯片段色彩"
 msgid "Default"
 msgstr "預設"
 
-#: guicomponents.py:1951 translations.py:525 translations.py:635
+#: guicomponents.py:1951 translations.py:525 translations.py:639
 msgid "Red"
 msgstr "紅"
 
-#: guicomponents.py:1952 translations.py:526 translations.py:630
-#: translations.py:636
+#: guicomponents.py:1952 translations.py:526 translations.py:634
+#: translations.py:640
 msgid "Green"
 msgstr "綠"
 
-#: guicomponents.py:1953 translations.py:527 translations.py:631
-#: translations.py:637
+#: guicomponents.py:1953 translations.py:527 translations.py:635
+#: translations.py:641
 msgid "Blue"
 msgstr "藍"
 
@@ -2764,8 +2756,8 @@ msgstr "可見媒體檔案類型"
 msgid "Bins"
 msgstr "容器"
 
-#: panels.py:95 translations.py:628 translations.py:656 mlttransitions.py:145
-#: tools/titler.py:207
+#: panels.py:95 translations.py:632 translations.py:660 translations.py:681
+#: mlttransitions.py:145 tools/titler.py:207
 msgid "Add"
 msgstr "新增"
 
@@ -3094,7 +3086,7 @@ msgstr "模糊"
 msgid "Distort"
 msgstr "扭曲"
 
-#: translations.py:135
+#: translations.py:135 translations.py:683
 msgid "Alpha"
 msgstr "Alpha"
 
@@ -3288,6 +3280,7 @@ msgstr "飽和"
 
 #: translations.py:192 translations.py:407 translations.py:459
 #: translations.py:484 translations.py:573 translations.py:577
+#: translations.py:605
 msgid "Invert"
 msgstr "顛倒"
 
@@ -3300,7 +3293,7 @@ msgstr "色調"
 msgid "Brightness"
 msgstr "亮度"
 
-#: translations.py:195 translations.py:643
+#: translations.py:195 translations.py:647
 msgid "Sepia"
 msgstr "棕褐色"
 
@@ -3571,11 +3564,11 @@ msgstr "梯度宽度"
 msgid "Tilt"
 msgstr "傾斜"
 
-#: translations.py:280 translations.py:627
+#: translations.py:280 translations.py:631
 msgid "Min"
 msgstr "最小"
 
-#: translations.py:281 translations.py:626
+#: translations.py:281 translations.py:630
 msgid "Max"
 msgstr "最大"
 
@@ -4177,7 +4170,7 @@ msgstr "Sel. Space"
 msgid "Operation"
 msgstr "操作"
 
-#: translations.py:495 translations.py:619
+#: translations.py:495 translations.py:623
 msgid "Hard"
 msgstr "堅硬"
 
@@ -4201,11 +4194,11 @@ msgstr "B/I/I"
 msgid "Supress"
 msgstr "抑制"
 
-#: translations.py:501 translations.py:649
+#: translations.py:501 translations.py:653
 msgid "Horizontal"
 msgstr "水平"
 
-#: translations.py:502 translations.py:650
+#: translations.py:502 translations.py:654
 msgid "Vertical"
 msgstr "垂直"
 
@@ -4522,226 +4515,251 @@ msgstr "擦拭類型"
 msgid "Radial Offset"
 msgstr ""
 
-#: translations.py:605 translations.py:611
+#: translations.py:601
+#, fuzzy
+msgid "Feather Passes"
+msgstr "傳遞"
+
+#: translations.py:602
+#, fuzzy
+msgid "Alpha Mode"
+msgstr "Alpha 修飾"
+
+#: translations.py:603
+#, fuzzy
+msgid "Feather"
+msgstr "抖動"
+
+#: translations.py:604
+#, fuzzy
+msgid "Mode"
+msgstr "視窗模式"
+
+#: translations.py:609 translations.py:615
 msgid "Shave"
 msgstr "修面"
 
-#: translations.py:606
+#: translations.py:610
 msgid "Rectangle"
 msgstr "矩形"
 
-#: translations.py:607
+#: translations.py:611
 msgid "Ellipse"
 msgstr "橢圓形"
 
-#: translations.py:608
+#: translations.py:612
 msgid "Triangle"
 msgstr "三角形"
 
-#: translations.py:609 shortcuts.py:212 workflow.py:71
+#: translations.py:613 shortcuts.py:212 workflow.py:71
 msgid "Box"
 msgstr "箱子"
 
-#: translations.py:610 translations.py:624
+#: translations.py:614 translations.py:628
 msgid "Diamond"
 msgstr "菱形"
 
-#: translations.py:612
+#: translations.py:616
 msgid "Shrink Hard"
 msgstr "硬收縮"
 
-#: translations.py:613
+#: translations.py:617
 msgid "Shrink Soft"
 msgstr "軟收縮"
 
-#: translations.py:614
+#: translations.py:618
 msgid "Grow Hard"
 msgstr "硬增長"
 
-#: translations.py:615
+#: translations.py:619
 msgid "Grow Soft"
 msgstr "軟增長"
 
-#: translations.py:616
+#: translations.py:620
 msgid "RGB"
 msgstr "RGB"
 
-#: translations.py:617
+#: translations.py:621
 msgid "ABI"
 msgstr "ABI"
 
-#: translations.py:618
+#: translations.py:622
 msgid "HCI"
 msgstr "HCI"
 
-#: translations.py:620
+#: translations.py:624
 msgid "Fat"
 msgstr "胖"
 
-#: translations.py:621
+#: translations.py:625
 msgid "Normal"
 msgstr "正常"
 
-#: translations.py:622
+#: translations.py:626
 msgid "Skinny"
 msgstr "瘦"
 
-#: translations.py:623
+#: translations.py:627
 msgid "Ellipsoid"
 msgstr "橢圓形"
 
-#: translations.py:625 shortcuts.py:207
+#: translations.py:629 shortcuts.py:207
 msgid "Overwrite"
 msgstr "覆寫"
 
-#: translations.py:629 mlttransitions.py:162
+#: translations.py:633 translations.py:682 mlttransitions.py:162
 msgid "Subtract"
 msgstr "減去"
 
-#: translations.py:632
+#: translations.py:636
 msgid "Sharper"
 msgstr "較銳利"
 
-#: translations.py:633
+#: translations.py:637
 msgid "Fuzzier"
 msgstr "較模糊"
 
-#: translations.py:634
+#: translations.py:638
 msgid "Luma"
 msgstr "亮度"
 
-#: translations.py:638
+#: translations.py:642
 msgid "Add Constant"
 msgstr "增加常數"
 
-#: translations.py:639
+#: translations.py:643
 msgid "Change Gamma"
 msgstr "變更伽瑪"
 
-#: translations.py:640 translations.py:658 mlttransitions.py:157
+#: translations.py:644 translations.py:662 mlttransitions.py:157
 msgid "Multiply"
 msgstr "加乘"
 
-#: translations.py:641
+#: translations.py:645
 msgid "XPro"
 msgstr "XPro"
 
-#: translations.py:642
+#: translations.py:646
 msgid "OldPhoto"
 msgstr "舊照片"
 
-#: translations.py:644
+#: translations.py:648
 msgid "Heat"
 msgstr "燥熱"
 
-#: translations.py:645
+#: translations.py:649
 msgid "XRay"
 msgstr "X光"
 
-#: translations.py:646
+#: translations.py:650
 msgid "RedGreen"
 msgstr "紅綠"
 
-#: translations.py:647
+#: translations.py:651
 msgid "YellowBlue"
 msgstr "黃藍"
 
-#: translations.py:648
+#: translations.py:652
 msgid "Esses"
 msgstr "Esses"
 
-#: translations.py:651
+#: translations.py:655
 msgid "Shadows"
 msgstr "陰影"
 
-#: translations.py:652
+#: translations.py:656
 msgid "Midtones"
 msgstr "中色調"
 
-#: translations.py:653
+#: translations.py:657
 msgid "Highlights"
 msgstr "亮點"
 
-#: translations.py:654
+#: translations.py:658
 msgid "Forward"
 msgstr "前進"
 
-#: translations.py:655
+#: translations.py:659
 msgid "Backward"
 msgstr "後退"
 
-#: translations.py:657
+#: translations.py:661
 msgid "Saturate"
 msgstr "飽和"
 
-#: translations.py:659 mlttransitions.py:160
+#: translations.py:663 mlttransitions.py:160
 msgid "Screen"
 msgstr "螢幕"
 
-#: translations.py:660 mlttransitions.py:158
+#: translations.py:664 mlttransitions.py:158
 msgid "Overlay"
 msgstr "覆蓋"
 
-#: translations.py:661 mlttransitions.py:148
+#: translations.py:665 mlttransitions.py:148
 msgid "Darken"
 msgstr "變暗"
 
-#: translations.py:662 mlttransitions.py:156
+#: translations.py:666 mlttransitions.py:156
 msgid "Lighten"
 msgstr "變亮"
 
-#: translations.py:663
+#: translations.py:667
 msgid "ColorDodge"
 msgstr "色彩漂白"
 
-#: translations.py:664
+#: translations.py:668
 msgid "Colorburn"
 msgstr "色彩燻黑"
 
-#: translations.py:665 mlttransitions.py:154
+#: translations.py:669 mlttransitions.py:154
 msgid "Hardlight"
 msgstr "強光"
 
-#: translations.py:666 mlttransitions.py:161
+#: translations.py:670 mlttransitions.py:161
 msgid "Softlight"
 msgstr "柔光"
 
-#: translations.py:667 mlttransitions.py:149
+#: translations.py:671 mlttransitions.py:149
 msgid "Difference"
 msgstr "區別"
 
-#: translations.py:668
+#: translations.py:672
 msgid "Exclusion"
 msgstr "排除"
 
-#: translations.py:669
+#: translations.py:673
 msgid "HSLHue"
 msgstr "HSLHue"
 
-#: translations.py:670
+#: translations.py:674
 msgid "HSLSaturation"
 msgstr "HSLSaturation"
 
-#: translations.py:671
+#: translations.py:675
 msgid "HSLColor"
 msgstr "HSLColor"
 
-#: translations.py:672
+#: translations.py:676
 msgid "HSLLuminosity"
 msgstr "HSLLuminosity"
 
-#: translations.py:673
+#: translations.py:677
 #, fuzzy
 msgid "Cos"
 msgstr "關閉"
 
-#: translations.py:674
+#: translations.py:678
 msgid "Linear"
 msgstr ""
 
-#: translations.py:675
+#: translations.py:679
 msgid "Radial"
 msgstr ""
+
+#: translations.py:680
+#, fuzzy
+msgid "Clear"
+msgstr "清除全部"
 
 #: mlttransitions.py:81
 msgid "Burst"
@@ -5096,104 +5114,112 @@ msgstr ""
 msgid "RotoMask info"
 msgstr ""
 
-#: keyframeeditor.py:621 kftoolmode.py:1345
+#: keyframeeditor.py:625 kftoolmode.py:1345
 msgid "Delete all but first Keyframe before Clip Range"
 msgstr "在剪輯範圍之前刪除第一個以外的關鍵影格"
 
-#: keyframeeditor.py:627 kftoolmode.py:1351
+#: keyframeeditor.py:631 kftoolmode.py:1351
 msgid "Set Keyframe at Frame 0 to value of next Keyframe"
 msgstr "將第 0 影格的關鍵影格設置為下一個關鍵影格的值"
 
-#: keyframeeditor.py:629 kftoolmode.py:1340 kftoolmode.py:1363
+#: keyframeeditor.py:633 kftoolmode.py:1340 kftoolmode.py:1363
 #: kftoolmode.py:1374
 msgid "No Edit Actions currently available"
 msgstr "目前沒有可用的編輯操作"
 
-#: keyframeeditor.py:644 kftoolmode.py:1369
+#: keyframeeditor.py:648 kftoolmode.py:1369
 msgid "Delete all Keyframes after Clip Range"
 msgstr "剪輯範圍後刪除所有關鍵影格"
 
-#: keyframeeditor.py:728
+#: keyframeeditor.py:736
 msgid "Add Keyframe"
 msgstr "新增關鍵影格"
 
-#: keyframeeditor.py:729
+#: keyframeeditor.py:737
 msgid "Delete Keyframe"
 msgstr "刪除關鍵影格"
 
-#: keyframeeditor.py:730
+#: keyframeeditor.py:738
 msgid "Previous Keyframe"
 msgstr "前一關鍵影格"
 
-#: keyframeeditor.py:731
+#: keyframeeditor.py:739
 msgid "Next Keyframe"
 msgstr "下一關鍵影格"
 
-#: keyframeeditor.py:734
+#: keyframeeditor.py:742
 msgid "Move Keyframe 1 Frame Back"
 msgstr "移動關鍵影格 1 影格後退"
 
-#: keyframeeditor.py:735
+#: keyframeeditor.py:743
 msgid "Move Keyframe 1 Frame Forward"
 msgstr "移動關鍵影格 1 影格前進"
 
-#: keyframeeditor.py:800
+#: keyframeeditor.py:744
+msgid "Add Fade In"
+msgstr "增加淡入"
+
+#: keyframeeditor.py:745
+msgid "Add Fade Out"
+msgstr "增加淡出"
+
+#: keyframeeditor.py:816
 msgid "View:"
 msgstr "檢視："
 
-#: keyframeeditor.py:806
+#: keyframeeditor.py:822
 msgid "Large"
 msgstr "大"
 
-#: keyframeeditor.py:807
+#: keyframeeditor.py:823
 msgid "Medium"
 msgstr "中"
 
-#: keyframeeditor.py:808
+#: keyframeeditor.py:824
 msgid "Small"
 msgstr "小"
 
-#: keyframeeditor.py:828
+#: keyframeeditor.py:844
 msgid "Reset Geometry"
 msgstr "重置幾何"
 
-#: keyframeeditor.py:829
+#: keyframeeditor.py:845
 msgid "Geometry to Original Aspect Ratio"
 msgstr "幾何到原始縱橫比"
 
-#: keyframeeditor.py:830
+#: keyframeeditor.py:846
 msgid "Center Horizontal"
 msgstr "中心水平"
 
-#: keyframeeditor.py:831
+#: keyframeeditor.py:847
 msgid "Center Vertical"
 msgstr "中心垂直"
 
-#: keyframeeditor.py:1557 keyframeeditor.py:1593
+#: keyframeeditor.py:1573 keyframeeditor.py:1609
 msgid "X:"
 msgstr "X："
 
-#: keyframeeditor.py:1558 keyframeeditor.py:1594
+#: keyframeeditor.py:1574 keyframeeditor.py:1610
 msgid "Y:"
 msgstr "Y："
 
-#: keyframeeditor.py:1559 profilesmanager.py:132
+#: keyframeeditor.py:1575 profilesmanager.py:132
 msgid "Width:"
 msgstr "寬："
 
-#: keyframeeditor.py:1560 profilesmanager.py:133
+#: keyframeeditor.py:1576 profilesmanager.py:133
 msgid "Height:"
 msgstr "高："
 
-#: keyframeeditor.py:1595
+#: keyframeeditor.py:1611
 msgid "X scale:"
 msgstr "X 比例："
 
-#: keyframeeditor.py:1596
+#: keyframeeditor.py:1612
 msgid "Y scale:"
 msgstr "Y 比例："
 
-#: keyframeeditor.py:1597
+#: keyframeeditor.py:1613
 msgid "Rotation:"
 msgstr "迴轉："
 

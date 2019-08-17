@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-24 18:22+0300\n"
+"POT-Creation-Date: 2019-08-17 19:05+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,23 +17,23 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: app.py:841
+#: app.py:845
 msgid "Too small screen for this application."
 msgstr ""
 
-#: app.py:844
+#: app.py:848
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr ""
 
-#: app.py:845
+#: app.py:849
 msgid "Your screen dimensions are "
 msgstr ""
 
-#: app.py:878 projectaction.py:395 projectaction.py:715
+#: app.py:882 projectaction.py:395 projectaction.py:715
 msgid "Project has not been saved previously"
 msgstr ""
 
-#: app.py:879 projectaction.py:396 projectaction.py:716
+#: app.py:883 projectaction.py:396 projectaction.py:716
 msgid "Save project with File -> Save As before closing."
 msgstr ""
 
@@ -927,7 +927,7 @@ msgstr ""
 msgid "Saved Filter data not applicaple for this Filter!"
 msgstr ""
 
-#: clipeffectseditor.py:674 compositeeditor.py:357
+#: clipeffectseditor.py:674 compositeeditor.py:331
 msgid "Saved data is for "
 msgstr ""
 
@@ -943,23 +943,15 @@ msgstr ""
 msgid "Destination Track:"
 msgstr ""
 
-#: compositeeditor.py:209
-msgid "Add Fade In"
-msgstr ""
-
-#: compositeeditor.py:212
-msgid "Add Fade Out"
-msgstr ""
-
-#: compositeeditor.py:325
+#: compositeeditor.py:299
 msgid "_compositor_values"
 msgstr ""
 
-#: compositeeditor.py:356
+#: compositeeditor.py:330
 msgid "Saved Compositor data not applicaple for this compositor!"
 msgstr ""
 
-#: compositeeditor.py:357
+#: compositeeditor.py:331
 msgid ", current compositor is "
 msgstr ""
 
@@ -1888,11 +1880,11 @@ msgstr ""
 msgid "Deletes Selected Handle"
 msgstr ""
 
-#: dialogs.py:1494 keyframeeditor.py:732
+#: dialogs.py:1494 keyframeeditor.py:740
 msgid "Previous Frame"
 msgstr ""
 
-#: dialogs.py:1495 keyframeeditor.py:733 shortcuts.py:188
+#: dialogs.py:1495 keyframeeditor.py:741 shortcuts.py:188
 msgid "Next Frame"
 msgstr ""
 
@@ -2337,17 +2329,17 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: guicomponents.py:1951 translations.py:525 translations.py:635
+#: guicomponents.py:1951 translations.py:525 translations.py:639
 msgid "Red"
 msgstr ""
 
-#: guicomponents.py:1952 translations.py:526 translations.py:630
-#: translations.py:636
+#: guicomponents.py:1952 translations.py:526 translations.py:634
+#: translations.py:640
 msgid "Green"
 msgstr ""
 
-#: guicomponents.py:1953 translations.py:527 translations.py:631
-#: translations.py:637
+#: guicomponents.py:1953 translations.py:527 translations.py:635
+#: translations.py:641
 msgid "Blue"
 msgstr ""
 
@@ -2708,8 +2700,8 @@ msgstr ""
 msgid "Bins"
 msgstr ""
 
-#: panels.py:95 translations.py:628 translations.py:656 mlttransitions.py:145
-#: tools/titler.py:207
+#: panels.py:95 translations.py:632 translations.py:660 translations.py:681
+#: mlttransitions.py:145 tools/titler.py:207
 msgid "Add"
 msgstr ""
 
@@ -3032,7 +3024,7 @@ msgstr ""
 msgid "Distort"
 msgstr ""
 
-#: translations.py:135
+#: translations.py:135 translations.py:683
 msgid "Alpha"
 msgstr ""
 
@@ -3226,6 +3218,7 @@ msgstr ""
 
 #: translations.py:192 translations.py:407 translations.py:459
 #: translations.py:484 translations.py:573 translations.py:577
+#: translations.py:605
 msgid "Invert"
 msgstr ""
 
@@ -3238,7 +3231,7 @@ msgstr ""
 msgid "Brightness"
 msgstr ""
 
-#: translations.py:195 translations.py:643
+#: translations.py:195 translations.py:647
 msgid "Sepia"
 msgstr ""
 
@@ -3506,11 +3499,11 @@ msgstr ""
 msgid "Tilt"
 msgstr ""
 
-#: translations.py:280 translations.py:627
+#: translations.py:280 translations.py:631
 msgid "Min"
 msgstr ""
 
-#: translations.py:281 translations.py:626
+#: translations.py:281 translations.py:630
 msgid "Max"
 msgstr ""
 
@@ -4112,7 +4105,7 @@ msgstr ""
 msgid "Operation"
 msgstr ""
 
-#: translations.py:495 translations.py:619
+#: translations.py:495 translations.py:623
 msgid "Hard"
 msgstr ""
 
@@ -4136,11 +4129,11 @@ msgstr ""
 msgid "Supress"
 msgstr ""
 
-#: translations.py:501 translations.py:649
+#: translations.py:501 translations.py:653
 msgid "Horizontal"
 msgstr ""
 
-#: translations.py:502 translations.py:650
+#: translations.py:502 translations.py:654
 msgid "Vertical"
 msgstr ""
 
@@ -4444,224 +4437,244 @@ msgstr ""
 msgid "Radial Offset"
 msgstr ""
 
-#: translations.py:605 translations.py:611
+#: translations.py:601
+msgid "Feather Passes"
+msgstr ""
+
+#: translations.py:602
+msgid "Alpha Mode"
+msgstr ""
+
+#: translations.py:603
+msgid "Feather"
+msgstr ""
+
+#: translations.py:604
+msgid "Mode"
+msgstr ""
+
+#: translations.py:609 translations.py:615
 msgid "Shave"
 msgstr ""
 
-#: translations.py:606
+#: translations.py:610
 msgid "Rectangle"
 msgstr ""
 
-#: translations.py:607
+#: translations.py:611
 msgid "Ellipse"
 msgstr ""
 
-#: translations.py:608
+#: translations.py:612
 msgid "Triangle"
 msgstr ""
 
-#: translations.py:609 shortcuts.py:212 workflow.py:71
+#: translations.py:613 shortcuts.py:212 workflow.py:71
 msgid "Box"
 msgstr ""
 
-#: translations.py:610 translations.py:624
+#: translations.py:614 translations.py:628
 msgid "Diamond"
 msgstr ""
 
-#: translations.py:612
+#: translations.py:616
 msgid "Shrink Hard"
 msgstr ""
 
-#: translations.py:613
+#: translations.py:617
 msgid "Shrink Soft"
 msgstr ""
 
-#: translations.py:614
+#: translations.py:618
 msgid "Grow Hard"
 msgstr ""
 
-#: translations.py:615
+#: translations.py:619
 msgid "Grow Soft"
 msgstr ""
 
-#: translations.py:616
+#: translations.py:620
 msgid "RGB"
 msgstr ""
 
-#: translations.py:617
+#: translations.py:621
 msgid "ABI"
 msgstr ""
 
-#: translations.py:618
+#: translations.py:622
 msgid "HCI"
 msgstr ""
 
-#: translations.py:620
+#: translations.py:624
 msgid "Fat"
 msgstr ""
 
-#: translations.py:621
+#: translations.py:625
 msgid "Normal"
 msgstr ""
 
-#: translations.py:622
+#: translations.py:626
 msgid "Skinny"
 msgstr ""
 
-#: translations.py:623
+#: translations.py:627
 msgid "Ellipsoid"
 msgstr ""
 
-#: translations.py:625 shortcuts.py:207
+#: translations.py:629 shortcuts.py:207
 msgid "Overwrite"
 msgstr ""
 
-#: translations.py:629 mlttransitions.py:162
+#: translations.py:633 translations.py:682 mlttransitions.py:162
 msgid "Subtract"
 msgstr ""
 
-#: translations.py:632
+#: translations.py:636
 msgid "Sharper"
 msgstr ""
 
-#: translations.py:633
+#: translations.py:637
 msgid "Fuzzier"
 msgstr ""
 
-#: translations.py:634
+#: translations.py:638
 msgid "Luma"
 msgstr ""
 
-#: translations.py:638
+#: translations.py:642
 msgid "Add Constant"
 msgstr ""
 
-#: translations.py:639
+#: translations.py:643
 msgid "Change Gamma"
 msgstr ""
 
-#: translations.py:640 translations.py:658 mlttransitions.py:157
+#: translations.py:644 translations.py:662 mlttransitions.py:157
 msgid "Multiply"
 msgstr ""
 
-#: translations.py:641
+#: translations.py:645
 msgid "XPro"
 msgstr ""
 
-#: translations.py:642
+#: translations.py:646
 msgid "OldPhoto"
 msgstr ""
 
-#: translations.py:644
+#: translations.py:648
 msgid "Heat"
 msgstr ""
 
-#: translations.py:645
+#: translations.py:649
 msgid "XRay"
 msgstr ""
 
-#: translations.py:646
+#: translations.py:650
 msgid "RedGreen"
 msgstr ""
 
-#: translations.py:647
+#: translations.py:651
 msgid "YellowBlue"
 msgstr ""
 
-#: translations.py:648
+#: translations.py:652
 msgid "Esses"
 msgstr ""
 
-#: translations.py:651
+#: translations.py:655
 msgid "Shadows"
 msgstr ""
 
-#: translations.py:652
+#: translations.py:656
 msgid "Midtones"
 msgstr ""
 
-#: translations.py:653
+#: translations.py:657
 msgid "Highlights"
 msgstr ""
 
-#: translations.py:654
+#: translations.py:658
 msgid "Forward"
 msgstr ""
 
-#: translations.py:655
+#: translations.py:659
 msgid "Backward"
 msgstr ""
 
-#: translations.py:657
+#: translations.py:661
 msgid "Saturate"
 msgstr ""
 
-#: translations.py:659 mlttransitions.py:160
+#: translations.py:663 mlttransitions.py:160
 msgid "Screen"
 msgstr ""
 
-#: translations.py:660 mlttransitions.py:158
+#: translations.py:664 mlttransitions.py:158
 msgid "Overlay"
 msgstr ""
 
-#: translations.py:661 mlttransitions.py:148
+#: translations.py:665 mlttransitions.py:148
 msgid "Darken"
 msgstr ""
 
-#: translations.py:662 mlttransitions.py:156
+#: translations.py:666 mlttransitions.py:156
 msgid "Lighten"
 msgstr ""
 
-#: translations.py:663
+#: translations.py:667
 msgid "ColorDodge"
 msgstr ""
 
-#: translations.py:664
+#: translations.py:668
 msgid "Colorburn"
 msgstr ""
 
-#: translations.py:665 mlttransitions.py:154
+#: translations.py:669 mlttransitions.py:154
 msgid "Hardlight"
 msgstr ""
 
-#: translations.py:666 mlttransitions.py:161
+#: translations.py:670 mlttransitions.py:161
 msgid "Softlight"
 msgstr ""
 
-#: translations.py:667 mlttransitions.py:149
+#: translations.py:671 mlttransitions.py:149
 msgid "Difference"
 msgstr ""
 
-#: translations.py:668
+#: translations.py:672
 msgid "Exclusion"
 msgstr ""
 
-#: translations.py:669
+#: translations.py:673
 msgid "HSLHue"
 msgstr ""
 
-#: translations.py:670
+#: translations.py:674
 msgid "HSLSaturation"
 msgstr ""
 
-#: translations.py:671
+#: translations.py:675
 msgid "HSLColor"
 msgstr ""
 
-#: translations.py:672
+#: translations.py:676
 msgid "HSLLuminosity"
 msgstr ""
 
-#: translations.py:673
+#: translations.py:677
 msgid "Cos"
 msgstr ""
 
-#: translations.py:674
+#: translations.py:678
 msgid "Linear"
 msgstr ""
 
-#: translations.py:675
+#: translations.py:679
 msgid "Radial"
+msgstr ""
+
+#: translations.py:680
+msgid "Clear"
 msgstr ""
 
 #: mlttransitions.py:81
@@ -5012,104 +5025,112 @@ msgstr ""
 msgid "RotoMask info"
 msgstr ""
 
-#: keyframeeditor.py:621 kftoolmode.py:1345
+#: keyframeeditor.py:625 kftoolmode.py:1345
 msgid "Delete all but first Keyframe before Clip Range"
 msgstr ""
 
-#: keyframeeditor.py:627 kftoolmode.py:1351
+#: keyframeeditor.py:631 kftoolmode.py:1351
 msgid "Set Keyframe at Frame 0 to value of next Keyframe"
 msgstr ""
 
-#: keyframeeditor.py:629 kftoolmode.py:1340 kftoolmode.py:1363
+#: keyframeeditor.py:633 kftoolmode.py:1340 kftoolmode.py:1363
 #: kftoolmode.py:1374
 msgid "No Edit Actions currently available"
 msgstr ""
 
-#: keyframeeditor.py:644 kftoolmode.py:1369
+#: keyframeeditor.py:648 kftoolmode.py:1369
 msgid "Delete all Keyframes after Clip Range"
 msgstr ""
 
-#: keyframeeditor.py:728
+#: keyframeeditor.py:736
 msgid "Add Keyframe"
 msgstr ""
 
-#: keyframeeditor.py:729
+#: keyframeeditor.py:737
 msgid "Delete Keyframe"
 msgstr ""
 
-#: keyframeeditor.py:730
+#: keyframeeditor.py:738
 msgid "Previous Keyframe"
 msgstr ""
 
-#: keyframeeditor.py:731
+#: keyframeeditor.py:739
 msgid "Next Keyframe"
 msgstr ""
 
-#: keyframeeditor.py:734
+#: keyframeeditor.py:742
 msgid "Move Keyframe 1 Frame Back"
 msgstr ""
 
-#: keyframeeditor.py:735
+#: keyframeeditor.py:743
 msgid "Move Keyframe 1 Frame Forward"
 msgstr ""
 
-#: keyframeeditor.py:800
+#: keyframeeditor.py:744
+msgid "Add Fade In"
+msgstr ""
+
+#: keyframeeditor.py:745
+msgid "Add Fade Out"
+msgstr ""
+
+#: keyframeeditor.py:816
 msgid "View:"
 msgstr ""
 
-#: keyframeeditor.py:806
+#: keyframeeditor.py:822
 msgid "Large"
 msgstr ""
 
-#: keyframeeditor.py:807
+#: keyframeeditor.py:823
 msgid "Medium"
 msgstr ""
 
-#: keyframeeditor.py:808
+#: keyframeeditor.py:824
 msgid "Small"
 msgstr ""
 
-#: keyframeeditor.py:828
+#: keyframeeditor.py:844
 msgid "Reset Geometry"
 msgstr ""
 
-#: keyframeeditor.py:829
+#: keyframeeditor.py:845
 msgid "Geometry to Original Aspect Ratio"
 msgstr ""
 
-#: keyframeeditor.py:830
+#: keyframeeditor.py:846
 msgid "Center Horizontal"
 msgstr ""
 
-#: keyframeeditor.py:831
+#: keyframeeditor.py:847
 msgid "Center Vertical"
 msgstr ""
 
-#: keyframeeditor.py:1557 keyframeeditor.py:1593
+#: keyframeeditor.py:1573 keyframeeditor.py:1609
 msgid "X:"
 msgstr ""
 
-#: keyframeeditor.py:1558 keyframeeditor.py:1594
+#: keyframeeditor.py:1574 keyframeeditor.py:1610
 msgid "Y:"
 msgstr ""
 
-#: keyframeeditor.py:1559 profilesmanager.py:132
+#: keyframeeditor.py:1575 profilesmanager.py:132
 msgid "Width:"
 msgstr ""
 
-#: keyframeeditor.py:1560 profilesmanager.py:133
+#: keyframeeditor.py:1576 profilesmanager.py:133
 msgid "Height:"
 msgstr ""
 
-#: keyframeeditor.py:1595
+#: keyframeeditor.py:1611
 msgid "X scale:"
 msgstr ""
 
-#: keyframeeditor.py:1596
+#: keyframeeditor.py:1612
 msgid "Y scale:"
 msgstr ""
 
-#: keyframeeditor.py:1597
+#: keyframeeditor.py:1613
 msgid "Rotation:"
 msgstr ""
 
