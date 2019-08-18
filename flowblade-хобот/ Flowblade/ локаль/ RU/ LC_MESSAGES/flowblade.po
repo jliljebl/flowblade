@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Flowblade 2.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-18 19:03+0300\n"
-"PO-Revision-Date: 2019-08-16 21:44+0300\n"
+"PO-Revision-Date: 2019-08-18 22:42+0300\n"
 "Last-Translator: Николай Смольянинов <smolianinow.colya2016@yandex.ru>\n"
 "Language-Team: vk.com/flowblade\n"
 "Language: ru_RU\n"
@@ -29,7 +29,7 @@ msgstr "Минимальное разрешение экрана должно б
 
 #: app.py:849
 msgid "Your screen dimensions are "
-msgstr "Ваше разрешение экрана "
+msgstr "Разрешение вашего экрана "
 
 #: app.py:882 projectaction.py:395 projectaction.py:715
 msgid "Project has not been saved previously"
@@ -128,7 +128,7 @@ msgid ""
 "When saving a back-up snapshot of the project, the selected folder\n"
 "has to be empty."
 msgstr ""
-"Для сохранения резервной копии проекта, выбиранная папка\n"
+"Для сохранения резервной копии проекта, выбранная папка\n"
 "должна быть пустой."
 
 #: projectaction.py:568
@@ -304,7 +304,7 @@ msgstr "выбор_"
 
 #: projectaction.py:1268
 msgid "Save Selection Compound Clip"
-msgstr "Сохранить селекционный составной клип"
+msgstr "Сохранить выбранный составной клип"
 
 #: projectaction.py:1323 projectaction.py:1630 projectaction.py:1646
 #: projectdata.py:213 tlineaction.py:274
@@ -937,7 +937,7 @@ msgstr "Удалить эффект из стека эффектов клипа"
 
 #: clipeffectseditor.py:261
 msgid "Toggle all Filters On/Off"
-msgstr "Вкл./Выкл. все эффекты"
+msgstr "Вкл/Выкл все эффекты"
 
 #: clipeffectseditor.py:449
 msgid "No Clip"
@@ -3009,7 +3009,7 @@ msgstr "Выберите участок для сборки"
 msgid "Reset all render options to defaults"
 msgstr ""
 "Сбросить все параметры сборки \n"
-" на параметры по умолчанию"
+"на параметры по умолчанию"
 
 #: render.py:226
 msgid "Begin Rendering"
@@ -3573,9 +3573,8 @@ msgid "Gradient Tint"
 msgstr "Градиентная заливка"
 
 #: translations.py:272
-#, fuzzy
 msgid "RotoMask"
-msgstr "Информация о блуждающей маске"
+msgstr "Блуждающая маска"
 
 #: translations.py:278 translations.py:461
 msgid "Position"
@@ -4472,9 +4471,8 @@ msgid "Max Gain"
 msgstr "Максимальное усиление"
 
 #: translations.py:587
-#, fuzzy
 msgid "Min Gain"
-msgstr "Максимальное усиление"
+msgstr "Минимальное усиление"
 
 #: translations.py:588
 msgid "Select file"
@@ -4529,24 +4527,20 @@ msgid "Radial Offset"
 msgstr "Радиальное смещение"
 
 #: translations.py:602
-#, fuzzy
 msgid "Feather Passes"
-msgstr "Проход"
+msgstr "Проходов растушёвки"
 
 #: translations.py:603
-#, fuzzy
 msgid "Alpha Mode"
-msgstr "Модификация альфа"
+msgstr "Режим альфа"
 
 #: translations.py:604
-#, fuzzy
 msgid "Feather"
-msgstr "Дизеринг"
+msgstr "Растушёвка"
 
 #: translations.py:605
-#, fuzzy
 msgid "Mode"
-msgstr "Минимальный режим"
+msgstr "Режим"
 
 #: translations.py:609 translations.py:615
 msgid "Shave"
@@ -4769,9 +4763,8 @@ msgid "Radial"
 msgstr "Радиально"
 
 #: translations.py:680
-#, fuzzy
 msgid "Clear"
-msgstr "Очистить всё"
+msgstr "Очистить"
 
 #: mlttransitions.py:81
 msgid "Burst"
@@ -5841,7 +5834,7 @@ msgstr "Настройки Flowblade"
 
 #: preferenceswindow.py:58
 msgid "Editing"
-msgstr "Редактирование"
+msgstr "Правка"
 
 #: preferenceswindow.py:61
 msgid "Performance"
@@ -6167,7 +6160,7 @@ msgstr "Выберите количество ядер процессора"
 #: preferenceswindow.py:442
 msgid "Allow Frame Dropping for real-time rendering, when needed"
 msgstr ""
-"Разрешить пропуск кадров в  сборке реального времени, когда это необходимо"
+"Разрешить, при необходимости, пропуск кадров в сборке реального времени"
 
 #: preferenceswindow.py:446
 msgid "Render Threads:"
@@ -6705,7 +6698,7 @@ msgstr "Пересборка всех переходов и затемнений
 
 #: tlineaction.py:1558
 msgid "Rendering item "
-msgstr "Пересборка элемента: "
+msgstr "Пересборка элемента "
 
 #: tlineaction.py:1745 tlineaction.py:1750
 msgid "Can't rerender this fade / transition."
@@ -6995,7 +6988,7 @@ msgstr " сборка в файл"
 
 #: tools/gmic.py:915
 msgid " frame(s),"
-msgstr " кадра(ов),"
+msgstr " кадр(ов),"
 
 #: tools/gmic.py:927
 msgid "G'Mic Webpage"
@@ -7106,14 +7099,14 @@ msgstr "Синхронизация звука для составных клип
 msgid "Audio Sync parent clips must be on differnt tracks "
 msgstr ""
 "Для синхронизации родительский и звуковой клипы должны\n"
-" размещаться на разных дорожках "
+"размещаться на разных дорожках "
 
 #: audiosync.py:185
 msgid ""
 "Selected audio sync clip is on the sametrack as the sync action origin clip."
 msgstr ""
 "Выбранный синхронизируемый звуковой клип находится на той же дорожке,\n"
-" что и синхронизирующий родительский."
+"что и синхронизирующий родительский."
 
 #: audiosync.py:222
 msgid "Audio sync move not possible"
@@ -7236,7 +7229,7 @@ msgstr "Изменить скорость клипа"
 
 #: toolsintegration.py:129
 msgid "Reverse"
-msgstr "Изменить направление клипа"
+msgstr "Изменить направление"
 
 #: projectmediaimport.py:144
 msgid "Loading Media Import Project"
@@ -7292,11 +7285,11 @@ msgstr "Удалить элемент без вставки"
 
 #: shortcuts.py:199
 msgid "Go To Start"
-msgstr "Перейти к началу редактирования"
+msgstr "К началу"
 
 #: shortcuts.py:200
 msgid "Go To End"
-msgstr "Перейти в конец"
+msgstr "В конец"
 
 #: shortcuts.py:201
 msgid "3 Point Overwrite"
@@ -7480,9 +7473,7 @@ msgstr "Нельзя вносить изменения в заблокирова
 
 #: dialogutils.py:218
 msgid " is locked. Unlock track to edit it."
-msgstr ""
-" заблокирована. Для внесения изменений в дорожку, необходимо её "
-"разблокировать."
+msgstr " заблокирована. Разблокируйте дорожку для внесения в неё изменений."
 
 #: trimmodes.py:462
 msgid "Can't use Trim tool on blank clips."
@@ -7515,8 +7506,8 @@ msgid ""
 "Unfortunately the webresource containing help information\n"
 "for this application was not found."
 msgstr ""
-"К сожалению, источник веб-страниц, содержащий справочную\n"
-" информацию к этому приложению, не найден."
+"К сожалению, источник веб-страницы, содержащий справочную\n"
+"информацию к этому приложению, не найден."
 
 #: exporting.py:376
 msgid "Sequence is too short"
@@ -7717,7 +7708,7 @@ msgstr ""
 "<b>\n"
 "\n"
 "Левой кнопкой мыши</b> выделите область элементов в рамку и переместите\n"
-" выделенную область вперёд или назад."
+"выделенную область вперёд или назад."
 
 #: workflow.py:173
 msgid "Workflow Presets"
@@ -7761,11 +7752,11 @@ msgstr "Автосопровождение композитора"
 
 #: workflow.py:228
 msgid "Show Tooltips for Tools"
-msgstr "Подсказки инструментов"
+msgstr "Подсказки к инструментам"
 
 #: workflow.py:316
 msgid "Tool Active"
-msgstr "Использовать инструмент"
+msgstr "Включить инструмент"
 
 #: workflow.py:324
 msgid "Set Position"
