@@ -37,6 +37,7 @@ import keyframeeditor
 import mltfilters
 import mlttransitions
 import propertyparse
+import propertyedit
 import respaths
 import translations
 import updater
@@ -930,22 +931,27 @@ def _create_rotomask_property_editor_widgets(editable_properties):
     property_editor_widgets = []
     
     invert_prop = filter(lambda ep: ep.name == "invert", editable_properties)[0]
+    invert_prop.args[propertyedit.DISPLAY_NAME] = translations.param_names["Invert"]
     invert_editor =  _get_boolean_check_box_row(invert_prop, True)
     invert_editor.set_size_request(130, 20)
 
     feather_prop = filter(lambda ep: ep.name == "feather", editable_properties)[0]
+    feather_prop.args[propertyedit.DISPLAY_NAME] = translations.param_names["Feather"]
     feather_editor = _get_no_kf_slider_row(feather_prop, slider_name=None, compact=True)
     feather_editor.set_size_request(450, 20)
 
     feather_passes_prop = filter(lambda ep: ep.name == "feather_passes", editable_properties)[0]
+    feather_passes_prop.args[propertyedit.DISPLAY_NAME] = translations.param_names["Feather Passes"]
     feather_passes_editor = _get_no_kf_slider_row(feather_passes_prop, slider_name=None, compact=True)
     feather_passes_editor.set_size_request(450, 20)
     
     alpha_operation_prop = filter(lambda ep: ep.name == "alpha_operation", editable_properties)[0]
+    alpha_operation_prop.args[propertyedit.DISPLAY_NAME] = translations.param_names["Alpha Mode"]
     alpha_operation_editor = _get_combo_box_row(alpha_operation_prop, True)
     alpha_operation_editor.set_size_request(270, 20)
     
     mode_prop = filter(lambda ep: ep.name == "mode", editable_properties)[0]
+    mode_prop.args[propertyedit.DISPLAY_NAME] = translations.param_names["Mode"]
     mode_editor = _get_combo_box_row(mode_prop, True)
     mode_editor.set_size_request(270, 20)
 

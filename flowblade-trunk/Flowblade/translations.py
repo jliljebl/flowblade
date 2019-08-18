@@ -269,6 +269,7 @@ def load_filters_translations():
     filter_names["Normalize"] = _("Normalize")
     filter_names["File Luma to Alpha"] = _("File Luma to Alpha") 
     filter_names["Gradient Tint"] = _("Gradient Tint")
+    filter_names["RotoMask"] = _("RotoMask")
     
     # param names
     global param_names
@@ -583,7 +584,7 @@ def load_filters_translations():
     param_names["Target Loudness"] = _("Blend Mode")
     param_names["Analysis Length"] = _("Analysis Length")
     param_names["Max Gain"] = _("Max Gain")
-    param_names["Min Mode"] = _("Min Mode")
+    param_names["Min Gain"] = _("Min Gain")
     param_names["Select file"] = _("Select file")
     param_names["Smooth"] = _("Smooth")
     param_names["Radius"] = _("Radius")
@@ -602,7 +603,6 @@ def load_filters_translations():
     param_names["Alpha Mode"] = _("Alpha Mode")
     param_names["Feather"] = _("Feather")
     param_names["Mode"] = _("Mode")
-    param_names["Invert"] = _("Invert")
 
     # Combo options
     global combo_options
