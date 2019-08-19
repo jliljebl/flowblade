@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-18 19:03+0300\n"
+"POT-Creation-Date: 2019-08-19 15:13+0300\n"
 "PO-Revision-Date: 2019-06-21 20:33+0200\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -5163,63 +5163,63 @@ msgstr "Přidat postupné zesílení (postupný náběh)"
 msgid "Add Fade Out"
 msgstr "Přidat postupné zeslabení (do ztracena)"
 
-#: keyframeeditor.py:816
+#: keyframeeditor.py:817
 msgid "View:"
 msgstr "Pohled:"
 
-#: keyframeeditor.py:822
+#: keyframeeditor.py:823
 msgid "Large"
 msgstr "Velký"
 
-#: keyframeeditor.py:823
+#: keyframeeditor.py:824
 msgid "Medium"
 msgstr "Střední"
 
-#: keyframeeditor.py:824
+#: keyframeeditor.py:825
 msgid "Small"
 msgstr "Malá"
 
-#: keyframeeditor.py:844
+#: keyframeeditor.py:845
 msgid "Reset Geometry"
 msgstr "Nastavit znovu výchozí rozvržení"
 
-#: keyframeeditor.py:845
+#: keyframeeditor.py:846
 msgid "Geometry to Original Aspect Ratio"
 msgstr "Rozvržení na původní poměr stran"
 
-#: keyframeeditor.py:846
+#: keyframeeditor.py:847
 msgid "Center Horizontal"
 msgstr "Vystředit vodorovně"
 
-#: keyframeeditor.py:847
+#: keyframeeditor.py:848
 msgid "Center Vertical"
 msgstr "Vystředit svisle"
 
-#: keyframeeditor.py:1573 keyframeeditor.py:1609
+#: keyframeeditor.py:1574 keyframeeditor.py:1610
 msgid "X:"
 msgstr "X:"
 
-#: keyframeeditor.py:1574 keyframeeditor.py:1610
+#: keyframeeditor.py:1575 keyframeeditor.py:1611
 msgid "Y:"
 msgstr "Y:"
 
-#: keyframeeditor.py:1575 profilesmanager.py:132
+#: keyframeeditor.py:1576 profilesmanager.py:132
 msgid "Width:"
 msgstr "Šířka:"
 
-#: keyframeeditor.py:1576 profilesmanager.py:133
+#: keyframeeditor.py:1577 profilesmanager.py:133
 msgid "Height:"
 msgstr "Výška:"
 
-#: keyframeeditor.py:1611
+#: keyframeeditor.py:1612
 msgid "X scale:"
 msgstr "Osa X:"
 
-#: keyframeeditor.py:1612
+#: keyframeeditor.py:1613
 msgid "Y scale:"
 msgstr "Osa Y:"
 
-#: keyframeeditor.py:1613
+#: keyframeeditor.py:1614
 msgid "Rotation:"
 msgstr "Otočení:"
 

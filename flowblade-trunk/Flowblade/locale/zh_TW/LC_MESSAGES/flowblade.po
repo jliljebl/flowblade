@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-18 19:03+0300\n"
+"POT-Creation-Date: 2019-08-19 15:13+0300\n"
 "PO-Revision-Date: 2018-12-31 10:20+0800\n"
 "Last-Translator: Steve Nian <sdnian@gmail.com>\n"
 "Language-Team: Chinese (traditional)\n"
@@ -5167,63 +5167,63 @@ msgstr "增加淡入"
 msgid "Add Fade Out"
 msgstr "增加淡出"
 
-#: keyframeeditor.py:816
+#: keyframeeditor.py:817
 msgid "View:"
 msgstr "檢視："
 
-#: keyframeeditor.py:822
+#: keyframeeditor.py:823
 msgid "Large"
 msgstr "大"
 
-#: keyframeeditor.py:823
+#: keyframeeditor.py:824
 msgid "Medium"
 msgstr "中"
 
-#: keyframeeditor.py:824
+#: keyframeeditor.py:825
 msgid "Small"
 msgstr "小"
 
-#: keyframeeditor.py:844
+#: keyframeeditor.py:845
 msgid "Reset Geometry"
 msgstr "重置幾何"
 
-#: keyframeeditor.py:845
+#: keyframeeditor.py:846
 msgid "Geometry to Original Aspect Ratio"
 msgstr "幾何到原始縱橫比"
 
-#: keyframeeditor.py:846
+#: keyframeeditor.py:847
 msgid "Center Horizontal"
 msgstr "中心水平"
 
-#: keyframeeditor.py:847
+#: keyframeeditor.py:848
 msgid "Center Vertical"
 msgstr "中心垂直"
 
-#: keyframeeditor.py:1573 keyframeeditor.py:1609
+#: keyframeeditor.py:1574 keyframeeditor.py:1610
 msgid "X:"
 msgstr "X："
 
-#: keyframeeditor.py:1574 keyframeeditor.py:1610
+#: keyframeeditor.py:1575 keyframeeditor.py:1611
 msgid "Y:"
 msgstr "Y："
 
-#: keyframeeditor.py:1575 profilesmanager.py:132
+#: keyframeeditor.py:1576 profilesmanager.py:132
 msgid "Width:"
 msgstr "寬："
 
-#: keyframeeditor.py:1576 profilesmanager.py:133
+#: keyframeeditor.py:1577 profilesmanager.py:133
 msgid "Height:"
 msgstr "高："
 
-#: keyframeeditor.py:1611
+#: keyframeeditor.py:1612
 msgid "X scale:"
 msgstr "X 比例："
 
-#: keyframeeditor.py:1612
+#: keyframeeditor.py:1613
 msgid "Y scale:"
 msgstr "Y 比例："
 
-#: keyframeeditor.py:1613
+#: keyframeeditor.py:1614
 msgid "Rotation:"
 msgstr "迴轉："
 
