@@ -98,7 +98,7 @@ SCREEN_WIDTH = -1
 # Runtime environment data
 gtk_version = None
 mlt_version = None
-appversion = "2.0.0"
+appversion = "2.2.0"
 RUNNING_FROM_INSTALLATION = 0
 RUNNING_FROM_DEV_VERSION = 1
 app_running_from = RUNNING_FROM_INSTALLATION
@@ -120,9 +120,6 @@ attach_jackrack = False
 
 # Flag is used to block unwanted draw events during loads  
 project_is_loading = False
-
-# Audio Scrubbing
-#audio_scrubbing = True
 
 # Audio levels display mode, False means that audio levels are displayed on request
 display_all_audio_levels = True
@@ -287,12 +284,6 @@ def set_mouse_current_non_drag_pos(x, y):
     last_mouse_x = x
     last_mouse_y = y
     
-"""
-def get_sdl_version(): # This ain't true anymore, 6.6.0 has both available
-    if mlt_version_is_equal_or_greater_correct("6.4.2") == True:
-        return SDL_2
-    else:
-        return SDL_1
-"""
+
         
          
