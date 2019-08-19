@@ -705,7 +705,7 @@ class ClipEditorButtonsRow(Gtk.HBox):
         editor_parent.prev_frame_pressed()
         editor_parent.next_frame_pressed()
     """
-    def __init__(self, editor_parent, centered_buttons=False):
+    def __init__(self, editor_parent, centered_buttons=False, show_fade_buttons=True):
         GObject.GObject.__init__(self)
         self.set_homogeneous(False)
         self.set_spacing(2)
@@ -765,8 +765,9 @@ class ClipEditorButtonsRow(Gtk.HBox):
         self.pack_start(self.prev_frame_button, False, False, 0)
         self.pack_start(self.next_frame_button, False, False, 0)
         self.pack_start(guiutils.pad_label(24,4), False, False, 0)
-        self.pack_start(self.add_fade_in_button, False, False, 0)
-        self.pack_start(self.add_fade_out_button, False, False, 0)
+        if show_fade_buttons:
+            self.pack_start(self.add_fade_in_button, False, False, 0)
+            self.pack_start(self.add_fade_out_button, False, False, 0)
         if not centered_buttons:
             self.pack_start(Gtk.Label(), True, True, 0)
         else:
@@ -1423,7 +1424,7 @@ class RotoMaskKeyFrameEditor(Gtk.VBox):
         clip_editor_row.pack_start(self.clip_editor.widget, True, True, 0)
         clip_editor_row.pack_start(guiutils.pad_label(4, 4), False, False, 0)
         
-        self.buttons_row = ClipEditorButtonsRow(self, True)
+        self.buttons_row = ClipEditorButtonsRow(self, True, False)
         
         self.pack_start(clip_editor_row, False, False, 0)
         self.pack_start(self.buttons_row, False, False, 0)
