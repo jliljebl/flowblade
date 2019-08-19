@@ -9,7 +9,7 @@ Document focuses on large fundamental structures and intentions present in the c
 Diagrams are created with PlantUML  from the text files present in this directory.
 
 ## 2. Module design
-![diagram 2.1](/home/janne/codes/docs/Flowblade/plantuml/modulesdia.png  "diagram 2.1")
+![diagram 2.1](./modulesdia.png  "diagram 2.1")
 
 The approach taken in structuring Flowblade code base is that **modules are considered to be divided into three categories** based on number of other *internal* modules they import:
   * **Root modules** import a large part of total number of modules
@@ -28,7 +28,7 @@ Unfortunately import structures in *Functional Modules* often still remain compl
 
 
 ## 3. Data Structures
-![Data Structure](/home/janne/codes/docs/Flowblade/plantuml/datadia.png)
+![Data Structure](./datadia.png)
 
 **Flowblade maintains at all times two 100% synced data structures:**
   * Python data structures that are mainly described in *sequence.py* and *projectsdata.py*
@@ -51,7 +51,7 @@ The reaasoning behind the approach:
 * save and load using *pickle()* requires this
 
 ## 4. Filter editing Pipeline
-![Data Structure](/home/janne/codes/docs/Flowblade/plantuml/filtersdia.png)
+![Data Structure](./filtersdia.png)
 
 The conceptual approach taken in filter editing related code is that **the whole process is a data modifying pipeline.**
 
@@ -60,7 +60,7 @@ This approach has been massive success from correctness point-of-view. We have r
 For anyone interested in understanding this functionality in more detail the best approach would be to go through the diagram above while reading the related code *(which is given in the notes on the left, notes on the right give some additional information on each step).*
 
 ## 5. Minimal Viable Diagram
-![Minimal viable diagram](/home/janne/codes/docs/Flowblade/plantuml/fbladedia.png)
+![Minimal viable diagram](./fbladedia.png)
 
 This diagram attempts to show the smallest possible view describing application life cycle and main editing actions.
 * *smalltext.py* names are Python modules
