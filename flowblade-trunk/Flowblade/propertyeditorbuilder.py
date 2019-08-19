@@ -928,30 +928,32 @@ def _roto_lauch_pressed(filt, editable_properties, property_editor_widgets_creat
     show_rotomask_func(filt, editable_properties, property_editor_widgets_create_func, value_labels)
 
 def _create_rotomask_property_editor_widgets(editable_properties):
+    # NOTE: EditanbleParam objects for are usually created in  propertyedit.get_filter_editable_properties(), this a deviation from normal pipeline
+    # that was needed because RotoMask editor is a separate window.
     property_editor_widgets = []
     
     invert_prop = filter(lambda ep: ep.name == "invert", editable_properties)[0]
-    invert_prop.args[propertyedit.DISPLAY_NAME] = translations.param_names["Invert"]
+    invert_prop.args[propertyedit.DISPLAY_NAME] = translations.param_names["Invert"] # NOTE: We needed to put this here because we didn't use the normal method create these ( propertyedit.get_filter_editable_properties() )
     invert_editor =  _get_boolean_check_box_row(invert_prop, True)
     invert_editor.set_size_request(130, 20)
 
     feather_prop = filter(lambda ep: ep.name == "feather", editable_properties)[0]
-    feather_prop.args[propertyedit.DISPLAY_NAME] = translations.param_names["Feather"]
+    feather_prop.args[propertyedit.DISPLAY_NAME] = translations.param_names["Feather"] # NOTE: We needed to put this here because we didn't use the normal method create these ( propertyedit.get_filter_editable_properties() )
     feather_editor = _get_no_kf_slider_row(feather_prop, slider_name=None, compact=True)
     feather_editor.set_size_request(450, 20)
 
     feather_passes_prop = filter(lambda ep: ep.name == "feather_passes", editable_properties)[0]
-    feather_passes_prop.args[propertyedit.DISPLAY_NAME] = translations.param_names["Feather Passes"]
+    feather_passes_prop.args[propertyedit.DISPLAY_NAME] = translations.param_names["Feather Passes"] # NOTE: We needed to put this here because we didn't use the normal method create these ( propertyedit.get_filter_editable_properties() )
     feather_passes_editor = _get_no_kf_slider_row(feather_passes_prop, slider_name=None, compact=True)
     feather_passes_editor.set_size_request(450, 20)
     
     alpha_operation_prop = filter(lambda ep: ep.name == "alpha_operation", editable_properties)[0]
-    alpha_operation_prop.args[propertyedit.DISPLAY_NAME] = translations.param_names["Alpha Mode"]
+    alpha_operation_prop.args[propertyedit.DISPLAY_NAME] = translations.param_names["Alpha Mode"] # NOTE: We needed to put this here because we didn't use the normal method create these ( propertyedit.get_filter_editable_properties() )
     alpha_operation_editor = _get_combo_box_row(alpha_operation_prop, True)
     alpha_operation_editor.set_size_request(270, 20)
     
     mode_prop = filter(lambda ep: ep.name == "mode", editable_properties)[0]
-    mode_prop.args[propertyedit.DISPLAY_NAME] = translations.param_names["Mode"]
+    mode_prop.args[propertyedit.DISPLAY_NAME] = translations.param_names["Mode"] # NOTE: We needed to put this here because we didn't use the normal method create these ( propertyedit.get_filter_editable_properties() )
     mode_editor = _get_combo_box_row(mode_prop, True)
     mode_editor.set_size_request(270, 20)
 
