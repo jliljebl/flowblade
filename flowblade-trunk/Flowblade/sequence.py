@@ -912,6 +912,9 @@ class Sequence:
         """
         Returns frame of next cut in active tracks relative to timeline.
         """
+        if tline_frame == 0:
+            return 0 # Rest of method fails for this special case
+        
         cut_frame = -1
         for i in range(1, len(self.tracks) - 1):
             track = self.tracks[i]
