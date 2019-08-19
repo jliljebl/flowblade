@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Floblade Italian Translation 0.14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-19 15:13+0300\n"
+"POT-Creation-Date: 2019-08-19 23:11+0300\n"
 "PO-Revision-Date: 2019-04-07 10:24+0200\n"
 "Last-Translator: Enrico Bella <enricobe@hotmail.com>\n"
 "Language-Team: Italiano\n"
@@ -7806,11 +7806,13 @@ msgid "Select Preset Workflow and Continue"
 msgstr "Seleziona workflow e continua"
 
 #: workflow.py:429
-msgid "<b>Welcome to Flowblade 2.0</b>"
+#, fuzzy
+msgid "<b>Welcome to Flowblade 2.2</b>"
 msgstr "<b>Benvenuto in Flowblade 2.0</b>"
 
 #: workflow.py:434
-msgid "<b>Flowblade 2.0</b> comes with a configurable workflow."
+#, fuzzy
+msgid "<b>Flowblade 2.2</b> comes with a configurable workflow."
 msgstr "<b>Flowblade 2.0</b> dispone di un workflow configurabile."
 
 #: workflow.py:439

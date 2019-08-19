@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-19 15:13+0300\n"
+"POT-Creation-Date: 2019-08-19 23:11+0300\n"
 "PO-Revision-Date: 2019-06-21 20:33+0200\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -7771,11 +7771,13 @@ msgid "Select Preset Workflow and Continue"
 msgstr "Vyberte přednastavení pracovního postupu a pokračujte"
 
 #: workflow.py:429
-msgid "<b>Welcome to Flowblade 2.0</b>"
+#, fuzzy
+msgid "<b>Welcome to Flowblade 2.2</b>"
 msgstr "<b>Vítejte ve Flowblade 2.0</b>"
 
 #: workflow.py:434
-msgid "<b>Flowblade 2.0</b> comes with a configurable workflow."
+#, fuzzy
+msgid "<b>Flowblade 2.2</b> comes with a configurable workflow."
 msgstr "<b>Flowblade 2.0</b> přichází s nastavitelným pracovním postupem."
 
 #: workflow.py:439

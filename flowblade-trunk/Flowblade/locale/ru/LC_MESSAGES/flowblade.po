@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Flowblade 2.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-19 15:13+0300\n"
+"POT-Creation-Date: 2019-08-19 23:11+0300\n"
 "PO-Revision-Date: 2019-08-18 22:42+0300\n"
 "Last-Translator: Николай Смольянинов <smolianinow.colya2016@yandex.ru>\n"
 "Language-Team: vk.com/flowblade\n"
@@ -7775,11 +7775,13 @@ msgid "Select Preset Workflow and Continue"
 msgstr "Выбрать режим работы и продолжить"
 
 #: workflow.py:429
-msgid "<b>Welcome to Flowblade 2.0</b>"
+#, fuzzy
+msgid "<b>Welcome to Flowblade 2.2</b>"
 msgstr "<b>Добро пожаловать в Flowblade 2.0</b>"
 
 #: workflow.py:434
-msgid "<b>Flowblade 2.0</b> comes with a configurable workflow."
+#, fuzzy
+msgid "<b>Flowblade 2.2</b> comes with a configurable workflow."
 msgstr "<b>Flowblade 2.0</b> поставляется с настраиваемым режимом работы."
 
 #: workflow.py:439
