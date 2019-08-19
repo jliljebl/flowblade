@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-18 19:03+0300\n"
+"POT-Creation-Date: 2019-08-19 15:13+0300\n"
 "PO-Revision-Date: 2014-11-23 14:22+0100\n"
 "Last-Translator: Mario Dejanovic <mario.dejanovic@gmx.at>\n"
 "Language-Team: German\n"
@@ -5518,65 +5518,65 @@ msgstr "Ausblenden"
 #
 #
 #
-#: keyframeeditor.py:816
+#: keyframeeditor.py:817
 msgid "View:"
 msgstr "Ansicht:"
 
-#: keyframeeditor.py:822
+#: keyframeeditor.py:823
 msgid "Large"
 msgstr "Groß"
 
-#: keyframeeditor.py:823
+#: keyframeeditor.py:824
 msgid "Medium"
 msgstr "Mittel"
 
-#: keyframeeditor.py:824
+#: keyframeeditor.py:825
 msgid "Small"
 msgstr "Klein"
 
-#: keyframeeditor.py:844
+#: keyframeeditor.py:845
 msgid "Reset Geometry"
 msgstr "Geometrie zurücksetzen"
 
-#: keyframeeditor.py:845
+#: keyframeeditor.py:846
 msgid "Geometry to Original Aspect Ratio"
 msgstr "Geometrie zurücksetzen Original Verhältnis"
 
-#: keyframeeditor.py:846
+#: keyframeeditor.py:847
 msgid "Center Horizontal"
 msgstr "Horizontal zentrieren"
 
-#: keyframeeditor.py:847
+#: keyframeeditor.py:848
 msgid "Center Vertical"
 msgstr "Vertikal zentrieren"
 
-#: keyframeeditor.py:1573 keyframeeditor.py:1609
+#: keyframeeditor.py:1574 keyframeeditor.py:1610
 msgid "X:"
 msgstr ""
 
-#: keyframeeditor.py:1574 keyframeeditor.py:1610
+#: keyframeeditor.py:1575 keyframeeditor.py:1611
 msgid "Y:"
 msgstr ""
 
-#: keyframeeditor.py:1575 profilesmanager.py:132
+#: keyframeeditor.py:1576 profilesmanager.py:132
 msgid "Width:"
 msgstr "Breite:"
 
-#: keyframeeditor.py:1576 profilesmanager.py:133
+#: keyframeeditor.py:1577 profilesmanager.py:133
 msgid "Height:"
 msgstr "Höhe:"
 
-#: keyframeeditor.py:1611
+#: keyframeeditor.py:1612
 #, fuzzy
 msgid "X scale:"
 msgstr "Lokal: "
 
-#: keyframeeditor.py:1612
+#: keyframeeditor.py:1613
 #, fuzzy
 msgid "Y scale:"
 msgstr "Lokal: "
 
-#: keyframeeditor.py:1613
+#: keyframeeditor.py:1614
 #, fuzzy
 msgid "Rotation:"
 msgstr "Dauer"

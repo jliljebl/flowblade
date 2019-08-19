@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-18 19:03+0300\n"
+"POT-Creation-Date: 2019-08-19 15:13+0300\n"
 "PO-Revision-Date: 2018-11-15 12:12+0200\n"
 "Last-Translator: Stanislaw Polak <polak@icsr.agh.edu.pl>\n"
 "Language-Team: Polish\n"
@@ -5202,63 +5202,63 @@ msgstr "Dodaj płynne wyłanianie"
 msgid "Add Fade Out"
 msgstr "Dodaj płynne zanikanie"
 
-#: keyframeeditor.py:816
+#: keyframeeditor.py:817
 msgid "View:"
 msgstr "Widok:"
 
-#: keyframeeditor.py:822
+#: keyframeeditor.py:823
 msgid "Large"
 msgstr "Duży"
 
-#: keyframeeditor.py:823
+#: keyframeeditor.py:824
 msgid "Medium"
 msgstr "Średni"
 
-#: keyframeeditor.py:824
+#: keyframeeditor.py:825
 msgid "Small"
 msgstr "Mały"
 
-#: keyframeeditor.py:844
+#: keyframeeditor.py:845
 msgid "Reset Geometry"
 msgstr "Zresetuj geometrię"
 
-#: keyframeeditor.py:845
+#: keyframeeditor.py:846
 msgid "Geometry to Original Aspect Ratio"
 msgstr "Geometria do pierwotnego współczynnika proporcji"
 
-#: keyframeeditor.py:846
+#: keyframeeditor.py:847
 msgid "Center Horizontal"
 msgstr "Centruj w poziomie"
 
-#: keyframeeditor.py:847
+#: keyframeeditor.py:848
 msgid "Center Vertical"
 msgstr "Centruj w pionie"
 
-#: keyframeeditor.py:1573 keyframeeditor.py:1609
+#: keyframeeditor.py:1574 keyframeeditor.py:1610
 msgid "X:"
 msgstr ""
 
-#: keyframeeditor.py:1574 keyframeeditor.py:1610
+#: keyframeeditor.py:1575 keyframeeditor.py:1611
 msgid "Y:"
 msgstr ""
 
-#: keyframeeditor.py:1575 profilesmanager.py:132
+#: keyframeeditor.py:1576 profilesmanager.py:132
 msgid "Width:"
 msgstr "Szerokość:"
 
-#: keyframeeditor.py:1576 profilesmanager.py:133
+#: keyframeeditor.py:1577 profilesmanager.py:133
 msgid "Height:"
 msgstr "Wysokość:"
 
-#: keyframeeditor.py:1611
+#: keyframeeditor.py:1612
 msgid "X scale:"
 msgstr "Skala X: "
 
-#: keyframeeditor.py:1612
+#: keyframeeditor.py:1613
 msgid "Y scale:"
 msgstr "Skala Y: "
 
-#: keyframeeditor.py:1613
+#: keyframeeditor.py:1614
 msgid "Rotation:"
 msgstr "Rotacja:"
 

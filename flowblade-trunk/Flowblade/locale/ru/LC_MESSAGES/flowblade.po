@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Flowblade 2.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-18 19:03+0300\n"
+"POT-Creation-Date: 2019-08-19 15:13+0300\n"
 "PO-Revision-Date: 2019-08-18 22:42+0300\n"
 "Last-Translator: Николай Смольянинов <smolianinow.colya2016@yandex.ru>\n"
 "Language-Team: vk.com/flowblade\n"
@@ -5164,63 +5164,63 @@ msgstr "Добавить выход из затемнения"
 msgid "Add Fade Out"
 msgstr "Добавить уход в затемнение"
 
-#: keyframeeditor.py:816
+#: keyframeeditor.py:817
 msgid "View:"
 msgstr "Вид:"
 
-#: keyframeeditor.py:822
+#: keyframeeditor.py:823
 msgid "Large"
 msgstr "Большой"
 
-#: keyframeeditor.py:823
+#: keyframeeditor.py:824
 msgid "Medium"
 msgstr "Средний"
 
-#: keyframeeditor.py:824
+#: keyframeeditor.py:825
 msgid "Small"
 msgstr "Маленький"
 
-#: keyframeeditor.py:844
+#: keyframeeditor.py:845
 msgid "Reset Geometry"
 msgstr "Сброс геометрии"
 
-#: keyframeeditor.py:845
+#: keyframeeditor.py:846
 msgid "Geometry to Original Aspect Ratio"
 msgstr "Геометрия к исходному соотношению сторон"
 
-#: keyframeeditor.py:846
+#: keyframeeditor.py:847
 msgid "Center Horizontal"
 msgstr "Центрировать по горизонтали"
 
-#: keyframeeditor.py:847
+#: keyframeeditor.py:848
 msgid "Center Vertical"
 msgstr "Центрировать по вертикали"
 
-#: keyframeeditor.py:1573 keyframeeditor.py:1609
+#: keyframeeditor.py:1574 keyframeeditor.py:1610
 msgid "X:"
 msgstr "X:"
 
-#: keyframeeditor.py:1574 keyframeeditor.py:1610
+#: keyframeeditor.py:1575 keyframeeditor.py:1611
 msgid "Y:"
 msgstr "Y:"
 
-#: keyframeeditor.py:1575 profilesmanager.py:132
+#: keyframeeditor.py:1576 profilesmanager.py:132
 msgid "Width:"
 msgstr "Ширина:"
 
-#: keyframeeditor.py:1576 profilesmanager.py:133
+#: keyframeeditor.py:1577 profilesmanager.py:133
 msgid "Height:"
 msgstr "Высота:"
 
-#: keyframeeditor.py:1611
+#: keyframeeditor.py:1612
 msgid "X scale:"
 msgstr "Ширина:"
 
-#: keyframeeditor.py:1612
+#: keyframeeditor.py:1613
 msgid "Y scale:"
 msgstr "Высота:"
 
-#: keyframeeditor.py:1613
+#: keyframeeditor.py:1614
 msgid "Rotation:"
 msgstr "Вращение:"
 
