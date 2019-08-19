@@ -65,8 +65,8 @@ POS_ENTRY_H = 20
 KF_HIT_WIDTH = 4
 KF_DRAG_THRESHOLD = 3
 
-GEOM_EDITOR_SIZE_LARGE = 0.9
-GEOM_EDITOR_SIZE_SMALL = 0.3
+GEOM_EDITOR_SIZE_LARGE = 0.9 # displayed screensize as fraction of available height
+GEOM_EDITOR_SIZE_SMALL = 0.3 # displayed screensize as fraction of available height
 GEOM_EDITOR_SIZE_MEDIUM = 0.6 # displayed screensize as fraction of available height
 GEOM_EDITOR_SIZES = [GEOM_EDITOR_SIZE_LARGE, GEOM_EDITOR_SIZE_MEDIUM, GEOM_EDITOR_SIZE_SMALL]
 
