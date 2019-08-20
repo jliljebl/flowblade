@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-19 23:11+0300\n"
+"POT-Creation-Date: 2019-08-20 22:56+0300\n"
 "PO-Revision-Date: 2018-12-31 10:20+0800\n"
 "Last-Translator: Steve Nian <sdnian@gmail.com>\n"
 "Language-Team: Chinese (traditional)\n"
@@ -567,7 +567,7 @@ msgstr "更改序列軌道數量..."
 msgid "Watermark..."
 msgstr "浮水印..."
 
-#: editorwindow.py:229 diskcachemanagement.py:148
+#: editorwindow.py:229 diskcachemanagement.py:149
 msgid "Disk Cache Manager"
 msgstr "磁碟快取管理員"
 
@@ -1949,7 +1949,7 @@ msgid "Sequence Watermark"
 msgstr "序列浮水印"
 
 #: dialogs.py:1532 tools/titler.py:512 proxyediting.py:422 medialinker.py:157
-#: tools/gmic.py:838 tools/gmic.py:929 diskcachemanagement.py:150
+#: tools/gmic.py:838 tools/gmic.py:929 diskcachemanagement.py:151
 msgid "Close"
 msgstr "關閉"
 
@@ -7122,11 +7122,11 @@ msgstr "SYNC_CLIP_"
 msgid "Save Sync Compound Clip XML"
 msgstr "保存同步複合剪輯 XML"
 
-#: diskcachemanagement.py:46
+#: diskcachemanagement.py:47
 msgid "Destroy data"
 msgstr "銷毀數據"
 
-#: diskcachemanagement.py:70
+#: diskcachemanagement.py:71
 msgid ""
 "Destroying this data may change contents of existing\n"
 "projects and make some projects unopenable."
@@ -7134,19 +7134,19 @@ msgstr ""
 "銷毀此數據可能會更改現有專案項目的內容，\n"
 "並使某些項目無法打開。"
 
-#: diskcachemanagement.py:101
+#: diskcachemanagement.py:102
 msgid " MB"
 msgstr " MB"
 
-#: diskcachemanagement.py:103
+#: diskcachemanagement.py:104
 msgid " kB"
 msgstr " kB"
 
-#: diskcachemanagement.py:113
+#: diskcachemanagement.py:114
 msgid "Confirm Destroying Cached Data!"
 msgstr "確認銷毀快取資料！"
 
-#: diskcachemanagement.py:115
+#: diskcachemanagement.py:116
 msgid ""
 "Destroying this data may <b>change contents</b> of existing\n"
 "projects or <b>make some projects unopenable!</b>"
@@ -7154,7 +7154,7 @@ msgstr ""
 "銷毀此資料可能改變現有專案<b>變更的內容</b>，\n"
 "或<b>使某些專案無法開啟！</b>"
 
-#: diskcachemanagement.py:117
+#: diskcachemanagement.py:118
 msgid ""
 "You can use 'File->Save Backup Snapshot...' functionality to backup "
 "projects\n"
@@ -7163,17 +7163,21 @@ msgstr ""
 "在銷毀此資料之前，你可以使用 '檔案->儲存備份快照...' 的功能\n"
 "來備份專案，所以他們以後可以開啟。"
 
-#: diskcachemanagement.py:119
+#: diskcachemanagement.py:120
 msgid "Destroying this data may require parts of it to be recreated later."
 msgstr "銷毀此資料可能之後要重新建立部分資料。"
 
-#: diskcachemanagement.py:171
+#: diskcachemanagement.py:172
 msgid "Audio Levels Data"
 msgstr "音訊波形資料"
 
-#: diskcachemanagement.py:172
+#: diskcachemanagement.py:173
 msgid "G'Mic Tool Session Data"
 msgstr "G'Mic 工具會話資料"
+
+#: diskcachemanagement.py:174
+msgid "Rendered Files"
+msgstr "渲染檔案"
 
 #: diskcachemanagement.py:175
 msgid "Thumbnails"
@@ -7962,9 +7966,6 @@ msgstr "關閉"
 
 #~ msgid "Natron Clip Export Data"
 #~ msgstr "Natron 剪輯片段匯出資料"
-
-#~ msgid "Rendered Files"
-#~ msgstr "渲染檔案"
 
 #~ msgid "Natron"
 #~ msgstr "Natron"
