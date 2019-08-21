@@ -16,7 +16,7 @@ The approach taken in structuring Flowblade code base is that **modules are cons
   * **Functional modules** import all modules required achieve their designed function
   * **Leaf Modules** only import *external* modules (which offer clear defined interface and do not make the code base structurally more complex)
 
-**The goal of the design is to have the maximum amount of code in the Leaf Modules** and to have as little as possible interdependence between Functional Modules.
+**The goal of the design is to have the maximum amount of code in the Leaf Modules** and to have as little as possible interdependence between *Functional Modules*.
 
 **Each new clearly defined functionality should be added by creating a new module** and connecting it in root modules to GUI callbacks and  into existing main paths in the application and importing the necessery *Leaf Modules*.
 
@@ -73,7 +73,7 @@ This diagram attempts to show the smallest possible view describing application 
 We have been able to add new features and fix bugs with low level of regressions and from technical perspective there is no clear need to start re-architecting the application.
 
 We can however achieve improvements in readability and maintainability of the code with number of possible refactorings:
-* push as much as possible code into Leaf Modules
+* push as much as possible code into *Leaf Modules*
 * remove imports from modules by creating new smaller modules with fewer or zero (internal) imports
 * *editorstate.py* can be made smaller by moving same multimodule state into smaller modules like maybe *monitorstate.py* and leaving only the truly global state in *editorstate.py*
 * cut some central large modules into smaller ones, candidates include:
