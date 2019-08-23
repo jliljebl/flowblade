@@ -187,11 +187,11 @@ class Titler(Gtk.Window):
         self.set_title(_("Titler"))
         self.connect("delete-event", lambda w, e:close_titler())
         
-        if editorstate.screen_size_small_height() == True:
+        if editorstate.SCREEN_HEIGHT < 865:
             global TEXT_LAYER_LIST_HEIGHT, TEXT_VIEW_HEIGHT, VIEW_EDITOR_HEIGHT
-            TEXT_LAYER_LIST_HEIGHT = 150
-            TEXT_VIEW_HEIGHT = 180
-            VIEW_EDITOR_HEIGHT = 450
+            TEXT_LAYER_LIST_HEIGHT = 130
+            TEXT_VIEW_HEIGHT = 130
+            VIEW_EDITOR_HEIGHT = 350
 
         if editorstate.screen_size_small_height() == True:
             global VIEW_EDITOR_WIDTH
