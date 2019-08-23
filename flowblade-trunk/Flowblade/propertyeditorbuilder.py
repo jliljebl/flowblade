@@ -51,6 +51,7 @@ BOOLEAN_CHECK_BOX = "booleancheckbox"                       # Gtk.CheckButton
 COMBO_BOX = "combobox"                                      # Gtk.Combobox
 KEYFRAME_EDITOR = "keyframe_editor"                         # keyfremeeditor.KeyFrameEditor that has all the key frames relative to MEDIA start
 KEYFRAME_EDITOR_CLIP = "keyframe_editor_clip"               # keyfremeeditor.KeyFrameEditor that has all the key frames relative to CLIP start
+KEYFRAME_EDITOR_CLIP_FADE = "keyframe_editor_clip_fade"     # keyfremeeditor.KeyFrameEditor that has all the key frames relative to CLIP start, with fade buttons
 KEYFRAME_EDITOR_RELEASE = "keyframe_editor_release"         # HACK, HACK. used to prevent property update crashes in slider keyfremeeditor.KeyFrameEditor
 COLOR_SELECT = "color_select"                               # Gtk.ColorButton
 GEOMETRY_EDITOR = "geometry_editor"                         # keyfremeeditor.GeometryEditor
@@ -983,7 +984,10 @@ def _get_keyframe_editor(editable_property):
 
 def _get_keyframe_editor_clip(editable_property):
     return keyframeeditor.KeyFrameEditor(editable_property, False)
-    
+
+def _get_keyframe_editor_clip_fade(editable_property):
+    return keyframeeditor.KeyFrameEditorClipFade(editable_property)
+ 
 def _get_keyframe_editor_release(editable_property):
     editor = keyframeeditor.KeyFrameEditor(editable_property)
     editor.connect_to_update_on_release()
@@ -1062,6 +1066,7 @@ EDITOR_ROW_CREATORS = { \
     COMBO_BOX:lambda ep :_get_combo_box_row(ep),
     KEYFRAME_EDITOR: lambda ep : _get_keyframe_editor(ep),
     KEYFRAME_EDITOR_CLIP: lambda ep : _get_keyframe_editor_clip(ep),
+    KEYFRAME_EDITOR_CLIP_FADE: lambda ep : _get_keyframe_editor_clip_fade(ep),
     KEYFRAME_EDITOR_RELEASE: lambda ep : _get_keyframe_editor_release(ep),
     GEOMETRY_EDITOR: lambda ep : _get_geometry_editor(ep),
     AFFINE_GEOM_4_SLIDER: lambda ep : _get_affine_filt_geom_sliders(ep),

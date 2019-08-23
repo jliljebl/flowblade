@@ -235,6 +235,8 @@ def create_editable_property_for_affine_blend(clip, editable_properties):
     ep.get_pixel_aspect_ratio = lambda : (float(current_sequence().profile.sample_aspect_num()) / current_sequence().profile.sample_aspect_den())
     ep.get_in_value = lambda out_value : out_value # hard coded for opacity 100 -> 100 range
     ep.write_out_keyframes = lambda w_kf : rotating_ge_write_out_keyframes(ep, w_kf)
+    ep.update_prop_value = lambda : rotating_ge_update_prop_value(ep) # This is needed to get good update after adding kfs with fade buttons, iz all kinda fugly
+                                                                            # We need this to reinit GUI components after programmatically added kfs.
     # duck type members
     x_tokens = ep.x.value.split(";")
     y_tokens = ep.y.value.split(";")
@@ -290,7 +292,31 @@ def rotating_ge_write_out_keyframes(ep, keyframes):
     ep.y_scale.write_value(y_scale_val)
     ep.rotation.write_value(rotation_val)
     ep.opacity.write_value(opacity_val)
+
+def rotating_ge_update_prop_value(ep):
+
+    # duck type members
+    x_tokens = ep.x.value.split(";")
+    y_tokens = ep.y.value.split(";")
+    x_scale_tokens = ep.x_scale.value.split(";")
+    y_scale_tokens = ep.y_scale.value.split(";")
+    rotation_tokens = ep.rotation.value.split(";")
+    opacity_tokens = ep.opacity.value.split(";")
     
+    value = ""
+    for i in range(0, len(x_tokens)): # these better match, same number of keyframes for all values, or this will not work
+        frame, x = x_tokens[i].split("=")
+        frame, y = y_tokens[i].split("=")
+        frame, x_scale = x_scale_tokens[i].split("=")
+        frame, y_scale = y_scale_tokens[i].split("=")
+        frame, rotation = rotation_tokens[i].split("=")
+        frame, opacity = opacity_tokens[i].split("=")
+        
+        frame_str = str(frame) + "=" + str(x) + ":" + str(y) + ":" + str(x_scale) + ":" + str(y_scale) + ":" + str(rotation) + ":" + str(opacity)
+        value += frame_str + ";"
+
+    ep.value = value.strip(";")
+
 def _get_pixel_pos_from_frei0r_cairo_pos(value, screen_dim):
     # convert positions from range used by frei0r cairo plugins to pixel values
     return -2.0 * screen_dim + value * 5.0 * screen_dim

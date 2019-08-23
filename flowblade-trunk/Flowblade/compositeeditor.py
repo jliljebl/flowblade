@@ -120,16 +120,19 @@ def maybe_clear_editor(killed_compositor):
     if killed_compositor.destroy_id == compositor.destroy_id:
         clear_compositor()
 
+def get_compositor():
+    return compositor
+"""
 def _add_fade_in_pressed():
-    compositorfades.add_fade_in(compositor, 10) # remove hardcoding in 2.4
+    compositorfades.add_fade_in(compositor, 10) # remove fade length hardcoding in 2.4
     # We need GUI reload to show results
     set_compositor(compositor)
 
 def _add_fade_out_pressed():
-    compositorfades.add_fade_out(compositor, 10) # remove hardcoding in 2.4
+    compositorfades.add_fade_out(compositor, 10) # remove fade legth hardcoding in 2.4
     # We need GUI reload to show results
     set_compositor(compositor)
-
+"""
 def _delete_compositor_pressed():
     data = {"compositor":compositor}
     action = edit.delete_compositor_action(data)

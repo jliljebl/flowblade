@@ -391,8 +391,8 @@ def monkeypatch_callbacks():
     
     multitrimmode.set_default_mode_func = modesetting.set_default_edit_mode
     
-    keyframeeditor.add_fade_in_func = compositeeditor._add_fade_in_pressed
-    keyframeeditor.add_fade_out_func = compositeeditor._add_fade_out_pressed
+    keyframeeditor._get_current_edited_compositor = compositeeditor.get_compositor
+    #keyframeeditor.add_fade_out_func = compositeeditor._add_fade_out_pressed
     # These provide clues for further module refactoring 
 
 # ---------------------------------- SDL2 consumer
