@@ -69,6 +69,8 @@ FACE_BOLD = "Bold"
 FACE_ITALIC = "Italic"
 FACE_BOLD_ITALIC = "Bold Italic"
 
+DEFAULT_FONT_SIZE = 40
+
 ALIGN_LEFT = 0
 ALIGN_CENTER = 1
 ALIGN_RIGHT = 2
@@ -120,7 +122,7 @@ class TextLayer:
         self.angle = 0.0 # future feature
         self.font_family = "Times New Roman"
         self.font_face = FACE_REGULAR
-        self.font_size = 15
+        self.font_size = DEFAULT_FONT_SIZE
         self.fill_on = True
         self.color_rgba = (1.0, 1.0, 1.0, 1.0) 
         self.alignment = ALIGN_LEFT
