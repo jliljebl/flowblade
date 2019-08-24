@@ -203,16 +203,14 @@ def _do_user_add_fade_in(keyframe_property, property_klass, keyframes, fade_in_l
         if property_klass in _dissolve_property_klasses:
             frame, opacity  = keyframes.pop(0)
             keyframes.insert(0, (frame, 0))
-            keyframes.pop(1)
             keyframes.insert(1,(frame + fade_in_length, 100))
         else:
             # (0, [0, 0, 1280, 720], 100.0) or (0, [640.0, 360.0, 1.0, 1.0, 0.0], 100.0) e.g.
             frame, geom, opacity = keyframes.pop(0)
             keyframes.insert(0, (frame, geom, 0))
-            keyframes.pop(1)
             keyframes.insert(1, (frame + fade_in_length, geom, 100))
 
-    # Because we create SECOND SET of EditableProperties this only updates data structures (py and MLT)
+    # Because we created a SECOND SET of EditableProperties this only updates data structures (py and MLT)
     # but not EditableProperties wrappers that are edited in GUI in "Compositor" panel.
     keyframe_property.write_out_keyframes(keyframes)
     
@@ -246,7 +244,7 @@ def _do_user_add_fade_out(keyframe_property, property_klass, keyframes, fade_out
             
         keyframes = _add_default_fade_out(keyframe_property, property_klass, keyframes, fade_out_length, clip, len(keyframes) - 1)
 
-    # Because we create SECOND SET of EditableProperties this only updates data structures (py and MLT)
+    # Because we created a SECOND SET of EditableProperties this only updates data structures (py and MLT)
     # but not EditableProperties wrappers that are edited in GUI in "Compositor" panel.
     keyframe_property.write_out_keyframes(keyframes)
 
