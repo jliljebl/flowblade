@@ -1647,6 +1647,8 @@ def _get_audio_filters_add_menu_item(event, clip, track, callback):
 
     audio_groups = mltfilters.get_audio_filters_groups()
     for group in audio_groups:
+        if group == None:
+            continue
         group_name, filters_array = group
         group_item = Gtk.MenuItem(group_name)
         sub_menu.append(group_item)

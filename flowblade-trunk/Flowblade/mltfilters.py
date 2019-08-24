@@ -486,6 +486,10 @@ def get_compositor_filter(filter_id):
     return compositor_filters[filter_id]
 
 def get_audio_filters_groups():
+    # On some environments LADSPA filters are known to missing and group "Audio Filter"
+    # is not present, we must init groups to 'None' to handle this possibility.
+    group_tuple1 = None
+    group_tuple2 = None
     for group_tuple in groups:
         gkey, group = group_tuple
         if gkey == translations.get_filter_group_name("Audio"):
