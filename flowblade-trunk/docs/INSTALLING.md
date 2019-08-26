@@ -9,7 +9,7 @@
 ### Installing deb package
 
 #### Step 1. Download and install .deb 
-**First download .deb file** for Flowblade 2.0 from <a href="https://github.com/jliljebl/flowblade/releases">here.</a>
+**First download .deb file** for Flowblade 2.2 from <a href="https://github.com/jliljebl/flowblade/releases">here.</a>
 
 Double click on <b>.deb</b> file to install it. 
 
@@ -19,7 +19,7 @@ On some systems double clicking may not work and you need to install <b>.deb</b>
 	<li>	<p>Open terminal in the directory you saved the  downloaded <b>.deb</b> file. Give command:	</li>
 </ul>
 
-    sudo apt install ./flowblade-2.0.0-1_all.deb
+    sudo apt install ./flowblade-2.2.0-1_all.deb
 
 OR if you have Debian buster+, or Ubuntu 19.04+
 
@@ -28,6 +28,8 @@ You can just apt-get install flowblade
 See: https://packages.debian.org/search?keywords=flowblade and https://launchpad.net/ubuntu/+source/flowblade
 
 ### Installing Flatpak from Flathub
+
+**NOTE: Flatpak is currently still in version 2.0 , the issues are being worked on.**
 
 #### 1. Setup Flatpak and Flathub
 There is an official guide here: https://flatpak.org/setup/
