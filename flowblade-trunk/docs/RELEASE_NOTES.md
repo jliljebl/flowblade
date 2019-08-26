@@ -26,6 +26,8 @@ This filter uses luma values from source media and writes them into alpha channe
 ### User data moved into XDG folders
 We have moved user data from directory */home/USERFOLDER/.flowblade* into XDG folders specified in the user system. Data will be copied automatically on first launch of this version.
 
+**NOTE: Thumbnail and Render directories are not user settable anymore since we decided to support XDG user data spec.**
+
 **NOTE: Application DOES NOT delete existing data in .flowblade folder, so if you have large amount of data there you will probably want to delete folder */home/USERFOLDER/.flowblade* manually to free disk space.**
 
 ### New Filters
