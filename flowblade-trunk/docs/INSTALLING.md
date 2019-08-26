@@ -107,4 +107,4 @@ git clone https://github.com/jliljebl/flowblade.git
  
  
  ### Installing with setup.py not supported
-*Please note: Using the available setup.py script will probably NOT result in a successful installation, even if dependencies are installed, and may actually break the .deb install if attempted. It is only there to help .deb packaging.* 
+*Please note: Using the available setup.py script will probably NOT result in a successful installation, even if dependencies are installed, and may actually break the .deb install if attempted. It is only there to help .deb packaging and Flatpak.* 
