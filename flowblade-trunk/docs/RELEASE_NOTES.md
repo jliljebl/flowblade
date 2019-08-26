@@ -4,7 +4,7 @@
 
 Date: August 26, 2019
 
-**Flowblade 2.2** is the first new version after 2.0 brought large changes the editing workflow and application layout. This time the main focus was on improving Flowblade's compositing capabilities with a dedicated tool editing animated masks being most important new functionality.
+**Flowblade 2.2** is the first new version after 2.0 brought large changes the editing workflow and application layout. This time the main focus was on improving Flowblade's compositing capabilities with a dedicated tool for editing animated masks being most important new functionality.
 
 There was also a lot of other new functionality and fixes, including G'Mic update, support for XDG user folders and many Issues fixed from Github Issue list.
 
