@@ -61,7 +61,7 @@ Flowblade offers a configurable workflow - toolset, its order, default tool and 
         
 # Releases
 
-**Latest release:** Flowblade Movie Editor 2.0 was released on August 2019.
+**Latest release:** Flowblade Movie Editor 2.2 was released on August 2019.
 
 **Next release:** Flowblade Movie Editor 2.4 is coming in December 2019.
 
