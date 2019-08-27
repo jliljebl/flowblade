@@ -27,10 +27,12 @@ import logging, time, struct, subprocess, sys, os, array, argparse
 import tempfile, hashlib, re
 import numpy
 
-import utils
+import userfolders
 
 OFFSETS_DATA_FILE = "audio_offsets_data"
 OFFSETS_DATA_FILE_ID_DEFAULT = "idstr_default"
+
+MAGIC_SEPARATOR = "##¤¤%%¤¤##¤¤%%¤¤##"
 
 __version__ = "0.99.8"
 
@@ -353,9 +355,11 @@ def main():
     out_str = ""
     for file_offset in offsets_output:
         f, offset = file_offset
-        out_str = out_str + f + " " + str(offset) + "\n"
+        out_str = out_str + f + MAGIC_SEPARATOR + str(offset) + "\n"
     
-    output_file = utils.get_hidden_user_dir_path() + OFFSETS_DATA_FILE + "_"+ args.idstr
+    userfolders.init()
+    output_file = userfolders.get_cache_dir() + OFFSETS_DATA_FILE + "_"+ args.idstr
+
     f = open(output_file, 'w')
     f.write(out_str)
     f.close()

@@ -31,6 +31,7 @@ gi.require_version('PangoCairo', '1.0')
 from gi.repository import Gtk, Gdk
 from gi.repository import GLib
 
+import appconsts
 import editorstate
 import editorpersistance
 import gui
@@ -41,10 +42,11 @@ import mlttransitions
 import mltfilters
 import patternproducer
 import persistance
+import processutils
 import respaths
 import renderconsumer
 import translations
-import utils
+import userfolders
 
 """
 This module implements media import from another project feature.
@@ -116,7 +118,7 @@ def get_imported_media():
     
 def write_files(filename):
     print "Starting media import..."
-    FLOG = open(utils.get_hidden_user_dir_path() + "log_media_import", 'w')
+    FLOG = open(userfolders.get_cache_dir() + "log_media_import", 'w')
     p = subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowblademediaimport", filename], stdin=FLOG, stdout=FLOG, stderr=FLOG)
     p.wait()
     
@@ -135,7 +137,7 @@ def _do_assets_write(filename):
     load_thread.start()
         
 def _get_assets_file():
-    return utils.get_hidden_user_dir_path() + MEDIA_ASSETS_IMPORT_FILE
+    return userfolders.get_cache_dir() + MEDIA_ASSETS_IMPORT_FILE
 
 def _create_info_dialog():
     dialog = Gtk.Window(Gtk.WindowType.TOPLEVEL)
@@ -185,6 +187,9 @@ def main(root_path, filename):
     except:
         editorstate.mlt_version = "0.0.99" # magic string for "not found"
 
+    # Read the XDG_* variables etc.
+    userfolders.init()
+    
     # Set paths.
     respaths.set_paths(root_path)
 
@@ -207,7 +212,8 @@ def main(root_path, filename):
             gui.apply_gtk_css()
             
     repo = mlt.Factory().init()
-
+    processutils.prepare_mlt_repo(repo)
+    
     # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
     locale.setlocale(locale.LC_NUMERIC, 'C')
 

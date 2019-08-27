@@ -54,7 +54,6 @@ MB_BUTTON_Y = 4
 MB_BUTTON_IMAGE_Y = 6
 
 GMIC_BUTTONS_WIDTH = 250
-NATRON_BUTTONS_WIDTH = 100
 
 M_PI = math.pi
 
@@ -165,14 +164,6 @@ class AbstractGlassButtons:
                 icon = self.icons[i]
                 cr.set_source_surface(icon, x + self.image_x[i], self.image_y[i])
                 cr.paint()
-                if self.sensitive[i] == False:
-                    cr.save()
-                    self._round_rect_path(cr)
-                    cr.set_source(grad)
-                    cr.clip()
-                    cr.rectangle(x, self.button_y, self.button_width, self.button_height)
-                    cr.fill()
-                    cr.restore()
                 x += self.button_width
             
             return

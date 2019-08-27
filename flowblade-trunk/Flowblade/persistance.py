@@ -46,6 +46,7 @@ import mlttransitions
 import miscdataobjects
 import propertyparse
 import resync
+import userfolders
 import utils
 
 # Unpickleable attributes for all objects
@@ -153,7 +154,7 @@ def save_project(project, file_path, changed_profile_desc=None):
         # Because of MLT misfeature of changing project profile when loading MLT XML files we need to create new modified XML files when
         # saving to change profile.
         # Underlying reason: https://github.com/mltframework/mlt/issues/212
-        if changed_profile_desc != None and s_media_file.path != None and utils.is_mlt_xml_file(s_media_file.path) == True:
+        if changed_profile_desc != None and hasattr(s_media_file, "path") and s_media_file.path != None and utils.is_mlt_xml_file(s_media_file.path) == True:
             new_xml_file_path = _save_changed_xml_file(s_media_file, new_profile)
             _xml_new_paths_for_profile_change[s_media_file.path] = new_xml_file_path
             s_media_file.path = new_xml_file_path
@@ -374,7 +375,7 @@ def _save_changed_xml_file(s_media_file, new_profile):
     
     new_xml_text = xml_text[0:in_index] + new_profile_node + xml_text[out_index:len(xml_text)]
 
-    folder = editorpersistance.prefs.render_folder
+    folder = userfolders.get_render_dir()
     uuid_str = md5.new(str(os.urandom(32))).hexdigest()
     new_xml_file_path = folder + "/"+ uuid_str + ".xml"
 
@@ -450,7 +451,6 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
             media_file.path = get_img_seq_media_path(media_file.path, _load_file_path)
             
         # This fixes Media Relinked projects with SAVEFILE_VERSION < 4:
-        # Remove 2018
         if (not(hasattr(media_file,  "is_proxy_file"))):
             FIX_N_TO_4_MEDIA_FILE_COMPATIBILITY(media_file)
         # This attr was added for 1.8. It is not computed for older projects.
@@ -710,7 +710,7 @@ def get_img_seq_media_path(path, load_file_path):
 
 def get_relative_path(project_file_path, asset_path):
     name = os.path.basename(asset_path)
-    _show_msg("Relative file search for "  + name + "...", delay=0.0)
+    _show_msg(_("Relative file search for ")  + name.decode('utf-8') + "...", delay=0.0)
     matches = []
     asset_folder, asset_file_name = os.path.split(asset_path)
     project_folder, project_file_name =  os.path.split(project_file_path)
@@ -730,7 +730,7 @@ def get_relative_path(project_file_path, asset_path):
 
 def get_img_seq_relative_path(project_file_path, asset_path):
     name = os.path.basename(asset_path)
-    _show_msg("Relative file search for "  + name + "...", delay=0.0)
+    _show_msg(_("Relative file search for ")  + name.decode('utf-8') + "...", delay=0.0)
     matches = []
     asset_folder, asset_file_name = os.path.split(asset_path)
     look_up_file_name = utils.get_img_seq_glob_lookup_name(asset_file_name)

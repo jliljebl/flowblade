@@ -1,0 +1,22 @@
+@startuml
+
+scale 900 width
+
+
+[*] --> GUI : User input
+
+GUI -d-> PYTHON_DATA : write
+PYTHON_DATA -u-> GUI : read
+PYTHON_DATA : Python data is authoritative data.
+
+state join_state <<join>>
+PYTHON_DATA --> join_state : Writes only, MLT data is never read
+join_state --> MLT_C_DATA
+
+note left of join_state : CPython extension interface to C 
+
+
+MLT_C_DATA : MLT C data is copy of authoritative Python data.
+note right of MLT_C_DATA : Data is destroyed on save,\nrecreated on load
+
+@enduml

@@ -49,3 +49,11 @@ In systems running MLT 6.4.0 Flowblade does not start, more info on issue here: 
 
 **Status:** This is fixed upstream, make sure to use MLT 6.4.1 or higher.
 
+
+#### 8. Lock up when exporting frame from file with size 640x360 with Project Profile being 4K UHD 2160p 30fps
+
+More here: https://github.com/jliljebl/flowblade/issues/517
+
+**Workaround:** Re-encode 640x360 into bigger size.
+
+**Status:** No work on a fix is planned.

@@ -407,7 +407,7 @@ class AbstractEditCanvas:
         self.current_mouse_hit = self._check_shape_hit(event.x, event.y)
         if self.current_mouse_hit == NO_HIT:
             return
-        
+            
         self.mouse_start_x = event.x
         self.mouse_start_y = event.y
 
@@ -682,6 +682,20 @@ class BoxEditCanvas(AbstractEditCanvas):
             self.source_edit_rect.y -= delta
         if keyval == Gdk.KEY_Down:                         
             self.source_edit_rect.y += delta
+
+    def handle_arrow_scale_edit(self, keyval, delta):
+        old_w = self.source_edit_rect.w
+
+        if keyval == Gdk.KEY_Left:
+            self.source_edit_rect.w -= delta
+        if keyval == Gdk.KEY_Right:
+            self.source_edit_rect.w += delta
+        if keyval == Gdk.KEY_Up:
+            self.source_edit_rect.w -= delta
+        if keyval == Gdk.KEY_Down:                         
+            self.source_edit_rect.w += delta
+        
+        self.source_edit_rect.h = self.source_edit_rect.h * (self.source_edit_rect.w / old_w)
             
     def print_keyframes(self):
         for i in range(0, len(self.keyframes)):
@@ -837,7 +851,22 @@ class RotatingEditCanvas(AbstractEditCanvas):
             self.shape_y -= delta
         if keyval == Gdk.KEY_Down:                         
             self.shape_y += delta
-            
+
+    def handle_arrow_scale_edit(self, keyval, delta):
+        old_scale = self.x_scale
+        delta = delta * 0.01
+
+        if keyval == Gdk.KEY_Left:
+            self.x_scale -= delta
+        if keyval == Gdk.KEY_Right:
+            self.x_scale += delta
+        if keyval == Gdk.KEY_Up:
+            self.x_scale -= delta
+        if keyval == Gdk.KEY_Down:                         
+            self.x_scale += delta
+        
+        self.y_scale = self.y_scale * (self.x_scale / old_scale)
+        
     # --------------------------------------------------------- mouse events
     def _shape_press_event(self):
         self.start_edit_points = copy.deepcopy(self.edit_points)

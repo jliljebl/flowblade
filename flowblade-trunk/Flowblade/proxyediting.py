@@ -42,7 +42,7 @@ import render
 import renderconsumer
 import sequence
 import utils
-
+import userfolders
 
 manager_window = None
 progress_window = None
@@ -538,13 +538,6 @@ def create_proxy_menu_item_selected(media_file):
     _do_create_proxy_files(media_files)
 
 def _do_create_proxy_files(media_files, retry_from_render_folder_select=False):
-    if editorpersistance.prefs.render_folder == None:
-        if retry_from_render_folder_select == True:
-            return
-        dialogs.select_rendred_clips_dir(_create_proxy_render_folder_select_callback, 
-                                         gui.editor_window.window, editorpersistance.prefs.render_folder,
-                                         media_files)
-        return
     
     # Create proxies dir if does not exist
     proxies_dir = _get_proxies_dir()
@@ -618,7 +611,7 @@ def _create_proxy_files(media_files_to_render):
 
 # ------------------------------------------------------------------ module functions
 def _get_proxies_dir():
-    return editorpersistance.prefs.render_folder + "/proxies"
+    return userfolders.get_render_dir() + "/proxies"
 
 def _get_proxy_encoding():
     enc_index = editorstate.PROJECT().proxy_data.encoding
@@ -654,7 +647,7 @@ def _get_proxy_profile(project):
     file_contents += "display_aspect_num=" + str(project_profile.display_aspect_num()) + "\n"
     file_contents += "display_aspect_den=" + str(project_profile.display_aspect_den()) + "\n"
 
-    proxy_profile_path = utils.get_hidden_user_dir_path() + "temp_proxy_profile"
+    proxy_profile_path = userfolders.get_cache_dir() + "temp_proxy_profile"
     profile_file = open(proxy_profile_path, "w")
     profile_file.write(file_contents)
     profile_file.close()
@@ -669,26 +662,11 @@ def _proxy_render_stopped():
     progress_window = None
     runner_thread = None
 
-def _create_proxy_render_folder_select_callback(dialog, response_id, file_select, media_files):
-    try:
-        folder = file_select.get_filenames()[0]
-    except:
-        dialog.destroy()
-        return
-
-    dialog.destroy()
-    if response_id == Gtk.ResponseType.YES:
-        if folder ==  os.path.expanduser("~"):
-            dialogs.rendered_clips_no_home_folder_dialog()
-        else:
-            editorpersistance.prefs.render_folder = folder
-            editorpersistance.save()
-            _do_create_proxy_files(media_files, True)
 
 # ----------------------------------------------------------- changing proxy modes
 def _convert_to_proxy_project():    
     editorstate.PROJECT().proxy_data.proxy_mode = appconsts.CONVERTING_TO_USE_PROXY_MEDIA
-    conv_temp_project_path = utils.get_hidden_user_dir_path() + "proxy_conv.flb"
+    conv_temp_project_path = userfolders.get_cache_dir() + "proxy_conv.flb"
     manager_window.convert_progress_bar.set_text(_("Converting Project to Use Proxy Media"))
     
     mark_in = editorstate.PROJECT().c_seq.tractor.mark_in
@@ -701,7 +679,7 @@ def _convert_to_proxy_project():
 
 def _convert_to_original_media_project():
     editorstate.PROJECT().proxy_data.proxy_mode = appconsts.CONVERTING_TO_USE_ORIGINAL_MEDIA
-    conv_temp_project_path = utils.get_hidden_user_dir_path() + "proxy_conv.flb"
+    conv_temp_project_path = userfolders.get_cache_dir() + "proxy_conv.flb"
     manager_window.convert_progress_bar.set_text(_("Converting to Use Original Media"))
 
     mark_in = editorstate.PROJECT().c_seq.tractor.mark_in
@@ -719,7 +697,7 @@ def _auto_re_convert_after_proxy_render_in_proxy_mode():
     # Save to temp to convert to using original media
     project = editorstate.PROJECT()
     project.proxy_data.proxy_mode = appconsts.CONVERTING_TO_USE_ORIGINAL_MEDIA
-    conv_temp_project_path = utils.get_hidden_user_dir_path() + "proxy_conv.flb"
+    conv_temp_project_path = userfolders.get_cache_dir() + "proxy_conv.flb"
     persistance.save_project(editorstate.PROJECT(), conv_temp_project_path)
     project.proxy_data.proxy_mode = appconsts.USE_ORIGINAL_MEDIA
 
@@ -760,6 +738,7 @@ def _converting_proxy_mode_done():
     gui.media_list_view.widget.queue_draw()
     gui.tline_left_corner.update_gui()
     set_menu_to_proxy_state()
+    
 
 class ProxyProjectLoadThread(threading.Thread):
 

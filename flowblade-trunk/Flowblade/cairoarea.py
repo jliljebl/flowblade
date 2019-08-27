@@ -66,13 +66,11 @@ class CairoDrawableArea2(Gtk.DrawingArea):
         self.enter_notify_func = self._enter
         self.mouse_scroll_func = None
 
-        # Flag for grabbing focus
         self.set_property("can-focus",  True)
         self.grab_focus_on_press = True
 
     def add_pointer_motion_mask(self):
         self.add_events(Gdk.EventMask.POINTER_MOTION_MASK)
-        #self.connect('pointer-motion-event', listener)
 
     def set_pref_size(self, pref_width, pref_height):
         self.set_size_request(pref_width, pref_height)

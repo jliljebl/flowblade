@@ -16,14 +16,13 @@
   </description>
   <screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/jliljebl/flowblade/master/flowblade-trunk/docs/Screenshot-1-4-dark.png</image>
-    </screenshot>
-    <screenshot>
-      <image>https://raw.githubusercontent.com/jliljebl/flowblade/master/flowblade-trunk/docs/Screenshot-0-18.png</image>
+      <image>https://raw.githubusercontent.com/jliljebl/flowblade/master/flowblade-trunk/docs/Screenshot-2-0.png</image>
     </screenshot>
   </screenshots>
   <content_rating type="oars-1.1" />
   <releases>
+    <release version="2.2" date="2019-08-24"/>
+    <release version="2.0" date="2019-02-3"/>
     <release version="1.16" date="2018-03-31"/>
     <release version="1.14" date="2017-10-04"/>
     <release version="1.12.2" date="2017-03-20"/>

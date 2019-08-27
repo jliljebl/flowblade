@@ -145,7 +145,14 @@ def set_clip(new_clip, new_track, new_index):
     widgets.clip_info.display_clip_info(clip, track, clip_index)
     set_enabled(True)
     update_stack_view()
-    effect_selection_changed() # This may get called twice
+
+    if len(clip.filters) > 0:
+        path = str(len(clip.filters) - 1)
+        # Causes edit_effect_selected() called as it is the "change" listener
+        widgets.effect_stack_view.treeview.get_selection().select_path(path)
+    else:
+        effect_selection_changed()
+
     gui.middle_notebook.set_current_page(filters_notebook_index) # 2 == index of clipeditor page in notebook
 
 def effect_select_row_double_clicked(treeview, tree_path, col):
@@ -176,13 +183,13 @@ def _filter_stack_menu_item_selected(widget, data):
         toggle_filter_active(row)
     if item_id == "reset":
         reset_filter_values()
-    if item_id == "moveup":
+    if item_id == "movedown":
         delete_row = row
         insert_row = row + 2
         if insert_row > len(clip.filters):
             insert_row = len(clip.filters)
         do_stack_move(insert_row, delete_row)
-    if item_id == "movedown":
+    if item_id == "moveup":
         delete_row = row + 1
         insert_row = row - 1
         if insert_row < 0:
@@ -284,14 +291,12 @@ def add_currently_selected_effect():
     # Check we have clip
     if clip == None:
         return
-        
+    
     filter_info = get_selected_filter_info()
     action = get_filter_add_action(filter_info, clip)
     action.do_edit() # gui update in callback from EditAction object.
     
     updater.repaint_tline()
-
-    filter_info = get_selected_filter_info()
 
 def get_filter_add_action(filter_info, target_clip):
     if filter_info.multipart_filter == False:
@@ -469,7 +474,6 @@ def effect_selection_changed(use_current_filter_index=False):
     except:
         filter_index = 0
 
-    # This isused when reiniting filter panel after every edit,
     # use_current_filter_index == False is used when user changes edited filter or clip.
     if use_current_filter_index == True:
         filter_index = current_filter_index
@@ -584,8 +588,7 @@ def show_text_in_edit_area(text):
     widgets.value_edit_frame.add(scroll_window)
 
     widgets.value_edit_box = scroll_window
-    
-        
+
 def clear_effects_edit_panel():
     widgets.value_edit_frame.remove(widgets.value_edit_box)
     label = Gtk.Label()
@@ -607,7 +610,7 @@ def filter_edit_done(edited_clip, index=-1):
     # Select row in effect stack view and so display corresponding effect editor panel.
     if not(index < 0):
         widgets.effect_stack_view.treeview.get_selection().select_path(str(index))
-    else: # no effects after edit, clear effect editor panel  
+    else: # no effects after edit, clear effect editor panel
         clear_effects_edit_panel()
 
 def display_kfeditors_tline_frame(frame):
@@ -715,12 +718,13 @@ class EffectValuesSaveData:
         if isinstance(self.info, filter_info.__class__):
             return self.info.__dict__ == filter_info.__dict__
         return False
-        
+
     def set_effect_values(self, filter_object):
         if self.multipart_filter == True:
             filter_object.value = self.value
          
         filter_object.properties = copy.deepcopy(self.properties)
         filter_object.non_mlt_properties = copy.deepcopy(self.non_mlt_properties)
+        filter_object.update_mlt_filter_properties_all()
          
     

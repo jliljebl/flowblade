@@ -23,11 +23,13 @@ import sys
 
 from gi.repository import Gtk
 
+import appconsts
 import dialogutils
 import editorstate
 import guiutils
 import gui
 import respaths
+import userfolders
 import utils
 
 _phantom_found = False
@@ -63,10 +65,10 @@ def launch_phantom():
         dialogutils.panel_ok_dialog(_("Phantom2D not found"), panel)
         return
 
-    FLOG = open(utils.get_hidden_user_dir_path() + "log_phantom", 'w')
+    FLOG = open(userfolders.get_cache_dir() + "log_phantom", 'w')
     subprocess.Popen([str(respaths.LAUNCH_DIR + "flowbladephantom") + " " + str(respaths.PHANTOM_JAR) \
                         + " profile" + " " + _get_underscored_profile() \
-                        + " cachefolder "  + utils.get_phantom_disk_cache_folder()], shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
+                        + " cachefolder "  + userfolders.get_cache_dir() + appconsts.PHANTOM_DIR + "/" + appconsts.PHANTOM_DISK_CACHE_DIR], shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
 
     print "Phantom2D launched"
 

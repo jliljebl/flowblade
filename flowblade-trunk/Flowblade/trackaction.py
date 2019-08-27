@@ -22,6 +22,8 @@
 This module handles track actions; mute, change active state, size change.
 """
 
+from gi.repository import GObject
+
 import appconsts
 import audiomonitoring
 import dialogutils
@@ -29,9 +31,11 @@ import gui
 import guicomponents
 import editorstate
 import edit
+import editorpersistance
 from editorstate import get_track
 from editorstate import current_sequence
 from editorstate import PROJECT
+from editorstate import PLAYER
 import snapping
 import tlinewidgets
 import updater
@@ -55,25 +59,38 @@ def unlock_track(track_index):
     track.edit_freedom = appconsts.FREE
     updater.repaint_tline()
 
-def set_track_normal_height(track_index):
+def set_track_normal_height(track_index, is_retry=False):
     track = get_track(track_index)
     track.height = appconsts.TRACK_HEIGHT_NORMAL
-    
+
     # Check that new height tracks can be displayed and cancel if not.
     new_h = current_sequence().get_tracks_height()
     allocation = gui.tline_canvas.widget.get_allocation()
     x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
+
+    if new_h > h and is_retry == False:
+        current_paned_pos = gui.editor_window.app_v_paned.get_position()
+        new_paned_pos = current_paned_pos - (new_h - h) - 5
+        gui.editor_window.app_v_paned.set_position(new_paned_pos)
+        GObject.timeout_add(200, lambda: set_track_normal_height(track_index, True))
+        return False
+    
+    allocation = gui.tline_canvas.widget.get_allocation()
+    x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
+    
     if new_h > h:
         track.height = appconsts.TRACK_HEIGHT_SMALL
         dialogutils.warning_message(_("Not enough vertical space on Timeline to expand track"), 
                                 _("Maximize or resize application window to get more\nspace for tracks if possible."),
                                 gui.editor_window.window,
                                 True)
-        return
+        return False
 
     tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
     gui.tline_column.init_listeners()
     updater.repaint_tline()
+
+    return False
 
 def set_track_small_height(track_index):
     track = get_track(track_index)
@@ -158,6 +175,11 @@ def _audio_levels_item_activated(widget, msg):
         updater.repaint_tline()
     elif msg == "snapping":
         snapping.snapping_on = widget.get_active()
+    elif msg == "scrubbing":
+        editorpersistance.prefs.audio_scrubbing = widget.get_active()
+        editorpersistance.save()
+        PLAYER().set_scrubbing(widget.get_active())
+        
     else: # media thumbnails
         editorstate.display_clip_media_thumbnails = widget.get_active()
         updater.repaint_tline()
@@ -176,6 +198,13 @@ def track_active_switch_pressed(data):
         guicomponents.display_tracks_popup_menu(data.event, data.track, \
                                                 _track_menu_item_activated)
 
+def track_double_click(track_id):
+    track = get_track(track_id) # data.track is index, not object
+    if track.height == appconsts.TRACK_HEIGHT_NORMAL:
+        set_track_small_height(track_id)
+    else:
+        set_track_normal_height(track_id)
+    
 def track_center_pressed(data):
     if data.event.button == 1:
         # handle possible mute icon presses

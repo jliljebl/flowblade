@@ -19,7 +19,7 @@
 """
 
 """
-Module holds references to GUI widgets.
+Module holds references to GUI widgets and offers some helper fuctions used in GUI creation.
 """
 
 from gi.repository import Gtk, Gdk
@@ -29,7 +29,8 @@ import pickle
 import appconsts
 import editorpersistance
 import respaths
-import utils
+import userfolders
+
 
 # Editor window
 editor_window = None
@@ -37,14 +38,14 @@ editor_window = None
 # Menu
 editmenu = None
 
-# Project data lists
+# Project data lists and related views.
 media_list_view = None
 bin_list_view = None
 bin_panel = None
 sequence_list_view = None
 effect_stack_list_view = None
 
-middle_notebook = None # This is now the only notebook, update name sometime
+middle_notebook = None # This is now the only notebook, maybe update name sometime
 project_info_vbox = None
 
 effect_select_list_view = None
@@ -147,8 +148,8 @@ def get_selected_bg_color():
     return _selected_bg_color
 
 # returns Gdk.RGBA color
-def get_buttons_color():
-    return _button_colors
+#def get_buttons_color():
+#    return _button_colors
 
 def set_theme_colors():
     # Find out if theme color discovery works and set selected bg color apppropiately when
@@ -179,7 +180,7 @@ def set_theme_colors():
     bg_color = style.get_background_color(Gtk.StateFlags.NORMAL)
     if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
         bg_color = Gdk.RGBA(red=(30.0/255.0), green=(35.0/255.0), blue=(51.0/255.0), alpha=1.0)
-    #(30, 35, 51)
+
     r, g, b, a = unpack_gdk_color(bg_color)
 
     if r == 0.0 and g == 0.0 and b == 0.0:
@@ -195,11 +196,25 @@ def set_theme_colors():
         _bg_color = bg_color
         _button_colors = bg_color
 
+    if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
+        theme_colors = _THEME_COLORS[4]
+        c = theme_colors[3]
+        _selected_bg_color = Gdk.RGBA(*c) 
+
     # Adwaita and some others show big area of black without this, does not bother Ambient on Ubuntu
     editor_window.tline_pane.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
     editor_window.media_panel.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
     editor_window.mm_paned.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
 
+def apply_flowblade_theme_fixes():
+    fblade_bg_color = Gdk.RGBA(red=(30.0/255.0), green=(35.0/255.0), blue=(51.0/255.0), alpha=1.0)
+    fblade_bg_color_darker = Gdk.RGBA(red=(16.0/255.0), green=(19.0/255.0), blue=(30.0/255.0), alpha=1.0)
+    test_color =  Gdk.RGBA(1, 0, 0, alpha=1.0)
+    for widget in editor_window.fblade_theme_fix_panels:
+        widget.override_background_color(Gtk.StateFlags.NORMAL, fblade_bg_color)
+    for widget in editor_window.fblade_theme_fix_panels_darker:
+        widget.override_background_color(Gtk.StateFlags.NORMAL, fblade_bg_color_darker)
+        
 def unpack_gdk_color(gdk_color):
     return (gdk_color.red, gdk_color.green, gdk_color.blue, gdk_color.alpha)
 
@@ -221,7 +236,7 @@ def load_current_colors():
     _button_colors = Gdk.RGBA(*button)
 
 def _colors_data_path():
-    return utils.get_hidden_user_dir_path() + _CURRENT_THEME_COLORS_FILE
+    return userfolders.get_cache_dir() + _CURRENT_THEME_COLORS_FILE
   
 def _print_widget(widget): # debug
     path_str = widget.get_path().to_string()
@@ -235,16 +250,18 @@ def _print_widget(widget): # debug
 
 def apply_gtk_css():
     gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
-    if Gtk.get_major_version() == 3 and Gtk.get_minor_version() == 22:
+    if Gtk.get_major_version() == 3 and Gtk.get_minor_version() >= 22:
         print "Gtk version is " + gtk_version + ", Flowblade theme is available."
     else:
-        print "Gtk version is " + gtk_version + ", Flowblade theme only available for Gtk 3.22"
-        return
+        print "Gtk version is " + gtk_version + ", Flowblade theme only available for Gtk >= 3.22"
+        editorpersistance.prefs.theme = appconsts.LIGHT_THEME
+        editorpersistance.save()
+        return False
         
     provider = Gtk.CssProvider.new()
     display = Gdk.Display.get_default()
     screen = display.get_default_screen()
-    Gtk.StyleContext.add_provider_for_screen (screen, provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
-    
-    provider.load_from_path(respaths.ROOT_PATH + "/res/css/gtk-dark-fix.css")
+    Gtk.StyleContext.add_provider_for_screen (screen, provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+    provider.load_from_path(respaths.ROOT_PATH + "/res/css/gtk-flowblade-dark.css")
 
+    return True

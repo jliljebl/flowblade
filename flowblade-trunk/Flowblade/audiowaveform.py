@@ -36,6 +36,7 @@ from editorstate import PROJECT
 import gui
 import guiutils
 import updater
+import userfolders
 import utils
 
 # Frame level value cache for audio levels
@@ -55,14 +56,16 @@ def set_waveform_displayer_clip_from_popup(data):
     if clip.path in frames_cache:
         frame_levels = frames_cache[clip.path]
         clip.waveform_data = frame_levels
+        updater.repaint_tline()
         return
 
-    cache_file_path = utils.get_hidden_user_dir_path() + appconsts.AUDIO_LEVELS_DIR + _get_unique_name_for_media(clip.path)
+    cache_file_path = userfolders.get_cache_dir() + appconsts.AUDIO_LEVELS_DIR + _get_unique_name_for_media(clip.path)
     if os.path.isfile(cache_file_path):
         f = open(cache_file_path)
         frame_levels = pickle.load(f)
         frames_cache[clip.path] = frame_levels
         clip.waveform_data = frame_levels
+        updater.repaint_tline()
         return
 
     progress_bar = Gtk.ProgressBar()
@@ -101,7 +104,7 @@ class WaveformCreator(threading.Thread):
         threading.Thread.__init__(self)
         self.clip = clip
         self.temp_clip = self._get_temp_producer(clip)
-        self.file_cache_path = utils.get_hidden_user_dir_path() + appconsts.AUDIO_LEVELS_DIR + _get_unique_name_for_media(clip.path)
+        self.file_cache_path = userfolders.get_cache_dir() + appconsts.AUDIO_LEVELS_DIR + _get_unique_name_for_media(clip.path)
         self.track_height = track_height
         self.abort = False
         self.clip_media_length = self.temp_clip.get_length()

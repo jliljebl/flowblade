@@ -78,50 +78,56 @@ def init_module():
     # translations and module load order make us do this in method instead of at module load
     global wipe_lumas, compositors, blenders, name_for_type, rendered_transitions, single_track_render_type_names, autofades, alpha_combiners
     wipe_lumas = { \
-                _("Vertical From Center"):"bi-linear_x.pgm",
-                _("Vertical Top to Bottom"):"wipe_top_to_bottom.svg",
-                _("Vertical Bottom to Top"):"wipe_bottom_to_top.svg",
-                _("Horizontal From Center"):"bi-linear_y.pgm",
-                _("Horizontal Left to Right"):"wipe_left_to_right.svg",
-                _("Horizontal Right to Left"):"wipe_right_to_left.svg",
+                _("Burst"):"burst.pgm",
+                _("Checkerboard"):"checkerboard.pgm",
+                _("Circle From In"):"circle_in_to_out.pgm",
+                _("Circle From Out"):"circle_out_to_in.pgm",
                 _("Clock Left To Right"):"clock_left_to_right.pgm",
                 _("Clock Right to Left"):"clock_right_to_left.pgm",
                 _("Clock Symmetric"):"symmetric_clock.pgm",
-                _("Stripes Horizontal"):"blinds_in_to_out.pgm",
-                _("Stripes Horizontal Big"):"blinds_in_to_out_big.pgm",
-                _("Stripes Horizontal Moving"):"blinds_sliding.png",
-                _("Stripes Vertical"):"vertical_blinds_in_to_out.pgm",
-                _("Stripes Vertical Big"):"vertical_blinds_in_to_out_big.pgm",
-                _("Burst"):"burst.pgm",
-                _("Circle From In"):"circle_in_to_out.svg",
-                _("Circle From Out"):"circle_out_to_in.svg",
                 _("Cloud"):"cloud.pgm",
-                _("Hatched 1"):"hatched_1.png",
-                _("Hatched 2"):"hatched_2.png",
-                _("Hourglass"):"hourglass_1.png",
-                _("Puddles"):"mountains.png",
-                _("Rings"):"radial-bars.pgm",
+                _("Cross"):"Cross.pgm",
+                _("Diagonal 1"):"wipe_diagonal_1.pgm",
+                _("Diagonal 2"):"wipe_diagonal_2.pgm",
+                _("Diagonal 3"):"wipe_diagonal_3.pgm",
+                _("Diagonal 4"):"wipe_diagonal_4.pgm",
+                _("Flower"):"flower.pgm",
+                _("Fogg"):"fogg.pgm",
+                _("Free Curves"):"free_curves.pgm",
+                _("Free Stripes"):"free_stripes.pgm",
+                _("Heart"):"heart.pgm",
+                _("Honeycomb"):"kosette_honeycomb.pgm",
+                _("Horizontal From Center"):"bi-linear_y.pgm",
+                _("Horizontal Left to Right"):"wipe_left_to_right.pgm",
+                _("Horizontal Right to Left"):"wipe_right_to_left.pgm",
+                _("Paint"):"kosette_paint.pgm",
+                _("Patches"):"fractal.pgm",
+                _("Puzzle"):"Puzzle.pgm",
+                _("Rays"):"rays.pgm",
+                _("Rectangle Bars"):"Rectangle_Bars.pgm",
                 _("Rectangle From In"):"rectangle_in_to_out.pgm",
                 _("Rectangle From Out"):"rectangle_out_to_in.pgm",
-                _("Rectangle Bars"):"square2-bars.pgm",
-                _("Sand"):"sand.svg",
-                _("Sphere"):"sphere.png",
-                _("Spiral Abstract"):"spiral_abstract_1.png",
-                _("Spiral"):"spiral.pgm",
-                _("Spiral Galaxy"):"spiral2.pgm",
+                _("Rectangles"):"square_bars.pgm",
+                _("Rings"):"radial_bars.pgm",
+                _("Sand"):"sand.pgm",
+                _("Sphere"):"sphere.pgm",
+                _("Spiral Abstract"):"spiral_abstract.pgm",
                 _("Spiral Big"):"spiral_big.pgm",
+                _("Spiral Galaxy"):"spiral2.pgm",
                 _("Spiral Medium"):"spiral_medium.pgm",
-                _("Spots"):"spots.png",
-                _("Star"):"star_2.png",
-                _("Arch"):"fractal_1.png",
-                _("Patches"):"fractal_4.png",
-                _("Free Stripes"):"fractal_5.png",
-                _("Free Curves"):"fractal_7.png",
-                _("Diagonal 1"):"wipe_diagonal_1.png",
-                _("Diagonal 2"):"wipe_diagonal_2.png",
-                _("Diagonal 3"):"wipe_diagonal_3.png",
-                _("Diagonal 4"):"wipe_diagonal_4.png",
-                _("Checkerboard"):"checkerboard_small.pgm"}
+                _("Spiral"):"spiral.pgm",
+                _("Spots"):"spots.pgm",
+                _("Star"):"star.pgm",
+                _("Stripes Horizontal Big"):"blinds_in_to_out_big.pgm",
+                _("Stripes Horizontal"):"blinds_in_to_out.pgm",
+                _("Stripes Horizontal Moving"):"blinds_sliding.pgm",
+                _("Stripes Vertical Big"):"vertical_blinds_in_to_out_big.pgm",
+                _("Stripes Vertical"):"vertical_blinds_in_to_out.pgm",
+                _("Torn frame"):"Torn_frame.pgm",
+                _("Vertical Bottom to Top"):"wipe_bottom_to_top.pgm",
+                _("Vertical From Center"):"bi-linear_x.pgm",
+                _("Vertical Top to Bottom"):"wipe_top_to_bottom.pgm",
+                _("Wood"):"wood.pgm"}
 
     # name -> mlt_compositor_transition_infos key dict.
     unsorted_compositors = [ (_("Dissolve"),"##opacity_kf"),
@@ -130,7 +136,8 @@ def init_module():
                              (_("Affine Blend"), "##affineblend"),
                              (_("Blend"), "##blend"),
                              (_("Wipe Clip Length"),"##wipe"),
-                             (_("Transform"),"##affine")]
+                             (_("Transform"),"##affine"),
+                             (_("LumaToAlpha"),"##matte")]
 
     compositors = sorted(unsorted_compositors, key=lambda comp: comp[0])   
 
@@ -161,11 +168,6 @@ def init_module():
     alpha_combiners = [ (_("Alpha XOR"),"##alphaxor"),
                         (_("Alpha Out"),"##alphaout"),
                         (_("Alpha In"),"##alphain")]
-
-    """ These ain't doing correct Porter-Duff
-                        (_("Alpha Over"),"##alphaover"),
-                        (_("Alpha Atop"),"##alphaatop")]
-    """
                         
     for comp in compositors:
         name, comp_type = comp
@@ -256,6 +258,8 @@ class CompositorTransition:
             self._set_luma_service_default_values()
         elif self.info.mlt_service_id == "region":
             self._set_region_service_default_values()
+        elif self.info.mlt_service_id == "matte":
+            pass
         else:
             self._set_blend_service_default_values()
         

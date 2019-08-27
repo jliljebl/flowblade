@@ -47,15 +47,22 @@ def init_languages():
 
     if editorstate.app_running_from == editorstate.RUNNING_FROM_INSTALLATION:
         # Use /usr/share/locale first if available and running from installation
-        if os.path.isfile("/usr/share/locale/fi/LC_MESSAGES/flowblade.mo"): # fi is the translation controlled by program author
+        # Look for installed translation in distro install
+        # Were using Russian as test language
+        if os.path.isfile("/usr/share/locale/ru/LC_MESSAGES/flowblade.mo"): # fi is the translation controlled by program author
             print "Found translations at /usr/share/locale, using those."
             locale_path = "/usr/share/locale/"
+        #  Look for installed translations in flatpak install 
+        elif os.path.isfile("/app/share/flowblade/Flowblade/locale/ru/LC_MESSAGES/flowblade.mo"): # fi is the translation controlled by program author
+            print "Found translations at /app/share/flowblade/Flowblade/locale, using those."
+            locale_path = "/app/share/flowblade/Flowblade/locale"
         else:
             print "Translations at /usr/share/locale were not found, using program root directory translations."
             locale_path = respaths.LOCALE_PATH
     else:
         # Use translations in program folder first if NOT running from installation
-        locale_file = respaths.LOCALE_PATH + "fi/LC_MESSAGES/flowblade.mo"
+        # Were using Russian as test language
+        locale_file = respaths.LOCALE_PATH + "ru/LC_MESSAGES/flowblade.mo"
         if os.path.isfile(locale_file): # fi is the translation controlled by program author
             print "Found translations at " +  respaths.LOCALE_PATH + ", using those."
             locale_path = respaths.LOCALE_PATH
@@ -69,14 +76,25 @@ def init_languages():
     # Get the language to use
     global lang
     if editorpersistance.prefs.use_english_always == True:
+        lang_code = "English"
+        editorpersistance.prefs.use_english_always = False
+        editorpersistance.prefs.force_language = "English"
+        editorpersistance.save()
+    else:
+        lang_code = editorpersistance.prefs.force_language
+    
+    if editorpersistance.prefs.force_language == "English":
         print "Force use English."
         lang = gettext.translation(APP_NAME, locale_path, languages=["dummy"], fallback=True)
+    elif editorpersistance.prefs.force_language != "None":
+        print "Force use ", editorpersistance.prefs.force_language
+        lang = gettext.translation(APP_NAME, locale_path, languages=[str(editorpersistance.prefs.force_language)], fallback=True)
     else:
         print "Use OS locale language."
         lang = gettext.translation(APP_NAME, locale_path, languages=langs, fallback=True)
 
     # Un-comment for translations tests
-    #lang = gettext.translation(APP_NAME, locale_path, languages=["fi"], fallback=True)
+    #lang = gettext.translation(APP_NAME, locale_path, languages=["it"], fallback=True)
 
     lang.install(APP_NAME) # makes _() a build-in available in all modules without imports
 
@@ -220,6 +238,7 @@ def load_filters_translations():
     filter_names["Color Halftone"]= _("Color Halftone")
     filter_names["Dither"]= _("Dither")
     filter_names["Vignette"]= _("Vignette")
+    filter_names["Vignette Advanced"]= _("Vignette Advanced")
     filter_names["Emboss"]= _("Emboss")
     filter_names["3 Point Balance"]= _("3 Point Balance")
     filter_names["Colorize"]= _("Colorize")
@@ -240,10 +259,17 @@ def load_filters_translations():
     filter_names["Lift Gain Gamma"] = _("Lift Gain Gamma")
     filter_names["Image Grid"] = _("Image Grid")
 
+    # Later
     filter_names["Color Lift Gain Gamma"] = _("Color Lift Gain Gamma")
     filter_names["Color Channel Mixer"] = _("Color Channel Mixer")
     filter_names["Lens Correction AV"] = _("Lens Correction AV")
     filter_names["Perspective"] = _("Perspective")
+    filter_names["Translate"] = _("Translate")
+    filter_names["Lut3D"] = _("Lut3D")
+    filter_names["Normalize"] = _("Normalize")
+    filter_names["File Luma to Alpha"] = _("File Luma to Alpha") 
+    filter_names["Gradient Tint"] = _("Gradient Tint")
+    filter_names["RotoMask"] = _("RotoMask")
     
     # param names
     global param_names
@@ -535,7 +561,9 @@ def load_filters_translations():
     param_names["Center Y"] = _("Center Y")
     param_names["Quad Distortion"] = _("Quad Distortion")
     param_names["Double Quad Distortion"] = _("Double Quad Distortion")
-
+    param_names["Level"] = _("Level")
+    param_names["Select .cube file"] = _("Select .cube file")
+    
     # param names for compositors
     param_names["Opacity"] = _("Opacity")
     param_names["Shear X"] = _("Shear X")
@@ -553,7 +581,29 @@ def load_filters_translations():
     param_names["Fade In Length"] = _("Fade In Length")
     param_names["Wipe Direction"] = _("Wipe Direction")
     param_names["Blend Mode"] = _("Blend Mode")
-    
+    param_names["Target Loudness"] = _("Blend Mode")
+    param_names["Analysis Length"] = _("Analysis Length")
+    param_names["Max Gain"] = _("Max Gain")
+    param_names["Min Gain"] = _("Min Gain")
+    param_names["Select file"] = _("Select file")
+    param_names["Smooth"] = _("Smooth")
+    param_names["Radius"] = _("Radius")
+    param_names["Fade"] = _("Fade")
+    param_names["Start Opacity"] = _("Start Opacity")
+    param_names["End Opacity"] = _("End Opacity")
+    param_names["End Color"] = _("End Color")
+    param_names["Start Color"] = _("Start Color")
+    param_names["Start X"] = _("Start X")
+    param_names["Start Y"] = _("Start Y")
+    param_names["End Y"] = _("End Y")
+    param_names["End X"] = _("End X")
+    param_names["Gradient Type"] = _("Gradient Type")
+    param_names["Radial Offset"] = _("Radial Offset")
+    param_names["Feather Passes"] = _("Feather Passes")
+    param_names["Alpha Mode"] = _("Alpha Mode")
+    param_names["Feather"] = _("Feather")
+    param_names["Mode"] = _("Mode")
+
     # Combo options
     global combo_options
     combo_options["Shave"] = _("Shave")
@@ -624,4 +674,10 @@ def load_filters_translations():
     combo_options["HSLSaturation"] = _("HSLSaturation")
     combo_options["HSLColor"] = _("HSLColor")
     combo_options["HSLLuminosity"] = _("HSLLuminosity")
-     
+    combo_options["Cos"] = _("Cos")
+    combo_options["Linear"] = _("Linear")
+    combo_options["Radial"] = _("Radial")
+    combo_options["Clear"] = _("Clear")
+    combo_options["Add"] = _("Add")
+    combo_options["Subtract"] = _("Subtract")
+    combo_options["Alpha"] = _("Alpha")

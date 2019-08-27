@@ -20,10 +20,11 @@
 
 """
 Modules provides functions that:
-- parses strings to property tuples or argument dicts
+- parse strings to property tuples or argument dicts
 - build value strings from property tuples.
 """
 from gi.repository import Gtk
+import json
 
 import appconsts
 from editorstate import current_sequence
@@ -49,7 +50,7 @@ def node_list_to_properties_array(node_list):
     properties = []
     for node in node_list:
         p_name = node.getAttribute(NAME)
-        p_value = node.firstChild.nodeValue
+        p_value = node.firstChild.nodeValue # Crash here, is 'exptype' set in string value param args in filters.xml?
         p_type = _property_type(p_value)
         properties.append((p_name, p_value, p_type))
     return properties
@@ -134,7 +135,7 @@ def get_args_num_value(val_str):
                 return current_sequence().profile.height()
     return None
 
-# ------------------------------------------ kf editor values strings to kfs funcs
+# ------------------------------------------ kf editor values strings to kf arrays funcs
 def single_value_keyframes_string_to_kf_array(keyframes_str, out_to_in_func):
     new_keyframes = []
     keyframes_str = keyframes_str.strip('"') # expression have sometimes quotes that need to go away
@@ -203,6 +204,16 @@ def rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_
 
     return new_keyframes
 
+def rotomask_json_value_string_to_kf_array(keyframes_str, out_to_in_func):
+    new_keyframes = []
+    json_obj = json.loads(keyframes_str)
+    for kf in json_obj:
+        kf_obj = json_obj[kf]
+        add_kf = (int(kf), kf_obj)
+        new_keyframes.append(add_kf)
+
+    return sorted(new_keyframes, key=lambda kf_tuple: kf_tuple[0]) 
+    
 def create_editable_property_for_affine_blend(clip, editable_properties):
     # Build a custom object that duck types for TransitionEditableProperty to use in editor
     ep = utils.EmptyClass()
@@ -224,6 +235,8 @@ def create_editable_property_for_affine_blend(clip, editable_properties):
     ep.get_pixel_aspect_ratio = lambda : (float(current_sequence().profile.sample_aspect_num()) / current_sequence().profile.sample_aspect_den())
     ep.get_in_value = lambda out_value : out_value # hard coded for opacity 100 -> 100 range
     ep.write_out_keyframes = lambda w_kf : rotating_ge_write_out_keyframes(ep, w_kf)
+    ep.update_prop_value = lambda : rotating_ge_update_prop_value(ep) # This is needed to get good update after adding kfs with fade buttons, iz all kinda fugly
+                                                                            # We need this to reinit GUI components after programmatically added kfs.
     # duck type members
     x_tokens = ep.x.value.split(";")
     y_tokens = ep.y.value.split(";")
@@ -279,7 +292,31 @@ def rotating_ge_write_out_keyframes(ep, keyframes):
     ep.y_scale.write_value(y_scale_val)
     ep.rotation.write_value(rotation_val)
     ep.opacity.write_value(opacity_val)
+
+def rotating_ge_update_prop_value(ep):
+
+    # duck type members
+    x_tokens = ep.x.value.split(";")
+    y_tokens = ep.y.value.split(";")
+    x_scale_tokens = ep.x_scale.value.split(";")
+    y_scale_tokens = ep.y_scale.value.split(";")
+    rotation_tokens = ep.rotation.value.split(";")
+    opacity_tokens = ep.opacity.value.split(";")
     
+    value = ""
+    for i in range(0, len(x_tokens)): # these better match, same number of keyframes for all values, or this will not work
+        frame, x = x_tokens[i].split("=")
+        frame, y = y_tokens[i].split("=")
+        frame, x_scale = x_scale_tokens[i].split("=")
+        frame, y_scale = y_scale_tokens[i].split("=")
+        frame, rotation = rotation_tokens[i].split("=")
+        frame, opacity = opacity_tokens[i].split("=")
+        
+        frame_str = str(frame) + "=" + str(x) + ":" + str(y) + ":" + str(x_scale) + ":" + str(y_scale) + ":" + str(rotation) + ":" + str(opacity)
+        value += frame_str + ";"
+
+    ep.value = value.strip(";")
+
 def _get_pixel_pos_from_frei0r_cairo_pos(value, screen_dim):
     # convert positions from range used by frei0r cairo plugins to pixel values
     return -2.0 * screen_dim + value * 5.0 * screen_dim
@@ -294,6 +331,12 @@ def get_frei0r_cairo_position(pos, screen_dim):
     pix_range = screen_dim * 5.0
     range_pos = pos + screen_dim * 2.0
     return range_pos / pix_range
+
+def get_on_off_txt_for_int(int_val):
+    if int_val == 0:
+        return _("Off")
+    else:
+        return _("On")
 
 #------------------------------------------------------ util funcs
 def _property_type(value_str):

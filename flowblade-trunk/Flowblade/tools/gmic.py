@@ -52,12 +52,14 @@ import mltprofiles
 import mlttransitions
 import mltfilters
 import positionbar
+import processutils
 import respaths
 import renderconsumer
 import toolguicomponents
 import toolsencoding
 import translations
 import threading
+import userfolders
 import utils
 
 import gmicplayer
@@ -98,7 +100,7 @@ _hamburger_menu = Gtk.Menu()
 
 #-------------------------------------------------- launch and inits
 def test_availablity():
-    if os.path.exists("/usr/bin/gmic") == True:
+    if os.path.exists("/usr/bin/gmic") == True or os.path.exists("/app/bin/gmic") == True: # File system and flatpak
         print "G'MIC found"
         global _gmic_found
         _gmic_found = True
@@ -124,7 +126,7 @@ def launch_gmic(launch_data=None):
         args = ("path:" + str(clip.path), "clip_in:" + str(clip.clip_in), "clip_out:" + str(clip.clip_out))
         
     print "Launch gmic..."
-    FLOG = open(utils.get_hidden_user_dir_path() + "log_gmic", 'w')
+    FLOG = open(userfolders.get_cache_dir() + "log_gmic", 'w')
     if args == None:
         subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladegmic"], stdin=FLOG, stdout=FLOG, stderr=FLOG)
     else:
@@ -170,7 +172,8 @@ def main(root_path, force_launch=False):
                 respaths.set_gmic2(root_path)
 
     # Write stdout to log file
-    sys.stdout = open(utils.get_hidden_user_dir_path() + "log_gmic", 'w')
+    userfolders.init()
+    sys.stdout = open(userfolders.get_cache_dir() + "log_gmic", 'w')
     print "G'MIC version:", str(_gmic_version)
 
     # Init gmic tool session dirs
@@ -218,7 +221,8 @@ def main(root_path, force_launch=False):
             gui.apply_gtk_css()
 
     repo = mlt.Factory().init()
-
+    processutils.prepare_mlt_repo(repo)
+    
     # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
     locale.setlocale(locale.LC_NUMERIC, 'C')
 
@@ -274,7 +278,7 @@ def init_frames_dirs():
 
 #----------------------------------------------- session folders and files
 def get_session_folder():
-    return utils.get_hidden_user_dir_path() + appconsts.GMIC_DIR + "/session_" + str(_session_id)
+    return userfolders.get_cache_dir() + appconsts.GMIC_DIR + "/session_" + str(_session_id)
 
 def get_clip_frames_dir():
     return get_session_folder() + CLIP_FRAMES_DIR
@@ -1103,13 +1107,14 @@ class GmicPreviewRendererer(threading.Thread):
 
         print "Render preview:", script_str
         
-        FLOG = open(utils.get_hidden_user_dir_path() + "log_gmic_preview", 'w')
+        # Render preview and write log
+        FLOG = open(userfolders.get_cache_dir() + "log_gmic_preview", 'w')
         p = subprocess.Popen(script_str, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
         p.wait()
         FLOG.close()
      
         # read log
-        f = open(utils.get_hidden_user_dir_path() + "log_gmic_preview", 'r')
+        f = open(userfolders.get_cache_dir() + "log_gmic_preview", 'r')
         out = f.read()
         f.close()
 
@@ -1224,13 +1229,13 @@ class GmicEffectRendererer(threading.Thread):
             script_str = "gmic " + clip_frame_path + " " + user_script + " -output " +  rendered_file_path
 
             if frame_count == 1: # first frame displays shell output and does error checking
-                FLOG = open(utils.get_hidden_user_dir_path() + "log_gmic_preview", 'w')
+                FLOG = open(userfolders.get_cache_dir() + "log_gmic_preview", 'w')
                 p = subprocess.Popen(script_str, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
                 p.wait()
                 FLOG.close()
                 
                 # read log
-                f = open(utils.get_hidden_user_dir_path() + "log_gmic_preview", 'r')
+                f = open(userfolders.get_cache_dir() + "log_gmic_preview", 'r')
                 out = f.read()
                 f.close()
                 
@@ -1245,7 +1250,7 @@ class GmicEffectRendererer(threading.Thread):
                     _window.out_view.override_color((Gtk.StateFlags.NORMAL and Gtk.StateFlags.ACTIVE), None)
                     Gdk.threads_leave()
             else:
-                FLOG = open(utils.get_hidden_user_dir_path() + "log_gmic_preview", 'w')
+                FLOG = open(userfolders.get_cache_dir() + "log_gmic_preview", 'w')
                 p = subprocess.Popen(script_str, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
                 p.wait()
                 FLOG.close()

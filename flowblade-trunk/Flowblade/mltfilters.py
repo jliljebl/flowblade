@@ -91,6 +91,7 @@ old_filters = []
 
 # We need this to mute clips
 _volume_filter_info = None
+_brightness_filter_info = None # for kf tool
 
 def _load_icons():
     global FILTER_DEFAULT_ICON
@@ -239,7 +240,7 @@ class FilterObject:
         else:
              self.mlt_filter.set("disable", str(1))
     
-    def reset_values(self,  mlt_profile=None, clip=None): #multipartfilters need profile and clip
+    def reset_values(self,  mlt_profile=None, clip=None): # multipartfilters need profile and clip
         for i in range(0, len(self.properties)):
             name, o_value, prop_type = self.info.properties[i]
             name, value, prop_type = self.properties[i]
@@ -379,12 +380,12 @@ def load_filters_xml(services):
         filter_info = FilterInfo(f_node)
 
         if filter_info.mlt_drop_version != "":
-            if editorstate.mlt_version_is_equal_or_greater(filter_info.mlt_drop_version):
+            if editorstate.mlt_version_is_greater_correct(filter_info.mlt_drop_version):
                 print filter_info.name + " dropped, MLT version too high for this filter."
                 continue
 
         if filter_info.mlt_min_version != "":
-            if not editorstate.mlt_version_is_equal_or_greater(filter_info.mlt_min_version):
+            if not editorstate.mlt_version_is_greater_correct(filter_info.mlt_min_version):
                 print filter_info.name + " dropped, MLT version too low for this filter."
                 continue
 
@@ -398,6 +399,10 @@ def load_filters_xml(services):
             global _volume_filter_info
             _volume_filter_info = filter_info
 
+        if filter_info.mlt_service_id == "brightness": # TODO: maybe add general search fuction for these, if we need a third one this is becoming a bit silly
+            global _brightness_filter_info
+            _brightness_filter_info = filter_info
+            
         # Add filter compositor filters or filter groups
         if filter_info.group == COMPOSITOR_FILTER_GROUP:
             global compositor_filters
@@ -432,7 +437,6 @@ def clone_filter_object(filter_object, mlt_profile):
     return clone
 
 def replace_services(services):
-    # this has gotta be a bullshit way to do this
     
     replacements_doc = xml.dom.minidom.parse(respaths.REPLACEMENTS_XML_DOC)
 
@@ -482,6 +486,10 @@ def get_compositor_filter(filter_id):
     return compositor_filters[filter_id]
 
 def get_audio_filters_groups():
+    # On some environments LADSPA filters are known to be missing and group "Audio Filter"
+    # is not present, we must init groups to 'None' to handle this possibility.
+    group_tuple1 = None
+    group_tuple2 = None
     for group_tuple in groups:
         gkey, group = group_tuple
         if gkey == translations.get_filter_group_name("Audio"):
@@ -494,6 +502,9 @@ def get_audio_filters_groups():
 def get_volume_filters_info():
     return _volume_filter_info
 
+def get_brightness_filter_info():
+    return _brightness_filter_info
+    
 def detach_all_filters(clip):
     for f in clip.filters:
         if isinstance(f, FilterObject):
@@ -526,6 +537,7 @@ def print_not_found_filters():
 
 
 # ------------------------------------------------------------- mute filters
+# We have some helper functions here for muting clips
 def create_mute_volume_filter(seq):    
     mute_filter = seq.create_filter(get_volume_filters_info())
     mute_filter.mlt_filter.set("gain","0")

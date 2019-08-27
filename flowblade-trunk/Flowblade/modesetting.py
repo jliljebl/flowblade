@@ -19,8 +19,6 @@
 """
 
 """
-Handles or passes on mouse edit events from timeline.
-
 Handles edit mode setting.
 """
 
@@ -31,6 +29,7 @@ from editorstate import PLAYER
 from editorstate import EDIT_MODE
 import editorpersistance
 import gui
+import kftoolmode
 import movemodes
 import tlinewidgets
 import trimmodes
@@ -43,9 +42,6 @@ def set_default_edit_mode(disable_mouse=False):
     This is used as global 'go to start position' exit door from
     situations where for example user is in trim and exits it
     without specifying which edit mode to go to.
-    
-    NOTE: As this uses 'programmed click', this method does nothing if insert mode button
-    is already down.
     """
     gui.editor_window.set_default_edit_tool()
     if disable_mouse:
@@ -167,19 +163,11 @@ def oneroll_trim_no_edit_press(event, frame):
     """
     success = oneroll_trim_mode_init(event.x, event.y)
     if success:
-        # If not quick enter, disable edit until mouse released
-        if not editorpersistance.prefs.quick_enter_trims:
-            tlinewidgets.trim_mode_in_non_active_state = True
-            editorstate.timeline_mouse_disabled = True
-         # If preference is quick enter, call mouse move handler immediately 
-         # to move edit point to where mouse is
-        else:
-            trimmodes.oneroll_trim_move(event.x, event.y, frame, None)
+        trimmodes.oneroll_trim_move(event.x, event.y, frame, None)
+        trimmodes.submode = trimmodes.MOUSE_EDIT_ON
+        # additional mouse move and release handled at trimmodes because successful init editorstate.edit_mode = editorstate.ONE_ROLL_TRIM
     else:
-        if editorpersistance.prefs.empty_click_exits_trims == True:
-            set_default_edit_mode(True)
-        else:
-            editorstate.edit_mode = editorstate.ONE_ROLL_TRIM_NO_EDIT
+        set_default_edit_mode(True)
 
 def oneroll_trim_no_edit_move(x, y, frame, state):
     # Only presses are handled in ONE_ROLL_TRIM_NO_EDIT mode
@@ -196,11 +184,6 @@ def oneroll_trim_mode_init(x, y):
     track = tlinewidgets.get_track(y)
     if track == None:
         return False
-
-    # Feature disabled for now
-    #if track_lock_check_and_user_info(track, oneroll_trim_mode_init, "one roll trim mode"):
-    #    set_default_edit_mode()
-    #    return False
 
     stop_looping() 
     editorstate.edit_mode = editorstate.ONE_ROLL_TRIM
@@ -227,16 +210,11 @@ def tworoll_trim_no_edit_init():
 def tworoll_trim_no_edit_press(event, frame):
     success = tworoll_trim_mode_init(event.x, event.y)
     if success:
-        if not editorpersistance.prefs.quick_enter_trims:
-            tlinewidgets.trim_mode_in_non_active_state = True
-            editorstate.timeline_mouse_disabled = True
-        else:
-            trimmodes.tworoll_trim_move(event.x, event.y, frame, None)
+        trimmodes.tworoll_trim_move(event.x, event.y, frame, None)
+        trimmodes.submode = trimmodes.MOUSE_EDIT_ON
+        # additional mouse move and release handled at trimmodes because successful init editorstate.edit_mode = editorstate.TWO_ROLL_TRIM
     else:
-        if editorpersistance.prefs.empty_click_exits_trims == True:
-            set_default_edit_mode(True)
-        else:
-            editorstate.edit_mode = editorstate.TWO_ROLL_TRIM_NO_EDIT
+        set_default_edit_mode(True)
 
 def tworoll_trim_no_edit_move(x, y, frame, state):
     pass
@@ -251,10 +229,6 @@ def tworoll_trim_mode_init(x, y):
     track = tlinewidgets.get_track(y)
     if track == None:
         return False
-    
-    #if track_lock_check_and_user_info(track, tworoll_trim_mode_init, "two roll trim mode",):
-    #    set_default_edit_mode()
-    #    return False
 
     stop_looping()
     editorstate.edit_mode = editorstate.TWO_ROLL_TRIM
@@ -280,17 +254,11 @@ def slide_trim_no_edit_init():
 def slide_trim_no_edit_press(event, frame):
     success = slide_trim_mode_init(event.x, event.y)
     if success:
-        if not editorpersistance.prefs.quick_enter_trims:
-            tlinewidgets.trim_mode_in_non_active_state = True
-            editorstate.timeline_mouse_disabled = True
-        else:
-            trimmodes.edit_data["press_start"] = frame
-            trimmodes.slide_trim_move(event.x, event.y, frame, None)
+        trimmodes.edit_data["press_start"] = frame
+        trimmodes.slide_trim_move(event.x, event.y, frame, None)
+        trimmodes.submode = trimmodes.MOUSE_EDIT_ON
     else:
-        if editorpersistance.prefs.empty_click_exits_trims == True:
-            set_default_edit_mode(True)
-        else:
-            editorstate.edit_mode = editorstate.SLIDE_TRIM_NO_EDIT
+        set_default_edit_mode(True)
     
 def slide_trim_no_edit_move(x, y, frame, state):
     pass
@@ -305,10 +273,6 @@ def slide_trim_mode_init(x, y):
     track = tlinewidgets.get_track(y)
     if track == None:
         return False
-    
-    #if track_lock_check_and_user_info(track, tworoll_trim_mode_init, "two roll trim mode"):
-    #    set_default_edit_mode()
-    #    return False
 
     stop_looping()
     editorstate.edit_mode = editorstate.SLIDE_TRIM
@@ -322,9 +286,17 @@ def slide_trim_mode_init(x, y):
     success = trimmodes.set_slide_mode(track, press_frame)
     return success
 
+
+# -------------------------------------- multi trim mode
+def multitrim_mode_pressed():
+    stop_looping()
+    editorstate.edit_mode = editorstate.MULTI_TRIM
+    tlinewidgets.set_edit_mode(None, None) # No overlays are drawn in this edit mode
+    movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
+    updater.set_trim_mode_gui()
+    
 # -------------------------------------- cut mode
 def cut_mode_pressed():
-    #print "cut_mode_pressed"
     stop_looping()
     current_sequence().clear_hidden_track()
 
@@ -333,17 +305,32 @@ def cut_mode_pressed():
         
     tlinewidgets.set_edit_mode(None, tlinewidgets.draw_cut_overlay)
     movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
-    
-    #_set_move_mode()
 
-# -------------------------------------- cut mode
+# -------------------------------------- kftool mode
 def kftool_mode_pressed():
-    print "kftool_mode_pressed"
     stop_looping()
     current_sequence().clear_hidden_track()
 
     # Box tool is implemeted as sub mode of OVERWRITE_MOVE
     editorstate.edit_mode = editorstate.KF_TOOL
-        
+    kftoolmode.enter_mode = None
+    kftoolmode.set_no_clip_edit_data()
+
     tlinewidgets.set_edit_mode(None, tlinewidgets.draw_kftool_overlay)
     movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
+
+def kftool_mode_from_popup_menu(clip, track, edit_type):
+    stop_looping()
+    current_sequence().clear_hidden_track()
+
+    kftoolmode.enter_mode = editorstate.edit_mode 
+    editorstate.edit_mode = editorstate.KF_TOOL
+        
+    tlinewidgets.set_edit_mode(None, tlinewidgets.draw_kftool_overlay)
+    movemodes.clear_selected_clips() # Entering this edit mode clears selection 
+
+    kftoolmode.set_no_clip_edit_data()
+
+    kftoolmode.init_tool_for_clip(clip, track, edit_type)
+    kftoolmode.edit_data["initializing"] = False
+    gui.editor_window.set_cursor_to_mode()

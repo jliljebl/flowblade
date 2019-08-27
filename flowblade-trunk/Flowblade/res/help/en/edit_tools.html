@@ -1,7 +1,7 @@
  <!DOCTYPE html>
 <html>
 <head>
-  <title>Edit Tools</title>
+  <title>Edit Tools and Workflow</title>
   <link rel="stylesheet" href="style.css">
   <META CHARSET="UTF-8">
 </head>
@@ -14,32 +14,155 @@
 
 <script src="tocgen.js"></script>
 
-<div class="subject-header">Edit Tools</div>
+<div class="subject-header">Edit Tools and Workflow</div>
 
 <p>
-Flowblade Movie Editor has six edit tools, <b>4 move tools</b> and <b>3 trim tools</b>.
+Flowblade Movie Editor has 10 edit tools, <b>4 move tools</b>, <b>4 trim tools</b> and <b>Cut tool</b> and <b>Keyframe tool</b> .
 </p>
-<div class="note">
-<b>Use Keyboard Shortcuts!</b> It is much faster to use keys <b>1-7</b> to change tools. Note that keys 1-7 only change tools if timeline has keyboard focus. 
-</div>
 
 <div id="toccontent">
 <div id="toc"></div>
+
+<h2>Workflow configuration</h2>
+
+<p>
+Flowblade offers a configurable workflow with user selectable toolset and timeline behaviours.
+</p>
+
+<p>
+Worflow is configured from the menu launched by pressing icon <img src="workflow.png">.
+</p>
+
+<p>
+You can select 9 tools to be available and set the order the tools presented in with the first one being the default tool.
+</p>
+
+<p>
+You can also further configure the workflow by selecting the drag and drop action, and make Compositors automatically follow their origin clips. 
+</p>
+
+<p>
+There are 2 preset workflows available.
+</p>
+
+
+<h3>Workflow presets</h3>
+<p>
+<h4><b>Standard</b></h4>
+</p>
+<p>
+Standard workflow has the <b>Move</b> tool as default tool and presents a workflow similar to most video editors.
+</p>
+<p>
+<b>Tools:</b> <b>Move</b>, <b>Multitrim</b>, <b>Spacer</b>, <b>Insert</b>, <b>Cut</b>, <b>Keyframe</b>.
+</p>
+<p>
+<b>Behaviours:</b> Drag'n'Drop: <i>'Always Overwrite Blanks' </i>, Compositors Autofollow: <i>Off</i>
+</p>
+<p>
+<h4><b>Film Style</b></h4>
+</p>
+<p>
+Film Style workflow has the <b>Insert</b> tool as default tool and employs insert style editing. This was the workflow in previous versions of the application.
+</p>
+<p>
+<b>Tools:</b> <b>Insert</b>, <b>Move</b>, <b>Trim</b>, <b>Roll</b>, <b>Slip</b>, <b>Spacer</b>, <b>Box</b>.
+</p>
+<p>
+<b>Behaviours:</b> Drag'n'Drop: <i>'Overwrite blanks on non-V1 tracks' </i>, Compositors Autofollow: <i>Off</i>
+</p>
+
+<h3>Managing tool set</h3>
+
+<ol>
+<li>Launch Workflow popup menu clip</li>
+	<ul>
+	<li> Press icon <img src="workflow.png">.</li>
+	</ul>
+<li>Turn tools on and off </li>
+	<ul>
+	<li> Click <b><i>Tool name</i> -> Tool Active</b> check menu item </li>
+	</ul>
+<li>Set tool position</li>
+	<ul>
+	<li> Click <b><i>Tool name</i> -> Sert Position -> <i>Position number</i></b> menu item </li>
+	</ul>
+</ol>
+
+<h3>Setting timeline behaviours</h3>
+
+<ol>
+<li>Launch Workflow popup menu clip</li>
+	<ul>
+	<li> Press icon <img src="workflow.png">.</li>
+	</ul>
+    
+<li>Set drag'n'drop behaviours in submenu <b>Behaviours -> Drag'n'Drop Action</b></li>
+
+<ul>
+<li> If <i>'Always Overwrite Blanks'</i>:</li>
+<ul>
+<li> Clip will overwrite available blank and empty space and will perform insert for the length of frames that would be overwritten.  </li>
+</ul>
+<li>  If <i>'Overwrite blanks on non-V1 tracks'</i>:</li>
+<ul>
+<li> On track V1 clip will be inserted on the track at the nearest cut. </li>
+<li> On non-V1 tracks:. </li>
+<ul>
+<li> Clip will be inserted if dropped on a clip. </li>
+<li> Clip will overwrite available blank and empty space and will perform insert for the length of frames that would be overwritten.  </li>
+</ul>
+</ul>
+<li>  If <i>'Always Insert'</i>:</li>
+<ul>
+<li> Clip will be inserted on the track at the nearest cut. </li>
+</ul>
+</ul>
+
+<li>Set Compositor behaviour with check item <b>Compositor Autofollow</b></li>
+<ul>
+<li> If <i>'Off'</i>:</li>
+<ul>
+<li> Compositors will not follow their origin clips.</li>
+<li> Compositors can be freely moved and trimmed.</li>
+</ul>
+<li>  If <i>'On'</i>:</li>
+<ul>
+<li> Compositors will follow their origin clips.</li>
+<li> Compositors cannot be free moved and trimmed.</li>
+<ul>
+</ul>
+</ul>
+
+</ol>
+
+<p>
+Worflow is configured from the menu launched by pressing icon <img src="workflow.png">.
+</p>
+
+<h2>Selecting Tools</h2>
+
+<p>
+Use <b>Tool Switcher</b> button drop menu or press key <b>1 - 9</b>  to pick tool .
+</p>
+
+<div class="note">
+<b>Use Keyboard Shortcuts!</b> It is much faster to use keys <b>1 - 9</b> to change tools. Note that keys 1-9 only change tools if timeline has keyboard focus. 
+</div>
+
+
+<h2>Move Tools</h2>
+
+
+
 <a id="insert"></a>
-
-
-
-<h3>Insert Tool</h3>
+<h3>Insert</h3>
 
 <p>
 Splice out one or more clips and insert them at desired cut on any track.
 </p>
 
 <ol>
-<li>Pick 'Insert' tool</li>
-	<ul>
-	<li> Use <b>Tool Switcher</b> button drop menu or press <b>1</b> key.</li>
-	</ul>
 <li>Select clip</li>
 	<ul>
 	<li> Click <b>Left Mouse</b> on a clip.</li>
@@ -56,22 +179,44 @@ Splice out one or more clips and insert them at desired cut on any track.
 	</ul>
 </ol>
 
+<p>
+Drag clip ends to change clip length.
+</p>
+
+<ol>
+<li>Place cursor near clip end </li>
+	<ul>
+	<li>When cursor changes to horizontal arrow with vertical bar you can start clip end drag edit.</li>
+	</ul>
+<li>Drag clip end with <b>Left Mouse</b>.</li>
+	<ul>
+	<li> Added clip length will perform overwrite on blanks and empty space</li>
+	</ul>
+	<ul>
+	<li> Added clip length will perform insert on other clips</li>
+	</ul>
+	<ul>
+	<li> Decreased clip length will perform splice out.</li>
+	</ul>
+ </ol> 
+
+
+
 <a id="overwrite"></a>
-<h3>Overwrite Tool</h3>
+<h3>Move</h3>
 
 <p>
 Lift out one or more clips and insert them at any point to overwrite on any track.
 </p>
 
 <ol>
-<li>Pick 'Overwrite' tool</li>
-	<ul>
-	<li> Use <b>Tool Switcher</b> button drop menu or press <b>2</b> key.</li>
-	</ul>
 <li>Select clip</li>
 	<ul>
-	<li><b> Click </b>Left Mouse<b> on a clip.</li>
-	<li></b> Select other end of clip range if moving multiple clips. Click <b>CTRL+Left Mouse</b> on the clip you wish to be the other end of move clip range./li>
+	<li><b> Click </b>Left Mouse on a clip.</li>
+	</ul>
+<li>Select other end of clip range if moving multiple clips</li>
+	<ul>
+	<li> Click <b>CTRL+Left Mouse</b> on the clip you wish to be the other end of move clip range.</li>
 	</ul>
 <li>Drag Clip(s) to new position</li>
 	<ul>
@@ -81,94 +226,129 @@ Lift out one or more clips and insert them at any point to overwrite on any trac
 	</ul>
 </ol>
 
+<p>
+Drag clip ends to change clip length.
+</p>
+
+<ol>
+<li>Place cursor near clip end </li>
+	<ul>
+	<li>When cursor changes to horizontal arrow with vertical bar you can start clip end drag edit.</li>
+	</ul>
+<li>Drag clip end with <b>Left Mouse</b>.</li>
+	<ul>
+	<li> Added clip length will perform overwrite on blanks and empty space</li>
+	</ul>
+	<ul>
+	<li> Added clip length will perform insert on other clips</li>
+	</ul>
+	<ul>
+	<li> Decreased clip length will perform splice out.</li>
+	</ul>
+ </ol> 
+
+<p>
+Select and overwrite move all Timeline items contained in a box selection.
+</p>
+
+<ol>
+<li>Select an area on Timeline by dragging a box selection with <b>Left Mouse</b> around all items you wish to move and release mouse button.</li>
+<li>Press <b>Left Mouse</b> inside the box selection and drag the box into new position on timeline and release mouse.</li>
+<li>Box contents are overwritten on new position and Compositors are moved.</li>
+
+</ol>
+
+
+
+<a id="spacer"></a>
+<h3>Spacer</h3>
+
+<p>Move all Timeline items after pressed frame on all tracks or on a single track</p>
+<ol>
+<li>Select a clip on Timeline and move it and all items to the right of it</li>
+	<ul>
+<li> Press <b>Left Mouse</b> on a clip.</li>
+<li> Continue to <b>Left drag</b> clip and all clips and compositors to right of it into a new position</li>
+<li> It is not possible to move items on top of clips. Items can only be moved on top of empty space </li>
+	</ul>
+<li>Use <b>Control</b> button to only affect items on a single track</li>
+	<ul>
+<li> Press <b>Control</b> and use <b>Left Mouse</b> to move all items on single track to the right of the selected clip</li>
+	</ul>
+</ol>
+
+
+
+<a id="box"></a>
+<h3>Box</h3>
+
+<p>Select and overwrite move all Timeline items contained in a box selection.</p>
+<ol>
+<li>Select an area on Timeline by dragging a box selection with <b>Left Mouse</b> around all items you wish to move and release mouse button.</li>
+
+<li>Press <b>Left Mouse</b> inside the box selection and drag the box into new position on timeline and release mouse.</li>
+<li>Box contents are overwritten on new position and Compositors are moved.</li>
+
+</ol>
+
+ 
+ 
+<h2>Trim Tools</h2>
+
+
+
+
 <a id="trim"></a>
-<h3>Trim Tool</h3>
+<h3>Trim</h3>
 <p>
 Make clip longer or shorter from either clip's end or from clip's beginning.
 </p>
 <ol>
-<li> Pick 'Trim' tool</li>
-	<ul>
-	<li> Use <b>Tool Switcher</b> button drop menu or press <b>3</b> key.</li>
-	</ul>
 <li> Select trimmed cut and select new in or out frame</li>
 	<ul>
 	<li> Press with <b>Left Mouse</b> on a clip near the side you wish to trim</li>
+    <li> Cursor change indicates the side of cut that will be trimmed.</li>
 	<li> Continue on to <b>Left drag</b> on clip to select new in or out frame</li>
 	</ul>
 <li> View trimmed cut</li>
 	<ul>
-	<li> Press <b>Play Loop</b> button to view edit.</li>
+<li> Press <b>Play</b> button to loop view edit. Exiting trim tool allows free playback.</li>
 	</ul>
-<li> Select new trim from another clip</li>
-	<ul>
-	<li> Click with <b>Left Mouse</b> on another clip near the side you wish to trim</li>
-	</ul>
-<li> Select other end of same clip to trim</li>
-	<ul>
-	<li> Click on empty space on the Timeline</li>
-	<li> Click with <b>Left Mouse</b> on the original clip near the side you wish to trim</li>
-	</ul>
-</ol>
-
-<a id="rippletrim"></a>
-<h3>Trim Tool Multi Track Ripple Mode</h3>
-<p>
-Make clip longer or shorter from either clip's end or from clip's beginning and move items on other tracks to maintain position sync with trimmed track.
-</p>
-<ol>
-<li> Pick 'Trim' tool</li>
-	<ul>
-	<li> Press <b>R</b> key to switch to Multi Track Ripple mode.</li>
-	</ul>
-<li> Select trimmed cut and select new in or out frame</li>
-	<ul>
-	<li> Press with <b>Left Mouse</b> on a clip near the side you wish to trim</li>
-	<li> Continue on to <b>Left drag</b> on clip to select new in or out frame</li>
-	</ul>
-<li>Items after trim point maintain position sync with trimmed track.</li>
-<li>Trim range is limited so that no overwrites can happen on other tracks.</li>
-<li> Press <b>R</b> key to exit to Multi Track Ripple mode.</li>
 </ol>
 
 
 
 <a id="roll"></a>
-<h3>Roll Tool</h3>
+<h3>Roll</h3>
 
 <p>Move edit point between two clips so that their combined length stays the same.</p>
 
 <ol>
-<li> Pick 'Roll' tool</li>
-	<ul>
-<li> Use <b>Tool Switcher</b> button drop menu or press <b>4</b> key.</li>
-	</ul>
 <li> Select trimmed cut and select new in or out frames</li>
 	<ul>
 <li> Press with <b>Left Mouse</b> on a clip near the cut you wish to trim on the side you wish to view while trimming</li>
 <li> Continue on to <b>Left drag</b> on the two selected clips to select in or out frames for both clips            </li>
 	</ul>
-<li> View trimmed cut</li>
-	<ul>
-<li> Press <b>Play Loop</b> button to view edit.</li>
-	</ul>
+
 <li> Select new trim from another clip</li>
 	<ul>
 <li> Click on empty space on the Timeline</li>
 <li> Click with <b>Left Mouse</b> near the cut you wish to trim</li>
 	</ul>
+<li> View trimmed cut</li>
+	<ul>
+<li> Press <b>Play</b> button to loop view edit. Exiting trim tool allows free playback.</li>
+	</ul>
 </ol>
 
+
+
 <a id="slip"></a>
-<h3>Slip Tool</h3>
+<h3>Slip</h3>
 
 <p>Change the displayed area of media in a clip while keeping the clip position unchanged on the timeline.</p>
 
 <ol>
-<li>Pick 'Slip' tool</li>
-	<ul>
-<li> Use <b>Tool Switcher</b> button drop menu or press <b>5</b> key.</li>
-	</ul>
 <li>Select trimmed clip and change displayed media</li>
 	<ul>
 <li> Press with <b>Left Mouse</b> on a clip you wish to slip trim</li>
@@ -179,74 +359,92 @@ Make clip longer or shorter from either clip's end or from clip's beginning and 
 <li> Click on empty space on the Timeline</li>
 <li> Click with <b>Left Mouse</b> on the clip you wish to trim</li>
 	</ul>
-</ol>
-
-<a id="spacer"></a>
-<h3>Spacer Tool</h3>
-
-<p>Move all Timeline items after pressed frame on all tracks or on a single track</p>
-<ol>
-<li>Pick 'Spacer' tool</li>
+<li> View trimmed cut</li>
 	<ul>
-<li> Use <b>Tool Switcher</b> button drop menu or press <b>6</b> key.</li>
-	</ul>
-<li>Select a clip on Timeline and move it and all items to the right of it</li>
-	<ul>
-<li> Press <b>Left Mouse</b> on a clip.</li>
-<li>  Continue on to <b>Left drag</b> clip and all clips and compositors to right of it to a new position</li>
-<li> It is not possible to move items on top of clips. Items can only be moved on top of empty space </li>
-	</ul>
-<li>Use <b>Control</b> button to only affect items on a single track</li>
-	<ul>
-<li> Press <b>Control</b> and use <b>Left Mouse</b> to move all items on single track to the right of the selected clip</li>
+<li> Press <b>Play</b> button to loop view edit. Exiting trim tool allows free playback.</li>
 	</ul>
 </ol>
 
-<a id="box"></a>
-<h3>Box Tool</h3>
 
-<p>Select and overwrite move all Timeline items contained in a box selection.</p>
-<ol>
-<li>Pick 'Box' tool</li>
-	<ul>
-<li> Use <b>Tool Switcher</b> button drop menu or press <b>7</b> key.</li>
-	</ul>
-<li>Select an area on Timeline by dragging a box selection with <b>Left Mouse</b> around all items you wish to move and release mouse button.</li>
 
-<li>Press <b>Left Mouse</b> inside the box selection and drag the box into new position on timeline and release mouse.</li>
-<li>Box contents are overwritten on new position and Compositors are moved.</li>
-
-</ol>
-
-<a id="movetrim"></a>
-<h3>Move Tool clip end trim</h3>
-
+<a id="rippletrim"></a>
+<h3>Ripple Trim</h3>
 <p>
-When an <b>Insert, Overwrite</b> or <b>Spacer</b> tool is selected the ends of clips can be dragged to lengthen or shorten the clip. 
+Make clip longer or shorter from either clip's end or from clip's beginning and move items on other tracks to maintain position sync with trimmed track.
 </p>
-
 <ol>
-<li>Pick 'Insert', 'Overwrite' or 'Spacer' tool</li>
+<li> Select trimmed cut and select new in or out frame</li>
 	<ul>
-	<li> Use <b>Tool Switcher</b> button drop menu or press <b>1, 2</b> or <b>6</b> key.</li>
+	<li> Press with <b>Left Mouse</b> on a clip near the side you wish to trim</li>
+	<li> Continue on to <b>Left drag</b> on clip to select new in or out frame</li>
 	</ul>
-<li>Select clip end to trim</li>
+<li>Items after trim point maintain position sync with trimmed track.</li>
+<li>Trim range is limited so that no overwrites can happen on other tracks.</li><li> View trimmed cut</li>
 	<ul>
-	<li> Click <b>Control + Right Mouse</b> on a clip.</li>
+<li> Press <b>Play</b> button to loop view edit. Exiting trim tool allows free playback.</li>
 	</ul>
+</ol>
+
+<a id="multitrim"></a>
+<h3>Multitrim</h3>
+<p>
+Do  <b>Trim</b>, <b>Roll</b> or <b>Slip</b> tool edits based on cursor position on timeline.
+</p>
+<ol>
+
+<li> Cursor change indicates which type of trim edit is done when edit is initiated with <b>Left Mouse</b> press.</li>
 	<ul>
-	<li> The nearer clip end will be selected for edit.</li>
+	<li> If cursor is right on the cut, a <b>Roll</b> edit is done. </li>
+	<li> If cursor is right on the center of clip, a <b>Slip</b> edit is done. </li>
+	<li> On other cursor positions a <b>Trim</b> edit on the closer clip end is done. </li>
 	</ul>
-<li>Drag clip end</li>
+<li> Continue on to <b>Left drag</b> to complete the edit.</li>
+<li> Press <b>Play</b> button to loop view edit. Exiting trim tool allows free playback.</li>
+</ol>
+  
+  
+  
+<h2>Other Tools</h2>
+
+
+
+<a id="cuttool"></a>
+<h3>Cut</h3>
+<p>
+Cut single or multiple clips.
+</p>
+<ol>
+<li> Cut single clip.</li>
 	<ul>
-	<li> Added clip length will perform overwrite on blanks and empty space</li>
+	<li>Position cursor on the frame on the clip you wish to cut at and press <b>Left Mouse</b>.</li>
 	</ul>
+<li> Cut clips on all tracks on selected position.</li>
 	<ul>
-	<li> Added clip length will perform insert on other clips</li>
+	<li>Position cursor on frame you wish to cut at and press <b>Control + Left Mouse</b>.</li>
 	</ul>
+</ol>
+
+
+
+<a id="keyframe"></a>
+<h3>Keyframe</h3>
+<p>
+Edit <b>Volume</b> or <b>Brightness</b> filter keyfrmes on timeline.
+</p>
+<ol>
+<li> Click on the clip you wish to edit.</li>
 	<ul>
-	<li> Decreased clip length will perform splice out.</li>
+	<li> A <b>Volume</b> filter is created automatically if clip does not have one.</li>
+	<li> A keyframe editor overlay is displayed on timeline.</li>
 	</ul>
+<li> Press and drag keyframe with <b>Left Mouse</b> to set its value and position</li>
+<li> Press on empty on overlay area with <b>Left Mouse</b> to create and drag keyframe.</li>
+<li> <b>Delete</b> key deletes the active keyframe.</li>
+<li> Press on <b>Hamburger menu icon</b> to change to <b>Brightness</b> keyframe editing or to access additional edit actions.</li>
+<li> Press outside overlay area to close overlay editor.</li>
+</ol>
+
+
 </div>
 
 </div>

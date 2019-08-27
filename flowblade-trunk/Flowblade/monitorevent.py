@@ -43,14 +43,16 @@ FF_REW_SPEED = 3.0
 
 
 JKL_SPEEDS = [-32.0, -16.0, -8.0, -1.0, 0.0, 1.0, 3.0, 5.0, 8.0]
-#JKL_SPEEDS = [-32.0, -16.0, -8.0, -1.0, -0.2, 0.0, 0.2, 1.0, 3.0, 5.0, 8.0]
 JKL_STOPPED_INDEX = 4
 
 # ---------------------------------------- playback
 # Some events have different meanings depending on edit mode and
 # are handled in either movemodes.py or trimmodes.py modules depending 
 # on edit mode.
-def play_pressed():
+def play_pressed():    
+    if editorstate.current_is_active_trim_mode() and trimmodes.submode != trimmodes.NOTHING_ON:
+        return
+
     if current_is_move_mode():
         movemodes.play_pressed()
     elif EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
@@ -65,7 +67,13 @@ def play_pressed():
         trimmodes.slide_play_pressed()
     elif EDIT_MODE() == editorstate.SLIDE_TRIM_NO_EDIT:
         movemodes.play_pressed()
-    
+    elif EDIT_MODE() == editorstate.KF_TOOL:
+        movemodes.play_pressed()
+    elif EDIT_MODE() == editorstate.MULTI_TRIM:
+        movemodes.play_pressed()
+    elif EDIT_MODE() == editorstate.CUT:
+        movemodes.play_pressed()
+        
 def stop_pressed():
     if current_is_move_mode():
         movemodes.stop_pressed()
@@ -81,6 +89,14 @@ def stop_pressed():
         trimmodes.slide_stop_pressed()
     elif EDIT_MODE() == editorstate.SLIDE_TRIM_NO_EDIT:
         movemodes.stop_pressed()
+    elif EDIT_MODE() == editorstate.KF_TOOL:
+        movemodes.stop_pressed()
+    elif EDIT_MODE() == editorstate.MULTI_TRIM:
+        movemodes.stop_pressed()
+    elif EDIT_MODE() == editorstate.CUT:
+        movemodes.stop_pressed()
+        
+    updater.maybe_autocenter()
 
 def next_pressed():
     if current_is_move_mode():

@@ -46,11 +46,13 @@ import mlttransitions
 import mltfilters
 import patternproducer
 import persistance
+import processutils
 import projectdata
 import propertyparse
 import respaths
 import renderconsumer
 import translations
+import userfolders
 import utils
 
 linker_window = None
@@ -61,8 +63,8 @@ media_assets = []
 NO_PROJECT_AT_LAUNCH = "##&&noproject&&##"
 
 def display_linker(filename=NO_PROJECT_AT_LAUNCH):
-    print "Launching Media Re-linker"
-    FLOG = open(utils.get_hidden_user_dir_path() + "log_media_relinker", 'w')
+    print "Launching Media Relinker"
+    FLOG = open(userfolders.get_cache_dir() + "log_media_relinker", 'w')
     subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowblademedialinker", filename], stdin=FLOG, stdout=FLOG, stderr=FLOG)
 
 
@@ -433,7 +435,7 @@ def _set_button_pressed():
 
 def _set_relink_path(media_asset):
     file_name = os.path.basename(media_asset.orig_path)
-    dialogs.media_file_dialog(_("Select Media File To Relink To") + " " + file_name, 
+    dialogs.media_file_dialog(_("Select Media File To Relink To") + " " + file_name.decode('utf-8'), 
                                 _select_relink_path_dialog_callback, False, 
                                 media_asset, linker_window, last_media_dir)
 
@@ -574,6 +576,9 @@ def main(root_path, filename):
     except:
         editorstate.mlt_version = "0.0.99" # magic string for "not found"
 
+    # Create user folders if need and determine if were using xdg or dotfile userf folders.
+    userfolders.init()
+
     # Set paths.
     respaths.set_paths(root_path)
 
@@ -596,7 +601,8 @@ def main(root_path, filename):
             gui.apply_gtk_css()
 
     repo = mlt.Factory().init()
-
+    processutils.prepare_mlt_repo(repo)
+    
     # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
     locale.setlocale(locale.LC_NUMERIC, 'C')
 

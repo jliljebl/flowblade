@@ -21,7 +21,8 @@
 """
 Module handles saving and loading data that is related to the editor and not any particular project.
 """
-
+import gi
+gi.require_version('Gtk', '3.0') 
 from gi.repository import Gtk
 
 import os
@@ -29,6 +30,7 @@ import pickle
 
 import appconsts
 import mltprofiles
+import userfolders
 import utils
 
 PREFS_DOC = "prefs"
@@ -51,8 +53,8 @@ def load():
     """
     If docs fail to load, new ones are created and saved.
     """
-    prefs_file_path = utils.get_hidden_user_dir_path() + PREFS_DOC
-    recents_file_path = utils.get_hidden_user_dir_path() + RECENT_DOC
+    prefs_file_path = userfolders.get_config_dir() + PREFS_DOC
+    recents_file_path = userfolders.get_config_dir() + RECENT_DOC
 
     global prefs, recent_projects
     try:
@@ -107,8 +109,8 @@ def save():
     """
     Write out prefs and recent_projects files 
     """
-    prefs_file_path = utils.get_hidden_user_dir_path() + PREFS_DOC
-    recents_file_path = utils.get_hidden_user_dir_path() + RECENT_DOC
+    prefs_file_path = userfolders.get_config_dir()+ PREFS_DOC
+    recents_file_path = userfolders.get_config_dir() + RECENT_DOC
     
     write_file = file(prefs_file_path, "wb")
     pickle.dump(prefs, write_file)
@@ -124,7 +126,7 @@ def add_recent_project_path(path):
         recent_projects.projects.pop(-1)
         
     # Reject autosaves.
-    autosave_dir = utils.get_hidden_user_dir_path() + appconsts.AUTOSAVE_DIR
+    autosave_dir = userfolders.get_cache_dir() + appconsts.AUTOSAVE_DIR
     file_save_dir = os.path.dirname(path) + "/"        
     if file_save_dir == autosave_dir:
         return
@@ -140,7 +142,7 @@ def add_recent_project_path(path):
 
 def remove_non_existing_recent_projects():
     # Remove non-existing projects from recents list
-    recents_file_path = utils.get_hidden_user_dir_path() + RECENT_DOC
+    recents_file_path = userfolders.get_config_dir() + RECENT_DOC
     remove_list = []
     for proj_path in recent_projects.projects:
         if os.path.isfile(proj_path) == False:
@@ -200,9 +202,9 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     gfx_length_spin, cover_delete, mouse_scroll_action, hide_file_ext_button, hor_scroll_dir, kf_edit_playhead_move = edit_prefs_widgets
     
     auto_center_check, play_pause_button, auto_center_on_updown, \
-    ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range = playback_prefs_widgets
+    ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips = playback_prefs_widgets
     
-    use_english, disp_splash, buttons_style, theme, theme_combo, audio_levels_combo, \
+    force_language_combo, disp_splash, buttons_style, theme, theme_combo, audio_levels_combo, \
     window_mode_combo, full_names, double_track_hights, top_row_layout = view_prefs_widgets
 
     # Jan-2017 - SvdB
@@ -228,8 +230,10 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.ffwd_rev_shift = int(ffwd_rev_shift_spin.get_adjustment().get_value())
     prefs.ffwd_rev_ctrl = int(ffwd_rev_ctrl_spin.get_adjustment().get_value())
     prefs.ffwd_rev_caps = int(ffwd_rev_caps_spin.get_adjustment().get_value())
+    prefs.loop_clips = loop_clips.get_active()
     
-    prefs.use_english_always = use_english.get_active()
+    prefs.use_english_always = False # DEPRECATED, "force_language" used instead
+    prefs.force_language = force_language_combo.lang_codes[force_language_combo.get_active()]
     prefs.display_splash_screen = disp_splash.get_active()
     prefs.buttons_style = buttons_style.get_active() # styles enum values and widget indexes correspond
 
@@ -257,19 +261,6 @@ def get_graphics_default_in_out_length():
     out_fr = in_fr + int(prefs.default_grfx_length) - 1 # -1, out inclusive
     return (in_fr, out_fr, prefs.default_grfx_length)
 
-def create_thumbs_folder_if_needed(user_dir):
-    if prefs.thumbnail_folder == None:
-        thumbs_folder = user_dir + appconsts.THUMBNAILS_DIR
-        if not os.path.exists(thumbs_folder + "/"):
-            os.mkdir(thumbs_folder + "/")
-        prefs.thumbnail_folder = thumbs_folder
-
-def create_rendered_clips_folder_if_needed(user_dir):
-    if prefs.render_folder == None:
-        render_folder = user_dir + appconsts.RENDERED_CLIPS_DIR
-        if not os.path.exists(render_folder + "/"):
-            os.mkdir(render_folder + "/")
-        prefs.render_folder = render_folder
 
 class EditorPreferences:
     """
@@ -288,7 +279,7 @@ class EditorPreferences:
         self.default_profile_name = 10 # index of default profile
         self.auto_play_in_clip_monitor = False  # DEPRECATED, NOT USER SETTABLE ANYMORE
         self.auto_center_on_play_stop = False
-        self.thumbnail_folder = None
+        self.thumbnail_folder = None # DEPRECATED, this set XDG variables now
         self.hidden_profile_names = []
         self.display_splash_screen = True
         self.auto_move_after_edit = False
@@ -303,7 +294,7 @@ class EditorPreferences:
         self.app_v_paned_position = 500 # Paned get/set position value
         self.top_paned_position = 600 # Paned get/set position value
         self.mm_paned_position = 260 # Paned get/set position value
-        self.render_folder = None
+        self.render_folder = None  # DEPRECATED, this set by XDG variables now
         self.show_sequence_profile = True
         self.buttons_style = GLASS_STYLE
         self.dark_theme = False # DEPRECATED, "theme" used instead
@@ -316,7 +307,7 @@ class EditorPreferences:
         self.jack_frequency = 48000 # not used 
         self.jack_output_type = appconsts.JACK_OUT_AUDIO # not used
         self.media_load_order = appconsts.LOAD_ABSOLUTE_FIRST
-        self.use_english_always = False
+        self.use_english_always = False # DEPRECATED, "force_language" used instead
         self.theme_fallback_colors = 4 # index of gui._THEME_COLORS
         self.display_all_audio_levels = True
         self.overwrite_clip_drop = True # DEPRECATED, "dnd_action" used instead
@@ -353,3 +344,9 @@ class EditorPreferences:
         self.box_for_empty_press_in_overwrite_tool = False
         self.scroll_horizontal_dir_up_forward = True
         self.kf_edit_init_affects_playhead = True
+        self.show_tool_tooltips = True
+        self.workflow_dialog_last_version_shown = "0.0.1"
+        self.loop_clips = False
+        self.audio_scrubbing = False
+        self.force_language = "None"
+

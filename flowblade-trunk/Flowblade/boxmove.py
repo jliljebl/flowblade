@@ -22,6 +22,8 @@
 Handles Box tool functionality.
 """
 
+import appconsts
+import dialogutils
 import gui
 import edit
 import editorstate
@@ -41,6 +43,7 @@ def clear_data():
      
 def mouse_press(event, frame):
     global edit_data, box_selection_data
+
     if box_selection_data == None: # mouse action is to select
         press_point = (event.x, event.y)
         
@@ -85,6 +88,19 @@ def mouse_release(x, y, frame):
         
     if box_selection_data == None: # mouse action is to select
         box_selection_data = BoxMoveData(edit_data["press_point"], (x, y))
+        
+        locked_track = box_selection_data.get_possible_locked_track()
+        if locked_track != None:
+            dialogutils.track_lock_check_and_user_info(locked_track)
+            edit_data = None
+            box_selection_data = None
+            tlinewidgets.set_edit_mode_data(edit_data)
+            updater.repaint_tline()
+            # Exit box mode if entered from overwrite
+            if entered_from_overwrite == True:
+                _exit_to_overwrite()
+            return 
+              
         if box_selection_data.is_empty() == False:
             edit_data = {"action_on":True,
                          "press_frame":frame,
@@ -102,6 +118,20 @@ def mouse_release(x, y, frame):
                 return 
     
     else: # mouse action is to move
+        # Exit if selection contains locked track
+        locked_track = box_selection_data.get_possible_locked_track()
+        if locked_track != None:
+            dialogutils.track_lock_check_and_user_info(locked_track)
+            edit_data = None
+            box_selection_data = None
+            tlinewidgets.set_edit_mode_data(edit_data)
+            updater.repaint_tline()
+            # Exit box mode if entered from overwrite
+            if entered_from_overwrite == True:
+                _exit_to_overwrite()
+            return 
+            
+        # If we lock track after 
         delta = frame - edit_data["press_frame"]
         edit_data["delta"] = delta
 
@@ -234,6 +264,13 @@ class BoxMoveData:
                 
         return False
 
+
+    def get_possible_locked_track(self):
+        for selection in self.track_selections:
+            if current_sequence().tracks[selection.track_id].edit_freedom == appconsts.LOCKED:
+                return current_sequence().tracks[selection.track_id]
+        
+        return None
 
 class BoxTrackSelection:
     """

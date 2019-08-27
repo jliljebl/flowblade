@@ -113,10 +113,10 @@ def init(profile):
 
     global CONTROL_SLOT_H, METER_SLOT_H, METER_LIGHTS, METER_HEIGHT
     if editorstate.screen_size_small_height() == True:
-        if editorstate.SCREEN_HEIGHT > 898:
-            METER_SLOT_H = 400
+        if editorstate.SCREEN_HEIGHT > 902:
+            METER_SLOT_H = 300
             CONTROL_SLOT_H = 240
-            METER_LIGHTS = 123
+            METER_LIGHTS = 100
             METER_HEIGHT = METER_LIGHTS * DASH_INK + (METER_LIGHTS - 1) * DASH_SKIP
         else:
             METER_SLOT_H = 275
@@ -422,6 +422,10 @@ class AudioMeter:
         self.x_pad_r = SLOT_W / 2 + 6 - 2
         self.meter_width = METER_WIDTH
 
+    def set_height(self, h):
+        self.left_channel.set_height(h)
+        self.right_channel.set_height(h)
+        
     def display_value(self, cr, x, value_left, value_right, grad):
         cr.set_source(grad)
         cr.set_dash(DASHES, 0) 
@@ -445,6 +449,9 @@ class ChannelMeter:
         self.dB_x_pad = 11
         self.y_top_pad = Y_TOP_PAD
         self.over_countdown = 0
+
+    def set_height(self, height):
+        self.height = height
 
     def display_value(self, cr, x, value):
         if value > 1.0:
@@ -632,13 +639,17 @@ class GainControl(Gtk.Frame):
 
 class MasterVolumeMeter:
     def __init__(self):
+        self.H_CUT = 30
+        self.GRAD_CUT = 37
+        self.top_pad = 14
+        
         self.meter = AudioMeter(METER_HEIGHT + 40)
         self.meter.x_pad_l = 6
         self.meter.x_pad_r = 14
         self.meter.right_channel.draw_dB = True
         self.meter.right_channel.dB_x_pad = -14
         self.meter.meter_width = 5
-        self.top_pad = 14
+
         self.meter.right_channel.y_top_pad = self.top_pad 
         self.meter.left_channel.y_top_pad = self.top_pad 
 
@@ -649,11 +660,13 @@ class MasterVolumeMeter:
                                                     self._draw)
 
         self.widget = Gtk.VBox(False, 0)
-        self.widget.pack_start(self.canvas, False, False, 0)
+        self.widget.pack_start(self.canvas, True, True, 0)
 
     def _draw(self, event, cr, allocation):
         x, y, w, h = allocation
 
+        self.meter.set_height(h - self.H_CUT)
+ 
         if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
             cr.set_source_rgb(*METER_BG_COLOR)
         else:
@@ -662,7 +675,7 @@ class MasterVolumeMeter:
         cr.rectangle(0, 0, w, h)
         cr.fill()
 
-        grad = cairo.LinearGradient (0, self.top_pad, 0, METER_HEIGHT + self.top_pad)
+        grad = cairo.LinearGradient (0, self.top_pad, 0, self.top_pad + h - self.GRAD_CUT)
         grad.add_color_stop_rgba(*RED_1)
         grad.add_color_stop_rgba(*RED_2)
         grad.add_color_stop_rgba(*YELLOW_1)

@@ -35,6 +35,7 @@ import clipenddragmode
 import compositeeditor
 import compositormodes
 import cutmode
+import dialogs
 import dialogutils
 import edit
 import editorstate
@@ -50,6 +51,7 @@ import medialog
 import modesetting
 import movemodes
 import multimovemode
+import multitrimmode
 import syncsplitevent
 import tlinewidgets
 import trimmodes
@@ -218,9 +220,7 @@ def _get_insert_index(track, tline_pos):
     return index
 
 def _display_no_audio_on_video_msg(track):
-    dialogutils.warning_message(_("Can't put an audio clip on a video track."), 
-                            _("Track ")+ utils.get_track_name(track, current_sequence()) + _(" is a video track and can't display audio only material."),
-                            gui.editor_window.window)
+    dialogs.no_audio_dialog(track)
 
 
 # ------------------------------------ timeline mouse events
@@ -228,6 +228,7 @@ def tline_canvas_mouse_pressed(event, frame):
     """
     Mouse event callback from timeline canvas widget
     """
+    editorstate.timeline_mouse_disabled = False # This is used to disable "move and "release" events when they would get bad data.
     
     if PLAYER().looping():
         return
@@ -323,7 +324,7 @@ def tline_canvas_mouse_pressed(event, frame):
     # Handle mouse button presses depending which button was pressed and
     # editor state.
     # RIGHT BUTTON: seek frame or display clip menu if not dragging clip end
-    if (event.button == 3 and EDIT_MODE() != editorstate.CLIP_END_DRAG):
+    if (event.button == 3 and EDIT_MODE() != editorstate.CLIP_END_DRAG and EDIT_MODE() != editorstate.KF_TOOL):
         if ((not editorstate.current_is_active_trim_mode()) and timeline_visible()):
             if not(event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                 success = display_clip_menu_pop_up(event.y, event, frame)
@@ -334,50 +335,27 @@ def tline_canvas_mouse_pressed(event, frame):
             trimmodes.set_no_edit_trim_mode()
             PLAYER().seek_frame(frame)
         return
-    # LEFT BUTTON + CTRL: Select new trimmed clip in one roll trim mode
-    #  This is not that relevant anymore with context sensitive cursor, look to remove.
-    elif ((event.button == 1 
-          and (event.get_state() & Gdk.ModifierType.CONTROL_MASK)
-          and EDIT_MODE() == editorstate.ONE_ROLL_TRIM) or 
-        (event.button == 1 and editorstate.cursor_is_tline_sensitive == True and EDIT_MODE() == editorstate.ONE_ROLL_TRIM)):
-        track = tlinewidgets.get_track(event.y)
-        if track == None:
-            if editorpersistance.prefs.empty_click_exits_trims == True:
-                modesetting.set_default_edit_mode(True)
-            return
-        success = trimmodes.set_oneroll_mode(track, frame)
-        if (not success) and editorpersistance.prefs.empty_click_exits_trims == True:
-            modesetting.set_default_edit_mode(True)
-            return
-            
-        if trimmodes.edit_data["to_side_being_edited"] == True:
-            pointer_context = appconsts.POINTER_CONTEXT_TRIM_LEFT
-        else:
-            pointer_context = appconsts.POINTER_CONTEXT_TRIM_RIGHT
-        gui.editor_window.set_tline_cursor_to_context(pointer_context)
-        gui.editor_window.set_tool_selector_to_mode()
-        if not editorpersistance.prefs.quick_enter_trims:
-            editorstate.timeline_mouse_disabled = True
-        else:
+    # LEFT BUTTON: Select new trimmed clip in active one roll trim mode	with sensitive cursor.
+    elif (event.button == 1 and EDIT_MODE() == editorstate.ONE_ROLL_TRIM):	
+        track = tlinewidgets.get_track(event.y)	
+        if track == None:	
+            modesetting.set_default_edit_mode(True)	
+            return	
+        success = trimmodes.set_oneroll_mode(track, frame)	
+        if not success:
+            modesetting.set_default_edit_mode(True)	
+            return	
+            	
+        if trimmodes.edit_data["to_side_being_edited"] == True:	
+            pointer_context = appconsts.POINTER_CONTEXT_TRIM_LEFT	
+        else:	
+            pointer_context = appconsts.POINTER_CONTEXT_TRIM_RIGHT	
+        gui.editor_window.set_tline_cursor_to_context(pointer_context)	
+        gui.editor_window.set_tool_selector_to_mode()	
+        if not editorpersistance.prefs.quick_enter_trims:	
+            editorstate.timeline_mouse_disabled = True	
+        else:	
             trimmodes.oneroll_trim_move(event.x, event.y, frame, None)
-    # LEFT BUTTON + CTRL: Select new trimmed clip in two roll trim mode
-    # This is not that relevant anymore with context sensitive cursor, look to remove.
-    elif (event.button == 1 
-          and (event.get_state() & Gdk.ModifierType.CONTROL_MASK)
-          and EDIT_MODE() == editorstate.TWO_ROLL_TRIM):
-        track = tlinewidgets.get_track(event.y)
-        if track == None:
-            if editorpersistance.prefs.empty_click_exits_trims == True:
-                modesetting.set_default_edit_mode(True)
-            return
-        success = trimmodes.set_tworoll_mode(track, frame)
-        if (not success) and  editorpersistance.prefs.empty_click_exits_trims == True:
-            modesetting.set_default_edit_mode(True)
-            return
-        if not editorpersistance.prefs.quick_enter_trims:
-            editorstate.timeline_mouse_disabled = True
-        else:
-            trimmodes.tworoll_trim_move(event.x, event.y, frame, None)
     elif event.button == 2:
         updater.zoom_project_length()
     # LEFT BUTTON: Handle left mouse button edits by passing event to current edit mode
@@ -400,7 +378,7 @@ def tline_canvas_mouse_moved(x, y, frame, button, state):
         return
 
     # Handle timeline position setting with right mouse button
-    if button == 3 and EDIT_MODE() != editorstate.CLIP_END_DRAG and EDIT_MODE() != editorstate.COMPOSITOR_EDIT:
+    if button == 3 and EDIT_MODE() != editorstate.CLIP_END_DRAG and EDIT_MODE() != editorstate.COMPOSITOR_EDIT and EDIT_MODE() != editorstate.KF_TOOL:
         if not timeline_visible():
             return
         PLAYER().seek_frame(frame)
@@ -431,11 +409,10 @@ def tline_canvas_mouse_released(x, y, frame, button, state):
         return
 
     # Handle timeline position setting with right mouse button
-    if button == 3 and EDIT_MODE() != editorstate.CLIP_END_DRAG and EDIT_MODE() != editorstate.COMPOSITOR_EDIT:
+    if button == 3 and EDIT_MODE() != editorstate.CLIP_END_DRAG and EDIT_MODE() != editorstate.COMPOSITOR_EDIT and EDIT_MODE() != editorstate.KF_TOOL:
         if not timeline_visible():
             return
         PLAYER().seek_frame(frame)
-        clipeffectseditor.update_kfeditors_sliders(frame)
     # Handle mouse button edits
     elif button == 1 or button == 3:
         mode_funcs = EDIT_MODE_FUNCS[EDIT_MODE()]
@@ -482,7 +459,7 @@ def tline_effect_drop(x, y):
         return
     if track.id < 1 or track.id >= (len(current_sequence().tracks) - 1):
         return 
-    if track_lock_check_and_user_info(track):
+    if dialogutils.track_lock_check_and_user_info(track):
         modesetting.set_default_edit_mode()
         return
         
@@ -497,11 +474,14 @@ def tline_media_drop(media_file, x, y, use_marks=False):
         return
     if track.id < 1 or track.id >= (len(current_sequence().tracks) - 1):
         return 
-    if track_lock_check_and_user_info(track):
-        modesetting.set_default_edit_mode()
+    if dialogutils.track_lock_check_and_user_info(track):
+        #modesetting.set_default_edit_mode()
+        # TODO: Info
         return
 
-    modesetting.set_default_edit_mode()
+    modesetting.stop_looping()
+    if EDIT_MODE() == editorstate.KF_TOOL:
+        kftoolmode.exit_tool()
 
     frame = tlinewidgets.get_frame(x)
     
@@ -510,7 +490,7 @@ def tline_media_drop(media_file, x, y, use_marks=False):
         new_clip = current_sequence().create_file_producer_clip(media_file.path, media_file.name, False, media_file.ttl)
     else:
         new_clip = current_sequence().create_pattern_producer(media_file)
-
+            
     # Set clip in and out
     if use_marks == False:
         new_clip.mark_in = 0
@@ -519,8 +499,22 @@ def tline_media_drop(media_file, x, y, use_marks=False):
         if media_file.type == appconsts.IMAGE_SEQUENCE:
             new_clip.mark_out = media_file.length
     else:
-        new_clip.mark_in = media_file.mark_in
-        new_clip.mark_out =  media_file.mark_out
+        if new_clip.media_type == appconsts.IMAGE or new_clip.media_type == appconsts.PATTERN_PRODUCER:
+            # Give IMAGE and PATTERN_PRODUCER media types default mark in and mark out if not already set.
+            # This makes them reasonably short and trimmable in both directions.
+            # NOTE: WE SHOULD BE DOING THIS AT CREATION TIME, WE'RE DOING THE SAME THING IN updater.display_clip_in_monitor() ?
+            #       ...but then we would need to patch persistance.py...maybe keep this even if not too smart.
+            # TODO: Make default length user settable or use graphics value
+            if (hasattr(new_clip, 'mark_in') == False) or (new_clip.mark_in == -1 and new_clip.mark_out == -1):
+                center_frame = new_clip.get_length() / 2
+                default_length_half = 75
+                mark_in = center_frame - default_length_half
+                mark_out = center_frame + default_length_half - 1
+                new_clip.mark_in = mark_in
+                new_clip.mark_out = mark_out
+        else: # All the rest
+            new_clip.mark_in = media_file.mark_in
+            new_clip.mark_out = media_file.mark_out
 
         if new_clip.mark_in == -1:
             new_clip.mark_in = 0
@@ -555,7 +549,7 @@ def tline_range_item_drop(rows, x, y):
         return
     if track.id < 1 or track.id >= (len(current_sequence().tracks) - 1):
         return 
-    if track_lock_check_and_user_info(track):
+    if dialogutils.track_lock_check_and_user_info(track):
         modesetting.set_default_edit_mode()
         return
         
@@ -564,18 +558,7 @@ def tline_range_item_drop(rows, x, y):
     modesetting.set_default_edit_mode()
     do_multiple_clip_insert(track, clips, frame)
 
-# ------------------------------------ track locks handling
-def track_lock_check_and_user_info(track, calling_function="this ain't used anymore", actionname="this ain't used anymore"):
-    if track.edit_freedom == appconsts.LOCKED:
-        track_name = utils.get_track_name(track, current_sequence())
 
-        # No edits on locked tracks.
-        primary_txt = _("Can't edit a locked track")
-        secondary_txt = _("Track ") + track_name + _(" is locked. Unlock track to edit it.")
-        dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
-        return True
-
-    return False
 
 
 # ------------------------------------ function tables
@@ -624,6 +607,10 @@ CUT_FUNCS = [cutmode.mouse_press,
 KFTOOL_FUNCS = [kftoolmode.mouse_press,
                 kftoolmode.mouse_move,
                 kftoolmode.mouse_release]
+MULTI_TRIM_FUNCS = [multitrimmode.mouse_press,
+                    multitrimmode.mouse_move,
+                    multitrimmode.mouse_release]
+
 
 # (mode -> mouse handler function list) table
 EDIT_MODE_FUNCS = {editorstate.INSERT_MOVE:INSERT_MOVE_FUNCS,
@@ -638,5 +625,6 @@ EDIT_MODE_FUNCS = {editorstate.INSERT_MOVE:INSERT_MOVE_FUNCS,
                    editorstate.MULTI_MOVE:MULTI_MOVE_FUNCS,
                    editorstate.CLIP_END_DRAG:CLIP_END_DRAG_FUNCS,
                    editorstate.CUT:CUT_FUNCS,
-                   editorstate.KF_TOOL:KFTOOL_FUNCS}
+                   editorstate.KF_TOOL:KFTOOL_FUNCS,
+                   editorstate.MULTI_TRIM:MULTI_TRIM_FUNCS}
 

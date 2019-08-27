@@ -56,6 +56,8 @@ def get_snapped_x(x, track, edit_data):
     elif EDIT_MODE() == editorstate.COMPOSITOR_EDIT:
         track = current_sequence().tracks[compositormodes.compositor.transition.b_track - 1]
         if compositormodes.sub_mode == compositormodes.TRIM_EDIT:
+            if compositormodes.edit_data["trim_is_clip_in"] == False: # This has different out frame semantics then clips, +1 makes the same function work in this case.
+                frame = frame + 1
             return _object_end_drag_snap(x, track, frame, edit_data)
         elif compositormodes.sub_mode == compositormodes.MOVE_EDIT:
             return _compositor_move_snap(x, track, frame, edit_data)
@@ -80,18 +82,27 @@ def mouse_edit_ended():
 
 #------------------------------------------- utils funcs
 def _get_track_above(track):
+    if track == None:
+        return None # Clip is being dragged outside of tracks area
+        
     if track.id < len(current_sequence().tracks) - 2:
         return current_sequence().tracks[track.id  + 1]
     else:
         return None
         
 def _get_track_below(track):
+    if track == None:
+        return None  # Clip is being dragged outside of tracks area
+        
     if track.id > 1:
         return current_sequence().tracks[track.id  - 1]
     else:
         return None
 
 def _get_track_snapped_x(track, x, frame, frame_x):
+    if track == None:  # Clip is being dragged outside of tracks area
+        return -1
+
     closest_cut_frame = current_sequence().get_closest_cut_frame(track.id, frame)
     if closest_cut_frame == -1:
         return -1

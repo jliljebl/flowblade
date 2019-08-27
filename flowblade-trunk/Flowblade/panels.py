@@ -45,15 +45,7 @@ MEDIA_PANEL_MAX_ROWS = 8
 MEDIA_PANEL_DEFAULT_ROWS = 2
 
 
-def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hamburger_launch_pressed, filtering_cb):
-    # Create buttons and connect signals
-    add_media_b = Gtk.Button(_("Add"))
-    del_media_b = Gtk.Button(_("Delete"))    
-    add_media_b.connect("clicked", add_cb, None)
-    del_media_b.connect("clicked", del_cb, None)
-    add_media_b.set_tooltip_text(_("Add Media File to Bin"))
-    del_media_b.set_tooltip_text(_("Delete Media File from Bin"))
-
+def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hamburger_launch_pressed, filtering_cb):   
     hamburger_launcher = guicomponents.HamburgerPressLaunch(hamburger_launch_pressed)
     guiutils.set_margins(hamburger_launcher.widget, 2, 0, 4, 12)
 
@@ -75,6 +67,7 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hambu
     files_filter_launcher.widget.set_tooltip_text(_("Visible Media File types."))
     gui.media_view_filter_selector = files_filter_launcher
 
+    bin_info = guicomponents.BinInfoPanel()
     
     buttons_box = Gtk.HBox(False,1)
     buttons_box.pack_start(hamburger_launcher.widget, False, False, 0)
@@ -82,13 +75,14 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hambu
     buttons_box.pack_start(columns_launcher.widget, False, False, 0)
     buttons_box.pack_start(files_filter_launcher.widget, False, False, 0)
     buttons_box.pack_start(Gtk.Label(), True, True, 0)
+    buttons_box.pack_start(bin_info, False, False, 0)
+    #buttons_box.pack_start(Gtk.Label(), True, True, 0)
 
     panel = Gtk.VBox()
     panel.pack_start(media_list_view, True, True, 0)
     panel.pack_start(buttons_box, False, True, 0)
 
-    
-    return panel
+    return (panel, bin_info)
 
 def get_bins_tree_panel(bin_list_view):   
     panel = Gtk.VBox()
@@ -119,62 +113,9 @@ def get_sequences_panel(sequence_list_view, edit_seq_cb, add_seq_cb, del_seq_cb)
 
     return get_named_frame(_("Sequences"), panel, 0, 6, 4, _("A <b>Sequence</b> is the full contents of the timeline creating a program, a movie."))
 
-def get_thumbnail_select_panel(current_folder_path):    
-    texts_panel = get_two_text_panel(_("Select folder for new thumbnails."), 
-                                     _("Old thumbnails in this or other projects will") + 
-                                     _(" still be available,\nthis only affects thumnails that are created for new media.\n") + 
-                                     _("\nSetting your home folder as thumbnails folder is not allowed."))
-
-    out_folder = Gtk.FileChooserButton("Select Folder")
-    out_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
-    if current_folder_path != None:
-        out_folder.set_current_folder(current_folder_path)
-    
-    out_folder_align = guiutils.set_margins(out_folder, 12, 24, 12, 12)
-
-    panel = Gtk.VBox()
-    panel.pack_start(texts_panel, False, False, 0)
-    panel.pack_start(out_folder_align, False, False, 0)
-    
-    return (panel, out_folder)
-
-def get_render_folder_select_panel(current_folder_path):    
-    texts_panel = get_two_text_panel(_("Select folder for rendered clips."), 
-                                     _("Old rendered clips in this or other projects will") + 
-                                     _(" still be available,\nthis only affects rendered files that are created from now on.\n") + 
-                                     _("\nSetting your home folder as folder for rendered clips is not allowed."))
-        
-    out_folder = Gtk.FileChooserButton("Select Folder")
-    out_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
-    if current_folder_path != None:
-        out_folder.set_current_folder(current_folder_path)
-
-    out_folder_align = guiutils.set_margins(out_folder, 12, 24, 12, 12)
-    
-    panel = Gtk.VBox()
-    panel.pack_start(texts_panel, False, False, 0)
-    panel.pack_start(out_folder_align, False, False, 0)
-    
-    return (panel, out_folder)
-
 def _set_sensive_widgets(sensitive, list):
     for widget in list:
         widget.set_sensitive(sensitive)
-"""
-def get_motion_render_progress_panel(file_name, progress_bar):
-    status_box = Gtk.HBox(False, 2)
-    status_box.pack_start(Gtk.Label(label=file_name),False, False, 0)
-    status_box.pack_start(Gtk.Label(), True, True, 0)
-
-    progress_vbox = Gtk.VBox(False, 2)
-    progress_vbox.pack_start(status_box, False, False, 0)
-    progress_vbox.pack_start(guiutils.get_pad_label(10, 10), False, False, 0)
-    progress_vbox.pack_start(progress_bar, False, False, 0)
-    print "ee"
-    alignment = guiutils.set_margins(progress_vbox, 12, 12, 12, 12)
-
-    return alignment
-"""
 
 def get_named_frame(name, widget, left_padding=12, right_padding=6, right_out_padding=4, tooltip_txt=None):
     """

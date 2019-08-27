@@ -40,6 +40,7 @@ import gui
 import guiutils
 import renderconsumer
 import utils
+import userfolders
 
 REEL_NAME_HASH_8_NUMBER = 1
 REEL_NAME_FILE_NAME_START = 2
@@ -97,12 +98,11 @@ def _edl_xml_render_done(data):
     mlt_parse = MLTXMLToEDLParse(get_edl_temp_xml_path(), current_sequence())
     edl_contents = mlt_parse.create_edl()
     f = open(edl_path, 'w')
-    f.write(edl_contents)
+    f.write(edl_contents.encode('utf-8'))
     f.close()
 
-
 def get_edl_temp_xml_path():
-    return utils.get_hidden_user_dir_path() + "edl_temp_xml.xml"
+    return userfolders.get_cache_dir() + "edl_temp_xml.xml"
 
 
 class MLTXMLToEDLParse:
@@ -392,8 +392,8 @@ def _export_screenshot_dialog_callback(dialog, response_id, data):
     if response_id == Gtk.ResponseType.YES:
         vcodec = _img_types[file_type_combo.get_active()]
         ext = _img_extensions[file_type_combo.get_active()]
-        render_path = utils.get_hidden_screenshot_dir_path() + "screenshot_%01d." + ext
-        rendered_file_path = utils.get_hidden_screenshot_dir_path() + "screenshot_1." + ext 
+        render_path = userfolders.get_hidden_screenshot_dir_path() + "screenshot_%01d." + ext
+        rendered_file_path = userfolders.get_hidden_screenshot_dir_path() + "screenshot_1." + ext 
         out_file_path = out_folder.get_filename()+ "/" + file_name.get_text() + "." + ext
         dialog.destroy()
 
@@ -406,13 +406,10 @@ def _export_screenshot_dialog_callback(dialog, response_id, data):
     PLAYER().seek_frame(frame)
 
 def get_displayed_image_render_path():
-    return utils.get_hidden_screenshot_dir_path() + "screenshot_%01d.png"
+    return userfolders.get_hidden_screenshot_dir_path() + "screenshot_%01d.png"
 
 def get_displayed_image_path():
-    return utils.get_hidden_screenshot_dir_path() + "screenshot_1.png"
-
-def _screenshot_frame_changed(adjustment):
-    _update_displayed_image(int(adjustment.get_value()))
+    return userfolders.get_hidden_screenshot_dir_path() + "screenshot_1.png"
 
 def render_screen_shot(frame, render_path, vcodec):
     producer = current_sequence().tractor   
@@ -494,6 +491,6 @@ def _file_type_changed(combo, label):
     label.set_text("." + _img_extensions[combo.get_active()])
 
 def purge_screenshots():
-    d = utils.get_hidden_screenshot_dir_path()
+    d = userfolders.get_hidden_screenshot_dir_path()
     for f in os.listdir(d):
         os.remove(os.path.join(d, f))

@@ -34,6 +34,7 @@ from editorstate import PLAYER
 from editorstate import PROJECT
 import respaths
 import utils
+import userfolders
 
 """
 Module is used to display trim views for Trim, Roll and Slip tools and selected match frames.
@@ -69,7 +70,7 @@ _frame_write_on = False
 _widget = None
 
 def _get_match_frame_path():
-    return utils.get_hidden_user_dir_path() + appconsts.TRIM_VIEW_DIR + "/" + MATCH_FRAME
+    return userfolders.get_cache_dir() + appconsts.TRIM_VIEW_DIR + "/" + MATCH_FRAME
         
 class MonitorWidget:
     
@@ -576,7 +577,7 @@ class MonitorWidget:
         
     def create_match_frame_image_surface(self, frame_name):
         # Create non-scaled surface
-        matchframe_path = utils.get_hidden_user_dir_path() + appconsts.TRIM_VIEW_DIR + "/" + frame_name 
+        matchframe_path = userfolders.get_cache_dir() + appconsts.TRIM_VIEW_DIR + "/" + frame_name 
         
         surface = cairo.ImageSurface.create_from_png(matchframe_path)
 
@@ -876,7 +877,7 @@ class MonitorMatchFrameWriter(threading.Thread):
         Writes thumbnail image from file producer
         """
         # Create consumer
-        matchframe_path = utils.get_hidden_user_dir_path() + appconsts.TRIM_VIEW_DIR + "/" + self.frame_name
+        matchframe_path = userfolders.get_cache_dir() + appconsts.TRIM_VIEW_DIR + "/" + self.frame_name
         consumer = mlt.Consumer(PROJECT().profile, "avformat", matchframe_path)
         consumer.set("real_time", 0)
         consumer.set("vcodec", "png")

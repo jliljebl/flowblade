@@ -66,6 +66,7 @@ import respaths
 import sequence
 import syncsplitevent
 import updater
+import userfolders
 import utils
 
 
@@ -113,17 +114,8 @@ def cut_pressed():
     if not timeline_visible():
         updater.display_sequence_in_monitor()   
 
-    # Disable whencut action when it cut clash with ongoing edits
-    if EDIT_MODE() == editorstate.ONE_ROLL_TRIM or EDIT_MODE() == editorstate.TWO_ROLL_TRIM or EDIT_MODE() == editorstate.SLIDE_TRIM:
-        return
-
-    if EDIT_MODE() == editorstate.MULTI_MOVE and multimovemode.edit_data != None:
-        return
-
-    if EDIT_MODE() == editorstate.MULTI_MOVE and multimovemode.edit_data != None:
-        return
-        
-    if boxmove.box_selection_data != None:
+    # Disable cut action when it clashes with ongoing edits
+    if _can_do_cut() == False:
         return
     
     # Get cut frame
@@ -138,7 +130,7 @@ def cut_pressed():
         if track.active == False:
             continue
         
-        if editevent.track_lock_check_and_user_info(track, cut_pressed, "cut"): # so the other tracks get cut...
+        if dialogutils.track_lock_check_and_user_info(track): # so the other tracks get cut...
            continue 
 
         # Get index and clip
@@ -169,6 +161,27 @@ def cut_pressed():
    
     updater.repaint_tline()
 
+def cut_all_pressed():
+    # Disable cut action when it clashes with ongoing edits
+    if _can_do_cut() == False:
+        return
+        
+    tline_frame = PLAYER().current_frame()
+    movemodes.clear_selected_clips()
+    cutmode.cut_all_tracks(tline_frame)
+    
+def _can_do_cut():
+    if EDIT_MODE() == editorstate.ONE_ROLL_TRIM or EDIT_MODE() == editorstate.TWO_ROLL_TRIM or EDIT_MODE() == editorstate.SLIDE_TRIM:
+        return False
+    if EDIT_MODE() == editorstate.MULTI_MOVE and multimovemode.edit_data != None:
+        return False
+    if EDIT_MODE() == editorstate.MULTI_MOVE and multimovemode.edit_data != None:
+        return False
+    if boxmove.box_selection_data != None:
+        return False
+    
+    return True
+        
 def sequence_split_pressed():
     """
     Intention of this method is to split a sequence at the current position,
@@ -375,7 +388,7 @@ def splice_out_button_pressed():
     
     track = get_track(movemodes.selected_track)
 
-    if editevent.track_lock_check_and_user_info(track, splice_out_button_pressed, "splice out"):
+    if dialogutils.track_lock_check_and_user_info(track):
         movemodes.clear_selection_values()
         return
 
@@ -487,7 +500,7 @@ def lift_button_pressed():
                          
     track = get_track(movemodes.selected_track)
 
-    if editevent.track_lock_check_and_user_info(track, lift_button_pressed, "lift"):
+    if dialogutils.track_lock_check_and_user_info(track):
         movemodes.clear_selection_values()
         return
 
@@ -545,7 +558,7 @@ def ripple_delete_button_pressed():
 def insert_button_pressed():
     track = current_sequence().get_first_active_track()
 
-    if editevent.track_lock_check_and_user_info(track, insert_button_pressed, "insert"):
+    if dialogutils.track_lock_check_and_user_info(track):
         return
 
     tline_pos =_current_tline_frame()
@@ -561,7 +574,7 @@ def insert_button_pressed():
 def append_button_pressed():
     track = current_sequence().get_first_active_track()
 
-    if editevent.track_lock_check_and_user_info(track, append_button_pressed, "insert"):
+    if dialogutils.track_lock_check_and_user_info(track):
         return
 
     tline_pos = track.get_length()
@@ -584,7 +597,7 @@ def three_point_overwrite_pressed():
 
     # Get data
     track = get_track(movemodes.selected_track)
-    if editevent.track_lock_check_and_user_info(track, three_point_overwrite_pressed, "3 point overwrite"):
+    if dialogutils.track_lock_check_and_user_info(track):
         return
     
     range_start_frame = track.clip_start(movemodes.selected_range_in)
@@ -629,7 +642,7 @@ def three_point_overwrite_pressed():
 def range_overwrite_pressed():
     # Get data
     track = current_sequence().get_first_active_track()
-    if editevent.track_lock_check_and_user_info(track, range_overwrite_pressed, "range overwrite"):
+    if dialogutils.track_lock_check_and_user_info(track):
         return
 
     # Get over clip and check it overwrite range area
@@ -646,7 +659,7 @@ def range_overwrite_pressed():
     if mark_in_frame != -1 and mark_out_frame != -1:
         range_length = mark_out_frame - mark_in_frame + 1 # end is incl.
         if over_clip.mark_in == -1:
-            # This actually never hit because mark in and mark out seem to first and last frame if nothing set
+            # This actually should never be hit because mark in and mark out seem to first and last frame if nothing set
             show_three_point_edit_not_defined()
             return
 
@@ -914,14 +927,6 @@ def add_transition_pressed(retry_from_render_folder_select=False):
         _no_audio_tracks_mixing_info()
         return
 
-    if editorpersistance.prefs.render_folder == None:
-        if retry_from_render_folder_select == True:
-            return
-        dialogs.select_rendred_clips_dir(_add_transition_render_folder_select_callback,
-                                         gui.editor_window.window,
-                                         editorpersistance.prefs.render_folder)
-        return
-
     if clip_count == 2:
         _do_rendered_transition(track)
     else:
@@ -968,22 +973,6 @@ def get_transition_data_for_clips(track, from_clip, to_clip):
                        "to_handle":to_handle,
                        "max_length":max_length}
     return transition_data
-
-def _add_transition_render_folder_select_callback(dialog, response_id, file_select):
-    try:
-        folder = file_select.get_filenames()[0]
-    except:
-        dialog.destroy()
-        return
-
-    dialog.destroy()
-    if response_id == Gtk.ResponseType.YES:
-        if folder ==  os.path.expanduser("~"):
-            dialogs.rendered_clips_no_home_folder_dialog()
-        else:
-            editorpersistance.prefs.render_folder = folder
-            editorpersistance.save()
-            add_transition_pressed(True)
 
 def _add_transition_dialog_callback(dialog, response_id, selection_widgets, transition_data):
     if response_id != Gtk.ResponseType.ACCEPT:
@@ -1522,7 +1511,7 @@ class ReRenderderAllWindow:
         self.rerender_list = rerender_list
         self.rendered_items = []
         self.encoding_selections = encoding_selections
-        self.dialog = Gtk.Dialog("Rerender all Rendered Transitions / Fades",
+        self.dialog = Gtk.Dialog(_("Rerender all Rendered Transitions / Fades").encode('utf-8'),
                          gui.editor_window.window,
                          Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                          (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT))
@@ -1577,7 +1566,7 @@ class ReRenderderAllWindow:
 
         # Dreate render consumer
         profile = PROJECT().profile
-        folder = editorpersistance.prefs.render_folder
+        folder = userfolders.get_render_dir()
         file_name = md5.new(str(os.urandom(32))).hexdigest()
         self.write_file = folder + "/"+ file_name + file_ext
         consumer = renderconsumer.get_render_consumer_for_encoding_and_quality(self.write_file, profile, encoding_option_index, quality_option_index)

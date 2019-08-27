@@ -21,7 +21,7 @@
         <quality name="20000 kb/s" replvalues="%BITRATE% 20000k" />
         <quality name="25000 kb/s" replvalues="%BITRATE% 25000k" />
     </qualityqroup>
-    <qualityqroup id="qgroup2" defaultindex="6">
+    <qualityqroup id="qgroup2" defaultindex="10">
         <quality name="200 kb/s" replvalues="%BITRATE% 200k" />
         <quality name="400 kb/s" replvalues="%BITRATE% 400k" />
         <quality name="600 kb/s" replvalues="%BITRATE% 600k" />
@@ -92,9 +92,13 @@
         <profile args="f=mkv acodec=flac vcodec=ffv1 level=3 g=1 slicecrc=1 slices=16" />
     </encodingoption>
     <encodingoption name="Apple ProRes 4:2:2 / .mov" extension="mov" audiodesc=" pcm" type="av" resize="True" qgroup="variablenooption">
-    <profile args="f=mov acodec=pcm_s16le ac=2 vcodec=prores vb=0 g=0 bf=0 threads=1 vprofile=2" />
+        <profile args="f=mov acodec=pcm_s16le ac=2 vcodec=prores vb=0 g=0 bf=0 threads=1 vprofile=2" />
     </encodingoption>
-    
+    <encodingoption name="WebM Alpha / .webm" extension="webm" audiodesc=" vorbis" type="av" resize="True" qgroup="qgroup2">
+        <profile args="f=webm acodec=vorbis ab=128k vcodec=libvpx g=120 rc_lookahead=16 quality=good speed=0 vprofile=0 qmax=51 qmin=11 slices=4 vb=%BITRATE% maxrate=24M minrate=100k arnr_max_frames=7 arnr_strength=5 arnr_type=3 auto-alt-ref=0 mlt_image_format=rgb24a pix_fmt=yuva420p" />
+    </encodingoption>
+
+
     <!-- Preset encodings -->
     <encodingoption name="Audio PCM/.wav 48kHz" extension="wav" nonuser="True" audiodesc="NA" type="audio" resize="NA" qgroup="lossless"> 
         <profile args="f=wav ar=48000 video_off=1" />

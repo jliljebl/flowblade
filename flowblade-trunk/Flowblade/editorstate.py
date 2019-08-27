@@ -45,6 +45,7 @@ CLIP_END_DRAG = 11
 SELECT_TLINE_SYNC_CLIP = 12
 CUT = 13
 KF_TOOL = 14
+MULTI_TRIM = 15
 
 # SDL version (Not used currently)
 SDL_1 = 1
@@ -97,7 +98,7 @@ SCREEN_WIDTH = -1
 # Runtime environment data
 gtk_version = None
 mlt_version = None
-appversion = "0.10"
+appversion = "2.2.0"
 RUNNING_FROM_INSTALLATION = 0
 RUNNING_FROM_DEV_VERSION = 1
 app_running_from = RUNNING_FROM_INSTALLATION
@@ -109,6 +110,8 @@ use_xdg = False
 # Cursor position and sensitivity
 cursor_on_tline = False
 cursor_is_tline_sensitive = True
+last_mouse_x = -1 # This is only used by multitrimmode.py 
+last_mouse_y = -1 # This is only used by multitrimmode.py 
 
 # Flag for running JACK audio server. If this is on when SDLConsumer created in mltplayer.py
 # jack rack filter will bw attached to it
@@ -196,8 +199,23 @@ def mlt_version_is_equal_or_greater(test_version):
     
     return False
 
-def mlt_version_is_equal_or_greater_correct(test_version):
+def mlt_version_is_greater_correct(test_version):
     runtime_ver = mlt_version.split(".")
+    test_ver = test_version.split(".")
+    
+    if runtime_ver[0] > test_ver[0]:
+        return True
+    elif runtime_ver[0] == test_ver[0]:
+        if runtime_ver[1] > test_ver[1]:
+            return True
+        elif runtime_ver[1] == test_ver[1]:
+            if  runtime_ver[2] >  test_ver[2]:
+                return True
+    
+    return False
+
+def runtime_version_greater_then_test_version(test_version, runtime_version):
+    runtime_ver = runtime_version.split(".")
     test_ver = test_version.split(".")
     
     if runtime_ver[0] > test_ver[0]:
@@ -228,31 +246,19 @@ def screen_size_small_height():
         return False
 
 def screen_size_small_width():
-    if SCREEN_WIDTH < 1368:
+    if SCREEN_WIDTH < 1420:
         return True
     else:
         return False
-"""
-def screen_size_smallest_width():
-    if SCREEN_WIDTH < 1279:
-        return True
-    else:
-        return False
-"""
+
 def screen_size_small():
     if screen_size_small_height() == True or screen_size_small_width() == True:
         return True
     
     return False
 
-def screen_size_small_height():
-    if SCREEN_HEIGHT < 898:
-        return True
-    else:
-        return False
-
 def screen_size_large_height():
-    if SCREEN_HEIGHT > 1050:
+    if SCREEN_HEIGHT > 1048:
         return True
     else:
         return False
@@ -270,12 +276,14 @@ def clear_trim_clip_cache():
     global _trim_clips_cache
     _trim_clips_cache = {}
 
-"""
-def get_sdl_version(): # This ain't true anymore, 6.6.0 has both available
-    if mlt_version_is_equal_or_greater_correct("6.4.2") == True:
-        return SDL_2
-    else:
-        return SDL_1
-"""
+
+# Called from tline "motion_notify_event" when drag is not on.
+# This is only used by multitrimmode.py to have data to enter trims with keyboard correctly
+def set_mouse_current_non_drag_pos(x, y):
+    global last_mouse_x, last_mouse_y
+    last_mouse_x = x
+    last_mouse_y = y
+    
+
         
          

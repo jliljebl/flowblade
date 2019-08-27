@@ -12,7 +12,7 @@ Flowblade uses the standard [GNU "gettext" utilities](http://www.gnu.org/softwar
 
 ### 1. Use **git** to pull repository version of Flowblade
 
-To create a translation you should probably first install the repository version of Flowblade using **git** so that you can edit and compile the translation file ``Flowblade.po``, see [Install Instructions](https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/INSTALLING.md).
+To create a translation you should probably first install the repository version of Flowblade using **git** so that you can edit and compile the translation file ``flowblade.po``, see [Install Instructions](https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/INSTALLING.md).
 
 
 
@@ -29,8 +29,9 @@ To create a translation you should probably first install the repository version
 ### 3. Edit the created template to create the translation and compile **.mo** file from it to see your work ###
 
   * A folder named with the LANGUAGE_CODE for your language can be found in the ``/locale`` folder
-  * Inside that folder is a ``/LC_MESSAGES`` folder in which there is a file called ``Flowblade.po``. This is the file used to create the translation.
-  * Open the file ``Flowblade.po`` in a text editor. Translations are given by writing the the translations inside quotes on lines staring with text ``msgstr``. To traslate the menu item *Open...* you would need to fill the ``msgstr`` in example below:
+  * Inside that folder is a ``/LC_MESSAGES`` folder in which there is a file called ``flowblade.po``. This is the file used to create the translation.
+  * You can use program **Poedit** (or **Poedit2**) to edit the ``flowblade.po`` file. These applications often compile the translation on save too, and if not, use the compile command below.
+  * **or** you can open the file ``flowblade.po`` in a text editor. Translations are given by writing the the translations inside quotes on lines staring with text ``msgstr``. To traslate the menu item *Open...* you would need to fill the ``msgstr`` in example below:
 ```bash
 #: useraction.py:489
 msgid "Open.."
@@ -40,12 +41,10 @@ msgstr ""
 ```bash
 ./compile_language LANGUAGE_CODE
 ```
-  * Launch repository version of Flowblade to view your translations.
-
-
+  * Launch by running script ``../flowblade-trunk/flowblade`` that was created when you downloaded the repository version. (You may need to set it executable first)
 
 ### 4. Contributing a translation
-Send the created ``Flowblade.po`` file to janne.liljeblad@gmail.com or submit a Github pull request. Please mention words Flowblade, translation and the LANGUAGE_CODE in the subject line. Translation will be in the next release.
+Send the created ``flowblade.po`` file to janne.liljeblad@gmail.com or submit a Github pull request. Please mention words Flowblade, translation and the LANGUAGE_CODE in the subject line. Translation will be in the next release.
 
 
 ## Updating translation ##

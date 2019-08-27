@@ -1,0 +1,28 @@
+@startuml
+
+scale 900 width
+
+
+[*] --> ROOT_MODULES
+ROOT_MODULES : app.py, editorwindow.py
+
+state fork_state <<fork>>
+ROOT_MODULES --> fork_state
+fork_state --> FUNCTIONAL_MODULE_1
+fork_state --> FUNCTIONAL_MODULE_2
+fork_state --> FUNCTIONAL_MODULE_N
+
+state join_state <<join>>
+FUNCTIONAL_MODULE_1 --> join_state
+FUNCTIONAL_MODULE_2 --> join_state
+FUNCTIONAL_MODULE_N --> join_state
+FUNCTIONAL_MODULE_1 : e.g audiomonitoring.py
+FUNCTIONAL_MODULE_2 : e.g trimmodes.py
+FUNCTIONAL_MODULE_N : ...etc
+join_state --> LEAF_MODULE_1
+join_state --> LEAF_MODULE_2
+join_state --> LEAF_MODULE_N
+LEAF_MODULE_1 : e.g editorstate.py
+LEAF_MODULE_2 : e.g respaths.py
+LEAF_MODULE_N : ..etc
+@enduml

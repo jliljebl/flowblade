@@ -1,5 +1,331 @@
 # Release Notes #
 
+## Flowblade 2.2 ##
+
+Date: August 26, 2019
+
+**Flowblade 2.2** is the first new version after 2.0 brought large changes the editing workflow and application layout. This time the main focus was on improving Flowblade's compositing capabilities with a dedicated tool for editing animated masks being most important new functionality.
+
+There was also a lot of other new functionality and fixes, including G'Mic update, support for XDG user folders and many Issues fixed from Github Issue list.
+
+### Compositing Improvements
+For the purpose of improving compositing we added 2 new filters and 1 new compositor. Together these will enable doing much more complex compositing work.
+
+There is a tutorial video for the new compositioning features: https://vimeo.com/355860509.
+
+#### RotoMask Filter
+
+RotoMask filter enables creating animated line or curve masks which will either affect the alpha channel or RGB data. Masks are edited with a GUI editor created especially for this filter, editor also comes with complete keyframe editing functionality.
+
+#### LumaToAlpha Compositor
+This compositor uses luma values from source track and writes them into alpha channel of target track.
+
+#### FileLumaToAlpha Filter
+This filter uses luma values from source media and writes them into alpha channel of video or image clip.
+
+### User data moved into XDG folders
+We have moved user data from directory */home/USERFOLDER/.flowblade* into XDG folders specified in the user system. Data will be copied automatically on first launch of this version.
+
+**NOTE: Thumbnail and Render directories are not user settable anymore since we decided to support XDG user data spec.**
+
+**NOTE: Application DOES NOT delete existing data in .flowblade folder, so if you have large amount of data there you will probably want to delete folder */home/USERFOLDER/.flowblade* manually to free disk space.**
+
+### New Filters
+We added 3 new filters: **Vignette Advanced, Normalize** and **Gradient Tint**.
+
+### Keyframe Edit Tool update
+* Tool colors got an update.
+* All keyframable params can now be edited with the tool.
+* Value snapping options for steps 2 and 5 were added.
+
+### Tools updates
+
+#### G'MIC
+* We added 20 new filters for systems G'MIC 2+: **YAG Effect, Delaunay, Difference of Gaussians, Dices, Boost Chroma, Threshold, Etch, Bokeh, Make Squiggly, Dream Smooth, Graphic Novel, Rodilius, Aurora, Grid Hexagonal, Anguish, Blockism, Cut Out, Wiremap, Fraeky BW, Warhol, Grid Triangular**
+* Gmic tool no longer does audio scrubbing
+* Some GUI fixes
+
+#### Titler
+* Layout update
+* New layers now use current selected font properties
+
+## Contributions
+**Николай Смольянинов** did a overhaul of wipe luma files with some new ones added and some existing improved.
+
+**rtomj** fixed issue #660 caused by move to XDG folders.
+
+**Alex Myczko** Updated INSTALLING.md with new information.
+
+**jorgenatz** Change launch script for variant install locations
+
+**cclauss** provided a batch of correctness fixes improving code base quality and helping towards Python 3 transition.
+
+## Going forward
+
+The next thing in line is the Python 3 conversion.
+
+Things are looking good on this front and hopefully there will be no major setbacks. We may do a release that does just the conversion or perhaps do a longer release cycle with some new features added too. In any case there will be at least one more release this year to move Flowblade to Python 3.
+
+## Translations updates
+* Czech translation update by Peter Frei
+* Italy translation update by Enrico Bella
+* Ukrainian translation update by Slava Manoilo
+* Russian translation update by Николай Смольянинов
+
+## New small features
+* Move fade buttons under Opacity slider in Compositors
+* Add keep existing workflow item to new version first run workflow menu
+* Removed Finnish translation
+* Add Alt+S as keyboard shortcut for Sync All Compositors
+* Make Control + Delete do Lift
+* Make timeline auto expand if possible when making track heights larger
+* Make Multitrim tool exit on empty click like other trims
+* Add pref to loop clips in monitor, #623
+* Make R do Overwrite Range and change Toggle Ripple to Alt + R
+* Make track scrubbing action selection persistent
+* Make Keyboard Shortcuts dialog non-modal
+* Make mouse double click on track head toggle track height
+* Show pulse progress bar when doing clapperless compare
+* Make ALT + N open next media item in monitor
+* Make , and . nudge selected clips on timeline
+* Audio media items icon update
+* Fix #529, more complete render settings saving
+* Fix tool shortcuts display in Keyboard Shortcuts dialog
+* Add append media from Bin to timeline feature, Issue #605
+* Make audio scrubbing user settable
+* Make Master Audio meter resizable
+* Make possible to render speedup video with 601-2900% speedup, Issue #648
+* Make possible to forca any language in any language OS
+* Added Operation combobox for two alpha filters
+* MLT profiles were updated
+
+## Bug fixes
+* Fix tracks resize to fit  failure bug
+* Fix Issue #661 with no update on loaded filter data
+* Fix Issue #659 with bad UI for buttons in custom theme
+* Handle missing LADSPA filters in audio clip context menus
+* Fix add fade in case kfs exist after fade length
+* Update some MLT profiles
+* Fix extra blank appearing when adding new video tracks
+* Make recents list update for all saves
+* Keep source bin open when doing drag'n'drop to another bin
+* Fix reverted filter stack move menu items, #641
+* Fix no drag for keyframe on first press when initializing Keyframe Tool from pop-up menu
+* Fix value updates when going from Keyframe editor to slider
+* Add missing keyframe editor updates in clipeffectseditor.py
+* Fix cut tool playback bug
+* Fix compositor end drag snap frame
+* Fix Issue #640 with hite frames + static added to end of file when rendering fixed range
+* Fix Media Relinker and Keyboard shortcuts dialog (nää ei ollut dynaamiset)
+* Fix timeline track column repaint bug
+* Fix args rendering on small screens when args window never opened
+* Fix missing c_seq on load error
+* Fix colors for visibility in workflow dialog, Issue #622
+* Don't match profiles with more then 2x size diffence to media even if fps matches, Issue #517
+* Fix keyframe delete not registering when done as last edit
+
+## Flowblade 2.0
+
+Date: February 4, 2019
+
+**Flowblade 2.0** comes with the largest changes to workflow and UX since the very first releases.
+
+Timeline editing workflow has been made much more configurable, new tools have been added and GUI comes with a new custom theme (for Gtk+ versions >= 3.22), new top row layout and modernized design language.
+
+
+### Workflow 2.0 ###
+
+The *insert editing* approach to video editing taken by previous versions of Flowblade has had the down side of being found by some users to be somewhat unintuitive. On the other hand many users have found it to be clean and efficient.
+
+Flowblade 2.0 solves this issue by presenting a configurable workflow that enables users to make the application better confirm to their mental model of editing workflow.
+
+
+
+#### Toolset Configuration
+   * User can select between 1 - 9 tools to be availabe via tool menu and shortcut keys 1-9
+   * User can set the order in which the tools presented and which shortcut keys they get.
+   * The *default tool* is the first tool in the tool menu with shortcut key **1**. This is the tool that is activated when for example exiting trims, this is settable by selecting the tool order
+
+
+
+#### Configurable Timeline Behaviours
+   * Drag'n'Drop behaviour, user can select wheather insert or blank overwrites are done on track V1 and others
+   * Composiors autofollow, users can make compositors follow their origin clips automatically
+
+
+#### Workflow presets
+   To get things going the user is given option too choose between two *Workflow Preset* options application start or at anytime later.
+
+
+**STANDARD  WORKFLOW** has the **Move** tool as default tool and presents a workflow similar to most video editors.
+**Tools:** Move, Multitrim, Spacer, Insert, Cut, Keyframe
+**Behaviours:** Drag'n'Drop: 'Always Overwrite Blanks', Compositors Autofollow: Off
+
+
+**FILM STYLE WORKFLOW** has the Insert tool as the default tool and employs insert style editing. This was the workflow in previous versions of the application.
+**Tools:** Insert, Move, Trim, Roll, Slip,Spacer, Box
+**Behaviours:** Drag'n'Drop: 'Overwrite blanks on non-V1 tracks', Compositors Autofollow: Off
+
+
+#### New Tools
+
+Four new tools have been added to selection of tools that user has available when deciding on their preferred toolset.
+
+  * **Keyframe tool** enables editing Volume and Brightness keyframes on the timeline with overlay curves editor.
+ 
+  * **Multitrim** tool combines Trim, Roll and Slip tool into a single tool that comminicates the available edit action with context sensitive cursor changes.
+ 
+  * **Cut** Tool allow performing cuts with tool in addition to earlier method of cut action at playhead.
+ 
+  * **Ripple Trim** tool was earlier available as a mode of Trim tool but it is now a separate tool.
+
+#### Tools changes
+ **Overwrite tool's name was changed to Move** and it was made the default Tool in the "Standard" workflow preset. New Move tool also has box selection and box move available as additional edit actions if user does a box selection starting from pressing on empty spot on timeline.
+
+
+
+### GUI updates
+
+We made quite a few updates and changes to the user interface to clean up and modernize the design.
+
+**New Custom Theme** was created and made the default theme for the application. It has become clear that video editors are the kind of applications that work best with a custom made dark theme, the generic dark themes are too light for current established look of video editors. Now that GTK3 has finally stabilized the theme CSS, creating and maintaining a custom theme is now possible.
+
+Earlier **panel design** with quite large buttons **has been updated** with a design employing more context and hamburger menus and by making almost all toplevel items icons.
+
+For systems with larger screen dimension the **default top row layout has been changed to a 3 panel design** instead of the earlier 2 panel design, earlier layout still being available via user preference item.
+
+**Tooltips coverage was extended** and almost all top level items now have individual tooltips..
+
+Insert and Move (earlier Ovewrite) tools have new cursors.
+
+
+### Keyframe editing updates
+
+In addition to new Keyframe tool many updates were made to keyframe editing.
+
+**Slider to Keyframe editor functionality.** Majority of filter parameters that earlier only had a slider editor available for setting a single unchanging value can now be eddited with a keyframe editor. There is a new keyframe icon in slider editors that turns slider editor into a keyframe editor when pressed. Kyrame editor can also be turned back into a slider editor.
+
+Keyframe editors now have buttons that **move keyframes 1 frame forward or backwards.**
+
+Keyframe editor **out-of-clip-range keyframes now have info** on on them displayed and there are editing actions available for deleting and setting their values.
+
+Keyframe editors are also now updated on all mouse events making it more intuitive to know the value of a parameter in all keyframes.
+
+**Compositor geometry editors now have numerical inputs**.
+
+**Shift + Arrow keys now change scale** in Compositor geometry editors.
+
+
+
+### Compositors
+  * **Transform Compositor** was added. This provides some transformations like rotations that previously were not available.
+  * **AlphaXOR, Alpha Out and Alpha In Compositors** were added that provide additional ways of combining images using  alpha channel data.
+
+
+### Edit Action updates
+**Ripple delete Button**, that does multitrack ripple to maintain sync between tracks if overwrites can be avoided.
+
+**Shift + X cuts all tracks on Playhead.**
+
+
+### Contributions
+**Sequence Split functionality.** It is now possible to split Sequence at playhead position to create a new Sequence from timeline contents after playhead, by **Bene81**.
+
+Fix GTK version detection logic inversion problem, Issue #521, **by Bene81.**
+
+Reducing video track count damages project Issue #486, fixed by **Eliot Blennerhassett.**
+
+Change tracks dialog now gets current sequence track counts, not hard coded values by **Eliot Blennerhassett.**
+
+Some wipe luma files for wide screen do not work correctly, Issue #572, fixed by **Николай Смольянинов** who also provided very helpful release QA.
+
+Make Flowblade exit cleanly if audio waveform rendering is still on, by **Steven van de Beek.**
+
+Add appdata file used by e.g. GNOME Software or KDE Discover  by **Peter Eszlari**.
+
+Change icon path in setup.py to comply freedesktop with spec, fix mimetype data to be consistant, by **Peter Eszlari**.
+
+Archlinux docs fix, depends sdl_image by **Bernhard Landauer.**
+
+### New translations
+Steve Nian contributed Traditional Chinese translation. 
+Slava Manoilo contributed Urkrainian translation. 
+
+### Help docs in Russian
+**Николай Смольянинов** created the first full translation of help documentation, docs are now available in  Russian too.  **Andrey Grigoriev** provided some additional scripts to display correct helps in all systems.
+
+### Translations updates
+Czech translations updates by **Pavel Fic and p-bo.**
+
+Russian translation update **Николай Смольянинов.**
+
+Polish translation update by **Stanisław Polak.**
+
+German translation update by **Martin Gansser.**
+
+### Refactoring
+Some worst modules were cut in half and object naming was somewhat improved.
+Modes setting code was moved from module *editevent.py - > modesetting.py.*
+Screen editors code was renamed and moved from module *keyframeeditor.py -> keyframeeditcanvas.py.*
+Unused imports were removed using pyflakes analysis.
+
+## Future directions
+
+This release took longer then would have been liked for various reasons, but mainly because the feature set was larger then usually and getting a release out of at least reasonable quality took some effort.
+
+We will be doing 2 more releases this year with feature sets that will be adjusted to make sure that we have some nice incremental steps forward. There is an updated roadmap for larger development directions thought to be important right now and Issues list has quite a few items that need addressing. 
+
+
+### Smaller fixes and features
+Add prefeference to not move to clip start on keyframe edit init
+
+Keep filter editors open on most edits #537
+
+More height for Compositor geometry editors on larger screens.
+
+Make clip editor next/prev buttons stay in edit range.
+
+768px height and some other screen sizes fixes can now full screen properly.
+
+fix track locking for multiple tools.
+
+Fix recent files bug.
+
+No more changing to default edit mode on media drop
+
+Add follow tline range in playback option, Issue #503.
+
+Offer preference to switch mouse horizontal scroll direction, #499.
+
+Fix Issue #532 by removing lossless mpeg2 rendering.
+
+Make G'Mic tool monitors bigger for bigger screens.
+
+Fix "Blend" Compositor
+
+Remove some less useful preferences.
+
+Fix trim info dialog texts.
+
+Fix Issue #558 with setting user lumas.
+
+Make possible to start playback with Space after loading clip in monitor with double click.
+
+Support Shift range selection in media panel.
+
+Fix Issue #497 with timeline mouse events on load.
+
+Make possible to move Bins up/down in GUI.
+
+Make hard coded paths work with flatpack.
+
+Add Keyframe Editor editor buttons tooltips.
+
+Fix Keyframe Editor icon positions for Flowblade/arc theme.
+
+Fix MLT version filters dropping.
+
+Fix crash by banning Qt producers to keep using Gtk producers after Qt ones were made default in MLT.
 
 
 ## Flowblade 1.16 ##

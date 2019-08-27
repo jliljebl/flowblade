@@ -1,0 +1,47 @@
+@startuml
+
+scale 1000 width
+
+
+(*) --> "filters.xml"
+-->[Read on startup] "List of FilterInfo objects created"
+note right: FilterInfo objects are immutable
+note left: mltfilters.load_filters_xml()
+-->[User adds a filter] "FilterObject object created with\n a reference to a FilterInfo object"
+note right
+	FilterObject objects are mutable objects 
+	defined by immutable FilterInfo objects
+end note
+--> "FilterObject copies into FilterObject.properties list a mutable copy\n of immutable FilterInfo.properties list"
+note right: Filter properties are (key, value, type) tuples
+--> "FilterObject creates mlt.Filter object"
+note right
+	mlt.Filter objects are Swig bindings to MLT 
+	C data structures
+end note
+note left: mltfilters.FilterObject.create_mlt_filter()
+--> "Properties' default values set into MLT data structures\nwith mlt.Filter.set(key, value)"
+--> [User opens filter for editing] "A properyedit.EditableProperty extending\n wrapper object created for each property of filter."
+note right
+    properyedit.EditableProperty objects convert user inputs to 
+    property values and write to Python and MLT data structures.
+end note
+note left
+    clipeffectseditor.effect_selection_changed()
+    propertyedit.get_filter_editable_properties()
+end note
+--> "A GUI editor object is created for each\n properyedit.EditableProperty extending wrapper object"
+note left
+    clipeffectseditor.effect_selection_changed()
+    propertyeditorbuilder.get_editor_row()
+end note
+--> [User does GUI edit] "GUI editor calls properyedit.EditableProperty.write_value() after each edit"
+--> [User stops editing filter] "properyedit.EditableProperty objects and GUI editors get garbage collected"
+--> [User saves project] "mlt.Filter object is destroyed as it cannot be pickled"
+note left: persistance.save_project()
+--> [User loads project] "mlt.Filter object is created with FilterObject data and MLT data structures are updated"
+note left: persistance.load_project()
+--> (*)
+
+
+@enduml

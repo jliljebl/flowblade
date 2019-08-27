@@ -34,9 +34,6 @@ import os
 import time
 import threading
 
-# SvdB - Render Folder from Preferences is not copied to Render panel #337
-# SvdB - Added appconsts for the RENDERED_CLIPS_DIR value
-import appconsts
 import dialogutils
 import editorstate
 from editorstate import current_sequence
@@ -51,6 +48,7 @@ import mltrefhold
 import renderconsumer
 import rendergui
 import sequence
+import userfolders
 import utils
 
 # User defined render agrs file extension
@@ -135,6 +133,21 @@ def get_current_gui_selections():
     selections["folder"] = widgets.file_panel.out_folder.get_current_folder()
     selections["name"] = widgets.file_panel.movie_name.get_text()
     selections["range"] = widgets.range_cb.get_active()
+    selections["markinmarkout"] = (PROJECT().c_seq.tractor.mark_in, PROJECT().c_seq.tractor.mark_out)
+    selections["use_project_profile"] = widgets.profile_panel.use_project_profile_check.get_active()
+    selections["render_profile"] = widgets.profile_panel.out_profile_combo.widget.get_active()
+    if widgets.args_panel.use_args_check.get_active() == True:
+        if widgets.args_panel.text_buffer == None:
+            buf = widgets.args_panel.opts_view.get_buffer()
+        else:
+            buf = widgets.args_panel.text_buffer
+            
+        buf_text = buf.get_text( buf.get_start_iter(), 
+                                 buf.get_end_iter(), 
+                                 include_hidden_chars=True)
+        selections["render_args"] = buf_text
+    else:
+        selections["render_args"] = None
     return selections
 
 def set_saved_gui_selections(selections):
@@ -145,6 +158,23 @@ def set_saved_gui_selections(selections):
     widgets.file_panel.out_folder.set_current_folder(selections["folder"])
     widgets.file_panel.movie_name.set_text(selections["name"])
     widgets.range_cb.set_active(selections["range"])
+    try:
+        # These were added later so we may not have the data
+        if selections["range"] == 1:
+            mark_in, mark_out = selections["markinmarkout"]
+            PROJECT().c_seq.tractor.mark_in = mark_in
+            PROJECT().c_seq.tractor.mark_out = mark_out
+        widgets.profile_panel.use_project_profile_check.set_active(selections["use_project_profile"] )
+        widgets.profile_panel.out_profile_combo.widget.set_active(selections["render_profile"] )
+        if selections["render_args"] != None:
+            widgets.args_panel.use_args_check.set_active(True)
+            if widgets.args_panel.text_buffer == None:
+                buf = widgets.args_panel.opts_view.get_buffer()
+            else:
+                buf = widgets.args_panel.text_buffer
+            buf.set_text(selections["render_args"])
+    except:
+        pass
     
 def get_file_path():
     folder = widgets.file_panel.out_folder.get_filenames()[0]        
@@ -157,10 +187,10 @@ def get_file_path():
             extension = "." +  widgets.args_panel.ext_entry.get_text()
         else:
             # Small height with dialog args setting
-            ext_str = widgets.args_panel.args_edit_window.ext_entry.get_text()
-            if ext_str == "":
-                # dialog is closed
-                print "yyyyyyyyy"
+            try:
+                ext_str = widgets.args_panel.args_edit_window.ext_entry.get_text()
+            except:
+                # args edit window was never opened, so requested value not available/set, use default extension
                 ext_str = widgets.args_panel.ext
             extension = "." + ext_str
     return folder + "/" + filename + extension
@@ -201,13 +231,10 @@ def set_default_values_for_widgets(movie_name_too=False):
     widgets.encoding_panel.encoding_selector.widget.set_active(0)
     if movie_name_too == True:
         widgets.file_panel.movie_name.set_text("movie")
-    # SvdB - Render Folder from Preferences is not copied to Render panel #337
-    # Default render path is ~/.flowblade/rendered_clips. If this is not changed by the user
-    # we will use the HOME directory
-    if editorpersistance.prefs.render_folder != str(utils.get_hidden_user_dir_path()) + appconsts.RENDERED_CLIPS_DIR:
-        widgets.file_panel.out_folder.set_current_folder(editorpersistance.prefs.render_folder)
-    else:
-        widgets.file_panel.out_folder.set_current_folder(os.path.expanduser("~") + "/")
+
+    # Default render path is ~/
+    widgets.file_panel.out_folder.set_current_folder(os.path.expanduser("~") + "/")
+
     widgets.args_panel.use_args_check.set_active(False)
     widgets.profile_panel.use_project_profile_check.set_active(True)
 
@@ -377,7 +404,7 @@ def render_frame_buffer_clip(media_file, default_range_render=False):
 def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, media_file):
     if response_id == Gtk.ResponseType.ACCEPT:
         # speed, filename folder
-        speed = float(int(fb_widgets.hslider.get_value())) / 100.0
+        speed = float(int(fb_widgets.adjustment.get_value())) / 100.0
         file_name = fb_widgets.file_name.get_text()
         filenames = fb_widgets.out_folder.get_filenames()
         folder = filenames[0]
@@ -450,7 +477,8 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
         motion_renderer.start()
 
         title = _("Rendering Motion Clip")
-        text = _("<b>Motion Clip File: </b>") + write_file
+        text = _("<b>Motion Clip File: </b>") + write_file.decode('utf-8')
+
         progress_bar = Gtk.ProgressBar()
         dialog = rendergui.clip_render_progress_dialog(_FB_render_stop, title, text, progress_bar, gui.editor_window.window)
 
@@ -547,7 +575,7 @@ def _render_reverse_clip_dialog_callback(dialog, response_id, fb_widgets, media_
         motion_renderer.start()
 
         title = _("Rendering Reverse Clip")
-        text = _("<b>Motion Clip File: </b>") + write_file
+        text = _("<b>Motion Clip File: </b>") + write_file.decode('utf-8')
         progress_bar = Gtk.ProgressBar()
         dialog = rendergui.clip_render_progress_dialog(_FB_render_stop, title, text, progress_bar, gui.editor_window.window)
 
@@ -578,7 +606,7 @@ def render_single_track_transition_clip(transition_producer, encoding_option_ind
     # Profile
     profile = PROJECT().profile
 
-    folder = editorpersistance.prefs.render_folder
+    folder = userfolders.get_render_dir()
 
     file_name = md5.new(str(os.urandom(32))).hexdigest()
     write_file = folder + "/"+ file_name + file_ext

@@ -13,7 +13,7 @@
         <property name="Tilt" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs">0=0.5</property>
         <property name="Min" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs">0=0</property>
         <property name="Max" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs">0=1</property>
-        <property name="Operation" args="editor=no_editor">0.0</property>
+        <property name="Operation" args="editor=combobox exptype=default cbopts=Overwrite:0.0,Add:0.7,Subtract:1.0">0.0</property>
     </filter>
     <filter id="frei0r.mask0mate">
         <name>Crop</name>
@@ -27,7 +27,7 @@
     </filter>
     <filter id="frei0r.alphaspot">
         <name>Alpha Shape</name>
-        <group>Alpha</group>  
+        <group>Alpha</group>
         <property name="Shape" args="editor=combobox exptype=default cbopts=Rectangle:0.0,Ellipse:0.32,Triangle:0.68,Diamond:1.0">0.0</property>
         <property name="Position X" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Pos!X">0=0.5</property>
         <property name="Position Y" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Pos!Y">0=0.5</property>
@@ -37,7 +37,17 @@
         <property name="Transition width" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Trans.!Width">0=0.2</property>
         <property name="Min" args="editor=no_editor exptype=keyframe_hcs">0=0</property>
         <property name="Max" args="editor=no_editor exptype=keyframe_hcs">0=1</property>
-        <property name="Operation" args="editor=no_editor">0.0</property>
+        <property name="Operation" args="editor=combobox exptype=default cbopts=Overwrite:0.0,Add:0.7,Subtract:1.0">0.0</property>
+    </filter>
+    <filter id="shape">
+        <name>File Luma to Alpha</name>
+        <group>Alpha</group>  
+        <property name="mix" args="range_in=0.0,100.0 range_out=0,100 editor=slider displayname=Threshold">25.65</property>
+        <property name="softness" args="range_in=0.0,100.0 editor=slider displayname=Softness">0</property>
+        <property name="invert" args="editor=booleancheckbox displayname=Invert">0</property>
+        <property name="use_luminance" args="editor=no_editor">1</property>
+        <property name="resource" args="editor=file_select exptype=file_resource displayname=Select!file">""</property>
+        <property name="use_mix" args="editor=no_editor">1</property>
     </filter>
    <filter id="frei0r.alpha0ps">
         <name>Alpha Modify</name>
@@ -45,8 +55,8 @@
         <property name="Display" args="editor=no_editor">0.0</property>
         <property name="Display input alpha" args="editor=no_editor">0</property>
         <property name="Operation" args="editor=combobox exptype=default cbopts=Shave:0.21,Shrink!Hard:0.36,Shrink!Soft:0.50,Grow!Hard:0.64,Grow!Soft:0.79">0.21</property>
-        <property name="Threshold" args="editor=no_editor exptype=singlekeyframe">0=0.5</property>
-        <property name="Shrink/grow amount" args="range_in=0,100 range_out=0,1 exptype=singlekeyframe displayname=Amount">0=0.5</property>
+        <property name="Threshold" args="editor=no_editor">0.5</property>
+        <property name="Shrink/grow amount" args="range_in=0,100 range_out=0,1 displayname=Amount">0.5</property>
         <property name="Invert" args="editor=booleancheckbox displayname=Invert">0</property>
    </filter>
     <filter id="frei0r.select0r">
@@ -55,9 +65,9 @@
         <property name="Color to select" args="editor=color_select exptype=color displayname=Color">#00ff00</property>
         <property name="Invert selection"  args="editor=booleancheckbox displayname=Invert">0</property>
         <property name="Selection subspace" args="editor=combobox exptype=default cbopts=RGB:0.0,ABI:0.5,HCI:1.0">0.0</property>
-        <property name="Delta R / A / Hue" args="range_in=0,100 exptype=singlekeyframe displayname=R/A/Hue">0=0.2</property>
-        <property name="Delta G / B / Chroma" args="range_in=0,100 exptype=singlekeyframe displayname=G/B/Chroma">0=0.2</property>
-        <property name="Delta B / I / I" args="range_in=0,100 exptype=singlekeyframe displayname=B/I/I">0=0.2</property>
+        <property name="Delta R / A / Hue" args="range_in=0,100 displayname=R/A/Hue">0.2</property>
+        <property name="Delta G / B / Chroma" args="range_in=0,100 displayname=G/B/Chroma">0.2</property>
+        <property name="Delta B / I / I" args="range_in=0,100 displayname=B/I/I">0.2</property>
         <property name="Edge mode" args="editor=combobox exptype=default cbopts=Hard:0.0,Fat:0.35,Normal:0.60,Skinny:1.0 displayname=Edge!Mode">0.0</property>
         <property name="Subspace shape" args="editor=combobox displayname=Sel.!Space exptype=default cbopts=Box:0.0,Ellipsoid:0.5,Diamond:1.0">0.0</property>
         <property name="Operation" args="editor=combobox exptype=default cbopts=Overwrite:0.0,Max:0.3,Min:0.5,Add:0.7,Subtract:1.0">0.0</property>
@@ -76,14 +86,29 @@
         <property name="postlevel" args="range_in=0,255 range_out=0,255 displayname=Post-Level">255</property>
     </filter>
    <filter id="chroma">
-    <name>Chroma Key</name>
+        <name>Chroma Key</name>
         <group>Alpha</group>
         <property name="key" args="editor=color_select exptype=color displayname=Key!Color">#00ff00</property>
-        <property name="variance"  args="range_in=0,100 range_out=0.0,1.0 displayname=Variance">0.15</property>
+        <property name="variance" args="range_in=0,100 range_out=0.0,1.0 displayname=Variance">0.15</property>
    </filter>
-
-
-
+   <filter id="rotoscoping">
+        <name>RotoMask</name>
+        <group>Alpha</group>   
+        <property name="mode" args="editor=no_editor exptype=not_parsed exptype=not_parsed cbopts=Alpha:alpha,Luma:luma,RGB:rgb displayname=Mode">alpha</property>
+        <property name="alpha_operation" args="editor=no_editor exptype=not_parsed cbopts=Clear:clear,Add:add,Subtract:sub displayname=Alpha!Mode">clear</property>
+        <property name="invert" args="editor=no_editor displayname=Invert">0</property>
+        <property name="feather" args="editor=no_editor range_in=0,20 range_out=0,20 displayname=Feather">0</property>
+        <property name="feather_passes" args="editor=no_editor range_in=1,5 range_out=1,5 displayname=Feather!Passes">1</property>
+        <property name="spline" args="editor=no_editor exptype=roto_json">{"0": []}</property>
+        <extraeditor name="rotomask"></extraeditor> 
+   </filter>
+   <!-- Not found on test system, so not tested, add later
+    <filter id="frei0r.premultiply">
+        <name>Unpremultiply</name>
+        <group>Alpha</group>   
+        <property name="0" args="editor=booleancheckbox displayname=Active">1</property>
+    </filter>
+    -->
     <!-- AUDIO -->
     <filter id="volume" multipart="true">
         <name>Volume</name>
@@ -115,7 +140,15 @@
         <name>Swap Channels</name>
         <group>Audio</group>
     </filter>
-
+    <filter id="dynamic_loudness">
+        <name>Normalize</name>
+        <group>Audio</group>
+        <property name="target_loudness" args="range_in=-50,-10 range_out=-50,-10 editor=ladspa_slider displayname=Target!Loudness">-23.0</property>
+        <property name="window" args="range_in=1,20 range_out=1,20 editor=ladspa_slider displayname=Analysis!Length">10</property>
+        <property name="max_gain" args="range_in=0,30 range_out=0,30 editor=ladspa_slider displayname=Max!Gain">15.0</property>
+        <property name="min_gain" args="range_in=-30,0 range_out=-30,0 editor=ladspa_slider displayname=Min!Gain">-15.0</property>
+        <property name="max_rate" args="editor=no_editor">3.0</property>
+    </filter>
 
 
     <!-- AUDIO FILTER -->
@@ -325,7 +358,7 @@
         <property name="5" args="range_in=-20,0 range_out=-20,0 step=0.1 scale_digits=1 editor=ladspa_slider displayname=Output!attenuation(dB)">0.0</property>
         <property name="wetness" args="range_in=0,100 editor=ladspa_slider displayname=Dry/Wet">1</property>
     </filter>
-   
+
 
 
     <!-- ARTISTIC -->
@@ -382,6 +415,16 @@
         <property name="aspect" args="editor=keyframe_editor exptype=keyframe_hcs range_in=-100,100 displayname=Aspect">0=0.5</property>
         <property name="clearCenter" args="editor=keyframe_editor exptype=keyframe_hcs range_in=0,100 displayname=Center!Size">0=0.5</property>
         <property name="soft" args="editor=keyframe_editor exptype=keyframe_hcs range_in=0,100 displayname=Softness">0=0.2</property>
+    </filter>
+    <filter id="vignette">
+        <name>Vignette Advanced</name>
+        <group>Artistic</group>
+        <property name="smooth" args="range_in=0,100 range_out=0,1 displayname=Smooth">0.8</property>
+        <property name="radius" args="range_in=0,100 range_out=0,1 displayname=Radius">0.2</property>
+        <property name="x" args="range_in=0,100 range_out=0,1 displayname=Pos!X">0.5</property>
+        <property name="y" args="range_in=0,100 range_out=0,1 displayname=Pos!Y">0.5</property>
+        <property name="opacity" args="range_in=0,100 range_out=0,1 displayname=Opacity">0.0</property>
+        <property name="mode" args="editor=combobox displayname=Fade exptype=default cbopts=Linear:0.0,Cos:1.0">1.0</property>
     </filter>
     <filter id="frei0r.emboss">
         <name>Emboss</name>
@@ -460,30 +503,15 @@
         <name>Grayscale</name>
         <group>Color</group>
     </filter>
-    <!---
-    <filter id="frei0r.cairogradient">
-        <name>Cairogradient</name>
-        <group>Color</group>
-        <property name="pattern" args="editor=combobox exptype=default cbopts=Linear:gradient_linear,Radial:gradient_radial">gradient_linear</property>
-        <property name="start x" args="editor=no_editor exptype=frei_pos_hcs">0=0.5;200=0.0</property>
-        <property name="end x" args="editor=no_editor exptype=frei_pos_hcs">0=0.5;200=1.0</property>
-        <property name="start color" args="editor=color_select exptype=color displayname=Start!Color">#ffffff</property>
-        <property name="start opacity" args="editor=slider range_in=0,100">0.5</property>
-        <property name="end color" args="editor=color_select exptype=color displayname=End!Color">#000000</property>
-        <property name="end opacity" args="editor=slider range_in=0,100">0.5</property>
-        <property name="blend mode" args="editor=combobox displayname=Blend!Mode exptype=default cbopts=Normal:normal,Add:add,Saturate:saturate,Multiply:multiply,Screen:screen,Overlay:overlay,Darken:darken,Lighten:lighten,ColorDodge:colordodge,Colorburn:colorburn,Hardlight:hardlight,Softlight:softlight,Difference:difference,Exclusion:exclusion,HSLHue:hslhue,HSLSaturation:hslsaturation,HSLColor:hslcolor,HSLLuminosity:hslluminosity">normal</property>
-        <property name="offset" args="editor=slider range_in=0,100">0.0</property>
-    </filter>
-    -->
     <filter id="frei0r.contrast0r">
         <name>Contrast</name>
         <group>Color</group>
-        <property name="Contrast" args="exptype=singlekeyframe range_in=-50,150 range_out=0.0,2.0 step=1.0">"0=0.5"</property>
+        <property name="Contrast" args="range_in=-50,150 range_out=0.0,2.0 step=1.0">0.5</property>
     </filter>
     <filter id="frei0r.saturat0r">
         <name>Saturation</name>
         <group>Color</group>
-        <property name="Saturation" args="exptype=singlekeyframe range_in=-20,40 range_out=0.0,0.375">"0=0.125"</property>
+        <property name="Saturation" args="range_in=-20,40 range_out=0.0,0.375">0.125</property>
     </filter>
     <filter id="invert">
         <name>Invert</name>
@@ -521,7 +549,7 @@
         <group>Color</group>
         <property name="Hue" args="range_in=0,360">0.0</property>
     </filter>
-    <filter id="frei0r.brightness"  mlt_drop_version="0.9.1">
+    <filter id="frei0r.brightness" mlt_drop_version="0.9.1">
         <name>Brightness</name>
         <group>Color</group>
         <property name="Brightness" args="range_in=-100,100">0.5</property>
@@ -576,18 +604,18 @@
         <group>Color</group>
         <property name="Channel" args="displayname=Channel editor=combobox exptype=default cbopts=Luma:0.3,Red:0.0,Green:0.1,Blue:0.2">0.3</property>
         <property name="Show histogram" args="editor=no_editor">0</property>
-        <property name="Input black level" args="range_in=0,255 exptype=singlekeyframe">0=0</property>
-        <property name="Input white level" args="range_in=0,255 exptype=singlekeyframe">0=1</property>
-        <property name="Gamma" args="range_in=0,100 exptype=singlekeyframe">0=0.25</property>
-        <property name="Black output" args="range_in=0,255 exptype=singlekeyframe">0=0</property>
-        <property name="White output" args="range_in=0,255 exptype=singlekeyframe">0=1</property>
+        <property name="Input black level" args="range_in=0,255">0</property>
+        <property name="Input white level" args="range_in=0,255">1</property>
+        <property name="Gamma" args="range_in=0,100">0.25</property>
+        <property name="Black output" args="range_in=0,255">0</property>
+        <property name="White output" args="range_in=0,255">1</property>
     </filter>
    <filter id="frei0r.coloradj_RGB">
         <name>RGB Adjustment</name>
         <group>Color</group>
-        <property name="R" args="range_in=-50,50 exptype=singlekeyframe displayname=Red">0=0.5</property>
-        <property name="G" args="range_in=-50,50 exptype=singlekeyframe displayname=Green">0=0.5</property>
-        <property name="B" args="range_in=-50,50 exptype=singlekeyframe displayname=Blue">0=0.5</property>
+        <property name="R" args="range_in=-50,50 displayname=Red">0.5</property>
+        <property name="G" args="range_in=-50,50 displayname=Green">0.5</property>
+        <property name="B" args="range_in=-50,50 displayname=Blue">0.5</property>
         <property name="Action" args="displayname=Action editor=combobox exptype=default cbopts=Add!Constant:0.0,Change!Gamma:0.5,Multiply:1.0">0.0</property>
         <property name="Keep luma" args="editor=booleancheckbox displayname=Keep!Luma">1</property>
         <property name="Alpha controlled" args="editor=no_editor">0</property>
@@ -651,6 +679,21 @@
    
    
     <!-- COLOR EFFECT -->
+    <filter id="frei0r.cairogradient">
+        <name>Gradient Tint</name>
+        <group>Color Effect</group>
+        <property name="1" args="editor=color_select exptype=cairo_color displayname=Start!Color">#ffffff</property>
+        <property name="3" args="editor=color_select exptype=cairo_color displayname=End!Color">#000000</property>
+        <property name="10" args="editor=combobox displayname=Blend!Mode exptype=default cbopts=Normal:normal,Add:add,Saturate:saturate,Multiply:multiply,Screen:screen,Overlay:overlay,Darken:darken,Lighten:lighten,ColorDodge:colordodge,Colorburn:colorburn,Hardlight:hardlight,Softlight:softlight,Difference:difference,Exclusion:exclusion,HSLHue:hslhue,HSLSaturation:hslsaturation,HSLColor:hslcolor,HSLLuminosity:hslluminosity">normal</property>
+        <property name="2" args="editor=slider range_in=0,100 displayname=Start!Opacity">0.5</property>
+        <property name="4" args="editor=slider range_in=0,100 displayname=End!Opacity">0.5</property>
+        <property name="5" args="editor=slider range_in=0,100 displayname=Start!X">0.5</property>
+        <property name="6" args="editor=slider range_in=0,100 displayname=Start!Y">0.8</property>
+        <property name="7" args="editor=slider range_in=0,100 displayname=End!X">0.5</property>
+        <property name="8" args="editor=slider range_in=0,100 displayname=End!Y">0.2</property>
+           <property name="0" args="editor=combobox displayname=Gradient!Type exptype=default cbopts=Linear:gradient_linear,Radial:gradient_radial">gradient_linear</property>
+        <property name="9" args="editor=slider range_in=0,100 displayname=Radial!Offset">0.0</property>
+    </filter>
     <filter id="frei0r.cluster">
         <name>Color Clustering</name>
         <group>Color Effect</group>
@@ -720,7 +763,7 @@
         <group>Color Effect</group>
         <property name="Map black to" args="editor=color_select exptype=color displayname=Black">#000000</property>
         <property name="Map white to" args="editor=color_select exptype=color displayname=White">#ff8080</property>
-        <property name="Tint amount" args="exptype=singlekeyframe range_in=0,100 displayname=Amount">0=0.25</property>
+        <property name="Tint amount" args="range_in=0,100 displayname=Amount">0.25</property>
     </filter>
    <filter id="frei0r.colorize">
         <name>Colorize</name>
@@ -821,14 +864,14 @@
     <filter id="frei0r.hqdn3d">
         <name>Denoise</name>
         <group>Fix</group>
-        <property name="Spatial" args="range_in=0,100 exptype=singlekeyframe">0=0.5</property>
-        <property name="Temporal"  args="range_in=0,100 exptype=singlekeyframe">0=0</property>
+        <property name="Spatial" args="range_in=0,100">0.5</property>
+        <property name="Temporal"  args="range_in=0,100">0</property>
     </filter>
     <filter id="frei0r.sharpness">
         <name>Sharpness</name>
         <group>Fix</group>
-        <property name="Amount" args="range_in=0,100 exptype=singlekeyframe">0=0.5</property>
-        <property name="Size" args="range_in=0,100 exptype=singlekeyframe">0=0.5</property>
+        <property name="Amount" args="range_in=0,100">0.5</property>
+        <property name="Size" args="range_in=0,100">0.5</property>
     </filter>
     <filter id="frei0r.letterb0xed">
         <name>Letterbox</name>

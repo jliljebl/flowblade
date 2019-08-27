@@ -55,11 +55,14 @@ import renderconsumer
 import respaths
 import tlinewidgets
 import updater
+import userfolders
 import utils
 
 _tline_sync_data = None # Compound clip and tline clip sync functions can't pass the same data througn clapperless so 
                          # we use this global to save data as needed for tline sync function.
                          # The data flow is a bit haed to follow here, this needs tobe refactored.
+
+_compare_dialog_thread = None
 
 class ClapperlesLaunchThread(threading.Thread):
     def __init__(self, video_file, audio_file, completed_callback):
@@ -77,7 +80,7 @@ def _write_offsets(video_file_path, audio_file_path, completed_callback):
     fps = str(int(utils.fps() + 0.5))
     idstr = _get_offset_file_idstr(video_file_path, audio_file_path)
 
-    FLOG = open(utils.get_hidden_user_dir_path() + "log_clapperless", 'w')
+    FLOG = open(userfolders.get_cache_dir() + "log_clapperless", 'w')
     
     # clapperless.py computes offsets and writes them to file clapperless.OFFSETS_DATA_FILE
     p = subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladeclapperless", video_file_path, audio_file_path, "--rate", fps, "--idstr", idstr], stdin=FLOG, stdout=FLOG, stderr=FLOG)
@@ -87,19 +90,17 @@ def _write_offsets(video_file_path, audio_file_path, completed_callback):
     GLib.idle_add(completed_callback, (video_file_path, audio_file_path, idstr))
 
 def _get_offset_file_idstr(file_1, file_2):
-    # Create unique file path in hidden render folder
-    folder = editorpersistance.prefs.render_folder
     return md5.new(file_1 + file_2).hexdigest()
     
 def _read_offsets(idstr):
-    offsets_file = utils.get_hidden_user_dir_path() + clapperless.OFFSETS_DATA_FILE + "_"+ idstr
+    offsets_file = userfolders.get_cache_dir() + clapperless.OFFSETS_DATA_FILE + "_"+ idstr
     with open(offsets_file) as f:
         file_lines = f.readlines()
     file_lines = [x.rstrip("\n") for x in file_lines]
     
     _files_offsets = {}
     for line in file_lines:
-        tokens = line.split(" ")
+        tokens = line.split(clapperless.MAGIC_SEPARATOR)
         _files_offsets[tokens[0]] = tokens[1]
     
     os.remove(offsets_file)
@@ -160,6 +161,10 @@ def select_sync_clip_mouse_pressed(event, frame):
     gdk_window = gui.tline_display.get_parent_window();
     gdk_window.set_cursor(Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR))
     
+    global _compare_dialog_thread
+    _compare_dialog_thread = AudioCompareActiveThread()
+    _compare_dialog_thread.start()
+    
     # This or GUI freezes, we really can't do Popen.wait() in a Gtk thread
     clapperless_thread = ClapperlesLaunchThread(_tline_sync_data.origin_clip.path, sync_clip.path, _tline_sync_offsets_computed_callback)
     clapperless_thread.start()
@@ -168,7 +173,7 @@ def select_sync_clip_mouse_pressed(event, frame):
     movemodes.clear_selected_clips()
 
     updater.repaint_tline()
-
+    
 def _get_sync_tline_clip(event, frame):
     sync_track = tlinewidgets.get_track(event.y)
 
@@ -190,6 +195,9 @@ def _get_sync_tline_clip(event, frame):
     
 def _tline_sync_offsets_computed_callback(clapperless_data):
     print "Clapperless done for tline sync"
+    
+    global _compare_dialog_thread
+    _compare_dialog_thread.compare_done()
     
     file_path_1, file_path_2, idstr = clapperless_data
     files_offsets = _read_offsets(idstr)
@@ -282,6 +290,10 @@ def create_audio_sync_compound_clip():
     else:
         print  "2 video files, video audio assignments determined by selection order"
 
+    global _compare_dialog_thread
+    _compare_dialog_thread = AudioCompareActiveThread()
+    _compare_dialog_thread.start()
+    
     # This or GUI freezes, we really can't do Popen.wait() in a Gtk thread
     clapperless_thread = ClapperlesLaunchThread(video_file.path, audio_file.path, _compound_offsets_complete)
     clapperless_thread.start()
@@ -289,6 +301,9 @@ def create_audio_sync_compound_clip():
 def _compound_offsets_complete(data):
     print "Clapperless done for compound clip"
 
+    global _compare_dialog_thread
+    _compare_dialog_thread.compare_done()
+    
     video_file_path, audio_file_path, idstr = data
     files_offsets = _read_offsets(idstr)
     sync_data = (files_offsets, data)
@@ -310,7 +325,7 @@ def _do_create_sync_compound_clip(dialog, response_id, data):
     dialog.destroy()
     
     # Create unique file path in hidden render folder
-    folder = editorpersistance.prefs.render_folder
+    folder = userfolders.get_render_dir()
     uuid_str = md5.new(str(os.urandom(32))).hexdigest()
     write_file = folder + "/"+ uuid_str + ".xml"
     
@@ -349,3 +364,33 @@ def _do_create_sync_compound_clip(dialog, response_id, data):
     # render MLT XML, callback in projectaction.py creates media object
     render_player = renderconsumer.XMLCompoundRenderPlayer(write_file, media_name, projectaction._xml_compound_render_done_callback, tractor)
     render_player.start()
+
+
+
+class AudioCompareActiveThread(threading.Thread):
+    
+    def __init__(self):
+        threading.Thread.__init__(self)
+        self.running = True
+        
+    def run(self):
+
+        Gdk.threads_enter()
+        dialog = dialogs.audio_sync_active_dialog()
+        dialog.progress_bar.set_pulse_step(0.2)
+        time.sleep(0.1)
+        Gdk.threads_leave()
+
+        while self.running:
+            dialog.progress_bar.pulse()
+            time.sleep(0.2)
+                
+        PROJECT().update_media_lengths_on_load = False
+        
+        Gdk.threads_enter()
+        dialog.destroy()
+        Gdk.threads_leave()
+    
+    def compare_done(self):
+        self.running = False
+

@@ -34,8 +34,6 @@ PREFERENCES_WIDTH = 730
 PREFERENCES_HEIGHT = 440
 PREFERENCES_LEFT = 410
 
-select_thumbnail_dir_callback = None # app.py sets at start up
-select_render_clips_dir_callback = None # app.py sets at start up
 
 def preferences_dialog():
 
@@ -45,7 +43,7 @@ def preferences_dialog():
                     (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
                     _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
 
-    gen_opts_panel, gen_opts_widgets = _general_options_panel(_thumbs_select_clicked, _renders_select_clicked)
+    gen_opts_panel, gen_opts_widgets = _general_options_panel()
     edit_prefs_panel, edit_prefs_widgets = _edit_prefs_panel()
     playback_prefs_panel, playback_prefs_widgets  = _playback_prefs_panel()
     view_pres_panel, view_pref_widgets = _view_prefs_panel()
@@ -73,12 +71,6 @@ def preferences_dialog():
     dialog.set_transient_for(gui.editor_window.window)
     dialog.show_all()
 
-def _thumbs_select_clicked(widget):
-    dialogs.select_thumbnail_dir(select_thumbnail_dir_callback, gui.editor_window.window, editorpersistance.prefs.thumbnail_folder, False)
-
-def _renders_select_clicked(widget):
-    dialogs.select_rendred_clips_dir(select_render_clips_dir_callback, gui.editor_window.window, editorpersistance.prefs.render_folder)
-
 def _preferences_dialog_callback(dialog, response_id, all_widgets):
     if response_id == Gtk.ResponseType.ACCEPT:
         editorpersistance.update_prefs_from_widgets(all_widgets)
@@ -91,7 +83,7 @@ def _preferences_dialog_callback(dialog, response_id, all_widgets):
 
     dialog.destroy()
 
-def _general_options_panel(folder_select_clicked_cb, render_folder_select_clicked_cb):
+def _general_options_panel():
     prefs = editorpersistance.prefs
 
     # Widgets
@@ -112,12 +104,6 @@ def _general_options_panel(folder_select_clicked_cb, render_folder_select_clicke
     undo_max_spin.set_adjustment(spin_adj)
     undo_max_spin.set_numeric(True)
 
-    folder_select = Gtk.Button(_("Select Folder")) # thumbnails
-    folder_select.connect("clicked" , folder_select_clicked_cb)
-
-    render_folder_select = Gtk.Button(_("Select Folder"))
-    render_folder_select.connect("clicked" , render_folder_select_clicked_cb)
-
     autosave_combo = Gtk.ComboBoxText()
     AUTO_SAVE_OPTS = ((-1, _("No Autosave")),(1, _("1 min")),(2, _("2 min")),(5, _("5 min")))
 
@@ -136,10 +122,8 @@ def _general_options_panel(folder_select_clicked_cb, render_folder_select_clicke
     row1 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Default Profile:")), default_profile_combo, PREFERENCES_LEFT))
     row2 = _row(guiutils.get_checkbox_row_box(open_in_last_opened_check, Gtk.Label(label=_("Remember last media directory"))))
     row3 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Undo stack size:")), undo_max_spin, PREFERENCES_LEFT))
-    row4 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Thumbnail folder:")), folder_select, PREFERENCES_LEFT))
     row5 = _row(guiutils.get_checkbox_row_box(open_in_last_rendered_check, Gtk.Label(label=_("Remember last render directory"))))
     row6 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Autosave for crash recovery every:")), autosave_combo, PREFERENCES_LEFT))
-    row8 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Rendered Clips folder:")), render_folder_select, PREFERENCES_LEFT))
     row9 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Media look-up order on load:")), load_order_combo, PREFERENCES_LEFT))
 
     vbox = Gtk.VBox(False, 2)
@@ -148,8 +132,6 @@ def _general_options_panel(folder_select_clicked_cb, render_folder_select_clicke
     vbox.pack_start(row2, False, False, 0)
     vbox.pack_start(row5, False, False, 0)
     vbox.pack_start(row3, False, False, 0)
-    vbox.pack_start(row4, False, False, 0)
-    vbox.pack_start(row8, False, False, 0)
     vbox.pack_start(row9, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
 
@@ -273,7 +255,11 @@ def _playback_prefs_panel():
     ffwd_rev_caps_spin = Gtk.SpinButton()
     ffwd_rev_caps_spin.set_adjustment(spin_adj)
     ffwd_rev_caps_spin.set_numeric(True)
-    
+
+    loop_clips = Gtk.CheckButton()
+    loop_clips.set_active(prefs.loop_clips)
+
+     
     # Layout
     #row1 = _row(guiutils.get_checkbox_row_box(auto_play_in_clip_monitor, Gtk.Label(label=_("Autoplay new Clips in Clip Monitor"))))
     row2 = _row(guiutils.get_checkbox_row_box(auto_center_on_stop, Gtk.Label(label=_("Center Current Frame on Playback Stop"))))
@@ -291,11 +277,12 @@ def _playback_prefs_panel():
     row15.set_tooltip_text(_("Speed of Forward / Reverse will be multiplied by this value if Ctrl Key is held (Only using KEYS)."))
     row16 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Fast Forward / Reverse Speed for Caps Lock Key:")), ffwd_rev_caps_spin, PREFERENCES_LEFT))
     row16.set_tooltip_text(_("Speed of Forward / Reverse will be multiplied by this value if Caps Lock is set (Only using KEYS)."))
-
     row17 = _row(guiutils.get_checkbox_row_box(follow_move_range, Gtk.Label(label=_("Move Timeline to follow Playback"))))
+    row18 = _row(guiutils.get_checkbox_row_box(loop_clips, Gtk.Label(label=_("Loop Media Clips on Monitor"))))
     
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row17, False, False, 0)
+    vbox.pack_start(row18, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
     vbox.pack_start(row13, False, False, 0)
     # Jul-2016 - SvdB - For play_pause button
@@ -304,6 +291,7 @@ def _playback_prefs_panel():
     vbox.pack_start(row14, False, False, 0)
     vbox.pack_start(row15, False, False, 0)
     vbox.pack_start(row16, False, False, 0)
+
     vbox.pack_start(Gtk.Label(), True, True, 0)
 
     guiutils.set_margins(vbox, 12, 0, 12, 12)
@@ -312,7 +300,7 @@ def _playback_prefs_panel():
     # Apr-2017 - SvdB - Added ffwd / rev values
     return vbox, (auto_center_on_stop, 
                   play_pause_button, auto_center_on_updown,
-                  ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range)
+                  ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips)
                   
 def _view_prefs_panel():
     prefs = editorpersistance.prefs
@@ -321,6 +309,26 @@ def _view_prefs_panel():
     force_english_check = Gtk.CheckButton()
     force_english_check.set_active(prefs.use_english_always)
 
+    force_language_combo = Gtk.ComboBoxText()
+    force_language_combo.append_text(_("None"))
+    force_language_combo.append_text(_("English"))
+    force_language_combo.append_text(_("Chinese, Simplified"))
+    force_language_combo.append_text(_("Chinese, Traditional"))
+    force_language_combo.append_text(_("Czech"))
+    force_language_combo.append_text(_("French"))
+    force_language_combo.append_text(_("German"))
+    force_language_combo.append_text(_("Hungarian"))
+    force_language_combo.append_text(_("Italian"))
+    force_language_combo.append_text(_("Polish"))
+    force_language_combo.append_text(_("Russian"))
+    force_language_combo.append_text(_("Spanish"))
+    force_language_combo.append_text(_("Ukranian"))
+    # THIS NEEDS TO BE UPDATED WHEN LANGUAGES ARE ADDED!!!
+    lang_list = ["None","English","zh_CN","zh_TW","cs","fr","de","hu","it","pl","ru","es","uk"]
+    active_index = lang_list.index(prefs.force_language)
+    force_language_combo.set_active(active_index)
+    force_language_combo.lang_codes = lang_list
+    
     display_splash_check = Gtk.CheckButton()
     display_splash_check.set_active(prefs.display_splash_screen)
 
@@ -368,19 +376,20 @@ def _view_prefs_panel():
     tracks_combo.set_active(prefs.double_track_hights)
 
     top_row_layout = Gtk.ComboBoxText()
-    top_row_layout.append_text(_("3 panels if width awailable"))
+    top_row_layout.append_text(_("3 panels if width (1450px+) available"))
     top_row_layout.append_text(_("2 panels always"))
     top_row_layout.set_active(prefs.top_row_layout)
         
     # Layout
     row00 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Application window mode:")), window_mode_combo, PREFERENCES_LEFT))
-    row0 =  _row(guiutils.get_checkbox_row_box(force_english_check, Gtk.Label(label=_("Use English texts on localized OS"))))
-    row1 =  _row(guiutils.get_checkbox_row_box(display_splash_check, Gtk.Label(label=_("Display splash screen"))))
-    row2 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Buttons style:")), buttons_combo, PREFERENCES_LEFT))
-    row3 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Theme request, icons and colors:")), dark_combo, PREFERENCES_LEFT))
-    row4 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Theme detection fail fallback colors:")), theme_combo, PREFERENCES_LEFT))
-    row5 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Default audio levels display:")), audio_levels_combo, PREFERENCES_LEFT))
-    row7 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Tracks Heights:")), tracks_combo, PREFERENCES_LEFT))
+    #row0 = _row(guiutils.get_checkbox_row_box(force_english_check, Gtk.Label(label=_("Use English texts on localized OS"))))
+    row9 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Force Language:")), force_language_combo, PREFERENCES_LEFT))
+    row1 = _row(guiutils.get_checkbox_row_box(display_splash_check, Gtk.Label(label=_("Display splash screen"))))
+    row2 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Buttons style:")), buttons_combo, PREFERENCES_LEFT))
+    row3 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Theme request, icons and colors:")), dark_combo, PREFERENCES_LEFT))
+    row4 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Theme detection fail fallback colors:")), theme_combo, PREFERENCES_LEFT))
+    row5 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Default audio levels display:")), audio_levels_combo, PREFERENCES_LEFT))
+    row7 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Tracks Heights:")), tracks_combo, PREFERENCES_LEFT))
 
     # Feb-2017 - SvdB - For full file names
     row6 =  _row(guiutils.get_checkbox_row_box(show_full_file_names, Gtk.Label(label=_("Show Full File names"))))
@@ -389,7 +398,8 @@ def _view_prefs_panel():
 
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row00, False, False, 0)
-    vbox.pack_start(row0, False, False, 0)
+    #vbox.pack_start(row0, False, False, 0)
+    vbox.pack_start(row9, False, False, 0)
     vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
     vbox.pack_start(row3, False, False, 0)
@@ -404,7 +414,7 @@ def _view_prefs_panel():
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
     # Feb-2017 - SvdB - Added code for full file names
-    return vbox, (force_english_check, display_splash_check, buttons_combo, dark_combo, theme_combo, audio_levels_combo, 
+    return vbox, (force_language_combo, display_splash_check, buttons_combo, dark_combo, theme_combo, audio_levels_combo, 
                   window_mode_combo, show_full_file_names, tracks_combo, top_row_layout)
 
 def _performance_panel():

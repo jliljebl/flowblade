@@ -7,9 +7,8 @@ import os
 modules_path = os.path.dirname(os.path.abspath(sys.argv[0])).rstrip("/launch")
 
 sys.path.insert(0, modules_path)
-sys.path.insert(0, modules_path + "/vieweditor")
-sys.path.insert(0, modules_path + "/tools")
-
+import processutils
+processutils.update_sys_path(modules_path)
 
 try:
     import medialinker

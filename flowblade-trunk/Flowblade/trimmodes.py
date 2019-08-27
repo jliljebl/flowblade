@@ -54,12 +54,15 @@ last_from_trimmed = False
 # Function that sets edit mode when exiting with click on empty
 set_exit_mode_func = None
 
+# Edit complete callback used to get back to multitrimmode.py when trims inited from there.
+edit_complete_callback = None
+
 # Function that sets <X>_NO_EDIT mode that displays trim cursor but no edit is under way.
 #
 # This is used e.g. when user clicks empty and preference is to stay in trim mode, 
 # so active edit is exited to <X>_NO_EDIT mode.
 #
-# This function is set when trim modes are entered to be to the "edit init func for" the entered trim mode.
+# This function is set when trim modes are entered.
 set_no_edit_mode_func = None
 
 # Sub modes for handling mouse vs. keyboard edits
@@ -287,6 +290,9 @@ def enter_pressed():
 
     submode = NOTHING_ON
 
+    if edit_complete_callback != None:
+        edit_complete_callback() # get back to MULTI_TRIM mode because we inited edit from there
+
 def _one_roll_trim_left(delta):
     # Get legal edit frame for overlay display
     global edit_data
@@ -388,6 +394,9 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     if track.id < 1 or (track.id >= len(current_sequence().tracks) - 1):
         return False
 
+    if dialogutils.track_lock_check_and_user_info(track):
+        return False
+
     if current_frame == -1: # from button, ctrl + mouse calls with frame
         current_frame = PLAYER().producer.frame() + 1 # +1 because cut frame selects previous clip
 
@@ -410,7 +419,7 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
         to_side_being_edited = editing_to_clip
 
     _set_edit_data(track, edit_frame, True)
-
+    
     # Init ripple data if needed
     global ripple_data
     ripple_data = None
@@ -443,18 +452,20 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     else:
         edit_data["trim_limits"]["ripple_display_end"] = -1
         edit_data["trim_limits"]["ripple_display_start"] = -1
-            
-    current_sequence().clear_hidden_track()
 
     # Cant't trim a blank clip. Blank clips are special in MLT and can't be
     # made to do things that are needed in trim.
     if _trimmed_clip_is_blank():
-        set_exit_mode_func()
-        primary_txt = _("Can't ONE ROLL TRIM blank clips.")
-        secondary_txt = _("You can use MOVE OVERWRITE or TWO ROLL TRIM edits instead\nto get the desired change.")
+        ripple_data = None
+        edit_data = None
+        gui.tline_canvas.drag_on = False
+        primary_txt = _("Can't use Trim tool on blank clips.")
+        secondary_txt = _("You can use <b>Move</b> or <b>Roll</b> tools instead.")
         dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
         return False
-        
+
+    current_sequence().clear_hidden_track()
+    
     # Give timeline widget needed data
     if editorstate.trim_mode_ripple == False:
         tlinewidgets.set_edit_mode(edit_data,
@@ -492,54 +503,47 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
     PLAYER().seek_frame(edit_frame)
     return True
 
-def oneroll_trim_press(event, frame):
+def oneroll_trim_press(event, frame, x=None, y=None):
     """
     User presses mouse when in one roll mode.
+    
+    WE ARE HITTING THIS FROM MULTITRIM ONLY, NOT TRIM TOOL because we remove non-quick enter edits.
     """
     global mouse_disabled, submode
+    
+    # We need this to enter with keyboard action from multitrimmode.py
+    if x == None:
+        x = event.x
+        y = event.y
 
-    if not _pressed_on_edited_track(event.y):
-        track = tlinewidgets.get_track(event.y)
-        success = set_oneroll_mode(track, frame)
+    if not _pressed_on_edited_track(y):
+        track = tlinewidgets.get_track(y)
+        if track == None or dialogutils.track_lock_check_and_user_info(track):
+            success = False # track is locked 
+        else:
+            success = set_oneroll_mode(track, frame) # attempt init
         if not success:
-            if editorpersistance.prefs.empty_click_exits_trims == True:
-                set_exit_mode_func(True) # further mouse events are handled at editevent.py
-            else:
-                set_no_edit_mode_func() # further mouse events are handled at editevent.py
+            set_exit_mode_func(True) # further mouse events are handled at editevent.py
         else:
             submode = MOUSE_EDIT_ON # to stop entering keyboard edits until mouse released
-            if not editorpersistance.prefs.quick_enter_trims:
-                # new trim inited, editing non-active until release
-                tlinewidgets.trim_mode_in_non_active_state = True
-                gui.tline_canvas.widget.queue_draw()
-                gui.editor_window.set_tline_cursor(editorstate.ONE_ROLL_TRIM_NO_EDIT)
-                mouse_disabled = True
-            else:
-                # new trim inited, active immediately
-                oneroll_trim_move(event.x, event.y, frame, None)
-                gui.tline_canvas.widget.queue_draw()
+            oneroll_trim_move(x, y, frame, None)
+            gui.tline_canvas.widget.queue_draw()
         return
         
     if not _pressed_on_one_roll_active_area(frame):
-        track = tlinewidgets.get_track(event.y)
-        success = set_oneroll_mode(track, frame)
+        track = tlinewidgets.get_track(y)
+        if dialogutils.track_lock_check_and_user_info(track):
+            success = False # track is locked 
+        else:
+            success = set_oneroll_mode(track, frame) # attempt init
+        
         if not success:
-            if editorpersistance.prefs.empty_click_exits_trims == True:
-                set_exit_mode_func(True) # further mouse events are handled at editevent.py
-            else:
-                set_no_edit_mode_func() # no furter mouse events will come here
+            set_exit_mode_func(True) # further mouse events are handled at editevent.py
+            submode = NOTHING_ON 
         else:
             submode = MOUSE_EDIT_ON # to stop entering keyboard edits until mouse released
-            if not editorpersistance.prefs.quick_enter_trims:
-                # new trim inited, editing non-active until release
-                tlinewidgets.trim_mode_in_non_active_state = True
-                gui.tline_canvas.widget.queue_draw()
-                gui.editor_window.set_tline_cursor(editorstate.ONE_ROLL_TRIM_NO_EDIT)
-                mouse_disabled = True
-            else:
-                # new trim inited, active immediately
-                oneroll_trim_move(event.x, event.y, frame, None)
-                gui.tline_canvas.widget.queue_draw()
+            oneroll_trim_move(x, y, frame, None)
+            gui.tline_canvas.widget.queue_draw()
         return
 
     # Get legal edit delta and set to edit mode data for overlay draw
@@ -547,6 +551,8 @@ def oneroll_trim_press(event, frame):
     frame = _legalize_one_roll_trim(frame, edit_data["trim_limits"])
     edit_data["selected_frame"] = frame
 
+    submode = MOUSE_EDIT_ON 
+            
     PLAYER().seek_frame(frame)
 
 def oneroll_trim_move(x, y, frame, state):
@@ -582,6 +588,9 @@ def oneroll_trim_release(x, y, frame, state):
     tlinewidgets.pointer_context = appconsts.POINTER_CONTEXT_NONE
 
     _do_one_roll_trim_edit(frame)
+
+    if edit_complete_callback != None:
+        edit_complete_callback() # get back to MULTI_TRIM mode because we inited edit from there
 
 def _do_one_roll_trim_edit(frame):
     # Get legal edit delta and set to edit mode data for overlay draw
@@ -852,6 +861,9 @@ class RippleData:
         track_edit_ops = []
         for i in range(1, len(tracks) - 1):
             track = tracks[i]
+            if track.edit_freedom == appconsts.LOCKED:
+                track_edit_ops.append(appconsts.MULTI_NOOP)
+                continue
             track_delta = track_max_deltas[i - 1]
             if track_delta == 0:
                 track_edit_ops.append(appconsts.MULTI_ADD_TRIM)
@@ -903,10 +915,16 @@ class RippleData:
 def set_tworoll_mode(track, current_frame = -1):
     """
     Sets two roll mode
-    """     
+    """
     if track == None:
         return False
-    
+
+    if track.id < 1 or (track.id >= len(current_sequence().tracks) - 1):
+        return False
+        
+    if dialogutils.track_lock_check_and_user_info(track):
+        return False
+        
     current_frame_trim_view_fix = 0
     if current_frame == -1:
         current_frame = PLAYER().producer.frame() + 1 # +1 because cut frame selects previous clip
@@ -991,20 +1009,30 @@ def set_tworoll_mode(track, current_frame = -1):
     return True
 
 def _tworoll_init_failed_window():
-    primary_txt = _("Initializing TWO ROLL TRIM failed")
-    secondary_txt = _("You are attempting TWO ROLL TRIM at a position in the timeline\nwhere it can't be performed.")
+    primary_txt = _("Initializing Roll tool failed")
+    secondary_txt = _("You are attempting a roll trim at a position in the timeline\nwhere it can't be performed.")
     dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
 
-def tworoll_trim_press(event, frame):
+def tworoll_trim_press(event, frame, x=None, y=None):
     """
     User presses mouse when in two roll mode.
-    """   
-    if not _pressed_on_edited_track(event.y):
-        _attempt_reinit_tworoll(event, frame)
+    """
+    # We need this to enter with keyboard action from multitrimmode.py which gives x and y, normally we get event.
+    if x == None:
+        x = event.x
+        y = event.y
+        
+    if not _pressed_on_edited_track(y):
+        _attempt_reinit_tworoll(x, y, frame)
         return
 
     if not _pressed_on_two_roll_active_area(frame):
-        _attempt_reinit_tworoll(event, frame)
+        _attempt_reinit_tworoll(x, y, frame)
+        return
+
+    track = tlinewidgets.get_track(y)
+    if dialogutils.track_lock_check_and_user_info(track):
+        set_no_edit_mode_func()
         return
 
     global edit_data, submode
@@ -1014,26 +1042,20 @@ def tworoll_trim_press(event, frame):
     edit_data["selected_frame"] = frame
     PLAYER().seek_frame(frame)
 
-def _attempt_reinit_tworoll(event, frame):
-        track = tlinewidgets.get_track(event.y)
-        success = set_tworoll_mode(track, frame)
-        if not success:
-            if editorpersistance.prefs.empty_click_exits_trims == True:
-                set_exit_mode_func(True) # further mouse events are handled at editevent.py
-            else:
-                set_no_edit_mode_func() # further mouse events are handled at editevent.py
+def _attempt_reinit_tworoll(x, y, frame):
+        track = tlinewidgets.get_track(y)
+        if dialogutils.track_lock_check_and_user_info(track):
+            success = False # track is locked 
         else:
-            if not editorpersistance.prefs.quick_enter_trims:
-                # new trim inited, editing non-active until release
-                global mouse_disabled
-                tlinewidgets.trim_mode_in_non_active_state = True
-                gui.tline_canvas.widget.queue_draw()
-                gui.editor_window.set_tline_cursor(editorstate.TWO_ROLL_TRIM_NO_EDIT)
-                mouse_disabled = True
-            else:
-                # new trim inited, active immediately
-                tworoll_trim_move(event.x, event.y, frame, None)
-                gui.tline_canvas.widget.queue_draw()
+            success = set_tworoll_mode(track, frame) # attempt init
+        if not success:
+            set_exit_mode_func(True) # further mouse events are handled at editevent.py
+        else:
+            # new trim inited, active immediately
+            global submode
+            submode = MOUSE_EDIT_ON
+            tworoll_trim_move(x, y, frame, None)
+            gui.tline_canvas.widget.queue_draw()
                 
 def tworoll_trim_move(x, y, frame, state):
     """
@@ -1074,6 +1096,9 @@ def tworoll_trim_release(x, y, frame, state):
     gui.monitor_widget.update_roll_match_frame()
     
     _do_two_roll_edit(frame)
+
+    if edit_complete_callback != None:
+        edit_complete_callback() # get back to MULTI_TRIM mode because we inited edit from there
 
 def tworoll_play_pressed():
     current_sequence().hide_hidden_clips()
@@ -1203,6 +1228,12 @@ def set_slide_mode(track, current_frame):
     if track == None:
         return None
 
+    if track.id < 1 or (track.id >= len(current_sequence().tracks) - 1):
+        return False
+
+    if dialogutils.track_lock_check_and_user_info(track):
+        return False
+        
     if current_frame > track.get_length() - 1:
         return False
 
@@ -1287,47 +1318,50 @@ def _set_slide_mode_edit_data(track, edit_frame):
                  "mouse_delta":0,
                  "clip":clip}
 
-def _attempt_reinit_slide(event, frame):
-    track = tlinewidgets.get_track(event.y)
-    success = set_slide_mode(track, frame)
-    if not success:
-        if editorpersistance.prefs.empty_click_exits_trims == True:
-            set_exit_mode_func(True) # further mouse events are handled at editevent.py
-        else:
-            set_no_edit_mode_func() # further mouse events are handled at editevent.py
+def _attempt_reinit_slide(x, y, frame):
+    track = tlinewidgets.get_track(y)
+    
+    if dialogutils.track_lock_check_and_user_info(track):
+        success = False # track is locked 
     else:
-        if not editorpersistance.prefs.quick_enter_trims:
-            gui.tline_canvas.widget.queue_draw()
-            gui.editor_window.set_tline_cursor(editorstate.SLIDE_TRIM_NO_EDIT)
-            tlinewidgets.trim_mode_in_non_active_state = True
-            global mouse_disabled
-            mouse_disabled = True
-        else:
-            # new trim inited, active immediately
-            global edit_data
-            edit_data["press_start"] = frame
-            slide_trim_move(event.x, event.y, frame, None)
-            gui.tline_canvas.widget.queue_draw()
+        success = set_slide_mode(track, frame) # attempt init
 
-def slide_trim_press(event, frame):
+    if not success:
+        set_exit_mode_func(True) # further mouse events are handled at editevent.py
+    else:
+        # new trim inited, active immediately
+        global edit_data, submode
+        submode = MOUSE_EDIT_ON
+        edit_data["press_start"] = frame
+        slide_trim_move(x, y, frame, None)
+        gui.tline_canvas.widget.queue_draw()
+
+def slide_trim_press(event, frame, x=None, y=None):
     global edit_data
     edit_data["press_start"] = frame
 
-    if not _pressed_on_edited_track(event.y):
-        _attempt_reinit_slide(event, frame)
+    # We need this to enter with keyboard action from multitrimmode.py which gives x and y, normally we get event.
+    if x == None:
+        x = event.x
+        y = event.y
+        
+    if not _pressed_on_edited_track(y):
+        _attempt_reinit_slide(x, y, frame)
         return
     
-    if frame > tlinewidgets.get_track(event.y).get_length():
-        if editorpersistance.prefs.empty_click_exits_trims == True:
-            set_exit_mode_func(True) # further mouse events are handled at editevent.py
-        else:
-            set_no_edit_mode_func() # further mouse events are handled at editevent.py
+    if frame > tlinewidgets.get_track(y).get_length():
+        set_exit_mode_func(True) # further mouse events are handled at editevent.py
         return
 
     if not _pressed_on_slide_active_area(frame):
-        _attempt_reinit_slide(event, frame)
+        _attempt_reinit_slide(x, y, frame)
         return
 
+    track = tlinewidgets.get_track(y)
+    if dialogutils.track_lock_check_and_user_info(track):
+        set_no_edit_mode_func()
+        return
+        
     global submode
     submode = MOUSE_EDIT_ON
     
@@ -1362,7 +1396,10 @@ def slide_trim_release(x, y, frame, state):
     display_frame = _update_slide_trim_for_mouse_frame(frame)
     PLAYER().seek_frame(display_frame)
     _do_slide_edit()
-    
+
+    if edit_complete_callback != None:
+        edit_complete_callback() # get back to MULTI_TRIM mode because we inited edit from there
+
 def _update_slide_trim_for_mouse_frame(frame):
     global edit_data
     clip = edit_data["clip"]

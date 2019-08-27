@@ -59,6 +59,7 @@ class GmicPlayer:
         self.consumer.set("rescale", "bicubic") # MLT options "nearest", "bilinear", "bicubic", "hyper"
         self.consumer.set("resize", 1)
         self.consumer.set("progressive", 1)
+        self.consumer.set("scrub_audio", 0)
 
         # Hold ref to switch back from rendering
         self.sdl_consumer = self.consumer 

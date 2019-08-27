@@ -17,7 +17,6 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
-
 import sys
 
 import vieweditorshape
@@ -26,6 +25,13 @@ import viewgeom
 # Edit modes
 MOVE_MODE = 0
 ROTATE_MODE = 1
+
+ROTO_POINT_MODE = 0
+ROTO_MOVE_MODE = 1
+
+ROTO_NO_EDIT = 0
+ROTO_POINT_MOVE_EDIT = 1
+
     
 # Edit types, used as kind of subtypes of modes if needed, e.g. MOVE_MODE can have MOVE_EDIT or HANDLE_EDIT 
 NO_EDIT = 0 # mouse hit meaningless
@@ -52,7 +58,7 @@ class AbstactEditorLayer:
         self.mouse_released_listener = None
     
     # --------------------------------------------- state changes
-    def frame_changed(self):
+    def frame_changed(self, frame):
         pass # override to react to frame change
 
     def mode_changed(self):
@@ -62,6 +68,7 @@ class AbstactEditorLayer:
     def hit(self, p):
         """
         Test hit AND save hit point or clear hit point if only area hit.
+        TODO: This isn't really "abstract" in anyway, move up inheritance chain.
         """
         self.last_press_hit_point = self.edit_point_shape.get_edit_point(p)
         if self.last_press_hit_point != None:
@@ -79,6 +86,11 @@ class AbstactEditorLayer:
         self.mouse_current_point = p
         self.mouse_rotation_last = 0.0
         self.mouse_pressed()
+
+    def convert_saved_points_to_panel_points(self):
+        # RotoMaskEditLayer wants to handle everything in panel coords
+        self.mouse_start_point = self.view_editor.movie_coord_to_panel_coord(self.mouse_start_point)
+        self.mouse_current_point = self.view_editor.movie_coord_to_panel_coord(self.mouse_current_point)
 
     def handle_mouse_drag(self, p):
         self.mouse_current_point = p
@@ -122,7 +134,6 @@ class AbstactEditorLayer:
 
         return angle
 
-    
     def mouse_pressed(self):
         print "AbstactEditorLayer.mouse_pressed not overridden in" + self.__class__
         sys.exit(1)
@@ -144,6 +155,8 @@ class AbstactEditorLayer:
     def draw(self, cr, write_out_layers, draw_overlays):
         print "AbstactEditorLayer.draw not overridden in" + self.__class__
         sys.exit(1)
+
+
 
 class SimpleRectEditLayer(AbstactEditorLayer):
     
@@ -226,6 +239,7 @@ class SimpleRectEditLayer(AbstactEditorLayer):
             self.edit_point_shape.draw_points(cr, self.view_editor)
 
 
+
 class TextEditLayer(SimpleRectEditLayer):
     def __init__(self, view_editor, text_layout):
         # text_layout is titler.PangoLayout
@@ -256,3 +270,212 @@ class TextEditLayer(SimpleRectEditLayer):
             self.edit_point_shape.update_rect_size(w, h)
             self.update_rect = False
         SimpleRectEditLayer.draw(self, cr, write_out_layers, draw_overlays)
+
+
+
+class RotoMaskEditLayer(AbstactEditorLayer):
+    
+    def __init__(self, view_editor, clip_editor, editable_property, rotomask_editor):
+        AbstactEditorLayer.__init__(self, view_editor)
+        self.view_editor = view_editor
+        
+        self.editable_property = editable_property
+        self.clip_editor = clip_editor
+        self.rotomask_editor = rotomask_editor
+
+        self.allow_adding_points = False
+
+        self.edit_point_shape = vieweditorshape.RotoMaskEditShape(view_editor, clip_editor, rotomask_editor)
+        self.edit_point_shape.update_shape()
+
+        #self.block_shape_update = False 
+        
+        self.ACTIVE_COLOR = (0.0,1.0,0.55,1)
+        self.NOT_ACTIVE_COLOR = (0.2,0.2,0.2,1)
+
+        self.edit_mode = ROTO_POINT_MODE
+
+    # ----------------------------------------------------- mouse events
+    def hit(self, p):
+        self.last_pressed_edit_point = None
+        self.mouse_press_panel_point = self.view_editor.movie_coord_to_panel_coord(p) #V This needed when adding new curve points
+
+        if self.edit_mode == ROTO_POINT_MODE:
+            # Hit test comes as movie coord point, but rotomask stuff is running on pamel points, need to convert
+            ep = self.edit_point_shape.get_edit_point(self.view_editor.movie_coord_to_panel_coord(p))
+            self.last_pressed_edit_point = ep
+            # We want to get "mouse_pressed()" below always called from vieweditor so we always return True for hit.
+            # self.last_pressed_edit_point is now None if we didn't hit anything and we use info to determine what ediy to do.
+            return True
+
+        elif self.edit_mode == ROTO_MOVE_MODE:
+            # This mode has whole edit area active.
+            return True
+        
+        #there are no other modes
+        
+    def mouse_pressed(self):
+        self.view_editor.edit_area_update_blocked = True
+        self.edit_point_shape.block_shape_updates = True
+        self.edit_point_shape.save_start_pos()
+
+        # Rotomask always adds keyframe on current frame if any changes are done.
+        # Maybe make user settable?
+        if self.clip_editor.get_active_kf_frame() != self.clip_editor.current_clip_frame:
+            self.edit_point_shape.save_selected_point_data(self.last_pressed_edit_point)
+            self.clip_editor.add_keyframe(self.clip_editor.current_clip_frame)
+            self.edit_point_shape.convert_shape_coords_and_update_clip_editor_keyframes()
+            self.editable_property.write_out_keyframes(self.clip_editor.keyframes)
+
+        if self.edit_mode == ROTO_MOVE_MODE:
+            pass
+        elif self.edit_mode == ROTO_POINT_MODE:
+            if self.last_pressed_edit_point != None:
+                if self.edit_point_shape.closed == False:
+                    if (self.edit_point_shape.curve_points.index(self.last_pressed_edit_point) == 0 and
+                        len(self.edit_point_shape.curve_points) > 2):
+                        self.edit_point_shape.closed = True
+                        self.edit_point_shape.maybe_force_line_mask(True) # We start with line mask curve points
+                        self.rotomask_editor.update_mask_create_freeze_gui() # Shape closed unfreeze GUI
+                    else:
+                        # Point pressed, we are moving it
+                        self.edit_point_shape.clear_selection()
+                        self.last_pressed_edit_point.selected = True
+                        self.edit_point_shape.save_selected_point_data(self.last_pressed_edit_point)
+                else:
+                    # Point pressed, we are moving it
+                    self.edit_point_shape.clear_selection()
+                    self.last_pressed_edit_point.selected = True
+                    self.edit_point_shape.save_selected_point_data(self.last_pressed_edit_point)
+
+            # No point hit attempt to add a point.
+            else:
+                if self.edit_point_shape.closed == True:
+                    if self.allow_adding_points == False:
+                        return
+                    
+                    # Closed curve, try add point in between existing points
+                    self.edit_point_shape.block_shape_updates = False
+                    self.edit_point_shape.clear_selection()
+                    if len(self.edit_point_shape.curve_points) > 1:
+                        side_index = self.edit_point_shape.get_point_insert_side(self.mouse_press_panel_point)
+                        if side_index != -1:
+                            insert_index = side_index + 1
+                            if insert_index == len(self.edit_point_shape.curve_points):
+                                insert_index = 0
+                    elif len(self.edit_point_shape.curve_points) == 1:
+                        insert_index = 1
+                    else:
+                        insert_index = 0
+
+                    self.add_edit_point(insert_index, self.mouse_press_panel_point)
+                    self.edit_point_shape.set_curve_point_as_selected(insert_index)
+                else:
+                    # Open curve, add point last
+                    self.edit_point_shape.block_shape_updates = False
+
+                    if len(self.edit_point_shape.curve_points) > 1:
+                        self.add_edit_point(len(self.edit_point_shape.curve_points), self.mouse_press_panel_point, False)
+                        self.edit_point_shape.maybe_force_line_mask(True)
+                        self.edit_point_shape.convert_shape_coords_and_update_clip_editor_keyframes()
+                        self.editable_property.write_out_keyframes(self.clip_editor.keyframes)
+                        self.rotomask_editor.show_current_frame()
+                    else:
+                        self.add_edit_point(len(self.edit_point_shape.curve_points), self.mouse_press_panel_point)
+                    
+                    self.rotomask_editor.update_mask_create_freeze_gui() 
+
+        self.clip_editor.widget.queue_draw()
+            
+    def mouse_dragged(self):
+        self.edit_point_shape.block_shape_updates = False
+        
+        # delta is given in movie coords, RotoMaskEditShape uses panel coords (because it needs to do complex drawing in those) so we have to convert mouse delta.
+        mdx, mdy = self.view_editor.movie_coord_to_panel_coord(self.get_mouse_delta()) # panel coords mouse delta 
+        odx, ody = self.view_editor.movie_coord_to_panel_coord((0, 0)) # movie origo in panel points
+        delta = (mdx - odx, mdy - ody) # panel coords mouse delta - movie origo in panel points get delta in panel points
+
+        if self.edit_mode == ROTO_MOVE_MODE:
+            self.edit_point_shape.translate_from_move_start(delta)
+        elif self.edit_mode == ROTO_POINT_MODE:
+            if self.last_pressed_edit_point != None:
+                if self.last_pressed_edit_point.display_type == vieweditorshape.ROTO_HANDLE_POINT:
+                    self.last_pressed_edit_point.translate_from_move_start(delta)
+                else: # curve point
+                    hp1, hp2 = self.edit_point_shape.handles_for_curve_point[self.last_pressed_edit_point]
+                    self.last_pressed_edit_point.translate_from_move_start(delta)
+                    hp1.translate_from_move_start(delta)
+                    hp2.translate_from_move_start(delta)
+    
+        self.edit_point_shape.maybe_force_line_mask()
+
+    def mouse_released(self):
+        self.edit_point_shape.block_shape_updates = False
+
+        # delta is given in movie coords, RotoMaskEditShape uses panel coords  (because it needs to do complex drawing in those) so we have to convert mouse delta.
+        mdx, mdy = self.view_editor.movie_coord_to_panel_coord(self.get_mouse_delta())
+        odx, ody = self.view_editor.movie_coord_to_panel_coord((0, 0))
+        delta = (mdx - odx, mdy - ody)
+        
+        if self.edit_mode == ROTO_MOVE_MODE:
+            self.edit_point_shape.translate_from_move_start(delta)
+        elif self.edit_mode == ROTO_POINT_MODE:
+            if self.last_pressed_edit_point != None:
+                if self.last_pressed_edit_point.display_type == vieweditorshape.ROTO_HANDLE_POINT:
+                    self.last_pressed_edit_point.translate_from_move_start(delta)
+                else: # curve point
+                    hp1, hp2 = self.edit_point_shape.handles_for_curve_point[self.last_pressed_edit_point]
+                    self.last_pressed_edit_point.translate_from_move_start(delta)
+                    hp1.translate_from_move_start(delta)
+                    hp2.translate_from_move_start(delta)
+            else:
+                return # no edit point moved, no update needed
+        
+        self.last_pressed_edit_point = None
+        
+        self.edit_point_shape.maybe_force_line_mask()
+        
+        self.edit_point_shape.convert_shape_coords_and_update_clip_editor_keyframes()
+        self.editable_property.write_out_keyframes(self.clip_editor.keyframes)
+        
+        self.rotomask_editor.show_current_frame()
+        self.rotomask_editor.update_effects_editor_value_labels()
+        self.clip_editor.widget.queue_draw()
+        self.view_editor.edit_area_update_blocked = False
+
+    # --------------------------------------------- edit events
+    def add_edit_point(self, index, p, show_current_frame=True):
+        self.edit_point_shape.add_point(index, p)
+
+        self.edit_point_shape.maybe_force_line_mask()
+
+        self.editable_property.write_out_keyframes(self.clip_editor.keyframes)
+        if show_current_frame:
+            self.rotomask_editor.show_current_frame() #  callback for full update
+        self.rotomask_editor.update_effects_editor_value_labels()
+        
+    def delete_selected_point(self):
+        self.edit_point_shape.delete_selected_point()
+
+        self.edit_point_shape.maybe_force_line_mask()
+
+        self.editable_property.write_out_keyframes(self.clip_editor.keyframes)
+        self.rotomask_editor.show_current_frame() #  callback for full update
+        self.rotomask_editor.update_effects_editor_value_labels()
+
+    # --------------------------------------------- state changes
+    def frame_changed(self, tline_frame):
+        self.edit_point_shape.update_shape()
+
+    def mode_changed(self):
+        pass
+        
+    # -------------------------------------------- draw
+    def draw(self, cr, write_out_layers, draw_overlays):
+        self.edit_point_shape.draw_line_shape(cr, self.view_editor)
+        if self.edit_point_shape.closed == True:
+            self.edit_point_shape.draw_points(cr, self.view_editor)
+        else:
+            self.edit_point_shape.draw_curve_points(cr, self.view_editor)
+
+

@@ -43,7 +43,7 @@ import utils
 
 widgets = utils.EmptyClass()
 
-do_multiple_clip_insert_func = None # this mankeypathched her in app.py
+do_multiple_clip_insert_func = None # this is monkeypathched here in app.py
 
 actions_popup_menu = Gtk.Menu()        
 
@@ -55,7 +55,9 @@ COMMENT_SORT = appconsts.COMMENT_SORT
 sorting_order = TIME_SORT
 
 range_log_notebook_index = 1 # this is set 0 for 2 window mode
-                
+
+
+# ----------------------------------- log data object
 class MediaLogEvent:
     def __init__(self, event_type, mark_in, mark_out, name, path):
         self.event_type = event_type
@@ -246,8 +248,15 @@ def append_log_events():
     for le in log_events:
         clips.append(get_log_event_clip(le))
     
-    track = editorstate.current_sequence().get_first_active_track() # audio tracks??!!??
-    
+    track = editorstate.current_sequence().get_first_active_track()
+
+    # Can't put audio media on video track
+    for new_clip in clips:
+        if ((new_clip.media_type == appconsts.AUDIO)
+           and (track.type == appconsts.VIDEO)):
+            dialogs.no_audio_dialog(track)
+            return
+
     data = {"track":track,
             "clips":clips}
 

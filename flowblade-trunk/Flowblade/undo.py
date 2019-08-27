@@ -22,6 +22,7 @@
 Module manages undo and redo stacks and executes edit actions from them
 on user requests.
 """
+import time
 import editorstate
 
 set_post_undo_redo_edit_mode = None # This is set at startup to avoid circular imports
@@ -146,18 +147,19 @@ def _set_post_edit_mode():
         set_post_undo_redo_edit_mode()
 
 def undo_redo_stress_test():
+    global undo_stack, index
     times = 10
     delay = 0.100
     
     for r in range(0, times):
-        while undo.index > 0:
-            print "undo:", undo.index
+        while index > 0:
+            print "undo:", index
             do_undo()
 
             time.sleep(delay)
     
-        while undo.index < len(undo.undo_stack):
-            print "redo:", undo.index
+        while index < len(undo_stack):
+            print "redo:", index
             do_redo()
 
             time.sleep(delay)

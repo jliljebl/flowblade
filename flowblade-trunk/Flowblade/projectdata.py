@@ -37,6 +37,7 @@ import patternproducer
 import miscdataobjects
 import respaths
 import sequence
+import userfolders
 import utils
 
 
@@ -360,7 +361,7 @@ class MediaFile:
         if hasattr(self, "use_unique_proxy"): # This may have been added in proxyediting.py to prevent interfering with existing projects
             proxy_md_key = proxy_md_key + os.urandom(16)
         md_str = md5.new(proxy_md_key).hexdigest()
-        return str(editorpersistance.prefs.render_folder + "/proxies/" + md_str + "." + file_extesion) # str() because we get unicode here
+        return str(userfolders.get_render_dir() + "/proxies/" + md_str + "." + file_extesion) # str() because we get unicode here
 
     def _create_img_seg_proxy_path(self,  proxy_width, proxy_height):
         folder, file_name = os.path.split(self.path)
@@ -368,7 +369,7 @@ class MediaFile:
         if hasattr(self, "use_unique_proxy"): # This may have been added in proxyediting.py to prevent interfering with existing projects
             proxy_md_key = proxy_md_key + os.urandom(16)
         md_str = md5.new(proxy_md_key).hexdigest()
-        return str(editorpersistance.prefs.render_folder + "/proxies/" + md_str + "/" + file_name)
+        return str(userfolders.get_render_dir() + "/proxies/" + md_str + "/" + file_name)
 
     def add_proxy_file(self, proxy_path):
         self.has_proxy_file = True
@@ -460,7 +461,7 @@ class Thumbnailer:
         """
         # Get data
         md_str = md5.new(file_path).hexdigest()
-        thumbnail_path = editorpersistance.prefs.thumbnail_folder + "/" + md_str +  ".png"
+        thumbnail_path = userfolders.get_cache_dir() + appconsts.THUMBNAILS_DIR + "/" + md_str +  ".png"
 
         # Create consumer
         consumer = mlt.Consumer(self.profile, "avformat", 

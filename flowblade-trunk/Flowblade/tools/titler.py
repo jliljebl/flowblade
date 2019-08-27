@@ -60,7 +60,7 @@ TEXT_LAYER_LIST_WIDTH = 300
 TEXT_LAYER_LIST_HEIGHT = 150
 
 TEXT_VIEW_WIDTH = 300
-TEXT_VIEW_HEIGHT = 275
+TEXT_VIEW_HEIGHT = 200
 
 DEFAULT_FONT_SIZE = 25
 
@@ -68,6 +68,8 @@ FACE_REGULAR = "Regular"
 FACE_BOLD = "Bold"
 FACE_ITALIC = "Italic"
 FACE_BOLD_ITALIC = "Bold Italic"
+
+DEFAULT_FONT_SIZE = 40
 
 ALIGN_LEFT = 0
 ALIGN_CENTER = 1
@@ -120,7 +122,7 @@ class TextLayer:
         self.angle = 0.0 # future feature
         self.font_family = "Times New Roman"
         self.font_face = FACE_REGULAR
-        self.font_size = 15
+        self.font_size = DEFAULT_FONT_SIZE
         self.fill_on = True
         self.color_rgba = (1.0, 1.0, 1.0, 1.0) 
         self.alignment = ALIGN_LEFT
@@ -187,11 +189,11 @@ class Titler(Gtk.Window):
         self.set_title(_("Titler"))
         self.connect("delete-event", lambda w, e:close_titler())
         
-        if editorstate.screen_size_small_height() == True:
+        if editorstate.SCREEN_HEIGHT < 865:
             global TEXT_LAYER_LIST_HEIGHT, TEXT_VIEW_HEIGHT, VIEW_EDITOR_HEIGHT
-            TEXT_LAYER_LIST_HEIGHT = 150
-            TEXT_VIEW_HEIGHT = 180
-            VIEW_EDITOR_HEIGHT = 450
+            TEXT_LAYER_LIST_HEIGHT = 130
+            TEXT_VIEW_HEIGHT = 130
+            VIEW_EDITOR_HEIGHT = 350
 
         if editorstate.screen_size_small_height() == True:
             global VIEW_EDITOR_WIDTH
@@ -329,8 +331,6 @@ class Titler(Gtk.Window):
         buttons_box.pack_start(self.fill_on, False, False, 0)
         buttons_box.pack_start(Gtk.Label(), True, True, 0)
 
-        outline_label = Gtk.Label(_("<b>Outline</b>"))
-        outline_label.set_use_markup(True)
         outline_size = Gtk.Label(_("Size:"))
         
         self.out_line_color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(red=0.3, green=0.3, blue=0.3, alpha=1.0))
@@ -347,8 +347,6 @@ class Titler(Gtk.Window):
         self.outline_on.connect("toggled", self._edit_value_changed)
         
         outline_box = Gtk.HBox()
-        outline_box.pack_start(outline_label, False, False, 0)
-        outline_box.pack_start(guiutils.pad_label(15, 1), False, False, 0)
         outline_box.pack_start(outline_size, False, False, 0)
         outline_box.pack_start(guiutils.pad_label(2, 1), False, False, 0)
         outline_box.pack_start(self.out_line_size_spin, False, False, 0)
@@ -358,8 +356,6 @@ class Titler(Gtk.Window):
         outline_box.pack_start(self.outline_on, False, False, 0)
         outline_box.pack_start(Gtk.Label(), True, True, 0)
 
-        shadow_label = Gtk.Label(_("<b>Shadow</b>"))
-        shadow_label.set_use_markup(True)
         shadow_opacity_label = Gtk.Label(_("Opacity:"))
         shadow_xoff = Gtk.Label(_("X Off:"))
         shadow_yoff = Gtk.Label(_("Y Off:"))
@@ -390,8 +386,6 @@ class Titler(Gtk.Window):
         self.shadow_color_button.connect("color-set", self._edit_value_changed)
 
         shadow_box_1 = Gtk.HBox()
-        shadow_box_1.pack_start(shadow_label, False, False, 0)
-        shadow_box_1.pack_start(guiutils.pad_label(15, 1), False, False, 0)
         shadow_box_1.pack_start(shadow_opacity_label, False, False, 0)
         shadow_box_1.pack_start(self.shadow_opa_spin, False, False, 0)
         shadow_box_1.pack_start(guiutils.pad_label(15, 1), False, False, 0)
@@ -451,6 +445,7 @@ class Titler(Gtk.Window):
         next_frame.connect("clicked", lambda w:self._next_frame_pressed())
 
         self.scale_selector = vieweditor.ScaleSelector(self)
+        self.view_editor.scale_select = self.scale_selector
 
         timeline_box = Gtk.HBox()
         timeline_box.pack_start(self.tc_display.widget, False, False, 0)
@@ -471,8 +466,6 @@ class Titler(Gtk.Window):
         positions_box.pack_start(guiutils.pad_label(40, 5), False, False, 0)
         positions_box.pack_start(Gtk.Label(label="Y:"), False, False, 0)
         positions_box.pack_start(self.y_pos_spin, False, False, 0)
-        #positions_box.pack_start(Gtk.Label(label=_("Angle")), False, False, 0)
-        #positions_box.pack_start(self.rotation_spin, False, False, 0)
         positions_box.pack_start(guiutils.pad_label(40, 5), False, False, 0)
         positions_box.pack_start(center_h, False, False, 0)
         positions_box.pack_start(center_v, False, False, 0)
@@ -487,14 +480,21 @@ class Titler(Gtk.Window):
         controls_panel_2.pack_start(scroll_frame, True, True, 0)
         controls_panel_2.pack_start(font_main_row, False, False, 0)
         controls_panel_2.pack_start(buttons_box, False, False, 0)
-        controls_panel_2.pack_start(guiutils.pad_label(40, 1), False, False, 0)
-        controls_panel_2.pack_start(outline_box, False, False, 0)
-        controls_panel_2.pack_start(guiutils.pad_label(40, 1), False, False, 0)
-        controls_panel_2.pack_start(shadow_box_1, False, False, 0)
-        controls_panel_2.pack_start(shadow_box_2, False, False, 0)
+
+        controls_panel_3 = Gtk.VBox()
+        controls_panel_3.pack_start(outline_box, False, False, 0)
+
+        controls_panel_4 = Gtk.VBox()
+        controls_panel_4.pack_start(shadow_box_1, False, False, 0)
+        controls_panel_4.pack_start(shadow_box_2, False, False, 0)
         
         controls_panel = Gtk.VBox()
-        controls_panel.pack_start(guiutils.get_named_frame(_("Active Layer"),controls_panel_2), True, True, 0)
+        controls_panel.pack_start(guiutils.get_named_frame(_("Layer Text"),controls_panel_2), True, True, 0)
+        controls_panel.pack_start(guiutils.pad_label(1, 24), False, False, 0)
+        controls_panel.pack_start(guiutils.get_named_frame(_("Outline"),controls_panel_3), False, False, 0)
+        controls_panel.pack_start(guiutils.pad_label(1, 24), False, False, 0)
+        controls_panel.pack_start(guiutils.get_named_frame(_("Shadow"),controls_panel_4), False, False, 0)
+        controls_panel.pack_start(guiutils.pad_label(1, 24), False, False, 0)
         controls_panel.pack_start(guiutils.get_named_frame(_("Layers"),controls_panel_1), False, False, 0)
  
         view_editor_editor_buttons_row = Gtk.HBox()
@@ -531,7 +531,7 @@ class Titler(Gtk.Window):
         editor_panel.pack_start(self.view_editor, True, True, 0)
         editor_panel.pack_start(timeline_box, False, False, 0)
         editor_panel.pack_start(guiutils.get_in_centering_alignment(view_editor_editor_buttons_row), False, False, 0)
-        editor_panel.pack_start(guiutils.pad_label(2, 24), True, True, 0)
+        editor_panel.pack_start(guiutils.pad_label(2, 24), False, False, 0)
         editor_panel.pack_start(editor_buttons_row, False, False, 0)
 
         editor_row = Gtk.HBox()
@@ -708,7 +708,7 @@ class Titler(Gtk.Window):
         self.view_editor.edit_layers.append(view_editor_layer)
         
         self.layer_list.fill_data_model()
-        self._activate_layer(len(_titler_data.layers) - 1)
+        self._activate_layer(len(_titler_data.layers) - 1, True)
         
     def _del_layer_pressed(self):
         # we always need 1 layer
@@ -781,11 +781,15 @@ class Titler(Gtk.Window):
         self._update_gui_with_active_layer_data()
         _titler_data.active_layer.update_pango_layout()
 
-    def _activate_layer(self, layer_index):
+    def _activate_layer(self, layer_index, is_new_layer=False):
         global _titler_data
         _titler_data.active_layer = _titler_data.layers[layer_index]
         
-        self._update_gui_with_active_layer_data()
+        if not is_new_layer:
+            self._update_gui_with_active_layer_data() # Update GUI with layer data
+        else:
+            self._update_active_layout_font_properties() # Update layer font properties with current GUI values.
+
         _titler_data.active_layer.update_pango_layout()
         self.view_editor.activate_layer(layer_index)
         self.view_editor.active_layer.update_rect = True
@@ -822,7 +826,7 @@ class Titler(Gtk.Window):
     def _edit_value_changed(self, widget):
         self._update_active_layout()
 
-    def _update_active_layout(self, fill_layers_data_if_needed=True):
+    def _update_active_layout(self):
         if self.block_updates:
             return
 
@@ -835,7 +839,16 @@ class Titler(Gtk.Window):
             update_layers_list = False
 
         _titler_data.active_layer.text = text
-        
+
+        self._update_active_layout_font_properties()
+
+        # We only wnat to update layer list data model when this called after user typing 
+        if update_layers_list:
+            self.layer_list.fill_data_model()
+
+        self.view_editor.edit_area.queue_draw()
+
+    def _update_active_layout_font_properties(self):
         family = self.font_families[self.font_select.get_active()]
         _titler_data.active_layer.font_family = family.get_name()
 
@@ -871,7 +884,6 @@ class Titler(Gtk.Window):
         _titler_data.active_layer.outline_on = self.outline_on.get_active()
         _titler_data.active_layer.outline_width = self.out_line_size_spin.get_value()
 
-        
         # SHADOW
         color = self.shadow_color_button.get_color()
         r, g, b = utils.hex_to_rgb(color.to_string())
@@ -885,12 +897,6 @@ class Titler(Gtk.Window):
                 
         self.view_editor.active_layer.update_rect = True
         _titler_data.active_layer.update_pango_layout()
-
-        # We only wnat to update layer list data model when this called after user typing 
-        if update_layers_list:
-            self.layer_list.fill_data_model()
-
-        self.view_editor.edit_area.queue_draw()
 
     def _update_gui_with_active_layer_data(self):
         if _filling_layer_list:

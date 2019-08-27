@@ -30,6 +30,8 @@ import subprocess
 import sys
 import threading
 
+import gi
+gi.require_version('Gdk', '3.0') 
 from gi.repository import Gdk
 
 import appconsts
@@ -39,10 +41,12 @@ import mltenv
 import mltprofiles
 import mlttransitions
 import mltfilters
+import processutils
 import renderconsumer
 import respaths
 import translations
 import updater
+import userfolders
 import utils
 
 LEFT_CHANNEL = "_audio_level.0"
@@ -121,7 +125,7 @@ def launch_audio_levels_rendering(file_names):
     single_render_launch_thread.start()
 
 def _get_levels_file_path(media_file_path, profile):
-    return utils.get_hidden_user_dir_path() + appconsts.AUDIO_LEVELS_DIR + utils.get_unique_name_for_audio_levels_file(media_file_path, profile)
+    return userfolders.get_cache_dir() + appconsts.AUDIO_LEVELS_DIR + utils.get_unique_name_for_audio_levels_file(media_file_path, profile)
  
 
 class AudioRenderLaunchThread(threading.Thread):
@@ -132,36 +136,16 @@ class AudioRenderLaunchThread(threading.Thread):
 
     def run(self):
         # Launch render process and wait for it to end
-        FLOG = open(utils.get_hidden_user_dir_path() + "log_audio_levels_render", 'w')
-        process = subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladeaudiorender", \
+        FLOG = open(userfolders.get_data_dir() + "log_audio_levels_render", 'w')
+        # Sep-2018 - SvdB - Added self. to be able to access the thread through 'process'
+        self.process = subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladeaudiorender", \
                   self.rendered_media, self.profile_desc, respaths.ROOT_PATH], \
                   stdin=FLOG, stdout=FLOG, stderr=FLOG)
-        process.wait()
+        self.process.wait()
         
         Gdk.threads_enter()
         updater.repaint_tline()
         Gdk.threads_leave()
-
-def set_waveform_displayer_clip_from_popup(data):
-    clip, track, item_id, item_data = data
-
-    global frames_cache
-    if clip.path in frames_cache:
-        frame_levels = frames_cache[clip.path]
-        clip.waveform_data = frame_levels
-        return
-
-    cache_file_path = utils.get_hidden_user_dir_path() + appconsts.AUDIO_LEVELS_DIR + _get_unique_name_for_media(clip.path)
-    if os.path.isfile(cache_file_path):
-        f = open(cache_file_path)
-        frame_levels = pickle.load(f)
-        frames_cache[clip.path] = frame_levels
-        clip.waveform_data = frame_levels
-        return
-    
-    global waveform_thread
-    waveform_thread = WaveformCreator(clip, track.height, dialog)
-    waveform_thread.start()
 
 
 # --------------------------------------------------------- rendering
@@ -174,7 +158,10 @@ def main():
         editorstate.mlt_version = mlt.LIBMLT_VERSION
     except:
         editorstate.mlt_version = "0.0.99" # magic string for "not found"
-        
+    
+    # Set folders paths
+    userfolders.init()
+    
     # Load editor prefs and list of recent projects
     editorpersistance.load()
     
@@ -184,7 +171,8 @@ def main():
     mlttransitions.init_module()
 
     repo = mlt.Factory().init()
-
+    processutils.prepare_mlt_repo(repo)
+    
     # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
     locale.setlocale(locale.LC_NUMERIC, 'C')
 

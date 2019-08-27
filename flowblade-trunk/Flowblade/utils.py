@@ -25,7 +25,7 @@ import time
 
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
+from gi.repository import Gtk, GLib
 
 import math
 import md5
@@ -98,6 +98,14 @@ class LaunchThread(threading.Thread):
 def fps():
     return editorstate.PROJECT().profile.fps()
 
+def get_fps_str_with_two_decimals(fps_str):
+    fps_sides = fps_str.split(".")
+    try:
+        decimals = fps_sides[1][0:2]
+    except:
+        decimals = fps_sides[1]
+    return fps_sides[0] + "." + decimals
+    
 def clip_length_string(length):
     """ 
     Returns length string for length in frames.
@@ -147,7 +155,7 @@ def get_tc_frame_with_fps(frame_str, frames_per_sec):
     # calculate corresponding frame
     try:
         times = frame_str.split(":", 4)
-    except expression as identifier:
+    except Exception:
         return 0
 
     # now we calculate the sum of frames that would sum up at corresponding
@@ -180,6 +188,17 @@ def get_tc_string_with_fps(frame, frames_per_sec):
     mins = mins % 60
     return "%02d:%02d:%02d:%02d" % (hours, mins, sec, fr)
 
+def get_tc_string_with_fps_for_filename(frame, frames_per_sec):
+    frames_per_sec = int(round(frames_per_sec))
+
+    fr = frame % frames_per_sec
+    sec = frame / frames_per_sec
+    mins = sec / 60
+    sec = sec % 60
+    hours = mins / 60
+    mins = mins % 60
+    return "%02d-%02d-%02d-%02d" % (hours, mins, sec, fr)
+    
 def get_time_str_for_sec_float(sec):
     mins = sec / 60
     sec = sec % 60
@@ -417,25 +436,6 @@ def get_unique_name_for_audio_levels_file(media_file_path, profile):
     fps_str = str(profile.description())
     file_name = md5.new(media_file_path + size_str + fps_str).hexdigest()
     return file_name
-    
-def get_hidden_user_dir_path():
-    """ 
-    this is nit for now, reactiva if flatpack snadboxing is tried.
-    
-    if editorstate.use_xdg:
-        return os.path.join( 
-                            os.getenv("XDG_CONFIG_HOME", os.path.join(os.getenv("HOME"),".config")),
-                            "flowblade/")
-    else:
-    """
-    
-    return os.getenv("HOME") + "/.flowblade/"
-
-def get_phantom_disk_cache_folder():
-    return get_hidden_user_dir_path() +  appconsts.PHANTOM_DIR + "/" + appconsts.PHANTOM_DISK_CACHE_DIR
-
-def get_hidden_screenshot_dir_path():
-    return get_hidden_user_dir_path() + "screenshot/"
 
 def get_img_seq_glob_lookup_name(asset_file_name):
     parts1 = asset_file_name.split("%")

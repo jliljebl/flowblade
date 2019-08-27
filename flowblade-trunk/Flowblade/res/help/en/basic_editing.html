@@ -67,11 +67,24 @@ For complex projects it is sometimes best to use multiple sequences for creating
 </p>
 
 <p>
-Use <b>Add</b> and <b>Delete</b> buttons in the <b>Project</b> tab <b>Sequences</b> panel. All Sequences use the same Profile.
+<b>Adding Sequences:</b>
 </p>
+<ul>
+<li> <b>3 panel layout:</b> Press <b>Right Mouse</b> popup menu on Sequences area and select menu item <b>Add New Sequence</b>..</li>
+<li> <b>2 panel layout:</b> Press <b>Right Mouse</b> popup menu in the <b>Project</b> tab <b>Sequences</b> area and select menu item <b>Add New Sequence</b>.</li>
+<li> Or select  <b>Project -> Sequence -> Add New Sequence</b> from application menu.</li>
+</ul>
+
+
+<p>
+<b>Deleting Sequences</b> can be done with menu actions accessed in the same places.
+</p>
+
+<div class="note">
 <p>
 When creating a new Sequence, you can choose the number of Tracks in the Sequence. This can be changed later, but the operation destroys the Undo / Redo stack and all the Timeline Clips that do not fit in the newly created version of the Sequence.
 </p>
+</div>
 
 <h3>Working with Media Files</h3>
 
@@ -80,11 +93,12 @@ Flowblade Movie Editor holds files in <b>Media</b> tab. Files are listed in unna
 </p>
 
 <p>
-Opening Media Files:
+<b>Opening Media Files:</b>
 </p>
 
 <ol>
-<li> Press <b>Add</b> button above the unnamed Bin contents table in the <b>Media</b> tab.</li>
+<li> Press <b>Right Mouse</b> on <b>Media</b> tab empty area and select menu item <b>Add Video, Audio or Image...</b>.
+<li> Or select  <b>Project -> Add Video, Audio or Image...</b> from application menu.
 <li> Use dialog to find and select files.</li>
 <li> Files are displayed as thumbnails.</li>
 <li> Note that creating thumbnails for opened files will take some time.</li>
@@ -108,19 +122,27 @@ Opening Media Files:
 <h3>Working with Bins</h3>
 
 <p>
-In video editing a bin is a location for storing media. The term is used in Avid and was earlier used by film editors.
+In video editing a bin is a named location for storing media. The term is used in Avid and was earlier used by film editors.
 </p>
 
 <p>
-For small projects using bins is usually not needed and you can hide the Bin panel by dragging a handle between the panels.
-</p>
+    <b>Adding a Bin:</b>
+<p>
+<ul>
+<li> <b>3 panel layout:</b> Press <b>Right Mouse</b> on Bin area to launch a popup menu and select menu item <b>Add Bin</b>.</li>
+<li> <b>2 panel layout:</b> Press <b>Right Mouse</b> in the <b>Media</b> tab <b>Bins</b> panel to launch a popup menu and select menu item <b>Add Bin</b>.</li>
+<li> Or select  <b>Project -> Bin -> Add Bin</b> from application menu.</li>
+</ul>
 
+<p><b>Deleting a Bin</b>: Delete actions can be accessed from the same places as above.</p>
+<p><b>Renaming a Bin</b>: Click on the Bin name, type new name and press <b>Enter</b>.</p>
+<p><b>Moving files to another Bin:</b></p>
+<ul>
+<li> Select and drag files on top of the Bin you wish to move the files into.</li>
+<li> Select files and open <b>Hamburger menu</b> in <b>Media</b> panel and select menu item <b>Move Selected media to Bin</b> and then the menu item with the Bins name.</li>
+</ul>
 <div class="tabbed">
-<p><b>Adding a Bin</b>: Press <b>Add</b> button above Bins table.</p>
-<p><b>Deleting a Bin</b>: Press <b>Delete</b> button above Bins table.
-Bin must be empty before removing. A project must always have at least one Bin.</p>
-<p><b>Renaming a Bin</b>: Double click on the Bin name.</p>
-<p><b>Moving files to another Bin:</b> Drag files on top of bin icon.</p>
+
 </div>
 
 <h3>Using Timeline</h3>
@@ -194,10 +216,14 @@ Bin must be empty before removing. A project must always have at least one Bin.<
 <h3>Adding clips to Sequence </h3>
 
 <h4>Drag'n'Drop</h4>
-<ul>
-<li> Press on a Media File in <b>Media</b> tab and drag it on top of the track you want to place it on. </li>
+<p> Press on a Media File in <b>Media</b> tab and drag it on top of the track you want to place it on.</p>
 
-<li> <i>'Overwrite blank' </i> is selected as preference for drag'n'drop action:</li>
+<ul>
+<li> If <i>'Always Overwrite Blanks' </i> is selected as preference for drag'n'drop action:</li>
+<ul>
+<li> Clip will overwrite available blank and empty space and will perform insert for the length of frames that would be overwritten.  </li>
+</ul>
+<li>  If <i>'Overwrite blanks on non-V1 tracks' </i> is selected as preference for drag'n'drop action:</li>
 <ul>
 <li> On track V1 clip will be inserted on the track at the nearest cut. </li>
 <li> On non-V1 tracks:. </li>
@@ -206,7 +232,7 @@ Bin must be empty before removing. A project must always have at least one Bin.<
 <li> Clip will overwrite available blank and empty space and will perform insert for the length of frames that would be overwritten.  </li>
 </ul>
 </ul>
-<li>  <i>'Always Insert' </i> is selected as preference for drag'n'drop action:</li>
+<li>  If <i>'Always Insert' </i> is selected as preference for drag'n'drop action:</li>
 <ul>
 <li> Clip will be inserted on the track at the nearest cut. </li>
 </ul>
@@ -238,12 +264,12 @@ Once you have placed clips on the Timeline to form a Sequence, you will probably
 </p>
 <h4>Trimming Clips</h4>
 <p>
-Use <a href="edit_tools.html#trim">Trim Tool</a>,  <a href="edit_tools.html#roll">Roll Tool</a> or <a href="edit_tools.html#slip">Slip Tool</a>
+Use <a href="edit_tools.html#trim">Trim Tool</a>,  <a href="edit_tools.html#roll">Roll Tool</a>, <a href="edit_tools.html#slip">Slip Tool</a> or <a href="edit_tools.html#multitrim">Multitrim Tool</a>.
 </p>
 
 <h4>Moving Clips</h4>
 <p>
-Use  <a href="edit_tools.html#insert">Insert Tool</a>,  <a href="edit_tools.html#overwrite">Overwrite Tool</a> or  <a href="edit_tools.html#spacer">Spacer Tool</a>
+Use  <a href="edit_tools.html#insert">Insert Tool</a>,  <a href="edit_tools.html#overwrite">Move Tool</a>, <a href="edit_tools.html#spacer">Spacer Tool</a> or <a href="edit_tools.html#box">Box Tool</a>.
 </p>
 
 <h4>Cutting Clips</h4>
@@ -260,10 +286,14 @@ Use  <a href="edit_tools.html#insert">Insert Tool</a>,  <a href="edit_tools.html
 
 
 <h4>Deleting Clips</h4>
-<p><b>Splice Out</b>: Select clip(s) and press <b>Delete</b> key or use the <b>Splice Out</b> button on middle bar. All the clips in the track after the deleted clip(s) are moved to left to cover the created empty space. Some editors call this operation <i>Ripple Delete</i>.</p>
+<p><b>Splice Out</b>: Select clip(s) and press <b>Delete</b> key or use the <b>Splice Out</b> button on middle bar. All the clips in the track after the deleted clip(s) are moved to left to cover the created empty space.</p>
 <p><b>Lift</b>: Select clip(s) and press the <b>Lift</b> button on the middle bar. Clip is replaced with a blank if it is in middle of track. Other clips on the track are not moved.
-<p><b>Fade/Transition cover delete</b>: Select a single rendered fade or transition clip and press <b>Delete</b> key or button. If clips before and after of the deleted clip have frames available, then the space left by the deleted clip will covered using material from adjacent clips. If material is not available a splice out will be performed. A preference exists to always perform splice out on fades and transitions.
+<p><b>Ripple Delete</b>: Select clip(s) and press the <b>Ripple Delete</b> button on middle bar. All the clips on <b>all tracks</b> are moved forward to cover the created empty space. If moving clips backwards would cause an overwrite to happen on timeline, edit is not allowed.</p>
+<p><b>Range Delete</b>: Set <b>Mark In</b> and <b>Mark out</b> on timeline and and press the <b>Range Delete</b> button on middle bar. All the clips and blanks on <b>all tracks</b> are deleted between marks and everything after deleted range is moved forward the length of the deleted range.</p>
 
+<div class="note">
+<p><b>Fade/Transition cover delete</b>: Select a single rendered fade or transition clip and press <b>Delete</b> key or button. If clips before and after of the deleted clip have frames available, then the space left by the deleted clip will covered using material from adjacent clips. If material is not available a splice out will be performed. A preference exists to always perform splice out on fades and transitions.
+</div>
 <div class="note">
 <b>Use Keyboard Shortcuts!</b> It is much faster to use <b>X</b> key to cut clips and <b>Delete</b> key to splice out clips than it is to use buttons for the same operations.
 </div>

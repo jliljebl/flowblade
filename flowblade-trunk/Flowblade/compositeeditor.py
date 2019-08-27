@@ -120,16 +120,19 @@ def maybe_clear_editor(killed_compositor):
     if killed_compositor.destroy_id == compositor.destroy_id:
         clear_compositor()
 
+def get_compositor():
+    return compositor
+"""
 def _add_fade_in_pressed():
-    compositorfades.add_fade_in(compositor, int(widgets.fade_in_spin.get_value()))
+    compositorfades.add_fade_in(compositor, 10) # remove fade length hardcoding in 2.4
     # We need GUI reload to show results
     set_compositor(compositor)
 
 def _add_fade_out_pressed():
-    compositorfades.add_fade_out(compositor, int(widgets.fade_out_spin.get_value()))
+    compositorfades.add_fade_out(compositor, 10) # remove fade legth hardcoding in 2.4
     # We need GUI reload to show results
     set_compositor(compositor)
-
+"""
 def _delete_compositor_pressed():
     data = {"compositor":compositor}
     action = edit.delete_compositor_action(data)
@@ -204,32 +207,6 @@ def _display_compositor_edit_box():
     vbox.pack_start(target_row, False, False, 0)
     vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
 
-    # Fade buttons
-    compositor_info = guicomponents.CompositorInfoPanel()
-    fade_in_b = Gtk.Button(_("Add Fade In"))
-    fade_in_b.connect("clicked", lambda w,e: _add_fade_in_pressed(), None)
-
-    fade_out_b = Gtk.Button(_("Add Fade Out"))
-    fade_out_b.connect("clicked", lambda w,e: _add_fade_out_pressed(), None)
-
-    widgets.fade_in_spin = Gtk.SpinButton.new_with_range(0, 150, 1)
-    widgets.fade_in_spin.set_value(10)
-    
-    widgets.fade_out_spin = Gtk.SpinButton.new_with_range(0, 150, 1)
-    widgets.fade_out_spin.set_value(10)
-    
-    fades_row = Gtk.HBox()
-    fades_row.pack_start(guiutils.get_pad_label(5, 3), False, False, 0)
-    fades_row.pack_start(fade_in_b, False, False, 0)
-    fades_row.pack_start(widgets.fade_in_spin, False, False, 0)
-    fades_row.pack_start(fade_out_b, False, False, 0)
-    fades_row.pack_start(widgets.fade_out_spin, False, False, 0)
-    fades_row.pack_start(Gtk.Label(), True, True, 0)
-    
-    if _compositor_uses_fade_buttons(compositor) == True:
-        vbox.pack_start(fades_row, False, False, 0)
-        vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
-    
     # Transition editors
     t_editable_properties = propertyedit.get_transition_editable_properties(compositor)
     for ep in t_editable_properties:

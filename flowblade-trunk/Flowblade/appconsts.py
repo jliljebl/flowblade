@@ -144,9 +144,10 @@ CONVERTING_TO_USE_ORIGINAL_MEDIA = 3
 
 # Autosave directory relative path
 AUTOSAVE_DIR = "autosave/"
-AUDIO_LEVELS_DIR = "audiolevels/"
 
 # Hidden media folders
+# NOTE: We have not been fully consistant with the ending forward slashes.
+AUDIO_LEVELS_DIR = "audiolevels/"
 THUMBNAILS_DIR = "thumbnails"
 RENDERED_CLIPS_DIR = "rendered_clips"
 GMIC_DIR = "gmic"
@@ -156,7 +157,9 @@ MATCH_FRAME_DIR = "match_frame"
 MATCH_FRAME = MATCH_FRAME_DIR + "/match_frame.png"
 MATCH_FRAME_NEW = MATCH_FRAME_DIR + "/match_frame_new.png"
 TRIM_VIEW_DIR = "trim_view"
-NATRON_DIR = "natron"
+USER_PROFILES_DIR = "user_profiles/"
+USER_PROFILES_DIR_NO_SLASH = "user_profiles"
+BATCH_DIR = "batchrender/"
 
 # Luma bands
 SHADOWS = 0
@@ -210,6 +213,7 @@ P_PROP_LAST_RENDER_SELECTIONS = "P_PROP_LAST_RENDER_SELECTIONS"
 P_PROP_TRANSITION_ENCODING = "P_PROP_TRANSITION_ENCODING"
 P_PROP_AUTO_FOLLOW = "P_PROP_AUTO_FOLLOW"
 
+
 # A context defining action taken when mouse press happens based on edit mode ands mouse position
 POINTER_CONTEXT_NONE = 0
 POINTER_CONTEXT_END_DRAG_LEFT = 1
@@ -220,6 +224,8 @@ POINTER_CONTEXT_COMPOSITOR_END_DRAG_RIGHT = 5
 POINTER_CONTEXT_TRIM_LEFT = 6
 POINTER_CONTEXT_TRIM_RIGHT = 7
 POINTER_CONTEXT_BOX_SIDEWAYS = 8
+POINTER_CONTEXT_MULTI_ROLL = 9
+POINTER_CONTEXT_MULTI_SLIP = 10
 
 # Timeline tool ids. NOTE: a tool can map to 1 or more editmodes and even module specified submodes, depending on complexity of edit actions.
 TLINE_TOOL_INSERT = 1
@@ -232,6 +238,7 @@ TLINE_TOOL_BOX = 7
 TLINE_TOOL_RIPPLE_TRIM = 8
 TLINE_TOOL_CUT = 9
 TLINE_TOOL_KFTOOL = 10
+TLINE_TOOL_MULTI_TRIM = 11
 
 # Monitor switch events
 MONITOR_TLINE_BUTTON_PRESSED = 1

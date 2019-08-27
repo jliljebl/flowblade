@@ -32,7 +32,7 @@
     <compositortransition mlt_service="composite">
         <name>##opacity_kf</name>
         <property name="force_track" args="editor=no_editor">0</property>
-        <property name="geometry" args="editor=keyframe_editor_clip range_in=0,100 range_out=0,100 exptype=opacity_in_geom_kf displayname=Opacity">0=0/0:SCREENSIZE:100</property>
+        <property name="geometry" args="editor=keyframe_editor_clip_fade range_in=0,100 range_out=0,100 exptype=opacity_in_geom_kf displayname=Opacity">0=0/0:SCREENSIZE:100</property>
         <property name="aligned" args="editor=no_editor">0</property>
         <property name="distort" args="editor=no_editor">0</property>
         <property name="fill" args="editor=no_editor">1</property>        
@@ -80,11 +80,13 @@
     <compositortransition mlt_service="frei0r.cairoblend">
         <name>##blend</name>
         <property name="1" args="editor=combobox exptype=default_transition displayname=Blend!Mode cbopts=Normal:normal,Add:add,Saturate:saturate,Multiply:multiply,Screen:screen,Overlay:overlay,Darken:darken,Lighten:lighten,ColorDodge:colordodge,Colorburn:colorburn,Hardlight:hardlight,Softlight:softlight,Difference:difference,Exclusion:exclusion,HSLHue:hslhue,HSLSaturation:hslsaturation,HSLColor:hslcolor,HSLLuminosity:hslluminosity">normal</property>
-        <property name="0" args="editor=keyframe_editor_clip range_in=0,100 range_out=0,1 exptype=keyframe_hcs_transition displayname=Opacity">0=1.0</property>
+        <property name="0" args="editor=keyframe_editor_clip_fade range_in=0,100 range_out=0,1 exptype=keyframe_hcs_transition displayname=Opacity">0=1.0</property>
         <property name="automatic" args="editor=no_editor">1</property>
         <property name="force_track" args="editor=no_editor">0</property>
     </compositortransition>
-
+    <compositortransition mlt_service="matte">
+        <name>##matte</name>
+    </compositortransition>
 
 
     <!-- AUTOFADES -->
@@ -175,14 +177,13 @@
         <name>##value</name>
     </compositortransition>
 
+    <!-- ALPHA OPS -->
     <compositortransition mlt_service="frei0r.alphaxor">
         <name>##alphaxor</name>
     </compositortransition>
-
     <compositortransition mlt_service="frei0r.alphain">
         <name>##alphain</name>
     </compositortransition>
-
     <compositortransition mlt_service="frei0r.alphaout">
         <name>##alphaout</name>
     </compositortransition>

@@ -22,7 +22,6 @@
 Module contains an object that is used to do playback from mlt.Producers to
 a Xwindow of a GTK+ widget and os audiosystem using a SDL consumer.
 """
-
 from gi.repository import Gdk
 
 import mlt
@@ -31,6 +30,7 @@ import time
 
 import gui
 from editorstate import timeline_visible
+import editorpersistance
 import utils
 import updater
 
@@ -84,6 +84,7 @@ class Player:
         self.consumer.set("resize", 1)
         self.consumer.set("progressive", 1)
 
+
         # Hold ref to switch back from rendering
         self.sdl_consumer = self.consumer 
 
@@ -111,6 +112,12 @@ class Player:
         self.connect_and_start()
     """
     
+    def set_scrubbing(self, scrubbing_active):
+        if scrubbing_active == True:
+            self.consumer.set("scrub_audio", 1)
+        else:
+            self.consumer.set("scrub_audio", 0)
+            
     def set_sdl_xwindow(self, widget):
         """
         Connects SDL output to display widget's xwindow
@@ -192,7 +199,6 @@ class Player:
         self.ticker.stop_ticker()
         self.producer.set_speed(0)
         updater.update_frame_displayers(self.producer.frame())
-        updater.maybe_autocenter()
 
     def start_loop_playback(self, cut_frame, loop_half_length, track_length):
         self.loop_start = cut_frame - loop_half_length
@@ -288,12 +294,21 @@ class Player:
         return (self.producer.get_speed() != 0)
 
     def _ticker_event(self):
-            
+        
+        current_frame = self.producer.frame()
+        
+        loop_clips = editorpersistance.prefs.loop_clips
+        if loop_clips and current_frame >= self.get_active_length() and timeline_visible() == False: # Looping for clips
+            self.seek_frame(0, False) #NOTE: False==GUI not updated
+            self.producer.set_speed(1)
+            Gdk.threads_enter()
+            updater.update_frame_displayers(current_frame)
+            Gdk.threads_leave()
+            return
+
         # Stop ticker if playback has stopped.
         if (self.consumer.is_stopped() or self.producer.get_speed() == 0):
             self.ticker.stop_ticker()
-
-        current_frame = self.producer.frame()
         
         # Stop rendering if last frame reached.
         if self.is_rendering == True and current_frame >= self.render_stop_frame:
@@ -328,13 +343,17 @@ class Player:
             or (current_frame >= self.get_active_length()))):
             self.seek_frame(self.loop_start, False) #NOTE: False==GUI not updated
             self.producer.set_speed(1)
-        
+
+        # Frame displayers update
         Gdk.threads_enter()
-        # If prefs set and frame out tline view, move tline view
-        range_moved = updater.maybe_move_playback_tline_range(current_frame) # range_moved given just to avoid two updates
-        if range_moved == False:
-            # Just display tline
+        if timeline_visible() == False:
             updater.update_frame_displayers(current_frame)
+        else:
+            # If prefs set and frame out tline view, move tline view
+            range_moved = updater.maybe_move_playback_tline_range(current_frame) # range_moved flag returned just to avoid two updates
+            if range_moved == False:
+                # Just display tline
+                updater.update_frame_displayers(current_frame)
         Gdk.threads_leave()
         
     def get_active_length(self):
@@ -421,41 +440,6 @@ class Player:
         self.render_callbacks.exit_render_gui()
         self.render_callbacks.maybe_open_rendered_file_in_bin()
         Gdk.threads_leave()
-
-    """
-    def jack_output_on(self):
-        # We're assuming that we are not rendering and consumer is SDL consumer
-        self.producer.set_speed(0)
-        self.ticker.stop_ticker()
-
-        self.consumer.stop()
-
-        self.create_sdl_consumer()
-
-        self.jack_output_filter = mlt.Filter(self.profile, "jackrack")
-        if editorpersistance.prefs.jack_output_type == appconsts.JACK_OUT_AUDIO:
-            self.jack_output_filter.set("out_1", "system:playback_1")
-            self.jack_output_filter.set("out_2", "system:playback_2")
-        self.consumer.attach(self.jack_output_filter)
-        self.consumer.set("audio_off", "1")
-        self.consumer.set("frequency", str(editorpersistance.prefs.jack_frequency))
-
-        self.consumer.connect(self.producer)
-        self.consumer.start()
-
-    def jack_output_off(self):
-        # We're assuming that we are not rendering and consumer is SDL consumer
-        self.producer.set_speed(0)
-        self.ticker.stop_ticker()
-
-        self.consumer.detach(self.jack_output_filter)
-        self.consumer.set("audio_off", "0")
-
-        self.consumer.stop()
-        self.consumer.start()
-        
-        self.jack_output_filter = None
-    """
 
     def shutdown(self):
         self.ticker.stop_ticker()

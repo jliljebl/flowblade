@@ -36,13 +36,17 @@ from editorstate import current_sequence
 from editorstate import PLAYER
 from editorstate import timeline_visible
 import keyframeeditor
+import kftoolmode
 import medialog
 import menuactions
 import modesetting
 import monitorevent
+import movemodes
+import multitrimmode
 # Apr-2017 - SvdB
 import shortcuts
 import re
+import rotomask
 import tlineaction
 import tlinewidgets
 import trimmodes
@@ -93,30 +97,17 @@ def key_down(widget, event):
 
     # Insert shortcut keys need more focus then timeline shortcuts.
     # these may already have been handled in timeline focus events
-    was_handled = _handle_extended_tline_focus_events(event)
+    was_handled = _handle_extended_monitor_focus_events(event)
     if was_handled:
         # Stop event handling here
         return True
 
+    was_handled = _handle_configurable_global_events(event)
+    if was_handled:
+        return True
+        
     # Pressing timeline button obivously leaves user expecting
     # to have focus in timeline
-    """
-    TODO: this needs something
-    if gui.sequence_editor_b.has_focus():
-        _handle_tline_key_event(event)
-        # Stop event handling here
-        return True
-    """
-    
-    # Clip button or posbar focus with clip displayed leaves playback keyshortcuts available
-    """
-    if (gui.clip_editor_b.has_focus()
-        TODO: this needs something
-        or (gui.pos_bar.widget.is_focus() and (not timeline_visible()))):
-        _handle_clip_key_event(event)
-        # Stop event handling here
-        return True
-    """
     if gui.monitor_switch.widget.has_focus() and timeline_visible():
         _handle_tline_key_event(event)
         return True
@@ -160,10 +151,10 @@ def key_down(widget, event):
         menuactions.toggle_fullscreen()
         return True
 
-    #debug
+    #debug.test help 
     if event.keyval == Gdk.KEY_F12:
         if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-            tlineaction.ripple_delete_button_pressed()
+            rotomask.show_rotomask()
         return True
 
     # Key event was not handled here.
@@ -225,19 +216,19 @@ def _handle_tline_key_event(event):
     if action == 'cut':
         tlineaction.cut_pressed()
         return True
+    if action == 'cut_all':
+        tlineaction.cut_all_pressed()
+        return True
     if action == 'sequence_split':
         tlineaction.sequence_split_pressed()
         return True
     if action == 'log_range':
         medialog.log_range_clicked()
         return True
-    """
-    THis may need rethinking
     if action == 'toggle_ripple':
         gui.editor_window.toggle_trim_ripple_mode()
         return True
-    """
-    
+
     # Key bindings for keyboard trimming
     if editorstate.current_is_active_trim_mode() == True:
         if action == 'prev_frame':
@@ -249,6 +240,23 @@ def _handle_tline_key_event(event):
         elif action == 'enter_edit':
             trimmodes.enter_pressed()
             return True
+
+    if editorstate.EDIT_MODE() == editorstate.OVERWRITE_MOVE:
+        if action == 'nudge_back':
+            movemodes.nudge_selection(-1)
+            return True
+        elif action == 'nudge_forward':
+            movemodes.nudge_selection(1)
+            return True
+        elif action == 'nudge_back_10':
+            movemodes.nudge_selection(-10)
+            return True
+        elif action == 'nudge_forward_10':
+            movemodes.nudge_selection(10)
+            return True
+    
+    if editorstate.EDIT_MODE() == editorstate.MULTI_TRIM:
+        multitrimmode.enter_pressed()
 
     # Key bindings for MOVE MODES and _NO_EDIT modes
     if editorstate.current_is_move_mode() or editorstate.current_is_active_trim_mode() == False:
@@ -296,12 +304,18 @@ def _handle_tline_key_event(event):
         if action == '3_point_overwrite':
             tlineaction.three_point_overwrite_pressed()
             return True
+        if action == 'overwrite_range':
+            tlineaction.range_overwrite_pressed()
+            return True
         if action == 'insert':
             if not (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                 tlineaction.insert_button_pressed()
                 return True
         if action == 'append':
             tlineaction.append_button_pressed()
+            return True
+        if action == 'append_from_bin':
+            projectaction.append_selected_media_clips_into_timeline()
             return True
         if action == 'slower':
             monitorevent.j_pressed()
@@ -319,10 +333,16 @@ def _handle_tline_key_event(event):
             tlineaction.resync_button_pressed()
             return True
         if action == 'delete':
-            # Clip selection and compositor selection are mutually exclusive, 
-            # so max one one these will actually delete something
-            tlineaction.splice_out_button_pressed()
-            compositormodes.delete_current_selection()
+            if editorstate.EDIT_MODE() == editorstate.KF_TOOL:
+                kftoolmode.delete_active_keyframe()
+            else:
+                # Clip selection and compositor selection are mutually exclusive, 
+                # so max one one these will actually delete something
+                tlineaction.splice_out_button_pressed()
+                compositormodes.delete_current_selection()
+        if action == 'lift':
+            tlineaction.lift_button_pressed()
+            return True
         if action == 'to_start':
             if PLAYER().is_playing():
                 monitorevent.stop_pressed()
@@ -353,21 +373,22 @@ def _handle_tline_key_event(event):
 
     return False
 
-def _handle_extended_tline_focus_events(event):
-    # This function was added to fix to a bug long time ago but the rationale for "extended_tline_focus_events" has been forgotten, but probably still exists
+def _handle_extended_monitor_focus_events(event):
+    # This function was added to get a subset of events only to work when monitor has focus
     # Apr-2017 - SvdB - For keyboard shortcuts
     action = _get_shortcut_action(event)
 
     # We're dropping monitor window in 2 window mode as part of timeline focus
     #    TODO:        gui.sequence_editor_b.has_focus() or
     #        gui.clip_editor_b.has_focus()):
-    if not(_timeline_has_focus() or gui.monitor_switch.widget.has_focus() or
-            gui.pos_bar.widget.has_focus()):
+    if not(gui.monitor_switch.widget.has_focus() or gui.pos_bar.widget.has_focus()):
         return False
 
     if action == '3_point_overwrite':
         tlineaction.three_point_overwrite_pressed()
         return True
+    if action == 'overwrite_range':
+        tlineaction.range_overwrite_pressed()
     if action == 'insert':
         tlineaction.insert_button_pressed()
         return True
@@ -389,7 +410,10 @@ def _handle_extended_tline_focus_events(event):
     if action == 'switch_monitor':
         updater.switch_monitor_display()
         return True
-    
+    if action == 'append_from_bin':
+        projectaction.append_selected_media_clips_into_timeline()
+        return True
+
     tool_was_selected = workflow.tline_tool_keyboard_selected(event)
     if tool_was_selected == True:
         return True
@@ -400,6 +424,7 @@ def _handle_extended_tline_focus_events(event):
 def _get_shortcut_action(event):
     # Get the name of the key pressed
     key_name = Gdk.keyval_name(event.keyval).lower()
+
     # Check if this key is in the dictionary.
     state = event.get_state()
     # Now we have a key and a key state we need to check if it is a shortcut.
@@ -439,6 +464,14 @@ def _get_shortcut_action(event):
     # We didn't find an action, so return nothing 
     return 'None'
 
+def _handle_configurable_global_events(event):
+    action = _get_shortcut_action(event)
+    if action == 'open_next':
+        projectaction.open_next_media_item_in_monitor()
+        return True
+
+    return False
+    
 def _handle_clip_key_event(event):
     # Key bindings for MOVE MODES
     if editorstate.current_is_move_mode():
@@ -560,7 +593,7 @@ def _handle_geometry_editor_keys(event):
                         or (event.keyval == Gdk.KEY_Right)
                         or (event.keyval == Gdk.KEY_Up)
                         or (event.keyval == Gdk.KEY_Down)):
-                        kfeditor.arrow_edit(event.keyval, (event.get_state() & Gdk.ModifierType.CONTROL_MASK))
+                        kfeditor.arrow_edit(event.keyval, (event.get_state() & Gdk.ModifierType.CONTROL_MASK), (event.get_state() & Gdk.ModifierType.SHIFT_MASK))
                         return True
                     if event.keyval == Gdk.KEY_plus:
                         pass # not impl

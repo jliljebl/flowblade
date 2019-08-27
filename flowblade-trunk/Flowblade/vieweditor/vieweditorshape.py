@@ -26,6 +26,8 @@ MOVE_HANDLE = 0
 ROTATE_HANDLE = 1
 CONTROL_POINT = 2
 INVISIBLE_POINT = 3
+ROTO_CURVE_POINT = 4
+ROTO_HANDLE_POINT = 5
 
 # handle size
 EDIT_POINT_SIDE_HALF = 4
@@ -33,6 +35,15 @@ EDIT_POINT_SIDE_HALF = 4
 # line types
 LINE_NORMAL = 0
 LINE_DASH = 1
+
+# colors
+ROTO_CURVE_COLOR = (0.97, 0.97, 0.30, 1)
+HANDLE_LINES_COLOR = (0.82, 0.16, 0.16, 1)
+ROTO_CURVE_POINT_COLOR = (0.9, 0.9, 0.9, 1)
+ROTO_HANDLE_POINT_COLOR = (0.82, 0.16, 0.16, 1)
+# Roto mask types
+CURVE_MASK = 0
+LINE_MASK = 1
 
 class EditPoint:
     """
@@ -91,6 +102,51 @@ class EditPoint:
             x, y = view_editor.movie_coord_to_panel_coord((self.x, self.y))
             cr.rectangle(x - 4, y - 4, 8, 8)
             cr.fill()
+
+
+
+class RotoMaskEditPoint(EditPoint):
+    def __init__(self, point_type, x=0, y=0):
+        EditPoint.__init__(self, x, y)
+        self.display_type = point_type
+        self.selected = None
+        self.mask_type = CURVE_MASK
+
+    def hit(self, test_p, view_scale=1.0):
+        if self.mask_type == LINE_MASK and self.display_type == ROTO_HANDLE_POINT:
+            return False # With LINE_MASK handles are not user draggable.
+            
+        test_x, test_y = test_p
+      
+        if((test_x >= self.x - EDIT_POINT_SIDE_HALF) 
+            and (test_x <= self.x + EDIT_POINT_SIDE_HALF) 
+            and (test_y >= self.y - EDIT_POINT_SIDE_HALF)
+            and (test_y <= self.y + EDIT_POINT_SIDE_HALF)):
+            return True
+
+        return False
+        
+    def draw(self, cr, view_editor):
+        if self.mask_type == LINE_MASK and self.display_type == ROTO_HANDLE_POINT:
+            return 
+
+        if self.display_type == ROTO_CURVE_POINT:
+            cr.set_source_rgba(*ROTO_CURVE_COLOR)
+        else:
+            cr.set_source_rgba(*ROTO_HANDLE_POINT_COLOR)
+            
+        x, y = self.x, self.y
+        cr.rectangle(x - 4, y - 4, 8, 8)
+        if self.display_type == ROTO_CURVE_POINT:
+            cr.stroke()
+        else:
+            cr.fill()
+
+        if self.selected:
+            cr.set_source_rgba(0,0,0,1)
+            cr.rectangle(x - 4, y - 4, 8, 8)
+            cr.stroke()
+
 
 class EditPointShape:
     """
@@ -205,6 +261,7 @@ class EditPointShape:
         for ep in self.edit_points:
             ep.display_type = INVISIBLE_POINT
 
+
 class SimpleRectEditShape(EditPointShape):
     """
     A rect with four corner points.
@@ -277,3 +334,412 @@ class SimpleRectEditShape(EditPointShape):
         return (guide_1, guide_2)
         
 
+
+class RotoMaskEditShape(EditPointShape):
+    """
+    A Bezier spline creating a closed area.
+    """
+    def __init__(self, view_editor, clip_editor, rotomask_editor):
+        EditPointShape.__init__(self)
+        
+        self.mask_type = CURVE_MASK
+                
+        self.curve_points = [] # panel coords, not movie coods or normalized movie coords
+        self.handles1 =  [] # panel coords, not movie coods or normalized movie coords
+        self.handles2 =  [] # panel coords, not movie coods or normalized movie coords
+        
+        self.handles_for_curve_point = {}
+
+        self.selected_point_array = None
+        self.selected_point_index = -1
+            
+        self.clip_editor = clip_editor # This is keyframeeditor.ClipKeyFrameEditor
+        self.view_editor = view_editor # This is viewEditor.ViewEditor
+        self.rotomask_editor = rotomask_editor
+        
+        keyframe, bz_points = clip_editor.keyframes[0]
+        if len(bz_points) > 2:
+            self.closed = True
+        else:
+            self.closed = False
+        
+        self.block_shape_updates = False # We're getting a difficult to kill "size-allocate"., "window-resized" events and have to manage manually when updates to shape are allowed.
+                                        # and this is used to block it from recreating edit shape in middle of mouse edit, bit hacky but works fine.
+
+        self.update_shape()
+
+    def add_point(self, index, p):
+        if index == -1:
+            return
+    
+        x, y = p
+        add_cp = RotoMaskEditPoint(ROTO_CURVE_POINT, x, y)
+        self.curve_points.insert(index, add_cp)
+        if len(self.curve_points) > 1:
+            hp1, hp2 = self.get_straight_line_handle_places(index)
+        else:
+            hp1 = (x, y + 30)
+            hp2 = (x + 30, y)
+    
+        add_hp1 = RotoMaskEditPoint(ROTO_CURVE_POINT, *hp1)
+        add_hp2 = RotoMaskEditPoint(ROTO_CURVE_POINT, *hp2)
+        self.handles1.insert(index, add_hp1)
+        self.handles2.insert(index, add_hp2)
+            
+        hch = [ self.view_editor.panel_coord_to_normalized_movie_coord(hp1), 
+                self.view_editor.panel_coord_to_normalized_movie_coord(p), 
+                self.view_editor.panel_coord_to_normalized_movie_coord(hp2)]
+
+        for kf_tuple in self.clip_editor.keyframes:
+            keyframe, bz_points = kf_tuple
+            bz_points.insert(index, hch) 
+
+    def delete_selected_point(self):
+        if self.selected_point_index == -1:
+            return
+
+        for kf_tuple in self.clip_editor.keyframes:
+            keyframe, bz_points = kf_tuple
+            bz_points.pop(self.selected_point_index) 
+        
+        self.selected_point_array = None
+        self.selected_point_index = -1
+    
+        if len(bz_points) < 3:
+            self.closed = False # 2 points can't create a closed polygon/curve
+            self.rotomask_editor.update_mask_create_freeze_gui() # Freeze GUI
+
+        self.update_shape()
+
+    def update_shape(self):
+        if self.block_shape_updates == True:
+            return
+
+
+        # We're not using timeline frame for shape, we're using clip frame.
+        frame = self.clip_editor.current_clip_frame
+
+        self.edit_points = [] # all points
+
+        del self.curve_points[:] # we want to array obj to be the same for maintaining point selections after this method has been called
+        del self.handles1[:]
+        del self.handles2[:]
+
+        self.handles_for_curve_point = {}
+        
+        bezier_points = self.get_bezier_points_for_frame(frame)
+        
+        for p in bezier_points:
+            # curve point 
+            x, y = p[1]
+            cp = RotoMaskEditPoint(ROTO_CURVE_POINT, *self.view_editor.normalized_movie_coord_to_panel_coord((x, y)))
+            self.curve_points.append(cp)
+            self.edit_points.append(cp)
+
+            # handle 1
+            x, y = p[0]
+            hp1 = RotoMaskEditPoint(ROTO_HANDLE_POINT, *self.view_editor.normalized_movie_coord_to_panel_coord((x, y)))
+            self.handles1.append(hp1)
+            self.edit_points.append(hp1)
+            
+            # handle 2
+            x, y = p[2]
+            hp2 = RotoMaskEditPoint(ROTO_HANDLE_POINT, *self.view_editor.normalized_movie_coord_to_panel_coord((x, y)))
+            self.handles2.append(hp2)
+            self.edit_points.append(hp2)
+            
+            self.handles_for_curve_point[cp] = (hp1, hp2)
+
+        # Keep point selection alive
+        if self.selected_point_array != None:
+            self.selected_point_array[self.selected_point_index].selected = True 
+
+        self.maybe_force_line_mask()
+        self.set_points_mask_type_data()
+
+    """
+    OLD ALGO FOR GETTING SEQ TO PLACE POINT IN BETWEEN
+    KEEP AROUND FOR COMPARISON
+    def get_point_insert_seq(self, p):
+        # Return index of first curve point in the curve seqment that is closest to given point.
+        seq_index = -1
+        closest_dist = 10000000000.0
+        for i in range(0, len(self.curve_points)):
+            dist = self.get_point_dist_from_seq(p, i)
+            if dist >= 0 and dist < closest_dist:
+                closest_dist = dist
+                seq_index = i
+        
+        return seq_index
+
+    def get_point_dist_from_seq(self, p, seq_index):
+        start = self.curve_points[seq_index].get_pos()
+
+        if seq_index < len(self.curve_points) - 1:
+            end = self.curve_points[seq_index + 1].get_pos()
+        else:
+            end = self.curve_points[0].get_pos()
+        
+        seq = viewgeom.get_vec_for_points(start, end)
+
+        if seq.point_is_between(p) == True:
+            dist = seq.get_distance_vec(p)
+            return abs(dist.get_length())
+        else:
+            return -1
+    """
+
+    def get_point_insert_side(self, p):
+        # We need possibility to have a closed polygon for this to be meaningful
+        if len(self.curve_points) < 3:
+            return -1
+        
+        # "between" meas in area defined by normal lines going through seg
+        between_sides = self.get_between_sides_in_distance_order(p)
+        sides_in_distance_order = self.get_sides_in_end_point_distance_order(p)
+        
+        i0, d0 = sides_in_distance_order[0]
+        i1, d1 = sides_in_distance_order[1]
+        i2, d2 = sides_in_distance_order[2]
+        
+        # If point not between any seq, return closest seq
+        if len(between_sides) == 0:
+            return i0
+        
+        # If closest between seq among two closest seqs return that
+        ci, cd = between_sides[0]
+        if ci == i0:
+            return ci
+        if ci == i1:
+            return ci
+
+        # Return closest, between seq is on opposite side
+        # NOTE: This algorithm DOES NOT behave perfectly on all shapes of maskes.
+        return i0
+        
+    def get_side_for_index(self, side_index):
+        start = self.curve_points[side_index].get_pos()
+
+        if side_index < len(self.curve_points) - 1:
+            end = self.curve_points[side_index + 1].get_pos()
+        else:
+            end = self.curve_points[0].get_pos()
+        
+        return viewgeom.get_vec_for_points(start, end)
+        
+    def get_between_sides_in_distance_order(self, p):
+        between_sides = []
+        for i in range(0, len(self.curve_points)):
+            side = self.get_side_for_index(i)
+            if side.point_is_between(p) == True:
+                dist = side.get_normal_projection_distance_vec(p)
+                between_sides.append((i, dist.get_length()))
+        return sorted(between_sides, key = lambda x: float(x[1]))
+
+    def get_sides_in_end_point_distance_order(self, p):
+        sides = []
+        for i in range(0, len(self.curve_points)):
+            side = self.get_side_for_index(i)
+            d = side.get_minimum_end_point_distance(p)
+            sides.append((i, d))
+
+        return sorted(sides, key = lambda x: float(x[1]))
+
+    def set_mask_type(self, mask_type):
+        self.mask_type = mask_type
+        self.maybe_force_line_mask()
+        self.set_points_mask_type_data()
+
+    def set_points_mask_type_data(self):
+        for ep in self.edit_points:
+            ep.mask_type = self.mask_type 
+
+    def maybe_force_line_mask(self, force=False):
+        if (self.mask_type == LINE_MASK or force) and self.closed: 
+            # Makes all lines between curve points straight
+            for i in range(0, len(self.curve_points)):
+                hp1, hp2 = self.get_straight_line_handle_places(i)
+                self.handles1[i].set_pos(hp1)
+                self.handles2[i].set_pos(hp2)
+            
+    def get_straight_line_handle_places(self, cp_index):
+        prev_i = cp_index - 1
+        next_i = cp_index + 1
+        if next_i == len(self.curve_points):
+            next_i = 0
+        if prev_i < 0:
+            prev_i = len(self.curve_points) - 1
+        
+        prev_p = self.curve_points[prev_i].get_pos()
+        next_p = self.curve_points[next_i].get_pos()
+        p = self.curve_points[cp_index].get_pos()
+        
+        forward = viewgeom.get_vec_for_points(p, next_p)
+        back =  viewgeom.get_vec_for_points(p, prev_p)
+        
+        forward = forward.get_multiplied_vec(0.3)
+        back = back.get_multiplied_vec(0.3)
+        
+        return (back.end_point, forward.end_point)
+
+    def save_selected_point_data(self, selected_point):
+        # These points get re-created all the time and we need to save data on which point was selectes
+        if selected_point in self.curve_points:
+            self.selected_point_array = self.curve_points
+            self.selected_point_index = self.curve_points.index(selected_point)
+        elif selected_point in self.handles1:
+            self.selected_point_array = self.handles1
+            self.selected_point_index = self.handles1.index(selected_point)
+        elif selected_point in self.handles2:
+            self.selected_point_array = self.handles2
+            self.selected_point_index = self.handles2.index(selected_point)
+        else:
+            self.selected_point_array = None
+            self.selected_point_index = -1
+
+    def set_curve_point_as_selected(self, index):
+        self.clear_selection()
+        self.curve_points[index].selected = True
+        self.selected_point_array = self.curve_points
+        self.selected_point_index = index
+            
+    def clear_selection(self):
+        for p in self.edit_points:
+            p.selected = False
+
+            self.selected_point_array = None
+            self.selected_point_index = -1
+
+    def get_selected_point(self):
+        if self.selected_point_array != None:
+            return self.selected_point_array[self.selected_point_index]
+        else:
+            return None
+            
+    def get_bezier_points_for_frame(self, current_frame):
+
+        # We're replicating stuff from MLT file filter_rotoscoping.c to make sure out GUI matches the results there.
+        keyframes = self.clip_editor.keyframes
+        
+        # If single keyframe, just return values of that 
+        if len(keyframes) < 2:
+            keyframe, bz_points = keyframes[0]
+            return bz_points
+
+        # if current_frame after last keyframe, use last kayframe for values, no continued interpolation
+        last_keyframe = 0
+        for kf_tuple in self.clip_editor.keyframes:
+            keyframe, bz_points = kf_tuple
+            if keyframe > last_keyframe:
+                last_keyframe = keyframe
+        
+        # More of the last keyframe value fix, code below this block isn't getting the value for last kf and frames after that right
+        l_keyframe, l_bz_points = self.clip_editor.keyframes[-1]       
+        if current_frame >= last_keyframe:
+            return l_bz_points
+        
+        # Get keyframe range containing current_frame
+        for i in range(0, len(keyframes) - 1):
+            keyframe, bz_points = keyframes[i]
+            keyframe_next, bz_points2 = keyframes[i + 1] # were quaranteed to have at least 2 keyframes when getting here
+            if current_frame >= keyframe and current_frame < keyframe_next:
+                break
+        
+        frame_1 = float(keyframe)
+        frame_2 = float(keyframe_next)
+        current_frame = float(current_frame)
+        
+        # time in range 0 - 1 between frame_1, frame_2 range like in filter_rotoscoping.c
+        t = ( current_frame - frame_1 ) / ( frame_2 - frame_1 + 1 )
+
+        # Get point values  for current frame
+        current_frame_bezier_points = [] # array of [handle_point1, curve_point, handle_point2] arrays
+        for i in range(0, len(bz_points)):
+            hch_array = []
+            for j in range(0, 3):
+                pa = bz_points[i][j]
+                pb = bz_points2[i][j]
+                value_point = self.lerp(pa, pb, t)
+                hch_array.append(value_point)
+            current_frame_bezier_points.append(hch_array)
+            
+        return current_frame_bezier_points
+
+    def lerp(self, pa, pb, t):
+        pax, pay = pa
+        pbx, pby = pb
+        x = pax + ( pbx - pax ) * t;
+        y = pay + ( pby - pay ) * t;
+        return (x, y)
+    
+    def draw_line_shape(self, cr, view_editor):
+        if self.closed == True:
+            if len(self.curve_points) > 1:
+                cr.set_source_rgba(*ROTO_CURVE_COLOR)
+                cr.move_to(self.curve_points[0].x, self.curve_points[0].y)
+                for i in range(0, len(self.curve_points)):
+                    next_point_index = i + 1
+                    if next_point_index == len(self.curve_points):
+                        next_point_index = 0
+                    cr.curve_to(    self.handles2[i].x,
+                                    self.handles2[i].y,
+                                    self.handles1[next_point_index].x,
+                                    self.handles1[next_point_index].y,
+                                    self.curve_points[next_point_index].x,
+                                    self.curve_points[next_point_index].y)
+                cr.close_path()
+                cr.stroke()
+            
+            if self.mask_type == LINE_MASK:
+                return
+
+            cr.set_source_rgba(*HANDLE_LINES_COLOR)
+            for i in range(0, len(self.curve_points)):
+                cr.move_to(self.handles1[i].x, self.handles1[i].y)
+                cr.line_to(self.curve_points[i].x, self.curve_points[i].y)
+                cr.line_to(self.handles2[i].x, self.handles2[i].y)
+
+                cr.stroke()
+        else:
+            if len(self.curve_points) > 1:
+                cr.set_source_rgba(*ROTO_CURVE_COLOR)
+                cr.move_to(self.curve_points[0].x, self.curve_points[0].y)
+                for i in range(0, len(self.curve_points)):
+                    cr.line_to(self.curve_points[i].x, self.curve_points[i].y)
+                
+                cr.stroke()
+    
+    def draw_curve_points(self, cr, view_editor):
+        for ep in self.curve_points:
+            ep.draw(cr, view_editor)
+
+    # ------------------------------------------------------------- saving edits
+    def convert_shape_coords_and_update_clip_editor_keyframes(self):
+        clip_editor_keyframes = []
+        frame_shape = self._get_converted_frame_shape()
+        self.clip_editor.set_active_kf_value(frame_shape)
+     
+    def _get_converted_frame_shape(self):
+        frame_shape_array = []
+        for i in range(0, len(self.curve_points)):
+            hph_array = []
+            cp = self.curve_points[i]
+            hp1 = self.handles1[i]
+            hp2 = self.handles2[i]
+            # order is [handle1, curve_point, handle2]
+            hph_array.append(self.get_point_as_normalized_array(hp1))
+            hph_array.append(self.get_point_as_normalized_array(cp))
+            hph_array.append(self.get_point_as_normalized_array(hp2))
+            
+            frame_shape_array.append(hph_array)
+        
+        return frame_shape_array
+
+    def get_point_as_normalized_array(self, edit_point):
+        np  = self.view_editor.panel_coord_to_normalized_movie_coord((edit_point.x, edit_point.y))
+        nx, ny = np
+        return [nx, ny]
+
+        
+        
+        

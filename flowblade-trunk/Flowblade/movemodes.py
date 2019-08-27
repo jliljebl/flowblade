@@ -30,6 +30,7 @@ import boxmove
 import dialogutils
 import editorpersistance # Jul-2016 - SvdB - For play/pause button
 import editorstate
+import clipeffectseditor
 import dnd
 import edit
 from editorstate import current_sequence
@@ -272,6 +273,7 @@ def overwrite_move_press(event, frame):
     """
     User presses mouse when in overwrite move mode.
     """
+    # This happens when we already have a box selection and now are trying to move it
     if editorstate.overwrite_mode_box == True:
         boxmove.mouse_press(event, frame)
         return
@@ -281,7 +283,7 @@ def overwrite_move_press(event, frame):
     _move_mode_pressed(event, frame)
     
     global edit_data
-    if (not(edit_data == None)):
+    if edit_data != None:
         edit_data["over_in"] = -1
         edit_data["over_out"] = -1
         
@@ -297,6 +299,7 @@ def overwrite_move_press(event, frame):
             editorstate.overwrite_mode_box = True
             boxmove.entered_from_overwrite = True
             boxmove.clear_data()
+            # This happens when we start drawing a box
             boxmove.mouse_press(event, frame)
 
 def overwrite_move_move(x, y, frame, state):
@@ -337,13 +340,15 @@ def overwrite_move_release(x, y, frame, state):
     """
     User releases mouse when in overwrite move mode.
     """
+    global edit_data, drag_disabled    
     if editorstate.overwrite_mode_box == True:
         boxmove.mouse_release(x, y, frame)
+        edit_data = None
         return
-        
-    global edit_data, drag_disabled    
+
     if drag_disabled:
         drag_disabled = False
+        edit_data = None
         return   
     if edit_data == None:
         return
@@ -364,6 +369,7 @@ def overwrite_move_release(x, y, frame, state):
     
     # Moved clips are completely out of displayable track area, can't do edit.
     if over_out  < 1:
+        edit_data = None
         return
         
     # Autocorrect moved clips to be fully on displayable track area
@@ -380,7 +386,7 @@ def overwrite_move_release(x, y, frame, state):
             "move_edit_done_func":move_edit_done}
             
     # Do edit. Use different actions depending on if 
-    # clip is moved to a differrent track
+    # clip is moved to a different track
     if track == to_track:
         # Do edit if were moving and clips have moved
         if (edit_data["move_on"] == True and (press_frame != frame)):
@@ -406,6 +412,57 @@ def overwrite_move_release(x, y, frame, state):
     updater.repaint_tline()
 
 
+def nudge_selection(delta):
+    global selected_track, selected_range_in, selected_range_out
+    # Can't do this in middle of mouse edit
+    if edit_data != None:
+        return
+    if drag_disabled != False:
+        return
+
+    # We need a selection for this
+    if selected_track == -1:
+        return
+    
+    # Collect edit data
+    track = current_sequence().tracks[selected_track]
+    selection_in_frame = track.clip_start(selected_range_in)
+    over_in = selection_in_frame + delta
+    # Can't move stuff off timeline
+    if over_in < 0:
+        return
+    moving_length = 0
+    for i in range(selected_range_in, selected_range_out + 1):
+        clip = track.clips[i]
+        clip_length = clip.clip_out - clip.clip_in + 1
+        moving_length += clip_length     
+    over_out = over_in + moving_length
+    
+    # We need to save this data because edit auto clears selection
+    selected_clips_count = selected_range_out - selected_range_in + 1
+    orig_selected_track = selected_track
+    
+    data = {"track":track,
+            "over_in":over_in,
+            "over_out":over_out,
+            "selected_range_in":selected_range_in,
+            "selected_range_out":selected_range_out,
+            "move_edit_done_func":move_edit_done}
+            
+    action = edit.overwrite_move_action(data)
+    action.do_edit()
+
+    # Re-select moved clips
+    new_sel_start = track.get_clip_index_at(over_in)
+    new_sel_end = new_sel_start + selected_clips_count - 1
+    selected_track = orig_selected_track
+    selected_range_in = new_sel_start
+    selected_range_out = new_sel_end
+    set_range_selection(orig_selected_track, new_sel_start, new_sel_end, True)
+        
+    updater.repaint_tline()
+            
+
 # ------------------------------------- MOVE MODES EVENTS
 def _move_mode_pressed(event, frame):
     """
@@ -425,13 +482,14 @@ def _move_mode_pressed(event, frame):
     # Get pressed track
     track = tlinewidgets.get_track(y)  
 
-    # Selecting empty clears selection
-    if track == None:
+    # Selecting empty clears selection and prevents from setting edit data since we cannot have it.
+    # Exitance of edit_data is also used to determine if we should enter box mode so we need to not have it if we're not hitting clip
+    if track == None or track.id < 1 or track.id > len(current_sequence().tracks) - 2: # -2 because topmost hidden track
         clear_selected_clips()
         pressed_on_selected = False
         updater.repaint_tline()
         return    
-    
+
     # Get pressed clip index
     clip_index = current_sequence().get_clip_index(track, frame)
 
@@ -443,7 +501,6 @@ def _move_mode_pressed(event, frame):
         return
         
     # Check locking for pressed track
-    # This ain't used crrently!!!!!
     if _track_is_locked(track):
         clear_selected_clips()
         pressed_on_selected = False

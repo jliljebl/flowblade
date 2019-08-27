@@ -25,7 +25,11 @@ from gi.repository import GObject
 
 from gi.repository import Gtk
 
+import appconsts
+from editorstate import current_sequence
+import gui
 import guiutils
+import utils
 
 def dialog_destroy(dialog, response):
     dialog.destroy()
@@ -201,4 +205,18 @@ def delay_destroy_window(window, delay):
 
 def _window_destroy_event(window):
     window.destroy()
-    
+
+
+# ------------------------------------ track locks handling
+# returns True if track locked and displays info
+def track_lock_check_and_user_info(track):
+    if track.edit_freedom == appconsts.LOCKED:
+        track_name = utils.get_track_name(track, current_sequence())
+
+        # No edits on locked tracks.
+        primary_txt = _("Can't edit a locked track")
+        secondary_txt = _("Track ") + track_name + _(" is locked. Unlock track to edit it.")
+        warning_message(primary_txt, secondary_txt, gui.editor_window.window)
+        return True
+
+    return False

@@ -45,6 +45,7 @@ import renderconsumer
 import respaths
 import shortcuts
 import utils
+import workflow
 
 
 def new_project_dialog(callback):
@@ -88,6 +89,19 @@ def new_project_dialog(callback):
                    
     out_profile_combo.connect('changed', lambda w: _new_project_profile_changed(w, profile_info_box))
     dialog.show_all()
+
+def xdg_copy_dialog():
+    dialog = Gtk.Dialog(_("New Project"), gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT, 
+                        None)
+    primary_txt = _("Copying user data to XDG folders")
+    secondary_txt = _("This can take up to a few minutes, please wait...")
+    panel = dialogutils.get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info=True)
+    alignment = dialogutils.get_default_alignment(panel)
+    dialogutils.set_outer_margins(dialog.vbox)
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialog.show_all()
+    return dialog
 
 def _new_project_profile_changed(combo_box, profile_info_box):
     profile = mltprofiles.get_profile_for_index(combo_box.get_active())
@@ -282,7 +296,7 @@ def save_project_as_dialog(callback, current_name, open_dir, parent=None):
                                    (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
                                     _("Save").encode('utf-8'), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.SAVE)
-    dialog.set_current_name(current_name)
+    dialog.set_current_name(current_name.encode('utf-8'))
     dialog.set_do_overwrite_confirmation(True)
     if open_dir != None:
         dialog.set_current_folder(open_dir)
@@ -349,7 +363,7 @@ def _export_file_name_dialog(callback, project_name, dialog_title):
                                    _("Export").encode('utf-8'), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.SAVE)
     project_name = project_name.strip(".flb")
-    dialog.set_current_name(project_name + ".xml")
+    dialog.set_current_name(project_name.encode('utf-8') + ".xml")
     dialog.set_do_overwrite_confirmation(True)
 
     dialog.set_select_multiple(False)
@@ -399,41 +413,6 @@ def save_env_data_dialog(callback):
     dialog.set_select_multiple(False)
     dialog.connect('response', callback)
     dialog.show()
-
-def select_thumbnail_dir(callback, parent_window, current_dir_path, retry_open_media):
-    panel, file_select = panels.get_thumbnail_select_panel(current_dir_path)
-    cancel_str = _("Cancel").encode('utf-8')
-    ok_str = _("Ok").encode('utf-8')
-    dialog = Gtk.Dialog(_("Select Thumbnail Folder"),
-                        parent_window,
-                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (cancel_str, Gtk.ResponseType.CANCEL,
-                        ok_str, Gtk.ResponseType.YES))
-
-    dialog.vbox.pack_start(panel, True, True, 0)
-    dialogutils.set_outer_margins(dialog.vbox)
-    _default_behaviour(dialog)
-    dialog.connect('response', callback, (file_select, retry_open_media))
-    dialog.show_all()
-
-def select_rendred_clips_dir(callback, parent_window, current_dir_path, context_data=None):
-    panel, file_select = panels.get_render_folder_select_panel(current_dir_path)
-    cancel_str = _("Cancel").encode('utf-8')
-    ok_str = _("Ok").encode('utf-8')
-    dialog = Gtk.Dialog(_("Select Thumbnail Folder"),
-                        parent_window,
-                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (cancel_str, Gtk.ResponseType.CANCEL,
-                        ok_str, Gtk.ResponseType.YES))
-
-    dialog.vbox.pack_start(panel, True, True, 0)
-    dialogutils.set_outer_margins(dialog.vbox)
-    _default_behaviour(dialog)
-    if context_data == None:
-        dialog.connect('response', callback, file_select)
-    else:
-        dialog.connect('response', callback, file_select, context_data)
-    dialog.show_all()
 
 def rendered_clips_no_home_folder_dialog():
     dialogutils.warning_message(_("Can't make home folder render clips folder"),
@@ -488,8 +467,8 @@ def about_dialog(parent_window):
     # Application tab
     img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
     flow_label = Gtk.Label(label="Flowblade Movie Editor")
-    ver_label = Gtk.Label(label="1.16.0")
-    janne_label = Gtk.Label(label="Copyright 2018 Janne Liljeblad and contributors")
+    ver_label = Gtk.Label(label="2.2.0")
+    janne_label = Gtk.Label(label="Copyright 2019 Janne Liljeblad and contributors")
     page_label = Gtk.Label(label=_("Project page:") + " " + "<a href=\"https://github.com/jliljebl/flowblade\">https://github.com/jliljebl/flowblade</a>")
     page_label.set_use_markup(True)
     flow_label.modify_font(Pango.FontDescription("sans bold 14"))
@@ -798,6 +777,9 @@ def recreate_icons_progress_dialog():
 
 def update_media_lengths_progress_dialog():
     return _text_info_prograss_dialog(_("Update media lengths data"))
+
+def audio_sync_active_dialog():
+    return _text_info_prograss_dialog(_("Comparing Audio Data..."))
     
 def _text_info_prograss_dialog(title):
     dialog = Gtk.Window(Gtk.WindowType.TOPLEVEL)
@@ -1263,7 +1245,7 @@ def export_edl_dialog(callback, parent_window, project_name):
                                    _("Export").encode('utf-8'), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.SAVE)
     project_name = project_name.rstrip(".flb")
-    dialog.set_current_name(project_name + ".edl")
+    dialog.set_current_name(project_name.encode('utf-8') + ".edl")
     dialog.set_do_overwrite_confirmation(True)
 
     dialog.set_select_multiple(False)
@@ -1340,10 +1322,10 @@ def fade_edit_dialog(callback, transition_data):
     _default_behaviour(dialog)
     dialog.show_all()
 
-def keyboard_shortcuts_dialog(parent_window, callback):
+def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, callback):
     dialog = Gtk.Dialog(_("Keyboard Shortcuts"),
                         parent_window,
-                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
                         _("Apply").encode('utf-8'), Gtk.ResponseType.ACCEPT))
 
@@ -1378,7 +1360,7 @@ def keyboard_shortcuts_dialog(parent_window, callback):
     content_panel.pack_start(guiutils.get_left_justified_box([diff_label]), False, False, 0)
     content_panel.pack_start(diff_sw, False, False, 0)
 
-    scroll_window = _display_keyboard_schortcuts(editorpersistance.prefs.shortcuts, scroll_hold_panel)
+    scroll_window = _display_keyboard_schortcuts(editorpersistance.prefs.shortcuts, get_tool_list_func(), scroll_hold_panel)
 
     shortcuts_combo.connect('changed', lambda w:_shorcuts_selection_changed(w, scroll_hold_panel, diff_data, dialog))
     
@@ -1390,19 +1372,18 @@ def keyboard_shortcuts_dialog(parent_window, callback):
     dialog.connect('response', callback, shortcuts_combo)
     dialog.show_all()
  
- 
 def _shorcuts_selection_changed(combo, scroll_hold_panel, diff_data, dialog):
     selected_xml = shortcuts.shortcut_files[combo.get_active()]
-    _display_keyboard_schortcuts(selected_xml, scroll_hold_panel)
+    _display_keyboard_schortcuts(selected_xml, workflow.get_tline_tool_working_set(), scroll_hold_panel)
     diff_data.set_text(shortcuts.get_diff_to_defaults(selected_xml))
     dialog.show_all()
 
-def _display_keyboard_schortcuts(xml_file, scroll_hold_panel):
+def _display_keyboard_schortcuts(xml_file, tool_set, scroll_hold_panel):
     widgets = scroll_hold_panel.get_children()
     if len(widgets) != 0:
         scroll_hold_panel.remove(widgets[0])
 
-    shorcuts_panel = _get_dynamic_kb_shortcuts_panel(xml_file)
+    shorcuts_panel = _get_dynamic_kb_shortcuts_panel(xml_file, tool_set)
 
     pad_panel = Gtk.HBox()
     pad_panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
@@ -1417,7 +1398,7 @@ def _display_keyboard_schortcuts(xml_file, scroll_hold_panel):
     scroll_hold_panel.pack_start(sw, False, False, 0)
     return sw
 
-def _get_dynamic_kb_shortcuts_panel(xml_file):   
+def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):   
     root_node = shortcuts.get_shortcuts_xml_root_node(xml_file)
     
     general_vbox = Gtk.VBox()
@@ -1430,6 +1411,7 @@ def _get_dynamic_kb_shortcuts_panel(xml_file):
     general_vbox.pack_start(_get_kb_row(_("Control + Y"), _("Redo")), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("Control + O"), _("Open Project")), False, False, 0)
     general_vbox.pack_start(_get_dynamic_kb_row(root_node, "switch_monitor"), False, False, 0)
+    general_vbox.pack_start(_get_dynamic_kb_row(root_node, "open_next"), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("Control + L"), _("Log Marked Clip Range")), False, False, 0)
     general_vbox.pack_start(_get_dynamic_kb_row(root_node, "zoom_in"), False, False, 0)
     general_vbox.pack_start(_get_dynamic_kb_row(root_node, "zoom_out"), False, False, 0)
@@ -1441,10 +1423,14 @@ def _get_dynamic_kb_shortcuts_panel(xml_file):
     tline_vbox.pack_start(_get_kb_row(_("Alt + I"), _("Go To Mark In")), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Alt + O"), _("Go To Mark Out")), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "cut"), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "cut_all"), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("DELETE"),  _("Splice Out")), False, False, 0)
+    tline_vbox.pack_start(_get_kb_row(_("Control + DELETE"),  _("Lift")), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "insert"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "append"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "3_point_overwrite"), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "overwrite_range"), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "append_from_bin"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "add_marker"), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Control + C"), _("Copy Clips")), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Control + V"), _("Paste Clips")), False, False, 0)
@@ -1456,8 +1442,16 @@ def _get_dynamic_kb_shortcuts_panel(xml_file):
     tline_vbox.pack_start(_get_kb_row(_("Control + Left Arrow "), _("Back 10 Frames Trim Edit")), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Control + Right Arrow"), _("Forward 10 Frames Trim Edit")), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "enter_edit"), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "nudge_back"), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "nudge_forward"), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "nudge_back_10"), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "nudge_forward_10"), False, False, 0)
     tline = guiutils.get_named_frame(_("Timeline"), tline_vbox)
 
+    track_head_vbox = Gtk.VBox()
+    track_head_vbox.pack_start(_get_kb_row(_("Mouse Double Click"), _("Toggle Track Height")), False, False, 0)
+    track_head = guiutils.get_named_frame(_("Track Head Column"), track_head_vbox)
+    
     play_vbox = Gtk.VBox()
     play_vbox.pack_start(_get_dynamic_kb_row(root_node, "play_pause"), False, False, 0)
     play_vbox.pack_start(_get_dynamic_kb_row(root_node, "slower"), False, False, 0)
@@ -1476,15 +1470,9 @@ def _get_dynamic_kb_shortcuts_panel(xml_file):
     play = guiutils.get_named_frame(_("Playback"), play_vbox)
 
     tools_vbox = Gtk.VBox()
-    tools_vbox.pack_start(_get_dynamic_kb_row(root_node, "edit_mode_insert"), False, False, 0)
-    tools_vbox.pack_start(_get_dynamic_kb_row(root_node, "edit_mode_overwrite"), False, False, 0)
-    tools_vbox.pack_start(_get_dynamic_kb_row(root_node, "edit_mode_trim"), False, False, 0)
-    tools_vbox.pack_start(_get_dynamic_kb_row(root_node, "edit_mode_roll"), False, False, 0)
-    tools_vbox.pack_start(_get_dynamic_kb_row(root_node, "edit_mode_slip"), False, False, 0)
-    tools_vbox.pack_start(_get_dynamic_kb_row(root_node, "edit_mode_spacer"), False, False, 0)
-    tools_vbox.pack_start(_get_dynamic_kb_row(root_node, "edit_mode_box"), False, False, 0)
-    tools_vbox.pack_start(_get_kb_row(_("Keypad 1-7"), _("Same as 1-7")), False, False, 0)
-    tools_vbox.pack_start(_get_kb_row(_("R"), _("Trim Tool Ripple Mode On/Off")), False, False, 0)
+    for tool_name, kb_shortcut in tool_set:
+            tools_vbox.pack_start(_get_kb_row(tool_name, kb_shortcut), False, False, 0)
+    tools_vbox.pack_start(_get_kb_row(_("Keypad 1-9"), _("Same as 1-9")), False, False, 0)
     tools = guiutils.get_named_frame(_("Tools"), tools_vbox)
 
     geom_vbox = Gtk.VBox()
@@ -1493,21 +1481,35 @@ def _get_dynamic_kb_shortcuts_panel(xml_file):
     geom_vbox.pack_start(_get_kb_row(_("Up Arrow"), _("Move Source Video Up 1px")), False, False, 0)
     geom_vbox.pack_start(_get_kb_row(_("Down Arrow"), _("Move Source Video Down 1px")), False, False, 0)
     geom_vbox.pack_start(_get_kb_row(_("Control + Arrow"), _("Move Source Video 10px")), False, False, 0)
-    geom_vbox.pack_start(_get_kb_row(_("Control + Mouse Drag"), _("Keep Aspect Ratio in Affine Blend scaling")), False, False, 0) 
+    geom_vbox.pack_start(_get_kb_row(_("Control + Mouse Drag"), _("Keep Aspect Ratio in Affine Blend scaling")), False, False, 0)
+    geom_vbox.pack_start(_get_kb_row(_("Shift + Left Arrow "), _("Scale Down")), False, False, 0)
+    geom_vbox.pack_start(_get_kb_row(_("Shift + Right Arrow"), _("Scale Up")), False, False, 0)
+    geom_vbox.pack_start(_get_kb_row(_("Shift + Control + Left Arrow "), _("Scale Down More")), False, False, 0)
+    geom_vbox.pack_start(_get_kb_row(_("Shift + Control + Right Arrow"), _("Scale Up More")), False, False, 0)
     geom_vbox.pack_start(_get_kb_row(_("Shift"), _("Snap to X or Y of drag start point")), False, False, 0)
     geom = guiutils.get_named_frame(_("Geometry Editor"), geom_vbox)
 
+    roto_vbox = Gtk.VBox()
+    roto_vbox.pack_start(_get_kb_row(_("Delete"), _("Deletes Selected Handle")), False, False, 0)
+    roto_vbox.pack_start(_get_kb_row(_("Left Arrow "), _("Previous Frame")), False, False, 0)
+    roto_vbox.pack_start(_get_kb_row(_("Right Arrow"), _("Next Frame")), False, False, 0)
+    roto = guiutils.get_named_frame(_("RotoMask Editor"), roto_vbox)
+    
     panel = Gtk.VBox()
     panel.pack_start(tools, False, False, 0)
     panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
     panel.pack_start(tline, False, False, 0)
+    panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
+    panel.pack_start(track_head, False, False, 0)
     panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
     panel.pack_start(play, False, False, 0)
     panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
     panel.pack_start(general, False, False, 0)
     panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
     panel.pack_start(geom, False, False, 0)
-
+    panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
+    panel.pack_start(roto, False, False, 0)
+    
     return panel
 
 def _get_dynamic_kb_row(root_node, code):
@@ -1881,7 +1883,10 @@ def tline_audio_sync_dialog(callback, data):
     dialog.connect('response', callback, data)
     dialog.show_all()
 
-
+def no_audio_dialog(track):
+    dialogutils.warning_message(_("Can't put an audio clip on a video track."), 
+                            _("Track ")+ utils.get_track_name(track, editorstate.current_sequence()) + _(" is a video track and can't display audio only material."),
+                            gui.editor_window.window)
 
 
         

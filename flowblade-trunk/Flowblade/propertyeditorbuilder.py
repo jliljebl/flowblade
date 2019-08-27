@@ -22,9 +22,10 @@
 Module creates GUI editors for editable mlt properties.
 """
 
-from gi.repository import Gtk, Gdk, GObject
+from gi.repository import Gtk, Gdk, GObject, GLib
 
 import cairo
+import json
 
 import appconsts
 import cairoarea
@@ -36,6 +37,7 @@ import keyframeeditor
 import mltfilters
 import mlttransitions
 import propertyparse
+import propertyedit
 import respaths
 import translations
 import updater
@@ -49,6 +51,7 @@ BOOLEAN_CHECK_BOX = "booleancheckbox"                       # Gtk.CheckButton
 COMBO_BOX = "combobox"                                      # Gtk.Combobox
 KEYFRAME_EDITOR = "keyframe_editor"                         # keyfremeeditor.KeyFrameEditor that has all the key frames relative to MEDIA start
 KEYFRAME_EDITOR_CLIP = "keyframe_editor_clip"               # keyfremeeditor.KeyFrameEditor that has all the key frames relative to CLIP start
+KEYFRAME_EDITOR_CLIP_FADE = "keyframe_editor_clip_fade"     # keyfremeeditor.KeyFrameEditor that has all the key frames relative to CLIP start, with fade buttons
 KEYFRAME_EDITOR_RELEASE = "keyframe_editor_release"         # HACK, HACK. used to prevent property update crashes in slider keyfremeeditor.KeyFrameEditor
 COLOR_SELECT = "color_select"                               # Gtk.ColorButton
 GEOMETRY_EDITOR = "geometry_editor"                         # keyfremeeditor.GeometryEditor
@@ -67,6 +70,7 @@ IMAGE_MEDIA_FILE_SELECTOR = "image_media_file_select"       # File selector butt
 FILE_TYPES = "file_types"                                   # list of files types with "." chracters, like ".png.tga.bmp"
 FADE_LENGTH = "fade_length"                                 # Autofade compositors fade length
 TEXT_ENTRY = "text_entry"                                   # Text editor
+ROTOMASK = "rotomask"                                       # Displays info and lauches rotomask window
 NO_EDITOR = "no_editor"                                     # No editor displayed for property
 
 COMPOSITE_EDITOR_BUILDER = "composite_properties"           # Creates a single row editor for multiple properties of composite transition
@@ -77,9 +81,10 @@ SCALE_DIGITS = "scale_digits"                               # Number of decimal 
 
 # We need to use globals to change slider -> kf editor and back because the data does not (can not) exist anywhere else. FilterObject.properties are just tuples and EditableProperty objects
 # are created deterministically from those and FilterObject.info.property_args data. So we need to save data here on change request to make the change happen.
-# This data needs to erased always after use.
+# This data needs to be erased always after use.
 changing_slider_to_kf_property_name = None
-re_init_editors_for_slider_type_change_func = None # monkeypatched in
+re_init_editors_for_slider_type_change_func = None # monkeypatched in, it is clipeffectseditor.effect_selection_changed
+show_rotomask_func =  None # monkeypatched in, it is rotomask.py, gmic won't lauch if we import
 
 def _p(name):
     try:
@@ -131,6 +136,9 @@ def get_filter_extra_editor_rows(filt, editable_properties):
             print "get_filter_extra_editor_rows fail with:" + editor_name
 
     return rows
+
+
+
     
 # ------------------------------------------------- gui builders
 def _get_two_column_editor_row(name, editor_widget):
@@ -149,25 +157,25 @@ def _get_two_column_editor_row(name, editor_widget):
     
 def _get_slider_row(editable_property, slider_name=None, compact=False):
     slider_editor = SliderEditor(editable_property, slider_name=None, compact=False)
-    
-    # This has now already been used if existed and has to be deleted.
-    global changing_slider_to_kf_property_name
-    changing_slider_to_kf_property_name = None
-    
+
     # We need to tag this somehow and add lambda to pass frame events so that this can be to set get frame events
     # in clipeffectseditor.py.
     if slider_editor.editor_type == KEYFRAME_EDITOR:
         slider_editor.vbox.is_kf_editor = True      
         slider_editor.vbox.display_tline_frame = lambda tline_frame:slider_editor.kfeditor.display_tline_frame(tline_frame)
-        
+        slider_editor.vbox.update_slider_value_display = lambda frame:slider_editor.kfeditor.update_slider_value_display(frame)
+        slider_editor.vbox.update_clip_pos = lambda:slider_editor.kfeditor.update_clip_pos()
+
     return slider_editor.vbox
     
 
 class SliderEditor:
     def __init__(self, editable_property, slider_name=None, compact=False):
-
         self.vbox = Gtk.VBox(False)
-        is_multi_kf = (editable_property.value.find(";") != -1)
+        # We are using value here as flag if this is beinfg edited by slider as a single value or by keyframe editor as changing value
+        # If we find "=" this means that value is keyframe expression
+        is_multi_kf = (editable_property.value.find("=") != -1)
+
         if changing_slider_to_kf_property_name == editable_property.name or is_multi_kf == True:
             eq_index = editable_property.value.find("=")
             
@@ -179,6 +187,11 @@ class SliderEditor:
                             
             editable_property = editable_property.get_as_KeyFrameHCSFilterProperty()
             self.init_for_kf_editor(editable_property)
+            
+            # This has now already been used if existed and has to be deleted.
+            if changing_slider_to_kf_property_name == editable_property.name:
+                global changing_slider_to_kf_property_name
+                changing_slider_to_kf_property_name = None
         else:
             self.init_for_slider(editable_property, slider_name, compact)
         
@@ -250,17 +263,27 @@ class SliderEditor:
             
             eq_index = self.editable_property.value.find("=")  + 1
             first_kf_val = val[eq_index:len(val)]
+
+            #  We need to turn editable property value and type  back to what it was before user selected to go kf editing
+            # so that it gets edited with slider on next init.
+            info = self.editable_property._get_filter_object().info #.__dict__
+            p_name, p_value, p_original_type = info.properties[self.editable_property.property_index]
             
-            #  We need to turn editable prperty value and type(original type) back to what it was before user selected to go kf editing
-            if self.editable_property.prop_orig_type == appconsts.PROP_INT:
-                self.editable_property.type = appconsts.PROP_INT 
-                self.editable_property.write_filter_object_property(str(int(first_kf_val)))
-                #self.editable_property.typ
-            elif self.editable_property.prop_orig_type == appconsts.PROP_FLOAT:
+            if p_original_type == appconsts.PROP_INT:
+                self.editable_property.type = appconsts.PROP_INT
+                try:
+                    int_str_val = str(int(first_kf_val))
+                except:
+                    int_str_val = str(float(first_kf_val))
+
+                self.editable_property.write_value(int_str_val)
+            elif p_original_type == appconsts.PROP_FLOAT:
                 self.editable_property.type = appconsts.PROP_FLOAT 
-                self.editable_property.write_filter_object_property(str(float(first_kf_val)))
+
+                self.editable_property.write_value(str(float(first_kf_val)))
             else:
-                self.editable_property.write_filter_object_property("0=" + str(float(first_kf_val)))
+
+                self.editable_property.write_value("0=" + str(float(first_kf_val)))
 
             re_init_editors_for_slider_type_change_func()
 
@@ -317,7 +340,46 @@ def _get_ladspa_slider_row(editable_property, slider_name=None):
     vbox.pack_start(top_row, True, True, 0)
     vbox.pack_start(hbox, False, False, 0)
     return vbox
+
+def _get_no_kf_slider_row(editable_property, slider_name=None, compact=False):
+    adjustment = editable_property.get_input_range_adjustment()
+
+    hslider = Gtk.HScale()
+    hslider.set_adjustment(adjustment)
+    hslider.set_draw_value(False)
+    hslider.connect("button-release-event", lambda w, e: _ladspa_slider_update(editable_property, adjustment))
     
+    spin = Gtk.SpinButton()
+    spin.set_numeric(True)
+    spin.set_adjustment(adjustment)
+    spin.connect("button-release-event", lambda w, e: _ladspa_slider_update(editable_property, adjustment))
+
+    _set_digits(editable_property, hslider, spin)
+
+    if slider_name == None:
+        name = editable_property.get_display_name()
+    else:
+        name = slider_name
+
+    hbox = Gtk.HBox(False, 4)
+    if compact:
+        name_label = Gtk.Label(label=name + ":")
+        hbox.pack_start(name_label, False, False, 4)
+    hbox.pack_start(hslider, True, True, 0)
+    hbox.pack_start(spin, False, False, 4)
+
+    vbox = Gtk.VBox(False)
+    if compact:
+        vbox.pack_start(hbox, False, False, 0)
+    else:
+        top_right_h = Gtk.HBox()
+        top_right_h.pack_start(Gtk.Label(), True, True, 0)            
+        top_row = _get_two_column_editor_row(name, top_right_h)
+        
+        vbox.pack_start(top_row, True, True, 0)
+        vbox.pack_start(hbox, False, False, 0)
+            
+    return vbox
 
 def _get_clip_frame_slider(editable_property):
     # Exceptionally we set the edit range here,
@@ -353,7 +415,7 @@ def _get_affine_filt_geom_sliders(ep):
     scr_width = PROJECT().profile.width()
     scr_height = PROJECT().profile.width()
 
-    # "0=0,0:SCREENSIZE:100"
+    # value str format "0=0,0:SCREENSIZE:100"
     frame_value = ep.value.split("=")
     tokens = frame_value[1].split(":")
     pos_tokens = tokens[0].split("/")
@@ -376,7 +438,6 @@ def _get_affine_filt_geom_sliders(ep):
     h_slider.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_width))
     h_spin.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_width))
 
-    
     vbox = Gtk.VBox(False, 4)
     vbox.pack_start(x_row, True, True, 0)
     vbox.pack_start(y_row, True, True, 0)
@@ -388,7 +449,7 @@ def _get_affine_filt_geom_sliders_2(ep):
     scr_width = PROJECT().profile.width()
     scr_height = PROJECT().profile.height()
 
-    # "0=0,0:SCREENSIZE:100"
+    # value str format "0=0,0:SCREENSIZE:100"
     frame_value = ep.value.split("=")
     tokens = frame_value[1].split(":")
     pos_tokens = tokens[0].split("/")
@@ -397,12 +458,10 @@ def _get_affine_filt_geom_sliders_2(ep):
     x_adj = Gtk.Adjustment(float(pos_tokens[0]), float(-scr_width), float(scr_width), float(1))
     y_adj = Gtk.Adjustment(float(pos_tokens[1]), float(-scr_height), float(scr_height), float(1))
     xs_adj = Gtk.Adjustment(float(size_tokens[0]), float(10), float(scr_width * 3), float(1))
-    #ys_adj = Gtk.Adjustment(float(size_tokens[1]), float(10), float(scr_height * 3), float(1))
 
     x_slider, x_spin, x_row =  _get_affine_slider("X", x_adj)
     y_slider, y_spin, y_row =  _get_affine_slider("Y", y_adj)
     xs_slider, xs_spin, xs_row =  _get_affine_slider(_("Width"), xs_adj)
-    #ys_slider, ys_spin, ys_row =  _get_affine_slider(_("Height"), ys_adj)
 
     all_sliders = (x_slider, y_slider, xs_slider)
 
@@ -412,14 +471,11 @@ def _get_affine_filt_geom_sliders_2(ep):
     y_spin.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_height))
     xs_slider.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_height))
     xs_spin.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_height))
-    #ys_slider.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders))
-    #ys_spin.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders))
     
     vbox = Gtk.VBox(False, 4)
     vbox.pack_start(x_row, True, True, 0)
     vbox.pack_start(y_row, True, True, 0)
     vbox.pack_start(xs_row, True, True, 0)
-    #vbox.pack_start(ys_row, True, True, 0)
 
     return vbox
     
@@ -441,7 +497,6 @@ def _get_affine_slider(name, adjustment):
 
     return (hslider, spin, _get_two_column_editor_row(name, hbox))
 
-
 def _get_text_entry(editable_property):
     entry = Gtk.Entry.new()
     entry.set_text(editable_property.value)
@@ -449,27 +504,28 @@ def _get_text_entry(editable_property):
 
     hbox = Gtk.HBox(False, 4)
     hbox.pack_start(entry, True, True, 0)
-    #hbox.pack_start(Gtk.Label(), False, False, 4)
-
 
     return _get_two_column_editor_row(editable_property.get_display_name(), hbox)
 
 def _entry_contentents_changed(entry, editable_property):
      editable_property.value = entry.get_text()
  
-def _get_boolean_check_box_row(editable_property):
+def _get_boolean_check_box_row(editable_property, compact=False):
     check_button = Gtk.CheckButton()
     check_button.set_active(editable_property.value == "1")
     check_button.connect("toggled", editable_property.boolean_button_toggled)
     
-    hbox = Gtk.HBox(False, 4)
+    if compact:
+        return guiutils.get_right_expand_box(Gtk.Label(editable_property.get_display_name() + ":"), check_button, True)
+    else:
+        hbox = Gtk.HBox(False, 4)
 
-    hbox.pack_start(check_button, False, False, 4)
-    hbox.pack_start(Gtk.Label(), True, True, 0)
-    
-    return _get_two_column_editor_row(editable_property.get_display_name(), hbox)
+        hbox.pack_start(check_button, False, False, 4)
+        hbox.pack_start(Gtk.Label(), True, True, 0)
+        
+        return _get_two_column_editor_row(editable_property.get_display_name(), hbox)
 
-def _get_combo_box_row(editable_property):
+def _get_combo_box_row(editable_property, compact=False):
     combo_box = Gtk.ComboBoxText()
             
     # Parse options and fill combo box
@@ -490,7 +546,10 @@ def _get_combo_box_row(editable_property):
     
     combo_box.connect("changed", editable_property.combo_selection_changed, values)  
 
-    return _get_two_column_editor_row(editable_property.get_display_name(), combo_box)
+    if compact:
+        return guiutils.get_right_expand_box(Gtk.Label(editable_property.get_display_name() + ":"), combo_box, True)
+    else:
+        return _get_two_column_editor_row(editable_property.get_display_name(), combo_box)
 
 def _get_color_selector(editable_property):
     gdk_color = editable_property.get_value_rgba()
@@ -574,7 +633,7 @@ def _get_wipe_selector(editable_property):
     
     combo_box.connect("changed", editable_property.combo_selection_changed, keys)
     use_preset_luma_combo.connect("changed", _wipe_preset_combo_changed, editable_property, widgets)
-    dialog.connect('response', _wipe_lumafile_dialog_response, editable_property, widgets)
+    user_luma_select.connect('file-set', _wipe_lumafile_dialog_response, editable_property, widgets)
     
     return editor_pane
 
@@ -616,7 +675,7 @@ class FadeLengthEditor(Gtk.HBox):
         updater.repaint_tline()
     
     def display_tline_frame(self, frame):
-        pass # we don't seem to need this afte all, panel gets recreated after cpompositor length change
+        pass # we don't seem to need this after all, panel gets recreated after compositor length change
         
 def _get_fade_length_editor(editable_property):
     return FadeLengthEditor(editable_property)
@@ -636,11 +695,14 @@ def _wipe_preset_combo_changed(widget, ep, widgets):
         combo_box.set_sensitive(True)
         ep.combo_selection_changed(combo_box, keys)
 
-def _wipe_lumafile_dialog_response(dialog, response_id, ep, widgets):
+def _wipe_lumafile_dialog_response(button, ep, widgets):
     combo_box, use_preset_luma_combo, user_luma_select, user_luma_label, keys = widgets
     file_name = user_luma_select.get_filename()
+
     if file_name != None:
+        ep.combo_selection_changed(combo_box, keys)
         ep.write_value(file_name)
+
 
 def _get_file_select_editor(editable_property):
     """
@@ -653,18 +715,24 @@ def _get_file_select_editor(editable_property):
     dialog.set_action(Gtk.FileChooserAction.OPEN)
     dialog.set_select_multiple(False)
 
-    file_types_args_list = editable_property.args[FILE_TYPES].split(".")
-    file_types_args_list = file_types_args_list[1:len(file_types_args_list)]
-    file_filter = Gtk.FileFilter()
-    for file_type in file_types_args_list:
-        file_filter.add_pattern("*." + file_type)
-    file_filter.set_name("Accepted Files")
-    
-    dialog.add_filter(file_filter)
+    try:
+        file_types_args_list = editable_property.args[FILE_TYPES].split(".")
+        file_types_args_list = file_types_args_list[1:len(file_types_args_list)]
+        file_filter = Gtk.FileFilter()
+        for file_type in file_types_args_list:
+            file_filter.add_pattern("*." + file_type)
+        file_filter.set_name("Accepted Files")
+        
+        dialog.add_filter(file_filter)
+    except:
+        # we will interpret missing as decision to add no file filter
+        pass
         
     file_select_button = Gtk.FileChooserButton.new_with_dialog(dialog)
     file_select_button.set_size_request(210, 28)
-    
+    if hasattr(editable_property, "value") and editable_property.value != '' and editable_property.value != '""':
+        file_select_button.set_uri(GLib.filename_to_uri(editable_property.value))
+
     file_select_label = Gtk.Label(editable_property.get_display_name())
 
     editor_row = Gtk.HBox(False, 2)
@@ -827,6 +895,77 @@ def _create_color_lgg_editor(filt, editable_properties):
     vbox.no_separator = True
     return vbox
 
+def _create_rotomask_editor(filt, editable_properties):
+
+    property_editor_widgets_create_func = lambda: _create_rotomask_property_editor_widgets(editable_properties)
+
+    kf_json_prop = filter(lambda ep: ep.name == "spline", editable_properties)[0]
+    kf_editor = keyframeeditor.RotoMaskKeyFrameEditor(kf_json_prop, propertyparse.rotomask_json_value_string_to_kf_array)
+
+    kfs_value_label = Gtk.Label(str(len(kf_editor.clip_editor.keyframes)))
+
+    kf_row = guiutils.get_left_justified_box([guiutils.pad_label(12, 12), guiutils.bold_label(_("Keyframes") + ": "), kfs_value_label])
+    
+    kf, curve_points = kf_editor.clip_editor.keyframes[0]
+    curve_points_value_label = Gtk.Label(str(len(curve_points)))
+    cps_row = guiutils.get_left_justified_box([guiutils.pad_label(12, 12), guiutils.bold_label(_("Curve Points") + ": "), curve_points_value_label])
+
+    value_labels = [kfs_value_label, curve_points_value_label]
+
+    lauch_button = Gtk.Button(_("Lauch RotoMask editor"))
+    lauch_button.connect("clicked", lambda b:_roto_lauch_pressed(filt, editable_properties, property_editor_widgets_create_func, value_labels))
+    
+    vbox = Gtk.VBox(False, 4)
+    vbox.pack_start(guiutils.bold_label(_("RotoMask info")), False, False, 0)
+    vbox.pack_start(kf_row, False, False, 0)
+    vbox.pack_start(cps_row, False, False, 0)
+    vbox.pack_start(guiutils.pad_label(12, 12), False, False, 0)
+    vbox.pack_start(lauch_button, False, False, 0)
+    vbox.pack_start(Gtk.Label(), True, True, 0)
+    vbox.no_separator = True
+    return vbox
+
+def _roto_lauch_pressed(filt, editable_properties, property_editor_widgets_create_func, value_labels):
+    show_rotomask_func(filt, editable_properties, property_editor_widgets_create_func, value_labels)
+
+def _create_rotomask_property_editor_widgets(editable_properties):
+    # NOTE: EditanbleParam objects for are usually created in  propertyedit.get_filter_editable_properties(), this a deviation from normal pipeline
+    # that was needed because RotoMask editor is a separate window.
+    property_editor_widgets = []
+    
+    invert_prop = filter(lambda ep: ep.name == "invert", editable_properties)[0]
+    invert_prop.args[propertyedit.DISPLAY_NAME] = translations.param_names["Invert"] # NOTE: We needed to put this here because we didn't use the normal method create these ( propertyedit.get_filter_editable_properties() )
+    invert_editor =  _get_boolean_check_box_row(invert_prop, True)
+    invert_editor.set_size_request(130, 20)
+
+    feather_prop = filter(lambda ep: ep.name == "feather", editable_properties)[0]
+    feather_prop.args[propertyedit.DISPLAY_NAME] = translations.param_names["Feather"] # NOTE: We needed to put this here because we didn't use the normal method create these ( propertyedit.get_filter_editable_properties() )
+    feather_editor = _get_no_kf_slider_row(feather_prop, slider_name=None, compact=True)
+    feather_editor.set_size_request(450, 20)
+
+    feather_passes_prop = filter(lambda ep: ep.name == "feather_passes", editable_properties)[0]
+    feather_passes_prop.args[propertyedit.DISPLAY_NAME] = translations.param_names["Feather Passes"] # NOTE: We needed to put this here because we didn't use the normal method create these ( propertyedit.get_filter_editable_properties() )
+    feather_passes_editor = _get_no_kf_slider_row(feather_passes_prop, slider_name=None, compact=True)
+    feather_passes_editor.set_size_request(450, 20)
+    
+    alpha_operation_prop = filter(lambda ep: ep.name == "alpha_operation", editable_properties)[0]
+    alpha_operation_prop.args[propertyedit.DISPLAY_NAME] = translations.param_names["Alpha Mode"] # NOTE: We needed to put this here because we didn't use the normal method create these ( propertyedit.get_filter_editable_properties() )
+    alpha_operation_editor = _get_combo_box_row(alpha_operation_prop, True)
+    alpha_operation_editor.set_size_request(270, 20)
+    
+    mode_prop = filter(lambda ep: ep.name == "mode", editable_properties)[0]
+    mode_prop.args[propertyedit.DISPLAY_NAME] = translations.param_names["Mode"] # NOTE: We needed to put this here because we didn't use the normal method create these ( propertyedit.get_filter_editable_properties() )
+    mode_editor = _get_combo_box_row(mode_prop, True)
+    mode_editor.set_size_request(270, 20)
+
+    property_editor_widgets.append(invert_editor)
+    property_editor_widgets.append(feather_editor)
+    property_editor_widgets.append(feather_passes_editor)
+    property_editor_widgets.append(alpha_operation_editor)
+    property_editor_widgets.append(mode_editor)
+
+    return property_editor_widgets
+
 def _get_force_combo_index(deinterlace, progressive):
     # These correspond to hardcoded values ["Nothing","Progressive","Deinterlace","Both"] above
     if int(deinterlace.value) == 0:
@@ -845,7 +984,10 @@ def _get_keyframe_editor(editable_property):
 
 def _get_keyframe_editor_clip(editable_property):
     return keyframeeditor.KeyFrameEditor(editable_property, False)
-    
+
+def _get_keyframe_editor_clip_fade(editable_property):
+    return keyframeeditor.KeyFrameEditorClipFade(editable_property)
+ 
 def _get_keyframe_editor_release(editable_property):
     editor = keyframeeditor.KeyFrameEditor(editable_property)
     editor.connect_to_update_on_release()
@@ -924,6 +1066,7 @@ EDITOR_ROW_CREATORS = { \
     COMBO_BOX:lambda ep :_get_combo_box_row(ep),
     KEYFRAME_EDITOR: lambda ep : _get_keyframe_editor(ep),
     KEYFRAME_EDITOR_CLIP: lambda ep : _get_keyframe_editor_clip(ep),
+    KEYFRAME_EDITOR_CLIP_FADE: lambda ep : _get_keyframe_editor_clip_fade(ep),
     KEYFRAME_EDITOR_RELEASE: lambda ep : _get_keyframe_editor_release(ep),
     GEOMETRY_EDITOR: lambda ep : _get_geometry_editor(ep),
     AFFINE_GEOM_4_SLIDER: lambda ep : _get_affine_filt_geom_sliders(ep),
@@ -943,6 +1086,7 @@ EDITOR_ROW_CREATORS = { \
     CR_CURVES: lambda filt, editable_properties:_create_crcurves_editor(filt, editable_properties),
     COLOR_BOX: lambda filt, editable_properties:_create_colorbox_editor(filt, editable_properties),
     COLOR_LGG: lambda filt, editable_properties:_create_color_lgg_editor(filt, editable_properties),
+    ROTOMASK: lambda filt, editable_properties:_create_rotomask_editor(filt, editable_properties),
     TEXT_ENTRY: lambda ep: _get_text_entry(ep),
     }
 

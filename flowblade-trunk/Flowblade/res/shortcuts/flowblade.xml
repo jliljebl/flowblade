@@ -69,6 +69,7 @@
     <event code='insert' name='Insert' modifiers='SHIFT'>y</event>
     <event code='append' name='Append'>u</event>
     <event code='append' name='Append' modifiers='SHIFT'>u</event>
+    <event code='append_from_bin' name='Append Selected Media From Bin'>a</event>
     <event code='slower' name='Slower'>j</event>
     <event code='stop' name='Stop'>k</event>
     <event code='faster' name='Faster'>l</event>
@@ -76,11 +77,14 @@
     <event code='log_range' name='Log Range'>g</event>
     <event code='resync' name='Resynchronization'>s</event>
     <event code='delete' name='Delete'>delete</event>
+    <event code='lift' name='Lift' modifiers='CTRL'>delete</event>
     <event code='to_start' name='Go To Start'>home</event>
     <event code='to_end' name='Go To End'>end</event>
     <event code='3_point_overwrite' name='Three Point Overwrite'>t</event>
-    <event code='toggle_ripple' name='Toggle Ripple Mode'>r</event>
-    <event code='cut' name='Cut'>x</event>
+    <event code='overwrite_range' name='Overwrite Range'>r</event>
+    <event code='toggle_ripple' modifiers='ALT' name='Toggle Ripple Mode'>r</event>
+    <event code='cut' name='Cut Active Tracks'>x</event>
+    <event code='cut_all' name='Cut All Tracks' modifiers='SHIFT'>x</event>
     <event code='edit_mode_insert' name='Change Edit Mode to Insert'>1</event>
     <event code='edit_mode_insert' name='Change Edit Mode to Insert'>kp_1</event>
     <event code='edit_mode_insert' name='Change Edit Mode to Insert'>kp_end</event>
@@ -107,6 +111,10 @@
     <event code='switch_monitor' name='Switch Monitor Display'>tab</event>
     <event code='add_marker' name='Add Marker'>m</event>
     <event code='enter_edit' name='Enter Editing Mode'>return</event>
-    <event code='sequence_split' name='Sequence Split'>y</event>
+    <event code='nudge_back' name='Nudge Move Selection Back 1 Frame'>comma</event>
+    <event code='nudge_forward' name='Nudge Move Selection Forward 1 Frame'>period</event>
+    <event code='nudge_back_10' name='Nudge Move Selection Back 10 Frames'  modifiers='CTRL'>comma</event>
+    <event code='nudge_forward_10' name='Nudge Move Selection Forward 10 Frames' modifiers='CTRL'>period</event>
+    <event code='open_next' name='Open Next Media Item In Monitor' modifiers='ALT'>n</event>
   </shortcuts>
 </flowblade>

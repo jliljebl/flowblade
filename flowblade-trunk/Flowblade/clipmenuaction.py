@@ -48,12 +48,15 @@ from editorstate import current_sequence
 from editorstate import get_track
 from editorstate import PROJECT
 from editorstate import PLAYER
+import kftoolmode
 import mlttransitions
+import modesetting
 import movemodes
 import syncsplitevent
 import tlinewidgets
 import tlineaction
 import updater
+import userfolders
 import utils
 
 _match_frame_writer = None
@@ -68,7 +71,7 @@ def display_clip_menu(y, event, frame):
     if clip_index == -1:
         return False
     # Can't do anything to clips in locked tracks
-    if editevent.track_lock_check_and_user_info(track, display_clip_menu, "clip context menu"):
+    if dialogutils.track_lock_check_and_user_info(track):
         return False
     
     # Display popup
@@ -511,7 +514,7 @@ class MatchFrameWriter:
         clip_path = self.clip.path
 
         # Create consumer
-        matchframe_new_path = utils.get_hidden_user_dir_path() + appconsts.MATCH_FRAME_NEW
+        matchframe_new_path = userfolders.get_cache_dir() + appconsts.MATCH_FRAME_NEW
         consumer = mlt.Consumer(PROJECT().profile, "avformat", matchframe_new_path)
         consumer.set("real_time", 0)
         consumer.set("vcodec", "png")
@@ -536,7 +539,7 @@ class MatchFrameWriter:
             time.sleep(0.1)
 
         # Copy to match frame
-        matchframe_path = utils.get_hidden_user_dir_path() + appconsts.MATCH_FRAME
+        matchframe_path = userfolders.get_cache_dir() + appconsts.MATCH_FRAME
         shutil.copyfile(matchframe_new_path, matchframe_path)
 
         # Update timeline data           
@@ -620,7 +623,13 @@ def _delete_all_clip_markers(data):
     clip.markers = []
     updater.repaint_tline()
 
-
+def _volume_keyframes(data):
+    clip, track, item_id, item_data = data
+    modesetting.kftool_mode_from_popup_menu(clip, track, kftoolmode.VOLUME_KF_EDIT)
+    
+def _brightness_keyframes(data):
+    clip, track, item_id, item_data = data
+    modesetting.kftool_mode_from_popup_menu(clip, track, kftoolmode.BRIGHTNESS_KF_EDIT)
 
 # Functions to handle popup menu selections for strings 
 # set as activation messages in guicomponents.py
@@ -664,4 +673,6 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "add_clip_marker":_add_clip_marker,
                   "go_to_clip_marker":_go_to_clip_marker,
                   "delete_clip_marker":_delete_clip_marker,
-                  "deleteall_clip_markers":_delete_all_clip_markers}
+                  "deleteall_clip_markers":_delete_all_clip_markers,
+                  "volumekf":_volume_keyframes,
+                  "brightnesskf":_brightness_keyframes}

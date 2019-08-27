@@ -203,7 +203,7 @@ class Sequence:
 
     def _create_black_track_clip(self):
         # Create 1 fr long black bg clip and set in and out
-        global black_track_clip # btw, why global?
+        global black_track_clip
         
         # This is not an actual bin clip so id can be -1, it is just used to create the producer
         pattern_producer_data = patternproducer.BinColorClip(-1, "black_bg", "#000000000000")
@@ -843,47 +843,50 @@ class Sequence:
         """
         Set black to track length of sequence.
         """
-        global black_track_clip
-        if black_track_clip == None: # This fails for launch with assoc Gnome file because this has not been made yet.
-                                     # This global black_track_clip is brain dead.  
-            self._create_black_track_clip()
-        c_in = 0
-        c_out = self.get_length()
-        black_track_clip.clip_in = c_in
-        black_track_clip.clip_out = c_out
-        black_track_clip.set_in_and_out(c_in, c_out)
+        self._create_black_track_clip()
+        
+        # We are now always creating a new 1 frame long black track clip
+        # and putting it on track0. This is to stay compatible with earlier project files
+        # but to also always have just 1 frame long black track clip.
+        if len(self.tracks[0].clips) > 0:
+            self.tracks[0].clips.pop(0) # py
+            self.tracks[0].remove(0) # mlt
+
+        self.tracks[0].clips.append(black_track_clip) # py
+        self.tracks[0].append(black_track_clip, 0, 0) # mlt
+        
+        # LOOK TO GET RID OF THIS, WE ARE CREATING A NEW BLACK CLIP PER CHANGE OF SEQUENCE!
 
     def get_length(self):
         return self.multitrack.get_length()
 
     def resize_tracks_to_fit(self, allocation):
         x, y, w, panel_height = allocation.x, allocation.y, allocation.width, allocation.height
-        count = 0
+        track_id = 1
         fix_next = True
         while(fix_next):
             tracks_height = self.get_tracks_height()
             if tracks_height < panel_height:
                 fix_next = False
-            elif count + 1 == self.first_video_index:
+            elif track_id == self.first_video_index:
+                # V1 should stay large and everything should still fit
+                track_id += 1
+                continue
+            elif track_id == len(self.tracks) - 2:
                 # This shold not happen because track heights should be set up so that minimized app 
-                # has enough space to display all tracks.
-                # Yet it happens sometimes, meh.
-                print "sequence.resize_tracks_to_fit (): could not make tracks fit in timeline vertical space"
                 fix_next = False
+                print "sequence.resize_tracks_to_fit (): could not make tracks fit in timeline vertical space"
             else:
-                self.tracks[1 + count].height = TRACK_HEIGHT_SMALL
-                self.tracks[len(self.tracks) - 2 - count].height = TRACK_HEIGHT_SMALL
-                count += 1
+                self.tracks[track_id].height = TRACK_HEIGHT_SMALL
+                track_id += 1
 
     def find_next_cut_frame(self, tline_frame):
         """
         Returns frame of next cut in active tracks relative to timeline.
         """
         cut_frame = -1
-        for i in range(1, len(self.tracks)):
+        for i in range(1, len(self.tracks) - 1):
             track = self.tracks[i]
-            if track.active == False:
-                continue
             
             # Get index and clip
             index = track.get_clip_index_at(tline_frame)
@@ -909,11 +912,13 @@ class Sequence:
         """
         Returns frame of next cut in active tracks relative to timeline.
         """
+        if tline_frame == 0:
+            return 0 # Rest of method fails for this special case
+        
         cut_frame = -1
-        for i in range(1, len(self.tracks)):
+        for i in range(1, len(self.tracks) - 1):
             track = self.tracks[i]
-            if track == False:
-                continue
+            #print track.get_producer().get_length()
             
             # Get index and clip start
             index = track.get_clip_index_at(tline_frame)
@@ -923,21 +928,24 @@ class Sequence:
             if clip_start_frame == tline_frame:
                 index = index - 1
             
-            # Check index is good
-            try:
-                clip = track.clips[index]            
-            except Exception:
-                continue # index not good clip
-            
             # Get prev cut frame
-            next_cut_frame = track.clip_start(index)
+            try:
+                clip = track.clips[index]
+                prev_cut_frame = track.clip_start(index)
+            except Exception:
+                try:
+                    if index == len(track.clips):
+                        clip = track.clips[index - 1]
+                        prev_cut_frame = track.clip_start(index)
+                except Exception:
+                    continue
             
             # Set cut frame
             if cut_frame == -1:
-                cut_frame = next_cut_frame
-            elif next_cut_frame > cut_frame:
-                cut_frame = next_cut_frame
-                
+                cut_frame = prev_cut_frame
+            elif prev_cut_frame > cut_frame:
+                cut_frame = prev_cut_frame
+            
         return cut_frame
     
     def get_closest_cut_frame(self, track_id, frame):

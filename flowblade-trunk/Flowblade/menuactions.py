@@ -38,7 +38,6 @@ from editorstate import PROJECT
 from editorstate import current_sequence
 import editorstate
 import gui
-import jackaudio
 import projectdata
 import patternproducer
 import profilesmanager
@@ -151,11 +150,6 @@ def _watermark_remove_callback(button, widgets):
     file_path_value_label.set_text(_("Not Set"))
     current_sequence().remove_watermark()
       
-def jack_output_managing():
-    dialog = jackaudio.JackAudioManagerDialog()
-    #PLAYER().jack_output_on()
-
-
 def toggle_fullscreen():
     print "toggle_fullscreen"
     if editorstate.fullscreen == False:

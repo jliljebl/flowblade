@@ -24,6 +24,8 @@ Module handles cut tool functionality
 
 from gi.repository import Gdk
 
+import appconsts
+import dialogutils
 import edit
 from editorstate import current_sequence
 import tlinewidgets
@@ -46,6 +48,12 @@ def mouse_release(x, y, frame, state):
 # ---------------------------------------------- cut actions
 def cut_single_track(event, frame):
     track = tlinewidgets.get_track(event.y)
+    if track == None or track.id == 0 or track.id == len(current_sequence().tracks) - 1:
+        return
+
+    if dialogutils.track_lock_check_and_user_info(track):
+        return
+        
     data = get_cut_data(track, frame)
     if data == None:
         return
@@ -59,7 +67,10 @@ def cut_all_tracks(frame):
     tracks_cut_data = []
 
     for i in range(1, len(current_sequence().tracks) - 1):
-        tracks_cut_data.append(get_cut_data(current_sequence().tracks[i], frame))
+        if current_sequence().tracks[i].edit_freedom == appconsts.LOCKED:
+            tracks_cut_data.append(None) # Don't cut locked tracks.
+        else:
+            tracks_cut_data.append(get_cut_data(current_sequence().tracks[i], frame))
 
     data = {"tracks_cut_data":tracks_cut_data}
     action = edit.cut_all_action(data)

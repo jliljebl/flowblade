@@ -1,0 +1,24 @@
+Flowblade patch
+===============
+
+Author: Steven van de Beek, Sep-2018
+
+Patch purpose:
+Stopping the audio wave form renderer thread when exiting the application.
+
+Explanation:
+When a clip is added to a bin, a background process is launched to start an audio
+wave form render. If the clip is long, this could take a long time and if you try
+to leave the application before it is finished you will see the application keeps
+on running. This is especially a problem when running it from the command line as
+you don't get control over the command line back.
+It will also still consume computer resources, which is not ideal.
+
+Patch:
+audiowaveformrenderer.py
+-- Add self. to the process attribute in AudioRenderLaunchThread to make it accessible
+
+app.py
+-- When exiting the application, add a thread enumeration and try/except to terminate
+   the threads that have a 'process' attribute, as these are started by
+   audiowaveformrenderer.

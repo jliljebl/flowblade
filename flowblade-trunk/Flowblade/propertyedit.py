@@ -27,11 +27,13 @@ extending AbstractProperty class for editing. These wrappers convert
 edit inputs into mlt property values (that effect how sequence is displayed)
 and python side values (that are persistant).
 """
+import json
 
 from gi.repository import Gtk, Gdk
 
 import appconsts
 from editorstate import current_sequence
+import gui
 import mlttransitions
 import mltfilters
 import propertyparse
@@ -53,7 +55,7 @@ NORMALIZED_FLOAT = "NORMALIZED_FLOAT"                       # range 0.0 - 1.0
 #  PROP_EXPRESSION values, e.g. "exptype=keyframe_hcs"      parsed output
 DEFAULT = "default"                                         # value     (str(int), str(float) or str(str))
 DEFAULT_TRANSITION = "default_transition"                   # value     (str(int), str(float) or str(str))
-SINGLE_KEYFRAME = "singlekeyframe"                          # 0=value
+SINGLE_KEYFRAME = "singlekeyframe"                          # DEPRECATED, were juat presenting standart slider for these now. This kept for back wards compatibility.
 OPACITY_IN_GEOM_SINGLE_KF = "opacity_in_geom_kf_single"     # 0=0/0:SCREEN_WIDTHxSCREEN_HEIGHT:opacity
 OPACITY_IN_GEOM_KF = "opacity_in_geom_kf"                   # frame=0/0:SCREEN_WIDTHxSCREEN_HEIGHT:opacity (kf_str;kf_str;kf_str;...;kf_str)
 GEOMETRY_OPACITY_KF ="geom_opac_kf"                         # frame=x/y:widthxheight:opacity
@@ -66,9 +68,11 @@ MULTIPART_KEYFRAME_HCS = "multipart_keyframe"               # frame=value(;frame
 FREI_POSITION_HCS = "frei_pos_hcs"                          # frame=x:y
 FREI_GEOM_HCS_TRANSITION = "frei_geom_hcs";                 # time=x:y:x_scale:y_scale:rotation:mix
 COLOR = "color"                                             # #rrggbb
+CAIRO_COLOR = "cairo_color"                                             # #rrggbb but displayed as r and b switched
 LUT_TABLE = "lut_table"                                     # val;val;val;val;...;val
 WIPE_RESOURCE = "wipe_resource"                             # /path/to/resource.pgm
 FILE_RESOURCE = "file_resource"                             # /path/to/somefile
+ROTO_JSON = "roto_json"                                     # JSON string of keyframes and values
 PLAIN_STRING = "plain_string"                               # String is just string, for text input
 NOT_PARSED = "not_parsed"                                   # A write out value is not parsed from value
 NOT_PARSED_TRANSITION = "not_parsed_transition"             # A write out value is not parsed from value in transition object
@@ -323,10 +327,13 @@ class AbstractProperty:
         return (float(current_sequence().profile.sample_aspect_num()) / 
                     current_sequence().profile.sample_aspect_den())
        
-        
+    def enable_save_menu_item(self):
+        gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(True)
+
+    
 class EditableProperty(AbstractProperty):
     """
-    A wrapper for mltfilter.FilterObject.properties array property tuple 
+    A wrapper for a mltfilter.FilterObject.properties array property tuple 
     and related data that converts user input to 
     property values.
 
@@ -675,6 +682,21 @@ class KeyFrameHCSFilterProperty(EditableProperty):
         self.write_value(val_str)
 
 
+class RotoJSONProperty(EditableProperty):
+
+    def write_out_keyframes(self, keyframes):
+        self.enable_save_menu_item()
+        val_str = "{"
+        for kf_obj in keyframes:
+            kf, points = kf_obj
+            val_str += '"' + str(kf) + '"' + ':'
+            val_str += json.dumps(points) + ","
+        
+        val_str = val_str.rstrip(",")
+        val_str += "}"
+        self.write_value(val_str)
+
+
 class KeyFrameHCSTransitionProperty(TransitionEditableProperty):
     """
     Coverts array of keyframe tuples to string of type "0=0.2;123=0.143"
@@ -703,10 +725,11 @@ class KeyFrameHCSTransitionProperty(TransitionEditableProperty):
 class ColorProperty(EditableProperty):
     """
     Gives value as gdk color for gui and writes out color as 
-    different type of hex to mlt 
+    different type of hex to mlt.
     """
     
     def get_value_as_gdk_color(self):
+        # NOT USED ?!?
         raw_r, raw_g, raw_b = utils.hex_to_rgb(self.value)
         return Gdk.Color(red=(float(raw_r)/255.0),
                              green=(float(raw_g)/255.0),
@@ -724,6 +747,34 @@ class ColorProperty(EditableProperty):
                         utils.int_to_hex_str(int(raw_b * 255.0))
         self.write_value(val_str)
 
+
+class CairoColorProperty(EditableProperty):
+    """
+    Gives value as gdk color for gui and writes out color as 
+    different type of hex to mlt, for uses R and B switched,
+    there is something gone wrom
+    """
+    
+    def get_value_as_gdk_color(self):
+        # NOT USED ?!?
+        raw_r, raw_g, raw_b = utils.hex_to_rgb(self.value)
+        return Gdk.Color(red=(float(raw_b)/255.0),
+                             green=(float(raw_g)/255.0),
+                             blue=(float(raw_r)/255.0))
+
+    def get_value_rgba(self):
+        raw_r, raw_g, raw_b = utils.hex_to_rgb(self.value)
+        return (float(raw_b)/255.0, float(raw_g)/255.0, float(raw_r)/255.0, 1.0)
+
+    def color_selected(self, color_button):
+        color = color_button.get_color()
+        raw_r, raw_g, raw_b = color.to_floats()
+        val_str = "#" + utils.int_to_hex_str(int(raw_b * 255.0)) + \
+                        utils.int_to_hex_str(int(raw_g * 255.0)) + \
+                        utils.int_to_hex_str(int(raw_r * 255.0))
+        self.write_value(val_str)
+
+
 class WipeResourceProperty(TransitionEditableProperty):
     """
     Converts user combobox selections to absolute paths containing wipe
@@ -736,7 +787,8 @@ class WipeResourceProperty(TransitionEditableProperty):
         key = keys[combo_box.get_active()]
         res_path = mlttransitions.get_wipe_resource_path(key)
         self.write_value(str(res_path))
-        
+
+
 class FileResourceProperty(EditableProperty):
     """
     A file path as property value set from file chooser dialog callback.
@@ -747,7 +799,8 @@ class FileResourceProperty(EditableProperty):
             self.write_value(unicode(str(res_path), "utf-8"))
         else:
             self.write_value(unicode(str(""), "utf-8"))
-        
+
+
 class MultipartKeyFrameProperty(AbstractProperty):
     
     def __init__(self, params):
@@ -841,11 +894,13 @@ EDITABLE_PROPERTY_CREATORS = { \
     KEYFRAME_HCS_TRANSITION: lambda params : KeyFrameHCSTransitionProperty(params),
     MULTIPART_KEYFRAME_HCS: lambda params : MultipartKeyFrameProperty(params),
     COLOR: lambda params : ColorProperty(params),
+    CAIRO_COLOR: lambda params : CairoColorProperty(params),
     GEOMETRY_OPACITY_KF: lambda params : KeyFrameGeometryOpacityProperty(params),
     GEOM_IN_AFFINE_FILTER: lambda params : AffineFilterGeomProperty(params),
     GEOM_IN_AFFINE_FILTER_V2: lambda params :AffineFilterGeomPropertyV2(params),
     WIPE_RESOURCE : lambda params : WipeResourceProperty(params),
     FILE_RESOURCE : lambda params :FileResourceProperty(params),
+    ROTO_JSON  : lambda params :RotoJSONProperty(params),
     LUT_TABLE : lambda params  : LUTTableProperty(params),
     NOT_PARSED : lambda params : EditableProperty(params), # This should only be used with params that have editor=NO_EDITOR
     NOT_PARSED_TRANSITION : lambda params : TransitionEditableProperty(params), # This should only be used with params that have editor=NO_EDITOR
