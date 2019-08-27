@@ -21,6 +21,14 @@
 """
 Module handles saving and loading data that is related to the editor and not any particular project.
 """
+
+"""
+    Change History:
+        Aug-2019 - SvdB - AS:
+            Save value of Autosave preference.
+            See preferenceswindow.py for more info
+"""
+
 import gi
 gi.require_version('Gtk', '3.0') 
 from gi.repository import Gtk
@@ -47,7 +55,6 @@ NO_DECORATIONS = 2
 
 prefs = None
 recent_projects = None
-
 
 def load():
     """
@@ -195,7 +202,9 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     # Unpack widgets
     gen_opts_widgets, edit_prefs_widgets, playback_prefs_widgets, view_prefs_widgets, performance_widgets = widgets_tuples_tuple
 
-    default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin, load_order_combo = gen_opts_widgets
+    # Aug-2019 - SvdB - AS - added autosave_combo
+    default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin, load_order_combo, \
+        autosave_combo = gen_opts_widgets
     
     # Jul-2016 - SvdB - Added play_pause_button
     # Apr-2017 - SvdB - Added ffwd / rev values
@@ -250,6 +259,8 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.playback_follow_move_tline_range = follow_move_range.get_active()
     prefs.theme = theme.get_active()
     prefs.top_row_layout = top_row_layout.get_active()
+    # Aug-2019 - SvdB - AS
+    prefs.auto_save_delay_value_index = autosave_combo.get_active()
 
     #if prefs.shortcuts != shortcuts.shortcut_files[shortcuts_combo.get_active()]:
     #    prefs.shortcuts = shortcuts.shortcut_files[shortcuts_combo.get_active()]
