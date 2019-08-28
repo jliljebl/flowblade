@@ -24,6 +24,14 @@ Application module.
 Handles application initialization, shutdown, opening projects, autosave and changing
 sequences.
 """
+
+"""
+    Change History:
+        Aug-2019 - SvdB - AS:
+            Changes to get the autosave value from preferences to work.
+            See preferenceswindow.py for more info
+"""
+
 try:
     import pgi
     pgi.install_as_gi()
@@ -180,6 +188,14 @@ def main(root_path):
     # Apr-2017 - SvdB - Keyboard shortcuts
     shortcuts.load_shortcut_files()
     shortcuts.load_shortcuts()
+
+    # Aug-2019 - SvdB - AS
+    # The test for len != 4 is to make sure that if we change the number of values below the prefs are reset to the correct list
+    # So when we add or remove a value, make sure we also change the len test
+    # Only use positive numbers.
+    if( not editorpersistance.prefs.AUTO_SAVE_OPTS or len(editorpersistance.prefs.AUTO_SAVE_OPTS) != 4):
+        print("Initializing Auto Save Options")
+        editorpersistance.prefs.AUTO_SAVE_OPTS = ((0, _("No Autosave")),(1, _("1 min")),(2, _("2 min")),(5, _("5 min")))
 
     # We respaths and translations data available so we need to init in a function.
     workflow.init_data()
@@ -736,13 +752,25 @@ def get_instance_autosave_file():
 
 def start_autosave():
     global autosave_timeout_id
-    time_min = 1 # hard coded, probably no need to make configurable
+
+    # Aug-2019 - SvdB - AS - Made changes to use the value stored in prefs, with Default=1 minute, rather than hardcoding
+    try:
+        time_min, desc = editorpersistance.prefs.AUTO_SAVE_OPTS[editorpersistance.prefs.auto_save_delay_value_index]
+    except:
+    	  time_min = 1
+
     autosave_delay_millis = time_min * 60 * 1000
 
-    print "Autosave started..."
-    autosave_timeout_id = GObject.timeout_add(autosave_delay_millis, do_autosave)
-    autosave_file = userfolders.get_cache_dir() + get_instance_autosave_file()
-    persistance.save_project(editorstate.PROJECT(), autosave_file)
+    # Aug-2019 - SvdB - AS - put in code to stop or not start autosave depending on user selection
+    if autosave_delay_millis > 0:
+        print "Autosave started..."
+        autosave_timeout_id = GObject.timeout_add(autosave_delay_millis, do_autosave)
+        autosave_file = userfolders.get_cache_dir() + get_instance_autosave_file()
+        persistance.save_project(editorstate.PROJECT(), autosave_file)
+    else:
+        print "Autosave disabled..."
+        stop_autosave()
+
 
 def get_autosave_files():
     autosave_dir = userfolders.get_cache_dir() + AUTOSAVE_DIR

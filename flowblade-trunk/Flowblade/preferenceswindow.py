@@ -18,6 +18,13 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+"""
+    Change History:
+        Aug-2019 - SvdB - AS:
+            Save value of Autosave preference.
+            This impacts the following files: preferenceswindow, editorpersistance, app
+"""
+
 from gi.repository import Gtk
 
 import appconsts
@@ -33,7 +40,6 @@ import multiprocessing
 PREFERENCES_WIDTH = 730
 PREFERENCES_HEIGHT = 440
 PREFERENCES_LEFT = 410
-
 
 def preferences_dialog():
 
@@ -105,10 +111,12 @@ def _general_options_panel():
     undo_max_spin.set_numeric(True)
 
     autosave_combo = Gtk.ComboBoxText()
-    AUTO_SAVE_OPTS = ((-1, _("No Autosave")),(1, _("1 min")),(2, _("2 min")),(5, _("5 min")))
+    # Aug-2019 - SvdB - AS - This is now initialized in app.main
+    # Using editorpersistance.prefs.AUTO_SAVE_OPTS as source
+    # AUTO_SAVE_OPTS = ((-1, _("No Autosave")),(1, _("1 min")),(2, _("2 min")),(5, _("5 min")))
 
-    for i in range(0, len(AUTO_SAVE_OPTS)):
-        time, desc = AUTO_SAVE_OPTS[i]
+    for i in range(0, len(editorpersistance.prefs.AUTO_SAVE_OPTS)):
+        time, desc = editorpersistance.prefs.AUTO_SAVE_OPTS[i]
         autosave_combo.append_text(desc)
     autosave_combo.set_active(prefs.auto_save_delay_value_index)
 
@@ -137,7 +145,8 @@ def _general_options_panel():
 
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
-    return vbox, (default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin, load_order_combo)
+    # Aug-2019 - SvdB - AS - Added autosave_combo
+    return vbox, (default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin, load_order_combo, autosave_combo)
 
 def _edit_prefs_panel():
     prefs = editorpersistance.prefs
