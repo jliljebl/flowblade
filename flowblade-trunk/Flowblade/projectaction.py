@@ -748,6 +748,7 @@ def get_save_time_msg():
     
 # ---------------------------------- rendering
 def do_rendering():
+    global force_overwrite, force_proxy
     if force_overwrite == False:
         render_path = render.get_file_path()
         if os.path.isfile(render_path):
@@ -771,7 +772,6 @@ def do_rendering():
     elif EDIT_MODE() == editorstate.SLIDE_TRIM:
         modesetting.slide_trim_no_edit_init()
     
-    global force_overwrite, force_proxy
     force_overwrite = False
     force_proxy = False
     

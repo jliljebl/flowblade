@@ -176,6 +176,7 @@ class SliderEditor:
         # If we find "=" this means that value is keyframe expression
         is_multi_kf = (editable_property.value.find("=") != -1)
 
+        global changing_slider_to_kf_property_name
         if changing_slider_to_kf_property_name == editable_property.name or is_multi_kf == True:
             eq_index = editable_property.value.find("=")
             
@@ -190,7 +191,6 @@ class SliderEditor:
             
             # This has now already been used if existed and has to be deleted.
             if changing_slider_to_kf_property_name == editable_property.name:
-                global changing_slider_to_kf_property_name
                 changing_slider_to_kf_property_name = None
         else:
             self.init_for_slider(editable_property, slider_name, compact)
