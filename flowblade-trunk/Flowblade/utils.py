@@ -384,7 +384,7 @@ def is_mlt_xml_file(file_path):
 def hex_to_rgb(value):
     value = value.lstrip('#')
     lv = len(value)
-    return tuple(int(value[i:i+lv/3], 16) for i in range(0, lv, lv/3))
+    return tuple(int(value[i:i+lv//3], 16) for i in range(0, lv, lv//3))
 
 def int_to_hex_str(n):
     val = int_to_hex(n)
