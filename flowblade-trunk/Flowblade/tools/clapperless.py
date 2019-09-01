@@ -8,7 +8,7 @@
 # by Benjamin M. Schwartz <bens@alum.mit.edu>
 # http://git.pitivi.org/?p=pitivi.git;a=blob;f=pitivi/autoaligner.py
 #
-# with some minor modifications for use in Flowblade by janne Liljeblad in 2017
+# with some minor modifications for use in Flowblade by Janne Liljeblad in 2017
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

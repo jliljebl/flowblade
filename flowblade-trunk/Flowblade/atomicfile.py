@@ -22,7 +22,7 @@
 Atomic file write support.
 """
 
-import md5
+import hashlib
 import os
 import shutil
 
@@ -175,6 +175,6 @@ class AtomicFileWriter(object):
         Create a candidate temp filename, without touching the filesystem.
         """
 
-        uuid_str = md5.new(str(os.urandom(32))).hexdigest()
+        uuid_str = hashlib.md5(str(os.urandom(32))).hexdigest()
         return ".tmp-" + uuid_str + "-" + basepath
 

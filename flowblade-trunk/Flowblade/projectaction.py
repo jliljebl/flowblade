@@ -26,7 +26,7 @@ Load, save, add media file, etc...
 import copy
 import datetime
 import glob
-import md5
+import hashlib
 import mlt
 import os
 from os import listdir
@@ -675,7 +675,7 @@ class SnaphotSaveThread(threading.Thread):
 
 def get_snapshot_unique_name(file_path, file_name):
     (name, ext) = os.path.splitext(file_name)
-    return md5.new(file_path).hexdigest() + ext
+    return hashlib.md5(file_path).hexdigest() + ext
 
 def copy_comp_resourse_file(compositor, res_property, media_folder):
     res_path = propertyparse.get_property_value(compositor.transition.properties, res_property)
@@ -1277,7 +1277,7 @@ def _do_create_selection_compound_clip(dialog, response_id, name_entry):
     
     # Create unique file path in hidden render folder
     folder = userfolders.get_render_dir()
-    uuid_str = md5.new(str(os.urandom(32))).hexdigest()
+    uuid_str = hashlib.md5(str(os.urandom(32))).hexdigest()
     write_file = folder + "/"+ uuid_str + ".xml"
 
     dialog.destroy()

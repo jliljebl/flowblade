@@ -30,7 +30,7 @@ import dbus
 import dbus.service
 from dbus.mainloop.glib import DBusGMainLoop
 import mlt
-import md5
+import hashlib
 import locale
 import os
 from os import listdir
@@ -524,11 +524,11 @@ class BatchRenderItemData:
     def generate_identifier(self):
         id_str = self.project_name + self.timestamp.ctime()
         try:
-            idfier = md5.new(id_str).hexdigest()
+            idfier = hashlib.md5(id_str).hexdigest()
         except:
             ascii_pname = unicodedata.normalize('NFKD', self.project_name).encode('ascii','ignore')
             id_str = str(ascii_pname) + self.timestamp.ctime()
-            idfier = md5.new(id_str).hexdigest()
+            idfier = hashlib.md5(id_str).hexdigest()
         return idfier
 
     def matches_identifier(self, identifier):

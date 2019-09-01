@@ -24,7 +24,7 @@ Module contains objects used to capture project data.
 import cairo
 import datetime
 import mlt
-import md5
+import hashlib
 import os
 
 from gi.repository import GdkPixbuf
@@ -360,7 +360,7 @@ class MediaFile:
         proxy_md_key = self.path + str(proxy_width) + str(proxy_height)
         if hasattr(self, "use_unique_proxy"): # This may have been added in proxyediting.py to prevent interfering with existing projects
             proxy_md_key = proxy_md_key + os.urandom(16)
-        md_str = md5.new(proxy_md_key).hexdigest()
+        md_str = hashlib.md5(proxy_md_key).hexdigest()
         return str(userfolders.get_render_dir() + "/proxies/" + md_str + "." + file_extesion) # str() because we get unicode here
 
     def _create_img_seg_proxy_path(self,  proxy_width, proxy_height):
@@ -368,7 +368,7 @@ class MediaFile:
         proxy_md_key = self.path + str(proxy_width) + str(proxy_height)
         if hasattr(self, "use_unique_proxy"): # This may have been added in proxyediting.py to prevent interfering with existing projects
             proxy_md_key = proxy_md_key + os.urandom(16)
-        md_str = md5.new(proxy_md_key).hexdigest()
+        md_str = hashlib.md5(proxy_md_key).hexdigest()
         return str(userfolders.get_render_dir() + "/proxies/" + md_str + "/" + file_name)
 
     def add_proxy_file(self, proxy_path):
@@ -460,7 +460,7 @@ class Thumbnailer:
         Writes thumbnail image from file producer
         """
         # Get data
-        md_str = md5.new(file_path).hexdigest()
+        md_str = hashlib.md5(file_path).hexdigest()
         thumbnail_path = userfolders.get_cache_dir() + appconsts.THUMBNAILS_DIR + "/" + md_str +  ".png"
 
         # Create consumer

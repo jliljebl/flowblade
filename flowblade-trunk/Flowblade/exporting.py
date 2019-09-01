@@ -26,7 +26,7 @@ from xml.dom import minidom
 from math import floor
 import mlt
 import time
-import md5
+import hashlib
 import re
 import shutil
 
@@ -217,7 +217,7 @@ class MLTXMLToEDLParse:
                 existing_resource = self.reel_name_to_resource[reel_name]
 
                 if existing_resource != producer_resource:
-                    reel_name = md5.new(producer_resource).hexdigest()[:8]
+                    reel_name = hashlib.md5(producer_resource).hexdigest()[:8]
                     
 
             self.resource_to_reel_name[producer_resource] = reel_name
@@ -225,7 +225,7 @@ class MLTXMLToEDLParse:
 
     def get_reel_name(self, resource):
         if self.reel_name_type == REEL_NAME_HASH_8_NUMBER:
-            return "{0:08d}".format(md5.new(resource).hexdigest())
+            return "{0:08d}".format(hashlib.md5(resource).hexdigest())
         else:
             file_name = resource.split("/")[-1]
             file_name_no_ext = file_name.split(".")[0]

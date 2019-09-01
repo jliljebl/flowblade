@@ -47,8 +47,8 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 
 import locale
-import md5
 import mlt
+import hashlib
 import os
 import sys
 import time
@@ -745,7 +745,7 @@ def autosaves_many_dialog_callback(dialog, response, autosaves_view, autosaves):
 
 def set_instance_autosave_id():
     global instance_autosave_id_str
-    instance_autosave_id_str = "_" + md5.new(str(os.urandom(32))).hexdigest()
+    instance_autosave_id_str = "_" + hashlib.md5(str(os.urandom(32))).hexdigest()
 
 def get_instance_autosave_file():
     return AUTOSAVE_FILE + instance_autosave_id_str

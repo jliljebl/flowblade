@@ -29,7 +29,7 @@ Rendering is done in app.player object of class mltplayer.Player
 from gi.repository import Gtk
 
 import mlt
-import md5
+import hashlib
 import os
 import time
 import threading
@@ -608,7 +608,7 @@ def render_single_track_transition_clip(transition_producer, encoding_option_ind
 
     folder = userfolders.get_render_dir()
 
-    file_name = md5.new(str(os.urandom(32))).hexdigest()
+    file_name = hashlib.md5(str(os.urandom(32))).hexdigest()
     write_file = folder + "/"+ file_name + file_ext
 
     # Render consumer

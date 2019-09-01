@@ -25,7 +25,7 @@ Handles application initialization, shutdown, opening projects, autosave and cha
 sequences.
 """
 import datetime
-import md5
+import hashlib
 import mlt
 import os
 import subprocess
@@ -90,7 +90,7 @@ def _write_offsets(video_file_path, audio_file_path, completed_callback):
     GLib.idle_add(completed_callback, (video_file_path, audio_file_path, idstr))
 
 def _get_offset_file_idstr(file_1, file_2):
-    return md5.new(file_1 + file_2).hexdigest()
+    return hashlib.md5(file_1 + file_2).hexdigest()
     
 def _read_offsets(idstr):
     offsets_file = userfolders.get_cache_dir() + clapperless.OFFSETS_DATA_FILE + "_"+ idstr
@@ -326,7 +326,7 @@ def _do_create_sync_compound_clip(dialog, response_id, data):
     
     # Create unique file path in hidden render folder
     folder = userfolders.get_render_dir()
-    uuid_str = md5.new(str(os.urandom(32))).hexdigest()
+    uuid_str = hashlib.md5(str(os.urandom(32))).hexdigest()
     write_file = folder + "/"+ uuid_str + ".xml"
     
     # Create tractor
