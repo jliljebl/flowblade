@@ -27,7 +27,7 @@ Module handles button edit events from buttons in the middle bar.
 from gi.repository import Gtk
 from gi.repository import Gdk
 
-import md5
+import hashlib
 import os
 from operator import itemgetter
 import threading
@@ -1567,7 +1567,7 @@ class ReRenderderAllWindow:
         # Dreate render consumer
         profile = PROJECT().profile
         folder = userfolders.get_render_dir()
-        file_name = md5.new(str(os.urandom(32))).hexdigest()
+        file_name = hashlib.md5(str(os.urandom(32))).hexdigest()
         self.write_file = folder + "/"+ file_name + file_ext
         consumer = renderconsumer.get_render_consumer_for_encoding_and_quality(self.write_file, profile, encoding_option_index, quality_option_index)
         
