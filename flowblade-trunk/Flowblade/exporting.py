@@ -121,7 +121,7 @@ class MLTXMLToEDLParse:
     def get_project_profile(self):
         profile_dict = {}
         profile = self.xmldoc.getElementsByTagName("profile")
-        key_list = profile.item(0).attributes.keys()
+        key_list = list(profile.item(0).attributes.keys())
         for a in key_list:
             profile_dict[a] = profile.item(0).attributes[a].value
         return profile_dict
@@ -205,7 +205,7 @@ class MLTXMLToEDLParse:
             self.producers[producer_data["id"]] = producer_data
     
     def link_resources(self):
-        for producer_id, producer_data in self.producers.iteritems():
+        for producer_id, producer_data in self.producers.items():
 
             producer_resource = producer_data["resource"]
             reel_name = self.get_reel_name(producer_resource)

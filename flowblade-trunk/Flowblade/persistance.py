@@ -116,7 +116,7 @@ def save_project(project, file_path, changed_profile_desc=None):
     """
     Creates pickleable project object
     """
-    print "Saving project..."  # + os.path.basename(file_path)
+    print("Saving project...")  # + os.path.basename(file_path)
     
     # Get shallow copy
     s_proj = copy.copy(project)
@@ -148,7 +148,7 @@ def save_project(project, file_path, changed_profile_desc=None):
 
     # Replace media file objects with pickleable copys
     media_files = {}
-    for k, v in s_proj.media_files.iteritems():
+    for k, v in s_proj.media_files.items():
         s_media_file = copy.copy(v)
         
         # Because of MLT misfeature of changing project profile when loading MLT XML files we need to create new modified XML files when
@@ -407,7 +407,7 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
     if(not hasattr(project, "SAVEFILE_VERSION")):
         project.SAVEFILE_VERSION = 1 # first save files did not have this
     # SvdB - Feb-2017 - Removed project.name from print. It causes problems with non-latin characters, in some cases. Not sure why, yet.
-    print "Loading Project, SAVEFILE_VERSION:", project.SAVEFILE_VERSION
+    print("Loading Project, SAVEFILE_VERSION:", project.SAVEFILE_VERSION)
 
     # Set MLT profile. NEEDS INFO USER ON MISSING PROFILE!!!!!
     project.profile = mltprofiles.get_profile(project.profile_desc)
@@ -441,7 +441,7 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
     all_clips = {}
     sync_clips = []
 
-    for k, media_file in project.media_files.iteritems():
+    for k, media_file in project.media_files.items():
         if project.SAVEFILE_VERSION < 4:
             FIX_N_TO_4_MEDIA_FILE_COMPATIBILITY(media_file)
         media_file.current_frame = 0 # this is always reset on load, value is not considered persistent
@@ -466,7 +466,7 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
     
     if icons_and_thumnails == True:
         _show_msg(_("Loading icons"))
-        for k, media_file in project.media_files.iteritems():
+        for k, media_file in project.media_files.items():
             media_file.create_icon()
     
     project.c_seq = project.sequences[project.c_seq_index]
@@ -600,8 +600,8 @@ def fill_track_mlt(mlt_track, py_track):
             mlt_clip.__dict__.update(clip.__dict__)
             append_created = False
         else: # This is just for info, if this ever happens crash will happen.
-            print "Could not recognize clip, dict:"
-            print clip.__dict__
+            print("Could not recognize clip, dict:")
+            print(clip.__dict__)
 
         mlt_clip.selected = False # This transient state gets saved and 
                                    # we want everything unselected to begin with

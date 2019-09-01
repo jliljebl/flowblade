@@ -239,7 +239,7 @@ def workflow_menu_launched(widget, event):
     guiutils.add_separetor(_workflow_menu)
     
     # Active tools
-    non_active_tools = range(1, 12) # we have 11 tools currently
+    non_active_tools = list(range(1, 12)) # we have 11 tools currently
     for i in range(0, len(editorpersistance.prefs.active_tools)):#  tool_id in _TOOLS_DATA:
         tool_id = editorpersistance.prefs.active_tools[i]
         tool_name, tool_icon_file = _TOOLS_DATA[tool_id]
@@ -380,9 +380,9 @@ def _workflow_menu_callback(widget, data):
     elif  msg ==  "tooltips":
         editorpersistance.prefs.show_tool_tooltips = widget.get_active()
     elif msg == "delete lift" and widget.get_active() == True:
-        print "lift"
+        print("lift")
     elif msg == "delete splice" and widget.get_active() == True:
-        print "splice"
+        print("splice")
     else:
         try:
             pos = int(msg)
@@ -436,8 +436,8 @@ class WorkflowDialog(Gtk.Dialog):
         info_label_2.set_use_markup(True)
 
         INDENT = "    "
-        info_label_text_6 = INDENT + u"\u2022" + _(" You can select which <b>tools</b> you want to use.\n") + \
-                            INDENT + u"\u2022" + _(" Many timeline edit <b>behaviours</b> are configurable.\n")
+        info_label_text_6 = INDENT + "\u2022" + _(" You can select which <b>tools</b> you want to use.\n") + \
+                            INDENT + "\u2022" + _(" Many timeline edit <b>behaviours</b> are configurable.\n")
 
         info_label_6 = Gtk.Label(info_label_text_6)
         info_label_6.set_use_markup(True)

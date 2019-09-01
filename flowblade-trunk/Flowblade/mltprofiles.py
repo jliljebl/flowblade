@@ -132,13 +132,13 @@ def get_default_profile_index():
     """
     def_profile_index = get_index_for_name(editorpersistance.prefs.default_profile_name)
     if def_profile_index == -1:
-        print "default profile from prefs not found"
+        print("default profile from prefs not found")
         def_profile_index = get_index_for_name(DEFAULT_DEFAULT_PROFILE)
         def_profile_name =  DEFAULT_DEFAULT_PROFILE
         if def_profile_index == -1:
             def_profile_index = 0
             def_profile_name, profile = _profile_list[def_profile_index]
-            print "DEFAULT_DEFAULT_PROFILE deleted returning first profile"
+            print("DEFAULT_DEFAULT_PROFILE deleted returning first profile")
         editorpersistance.prefs.default_profile_name = def_profile_name
         editorpersistance.save()
     return def_profile_index

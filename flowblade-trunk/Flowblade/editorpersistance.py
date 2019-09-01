@@ -110,7 +110,7 @@ def load():
         prefs = current_prefs
         write_file = file(prefs_file_path, "wb")
         pickle.dump(prefs, write_file)
-        print "prefs updated to new version, new param count:", len(prefs.__dict__)
+        print("prefs updated to new version, new param count:", len(prefs.__dict__))
 
 def save():
     """

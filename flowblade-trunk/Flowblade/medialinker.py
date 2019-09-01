@@ -63,7 +63,7 @@ media_assets = []
 NO_PROJECT_AT_LAUNCH = "##&&noproject&&##"
 
 def display_linker(filename=NO_PROJECT_AT_LAUNCH):
-    print "Launching Media Relinker"
+    print("Launching Media Relinker")
     FLOG = open(userfolders.get_cache_dir() + "log_media_relinker", 'w')
     subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowblademedialinker", filename], stdin=FLOG, stdout=FLOG, stderr=FLOG)
 
@@ -381,14 +381,14 @@ def _update_media_assets():
     asset_paths = {}
             
     # Media file media assets
-    for media_file_id, media_file in target_project.media_files.iteritems():
+    for media_file_id, media_file in target_project.media_files.items():
         if isinstance(media_file, patternproducer.AbstractBinClip):
             continue
         try:
             new_assets.append(MediaAsset(media_file.path, media_file.type))
             asset_paths[media_file.path] = media_file.path
         except:
-            print "failed loading:", media_file
+            print("failed loading:", media_file)
             
     for seq in target_project.sequences:
         # Clip media assets
@@ -538,7 +538,7 @@ def _relink_project_media_paths():
             relinked_paths[media_asset.orig_path] = media_asset.relink_path
             
     # Relink media file media assets
-    for media_file_id, media_file in target_project.media_files.iteritems():
+    for media_file_id, media_file in target_project.media_files.items():
         if isinstance(media_file, patternproducer.AbstractBinClip):
             continue
         if media_file.path in relinked_paths:
@@ -569,7 +569,7 @@ def _relink_project_media_paths():
 # ----------------------------------------------------------- main
 def main(root_path, filename):
     gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
-    print "GTK+ version:", gtk_version
+    print("GTK+ version:", gtk_version)
     editorstate.gtk_version = gtk_version
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION

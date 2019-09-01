@@ -264,8 +264,8 @@ class BinTreeView(Gtk.VBox):
                             str(len(media_bin.file_ids))]
                 self.storemodel.append(row_data)
                 
-            except GObject.GError, exc:
-                print "can't load icon", exc
+            except GObject.GError as exc:
+                print("can't load icon", exc)
         
         self.scroll.queue_draw()
         
@@ -468,8 +468,8 @@ class BinListView(ImageTextTextListView):
                             str(len(media_bin.file_ids))]
                 self.storemodel.append(row_data)
                 self.scroll.queue_draw()
-            except GObject.GError, exc:
-                print "can't load icon", exc
+            except GObject.GError as exc:
+                print("can't load icon", exc)
 
 
 class FilterListView(ImageTextImageListView):
@@ -1067,7 +1067,7 @@ class MediaPanel():
         self.clear_selection()
         bg_color = gui.get_selected_bg_color()
 
-        for media_file, media_object in self.widget_for_mediafile.iteritems():
+        for media_file, media_object in self.widget_for_mediafile.items():
             media_object.widget.override_background_color(Gtk.StateType.NORMAL, bg_color)
             self.selected_objects.append(media_object)
 
@@ -2874,7 +2874,7 @@ def get_shorcuts_selector():
         shortcuts_combo.set_active(current_pref_index)
     else:
         # Something is wrong, the pref shortcut file is not preset in the system.
-        print "Shortcut file in editprpersistance.pref.shortcuts not found!"
+        print("Shortcut file in editprpersistance.pref.shortcuts not found!")
         shortcuts_combo.set_active(0)
 
     return shortcuts_combo

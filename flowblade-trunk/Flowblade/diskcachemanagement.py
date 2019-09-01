@@ -136,7 +136,7 @@ class DiskFolderManagementPanel:
         self.destroy_data()
     
     def destroy_data(self):
-        print "deleting ", self.folder
+        print("deleting ", self.folder)
         
         files = self.get_folder_files()
         for f in files:

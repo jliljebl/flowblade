@@ -165,14 +165,14 @@ def set_theme_colors():
 
     r, g, b, a = unpack_gdk_color(sel_bg_color)
     if r == 0.0 and g == 0.0 and b == 0.0:
-        print "Selected color NOT detected"
+        print("Selected color NOT detected")
         if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
             c = theme_colors[2]
         else:
             c = theme_colors[3]
         _selected_bg_color = Gdk.RGBA(*c)
     else:
-        print "Selected color detected"
+        print("Selected color detected")
         _selected_bg_color = sel_bg_color
 
     # Try to detect bg color and set frow fallback if fails
@@ -184,7 +184,7 @@ def set_theme_colors():
     r, g, b, a = unpack_gdk_color(bg_color)
 
     if r == 0.0 and g == 0.0 and b == 0.0:
-        print "BG color NOT detected"
+        print("BG color NOT detected")
         if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
             c = theme_colors[0]
         else:
@@ -192,7 +192,7 @@ def set_theme_colors():
         _bg_color = Gdk.RGBA(*c)
         _button_colors = Gdk.RGBA(*c)
     else:
-        print "BG color detected"
+        print("BG color detected")
         _bg_color = bg_color
         _button_colors = bg_color
 
@@ -246,14 +246,14 @@ def _print_widget(widget): # debug
     path_str = path_str.replace("horizontal","")
     path_str = path_str.replace("[1/2]","")
     path_str = path_str.replace("GtkVBox:. GtkVPaned:[2/2]. GtkHBox:. GtkHPaned:. GtkVBox:. GtkNotebook:[1/1]","notebook:")
-    print path_str
+    print(path_str)
 
 def apply_gtk_css():
     gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
     if Gtk.get_major_version() == 3 and Gtk.get_minor_version() >= 22:
-        print "Gtk version is " + gtk_version + ", Flowblade theme is available."
+        print("Gtk version is " + gtk_version + ", Flowblade theme is available.")
     else:
-        print "Gtk version is " + gtk_version + ", Flowblade theme only available for Gtk >= 3.22"
+        print("Gtk version is " + gtk_version + ", Flowblade theme only available for Gtk >= 3.22")
         editorpersistance.prefs.theme = appconsts.LIGHT_THEME
         editorpersistance.save()
         return False

@@ -930,11 +930,11 @@ def tracks_count_change_dialog(callback, v_tracks, a_tracks):
     tracks_select = guicomponents.TracksNumbersSelect(v_tracks, a_tracks)
 
     info_text = _("Please note:\n\n") + \
-                u"\u2022" + _(" When reducing the number of tracks the top Video track and/or bottom Audio track will be removed\n") + \
-                u"\u2022" + _(" It is recommended that you save Project before completing this operation\n") + \
-                u"\u2022" + _(" There is no Undo for this operation\n") + \
-                u"\u2022" + _(" Current Undo Stack will be destroyed\n") + \
-                u"\u2022" + _(" All Clips and Compositors on deleted Tracks will be permanently destroyed")
+                "\u2022" + _(" When reducing the number of tracks the top Video track and/or bottom Audio track will be removed\n") + \
+                "\u2022" + _(" It is recommended that you save Project before completing this operation\n") + \
+                "\u2022" + _(" There is no Undo for this operation\n") + \
+                "\u2022" + _(" Current Undo Stack will be destroyed\n") + \
+                "\u2022" + _(" All Clips and Compositors on deleted Tracks will be permanently destroyed")
     info_label = Gtk.Label(label=info_text)
     info_label.set_use_markup(True)
     info_box = guiutils.get_left_justified_box([info_label])
@@ -1175,9 +1175,9 @@ def alpha_info_msg(callback, filter_name):
     line_label.set_use_markup(True)
     row1 = guiutils.get_left_justified_box([line_label])
     
-    info_text = u"\u2022" + _(" <b>Alpha Filters</b> work by modifying image's alpha channel.\n") + \
-                u"\u2022" + _(" To see the effect of <b>Alpha Filter</b> you need composite this clip on track below by adding a <b>Compositor like 'Dissolve'</b> into this clip.\n") + \
-                u"\u2022" + _(" <b>Alpha Filters</b> on clips on <b>Track V1</b> have no effect.")
+    info_text = "\u2022" + _(" <b>Alpha Filters</b> work by modifying image's alpha channel.\n") + \
+                "\u2022" + _(" To see the effect of <b>Alpha Filter</b> you need composite this clip on track below by adding a <b>Compositor like 'Dissolve'</b> into this clip.\n") + \
+                "\u2022" + _(" <b>Alpha Filters</b> on clips on <b>Track V1</b> have no effect.")
     info_label = Gtk.Label(label=info_text)
     info_label.set_use_markup(True)
     info_box = guiutils.get_left_justified_box([info_label])
@@ -1697,9 +1697,9 @@ def combine_sequences_dialog(callback):
                          _("Import").encode('utf-8'), Gtk.ResponseType.ACCEPT))
     
     info_text = _("<b>Please note:</b>\n") + \
-                u"\u2022" + _(" It is recommended that you save Project before completing this operation\n") + \
-                u"\u2022" + _(" There is no Undo for this operation\n") + \
-                u"\u2022" + _(" Current Undo Stack will be destroyed\n")
+                "\u2022" + _(" It is recommended that you save Project before completing this operation\n") + \
+                "\u2022" + _(" There is no Undo for this operation\n") + \
+                "\u2022" + _(" Current Undo Stack will be destroyed\n")
     info_label = Gtk.Label(label=info_text)
     info_label.set_use_markup(True)
     info_box = guiutils.get_left_justified_box([info_label])

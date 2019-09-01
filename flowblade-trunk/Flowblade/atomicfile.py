@@ -143,7 +143,7 @@ class AtomicFileWriter(object):
                 os.unlink(self.tmp_file_path)
 
             except:
-                print "Error cleaning up temp file: " + self.tmp_file_path
+                print("Error cleaning up temp file: " + self.tmp_file_path)
 
             # let the original exception that was passed into this method bubble up
             return False

@@ -137,7 +137,7 @@ def window_resized():
         return False
     except:
         GObject.timeout_add(200, window_resized)
-        print "window resized FAILED"
+        print("window resized FAILED")
         return False
 
 # --------------------------------- timeline

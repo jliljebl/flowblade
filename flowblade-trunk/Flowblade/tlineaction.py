@@ -517,7 +517,7 @@ def lift_button_pressed():
 
 
 def ripple_delete_button_pressed():
-    print "Ripple delete"
+    print("Ripple delete")
     if movemodes.selected_track == -1:
         return
 
@@ -899,7 +899,7 @@ def add_transition_menu_item_selected():
     
 def add_fade_menu_item_selected():
     if movemodes.selected_track == -1:
-        print "so selection track"
+        print("so selection track")
         # INFOWINDOW
         return
 
@@ -911,7 +911,7 @@ def add_fade_menu_item_selected():
 
 def add_transition_pressed(retry_from_render_folder_select=False):
     if movemodes.selected_track == -1:
-        print "so selection track"
+        print("so selection track")
         # INFOWINDOW
         return
 
@@ -920,7 +920,7 @@ def add_transition_pressed(retry_from_render_folder_select=False):
 
     if not ((clip_count == 2) or (clip_count == 1)):
         # INFOWINDOW
-        print "clip count"
+        print("clip count")
         return
 
     if track.id < current_sequence().first_video_index and clip_count == 1:
@@ -990,10 +990,10 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
 
     try:
         length = int(length_entry.get_text())
-    except Exception, e:
+    except Exception as e:
         # INFOWINDOW, bad input
-        print str(e)
-        print "entry"
+        print(str(e))
+        print("entry")
         return
 
     dialog.destroy()
@@ -1072,7 +1072,7 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
                                                 window_text)
 
 def _transition_render_complete(clip_path):
-    print "Render complete"
+    print("Render complete")
 
     global transition_render_data
     transition_index, from_clip, to_clip, track, from_in, to_out, transition_type, creation_data = transition_render_data
@@ -1270,10 +1270,10 @@ def _add_fade_dialog_callback(dialog, response_id, selection_widgets, transition
 
     try:
         length = int(length_entry.get_text())
-    except Exception, e:
+    except Exception as e:
         # INFOWINDOW, bad input
-        print str(e)
-        print "entry"
+        print(str(e))
+        print("entry")
         return
 
     dialog.destroy()
@@ -1312,7 +1312,7 @@ def _add_fade_dialog_callback(dialog, response_id, selection_widgets, transition
                                                                         transition_type_selection_index,
                                                                         None,
                                                                         color_str)
-    print "producer_tractor length:" + str(producer_tractor.get_length())
+    print("producer_tractor length:" + str(producer_tractor.get_length()))
 
     # Creation data struct needs to have same members for transitions and fades, hence a lot of None here.
     # Used for rerender functionality.
@@ -1421,7 +1421,7 @@ def _fade_RE_render_dialog_callback(dialog, response_id, selection_widgets, fade
                                                                         transition_type_index,
                                                                         None,
                                                                         color_str)
-    print "producer_tractor length:" + str(producer_tractor.get_length())
+    print("producer_tractor length:" + str(producer_tractor.get_length()))
 
     fade_clip_index = track.clips.index(orig_fade_clip)
     
@@ -1881,7 +1881,7 @@ def do_timeline_filters_paste():
 def do_compositor_data_paste(paste_objs):
     data_type, paste_data = paste_objs
     if data_type != COPY_PASTA_DATA_COMPOSITOR_PROPERTIES:
-        print "supposed unreahcable if in do_compositor_data_paste"
+        print("supposed unreahcable if in do_compositor_data_paste")
         return
         
     if compositormodes.compositor != None and compositormodes.compositor.selected == True:

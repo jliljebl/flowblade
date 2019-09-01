@@ -117,7 +117,7 @@ def get_transition_extra_editor_rows(compositor, editable_properties):
             editor_row = create_func(compositor, editable_properties)
             rows.append(editor_row)
         except KeyError:
-            print "get_transition_extra_editor_rows fail with:" + editor_name
+            print("get_transition_extra_editor_rows fail with:" + editor_name)
 
     return rows
 
@@ -133,7 +133,7 @@ def get_filter_extra_editor_rows(filt, editable_properties):
             editor_row = create_func(filt, editable_properties)
             rows.append(editor_row)
         except KeyError:
-            print "get_filter_extra_editor_rows fail with:" + editor_name
+            print("get_filter_extra_editor_rows fail with:" + editor_name)
 
     return rows
 
@@ -570,7 +570,7 @@ def _get_wipe_selector(editable_property):
     combo_box = Gtk.ComboBoxText()
             
     # Get options
-    keys = mlttransitions.wipe_lumas.keys()
+    keys = list(mlttransitions.wipe_lumas.keys())
     # translate here
     keys.sort()
     for k in keys:
@@ -580,7 +580,7 @@ def _get_wipe_selector(editable_property):
     k_index = -1
     tokens = editable_property.value.split("/")
     test_value = tokens[len(tokens) - 1]
-    for k,v in mlttransitions.wipe_lumas.iteritems():
+    for k,v in mlttransitions.wipe_lumas.items():
         if v == test_value:
             k_index = keys.index(k)
     
@@ -773,12 +773,12 @@ def _get_image_file_select_editor(editable_property):
     return editor_row
     
 def _create_composite_editor(clip, editable_properties):
-    aligned = filter(lambda ep: ep.name == "aligned", editable_properties)[0]
-    distort = filter(lambda ep: ep.name == "distort", editable_properties)[0]
-    operator = filter(lambda ep: ep.name == "operator", editable_properties)[0]
+    aligned = [ep for ep in editable_properties if ep.name == "aligned"][0]
+    distort = [ep for ep in editable_properties if ep.name == "distort"][0]
+    operator = [ep for ep in editable_properties if ep.name == "operator"][0]
     values = ["over","and","or","xor"]
-    deinterlace = filter(lambda ep: ep.name == "deinterlace", editable_properties)[0]
-    progressive = filter(lambda ep: ep.name == "progressive", editable_properties)[0]
+    deinterlace = [ep for ep in editable_properties if ep.name == "deinterlace"][0]
+    progressive = [ep for ep in editable_properties if ep.name == "progressive"][0]
     force_values = [_("Nothing"),_("Progressive"),_("Deinterlace"),_("Both")]
 
     combo_box = Gtk.ComboBoxText()
@@ -828,12 +828,12 @@ def _create_rotion_geometry_editor(clip, editable_properties):
     return kf_edit
 
 def _create_region_editor(clip, editable_properties):
-    aligned = filter(lambda ep: ep.name == "composite.aligned", editable_properties)[0]
-    distort = filter(lambda ep: ep.name == "composite.distort", editable_properties)[0]
-    operator = filter(lambda ep: ep.name == "composite.operator", editable_properties)[0]
+    aligned = [ep for ep in editable_properties if ep.name == "composite.aligned"][0]
+    distort = [ep for ep in editable_properties if ep.name == "composite.distort"][0]
+    operator = [ep for ep in editable_properties if ep.name == "composite.operator"][0]
     values = ["over","and","or","xor"]
-    deinterlace = filter(lambda ep: ep.name == "composite.deinterlace", editable_properties)[0]
-    progressive = filter(lambda ep: ep.name == "composite.progressive", editable_properties)[0]
+    deinterlace = [ep for ep in editable_properties if ep.name == "composite.deinterlace"][0]
+    progressive = [ep for ep in editable_properties if ep.name == "composite.progressive"][0]
     force_values = [_("Nothing"),_("Progressive"),_("Deinterlace"),_("Both")]
 
     combo_box = Gtk.ComboBoxText()
@@ -899,7 +899,7 @@ def _create_rotomask_editor(filt, editable_properties):
 
     property_editor_widgets_create_func = lambda: _create_rotomask_property_editor_widgets(editable_properties)
 
-    kf_json_prop = filter(lambda ep: ep.name == "spline", editable_properties)[0]
+    kf_json_prop = [ep for ep in editable_properties if ep.name == "spline"][0]
     kf_editor = keyframeeditor.RotoMaskKeyFrameEditor(kf_json_prop, propertyparse.rotomask_json_value_string_to_kf_array)
 
     kfs_value_label = Gtk.Label(str(len(kf_editor.clip_editor.keyframes)))
@@ -933,27 +933,27 @@ def _create_rotomask_property_editor_widgets(editable_properties):
     # that was needed because RotoMask editor is a separate window.
     property_editor_widgets = []
     
-    invert_prop = filter(lambda ep: ep.name == "invert", editable_properties)[0]
+    invert_prop = [ep for ep in editable_properties if ep.name == "invert"][0]
     invert_prop.args[propertyedit.DISPLAY_NAME] = translations.param_names["Invert"] # NOTE: We needed to put this here because we didn't use the normal method create these ( propertyedit.get_filter_editable_properties() )
     invert_editor =  _get_boolean_check_box_row(invert_prop, True)
     invert_editor.set_size_request(130, 20)
 
-    feather_prop = filter(lambda ep: ep.name == "feather", editable_properties)[0]
+    feather_prop = [ep for ep in editable_properties if ep.name == "feather"][0]
     feather_prop.args[propertyedit.DISPLAY_NAME] = translations.param_names["Feather"] # NOTE: We needed to put this here because we didn't use the normal method create these ( propertyedit.get_filter_editable_properties() )
     feather_editor = _get_no_kf_slider_row(feather_prop, slider_name=None, compact=True)
     feather_editor.set_size_request(450, 20)
 
-    feather_passes_prop = filter(lambda ep: ep.name == "feather_passes", editable_properties)[0]
+    feather_passes_prop = [ep for ep in editable_properties if ep.name == "feather_passes"][0]
     feather_passes_prop.args[propertyedit.DISPLAY_NAME] = translations.param_names["Feather Passes"] # NOTE: We needed to put this here because we didn't use the normal method create these ( propertyedit.get_filter_editable_properties() )
     feather_passes_editor = _get_no_kf_slider_row(feather_passes_prop, slider_name=None, compact=True)
     feather_passes_editor.set_size_request(450, 20)
     
-    alpha_operation_prop = filter(lambda ep: ep.name == "alpha_operation", editable_properties)[0]
+    alpha_operation_prop = [ep for ep in editable_properties if ep.name == "alpha_operation"][0]
     alpha_operation_prop.args[propertyedit.DISPLAY_NAME] = translations.param_names["Alpha Mode"] # NOTE: We needed to put this here because we didn't use the normal method create these ( propertyedit.get_filter_editable_properties() )
     alpha_operation_editor = _get_combo_box_row(alpha_operation_prop, True)
     alpha_operation_editor.set_size_request(270, 20)
     
-    mode_prop = filter(lambda ep: ep.name == "mode", editable_properties)[0]
+    mode_prop = [ep for ep in editable_properties if ep.name == "mode"][0]
     mode_prop.args[propertyedit.DISPLAY_NAME] = translations.param_names["Mode"] # NOTE: We needed to put this here because we didn't use the normal method create these ( propertyedit.get_filter_editable_properties() )
     mode_editor = _get_combo_box_row(mode_prop, True)
     mode_editor.set_size_request(270, 20)

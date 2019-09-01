@@ -257,7 +257,7 @@ class Titler(Gtk.Window):
         font_map = PangoCairo.font_map_get_default()
         unsorted_families = font_map.list_families()
         if len(unsorted_families) == 0:
-            print "No font families found in system! Titler will not work."
+            print("No font families found in system! Titler will not work.")
         self.font_families = sorted(unsorted_families, key=lambda family: family.get_name())
         self.font_family_indexes_for_name = {}
         combo = Gtk.ComboBoxText()
