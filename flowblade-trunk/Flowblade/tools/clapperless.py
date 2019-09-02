@@ -270,7 +270,7 @@ class Envelope:
             
     def read_cache(self, name):
         hash = "%s-%s" % (os.path.basename(sys.argv[0]),
-                          hashlib.md5(name).hexdigest())
+                          hashlib.md5(name.encode('utf-8')).hexdigest())
         self.cachename = os.path.join(self.args.cache_dir[0], hash)
         if os.access(self.cachename, os.R_OK):
             #size = os.stat(self.cachename)[stat.ST_SIZE] / 4

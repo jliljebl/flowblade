@@ -434,7 +434,7 @@ def do_nothing():
 def get_unique_name_for_audio_levels_file(media_file_path, profile):
     size_str = str(os.path.getsize(media_file_path))
     fps_str = str(profile.description())
-    file_name = hashlib.md5(media_file_path + size_str + fps_str).hexdigest()
+    file_name = hashlib.md5((media_file_path + size_str + fps_str).encode('utf-8')).hexdigest()
     return file_name
 
 def get_img_seq_glob_lookup_name(asset_file_name):

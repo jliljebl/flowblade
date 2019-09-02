@@ -368,7 +368,7 @@ class MediaFile:
         proxy_md_key = self.path + str(proxy_width) + str(proxy_height)
         if hasattr(self, "use_unique_proxy"): # This may have been added in proxyediting.py to prevent interfering with existing projects
             proxy_md_key = proxy_md_key + os.urandom(16)
-        md_str = hashlib.md5(proxy_md_key).hexdigest()
+        md_str = hashlib.md5(proxy_md_key.encode('utf-8')).hexdigest()
         return str(userfolders.get_render_dir() + "/proxies/" + md_str + "/" + file_name)
 
     def add_proxy_file(self, proxy_path):

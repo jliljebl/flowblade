@@ -524,11 +524,11 @@ class BatchRenderItemData:
     def generate_identifier(self):
         id_str = self.project_name + self.timestamp.ctime()
         try:
-            idfier = hashlib.md5(id_str).hexdigest()
+            idfier = hashlib.md5(id_str.encode('utf-8')).hexdigest()
         except:
             ascii_pname = unicodedata.normalize('NFKD', self.project_name).encode('ascii','ignore')
             id_str = str(ascii_pname) + self.timestamp.ctime()
-            idfier = hashlib.md5(id_str).hexdigest()
+            idfier = hashlib.md5(id_str.encode('utf-8')).hexdigest()
         return idfier
 
     def matches_identifier(self, identifier):
@@ -539,11 +539,11 @@ class BatchRenderItemData:
 
     def save(self):
         item_path = get_datafiles_dir() + self.generate_identifier() + ".renderitem"
-        item_write_file = file(item_path, "wb")
+        item_write_file = open(item_path, "wb")
         pickle.dump(self, item_write_file)
 
     def save_as_single_render_item(self, item_path):
-        item_write_file = file(item_path, "wb")
+        item_write_file = open(item_path, "wb")
         pickle.dump(self, item_write_file)
 
     def delete_from_queue(self):

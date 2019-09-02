@@ -90,7 +90,7 @@ def _write_offsets(video_file_path, audio_file_path, completed_callback):
     GLib.idle_add(completed_callback, (video_file_path, audio_file_path, idstr))
 
 def _get_offset_file_idstr(file_1, file_2):
-    return hashlib.md5(file_1 + file_2).hexdigest()
+    return hashlib.md5((file_1 + file_2).encode('utf-8')).hexdigest()
     
 def _read_offsets(idstr):
     offsets_file = userfolders.get_cache_dir() + clapperless.OFFSETS_DATA_FILE + "_"+ idstr

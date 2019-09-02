@@ -226,7 +226,7 @@ class BinColorClip(AbstractBinClip):
         cr.rectangle(0, 0, width + 1, height+ 1)
         cr.fill()
 
-        file_name = hashlib.md5(self.gdk_color_str + str(width) + str(height)).hexdigest()      
+        file_name = hashlib.md5((self.gdk_color_str + str(width) + str(height)).encode('utf-8')).hexdigest()      
         write_file_path = userfolders.get_render_dir() + "/" + file_name + ".png"
         surface.write_to_png(write_file_path)
         
