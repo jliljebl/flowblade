@@ -460,7 +460,7 @@ class Thumbnailer:
         Writes thumbnail image from file producer
         """
         # Get data
-        md_str = hashlib.md5(file_path).hexdigest()
+        md_str = hashlib.md5(file_path.encode('utf-8')).hexdigest()
         thumbnail_path = userfolders.get_cache_dir() + appconsts.THUMBNAILS_DIR + "/" + md_str +  ".png"
 
         # Create consumer
@@ -477,7 +477,7 @@ class Thumbnailer:
         info = utils.get_file_producer_info(producer)
 
         length = producer.get_length()
-        frame = length / 2
+        frame = length // 2
         producer = producer.cut(frame, frame)
 
         # Connect and write image
