@@ -175,6 +175,6 @@ class AtomicFileWriter(object):
         Create a candidate temp filename, without touching the filesystem.
         """
 
-        uuid_str = hashlib.md5(str(os.urandom(32))).hexdigest()
+        uuid_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
         return ".tmp-" + uuid_str + "-" + basepath
 
