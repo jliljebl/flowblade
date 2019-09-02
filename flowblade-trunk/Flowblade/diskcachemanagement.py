@@ -148,7 +148,7 @@ class DiskFolderManagementPanel:
 def show_disk_management_dialog():
     dialog = Gtk.Dialog(_("Disk Cache Manager"), None,
                     Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                    (_("Close").encode('utf-8'), Gtk.ResponseType.CLOSE))
+                    (_("Close"), Gtk.ResponseType.CLOSE))
 
     global _panels
     _panels = _get_disk_dir_panels()

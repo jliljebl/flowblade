@@ -594,8 +594,8 @@ def _get_wipe_selector(editable_property):
         
     dialog = Gtk.FileChooserDialog(_("Select Luma File"), None, 
                                    Gtk.FileChooserAction.OPEN, 
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
-                                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                                   (_("Cancel"), Gtk.ResponseType.CANCEL,
+                                    _("OK"), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.OPEN)
     dialog.set_select_multiple(False)
     file_filter = Gtk.FileFilter()
@@ -710,8 +710,8 @@ def _get_file_select_editor(editable_property):
     """
     dialog = Gtk.FileChooserDialog(_("Select File"), None, 
                                    Gtk.FileChooserAction.OPEN, 
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
-                                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                                   (_("Cancel"), Gtk.ResponseType.CANCEL,
+                                    _("OK"), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.OPEN)
     dialog.set_select_multiple(False)
 
@@ -750,8 +750,8 @@ def _get_image_file_select_editor(editable_property):
     """
     dialog = Gtk.FileChooserDialog(_("Select Image Producing File"), None, 
                                    Gtk.FileChooserAction.OPEN, 
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
-                                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                                   (_("Cancel"), Gtk.ResponseType.CANCEL,
+                                    _("OK"), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.OPEN)
     dialog.set_select_multiple(False)
 

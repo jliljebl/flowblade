@@ -326,10 +326,10 @@ def _group_action_pressed(widget, event):
 
     guiutils.add_separetor(actions_menu)
     
-    move_menu_item = Gtk.MenuItem(_("Move Selected Items To Group").encode('utf-8'))
+    move_menu_item = Gtk.MenuItem(_("Move Selected Items To Group"))
     move_menu = Gtk.Menu()
     if len(PROJECT().media_log_groups) == 0:
-        move_menu.add(guiutils.get_menu_item(_("No Groups").encode('utf-8'), _actions_callback, "dummy", False))
+        move_menu.add(guiutils.get_menu_item(_("No Groups"), _actions_callback, "dummy", False))
     else:
         index = 0
         for group in PROJECT().media_log_groups:
@@ -348,21 +348,21 @@ def _group_action_pressed(widget, event):
 
     guiutils.add_separetor(actions_menu)
     
-    sort_item = Gtk.MenuItem(_("Sort by").encode('utf-8'))
+    sort_item = Gtk.MenuItem(_("Sort by"))
     sort_menu = Gtk.Menu()
     time_item = Gtk.RadioMenuItem()
-    time_item.set_label(_("Time").encode('utf-8'))
+    time_item.set_label(_("Time"))
     time_item.set_active(True)
     time_item.show()
     time_item.connect("activate", lambda w: _sorting_changed("time"))
     sort_menu.append(time_item)
 
-    name_item = Gtk.RadioMenuItem.new_with_label([time_item], _("File Name").encode('utf-8'))
+    name_item = Gtk.RadioMenuItem.new_with_label([time_item], _("File Name"))
     name_item.connect("activate", lambda w: _sorting_changed("name"))
     name_item.show()
     sort_menu.append(name_item)
 
-    comment_item = Gtk.RadioMenuItem.new_with_label([time_item], _("Comment").encode('utf-8'))
+    comment_item = Gtk.RadioMenuItem.new_with_label([time_item], _("Comment"))
     comment_item.connect("activate", lambda w: _sorting_changed("comment"))
     comment_item.show()
     sort_menu.append(comment_item)

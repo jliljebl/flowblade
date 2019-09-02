@@ -2590,7 +2590,7 @@ def get_all_tracks_popup_menu(event, callback):
     menu.add(_get_menu_item(_("Activate All Tracks"), callback, "allactive" ))
     menu.add(_get_menu_item(_("Activate Only Current Top Active Track"), callback, "topactiveonly" ))
     _add_separetor(menu)
-    shrink_tline_item = Gtk.CheckMenuItem(_("Vertical Shrink Timeline").encode('utf-8'))
+    shrink_tline_item = Gtk.CheckMenuItem(_("Vertical Shrink Timeline"))
     shrink_tline_item.set_active(PROJECT().get_project_property(appconsts.P_PROP_TLINE_SHRINK_VERTICAL))
     shrink_tline_item.show()
     shrink_tline_item.connect("toggled", callback, "shrink" )
@@ -2704,32 +2704,32 @@ def get_monitor_view_popupmenu(launcher, event, callback):
 
     _add_separetor(menu)
 
-    overlay_menu_item = Gtk.MenuItem(_("Overlay Opacity").encode('utf-8'))
+    overlay_menu_item = Gtk.MenuItem(_("Overlay Opacity"))
     overlay_menu_item.show()
     overlay_menu = Gtk.Menu()
 
     op_100 = Gtk.RadioMenuItem()
-    op_100.set_label(_("100%").encode('utf-8'))
+    op_100.set_label(_("100%"))
     op_100.connect("activate", callback, 3)
     op_100.show()
     overlay_menu.append(op_100)
 
-    op_80 = Gtk.RadioMenuItem.new_with_label([op_100], _("80%").encode('utf-8'))
+    op_80 = Gtk.RadioMenuItem.new_with_label([op_100], _("80%"))
     op_80.connect("activate", callback, 4)
     op_80.show()
     overlay_menu.append(op_80)
 
-    op_50 = Gtk.RadioMenuItem.new_with_label([op_100], _("50%").encode('utf-8'))
+    op_50 = Gtk.RadioMenuItem.new_with_label([op_100], _("50%"))
     op_50.connect("activate", callback, 5)
     op_50.show()
     overlay_menu.append(op_50)
 
-    op_20 = Gtk.RadioMenuItem.new_with_label([op_100], _("20%").encode('utf-8'))
+    op_20 = Gtk.RadioMenuItem.new_with_label([op_100], _("20%"))
     op_20.connect("activate", callback, 6)
     op_20.show()
     overlay_menu.append(op_20)
 
-    op_0 = Gtk.RadioMenuItem.new_with_label([op_100], _("0%").encode('utf-8'))
+    op_0 = Gtk.RadioMenuItem.new_with_label([op_100], _("0%"))
     op_0.connect("activate", callback, 7)
     op_0.show()
     overlay_menu.append(op_0)
@@ -2749,17 +2749,17 @@ def get_trim_view_popupmenu(launcher, event, callback):
     guiutils.remove_children(menu)
 
     trim_view_all = Gtk.RadioMenuItem()
-    trim_view_all.set_label(_("Trim View On").encode('utf-8'))
+    trim_view_all.set_label(_("Trim View On"))
 
     trim_view_all.show()
     menu.append(trim_view_all)
     
-    trim_view_single = Gtk.RadioMenuItem.new_with_label([trim_view_all], _("Trim View Single Side Edits Only").encode('utf-8'))
+    trim_view_single = Gtk.RadioMenuItem.new_with_label([trim_view_all], _("Trim View Single Side Edits Only"))
 
     trim_view_single.show()
     menu.append(trim_view_single)
 
-    no_trim_view = Gtk.RadioMenuItem.new_with_label([trim_view_all], _("Trim View Off").encode('utf-8'))
+    no_trim_view = Gtk.RadioMenuItem.new_with_label([trim_view_all], _("Trim View Off"))
 
     no_trim_view.show()
     menu.append(no_trim_view)

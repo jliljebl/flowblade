@@ -98,7 +98,7 @@ def _edl_xml_render_done(data):
     mlt_parse = MLTXMLToEDLParse(get_edl_temp_xml_path(), current_sequence())
     edl_contents = mlt_parse.create_edl()
     f = open(edl_path, 'w')
-    f.write(edl_contents.encode('utf-8'))
+    f.write(edl_contents)
     f.close()
 
 def get_edl_temp_xml_path():
@@ -431,8 +431,8 @@ def render_screen_shot(frame, render_path, vcodec):
         time.sleep(0.05)
 
 def export_screenshot_dialog(callback, frame, parent_window, project_name):
-    cancel_str = _("Cancel").encode('utf-8')
-    ok_str = _("Export Image").encode('utf-8')
+    cancel_str = _("Cancel")
+    ok_str = _("Export Image")
     dialog = Gtk.Dialog(_("Export Frame Image"),
                         parent_window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,

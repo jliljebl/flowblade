@@ -217,7 +217,7 @@ class ProxyManagerDialog:
     def __init__(self):
         self.dialog = Gtk.Dialog(_("Proxy Manager"), gui.editor_window.window,
                             Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                            (_("Close Manager").encode('utf-8'), Gtk.ResponseType.CLOSE))
+                            (_("Close Manager"), Gtk.ResponseType.CLOSE))
 
         # Encoding
         self.enc_select = Gtk.ComboBoxText()
@@ -352,7 +352,7 @@ class ProxyRenderProgressDialog:
         self.dialog = Gtk.Dialog(_("Creating Proxy Files"),
                                  gui.editor_window.window,
                                  Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                 (_("Stop").encode('utf-8'), Gtk.ResponseType.REJECT))
+                                 (_("Stop"), Gtk.ResponseType.REJECT))
         
         self.render_progress_bar = Gtk.ProgressBar()
         self.render_progress_bar.set_text("0 %")
@@ -419,7 +419,7 @@ class ProxyRenderIssuesWindow:
             self.dialog = Gtk.Dialog(dialog_title,
                                      gui.editor_window.window,
                                      Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                     (_("Close").encode('utf-8'), Gtk.ResponseType.CLOSE))
+                                     (_("Close"), Gtk.ResponseType.CLOSE))
             info_box = dialogutils.get_warning_message_dialog_panel(_("Nothing will be rendered"), 
                                                                       _("No video files were selected.\nOnly video files can have proxy files."),
                                                                       True)
@@ -428,8 +428,8 @@ class ProxyRenderIssuesWindow:
             self.dialog = Gtk.Dialog(dialog_title,
                                      gui.editor_window.window,
                                      Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                     (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
-                                      _("Do Render Action" ).encode('utf-8'), Gtk.ResponseType.OK))
+                                     (_("Cancel"), Gtk.ResponseType.CANCEL,
+                                      _("Do Render Action" ), Gtk.ResponseType.OK))
             self.dialog.connect('response', self.response)
 
             rows = ""

@@ -27,8 +27,8 @@ from gi.repository import Gtk
 def load_titler_data_dialog(callback):    
     dialog = Gtk.FileChooserDialog(_("Select Titler Data File"), None, 
                                    Gtk.FileChooserAction.OPEN, 
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT), None)
+                                   (_("Cancel"), Gtk.ResponseType.REJECT,
+                                    _("OK"), Gtk.ResponseType.ACCEPT), None)
     dialog.set_action(Gtk.FileChooserAction.OPEN)
     dialog.set_select_multiple(False)
     dialog.connect('response', callback)
@@ -37,8 +37,8 @@ def load_titler_data_dialog(callback):
 def save_titler_data_as_dialog(callback, current_name, open_dir):    
     dialog = Gtk.FileChooserDialog(_("Save Titler Layers As"), None, 
                                    Gtk.FileChooserAction.SAVE, 
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                                   _("Save").encode('utf-8'), Gtk.ResponseType.ACCEPT), None)
+                                   (_("Cancel"), Gtk.ResponseType.REJECT,
+                                   _("Save"), Gtk.ResponseType.ACCEPT), None)
     dialog.set_action(Gtk.FileChooserAction.SAVE)
     dialog.set_current_name(current_name)
     dialog.set_do_overwrite_confirmation(True)
@@ -52,8 +52,8 @@ def save_titler_data_as_dialog(callback, current_name, open_dir):
 def save_titler_graphic_as_dialog(callback, current_name, open_dir):    
     dialog = Gtk.FileChooserDialog(_("Save Titler Graphic As"), None, 
                                    Gtk.FileChooserAction.SAVE, 
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                                   _("Save").encode('utf-8'), Gtk.ResponseType.ACCEPT), None)
+                                   (_("Cancel"), Gtk.ResponseType.REJECT,
+                                   _("Save"), Gtk.ResponseType.ACCEPT), None)
     dialog.set_action(Gtk.FileChooserAction.SAVE)
     dialog.set_current_name(current_name)
     dialog.set_do_overwrite_confirmation(True)

@@ -403,7 +403,7 @@ def _display_single_instance_window():
     dialog = Gtk.Dialog("",
                         None,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("OK").encode('utf-8'), Gtk.ResponseType.OK))
+                        (_("OK"), Gtk.ResponseType.OK))
 
     dialog.vbox.pack_start(align, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
@@ -979,8 +979,8 @@ class RenderQueueView(Gtk.VBox):
 def run_save_project_as_dialog(project_name):
     dialog = Gtk.FileChooserDialog(_("Save Render Item Project As"), None, 
                                    Gtk.FileChooserAction.SAVE, 
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                                    _("Save").encode('utf-8'), Gtk.ResponseType.ACCEPT), None)
+                                   (_("Cancel"), Gtk.ResponseType.REJECT,
+                                    _("Save"), Gtk.ResponseType.ACCEPT), None)
     dialog.set_action(Gtk.FileChooserAction.SAVE)
     project_name = project_name.rstrip(".flb")
     dialog.set_current_name(project_name + "_FROM_BATCH.flb")

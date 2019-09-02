@@ -390,8 +390,8 @@ def script_menu_item_selected(item, script):
 def save_script_dialog(callback):
     dialog = Gtk.FileChooserDialog(_("Save Gmic Script As"), None, 
                                    Gtk.FileChooserAction.SAVE, 
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
-                                   _("Save").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                                   (_("Cancel"), Gtk.ResponseType.CANCEL,
+                                   _("Save"), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.SAVE)
     dialog.set_current_name("gmic_script")
     dialog.set_do_overwrite_confirmation(True)
@@ -414,8 +414,8 @@ def _save_script_dialog_callback(dialog, response_id):
 def load_script_dialog(callback):
     dialog = Gtk.FileChooserDialog(_("Load Gmic Script"), None, 
                                    Gtk.FileChooserAction.OPEN, 
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
-                                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                                   (_("Cancel"), Gtk.ResponseType.CANCEL,
+                                    _("OK"), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.OPEN)
     dialog.set_select_multiple(False)
     dialog.connect('response', callback)
@@ -543,8 +543,8 @@ def _encode_settings_clicked():
     dialog = Gtk.Dialog(_("Video Encoding Settings"),
                         _window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                         _("Set Encoding").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                         _("Set Encoding"), Gtk.ResponseType.ACCEPT))
     dialog.vbox.pack_start(align, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     dialog.set_resizable(False)

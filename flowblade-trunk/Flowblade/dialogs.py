@@ -54,8 +54,8 @@ def new_project_dialog(callback):
 
     dialog = Gtk.Dialog(_("New Project"), gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                         _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                         _("OK"), Gtk.ResponseType.ACCEPT))
 
     out_profile_combo = Gtk.ComboBoxText()
     profiles = mltprofiles.get_profiles()
@@ -122,8 +122,8 @@ def change_profile_project_dialog(project, callback):
 
     dialog = Gtk.Dialog(_("Change Project Profile"), gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                         _("Save With Changed Profile").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                         _("Save With Changed Profile"), Gtk.ResponseType.ACCEPT))
 
     info_label = guiutils.bold_label(_("Project Profile can only changed by saving a version\nwith different profile."))
 
@@ -180,8 +180,8 @@ def change_profile_project_to_match_media_dialog(project, media_file, callback):
 
     dialog = Gtk.Dialog(_("Change Project Profile"), gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                         _("Save With Changed Profile").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                         _("Save With Changed Profile"), Gtk.ResponseType.ACCEPT))
 
     info_label = guiutils.bold_label(_("Project Profile can only changed by saving a version\nwith different profile."))
 
@@ -233,8 +233,8 @@ def change_profile_project_to_match_media_dialog(project, media_file, callback):
 def save_backup_snapshot(name, callback):
     dialog = Gtk.Dialog(_("Save Project Backup Snapshot"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                         _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                         _("OK"), Gtk.ResponseType.ACCEPT))
 
     project_folder = Gtk.FileChooserButton(_("Select Snapshot Project Folder"))
     project_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
@@ -276,8 +276,8 @@ def load_project_dialog(callback, parent=None, title_text=None):
 
     dialog = Gtk.FileChooserDialog(title_text, parent,
                                    Gtk.FileChooserAction.OPEN,
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
-                                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                                   (_("Cancel"), Gtk.ResponseType.CANCEL,
+                                    _("OK"), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.OPEN)
     dialog.set_select_multiple(False)
     file_filter = Gtk.FileFilter()
@@ -293,10 +293,10 @@ def save_project_as_dialog(callback, current_name, open_dir, parent=None):
 
     dialog = Gtk.FileChooserDialog(_("Save Project As"), parent,
                                    Gtk.FileChooserAction.SAVE,
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
-                                    _("Save").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                                   (_("Cancel"), Gtk.ResponseType.CANCEL,
+                                    _("Save"), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.SAVE)
-    dialog.set_current_name(current_name.encode('utf-8'))
+    dialog.set_current_name(current_name)
     dialog.set_do_overwrite_confirmation(True)
     if open_dir != None:
         dialog.set_current_folder(open_dir)
@@ -318,8 +318,8 @@ def save_effects_compositors_values(callback, default_name, saving_effect=True):
         
     dialog = Gtk.FileChooserDialog(title, parent,
                                    Gtk.FileChooserAction.SAVE,
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
-                                    _("Save").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                                   (_("Cancel"), Gtk.ResponseType.CANCEL,
+                                    _("Save"), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.SAVE)
     dialog.set_current_name(default_name)
     dialog.set_do_overwrite_confirmation(True)
@@ -342,8 +342,8 @@ def load_effects_compositors_values_dialog(callback, loading_effect=True):
 
     dialog = Gtk.FileChooserDialog(title_text, parent,
                                    Gtk.FileChooserAction.OPEN,
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
-                                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                                   (_("Cancel"), Gtk.ResponseType.CANCEL,
+                                    _("OK"), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.OPEN)
     dialog.set_select_multiple(False)
     file_filter = Gtk.FileFilter()
@@ -359,11 +359,11 @@ def export_xml_dialog(callback, project_name):
 def _export_file_name_dialog(callback, project_name, dialog_title):
     dialog = Gtk.FileChooserDialog(dialog_title,  gui.editor_window.window,
                                    Gtk.FileChooserAction.SAVE,
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
-                                   _("Export").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                                   (_("Cancel"), Gtk.ResponseType.CANCEL,
+                                   _("Export"), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.SAVE)
     project_name = project_name.strip(".flb")
-    dialog.set_current_name(project_name.encode('utf-8') + ".xml")
+    dialog.set_current_name(project_name + ".xml")
     dialog.set_do_overwrite_confirmation(True)
 
     dialog.set_select_multiple(False)
@@ -374,8 +374,8 @@ def compound_clip_name_dialog(callback, default_name, dialog_title, data=None):
     
     dialog = Gtk.Dialog(dialog_title,  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                        _("Create").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                        _("Create"), Gtk.ResponseType.ACCEPT))
 
     name_entry = Gtk.Entry()
     name_entry.set_width_chars(30)
@@ -405,8 +405,8 @@ def compound_clip_name_dialog(callback, default_name, dialog_title, data=None):
 def save_env_data_dialog(callback):
     dialog = Gtk.FileChooserDialog(_("Save Runtime Environment Data"),  gui.editor_window.window,
                                    Gtk.FileChooserAction.SAVE,
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
-                                   _("Save").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                                   (_("Cancel"), Gtk.ResponseType.CANCEL,
+                                   _("Save"), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.SAVE)
     dialog.set_current_name("flowblade_runtime_environment_data")
     dialog.set_do_overwrite_confirmation(True)
@@ -427,9 +427,9 @@ def exit_confirm_dialog(callback, msg, parent_window, project_name, data=None):
     dialog = Gtk.Dialog("",
                         parent_window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Don't Save").encode('utf-8'), Gtk.ResponseType.CLOSE,
-                        _("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
-                        _("Save").encode('utf-8'), Gtk.ResponseType.YES))
+                        (_("Don't Save"), Gtk.ResponseType.CLOSE,
+                        _("Cancel"), Gtk.ResponseType.CANCEL,
+                        _("Save"), Gtk.ResponseType.YES))
 
     alignment = dialogutils.get_default_alignment(content)
     dialog.vbox.pack_start(alignment, True, True, 0)
@@ -449,9 +449,9 @@ def close_confirm_dialog(callback, msg, parent_window, project_name):
     dialog = Gtk.Dialog("",
                         parent_window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Don't Save").encode('utf-8'), Gtk.ResponseType.CLOSE,
-                        _("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
-                        _("Save").encode('utf-8'), Gtk.ResponseType.YES))
+                        (_("Don't Save"), Gtk.ResponseType.CLOSE,
+                        _("Cancel"), Gtk.ResponseType.CANCEL,
+                        _("Save"), Gtk.ResponseType.YES))
 
     dialog.vbox.pack_start(align, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
@@ -462,7 +462,7 @@ def close_confirm_dialog(callback, msg, parent_window, project_name):
 def about_dialog(parent_window):
     dialog = Gtk.Dialog(_("About"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        (_("OK"), Gtk.ResponseType.ACCEPT))
 
     # Application tab
     img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
@@ -588,7 +588,7 @@ def about_dialog(parent_window):
 def environment_dialog(parent_window):
     dialog = Gtk.Dialog(_("Runtime Environment"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        (_("OK"), Gtk.ResponseType.ACCEPT))
 
     COLUMN_WIDTH = 450
 
@@ -707,7 +707,7 @@ def _get_item_columns_panel(items, rows):
 def file_properties_dialog(data):
     dialog = Gtk.Dialog(_("File Properties"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        ( _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        ( _("OK"), Gtk.ResponseType.ACCEPT))
 
     panel = panels.get_file_properties_panel(data)
     alignment = dialogutils.get_default_alignment(panel)
@@ -720,7 +720,7 @@ def file_properties_dialog(data):
 def clip_properties_dialog(data):
     dialog = Gtk.Dialog(_("Clip Properties"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        ( _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        ( _("OK"), Gtk.ResponseType.ACCEPT))
 
     panel = panels.get_clip_properties_panel(data)
     alignment = dialogutils.get_default_alignment(panel)
@@ -829,8 +829,8 @@ def proxy_delete_warning_dialog(parent_window, callback):
     dialog = Gtk.Dialog("",
                         parent_window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
-                        _("Force Delete").encode('utf-8'), Gtk.ResponseType.OK))
+                        (_("Cancel"), Gtk.ResponseType.CANCEL,
+                        _("Force Delete"), Gtk.ResponseType.OK))
 
     dialog.vbox.pack_start(align, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
@@ -852,8 +852,8 @@ def autosave_recovery_dialog(callback, parent_window):
     dialog = Gtk.Dialog("",
                         parent_window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Continue with default 'untitled' project").encode('utf-8'), Gtk.ResponseType.CANCEL,
-                        _("Open Autosaved Project").encode('utf-8'), Gtk.ResponseType.OK))
+                        (_("Continue with default 'untitled' project"), Gtk.ResponseType.CANCEL,
+                        _("Open Autosaved Project"), Gtk.ResponseType.OK))
 
     dialog.vbox.pack_start(align, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
@@ -896,8 +896,8 @@ def autosaves_many_recovery_dialog(response_callback, autosaves, parent_window):
     dialog = Gtk.Dialog("",
                         parent_window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Continue with default 'untitled' project").encode('utf-8'), Gtk.ResponseType.CANCEL,
-                        _("Open Selected Autosave").encode('utf-8'), Gtk.ResponseType.OK))
+                        (_("Continue with default 'untitled' project"), Gtk.ResponseType.CANCEL,
+                        _("Open Selected Autosave"), Gtk.ResponseType.OK))
 
     dialog.vbox.pack_start(align, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
@@ -924,8 +924,8 @@ def _autosaves_delete_unselected(autosaves, autosaves_view):
 def tracks_count_change_dialog(callback, v_tracks, a_tracks):
     dialog = Gtk.Dialog(_("Change Sequence Tracks Count"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                        _("Change Tracks").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                        _("Change Tracks"), Gtk.ResponseType.ACCEPT))
 
     tracks_select = guicomponents.TracksNumbersSelect(v_tracks, a_tracks)
 
@@ -958,8 +958,8 @@ def tracks_count_change_dialog(callback, v_tracks, a_tracks):
 def clip_length_change_dialog(callback, clip, track):
     dialog = Gtk.Dialog(_("Change Clip Length"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                        _("Ok").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                        _("Ok"), Gtk.ResponseType.ACCEPT))
     
     length_changer = guicomponents.ClipLengthChanger(clip)
 
@@ -979,8 +979,8 @@ def clip_length_change_dialog(callback, clip, track):
 def new_sequence_dialog(callback, default_name):
     dialog = Gtk.Dialog(_("Create New Sequence"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                        _("Create Sequence").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                        _("Create Sequence"), Gtk.ResponseType.ACCEPT))
 
     name_entry = Gtk.Entry()
     name_entry.set_width_chars(30)
@@ -1020,8 +1020,8 @@ def new_sequence_dialog(callback, default_name):
 def new_media_name_dialog(callback, media_file):
     dialog = Gtk.Dialog(_("Rename New Media Object"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                        _("Rename").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                        _("Rename"), Gtk.ResponseType.ACCEPT))
 
     name_entry = Gtk.Entry()
     name_entry.set_width_chars(30)
@@ -1048,8 +1048,8 @@ def new_media_name_dialog(callback, media_file):
 def new_clip_name_dialog(callback, clip):
     dialog = Gtk.Dialog(_("Rename Clip"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                        _("Rename").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                        _("Rename"), Gtk.ResponseType.ACCEPT))
 
     name_entry = Gtk.Entry()
     name_entry.set_width_chars(30)
@@ -1076,8 +1076,8 @@ def new_clip_name_dialog(callback, clip):
 def new_media_log_group_name_dialog(callback, next_index, add_selected):
     dialog = Gtk.Dialog(_("New Range Item Group"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                        _("Create").encode('utf-8'), Gtk.ResponseType.OK))
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                        _("Create"), Gtk.ResponseType.OK))
 
     name_entry = Gtk.Entry()
     name_entry.set_width_chars(30)
@@ -1103,7 +1103,7 @@ def new_media_log_group_name_dialog(callback, next_index, add_selected):
 def group_rename_dialog(callback, group_name):
     dialog, entry = dialogutils.get_single_line_text_input_dialog(30, 130,
                                                 _("Rename Range Log Item Group"),
-                                                _("Rename").encode('utf-8'),
+                                                _("Rename"),
                                                 _("New Group Name:"),
                                                 group_name)
     dialog.connect('response', callback, entry)
@@ -1117,7 +1117,7 @@ def not_valid_producer_dialog(file_path, parent_window):
 def marker_name_dialog(frame_str, callback):
     dialog = Gtk.Dialog(_("New Marker"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Add Marker").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        (_("Add Marker"), Gtk.ResponseType.ACCEPT))
 
     name_entry = Gtk.Entry()
     name_entry.set_width_chars(30)
@@ -1139,7 +1139,7 @@ def marker_name_dialog(frame_str, callback):
 def clip_marker_name_dialog(clip_frame_str, tline_frame_str, callback, data):
     dialog = Gtk.Dialog(_("New Marker"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Add Marker").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        (_("Add Marker"), Gtk.ResponseType.ACCEPT))
 
     tline_frame_info = guiutils.get_left_justified_box([Gtk.Label(_("Timeline position: ") + tline_frame_str),Gtk.Label()])
 
@@ -1169,7 +1169,7 @@ def clip_marker_name_dialog(clip_frame_str, tline_frame_str, callback, data):
 def alpha_info_msg(callback, filter_name):
     dialog = Gtk.Dialog(_("Alpha Filters Info"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Ok").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        (_("Ok"), Gtk.ResponseType.ACCEPT))
 
     line_label = Gtk.Label(_("You are adding <b>Alpha Filter '") + filter_name + _("'</b> into a clip. Here is some info on how <b>Alpha Filters</b> work on Flowblade:"))
     line_label.set_use_markup(True)
@@ -1202,8 +1202,8 @@ def alpha_info_msg(callback, filter_name):
     dialog.show_all()
 
 def open_image_sequence_dialog(callback, parent_window):
-    cancel_str = _("Cancel").encode('utf-8')
-    ok_str = _("Ok").encode('utf-8')
+    cancel_str = _("Cancel")
+    ok_str = _("Ok")
     dialog = Gtk.Dialog(_("Add Image Sequence Clip"),
                         parent_window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
@@ -1241,11 +1241,11 @@ def open_image_sequence_dialog(callback, parent_window):
 def export_edl_dialog(callback, parent_window, project_name):
     dialog = Gtk.FileChooserDialog(_("Export EDL"), parent_window,
                                    Gtk.FileChooserAction.SAVE,
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
-                                   _("Export").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                                   (_("Cancel"), Gtk.ResponseType.CANCEL,
+                                   _("Export"), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.SAVE)
     project_name = project_name.rstrip(".flb")
-    dialog.set_current_name(project_name.encode('utf-8') + ".edl")
+    dialog.set_current_name(project_name + ".edl")
     dialog.set_do_overwrite_confirmation(True)
 
     dialog.set_select_multiple(False)
@@ -1253,10 +1253,10 @@ def export_edl_dialog(callback, parent_window, project_name):
     dialog.show()
 
 def transition_edit_dialog(callback, transition_data):
-    dialog = Gtk.Dialog(_("Add Transition").encode('utf-8'),  gui.editor_window.window,
+    dialog = Gtk.Dialog(_("Add Transition"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                        _("Apply").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                        _("Apply"), Gtk.ResponseType.ACCEPT))
 
     alignment, type_combo, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button = panels.get_transition_panel(transition_data)
     widgets = (type_combo, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button)
@@ -1267,10 +1267,10 @@ def transition_edit_dialog(callback, transition_data):
     dialog.show_all()
 
 def transition_re_render_dialog(callback, transition_data):
-    dialog = Gtk.Dialog(_("Rerender Transition").encode('utf-8'),  gui.editor_window.window,
+    dialog = Gtk.Dialog(_("Rerender Transition"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                        _("Rerender").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                        _("Rerender"), Gtk.ResponseType.ACCEPT))
 
     alignment, encodings_cb, quality_cb = panels.get_transition_re_render_panel(transition_data)
     widgets = (encodings_cb, quality_cb)
@@ -1281,10 +1281,10 @@ def transition_re_render_dialog(callback, transition_data):
     dialog.show_all()
 
 def fade_re_render_dialog(callback, fade_data):
-    dialog = Gtk.Dialog(_("Rerender Fade").encode('utf-8'),  gui.editor_window.window,
+    dialog = Gtk.Dialog(_("Rerender Fade"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                        _("Rerender").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                        _("Rerender"), Gtk.ResponseType.ACCEPT))
 
     alignment, encodings_cb, quality_cb = panels.get_fade_re_render_panel(fade_data)
     widgets = (encodings_cb, quality_cb)
@@ -1295,10 +1295,10 @@ def fade_re_render_dialog(callback, fade_data):
     dialog.show_all()
 
 def re_render_all_dialog(callback, rerender_list, unrenderable):
-    dialog = Gtk.Dialog(_("Rerender All Transitions and Fades").encode('utf-8'),  gui.editor_window.window,
+    dialog = Gtk.Dialog(_("Rerender All Transitions and Fades"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                        _("Rerender All").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                        _("Rerender All"), Gtk.ResponseType.ACCEPT))
 
     alignment, encodings_cb, quality_cb = panels.get_re_render_all_panel(rerender_list, unrenderable)
     widgets = (encodings_cb, quality_cb)
@@ -1311,8 +1311,8 @@ def re_render_all_dialog(callback, rerender_list, unrenderable):
 def fade_edit_dialog(callback, transition_data):
     dialog = Gtk.Dialog(_("Add Fade"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                        _("Apply").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                        _("Apply"), Gtk.ResponseType.ACCEPT))
 
     alignment, type_combo, length_entry, encodings_cb, quality_cb, color_button = panels.get_fade_panel(transition_data)
     widgets = (type_combo, length_entry, encodings_cb, quality_cb, color_button)
@@ -1326,8 +1326,8 @@ def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, callback):
     dialog = Gtk.Dialog(_("Keyboard Shortcuts"),
                         parent_window,
                         Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                        _("Apply").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                        _("Apply"), Gtk.ResponseType.ACCEPT))
 
     presets_label = guiutils.bold_label(_("Shortcuts Presets:"))
     shortcuts_combo = guicomponents.get_shorcuts_selector()
@@ -1529,7 +1529,7 @@ def _get_kb_row(msg1, msg2):
 def watermark_dialog(add_callback, remove_callback):
     dialog = Gtk.Dialog(_("Sequence Watermark"),  gui.editor_window.window,
                         Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Close").encode('utf-8'), Gtk.ResponseType.CLOSE))
+                        (_("Close"), Gtk.ResponseType.CLOSE))
 
     seq_label = guiutils.bold_label(_("Sequence:") + " ")
     seq_name = Gtk.Label(label=editorstate.current_sequence().name)
@@ -1576,8 +1576,8 @@ def watermark_dialog(add_callback, remove_callback):
 def watermark_file_dialog(callback, parent, widgets):
     dialog = Gtk.FileChooserDialog(_("Select Watermark File"), None,
                                    Gtk.FileChooserAction.OPEN,
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
-                                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                                   (_("Cancel"), Gtk.ResponseType.CANCEL,
+                                    _("OK"), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.OPEN)
     dialog.set_select_multiple(False)
     file_filter = Gtk.FileFilter()
@@ -1649,8 +1649,8 @@ def save_snaphot_progess(media_copy_txt, project_txt):
 def not_matching_media_info_dialog(project, media_file, callback):
     dialog = Gtk.Dialog(_("Loaded Media Profile Mismatch"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Keep Current Profile").encode('utf-8'), Gtk.ResponseType.REJECT,
-                         _("Change To File Profile").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        (_("Keep Current Profile"), Gtk.ResponseType.REJECT,
+                         _("Change To File Profile"), Gtk.ResponseType.ACCEPT))
 
     primary_txt = _("A video file was loaded that does not match the Project Profile!")
     secondary_txt = ""
@@ -1693,8 +1693,8 @@ def combine_sequences_dialog(callback):
     
     dialog = Gtk.Dialog(_("Import Sequence"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                         _("Import").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                         _("Import"), Gtk.ResponseType.ACCEPT))
     
     info_text = _("<b>Please note:</b>\n") + \
                 "\u2022" + _(" It is recommended that you save Project before completing this operation\n") + \
@@ -1741,8 +1741,8 @@ def set_fades_defaults_dialog(callback):
 
     dialog = Gtk.Dialog(_("Compositors Auto Fades"), gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                         _("Set Group Defaults").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                         _("Set Group Defaults"), Gtk.ResponseType.ACCEPT))
 
 
 
@@ -1856,8 +1856,8 @@ def _fade_on_off_changed(check_widget, widgets):
 def tline_audio_sync_dialog(callback, data):
     dialog = Gtk.Dialog(_("Timeline Audio Sync"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                        _("Do Audio Sync Move Edit").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                        _("Do Audio Sync Move Edit"), Gtk.ResponseType.ACCEPT))
         
     media_offsets_label = Gtk.Label(_("<b>Audio Sync Offset</b> between clips media is ") + str(data.media_offset_frames) + _(" frames."))
     media_offsets_label.set_use_markup(True)

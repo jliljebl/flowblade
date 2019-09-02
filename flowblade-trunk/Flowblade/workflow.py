@@ -313,7 +313,7 @@ def _get_workflow_tool_submenu(callback, tool_id, position):
     sub_menu = Gtk.Menu()
     
     tool_active = (tool_id in editorpersistance.prefs.active_tools)
-    activity_item = Gtk.CheckMenuItem(_("Tool Active").encode('utf-8'))
+    activity_item = Gtk.CheckMenuItem(_("Tool Active"))
     activity_item.set_active(tool_active)
     activity_item.connect("toggled", callback, (tool_id, "activity"))
     activity_item.show()
@@ -341,7 +341,7 @@ def _get_workflow_tool_submenu(callback, tool_id, position):
     
     # Individual prefs for tools
     if tool_id == appconsts.TLINE_TOOL_OVERWRITE:
-        pref_item = Gtk.CheckMenuItem(_("Do Box Selection and Box Move from empty press").encode('utf-8'))
+        pref_item = Gtk.CheckMenuItem(_("Do Box Selection and Box Move from empty press"))
         pref_item.set_active(editorpersistance.prefs.box_for_empty_press_in_overwrite_tool)
         pref_item.connect("toggled", _TLINE_TOOL_OVERWRITE_box_selection_pref)
         pref_item.show()
@@ -422,7 +422,7 @@ class WorkflowDialog(Gtk.Dialog):
     def __init__(self):
         Gtk.Dialog.__init__(self, _("Workflow First Run Wizard"),  gui.editor_window.window,
                                 Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                (_("Select Preset Workflow and Continue").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                                (_("Select Preset Workflow and Continue"), Gtk.ResponseType.ACCEPT))
 
         self.selection = STANDARD_PRESET 
         

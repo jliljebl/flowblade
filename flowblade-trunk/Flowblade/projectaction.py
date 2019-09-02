@@ -541,7 +541,7 @@ def _change_project_profile_callback(dialog, response_id, profile_combo, out_fol
         folder = ("/" + ou.lstrip("file:/"))
         name = project_name_entry.get_text().decode('utf-8')
         profile = mltprofiles.get_profile_for_index(profile_combo.get_active())
-        path = (folder + "/" + name).encode('utf-8')
+        path = (folder + "/" + name)
 
         PROJECT().update_media_lengths_on_load = True # saved version needs to do this
         old_name = PROJECT().name
@@ -876,7 +876,7 @@ def hamburger_pressed(widget, event):
     hamburger_menu.add(guiutils.get_menu_item(_("Select All"), _hamburger_menu_item_selected, "select all"))
     hamburger_menu.add(guiutils.get_menu_item(_("Select None"), _hamburger_menu_item_selected, "select none"))
 
-    move_menu_item = Gtk.MenuItem(_("Move Selected Media To Bin").encode('utf-8'))
+    move_menu_item = Gtk.MenuItem(_("Move Selected Media To Bin"))
     move_menu = Gtk.Menu()
     if len(PROJECT().bins) == 1:
         item = guiutils.get_menu_item(_("No Target Bins"), _hamburger_menu_item_selected, "dummy")
@@ -1424,7 +1424,7 @@ def bins_panel_popup_requested(event):
 
     guiutils.add_separetor(bin_menu)
     
-    move_menu_item = Gtk.MenuItem(_("Move Bin").encode('utf-8'))
+    move_menu_item = Gtk.MenuItem(_("Move Bin"))
     move_menu = Gtk.Menu()
     move_menu.add(guiutils.get_menu_item(_("Up"), _bin_menu_item_selected, ("up bin", None)))
     move_menu.add(guiutils.get_menu_item(_("Down"), _bin_menu_item_selected, ("down bin", None)))

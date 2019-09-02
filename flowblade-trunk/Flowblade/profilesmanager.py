@@ -44,7 +44,7 @@ PROFILE_MANAGER_LEFT = 265 # label column of profile manager panel
 def profiles_manager_dialog():
     dialog = Gtk.Dialog(_("Profiles Manager"), None,
                     Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                    (_("Close Manager").encode('utf-8'), Gtk.ResponseType.CLOSE))
+                    (_("Close Manager"), Gtk.ResponseType.CLOSE))
 
     panel2, user_profiles_view = _get_user_profiles_panel()
     guiutils.set_margins(panel2, 12, 14, 12, 6)
@@ -172,11 +172,11 @@ def _get_user_profiles_panel():
 def _get_factory_profiles_panel(user_profiles_list):
 
     # Factory
-    all_profiles_list = guicomponents.ProfileListView(_("Visible").encode('utf-8'))
+    all_profiles_list = guicomponents.ProfileListView(_("Visible"))
     all_profiles_list.fill_data_model(mltprofiles.get_factory_profiles())    
     hide_selected_button = Gtk.Button(_("Hide Selected"))
     
-    hidden_profiles_list = guicomponents.ProfileListView(_("Hidden").encode('utf-8'))
+    hidden_profiles_list = guicomponents.ProfileListView(_("Hidden"))
     hidden_profiles_list.fill_data_model(mltprofiles.get_hidden_profiles())   
     unhide_selected_button = Gtk.Button(_("Unhide Selected"))
     
