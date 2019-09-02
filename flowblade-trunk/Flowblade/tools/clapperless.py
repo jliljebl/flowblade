@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 # -*- encoding: utf-8 -*-
 
 # clapperless -- automatic find sync offsets for multi source recordings
