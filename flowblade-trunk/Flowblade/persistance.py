@@ -383,7 +383,7 @@ def _save_changed_xml_file(s_media_file, new_profile):
     new_xml_text = xml_text[0:in_index] + new_profile_node + xml_text[out_index:len(xml_text)]
 
     folder = userfolders.get_render_dir()
-    uuid_str = hashlib.md5(str(os.urandom(32))).hexdigest()
+    uuid_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
     new_xml_file_path = folder + "/"+ uuid_str + ".xml"
 
     with atomicfile.AtomicFileWriter(new_xml_file_path, "w") as afw:

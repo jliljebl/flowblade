@@ -608,7 +608,7 @@ def render_single_track_transition_clip(transition_producer, encoding_option_ind
 
     folder = userfolders.get_render_dir()
 
-    file_name = hashlib.md5(str(os.urandom(32))).hexdigest()
+    file_name = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
     write_file = folder + "/"+ file_name + file_ext
 
     # Render consumer

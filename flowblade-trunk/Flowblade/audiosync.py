@@ -326,7 +326,7 @@ def _do_create_sync_compound_clip(dialog, response_id, data):
     
     # Create unique file path in hidden render folder
     folder = userfolders.get_render_dir()
-    uuid_str = hashlib.md5(str(os.urandom(32))).hexdigest()
+    uuid_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
     write_file = folder + "/"+ uuid_str + ".xml"
     
     # Create tractor
