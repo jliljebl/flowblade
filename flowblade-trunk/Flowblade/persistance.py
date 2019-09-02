@@ -195,9 +195,16 @@ def save_project(project, file_path, changed_profile_desc=None):
     remove_attrs(s_proj, PROJECT_REMOVE)
 
     # Write out file.
-    with atomicfile.AtomicFileWriter(file_path, "wb") as afw:
+    outfile = open(file_path,'wb')
+    pickle.dump(s_proj, outfile)
+    
+    """
+    with atomicfile.AtomicFileWriter(file_path, "w") as afw:
         write_file = afw.get_file()
-        pickle.dump(s_proj, write_file)
+        pickle_str =  pickle.dumps(s_proj)
+        print (pickle_str)
+        pickle.dump(pickle_str, write_file)
+    """
 
 def get_p_sequence(sequence):
     """
