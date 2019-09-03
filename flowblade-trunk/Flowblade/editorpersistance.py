@@ -64,8 +64,9 @@ def load():
     recents_file_path = userfolders.get_config_dir() + RECENT_DOC
 
     global prefs, recent_projects
+        
     try:
-        f = open(prefs_file_path)
+        f = open(prefs_file_path, "rb")
         prefs = pickle.load(f)
     except:
         prefs = EditorPreferences()
