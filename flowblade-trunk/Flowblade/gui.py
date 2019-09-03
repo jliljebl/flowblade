@@ -222,7 +222,7 @@ def save_current_colors():
     # Used to communicate theme colors to tools like gmic.py running on separate process
     colors = (unpack_gdk_color(_selected_bg_color), unpack_gdk_color(_bg_color), unpack_gdk_color(_button_colors))
     save_file_path = _colors_data_path()
-    write_file = file(save_file_path, "wb")
+    write_file = open(save_file_path, "wb")
     pickle.dump(colors, write_file)
 
 def load_current_colors():
