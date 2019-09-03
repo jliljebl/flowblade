@@ -397,7 +397,7 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
     _show_msg("Unpickling")
 
     # Load project object
-    f = open(file_path)
+    f = open(file_path, "rb")
     project = pickle.load(f)
 
     # Relinker only operates on pickleable python data 

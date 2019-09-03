@@ -79,9 +79,10 @@ def get_waveform_data(clip):
     # Load from disk if found, otherwise queue for levels render
     levels_file_path = _get_levels_file_path(clip.path, editorstate.PROJECT().profile)
     if os.path.isfile(levels_file_path):
-        f = open(levels_file_path)
+        f = open(levels_file_path, "rb")
         waveform = pickle.load(f)
         _waveforms[clip.path] = waveform
+        print ("we got waveform")
         return waveform
     else:
         global _queued_waveform_renders
@@ -136,7 +137,7 @@ class AudioRenderLaunchThread(threading.Thread):
 
     def run(self):
         # Launch render process and wait for it to end
-        FLOG = open(userfolders.get_data_dir() + "log_audio_levels_render", 'w')
+        FLOG = open(userfolders.get_cache_dir() + "log_audio_levels_render", 'w')
         # Sep-2018 - SvdB - Added self. to be able to access the thread through 'process'
         self.process = subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladeaudiorender", \
                   self.rendered_media, self.profile_desc, respaths.ROOT_PATH], \
@@ -215,7 +216,8 @@ class WaveformCreator(threading.Thread):
 
         for frame in range(0, len(frame_levels)):
             self.temp_clip.seek(frame)
-            mlt.frame_get_waveform(self.temp_clip.get_frame(), 10, 50)
+            # LINE BELOW THIS DOES NOT WORK WITH PYTHON 3 BINDIGS, BUT IS NEEDED TO GET LEVELS
+            #mlt.frame_get_waveform(self.temp_clip.get_frame(), 10, 50)
             val = self.levels.get(RIGHT_CHANNEL)
             if val == None:
                 val = 0.0
