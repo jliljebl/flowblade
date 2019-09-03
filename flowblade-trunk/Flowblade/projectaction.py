@@ -454,7 +454,7 @@ def _save_as_dialog_callback(dialog, response_id):
     if response_id == Gtk.ResponseType.ACCEPT:
         filenames = dialog.get_filenames()
         PROJECT().last_save_path = filenames[0]
-        PROJECT().name = str(os.path.basename(filenames[0]), "utf-8")
+        PROJECT().name = os.path.basename(filenames[0])
         updater.set_info_icon(Gtk.STOCK_SAVE)
 
         try:
