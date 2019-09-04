@@ -1971,7 +1971,7 @@ class TimeLineCanvas:
                 draw_pix_per_frame = pix_per_frame
                 if draw_pix_per_frame < 2:
                     draw_pix_per_frame = 2
-                    step = int(2 / pix_per_frame)
+                    step = int(2 // pix_per_frame)
                     if step < 1:
                         step = 1
                 else:

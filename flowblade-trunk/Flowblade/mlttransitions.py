@@ -530,7 +530,7 @@ def get_rendered_transition_tractor(current_sequence,
         kf_str = "0=0/0:100%x100%:0.0;"+ str(tractor.get_length() - 1) + "=0/0:100%x100%:100.0"
     elif transition_type == RENDERED_COLOR_DIP:
         length = action_from_out - action_from_in
-        first_clip_length = length / 2
+        first_clip_length = length // 2
         second_clip_length = length - first_clip_length
         color_clip = patternproducer.create_color_producer(current_sequence.profile, gdk_color_str)
         track0.insert(color_clip, 0, 0, length)

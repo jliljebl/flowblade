@@ -458,7 +458,7 @@ def _attempt_clip_cover_delete(clip, track, index):
         cover_to_clip = track.clips[movemodes.selected_range_in + 1]
         
         real_length = clip.get_length()
-        to_part = real_length / 2
+        to_part = real_length // 2
         from_part = real_length - to_part
     
         if to_part > cover_to_clip.clip_in:
@@ -1007,7 +1007,7 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
     # Get values to build transition render sequence
     # Divide transition lenght between clips, odd frame goes to from_clip 
     real_length = length + 1 # first frame is 100% from clip frame so we are going to have to drop that
-    to_part = real_length / 2
+    to_part = real_length // 2
     from_part = real_length - to_part
 
     # HACKFIX, I just tested this till it worked, not entirely sure on math here
