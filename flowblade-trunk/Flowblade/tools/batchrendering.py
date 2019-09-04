@@ -1181,7 +1181,7 @@ class SingleRenderThread(threading.Thread):
 
         try:
             data_file_path = hidden_dir + CURRENT_RENDER_RENDER_ITEM
-            data_file = open(data_file_path)
+            data_file = open(data_file_path, 'rb')
             render_item = pickle.load(data_file)
             self.error_status = None
         except Exception as e:
