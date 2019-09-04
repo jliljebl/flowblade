@@ -216,7 +216,6 @@ class WaveformCreator(threading.Thread):
 
         for frame in range(0, len(frame_levels)):
             self.temp_clip.seek(frame)
-            # LINE BELOW THIS DOES NOT WORK WITH PYTHON 3 BINDIGS, BUT IS NEEDED TO GET LEVELS
             mlt.frame_get_waveform(self.temp_clip.get_frame(), 10, 50)
             val = self.levels.get(RIGHT_CHANNEL)
             if val == None:
