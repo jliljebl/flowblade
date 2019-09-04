@@ -281,9 +281,8 @@ class Player:
         # And make sure we deinterlace if input is interlaced
         frame.set("consumer_deinterlace", 1)
 
-        # Now we are ready to get the image and save it.
-        size = (self.profile.width(), self.profile.height())
-        rgb = frame.get_image(mlt.mlt_image_rgb24a, *size) 
+        # Now we are ready to get the image and save it.        
+        rgb = frame.get_image(int(mlt.mlt_image_rgb24a), int(self.profile.width()), int(self.profile.height()))
         return rgb
 
     def display_inside_sequence_length(self, new_seq_len):
