@@ -442,21 +442,25 @@ class RenderQueue:
         data_files_dir = user_dir + DATAFILES_DIR
         data_files = [ f for f in listdir(data_files_dir) if isfile(join(data_files_dir,f)) ]
         for data_file_name in data_files:
+            render_item = None
             try:
                 data_file_path = data_files_dir + data_file_name
-                data_file = open(data_file_path)
+                data_file = open(data_file_path, 'rb')
                 render_item = pickle.load(data_file)
                 self.queue.append(render_item)
             except Exception as e:
+                print (str(e))
                 if self.error_status == None:
                     self.error_status = []
                 self.error_status.append((data_file_name,  _(" datafile load failed with ") + str(e)))
+                continue
+
             try:
-                render_file = open(render_item.get_project_filepath())
+                render_file = open(render_item.get_project_filepath(), 'rb')
             except Exception as e:
                 if self.error_status == None:
                     self.error_status = []
-                self.error_status.append((render_item.get_project_filepath(), _(" project file load failed with ") + str(e)))
+                self.error_status.append((_(" project file load failed with ") + str(e)))
 
         if self.error_status != None:
             for file_path, error_str in self.error_status:
