@@ -227,7 +227,7 @@ def save_current_colors():
 
 def load_current_colors():
     load_path = _colors_data_path()
-    f = open(load_path)
+    f = open(load_path, "rb")
     colors = pickle.load(f)
     sel, bg, button = colors
     global _selected_bg_color, _bg_color, _button_colors

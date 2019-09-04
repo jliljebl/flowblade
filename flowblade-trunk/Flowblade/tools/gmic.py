@@ -161,10 +161,12 @@ def main(root_path, force_launch=False):
     process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
     output, error = process.communicate()
     tokens = output.split()
+    print (tokens)
+    print (output)
     clended = []
     for token in tokens:
-        str1 = token.replace('.','')
-        str2 = str1.replace(',','')
+        str1 = token.replace(b'.',b'')
+        str2 = str1.replace(b',',b'')
         if str2.isdigit(): # this is based on assumtion that str2 ends up being number like "175" or 215" etc. only for version number token
             if str2[0] == '2':
                 global _gmic_version
