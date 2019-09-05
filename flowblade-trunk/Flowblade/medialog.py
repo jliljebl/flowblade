@@ -149,10 +149,13 @@ def _update_list_view(log_event):
     max_val = widgets.media_log_view.treeview.get_vadjustment().get_upper()
     gui.middle_notebook.set_current_page(range_log_notebook_index)
     view_group = get_current_filtered_events()
-    event_index = view_group.index(log_event)
-    widgets.media_log_view.treeview.get_selection().select_path(str(event_index))
-    widgets.media_log_view.treeview.get_vadjustment().set_value(max_val)
-
+    try:
+        event_index = view_group.index(log_event)
+        widgets.media_log_view.treeview.get_selection().select_path(str(event_index))
+        widgets.media_log_view.treeview.get_vadjustment().set_value(max_val)
+    except:
+        pass # if non-starred are not displayed currently. TODO: think of logic, should new items into displayed category?
+        
 def log_item_name_edited(cell, path, new_text, user_data):
     if len(new_text) == 0:
         return

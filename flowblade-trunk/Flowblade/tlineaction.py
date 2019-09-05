@@ -192,8 +192,8 @@ def sequence_split_pressed():
     # before we start we will ask the user whether he really wants to do, what he
     # just asked for. The intention of this is to provide some more background
     # information
-    heading = _("Split to new Sequence at Playhead Position")
-    info = _("Do you realy want to split this sequence into two?\nThis will create a new sequence receiving righthand content of your currently active sequence. Also the same content will be removed from your currently active sequence.\nThe newly created sequence will be opened.\n\n Continue?")
+    heading = _("Confirm split to new Sequence at Playhead position")
+    info = _("This will create a new sequence from the part after playhead. That part will be removed from\nyour current active sequence.\n\nThe newly created sequence will be opened as current sequence.")
     dialogutils.warning_confirmation(split_confirmed, heading, info, gui.editor_window.window)
 
 def split_confirmed(dialog, response_id):
