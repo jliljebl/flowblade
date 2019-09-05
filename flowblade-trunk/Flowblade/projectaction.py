@@ -130,7 +130,7 @@ class LoadThread(threading.Thread):
             self._error_stop(dialog, ticker)
             Gdk.threads_enter()
             primary_txt = _("Media asset was missing!")
-            secondary_txt = _("Path of missing asset:") + "\n   <b>" + e.value.decode('utf-8') + "</b>\n\n" + \
+            secondary_txt = _("Path of missing asset:") + "\n   <b>" + e.value + "</b>\n\n" + \
                             _("Relative search for replacement file in sub folders of project file failed.") + "\n\n" + \
                             _("To load the project you will need to either:") + "\n" + \
                             "\u2022" + " " + _("Open project in 'Media Relinker' tool to relink media assets to new files, or") + "\n" + \
@@ -154,7 +154,7 @@ class LoadThread(threading.Thread):
             return
         except persistance.ProjectProfileNotFoundError as e:
             self._error_stop(dialog, ticker)
-            primary_txt = _("Profile with Description: '") + e.value.decode('utf-8')  + _("' was not found on load!")
+            primary_txt = _("Profile with Description: '") + e.value  + _("' was not found on load!")
             secondary_txt = _("It is possible to load the project by creating a User Profile with exactly the same Description\nas the missing profile. ") + "\n\n" + \
                             _("User Profiles can be created by selecting 'Edit->Profiles Manager'.")
             dialogutils.warning_message(primary_txt, secondary_txt, None, is_info=False)
@@ -515,10 +515,10 @@ def _save_backup_snapshot_dialog_callback(dialog, response_id, project_folder, n
             dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
             return
 
-        name = name_entry.get_text().decode('utf-8')
+        name = name_entry.get_text()
         dialog.destroy()
         
-        GLib.idle_add(lambda : _do_snapshot_save(root_path.decode('utf-8') + "/", name))
+        GLib.idle_add(lambda : _do_snapshot_save(root_path + "/", name))
 
     else:
         dialog.destroy()
@@ -537,9 +537,9 @@ def change_project_profile():
 
 def _change_project_profile_callback(dialog, response_id, profile_combo, out_folder, project_name_entry):
     if response_id == Gtk.ResponseType.ACCEPT:
-        ou = out_folder.get_filename().decode('utf-8')
+        ou = out_folder.get_filename()
         folder = ("/" + ou.lstrip("file:/"))
-        name = project_name_entry.get_text().decode('utf-8')
+        name = project_name_entry.get_text()
         profile = mltprofiles.get_profile_for_index(profile_combo.get_active())
         path = (folder + "/" + name)
 
@@ -589,12 +589,12 @@ class SnaphotSaveThread(threading.Thread):
             
             # Message
             Gdk.threads_enter()
-            dialog.media_copy_info.set_text(copy_txt + "... " +  file_name.decode('utf-8'))
+            dialog.media_copy_info.set_text(copy_txt + "... " +  file_name)
             Gdk.threads_leave()
             
             # Other media types than image sequences
             if media_file.type != appconsts.IMAGE_SEQUENCE:
-                media_file_copy = media_folder + file_name.decode('utf-8')
+                media_file_copy = media_folder + file_name
 
                 # TEST THIS SOMEHOW FOR UNICODE PROBLEMS
                 if media_file_copy in list(asset_paths.values()): # Create different filename for files 
@@ -631,7 +631,7 @@ class SnaphotSaveThread(threading.Thread):
                     # Only producer clips are affected
                     if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):
                         directory, file_name = os.path.split(clip.path)
-                        clip_file_copy = media_folder + file_name.decode('utf-8')
+                        clip_file_copy = media_folder + file_name
                         
                         if not os.path.isfile(clip_file_copy):
                             directory, file_name = os.path.split(clip.path)
@@ -1639,9 +1639,9 @@ def _add_new_sequence_dialog_callback(dialog, response_id, widgets):
     name_entry, tracks_select, open_check = widgets
     
     # Get dialog data 
-    name = name_entry.get_text().decode('utf-8')
+    name = name_entry.get_text()
     if len(name) == 0:
-        name = (_("sequence_") + str(PROJECT().next_seq_number)).decode('utf-8')
+        name = (_("sequence_") + str(PROJECT().next_seq_number))
 
     v_tracks, a_tracks = tracks_select.get_tracks()
     open_right_away = open_check.get_active()
