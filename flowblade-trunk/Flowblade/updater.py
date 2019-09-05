@@ -393,7 +393,7 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
     # This makes them reasonably short and trimmable in both directions.
     if clip_producer.media_type == appconsts.IMAGE or clip_producer.media_type == appconsts.PATTERN_PRODUCER:
         if  clip_producer.mark_in == -1 and clip_producer.mark_out == -1:
-            center_frame = clip_producer.get_length() / 2
+            center_frame = clip_producer.get_length() // 2
             default_length_half = 75
             mark_in = center_frame - default_length_half
             mark_out = center_frame + default_length_half - 1
