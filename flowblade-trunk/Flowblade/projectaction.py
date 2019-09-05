@@ -1520,9 +1520,7 @@ def bin_name_edited(cell, path, new_text, user_data):
     # Can't have empty string names
     if len(new_text) == 0:
         return
-    
-    new_text = new_text.decode('utf-8')
-    
+        
     liststore, column = user_data
     liststore[path][column] = new_text
     PROJECT().bins[int(path)].name = new_text
@@ -1730,8 +1728,6 @@ def sequence_name_edited(cell, path, new_text, user_data):
     # Can't have empty string names
     if len(new_text) == 0:
         return
-
-    new_text = new_text.decode('utf-8')
 
     liststore, column = user_data
     liststore[path][column] = new_text
