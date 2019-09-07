@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-20 22:56+0300\n"
-"PO-Revision-Date: 2019-06-21 20:33+0200\n"
+"PO-Revision-Date: 2019-08-29 13:33+0200\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "Language: cs\n"
@@ -1819,7 +1819,7 @@ msgstr "Přepnout výšku stopy"
 
 #: dialogs.py:1453
 msgid "Track Head Column"
-msgstr ""
+msgstr "Sloupec záhlaví stopy"
 
 #: dialogs.py:1462
 msgid "Move Back 10 Frames"
@@ -1941,9 +1941,8 @@ msgid "Delete"
 msgstr "Smazat"
 
 #: dialogs.py:1493
-#, fuzzy
 msgid "Deletes Selected Handle"
-msgstr "Smazat označený koš"
+msgstr "Smaže vybraný úchop"
 
 #: dialogs.py:1494 keyframeeditor.py:740
 msgid "Previous Frame"
@@ -1954,7 +1953,6 @@ msgid "Next Frame"
 msgstr "Další snímek"
 
 #: dialogs.py:1496
-#, fuzzy
 msgid "RotoMask Editor"
 msgstr "Editor rotační masky"
 
@@ -3564,9 +3562,8 @@ msgid "Gradient Tint"
 msgstr "Odstín přechodu"
 
 #: translations.py:272
-#, fuzzy
 msgid "RotoMask"
-msgstr "Informace o rotační masce"
+msgstr "Rotační maska"
 
 #: translations.py:278 translations.py:461
 msgid "Position"
@@ -4463,9 +4460,8 @@ msgid "Max Gain"
 msgstr "Největší zesílení"
 
 #: translations.py:587
-#, fuzzy
 msgid "Min Gain"
-msgstr "Největší zesílení"
+msgstr "Nejmenší zesílení"
 
 #: translations.py:588
 msgid "Select file"
@@ -4520,24 +4516,20 @@ msgid "Radial Offset"
 msgstr "Paprskový posun"
 
 #: translations.py:602
-#, fuzzy
 msgid "Feather Passes"
-msgstr "Průchody"
+msgstr "Průchody péra"
 
 #: translations.py:603
-#, fuzzy
 msgid "Alpha Mode"
-msgstr "Změna alfy"
+msgstr "Režim alfy"
 
 #: translations.py:604
-#, fuzzy
 msgid "Feather"
-msgstr "Náhodný šum"
+msgstr "Péro"
 
 #: translations.py:605
-#, fuzzy
 msgid "Mode"
-msgstr "Nejmenší režim"
+msgstr "Režim"
 
 #: translations.py:609 translations.py:615
 msgid "Shave"
@@ -4760,9 +4752,8 @@ msgid "Radial"
 msgstr "Paprskový"
 
 #: translations.py:680
-#, fuzzy
 msgid "Clear"
-msgstr "Vyprázdnit vše"
+msgstr "Vyprázdnit"
 
 #: mlttransitions.py:81
 msgid "Burst"
@@ -7775,14 +7766,12 @@ msgid "Select Preset Workflow and Continue"
 msgstr "Vyberte přednastavení pracovního postupu a pokračujte"
 
 #: workflow.py:429
-#, fuzzy
 msgid "<b>Welcome to Flowblade 2.2</b>"
-msgstr "<b>Vítejte ve Flowblade 2.0</b>"
+msgstr "<b>Vítejte ve Flowblade 2.2</b>"
 
 #: workflow.py:434
-#, fuzzy
 msgid "<b>Flowblade 2.2</b> comes with a configurable workflow."
-msgstr "<b>Flowblade 2.0</b> přichází s nastavitelným pracovním postupem."
+msgstr "<b>Flowblade 2.2</b> přichází s nastavitelným pracovním postupem."
 
 #: workflow.py:439
 msgid " You can select which <b>tools</b> you want to use.\n"
@@ -7838,15 +7827,16 @@ msgstr ""
 "To byl pracovní postup předchozích verzí programu Flowblade."
 
 #: workflow.py:471
-#, fuzzy
 msgid "<b>Keep Existing Worflow</b>"
-msgstr "<b>Vyberte přednastavení pracovního postupu</b>"
+msgstr "<b>Zachovat stávající pracovní postup</b>"
 
 #: workflow.py:472
 msgid ""
 "Select this if you have installed new version and wish to keep your existing "
 "workflow."
 msgstr ""
+"Vyberte, pokud jste nainstaloval novou verzi a přejete si zachovat stávající"
+" pracovní postup."
 
 #: kftoolmode.py:407
 msgid "Media Frame: "
@@ -7907,9 +7897,8 @@ msgid "Line Mask"
 msgstr "Maska čáry"
 
 #: tools/rotomask.py:159
-#, fuzzy
 msgid "Allow to add / delete points in closed masks"
-msgstr "Povolit přidání bodů do zavřených masek"
+msgstr "Povolit přidání/smazání bodů do zavřených masek"
 
 #: tools/rotomask.py:161
 msgid "Close Tool"
