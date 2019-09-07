@@ -32,6 +32,7 @@ import edit
 import gui
 import guicomponents
 import guiutils
+import editorpersistance # Aug-2019 - SvdB - BB
 import editorstate
 from editorstate import PROJECT
 import monitorevent
@@ -658,7 +659,8 @@ def get_media_log_events_panel(events_list_view):
     widgets.star_check = star_check
 
     star_label = Gtk.Image()
-    star_label.set_from_file(respaths.IMAGE_PATH + "star.png")
+    # Aug-2019 - SvdB - BB
+    star_label.set_from_file(respaths.IMAGE_PATH + guiutils.get_image_name("star", double_height=editorpersistance.prefs.double_track_height))
 
     star_not_active_check = Gtk.CheckButton()
     star_not_active_check.set_active(True)
@@ -666,14 +668,17 @@ def get_media_log_events_panel(events_list_view):
     widgets.star_not_active_check = star_not_active_check
 
     star_not_active_label = Gtk.Image()
-    star_not_active_label.set_from_file(respaths.IMAGE_PATH + "star_not_active.png")
+    # Aug-2019 - SvdB - BB
+    star_not_active_label.set_from_file(respaths.IMAGE_PATH + guiutils.get_image_name("star_not_active", double_height=editorpersistance.prefs.double_track_height))
 
     star_button = Gtk.Button()
-    star_button.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "star.png"))
+    # Aug-2019 - SvdB - BB
+    star_button.set_image(guiutils.get_image("star"))
     star_button.connect("clicked", lambda w: media_log_star_button_pressed())
 
     no_star_button = Gtk.Button()
-    no_star_button.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "star_not_active.png"))
+    # Aug-2019 - SvdB - BB
+    no_star_button.set_image(guiutils.get_image("star_not_active"))
     no_star_button.connect("clicked", lambda w: media_log_no_star_button_pressed())
 
     widgets.group_box = Gtk.HBox()
@@ -695,13 +700,18 @@ def get_media_log_events_panel(events_list_view):
     row1.pack_start(no_star_button, False, True, 0)
     row1.pack_start(Gtk.Label(), True, True, 0)
 
+    # Aug-2019 - SvdB - BB
+    prefs = editorpersistance.prefs
+    size_adj = 1
+    if prefs.double_track_height:
+        size_adj = 2
     widgets.log_range = Gtk.Button()
-    widgets.log_range.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "log_range.png"))
+    widgets.log_range.set_image(guiutils.get_image("log_range"))
     widgets.log_range.set_size_request(80, 30)
     widgets.log_range.connect("clicked", lambda w:log_range_clicked())
 
     delete_button = Gtk.Button()
-    delete_button.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "delete_log_range.png"))
+    delete_button.set_image(guiutils.get_image("delete_log_range"))
     delete_button.set_size_request(80, 30)
     delete_button.connect("clicked", lambda w:delete_selected())
 
@@ -711,12 +721,12 @@ def get_media_log_events_panel(events_list_view):
     widgets.use_comments_check = use_comments_check
 
     insert_displayed = Gtk.Button()
-    insert_displayed.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "insert_media_log.png"))
+    insert_displayed.set_image(guiutils.get_image("insert_media_log"))
     insert_displayed.set_size_request(80, 22)
     insert_displayed.connect("clicked", lambda w:insert_selected_log_events())
 
     append_displayed = Gtk.Button()
-    append_displayed.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "append_media_log.png"))
+    append_displayed.set_image(guiutils.get_image("append_media_log"))
     append_displayed.set_size_request(80, 22)
     append_displayed.connect("clicked", lambda w:append_log_events())
 

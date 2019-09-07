@@ -711,17 +711,17 @@ class ClipEditorButtonsRow(Gtk.HBox):
         self.set_homogeneous(False)
         self.set_spacing(2)
 
-        # Buttons
-        self.add_button = guiutils.get_image_button("add_kf.png", BUTTON_WIDTH, BUTTON_HEIGHT)
-        self.delete_button = guiutils.get_image_button("delete_kf.png", BUTTON_WIDTH, BUTTON_HEIGHT)
-        self.prev_kf_button = guiutils.get_image_button("prev_kf.png", BUTTON_WIDTH, BUTTON_HEIGHT)
-        self.next_kf_button = guiutils.get_image_button("next_kf.png", BUTTON_WIDTH, BUTTON_HEIGHT)
-        self.prev_frame_button = guiutils.get_image_button("kf_edit_prev_frame.png", BUTTON_WIDTH, BUTTON_HEIGHT)
-        self.next_frame_button = guiutils.get_image_button("kf_edit_next_frame.png", BUTTON_WIDTH, BUTTON_HEIGHT)
-        self.kf_to_prev_frame_button = guiutils.get_image_button("kf_edit_kf_to_prev_frame.png", BUTTON_WIDTH, BUTTON_HEIGHT)
-        self.kf_to_next_frame_button = guiutils.get_image_button("kf_edit_kf_to_next_frame.png", BUTTON_WIDTH, BUTTON_HEIGHT)
-        self.add_fade_in_button = guiutils.get_image_button("add_fade_in.png", BUTTON_WIDTH, BUTTON_HEIGHT)
-        self.add_fade_out_button = guiutils.get_image_button("add_fade_out.png", BUTTON_WIDTH, BUTTON_HEIGHT)
+        # Aug-2019 - SvdB - BB
+        self.add_button = guiutils.get_image_button("add_kf", BUTTON_WIDTH, BUTTON_HEIGHT)
+        self.delete_button = guiutils.get_image_button("delete_kf", BUTTON_WIDTH, BUTTON_HEIGHT)
+        self.prev_kf_button = guiutils.get_image_button("prev_kf", BUTTON_WIDTH, BUTTON_HEIGHT)
+        self.next_kf_button = guiutils.get_image_button("next_kf", BUTTON_WIDTH, BUTTON_HEIGHT)
+        self.prev_frame_button = guiutils.get_image_button("kf_edit_prev_frame", BUTTON_WIDTH, BUTTON_HEIGHT)
+        self.next_frame_button = guiutils.get_image_button("kf_edit_next_frame", BUTTON_WIDTH, BUTTON_HEIGHT)
+        self.kf_to_prev_frame_button = guiutils.get_image_button("kf_edit_kf_to_prev_frame", BUTTON_WIDTH, BUTTON_HEIGHT)
+        self.kf_to_next_frame_button = guiutils.get_image_button("kf_edit_kf_to_next_frame", BUTTON_WIDTH, BUTTON_HEIGHT)
+        self.add_fade_in_button = guiutils.get_image_button("add_fade_in", BUTTON_WIDTH, BUTTON_HEIGHT)
+        self.add_fade_out_button = guiutils.get_image_button("add_fade_out", BUTTON_WIDTH, BUTTON_HEIGHT)
         
         self.add_button.connect("clicked", lambda w,e: editor_parent.add_pressed(), None)
         self.delete_button.connect("clicked", lambda w,e: editor_parent.delete_pressed(), None)
@@ -817,8 +817,12 @@ class GeometryEditorButtonsRow(Gtk.HBox):
         
         name_label = Gtk.Label(label=_("View:"))
 
-        surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "geom_action.png")
-        action_menu_button = guicomponents.PressLaunch(self._show_actions_menu, surface, 24, 22)
+        # Aug-2019 - SvdB - BB
+        size_adj = 1
+        if editorpersistance.prefs.double_track_height:
+            size_adj = 2
+        surface = guiutils.get_cairo_image("geom_action")
+        action_menu_button = guicomponents.PressLaunch(self._show_actions_menu, surface, 24*size_adj, 22*size_adj)
         
         size_select = Gtk.ComboBoxText()
         size_select.append_text(_("Large"))

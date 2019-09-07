@@ -135,23 +135,24 @@ class EditorWindow:
         MULTIMOVE_CURSOR, MULTIMOVE_NO_EDIT_CURSOR, ONEROLL_RIPPLE_CURSOR, ONEROLL_TOOL, \
         OVERWRITE_BOX_CURSOR, OVERWRITE_TOOL, CUT_CURSOR, KF_TOOL_CURSOR, MULTI_TRIM_CURSOR
         
-        INSERTMOVE_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insertmove_cursor.png")
-        OVERWRITE_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "overwrite_cursor.png")
-        OVERWRITE_BOX_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "overwrite_cursor_box.png")
-        TWOROLL_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "tworoll_cursor.png")
-        ONEROLL_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "oneroll_cursor.png")
-        SLIDE_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "slide_cursor.png")
-        ONEROLL_NO_EDIT_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "oneroll_noedit_cursor.png")
-        TWOROLL_NO_EDIT_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "tworoll_noedit_cursor.png")
-        SLIDE_NO_EDIT_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "slide_noedit_cursor.png")
-        MULTIMOVE_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "multimove_cursor.png")
-        MULTIMOVE_NO_EDIT_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "multimove_cursor.png")
-        ONEROLL_RIPPLE_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "oneroll_cursor_ripple.png")
-        ONEROLL_TOOL = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "oneroll_tool.png")
-        OVERWRITE_TOOL = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "overwrite_tool.png")
-        CUT_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "cut_cursor.png")
-        KF_TOOL_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kftool_cursor.png")
-        MULTI_TRIM_CURSOR = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "multitrim_cursor.png")
+        # Aug-2019 - SvdB - BB
+        INSERTMOVE_CURSOR = guiutils.get_cairo_image("insertmove_cursor")
+        OVERWRITE_CURSOR = guiutils.get_cairo_image("overwrite_cursor")
+        OVERWRITE_BOX_CURSOR = guiutils.get_cairo_image("overwrite_cursor_box")
+        TWOROLL_CURSOR = guiutils.get_cairo_image("tworoll_cursor")
+        SLIDE_CURSOR = guiutils.get_cairo_image("slide_cursor")
+        ONEROLL_CURSOR = guiutils.get_cairo_image("oneroll_cursor")
+        ONEROLL_NO_EDIT_CURSOR = guiutils.get_cairo_image("oneroll_noedit_cursor")
+        TWOROLL_NO_EDIT_CURSOR = guiutils.get_cairo_image("tworoll_noedit_cursor")
+        SLIDE_NO_EDIT_CURSOR = guiutils.get_cairo_image("slide_noedit_cursor")
+        MULTIMOVE_CURSOR = guiutils.get_cairo_image("multimove_cursor")
+        MULTIMOVE_NO_EDIT_CURSOR = guiutils.get_cairo_image("multimove_cursor")
+        ONEROLL_TOOL = guiutils.get_cairo_image("oneroll_tool")
+        ONEROLL_RIPPLE_CURSOR = guiutils.get_cairo_image("oneroll_cursor_ripple")
+        OVERWRITE_TOOL = guiutils.get_cairo_image("overwrite_tool")
+        CUT_CURSOR = guiutils.get_cairo_image("cut_cursor")
+        KF_TOOL_CURSOR = guiutils.get_cairo_image("kftool_cursor")
+        MULTI_TRIM_CURSOR = guiutils.get_cairo_image("multitrim_cursor")
         
         # Context cursors 
         self.context_cursors = {appconsts.POINTER_CONTEXT_END_DRAG_LEFT:(cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "ctx_drag_left.png"), 3, 7),
@@ -731,17 +732,25 @@ class EditorWindow:
         info_h = Gtk.HBox()
         info_h.pack_start(self.tline_info, False, False, 0)
         info_h.pack_start(Gtk.Label(), True, True, 0)
-        info_h.set_size_request(tlinewidgets.COLUMN_WIDTH - 22 - 22 - 22,
-                                      tlinewidgets.SCALE_HEIGHT)
+        # Aug-2019 - SvdB - BB - Height doesn't need to be doubled. 1.4x is nicer
+        size_adj = 1
+        size_x = tlinewidgets.COLUMN_WIDTH - 22 - 22 - 22
+        size_y = tlinewidgets.SCALE_HEIGHT
+        if editorpersistance.prefs.double_track_height:
+            size_adj = 1.4
+            size_x = tlinewidgets.COLUMN_WIDTH - (66*size_adj)
+            # size_y = round(tlinewidgets.SCALE_HEIGHT*1.1)
+        info_h.set_size_request(size_x, size_y)
 
-        marker_surface =  cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "marker.png")
-        markers_launcher = guicomponents.get_markers_menu_launcher(tlineaction.marker_menu_lauch_pressed, marker_surface)
+        # Aug-2019 - SvdB - BB - add size_adj and width/height as parameter to be able to adjust it for double height        
+        marker_surface =  guiutils.get_cairo_image("marker")
+        markers_launcher = guicomponents.get_markers_menu_launcher(tlineaction.marker_menu_lauch_pressed, marker_surface, 22*size_adj, 22*size_adj)
 
-        tracks_launcher_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "track_menu_launch.png")
-        tracks_launcher = guicomponents.PressLaunch(trackaction.all_tracks_menu_launch_pressed, tracks_launcher_surface)
+        tracks_launcher_surface = guiutils.get_cairo_image("track_menu_launch")
+        tracks_launcher = guicomponents.PressLaunch(trackaction.all_tracks_menu_launch_pressed, tracks_launcher_surface, 22*size_adj, 22*size_adj)
 
-        levels_launcher_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "audio_levels_menu_launch.png")
-        levels_launcher = guicomponents.PressLaunch(trackaction.audio_levels_menu_launch_pressed, levels_launcher_surface)
+        levels_launcher_surface = guiutils.get_cairo_image("audio_levels_menu_launch")
+        levels_launcher = guicomponents.PressLaunch(trackaction.audio_levels_menu_launch_pressed, levels_launcher_surface, 22*size_adj, 22*size_adj)
         
         # Timeline top row
         tline_hbox_1 = Gtk.HBox()
@@ -933,7 +942,7 @@ class EditorWindow:
         mb_menu.append(tc_middle)
 
         components_centered = Gtk.RadioMenuItem.new_with_label([tc_left], _("Components Centered").encode('utf-8'))
-        components_centered.connect("activate", lambda w: middlebar._show_buttons_COMPONETS_CENTERED_layout(w))
+        components_centered.connect("activate", lambda w: middlebar._show_buttons_COMPONENTS_CENTERED_layout(w))
         mb_menu.append(components_centered)
 
         if editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_COMPONENTS_CENTERED:
@@ -1097,15 +1106,21 @@ class EditorWindow:
     
         buttons_row = Gtk.HBox(False, 1)
         if editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_COMPONENTS_CENTERED:
-            middlebar.fill_with_COMPONETS_CENTERED_pattern(buttons_row, self)
+            middlebar.fill_with_COMPONENTS_CENTERED_pattern(buttons_row, self)
         elif editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_TC_LEFT:
             middlebar.fill_with_TC_LEFT_pattern(buttons_row, self)
         else:
             middlebar.fill_with_TC_MIDDLE_pattern(buttons_row, self)
 
-        buttons_row.set_margin_top(2)
-        buttons_row.set_margin_left(2)
-        buttons_row.set_margin_right(2)
+        # Aug-2019 - SvdB - BB
+        offset = 2        
+        if editorpersistance.prefs.double_track_height:
+           offset = 4
+           buttons_row.set_margin_bottom(offset)
+
+        buttons_row.set_margin_top(offset)
+        buttons_row.set_margin_left(offset)
+        buttons_row.set_margin_right(offset)
 
         return buttons_row
 
