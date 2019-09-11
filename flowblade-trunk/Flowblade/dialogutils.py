@@ -41,7 +41,7 @@ def default_behaviour(dialog):
 def panel_ok_dialog(title, panel):
     dialog = Gtk.Dialog(title, None,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        ( _("OK").encode('utf-8'), Gtk.ResponseType.OK))
+                        ( _("OK"), Gtk.ResponseType.OK))
                         
     alignment = get_default_alignment(panel)
     
@@ -62,7 +62,7 @@ def warning_message_with_callback(primary_txt, secondary_txt, parent_window, is_
     dialog = Gtk.Dialog("",
                         parent_window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        ( _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        ( _("OK"), Gtk.ResponseType.ACCEPT))
     alignment = get_default_alignment(content)
     dialog.vbox.pack_start(alignment, True, True, 0)
     set_outer_margins(dialog.vbox)
@@ -75,7 +75,7 @@ def warning_message_with_panels(primary_txt, secondary_txt, parent_window, is_in
     dialog = Gtk.Dialog("",
                         parent_window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        ( _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        ( _("OK"), Gtk.ResponseType.ACCEPT))
     alignment = get_default_alignment(content)
     dialog.vbox.pack_start(alignment, True, True, 0)
     set_outer_margins(dialog.vbox)
@@ -88,14 +88,14 @@ def warning_confirmation(callback, primary_txt, secondary_txt, parent_window, da
     align = get_default_alignment(content)
     
     if use_confirm_text == True:
-        accept_text = _("Confirm").encode('utf-8')
+        accept_text = _("Confirm")
     else:
-        accept_text = _("OK").encode('utf-8')
+        accept_text = _("OK")
     
     dialog = Gtk.Dialog("",
                         parent_window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
                          accept_text, Gtk.ResponseType.ACCEPT))
     dialog.vbox.pack_start(align, True, True, 0)
     set_outer_margins(dialog.vbox)
@@ -155,7 +155,7 @@ def get_single_line_text_input_dialog(chars, label_width,title, ok_button_text,
                                       label, default_text):
     dialog = Gtk.Dialog(title, None,
                             Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                            (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
+                            (_("Cancel"), Gtk.ResponseType.REJECT,
                             ok_button_text, Gtk.ResponseType.OK))
 
     entry = Gtk.Entry()

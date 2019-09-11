@@ -441,9 +441,9 @@ class TLineKeyFrameEditor:
 
     # ------------------------------------------------------- debug
     def print_keyframes(self):
-        print "clip edit keyframes:"
+        print("clip edit keyframes:")
         for i in range(0, len(self.keyframes)):
-            print self.keyframes[i]
+            print(self.keyframes[i])
             
     # ----------------------------------------------------------------- Draw
     def draw(self, cr):

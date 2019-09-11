@@ -23,7 +23,7 @@ corresponding mlt.Producers for timeline.
 """
 import cairo
 import copy
-import md5
+import hashlib
 
 from gi.repository import Gtk, Gdk
 
@@ -202,10 +202,10 @@ class AbstractBinClip: # not extends projectdata.MediaFile? too late, too late. 
         return True # these are created to match project profile
 
     def create_mlt_producer(self, profile):
-        print "create_mlt_producer not implemented"
+        print("create_mlt_producer not implemented")
 
     def create_icon(self):
-        print "patter producer create_icon() not implemented"
+        print("patter producer create_icon() not implemented")
 
 class BinColorClip(AbstractBinClip):
     """
@@ -226,7 +226,7 @@ class BinColorClip(AbstractBinClip):
         cr.rectangle(0, 0, width + 1, height+ 1)
         cr.fill()
 
-        file_name =  md5.new(self.gdk_color_str + str(width) + str(height)).hexdigest()      
+        file_name = hashlib.md5((self.gdk_color_str + str(width) + str(height)).encode('utf-8')).hexdigest()      
         write_file_path = userfolders.get_render_dir() + "/" + file_name + ".png"
         surface.write_to_png(write_file_path)
         
@@ -351,8 +351,8 @@ class BinCountClip(AbstractBinClip):
 def _color_clip_dialog(callback):
     dialog = Gtk.Dialog(_("Create Color Clip"), None,
                     Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                    (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                    _("Create").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                    (_("Cancel"), Gtk.ResponseType.REJECT,
+                    _("Create"), Gtk.ResponseType.ACCEPT))
 
     name_entry = Gtk.Entry()
     name_entry.set_text(_("Color Clip"))   
@@ -384,8 +384,8 @@ def _color_clip_dialog(callback):
 def _ising_clip_dialog(callback):
     dialog = Gtk.Dialog(_("Create Ising Clip"), None,
                     Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                    (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                    _("Create").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                    (_("Cancel"), Gtk.ResponseType.REJECT,
+                    _("Create"), Gtk.ResponseType.ACCEPT))
  
     n_box, n_slider = guiutils.get_non_property_slider_row(0, 100, 1)
     bg_box, bg_slider = guiutils.get_non_property_slider_row(0, 100, 1)
@@ -415,8 +415,8 @@ def _ising_clip_dialog(callback):
 def _color_pulse_clip_dialog(callback):
     dialog = Gtk.Dialog(_("Create Color Pulse Clip"), None,
                     Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                    (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                    _("Create").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                    (_("Cancel"), Gtk.ResponseType.REJECT,
+                    _("Create"), Gtk.ResponseType.ACCEPT))
 
     s1_box, s1_slider = guiutils.get_non_property_slider_row(0, 100, 1, 100)
     s2_box, s2_slider = guiutils.get_non_property_slider_row(0, 100, 1, 100)

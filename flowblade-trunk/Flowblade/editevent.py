@@ -279,7 +279,7 @@ def tline_canvas_mouse_pressed(event, frame):
     if EDIT_MODE() == editorstate.CLIP_END_DRAG:
         modesetting.set_default_edit_mode()
         # This shouldn't happen unless for some reason mouse release didn't hit clipenddragmode listener.
-        print "EDIT_MODE() == editorstate.CLIP_END_DRAG at mouse press!"
+        print("EDIT_MODE() == editorstate.CLIP_END_DRAG at mouse press!")
 
     #  Check if match frame close is hit
     if editorstate.current_is_move_mode() and timeline_visible():
@@ -506,7 +506,7 @@ def tline_media_drop(media_file, x, y, use_marks=False):
             #       ...but then we would need to patch persistance.py...maybe keep this even if not too smart.
             # TODO: Make default length user settable or use graphics value
             if (hasattr(new_clip, 'mark_in') == False) or (new_clip.mark_in == -1 and new_clip.mark_out == -1):
-                center_frame = new_clip.get_length() / 2
+                center_frame = new_clip.get_length() // 2
                 default_length_half = 75
                 mark_in = center_frame - default_length_half
                 mark_out = center_frame + default_length_half - 1

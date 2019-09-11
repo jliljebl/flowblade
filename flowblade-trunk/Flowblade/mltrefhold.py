@@ -25,7 +25,7 @@ def hold_ref(mlt_obj):
 
 def print_objects():
     global mlt_objects
-    print "len(mlt_objects):", len(mlt_objects)
+    print("len(mlt_objects):", len(mlt_objects))
     
 def print_and_clear():
     print_objects()

@@ -39,7 +39,7 @@ def init_languages():
     lc, encoding = locale.getdefaultlocale()
     if (lc):
         langs = [lc]
-    print "Locale:", lc
+    print("Locale:", lc)
 
     language = os.environ.get('LANGUAGE', None)
     if (language):
@@ -50,24 +50,24 @@ def init_languages():
         # Look for installed translation in distro install
         # Were using Russian as test language
         if os.path.isfile("/usr/share/locale/ru/LC_MESSAGES/flowblade.mo"): # fi is the translation controlled by program author
-            print "Found translations at /usr/share/locale, using those."
+            print("Found translations at /usr/share/locale, using those.")
             locale_path = "/usr/share/locale/"
         #  Look for installed translations in flatpak install 
         elif os.path.isfile("/app/share/flowblade/Flowblade/locale/ru/LC_MESSAGES/flowblade.mo"): # fi is the translation controlled by program author
-            print "Found translations at /app/share/flowblade/Flowblade/locale, using those."
+            print("Found translations at /app/share/flowblade/Flowblade/locale, using those.")
             locale_path = "/app/share/flowblade/Flowblade/locale"
         else:
-            print "Translations at /usr/share/locale were not found, using program root directory translations."
+            print("Translations at /usr/share/locale were not found, using program root directory translations.")
             locale_path = respaths.LOCALE_PATH
     else:
         # Use translations in program folder first if NOT running from installation
         # Were using Russian as test language
         locale_file = respaths.LOCALE_PATH + "ru/LC_MESSAGES/flowblade.mo"
         if os.path.isfile(locale_file): # fi is the translation controlled by program author
-            print "Found translations at " +  respaths.LOCALE_PATH + ", using those."
+            print("Found translations at " +  respaths.LOCALE_PATH + ", using those.")
             locale_path = respaths.LOCALE_PATH
         else:
-            print "Translations at " + locale_file + " were not found, using /usr/share/locale translations."
+            print("Translations at " + locale_file + " were not found, using /usr/share/locale translations.")
             locale_path = "/usr/share/locale/"
 
     gettext.bindtextdomain(APP_NAME, locale_path)
@@ -84,13 +84,13 @@ def init_languages():
         lang_code = editorpersistance.prefs.force_language
     
     if editorpersistance.prefs.force_language == "English":
-        print "Force use English."
+        print("Force use English.")
         lang = gettext.translation(APP_NAME, locale_path, languages=["dummy"], fallback=True)
     elif editorpersistance.prefs.force_language != "None":
-        print "Force use ", editorpersistance.prefs.force_language
+        print("Force use ", editorpersistance.prefs.force_language)
         lang = gettext.translation(APP_NAME, locale_path, languages=[str(editorpersistance.prefs.force_language)], fallback=True)
     else:
-        print "Use OS locale language."
+        print("Use OS locale language.")
         lang = gettext.translation(APP_NAME, locale_path, languages=langs, fallback=True)
 
     # Un-comment for translations tests

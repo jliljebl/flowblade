@@ -219,7 +219,7 @@ class MultimoveData:
                 return track
         
         # We should never get here and we allow this to crash
-        print "getting failed ripple delete track info in get_overwrite_data() failed"
+        print("getting failed ripple delete track info in get_overwrite_data() failed")
         return None
             
 def mouse_press(event, frame):

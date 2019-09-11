@@ -444,7 +444,7 @@ def reinit_current_effect():
     effect_selection_changed(True)
 
 def effect_selection_changed(use_current_filter_index=False):
-    global keyframe_editor_widgets
+    global keyframe_editor_widgets, current_filter_index
 
     # Check we have clip
     if clip == None:
@@ -483,7 +483,6 @@ def effect_selection_changed(use_current_filter_index=False):
 
     filter_object = clip.filters[filter_index]
     
-    global current_filter_index
     current_filter_index = filter_index
     
     # Create EditableProperty wrappers for properties

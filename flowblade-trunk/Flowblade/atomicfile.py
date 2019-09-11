@@ -22,7 +22,7 @@
 Atomic file write support.
 """
 
-import md5
+import hashlib
 import os
 import shutil
 
@@ -143,7 +143,7 @@ class AtomicFileWriter(object):
                 os.unlink(self.tmp_file_path)
 
             except:
-                print "Error cleaning up temp file: " + self.tmp_file_path
+                print("Error cleaning up temp file: " + self.tmp_file_path)
 
             # let the original exception that was passed into this method bubble up
             return False
@@ -175,6 +175,6 @@ class AtomicFileWriter(object):
         Create a candidate temp filename, without touching the filesystem.
         """
 
-        uuid_str = md5.new(str(os.urandom(32))).hexdigest()
+        uuid_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
         return ".tmp-" + uuid_str + "-" + basepath
 

@@ -508,9 +508,9 @@ class ClipKeyFrameEditor:
         self.active_kf_index = len(self.keyframes) - 1
 
     def print_keyframes(self, msg="no_msg"):
-        print msg, "clip edit keyframes:"
+        print(msg, "clip edit keyframes:")
         for i in range(0, len(self.keyframes)):
-            print self.keyframes[i]
+            print(self.keyframes[i])
         
     def delete_active_keyframe(self):
         if self.active_kf_index == 0:
@@ -955,7 +955,7 @@ class AbstractKeyFrameEditor(Gtk.VBox):
         PLAYER().seek_frame(self.clip_tline_pos + clip_frame - self.clip_in)
     
     def update_editor_view(self, seek_tline=True):
-        print "update_editor_view not implemented"
+        print("update_editor_view not implemented")
 
 
 
@@ -1742,7 +1742,7 @@ class PositionNumericalEntries(Gtk.HBox):
                 self.parent_editor.numerical_edit_done(shape)
             except Exception as e:
                 # If user inputs non-ifloats we will just do nothing
-                print "Numerical input Exception - ", e
+                print("Numerical input Exception - ", e)
         else:
             try:
                 x = float(self.x_entry.get_text())
@@ -1753,7 +1753,7 @@ class PositionNumericalEntries(Gtk.HBox):
                 self.parent_editor.numerical_edit_done(shape)
             except Exception as e:
                 # If user inputs non-ifloats we will just do nothing
-                print "Numerical input Exception - ", e
+                print("Numerical input Exception - ", e)
 
     def update_entry_values(self, active_kf):
         frame, shape, opacity = active_kf

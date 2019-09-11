@@ -46,7 +46,7 @@ def render_progress_dialog(callback, parent_window, frame_rates_match=True):
     dialog = Gtk.Dialog(_("Render Progress"),
                          parent_window,
                          Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                         (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT))
+                         (_("Cancel"), Gtk.ResponseType.REJECT))
 
     dialog.status_label = Gtk.Label()
     dialog.remaining_time_label = Gtk.Label()
@@ -105,8 +105,8 @@ def no_good_rander_range_info():
 def load_ffmpeg_opts_dialog(callback, opts_extension):
     dialog = Gtk.FileChooserDialog(_("Load Render Args File"), None, 
                                    Gtk.FileChooserAction.OPEN, 
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
-                                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                                   (_("Cancel"), Gtk.ResponseType.CANCEL,
+                                    _("OK"), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.OPEN)
     dialog.set_select_multiple(False)
     file_filter = Gtk.FileFilter()
@@ -119,8 +119,8 @@ def load_ffmpeg_opts_dialog(callback, opts_extension):
 def save_ffmpeg_opts_dialog(callback, opts_extension):
     dialog = Gtk.FileChooserDialog(_("Save Render Args As"), None, 
                                    Gtk.FileChooserAction.SAVE, 
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
-                                   _("Save").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                                   (_("Cancel"), Gtk.ResponseType.CANCEL,
+                                   _("Save"), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.SAVE)
     dialog.set_current_name("untitled" + opts_extension)
     dialog.set_do_overwrite_confirmation(True)
@@ -136,7 +136,7 @@ def clip_render_progress_dialog(callback, title, text, progress_bar, parent_wind
     dialog = Gtk.Dialog(title,
                          parent_window,
                          Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                         (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT))
+                         (_("Cancel"), Gtk.ResponseType.REJECT))
 
     dialog.text_label = Gtk.Label(label=text)
     dialog.text_label.set_use_markup(True)
@@ -174,7 +174,7 @@ def show_slowmo_dialog(media_file, default_range_render, _response_callback):
     dialog = Gtk.Dialog(_("Render Slow/Fast Motion Video File"), gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (Gtk.STOCK_CANCEL, Gtk.ResponseType.REJECT,
-                        _("Render").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        _("Render"), Gtk.ResponseType.ACCEPT))
 
     media_file_label = Gtk.Label(label=_("Source Media File: "))
     media_name = Gtk.Label(label="<b>" + media_file.name + "</b>")
@@ -320,7 +320,7 @@ def show_reverse_dialog(media_file, default_range_render, _response_callback):
     dialog = Gtk.Dialog(_("Render Reverse Motion Video File"), gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (Gtk.STOCK_CANCEL, Gtk.ResponseType.REJECT,
-                        _("Render").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        _("Render"), Gtk.ResponseType.ACCEPT))
 
     media_file_label = Gtk.Label(label=_("Source Media File: "))
     media_name = Gtk.Label(label="<b>" + media_file.name + "</b>")

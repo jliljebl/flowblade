@@ -172,12 +172,13 @@ class TitlerData:
         return self.layers.index(self.active_layer)
     
     def save(self, save_file_path):
-        save_data = copy.deepcopy(self)
+        save_data = copy.copy(self)
         for layer in save_data.layers:
             layer.pango_layout = None
-        write_file = file(save_file_path, "wb")
+        write_file = open(save_file_path, 'wb')
         pickle.dump(save_data, write_file)
-   
+        self.create_pango_layouts() # we just destroyed these because they don't pickle, they need to be recreated.
+
     def create_pango_layouts(self):
         for layer in self.layers:
             layer.pango_layout = PangoTextLayout(layer)
@@ -257,7 +258,7 @@ class Titler(Gtk.Window):
         font_map = PangoCairo.font_map_get_default()
         unsorted_families = font_map.list_families()
         if len(unsorted_families) == 0:
-            print "No font families found in system! Titler will not work."
+            print("No font families found in system! Titler will not work.")
         self.font_families = sorted(unsorted_families, key=lambda family: family.get_name())
         self.font_family_indexes_for_name = {}
         combo = Gtk.ComboBoxText()
@@ -644,7 +645,7 @@ class Titler(Gtk.Window):
             try:
                 filenames = dialog.get_filenames()
                 load_path = filenames[0]
-                f = open(load_path)
+                f = open(load_path, 'rb')
                 new_data = pickle.load(f)
                 global _titler_data
                 _titler_data = new_data

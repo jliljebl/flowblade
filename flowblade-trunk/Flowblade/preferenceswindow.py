@@ -46,8 +46,8 @@ def preferences_dialog():
 
     dialog = Gtk.Dialog(_("Editor Preferences"), None,
                     Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                    (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                    (_("Cancel"), Gtk.ResponseType.REJECT,
+                    _("OK"), Gtk.ResponseType.ACCEPT))
 
     gen_opts_panel, gen_opts_widgets = _general_options_panel()
     edit_prefs_panel, edit_prefs_widgets = _edit_prefs_panel()
