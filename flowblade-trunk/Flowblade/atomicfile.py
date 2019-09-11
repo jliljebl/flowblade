@@ -68,7 +68,7 @@ class AtomicFileWriter(object):
 
         if mode is None:
             self.mode = "w"
-        elif (mode == "w") or (mode == "wb"):
+        elif mode in ("w", "wb"):
             self.mode = mode
         else:
             raise ValueError("AtomicFileWriter only accepts 'w' or 'wb' as valid modes")
