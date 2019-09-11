@@ -68,7 +68,7 @@ def render_progress_dialog(callback, parent_window, frame_rates_match=True):
     if frame_rates_match == False:
         # Aug-2019 - SvdB - BB
         if editorpersistance.prefs.double_track_hights:
-            warning_icon = Gtk.Image.new_from_stock(Gtk.STOCK_DIALOG_WARNING, IconSize.DND)
+            warning_icon = Gtk.Image.new_from_stock(Gtk.STOCK_DIALOG_WARNING, Gtk.IconSize.DND)
         else:
             warning_icon = Gtk.Image.new_from_stock(Gtk.STOCK_DIALOG_WARNING, Gtk.IconSize.MENU)
         warning_text = Gtk.Label(label=_("Project and Render Profile FPS values are not same. Rendered file may have A/V sync issues."))
