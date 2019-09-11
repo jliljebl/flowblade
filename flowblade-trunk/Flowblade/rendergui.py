@@ -67,7 +67,7 @@ def render_progress_dialog(callback, parent_window, frame_rates_match=True):
 
     if frame_rates_match == False:
         # Aug-2019 - SvdB - BB
-        if editorpersistance.prefs.double_track_height:
+        if editorpersistance.prefs.double_track_hights:
             warning_icon = Gtk.Image.new_from_stock(Gtk.STOCK_DIALOG_WARNING, IconSize.DND)
         else:
             warning_icon = Gtk.Image.new_from_stock(Gtk.STOCK_DIALOG_WARNING, Gtk.IconSize.MENU)
@@ -800,7 +800,7 @@ class RenderArgsPanel():
 
         self.opts_save_button = Gtk.Button()
         # Aug-2019 - SvdB - BB
-        if editorpersistance.prefs.double_track_height:
+        if editorpersistance.prefs.double_track_hights:
             icon = Gtk.Image.new_from_stock(Gtk.STOCK_SAVE, Gtk.IconSize.LARGE_TOOLBAR)
         else:
             icon = Gtk.Image.new_from_stock(Gtk.STOCK_SAVE, Gtk.IconSize.MENU)
@@ -810,7 +810,7 @@ class RenderArgsPanel():
     
         self.opts_load_button = Gtk.Button()
         # Aug-2019 - SvdB - BB
-        if editorpersistance.prefs.double_track_height:
+        if editorpersistance.prefs.double_track_hights:
             icon = Gtk.Image.new_from_stock(Gtk.STOCK_OPEN, Gtk.IconSize.LARGE_TOOLBAR)
         else:
             icon = Gtk.Image.new_from_stock(Gtk.STOCK_OPEN, Gtk.IconSize.MENU)

@@ -736,7 +736,7 @@ class EditorWindow:
         size_adj = 1
         size_x = tlinewidgets.COLUMN_WIDTH - 22 - 22 - 22
         size_y = tlinewidgets.SCALE_HEIGHT
-        if editorpersistance.prefs.double_track_height:
+        if editorpersistance.prefs.double_track_hights:
             size_adj = 1.4
             size_x = tlinewidgets.COLUMN_WIDTH - (66*size_adj)
             # size_y = round(tlinewidgets.SCALE_HEIGHT*1.1)
@@ -1115,7 +1115,7 @@ class EditorWindow:
 
         # Aug-2019 - SvdB - BB
         offset = 2        
-        if editorpersistance.prefs.double_track_height:
+        if editorpersistance.prefs.double_track_hights:
            offset = 4
            buttons_row.set_margin_bottom(offset)
 

@@ -150,7 +150,7 @@ def get_image_name(img_name, suffix = ".png", double_height = False):
 def get_image(img_name, suffix = ".png", force = None):
     # Use parameter force as True or False to force the track height no matter what the preferences setting
     if force == None:
-        force = editorpersistance.prefs.double_track_height
+        force = editorpersistance.prefs.double_track_hights
     if force:
         img_name = img_name + "@2"
     return Gtk.Image.new_from_file(respaths.IMAGE_PATH + img_name + suffix)
@@ -159,7 +159,7 @@ def get_image(img_name, suffix = ".png", force = None):
 def get_cairo_image(img_name, suffix = ".png", force = None):
     # Use parameter force as True or False to force the track height no matter what the preferences setting
     if force == None:
-        force = editorpersistance.prefs.double_track_height
+        force = editorpersistance.prefs.double_track_hights
     if force:
         img_name = img_name + "@2"
     return cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + img_name + suffix)
@@ -169,7 +169,7 @@ def get_image_button(img_file_name, width, height):
     button = Gtk.Button()
     icon = get_image(img_file_name)        
     size_adj = 1
-    if editorpersistance.prefs.double_track_height:
+    if editorpersistance.prefs.double_track_hights:
         size_adj = 2
     button_box = Gtk.HBox()
     button_box.pack_start(icon, False, False, 0)

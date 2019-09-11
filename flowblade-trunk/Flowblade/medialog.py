@@ -663,7 +663,7 @@ def get_media_log_events_panel(events_list_view):
 
     star_label = Gtk.Image()
     # Aug-2019 - SvdB - BB
-    star_label.set_from_file(respaths.IMAGE_PATH + guiutils.get_image_name("star", double_height=editorpersistance.prefs.double_track_height))
+    star_label.set_from_file(respaths.IMAGE_PATH + guiutils.get_image_name("star", double_height=editorpersistance.prefs.double_track_hights))
 
     star_not_active_check = Gtk.CheckButton()
     star_not_active_check.set_active(True)
@@ -672,7 +672,7 @@ def get_media_log_events_panel(events_list_view):
 
     star_not_active_label = Gtk.Image()
     # Aug-2019 - SvdB - BB
-    star_not_active_label.set_from_file(respaths.IMAGE_PATH + guiutils.get_image_name("star_not_active", double_height=editorpersistance.prefs.double_track_height))
+    star_not_active_label.set_from_file(respaths.IMAGE_PATH + guiutils.get_image_name("star_not_active", double_height=editorpersistance.prefs.double_track_hights))
 
     star_button = Gtk.Button()
     # Aug-2019 - SvdB - BB
@@ -706,7 +706,7 @@ def get_media_log_events_panel(events_list_view):
     # Aug-2019 - SvdB - BB
     prefs = editorpersistance.prefs
     size_adj = 1
-    if prefs.double_track_height:
+    if prefs.double_track_hights:
         size_adj = 2
     widgets.log_range = Gtk.Button()
     widgets.log_range.set_image(guiutils.get_image("log_range"))

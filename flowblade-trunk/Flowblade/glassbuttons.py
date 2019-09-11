@@ -275,7 +275,7 @@ class PlayerButtons(AbstractGlassButtons):
         size_ind = 0
         size_adj = 1
         prefs = editorpersistance.prefs 
-        if prefs.double_track_height:
+        if prefs.double_track_hights:
            size_ind = 1
            size_adj = 2
         AbstractGlassButtons.__init__(self, MB_BUTTON_WIDTH[size_ind], MB_BUTTON_HEIGHT[size_ind], MB_BUTTON_Y, MB_BUTTONS_WIDTH[size_ind], MB_BUTTONS_HEIGHT[size_ind])

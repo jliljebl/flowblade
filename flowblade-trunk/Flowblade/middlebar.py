@@ -121,7 +121,7 @@ def _create_buttons(editor_window):
     # Aug-2019 - SvdB - BB
     prefs = editorpersistance.prefs
     size_adj = 1
-    if prefs.double_track_height:
+    if prefs.double_track_hights:
        size_adj = 2
 
     editor_window.big_TC = Gtk.Stack()

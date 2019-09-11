@@ -50,7 +50,7 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hambu
     # Aug-2019 - SvdB - BB
     size_adj = 1
     prefs = editorpersistance.prefs
-    if prefs.double_track_height:
+    if prefs.double_track_hights:
         size_adj = 2
     hamburger_launcher = guicomponents.HamburgerPressLaunch(hamburger_launch_pressed)
     guiutils.set_margins(hamburger_launcher.widget, 2, 0, 4, 12)

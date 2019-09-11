@@ -819,7 +819,7 @@ class GeometryEditorButtonsRow(Gtk.HBox):
 
         # Aug-2019 - SvdB - BB
         size_adj = 1
-        if editorpersistance.prefs.double_track_height:
+        if editorpersistance.prefs.double_track_hights:
             size_adj = 2
         surface = guiutils.get_cairo_image("geom_action")
         action_menu_button = guicomponents.PressLaunch(self._show_actions_menu, surface, 24*size_adj, 22*size_adj)

@@ -1330,7 +1330,7 @@ def get_monitor_view_select_combo(callback):
     # Aug-2019 - SvdB - BB
     prefs = editorpersistance.prefs
     size_adj = 1
-    if prefs.double_track_height:
+    if prefs.double_track_hights:
        size_adj = 2
     surface_list = [guiutils.get_cairo_image("program_view_2"),
                    guiutils.get_cairo_image("vectorscope"),
@@ -1343,7 +1343,7 @@ def get_trim_view_select_combo(callback):
     # Aug-2019 - SvdB - BB
     prefs = editorpersistance.prefs
     size_adj = 1
-    if prefs.double_track_height:
+    if prefs.double_track_hights:
        size_adj = 2
     surface = guiutils.get_cairo_image("trim_view")
     menu_launch = PressLaunch(callback, surface, w=24*size_adj, h=20*size_adj)
@@ -2188,7 +2188,7 @@ class BigTCDisplay:
         # Aug-2019 - SvdB -BB
         prefs = editorpersistance.prefs
         size_adj = 1
-        if prefs.double_track_height:
+        if prefs.double_track_hights:
            size_adj = 2
 
         self.widget = cairoarea.CairoDrawableArea2( 170*size_adj,
@@ -2951,7 +2951,7 @@ class ToolSelector(ImageMenuLaunch):
         PressLaunch._draw(self, event, cr, allocation)
 
         # Aug-2019 - SvdB - BB - If we have larger icons we need to move this a bit and make it a tad larger.
-        if editorpersistance.prefs.double_track_height:
+        if editorpersistance.prefs.double_track_hights:
             x_pos = [40,45,50]
             y_pos = [10,20,10]
         else:    
@@ -2974,7 +2974,7 @@ class HamburgerPressLaunch:
         prefs = editorpersistance.prefs
         size_adj = 1
         y_adj = 0
-        if prefs.double_track_height:
+        if prefs.double_track_hights:
             size_adj = 2
             y_adj = -2
         
@@ -3014,7 +3014,7 @@ class MonitorSwitch:
         self.HEIGHT = 22
         # Aug-2019 - SvdB - BB - Set the appropriate values based on button size. Use guiutils functions
         prefs = editorpersistance.prefs
-        if prefs.double_track_height:
+        if prefs.double_track_hights:
             self.WIDTH = self.WIDTH * 2
             self.HEIGHT = self.HEIGHT * 2
 
@@ -3046,7 +3046,7 @@ class MonitorSwitch:
         def_off = 10
         y_off_tline = 7
         y_off_clip = 8
-        if prefs.double_track_height:
+        if prefs.double_track_hights:
            def_off = def_off * 2
            y_off_tline = y_off_tline * 2
            y_off_clip = y_off_clip * 2
