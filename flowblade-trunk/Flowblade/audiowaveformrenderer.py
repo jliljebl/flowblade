@@ -84,7 +84,6 @@ def get_waveform_data(clip):
              print( "Size zero Audio levels file, this is error!", levels_file_path)
         waveform = pickle.load(f)
         _waveforms[clip.path] = waveform
-        print ("we got waveform")
         return waveform
     else:
         global _queued_waveform_renders
