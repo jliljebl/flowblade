@@ -26,6 +26,7 @@ import math
 import os
 
 import dialogutils
+import editorpersistance # Aug-2019- SvdB - BB
 import editorstate
 import gui
 import guiutils
@@ -45,7 +46,7 @@ def render_progress_dialog(callback, parent_window, frame_rates_match=True):
     dialog = Gtk.Dialog(_("Render Progress"),
                          parent_window,
                          Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                         (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT))
+                         (_("Cancel"), Gtk.ResponseType.REJECT))
 
     dialog.status_label = Gtk.Label()
     dialog.remaining_time_label = Gtk.Label()
@@ -65,7 +66,11 @@ def render_progress_dialog(callback, parent_window, frame_rates_match=True):
     passed_box.pack_start(Gtk.Label(), True, True, 0)
 
     if frame_rates_match == False:
-        warning_icon = Gtk.Image.new_from_stock(Gtk.STOCK_DIALOG_WARNING, Gtk.IconSize.MENU)
+        # Aug-2019 - SvdB - BB
+        if editorpersistance.prefs.double_track_hights:
+            warning_icon = Gtk.Image.new_from_stock(Gtk.STOCK_DIALOG_WARNING, IconSize.DND)
+        else:
+            warning_icon = Gtk.Image.new_from_stock(Gtk.STOCK_DIALOG_WARNING, Gtk.IconSize.MENU)
         warning_text = Gtk.Label(label=_("Project and Render Profile FPS values are not same. Rendered file may have A/V sync issues."))
         warning_box = Gtk.HBox(False, 2)
         warning_box.pack_start(warning_icon,False, False, 0)
@@ -100,8 +105,8 @@ def no_good_rander_range_info():
 def load_ffmpeg_opts_dialog(callback, opts_extension):
     dialog = Gtk.FileChooserDialog(_("Load Render Args File"), None, 
                                    Gtk.FileChooserAction.OPEN, 
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
-                                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                                   (_("Cancel"), Gtk.ResponseType.CANCEL,
+                                    _("OK"), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.OPEN)
     dialog.set_select_multiple(False)
     file_filter = Gtk.FileFilter()
@@ -114,8 +119,8 @@ def load_ffmpeg_opts_dialog(callback, opts_extension):
 def save_ffmpeg_opts_dialog(callback, opts_extension):
     dialog = Gtk.FileChooserDialog(_("Save Render Args As"), None, 
                                    Gtk.FileChooserAction.SAVE, 
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
-                                   _("Save").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                                   (_("Cancel"), Gtk.ResponseType.CANCEL,
+                                   _("Save"), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.SAVE)
     dialog.set_current_name("untitled" + opts_extension)
     dialog.set_do_overwrite_confirmation(True)
@@ -131,7 +136,7 @@ def clip_render_progress_dialog(callback, title, text, progress_bar, parent_wind
     dialog = Gtk.Dialog(title,
                          parent_window,
                          Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                         (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT))
+                         (_("Cancel"), Gtk.ResponseType.REJECT))
 
     dialog.text_label = Gtk.Label(label=text)
     dialog.text_label.set_use_markup(True)
@@ -169,7 +174,7 @@ def show_slowmo_dialog(media_file, default_range_render, _response_callback):
     dialog = Gtk.Dialog(_("Render Slow/Fast Motion Video File"), gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (Gtk.STOCK_CANCEL, Gtk.ResponseType.REJECT,
-                        _("Render").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        _("Render"), Gtk.ResponseType.ACCEPT))
 
     media_file_label = Gtk.Label(label=_("Source Media File: "))
     media_name = Gtk.Label(label="<b>" + media_file.name + "</b>")
@@ -315,7 +320,7 @@ def show_reverse_dialog(media_file, default_range_render, _response_callback):
     dialog = Gtk.Dialog(_("Render Reverse Motion Video File"), gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (Gtk.STOCK_CANCEL, Gtk.ResponseType.REJECT,
-                        _("Render").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        _("Render"), Gtk.ResponseType.ACCEPT))
 
     media_file_label = Gtk.Label(label=_("Source Media File: "))
     media_name = Gtk.Label(label="<b>" + media_file.name + "</b>")
@@ -759,7 +764,8 @@ class RenderEncodingPanel():
         
         self.sample_rate_selector = RenderAudioRateSelector()
 
-        self.speaker_image = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "audio_desc_icon.png")
+        # Aug-2019 - SvdB - BB
+        self.speaker_image = guiutils.get_image("audio_desc_icon")
 
         quality_row  = Gtk.HBox()
         quality_row.pack_start(self.quality_selector.widget, False, False, 0)
@@ -793,13 +799,21 @@ class RenderArgsPanel():
         self.use_args_check.connect("toggled", self.use_args_toggled)
 
         self.opts_save_button = Gtk.Button()
-        icon = Gtk.Image.new_from_stock(Gtk.STOCK_SAVE, Gtk.IconSize.MENU)
+        # Aug-2019 - SvdB - BB
+        if editorpersistance.prefs.double_track_hights:
+            icon = Gtk.Image.new_from_stock(Gtk.STOCK_SAVE, Gtk.IconSize.LARGE_TOOLBAR)
+        else:
+            icon = Gtk.Image.new_from_stock(Gtk.STOCK_SAVE, Gtk.IconSize.MENU)
         self.opts_save_button.set_image(icon)
         self.opts_save_button.connect("clicked", lambda w: save_args_callback())
         self.opts_save_button.set_sensitive(False)
     
         self.opts_load_button = Gtk.Button()
-        icon = Gtk.Image.new_from_stock(Gtk.STOCK_OPEN, Gtk.IconSize.MENU)
+        # Aug-2019 - SvdB - BB
+        if editorpersistance.prefs.double_track_hights:
+            icon = Gtk.Image.new_from_stock(Gtk.STOCK_OPEN, Gtk.IconSize.LARGE_TOOLBAR)
+        else:
+            icon = Gtk.Image.new_from_stock(Gtk.STOCK_OPEN, Gtk.IconSize.MENU)
         self.opts_load_button.set_image(icon)
         self.opts_load_button.connect("clicked", lambda w: load_args_callback())
                 

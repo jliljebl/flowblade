@@ -32,6 +32,7 @@ import edit
 import gui
 import guicomponents
 import guiutils
+import editorpersistance # Aug-2019 - SvdB - BB
 import editorstate
 from editorstate import PROJECT
 import monitorevent
@@ -149,10 +150,13 @@ def _update_list_view(log_event):
     max_val = widgets.media_log_view.treeview.get_vadjustment().get_upper()
     gui.middle_notebook.set_current_page(range_log_notebook_index)
     view_group = get_current_filtered_events()
-    event_index = view_group.index(log_event)
-    widgets.media_log_view.treeview.get_selection().select_path(str(event_index))
-    widgets.media_log_view.treeview.get_vadjustment().set_value(max_val)
-
+    try:
+        event_index = view_group.index(log_event)
+        widgets.media_log_view.treeview.get_selection().select_path(str(event_index))
+        widgets.media_log_view.treeview.get_vadjustment().set_value(max_val)
+    except:
+        pass # if non-starred are not displayed currently. TODO: think of logic, should new items into displayed category?
+        
 def log_item_name_edited(cell, path, new_text, user_data):
     if len(new_text) == 0:
         return
@@ -326,10 +330,10 @@ def _group_action_pressed(widget, event):
 
     guiutils.add_separetor(actions_menu)
     
-    move_menu_item = Gtk.MenuItem(_("Move Selected Items To Group").encode('utf-8'))
+    move_menu_item = Gtk.MenuItem(_("Move Selected Items To Group"))
     move_menu = Gtk.Menu()
     if len(PROJECT().media_log_groups) == 0:
-        move_menu.add(guiutils.get_menu_item(_("No Groups").encode('utf-8'), _actions_callback, "dummy", False))
+        move_menu.add(guiutils.get_menu_item(_("No Groups"), _actions_callback, "dummy", False))
     else:
         index = 0
         for group in PROJECT().media_log_groups:
@@ -348,21 +352,21 @@ def _group_action_pressed(widget, event):
 
     guiutils.add_separetor(actions_menu)
     
-    sort_item = Gtk.MenuItem(_("Sort by").encode('utf-8'))
+    sort_item = Gtk.MenuItem(_("Sort by"))
     sort_menu = Gtk.Menu()
     time_item = Gtk.RadioMenuItem()
-    time_item.set_label(_("Time").encode('utf-8'))
+    time_item.set_label(_("Time"))
     time_item.set_active(True)
     time_item.show()
     time_item.connect("activate", lambda w: _sorting_changed("time"))
     sort_menu.append(time_item)
 
-    name_item = Gtk.RadioMenuItem.new_with_label([time_item], _("File Name").encode('utf-8'))
+    name_item = Gtk.RadioMenuItem.new_with_label([time_item], _("File Name"))
     name_item.connect("activate", lambda w: _sorting_changed("name"))
     name_item.show()
     sort_menu.append(name_item)
 
-    comment_item = Gtk.RadioMenuItem.new_with_label([time_item], _("Comment").encode('utf-8'))
+    comment_item = Gtk.RadioMenuItem.new_with_label([time_item], _("Comment"))
     comment_item.connect("activate", lambda w: _sorting_changed("comment"))
     comment_item.show()
     sort_menu.append(comment_item)
@@ -658,7 +662,8 @@ def get_media_log_events_panel(events_list_view):
     widgets.star_check = star_check
 
     star_label = Gtk.Image()
-    star_label.set_from_file(respaths.IMAGE_PATH + "star.png")
+    # Aug-2019 - SvdB - BB
+    star_label.set_from_file(respaths.IMAGE_PATH + guiutils.get_image_name("star", double_height=editorpersistance.prefs.double_track_hights))
 
     star_not_active_check = Gtk.CheckButton()
     star_not_active_check.set_active(True)
@@ -666,14 +671,17 @@ def get_media_log_events_panel(events_list_view):
     widgets.star_not_active_check = star_not_active_check
 
     star_not_active_label = Gtk.Image()
-    star_not_active_label.set_from_file(respaths.IMAGE_PATH + "star_not_active.png")
+    # Aug-2019 - SvdB - BB
+    star_not_active_label.set_from_file(respaths.IMAGE_PATH + guiutils.get_image_name("star_not_active", double_height=editorpersistance.prefs.double_track_hights))
 
     star_button = Gtk.Button()
-    star_button.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "star.png"))
+    # Aug-2019 - SvdB - BB
+    star_button.set_image(guiutils.get_image("star"))
     star_button.connect("clicked", lambda w: media_log_star_button_pressed())
 
     no_star_button = Gtk.Button()
-    no_star_button.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "star_not_active.png"))
+    # Aug-2019 - SvdB - BB
+    no_star_button.set_image(guiutils.get_image("star_not_active"))
     no_star_button.connect("clicked", lambda w: media_log_no_star_button_pressed())
 
     widgets.group_box = Gtk.HBox()
@@ -695,13 +703,18 @@ def get_media_log_events_panel(events_list_view):
     row1.pack_start(no_star_button, False, True, 0)
     row1.pack_start(Gtk.Label(), True, True, 0)
 
+    # Aug-2019 - SvdB - BB
+    prefs = editorpersistance.prefs
+    size_adj = 1
+    if prefs.double_track_hights:
+        size_adj = 2
     widgets.log_range = Gtk.Button()
-    widgets.log_range.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "log_range.png"))
+    widgets.log_range.set_image(guiutils.get_image("log_range"))
     widgets.log_range.set_size_request(80, 30)
     widgets.log_range.connect("clicked", lambda w:log_range_clicked())
 
     delete_button = Gtk.Button()
-    delete_button.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "delete_log_range.png"))
+    delete_button.set_image(guiutils.get_image("delete_log_range"))
     delete_button.set_size_request(80, 30)
     delete_button.connect("clicked", lambda w:delete_selected())
 
@@ -711,12 +724,12 @@ def get_media_log_events_panel(events_list_view):
     widgets.use_comments_check = use_comments_check
 
     insert_displayed = Gtk.Button()
-    insert_displayed.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "insert_media_log.png"))
+    insert_displayed.set_image(guiutils.get_image("insert_media_log"))
     insert_displayed.set_size_request(80, 22)
     insert_displayed.connect("clicked", lambda w:insert_selected_log_events())
 
     append_displayed = Gtk.Button()
-    append_displayed.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "append_media_log.png"))
+    append_displayed.set_image(guiutils.get_image("append_media_log"))
     append_displayed.set_size_request(80, 22)
     append_displayed.connect("clicked", lambda w:append_log_events())
 

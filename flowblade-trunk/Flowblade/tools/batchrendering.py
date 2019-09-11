@@ -30,7 +30,7 @@ import dbus
 import dbus.service
 from dbus.mainloop.glib import DBusGMainLoop
 import mlt
-import md5
+import hashlib
 import locale
 import os
 from os import listdir
@@ -205,7 +205,7 @@ class QueueRunnerThread(threading.Thread):
 
 class BatchRenderDBUSService(dbus.service.Object):
     def __init__(self):
-        print "dbus service init"
+        print("dbus service init")
         bus_name = dbus.service.BusName('flowblade.movie.editor.batchrender', bus=dbus.SessionBus())
         dbus.service.Object.__init__(self, bus_name, '/flowblade/movie/editor/batchrender')
 
@@ -310,7 +310,7 @@ def copy_project(render_item, file_name):
 def launch_batch_rendering():
     bus = dbus.SessionBus()
     if bus.name_has_owner('flowblade.movie.editor.batchrender'):
-        print "flowblade.movie.editor.batchrender dbus service exists, batch rendering already running"
+        print("flowblade.movie.editor.batchrender dbus service exists, batch rendering already running")
         _show_single_instance_info()
     else:
         FLOG = open(userfolders.get_cache_dir() + "log_batch_render", 'w')
@@ -403,7 +403,7 @@ def _display_single_instance_window():
     dialog = Gtk.Dialog("",
                         None,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("OK").encode('utf-8'), Gtk.ResponseType.OK))
+                        (_("OK"), Gtk.ResponseType.OK))
 
     dialog.vbox.pack_start(align, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
@@ -442,21 +442,25 @@ class RenderQueue:
         data_files_dir = user_dir + DATAFILES_DIR
         data_files = [ f for f in listdir(data_files_dir) if isfile(join(data_files_dir,f)) ]
         for data_file_name in data_files:
+            render_item = None
             try:
                 data_file_path = data_files_dir + data_file_name
-                data_file = open(data_file_path)
+                data_file = open(data_file_path, 'rb')
                 render_item = pickle.load(data_file)
                 self.queue.append(render_item)
             except Exception as e:
+                print (str(e))
                 if self.error_status == None:
                     self.error_status = []
                 self.error_status.append((data_file_name,  _(" datafile load failed with ") + str(e)))
+                continue
+
             try:
-                render_file = open(render_item.get_project_filepath())
+                render_file = open(render_item.get_project_filepath(), 'rb')
             except Exception as e:
                 if self.error_status == None:
                     self.error_status = []
-                self.error_status.append((render_item.get_project_filepath(), _(" project file load failed with ") + str(e)))
+                self.error_status.append((_(" project file load failed with ") + str(e)))
 
         if self.error_status != None:
             for file_path, error_str in self.error_status:
@@ -496,7 +500,7 @@ class RenderQueue:
             except:
                 path_counts[render_item.render_path] = 1
         
-        for k,v in path_counts.iteritems():
+        for k,v in path_counts.items():
             if v > 1:
                 same_paths[k] = v
         
@@ -524,11 +528,11 @@ class BatchRenderItemData:
     def generate_identifier(self):
         id_str = self.project_name + self.timestamp.ctime()
         try:
-            idfier = md5.new(id_str).hexdigest()
+            idfier = hashlib.md5(id_str.encode('utf-8')).hexdigest()
         except:
             ascii_pname = unicodedata.normalize('NFKD', self.project_name).encode('ascii','ignore')
             id_str = str(ascii_pname) + self.timestamp.ctime()
-            idfier = md5.new(id_str).hexdigest()
+            idfier = hashlib.md5(id_str.encode('utf-8')).hexdigest()
         return idfier
 
     def matches_identifier(self, identifier):
@@ -539,11 +543,11 @@ class BatchRenderItemData:
 
     def save(self):
         item_path = get_datafiles_dir() + self.generate_identifier() + ".renderitem"
-        item_write_file = file(item_path, "wb")
+        item_write_file = open(item_path, "wb")
         pickle.dump(self, item_write_file)
 
     def save_as_single_render_item(self, item_path):
-        item_write_file = file(item_path, "wb")
+        item_write_file = open(item_path, "wb")
         pickle.dump(self, item_write_file)
 
     def delete_from_queue(self):
@@ -783,7 +787,7 @@ class BatchRenderWindow:
             
             secondary_txt = _("Later items will render on top of earlier items if this queue is rendered.\n") + \
                             _("Delete or unqueue some items with same paths:\n\n")
-            for k,v in same_paths.iteritems():
+            for k,v in same_paths.items():
                 secondary_txt = secondary_txt + str(v) + _(" items with path: ") + str(k) + "\n"
             dialogutils.warning_message(primary_txt, secondary_txt, batch_window.window)
             return
@@ -979,8 +983,8 @@ class RenderQueueView(Gtk.VBox):
 def run_save_project_as_dialog(project_name):
     dialog = Gtk.FileChooserDialog(_("Save Render Item Project As"), None, 
                                    Gtk.FileChooserAction.SAVE, 
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                                    _("Save").encode('utf-8'), Gtk.ResponseType.ACCEPT), None)
+                                   (_("Cancel"), Gtk.ResponseType.REJECT,
+                                    _("Save"), Gtk.ResponseType.ACCEPT), None)
     dialog.set_action(Gtk.FileChooserAction.SAVE)
     project_name = project_name.rstrip(".flb")
     dialog.set_current_name(project_name + "_FROM_BATCH.flb")
@@ -1177,7 +1181,7 @@ class SingleRenderThread(threading.Thread):
 
         try:
             data_file_path = hidden_dir + CURRENT_RENDER_RENDER_ITEM
-            data_file = open(data_file_path)
+            data_file = open(data_file_path, 'rb')
             render_item = pickle.load(data_file)
             self.error_status = None
         except Exception as e:

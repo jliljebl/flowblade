@@ -217,6 +217,9 @@ def create_widgets():
     """
     Widgets for editing clip effects properties.
     """
+    # Aug-2019 - SvdB - BB
+    prefs = editorpersistance.prefs
+
     widgets.clip_info = guicomponents.ClipInfoPanel()
     
     widgets.exit_button = Gtk.Button()
@@ -237,11 +240,11 @@ def create_widgets():
     widgets.value_edit_frame.add(widgets.value_edit_box)
 
     widgets.add_effect_b = Gtk.Button()
-    widgets.add_effect_b.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "filter_add.png"))
+    widgets.add_effect_b.set_image(guiutils.get_image("filter_add"))
     widgets.del_effect_b = Gtk.Button()
-    widgets.del_effect_b.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "filter_delete.png"))
+    widgets.del_effect_b.set_image(guiutils.get_image("filter_delete"))
     widgets.toggle_all = Gtk.Button()
-    widgets.toggle_all.set_image(Gtk.Image.new_from_file(respaths.IMAGE_PATH + "filters_all_toggle.png"))
+    widgets.toggle_all.set_image(guiutils.get_image("filters_all_toggle"))
 
     widgets.add_effect_b.connect("clicked", lambda w,e: add_effect_pressed(), None)
     widgets.del_effect_b.connect("clicked", lambda w,e: delete_effect_pressed(), None)
@@ -441,7 +444,7 @@ def reinit_current_effect():
     effect_selection_changed(True)
 
 def effect_selection_changed(use_current_filter_index=False):
-    global keyframe_editor_widgets
+    global keyframe_editor_widgets, current_filter_index
 
     # Check we have clip
     if clip == None:
@@ -480,7 +483,6 @@ def effect_selection_changed(use_current_filter_index=False):
 
     filter_object = clip.filters[filter_index]
     
-    global current_filter_index
     current_filter_index = filter_index
     
     # Create EditableProperty wrappers for properties

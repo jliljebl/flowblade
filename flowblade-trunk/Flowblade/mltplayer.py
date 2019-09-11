@@ -49,7 +49,7 @@ class Player:
     def init_for_profile(self, profile):
         # Get profile and create ticker for playback GUI updates
         self.profile = profile
-        print "Player initialized with profile: ", self.profile.description()
+        print("Player initialized with profile: ", self.profile.description())
         
         # Trim loop preview
         self.loop_start = -1
@@ -76,7 +76,7 @@ class Player:
         #    print "refuse SDL1 consumer"
         #    return
 
-        print "Create SDL1 consumer..."
+        print("Create SDL1 consumer...")
         # Create consumer and set params
         self.consumer = mlt.Consumer(self.profile, "sdl")
         self.consumer.set("real_time", 1)
@@ -281,9 +281,8 @@ class Player:
         # And make sure we deinterlace if input is interlaced
         frame.set("consumer_deinterlace", 1)
 
-        # Now we are ready to get the image and save it.
-        size = (self.profile.width(), self.profile.height())
-        rgb = frame.get_image(mlt.mlt_image_rgb24a, *size) 
+        # Now we are ready to get the image and save it.        
+        rgb = frame.get_image(int(mlt.mlt_image_rgb24a), int(self.profile.width()), int(self.profile.height()))
         return rgb
 
     def display_inside_sequence_length(self, new_seq_len):
@@ -389,7 +388,7 @@ class Player:
         else:
             self.wait_for_producer_end_stop = False
                 
-        print "start_rendering(), start frame :" + str(start_frame) + ", stop_frame: " + str(stop_frame)
+        print("start_rendering(), start frame :" + str(start_frame) + ", stop_frame: " + str(stop_frame))
         self.ticker.stop_ticker()
         self.consumer.stop()
         self.producer.set_speed(0)
@@ -406,7 +405,7 @@ class Player:
         self.ticker.start_ticker(RENDER_TICKER_DELAY)
 
     def stop_rendering(self):
-        print "stop_rendering, producer frame: " + str(self.producer.frame())
+        print("stop_rendering, producer frame: " + str(self.producer.frame()))
         # Stop render
         # This method of stopping makes sure that whole producer is rendered and written to disk
         if self.wait_for_producer_end_stop:

@@ -508,9 +508,9 @@ class ClipKeyFrameEditor:
         self.active_kf_index = len(self.keyframes) - 1
 
     def print_keyframes(self, msg="no_msg"):
-        print msg, "clip edit keyframes:"
+        print(msg, "clip edit keyframes:")
         for i in range(0, len(self.keyframes)):
-            print self.keyframes[i]
+            print(self.keyframes[i])
         
     def delete_active_keyframe(self):
         if self.active_kf_index == 0:
@@ -711,17 +711,17 @@ class ClipEditorButtonsRow(Gtk.HBox):
         self.set_homogeneous(False)
         self.set_spacing(2)
 
-        # Buttons
-        self.add_button = guiutils.get_image_button("add_kf.png", BUTTON_WIDTH, BUTTON_HEIGHT)
-        self.delete_button = guiutils.get_image_button("delete_kf.png", BUTTON_WIDTH, BUTTON_HEIGHT)
-        self.prev_kf_button = guiutils.get_image_button("prev_kf.png", BUTTON_WIDTH, BUTTON_HEIGHT)
-        self.next_kf_button = guiutils.get_image_button("next_kf.png", BUTTON_WIDTH, BUTTON_HEIGHT)
-        self.prev_frame_button = guiutils.get_image_button("kf_edit_prev_frame.png", BUTTON_WIDTH, BUTTON_HEIGHT)
-        self.next_frame_button = guiutils.get_image_button("kf_edit_next_frame.png", BUTTON_WIDTH, BUTTON_HEIGHT)
-        self.kf_to_prev_frame_button = guiutils.get_image_button("kf_edit_kf_to_prev_frame.png", BUTTON_WIDTH, BUTTON_HEIGHT)
-        self.kf_to_next_frame_button = guiutils.get_image_button("kf_edit_kf_to_next_frame.png", BUTTON_WIDTH, BUTTON_HEIGHT)
-        self.add_fade_in_button = guiutils.get_image_button("add_fade_in.png", BUTTON_WIDTH, BUTTON_HEIGHT)
-        self.add_fade_out_button = guiutils.get_image_button("add_fade_out.png", BUTTON_WIDTH, BUTTON_HEIGHT)
+        # Aug-2019 - SvdB - BB
+        self.add_button = guiutils.get_image_button("add_kf", BUTTON_WIDTH, BUTTON_HEIGHT)
+        self.delete_button = guiutils.get_image_button("delete_kf", BUTTON_WIDTH, BUTTON_HEIGHT)
+        self.prev_kf_button = guiutils.get_image_button("prev_kf", BUTTON_WIDTH, BUTTON_HEIGHT)
+        self.next_kf_button = guiutils.get_image_button("next_kf", BUTTON_WIDTH, BUTTON_HEIGHT)
+        self.prev_frame_button = guiutils.get_image_button("kf_edit_prev_frame", BUTTON_WIDTH, BUTTON_HEIGHT)
+        self.next_frame_button = guiutils.get_image_button("kf_edit_next_frame", BUTTON_WIDTH, BUTTON_HEIGHT)
+        self.kf_to_prev_frame_button = guiutils.get_image_button("kf_edit_kf_to_prev_frame", BUTTON_WIDTH, BUTTON_HEIGHT)
+        self.kf_to_next_frame_button = guiutils.get_image_button("kf_edit_kf_to_next_frame", BUTTON_WIDTH, BUTTON_HEIGHT)
+        self.add_fade_in_button = guiutils.get_image_button("add_fade_in", BUTTON_WIDTH, BUTTON_HEIGHT)
+        self.add_fade_out_button = guiutils.get_image_button("add_fade_out", BUTTON_WIDTH, BUTTON_HEIGHT)
         
         self.add_button.connect("clicked", lambda w,e: editor_parent.add_pressed(), None)
         self.delete_button.connect("clicked", lambda w,e: editor_parent.delete_pressed(), None)
@@ -817,8 +817,12 @@ class GeometryEditorButtonsRow(Gtk.HBox):
         
         name_label = Gtk.Label(label=_("View:"))
 
-        surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "geom_action.png")
-        action_menu_button = guicomponents.PressLaunch(self._show_actions_menu, surface, 24, 22)
+        # Aug-2019 - SvdB - BB
+        size_adj = 1
+        if editorpersistance.prefs.double_track_hights:
+            size_adj = 2
+        surface = guiutils.get_cairo_image("geom_action")
+        action_menu_button = guicomponents.PressLaunch(self._show_actions_menu, surface, 24*size_adj, 22*size_adj)
         
         size_select = Gtk.ComboBoxText()
         size_select.append_text(_("Large"))
@@ -951,7 +955,7 @@ class AbstractKeyFrameEditor(Gtk.VBox):
         PLAYER().seek_frame(self.clip_tline_pos + clip_frame - self.clip_in)
     
     def update_editor_view(self, seek_tline=True):
-        print "update_editor_view not implemented"
+        print("update_editor_view not implemented")
 
 
 
@@ -1738,7 +1742,7 @@ class PositionNumericalEntries(Gtk.HBox):
                 self.parent_editor.numerical_edit_done(shape)
             except Exception as e:
                 # If user inputs non-ifloats we will just do nothing
-                print "Numerical input Exception - ", e
+                print("Numerical input Exception - ", e)
         else:
             try:
                 x = float(self.x_entry.get_text())
@@ -1749,7 +1753,7 @@ class PositionNumericalEntries(Gtk.HBox):
                 self.parent_editor.numerical_edit_done(shape)
             except Exception as e:
                 # If user inputs non-ifloats we will just do nothing
-                print "Numerical input Exception - ", e
+                print("Numerical input Exception - ", e)
 
     def update_entry_values(self, active_kf):
         frame, shape, opacity = active_kf

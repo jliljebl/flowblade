@@ -67,17 +67,17 @@ def load_shortcut_files():
                         
         else:
             format_error = False
-            print "Shortcuts file " + f + " found, but ignored."
+            print("Shortcuts file " + f + " found, but ignored.")
 
         if format_error:
-            print "Shortcuts file " + f + " found, but has incorrect format."
+            print("Shortcuts file " + f + " found, but has incorrect format.")
     
     # Default shortcuts file always goes to index 0
     if default_shortcuts_file_found == True:# this is a bit unneccceasy, it is there unless someone destroys it manually
         shortcut_files.insert(0, DEFAULT_SHORTCUTS_FILE)
         shortcut_files_display_names.insert(0, "Flowblade Default")
 
-    print "Valid shortcut files found: " + str(shortcut_files)
+    print("Valid shortcut files found: " + str(shortcut_files))
 
 # Apr-2017 - SvdB - keyboard shortcuts
 def load_shortcuts():
@@ -88,7 +88,7 @@ def load_shortcuts():
 def set_keyboard_shortcuts():
     global _keyboard_actions
     prefs = editorpersistance.prefs
-    print "Keyboard shortcuts file:",  editorpersistance.prefs.shortcuts
+    print("Keyboard shortcuts file:",  editorpersistance.prefs.shortcuts)
     _modifier_dict = {}
 
     # Make sure that whatever is in preferences is a valid file. If it's not in shortcut_files it's not valid
@@ -105,7 +105,7 @@ def set_keyboard_shortcuts():
             # Check if this is a shortcuts file
             if root.get('file') == appconsts.SHORTCUTS_TAG:
                 # Get name and comments
-                print "Loading shortcuts: " + root.get('name')
+                print("Loading shortcuts: " + root.get('name'))
                 # We have good shortcuts file, destroy hardcoded defaults
                 _keyboard_actions = {}
                 # Now loop through all the events and assign them
@@ -131,7 +131,7 @@ def set_keyboard_shortcuts():
                         _modifier_dict[''.join(sorted(re.sub('[\s]','',event.get('modifiers').lower())))] = event.get('code')
                     _keyboard_actions[event.text] = _modifier_dict
     except:
-        print "Error opening shortcuts file:" + prefs.shortcuts
+        print("Error opening shortcuts file:" + prefs.shortcuts)
 
     #_print_shortcuts()
 
@@ -166,7 +166,7 @@ def get_diff_to_defaults(xml_file):
     test_root = get_shortcuts_xml_root_node(xml_file)
     def_root = get_shortcuts_xml_root_node(DEFAULT_SHORTCUTS_FILE)
     
-    for code, action_name in _keyboard_action_names.iteritems():
+    for code, action_name in _keyboard_action_names.items():
         key_name_test, action_name = get_shortcut_info(test_root, code)
         key_name_def, action_name = get_shortcut_info(def_root , code)
     

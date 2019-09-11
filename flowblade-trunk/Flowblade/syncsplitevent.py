@@ -105,7 +105,7 @@ def init_select_master_clip(popup_data):
 
     if not (track.clips[child_index] == clip):
         # This should never happen 
-        print "big fu at _init_select_master_clip(...)"
+        print("big fu at _init_select_master_clip(...)")
         return
 
     gdk_window = gui.tline_display.get_parent_window();
@@ -152,7 +152,7 @@ def _set_sync_parent_clip(event, frame):
     # Parent and child can't be on the same track.
     # Now that all parent clips must be on track V1 this is no longer shoild be possible.
     if parent_track == child_clip_track:
-        print "parent_track == child_clip_track"
+        print("parent_track == child_clip_track")
         return
         
     parent_clip = parent_track.clips[parent_clip_index]
@@ -160,7 +160,7 @@ def _set_sync_parent_clip(event, frame):
     # These cannot be chained.
     # Now that all parent clips must be on track V1 this is no longer shoild be possible.
     if parent_clip.sync_data != None:
-        print "parent_clip.sync_data != None"
+        print("parent_clip.sync_data != None")
         return
 
     data = {"child_index":child_index,

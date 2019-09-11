@@ -136,7 +136,7 @@ class DiskFolderManagementPanel:
         self.destroy_data()
     
     def destroy_data(self):
-        print "deleting ", self.folder
+        print("deleting ", self.folder)
         
         files = self.get_folder_files()
         for f in files:
@@ -148,7 +148,7 @@ class DiskFolderManagementPanel:
 def show_disk_management_dialog():
     dialog = Gtk.Dialog(_("Disk Cache Manager"), None,
                     Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                    (_("Close").encode('utf-8'), Gtk.ResponseType.CLOSE))
+                    (_("Close"), Gtk.ResponseType.CLOSE))
 
     global _panels
     _panels = _get_disk_dir_panels()

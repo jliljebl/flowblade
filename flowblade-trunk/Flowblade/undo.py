@@ -153,13 +153,13 @@ def undo_redo_stress_test():
     
     for r in range(0, times):
         while index > 0:
-            print "undo:", index
+            print("undo:", index)
             do_undo()
 
             time.sleep(delay)
     
         while index < len(undo_stack):
-            print "redo:", index
+            print("redo:", index)
             do_redo()
 
             time.sleep(delay)

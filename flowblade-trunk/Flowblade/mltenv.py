@@ -38,7 +38,7 @@ environment_detection_success = False
 
 def check_available_features(repo):
     try:
-        print "Detecting environment..."
+        print("Detecting environment...")
         global acodecs        
         global vcodecs    
         global formats
@@ -85,14 +85,14 @@ def check_available_features(repo):
         for i in range(mlt.Properties.count(envtransitions)):
             transitions[mlt.Properties.get_name(envtransitions, i)] = True
             
-        print "MLT detection succeeded, " + str(len(formats)) + " formats, "  \
-        + str(len(vcodecs)) + " video codecs and " + str(len(acodecs)) + " audio codecs found."
-        print str(len(services)) + " MLT services found."
+        print("MLT detection succeeded, " + str(len(formats)) + " formats, "  \
+        + str(len(vcodecs)) + " video codecs and " + str(len(acodecs)) + " audio codecs found.")
+        print(str(len(services)) + " MLT services found.")
 
         environment_detection_success = True
 
     except:
-        print "Environment detection failed, environment unknown."
+        print("Environment detection failed, environment unknown.")
         GObject.timeout_add(2000, _show_failed_environment_info)
 
 def render_profile_supported(frmt, vcodec, acodec):
@@ -108,7 +108,7 @@ def render_profile_supported(frmt, vcodec, acodec):
                 return (True, "")
             else:
                 err_msg = "format " + frmt
-                print err_msg
+                print(err_msg)
         else:
             err_msg = "video codec " + vcodec
     else:

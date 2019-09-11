@@ -295,7 +295,7 @@ class AbstractProperty:
         self.write_value(val)
         
     def color_selected(self, color_button):
-        print "color_selected() not overridden"
+        print("color_selected() not overridden")
 
     def combo_selection_changed(self, combo_box, values):
         value = values[combo_box.get_active()]
@@ -305,14 +305,14 @@ class AbstractProperty:
         """
         This has to be overridden by all extending classes.
         """
-        print "write_value() not overridden"
+        print("write_value() not overridden")
     
     def write_out_keyframes(self, keyframes):
         """
         This has to be overridden by extending classes 
         edited with keyframe editor.
         """
-        print "write_out_keyframes() not overridden"
+        print("write_out_keyframes() not overridden")
         
     def get_clip_length(self):
         return self.clip.clip_out - self.clip.clip_in + 1
@@ -796,9 +796,9 @@ class FileResourceProperty(EditableProperty):
     def dialog_response_callback(self, dialog, response_id):
         res_path = dialog.get_filename()
         if response_id == Gtk.ResponseType.ACCEPT and res_path != None:
-            self.write_value(unicode(str(res_path), "utf-8"))
+            self.write_value(str(str(res_path), "utf-8"))
         else:
-            self.write_value(unicode(str(""), "utf-8"))
+            self.write_value(str(str(""), "utf-8"))
 
 
 class MultipartKeyFrameProperty(AbstractProperty):

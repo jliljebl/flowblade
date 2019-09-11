@@ -109,9 +109,10 @@ _snapping = 1
 def load_icons():
     global HAMBURGER_ICON, ACTIVE_KF_ICON, NON_ACTIVE_KF_ICON
 
-    HAMBURGER_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger.png")
-    ACTIVE_KF_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_active.png")
-    NON_ACTIVE_KF_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_not_active_tool.png")    
+    # Aug-2019 - SvdB - BB
+    HAMBURGER_ICON = guiutils.get_cairo_image("hamburger")
+    ACTIVE_KF_ICON = guiutils.get_cairo_image("kf_active")
+    NON_ACTIVE_KF_ICON = guiutils.get_cairo_image("kf_not_active_tool")    
 
 def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT, param_data=None):
     # These can produce data for same objects we choose not to commit to updating
@@ -440,9 +441,9 @@ class TLineKeyFrameEditor:
 
     # ------------------------------------------------------- debug
     def print_keyframes(self):
-        print "clip edit keyframes:"
+        print("clip edit keyframes:")
         for i in range(0, len(self.keyframes)):
-            print self.keyframes[i]
+            print(self.keyframes[i])
             
     # ----------------------------------------------------------------- Draw
     def draw(self, cr):

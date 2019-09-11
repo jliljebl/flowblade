@@ -27,6 +27,7 @@ import cairo
 from gi.repository import Gtk, Gdk
 
 import appconsts
+import editorpersistance # Aug-2019 - SvdB - BB
 import gui
 import guicomponents
 import guiutils
@@ -46,22 +47,27 @@ MEDIA_PANEL_DEFAULT_ROWS = 2
 
 
 def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hamburger_launch_pressed, filtering_cb):   
+    # Aug-2019 - SvdB - BB
+    size_adj = 1
+    prefs = editorpersistance.prefs
+    if prefs.double_track_hights:
+        size_adj = 2
     hamburger_launcher = guicomponents.HamburgerPressLaunch(hamburger_launch_pressed)
     guiutils.set_margins(hamburger_launcher.widget, 2, 0, 4, 12)
 
-    columns_img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "columns.png")
-    columns_launcher = guicomponents.PressLaunch(col_changed_cb, columns_img, w=22, h=22)
+    columns_img = guiutils.get_cairo_image("columns")
+    columns_launcher = guicomponents.PressLaunch(col_changed_cb, columns_img, w=22*size_adj, h=22*size_adj)
     columns_launcher.surface_y = 6
     columns_launcher.widget.set_tooltip_text(_("Number of Media File columns."))
     
-    all_pixbuf = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "show_all_files.png")
-    audio_pixbuf = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "show_audio_files.png")
-    graphics_pixbuf = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "show_graphics_files.png")
-    video_pixbuf = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "show_video_files.png")
-    imgseq_pixbuf = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "show_imgseq_files.png")
-    pattern_pixbuf = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "show_pattern_producers.png")
+    all_pixbuf = guiutils.get_cairo_image("show_all_files")
+    audio_pixbuf = guiutils.get_cairo_image("show_audio_files")
+    graphics_pixbuf = guiutils.get_cairo_image("show_graphics_files")
+    video_pixbuf = guiutils.get_cairo_image("show_video_files")
+    imgseq_pixbuf = guiutils.get_cairo_image("show_imgseq_files")
+    pattern_pixbuf = guiutils.get_cairo_image("show_pattern_producers")
 
-    files_filter_launcher = guicomponents.ImageMenuLaunch(filtering_cb, [all_pixbuf, video_pixbuf, audio_pixbuf, graphics_pixbuf, imgseq_pixbuf, pattern_pixbuf], 24, 22)
+    files_filter_launcher = guicomponents.ImageMenuLaunch(filtering_cb, [all_pixbuf, video_pixbuf, audio_pixbuf, graphics_pixbuf, imgseq_pixbuf, pattern_pixbuf], 24*size_adj, 22*size_adj)
     files_filter_launcher.surface_x  = 3
     files_filter_launcher.surface_y  = 4
     files_filter_launcher.widget.set_tooltip_text(_("Visible Media File types."))
@@ -253,7 +259,7 @@ def get_transition_panel(trans_data):
                                  type_combo_box)
 
     wipe_luma_combo_box = Gtk.ComboBoxText()
-    keys = mlttransitions.wipe_lumas.keys()
+    keys = list(mlttransitions.wipe_lumas.keys())
     keys.sort()
     for k in keys:
         wipe_luma_combo_box.append_text(k)

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 # -*- encoding: utf-8 -*-
 
 # clapperless -- automatic find sync offsets for multi source recordings
@@ -8,7 +8,7 @@
 # by Benjamin M. Schwartz <bens@alum.mit.edu>
 # http://git.pitivi.org/?p=pitivi.git;a=blob;f=pitivi/autoaligner.py
 #
-# with some minor modifications for use in Flowblade by janne Liljeblad in 2017
+# with some minor modifications for use in Flowblade by Janne Liljeblad in 2017
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -330,7 +330,7 @@ def process_files(args):
     envelopes = [Envelope(n, args) for n in args.files]
     reference = envelopes[0].envelope
 
-    envelopes_envelope = list(map(lambda x: x.envelope, envelopes))
+    envelopes_envelope = list([x.envelope for x in envelopes])
     logging.info("calculate offsets...")
     offsets = rigidalign(reference, envelopes_envelope)
     logging.debug("got offsets: %s" % offsets) 
@@ -347,7 +347,7 @@ def process_files(args):
 
 def main():
     args = cl_parser()
-    print args.idstr
+    print(args.idstr)
     
     offsets_output = process_files(args)
 

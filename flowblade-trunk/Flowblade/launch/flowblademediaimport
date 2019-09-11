@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 
 import sys
 import os
@@ -18,10 +18,10 @@ try:
         editorstate.app_running_from = editorstate.RUNNING_FROM_INSTALLATION
     else:
         editorstate.app_running_from = editorstate.RUNNING_FROM_DEV_VERSION
-except Exception, err:
-    print "Failed to import projectmediaimport"
-    print "ERROR:", err
-    print "Installation was assumed to be at:", modules_path
+except Exception:
+    print ("Failed to import projectmediaimport")
+    print ("ERROR:", err)
+    print ("Installation was assumed to be at:", modules_path)
     sys.exit(1)
 
 

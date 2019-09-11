@@ -827,7 +827,7 @@ class RippleData:
                                 closest_blank_distance = blank_last_frame - self.trim_frame 
                                 closest_blank_index = i
                         else:
-                            print "_build_ripple_data(): supposedly unreachable case hit"
+                            print("_build_ripple_data(): supposedly unreachable case hit")
                         
                     
                     # Case: no blanks found on track

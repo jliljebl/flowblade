@@ -343,9 +343,11 @@ def load_icons():
     TC_POINTER_HEAD = _load_pixbuf("tc_pointer_head.png")
     EDIT_INDICATOR = _load_pixbuf("clip_edited.png")
 
+    global FRAME_SCALE_COLOR_GRAD, FRAME_SCALE_COLOR_GRAD_L, BG_COLOR, FRAME_SCALE_LINES, TRACK_GRAD_STOP1, TRACK_GRAD_STOP3, TRACK_NAME_COLOR,  \
+            TRACK_GRAD_ORANGE_STOP1, TRACK_GRAD_ORANGE_STOP3, BLANK_CLIP_COLOR_GRAD, BLANK_CLIP_COLOR_GRAD_L
+                
     if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
-        global FRAME_SCALE_COLOR_GRAD, FRAME_SCALE_COLOR_GRAD_L, BG_COLOR, FRAME_SCALE_LINES, TRACK_GRAD_STOP1, TRACK_GRAD_STOP3, TRACK_NAME_COLOR,  \
-                TRACK_GRAD_ORANGE_STOP1, TRACK_GRAD_ORANGE_STOP3, BLANK_CLIP_COLOR_GRAD, BLANK_CLIP_COLOR_GRAD_L
+
         FRAME_SCALE_COLOR_GRAD = (1, 0.3, 0.3, 0.3, 1)
         FRAME_SCALE_COLOR_GRAD_L = get_multiplied_grad(0, 1, FRAME_SCALE_COLOR_GRAD, GRAD_MULTIPLIER)
         BG_COLOR = (0.44, 0.44, 0.46)
@@ -367,7 +369,6 @@ def load_icons():
             BLANK_CLIP_COLOR_GRAD = (1, 0.12, 0.14, 0.2, 1)
             BLANK_CLIP_COLOR_GRAD_L = (0, 0.12, 0.14, 0.2, 1)
     else:
-        global TRACK_GRAD_ORANGE_STOP1,TRACK_GRAD_ORANGE_STOP3,TRACK_GRAD_STOP1,TRACK_GRAD_STOP3
         TRACK_GRAD_ORANGE_STOP1 = (1,  0.4, 0.4, 0.4, 1) # V1
         TRACK_GRAD_ORANGE_STOP3 = (0,  0.68, 0.68, 0.68, 1) # V1
 
@@ -1970,7 +1971,7 @@ class TimeLineCanvas:
                 draw_pix_per_frame = pix_per_frame
                 if draw_pix_per_frame < 2:
                     draw_pix_per_frame = 2
-                    step = int(2 / pix_per_frame)
+                    step = int(2 // pix_per_frame)
                     if step < 1:
                         step = 1
                 else:
@@ -2512,6 +2513,13 @@ class TimeLineFrameScale:
             cr.rectangle(in_x,0,out_x-in_x,h)
             cr.fill()
 
+        # Aug-2019 - SvdB - BB - Increase indicator triangles by 1 for double track height. size_adj for tick lines
+        max_range = 3
+        size_adj = 1
+        if editorpersistance.prefs.double_track_hights:
+           max_range = 4
+           size_adj = 1.4
+
         # Draw start indicator triangles
         if pos == 0:
             cr.set_source_rgb(*FRAME_SCALE_LINES)
@@ -2519,7 +2527,8 @@ class TimeLineFrameScale:
             tri_h = 8
             tri_h_half = tri_h / 2
             tri_w = 8
-            for i in range(0, 3):
+
+            for i in range(0, max_range):
                 cr.move_to (0, start_y + i * tri_h)
                 cr.line_to (tri_w, start_y + i * tri_h + tri_h_half)
                 cr.line_to (0, start_y + i * tri_h + tri_h)
@@ -2576,7 +2585,8 @@ class TimeLineFrameScale:
         end = int(view_end_frame / small_tick_step) + 1 
         for i in range(start, end):
             x = math.floor(i * small_tick_step * pix_per_frame - pos * pix_per_frame) + 0.5 
-            cr.move_to(x, SCALE_HEIGHT)
+            # Aug-2019 - SvdB - BB - Added size_adj
+            cr.move_to(x, SCALE_HEIGHT*size_adj)
             cr.line_to(x, SMALL_TICK_Y)
             if tc_draw_step == small_tick_step:
                 cr.move_to(x, TC_Y)
@@ -2596,7 +2606,8 @@ class TimeLineFrameScale:
             for i in range(1, count):
                 x = math.floor((math.floor(i * big_tick_step) + to_seconds_fix_add) * pix_per_frame \
                     - pos * pix_per_frame) + 0.5 
-                cr.move_to(x, SCALE_HEIGHT)
+                # Aug-2019 - SvdB - BB - Added size_adj
+                cr.move_to(x, SCALE_HEIGHT*size_adj)
                 cr.line_to(x, BIG_TICK_Y)
                 cr.stroke()
 

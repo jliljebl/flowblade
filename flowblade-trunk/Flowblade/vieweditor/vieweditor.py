@@ -19,7 +19,7 @@
 """
 
 import numpy as np
-print "numpy version:", np.version.version
+print("numpy version:", np.version.version)
 
 from gi.repository import Gtk, GObject, Gdk
 
@@ -263,7 +263,7 @@ class ViewEditor(Gtk.Frame):
     def set_screen_rgb_data(self, screen_rgb_data):
         # MLT Provides images in which R <-> B are swiched from what Cairo wants them,
         # so use numpy to switch them and to create a modifiable buffer for Cairo
-        buf = np.fromstring(screen_rgb_data, dtype=np.uint8)
+        buf = np.frombuffer(screen_rgb_data, dtype=np.uint8)
         buf.shape = (self.profile_h + 1, self.profile_w, 4) # +1 in h, seemeed to need it
         out = np.copy(buf)
         r = np.index_exp[:, :, 0]

@@ -1,12 +1,15 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 
 import sys
 import os
 
 
 modules_path = os.path.dirname(os.path.abspath(sys.argv[0])).rstrip("/launch")
+root_path = os.path.dirname(os.path.abspath(sys.argv[0])).rstrip("/Flowblade/launch") # TODO: THIS NEEDS TO BE CONDITIONAL ON BEING FILE SYSTEM INSTALLATION!!
 
 sys.path.insert(0, modules_path)
+sys.path.insert(0, root_path) # TODO: THIS NEEDS TO BE CONDITIONAL ON BEING FILE SYSTEM INSTALLATION!!
+
 import processutils
 processutils.update_sys_path(modules_path)
 

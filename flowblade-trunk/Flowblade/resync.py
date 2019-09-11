@@ -64,7 +64,7 @@ def sequence_changed(new_sequence):
 
 def calculate_and_set_child_clip_sync_states():
     parent_track = current_sequence().first_video_track()
-    for child_clip, track in sync_children.iteritems():
+    for child_clip, track in sync_children.items():
         child_index = track.clips.index(child_clip)
         child_clip_start = track.clip_start(child_index) - child_clip.clip_in
 
@@ -90,7 +90,7 @@ def get_resync_data_list():
     # Return tuples (clip, track, index, pos_off)
     resync_data = []
     parent_track = current_sequence().first_video_track()
-    for child_clip, track in sync_children.iteritems():
+    for child_clip, track in sync_children.items():
         child_index = track.clips.index(child_clip)
         child_clip_start = track.clip_start(child_index) - child_clip.clip_in
 
@@ -134,8 +134,8 @@ def get_resync_data_list_for_clip_list(clips_list):
     return resync_data
     
 def print_sync_children():
-    for child_clip, track in sync_children.iteritems():
-        print child_clip.id
+    for child_clip, track in sync_children.items():
+        print(child_clip.id)
         
         
         

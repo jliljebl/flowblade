@@ -46,8 +46,8 @@ def preferences_dialog():
 
     dialog = Gtk.Dialog(_("Editor Preferences"), None,
                     Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                    (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                    (_("Cancel"), Gtk.ResponseType.REJECT,
+                    _("OK"), Gtk.ResponseType.ACCEPT))
 
     gen_opts_panel, gen_opts_widgets = _general_options_panel()
     edit_prefs_panel, edit_prefs_widgets = _edit_prefs_panel()
@@ -382,6 +382,7 @@ def _view_prefs_panel():
     tracks_combo = Gtk.ComboBoxText()
     tracks_combo.append_text(_("Normal - 50px, 25px"))
     tracks_combo.append_text(_("Double for HiDPI - 100px, 50px"))
+    # Aug-2019 - SvdB - BB
     tracks_combo.set_active(prefs.double_track_hights)
 
     top_row_layout = Gtk.ComboBoxText()
