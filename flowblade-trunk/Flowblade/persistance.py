@@ -29,7 +29,7 @@ and then create MLT objects from pickled objects when project is loaded.
 import copy
 import glob
 import fnmatch
-import md5
+import hashlib
 import os
 import pickle
 import time
@@ -116,7 +116,7 @@ def save_project(project, file_path, changed_profile_desc=None):
     """
     Creates pickleable project object
     """
-    print "Saving project..."  # + os.path.basename(file_path)
+    print("Saving project...")  # + os.path.basename(file_path)
     
     # Get shallow copy
     s_proj = copy.copy(project)
@@ -148,7 +148,7 @@ def save_project(project, file_path, changed_profile_desc=None):
 
     # Replace media file objects with pickleable copys
     media_files = {}
-    for k, v in s_proj.media_files.iteritems():
+    for k, v in s_proj.media_files.items():
         s_media_file = copy.copy(v)
         
         # Because of MLT misfeature of changing project profile when loading MLT XML files we need to create new modified XML files when
@@ -195,9 +195,16 @@ def save_project(project, file_path, changed_profile_desc=None):
     remove_attrs(s_proj, PROJECT_REMOVE)
 
     # Write out file.
-    with atomicfile.AtomicFileWriter(file_path, "wb") as afw:
+    outfile = open(file_path,'wb')
+    pickle.dump(s_proj, outfile)
+    
+    """
+    with atomicfile.AtomicFileWriter(file_path, "w") as afw:
         write_file = afw.get_file()
-        pickle.dump(s_proj, write_file)
+        pickle_str =  pickle.dumps(s_proj)
+        print (pickle_str)
+        pickle.dump(pickle_str, write_file)
+    """
 
 def get_p_sequence(sequence):
     """
@@ -376,7 +383,7 @@ def _save_changed_xml_file(s_media_file, new_profile):
     new_xml_text = xml_text[0:in_index] + new_profile_node + xml_text[out_index:len(xml_text)]
 
     folder = userfolders.get_render_dir()
-    uuid_str = md5.new(str(os.urandom(32))).hexdigest()
+    uuid_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
     new_xml_file_path = folder + "/"+ uuid_str + ".xml"
 
     with atomicfile.AtomicFileWriter(new_xml_file_path, "w") as afw:
@@ -390,7 +397,7 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
     _show_msg("Unpickling")
 
     # Load project object
-    f = open(file_path)
+    f = open(file_path, "rb")
     project = pickle.load(f)
 
     # Relinker only operates on pickleable python data 
@@ -407,7 +414,7 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
     if(not hasattr(project, "SAVEFILE_VERSION")):
         project.SAVEFILE_VERSION = 1 # first save files did not have this
     # SvdB - Feb-2017 - Removed project.name from print. It causes problems with non-latin characters, in some cases. Not sure why, yet.
-    print "Loading Project, SAVEFILE_VERSION:", project.SAVEFILE_VERSION
+    print("Loading Project, SAVEFILE_VERSION:", project.SAVEFILE_VERSION)
 
     # Set MLT profile. NEEDS INFO USER ON MISSING PROFILE!!!!!
     project.profile = mltprofiles.get_profile(project.profile_desc)
@@ -441,7 +448,7 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
     all_clips = {}
     sync_clips = []
 
-    for k, media_file in project.media_files.iteritems():
+    for k, media_file in project.media_files.items():
         if project.SAVEFILE_VERSION < 4:
             FIX_N_TO_4_MEDIA_FILE_COMPATIBILITY(media_file)
         media_file.current_frame = 0 # this is always reset on load, value is not considered persistent
@@ -466,7 +473,7 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
     
     if icons_and_thumnails == True:
         _show_msg(_("Loading icons"))
-        for k, media_file in project.media_files.iteritems():
+        for k, media_file in project.media_files.items():
             media_file.create_icon()
     
     project.c_seq = project.sequences[project.c_seq_index]
@@ -600,8 +607,8 @@ def fill_track_mlt(mlt_track, py_track):
             mlt_clip.__dict__.update(clip.__dict__)
             append_created = False
         else: # This is just for info, if this ever happens crash will happen.
-            print "Could not recognize clip, dict:"
-            print clip.__dict__
+            print("Could not recognize clip, dict:")
+            print(clip.__dict__)
 
         mlt_clip.selected = False # This transient state gets saved and 
                                    # we want everything unselected to begin with
@@ -710,7 +717,7 @@ def get_img_seq_media_path(path, load_file_path):
 
 def get_relative_path(project_file_path, asset_path):
     name = os.path.basename(asset_path)
-    _show_msg(_("Relative file search for ")  + name.decode('utf-8') + "...", delay=0.0)
+    _show_msg(_("Relative file search for ")  + name + "...", delay=0.0)
     matches = []
     asset_folder, asset_file_name = os.path.split(asset_path)
     project_folder, project_file_name =  os.path.split(project_file_path)
@@ -730,7 +737,7 @@ def get_relative_path(project_file_path, asset_path):
 
 def get_img_seq_relative_path(project_file_path, asset_path):
     name = os.path.basename(asset_path)
-    _show_msg(_("Relative file search for ")  + name.decode('utf-8') + "...", delay=0.0)
+    _show_msg(_("Relative file search for ")  + name + "...", delay=0.0)
     matches = []
     asset_folder, asset_file_name = os.path.split(asset_path)
     look_up_file_name = utils.get_img_seq_glob_lookup_name(asset_file_name)

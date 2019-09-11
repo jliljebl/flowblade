@@ -101,7 +101,7 @@ class EditRect:
         self.edit_points[BOTTOM_RIGHT] = (self.x + self.w, self.y + self.h)
         
     def check_hit(self, x, y):
-        for id_int, value in self.edit_points.iteritems():
+        for id_int, value in self.edit_points.items():
             x1, y1 = value
             if (x >= x1 - EP_HALF and x <= x1 + EP_HALF and y >= y1 - EP_HALF and y <= y1 + EP_HALF):
                 return id_int
@@ -211,7 +211,7 @@ class EditRect:
         cr.stroke()
 
         # handles
-        for id_int, pos in self.edit_points.iteritems():
+        for id_int, pos in self.edit_points.items():
             x, y = pos
             cr.rectangle(x - 2, y - 2, 4, 4)
             cr.fill()
@@ -315,7 +315,7 @@ class AbstractEditCanvas:
         self._clip_frame_changed()
     
     def _clip_frame_changed(self):
-        print "_clip_frame_changed not impl"
+        print("_clip_frame_changed not impl")
 
     def set_keyframe_to_edit_shape(self, kf_index, value_shape=None):
         if value_shape == None:
@@ -331,10 +331,10 @@ class AbstractEditCanvas:
         self._update_shape()
     
     def _get_current_screen_shape(self):
-        print "_get_current_screen_shape not impl"
+        print("_get_current_screen_shape not impl")
     
     def _update_shape(self):
-        print "_update_shape not impl"
+        print("_update_shape not impl")
 
     # ------------------------------------------------- keyframes
     def add_keyframe(self, frame):
@@ -384,20 +384,20 @@ class AbstractEditCanvas:
 
     # ---------------------------------------------------- editor menu actions
     def reset_active_keyframe_shape(self, active_kf_index):
-        print "reset_active_keyframe_shape not impl"
+        print("reset_active_keyframe_shape not impl")
 
     def reset_active_keyframe_rect_shape(self, active_kf_index):
-        print "reset_active_keyframe_rect_shape not impl" 
+        print("reset_active_keyframe_rect_shape not impl") 
 
     def center_h_active_keyframe_shape(self, active_kf_index):
-        print "center_h_active_keyframe_shape not impl"
+        print("center_h_active_keyframe_shape not impl")
 
     def center_v_active_keyframe_shape(self, active_kf_index):
-        print "center_v_active_keyframe_shape not impl"
+        print("center_v_active_keyframe_shape not impl")
 
     # ------------------------------------------------------ arrow edit
     def handle_arrow_edit(self, keyval):
-        print "handle_arrow_edit not impl"
+        print("handle_arrow_edit not impl")
 
     # -------------------------------------------------------- mouse events
     def _press_event(self, event):
@@ -417,10 +417,10 @@ class AbstractEditCanvas:
         self.parent_editor.update_request_from_geom_editor()
 
     def _check_shape_hit(self, x, y):
-        print "_check_shape_hit not impl"
+        print("_check_shape_hit not impl")
 
     def _shape_press_event(self):
-        print "_shape_press_event not impl"
+        print("_shape_press_event not impl")
         
     def _motion_notify_event(self, x, y, state):
         """
@@ -447,7 +447,7 @@ class AbstractEditCanvas:
         self.parent_editor.queue_draw()
     
     def _shape__motion_notify_event(self, delta_x, delta_y, CTRL_DOWN):
-        print "_shape__motion_notify_event not impl"
+        print("_shape__motion_notify_event not impl")
 
     def _release_event(self, event):
         global _shift_down 
@@ -470,7 +470,7 @@ class AbstractEditCanvas:
         self.parent_editor.geometry_edit_finished()
 
     def _shape_release_event(self, delta_x, delta_y, CTRL_DOWN):
-        print "_shape_release_event not impl"
+        print("_shape_release_event not impl")
 
     def _mouse_scroll_listener(self, event):
         if event.direction == Gdk.ScrollDirection.UP:
@@ -526,7 +526,7 @@ class AbstractEditCanvas:
         cr.stroke()
 
     def _draw_edit_shape(self, cr, allocation):
-        print "_draw_edit_shape not impl."
+        print("_draw_edit_shape not impl.")
         
 
 class BoxEditCanvas(AbstractEditCanvas):
@@ -608,7 +608,7 @@ class BoxEditCanvas(AbstractEditCanvas):
                 self.source_edit_rect.set_geom(*self._get_screen_to_panel_rect(rect))
                 return
                 
-        print "reached end of _update_source_rect, this should be unreachable"
+        print("reached end of _update_source_rect, this should be unreachable")
         
     def _get_interpolated_rect(self, rect_1, rect_2, fract):
         x1, y1, w1, h1 = rect_1
@@ -699,7 +699,7 @@ class BoxEditCanvas(AbstractEditCanvas):
             
     def print_keyframes(self):
         for i in range(0, len(self.keyframes)):
-            print self.keyframes[i]
+            print(self.keyframes[i])
 
 
 class RotatingEditCanvas(AbstractEditCanvas):

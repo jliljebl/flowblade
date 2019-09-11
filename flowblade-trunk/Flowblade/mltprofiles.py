@@ -52,10 +52,10 @@ def load_profile_list():
 
     _profile_list = _factory_profiles + _user_profiles
 
-    _profile_list.sort(_sort_profiles)
-    _factory_profiles.sort(_sort_profiles)
-    _hidden_factory_profiles.sort(_sort_profiles)
-    _user_profiles.sort(_sort_profiles)
+    _profile_list.sort(key=_sort_profiles)
+    _factory_profiles.sort(key=_sort_profiles)
+    _hidden_factory_profiles.sort(key=_sort_profiles)
+    _user_profiles.sort(key=_sort_profiles)
 
 def _load_profiles_list(dir_path):
     load_profiles = []
@@ -68,8 +68,6 @@ def _load_profiles_list(dir_path):
         profile = mlt.Profile(file_path)
         profile.file_path = file_path
         load_profiles.append([profile.description(), profile])
-
-        #print profile.description(), fname
 
         # Feb-2017 - SvdB - Filter out duplicate profiles based on profile name
         for enu_count, prof in enumerate(load_profiles):
@@ -132,13 +130,13 @@ def get_default_profile_index():
     """
     def_profile_index = get_index_for_name(editorpersistance.prefs.default_profile_name)
     if def_profile_index == -1:
-        print "default profile from prefs not found"
+        print("default profile from prefs not found")
         def_profile_index = get_index_for_name(DEFAULT_DEFAULT_PROFILE)
         def_profile_name =  DEFAULT_DEFAULT_PROFILE
         if def_profile_index == -1:
             def_profile_index = 0
             def_profile_name, profile = _profile_list[def_profile_index]
-            print "DEFAULT_DEFAULT_PROFILE deleted returning first profile"
+            print("DEFAULT_DEFAULT_PROFILE deleted returning first profile")
         editorpersistance.prefs.default_profile_name = def_profile_name
         editorpersistance.save()
     return def_profile_index
@@ -215,14 +213,6 @@ def get_closest_matching_profile_index(producer_info):
     
     return current_match_index
 
-def _sort_profiles(a, b):
-    a_desc, a_profile = a
-    b_desc, b_profile = b
-
-    if a_desc.lower() < b_desc.lower():
-        return -1
-    elif a_desc.lower() > b_desc.lower():
-        return 1
-    else:
-        return 0
-
+def _sort_profiles(profile_item):
+    a_desc, a_profile = profile_item
+    return a_desc.lower()

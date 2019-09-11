@@ -148,7 +148,7 @@ class WaveformCreator(threading.Thread):
 
         if not self.abort:
             self.clip.waveform_data = frame_levels
-            write_file = file(self.file_cache_path, "wb")
+            write_file = open(self.file_cache_path, "wb")
             pickle.dump(frame_levels, write_file)
 
             Gdk.threads_enter()
@@ -171,7 +171,7 @@ class WaveformCreator(threading.Thread):
         service = clip.get("mlt_service")
         if service.startswith("xml"):
             service = "xml-nogl"
-        temp_producer = mlt.Producer(PROJECT().profile, service.encode('utf-8'), clip.get("resource"))
+        temp_producer = mlt.Producer(PROJECT().profile, service, clip.get("resource"))
         channels = mlt.Filter(PROJECT().profile, "audiochannels")
         converter = mlt.Filter(PROJECT().profile, "audioconvert")
         self.levels = mlt.Filter(PROJECT().profile, "audiolevel")
@@ -188,7 +188,7 @@ def _waveform_render_progress_dialog(callback, title, text, progress_bar, parent
     dialog = Gtk.Dialog(title,
                          parent_window,
                          Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                         (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT))
+                         (_("Cancel"), Gtk.ResponseType.REJECT))
 
     dialog.text_label = Gtk.Label(label=text)
     dialog.text_label.set_use_markup(True)

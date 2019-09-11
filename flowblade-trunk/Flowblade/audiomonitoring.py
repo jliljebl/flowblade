@@ -499,7 +499,7 @@ class ChannelMeter:
             self.draw_value_line(cr, x, DB_IEC_MINUS_12, "-12", 1)
             self.draw_value_line(cr, x, DB_IEC_MINUS_20, "-20", 1)
             self.draw_value_line(cr, x, DB_IEC_MINUS_40, "-40", 1)
-            self.draw_value_line(cr, x, 0.0,  u"\u221E", 5)
+            self.draw_value_line(cr, x, 0.0,  "\u221E", 5)
             
     def get_meter_y_for_value(self, value):
         y = self.get_y_for_value(value)

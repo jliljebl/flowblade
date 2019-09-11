@@ -44,27 +44,27 @@ VIEW_EDITOR_HEIGHT = 620
 def show_rotomask(mlt_filter, editable_properties, property_editor_widgets_create_func, value_labels):
     
     # Create custom keyframe editor for spline
-    kf_json_prop = filter(lambda ep: ep.name == "spline", editable_properties)[0]
+    kf_json_prop = [ep for ep in editable_properties if ep.name == "spline"][0]
     kf_editor = keyframeeditor.RotoMaskKeyFrameEditor(kf_json_prop, propertyparse.rotomask_json_value_string_to_kf_array)
 
     # Use lambda to monkeypatch other editable properties to update rotomask on value write 
-    invert_prop = filter(lambda ep: ep.name == "invert", editable_properties)[0]
+    invert_prop = [ep for ep in editable_properties if ep.name == "invert"][0]
     invert_prop.write_val_func = invert_prop.write_value
     invert_prop.write_value = lambda value_str: _write_val_and_update_editor(invert_prop, value_str)
 
-    feather_prop = filter(lambda ep: ep.name == "feather", editable_properties)[0]
+    feather_prop = [ep for ep in editable_properties if ep.name == "feather"][0]
     feather_prop.write_val_func = feather_prop.write_value
     feather_prop.write_value = lambda value_str: _write_val_and_update_editor(feather_prop, value_str)
     
-    feather_passes_prop = filter(lambda ep: ep.name == "feather_passes", editable_properties)[0]
+    feather_passes_prop = [ep for ep in editable_properties if ep.name == "feather_passes"][0]
     feather_passes_prop.write_val_func = feather_passes_prop.write_value
     feather_passes_prop.write_value = lambda value_str: _write_val_and_update_editor(feather_passes_prop, value_str)
     
-    alpha_operation_prop = filter(lambda ep: ep.name == "alpha_operation", editable_properties)[0]
+    alpha_operation_prop = [ep for ep in editable_properties if ep.name == "alpha_operation"][0]
     alpha_operation_prop.write_val_func = alpha_operation_prop.write_value
     alpha_operation_prop.write_value = lambda value_str: _write_val_and_update_editor(alpha_operation_prop, value_str)
 
-    mode_prop = filter(lambda ep: ep.name == "mode", editable_properties)[0]
+    mode_prop = [ep for ep in editable_properties if ep.name == "mode"][0]
     mode_prop.write_val_func = mode_prop.write_value
     mode_prop.write_value = lambda value_str: _write_val_and_update_editor(mode_prop, value_str)
     

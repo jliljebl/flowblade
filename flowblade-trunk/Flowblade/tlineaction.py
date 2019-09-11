@@ -27,7 +27,7 @@ Module handles button edit events from buttons in the middle bar.
 from gi.repository import Gtk
 from gi.repository import Gdk
 
-import md5
+import hashlib
 import os
 from operator import itemgetter
 import threading
@@ -192,8 +192,8 @@ def sequence_split_pressed():
     # before we start we will ask the user whether he really wants to do, what he
     # just asked for. The intention of this is to provide some more background
     # information
-    heading = _("Split to new Sequence at Playhead Position")
-    info = _("Do you realy want to split this sequence into two?\nThis will create a new sequence receiving righthand content of your currently active sequence. Also the same content will be removed from your currently active sequence.\nThe newly created sequence will be opened.\n\n Continue?")
+    heading = _("Confirm split to new Sequence at Playhead position")
+    info = _("This will create a new sequence from the part after playhead. That part will be removed from\nyour current active sequence.\n\nThe newly created sequence will be opened as current sequence.")
     dialogutils.warning_confirmation(split_confirmed, heading, info, gui.editor_window.window)
 
 def split_confirmed(dialog, response_id):
@@ -458,7 +458,7 @@ def _attempt_clip_cover_delete(clip, track, index):
         cover_to_clip = track.clips[movemodes.selected_range_in + 1]
         
         real_length = clip.get_length()
-        to_part = real_length / 2
+        to_part = real_length // 2
         from_part = real_length - to_part
     
         if to_part > cover_to_clip.clip_in:
@@ -517,7 +517,7 @@ def lift_button_pressed():
 
 
 def ripple_delete_button_pressed():
-    print "Ripple delete"
+    print("Ripple delete")
     if movemodes.selected_track == -1:
         return
 
@@ -899,7 +899,7 @@ def add_transition_menu_item_selected():
     
 def add_fade_menu_item_selected():
     if movemodes.selected_track == -1:
-        print "so selection track"
+        print("so selection track")
         # INFOWINDOW
         return
 
@@ -911,7 +911,7 @@ def add_fade_menu_item_selected():
 
 def add_transition_pressed(retry_from_render_folder_select=False):
     if movemodes.selected_track == -1:
-        print "so selection track"
+        print("so selection track")
         # INFOWINDOW
         return
 
@@ -920,7 +920,7 @@ def add_transition_pressed(retry_from_render_folder_select=False):
 
     if not ((clip_count == 2) or (clip_count == 1)):
         # INFOWINDOW
-        print "clip count"
+        print("clip count")
         return
 
     if track.id < current_sequence().first_video_index and clip_count == 1:
@@ -990,10 +990,10 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
 
     try:
         length = int(length_entry.get_text())
-    except Exception, e:
+    except Exception as e:
         # INFOWINDOW, bad input
-        print str(e)
-        print "entry"
+        print(str(e))
+        print("entry")
         return
 
     dialog.destroy()
@@ -1007,7 +1007,7 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
     # Get values to build transition render sequence
     # Divide transition lenght between clips, odd frame goes to from_clip 
     real_length = length + 1 # first frame is 100% from clip frame so we are going to have to drop that
-    to_part = real_length / 2
+    to_part = real_length // 2
     from_part = real_length - to_part
 
     # HACKFIX, I just tested this till it worked, not entirely sure on math here
@@ -1072,7 +1072,7 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
                                                 window_text)
 
 def _transition_render_complete(clip_path):
-    print "Render complete"
+    print("Render complete")
 
     global transition_render_data
     transition_index, from_clip, to_clip, track, from_in, to_out, transition_type, creation_data = transition_render_data
@@ -1270,10 +1270,10 @@ def _add_fade_dialog_callback(dialog, response_id, selection_widgets, transition
 
     try:
         length = int(length_entry.get_text())
-    except Exception, e:
+    except Exception as e:
         # INFOWINDOW, bad input
-        print str(e)
-        print "entry"
+        print(str(e))
+        print("entry")
         return
 
     dialog.destroy()
@@ -1312,7 +1312,7 @@ def _add_fade_dialog_callback(dialog, response_id, selection_widgets, transition
                                                                         transition_type_selection_index,
                                                                         None,
                                                                         color_str)
-    print "producer_tractor length:" + str(producer_tractor.get_length())
+    print("producer_tractor length:" + str(producer_tractor.get_length()))
 
     # Creation data struct needs to have same members for transitions and fades, hence a lot of None here.
     # Used for rerender functionality.
@@ -1421,7 +1421,7 @@ def _fade_RE_render_dialog_callback(dialog, response_id, selection_widgets, fade
                                                                         transition_type_index,
                                                                         None,
                                                                         color_str)
-    print "producer_tractor length:" + str(producer_tractor.get_length())
+    print("producer_tractor length:" + str(producer_tractor.get_length()))
 
     fade_clip_index = track.clips.index(orig_fade_clip)
     
@@ -1511,10 +1511,10 @@ class ReRenderderAllWindow:
         self.rerender_list = rerender_list
         self.rendered_items = []
         self.encoding_selections = encoding_selections
-        self.dialog = Gtk.Dialog(_("Rerender all Rendered Transitions / Fades").encode('utf-8'),
+        self.dialog = Gtk.Dialog(_("Rerender all Rendered Transitions / Fades"),
                          gui.editor_window.window,
                          Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                         (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT))
+                         (_("Cancel"), Gtk.ResponseType.REJECT))
         self.current_item = 0
         self.runner_thread = None
         self.renderer = None
@@ -1567,7 +1567,7 @@ class ReRenderderAllWindow:
         # Dreate render consumer
         profile = PROJECT().profile
         folder = userfolders.get_render_dir()
-        file_name = md5.new(str(os.urandom(32))).hexdigest()
+        file_name = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
         self.write_file = folder + "/"+ file_name + file_ext
         consumer = renderconsumer.get_render_consumer_for_encoding_and_quality(self.write_file, profile, encoding_option_index, quality_option_index)
         
@@ -1881,7 +1881,7 @@ def do_timeline_filters_paste():
 def do_compositor_data_paste(paste_objs):
     data_type, paste_data = paste_objs
     if data_type != COPY_PASTA_DATA_COMPOSITOR_PROPERTIES:
-        print "supposed unreahcable if in do_compositor_data_paste"
+        print("supposed unreahcable if in do_compositor_data_paste")
         return
         
     if compositormodes.compositor != None and compositormodes.compositor.selected == True:

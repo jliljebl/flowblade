@@ -218,12 +218,12 @@ def create_editable_property_for_affine_blend(clip, editable_properties):
     # Build a custom object that duck types for TransitionEditableProperty to use in editor
     ep = utils.EmptyClass()
     # pack real properties to go
-    ep.x = filter(lambda ep: ep.name == "x", editable_properties)[0]
-    ep.y = filter(lambda ep: ep.name == "y", editable_properties)[0]
-    ep.x_scale = filter(lambda ep: ep.name == "x scale", editable_properties)[0]
-    ep.y_scale = filter(lambda ep: ep.name == "y scale", editable_properties)[0]
-    ep.rotation = filter(lambda ep: ep.name == "rotation", editable_properties)[0]
-    ep.opacity = filter(lambda ep: ep.name == "opacity", editable_properties)[0]
+    ep.x = [ep for ep in editable_properties if ep.name == "x"][0]
+    ep.y = [ep for ep in editable_properties if ep.name == "y"][0]
+    ep.x_scale = [ep for ep in editable_properties if ep.name == "x scale"][0]
+    ep.y_scale = [ep for ep in editable_properties if ep.name == "y scale"][0]
+    ep.rotation = [ep for ep in editable_properties if ep.name == "rotation"][0]
+    ep.opacity = [ep for ep in editable_properties if ep.name == "opacity"][0]
     # Screen width and height are needeed for frei0r conversions
     ep.profile_width = current_sequence().profile.width()
     ep.profile_height = current_sequence().profile.height()

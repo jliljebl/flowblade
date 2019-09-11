@@ -25,7 +25,6 @@ Module provides functions needed to get application processes in Flowblde runnin
 In addition to main application, Flowblade launches several processes that are essentially 
 independently running applications. 
 """
-
 import sys
 
 
@@ -34,6 +33,8 @@ def update_sys_path(modules_path):
     sys.path.insert(0, modules_path + "/vieweditor")
     sys.path.insert(0, modules_path + "/tools")
 
+    root_path = modules_path.rstrip("/Flowblade") # TODO: THIS COULD BE CONDITIONAL ON BEING FILE SYSTEM INSTALLATION.
+    sys.path.insert(0, root_path)
 
 def prepare_mlt_repo(repo):
     # Remove mlt services that interfere with Flowblade running correctly

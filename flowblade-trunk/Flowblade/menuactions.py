@@ -60,7 +60,7 @@ class RecreateIconsThread(threading.Thread):
 
         no_icon_path = respaths.IMAGE_PATH + projectdata.FALLBACK_THUMB
         loaded = 0
-        for key in PROJECT().media_files.iterkeys():
+        for key in PROJECT().media_files.keys():
             media_file = PROJECT().media_files[key]
             Gdk.threads_enter()
             recreate_progress_window.info.set_text(media_file.name)
@@ -116,7 +116,7 @@ def environment():
 def quick_reference():
     try:
         url = "file://" + respaths.HELP_DOC
-        print url 
+        print(url) 
         #webbrowser.open('http://code.google.com/p/flowblade/wiki/FlowbladeReference')
         webbrowser.open(url)
     except:
@@ -151,7 +151,7 @@ def _watermark_remove_callback(button, widgets):
     current_sequence().remove_watermark()
       
 def toggle_fullscreen():
-    print "toggle_fullscreen"
+    print("toggle_fullscreen")
     if editorstate.fullscreen == False:
        gui.editor_window.window.fullscreen()
        editorstate.fullscreen = True

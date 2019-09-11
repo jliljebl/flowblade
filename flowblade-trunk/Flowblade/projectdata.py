@@ -24,7 +24,7 @@ Module contains objects used to capture project data.
 import cairo
 import datetime
 import mlt
-import md5
+import hashlib
 import os
 
 from gi.repository import GdkPixbuf
@@ -109,7 +109,7 @@ class Project:
         thumbnailer.set_context(self.profile)
 
     def add_image_sequence_media_object(self, resource_path, name, length, ttl):
-        print resource_path
+        print(resource_path)
         media_object = self.add_media_file(resource_path)
         media_object.length = length
         media_object.name = name
@@ -166,7 +166,7 @@ class Project:
         self.c_bin.file_ids.append(media_object.id)
 
     def media_file_exists(self, file_path):
-        for key, media_file in self.media_files.items():
+        for key, media_file in list(self.media_files.items()):
             if media_file.type == appconsts.PATTERN_PRODUCER:
                 continue
             if file_path == media_file.path:
@@ -175,7 +175,7 @@ class Project:
         return False
 
     def get_media_file_for_path(self, file_path):
-        for key, media_file in self.media_files.items():
+        for key, media_file in list(self.media_files.items()):
             if media_file.type == appconsts.PATTERN_PRODUCER:
                 continue
             if file_path == media_file.path:
@@ -187,7 +187,7 @@ class Project:
 
     def get_current_proxy_paths(self):
         paths_dict = {}
-        for idkey, media_file in self.media_files.items():
+        for idkey, media_file in list(self.media_files.items()):
             try:
                 if media_file.is_proxy_file:
                     paths_dict[media_file.path] = media_file
@@ -283,7 +283,7 @@ class Project:
         return os.path.dirname(last_render_event.data)
 
     def is_first_video_load(self):
-        for uid, media_file in self.media_files.iteritems():
+        for uid, media_file in self.media_files.items():
             if media_file.type == appconsts.VIDEO:
                 return False
         
@@ -339,7 +339,7 @@ class MediaFile:
         try:
             self.icon = self._create_image_surface(self.icon_path)
         except:
-            print "failed to make icon from:", self.icon_path
+            print("failed to make icon from:", self.icon_path)
             self.icon_path = respaths.IMAGE_PATH + FALLBACK_THUMB
             self.icon = self._create_image_surface(self.icon_path)
 
@@ -360,7 +360,7 @@ class MediaFile:
         proxy_md_key = self.path + str(proxy_width) + str(proxy_height)
         if hasattr(self, "use_unique_proxy"): # This may have been added in proxyediting.py to prevent interfering with existing projects
             proxy_md_key = proxy_md_key + os.urandom(16)
-        md_str = md5.new(proxy_md_key).hexdigest()
+        md_str = hashlib.md5(proxy_md_key.encode('utf-8')).hexdigest()
         return str(userfolders.get_render_dir() + "/proxies/" + md_str + "." + file_extesion) # str() because we get unicode here
 
     def _create_img_seg_proxy_path(self,  proxy_width, proxy_height):
@@ -368,7 +368,7 @@ class MediaFile:
         proxy_md_key = self.path + str(proxy_width) + str(proxy_height)
         if hasattr(self, "use_unique_proxy"): # This may have been added in proxyediting.py to prevent interfering with existing projects
             proxy_md_key = proxy_md_key + os.urandom(16)
-        md_str = md5.new(proxy_md_key).hexdigest()
+        md_str = hashlib.md5(proxy_md_key.encode('utf-8')).hexdigest()
         return str(userfolders.get_render_dir() + "/proxies/" + md_str + "/" + file_name)
 
     def add_proxy_file(self, proxy_path):
@@ -460,7 +460,7 @@ class Thumbnailer:
         Writes thumbnail image from file producer
         """
         # Get data
-        md_str = md5.new(file_path).hexdigest()
+        md_str = hashlib.md5(file_path.encode('utf-8')).hexdigest()
         thumbnail_path = userfolders.get_cache_dir() + appconsts.THUMBNAILS_DIR + "/" + md_str +  ".png"
 
         # Create consumer
@@ -477,7 +477,7 @@ class Thumbnailer:
         info = utils.get_file_producer_info(producer)
 
         length = producer.get_length()
-        frame = length / 2
+        frame = length // 2
         producer = producer.cut(frame, frame)
 
         # Connect and write image

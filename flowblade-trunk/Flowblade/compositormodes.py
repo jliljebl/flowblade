@@ -141,7 +141,7 @@ def mouse_release(x, y, frame, state):
     elif editorstate.edit_mode == editorstate.MULTI_MOVE:
         tlinewidgets.set_edit_mode(None, tlinewidgets.draw_multi_overlay)
     else:
-        print "COMPOSITOR MODE EXIT PROBLEM at compositormodes.mouse_release"
+        print("COMPOSITOR MODE EXIT PROBLEM at compositormodes.mouse_release")
 
     gui.editor_window.set_cursor_to_mode()
 

@@ -79,7 +79,9 @@ def get_waveform_data(clip):
     # Load from disk if found, otherwise queue for levels render
     levels_file_path = _get_levels_file_path(clip.path, editorstate.PROJECT().profile)
     if os.path.isfile(levels_file_path):
-        f = open(levels_file_path)
+        f = open(levels_file_path, "rb")
+        if os.path.getsize(levels_file_path) == 0:
+             print( "Size zero Audio levels file, this is error!", levels_file_path)
         waveform = pickle.load(f)
         _waveforms[clip.path] = waveform
         return waveform
@@ -136,7 +138,7 @@ class AudioRenderLaunchThread(threading.Thread):
 
     def run(self):
         # Launch render process and wait for it to end
-        FLOG = open(userfolders.get_data_dir() + "log_audio_levels_render", 'w')
+        FLOG = open(userfolders.get_cache_dir() + "log_audio_levels_render", 'w')
         # Sep-2018 - SvdB - Added self. to be able to access the thread through 'process'
         self.process = subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladeaudiorender", \
                   self.rendered_media, self.profile_desc, respaths.ROOT_PATH], \
@@ -222,7 +224,7 @@ class WaveformCreator(threading.Thread):
             frame_levels[frame] = float(val)
             self.last_rendered_frame = frame
 
-        write_file = file(self.file_cache_path, "wb")
+        write_file = open(self.file_cache_path, "wb")
         pickle.dump(frame_levels, write_file)
 
     def _get_temp_producer(self, clip_path, profile):

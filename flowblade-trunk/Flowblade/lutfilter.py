@@ -269,16 +269,16 @@ class CatmullRomFilter:
     
     def __init__(self, editable_properties):
         # These properties hold the values that are writtenout to MLT to do the filtering
-        self.r_table_prop = filter(lambda ep: ep.name == "R_table", editable_properties)[0]
-        self.g_table_prop = filter(lambda ep: ep.name == "G_table", editable_properties)[0]
-        self.b_table_prop = filter(lambda ep: ep.name == "B_table", editable_properties)[0]
+        self.r_table_prop = [ep for ep in editable_properties if ep.name == "R_table"][0]
+        self.g_table_prop = [ep for ep in editable_properties if ep.name == "G_table"][0]
+        self.b_table_prop = [ep for ep in editable_properties if ep.name == "B_table"][0]
         
         # These properties hold points lists which define cr curves. They are persistent but are not 
         # written out to MLT
-        self.r_points_prop = filter(lambda ep: ep.name == "r_curve", editable_properties)[0]
-        self.g_points_prop = filter(lambda ep: ep.name == "g_curve", editable_properties)[0]
-        self.b_points_prop = filter(lambda ep: ep.name == "b_curve", editable_properties)[0]
-        self.value_points_prop = filter(lambda ep: ep.name == "value_curve", editable_properties)[0]
+        self.r_points_prop = [ep for ep in editable_properties if ep.name == "r_curve"][0]
+        self.g_points_prop = [ep for ep in editable_properties if ep.name == "g_curve"][0]
+        self.b_points_prop = [ep for ep in editable_properties if ep.name == "b_curve"][0]
+        self.value_points_prop = [ep for ep in editable_properties if ep.name == "value_curve"][0]
 
         # These are objects that generate lut tables from points lists
         self.r_cr_curve = CRCurve()
@@ -387,16 +387,16 @@ class ColorGradeBandCorrection:
         
     def print_table(self, table):
         for i in range(0, len(table)):
-            print str(i) + ":" + str(table[i])
+            print(str(i) + ":" + str(table[i]))
 
 
 class ColorGradeFilter:
     
     def __init__(self, editable_properties):
         # These properties hold the values that are writtenout to MLT to do the filtering
-        self.r_table_prop = filter(lambda ep: ep.name == "R_table", editable_properties)[0]
-        self.g_table_prop = filter(lambda ep: ep.name == "G_table", editable_properties)[0]
-        self.b_table_prop = filter(lambda ep: ep.name == "B_table", editable_properties)[0]
+        self.r_table_prop = [ep for ep in editable_properties if ep.name == "R_table"][0]
+        self.g_table_prop = [ep for ep in editable_properties if ep.name == "G_table"][0]
+        self.b_table_prop = [ep for ep in editable_properties if ep.name == "B_table"][0]
 
         self.r_lookup = [0] * 256 
         self.g_lookup = [0] * 256

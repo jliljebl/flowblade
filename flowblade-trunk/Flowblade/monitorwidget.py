@@ -920,7 +920,7 @@ class MatchSurfaceCreator(threading.Thread):
     def run(self):
         # Create new producer to get mlt frame data
         while _producer == None:
-            print "MatchSurfaceCreator: waiting for _producer"
+            print("MatchSurfaceCreator: waiting for _producer")
             time.sleep(0.01)
             
         image_producer = _producer.cut(int(self.match_frame), int(self.match_frame))

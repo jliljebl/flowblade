@@ -406,7 +406,7 @@ class Sequence:
         producer.media_type = get_media_type(path)
 
         if producer.media_type == FILE_DOES_NOT_EXIST:
-            print "file does not exist"
+            print("file does not exist")
             return None
 
         self.add_clip_attr(producer)
@@ -653,7 +653,7 @@ class Sequence:
         """
         Compositor order must be from top to bottom or will not work.
         """
-        self.compositors.sort(_sort_compositors_comparator)
+        self.compositors.sort(key=_sort_compositors_comparator)
 
     def get_track_compositors(self, track_index):
         track_compositors = []
@@ -875,7 +875,7 @@ class Sequence:
             elif track_id == len(self.tracks) - 2:
                 # This shold not happen because track heights should be set up so that minimized app 
                 fix_next = False
-                print "sequence.resize_tracks_to_fit (): could not make tracks fit in timeline vertical space"
+                print("sequence.resize_tracks_to_fit (): could not make tracks fit in timeline vertical space")
             else:
                 self.tracks[track_id].height = TRACK_HEIGHT_SMALL
                 track_id += 1
@@ -1050,15 +1050,15 @@ class Sequence:
                     clip.waveform_data = None
 
     def print_all(self):
-        print "------------------------######"
+        print("------------------------######")
         for i in range(0, len(self.tracks)):
-            print "TRACK:", i
+            print("TRACK:", i)
             self.print_track(i)
 
     def print_track(self, track_id):
         track = self.tracks[track_id]
 
-        print "PYTHON"
+        print("PYTHON")
         for i in range(0, len(track.clips)):
             clip = track.clips[i]
             if clip.is_blank():
@@ -1066,21 +1066,21 @@ class Sequence:
             else:
                 msg = clip.name
      
-            print i, ": id:", clip.id, " in:",clip.clip_in," out:", \
-            clip.clip_out, msg
+            print(i, ": id:", clip.id, " in:",clip.clip_in," out:", \
+            clip.clip_out, msg)
 
-        print "MLT"
+        print("MLT")
         for i in range(0, track.count()):
             clip = track.get_clip(i)
-            print i, " in:", clip.get_in()," out:", clip.get_out()
+            print(i, " in:", clip.get_in()," out:", clip.get_out())
 
 
     def print_compositors(self):
         for compositor in self.compositors:
-            print "---"
-            print compositor.name
-            print "a_track:" , compositor.transition.a_track
-            print "b_track:" , compositor.transition.b_track
+            print("---")
+            print(compositor.name)
+            print("a_track:" , compositor.transition.a_track)
+            print("b_track:" , compositor.transition.b_track)
 
 # ------------------------------------------------ module util methods
 def get_media_type(file_path):
@@ -1117,7 +1117,10 @@ def get_media_type(file_path):
 def _clip_length(clip):
     return clip.clip_out - clip.clip_in + 1
 
-def _sort_compositors_comparator(a_comp, b_comp):
+def _sort_compositors_comparator(a_comp):
+    return int(a_comp.transition.b_track)
+    
+    """
     # compositors on top most tracks first
     if a_comp.transition.b_track > b_comp.transition.b_track:
         return -1
@@ -1125,7 +1128,7 @@ def _sort_compositors_comparator(a_comp, b_comp):
         return 1
     else:
         return 0
-
+    """
 # ----------------------------- sequence cloning for tracks count change
 def create_sequence_clone_with_different_track_count(old_seq, v_tracks, a_tracks):
     # Create new sequence with different number of tracks
