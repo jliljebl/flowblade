@@ -200,6 +200,7 @@ def get_recent_projects():
     return proj_list
 
 def update_prefs_from_widgets(widgets_tuples_tuple):
+    # Aug-2019 - SvdB - BB - Replace double_track_hights by double_track_height
     # Unpack widgets
     gen_opts_widgets, edit_prefs_widgets, playback_prefs_widgets, view_prefs_widgets, performance_widgets = widgets_tuples_tuple
 
@@ -215,7 +216,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips = playback_prefs_widgets
     
     force_language_combo, disp_splash, buttons_style, theme, theme_combo, audio_levels_combo, \
-    window_mode_combo, full_names, double_track_hights, top_row_layout = view_prefs_widgets
+    window_mode_combo, full_names, double_track_height, top_row_layout = view_prefs_widgets
 
     # Jan-2017 - SvdB
     perf_render_threads, perf_drop_frames = performance_widgets
@@ -256,7 +257,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     # Feb-2017 - SvdB - for full file names
     prefs.show_full_file_names = full_names.get_active()
     prefs.center_on_arrow_move = auto_center_on_updown.get_active()
-    prefs.double_track_hights = (double_track_hights.get_active() == 1)
+    prefs.double_track_height = (double_track_height.get_active() == 1)
     prefs.playback_follow_move_tline_range = follow_move_range.get_active()
     prefs.theme = theme.get_active()
     prefs.top_row_layout = top_row_layout.get_active()
@@ -344,7 +345,7 @@ class EditorPreferences:
         self.ffwd_rev_ctrl = 10
         self.ffwd_rev_caps = 1
         self.shortcuts = "flowblade.xml"
-        self.double_track_hights = False
+        self.double_track_height = False
         self.delta_overlay = True # DEPRECATED, NOT USER SETTABLE ANYMORE
         self.show_alpha_info_message = True
         self.playback_follow_move_tline_range = True

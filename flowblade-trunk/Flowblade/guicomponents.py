@@ -913,8 +913,8 @@ class BinInfoPanel(Gtk.HBox):
         
 # -------------------------------------------- media select panel
 class MediaPanel():
-
     def __init__(self, media_file_popup_cb, double_click_cb, panel_menu_cb):
+        # Aug-2019 - SvdB - BB
         self.widget = Gtk.VBox()
         self.row_widgets = []
         self.selected_objects = []
@@ -922,20 +922,20 @@ class MediaPanel():
         self.media_file_popup_cb = media_file_popup_cb
         self.panel_menu_cb = panel_menu_cb
         self.double_click_cb = double_click_cb
-        self.monitor_indicator = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "monitor_indicator.png")
+        self.monitor_indicator = guiutils.get_cairo_image("monitor_indicator", force=False) # Aug-2019 - SvdB - BB - We want to keep the small icon for this
         self.last_event_time = 0.0
         self.last_ctrl_selected_media_object = None
         
         self.double_click_release = False # needed to get focus over to pos bar after double click, usually media object grabs focus
         
         global has_proxy_icon, is_proxy_icon, graphics_icon, imgseq_icon, audio_icon, pattern_icon, profile_warning_icon
-        has_proxy_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "has_proxy_indicator.png")
-        is_proxy_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "is_proxy_indicator.png")
-        graphics_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "graphics_indicator.png")
-        imgseq_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "imgseq_indicator.png")
-        audio_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "audio_indicator.png")
-        pattern_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "pattern_producer_indicator.png")
-        profile_warning_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "profile_warning.png")
+        has_proxy_icon = guiutils.get_cairo_image("has_proxy_indicator")
+        is_proxy_icon = guiutils.get_cairo_image("is_proxy_indicator")
+        graphics_icon = guiutils.get_cairo_image("graphics_indicator")
+        imgseq_icon = guiutils.get_cairo_image("imgseq_indicator")
+        audio_icon = guiutils.get_cairo_image("audio_indicator")
+        pattern_icon = guiutils.get_cairo_image("pattern_producer_indicator")
+        profile_warning_icon = guiutils.get_cairo_image("profile_warning")
 
     def get_selected_media_objects(self):
         return self.selected_objects
@@ -1327,17 +1327,27 @@ class EditorSeparator:
 
 # ---------------------------------------------- MISC WIDGETS
 def get_monitor_view_select_combo(callback):
-    surface_list = [cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "program_view_2.png"),
-                   cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "vectorscope.png"),
-                   cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "rgbparade.png")]
-    menu_launch = ImageMenuLaunch(callback, surface_list, w=24, h=20)
-    menu_launch.surface_y = 10
+    # Aug-2019 - SvdB - BB
+    prefs = editorpersistance.prefs
+    size_adj = 1
+    if prefs.double_track_height:
+       size_adj = 2
+    surface_list = [guiutils.get_cairo_image("program_view_2"),
+                   guiutils.get_cairo_image("vectorscope"),
+                   guiutils.get_cairo_image("rgbparade")]
+    menu_launch = ImageMenuLaunch(callback, surface_list, w=24*size_adj, h=20*size_adj)
+    menu_launch.surface_y = 8*size_adj
     return menu_launch
 
 def get_trim_view_select_combo(callback):
-    surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "trim_view.png")
-    menu_launch = PressLaunch(callback, surface, w=24, h=20)
-    menu_launch.surface_y = 10
+    # Aug-2019 - SvdB - BB
+    prefs = editorpersistance.prefs
+    size_adj = 1
+    if prefs.double_track_height:
+       size_adj = 2
+    surface = guiutils.get_cairo_image("trim_view")
+    menu_launch = PressLaunch(callback, surface, w=24*size_adj, h=20*size_adj)
+    menu_launch.surface_y = 8*size_adj
     return menu_launch
     
 def get_compositor_track_select_combo(source_track, target_track, callback):
@@ -2175,16 +2185,22 @@ def set_profile_info_values_text(profile, label, show_description):
 class BigTCDisplay:
 
     def __init__(self):
-        self.widget = cairoarea.CairoDrawableArea2( 170,
-                                                    22,
+        # Aug-2019 - SvdB -BB
+        prefs = editorpersistance.prefs
+        size_adj = 1
+        if prefs.double_track_height:
+           size_adj = 2
+
+        self.widget = cairoarea.CairoDrawableArea2( 170*size_adj,
+                                                    22*size_adj,
                                                     self._draw)
-        self.font_desc = Pango.FontDescription("Bitstream Vera Sans Mono Condensed 15")
+        self.font_desc = Pango.FontDescription("Bitstream Vera Sans Mono Condensed "+str(15*size_adj))
         
         # Draw consts
         x = 2
         y = 2
-        width = 166
-        height = 24
+        width = 166*size_adj
+        height = 24*size_adj
         aspect = 1.0
         corner_radius = height / 3.5
         radius = corner_radius / aspect
@@ -2550,8 +2566,9 @@ def get_text_scroll_widget(text, size):
 
     return sw
 
-def get_markers_menu_launcher(callback, pixbuf):
-    m_launch = PressLaunch(callback, pixbuf)
+# Aug-2019 - SvdB - BB - Need to add w/h
+def get_markers_menu_launcher(callback, pixbuf, w=22, h=22):
+    m_launch = PressLaunch(callback, pixbuf, w, h)
     return m_launch
 
 def get_markers_popup_menu(event, callback):
@@ -2933,9 +2950,16 @@ class ToolSelector(ImageMenuLaunch):
     def _draw(self, event, cr, allocation):
         PressLaunch._draw(self, event, cr, allocation)
 
-        cr.move_to(27, 13)
-        cr.line_to(32, 18)
-        cr.line_to(37, 13)
+        # Aug-2019 - SvdB - BB - If we have larger icons we need to move this a bit and make it a tad larger.
+        if editorpersistance.prefs.double_track_height:
+            x_pos = [40,45,50]
+            y_pos = [10,20,10]
+        else:    
+            x_pos = [27,32,37]
+            y_pos = [13,18,13]
+        cr.move_to(x_pos[0], y_pos[0])
+        cr.line_to(x_pos[1], y_pos[1])
+        cr.line_to(x_pos[2], y_pos[2])
         cr.close_path()
         if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
             cr.set_source_rgb(0, 0, 0)
@@ -2946,17 +2970,25 @@ class ToolSelector(ImageMenuLaunch):
 
 class HamburgerPressLaunch:
     def __init__(self, callback):
-        self.widget = cairoarea.CairoDrawableArea2( 18,
-                                                    18,
+        # Aug-2019 - SvdB - BB
+        prefs = editorpersistance.prefs
+        size_adj = 1
+        y_adj = 0
+        if prefs.double_track_height:
+            size_adj = 2
+            y_adj = -2
+        
+        self.widget = cairoarea.CairoDrawableArea2( 18*size_adj,
+                                                    18*size_adj,
                                                     self._draw)
         self.widget.press_func = self._press_event
         self.sensitive = True
         self.callback = callback
         
-        self.surface_active = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger.png")
-        self.surface_not_active = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger_not_active.png")
+        self.surface_active = guiutils.get_cairo_image("hamburger")
+        self.surface_not_active = guiutils.get_cairo_image("hamburger_not_active")
         self.surface_x  = 0
-        self.surface_y  = 0
+        self.surface_y  = y_adj
     
     def set_sensitive(self, sensitive):
         self.sensitive = sensitive
@@ -2980,16 +3012,22 @@ class MonitorSwitch:
     def __init__(self, callback):
         self.WIDTH = 84
         self.HEIGHT = 22
+        # Aug-2019 - SvdB - BB - Set the appropriate values based on button size. Use guiutils functions
+        prefs = editorpersistance.prefs
+        if prefs.double_track_height:
+            self.WIDTH = self.WIDTH * 2
+            self.HEIGHT = self.HEIGHT * 2
+
         self.widget = cairoarea.CairoDrawableArea2( self.WIDTH ,
                                                     self.HEIGHT,
                                                     self._draw)
         self.widget.set_tooltip_text(_("Display Timeline / Clip on Monitor"))
         self.widget.press_func = self._press_event
 
-        self.tline_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "timeline_button.png")
-        self.tline_active_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "timeline_button_active.png")
-        self.clip_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "clip_button.png")
-        self.clip_active_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "clip_button_active.png")
+        self.tline_surface = guiutils.get_cairo_image("timeline_button")
+        self.tline_active_surface = guiutils.get_cairo_image("timeline_button_active")
+        self.clip_surface = guiutils.get_cairo_image("clip_button")
+        self.clip_active_surface = guiutils.get_cairo_image("clip_button_active")
         
         self.callback = callback
         self.surface_x  = 6
@@ -3003,10 +3041,23 @@ class MonitorSwitch:
             tline_draw_surface = self.tline_surface 
             clip_draw_surface = self.clip_active_surface
             
-        cr.set_source_surface(tline_draw_surface, 10, 5)
+        # Aug-2019 - SvdB - BB - set default offset
+        prefs = editorpersistance.prefs
+        def_off = 10
+        y_off_tline = 7
+        y_off_clip = 8
+        if prefs.double_track_height:
+           def_off = def_off * 2
+           y_off_tline = y_off_tline * 2
+           y_off_clip = y_off_clip * 2
+        cr.set_source_surface(tline_draw_surface, def_off, y_off_tline)
         cr.paint()
 
-        cr.set_source_surface(clip_draw_surface, 54, 6)
+        # Aug-2019 - SvdB - BB - Calculate offset for displaying the next button
+        base_off = tline_draw_surface.get_width()
+        x_off = clip_draw_surface.get_width()
+
+        cr.set_source_surface(clip_draw_surface, def_off + base_off + x_off, y_off_clip)
         cr.paint()
         
     def _press_event(self, event):

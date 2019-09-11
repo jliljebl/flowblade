@@ -855,7 +855,8 @@ def _set_draw_params():
         editorwindow.MONITOR_AREA_WIDTH = 400
         positionbar.BAR_WIDTH = 100
 
-    if editorpersistance.prefs.double_track_hights == True:
+    # Aug-2019 - SvdB - BB - replace double_track_hights by double_track_height
+    if editorpersistance.prefs.double_track_height == True:
         appconsts.TRACK_HEIGHT_NORMAL = 100 # track height in canvas and column
         appconsts.TRACK_HEIGHT_SMALL = 50 # track height in canvas and column
         appconsts.TRACK_HEIGHT_SMALLEST = 50 # maybe remove as it is no longer meaningful

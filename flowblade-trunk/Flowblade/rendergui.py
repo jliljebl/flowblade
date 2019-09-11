@@ -26,6 +26,7 @@ import math
 import os
 
 import dialogutils
+import editorpersistance # Aug-2019- SvdB - BB
 import editorstate
 import gui
 import guiutils
@@ -65,7 +66,11 @@ def render_progress_dialog(callback, parent_window, frame_rates_match=True):
     passed_box.pack_start(Gtk.Label(), True, True, 0)
 
     if frame_rates_match == False:
-        warning_icon = Gtk.Image.new_from_stock(Gtk.STOCK_DIALOG_WARNING, Gtk.IconSize.MENU)
+        # Aug-2019 - SvdB - BB
+        if editorpersistance.prefs.double_track_height:
+            warning_icon = Gtk.Image.new_from_stock(Gtk.STOCK_DIALOG_WARNING, IconSize.DND)
+        else:
+            warning_icon = Gtk.Image.new_from_stock(Gtk.STOCK_DIALOG_WARNING, Gtk.IconSize.MENU)
         warning_text = Gtk.Label(label=_("Project and Render Profile FPS values are not same. Rendered file may have A/V sync issues."))
         warning_box = Gtk.HBox(False, 2)
         warning_box.pack_start(warning_icon,False, False, 0)
@@ -759,7 +764,8 @@ class RenderEncodingPanel():
         
         self.sample_rate_selector = RenderAudioRateSelector()
 
-        self.speaker_image = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "audio_desc_icon.png")
+        # Aug-2019 - SvdB - BB
+        self.speaker_image = guiutils.get_image("audio_desc_icon")
 
         quality_row  = Gtk.HBox()
         quality_row.pack_start(self.quality_selector.widget, False, False, 0)
@@ -793,13 +799,21 @@ class RenderArgsPanel():
         self.use_args_check.connect("toggled", self.use_args_toggled)
 
         self.opts_save_button = Gtk.Button()
-        icon = Gtk.Image.new_from_stock(Gtk.STOCK_SAVE, Gtk.IconSize.MENU)
+        # Aug-2019 - SvdB - BB
+        if editorpersistance.prefs.double_track_height:
+            icon = Gtk.Image.new_from_stock(Gtk.STOCK_SAVE, Gtk.IconSize.LARGE_TOOLBAR)
+        else:
+            icon = Gtk.Image.new_from_stock(Gtk.STOCK_SAVE, Gtk.IconSize.MENU)
         self.opts_save_button.set_image(icon)
         self.opts_save_button.connect("clicked", lambda w: save_args_callback())
         self.opts_save_button.set_sensitive(False)
     
         self.opts_load_button = Gtk.Button()
-        icon = Gtk.Image.new_from_stock(Gtk.STOCK_OPEN, Gtk.IconSize.MENU)
+        # Aug-2019 - SvdB - BB
+        if editorpersistance.prefs.double_track_height:
+            icon = Gtk.Image.new_from_stock(Gtk.STOCK_OPEN, Gtk.IconSize.LARGE_TOOLBAR)
+        else:
+            icon = Gtk.Image.new_from_stock(Gtk.STOCK_OPEN, Gtk.IconSize.MENU)
         self.opts_load_button.set_image(icon)
         self.opts_load_button.connect("clicked", lambda w: load_args_callback())
                 
