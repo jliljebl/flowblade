@@ -1240,8 +1240,19 @@ class MediaObjectWidget:
 
     def _draw_icon(self, event, cr, allocation):
         x, y, w, h = allocation
+
+        self.create_round_rect_path(cr, 0, 0, w - 5, h - 5, 5.0)
+        cr.clip()
+        
         cr.set_source_surface(self.media_file.icon, 0, 0)
         cr.paint()
+
+        cr.reset_clip()
+        cr.set_source_rgba(0,0,0,0.5)
+        cr.set_line_width(2.0)
+        self.create_round_rect_path(cr, 0, 0, w - 5, h - 5, 5.0)
+        cr.stroke()
+        
         if self.media_file == editorstate.MONITOR_MEDIA_FILE():
             cr.set_source_surface(self.indicator_icon, 29, 22)
             cr.paint()
@@ -1261,14 +1272,14 @@ class MediaObjectWidget:
             cr.show_text("][ " + str(clip_length))
 
         cr.set_source_rgba(0,0,0,0.5)
-        cr.rectangle(28,75,62,12)
+        cr.rectangle(28,71,62,12)
         cr.fill()
             
-        cr.move_to(30, 84)
+        cr.move_to(30, 79)
         cr.set_source_rgb(1, 1, 1)
         media_length = utils.get_tc_string(self.media_file.length)
         cr.show_text(str(media_length))
-            
+
         if self.media_file.type != appconsts.PATTERN_PRODUCER:
             if self.media_file.is_proxy_file == True:
                 cr.set_source_surface(is_proxy_icon, 96, 6)
@@ -1297,7 +1308,15 @@ class MediaObjectWidget:
             cr.set_source_surface(pattern_icon, 6, 6)
             cr.paint()
 
+    def create_round_rect_path(self, cr, x, y, width, height, radius=4.0):
+        degrees = math.pi / 180.0
 
+        cr.new_sub_path()
+        cr.arc(x + width - radius, y + radius, radius, -90 * degrees, 0 * degrees)
+        cr.arc(x + width - radius, y + height - radius, radius, 0 * degrees, 90 * degrees)
+        cr.arc(x + radius, y + height - radius, radius, 90 * degrees, 180 * degrees)
+        cr.arc(x + radius, y + radius, radius, 180 * degrees, 270 * degrees)
+        cr.close_path()
 
 # -------------------------------------------- context menus
 class EditorSeparator:

@@ -1820,7 +1820,7 @@ class TimeLineCanvas:
                         cr.clip()
                         cr.set_source_surface(thumb_img,scale_in, y - 20)
                         cr.paint()
-                    except: # thumbnail not found  in dict, get it pait it
+                    except: # thumbnail not found  in dict, get it and  paint it
                         try:
                             media_file = PROJECT().get_media_file_for_path(clip.path)
                             thumb_img = media_file.icon
