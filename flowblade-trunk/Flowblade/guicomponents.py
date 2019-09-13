@@ -2416,6 +2416,71 @@ class MonitorTCDisplay:
         cr.close_path ()
 
 
+class MonitorTCInfo:
+    def __init__(self):
+        if editorstate.screen_size_small_height() == True:
+            font_desc = "sans bold 8"
+        else:
+            font_desc = "sans bold 9"
+            
+        self.widget = Gtk.HBox()
+        self.widget.set_tooltip_text(_("Current Sequence / Clip name and length"))
+        
+        self.monitor_source = Gtk.Label()
+        self.monitor_source.modify_font(Pango.FontDescription(font_desc))
+        self.monitor_source.set_ellipsize(Pango.EllipsizeMode.END)
+        self.monitor_source.set_sensitive(False)
+        
+        self.monitor_tc = Gtk.Label()
+        self.monitor_tc.modify_font(Pango.FontDescription(font_desc))
+
+        self.in_label = Gtk.Label("] ")
+        self.in_label.modify_font(Pango.FontDescription(font_desc))
+        self.in_label.set_sensitive(False)
+
+        self.out_label = Gtk.Label("[ ")
+        self.out_label.modify_font(Pango.FontDescription(font_desc))
+        self.out_label.set_sensitive(False)
+
+        self.marks_length_label = Gtk.Label("][ ")
+        self.marks_length_label.modify_font(Pango.FontDescription(font_desc))
+        self.marks_length_label.set_sensitive(False)
+
+        self.in_value = Gtk.Label("--:--:--:--")
+        self.in_value.modify_font(Pango.FontDescription(font_desc))
+
+        self.out_value = Gtk.Label("--:--:--:--")
+        self.out_value.modify_font(Pango.FontDescription(font_desc))
+
+        self.marks_length_value = Gtk.Label("--:--:--:--")
+        self.marks_length_value.modify_font(Pango.FontDescription(font_desc))
+        
+        self.widget.pack_start(self.monitor_source, False, False, 0)
+        self.widget.pack_start(self.monitor_tc, False, False, 0)
+        self.widget.pack_start(guiutils.pad_label(24, 10), False, False, 0)
+        if editorstate.screen_size_small_width() == False:
+            self.widget.pack_start(self.in_label, False, False, 0)
+            self.widget.pack_start(self.in_value, False, False, 0)
+            self.widget.pack_start(guiutils.pad_label(12, 10), False, False, 0)
+            self.widget.pack_start(self.out_label, False, False, 0)
+            self.widget.pack_start(self.out_value, False, False, 0)
+            self.widget.pack_start(guiutils.pad_label(12, 10), False, False, 0)
+        self.widget.pack_start(self.marks_length_label, False, False, 0)
+        self.widget.pack_start(self.marks_length_value, False, False, 0)
+            
+    def set_source_name(self, source_name):
+        self.monitor_source.set_text(source_name)
+        
+    def set_source_tc(self, tc_str):
+        self.monitor_tc.set_text(tc_str)
+    
+    def set_range_info(self, in_str, out_str, len_str):
+        if editorstate.screen_size_small_width() == False:
+            self.in_value.set_text(in_str)
+            self.out_value.set_text(out_str)
+        self.marks_length_value.set_text(len_str)
+    
+
 class TimeLineLeftBottom:
     def __init__(self):
         self.widget = Gtk.HBox()

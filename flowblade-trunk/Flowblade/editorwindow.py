@@ -826,15 +826,11 @@ class EditorWindow:
         menu_vbox.pack_start(guiutils.get_right_justified_box([self.menubar]), False, False, 0)
         menu_vbox.pack_start(Gtk.Label(), True, True, 0)
         if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
-            menu_vbox.pack_start(self.monitor_source, False, False, 0)
-            menu_vbox.pack_start(guiutils.pad_label(24, 10), False, False, 0)
-            menu_vbox.pack_start(self.info1, False, False, 0)
+            menu_vbox.pack_start(self.monitor_tc_info.widget, False, False, 0)
         else:
             top_row_window_2 = Gtk.HBox(False, 0)
             top_row_window_2.pack_start(Gtk.Label(), True, True, 0)
-            top_row_window_2.pack_start(self.monitor_source, False, False, 0)
-            top_row_window_2.pack_start(guiutils.pad_label(24, 10), False, False, 0)
-            top_row_window_2.pack_start(self.info1, False, False, 0)
+            top_row_window_2.pack_start(self.monitor_tc_info.widget, False, False, 0)
         # Pane
         pane = Gtk.VBox(False, 1)
         pane.pack_start(menu_vbox, False, True, 0)
@@ -1130,9 +1126,6 @@ class EditorWindow:
 
         self.view_mode_select.widget.set_tooltip_text(_("Select view mode: Video / Vectorscope/ RGBParade"))
         self.trim_view_select.widget.set_tooltip_text(_("Set trim view and match frames"))
-        
-        self.tc.widget.set_tooltip_text(_("Sequence / Media current frame timecode"))
-        self.monitor_source.set_tooltip_text(_("Current Sequence / Clip name and length"))
     
         self.pos_bar.widget.set_tooltip_text(_("Sequence / Media current position"))
 
@@ -1406,21 +1399,8 @@ class EditorWindow:
         print(self.mm_paned.get_position())
 
     def _create_monitor_row_widgets(self):
-        if editorstate.screen_size_small_height() == True:
-            font_desc = "sans bold 8"
-        else:
-            font_desc = "sans bold 9"
+        self.monitor_tc_info = guicomponents.MonitorTCInfo()
 
-        self.tc = guicomponents.MonitorTCDisplay()
-        self.monitor_source = Gtk.Label(label="sequence1")
-        self.monitor_source.set_ellipsize(Pango.EllipsizeMode.END)
-        self.monitor_source.modify_font(Pango.FontDescription(font_desc))
-        self.monitor_source.set_sensitive(False)
-        self.info1 = Gtk.Label(label="--:--:--:--")
-        self.info1.set_ellipsize(Pango.EllipsizeMode.END)
-        self.info1.modify_font(Pango.FontDescription(font_desc))
-        self.info1.set_sensitive(False)
-        self.info1.set_tooltip_text(_("In / Out / Marked Length"))
         
 def _this_is_not_used():
     print("THIS WAS USED!!!!!")

@@ -99,18 +99,6 @@ def _show_buttons_COMPONENTS_CENTERED_layout(widget):
 
     editorpersistance.prefs.midbar_layout = appconsts.MIDBAR_COMPONENTS_CENTERED
     editorpersistance.save()
-    
-def _show_monitor_info_toggled(widget):
-    editorpersistance.prefs.show_sequence_profile = widget.get_active()
-    editorpersistance.save()
-
-    if editorstate.timeline_visible():
-        name = editorstate.current_sequence().name
-        profile_desc = editorstate.current_sequence().profile.description()
-        if editorpersistance.prefs.show_sequence_profile:
-            gui.editor_window.monitor_source.set_text(name + " / " + profile_desc)
-        else:
-            gui.editor_window.monitor_source.set_text(name)
 
 def create_edit_buttons_row_buttons(editor_window, modes_pixbufs):
     global m_pixbufs
