@@ -137,11 +137,11 @@ def cut_pressed():
         index = track.get_clip_index_at(int(tline_frame))
         try:
             clip = track.clips[index]            
-            # don't cut blanck clip
+            # don't cut blanck clips
             if clip.is_blanck_clip:
                 continue
         except Exception:
-            continue # Frame after last clip in track
+            continue # Frame is after last clip in track
 
         # Get cut frame in clip frames
         clip_start_in_tline = track.clip_start(index)

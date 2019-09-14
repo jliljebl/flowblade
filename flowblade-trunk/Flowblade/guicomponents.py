@@ -1241,16 +1241,16 @@ class MediaObjectWidget:
     def _draw_icon(self, event, cr, allocation):
         x, y, w, h = allocation
 
-        self.create_round_rect_path(cr, 0, 0, w - 5, h - 5, 5.0)
+        self.create_round_rect_path(cr, 0, 0, w - 5, h - 5, 6.0)
         cr.clip()
         
         cr.set_source_surface(self.media_file.icon, 0, 0)
         cr.paint()
 
         cr.reset_clip()
-        cr.set_source_rgba(0,0,0,0.5)
+        cr.set_source_rgba(0,0,0,0.3)
         cr.set_line_width(2.0)
-        self.create_round_rect_path(cr, 0, 0, w - 5, h - 5, 5.0)
+        self.create_round_rect_path(cr, 0, 0, w - 5, h - 5, 6.0)
         cr.stroke()
         
         if self.media_file == editorstate.MONITOR_MEDIA_FILE():
