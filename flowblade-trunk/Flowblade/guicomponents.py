@@ -3051,7 +3051,7 @@ class ToolSelector(ImageMenuLaunch):
             cr.set_source_rgb(0.66, 0.66, 0.66)
         cr.fill()
 
-
+    
 class HamburgerPressLaunch:
     def __init__(self, callback):
         # Aug-2019 - SvdB - BB
