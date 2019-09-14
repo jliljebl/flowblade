@@ -26,7 +26,7 @@ from xml.dom import minidom
 from math import floor
 import mlt
 import time
-import md5
+import hashlib
 import re
 import shutil
 
@@ -98,7 +98,7 @@ def _edl_xml_render_done(data):
     mlt_parse = MLTXMLToEDLParse(get_edl_temp_xml_path(), current_sequence())
     edl_contents = mlt_parse.create_edl()
     f = open(edl_path, 'w')
-    f.write(edl_contents.encode('utf-8'))
+    f.write(edl_contents)
     f.close()
 
 def get_edl_temp_xml_path():
@@ -121,7 +121,7 @@ class MLTXMLToEDLParse:
     def get_project_profile(self):
         profile_dict = {}
         profile = self.xmldoc.getElementsByTagName("profile")
-        key_list = profile.item(0).attributes.keys()
+        key_list = list(profile.item(0).attributes.keys())
         for a in key_list:
             profile_dict[a] = profile.item(0).attributes[a].value
         return profile_dict
@@ -205,7 +205,7 @@ class MLTXMLToEDLParse:
             self.producers[producer_data["id"]] = producer_data
     
     def link_resources(self):
-        for producer_id, producer_data in self.producers.iteritems():
+        for producer_id, producer_data in self.producers.items():
 
             producer_resource = producer_data["resource"]
             reel_name = self.get_reel_name(producer_resource)
@@ -217,7 +217,7 @@ class MLTXMLToEDLParse:
                 existing_resource = self.reel_name_to_resource[reel_name]
 
                 if existing_resource != producer_resource:
-                    reel_name = md5.new(producer_resource).hexdigest()[:8]
+                    reel_name = hashlib.md5(producer_resource.encode('utf-8')).hexdigest()[:8]
                     
 
             self.resource_to_reel_name[producer_resource] = reel_name
@@ -225,7 +225,7 @@ class MLTXMLToEDLParse:
 
     def get_reel_name(self, resource):
         if self.reel_name_type == REEL_NAME_HASH_8_NUMBER:
-            return "{0:08d}".format(md5.new(resource).hexdigest())
+            return "{0:08d}".format(hashlib.md5(resource.encode('utf-8')).hexdigest())
         else:
             file_name = resource.split("/")[-1]
             file_name_no_ext = file_name.split(".")[0]
@@ -431,8 +431,8 @@ def render_screen_shot(frame, render_path, vcodec):
         time.sleep(0.05)
 
 def export_screenshot_dialog(callback, frame, parent_window, project_name):
-    cancel_str = _("Cancel").encode('utf-8')
-    ok_str = _("Export Image").encode('utf-8')
+    cancel_str = _("Cancel")
+    ok_str = _("Export Image")
     dialog = Gtk.Dialog(_("Export Frame Image"),
                         parent_window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,

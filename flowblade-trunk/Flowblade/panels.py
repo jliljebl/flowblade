@@ -253,7 +253,7 @@ def get_transition_panel(trans_data):
                                  type_combo_box)
 
     wipe_luma_combo_box = Gtk.ComboBoxText()
-    keys = mlttransitions.wipe_lumas.keys()
+    keys = list(mlttransitions.wipe_lumas.keys())
     keys.sort()
     for k in keys:
         wipe_luma_combo_box.append_text(k)

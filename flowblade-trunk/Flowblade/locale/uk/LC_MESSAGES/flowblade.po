@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-24 18:22+0300\n"
+"POT-Creation-Date: 2019-08-31 09:41+0300\n"
 "PO-Revision-Date: 2019-05-02 20:23+0300\n"
 "Last-Translator: Микита Бесчастний <pravymicita@rambler.ua>\n"
 "Language-Team: \n"
@@ -19,23 +19,39 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: app.py:841
+#: app.py:198
+msgid "No Autosave"
+msgstr ""
+
+#: app.py:198
+msgid "1 min"
+msgstr "1 мін"
+
+#: app.py:198
+msgid "2 min"
+msgstr "2 мін"
+
+#: app.py:198
+msgid "5 min"
+msgstr "5 мін"
+
+#: app.py:873
 msgid "Too small screen for this application."
 msgstr "Занадто маленький екран для цього додатка."
 
-#: app.py:844
+#: app.py:876
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr "Мінімальні розміри екрана для цієї програми - 1152 x 768.\n"
 
-#: app.py:845
+#: app.py:877
 msgid "Your screen dimensions are "
 msgstr "Ваші розміри екрана "
 
-#: app.py:878 projectaction.py:395 projectaction.py:715
+#: app.py:910 projectaction.py:395 projectaction.py:715
 msgid "Project has not been saved previously"
 msgstr "Проект раніше не зберігався"
 
-#: app.py:879 projectaction.py:396 projectaction.py:716
+#: app.py:911 projectaction.py:396 projectaction.py:716
 msgid "Save project with File -> Save As before closing."
 msgstr ""
 
@@ -262,11 +278,11 @@ msgstr ""
 msgid "N/A"
 msgstr "N/A"
 
-#: projectaction.py:1190 guicomponents.py:2164
+#: projectaction.py:1190 guicomponents.py:2166
 msgid "Yes"
 msgstr "Так"
 
-#: projectaction.py:1192 guicomponents.py:2166
+#: projectaction.py:1192 guicomponents.py:2168
 msgid "No"
 msgstr "Ні"
 
@@ -491,8 +507,8 @@ msgstr "Розрізати кліп"
 msgid "Split to new Sequence at Playhead Position"
 msgstr ""
 
-#: editorwindow.py:215 dialogs.py:1428 guicomponents.py:1840
-#: translations.py:540 workflow.py:201
+#: editorwindow.py:215 dialogs.py:1428 guicomponents.py:1842
+#: translations.py:541 workflow.py:201
 msgid "Lift"
 msgstr "Підняття"
 
@@ -548,7 +564,7 @@ msgstr ""
 msgid "Watermark..."
 msgstr "Водяний знак..."
 
-#: editorwindow.py:229 diskcachemanagement.py:148
+#: editorwindow.py:229 diskcachemanagement.py:149
 msgid "Disk Cache Manager"
 msgstr ""
 
@@ -560,7 +576,7 @@ msgstr ""
 msgid "Preferences"
 msgstr "Параметри"
 
-#: editorwindow.py:232 preferenceswindow.py:60
+#: editorwindow.py:232 preferenceswindow.py:66
 msgid "View"
 msgstr "Перегляд"
 
@@ -588,7 +604,7 @@ msgstr "Послідовність"
 msgid "Create Pattern Producer"
 msgstr ""
 
-#: editorwindow.py:246 translations.py:422 patternproducer.py:67
+#: editorwindow.py:246 translations.py:423 patternproducer.py:67
 msgid "Noise"
 msgstr "Шум"
 
@@ -685,7 +701,7 @@ msgstr "Обробка монтажного столу"
 msgid "Tools"
 msgstr "Інструменти"
 
-#: editorwindow.py:270 middlebar.py:194 tools/titler.py:187
+#: editorwindow.py:270 middlebar.py:194 tools/titler.py:189
 msgid "Titler"
 msgstr "Титлер"
 
@@ -777,11 +793,11 @@ msgstr "Вихідна точка"
 msgid "Window Mode"
 msgstr "Режим вікна"
 
-#: editorwindow.py:906 preferenceswindow.py:366
+#: editorwindow.py:906 preferenceswindow.py:375
 msgid "Single Window"
 msgstr "Одне вікно"
 
-#: editorwindow.py:910 preferenceswindow.py:367
+#: editorwindow.py:910 preferenceswindow.py:376
 msgid "Two Windows"
 msgstr "Два вікна"
 
@@ -929,7 +945,7 @@ msgstr "_ефект_значеення"
 msgid "Saved Filter data not applicaple for this Filter!"
 msgstr ""
 
-#: clipeffectseditor.py:674 compositeeditor.py:357
+#: clipeffectseditor.py:674 compositeeditor.py:334
 msgid "Saved data is for "
 msgstr "Збережені дані для "
 
@@ -937,31 +953,23 @@ msgstr "Збережені дані для "
 msgid "current edited Filter is "
 msgstr "поточний відредагований фільтр "
 
-#: compositeeditor.py:67 compositeeditor.py:166
+#: compositeeditor.py:67 compositeeditor.py:169
 msgid "No Compositor"
 msgstr "Немає композитора"
 
-#: compositeeditor.py:200
+#: compositeeditor.py:203
 msgid "Destination Track:"
 msgstr ""
 
-#: compositeeditor.py:209
-msgid "Add Fade In"
-msgstr ""
-
-#: compositeeditor.py:212
-msgid "Add Fade Out"
-msgstr ""
-
-#: compositeeditor.py:325
+#: compositeeditor.py:302
 msgid "_compositor_values"
 msgstr ""
 
-#: compositeeditor.py:356
+#: compositeeditor.py:333
 msgid "Saved Compositor data not applicaple for this compositor!"
 msgstr ""
 
-#: compositeeditor.py:357
+#: compositeeditor.py:334
 msgid ", current compositor is "
 msgstr ""
 
@@ -976,9 +984,9 @@ msgstr "Новий проект"
 #: dialogs.py:1079 dialogs.py:1205 dialogs.py:1244 dialogs.py:1258
 #: dialogs.py:1272 dialogs.py:1286 dialogs.py:1300 dialogs.py:1314
 #: dialogs.py:1329 dialogs.py:1579 dialogs.py:1696 dialogs.py:1744
-#: dialogs.py:1859 propertyeditorbuilder.py:595 propertyeditorbuilder.py:711
-#: propertyeditorbuilder.py:751 rendergui.py:48 rendergui.py:103
-#: rendergui.py:117 rendergui.py:134 rendergui.py:1051 preferenceswindow.py:43
+#: dialogs.py:1859 propertyeditorbuilder.py:597 propertyeditorbuilder.py:713
+#: propertyeditorbuilder.py:753 rendergui.py:48 rendergui.py:103
+#: rendergui.py:117 rendergui.py:134 rendergui.py:1051 preferenceswindow.py:49
 #: tools/batchrendering.py:982 proxyediting.py:431 tlineaction.py:1517
 #: patternproducer.py:354 patternproducer.py:387 patternproducer.py:418
 #: tools/gmic.py:393 tools/gmic.py:417 tools/gmic.py:546 dialogutils.py:98
@@ -988,8 +996,8 @@ msgstr "Скасувати"
 
 #: dialogs.py:58 dialogs.py:237 dialogs.py:280 dialogs.py:346 dialogs.py:465
 #: dialogs.py:591 dialogs.py:710 dialogs.py:723 dialogs.py:1580
-#: propertyeditorbuilder.py:596 propertyeditorbuilder.py:712
-#: propertyeditorbuilder.py:752 rendergui.py:104 preferenceswindow.py:44
+#: propertyeditorbuilder.py:598 propertyeditorbuilder.py:714
+#: propertyeditorbuilder.py:754 rendergui.py:104 preferenceswindow.py:50
 #: tools/batchrendering.py:406 tools/gmic.py:418 dialogutils.py:44
 #: dialogutils.py:65 dialogutils.py:78 dialogutils.py:93
 msgid "OK"
@@ -1260,7 +1268,7 @@ msgstr ""
 msgid " FOR TRANSITION "
 msgstr ""
 
-#: dialogs.py:653 dialogs.py:1418 preferenceswindow.py:57
+#: dialogs.py:653 dialogs.py:1418 preferenceswindow.py:63
 msgid "General"
 msgstr "Загальні"
 
@@ -1292,7 +1300,7 @@ msgstr "Формати"
 msgid "Render Options"
 msgstr "Параметри обробити"
 
-#: dialogs.py:708 guicomponents.py:2002
+#: dialogs.py:708 guicomponents.py:2004
 msgid "File Properties"
 msgstr "Властивості файлу"
 
@@ -1469,7 +1477,7 @@ msgstr ""
 msgid "Rename New Media Object"
 msgstr ""
 
-#: dialogs.py:1024 dialogs.py:1052 dialogs.py:1106 guicomponents.py:1997
+#: dialogs.py:1024 dialogs.py:1052 dialogs.py:1106 guicomponents.py:1999
 msgid "Rename"
 msgstr "Перейменувати"
 
@@ -1477,7 +1485,7 @@ msgstr "Перейменувати"
 msgid "New Name:"
 msgstr "Назва:"
 
-#: dialogs.py:1049 guicomponents.py:1586 guicomponents.py:1940
+#: dialogs.py:1049 guicomponents.py:1586 guicomponents.py:1942
 msgid "Rename Clip"
 msgstr "Перейменування кліпу"
 
@@ -1515,7 +1523,7 @@ msgstr ""
 msgid "New Marker"
 msgstr "Новий маркер"
 
-#: dialogs.py:1120 dialogs.py:1142 guicomponents.py:2571
+#: dialogs.py:1120 dialogs.py:1142 guicomponents.py:2573
 msgid "Add Marker"
 msgstr "Додати позначку"
 
@@ -1611,7 +1619,7 @@ msgstr ""
 msgid "Rerender All"
 msgstr ""
 
-#: dialogs.py:1312 guicomponents.py:1729
+#: dialogs.py:1312 guicomponents.py:1731
 msgid "Add Fade"
 msgstr "Додати Fade"
 
@@ -1783,7 +1791,7 @@ msgstr "Shift + I"
 msgid "Shift + O"
 msgstr "Shift + O"
 
-#: dialogs.py:1470 preferenceswindow.py:59
+#: dialogs.py:1470 preferenceswindow.py:65
 msgid "Playback"
 msgstr "Відтворення"
 
@@ -1880,8 +1888,8 @@ msgid "Geometry Editor"
 msgstr "Редактор геометрії"
 
 #: dialogs.py:1493 guicomponents.py:1543 guicomponents.py:1619
-#: guicomponents.py:1837 guicomponents.py:1998 guicomponents.py:2035
-#: panels.py:96 tools/titler.py:208 tools/batchrendering.py:1050
+#: guicomponents.py:1839 guicomponents.py:2000 guicomponents.py:2037
+#: panels.py:96 tools/titler.py:210 tools/batchrendering.py:1050
 #: shortcuts.py:244
 msgid "Delete"
 msgstr "Вилучити"
@@ -1891,11 +1899,11 @@ msgstr "Вилучити"
 msgid "Deletes Selected Handle"
 msgstr "Вилучити позначений контейнер"
 
-#: dialogs.py:1494 keyframeeditor.py:732
+#: dialogs.py:1494 keyframeeditor.py:741
 msgid "Previous Frame"
 msgstr "Попередній кадр"
 
-#: dialogs.py:1495 keyframeeditor.py:733 shortcuts.py:188
+#: dialogs.py:1495 keyframeeditor.py:742 shortcuts.py:188
 msgid "Next Frame"
 msgstr "Наступний кадр"
 
@@ -1908,8 +1916,8 @@ msgstr "Закрити редактор"
 msgid "Sequence Watermark"
 msgstr ""
 
-#: dialogs.py:1532 tools/titler.py:512 proxyediting.py:422 medialinker.py:157
-#: tools/gmic.py:838 tools/gmic.py:929 diskcachemanagement.py:150
+#: dialogs.py:1532 tools/titler.py:514 proxyediting.py:422 medialinker.py:157
+#: tools/gmic.py:838 tools/gmic.py:929 diskcachemanagement.py:151
 msgid "Close"
 msgstr "Закрити"
 
@@ -2085,7 +2093,7 @@ msgstr "Доріжка "
 msgid " is a video track and can't display audio only material."
 msgstr ""
 
-#: editorpersistance.py:179
+#: editorpersistance.py:186
 msgid "Empty"
 msgstr ""
 
@@ -2161,7 +2169,7 @@ msgstr "Звичайна висота"
 msgid "Open in Filters Editor"
 msgstr ""
 
-#: guicomponents.py:1415 guicomponents.py:1556 guicomponents.py:2000
+#: guicomponents.py:1415 guicomponents.py:1556 guicomponents.py:2002
 msgid "Open in Clip Monitor"
 msgstr ""
 
@@ -2221,474 +2229,474 @@ msgstr ""
 msgid "Add Filter"
 msgstr "Додати фільтр"
 
-#: guicomponents.py:1666
+#: guicomponents.py:1668
 msgid "Add Compositor"
 msgstr "Додати композитора"
 
-#: guicomponents.py:1697
+#: guicomponents.py:1699
 msgid "Blenders"
 msgstr "Блендери"
 
-#: guicomponents.py:1713
+#: guicomponents.py:1715
 msgid "Alpha Combiners"
 msgstr "Альфа Комбінатори"
 
-#: guicomponents.py:1749
+#: guicomponents.py:1751
 msgid "Show Match Frame"
 msgstr ""
 
-#: guicomponents.py:1753
+#: guicomponents.py:1755
 msgid "First Frame in Monitor"
 msgstr ""
 
-#: guicomponents.py:1758
+#: guicomponents.py:1760
 msgid "Last Frame in Monitor"
 msgstr ""
 
-#: guicomponents.py:1765
+#: guicomponents.py:1767
 msgid "First Frame on Timeline"
 msgstr ""
 
-#: guicomponents.py:1770
+#: guicomponents.py:1772
 msgid "Last Frame on Timeline"
 msgstr ""
 
-#: guicomponents.py:1777 guicomponents.py:2781
+#: guicomponents.py:1779 guicomponents.py:2783
 msgid "Clear Match Frame"
 msgstr ""
 
-#: guicomponents.py:1787
+#: guicomponents.py:1789
 msgid "Select"
 msgstr "Виберіть"
 
-#: guicomponents.py:1791
+#: guicomponents.py:1793
 msgid "All Clips After"
 msgstr "Всі кліпи після"
 
-#: guicomponents.py:1796
+#: guicomponents.py:1798
 msgid "All Clips Before"
 msgstr "Всі кліпи до"
 
-#: guicomponents.py:1806
+#: guicomponents.py:1808
 msgid "Export To Tool"
 msgstr ""
 
-#: guicomponents.py:1823 panels.py:97
+#: guicomponents.py:1825 panels.py:97
 msgid "Edit"
 msgstr "Змінити"
 
-#: guicomponents.py:1828 kftoolmode.py:408
+#: guicomponents.py:1830 kftoolmode.py:408
 msgid "Volume Keyframes"
 msgstr ""
 
-#: guicomponents.py:1832 kftoolmode.py:409
+#: guicomponents.py:1834 kftoolmode.py:409
 msgid "Brightness Keyframes"
 msgstr ""
 
-#: guicomponents.py:1845
+#: guicomponents.py:1847
 msgid "Set Clip Length..."
 msgstr ""
 
-#: guicomponents.py:1848
+#: guicomponents.py:1850
 msgid "Stretch Over Next Blank"
 msgstr ""
 
-#: guicomponents.py:1851
+#: guicomponents.py:1853
 msgid "Stretch Over Prev Blank"
 msgstr ""
 
-#: guicomponents.py:1858
+#: guicomponents.py:1860
 msgid "Clone Filters"
 msgstr "Вставити ефекти"
 
-#: guicomponents.py:1862
+#: guicomponents.py:1864
 msgid "From Next Clip"
 msgstr ""
 
-#: guicomponents.py:1867
+#: guicomponents.py:1869
 msgid "From Previous Clip"
 msgstr ""
 
-#: guicomponents.py:1876 guicomponents.py:1896
+#: guicomponents.py:1878 guicomponents.py:1898
 msgid "Mute"
 msgstr "Вимкнути звук"
 
-#: guicomponents.py:1880 guicomponents.py:1900
+#: guicomponents.py:1882 guicomponents.py:1902
 msgid "Unmute"
 msgstr "Увімкнути"
 
-#: guicomponents.py:1886 guicomponents.py:1917
+#: guicomponents.py:1888 guicomponents.py:1919
 msgid "Mute Audio"
 msgstr "Вимкнення звуку"
 
-#: guicomponents.py:1911
+#: guicomponents.py:1913
 msgid "Mute Video"
 msgstr "Вимкнення відео"
 
-#: guicomponents.py:1928
+#: guicomponents.py:1930
 msgid "Mute All"
 msgstr "Вимкнути всі"
 
-#: guicomponents.py:1938
+#: guicomponents.py:1940
 msgid "Properties"
 msgstr "Властивості"
 
-#: guicomponents.py:1948
+#: guicomponents.py:1950
 msgid "Clip Color"
 msgstr "Колір кліпу"
 
-#: guicomponents.py:1950
+#: guicomponents.py:1952
 msgid "Default"
 msgstr "Типовий"
 
-#: guicomponents.py:1951 translations.py:525 translations.py:635
+#: guicomponents.py:1953 translations.py:526 translations.py:639
 msgid "Red"
 msgstr "Червоний"
 
-#: guicomponents.py:1952 translations.py:526 translations.py:630
-#: translations.py:636
+#: guicomponents.py:1954 translations.py:527 translations.py:634
+#: translations.py:640
 msgid "Green"
 msgstr "Зелений"
 
-#: guicomponents.py:1953 translations.py:527 translations.py:631
-#: translations.py:637
+#: guicomponents.py:1955 translations.py:528 translations.py:635
+#: translations.py:641
 msgid "Blue"
 msgstr "Синій"
 
-#: guicomponents.py:1954
+#: guicomponents.py:1956
 msgid "Orange"
 msgstr "Помаранчевий"
 
-#: guicomponents.py:1955
+#: guicomponents.py:1957
 msgid "Brown"
 msgstr "Коричневий"
 
-#: guicomponents.py:1956
+#: guicomponents.py:1958
 msgid "Olive"
 msgstr "Оливкова"
 
-#: guicomponents.py:1962
+#: guicomponents.py:1964
 msgid "Markers"
 msgstr "Позначки"
 
-#: guicomponents.py:1975
+#: guicomponents.py:1977
 msgid "No Clip Markers"
 msgstr "Додавати позначки кліпів"
 
-#: guicomponents.py:1979
+#: guicomponents.py:1981
 msgid "Add Clip Marker At Playhead Position"
 msgstr ""
 
-#: guicomponents.py:1980
+#: guicomponents.py:1982
 msgid "Delete Clip Marker At Playhead Position"
 msgstr ""
 
-#: guicomponents.py:1982
+#: guicomponents.py:1984
 msgid "Delete All Clip Markers"
 msgstr ""
 
-#: guicomponents.py:2007 guicomponents.py:2033
+#: guicomponents.py:2009 guicomponents.py:2035
 msgid "Render Slow/Fast Motion File"
 msgstr ""
 
-#: guicomponents.py:2009
+#: guicomponents.py:2011
 msgid "Render Reverse Motion File"
 msgstr ""
 
-#: guicomponents.py:2011
+#: guicomponents.py:2013
 msgid "Render Proxy File"
 msgstr ""
 
-#: guicomponents.py:2020
+#: guicomponents.py:2022
 msgid "Toggle Active"
 msgstr ""
 
-#: guicomponents.py:2021
+#: guicomponents.py:2023
 msgid "Reset Values"
 msgstr ""
 
-#: guicomponents.py:2023
+#: guicomponents.py:2025
 msgid "Move Up"
 msgstr "Перемістити Вгору"
 
-#: guicomponents.py:2024
+#: guicomponents.py:2026
 msgid "Move Down"
 msgstr "Перемістити Вниз"
 
-#: guicomponents.py:2032
+#: guicomponents.py:2034
 msgid "Display In Clip Monitor"
 msgstr ""
 
-#: guicomponents.py:2034
+#: guicomponents.py:2036
 msgid "Toggle Star"
 msgstr "Переключити зірку"
 
-#: guicomponents.py:2042 medialinker.py:137
+#: guicomponents.py:2044 medialinker.py:137
 msgid "Set File Relink Path"
 msgstr ""
 
-#: guicomponents.py:2043 medialinker.py:139
+#: guicomponents.py:2045 medialinker.py:139
 msgid "Delete File Relink Path"
 msgstr ""
 
-#: guicomponents.py:2045
+#: guicomponents.py:2047
 msgid "Show Full Paths"
 msgstr ""
 
-#: guicomponents.py:2111 propertyeditorbuilder.py:780
-#: propertyeditorbuilder.py:835 tools/toolsencoding.py:343
+#: guicomponents.py:2113 propertyeditorbuilder.py:782
+#: propertyeditorbuilder.py:837 tools/toolsencoding.py:343
 msgid "Progressive"
 msgstr "Прогресивне"
 
-#: guicomponents.py:2113 tools/toolsencoding.py:345
+#: guicomponents.py:2115 tools/toolsencoding.py:345
 msgid "Interlaced"
 msgstr "Черезрядкове"
 
-#: guicomponents.py:2118 tools/toolsencoding.py:348
+#: guicomponents.py:2120 tools/toolsencoding.py:348
 msgid "Fps: "
 msgstr "Частота: "
 
-#: guicomponents.py:2121 tools/toolsencoding.py:351
+#: guicomponents.py:2123 tools/toolsencoding.py:351
 msgid "Pixel Aspect: "
 msgstr "Пропорції сторін пікселів: "
 
-#: guicomponents.py:2128
+#: guicomponents.py:2130
 msgid "Description:"
 msgstr "Опис:"
 
-#: guicomponents.py:2130
+#: guicomponents.py:2132
 msgid "Dimensions:"
 msgstr "Розмір:"
 
-#: guicomponents.py:2132
+#: guicomponents.py:2134
 msgid "Frames per second:"
 msgstr "Полів на секунду:"
 
-#: guicomponents.py:2134 tools/titler.py:332
+#: guicomponents.py:2136 tools/titler.py:334
 msgid "Size:"
 msgstr "Розмір:"
 
-#: guicomponents.py:2136
+#: guicomponents.py:2138
 msgid "Pixel aspect ratio: "
 msgstr "Співвідношення розмірів пікселя: "
 
-#: guicomponents.py:2138 profilesmanager.py:138
+#: guicomponents.py:2140 profilesmanager.py:138
 msgid "Progressive:"
 msgstr "Прогресивне:"
 
-#: guicomponents.py:2425
+#: guicomponents.py:2427
 msgid "Video:"
 msgstr "Відео:"
 
-#: guicomponents.py:2430
+#: guicomponents.py:2432
 msgid "Audio:"
 msgstr "Звук:"
 
-#: guicomponents.py:2435
+#: guicomponents.py:2437
 msgid "Number of Tracks:"
 msgstr ""
 
-#: guicomponents.py:2478
+#: guicomponents.py:2480
 msgid "Frames:"
 msgstr "Кадрів:"
 
-#: guicomponents.py:2568
+#: guicomponents.py:2570
 msgid "No Markers"
 msgstr "Немає маркерів"
 
-#: guicomponents.py:2572
+#: guicomponents.py:2574
 msgid "Delete Marker"
 msgstr "Вилучити позначку"
 
-#: guicomponents.py:2574
+#: guicomponents.py:2576
 msgid "Delete All Markers"
 msgstr "Вилучити всі позначки"
 
-#: guicomponents.py:2582
+#: guicomponents.py:2584
 msgid "Maximize Tracks"
 msgstr "Збільшення доріжок"
 
-#: guicomponents.py:2583
+#: guicomponents.py:2585
 msgid "Maximize Video Tracks"
 msgstr "Збільште доріжки відео"
 
-#: guicomponents.py:2584
+#: guicomponents.py:2586
 msgid "Maximize Audio Tracks"
 msgstr "Максимізуйте звукові доріжки"
 
-#: guicomponents.py:2586
+#: guicomponents.py:2588
 msgid "Minimize Tracks"
 msgstr ""
 
-#: guicomponents.py:2588
+#: guicomponents.py:2590
 msgid "Activate All Tracks"
 msgstr ""
 
-#: guicomponents.py:2589
+#: guicomponents.py:2591
 msgid "Activate Only Current Top Active Track"
 msgstr ""
 
-#: guicomponents.py:2591
+#: guicomponents.py:2593
 msgid "Vertical Shrink Timeline"
 msgstr ""
 
-#: guicomponents.py:2607
+#: guicomponents.py:2609
 msgid "Display Clip Media Thumbnails"
 msgstr ""
 
-#: guicomponents.py:2616
+#: guicomponents.py:2618
 msgid "Snapping On"
 msgstr "Вмикання"
 
-#: guicomponents.py:2625
+#: guicomponents.py:2627
 msgid "Audio scrubbing"
 msgstr "Очищення звуку"
 
-#: guicomponents.py:2634
+#: guicomponents.py:2636
 msgid "Display All Audio Levels"
 msgstr ""
 
-#: guicomponents.py:2637
+#: guicomponents.py:2639
 msgid "Display Audio Levels On Request"
 msgstr ""
 
-#: guicomponents.py:2658
+#: guicomponents.py:2660
 msgid "Save Effect Values"
 msgstr "Зберегти значення ефекту"
 
-#: guicomponents.py:2659
+#: guicomponents.py:2661
 msgid "Load Effect Values"
 msgstr "Значення ефекту навантаження"
 
-#: guicomponents.py:2660
+#: guicomponents.py:2662
 msgid "Reset Effect Values"
 msgstr "Скинути значення ефектів"
 
-#: guicomponents.py:2664
+#: guicomponents.py:2666
 msgid "Delete Effect"
 msgstr "Вилучити ефект"
 
-#: guicomponents.py:2668 guicomponents.py:2688
+#: guicomponents.py:2670 guicomponents.py:2690
 msgid "Close Editor"
 msgstr "Закрити редактор"
 
-#: guicomponents.py:2678
+#: guicomponents.py:2680
 msgid "Save Compositor Values"
 msgstr "Зберегти значення композитора"
 
-#: guicomponents.py:2679
+#: guicomponents.py:2681
 msgid "Load Compositor Values"
 msgstr "Завантажити значення композитора"
 
-#: guicomponents.py:2680
+#: guicomponents.py:2682
 msgid "Reset Compositor Values"
 msgstr "Скинути значення композитора"
 
-#: guicomponents.py:2684
+#: guicomponents.py:2686
 msgid "Delete Compositor"
 msgstr "Видалити композитор"
 
-#: guicomponents.py:2697
+#: guicomponents.py:2699
 msgid "Image"
 msgstr "Зображення"
 
-#: guicomponents.py:2699
+#: guicomponents.py:2701
 msgid "Vectorscope"
 msgstr "Векторний перегляд"
 
-#: guicomponents.py:2701
+#: guicomponents.py:2703
 msgid "RGB Parade"
 msgstr "Розкладка RGB"
 
-#: guicomponents.py:2705
+#: guicomponents.py:2707
 msgid "Overlay Opacity"
 msgstr "Непрозорість накладання"
 
-#: guicomponents.py:2710
+#: guicomponents.py:2712
 msgid "100%"
 msgstr "100%"
 
-#: guicomponents.py:2715
+#: guicomponents.py:2717
 msgid "80%"
 msgstr "80%"
 
-#: guicomponents.py:2720
+#: guicomponents.py:2722
 msgid "50%"
 msgstr "50%"
 
-#: guicomponents.py:2725
+#: guicomponents.py:2727
 msgid "20%"
 msgstr "20%"
 
-#: guicomponents.py:2730
+#: guicomponents.py:2732
 msgid "0%"
 msgstr "0%"
 
-#: guicomponents.py:2750
+#: guicomponents.py:2752
 msgid "Trim View On"
 msgstr ""
 
-#: guicomponents.py:2755
+#: guicomponents.py:2757
 msgid "Trim View Single Side Edits Only"
 msgstr ""
 
-#: guicomponents.py:2760
+#: guicomponents.py:2762
 msgid "Trim View Off"
 msgstr ""
 
-#: guicomponents.py:2776
+#: guicomponents.py:2778
 msgid "Set Current Clip Frame Match Frame"
 msgstr ""
 
-#: guicomponents.py:2794
+#: guicomponents.py:2796
 msgid "All Files"
 msgstr "Всі файли"
 
-#: guicomponents.py:2798
+#: guicomponents.py:2800
 msgid "Video Files"
 msgstr "Відеофайли"
 
-#: guicomponents.py:2802
+#: guicomponents.py:2804
 msgid "Audio Files"
 msgstr "Аудіофайли"
 
-#: guicomponents.py:2806
+#: guicomponents.py:2808
 msgid "Graphics Files"
 msgstr "Графічні файли"
 
-#: guicomponents.py:2810
+#: guicomponents.py:2812
 msgid "Image Sequences"
 msgstr ""
 
-#: guicomponents.py:2814
+#: guicomponents.py:2816
 msgid "Pattern Producers"
 msgstr "Виробники шаблонів"
 
-#: guicomponents.py:2827
+#: guicomponents.py:2829
 msgid "2 Columns"
 msgstr "2 колонки"
 
-#: guicomponents.py:2832
+#: guicomponents.py:2834
 msgid "3 Columns"
 msgstr "3 колонки"
 
-#: guicomponents.py:2837
+#: guicomponents.py:2839
 msgid "4 Columns"
 msgstr "4 колонки"
 
-#: guicomponents.py:2842
+#: guicomponents.py:2844
 msgid "5 Columns"
 msgstr "5 колонок"
 
-#: guicomponents.py:2847
+#: guicomponents.py:2849
 msgid "6 Columns"
 msgstr "6 колонок"
 
-#: guicomponents.py:2852
+#: guicomponents.py:2854
 msgid "7 Columns"
 msgstr "7 колонок"
 
-#: guicomponents.py:2984
+#: guicomponents.py:2986
 msgid "Display Timeline / Clip on Monitor"
 msgstr ""
 
@@ -2712,8 +2720,8 @@ msgstr ""
 msgid "Bins"
 msgstr ""
 
-#: panels.py:95 translations.py:628 translations.py:656 mlttransitions.py:145
-#: tools/titler.py:207
+#: panels.py:95 translations.py:632 translations.py:660 translations.py:681
+#: mlttransitions.py:145 tools/titler.py:209
 msgid "Add"
 msgstr "Додати"
 
@@ -2843,7 +2851,7 @@ msgstr ""
 msgid "Transition"
 msgstr "Перехід"
 
-#: panels.py:407 translations.py:590
+#: panels.py:407 translations.py:591
 msgid "Fade"
 msgstr "Знебарвлювання"
 
@@ -3010,7 +3018,7 @@ msgid ""
 "You can only sync to clips that are on track V1."
 msgstr ""
 
-#: translations.py:129 translations.py:443
+#: translations.py:129 translations.py:444
 msgid "Color"
 msgstr "Колір"
 
@@ -3026,17 +3034,17 @@ msgstr "Звук"
 msgid "Audio Filter"
 msgstr "Аудіофільтр"
 
-#: translations.py:133 translations.py:186 translations.py:408
-#: translations.py:485
+#: translations.py:133 translations.py:186 translations.py:409
+#: translations.py:486
 msgid "Blur"
 msgstr "Розмивання"
 
-#: translations.py:134 translations.py:570 propertyeditorbuilder.py:795
-#: propertyeditorbuilder.py:850
+#: translations.py:134 translations.py:571 propertyeditorbuilder.py:797
+#: propertyeditorbuilder.py:852
 msgid "Distort"
 msgstr "Викривлення"
 
-#: translations.py:135
+#: translations.py:135 translations.py:683
 msgid "Alpha"
 msgstr "Прозорість"
 
@@ -3048,7 +3056,7 @@ msgstr "Рух"
 msgid "Transform"
 msgstr "Перетворення"
 
-#: translations.py:138 translations.py:504
+#: translations.py:138 translations.py:505
 msgid "Edge"
 msgstr "Край"
 
@@ -3072,7 +3080,7 @@ msgstr "Обрізати"
 msgid "Alpha Shape"
 msgstr "Форма рамки"
 
-#: translations.py:148 translations.py:293
+#: translations.py:148 translations.py:294
 msgid "Volume"
 msgstr "Гучність"
 
@@ -3220,29 +3228,29 @@ msgstr "Зерно"
 msgid "Grayscale"
 msgstr ""
 
-#: translations.py:190 translations.py:423 translations.py:425
+#: translations.py:190 translations.py:424 translations.py:426
 msgid "Contrast"
 msgstr "Контрастність"
 
-#: translations.py:191 translations.py:426 mlttransitions.py:159
+#: translations.py:191 translations.py:427 mlttransitions.py:159
 msgid "Saturation"
 msgstr "Насиченість"
 
-#: translations.py:192 translations.py:407 translations.py:459
-#: translations.py:484 translations.py:573 translations.py:577
+#: translations.py:192 translations.py:408 translations.py:460
+#: translations.py:485 translations.py:574 translations.py:578
 msgid "Invert"
 msgstr "Інвертувати"
 
-#: translations.py:193 translations.py:427 mlttransitions.py:155
+#: translations.py:193 translations.py:428 mlttransitions.py:155
 msgid "Hue"
 msgstr "Відтінок"
 
-#: translations.py:194 translations.py:424 translations.py:428
-#: translations.py:429
+#: translations.py:194 translations.py:425 translations.py:429
+#: translations.py:430
 msgid "Brightness"
 msgstr "Яскравість"
 
-#: translations.py:195 translations.py:643
+#: translations.py:195 translations.py:647
 msgid "Sepia"
 msgstr "Сепія"
 
@@ -3254,7 +3262,7 @@ msgstr "Зміна відтінку"
 msgid "White Balance"
 msgstr "Баланс білого"
 
-#: translations.py:198 translations.py:509
+#: translations.py:198 translations.py:510
 msgid "Levels"
 msgstr "Рівні"
 
@@ -3286,7 +3294,7 @@ msgstr "Основні"
 msgid "Color Distance"
 msgstr "Відстань між кольорами"
 
-#: translations.py:207 translations.py:445 translations.py:450
+#: translations.py:207 translations.py:446 translations.py:451
 msgid "Threshold"
 msgstr "Поріг"
 
@@ -3298,7 +3306,7 @@ msgstr ""
 msgid "Lens Correction"
 msgstr "Виправлення об’єктива"
 
-#: translations.py:211 translations.py:457
+#: translations.py:211 translations.py:458
 msgid "Flip"
 msgstr "Відобразити"
 
@@ -3322,7 +3330,7 @@ msgstr "Собель"
 msgid "Denoise"
 msgstr "Усування шуму"
 
-#: translations.py:219 translations.py:532
+#: translations.py:219 translations.py:533
 msgid "Sharpness"
 msgstr ""
 
@@ -3346,7 +3354,7 @@ msgstr "Нервовість"
 msgid "Freeze"
 msgstr "Зупинка"
 
-#: translations.py:227 translations.py:453
+#: translations.py:227 translations.py:454
 msgid "Rotate"
 msgstr "Обертання"
 
@@ -3498,1175 +3506,1205 @@ msgstr "Файл Luma до Alpha"
 msgid "Gradient Tint"
 msgstr ""
 
-#: translations.py:277 translations.py:460
+#: translations.py:272
+#, fuzzy
+msgid "RotoMask"
+msgstr "Закрити редактор"
+
+#: translations.py:278 translations.py:461
 msgid "Position"
 msgstr "Позиція"
 
-#: translations.py:278
+#: translations.py:279
 msgid "Grad width"
 msgstr ""
 
-#: translations.py:279 translations.py:291 translations.py:454
+#: translations.py:280 translations.py:292 translations.py:455
 msgid "Tilt"
 msgstr "Нахил"
 
-#: translations.py:280 translations.py:627
+#: translations.py:281 translations.py:631
 msgid "Min"
 msgstr "Мін"
 
-#: translations.py:281 translations.py:626
+#: translations.py:282 translations.py:630
 msgid "Max"
 msgstr "Макс"
 
-#: translations.py:282 translations.py:480
+#: translations.py:283 translations.py:481
 msgid "Left"
 msgstr "Ліворуч"
 
-#: translations.py:283 translations.py:481
+#: translations.py:284 translations.py:482
 msgid "Right"
 msgstr "Праворуч"
 
-#: translations.py:284 translations.py:482
+#: translations.py:285 translations.py:483
 msgid "Top"
 msgstr "Вгорі"
 
-#: translations.py:285 translations.py:483
+#: translations.py:286 translations.py:484
 msgid "Bottom"
 msgstr "Внизу"
 
-#: translations.py:286
+#: translations.py:287
 msgid "Shape"
 msgstr "Форма"
 
-#: translations.py:287
+#: translations.py:288
 msgid "Pos X"
 msgstr "Позиція за X"
 
-#: translations.py:288
+#: translations.py:289
 msgid "Pos Y"
 msgstr "Позиція за Y"
 
-#: translations.py:289
+#: translations.py:290
 msgid "Size X"
 msgstr "Розмір за X"
 
-#: translations.py:290
+#: translations.py:291
 msgid "Size Y"
 msgstr "Розмір за Y"
 
-#: translations.py:292
+#: translations.py:293
 msgid "Trans. Width"
 msgstr "Ширина переходу"
 
-#: translations.py:294 translations.py:295
+#: translations.py:295 translations.py:296
 msgid "Left/Right"
 msgstr "Лівий/Правий"
 
-#: translations.py:296 translations.py:299 translations.py:302
-#: translations.py:304 translations.py:308 translations.py:312
-#: translations.py:313 translations.py:324 translations.py:326
-#: translations.py:329 translations.py:332 translations.py:335
-#: translations.py:338 translations.py:346 translations.py:354
-#: translations.py:358 translations.py:360 translations.py:376
-#: translations.py:380 translations.py:383 translations.py:385
-#: translations.py:387 translations.py:389 translations.py:395
-#: translations.py:402
+#: translations.py:297 translations.py:300 translations.py:303
+#: translations.py:305 translations.py:309 translations.py:313
+#: translations.py:314 translations.py:325 translations.py:327
+#: translations.py:330 translations.py:333 translations.py:336
+#: translations.py:339 translations.py:347 translations.py:355
+#: translations.py:359 translations.py:361 translations.py:377
+#: translations.py:381 translations.py:384 translations.py:386
+#: translations.py:388 translations.py:390 translations.py:396
+#: translations.py:403
 msgid "Dry/Wet"
 msgstr ""
 
-#: translations.py:297
+#: translations.py:298
 msgid "Pitch Shift"
 msgstr "Зсув тону"
 
-#: translations.py:298
+#: translations.py:299
 msgid "Buffer Size"
 msgstr ""
 
-#: translations.py:300
+#: translations.py:301
 msgid "Decay Time(samples)"
 msgstr ""
 
-#: translations.py:301
+#: translations.py:302
 msgid "Knee Point(dB)"
 msgstr ""
 
-#: translations.py:303
+#: translations.py:304
 msgid "Frequency shift"
 msgstr ""
 
-#: translations.py:305
+#: translations.py:306
 msgid "Low Gain(dB)"
 msgstr "Вхідне підсилення (у дБ)"
 
-#: translations.py:306
+#: translations.py:307
 msgid "Mid Gain(dB)"
 msgstr ""
 
-#: translations.py:307
+#: translations.py:308
 msgid "High Gain(dB)"
 msgstr ""
 
-#: translations.py:309
+#: translations.py:310
 msgid "Oscillation period(s)"
 msgstr ""
 
-#: translations.py:310
+#: translations.py:311
 msgid "Oscillation depth(ms)"
 msgstr ""
 
-#: translations.py:311
+#: translations.py:312
 msgid "Feedback%"
 msgstr "Зворотній зв’язок%"
 
-#: translations.py:314
+#: translations.py:315
 msgid "Random seed"
 msgstr "Випадкове насіння"
 
-#: translations.py:315
+#: translations.py:316
 msgid "Input Gain(dB)"
 msgstr "Вхідне підсилення (у дБ)"
 
-#: translations.py:316
+#: translations.py:317
 msgid "Feedback(%)"
 msgstr "Зворотній зв’язок(%)"
 
-#: translations.py:317
+#: translations.py:318
 msgid "Number of taps"
 msgstr ""
 
-#: translations.py:318
+#: translations.py:319
 msgid "First Delay(s)"
 msgstr ""
 
-#: translations.py:319
+#: translations.py:320
 msgid "Delay Range(s)"
 msgstr ""
 
-#: translations.py:320
+#: translations.py:321
 msgid "Delay Change"
 msgstr ""
 
-#: translations.py:321
+#: translations.py:322
 msgid "Delay Random(%)"
 msgstr "Випадкова затримка(%)"
 
-#: translations.py:322
+#: translations.py:323
 msgid "Amplitude Change"
 msgstr ""
 
-#: translations.py:323
+#: translations.py:324
 msgid "Amplitude Random(%)"
 msgstr ""
 
-#: translations.py:325 translations.py:388 translations.py:434
-#: translations.py:466
+#: translations.py:326 translations.py:389 translations.py:435
+#: translations.py:467
 msgid "Amount"
 msgstr "Потужність"
 
-#: translations.py:327
+#: translations.py:328
 msgid "Drive"
 msgstr ""
 
-#: translations.py:328
+#: translations.py:329
 msgid "Skew"
 msgstr "Нахил"
 
-#: translations.py:330 translations.py:333
+#: translations.py:331 translations.py:334
 msgid "Cutoff Frequency(Hz)"
 msgstr "Частота відсікання (Гц)"
 
-#: translations.py:331 translations.py:334
+#: translations.py:332 translations.py:335
 msgid "Resonance"
 msgstr "Резонанс"
 
-#: translations.py:336
+#: translations.py:337
 msgid "Passes"
 msgstr "Пропуску"
 
-#: translations.py:337
+#: translations.py:338
 msgid "Error Rate"
 msgstr "Частота помилок"
 
-#: translations.py:339
+#: translations.py:340
 msgid "Roomsize"
 msgstr ""
 
-#: translations.py:340
+#: translations.py:341
 msgid "Reverb time(s)"
 msgstr "Час реверберації(s)"
 
-#: translations.py:341 translations.py:378
+#: translations.py:342 translations.py:379
 msgid "Damping"
 msgstr "В’язкість"
 
-#: translations.py:342
+#: translations.py:343
 msgid "Input bandwith"
 msgstr "Вхідна смуга пропускання"
 
-#: translations.py:343
+#: translations.py:344
 msgid "Dry signal level(dB)"
 msgstr ""
 
-#: translations.py:344
+#: translations.py:345
 msgid "Early reflection level(dB)"
 msgstr ""
 
-#: translations.py:345
+#: translations.py:346
 msgid "Tail level(dB)"
 msgstr "Рівень хвоста (дБ)"
 
-#: translations.py:347
+#: translations.py:348
 msgid "LF keyfilter(Hz)"
 msgstr ""
 
-#: translations.py:348
+#: translations.py:349
 msgid "HF keyfilter(Hz)"
 msgstr ""
 
-#: translations.py:349
+#: translations.py:350
 msgid "Threshold(dB)"
 msgstr ""
 
-#: translations.py:350
+#: translations.py:351
 msgid "Attack(ms)"
 msgstr ""
 
-#: translations.py:351
+#: translations.py:352
 msgid "Hold(ms)"
 msgstr ""
 
-#: translations.py:352
+#: translations.py:353
 msgid "Decay(ms)"
 msgstr ""
 
-#: translations.py:353
+#: translations.py:354
 msgid "Range(dB)"
 msgstr ""
 
-#: translations.py:355
+#: translations.py:356
 msgid "Center Frequency(Hz)"
 msgstr ""
 
-#: translations.py:356
+#: translations.py:357
 msgid "Bandwidth(Hz)"
 msgstr ""
 
-#: translations.py:357
+#: translations.py:358
 msgid "Stages"
 msgstr "Етапи"
 
-#: translations.py:359
+#: translations.py:360
 msgid "Pitch-coefficient"
 msgstr ""
 
-#: translations.py:361
+#: translations.py:362
 msgid "50Hz gain"
 msgstr ""
 
-#: translations.py:362
+#: translations.py:363
 msgid "100Hz gain"
 msgstr ""
 
-#: translations.py:363
+#: translations.py:364
 msgid "156Hz gain"
 msgstr ""
 
-#: translations.py:364
+#: translations.py:365
 msgid "220Hz gain"
 msgstr ""
 
-#: translations.py:365
+#: translations.py:366
 msgid "311Hz gain"
 msgstr ""
 
-#: translations.py:366
+#: translations.py:367
 msgid "440Hz gain"
 msgstr ""
 
-#: translations.py:367
+#: translations.py:368
 msgid "622Hz gain"
 msgstr ""
 
-#: translations.py:368
+#: translations.py:369
 msgid "880Hz gain"
 msgstr ""
 
-#: translations.py:369
+#: translations.py:370
 msgid "1250Hz gain"
 msgstr ""
 
-#: translations.py:370
+#: translations.py:371
 msgid "1750Hz gain"
 msgstr ""
 
-#: translations.py:371
+#: translations.py:372
 msgid "2500Hz gain"
 msgstr ""
 
-#: translations.py:372
+#: translations.py:373
 msgid "3500Hz gain"
 msgstr ""
 
-#: translations.py:373
+#: translations.py:374
 msgid "5000Hz gain"
 msgstr ""
 
-#: translations.py:374
+#: translations.py:375
 msgid "100000Hz gain"
 msgstr ""
 
-#: translations.py:375
+#: translations.py:376
 msgid "200000Hz gain"
 msgstr ""
 
-#: translations.py:377
+#: translations.py:378
 msgid "Reverb time"
 msgstr "Час реверберації"
 
-#: translations.py:379 translations.py:382
+#: translations.py:380 translations.py:383
 msgid "Dry/Wet mix"
 msgstr ""
 
-#: translations.py:381
+#: translations.py:382
 msgid "Effect cutoff(Hz)"
 msgstr ""
 
-#: translations.py:384
+#: translations.py:385
 msgid "Rate"
 msgstr "Частота"
 
-#: translations.py:386
+#: translations.py:387
 msgid "Sift"
 msgstr ""
 
-#: translations.py:390
+#: translations.py:391
 msgid "Year"
 msgstr "Рік"
 
-#: translations.py:391
+#: translations.py:392
 msgid "RPM"
 msgstr "RPM"
 
-#: translations.py:392
+#: translations.py:393
 msgid "Surface warping"
 msgstr "Викривлення поверхні"
 
-#: translations.py:393
+#: translations.py:394
 msgid "Cracle"
 msgstr "Тріск"
 
-#: translations.py:394
+#: translations.py:395
 msgid "Wear"
 msgstr "Зношеність"
 
-#: translations.py:396
+#: translations.py:397
 msgid "Number of voices"
 msgstr "Кількість голосів"
 
-#: translations.py:397
+#: translations.py:398
 msgid "Delay base(ms)"
 msgstr ""
 
-#: translations.py:398
+#: translations.py:399
 msgid "Voice separation(ms)"
 msgstr ""
 
-#: translations.py:399
+#: translations.py:400
 msgid "Detune(%)"
 msgstr ""
 
-#: translations.py:400
+#: translations.py:401
 msgid "Oscillation frequency(Hz)"
 msgstr ""
 
-#: translations.py:401
+#: translations.py:402
 msgid "Output attenuation(dB)"
 msgstr ""
 
-#: translations.py:403
+#: translations.py:404
 msgid "X Scatter"
 msgstr "Вертикальне розсіювання"
 
-#: translations.py:404
+#: translations.py:405
 msgid "Y Scatter"
 msgstr "Горизонтальне розсіювання"
 
-#: translations.py:405
+#: translations.py:406
 msgid "Scale"
 msgstr "Масштаб"
 
-#: translations.py:406
+#: translations.py:407
 msgid "Mix"
 msgstr "Змішати"
 
-#: translations.py:409
+#: translations.py:410
 msgid "Delta"
 msgstr ""
 
-#: translations.py:410
+#: translations.py:411
 msgid "Duration"
 msgstr "Тривалість"
 
-#: translations.py:411
+#: translations.py:412
 msgid "Bright. up"
 msgstr ""
 
-#: translations.py:412
+#: translations.py:413
 msgid "Bright. down"
 msgstr ""
 
-#: translations.py:413
+#: translations.py:414
 msgid "Bright. dur."
 msgstr ""
 
-#: translations.py:414
+#: translations.py:415
 msgid "Develop up"
 msgstr ""
 
-#: translations.py:415
+#: translations.py:416
 msgid "Develop down"
 msgstr ""
 
-#: translations.py:416
+#: translations.py:417
 msgid "Develop dur."
 msgstr ""
 
-#: translations.py:417
+#: translations.py:418
 msgid "Triplevel"
 msgstr "Triplevel"
 
-#: translations.py:418
+#: translations.py:419
 msgid "Difference Space"
 msgstr "Простір відмінностей"
 
-#: translations.py:419
+#: translations.py:420
 msgid "Block width"
 msgstr "Розмір блоку за X"
 
-#: translations.py:420
+#: translations.py:421
 msgid "Block height"
 msgstr "Розмір блоку за Y"
 
-#: translations.py:421 translations.py:467
+#: translations.py:422 translations.py:468
 msgid "Size"
 msgstr "Розміри"
 
-#: translations.py:430
+#: translations.py:431
 msgid "U"
 msgstr "U"
 
-#: translations.py:431
+#: translations.py:432
 msgid "V"
 msgstr "V"
 
-#: translations.py:432 translations.py:439
+#: translations.py:433 translations.py:440
 msgid "Black"
 msgstr "Чорний"
 
-#: translations.py:433 translations.py:440
+#: translations.py:434 translations.py:441
 msgid "White"
 msgstr "Білий"
 
-#: translations.py:435
+#: translations.py:436
 msgid "Neutral Color"
 msgstr "Нейтральний колір"
 
-#: translations.py:436 translations.py:437
+#: translations.py:437 translations.py:438
 msgid "Input"
 msgstr "Вхідні дані"
 
-#: translations.py:438
+#: translations.py:439
 msgid "Gamma"
 msgstr "Коефіцієнт контрастності"
 
-#: translations.py:441
+#: translations.py:442
 msgid "Num"
 msgstr ""
 
-#: translations.py:442
+#: translations.py:443
 msgid "Dist. weight"
 msgstr ""
 
-#: translations.py:444
+#: translations.py:445
 msgid "Variance"
 msgstr "Дисперсія"
 
-#: translations.py:446
+#: translations.py:447
 msgid "Red Saturation"
 msgstr ""
 
-#: translations.py:447
+#: translations.py:448
 msgid "Yellow Saturation"
 msgstr ""
 
-#: translations.py:448
+#: translations.py:449
 msgid "Factor"
 msgstr "Множник"
 
-#: translations.py:449
+#: translations.py:450
 msgid "Source color"
 msgstr "Вихідний колір"
 
-#: translations.py:451
+#: translations.py:452
 msgid "Amplitude"
 msgstr "Амплітуда"
 
-#: translations.py:452
+#: translations.py:453
 msgid "Frequency"
 msgstr "Частота"
 
-#: translations.py:455
+#: translations.py:456
 msgid "Center Correct"
 msgstr ""
 
-#: translations.py:456
+#: translations.py:457
 msgid "Edges Correct"
 msgstr ""
 
-#: translations.py:458
+#: translations.py:459
 msgid "Axis"
 msgstr ""
 
-#: translations.py:461
+#: translations.py:462
 msgid "Edge Lightning"
 msgstr ""
 
-#: translations.py:462
+#: translations.py:463
 msgid "Edge Brightness"
 msgstr ""
 
-#: translations.py:463
+#: translations.py:464
 msgid "Non-Edge Brightness"
 msgstr ""
 
-#: translations.py:464
+#: translations.py:465
 msgid "Spatial"
 msgstr "Просторові"
 
-#: translations.py:465
+#: translations.py:466
 msgid "Temporal"
 msgstr "Часові"
 
-#: translations.py:468
+#: translations.py:469
 msgid "Border width"
 msgstr "Ширина рамки"
 
-#: translations.py:469
+#: translations.py:470
 msgid "Phase Incr."
 msgstr ""
 
-#: translations.py:470
+#: translations.py:471
 msgid "Zoom"
 msgstr "Масштабування"
 
-#: translations.py:471
+#: translations.py:472
 msgid "Freeze Frame"
 msgstr ""
 
-#: translations.py:472
+#: translations.py:473
 msgid "Freeze After"
 msgstr "Зупинити після"
 
-#: translations.py:473
+#: translations.py:474
 msgid "Freeze Before"
 msgstr "Зупинити до"
 
-#: translations.py:474
+#: translations.py:475
 msgid "Angle"
 msgstr "Кут"
 
-#: translations.py:475 translations.py:478 translations.py:479
+#: translations.py:476 translations.py:479 translations.py:480
 msgid "transition.geometry"
 msgstr ""
 
-#: translations.py:476 translations.py:568
+#: translations.py:477 translations.py:569
 msgid "Shear X"
 msgstr "Зсув за X"
 
-#: translations.py:477 translations.py:569
+#: translations.py:478 translations.py:570
 msgid "Shear Y"
 msgstr "Зсув за Y"
 
-#: translations.py:486 translations.py:487 translations.py:567
-#: translations.py:571
+#: translations.py:487 translations.py:488 translations.py:568
+#: translations.py:572
 msgid "Opacity"
 msgstr "Непрозорість"
 
-#: translations.py:488
+#: translations.py:489
 msgid "Rotate X"
 msgstr "Обертання навколо X"
 
-#: translations.py:489
+#: translations.py:490
 msgid "Rotate Y"
 msgstr "Обертання навколо Y"
 
-#: translations.py:490
+#: translations.py:491
 msgid "Rotate Z"
 msgstr "Обертання навколо Z"
 
-#: translations.py:492
+#: translations.py:493
 msgid "Edge Mode"
 msgstr "Режим країв"
 
-#: translations.py:493
+#: translations.py:494
 msgid "Sel. Space"
 msgstr ""
 
-#: translations.py:494
+#: translations.py:495
 msgid "Operation"
 msgstr "Обробка"
 
-#: translations.py:495 translations.py:619
+#: translations.py:496 translations.py:623
 msgid "Hard"
 msgstr "Жорсткий"
 
-#: translations.py:496
+#: translations.py:497
 msgid "Selection subspace"
 msgstr "Підпростір вибору"
 
-#: translations.py:497
+#: translations.py:498
 msgid "R/A/Hue"
 msgstr "Ч/А/Відтінок"
 
-#: translations.py:498
+#: translations.py:499
 msgid "G/B/Chroma"
 msgstr "З/С/Яскравість"
 
-#: translations.py:499
+#: translations.py:500
 msgid "B/I/I"
 msgstr "B/I/I"
 
-#: translations.py:500
+#: translations.py:501
 msgid "Supress"
 msgstr ""
 
-#: translations.py:501 translations.py:649
+#: translations.py:502 translations.py:653
 msgid "Horizontal"
 msgstr "Горизонтально"
 
-#: translations.py:502 translations.py:650
+#: translations.py:503 translations.py:654
 msgid "Vertical"
 msgstr "Вертикально"
 
-#: translations.py:503
+#: translations.py:504
 msgid "Type"
 msgstr "Тип"
 
-#: translations.py:505
+#: translations.py:506
 msgid "Dot Radius"
 msgstr ""
 
-#: translations.py:506
+#: translations.py:507
 msgid "Cyan Angle"
 msgstr ""
 
-#: translations.py:507
+#: translations.py:508
 msgid "Magenta Angle"
 msgstr ""
 
-#: translations.py:508
+#: translations.py:509
 msgid "Yellow Angle"
 msgstr ""
 
-#: translations.py:510
+#: translations.py:511
 msgid "Matrix Type"
 msgstr ""
 
-#: translations.py:511
+#: translations.py:512
 msgid "Aspect"
 msgstr ""
 
-#: translations.py:512
+#: translations.py:513
 msgid "Center Size"
 msgstr ""
 
-#: translations.py:513
+#: translations.py:514
 msgid "Azimuth"
 msgstr ""
 
-#: translations.py:514 translations.py:519
+#: translations.py:515 translations.py:520
 msgid "Lightness"
 msgstr ""
 
-#: translations.py:515
+#: translations.py:516
 msgid "Bump Height"
 msgstr ""
 
-#: translations.py:516
+#: translations.py:517
 msgid "Gray"
 msgstr "Сірий"
 
-#: translations.py:517
+#: translations.py:518
 msgid "Split Preview"
 msgstr ""
 
-#: translations.py:518
+#: translations.py:519
 msgid "Source on Left"
 msgstr ""
 
-#: translations.py:520
+#: translations.py:521
 msgid "Channel"
 msgstr "Канал"
 
-#: translations.py:521
+#: translations.py:522
 msgid "Input black level"
 msgstr "Вхідний рівень чорного"
 
-#: translations.py:522
+#: translations.py:523
 msgid "Input white level"
 msgstr "Вхідний рівень білого"
 
-#: translations.py:523
+#: translations.py:524
 msgid "Black output"
 msgstr "Вихідний чорний"
 
-#: translations.py:524
+#: translations.py:525
 msgid "White output"
 msgstr "Вихідний білий"
 
-#: translations.py:528
+#: translations.py:529
 msgid "Action"
 msgstr "Дія"
 
-#: translations.py:529
+#: translations.py:530
 msgid "Keep Luma"
 msgstr "Зберігати яскравість"
 
-#: translations.py:530
+#: translations.py:531
 msgid "Luma Formula"
 msgstr "Формула яскравості"
 
-#: translations.py:531
+#: translations.py:532
 msgid "Effect"
 msgstr "Ефект"
 
-#: translations.py:533
+#: translations.py:534
 msgid "Blend Type"
 msgstr ""
 
-#: translations.py:535
+#: translations.py:536
 msgid "Key Color"
 msgstr "Ключовий колір"
 
-#: translations.py:536
+#: translations.py:537
 msgid "Pre-Level"
 msgstr ""
 
-#: translations.py:537
+#: translations.py:538
 msgid "Post-Level"
 msgstr ""
 
-#: translations.py:538
+#: translations.py:539
 msgid "Slope"
 msgstr "Нахил"
 
-#: translations.py:539
+#: translations.py:540
 msgid "Luma Band"
 msgstr ""
 
-#: translations.py:541
+#: translations.py:542
 msgid "Gain"
 msgstr "Підсилення"
 
-#: translations.py:542
+#: translations.py:543
 msgid "Input White Level"
 msgstr "Вхідний рівень білого"
 
-#: translations.py:543
+#: translations.py:544
 msgid "Input Black Level"
 msgstr "Вхідний рівень чорного"
 
-#: translations.py:544
+#: translations.py:545
 msgid "Black Output"
 msgstr "Вихідний чорний"
 
-#: translations.py:545
+#: translations.py:546
 msgid "White Output"
 msgstr "Вихідний білий"
 
-#: translations.py:546
+#: translations.py:547
 msgid "Rows"
 msgstr ""
 
-#: translations.py:547
+#: translations.py:548
 msgid "Columns"
 msgstr ""
 
-#: translations.py:548
+#: translations.py:549
 msgid "Color Temperature"
 msgstr "Кольорова температура"
 
-#: translations.py:549 translations.py:564
+#: translations.py:550 translations.py:565
 msgid "Select .cube file"
 msgstr ""
 
-#: translations.py:550
+#: translations.py:551
 msgid "Red Ch. Red Gain"
 msgstr ""
 
-#: translations.py:551
+#: translations.py:552
 msgid "Red Ch. Green Gain"
 msgstr ""
 
-#: translations.py:552
+#: translations.py:553
 msgid "Red Ch. Blue Gain"
 msgstr ""
 
-#: translations.py:553
+#: translations.py:554
 msgid "Green Ch. Red Gain"
 msgstr ""
 
-#: translations.py:554
+#: translations.py:555
 msgid "Green Ch. Green Gain"
 msgstr ""
 
-#: translations.py:555
+#: translations.py:556
 msgid "Green Ch. Blue Gain"
 msgstr ""
 
-#: translations.py:556
+#: translations.py:557
 msgid "Blue Ch. Red Gain"
 msgstr ""
 
-#: translations.py:557
+#: translations.py:558
 msgid "Blue Ch. Green Gain"
 msgstr ""
 
-#: translations.py:558
+#: translations.py:559
 msgid "Blue Ch. Blue Gain"
 msgstr ""
 
-#: translations.py:559
+#: translations.py:560
 msgid "Center X"
 msgstr "Центр за X"
 
-#: translations.py:560
+#: translations.py:561
 msgid "Center Y"
 msgstr "Центр за Y"
 
-#: translations.py:561
+#: translations.py:562
 msgid "Quad Distortion"
 msgstr ""
 
-#: translations.py:562
+#: translations.py:563
 msgid "Double Quad Distortion"
 msgstr ""
 
-#: translations.py:563
+#: translations.py:564
 msgid "Level"
 msgstr "Рівень"
 
-#: translations.py:572 translations.py:576
+#: translations.py:573 translations.py:577
 msgid "Wipe Type"
 msgstr "Тип видалення"
 
-#: translations.py:574 translations.py:578
+#: translations.py:575 translations.py:579
 msgid "Softness"
 msgstr "М’якість"
 
-#: translations.py:575
+#: translations.py:576
 msgid "Wipe Amount"
 msgstr "Витерти кількість"
 
-#: translations.py:579
+#: translations.py:580
 msgid "Fade Out Length"
 msgstr ""
 
-#: translations.py:580
+#: translations.py:581
 msgid "Fade In Length"
 msgstr ""
 
-#: translations.py:581
+#: translations.py:582
 msgid "Wipe Direction"
 msgstr ""
 
-#: translations.py:582 translations.py:583
+#: translations.py:583 translations.py:584
 msgid "Blend Mode"
 msgstr "Режим змішування"
 
-#: translations.py:584
+#: translations.py:585
 msgid "Analysis Length"
 msgstr "Довжина аналізу"
 
-#: translations.py:585
+#: translations.py:586
 msgid "Max Gain"
 msgstr ""
 
-#: translations.py:586
-msgid "Min Mode"
-msgstr ""
-
 #: translations.py:587
+#, fuzzy
+msgid "Min Gain"
+msgstr "Підсилення"
+
+#: translations.py:588
 msgid "Select file"
 msgstr ""
 
-#: translations.py:588
+#: translations.py:589
 msgid "Smooth"
 msgstr "Згладжування"
 
-#: translations.py:589
+#: translations.py:590
 msgid "Radius"
 msgstr "Радіус"
 
-#: translations.py:591
+#: translations.py:592
 msgid "Start Opacity"
 msgstr ""
 
-#: translations.py:592
+#: translations.py:593
 msgid "End Opacity"
 msgstr ""
 
-#: translations.py:593
+#: translations.py:594
 msgid "End Color"
 msgstr "Кінець кольору"
 
-#: translations.py:594
+#: translations.py:595
 msgid "Start Color"
 msgstr ""
 
-#: translations.py:595
+#: translations.py:596
 msgid "Start X"
 msgstr "Запустіть X"
 
-#: translations.py:596
+#: translations.py:597
 msgid "Start Y"
 msgstr "Початок Y"
 
-#: translations.py:597
+#: translations.py:598
 msgid "End Y"
 msgstr "Кінець Y"
 
-#: translations.py:598
+#: translations.py:599
 msgid "End X"
 msgstr "Кінець X"
 
-#: translations.py:599
+#: translations.py:600
 msgid "Gradient Type"
 msgstr "Тип градієнта"
 
-#: translations.py:600
+#: translations.py:601
 msgid "Radial Offset"
 msgstr "Радіальне зміщення"
 
-#: translations.py:605 translations.py:611
+#: translations.py:602
+#, fuzzy
+msgid "Feather Passes"
+msgstr "Пропуску"
+
+#: translations.py:603
+#, fuzzy
+msgid "Alpha Mode"
+msgstr "α-градієнт"
+
+#: translations.py:604
+msgid "Feather"
+msgstr ""
+
+#: translations.py:605
+#, fuzzy
+msgid "Mode"
+msgstr "Режим країв"
+
+#: translations.py:609 translations.py:615
 msgid "Shave"
 msgstr "Гоління"
 
-#: translations.py:606
+#: translations.py:610
 msgid "Rectangle"
 msgstr "Прямокутник"
 
-#: translations.py:607
+#: translations.py:611
 msgid "Ellipse"
 msgstr "Еліпс"
 
-#: translations.py:608
+#: translations.py:612
 msgid "Triangle"
 msgstr "Трикутник"
 
-#: translations.py:609 shortcuts.py:212 workflow.py:71
+#: translations.py:613 shortcuts.py:212 workflow.py:71
 msgid "Box"
 msgstr "Прямокутник"
 
-#: translations.py:610 translations.py:624
+#: translations.py:614 translations.py:628
 msgid "Diamond"
 msgstr "Ромб"
 
-#: translations.py:612
+#: translations.py:616
 msgid "Shrink Hard"
 msgstr ""
 
-#: translations.py:613
+#: translations.py:617
 msgid "Shrink Soft"
 msgstr "Термозбіжна м'яка"
 
-#: translations.py:614
+#: translations.py:618
 msgid "Grow Hard"
 msgstr ""
 
-#: translations.py:615
+#: translations.py:619
 msgid "Grow Soft"
 msgstr ""
 
-#: translations.py:616
+#: translations.py:620
 msgid "RGB"
 msgstr "RGB"
 
-#: translations.py:617
+#: translations.py:621
 msgid "ABI"
 msgstr "ABI"
 
-#: translations.py:618
+#: translations.py:622
 msgid "HCI"
 msgstr "HCI"
 
-#: translations.py:620
+#: translations.py:624
 msgid "Fat"
 msgstr "Жир"
 
-#: translations.py:621
+#: translations.py:625
 msgid "Normal"
 msgstr "Звичайний"
 
-#: translations.py:622
+#: translations.py:626
 msgid "Skinny"
 msgstr "Худий"
 
-#: translations.py:623
+#: translations.py:627
 msgid "Ellipsoid"
 msgstr "Еліпсоїд"
 
-#: translations.py:625 shortcuts.py:207
+#: translations.py:629 shortcuts.py:207
 msgid "Overwrite"
 msgstr "Перезапис"
 
-#: translations.py:629 mlttransitions.py:162
+#: translations.py:633 translations.py:682 mlttransitions.py:162
 msgid "Subtract"
 msgstr ""
 
-#: translations.py:632
+#: translations.py:636
 msgid "Sharper"
 msgstr "Чіткіше"
 
-#: translations.py:633
+#: translations.py:637
 msgid "Fuzzier"
 msgstr ""
 
-#: translations.py:634
+#: translations.py:638
 msgid "Luma"
 msgstr "Яскравість"
 
-#: translations.py:638
+#: translations.py:642
 msgid "Add Constant"
 msgstr "Додати константа"
 
-#: translations.py:639
+#: translations.py:643
 msgid "Change Gamma"
 msgstr "Зміни гами"
 
-#: translations.py:640 translations.py:658 mlttransitions.py:157
+#: translations.py:644 translations.py:662 mlttransitions.py:157
 msgid "Multiply"
 msgstr "Множення"
 
-#: translations.py:641
+#: translations.py:645
 msgid "XPro"
 msgstr ""
 
-#: translations.py:642
+#: translations.py:646
 msgid "OldPhoto"
 msgstr "Старі фотографії"
 
-#: translations.py:644
+#: translations.py:648
 msgid "Heat"
 msgstr "Тепло"
 
-#: translations.py:645
+#: translations.py:649
 msgid "XRay"
 msgstr ""
 
-#: translations.py:646
+#: translations.py:650
 msgid "RedGreen"
 msgstr ""
 
-#: translations.py:647
+#: translations.py:651
 msgid "YellowBlue"
 msgstr ""
 
-#: translations.py:648
+#: translations.py:652
 msgid "Esses"
 msgstr "Це"
 
-#: translations.py:651
+#: translations.py:655
 msgid "Shadows"
 msgstr "Тіні"
 
-#: translations.py:652
+#: translations.py:656
 msgid "Midtones"
 msgstr ""
 
-#: translations.py:653
+#: translations.py:657
 msgid "Highlights"
 msgstr ""
 
-#: translations.py:654
+#: translations.py:658
 msgid "Forward"
 msgstr "Вперед"
 
-#: translations.py:655
+#: translations.py:659
 msgid "Backward"
 msgstr ""
 
-#: translations.py:657
+#: translations.py:661
 msgid "Saturate"
 msgstr "Насичені"
 
-#: translations.py:659 mlttransitions.py:160
+#: translations.py:663 mlttransitions.py:160
 msgid "Screen"
 msgstr "Екран"
 
-#: translations.py:660 mlttransitions.py:158
+#: translations.py:664 mlttransitions.py:158
 msgid "Overlay"
 msgstr "Накладання"
 
-#: translations.py:661 mlttransitions.py:148
+#: translations.py:665 mlttransitions.py:148
 msgid "Darken"
 msgstr "Заміна темним"
 
-#: translations.py:662 mlttransitions.py:156
+#: translations.py:666 mlttransitions.py:156
 msgid "Lighten"
 msgstr "Заміна світлим"
 
-#: translations.py:663
+#: translations.py:667
 msgid "ColorDodge"
 msgstr ""
 
-#: translations.py:664
+#: translations.py:668
 msgid "Colorburn"
 msgstr ""
 
-#: translations.py:665 mlttransitions.py:154
+#: translations.py:669 mlttransitions.py:154
 msgid "Hardlight"
 msgstr ""
 
-#: translations.py:666 mlttransitions.py:161
+#: translations.py:670 mlttransitions.py:161
 msgid "Softlight"
 msgstr ""
 
-#: translations.py:667 mlttransitions.py:149
+#: translations.py:671 mlttransitions.py:149
 msgid "Difference"
 msgstr "Різниця"
 
-#: translations.py:668
+#: translations.py:672
 msgid "Exclusion"
 msgstr "Виключення"
 
-#: translations.py:669
+#: translations.py:673
 msgid "HSLHue"
 msgstr ""
 
-#: translations.py:670
+#: translations.py:674
 msgid "HSLSaturation"
 msgstr ""
 
-#: translations.py:671
+#: translations.py:675
 msgid "HSLColor"
 msgstr ""
 
-#: translations.py:672
+#: translations.py:676
 msgid "HSLLuminosity"
 msgstr ""
 
-#: translations.py:673
+#: translations.py:677
 msgid "Cos"
 msgstr ""
 
-#: translations.py:674
+#: translations.py:678
 msgid "Linear"
 msgstr "Лінійний"
 
-#: translations.py:675
+#: translations.py:679
 msgid "Radial"
 msgstr ""
+
+#: translations.py:680
+#, fuzzy
+msgid "Clear"
+msgstr "Вибрати все"
 
 #: mlttransitions.py:81
 msgid "Burst"
@@ -4944,176 +4982,184 @@ msgstr "Витирання"
 msgid "Color Dip"
 msgstr ""
 
-#: propertyeditorbuilder.py:428
+#: propertyeditorbuilder.py:430
 msgid "Size/Height"
 msgstr ""
 
-#: propertyeditorbuilder.py:462
+#: propertyeditorbuilder.py:464
 msgid "Width"
 msgstr "Ширина"
 
-#: propertyeditorbuilder.py:590
+#: propertyeditorbuilder.py:592
 msgid "Preset Luma"
 msgstr ""
 
-#: propertyeditorbuilder.py:591
+#: propertyeditorbuilder.py:593
 msgid "User Luma"
 msgstr ""
 
-#: propertyeditorbuilder.py:593
+#: propertyeditorbuilder.py:595
 msgid "Select Luma File"
 msgstr ""
 
-#: propertyeditorbuilder.py:602
+#: propertyeditorbuilder.py:604
 msgid "Wipe Luma files"
 msgstr ""
 
-#: propertyeditorbuilder.py:608
+#: propertyeditorbuilder.py:610
 msgid "Luma File:"
 msgstr "Файл сигналу яскравості:"
 
-#: propertyeditorbuilder.py:709
+#: propertyeditorbuilder.py:711
 msgid "Select File"
 msgstr ""
 
-#: propertyeditorbuilder.py:749
+#: propertyeditorbuilder.py:751
 msgid "Select Image Producing File"
 msgstr ""
 
-#: propertyeditorbuilder.py:780 propertyeditorbuilder.py:835
+#: propertyeditorbuilder.py:782 propertyeditorbuilder.py:837
 msgid "Nothing"
 msgstr ""
 
-#: propertyeditorbuilder.py:780 propertyeditorbuilder.py:835
+#: propertyeditorbuilder.py:782 propertyeditorbuilder.py:837
 msgid "Deinterlace"
 msgstr ""
 
-#: propertyeditorbuilder.py:780 propertyeditorbuilder.py:835
+#: propertyeditorbuilder.py:782 propertyeditorbuilder.py:837
 msgid "Both"
 msgstr "Обидва"
 
-#: propertyeditorbuilder.py:789 propertyeditorbuilder.py:844
+#: propertyeditorbuilder.py:791 propertyeditorbuilder.py:846
 msgid "Force"
 msgstr "Примусово"
 
-#: propertyeditorbuilder.py:794 propertyeditorbuilder.py:849
+#: propertyeditorbuilder.py:796 propertyeditorbuilder.py:851
 msgid "Align"
 msgstr "Вирівняти"
 
-#: propertyeditorbuilder.py:905
+#: propertyeditorbuilder.py:907
 msgid "Keyframes"
 msgstr "Ключові кадри"
 
-#: propertyeditorbuilder.py:909
+#: propertyeditorbuilder.py:911
 msgid "Curve Points"
 msgstr ""
 
-#: propertyeditorbuilder.py:913
+#: propertyeditorbuilder.py:915
 msgid "Lauch RotoMask editor"
 msgstr ""
 
-#: propertyeditorbuilder.py:917
+#: propertyeditorbuilder.py:919
 msgid "RotoMask info"
 msgstr ""
 
-#: keyframeeditor.py:621 kftoolmode.py:1345
+#: keyframeeditor.py:626 kftoolmode.py:1345
 msgid "Delete all but first Keyframe before Clip Range"
 msgstr "Видаліть усі, крім першого, ключовий кадр перед діапазоном кліпу"
 
-#: keyframeeditor.py:627 kftoolmode.py:1351
+#: keyframeeditor.py:632 kftoolmode.py:1351
 msgid "Set Keyframe at Frame 0 to value of next Keyframe"
 msgstr ""
 
-#: keyframeeditor.py:629 kftoolmode.py:1340 kftoolmode.py:1363
+#: keyframeeditor.py:634 kftoolmode.py:1340 kftoolmode.py:1363
 #: kftoolmode.py:1374
 msgid "No Edit Actions currently available"
 msgstr ""
 
-#: keyframeeditor.py:644 kftoolmode.py:1369
+#: keyframeeditor.py:649 kftoolmode.py:1369
 msgid "Delete all Keyframes after Clip Range"
 msgstr ""
 
-#: keyframeeditor.py:728
+#: keyframeeditor.py:737
 msgid "Add Keyframe"
 msgstr "Додати ключовий кадр"
 
-#: keyframeeditor.py:729
+#: keyframeeditor.py:738
 msgid "Delete Keyframe"
 msgstr "Вилучити ключовий кадр"
 
-#: keyframeeditor.py:730
+#: keyframeeditor.py:739
 msgid "Previous Keyframe"
 msgstr "Попередній ключовий кадр"
 
-#: keyframeeditor.py:731
+#: keyframeeditor.py:740
 msgid "Next Keyframe"
 msgstr "Наступний ключовий кадр"
 
-#: keyframeeditor.py:734
+#: keyframeeditor.py:743
 msgid "Move Keyframe 1 Frame Back"
 msgstr ""
 
-#: keyframeeditor.py:735
+#: keyframeeditor.py:744
 msgid "Move Keyframe 1 Frame Forward"
 msgstr ""
 
-#: keyframeeditor.py:800
+#: keyframeeditor.py:745
+msgid "Add Fade In"
+msgstr ""
+
+#: keyframeeditor.py:746
+msgid "Add Fade Out"
+msgstr ""
+
+#: keyframeeditor.py:818
 msgid "View:"
 msgstr "Перегляд:"
 
-#: keyframeeditor.py:806
+#: keyframeeditor.py:824
 msgid "Large"
 msgstr ""
 
-#: keyframeeditor.py:807
+#: keyframeeditor.py:825
 msgid "Medium"
 msgstr ""
 
-#: keyframeeditor.py:808
+#: keyframeeditor.py:826
 msgid "Small"
 msgstr ""
 
-#: keyframeeditor.py:828
+#: keyframeeditor.py:846
 msgid "Reset Geometry"
 msgstr ""
 
-#: keyframeeditor.py:829
+#: keyframeeditor.py:847
 msgid "Geometry to Original Aspect Ratio"
 msgstr ""
 
-#: keyframeeditor.py:830
+#: keyframeeditor.py:848
 msgid "Center Horizontal"
 msgstr "По центру горизонтально"
 
-#: keyframeeditor.py:831
+#: keyframeeditor.py:849
 msgid "Center Vertical"
 msgstr "По центру вертикально"
 
-#: keyframeeditor.py:1557 keyframeeditor.py:1593
+#: keyframeeditor.py:1648 keyframeeditor.py:1684
 msgid "X:"
 msgstr "X:"
 
-#: keyframeeditor.py:1558 keyframeeditor.py:1594
+#: keyframeeditor.py:1649 keyframeeditor.py:1685
 msgid "Y:"
 msgstr "Y:"
 
-#: keyframeeditor.py:1559 profilesmanager.py:132
+#: keyframeeditor.py:1650 profilesmanager.py:132
 msgid "Width:"
 msgstr "Ширина:"
 
-#: keyframeeditor.py:1560 profilesmanager.py:133
+#: keyframeeditor.py:1651 profilesmanager.py:133
 msgid "Height:"
 msgstr "Висота:"
 
-#: keyframeeditor.py:1595
+#: keyframeeditor.py:1686
 msgid "X scale:"
 msgstr "Масштаб X:"
 
-#: keyframeeditor.py:1596
+#: keyframeeditor.py:1687
 msgid "Y scale:"
 msgstr "Масштаб Y:"
 
-#: keyframeeditor.py:1597
+#: keyframeeditor.py:1688
 msgid "Rotation:"
 msgstr "Обертання:"
 
@@ -5323,63 +5369,63 @@ msgstr ""
 msgid "Path"
 msgstr "Шлях"
 
-#: tools/titler.py:83
+#: tools/titler.py:85
 msgid "Titler is already open"
 msgstr "Титлер вже відкритий"
 
-#: tools/titler.py:84
+#: tools/titler.py:86
 msgid "Only single instance of Titler can be opened."
 msgstr ""
 
-#: tools/titler.py:357
+#: tools/titler.py:359
 msgid "Opacity:"
 msgstr "Непрозорість:"
 
-#: tools/titler.py:358
+#: tools/titler.py:360
 msgid "X Off:"
 msgstr ""
 
-#: tools/titler.py:359
+#: tools/titler.py:361
 msgid "Y Off:"
 msgstr ""
 
-#: tools/titler.py:403
+#: tools/titler.py:405
 msgid "Load Layers"
 msgstr ""
 
-#: tools/titler.py:405
+#: tools/titler.py:407
 msgid "Save Layers"
 msgstr "Зберегти шари"
 
-#: tools/titler.py:407
+#: tools/titler.py:409
 msgid "Clear All"
 msgstr "Вибрати все"
 
-#: tools/titler.py:490
+#: tools/titler.py:492
 msgid "Layer Text"
 msgstr ""
 
-#: tools/titler.py:492
+#: tools/titler.py:494
 msgid "Outline"
 msgstr "Контур"
 
-#: tools/titler.py:494
+#: tools/titler.py:496
 msgid "Shadow"
 msgstr "Тінь"
 
-#: tools/titler.py:496
+#: tools/titler.py:498
 msgid "Layers"
 msgstr ""
 
-#: tools/titler.py:502
+#: tools/titler.py:504
 msgid "Keep Layers When Closed"
 msgstr ""
 
-#: tools/titler.py:507
+#: tools/titler.py:509
 msgid "Open Saved Title In Bin"
 msgstr ""
 
-#: tools/titler.py:514
+#: tools/titler.py:516
 msgid "Save Title Graphic"
 msgstr ""
 
@@ -5707,135 +5753,119 @@ msgstr ""
 msgid "This operation cannot be undone."
 msgstr ""
 
-#: preferenceswindow.py:41
+#: preferenceswindow.py:47
 msgid "Editor Preferences"
 msgstr ""
 
-#: preferenceswindow.py:58
+#: preferenceswindow.py:64
 msgid "Editing"
 msgstr "Редагування"
 
-#: preferenceswindow.py:61
+#: preferenceswindow.py:67
 msgid "Performance"
 msgstr ""
 
-#: preferenceswindow.py:79
+#: preferenceswindow.py:85
 msgid "Restart required for some setting changes to take effect."
 msgstr ""
 
-#: preferenceswindow.py:80
+#: preferenceswindow.py:86
 msgid "If requested change is not in effect, restart application."
 msgstr ""
 
-#: preferenceswindow.py:108
-msgid "No Autosave"
-msgstr ""
-
-#: preferenceswindow.py:108
-msgid "1 min"
-msgstr "1 мін"
-
-#: preferenceswindow.py:108
-msgid "2 min"
-msgstr "2 мін"
-
-#: preferenceswindow.py:108
-msgid "5 min"
-msgstr "5 мін"
-
-#: preferenceswindow.py:116
+#: preferenceswindow.py:124
 msgid "Absolute paths first, relative second"
 msgstr ""
 
-#: preferenceswindow.py:117
+#: preferenceswindow.py:125
 msgid "Relative paths first, absolute second"
 msgstr ""
 
-#: preferenceswindow.py:118
+#: preferenceswindow.py:126
 msgid "Absolute paths only"
 msgstr ""
 
-#: preferenceswindow.py:122
+#: preferenceswindow.py:130
 msgid "Default Profile:"
 msgstr "Типовий профіль:"
 
-#: preferenceswindow.py:123
+#: preferenceswindow.py:131
 msgid "Remember last media directory"
 msgstr ""
 
-#: preferenceswindow.py:124
+#: preferenceswindow.py:132
 msgid "Undo stack size:"
 msgstr ""
 
-#: preferenceswindow.py:125
+#: preferenceswindow.py:133
 msgid "Remember last render directory"
 msgstr ""
 
-#: preferenceswindow.py:126
+#: preferenceswindow.py:134
 msgid "Autosave for crash recovery every:"
 msgstr ""
 
-#: preferenceswindow.py:127
+#: preferenceswindow.py:135
 msgid "Media look-up order on load:"
 msgstr ""
 
-#: preferenceswindow.py:171
+#: preferenceswindow.py:180
 msgid "Zoom, Control to Scroll Horizontal"
 msgstr ""
 
-#: preferenceswindow.py:172
+#: preferenceswindow.py:181
 msgid "Scroll Horizontal, Control to Zoom"
 msgstr ""
 
-#: preferenceswindow.py:179
+#: preferenceswindow.py:188
 msgid "Scroll Up Forward"
 msgstr ""
 
-#: preferenceswindow.py:180
+#: preferenceswindow.py:189
 msgid "Scroll Down Forward"
 msgstr ""
 
-#: preferenceswindow.py:188
+#: preferenceswindow.py:197
 msgid "Graphics default length:"
 msgstr ""
 
-#: preferenceswindow.py:190
+#: preferenceswindow.py:199
 msgid "Cover Transition/Fade clips on delete if possible"
 msgstr ""
 
-#: preferenceswindow.py:192
+#: preferenceswindow.py:201
 msgid "Mouse Middle Button Scroll Action:"
 msgstr ""
 
-#: preferenceswindow.py:193
+#: preferenceswindow.py:202
 msgid "Mouse Horizontal Scroll Direction:"
 msgstr ""
 
-#: preferenceswindow.py:194
+#: preferenceswindow.py:203
 msgid "Move Playhead to Clip start on keyframe edit init"
 msgstr ""
 
-#: preferenceswindow.py:195
+#: preferenceswindow.py:204
 msgid "Hide file extensions when importing Clips"
 msgstr ""
 
-#: preferenceswindow.py:265
+#: preferenceswindow.py:274
 msgid "Center Current Frame on Playback Stop"
 msgstr ""
 
-#: preferenceswindow.py:266
+#: preferenceswindow.py:275
 msgid "Center Current Frame after Up/Down Arrow"
 msgstr ""
 
-#: preferenceswindow.py:268
+#: preferenceswindow.py:277
 msgid "Enable single Play/Pause button"
 msgstr ""
 
-#: preferenceswindow.py:270
+#: preferenceswindow.py:279
 msgid "Fast Forward / Reverse Speed for Shift Key:"
 msgstr ""
 
-#: preferenceswindow.py:271
+#: preferenceswindow.py:280
 msgid ""
 "Speed of Forward / Reverse will be multiplied by this value if Shift Key is "
 "held (Only using KEYS).\n"
@@ -5843,193 +5873,193 @@ msgid ""
 "E.g. if Shift is set to "
 msgstr ""
 
-#: preferenceswindow.py:276
+#: preferenceswindow.py:285
 msgid "Fast Forward / Reverse Speed for Control Key:"
 msgstr ""
 
-#: preferenceswindow.py:277
+#: preferenceswindow.py:286
 msgid ""
 "Speed of Forward / Reverse will be multiplied by this value if Ctrl Key is "
 "held (Only using KEYS)."
 msgstr ""
 
-#: preferenceswindow.py:278
+#: preferenceswindow.py:287
 msgid "Fast Forward / Reverse Speed for Caps Lock Key:"
 msgstr ""
 
-#: preferenceswindow.py:279
+#: preferenceswindow.py:288
 msgid ""
 "Speed of Forward / Reverse will be multiplied by this value if Caps Lock is "
 "set (Only using KEYS)."
 msgstr ""
 
-#: preferenceswindow.py:280
+#: preferenceswindow.py:289
 msgid "Move Timeline to follow Playback"
 msgstr ""
 
-#: preferenceswindow.py:281
+#: preferenceswindow.py:290
 msgid "Loop Media Clips on Monitor"
 msgstr ""
 
-#: preferenceswindow.py:313
+#: preferenceswindow.py:322
 msgid "None"
 msgstr "Немає"
 
-#: preferenceswindow.py:314
+#: preferenceswindow.py:323
 msgid "English"
 msgstr "English"
 
-#: preferenceswindow.py:315
+#: preferenceswindow.py:324
 msgid "Chinese, Simplified"
 msgstr "简体中文"
 
-#: preferenceswindow.py:316
+#: preferenceswindow.py:325
 msgid "Chinese, Traditional"
 msgstr "中國傳統的"
 
-#: preferenceswindow.py:317
+#: preferenceswindow.py:326
 msgid "Czech"
 msgstr "čeština"
 
-#: preferenceswindow.py:318
+#: preferenceswindow.py:327
 msgid "French"
 msgstr "française"
 
-#: preferenceswindow.py:319
+#: preferenceswindow.py:328
 msgid "German"
 msgstr "Deutsche"
 
-#: preferenceswindow.py:320
+#: preferenceswindow.py:329
 msgid "Hungarian"
 msgstr "Magyar"
 
-#: preferenceswindow.py:321
+#: preferenceswindow.py:330
 msgid "Italian"
 msgstr "Italiana"
 
-#: preferenceswindow.py:322
+#: preferenceswindow.py:331
 msgid "Polish"
 msgstr "Polskie"
 
-#: preferenceswindow.py:323
+#: preferenceswindow.py:332
 msgid "Russian"
 msgstr "русский"
 
-#: preferenceswindow.py:324
+#: preferenceswindow.py:333
 msgid "Spanish"
 msgstr "Española"
 
-#: preferenceswindow.py:325
+#: preferenceswindow.py:334
 msgid "Ukranian"
 msgstr "Українська"
 
-#: preferenceswindow.py:340
+#: preferenceswindow.py:349
 msgid "Glass"
 msgstr "Скло"
 
-#: preferenceswindow.py:341
+#: preferenceswindow.py:350
 msgid "Simple"
 msgstr ""
 
-#: preferenceswindow.py:342
+#: preferenceswindow.py:351
 msgid "No Decorations"
 msgstr ""
 
-#: preferenceswindow.py:346
+#: preferenceswindow.py:355
 msgid "Flowblade Theme"
 msgstr ""
 
-#: preferenceswindow.py:347
+#: preferenceswindow.py:356
 msgid "Dark Theme"
 msgstr ""
 
-#: preferenceswindow.py:348
+#: preferenceswindow.py:357
 msgid "Light Theme"
 msgstr ""
 
-#: preferenceswindow.py:358
+#: preferenceswindow.py:367
 msgid "Display All Levels"
 msgstr ""
 
-#: preferenceswindow.py:359
+#: preferenceswindow.py:368
 msgid "Display Levels On Request"
 msgstr ""
 
-#: preferenceswindow.py:374
+#: preferenceswindow.py:383
 msgid "Normal - 50px, 25px"
 msgstr ""
 
-#: preferenceswindow.py:375
+#: preferenceswindow.py:384
 msgid "Double for HiDPI - 100px, 50px"
 msgstr ""
 
-#: preferenceswindow.py:379
+#: preferenceswindow.py:388
 msgid "3 panels if width (1450px+) available"
 msgstr ""
 
-#: preferenceswindow.py:380
+#: preferenceswindow.py:389
 msgid "2 panels always"
 msgstr ""
 
-#: preferenceswindow.py:384
+#: preferenceswindow.py:393
 msgid "Application window mode:"
 msgstr ""
 
-#: preferenceswindow.py:386
+#: preferenceswindow.py:395
 msgid "Force Language:"
 msgstr "Мова примусово:"
 
-#: preferenceswindow.py:387
+#: preferenceswindow.py:396
 msgid "Display splash screen"
 msgstr ""
 
-#: preferenceswindow.py:388
+#: preferenceswindow.py:397
 msgid "Buttons style:"
 msgstr ""
 
-#: preferenceswindow.py:389
+#: preferenceswindow.py:398
 msgid "Theme request, icons and colors:"
 msgstr ""
 
-#: preferenceswindow.py:390
+#: preferenceswindow.py:399
 msgid "Theme detection fail fallback colors:"
 msgstr ""
 
-#: preferenceswindow.py:391
+#: preferenceswindow.py:400
 msgid "Default audio levels display:"
 msgstr ""
 
-#: preferenceswindow.py:392
+#: preferenceswindow.py:401
 msgid "Tracks Heights:"
 msgstr ""
 
-#: preferenceswindow.py:395
+#: preferenceswindow.py:404
 msgid "Show Full File names"
 msgstr ""
 
-#: preferenceswindow.py:397
+#: preferenceswindow.py:406
 msgid "Top row layout:"
 msgstr ""
 
-#: preferenceswindow.py:430
+#: preferenceswindow.py:439
 msgid ""
 "Changing these values may cause problems with playback and rendering.\n"
 "The safe values are Render Threads:1, Allow Frame Dropping: No."
 msgstr ""
 
-#: preferenceswindow.py:441
+#: preferenceswindow.py:450
 msgid "Between 1 and the number of CPU Cores"
 msgstr ""
 
-#: preferenceswindow.py:442
+#: preferenceswindow.py:451
 msgid "Allow Frame Dropping for real-time rendering, when needed"
 msgstr ""
 
-#: preferenceswindow.py:446
+#: preferenceswindow.py:455
 msgid "Render Threads:"
 msgstr ""
 
-#: preferenceswindow.py:447
+#: preferenceswindow.py:456
 msgid "Allow Frame Dropping"
 msgstr ""
 
@@ -6869,19 +6899,19 @@ msgid ""
 "if performance is not satisfactory."
 msgstr ""
 
-#: compositorfades.py:242
+#: compositorfades.py:256
 msgid "Clip too short!"
 msgstr ""
 
-#: compositorfades.py:243
+#: compositorfades.py:257
 msgid "The Clip is too short to add the requested fade."
 msgstr ""
 
-#: compositorfades.py:248
+#: compositorfades.py:262
 msgid "Clip too short for Auto Fades!"
 msgstr ""
 
-#: compositorfades.py:249
+#: compositorfades.py:263
 msgid ""
 "The Clip is too short to add the user set default fades on Compositor "
 "creation."
@@ -6949,52 +6979,57 @@ msgstr "Кліп_"
 msgid "Save Sync Compound Clip XML"
 msgstr ""
 
-#: diskcachemanagement.py:46
+#: diskcachemanagement.py:47
 msgid "Destroy data"
 msgstr ""
 
-#: diskcachemanagement.py:70
+#: diskcachemanagement.py:71
 msgid ""
 "Destroying this data may change contents of existing\n"
 "projects and make some projects unopenable."
 msgstr ""
 
-#: diskcachemanagement.py:101
+#: diskcachemanagement.py:102
 msgid " MB"
 msgstr " МБ"
 
-#: diskcachemanagement.py:103
+#: diskcachemanagement.py:104
 msgid " kB"
 msgstr " кБ"
 
-#: diskcachemanagement.py:113
+#: diskcachemanagement.py:114
 msgid "Confirm Destroying Cached Data!"
 msgstr ""
 
-#: diskcachemanagement.py:115
+#: diskcachemanagement.py:116
 msgid ""
 "Destroying this data may <b>change contents</b> of existing\n"
 "projects or <b>make some projects unopenable!</b>"
 msgstr ""
 
-#: diskcachemanagement.py:117
+#: diskcachemanagement.py:118
 msgid ""
 "You can use 'File->Save Backup Snapshot...' functionality to backup "
 "projects\n"
 "so that they can be opened later before destroying this data."
 msgstr ""
 
-#: diskcachemanagement.py:119
+#: diskcachemanagement.py:120
 msgid "Destroying this data may require parts of it to be recreated later."
 msgstr ""
 
-#: diskcachemanagement.py:171
+#: diskcachemanagement.py:172
 msgid "Audio Levels Data"
 msgstr ""
 
-#: diskcachemanagement.py:172
+#: diskcachemanagement.py:173
 msgid "G'Mic Tool Session Data"
 msgstr ""
+
+#: diskcachemanagement.py:174
+#, fuzzy
+msgid "Rendered Files"
+msgstr "Профіль візуалізації"
 
 #: diskcachemanagement.py:175
 msgid "Thumbnails"
@@ -7495,11 +7530,11 @@ msgid "Select Preset Workflow and Continue"
 msgstr ""
 
 #: workflow.py:429
-msgid "<b>Welcome to Flowblade 2.0</b>"
+msgid "<b>Welcome to Flowblade 2.2</b>"
 msgstr ""
 
 #: workflow.py:434
-msgid "<b>Flowblade 2.0</b> comes with a configurable workflow."
+msgid "<b>Flowblade 2.2</b> comes with a configurable workflow."
 msgstr ""
 
 #: workflow.py:439

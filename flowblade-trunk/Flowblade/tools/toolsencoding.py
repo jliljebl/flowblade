@@ -383,7 +383,7 @@ def get_args_vals_list_for_render_data(render_data):
     return args_vals_list
 
 def get_encoding_desc(args_vals_list):
-    print args_vals_list
+    print(args_vals_list)
     vcodec = ""
     vb = ""
     for arg_val in args_vals_list:

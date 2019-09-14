@@ -555,7 +555,7 @@ class RotoMaskEditShape(EditPointShape):
             ep.mask_type = self.mask_type 
 
     def maybe_force_line_mask(self, force=False):
-        if self.mask_type == LINE_MASK or force: 
+        if (self.mask_type == LINE_MASK or force) and self.closed: 
             # Makes all lines between curve points straight
             for i in range(0, len(self.curve_points)):
                 hp1, hp2 = self.get_straight_line_handle_places(i)

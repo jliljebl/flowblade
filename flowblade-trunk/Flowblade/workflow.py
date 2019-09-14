@@ -284,7 +284,7 @@ def workflow_menu_launched(widget, event):
     guiutils.add_separetor(_workflow_menu)
     
     # Active tools
-    non_active_tools = range(1, 12) # we have 11 tools currently
+    non_active_tools = list(range(1, 12)) # we have 11 tools currently
     for i in range(0, len(editorpersistance.prefs.active_tools)):#  tool_id in _TOOLS_DATA:
         tool_id = editorpersistance.prefs.active_tools[i]
         tool_name, tool_icon_file = _TOOLS_DATA[tool_id]
@@ -358,7 +358,7 @@ def _get_workflow_tool_submenu(callback, tool_id, position):
     sub_menu = Gtk.Menu()
     
     tool_active = (tool_id in editorpersistance.prefs.active_tools)
-    activity_item = Gtk.CheckMenuItem(_("Tool Active").encode('utf-8'))
+    activity_item = Gtk.CheckMenuItem(_("Tool Active"))
     activity_item.set_active(tool_active)
     activity_item.connect("toggled", callback, (tool_id, "activity"))
     activity_item.show()
@@ -386,7 +386,7 @@ def _get_workflow_tool_submenu(callback, tool_id, position):
     
     # Individual prefs for tools
     if tool_id == appconsts.TLINE_TOOL_OVERWRITE:
-        pref_item = Gtk.CheckMenuItem(_("Do Box Selection and Box Move from empty press").encode('utf-8'))
+        pref_item = Gtk.CheckMenuItem(_("Do Box Selection and Box Move from empty press"))
         pref_item.set_active(editorpersistance.prefs.box_for_empty_press_in_overwrite_tool)
         pref_item.connect("toggled", _TLINE_TOOL_OVERWRITE_box_selection_pref)
         pref_item.show()
@@ -425,9 +425,9 @@ def _workflow_menu_callback(widget, data):
     elif  msg ==  "tooltips":
         editorpersistance.prefs.show_tool_tooltips = widget.get_active()
     elif msg == "delete lift" and widget.get_active() == True:
-        print "lift"
+        print("lift")
     elif msg == "delete splice" and widget.get_active() == True:
-        print "splice"
+        print("splice")
     else:
         try:
             pos = int(msg)
@@ -467,22 +467,22 @@ class WorkflowDialog(Gtk.Dialog):
     def __init__(self):
         Gtk.Dialog.__init__(self, _("Workflow First Run Wizard"),  gui.editor_window.window,
                                 Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                (_("Select Preset Workflow and Continue").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                                (_("Select Preset Workflow and Continue"), Gtk.ResponseType.ACCEPT))
 
         self.selection = STANDARD_PRESET 
         
-        info_label_text_1 = _("<b>Welcome to Flowblade 2.0</b>")
+        info_label_text_1 = _("<b>Welcome to Flowblade 2.2</b>")
         info_label_1 = Gtk.Label(info_label_text_1)
         info_label_1.set_use_markup(True)
 
 
-        info_label_text_2 = _("<b>Flowblade 2.0</b> comes with a configurable workflow.")
+        info_label_text_2 = _("<b>Flowblade 2.2</b> comes with a configurable workflow.")
         info_label_2 = Gtk.Label(info_label_text_2)
         info_label_2.set_use_markup(True)
 
         INDENT = "    "
-        info_label_text_6 = INDENT + u"\u2022" + _(" You can select which <b>tools</b> you want to use.\n") + \
-                            INDENT + u"\u2022" + _(" Many timeline edit <b>behaviours</b> are configurable.\n")
+        info_label_text_6 = INDENT + "\u2022" + _(" You can select which <b>tools</b> you want to use.\n") + \
+                            INDENT + "\u2022" + _(" Many timeline edit <b>behaviours</b> are configurable.\n")
 
         info_label_6 = Gtk.Label(info_label_text_6)
         info_label_6.set_use_markup(True)

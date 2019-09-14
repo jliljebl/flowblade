@@ -70,7 +70,7 @@ class ToolIntegrator:
         new_instance.do_export()
         
     def do_export(self):
-        print self.__class__.__name__ + " does not implement do_export()"
+        print(self.__class__.__name__ + " does not implement do_export()")
          
     def render_program(self, program_file, write_file, render_data, progress_callback, completion_callback):
         new_instance = copy.deepcopy(self)
@@ -90,13 +90,13 @@ class ToolIntegrator:
         self.ticker.stop_ticker()
         
     def start_render(self):
-        print self.__class__.__name__ + " does not implement start_render()"
+        print(self.__class__.__name__ + " does not implement start_render()")
 
     def stop_render(self):
-        print self.__class__.__name__ + " does not implement start_render()"
+        print(self.__class__.__name__ + " does not implement start_render()")
         
     def render_tick(self):
-        print self.__class__.__name__ + " does not implement render_tick()"
+        print(self.__class__.__name__ + " does not implement render_tick()")
         
     def create_render_ticker(self):
         self.render_ticker = utils.Ticker(self.render_tick, 1.0)

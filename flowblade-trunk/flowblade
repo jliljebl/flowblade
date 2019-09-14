@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 """
     Flowblade Movie Editor is a nonlinear video editor.
@@ -23,33 +23,33 @@
 import os
 import sys
 
-print "FLOWBLADE MOVIE EDITOR 2.0"
-print "--------------------------"
+print ("FLOWBLADE MOVIE EDITOR 2.2")
+print ("--------------------------")
 
 
 # Get launch script dir
 launch_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
 
-print "Launch script dir:", launch_dir
+print ("Launch script dir:", launch_dir)
 
 # Update sys.path to include modules
 # When running on distro
 if launch_dir == "/usr/bin":
-    print "Running from installation..."
+    print ("Running from installation...")
     modules_path = "/usr/share/flowblade/Flowblade"
     if not os.path.isdir(modules_path):
         modules_path = "/usr/share/pyshared/Flowblade"
-    print "modules path:", modules_path
+    print ("modules path:", modules_path)
 # When running in flatpak
 elif launch_dir == "/app/bin":
-    print "Running from Flatpak installation..."
+    print ("Running from Flatpak installation...")
     modules_path = "/app/share/flowblade/Flowblade"
     if not os.path.isdir(modules_path):
         modules_path = "/app/share/pyshared/Flowblade"
-    print "modules path:", modules_path
+    print ("modules path:", modules_path)
 # When running in filesystem
 else:
-    print "Running from filesystem..."
+    print ("Running from filesystem...")
     modules_path = launch_dir + "/Flowblade"
 
 sys.path.insert(0, modules_path)
@@ -60,12 +60,12 @@ try:
     import mlt
     try:
         mlt_version = mlt.LIBMLT_VERSION
-        print "MLT found, version:", mlt_version
+        print ("MLT found, version:", mlt_version)
     except:
-        print "MLT found but version info not available. MLT probably too old to work reliably..."
-except Exception, err:
-    print "MLT not found, exiting..."
-    print "ERROR:", err
+        print ("MLT found but version info not available. MLT probably too old to work reliably...")
+except Exception as err:
+    print ("MLT not found, exiting...")
+    print ("ERROR:", err)
     sys.exit(1)
 
 # Get app.py module and set info which type of installation is running
@@ -81,10 +81,10 @@ try:
         editorstate.app_running_from = editorstate.RUNNING_FROM_INSTALLATION
     else:
         editorstate.app_running_from = editorstate.RUNNING_FROM_DEV_VERSION
-except Exception, err:
-    print "Failed to import module app.py to launch Flowblade!"
-    print "ERROR:", err
-    print "Installation was assumed to be at:", modules_path
+except Exception as err:
+    print ("Failed to import module app.py to launch Flowblade!")
+    print ("ERROR:", err)
+    print ("Installation was assumed to be at:", modules_path)
     sys.exit(1)
 
 # Launch application

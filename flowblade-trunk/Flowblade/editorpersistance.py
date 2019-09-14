@@ -21,6 +21,14 @@
 """
 Module handles saving and loading data that is related to the editor and not any particular project.
 """
+
+"""
+    Change History:
+        Aug-2019 - SvdB - AS:
+            Save value of Autosave preference.
+            See preferenceswindow.py for more info
+"""
+
 import gi
 gi.require_version('Gtk', '3.0') 
 from gi.repository import Gtk
@@ -48,7 +56,6 @@ NO_DECORATIONS = 2
 prefs = None
 recent_projects = None
 
-
 def load():
     """
     If docs fail to load, new ones are created and saved.
@@ -57,12 +64,13 @@ def load():
     recents_file_path = userfolders.get_config_dir() + RECENT_DOC
 
     global prefs, recent_projects
+        
     try:
-        f = open(prefs_file_path)
+        f = open(prefs_file_path, "rb")
         prefs = pickle.load(f)
     except:
         prefs = EditorPreferences()
-        write_file = file(prefs_file_path, "wb")
+        write_file = open(prefs_file_path, "wb")
         pickle.dump(prefs, write_file)
 
     # Override deprecated preferences to default values.
@@ -78,7 +86,7 @@ def load():
     except:
         recent_projects = utils.EmptyClass()
         recent_projects.projects = []
-        write_file = file(recents_file_path, "wb")
+        write_file = open(recents_file_path, "wb")
         pickle.dump(recent_projects, write_file)
 
     # Remove non-existing projects from recents list
@@ -90,7 +98,7 @@ def load():
     if len(remove_list) > 0:
         for proj_path in remove_list:
             recent_projects.projects.remove(proj_path)
-        write_file = file(recents_file_path, "wb")
+        write_file = open(recents_file_path, "wb")
         pickle.dump(recent_projects, write_file)
         
     # Versions of program may have different prefs objects and 
@@ -101,9 +109,9 @@ def load():
     if len(prefs.__dict__) != len(current_prefs.__dict__):
         current_prefs.__dict__.update(prefs.__dict__)
         prefs = current_prefs
-        write_file = file(prefs_file_path, "wb")
+        write_file = open(prefs_file_path, "wb")
         pickle.dump(prefs, write_file)
-        print "prefs updated to new version, new param count:", len(prefs.__dict__)
+        print("prefs updated to new version, new param count:", len(prefs.__dict__))
 
 def save():
     """
@@ -112,10 +120,10 @@ def save():
     prefs_file_path = userfolders.get_config_dir()+ PREFS_DOC
     recents_file_path = userfolders.get_config_dir() + RECENT_DOC
     
-    write_file = file(prefs_file_path, "wb")
+    write_file = open(prefs_file_path, "wb")
     pickle.dump(prefs, write_file)
 
-    write_file = file(recents_file_path, "wb")
+    write_file = open(recents_file_path, "wb")
     pickle.dump(recent_projects, write_file)
 
 def add_recent_project_path(path):
@@ -151,7 +159,7 @@ def remove_non_existing_recent_projects():
     if len(remove_list) > 0:
         for proj_path in remove_list:
             recent_projects.projects.remove(proj_path)
-        write_file = file(recents_file_path, "wb")
+        write_file = open(recents_file_path, "wb")
         pickle.dump(recent_projects, write_file)
         
 def fill_recents_menu_widget(menu_item, callback):
@@ -195,7 +203,9 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     # Unpack widgets
     gen_opts_widgets, edit_prefs_widgets, playback_prefs_widgets, view_prefs_widgets, performance_widgets = widgets_tuples_tuple
 
-    default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin, load_order_combo = gen_opts_widgets
+    # Aug-2019 - SvdB - AS - added autosave_combo
+    default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin, load_order_combo, \
+        autosave_combo = gen_opts_widgets
     
     # Jul-2016 - SvdB - Added play_pause_button
     # Apr-2017 - SvdB - Added ffwd / rev values
@@ -250,6 +260,8 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.playback_follow_move_tline_range = follow_move_range.get_active()
     prefs.theme = theme.get_active()
     prefs.top_row_layout = top_row_layout.get_active()
+    # Aug-2019 - SvdB - AS
+    prefs.auto_save_delay_value_index = autosave_combo.get_active()
 
     #if prefs.shortcuts != shortcuts.shortcut_files[shortcuts_combo.get_active()]:
     #    prefs.shortcuts = shortcuts.shortcut_files[shortcuts_combo.get_active()]

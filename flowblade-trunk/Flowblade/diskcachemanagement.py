@@ -39,7 +39,8 @@ _panels = None
 
 class DiskFolderManagementPanel:
     
-    def __init__(self, folder, info_text, warning_level):
+    def __init__(self, xdg_folder, folder, info_text, warning_level):
+        self.xdg_folder = xdg_folder
         self.folder = folder
         self.warning_level = warning_level
                 
@@ -80,19 +81,19 @@ class DiskFolderManagementPanel:
         self.vbox = Gtk.VBox(False, 2)
         self.vbox.pack_start(row, False, False, 0)
 
-    def get_cache_folder(self):
-        cf = userfolders.get_cache_dir() + self.folder
+    def get_disk_folder(self):
+        cf = self.xdg_folder + self.folder
         return cf
 
     def get_folder_files(self):
-        cache_folder = self.get_cache_folder()
-        return [f for f in listdir(cache_folder) if isfile(join(cache_folder, f))]
+        data_folder = self.get_disk_folder()
+        return [f for f in listdir(data_folder) if isfile(join(data_folder, f))]
     
     def get_folder_size(self):
         files = self.get_folder_files()
         size = 0
         for f in files:
-            size += os.path.getsize(self.get_cache_folder() +"/" + f)
+            size += os.path.getsize(self.get_disk_folder() +"/" + f)
         return size
 
     def get_folder_size_str(self):
@@ -135,11 +136,11 @@ class DiskFolderManagementPanel:
         self.destroy_data()
     
     def destroy_data(self):
-        print "deleting ", self.folder
+        print("deleting ", self.folder)
         
         files = self.get_folder_files()
         for f in files:
-            os.remove(self.get_cache_folder() +"/" + f)
+            os.remove(self.get_disk_folder() +"/" + f)
 
         self.size_info.set_text(self.get_folder_size_str())
         self.size_info.queue_draw()
@@ -147,7 +148,7 @@ class DiskFolderManagementPanel:
 def show_disk_management_dialog():
     dialog = Gtk.Dialog(_("Disk Cache Manager"), None,
                     Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                    (_("Close").encode('utf-8'), Gtk.ResponseType.CLOSE))
+                    (_("Close"), Gtk.ResponseType.CLOSE))
 
     global _panels
     _panels = _get_disk_dir_panels()
@@ -168,11 +169,10 @@ def show_disk_management_dialog():
 
 def _get_disk_dir_panels():
     panels = []
-    panels.append(DiskFolderManagementPanel(appconsts.AUDIO_LEVELS_DIR, _("Audio Levels Data"), RECREATE_WARNING))
-    panels.append(DiskFolderManagementPanel(appconsts.GMIC_DIR, _("G'Mic Tool Session Data"), NO_WARNING))
-    # FIXME: code assumes that all these are in same root folder, not anymore, 
-    #panels.append(DiskFolderManagementPanel(appconsts.RENDERED_CLIPS_DIR, _("Rendered Files"), PROJECT_DATA_WARNING))
-    panels.append(DiskFolderManagementPanel(appconsts.THUMBNAILS_DIR, _("Thumbnails"), RECREATE_WARNING))
-    panels.append(DiskFolderManagementPanel(appconsts.USER_PROFILES_DIR_NO_SLASH, _("User Created Custom Profiles"), PROJECT_DATA_WARNING))
+    panels.append(DiskFolderManagementPanel(userfolders.get_cache_dir(), appconsts.AUDIO_LEVELS_DIR, _("Audio Levels Data"), RECREATE_WARNING))
+    panels.append(DiskFolderManagementPanel(userfolders.get_cache_dir(), appconsts.GMIC_DIR, _("G'Mic Tool Session Data"), NO_WARNING))
+    panels.append(DiskFolderManagementPanel(userfolders.get_data_dir(), appconsts.RENDERED_CLIPS_DIR, _("Rendered Files"), PROJECT_DATA_WARNING))
+    panels.append(DiskFolderManagementPanel(userfolders.get_cache_dir(), appconsts.THUMBNAILS_DIR, _("Thumbnails"), RECREATE_WARNING))
+    panels.append(DiskFolderManagementPanel(userfolders.get_data_dir(), appconsts.USER_PROFILES_DIR_NO_SLASH, _("User Created Custom Profiles"), PROJECT_DATA_WARNING))
 
     return panels

@@ -77,7 +77,7 @@ class ProjectLoadThread(threading.Thread):
 
         # Media file media assets
         media_assets = ""
-        for media_file_id, media_file in target_project.media_files.iteritems():
+        for media_file_id, media_file in target_project.media_files.items():
             if isinstance(media_file, patternproducer.AbstractBinClip):
                 continue
             if os.path.isfile(media_file.path):                
@@ -117,7 +117,7 @@ def get_imported_media():
     return files_list
     
 def write_files(filename):
-    print "Starting media import..."
+    print("Starting media import...")
     FLOG = open(userfolders.get_cache_dir() + "log_media_import", 'w')
     p = subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowblademediaimport", filename], stdin=FLOG, stdout=FLOG, stderr=FLOG)
     p.wait()
@@ -180,7 +180,7 @@ def _create_info_dialog():
 def main(root_path, filename):
     # This the main for launched process, this is reached via 'flowblademediaimport' laucher file
     gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
-    print "GTK+ version:", gtk_version
+    print("GTK+ version:", gtk_version)
     editorstate.gtk_version = gtk_version
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION

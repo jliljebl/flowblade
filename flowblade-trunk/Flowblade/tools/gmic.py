@@ -101,11 +101,11 @@ _hamburger_menu = Gtk.Menu()
 #-------------------------------------------------- launch and inits
 def test_availablity():
     if os.path.exists("/usr/bin/gmic") == True or os.path.exists("/app/bin/gmic") == True: # File system and flatpak
-        print "G'MIC found"
+        print("G'MIC found")
         global _gmic_found
         _gmic_found = True
     else:
-        print "G'MIC NOT found"
+        print("G'MIC NOT found")
 
 def gmic_available():
     return _gmic_found
@@ -125,7 +125,7 @@ def launch_gmic(launch_data=None):
         clip, track = launch_data # from guicomponwnts._get_tool_integration_menu_item()
         args = ("path:" + str(clip.path), "clip_in:" + str(clip.clip_in), "clip_out:" + str(clip.clip_out))
         
-    print "Launch gmic..."
+    print("Launch gmic...")
     FLOG = open(userfolders.get_cache_dir() + "log_gmic", 'w')
     if args == None:
         subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladegmic"], stdin=FLOG, stdout=FLOG, stderr=FLOG)
@@ -161,10 +161,12 @@ def main(root_path, force_launch=False):
     process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
     output, error = process.communicate()
     tokens = output.split()
+    print (tokens)
+    print (output)
     clended = []
     for token in tokens:
-        str1 = token.replace('.','')
-        str2 = str1.replace(',','')
+        str1 = token.replace(b'.',b'')
+        str2 = str1.replace(b',',b'')
         if str2.isdigit(): # this is based on assumtion that str2 ends up being number like "175" or 215" etc. only for version number token
             if str2[0] == '2':
                 global _gmic_version
@@ -174,7 +176,7 @@ def main(root_path, force_launch=False):
     # Write stdout to log file
     userfolders.init()
     sys.stdout = open(userfolders.get_cache_dir() + "log_gmic", 'w')
-    print "G'MIC version:", str(_gmic_version)
+    print("G'MIC version:", str(_gmic_version))
 
     # Init gmic tool session dirs
     if os.path.exists(get_session_folder()):
@@ -390,8 +392,8 @@ def script_menu_item_selected(item, script):
 def save_script_dialog(callback):
     dialog = Gtk.FileChooserDialog(_("Save Gmic Script As"), None, 
                                    Gtk.FileChooserAction.SAVE, 
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
-                                   _("Save").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                                   (_("Cancel"), Gtk.ResponseType.CANCEL,
+                                   _("Save"), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.SAVE)
     dialog.set_current_name("gmic_script")
     dialog.set_do_overwrite_confirmation(True)
@@ -414,8 +416,8 @@ def _save_script_dialog_callback(dialog, response_id):
 def load_script_dialog(callback):
     dialog = Gtk.FileChooserDialog(_("Load Gmic Script"), None, 
                                    Gtk.FileChooserAction.OPEN, 
-                                   (_("Cancel").encode('utf-8'), Gtk.ResponseType.CANCEL,
-                                    _("OK").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                                   (_("Cancel"), Gtk.ResponseType.CANCEL,
+                                    _("OK"), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.OPEN)
     dialog.set_select_multiple(False)
     dialog.connect('response', callback)
@@ -543,8 +545,8 @@ def _encode_settings_clicked():
     dialog = Gtk.Dialog(_("Video Encoding Settings"),
                         _window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel").encode('utf-8'), Gtk.ResponseType.REJECT,
-                         _("Set Encoding").encode('utf-8'), Gtk.ResponseType.ACCEPT))
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                         _("Set Encoding"), Gtk.ResponseType.ACCEPT))
     dialog.vbox.pack_start(align, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     dialog.set_resizable(False)
@@ -1105,7 +1107,7 @@ class GmicPreviewRendererer(threading.Thread):
         
         script_str = "gmic " + get_current_frame_file() + " " + view_text + " -output " +  get_preview_file()
 
-        print "Render preview:", script_str
+        print("Render preview:", script_str)
         
         # Render preview and write log
         FLOG = open(userfolders.get_cache_dir() + "log_gmic_preview", 'w')

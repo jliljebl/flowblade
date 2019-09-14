@@ -58,11 +58,6 @@ def init():
     _xdg_data_dir = os.path.join(GLib.get_user_data_dir(), "flowblade")
     _xdg_cache_dir = os.path.join(GLib.get_user_cache_dir(), "flowblade")
 
-    # Testing 
-    print _xdg_config_dir
-    print _xdg_data_dir
-    print _xdg_cache_dir
-
     # Make sure XDG dirs data is available and usable by trying to create XDG folders
     try:
         _maybe_create_xdg_dirs()
@@ -77,18 +72,18 @@ def init():
 
     # If previous install exits and no data in XDG dirs, we need to copy existing data.
     if _dot_prefs_file_exists == True and _xdg_prefs_file_exists == False:
-        print "userfolders.init(): .flowblade/ data exists, we need to copy to XDG folders."
+        print("userfolders.init(): .flowblade/ data exists, we need to copy to XDG folders.")
         global _copy_needed
         _copy_needed = True
     else:
-        print "XDG user data exists."
+        print("XDG user data exists.")
 
     # Set folders and maybe create them
     global _user_dirs
     
     # If we could not create XDG dirs, we will use dot dirs
     if force_dot_dir == True:
-        print "userfolders.init():  UNABLE TO CREATE XDG FOLDERS! Usinf .flowblade dir forced!"
+        print("userfolders.init():  UNABLE TO CREATE XDG FOLDERS! Usinf .flowblade dir forced!")
         global _dot_dir_was_forced
         _dot_dir_was_forced = True
         _user_dirs = USING_DOT_DIRS
@@ -159,14 +154,14 @@ def _maybe_create_xdg_dirs():
     # ---------------------- CONFIG
     # Prefs and recents files
     if not os.path.exists(_xdg_config_dir):
-        print "CREATED XDG CONFIG DIR."
+        print("CREATED XDG CONFIG DIR.")
         os.mkdir(_xdg_config_dir)
 
     # --------------------- DATA
     # Data that can break projects and cannot be regerated by app
     # Data root folder
     if not os.path.exists(_xdg_data_dir):
-        print "CREATED XDG DATA DIR."
+        print("CREATED XDG DATA DIR.")
         os.mkdir(_xdg_data_dir)
     # Data individual folders
     if not os.path.exists(get_data_dir() + appconsts.USER_PROFILES_DIR):
@@ -178,7 +173,7 @@ def _maybe_create_xdg_dirs():
     # Data that can be regerated by app or is transient
     # Cache root folder
     if not os.path.exists(_xdg_cache_dir):
-        print "CREATED XDG CACHE DIR."
+        print("CREATED XDG CACHE DIR.")
         os.mkdir(_xdg_cache_dir)
     # Cache individual folders
     if not os.path.exists(get_cache_dir() + appconsts.AUTOSAVE_DIR):
@@ -213,17 +208,17 @@ class XDGCopyThread(threading.Thread):
         
 def _copy_data_from_dot_folders_xdg_folders():
     # ---------------------- CONFIG
-    print "Copying CONFIG..."
+    print("Copying CONFIG...")
     file_util.copy_file(_dot_dir + "prefs", get_config_dir() + "prefs", verbose=1)
     file_util.copy_file(_dot_dir + "recent", get_config_dir() + "recent", verbose=1)
     
     # --------------------- DATA
-    print "Copying DATA..."
+    print("Copying DATA...")
     dir_util.copy_tree(_dot_dir + appconsts.USER_PROFILES_DIR, get_data_dir() + appconsts.USER_PROFILES_DIR, verbose=0)
     dir_util.copy_tree(_dot_dir + appconsts.RENDERED_CLIPS_DIR, get_render_dir(), verbose=1)
     
     # --------------------- CACHE
-    print "Copying CACHE..."
+    print("Copying CACHE...")
     dir_util.copy_tree(_dot_dir + appconsts.AUTOSAVE_DIR, get_cache_dir() + appconsts.AUTOSAVE_DIR, verbose=1)
     dir_util.copy_tree(_dot_dir + appconsts.THUMBNAILS_DIR, get_cache_dir() + appconsts.THUMBNAILS_DIR, verbose=1)
     dir_util.copy_tree(_dot_dir + appconsts.GMIC_DIR, get_cache_dir() + appconsts.GMIC_DIR, verbose=1)
@@ -232,4 +227,4 @@ def _copy_data_from_dot_folders_xdg_folders():
     dir_util.copy_tree(_dot_dir + appconsts.TRIM_VIEW_DIR, get_cache_dir() + appconsts.TRIM_VIEW_DIR, verbose=1)
     dir_util.copy_tree(_dot_dir + appconsts.BATCH_DIR, get_cache_dir() + appconsts.BATCH_DIR, verbose=1)
 
-    print "XDG Copy done."
+    print("XDG Copy done.")

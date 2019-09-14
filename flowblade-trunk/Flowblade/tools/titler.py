@@ -69,6 +69,8 @@ FACE_BOLD = "Bold"
 FACE_ITALIC = "Italic"
 FACE_BOLD_ITALIC = "Bold Italic"
 
+DEFAULT_FONT_SIZE = 40
+
 ALIGN_LEFT = 0
 ALIGN_CENTER = 1
 ALIGN_RIGHT = 2
@@ -120,7 +122,7 @@ class TextLayer:
         self.angle = 0.0 # future feature
         self.font_family = "Times New Roman"
         self.font_face = FACE_REGULAR
-        self.font_size = 15
+        self.font_size = DEFAULT_FONT_SIZE
         self.fill_on = True
         self.color_rgba = (1.0, 1.0, 1.0, 1.0) 
         self.alignment = ALIGN_LEFT
@@ -170,12 +172,13 @@ class TitlerData:
         return self.layers.index(self.active_layer)
     
     def save(self, save_file_path):
-        save_data = copy.deepcopy(self)
+        save_data = copy.copy(self)
         for layer in save_data.layers:
             layer.pango_layout = None
-        write_file = file(save_file_path, "wb")
+        write_file = open(save_file_path, 'wb')
         pickle.dump(save_data, write_file)
-   
+        self.create_pango_layouts() # we just destroyed these because they don't pickle, they need to be recreated.
+
     def create_pango_layouts(self):
         for layer in self.layers:
             layer.pango_layout = PangoTextLayout(layer)
@@ -187,11 +190,11 @@ class Titler(Gtk.Window):
         self.set_title(_("Titler"))
         self.connect("delete-event", lambda w, e:close_titler())
         
-        if editorstate.screen_size_small_height() == True:
+        if editorstate.SCREEN_HEIGHT < 865:
             global TEXT_LAYER_LIST_HEIGHT, TEXT_VIEW_HEIGHT, VIEW_EDITOR_HEIGHT
-            TEXT_LAYER_LIST_HEIGHT = 150
-            TEXT_VIEW_HEIGHT = 180
-            VIEW_EDITOR_HEIGHT = 450
+            TEXT_LAYER_LIST_HEIGHT = 130
+            TEXT_VIEW_HEIGHT = 130
+            VIEW_EDITOR_HEIGHT = 350
 
         if editorstate.screen_size_small_height() == True:
             global VIEW_EDITOR_WIDTH
@@ -255,7 +258,7 @@ class Titler(Gtk.Window):
         font_map = PangoCairo.font_map_get_default()
         unsorted_families = font_map.list_families()
         if len(unsorted_families) == 0:
-            print "No font families found in system! Titler will not work."
+            print("No font families found in system! Titler will not work.")
         self.font_families = sorted(unsorted_families, key=lambda family: family.get_name())
         self.font_family_indexes_for_name = {}
         combo = Gtk.ComboBoxText()
@@ -642,7 +645,7 @@ class Titler(Gtk.Window):
             try:
                 filenames = dialog.get_filenames()
                 load_path = filenames[0]
-                f = open(load_path)
+                f = open(load_path, 'rb')
                 new_data = pickle.load(f)
                 global _titler_data
                 _titler_data = new_data

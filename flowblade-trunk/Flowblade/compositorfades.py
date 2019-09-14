@@ -30,6 +30,9 @@ This module handles adding fade-ins and fade-outs to compositors.
 
 Creating and managing keyframes is mostly handled by editor GUI components which cannot easily 
 be used for adding fade-ins and fade outs, so this dedicated module is needed.
+
+NOTE: This can all (maybe) be killed now and done more sinply in keyframeeditor.py, original reasons for this existing
+may not apply anymore.
 """
 
 # Dissolve default fades group ("Dissolve", "Blend") keyframe property class names
@@ -42,9 +45,10 @@ def add_fade_in(compositor, fade_in_length):
     
     if fade_in_length > 0:
         if fade_in_length <= clip.clip_length():
-            _do_user_add_fade_in(keyframe_property, property_klass, keyframes, fade_in_length)
+            return _do_user_add_fade_in(keyframe_property, property_klass, keyframes, fade_in_length)
         else:
             _show_length_error_dialog()
+            return None
 
 def add_fade_out(compositor, fade_out_length):
     clip = _get_compositor_clip(compositor)
@@ -52,9 +56,10 @@ def add_fade_out(compositor, fade_out_length):
     
     if fade_out_length > 0:
         if fade_out_length + 1 <= clip.clip_length():
-            _do_user_add_fade_out(keyframe_property, property_klass, keyframes, fade_out_length, clip)
+            return _do_user_add_fade_out(keyframe_property, property_klass, keyframes, fade_out_length, clip)
         else:
             _show_length_error_dialog()
+            return None
 
 def set_auto_fade_in_keyframes(compositor):
     clip = _get_compositor_clip(compositor)
@@ -86,7 +91,9 @@ def set_auto_fade_out_keyframes(compositor):
     
 # ---------------------------------------------------------------------- module functions
 def _get_kfproperty_klass_and_keyframes(compositor, clip):
-    # Create editable properties from compositor properties.
+    # We create a SECOND SET of EditableProperties from compositor properties.
+    # These are not the same EditableProperties that are edited in GUI in "Compositor" panel.
+    # This approach seems necessery because Affine Blend requires creating a new property.
     t_editable_properties = propertyedit.get_transition_editable_properties(compositor)
 
     # Find keyframe property, its class and create keyframes list
@@ -196,16 +203,19 @@ def _do_user_add_fade_in(keyframe_property, property_klass, keyframes, fade_in_l
         if property_klass in _dissolve_property_klasses:
             frame, opacity  = keyframes.pop(0)
             keyframes.insert(0, (frame, 0))
-            keyframes.pop(1)
             keyframes.insert(1,(frame + fade_in_length, 100))
         else:
             # (0, [0, 0, 1280, 720], 100.0) or (0, [640.0, 360.0, 1.0, 1.0, 0.0], 100.0) e.g.
             frame, geom, opacity = keyframes.pop(0)
             keyframes.insert(0, (frame, geom, 0))
-            keyframes.pop(1)
             keyframes.insert(1, (frame + fade_in_length, geom, 100))
 
+    # Because we created a SECOND SET of EditableProperties this only updates data structures (py and MLT)
+    # but not EditableProperties wrappers that are edited in GUI in "Compositor" panel.
     keyframe_property.write_out_keyframes(keyframes)
+    
+    # We need to return updated keyframes to update GUI in "Compositor" panel.
+    return keyframes
 
 def _do_user_add_fade_out(keyframe_property, property_klass, keyframes, fade_out_length, clip):
     # Get index of first keyframe before fade out begins
@@ -234,8 +244,12 @@ def _do_user_add_fade_out(keyframe_property, property_klass, keyframes, fade_out
             
         keyframes = _add_default_fade_out(keyframe_property, property_klass, keyframes, fade_out_length, clip, len(keyframes) - 1)
 
+    # Because we created a SECOND SET of EditableProperties this only updates data structures (py and MLT)
+    # but not EditableProperties wrappers that are edited in GUI in "Compositor" panel.
     keyframe_property.write_out_keyframes(keyframes)
 
+    # We need to return updated keyframes to update GUI in "Compositor" panel.
+    return keyframes
 
 def _show_length_error_dialog():
     parent_window = gui.editor_window.window

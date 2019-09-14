@@ -415,12 +415,12 @@ class ColorBoxFilterEditor:
         self.SAT_MAX = 0.5
         self.widget = Gtk.VBox()
 
-        self.hue = filter(lambda ep: ep.name == "hue", editable_properties)[0]
-        self.saturation = filter(lambda ep: ep.name == "saturation", editable_properties)[0]
+        self.hue = [ep for ep in editable_properties if ep.name == "hue"][0]
+        self.saturation = [ep for ep in editable_properties if ep.name == "saturation"][0]
 
-        self.R = filter(lambda ep: ep.name == "R", editable_properties)[0]
-        self.G = filter(lambda ep: ep.name == "G", editable_properties)[0]
-        self.B = filter(lambda ep: ep.name == "B", editable_properties)[0]
+        self.R = [ep for ep in editable_properties if ep.name == "R"][0]
+        self.G = [ep for ep in editable_properties if ep.name == "G"][0]
+        self.B = [ep for ep in editable_properties if ep.name == "B"][0]
 
         self.color_box = ColorBox(self.color_box_values_changed)
         self.color_box.set_cursor(self.hue.get_float_value(), self.saturation.get_float_value())
@@ -462,7 +462,7 @@ class ColorBoxFilterEditor:
 
     def _display_values(self, hue, saturation):
         sat_str = str(int(saturation * 100)) + "%"
-        hue_str = unicode(int(360 * hue)) + ColorGrader.DEGREE_CHAR + u' '
+        hue_str = str(int(360 * hue)) + ColorGrader.DEGREE_CHAR + ' '
         self.h_label.set_text(hue_str)
         self.s_label.set_text(sat_str)
 
@@ -474,23 +474,23 @@ class ColorLGGFilterEditor:
         self.widget = Gtk.VBox()
 
         # Get MLT properties
-        self.lift_r = filter(lambda ep: ep.name == "lift_r", editable_properties)[0]
-        self.lift_g = filter(lambda ep: ep.name == "lift_g", editable_properties)[0]
-        self.lift_b = filter(lambda ep: ep.name == "lift_b", editable_properties)[0]
-        self.gamma_r = filter(lambda ep: ep.name == "gamma_r", editable_properties)[0]
-        self.gamma_g = filter(lambda ep: ep.name == "gamma_g", editable_properties)[0]
-        self.gamma_b = filter(lambda ep: ep.name == "gamma_b", editable_properties)[0]
-        self.gain_r = filter(lambda ep: ep.name == "gain_r", editable_properties)[0]
-        self.gain_g = filter(lambda ep: ep.name == "gain_g", editable_properties)[0]
-        self.gain_b = filter(lambda ep: ep.name == "gain_b", editable_properties)[0]
+        self.lift_r = [ep for ep in editable_properties if ep.name == "lift_r"][0]
+        self.lift_g = [ep for ep in editable_properties if ep.name == "lift_g"][0]
+        self.lift_b = [ep for ep in editable_properties if ep.name == "lift_b"][0]
+        self.gamma_r = [ep for ep in editable_properties if ep.name == "gamma_r"][0]
+        self.gamma_g = [ep for ep in editable_properties if ep.name == "gamma_g"][0]
+        self.gamma_b = [ep for ep in editable_properties if ep.name == "gamma_b"][0]
+        self.gain_r = [ep for ep in editable_properties if ep.name == "gain_r"][0]
+        self.gain_g = [ep for ep in editable_properties if ep.name == "gain_g"][0]
+        self.gain_b = [ep for ep in editable_properties if ep.name == "gain_b"][0]
 
         # Get Non-MLT properties
-        self.lift_hue = filter(lambda ep: ep.name == "lift_hue", editable_properties)[0]
-        self.lift_value = filter(lambda ep: ep.name == "lift_value", editable_properties)[0]
-        self.gamma_hue = filter(lambda ep: ep.name == "gamma_hue", editable_properties)[0]
-        self.gamma_value = filter(lambda ep: ep.name == "gamma_value", editable_properties)[0]
-        self.gain_hue = filter(lambda ep: ep.name == "gain_hue", editable_properties)[0]
-        self.gain_value = filter(lambda ep: ep.name == "gain_value", editable_properties)[0]
+        self.lift_hue = [ep for ep in editable_properties if ep.name == "lift_hue"][0]
+        self.lift_value = [ep for ep in editable_properties if ep.name == "lift_value"][0]
+        self.gamma_hue = [ep for ep in editable_properties if ep.name == "gamma_hue"][0]
+        self.gamma_value = [ep for ep in editable_properties if ep.name == "gamma_value"][0]
+        self.gain_hue = [ep for ep in editable_properties if ep.name == "gain_hue"][0]
+        self.gain_value = [ep for ep in editable_properties if ep.name == "gain_value"][0]
 
         # Lift editor
         self.lift_hue_selector = self.get_hue_selector(self.lift_hue_edited)
@@ -600,7 +600,7 @@ class ColorLGGFilterEditor:
         self.gain_adjustment.set_value(val)
 
     def set_hue_label_value(self, hue, label):
-        hue_str = unicode(int(360 * hue)) + ColorGrader.DEGREE_CHAR + u' '
+        hue_str = str(int(360 * hue)) + ColorGrader.DEGREE_CHAR + ' '
         label.set_text(hue_str)
 
     # ------------------------------ color box listeners
@@ -944,7 +944,7 @@ class CurvesBoxEditor(BoxEditor):
 
 class ColorGrader:
 
-    DEGREE_CHAR = u'\u00B0'
+    DEGREE_CHAR = '\u00B0'
 
     def __init__(self, editable_properties):
         # Initial active band
@@ -960,12 +960,12 @@ class ColorGrader:
         # - negative correction is interpreted as positive correction of complimentary color
 
         # Editable properties
-        self.shadow_hue = filter(lambda ep: ep.name == "shadow_hue", editable_properties)[0]
-        self.shadow_saturation = filter(lambda ep: ep.name == "shadow_saturation", editable_properties)[0]
-        self.mid_hue = filter(lambda ep: ep.name == "mid_hue", editable_properties)[0]
-        self.mid_saturation = filter(lambda ep: ep.name == "mid_saturation", editable_properties)[0]
-        self.hi_hue = filter(lambda ep: ep.name == "hi_hue", editable_properties)[0]
-        self.hi_saturation = filter(lambda ep: ep.name == "hi_saturation", editable_properties)[0]
+        self.shadow_hue = [ep for ep in editable_properties if ep.name == "shadow_hue"][0]
+        self.shadow_saturation = [ep for ep in editable_properties if ep.name == "shadow_saturation"][0]
+        self.mid_hue = [ep for ep in editable_properties if ep.name == "mid_hue"][0]
+        self.mid_saturation = [ep for ep in editable_properties if ep.name == "mid_saturation"][0]
+        self.hi_hue = [ep for ep in editable_properties if ep.name == "hi_hue"][0]
+        self.hi_saturation = [ep for ep in editable_properties if ep.name == "hi_saturation"][0]
 
         # Create filter and init values
         self.filt = lutfilter.ColorGradeFilter(editable_properties)
@@ -1070,7 +1070,7 @@ class ColorGrader:
 
     def _display_values(self, band, hue, saturation):
         sat_str = str(int(((saturation - 0.5) * 2.0) * 100)) + "%"
-        hue_str = unicode(int(360 * hue)) + ColorGrader.DEGREE_CHAR + u' '
+        hue_str = str(int(360 * hue)) + ColorGrader.DEGREE_CHAR + ' '
         if band == SHADOW:
             self.sh_label.set_text(hue_str)
             self.ss_label.set_text(sat_str)

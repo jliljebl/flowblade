@@ -369,7 +369,7 @@ def load_filters_xml(services):
     """
     _load_icons()
     
-    print "Loading filters..."
+    print("Loading filters...")
     
     global filters_doc
     filters_doc = xml.dom.minidom.parse(respaths.FILTERS_XML_DOC)
@@ -381,16 +381,16 @@ def load_filters_xml(services):
 
         if filter_info.mlt_drop_version != "":
             if editorstate.mlt_version_is_greater_correct(filter_info.mlt_drop_version):
-                print filter_info.name + " dropped, MLT version too high for this filter."
+                print(filter_info.name + " dropped, MLT version too high for this filter.")
                 continue
 
         if filter_info.mlt_min_version != "":
             if not editorstate.mlt_version_is_greater_correct(filter_info.mlt_min_version):
-                print filter_info.name + " dropped, MLT version too low for this filter."
+                print(filter_info.name + " dropped, MLT version too low for this filter.")
                 continue
 
         if (not filter_info.mlt_service_id in services) and len(services) > 0:
-            print "MLT service " + filter_info.mlt_service_id + " not found."
+            print("MLT service " + filter_info.mlt_service_id + " not found.")
             global not_found_filters
             not_found_filters.append(filter_info)
             continue
@@ -461,7 +461,7 @@ def replace_services(services):
             try:
                 use_service_data = filters_dict[use_service_name]
             except:
-                print "Replace service " + use_service_name + " not found."
+                print("Replace service " + use_service_name + " not found.")
                 continue
             
             drop_nodes = r_node.getElementsByTagName(DROP_SERVICE)
@@ -477,15 +477,19 @@ def replace_services(services):
                     for i in range(0, len(group)):
                         if group[i].name == f_info.name:
                             group.pop(i)
-                            print f_info.name +" dropped for " + use_service_name
+                            print(f_info.name +" dropped for " + use_service_name)
                             break
             except:
-                print "Dropping a mlt service for " + use_service_name + " failed, maybe not present."
+                print("Dropping a mlt service for " + use_service_name + " failed, maybe not present.")
 
 def get_compositor_filter(filter_id):
     return compositor_filters[filter_id]
 
 def get_audio_filters_groups():
+    # On some environments LADSPA filters are known to be missing and group "Audio Filter"
+    # is not present, we must init groups to 'None' to handle this possibility.
+    group_tuple1 = None
+    group_tuple2 = None
     for group_tuple in groups:
         gkey, group = group_tuple
         if gkey == translations.get_filter_group_name("Audio"):
@@ -525,11 +529,11 @@ def get_all_found_filters():
 def print_found_filters():
     all_filters = get_all_found_filters()
     for f in all_filters:
-        print f.mlt_service_id + " for filter " + f.name  + " available"
+        print(f.mlt_service_id + " for filter " + f.name  + " available")
 
 def print_not_found_filters():
     for f in not_found_filters:
-        print f.mlt_service_id + " for filter " + f.name + " not found"
+        print(f.mlt_service_id + " for filter " + f.name + " not found")
 
 
 # ------------------------------------------------------------- mute filters

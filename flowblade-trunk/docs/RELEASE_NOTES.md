@@ -1,5 +1,128 @@
 # Release Notes #
 
+## Flowblade 2.2 ##
+
+Date: August 26, 2019
+
+**Flowblade 2.2** is the first new version after 2.0 brought large changes the editing workflow and application layout. This time the main focus was on improving Flowblade's compositing capabilities with a dedicated tool for editing animated masks being most important new functionality.
+
+There was also a lot of other new functionality and fixes, including G'Mic update, support for XDG user folders and many Issues fixed from Github Issue list.
+
+### Compositing Improvements
+For the purpose of improving compositing we added 2 new filters and 1 new compositor. Together these will enable doing much more complex compositing work.
+
+There is a tutorial video for the new compositioning features: https://vimeo.com/355860509.
+
+#### RotoMask Filter
+
+RotoMask filter enables creating animated line or curve masks which will either affect the alpha channel or RGB data. Masks are edited with a GUI editor created especially for this filter, editor also comes with complete keyframe editing functionality.
+
+#### LumaToAlpha Compositor
+This compositor uses luma values from source track and writes them into alpha channel of target track.
+
+#### FileLumaToAlpha Filter
+This filter uses luma values from source media and writes them into alpha channel of video or image clip.
+
+### User data moved into XDG folders
+We have moved user data from directory */home/USERFOLDER/.flowblade* into XDG folders specified in the user system. Data will be copied automatically on first launch of this version.
+
+**NOTE: Thumbnail and Render directories are not user settable anymore since we decided to support XDG user data spec.**
+
+**NOTE: Application DOES NOT delete existing data in .flowblade folder, so if you have large amount of data there you will probably want to delete folder */home/USERFOLDER/.flowblade* manually to free disk space.**
+
+### New Filters
+We added 3 new filters: **Vignette Advanced, Normalize** and **Gradient Tint**.
+
+### Keyframe Edit Tool update
+* Tool colors got an update.
+* All keyframable params can now be edited with the tool.
+* Value snapping options for steps 2 and 5 were added.
+
+### Tools updates
+
+#### G'MIC
+* We added 20 new filters for systems G'MIC 2+: **YAG Effect, Delaunay, Difference of Gaussians, Dices, Boost Chroma, Threshold, Etch, Bokeh, Make Squiggly, Dream Smooth, Graphic Novel, Rodilius, Aurora, Grid Hexagonal, Anguish, Blockism, Cut Out, Wiremap, Fraeky BW, Warhol, Grid Triangular**
+* Gmic tool no longer does audio scrubbing
+* Some GUI fixes
+
+#### Titler
+* Layout update
+* New layers now use current selected font properties
+
+## Contributions
+**Николай Смольянинов** did a overhaul of wipe luma files with some new ones added and some existing improved.
+
+**rtomj** fixed issue #660 caused by move to XDG folders.
+
+**Alex Myczko** Updated INSTALLING.md with new information.
+
+**jorgenatz** Change launch script for variant install locations
+
+**cclauss** provided a batch of correctness fixes improving code base quality and helping towards Python 3 transition.
+
+## Going forward
+
+The next thing in line is the Python 3 conversion.
+
+Things are looking good on this front and hopefully there will be no major setbacks. We may do a release that does just the conversion or perhaps do a longer release cycle with some new features added too. In any case there will be at least one more release this year to move Flowblade to Python 3.
+
+## Translations updates
+* Czech translation update by Peter Frei
+* Italy translation update by Enrico Bella
+* Ukrainian translation update by Slava Manoilo
+* Russian translation update by Николай Смольянинов
+
+## New small features
+* Move fade buttons under Opacity slider in Compositors
+* Add keep existing workflow item to new version first run workflow menu
+* Removed Finnish translation
+* Add Alt+S as keyboard shortcut for Sync All Compositors
+* Make Control + Delete do Lift
+* Make timeline auto expand if possible when making track heights larger
+* Make Multitrim tool exit on empty click like other trims
+* Add pref to loop clips in monitor, #623
+* Make R do Overwrite Range and change Toggle Ripple to Alt + R
+* Make track scrubbing action selection persistent
+* Make Keyboard Shortcuts dialog non-modal
+* Make mouse double click on track head toggle track height
+* Show pulse progress bar when doing clapperless compare
+* Make ALT + N open next media item in monitor
+* Make , and . nudge selected clips on timeline
+* Audio media items icon update
+* Fix #529, more complete render settings saving
+* Fix tool shortcuts display in Keyboard Shortcuts dialog
+* Add append media from Bin to timeline feature, Issue #605
+* Make audio scrubbing user settable
+* Make Master Audio meter resizable
+* Make possible to render speedup video with 601-2900% speedup, Issue #648
+* Make possible to forca any language in any language OS
+* Added Operation combobox for two alpha filters
+* MLT profiles were updated
+
+## Bug fixes
+* Fix tracks resize to fit  failure bug
+* Fix Issue #661 with no update on loaded filter data
+* Fix Issue #659 with bad UI for buttons in custom theme
+* Handle missing LADSPA filters in audio clip context menus
+* Fix add fade in case kfs exist after fade length
+* Update some MLT profiles
+* Fix extra blank appearing when adding new video tracks
+* Make recents list update for all saves
+* Keep source bin open when doing drag'n'drop to another bin
+* Fix reverted filter stack move menu items, #641
+* Fix no drag for keyframe on first press when initializing Keyframe Tool from pop-up menu
+* Fix value updates when going from Keyframe editor to slider
+* Add missing keyframe editor updates in clipeffectseditor.py
+* Fix cut tool playback bug
+* Fix compositor end drag snap frame
+* Fix Issue #640 with hite frames + static added to end of file when rendering fixed range
+* Fix Media Relinker and Keyboard shortcuts dialog (nää ei ollut dynaamiset)
+* Fix timeline track column repaint bug
+* Fix args rendering on small screens when args window never opened
+* Fix missing c_seq on load error
+* Fix colors for visibility in workflow dialog, Issue #622
+* Don't match profiles with more then 2x size diffence to media even if fps matches, Issue #517
+* Fix keyframe delete not registering when done as last edit
 
 ## Flowblade 2.0
 

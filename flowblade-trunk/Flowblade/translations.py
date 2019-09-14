@@ -39,7 +39,7 @@ def init_languages():
     lc, encoding = locale.getdefaultlocale()
     if (lc):
         langs = [lc]
-    print "Locale:", lc
+    print("Locale:", lc)
 
     language = os.environ.get('LANGUAGE', None)
     if (language):
@@ -50,24 +50,24 @@ def init_languages():
         # Look for installed translation in distro install
         # Were using Russian as test language
         if os.path.isfile("/usr/share/locale/ru/LC_MESSAGES/flowblade.mo"): # fi is the translation controlled by program author
-            print "Found translations at /usr/share/locale, using those."
+            print("Found translations at /usr/share/locale, using those.")
             locale_path = "/usr/share/locale/"
         #  Look for installed translations in flatpak install 
         elif os.path.isfile("/app/share/flowblade/Flowblade/locale/ru/LC_MESSAGES/flowblade.mo"): # fi is the translation controlled by program author
-            print "Found translations at /app/share/flowblade/Flowblade/locale, using those."
+            print("Found translations at /app/share/flowblade/Flowblade/locale, using those.")
             locale_path = "/app/share/flowblade/Flowblade/locale"
         else:
-            print "Translations at /usr/share/locale were not found, using program root directory translations."
+            print("Translations at /usr/share/locale were not found, using program root directory translations.")
             locale_path = respaths.LOCALE_PATH
     else:
         # Use translations in program folder first if NOT running from installation
         # Were using Russian as test language
         locale_file = respaths.LOCALE_PATH + "ru/LC_MESSAGES/flowblade.mo"
         if os.path.isfile(locale_file): # fi is the translation controlled by program author
-            print "Found translations at " +  respaths.LOCALE_PATH + ", using those."
+            print("Found translations at " +  respaths.LOCALE_PATH + ", using those.")
             locale_path = respaths.LOCALE_PATH
         else:
-            print "Translations at " + locale_file + " were not found, using /usr/share/locale translations."
+            print("Translations at " + locale_file + " were not found, using /usr/share/locale translations.")
             locale_path = "/usr/share/locale/"
 
     gettext.bindtextdomain(APP_NAME, locale_path)
@@ -84,13 +84,13 @@ def init_languages():
         lang_code = editorpersistance.prefs.force_language
     
     if editorpersistance.prefs.force_language == "English":
-        print "Force use English."
+        print("Force use English.")
         lang = gettext.translation(APP_NAME, locale_path, languages=["dummy"], fallback=True)
     elif editorpersistance.prefs.force_language != "None":
-        print "Force use ", editorpersistance.prefs.force_language
+        print("Force use ", editorpersistance.prefs.force_language)
         lang = gettext.translation(APP_NAME, locale_path, languages=[str(editorpersistance.prefs.force_language)], fallback=True)
     else:
-        print "Use OS locale language."
+        print("Use OS locale language.")
         lang = gettext.translation(APP_NAME, locale_path, languages=langs, fallback=True)
 
     # Un-comment for translations tests
@@ -269,6 +269,7 @@ def load_filters_translations():
     filter_names["Normalize"] = _("Normalize")
     filter_names["File Luma to Alpha"] = _("File Luma to Alpha") 
     filter_names["Gradient Tint"] = _("Gradient Tint")
+    filter_names["RotoMask"] = _("RotoMask")
     
     # param names
     global param_names
@@ -583,7 +584,7 @@ def load_filters_translations():
     param_names["Target Loudness"] = _("Blend Mode")
     param_names["Analysis Length"] = _("Analysis Length")
     param_names["Max Gain"] = _("Max Gain")
-    param_names["Min Mode"] = _("Min Mode")
+    param_names["Min Gain"] = _("Min Gain")
     param_names["Select file"] = _("Select file")
     param_names["Smooth"] = _("Smooth")
     param_names["Radius"] = _("Radius")
@@ -598,8 +599,11 @@ def load_filters_translations():
     param_names["End X"] = _("End X")
     param_names["Gradient Type"] = _("Gradient Type")
     param_names["Radial Offset"] = _("Radial Offset")
-    
-    
+    param_names["Feather Passes"] = _("Feather Passes")
+    param_names["Alpha Mode"] = _("Alpha Mode")
+    param_names["Feather"] = _("Feather")
+    param_names["Mode"] = _("Mode")
+
     # Combo options
     global combo_options
     combo_options["Shave"] = _("Shave")
@@ -673,3 +677,7 @@ def load_filters_translations():
     combo_options["Cos"] = _("Cos")
     combo_options["Linear"] = _("Linear")
     combo_options["Radial"] = _("Radial")
+    combo_options["Clear"] = _("Clear")
+    combo_options["Add"] = _("Add")
+    combo_options["Subtract"] = _("Subtract")
+    combo_options["Alpha"] = _("Alpha")
