@@ -778,8 +778,8 @@ class EditorWindow:
 
         tline_hbox_2.pack_start(self.tline_column.widget, False, False, 0)
         tline_hbox_2.pack_start(self.tline_canvas.widget, True, True, 0)
-        tline_hbox_2.pack_start(guiutils.get_pad_label(8,4), False, False, 0)
-        tline_hbox_2.pack_start(tool_dock, False, False, 0)
+        tline_hbox_2.pack_start(guiutils.get_pad_label(4,4), False, False, 0)
+
 
         
         # Bottom row filler
@@ -793,27 +793,33 @@ class EditorWindow:
         tline_hbox_3 = Gtk.HBox()
         tline_hbox_3.pack_start(self.left_corner.widget, False, False, 0)
         tline_hbox_3.pack_start(self.tline_scroller, True, True, 0)
-        
-        # Timeline hbox 
+        print ("oo")
+        # Timeline vbox 
         tline_vbox = Gtk.VBox()
         tline_vbox.pack_start(tline_hbox_1, False, False, 0)
         tline_vbox.pack_start(tline_hbox_2, True, True, 0)
         tline_vbox.pack_start(tline_hbox_3, False, False, 0)
-        
+        print ("oo")
         # Timeline box 
         self.tline_box = Gtk.HBox()
         self.tline_box.pack_start(tline_vbox, True, True, 0)
-
+        #self.tline_box.pack_start(tool_dock, False, False, 0)
+        print ("oo")
         # Timeline pane
-        tline_pane = Gtk.VBox(False, 1)
-        tline_pane.pack_start(self.edit_buttons_frame, False, True, 0)
-        tline_pane.pack_start(self.tline_box, True, True, 0)
-        self.tline_pane = tline_pane
+        tline_pane_v = Gtk.VBox(False, 1)
+        tline_pane_v.pack_start(self.edit_buttons_frame, False, True, 0)
+        tline_pane_v.pack_start(self.tline_box, True, True, 0)
+        print ("oo")
+        tline_pane_h = Gtk.HBox(False, 0)
+        tline_pane_h.pack_start(tline_pane_v, True, True, 0)
+        tline_pane_h.pack_start(tool_dock, False, False, 0)
+        print ("oo")
+        self.tline_pane = tline_pane_h
     
         # VPaned top row / timeline
         self.app_v_paned = Gtk.VPaned()
         self.app_v_paned.pack1(self.top_row_hbox, resize=False, shrink=False)
-        self.app_v_paned.pack2(tline_pane, resize=True, shrink=False)
+        self.app_v_paned.pack2(self.tline_pane, resize=True, shrink=False)
         self.app_v_paned.no_dark_bg = True
 
 
@@ -973,14 +979,14 @@ class EditorWindow:
         menu.append(tabs_menu_item)
 
 
-        tool_selector_menu_item = Gtk.MenuItem(_("Tool Selection").encode('utf-8'))
+        tool_selector_menu_item = Gtk.MenuItem(_("Tool Selection"))
         tool_selector_menu =  Gtk.Menu()
         tools_middlebar = Gtk.RadioMenuItem()
-        tools_middlebar.set_label( _("Middlebar Menu").encode('utf-8'))
+        tools_middlebar.set_label( _("Middlebar Menu"))
         #tools_middlebar.connect("activate", lambda w: self._show_tabs_up(w))
         tool_selector_menu.append(tools_middlebar)
         
-        tools_dock = Gtk.RadioMenuItem.new_with_label([tabs_up], _("Dock").encode('utf-8'))
+        tools_dock = Gtk.RadioMenuItem.new_with_label([tabs_up], _("Dock"))
         #tools_dock.connect("activate", lambda w: self._show_tabs_down(w))
 
         if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
