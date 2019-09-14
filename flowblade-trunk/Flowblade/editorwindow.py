@@ -938,7 +938,7 @@ class EditorWindow:
         mb_menu.append(tc_middle)
 
         components_centered = Gtk.RadioMenuItem.new_with_label([tc_left], _("Components Centered"))
-        components_centered.connect("activate", lambda w: middlebar._show_buttons_COMPONETS_CENTERED_layout(w))
+        components_centered.connect("activate", lambda w: middlebar._show_buttons_COMPONENTS_CENTERED_layout(w))
 
         mb_menu.append(components_centered)
 
