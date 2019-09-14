@@ -2453,25 +2453,25 @@ class MonitorTCInfo:
         self.monitor_tc = Gtk.Label()
         self.monitor_tc.modify_font(Pango.FontDescription(font_desc))
 
-        self.in_label = Gtk.Label("] ")
+        self.in_label = Gtk.Label(label="] ")
         self.in_label.modify_font(Pango.FontDescription(font_desc))
         self.in_label.set_sensitive(False)
 
-        self.out_label = Gtk.Label("[ ")
+        self.out_label = Gtk.Label(label="[ ")
         self.out_label.modify_font(Pango.FontDescription(font_desc))
         self.out_label.set_sensitive(False)
 
-        self.marks_length_label = Gtk.Label("][ ")
+        self.marks_length_label = Gtk.Label(label="][ ")
         self.marks_length_label.modify_font(Pango.FontDescription(font_desc))
         self.marks_length_label.set_sensitive(False)
 
-        self.in_value = Gtk.Label("--:--:--:--")
+        self.in_value = Gtk.Label(label="--:--:--:--")
         self.in_value.modify_font(Pango.FontDescription(font_desc))
 
-        self.out_value = Gtk.Label("--:--:--:--")
+        self.out_value = Gtk.Label(label="--:--:--:--")
         self.out_value.modify_font(Pango.FontDescription(font_desc))
 
-        self.marks_length_value = Gtk.Label("--:--:--:--")
+        self.marks_length_value = Gtk.Label(label="--:--:--:--")
         self.marks_length_value.modify_font(Pango.FontDescription(font_desc))
         
         self.widget.pack_start(self.monitor_source, False, False, 0)
