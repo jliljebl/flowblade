@@ -35,7 +35,7 @@ cd mlt
 
 ### Update bindings file for Python 3
 
-Change line in file **\<ROOT_DIR\>mlt/src/swig/python/build** from:
+Change line in file *\<ROOT_DIR\>/mlt/src/swig/python/build* from:
 
 ```bash
 	export PYTHON_INCLUDE=`python -c "import sys;print(\"{}/include/python{}.{}\".format(sys.prefix,*sys.version_info))"`
