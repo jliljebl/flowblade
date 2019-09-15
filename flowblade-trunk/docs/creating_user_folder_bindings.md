@@ -5,7 +5,7 @@ This is a rough guide on how install and run self created MLT bindinds with Flow
 
 Please create pull request against this document if you have corrections or additions to improve this guide.
 
-### Install Flowblade from repo
+### Install Flowblade from repository
 See [here](./INSTALLING.md).
 
 ### Install MLT build dependencies
