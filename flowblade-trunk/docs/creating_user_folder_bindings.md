@@ -30,7 +30,7 @@ git clone git://github.com/mltframework/mlt.git
 ### Configure build
 ```bash
 cd mlt
-./configure --prefix=**\<ROOT_DIR\>**/build --enable-gpl --enable-gpl3 --swig-languages=python
+./configure --prefix=<ROOT_DIR>/build --enable-gpl --enable-gpl3 --swig-languages=python
 ```
 
 ### Update bindings file for Python 3
