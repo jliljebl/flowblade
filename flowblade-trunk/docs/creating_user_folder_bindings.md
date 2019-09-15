@@ -1,5 +1,5 @@
 
-## Building Python 3 bindings to use with repoinstallation
+## Building Python 3 bindings to use with repo installation
 
 This is a rough guide on how install and run self created MLT bindinds with Flowblade install from repository.
 
