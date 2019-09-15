@@ -787,10 +787,8 @@ class EditorWindow:
 
         tline_hbox_2.pack_start(self.tline_column.widget, False, False, 0)
         tline_hbox_2.pack_start(self.tline_canvas.widget, True, True, 0)
-        tline_hbox_2.pack_start(guiutils.get_pad_label(4,4), False, False, 0)
+        #tline_hbox_2.pack_start(guiutils.get_pad_label(4,4), False, False, 0)
 
-
-        
         # Bottom row filler
         self.left_corner = guicomponents.TimeLineLeftBottom()
         self.left_corner.widget.set_size_request(tlinewidgets.COLUMN_WIDTH, 20)
@@ -802,27 +800,26 @@ class EditorWindow:
         tline_hbox_3 = Gtk.HBox()
         tline_hbox_3.pack_start(self.left_corner.widget, False, False, 0)
         tline_hbox_3.pack_start(self.tline_scroller, True, True, 0)
-        print ("oo")
+
         # Timeline vbox 
         tline_vbox = Gtk.VBox()
         tline_vbox.pack_start(tline_hbox_1, False, False, 0)
         tline_vbox.pack_start(tline_hbox_2, True, True, 0)
         tline_vbox.pack_start(tline_hbox_3, False, False, 0)
-        print ("oo")
+
         # Timeline box 
         self.tline_box = Gtk.HBox()
         self.tline_box.pack_start(tline_vbox, True, True, 0)
-        #self.tline_box.pack_start(tool_dock, False, False, 0)
-        print ("oo")
+
         # Timeline pane
         tline_pane_v = Gtk.VBox(False, 1)
         tline_pane_v.pack_start(self.edit_buttons_frame, False, True, 0)
         tline_pane_v.pack_start(self.tline_box, True, True, 0)
-        print ("oo")
+
         tline_pane_h = Gtk.HBox(False, 0)
         tline_pane_h.pack_start(tline_pane_v, True, True, 0)
         tline_pane_h.pack_start(tool_dock, False, False, 0)
-        print ("oo")
+
         self.tline_pane = tline_pane_h
     
         # VPaned top row / timeline

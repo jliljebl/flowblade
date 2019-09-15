@@ -164,6 +164,19 @@ def get_cairo_image(img_name, suffix = ".png", force = None):
         img_name = img_name + "@2"
     return cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + img_name + suffix)
 
+def get_scaled_cairo_image(img_name):
+    icon = cairo.ImageSurface.create_from_png(img_name)
+    if editorpersistance.prefs.double_track_hights  == False:
+        return icon
+    
+    scaled_icon = cairo.ImageSurface(cairo.FORMAT_ARGB32, icon.get_width() * 2, icon.get_height() * 2)
+    cr = cairo.Context(scaled_icon)
+    cr.scale(2.0, 2.0)
+    cr.set_source_surface(icon, 0, 0)
+    cr.paint()
+
+    return scaled_icon
+        
 # Aug-2019 - SvdB - BB
 def get_image_button(img_file_name, width, height):
     button = Gtk.Button()
