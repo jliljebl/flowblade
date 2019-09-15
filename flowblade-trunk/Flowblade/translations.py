@@ -45,7 +45,7 @@ def init_languages():
     if (language):
         langs += language.split(":")
 
-    if editorstate.app_running_from == editorstate.RUNNING_FROM_INSTALLATION:
+    if editorstate.app_running_from == editorstate.RUNNING_FROM_INSTALLATION or editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
         # Use /usr/share/locale first if available and running from installation
         # Look for installed translation in distro install
         # Were using Russian as test language

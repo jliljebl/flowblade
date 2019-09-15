@@ -604,6 +604,8 @@ def environment_dialog(parent_window):
 
     if editorstate.app_running_from == editorstate.RUNNING_FROM_INSTALLATION:
         run_type = _("INSTALLATION")
+    elif editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
+        run_type = "FLATPAK"
     else:
         run_type = _("DEVELOPER VERSION")
 
