@@ -20,7 +20,7 @@ libsox-dev libjack-dev ladspa-sdk
 
 ### Create work directory 
 
-Let's name call directory **\<ROOT_DIR\>**. Open termina in this directory
+Let's name call this directory **\<ROOT_DIR\>**. Open terminal in this directory
 
 ### Clone MLT repository
 ```bash
