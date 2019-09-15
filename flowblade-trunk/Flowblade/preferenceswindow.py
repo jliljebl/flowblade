@@ -382,6 +382,7 @@ def _view_prefs_panel():
     tracks_combo = Gtk.ComboBoxText()
     tracks_combo.append_text(_("Normal - 50px, 25px"))
     tracks_combo.append_text(_("Double for HiDPI - 100px, 50px"))
+    # Aug-2019 - SvdB - BB
     tracks_combo.set_active(prefs.double_track_hights)
 
     top_row_layout = Gtk.ComboBoxText()

@@ -1820,7 +1820,7 @@ class TimeLineCanvas:
                         cr.clip()
                         cr.set_source_surface(thumb_img,scale_in, y - 20)
                         cr.paint()
-                    except: # thumbnail not found  in dict, get it pait it
+                    except: # thumbnail not found  in dict, get it and  paint it
                         try:
                             media_file = PROJECT().get_media_file_for_path(clip.path)
                             thumb_img = media_file.icon
@@ -2513,6 +2513,13 @@ class TimeLineFrameScale:
             cr.rectangle(in_x,0,out_x-in_x,h)
             cr.fill()
 
+        # Aug-2019 - SvdB - BB - Increase indicator triangles by 1 for double track height. size_adj for tick lines
+        max_range = 3
+        size_adj = 1
+        if editorpersistance.prefs.double_track_hights:
+           max_range = 4
+           size_adj = 1.4
+
         # Draw start indicator triangles
         if pos == 0:
             cr.set_source_rgb(*FRAME_SCALE_LINES)
@@ -2520,7 +2527,8 @@ class TimeLineFrameScale:
             tri_h = 8
             tri_h_half = tri_h / 2
             tri_w = 8
-            for i in range(0, 3):
+
+            for i in range(0, max_range):
                 cr.move_to (0, start_y + i * tri_h)
                 cr.line_to (tri_w, start_y + i * tri_h + tri_h_half)
                 cr.line_to (0, start_y + i * tri_h + tri_h)
@@ -2577,7 +2585,8 @@ class TimeLineFrameScale:
         end = int(view_end_frame / small_tick_step) + 1 
         for i in range(start, end):
             x = math.floor(i * small_tick_step * pix_per_frame - pos * pix_per_frame) + 0.5 
-            cr.move_to(x, SCALE_HEIGHT)
+            # Aug-2019 - SvdB - BB - Added size_adj
+            cr.move_to(x, SCALE_HEIGHT*size_adj)
             cr.line_to(x, SMALL_TICK_Y)
             if tc_draw_step == small_tick_step:
                 cr.move_to(x, TC_Y)
@@ -2597,7 +2606,8 @@ class TimeLineFrameScale:
             for i in range(1, count):
                 x = math.floor((math.floor(i * big_tick_step) + to_seconds_fix_add) * pix_per_frame \
                     - pos * pix_per_frame) + 0.5 
-                cr.move_to(x, SCALE_HEIGHT)
+                # Aug-2019 - SvdB - BB - Added size_adj
+                cr.move_to(x, SCALE_HEIGHT*size_adj)
                 cr.line_to(x, BIG_TICK_Y)
                 cr.stroke()
 

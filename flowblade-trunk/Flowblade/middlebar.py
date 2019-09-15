@@ -84,7 +84,7 @@ def _show_buttons_TC_MIDDLE_layout(widget):
     editorpersistance.prefs.midbar_layout = appconsts.MIDBAR_TC_CENTER
     editorpersistance.save()
 
-def _show_buttons_COMPONETS_CENTERED_layout(widget):
+def _show_buttons_COMPONENTS_CENTERED_layout(widget):
     global w
     w = gui.editor_window
     if w == None:
@@ -94,23 +94,11 @@ def _show_buttons_COMPONETS_CENTERED_layout(widget):
 
     _clear_container(w.edit_buttons_row)
     _create_buttons(w)
-    fill_with_COMPONETS_CENTERED_pattern(w.edit_buttons_row, w)
+    fill_with_COMPONENTS_CENTERED_pattern(w.edit_buttons_row, w)
     w.window.show_all()
 
     editorpersistance.prefs.midbar_layout = appconsts.MIDBAR_COMPONENTS_CENTERED
     editorpersistance.save()
-    
-def _show_monitor_info_toggled(widget):
-    editorpersistance.prefs.show_sequence_profile = widget.get_active()
-    editorpersistance.save()
-
-    if editorstate.timeline_visible():
-        name = editorstate.current_sequence().name
-        profile_desc = editorstate.current_sequence().profile.description()
-        if editorpersistance.prefs.show_sequence_profile:
-            gui.editor_window.monitor_source.set_text(name + " / " + profile_desc)
-        else:
-            gui.editor_window.monitor_source.set_text(name)
 
 def create_edit_buttons_row_buttons(editor_window, modes_pixbufs):
     global m_pixbufs
@@ -118,7 +106,12 @@ def create_edit_buttons_row_buttons(editor_window, modes_pixbufs):
     _create_buttons(editor_window)
 
 def _create_buttons(editor_window):
-    IMG_PATH = respaths.IMAGE_PATH
+    # Aug-2019 - SvdB - BB
+    prefs = editorpersistance.prefs
+    size_adj = 1
+    if prefs.double_track_hights:
+       size_adj = 2
+
     editor_window.big_TC = Gtk.Stack()
     tc_disp = guicomponents.BigTCDisplay()
     tc_entry = guicomponents.BigTCEntry()
@@ -129,68 +122,68 @@ def _create_buttons(editor_window):
     editor_window.big_TC.set_visible_child_name("BigTCDisplay")
     gui.big_tc = editor_window.big_TC 
 
-    surface = cairo.ImageSurface.create_from_png(IMG_PATH + "workflow.png")
-    editor_window.worflow_launch = guicomponents.PressLaunch(workflow.workflow_menu_launched, surface, w=22, h=22)
+    surface = guiutils.get_cairo_image("workflow")
+    editor_window.worflow_launch = guicomponents.PressLaunch(workflow.workflow_menu_launched, surface, w=22*size_adj, h=22*size_adj)
 
-    editor_window.tool_selector = guicomponents.ToolSelector(editor_window.mode_selector_pressed, m_pixbufs, 40, 22)
+    editor_window.tool_selector = guicomponents.ToolSelector(editor_window.mode_selector_pressed, m_pixbufs, 40*size_adj, 22*size_adj)
 
     if editorpersistance.prefs.buttons_style == 2: # NO_DECORATIONS
         no_decorations = True
     else:
         no_decorations = False
 
-    editor_window.zoom_buttons = glassbuttons.GlassButtonsGroup(38, 23, 2, 8, 5)
-    editor_window.zoom_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "zoom_in.png"), updater.zoom_in)
-    editor_window.zoom_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "zoom_out.png"), updater.zoom_out)
-    editor_window.zoom_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "zoom_length.png"), updater.zoom_project_length)
+    editor_window.zoom_buttons = glassbuttons.GlassButtonsGroup(38*size_adj, 23*size_adj, 2*size_adj, 8*size_adj, 5*size_adj)
+    editor_window.zoom_buttons.add_button(guiutils.get_cairo_image("zoom_in"), updater.zoom_in)
+    editor_window.zoom_buttons.add_button(guiutils.get_cairo_image("zoom_out"), updater.zoom_out)
+    editor_window.zoom_buttons.add_button(guiutils.get_cairo_image("zoom_length"), updater.zoom_project_length)
     tooltips = [_("Zoom In - Mouse Middle Scroll"), _("Zoom Out - Mouse Middle Scroll"), _("Zoom Length - Mouse Middle Click")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.zoom_buttons, tooltips)
     editor_window.zoom_buttons.no_decorations = no_decorations
     
-    editor_window.edit_buttons = glassbuttons.GlassButtonsGroup(32, 23, 2, 5, 5)
-    editor_window.edit_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "dissolve.png"), tlineaction.add_transition_pressed)
-    editor_window.edit_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "cut.png"), tlineaction.cut_pressed)
+    editor_window.edit_buttons = glassbuttons.GlassButtonsGroup(32*size_adj, 23*size_adj, 2*size_adj, 5*size_adj, 5*size_adj)
+    editor_window.edit_buttons.add_button(guiutils.get_cairo_image("dissolve"), tlineaction.add_transition_pressed)
+    editor_window.edit_buttons.add_button(guiutils.get_cairo_image("cut"), tlineaction.cut_pressed)
     tooltips = [_("Add Rendered Transition - 2 clips selected\nAdd Rendered Fade - 1 clip selected"), _("Cut Active Tracks - X\nCut All Tracks - Shift + X")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons, tooltips)
     editor_window.edit_buttons.no_decorations = no_decorations
         
-    editor_window.edit_buttons_3 = glassbuttons.GlassButtonsGroup(46, 23, 2, 3, 5)
-    editor_window.edit_buttons_3.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "splice_out.png"), tlineaction.splice_out_button_pressed)
-    editor_window.edit_buttons_3.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "lift.png"), tlineaction.lift_button_pressed)
-    editor_window.edit_buttons_3.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "ripple_delete.png"), tlineaction.ripple_delete_button_pressed)
-    editor_window.edit_buttons_3.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "delete_range.png"), tlineaction.delete_range_button_pressed)
+    editor_window.edit_buttons_3 = glassbuttons.GlassButtonsGroup(46*size_adj, 23*size_adj, 2*size_adj, 3*size_adj, 5*size_adj)
+    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("splice_out"), tlineaction.splice_out_button_pressed)
+    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("lift"), tlineaction.lift_button_pressed)
+    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("ripple_delete"), tlineaction.ripple_delete_button_pressed)
+    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("delete_range"), tlineaction.delete_range_button_pressed)
     tooltips = [_("Splice Out - Delete"), _("Lift - Control + Delete"), _("Ripple Delete"), _("Range Delete")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons_3, tooltips)
     editor_window.edit_buttons_3.no_decorations = no_decorations
 
-    editor_window.edit_buttons_2 = glassbuttons.GlassButtonsGroup(44, 23, 2, 3, 5)
-    editor_window.edit_buttons_2.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "resync.png"), tlineaction.resync_button_pressed)
-    editor_window.edit_buttons_2.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "split_audio.png"), tlineaction.split_audio_button_pressed)
+    editor_window.edit_buttons_2 = glassbuttons.GlassButtonsGroup(44*size_adj, 23*size_adj, 2*size_adj, 3*size_adj, 5*size_adj)
+    editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("resync"), tlineaction.resync_button_pressed)
+    editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("split_audio"), tlineaction.split_audio_button_pressed)
     tooltips = [_("Resync Selected"), _("Split Audio")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons_2, tooltips)
     editor_window.edit_buttons_2.no_decorations = no_decorations
     
-    editor_window.monitor_insert_buttons = glassbuttons.GlassButtonsGroup(44, 23, 2, 3, 5)
-    editor_window.monitor_insert_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "overwrite_range.png"), tlineaction.range_overwrite_pressed)
-    editor_window.monitor_insert_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "overwrite_clip.png"), tlineaction.three_point_overwrite_pressed)
-    editor_window.monitor_insert_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "insert_clip.png"), tlineaction.insert_button_pressed)
-    editor_window.monitor_insert_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "append_clip.png"), tlineaction.append_button_pressed)
+    editor_window.monitor_insert_buttons = glassbuttons.GlassButtonsGroup(44*size_adj, 23*size_adj, 2*size_adj, 3*size_adj, 5*size_adj)
+    editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("overwrite_range"), tlineaction.range_overwrite_pressed)
+    editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("overwrite_clip"), tlineaction.three_point_overwrite_pressed)
+    editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("insert_clip"), tlineaction.insert_button_pressed)
+    editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("append_clip"), tlineaction.append_button_pressed)
     tooltips = [_("Overwrite Range"), _("Overwrite Clip - T"), _("Insert Clip - Y"), _("Append Clip - U")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.monitor_insert_buttons, tooltips)
     editor_window.monitor_insert_buttons.no_decorations = no_decorations
     
-    editor_window.undo_redo = glassbuttons.GlassButtonsGroup(28, 23, 2, 2, 7)
-    editor_window.undo_redo.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "undo.png"), undo.do_undo_and_repaint)
-    editor_window.undo_redo.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "redo.png"), undo.do_redo_and_repaint)
+    editor_window.undo_redo = glassbuttons.GlassButtonsGroup(28*size_adj, 23*size_adj, 2*size_adj, 2*size_adj, 7*size_adj)
+    editor_window.undo_redo.add_button(guiutils.get_cairo_image("undo"), undo.do_undo_and_repaint)
+    editor_window.undo_redo.add_button(guiutils.get_cairo_image("redo"), undo.do_redo_and_repaint)
     tooltips = [_("Undo - Ctrl + Z"), _("Redo - Ctrl + Y")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.undo_redo, tooltips)
     editor_window.undo_redo.no_decorations = no_decorations
     
-    editor_window.tools_buttons = glassbuttons.GlassButtonsGroup(30, 23, 2, 14, 7)
-    editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_mixer.png"), audiomonitoring.show_audio_monitor)
-    editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_titler.png"), titler.show_titler)
-    editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_gmic.png"), gmic.launch_gmic)
-    editor_window.tools_buttons.add_button(cairo.ImageSurface.create_from_png(IMG_PATH + "open_renderqueue.png"), lambda :batchrendering.launch_batch_rendering())
+    editor_window.tools_buttons = glassbuttons.GlassButtonsGroup(30*size_adj, 23*size_adj, 2*size_adj, 14*size_adj, 7*size_adj)
+    editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_mixer"), audiomonitoring.show_audio_monitor)
+    editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_titler"), titler.show_titler)
+    editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_gmic"), gmic.launch_gmic)
+    editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_renderqueue"), lambda :batchrendering.launch_batch_rendering())
     tooltips = [_("Audio Mixer"), _("Titler"), _("G'Mic Effects"), _("Batch Render Queue")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.tools_buttons, tooltips)
     editor_window.tools_buttons.no_decorations = True
@@ -200,6 +193,7 @@ def _create_buttons(editor_window):
         editor_window.tools_buttons.widget.set_tooltip_text(_("Audio Mixer(not available)\nTitler"))
 
 def fill_with_TC_LEFT_pattern(buttons_row, window):
+    buttons_row.set_homogeneous(False)
     global w
     w = window
     buttons_row.pack_start(w.worflow_launch.widget, False, True, 0)
@@ -208,37 +202,33 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
     buttons_row.pack_start(w.tool_selector.widget, False, True, 0)
     if editorstate.SCREEN_WIDTH > NORMAL_WIDTH:
-        buttons_row.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
+        buttons_row.pack_start(guiutils.get_pad_label(24, 10), False, True, 0)
         buttons_row.pack_start(_get_tools_buttons(), False, True, 0)
-        buttons_row.pack_start(guiutils.get_pad_label(150, 10), False, True, 0)
+        buttons_row.pack_start(guiutils.get_pad_label(170, 10), False, True, 0)
     else:
         buttons_row.pack_start(guiutils.get_pad_label(30, 10), False, True, 0)
     
     
     buttons_row.pack_start(_get_undo_buttons_panel(), False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(30, 10), False, True, 0)
-    #buttons_row.pack_start(Gtk.Label(), True, True, 0)
         
     buttons_row.pack_start(_get_zoom_buttons_panel(),False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(30, 10), False, True, 0)
-    #buttons_row.pack_start(Gtk.Label(), True, True, 0)
     
     buttons_row.pack_start(_get_edit_buttons_panel(),False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(30, 10), False, True, 0)
-    # buttons_row.pack_start(Gtk.Label(), True, True, 0)
     
     buttons_row.pack_start(_get_edit_buttons_2_panel(),False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
-    #buttons_row.pack_start(Gtk.Label(), True, True, 0)
     
     buttons_row.pack_start(_get_edit_buttons_3_panel(),False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(30, 10), False, True, 0)
-    #buttons_row.pack_start(Gtk.Label(), True, True, 0)
     
     buttons_row.pack_start(_get_monitor_insert_buttons(), False, True, 0)
     buttons_row.pack_start(Gtk.Label(), True, True, 0)
     
 def fill_with_TC_MIDDLE_pattern(buttons_row, window):
+    buttons_row.set_homogeneous(True)
     global w
     w = window
     left_panel = Gtk.HBox(False, 0)    
@@ -274,7 +264,8 @@ def fill_with_TC_MIDDLE_pattern(buttons_row, window):
     buttons_row.pack_start(middle_panel, False, False, 0)
     buttons_row.pack_start(right_panel, True, True, 0)
 
-def fill_with_COMPONETS_CENTERED_pattern(buttons_row, window):
+def fill_with_COMPONENTS_CENTERED_pattern(buttons_row, window):
+    buttons_row.set_homogeneous(False)
     global w
     w = window
     buttons_row.pack_start(Gtk.Label(), True, True, 0)

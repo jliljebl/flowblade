@@ -200,6 +200,7 @@ def get_recent_projects():
     return proj_list
 
 def update_prefs_from_widgets(widgets_tuples_tuple):
+    # Aug-2019 - SvdB - BB - Replace double_track_hights by double_track_hights
     # Unpack widgets
     gen_opts_widgets, edit_prefs_widgets, playback_prefs_widgets, view_prefs_widgets, performance_widgets = widgets_tuples_tuple
 

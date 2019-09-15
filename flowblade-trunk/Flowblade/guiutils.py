@@ -29,6 +29,8 @@ from gi.repository import Gtk, Gdk
 from gi.repository import GdkPixbuf
 
 import appconsts
+import cairo # Aug-2019 - SvdB - BB
+import editorpersistance # Aug-2019 - SvdB - BB
 import respaths
 import translations
 
@@ -136,13 +138,43 @@ def get_right_expand_box(widget1, widget2, center_pad=False):
     hbox.pack_start(widget2, True, True, 0)
     return hbox
 
+# Aug-2019 - SvdB - BB
+def get_image_name(img_name, suffix = ".png", double_height = False):
+    button_size_text = ""
+    if double_height:
+       button_size_text = "@2"    
+    img_name = img_name+button_size_text+suffix
+    return img_name
+
+# Aug-2019 - SvdB - BB
+def get_image(img_name, suffix = ".png", force = None):
+    # Use parameter force as True or False to force the track height no matter what the preferences setting
+    if force == None:
+        force = editorpersistance.prefs.double_track_hights
+    if force:
+        img_name = img_name + "@2"
+    return Gtk.Image.new_from_file(respaths.IMAGE_PATH + img_name + suffix)
+
+# Aug-2019 - SvdB - BB
+def get_cairo_image(img_name, suffix = ".png", force = None):
+    # Use parameter force as True or False to force the track height no matter what the preferences setting
+    if force == None:
+        force = editorpersistance.prefs.double_track_hights
+    if force:
+        img_name = img_name + "@2"
+    return cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + img_name + suffix)
+
+# Aug-2019 - SvdB - BB
 def get_image_button(img_file_name, width, height):
     button = Gtk.Button()
-    icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + img_file_name)        
+    icon = get_image(img_file_name)        
+    size_adj = 1
+    if editorpersistance.prefs.double_track_hights:
+        size_adj = 2
     button_box = Gtk.HBox()
     button_box.pack_start(icon, False, False, 0)
     button.add(button_box)
-    button.set_size_request(width, height)
+    button.set_size_request(width*size_adj, height*size_adj)
     return button
     
 def get_pad_label(w, h):
