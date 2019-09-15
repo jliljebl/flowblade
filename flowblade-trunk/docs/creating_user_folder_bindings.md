@@ -9,7 +9,7 @@ Please create pull request against this document if you have corrections or addi
 See [here](./INSTALLING.md).
 
 ### Install MLT build dependencies
-Here is list of Ubuntu depencies. There could be some omissions, please file pull request to update lsit if something is found to be missing.
+Here is list of Ubuntu depencies. There could be some omissions, please file pull request to update the list if something is found to be missing.
 
 ```bash
 sudo apt-get install git swig python3-dev libxml2-dev libsdl-dev 
