@@ -38,11 +38,11 @@ cd mlt
 Change line in file *\<ROOT_DIR\>/mlt/src/swig/python/build* from:
 
 ```bash
-	export PYTHON_INCLUDE=`python -c "import sys;print(\"{}/include/python{}.{}\".format(sys.prefix,*sys.version_info))"`
+export PYTHON_INCLUDE=`python -c "import sys;print(\"{}/include/python{}.{}\".format(sys.prefix,*sys.version_info))"`
 ```
  to:
  ```bash
-  export PYTHON_INCLUDE=`python3 -c "import sys;print(\"{}/include/python{}.{}\".format(sys.prefix,*sys.version_info))"`
+export PYTHON_INCLUDE=`python3 -c "import sys;print(\"{}/include/python{}.{}\".format(sys.prefix,*sys.version_info))"`
 ```
 
 ### Build MLT and bindongs
