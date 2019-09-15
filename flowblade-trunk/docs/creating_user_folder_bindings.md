@@ -6,7 +6,7 @@ This is a rough guide on how install and run self created MLT bindinds with Flow
 Please create pull request against this document if you have corrections or additions to improve this guide.
 
 ### Install Flowblade from repo
-See here.
+See [here](./INSTALLING.md).
 
 ### Install MLT build dependencies
 Here is list of Ubuntu depencies. There could be some omissions, please file pull request to update lsit if something is found to be missing.
