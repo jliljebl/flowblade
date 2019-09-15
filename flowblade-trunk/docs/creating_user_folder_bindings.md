@@ -72,12 +72,6 @@ export MLT_DATA=$INSTALL_DIR/share/mlt
 export MLT_PROFILES_PATH=$INSTALL_DIR/share/mlt/profiles
 export LD_LIBRARY_PATH=$INSTALL_DIR/lib:$LD_LIBRARY_PATH
 
-echo "ENV VARIABLES_:"
-echo $MLT_REPOSITORY
-echo $MLT_DATA
-echo $MLT_PROFILES_PATH
-echo $LD_LIBRARY_PATH
-
 # Lauch repository Flowblade
 /home/path/to/your/repository/install//flowblade-trunk/flowblade
 ``` 
