@@ -53,7 +53,7 @@ make install
 
 ### Set up bindings
 
-1. Copy *mlt.py* and *_mlt.so* into  *../flowblade-trunk* where your repository version Flowblade is installed.
+1. Copy *mlt.py* and *_mlt.so* from  *\<ROOT_DIR\>/mlt/src/swig/python* into  *../flowblade-trunk* where your repository version Flowblade is installed.
 1. Create launch script in **\<ROOT_DIR\>** to set up MLT variables correctly on launch.
 
  ```bash
