@@ -507,7 +507,7 @@ class XMLRenderPlayer(threading.Thread):
             time.sleep(0.1)
         
         # Get render producer
-        if self.rendered_sequence == None:
+        if self.rendered_sequence == None: # default is current sequence
             timeline_producer = PROJECT().c_seq.tractor
         else:
             timeline_producer = self.rendered_sequence.tractor
