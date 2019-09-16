@@ -906,7 +906,7 @@ class RenderQueueView(Gtk.VBox):
         self.text_col_2.set_expand(False)
         self.text_col_2.pack_start(self.text_rend_2, True)
         self.text_col_2.add_attribute(self.text_rend_2, "text", 2)
-        self.text_col_2.set_fixed_width(90)
+        self.text_col_2.set_min_width(90)
 
         self.text_col_3.set_expand(False)
         self.text_col_3.pack_start(self.text_rend_3, True)
