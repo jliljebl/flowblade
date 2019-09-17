@@ -46,6 +46,7 @@ from editorstate import EDIT_MODE
 from editorstate import current_proxy_media_paths
 import editorstate
 import gui
+import guiutils
 import respaths
 import sequence
 import snapping
@@ -118,7 +119,6 @@ TRACK_ALL_ON_A_ICON = None
 
 # clip icons
 FILTER_CLIP_ICON = None
-COMPOSITOR_CLIP_ICON = None
 VIEW_SIDE_ICON = None
 INSERT_ARROW_ICON = None
 AUDIO_MUTE_ICON = None
@@ -130,6 +130,7 @@ LEVELS_RENDER_ICON = None
 SNAP_ICON = None
 KEYBOARD_ICON = None
 CLOSE_MATCH_ICON = None
+COMPOSITOR_ICON = None
 
 # tc scale
 TC_POINTER_HEAD = None
@@ -313,14 +314,13 @@ match_frame_height = 1
 # ------------------------------------------------------------------- module functions
 def load_icons():
     global FULL_LOCK_ICON, FILTER_CLIP_ICON, VIEW_SIDE_ICON,\
-    COMPOSITOR_CLIP_ICON, INSERT_ARROW_ICON, AUDIO_MUTE_ICON, MARKER_ICON, \
+    COMPOSITOR_ICON, INSERT_ARROW_ICON, AUDIO_MUTE_ICON, MARKER_ICON, \
     VIDEO_MUTE_ICON, ALL_MUTE_ICON, TRACK_BG_ICON, MUTE_AUDIO_ICON, MUTE_VIDEO_ICON, MUTE_ALL_ICON, \
     TRACK_ALL_ON_V_ICON, TRACK_ALL_ON_A_ICON, MUTE_AUDIO_A_ICON, TC_POINTER_HEAD, EDIT_INDICATOR, \
     LEVELS_RENDER_ICON, SNAP_ICON, KEYBOARD_ICON, CLOSE_MATCH_ICON, CLIP_MARKER_ICON
 
     FULL_LOCK_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "full_lock.png")
     FILTER_CLIP_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "filter_clip_icon_sharp.png")
-    COMPOSITOR_CLIP_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "compositor.png")
     VIEW_SIDE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "view_side.png")
     INSERT_ARROW_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insert_arrow.png")
     AUDIO_MUTE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH +"clip_audio_mute.png")
@@ -335,6 +335,7 @@ def load_icons():
     KEYBOARD_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "keyb_trim.png")
     CLOSE_MATCH_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "close_match.png")
     CLIP_MARKER_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "clip_marker.png")
+    COMPOSITOR_ICON = guiutils.get_cairo_image("compositor_icon")
 
     MARKER_ICON = _load_pixbuf("marker.png")
     TRACK_ALL_ON_V_ICON = _load_pixbuf("track_all_on_V.png")
@@ -1256,7 +1257,11 @@ def _create_compositor_cairo_path(cr, scale_in, scale_length, y, target_y):
     cr.line_to(scale_in + 0.5 + COMPOSITOR_TRACK_X_PAD, y + 0.5 + COMPOSITOR_HEIGHT)
     cr.line_to(scale_in + 0.5, y + 0.5 + COMPOSITOR_HEIGHT)
     cr.close_path()
-            
+
+
+        
+    
+
 def _draw_two_arrows(cr, x, y, distance):
     """
     Draws two arrows indicating that user can drag in 
@@ -2071,17 +2076,23 @@ class TimeLineCanvas:
             scale_in = (comp.clip_in - pos) * pix_per_frame
             scale_length = (comp.clip_out - comp.clip_in + 1) * pix_per_frame # +1, out inclusive
 
-            if comp.selected == False:
-                if editorstate.auto_follow_active() == True and comp.obey_autofollow == True:
-                    color = COMPOSITOR_CLIP_AUTO_FOLLOW
-                else:
-                    color = COMPOSITOR_CLIP
-            else:
-                color = COMPOSITOR_CLIP_SELECTED
-            cr.set_source_rgba(*color)
 
+
+            if editorstate.auto_follow_active() == False:
+                self.draw_default_compositor(comp, cr, scale_in, scale_length, y, target_y)
+            elif editorstate.auto_follow_active() == True:
+                self.draw_autofollow_compositor(comp, cr, scale_in, scale_length, y, target_y)
+                
+    def draw_default_compositor(self, comp, cr, scale_in, scale_length, y, target_y):
             _create_compositor_cairo_path(cr, scale_in, scale_length, y, target_y)
 
+            if comp.selected == False:
+                color = COMPOSITOR_CLIP
+            else:
+                color = COMPOSITOR_CLIP_SELECTED
+                
+            cr.set_source_rgba(*color)
+            
             cr.fill_preserve()
 
             cr.set_source_rgb(0, 0, 0)
@@ -2107,6 +2118,53 @@ class TimeLineCanvas:
             
             cr.restore()
 
+    def draw_autofollow_compositor(self, comp, cr, scale_in, scale_length, y, target_y):
+            #_create_compositor_cairo_path(cr, scale_in, scale_length, y, target_y)
+
+            scale_mid = int(scale_in) + int(scale_length) // 2
+            y = int(y) - 8.0
+            side_half = 11
+    
+            self.create_round_rect_path(cr, scale_mid - side_half, y, side_half * 2, side_half * 2, 4.0)
+        
+            if comp.selected == False:
+                color = COMPOSITOR_CLIP_AUTO_FOLLOW
+            else:
+                color = COMPOSITOR_CLIP_SELECTED
+                
+            cr.set_source_rgba(*color)
+            
+            cr.fill_preserve()
+
+            cr.set_source_rgb(0, 0, 0)
+            cr.set_line_width(1.0)
+            cr.stroke()
+
+
+            cr.set_source_surface(COMPOSITOR_ICON, scale_mid - side_half - 2, y + 2)
+            cr.paint()
+                        
+            """
+            # text
+            cr.save()
+
+            cr.rectangle(scale_in + 0.5,
+                         y + 0.5, scale_length, 
+                         COMPOSITOR_HEIGHT)
+            cr.clip()
+            cr.new_path()
+            cr.set_source_rgb(1, 1, 1)
+            cr.select_font_face ("sans-serif",
+                                 cairo.FONT_SLANT_NORMAL,
+                                 cairo.FONT_WEIGHT_NORMAL)
+
+            cr.set_font_size(11)
+            cr.move_to(scale_in + COMPOSITOR_TEXT_X, y + COMPOSITOR_TEXT_Y)
+            cr.show_text(comp.name.upper())
+            
+            cr.restore()
+            """
+        
     def draw_sync_relations(self, cr):
         parent_y = _get_track_y(current_sequence().first_video_index)
         radius = 4
