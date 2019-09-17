@@ -204,6 +204,18 @@ def workflow_menu_launched(widget, event):
 
     delete_item.set_submenu(delete_menu)
 
+    comositing_item = Gtk.MenuItem.new_with_label(_("Compositing Mode"))
+    comositing_item.show()
+    
+    compositing_menu = Gtk.Menu()
+    labels = [_("Top Down Free Move"), _("Top Down Auto Follow"), _("Standard Auto Follow")]
+    msgs = ["top down free", "top down auto follow", "standartd auto follow"]
+    active_index = editorstate.get_compositing_mode() # appconsts values correspond with order here
+    _build_radio_menu_items_group(compositing_menu, labels, msgs, _workflow_menu_callback, active_index)
+
+    comositing_item.set_submenu(compositing_menu)
+    behaviours_menu.add(comositing_item)
+    
     dnd_item = Gtk.MenuItem.new_with_label(_("Drag'n'Drop Action"))
     dnd_item.show()
     
@@ -216,13 +228,15 @@ def workflow_menu_launched(widget, event):
     dnd_item.set_submenu(dnd_menu)
     behaviours_menu.add(dnd_item)
 
+    """
     autofollow_item = Gtk.CheckMenuItem()
     autofollow_item.set_label(_("Compositors Auto Follow"))
-    autofollow_item.set_active(editorstate.auto_follow_active())
+    autofollow_item.set_active(editorstate.compositing_mode())
     autofollow_item.connect("activate", _workflow_menu_callback, (None, "autofollow"))
     autofollow_item.show()
 
     behaviours_menu.append(autofollow_item)
+    """
 
     show_tooltips_item = Gtk.CheckMenuItem()
     show_tooltips_item.set_label(_("Show Tooltips for Tools"))

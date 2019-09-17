@@ -63,6 +63,8 @@ edit_mode = INSERT_MOVE
 # Compositor autofollow state. If true when edit is performed, all compositors are auto resynced on first do, redo and undo actions.
 auto_follow = False
 
+compositing_mode = appconsts.TOP_DOWN_FREE_MOVE
+
 # Ripple Trim tool is ONE_ROLL_TRIM mode + True on this flag
 trim_mode_ripple = False
 
@@ -182,6 +184,9 @@ def MONITOR_MEDIA_FILE():
 
 def auto_follow_active():
     return auto_follow
+
+def get_compositing_mode():
+    return compositing_mode
 
 def get_track(index):
     return project.c_seq.tracks[index]
