@@ -327,19 +327,14 @@ class EditorWindow:
                     <menuitem action='SpliceOutClip'/>
                     <menuitem action='DeleteClip'/>
                     <menuitem action='ResyncSelected'/>
-                    <menuitem action='SyncCompositors'/>
                     <menuitem action='ClearFilters'/>
                     <separator/>
-                    <menu action='Timeline'>
-                        <menuitem action='FiltersOff'/>
-                        <menuitem action='FiltersOn'/>
-                    </menu>
+                    <menuitem action='SyncCompositors'/>
+                    <menuitem action='FiltersOff'/>
+                    <menuitem action='FiltersOn'/>
                     <separator/>
                     <menuitem action='AddTransition'/>
                     <menuitem action='AddFade'/>
-                    <separator/>
-                    <menuitem action='ChangeSequenceTracks'/>
-                    <menuitem action='Watermark'/>
                     <separator/>
                     <menuitem action='ProfilesManager'/>
                     <menuitem action='DiskCacheManager'/>
@@ -370,14 +365,6 @@ class EditorWindow:
                         <menuitem action='AddBin'/>
                         <menuitem action='DeleteBin'/>
                     </menu>
-                    <menu action='SequenceMenu'>
-                        <menuitem action='AddSequence'/>
-                        <menuitem action='EditSequence'/>
-                        <menuitem action='DeleteSequence'/>
-                        <separator/>
-                        <menuitem action='CombineSequences'/>
-                        <menuitem action='SequenceSplit'/>
-                    </menu>
                     <separator/>
                     <menuitem action='ImportProjectMedia'/>
                     <separator/>
@@ -389,6 +376,17 @@ class EditorWindow:
                     <menuitem action='ChangeProfile'/>
                     <separator/>
                     <menuitem action='ProxyManager'/>
+                </menu>
+                <menu action='SequenceMenu'>
+                    <menuitem action='AddSequence'/>
+                    <menuitem action='EditSequence'/>
+                    <menuitem action='DeleteSequence'/>
+                    <separator/>
+                    <menuitem action='CombineSequences'/>
+                    <menuitem action='SequenceSplit'/>
+                    <separator/>
+                    <menuitem action='ChangeSequenceTracks'/>
+                    <menuitem action='Watermark'/>
                 </menu>
                 <menu action='RenderMenu'>
                     <menuitem action='AddToQueue'/>
