@@ -1788,6 +1788,7 @@ def mouse_dragged_out(event):
 
 # --------------------------------------------------- copy/paste
 def do_timeline_objects_copy():
+    """
     if _timeline_has_focus() == False:
         # try to extract text to clipboard because user pressed CTRL + C
         copy_source = gui.editor_window.window.get_focus()
@@ -1797,7 +1798,7 @@ def do_timeline_objects_copy():
             pass
 
         return 
-
+    """
     if compositormodes.compositor != None and compositormodes.compositor.selected == True:
         editorstate.set_copy_paste_objects((COPY_PASTA_DATA_COMPOSITOR_PROPERTIES, compositormodes.compositor.get_copy_paste_objects()))
         return
@@ -1813,9 +1814,6 @@ def do_timeline_objects_copy():
         return
 
 def do_timeline_objects_paste():
-    if _timeline_has_focus() == False:
-        return 
-        
     track = current_sequence().get_first_active_track()
     if track == None:
         return 

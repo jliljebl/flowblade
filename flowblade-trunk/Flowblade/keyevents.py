@@ -635,3 +635,30 @@ def _move_to_end():
     updater.repaint_tline()
     updater.update_tline_scrollbar()
 
+# ----------------------------------------------------------------------- COPY PASTE ACTION FORWARDING
+def copy_action():
+    if _timeline_has_focus() == False:
+        filter_kf_editor = _get_focus_keyframe_editor(clipeffectseditor.keyframe_editor_widgets)
+        print (compositeeditor.keyframe_editor_widgets)
+        geom_kf_editor = _get_focus_keyframe_editor(compositeeditor.keyframe_editor_widgets)
+        if filter_kf_editor != None:
+            print (type(filter_kf_editor.clip_editor.get_active_kf_value()))
+            
+        elif geom_kf_editor != None:
+            print (geom_kf_editor.geom_kf_edit.get_keyframe(geom_kf_editor.clip_editor.active_kf_index))
+        else:
+            # Try to extract text to clipboard because user pressed CTRL + C
+            copy_source = gui.editor_window.window.get_focus()
+            try:
+                copy_source.copy_clipboard()
+            except:# selected widget was not a Gtk.Editable that can provide text to clipboard
+                pass
+    else:
+        tlineaction.do_timeline_objects_copy()
+
+def paste_action():
+    if _timeline_has_focus() == False:
+        return 
+    else:
+        tlineaction.do_timeline_objects_paste()
+

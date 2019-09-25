@@ -122,17 +122,7 @@ def maybe_clear_editor(killed_compositor):
 
 def get_compositor():
     return compositor
-"""
-def _add_fade_in_pressed():
-    compositorfades.add_fade_in(compositor, 10) # remove fade length hardcoding in 2.4
-    # We need GUI reload to show results
-    set_compositor(compositor)
 
-def _add_fade_out_pressed():
-    compositorfades.add_fade_out(compositor, 10) # remove fade legth hardcoding in 2.4
-    # We need GUI reload to show results
-    set_compositor(compositor)
-"""
 def _delete_compositor_pressed():
     data = {"compositor":compositor}
     action = edit.delete_compositor_action(data)
@@ -225,6 +215,7 @@ def _display_compositor_edit_box():
         if ((editor_type == propertyeditorbuilder.KEYFRAME_EDITOR)
             or (editor_type == propertyeditorbuilder.KEYFRAME_EDITOR_RELEASE)
             or (editor_type == propertyeditorbuilder.KEYFRAME_EDITOR_CLIP)
+            or (editor_type == propertyeditorbuilder.KEYFRAME_EDITOR_CLIP_FADE)
             or (editor_type == propertyeditorbuilder.FADE_LENGTH)
             or (editor_type == propertyeditorbuilder.GEOMETRY_EDITOR)):
                 keyframe_editor_widgets.append(editor_row)
@@ -233,7 +224,7 @@ def _display_compositor_edit_box():
     # and will be looked up by editors from clip
     editor_rows = propertyeditorbuilder.get_transition_extra_editor_rows(compositor, t_editable_properties)
     for editor_row in editor_rows:
-        # These are added to keyframe editor based on editor type, not based on EditableProperty type as above
+        # These are added to keyframe editors list based on editor type, not based on EditableProperty type as above
         # because one editor sets values for multiple EditableProperty objects
         if editor_row.__class__ == keyframeeditor.RotatingGeometryEditor:
             keyframe_editor_widgets.append(editor_row)
