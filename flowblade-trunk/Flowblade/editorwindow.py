@@ -243,6 +243,7 @@ class EditorWindow:
             ('AddSequence', None, _('Add New Sequence'), None, None, lambda a:projectaction.add_new_sequence()),
             ('EditSequence', None, _('Edit Selected Sequence'), None, None, lambda a:projectaction.change_edit_sequence()),
             ('DeleteSequence', None, _('Delete Selected Sequence'), None, None, lambda a:projectaction.delete_selected_sequence()),
+            ('CompositingModeMenu', None, _('Compositing Mode')),
             ('PatternProducersMenu', None, _('Create Pattern Producer')),
             ('CreateNoiseClip', None, _('Noise'), None, None, lambda a:patternproducer.create_noise_clip()),
             ('CreateBarsClip', None, _('EBU Bars'), None, None, lambda a:patternproducer.create_bars_clip()),
@@ -381,6 +382,8 @@ class EditorWindow:
                     <menuitem action='AddSequence'/>
                     <menuitem action='EditSequence'/>
                     <menuitem action='DeleteSequence'/>
+                    <separator/>
+                    <menu action='CompositingModeMenu'/>
                     <separator/>
                     <menuitem action='CombineSequences'/>
                     <menuitem action='SequenceSplit'/>
@@ -844,7 +847,7 @@ class EditorWindow:
 
         # Viewmenu initial state
         self._init_view_menu(ui.get_widget('/MenuBar/ViewMenu'))
-        
+
         # Set pane and show window
         self.window.add(pane)
         self.window.set_title("Flowblade")
@@ -1011,7 +1014,31 @@ class EditorWindow:
         zoom_fit_menu_item = Gtk.MenuItem(_("Zoom Fit"))
         zoom_fit_menu_item.connect("activate", lambda w: updater.zoom_project_length())
         menu.append(zoom_fit_menu_item)
-                
+
+    def init_compositing_mode_menu(self):
+        menu_item = self.uimanager.get_widget('/MenuBar/SequenceMenu/CompositingModeMenu')
+        menu = menu_item.get_submenu()
+        guiutils.remove_children(menu)
+    
+        comp_top_free = Gtk.RadioMenuItem()
+        comp_top_free.set_label(_("Top Down Free Move"))
+        #comp_top_free.connect("activate", lambda w: monitorevent.set_monitor_playback_interpolation("nearest"))
+        comp_top_free.show()
+        menu.append(comp_top_free)
+        
+        comp_top_auto = Gtk.RadioMenuItem.new_with_label([comp_top_free],_("Top Down Auto Follow"))
+        #comp_top_auto.connect("activate", lambda w: monitorevent.set_monitor_playback_interpolation("nearest"))
+        comp_top_auto.show()
+        menu.append(comp_top_auto)
+        
+        comp_standard_auto = Gtk.RadioMenuItem.new_with_label([comp_top_free],_("Standard Auto Follow"))
+        #comp_top_auto.connect("activate", lambda w: monitorevent.set_monitor_playback_interpolation("nearest"))
+        comp_standard_auto.show()
+        menu.append(comp_standard_auto)
+        
+        menu_items = [comp_top_free, comp_top_auto, comp_standard_auto]
+        menu_items[editorstate.get_compositing_mode()].set_active(True)
+    
     def _init_gui_to_prefs(self):
         if editorpersistance.prefs.tabs_on_top == True:
             self.notebook.set_tab_pos(Gtk.PositionType.TOP)

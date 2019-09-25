@@ -542,6 +542,9 @@ def init_sequence_gui():
     Called after project load or changing current sequence 
     to initialize interface.
     """
+    # Set correct compositing mode menu item selected
+    gui.editor_window.init_compositing_mode_menu()
+
     # Set initial timeline scale draw params
     editorstate.current_sequence().update_length()
     updater.update_pix_per_frame_full_view()
