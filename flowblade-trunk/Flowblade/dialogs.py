@@ -1477,6 +1477,11 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     tools_vbox.pack_start(_get_kb_row(_("Keypad 1-9"), _("Same as 1-9")), False, False, 0)
     tools = guiutils.get_named_frame(_("Tools"), tools_vbox)
 
+    kfs_vbox = Gtk.VBox()
+    kfs_vbox.pack_start(_get_kb_row(_("Control + C"), _("Copy Keyframe Value")), False, False, 0)
+    kfs_vbox.pack_start(_get_kb_row(_("Control + V"), _("Paste Keyframe Value")), False, False, 0)
+    kfs = guiutils.get_named_frame(_("Keyframe and Geometry Editor"), kfs_vbox)
+    
     geom_vbox = Gtk.VBox()
     geom_vbox.pack_start(_get_kb_row(_("Left Arrow "), _("Move Source Video Left 1px")), False, False, 0)
     geom_vbox.pack_start(_get_kb_row(_("Right Arrow"), _("Move Source Video Right 1px")), False, False, 0)
@@ -1507,6 +1512,8 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     panel.pack_start(play, False, False, 0)
     panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
     panel.pack_start(general, False, False, 0)
+    panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
+    panel.pack_start(kfs, False, False, 0)
     panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
     panel.pack_start(geom, False, False, 0)
     panel.pack_start(guiutils.pad_label(12,12), False, False, 0)

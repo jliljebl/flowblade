@@ -955,9 +955,13 @@ class AbstractKeyFrameEditor(Gtk.VBox):
         PLAYER().seek_frame(self.clip_tline_pos + clip_frame - self.clip_in)
     
     def update_editor_view(self, seek_tline=True):
-        print("update_editor_view not implemented")
+        print(type(self), "update_editor_view not implemented")
 
+    def paste_kf_value(self, value):
+        print(type(self), "paste_kf_value not implemented")
 
+    def get_copy_kf_value(self):
+        print(type(self), "get_copy_kf_value not implemented")
 
 class KeyFrameEditor(AbstractKeyFrameEditor):
     """
@@ -1038,6 +1042,14 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         self.update_editor_view()
         self.update_property_value()
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
+
+    def get_copy_kf_value(self):
+        return self.clip_editor.get_active_kf_value()
+        
+    def paste_kf_value(self, value_data):
+        self.clip_editor.set_active_kf_value(value_data)
+        self.update_editor_view()
+        self.update_property_value()
         
     def next_pressed(self):
         self.clip_editor.set_next_active()
@@ -1211,7 +1223,7 @@ class GeometryEditor(AbstractKeyFrameEditor):
         self.update_editor_view_with_frame(frame)
         self.update_property_value()
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
-        
+
     def next_pressed(self):
         self.clip_editor.set_next_active()
         frame = self.clip_editor.get_active_kf_frame()
@@ -1247,6 +1259,16 @@ class GeometryEditor(AbstractKeyFrameEditor):
         self.clip_editor.set_active_kf_value(value)
         self.update_property_value()
 
+    def get_copy_kf_value(self):
+         return self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index)
+         
+    def paste_kf_value(self, value_data):
+        frame, rect, opacity = value_data
+        self.clip_editor.set_active_kf_value(opacity)
+        self.geom_kf_edit.set_keyframe_to_edit_shape(self.clip_editor.active_kf_index, rect)
+        self.update_property_value()
+        self.update_editor_view()
+        
     def add_fade_in(self):
         compositor = _get_current_edited_compositor()
         keyframes = compositorfades.add_fade_in(compositor, 10) # updates editable_property.value. Remove fade length hardcoding in 2.4

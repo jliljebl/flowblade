@@ -71,8 +71,8 @@ import utils
 
 
 # values for differentiating copy paste data
-COPY_PASTA_DATA_CLIPS = 1
-COPY_PASTA_DATA_COMPOSITOR_PROPERTIES = 2
+COPY_PASTE_DATA_CLIPS = appconsts.COPY_PASTE_DATA_CLIPS
+COPY_PASTE_DATA_COMPOSITOR_PROPERTIES = appconsts.COPY_PASTE_DATA_COMPOSITOR_PROPERTIES
 
 # Used to store transition render data to be used at render complete callback
 transition_render_data = None
@@ -844,48 +844,6 @@ def sync_all_compositors():
         action = edit.move_compositor_action(data)
         action.do_edit()
 
-    """
-    # Pair all compositors with their origin clips ids
-    comp_clip_pairings = {}
-    for compositor in current_sequence().compositors:
-        if compositor.origin_clip_id in comp_clip_pairings:
-            comp_clip_pairings[compositor.origin_clip_id].append(compositor)
-        else:
-            comp_clip_pairings[compositor.origin_clip_id] = [compositor]
-    
-    # Create resync list
-    resync_list = []
-    for i in range(current_sequence().first_video_index, len(current_sequence().tracks) - 1): # -1, there is a topmost hidden track 
-        track = current_sequence().tracks[i] # b_track is source track where origin clip is
-        for j in range(0, len(track.clips)):
-            clip = track.clips[j]
-            if clip.id in comp_clip_pairings:
-                compositor_list = comp_clip_pairings[clip.id]
-                for compositor in compositor_list:
-                    resync_list.append((clip, track, j, compositor))
-                    
-    # Do sync
-    for resync_item in resync_list:
-        try:
-            clip, track, clip_index, compositor = resync_item
-            clip_start = track.clip_start(clip_index)
-            clip_end = clip_start + clip.clip_out - clip.clip_in
-            
-            # Auto fades need to go to start or end of clips and maintain their lengths
-            if compositor.transition.info.auto_fade_compositor == True:
-                if compositor.transition.info.name == "##auto_fade_in":
-                    clip_end = clip_start + compositor.get_length() - 1
-                else:
-                    clip_start = clip_end - compositor.get_length() + 1
-            
-            data = {"compositor":compositor,"clip_in":clip_start,"clip_out":clip_end}
-            action = edit.move_compositor_action(data)
-            action.do_edit()
-        except:
-            # Clip is probably deleted
-            pass
-    """
-    
 def add_transition_menu_item_selected():
     if movemodes.selected_track == -1:
         # INFOWINDOW
@@ -1788,19 +1746,8 @@ def mouse_dragged_out(event):
 
 # --------------------------------------------------- copy/paste
 def do_timeline_objects_copy():
-    """
-    if _timeline_has_focus() == False:
-        # try to extract text to clipboard because user pressed CTRL + C
-        copy_source = gui.editor_window.window.get_focus()
-        try:
-            copy_source.copy_clipboard()
-        except:# selected widget was not a Gtk.Editable that can provide text to clipboard
-            pass
-
-        return 
-    """
     if compositormodes.compositor != None and compositormodes.compositor.selected == True:
-        editorstate.set_copy_paste_objects((COPY_PASTA_DATA_COMPOSITOR_PROPERTIES, compositormodes.compositor.get_copy_paste_objects()))
+        editorstate.set_copy_paste_objects((COPY_PASTE_DATA_COMPOSITOR_PROPERTIES, compositormodes.compositor.get_copy_paste_data()))
         return
         
     if movemodes.selected_track != -1:
@@ -1810,7 +1757,7 @@ def do_timeline_objects_copy():
         for i in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
             clone_clip = current_sequence().clone_track_clip(track, i)
             clone_clips.append(clone_clip)
-        editorstate.set_copy_paste_objects((COPY_PASTA_DATA_CLIPS, clone_clips))
+        editorstate.set_copy_paste_objects((COPY_PASTE_DATA_CLIPS, clone_clips))
         return
 
 def do_timeline_objects_paste():
@@ -1822,7 +1769,7 @@ def do_timeline_objects_paste():
         return 
     
     data_type, paste_clips = paste_objs
-    if data_type != COPY_PASTA_DATA_CLIPS:
+    if data_type != COPY_PASTE_DATA_CLIPS:
         do_compositor_data_paste(paste_objs)
         return
 
@@ -1832,7 +1779,7 @@ def do_timeline_objects_paste():
     for clip in paste_clips:
         new_clip = current_sequence().create_clone_clip(clip)
         new_clips.append(new_clip)
-    editorstate.set_copy_paste_objects((COPY_PASTA_DATA_CLIPS, new_clips))
+    editorstate.set_copy_paste_objects((COPY_PASTE_DATA_CLIPS, new_clips))
 
     # Paste clips
     editevent.do_multiple_clip_insert(track, paste_clips, tline_pos)
@@ -1850,7 +1797,7 @@ def do_timeline_filters_paste():
         return 
 
     data_type, paste_clips = paste_objs
-    if data_type != COPY_PASTA_DATA_CLIPS:
+    if data_type != COPY_PASTE_DATA_CLIPS:
         do_compositor_data_paste(paste_objs)
         return
         
@@ -1878,7 +1825,7 @@ def do_timeline_filters_paste():
 
 def do_compositor_data_paste(paste_objs):
     data_type, paste_data = paste_objs
-    if data_type != COPY_PASTA_DATA_COMPOSITOR_PROPERTIES:
+    if data_type != COPY_PASTE_DATA_COMPOSITOR_PROPERTIES:
         print("supposed unreahcable if in do_compositor_data_paste")
         return
         

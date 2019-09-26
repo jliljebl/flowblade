@@ -88,7 +88,8 @@ tline_shadow_frame = -1
 # Dict of current proxy media paths
 _current_proxy_paths = {}
 
-# Clips or compositors that are copy/pasted with CTRL+C, CTRL+V 
+# Clips or compositors that are copy/pasted with CTRL+C, CTRL+V
+# Code using this assumes that this is saved as tuple (type_info, paste_data)
 _copy_paste_objects = None
 
 # Used to alter gui layout and tracks configuration, set at startup
