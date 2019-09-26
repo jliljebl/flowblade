@@ -250,6 +250,9 @@
 
 
     <!-- Proxy encoding -->
+    <proxyencodingoption name="H.264 Preset Ultrafast" extension="mp4" type="av" audiodesc="copy" resize="True" qgroup="qgroup2">
+        <profile args="f=mp4 acodec=aac ab=128k ar=48000 vcodec=libx264 preset=ultrafast tune=fastdecode g=30 crf=25"/>
+    </proxyencodingoption>
     <proxyencodingoption name="MPEG-4 Preset Ultrafast" extension="mp4" type="av" audiodesc="mp2, 192kb/s, 48000Hz" resize="True" qgroup="qgroup1">
         <profile args="f=mp4 acodec=mp2 ab=192k ar=48000 vcodec=mpeg4 preset=ultrafast"/>
     </proxyencodingoption>
