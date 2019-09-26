@@ -801,6 +801,7 @@ class ClipEditorButtonsRow(Gtk.HBox):
         self.kf_to_prev_frame_button.set_sensitive(sensitive)
         self.kf_to_next_frame_button.set_sensitive(sensitive)
 
+
 class GeometryEditorButtonsRow(Gtk.HBox):
     def __init__(self, editor_parent):
         """
@@ -825,24 +826,18 @@ class GeometryEditorButtonsRow(Gtk.HBox):
         action_menu_button = guicomponents.PressLaunch(self._show_actions_menu, surface, 24*size_adj, 22*size_adj)
         
         size_select = Gtk.ComboBoxText()
-        size_select.append_text(_("Large"))
-        size_select.append_text(_("Medium"))
-        size_select.append_text(_("Small"))
+        size_select.append_text("100%")
+        size_select.append_text("66%")
+        size_select.append_text("33%")
         size_select.set_active(1)
-        size_select.set_size_request(120, 30)
-        font_desc = Pango.FontDescription("normal 9")
-        size_select.get_child().modify_font(font_desc)
         size_select.connect("changed", lambda w,e: editor_parent.view_size_changed(w.get_active()), 
                             None)
         self.size_select = size_select
         
         # Build row
-        self.pack_start(guiutils.get_pad_label(2, 10), False, False, 0)
-        self.pack_start(name_label, False, False, 0)
-        self.pack_start(size_select, False, False, 0)
-        self.pack_start(Gtk.Label(), True, True, 0)
         self.pack_start(action_menu_button.widget, False, False, 0)
-        self.pack_start(guiutils.get_pad_label(2, 10), False, False, 0)
+        self.pack_start(guiutils.get_pad_label(12, 10), False, False, 0)
+        self.pack_start(size_select, False, False, 0)
 
     def _show_actions_menu(self, widget, event):
         menu = actions_menu
@@ -1167,7 +1162,7 @@ class GeometryEditor(AbstractKeyFrameEditor):
              
         self.buttons_row = ClipEditorButtonsRow(self, False, True)
 
-        self.pos_entries_row = PositionNumericalEntries(self.geom_kf_edit, self)
+        self.pos_entries_row = PositionNumericalEntries(self.geom_kf_edit, self, self.geom_buttons_row)
         
         # Create clip editor keyframes from geom editor keyframes
         # that contain the property values when opening editor.
@@ -1175,9 +1170,10 @@ class GeometryEditor(AbstractKeyFrameEditor):
         self.clip_editor.keyframes = self.get_clip_editor_keyframes()
       
         # Build gui
-        self.pack_start(self.geom_buttons_row, False, False, 0)
+        #self.pack_start(self.geom_buttons_row, False, False, 0)
         self.pack_start(g_frame, False, False, 0)
         self.pack_start(self.pos_entries_row, False, False, 0)
+        self.pack_start(guiutils.pad_label(1, 1), False, False, 0)
         self.pack_start(self.value_slider_row, False, False, 0)
         self.pack_start(self.clip_editor.widget, False, False, 0)
         self.pack_start(self.buttons_row, False, False, 0)
@@ -1658,19 +1654,19 @@ class RotoMaskKeyFrameEditor(Gtk.VBox):
 # ----------------------------------------------------------------- POSITION NUMERICAL ENTRY WIDGET
 class PositionNumericalEntries(Gtk.HBox):
     
-    def __init__(self, geom_editor, parent_editor):
+    def __init__(self, geom_editor, parent_editor, editor_buttons):
         GObject.GObject.__init__(self)
 
         self.parent_editor = parent_editor
         
         if isinstance(geom_editor, keyframeeditcanvas.RotatingEditCanvas):
             self.rotating_geom = True
-            self.init_for_roto_geom()
+            self.init_for_roto_geom(editor_buttons)
         else:
             self.rotating_geom = False
-            self.init_for_box_geom()     
+            self.init_for_box_geom(editor_buttons)     
 
-    def init_for_box_geom(self):
+    def init_for_box_geom(self, editor_buttons):
         x_label = Gtk.Label(_("X:"))
         y_label = Gtk.Label(_("Y:"))
         w_label = Gtk.Label(_("Width:"))
@@ -1690,6 +1686,7 @@ class PositionNumericalEntries(Gtk.HBox):
         self.set_spacing(2)
         self.set_margin_top (4)
 
+        self.pack_start(editor_buttons, False, False, 0)
         self.pack_start(Gtk.Label(), True, True, 0)
         self.pack_start(x_label, False, False, 0)
         self.pack_start(self.x_entry, False, False, 0)
@@ -1703,8 +1700,8 @@ class PositionNumericalEntries(Gtk.HBox):
         self.pack_start(h_label, False, False, 0)
         self.pack_start(self.h_entry, False, False, 0)
         self.pack_start(Gtk.Label(), True, True, 0)
-
-    def init_for_roto_geom(self):
+        
+    def init_for_roto_geom(self, editor_buttons):
         # [960.0, 540.0, 1.0, 1.0, 0.0]
 
         x_label = Gtk.Label(_("X:"))
@@ -1729,6 +1726,7 @@ class PositionNumericalEntries(Gtk.HBox):
         self.set_spacing(2)
         self.set_margin_top (4)
 
+        self.pack_start(editor_buttons, False, False, 0)
         self.pack_start(Gtk.Label(), True, True, 0)
         self.pack_start(x_label, False, False, 0)
         self.pack_start(self.x_entry, False, False, 0)
@@ -1744,7 +1742,7 @@ class PositionNumericalEntries(Gtk.HBox):
         self.pack_start(guiutils.pad_label(6, 6), False, False, 0)
         self.pack_start(rotation_label, False, False, 0)
         self.pack_start(self.rotation_entry, False, False, 0)
-        self.pack_start(Gtk.Label(), True, True, 0)
+        self.pack_start(guiutils.pad_label(1, 6), False, False, 0)
         
     def prepare_entry(self, entry):
         entry.set_width_chars (4)
