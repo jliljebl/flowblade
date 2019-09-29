@@ -255,7 +255,7 @@ class TextEditLayer(SimpleRectEditLayer):
         xscale = self.view_editor.scale #* self.view_editor.aspect_ratio
         yscale = self.view_editor.scale
         # x for write out image is on different place because computer screen has box pixels, 
-        # some video formats do not
+        # and some video formats do not.
         # were not getting pixel perfect results here but its mostly ok
         if write_out_layers == True:
             x = x / self.view_editor.aspect_ratio
