@@ -1492,6 +1492,7 @@ menubar,
     border-width: 0; }
     menubar > menuitem:hover,
     .menubar > menuitem:hover {
+      background-image: none;    /* background-image is dominant over background-color if set by system theme */
       background-color: #195093;
       color: #ffffff; }
     menubar > menuitem:disabled,
@@ -1532,6 +1533,7 @@ menu,
     menu menuitem:hover,
     .menu menuitem:hover {
       color: #ffffff;
+      background-image: none;    /* background-image is dominant over background-color if set by system theme */
       background-color: #195093; }
     menu menuitem:disabled,
     .menu menuitem:disabled {
