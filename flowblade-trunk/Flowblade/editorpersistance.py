@@ -359,4 +359,4 @@ class EditorPreferences:
         self.loop_clips = False
         self.audio_scrubbing = False
         self.force_language = "None"
-        #self.compositing_mode = appconsts.TOP_DOWN_FREE_MOVE
+        self.default_compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE

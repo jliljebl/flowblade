@@ -292,7 +292,7 @@ def tline_canvas_mouse_pressed(event, frame):
     if editorstate.current_is_move_mode() and timeline_visible():
         hit_compositor = tlinewidgets.compositor_hit(frame, event.y, current_sequence().compositors)
         if hit_compositor != None:         
-            if editorstate.auto_follow == False or hit_compositor.obey_autofollow == False:
+            if editorstate.auto_follow_active() == False or hit_compositor.obey_autofollow == False:
                 movemodes.clear_selected_clips()
                 if event.button == 1 or (event.button == 3 and event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                     compositormodes.set_compositor_mode(hit_compositor)

@@ -1948,7 +1948,11 @@ def _update_gui_after_sequence_import(): # This copied  with small modifications
     editorstate.PLAYER().display_inside_sequence_length(current_sequence().seq_len) # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
 
     updater. update_seqence_info_text()
-        
+
+def change_current_sequence_compositing_mode(new_compositing_mode):
+    current_sequence().compositing_mode = new_compositing_mode
+    updater.repaint_tline()
+
 # --------------------------------------------------------- pop-up menus
 def media_file_menu_item_selected(widget, data):
     item_id, media_file, event = data

@@ -111,7 +111,7 @@ class Sequence:
         self.watermark_filter = None
         self.watermark_file_path = None
         self.seq_len = 0 # used in trim crash hack, remove when fixed
-        self.compositing_mode = appconsts.TOP_DOWN_FREE_MOVE
+        self.compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
 
         # MLT objects for a multitrack sequence
         self.init_mlt_objects()

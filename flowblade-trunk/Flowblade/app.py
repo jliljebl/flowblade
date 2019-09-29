@@ -613,7 +613,6 @@ def open_project(new_project):
 
     editorstate.project = new_project
     editorstate.media_view_filter = appconsts.SHOW_ALL_FILES
-    editorstate.auto_follow = editorstate.project.get_project_property(appconsts.P_PROP_AUTO_FOLLOW)
 
     # Inits widgets with project data
     init_project_gui()

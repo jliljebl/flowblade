@@ -354,7 +354,10 @@ def _workflow_menu_callback(widget, data):
         _set_workflow_STANDARD()
     elif msg == "preset filmstyle":
         _set_workflow_FILM_STYLE()
+    
     elif msg == "autofollow":
+        pass
+        """
         active = widget.get_active()
         editorstate.auto_follow = active
         PROJECT().set_project_property(appconsts.P_PROP_AUTO_FOLLOW, active)
@@ -363,6 +366,7 @@ def _workflow_menu_callback(widget, data):
             compositor_autofollow_data = edit.get_full_compositor_sync_data()
             edit.do_autofollow_redo(compositor_autofollow_data)
         updater.repaint_tline()
+        """
     elif  msg == "always overwrite":
         editorpersistance.prefs.dnd_action = appconsts.DND_ALWAYS_OVERWRITE
     elif  msg == "overwrite nonV1":

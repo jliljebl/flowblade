@@ -1484,7 +1484,7 @@ class TimeLineCanvas:
         frame = get_frame(x)
         hit_compositor = compositor_hit(frame, y, current_sequence().compositors)
         if hit_compositor != None:
-            if editorstate.auto_follow == False or (editorstate.auto_follow == True and hit_compositor.obey_autofollow == False):
+            if editorstate.auto_follow_active() == False or (editorstate.auto_follow_active() == True and hit_compositor.obey_autofollow == False):
                 return compositormodes.get_pointer_context(hit_compositor, x)
             else:
                 return appconsts.POINTER_CONTEXT_NONE
@@ -1494,8 +1494,7 @@ class TimeLineCanvas:
             return appconsts.POINTER_CONTEXT_NONE
 
         clip_index = current_sequence().get_clip_index(track, frame)
-        if clip_index == -1:
-            # This gets none always after track, which may not be what we want
+        if clip_index == -1: # frame after last clip on track
             return appconsts.POINTER_CONTEXT_NONE
 
         try:
