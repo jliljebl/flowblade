@@ -185,7 +185,7 @@ def auto_follow_active():
 
 def get_compositing_mode():
     if project.c_seq == None:
-        print ("Trying to get compositing mode when no current sequence available!") 
+        print ("get_compositing_mode(), trying to get compositing mode when no current sequence available!") 
         return appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
     else:
         return project.c_seq.compositing_mode

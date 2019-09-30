@@ -2075,95 +2075,77 @@ class TimeLineCanvas:
             scale_in = (comp.clip_in - pos) * pix_per_frame
             scale_length = (comp.clip_out - comp.clip_in + 1) * pix_per_frame # +1, out inclusive
 
-
-
-            if editorstate.auto_follow_active() == False:
-                self.draw_default_compositor(comp, cr, scale_in, scale_length, y, target_y)
-            elif editorstate.auto_follow_active() == True:
-                self.draw_autofollow_compositor(comp, cr, scale_in, scale_length, y, target_y)
+            if editorstate.get_compositing_mode() == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
+                self.draw_standard_mode_compositor(comp, cr, scale_in, scale_length, y)
                 
-    def draw_default_compositor(self, comp, cr, scale_in, scale_length, y, target_y):
-            _create_compositor_cairo_path(cr, scale_in, scale_length, y, target_y)
-
-            if comp.selected == False:
-                color = COMPOSITOR_CLIP
             else:
-                color = COMPOSITOR_CLIP_SELECTED
+                self.draw_arrow_compositor(comp, cr, scale_in, scale_length, y, target_y)
                 
-            cr.set_source_rgba(*color)
-            
-            cr.fill_preserve()
+    def draw_arrow_compositor(self, comp, cr, scale_in, scale_length, y, target_y):
+        _create_compositor_cairo_path(cr, scale_in, scale_length, y, target_y)
 
-            cr.set_source_rgb(0, 0, 0)
-            cr.set_line_width(1.0)
-            cr.stroke()
-
-            # text
-            cr.save()
-
-            cr.rectangle(scale_in + 0.5,
-                         y + 0.5, scale_length, 
-                         COMPOSITOR_HEIGHT)
-            cr.clip()
-            cr.new_path()
-            cr.set_source_rgb(1, 1, 1)
-            cr.select_font_face ("sans-serif",
-                                 cairo.FONT_SLANT_NORMAL,
-                                 cairo.FONT_WEIGHT_NORMAL)
-
-            cr.set_font_size(11)
-            cr.move_to(scale_in + COMPOSITOR_TEXT_X, y + COMPOSITOR_TEXT_Y)
-            cr.show_text(comp.name.upper())
-            
-            cr.restore()
-
-    def draw_autofollow_compositor(self, comp, cr, scale_in, scale_length, y, target_y):
-            #_create_compositor_cairo_path(cr, scale_in, scale_length, y, target_y)
-
-            scale_mid = int(scale_in) + int(scale_length) // 2
-            y = int(y) - 8.0
-            side_half = 11
-    
-            self.create_round_rect_path(cr, scale_mid - side_half, y, side_half * 2, side_half * 2, 4.0)
-        
-            if comp.selected == False:
+        if comp.selected == False:
+            color = COMPOSITOR_CLIP
+            if editorstate.get_compositing_mode() == appconsts.COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW:
                 color = COMPOSITOR_CLIP_AUTO_FOLLOW
-            else:
-                color = COMPOSITOR_CLIP_SELECTED
-                
-            cr.set_source_rgba(*color)
+        else:
+            color = COMPOSITOR_CLIP_SELECTED
             
-            cr.fill_preserve()
-
-            cr.set_source_rgb(0, 0, 0)
-            cr.set_line_width(1.0)
-            cr.stroke()
-
-
-            cr.set_source_surface(COMPOSITOR_ICON, scale_mid - side_half - 2, y + 2)
-            cr.paint()
-                        
-            """
-            # text
-            cr.save()
-
-            cr.rectangle(scale_in + 0.5,
-                         y + 0.5, scale_length, 
-                         COMPOSITOR_HEIGHT)
-            cr.clip()
-            cr.new_path()
-            cr.set_source_rgb(1, 1, 1)
-            cr.select_font_face ("sans-serif",
-                                 cairo.FONT_SLANT_NORMAL,
-                                 cairo.FONT_WEIGHT_NORMAL)
-
-            cr.set_font_size(11)
-            cr.move_to(scale_in + COMPOSITOR_TEXT_X, y + COMPOSITOR_TEXT_Y)
-            cr.show_text(comp.name.upper())
-            
-            cr.restore()
-            """
+        cr.set_source_rgba(*color)
         
+        cr.fill_preserve()
+
+        cr.set_source_rgb(0, 0, 0)
+        cr.set_line_width(1.0)
+        cr.stroke()
+
+        # text
+        cr.save()
+
+        cr.rectangle(scale_in + 0.5,
+                     y + 0.5, scale_length, 
+                     COMPOSITOR_HEIGHT)
+        cr.clip()
+        cr.new_path()
+        cr.set_source_rgb(1, 1, 1)
+        cr.select_font_face ("sans-serif",
+                             cairo.FONT_SLANT_NORMAL,
+                             cairo.FONT_WEIGHT_NORMAL)
+
+        cr.set_font_size(11)
+        cr.move_to(scale_in + COMPOSITOR_TEXT_X, y + COMPOSITOR_TEXT_Y)
+        cr.show_text(comp.name.upper())
+        
+        cr.restore()
+
+    def draw_standard_mode_compositor(self, comp, cr, scale_in, scale_length, y):
+        x_draw, y_draw, width, height = self.get_standard_mode_compositor_rect(scale_in, scale_length, y)
+    
+        self.create_round_rect_path(cr, x_draw, y_draw, width, height, 4.0)
+    
+        if comp.selected == False:
+            color = COMPOSITOR_CLIP_AUTO_FOLLOW
+        else:
+            color = COMPOSITOR_CLIP_SELECTED
+            
+        cr.set_source_rgba(*color)
+        
+        cr.fill_preserve()
+
+        cr.set_source_rgb(0, 0, 0)
+        cr.set_line_width(1.0)
+        cr.stroke()
+
+        cr.set_source_surface(COMPOSITOR_ICON, x_draw - 2, y_draw + 2)
+        cr.paint()
+    
+    def get_standard_mode_compositor_rect(self, scale_in, scale_length, y):
+        scale_mid = int(scale_in) + int(scale_length) // 2
+        y = int(y) - 8.0
+        side_half = 11
+        
+        return (scale_mid - side_half, y, side_half * 2, side_half * 2)
+    
     def draw_sync_relations(self, cr):
         parent_y = _get_track_y(current_sequence().first_video_index)
         radius = 4

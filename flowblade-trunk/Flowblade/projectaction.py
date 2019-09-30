@@ -46,6 +46,7 @@ import app
 import audiowaveformrenderer
 import appconsts
 import batchrendering
+import compositeeditor
 import dialogs
 import dialogutils
 import gui
@@ -1949,7 +1950,11 @@ def _update_gui_after_sequence_import(): # This copied  with small modifications
 
     updater. update_seqence_info_text()
 
-def change_current_sequence_compositing_mode(new_compositing_mode):
+def change_current_sequence_compositing_mode(menu_widget, new_compositing_mode):
+    if menu_widget.get_active() == False:
+        return
+
+    compositeeditor.clear_compositor()
     current_sequence().compositing_mode = new_compositing_mode
     updater.repaint_tline()
 
