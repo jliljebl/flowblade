@@ -73,8 +73,9 @@ GEOM_EDITOR_SIZES = [GEOM_EDITOR_SIZE_LARGE, GEOM_EDITOR_SIZE_MEDIUM, GEOM_EDITO
 
 # Colors
 POINTER_COLOR = (1, 0.3, 0.3)
-CLIP_EDITOR_BG_COLOR = (0.7, 0.7, 0.7)
-CLIP_EDITOR_NOT_ACTIVE_BG_COLOR = (0.4, 0.4, 0.4)
+CLIP_EDITOR_BG_COLOR = (0.1445, 0.172, 0.25)
+CLIP_EDITOR_NOT_ACTIVE_BG_COLOR = (0.625, 0.074, 0.117)
+CLIP_EDITOR_CENTER_LINE_COLOR = (0.098, 0.313, 0.574)
 LIGHT_MULTILPLIER = 1.14
 DARK_MULTIPLIER = 0.74
 
@@ -216,7 +217,7 @@ class ClipKeyFrameEditor:
         self.draw_emboss(cr, rect, gui.get_bg_color())
 
         # Draw center line
-        cr.set_source_rgb(0.4, 0.4, 0.4)
+        cr.set_source_rgb(*CLIP_EDITOR_CENTER_LINE_COLOR)
         cr.set_line_width(2.0)
         cr.move_to(END_PAD, CENTER_LINE_Y)
         cr.line_to(END_PAD + active_width, CENTER_LINE_Y)
