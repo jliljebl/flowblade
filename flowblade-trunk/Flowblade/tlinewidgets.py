@@ -269,13 +269,22 @@ TRACK_GRAD_ORANGE_STOP3 = (0, 0.65, 0.65, 0.65, 1)
 LIGHT_MULTILPLIER = 1.14
 DARK_MULTIPLIER = 0.74
 
-# ------------------------------------------------------------------ MODULE STATE
+
+
+# ------------------------------------------------------------------ MODULE POSITION STATE
+# ------------------------------------------------------------------ MODULE POSITION STATE
+# ------------------------------------------------------------------ MODULE POSITION STATE
+
+pix_per_frame = 5.0 # Current draw scale. This is set elsewhere on init so default value irrelevant.
+pos = 0 # Current left most frame in timeline display
+
+# ------------------------------------------------------------------ MODULE POSITION STATE
+# ------------------------------------------------------------------ MODULE POSITION STATE
+# ------------------------------------------------------------------ MODULE POSITION STATE
+
+
 # debug purposes
 draw_blank_borders = True
-
-# Draw state
-pix_per_frame = 5.0 # Current draw scale. This set set elsewhere on init so default value irrelevant.
-pos = 0 # Current left most frame in timeline display
 
 # A context defining action taken when mouse press happens based on edit mode and mouse position.
 # Cursor communicates current pointer contest to user.
@@ -534,7 +543,7 @@ def _get_frame_x(frame):
     disp_frame = frame - pos
     return disp_frame * pix_per_frame
 
-def compositor_hit(frame, y, sorted_compositors):
+def compositor_hit(frame, x, y, sorted_compositors):
     """
     Returns compositor hit with mouse press x,y or None if nothing hit.
     """
@@ -543,7 +552,10 @@ def compositor_hit(frame, y, sorted_compositors):
         track_top = _get_track_y(track.id)
     except AttributeError: # we didn't press on a editable track
         return None
-        
+    
+    if editorstate.get_compositing_mode() == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
+        return _standard_auto_follow_comp_hit(frame, track, x, y, sorted_compositors)
+    
     # Test if compositor hit on track top, so compositor hit on dest track side
     if y >= track_top and y < track_top + (COMPOSITOR_HEIGHT - COMPOSITOR_HEIGHT_OFF):
        return _comp_hit_on_below_track(frame, track, sorted_compositors)
@@ -569,7 +581,27 @@ def _comp_hit_on_source_track(frame, track, sorted_compositors):
             if comp.clip_in <= frame and comp.clip_out >= frame:
                 return comp
     return None
+
+def _standard_auto_follow_comp_hit(frame, track, x, y, sorted_compositors):
+    for comp in sorted_compositors:
+        if comp.transition.b_track == track.id:
+            if comp.clip_in <= frame and comp.clip_out >= frame:
+                scale_in = (comp.clip_in - pos) * pix_per_frame
+                scale_length = (comp.clip_out - comp.clip_in + 1) * pix_per_frame # +1, out incl.
+                y = _get_track_y(track.id) + track.height - COMPOSITOR_HEIGHT_OFF
+                tx, ty, tw, th = _get_standard_mode_compositor_rect(scale_in, scale_length, y)
+                if x >= tx and x <= tx + tw:
+                    if y >= ty and y <= ty + th:
+                        return comp
+    return None
+
+def _get_standard_mode_compositor_rect(scale_in, scale_length, y):
+    scale_mid = int(scale_in) + int(scale_length) // 2
+    y = int(y) - 8.0
+    side_half = 11
     
+    return (scale_mid - side_half, y, side_half * 2, side_half * 2)
+        
 # --------------------------------------- edit mode overlay draw handling
 def set_edit_mode(data, draw_func):
     global canvas_widget
@@ -1482,8 +1514,11 @@ class TimeLineCanvas:
         
     def get_pointer_context(self, x, y):
         frame = get_frame(x)
-        hit_compositor = compositor_hit(frame, y, current_sequence().compositors)
+        hit_compositor = compositor_hit(frame, x, y, current_sequence().compositors)
         if hit_compositor != None:
+            if editorstate.get_compositing_mode() == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
+                return appconsts.POINTER_CONTEXT_NONE
+                                
             if editorstate.auto_follow_active() == False or (editorstate.auto_follow_active() == True and hit_compositor.obey_autofollow == False):
                 return compositormodes.get_pointer_context(hit_compositor, x)
             else:
@@ -2070,15 +2105,14 @@ class TimeLineCanvas:
             target_track =  current_sequence().tracks[comp.transition.a_track]
             
             y = _get_track_y(track.id) + track.height - COMPOSITOR_HEIGHT_OFF
-            target_y = _get_track_y(target_track.id) + target_track.height - COMPOSITOR_HEIGHT_OFF
 
             scale_in = (comp.clip_in - pos) * pix_per_frame
             scale_length = (comp.clip_out - comp.clip_in + 1) * pix_per_frame # +1, out inclusive
 
             if editorstate.get_compositing_mode() == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
                 self.draw_standard_mode_compositor(comp, cr, scale_in, scale_length, y)
-                
             else:
+                target_y = _get_track_y(target_track.id) + target_track.height - COMPOSITOR_HEIGHT_OFF
                 self.draw_arrow_compositor(comp, cr, scale_in, scale_length, y, target_y)
                 
     def draw_arrow_compositor(self, comp, cr, scale_in, scale_length, y, target_y):
@@ -2119,7 +2153,7 @@ class TimeLineCanvas:
         cr.restore()
 
     def draw_standard_mode_compositor(self, comp, cr, scale_in, scale_length, y):
-        x_draw, y_draw, width, height = self.get_standard_mode_compositor_rect(scale_in, scale_length, y)
+        x_draw, y_draw, width, height = _get_standard_mode_compositor_rect(scale_in, scale_length, y)
     
         self.create_round_rect_path(cr, x_draw, y_draw, width, height, 4.0)
     
@@ -2138,13 +2172,6 @@ class TimeLineCanvas:
 
         cr.set_source_surface(COMPOSITOR_ICON, x_draw - 2, y_draw + 2)
         cr.paint()
-    
-    def get_standard_mode_compositor_rect(self, scale_in, scale_length, y):
-        scale_mid = int(scale_in) + int(scale_length) // 2
-        y = int(y) - 8.0
-        side_half = 11
-        
-        return (scale_mid - side_half, y, side_half * 2, side_half * 2)
     
     def draw_sync_relations(self, cr):
         parent_y = _get_track_y(current_sequence().first_video_index)

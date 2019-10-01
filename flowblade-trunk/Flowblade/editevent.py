@@ -290,9 +290,15 @@ def tline_canvas_mouse_pressed(event, frame):
 
     #  Check if compositor is hit and if so, handle compositor editing
     if editorstate.current_is_move_mode() and timeline_visible():
-        hit_compositor = tlinewidgets.compositor_hit(frame, event.y, current_sequence().compositors)
-        if hit_compositor != None:         
-            if editorstate.auto_follow_active() == False or hit_compositor.obey_autofollow == False:
+        hit_compositor = tlinewidgets.compositor_hit(frame, event.x, event.y, current_sequence().compositors)
+        if hit_compositor != None:
+            if editorstate.get_compositing_mode() == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
+                compositeeditor.set_compositor(hit_compositor)
+                compositormodes.set_compositor_selected(hit_compositor)
+                movemodes.clear_selected_clips()
+                editorstate.timeline_mouse_disabled = True
+                return
+            elif editorstate.auto_follow_active() == False or hit_compositor.obey_autofollow == False:
                 movemodes.clear_selected_clips()
                 if event.button == 1 or (event.button == 3 and event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                     compositormodes.set_compositor_mode(hit_compositor)
@@ -430,7 +436,7 @@ def tline_canvas_double_click(frame, x, y):
         modesetting.set_default_edit_mode()
         return
 
-    hit_compositor = tlinewidgets.compositor_hit(frame, y, current_sequence().compositors)
+    hit_compositor = tlinewidgets.compositor_hit(frame, x, y, current_sequence().compositors)
     if hit_compositor != None:
         compositeeditor.set_compositor(hit_compositor)
         return
