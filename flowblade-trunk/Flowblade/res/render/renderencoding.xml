@@ -67,8 +67,8 @@
 
     <!-- User editable encodings -->
     <!-- encoding options group together codecs, file formats and quality option groups -->
-    <encodingoption name="H.264 / .mp4" extension="mp4" audiodesc=" mp3" type="av" resize="True" qgroup="qgroup2">
-        <profile args="f=mp4 s=%SCREENSIZE% hq=1 acodec=libmp3lame ab=320k pix_fmt=yuv420p vcodec=libx264 minrate=0 b=%BITRATE% b_strategy=1 subcmp=2 cmp=2 coder=1 flags=+loop qmax=51 subq=7 qmin=10 qcomp=0.6 qdiff=4 trellis=1 aspect=%ASPECT%"/>
+    <encodingoption name="H.264 / .mp4" extension="mp4" audiodesc=" aac" type="av" resize="True" qgroup="qgroup2">
+        <profile args="f=mp4 s=%SCREENSIZE% hq=1 acodec=aac ab=256k pix_fmt=yuv420p vcodec=libx264 minrate=0 b=%BITRATE% b_strategy=1 subcmp=2 cmp=2 coder=1 flags=+loop qmax=51 subq=7 qmin=10 qcomp=0.6 qdiff=4 trellis=1 aspect=%ASPECT%"/>
     </encodingoption>
     <encodingoption name="MPEG-4 / .mp4" extension="mp4" type="av" audiodesc=" mp2" resize="True" qgroup="qgroup1">
         <profile args="f=mp4 hq=1 acodec=mp2 ab=192k vcodec=mpeg4 minrate=0 vb=%BITRATE%"/>
