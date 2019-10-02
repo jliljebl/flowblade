@@ -76,7 +76,7 @@
     <encodingoption name="MPEG-2 / .mpg" extension="mpg" audiodesc=" mp2" type="av" resize="True" qgroup="qgroup1">
         <profile args="f=mpeg acodec=libtwolame ab=384k vcodec=mpeg2video minrate=0 vb=%BITRATE% bf=2 b_strategy=1 trellis=1" />
     </encodingoption>
-    <encodingoption name="WebM Alpha / .webm" extension="webm" audiodesc=" vorbis" type="av" resize="True" qgroup="qgroup2">
+    <encodingoption name="WebM VP8 / .webm" extension="webm" audiodesc=" vorbis" type="av" resize="True" qgroup="qgroup2">
         <profile args="f=webm acodec=libvorbis ab=128k vcodec=libvpx g=120 rc_lookahead=16 quality=good speed=0 vprofile=0 qmax=51 qmin=11 slices=4 vb=%BITRATE% maxrate=24M minrate=100k arnr_max_frames=7 arnr_strength=5 arnr_type=3 auto-alt-ref=0 mlt_image_format=rgb24a pix_fmt=yuva420p" />
     </encodingoption>
     <encodingoption name="Ogg Theora / .ogv" extension="ogv" audiodesc=" vorbis" type="av" resize="True" qgroup="qgroup2">
