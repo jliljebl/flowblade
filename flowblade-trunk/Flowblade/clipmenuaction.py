@@ -218,6 +218,9 @@ def _add_compositor(data):
 
     target_track_index = track.id - 1
 
+    if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
+        target_track_index = current_sequence().first_video_index
+
     compositor_in = current_sequence().tracks[track.id].clip_start(clip_index)
     clip_length = clip.clip_out - clip.clip_in
     compositor_out = compositor_in + clip_length

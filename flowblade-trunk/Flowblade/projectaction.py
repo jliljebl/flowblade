@@ -46,6 +46,7 @@ import app
 import audiowaveformrenderer
 import appconsts
 import batchrendering
+import compositeeditor
 import dialogs
 import dialogutils
 import gui
@@ -1679,16 +1680,21 @@ def _add_new_sequence_dialog_callback(dialog, response_id, widgets):
     (model, rows) = selection.get_selected_rows()
     row = max(rows[0])
     
-    # Add new sequence
+    # Set default track counts as module global values, this is not a good design.
     sequence.AUDIO_TRACKS_COUNT = a_tracks
     sequence.VIDEO_TRACKS_COUNT = v_tracks
+
+    # Add new sequence
     PROJECT().add_named_sequence(name)
+
     gui.sequence_list_view.fill_data_model()
     
     if open_right_away == False:
         selection.select_path(str(row)) # Keep previous selection
     else:
         app.change_current_sequence(len(PROJECT().sequences) - 1)
+        PROJECT().c_seq.compositing_mode = editorpersistance.prefs.default_compositing_mode
+        gui.editor_window.init_compositing_mode_menu()
     
     dialog.destroy()
 
@@ -1948,7 +1954,15 @@ def _update_gui_after_sequence_import(): # This copied  with small modifications
     editorstate.PLAYER().display_inside_sequence_length(current_sequence().seq_len) # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
 
     updater. update_seqence_info_text()
-        
+
+def change_current_sequence_compositing_mode(menu_widget, new_compositing_mode):
+    if menu_widget.get_active() == False:
+        return
+
+    compositeeditor.clear_compositor()
+    current_sequence().compositing_mode = new_compositing_mode
+    updater.repaint_tline()
+
 # --------------------------------------------------------- pop-up menus
 def media_file_menu_item_selected(widget, data):
     item_id, media_file, event = data

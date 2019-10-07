@@ -263,10 +263,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.top_row_layout = top_row_layout.get_active()
     # Aug-2019 - SvdB - AS
     prefs.auto_save_delay_value_index = autosave_combo.get_active()
-
-    #if prefs.shortcuts != shortcuts.shortcut_files[shortcuts_combo.get_active()]:
-    #    prefs.shortcuts = shortcuts.shortcut_files[shortcuts_combo.get_active()]
-    #    shortcuts.load_shortcuts()
+    
 
 
 def get_graphics_default_in_out_length():
@@ -362,4 +359,4 @@ class EditorPreferences:
         self.loop_clips = False
         self.audio_scrubbing = False
         self.force_language = "None"
-
+        self.default_compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE

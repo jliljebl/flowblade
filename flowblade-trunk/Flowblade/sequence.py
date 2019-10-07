@@ -111,6 +111,7 @@ class Sequence:
         self.watermark_filter = None
         self.watermark_file_path = None
         self.seq_len = 0 # used in trim crash hack, remove when fixed
+        self.compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
 
         # MLT objects for a multitrack sequence
         self.init_mlt_objects()
@@ -630,6 +631,7 @@ class Sequence:
 
     def add_compositor(self, compositor):
         self.compositors.append(compositor)
+        
 
     def remove_compositor(self, old_compositor):
         try:
@@ -658,7 +660,7 @@ class Sequence:
         Compositor order must be from top to bottom or will not work.
         """
         self.compositors.sort(key=_sort_compositors_comparator)
-
+        
     def get_track_compositors(self, track_index):
         track_compositors = []
         for comp in self.compositors:
@@ -1123,16 +1125,7 @@ def _clip_length(clip):
 
 def _sort_compositors_comparator(a_comp):
     return int(a_comp.transition.b_track)
-    
-    """
-    # compositors on top most tracks first
-    if a_comp.transition.b_track > b_comp.transition.b_track:
-        return -1
-    elif a_comp.transition.b_track < b_comp.transition.b_track:
-        return 1
-    else:
-        return 0
-    """
+
 # ----------------------------- sequence cloning for tracks count change
 def create_sequence_clone_with_different_track_count(old_seq, v_tracks, a_tracks):
     # Create new sequence with different number of tracks

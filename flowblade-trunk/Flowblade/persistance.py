@@ -442,6 +442,9 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
 
         if not hasattr(seq, "seq_len"):
             seq.update_edit_tracks_length()
+            
+        if not hasattr(seq, "compositing_mode"):
+            seq.compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
 
         seq_count = seq_count + 1
 
