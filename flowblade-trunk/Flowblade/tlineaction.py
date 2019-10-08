@@ -838,7 +838,7 @@ def sync_all_compositors():
     full_sync_data, orphaned_compositors = edit.get_full_compositor_sync_data()
     
     for sync_item in full_sync_data:
-        destroy_id, orig_in, orig_out, clip_start, clip_end = sync_item
+        destroy_id, orig_in, orig_out, clip_start, clip_end, clip_track, orig_compositor_track = sync_item
         compositor = current_sequence().get_compositor_for_destroy_id(destroy_id)
         data = {"compositor":compositor,"clip_in":clip_start,"clip_out":clip_end}
         action = edit.move_compositor_action(data)
