@@ -1961,15 +1961,14 @@ def _add_compositor_undo(self):
     current_sequence().remove_compositor(self.compositor)
     current_sequence().restack_compositors()
     
-    # Hack!!! Some filters don't seem to handle setting compositors None (and the
-    # following gc) and crash, so we'll hold references to them forever.
-    #global old_compositors
-    #old_compositors.append(self.compositor)
+    self.old_compositor = self.compositor # maintain compositor property values though full undo/redo sequence
     compositeeditor.maybe_clear_editor(self.compositor)
     self.compositor = None
 
 def _add_compositor_redo(self):    
     self.compositor = current_sequence().create_compositor(self.compositor_type)
+    if hasattr(self, "old_compositor"): # maintain compositor property values though full undo/redo sequence
+        self.compositor.clone_properties(self.old_compositor)
     self.compositor.transition.set_tracks(self.a_track, self.b_track)
     self.compositor.set_in_and_out(self.in_frame, self.out_frame)
     self.compositor.origin_clip_id = self.origin_clip_id
