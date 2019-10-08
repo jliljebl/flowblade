@@ -632,7 +632,6 @@ class Sequence:
     def add_compositor(self, compositor):
         self.compositors.append(compositor)
         
-
     def remove_compositor(self, old_compositor):
         try:
             self.compositors.remove(old_compositor)
@@ -655,6 +654,13 @@ class Sequence:
                 return comp
         raise ValueError('compositor for id not found')
 
+    def get_clip_compositors(self, clip):
+        clip_compositors = []
+        for compositor in self.compositors:
+            if compositor.origin_clip_id == clip.id:
+                clip_compositors.append(compositor)
+        return clip_compositors
+        
     def sort_compositors(self):
         """
         Compositor order must be from top to bottom or will not work.

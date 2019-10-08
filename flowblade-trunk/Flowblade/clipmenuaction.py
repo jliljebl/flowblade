@@ -111,7 +111,15 @@ def _compositor_menu_item_activated(widget, data):
     elif action_id == "set auto follow":
         compositor.obey_autofollow = widget.get_active()
         updater.repaint_tline()
-        
+
+def _delete_compositors(data):
+    clip, track, item_id, x = data
+    compositors = current_sequence().get_clip_compositors(clip)
+    for compositor in compositors:
+        data = {"compositor":compositor}
+        action = edit.delete_compositor_action(data)
+        action.do_edit()
+    
 def _open_clip_in_effects_editor(data):
     updater.open_clip_in_effects_editor(data)
     
@@ -678,4 +686,5 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "delete_clip_marker":_delete_clip_marker,
                   "deleteall_clip_markers":_delete_all_clip_markers,
                   "volumekf":_volume_keyframes,
-                  "brightnesskf":_brightness_keyframes}
+                  "brightnesskf":_brightness_keyframes,
+                  "delete_compositors":_delete_compositors}
