@@ -296,6 +296,10 @@ class EditAction:
         # Compositor auto follow is saved with each edit and is computed on first do and later done on redo/undo
         self.compositor_autofollow_data = None
         
+        # Compositor mode COMPOSITING_MODE_STANDARD_AUTO_FOLLOW requires that compositors without parent clips are destroyed
+        # when origin clips are destroyed.
+        self.orphaned_compositors = None
+        
         # Other then actual trim edits, attempting all edits exits active trimodes and enters <X>_NO_EDIT trim mode.
         self.exit_active_trimmode_on_edit = True
         
@@ -328,9 +332,13 @@ class EditAction:
         # If autofollow and no data, then GUI update happens in do_edit()
         # Added complexity here is to avoid two GUI updates
         if auto_follow_active() == True:
-            self.compositor_autofollow_data = get_full_compositor_sync_data()
+            self.compositor_autofollow_data, self.orphaned_compositors = get_full_compositor_sync_data()
             self.redo_auto_follow()
-            # This wasn'rt done in redo() because no auto follow data available
+            if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
+                do_orphaned_compositors_delete_redo(self)
+                current_sequence().restack_compositors()
+                
+            # This wasn't done in redo() because no auto follow data was available
             if do_gui_update:
                 self._update_gui()
 
@@ -353,7 +361,10 @@ class EditAction:
 
         if self.compositor_autofollow_data != None:
             self.undo_auto_follow()
-            
+            if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
+                do_orphaned_compositors_delete_undo(self)
+                current_sequence().restack_compositors()
+                
         # HACK, see above.
         if self.stop_for_edit:
             PLAYER().consumer.start()
@@ -368,7 +379,7 @@ class EditAction:
         if self.stop_for_edit:
             PLAYER().consumer.stop()
 
-        movemodes.clear_selected_clips() # selection not valid after change in sequence
+        movemodes.clear_selected_clips() # selection is not valid after a change in sequence
 
         self.redo_func(self)
 
@@ -378,6 +389,9 @@ class EditAction:
 
         if self.compositor_autofollow_data != None:
             self.redo_auto_follow()
+            if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
+                do_orphaned_compositors_delete_redo(self)
+                current_sequence().restack_compositors()
 
         tlinewidgets.set_match_frame(-1, -1, True)
 
@@ -426,11 +440,13 @@ class EditAction:
 
         updater.update_seqence_info_text()
 
+
 # ---------------------------------------------------- compositor sync util methods
 def get_full_compositor_sync_data():
     # Returns list of tuples in form (compositor, orig_in, orig_out, clip_start, clip_end)
     # Pair all compositors with their origin clips ids
     comp_clip_pairings = {}
+    orphan_compositors = []
     for compositor in current_sequence().compositors:
         if compositor.origin_clip_id in comp_clip_pairings:
             comp_clip_pairings[compositor.origin_clip_id].append(compositor)
@@ -439,6 +455,7 @@ def get_full_compositor_sync_data():
     
     # Create resync list
     resync_list = []
+    orphan_origin_clip_ids = list(comp_clip_pairings.keys())
     for i in range(current_sequence().first_video_index, len(current_sequence().tracks) - 1): # -1, there is a topmost hidden track 
         track = current_sequence().tracks[i] # b_track is source track where origin clip is
         for j in range(0, len(track.clips)):
@@ -447,9 +464,18 @@ def get_full_compositor_sync_data():
                 compositor_list = comp_clip_pairings[clip.id]
                 for compositor in compositor_list:
                     resync_list.append((clip, track, j, compositor))
-                    
+            if clip.id in orphan_origin_clip_ids:
+                orphan_origin_clip_ids.remove(clip.id)
+    
+    # Create orphan compositors list
+    orhan_compositors = []
+    if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
+        for oprhan_comp_origin in orphan_origin_clip_ids:
+            orhan_compositors.append(comp_clip_pairings[oprhan_comp_origin][0])
+
     # Create full data
     full_sync_data = []
+
     for resync_item in resync_list:
         try:
             clip, track, clip_index, compositor = resync_item
@@ -473,8 +499,8 @@ def get_full_compositor_sync_data():
         except:
             # Clip is probably deleted
             pass
-            
-    return full_sync_data
+
+    return (full_sync_data, orhan_compositors)
 
 def do_autofollow_redo(compositor_autofollow_data):
     for sync_item in compositor_autofollow_data:
@@ -487,7 +513,27 @@ def do_autofollow_redo(compositor_autofollow_data):
         except:
             # Compositor or clip not found
             pass
-                
+
+def do_orphaned_compositors_delete_redo(action_object):
+    for delete_compositor in action_object.orphaned_compositors:
+        current_sequence().remove_compositor(delete_compositor)
+        compositeeditor.maybe_clear_editor(delete_compositor)
+
+def do_orphaned_compositors_delete_undo(action_object):
+    old_orphaned = action_object.orphaned_compositors
+    new_orphaned = []
+    for old_compositor in old_orphaned:
+        new_ompositor = current_sequence().create_compositor(old_compositor.type_id)
+        new_ompositor.clone_properties(old_compositor)
+        new_ompositor.set_in_and_out(old_compositor.clip_in, old_compositor.clip_out)
+        new_ompositor.transition.set_tracks(old_compositor.transition.a_track, old_compositor.transition.b_track)
+        current_sequence().add_compositor(new_ompositor)
+        new_orphaned.append(new_ompositor)
+        
+    current_sequence().restack_compositors()
+    action_object.orphaned_compositors = new_orphaned
+
+
 # ---------------------------------------------------- SYNC DATA
 class SyncData:
     """

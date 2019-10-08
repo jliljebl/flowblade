@@ -835,7 +835,7 @@ def split_audio_button_pressed():
     syncsplitevent.split_audio_from_clips_list(clips, track)
 
 def sync_all_compositors():
-    full_sync_data = edit.get_full_compositor_sync_data()
+    full_sync_data, orphaned_compositors = edit.get_full_compositor_sync_data()
     
     for sync_item in full_sync_data:
         destroy_id, orig_in, orig_out, clip_start, clip_end = sync_item
