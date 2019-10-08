@@ -335,14 +335,12 @@ class EditAction:
         # If autofollow and no data, then GUI update happens in do_edit()
         # Added complexity here is to avoid two GUI updates
         if auto_follow_active() == True:
-            print ("first do autofollloowwwss")
             self.compositor_autofollow_data, self.orphaned_compositors = get_full_compositor_sync_data()
             do_autofollow_redo(self)
             if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
                 do_orphaned_compositors_delete_redo(self)
             
             if self.do_restack_compositors == True:
-                print ("restack do edit")
                 current_sequence().restack_compositors()
                 
             self.do_restack_compositors = False  # We wish to do this only once 
@@ -401,7 +399,6 @@ class EditAction:
 
         
         if self.compositor_autofollow_data != None: # This is not called from do_edit() if these exist, we need to do auto follow and orphan compositos management
-            print ("real redo do autofollloowwwss")
             do_autofollow_redo(self)
             if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
                 do_orphaned_compositors_delete_redo(self)
@@ -510,7 +507,6 @@ def do_autofollow_redo(action_object):
         try:
             sync_compositor = current_sequence().get_compositor_for_destroy_id(destroy_id)
             if sync_compositor.transition.b_track != clip_track and current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
-                print(sync_compositor.transition.b_track, clip_track)
                 new_compositor = current_sequence().create_compositor(sync_compositor.type_id)
                 new_compositor.clone_properties(sync_compositor)
                 new_compositor.set_in_and_out(sync_compositor.clip_in, sync_compositor.clip_out)
@@ -518,14 +514,10 @@ def do_autofollow_redo(action_object):
                 
                 current_sequence().remove_compositor(sync_compositor)
                 current_sequence().add_compositor(new_compositor)
-                print ("moving compositordone ")
                 action_object.do_restack_compositors = True
             elif sync_compositor.obey_autofollow == True:
                 sync_compositor.set_in_and_out(clip_start, clip_end)
         except Exception as ex:
-            print(ex)
-            # Compositor or clip not found
-            print 
             pass
 
 def do_autofollow_undo(action_object):
