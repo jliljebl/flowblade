@@ -1714,8 +1714,9 @@ def _get_compositors_add_menu_item(event, clip, track, callback, sensitive):
     for i in range(0, len(mlttransitions.compositors)):
         compositor = mlttransitions.compositors[i]
         name, compositor_type = compositor
-        #if compositor_type == "##affine":
-        #    continue
+        # Continue if dropped compositor
+        if compositor_type in mlttransitions.dropped_compositors:
+            continue
         # Continue if compositor_type not present in system
         try:
             info = mlttransitions.mlt_compositor_transition_infos[compositor_type]

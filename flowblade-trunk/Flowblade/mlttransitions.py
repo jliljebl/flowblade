@@ -73,6 +73,9 @@ blenders = None
 autofades = None
 alpha_combiners = None
 
+# these are no longer presented as options for users since 2.4
+dropped_compositors = ["##pict_in_pict", "##opacity_kf"]
+
 def init_module():
 
     # translations and module load order make us do this in method instead of at module load
