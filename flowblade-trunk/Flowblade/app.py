@@ -314,7 +314,7 @@ def main(root_path):
     # Show splash
     if ((editorpersistance.prefs.display_splash_screen == True) and len(autosave_files) == 0) and not editorstate.runtime_version_greater_then_test_version(editorpersistance.prefs.workflow_dialog_last_version_shown, editorstate.appversion):
         global splash_timeout_id
-        splash_timeout_id = GLib.timeout_add(2600, destroy_splash_screen)
+        splash_timeout_id = GLib.timeout_add(1300, destroy_splash_screen)
         splash_screen.show_all()
 
     appconsts.SAVEFILE_VERSION = projectdata.SAVEFILE_VERSION # THIS IS A QUESTIONABLE IDEA TO SIMPLIFY IMPORTS, NOT DRY. WHEN DOING TOOLS THAT RUN IN ANOTHER PROCESSES AND SAVE PROJECTS, THIS LINE NEEDS TO BE THERE ALSO.
