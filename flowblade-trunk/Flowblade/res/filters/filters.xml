@@ -864,8 +864,8 @@
     <filter id="frei0r.hqdn3d">
         <name>Denoise</name>
         <group>Fix</group>
-        <property name="Spatial" args="range_in=0,100">0.5</property>
-        <property name="Temporal"  args="range_in=0,100">0</property>
+        <property name="Spatial" args="range_in=0,100">0.04</property>
+        <property name="Temporal"  args="range_in=0,100">0.12</property>
     </filter>
     <filter id="frei0r.sharpness">
         <name>Sharpness</name>
