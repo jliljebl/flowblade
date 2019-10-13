@@ -140,6 +140,9 @@
     <compositortransition mlt_service="frei0r.color_only">
         <name>##color_only</name>
     </compositortransition>
+    <compositortransition mlt_service="frei0r.dodge">
+        <name>##dodge</name>
+    </compositortransition>
     <compositortransition mlt_service="frei0r.grain_extract">
         <name>##grain_extract</name>
     </compositortransition>

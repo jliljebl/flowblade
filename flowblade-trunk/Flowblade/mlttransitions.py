@@ -74,7 +74,7 @@ autofades = None
 alpha_combiners = None
 
 # these are no longer presented as options for users since 2.4
-dropped_compositors = ["##pict_in_pict", "##opacity_kf"]
+dropped_compositors = ["##pict_in_pict", "##opacity_kf", "##dodge"]
 
 def init_module():
 

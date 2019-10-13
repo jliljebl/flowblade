@@ -1746,6 +1746,8 @@ def _get_blenders_add_menu_item(event, clip, track, callback, sensitive):
     for i in range(0, len(mlttransitions.blenders)):
         blend = mlttransitions.blenders[i]
         name, compositor_type = blend
+        if compositor_type in mlttransitions.dropped_compositors:
+            continue
         blender_item = Gtk.MenuItem(name)
         sub_menu.append(blender_item)
         blender_item.connect("activate", callback, (clip, track, "add_compositor", (event.x, compositor_type)))
