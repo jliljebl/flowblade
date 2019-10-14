@@ -1757,7 +1757,7 @@ def _get_blenders_add_menu_item(event, clip, track, callback, sensitive):
     return menu_item
 
 def _get_alpha_combiners_add_menu_item(event, clip, track, callback, sensitive):
-    menu_item = Gtk.MenuItem(_("Alpha Combiners"))
+    menu_item = Gtk.MenuItem(_("Alpha"))
     sub_menu = Gtk.Menu()
     menu_item.set_submenu(sub_menu)
 

@@ -139,8 +139,7 @@ def init_module():
                              (_("Affine Blend"), "##affineblend"),
                              (_("Blend"), "##blend"),
                              (_("Wipe Clip Length"),"##wipe"),
-                             (_("Transform"),"##affine"),
-                             (_("LumaToAlpha"),"##matte")]
+                             (_("Transform"),"##affine")]
 
     compositors = sorted(unsorted_compositors, key=lambda comp: comp[0])   
 
@@ -168,7 +167,8 @@ def init_module():
     autofades = [(_("Fade In"),"##auto_fade_in"),
                 (_("Fade Out"),"##auto_fade_out")]
     
-    alpha_combiners = [ (_("Alpha XOR"),"##alphaxor"),
+    alpha_combiners = [ (_("LumaToAlpha"),"##matte"), 
+                        (_("Alpha XOR"),"##alphaxor"),
                         (_("Alpha Out"),"##alphaout"),
                         (_("Alpha In"),"##alphain")]
                         
