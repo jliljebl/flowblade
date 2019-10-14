@@ -72,6 +72,7 @@ compositors = None
 blenders = None
 autofades = None
 alpha_combiners = None
+wipe_compositors = None
 
 # these are no longer presented as options for users since 2.4
 dropped_compositors = ["##pict_in_pict", "##opacity_kf", "##dodge"]
@@ -79,7 +80,7 @@ dropped_compositors = ["##pict_in_pict", "##opacity_kf", "##dodge"]
 def init_module():
 
     # translations and module load order make us do this in method instead of at module load
-    global wipe_lumas, compositors, blenders, name_for_type, rendered_transitions, single_track_render_type_names, autofades, alpha_combiners
+    global wipe_lumas, compositors, blenders, name_for_type, rendered_transitions, single_track_render_type_names, autofades, alpha_combiners, wipe_compositors
     wipe_lumas = { \
                 _("Burst"):"burst.pgm",
                 _("Checkerboard"):"checkerboard.pgm",
@@ -135,10 +136,10 @@ def init_module():
     # name -> mlt_compositor_transition_infos key dict.
     unsorted_compositors = [ (_("Dissolve"),"##opacity_kf"),
                              (_("Picture in Picture"),"##pict_in_pict"),
-                             (_("Region"), "##region"),
+
                              (_("Affine Blend"), "##affineblend"),
                              (_("Blend"), "##blend"),
-                             (_("Wipe Clip Length"),"##wipe"),
+
                              (_("Transform"),"##affine")]
 
     compositors = sorted(unsorted_compositors, key=lambda comp: comp[0])   
@@ -171,7 +172,10 @@ def init_module():
                         (_("Alpha XOR"),"##alphaxor"),
                         (_("Alpha Out"),"##alphaout"),
                         (_("Alpha In"),"##alphain")]
-                        
+
+    wipe_compositors = [(_("Wipe/Translate"), "##region"), 
+                        (_("Wipe Clip Length"),"##wipe")]
+
     for comp in compositors:
         name, comp_type = comp
         name_for_type[comp_type] = name
@@ -186,6 +190,10 @@ def init_module():
 
     for acomb in alpha_combiners:
         name, comp_type = acomb
+        name_for_type[comp_type] = name
+    
+    for wc in wipe_compositors:
+        name, comp_type = wc
         name_for_type[comp_type] = name
         
     # Rendered transition names and types

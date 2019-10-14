@@ -1733,6 +1733,8 @@ def _get_compositors_add_menu_item(event, clip, track, callback, sensitive):
     sub_menu.append(alpha_combiners_menu_item)
     blenders_menu_item  = _get_blenders_add_menu_item(event, clip, track, callback, sensitive)
     sub_menu.append(blenders_menu_item)
+    wipe_compositors_menu_item = _get_wipe_compositors_add_menu_item(event, clip, track, callback, sensitive)
+    sub_menu.append(wipe_compositors_menu_item)
     
     menu_item.set_sensitive(sensitive)
     menu_item.show()
@@ -1768,6 +1770,22 @@ def _get_alpha_combiners_add_menu_item(event, clip, track, callback, sensitive):
         sub_menu.append(alpha_combiner_item)
         alpha_combiner_item.connect("activate", callback, (clip, track, "add_compositor", (event.x, compositor_type)))
         alpha_combiner_item.show()
+    menu_item.set_sensitive(sensitive)
+    menu_item.show()
+    return menu_item
+
+def _get_wipe_compositors_add_menu_item(event, clip, track, callback, sensitive):
+    menu_item = Gtk.MenuItem(_("Wipe"))
+    sub_menu = Gtk.Menu()
+    menu_item.set_submenu(sub_menu)
+
+    for i in range(0, len(mlttransitions.wipe_compositors)):
+        alpha_combiner = mlttransitions.wipe_compositors[i]
+        name, compositor_type = alpha_combiner
+        wipe_item = Gtk.MenuItem(name)
+        sub_menu.append(wipe_item)
+        wipe_item.connect("activate", callback, (clip, track, "add_compositor", (event.x, compositor_type)))
+        wipe_item.show()
     menu_item.set_sensitive(sensitive)
     menu_item.show()
     return menu_item
