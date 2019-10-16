@@ -1507,7 +1507,12 @@ def display_clip_popup_menu(event, clip, track, callback):
         active = False
     else:
         active = True
-    clip_menu.add(_get_compositors_add_menu_item(event, clip, track, callback, active))
+    compositors_add_item = _get_compositors_add_menu_item(event, clip, track, callback, active)
+    if (current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW 
+        and len(current_sequence().get_clip_compositors(clip)) != 0):
+        compositors_add_item.set_sensitive(False)
+    clip_menu.add(compositors_add_item)
+    
     if current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
         clip_menu.add(_get_auto_fade_compositors_add_menu_item(event, clip, track, callback, active))
 
@@ -1566,7 +1571,11 @@ def display_transition_clip_popup_menu(event, clip, track, callback):
         active = False
     else:
         active = True
-    clip_menu.add(_get_compositors_add_menu_item(event, clip, track, callback, active))
+    compositors_add_item = _get_compositors_add_menu_item(event, clip, track, callback, active)
+    if (current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW 
+        and len(current_sequence().get_clip_compositors(clip)) != 0):
+        compositors_add_item.set_sensitive(False)
+    clip_menu.add(compositors_add_item)
     clip_menu.add(_get_blenders_add_menu_item(event, clip, track, callback, active))
 
     _add_separetor(clip_menu)
