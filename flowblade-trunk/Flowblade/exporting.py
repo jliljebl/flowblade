@@ -36,6 +36,7 @@ import dialogutils
 from editorstate import PLAYER
 from editorstate import PROJECT
 from editorstate import current_sequence
+import exportardour
 import gui
 import guiutils
 import renderconsumer
@@ -494,3 +495,49 @@ def purge_screenshots():
     d = userfolders.get_hidden_screenshot_dir_path()
     for f in os.listdir(d):
         os.remove(os.path.join(d, f))
+
+
+
+####---------------Ardour Session--------------####
+def ardour_export():
+    print ("Ardour export...")
+    dialogs.export_ardour_session_folder_select(_ardour_export_dialog_callback)
+    
+    
+def _ardour_export_dialog_callback(dialog, response_id, session_folder):
+    if response_id != Gtk.ResponseType.ACCEPT:
+        dialog.destroy()
+        return
+        
+    folder_path = session_folder.get_filenames()[0]
+    if not (os.listdir(folder_path) == []):
+        dialog.destroy()
+        primary_txt = _("Selected folder contains files")
+        secondary_txt = _("When exporting audio to Ardour, the selected folder\nhas to be empty.")
+        dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+        return
+
+    # name = name_entry.get_text()
+    dialog.destroy()
+
+    xml_save_path = userfolders.get_cache_dir() + "ardour_export.xml"
+    
+    global _xml_render_player
+    _xml_render_player = renderconsumer.XMLRenderPlayer(xml_save_path,
+                                                          _ardour_xml_render_done,
+                                                          None)
+    _xml_render_player.ardour_session_folder = folder_path
+    _xml_render_player.start()
+
+def _ardour_xml_render_done(data):
+    global _xml_render_player
+    
+    adour_session_folder = _xml_render_player.ardour_session_folder
+    temp_xml = _xml_render_player.file_name
+    
+    _xml_render_player = None
+    
+    exportardour.use_existing_basedir = True
+    exportardour.launch_export_ardour_session_from_flowblade(temp_xml, adour_session_folder)
+
+    print ("Ardour export done.")

@@ -267,6 +267,34 @@ def save_backup_snapshot(name, callback):
     dialog.connect('response', callback, project_folder, compact_name_entry)
     dialog.show_all()
 
+def export_ardour_session_folder_select(callback):
+    dialog = Gtk.Dialog(_("Save Sequence Audio As Ardour Session"),  gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                         _("Export"), Gtk.ResponseType.ACCEPT))
+
+    project_folder = Gtk.FileChooserButton(_("Select Ardour Session Folder"))
+    project_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
+    project_folder.set_current_folder(os.path.expanduser("~") + "/")
+
+    project_folder_label = Gtk.Label(label=_("Select Ardour Session Folder:"))
+
+    project_folder_row = guiutils.get_two_column_box(project_folder_label, project_folder, 250)
+    
+    type_vbox = Gtk.VBox(False, 2)
+    type_vbox.pack_start(project_folder_row, False, False, 0)
+
+    vbox = Gtk.VBox(False, 2)
+    vbox.add(type_vbox)
+
+    alignment = dialogutils.get_default_alignment(vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, project_folder)
+    dialog.show_all()
+    
 def load_project_dialog(callback, parent=None, title_text=None):
     if parent == None:
         parent = gui.editor_window.window

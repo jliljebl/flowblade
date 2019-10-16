@@ -20,6 +20,13 @@ import sys
 import xml.etree.ElementTree
 
 ##############################################################################
+# GLOBAL BEHAVIOUR FLAG                                                      #
+##############################################################################
+# GTK only enables selecting existing directories so when used from Flowblade we can't disallow using existing directory.
+# and use this flag to use existing directory
+use_existing_basedir = False
+  
+##############################################################################
 # CONSTANTS                                                                  #
 ##############################################################################
 
@@ -609,17 +616,19 @@ def _create_ardour_project_dirs(basedir):
     given base directory.
 
     """
-
-    if os.path.exists(basedir):
-        raise Exception("Ardour project directory '" + basedir +
-                        "' already exists")
+    global use_existing_basedir
+    if use_existing_basedir == False: # GTK only enables selecting existing directories so when used from Flowblade we use existing dir.
+        if os.path.exists(basedir):
+            raise Exception("Ardour project directory '" + basedir +
+                            "' already exists")
 
     # get the directory name without any other path information
     (head, subdir) = os.path.split(basedir)
     if '' == subdir:
         raise Exception("could not extract base directory")
 
-    os.mkdir(basedir)
+    if use_existing_basedir == False: # GTK only enables selecting existing directories so when used from Flowblade we use existing dir.
+        os.mkdir(basedir)
     os.mkdir(os.path.join(basedir, "analysis"))
     os.mkdir(os.path.join(basedir, "dead"))
     os.mkdir(os.path.join(basedir, "export"))
@@ -776,9 +785,11 @@ def create_ardour_project(basedir, project):
     if '' == basedir:
         raise Exception("invalid base directory")
 
-    if os.path.exists(basedir):
-        raise Exception("Ardour project directory '" + basedir + \
-                        "' already exists")
+    global use_existing_basedir
+    if use_existing_basedir == False: # GTK only enables selecting existing directories so when used from Flowblade we use existing dir.
+        if os.path.exists(basedir):
+            raise Exception("Ardour project directory '" + basedir + \
+                            "' already exists")
 
     # create the ardour project directory hierarchy
     _create_ardour_project_dirs(basedir)
@@ -887,7 +898,8 @@ def _get_ardour_config(project):
            (60000 == frame_rate_num):
 
             fps_int = int(frame_rate_num / 1000)
-
+    elif 1 == frame_rate_den:
+        fps_int = frame_rate_num
     # NTSC frame rates
     elif 1001 == frame_rate_den:
         if 24000 == frame_rate_num:
@@ -1748,6 +1760,19 @@ def _create_ardour_project_file(basedir, project):
 
         # session close
         f.write(_get_ardour_session_close())
+
+##############################################################################
+# FLOWBLADE EXPORT LAUNCH                                                    #
+##############################################################################
+def launch_export_ardour_session_from_flowblade(mlt_xml_file, ardour_project_dir, sample_rate=None):
+    if sample_rate == None:
+        sample_rate = DEFAULT_SAMPLE_RATE
+
+    # create a Project instance from a Flowblade MLT XML file
+    project = create_project_from_mlt_xml(mlt_xml_file, sample_rate)
+
+    # create a new Ardour project, using our Project instance
+    create_ardour_project(ardour_project_dir, project)
 
 ##############################################################################
 # CLI PROGRAM                                                                #

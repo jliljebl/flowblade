@@ -199,6 +199,7 @@ class EditorWindow:
             ('ExportMeltXML', None, _('MLT XML'), None, None, lambda a:exporting.MELT_XML_export()),
             ('ExportEDL', None, _('EDL'), None, None, lambda a:exporting.EDL_export()),
             ('ExportScreenshot', None, _('Current Frame'), None, None, lambda a:exporting.screenshot_export()),
+            ('ExportToArdour', None, _('Current Sequence Audio As Ardour Session'), None, None, lambda a:exporting.ardour_export()),
             ('Close', None, _('_Close'), None, None, lambda a:projectaction.close_project()),
             ('Quit', None, _('_Quit'), '<control>Q', None, lambda a:app.shutdown()),
             ('EditMenu', None, _('_Edit')),
@@ -304,6 +305,7 @@ class EditorWindow:
                         <menuitem action='ExportMeltXML'/>
                         <menuitem action='ExportEDL'/>
                         <menuitem action='ExportScreenshot'/>
+                        <menuitem action='ExportToArdour'/>
                     </menu>
                     <separator/>
                     <menuitem action='Close'/>
