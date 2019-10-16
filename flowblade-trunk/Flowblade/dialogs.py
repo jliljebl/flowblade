@@ -1926,5 +1926,27 @@ def no_audio_dialog(track):
                             gui.editor_window.window)
 
 
-        
+def confirm_compositing_mode_change(callback, new_compositing_mode):
+    dialog = Gtk.Dialog(_("Confirm Compositing Mode Change"),  gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                        _("Change Compositing Mode"), Gtk.ResponseType.ACCEPT))
+    
+    primary_txt = _("Changing Compositing Mode destroys current Compositors and undo stack")
+    secondary_txt = _("This operation cannot be undo. Are you sure you wish to preceed?")
+    warning_panel = dialogutils.get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info=False, alternative_icon=None, panels=None)
+    
+    """
+    panel_vbox = Gtk.VBox(False, 2)
+    panel_vbox.pack_start(guiutils.get_left_justified_box([media_offsets_label]), False, False, 0)
+    panel_vbox.pack_start(guiutils.get_pad_label(24, 24), False, False, 0)
+    """
+    alignment = dialogutils.get_alignment2(warning_panel)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, new_compositing_mode)
+    dialog.show_all()
+
         

@@ -1958,7 +1958,17 @@ def _update_gui_after_sequence_import(): # This copied  with small modifications
 def change_current_sequence_compositing_mode(menu_widget, new_compositing_mode):
     if menu_widget.get_active() == False:
         return
+    
+    dialogs.confirm_compositing_mode_change(_compositing_mode_dialog_callback, new_compositing_mode)
 
+def _compositing_mode_dialog_callback(dialog, response_id, new_compositing_mode):
+    dialog.destroy()
+    if response_id != Gtk.ResponseType.ACCEPT:
+        gui.editor_window.init_compositing_mode_menu()
+        return
+    
+    # Destry stuff
+    
     compositeeditor.clear_compositor()
     current_sequence().compositing_mode = new_compositing_mode
     updater.repaint_tline()

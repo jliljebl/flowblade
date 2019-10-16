@@ -1025,23 +1025,24 @@ class EditorWindow:
     
         comp_top_free = Gtk.RadioMenuItem()
         comp_top_free.set_label(_("Top Down Free Move"))
-        comp_top_free.connect("toggled", lambda w: projectaction.change_current_sequence_compositing_mode(w, appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE))
         comp_top_free.show()
         menu.append(comp_top_free)
         
         comp_top_auto = Gtk.RadioMenuItem.new_with_label([comp_top_free],_("Top Down Auto Follow"))
-        comp_top_auto.connect("toggled", lambda w: projectaction.change_current_sequence_compositing_mode(w, appconsts.COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW))
         comp_top_auto.show()
         menu.append(comp_top_auto)
         
         comp_standard_auto = Gtk.RadioMenuItem.new_with_label([comp_top_free],_("Standard Auto Follow"))
-        comp_standard_auto.connect("toggled", lambda w: projectaction.change_current_sequence_compositing_mode(w, appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW))
         comp_standard_auto.show()
         menu.append(comp_standard_auto)
         
         menu_items = [comp_top_free, comp_top_auto, comp_standard_auto]
         menu_items[editorstate.get_compositing_mode()].set_active(True)
-    
+
+        comp_top_free.connect("toggled", lambda w: projectaction.change_current_sequence_compositing_mode(w, appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE))
+        comp_top_auto.connect("toggled", lambda w: projectaction.change_current_sequence_compositing_mode(w, appconsts.COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW))
+        comp_standard_auto.connect("toggled", lambda w: projectaction.change_current_sequence_compositing_mode(w, appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW))
+        
     def _init_gui_to_prefs(self):
         if editorpersistance.prefs.tabs_on_top == True:
             self.notebook.set_tab_pos(Gtk.PositionType.TOP)
