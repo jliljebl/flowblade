@@ -520,6 +520,18 @@ def create_project_from_mlt_xml(xml_file, project_sample_rate):
                     out_point = int(sub_element.attrib['out'])
                     length = out_point - in_point + 1
 
+                    # in the common case, the producer will reference a media
+                    # clip that we're going to transcode. but we might also
+                    # get a producer entry that doesn't directly reference a
+                    # media clip, but has in and out points (like a compound
+                    # clip that is actually a reference to an external MLT XML
+                    # file). we can't extract the compound clip into the
+                    # timeline, but we can at least respect the length of the
+                    # clip so that the other elements come through. there is
+                    # also a "producer0" clip with zero length and a black
+                    # frame, but this is neatly ignored by the length
+                    # calculations anyway
+
                     # if this entry has an actual media file with audio
                     # backing it, then add it to the playlist
                     if producer_id in producer_to_path:
@@ -531,7 +543,17 @@ def create_project_from_mlt_xml(xml_file, project_sample_rate):
                                           in_point,
                                           out_point)
 
-                        timeline_start_frame += length
+                    # compound clip, or something else we don't understand
+                    elif producer_id.startswith("tractor"):
+                        sys.stderr.write("warning: can not transcode media ")
+                        sys.stderr.write("for compound clip: '")
+                        sys.stderr.write(producer_id)
+                        sys.stderr.write("'\n")
+
+                    # extend the timeline start frame counter
+                    # regardless of whether we could transcode the underlying
+                    # media or not
+                    timeline_start_frame += length
 
             playlists.append(playlist)
 
