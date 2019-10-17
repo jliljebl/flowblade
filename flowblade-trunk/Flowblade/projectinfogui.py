@@ -23,6 +23,7 @@ from gi.repository import Gtk
 from gi.repository import GObject
 from gi.repository import Pango
 
+import dialogutils
 from editorstate import PROJECT
 import guicomponents
 import guiutils
@@ -94,12 +95,12 @@ def update_project_info():
     widgets.info_box.get_children()[0].set_text(profile_info_text)
 
 
-
-"""
+def show_project_events_dialog():
     events_list = ProjectEventListView()
     events_list.fill_data_model()
-    events_panel = guiutils.get_named_frame(_("Project Events"), events_list, 4)
-"""
+    events_list.set_size_request(500, 600)
+    dialogutils.panel_ok_dialog(_("Project Events"), events_list)
+
 class ProjectEventListView(Gtk.VBox):
 
     def __init__(self):

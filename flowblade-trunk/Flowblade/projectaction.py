@@ -746,7 +746,11 @@ def get_save_time_msg():
         return _("Project was saved one minute ago.")
     
     return _("Project was saved ") + str(int(save_ago)) + _(" minutes ago.")
-    
+
+
+def view_project_events():
+    projectinfogui.show_project_events_dialog()
+
 # ---------------------------------- rendering
 def do_rendering():
     global force_overwrite, force_proxy
