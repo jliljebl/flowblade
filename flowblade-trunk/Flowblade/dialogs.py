@@ -1933,14 +1933,9 @@ def confirm_compositing_mode_change(callback, new_compositing_mode):
                         _("Change Compositing Mode"), Gtk.ResponseType.ACCEPT))
     
     primary_txt = _("Changing Compositing Mode destroys current Compositors and undo stack")
-    secondary_txt = _("This operation cannot be undo. Are you sure you wish to preceed?")
+    secondary_txt = _("This operation cannot be undone. Are you sure you wish to proceed?")
     warning_panel = dialogutils.get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info=False, alternative_icon=None, panels=None)
-    
-    """
-    panel_vbox = Gtk.VBox(False, 2)
-    panel_vbox.pack_start(guiutils.get_left_justified_box([media_offsets_label]), False, False, 0)
-    panel_vbox.pack_start(guiutils.get_pad_label(24, 24), False, False, 0)
-    """
+
     alignment = dialogutils.get_alignment2(warning_panel)
 
     dialog.vbox.pack_start(alignment, True, True, 0)

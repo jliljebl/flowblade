@@ -576,7 +576,6 @@ class EditorWindow:
         # Range Log panel
         media_log_events_list_view = medialog.get_media_log_list_view()   
         events_panel = medialog.get_media_log_events_panel(media_log_events_list_view)
-        #self.fblade_theme_fix_panels.append(events_panel)
 
         media_log_vbox = Gtk.HBox()
         media_log_vbox.pack_start(events_panel, True, True, 0)
