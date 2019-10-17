@@ -1030,7 +1030,10 @@ def _insert_multiple_redo(self):
     for i in range(0, len(self.clips)):
         add_clip = self.clips[i]
         index = self.index + i
-        _insert_clip(self.track, add_clip, index, add_clip.clip_in, add_clip.clip_out)
+        if isinstance(add_clip, int): # blanks, these represented as int's.on first do
+            _insert_blank(self.track, index, add_clip)
+        else: # media clips
+            _insert_clip(self.track, add_clip, index, add_clip.clip_in, add_clip.clip_out)
 
 
 #-------------------- MULTITRACK INSERT MOVE

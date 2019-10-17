@@ -479,6 +479,10 @@ class Sequence:
         
     def clone_track_clip(self, track, index):
         orig_clip = track.clips[index]
+        if orig_clip.is_blanck_clip == True:
+            # Blank clips are created by adding a blank clip into MLT track and that is not approprite here,
+            # so blank clips are represent by their length as int.
+            return orig_clip.clip_length()
         return self.create_clone_clip(orig_clip)
 
     def create_clone_clip(self, clip):

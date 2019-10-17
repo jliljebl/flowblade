@@ -1777,7 +1777,10 @@ def do_timeline_objects_paste():
 
     new_clips = []
     for clip in paste_clips:
-        new_clip = current_sequence().create_clone_clip(clip)
+        if isinstance(clip, int): # blanks, these represented as int's.
+            new_clip = clip 
+        else: # media clips
+            new_clip = current_sequence().create_clone_clip(clip)
         new_clips.append(new_clip)
     editorstate.set_copy_paste_objects((COPY_PASTE_DATA_CLIPS, new_clips))
 

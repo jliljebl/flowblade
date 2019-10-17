@@ -92,6 +92,8 @@ def do_multiple_clip_insert(track, clips, tline_pos):
     
     # Can't put audio media on video track
     for new_clip in clips:
+        if isinstance(new_clip, int):
+            continue
         if ((new_clip.media_type == appconsts.AUDIO)
            and (track.type == appconsts.VIDEO)):        
             _display_no_audio_on_video_msg(track)
