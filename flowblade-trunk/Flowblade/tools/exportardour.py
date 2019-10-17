@@ -30,8 +30,11 @@ use_existing_basedir = False
 # CONSTANTS                                                                  #
 ##############################################################################
 
-# the name of the program
-PROGRAM_NAME = 'exportardour.py'
+# the name of the overall program
+PROGRAM_NAME = 'Flowblade'
+
+# the name of the command-line script
+CLI_PROGRAM_NAME = 'exportardour.py'
 
 # command-line program exit codes
 EXIT_OK = 0
@@ -1784,11 +1787,11 @@ def show_usage():
 
     """
 
-    sys.stderr.write(PROGRAM_NAME)
+    sys.stderr.write(CLI_PROGRAM_NAME)
     sys.stderr.write('\n')
 
     sys.stderr.write('Usage: ')
-    sys.stderr.write(PROGRAM_NAME)
+    sys.stderr.write(CLI_PROGRAM_NAME)
     sys.stderr.write(' MLT_XML_FILE NEW_ARDOUR_PROJECT_DIR [SAMPLE_RATE_HZ]\n')
 
     sys.exit(EXIT_FAIL)
