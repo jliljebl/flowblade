@@ -595,7 +595,11 @@ def get_render_panel_left(render_widgets):
     if small_height == False:
         render_panel.pack_start(encoding_panel, False, False, 0)
         render_panel.pack_start(Gtk.Label(), True, True, 0)
-        
+    elif editorstate.SCREEN_HEIGHT == 900: # 900px height screens need most small height fixes but not this
+        encoding_panel = guiutils.get_named_frame(_("Encoding Format"), render_widgets.encoding_panel.vbox, 4)
+        render_panel.pack_start(encoding_panel, False, False, 0)
+        render_panel.pack_start(Gtk.Label(), True, True, 0)
+    
     return render_panel
 
 def get_render_panel_right(render_widgets, render_clicked_cb, to_queue_clicked_cb):
