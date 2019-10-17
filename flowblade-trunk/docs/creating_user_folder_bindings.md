@@ -47,7 +47,7 @@ export PYTHON_INCLUDE=`python -c "import sys;print(\"{}/include/python{}.{}\".fo
 export PYTHON_INCLUDE=`python3 -c "import sys;print(\"{}/include/python{}.{}\".format(sys.prefix,*sys.version_info))"`
 ```
 
-### Build MLT and bindongs
+### Build MLT and bindings
  ```bash
 make 
 make install
