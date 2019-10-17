@@ -3,7 +3,6 @@
 1. [Installing deb package](./INSTALLING.md#installing-deb-package)
   1. [Installing Flatpak from Flathub](./INSTALLING.md#installing-flatpak-from-flathub)
   1. [Installing from your OS repository](./INSTALLING.md#installing-from-your-os-repository)
-  1. [Installing using Source Code Archive](./INSTALLING.md#installing-using-source-code-archive)
   1. [Installing using Development Repository Version](./INSTALLING.md#installing-using-development-repository-version)
   1. [Installing with setup.py not supported](./INSTALLING.md#installing-with-setuppy-not-supported)   
 ### Installing deb package
@@ -72,22 +71,9 @@ _Git version_. Visit the <a href="https://aur.archlinux.org/packages/flowblade-g
 yaourt -S flowblade-git
 ```
 
-
-
-### Installing using Source Code Archive
-
-Flowblade is currently a 100% script application, and all the dependencies should be available in popular distributions, so in most cases it should be possible to install and run Flowblade without compiling anything.
-
-**First download tar.gz** source archive file from <a href="https://github.com/jliljebl/flowblade/releases">here.</a> 
-
-  * Extract archive into a folder of your choosing
-  * Install dependencies. See [Dependencies](DEPENDENCIES.md) doc for more information.
-  * If you have Flowblade installed in your system, you probably have the dependencies installed, unless some new ones have been added.
-  * Launch by running script *.../flowblade-2.0.0/flowblade* that was created in the folder where archive was unpacked.
-  * Note that if you have Flowblade installed yu will need use full path to repository version or navigate to the folder containing launch script and use command "./flowblade" to launch repository version instead of installed version.
-
-
 ### Installing using Development Repository Version
+
+Before MLT 6.18 comes available in distributions Python 3 bindins have to build and installed to run repository Flowblade, here is some advice on how to get this done: https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/creating_user_folder_bindings.md 
 
 Flowblade is currently a 100% script application, and all the dependencies should be available in popular distributions, so in most cases it should be possible to install and run Flowblade without compiling anything.
 

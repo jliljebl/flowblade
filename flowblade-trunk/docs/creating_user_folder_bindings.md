@@ -35,6 +35,8 @@ cd mlt
 
 ### Update bindings file for Python 3
 
+**This is not needed with current MLT repo head anymore.**
+
 Change line in file *\<ROOT_DIR\>/mlt/src/swig/python/build* from:
 
 ```bash
@@ -45,7 +47,7 @@ export PYTHON_INCLUDE=`python -c "import sys;print(\"{}/include/python{}.{}\".fo
 export PYTHON_INCLUDE=`python3 -c "import sys;print(\"{}/include/python{}.{}\".format(sys.prefix,*sys.version_info))"`
 ```
 
-### Build MLT and bindongs
+### Build MLT and bindings
  ```bash
 make 
 make install
@@ -73,7 +75,7 @@ export MLT_PROFILES_PATH=$INSTALL_DIR/share/mlt/profiles
 export LD_LIBRARY_PATH=$INSTALL_DIR/lib:$LD_LIBRARY_PATH
 
 # Lauch repository Flowblade
-/home/path/to/your/repository/install//flowblade-trunk/flowblade
+/home/path/to/your/repository/install/flowblade-trunk/flowblade
 ``` 
 
 Launch Flowblade with script above.
