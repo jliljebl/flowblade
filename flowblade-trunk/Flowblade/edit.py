@@ -1030,7 +1030,7 @@ def _insert_multiple_redo(self):
     for i in range(0, len(self.clips)):
         add_clip = self.clips[i]
         index = self.index + i
-        if isinstance(add_clip, int): # blanks, these represented as int's.on first do
+        if isinstance(add_clip, int): # blanks, these represented as int's
             _insert_blank(self.track, index, add_clip)
         else: # media clips
             _insert_clip(self.track, add_clip, index, add_clip.clip_in, add_clip.clip_out)
@@ -1211,7 +1211,7 @@ def _box_overwrite_move_redo(self):
 
     # Do track move edits
     for move_data in self.track_moves:
-        action_object = utils.EmptyClass
+        action_object = utils.EmptyClass()
         action_object.__dict__.update(move_data)
 
         _overwrite_move_redo(action_object)
