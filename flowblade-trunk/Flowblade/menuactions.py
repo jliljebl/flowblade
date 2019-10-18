@@ -23,7 +23,6 @@ This module handles the less central actions inited by user from menu.
 """
 
 
-
 from gi.repository import Gtk, Gdk
 
 import threading

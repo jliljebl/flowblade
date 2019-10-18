@@ -194,6 +194,7 @@ def workflow_menu_launched(widget, event):
 
     behaviours_menu = Gtk.Menu()
     
+    # Delete item not currently used
     delete_item = Gtk.MenuItem.new_with_label(_("Default Delete Action"))
     delete_item.show()
 
@@ -210,20 +211,24 @@ def workflow_menu_launched(widget, event):
     dnd_menu = Gtk.Menu()
     labels = [_("Always Overwrite Blanks"), _("Overwrite Blanks on non-V1 Tracks"), _("Always Insert")]
     msgs = ["always overwrite", "overwrite nonV1", "always insert"]
-    active_index = editorpersistance.prefs.dnd_action  #appconsts values corrspond with order here
+    active_index = editorpersistance.prefs.dnd_action  # appconsts values correspond with order here.
     _build_radio_menu_items_group(dnd_menu, labels, msgs, _workflow_menu_callback, active_index)
 
     dnd_item.set_submenu(dnd_menu)
     behaviours_menu.add(dnd_item)
 
-    autofollow_item = Gtk.CheckMenuItem()
-    autofollow_item.set_label(_("Compositors Auto Follow"))
-    autofollow_item.set_active(editorstate.auto_follow_active())
-    autofollow_item.connect("activate", _workflow_menu_callback, (None, "autofollow"))
-    autofollow_item.show()
+    default_compositing_item = Gtk.MenuItem.new_with_label(_("New Sequence Default Compositing Mode"))
+    default_compositing_item.show()
+    
+    default_compositing_menu = Gtk.Menu()
+    labels = [_("Top Down Free Move"), _("Top Down Auto Follow"), _("Standard Auto Follow")]
+    msgs = ["top down", "top down auto", "standard auto"]
+    active_index = editorpersistance.prefs.default_compositing_mode  # appconsts values correspond with order here.
+    _build_radio_menu_items_group(default_compositing_menu, labels, msgs, _workflow_menu_callback, active_index)
 
-    behaviours_menu.append(autofollow_item)
-
+    default_compositing_item.set_submenu(default_compositing_menu)
+    behaviours_menu.add(default_compositing_item)
+    
     show_tooltips_item = Gtk.CheckMenuItem()
     show_tooltips_item.set_label(_("Show Tooltips for Tools"))
     show_tooltips_item.set_active(editorpersistance.prefs.show_tool_tooltips)
@@ -244,7 +249,7 @@ def workflow_menu_launched(widget, event):
         tool_id = editorpersistance.prefs.active_tools[i]
         tool_name, tool_icon_file = _TOOLS_DATA[tool_id]
         _workflow_menu.add(_get_workflow_tool_menu_item(_workflow_menu_callback, tool_id, tool_name, tool_icon_file, i+1))
-        try: # needed to prevent crashes when manually changing preset tools during dev, remove when those are decided upon
+        try: # needed to prevent crashes when manually changing preset tools during dev
             non_active_tools.remove(tool_id)
         except:
             pass
@@ -362,23 +367,20 @@ def _workflow_menu_callback(widget, data):
         _set_workflow_STANDARD()
     elif msg == "preset filmstyle":
         _set_workflow_FILM_STYLE()
-    elif msg == "autofollow":
-        active = widget.get_active()
-        editorstate.auto_follow = active
-        PROJECT().set_project_property(appconsts.P_PROP_AUTO_FOLLOW, active)
-        if active == True:
-            # Do autofollow update if auto follow activated
-            compositor_autofollow_data = edit.get_full_compositor_sync_data()
-            edit.do_autofollow_redo(compositor_autofollow_data)
-        updater.repaint_tline()
     elif  msg == "always overwrite":
         editorpersistance.prefs.dnd_action = appconsts.DND_ALWAYS_OVERWRITE
     elif  msg == "overwrite nonV1":
         editorpersistance.prefs.dnd_action = appconsts.DND_OVERWRITE_NON_V1
     elif  msg == "always insert":
         editorpersistance.prefs.dnd_action = appconsts.DND_ALWAYS_INSERT
-    elif  msg ==  "tooltips":
+    elif  msg == "tooltips":
         editorpersistance.prefs.show_tool_tooltips = widget.get_active()
+    elif  msg == "top down":
+        editorpersistance.prefs.default_compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
+    elif  msg == "top down auto":
+        editorpersistance.prefs.default_compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW
+    elif  msg == "standard auto":
+        editorpersistance.prefs.default_compositing_mode = appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW
     elif msg == "delete lift" and widget.get_active() == True:
         print("lift")
     elif msg == "delete splice" and widget.get_active() == True:

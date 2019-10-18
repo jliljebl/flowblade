@@ -476,11 +476,12 @@ class FileRenderPlayer(threading.Thread):
 
 
 class XMLRenderPlayer(threading.Thread):
-    def __init__(self, file_name, callback, data):
+    def __init__(self, file_name, callback, data, rendered_sequence=None):
         self.file_name = file_name
         self.render_done_callback = callback
         self.data = data
         self.current_playback_frame = 0
+        self.rendered_sequence = rendered_sequence
 
         threading.Thread.__init__(self)
 
@@ -506,7 +507,10 @@ class XMLRenderPlayer(threading.Thread):
             time.sleep(0.1)
         
         # Get render producer
-        timeline_producer = PROJECT().c_seq.tractor
+        if self.rendered_sequence == None: # default is current sequence
+            timeline_producer = PROJECT().c_seq.tractor
+        else:
+            timeline_producer = self.rendered_sequence.tractor
 
         # Get render consumer
         xml_consumer = mlt.Consumer(PROJECT().profile, "xml", str(self.file_name))

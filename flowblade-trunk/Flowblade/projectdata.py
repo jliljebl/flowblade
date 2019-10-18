@@ -53,9 +53,11 @@ EVENT_SAVED = 2
 EVENT_SAVED_AS = 3
 EVENT_RENDERED = 4
 EVENT_SAVED_SNAPSHOT = 5
+EVENT_MEDIA_ADDED = 6
 
 thumbnailer = None
 
+# Look to drop unused, we're not using most of this stuff.
 _project_properties_default_values = {appconsts.P_PROP_TLINE_SHRINK_VERTICAL:False, # Shink timeline max height if < 9 tracks
                                       appconsts.P_PROP_DISSOLVE_GROUP_FADE_IN:-1, # not used, dropped feature (auto fades on creation)
                                       appconsts.P_PROP_DISSOLVE_GROUP_FADE_OUT:-1, # not used, dropped feature (auto fades on creation)
@@ -63,7 +65,7 @@ _project_properties_default_values = {appconsts.P_PROP_TLINE_SHRINK_VERTICAL:Fal
                                       appconsts.P_PROP_ANIM_GROUP_FADE_OUT:-1, # not used, dropped feature (auto fades on creation)
                                       appconsts.P_PROP_LAST_RENDER_SELECTIONS: None, # tuple for last render selections data
                                       appconsts.P_PROP_TRANSITION_ENCODING: None,  # tuple for last renderered transition render selections data
-                                      appconsts.P_PROP_AUTO_FOLLOW: False} # Global compositor auto follow
+                                      appconsts.P_PROP_AUTO_FOLLOW: False} # not here anymore, this is now function of current_sequence().compositing_mode
 
 class Project:
     """
@@ -359,7 +361,7 @@ class MediaFile:
         
         proxy_md_key = self.path + str(proxy_width) + str(proxy_height)
         if hasattr(self, "use_unique_proxy"): # This may have been added in proxyediting.py to prevent interfering with existing projects
-            proxy_md_key = proxy_md_key + os.urandom(16)
+            proxy_md_key = proxy_md_key + str(os.urandom(16))
         md_str = hashlib.md5(proxy_md_key.encode('utf-8')).hexdigest()
         return str(userfolders.get_render_dir() + "/proxies/" + md_str + "." + file_extesion) # str() because we get unicode here
 
@@ -533,6 +535,7 @@ def get_default_project():
     """
     profile = mltprofiles.get_default_profile()
     project = Project(profile)
+    project.c_seq.compositing_mode = editorpersistance.prefs.default_compositing_mode
     return project
 
 

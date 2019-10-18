@@ -31,7 +31,7 @@ import userfolders
 
 # Inside hidden user folder
 USER_PROFILES_DIR = appconsts.USER_PROFILES_DIR
-DEFAULT_DEFAULT_PROFILE = "DV/DVD PAL"
+DEFAULT_DEFAULT_PROFILE = "HD 1080p 30 fps"
 
 # List of mlt profiles
 _profile_list = []

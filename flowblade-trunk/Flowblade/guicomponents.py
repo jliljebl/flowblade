@@ -1240,8 +1240,19 @@ class MediaObjectWidget:
 
     def _draw_icon(self, event, cr, allocation):
         x, y, w, h = allocation
+
+        self.create_round_rect_path(cr, 0, 0, w - 5, h - 5, 6.0)
+        cr.clip()
+        
         cr.set_source_surface(self.media_file.icon, 0, 0)
         cr.paint()
+
+        cr.reset_clip()
+        cr.set_source_rgba(0,0,0,0.3)
+        cr.set_line_width(2.0)
+        self.create_round_rect_path(cr, 0, 0, w - 5, h - 5, 6.0)
+        cr.stroke()
+        
         if self.media_file == editorstate.MONITOR_MEDIA_FILE():
             cr.set_source_surface(self.indicator_icon, 29, 22)
             cr.paint()
@@ -1261,14 +1272,14 @@ class MediaObjectWidget:
             cr.show_text("][ " + str(clip_length))
 
         cr.set_source_rgba(0,0,0,0.5)
-        cr.rectangle(28,75,62,12)
+        cr.rectangle(28,71,62,12)
         cr.fill()
             
-        cr.move_to(30, 84)
+        cr.move_to(30, 79)
         cr.set_source_rgb(1, 1, 1)
         media_length = utils.get_tc_string(self.media_file.length)
         cr.show_text(str(media_length))
-            
+
         if self.media_file.type != appconsts.PATTERN_PRODUCER:
             if self.media_file.is_proxy_file == True:
                 cr.set_source_surface(is_proxy_icon, 96, 6)
@@ -1297,7 +1308,15 @@ class MediaObjectWidget:
             cr.set_source_surface(pattern_icon, 6, 6)
             cr.paint()
 
+    def create_round_rect_path(self, cr, x, y, width, height, radius=4.0):
+        degrees = math.pi / 180.0
 
+        cr.new_sub_path()
+        cr.arc(x + width - radius, y + radius, radius, -90 * degrees, 0 * degrees)
+        cr.arc(x + width - radius, y + height - radius, radius, 0 * degrees, 90 * degrees)
+        cr.arc(x + radius, y + height - radius, radius, 90 * degrees, 180 * degrees)
+        cr.arc(x + radius, y + radius, radius, 180 * degrees, 270 * degrees)
+        cr.close_path()
 
 # -------------------------------------------- context menus
 class EditorSeparator:
@@ -1481,20 +1500,38 @@ def display_clip_popup_menu(event, clip, track, callback):
 
     clip_menu.add(_get_filters_add_menu_item(event, clip, track, callback))
 
+    _add_separetor(clip_menu)
+    
     # Only add compositors for video tracks V2 and higher
     if track.id <= current_sequence().first_video_index:
         active = False
     else:
         active = True
-    clip_menu.add(_get_compositors_add_menu_item(event, clip, track, callback, active))
-    clip_menu.add(_get_auto_fade_compositors_add_menu_item(event, clip, track, callback, active))
-    #clip_menu.add(_get_blenders_add_menu_item(event, clip, track, callback, active))
+    compositors_add_item = _get_compositors_add_menu_item(event, clip, track, callback, active)
+    if (current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW 
+        and len(current_sequence().get_clip_compositors(clip)) != 0):
+        compositors_add_item.set_sensitive(False)
+    clip_menu.add(compositors_add_item)
+    
+    if current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
+        clip_menu.add(_get_auto_fade_compositors_add_menu_item(event, clip, track, callback, active))
+
+    if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
+        item_text = _("Delete Compositor")
+    else:
+        item_text = _("Delete Compositor/s")
+    comp_delete_item = _get_menu_item(item_text, callback, (clip, track, "delete_compositors", event.x))
+    if len(current_sequence().get_clip_compositors(clip)) == 0:
+        comp_delete_item.set_sensitive(False)
+    clip_menu.add(comp_delete_item)
 
     _add_separetor(clip_menu)
+
     clip_menu.add(_get_clone_filters_menu_item(event, clip, track, callback))
     clip_menu.add(_get_menu_item(_("Clear Filters"), callback, (clip, track, "clear_filters", event.x)))
 
     _add_separetor(clip_menu)
+    
     clip_menu.add(_get_clip_properties_menu_item(event, clip, track, callback))
     clip_menu.add(_get_clip_markers_menu_item(event, clip, track, callback))
     clip_menu.add(_get_menu_item(_("Clip Info"), callback,\
@@ -1534,7 +1571,11 @@ def display_transition_clip_popup_menu(event, clip, track, callback):
         active = False
     else:
         active = True
-    clip_menu.add(_get_compositors_add_menu_item(event, clip, track, callback, active))
+    compositors_add_item = _get_compositors_add_menu_item(event, clip, track, callback, active)
+    if (current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW 
+        and len(current_sequence().get_clip_compositors(clip)) != 0):
+        compositors_add_item.set_sensitive(False)
+    clip_menu.add(compositors_add_item)
     clip_menu.add(_get_blenders_add_menu_item(event, clip, track, callback, active))
 
     _add_separetor(clip_menu)
@@ -1682,8 +1723,9 @@ def _get_compositors_add_menu_item(event, clip, track, callback, sensitive):
     for i in range(0, len(mlttransitions.compositors)):
         compositor = mlttransitions.compositors[i]
         name, compositor_type = compositor
-        #if compositor_type == "##affine":
-        #    continue
+        # Continue if dropped compositor
+        if compositor_type in mlttransitions.dropped_compositors:
+            continue
         # Continue if compositor_type not present in system
         try:
             info = mlttransitions.mlt_compositor_transition_infos[compositor_type]
@@ -1700,6 +1742,8 @@ def _get_compositors_add_menu_item(event, clip, track, callback, sensitive):
     sub_menu.append(alpha_combiners_menu_item)
     blenders_menu_item  = _get_blenders_add_menu_item(event, clip, track, callback, sensitive)
     sub_menu.append(blenders_menu_item)
+    wipe_compositors_menu_item = _get_wipe_compositors_add_menu_item(event, clip, track, callback, sensitive)
+    sub_menu.append(wipe_compositors_menu_item)
     
     menu_item.set_sensitive(sensitive)
     menu_item.show()
@@ -1713,6 +1757,8 @@ def _get_blenders_add_menu_item(event, clip, track, callback, sensitive):
     for i in range(0, len(mlttransitions.blenders)):
         blend = mlttransitions.blenders[i]
         name, compositor_type = blend
+        if compositor_type in mlttransitions.dropped_compositors:
+            continue
         blender_item = Gtk.MenuItem(name)
         sub_menu.append(blender_item)
         blender_item.connect("activate", callback, (clip, track, "add_compositor", (event.x, compositor_type)))
@@ -1722,7 +1768,7 @@ def _get_blenders_add_menu_item(event, clip, track, callback, sensitive):
     return menu_item
 
 def _get_alpha_combiners_add_menu_item(event, clip, track, callback, sensitive):
-    menu_item = Gtk.MenuItem(_("Alpha Combiners"))
+    menu_item = Gtk.MenuItem(_("Alpha"))
     sub_menu = Gtk.Menu()
     menu_item.set_submenu(sub_menu)
 
@@ -1733,6 +1779,22 @@ def _get_alpha_combiners_add_menu_item(event, clip, track, callback, sensitive):
         sub_menu.append(alpha_combiner_item)
         alpha_combiner_item.connect("activate", callback, (clip, track, "add_compositor", (event.x, compositor_type)))
         alpha_combiner_item.show()
+    menu_item.set_sensitive(sensitive)
+    menu_item.show()
+    return menu_item
+
+def _get_wipe_compositors_add_menu_item(event, clip, track, callback, sensitive):
+    menu_item = Gtk.MenuItem(_("Wipe"))
+    sub_menu = Gtk.Menu()
+    menu_item.set_submenu(sub_menu)
+
+    for i in range(0, len(mlttransitions.wipe_compositors)):
+        alpha_combiner = mlttransitions.wipe_compositors[i]
+        name, compositor_type = alpha_combiner
+        wipe_item = Gtk.MenuItem(name)
+        sub_menu.append(wipe_item)
+        wipe_item.connect("activate", callback, (clip, track, "add_compositor", (event.x, compositor_type)))
+        wipe_item.show()
     menu_item.set_sensitive(sensitive)
     menu_item.show()
     return menu_item
@@ -2416,6 +2478,71 @@ class MonitorTCDisplay:
         cr.close_path ()
 
 
+class MonitorTCInfo:
+    def __init__(self):
+        if editorstate.screen_size_small_height() == True:
+            font_desc = "sans bold 8"
+        else:
+            font_desc = "sans bold 9"
+            
+        self.widget = Gtk.HBox()
+        self.widget.set_tooltip_text(_("Current Sequence / Clip name and length"))
+        
+        self.monitor_source = Gtk.Label()
+        self.monitor_source.modify_font(Pango.FontDescription(font_desc))
+        self.monitor_source.set_ellipsize(Pango.EllipsizeMode.END)
+        self.monitor_source.set_sensitive(False)
+        
+        self.monitor_tc = Gtk.Label()
+        self.monitor_tc.modify_font(Pango.FontDescription(font_desc))
+
+        self.in_label = Gtk.Label(label="] ")
+        self.in_label.modify_font(Pango.FontDescription(font_desc))
+        self.in_label.set_sensitive(False)
+
+        self.out_label = Gtk.Label(label="[ ")
+        self.out_label.modify_font(Pango.FontDescription(font_desc))
+        self.out_label.set_sensitive(False)
+
+        self.marks_length_label = Gtk.Label(label="][ ")
+        self.marks_length_label.modify_font(Pango.FontDescription(font_desc))
+        self.marks_length_label.set_sensitive(False)
+
+        self.in_value = Gtk.Label(label="--:--:--:--")
+        self.in_value.modify_font(Pango.FontDescription(font_desc))
+
+        self.out_value = Gtk.Label(label="--:--:--:--")
+        self.out_value.modify_font(Pango.FontDescription(font_desc))
+
+        self.marks_length_value = Gtk.Label(label="--:--:--:--")
+        self.marks_length_value.modify_font(Pango.FontDescription(font_desc))
+        
+        self.widget.pack_start(self.monitor_source, False, False, 0)
+        self.widget.pack_start(self.monitor_tc, False, False, 0)
+        self.widget.pack_start(guiutils.pad_label(24, 10), False, False, 0)
+        if editorstate.screen_size_small_width() == False:
+            self.widget.pack_start(self.in_label, False, False, 0)
+            self.widget.pack_start(self.in_value, False, False, 0)
+            self.widget.pack_start(guiutils.pad_label(12, 10), False, False, 0)
+            self.widget.pack_start(self.out_label, False, False, 0)
+            self.widget.pack_start(self.out_value, False, False, 0)
+            self.widget.pack_start(guiutils.pad_label(12, 10), False, False, 0)
+        self.widget.pack_start(self.marks_length_label, False, False, 0)
+        self.widget.pack_start(self.marks_length_value, False, False, 0)
+            
+    def set_source_name(self, source_name):
+        self.monitor_source.set_text(source_name)
+        
+    def set_source_tc(self, tc_str):
+        self.monitor_tc.set_text(tc_str)
+    
+    def set_range_info(self, in_str, out_str, len_str):
+        if editorstate.screen_size_small_width() == False:
+            self.in_value.set_text(in_str)
+            self.out_value.set_text(out_str)
+        self.marks_length_value.set_text(len_str)
+    
+
 class TimeLineLeftBottom:
     def __init__(self):
         self.widget = Gtk.HBox()
@@ -2967,7 +3094,7 @@ class ToolSelector(ImageMenuLaunch):
             cr.set_source_rgb(0.66, 0.66, 0.66)
         cr.fill()
 
-
+    
 class HamburgerPressLaunch:
     def __init__(self, callback):
         # Aug-2019 - SvdB - BB

@@ -24,6 +24,7 @@ Module handles keyevents.
 
 from gi.repository import Gdk
 
+import appconsts
 import audiowaveform
 import clipeffectseditor
 import compositeeditor
@@ -177,7 +178,6 @@ def _handle_tline_key_event(event):
     Returns True for handled key presses to stop those
     keyevents from going forward.
     """
-
     tool_was_selected = workflow.tline_tool_keyboard_selected(event)
     if tool_was_selected == True:
         return True
@@ -634,4 +634,42 @@ def _move_to_beginning():
 def _move_to_end():
     updater.repaint_tline()
     updater.update_tline_scrollbar()
+
+# ----------------------------------------------------------------------- COPY PASTE ACTION FORWARDING
+def copy_action():
+    if _timeline_has_focus() == False:
+        filter_kf_editor = _get_focus_keyframe_editor(clipeffectseditor.keyframe_editor_widgets)
+        geom_kf_editor = _get_focus_keyframe_editor(compositeeditor.keyframe_editor_widgets)
+        if filter_kf_editor != None:
+            value = filter_kf_editor.get_copy_kf_value() 
+            save_data = (appconsts.COPY_PASTE_KEYFRAME_EDITOR_KF_DATA, (value, filter_kf_editor))
+            editorstate.set_copy_paste_objects(save_data) 
+        elif geom_kf_editor != None:
+            value = geom_kf_editor.get_copy_kf_value() 
+            save_data = (appconsts.COPY_PASTE_GEOMETRY_EDITOR_KF_DATA, (value, geom_kf_editor))
+            editorstate.set_copy_paste_objects(save_data) 
+        else:
+            # Try to extract text to clipboard because user pressed CTRL + C
+            copy_source = gui.editor_window.window.get_focus()
+            try:
+                copy_source.copy_clipboard()
+            except:# selected widget was not a Gtk.Editable that can provide text to clipboard
+                pass
+    else:
+        tlineaction.do_timeline_objects_copy()
+
+def paste_action():
+    if _timeline_has_focus() == False:
+        copy_paste_object = editorstate.get_copy_paste_objects()
+        if copy_paste_object == None:
+            return
+        data_type, paste_data = editorstate.get_copy_paste_objects()
+        if data_type == appconsts.COPY_PASTE_KEYFRAME_EDITOR_KF_DATA:
+            value, kf_editor = paste_data
+            kf_editor.paste_kf_value(value)
+        elif data_type == appconsts.COPY_PASTE_GEOMETRY_EDITOR_KF_DATA:
+            value, geom_editor = paste_data
+            geom_editor.paste_kf_value(value)
+    else:
+        tlineaction.do_timeline_objects_paste()
 

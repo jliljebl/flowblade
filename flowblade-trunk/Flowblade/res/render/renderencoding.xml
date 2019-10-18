@@ -67,35 +67,35 @@
 
     <!-- User editable encodings -->
     <!-- encoding options group together codecs, file formats and quality option groups -->
-    <encodingoption name="MPEG-2 / .mpg" extension="mpg" audiodesc=" mp2" type="av" resize="True" qgroup="qgroup1">
-        <profile args="f=mpeg acodec=mp2 ab=384k vcodec=mpeg2video minrate=0 vb=%BITRATE% bf=2 b_strategy=1 trellis=1" />
-    </encodingoption>
-    <encodingoption name="H.264 / .mp4" extension="mp4" audiodesc=" mp3" type="av" resize="True" qgroup="qgroup2">
-        <profile args="f=mp4 s=%SCREENSIZE% hq=1 acodec=libmp3lame ab=384k pix_fmt=yuv420p vcodec=libx264 minrate=0 b=%BITRATE% b_strategy=1 subcmp=2 cmp=2 coder=1 flags=+loop qmax=51 subq=7 qmin=10 qcomp=0.6 qdiff=4 trellis=1 aspect=%ASPECT%"/>
+    <encodingoption name="H.264 / .mp4" extension="mp4" audiodesc=" aac" type="av" resize="True" qgroup="qgroup2">
+        <profile args="f=mp4 s=%SCREENSIZE% hq=1 acodec=aac ab=256k pix_fmt=yuv420p vcodec=libx264 minrate=0 b=%BITRATE% b_strategy=1 subcmp=2 cmp=2 coder=1 flags=+loop qmax=51 subq=7 qmin=10 qcomp=0.6 qdiff=4 trellis=1 aspect=%ASPECT%"/>
     </encodingoption>
     <encodingoption name="MPEG-4 / .mp4" extension="mp4" type="av" audiodesc=" mp2" resize="True" qgroup="qgroup1">
-        <profile args="f=mp4 hq=1 acodec=mp2 ab=192k vcodec=mpeg4 minrate=0 vb=%BITRATE%"/>
+        <profile args="f=mp4 hq=1 acodec=libtwolame ab=192k vcodec=mpeg4 minrate=0 vb=%BITRATE%"/>
     </encodingoption>
-    <encodingoption name="Theora / .ogv" extension="ogv" audiodesc="flac" type="av" resize="True" qgroup="qgroup2">
-        <profile args="f=ogg acodec=flac ac=2 vcodec=libtheora minrate=0 vb=%BITRATE%" />
+    <encodingoption name="MPEG-2 / .mpg" extension="mpg" audiodesc=" mp2" type="av" resize="True" qgroup="qgroup1">
+        <profile args="f=mpeg acodec=libtwolame ab=384k vcodec=mpeg2video minrate=0 vb=%BITRATE% bf=2 b_strategy=1 trellis=1" />
     </encodingoption>
-    <encodingoption name="Lossless HuffYUV / .avi" extension="avi" audiodesc=" pcm"  type="av" resize="True" qgroup="lossless">
-        <profile args="f=avi acodec=pcm_s16le ac=2 vcodec=huffyuv" />
+    <encodingoption name="WebM VP8 / .webm" extension="webm" audiodesc=" vorbis" type="av" resize="True" qgroup="qgroup2">
+        <profile args="f=webm acodec=libvorbis ab=128k vcodec=libvpx g=120 rc_lookahead=16 quality=good speed=0 vprofile=0 qmax=51 qmin=11 slices=4 vb=%BITRATE% maxrate=24M minrate=100k arnr_max_frames=7 arnr_strength=5 arnr_type=3 auto-alt-ref=0 mlt_image_format=rgb24a pix_fmt=yuva420p" />
     </encodingoption>
-    <encodingoption name="Lossless MPEG-4 / .mp4" extension="mp4" audiodesc=" mp3" type="av" resize="True" qgroup="lossless">
-        <profile args="f=mp4 acodec=libmp3lame ab=384k ac=2 vcodec=mpeg4 qscale=1 qmin=1" />
+    <encodingoption name="Ogg Theora / .ogv" extension="ogv" audiodesc=" vorbis" type="av" resize="True" qgroup="qgroup2">
+        <profile args="f=ogg acodec=libvorbis ac=2 vcodec=libtheora minrate=0 vb=%BITRATE%" />
     </encodingoption>
     <encodingoption name="Lossless H.264 / .mp4" extension="mp4" audiodesc=" aac"  type="av" resize="True" qgroup="lossless">
         <profile args="f=mp4 acodec=aac ab=384k ac=2 pix_fmt=yuv420p vcodec=libx264 cqp=0 me_method=esa subq=8 qmin=10 qcomp=0.6 qdiff=4 qmax=51 coder=ac partitions=+parti4x4+parti8x8+partp4x4+partp8x8+partb8x8 refs=16 trellis=1" />
     </encodingoption>
+    <encodingoption name="Lossless MPEG-4 / .mp4" extension="mp4" audiodesc=" mp3" type="av" resize="True" qgroup="lossless">
+        <profile args="f=mp4 acodec=libmp3lame ab=320k ac=2 vcodec=mpeg4 qscale=1 qmin=1" />
+    </encodingoption>
     <encodingoption name="Lossless FFv1 / .mkv" extension="mkv" audiodesc=" flac"  type="av" resize="True" qgroup="lossless">
         <profile args="f=mkv acodec=flac vcodec=ffv1 level=3 g=1 slicecrc=1 slices=16" />
     </encodingoption>
+    <encodingoption name="Lossless HuffYUV / .avi" extension="avi" audiodesc=" pcm"  type="av" resize="True" qgroup="lossless">
+        <profile args="f=avi acodec=pcm_s16le ac=2 vcodec=huffyuv" />
+    </encodingoption>
     <encodingoption name="Apple ProRes 4:2:2 / .mov" extension="mov" audiodesc=" pcm" type="av" resize="True" qgroup="variablenooption">
         <profile args="f=mov acodec=pcm_s16le ac=2 vcodec=prores vb=0 g=0 bf=0 threads=1 vprofile=2" />
-    </encodingoption>
-    <encodingoption name="WebM Alpha / .webm" extension="webm" audiodesc=" vorbis" type="av" resize="True" qgroup="qgroup2">
-        <profile args="f=webm acodec=vorbis ab=128k vcodec=libvpx g=120 rc_lookahead=16 quality=good speed=0 vprofile=0 qmax=51 qmin=11 slices=4 vb=%BITRATE% maxrate=24M minrate=100k arnr_max_frames=7 arnr_strength=5 arnr_type=3 auto-alt-ref=0 mlt_image_format=rgb24a pix_fmt=yuva420p" />
     </encodingoption>
 
 
@@ -134,22 +134,22 @@
         <profile args="f=m4v s=480x320 aspect=%dar progressive=1 acodec=aac ab=128k vcodec=libx264 vb=700k flags=+loop cmp=+chroma partitions=+parti8x8+parti4x4+partp8x8+partb8x8 me_method=umh subq=7 me_range=16 g=250 keyint_min=25 sc_threshold=40 i_qfactor=0.71 qcomp=0.6 qmin=10 qmax=51 qdiff=4 directpred=1 trellis=1 coder=0 bf=0 refs=3 level=30 maxrate=10000k bufsize=10000k wpredp=0 pass=1" />
     </encodingoption>
     <encodingoption name="HDV PAL 1080 50i" extension="m2t" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=mpegts acodec=mp2 ab=384k ar=48000 ac=2 vcodec=mpeg2video s=1440x1080 vb=25000k g=12 trellis=1 mlt_profile=hdv_1080_50i pass=1" />
+        <profile args="f=mpegts acodec=libtwolame ab=384k ar=48000 ac=2 vcodec=mpeg2video s=1440x1080 vb=25000k g=12 trellis=1 mlt_profile=hdv_1080_50i pass=1" />
     </encodingoption>
         <encodingoption name="HDV PAL 1080 25p" extension="m2t" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-    <profile name="PAL 1080 25p" standard="PAL" args="f=mpegts acodec=mp2 ab=384k ar=48000 ac=2 vcodec=mpeg2video s=1440x1080 vb=25000k g=12 trellis=1 mlt_profile=hdv_1080_25p pass=1" />
+    <profile name="PAL 1080 25p" standard="PAL" args="f=mpegts acodec=libtwolame ab=384k ar=48000 ac=2 vcodec=mpeg2video s=1440x1080 vb=25000k g=12 trellis=1 mlt_profile=hdv_1080_25p pass=1" />
     </encodingoption>
     <encodingoption name="HDV PAL 720 25p" extension="m2t" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=mpegts acodec=mp2 ab=384k ar=48000 ac=2 vcodec=mpeg2video s=1280x720 vb=19700k g=12 trellis=1 mlt_profile=hdv_720_25p pass=1" />
+        <profile args="f=mpegts acodec=libtwolame ab=384k ar=48000 ac=2 vcodec=mpeg2video s=1280x720 vb=19700k g=12 trellis=1 mlt_profile=hdv_720_25p pass=1" />
     </encodingoption>
     <encodingoption name="HDV NTSC 1080 60i" extension="m2t" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=mpegts acodec=mp2 ab=384k ar=48000 ac=2 vcodec=mpeg2video s=1440x1080 vb=25000k g=15 trellis=1 mlt_profile=hdv_1080_60i pass=1" />
+        <profile args="f=mpegts acodec=libtwolame ab=384k ar=48000 ac=2 vcodec=mpeg2video s=1440x1080 vb=25000k g=15 trellis=1 mlt_profile=hdv_1080_60i pass=1" />
     </encodingoption>
     <encodingoption name="HDV NTSC 1080 30p" extension="m2t" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=mpegts acodec=mp2 ab=384k ar=48000 ac=2 vcodec=mpeg2video s=1440x1080 vb=25000k g=15 trellis=1 mlt_profile=hdv_1080_30p pass=1" />
+        <profile args="f=mpegts acodec=libtwolame ab=384k ar=48000 ac=2 vcodec=mpeg2video s=1440x1080 vb=25000k g=15 trellis=1 mlt_profile=hdv_1080_30p pass=1" />
     </encodingoption>
     <encodingoption name="HDV NTSC 720 30p" extension="m2t" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=mpegts acodec=mp2 ab=384k ar=48000 ac=2 vcodec=mpeg2video s=1280x720 vb=19700k g=15 trellis=1 mlt_profile=hdv_720_30p pass=%passes" />
+        <profile args="f=mpegts acodec=libtwolame ab=384k ar=48000 ac=2 vcodec=mpeg2video s=1280x720 vb=19700k g=15 trellis=1 mlt_profile=hdv_720_30p pass=%passes" />
     </encodingoption>
     <encodingoption name="DVD MPEG PAL" extension="mpg" nonuser="True" audiodesc="NA"  type="av" resize="NA" qgroup="lossless">
         <profile args="f=mpeg vcodec=mpeg2video acodec=ac3 b=5000k maxrate=8000k minrate=0 bufsize=1835008 packetsize=2048 muxrate=10080000 ab=192k ar=48000 s=720x576 g=15 me_range=63 trellis=1" />
@@ -250,11 +250,14 @@
 
 
     <!-- Proxy encoding -->
+    <proxyencodingoption name="H.264 Preset Ultrafast" extension="mp4" type="av" audiodesc="aac, 128kb/s, 48000Hz" resize="True" qgroup="qgroup2">
+        <profile args="f=mp4 acodec=aac ab=128k ar=48000 vcodec=libx264 preset=ultrafast tune=fastdecode g=30 crf=25"/>
+    </proxyencodingoption>
     <proxyencodingoption name="MPEG-4 Preset Ultrafast" extension="mp4" type="av" audiodesc="mp2, 192kb/s, 48000Hz" resize="True" qgroup="qgroup1">
-        <profile args="f=mp4 acodec=mp2 ab=192k ar=48000 vcodec=mpeg4 preset=ultrafast"/>
+        <profile args="f=mp4 acodec=libmp3lame ac=2 ab=192k ar=48000 vcodec=mpeg4 preset=ultrafast"/>
     </proxyencodingoption>
     <proxyencodingoption name="MPEG-2 Transport Stream" audiodesc="mp2, 384kb/s, 48000Hz"  extension="m2t" type="av" resize="True" qgroup="qgroup1">
-       <profile args="f=mpegts acodec=libmp3lame ac=2 ab=128k ar=48000 vcodec=mpeg2video g=5" />
+       <profile args="f=mpegts acodec=libtwolame ab=256k ar=48000 vcodec=mpeg2video g=5" />
    </proxyencodingoption>
 
 </renderencoding>

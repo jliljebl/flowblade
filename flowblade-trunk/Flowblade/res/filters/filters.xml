@@ -782,6 +782,17 @@
         <property name="Amplitude" args="range_in=-100,100 range_out=-1,1">0.0</property>
         <property name="Frequency" args="range_in=-100,100 range_out=-0.5,0.5">0.0</property>
     </filter>
+    <filter id="frei0r.defish0r">
+        <name>Lens Defisher</name>
+        <group>Distort</group>
+        <property name="Aspect type" args="editor=no_editor">1.0</property>
+        <property name="Manual Aspect" args="editor=combobox exptype=default cbopts=Square:1.0,HDV:1.333,DV/DVD!Widescreen!PAL:1.422,DV/DVD!Widescreen!NTSC:1.185,DV/DVD!PAL:1.067,DV/DVD!NTSC:0.889 displayname=Input!Pixel!Aspect!Ratio">1.0</property>
+        <property name="Scaling" args="editor=no_editor">0.0</property>
+        <property name="DeFish" args="editor=combobox exptype=default cbopts=Remove!Lens!Distortion:1.0,Apply!Lens!Distortion:0.0 displayname=Direction">1.0</property>
+        <property name="Type" args="editor=combobox exptype=default cbopts=Equidistant:0.00,Orthographic:0.33,Equiarea:0.67,Stereographic:1.00 displayname=Lens!Projection">0.00</property>
+        <property name="Interpolator" args="editor=combobox exptype=default cbopts=Bilinear:0.17,Bicubic!Smooth:0.33,Bicubic!Sharp:0.50,Spline:0.67 displayname=Interpolator">0.17</property>
+        <property name="Amount" args="range_in=0,100 range_out=0,1 displayname=Strength">0.3</property>
+    </filter>
     <filter id="frei0r.lenscorrection">
         <name>Lens Correction</name>
         <group>Distort</group>
@@ -818,7 +829,7 @@
         <property name="av.cx" args="range_in=0,SCREENSIZE_WIDTH range_out=0,1 displayname=Center!X">0.5</property>
         <property name="av.cy" args="range_in=0,SCREENSIZE_HEIGHT range_out=0,1 displayname=Center!Y">0.5</property>
         <property name="av.k1" args="range_in=0,100 range_out=-1,1 displayname=Quad!Distortion">0</property>
-        <property name="av.k2" args="range_in=0,100 range_out=-1,1 displayname=Double!Quad!Distortion">10</property>
+        <property name="av.k2" args="range_in=0,100 range_out=-1,1 displayname=Double!Quad!Distortion">0</property>
     </filter>
     
     <!-- for some reason avfilter.perspective gives errors:
@@ -864,8 +875,8 @@
     <filter id="frei0r.hqdn3d">
         <name>Denoise</name>
         <group>Fix</group>
-        <property name="Spatial" args="range_in=0,100">0.5</property>
-        <property name="Temporal"  args="range_in=0,100">0</property>
+        <property name="Spatial" args="range_in=0,100">0.04</property>
+        <property name="Temporal"  args="range_in=0,100">0.12</property>
     </filter>
     <filter id="frei0r.sharpness">
         <name>Sharpness</name>

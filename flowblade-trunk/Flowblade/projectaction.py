@@ -46,6 +46,7 @@ import app
 import audiowaveformrenderer
 import appconsts
 import batchrendering
+import compositeeditor
 import dialogs
 import dialogutils
 import gui
@@ -745,7 +746,11 @@ def get_save_time_msg():
         return _("Project was saved one minute ago.")
     
     return _("Project was saved ") + str(int(save_ago)) + _(" minutes ago.")
-    
+
+
+def view_project_events():
+    projectinfogui.show_project_events_dialog()
+
 # ---------------------------------- rendering
 def do_rendering():
     global force_overwrite, force_proxy
@@ -1267,7 +1272,6 @@ def create_selection_compound_clip():
     default_name = _("selection_") + _get_compound_clip_default_name_date_str()
     dialogs.compound_clip_name_dialog(_do_create_selection_compound_clip, default_name, _("Save Selection Compound Clip"))
 
-
 def _do_create_selection_compound_clip(dialog, response_id, name_entry):
     if response_id != Gtk.ResponseType.ACCEPT:
         dialog.destroy()
@@ -1337,6 +1341,31 @@ def _do_create_sequence_compound_clip(dialog, response_id, name_entry):
     render_player = renderconsumer.XMLRenderPlayer(write_file, _sequence_xml_compound_render_done_callback, (write_file, media_name))
     render_player.start()
 
+# This is called from popup menu and can be used to create compound clips from non-active sequences
+def create_sequence_compound_clip_from_selected():
+    default_name = _("sequence_") + _get_compound_clip_default_name_date_str() + ".xml"
+    dialogs.compound_clip_name_dialog(_do_create_sequence_compound_clip_from_selected, default_name, _("Save Sequence Compound Clip"))
+
+def _do_create_sequence_compound_clip_from_selected(dialog, response_id, name_entry):
+    if response_id != Gtk.ResponseType.ACCEPT:
+        dialog.destroy()
+        return
+
+    media_name = name_entry.get_text()
+    folder = userfolders.get_render_dir()
+    write_file = folder + "/"+ media_name + ".xml"
+
+    dialog.destroy()
+
+    selection = gui.sequence_list_view.treeview.get_selection()
+    model, iter = selection.get_selected()
+    (model, rows) = selection.get_selected_rows()
+    row = max(rows[0])
+    selected_sequence = PROJECT().sequences[row]
+
+    render_player = renderconsumer.XMLRenderPlayer(write_file, _sequence_xml_compound_render_done_callback, (write_file, media_name), selected_sequence)
+    render_player.start()
+    
 def create_sequence_freeze_frame_compound_clip():
     # lets's just set something unique-ish 
     default_name = _("frame_") + utils.get_tc_string_with_fps_for_filename(PLAYER().current_frame(), utils.fps()) + ".xml"
@@ -1612,6 +1641,8 @@ def sequence_panel_popup_requested(event):
     sequence_menu.add(guiutils.get_menu_item(_("Add New Sequence"), _sequece_menu_item_selected, ("add sequence", None)))
     sequence_menu.add(guiutils.get_menu_item(_("Edit Selected Sequence"), _sequece_menu_item_selected, ("edit sequence", None)))
     sequence_menu.add(guiutils.get_menu_item(_("Delete Selected Sequence"), _sequece_menu_item_selected, ("delete sequence", None)))
+    guiutils.add_separetor(sequence_menu)
+    sequence_menu.add(guiutils.get_menu_item(_("Create Compound Clip from Selected Sequence"), _sequece_menu_item_selected, ("compound clip", None)))
     
     sequence_menu.popup(None, None, None, None, event.button, event.time)    
 
@@ -1623,7 +1654,9 @@ def _sequece_menu_item_selected(widget, data):
         delete_selected_sequence()
     elif msg == "edit sequence":
         change_edit_sequence()
-
+    elif msg == "compound clip":
+        create_sequence_compound_clip_from_selected()
+        
 def add_new_sequence():
     default_name = _("sequence_") + str(PROJECT().next_seq_number)
     dialogs.new_sequence_dialog(_add_new_sequence_dialog_callback, default_name)
@@ -1651,16 +1684,21 @@ def _add_new_sequence_dialog_callback(dialog, response_id, widgets):
     (model, rows) = selection.get_selected_rows()
     row = max(rows[0])
     
-    # Add new sequence
+    # Set default track counts as module global values, this is not a good design.
     sequence.AUDIO_TRACKS_COUNT = a_tracks
     sequence.VIDEO_TRACKS_COUNT = v_tracks
+
+    # Add new sequence
     PROJECT().add_named_sequence(name)
+
     gui.sequence_list_view.fill_data_model()
     
     if open_right_away == False:
         selection.select_path(str(row)) # Keep previous selection
     else:
         app.change_current_sequence(len(PROJECT().sequences) - 1)
+        PROJECT().c_seq.compositing_mode = editorpersistance.prefs.default_compositing_mode
+        gui.editor_window.init_compositing_mode_menu()
     
     dialog.destroy()
 
@@ -1920,7 +1958,25 @@ def _update_gui_after_sequence_import(): # This copied  with small modifications
     editorstate.PLAYER().display_inside_sequence_length(current_sequence().seq_len) # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
 
     updater. update_seqence_info_text()
-        
+
+def change_current_sequence_compositing_mode(menu_widget, new_compositing_mode):
+    if menu_widget.get_active() == False:
+        return
+    
+    dialogs.confirm_compositing_mode_change(_compositing_mode_dialog_callback, new_compositing_mode)
+
+def _compositing_mode_dialog_callback(dialog, response_id, new_compositing_mode):
+    dialog.destroy()
+    if response_id != Gtk.ResponseType.ACCEPT:
+        gui.editor_window.init_compositing_mode_menu()
+        return
+    
+    # Destry stuff
+    
+    compositeeditor.clear_compositor()
+    current_sequence().compositing_mode = new_compositing_mode
+    updater.repaint_tline()
+
 # --------------------------------------------------------- pop-up menus
 def media_file_menu_item_selected(widget, data):
     item_id, media_file, event = data

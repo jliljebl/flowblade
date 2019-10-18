@@ -296,6 +296,13 @@ class EditAction:
         # Compositor auto follow is saved with each edit and is computed on first do and later done on redo/undo
         self.compositor_autofollow_data = None
         
+        # Compositor mode COMPOSITING_MODE_STANDARD_AUTO_FOLLOW requires that compositors without parent clips are destroyed
+        # when origin clips are destroyed.
+        self.orphaned_compositors = None
+        
+        # Some edit redo/undo actions require this but let's only do it when needed.
+        self.do_restack_compositors = False
+        
         # Other then actual trim edits, attempting all edits exits active trimodes and enters <X>_NO_EDIT trim mode.
         self.exit_active_trimmode_on_edit = True
         
@@ -328,9 +335,17 @@ class EditAction:
         # If autofollow and no data, then GUI update happens in do_edit()
         # Added complexity here is to avoid two GUI updates
         if auto_follow_active() == True:
-            self.compositor_autofollow_data = get_full_compositor_sync_data()
-            self.redo_auto_follow()
-            # This wasn'rt done in redo() because no auto follow data available
+            self.compositor_autofollow_data, self.orphaned_compositors = get_full_compositor_sync_data()
+            do_autofollow_redo(self)
+            if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
+                do_orphaned_compositors_delete_redo(self)
+            
+            if self.do_restack_compositors == True:
+                current_sequence().restack_compositors()
+                
+            self.do_restack_compositors = False  # We wish to do this only once 
+             
+            # This wasn't done in redo() because no auto follow data was available
             if do_gui_update:
                 self._update_gui()
 
@@ -352,12 +367,18 @@ class EditAction:
         resync.calculate_and_set_child_clip_sync_states()
 
         if self.compositor_autofollow_data != None:
-            self.undo_auto_follow()
-            
+            do_autofollow_undo(self)
+            if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
+                do_orphaned_compositors_delete_undo(self)
+                if self.do_restack_compositors == True:
+                    current_sequence().restack_compositors()
+                
         # HACK, see above.
         if self.stop_for_edit:
             PLAYER().consumer.start()
 
+        self.do_restack_compositors = False  # We wish to do this only once 
+        
         if do_gui_update:
             self._update_gui()
             
@@ -368,7 +389,7 @@ class EditAction:
         if self.stop_for_edit:
             PLAYER().consumer.stop()
 
-        movemodes.clear_selected_clips() # selection not valid after change in sequence
+        movemodes.clear_selected_clips() # selection is not valid after a change in sequence
 
         self.redo_func(self)
 
@@ -376,8 +397,13 @@ class EditAction:
         _remove_trailing_blanks_redo(self)
         resync.calculate_and_set_child_clip_sync_states()
 
-        if self.compositor_autofollow_data != None:
-            self.redo_auto_follow()
+        
+        if self.compositor_autofollow_data != None: # This is not called from do_edit() if these exist, we need to do auto follow and orphan compositos management
+            do_autofollow_redo(self)
+            if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
+                do_orphaned_compositors_delete_redo(self)
+                if self.do_restack_compositors == True:
+                    current_sequence().restack_compositors()
 
         tlinewidgets.set_match_frame(-1, -1, True)
 
@@ -385,27 +411,14 @@ class EditAction:
         if self.stop_for_edit:
             PLAYER().consumer.start()
 
+        self.do_restack_compositors = False # We wish to do this only once
+                
         # Update GUI if no autofollow or if autofollow data is available.
         # If autofollow and no data, then GUI update happens in do_edit()
         # Added complexity here is to avoid two GUI updates
         if ((do_gui_update and auto_follow_active() == False) or 
            (do_gui_update and auto_follow_active() == True and self.compositor_autofollow_data != None)):
             self._update_gui()
-
-    def undo_auto_follow(self):
-        for sync_item in self.compositor_autofollow_data:
-            # real compositor objects get recreated and destroyed all the time and in redo/undo they need to identified by destroy_id
-            destroy_id, orig_in, orig_out, clip_start, clip_end = sync_item
-            try:
-                sync_compositor = current_sequence().get_compositor_for_destroy_id(destroy_id)
-                if sync_compositor.obey_autofollow == True:
-                    sync_compositor.set_in_and_out(orig_in, orig_out)   
-            except:
-                # Compositor or clip not found
-                pass
-
-    def redo_auto_follow(self):
-        do_autofollow_redo(self.compositor_autofollow_data)
         
     def _update_gui(self): # This copied  with small modifications into projectaction.py for sequence imports, update there too if needed...yeah.
         updater.update_tline_scrollbar() # Slider needs to adjust to possily new program length.
@@ -426,11 +439,13 @@ class EditAction:
 
         updater.update_seqence_info_text()
 
-# ---------------------------------------------------- compositor sync util methods
+
+# ---------------------------------------------------- compositor sync methods
 def get_full_compositor_sync_data():
     # Returns list of tuples in form (compositor, orig_in, orig_out, clip_start, clip_end)
     # Pair all compositors with their origin clips ids
     comp_clip_pairings = {}
+    orphan_compositors = []
     for compositor in current_sequence().compositors:
         if compositor.origin_clip_id in comp_clip_pairings:
             comp_clip_pairings[compositor.origin_clip_id].append(compositor)
@@ -439,6 +454,7 @@ def get_full_compositor_sync_data():
     
     # Create resync list
     resync_list = []
+    orphan_origin_clip_ids = list(comp_clip_pairings.keys())
     for i in range(current_sequence().first_video_index, len(current_sequence().tracks) - 1): # -1, there is a topmost hidden track 
         track = current_sequence().tracks[i] # b_track is source track where origin clip is
         for j in range(0, len(track.clips)):
@@ -447,7 +463,15 @@ def get_full_compositor_sync_data():
                 compositor_list = comp_clip_pairings[clip.id]
                 for compositor in compositor_list:
                     resync_list.append((clip, track, j, compositor))
-                    
+            if clip.id in orphan_origin_clip_ids:
+                orphan_origin_clip_ids.remove(clip.id)
+    
+    # Create orphan compositors list
+    orhan_compositors = []
+    if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
+        for oprhan_comp_origin in orphan_origin_clip_ids:
+            orhan_compositors.append(comp_clip_pairings[oprhan_comp_origin][0])
+
     # Create full data
     full_sync_data = []
     for resync_item in resync_list:
@@ -468,26 +492,79 @@ def get_full_compositor_sync_data():
             
             destroy_id = compositor.destroy_id
             
-            full_sync_data_item = (destroy_id, orig_in, orig_out, clip_start, clip_end)
+            full_sync_data_item = (destroy_id, orig_in, orig_out, clip_start, clip_end, track.id, compositor.transition.b_track)
             full_sync_data.append(full_sync_data_item)
         except:
             # Clip is probably deleted
             pass
-            
-    return full_sync_data
 
-def do_autofollow_redo(compositor_autofollow_data):
-    for sync_item in compositor_autofollow_data:
+    return (full_sync_data, orhan_compositors)
+
+def do_autofollow_redo(action_object):
+    for sync_item in action_object.compositor_autofollow_data:
         # real compositor objects get recreated and destroyed all the time and in redo/undo they need to identified by destroy_id
-        destroy_id, orig_in, orig_out, clip_start, clip_end = sync_item
+        destroy_id, orig_in, orig_out, clip_start, clip_end, clip_track, orig_compositor_track = sync_item
         try:
             sync_compositor = current_sequence().get_compositor_for_destroy_id(destroy_id)
-            if sync_compositor.obey_autofollow == True:
+            if sync_compositor.transition.b_track != clip_track and current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
+                new_compositor = current_sequence().create_compositor(sync_compositor.type_id)
+                new_compositor.clone_properties(sync_compositor)
+                new_compositor.set_in_and_out(sync_compositor.clip_in, sync_compositor.clip_out)
+                new_compositor.transition.set_tracks(sync_compositor.transition.a_track, clip_track)
+                
+                current_sequence().remove_compositor(sync_compositor)
+                current_sequence().add_compositor(new_compositor)
+                action_object.do_restack_compositors = True
+            elif sync_compositor.obey_autofollow == True:
                 sync_compositor.set_in_and_out(clip_start, clip_end)
+        except Exception as ex:
+            pass
+
+def do_autofollow_undo(action_object):
+    for sync_item in action_object.compositor_autofollow_data:
+        # real compositor objects get recreated and destroyed all the time and in redo/undo they need to identified by destroy_id
+        destroy_id, orig_in, orig_out, clip_start, clip_end, clip_track, orig_compositor_track = sync_item
+        try:
+            sync_compositor = current_sequence().get_compositor_for_destroy_id(destroy_id)
+            if sync_compositor.transition.b_track != orig_compositor_track and current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
+                new_compositor = current_sequence().create_compositor(sync_compositor.type_id)
+                new_compositor.clone_properties(sync_compositor)
+                new_compositor.set_in_and_out(sync_compositor.clip_in, sync_compositor.clip_out)
+                new_compositor.transition.set_tracks(sync_compositor.transition.a_track, orig_compositor_track)
+                
+                current_sequence().remove_compositor(sync_compositor)
+                current_sequence().add_compositor(new_compositor)
+                
+                action_object.do_restack_compositors = True
+            elif sync_compositor.obey_autofollow == True:
+                sync_compositor.set_in_and_out(orig_in, orig_out)   
         except:
             # Compositor or clip not found
             pass
                 
+def do_orphaned_compositors_delete_redo(action_object):
+    for delete_compositor in action_object.orphaned_compositors:
+        current_sequence().remove_compositor(delete_compositor)
+        compositeeditor.maybe_clear_editor(delete_compositor)
+
+        action_object.do_restack_compositors = True
+
+def do_orphaned_compositors_delete_undo(action_object):
+    old_orphaned = action_object.orphaned_compositors
+    new_orphaned = []
+    for old_compositor in old_orphaned:
+        new_ompositor = current_sequence().create_compositor(old_compositor.type_id)
+        new_ompositor.clone_properties(old_compositor)
+        new_ompositor.set_in_and_out(old_compositor.clip_in, old_compositor.clip_out)
+        new_ompositor.transition.set_tracks(old_compositor.transition.a_track, old_compositor.transition.b_track)
+        current_sequence().add_compositor(new_ompositor)
+        new_orphaned.append(new_ompositor)
+        
+        action_object.do_restack_compositors = True
+        
+    action_object.orphaned_compositors = new_orphaned
+
+
 # ---------------------------------------------------- SYNC DATA
 class SyncData:
     """
@@ -953,7 +1030,10 @@ def _insert_multiple_redo(self):
     for i in range(0, len(self.clips)):
         add_clip = self.clips[i]
         index = self.index + i
-        _insert_clip(self.track, add_clip, index, add_clip.clip_in, add_clip.clip_out)
+        if isinstance(add_clip, int): # blanks, these represented as int's
+            _insert_blank(self.track, index, add_clip)
+        else: # media clips
+            _insert_clip(self.track, add_clip, index, add_clip.clip_in, add_clip.clip_out)
 
 
 #-------------------- MULTITRACK INSERT MOVE
@@ -1131,7 +1211,7 @@ def _box_overwrite_move_redo(self):
 
     # Do track move edits
     for move_data in self.track_moves:
-        action_object = utils.EmptyClass
+        action_object = utils.EmptyClass()
         action_object.__dict__.update(move_data)
 
         _overwrite_move_redo(action_object)
@@ -1435,7 +1515,6 @@ def _ripple_trim_blanks_undo(self, reverse_comp_delta=False):
         elif edit_op == appconsts.MULTI_ADD_TRIM:
             _remove_clip(track, trim_blank_index) 
         elif edit_op == appconsts.MULTI_TRIM_REMOVE:
-            #print "MULTI_TRIM_REMOVE for track", track.id, "values: ", self.edit_delta, applied_delta, -self.multi_data.max_backwards
             if reverse_comp_delta:
                 if -self.edit_delta != -self.multi_data.max_backwards:
                     _remove_clip(track, trim_blank_index) 
@@ -1478,7 +1557,6 @@ def _ripple_trim_blanks_redo(self, reverse_delta=False):
         elif edit_op == appconsts.MULTI_TRIM_REMOVE: # blank is trimmed if not max length triom, if so, blank is removed
             self.orig_length = track.clips[trim_blank_index].clip_length()
             _remove_clip(track, trim_blank_index)
-            #print "MULTI_TRIM_REMOVE for track", track.id, "values: ", applied_delta, -self.multi_data.max_backwards
             if applied_delta != -self.multi_data.max_backwards:
                 _insert_blank(track, trim_blank_index, self.orig_length + applied_delta)
 
@@ -1878,15 +1956,14 @@ def _add_compositor_undo(self):
     current_sequence().remove_compositor(self.compositor)
     current_sequence().restack_compositors()
     
-    # Hack!!! Some filters don't seem to handle setting compositors None (and the
-    # following gc) and crash, so we'll hold references to them forever.
-    #global old_compositors
-    #old_compositors.append(self.compositor)
+    self.old_compositor = self.compositor # maintain compositor property values though full undo/redo sequence
     compositeeditor.maybe_clear_editor(self.compositor)
     self.compositor = None
 
 def _add_compositor_redo(self):    
     self.compositor = current_sequence().create_compositor(self.compositor_type)
+    if hasattr(self, "old_compositor"): # maintain compositor property values though full undo/redo sequence
+        self.compositor.clone_properties(self.old_compositor)
     self.compositor.transition.set_tracks(self.a_track, self.b_track)
     self.compositor.set_in_and_out(self.in_frame, self.out_frame)
     self.compositor.origin_clip_id = self.origin_clip_id

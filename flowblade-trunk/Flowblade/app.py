@@ -167,7 +167,7 @@ def main(root_path):
     except:
         editorstate.mlt_version = "0.0.99" # magic string for "not found"
 
-    # Create user folders if need and determine if were using xdg or dotfile userf folders.
+    # Create user folders if needed and determine if we're using xdg or dotfile userf folders.
     userfolders.init()
 
     # Set paths.
@@ -542,6 +542,9 @@ def init_sequence_gui():
     Called after project load or changing current sequence 
     to initialize interface.
     """
+    # Set correct compositing mode menu item selected
+    gui.editor_window.init_compositing_mode_menu()
+
     # Set initial timeline scale draw params
     editorstate.current_sequence().update_length()
     updater.update_pix_per_frame_full_view()
@@ -610,7 +613,6 @@ def open_project(new_project):
 
     editorstate.project = new_project
     editorstate.media_view_filter = appconsts.SHOW_ALL_FILES
-    editorstate.auto_follow = editorstate.project.get_project_property(appconsts.P_PROP_AUTO_FOLLOW)
 
     # Inits widgets with project data
     init_project_gui()

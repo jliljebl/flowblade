@@ -628,8 +628,8 @@ def _get_proxy_dimensions(project_profile, proxy_size):
 
     old_width_half = int(project_profile.width() * size_mult)
     old_height_half = int(project_profile.height() * size_mult)
-    new_width = old_width_half - old_width_half % 8
-    new_height = old_height_half - old_height_half % 8
+    new_width = old_width_half - old_width_half % 2
+    new_height = old_height_half - old_height_half % 2
     return (new_width, new_height)
 
 def _get_proxy_profile(project):

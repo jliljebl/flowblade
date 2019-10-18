@@ -77,8 +77,10 @@ try:
     import app
     import editorstate
 
-    if launch_dir == "/usr/bin" or launch_dir == "/app/bin":
+    if launch_dir == "/usr/bin":
         editorstate.app_running_from = editorstate.RUNNING_FROM_INSTALLATION
+    elif launch_dir == "/app/bin":   
+        editorstate.app_running_from = editorstate.RUNNING_FROM_FLATPAK
     else:
         editorstate.app_running_from = editorstate.RUNNING_FROM_DEV_VERSION
 except Exception as err:

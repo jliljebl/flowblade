@@ -267,6 +267,34 @@ def save_backup_snapshot(name, callback):
     dialog.connect('response', callback, project_folder, compact_name_entry)
     dialog.show_all()
 
+def export_ardour_session_folder_select(callback):
+    dialog = Gtk.Dialog(_("Save Sequence Audio As Ardour Session"),  gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                         _("Export"), Gtk.ResponseType.ACCEPT))
+
+    project_folder = Gtk.FileChooserButton(_("Select Ardour Session Folder"))
+    project_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
+    project_folder.set_current_folder(os.path.expanduser("~") + "/")
+
+    project_folder_label = Gtk.Label(label=_("Select Ardour Session Folder:"))
+
+    project_folder_row = guiutils.get_two_column_box(project_folder_label, project_folder, 250)
+    
+    type_vbox = Gtk.VBox(False, 2)
+    type_vbox.pack_start(project_folder_row, False, False, 0)
+
+    vbox = Gtk.VBox(False, 2)
+    vbox.add(type_vbox)
+
+    alignment = dialogutils.get_default_alignment(vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, project_folder)
+    dialog.show_all()
+    
 def load_project_dialog(callback, parent=None, title_text=None):
     if parent == None:
         parent = gui.editor_window.window
@@ -604,6 +632,8 @@ def environment_dialog(parent_window):
 
     if editorstate.app_running_from == editorstate.RUNNING_FROM_INSTALLATION:
         run_type = _("INSTALLATION")
+    elif editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
+        run_type = "FLATPAK"
     else:
         run_type = _("DEVELOPER VERSION")
 
@@ -1475,6 +1505,11 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     tools_vbox.pack_start(_get_kb_row(_("Keypad 1-9"), _("Same as 1-9")), False, False, 0)
     tools = guiutils.get_named_frame(_("Tools"), tools_vbox)
 
+    kfs_vbox = Gtk.VBox()
+    kfs_vbox.pack_start(_get_kb_row(_("Control + C"), _("Copy Keyframe Value")), False, False, 0)
+    kfs_vbox.pack_start(_get_kb_row(_("Control + V"), _("Paste Keyframe Value")), False, False, 0)
+    kfs = guiutils.get_named_frame(_("Keyframe and Geometry Editor"), kfs_vbox)
+    
     geom_vbox = Gtk.VBox()
     geom_vbox.pack_start(_get_kb_row(_("Left Arrow "), _("Move Source Video Left 1px")), False, False, 0)
     geom_vbox.pack_start(_get_kb_row(_("Right Arrow"), _("Move Source Video Right 1px")), False, False, 0)
@@ -1505,6 +1540,8 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     panel.pack_start(play, False, False, 0)
     panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
     panel.pack_start(general, False, False, 0)
+    panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
+    panel.pack_start(kfs, False, False, 0)
     panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
     panel.pack_start(geom, False, False, 0)
     panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
@@ -1889,5 +1926,22 @@ def no_audio_dialog(track):
                             gui.editor_window.window)
 
 
-        
+def confirm_compositing_mode_change(callback, new_compositing_mode):
+    dialog = Gtk.Dialog(_("Confirm Compositing Mode Change"),  gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                        _("Change Compositing Mode"), Gtk.ResponseType.ACCEPT))
+    
+    primary_txt = _("Changing Compositing Mode destroys current Compositors and undo stack")
+    secondary_txt = _("This operation cannot be undone. Are you sure you wish to proceed?")
+    warning_panel = dialogutils.get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info=False, alternative_icon=None, panels=None)
+
+    alignment = dialogutils.get_alignment2(warning_panel)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, new_compositing_mode)
+    dialog.show_all()
+
         

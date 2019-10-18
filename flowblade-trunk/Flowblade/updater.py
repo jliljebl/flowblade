@@ -430,10 +430,12 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
 
 def display_monitor_clip_name():#we're displaying length and range length also
     clip_len = utils.get_tc_string(gui.pos_bar.producer.get_length())
-    range_info = _get_marks_range_info_text(MONITOR_MEDIA_FILE().mark_in, MONITOR_MEDIA_FILE().mark_out)
+    range_info = _get_marks_range_info(MONITOR_MEDIA_FILE().mark_in, MONITOR_MEDIA_FILE().mark_out)
 
-    gui.editor_window.monitor_source.set_text(MONITOR_MEDIA_FILE().name + " - " + clip_len)
-    gui.editor_window.info1.set_text(range_info)
+    gui.editor_window.monitor_tc_info.set_source_name(MONITOR_MEDIA_FILE().name + " - ")
+    gui.editor_window.monitor_tc_info.set_source_tc(clip_len)
+
+    gui.editor_window.monitor_tc_info.set_range_info(*range_info)
 
 def display_sequence_in_monitor():
     """
@@ -470,31 +472,31 @@ def update_seqence_info_text():
         prog_len = 0
     tc_info = utils.get_tc_string(prog_len)
 
-    gui.editor_window.monitor_source.set_text(name + "  -  " + tc_info)
-    range_info = _get_marks_range_info_text(PLAYER().producer.mark_in, PLAYER().producer.mark_out)
-    gui.editor_window.info1.set_text(range_info)
+    gui.editor_window.monitor_tc_info.set_source_name(name + " - ")
+    gui.editor_window.monitor_tc_info.set_source_tc(tc_info)
 
-def _get_marks_range_info_text(mark_in, mark_out):
-    if editorstate.screen_size_small_width() == False:
-        if mark_in != -1:
-            range_info = "] " + utils.get_tc_string(mark_in)
-        else:
-            range_info = "] --:--:--:--" 
+    range_info = _get_marks_range_info(PLAYER().producer.mark_in, PLAYER().producer.mark_out)
+    gui.editor_window.monitor_tc_info.set_range_info(*range_info)
 
-        if mark_out != -1:
-            range_info = range_info + "   [ " + utils.get_tc_string(mark_out) + "   "
-        else:
-            range_info = range_info + "   [ --:--:--:--"  + "   "
+def _get_marks_range_info(mark_in, mark_out):
+
+    if mark_in != -1:
+        mark_in_info = utils.get_tc_string(mark_in)
     else:
-        range_info = ""
+        mark_in_info = "--:--:--:--" 
+
+    if mark_out != -1:
+        mark_out_info = utils.get_tc_string(mark_out)
+    else:
+        mark_out_info = "--:--:--:--"
 
     range_len = mark_out - mark_in + 1 # +1, out incl.
     if mark_in != -1 and mark_out != -1:
-        range_info = range_info + "][ " + utils.get_tc_string(range_len)
+        range_info = utils.get_tc_string(range_len)
     else:
-        range_info = range_info + "][ --:--:--:--" 
+        range_info = "--:--:--:--" 
     
-    return range_info
+    return (mark_in_info, mark_out_info, range_info)
 
 def switch_monitor_display():
     monitorevent.stop_pressed()

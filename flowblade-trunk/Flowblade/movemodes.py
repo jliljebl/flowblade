@@ -28,7 +28,7 @@ from gi.repository import Gdk
 import appconsts
 import boxmove
 import dialogutils
-import editorpersistance # Jul-2016 - SvdB - For play/pause button
+import editorpersistance
 import editorstate
 import clipeffectseditor
 import dnd
@@ -514,6 +514,8 @@ def _move_mode_pressed(event, frame):
     if selected_track == -1:
         if not pressed_clip.is_blanck_clip:
             select_clip(track.id, clip_index)
+            if editorpersistance.prefs.single_click_effects_editor_load == True:
+                clipeffectseditor.set_clip(pressed_clip, track, clip_index, False)
             pressed_on_selected = False
         else: 
             # There may be multiple blank clips in area that for user
@@ -551,12 +553,16 @@ def _move_mode_pressed(event, frame):
         if selected_track != track.id:
             clear_selected_clips()
             select_clip(track.id, clip_index)
+            if editorpersistance.prefs.single_click_effects_editor_load == True:
+                clipeffectseditor.set_clip(pressed_clip, track, clip_index, False)
             pressed_on_selected = False
         else:
             if not pressed_clip.is_blanck_clip:
                 # Pressing on selected clip keeps selection unchanged
                 if clip_index < selected_range_in or clip_index > selected_range_out:
                     select_clip(track.id, clip_index)
+                    if editorpersistance.prefs.single_click_effects_editor_load == True:
+                        clipeffectseditor.set_clip(pressed_clip, track, clip_index, False)
                     pressed_on_selected = False
                 # Pressing on non-selected clip clears current selection and selects newly selected clip
                 else:

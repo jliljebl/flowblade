@@ -34,7 +34,6 @@ import editorpersistance
 import gui
 import guiutils
 import mltprofiles
-# Jan-2017 - SvdB - To get the number of CPU cores
 import multiprocessing
 
 PREFERENCES_WIDTH = 730
@@ -65,7 +64,6 @@ def preferences_dialog():
     notebook.append_page(playback_prefs_panel, Gtk.Label(label=_("Playback")))
     notebook.append_page(view_pres_panel, Gtk.Label(label=_("View")))
     notebook.append_page(performance_panel, Gtk.Label(label=_("Performance")))
-    #notebook.append_page(shortcuts_panel, Gtk.Label(label=_("Shortcuts")))
     guiutils.set_margins(notebook, 4, 24, 6, 0)
 
     dialog.connect('response', _preferences_dialog_callback, (gen_opts_widgets, edit_prefs_widgets, playback_prefs_widgets, view_pref_widgets, \
@@ -157,16 +155,6 @@ def _edit_prefs_panel():
     gfx_length_spin.set_adjustment(spin_adj)
     gfx_length_spin.set_numeric(True)
 
-    """
-    overwrite_clip_drop = Gtk.ComboBoxText()
-    active = 0
-    if prefs.overwrite_clip_drop == False:
-        active = 1
-    overwrite_clip_drop.append_text(_("Overwrite blanks"))
-    overwrite_clip_drop.append_text(_("Always insert"))
-    overwrite_clip_drop.set_active(active)
-    """
-    
     kf_edit_playhead_move = Gtk.CheckButton()
     kf_edit_playhead_move.set_active(prefs.kf_edit_init_affects_playhead)
 
@@ -188,20 +176,28 @@ def _edit_prefs_panel():
     hor_scroll_dir.append_text(_("Scroll Up Forward"))
     hor_scroll_dir.append_text(_("Scroll Down Forward"))
     hor_scroll_dir.set_active(active)
-            
+
+    active = 0
+    if prefs.single_click_effects_editor_load == True:
+        active = 1
+    effects_editor_clip_load = Gtk.ComboBoxText()
+    effects_editor_clip_load.append_text(_("On Double Click"))
+    effects_editor_clip_load.append_text(_("On Single Click"))
+    effects_editor_clip_load.set_active(active)
+    
     hide_file_ext_button = Gtk.CheckButton()
     if hasattr(prefs, 'hide_file_ext'):
         hide_file_ext_button.set_active(prefs.hide_file_ext)
     
     # Layout
     row4 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Graphics default length:")), gfx_length_spin, PREFERENCES_LEFT))
-    #row8 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Media drag'n'drop action on non-V1 tracks:")), overwrite_clip_drop, PREFERENCES_LEFT))
     row9 = _row(guiutils.get_checkbox_row_box(cover_delete, Gtk.Label(label=_("Cover Transition/Fade clips on delete if possible"))))
     # Jul-2016 - SvdB - For play_pause button
     row11 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Mouse Middle Button Scroll Action:")), mouse_scroll_action, PREFERENCES_LEFT))
     row13 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Mouse Horizontal Scroll Direction:")), hor_scroll_dir, PREFERENCES_LEFT))
     row14 = _row(guiutils.get_checkbox_row_box(kf_edit_playhead_move, Gtk.Label(label=_("Move Playhead to Clip start on keyframe edit init"))))
     row12 = _row(guiutils.get_checkbox_row_box(hide_file_ext_button, Gtk.Label(label=_("Hide file extensions when importing Clips"))))
+    row15 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Open Clip in Effects Editor")), effects_editor_clip_load, PREFERENCES_LEFT))
     # Apr-2017 - SvdB - For Fast Forward / Reverse options
     
     vbox = Gtk.VBox(False, 2)
@@ -212,6 +208,7 @@ def _edit_prefs_panel():
     vbox.pack_start(row13, False, False, 0)
     vbox.pack_start(row14, False, False, 0)
     vbox.pack_start(row12, False, False, 0)
+    vbox.pack_start(row15, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
 
     guiutils.set_margins(vbox, 12, 0, 12, 12)
@@ -219,7 +216,8 @@ def _edit_prefs_panel():
     # Jul-2016 - SvdB - Added play_pause_button
     # Apr-2017 - SvdB - Added ffwd / rev values
     return vbox, (gfx_length_spin, cover_delete,
-                  mouse_scroll_action, hide_file_ext_button, hor_scroll_dir, kf_edit_playhead_move)
+                  mouse_scroll_action, hide_file_ext_button, hor_scroll_dir, 
+                  kf_edit_playhead_move, effects_editor_clip_load)
 
 def _playback_prefs_panel():
     prefs = editorpersistance.prefs
@@ -268,9 +266,7 @@ def _playback_prefs_panel():
     loop_clips = Gtk.CheckButton()
     loop_clips.set_active(prefs.loop_clips)
 
-     
     # Layout
-    #row1 = _row(guiutils.get_checkbox_row_box(auto_play_in_clip_monitor, Gtk.Label(label=_("Autoplay new Clips in Clip Monitor"))))
     row2 = _row(guiutils.get_checkbox_row_box(auto_center_on_stop, Gtk.Label(label=_("Center Current Frame on Playback Stop"))))
     row13 = _row(guiutils.get_checkbox_row_box(auto_center_on_updown, Gtk.Label(label=_("Center Current Frame after Up/Down Arrow"))))
     # Jul-2016 - SvdB - For play_pause button

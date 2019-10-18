@@ -45,7 +45,7 @@ def init_languages():
     if (language):
         langs += language.split(":")
 
-    if editorstate.app_running_from == editorstate.RUNNING_FROM_INSTALLATION:
+    if editorstate.app_running_from == editorstate.RUNNING_FROM_INSTALLATION or editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
         # Use /usr/share/locale first if available and running from installation
         # Look for installed translation in distro install
         # Were using Russian as test language
@@ -270,6 +270,7 @@ def load_filters_translations():
     filter_names["File Luma to Alpha"] = _("File Luma to Alpha") 
     filter_names["Gradient Tint"] = _("Gradient Tint")
     filter_names["RotoMask"] = _("RotoMask")
+    filter_names["Lens Defisher"] = _("Lens Defisher")
     
     # param names
     global param_names
@@ -603,6 +604,11 @@ def load_filters_translations():
     param_names["Alpha Mode"] = _("Alpha Mode")
     param_names["Feather"] = _("Feather")
     param_names["Mode"] = _("Mode")
+    param_names["Input Pixel Aspect Ratio"] = _("Input Pixel Aspect Ratio")
+    param_names["Direction"] = _("Direction")
+    param_names["Lens Projection"] = _("Lens Projection")
+    param_names["Interpolator"] = _("Interpolator")
+    param_names["Strength"] = _("Strength")
 
     # Combo options
     global combo_options
@@ -681,3 +687,19 @@ def load_filters_translations():
     combo_options["Add"] = _("Add")
     combo_options["Subtract"] = _("Subtract")
     combo_options["Alpha"] = _("Alpha")
+    combo_options["Square"] = _("Square")
+    combo_options["HDV"] = _("HDV")
+    combo_options["DV/DVD Widescreen PAL"] = _("DV/DVD Widescreen PAL")
+    combo_options["DV/DVD Widescreen NTSC"] = _("DV/DVD Widescreen NTSC")
+    combo_options["DV/DVD PAL"] = _("DV/DVD PAL")
+    combo_options["DV/DVD NTSC"] = _("DV/DVD NTSC")
+    combo_options["Remove Lens Distortion"] = _("Remove Lens Distortion")
+    combo_options["Apply Lens Distortion"] = _("Apply Lens Distortion")
+    combo_options["Equidistant"] = _("Equidistant")
+    combo_options["Orthographic"] = _("Orthographic")
+    combo_options["Equiarea"] = _("Equiarea")
+    combo_options["Stereographic"] = _("Stereographic")
+    combo_options["Bilinear"] = _("Bilinear")
+    combo_options["Bicubic Smooth"] = _("Bicubic Smooth")
+    combo_options["Bicubic Sharp"] = _("Bicubic Sharp")
+    combo_options["Spline"] = _("Spline")

@@ -133,11 +133,14 @@ def _group_selection_changed(group_combo, filters_list_view):
     filters_list_view.fill_data_model(filters_array)
     filters_list_view.treeview.get_selection().select_path("0")
 
-def set_clip(new_clip, new_track, new_index):
+def set_clip(new_clip, new_track, new_index, show_tab=True):
     """
     Sets clip being edited and inits gui.
     """
     global clip, track, clip_index
+    if clip == new_clip and track == new_track and clip_index == new_index and show_tab==False:
+        return
+
     clip = new_clip
     track = new_track
     clip_index = new_index
@@ -153,7 +156,8 @@ def set_clip(new_clip, new_track, new_index):
     else:
         effect_selection_changed()
 
-    gui.middle_notebook.set_current_page(filters_notebook_index) # 2 == index of clipeditor page in notebook
+    if show_tab:
+        gui.middle_notebook.set_current_page(filters_notebook_index) # 2 == index of clipeditor page in notebook
 
 def effect_select_row_double_clicked(treeview, tree_path, col):
     add_currently_selected_effect()

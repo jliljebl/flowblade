@@ -49,6 +49,7 @@ import gmic
 import gui
 import guicomponents
 import guiutils
+import keyevents
 import medialinker
 import medialog
 import menuactions
@@ -198,13 +199,14 @@ class EditorWindow:
             ('ExportMeltXML', None, _('MLT XML'), None, None, lambda a:exporting.MELT_XML_export()),
             ('ExportEDL', None, _('EDL'), None, None, lambda a:exporting.EDL_export()),
             ('ExportScreenshot', None, _('Current Frame'), None, None, lambda a:exporting.screenshot_export()),
+            ('ExportToArdour', None, _('Current Sequence Audio As Ardour Session'), None, None, lambda a:exporting.ardour_export()),
             ('Close', None, _('_Close'), None, None, lambda a:projectaction.close_project()),
             ('Quit', None, _('_Quit'), '<control>Q', None, lambda a:app.shutdown()),
             ('EditMenu', None, _('_Edit')),
             ('Undo', None, _('_Undo'), '<control>Z', None, undo.do_undo_and_repaint),
             ('Redo', None, _('_Redo'), '<control>Y', None, undo.do_redo_and_repaint),
-            ('Copy', None, _('Copy'), '<control>C', None, lambda a:tlineaction.do_timeline_objects_copy()),
-            ('Paste', None, _('Paste'), '<control>V', None, lambda a:tlineaction.do_timeline_objects_paste()),
+            ('Copy', None, _('Copy'), '<control>C', None, lambda a:keyevents.copy_action()),
+            ('Paste', None, _('Paste'), '<control>V', None, lambda a:keyevents.paste_action()),
             ('PasteFilters', None, _('Paste Filters'), '<control><alt>V', None, lambda a:tlineaction.do_timeline_filters_paste()),
             ('AddFromMonitor', None, _('Add Monitor Clip')),
             ('AppendClip', None, _('Append'), None, None, lambda a:tlineaction.append_button_pressed()),
@@ -243,6 +245,7 @@ class EditorWindow:
             ('AddSequence', None, _('Add New Sequence'), None, None, lambda a:projectaction.add_new_sequence()),
             ('EditSequence', None, _('Edit Selected Sequence'), None, None, lambda a:projectaction.change_edit_sequence()),
             ('DeleteSequence', None, _('Delete Selected Sequence'), None, None, lambda a:projectaction.delete_selected_sequence()),
+            ('CompositingModeMenu', None, _('Compositing Mode')),
             ('PatternProducersMenu', None, _('Create Pattern Producer')),
             ('CreateNoiseClip', None, _('Noise'), None, None, lambda a:patternproducer.create_noise_clip()),
             ('CreateBarsClip', None, _('EBU Bars'), None, None, lambda a:patternproducer.create_bars_clip()),
@@ -257,6 +260,7 @@ class EditorWindow:
             ('ImportProjectMedia', None, _('Import Media From Project...'), None, None, lambda a:projectaction.import_project_media()),
             ('CombineSequences', None, _('Import Another Sequence Into This Sequence...'), None, None, lambda a:projectaction.combine_sequences()),
             ('LogClipRange', None, _('Log Marked Clip Range'), '<control>L', None, lambda a:medialog.log_range_clicked()),
+            ('ViewProjectEvents', None, _('View Project Events...'), None, None, lambda a:projectaction.view_project_events()),
             ('RecreateMediaIcons', None, _('Recreate Media Icons...'), None, None, lambda a:menuactions.recreate_media_file_icons()),
             ('RemoveUnusedMedia', None, _('Remove Unused Media...'), None, None, lambda a:projectaction.remove_unused_media()),
             ('ChangeProfile', None, _("Change Project Profile..."), None, None, lambda a: projectaction.change_project_profile()),
@@ -302,6 +306,7 @@ class EditorWindow:
                         <menuitem action='ExportMeltXML'/>
                         <menuitem action='ExportEDL'/>
                         <menuitem action='ExportScreenshot'/>
+                        <menuitem action='ExportToArdour'/>
                     </menu>
                     <separator/>
                     <menuitem action='Close'/>
@@ -327,19 +332,14 @@ class EditorWindow:
                     <menuitem action='SpliceOutClip'/>
                     <menuitem action='DeleteClip'/>
                     <menuitem action='ResyncSelected'/>
-                    <menuitem action='SyncCompositors'/>
                     <menuitem action='ClearFilters'/>
                     <separator/>
-                    <menu action='Timeline'>
-                        <menuitem action='FiltersOff'/>
-                        <menuitem action='FiltersOn'/>
-                    </menu>
+                    <menuitem action='SyncCompositors'/>
+                    <menuitem action='FiltersOff'/>
+                    <menuitem action='FiltersOn'/>
                     <separator/>
                     <menuitem action='AddTransition'/>
                     <menuitem action='AddFade'/>
-                    <separator/>
-                    <menuitem action='ChangeSequenceTracks'/>
-                    <menuitem action='Watermark'/>
                     <separator/>
                     <menuitem action='ProfilesManager'/>
                     <menuitem action='DiskCacheManager'/>
@@ -370,25 +370,31 @@ class EditorWindow:
                         <menuitem action='AddBin'/>
                         <menuitem action='DeleteBin'/>
                     </menu>
-                    <menu action='SequenceMenu'>
-                        <menuitem action='AddSequence'/>
-                        <menuitem action='EditSequence'/>
-                        <menuitem action='DeleteSequence'/>
-                        <separator/>
-                        <menuitem action='CombineSequences'/>
-                        <menuitem action='SequenceSplit'/>
-                    </menu>
                     <separator/>
                     <menuitem action='ImportProjectMedia'/>
                     <separator/>
                     <menuitem action='LogClipRange'/>
                     <separator/>
+                    <menuitem action='ViewProjectEvents'/>
                     <menuitem action='RecreateMediaIcons'/>
                     <menuitem action='RemoveUnusedMedia'/>
                     <separator/>
                     <menuitem action='ChangeProfile'/>
                     <separator/>
                     <menuitem action='ProxyManager'/>
+                </menu>
+                <menu action='SequenceMenu'>
+                    <menuitem action='AddSequence'/>
+                    <menuitem action='EditSequence'/>
+                    <menuitem action='DeleteSequence'/>
+                    <separator/>
+                    <menu action='CompositingModeMenu'/>
+                    <separator/>
+                    <menuitem action='CombineSequences'/>
+                    <menuitem action='SequenceSplit'/>
+                    <separator/>
+                    <menuitem action='ChangeSequenceTracks'/>
+                    <menuitem action='Watermark'/>
                 </menu>
                 <menu action='RenderMenu'>
                     <menuitem action='AddToQueue'/>
@@ -572,7 +578,6 @@ class EditorWindow:
         # Range Log panel
         media_log_events_list_view = medialog.get_media_log_list_view()   
         events_panel = medialog.get_media_log_events_panel(media_log_events_list_view)
-        #self.fblade_theme_fix_panels.append(events_panel)
 
         media_log_vbox = Gtk.HBox()
         media_log_vbox.pack_start(events_panel, True, True, 0)
@@ -826,15 +831,11 @@ class EditorWindow:
         menu_vbox.pack_start(guiutils.get_right_justified_box([self.menubar]), False, False, 0)
         menu_vbox.pack_start(Gtk.Label(), True, True, 0)
         if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
-            menu_vbox.pack_start(self.monitor_source, False, False, 0)
-            menu_vbox.pack_start(guiutils.pad_label(24, 10), False, False, 0)
-            menu_vbox.pack_start(self.info1, False, False, 0)
+            menu_vbox.pack_start(self.monitor_tc_info.widget, False, False, 0)
         else:
             top_row_window_2 = Gtk.HBox(False, 0)
             top_row_window_2.pack_start(Gtk.Label(), True, True, 0)
-            top_row_window_2.pack_start(self.monitor_source, False, False, 0)
-            top_row_window_2.pack_start(guiutils.pad_label(24, 10), False, False, 0)
-            top_row_window_2.pack_start(self.info1, False, False, 0)
+            top_row_window_2.pack_start(self.monitor_tc_info.widget, False, False, 0)
         # Pane
         pane = Gtk.VBox(False, 1)
         pane.pack_start(menu_vbox, False, True, 0)
@@ -850,7 +851,7 @@ class EditorWindow:
 
         # Viewmenu initial state
         self._init_view_menu(ui.get_widget('/MenuBar/ViewMenu'))
-        
+
         # Set pane and show window
         self.window.add(pane)
         self.window.set_title("Flowblade")
@@ -942,7 +943,7 @@ class EditorWindow:
         mb_menu.append(tc_middle)
 
         components_centered = Gtk.RadioMenuItem.new_with_label([tc_left], _("Components Centered"))
-        components_centered.connect("activate", lambda w: middlebar._show_buttons_COMPONETS_CENTERED_layout(w))
+        components_centered.connect("activate", lambda w: middlebar._show_buttons_COMPONENTS_CENTERED_layout(w))
 
         mb_menu.append(components_centered)
 
@@ -1017,7 +1018,32 @@ class EditorWindow:
         zoom_fit_menu_item = Gtk.MenuItem(_("Zoom Fit"))
         zoom_fit_menu_item.connect("activate", lambda w: updater.zoom_project_length())
         menu.append(zoom_fit_menu_item)
-                
+
+    def init_compositing_mode_menu(self):
+        menu_item = self.uimanager.get_widget('/MenuBar/SequenceMenu/CompositingModeMenu')
+        menu = menu_item.get_submenu()
+        guiutils.remove_children(menu)
+    
+        comp_top_free = Gtk.RadioMenuItem()
+        comp_top_free.set_label(_("Top Down Free Move"))
+        comp_top_free.show()
+        menu.append(comp_top_free)
+        
+        comp_top_auto = Gtk.RadioMenuItem.new_with_label([comp_top_free],_("Top Down Auto Follow"))
+        comp_top_auto.show()
+        menu.append(comp_top_auto)
+        
+        comp_standard_auto = Gtk.RadioMenuItem.new_with_label([comp_top_free],_("Standard Auto Follow"))
+        comp_standard_auto.show()
+        menu.append(comp_standard_auto)
+        
+        menu_items = [comp_top_free, comp_top_auto, comp_standard_auto]
+        menu_items[editorstate.get_compositing_mode()].set_active(True)
+
+        comp_top_free.connect("toggled", lambda w: projectaction.change_current_sequence_compositing_mode(w, appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE))
+        comp_top_auto.connect("toggled", lambda w: projectaction.change_current_sequence_compositing_mode(w, appconsts.COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW))
+        comp_standard_auto.connect("toggled", lambda w: projectaction.change_current_sequence_compositing_mode(w, appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW))
+        
     def _init_gui_to_prefs(self):
         if editorpersistance.prefs.tabs_on_top == True:
             self.notebook.set_tab_pos(Gtk.PositionType.TOP)
@@ -1130,9 +1156,6 @@ class EditorWindow:
 
         self.view_mode_select.widget.set_tooltip_text(_("Select view mode: Video / Vectorscope/ RGBParade"))
         self.trim_view_select.widget.set_tooltip_text(_("Set trim view and match frames"))
-        
-        self.tc.widget.set_tooltip_text(_("Sequence / Media current frame timecode"))
-        self.monitor_source.set_tooltip_text(_("Current Sequence / Clip name and length"))
     
         self.pos_bar.widget.set_tooltip_text(_("Sequence / Media current position"))
 
@@ -1406,21 +1429,8 @@ class EditorWindow:
         print(self.mm_paned.get_position())
 
     def _create_monitor_row_widgets(self):
-        if editorstate.screen_size_small_height() == True:
-            font_desc = "sans bold 8"
-        else:
-            font_desc = "sans bold 9"
+        self.monitor_tc_info = guicomponents.MonitorTCInfo()
 
-        self.tc = guicomponents.MonitorTCDisplay()
-        self.monitor_source = Gtk.Label(label="sequence1")
-        self.monitor_source.set_ellipsize(Pango.EllipsizeMode.END)
-        self.monitor_source.modify_font(Pango.FontDescription(font_desc))
-        self.monitor_source.set_sensitive(False)
-        self.info1 = Gtk.Label(label="--:--:--:--")
-        self.info1.set_ellipsize(Pango.EllipsizeMode.END)
-        self.info1.modify_font(Pango.FontDescription(font_desc))
-        self.info1.set_sensitive(False)
-        self.info1.set_tooltip_text(_("In / Out / Marked Length"))
         
 def _this_is_not_used():
     print("THIS WAS USED!!!!!")
