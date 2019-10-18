@@ -20,7 +20,7 @@ libsox-dev libjack-dev ladspa-sdk
 
 ### Create work directory 
 
-Let's name call this directory **\<ROOT_DIR\>**. Open terminal in this directory
+Let's call this directory **\<ROOT_DIR\>**. Open terminal in this directory
 
 ### Clone MLT repository
 ```bash
@@ -78,4 +78,4 @@ export LD_LIBRARY_PATH=$INSTALL_DIR/lib:$LD_LIBRARY_PATH
 /home/path/to/your/repository/install/flowblade-trunk/flowblade
 ``` 
 
-Launch Flowblade with script above.
+Launch Flowblade with the script above.
