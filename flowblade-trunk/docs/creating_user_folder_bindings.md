@@ -12,7 +12,7 @@ See [here](./INSTALLING.md).
 Here is list of Ubuntu depencies. There could be some omissions, please file pull request to update the list if something is found to be missing.
 
 ```bash
-sudo apt-get install git swig python3-dev libxml2-dev libsdl-dev 
+sudo apt-get install git swig python3-dev python3-numpy libxml2-dev libsdl-dev 
 libavdevice-dev libswscale-dev libvorbis-dev libsamplerate-dev 
 frei0r-plugins-dev libdv-dev libavformat-dev libquicktime-dev 
 libsox-dev libjack-dev ladspa-sdk
