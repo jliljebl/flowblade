@@ -239,6 +239,10 @@ class AddMediaFilesThread(threading.Thread):
             gui.editor_window.media_scroll_window.get_vadjustment().set_value(max_val)
             Gdk.threads_leave()
 
+        add_count = len(filenames) - len(duplicates)
+        project_event = projectdata.ProjectEvent(projectdata.EVENT_MEDIA_ADDED, str(add_count))
+        PROJECT().events.append(project_event)
+        
         if succes_new_file != None and self.compound_clip_name == None: # hidden rendered files folder for compound clips is not a last_opened_media_dir
             editorpersistance.prefs.last_opened_media_dir = os.path.dirname(succes_new_file)
             editorpersistance.save()
@@ -550,6 +554,9 @@ def _change_project_profile_callback(dialog, response_id, profile_combo, out_fol
         
         persistance.save_project(PROJECT(), path, profile.description()) #<----- HERE
 
+        project_event = projectdata.ProjectEvent(projectdata.EVENT_PROFILE_CHANGED_SAVE, str(profile.description()))
+        PROJECT().events.append(project_event)
+        
         PROJECT().name = old_name
         PROJECT().update_media_lengths_on_load = False
 
@@ -785,7 +792,10 @@ def do_rendering():
         render_selections = render.get_current_gui_selections()
         PROJECT().set_project_property(appconsts.P_PROP_LAST_RENDER_SELECTIONS, render_selections)
         batchrendering.launch_single_rendering()
-
+        
+        project_event = projectdata.ProjectEvent(projectdata.EVENT_RENDERED, str(render.get_file_path()))
+        PROJECT().events.append(project_event)
+        
 def _overwrite_confirm_dialog_callback(dialog, response_id):
     dialog.destroy()
     if response_id == Gtk.ResponseType.ACCEPT:

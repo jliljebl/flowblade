@@ -54,6 +54,7 @@ EVENT_SAVED_AS = 3
 EVENT_RENDERED = 4
 EVENT_SAVED_SNAPSHOT = 5
 EVENT_MEDIA_ADDED = 6
+EVENT_PROFILE_CHANGED_SAVE = 7
 
 thumbnailer = None
 
@@ -523,6 +524,10 @@ class ProjectEvent:
             return (_("Rendered "), self.data)
         elif self.event_type == EVENT_SAVED_SNAPSHOT:
             return (_("Saved backup snapshot"), self.data)
+        elif self.event_type == EVENT_MEDIA_ADDED:
+            return (_("Media load"), self.data)
+        elif self.event_type == EVENT_PROFILE_CHANGED_SAVE:
+            return (_("Saved with changed profile"), self.data)
         else:
             return ("Unknown project event, bug or data corruption", None)
 
