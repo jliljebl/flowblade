@@ -673,7 +673,7 @@
     <filter id="avfilter.lut3d">
         <name>Lut3D</name>
         <group>Color</group>
-        <property name="av.file" args="editor=file_select exptype=file_resource file_types=.cube displayname=Select!.cube!file">/home/janne/Downloads/tmax.cube</property>
+        <property name="av.file" args="editor=file_select exptype=file_resource file_types=.cube,.CUBE displayname=Select!.cube!file">/this/is/placeholder/value.cube</property>
    </filter>
    
    

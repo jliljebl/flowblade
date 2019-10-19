@@ -796,9 +796,9 @@ class FileResourceProperty(EditableProperty):
     def dialog_response_callback(self, dialog, response_id):
         res_path = dialog.get_filename()
         if response_id == Gtk.ResponseType.ACCEPT and res_path != None:
-            self.write_value(str(str(res_path), "utf-8"))
+            self.write_value(str(res_path))
         else:
-            self.write_value(str(str(""), "utf-8"))
+            self.write_value(str(""))
 
 
 class MultipartKeyFrameProperty(AbstractProperty):
