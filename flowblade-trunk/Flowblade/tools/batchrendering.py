@@ -1016,6 +1016,16 @@ def show_render_properties_panel(render_item):
     start_str = utils.get_tc_string_with_fps(start_frame, render_item.render_data.fps)
     end_str = utils.get_tc_string_with_fps(end_frame, render_item.render_data.fps)
     
+    
+    if hasattr(render_item.render_data, "proxy_mode"):
+        if render_item.render_data.proxy_mode == appconsts.USE_ORIGINAL_MEDIA:
+            proxy_mode = _("Using Original Media")
+        else:
+            proxy_mode = _("Using Proxy Media")
+    else:
+        proxy_mode = _("N/A")
+
+    
     LEFT_WIDTH = 200
     render_item.get_display_name()
     row0 = guiutils.get_two_column_box(guiutils.bold_label(_("Encoding:")), Gtk.Label(label=enc_desc), LEFT_WIDTH)
@@ -1027,6 +1037,7 @@ def show_render_properties_panel(render_item):
     row6 = guiutils.get_two_column_box(guiutils.bold_label(_("Frames Per Second:")), Gtk.Label(label=str(render_item.render_data.fps)), LEFT_WIDTH)
     row7 = guiutils.get_two_column_box(guiutils.bold_label(_("Render Profile Name:")), Gtk.Label(label=str(render_item.render_data.profile_name)), LEFT_WIDTH)
     row8 = guiutils.get_two_column_box(guiutils.bold_label(_("Render Profile:")), Gtk.Label(label=render_item.render_data.profile_desc), LEFT_WIDTH)
+    row8 = guiutils.get_two_column_box(guiutils.bold_label(_("Proxy Mode:")), Gtk.Label(label=proxy_mode), LEFT_WIDTH)
 
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(Gtk.Label(label=render_item.get_display_name()), False, False, 0)

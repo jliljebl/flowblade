@@ -845,7 +845,8 @@ def _write_out_render_item(single_render_item_item):
     profile_text = guicomponents.get_profile_info_text(profile)
     fps = profile.fps()
     profile_name = profile.description()
-    r_data = batchrendering.RenderData(enc_index, quality_index, user_args, profile_text, profile_name, fps) 
+    r_data = batchrendering.RenderData(enc_index, quality_index, user_args, profile_text, profile_name, fps)
+    r_data.proxy_mode = PROJECT().proxy_data.proxy_mode 
     if user_args == True:
         r_data.args_vals_list = args_vals_list # pack these to go for display purposes if used
     
