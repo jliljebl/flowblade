@@ -23,6 +23,7 @@ MLT framework profiles.
 """
 import os
 import mlt
+import xml.dom.minidom
 
 import appconsts
 import editorpersistance
@@ -167,6 +168,45 @@ def get_profile_node(profile):
     node_str += 'colorspace="' + str(profile.colorspace()) + '"/>'
 
     return node_str
+
+def is_mlt_xml_profile_match_to_profile(mlt_xml_path, profile):
+    mlt_xml_doc = xml.dom.minidom.parse(mlt_xml_path)
+    try:
+        profile_node = mlt_xml_doc.getElementsByTagName("profile")[0]
+    except:
+        print("no profile node")
+        return (False, "Unknown")
+    
+    match = True
+    if profile_node.getAttribute("description") != profile.description():
+        match = False
+    if profile_node.getAttribute("width") != str(profile.width()):
+        match = False
+    if profile_node.getAttribute("height") != str(profile.height()):
+        match = False
+    if profile.progressive() == True:
+        prog_val = "1"
+    else:
+        prog_val = "0"
+    if profile_node.getAttribute("progressive") != prog_val:
+        match = False
+    if profile_node.getAttribute("sample_aspect_num") != str(profile.sample_aspect_num()):
+        match = False
+    if profile_node.getAttribute("sample_aspect_den") != str(profile.sample_aspect_den()):
+        match = False
+    if profile_node.getAttribute("display_aspect_num") != str(profile.display_aspect_num()):
+        match = False
+    if profile_node.getAttribute("display_aspect_den") != str(profile.display_aspect_den()):
+        match = False
+    if profile_node.getAttribute("frame_rate_num") != str(profile.frame_rate_num()):
+        match = False
+    if profile_node.getAttribute("frame_rate_den") != str(profile.frame_rate_den()):
+        match = False
+    if profile_node.getAttribute("colorspace") != str(profile.colorspace()):
+        match = False
+
+    return (match, profile_node.getAttribute("description"))
+
 
 def get_closest_matching_profile_index(producer_info):
     # producer_info is dict from utils.get_file_producer_info

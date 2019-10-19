@@ -981,18 +981,22 @@ def _open_files_dialog_cb(file_select, response_id):
     # when opening MLT XML files as nedia
     # Underlying reason: https://github.com/mltframework/mlt/issues/212
     mlt_files_deleted = False
+    last_non_matching_profile = None
     for i in range(len(filenames) - 1, -1, -1):
         file_path = filenames[i]
         if utils.is_mlt_xml_file(file_path) == True:
-            filenames.pop(i)
-            mlt_files_deleted = True
+            match, non_matching_profile = mltprofiles.is_mlt_xml_profile_match_to_profile(file_path, current_sequence().profile)
+            if match == False:
+                filenames.pop(i)
+                mlt_files_deleted = True
+                last_non_matching_profile = non_matching_profile
     
     open_file_names(filenames)
 
     # Info on disallowed files
     if mlt_files_deleted == True:
         primary_txt = _("Opening .mlt or .xml file as media was disallowed!")
-        secondary_txt = _("Because of current MLT behaviour of overwriting projct properties when opening MLT XML files\nit is not allowed to open these files as media.")
+        secondary_txt = _("Only XML files with matching Profiles can be opened as clips.\n\nLast non-matching MLT XML file had Profile: ") + last_non_matching_profile
         dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
         
 def open_file_names(filenames):
