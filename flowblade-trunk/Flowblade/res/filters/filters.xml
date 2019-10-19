@@ -823,14 +823,6 @@
         <property name="rows" args="range_in=1,20 displayname=Rows">0.1</property>
         <property name="columns" args="range_in=1,20 displayname=Columns">0.1</property>
     </filter>
-    <filter id="avfilter.lenscorrection">
-        <name>Lens Correction AV</name>
-        <group>Distort</group>
-        <property name="av.cx" args="range_in=0,SCREENSIZE_WIDTH range_out=0,1 displayname=Center!X">0.5</property>
-        <property name="av.cy" args="range_in=0,SCREENSIZE_HEIGHT range_out=0,1 displayname=Center!Y">0.5</property>
-        <property name="av.k1" args="range_in=0,100 range_out=-1,1 displayname=Quad!Distortion">0</property>
-        <property name="av.k2" args="range_in=0,100 range_out=-1,1 displayname=Double!Quad!Distortion">0</property>
-    </filter>
     
     <!-- for some reason avfilter.perspective gives errors:
             [filter avfilter.perspective] Unexpected return format
