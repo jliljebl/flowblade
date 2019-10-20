@@ -107,6 +107,23 @@ def test_availablity():
     else:
         print("G'MIC NOT found")
 
+def get_gmic_version():
+    gmic_ver = 1
+    cmd = "gmic -version"
+    process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
+    output, error = process.communicate()
+    tokens = output.split()
+    clended = []
+    for token in tokens:
+        token = token.decode("utf-8") 
+        str1 = token.replace('.','')
+        str2 = str1.replace(',','')
+        if str2.isdigit(): # this is based on assumtion that str2 ends up being number like "175" or 215" etc. only for version number token
+            if str2[0] == '2':
+                gmic_ver = 2
+
+    return gmic_ver
+                
 def gmic_available():
     return _gmic_found
     
@@ -157,21 +174,10 @@ def main(root_path, force_launch=False):
     respaths.set_paths(root_path)
 
     # Check G'MIC version
-    cmd = "gmic -version"
-    process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
-    output, error = process.communicate()
-    tokens = output.split()
-    print (tokens)
-    print (output)
-    clended = []
-    for token in tokens:
-        str1 = token.replace(b'.',b'')
-        str2 = str1.replace(b',',b'')
-        if str2.isdigit(): # this is based on assumtion that str2 ends up being number like "175" or 215" etc. only for version number token
-            if str2[0] == '2':
-                global _gmic_version
-                _gmic_version = 2
-                respaths.set_gmic2(root_path)
+    global _gmic_version
+    _gmic_version = get_gmic_version()
+    if _gmic_version == 2:
+        respaths.set_gmic2(root_path)
 
     # Write stdout to log file
     userfolders.init()
