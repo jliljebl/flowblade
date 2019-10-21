@@ -387,14 +387,6 @@ def _parse_line(line_start, line_end, buf):
         return (None, _("Arg name token is empty."))
     if len(v) == 0:
         return (None, _("Arg value token is empty."))
-    try:
-        k.decode('ascii')
-    except UnicodeDecodeError:
-        return (None, _("Non-ascii char in Arg name."))
-    try:
-        v.decode('ascii')
-    except UnicodeDecodeError:
-        return (None, _("Non-ascii char in Arg value."))
     if k.find(" ") != -1:
         return (None,  _("Whitespace in Arg name."))
     if v.find(" ") != -1:

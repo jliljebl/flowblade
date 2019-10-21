@@ -115,7 +115,6 @@ def get_gmic_version():
     tokens = output.split()
     clended = []
     for token in tokens:
-        token = token.decode("utf-8") 
         str1 = token.replace('.','')
         str2 = str1.replace(',','')
         if str2.isdigit(): # this is based on assumtion that str2 ends up being number like "175" or 215" etc. only for version number token
