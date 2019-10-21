@@ -35,6 +35,7 @@ import gui
 import guiutils
 import mltprofiles
 import multiprocessing
+import utils
 
 PREFERENCES_WIDTH = 730
 PREFERENCES_HEIGHT = 440
@@ -385,7 +386,18 @@ def _view_prefs_panel():
     top_row_layout.append_text(_("3 panels if width (1450px+) available"))
     top_row_layout.append_text(_("2 panels always"))
     top_row_layout.set_active(prefs.top_row_layout)
-        
+
+    monitors_data = utils.get_display_monitors_size_data()
+    layout_monitor = Gtk.ComboBoxText()
+    combined_w, combined_h = monitors_data[0]
+    layout_monitor.append_text(_("Full Display area: ") + str(combined_w) + " x " + str(combined_h))
+    if len(monitors_data) >= 3:
+        for monitor_index in range(1, len(monitors_data)):
+            monitor_w, monitor_h = monitors_data[monitor_index]
+            layout_monitor.append_text(_("Monitor ") + str(monitor_index) + ": " + str(monitor_w) + " x " + str(monitor_h))
+    layout_monitor.set_active(prefs.layout_display_index)
+
+
     # Layout
     row00 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Application window mode:")), window_mode_combo, PREFERENCES_LEFT))
     #row0 = _row(guiutils.get_checkbox_row_box(force_english_check, Gtk.Label(label=_("Use English texts on localized OS"))))
@@ -396,15 +408,15 @@ def _view_prefs_panel():
     row4 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Theme detection fail fallback colors:")), theme_combo, PREFERENCES_LEFT))
     row5 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Default audio levels display:")), audio_levels_combo, PREFERENCES_LEFT))
     row7 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Tracks Heights:")), tracks_combo, PREFERENCES_LEFT))
-
     # Feb-2017 - SvdB - For full file names
     row6 =  _row(guiutils.get_checkbox_row_box(show_full_file_names, Gtk.Label(label=_("Show Full File names"))))
-
     row8 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Top row layout:")), top_row_layout, PREFERENCES_LEFT))
-
+    
+    row10 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Do GUI layout based on:")), layout_monitor, PREFERENCES_LEFT))
+    
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row00, False, False, 0)
-    #vbox.pack_start(row0, False, False, 0)
+    vbox.pack_start(row10, False, False, 0)
     vbox.pack_start(row9, False, False, 0)
     vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
@@ -421,7 +433,7 @@ def _view_prefs_panel():
 
     # Feb-2017 - SvdB - Added code for full file names
     return vbox, (force_language_combo, display_splash_check, buttons_combo, dark_combo, theme_combo, audio_levels_combo, 
-                  window_mode_combo, show_full_file_names, tracks_combo, top_row_layout)
+                  window_mode_combo, show_full_file_names, tracks_combo, top_row_layout, layout_monitor)
 
 def _performance_panel():
     # Jan-2017 - SvdB

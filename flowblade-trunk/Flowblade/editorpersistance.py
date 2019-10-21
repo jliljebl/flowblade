@@ -217,7 +217,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips = playback_prefs_widgets
     
     force_language_combo, disp_splash, buttons_style, theme, theme_combo, audio_levels_combo, \
-    window_mode_combo, full_names, double_track_hights, top_row_layout = view_prefs_widgets
+    window_mode_combo, full_names, double_track_hights, top_row_layout, layout_monitor = view_prefs_widgets
 
     # Jan-2017 - SvdB
     perf_render_threads, perf_drop_frames = performance_widgets
@@ -265,7 +265,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.top_row_layout = top_row_layout.get_active()
     # Aug-2019 - SvdB - AS
     prefs.auto_save_delay_value_index = autosave_combo.get_active()
-    
+    prefs.layout_display_index = layout_monitor.get_active()
 
 
 def get_graphics_default_in_out_length():
@@ -363,3 +363,4 @@ class EditorPreferences:
         self.force_language = "None"
         self.default_compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
         self.single_click_effects_editor_load = False
+        self.layout_display_index = 0 # 0 == full area - 1,2... monitor number
