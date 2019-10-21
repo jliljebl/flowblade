@@ -92,10 +92,10 @@
         <profile args="f=mkv acodec=flac vcodec=ffv1 level=3 g=1 slicecrc=1 slices=16" />
     </encodingoption>
     <encodingoption name="Lossless HuffYUV / .avi" extension="avi" audiodesc=" pcm"  type="av" resize="True" qgroup="lossless">
-        <profile args="f=avi acodec=pcm_s16le ac=2 vcodec=huffyuv" />
+        <profile args="f=avi acodec=pcm_s24le ac=2 vcodec=huffyuv" />
     </encodingoption>
     <encodingoption name="Apple ProRes 4:2:2 / .mov" extension="mov" audiodesc=" pcm" type="av" resize="True" qgroup="variablenooption">
-        <profile args="f=mov acodec=pcm_s16le ac=2 vcodec=prores vb=0 g=0 bf=0 threads=1 vprofile=2" />
+        <profile args="f=mov acodec=pcm_s24le ac=2 vcodec=prores vendor=ap10 pix_fmt=yuv422p10le vb=0 g=0 bf=0 threads=1 vprofile=2" />
     </encodingoption>
 
 
