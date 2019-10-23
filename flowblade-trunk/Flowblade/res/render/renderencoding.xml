@@ -258,6 +258,9 @@
     </proxyencodingoption>
     <proxyencodingoption name="MPEG-2 Transport Stream" audiodesc="mp2, 384kb/s, 48000Hz"  extension="m2t" type="av" resize="True" qgroup="qgroup1">
        <profile args="f=mpegts acodec=libtwolame ab=256k ar=48000 vcodec=mpeg2video g=5" />
-   </proxyencodingoption>
+    </proxyencodingoption>
+    <proxyencodingoption name="Apple ProRes 422 Proxy / .mov" extension="mov" audiodesc=" pcm" type="av" resize="True" qgroup="not_settable">
+        <profile args="f=mov acodec=pcm_s24le ac=2 vcodec=prores vprofile=0 vendor=ap10 pix_fmt=yuv422p10le" />
+    </proxyencodingoption>
 
 </renderencoding>
