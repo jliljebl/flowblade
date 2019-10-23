@@ -2217,6 +2217,13 @@ def set_profile_info_labels_text(label, show_description):
 
 def set_profile_info_values_text(profile, label, show_description):
     str_list = []
+
+    # round fractional frame rates to something easier to read
+    fps = profile.fps()
+    display_fps = str(round(fps))
+    if 0 != (fps % 1):
+        display_fps = str(round((float(fps)), 2))
+
     if show_description:
         str_list.append(profile.description())
         str_list.append("\n")
@@ -2224,7 +2231,7 @@ def set_profile_info_values_text(profile, label, show_description):
     str_list.append(":")
     str_list.append(str(profile.display_aspect_den()))
     str_list.append("\n")
-    str_list.append(str(profile.fps()))
+    str_list.append(display_fps)
     str_list.append("\n")
     str_list.append(str(profile.width()))
     str_list.append(" x ")
