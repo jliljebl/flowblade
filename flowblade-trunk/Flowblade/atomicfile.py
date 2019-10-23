@@ -77,10 +77,10 @@ class AtomicFileWriter(object):
         self.dest_file_path = os.path.abspath(file_path)
 
         # absolute path to the directory containing the files
-        self.dir_path = os.path.dirname(file_path)
+        self.dir_path = os.path.dirname(self.dest_file_path)
 
         # destination base filename (without the parent path)
-        self.basename = os.path.basename(file_path)
+        self.basename = os.path.basename(self.dest_file_path)
 
         # temp file object
         self.file_obj = None
@@ -95,7 +95,12 @@ class AtomicFileWriter(object):
         # try several times to create a new temp file
         for i in range(MAX_CREATE_FILE_ATTEMPTS):
             # pick a temp filename that we hope is unique
-            maybe_tmp_file_path = self.__get_random_filename(self.basename)
+            maybe_tmp_filename = self.__get_random_filename(self.basename)
+
+            # add the candidate temp filename to the directory where the destination
+            # file will be written. since the temp and final destination file are
+            # in the same directory, rename() will never cross filesystems.
+            maybe_tmp_file_path = os.path.join(self.dir_path, maybe_tmp_filename)
 
             try:
                 # create the temp file, with a guarantee that it didn't exist before
@@ -157,9 +162,7 @@ class AtomicFileWriter(object):
             self.file_obj.close()
 
         # rename the temp file into the final destination
-        # Issue 459, uncomment os.... if problems
-        #os.rename(self.tmp_file_path, self.dest_file_path)
-        shutil.move(self.tmp_file_path, self.dest_file_path)
+        os.rename(self.tmp_file_path, self.dest_file_path)
 
     def get_file(self):
         """
