@@ -380,7 +380,7 @@ Github user *eszlari* created a Flowblade 1.14 Flatpak which is already availabl
 
 ### Contributions ###
 
-*atomicfile.py* module was added by *ratherlargerobot* to make saving data more robust.
+*atomicfile.py* module was added by *Nathan Rosenquist* to make saving data more robust.
 
 Николай Смольянинов provided a series of reports on missing translations strings, the coverage should now be close to 100%.
 
