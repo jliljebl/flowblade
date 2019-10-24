@@ -105,7 +105,7 @@ class AtomicFileWriter(object):
 
                 # if we didn't get an OSError by now, turn the numeric
                 # file descriptor into a Python file object
-                self.file_obj = os.fdopen(fd, "w")
+                self.file_obj = os.fdopen(fd, self.mode)
 
                 # remember the temp file path
                 self.tmp_file_path = maybe_tmp_file_path
