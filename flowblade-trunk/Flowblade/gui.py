@@ -27,6 +27,7 @@ from gi.repository import Gtk, Gdk
 import pickle
 
 import appconsts
+import atomicfile
 import editorpersistance
 import respaths
 import userfolders
@@ -219,8 +220,9 @@ def save_current_colors():
     # Used to communicate theme colors to tools like gmic.py running on separate process
     colors = (unpack_gdk_color(_selected_bg_color), unpack_gdk_color(_bg_color), unpack_gdk_color(_button_colors))
     save_file_path = _colors_data_path()
-    write_file = open(save_file_path, "wb")
-    pickle.dump(colors, write_file)
+    with atomicfile.AtomicFileWriter(save_file_path, "wb") as afw:
+        write_file = afw.get_file()
+        pickle.dump(colors, write_file)
 
 def load_current_colors():
     load_path = _colors_data_path()

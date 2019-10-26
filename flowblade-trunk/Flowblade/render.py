@@ -34,6 +34,7 @@ import os
 import time
 import threading
 
+import atomicfile
 import dialogutils
 import editorstate
 from editorstate import current_sequence
@@ -374,11 +375,11 @@ def _save_opts_pressed():
 def _save_opts_dialog_callback(dialog, response_id):
     if response_id == Gtk.ResponseType.ACCEPT:
         file_path = dialog.get_filenames()[0]
-        opts_file = open(file_path, "w")
         buf = widgets.args_panel.opts_view.get_buffer()
         opts_text = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), include_hidden_chars=True)
-        opts_file.write(opts_text)
-        opts_file.close()
+        with atomicfile.AtomicFileWriter(file_path, "w") as afw:
+            opts_file = afw.get_file()
+            opts_file.write(opts_text)
         dialog.destroy()
     else:
         dialog.destroy()

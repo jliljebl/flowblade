@@ -30,6 +30,7 @@ from gi.repository import GLib, GObject
 from gi.repository import Pango
 from gi.repository import PangoCairo
 
+import atomicfile
 import toolsdialogs
 from editorstate import PLAYER
 import editorstate
@@ -175,8 +176,9 @@ class TitlerData:
         save_data = copy.copy(self)
         for layer in save_data.layers:
             layer.pango_layout = None
-        write_file = open(save_file_path, 'wb')
-        pickle.dump(save_data, write_file)
+        with atomicfile.AtomicFileWriter(save_file_path, "wb") as afw:
+            write_file = afw.get_file()
+            pickle.dump(save_data, write_file)
         self.create_pango_layouts() # we just destroyed these because they don't pickle, they need to be recreated.
 
     def create_pango_layouts(self):

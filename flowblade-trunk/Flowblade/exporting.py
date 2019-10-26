@@ -31,6 +31,7 @@ import re
 import shutil
 
 import appconsts
+import atomicfile
 import dialogs
 import dialogutils
 from editorstate import PLAYER
@@ -98,9 +99,9 @@ def _edl_xml_render_done(data):
     edl_path  = data
     mlt_parse = MLTXMLToEDLParse(get_edl_temp_xml_path(), current_sequence())
     edl_contents = mlt_parse.create_edl()
-    f = open(edl_path, 'w')
-    f.write(edl_contents)
-    f.close()
+    with atomicfile.AtomicFileWriter(edl_path, "w") as afw:
+        f = afw.get_file()
+        f.write(edl_contents)
 
 def get_edl_temp_xml_path():
     return userfolders.get_cache_dir() + "edl_temp_xml.xml"
