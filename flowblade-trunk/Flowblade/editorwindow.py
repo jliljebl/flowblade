@@ -207,7 +207,7 @@ class EditorWindow:
             ('Redo', None, _('_Redo'), '<control>Y', None, undo.do_redo_and_repaint),
             ('Copy', None, _('Copy'), '<control>C', None, lambda a:keyevents.copy_action()),
             ('Paste', None, _('Paste'), '<control>V', None, lambda a:keyevents.paste_action()),
-            ('PasteFilters', None, _('Paste Filters'), '<control><alt>V', None, lambda a:tlineaction.do_timeline_filters_paste()),
+            ('PasteFilters', None, _('Paste Filters / Properties'), '<control><alt>V', None, lambda a:tlineaction.do_timeline_filters_paste()),
             ('AddFromMonitor', None, _('Add Monitor Clip')),
             ('AppendClip', None, _('Append'), None, None, lambda a:tlineaction.append_button_pressed()),
             ('InsertClip', None, _('Insert'), None, None, lambda a:tlineaction.insert_button_pressed()),
