@@ -1777,7 +1777,7 @@ def _create_ardour_project_file(basedir, project):
     s.append(_get_ardour_extra())
 
     # write the ardour project file
-    with atomicfile.AtomicFileWriter(ardour_project_file_path, "wb") as afw:
+    with atomicfile.AtomicFileWriter(ardour_project_file_path, "w") as afw:
         # get a reference to the temp file we're writing
         f = afw.get_file()
 

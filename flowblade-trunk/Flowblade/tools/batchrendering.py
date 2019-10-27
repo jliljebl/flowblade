@@ -45,6 +45,7 @@ import time
 import threading
 import unicodedata
 
+import atomicfile
 import appconsts
 import dialogutils
 import editorstate
@@ -543,12 +544,14 @@ class BatchRenderItemData:
 
     def save(self):
         item_path = get_datafiles_dir() + self.generate_identifier() + ".renderitem"
-        item_write_file = open(item_path, "wb")
-        pickle.dump(self, item_write_file)
+        with atomicfile.AtomicFileWriter(item_path, "wb") as afw:
+            item_write_file = afw.get_file()
+            pickle.dump(self, item_write_file)
 
     def save_as_single_render_item(self, item_path):
-        item_write_file = open(item_path, "wb")
-        pickle.dump(self, item_write_file)
+        with atomicfile.AtomicFileWriter(item_path, "wb") as afw:
+            item_write_file = afw.get_file()
+            pickle.dump(self, item_write_file)
 
     def delete_from_queue(self):
         identifier = self.generate_identifier()

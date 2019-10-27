@@ -31,6 +31,7 @@ import time
 from gi.repository import Gtk, Gdk
 
 import appconsts
+import atomicfile
 import dialogutils
 from editorstate import PROJECT
 import gui
@@ -148,8 +149,9 @@ class WaveformCreator(threading.Thread):
 
         if not self.abort:
             self.clip.waveform_data = frame_levels
-            write_file = open(self.file_cache_path, "wb")
-            pickle.dump(frame_levels, write_file)
+            with atomicfile.AtomicFileWriter(self.file_cache_path, "wb") as afw:
+                write_file = afw.get_file()
+                pickle.dump(frame_levels, write_file)
 
             Gdk.threads_enter()
             self.dialog.progress_bar.set_fraction(1.0)

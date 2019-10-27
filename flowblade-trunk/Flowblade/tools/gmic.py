@@ -39,6 +39,7 @@ import time
 import webbrowser
 
 import appconsts
+import atomicfile
 import cairoarea
 import dialogutils
 import editorstate
@@ -410,11 +411,11 @@ def save_script_dialog(callback):
 def _save_script_dialog_callback(dialog, response_id):
     if response_id == Gtk.ResponseType.ACCEPT:
         file_path = dialog.get_filenames()[0]
-        script_file = open(file_path, "w")
         buf = _window.script_view.get_buffer()
         script_text = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), include_hidden_chars=True)
-        script_file.write(script_text)
-        script_file.close()
+        with atomicfile.AtomicFileWriter(file_path, "w") as afw:
+            script_file = afw.get_file()
+            script_file.write(script_text)
         dialog.destroy()
     else:
         dialog.destroy()
