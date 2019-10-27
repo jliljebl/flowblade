@@ -27,6 +27,7 @@ from gi.repository import Gtk
 
 import os
 
+import atomicfile
 import dialogutils
 import editorpersistance
 import gui
@@ -259,9 +260,9 @@ def _save_profile_clicked(widgets, user_profiles_view):
                                 _("Delete profile and save again."),  gui.editor_window.window)
         return
 
-    profile_file = open(profile_path, "w")
-    profile_file.write(file_contents)
-    profile_file.close()
+    with atomicfile.AtomicFileWriter(profile_path, "w") as afw:
+        profile_file = afw.get_file()
+        profile_file.write(file_contents)
 
     dialogutils.info_message(_("Profile '") +  description.get_text() + _("' saved."), \
                  _("You can now create a new project using the new profile."), gui.editor_window.window)

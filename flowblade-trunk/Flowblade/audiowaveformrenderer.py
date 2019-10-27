@@ -35,6 +35,7 @@ gi.require_version('Gdk', '3.0')
 from gi.repository import Gdk
 
 import appconsts
+import atomicfile
 import editorpersistance
 import editorstate
 import mltenv
@@ -224,8 +225,9 @@ class WaveformCreator(threading.Thread):
             frame_levels[frame] = float(val)
             self.last_rendered_frame = frame
 
-        write_file = open(self.file_cache_path, "wb")
-        pickle.dump(frame_levels, write_file)
+        with atomicfile.AtomicFileWriter(self.file_cache_path, "wb") as afw:
+            write_file = afw.get_file()
+            pickle.dump(frame_levels, write_file)
 
     def _get_temp_producer(self, clip_path, profile):
         temp_producer = mlt.Producer(profile, str(clip_path))
