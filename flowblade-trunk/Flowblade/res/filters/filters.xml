@@ -947,7 +947,29 @@
         <property name="transition.fix_shear_x" args="range_in=-180,180 range_out=-180,180 displayname=Shear!X">0</property>
         <property name="transition.fix_shear_y" args="range_in=-180,180 range_out=-180,180 displayname=Shear!Y">0</property>
     </filter>
+        <filter id="affine">
+        <name>Pan Zoom Rotate</name>
+        <group>Transform</group>
+          <property name="transition.fix_rotate_x" args="editor=no_editor exptype=not_parsed">0=0</property>
+          <property name="transition.scale_x" args="editor=no_editor exptype=not_parsed">0=1</property>
+          <property name="transition.scale_y" args="editor=no_editor exptype=not_parsed">0=1</property>
+          <property name="transition.ox" args="editor=no_editor exptype=not_parsed">0=0</property>
+          <property name="transition.oy" args="editor=no_editor exptype=not_parsed">0=0</property>
+          <property name="transition.threads" args="editor=no_editor">0</property>
+          <propertynonmlt name="opacity" args="editor=no_editor exptype=not_parsed">0=1</propertynonmlt>
+          <extraeditor name="filter_rotation_geometry_editor"></extraeditor> 
+    </filter>
     <!--- Removed because didn't work on all media items.
+              <property name="transition.fix_rotate_x" args="range_in=-180,180 range_out=-180,180 displayname=Angle">0</property>
+          <property name="transition.scale_x" args="range_in=10,800 range_out=0.1,8.0 displayname=ScaleX">1</property>
+          <property name="transition.scale_y" args="range_in=10,800 range_out=0.1,8.0 displayname=ScaleY">1</property>
+          <property name="transition.ox" args="range_in=-800,800 range_out=-800,800 displayname=x">0</property>
+          <property name="transition.oy" args="range_in=-800,800 range_out=-800,800 displayname=y">0</property>
+          <property name="transition.threads" args="editor=no_editor">0</property>
+          
+          <property name="transition.scale_y">00:00:00,520=0,257865;00:00:01,320=0,5</property>
+          <property name="transition.ox">00:00:00,000|=-356;00:00:02,440=-400</property>
+          <property name="transition.oy">00:00:00,000|=0;00:00:01,840=-10</property>
     <filter id="avfilter.zoompan">
         <name>Zoom Pan</name>
         <group>Transform</group>

@@ -804,7 +804,7 @@ class ClipEditorButtonsRow(Gtk.HBox):
 
 
 class GeometryEditorButtonsRow(Gtk.HBox):
-    def __init__(self, editor_parent):
+    def __init__(self, editor_parent, empty_center=False):
         """
         editor_parent needs to implement interface:
         -------------------------------------------
@@ -837,7 +837,10 @@ class GeometryEditorButtonsRow(Gtk.HBox):
         
         # Build row
         self.pack_start(action_menu_button.widget, False, False, 0)
-        self.pack_start(guiutils.get_pad_label(12, 10), False, False, 0)
+        if empty_center == True:
+            self.pack_start(Gtk.Label(), True, True, 0)
+        else:
+            self.pack_start(guiutils.get_pad_label(12, 10), False, False, 0)
         self.pack_start(size_select, False, False, 0)
 
     def _show_actions_menu(self, widget, event):
@@ -1470,6 +1473,83 @@ class RotatingGeometryEditor(GeometryEditor):
         self.update_editor_view()
 
 
+class FilterRotatingGeometryEditor(GeometryEditor):
+
+    def init_geom_gui(self, editable_property):
+        self.geom_kf_edit = keyframeeditcanvas.RotatingEditCanvas(editable_property, self)
+        self.geom_kf_edit.init_editor(current_sequence().profile.width(),
+                                      current_sequence().profile.height(),
+                                      GEOM_EDITOR_SIZE_MEDIUM)
+        self.geom_kf_edit.create_edit_points_and_values()
+        editable_property.value.strip('"')
+        self.geom_kf_edit.keyframe_parser = propertyparse.non_freior_rotating_geom_keyframes_value_string_to_geom_kf_array
+        self.geom_kf_edit.set_keyframes(editable_property.value, editable_property.get_in_value)
+
+    def init_non_geom_gui(self):
+        # Create components
+        self.geom_buttons_row = GeometryEditorButtonsRow(self, True)
+        
+        g_frame = Gtk.Frame()
+        g_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
+        g_frame.add(self.geom_kf_edit.widget)
+             
+        self.buttons_row = ClipEditorButtonsRow(self, False, False)
+
+        self.pos_entries_row = PositionNumericalEntries(self.geom_kf_edit, self, None)
+        
+        # Create clip editor keyframes from geom editor keyframes
+        # that contain the property values when opening editor.
+        # From now on clip editor opacity values are used until editor is discarded.
+        self.clip_editor.keyframes = self.get_clip_editor_keyframes()
+      
+        print("cliop edit kfs", self.clip_editor.keyframes)
+        # Build gui
+        #self.pack_start(self.geom_buttons_row, False, False, 0)
+        self.pack_start(g_frame, False, False, 0)
+        self.pack_start(self.geom_buttons_row, False, False, 0)
+        self.pack_start(self.pos_entries_row, False, False, 0)
+        #self.pack_start(guiutils.pad_label(1, 1), False, False, 0)
+        #self.pack_start(self.value_slider_row, False, False, 0)
+        self.pack_start(self.clip_editor.widget, False, False, 0)
+        self.pack_start(self.buttons_row, False, False, 0)
+
+        orig_tline_frame = PLAYER().current_frame()
+        self.active_keyframe_changed() # to do update gui to current values
+                                       # This also seeks tline frame to frame 0, thus value was saved in the line above
+
+        # If we do not want to seek to kf 0 or clip start we, need seek back to original tline frame
+        if editorpersistance.prefs.kf_edit_init_affects_playhead == False:
+            print("kkkkkkkkkkkkkkkkkkkkkkk")
+            self.display_tline_frame(orig_tline_frame)
+            PLAYER().seek_frame(orig_tline_frame)
+        else:
+            print("jjjjjjjjjjjjjjjjjjjj")
+    
+        self.queue_draw()
+        
+    def add_fade_in(self):
+        compositor = _get_current_edited_compositor()
+        keyframes = compositorfades.add_fade_in(compositor, 10) # updates editable_property.value. Remove fade length hardcoding in 2.4
+        if keyframes == None:
+            return # update failed, clip probably too short
+        self._update_all_for_kf_vec(keyframes)
+                
+    def add_fade_out(self):
+        compositor = _get_current_edited_compositor()
+        keyframes = compositorfades.add_fade_out(compositor, 10) # updates editable_property.value. Remove fade length hardcoding in 2.4
+        if keyframes == None:
+            return # update failed, clip probably too short
+        self._update_all_for_kf_vec(keyframes)
+
+    def _update_all_for_kf_vec(self, keyframes):
+        self.editable_property.write_out_keyframes(keyframes)
+        self.editable_property.update_prop_value()
+        self.geom_kf_edit.set_keyframes(self.editable_property.value, self.editable_property.get_in_value)
+        self.clip_editor.keyframes = self.get_clip_editor_keyframes()
+        self.clip_editor.widget.queue_draw()
+        self.update_editor_view()
+        
+
 class RotoMaskKeyFrameEditor(Gtk.VBox):
     """
     Class combines named value slider with ClipKeyFrameEditor and 
@@ -1652,6 +1732,7 @@ class RotoMaskKeyFrameEditor(Gtk.VBox):
         self.clip_editor.set_sensitive(sensitive)
         self.clip_editor.widget.queue_draw()
 
+
 # ----------------------------------------------------------------- POSITION NUMERICAL ENTRY WIDGET
 class PositionNumericalEntries(Gtk.HBox):
     
@@ -1727,7 +1808,9 @@ class PositionNumericalEntries(Gtk.HBox):
         self.set_spacing(2)
         self.set_margin_top (4)
 
-        self.pack_start(editor_buttons, False, False, 0)
+        if editor_buttons != None: # We smetimes put editor buttons elsewhere
+            self.pack_start(editor_buttons, False, False, 0)
+            
         self.pack_start(Gtk.Label(), True, True, 0)
         self.pack_start(x_label, False, False, 0)
         self.pack_start(self.x_entry, False, False, 0)
@@ -1744,7 +1827,11 @@ class PositionNumericalEntries(Gtk.HBox):
         self.pack_start(rotation_label, False, False, 0)
         self.pack_start(self.rotation_entry, False, False, 0)
         self.pack_start(guiutils.pad_label(1, 6), False, False, 0)
-        
+        if editor_buttons != None: # We smetimes put editor buttons elsewhere
+            self.pack_start(guiutils.pad_label(1, 6), False, False, 0)
+        else:
+            self.pack_start(Gtk.Label(), True, True, 0)
+
     def prepare_entry(self, entry):
         entry.set_width_chars (4)
         entry.set_max_length (4)

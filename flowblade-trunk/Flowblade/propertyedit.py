@@ -460,6 +460,9 @@ class NonMltEditableProperty(AbstractProperty):
     def _get_filter_object(self):
         return self.clip.filters[self.filter_index]
 
+    def write_value(self, val):
+        pass # There has not defined need for this.
+
     def write_number_value(self, numb):
         self.write_property_value(str(numb))
 
@@ -876,7 +879,115 @@ class AffineScaleProperty(EditableProperty):
         # mlt property value
         filter_object = self._get_filter_object()
         filter_object.mlt_filter.set(str(self.name), str(epxr_sides[1]))
+
+
+
+
+# ----------------------------------------------------------------------------- AFFINE FILTER TRANSFORM
+class FilterAffineTransformEditableProperty:
+    
+    def __init__(self, clip, editable_properties):
+
+        # pack real properties to go
+        self.x = [ep for ep in editable_properties if ep.name == "transition.ox"][0]
+        self.y = [ep for ep in editable_properties if ep.name == "transition.oy"][0]
+        self.x_scale = [ep for ep in editable_properties if ep.name == "transition.scale_x"][0]
+        self.y_scale = [ep for ep in editable_properties if ep.name == "transition.scale_y"][0]
+        self.rotation = [ep for ep in editable_properties if ep.name == "transition.fix_rotate_x"][0]
+        self.opacity = [ep for ep in editable_properties if ep.name == "opacity"][0]
+        # Screen width and height are needeed for anchor point related conversions
+        self.profile_width = current_sequence().profile.width()
+        self.profile_height = current_sequence().profile.height()
+        # duck type methods, using opacity is not meaningful, any property with clip member could do
+        self.clip = self.x.clip
+        self.get_clip_tline_pos = lambda : clip.clip_in # clip is compositor, compositor in and out points straight in timeline frames
+        self.get_clip_length = lambda : clip.get_length()
+        self.get_input_range_adjustment = lambda : Gtk.Adjustment(float(100), float(0), float(100), float(1))
+        self.get_display_name = lambda : "GGSFSF"
+        self.get_pixel_aspect_ratio = lambda : (float(current_sequence().profile.sample_aspect_num()) / current_sequence().profile.sample_aspect_den())
+        self.get_in_value = lambda out_value : out_value # hard coded for opacity 100 -> 100 range
+        self.write_out_keyframes = lambda w_kf : self._rotating_ge_write_out_keyframes(w_kf)
+        self.update_prop_value = lambda : self._noop()
+
+        value = self._get_initial_value_str()
+        print("value:", value)
+        self.value = value.strip(";")
+
+
+    def _get_initial_value_str(self):
+        # duck type members
+        x_tokens = self.x.value.split(";")
+        y_tokens = self.y.value.split(";")
+        x_scale_tokens = self.x_scale.value.split(";")
+        y_scale_tokens = self.y_scale.value.split(";")
+        rotation_tokens = self.rotation.value.split(";")
+        opacity_tokens = self.opacity.value.split(";")
         
+        value = ""
+        for i in range(0, len(x_tokens)): # these better match, same number of keyframes for all values, or this will not work
+            frame, x = x_tokens[i].split("=")
+            x = -float(x) + float(self.profile_width) / 2.0 # -x is how MLT wants this param, offset is to make editor and output match 
+            frame, y = y_tokens[i].split("=")
+            y = -float(y) + float(self.profile_height) / 2.0  # this how MLT want this param
+            frame, x_scale = x_scale_tokens[i].split("=")
+            x_scale = 1.0 / float(x_scale) # this how MLT want this param
+            frame, y_scale = y_scale_tokens[i].split("=")
+            y_scale = 1.0 / float(y_scale) # this how MLT want this param
+            frame, rotation = rotation_tokens[i].split("=")
+            frame, opacity = opacity_tokens[i].split("=")
+            opacity = 1.0 # we ae not editing this so let's make it alwaus constant
+            
+            frame_str = str(frame) + "=" + str(x) + ":" + str(y) + ":" + str(x_scale) + ":" + str(y_scale) + ":" + str(rotation) + ":" + str(opacity)
+            value += frame_str + ";"
+
+        return value
+
+    def _noop(self):
+        pass
+
+    def _rotating_ge_write_out_keyframes(self, keyframes):
+        #print(keyframes)
+
+        x_val = ""
+        y_val = ""
+        x_scale_val = ""
+        y_scale_val = ""
+        rotation_val = ""
+        opacity_val = ""
+        
+        for kf in keyframes:
+            frame, transf, opacity = kf
+            x, y, x_scale, y_scale, rotation = transf
+            print (type(x), type(y), type(x_scale), type(y_scale), type(rotation))
+            print("X:", x, "Y:", y)
+            x_val += str(frame) + "=" + str(((-x)) + (float(self.profile_width)/2.0) * x_scale) + ";" # (self.profile_width/2.0)) editor thinks anchor point has been offset into middle of image, filter does this automatically.
+            y_val += str(frame) + "=" + str(((-y)) + (float(self.profile_height)/2.0) * y_scale) + ";"
+            x_scale_val += str(frame) + "=" + str(1.0/x_scale) + ";"
+            y_scale_val += str(frame) + "=" + str(1.0/y_scale) + ";"
+            rotation_val += str(frame) + "=" + str(rotation) + ";"
+            opacity_val += str(frame) + "=" + str(1.0) + ";"
+
+            print("KF ____________________________________________________________________")
+            print(x, y, x_scale, y_scale, rotation)
+            print(x_val, y_val, x_scale_val, y_scale_val, rotation_val)
+        
+        x_val = x_val.strip(";")
+        y_val = y_val.strip(";")
+        x_scale_val = x_scale_val.strip(";")
+        y_scale_val = y_scale_val.strip(";")
+        rotation_val = rotation_val.strip(";")
+        opacity_val = opacity_val.strip(";")
+       
+
+       
+        self.x.write_value(x_val)
+        self.y.write_value(y_val)
+        self.x_scale.write_value(x_scale_val)
+        self.y_scale.write_value(y_scale_val)
+        self.rotation.write_value(rotation_val)
+        self.opacity.write_value(opacity_val)
+
+        print("kf write done")
 
 # ------------------------------------------ creator func dicts
 # dict EXPRESSION_TYPE args value -> class extending AbstractProperty

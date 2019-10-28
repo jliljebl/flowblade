@@ -179,6 +179,9 @@ def geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
     return new_keyframes
 
 def rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
+    # THIS WAS CREATED FOR frei0r cairoaffineblend FILTER. That filter has to use a very particular paramter values
+    # scheme to satisty the frei0r requirement of all float values being in range 0.0 - 1.0.
+    #
     # Parse extraeditor value properties value string into (frame, [x, y, x_scale, y_scale, rotation], opacity)
     # keyframe tuples.
     new_keyframes = []
@@ -204,6 +207,32 @@ def rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_
 
     return new_keyframes
 
+def non_freior_rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
+    # Parse extraeditor value properties value string into (frame, [x, y, x_scale, y_scale, rotation], opacity)
+    # keyframe tuples.
+    new_keyframes = []
+    screen_width = current_sequence().profile.width()
+    screen_height = current_sequence().profile.height()
+    keyframes_str = keyframes_str.strip('"') # expression have sometimes quotes that need to go away
+    kf_tokens =  keyframes_str.split(';')
+    for token in kf_tokens:
+        sides = token.split('=')
+        values = sides[1].split(':')
+        frame = int(sides[0])
+        # get values and convert "frei0r.cairoaffineblend" values to editor values
+        # this because all frei0r plugins require values in range 0 - 1
+        x = float(values[0])
+        y = float(values[1])
+        x_scale = float(values[2])
+        y_scale = float(values[3])
+        rotation = float(values[4])
+        opacity = float(values[5]) * 100
+        source_rect = [x,y,x_scale,y_scale,rotation]
+        add_kf = (frame, source_rect, float(opacity))
+        new_keyframes.append(add_kf)
+
+    return new_keyframes
+    
 def rotomask_json_value_string_to_kf_array(keyframes_str, out_to_in_func):
     new_keyframes = []
     json_obj = json.loads(keyframes_str)
@@ -214,8 +243,11 @@ def rotomask_json_value_string_to_kf_array(keyframes_str, out_to_in_func):
 
     return sorted(new_keyframes, key=lambda kf_tuple: kf_tuple[0]) 
     
+    
+# ----------------------------------------------------------------------------- AFFINE BLEND
 def create_editable_property_for_affine_blend(clip, editable_properties):
     # Build a custom object that duck types for TransitionEditableProperty to use in editor
+    # 
     ep = utils.EmptyClass()
     # pack real properties to go
     ep.x = [ep for ep in editable_properties if ep.name == "x"][0]
@@ -293,6 +325,9 @@ def rotating_ge_write_out_keyframes(ep, keyframes):
     ep.rotation.write_value(rotation_val)
     ep.opacity.write_value(opacity_val)
 
+    print ("KF WRITE -----------------------------------------")
+    print(keyframes, ep.value)
+
 def rotating_ge_update_prop_value(ep):
 
     # duck type members
@@ -316,6 +351,8 @@ def rotating_ge_update_prop_value(ep):
         value += frame_str + ";"
 
     ep.value = value.strip(";")
+    
+    print (ep.value)
 
 def _get_pixel_pos_from_frei0r_cairo_pos(value, screen_dim):
     # convert positions from range used by frei0r cairo plugins to pixel values
@@ -332,11 +369,7 @@ def get_frei0r_cairo_position(pos, screen_dim):
     range_pos = pos + screen_dim * 2.0
     return range_pos / pix_range
 
-def get_on_off_txt_for_int(int_val):
-    if int_val == 0:
-        return _("Off")
-    else:
-        return _("On")
+
 
 #------------------------------------------------------ util funcs
 def _property_type(value_str):
