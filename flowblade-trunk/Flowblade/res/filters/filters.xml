@@ -921,64 +921,35 @@
 
     <!-- TRANSFORM -->
     <filter id="affine">
-        <name>Rotate</name>
+        <name>Move Scale</name>
         <group>Transform</group>
-        <property name="transition.fix_rotate_x" args="range_in=-180,180 range_out=-180,180 displayname=Angle">0</property>
-        <property name="transition.use_normalised" args="editor=no_editor">0</property>
-        <property name="transition.geometry" args="editor=affine_filt_geom_slider exptype=geom_in_affine_filt">0=0/0:SCREENSIZE:100</property>
-    </filter>
-   <filter id="affine">
-        <name>Shear</name>
-        <group>Transform</group>
-        <property name="transition.fix_shear_x" args="range_in=-180,180 range_out=-180,180 displayname=Shear!X">0</property>
-        <property name="transition.fix_shear_y" args="range_in=-180,180 range_out=-180,180 displayname=Shear!Y">0</property>
-        <property name="transition.geometry" args="editor=affine_filt_geom_slider exptype=geom_in_affine_filt">0=0/0:SCREENSIZE:100</property>
-   </filter>
-    <filter id="affine">
-        <name>Translate</name>
-        <group>Transform</group>
-        <property name="transition.geometry" args="editor=affine_filt_geom_slider exptype=geom_in_affine_filt">0=0/0:SCREENSIZE:100</property>
+        <property name="transition.fill" args="editor=no_editor">1</property>
+        <property name="transition.distort" args="editor=no_editor">0</property>
+        <property name="transition.rect"  args="editor=filter_rect_geometry_editor range_in=0,100 range_out=0,100 exptype=geom_filt_rect_kf">0=0 0 Screensize2 1</property>
+        <property name="transition.valign" args="editor=no_editor exptype=not_parsed">top</property>
+        <property name="transition.halign" args="editor=no_editor exptype=not_parsed">left</property>
+        <property name="transition.threads" args="editor=no_editor">0</property>
+        <property name="transition.repeat_off" args="editor=no_editor">1</property>
     </filter>
     <filter id="affine">
-        <name>Affine</name>
+        <name>Rotate Move Scale</name>
         <group>Transform</group>
-        <property name="transition.geometry" args="editor=affine_filt_geom_slider exptype=geom_in_affine_filt">0=0/0:SCREENSIZE:100</property>
-        <property name="transition.fix_rotate_x" args="range_in=-180,180 range_out=-180,180 displayname=Angle">0</property>
-        <property name="transition.fix_shear_x" args="range_in=-180,180 range_out=-180,180 displayname=Shear!X">0</property>
-        <property name="transition.fix_shear_y" args="range_in=-180,180 range_out=-180,180 displayname=Shear!Y">0</property>
-    </filter>
-        <filter id="affine">
-        <name>Pan Zoom Rotate</name>
-        <group>Transform</group>
-          <property name="transition.fix_rotate_x" args="editor=no_editor exptype=not_parsed">0=0</property>
-          <property name="transition.scale_x" args="editor=no_editor exptype=not_parsed">0=1</property>
-          <property name="transition.scale_y" args="editor=no_editor exptype=not_parsed">0=1</property>
-          <property name="transition.ox" args="editor=no_editor exptype=not_parsed">0=0</property>
-          <property name="transition.oy" args="editor=no_editor exptype=not_parsed">0=0</property>
+          <property name="transition.fix_rotate_x" args="range_in=-360,360 range_out=-360,360 displayname=Rotation">0</property>
+          <property name="transition.scale_x" args="editor=no_editor exptype=not_parsed">1</property>
+          <property name="transition.scale_y" args="editor=no_editor exptype=not_parsed">1</property>
+          <property name="transition.ox" args="range_in=-200,200 range_out=-3000,3000 displayname=X">0</property>
+          <property name="transition.oy" args="range_in=-200,200 range_out=-3000,3000 displayname=Y">0</property>
           <property name="transition.threads" args="editor=no_editor">0</property>
-          <propertynonmlt name="opacity" args="editor=no_editor exptype=not_parsed">0=1</propertynonmlt>
-          <extraeditor name="filter_rotation_geometry_editor"></extraeditor> 
     </filter>
-    <!--- Removed because didn't work on all media items.
-              <property name="transition.fix_rotate_x" args="range_in=-180,180 range_out=-180,180 displayname=Angle">0</property>
-          <property name="transition.scale_x" args="range_in=10,800 range_out=0.1,8.0 displayname=ScaleX">1</property>
-          <property name="transition.scale_y" args="range_in=10,800 range_out=0.1,8.0 displayname=ScaleY">1</property>
-          <property name="transition.ox" args="range_in=-800,800 range_out=-800,800 displayname=x">0</property>
-          <property name="transition.oy" args="range_in=-800,800 range_out=-800,800 displayname=y">0</property>
-          <property name="transition.threads" args="editor=no_editor">0</property>
-          
-          <property name="transition.scale_y">00:00:00,520=0,257865;00:00:01,320=0,5</property>
-          <property name="transition.ox">00:00:00,000|=-356;00:00:02,440=-400</property>
-          <property name="transition.oy">00:00:00,000|=0;00:00:01,840=-10</property>
-    <filter id="avfilter.zoompan">
-        <name>Zoom Pan</name>
+    <filter id="affine">
+        <name>Shear Move Scale</name>
         <group>Transform</group>
-        <property name="av.zoom" args="range_in=100,500 range_out=1,5 displayname=Zoom">1.1</property>
-        <property name="av.x" args="range_in=0,SCREENSIZE_WIDTH range_out=0,SCREENSIZE_WIDTH displayname=x">10</property>
-        <property name="av.y" args="range_in=0,SCREENSIZE_HEIGHT range_out=0,SCREENSIZE_HEIGHT displayname=y">10</property>
-        <property name="av.d" args="editor=no_editor">1</property>
+            <property name="transition.fix_shear_x" args="range_in=-180,180 range_out=-180,180 displayname=Shear!X">0</property>
+            <property name="transition.fix_shear_y" args="range_in=-180,180 range_out=-180,180 displayname=Shear!Y">0</property>
+            <property name="transition.ox" args="range_in=-200,200 range_out=-3000,3000 displayname=X">0</property>
+            <property name="transition.oy" args="range_in=-200,200 range_out=-3000,3000 displayname=Y">0</property>
     </filter>
-    -->
+
 
     <!-- compositor filters that are not displayed to user, not used currently -->
     <filter id="frei0r.mask0mate">

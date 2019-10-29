@@ -38,6 +38,7 @@ PROP_EXPRESSION = appconsts.PROP_EXPRESSION
 NAME = appconsts.NAME
 ARGS = appconsts.ARGS
 SCREENSIZE = "SCREENSIZE"                                   # replace with "WIDTHxHEIGHT" of profile screensize in pix
+SCREENSIZE2 = "Screensize2"                                 # replace with "WIDTH HEIGHT" of profile screensize in pix
 WIPE_PATH = "WIPE_PATH"                                     # path to folder contining wipe resource images
 SCREENSIZE_WIDTH = "SCREENSIZE_WIDTH"                       # replace with width of profile screensize in pix
 SCREENSIZE_HEIGHT = "SCREENSIZE_HEIGHT"                     # replace with height of profile screensize in pix
@@ -110,10 +111,12 @@ def replace_value_keywords(properties, profile):
     objects first become active.
     """
     sreensize_expr = str(profile.width()) + "x" + str(profile.height())
+    sreensize_expr_2 = str(profile.width()) + " " + str(profile.height())
     for i in range(0, len(properties)):
         name, value, prop_type = properties[i]
         if prop_type == PROP_EXPRESSION:
             value = value.replace(SCREENSIZE, sreensize_expr)
+            value = value.replace(SCREENSIZE2, sreensize_expr_2)
             value = value.replace(WIPE_PATH, respaths.WIPE_RESOURCES_PATH)
             properties[i] = (name, value, prop_type)
 
@@ -178,6 +181,27 @@ def geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
  
     return new_keyframes
 
+def rect_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
+    # Parse "composite:geometry" properties value string into (frame, source_rect, opacity)
+    # keyframe tuples.
+    new_keyframes = []
+    keyframes_str = keyframes_str.strip('"') # expression have sometimes quotes that need to go away
+    kf_tokens =  keyframes_str.split(';')
+    for token in kf_tokens:
+        sides = token.split('=')
+        values = sides[1].split(' ')
+        x = values[0]
+        y = values[1]
+        w = values[2] 
+        h = values[3] 
+        source_rect = [int(x), int(y), int(w), int(h)] #x,y,width,height
+        add_kf = (int(sides[0]), source_rect, out_to_in_func(float(1)))
+        new_keyframes.append(add_kf)
+ 
+    print(new_keyframes)
+    
+    return new_keyframes
+    
 def rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
     # THIS WAS CREATED FOR frei0r cairoaffineblend FILTER. That filter has to use a very particular paramter values
     # scheme to satisty the frei0r requirement of all float values being in range 0.0 - 1.0.
@@ -325,9 +349,6 @@ def rotating_ge_write_out_keyframes(ep, keyframes):
     ep.rotation.write_value(rotation_val)
     ep.opacity.write_value(opacity_val)
 
-    print ("KF WRITE -----------------------------------------")
-    print(keyframes, ep.value)
-
 def rotating_ge_update_prop_value(ep):
 
     # duck type members
@@ -351,8 +372,6 @@ def rotating_ge_update_prop_value(ep):
         value += frame_str + ";"
 
     ep.value = value.strip(";")
-    
-    print (ep.value)
 
 def _get_pixel_pos_from_frei0r_cairo_pos(value, screen_dim):
     # convert positions from range used by frei0r cairo plugins to pixel values

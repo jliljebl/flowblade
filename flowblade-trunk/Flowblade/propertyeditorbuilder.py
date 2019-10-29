@@ -54,7 +54,8 @@ KEYFRAME_EDITOR_CLIP = "keyframe_editor_clip"               # keyfremeeditor.Key
 KEYFRAME_EDITOR_CLIP_FADE = "keyframe_editor_clip_fade"     # keyfremeeditor.KeyFrameEditor that has all the key frames relative to CLIP start, with fade buttons
 KEYFRAME_EDITOR_RELEASE = "keyframe_editor_release"         # HACK, HACK. used to prevent property update crashes in slider keyfremeeditor.KeyFrameEditor
 COLOR_SELECT = "color_select"                               # Gtk.ColorButton
-GEOMETRY_EDITOR = "geometry_editor"                         # keyfremeeditor.GeometryEditor
+GEOMETRY_EDITOR = "geometry_editor"                         # keyframeeditor.GeometryEditor
+FILTER_RECT_GEOM_EDITOR = "filter_rect_geometry_editor"     # keyframeeditor.FilterRectGeometryEditor
 WIPE_SELECT = "wipe_select"                                 # Gtk.Combobox with options from mlttransitions.wipe_lumas
 COMBO_BOX_OPTIONS = "cbopts"                                # List of options for combo box editor displayed to user
 LADSPA_SLIDER = "ladspa_slider"                             # Gtk.HScale, does ladspa update for release changes(disconnect, reconnect)
@@ -76,7 +77,8 @@ NO_EDITOR = "no_editor"                                     # No editor displaye
 COMPOSITE_EDITOR_BUILDER = "composite_properties"           # Creates a single row editor for multiple properties of composite transition
 REGION_EDITOR_BUILDER = "region_properties"                 # Creates a single row editor for multiple properties of region transition
 ROTATION_GEOMETRY_EDITOR_BUILDER = "rotation_geometry_editor" # Creates a single editor for multiple geometry values
-FILTER_AFFINE_EDITOR = "filter_rotation_geometry_editor"    # Affine aditor for filters
+#FILTER_AFFINE_EDITOR = "filter_rotation_geometry_editor"    # Affine aditor for filters
+
 
 SCALE_DIGITS = "scale_digits"                               # Number of decimal digits displayed in a widget
 
@@ -870,16 +872,8 @@ def _create_color_grader(filt, editable_properties):
     vbox.no_separator = True
     return vbox
 
-def _create_filter_affine_editor(filt, editable_properties):
-    #print (type(filt), type(editable_properties))
-    #for ep in editable_properties:
-    #    print(type(ep), ep.name)
-
-    ep = propertyedit.FilterAffineTransformEditableProperty(editable_properties[0].clip, editable_properties)
-    kf_edit = keyframeeditor.FilterRotatingGeometryEditor(ep)
-    vbox = Gtk.VBox(False, 4)
-    vbox.pack_start(kf_edit, True, True, 0)
-    return vbox
+def _get_filter_rect_geom_editor(ep):
+    return keyframeeditor.FilterRectGeometryEditor(ep)
 
 def _create_crcurves_editor(filt, editable_properties):
     curves_editor = extraeditors.CatmullRomFilterEditor(editable_properties)
@@ -1100,7 +1094,7 @@ EDITOR_ROW_CREATORS = { \
     COLOR_LGG: lambda filt, editable_properties:_create_color_lgg_editor(filt, editable_properties),
     ROTOMASK: lambda filt, editable_properties:_create_rotomask_editor(filt, editable_properties),
     TEXT_ENTRY: lambda ep: _get_text_entry(ep),
-    FILTER_AFFINE_EDITOR: lambda filt, editable_properties:_create_filter_affine_editor(filt, editable_properties)
+    FILTER_RECT_GEOM_EDITOR: lambda ep : _get_filter_rect_geom_editor(ep)
     }
 
 """
