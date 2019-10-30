@@ -868,8 +868,7 @@ class AffineScaleProperty(EditableProperty):
         """
         Converts input value to output value using ranges.
         """
-        # in_range = 500 # hard coded special case
-        in_norm = float(in_value) / 100.0 # to get 0 - 5, 1.0 no scaling
+        in_norm = float(in_value) / 100.0
         if in_norm < 0.001:
             in_norm = 0.001
         out =  1.0 / in_norm
@@ -878,10 +877,9 @@ class AffineScaleProperty(EditableProperty):
         """
         Converts output to input value
         """
-        # out_value =  1 / in_norm, range 1 / 0.001 -> 1 / 5
         if out_value < 0.001:
             out_value = 0.001
-        in_value = (1.0 / (out_value)) * 100.0 # 0 - 500 range
+        in_value = (1.0 / float(out_value)) * 100.0
 
         return in_value  
 
