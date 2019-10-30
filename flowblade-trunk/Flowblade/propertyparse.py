@@ -197,8 +197,6 @@ def rect_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
         source_rect = [int(x), int(y), int(w), int(h)] #x,y,width,height
         add_kf = (int(sides[0]), source_rect, out_to_in_func(float(1)))
         new_keyframes.append(add_kf)
- 
-    print(new_keyframes)
     
     return new_keyframes
     

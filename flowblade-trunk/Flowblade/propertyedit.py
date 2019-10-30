@@ -122,24 +122,26 @@ def get_filter_editable_properties(clip, filter_object, filter_index,
     return editable_properties
 
 def _create_editable_property(p_type, args_str, params):
-    
+
+    args = propertyparse.args_string_to_args_dict(args_str)
+
+    try:
+        exp_type = args[EXPRESSION_TYPE] 
+    except:
+        # This fails for PROP_INT and PROP_FLOAT properties that are edited as keyframe properties.
+        # The given exp_type is irrelevant when set for PROP_INT and PROP_FLOAT but causes crashes/undetermined behaviour if exp_type not set correctly in filters.xml
+        # when required.
+        exp_type = SINGLE_KEYFRAME
+        
     if p_type == appconsts.PROP_EXPRESSION:
         """
         For expressions we can't do straight input output numerical
-        conversion so we need a extending class for expression type.
+        conversion so we need an extending class for expression type.
         """
-        args = propertyparse.args_string_to_args_dict(args_str)
-        
-        try:
-            exp_type = args[EXPRESSION_TYPE] 
-        except:
-            # This fails PROP_INT and PROP_FLOAT properties that are edited as keyframe properties and 
-            # they will be treated as exptype = SINGLE_KEYFRAME properties.
-            # This will now hide 'exptype' args in filters.xml, so they must be there set correctly.
-            exp_type = SINGLE_KEYFRAME
-        
         creator_func = EDITABLE_PROPERTY_CREATORS[exp_type]
         ep = creator_func(params)
+    elif exp_type == AFFINE_SCALE:
+        ep = AffineScaleProperty(params) # This needs special casing because slider input is a number and output value is inverse of input, not a linear range conversion.
     else:
         """
         Properties with single numerical values (int or float) can be handled with objects of EditableProperty class.
@@ -668,9 +670,7 @@ class KeyFrameFilterGeometryRectProperty(EditableProperty):
         # but this not the case for this editor/property pair.
         return Gtk.Adjustment(float(1.0), float(0.0), float(1.0), float(0.01)) # Value set later to first kf value
         
-    def write_out_keyframes(self, keyframes):
-        print(keyframes)
-        
+    def write_out_keyframes(self, keyframes):       
         # key frame array of tuples (frame, [x, y, width, height], opacity)
         val_str = ""
         for kf in keyframes:
@@ -863,32 +863,16 @@ class MultipartKeyFrameProperty(AbstractProperty):
 
 
 class AffineScaleProperty(EditableProperty):
-    
-    def get_input_range_adjustment(self):
-        step = DEFAULT_STEP
-        lower = 0
-        upper = 500
-        val = self.value.strip('"')
-        epxr_sides = val.split("=")
-        in_value = self.get_in_value(float(epxr_sides[1]))
-        return Gtk.Adjustment(float(in_value), float(lower), float(upper), float(step))
-
-    def adjustment_value_changed(self, adjustment):
-        value = adjustment.get_value()
-        out_value = self.get_out_value(value)
-        val_str = "0=" + str(out_value)
-        self.write_value(val_str)
 
     def get_out_value(self, in_value):
         """
         Converts input value to output value using ranges.
         """
         # in_range = 500 # hard coded special case
-        in_norm = in_value / 100.0 # to get 0 - 5, 1.0 no scaling
+        in_norm = float(in_value) / 100.0 # to get 0 - 5, 1.0 no scaling
         if in_norm < 0.001:
             in_norm = 0.001
-        out =  1 / in_norm
-        return out
+        out =  1.0 / in_norm
 
     def get_in_value(self, out_value):
         """
@@ -897,17 +881,9 @@ class AffineScaleProperty(EditableProperty):
         # out_value =  1 / in_norm, range 1 / 0.001 -> 1 / 5
         if out_value < 0.001:
             out_value = 0.001
-        in_value = (1 / (out_value)) * 100 # 0 - 500 range
+        in_value = (1.0 / (out_value)) * 100.0 # 0 - 500 range
+
         return in_value  
-
-    def write_mlt_property_str_value(self, str_value):
-        val = str_value.strip('"')
-        epxr_sides = val.split("=")
-        # mlt property value
-        filter_object = self._get_filter_object()
-        filter_object.mlt_filter.set(str(self.name), str(epxr_sides[1]))
-
-
 
 
 # ----------------------------------------------------------------------------- AFFINE FILTER TRANSFORM
