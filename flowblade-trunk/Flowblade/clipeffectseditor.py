@@ -521,9 +521,11 @@ def effect_selection_changed(use_current_filter_index=False):
                 editor_type = ep.args[propertyeditorbuilder.EDITOR]
             except KeyError:
                 editor_type = propertyeditorbuilder.SLIDER # this is the default value
+            
             if ((editor_type == propertyeditorbuilder.KEYFRAME_EDITOR)
                 or (editor_type == propertyeditorbuilder.KEYFRAME_EDITOR_RELEASE)
-                or (editor_type == propertyeditorbuilder.KEYFRAME_EDITOR_CLIP)):
+                or (editor_type == propertyeditorbuilder.KEYFRAME_EDITOR_CLIP)
+                or (editor_type == propertyeditorbuilder.FILTER_RECT_GEOM_EDITOR)):
                     keyframe_editor_widgets.append(editor_row)
             
             # if slider property is being dedited as keyrame property
