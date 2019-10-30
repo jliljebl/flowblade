@@ -74,6 +74,7 @@ COLOR = "color"                                             # #rrggbb
 CAIRO_COLOR = "cairo_color"                                             # #rrggbb but displayed as r and b switched
 LUT_TABLE = "lut_table"                                     # val;val;val;val;...;val
 WIPE_RESOURCE = "wipe_resource"                             # /path/to/resource.pgm
+FILTER_WIPE_RESOURCE = "filter_wipe_resource"               # /path/to/resource.pgm
 FILE_RESOURCE = "file_resource"                             # /path/to/somefile
 ROTO_JSON = "roto_json"                                     # JSON string of keyframes and values
 PLAIN_STRING = "plain_string"                               # String is just string, for text input
@@ -519,6 +520,7 @@ class AffineFilterGeomProperty(EditableProperty):
         val_str = "0=" + str(x) + "/" + str(y) + ":" + str(w) + "x" + str(h) + ":100" # 100x MLT ignores width
         self.write_value(val_str)
 
+
 class AffineFilterGeomPropertyV2(EditableProperty):
     """
     Converts values of four sliders to position and size info
@@ -533,12 +535,14 @@ class AffineFilterGeomPropertyV2(EditableProperty):
         val_str = "0=" + str(x) + "/" + str(y) + ":" + str(w) + "x" + str(height) + ":100" # 100x MLT does translate for height
         self.write_value(val_str)
 
+
 class FreiPosHCSFilterProperty(EditableProperty):    
     def adjustment_value_changed(self, adjustment):
         value = adjustment.get_value()
         out_value = self.get_out_value(value)
         val_str = "0=" + str(out_value)
         self.write_value(val_str)
+
 
 class OpacityInGeomSKFProperty(TransitionEditableProperty):
     """
@@ -819,6 +823,20 @@ class WipeResourceProperty(TransitionEditableProperty):
         self.write_value(str(res_path))
 
 
+class FilterWipeResourceProperty(EditableProperty):
+    """
+    Converts user combobox selections to absolute paths containing wipe
+    resource images.
+    """
+    def __init__(self, params):
+        EditableProperty.__init__(self, params)
+
+    def combo_selection_changed(self, combo_box, keys):
+        key = keys[combo_box.get_active()]
+        res_path = mlttransitions.get_wipe_resource_path(key)
+        self.write_value(str(res_path))
+    
+    
 class FileResourceProperty(EditableProperty):
     """
     A file path as property value set from file chooser dialog callback.
@@ -1013,6 +1031,7 @@ EDITABLE_PROPERTY_CREATORS = { \
     GEOM_IN_AFFINE_FILTER: lambda params : AffineFilterGeomProperty(params),
     GEOM_IN_AFFINE_FILTER_V2: lambda params :AffineFilterGeomPropertyV2(params),
     WIPE_RESOURCE : lambda params : WipeResourceProperty(params),
+    FILTER_WIPE_RESOURCE : lambda params : FilterWipeResourceProperty(params),
     FILE_RESOURCE : lambda params :FileResourceProperty(params),
     ROTO_JSON  : lambda params :RotoJSONProperty(params),
     LUT_TABLE : lambda params  : LUTTableProperty(params),

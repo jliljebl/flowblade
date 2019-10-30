@@ -56,7 +56,8 @@ KEYFRAME_EDITOR_RELEASE = "keyframe_editor_release"         # HACK, HACK. used t
 COLOR_SELECT = "color_select"                               # Gtk.ColorButton
 GEOMETRY_EDITOR = "geometry_editor"                         # keyframeeditor.GeometryEditor
 FILTER_RECT_GEOM_EDITOR = "filter_rect_geometry_editor"     # keyframeeditor.FilterRectGeometryEditor
-WIPE_SELECT = "wipe_select"                                 # Gtk.Combobox with options from mlttransitions.wipe_lumas
+WIPE_SELECT = "wipe_select"                                 # Gtk.Combobox with options from mlttransitions.wipe_lumas, possible to select luma from file system
+FILTER_WIPE_SELECT = "filter_wipe_select"                   #  Gtk.Combobox with options from mlttransitions.wipe_lumas
 COMBO_BOX_OPTIONS = "cbopts"                                # List of options for combo box editor displayed to user
 LADSPA_SLIDER = "ladspa_slider"                             # Gtk.HScale, does ladspa update for release changes(disconnect, reconnect)
 CLIP_FRAME_SLIDER = "clip_frame_slider"                     # Gtk.HScale, range 0 - clip length in frames
@@ -640,6 +641,29 @@ def _get_wipe_selector(editable_property):
     
     return editor_pane
 
+def _get_filter_wipe_selector(editable_property):
+    # Preset luma
+    combo_box = Gtk.ComboBoxText()
+            
+    # Get options
+    keys = list(mlttransitions.wipe_lumas.keys())
+    # translate here
+    keys.sort()
+    for k in keys:
+        combo_box.append_text(k)
+ 
+    # Set initial value
+    k_index = -1
+    tokens = editable_property.value.split("/")
+    test_value = tokens[len(tokens) - 1]
+    for k,v in mlttransitions.wipe_lumas.items():
+        if v == test_value:
+            k_index = keys.index(k)
+    
+    combo_box.set_active(k_index)
+    combo_box.connect("changed", editable_property.combo_selection_changed, keys)
+    return _get_two_column_editor_row(editable_property.get_display_name(), combo_box)
+
 class FadeLengthEditor(Gtk.HBox):
     def __init__(self, editable_property):
 
@@ -1079,6 +1103,7 @@ EDITOR_ROW_CREATORS = { \
     AFFINE_GEOM_4_SLIDER_2: lambda ep :_get_affine_filt_geom_sliders_2(ep),
     COLOR_SELECT: lambda ep: _get_color_selector(ep),
     WIPE_SELECT: lambda ep: _get_wipe_selector(ep),
+    FILTER_WIPE_SELECT:  lambda ep: _get_filter_wipe_selector(ep),
     LADSPA_SLIDER: lambda ep: _get_ladspa_slider_row(ep),
     CLIP_FRAME_SLIDER: lambda ep: _get_clip_frame_slider(ep),
     FILE_SELECTOR: lambda ep: _get_file_select_editor(ep),

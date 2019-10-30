@@ -49,6 +49,18 @@
         <property name="resource" args="editor=file_select exptype=file_resource displayname=Select!file">""</property>
         <property name="use_mix" args="editor=no_editor">1</property>
     </filter>
+    <filter id="shape">
+        <name>Wipe</name>
+        <group>Alpha</group>
+        <property name="resource" args="editor=filter_wipe_select exptype=filter_wipe_resource displayname=Wipe!Type">WIPE_PATHbi-linear_y.pgm</property>
+        <property name="mix" args="range_in=0.0,100.0 range_out=0,100 editor=slider displayname=Threshold">50.0</property>
+        <property name="softness" args="range_in=0.0,100.0 editor=slider displayname=Softness">0</property>
+        <property name="invert" args="editor=booleancheckbox displayname=Invert">0</property>
+        <property name="use_luminance" args="editor=no_editor">1</property>
+        <property name="use_mix" args="editor=no_editor">1</property>
+    </filter>
+
+    
    <filter id="frei0r.alpha0ps">
         <name>Alpha Modify</name>
         <group>Alpha</group>  

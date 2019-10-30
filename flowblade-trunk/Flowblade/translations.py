@@ -249,7 +249,6 @@ def load_filters_translations():
     filter_names["Soft Glow"]= _("Soft Glow")
     filter_names["Newspaper"]= _("Newspaper")
 
-    # 0.16 added
     filter_names["Luma Key"] = _("Luma Key")
     filter_names["Chroma Key"] = _("Chroma Key")
     filter_names["Affine"] = _("Affine")
@@ -259,7 +258,6 @@ def load_filters_translations():
     filter_names["Lift Gain Gamma"] = _("Lift Gain Gamma")
     filter_names["Image Grid"] = _("Image Grid")
 
-    # Later
     filter_names["Color Lift Gain Gamma"] = _("Color Lift Gain Gamma")
     filter_names["Color Channel Mixer"] = _("Color Channel Mixer")
     filter_names["Lens Correction AV"] = _("Lens Correction AV")
@@ -272,6 +270,7 @@ def load_filters_translations():
     filter_names["RotoMask"] = _("RotoMask")
     filter_names["Lens Defisher"] = _("Lens Defisher")
     filter_names["Position Scale"] = _("Position Scale")
+    filter_names["Wipe"] = _("Wipe")
     
     # param names
     global param_names
