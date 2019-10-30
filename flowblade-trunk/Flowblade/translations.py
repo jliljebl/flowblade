@@ -271,11 +271,11 @@ def load_filters_translations():
     filter_names["Gradient Tint"] = _("Gradient Tint")
     filter_names["RotoMask"] = _("RotoMask")
     filter_names["Lens Defisher"] = _("Lens Defisher")
+    filter_names["Position Scale"] = _("Position Scale")
     
     # param names
     global param_names
 
-    # param names for filters
     param_names["Position"] = _("Position")
     param_names["Grad width"] = _("Grad width")
     param_names["Tilt"] = _("Tilt")
@@ -490,7 +490,7 @@ def load_filters_translations():
     param_names["Rotate X"] = _("Rotate X")
     param_names["Rotate Y"] = _("Rotate Y")
     param_names["Rotate Z"] = _("Rotate Z")
-    # added 0.8
+
     param_names["Edge Mode"] = _("Edge Mode")
     param_names["Sel. Space"] = _("Sel. Space")
     param_names["Operation"] = _("Operation")
@@ -565,7 +565,6 @@ def load_filters_translations():
     param_names["Level"] = _("Level")
     param_names["Select .cube file"] = _("Select .cube file")
     
-    # param names for compositors
     param_names["Opacity"] = _("Opacity")
     param_names["Shear X"] = _("Shear X")
     param_names["Shear Y"] = _("Shear Y")
@@ -609,6 +608,11 @@ def load_filters_translations():
     param_names["Lens Projection"] = _("Lens Projection")
     param_names["Interpolator"] = _("Interpolator")
     param_names["Strength"] = _("Strength")
+    param_names["X Scale"] = _("X Scale")
+    param_names["Y Scale"] = _("Y Scale")
+    param_names["Rotation"]= _("Rotation")
+    param_names["X Position"] = _("X Position")
+    param_names["Y Position"] = _("Y Position")
 
     # Combo options
     global combo_options

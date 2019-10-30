@@ -935,8 +935,8 @@
         <name>Rotate</name>
         <group>Transform</group>
             <property name="transition.fix_rotate_x" args="range_in=-360,360 range_out=-360,360 displayname=Rotation">0</property>
-            <property name="transition.ox" args="range_in=-200,200 range_out=-3000,3000 displayname=X">0</property>
-            <property name="transition.oy" args="range_in=-200,200 range_out=-3000,3000 displayname=Y">0</property>
+            <property name="transition.ox" args="range_in=-200,200 range_out=-3000,3000 displayname=X!Position">0</property>
+            <property name="transition.oy" args="range_in=-200,200 range_out=-3000,3000 displayname=Y!Position">0</property>
             <property name="transition.scale_x" args="editor=slider range_in=0,500 exptype=affine_scale displayname=X!Scale">1</property>
             <property name="transition.scale_y" args="editor=slider range_in=0,500 exptype=affine_scale displayname=Y!Scale">1</property>
             <property name="transition.threads" args="editor=no_editor">0</property>
@@ -946,8 +946,8 @@
         <group>Transform</group>
             <property name="transition.fix_shear_x" args="range_in=-180,180 range_out=-180,180 displayname=Shear!X">0</property>
             <property name="transition.fix_shear_y" args="range_in=-180,180 range_out=-180,180 displayname=Shear!Y">0</property>
-            <property name="transition.ox" args="range_in=-200,200 range_out=-3000,3000 displayname=X">0</property>
-            <property name="transition.oy" args="range_in=-200,200 range_out=-3000,3000 displayname=Y">0</property>
+            <property name="transition.ox" args="range_in=-200,200 range_out=-3000,3000 displayname=X!Position">0</property>
+            <property name="transition.oy" args="range_in=-200,200 range_out=-3000,3000 displayname=Y!Position">0</property>
             <property name="transition.scale_x" args="editor=slider range_in=0,500 exptype=affine_scale displayname=X!Scale">1</property>
             <property name="transition.scale_y" args="editor=slider range_in=0,500 exptype=affine_scale displayname=Y!Scale">1</property>
           <property name="transition.threads" args="editor=no_editor">0</property>

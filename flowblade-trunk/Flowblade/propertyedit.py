@@ -886,7 +886,7 @@ class AffineScaleProperty(EditableProperty):
 
 # ----------------------------------------------------------------------------- AFFINE FILTER TRANSFORM
 """
-Refactor Affine Blend editableProperty ducktyping object to be like the below instead of the current EmptyClass thing.
+Refactor Affine Blend EditableProperty ducktyping object to be like the below instead of the current EmptyClass thing.
 
 class FilterAffineTransformEditableProperty:
     
