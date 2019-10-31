@@ -679,6 +679,8 @@ def change_current_sequence(index):
     selected_index = editorstate.project.sequences.index(editorstate.current_sequence())
     selection.select_path(str(selected_index))
 
+    audiomonitoring.recreate_master_meter_filter_for_new_sequence()
+    
     start_autosave()
 
     updater.set_timeline_height()
