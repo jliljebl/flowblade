@@ -219,6 +219,7 @@ class AddMediaFilesThread(threading.Thread):
 
         is_first_video_load = PROJECT().is_first_video_load()
         duplicates = []
+        target_bin = PROJECT().c_bin
         succes_new_file = None
         filenames = self.filenames
         for new_file in filenames:
@@ -227,7 +228,7 @@ class AddMediaFilesThread(threading.Thread):
                 duplicates.append(file_name)
             else:
                 try:
-                    PROJECT().add_media_file(new_file, self.compound_clip_name)
+                    PROJECT().add_media_file(new_file, self.compound_clip_name, target_bin)
                     succes_new_file = new_file
                 except projectdata.ProducerNotValidError as err:
                     print(err.__str__())

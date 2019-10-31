@@ -118,7 +118,7 @@ class Project:
         media_object.name = name
         media_object.ttl = ttl
 
-    def add_media_file(self, file_path, compound_clip_name=None):
+    def add_media_file(self, file_path, compound_clip_name=None, target_bin=None):
         """
         Adds media file to project if exists and file is of right type.
         """
@@ -151,14 +151,14 @@ class Project:
                                  clip_name, media_type, length, icon_path, info)
         media_object.ttl = None
 
-        self._add_media_object(media_object)
+        self._add_media_object(media_object, target_bin)
         
         return media_object
 
     def add_pattern_producer_media_object(self, media_object):
         self._add_media_object(media_object)
 
-    def _add_media_object(self, media_object):
+    def _add_media_object(self, media_object, target_bin=None):
         """
         Adds media file or color clip to project data structures.
         """
@@ -166,7 +166,10 @@ class Project:
         self.next_media_file_id += 1
 
         # Add to bin
-        self.c_bin.file_ids.append(media_object.id)
+        if target_bin == None:
+            self.c_bin.file_ids.append(media_object.id)
+        else:
+            target_bin.file_ids.append(media_object.id)
 
     def media_file_exists(self, file_path):
         for key, media_file in list(self.media_files.items()):
