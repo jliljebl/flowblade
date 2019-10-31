@@ -343,7 +343,7 @@ def _do_create_sync_compound_clip(dialog, response_id, data):
     audio_clip = mlt.Producer(PROJECT().profile, str(audio_file))
     
     # Get offset
-    offset = files_offsets[audio_file]
+    offset = float(files_offsets[audio_file])
     print(audio_file, offset)
     
     # Add clips
