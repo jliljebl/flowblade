@@ -30,6 +30,7 @@ from gi.repository import Gtk, GLib, Gdk
 import math
 import hashlib
 import os
+import pickle
 import re
 import threading
 import xml.dom.minidom
@@ -689,4 +690,11 @@ def get_display_monitors_size_data():
             monitors_size_data.append((geom.width, geom.height))
         
         return monitors_size_data
-            
+
+def unpickle(path):
+    try:
+        f = open(path, "rb")
+        return pickle.load(f)
+    except:
+        f = open(path, 'rb')
+        return pickle.load(f, encoding='latin1') 
