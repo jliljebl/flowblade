@@ -289,11 +289,10 @@ def recreate_master_meter_filter_for_new_sequence():
     # We need to be sure that audio level updates are stopped before
     # detaching and destroying them
     _update_ticker.stop_ticker()
-    
-    # Detach filters
+
     if len(_level_filters) != 0:
         seq = editorstate.current_sequence()
-        # Only detach master filter if both GUI components destroyed
+        # Only detach master filter if we are displaying audio master meter
         if _master_volume_meter != None:
             seq.tractor.detach(_level_filters[0])
             _level_filters.pop(0)

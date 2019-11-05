@@ -48,6 +48,7 @@
         <property name="use_luminance" args="editor=no_editor">1</property>
         <property name="resource" args="editor=file_select exptype=file_resource displayname=Select!file">""</property>
         <property name="use_mix" args="editor=no_editor">1</property>
+        <property name="audio_match" args="editor=no_editor">0</property>
     </filter>
     <filter id="shape">
         <name>Wipe</name>
@@ -59,8 +60,6 @@
         <property name="use_luminance" args="editor=no_editor">1</property>
         <property name="use_mix" args="editor=no_editor">1</property>
     </filter>
-
-    
    <filter id="frei0r.alpha0ps">
         <name>Alpha Modify</name>
         <group>Alpha</group>  
