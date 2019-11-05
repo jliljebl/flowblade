@@ -59,6 +59,7 @@
         <property name="invert" args="editor=booleancheckbox displayname=Invert">0</property>
         <property name="use_luminance" args="editor=no_editor">1</property>
         <property name="use_mix" args="editor=no_editor">1</property>
+        <property name="audio_match" args="editor=no_editor">0</property>
     </filter>
    <filter id="frei0r.alpha0ps">
         <name>Alpha Modify</name>
