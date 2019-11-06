@@ -31,6 +31,7 @@ import atomicfile
 import editorpersistance
 import respaths
 import userfolders
+import utils
 
 
 # Editor window
@@ -226,8 +227,8 @@ def save_current_colors():
 
 def load_current_colors():
     load_path = _colors_data_path()
-    f = open(load_path, "rb")
-    colors = pickle.load(f)
+    colors = utils.unpickle(load_path)
+    
     sel, bg, button = colors
     global _selected_bg_color, _bg_color, _button_colors
     _selected_bg_color = Gdk.RGBA(*sel)

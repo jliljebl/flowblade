@@ -446,8 +446,7 @@ class RenderQueue:
             render_item = None
             try:
                 data_file_path = data_files_dir + data_file_name
-                data_file = open(data_file_path, 'rb')
-                render_item = pickle.load(data_file)
+                render_item = utils.unpickle(data_file_path)
                 self.queue.append(render_item)
             except Exception as e:
                 print (str(e))
@@ -1196,8 +1195,7 @@ class SingleRenderThread(threading.Thread):
 
         try:
             data_file_path = hidden_dir + CURRENT_RENDER_RENDER_ITEM
-            data_file = open(data_file_path, 'rb')
-            render_item = pickle.load(data_file)
+            render_item = utils.unpickle(data_file_path)
             self.error_status = None
         except Exception as e:
             if self.error_status == None:

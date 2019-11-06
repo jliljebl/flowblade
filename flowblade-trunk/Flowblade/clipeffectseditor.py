@@ -666,8 +666,7 @@ def _save_effect_values_dialog_callback(dialog, response_id):
 def _load_effect_values_dialog_callback(dialog, response_id):
     if response_id == Gtk.ResponseType.ACCEPT:
         load_path = dialog.get_filenames()[0]
-        f = open(load_path)
-        effect_data = pickle.load(f)
+        effect_data = utils.unpickle(load_path)
         
         filter_object = clip.filters[current_filter_index]
         

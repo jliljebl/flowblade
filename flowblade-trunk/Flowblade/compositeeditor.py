@@ -315,8 +315,7 @@ def _save_compositor_values_dialog_callback(dialog, response_id):
 def _load_compositor_values_dialog_callback(dialog, response_id):
     if response_id == Gtk.ResponseType.ACCEPT:
         load_path = dialog.get_filenames()[0]
-        f = open(load_path)
-        compositor_data = pickle.load(f)
+        compositor_data = utils.unpickle(load_path)
 
         if compositor_data.data_applicable(compositor.transition.info):
             compositor_data.set_values(compositor)

@@ -647,8 +647,7 @@ class Titler(Gtk.Window):
             try:
                 filenames = dialog.get_filenames()
                 load_path = filenames[0]
-                f = open(load_path, 'rb')
-                new_data = pickle.load(f)
+                new_data = utils.unpickle(load_path)
                 global _titler_data
                 _titler_data = new_data
                 self.load_titler_data()

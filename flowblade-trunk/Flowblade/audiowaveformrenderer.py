@@ -80,10 +80,9 @@ def get_waveform_data(clip):
     # Load from disk if found, otherwise queue for levels render
     levels_file_path = _get_levels_file_path(clip.path, editorstate.PROJECT().profile)
     if os.path.isfile(levels_file_path):
-        f = open(levels_file_path, "rb")
         if os.path.getsize(levels_file_path) == 0:
              print( "Size zero Audio levels file, this is error!", levels_file_path)
-        waveform = pickle.load(f)
+        waveform = utils.unpickle(levels_file_path)
         _waveforms[clip.path] = waveform
         return waveform
     else:

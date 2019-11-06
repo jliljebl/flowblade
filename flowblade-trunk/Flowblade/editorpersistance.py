@@ -67,8 +67,7 @@ def load():
     global prefs, recent_projects
 
     try:
-        f = open(prefs_file_path, "rb")
-        prefs = pickle.load(f)
+        prefs = utils.unpickle(prefs_file_path)
     except:
         prefs = EditorPreferences()
         with atomicfile.AtomicFileWriter(prefs_file_path, "wb") as afw:
@@ -83,8 +82,7 @@ def load():
     prefs.remember_monitor_clip_frame = True
 
     try:
-        f = open(recents_file_path)
-        recent_projects = pickle.load(f)
+        recent_projects = utils.unpickle(recents_file_path)
     except:
         recent_projects = utils.EmptyClass()
         recent_projects.projects = []

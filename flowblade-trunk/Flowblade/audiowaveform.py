@@ -62,8 +62,7 @@ def set_waveform_displayer_clip_from_popup(data):
 
     cache_file_path = userfolders.get_cache_dir() + appconsts.AUDIO_LEVELS_DIR + _get_unique_name_for_media(clip.path)
     if os.path.isfile(cache_file_path):
-        f = open(cache_file_path)
-        frame_levels = pickle.load(f)
+        frame_levels = utils.unpickle(cache_file_path)
         frames_cache[clip.path] = frame_levels
         clip.waveform_data = frame_levels
         updater.repaint_tline()
