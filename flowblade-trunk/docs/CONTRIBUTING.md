@@ -8,13 +8,13 @@ In this projects maintainers view these goals bring about a better world by enab
 
 We really are making a difference.
 
-## Code contributions
+# Code contributions
 
 Flowblade is Python application so to get going you will need to have some experience in working in that language.
 
 On the other hand, there are many tasks that could maybe taken on at let's say beginner+ level of competence and a solid medium level will very likely be adequate to handle all possible tasks. 
 
-Flowblade is a large and complex enough that the main problem  with contributing to it is to get know how the codebase works. We have a doceument to help with getting to know linkki
+Flowblade is a large and complex enough codebase that the main problem with contributing to it is to get know how the codebase works. We have a document to help with getting to know the inner workings [here.](./flowblade-trunk/docs/codebaseoverview/CodebaseOverview.md)
 
 ### 'In Feature Queue' Issues
 
@@ -34,7 +34,7 @@ There could be at any time be work going on with these, if you would be interest
 
 Best to get started is to open a new Issue, describe the feature you want to create and mention that you are planning to do the coding yourself. We will give feedback and pointers on how ahcieve the change.
 
-## Non-programmer contributions
+# Non-programmer contributions
 
 There are many quite impactful ways interested parties can help this project even if they are not programmers, some of which are listed below.
 
@@ -50,4 +50,4 @@ Flowblade is quite sparse and there are many ways it could be fleshed out more. 
 
 ### Translations
 
-Linkki
+Info on contributing to translations [here.](./flowblade-trunk/docs/CREATING_TRANSLATION.md)
