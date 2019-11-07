@@ -14,8 +14,7 @@ Flowblade is Python application so to get going you will need to have some exper
 
 On the other hand, there are many tasks that could maybe taken on at let's say beginner+ level of competence and a solid medium level will very likely be adequate to handle all possible tasks. 
 
-Flowblade is a large and complex enough codebase that the main problem with contributing to it is to get know how the codebase works. We have a document to help with getting to know the inner workings [here.](codeoverview/
-CodebaseOverview.md)
+Flowblade is a large and complex enough codebase that the main problem with contributing to it is to get know how the codebase works. We have a document to help with getting to know the inner workings [here.](/codeoverview/CodebaseOverview.md)
 
 ### 'In Feature Queue' Issues
 
