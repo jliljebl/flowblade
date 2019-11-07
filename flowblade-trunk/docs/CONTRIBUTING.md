@@ -4,7 +4,7 @@ Contributions are a boost that all projects need.
 
 Projects need contributions to gain a sense of being impactful and to gain added momentum towards their goals.
 
-In this projects maintainers view these goals bring about a better world by enabling individuals to control the digital platforms that are essential in the modern world, and also by giving access to useful tooling for all people.
+In this projects maintainer's view these goals bring about a better world by enabling individuals to control the digital platforms that are essential in the modern world, and also by giving access to useful tooling for all people.
 
 We really are making a difference.
 
