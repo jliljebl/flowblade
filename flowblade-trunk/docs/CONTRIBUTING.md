@@ -50,4 +50,4 @@ Flowblade is quite sparse and there are many ways it could be fleshed out more. 
 
 ### Translations
 
-Info on contributing to translations [here.](./flowblade-trunk/docs/CREATING_TRANSLATION.md)
+Info on contributing to translations [here.](CREATING_TRANSLATION.md)
