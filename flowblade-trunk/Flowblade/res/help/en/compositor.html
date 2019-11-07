@@ -18,28 +18,77 @@
 
 <p>
 Flowblade Movie Editor uses Compositors to mix images from two different tracks.
-By combining multiple tracks and multiple Compositors complex composite images can be achieved.
 </p>
-
 
 <div id="toc"></div>
 
-<h3>Introduction</h3>
+<h3>Compositing Modes</h3>
 <p>
-Compositors have a Source track and a Destination track.</p>
+The way that Compositors work is defined by a Compositing Mode. Users can select Compositing Mode to suit their preference or editing needs of a particular Sequence.
+</p>
 <p>
- On the Timeline a Compositor is displayed as a rectangular object on top of two tracks. Source track is always the one above Compositor, but Destination track may be any of the tracks below it.
+<b>To set Compositing Mode</b> for a Sequence select it from <b><i>Sequence -> Compositing Mode</i></b> sub menu.
+</p>
+
+<h4>Top Down Free Move</h4>
+<p>
+This is the most powerful and complex Compositing Mode. Users can set destination tracks and positions of Compositors freely and create node tree compositions if needed.
+</p>
+<h4>Top Down Auto Follow</h4>
+<p>
+Users can set destination tracks freely and create node tree compositions if needed. Compositors follow their origin clips automatically and users can only add one compositor per clip.
+</p>
+<h4>Standard Auto Follow</h4>
+<p>
+This is the most simple and easiest to use Compositing Mode. Compositors follow their origin clips automatically and users can only add one compositor per clip. Compositors select their destination tracks automatically and it is not possible to create node tree compositions.
+</p>
+
+
+<h2>Standard Auto Follow Compositing Mode</h2>
+<p>
+Compositing in Standard Auto Follow mode is similar to using layers in applications like Gimp and Photoshop. This mode works most similarly to way that most other video editors work.
+</p>
+<p>
+On the Timeline a Compositor is displayed as a purple square with rounded corners.
 </p>
 <p>
 Parameters defining the resulting image are edited in the <b>Compositors</b> tab.
 </p>
+<h3>Workflow</h3>
+<ol>
+<li>Creating a Compositor
+<ul>
+<li> Click <b>Right Mouse</b> on any clip on tracks from V5 to V2 and select for example <b>Add Compositor -> Dissolve</b> or <b>Add Blender -> Softlight</b> from popupmenu to create a new Compositor.</li>
+</ul>
+<li>Editing Compositor Parameters in Compositors Tab</li>
+<ul>
+<li> Click Compositor with <b>Left Mouse</b>.</li>
+<li> Click <b>Right Mouse</b> on any Compositor and select Open In Compositor Editor</li>
+<li> Edit parameters using value editors.</li>
+</ul>
+<li>Deleting Compositor</li>
+<ul>
+<li> Click <b>Left Mouse</b> on any Compositor to select it and press <b>Delete</b> key.</li>
+</ul>
+</ol>
+
+
+<h2>Top Down Free Move and Top Down Auto Follow Compositing modes</h2>
 <p>
-There is a subtype of Compositors called Blenders.
-Blenders do the standard blends like Add, Softlight and Darken,
-but offer no transformations, nor any method to control the amount of blend.
+In these modes Compositors have a Source track and a Destination track.</p>
+</p>
+<p>
+On the Timeline a Compositor is displayed as a rectangular object on top of two tracks. Source track is always the one above Compositor, but Destination track may be any of the tracks below it.
+</p>
+<p>
+Parameters defining the resulting image are edited in the <b>Compositors</b> tab.
 </p>
 
-<h3>Compositor Workflow</h3>
+
+<h3>Workflow</h3>
+<p>
+By combining multiple tracks and multiple Compositors complex composite images can be achieved.
+</p>
 <ol>
 <li>Creating a Compositor
 <ul>
@@ -62,7 +111,7 @@ but offer no transformations, nor any method to control the amount of blend.
 </ul>
 </ol>
 
-<h3>Compositor are executed from top to bottom</h3>
+<h3>Compositor are executed from top to bottom in Top Down Compositing modes</h3>
 In Flowblade Movie Editor <b>the order of rendering is top-to-bottom</b>,
 instead of bottom-to-top like in Gimp or Photoshop.
 
@@ -139,6 +188,7 @@ Here 'RED' Color Clip  is first composited using 'Free Stripes' wipe on 'BLUE' C
 </p>
 
 <img style="margin-bottom:45px" src="correct_comp.png">
+
 </div>
 </body>
 
