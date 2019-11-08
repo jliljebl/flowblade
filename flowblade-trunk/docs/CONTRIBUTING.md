@@ -11,14 +11,14 @@
 
 **How to get started** Flowblade is a large and complex enough codebase that the main problem with contributing to it is to get know how the codebase works. 
 * We have a document to help with getting to know the inner workings [here.](codeoverview/CodebaseOverview.md)
-* Most related communications in Flowblade project happen with comments in different items on *Issues* list
+* Most contributions related communications in Flowblade project are made in comments in different items on *Issues* list
 
 
 ### Work with Issues list to get going
 * **Your own ideas** 
    * Best way to get started is to open a new Issue, describe the feature you want to create and mention that you are planning to do the coding yourself. 
    * We will give feedback and pointers on how ahcieve the change.
-* **'In Feature Quesus' Issues**
+* **'In Feature Queue' Issues**
    * There could be at any time be work going on with these
    * if you are interested in working on an Issue with this label drop a comment indicationg so and we will give information on what is going on.
 * **'Contributions hoped' Issues**
@@ -35,7 +35,7 @@
 
 There are many impactful ways this project can be helped by users who are not programmers, some of which are listed below.
 
-We can't know always all the the ways this project could be helped so use forum, wiki or Issue system to propose ideas you may have.
+We can't know all the the ways this project could possobly be helped so use forum, wiki or Issue system to propose ideas you may have.
 
 ### Bug reports
 
