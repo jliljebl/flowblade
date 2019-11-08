@@ -9,7 +9,7 @@
  * Solid medium level will very likely be adequate to handle most if not all tasks.
  * You need be able to work with **git** and create pull requests using Github's features for doing this
 
-**How to get started** Flowblade is a large and complex enough codebase that the main problem with contributing to it is to get know how the codebase works. 
+**How to get started** Flowblade is a large and complex enough codebase that the first problem with contributing is to know how the codebase works. 
 * We have a document to help with getting to know the inner workings [here.](codeoverview/CodebaseOverview.md)
 * Most contributions related communications in Flowblade project are made in comments in different items on *Issues* list
 
