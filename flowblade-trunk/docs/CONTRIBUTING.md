@@ -11,10 +11,12 @@
 
 **How to get started** Flowblade is a large and complex enough codebase that the first problem with contributing is to know how the codebase works. 
 * We have a document to help with getting to know the inner workings [here.](codeoverview/CodebaseOverview.md)
-* Most contributions related communications in Flowblade project are made in comments in different items on *Issues* list
+
 
 
 ### Work with Issues list to get going
+Most contributions related communications in Flowblade project are made in comments in different items on *Issues* list
+
 * **Your own ideas** 
    * Best way to get started is to open a new Issue, describe the feature you want to create and mention that you are planning to do the coding yourself. 
    * We will give feedback and pointers on how ahcieve the change.
