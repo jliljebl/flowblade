@@ -332,8 +332,8 @@ img.centered-block {
 	line-height: 44px;
 	margin-bottom: 0px;
 	margin-top: 20px;
-	font-weight: 300;
-	font-family: "Open Sans",sans-serif;
+	font-weight: bold;
+	font-family: "Open Sans Bold",sans-serif;
 	padding-left: 0px;
 	border: medium none;
 	text-transform: uppercase;
