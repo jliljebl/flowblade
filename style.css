@@ -228,6 +228,10 @@ img.centered-block {
 }
 
 .header-box {
+	display: flex;
+	justify-content: right;
+	flex-direction: row;
+	text-align: center;
 	margin-left: auto;
 	margin-right: auto;
 }
