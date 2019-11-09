@@ -167,6 +167,11 @@ img.centered-block {
 	padding-top: 30px;
 }
 
+#black-bg-no-padding {
+	color:#ffffff;
+	background-color: #000000;
+}
+
 .code-bg {
 	font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
 	font-weight: bold;
