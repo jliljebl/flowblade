@@ -244,8 +244,9 @@ img.centered-block {
 
 .header-item {
 	padding-right: 30px;
-	padding-top: 1px;
+	padding-bottom: 5px;
 	font-size: 25px;
+	
 }
 
 .header-item a{
