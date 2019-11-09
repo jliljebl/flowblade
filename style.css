@@ -253,16 +253,23 @@ img.centered-block {
 }
 
 .footer-bg {
-	color:#5198CC;
+	color:#ffffff;
 	background-color: #000000;
+	height: 46px;
+	padding-bottom: 0px;
+	padding-top: 0px;
 }
 
 .footer-box {
-
+	display: flex;
+	justify-content: left;
+	flex-direction: row;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto
 }
 
 .footer-item {
-	float: left;
 	padding-right: 30px;
 }
 
