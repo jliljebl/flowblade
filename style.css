@@ -255,15 +255,15 @@ img.centered-block {
 .footer-bg {
 	color:#5198CC;
 	background-color: #000000;
-	padding-bottom: 50px;
-	padding-top: 6px;
-	margin-top: 30px;
 }
 
 .footer-box {
 	width: 900px ;
 	margin-left: auto;
 	margin-right: auto;
+	padding-bottom: 50px;
+	padding-top: 6px;
+	margin-top: 30px;
 }
 
 .footer-item {
