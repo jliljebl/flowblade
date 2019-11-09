@@ -66,6 +66,7 @@ b {
 	text-align: center;
 	color: #dddddd;
 	font-family: Verdana, Geneva, sans-serif;
+	text-transform: uppercase;
 }
 
 img.centered-block {
