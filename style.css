@@ -229,7 +229,7 @@ img.centered-block {
 
 .header-box {
 	display: flex;
-	justify-content: right;
+	justify-content: left;
 	flex-direction: row;
 	text-align: center;
 	margin-left: auto;
@@ -237,7 +237,7 @@ img.centered-block {
 }
 
 .header-img {
-	float: left;
+	padding-top: 5px;
 }
 
 .header-item {
