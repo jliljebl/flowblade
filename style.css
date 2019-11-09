@@ -335,7 +335,7 @@ img.centered-block {
 .front-text {
 	font-size: 38px;
 	line-height: 44px;
-	margin-bottom: 0px;
+	margin-bottom: 20px;
 	margin-top: 20px;
 	font-weight: bold;
 	font-family: "Open Sans Bold",sans-serif;
@@ -345,7 +345,7 @@ img.centered-block {
 	text-align: center;
 	text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.2);
 	letter-spacing: 0.1em;
-	color:#999999;
+	color:#777777;
 }
 
 .image-text {
