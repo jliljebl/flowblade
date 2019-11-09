@@ -44,46 +44,50 @@ p {
 	padding-top: 8px;
 }
 
+.responsive {
+	max-width: 100%;
+	height: auto;
+	margin-left: auto;
+	margin-right: auto;
+}
+
 .header-bg {
-	font-size: 14px;
-	line-height: 14px;
-	font-family: sans-serif;
-	color:#ffffff;
-	background-color: #5198CC;
+	color:#000000;
+	background-color: #ffdddd;
 	height: 46px;
 	padding-bottom: 0px;
 	padding-top: 0px;
 }
 
 .header-box {
+	display: flex;
+	justify-content: left;
+	flex-direction: row;
+	text-align: center;
 	margin-left: auto;
 	margin-right: auto;
 }
 
 .header-img {
-	float: left;
+	padding-top: 2px;
+	padding-left: 10px;
 }
 
 .header-item {
-	float: left;
 	padding-right: 30px;
-	padding-top: 8px;
-}
-
-.header-item a{
-	color:#ffffff;
-	text-transform: uppercase;
-	text-decoration: none;
+	padding-bottom: 2px;
+	font-size: 20px;
+	
 }
 
 #content {
-  width: 700px ;
+  width: 900px ;
   margin-left: auto ;
   margin-right: auto ;
 }
 .grid-container {
 	margin-top: 80px;
-        width: 700px;
+        width: 900px;
 	margin-bottom: 80px;
 }
 
