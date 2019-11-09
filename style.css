@@ -225,6 +225,7 @@ img.centered-block {
 	height: 46px;
 	padding-bottom: 0px;
 	padding-top: 0px;
+	text-size-adjust: none;
 }
 
 .header-box {
