@@ -65,6 +65,7 @@ b {
 .centered-text-normal { 
 	text-align: center;
 	color: #dddddd;
+	font-family: Verdana, Geneva, sans-serif;
 }
 
 img.centered-block {
