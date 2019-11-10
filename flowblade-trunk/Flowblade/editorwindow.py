@@ -505,8 +505,6 @@ class EditorWindow:
         self.effect_select_list_view.treeview.connect("row-activated", clipeffectseditor.effect_select_row_double_clicked)
         dnd.connect_effects_select_tree_view(self.effect_select_list_view.treeview)
 
-
-
         clip_editor_panel, info_row = clipeffectseditor.get_clip_effects_editor_panel(
                                         self.effect_select_combo_box,
                                         self.effect_select_list_view)

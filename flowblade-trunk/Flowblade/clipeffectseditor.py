@@ -33,6 +33,7 @@ import dialogs
 import dialogutils
 import edit
 import editorpersistance
+import editorstate
 from editorstate import PROJECT
 import gui
 import guicomponents
@@ -115,13 +116,27 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
     group_name, filters_array = mltfilters.groups[0]
     effects_list_view.fill_data_model(filters_array)
     effects_list_view.treeview.get_selection().select_path("0")
-    
+
     effects_vbox = Gtk.VBox(False, 2)
-    effects_vbox.pack_start(label_row, False, False, 0)
-    effects_vbox.pack_start(stack_buttons_box, False, False, 0)
-    effects_vbox.pack_start(effect_stack, True, True, 0)
-    effects_vbox.pack_start(combo_row, False, False, 0)
-    effects_vbox.pack_start(effects_list_view, True, True, 0)
+    if editorstate.SCREEN_HEIGHT < 1023:
+        stack_vbox = Gtk.VBox(False, 2)
+        stack_vbox.pack_start(stack_buttons_box, False, False, 0)
+        stack_vbox.pack_start(effect_stack, True, True, 0)
+        
+        groups_vbox = Gtk.VBox(False, 2)
+        groups_vbox.pack_start(combo_row, False, False, 0)
+        groups_vbox.pack_start(effects_list_view, True, True, 0)
+
+        notebook = Gtk.Notebook()
+        notebook.append_page(stack_vbox, Gtk.Label(label=_("Stack")))
+        notebook.append_page(groups_vbox, Gtk.Label(label=_("Filters")))
+        effects_vbox.pack_start(notebook, True, True, 0)
+    else:
+        effects_vbox.pack_start(label_row, False, False, 0)
+        effects_vbox.pack_start(stack_buttons_box, False, False, 0)
+        effects_vbox.pack_start(effect_stack, True, True, 0)
+        effects_vbox.pack_start(combo_row, False, False, 0)
+        effects_vbox.pack_start(effects_list_view, True, True, 0)
     
     widgets.group_combo.set_tooltip_text(_("Select Filter Group"))
     widgets.effect_list_view.set_tooltip_text(_("Current group Filters"))
