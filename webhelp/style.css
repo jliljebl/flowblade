@@ -117,6 +117,7 @@ p {
 }
 
 .subject-cell a{
+	text-transform: uppercase;
 	text-decoration: none;
 }
 
