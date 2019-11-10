@@ -113,8 +113,11 @@ p {
 	vertical-align: baseline;
 	font-weight:400;
 	font-size:22px;
-	text-transform: uppercase;
-	margin-bottom: 25px;
+	margin-bottom: 32px;
+}
+
+.subject-cell a{
+	text-decoration: none;
 }
 
 .appendix-pad {
