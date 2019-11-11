@@ -525,7 +525,7 @@ class EditorWindow:
         
         self.effects_panel = guiutils.set_margins(effects_vbox, 8, 0, 7, 2)
         
-        self.fblade_theme_fix_panels.append(self.effects_panel)
+        self.fblade_theme_fix_panels.append(self.effects_panel) # may not be needed?
         
         # Compositors panel
         action_row = compositeeditor.get_compositor_clip_panel()
