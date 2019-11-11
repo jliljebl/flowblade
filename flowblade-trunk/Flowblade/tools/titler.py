@@ -396,6 +396,7 @@ class Titler(Gtk.Window):
         shadow_box_1.pack_start(guiutils.pad_label(2, 1), False, False, 0)
         shadow_box_1.pack_start(self.shadow_on, False, False, 0)
         shadow_box_1.pack_start(Gtk.Label(), True, True, 0)
+        guiutils.set_margins(shadow_box_1, 0,4,0,0)
 
         shadow_box_2 = Gtk.HBox()
         shadow_box_2.pack_start(shadow_xoff, False, False, 0)
@@ -476,7 +477,7 @@ class Titler(Gtk.Window):
 
         controls_panel_1 = Gtk.VBox()
         controls_panel_1.pack_start(add_del_box, False, False, 0)
-        controls_panel_1.pack_start(self.layer_list, False, False, 0)
+        controls_panel_1.pack_start(self.layer_list, True, True, 0)
         controls_panel_1.pack_start(layers_save_buttons_row, False, False, 0)
 
         controls_panel_2 = Gtk.VBox()
@@ -490,15 +491,17 @@ class Titler(Gtk.Window):
         controls_panel_4 = Gtk.VBox()
         controls_panel_4.pack_start(shadow_box_1, False, False, 0)
         controls_panel_4.pack_start(shadow_box_2, False, False, 0)
+
+
+        notebook = Gtk.Notebook()
+        notebook.append_page(guiutils.set_margins(controls_panel_3,8,8,8,8), Gtk.Label(label=_("Outline")))
+        notebook.append_page(guiutils.set_margins(controls_panel_4,8,8,8,8), Gtk.Label(label=_("Shadow")))
         
         controls_panel = Gtk.VBox()
         controls_panel.pack_start(guiutils.get_named_frame(_("Layer Text"),controls_panel_2), True, True, 0)
+        controls_panel.pack_start(guiutils.set_margins(notebook, 0,0,10,4), False, False, 0)
         controls_panel.pack_start(guiutils.pad_label(1, 24), False, False, 0)
-        controls_panel.pack_start(guiutils.get_named_frame(_("Outline"),controls_panel_3), False, False, 0)
-        controls_panel.pack_start(guiutils.pad_label(1, 24), False, False, 0)
-        controls_panel.pack_start(guiutils.get_named_frame(_("Shadow"),controls_panel_4), False, False, 0)
-        controls_panel.pack_start(guiutils.pad_label(1, 24), False, False, 0)
-        controls_panel.pack_start(guiutils.get_named_frame(_("Layers"),controls_panel_1), False, False, 0)
+        controls_panel.pack_start(guiutils.get_named_frame(_("Layers"),controls_panel_1), True, True, 0)
  
         view_editor_editor_buttons_row = Gtk.HBox()
         view_editor_editor_buttons_row.pack_start(positions_box, False, False, 0)
