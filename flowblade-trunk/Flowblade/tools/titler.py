@@ -283,7 +283,8 @@ class Titler(Gtk.Window):
         font_main_row.pack_start(self.font_select, True, True, 0)
         font_main_row.pack_start(guiutils.pad_label(5, 5), False, False, 0)
         font_main_row.pack_start(self.size_spin, False, False, 0)
-
+        guiutils.set_margins(font_main_row, 0,4,0,0)
+        
         self.bold_font = Gtk.ToggleButton()
         self.italic_font = Gtk.ToggleButton()
         bold_icon = Gtk.Image.new_from_stock(Gtk.STOCK_BOLD, 
@@ -481,7 +482,7 @@ class Titler(Gtk.Window):
         controls_panel_1.pack_start(layers_save_buttons_row, False, False, 0)
 
         controls_panel_2 = Gtk.VBox()
-        controls_panel_2.pack_start(scroll_frame, True, True, 0)
+        #controls_panel_2.pack_start(scroll_frame, True, True, 0)
         controls_panel_2.pack_start(font_main_row, False, False, 0)
         controls_panel_2.pack_start(buttons_box, False, False, 0)
 
@@ -492,13 +493,13 @@ class Titler(Gtk.Window):
         controls_panel_4.pack_start(shadow_box_1, False, False, 0)
         controls_panel_4.pack_start(shadow_box_2, False, False, 0)
 
-
         notebook = Gtk.Notebook()
+        notebook.append_page(guiutils.set_margins(controls_panel_2,8,8,8,8), Gtk.Label(label=_("Font")))
         notebook.append_page(guiutils.set_margins(controls_panel_3,8,8,8,8), Gtk.Label(label=_("Outline")))
         notebook.append_page(guiutils.set_margins(controls_panel_4,8,8,8,8), Gtk.Label(label=_("Shadow")))
         
         controls_panel = Gtk.VBox()
-        controls_panel.pack_start(guiutils.get_named_frame(_("Layer Text"),controls_panel_2), True, True, 0)
+        controls_panel.pack_start(guiutils.get_named_frame(_("Layer Text"), scroll_frame), True, True, 0)
         controls_panel.pack_start(guiutils.set_margins(notebook, 0,0,10,4), False, False, 0)
         controls_panel.pack_start(guiutils.pad_label(1, 24), False, False, 0)
         controls_panel.pack_start(guiutils.get_named_frame(_("Layers"),controls_panel_1), True, True, 0)
