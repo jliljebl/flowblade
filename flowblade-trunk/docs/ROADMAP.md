@@ -39,6 +39,6 @@ See document **[Compositing 2 doc](./COMPOSITING_2.md)**
 * subbuses or virtual channels to help with mixing.
 * jack integration
 * a 5.1 surround audio track mixing
-- zig-zag layout auto audio splice out with handles
+* zig-zag layout auto audio splice out with handles
 * configurable keyboard shortcuts
 
