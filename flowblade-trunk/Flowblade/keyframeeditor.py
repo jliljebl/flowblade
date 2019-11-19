@@ -27,9 +27,6 @@ but slighly different editors can be made in the future). There are a lots
 of callbacks to parent objects, this makes the design difficult to follow.
 """
 
-
-import traceback
-
 import cairo
 
 from gi.repository import Gtk, GObject
