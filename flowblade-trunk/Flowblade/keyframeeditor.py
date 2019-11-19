@@ -27,6 +27,9 @@ but slighly different editors can be made in the future). There are a lots
 of callbacks to parent objects, this makes the design difficult to follow.
 """
 
+
+import traceback
+
 import cairo
 
 from gi.repository import Gtk, GObject
@@ -74,7 +77,7 @@ GEOM_EDITOR_SIZES = [GEOM_EDITOR_SIZE_LARGE, GEOM_EDITOR_SIZE_MEDIUM, GEOM_EDITO
 # Colors
 POINTER_COLOR = (1, 0.3, 0.3)
 CLIP_EDITOR_BG_COLOR = (0.1445, 0.172, 0.25)
-CLIP_EDITOR_NOT_ACTIVE_BG_COLOR = (0.625, 0.074, 0.117)
+CLIP_EDITOR_NOT_ACTIVE_BG_COLOR = (0.25, 0.28, 0.34)
 CLIP_EDITOR_CENTER_LINE_COLOR = (0.098, 0.313, 0.574)
 LIGHT_MULTILPLIER = 1.14
 DARK_MULTIPLIER = 0.74
@@ -801,6 +804,7 @@ class ClipEditorButtonsRow(Gtk.HBox):
         self.next_frame_button.set_sensitive(sensitive)
         self.kf_to_prev_frame_button.set_sensitive(sensitive)
         self.kf_to_next_frame_button.set_sensitive(sensitive)
+
 
 
 class GeometryEditorButtonsRow(Gtk.HBox):
@@ -1578,6 +1582,8 @@ class RotoMaskKeyFrameEditor(Gtk.VBox):
         
         self.pack_start(clip_editor_row, False, False, 0)
         self.pack_start(self.buttons_row, False, False, 0)
+
+        self.set_editor_sensitive(False)
 
     def set_parent_editor(self, parent):
         # parent implements callback:
