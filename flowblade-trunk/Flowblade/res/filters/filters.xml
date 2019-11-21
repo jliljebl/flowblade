@@ -937,7 +937,7 @@
         <group>Transform</group>
             <property name="transition.fill" args="editor=no_editor">1</property>
             <property name="transition.distort" args="editor=no_editor">0</property>
-            <property name="transition.rect"  args="editor=filter_rect_geometry_editor range_in=0,100 range_out=0,100 exptype=geom_filt_rect_kf">0=0 0 Screensize2 1</property>
+            <property name="transition.rect"  args="editor=filter_rect_geometry_editor range_in=0,100 range_out=0,100 exptype=geom_filt_rect_kf">0=0 0 Screensize2 1;20=100 100 Screensize2 1</property>
             <property name="transition.valign" args="editor=no_editor exptype=not_parsed">top</property>
             <property name="transition.halign" args="editor=no_editor exptype=not_parsed">left</property>
             <property name="transition.threads" args="editor=no_editor">0</property>
