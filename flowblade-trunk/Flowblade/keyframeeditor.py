@@ -1531,14 +1531,12 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         self.queue_draw()
         
     def active_keyframe_changed(self):
-        frame = self.clip_editor.current_clip_frame
-        keyframes = self.clip_editor.keyframes
-        value = _get_frame_value(frame, keyframes)
-        self.slider.set_value(value)
-        self.buttons_row.set_frame(frame)
-        self.seek_tline_frame(frame)
+        kf_frame = self.clip_editor.get_active_kf_frame()
+        self.update_editor_view_with_frame(kf_frame)
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
-
+        # we need active index from clip_editor and geometry values from geom_kf_edit to update numerical entries
+        self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+        
     def clip_editor_frame_changed(self, clip_frame):
         self.seek_tline_frame(clip_frame)
         self.buttons_row.set_frame(clip_frame)
