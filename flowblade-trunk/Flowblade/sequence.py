@@ -669,7 +669,13 @@ class Sequence:
         """
         Compositor order must be from top to bottom or will not work.
         """
-        self.compositors.sort(key=_sort_compositors_comparator)
+        if self.compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
+            self.compositors.sort(key=_sort_compositors_comparator, reverse=True)
+        else:
+            self.compositors.sort(key=_sort_compositors_comparator)
+        
+        #for comp in self.compositors:
+        #    print(comp.transition.b_track)
         
     def get_track_compositors(self, track_index):
         track_compositors = []
