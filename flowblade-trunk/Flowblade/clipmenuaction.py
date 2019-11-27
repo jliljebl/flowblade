@@ -233,11 +233,14 @@ def _add_compositor(data):
     clip_length = clip.clip_out - clip.clip_in
     compositor_out = compositor_in + clip_length
 
+    a_track = target_track_index
+    b_track = track.id
+
     edit_data = {"origin_clip_id":clip.id,
                 "in_frame":compositor_in,
                 "out_frame":compositor_out,
-                "a_track":target_track_index,
-                "b_track":track.id,
+                "a_track":a_track,
+                "b_track":b_track,
                 "compositor_type":compositor_type,
                 "clip":clip}
     action = edit.add_compositor_action(edit_data)

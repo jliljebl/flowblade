@@ -2108,11 +2108,11 @@ class TimeLineCanvas:
 
             scale_in = (comp.clip_in - pos) * pix_per_frame
             scale_length = (comp.clip_out - comp.clip_in + 1) * pix_per_frame # +1, out inclusive
-
+            target_y = _get_track_y(target_track.id) + target_track.height - COMPOSITOR_HEIGHT_OFF
+                
             if editorstate.get_compositing_mode() == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
-                self.draw_standard_mode_compositor(comp, cr, scale_in, scale_length, y)
+                self.draw_standard_mode_compositor(comp, cr, scale_in, scale_length, y, target_y)
             else:
-                target_y = _get_track_y(target_track.id) + target_track.height - COMPOSITOR_HEIGHT_OFF
                 self.draw_arrow_compositor(comp, cr, scale_in, scale_length, y, target_y)
                 
     def draw_arrow_compositor(self, comp, cr, scale_in, scale_length, y, target_y):
@@ -2152,11 +2152,40 @@ class TimeLineCanvas:
         
         cr.restore()
 
-    def draw_standard_mode_compositor(self, comp, cr, scale_in, scale_length, y):
+    def draw_standard_mode_compositor(self, comp, cr, scale_in, scale_length, y, target_y):
         x_draw, y_draw, width, height = _get_standard_mode_compositor_rect(scale_in, scale_length, y)
-    
-        self.create_round_rect_path(cr, x_draw, y_draw, width, height, 4.0)
-    
+        
+        radius = 4.0
+        degrees = M_PI / 180.0
+
+        cr.new_sub_path()
+        
+        # First two corners of round rect
+        cr.arc(x_draw + width - radius, y_draw + radius, radius, -90 * degrees, 0 * degrees)
+        cr.arc(x_draw + width - radius, y_draw + height - radius, radius, 0 * degrees, 90 * degrees)
+
+        # Arrow
+        scale_in = x_draw + width / 2.0 - COMPOSITOR_TRACK_ARROW_WIDTH / 2.0 - 5.5
+        start_y = y_draw + height
+
+        COMPOSITOR_TRACK_SMALL_ARROW_WIDTH = 4
+        COMPOSITOR_TRACK_SMALL_ARROW_HEAD_WIDTH = 8
+        COMPOSITOR_TRACK_SMALL_ARROW_HEAD_WIDTH_HEIGHT = 4
+        
+        cr.line_to(scale_in + 0.5 + COMPOSITOR_TRACK_X_PAD + 2 * COMPOSITOR_TRACK_SMALL_ARROW_WIDTH, start_y + 0.5 )
+        cr.line_to(scale_in + 0.5 + COMPOSITOR_TRACK_X_PAD + 2 * COMPOSITOR_TRACK_SMALL_ARROW_WIDTH, target_y + 0.5 - COMPOSITOR_TRACK_SMALL_ARROW_HEAD_WIDTH_HEIGHT)
+        cr.line_to(scale_in + 0.5 + COMPOSITOR_TRACK_X_PAD + COMPOSITOR_TRACK_SMALL_ARROW_WIDTH + COMPOSITOR_TRACK_SMALL_ARROW_HEAD_WIDTH, target_y + 0.5 - COMPOSITOR_TRACK_SMALL_ARROW_HEAD_WIDTH_HEIGHT)
+        cr.line_to(scale_in + 0.5 + COMPOSITOR_TRACK_X_PAD + COMPOSITOR_TRACK_SMALL_ARROW_WIDTH, target_y + 0.5)
+        cr.line_to(scale_in + 0.5 + COMPOSITOR_TRACK_X_PAD + COMPOSITOR_TRACK_SMALL_ARROW_WIDTH - COMPOSITOR_TRACK_SMALL_ARROW_HEAD_WIDTH, target_y + 0.5 - COMPOSITOR_TRACK_SMALL_ARROW_HEAD_WIDTH_HEIGHT)
+        cr.line_to(scale_in + 0.5 + COMPOSITOR_TRACK_X_PAD, target_y + 0.5 - COMPOSITOR_TRACK_SMALL_ARROW_HEAD_WIDTH_HEIGHT)
+        cr.line_to(scale_in + 0.5 + COMPOSITOR_TRACK_X_PAD, start_y + 0.5 )
+
+        # Last two corners of round rect
+        cr.arc(x_draw + radius, y_draw + height - radius, radius, 90 * degrees, 180 * degrees)
+        cr.arc(x_draw + radius, y_draw + radius, radius, 180 * degrees, 270 * degrees)
+        
+        cr.close_path()
+                
         if comp.selected == False:
             color = COMPOSITOR_CLIP_AUTO_FOLLOW
         else:
