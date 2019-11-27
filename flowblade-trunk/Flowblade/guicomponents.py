@@ -2558,11 +2558,15 @@ class TimeLineLeftBottom:
     def update_gui(self):
         for child in self.widget.get_children():
             self.widget.remove(child)
+        
         self.widget.pack_start(Gtk.Label(), True, True, 0)
+
         if PROJECT().proxy_data.proxy_mode == appconsts.USE_PROXY_MEDIA:
             proxy_img =  Gtk.Image.new_from_file(respaths.IMAGE_PATH + "project_proxy.png")
             self.widget.pack_start(proxy_img, False, False, 0)
 
+        self.widget.pack_start(guiutils.pad_label(4,4), False, False, 0)
+            
         self.widget.show_all()
         self.widget.queue_draw()
 
