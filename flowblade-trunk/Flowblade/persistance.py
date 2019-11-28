@@ -422,6 +422,10 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
     seq_count = 1
     for seq in project.sequences:
         FIX_N_TO_3_SEQUENCE_COMPATIBILITY(seq)
+            
+        if not hasattr(seq, "compositing_mode"):
+            seq.compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
+
         _show_msg(_("Building sequence ") + str(seq_count))
         all_clips = {}
         sync_clips = []
@@ -433,9 +437,6 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
 
         if not hasattr(seq, "seq_len"):
             seq.update_edit_tracks_length()
-            
-        if not hasattr(seq, "compositing_mode"):
-            seq.compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
 
         seq_count = seq_count + 1
 

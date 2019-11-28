@@ -591,9 +591,6 @@ class Sequence:
                 new_compositors.append(clone_compositor)
         self.compositors = new_compositors
 
-        #print("restack_compositors()")
-        #self.print_compositors()
-
     def _plant_compositor(self, compositor):
         self.field.plant_transition(compositor.transition.mlt_transition, 
                                     int(compositor.transition.a_track), 
