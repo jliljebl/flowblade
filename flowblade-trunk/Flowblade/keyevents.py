@@ -86,7 +86,7 @@ def key_down(widget, event):
         # Stop widget focus from travelling if arrow key pressed
         gui.editor_window.window.emit_stop_by_name("key_press_event")
         return True
-    
+
     # If timeline widgets are in focus timeline keyevents are available
     if _timeline_has_focus():
         was_handled = _handle_tline_key_event(event)
@@ -609,13 +609,27 @@ def _handle_effects_editor_keys(event):
     action = _get_shortcut_action(event)
     focus_editor = _get_focus_keyframe_editor(clipeffectseditor.keyframe_editor_widgets)
     if focus_editor != None:
-      if action == 'play_pause':
+        if action == 'play_pause':
             if PLAYER().is_playing():
                 monitorevent.stop_pressed()
             else:
                 monitorevent.play_pressed()
             return True
-
+        if action == 'prev_frame' or action == 'next_frame':
+            prefs = editorpersistance.prefs
+            if action == 'prev_frame':
+                seek_amount = -1
+            else:
+                seek_amount = 1
+            if (event.get_state() & Gdk.ModifierType.SHIFT_MASK):
+                seek_amount = seek_amount * prefs.ffwd_rev_shift
+            if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+                seek_amount = seek_amount * prefs.ffwd_rev_ctrl
+            if (event.get_state() & Gdk.ModifierType.LOCK_MASK):
+                seek_amount = seek_amount * prefs.ffwd_rev_caps
+            PLAYER().seek_delta(seek_amount)
+            return True
+        
     return False
 
 def _get_focus_keyframe_editor(keyframe_editor_widgets):
