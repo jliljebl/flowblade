@@ -588,8 +588,8 @@ def _standard_auto_follow_comp_hit(frame, track, x, y, sorted_compositors):
             if comp.clip_in <= frame and comp.clip_out >= frame:
                 scale_in = (comp.clip_in - pos) * pix_per_frame
                 scale_length = (comp.clip_out - comp.clip_in + 1) * pix_per_frame # +1, out incl.
-                y = _get_track_y(track.id) + track.height - COMPOSITOR_HEIGHT_OFF
-                tx, ty, tw, th = _get_standard_mode_compositor_rect(scale_in, scale_length, y)
+                comp_top_y = _get_track_y(track.id) + track.height - COMPOSITOR_HEIGHT_OFF
+                tx, ty, tw, th = _get_standard_mode_compositor_rect(scale_in, scale_length, comp_top_y)
                 if x >= tx and x <= tx + tw:
                     if y >= ty and y <= ty + th:
                         return comp
