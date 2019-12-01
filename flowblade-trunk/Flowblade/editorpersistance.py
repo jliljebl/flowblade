@@ -217,7 +217,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     # Jul-2016 - SvdB - Added play_pause_button
     # Apr-2017 - SvdB - Added ffwd / rev values
     gfx_length_spin, cover_delete, mouse_scroll_action, hide_file_ext_button, \
-    hor_scroll_dir, kf_edit_playhead_move, effects_editor_clip_load = edit_prefs_widgets
+    hor_scroll_dir, effects_editor_clip_load = edit_prefs_widgets
     
     auto_center_check, play_pause_button, auto_center_on_updown, \
     ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips = playback_prefs_widgets
@@ -238,7 +238,8 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.auto_center_on_play_stop = auto_center_check.get_active()
     prefs.default_grfx_length = int(gfx_length_spin.get_adjustment().get_value())
     prefs.trans_cover_delete = cover_delete.get_active()
-    prefs.kf_edit_init_affects_playhead = kf_edit_playhead_move.get_active()
+    #prefs.kf_edit_init_affects_playhead = kf_edit_playhead_move.get_active()
+
     # Jul-2016 - SvdB - For play/pause button
     prefs.play_pause = play_pause_button.get_active()
     prefs.hide_file_ext = hide_file_ext_button.get_active()
@@ -361,7 +362,7 @@ class EditorPreferences:
         self.top_row_layout = appconsts.THREE_PANELS_IF_POSSIBLE
         self.box_for_empty_press_in_overwrite_tool = False
         self.scroll_horizontal_dir_up_forward = True
-        self.kf_edit_init_affects_playhead = False
+        self.kf_edit_init_affects_playhead = False # DEPRECATED, this feature is now removed, kf editor inits no longer have effect on playhead
         self.show_tool_tooltips = True
         self.workflow_dialog_last_version_shown = "0.0.1"
         self.loop_clips = False

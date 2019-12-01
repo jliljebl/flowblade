@@ -1001,10 +1001,9 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
                                        # This also seeks tline frame to frame 0, thus value was saved in the line above
 
         # If we do not want to seek to kf 0 or clip start we, need seek back to original tline frame
-        if editorpersistance.prefs.kf_edit_init_affects_playhead == False:
-            self.display_tline_frame(orig_tline_frame)
-            PLAYER().seek_frame(orig_tline_frame)
-            
+        self.display_tline_frame(orig_tline_frame)
+        PLAYER().seek_frame(orig_tline_frame)
+        
     def slider_value_changed(self, adjustment):
         value = adjustment.get_value()        
         # Add key frame if were not on active key frame
@@ -1189,10 +1188,9 @@ class GeometryEditor(AbstractKeyFrameEditor):
                                        # This also seeks tline frame to frame 0, thus value was saved in the line above
 
         # If we do not want to seek to kf 0 or clip start we, need seek back to original tline frame
-        if editorpersistance.prefs.kf_edit_init_affects_playhead == False:
-            self.display_tline_frame(orig_tline_frame)
-            PLAYER().seek_frame(orig_tline_frame)
-            
+        self.display_tline_frame(orig_tline_frame)
+        PLAYER().seek_frame(orig_tline_frame)
+        
         self.queue_draw()
 
     def get_clip_editor_keyframes(self):
@@ -1524,9 +1522,8 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
                                        # This also seeks tline frame to frame 0, thus value was saved in the line above
 
         # If we do not want to seek to kf 0 or clip start we, need seek back to original tline frame
-        if editorpersistance.prefs.kf_edit_init_affects_playhead == False:
-            self.display_tline_frame(orig_tline_frame)
-            PLAYER().seek_frame(orig_tline_frame)
+        self.display_tline_frame(orig_tline_frame)
+        PLAYER().seek_frame(orig_tline_frame)
             
         self.queue_draw()
         

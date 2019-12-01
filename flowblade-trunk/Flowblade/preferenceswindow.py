@@ -156,9 +156,6 @@ def _edit_prefs_panel():
     gfx_length_spin.set_adjustment(spin_adj)
     gfx_length_spin.set_numeric(True)
 
-    kf_edit_playhead_move = Gtk.CheckButton()
-    kf_edit_playhead_move.set_active(prefs.kf_edit_init_affects_playhead)
-
     cover_delete = Gtk.CheckButton()
     cover_delete.set_active(prefs.trans_cover_delete)
         
@@ -196,7 +193,6 @@ def _edit_prefs_panel():
     # Jul-2016 - SvdB - For play_pause button
     row11 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Mouse Middle Button Scroll Action:")), mouse_scroll_action, PREFERENCES_LEFT))
     row13 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Mouse Horizontal Scroll Direction:")), hor_scroll_dir, PREFERENCES_LEFT))
-    row14 = _row(guiutils.get_checkbox_row_box(kf_edit_playhead_move, Gtk.Label(label=_("Move Playhead to Clip start on keyframe edit init"))))
     row12 = _row(guiutils.get_checkbox_row_box(hide_file_ext_button, Gtk.Label(label=_("Hide file extensions when importing Clips"))))
     row15 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Open Clip in Effects Editor")), effects_editor_clip_load, PREFERENCES_LEFT))
     # Apr-2017 - SvdB - For Fast Forward / Reverse options
@@ -204,10 +200,8 @@ def _edit_prefs_panel():
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row4, False, False, 0)
     vbox.pack_start(row9, False, False, 0)
-    #vbox.pack_start(row8, False, False, 0)
     vbox.pack_start(row11, False, False, 0)
     vbox.pack_start(row13, False, False, 0)
-    vbox.pack_start(row14, False, False, 0)
     vbox.pack_start(row12, False, False, 0)
     vbox.pack_start(row15, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
@@ -218,7 +212,7 @@ def _edit_prefs_panel():
     # Apr-2017 - SvdB - Added ffwd / rev values
     return vbox, (gfx_length_spin, cover_delete,
                   mouse_scroll_action, hide_file_ext_button, hor_scroll_dir, 
-                  kf_edit_playhead_move, effects_editor_clip_load)
+                  effects_editor_clip_load)
 
 def _playback_prefs_panel():
     prefs = editorpersistance.prefs
