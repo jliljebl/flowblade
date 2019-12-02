@@ -238,7 +238,6 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.auto_center_on_play_stop = auto_center_check.get_active()
     prefs.default_grfx_length = int(gfx_length_spin.get_adjustment().get_value())
     prefs.trans_cover_delete = cover_delete.get_active()
-    #prefs.kf_edit_init_affects_playhead = kf_edit_playhead_move.get_active()
 
     # Jul-2016 - SvdB - For play/pause button
     prefs.play_pause = play_pause_button.get_active()

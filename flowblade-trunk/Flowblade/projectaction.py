@@ -1987,9 +1987,10 @@ def _compositing_mode_dialog_callback(dialog, response_id, new_compositing_mode)
         gui.editor_window.init_compositing_mode_menu()
         return
     
-    # Destry stuff
-    
+    # Destroy stuff
     compositeeditor.clear_compositor()
+    current_sequence().destroy_compositors()
+    undo.clear_undos()
     current_sequence().compositing_mode = new_compositing_mode
     updater.repaint_tline()
 

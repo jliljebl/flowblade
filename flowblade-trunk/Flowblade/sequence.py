@@ -645,13 +645,18 @@ class Sequence:
                 if comp.destroy_id == old_compositor.destroy_id:
                     found = True
                     self.compositors.remove(comp)
-                    #edit.old_compositors.append(comp)
                     old_compositor = comp
             if found == False:
                 raise ValueError('compositor not found using destroy_id')
             
         self.field.disconnect_service(old_compositor.transition.mlt_transition)
 
+    def destroy_compositors(self):
+        # This can be called when undo stack destroyd too.
+        for compositor in self.compositors:
+            self.field.disconnect_service(compositor.transition.mlt_transition)
+        self.compositors = []
+            
     def get_compositor_for_destroy_id(self, destroy_id):
         for comp in self.compositors:
             if comp.destroy_id == destroy_id:
