@@ -749,7 +749,7 @@ class EditorWindow:
         if editorpersistance.prefs.double_track_hights:
             size_adj = 1.4
             size_x = tlinewidgets.COLUMN_WIDTH - (66*size_adj)
-            # size_y = round(tlinewidgets.SCALE_HEIGHT*1.1)
+
         info_h.set_size_request(size_x, size_y)
 
         # Aug-2019 - SvdB - BB - add size_adj and width/height as parameter to be able to adjust it for double height        
@@ -761,9 +761,17 @@ class EditorWindow:
 
         levels_launcher_surface = guiutils.get_cairo_image("audio_levels_menu_launch")
         levels_launcher = guicomponents.PressLaunch(trackaction.audio_levels_menu_launch_pressed, levels_launcher_surface, 22*size_adj, 22*size_adj)
+
+        levels_launcher_surface = guiutils.get_cairo_image("audio_levels_menu_launch")
+        levels_launcher = guicomponents.PressLaunch(trackaction.audio_levels_menu_launch_pressed, levels_launcher_surface, 22*size_adj, 22*size_adj)
+
+        # Comp mode selector test, comimg in 2.6
+        # comp_mode_surface = guiutils.get_cairo_image("standard_auto")
+        #comp_mode_launcher = guicomponents.PressLaunch(trackaction.audio_levels_menu_launch_pressed, comp_mode_surface, 22*size_adj, 22*size_adj)
         
         # Timeline top row
         tline_hbox_1 = Gtk.HBox()
+        #tline_hbox_1.pack_start(comp_mode_launcher.widget, False, False, 0)
         tline_hbox_1.pack_start(info_h, False, False, 0)
         tline_hbox_1.pack_start(levels_launcher.widget, False, False, 0)
         tline_hbox_1.pack_start(tracks_launcher.widget, False, False, 0)
