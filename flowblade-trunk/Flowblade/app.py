@@ -25,13 +25,6 @@ Handles application initialization, shutdown, opening projects, autosave and cha
 sequences.
 """
 
-"""
-    Change History:
-        Aug-2019 - SvdB - AS:
-            Changes to get the autosave value from preferences to work.
-            See preferenceswindow.py for more info
-"""
-
 try:
     import pgi
     pgi.install_as_gi()
