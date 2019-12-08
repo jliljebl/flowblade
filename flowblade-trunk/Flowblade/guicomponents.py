@@ -1737,9 +1737,11 @@ def _get_compositors_add_menu_item(event, clip, track, callback, sensitive):
         compositor_item.show()
  
     _add_separetor(sub_menu)
-     
-    alpha_combiners_menu_item = _get_alpha_combiners_add_menu_item(event, clip, track, callback, sensitive)
-    sub_menu.append(alpha_combiners_menu_item)
+    
+    if current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
+        alpha_combiners_menu_item = _get_alpha_combiners_add_menu_item(event, clip, track, callback, sensitive)
+        sub_menu.append(alpha_combiners_menu_item)
+
     blenders_menu_item  = _get_blenders_add_menu_item(event, clip, track, callback, sensitive)
     sub_menu.append(blenders_menu_item)
     wipe_compositors_menu_item = _get_wipe_compositors_add_menu_item(event, clip, track, callback, sensitive)
