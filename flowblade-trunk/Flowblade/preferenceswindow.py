@@ -442,8 +442,8 @@ def _performance_panel():
     warning_label = Gtk.Label(label=_("Changing these values may cause problems with playback and rendering.\nThe safe values are Render Threads:1, Allow Frame Dropping: No."))
     # Widgets
     spin_adj = Gtk.Adjustment(prefs.perf_render_threads, 1, multiprocessing.cpu_count(), 1)
-    perf_render_threads = Gtk.SpinButton()
-    perf_render_threads.set_adjustment(spin_adj)
+    perf_render_threads = Gtk.SpinButton(adjustment=spin_adj)
+    #perf_render_threads.set_adjustment(spin_adj)
     perf_render_threads.set_numeric(True)
 
     perf_drop_frames = Gtk.CheckButton()
