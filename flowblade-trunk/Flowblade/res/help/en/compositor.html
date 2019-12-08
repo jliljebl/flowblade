@@ -40,7 +40,7 @@ Users can set destination tracks freely and create node tree compositions if nee
 </p>
 <h4>Standard Auto Follow</h4>
 <p>
-This is the most simple and easiest to use Compositing Mode. Compositors follow their origin clips automatically and users can only add one compositor per clip. Compositors select their destination tracks automatically and it is not possible to create node tree compositions.
+This is the most simple and easiest to use Compositing Mode. Compositors follow their origin clips automatically and users can only add one compositor per clip. All Compositors have track V1 as their destination track. It is not possible to create node tree compositions.
 </p>
 
 
@@ -72,6 +72,30 @@ Parameters defining the resulting image are edited in the <b>Compositors</b> tab
 </ul>
 </ol>
 
+<h3>EXAMPLE: All tracks need Compositors when creating compositions with more the 2 tracks</h3>
+<p>
+In this mode all Compositors have track V1 as their target target.
+</p>
+<p>
+Because of this adding a Compositor to only the top track can make it dissapper. 
+</p>
+<p>
+When composition has more then 2 tracks, all clips need to have Compositors to get the expected result.
+</p>
+<p>
+<i><b>Only top track has Compositor</b></i>
+</p>
+<img src="only_one_comp.png">
+<p>
+Clip on track V3 has Compositor which composites it on track V1. However, the Clip on track V2 is on top of the composited image on track V1 and gets displayed.
+</p>
+</p>
+<i><b>All tracks have Compositors</b></i>
+</p>
+<img src="all_comp.png">
+<p>
+Images on all tracks are composited on track V1 to get the expected result.
+</p>
 
 <h2>Top Down Free Move and Top Down Auto Follow Compositing modes</h2>
 <p>
@@ -82,8 +106,6 @@ On the Timeline a Compositor is displayed as a rectangular object on top of two 
 </p>
 <p>
 Parameters defining the resulting image are edited in the <b>Compositors</b> tab.
-</p>
-
 
 <h3>Workflow</h3>
 <p>
