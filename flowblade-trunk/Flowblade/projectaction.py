@@ -1831,10 +1831,9 @@ def _combine_sequences_dialog_callback(dialog, response_id, action_select, seq_s
 
 def _append_sequence(import_seq):
     start_track_range, end_track_range = _get_sequence_import_range(import_seq)
-    
     tracks_off = current_sequence().first_video_index - import_seq.first_video_index
     orig_length = current_sequence().get_length()
-    
+
     # Justify ends
     for i in range(start_track_range, end_track_range):
         track = current_sequence().tracks[i]
@@ -1848,7 +1847,7 @@ def _append_sequence(import_seq):
     for i in range(start_track_range, end_track_range):
         track = current_sequence().tracks[i]
         
-        import_track = import_seq.tracks[i + tracks_off]
+        import_track = import_seq.tracks[i - tracks_off]
         insert_start_index = len(track.clips)
         for j in range(0, len(import_track.clips)):
             import_clip = import_track.clips[j]
@@ -1874,6 +1873,7 @@ def _append_sequence(import_seq):
                 edit._remove_clip(track, 0)
     # This method just needs some class to save data for undo which we are not using
     edit._consolidate_all_blanks_redo(utils.EmptyClass)
+    edit._remove_all_trailing_blanks()
     
     _update_gui_after_sequence_import()
 
@@ -1905,7 +1905,7 @@ def _insert_sequence(import_seq):
     for i in range(start_track_range, end_track_range):
         track = current_sequence().tracks[i]
         
-        import_track = import_seq.tracks[i + tracks_off]
+        import_track = import_seq.tracks[i - tracks_off]
         insert_start_index = track.get_clip_index_at(insert_frame)
         for j in range(0, len(import_track.clips)):
             import_clip = import_track.clips[j]
@@ -1941,7 +1941,8 @@ def _insert_sequence(import_seq):
                 edit._remove_clip(track, 0)
     # This method just needs some class to save data for undo which we are not using
     edit._consolidate_all_blanks_redo(utils.EmptyClass)
-    
+    edit._remove_all_trailing_blanks()
+        
     _update_gui_after_sequence_import()
 
     undo.clear_undos()
@@ -1951,15 +1952,21 @@ def _insert_sequence(import_seq):
 def _get_sequence_import_range(import_seq):
     # Compute corresponding tracks, import sequence may have less audio and/or video tracks
     first_video_off = current_sequence().first_video_index - import_seq.first_video_index
-    if first_video_off > 0:
-        start_track_range = 1 + first_video_off # import_seq has less audio tracks
-    else:
-        start_track_range = 1
     
-    video_tracks_count_diff = (len(current_sequence().tracks) - current_sequence().first_video_index) - (len(import_seq.tracks) - import_seq.first_video_index)
-    if video_tracks_count_diff > 0:
+    # Compare audio tracks count to determine first track from current sequence to be added clips from import sequence
+    if first_video_off > 0: # import_seq has less audio tracks
+        start_track_range = 1 + first_video_off 
+    else:  # import_seq has same number of audio tracks
+        start_track_range = 1
+
+    # Compare video tracks count to determine last track from current sequence to be added clips from import sequence
+    cur_seq_video_tracks_count = len(current_sequence().tracks) - current_sequence().first_video_index
+    import_seq_video_tracks_count = len(import_seq.tracks) - import_seq.first_video_index
+
+    video_tracks_count_diff = cur_seq_video_tracks_count - import_seq_video_tracks_count
+    if video_tracks_count_diff > 0: # Current sequence has more video tracks 
         end_track_range = len(current_sequence().tracks) - 1 - video_tracks_count_diff
-    else:
+    else:  # Current sequence has equak number or lass tracks 
         end_track_range = len(current_sequence().tracks) - 1
 
     return (start_track_range, end_track_range)
