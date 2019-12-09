@@ -2914,7 +2914,8 @@ class TimeLineScroller(Gtk.HScrollbar):
     """
     def __init__(self, scroll_listener):
         GObject.GObject.__init__(self)
-        adjustment = Gtk.Adjustment(0.0, 0.0, 100.0, 1.0, 10.0, 30.0)
+        
+        adjustment = Gtk.Adjustment(value=0.0, lower=0.0, upper=100.0, step_incr=1.0, page_increment=10.0, page_size=30.0)
         adjustment.connect("value-changed", scroll_listener)
         self.set_adjustment(adjustment)
 

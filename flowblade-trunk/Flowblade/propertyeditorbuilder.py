@@ -61,8 +61,6 @@ FILTER_WIPE_SELECT = "filter_wipe_select"                   #  Gtk.Combobox with
 COMBO_BOX_OPTIONS = "cbopts"                                # List of options for combo box editor displayed to user
 LADSPA_SLIDER = "ladspa_slider"                             # Gtk.HScale, does ladspa update for release changes(disconnect, reconnect)
 CLIP_FRAME_SLIDER = "clip_frame_slider"                     # Gtk.HScale, range 0 - clip length in frames
-AFFINE_GEOM_4_SLIDER = "affine_filt_geom_slider"            # 3 rows of Gtk.HScales to set the position and size
-AFFINE_GEOM_4_SLIDER_2 = "affine_filt_geom_slider_2"          # 4 rows of Gtk.HScales to set the position and size
 COLOR_CORRECTOR = "color_corrector"                         # 3 band color corrector color circle and Lift Gain Gamma sliders
 CR_CURVES = "crcurves"                                      # Curves color editor with Catmull-Rom curve
 COLOR_BOX = "colorbox"                                      # One band color editor with color box interface
@@ -414,75 +412,7 @@ def _get_clip_frame_slider(editable_property):
 
     name = editable_property.get_display_name()
     return _get_two_column_editor_row(name, hbox)
-
-def _get_affine_filt_geom_sliders(ep):
-    scr_width = PROJECT().profile.width()
-    scr_height = PROJECT().profile.width()
-
-    # value str format "0=0,0:SCREENSIZE:100"
-    frame_value = ep.value.split("=")
-    tokens = frame_value[1].split(":")
-    pos_tokens = tokens[0].split("/")
-    size_tokens = tokens[1].split("x")
-
-    x_adj = Gtk.Adjustment(float(pos_tokens[0]), float(-scr_width), float(scr_width), float(1))
-    y_adj = Gtk.Adjustment(float(pos_tokens[1]), float(-scr_height), float(scr_height), float(1))
-    h_adj = Gtk.Adjustment(float(size_tokens[1]), float(0), float(scr_height * 5), float(1))
-    
-    x_slider, x_spin, x_row =  _get_affine_slider("X", x_adj)
-    y_slider, y_spin, y_row =  _get_affine_slider("Y", y_adj)
-    h_slider, h_spin, h_row =  _get_affine_slider(_("Size/Height"), h_adj)
-
-    all_sliders = (x_slider, y_slider, h_slider)
-
-    x_slider.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_width))
-    x_spin.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_width))
-    y_slider.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_width))
-    y_spin.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_width))
-    h_slider.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_width))
-    h_spin.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_width))
-
-    vbox = Gtk.VBox(False, 4)
-    vbox.pack_start(x_row, True, True, 0)
-    vbox.pack_start(y_row, True, True, 0)
-    vbox.pack_start(h_row, True, True, 0)
-    
-    return vbox
-
-def _get_affine_filt_geom_sliders_2(ep):
-    scr_width = PROJECT().profile.width()
-    scr_height = PROJECT().profile.height()
-
-    # value str format "0=0,0:SCREENSIZE:100"
-    frame_value = ep.value.split("=")
-    tokens = frame_value[1].split(":")
-    pos_tokens = tokens[0].split("/")
-    size_tokens = tokens[1].split("x")
-
-    x_adj = Gtk.Adjustment(float(pos_tokens[0]), float(-scr_width), float(scr_width), float(1))
-    y_adj = Gtk.Adjustment(float(pos_tokens[1]), float(-scr_height), float(scr_height), float(1))
-    xs_adj = Gtk.Adjustment(float(size_tokens[0]), float(10), float(scr_width * 3), float(1))
-
-    x_slider, x_spin, x_row =  _get_affine_slider("X", x_adj)
-    y_slider, y_spin, y_row =  _get_affine_slider("Y", y_adj)
-    xs_slider, xs_spin, xs_row =  _get_affine_slider(_("Width"), xs_adj)
-
-    all_sliders = (x_slider, y_slider, xs_slider)
-
-    x_slider.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_height))
-    x_spin.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_height))
-    y_slider.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_height))
-    y_spin.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_height))
-    xs_slider.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_height))
-    xs_spin.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_height))
-    
-    vbox = Gtk.VBox(False, 4)
-    vbox.pack_start(x_row, True, True, 0)
-    vbox.pack_start(y_row, True, True, 0)
-    vbox.pack_start(xs_row, True, True, 0)
-
-    return vbox
-    
+   
 def _get_affine_slider(name, adjustment):
     hslider = Gtk.HScale()
     hslider.set_adjustment(adjustment)
@@ -1099,8 +1029,6 @@ EDITOR_ROW_CREATORS = { \
     KEYFRAME_EDITOR_CLIP_FADE: lambda ep : _get_keyframe_editor_clip_fade(ep),
     KEYFRAME_EDITOR_RELEASE: lambda ep : _get_keyframe_editor_release(ep),
     GEOMETRY_EDITOR: lambda ep : _get_geometry_editor(ep),
-    AFFINE_GEOM_4_SLIDER: lambda ep : _get_affine_filt_geom_sliders(ep),
-    AFFINE_GEOM_4_SLIDER_2: lambda ep :_get_affine_filt_geom_sliders_2(ep),
     COLOR_SELECT: lambda ep: _get_color_selector(ep),
     WIPE_SELECT: lambda ep: _get_wipe_selector(ep),
     FILTER_WIPE_SELECT:  lambda ep: _get_filter_wipe_selector(ep),

@@ -272,8 +272,7 @@ class Titler(Gtk.Window):
         combo.set_active(0)
         self.font_select = combo
         self.font_select.connect("changed", self._edit_value_changed)
-    
-        adj = Gtk.Adjustment(float(DEFAULT_FONT_SIZE), float(1), float(300), float(1))
+        adj = Gtk.Adjustment(value=float(DEFAULT_FONT_SIZE), lower=float(1), upper=float(300), step_incr=float(1))
         self.size_spin = Gtk.SpinButton()
         self.size_spin.set_adjustment(adj)
         self.size_spin.connect("changed", self._edit_value_changed)
@@ -339,8 +338,8 @@ class Titler(Gtk.Window):
         
         self.out_line_color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(red=0.3, green=0.3, blue=0.3, alpha=1.0))
         self.out_line_color_button.connect("color-set", self._edit_value_changed)
-        
-        adj2 = Gtk.Adjustment(float(3), float(1), float(50), float(1))
+
+        adj2 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(50), step_incr=float(1))
         self.out_line_size_spin = Gtk.SpinButton()
         self.out_line_size_spin.set_adjustment(adj2)
         self.out_line_size_spin.connect("changed", self._edit_value_changed)
@@ -365,19 +364,22 @@ class Titler(Gtk.Window):
         shadow_yoff = Gtk.Label(_("Y Off:"))
         
         self.shadow_opa_spin = Gtk.SpinButton()
-        adj3 = Gtk.Adjustment(float(100), float(1), float(100), float(1))
+ 
+        adj3 = Gtk.Adjustment(value=float(100), lower=float(1), upper=float(100), step_incr=float(1))
         self.shadow_opa_spin.set_adjustment(adj3)
         self.shadow_opa_spin.connect("changed", self._edit_value_changed)
         self.shadow_opa_spin.connect("key-press-event", self._key_pressed_on_widget)
 
         self.shadow_xoff_spin = Gtk.SpinButton()
-        adj4 = Gtk.Adjustment(float(3), float(1), float(100), float(1))
+
+        adj4 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(100), step_incr=float(1))
         self.shadow_xoff_spin.set_adjustment(adj4)
         self.shadow_xoff_spin.connect("changed", self._edit_value_changed)
         self.shadow_xoff_spin.connect("key-press-event", self._key_pressed_on_widget)
 
         self.shadow_yoff_spin = Gtk.SpinButton()
-        adj5 = Gtk.Adjustment(float(3), float(1), float(100), float(1))
+
+        adj5 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(100), step_incr=float(1))
         self.shadow_yoff_spin.set_adjustment(adj5)
         self.shadow_yoff_spin.connect("changed", self._edit_value_changed)
         self.shadow_yoff_spin.connect("key-press-event", self._key_pressed_on_widget)
@@ -418,18 +420,20 @@ class Titler(Gtk.Window):
         layers_save_buttons_row.pack_start(save_layers, False, False, 0)
         layers_save_buttons_row.pack_start(load_layers, False, False, 0)
         layers_save_buttons_row.pack_start(Gtk.Label(), True, True, 0)
-        
-        adj = Gtk.Adjustment(float(0), float(0), float(3000), float(1))
+
+        adj = Gtk.Adjustment(value=float(0), lower=float(0), upper=float(3000), step_incr=float(1))
         self.x_pos_spin = Gtk.SpinButton()
         self.x_pos_spin.set_adjustment(adj)
         self.x_pos_spin.connect("changed", self._position_value_changed)
         self.x_pos_spin.connect("key-press-event", self._key_pressed_on_widget)
-        adj = Gtk.Adjustment(float(0), float(0), float(3000), float(1))
+
+        adj = Gtk.Adjustment(value=float(0), lower=float(0), upper=float(3000), step_incr=float(1))
         self.y_pos_spin = Gtk.SpinButton()
         self.y_pos_spin.set_adjustment(adj)
         self.y_pos_spin.connect("changed", self._position_value_changed)
         self.y_pos_spin.connect("key-press-event", self._key_pressed_on_widget)
-        adj = Gtk.Adjustment(float(0), float(0), float(3000), float(1))
+
+        adj = Gtk.Adjustment(value=float(0), lower=float(0), upper=float(3000), step_incr=float(1))
         self.rotation_spin = Gtk.SpinButton()
         self.rotation_spin.set_adjustment(adj)
         self.rotation_spin.connect("changed", self._position_value_changed)

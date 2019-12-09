@@ -285,7 +285,8 @@ class AbstractProperty:
             step = DEFAULT_STEP
         lower, upper = self.input_range
         value = self.get_current_in_value()
-        return Gtk.Adjustment(float(value), float(lower), float(upper), float(step))
+
+        return Gtk.Adjustment(value=float(value), lower=float(lower), upper=float(upper), step_incr=float(step))
     
     def adjustment_value_changed(self, adjustment):
         value = adjustment.get_value()
@@ -497,7 +498,8 @@ class SingleKeyFrameProperty(EditableProperty):
         val = self.value.strip('"')
         epxr_sides = val.split("=")
         in_value = self.get_in_value(float(epxr_sides[1]))
-        return Gtk.Adjustment(float(in_value), float(lower), float(upper), float(step))
+
+        return Gtk.Adjustment(value=float(in_value), lower=float(lower), upper=float(upper), step_incr=float(step))
 
     def adjustment_value_changed(self, adjustment):
         value = adjustment.get_value()
@@ -564,7 +566,8 @@ class OpacityInGeomSKFProperty(TransitionEditableProperty):
             step = DEFAULT_STEP
         lower, upper = self.input_range
         in_value = self.get_in_value(float(self.value_parts[2]))
-        return Gtk.Adjustment(float(in_value), float(lower), float(upper), float(step))
+
+        return Gtk.Adjustment(value=float(in_value), lower=float(lower), upper=float(upper), step_incr=float(step))
 
     def adjustment_value_changed(self, adjustment):
         value = adjustment.get_value()
@@ -593,7 +596,8 @@ class OpacityInGeomKeyframeProperty(TransitionEditableProperty):
             step = DEFAULT_STEP
         lower, upper = self.input_range
         in_value = self.get_in_value(float(self.value_parts[2]))
-        return Gtk.Adjustment(float(in_value), float(lower), float(upper), float(step))
+
+        return Gtk.Adjustment(value=float(in_value), lower=float(lower), upper=float(upper), step_incr=float(step))
 
     def write_out_keyframes(self, keyframes):
         # key frame array of tuples (frame, opacity)
@@ -650,8 +654,8 @@ class KeyFrameGeometryOpacityProperty(TransitionEditableProperty):
         except:
             step = DEFAULT_STEP
         lower, upper = self.input_range
-        
-        return Gtk.Adjustment(float(1.0), float(lower), float(upper), float(step)) # Value set later to first kf value
+
+        return Gtk.Adjustment(value=float(1.0), lower=float(lower), upper=float(upper), step_incr=float(step)) # Value set later to first kf value
 
     def write_out_keyframes(self, keyframes):
         # key frame array of tuples (frame, [x, y, width, height], opacity)
@@ -672,7 +676,8 @@ class KeyFrameFilterGeometryRectProperty(EditableProperty):
     def get_input_range_adjustment(self):
         # Returns DUMMY noop Adjustment tht needs to exist because AbstrackKeyframeEditor assumes a slider always exists,
         # but this not the case for this editor/property pair.
-        return Gtk.Adjustment(float(1.0), float(0.0), float(1.0), float(0.01)) # Value set later to first kf value
+  
+        return Gtk.Adjustment(value=float(1.0), lower=float(0.0), upper=float(1.0), step_incr=float(0.01)) # Value set later to first kf value
         
     def write_out_keyframes(self, keyframes):       
         # key frame array of tuples (frame, [x, y, width, height], opacity)
@@ -704,7 +709,8 @@ class KeyFrameHCSFilterProperty(EditableProperty):
         except:
             step = DEFAULT_STEP
         lower, upper = self.input_range
-        return Gtk.Adjustment(float(0.1), float(lower), float(upper), float(step)) # Value set later to first kf value
+ 
+        return Gtk.Adjustment(value=float(0.1), lower=float(lower), upper=float(upper), step_incr=float(step)) # Value set later to first kf value
         
     def write_out_keyframes(self, keyframes):
         val_str = ""
@@ -744,7 +750,8 @@ class KeyFrameHCSTransitionProperty(TransitionEditableProperty):
         except:
             step = DEFAULT_STEP
         lower, upper = self.input_range
-        return Gtk.Adjustment(float(0.1), float(lower), float(upper), float(step)) # Value set later to first kf value
+
+        return Gtk.Adjustment(value=float(0.1), lower=float(lower), upper=float(upper), step_incr=float(step)) # Value set later to first kf value
 
     def write_out_keyframes(self, keyframes):
         val_str = ""
@@ -867,7 +874,7 @@ class MultipartKeyFrameProperty(AbstractProperty):
             step = DEFAULT_STEP
         lower, upper = self.input_range
 
-        return Gtk.Adjustment(float(0.1), float(lower), float(upper), float(step)) # Value set later to first kf value
+        return Gtk.Adjustment(value=float(0.1), lower=float(lower), upper=float(upper), step_incr=float(step)) # Value set later to first kf value
 
     def write_out_keyframes(self, keyframes):
         val_str = ""

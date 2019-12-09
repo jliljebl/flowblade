@@ -210,7 +210,7 @@ def show_slowmo_dialog(media_file, default_range_render, _response_callback):
     
     label = Gtk.Label(label=_("Speed %:"))
 
-    adjustment = Gtk.Adjustment(float(100), float(1), float(2900), float(1))
+    adjustment = Gtk.Adjustment(value=float(100), lower=float(1), upper=float(2900), step_incr=float(1))
     fb_widgets.adjustment = adjustment
 
     spin = Gtk.SpinButton()
@@ -356,7 +356,7 @@ def show_reverse_dialog(media_file, default_range_render, _response_callback):
     
     label = Gtk.Label(label=_("Speed %:"))
 
-    adjustment = Gtk.Adjustment(float(-100), float(-600), float(-1), float(1))
+    adjustment = Gtk.Adjustment(value=float(-100), lower=float(-600), upper=float(-1), step_incr=float(1))
     fb_widgets.hslider = Gtk.HScale()
     fb_widgets.hslider.set_adjustment(adjustment)
     fb_widgets.hslider.set_draw_value(False)

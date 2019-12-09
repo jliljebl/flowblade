@@ -284,7 +284,7 @@ def create_editable_property_for_affine_blend(clip, editable_properties):
     # duck type methods, using opacity is not meaningful, any property with clip member could do
     ep.get_clip_tline_pos = lambda : ep.opacity.clip.clip_in # clip is compositor, compositor in and out points straight in timeline frames
     ep.get_clip_length = lambda : ep.opacity.clip.clip_out - ep.opacity.clip.clip_in + 1
-    ep.get_input_range_adjustment = lambda : Gtk.Adjustment(float(100), float(0), float(100), float(1))
+    ep.get_input_range_adjustment = lambda : Gtk.Adjustment(value=float(100), lower=float(0), upper=float(100), step_incr=float(1))
     ep.get_display_name = lambda : "Opacity"
     ep.get_pixel_aspect_ratio = lambda : (float(current_sequence().profile.sample_aspect_num()) / current_sequence().profile.sample_aspect_den())
     ep.get_in_value = lambda out_value : out_value # hard coded for opacity 100 -> 100 range
