@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-08 18:03+0200\n"
+"POT-Creation-Date: 2019-12-12 18:20+0200\n"
 "PO-Revision-Date: 2017-03-24 08:40+0100\n"
 "Last-Translator: Péter Gábor <ptrg@freemail.hu>\n"
 "Language-Team: \n"
@@ -17,39 +17,39 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.5.4\n"
 
-#: app.py:200
+#: app.py:193
 msgid "No Autosave"
 msgstr "Nincs automatikus mentés"
 
-#: app.py:200
+#: app.py:193
 msgid "1 min"
 msgstr "1 perc"
 
-#: app.py:200
+#: app.py:193
 msgid "2 min"
 msgstr "2 perc"
 
-#: app.py:200
+#: app.py:193
 msgid "5 min"
 msgstr "5 perc"
 
-#: app.py:910
+#: app.py:903
 msgid "Too small screen for this application."
 msgstr "Túl kicsi a képernyő az alkalmazás számára."
 
-#: app.py:913
+#: app.py:906
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr "A minimális képernyőfelbontás ezen alkalmazás számára 1152 x 768.\n"
 
-#: app.py:914
+#: app.py:907
 msgid "Your screen dimensions are "
 msgstr "Az ön képernyőjének felbontása "
 
-#: app.py:947 projectaction.py:401 projectaction.py:724
+#: app.py:940 projectaction.py:401 projectaction.py:724
 msgid "Project has not been saved previously"
 msgstr "A projekt korábban még nem volt mentve"
 
-#: app.py:948 projectaction.py:402 projectaction.py:725
+#: app.py:941 projectaction.py:402 projectaction.py:725
 msgid "Save project with File -> Save As before closing."
 msgstr ""
 "Mentse a projektet a Fájl -> Mentés másként menüpont használatával mielőtt "
@@ -868,11 +868,11 @@ msgstr "\"B\" jelzőhöz"
 msgid "Window Mode"
 msgstr "Ablakmód"
 
-#: editorwindow.py:929 preferenceswindow.py:366
+#: editorwindow.py:929 preferenceswindow.py:365
 msgid "Single Window"
 msgstr "Egy ablak"
 
-#: editorwindow.py:933 preferenceswindow.py:367
+#: editorwindow.py:933 preferenceswindow.py:366
 msgid "Two Windows"
 msgstr "Két ablak"
 
@@ -1074,8 +1074,8 @@ msgstr "Új projekt"
 #: dialogs.py:1081 dialogs.py:1109 dialogs.py:1235 dialogs.py:1274
 #: dialogs.py:1288 dialogs.py:1302 dialogs.py:1316 dialogs.py:1330
 #: dialogs.py:1344 dialogs.py:1359 dialogs.py:1616 dialogs.py:1733
-#: dialogs.py:1781 dialogs.py:1896 dialogs.py:1932 propertyeditorbuilder.py:601
-#: propertyeditorbuilder.py:740 propertyeditorbuilder.py:780 rendergui.py:49
+#: dialogs.py:1781 dialogs.py:1896 dialogs.py:1932 propertyeditorbuilder.py:531
+#: propertyeditorbuilder.py:670 propertyeditorbuilder.py:710 rendergui.py:49
 #: rendergui.py:108 rendergui.py:122 rendergui.py:139 rendergui.py:1069
 #: preferenceswindow.py:49 tools/batchrendering.py:989 proxyediting.py:432
 #: tlineaction.py:1475 patternproducer.py:354 patternproducer.py:387
@@ -1086,8 +1086,8 @@ msgstr "Mégsem"
 
 #: dialogs.py:58 dialogs.py:237 dialogs.py:308 dialogs.py:374 dialogs.py:493
 #: dialogs.py:619 dialogs.py:740 dialogs.py:753 dialogs.py:1617
-#: propertyeditorbuilder.py:602 propertyeditorbuilder.py:741
-#: propertyeditorbuilder.py:781 rendergui.py:109 preferenceswindow.py:50
+#: propertyeditorbuilder.py:532 propertyeditorbuilder.py:671
+#: propertyeditorbuilder.py:711 rendergui.py:109 preferenceswindow.py:50
 #: tools/batchrendering.py:407 tools/gmic.py:427 dialogutils.py:44
 #: dialogutils.py:65 dialogutils.py:78 dialogutils.py:93
 msgid "OK"
@@ -2087,7 +2087,7 @@ msgstr "Geometria szerkesztő"
 msgid "Sequence Watermark"
 msgstr "Jelenet vízjele"
 
-#: dialogs.py:1569 tools/titler.py:521 proxyediting.py:423 medialinker.py:157
+#: dialogs.py:1569 tools/titler.py:525 proxyediting.py:423 medialinker.py:157
 #: tools/gmic.py:847 tools/gmic.py:938 diskcachemanagement.py:151
 msgid "Close"
 msgstr "Bezárás"
@@ -2669,8 +2669,8 @@ msgstr "A fájl újracsatolási útvonalának törlése"
 msgid "Show Full Paths"
 msgstr "Teljes útvonalak megjelenítése"
 
-#: guicomponents.py:2187 propertyeditorbuilder.py:809
-#: propertyeditorbuilder.py:864 tools/toolsencoding.py:343
+#: guicomponents.py:2187 propertyeditorbuilder.py:739
+#: propertyeditorbuilder.py:794 tools/toolsencoding.py:343
 msgid "Progressive"
 msgstr "Progresszív"
 
@@ -2698,7 +2698,7 @@ msgstr "Méretek:"
 msgid "Frames per second:"
 msgstr "Másodpercenkénti képkockaszám:"
 
-#: guicomponents.py:2210 tools/titler.py:338
+#: guicomponents.py:2210 tools/titler.py:337
 msgid "Size:"
 msgstr "Méret:"
 
@@ -3300,8 +3300,8 @@ msgstr "Hangszűrő"
 msgid "Blur"
 msgstr "Elmosás"
 
-#: translations.py:134 translations.py:570 propertyeditorbuilder.py:824
-#: propertyeditorbuilder.py:879
+#: translations.py:134 translations.py:570 propertyeditorbuilder.py:754
+#: propertyeditorbuilder.py:809
 msgid "Distort"
 msgstr "Torzítás"
 
@@ -5404,78 +5404,70 @@ msgstr "Áttolás a klip hosszában"
 msgid "Color Dip"
 msgstr "Színcsökkentés"
 
-#: propertyeditorbuilder.py:434
-msgid "Size/Height"
-msgstr "Méret/Magasság"
-
-#: propertyeditorbuilder.py:468
-msgid "Width"
-msgstr "Szélesség"
-
-#: propertyeditorbuilder.py:596
+#: propertyeditorbuilder.py:526
 msgid "Preset Luma"
 msgstr "Előre beállított fényesség"
 
-#: propertyeditorbuilder.py:597
+#: propertyeditorbuilder.py:527
 msgid "User Luma"
 msgstr "Felhasználói fényesség"
 
-#: propertyeditorbuilder.py:599
+#: propertyeditorbuilder.py:529
 msgid "Select Luma File"
 msgstr "Fényesség fájl választása"
 
-#: propertyeditorbuilder.py:608
+#: propertyeditorbuilder.py:538
 msgid "Wipe Luma files"
 msgstr "Fényesség áttolás fájlok"
 
-#: propertyeditorbuilder.py:614
+#: propertyeditorbuilder.py:544
 msgid "Luma File:"
 msgstr "Fényesség fájl:"
 
-#: propertyeditorbuilder.py:738
+#: propertyeditorbuilder.py:668
 msgid "Select File"
 msgstr "Fájl választása"
 
-#: propertyeditorbuilder.py:778
+#: propertyeditorbuilder.py:708
 #, fuzzy
 msgid "Select Image Producing File"
 msgstr "Projektfájl kiválasztása"
 
-#: propertyeditorbuilder.py:809 propertyeditorbuilder.py:864
+#: propertyeditorbuilder.py:739 propertyeditorbuilder.py:794
 msgid "Nothing"
 msgstr "Semmi"
 
-#: propertyeditorbuilder.py:809 propertyeditorbuilder.py:864
+#: propertyeditorbuilder.py:739 propertyeditorbuilder.py:794
 msgid "Deinterlace"
 msgstr "Váltottsorosság megszüntetése"
 
-#: propertyeditorbuilder.py:809 propertyeditorbuilder.py:864
+#: propertyeditorbuilder.py:739 propertyeditorbuilder.py:794
 msgid "Both"
 msgstr "Mindkettő"
 
-#: propertyeditorbuilder.py:818 propertyeditorbuilder.py:873
+#: propertyeditorbuilder.py:748 propertyeditorbuilder.py:803
 msgid "Force"
 msgstr "Kényszerítés"
 
-#: propertyeditorbuilder.py:823 propertyeditorbuilder.py:878
+#: propertyeditorbuilder.py:753 propertyeditorbuilder.py:808
 msgid "Align"
 msgstr "Igazítás"
 
-#: propertyeditorbuilder.py:937
+#: propertyeditorbuilder.py:867
 #, fuzzy
 msgid "Keyframes"
 msgstr "Egyensúly (kulcsképkockákhoz igazítva)"
 
-#: propertyeditorbuilder.py:941
+#: propertyeditorbuilder.py:871
 #, fuzzy
 msgid "Curve Points"
 msgstr "Görbék"
 
-#: propertyeditorbuilder.py:945
+#: propertyeditorbuilder.py:875
 msgid "Lauch RotoMask editor"
 msgstr ""
 
-#: propertyeditorbuilder.py:949
+#: propertyeditorbuilder.py:879
 msgid "RotoMask info"
 msgstr ""
 
@@ -5823,64 +5815,64 @@ msgstr "A feliratozó már nyitva van"
 msgid "Only single instance of Titler can be opened."
 msgstr "A feliratozó csak egy példányban nyitható meg."
 
-#: tools/titler.py:363
+#: tools/titler.py:362
 #, fuzzy
 msgid "Opacity:"
 msgstr "Átlátszatlanság"
 
-#: tools/titler.py:364
+#: tools/titler.py:363
 #, fuzzy
 msgid "X Off:"
 msgstr "X eltolás"
 
-#: tools/titler.py:365
+#: tools/titler.py:364
 #, fuzzy
 msgid "Y Off:"
 msgstr "Y eltolás"
 
-#: tools/titler.py:410
+#: tools/titler.py:412
 msgid "Load Layers"
 msgstr "Rétegek betöltése"
 
-#: tools/titler.py:412
+#: tools/titler.py:414
 msgid "Save Layers"
 msgstr "Rétegek mentése"
 
-#: tools/titler.py:414
+#: tools/titler.py:416
 msgid "Clear All"
 msgstr "Összes törlése"
 
-#: tools/titler.py:497
+#: tools/titler.py:501
 msgid "Font"
 msgstr ""
 
-#: tools/titler.py:498
+#: tools/titler.py:502
 msgid "Outline"
 msgstr "Körvonal"
 
-#: tools/titler.py:499
+#: tools/titler.py:503
 #, fuzzy
 msgid "Shadow"
 msgstr "Árnyékok"
 
-#: tools/titler.py:502
+#: tools/titler.py:506
 #, fuzzy
 msgid "Layer Text"
 msgstr "Rétegek"
 
-#: tools/titler.py:505
+#: tools/titler.py:509
 msgid "Layers"
 msgstr "Rétegek"
 
-#: tools/titler.py:511
+#: tools/titler.py:515
 msgid "Keep Layers When Closed"
 msgstr "Rétegek megtartása bezáráskor"
 
-#: tools/titler.py:516
+#: tools/titler.py:520
 msgid "Open Saved Title In Bin"
 msgstr "A mentett feliratozás megnyitása rekeszben"
 
-#: tools/titler.py:523
+#: tools/titler.py:527
 msgid "Save Title Graphic"
 msgstr "Felirat mentése képként"
 
@@ -6237,110 +6229,110 @@ msgstr "Újraindítás szükséges bizonyos beállítások életbe léptetéséh
 msgid "If requested change is not in effect, restart application."
 msgstr "Ha módosításnak nincs hatása, indítsa újra az alkalmazást."
 
-#: preferenceswindow.py:123
+#: preferenceswindow.py:122
 msgid "Absolute paths first, relative second"
 msgstr "Abszolút útvonalak először, relatívak másodikként"
 
-#: preferenceswindow.py:124
+#: preferenceswindow.py:123
 msgid "Relative paths first, absolute second"
 msgstr "Relatív útvonalak először, abszolútak másodikként"
 
-#: preferenceswindow.py:125
+#: preferenceswindow.py:124
 msgid "Absolute paths only"
 msgstr "Csak abszolút útvonalak"
 
-#: preferenceswindow.py:129
+#: preferenceswindow.py:128
 msgid "Default Profile:"
 msgstr "Alapértelmezett profil:"
 
-#: preferenceswindow.py:130
+#: preferenceswindow.py:129
 msgid "Remember last media directory"
 msgstr "Legutóbbi média mappa megjegyzése"
 
-#: preferenceswindow.py:131
+#: preferenceswindow.py:130
 msgid "Undo stack size:"
 msgstr "Visszavonási lista mérete:"
 
-#: preferenceswindow.py:132
+#: preferenceswindow.py:131
 msgid "Remember last render directory"
 msgstr "Legutóbbi renderelés mappájának megjegyzése"
 
-#: preferenceswindow.py:133
+#: preferenceswindow.py:132
 msgid "Autosave for crash recovery every:"
 msgstr "Automatikus mentések időköze:"
 
-#: preferenceswindow.py:134
+#: preferenceswindow.py:133
 msgid "Media look-up order on load:"
 msgstr "Médiakeresési sorrend betöltéskor:"
 
-#: preferenceswindow.py:166
+#: preferenceswindow.py:165
 msgid "Zoom, Control to Scroll Horizontal"
 msgstr "Nagyítás, Görgetés vízszintesen CTRL használatával"
 
-#: preferenceswindow.py:167
+#: preferenceswindow.py:166
 msgid "Scroll Horizontal, Control to Zoom"
 msgstr "Görgetés vízszintesen, Nagyítás CTRL használatával"
 
-#: preferenceswindow.py:174
+#: preferenceswindow.py:173
 msgid "Scroll Up Forward"
 msgstr ""
 
-#: preferenceswindow.py:175
+#: preferenceswindow.py:174
 msgid "Scroll Down Forward"
 msgstr ""
 
-#: preferenceswindow.py:182
+#: preferenceswindow.py:181
 msgid "On Double Click"
 msgstr ""
 
-#: preferenceswindow.py:183
+#: preferenceswindow.py:182
 msgid "On Single Click"
 msgstr ""
 
-#: preferenceswindow.py:191
+#: preferenceswindow.py:190
 msgid "Graphics default length:"
 msgstr "Grafikus fájlok alapértelmezett hossza:"
 
-#: preferenceswindow.py:192
+#: preferenceswindow.py:191
 msgid "Cover Transition/Fade clips on delete if possible"
 msgstr "Törléskor a klipek áttűnését/halványodását is foglalja bele ha lehet"
 
-#: preferenceswindow.py:194
+#: preferenceswindow.py:193
 #, fuzzy
 msgid "Mouse Middle Button Scroll Action:"
 msgstr "Egér középső gombjának görgetési művelete"
 
-#: preferenceswindow.py:195
+#: preferenceswindow.py:194
 #, fuzzy
 msgid "Mouse Horizontal Scroll Direction:"
 msgstr "Egér középső gombjának görgetési művelete"
 
-#: preferenceswindow.py:196
+#: preferenceswindow.py:195
 msgid "Hide file extensions when importing Clips"
 msgstr "Fájlok kiterjesztésének elrejtése klipek importálásakor"
 
-#: preferenceswindow.py:197
+#: preferenceswindow.py:196
 #, fuzzy
 msgid "Open Clip in Effects Editor"
 msgstr "Megnyitás a szűrő szerkesztőben"
 
-#: preferenceswindow.py:265
+#: preferenceswindow.py:264
 msgid "Center Current Frame on Playback Stop"
 msgstr "Képkocka középre hozása a lejátszás megállításakor"
 
-#: preferenceswindow.py:266
+#: preferenceswindow.py:265
 msgid "Center Current Frame after Up/Down Arrow"
 msgstr "Képkocka középre hozása a Fel/Le nyilak használata után"
 
-#: preferenceswindow.py:268
+#: preferenceswindow.py:267
 msgid "Enable single Play/Pause button"
 msgstr "Egyesített Lejátszás/Szünet gomb használata"
 
-#: preferenceswindow.py:270
+#: preferenceswindow.py:269
 msgid "Fast Forward / Reverse Speed for Shift Key:"
 msgstr ""
 
-#: preferenceswindow.py:271
+#: preferenceswindow.py:270
 msgid ""
 "Speed of Forward / Reverse will be multiplied by this value if Shift Key is "
 "held (Only using KEYS).\n"
@@ -6348,211 +6340,211 @@ msgid ""
 "E.g. if Shift is set to "
 msgstr ""
 
-#: preferenceswindow.py:276
+#: preferenceswindow.py:275
 msgid "Fast Forward / Reverse Speed for Control Key:"
 msgstr ""
 
-#: preferenceswindow.py:277
+#: preferenceswindow.py:276
 msgid ""
 "Speed of Forward / Reverse will be multiplied by this value if Ctrl Key is "
 "held (Only using KEYS)."
 msgstr ""
 
-#: preferenceswindow.py:278
+#: preferenceswindow.py:277
 msgid "Fast Forward / Reverse Speed for Caps Lock Key:"
 msgstr ""
 
-#: preferenceswindow.py:279
+#: preferenceswindow.py:278
 msgid ""
 "Speed of Forward / Reverse will be multiplied by this value if Caps Lock is "
 "set (Only using KEYS)."
 msgstr ""
 
-#: preferenceswindow.py:280
+#: preferenceswindow.py:279
 msgid "Move Timeline to follow Playback"
 msgstr ""
 
-#: preferenceswindow.py:281
+#: preferenceswindow.py:280
 #, fuzzy
 msgid "Loop Media Clips on Monitor"
 msgstr "Megnyitás a klip monitoron"
 
-#: preferenceswindow.py:313
+#: preferenceswindow.py:312
 msgid "None"
 msgstr ""
 
-#: preferenceswindow.py:314
+#: preferenceswindow.py:313
 msgid "English"
 msgstr ""
 
-#: preferenceswindow.py:315
+#: preferenceswindow.py:314
 msgid "Chinese, Simplified"
 msgstr ""
 
-#: preferenceswindow.py:316
+#: preferenceswindow.py:315
 msgid "Chinese, Traditional"
 msgstr ""
 
-#: preferenceswindow.py:317
+#: preferenceswindow.py:316
 msgid "Czech"
 msgstr ""
 
-#: preferenceswindow.py:318
+#: preferenceswindow.py:317
 msgid "French"
 msgstr ""
 
-#: preferenceswindow.py:319
+#: preferenceswindow.py:318
 msgid "German"
 msgstr ""
 
-#: preferenceswindow.py:320
+#: preferenceswindow.py:319
 msgid "Hungarian"
 msgstr ""
 
-#: preferenceswindow.py:321
+#: preferenceswindow.py:320
 msgid "Italian"
 msgstr ""
 
-#: preferenceswindow.py:322
+#: preferenceswindow.py:321
 msgid "Polish"
 msgstr ""
 
-#: preferenceswindow.py:323
+#: preferenceswindow.py:322
 msgid "Russian"
 msgstr ""
 
-#: preferenceswindow.py:324
+#: preferenceswindow.py:323
 msgid "Spanish"
 msgstr ""
 
-#: preferenceswindow.py:325
+#: preferenceswindow.py:324
 msgid "Ukranian"
 msgstr ""
 
-#: preferenceswindow.py:340
+#: preferenceswindow.py:339
 msgid "Glass"
 msgstr "Üveg"
 
-#: preferenceswindow.py:341
+#: preferenceswindow.py:340
 msgid "Simple"
 msgstr "Egyszerű"
 
-#: preferenceswindow.py:342
+#: preferenceswindow.py:341
 #, fuzzy
 msgid "No Decorations"
 msgstr "Időtartam"
 
-#: preferenceswindow.py:346
+#: preferenceswindow.py:345
 #, fuzzy
 msgid "Flowblade Theme"
 msgstr "Flowblade kötegelt renderelés"
 
-#: preferenceswindow.py:347
+#: preferenceswindow.py:346
 msgid "Dark Theme"
 msgstr "Sötét téma"
 
-#: preferenceswindow.py:348
+#: preferenceswindow.py:347
 msgid "Light Theme"
 msgstr "Világos téma"
 
-#: preferenceswindow.py:358
+#: preferenceswindow.py:357
 msgid "Display All Levels"
 msgstr "Szintek megjelenítése"
 
-#: preferenceswindow.py:359
+#: preferenceswindow.py:358
 msgid "Display Levels On Request"
 msgstr "Összes szint megjelenítése kérésre"
 
-#: preferenceswindow.py:374
+#: preferenceswindow.py:373
 msgid "Normal - 50px, 25px"
 msgstr ""
 
-#: preferenceswindow.py:375
+#: preferenceswindow.py:374
 msgid "Double for HiDPI - 100px, 50px"
 msgstr ""
 
-#: preferenceswindow.py:380
+#: preferenceswindow.py:379
 msgid "3 panels if width (1450px+) available"
 msgstr ""
 
-#: preferenceswindow.py:381
+#: preferenceswindow.py:380
 msgid "2 panels always"
 msgstr ""
 
-#: preferenceswindow.py:387
+#: preferenceswindow.py:386
 msgid "Full Display area: "
 msgstr ""
 
-#: preferenceswindow.py:391
+#: preferenceswindow.py:390
 #, fuzzy
 msgid "Monitor "
 msgstr "A monitoron lévő klip hozzáadása"
 
-#: preferenceswindow.py:396
+#: preferenceswindow.py:395
 msgid "Application window mode:"
 msgstr "Alkalmazás felülete:"
 
-#: preferenceswindow.py:398
+#: preferenceswindow.py:397
 msgid "Force Language:"
 msgstr ""
 
-#: preferenceswindow.py:399
+#: preferenceswindow.py:398
 msgid "Display splash screen"
 msgstr "Indítókép megjelenítése"
 
-#: preferenceswindow.py:400
+#: preferenceswindow.py:399
 msgid "Buttons style:"
 msgstr "Gombok stílusa:"
 
-#: preferenceswindow.py:401
+#: preferenceswindow.py:400
 msgid "Theme request, icons and colors:"
 msgstr "Téma használata, ikonok és színek:"
 
-#: preferenceswindow.py:402
+#: preferenceswindow.py:401
 msgid "Theme detection fail fallback colors:"
 msgstr "Témaérzékelés sikertelensége esetén használandó színek:"
 
-#: preferenceswindow.py:403
+#: preferenceswindow.py:402
 msgid "Default audio levels display:"
 msgstr "Hangszintek alapértelmezett megjelenítési módja"
 
-#: preferenceswindow.py:404
+#: preferenceswindow.py:403
 #, fuzzy
 msgid "Tracks Heights:"
 msgstr "Normál magasság"
 
-#: preferenceswindow.py:406
+#: preferenceswindow.py:405
 msgid "Show Full File names"
 msgstr "Teljes fájlnevek megjelenítése"
 
-#: preferenceswindow.py:407
+#: preferenceswindow.py:406
 msgid "Top row layout:"
 msgstr ""
 
-#: preferenceswindow.py:409
+#: preferenceswindow.py:408
 msgid "Do GUI layout based on:"
 msgstr ""
 
-#: preferenceswindow.py:442
+#: preferenceswindow.py:441
 msgid ""
 "Changing these values may cause problems with playback and rendering.\n"
 "The safe values are Render Threads:1, Allow Frame Dropping: No."
 msgstr ""
 
-#: preferenceswindow.py:453
+#: preferenceswindow.py:452
 msgid "Between 1 and the number of CPU Cores"
 msgstr "1 és a CPU magjainak száma között"
 
-#: preferenceswindow.py:454
+#: preferenceswindow.py:453
 msgid "Allow Frame Dropping for real-time rendering, when needed"
 msgstr ""
 "Képkockák eldobásának engedélyezése valós idejű lejátszáshoz, szükség esetén"
 
-#: preferenceswindow.py:458
+#: preferenceswindow.py:457
 msgid "Render Threads:"
 msgstr "Renderelés szálai:"
 
-#: preferenceswindow.py:459
+#: preferenceswindow.py:458
 msgid "Allow Frame Dropping"
 msgstr "Képkockák eldobásának engedélyezése"
 
@@ -8132,11 +8124,11 @@ msgid "Select Preset Workflow and Continue"
 msgstr ""
 
 #: workflow.py:431
-msgid "<b>Welcome to Flowblade 2.2</b>"
+msgid "<b>Welcome to Flowblade 2.4</b>"
 msgstr ""
 
 #: workflow.py:436
-msgid "<b>Flowblade 2.2</b> comes with a configurable workflow."
+msgid "<b>Flowblade 2.4</b> comes with a configurable workflow."
 msgstr ""
 
 #: workflow.py:441
@@ -8272,6 +8264,12 @@ msgstr ""
 #, fuzzy
 msgid "Close Tool"
 msgstr "Bezárás"
+
+#~ msgid "Size/Height"
+#~ msgstr "Méret/Magasság"
+
+#~ msgid "Width"
+#~ msgstr "Szélesség"
 
 #~ msgid "Paste Filters"
 #~ msgstr "Szűrők beillesztése"

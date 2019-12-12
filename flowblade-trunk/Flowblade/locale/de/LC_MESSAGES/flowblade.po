@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-08 18:03+0200\n"
+"POT-Creation-Date: 2019-12-12 18:20+0200\n"
 "PO-Revision-Date: 2014-11-23 14:22+0100\n"
 "Last-Translator: Mario Dejanovic <mario.dejanovic@gmx.at>\n"
 "Language-Team: German\n"
@@ -19,39 +19,39 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app.py:200
+#: app.py:193
 msgid "No Autosave"
 msgstr "Kein Auto-Save"
 
-#: app.py:200
+#: app.py:193
 msgid "1 min"
 msgstr "1 min"
 
-#: app.py:200
+#: app.py:193
 msgid "2 min"
 msgstr "2 min"
 
-#: app.py:200
+#: app.py:193
 msgid "5 min"
 msgstr "5 min"
 
-#: app.py:910
+#: app.py:903
 msgid "Too small screen for this application."
 msgstr "Zu kleiner Bildschirm für diese Applikation."
 
-#: app.py:913
+#: app.py:906
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr "Minimale Auflösung für diese Applikation ist 1152 x 768.\n"
 
-#: app.py:914
+#: app.py:907
 msgid "Your screen dimensions are "
 msgstr "Ihre Auflösung beträgt "
 
-#: app.py:947 projectaction.py:401 projectaction.py:724
+#: app.py:940 projectaction.py:401 projectaction.py:724
 msgid "Project has not been saved previously"
 msgstr "Projekt wurde noch nicht gesichert"
 
-#: app.py:948 projectaction.py:402 projectaction.py:725
+#: app.py:941 projectaction.py:402 projectaction.py:725
 msgid "Save project with File -> Save As before closing."
 msgstr "Projekt vor dem Schließen sichern mit 'Datei -> Sichern als...'."
 
@@ -893,11 +893,11 @@ msgstr "Zur Markierung Ende"
 msgid "Window Mode"
 msgstr "Eckenmodus"
 
-#: editorwindow.py:929 preferenceswindow.py:366
+#: editorwindow.py:929 preferenceswindow.py:365
 msgid "Single Window"
 msgstr "Einzelnes Fenster"
 
-#: editorwindow.py:933 preferenceswindow.py:367
+#: editorwindow.py:933 preferenceswindow.py:366
 msgid "Two Windows"
 msgstr "Zwei Fenster"
 
@@ -1104,8 +1104,8 @@ msgstr "Neues Projekt"
 #: dialogs.py:1081 dialogs.py:1109 dialogs.py:1235 dialogs.py:1274
 #: dialogs.py:1288 dialogs.py:1302 dialogs.py:1316 dialogs.py:1330
 #: dialogs.py:1344 dialogs.py:1359 dialogs.py:1616 dialogs.py:1733
-#: dialogs.py:1781 dialogs.py:1896 dialogs.py:1932 propertyeditorbuilder.py:601
-#: propertyeditorbuilder.py:740 propertyeditorbuilder.py:780 rendergui.py:49
+#: dialogs.py:1781 dialogs.py:1896 dialogs.py:1932 propertyeditorbuilder.py:531
+#: propertyeditorbuilder.py:670 propertyeditorbuilder.py:710 rendergui.py:49
 #: rendergui.py:108 rendergui.py:122 rendergui.py:139 rendergui.py:1069
 #: preferenceswindow.py:49 tools/batchrendering.py:989 proxyediting.py:432
 #: tlineaction.py:1475 patternproducer.py:354 patternproducer.py:387
@@ -1116,8 +1116,8 @@ msgstr "Abbruch"
 
 #: dialogs.py:58 dialogs.py:237 dialogs.py:308 dialogs.py:374 dialogs.py:493
 #: dialogs.py:619 dialogs.py:740 dialogs.py:753 dialogs.py:1617
-#: propertyeditorbuilder.py:602 propertyeditorbuilder.py:741
-#: propertyeditorbuilder.py:781 rendergui.py:109 preferenceswindow.py:50
+#: propertyeditorbuilder.py:532 propertyeditorbuilder.py:671
+#: propertyeditorbuilder.py:711 rendergui.py:109 preferenceswindow.py:50
 #: tools/batchrendering.py:407 tools/gmic.py:427 dialogutils.py:44
 #: dialogutils.py:65 dialogutils.py:78 dialogutils.py:93
 msgid "OK"
@@ -2151,7 +2151,7 @@ msgstr "Geometrie-Editor"
 msgid "Sequence Watermark"
 msgstr "Sequenz-Wasserzeichen"
 
-#: dialogs.py:1569 tools/titler.py:521 proxyediting.py:423 medialinker.py:157
+#: dialogs.py:1569 tools/titler.py:525 proxyediting.py:423 medialinker.py:157
 #: tools/gmic.py:847 tools/gmic.py:938 diskcachemanagement.py:151
 msgid "Close"
 msgstr "Schließen"
@@ -2757,8 +2757,8 @@ msgstr "Lösche Datei-Link-Pfad"
 msgid "Show Full Paths"
 msgstr "Zeige volle Pfade"
 
-#: guicomponents.py:2187 propertyeditorbuilder.py:809
-#: propertyeditorbuilder.py:864 tools/toolsencoding.py:343
+#: guicomponents.py:2187 propertyeditorbuilder.py:739
+#: propertyeditorbuilder.py:794 tools/toolsencoding.py:343
 msgid "Progressive"
 msgstr "Progressiv"
 
@@ -2786,7 +2786,7 @@ msgstr "Dimensionen:"
 msgid "Frames per second:"
 msgstr "Bilder pro Sekunde: "
 
-#: guicomponents.py:2210 tools/titler.py:338
+#: guicomponents.py:2210 tools/titler.py:337
 msgid "Size:"
 msgstr "Größe:"
 
@@ -3413,8 +3413,8 @@ msgstr "Audio-Filter"
 msgid "Blur"
 msgstr "Unschärfe"
 
-#: translations.py:134 translations.py:570 propertyeditorbuilder.py:824
-#: propertyeditorbuilder.py:879
+#: translations.py:134 translations.py:570 propertyeditorbuilder.py:754
+#: propertyeditorbuilder.py:809
 msgid "Distort"
 msgstr "Verzerren"
 
@@ -5604,85 +5604,74 @@ msgstr "Wisch-Clip-Länge"
 msgid "Color Dip"
 msgstr "Farb-Senkung"
 
-#
-#
-#
-#: propertyeditorbuilder.py:434
-msgid "Size/Height"
-msgstr "Größe/Höhe"
-
-#: propertyeditorbuilder.py:468
-msgid "Width"
-msgstr "Breite"
-
-#: propertyeditorbuilder.py:596
+#: propertyeditorbuilder.py:526
 msgid "Preset Luma"
 msgstr "Luma Vorgabe"
 
-#: propertyeditorbuilder.py:597
+#: propertyeditorbuilder.py:527
 msgid "User Luma"
 msgstr "Luma Benutzer"
 
-#: propertyeditorbuilder.py:599
+#: propertyeditorbuilder.py:529
 msgid "Select Luma File"
 msgstr "Luma-Datei wählen"
 
 # ???
-#: propertyeditorbuilder.py:608
+#: propertyeditorbuilder.py:538
 msgid "Wipe Luma files"
 msgstr "Luma-Datei entfernen"
 
-#: propertyeditorbuilder.py:614
+#: propertyeditorbuilder.py:544
 msgid "Luma File:"
 msgstr "Luma-Datei:"
 
-#: propertyeditorbuilder.py:738
+#: propertyeditorbuilder.py:668
 #, fuzzy
 msgid "Select File"
 msgstr "Ordner wählen"
 
-#: propertyeditorbuilder.py:778
+#: propertyeditorbuilder.py:708
 #, fuzzy
 msgid "Select Image Producing File"
 msgstr "Projektdatei wählen"
 
-#: propertyeditorbuilder.py:809 propertyeditorbuilder.py:864
+#: propertyeditorbuilder.py:739 propertyeditorbuilder.py:794
 msgid "Nothing"
 msgstr "Nichts"
 
-#: propertyeditorbuilder.py:809 propertyeditorbuilder.py:864
+#: propertyeditorbuilder.py:739 propertyeditorbuilder.py:794
 msgid "Deinterlace"
 msgstr "Deinterlace"
 
-#: propertyeditorbuilder.py:809 propertyeditorbuilder.py:864
+#: propertyeditorbuilder.py:739 propertyeditorbuilder.py:794
 msgid "Both"
 msgstr "Beide"
 
-#: propertyeditorbuilder.py:818 propertyeditorbuilder.py:873
+#: propertyeditorbuilder.py:748 propertyeditorbuilder.py:803
 msgid "Force"
 msgstr "Forcieren"
 
 # ???
-#: propertyeditorbuilder.py:823 propertyeditorbuilder.py:878
+#: propertyeditorbuilder.py:753 propertyeditorbuilder.py:808
 msgid "Align"
 msgstr "Anpassen"
 
 # ???
-#: propertyeditorbuilder.py:937
+#: propertyeditorbuilder.py:867
 #, fuzzy
 msgid "Keyframes"
 msgstr "Schwenken Keyframed"
 
-#: propertyeditorbuilder.py:941
+#: propertyeditorbuilder.py:871
 #, fuzzy
 msgid "Curve Points"
 msgstr "Kurven"
 
-#: propertyeditorbuilder.py:945
+#: propertyeditorbuilder.py:875
 msgid "Lauch RotoMask editor"
 msgstr ""
 
-#: propertyeditorbuilder.py:949
+#: propertyeditorbuilder.py:879
 msgid "RotoMask info"
 msgstr ""
 
@@ -6053,66 +6042,66 @@ msgstr "Titel-Generator bereits geöffnet"
 msgid "Only single instance of Titler can be opened."
 msgstr "Nur eine Instanz vom Titel-Generator kann offen sein."
 
-#: tools/titler.py:363
+#: tools/titler.py:362
 #, fuzzy
 msgid "Opacity:"
 msgstr "Durchsichtigkeit"
 
-#: tools/titler.py:364
+#: tools/titler.py:363
 msgid "X Off:"
 msgstr ""
 
-#: tools/titler.py:365
+#: tools/titler.py:364
 msgid "Y Off:"
 msgstr ""
 
 # ???
-#: tools/titler.py:410
+#: tools/titler.py:412
 msgid "Load Layers"
 msgstr "Lade Schichten"
 
 # ???
-#: tools/titler.py:412
+#: tools/titler.py:414
 msgid "Save Layers"
 msgstr "Sichere Schichten"
 
 # ???
-#: tools/titler.py:414
+#: tools/titler.py:416
 msgid "Clear All"
 msgstr "Alle zurücksetzen"
 
-#: tools/titler.py:497
+#: tools/titler.py:501
 msgid "Font"
 msgstr ""
 
-#: tools/titler.py:498
+#: tools/titler.py:502
 #, fuzzy
 msgid "Outline"
 msgstr "<b>Ausgabe-Datei: </b>"
 
-#: tools/titler.py:499
+#: tools/titler.py:503
 #, fuzzy
 msgid "Shadow"
 msgstr "Schatten"
 
-#: tools/titler.py:502
+#: tools/titler.py:506
 #, fuzzy
 msgid "Layer Text"
 msgstr "Schichten"
 
-#: tools/titler.py:505
+#: tools/titler.py:509
 msgid "Layers"
 msgstr "Schichten"
 
-#: tools/titler.py:511
+#: tools/titler.py:515
 msgid "Keep Layers When Closed"
 msgstr "Schichten beim Schließen behalten"
 
-#: tools/titler.py:516
+#: tools/titler.py:520
 msgid "Open Saved Title In Bin"
 msgstr "Gesicherten Titel in Album öffnen"
 
-#: tools/titler.py:523
+#: tools/titler.py:527
 msgid "Save Title Graphic"
 msgstr "Sichere Titelgrafik"
 
@@ -6479,111 +6468,111 @@ msgstr ""
 "Falls die gewünschte Änderung noch nicht nutzbar ist, bitte die Applikation "
 "neu starten."
 
-#: preferenceswindow.py:123
+#: preferenceswindow.py:122
 msgid "Absolute paths first, relative second"
 msgstr "Absolute Pfade zuerst, relative danach"
 
-#: preferenceswindow.py:124
+#: preferenceswindow.py:123
 msgid "Relative paths first, absolute second"
 msgstr "Relative Pfade zuerst, absolute dnach"
 
-#: preferenceswindow.py:125
+#: preferenceswindow.py:124
 msgid "Absolute paths only"
 msgstr "Nur absolute Pfade"
 
-#: preferenceswindow.py:129
+#: preferenceswindow.py:128
 msgid "Default Profile:"
 msgstr "Standard-Profil:"
 
-#: preferenceswindow.py:130
+#: preferenceswindow.py:129
 msgid "Remember last media directory"
 msgstr "Letzten Medien-Ordner merken"
 
-#: preferenceswindow.py:131
+#: preferenceswindow.py:130
 msgid "Undo stack size:"
 msgstr "Anzahl der maximalen Rückgängig Schritte:"
 
-#: preferenceswindow.py:132
+#: preferenceswindow.py:131
 msgid "Remember last render directory"
 msgstr "Letzten Render-Ordner merken"
 
 # ???
-#: preferenceswindow.py:133
+#: preferenceswindow.py:132
 msgid "Autosave for crash recovery every:"
 msgstr "Sicherungskopie nach Minute(n):"
 
-#: preferenceswindow.py:134
+#: preferenceswindow.py:133
 msgid "Media look-up order on load:"
 msgstr "Suchreihenfolge für Medien:"
 
-#: preferenceswindow.py:166
+#: preferenceswindow.py:165
 msgid "Zoom, Control to Scroll Horizontal"
 msgstr "Zoom, Steuerung zum horizontalen Scrollen"
 
-#: preferenceswindow.py:167
+#: preferenceswindow.py:166
 msgid "Scroll Horizontal, Control to Zoom"
 msgstr "Bildlauf horizontal, Steuerung auf Zoom"
 
-#: preferenceswindow.py:174
+#: preferenceswindow.py:173
 msgid "Scroll Up Forward"
 msgstr "Bildlauf vorwärts"
 
-#: preferenceswindow.py:175
+#: preferenceswindow.py:174
 msgid "Scroll Down Forward"
 msgstr "Nach unten scrollen"
 
-#: preferenceswindow.py:182
+#: preferenceswindow.py:181
 msgid "On Double Click"
 msgstr ""
 
-#: preferenceswindow.py:183
+#: preferenceswindow.py:182
 msgid "On Single Click"
 msgstr ""
 
 # ???
-#: preferenceswindow.py:191
+#: preferenceswindow.py:190
 msgid "Graphics default length:"
 msgstr "Standard-Länge für Grafiken:"
 
-#: preferenceswindow.py:192
+#: preferenceswindow.py:191
 msgid "Cover Transition/Fade clips on delete if possible"
 msgstr "Übergang/-blenden beim Löschen abdecken falls machbar"
 
-#: preferenceswindow.py:194
+#: preferenceswindow.py:193
 msgid "Mouse Middle Button Scroll Action:"
 msgstr "Maus-Mitteltasten-Bildlaufaktion:"
 
-#: preferenceswindow.py:195
+#: preferenceswindow.py:194
 msgid "Mouse Horizontal Scroll Direction:"
 msgstr "Horizontale Bildlaufrichtung der Maus:"
 
-#: preferenceswindow.py:196
+#: preferenceswindow.py:195
 msgid "Hide file extensions when importing Clips"
 msgstr "Verstecken Sie Dateierweiterungen beim Importieren von Clips"
 
-#: preferenceswindow.py:197
+#: preferenceswindow.py:196
 #, fuzzy
 msgid "Open Clip in Effects Editor"
 msgstr "In Filter-Editor öffnen"
 
-#: preferenceswindow.py:265
+#: preferenceswindow.py:264
 msgid "Center Current Frame on Playback Stop"
 msgstr "Zentriere aktuellen Frame bei Abspiel-Stopp"
 
-#: preferenceswindow.py:266
+#: preferenceswindow.py:265
 #, fuzzy
 msgid "Center Current Frame after Up/Down Arrow"
 msgstr "Zentriere aktuellen Frame bei Abspiel-Stopp"
 
-#: preferenceswindow.py:268
+#: preferenceswindow.py:267
 msgid "Enable single Play/Pause button"
 msgstr "Eine Schaltfläche für Abspielen/Pause"
 
-#: preferenceswindow.py:270
+#: preferenceswindow.py:269
 msgid "Fast Forward / Reverse Speed for Shift Key:"
 msgstr "Schneller Vorlauf / Rücklauf für Umschalttaste:"
 
-#: preferenceswindow.py:271
+#: preferenceswindow.py:270
 msgid ""
 "Speed of Forward / Reverse will be multiplied by this value if Shift Key is "
 "held (Only using KEYS).\n"
@@ -6596,11 +6585,11 @@ msgstr ""
 "multipliziert.\n"
 "z.B. wenn Shift auf"
 
-#: preferenceswindow.py:276
+#: preferenceswindow.py:275
 msgid "Fast Forward / Reverse Speed for Control Key:"
 msgstr "Schneller Vorlauf / Rücklauf für Steuerschlüssel:"
 
-#: preferenceswindow.py:277
+#: preferenceswindow.py:276
 msgid ""
 "Speed of Forward / Reverse will be multiplied by this value if Ctrl Key is "
 "held (Only using KEYS)."
@@ -6608,11 +6597,11 @@ msgstr ""
 "Vorwärts- / Rückwärtsgeschwindigkeit wird mit diesem Wert multipliziert, "
 "wenn die Strg-Taste ist angehalten (nur mit KEYS)."
 
-#: preferenceswindow.py:278
+#: preferenceswindow.py:277
 msgid "Fast Forward / Reverse Speed for Caps Lock Key:"
 msgstr "Schneller Vorlauf / Rücklauf für die Feststelltaste:"
 
-#: preferenceswindow.py:279
+#: preferenceswindow.py:278
 msgid ""
 "Speed of Forward / Reverse will be multiplied by this value if Caps Lock is "
 "set (Only using KEYS)."
@@ -6620,177 +6609,177 @@ msgstr ""
 "Vorwärts- / Rückwärtsgeschwindigkeit wird mit diesem Wert multipliziert, "
 "wenn die Feststelltaste aktiviert istset (Nur mit KEYS)."
 
-#: preferenceswindow.py:280
+#: preferenceswindow.py:279
 msgid "Move Timeline to follow Playback"
 msgstr "Verschieben Sie die Zeitleiste, um der Wiedergabe zu folgen"
 
-#: preferenceswindow.py:281
+#: preferenceswindow.py:280
 #, fuzzy
 msgid "Loop Media Clips on Monitor"
 msgstr "In Clip-Vorschau öffnen"
 
-#: preferenceswindow.py:313
+#: preferenceswindow.py:312
 msgid "None"
 msgstr ""
 
-#: preferenceswindow.py:314
+#: preferenceswindow.py:313
 msgid "English"
 msgstr ""
 
-#: preferenceswindow.py:315
+#: preferenceswindow.py:314
 msgid "Chinese, Simplified"
 msgstr ""
 
-#: preferenceswindow.py:316
+#: preferenceswindow.py:315
 msgid "Chinese, Traditional"
 msgstr ""
 
-#: preferenceswindow.py:317
+#: preferenceswindow.py:316
 msgid "Czech"
 msgstr ""
 
-#: preferenceswindow.py:318
+#: preferenceswindow.py:317
 msgid "French"
 msgstr ""
 
-#: preferenceswindow.py:319
+#: preferenceswindow.py:318
 msgid "German"
 msgstr ""
 
-#: preferenceswindow.py:320
+#: preferenceswindow.py:319
 msgid "Hungarian"
 msgstr ""
 
-#: preferenceswindow.py:321
+#: preferenceswindow.py:320
 msgid "Italian"
 msgstr ""
 
-#: preferenceswindow.py:322
+#: preferenceswindow.py:321
 msgid "Polish"
 msgstr ""
 
-#: preferenceswindow.py:323
+#: preferenceswindow.py:322
 msgid "Russian"
 msgstr ""
 
-#: preferenceswindow.py:324
+#: preferenceswindow.py:323
 msgid "Spanish"
 msgstr ""
 
-#: preferenceswindow.py:325
+#: preferenceswindow.py:324
 msgid "Ukranian"
 msgstr ""
 
-#: preferenceswindow.py:340
+#: preferenceswindow.py:339
 msgid "Glass"
 msgstr "Glas"
 
-#: preferenceswindow.py:341
+#: preferenceswindow.py:340
 msgid "Simple"
 msgstr "Einfach"
 
-#: preferenceswindow.py:342
+#: preferenceswindow.py:341
 #, fuzzy
 msgid "No Decorations"
 msgstr "Dauer"
 
 # ???
-#: preferenceswindow.py:346
+#: preferenceswindow.py:345
 #, fuzzy
 msgid "Flowblade Theme"
 msgstr "Flowblade Warteschlangen-Renderer"
 
-#: preferenceswindow.py:347
+#: preferenceswindow.py:346
 msgid "Dark Theme"
 msgstr "Dunkles Thema"
 
-#: preferenceswindow.py:348
+#: preferenceswindow.py:347
 msgid "Light Theme"
 msgstr "Helles Thema"
 
 # ???
-#: preferenceswindow.py:358
+#: preferenceswindow.py:357
 msgid "Display All Levels"
 msgstr "Alle Level anzeigen"
 
-#: preferenceswindow.py:359
+#: preferenceswindow.py:358
 msgid "Display Levels On Request"
 msgstr "Level bei Bedarf anzeigen"
 
-#: preferenceswindow.py:374
+#: preferenceswindow.py:373
 msgid "Normal - 50px, 25px"
 msgstr ""
 
-#: preferenceswindow.py:375
+#: preferenceswindow.py:374
 msgid "Double for HiDPI - 100px, 50px"
 msgstr ""
 
-#: preferenceswindow.py:380
+#: preferenceswindow.py:379
 msgid "3 panels if width (1450px+) available"
 msgstr "3 Platten, wenn Breite (1450px +) verfügbar"
 
-#: preferenceswindow.py:381
+#: preferenceswindow.py:380
 msgid "2 panels always"
 msgstr ""
 
-#: preferenceswindow.py:387
+#: preferenceswindow.py:386
 msgid "Full Display area: "
 msgstr ""
 
-#: preferenceswindow.py:391
+#: preferenceswindow.py:390
 #, fuzzy
 msgid "Monitor "
 msgstr "Vorschau-Clip"
 
-#: preferenceswindow.py:396
+#: preferenceswindow.py:395
 msgid "Application window mode:"
 msgstr "Applikation"
 
-#: preferenceswindow.py:398
+#: preferenceswindow.py:397
 #, fuzzy
 msgid "Force Language:"
 msgstr "Start erzwingen"
 
-#: preferenceswindow.py:399
+#: preferenceswindow.py:398
 msgid "Display splash screen"
 msgstr "Zeige Infofenster beim Start"
 
 # ???
-#: preferenceswindow.py:400
+#: preferenceswindow.py:399
 msgid "Buttons style:"
 msgstr "Stil der Schaltflächen:"
 
-#: preferenceswindow.py:401
+#: preferenceswindow.py:400
 msgid "Theme request, icons and colors:"
 msgstr "Farbschema bei fehlendem Thema:"
 
-#: preferenceswindow.py:402
+#: preferenceswindow.py:401
 msgid "Theme detection fail fallback colors:"
 msgstr "Farbschema bei fehlendem Thema:"
 
-#: preferenceswindow.py:403
+#: preferenceswindow.py:402
 msgid "Default audio levels display:"
 msgstr "Standard-Anzeige für Audio:"
 
-#: preferenceswindow.py:404
+#: preferenceswindow.py:403
 #, fuzzy
 msgid "Tracks Heights:"
 msgstr "Normale Höhe"
 
-#: preferenceswindow.py:406
+#: preferenceswindow.py:405
 #, fuzzy
 msgid "Show Full File names"
 msgstr "Zeige volle Pfade"
 
-#: preferenceswindow.py:407
+#: preferenceswindow.py:406
 msgid "Top row layout:"
 msgstr "Layout der obersten Zeile:"
 
-#: preferenceswindow.py:409
+#: preferenceswindow.py:408
 msgid "Do GUI layout based on:"
 msgstr ""
 
-#: preferenceswindow.py:442
+#: preferenceswindow.py:441
 msgid ""
 "Changing these values may cause problems with playback and rendering.\n"
 "The safe values are Render Threads:1, Allow Frame Dropping: No."
@@ -6799,20 +6788,20 @@ msgstr ""
 "Rendern führen.\n"
 "Die sicheren Werte sind Render Threads: 1, Frame Dropping zulassen: Nein."
 
-#: preferenceswindow.py:453
+#: preferenceswindow.py:452
 msgid "Between 1 and the number of CPU Cores"
 msgstr "Zwischen 1 und der Anzahl der CPU-Kerne"
 
-#: preferenceswindow.py:454
+#: preferenceswindow.py:453
 msgid "Allow Frame Dropping for real-time rendering, when needed"
 msgstr "Erlauben Sie bei Bedarf das Frame-Dropping für Echtzeit-Rendering"
 
-#: preferenceswindow.py:458
+#: preferenceswindow.py:457
 #, fuzzy
 msgid "Render Threads:"
 msgstr "Rendern gestartet:"
 
-#: preferenceswindow.py:459
+#: preferenceswindow.py:458
 msgid "Allow Frame Dropping"
 msgstr "Frame-Droping zulassen"
 
@@ -8536,12 +8525,12 @@ msgstr "Wählen Sie Preset Workflow und fahren Sie fort"
 
 #: workflow.py:431
 #, fuzzy
-msgid "<b>Welcome to Flowblade 2.2</b>"
+msgid "<b>Welcome to Flowblade 2.4</b>"
 msgstr "<b>Willkommen bei Flowblade 2.0</b>"
 
 #: workflow.py:436
 #, fuzzy
-msgid "<b>Flowblade 2.2</b> comes with a configurable workflow."
+msgid "<b>Flowblade 2.4</b> comes with a configurable workflow."
 msgstr "<b>Flowblade 2.0</b> verfügt über einen konfigurierbaren Workflow."
 
 #: workflow.py:441
@@ -8689,6 +8678,15 @@ msgstr ""
 #, fuzzy
 msgid "Close Tool"
 msgstr "Schließen"
+
+#
+#
+#
+#~ msgid "Size/Height"
+#~ msgstr "Größe/Höhe"
+
+#~ msgid "Width"
+#~ msgstr "Breite"
 
 #~ msgid "Move Playhead to Clip start on keyframe edit init"
 #~ msgstr ""

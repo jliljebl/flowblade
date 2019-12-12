@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-08 18:03+0200\n"
+"POT-Creation-Date: 2019-12-12 18:20+0200\n"
 "PO-Revision-Date: 2018-12-31 10:20+0800\n"
 "Last-Translator: Steve Nian <sdnian@gmail.com>\n"
 "Language-Team: Chinese (traditional)\n"
@@ -16,39 +16,39 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: app.py:200
+#: app.py:193
 msgid "No Autosave"
 msgstr "不要自動保存"
 
-#: app.py:200
+#: app.py:193
 msgid "1 min"
 msgstr "1 分鐘"
 
-#: app.py:200
+#: app.py:193
 msgid "2 min"
 msgstr "2 分鐘"
 
-#: app.py:200
+#: app.py:193
 msgid "5 min"
 msgstr "5 分鐘"
 
-#: app.py:910
+#: app.py:903
 msgid "Too small screen for this application."
 msgstr "畫面太小無法執行此應用程式"
 
-#: app.py:913
+#: app.py:906
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr "此應用程式的最小螢幕解析度為 1152 x 768。\n"
 
-#: app.py:914
+#: app.py:907
 msgid "Your screen dimensions are "
 msgstr "你的螢幕解析度是 "
 
-#: app.py:947 projectaction.py:401 projectaction.py:724
+#: app.py:940 projectaction.py:401 projectaction.py:724
 msgid "Project has not been saved previously"
 msgstr "先前的專案尚未儲存"
 
-#: app.py:948 projectaction.py:402 projectaction.py:725
+#: app.py:941 projectaction.py:402 projectaction.py:725
 msgid "Save project with File -> Save As before closing."
 msgstr "在結束之前，從 檔案 -> 另存新檔 來儲存專案。"
 
@@ -832,11 +832,11 @@ msgstr "到標記終點"
 msgid "Window Mode"
 msgstr "視窗模式"
 
-#: editorwindow.py:929 preferenceswindow.py:366
+#: editorwindow.py:929 preferenceswindow.py:365
 msgid "Single Window"
 msgstr "單視窗"
 
-#: editorwindow.py:933 preferenceswindow.py:367
+#: editorwindow.py:933 preferenceswindow.py:366
 msgid "Two Windows"
 msgstr "雙視窗"
 
@@ -1029,8 +1029,8 @@ msgstr "新專案"
 #: dialogs.py:1081 dialogs.py:1109 dialogs.py:1235 dialogs.py:1274
 #: dialogs.py:1288 dialogs.py:1302 dialogs.py:1316 dialogs.py:1330
 #: dialogs.py:1344 dialogs.py:1359 dialogs.py:1616 dialogs.py:1733
-#: dialogs.py:1781 dialogs.py:1896 dialogs.py:1932 propertyeditorbuilder.py:601
-#: propertyeditorbuilder.py:740 propertyeditorbuilder.py:780 rendergui.py:49
+#: dialogs.py:1781 dialogs.py:1896 dialogs.py:1932 propertyeditorbuilder.py:531
+#: propertyeditorbuilder.py:670 propertyeditorbuilder.py:710 rendergui.py:49
 #: rendergui.py:108 rendergui.py:122 rendergui.py:139 rendergui.py:1069
 #: preferenceswindow.py:49 tools/batchrendering.py:989 proxyediting.py:432
 #: tlineaction.py:1475 patternproducer.py:354 patternproducer.py:387
@@ -1041,8 +1041,8 @@ msgstr "取消"
 
 #: dialogs.py:58 dialogs.py:237 dialogs.py:308 dialogs.py:374 dialogs.py:493
 #: dialogs.py:619 dialogs.py:740 dialogs.py:753 dialogs.py:1617
-#: propertyeditorbuilder.py:602 propertyeditorbuilder.py:741
-#: propertyeditorbuilder.py:781 rendergui.py:109 preferenceswindow.py:50
+#: propertyeditorbuilder.py:532 propertyeditorbuilder.py:671
+#: propertyeditorbuilder.py:711 rendergui.py:109 preferenceswindow.py:50
 #: tools/batchrendering.py:407 tools/gmic.py:427 dialogutils.py:44
 #: dialogutils.py:65 dialogutils.py:78 dialogutils.py:93
 msgid "OK"
@@ -2017,7 +2017,7 @@ msgstr "關閉編輯器"
 msgid "Sequence Watermark"
 msgstr "序列浮水印"
 
-#: dialogs.py:1569 tools/titler.py:521 proxyediting.py:423 medialinker.py:157
+#: dialogs.py:1569 tools/titler.py:525 proxyediting.py:423 medialinker.py:157
 #: tools/gmic.py:847 tools/gmic.py:938 diskcachemanagement.py:151
 msgid "Close"
 msgstr "關閉"
@@ -2577,8 +2577,8 @@ msgstr "刪除檔案重新連結路徑"
 msgid "Show Full Paths"
 msgstr "顯示完整路徑"
 
-#: guicomponents.py:2187 propertyeditorbuilder.py:809
-#: propertyeditorbuilder.py:864 tools/toolsencoding.py:343
+#: guicomponents.py:2187 propertyeditorbuilder.py:739
+#: propertyeditorbuilder.py:794 tools/toolsencoding.py:343
 msgid "Progressive"
 msgstr "循序式掃瞄"
 
@@ -2606,7 +2606,7 @@ msgstr "解析度比例："
 msgid "Frames per second:"
 msgstr "每秒顯示張數："
 
-#: guicomponents.py:2210 tools/titler.py:338
+#: guicomponents.py:2210 tools/titler.py:337
 msgid "Size:"
 msgstr "大小："
 
@@ -3190,8 +3190,8 @@ msgstr "音訊濾波器"
 msgid "Blur"
 msgstr "模糊"
 
-#: translations.py:134 translations.py:570 propertyeditorbuilder.py:824
-#: propertyeditorbuilder.py:879
+#: translations.py:134 translations.py:570 propertyeditorbuilder.py:754
+#: propertyeditorbuilder.py:809
 msgid "Distort"
 msgstr "扭曲"
 
@@ -5275,77 +5275,69 @@ msgstr "擦除剪輯長度"
 msgid "Color Dip"
 msgstr "顏色浸透"
 
-#: propertyeditorbuilder.py:434
-msgid "Size/Height"
-msgstr "大小/高度"
-
-#: propertyeditorbuilder.py:468
-msgid "Width"
-msgstr "寬度"
-
-#: propertyeditorbuilder.py:596
+#: propertyeditorbuilder.py:526
 msgid "Preset Luma"
 msgstr "預設亮度"
 
-#: propertyeditorbuilder.py:597
+#: propertyeditorbuilder.py:527
 msgid "User Luma"
 msgstr "使用者亮度"
 
-#: propertyeditorbuilder.py:599
+#: propertyeditorbuilder.py:529
 msgid "Select Luma File"
 msgstr "選擇亮度檔案"
 
-#: propertyeditorbuilder.py:608
+#: propertyeditorbuilder.py:538
 msgid "Wipe Luma files"
 msgstr "擦除亮度檔案"
 
-#: propertyeditorbuilder.py:614
+#: propertyeditorbuilder.py:544
 msgid "Luma File:"
 msgstr "亮度檔案："
 
-#: propertyeditorbuilder.py:738
+#: propertyeditorbuilder.py:668
 msgid "Select File"
 msgstr "選擇檔案"
 
-#: propertyeditorbuilder.py:778
+#: propertyeditorbuilder.py:708
 msgid "Select Image Producing File"
 msgstr "選擇影像生成檔案"
 
-#: propertyeditorbuilder.py:809 propertyeditorbuilder.py:864
+#: propertyeditorbuilder.py:739 propertyeditorbuilder.py:794
 msgid "Nothing"
 msgstr "無"
 
-#: propertyeditorbuilder.py:809 propertyeditorbuilder.py:864
+#: propertyeditorbuilder.py:739 propertyeditorbuilder.py:794
 msgid "Deinterlace"
 msgstr "去交錯"
 
-#: propertyeditorbuilder.py:809 propertyeditorbuilder.py:864
+#: propertyeditorbuilder.py:739 propertyeditorbuilder.py:794
 msgid "Both"
 msgstr "兩者"
 
-#: propertyeditorbuilder.py:818 propertyeditorbuilder.py:873
+#: propertyeditorbuilder.py:748 propertyeditorbuilder.py:803
 msgid "Force"
 msgstr "強制"
 
-#: propertyeditorbuilder.py:823 propertyeditorbuilder.py:878
+#: propertyeditorbuilder.py:753 propertyeditorbuilder.py:808
 msgid "Align"
 msgstr "對齊"
 
-#: propertyeditorbuilder.py:937
+#: propertyeditorbuilder.py:867
 #, fuzzy
 msgid "Keyframes"
 msgstr "關鍵幀"
 
-#: propertyeditorbuilder.py:941
+#: propertyeditorbuilder.py:871
 #, fuzzy
 msgid "Curve Points"
 msgstr "曲線"
 
-#: propertyeditorbuilder.py:945
+#: propertyeditorbuilder.py:875
 msgid "Lauch RotoMask editor"
 msgstr ""
 
-#: propertyeditorbuilder.py:949
+#: propertyeditorbuilder.py:879
 msgid "RotoMask info"
 msgstr ""
 
@@ -5671,62 +5663,62 @@ msgstr "字幕器已經開啟"
 msgid "Only single instance of Titler can be opened."
 msgstr "只能開啟單一字幕器實例。"
 
-#: tools/titler.py:363
+#: tools/titler.py:362
 msgid "Opacity:"
 msgstr "不透明度"
 
-#: tools/titler.py:364
+#: tools/titler.py:363
 msgid "X Off:"
 msgstr "X Off:"
 
-#: tools/titler.py:365
+#: tools/titler.py:364
 msgid "Y Off:"
 msgstr "Y Off:"
 
-#: tools/titler.py:410
+#: tools/titler.py:412
 msgid "Load Layers"
 msgstr "載入層"
 
-#: tools/titler.py:412
+#: tools/titler.py:414
 msgid "Save Layers"
 msgstr "儲存層"
 
-#: tools/titler.py:414
+#: tools/titler.py:416
 msgid "Clear All"
 msgstr "清除全部"
 
-#: tools/titler.py:497
+#: tools/titler.py:501
 msgid "Font"
 msgstr ""
 
-#: tools/titler.py:498
+#: tools/titler.py:502
 #, fuzzy
 msgid "Outline"
 msgstr "<b>輪廓</b>"
 
-#: tools/titler.py:499
+#: tools/titler.py:503
 #, fuzzy
 msgid "Shadow"
 msgstr "陰影"
 
-#: tools/titler.py:502
+#: tools/titler.py:506
 #, fuzzy
 msgid "Layer Text"
 msgstr "層"
 
-#: tools/titler.py:505
+#: tools/titler.py:509
 msgid "Layers"
 msgstr "層"
 
-#: tools/titler.py:511
+#: tools/titler.py:515
 msgid "Keep Layers When Closed"
 msgstr "結束後保留層"
 
-#: tools/titler.py:516
+#: tools/titler.py:520
 msgid "Open Saved Title In Bin"
 msgstr "在容器中開啟保存字幕"
 
-#: tools/titler.py:523
+#: tools/titler.py:527
 msgid "Save Title Graphic"
 msgstr "儲存字幕圖形"
 
@@ -6078,108 +6070,108 @@ msgstr "需要重新啟動來讓某些變更的設定生效。"
 msgid "If requested change is not in effect, restart application."
 msgstr "如果要求的變更沒有生效，重新啟動應用程式。"
 
-#: preferenceswindow.py:123
+#: preferenceswindow.py:122
 msgid "Absolute paths first, relative second"
 msgstr "首先是絕對路徑，其次相對路徑"
 
-#: preferenceswindow.py:124
+#: preferenceswindow.py:123
 msgid "Relative paths first, absolute second"
 msgstr "首先是相對路徑，其次絕對路徑"
 
-#: preferenceswindow.py:125
+#: preferenceswindow.py:124
 msgid "Absolute paths only"
 msgstr "僅限絕對路徑"
 
-#: preferenceswindow.py:129
+#: preferenceswindow.py:128
 msgid "Default Profile:"
 msgstr "預設設定檔："
 
-#: preferenceswindow.py:130
+#: preferenceswindow.py:129
 msgid "Remember last media directory"
 msgstr "記住最後媒體目錄"
 
-#: preferenceswindow.py:131
+#: preferenceswindow.py:130
 msgid "Undo stack size:"
 msgstr "復原堆疊大小："
 
-#: preferenceswindow.py:132
+#: preferenceswindow.py:131
 msgid "Remember last render directory"
 msgstr "記住最後渲染目錄"
 
-#: preferenceswindow.py:133
+#: preferenceswindow.py:132
 msgid "Autosave for crash recovery every:"
 msgstr "自動保存每次崩潰修復的間隔時間："
 
-#: preferenceswindow.py:134
+#: preferenceswindow.py:133
 msgid "Media look-up order on load:"
 msgstr "載入時媒體查找順序："
 
-#: preferenceswindow.py:166
+#: preferenceswindow.py:165
 msgid "Zoom, Control to Scroll Horizontal"
 msgstr "縮放，按 Ctrl 水平滾動"
 
-#: preferenceswindow.py:167
+#: preferenceswindow.py:166
 msgid "Scroll Horizontal, Control to Zoom"
 msgstr "水平滾動，按 Ctrl 縮放"
 
-#: preferenceswindow.py:174
+#: preferenceswindow.py:173
 msgid "Scroll Up Forward"
 msgstr "向上滾動"
 
-#: preferenceswindow.py:175
+#: preferenceswindow.py:174
 msgid "Scroll Down Forward"
 msgstr "向下滾動"
 
-#: preferenceswindow.py:182
+#: preferenceswindow.py:181
 msgid "On Double Click"
 msgstr ""
 
-#: preferenceswindow.py:183
+#: preferenceswindow.py:182
 msgid "On Single Click"
 msgstr ""
 
-#: preferenceswindow.py:191
+#: preferenceswindow.py:190
 msgid "Graphics default length:"
 msgstr "圖像預設長度："
 
-#: preferenceswindow.py:192
+#: preferenceswindow.py:191
 msgid "Cover Transition/Fade clips on delete if possible"
 msgstr "如果可能，在刪除時覆蓋轉場/淡入剪輯片段"
 
-#: preferenceswindow.py:194
+#: preferenceswindow.py:193
 msgid "Mouse Middle Button Scroll Action:"
 msgstr "滑鼠中鍵滾動動作："
 
-#: preferenceswindow.py:195
+#: preferenceswindow.py:194
 msgid "Mouse Horizontal Scroll Direction:"
 msgstr "滑鼠水平滾動方向："
 
-#: preferenceswindow.py:196
+#: preferenceswindow.py:195
 msgid "Hide file extensions when importing Clips"
 msgstr "匯入剪輯片段時隱藏文件副檔名"
 
-#: preferenceswindow.py:197
+#: preferenceswindow.py:196
 #, fuzzy
 msgid "Open Clip in Effects Editor"
 msgstr "在濾鏡編輯器打開"
 
-#: preferenceswindow.py:265
+#: preferenceswindow.py:264
 msgid "Center Current Frame on Playback Stop"
 msgstr "回放停止時的置中當前影格"
 
-#: preferenceswindow.py:266
+#: preferenceswindow.py:265
 msgid "Center Current Frame after Up/Down Arrow"
 msgstr "上/下箭頭之後置中當前影格"
 
-#: preferenceswindow.py:268
+#: preferenceswindow.py:267
 msgid "Enable single Play/Pause button"
 msgstr "啟用單一 播放/暫停 按鈕"
 
-#: preferenceswindow.py:270
+#: preferenceswindow.py:269
 msgid "Fast Forward / Reverse Speed for Shift Key:"
 msgstr "Shift 鍵的快進/快退速度："
 
-#: preferenceswindow.py:271
+#: preferenceswindow.py:270
 msgid ""
 "Speed of Forward / Reverse will be multiplied by this value if Shift Key is "
 "held (Only using KEYS).\n"
@@ -6190,189 +6182,189 @@ msgstr ""
 "啟用多個修改鍵將乘以設定值。\n"
 "例如：如果 Shift 是設定到 "
 
-#: preferenceswindow.py:276
+#: preferenceswindow.py:275
 msgid "Fast Forward / Reverse Speed for Control Key:"
 msgstr "Ctrl 鍵的快進/快退速度："
 
-#: preferenceswindow.py:277
+#: preferenceswindow.py:276
 msgid ""
 "Speed of Forward / Reverse will be multiplied by this value if Ctrl Key is "
 "held (Only using KEYS)."
 msgstr "如果按住 Ctrl 鍵，則前進/後退速度將乘以此值（僅使用按鍵）。"
 
-#: preferenceswindow.py:278
+#: preferenceswindow.py:277
 msgid "Fast Forward / Reverse Speed for Caps Lock Key:"
 msgstr "大寫鎖定鍵的快進/快退速度："
 
-#: preferenceswindow.py:279
+#: preferenceswindow.py:278
 msgid ""
 "Speed of Forward / Reverse will be multiplied by this value if Caps Lock is "
 "set (Only using KEYS)."
 msgstr "如果按住 大寫鍵，則前進/後退速度將乘以此值（僅使用按鍵）。"
 
-#: preferenceswindow.py:280
+#: preferenceswindow.py:279
 msgid "Move Timeline to follow Playback"
 msgstr "移動時間軸來跟隨播放"
 
-#: preferenceswindow.py:281
+#: preferenceswindow.py:280
 #, fuzzy
 msgid "Loop Media Clips on Monitor"
 msgstr "在剪輯顯示器中打開"
 
-#: preferenceswindow.py:313
+#: preferenceswindow.py:312
 msgid "None"
 msgstr ""
 
-#: preferenceswindow.py:314
+#: preferenceswindow.py:313
 msgid "English"
 msgstr ""
 
-#: preferenceswindow.py:315
+#: preferenceswindow.py:314
 msgid "Chinese, Simplified"
 msgstr ""
 
-#: preferenceswindow.py:316
+#: preferenceswindow.py:315
 msgid "Chinese, Traditional"
 msgstr ""
 
-#: preferenceswindow.py:317
+#: preferenceswindow.py:316
 msgid "Czech"
 msgstr ""
 
-#: preferenceswindow.py:318
+#: preferenceswindow.py:317
 msgid "French"
 msgstr ""
 
-#: preferenceswindow.py:319
+#: preferenceswindow.py:318
 msgid "German"
 msgstr ""
 
-#: preferenceswindow.py:320
+#: preferenceswindow.py:319
 msgid "Hungarian"
 msgstr ""
 
-#: preferenceswindow.py:321
+#: preferenceswindow.py:320
 msgid "Italian"
 msgstr ""
 
-#: preferenceswindow.py:322
+#: preferenceswindow.py:321
 msgid "Polish"
 msgstr ""
 
-#: preferenceswindow.py:323
+#: preferenceswindow.py:322
 msgid "Russian"
 msgstr ""
 
-#: preferenceswindow.py:324
+#: preferenceswindow.py:323
 msgid "Spanish"
 msgstr ""
 
-#: preferenceswindow.py:325
+#: preferenceswindow.py:324
 msgid "Ukranian"
 msgstr ""
 
-#: preferenceswindow.py:340
+#: preferenceswindow.py:339
 msgid "Glass"
 msgstr "玻璃"
 
-#: preferenceswindow.py:341
+#: preferenceswindow.py:340
 msgid "Simple"
 msgstr "簡樸"
 
-#: preferenceswindow.py:342
+#: preferenceswindow.py:341
 msgid "No Decorations"
 msgstr "沒有裝飾"
 
-#: preferenceswindow.py:346
+#: preferenceswindow.py:345
 msgid "Flowblade Theme"
 msgstr "Flowblade 主題"
 
-#: preferenceswindow.py:347
+#: preferenceswindow.py:346
 msgid "Dark Theme"
 msgstr "黑暗主題"
 
-#: preferenceswindow.py:348
+#: preferenceswindow.py:347
 msgid "Light Theme"
 msgstr "明亮主題"
 
-#: preferenceswindow.py:358
+#: preferenceswindow.py:357
 msgid "Display All Levels"
 msgstr "顯示全部波形"
 
-#: preferenceswindow.py:359
+#: preferenceswindow.py:358
 msgid "Display Levels On Request"
 msgstr "依要求顯示波形"
 
-#: preferenceswindow.py:374
+#: preferenceswindow.py:373
 msgid "Normal - 50px, 25px"
 msgstr "正常 - 50px, 25px"
 
-#: preferenceswindow.py:375
+#: preferenceswindow.py:374
 msgid "Double for HiDPI - 100px, 50px"
 msgstr "雙倍用於 HiDPI - 100px, 50px"
 
-#: preferenceswindow.py:380
+#: preferenceswindow.py:379
 msgid "3 panels if width (1450px+) available"
 msgstr "三個面板，如果寬度可用（1450px+）"
 
-#: preferenceswindow.py:381
+#: preferenceswindow.py:380
 msgid "2 panels always"
 msgstr "永遠使用二個面版"
 
-#: preferenceswindow.py:387
+#: preferenceswindow.py:386
 msgid "Full Display area: "
 msgstr ""
 
-#: preferenceswindow.py:391
+#: preferenceswindow.py:390
 #, fuzzy
 msgid "Monitor "
 msgstr "新增剪輯片段顯示器"
 
-#: preferenceswindow.py:396
+#: preferenceswindow.py:395
 msgid "Application window mode:"
 msgstr "應用程式視窗模式："
 
-#: preferenceswindow.py:398
+#: preferenceswindow.py:397
 msgid "Force Language:"
 msgstr ""
 
-#: preferenceswindow.py:399
+#: preferenceswindow.py:398
 msgid "Display splash screen"
 msgstr "顯示啟動畫面"
 
-#: preferenceswindow.py:400
+#: preferenceswindow.py:399
 msgid "Buttons style:"
 msgstr "按鈕樣式："
 
-#: preferenceswindow.py:401
+#: preferenceswindow.py:400
 msgid "Theme request, icons and colors:"
 msgstr "主題要求、圖示和配色："
 
-#: preferenceswindow.py:402
+#: preferenceswindow.py:401
 msgid "Theme detection fail fallback colors:"
 msgstr "主題檢測失敗的備用配色："
 
-#: preferenceswindow.py:403
+#: preferenceswindow.py:402
 msgid "Default audio levels display:"
 msgstr "預設音訊波形顯示："
 
-#: preferenceswindow.py:404
+#: preferenceswindow.py:403
 msgid "Tracks Heights:"
 msgstr "軌道高度："
 
-#: preferenceswindow.py:406
+#: preferenceswindow.py:405
 msgid "Show Full File names"
 msgstr "顯示完整檔名"
 
-#: preferenceswindow.py:407
+#: preferenceswindow.py:406
 msgid "Top row layout:"
 msgstr "上排佈局："
 
-#: preferenceswindow.py:409
+#: preferenceswindow.py:408
 msgid "Do GUI layout based on:"
 msgstr ""
 
-#: preferenceswindow.py:442
+#: preferenceswindow.py:441
 msgid ""
 "Changing these values may cause problems with playback and rendering.\n"
 "The safe values are Render Threads:1, Allow Frame Dropping: No."
@@ -6380,19 +6372,19 @@ msgstr ""
 "更改這些值可能會導致播放和渲染出現問題。\n"
 "安全的值是：渲染線程 1，允許影格丟棄 否"
 
-#: preferenceswindow.py:453
+#: preferenceswindow.py:452
 msgid "Between 1 and the number of CPU Cores"
 msgstr "介於 1 和 CPU 的核心數量"
 
-#: preferenceswindow.py:454
+#: preferenceswindow.py:453
 msgid "Allow Frame Dropping for real-time rendering, when needed"
 msgstr "如果有需要，在即時渲染時允許影格丟棄"
 
-#: preferenceswindow.py:458
+#: preferenceswindow.py:457
 msgid "Render Threads:"
 msgstr "渲染線程："
 
-#: preferenceswindow.py:459
+#: preferenceswindow.py:458
 msgid "Allow Frame Dropping"
 msgstr "允許影格丟棄"
 
@@ -7977,12 +7969,12 @@ msgstr "選擇預設工作流程並繼續"
 
 #: workflow.py:431
 #, fuzzy
-msgid "<b>Welcome to Flowblade 2.2</b>"
+msgid "<b>Welcome to Flowblade 2.4</b>"
 msgstr "<b>歡迎來到 Flowblade 2.0</b>"
 
 #: workflow.py:436
 #, fuzzy
-msgid "<b>Flowblade 2.2</b> comes with a configurable workflow."
+msgid "<b>Flowblade 2.4</b> comes with a configurable workflow."
 msgstr "<b>Flowblade 2.0</b> 具有可設定的工作流程。"
 
 #: workflow.py:441
@@ -8117,6 +8109,12 @@ msgstr ""
 #, fuzzy
 msgid "Close Tool"
 msgstr "關閉"
+
+#~ msgid "Size/Height"
+#~ msgstr "大小/高度"
+
+#~ msgid "Width"
+#~ msgstr "寬度"
 
 #~ msgid "Move Playhead to Clip start on keyframe edit init"
 #~ msgstr "將關鍵影格編輯初始化的播放頭移動到剪輯開始"
