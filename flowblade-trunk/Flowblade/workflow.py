@@ -428,12 +428,12 @@ class WorkflowDialog(Gtk.Dialog):
 
         self.selection = STANDARD_PRESET 
         
-        info_label_text_1 = _("<b>Welcome to Flowblade 2.2</b>")
+        info_label_text_1 = _("<b>Welcome to Flowblade 2.4</b>")
         info_label_1 = Gtk.Label(info_label_text_1)
         info_label_1.set_use_markup(True)
 
 
-        info_label_text_2 = _("<b>Flowblade 2.2</b> comes with a configurable workflow.")
+        info_label_text_2 = _("<b>Flowblade 2.4</b> comes with a configurable workflow.")
         info_label_2 = Gtk.Label(info_label_text_2)
         info_label_2.set_use_markup(True)
 
