@@ -1,5 +1,148 @@
 # Release Notes #
 
+## Flowblade 2.4 ##
+
+Date: December 12, 2019
+
+**Flowblade 2.4** is the first version of the application running on Python 3.
+
+We also got interesting contributions in this development cycle and made some quite large changes on how Compositing works.
+
+With the Python 3 conversion now behind us, we have plenty of interesting ideas for the next development cycle and will also start working towards getting video display moved on from SDL 1.2.
+
+## PYTHON 3 PORT
+
+**All distributions are encouraged to update to Flowblade 2.4 and MLT 6.18**
+
+Flowblade was ported to Python 3. The process went without major gliches and we only needed to do one single patch upstream to maintain functionality.
+
+The change represent however a discontinuity point in the development of the application, 
+e.g. we do not offer **.deb** package for this release. It is also possible that we didn't catch all regressions for this release but we expect to get back on track towards continual quality improvemnt very quickly.
+
+Going forward we hope that the Python project focuses on improving its existing strenghs in a backward compatible way. The decade long transition into Python 3 should be considered as proof that further compatibility breaking changes will only hurt all stakeholders in the platform.
+
+## ARDOUR EXPORT
+
+**Nathan Rosenquist** contributed functionality to export Sequence audio as an Ardour project.
+
+This contribution is an important step towards more professional workflows where audio is worked on a dedicated application after the image edit is completed.
+
+Advantages of editing audio in Adrour include cutting audio with single sample accuracy (Flowblade generally allows cutting at every 44100th sample), unlimited tracks, more and better audio filtering options and much more.
+
+## NEW COMPOSITING MODE 'STANDARD AUTO'
+
+Previously we had a **Compositor Auto Follow** mode that changed the way compositors behaved.
+
+In this release we are moving to represent that previous functionality as a **Compositor Mode** and also we added a new Compositor Mode **Standard Auto Follow**.
+
+**Standard Auto Follow** mode is the most simple and easiest to use Compositing Mode. 
+
+In **Standard Auto Follow** mode Compositors follow their origin clips automatically and users can only add one compositor per clip. Compositors select their destination tracks automatically and it is not possible to create node tree compositions.
+
+This mode works most similarly to way that compositing works in most other video editors.
+
+User can set Compositing Mode for each Sequence by selecting it from *Sequence -> Compositing Mode* sub menu.
+
+
+## COMPOSITOR CHANGES
+
+We made some changes here to improve quality and approachability when working with compositors.
+
+* **Dropped Dissolve and Picture-in-Picture from compositors  selection**, these use cases are better covered by Blend and Affine Blend that have more functionality and better quality when compositing with alpha channel.
+
+* **Renamed Region to Wipe/Translate** and moved it into new group Wipe with Wipe Clip Length Compositor.
+
+* **Renamed Alpha Combiners compositor group Alpha** and moved LumaToAlpha compositor in it.
+
+* **Dropped Dodge blender and Cairo blending mode "Saturate"** because these were functioaning properly.
+
+* **Added 'Delete Compositors' menu action** in clip context menu.
+
+## TRANSFORM FILTERS UPDATES
+
+* **Filter selection was udated** New available filters transform are **Position Scale, Rotate and Shear**.
+
+* **Position Scale** filter now has GUI editor.
+
+* All filter values can now be edited with keyframes.
+
+## CONTRIBUTIONS
+
+#### Pascal de Bruijn 
+
+New defishor type filter and improved defaults - Changed Default new Project Profile to: HD 1080p 30 fps -  Change mp2 audio encoder to libtwolame - Change H.264 video to use with AAC audio - drop mp3 codec audio bitrate to real avaialble maximum - Change WebM to use xiph's libvorbis - make Ogg Theora video have Ogg Vorbis audio - Mention VP8 video for WebM container - Mention Ogg container for Theora video - Make h.264 as first option Encoding selection. - Proxy Editing:fix h.264 proxy format audio description (ref: dc13921e), reduce alignment to 2, this gets rid of the black bars , sensibly match audio codec to their (proxy) video codec - Flowblade CSS Theme: unset all properties so the system theme doesn't bleed through - keep assets sources local - GUI Keyframededitor colors update to better match Flowblade theme colors - Remove duplicates of profiles atsc_720p_25, atsc_720p_2997, atsc_720p_50, atsc_720p_5994
+
+#### Steven van de Beek
+
+* Fixed big buttons for HiDPI screens with new cdoe and new icons provided 
+* fixed autosave interval selection to work.
+
+#### Nathan Rosenqvist
+
+Fix atomic file for Python3 - update Lossless HuffYUV and Apple ProRes render Profiles to use 24bit audio - add numpy dependency to python3 doc.
+
+**cclauss** IconSize.DND -> Gtk.IconSize.DND
+
+**Alex Myczko** Rename flowblade..po to flowblade.po
+
+## TRANSLATIONS
+
+Chinese zh_CN translation update by **驿窗**
+
+Czech translation update by **Pavel Fric**
+
+Russian translation update for application and help docs **Николай Смольянинов.**
+
+## FEATURE ADDITIONS AND BUG FIXES
+
+* Fix sequence combining bugs
+
+* Add audio_match property to all shape filters to fix audio level bug
+
+* Fix audio monitoring for all sequences
+
+* Fix Issue #443 with media loading and bins
+
+* Add Wipe alpha filter
+
+* Change Paster Filters -> Paste Filters / Properties
+
+* Allow opening MLT XML files with exactly matching profiles
+
+* Make Proxy mode info available for Render Queue items
+
+* Drop LensCorrectionAV filter
+
+* Make possible to select the monitor used to decide window layout
+
+* Fix box move bug
+
+* Make possible to copy paste clip ranges with blanks in them
+
+* Project events are now displayed on modal window on all screen sizes
+
+* Fix Render panel GUI for 900px height screens
+
+* JKL playback new speed 1.8x, GUI fix
+
+* Geometry editors GUI update
+
+* Kayframe values copy/paste can now be copy pasted
+
+* Created Sequence menu to simplify Edit and Project menus
+
+* Batch render window GUI touchup
+
+* Make possible to render a compound clip from non-active sequence
+
+* Media icons GUI update
+
+* Middlebar GUI update
+
+* Make monitor timecode infos pop better
+
+* Created document helpng to create MLT bindigs to run Flowblade
+
 ## Flowblade 2.2 ##
 
 Date: August 26, 2019
