@@ -4,7 +4,7 @@
 
 Flowblade 2.4 is running in Python 3 and requires MLT version that supports Python 3 bindigs. MLT 6.18 is the first version that fully supports all features required by Flowblade.
 
-(MLT 6.16 does provide Python 3 bindings but do not support one part of API needed to run Flowblade successfully)
+(MLT 6.16 does provide Python 3 bindings but does not support one part of API needed to run Flowblade successfully)
 
 ## PYTHON 3.7 STRONGLY RECOMMENDED
 
