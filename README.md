@@ -5,7 +5,7 @@
 
 **All distributions are encouraged to update to Flowblade 2.4 and MLT 6.18**  [MLT 6.18 required for Flowblade 2.4](./flowblade-trunk/docs/running_flowblade_2-4.md)
 
-**Release Notes [here.](./flowblade-trunk/docs/RELEASE_NOTES.md)**
+**Release notes [here.](./flowblade-trunk/docs/RELEASE_NOTES.md)**
 
 **[Installing Flowblade 2.4](./flowblade-trunk/docs/INSTALLING.md).**
  
