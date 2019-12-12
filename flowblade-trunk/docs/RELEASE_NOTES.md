@@ -16,7 +16,7 @@ With the Python 3 conversion now behind us, we have plenty of interesting ideas 
 
 Flowblade was ported to Python 3. The process went without major gliches and we only needed to do one single patch upstream to maintain functionality.
 
-The change represent however a discontinuity point in the development of the application, 
+The change however represents a discontinuity point in the development of the application, 
 e.g. we do not offer **.deb** package for this release. It is also possible that we didn't catch all regressions, but we expect to get back on track towards continual quality improvemnt very quickly.
 
 Going forward we hope that the Python project focuses on improving its existing strenghs in a backward compatible way. The decade long transition into Python 3 should be considered as proof that further compatibility breaking changes will only hurt all stakeholders in the platform.
