@@ -46,7 +46,7 @@ User can set Compositing Mode for each Sequence by selecting it from *Sequence -
 
 ## COMPOSITOR CHANGES
 
-We made some changes here to improve quality and approachability when working with compositors.
+We made some changes here to improve image quality and approachability when working with compositors.
 
 * **Dropped Dissolve and Picture-in-Picture from compositors  selection**, these use cases are better covered by Blend and Affine Blend that have more functionality and better quality when compositing with alpha channel.
 
