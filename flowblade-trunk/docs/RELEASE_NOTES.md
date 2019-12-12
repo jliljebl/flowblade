@@ -54,7 +54,7 @@ We made some changes here to improve quality and approachability when working wi
 
 * **Renamed Alpha Combiners compositor group Alpha** and moved LumaToAlpha compositor in it.
 
-* **Dropped Dodge blender and Cairo blending mode "Saturate"** because these were functioaning properly.
+* **Dropped Dodge blender and Cairo blending mode "Saturate"** because these were not functioning properly.
 
 * **Added 'Delete Compositors' menu action** in clip context menu.
 
@@ -127,7 +127,7 @@ Russian translation update for application and help docs **Николай Смо
 
 * Geometry editors GUI update
 
-* Kayframe values copy/paste can now be copy pasted
+* Keyframe values can now be copy pasted
 
 * Created Sequence menu to simplify Edit and Project menus
 
