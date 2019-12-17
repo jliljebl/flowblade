@@ -30,8 +30,6 @@ See: https://packages.debian.org/search?keywords=flowblade and https://launchpad
 
 ### Installing Flatpak from Flathub
 
-**NOTE: Flatpak is currently still in version 2.2, 2.4 update pull request has been made**
-
 #### 1. Setup Flatpak and Flathub
 There is an official guide here: https://flatpak.org/setup/
 
