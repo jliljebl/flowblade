@@ -71,7 +71,7 @@ yaourt -S flowblade-git
 
 ### Installing using Development Repository Version
 
-Before MLT 6.18 comes available in distributions Python 3 bindings have to be build and installed to run repository Flowblade. We have pointers here: https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/creating_user_folder_bindings.md 
+Before MLT 6.18 comes available in distributions, Python 3 bindings have to be build and installed to run repository Flowblade. We have some pointers here: https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/creating_user_folder_bindings.md 
 
 Flowblade is currently a 100% script application, and all the dependencies should be available in popular distributions, so in most cases it should be possible to install and run Flowblade without compiling anything.
 
