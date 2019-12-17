@@ -12,6 +12,6 @@ Python 3 port of Flowblade was developed and tested on Python version 3.7.
 
 During development it was discovered that Python 3.6 required some Gtk objects to be instantiated with using only named parameters in constructors. We fixed all cases that were shown to cause problems but did not try to fix every possible instance of Gtk object being created in the codebase.
 
-Therefore we strongly recommend Python versions 3.7+ for running Flowlbade.
+Therefore we recommend Python versions 3.7 or later for running Flowblade.
 
 
