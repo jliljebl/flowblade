@@ -196,11 +196,13 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
     buttons_row.set_homogeneous(False)
     global w
     w = window
+
     buttons_row.pack_start(w.worflow_launch.widget, False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) 
     buttons_row.pack_start(w.big_TC, False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
     buttons_row.pack_start(w.tool_selector.widget, False, True, 0)
+
     if editorstate.SCREEN_WIDTH > NORMAL_WIDTH:
         buttons_row.pack_start(guiutils.get_pad_label(24, 10), False, True, 0)
         buttons_row.pack_start(_get_tools_buttons(), False, True, 0)

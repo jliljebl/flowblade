@@ -2553,8 +2553,9 @@ class MonitorTCInfo:
     
 
 class TimeLineLeftBottom:
-    def __init__(self):
+    def __init__(self, comp_mode_launch):
         self.widget = Gtk.HBox()
+        self.comp_mode_launch = comp_mode_launch
         self.update_gui()
 
     def update_gui(self):
@@ -2567,6 +2568,7 @@ class TimeLineLeftBottom:
             proxy_img =  Gtk.Image.new_from_file(respaths.IMAGE_PATH + "project_proxy.png")
             self.widget.pack_start(proxy_img, False, False, 0)
 
+        #self.widget.pack_start(self.comp_mode_launch.widget, False, False, 0)
         self.widget.pack_start(guiutils.pad_label(4,4), False, False, 0)
             
         self.widget.show_all()
@@ -3045,8 +3047,8 @@ class PressLaunch:
 
         self.callback = callback
         self.surface = surface
-        self.surface_x  = 6
-        self.surface_y  = 6
+        self.surface_x = 6
+        self.surface_y = 6
 
     def _draw(self, event, cr, allocation):
         cr.set_source_surface(self.surface, self.surface_x, self.surface_y)

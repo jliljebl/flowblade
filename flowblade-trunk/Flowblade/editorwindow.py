@@ -765,13 +765,8 @@ class EditorWindow:
         levels_launcher_surface = guiutils.get_cairo_image("audio_levels_menu_launch")
         levels_launcher = guicomponents.PressLaunch(trackaction.audio_levels_menu_launch_pressed, levels_launcher_surface, 22*size_adj, 22*size_adj)
 
-        # Comp mode selector test, comimg in 2.6
-        # comp_mode_surface = guiutils.get_cairo_image("standard_auto")
-        #comp_mode_launcher = guicomponents.PressLaunch(trackaction.audio_levels_menu_launch_pressed, comp_mode_surface, 22*size_adj, 22*size_adj)
-        
         # Timeline top row
         tline_hbox_1 = Gtk.HBox()
-        #tline_hbox_1.pack_start(comp_mode_launcher.widget, False, False, 0)
         tline_hbox_1.pack_start(info_h, False, False, 0)
         tline_hbox_1.pack_start(levels_launcher.widget, False, False, 0)
         tline_hbox_1.pack_start(tracks_launcher.widget, False, False, 0)
@@ -802,8 +797,15 @@ class EditorWindow:
         tline_hbox_2.pack_start(self.tline_column.widget, False, False, 0)
         tline_hbox_2.pack_start(self.tline_canvas.widget, True, True, 0)
         
+        # Comp mode selector test, comimg in 2.6
+        #import trackaction
+        size_adj = 1
+        comp_mode_surface = guiutils.get_cairo_image("standard_auto")
+        comp_mode_launcher = guicomponents.PressLaunch(trackaction.audio_levels_menu_launch_pressed, comp_mode_surface, 22*size_adj, 20)
+        comp_mode_launcher.surface_y = 4
+    
         # Bottom row filler
-        self.left_corner = guicomponents.TimeLineLeftBottom()
+        self.left_corner = guicomponents.TimeLineLeftBottom(comp_mode_launcher)
         self.left_corner.widget.set_size_request(tlinewidgets.COLUMN_WIDTH, 20)
 
         # Timeline scroller
@@ -836,9 +838,8 @@ class EditorWindow:
         self.app_v_paned.pack2(tline_pane, resize=True, shrink=False)
         self.app_v_paned.no_dark_bg = True
 
-
         # Menu box
-        # menubar size 348, 28 if w want to center someting her with set_size_request
+        # menubar size 348, 28 if w want to center someting here with set_size_request
         self.menubar.set_margin_bottom(4)
         menu_vbox = Gtk.HBox(False, 0)
         menu_vbox.pack_start(guiutils.get_right_justified_box([self.menubar]), False, False, 0)
