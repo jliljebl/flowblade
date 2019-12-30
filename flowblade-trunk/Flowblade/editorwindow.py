@@ -797,13 +797,18 @@ class EditorWindow:
         tline_hbox_2.pack_start(self.tline_column.widget, False, False, 0)
         tline_hbox_2.pack_start(self.tline_canvas.widget, True, True, 0)
         
-        # Comp mode selector test, comimg in 2.6
-        #import trackaction
+        # Comp mode selector
         size_adj = 1
-        comp_mode_surface = guiutils.get_cairo_image("standard_auto")
-        comp_mode_launcher = guicomponents.PressLaunch(trackaction.audio_levels_menu_launch_pressed, comp_mode_surface, 22*size_adj, 20)
+        tds = guiutils.get_cairo_image("top_down")
+        tdds = guiutils.get_cairo_image("top_down_auto")
+        sas = guiutils.get_cairo_image("standard_auto")
+        surfaces = [tds, tdds, sas]
+        comp_mode_launcher = guicomponents.ImageMenuLaunch(projectaction.compositing_mode_menu_launched, surfaces, 22*size_adj, 20)
+        comp_mode_launcher.surface_x = 0
         comp_mode_launcher.surface_y = 4
-    
+        comp_mode_launcher.widget.set_tooltip_markup(_("Current Sequence Compositing Mode"))
+        self.comp_mode_launcher = comp_mode_launcher
+
         # Bottom row filler
         self.left_corner = guicomponents.TimeLineLeftBottom(comp_mode_launcher)
         self.left_corner.widget.set_size_request(tlinewidgets.COLUMN_WIDTH, 20)

@@ -70,7 +70,7 @@ tline_info = None # Shows save icon
 tline_column = None
 tline_left_corner = None
 big_tc = None
-
+comp_mode_launcher = None
 monitor_widget = None
 monitor_switch = None
 # indexes match editmode values in editorstate.py
@@ -104,7 +104,7 @@ def capture_references(new_editor_window):
     tline_display, tline_scale, tline_canvas, tline_scroll, tline_v_scroll, tline_info, \
     tline_column, play_b, \
     effect_select_list_view, effect_select_combo_box, project_info_vbox, middle_notebook, big_tc, editmenu, notebook_buttons, tline_left_corner, \
-    monitor_widget, bin_panel, monitor_switch
+    monitor_widget, bin_panel, monitor_switch, comp_mode_launcher
 
     editor_window = new_editor_window
 
@@ -130,6 +130,7 @@ def capture_references(new_editor_window):
     tline_info = editor_window.tline_info
     tline_column = editor_window.tline_column
     tline_left_corner = editor_window.left_corner
+    comp_mode_launcher = editor_window.comp_mode_launcher
 
     big_tc = editor_window.big_TC
 

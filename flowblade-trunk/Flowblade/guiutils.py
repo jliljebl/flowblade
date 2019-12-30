@@ -353,6 +353,25 @@ def get_menu_item(text, callback, data, sensitive=True):
     item.set_sensitive(sensitive)
     return item
 
+
+def get_image_menu_item(text, image_name, callback, tooltip_markup=None):
+    img = get_image(image_name)
+    text_label = Gtk.Label(text)
+    
+    hbox = Gtk.HBox()
+    hbox.pack_start(pad_label(4, 4), False, False, 0)
+    hbox.pack_start(img, False, False, 0)
+    hbox.pack_start(pad_label(4, 4), False, False, 0)
+    hbox.pack_start(text_label, False, False, 0)
+    hbox.show_all()
+    item = Gtk.MenuItem()
+    item.add(hbox)
+    if tooltip_markup != None:
+        item.set_tooltip_markup(tooltip_markup)
+    item.show()
+
+    return item
+    
 def get_radio_menu_items_group(menu, labels, msgs, callback, active_index):
     first_item = Gtk.RadioMenuItem()
     first_item.set_label(labels[0])

@@ -85,6 +85,7 @@ media_panel_popup_menu = Gtk.Menu()
 bin_popup_menu = Gtk.Menu()
 sequence_popup_menu = Gtk.Menu()
 hamburger_popup_menu = Gtk.Menu()
+compositing_mode_menu = Gtk.Menu()
 
 save_time = None
 save_icon_remove_event_id = None
@@ -1982,12 +1983,36 @@ def _update_gui_after_sequence_import(): # This copied  with small modifications
 
     updater. update_seqence_info_text()
 
+
+def compositing_mode_menu_launched(widget, event):
+    guiutils.remove_children(compositing_mode_menu)
+
+    comp_top_free = guiutils.get_image_menu_item(_("Top Down Free Move"), "top_down", change_current_sequence_compositing_mode_from_corner_menu)
+    comp_top_auto = guiutils.get_image_menu_item(_("Top Down Auto Follow"), "top_down_auto", change_current_sequence_compositing_mode_from_corner_menu)
+    comp_standard_auto = guiutils.get_image_menu_item(_("Standard Auto Follow"), "standard_auto", change_current_sequence_compositing_mode_from_corner_menu)
+    
+    comp_top_free.connect("activate", lambda w: change_current_sequence_compositing_mode_from_corner_menu(appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE))
+    comp_top_auto.connect("activate", lambda w: change_current_sequence_compositing_mode_from_corner_menu(appconsts.COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW))
+    comp_standard_auto.connect("activate", lambda w: change_current_sequence_compositing_mode_from_corner_menu(appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW))
+
+    compositing_mode_menu.add(comp_top_free)
+    compositing_mode_menu.add(comp_top_auto)
+    compositing_mode_menu.add(comp_standard_auto)
+
+    compositing_mode_menu.popup(None, None, None, None, event.button, event.time)
+    
+def change_current_sequence_compositing_mode_from_corner_menu(new_compositing_mode):
+    if current_sequence().compositing_mode == new_compositing_mode:
+        return 
+        
+    dialogs.confirm_compositing_mode_change(_compositing_mode_dialog_callback, new_compositing_mode)
+
 def change_current_sequence_compositing_mode(menu_widget, new_compositing_mode):
     if menu_widget.get_active() == False:
         return
     
     dialogs.confirm_compositing_mode_change(_compositing_mode_dialog_callback, new_compositing_mode)
-
+        
 def _compositing_mode_dialog_callback(dialog, response_id, new_compositing_mode):
     dialog.destroy()
     if response_id != Gtk.ResponseType.ACCEPT:
@@ -2000,6 +2025,8 @@ def _compositing_mode_dialog_callback(dialog, response_id, new_compositing_mode)
     undo.clear_undos()
     current_sequence().compositing_mode = new_compositing_mode
     updater.repaint_tline()
+
+    gui.comp_mode_launcher.set_pixbuf(new_compositing_mode) # pixbuf indexes correspond with compositing mode enums.
 
 # --------------------------------------------------------- pop-up menus
 def media_file_menu_item_selected(widget, data):
