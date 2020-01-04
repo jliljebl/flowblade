@@ -612,7 +612,7 @@ def _create_proxy_files(media_files_to_render):
 
 # ------------------------------------------------------------------ module functions
 def _get_proxies_dir():
-    return userfolders.get_render_dir() + "/proxies"
+    return userfolders.get_render_dir() + appconsts.PROXIES_DIR
 
 def _get_proxy_encoding():
     enc_index = editorstate.PROJECT().proxy_data.encoding

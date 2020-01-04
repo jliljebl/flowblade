@@ -46,6 +46,8 @@ SAVEFILE_VERSION = 5 # this is changed when backwards incompatible changes are i
 
 FALLBACK_THUMB = "fallback_thumb.png"
 
+PROXIES_DIR = "/proxies/"
+ 
 # Project events
 EVENT_CREATED_BY_NEW_DIALOG = 0
 EVENT_CREATED_BY_SAVING = 1
@@ -375,7 +377,7 @@ class MediaFile:
         if hasattr(self, "use_unique_proxy"): # This may have been added in proxyediting.py to prevent interfering with existing projects
             proxy_md_key = proxy_md_key + os.urandom(16)
         md_str = hashlib.md5(proxy_md_key.encode('utf-8')).hexdigest()
-        return str(userfolders.get_render_dir() + "/proxies/" + md_str + "/" + file_name)
+        return str(userfolders.get_render_dir() + "/"+ appconsts.PROXIES_DIR + md_str + "/" + file_name)
 
     def add_proxy_file(self, proxy_path):
         self.has_proxy_file = True

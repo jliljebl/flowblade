@@ -148,6 +148,7 @@ AUTOSAVE_DIR = "autosave/"
 # Hidden media folders
 # NOTE: We have not been fully consistant with the ending forward slashes.
 AUDIO_LEVELS_DIR = "audiolevels/"
+PROXIES_DIR = "proxies/"
 THUMBNAILS_DIR = "thumbnails"
 RENDERED_CLIPS_DIR = "rendered_clips"
 GMIC_DIR = "gmic"

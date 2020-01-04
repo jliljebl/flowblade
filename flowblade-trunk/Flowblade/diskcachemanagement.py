@@ -53,13 +53,9 @@ class DiskFolderManagementPanel:
         self.size_info = Gtk.Label()
         self.size_info.set_text(self.get_folder_size_str())
 
-        folder_label = Gtk.Label("/<i>" + folder + "</i>")
-        folder_label.set_use_markup(True)
-
         info = Gtk.HBox(True, 2)
         info.pack_start(guiutils.get_left_justified_box([guiutils.bold_label(info_text)]), True, True, 0)
-        info.pack_start(guiutils.get_left_justified_box([guiutils.pad_label(40, 12), folder_label]), True, True, 0)
-        info.pack_start(guiutils.get_left_justified_box([guiutils.pad_label(12, 12), self.size_info]), True, True, 0)
+        info.pack_start(guiutils.get_left_justified_box([guiutils.pad_label(40, 12), self.size_info]), True, True, 0)
 
         button_area = Gtk.HBox(False, 2)
         if self.warning_level == PROJECT_DATA_WARNING:
@@ -172,6 +168,7 @@ def _get_disk_dir_panels():
     panels.append(DiskFolderManagementPanel(userfolders.get_cache_dir(), appconsts.AUDIO_LEVELS_DIR, _("Audio Levels Data"), RECREATE_WARNING))
     panels.append(DiskFolderManagementPanel(userfolders.get_cache_dir(), appconsts.GMIC_DIR, _("G'Mic Tool Session Data"), NO_WARNING))
     panels.append(DiskFolderManagementPanel(userfolders.get_data_dir(), appconsts.RENDERED_CLIPS_DIR, _("Rendered Files"), PROJECT_DATA_WARNING))
+    panels.append(DiskFolderManagementPanel(userfolders.get_render_dir(), "/" + appconsts.PROXIES_DIR, _("Proxy Files"), PROJECT_DATA_WARNING))
     panels.append(DiskFolderManagementPanel(userfolders.get_cache_dir(), appconsts.THUMBNAILS_DIR, _("Thumbnails"), RECREATE_WARNING))
     panels.append(DiskFolderManagementPanel(userfolders.get_data_dir(), appconsts.USER_PROFILES_DIR_NO_SLASH, _("User Created Custom Profiles"), PROJECT_DATA_WARNING))
 
