@@ -1900,6 +1900,11 @@ def _get_edit_menu_item(event, clip, track, callback):
     sub_menu = Gtk.Menu()
     menu_item.set_submenu(sub_menu)
 
+    if clip.media_type != appconsts.PATTERN_PRODUCER:
+        reload_item = _get_menu_item(_("Reload Media From Disk"), callback, (clip, track, "reload_media", event.x))
+        sub_menu.append(reload_item)
+        _add_separetor(sub_menu)
+
     if (clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER) == False:
         vol_item = _get_menu_item(_("Volume Keyframes"), callback, (clip, track, "volumekf", event.x))
         sub_menu.append(vol_item)
