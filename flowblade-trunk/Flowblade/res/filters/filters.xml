@@ -115,8 +115,10 @@
         <extraeditor name="rotomask"></extraeditor> 
    </filter>
 
-    <filter id="mask_start">
-        <name>Mask Start</name>
+
+    <!-- FILTER MASK FILTERS -->
+    <filter id="mask_start"  filtermaskfilter="Alpha Shape">
+        <name>Mask - Begin</name>
         <group>Alpha</group>  
         <property name="filter" args="editor=no_editor exptype=not_parsed">frei0r.alphaspot</property>
         <property name="filter.Shape" args="editor=combobox exptype=default cbopts=Rectangle:0.0,Ellipse:0.32,Triangle:0.68,Diamond:1.0">0.0</property>
@@ -130,12 +132,22 @@
         <property name="filter.Max" args="editor=no_editor exptype=keyframe_hcs">0=1</property>
         <property name="filter.Operation" args="editor=combobox exptype=default cbopts=Overwrite:0.0,Add:0.7,Subtract:1.0">0.0</property>
     </filter>
-    <filter id="mask_apply">
-        <name>Mask Apply</name>
+    <filter id="mask_start" filtermaskfilter="Luma Key">
+        <name>Mask - Begin</name>
+        <group>Alpha</group>  
+        <property name="filter" args="editor=no_editor exptype=not_parsed">lumakey</property>
+        <property name="filter.threshold" args="range_in=0,255 range_out=0,255 displayname=Threshold">128</property>
+        <property name="filter.slope" args="range_in=0,128 range_out=0,128 displayname=Slope">0</property>
+        <property name="filter.prelevel" args="range_in=0,255 range_out=0,255 displayname=Pre-Level">0</property>
+        <property name="filter.postlevel" args="range_in=0,255 range_out=0,255 displayname=Post-Level">255</property>
+    </filter>
+    <filter id="mask_apply" filtermaskfilter="mask_apply">
+        <name>Mask - End</name>
         <group>Alpha</group>  
         <property name="transition" args="editor=no_editor exptype=not_parsed">frei0r.composition</property>
         <property name="mlt_image_format" args="editor=no_editor exptype=not_parsed">rgb24a</property>
     </filter>
+    
     
     <!-- AUDIO -->
     <filter id="volume" multipart="true">

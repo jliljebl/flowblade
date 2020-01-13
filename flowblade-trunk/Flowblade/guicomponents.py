@@ -2835,7 +2835,7 @@ def get_clip_effects_editor_hamburger_menu(event, callback):
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
 
-def get_filter_mask_menu(event, callback):
+def get_filter_mask_menu(event, callback, filter_names, filter_msgs):
     menu = filter_mask_menu
     guiutils.remove_children(menu)
 
@@ -2843,8 +2843,8 @@ def get_filter_mask_menu(event, callback):
     sub_menu = Gtk.Menu()
     menu_item.set_submenu(sub_menu)
     
-    sub_menu.add(_get_menu_item(_("Alpha Shape"), callback, "alpha_shape"))
-    sub_menu.add(_get_menu_item(_("File Mask"), callback, "file_mask"))
+    for f_name, f_msg in zip(filter_names, filter_msgs):
+        sub_menu.add(_get_menu_item(f_name, callback, f_msg))
 
     menu.add(menu_item)
 
@@ -2852,8 +2852,8 @@ def get_filter_mask_menu(event, callback):
     sub_menu = Gtk.Menu()
     menu_item.set_submenu(sub_menu)
     
-    sub_menu.add(_get_menu_item(_("Alpha Shape"), callback, "alpha_shape"))
-    sub_menu.add(_get_menu_item(_("File Mask"), callback, "file_mask"))
+    for f_name, f_msg in zip(filter_names, filter_msgs):
+        sub_menu.add(_get_menu_item(f_name, callback, "all_" + f_msg))
 
     menu.add(menu_item)
     

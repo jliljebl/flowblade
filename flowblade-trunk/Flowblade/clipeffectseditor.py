@@ -676,7 +676,8 @@ def update_kfeditors_positions():
 
 # ------------------------------------------------ FILTER MASK 
 def _filter_mask_launch_pressed(widget, event):
-    guicomponents.get_filter_mask_menu(event, _filter_mask_item_activated)
+    filter_names, filter_msgs = mltfilters.get_filter_mask_start_filters_data()
+    guicomponents.get_filter_mask_menu(event, _filter_mask_item_activated, filter_names, filter_msgs)
 
 def _filter_mask_item_activated(widget, msg):
     print(msg)
