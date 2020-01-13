@@ -676,7 +676,10 @@ def update_kfeditors_positions():
 
 # ------------------------------------------------ FILTER MASK 
 def _filter_mask_launch_pressed(widget, event):
-    print("pilluuu")
+    guicomponents.get_filter_mask_menu(event, _filter_mask_item_activated)
+
+def _filter_mask_item_activated(widget, msg):
+    print(msg)
         
 # ------------------------------------------------ SAVE, LOAD etc. from hamburger menu
 def _hamburger_launch_pressed(widget, event):

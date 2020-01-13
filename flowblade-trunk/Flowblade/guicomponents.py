@@ -114,7 +114,7 @@ log_event_popup_menu = Gtk.Menu()
 levels_menu = Gtk.Menu()
 clip_effects_hamburger_menu = Gtk.Menu()
 bin_popup_menu = Gtk.Menu()
-
+filter_mask_menu = Gtk.Menu()
 
 # ------------------------------------------------- item lists
 class ImageTextTextListView(Gtk.VBox):
@@ -2817,7 +2817,6 @@ def get_audio_levels_popup_menu(event, callback):
     menu.popup(None, None, None, None, event.button, event.time)
 
 def get_clip_effects_editor_hamburger_menu(event, callback):
-    # needs renaming
     menu = clip_effects_hamburger_menu
     guiutils.remove_children(menu)
 
@@ -2833,6 +2832,31 @@ def get_clip_effects_editor_hamburger_menu(event, callback):
     
     menu.add(_get_menu_item(_("Close Editor"), callback, "close"))
 
+    menu.show_all()
+    menu.popup(None, None, None, None, event.button, event.time)
+
+def get_filter_mask_menu(event, callback):
+    menu = filter_mask_menu
+    guiutils.remove_children(menu)
+
+    menu_item = Gtk.MenuItem(_("Add Filter Mask on Selected Filter"))
+    sub_menu = Gtk.Menu()
+    menu_item.set_submenu(sub_menu)
+    
+    sub_menu.add(_get_menu_item(_("Alpha Shape"), callback, "alpha_shape"))
+    sub_menu.add(_get_menu_item(_("File Mask"), callback, "file_mask"))
+
+    menu.add(menu_item)
+
+    menu_item = Gtk.MenuItem(_("Add Filter Mask on All Filters"))
+    sub_menu = Gtk.Menu()
+    menu_item.set_submenu(sub_menu)
+    
+    sub_menu.add(_get_menu_item(_("Alpha Shape"), callback, "alpha_shape"))
+    sub_menu.add(_get_menu_item(_("File Mask"), callback, "file_mask"))
+
+    menu.add(menu_item)
+    
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
 
@@ -3141,7 +3165,6 @@ class HamburgerPressLaunch:
             self.surface_active = guiutils.get_cairo_image("hamburger")
             self.surface_not_active = guiutils.get_cairo_image("hamburger_not_active")
         else:
-            print("klklkllkklklkl")
             self.surface_active = surfaces[0]
             self.surface_not_active = surfaces[1]
 
