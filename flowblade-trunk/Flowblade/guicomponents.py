@@ -3116,7 +3116,7 @@ class ToolSelector(ImageMenuLaunch):
 
     
 class HamburgerPressLaunch:
-    def __init__(self, callback):
+    def __init__(self, callback, surfaces=None, width=-1): # We are using this with other launchers that need to be able to set non sensitive
         # Aug-2019 - SvdB - BB
         prefs = editorpersistance.prefs
         size_adj = 1
@@ -3125,15 +3125,26 @@ class HamburgerPressLaunch:
             size_adj = 2
             y_adj = -2
         
-        self.widget = cairoarea.CairoDrawableArea2( 18*size_adj,
-                                                    18*size_adj,
+        if width == -1:
+            x_size = 18
+        else:
+            x_size = width
+
+        self.widget = cairoarea.CairoDrawableArea2( x_size * size_adj,
+                                                    18 * size_adj,
                                                     self._draw)
         self.widget.press_func = self._press_event
         self.sensitive = True
         self.callback = callback
         
-        self.surface_active = guiutils.get_cairo_image("hamburger")
-        self.surface_not_active = guiutils.get_cairo_image("hamburger_not_active")
+        if surfaces == None:
+            self.surface_active = guiutils.get_cairo_image("hamburger")
+            self.surface_not_active = guiutils.get_cairo_image("hamburger_not_active")
+        else:
+            print("klklkllkklklkl")
+            self.surface_active = surfaces[0]
+            self.surface_not_active = surfaces[1]
+
         self.surface_x  = 0
         self.surface_y  = y_adj
     

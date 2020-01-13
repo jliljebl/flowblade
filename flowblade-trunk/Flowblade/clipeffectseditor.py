@@ -146,6 +146,7 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
         stack_buttons_box = Gtk.HBox(False,1)
         stack_buttons_box.pack_start(ad_buttons_box, True, True, 0)
         stack_buttons_box.pack_start(widgets.toggle_all, False, False, 0)
+        stack_buttons_box.pack_start(widgets.add_filter_mask.widget, False, False, 0)
 
         effects_vbox.pack_start(label_row, False, False, 0)
         effects_vbox.pack_start(stack_buttons_box, False, False, 0)
@@ -279,6 +280,10 @@ def create_widgets():
     widgets.del_effect_b.set_image(guiutils.get_image("filter_delete"))
     widgets.toggle_all = Gtk.Button()
     widgets.toggle_all.set_image(guiutils.get_image("filters_all_toggle"))
+    filter_mask_surfaces = [guiutils.get_cairo_image("filters_mask_add"), guiutils.get_cairo_image("filters_mask_add_not_active")]
+    #widgets.add_filter_mask = guicomponents.PressLaunch(_filter_mask_launch_pressed, filter_mask_surface, w=28, h=22)
+    widgets.add_filter_mask = guicomponents.HamburgerPressLaunch(_filter_mask_launch_pressed, filter_mask_surfaces, 26)
+    guiutils.set_margins(widgets.add_filter_mask.widget, 10, 0, 1, 0)
 
     widgets.add_effect_b.connect("clicked", lambda w,e: add_effect_pressed(), None)
     widgets.del_effect_b.connect("clicked", lambda w,e: delete_effect_pressed(), None)
@@ -296,7 +301,8 @@ def create_widgets():
     widgets.add_effect_b.set_tooltip_text(_("Add Filter to Clip Filter Stack"))
     widgets.del_effect_b.set_tooltip_text(_("Delete Filter from Clip Filter Stack"))
     widgets.toggle_all.set_tooltip_text(_("Toggle all Filters On/Off"))
-
+    widgets.add_filter_mask.widget.set_tooltip_text(_("Add Filter Mask"))
+ 
 def set_enabled(value):
     widgets.clip_info.set_enabled( value)
     widgets.add_effect_b.set_sensitive(value)
@@ -305,6 +311,8 @@ def set_enabled(value):
     widgets.exit_button.set_sensitive(value)
     widgets.toggle_all.set_sensitive(value)
     widgets.hamburger_launcher.set_sensitive(value)
+    widgets.hamburger_launcher.widget.queue_draw()
+    widgets.add_filter_mask.set_sensitive(value)
     widgets.hamburger_launcher.widget.queue_draw()
 
 def update_stack_view():
@@ -665,8 +673,12 @@ def update_kfeditors_positions():
     for kf_widget in keyframe_editor_widgets:
         kf_widget.update_clip_pos()
 
+
+# ------------------------------------------------ FILTER MASK 
+def _filter_mask_launch_pressed(widget, event):
+    print("pilluuu")
         
-# ------------------------------------------------ SAVE; LOAD etc. from hamburger menu
+# ------------------------------------------------ SAVE, LOAD etc. from hamburger menu
 def _hamburger_launch_pressed(widget, event):
     guicomponents.get_clip_effects_editor_hamburger_menu(event, _clip_hamburger_item_activated)
     
