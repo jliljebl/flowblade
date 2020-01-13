@@ -183,9 +183,17 @@ class LoadThread(threading.Thread):
         if selections != None:
             render.set_saved_gui_selections(selections)
         updater.set_info_icon(None)
+        
+        # If project file is moved since last save we need to update last_save_path property and save to get everything working as expected.
+        if self.filename != editorstate.project.last_save_path:
+            print("Project file moved since last save, save with updated last_save_path data.")
+            editorstate.project.last_save_path = self.filename
+            _save_project_in_last_saved_path()
+            
         dialog.destroy()
-        gui.tline_canvas.connect_mouse_events() # mouse events dutring load cause crashes because there is no data to handle
+        gui.tline_canvas.connect_mouse_events() # mouse events during load cause crashes because there is no data to handle
         Gdk.threads_leave()
+
 
         ticker.stop_ticker()
 
