@@ -655,6 +655,10 @@ def fill_filters_mlt(mlt_clip, sequence):
     """ 
     filters = []
     for py_filter in mlt_clip.filters:
+
+        if not hasattr(py_filter.info, "filter_mask_filter"):
+            py_filter.info.filter_mask_filter = None
+        
         if py_filter.is_multi_filter == False:
             if py_filter.info.mlt_service_id == "affine":
                 FIX_1_TO_N_BACKWARDS_FILTER_COMPABILITY(py_filter)

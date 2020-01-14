@@ -1857,6 +1857,36 @@ def _remove_filter_redo(self):
 
     self.filter_edit_done_func(self.clip, len(self.clip.filters) - 1)# updates effect stack gui
 
+#------------------- REMOVE TWO FILTER
+# "clip","index_1", "index_2","filter_edit_done_func"
+# We need that index_2 > index_1
+def remove_two_filters_action(data):
+    action = EditAction(_remove_two_filters_undo, _remove_two_filters_redo, data)
+    return action
+
+def _remove_two_filters_undo(self):
+    _detach_all(self.clip)
+    
+    try:
+        self.clip.filters.insert(self.index_1, self.filter_object_1)
+        self.clip.filters.insert(self.index_2, self.filter_object_2)
+    except:
+        self.clip.filters.append(self.filter_object)
+
+    _attach_all(self.clip)
+        
+    self.filter_edit_done_func(self.clip, len(self.clip.filters) - 1) # updates effect stack gui if needed
+
+def _remove_two_filters_redo(self):
+    _detach_all(self.clip)
+    
+    self.filter_object_2 = self.clip.filters.pop(self.index_2)
+    self.filter_object_1 = self.clip.filters.pop(self.index_1)
+    
+    _attach_all(self.clip)
+
+    self.filter_edit_done_func(self.clip, len(self.clip.filters) - 1)# updates effect stack gui
+    
 #------------------- MOVE FILTER
 # "clip",""insert_index","delete_index"","filter_edit_done_func"
 # Moves filter in filter stack filter to clip.

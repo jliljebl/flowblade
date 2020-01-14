@@ -150,21 +150,26 @@ class FilterInfo:
         except: # default is False
             self.multipart_filter = False
 
-        try:
-            self.mlt_drop_version = filter_node.getAttribute(MLT_DROP_VERSION)
-        except: 
-            self.mlt_drop_version = None
+        # NOTE, TODO: Turns out that non-existing attribute returns empty string and asking is not error.
+        # Clear these try catches towards 2.6, keep now to see if we get any problems.
+        #try:
+        self.mlt_drop_version = filter_node.getAttribute(MLT_DROP_VERSION)
+        #except: 
+        #    self.mlt_drop_version = None
 
-        try:
-            self.mlt_min_version = filter_node.getAttribute(MLT_MIN_VERSION)
-        except:
-            self.mlt_min_version = None
+        #try:
+        self.mlt_min_version = filter_node.getAttribute(MLT_MIN_VERSION)
+        #except:
+        #    self.mlt_min_version = None
 
-        try:
-            self.filter_mask_filter = filter_node.getAttribute(FILTER_MASK_FILTER)
-        except:
-            self.filter_mask_filter = None
-            
+        #try:
+        self.filter_mask_filter = filter_node.getAttribute(FILTER_MASK_FILTER)
+        #except:
+        #    self.filter_mask_filter = None
+        
+        if self.mlt_drop_version == None:
+            print("self.mlt_drop_version==None")
+        
         self.xml = filter_node.toxml()
         self.name = filter_node.getElementsByTagName(NAME).item(0).firstChild.nodeValue
         self.group = filter_node.getElementsByTagName(GROUP).item(0).firstChild.nodeValue

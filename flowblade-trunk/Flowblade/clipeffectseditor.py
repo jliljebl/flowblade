@@ -117,7 +117,9 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
         stack_buttons_box = Gtk.HBox(False,1)
         stack_buttons_box.pack_start(widgets.del_effect_b, True, True, 0)
         stack_buttons_box.pack_start(widgets.toggle_all, False, False, 0)
-        stack_buttons_box.pack_start(guiutils.pad_label(74, 10), False, False, 0)
+        stack_buttons_box.pack_start(guiutils.pad_label(8, 10), False, False, 0)
+        stack_buttons_box.pack_start(widgets.add_filter_mask.widget, False, False, 0)
+        stack_buttons_box.pack_start(guiutils.pad_label(8, 10), False, False, 0)
         guiutils.set_margins(stack_buttons_box, 4, 4, 0, 0)
 
         stack_vbox = Gtk.VBox(False, 2)
@@ -281,7 +283,6 @@ def create_widgets():
     widgets.toggle_all = Gtk.Button()
     widgets.toggle_all.set_image(guiutils.get_image("filters_all_toggle"))
     filter_mask_surfaces = [guiutils.get_cairo_image("filters_mask_add"), guiutils.get_cairo_image("filters_mask_add_not_active")]
-    #widgets.add_filter_mask = guicomponents.PressLaunch(_filter_mask_launch_pressed, filter_mask_surface, w=28, h=22)
     widgets.add_filter_mask = guicomponents.HamburgerPressLaunch(_filter_mask_launch_pressed, filter_mask_surfaces, 26)
     guiutils.set_margins(widgets.add_filter_mask.widget, 10, 0, 1, 0)
 
@@ -393,12 +394,34 @@ def delete_effect_pressed():
     global edit_effect_update_blocked
     edit_effect_update_blocked = True
 
-    data = {"clip":clip,
-            "index":current_filter_index,
-            "filter_edit_done_func":filter_edit_done}
-    action = edit.remove_filter_action(data)
-    action.do_edit()
-
+    current_filter = clip.filters[current_filter_index]
+    
+    if current_filter.info.filter_mask_filter == "":
+        # Regular filters
+        data = {"clip":clip,
+                "index":current_filter_index,
+                "filter_edit_done_func":filter_edit_done}
+        action = edit.remove_filter_action(data)
+        action.do_edit()
+    else:
+        # Filter mask filters.
+        index_1 = -1
+        index_2 = -1
+        for i in range(0, len(clip.filters)):
+            f = clip.filters[i]
+            if f.info.filter_mask_filter != "":
+                if index_1 == -1:
+                    index_1 = i
+                else:
+                    index_2 = i
+        
+        data = {"clip":clip,
+                "index_1":index_1,
+                "index_2":index_2,
+                "filter_edit_done_func":filter_edit_done}
+        action = edit.remove_two_filters_action(data)
+        action.do_edit()
+        
     updater.repaint_tline()
 
     # Set last filter selected and display in editor
@@ -506,6 +529,12 @@ def effect_selection_changed(use_current_filter_index=False):
     if block_changed_update == True:
         return
 
+    # We need this update on clip load into editor
+    if _clip_has_filter_mask_filter() == True:
+        widgets.add_filter_mask.set_sensitive(False)
+    else:
+        widgets.add_filter_mask.set_sensitive(True)
+        
     keyframe_editor_widgets = []
 
     # Get selected row which is also index of filter in clip.filters
@@ -653,6 +682,11 @@ def filter_edit_done(edited_clip, index=-1):
     update_stack_view()
     block_changed_update = False
 
+    if _clip_has_filter_mask_filter() == True:
+        widgets.add_filter_mask.set_sensitive(False)
+    else:
+        widgets.add_filter_mask.set_sensitive(True)
+
     # Select row in effect stack view and so display corresponding effect editor panel.
     if not(index < 0):
         widgets.effect_stack_view.treeview.get_selection().select_path(str(index))
@@ -708,7 +742,16 @@ def _filter_mask_item_activated(widget, data):
     action = edit.add_two_filters_action(data)
     action.do_edit()
 
-        
+def _clip_has_filter_mask_filter():
+    if clip == None:
+        return False
+    
+    for f in clip.filters:
+        if f.info.filter_mask_filter != "":
+            return True
+          
+    return False
+
 # ------------------------------------------------ SAVE, LOAD etc. from hamburger menu
 def _hamburger_launch_pressed(widget, event):
     guicomponents.get_clip_effects_editor_hamburger_menu(event, _clip_hamburger_item_activated)
