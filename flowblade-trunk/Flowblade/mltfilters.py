@@ -117,7 +117,7 @@ def _get_group_icon(group_name):
         group_icons["Edge"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "edge.png")
         group_icons["Fix"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "fix.png")
         group_icons["Artistic"] = FILTER_DEFAULT_ICON
-
+        group_icons["FILTER_MASK"] =  GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "filter_mask.png")
     try:
         return group_icons[group_name]
     except:
@@ -532,7 +532,11 @@ def get_filter_mask_start_filters_data():
         filter_msgs.append(f_info.filter_mask_filter)
  
     return (filter_names, filter_msgs)
-     
+
+def get_filter_mask_filter(filter_name):
+    # We're using names in attribute FILTER_MASK_FILTER because different filter masks have the same mlt service "mask_start"
+    return _filter_mask_filters[filter_name]
+
 def detach_all_filters(clip):
     for f in clip.filters:
         if isinstance(f, FilterObject):

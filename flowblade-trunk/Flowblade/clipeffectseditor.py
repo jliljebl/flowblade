@@ -679,8 +679,35 @@ def _filter_mask_launch_pressed(widget, event):
     filter_names, filter_msgs = mltfilters.get_filter_mask_start_filters_data()
     guicomponents.get_filter_mask_menu(event, _filter_mask_item_activated, filter_names, filter_msgs)
 
-def _filter_mask_item_activated(widget, msg):
-    print(msg)
+def _filter_mask_item_activated(widget, data):
+    if clip == None:
+        return
+
+    full_stack_mask, msg = data
+    
+    filter_info_1 = mltfilters.get_filter_mask_filter(msg)
+    filter_info_2 = mltfilters.get_filter_mask_filter("Mask - End")
+
+    if full_stack_mask == True:
+        index_1 = 0
+        index_2 = len(clip.filters) + 1
+    else:
+        if current_filter_index != -1:
+            index_1 = current_filter_index
+            index_2 = current_filter_index + 2
+        else:
+            index_1 = 0
+            index_2 = len(clip.filters) + 1
+    
+    data = {"clip":clip, 
+            "filter_info_1":filter_info_1,
+            "filter_info_2":filter_info_2,
+            "index_1":index_1,
+            "index_2":index_2,
+            "filter_edit_done_func":filter_edit_done}
+    action = edit.add_two_filters_action(data)
+    action.do_edit()
+
         
 # ------------------------------------------------ SAVE, LOAD etc. from hamburger menu
 def _hamburger_launch_pressed(widget, event):
