@@ -977,7 +977,8 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
     to_req = to_part - (1 - add_thingy)
     from_handle = transition_data["from_handle"]
     to_handle = transition_data["to_handle"]
-
+    from_clip_index = movemodes.selected_range_in
+    
     # Check that have enough handles
     if from_req > from_handle or to_req > to_handle:
         if force_steal_frames == False:
@@ -988,14 +989,17 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
         from_needed = from_req - from_handle
         if from_needed > 0:
             if from_needed + 1 < from_clip.get_length():
+                print(from_needed, from_clip_index, "from_needed")
                 data = {"track":transition_data["track"],
                         "clip":transition_data["from_clip"],
-                        "index": movemodes.selected_range_in,
+                        "index":from_clip_index,
                         "delta":-from_needed,
                         "undo_done_callback":None, # weäre not doing the callback brcause we are not in trim tool that needs
                         "first_do":False} # etting this False prevents callback
                 action = edit.trim_end_action(data)
-                action.do_edit()                
+                edit.do_gui_update = False
+                action.do_edit()
+                edit.do_gui_update = True
             else:
                 # Clip is not long enough for frame steeling, transition fails.
                 
@@ -1005,14 +1009,17 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
         to_needed = to_req - to_handle
         if to_needed > 0:
             if to_needed + 1 < to_clip.get_length():
+                print(to_needed, from_clip_index + 1, "to_needed")
                 data = {"track":transition_data["track"],
                         "clip":transition_data["to_clip"],
-                        "index": movemodes.selected_range_out,
+                        "index":from_clip_index + 1,
                         "delta":to_needed,
-                        "undo_done_callback":None, # weäre not doing the callback brcause we are not in trim tool that needs
+                        "undo_done_callback":None, # we're not doing the callback brcause we are not in trim tool that needs
                         "first_do":False} # etting this False prevents callback
                 action = edit.trim_start_action(data)
-                action.do_edit()      
+                edit.do_gui_update = False
+                action.do_edit()
+                edit.do_gui_update = True
             else:
                 # Clip is not long enough for frame steeling, transition fails.
                 return
@@ -1025,6 +1032,7 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
                                  length) == False:
         return
     """
+    print (len(transition_data["track"].clips), "clips")
     editorstate.transition_length = length # Saved for user so that last length becomes default for next invocation.
     
     # Get from in and out frames
@@ -1036,7 +1044,7 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
     to_out = to_in + length # or transition will include one frame too many
 
     # Edit clears selection, get transition index before selection is cleared
-    trans_index = movemodes.selected_range_out
+    trans_index = from_clip_index + 1
     movemodes.clear_selected_clips()
 
     # Save encoding
