@@ -138,6 +138,8 @@ def main(root_path):
     if _log_file != None:
         log_print_output_to_file()
 
+    set_quiet_if_requested()
+
     print("Application version: " + editorstate.appversion)
 
     # Print OS, Python version and GTK+ version
@@ -423,7 +425,14 @@ def get_assoc_file_path():
 def open_assoc_file():
     GObject.source_remove(assoc_timeout_id)
     projectaction.actually_load_project(assoc_file_path, block_recent_files=False)
-    
+
+def set_quiet_if_requested():
+    for arg in sys.argv:
+        if arg == "--quiet":
+            global _log_file
+            _log_file = "/dev/null"
+            log_print_output_to_file()
+            
 def create_gui():
     """
     Called at app start to create gui objects and handles for them.
@@ -914,9 +923,9 @@ def _early_exit(dialog, response):
 
 # ------------------------------------------------------- logging
 def log_print_output_to_file():
-    so = se = open(_log_file, 'w', 0)
+    so = se = open(_log_file, 'w', buffering=1)
 
-    sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
+    sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', buffering=1)
 
     os.dup2(so.fileno(), sys.stdout.fileno())
     os.dup2(se.fileno(), sys.stderr.fileno())
