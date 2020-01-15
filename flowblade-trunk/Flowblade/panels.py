@@ -304,9 +304,9 @@ def get_transition_panel(trans_data):
     in_clip_value = Gtk.Label(label=str(trans_data["to_handle"]) + _(" frame(s)"))
 
     steal_frames = Gtk.CheckButton()
-    steal_frames.set_active(True)
+    steal_frames.set_active(editorstate.steal_frames)
     
-    steal_check_row = guiutils.get_checkbox_row_box(steal_frames, Gtk.Label(label=_("Steal frames from clips if need")))
+    steal_check_row = guiutils.get_checkbox_row_box(steal_frames, Gtk.Label(label=_("Steal frames from clips if needed")))
 
     out_handle_row = get_two_column_box(out_clip_label, 
                                         out_clip_value)
