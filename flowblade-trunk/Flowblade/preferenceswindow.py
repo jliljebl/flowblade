@@ -18,12 +18,6 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-"""
-    Change History:
-        Aug-2019 - SvdB - AS:
-            Save value of Autosave preference.
-            This impacts the following files: preferenceswindow, editorpersistance, app
-"""
 
 from gi.repository import Gtk
 

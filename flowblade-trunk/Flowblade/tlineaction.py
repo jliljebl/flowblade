@@ -938,13 +938,14 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
         return
 
     # Get input data
-    type_combo, length_entry, enc_combo, quality_combo, wipe_luma_combo_box, color_button = selection_widgets
+    type_combo, length_entry, enc_combo, quality_combo, wipe_luma_combo_box, color_button, steal_frames = selection_widgets
     transition_type_selection_index = type_combo.get_active()
     encoding_option_index = enc_combo.get_active()
     quality_option_index = quality_combo.get_active()
     extension_text = "." + renderconsumer.encoding_options[encoding_option_index].extension
     sorted_wipe_luma_index = wipe_luma_combo_box.get_active()
     color_str = color_button.get_color().to_string()
+    force_steal_frames = steal_frames.get_active()
 
     try:
         length = int(length_entry.get_text())
@@ -955,9 +956,6 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
         return
 
     dialog.destroy()
-
-    # Save encoding
-    PROJECT().set_project_property(appconsts.P_PROP_TRANSITION_ENCODING,(encoding_option_index,quality_option_index))
 
     from_clip = transition_data["from_clip"]
     to_clip = transition_data["to_clip"]
@@ -973,15 +971,63 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
         add_thingy = 0
     else:
         add_thingy = 1
-    
+
+    # Get required handle lengths.
+    from_req = from_part - add_thingy
+    to_req = to_part - (1 - add_thingy)
+    from_handle = transition_data["from_handle"]
+    to_handle = transition_data["to_handle"]
+
+    # Check that have enough handles
+    if from_req > from_handle or to_req > to_handle:
+        if force_steal_frames == False:
+            #info
+            return
+
+        # Force trim from clip if need
+        from_needed = from_req - from_handle
+        if from_needed > 0:
+            if from_needed + 1 < from_clip.get_length():
+                print("PEEENIS")
+                data = {"track":transition_data["track"],
+                        "clip":transition_data["from_clip"],
+                        "index": movemodes.selected_range_in,
+                        "delta":-from_needed,
+                        "undo_done_callback":None, # weäre not doing the callback brcause we are not in trim tool that needs
+                        "first_do":False} # etting this False prevents callback
+                action = edit.trim_end_action(data)
+                action.do_edit()                
+            else:
+                # Clip is not long enough for frame steeling, transition fails.
+                
+                return
+                
+        # Force trim to clip if needed
+        to_needed = to_req - to_handle
+        if to_needed > 0:
+            if to_needed + 1 < to_clip.get_length():
+                print("VAGINA")
+                data = {"track":transition_data["track"],
+                        "clip":transition_data["to_clip"],
+                        "index": movemodes.selected_range_out,
+                        "delta":to_needed,
+                        "undo_done_callback":None, # weäre not doing the callback brcause we are not in trim tool that needs
+                        "first_do":False} # etting this False prevents callback
+                action = edit.trim_start_action(data)
+                action.do_edit()      
+            else:
+                # Clip is not long enough for frame steeling, transition fails.
+                return
+                
+    """
     if _check_transition_handles((from_part - add_thingy),
                                  transition_data["from_handle"], 
-                                 to_part - (1 - add_thingy), 
+                                 to_part - (1 - add_thingy),
                                  transition_data["to_handle"],
                                  length) == False:
         return
-    
-    editorstate.transition_length = length
+    """
+    editorstate.transition_length = length # Saved for user so that last length becomes default for next invocation.
     
     # Get from in and out frames
     from_in = from_clip.clip_out - from_part + add_thingy
@@ -991,9 +1037,12 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
     to_in = to_clip.clip_in - to_part - 1 
     to_out = to_in + length # or transition will include one frame too many
 
-    # Edit clears selection, get track index before selection is cleared
+    # Edit clears selection, get transition index before selection is cleared
     trans_index = movemodes.selected_range_out
     movemodes.clear_selected_clips()
+
+    # Save encoding
+    PROJECT().set_project_property(appconsts.P_PROP_TRANSITION_ENCODING, (encoding_option_index, quality_option_index))
 
     producer_tractor = mlttransitions.get_rendered_transition_tractor(  editorstate.current_sequence(),
                                                                         from_clip,
