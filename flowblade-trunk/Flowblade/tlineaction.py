@@ -988,7 +988,6 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
         from_needed = from_req - from_handle
         if from_needed > 0:
             if from_needed + 1 < from_clip.get_length():
-                print("PEEENIS")
                 data = {"track":transition_data["track"],
                         "clip":transition_data["from_clip"],
                         "index": movemodes.selected_range_in,
@@ -1006,7 +1005,6 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
         to_needed = to_req - to_handle
         if to_needed > 0:
             if to_needed + 1 < to_clip.get_length():
-                print("VAGINA")
                 data = {"track":transition_data["track"],
                         "clip":transition_data["to_clip"],
                         "index": movemodes.selected_range_out,
