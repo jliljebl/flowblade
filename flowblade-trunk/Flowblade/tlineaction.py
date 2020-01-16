@@ -980,7 +980,7 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
     to_handle = transition_data["to_handle"]
     from_clip_index = movemodes.selected_range_in
     
-    # Check that have enough handles
+    # Check that we have enough handles
     if from_req > from_handle or to_req > to_handle:
         if force_steal_frames == False:
             _show_no_handles_dialog( from_req,
@@ -990,7 +990,7 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
                                      length)
             return
 
-        # Force trim from clip if need
+        # Force trim from clip if needed
         from_needed = from_req - from_handle
         if from_needed > 0:
             if from_needed + 1 < from_clip.clip_length():
@@ -998,8 +998,8 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
                         "clip":transition_data["from_clip"],
                         "index":from_clip_index,
                         "delta":-from_needed,
-                        "undo_done_callback":None, # weäre not doing the callback brcause we are not in trim tool that needs
-                        "first_do":False} # etting this False prevents callback
+                        "undo_done_callback":None, # we're not doing the callback because we are not in trim tool that needs it
+                        "first_do":False} # setting this False prevents callback
                 action = edit.trim_end_action(data)
                 edit.do_gui_update = False
                 action.do_edit()
@@ -1017,8 +1017,8 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
                         "clip":transition_data["to_clip"],
                         "index":from_clip_index + 1,
                         "delta":to_needed,
-                        "undo_done_callback":None, # we're not doing the callback brcause we are not in trim tool that needs
-                        "first_do":False} # etting this False prevents callback
+                        "undo_done_callback":None, # we're not doing the callback because we are not in trim tool that needs it
+                        "first_do":False} # setting this False prevents callback
                 action = edit.trim_start_action(data)
                 edit.do_gui_update = False
                 action.do_edit()
