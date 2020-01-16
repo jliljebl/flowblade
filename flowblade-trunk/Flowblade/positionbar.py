@@ -24,6 +24,7 @@ class PositionBar - Displays position on a clip or a sequence
 """
 
 import cairo
+import math
 
 from gi.repository import Gdk
 
@@ -85,7 +86,8 @@ class PositionBar:
         self.handle_trimmodes = handle_trimmodes
 
         self.POINTER_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "posbarpointer.png")
-    
+        self.MARKER_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "marker.png")
+        
         if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
             global LINE_COLOR, DISABLED_BG_COLOR, SELECTED_RANGE_COLOR, MARK_COLOR, SPEED_TEST_COLOR
             LINE_COLOR = DARK_LINE_COLOR
@@ -109,7 +111,9 @@ class PositionBar:
     def update_display_from_producer(self, producer):
         self.producer = producer
         length = producer.get_length() # Get from MLT
+        self.length = length 
         try:
+
             self.mark_in_norm = float(producer.mark_in) / length
             self.mark_out_norm = float(producer.mark_out) / length
             frame_pos = producer.frame()
@@ -179,6 +183,16 @@ class PositionBar:
         self.draw_mark_in(cr, h)
         self.draw_mark_out(cr, h)
 
+        # Draw timeline markers, monitor media items don't have markers only timeline clips made from them do.markers
+        if editorstate.timeline_visible():
+            markers = editorstate.current_sequence().markers
+            for i in range(0, len(markers)):
+                marker_name, marker_frame = markers[i]
+                marker_frame_norm = float(marker_frame) / self.length
+                x = math.floor(self._get_panel_pos(marker_frame_norm))
+                cr.set_source_surface(self.MARKER_ICON, x - 4,0)
+                cr.paint()
+            
         # Draw position pointer
         if self.disabled:
             return

@@ -565,6 +565,12 @@ def update_frame_displayers(frame):
     clipeffectseditor.display_kfeditors_tline_frame(frame)
     compositeeditor.display_kfeditors_tline_frame(frame)
 
+def update_position_bar():
+    if timeline_visible():
+        gui.pos_bar.update_display_from_producer(PLAYER().producer)
+    else:
+        gui.pos_bar.update_display_from_producer(gui.pos_bar.producer)
+    
 def update_kf_editor():
     clipeffectseditor.update_kfeditors_positions()
 

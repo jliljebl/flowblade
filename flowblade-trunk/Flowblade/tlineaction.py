@@ -1995,6 +1995,8 @@ def _marker_add_dialog_callback(dialog, response_id, name_entry):
 
     current_sequence().markers.append((name, current_frame))
     current_sequence().markers = sorted(current_sequence().markers, key=itemgetter(1))
+
+    updater.update_position_bar()
     updater.repaint_tline()
     
 
