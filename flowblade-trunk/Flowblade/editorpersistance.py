@@ -212,7 +212,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
 
     # Aug-2019 - SvdB - AS - added autosave_combo
     default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin, load_order_combo, \
-        autosave_combo = gen_opts_widgets
+        autosave_combo, render_folder_select = gen_opts_widgets
     
     # Jul-2016 - SvdB - Added play_pause_button
     # Apr-2017 - SvdB - Added ffwd / rev values
@@ -272,8 +272,9 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     # Aug-2019 - SvdB - AS
     prefs.auto_save_delay_value_index = autosave_combo.get_active()
     prefs.layout_display_index = layout_monitor.get_active()
-
-
+    if len(render_folder_select.get_filenames()) != 0:
+        prefs.default_render_directory = render_folder_select.get_filename()
+    
 def get_graphics_default_in_out_length():
     in_fr = int(15000/2) - int(prefs.default_grfx_length/2)
     out_fr = in_fr + int(prefs.default_grfx_length) - 1 # -1, out inclusive
@@ -370,3 +371,4 @@ class EditorPreferences:
         self.default_compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
         self.single_click_effects_editor_load = False
         self.layout_display_index = 0 # 0 == full area - 1,2... monitor number
+        self.default_render_directory = appconsts.USER_HOME_DIR

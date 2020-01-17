@@ -18,6 +18,7 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+import os
 
 from gi.repository import Gtk
 
@@ -118,6 +119,14 @@ def _general_options_panel():
     load_order_combo.append_text(_("Absolute paths only"))
     load_order_combo.set_active(prefs.media_load_order)
 
+    render_folder_select = Gtk.FileChooserButton.new (_("Select Default Render Folder"), Gtk.FileChooserAction.SELECT_FOLDER)    
+    if prefs.default_render_directory == None or prefs.default_render_directory == appconsts.USER_HOME_DIR \
+        or (not os.path.exists(prefs.default_render_directory)) \
+        or (not os.path.isdir(prefs.default_render_directory)):
+        render_folder_select.set_current_folder_uri(os.path.expanduser("~") + "/")
+    else:
+        render_folder_select.set_current_folder_uri(prefs.default_render_directory)
+
     # Layout
     row1 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Default Profile:")), default_profile_combo, PREFERENCES_LEFT))
     row2 = _row(guiutils.get_checkbox_row_box(open_in_last_opened_check, Gtk.Label(label=_("Remember last media directory"))))
@@ -125,11 +134,13 @@ def _general_options_panel():
     row5 = _row(guiutils.get_checkbox_row_box(open_in_last_rendered_check, Gtk.Label(label=_("Remember last render directory"))))
     row6 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Autosave for crash recovery every:")), autosave_combo, PREFERENCES_LEFT))
     row9 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Media look-up order on load:")), load_order_combo, PREFERENCES_LEFT))
-
+    row10 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Default render directory:")), render_folder_select, PREFERENCES_LEFT))
+    
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row6, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
+    vbox.pack_start(row10, False, False, 0)
     vbox.pack_start(row5, False, False, 0)
     vbox.pack_start(row3, False, False, 0)
     vbox.pack_start(row9, False, False, 0)
@@ -138,7 +149,8 @@ def _general_options_panel():
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
     # Aug-2019 - SvdB - AS - Added autosave_combo
-    return vbox, (default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin, load_order_combo, autosave_combo)
+    return vbox, ( default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, 
+                    undo_max_spin, load_order_combo, autosave_combo, render_folder_select)
 
 def _edit_prefs_panel():
     prefs = editorpersistance.prefs
