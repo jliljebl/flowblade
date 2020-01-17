@@ -1206,7 +1206,7 @@ def alpha_info_msg(callback, filter_name):
     row1 = guiutils.get_left_justified_box([line_label])
     
     info_text = "\u2022" + _(" <b>Alpha Filters</b> work by modifying image's alpha channel.\n") + \
-                "\u2022" + _(" To see the effect of <b>Alpha Filter</b> you need composite this clip on track below by adding a <b>Compositor like 'Dissolve'</b> into this clip.\n") + \
+                "\u2022" + _(" To see the effect of <b>Alpha Filter</b> you need composite this clip on track below by adding a <b>Compositor like 'Blend'</b> into this clip.\n") + \
                 "\u2022" + _(" <b>Alpha Filters</b> on clips on <b>Track V1</b> have no effect.")
     info_label = Gtk.Label(label=info_text)
     info_label.set_use_markup(True)
@@ -1774,122 +1774,6 @@ def combine_sequences_dialog(callback):
     dialog.connect('response', callback, action_select, seq_select, selectable_seqs)
     dialog.show_all()
     
-def set_fades_defaults_dialog(callback):
-
-    dialog = Gtk.Dialog(_("Compositors Auto Fades"), gui.editor_window.window,
-                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel"), Gtk.ResponseType.REJECT,
-                         _("Set Group Defaults"), Gtk.ResponseType.ACCEPT))
-
-
-
-    group_select = Gtk.ComboBoxText()
-    group_select.append_text(_("Dissolve, Blend"))
-    group_select.append_text(_("Affine Blend,  Picture-In-Picture, Region"))
-    group_select.set_active(0)
-
-    
-    groups_vbox = guiutils.get_vbox([group_select], False)
-    group_frame = panels.get_named_frame(_("Compositor Auto Fades Group"), groups_vbox)
-    
-    fade_in_row = Gtk.HBox()
-    fade_in_length_label = Gtk.Label(_("Length:"))
-    fade_in_check = Gtk.CheckButton.new_with_label (_("Add Fade In on Creation"))
-    fade_in_spin = Gtk.SpinButton.new_with_range(0, 150, 1)
-    fade_in_spin.set_value(0)
-
-    fade_in_row.pack_start(fade_in_check, False, False, 0)
-    fade_in_row.pack_start(guiutils.pad_label(12,2), False, False, 0)
-    fade_in_row.pack_start(fade_in_length_label, False, False, 0)
-    fade_in_row.pack_start(fade_in_spin, False, False, 0)
-
-    fade_out_row = Gtk.HBox()
-    fade_out_length_label = Gtk.Label(_("Length:"))
-    fade_out_check = Gtk.CheckButton.new_with_label (_("Add Fade Out on Creation"))
-    fade_out_spin = Gtk.SpinButton.new_with_range(0, 150, 1)
-    fade_out_spin.set_value(0)
-
-    fade_out_row.pack_start(fade_out_check, False, False, 0)
-    fade_out_row.pack_start(guiutils.pad_label(12,2), False, False, 0)
-    fade_out_row.pack_start(fade_out_length_label, False, False, 0)
-    fade_out_row.pack_start(fade_out_spin, False, False, 0)
-
-    widgets = (group_select, fade_in_check, fade_in_spin, fade_out_check, fade_out_spin, fade_in_length_label, fade_out_length_label)
-    group_select.connect('changed', _fades_group_changed, widgets)
-    fade_in_check.connect("toggled", _fade_on_off_changed, widgets)
-    fade_out_check.connect("toggled", _fade_on_off_changed, widgets)
-
-    _fades_group_changed(group_select, widgets)
-
-    fades_vbox = guiutils.get_vbox([fade_in_row, fade_out_row], False)
-    fades_frame = panels.get_named_frame(_("Group Auto Fades"), fades_vbox)
-    
-    vbox = guiutils.get_vbox([group_frame, fades_frame], False)
-
-    alignment = dialogutils.get_default_alignment(vbox)
-    dialogutils.set_outer_margins(dialog.vbox)
-    dialog.vbox.pack_start(alignment, True, True, 0)
-    _default_behaviour(dialog)
-    dialog.connect('response', callback, widgets)
-
-    dialog.show_all()
-
-def _fades_group_changed(combo, widgets):
-
-    group_select, fade_in_check, fade_in_spin, fade_out_check, fade_out_spin, fade_in_length_label, fade_out_length_label = widgets
-    
-    if group_select.get_active() == 0:
-        fade_in_key = appconsts.P_PROP_DISSOLVE_GROUP_FADE_IN
-        fade_out_key = appconsts.P_PROP_DISSOLVE_GROUP_FADE_OUT
-    else:
-        fade_in_key = appconsts.P_PROP_ANIM_GROUP_FADE_IN
-        fade_out_key = appconsts.P_PROP_ANIM_GROUP_FADE_OUT
-    
-    fade_in = editorstate.PROJECT().get_project_property(fade_in_key)
-    fade_out = editorstate.PROJECT().get_project_property(fade_out_key)
-    
-    if fade_in < 1:
-        fade_in_check.set_active(False)
-        fade_in_spin.set_value(0)
-        fade_in_spin.set_sensitive(False)
-        fade_in_length_label.set_sensitive(False)
-    else:
-        fade_in_check.set_active(True)
-        fade_in_spin.set_value(fade_in)
-        fade_in_spin.set_sensitive(True)
-        fade_in_length_label.set_sensitive(True)
-        
-    if fade_out < 1:
-        fade_out_check.set_active(False)
-        fade_out_spin.set_value(0)
-        fade_out_spin.set_sensitive(False)
-        fade_out_length_label.set_sensitive(False)
-    else:
-        fade_out_check.set_active(True)
-        fade_out_spin.set_value(fade_out)
-        fade_out_spin.set_sensitive(True)
-        fade_out_length_label.set_sensitive(True)
-        
-def _fade_on_off_changed(check_widget, widgets):
-    group_select, fade_in_check, fade_in_spin, fade_out_check, fade_out_spin, fade_in_length_label, fade_out_length_label = widgets
-    if check_widget == fade_in_check:
-        fade_in_spin.set_value(0)
-        if fade_in_check.get_active() == True:
-            fade_in_spin.set_sensitive(True)
-            fade_in_length_label.set_sensitive(True)
-        else:
-            fade_in_spin.set_sensitive(False)
-            fade_in_length_label.set_sensitive(False)
-        
-    if check_widget == fade_out_check:
-        fade_out_spin.set_value(0)
-        if fade_out_check.get_active() == True:
-            fade_out_spin.set_sensitive(True)
-            fade_out_length_label.set_sensitive(True)
-        else:
-            fade_out_spin.set_sensitive(False)
-            fade_out_length_label.set_sensitive(False)
-
 def tline_audio_sync_dialog(callback, data):
     dialog = Gtk.Dialog(_("Timeline Audio Sync"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
