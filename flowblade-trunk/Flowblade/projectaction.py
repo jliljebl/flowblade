@@ -454,7 +454,7 @@ def _save_project_in_last_saved_path():
     save_icon_remove_event_id = GObject.timeout_add(500, remove_save_icon)
 
     global save_time
-    save_time = time.clock()
+    save_time = time.monotonic()
     
     projectinfogui.update_project_info()
         
@@ -498,7 +498,7 @@ def _save_as_dialog_callback(dialog, response_id):
         save_icon_remove_event_id = GObject.timeout_add(500, remove_save_icon)
 
         global save_time
-        save_time = time.clock()
+        save_time = time.monotonic()
 
         gui.editor_window.window.set_title(PROJECT().name + " - Flowblade")        
         gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(False)
@@ -754,7 +754,7 @@ def get_save_time_msg():
     if save_time == None:
         return _("Project has not been saved since it was opened.")
     
-    save_ago = (time.clock() - save_time) / 60.0
+    save_ago = (time.monotonic() - save_time) / 60.0
 
     if save_ago < 1:
         return _("Project was saved less than a minute ago.")
