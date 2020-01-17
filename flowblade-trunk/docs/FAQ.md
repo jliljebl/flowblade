@@ -20,7 +20,7 @@ Alpha channel in images exits for the sole purpose of compositing two images. If
 ### Crop filter does not work
 
 Are you trying zoom in a bit and use part of the image instead of the whole image?
-If this is the case then you should use filter **Affine** in filter group **Transform** and set properties *Scale X, Scale Y, X, Y*.
+If this is the case in versions **2.4** and later you should use filter **Position Scale** in filter group **Transform** and the GUI editor for the filter.
 
 If you are trying to crop an image in the sense that you want to cut part of the image out, then you must use a Compositor and composite the image you are trying to crop on top of another image or perhaps a black color producer.
 
