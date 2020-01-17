@@ -1615,6 +1615,14 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
         self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
 
+    def numerical_edit_done(self, new_shape):
+        # Callback from PositionNumericalEntries
+        self.geom_kf_edit.set_keyframe_to_edit_shape(self.clip_editor.active_kf_index, new_shape)
+        self.update_editor_view_with_frame(self.clip_editor.current_clip_frame)
+        self.update_property_value()
+        self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
+        self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+        
     def update_request_from_geom_editor(self): # callback from geom_kf_edit
         self.update_editor_view_with_frame(self.clip_editor.current_clip_frame)
         self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
