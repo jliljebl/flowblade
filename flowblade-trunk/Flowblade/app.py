@@ -95,6 +95,7 @@ import shortcuts
 import snapping
 import threading
 import titler
+import tlinerender
 import tlinewidgets
 import toolsintegration
 import trimmodes
@@ -397,6 +398,12 @@ def monkeypatch_callbacks():
     multitrimmode.set_default_mode_func = modesetting.set_default_edit_mode
     
     keyframeeditor._get_current_edited_compositor = compositeeditor.get_compositor
+
+    # Not callbacks but tlinerender needs this data and we do this instead of copypaste.
+    tlinerender._get_frame_for_x_func = tlinewidgets.get_frame
+    tlinerender._get_x_for_frame_func = tlinewidgets._get_frame_x
+    tlinerender._get_last_tline_view_frame_func = tlinewidgets.get_last_tline_view_frame
+
     #keyframeeditor.add_fade_out_func = compositeeditor._add_fade_out_pressed
     # These provide clues for further module refactoring 
 
@@ -525,7 +532,7 @@ def init_project_gui():
     projectinfogui.update_project_info()
 
     titler.reset_titler()
-
+    
     # Set render folder selector to last render if prefs require 
     folder_path = editorstate.PROJECT().get_last_render_folder()
     if folder_path != None and editorpersistance.prefs.remember_last_render_dir == True:
@@ -538,9 +545,17 @@ def init_sequence_gui():
     """
     # Set correct compositing mode menu item selected
     gui.editor_window.init_compositing_mode_menu()
+    gui.editor_window.init_timeline_rendering_menu()
 
     # Set initial timeline scale draw params
     editorstate.current_sequence().update_length()
+    
+    # Handle timeline rendering GUI and data
+    tlinerender.init_for_sequence(editorstate.current_sequence())
+    gui.editor_window.hide_tline_render_strip()
+    if editorstate.get_tline_rending_mode() != appconsts.TLINE_RENDERING_OFF: 
+        gui.editor_window.show_tline_render_strip()
+        
     updater.update_pix_per_frame_full_view()
     updater.init_tline_scale()
     updater.repaint_tline()

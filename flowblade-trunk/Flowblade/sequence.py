@@ -22,7 +22,7 @@
 Module contains class Sequence that is the multitrack media object being edited
 by the application. A project has 1-n of these.
 """
-
+import time
 import mlt
 import os
 
@@ -112,6 +112,7 @@ class Sequence:
         self.watermark_file_path = None
         self.seq_len = 0 # used in trim crash hack, remove when fixed
         self.compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
+        self.tline_render_mode = appconsts.TLINE_RENDERING_OFF
 
         # MLT objects for a multitrack sequence
         self.init_mlt_objects()
@@ -396,9 +397,12 @@ class Sequence:
         Creates MLT Producer and adds attributes to it, but does 
         not add it to track/playlist object.
         """        
+        #producer = mlt.Producer(self.profile, "avformat-novalidate", str(path)) # this runs 0.5s+ on some clips
+        t = time.monotonic()
         producer = mlt.Producer(self.profile, str(path)) # this runs 0.5s+ on some clips
-        if novalidate == True:
-            producer.set("mlt_service", "avformat-novalidate")
+        print(time.monotonic() - t)
+        #if novalidate == True:
+        #    producer.set("mlt_service", "avformat-novalidate")
         mltrefhold.hold_ref(producer)
         producer.path = path
         producer.filters = []

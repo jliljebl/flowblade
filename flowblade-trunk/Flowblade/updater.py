@@ -149,6 +149,7 @@ def repaint_tline():
     gui.tline_canvas.widget.queue_draw()
     gui.tline_column.widget.queue_draw()
     gui.tline_scale.widget.queue_draw()
+    gui.tline_render_strip.widget.queue_draw()
 
 # --- SCROLL AND LENGTH EVENTS
 def update_tline_scrollbar():

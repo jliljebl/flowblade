@@ -245,6 +245,7 @@ class EditorWindow:
             ('EditSequence', None, _('Edit Selected Sequence'), None, None, lambda a:projectaction.change_edit_sequence()),
             ('DeleteSequence', None, _('Delete Selected Sequence'), None, None, lambda a:projectaction.delete_selected_sequence()),
             ('CompositingModeMenu', None, _('Compositing Mode')),
+            ('TimelineRenderingMenu', None, _('Timeline Rendering')),
             ('PatternProducersMenu', None, _('Create Pattern Producer')),
             ('CreateNoiseClip', None, _('Noise'), None, None, lambda a:patternproducer.create_noise_clip()),
             ('CreateBarsClip', None, _('EBU Bars'), None, None, lambda a:patternproducer.create_bars_clip()),
@@ -388,6 +389,8 @@ class EditorWindow:
                     <menuitem action='DeleteSequence'/>
                     <separator/>
                     <menu action='CompositingModeMenu'/>
+                    <separator/>
+                    <menu action='TimelineRenderingMenu'/>
                     <separator/>
                     <menuitem action='CombineSequences'/>
                     <menuitem action='SequenceSplit'/>
@@ -795,6 +798,17 @@ class EditorWindow:
         tline_hbox_2 = Gtk.HBox()
         tline_hbox_2.pack_start(self.tline_column.widget, False, False, 0)
         tline_hbox_2.pack_start(self.tline_canvas.widget, True, True, 0)
+
+        # Timeline rendereŕ row
+        self.pad_box = Gtk.HBox()
+        self.pad_box.set_size_request(tlinewidgets.COLUMN_WIDTH, tlinewidgets.STRIP_HEIGHT)
+        self.tline_render_strip = tlinewidgets.TimeLineRenderingControlStrip()
+        self.tline_renderer_hbox = Gtk.HBox()
+        self.pad_box.show()
+        self.tline_render_strip.widget.show()
+        
+        #self.tline_renderer_hbox.pack_start(self.pad_box, False, False, 0)
+        #self.tline_renderer_hbox.pack_start(self.tline_render_strip.widget, True, True, 0)
         
         # Comp mode selector
         size_adj = 1
@@ -824,6 +838,7 @@ class EditorWindow:
         tline_vbox = Gtk.VBox()
         tline_vbox.pack_start(tline_hbox_1, False, False, 0)
         tline_vbox.pack_start(tline_hbox_2, True, True, 0)
+        tline_vbox.pack_start(self.tline_renderer_hbox, False, False, 0)
         tline_vbox.pack_start(tline_hbox_3, False, False, 0)
         
         # Timeline box 
@@ -1061,6 +1076,39 @@ class EditorWindow:
         comp_top_free.connect("toggled", lambda w: projectaction.change_current_sequence_compositing_mode(w, appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE))
         comp_top_auto.connect("toggled", lambda w: projectaction.change_current_sequence_compositing_mode(w, appconsts.COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW))
         comp_standard_auto.connect("toggled", lambda w: projectaction.change_current_sequence_compositing_mode(w, appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW))
+
+    def init_timeline_rendering_menu(self):
+        menu_item = self.uimanager.get_widget('/MenuBar/SequenceMenu/TimelineRenderingMenu')
+        menu = menu_item.get_submenu()
+        guiutils.remove_children(menu)
+    
+        rendering_off = Gtk.RadioMenuItem()
+        rendering_off.set_label(_("Off"))
+        rendering_off.show()
+        menu.append(rendering_off)
+        
+        rendering_auto = Gtk.RadioMenuItem.new_with_label([rendering_off],_("Render Auto"))
+        rendering_auto.show()
+        menu.append(rendering_auto)
+        
+        rendering_request = Gtk.RadioMenuItem.new_with_label([rendering_off],_("Render On Request"))
+        rendering_request.show()
+        menu.append(rendering_request)
+        
+        menu_items = [rendering_off, rendering_auto, rendering_request]
+        menu_items[editorstate.get_tline_rending_mode()].set_active(True)
+
+        rendering_off.connect("toggled", lambda w: tlineaction.change_current_tline_rendering_mode(w, appconsts.TLINE_RENDERING_OFF))
+        rendering_auto.connect("toggled", lambda w: tlineaction.change_current_tline_rendering_mode(w, appconsts.TLINE_RENDERING_AUTO))
+        rendering_request.connect("toggled", lambda w: tlineaction.change_current_tline_rendering_mode(w, appconsts.TLINE_RENDERING_REQUEST))
+
+    def hide_tline_render_strip(self):
+        guiutils.remove_children(self.tline_renderer_hbox)
+        #self.window.queue_draw()
+
+    def show_tline_render_strip(self):
+        self.tline_renderer_hbox.pack_start(self.pad_box, False, False, 0)
+        self.tline_renderer_hbox.pack_start(self.tline_render_strip.widget, True, True, 0)
         
     def _init_gui_to_prefs(self):
         if editorpersistance.prefs.tabs_on_top == True:

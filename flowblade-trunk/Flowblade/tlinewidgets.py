@@ -50,6 +50,7 @@ import guiutils
 import respaths
 import sequence
 import snapping
+import tlinerender
 import trimmodes
 import userfolders
 import utils
@@ -61,6 +62,7 @@ REF_LINE_Y = 250 # Y pos of tracks are relative to this. This is recalculated on
 
 WIDTH = 430 # this has no effect if smaller then editorwindow.NOTEBOOK_WIDTH + editorwindow.MONITOR_AREA_WIDTH
 HEIGHT = appconsts.TLINE_HEIGHT # defines window min height together with editorwindow.TOP_ROW_HEIGHT
+STRIP_HEIGHT = tlinerender.STRIP_HEIGHT # timeline rendering control strip height
 
 # Timeline draw constants
 # Other elements than black outline are not drawn if clip screen size
@@ -2809,6 +2811,49 @@ class TimeLineFrameScale:
         
         return grad
 
+
+class TimeLineRenderingControlStrip:
+    """
+    GUI component that passes draw and mouse events tlinerender module with some added data.
+    """
+
+    def __init__(self):
+        self.widget = cairoarea.CairoDrawableArea2( WIDTH, 
+                                                    STRIP_HEIGHT, 
+                                                    self._draw)
+        self.widget.press_func = self._press_event
+        self.widget.motion_notify_func = self._motion_notify_event
+        self.widget.release_func = self._release_event
+        #self.widget.mouse_scroll_func = mouse_scroll_listener
+
+
+    # --------------------------------------------- DRAW
+    def _draw(self, event, cr, allocation):
+        """
+        Callback for repaint from CairoDrawableArea.
+        We get cairo contect and allocation.
+        """
+        tlinerender.get_renderer().draw(event, cr, allocation, pos, pix_per_frame)
+
+        
+        # --------------------------------------------- MOUSE EVENTS    
+    def _press_event(self, event):
+        if event.button == 1 or event.button == 3:
+            self.drag_on = True
+            pass
+
+    def _motion_notify_event(self, x, y, state):
+        if((state & Gdk.ModifierType.BUTTON1_MASK)
+           or(state & Gdk.ModifierType.BUTTON3_MASK)):
+            if self.drag_on:
+                pass
+                
+    def _release_event(self, event):
+        if self.drag_on:
+            pass
+        self.drag_on = False
+        
+        
 class KFToolFrameScale:
     
     def __init__(self, line_color):

@@ -272,3 +272,9 @@ COMPOSITING_MODE_STANDARD_AUTO_FOLLOW = 2
 
 # Magic string for selection path being user home directory root
 USER_HOME_DIR = "USER_HOME_DIERCTORY_&&##&&"
+
+# Timeline rendering modes
+TLINE_RENDERING_OFF = 0
+TLINE_RENDERING_AUTO = 1
+TLINE_RENDERING_REQUEST = 2
+
