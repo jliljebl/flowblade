@@ -12,6 +12,9 @@
 #### Step 1. Download and install .deb 
 **First download .deb file** for Flowblade 2.2 from <a href="https://github.com/jliljebl/flowblade/releases">here.</a>
 
+Github user **luv** has created an **alternate package** for 2.2 that has a bug in *Affine* filter fixed <a href="https://github.com/luv/flowblade/releases/tag/v2.2-2">here.</a>
+
+
 Double click on <b>.deb</b> file to install it. 
 
 On some systems double clicking may not work and you need to install <b>.deb</b> file using terminal:
