@@ -445,6 +445,10 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
         if not hasattr(media_file, "ttl"):
             media_file.ttl = None
 
+        # Avoid crash in case path attribute is missing (color clips).
+        if not hasattr(media_file, "path"):
+            continue
+
         # Use this to try to fix clips with missing proxy files.
         proxy_path_dict[media_file.path] = media_file.second_file_path
         
