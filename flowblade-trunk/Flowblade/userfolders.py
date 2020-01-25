@@ -167,7 +167,9 @@ def _maybe_create_xdg_dirs():
         os.mkdir(get_data_dir() + appconsts.USER_PROFILES_DIR)
     if not os.path.exists(get_render_dir()):
         os.mkdir(get_render_dir())
-    
+    if not os.path.exists(get_data_dir() + appconsts.TLINE_RENDERS_DIR):
+        os.mkdir(get_data_dir() + appconsts.TLINE_RENDERS_DIR)
+
     #----------------- CACHE
     # Data that can be regerated by app or is transient
     # Cache root folder

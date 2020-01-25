@@ -317,6 +317,7 @@ def main(root_path):
         else:
             GObject.timeout_add(10, autosaves_many_recovery_dialog)
     else:
+        tlinerender.init_session()
         start_autosave()
 
     # We prefer to monkeypatch some callbacks into some modules, usually to
@@ -329,7 +330,7 @@ def main(root_path):
             print("Launch assoc file:", assoc_file_path)
             global assoc_timeout_id
             assoc_timeout_id = GObject.timeout_add(10, open_assoc_file)
-
+        
     if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
         gui.apply_flowblade_theme_fixes()
         
@@ -651,6 +652,7 @@ def open_project(new_project):
     editorstate.clear_trim_clip_cache()
     audiomonitoring.init_for_project_load()
 
+    tlinerender.init_session()
     start_autosave()
 
     if new_project.update_media_lengths_on_load == True:
@@ -728,6 +730,7 @@ def autosave_dialog_callback(dialog, response):
         loaded_autosave_file = autosave_file
         projectaction.actually_load_project(autosave_file, True)
     else:
+        tlinerender.init_session()  # didn't do this in main and not going to do app-open_project
         os.remove(autosave_file)
         start_autosave()
 
@@ -756,6 +759,7 @@ def autosaves_many_dialog_callback(dialog, response, autosaves_view, autosaves):
         projectaction.actually_load_project(autosave_file, True)
     else:
         dialog.destroy()
+        tlinerender.init_session()
         start_autosave()
 
 def set_instance_autosave_id():
@@ -981,6 +985,8 @@ def _shutdown_dialog_callback(dialog, response_id):
 
     # No more auto saving
     stop_autosave()
+
+    tlinerender.delete_session()
 
     # Save window dimensions on exit
     alloc = gui.editor_window.window.get_allocation()

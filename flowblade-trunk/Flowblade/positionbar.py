@@ -185,7 +185,7 @@ class PositionBar:
 
         # Draw timeline markers, monitor media items don't have markers only timeline clips made from them do.markers
         if editorstate.timeline_visible():
-            try: # this gets attempted on load sotimes before current sequence is available
+            try: # this gets attempted on load sotimes before current sequence is available.
                 markers = editorstate.current_sequence().markers
                 for i in range(0, len(markers)):
                     marker_name, marker_frame = markers[i]
@@ -195,6 +195,7 @@ class PositionBar:
                     cr.paint()
             except:
                 pass
+
         # Draw position pointer
         if self.disabled:
             return

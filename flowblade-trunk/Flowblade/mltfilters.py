@@ -136,6 +136,7 @@ def get_translated_audio_group_name():
     """
     translations.get_filter_group_name("Audio")
 
+
 class FilterInfo:
     """
     Info of a filter (mlt.Service) that is is available to the user.

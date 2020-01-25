@@ -77,8 +77,6 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
     label_row = guiutils.get_left_justified_box([stack_label])
     guiutils.set_margins(label_row, 0, 4, 0, 0)
     
-
-    
     effect_stack = widgets.effect_stack_view    
 
     for group in mltfilters.groups:
