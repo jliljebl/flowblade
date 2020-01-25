@@ -169,18 +169,18 @@ class TimeLineSegment:
         content_strings = []
         for i in range(1, len(current_sequence.tracks) - 1):
             track = current_sequence.tracks(i)
-            self._get_track_segment_content_strings_list(track, content_strings)
+            self._get_track_segment_content_strings(track, content_strings)
         
         content_desc = "".join(content_strings)
-        return  hashlib.md5(content_desc.encode('utf-8')).hexdigest()
+        return hashlib.md5(content_desc.encode('utf-8')).hexdigest()
         
-    def _get_track_segment_content_strings_list(self, track, content_strings):
+    def _get_track_segment_content_strings(self, track, content_strings):
         start_clip_index, clips = _get_track_segment_clips(self, track, start_frame, end_frame)
         if len(clips) == 0:
             content_strings.append("-1")
             return
             
-        for i in range(0, len(clips):
+        for i in range(0, len(clips)):
             clip = clips[i]
             self._get_clip_content_strings(self, track, clip, start_clip_index + i, content_strings)
                 
@@ -209,7 +209,7 @@ class TimeLineSegment:
         length = clip.clip_out - clip.clip_in 
     
         # Position and range data
-        # offset from segment start
+        # offset from segment start + in, out
         clip_start_in_tline = track.clip_start(clip_index)
         content_strings.append(str(clip_start_in_tline - self.start_frame))
         content_strings.append(str(clip.clip_in))
