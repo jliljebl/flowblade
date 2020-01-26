@@ -398,9 +398,9 @@ class Sequence:
         not add it to track/playlist object.
         """        
         #producer = mlt.Producer(self.profile, "avformat-novalidate", str(path)) # this runs 0.5s+ on some clips
-        t = time.monotonic()
+        #t = time.monotonic()
         producer = mlt.Producer(self.profile, str(path)) # this runs 0.5s+ on some clips
-        print(time.monotonic() - t)
+        #print(time.monotonic() - t)
         #if novalidate == True:
         #    producer.set("mlt_service", "avformat-novalidate")
         mltrefhold.hold_ref(producer)

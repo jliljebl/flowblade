@@ -38,6 +38,7 @@ import mltfilters
 import movemodes
 import resync
 import tlinewidgets
+import tlinerender
 import trimmodes
 import undo
 import updater
@@ -366,6 +367,8 @@ class EditAction:
 
         resync.calculate_and_set_child_clip_sync_states()
 
+        tlinerender.get_renderer().timeline_changed()
+        
         if self.compositor_autofollow_data != None:
             do_autofollow_undo(self)
             if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
@@ -395,8 +398,10 @@ class EditAction:
 
         _consolidate_all_blanks_redo(self)
         _remove_trailing_blanks_redo(self)
+
         resync.calculate_and_set_child_clip_sync_states()
 
+        tlinerender.get_renderer().timeline_changed()
         
         if self.compositor_autofollow_data != None: # This is not called from do_edit() if these exist, we need to do auto follow and orphan compositos management
             do_autofollow_redo(self)

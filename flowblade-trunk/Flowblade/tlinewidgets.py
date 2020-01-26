@@ -2814,7 +2814,7 @@ class TimeLineFrameScale:
 
 class TimeLineRenderingControlStrip:
     """
-    GUI component that passes draw and mouse events tlinerender module with some added data.
+    GUI component that passes draw and mouse events to tlinerender module with some added data.
     """
 
     def __init__(self):
@@ -2838,20 +2838,13 @@ class TimeLineRenderingControlStrip:
         
         # --------------------------------------------- MOUSE EVENTS    
     def _press_event(self, event):
-        if event.button == 1 or event.button == 3:
-            self.drag_on = True
-            pass
+        tlinerender.get_renderer().press_event(event)
 
     def _motion_notify_event(self, x, y, state):
-        if((state & Gdk.ModifierType.BUTTON1_MASK)
-           or(state & Gdk.ModifierType.BUTTON3_MASK)):
-            if self.drag_on:
-                pass
+        tlinerender.get_renderer().motion_notify_event(x, y, state)
                 
     def _release_event(self, event):
-        if self.drag_on:
-            pass
-        self.drag_on = False
+        tlinerender.get_renderer().release_event(event)
         
         
 class KFToolFrameScale:

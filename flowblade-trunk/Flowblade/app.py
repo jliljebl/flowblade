@@ -554,7 +554,7 @@ def init_sequence_gui():
     # Handle timeline rendering GUI and data
     tlinerender.init_for_sequence(editorstate.current_sequence())
     gui.editor_window.hide_tline_render_strip()
-    if editorstate.get_tline_rending_mode() != appconsts.TLINE_RENDERING_OFF: 
+    if editorstate.get_tline_rendering_mode() != appconsts.TLINE_RENDERING_OFF: 
         gui.editor_window.show_tline_render_strip()
         
     updater.update_pix_per_frame_full_view()

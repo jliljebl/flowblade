@@ -47,7 +47,8 @@ _dbus_service = None
 def launch_render_server():
     bus = dbus.SessionBus()
     if bus.name_has_owner('flowblade.movie.editor.tlinerenderserver'):
-        print("flowblade.movie.editor.tlinerenderserver dbus service exists, timeline background rendering server running")
+        # This should not be happening, we should be deleting session files and close service oon peoject chages. 
+        print("NOTE !!!: flowblade.movie.editor.tlinerenderserver dbus service exists ON LAUNCH REQUEST")
         return False
     else:
         FLOG = open(userfolders.get_cache_dir() + "log_tline_render", 'w')
@@ -55,15 +56,25 @@ def launch_render_server():
         return True
 
 def shutdown_render_server():
+    iface = _get_iface("shutdown_render_server")
+    if iface != None:
+        iface.shutdown_render_server()
+
+def abort_current_renders():
+    iface = _get_iface("abort_current_renders")
+    if iface != None:
+        iface.abort_renders()
+
+def _get_iface(method_name):
     bus = dbus.SessionBus()
     if bus.name_has_owner('flowblade.movie.editor.tlinerenderserver'):
         obj = bus.get_object('flowblade.movie.editor.tlinerenderserver', '/flowblade/movie/editor/tlinerenderserver')
         iface = dbus.Interface(obj, 'flowblade.movie.editor.tlinerenderserver')
-        iface.shutdown_render_server()
-        print("Timeline background render service shutdown requested.")
-
+        return iface
     else:
-        print("Timeline background render service not on DBus at shutdown")
+        print("Timeline background render service not available on DBus at", method_name)
+        return None
+
 
 # ---------------------------------------------------------------- server
 
@@ -107,12 +118,9 @@ def main(root_path, force_launch=False):
     mltprofiles.load_profile_list()
 
     # Launch server
-    print("tline render service running")
     DBusGMainLoop(set_as_default=True)
     loop = GLib.MainLoop()
-    print("tline render service running")
     global _dbus_service
-    print("tline render service running")
     _dbus_service = TLineRenderDBUSService(loop)
     print("tline render service running")
     loop.run()
@@ -125,7 +133,6 @@ class TLineRenderDBUSService(dbus.service.Object):
         dbus.service.Object.__init__(self, bus_name, '/flowblade/movie/editor/tlinerenderserver')
         self.main_loop = loop
 
-        
     @dbus.service.method('flowblade.movie.editor.tlinerenderserver')
     def render_item_added(self):
         if queue_runner_thread == None:
@@ -134,7 +141,14 @@ class TLineRenderDBUSService(dbus.service.Object):
         return "OK"
 
     @dbus.service.method('flowblade.movie.editor.tlinerenderserver')
+    def abort_renders(self):
+        # not impl
+        return
+
+    @dbus.service.method('flowblade.movie.editor.tlinerenderserver')
     def shutdown_render_server(self):
         self.remove_from_connection()
         self.main_loop.quit()
+
+
 

@@ -18,12 +18,17 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 import hashlib
+from gi.repository import Gdk
 import os
 from os import listdir
 from os.path import isfile, join
+import time
+import threading
 
 import appconsts
 import cairoarea
+from editorstate import current_sequence
+from editorstate import get_tline_rendering_mode
 import userfolders
 import tlinerenderserver
 
@@ -35,17 +40,19 @@ _get_x_for_frame_func = None
 _get_last_tline_view_frame_func = None
 
 SEGMENT_NOOP = 0
-SEGMENT_RENDERED_AREA = 1
-SEGMENT_UNRENDERED_RENDERED_AREA = 2
+SEGMENT_RENDERED = 1
+SEGMENT_UNRENDERED = 2
+SEGMENT_DIRTY = 3
 
 _segment_colors = { SEGMENT_NOOP:(0.26, 0.29, 0.42),
-                    SEGMENT_RENDERED_AREA:(0.29, 0.78, 0.30),
-                    SEGMENT_UNRENDERED_RENDERED_AREA:(0.76, 0.27, 0.27)}
+                    SEGMENT_RENDERED:(0.29, 0.78, 0.30),
+                    SEGMENT_UNRENDERED:(0.76, 0.27, 0.27),
+                    SEGMENT_DIRTY:(0.76, 0.27, 0.27)}
 
 _project_session_id = -1
 _timeline_renderer = None
 
-
+_update_thread = None
 
 # ------------------------------------------------------------ MODULE INTERFACE
 def init_session(): # called when project is loaded
@@ -54,8 +61,10 @@ def init_session(): # called when project is loaded
     if _project_session_id != -1:
         _delete_session_dir()
 
-    _project_session_id =  hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
-    print (_project_session_id)
+    global _updates
+    _updates = []
+    
+    _project_session_id = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
     os.mkdir(_get_session_dir())
 
     success = tlinerenderserver.launch_render_server()
@@ -73,17 +82,18 @@ def init_for_sequence(sequence):
     _timeline_renderer = TimeLineRenderer()
 
     #---testing
-    seg = TimeLineSegment(SEGMENT_NOOP, 0, 50)
+    #seg = TimeLineSegment(SEGMENT_NOOP, 0, 50)
+    #_timeline_renderer.segments.append(seg)
+    seg = TimeLineSegment(50, 70)
     _timeline_renderer.segments.append(seg)
-    seg = TimeLineSegment(SEGMENT_RENDERED_AREA, 50, 70)
-    _timeline_renderer.segments.append(seg)
-    seg = TimeLineSegment(SEGMENT_NOOP, 70, 80)
-    _timeline_renderer.segments.append(seg)
-    seg = TimeLineSegment(SEGMENT_RENDERED_AREA, 80, 90)
+    #seg = TimeLineSegment(SEGMENT_NOOP, 70, 80)
+    #_timeline_renderer.segments.append(seg)
+    seg = TimeLineSegment(80, 90)
     _timeline_renderer.segments.append(seg)
 
 def get_renderer():
     return _timeline_renderer
+
 
 # ------------------------------------------------------------ MODULE FUNCS
 def _get_tline_render_dir():
@@ -104,6 +114,7 @@ def _get_folder_files(folder):
     return [f for f in listdir(folder) if isfile(join(folder, f))]
 
 
+# ------------------------------------------------------------ RENDERER OBJECTS
 class TimeLineRenderer:
 
     def __init__(self):
@@ -129,80 +140,117 @@ class TimeLineRenderer:
                 continue
             if seg.start_frame > _get_last_tline_view_frame_func():
                 break
-            if seg.segment_type == SEGMENT_NOOP:
+            if seg.segment_state == SEGMENT_NOOP:
                 continue
             seg.draw(cr, h, pos, pix_per_frame)
 
-
-        # --------------------------------------------- MOUSE EVENTS    
-    def _press_event(self, event):
+    # --------------------------------------------- MOUSE EVENTS    
+    def press_event(self, event):
         if event.button == 1 or event.button == 3:
             self.drag_on = True
-            pass
+            print("press")
 
-    def _motion_notify_event(self, x, y, state):
+    def motion_notify_event(self, x, y, state):
         if((state & Gdk.ModifierType.BUTTON1_MASK)
            or(state & Gdk.ModifierType.BUTTON3_MASK)):
             if self.drag_on:
                 pass
+        print("motion")
                 
-    def _release_event(self, event):
+    def release_event(self, event):
         if self.drag_on:
             pass
         self.drag_on = False
-        
+        print("release")
     
+    # --------------------------------------------- CONTENT UPDATES
+    def timeline_changed(self):
+        global _update_thread
+        if _update_thread != None:
+            # We already have an update thread going, try to stop it before it launches renders.
+            _update_thread.abort_before_render_request = True
+    
+        _update_thread = TimeLineUpdateThread()
+        _update_thread.start()
+
+    def update_segments(self):
+        for seg in self.segments:
+            seg.update_segment()
+
+    def get_dirty_segments(self):
+        dirty = []
+        for seg in self.segments:
+            seg.segment_state = SEGMENT_DIRTY
+            dirty.append(seg)
+        
+        return dirty
+            
+            
 
 class TimeLineSegment:
 
-    def __init__(self, segment_type, start_frame, end_frame):
-        self.segment_type = segment_type
+    def __init__(self, start_frame, end_frame):
+        self.segment_state = SEGMENT_UNRENDERED
         
         self.start_frame = start_frame # inclusive
         self.end_frame = end_frame # exclusive
+
+        self.content_hash = "-1"
 
     # --------------------------------------------- DRAW
     def draw(self, cr, height, pos, pix_per_frame):
         x = int(_get_x_for_frame_func(self.start_frame))
         x_end = int(_get_x_for_frame_func(self.end_frame))
         w = x_end - x
-        cr.set_source_rgb(*_segment_colors[self.segment_type ])
+        cr.set_source_rgb(*_segment_colors[self.segment_state])
         cr.rectangle(x, 0, w ,height)
         cr.fill_preserve()
         cr.set_source_rgb(0, 0, 0)
         cr.stroke()
 
     # ----------------------------------------- CONTENT HASH
+    def update_segment(self):
+        new_hash = self.get_content_hash()
+        
+        if new_hash != self.content_hash:
+            if get_tline_rendering_mode() == appconsts.TLINE_RENDERING_AUTO:
+                self.segment_state = SEGMENT_DIRTY
+            elif get_tline_rendering_mode() == appconsts.TLINE_RENDERING_REQUEST:
+                self.segment_state = SEGMENT_UNRENDERED
+
+        self.content_hash = new_hash
+    
     def get_content_hash(self):
         content_strings = []
-        for i in range(1, len(current_sequence.tracks) - 1):
-            track = current_sequence.tracks(i)
+        for i in range(1, len(current_sequence().tracks) - 1):
+            track = current_sequence().tracks[i]
             self._get_track_segment_content_strings(track, content_strings)
         
         content_desc = "".join(content_strings)
+        
         return hashlib.md5(content_desc.encode('utf-8')).hexdigest()
         
     def _get_track_segment_content_strings(self, track, content_strings):
-        start_clip_index, clips = _get_track_segment_clips(self, track, start_frame, end_frame)
+        start_clip_index, clips = self._get_track_segment_clips(track, self.start_frame, self.end_frame)
         if len(clips) == 0:
             content_strings.append("-1")
             return
             
         for i in range(0, len(clips)):
             clip = clips[i]
-            self._get_clip_content_strings(self, track, clip, start_clip_index + i, content_strings)
+            self._get_clip_content_strings(track, clip, start_clip_index + i, content_strings)
                 
     def _get_track_segment_clips(self, track, start_frame, end_frame):
         clips = []
         
         # Get start range index, outer selection required
-        start_clip_index = editorstate.current_sequence().get_clip_index(track, start_frame)
+        start_clip_index = current_sequence().get_clip_index(track, start_frame)
         if start_clip_index == -1:
             # Segment start aftr track end no clips in segments on this track
             return (-1, clips)
         
         # Get end range index, outer selection required
-        end_clip_index = editorstate.current_sequence().get_clip_index(track, end_frame)
+        end_clip_index = current_sequence().get_clip_index(track, end_frame)
         if end_clip_index == -1:
             # Segment contains last clip on track
             end_clip_index = len(track.clips) - 1
@@ -246,8 +294,39 @@ class TimeLineSegment:
             content_strings.append(str(p_type))
 
         
+
+
+#--------------------------------------- worker threads
+class TimeLineUpdateThread(threading.Thread):
+    
+    def __init__(self):
+        self.update_id = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest() # starting these is human speed so using time is ok.
+        self.abort_before_render_request = False
+        threading.Thread.__init__(self)
+
+    def run(self):
         
+        _timeline_renderer.update_segments()
+
+        dirty_segments = _timeline_renderer.get_dirty_segments()
         
+        if len(dirty_segments) == 0:
+            return
         
+        # Blocks
+        try:
+            # Blocks untils renders are stopped and cleaned
+            tlinerenderserver.abort_current_renders()
+        except:
+            # Timeout of 25s was exceeded, sometrhing is very wrong, no use to attempt furher work.
+            print("INFO: tlinerendersrver.abort_current_renders() exceeded timeout of 25s.")
+            return
+
+        # Write out MLT XML for render
+
+        if self.abort_before_render_request == True:
+            # A new update was requested before this got ready to start rendering.
+            # This is no longer needed,  we can let the later request do the update,
+            return
         
-        
+        # Launch renders and completion polling

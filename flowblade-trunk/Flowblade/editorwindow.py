@@ -1096,7 +1096,7 @@ class EditorWindow:
         menu.append(rendering_request)
         
         menu_items = [rendering_off, rendering_auto, rendering_request]
-        menu_items[editorstate.get_tline_rending_mode()].set_active(True)
+        menu_items[editorstate.get_tline_rendering_mode()].set_active(True)
 
         rendering_off.connect("toggled", lambda w: tlineaction.change_current_tline_rendering_mode(w, appconsts.TLINE_RENDERING_OFF))
         rendering_auto.connect("toggled", lambda w: tlineaction.change_current_tline_rendering_mode(w, appconsts.TLINE_RENDERING_AUTO))
