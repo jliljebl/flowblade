@@ -28,11 +28,6 @@ Module handles saving and loading data that is related to the editor and not any
             Save value of Autosave preference.
             See preferenceswindow.py for more info
 """
-
-import gi
-gi.require_version('Gtk', '3.0') 
-from gi.repository import Gtk
-
 import os
 import pickle
 
@@ -40,7 +35,7 @@ import appconsts
 import atomicfile
 import mltprofiles
 import userfolders
-import utils
+import utils # this needs to also go to not load Gtk for background rendering process
 
 PREFS_DOC = "prefs"
 RECENT_DOC = "recent"
@@ -167,33 +162,6 @@ def remove_non_existing_recent_projects():
         with atomicfile.AtomicFileWriter(recents_file_path, "wb") as afw:
             write_file = afw.get_file()
             pickle.dump(recent_projects, write_file)
-        
-def fill_recents_menu_widget(menu_item, callback):
-    """
-    Fills menu item with menuitems to open recent projects.
-    """
-    menu = menu_item.get_submenu()
-
-    # Remove current items
-    items = menu.get_children()
-    for item in items:
-        menu.remove(item)
-    
-    # Add new menu items
-    recent_proj_names = get_recent_projects()
-    if len(recent_proj_names) != 0:
-        for i in range (0, len(recent_proj_names)):
-            proj_name = recent_proj_names[i]
-            new_item = Gtk.MenuItem(proj_name)
-            new_item.connect("activate", callback, i)
-            menu.append(new_item)
-            new_item.show()
-    # ...or a single non-sensitive Empty item 
-    else:
-        new_item = Gtk.MenuItem(_("Empty"))
-        new_item.set_sensitive(False)
-        menu.append(new_item)
-        new_item.show()
 
 def get_recent_projects():
     """
@@ -372,3 +340,4 @@ class EditorPreferences:
         self.single_click_effects_editor_load = False
         self.layout_display_index = 0 # 0 == full area - 1,2... monitor number
         self.default_render_directory = appconsts.USER_HOME_DIR
+

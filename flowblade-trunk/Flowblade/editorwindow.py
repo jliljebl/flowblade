@@ -445,7 +445,7 @@ class EditorWindow:
         self.accel_group = accel_group
 
         # Add recent projects to menu
-        editorpersistance.fill_recents_menu_widget(ui.get_widget('/MenuBar/FileMenu/OpenRecent'), projectaction.open_recent_project)
+        self.fill_recents_menu_widget(ui.get_widget('/MenuBar/FileMenu/OpenRecent'), projectaction.open_recent_project)
 
         # Disable audio mixer if not available
         if editorstate.audio_monitoring_available == False:
@@ -1102,6 +1102,33 @@ class EditorWindow:
         rendering_auto.connect("toggled", lambda w: tlineaction.change_current_tline_rendering_mode(w, appconsts.TLINE_RENDERING_AUTO))
         rendering_request.connect("toggled", lambda w: tlineaction.change_current_tline_rendering_mode(w, appconsts.TLINE_RENDERING_REQUEST))
 
+    def fill_recents_menu_widget(self, menu_item, callback):
+        """
+        Fills menu item with menuitems to open recent projects.
+        """
+        menu = menu_item.get_submenu()
+
+        # Remove current items
+        items = menu.get_children()
+        for item in items:
+            menu.remove(item)
+        
+        # Add new menu items
+        recent_proj_names = editorpersistance.get_recent_projects()
+        if len(recent_proj_names) != 0:
+            for i in range (0, len(recent_proj_names)):
+                proj_name = recent_proj_names[i]
+                new_item = Gtk.MenuItem(proj_name)
+                new_item.connect("activate", callback, i)
+                menu.append(new_item)
+                new_item.show()
+        # ...or a single non-sensitive Empty item 
+        else:
+            new_item = Gtk.MenuItem(_("Empty"))
+            new_item.set_sensitive(False)
+            menu.append(new_item)
+            new_item.show()
+        
     def hide_tline_render_strip(self):
         guiutils.remove_children(self.tline_renderer_hbox)
         #self.window.queue_draw()

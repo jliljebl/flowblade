@@ -25,6 +25,7 @@ from os.path import isfile, join
 import appconsts
 import cairoarea
 import userfolders
+import tlinerenderserver
 
 STRIP_HEIGHT = 8
 
@@ -57,7 +58,14 @@ def init_session(): # called when project is loaded
     print (_project_session_id)
     os.mkdir(_get_session_dir())
 
+    success = tlinerenderserver.launch_render_server()
+    if success:
+        print ("Timeline background render service launch succeeded.")
+    else:
+        print ("Timeline background render service launch failed.")
+        
 def delete_session():
+    tlinerenderserver.shutdown_render_server()
     _delete_session_dir()
 
 def init_for_sequence(sequence):

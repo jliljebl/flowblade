@@ -175,7 +175,7 @@ class LoadThread(threading.Thread):
 
         if self.block_recent_files: # naming flipped ????
             editorpersistance.add_recent_project_path(self.filename)
-            editorpersistance.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)
+            gui.editor_window.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)
         Gdk.threads_leave()
         
         Gdk.threads_enter()
@@ -447,7 +447,7 @@ def _save_project_in_last_saved_path():
         return
 
     editorpersistance.add_recent_project_path(PROJECT().last_save_path)
-    editorpersistance.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)
+    gui.editor_window.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)
     PROJECT().events.append(projectdata.ProjectEvent(projectdata.EVENT_SAVED, PROJECT().last_save_path))
     
     global save_icon_remove_event_id
@@ -506,7 +506,7 @@ def _save_as_dialog_callback(dialog, response_id):
         gui.editor_window.uimanager.get_widget("/MenuBar/EditMenu/Redo").set_sensitive(False)
 
         editorpersistance.add_recent_project_path(PROJECT().last_save_path)
-        editorpersistance.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)
+        gui.editor_window.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)
         
         projectinfogui.update_project_info()
         
@@ -742,7 +742,7 @@ def _open_recent_shutdown_dialog_callback(dialog, response_id, path):
 def _actually_open_recent(path):
     if not os.path.exists(path):
         editorpersistance.remove_non_existing_recent_projects()
-        editorpersistance.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)
+        gui.editor_window.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)
         primary_txt = _("Project not found on disk")
         secondary_txt = _("Project can't be loaded.")
         dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
