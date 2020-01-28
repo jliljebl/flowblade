@@ -1327,7 +1327,7 @@ def _do_create_selection_compound_clip(dialog, response_id, name_entry):
         track0.append(clip, clip.clip_in, clip.clip_out)
 
     # Render compound clip as MLT XML file
-    render_player = renderconsumer.XMLCompoundRenderPlayer(write_file, media_name, _xml_compound_render_done_callback, tractor)
+    render_player = renderconsumer.XMLCompoundRenderPlayer(write_file, media_name, _xml_compound_render_done_callback, tractor, PROJECT())
     render_player.start()
 
 def _xml_compound_render_done_callback(filename, media_name):
@@ -1363,7 +1363,9 @@ def _do_create_sequence_compound_clip(dialog, response_id, name_entry):
 
     dialog.destroy()
 
-    render_player = renderconsumer.XMLRenderPlayer(write_file, _sequence_xml_compound_render_done_callback, (write_file, media_name))
+    render_player = renderconsumer.XMLRenderPlayer( write_file, _sequence_xml_compound_render_done_callback, 
+                                                    (write_file, media_name), PROJECT().c_seq, 
+                                                    PROJECT(), PLAYER())
     render_player.start()
 
 # This is called from popup menu and can be used to create compound clips from non-active sequences
@@ -1388,7 +1390,9 @@ def _do_create_sequence_compound_clip_from_selected(dialog, response_id, name_en
     row = max(rows[0])
     selected_sequence = PROJECT().sequences[row]
 
-    render_player = renderconsumer.XMLRenderPlayer(write_file, _sequence_xml_compound_render_done_callback, (write_file, media_name), selected_sequence)
+    render_player = renderconsumer.XMLRenderPlayer( write_file, _sequence_xml_compound_render_done_callback, 
+                                                    (write_file, media_name), selected_sequence, 
+                                                    PROJECT(), PLAYER())
     render_player.start()
     
 def create_sequence_freeze_frame_compound_clip():
@@ -1418,7 +1422,7 @@ def _do_create_sequence_freeze_frame_compound_clip(dialog, response_id, name_ent
     freezed_tractor.freeze_filter = freeze_filter # pack to go so it can be detached and attr removed
 
     # Render compound clip as MLT XML file
-    render_player = renderconsumer.XMLCompoundRenderPlayer(write_file, media_name, _xml_freeze_compound_render_done_callback, freezed_tractor)
+    render_player = renderconsumer.XMLCompoundRenderPlayer(write_file, media_name, _xml_freeze_compound_render_done_callback, freezed_tractor, PROJECT())
     render_player.start()
     
 def _get_compound_clip_default_name_date_str():

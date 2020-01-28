@@ -61,10 +61,13 @@ def _export_melt_xml_dialog_callback(dialog, response_id):
     if response_id == Gtk.ResponseType.ACCEPT:
         filenames = dialog.get_filenames()
         save_path = filenames[0]
-        #global _xml_render_monitor
-        _xml_render_player = renderconsumer.XMLRenderPlayer(save_path,
-                                                          _xml_render_done,
-                                                          None)
+
+        _xml_render_player = renderconsumer.XMLRenderPlayer(  save_path,
+                                                              _xml_render_done,
+                                                              None,
+                                                              PROJECT().c_seq,
+                                                              PROJECT(),
+                                                              PLAYER())
         _xml_render_player.start()
         
         dialog.destroy()
@@ -88,7 +91,10 @@ def _export_edl_dialog_callback(dialog, response_id):
         
         _xml_render_player = renderconsumer.XMLRenderPlayer(get_edl_temp_xml_path(),
                                                             _edl_xml_render_done,
-                                                            edl_path)
+                                                            edl_path,
+                                                            PROJECT().c_seq,
+                                                            PROJECT(),
+                                                            PLAYER())
         _xml_render_player.start()
 
         dialog.destroy()
@@ -524,9 +530,13 @@ def _ardour_export_dialog_callback(dialog, response_id, session_folder):
     xml_save_path = userfolders.get_cache_dir() + "ardour_export.xml"
     
     global _xml_render_player
-    _xml_render_player = renderconsumer.XMLRenderPlayer(xml_save_path,
+    _xml_render_player = renderconsumer.XMLRenderPlayer(  xml_save_path,
                                                           _ardour_xml_render_done,
-                                                          None)
+                                                          None,
+                                                          PROJECT().c_seq,
+                                                          PROJECT(),
+                                                          PLAYER())
+
     _xml_render_player.ardour_session_folder = folder_path
     _xml_render_player.start()
 

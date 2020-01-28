@@ -19,10 +19,7 @@
 """
 
 """
-Application module.
-
-Handles application initialization, shutdown, opening projects, autosave and changing
-sequences.
+Handles syncing clips based on their audio data.
 """
 import datetime
 import hashlib
@@ -362,7 +359,7 @@ def _do_create_sync_compound_clip(dialog, response_id, data):
         track_audio.append(audio_clip, 0, audio_clip.get_length() - 1)
 
     # render MLT XML, callback in projectaction.py creates media object
-    render_player = renderconsumer.XMLCompoundRenderPlayer(write_file, media_name, projectaction._xml_compound_render_done_callback, tractor)
+    render_player = renderconsumer.XMLCompoundRenderPlayer(write_file, media_name, projectaction._xml_compound_render_done_callback, tractor, PROJECT())
     render_player.start()
 
 

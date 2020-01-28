@@ -325,7 +325,7 @@ class TimeLineUpdateThread(threading.Thread):
         # Write out MLT XML for render
 
         if self.abort_before_render_request == True:
-            # A new update was requested before this got ready to start rendering.
+            # A new update was requested before this update got ready to start rendering.
             # This is no longer needed,  we can let the later request do the update,
             return
         
