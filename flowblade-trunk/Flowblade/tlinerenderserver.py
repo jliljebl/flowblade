@@ -27,6 +27,8 @@ import locale
 import mlt
 import subprocess
 import sys
+import threading
+import time
 
 import editorstate
 import mltenv
@@ -40,10 +42,14 @@ import respaths
 import translations
 import userfolders
 
+
+TLINE_RENDER_ENCODING_INDEX = 0
+RENDERING_PAD_FRAMES = 3
+
 _dbus_service = None
 
 
-# --------------------------------------------------------------- lanch and shutdown
+# --------------------------------------------------------------- interface
 def launch_render_server():
     bus = dbus.SessionBus()
     if bus.name_has_owner('flowblade.movie.editor.tlinerenderserver'):
@@ -55,15 +61,24 @@ def launch_render_server():
         subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladetlinerender"], stdin=FLOG, stdout=FLOG, stderr=FLOG)
         return True
 
-def shutdown_render_server():
-    iface = _get_iface("shutdown_render_server")
+def render_update_clips(sequence_xml_path, segments_paths, segments_ins, segments_outs, profile_name):
+    iface = _get_iface("render_update_clips")
     if iface != None:
-        iface.shutdown_render_server()
+        iface.render_update_clips(sequence_xml_path, segments_paths, segments_ins, segments_outs, profile_name)
 
 def abort_current_renders():
     iface = _get_iface("abort_current_renders")
     if iface != None:
         iface.abort_renders()
+        
+def shutdown_render_server():
+    iface = _get_iface("shutdown_render_server")
+    if iface != None:
+        iface.shutdown_render_server()
+
+def get_encoding_extension():
+    print(renderconsumer.proxy_encodings[TLINE_RENDER_ENCODING_INDEX])
+    return renderconsumer.proxy_encodings[TLINE_RENDER_ENCODING_INDEX].extension
 
 def _get_iface(method_name):
     bus = dbus.SessionBus()
@@ -125,6 +140,8 @@ def main(root_path, force_launch=False):
     print("tline render service running")
     loop.run()
 
+def _get_render_encoding():
+    return renderconsumer.proxy_encodings[TLINE_RENDER_ENCODING_INDEX]
 
 
 class TLineRenderDBUSService(dbus.service.Object):
@@ -133,12 +150,23 @@ class TLineRenderDBUSService(dbus.service.Object):
         dbus.service.Object.__init__(self, bus_name, '/flowblade/movie/editor/tlinerenderserver')
         self.main_loop = loop
 
-    @dbus.service.method('flowblade.movie.editor.tlinerenderserver')
-    def render_item_added(self):
-        if queue_runner_thread == None:
-            batch_window.reload_queue()
+        self.render_runner_thread = None
         
-        return "OK"
+    @dbus.service.method('flowblade.movie.editor.tlinerenderserver')
+    def render_update_clips(self, sequence_xml_path, segments_paths, segments_ins, segments_outs, profile_name):
+        print(sequence_xml_path, profile_name)
+        
+        segments = []
+        for i in range(0, len(segments_paths)):
+            clip_path = segments_paths[i]
+            clip_range_in = segments_ins[i]
+            clip_range_out = segments_outs[i]
+            segments.append((clip_path, clip_range_in, clip_range_out))
+            
+            print("render segment:", clip_path, clip_range_in, clip_range_out)
+
+        self.render_runner_thread = TLineRenderRunnerThread(self, sequence_xml_path, segments, profile_name)
+        self.render_runner_thread.start()
 
     @dbus.service.method('flowblade.movie.editor.tlinerenderserver')
     def abort_renders(self):
@@ -151,4 +179,99 @@ class TLineRenderDBUSService(dbus.service.Object):
         self.main_loop.quit()
 
 
+
+
+class TLineRenderRunnerThread(threading.Thread):
+    """
+    SINGLE THREADED RENDERING, SHOULD WE GET MULTIPLE PROCESSES GOING FOR MULTIPLE CLIPS LATER IN MODERN MULTICORE MACHINES?
+    """
+    def __init__(self, dbus_service, sequence_xml_path, segments, profile_name):
+        threading.Thread.__init__(self)
+        
+        self.dbus_service = dbus_service
+        self.sequence_xml_path = sequence_xml_path
+        self.profile = mltprofiles.get_profile(profile_name)
+        self.segments = segments
+
+        self.render_thread = None
+
+        self.aborted = False
+
+    def run(self):        
+
+        width, height = self.profile.width(), self.profile.height()
+        encoding = _get_render_encoding()
+        self.current_render_file_path = None
+        
+        sequence_xml_producer = mlt.Producer(self.profile, str(self.sequence_xml_path))
+        
+        for segment in self.segments:
+            if self.aborted == True:
+                break
+                
+            clip_file_path, clip_range_in, clip_range_out = segment
+
+            # Create render objects
+            self.current_render_file_path = clip_file_path
+            renderconsumer.performance_settings_enabled = False
+            
+            consumer = renderconsumer.get_render_consumer_for_encoding( clip_file_path,
+                                                                        self.profile, 
+                                                                        encoding)
+            renderconsumer.performance_settings_enabled = True
+            
+            # DIS STUFF FROM PROXY RENDERING, REVISIT!
+            # Bit rates for proxy files are counted using 2500kbs for 
+            # PAL size image as starting point.
+            pal_pix_count = 720.0 * 576.0
+            pal_proxy_rate = 2500.0
+            proxy_pix_count = float(width * height)
+            proxy_rate = pal_proxy_rate * (proxy_pix_count / pal_pix_count)
+            proxy_rate = int(proxy_rate / 100) * 100 # Make proxy rate even hundred
+            # There are no practical reasons to have bitrates lower than 500kbs.
+            if proxy_rate < 500:
+                proxy_rate = 500
+            consumer.set("vb", str(int(proxy_rate)) + "k")
+
+            consumer.set("rescale", "nearest")
+
+            start_frame = clip_range_in 
+            
+            stop_frame = clip_range_out + RENDERING_PAD_FRAMES
+            if stop_frame > sequence_xml_producer.get_length() - 1:
+                stop_frame = sequence_xml_producer.get_length() - 1
+
+            # Create and launch render thread
+            self.render_thread = renderconsumer.FileRenderPlayer(None, sequence_xml_producer, consumer, start_frame, stop_frame)
+            self.wait_for_producer_end_stop = False
+            self.render_thread.start()
+
+            # Render view update loop
+            self.thread_running = True
+            self.aborted = False
+            while self.thread_running:
+                if self.aborted == True:
+                    break
+                render_fraction = self.render_thread.get_render_fraction()
+
+
+                self.render_thread.producer.get_length()
+                if self.render_thread.producer.frame() >= stop_frame:
+                    self.thread_running = False
+                    self.current_render_file_path = None
+                else:
+                    time.sleep(0.1)
+
+            if self.aborted:
+                self.render_thread.shutdown()
+                break
+
+            self.render_thread.shutdown()
+        
+        print("tline render done")
+
+    def abort(self):
+        render_thread.shutdown()
+        self.aborted = True
+        self.thread_running = False
 

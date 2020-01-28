@@ -29,6 +29,9 @@ import appconsts
 import cairoarea
 from editorstate import current_sequence
 from editorstate import get_tline_rendering_mode
+from editorstate import PROJECT
+from editorstate import PLAYER
+import renderconsumer
 import userfolders
 import tlinerenderserver
 
@@ -308,25 +311,45 @@ class TimeLineUpdateThread(threading.Thread):
         
         _timeline_renderer.update_segments()
 
-        dirty_segments = _timeline_renderer.get_dirty_segments()
+        self.dirty_segments = _timeline_renderer.get_dirty_segments()
         
-        if len(dirty_segments) == 0:
+        if len(self.dirty_segments) == 0:
             return
         
-        # Blocks
         try:
             # Blocks untils renders are stopped and cleaned
             tlinerenderserver.abort_current_renders()
         except:
-            # Timeout of 25s was exceeded, sometrhing is very wrong, no use to attempt furher work.
+            # Timeout of 25s was exceeded, something is very wrong, no use to attempt furher work.
             print("INFO: tlinerendersrver.abort_current_renders() exceeded timeout of 25s.")
             return
 
         # Write out MLT XML for render
+        self.save_path = _get_session_dir() + "/" + self.update_id + ".xml"
+               
+        _xml_render_player = renderconsumer.XMLRenderPlayer(  self.save_path,
+                                                              self.xml_render_done,
+                                                              None,
+                                                              PROJECT().c_seq,
+                                                              PROJECT(),
+                                                              PLAYER())
+        _xml_render_player.start()
 
+    def xml_render_done(self, data):
         if self.abort_before_render_request == True:
             # A new update was requested before this update got ready to start rendering.
             # This is no longer needed,  we can let the later request do the update,
             return
         
         # Launch renders and completion polling
+        segments_paths = []
+        segments_ins = []
+        segments_outs = []
+        for segment in self.dirty_segments:
+            clip_path = _get_session_dir() + "/" + segment.content_hash + "." + tlinerenderserver.get_encoding_extension()
+            segments_paths.append(clip_path)
+            segments_ins.append(segment.start_frame)
+            segments_outs.append(segment.end_frame)
+             
+        tlinerenderserver.render_update_clips(self.save_path,  segments_paths, segments_ins, segments_outs, current_sequence().profile.description())
+    
