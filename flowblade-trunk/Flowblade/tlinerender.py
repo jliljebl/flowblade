@@ -31,6 +31,7 @@ from editorstate import current_sequence
 from editorstate import get_tline_rendering_mode
 from editorstate import PROJECT
 from editorstate import PLAYER
+import gui
 import renderconsumer
 import userfolders
 import tlinerenderserver
@@ -87,11 +88,11 @@ def init_for_sequence(sequence):
     #---testing
     #seg = TimeLineSegment(SEGMENT_NOOP, 0, 50)
     #_timeline_renderer.segments.append(seg)
-    seg = TimeLineSegment(50, 70)
+    seg = TimeLineSegment(50, 170)
     _timeline_renderer.segments.append(seg)
     #seg = TimeLineSegment(SEGMENT_NOOP, 70, 80)
     #_timeline_renderer.segments.append(seg)
-    seg = TimeLineSegment(80, 90)
+    seg = TimeLineSegment(200, 290)
     _timeline_renderer.segments.append(seg)
 
 def get_renderer():
@@ -122,7 +123,6 @@ class TimeLineRenderer:
 
     def __init__(self):
         self.segments = []
-
 
     # --------------------------------------------- DRAW
     def draw(self, event, cr, allocation, pos, pix_per_frame):
@@ -183,12 +183,24 @@ class TimeLineRenderer:
     def get_dirty_segments(self):
         dirty = []
         for seg in self.segments:
-            seg.segment_state = SEGMENT_DIRTY
-            dirty.append(seg)
+            if seg.segment_state == SEGMENT_DIRTY:
+                dirty.append(seg)
         
         return dirty
             
-            
+    # ------------------------------------------------ RENDERING
+    def update_timeline_rendering_status(self, rendering_file, fract, render_completed, completed_segments):
+        dirty = self.get_dirty_segments()
+        for segment in dirty:
+            if segment.get_clip_path() == rendering_file:
+                segment.rendered_fract = fract
+                print(segment.rendered_fract, segment.content_hash) 
+            else:
+                segment.maybe_set_completed(completed_segments)
+                
+        
+        
+    
 
 class TimeLineSegment:
 
@@ -200,6 +212,10 @@ class TimeLineSegment:
 
         self.content_hash = "-1"
 
+        self.rendered_fract = 0.0
+    
+        self.producer = None
+    
     # --------------------------------------------- DRAW
     def draw(self, cr, height, pos, pix_per_frame):
         x = int(_get_x_for_frame_func(self.start_frame))
@@ -207,9 +223,40 @@ class TimeLineSegment:
         w = x_end - x
         cr.set_source_rgb(*_segment_colors[self.segment_state])
         cr.rectangle(x, 0, w ,height)
-        cr.fill_preserve()
-        cr.set_source_rgb(0, 0, 0)
-        cr.stroke()
+
+        if self.segment_state == SEGMENT_DIRTY:
+            cr.fill()
+            
+            rendered_w = int(self.rendered_fract * float(w))
+            cr.set_source_rgb(*_segment_colors[SEGMENT_RENDERED])
+            cr.rectangle(x, 0, rendered_w, height)
+            cr.fill()
+
+            cr.rectangle(x, 0, w ,height)
+            cr.set_source_rgb(0, 0, 0)
+            cr.stroke()
+        else:
+            cr.fill_preserve()
+            cr.set_source_rgb(0, 0, 0)
+            cr.stroke()
+
+    # -------------------------------------------- CLIP AND RENDERING
+    def get_clip_path(self):
+        return _get_session_dir() + "/" + self.content_hash + "." + tlinerenderserver.get_encoding_extension()
+    
+    def maybe_set_completed(self, completed_segments):
+        if self.get_clip_path() in completed_segments:
+            self.update_segment_as_rendered()
+            
+    def update_segment_as_rendered(self):
+        self.segment_state = SEGMENT_RENDERED
+        self.rendered_fract = 0.0
+        
+        self.create_clip()
+    
+    def create_clip(self):
+        self.producer = current_sequence().create_file_producer_clip(str(self.get_clip_path()))
+        print("prodicer created",  self.content_hash)
 
     # ----------------------------------------- CONTENT HASH
     def update_segment(self):
@@ -218,6 +265,7 @@ class TimeLineSegment:
         if new_hash != self.content_hash:
             if get_tline_rendering_mode() == appconsts.TLINE_RENDERING_AUTO:
                 self.segment_state = SEGMENT_DIRTY
+                self.producer = None
             elif get_tline_rendering_mode() == appconsts.TLINE_RENDERING_REQUEST:
                 self.segment_state = SEGMENT_UNRENDERED
 
@@ -312,6 +360,7 @@ class TimeLineUpdateThread(threading.Thread):
         _timeline_renderer.update_segments()
 
         self.dirty_segments = _timeline_renderer.get_dirty_segments()
+        print("dirty segments:", len(self.dirty_segments))
         
         if len(self.dirty_segments) == 0:
             return
@@ -320,8 +369,8 @@ class TimeLineUpdateThread(threading.Thread):
             # Blocks untils renders are stopped and cleaned
             tlinerenderserver.abort_current_renders()
         except:
-            # Timeout of 25s was exceeded, something is very wrong, no use to attempt furher work.
-            print("INFO: tlinerendersrver.abort_current_renders() exceeded timeout of 25s.")
+            # Dbus default timeout of 25s was exceeded, something is very wrong, no use to attempt furher work.
+            print("INFO: tlinerendersrver.abort_current_renders() exceeded DBus timeout of 25s.")
             return
 
         # Write out MLT XML for render
@@ -346,10 +395,53 @@ class TimeLineUpdateThread(threading.Thread):
         segments_ins = []
         segments_outs = []
         for segment in self.dirty_segments:
-            clip_path = _get_session_dir() + "/" + segment.content_hash + "." + tlinerenderserver.get_encoding_extension()
-            segments_paths.append(clip_path)
-            segments_ins.append(segment.start_frame)
-            segments_outs.append(segment.end_frame)
+            clip_path = segment.get_clip_path()
+            if os.path.isfile(clip_path) == True:
+                # We came here with undo or redo or new exit that some recreates same content for segment
+                print ("CreatinG for existing")
+                segment.update_segment_as_rendered()
+            else:
+                # Clip for this content does not exists
+                segments_paths.append(clip_path)
+                segments_ins.append(segment.start_frame)
+                segments_outs.append(segment.end_frame)
+        
+        if len(segments_paths) == 0:
+            # clips for all new dirty segments existed
+            gui.tline_render_strip.widget.queue_draw()
+            return
+        
              
         tlinerenderserver.render_update_clips(self.save_path,  segments_paths, segments_ins, segments_outs, current_sequence().profile.description())
+
+        status_display = TimeLineStatusPollingThread()
+        status_display.start()
+
+
+class TimeLineStatusPollingThread(threading.Thread):
     
+    def __init__(self):
+        self.update_id = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
+        self.abort_before_render_request = False
+        threading.Thread.__init__(self)
+
+    def run(self):
+        running = True
+        
+        while running:
+            rendering_file, fract, render_completed, completed_segments = tlinerenderserver.get_render_status()
+            get_renderer().update_timeline_rendering_status(rendering_file, fract, render_completed, completed_segments)
+
+            Gdk.threads_enter()
+            gui.tline_render_strip.widget.queue_draw()
+            Gdk.threads_leave()
+
+            #print(rendering_file, fract, render_completed, "\n\n")
+            # print(completed_segments,"\n\n\n\n")
+
+            time.sleep(0.5)
+            
+            if render_completed == 1: 
+                break
+    
+        print("timeline update rendering done")

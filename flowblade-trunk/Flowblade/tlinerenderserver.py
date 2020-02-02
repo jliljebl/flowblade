@@ -66,6 +66,11 @@ def render_update_clips(sequence_xml_path, segments_paths, segments_ins, segment
     if iface != None:
         iface.render_update_clips(sequence_xml_path, segments_paths, segments_ins, segments_outs, profile_name)
 
+def get_render_status():
+    iface = _get_iface("get_render_status")
+    if iface != None:
+        return iface.get_render_status()
+
 def abort_current_renders():
     iface = _get_iface("abort_current_renders")
     if iface != None:
@@ -77,7 +82,6 @@ def shutdown_render_server():
         iface.shutdown_render_server()
 
 def get_encoding_extension():
-    print(renderconsumer.proxy_encodings[TLINE_RENDER_ENCODING_INDEX])
     return renderconsumer.proxy_encodings[TLINE_RENDER_ENCODING_INDEX].extension
 
 def _get_iface(method_name):
@@ -144,6 +148,8 @@ def _get_render_encoding():
     return renderconsumer.proxy_encodings[TLINE_RENDER_ENCODING_INDEX]
 
 
+
+
 class TLineRenderDBUSService(dbus.service.Object):
     def __init__(self, loop):
         bus_name = dbus.service.BusName('flowblade.movie.editor.tlinerenderserver', bus=dbus.SessionBus())
@@ -169,6 +175,18 @@ class TLineRenderDBUSService(dbus.service.Object):
         self.render_runner_thread.start()
 
     @dbus.service.method('flowblade.movie.editor.tlinerenderserver')
+    def get_render_status(self):
+        dummy_list = ["nothing"]
+        if self.render_runner_thread == None:
+            return ("none", 1.0,  False, dummy_list)
+        
+        if self.render_runner_thread.render_complete:
+            return ("none", 1.0, self.render_runner_thread.render_complete, self.render_runner_thread.completed_segments)
+        
+        return ( self.render_runner_thread.current_render_file_path, self.render_runner_thread.get_fraction(), 
+                  self.render_runner_thread.render_complete, self.render_runner_thread.completed_segments)
+
+    @dbus.service.method('flowblade.movie.editor.tlinerenderserver')
     def abort_renders(self):
         # not impl
         return
@@ -192,7 +210,8 @@ class TLineRenderRunnerThread(threading.Thread):
         self.sequence_xml_path = sequence_xml_path
         self.profile = mltprofiles.get_profile(profile_name)
         self.segments = segments
-
+        self.completed_segments =  ["nothing"]
+        self.render_complete = False
         self.render_thread = None
 
         self.aborted = False
@@ -252,8 +271,6 @@ class TLineRenderRunnerThread(threading.Thread):
             while self.thread_running:
                 if self.aborted == True:
                     break
-                render_fraction = self.render_thread.get_render_fraction()
-
 
                 self.render_thread.producer.get_length()
                 if self.render_thread.producer.frame() >= stop_frame:
@@ -266,12 +283,18 @@ class TLineRenderRunnerThread(threading.Thread):
                 self.render_thread.shutdown()
                 break
 
+            self.completed_segments.append(clip_file_path)
+
             self.render_thread.shutdown()
         
+        self.render_complete = True
         print("tline render done")
 
+    def get_fraction(self):
+        return self.render_thread.get_render_fraction()
+
     def abort(self):
-        render_thread.shutdown()
+        self.render_thread.shutdown()
         self.aborted = True
         self.thread_running = False
 
