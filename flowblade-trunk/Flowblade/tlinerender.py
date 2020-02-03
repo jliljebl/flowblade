@@ -207,6 +207,8 @@ class TimeLineRenderer:
                 # Blank between segments/sequence start
                 if segment.start_frame > in_frame:
                     edit._insert_blank(hidden_track, index, segment.start_frame - in_frame)
+                    
+                    print("Inserting blank:", index, )
                     index += 1
                 
                 segment_length = segment.end_frame - segment.start_frame
@@ -218,8 +220,13 @@ class TimeLineRenderer:
                     print("Inserting tline render clip at index:", index)
                     edit.append_clip(hidden_track, segment.producer, 0, segment_length - 1) # -1, out incl.
 
+                in_frame = segment.end_frame
                 index += 1
-                    
+            
+            if hidden_track.get_length() < seq_len:
+                edit._insert_blank(hidden_track, index, seq_len - hidden_track.get_length())
+                print("end completion blank append", index)
+        
     # ------------------------------------------------ RENDERING
     def update_timeline_rendering_status(self, rendering_file, fract, render_completed, completed_segments):
         dirty = self.get_dirty_segments()

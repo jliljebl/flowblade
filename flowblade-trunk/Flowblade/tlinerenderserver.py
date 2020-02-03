@@ -262,19 +262,18 @@ class TLineRenderRunnerThread(threading.Thread):
 
             # Create and launch render thread
             self.render_thread = renderconsumer.FileRenderPlayer(None, sequence_xml_producer, consumer, start_frame, stop_frame)
-            self.wait_for_producer_end_stop = False
+            self.render_thread.wait_for_producer_end_stop = False
             self.render_thread.start()
 
             # Render view update loop
-            self.thread_running = True
+            self.render_in_progress = True
             self.aborted = False
-            while self.thread_running:
+            while self.render_in_progress:
                 if self.aborted == True:
                     break
 
-                self.render_thread.producer.get_length()
-                if self.render_thread.producer.frame() >= stop_frame:
-                    self.thread_running = False
+                if self.render_thread.running == False: # Rendering has reached end
+                    self.render_in_progress = False
                     self.current_render_file_path = None
                 else:
                     time.sleep(0.1)
