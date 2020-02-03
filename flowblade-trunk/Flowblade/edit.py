@@ -70,7 +70,7 @@ def _insert_clip(track, clip, index, clip_in, clip_out):
     resync.clip_added_to_timeline(clip, track)
 
 def _insert_blank(track, index, length):
-    track.insert_blank(index, length - 1) # -1 MLT API says so
+    track.insert_blank(index, length - 1) # end inclusive
     blank_clip = track.get_clip(index)
     current_sequence().add_clip_attr(blank_clip)
     blank_clip.clip_in = 0
@@ -437,10 +437,10 @@ class EditAction:
         else:
             updater.clear_kf_editor()
 
-        current_sequence().update_edit_tracks_length() # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
+        current_sequence().update_edit_tracks_length() # Needed for timeline render updates
         if self.update_hidden_track_blank:
-            current_sequence().update_trim_hack_blank_length() # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
-        PLAYER().display_inside_sequence_length(current_sequence().seq_len) # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
+            current_sequence().update_hidden_track_for_timeline_rendering() # Needed for timeline render updates
+        PLAYER().display_inside_sequence_length(current_sequence().seq_len)
 
         updater.update_position_bar()
 

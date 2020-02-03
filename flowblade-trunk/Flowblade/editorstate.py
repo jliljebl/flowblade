@@ -194,8 +194,8 @@ def get_compositing_mode():
 
 def get_tline_rendering_mode():
     if project.c_seq == None:
-        print ("get_compositing_mode(), trying to get compositing mode when no current sequence available!") 
-        return appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
+        print ("get_compositing_mode(), trying to get timeline render mode when no current sequence available!") 
+        return appconsts.TLINE_RENDERING_OFF
     else:
         return project.c_seq.tline_render_mode
         

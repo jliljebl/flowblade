@@ -33,6 +33,7 @@ import mltfilters
 import mlttransitions
 import mltrefhold
 import patternproducer
+import tlinerender
 import utils
 
 # Media types for tracks or clips
@@ -787,27 +788,26 @@ class Sequence:
         self._unmute_editable()
 
     def update_edit_tracks_length(self):
-        # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
-        self.seq_len = 0  # muuta  arvoksi 1 ???
+        # Needed for timeline renderering updates
+        self.seq_len = 0 
         for i in range(1, len(self.tracks) - 1):
             track_len = self.tracks[i].get_length()
             if track_len > self.seq_len:
                 self.seq_len = track_len
 
-    def update_trim_hack_blank_length(self):
-        # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
+    def update_hidden_track_for_timeline_rendering(self):
+        # Needed for timeline render updates
         self.tracks[-1].clips = []
         self.tracks[-1].clear()
 
         seq_len = self.seq_len
         if seq_len < 1:
             seq_len = 1
-            
-        edit._insert_blank(self.tracks[-1], 0, seq_len)
+        
+        tlinerender.get_renderer().update_hidden_track(self.tracks[-1], seq_len)
 
     def get_seq_range_frame(self, frame):
-        # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
-        # remove TimeLineFrameScale then too
+        # Needed for timeline renderering updates
         if frame >= (self.seq_len - 1):
             return self.seq_len - 1
         else:

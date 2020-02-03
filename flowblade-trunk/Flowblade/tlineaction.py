@@ -65,6 +65,7 @@ import renderconsumer
 import respaths
 import sequence
 import syncsplitevent
+import tlinerender
 import updater
 import userfolders
 import utils
@@ -1994,5 +1995,5 @@ def change_current_tline_rendering_mode(menu_widget, new_tline_render_mode):
         gui.editor_window.show_tline_render_strip()
     
     current_sequence().tline_render_mode = new_tline_render_mode
-    
-    
+    tlinerender.update_renderer_to_mode()
+

@@ -1989,9 +1989,9 @@ def _update_gui_after_sequence_import(): # This copied  with small modifications
                                      # This REPAINTS TIMELINE as a side effect.
     updater.clear_kf_editor()
 
-    current_sequence().update_edit_tracks_length() # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
-    current_sequence().update_trim_hack_blank_length() # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
-    editorstate.PLAYER().display_inside_sequence_length(current_sequence().seq_len) # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
+    current_sequence().update_edit_tracks_length() # Needed for timeline renderering updates
+    current_sequence().update_hidden_track_for_timeline_rendering() # Needed for timeline renderering updates
+    editorstate.PLAYER().display_inside_sequence_length(current_sequence().seq_len)
 
     updater. update_seqence_info_text()
 

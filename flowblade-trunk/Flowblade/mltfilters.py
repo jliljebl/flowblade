@@ -96,6 +96,7 @@ old_filters = []
 # We need this to mute clips
 _volume_filter_info = None
 _brightness_filter_info = None # for kf tool
+_colorize_filter_info = None # for tline render tests
 
 def _load_icons():
     global FILTER_DEFAULT_ICON
@@ -423,7 +424,11 @@ def load_filters_xml(services):
         if filter_info.mlt_service_id == "brightness": # TODO: maybe add general search fuction for these, if we need a third one this is becoming a bit silly
             global _brightness_filter_info
             _brightness_filter_info = filter_info
-            
+
+        if filter_info.mlt_service_id == "frei0r.colorize":
+            global _colorize_filter_info
+            _colorize_filter_info = filter_info
+
         # Add filter compositor filters or filter groups
         if filter_info.group == COMPOSITOR_FILTER_GROUP:
             global compositor_filters
@@ -525,6 +530,9 @@ def get_volume_filters_info():
 
 def get_brightness_filter_info():
     return _brightness_filter_info
+
+def get_colorize_filter_info():
+    return _colorize_filter_info
 
 def get_filter_mask_start_filters_data():
     filter_names = []

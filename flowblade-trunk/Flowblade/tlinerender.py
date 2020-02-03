@@ -27,11 +27,13 @@ import threading
 
 import appconsts
 import cairoarea
+import edit
 from editorstate import current_sequence
 from editorstate import get_tline_rendering_mode
 from editorstate import PROJECT
 from editorstate import PLAYER
 import gui
+import mltfilters
 import renderconsumer
 import userfolders
 import tlinerenderserver
@@ -65,9 +67,6 @@ def init_session(): # called when project is loaded
     if _project_session_id != -1:
         _delete_session_dir()
 
-    global _updates
-    _updates = []
-    
     _project_session_id = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
     os.mkdir(_get_session_dir())
 
@@ -82,19 +81,26 @@ def delete_session():
     _delete_session_dir()
 
 def init_for_sequence(sequence):
+    update_renderer_to_mode()
+
+def update_renderer_to_mode():
+    print("new renderer for mode:", get_tline_rendering_mode())
+    
     global _timeline_renderer
-    _timeline_renderer = TimeLineRenderer()
-
-    #---testing
-    #seg = TimeLineSegment(SEGMENT_NOOP, 0, 50)
-    #_timeline_renderer.segments.append(seg)
-    seg = TimeLineSegment(50, 170)
-    _timeline_renderer.segments.append(seg)
-    #seg = TimeLineSegment(SEGMENT_NOOP, 70, 80)
-    #_timeline_renderer.segments.append(seg)
-    seg = TimeLineSegment(200, 290)
-    _timeline_renderer.segments.append(seg)
-
+    if get_tline_rendering_mode() == appconsts.TLINE_RENDERING_OFF:
+        _timeline_renderer = NoOpRenderer()
+    else:
+        _timeline_renderer = TimeLineRenderer()
+        #---testing
+        #seg = TimeLineSegment(SEGMENT_NOOP, 0, 50)
+        #_timeline_renderer.segments.append(seg)
+        seg = TimeLineSegment(50, 170)
+        _timeline_renderer.segments.append(seg)
+        #seg = TimeLineSegment(SEGMENT_NOOP, 70, 80)
+        #_timeline_renderer.segments.append(seg)
+        seg = TimeLineSegment(200, 290)
+        _timeline_renderer.segments.append(seg)
+                
 def get_renderer():
     return _timeline_renderer
 
@@ -176,6 +182,9 @@ class TimeLineRenderer:
         _update_thread = TimeLineUpdateThread()
         _update_thread.start()
 
+    def all_segments_ready(self):
+        return (len(self.get_dirty_segments()) == 0)
+
     def update_segments(self):
         for seg in self.segments:
             seg.update_segment()
@@ -187,7 +196,30 @@ class TimeLineRenderer:
                 dirty.append(seg)
         
         return dirty
-            
+
+    def update_hidden_track(self, hidden_track, seq_len):
+        if len(self.segments) == 0:
+            edit._insert_blank(hidden_track, 0, seq_len)
+        else:
+            in_frame = 0
+            index = 0
+            for segment in self.segments:
+                # Blank between segments/sequence start
+                if segment.start_frame > in_frame:
+                    edit._insert_blank(hidden_track, index, segment.start_frame - in_frame)
+                    index += 1
+                
+                segment_length = segment.end_frame - segment.start_frame
+                
+                # Segment contents
+                if segment.segment_state == SEGMENT_UNRENDERED or segment.segment_state == SEGMENT_DIRTY:
+                    edit._insert_blank(hidden_track, index, segment_length - 1)
+                elif segment.segment_state == SEGMENT_RENDERED:
+                    print("Inserting tline render clip at index:", index)
+                    edit.append_clip(hidden_track, segment.producer, 0, segment_length - 1) # -1, out incl.
+
+                index += 1
+                    
     # ------------------------------------------------ RENDERING
     def update_timeline_rendering_status(self, rendering_file, fract, render_completed, completed_segments):
         dirty = self.get_dirty_segments()
@@ -198,9 +230,35 @@ class TimeLineRenderer:
             else:
                 segment.maybe_set_completed(completed_segments)
                 
-        
-        
+
+class NoOpRenderer():
+
     
+    def __init__(self):
+        """
+        Instead of multiple tests for editorstate.get_tline_rendering_mode() we implement TLINE_RENDERING_OFF mode 
+        as no-op timeline renderer.
+        """
+        pass
+        
+    def draw(self, event, cr, allocation, pos, pix_per_frame):
+        pass
+
+    def timeline_changed(self):
+        pass
+ 
+    def press_event(self, event):
+        pass
+
+    def motion_notify_event(self, x, y, state):
+        pass
+                
+    def release_event(self, event):
+        pass
+    
+    def update_hidden_track(self, hidden_track, seq_len):
+        edit._insert_blank(hidden_track, 0, seq_len)
+
 
 class TimeLineSegment:
 
@@ -256,7 +314,14 @@ class TimeLineSegment:
     
     def create_clip(self):
         self.producer = current_sequence().create_file_producer_clip(str(self.get_clip_path()))
-        print("prodicer created",  self.content_hash)
+        
+        # testing
+        filter_info = mltfilters.get_colorize_filter_info()
+        filter_object = current_sequence().create_filter(filter_info)
+        self.producer.attach(filter_object.mlt_filter)
+        self.producer.filters.append(filter_object)
+        
+        print("producer created",  self.content_hash)
 
     # ----------------------------------------- CONTENT HASH
     def update_segment(self):
@@ -397,7 +462,7 @@ class TimeLineUpdateThread(threading.Thread):
         for segment in self.dirty_segments:
             clip_path = segment.get_clip_path()
             if os.path.isfile(clip_path) == True:
-                # We came here with undo or redo or new exit that some recreates same content for segment
+                # We came here with undo or redo or new edit that recreates existing content for segment
                 print ("CreatinG for existing")
                 segment.update_segment_as_rendered()
             else:
@@ -408,10 +473,11 @@ class TimeLineUpdateThread(threading.Thread):
         
         if len(segments_paths) == 0:
             # clips for all new dirty segments existed
+            Gdk.threads_enter()
             gui.tline_render_strip.widget.queue_draw()
+            Gdk.threads_leave()
             return
-        
-             
+
         tlinerenderserver.render_update_clips(self.save_path,  segments_paths, segments_ins, segments_outs, current_sequence().profile.description())
 
         status_display = TimeLineStatusPollingThread()
@@ -442,6 +508,11 @@ class TimeLineStatusPollingThread(threading.Thread):
             time.sleep(0.5)
             
             if render_completed == 1: 
-                break
+                running = False
+    
+        while get_renderer().all_segments_ready() == False:
+            time.sleep(0.1)
+            
+        current_sequence().update_hidden_track_for_timeline_rendering() # We should have correct sequence length known because this always comes after edits.
     
         print("timeline update rendering done")
