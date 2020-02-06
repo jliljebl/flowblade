@@ -348,7 +348,7 @@ def load_icons():
     CLIP_MARKER_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "clip_marker.png")
     COMPOSITOR_ICON = guiutils.get_cairo_image("compositor_icon")
 
-    MARKER_ICON = _load_pixbuf("marker.png")
+    MARKER_ICON = _load_pixbuf("marker_yellow.png")
     TRACK_ALL_ON_V_ICON = _load_pixbuf("track_all_on_V.png")
     TRACK_ALL_ON_A_ICON = _load_pixbuf("track_all_on_A.png")
     MUTE_AUDIO_A_ICON = _load_pixbuf("track_audio_mute_A.png") 
