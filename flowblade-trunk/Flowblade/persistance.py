@@ -542,6 +542,10 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
             compositor.origin_clip_id = py_compositor.origin_clip_id
             compositor.obey_autofollow = py_compositor.obey_autofollow
            
+            if seq.compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+                print("seq.compositing_mode", seq.compositing_mode)
+                compositor.transition.mlt_transition.set("always_active", str(1))
+                       
             mlt_compositors.append(compositor)
 
     seq.compositors = mlt_compositors

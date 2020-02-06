@@ -618,6 +618,8 @@ class Sequence:
         compositor.set_in_and_out(old_compositor.clip_in, old_compositor.clip_out)
         compositor.transition.set_tracks(old_compositor.transition.a_track, old_compositor.transition.b_track)
         compositor.obey_autofollow = old_compositor.obey_autofollow
+        if self.compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+            compositor.transition.mlt_transition.set("always_active", str(1))
         self._plant_compositor(compositor)
         return compositor
     
@@ -708,9 +710,6 @@ class Sequence:
             self.compositors.sort(key=_sort_compositors_comparator, reverse=True)
         else:
             self.compositors.sort(key=_sort_compositors_comparator)
-        
-        #for comp in self.compositors:
-        #    print(comp.transition.b_track)
         
     def get_track_compositors(self, track_index):
         track_compositors = []
@@ -974,7 +973,6 @@ class Sequence:
         cut_frame = -1
         for i in range(1, len(self.tracks) - 1):
             track = self.tracks[i]
-            #print track.get_producer().get_length()
             
             # Get index and clip start
             index = track.get_clip_index_at(tline_frame)
