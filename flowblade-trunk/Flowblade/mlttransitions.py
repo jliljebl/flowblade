@@ -136,10 +136,8 @@ def init_module():
     # name -> mlt_compositor_transition_infos key dict.
     unsorted_compositors = [ (_("Dissolve"),"##opacity_kf"),
                              (_("Picture in Picture"),"##pict_in_pict"),
-
                              (_("Affine Blend"), "##affineblend"),
                              (_("Blend"), "##blend"),
-
                              (_("Transform"),"##affine")]
 
     compositors = sorted(unsorted_compositors, key=lambda comp: comp[0])   

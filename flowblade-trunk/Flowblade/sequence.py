@@ -586,8 +586,8 @@ class Sequence:
     def restack_compositors(self):
         if self.compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
             # we should only see this on sequence creation and adding removing tracks for COMPOSITING_MODE_STANDARD_FULL_TRACK
-            print("TRYING TO RESTACK COMPOSITORS IN COMPOSITING_MODE_STANDARD_FULL_TRACK!")
-            #return
+            # remove this later
+            print("restacking compositors!")
 
         self.sort_compositors()
 
@@ -669,7 +669,24 @@ class Sequence:
 
     def add_full_track_compositors(self):
         print("Adding full track compositors")
+        
+        for i in range(self.first_video_index, len(self.tracks) - 1):
+            track = self.tracks[i]
+        
+            compositor = self.create_compositor("##affineblend")
 
+            a_track = self.first_video_index
+            b_track = track.id 
+            compositor.transition.set_tracks(a_track, b_track)
+            compositor.set_in_and_out(-1, -1)
+            compositor.transition.mlt_transition.set("always_active", str(1))
+            compositor.origin_clip_id = -1
+
+            self.add_compositor(compositor)
+        
+        self.restack_compositors()
+        print("Adding full track compositors DONE")
+    
     def get_compositor_for_destroy_id(self, destroy_id):
         for comp in self.compositors:
             if comp.destroy_id == destroy_id:
@@ -687,7 +704,7 @@ class Sequence:
         """
         Compositor order must be from top to bottom or will not work.
         """
-        if self.compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
+        if self.compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW and self.compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
             self.compositors.sort(key=_sort_compositors_comparator, reverse=True)
         else:
             self.compositors.sort(key=_sort_compositors_comparator)

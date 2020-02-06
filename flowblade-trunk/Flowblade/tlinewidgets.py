@@ -554,7 +554,10 @@ def compositor_hit(frame, x, y, sorted_compositors):
         track_top = _get_track_y(track.id)
     except AttributeError: # we didn't press on a editable track
         return None
-    
+
+    if editorstate.get_compositing_mode() == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+        return None
+       
     if editorstate.get_compositing_mode() == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
         return _standard_auto_follow_comp_hit(frame, track, x, y, sorted_compositors)
     
@@ -2100,6 +2103,9 @@ class TimeLineCanvas:
             cr.fill()
 
     def draw_compositors(self, cr):
+        if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+            return
+            
         compositors = current_sequence().get_compositors()
         for comp in compositors:
             # compositor clip and edge
