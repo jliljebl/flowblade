@@ -584,11 +584,10 @@ class Sequence:
         return compositor
 
     def restack_compositors(self):
-        # Compositors are not user editable in compositng mode COMPOSITING_MODE_STANDARD_FULL_TRACK so 
-        # there should be no need to restack them.
         if self.compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+            # we should only see this on sequence creation and adding removing tracks for COMPOSITING_MODE_STANDARD_FULL_TRACK
             print("TRYING TO RESTACK COMPOSITORS IN COMPOSITING_MODE_STANDARD_FULL_TRACK!")
-            return
+            #return
 
         self.sort_compositors()
 
