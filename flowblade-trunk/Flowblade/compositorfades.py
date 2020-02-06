@@ -60,34 +60,6 @@ def add_fade_out(compositor, fade_out_length):
         else:
             _show_length_error_dialog()
             return None
-
-def set_auto_fade_in_keyframes(compositor):
-    clip = _get_compositor_clip(compositor)
-    keyframe_property, property_klass, keyframes = _get_kfproperty_klass_and_keyframes(compositor, clip)
-    
-    # Remove all key frames, there exists 2 or 1, 0 when created 1 always after that
-    while len(keyframes) > 0: 
-        keyframes.pop()
-    
-    # Set in fade in keyframes
-    keyframes.append((0, 0))
-    keyframes.append((compositor.get_length() - 1, 100))
-
-    keyframe_property.write_out_keyframes(keyframes)
-
-def set_auto_fade_out_keyframes(compositor):
-    clip = _get_compositor_clip(compositor)
-    keyframe_property, property_klass, keyframes = _get_kfproperty_klass_and_keyframes(compositor, clip)
-    
-    # Remove all key frames, there exists 2 or 1, 0 when created 1 always after that
-    while len(keyframes) > 0: 
-        keyframes.pop()
-    
-    # Set in fade in keyframes
-    keyframes.append((0, 100))
-    keyframes.append((compositor.get_length() - 1, 0))
-
-    keyframe_property.write_out_keyframes(keyframes)
     
 # ---------------------------------------------------------------------- module functions
 def _get_kfproperty_klass_and_keyframes(compositor, clip):
@@ -137,16 +109,6 @@ def _get_compositor_clip(compositor):
                 return clip
     
     return None
-
-def _get_default_fades_lengths(property_klass):
-    if property_klass in _dissolve_property_klasses:
-        fade_in_length = editorstate.PROJECT().get_project_property(appconsts.P_PROP_DISSOLVE_GROUP_FADE_IN)
-        fade_out_length = editorstate.PROJECT().get_project_property(appconsts.P_PROP_DISSOLVE_GROUP_FADE_OUT) 
-    else:
-        fade_in_length = editorstate.PROJECT().get_project_property(appconsts.P_PROP_ANIM_GROUP_FADE_IN)
-        fade_out_length = editorstate.PROJECT().get_project_property(appconsts.P_PROP_ANIM_GROUP_FADE_OUT)
-    
-    return (fade_in_length, fade_out_length)
 
 def _add_default_fade_in(keyframe_property, property_klass, keyframes, fade_in_length):
     if property_klass in _dissolve_property_klasses:

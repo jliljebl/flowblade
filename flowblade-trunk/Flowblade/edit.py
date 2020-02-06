@@ -2050,8 +2050,6 @@ def _add_compositor_redo(self):
 
     current_sequence().add_compositor(self.compositor)
     current_sequence().restack_compositors()
-
-    self.compositor.update_autofade_keyframes()
     
     compositeeditor.set_compositor(self.compositor)
 
