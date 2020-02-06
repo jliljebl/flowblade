@@ -65,8 +65,12 @@ def create_widgets():
     widgets.hamburger_launcher = guicomponents.HamburgerPressLaunch(_hamburger_launch_pressed)
     guiutils.set_margins(widgets.hamburger_launcher.widget, 4, 6, 6, 0)
     
-    # Edit area
+
+    # empty_label text has no effect on runtime behaviour, look to remove
+    # _display_compositor_edit_box() clearly overwrites anything we do here before user gets shown anything
     widgets.empty_label = Gtk.Label(label=_("No Compositor"))
+
+    # Edit area
     widgets.value_edit_box = Gtk.VBox()
     widgets.value_edit_box.pack_start(widgets.empty_label, True, True, 0)
     widgets.value_edit_frame = Gtk.Frame()
@@ -86,7 +90,15 @@ def get_compositor_clip_panel():
     set_enabled(False)
     
     return action_row
-    
+
+def compositing_mode_changed():
+    # Edit area
+    if current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+        widgets.empty_label.set_text(_("No Compositor"))
+    else:
+        widgets.empty_label.set_text(_("Compositor panel not used in/n Standard Full track Compositing Mode"))
+        widgets.empty_label.set_justify(Gtk.Justification.CENTER)
+        
 def set_compositor(new_compositor):
     """
     Sets clip to be edited in compositor editor.
@@ -152,14 +164,18 @@ def _display_compositor_edit_box():
     # Case: Empty edit frame
     global compositor
     if compositor == None:
-        #widgets.empty_label = Gtk.Label(label=_("No Compositor"))
-
         filler = Gtk.EventBox()
         filler.add(Gtk.Label())
         vbox.pack_start(filler, True, True, 0)
+
+        if current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+            info = Gtk.Label(label=_("No Compositor"))
+            info.set_sensitive(False)
+        else:
+            info = Gtk.Label(label=_("This panel not used in\n Compositing Mode Standard Full Track."))
+            info.set_justify(Gtk.Justification.CENTER)
+            info.set_sensitive(False)
         
-        info = Gtk.Label(label=_("No Compositor"))
-        info.set_sensitive(False)
         filler = Gtk.EventBox()
         filler.add(info)
         vbox.pack_start(filler, False, False, 0)

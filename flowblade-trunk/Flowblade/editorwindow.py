@@ -815,7 +815,8 @@ class EditorWindow:
         tds = guiutils.get_cairo_image("top_down")
         tdds = guiutils.get_cairo_image("top_down_auto")
         sas = guiutils.get_cairo_image("standard_auto")
-        surfaces = [tds, tdds, sas]
+        fta = guiutils.get_cairo_image("full_track_auto")
+        surfaces = [tds, tdds, sas, fta]
         comp_mode_launcher = guicomponents.ImageMenuLaunch(projectaction.compositing_mode_menu_launched, surfaces, 22*size_adj, 20)
         comp_mode_launcher.surface_x = 0
         comp_mode_launcher.surface_y = 4
@@ -1069,13 +1070,18 @@ class EditorWindow:
         comp_standard_auto = Gtk.RadioMenuItem.new_with_label([comp_top_free],_("Standard Auto Follow"))
         comp_standard_auto.show()
         menu.append(comp_standard_auto)
+
+        comp_standard_full = Gtk.RadioMenuItem.new_with_label([comp_top_free],_("Standard Full Track"))
+        comp_standard_full.show()
+        menu.append(comp_standard_full)
         
-        menu_items = [comp_top_free, comp_top_auto, comp_standard_auto]
+        menu_items = [comp_top_free, comp_top_auto, comp_standard_auto, comp_standard_full]
         menu_items[editorstate.get_compositing_mode()].set_active(True)
 
         comp_top_free.connect("toggled", lambda w: projectaction.change_current_sequence_compositing_mode(w, appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE))
         comp_top_auto.connect("toggled", lambda w: projectaction.change_current_sequence_compositing_mode(w, appconsts.COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW))
         comp_standard_auto.connect("toggled", lambda w: projectaction.change_current_sequence_compositing_mode(w, appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW))
+        comp_standard_full.connect("toggled", lambda w: projectaction.change_current_sequence_compositing_mode(w, appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK))
 
     def init_timeline_rendering_menu(self):
         menu_item = self.uimanager.get_widget('/MenuBar/SequenceMenu/TimelineRenderingMenu')

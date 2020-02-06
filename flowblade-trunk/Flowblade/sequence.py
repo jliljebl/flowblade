@@ -584,6 +584,12 @@ class Sequence:
         return compositor
 
     def restack_compositors(self):
+        # Compositors are not user editable in compositng mode COMPOSITING_MODE_STANDARD_FULL_TRACK so 
+        # there should be no need to restack them.
+        if self.compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+            print("TRYING TO RESTACK COMPOSITORS IN COMPOSITING_MODE_STANDARD_FULL_TRACK!")
+            return
+
         self.sort_compositors()
 
         new_compositors = []
@@ -661,7 +667,10 @@ class Sequence:
         for compositor in self.compositors:
             self.field.disconnect_service(compositor.transition.mlt_transition)
         self.compositors = []
-            
+
+    def add_full_track_compositors(self):
+        print("Adding full track compositors")
+
     def get_compositor_for_destroy_id(self, destroy_id):
         for comp in self.compositors:
             if comp.destroy_id == destroy_id:
