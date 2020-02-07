@@ -76,6 +76,7 @@ import render
 import renderconsumer
 import rendergui
 import sequence
+import tlinerender
 import undo
 import updater
 import userfolders
@@ -1819,11 +1820,22 @@ def _change_track_count_dialog_callback(dialog, response_id, tracks_select):
     if len(PROJECT().c_seq.tracks[-1].clips) == 1: # Remove hidden hack trick blank so that is does not get copied 
         edit._remove_clip(PROJECT().c_seq.tracks[-1], 0)
 
+    if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+        # These sequnces have one compositor for every non-V1 video track that will be recreated after track count changed.
+        current_sequence().destroy_compositors()
+
     new_seq = sequence.create_sequence_clone_with_different_track_count(PROJECT().c_seq, v_tracks, a_tracks)
+
     PROJECT().sequences.insert(cur_seq_index, new_seq)
     PROJECT().sequences.pop(cur_seq_index + 1)
     app.change_current_sequence(cur_seq_index)
-    
+
+    if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+        # Put track compositors back
+        current_sequence().add_full_track_compositors()
+
+    tlinerender.get_renderer().timeline_changed()
+
 def combine_sequences():
     dialogs.combine_sequences_dialog(_combine_sequences_dialog_callback)
 

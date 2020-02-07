@@ -807,9 +807,6 @@ class EditorWindow:
         self.pad_box.show()
         self.tline_render_strip.widget.show()
         
-        #self.tline_renderer_hbox.pack_start(self.pad_box, False, False, 0)
-        #self.tline_renderer_hbox.pack_start(self.tline_render_strip.widget, True, True, 0)
-        
         # Comp mode selector
         size_adj = 1
         tds = guiutils.get_cairo_image("top_down")
@@ -870,6 +867,7 @@ class EditorWindow:
             top_row_window_2 = Gtk.HBox(False, 0)
             top_row_window_2.pack_start(Gtk.Label(), True, True, 0)
             top_row_window_2.pack_start(self.monitor_tc_info.widget, False, False, 0)
+
         # Pane
         pane = Gtk.VBox(False, 1)
         pane.pack_start(menu_vbox, False, True, 0)

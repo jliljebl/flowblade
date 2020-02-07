@@ -1192,6 +1192,10 @@ def create_sequence_clone_with_different_track_count(old_seq, v_tracks, a_tracks
     track_delta = new_seq.first_video_index - old_seq.first_video_index
     new_seq.clone_compositors_from_sequence(old_seq, track_delta)
 
+    # Copy modes values
+    new_seq.compositing_mode = old_seq.compositing_mode
+    new_seq.tline_render_mode = old_seq.tline_render_mode
+        
     # copy next clip id data
     new_seq.next_id = old_seq.next_id
     return new_seq
