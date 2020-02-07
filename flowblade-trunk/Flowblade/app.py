@@ -990,6 +990,8 @@ def _shutdown_dialog_callback(dialog, response_id):
 
     tlinerender.delete_session()
 
+    clipeffectseditor.shutdown_polling()
+
     # Save window dimensions on exit
     alloc = gui.editor_window.window.get_allocation()
     x, y, w, h = alloc.x, alloc.y, alloc.width, alloc.height 
