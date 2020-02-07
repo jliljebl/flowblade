@@ -209,7 +209,7 @@ def set_clip(new_clip, new_track, new_index, show_tab=True):
     # Close old polling
     if _edit_polling_thread != None:
         _edit_polling_thread.shutdown()
-    # startnew polling
+    # Start new polling
     _edit_polling_thread = PropertyChangePollingThread()
     _edit_polling_thread.start()
 

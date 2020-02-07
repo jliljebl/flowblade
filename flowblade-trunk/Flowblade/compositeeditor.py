@@ -25,6 +25,8 @@ Module handles Compositors edit panel.
 import copy
 from gi.repository import Gtk
 import pickle
+import threading
+import time
 
 import appconsts
 import atomicfile
@@ -43,6 +45,7 @@ import mlttransitions
 import propertyeditorbuilder
 import propertyedit
 import propertyparse
+import tlinerender
 import utils
 
 COMPOSITOR_PANEL_LEFT_WIDTH = 160
@@ -51,11 +54,24 @@ widgets = utils.EmptyClass()
 
 compositor = None # Compositor being edited.
 
+# Property change polling.
+# We didn't put a layer of indirection to look for and launch events on filter property edits
+# so now we detect filter edits by polling. This has no performance impect, n is so small.
+_edit_polling_thread = None
+compositor_changed_since_last_save = False
+
 # This is updated when filter panel is displayed and cleared when removed.
 # Used to update kfeditors with external tline frame position changes
 keyframe_editor_widgets = []
 
 compositor_notebook_index = 3 # this is set 2 for the 2 window mode
+
+
+def shutdown_polling():
+    global _edit_polling_thread
+    if _edit_polling_thread != None:
+        _edit_polling_thread.shutdown()
+        _edit_polling_thread = None
 
 def create_widgets():
     """
@@ -116,12 +132,21 @@ def set_compositor(new_compositor):
     if editorpersistance.prefs.default_layout == True:
         gui.middle_notebook.set_current_page(compositor_notebook_index)
 
+    global _edit_polling_thread
+    # Close old polling
+    if _edit_polling_thread != None:
+        _edit_polling_thread.shutdown()
+    # Start new polling
+    _edit_polling_thread = PropertyChangePollingThread()
+    _edit_polling_thread.start()
+
 def clear_compositor():
     global compositor
     compositor = None
     widgets.compositor_info.set_no_compositor_info()
     _display_compositor_edit_box()
     set_enabled(False)
+    shutdown_polling()
 
 def set_enabled(value):
     widgets.empty_label.set_sensitive(value)
@@ -345,6 +370,52 @@ def _load_compositor_values_dialog_callback(dialog, response_id):
 
     dialog.destroy()
 
+
+class PropertyChangePollingThread(threading.Thread):
+    
+    def __init__(self):
+        threading.Thread.__init__(self)
+        self.last_properties = None
+        
+    def run(self):
+        self.running = True
+        while self.running:
+            global compositor
+            if compositor == None:
+                self.shutdown()
+            else:
+                if self.last_properties == None:
+                    self.last_properties = self.get_compositor_properties()
+                
+                new_properties = self.get_compositor_properties()
+                
+                changed = False
+                for new_prop, old_prop in zip(new_properties, self.last_properties):
+                    if new_prop != old_prop:
+                        changed = True
+
+                if changed:
+                    global compositor_changed_since_last_save
+                    compositor_changed_since_last_save = True
+                    tlinerender.get_renderer().timeline_changed()
+
+                self.last_properties = new_properties
+                
+                time.sleep(1.0)
+                
+    def get_compositor_properties(self):
+        compositor_properties = []
+
+        for prop in compositor.transition.properties:
+            compositor_properties.append(copy.deepcopy(prop))
+    
+        compositor_properties.append((copy.deepcopy(compositor.clip_in ), copy.deepcopy(compositor.clip_out)))
+        
+        return compositor_properties
+        
+    def shutdown(self):
+        self.running = False
+        
 
 class CompositorValuesSaveData:
     
