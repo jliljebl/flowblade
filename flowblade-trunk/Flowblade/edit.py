@@ -47,6 +47,9 @@ import utils
 # GUI updates are turned off for example when doing resync action
 do_gui_update = False
 
+# Flag for doing edits since last save
+edit_done_since_last_save = False
+
 
 # ---------------------------------- atomic edit ops
 def append_clip(track, clip, clip_in, clip_out):
@@ -331,6 +334,9 @@ class EditAction:
         undo.register_edit(self)
         if self.turn_on_stop_for_edit:
             self.stop_for_edit = True
+
+        global edit_done_since_last_save
+        edit_done_since_last_save = True
 
         # Create autofollow data if needed and update GUI.
         # If autofollow and no data, then GUI update happens in do_edit()

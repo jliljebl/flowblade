@@ -46,6 +46,7 @@ import app
 import audiowaveformrenderer
 import appconsts
 import batchrendering
+import clipeffectseditor
 import compositeeditor
 import dialogs
 import dialogutils
@@ -398,22 +399,26 @@ def _load_project_dialog_callback(dialog, response_id):
         dialog.destroy()
 
 def close_project():
-    dialogs.close_confirm_dialog(_close_dialog_callback, app.get_save_time_msg(), gui.editor_window.window, editorstate.PROJECT().name)
+    if was_edited_since_last_save() == False:
+        _close_dialog_callback(None, None, True)
+    else:
+        dialogs.close_confirm_dialog(_close_dialog_callback, app.get_save_time_msg(), gui.editor_window.window, editorstate.PROJECT().name)
 
-def _close_dialog_callback(dialog, response_id):
-    dialog.destroy()
-    if response_id == Gtk.ResponseType.CLOSE:# "Don't Save"
-        pass
-    elif response_id ==  Gtk.ResponseType.YES:# "Save"
-        if editorstate.PROJECT().last_save_path != None:
-            persistance.save_project(editorstate.PROJECT(), editorstate.PROJECT().last_save_path)
-        else:
-            dialogutils.warning_message(_("Project has not been saved previously"), 
-                                    _("Save project with File -> Save As before closing."),
-                                    gui.editor_window.window)
+def _close_dialog_callback(dialog, response_id, no_dialog_project_close=False):
+    if no_dialog_project_close == False:
+        dialog.destroy()
+        if response_id == Gtk.ResponseType.CLOSE:# "Don't Save"
+            pass
+        elif response_id ==  Gtk.ResponseType.YES:# "Save"
+            if editorstate.PROJECT().last_save_path != None:
+                persistance.save_project(editorstate.PROJECT(), editorstate.PROJECT().last_save_path)
+            else:
+                dialogutils.warning_message(_("Project has not been saved previously"), 
+                                        _("Save project with File -> Save As before closing."),
+                                        gui.editor_window.window)
+                return
+        else: # "Cancel"
             return
-    else: # "Cancel"
-        return
         
     # This is the same as opening default project
     sequence.AUDIO_TRACKS_COUNT = appconsts.INIT_A_TRACKS
@@ -456,6 +461,7 @@ def _save_project_in_last_saved_path():
 
     global save_time
     save_time = time.monotonic()
+    clear_changed_since_last_save_flags()
     
     projectinfogui.update_project_info()
         
@@ -500,6 +506,7 @@ def _save_as_dialog_callback(dialog, response_id):
 
         global save_time
         save_time = time.monotonic()
+        clear_changed_since_last_save_flags()
 
         gui.editor_window.window.set_title(PROJECT().name + " - Flowblade")        
         gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(False)
@@ -765,6 +772,18 @@ def get_save_time_msg():
     
     return _("Project was saved ") + str(int(save_ago)) + _(" minutes ago.")
 
+def clear_changed_since_last_save_flags():
+    edit.edit_done_since_last_save = False
+    compositeeditor.compositor_changed_since_last_save = False
+    clipeffectseditor.filter_changed_since_last_save = False
+
+def was_edited_since_last_save():
+    if (edit.edit_done_since_last_save == False and 
+        compositeeditor.compositor_changed_since_last_save == False and
+        clipeffectseditor.filter_changed_since_last_save == False):
+        return False
+    
+    return True
 
 def view_project_events():
     projectinfogui.show_project_events_dialog()

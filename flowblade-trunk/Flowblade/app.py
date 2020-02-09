@@ -320,6 +320,8 @@ def main(root_path):
         tlinerender.init_session()
         start_autosave()
 
+    projectaction.clear_changed_since_last_save_flags()
+    
     # We prefer to monkeypatch some callbacks into some modules, usually to
     # maintain a simpler and/or non-circular import structure.
     monkeypatch_callbacks()
@@ -669,6 +671,8 @@ def open_project(new_project):
     global resize_timeout_id
     resize_timeout_id = GLib.timeout_add(500, _do_window_resized_update)
 
+    projectaction.clear_changed_since_last_save_flags()
+
     # Set scrubbing
     editorstate.player.set_scrubbing(editorpersistance.prefs.audio_scrubbing)
     
@@ -953,26 +957,33 @@ def log_print_output_to_file():
 
 # ------------------------------------------------------ shutdown
 def shutdown():
-    dialogs.exit_confirm_dialog(_shutdown_dialog_callback, get_save_time_msg(), gui.editor_window.window, editorstate.PROJECT().name)
-    return True # Signal that event is handled, otherwise it'll destroy window anyway
+    if projectaction.was_edited_since_last_save() == False:
+        _shutdown_dialog_callback(None, None, True)
+        return True
+    else:
+        dialogs.exit_confirm_dialog(_shutdown_dialog_callback, get_save_time_msg(), gui.editor_window.window, editorstate.PROJECT().name)
+        return True # Signal that event is handled, otherwise it'll destroy window anyway
 
 def get_save_time_msg():
     return projectaction.get_save_time_msg()
 
-def _shutdown_dialog_callback(dialog, response_id):
-    dialog.destroy()
-    if response_id == Gtk.ResponseType.CLOSE:# "Don't Save"
-        pass
-    elif response_id ==  Gtk.ResponseType.YES:# "Save"
-        if editorstate.PROJECT().last_save_path != None:
-            persistance.save_project(editorstate.PROJECT(), editorstate.PROJECT().last_save_path)
-        else:
-            dialogutils.warning_message(_("Project has not been saved previously"), 
-                                    _("Save project with File -> Save As before closing."),
-                                    gui.editor_window.window)
+def _shutdown_dialog_callback(dialog, response_id, no_dialog_shutdown=False):
+    if no_dialog_shutdown == False:
+        dialog.destroy()
+        if response_id == Gtk.ResponseType.CLOSE:# "Don't Save"
+            pass
+        elif response_id ==  Gtk.ResponseType.YES:# "Save"
+            if editorstate.PROJECT().last_save_path != None:
+                persistance.save_project(editorstate.PROJECT(), editorstate.PROJECT().last_save_path)
+            else:
+                dialogutils.warning_message(_("Project has not been saved previously"), 
+                                        _("Save project with File -> Save As before closing."),
+                                        gui.editor_window.window)
+                return
+        else: # "Cancel"
             return
-    else: # "Cancel"
-        return
+    else:
+        print("Nothing changed since last save")
 
     # --- APP SHUT DOWN --- #
     print("Exiting app...")
