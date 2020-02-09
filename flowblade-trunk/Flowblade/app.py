@@ -252,7 +252,10 @@ def main(root_path):
 
     # Create list of available mlt profiles.
     mltprofiles.load_profile_list()
-    
+
+    # if we have crashed we could have large amount of disk space wasted unless we delete all files here.
+    tlinerender.app_launch_clean_up()
+
     # Save assoc file path if found in arguments.
     global assoc_file_path
     assoc_file_path = get_assoc_file_path()

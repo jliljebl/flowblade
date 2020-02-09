@@ -61,6 +61,10 @@ _timeline_renderer = None
 _update_thread = None
 
 # ------------------------------------------------------------ MODULE INTERFACE
+def app_launch_clean_up():
+    for old_session_dir in listdir(_get_tline_render_dir()):
+        _delete_dir_and_contents(_get_tline_render_dir() + "/" + old_session_dir)
+    
 def init_session(): # called when project is loaded
     
     global _project_session_id
@@ -72,7 +76,6 @@ def init_session(): # called when project is loaded
 
     tlinerenderserver.launch_render_server()
 
-        
 def delete_session():
     tlinerenderserver.shutdown_render_server()
     _delete_session_dir()
@@ -111,11 +114,14 @@ def _get_session_dir():
 
 def _delete_session_dir():
     session_dir = _get_session_dir()
-    files = _get_folder_files(session_dir)
-    for f in files:
-        os.remove(session_dir +"/" + f)
+    _delete_dir_and_contents(session_dir)
 
-    os.rmdir(session_dir)
+def _delete_dir_and_contents(del_dir):
+    files = _get_folder_files(del_dir)
+    for f in files:
+        os.remove(del_dir +"/" + f)
+
+    os.rmdir(del_dir)
         
 def _get_folder_files(folder):
     return [f for f in listdir(folder) if isfile(join(folder, f))]
