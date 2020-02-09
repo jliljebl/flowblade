@@ -53,13 +53,13 @@ _dbus_service = None
 def launch_render_server():
     bus = dbus.SessionBus()
     if bus.name_has_owner('flowblade.movie.editor.tlinerenderserver'):
-        # This should not be happening, we should be deleting session files and close service oon peoject chages. 
-        print("NOTE !!!: flowblade.movie.editor.tlinerenderserver dbus service exists ON LAUNCH REQUEST")
-        return False
+        # This happens for project profile changes e.g. when loading first video and changing to matching peofile.
+        # We are only running on of these per project edit session, so do nothing.
+        print("flowblade.movie.editor.tlinerenderserver dbus service already exists")
     else:
+        print("Launching flowblade.movie.editor.tlinerenderserver dbus service")
         FLOG = open(userfolders.get_cache_dir() + "log_tline_render", 'w')
         subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladetlinerender"], stdin=FLOG, stdout=FLOG, stderr=FLOG)
-        return True
 
 def render_update_clips(sequence_xml_path, segments_paths, segments_ins, segments_outs, profile_name):
     iface = _get_iface("render_update_clips")
@@ -92,6 +92,7 @@ def _get_iface(method_name):
         return iface
     else:
         print("Timeline background render service not available on DBus at", method_name)
+        # TODO: User infp.
         return None
 
 
@@ -160,7 +161,7 @@ class TLineRenderDBUSService(dbus.service.Object):
         
     @dbus.service.method('flowblade.movie.editor.tlinerenderserver')
     def render_update_clips(self, sequence_xml_path, segments_paths, segments_ins, segments_outs, profile_name):
-        print(sequence_xml_path, profile_name)
+        #print(sequence_xml_path, profile_name)
         
         segments = []
         for i in range(0, len(segments_paths)):
@@ -169,7 +170,7 @@ class TLineRenderDBUSService(dbus.service.Object):
             clip_range_out = segments_outs[i]
             segments.append((clip_path, clip_range_in, clip_range_out))
             
-            print("render segment:", clip_path, clip_range_in, clip_range_out)
+            #print("render segment:", clip_path, clip_range_in, clip_range_out)
 
         self.render_runner_thread = TLineRenderRunnerThread(self, sequence_xml_path, segments, profile_name)
         self.render_runner_thread.start()
@@ -188,7 +189,20 @@ class TLineRenderDBUSService(dbus.service.Object):
 
     @dbus.service.method('flowblade.movie.editor.tlinerenderserver')
     def abort_renders(self):
-        # not impl
+
+        start = time.monotonic()
+        print("abort request:", start)
+        if self.render_runner_thread == None:
+            print("abort doe NO self.render_runner_thread EXISTS!")
+            return
+        
+        self.render_runner_thread.abort()
+        while self.render_runner_thread.render_complete == False:
+            print("abort, waiting render complete")
+            time.sleep(0.1)
+            
+        print("abort request completed:", time.monotonic() - start)
+
         return
 
     @dbus.service.method('flowblade.movie.editor.tlinerenderserver')
@@ -217,7 +231,9 @@ class TLineRenderRunnerThread(threading.Thread):
         self.aborted = False
 
     def run(self):        
-
+        start_time = time.monotonic()
+        print("active threads at run() begin", threading.active_count())
+ 
         width, height = self.profile.width(), self.profile.height()
         encoding = _get_render_encoding()
         self.current_render_file_path = None
@@ -287,7 +303,7 @@ class TLineRenderRunnerThread(threading.Thread):
             self.render_thread.shutdown()
         
         self.render_complete = True
-        print("tline render done")
+        print("tline render done, time:", time.monotonic() - start_time)
 
     def get_fraction(self):
         return self.render_thread.get_render_fraction()

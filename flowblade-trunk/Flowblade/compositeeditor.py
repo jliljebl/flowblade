@@ -54,9 +54,9 @@ widgets = utils.EmptyClass()
 
 compositor = None # Compositor being edited.
 
-# Property change polling.
-# We didn't put a layer of indirection to look for and launch events on filter property edits
-# so now we detect filter edits by polling. This has no performance impect, n is so small.
+# Edit polling.
+# We didn't put a layer of indirection to look for and launch events on edits,
+# so now we detect edits by polling. This has no performance impect, n is so small.
 _edit_polling_thread = None
 compositor_changed_since_last_save = False
 

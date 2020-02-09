@@ -70,11 +70,8 @@ def init_session(): # called when project is loaded
     _project_session_id = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
     os.mkdir(_get_session_dir())
 
-    success = tlinerenderserver.launch_render_server()
-    if success:
-        print ("Timeline background render service launch succeeded.")
-    else:
-        print ("Timeline background render service launch failed.")
+    tlinerenderserver.launch_render_server()
+
         
 def delete_session():
     tlinerenderserver.shutdown_render_server()
@@ -84,7 +81,7 @@ def init_for_sequence(sequence):
     update_renderer_to_mode()
 
 def update_renderer_to_mode():
-    print("new renderer for mode:", get_tline_rendering_mode())
+    #print("new renderer for mode:", get_tline_rendering_mode())
     
     global _timeline_renderer
     if get_tline_rendering_mode() == appconsts.TLINE_RENDERING_OFF:
@@ -157,20 +154,20 @@ class TimeLineRenderer:
     def press_event(self, event):
         if event.button == 1 or event.button == 3:
             self.drag_on = True
-            print("press")
+            #print("press")
 
     def motion_notify_event(self, x, y, state):
         if((state & Gdk.ModifierType.BUTTON1_MASK)
            or(state & Gdk.ModifierType.BUTTON3_MASK)):
             if self.drag_on:
                 pass
-        print("motion")
+        #print("motion")
                 
     def release_event(self, event):
         if self.drag_on:
             pass
         self.drag_on = False
-        print("release")
+        #print("release")
     
     # --------------------------------------------- CONTENT UPDATES
     def timeline_changed(self):
@@ -208,7 +205,7 @@ class TimeLineRenderer:
                 if segment.start_frame > in_frame:
                     edit._insert_blank(hidden_track, index, segment.start_frame - in_frame)
                     
-                    print("Inserting blank:", index, )
+                    #print("Inserting blank:", index, )
                     index += 1
                 
                 segment_length = segment.end_frame - segment.start_frame
@@ -217,7 +214,7 @@ class TimeLineRenderer:
                 if segment.segment_state == SEGMENT_UNRENDERED or segment.segment_state == SEGMENT_DIRTY:
                     edit._insert_blank(hidden_track, index, segment_length - 1)
                 elif segment.segment_state == SEGMENT_RENDERED:
-                    print("Inserting tline render clip at index:", index)
+                    #print("Inserting tline render clip at index:", index)
                     edit.append_clip(hidden_track, segment.producer, 0, segment_length - 1) # -1, out incl.
 
                 in_frame = segment.end_frame
@@ -225,7 +222,7 @@ class TimeLineRenderer:
             
             if hidden_track.get_length() < seq_len:
                 edit._insert_blank(hidden_track, index, seq_len - hidden_track.get_length())
-                print("end completion blank append", index)
+                #print("end completion blank append", index)
         
     # ------------------------------------------------ RENDERING
     def update_timeline_rendering_status(self, rendering_file, fract, render_completed, completed_segments):
@@ -233,7 +230,7 @@ class TimeLineRenderer:
         for segment in dirty:
             if segment.get_clip_path() == rendering_file:
                 segment.rendered_fract = fract
-                print(segment.rendered_fract, segment.content_hash) 
+                #print(segment.rendered_fract, segment.content_hash) 
             else:
                 segment.maybe_set_completed(completed_segments)
                 
@@ -328,7 +325,7 @@ class TimeLineSegment:
         self.producer.attach(filter_object.mlt_filter)
         self.producer.filters.append(filter_object)
         
-        print("producer created",  self.content_hash)
+        #print("producer created",  self.content_hash)
 
     # ----------------------------------------- CONTENT HASH
     def update_segment(self):
@@ -415,6 +412,7 @@ class TimeLineSegment:
             p_name, p_value, p_type = filter_object.properties[i]
             content_strings.append(p_name)
             content_strings.append(str(p_type))
+            content_strings.append(str(p_value))
 
         
 
@@ -432,7 +430,7 @@ class TimeLineUpdateThread(threading.Thread):
         _timeline_renderer.update_segments()
 
         self.dirty_segments = _timeline_renderer.get_dirty_segments()
-        print("dirty segments:", len(self.dirty_segments))
+        #print("dirty segments:", len(self.dirty_segments))
         
         if len(self.dirty_segments) == 0:
             return
@@ -470,7 +468,7 @@ class TimeLineUpdateThread(threading.Thread):
             clip_path = segment.get_clip_path()
             if os.path.isfile(clip_path) == True:
                 # We came here with undo or redo or new edit that recreates existing content for segment
-                print ("CreatinG for existing")
+                #print ("CreatinG for existing")
                 segment.update_segment_as_rendered()
             else:
                 # Clip for this content does not exists

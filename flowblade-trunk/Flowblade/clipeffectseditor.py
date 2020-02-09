@@ -844,6 +844,7 @@ class PropertyChangePollingThread(threading.Thread):
         self.last_properties = None
         
     def run(self):
+        print ("Filter PropertyChangePollingThread")
         self.running = True
         while self.running:
             global clip
@@ -862,6 +863,7 @@ class PropertyChangePollingThread(threading.Thread):
                                 changed = True
 
                 if changed:
+                    print ("Changed")
                     global filter_changed_since_last_save
                     filter_changed_since_last_save = True
                     tlinerender.get_renderer().timeline_changed()
