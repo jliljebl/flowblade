@@ -17,7 +17,15 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
+try:
+    import pgi
+    pgi.install_as_gi()
+except ImportError:
+    pass
+    
+import gi
 
+gi.require_version('Gtk', '3.0')
 from gi.repository import GLib
     
 import dbus

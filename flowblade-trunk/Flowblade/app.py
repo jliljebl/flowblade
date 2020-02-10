@@ -106,6 +106,7 @@ import userfolders
 import utils
 import workflow
 
+
 AUTOSAVE_DIR = appconsts.AUTOSAVE_DIR
 AUTOSAVE_FILE = "autosave/autosave"
 instance_autosave_id_str = None
@@ -122,7 +123,6 @@ exit_timeout_id = -1
 window_resize_id = -1
 window_state_id = -1
 resize_timeout_id = -1
-
 
 
 _log_file = None
@@ -253,7 +253,7 @@ def main(root_path):
     # Create list of available mlt profiles.
     mltprofiles.load_profile_list()
 
-    # if we have crashed we could have large amount of disk space wasted unless we delete all files here.
+    # If we have crashed we could have large amount of disk space wasted unless we delete all files here.
     tlinerender.app_launch_clean_up()
 
     # Save assoc file path if found in arguments.
@@ -986,7 +986,7 @@ def _shutdown_dialog_callback(dialog, response_id, no_dialog_shutdown=False):
         else: # "Cancel"
             return
     else:
-        print("Nothing changed since last save")
+        print("Nothing changed since last save.")
 
     # --- APP SHUT DOWN --- #
     print("Exiting app...")
@@ -1048,7 +1048,7 @@ def _app_destroy():
     try:
         os.remove(userfolders.get_cache_dir() + get_instance_autosave_file())
     except:
-        print("Delete autosave file FAILED")
+        print("Delete autosave file FAILED!")
 
     # Exit gtk main loop.
     Gtk.main_quit()

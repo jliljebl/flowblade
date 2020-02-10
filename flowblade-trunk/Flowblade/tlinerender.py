@@ -50,10 +50,15 @@ SEGMENT_RENDERED = 1
 SEGMENT_UNRENDERED = 2
 SEGMENT_DIRTY = 3
 
+MOUSE_DRAG_THRESHOLD_FRAMES = 3
+
+
 _segment_colors = { SEGMENT_NOOP:(0.26, 0.29, 0.42),
                     SEGMENT_RENDERED:(0.29, 0.78, 0.30),
                     SEGMENT_UNRENDERED:(0.76, 0.27, 0.27),
                     SEGMENT_DIRTY:(0.76, 0.27, 0.27)}
+                    
+DRAG_RANGE_COLOR = (1,1,1,0.3)
 
 _project_session_id = -1
 _timeline_renderer = None
@@ -126,13 +131,20 @@ def _delete_dir_and_contents(del_dir):
 def _get_folder_files(folder):
     return [f for f in listdir(folder) if isfile(join(folder, f))]
 
-
+def _sort_segments_comparator(segment):
+    return int(segment.start_frame)
+    
 # ------------------------------------------------------------ RENDERER OBJECTS
 class TimeLineRenderer:
 
     def __init__(self):
         self.segments = []
+        
+        self.press_frame = -1
+        self.release_frame = -1
 
+        self.drag_on = True
+            
     # --------------------------------------------- DRAW
     def draw(self, event, cr, allocation, pos, pix_per_frame):
         """
@@ -156,27 +168,100 @@ class TimeLineRenderer:
                 continue
             seg.draw(cr, h, pos, pix_per_frame)
 
+        if self.drag_on == True:
+            cr.set_source_rgba(*DRAG_RANGE_COLOR)
+            range_start, range_end = self.get_drag_range()
+            xs = _get_x_for_frame_func(range_start)
+            xe = _get_x_for_frame_func(range_end)
+            cr.rectangle(int(xs), 0, int(xe - xs), h)
+            cr.fill()
+
+        
     # --------------------------------------------- MOUSE EVENTS    
     def press_event(self, event):
-        if event.button == 1 or event.button == 3:
+        if event.button == 1:
             self.drag_on = True
-            #print("press")
-
-    def motion_notify_event(self, x, y, state):
-        if((state & Gdk.ModifierType.BUTTON1_MASK)
-           or(state & Gdk.ModifierType.BUTTON3_MASK)):
-            if self.drag_on:
-                pass
-        #print("motion")
-                
-    def release_event(self, event):
-        if self.drag_on:
+            self.press_frame = _get_frame_for_x_func(event.x)
+            self.release_frame = _get_frame_for_x_func(event.x)
+        elif event.button == 3:
             pass
+
+        gui.tline_render_strip.widget.queue_draw()
+        
+    def motion_notify_event(self, x, y, state):
+        if (state & Gdk.ModifierType.BUTTON1_MASK):
+            self.release_frame = _get_frame_for_x_func(x)
+
+        gui.tline_render_strip.widget.queue_draw()
+            
+    def release_event(self, event):
+        self.release_frame = _get_frame_for_x_func(event.x)
+        moved_range = self.press_frame - self.release_frame
+        if self.drag_on == True and abs(self.get_drag_range()) > MOUSE_DRAG_THRESHOLD_FRAMES:
+            print(self.press_frame , self.release_frame)
+            self.mouse_drag_edit_completed()
+        elif self.drag_on == True:
+            print("Clicked")
+            self.mouse_clicked()
+
         self.drag_on = False
-        #print("release")
+        
+        self.press_frame = -1
+        self.release_frame = -1
+
+        gui.tline_render_strip.widget.queue_draw()
+
+    def mouse_drag_edit_completed(self):
+        range_start, range_end = self.get_drag_range()
+        
+        print(range_start, range_end)
+
+        start_hit_seg = self.get_hit_segment(range_start)
+        end_hit_seg = self.get_hit_segment(range_end)
+        covered_seqs = self.get_covered_segments(range_start, range_end)
     
+        if start_hit_seg == end_hit_seg and start_hit_seg != None:
+            self.remove_segments([start_hit_seg])
+            self.add_segment(range_start, range_end + 1)
+        elif start_hit_seg != None and end_hit_seg != None:
+            self.remove_segments(covered_seqs)
+            self.remove_segments([start_hit_seg])
+            self.remove_segments([end_hit_seg])
+            self.add_segment(start_hit_seg.start_frame, end_hit_seg.end_frame)
+        elif start_hit_seg != None and end_hit_seg == None:
+            self.remove_segments(covered_seqs)
+            self.remove_segments([start_hit_seg])
+            self.add_segment(start_hit_seg.start_frame, range_end + 1)
+        elif start_hit_seg == None and end_hit_seg != None:
+            self.remove_segments(covered_seqs)
+            self.remove_segments([end_hit_seg])
+            self.add_segment(range_start, end_hit_seg.end_frame)
+        elif start_hit_seg == None and end_hit_seg == None and len(covered_seqs) > 0:
+            print("cover all")
+            self.remove_segments(covered_seqs)
+            self.add_segment(range_start, range_end + 1)
+        else:
+            self.add_segment(range_start, range_end + 1)
+        
+        self.segments.sort(key=_sort_segments_comparator)
+
+    def mouse_clicked():
+        pass
+
+    def get_drag_range(self):
+        range_start = self.press_frame 
+        range_end = self.release_frame
+
+        if range_start > range_end:
+            range_end, range_start = range_start, range_end
+        
+        return (range_start, range_end)
+            
     # --------------------------------------------- CONTENT UPDATES
     def timeline_changed(self):
+        if self.drag_on == True:
+            return # Happens if user does keyboard edit while doing mouse edit on timeline render strip, not very likely.
+
         global _update_thread
         if _update_thread != None:
             # We already have an update thread going, try to stop it before it launches renders.
@@ -229,7 +314,31 @@ class TimeLineRenderer:
             if hidden_track.get_length() < seq_len:
                 edit._insert_blank(hidden_track, index, seq_len - hidden_track.get_length())
                 #print("end completion blank append", index)
+
+    def get_hit_segment(self, frame):
+        for segment in self.segments:
+            if segment.hit(frame) == True:
+                return segment
         
+        return None
+
+    def get_covered_segments(self, range_start, range_end):
+        covered = []
+        for segment in self.segments:
+            if segment.covered(range_start, range_end) == True:
+                covered.append(segment)
+        print("covered", len(covered))
+        return covered
+
+    def add_segment(self, seg_start, seg_end):
+        seg = TimeLineSegment(seg_start, seg_end)
+        _timeline_renderer.segments.append(seg)
+        
+    def remove_segments(self, remove_list):
+        remaining_set = set(self.segments) - set(remove_list)
+        print(len(remaining_set))
+        self.segments = list(remaining_set)
+
     # ------------------------------------------------ RENDERING
     def update_timeline_rendering_status(self, rendering_file, fract, render_completed, completed_segments):
         dirty = self.get_dirty_segments()
@@ -333,6 +442,18 @@ class TimeLineSegment:
         
         #print("producer created",  self.content_hash)
 
+    def hit(self, frame):
+        if frame >= self.start_frame and frame < self.end_frame:
+            return True
+        
+        return False
+
+    def covered(self, range_start, range_end):
+        if range_start < self.start_frame and range_end >= self.end_frame:
+            return True
+        
+        return False
+        
     # ----------------------------------------- CONTENT HASH
     def update_segment(self):
         new_hash = self.get_content_hash()
