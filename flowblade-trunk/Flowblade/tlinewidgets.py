@@ -2831,8 +2831,8 @@ class TimeLineRenderingControlStrip:
         self.widget.motion_notify_func = self._motion_notify_event
         self.widget.release_func = self._release_event
         #self.widget.mouse_scroll_func = mouse_scroll_listener
-
-
+        self.widget.add_events(Gdk.EventMask.FOCUS_CHANGE_MASK)
+        self.widget.connect("focus-out-event", self._focus_out_event)
     # --------------------------------------------- DRAW
     def _draw(self, event, cr, allocation):
         """
@@ -2852,7 +2852,9 @@ class TimeLineRenderingControlStrip:
     def _release_event(self, event):
         tlinerender.get_renderer().release_event(event)
         
-        
+    def _focus_out_event(self, widget, event):
+        tlinerender.get_renderer().focus_out()
+    
 class KFToolFrameScale:
     
     def __init__(self, line_color):

@@ -32,6 +32,7 @@ from editorstate import current_sequence
 from editorstate import get_tline_rendering_mode
 from editorstate import PROJECT
 from editorstate import PLAYER
+from editorstate import timeline_visible
 import gui
 import mltfilters
 import renderconsumer
@@ -88,23 +89,12 @@ def delete_session():
 def init_for_sequence(sequence):
     update_renderer_to_mode()
 
-def update_renderer_to_mode():
-    #print("new renderer for mode:", get_tline_rendering_mode())
-    
+def update_renderer_to_mode():   
     global _timeline_renderer
     if get_tline_rendering_mode() == appconsts.TLINE_RENDERING_OFF:
         _timeline_renderer = NoOpRenderer()
     else:
         _timeline_renderer = TimeLineRenderer()
-        #---testing
-        #seg = TimeLineSegment(SEGMENT_NOOP, 0, 50)
-        #_timeline_renderer.segments.append(seg)
-        seg = TimeLineSegment(50, 170)
-        _timeline_renderer.segments.append(seg)
-        #seg = TimeLineSegment(SEGMENT_NOOP, 70, 80)
-        #_timeline_renderer.segments.append(seg)
-        seg = TimeLineSegment(200, 290)
-        _timeline_renderer.segments.append(seg)
                 
 def get_renderer():
     return _timeline_renderer
@@ -143,7 +133,7 @@ class TimeLineRenderer:
         self.press_frame = -1
         self.release_frame = -1
 
-        self.drag_on = True
+        self.drag_on = False
             
     # --------------------------------------------- DRAW
     def draw(self, event, cr, allocation, pos, pix_per_frame):
@@ -197,24 +187,23 @@ class TimeLineRenderer:
     def release_event(self, event):
         self.release_frame = _get_frame_for_x_func(event.x)
         moved_range = self.press_frame - self.release_frame
-        if self.drag_on == True and abs(self.get_drag_range()) > MOUSE_DRAG_THRESHOLD_FRAMES:
-            print(self.press_frame , self.release_frame)
+        if self.drag_on == True and abs(moved_range) > MOUSE_DRAG_THRESHOLD_FRAMES:
+            self.drag_on = False
             self.mouse_drag_edit_completed()
         elif self.drag_on == True:
-            print("Clicked")
+            self.drag_on = False
             self.mouse_clicked()
 
-        self.drag_on = False
-        
         self.press_frame = -1
         self.release_frame = -1
 
+        if get_tline_rendering_mode() == appconsts.TLINE_RENDERING_AUTO:
+             self.launch_update_thread()
+            
         gui.tline_render_strip.widget.queue_draw()
 
     def mouse_drag_edit_completed(self):
         range_start, range_end = self.get_drag_range()
-        
-        print(range_start, range_end)
 
         start_hit_seg = self.get_hit_segment(range_start)
         end_hit_seg = self.get_hit_segment(range_end)
@@ -237,7 +226,6 @@ class TimeLineRenderer:
             self.remove_segments([end_hit_seg])
             self.add_segment(range_start, end_hit_seg.end_frame)
         elif start_hit_seg == None and end_hit_seg == None and len(covered_seqs) > 0:
-            print("cover all")
             self.remove_segments(covered_seqs)
             self.add_segment(range_start, range_end + 1)
         else:
@@ -245,9 +233,20 @@ class TimeLineRenderer:
         
         self.segments.sort(key=_sort_segments_comparator)
 
-    def mouse_clicked():
-        pass
-
+    def mouse_clicked(self):
+        hit_seg = self.get_hit_segment(self.release_frame)
+        if hit_seg == None:
+            return
+        
+        if get_tline_rendering_mode() == appconsts.TLINE_RENDERING_REQUEST:
+            hit_seg.segment_state = SEGMENT_DIRTY
+            self.clear_selection()
+            hit_seg.selected = True
+            self.launch_update_thread()
+        elif get_tline_rendering_mode() == appconsts.TLINE_RENDERING_AUTO:
+            self.clear_selection()
+            hit_seg.selected = True
+            
     def get_drag_range(self):
         range_start = self.press_frame 
         range_end = self.release_frame
@@ -256,12 +255,31 @@ class TimeLineRenderer:
             range_end, range_start = range_start, range_end
         
         return (range_start, range_end)
-            
+
+    def focus_out(self):
+        self.clear_selection()
+        gui.tline_render_strip.widget.queue_draw()
+
+    def clear_selection(self):
+        for seg in self.segments:
+            seg.selected = False
+
+    def delete_selected_segment(self):
+        for seg in self.segments:
+            if seg.selected == True:
+                self.segments.remove(seg)
+                if timeline_visible() == True:
+                    current_sequence().update_hidden_track_for_timeline_rendering()
+                gui.tline_render_strip.widget.queue_draw()
+        
     # --------------------------------------------- CONTENT UPDATES
     def timeline_changed(self):
         if self.drag_on == True:
-            return # Happens if user does keyboard edit while doing mouse edit on timeline render strip, not very likely.
+            return # Happens if user does keyboard edit while also doing s mouse edit on timeline render strip, we will do the update on mouse release.
 
+        self.launch_update_thread()
+
+    def launch_update_thread(self):
         global _update_thread
         if _update_thread != None:
             # We already have an update thread going, try to stop it before it launches renders.
@@ -305,7 +323,6 @@ class TimeLineRenderer:
                 if segment.segment_state == SEGMENT_UNRENDERED or segment.segment_state == SEGMENT_DIRTY:
                     edit._insert_blank(hidden_track, index, segment_length - 1)
                 elif segment.segment_state == SEGMENT_RENDERED:
-                    #print("Inserting tline render clip at index:", index)
                     edit.append_clip(hidden_track, segment.producer, 0, segment_length - 1) # -1, out incl.
 
                 in_frame = segment.end_frame
@@ -313,7 +330,6 @@ class TimeLineRenderer:
             
             if hidden_track.get_length() < seq_len:
                 edit._insert_blank(hidden_track, index, seq_len - hidden_track.get_length())
-                #print("end completion blank append", index)
 
     def get_hit_segment(self, frame):
         for segment in self.segments:
@@ -327,7 +343,6 @@ class TimeLineRenderer:
         for segment in self.segments:
             if segment.covered(range_start, range_end) == True:
                 covered.append(segment)
-        print("covered", len(covered))
         return covered
 
     def add_segment(self, seg_start, seg_end):
@@ -336,7 +351,6 @@ class TimeLineRenderer:
         
     def remove_segments(self, remove_list):
         remaining_set = set(self.segments) - set(remove_list)
-        print(len(remaining_set))
         self.segments = list(remaining_set)
 
     # ------------------------------------------------ RENDERING
@@ -345,7 +359,6 @@ class TimeLineRenderer:
         for segment in dirty:
             if segment.get_clip_path() == rendering_file:
                 segment.rendered_fract = fract
-                #print(segment.rendered_fract, segment.content_hash) 
             else:
                 segment.maybe_set_completed(completed_segments)
                 
@@ -374,7 +387,10 @@ class NoOpRenderer():
                 
     def release_event(self, event):
         pass
-    
+
+    def focus_out(self):
+        pass
+
     def update_hidden_track(self, hidden_track, seq_len):
         edit._insert_blank(hidden_track, 0, seq_len)
 
@@ -386,6 +402,8 @@ class TimeLineSegment:
         
         self.start_frame = start_frame # inclusive
         self.end_frame = end_frame # exclusive
+
+        self.selected = False
 
         self.content_hash = "-1"
 
@@ -401,6 +419,11 @@ class TimeLineSegment:
         cr.set_source_rgb(*_segment_colors[self.segment_state])
         cr.rectangle(x, 0, w ,height)
 
+        if self.selected:
+            outline_color = (0.8, 0.8, 0.8)
+        else:
+            outline_color = (0, 0, 0)
+            
         if self.segment_state == SEGMENT_DIRTY:
             cr.fill()
             
@@ -410,11 +433,11 @@ class TimeLineSegment:
             cr.fill()
 
             cr.rectangle(x, 0, w ,height)
-            cr.set_source_rgb(0, 0, 0)
+            cr.set_source_rgb(*outline_color)
             cr.stroke()
         else:
             cr.fill_preserve()
-            cr.set_source_rgb(0, 0, 0)
+            cr.set_source_rgb(*outline_color)
             cr.stroke()
 
     # -------------------------------------------- CLIP AND RENDERING
@@ -610,7 +633,7 @@ class TimeLineUpdateThread(threading.Thread):
             Gdk.threads_leave()
             return
 
-        tlinerenderserver.render_update_clips(self.save_path,  segments_paths, segments_ins, segments_outs, current_sequence().profile.description())
+        tlinerenderserver.render_update_clips(self.save_path, segments_paths, segments_ins, segments_outs, current_sequence().profile.description())
 
         status_display = TimeLineStatusPollingThread()
         status_display.start()

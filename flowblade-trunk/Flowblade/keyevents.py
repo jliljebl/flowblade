@@ -49,6 +49,7 @@ import shortcuts
 import re
 import rotomask
 import tlineaction
+import tlinerender
 import tlinewidgets
 import trimmodes
 import updater
@@ -568,6 +569,11 @@ def _handle_delete():
         medialog.delete_selected()
         return True
 
+    # Delete tline render segment
+    if gui.tline_render_strip.widget.has_focus() == True:
+        tlinerender.get_renderer().delete_selected_segment()
+        return True
+    
     focus_editor = _get_focus_keyframe_editor(compositeeditor.keyframe_editor_widgets)
     if focus_editor != None:
         focus_editor.delete_pressed()
