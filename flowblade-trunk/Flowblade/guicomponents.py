@@ -2559,9 +2559,10 @@ class MonitorTCInfo:
     
 
 class TimeLineLeftBottom:
-    def __init__(self, comp_mode_launch):
+    def __init__(self, comp_mode_launch, tline_render_mode_launcher):
         self.widget = Gtk.HBox()
         self.comp_mode_launch = comp_mode_launch
+        self.tline_render_mode_launcher = tline_render_mode_launcher
         self.update_gui()
 
     def update_gui(self):
@@ -2574,6 +2575,9 @@ class TimeLineLeftBottom:
             proxy_img =  Gtk.Image.new_from_file(respaths.IMAGE_PATH + "project_proxy.png")
             self.widget.pack_start(proxy_img, False, False, 0)
 
+        self.widget.pack_start(self.tline_render_mode_launcher.widget, False, False, 0)
+        self.widget.pack_start(guiutils.pad_label(8,4), False, False, 0)
+        
         self.widget.pack_start(self.comp_mode_launch.widget, False, False, 0)
         self.widget.pack_start(guiutils.pad_label(4,4), False, False, 0)
             
@@ -3067,6 +3071,7 @@ def get_shorcuts_selector():
         shortcuts_combo.set_active(0)
 
     return shortcuts_combo
+
 
 class PressLaunch:
     def __init__(self, callback, surface, w=22, h=22):

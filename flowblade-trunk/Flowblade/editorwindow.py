@@ -69,6 +69,7 @@ import projectinfogui
 import proxyediting
 import titler
 import tlineaction
+import tlinerender
 import tlinewidgets
 import trackaction
 import updater
@@ -820,8 +821,19 @@ class EditorWindow:
         comp_mode_launcher.widget.set_tooltip_markup(_("Current Sequence Compositing Mode"))
         self.comp_mode_launcher = comp_mode_launcher
 
+        # Tlinerender mode selector
+        tro = guiutils.get_cairo_image("tline_render_off")
+        tra = guiutils.get_cairo_image("tline_render_auto")
+        trr = guiutils.get_cairo_image("tline_render_request")
+        surfaces = [tro, tra, trr]
+        tline_render_mode_launcher = guicomponents.ImageMenuLaunch(tlinerender.corner_mode_menu_launched, surfaces, 22*size_adj, 20)
+        tline_render_mode_launcher.surface_x = 0
+        tline_render_mode_launcher.surface_y = 4
+        tline_render_mode_launcher.widget.set_tooltip_markup(_("Timeline Rendering"))
+        self.tline_render_mode_launcher = tline_render_mode_launcher
+        
         # Bottom row filler
-        self.left_corner = guicomponents.TimeLineLeftBottom(comp_mode_launcher)
+        self.left_corner = guicomponents.TimeLineLeftBottom(comp_mode_launcher, tline_render_mode_launcher)
         self.left_corner.widget.set_size_request(tlinewidgets.COLUMN_WIDTH, 20)
 
         # Timeline scroller
@@ -1102,10 +1114,17 @@ class EditorWindow:
         menu_items = [rendering_off, rendering_auto, rendering_request]
         menu_items[editorstate.get_tline_rendering_mode()].set_active(True)
 
-        rendering_off.connect("toggled", lambda w: tlineaction.change_current_tline_rendering_mode(w, appconsts.TLINE_RENDERING_OFF))
-        rendering_auto.connect("toggled", lambda w: tlineaction.change_current_tline_rendering_mode(w, appconsts.TLINE_RENDERING_AUTO))
-        rendering_request.connect("toggled", lambda w: tlineaction.change_current_tline_rendering_mode(w, appconsts.TLINE_RENDERING_REQUEST))
-
+        rendering_off.connect("toggled", lambda w: tlinerender.change_current_tline_rendering_mode(w, appconsts.TLINE_RENDERING_OFF))
+        rendering_auto.connect("toggled", lambda w: tlinerender.change_current_tline_rendering_mode(w, appconsts.TLINE_RENDERING_AUTO))
+        rendering_request.connect("toggled", lambda w: tlinerender.change_current_tline_rendering_mode(w, appconsts.TLINE_RENDERING_REQUEST))
+        
+        sep = Gtk.SeparatorMenuItem()
+        sep.show()
+        menu.append(sep)
+        
+        item = guiutils.get_menu_item(_("Settings..."), tlinerender.settings_dialog_launch, None)
+        menu.append(item)
+    
     def fill_recents_menu_widget(self, menu_item, callback):
         """
         Fills menu item with menuitems to open recent projects.
@@ -1135,7 +1154,6 @@ class EditorWindow:
         
     def hide_tline_render_strip(self):
         guiutils.remove_children(self.tline_renderer_hbox)
-        #self.window.queue_draw()
 
     def show_tline_render_strip(self):
         self.tline_renderer_hbox.pack_start(self.pad_box, False, False, 0)

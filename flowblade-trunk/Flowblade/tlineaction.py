@@ -1984,16 +1984,5 @@ def set_track_small_height(track_index):
     if editorstate.SCREEN_HEIGHT < 863:
         track.height = appconsts.TRACK_HEIGHT_SMALLEST
 
-# ----------------------------------------- timeline rednering
-def change_current_tline_rendering_mode(menu_widget, new_tline_render_mode):
-    if menu_widget.get_active() == False:
-        return
-    
-    if new_tline_render_mode == appconsts.TLINE_RENDERING_OFF and editorstate.get_tline_rendering_mode() != appconsts.TLINE_RENDERING_OFF:
-        gui.editor_window.hide_tline_render_strip()
-    elif new_tline_render_mode != appconsts.TLINE_RENDERING_OFF and editorstate.get_tline_rendering_mode() == appconsts.TLINE_RENDERING_OFF: 
-        gui.editor_window.show_tline_render_strip()
-    
-    current_sequence().tline_render_mode = new_tline_render_mode
-    tlinerender.update_renderer_to_mode()
+
 

@@ -18,7 +18,7 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 import hashlib
-from gi.repository import Gdk
+from gi.repository import Gdk, Gtk
 import os
 from os import listdir
 from os.path import isfile, join
@@ -33,7 +33,9 @@ from editorstate import get_tline_rendering_mode
 from editorstate import PROJECT
 from editorstate import PLAYER
 from editorstate import timeline_visible
+from editorstate import get_tline_rendering_mode
 import gui
+import guiutils
 import mltfilters
 import renderconsumer
 import userfolders
@@ -53,6 +55,8 @@ SEGMENT_DIRTY = 3
 
 MOUSE_DRAG_THRESHOLD_FRAMES = 3
 
+tlinerender_mode_menu = Gtk.Menu()
+strip_popup_menu = Gtk.Menu()
 
 _segment_colors = { SEGMENT_NOOP:(0.26, 0.29, 0.42),
                     SEGMENT_RENDERED:(0.29, 0.78, 0.30),
@@ -99,8 +103,66 @@ def update_renderer_to_mode():
 def get_renderer():
     return _timeline_renderer
 
+# --------------------------------------------------------- menus
+def corner_mode_menu_launched(widget, event):
+    guiutils.remove_children(tlinerender_mode_menu)
+        
+    render_off = guiutils.get_image_menu_item(_("Timeline Render Off"), "tline_render_off", _set_new_render_mode)
+    render_auto = guiutils.get_image_menu_item(_("Timeline Render Auto"), "tline_render_auto", _set_new_render_mode)
+    render_request = guiutils.get_image_menu_item(_("Timeline Render On Request"), "tline_render_request", _set_new_render_mode)
 
-# ------------------------------------------------------------ MODULE FUNCS
+    render_off.connect("activate", lambda w: _set_new_render_mode(appconsts.TLINE_RENDERING_OFF))
+    render_auto.connect("activate", lambda w: _set_new_render_mode(appconsts.TLINE_RENDERING_AUTO))
+    render_request.connect("activate", lambda w: _set_new_render_mode(appconsts.TLINE_RENDERING_REQUEST))
+
+    tlinerender_mode_menu.add(render_off)
+    tlinerender_mode_menu.add(render_auto)
+    tlinerender_mode_menu.add(render_request)
+
+    tlinerender_mode_menu.popup(None, None, None, None, event.button, event.time)
+
+def display_strip_context_menu(event, hit_segment):
+    global strip_popup_menu
+    guiutils.remove_children(strip_popup_menu)
+    
+    sensitive = (len(get_renderer().segments) > 0)
+    item = guiutils.get_menu_item(_("Delete All Segments"), _strip_menu_item_callback, ("delete_all", None), sensitive)
+    strip_popup_menu.append(item)
+    if hit_segment != None:
+        item = guiutils.get_menu_item(_("Delete Segment"), _strip_menu_item_callback, ("delete_segment", hit_segment), True)
+        strip_popup_menu.append(item)
+
+    strip_popup_menu.popup(None, None, None, None, event.button, event.time)
+
+def settings_dialog_launch(widget, event):
+    print("settings_dialog_launch")
+
+
+def _strip_menu_item_callback(widget, data):
+    print(data)
+
+# ----------------------------------------- timeline rendering
+def change_current_tline_rendering_mode(menu_widget, new_tline_render_mode):
+    if menu_widget.get_active() == False:
+        return
+    _set_new_render_mode(new_tline_render_mode)
+
+def _set_new_render_mode(new_tline_render_mode):
+    if new_tline_render_mode == get_tline_rendering_mode():
+        return
+    
+    if new_tline_render_mode == appconsts.TLINE_RENDERING_OFF and get_tline_rendering_mode() != appconsts.TLINE_RENDERING_OFF:
+        gui.editor_window.hide_tline_render_strip()
+    elif new_tline_render_mode != appconsts.TLINE_RENDERING_OFF and get_tline_rendering_mode() == appconsts.TLINE_RENDERING_OFF: 
+        gui.editor_window.show_tline_render_strip()
+    
+    current_sequence().tline_render_mode = new_tline_render_mode
+    update_renderer_to_mode()
+    gui.editor_window.tline_render_mode_launcher.set_pixbuf(new_tline_render_mode) 
+    gui.editor_window.init_timeline_rendering_menu()
+        
+
+# ------------------------------------------------------------ MODULE INTERNAL FUNCS
 def _get_tline_render_dir():
     return userfolders.get_data_dir() + appconsts.TLINE_RENDERS_DIR
 
@@ -123,7 +185,8 @@ def _get_folder_files(folder):
 
 def _sort_segments_comparator(segment):
     return int(segment.start_frame)
-    
+
+
 # ------------------------------------------------------------ RENDERER OBJECTS
 class TimeLineRenderer:
 
@@ -174,7 +237,9 @@ class TimeLineRenderer:
             self.press_frame = _get_frame_for_x_func(event.x)
             self.release_frame = _get_frame_for_x_func(event.x)
         elif event.button == 3:
-            pass
+            pop_up_frame = _get_frame_for_x_func(event.x)
+            hit_segment = self.get_hit_segment(pop_up_frame)
+            display_strip_context_menu(event, hit_segment)
 
         gui.tline_render_strip.widget.queue_draw()
         
@@ -369,7 +434,7 @@ class NoOpRenderer():
     def __init__(self):
         """
         Instead of multiple tests for editorstate.get_tline_rendering_mode() we implement TLINE_RENDERING_OFF mode 
-        as no-op timeline renderer.
+        as (mostly) no-op timeline renderer.
         """
         pass
         
@@ -392,6 +457,7 @@ class NoOpRenderer():
         pass
 
     def update_hidden_track(self, hidden_track, seq_len):
+        # This was required for some real random crashes long time ago, may not be needed anymore but we're keeping this.
         edit._insert_blank(hidden_track, 0, seq_len)
 
 
