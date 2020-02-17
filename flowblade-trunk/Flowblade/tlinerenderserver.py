@@ -33,11 +33,14 @@ import dbus.service
 from dbus.mainloop.glib import DBusGMainLoop
 import locale
 import mlt
+import os
 import subprocess
 import sys
 import threading
 import time
 
+import appconsts
+import atomicfile
 import editorstate
 import mltenv
 import mlttransitions
@@ -105,7 +108,6 @@ def _get_iface(method_name):
 
 
 # ---------------------------------------------------------------- server
-
 def main(root_path, force_launch=False):
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION
@@ -152,10 +154,6 @@ def main(root_path, force_launch=False):
     _dbus_service = TLineRenderDBUSService(loop)
     print("tline render service running")
     loop.run()
-
-def _get_render_encoding():
-    return renderconsumer.proxy_encodings[TLINE_RENDER_ENCODING_INDEX]
-
 
 
 
@@ -220,7 +218,7 @@ class TLineRenderDBUSService(dbus.service.Object):
 
 
 
-
+# --------------------------------------------------------------------- rendering
 class TLineRenderRunnerThread(threading.Thread):
     """
     SINGLE THREADED RENDERING, SHOULD WE GET MULTIPLE PROCESSES GOING FOR MULTIPLE CLIPS LATER IN MODERN MULTICORE MACHINES?
@@ -230,6 +228,8 @@ class TLineRenderRunnerThread(threading.Thread):
         
         self.dbus_service = dbus_service
         self.sequence_xml_path = sequence_xml_path
+        self.render_folder = os.path.dirname(sequence_xml_path)
+        self.current_render_file_path = None
         self.profile = mltprofiles.get_profile(profile_name)
         self.segments = segments
         self.completed_segments =  ["nothing"]
@@ -238,12 +238,16 @@ class TLineRenderRunnerThread(threading.Thread):
 
         self.aborted = False
 
-    def run(self):        
+    def run(self):
+        editorpersistance.load() # to apply possible chnages on timeline rendering
+        
         start_time = time.monotonic()
         print("active threads at run() begin", threading.active_count())
  
-        width, height = self.profile.width(), self.profile.height()
+        width, height = _get_render_dimensions(self.profile, editorpersistance.prefs.tline_render_size)
         encoding = _get_render_encoding()
+        self.render_profile = _get_render_profile(self.profile,  editorpersistance.prefs.tline_render_size, self.render_folder)
+        
         self.current_render_file_path = None
         
         sequence_xml_producer = mlt.Producer(self.profile, str(self.sequence_xml_path))
@@ -259,11 +263,11 @@ class TLineRenderRunnerThread(threading.Thread):
             renderconsumer.performance_settings_enabled = False
             
             consumer = renderconsumer.get_render_consumer_for_encoding( clip_file_path,
-                                                                        self.profile, 
+                                                                        self.render_profile, 
                                                                         encoding)
             renderconsumer.performance_settings_enabled = True
             
-            # DIS STUFF FROM PROXY RENDERING, REVISIT!
+            # We are using proxy file rendering code here mostly, didn't vhange all names.
             # Bit rates for proxy files are counted using 2500kbs for 
             # PAL size image as starting point.
             pal_pix_count = 720.0 * 576.0
@@ -320,4 +324,47 @@ class TLineRenderRunnerThread(threading.Thread):
         self.render_thread.shutdown()
         self.aborted = True
         self.thread_running = False
+
+
+def _get_render_encoding():
+    return renderconsumer.proxy_encodings[editorpersistance.prefs.tline_render_encoding]
+
+def _get_render_dimensions(project_profile, proxy_size):
+    # Get new dimension that are about half of previous and diviseble by eight
+    if proxy_size == appconsts.PROXY_SIZE_FULL:
+        size_mult = 1.0
+    elif proxy_size == appconsts.PROXY_SIZE_HALF:
+        size_mult = 0.5
+    else: # quarter size
+        size_mult = 0.25
+
+    old_width_half = int(project_profile.width() * size_mult)
+    old_height_half = int(project_profile.height() * size_mult)
+    new_width = old_width_half - old_width_half % 2
+    new_height = old_height_half - old_height_half % 2
+    return (new_width, new_height)
+
+def _get_render_profile(project_profile, render_size, render_folder):
+    new_width, new_height = _get_render_dimensions(project_profile, render_size)
+    
+    file_contents = "description=" + "proxy render profile" + "\n"
+    file_contents += "frame_rate_num=" + str(project_profile.frame_rate_num()) + "\n"
+    file_contents += "frame_rate_den=" + str(project_profile.frame_rate_den()) + "\n"
+    file_contents += "width=" + str(new_width) + "\n"
+    file_contents += "height=" + str(new_height) + "\n"
+    file_contents += "progressive=1" + "\n"
+    file_contents += "sample_aspect_num=" + str(project_profile.sample_aspect_num()) + "\n"
+    file_contents += "sample_aspect_den=" + str(project_profile.sample_aspect_den()) + "\n"
+    file_contents += "display_aspect_num=" + str(project_profile.display_aspect_num()) + "\n"
+    file_contents += "display_aspect_den=" + str(project_profile.display_aspect_den()) + "\n"
+
+
+    render_profile_path = render_folder + "/temp_render_profile"
+        
+    with atomicfile.AtomicFileWriter(render_profile_path, "w") as afw:
+        profile_file = afw.get_file()
+        profile_file.write(file_contents)
+
+    render_profile = mlt.Profile(render_profile_path)
+    return render_profile
 

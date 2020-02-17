@@ -54,9 +54,9 @@ runner_thread = None
 load_thread = None
 
 # These are made to correspond with size selector combobox indexes on manager window
-PROXY_SIZE_FULL = 0
-PROXY_SIZE_HALF = 1
-PROXY_SIZE_QUARTER = 2
+PROXY_SIZE_FULL = appconsts.PROXY_SIZE_FULL
+PROXY_SIZE_HALF =  appconsts.PROXY_SIZE_HALF
+PROXY_SIZE_QUARTER =  appconsts.PROXY_SIZE_QUARTER
 
 
 class ProxyRenderRunnerThread(threading.Thread):

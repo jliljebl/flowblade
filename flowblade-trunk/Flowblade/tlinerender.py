@@ -27,7 +27,9 @@ import threading
 
 import appconsts
 import cairoarea
+import dialogutils
 import edit
+import editorpersistance
 from editorstate import current_sequence
 from editorstate import get_tline_rendering_mode
 from editorstate import PROJECT
@@ -99,7 +101,11 @@ def update_renderer_to_mode():
         _timeline_renderer = NoOpRenderer()
     else:
         _timeline_renderer = TimeLineRenderer()
-                
+
+def settings_dialog_launch(widget, event):
+    global manager_window
+    manager_window = TLineSettingsRenderDialog()
+
 def get_renderer():
     return _timeline_renderer
 
@@ -134,12 +140,15 @@ def display_strip_context_menu(event, hit_segment):
 
     strip_popup_menu.popup(None, None, None, None, event.button, event.time)
 
-def settings_dialog_launch(widget, event):
-    print("settings_dialog_launch")
-
-
 def _strip_menu_item_callback(widget, data):
-    print(data)
+    msg, segment = data
+    if msg == "delete_all":
+        get_renderer().segments = []
+        if timeline_visible() == True:
+            current_sequence().update_hidden_track_for_timeline_rendering()
+        gui.tline_render_strip.widget.queue_draw()
+    else:
+        get_renderer().delete_segment(segment)
 
 # ----------------------------------------- timeline rendering
 def change_current_tline_rendering_mode(menu_widget, new_tline_render_mode):
@@ -332,11 +341,14 @@ class TimeLineRenderer:
     def delete_selected_segment(self):
         for seg in self.segments:
             if seg.selected == True:
-                self.segments.remove(seg)
-                if timeline_visible() == True:
-                    current_sequence().update_hidden_track_for_timeline_rendering()
-                gui.tline_render_strip.widget.queue_draw()
-        
+                self.delete_segment(seg)
+    
+    def delete_segment(self, segment):
+        self.segments.remove(segment)
+        if timeline_visible() == True:
+            current_sequence().update_hidden_track_for_timeline_rendering()
+        gui.tline_render_strip.widget.queue_draw()
+                
     # --------------------------------------------- CONTENT UPDATES
     def timeline_changed(self):
         if self.drag_on == True:
@@ -737,3 +749,75 @@ class TimeLineStatusPollingThread(threading.Thread):
         current_sequence().update_hidden_track_for_timeline_rendering() # We should have correct sequence length known because this always comes after edits.
     
         print("timeline update rendering done")
+
+
+
+# ---------------------------------------------------------------- settings
+class TLineSettingsRenderDialog:
+    def __init__(self):
+        self.dialog = Gtk.Dialog(_("Timeline Render Settings"), gui.editor_window.window,
+                            Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                            (_("Close"), Gtk.ResponseType.CLOSE))
+
+        # Encoding
+        self.enc_select = Gtk.ComboBoxText()
+        encodings = renderconsumer.proxy_encodings
+        if len(encodings) < 1: # no encoding options available, system does not have right codecs
+            # display info ?
+            pass
+        for encoption in encodings:
+            self.enc_select.append_text(encoption.name)
+            
+        current_enc = editorpersistance.prefs.tline_render_encoding
+        if current_enc >= len(encodings): # current encoding selection not available
+            current_enc = 0
+            editorpersistance.prefs.tline_render_encoding = 0
+            editorpersistance.save()
+
+        self.enc_select.set_active(current_enc)
+        self.enc_select.connect("changed", 
+                                lambda w,e: self.encoding_changed(w.get_active()), 
+                                None)
+                            
+        self.size_select = Gtk.ComboBoxText()
+        self.size_select.append_text(_("Project Image Size"))
+        self.size_select.append_text(_("Half Project Image Size"))
+        self.size_select.append_text(_("Quarter Project Image Size"))
+        self.size_select.set_active(editorpersistance.prefs.tline_render_size)
+        self.size_select.connect("changed", 
+                                lambda w,e: self.size_changed(w.get_active()), 
+                                None)
+                                
+        row_enc = Gtk.HBox(False, 2)
+        row_enc.pack_start(Gtk.Label(), True, True, 0)
+        row_enc.pack_start(self.enc_select, False, False, 0)
+        row_enc.pack_start(self.size_select, False, False, 0)
+        row_enc.pack_start(Gtk.Label(), True, True, 0)
+        
+        vbox_enc = Gtk.VBox(False, 2)
+        vbox_enc.pack_start(row_enc, False, False, 0)
+        vbox_enc.pack_start(guiutils.pad_label(8, 12), False, False, 0)
+        
+        panel_encoding = guiutils.get_named_frame(_("Render Encoding"), vbox_enc)
+
+
+        # Pane
+        vbox = Gtk.VBox(False, 2)
+        vbox.pack_start(panel_encoding, False, False, 0)
+        guiutils.set_margins(vbox, 8, 12, 12, 12)
+
+        self.dialog.vbox.pack_start(vbox, True, True, 0)
+        dialogutils.set_outer_margins(self.dialog.vbox)
+        
+        self.dialog.connect('response', dialogutils.dialog_destroy)
+        self.dialog.show_all()
+
+
+    def encoding_changed(self, enc_index):
+        editorpersistance.prefs.tline_render_encoding = enc_index
+        editorpersistance.save()
+
+    def size_changed(self, size_index):
+        editorpersistance.prefs.tline_render_size = size_index
+        editorpersistance.save()
+    
