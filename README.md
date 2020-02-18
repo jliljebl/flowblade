@@ -3,7 +3,7 @@
  
 **New release Flowblade 2.4 is now out.**
 
-**All distributions are encouraged to update to Flowblade 2.4 and MLT 6.18**  [MLT 6.18 required for Flowblade 2.4](./flowblade-trunk/docs/running_flowblade_2-4.md)
+**All distributions are encouraged to update to Flowblade 2.4 and MLT 6.18**  [MLT 6.18 required for Flowblade 2.4](./flowblade-trunk/docs/running_flowblade_2-4.md) **and use latest commit in patch fix brach** [here.](https://github.com/jliljebl/flowblade/commit/6a180252261b94b72959ac8fa562c916c99ecfaf)
 
 **Release notes [here.](./flowblade-trunk/docs/RELEASE_NOTES.md)**
 
