@@ -21,8 +21,6 @@
 Module contains functions to build generic dialogs.
 """
 from gi.repository import GObject
-
-
 from gi.repository import Gtk
 
 import appconsts

@@ -207,6 +207,7 @@ class AbstractBinClip: # not extends projectdata.MediaFile? too late, too late. 
     def create_icon(self):
         print("patter producer create_icon() not implemented")
 
+
 class BinColorClip(AbstractBinClip):
     """
     Color Clip that can added to and edited in Sequence.
@@ -241,6 +242,7 @@ class BinColorClip(AbstractBinClip):
         cr.rectangle(0, 0,   appconsts.THUMB_WIDTH + 1, appconsts.THUMB_HEIGHT + 1)
         cr.fill()
         self.icon = surface
+
 
 class BinNoiseClip(AbstractBinClip):
     def __init__(self, id, name):

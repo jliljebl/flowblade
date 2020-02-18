@@ -1141,6 +1141,8 @@ def get_media_type(file_path):
     """
     Returns media type of file.
     """
+    return utils.get_media_type(file_path)
+    """
     if os.path.exists(file_path):
         mime_type = utils.get_file_type(file_path)
     else:
@@ -1167,7 +1169,8 @@ def get_media_type(file_path):
         return IMAGE
     
     return UNKNOWN
-
+    """
+    
 def _clip_length(clip):
     return clip.clip_out - clip.clip_in + 1
 

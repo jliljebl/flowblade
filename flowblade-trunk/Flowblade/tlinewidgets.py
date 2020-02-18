@@ -1748,7 +1748,10 @@ class TimeLineCanvas:
                         grad.add_color_stop_rgba(*BLANK_CLIP_COLOR_GRAD_L)
                         cr.set_source(grad)
                 elif track.type == sequence.VIDEO:
-                    if clip.media_type == sequence.VIDEO:
+                    if clip.container_data != None:
+                            clip_bg_col = (0.7, 0.3, 0.3)
+                            cr.set_source_rgb(*clip_bg_col)
+                    elif clip.media_type == sequence.VIDEO:
                         if not clip.selected:
                             grad = cairo.LinearGradient (0, y, 0, y + track_height)
                             grad.add_color_stop_rgba(*CLIP_COLOR_GRAD)
@@ -1768,7 +1771,7 @@ class TimeLineCanvas:
                         else:
                             cr.set_source_rgb(*IMAGE_CLIP_SELECTED_COLOR)
                             clip_bg_col = IMAGE_CLIP_SELECTED_COLOR
-                else:# Audio clip
+                else:# Audio track
                     if not clip.selected:
                         grad = cairo.LinearGradient (0, y, 0, y + track_height)
                         grad.add_color_stop_rgba(*AUDIO_CLIP_COLOR_GRAD)

@@ -444,7 +444,10 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
         # We need this in all media files, used only by img seq media
         if not hasattr(media_file, "ttl"):
             media_file.ttl = None
-
+        # Add container data if not found.
+        if not hasattr(media_file, "container_data"):
+            media_file.container_data = None
+            
         # Use this to try to fix clips with missing proxy files.
         proxy_path_dict[media_file.path] = media_file.second_file_path
         

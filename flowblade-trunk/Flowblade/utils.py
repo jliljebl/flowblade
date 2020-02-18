@@ -358,6 +358,38 @@ def file_extension_is_graphics_file(ext):
     else:
         return False
 
+# ------------------------------------------------ module util methods
+def get_media_type(file_path):
+    """
+    Returns media type of file.
+    """
+    if os.path.exists(file_path):
+        mime_type = get_file_type(file_path)
+    else:
+        # IMAGE_SEQUENCE media objects have a MLT formatted resource path that does not
+        # point to an existing file in the file system. 
+        # We're doing a heuristic here to identify those.
+        pros_index = file_path.find("%0")
+        d_index = file_path.find("d.")
+        if pros_index != -1 and d_index != -1:
+            return appconsts.IMAGE_SEQUENCE
+        all_index = file_path.find(".all")
+        if all_index != -1:
+            return appconsts.IMAGE_SEQUENCE
+            
+        return appconsts.FILE_DOES_NOT_EXIST
+        
+    if mime_type.startswith("video"):
+        return appconsts.VIDEO
+    
+    if mime_type.startswith("audio"):
+        return appconsts.AUDIO
+    
+    if mime_type.startswith("image"):
+        return appconsts.IMAGE
+    
+    return appconsts.UNKNOWN
+    
 def get_file_type(file_path):
     name, ext = os.path.splitext(file_path)
     ext = ext.lstrip(".")
