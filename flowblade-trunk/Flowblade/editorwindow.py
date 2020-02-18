@@ -36,6 +36,7 @@ import boxmove
 import clipeffectseditor
 import clipmenuaction
 import compositeeditor
+import containerclip
 import dialogs
 import dialogutils
 import diskcachemanagement
@@ -259,6 +260,8 @@ class EditorWindow:
             ('CreateSequenceFreezeCompound', None, _('From Current Sequence With Freeze Frame at Playhead Position'), None, None, lambda a:projectaction.create_sequence_freeze_frame_compound_clip()),
             ('AudioSyncCompoundClip', None, _('Audio Sync Merge Clip From 2 Media Items '), None, None, lambda a:audiosync.create_audio_sync_compound_clip()),
             ('ImportProjectMedia', None, _('Import Media From Project...'), None, None, lambda a:projectaction.import_project_media()),
+            ('ContainerClipsMenu', None, _('Create Container Clip')),
+            ('CreateGMicContainerItem', None, _("From G'Mic Script"), None, None, lambda a:containerclip.create_gmic_media_item()),
             ('CombineSequences', None, _('Import Another Sequence Into This Sequence...'), None, None, lambda a:projectaction.combine_sequences()),
             ('LogClipRange', None, _('Log Marked Clip Range'), '<control>L', None, lambda a:medialog.log_range_clicked()),
             ('ViewProjectEvents', None, _('View Project Events...'), None, None, lambda a:projectaction.view_project_events()),
@@ -365,6 +368,9 @@ class EditorWindow:
                         <menuitem action='CreateSelectionCompound'/>
                         <menuitem action='CreateSequenceCompound'/>
                         <menuitem action='AudioSyncCompoundClip'/>
+                    </menu>
+                    <menu action='ContainerClipsMenu'>
+                        <menuitem action='CreateGMicContainerItem'/>
                     </menu>
                     <separator/>
                     <menu action='BinMenu'>
