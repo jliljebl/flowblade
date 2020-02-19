@@ -1548,7 +1548,11 @@ def display_clip_popup_menu(event, clip, track, callback):
     _add_separetor(clip_menu)
     
     clip_menu.add(_get_edit_menu_item(event, clip, track, callback))
-
+    
+    if clip.container_data != None:
+        _add_separetor(clip_menu)
+        clip_menu.add(_get_container_clip_menu_item(event, clip, track, callback))
+            
     clip_menu.popup(None, None, None, None, event.button, event.time)
 
 def display_transition_clip_popup_menu(event, clip, track, callback):
@@ -1935,7 +1939,26 @@ def _get_edit_menu_item(event, clip, track, callback):
     
     menu_item.show()
     return menu_item
+
+def _get_container_clip_menu_item(event, clip, track, callback):
+    menu_item = Gtk.MenuItem(_("Container Clip Actions"))
+    sub_menu = Gtk.Menu()
+    menu_item.set_submenu(sub_menu)
+
+    render_full_item = _get_menu_item(_("Render Full Media..."), callback, (clip, track, "cc_render_full_media", event.x))
+    sub_menu.append(render_full_item)
+
+    render_clip_item = _get_menu_item(_("Render Clip Length..."), callback, (clip, track, "cc_render_clip", event.x))
+    sub_menu.append(render_clip_item)
+
+    _add_separetor(sub_menu)
     
+    go_to_un_item = _get_menu_item(_("Go To Unrendered Media"), callback, (clip, track, "cc_go_to_underdered", event.x))
+    sub_menu.append(go_to_un_item)
+    
+    menu_item.show()
+    return menu_item
+
 def _get_clone_filters_menu_item(event, clip, track, callback):
     menu_item = Gtk.MenuItem(_("Clone Filters"))
     sub_menu = Gtk.Menu()
