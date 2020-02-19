@@ -1157,6 +1157,7 @@ class GmicEffectRendererer(threading.Thread):
         self.frames_range_writer = None
         
         self.abort = False
+        self.script_renderer = None
         
         # Refuse to render into user home folder
         out_folder = _window.out_folder.get_filenames()[0] + "/"
@@ -1212,58 +1213,16 @@ class GmicEffectRendererer(threading.Thread):
 
         while len(os.listdir(folder)) != self.length:
             time.sleep(0.5)
-            
-        clip_frames = os.listdir(folder)
-
-        frame_count = 1
-        for clip_frame in clip_frames:
-            if self.abort == True:
-                return
-            
-            update_info = _("Rendering frame: ") + str(frame_count) + "/" +  str(self.length)
-
-            Gdk.threads_enter()
-            _window.render_percentage.set_markup("<small>" + update_info + "</small>")
-            _window.render_progress_bar.set_fraction(float(frame_count)/float(self.length))
-            Gdk.threads_leave()
- 
-            file_numbers_list = re.findall(r'\d+', clip_frame)
-            filled_number_str = str(file_numbers_list[0]).zfill(3)
-
-            clip_frame_path = os.path.join(folder, clip_frame)
-            rendered_file_path = out_folder + frame_name + "_" + filled_number_str + ".png"
-            
-            script_str = "gmic " + clip_frame_path + " " + user_script + " -output " +  rendered_file_path
-
-            if frame_count == 1: # first frame displays shell output and does error checking
-                FLOG = open(userfolders.get_cache_dir() + "log_gmic_preview", 'w')
-                p = subprocess.Popen(script_str, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
-                p.wait()
-                FLOG.close()
-                
-                # read log
-                f = open(userfolders.get_cache_dir() + "log_gmic_preview", 'r')
-                out = f.read()
-                f.close()
-                
-                Gdk.threads_enter()
-                _window.out_view.get_buffer().set_text(out + "Return code:" + str(p.returncode))
-                if p.returncode != 0:
-                    _window.out_view.override_color((Gtk.StateFlags.NORMAL and Gtk.StateFlags.ACTIVE), Gdk.RGBA(red=1.0, green=0.0, blue=0.0))
-                    _window.render_percentage.set_text(_("Render error!"))
-                    Gdk.threads_leave()
-                    return
-                else:
-                    _window.out_view.override_color((Gtk.StateFlags.NORMAL and Gtk.StateFlags.ACTIVE), None)
-                    Gdk.threads_leave()
-            else:
-                FLOG = open(userfolders.get_cache_dir() + "log_gmic_preview", 'w')
-                p = subprocess.Popen(script_str, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
-                p.wait()
-                FLOG.close()
-
-            frame_count = frame_count + 1
-
+        
+        # Render frames with gmic script
+        self.script_renderer = gmicplayer.FolderFramesScriptRenderer(   user_script, 
+                                                                        folder,
+                                                                        out_folder,
+                                                                        frame_name,
+                                                                        self.script_render_update_callback, 
+                                                                        self.script_render_output_callback)
+        self.script_renderer.write_frames()
+        
         # Render video
         if _window.encode_check.get_active() == True:
             # Render consumer
@@ -1319,8 +1278,31 @@ class GmicEffectRendererer(threading.Thread):
         _window.render_progress_bar.set_fraction(float(frame + 1)/float(self.length))
         Gdk.threads_leave()
 
+    def script_render_update_callback(self, frame_count):
+        update_info = _("Rendering frame: ") + str(frame_count) + "/" +  str(self.length)
+
+        Gdk.threads_enter()
+        _window.render_percentage.set_markup("<small>" + update_info + "</small>")
+        _window.render_progress_bar.set_fraction(float(frame_count)/float(self.length))
+        Gdk.threads_leave()
+
+    def script_render_output_callback(self, p, out):
+        print("kkkk")
+        Gdk.threads_enter()
+        _window.out_view.get_buffer().set_text(out + "Return code:" + str(p.returncode))
+        if p.returncode != 0:
+            _window.out_view.override_color((Gtk.StateFlags.NORMAL and Gtk.StateFlags.ACTIVE), Gdk.RGBA(red=1.0, green=0.0, blue=0.0))
+            _window.render_percentage.set_text(_("Render error!"))
+            Gdk.threads_leave()
+            return
+        else:
+            _window.out_view.override_color((Gtk.StateFlags.NORMAL and Gtk.StateFlags.ACTIVE), None)
+            Gdk.threads_leave()
+
     def abort_render(self):
         self.abort = True
+        if self.script_renderer != None:
+             self.script_renderer.abort()
 
         self.shutdown()
                          
