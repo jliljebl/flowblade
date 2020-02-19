@@ -26,6 +26,7 @@ Clip player used to select frames for preview and range selection.
 import mlt
 import os
 import re
+import subprocess
 import time
 
 import mltprofiles
@@ -203,10 +204,9 @@ class FramesRangeWriter:
 
 class FolderFramesRenderer:
 
-    def __init__(self, user_script, folder, length, update_callback, render_output_callback):#, callback, profile):
+    def __init__(self, user_script, folder, update_callback, render_output_callback):#, callback, profile):
         self.user_script = user_script
         self.folder = folder
-        self.length = length
         self.update_callback = update_callback
         self.render_output_callback = render_output_callback
         self.abort = False
@@ -271,7 +271,7 @@ class FolderFramesRenderer:
             frame_count = frame_count + 1
 
     def do_update_callback(self, frame_count):
-        self.update_callback(frame_count, self.length)
+        self.update_callback(frame_count)
         
         """
         update_info = _("Rendering frame: ") + str(frame_count) + "/" +  str(self.length)
