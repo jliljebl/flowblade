@@ -1099,7 +1099,7 @@ class GmicPreviewRendererer(threading.Thread):
             # For the case the render fails
             shutil.copyfile(get_current_frame_file(), get_preview_file())
         except IOError:
-            # No we have failed to extract a png file from source file
+            # We have failed to extract a png file from source file
             Gdk.threads_enter()
             _window.out_view.override_color((Gtk.StateFlags.NORMAL and Gtk.StateFlags.ACTIVE), Gdk.RGBA(red=1.0, green=0.0, blue=0.0))
             _window.out_view.get_buffer().set_text("Extracting PNG frames from this file failed!")
@@ -1187,7 +1187,7 @@ class GmicEffectRendererer(threading.Thread):
             file_path = os.path.join(folder, frame_file)
             os.remove(file_path)
         
-        # Render clipm frames for range
+        # Render clip frames for range
         mark_in = _player.producer.mark_in
         mark_out = _player.producer.mark_out
         self.length = mark_out - mark_in + 1
@@ -1195,10 +1195,8 @@ class GmicEffectRendererer(threading.Thread):
         self.mark_out = mark_out
         
         frame_name = _window.frame_name.get_text()
-        
-        # jotain controllii frame_namelle
 
-        self.frames_range_writer = gmicplayer.FramesRangeWriter(_current_path, self.frames_update)
+        self.frames_range_writer = gmicplayer.get_frames_range_writer_for_current_profile(_current_path, self.frames_update)
         self.frames_range_writer.write_frames(get_render_frames_dir() + "/", frame_name, mark_in, mark_out)
 
         if self.abort == True:
@@ -1310,7 +1308,7 @@ class GmicEffectRendererer(threading.Thread):
         
     def frames_update(self, frame):
         if frame - self.mark_in < 0:
-            frame = self.length # hack fix, producer suddenly changes the frame i thinks it is in
+            frame = self.length # hack fix, producer suddenly changes the frame it thinks it is in
         else:
             frame = frame - self.mark_in # producer returns original clip frames
         

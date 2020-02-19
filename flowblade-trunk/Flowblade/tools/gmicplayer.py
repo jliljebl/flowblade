@@ -42,6 +42,10 @@ def set_current_profile(clip_path):
     _current_profile = mltprofiles.get_profile_for_index(profile_index)
     return profile_index
 
+def get_frames_range_writer_for_current_profile(file_path, callback):
+    return FramesRangeWriter(file_path, callback, _current_profile)
+
+        
 class GmicPlayer:
     
     def __init__(self, clip_path):
@@ -146,8 +150,9 @@ class PreviewFrameWriter:
         
 class FramesRangeWriter:
 
-    def __init__(self, file_path, callback):
-        self.producer = mlt.Producer(_current_profile, str(file_path))
+    def __init__(self, file_path, callback, profile):
+        self.producer = mlt.Producer(profile, str(file_path))
+        self.profile = profile
         self.callback = callback
         self.running = True
 
@@ -158,7 +163,7 @@ class FramesRangeWriter:
         # Get data
         render_path = clip_folder + frame_name + "_%04d." + "png"
 
-        self.consumer = mlt.Consumer(_current_profile, "avformat", str(render_path))
+        self.consumer = mlt.Consumer(self.profile, "avformat", str(render_path))
         self.consumer.set("real_time", -1)
         self.consumer.set("rescale", "bicubic")
         self.consumer.set("vcodec", "png")
