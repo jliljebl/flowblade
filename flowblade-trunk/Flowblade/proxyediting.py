@@ -521,14 +521,18 @@ def set_menu_to_proxy_state():
     else:
         gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/SaveSnapshot').set_sensitive(False)
 
-def create_proxy_files_pressed():
-    media_file_widgets = gui.media_list_view.get_selected_media_objects()
-    if len(media_file_widgets) == 0:
-        return
-
+def create_proxy_files_pressed(render_all=False):
     media_files = []
-    for w in media_file_widgets:
-        media_files.append(w.media_file)
+    if render_all == False:
+        media_file_widgets = gui.media_list_view.get_selected_media_objects()
+        if len(media_file_widgets) == 0:
+            return
+            
+        for w in media_file_widgets:
+            media_files.append(w.media_file)
+    else:
+        for item_id in editorstate.PROJECT().media_files:
+            media_files.append(editorstate.PROJECT().media_files[item_id])
     
     _do_create_proxy_files(media_files)
 

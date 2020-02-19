@@ -918,6 +918,7 @@ def hamburger_pressed(widget, event):
     guiutils.remove_children(hamburger_menu)
 
     hamburger_menu.add(guiutils.get_menu_item(_("Render Proxy Files For Selected Media"), _hamburger_menu_item_selected, "render proxies", ))
+    hamburger_menu.add(guiutils.get_menu_item(_("Render Proxy Files For All Media"), _hamburger_menu_item_selected, "render all proxies", ))
     guiutils.add_separetor(hamburger_menu)
     hamburger_menu.add(guiutils.get_menu_item(_("Select All"), _hamburger_menu_item_selected, "select all"))
     hamburger_menu.add(guiutils.get_menu_item(_("Select None"), _hamburger_menu_item_selected, "select none"))
@@ -952,6 +953,8 @@ def hamburger_pressed(widget, event):
 def _hamburger_menu_item_selected(widget, msg):
     if msg == "render proxies":
         proxyediting.create_proxy_files_pressed()
+    elif msg == "render all proxies":
+        proxyediting.create_proxy_files_pressed(True)
     elif msg == "select all":
         gui.media_list_view.select_all()
     elif msg == "select none":
