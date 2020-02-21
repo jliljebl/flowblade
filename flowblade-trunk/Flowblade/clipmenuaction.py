@@ -38,6 +38,7 @@ import audiosync
 import appconsts
 import clipeffectseditor
 import compositeeditor
+import containerclip
 import dialogs
 import dialogutils
 import gui
@@ -711,4 +712,9 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "volumekf":_volume_keyframes,
                   "brightnesskf":_brightness_keyframes,
                   "delete_compositors":_delete_compositors,
-                  "reload_media":_reload_clip_media}
+                  "reload_media":_reload_clip_media,
+                  "cc_render_full_media":containerclip.render_full_media,
+                  "cc_render_clip":containerclip.render_clip_length,
+                  "cc_go_to_underdered":containerclip.switch_to_unrendered_media,
+                  "cc_external_media":containerclip.save_rendered_media_in_external_folder,
+                  "cc_internal_media":containerclip.save_rendered_media_in_internal_cache}

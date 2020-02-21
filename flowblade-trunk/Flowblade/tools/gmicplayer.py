@@ -24,9 +24,14 @@ Clip player used to select frames for preview and range selection.
 
 
 import mlt
+import os
+import re
+import sys
+import subprocess
 import time
 
 import mltprofiles
+import userfolders
 import utils
 
 TICKER_DELAY = 0.25
@@ -42,6 +47,10 @@ def set_current_profile(clip_path):
     _current_profile = mltprofiles.get_profile_for_index(profile_index)
     return profile_index
 
+def get_frames_range_writer_for_current_profile(file_path, callback):
+    return FramesRangeWriter(file_path, callback, _current_profile)
+
+        
 class GmicPlayer:
     
     def __init__(self, clip_path):
@@ -146,8 +155,9 @@ class PreviewFrameWriter:
         
 class FramesRangeWriter:
 
-    def __init__(self, file_path, callback):
-        self.producer = mlt.Producer(_current_profile, str(file_path))
+    def __init__(self, file_path, callback, profile):
+        self.producer = mlt.Producer(profile, str(file_path))
+        self.profile = profile
         self.callback = callback
         self.running = True
 
@@ -157,8 +167,8 @@ class FramesRangeWriter:
         """
         # Get data
         render_path = clip_folder + frame_name + "_%04d." + "png"
-
-        self.consumer = mlt.Consumer(_current_profile, "avformat", str(render_path))
+        print("render_path", render_path, mark_in, mark_out)
+        self.consumer = mlt.Consumer(self.profile, "avformat", str(render_path))
         self.consumer.set("real_time", -1)
         self.consumer.set("rescale", "bicubic")
         self.consumer.set("vcodec", "png")
@@ -192,4 +202,72 @@ class FramesRangeWriter:
         self.frame_producer.set_speed(0)
         self.running = False
         
-        
+
+class FolderFramesScriptRenderer:
+
+    def __init__(self, user_script, folder, out_folder, frame_name, update_callback, render_output_callback):
+        self.user_script = user_script
+        self.folder = folder
+        self.out_folder = out_folder
+        self.frame_name = frame_name
+        self.update_callback = update_callback
+        self.render_output_callback = render_output_callback
+        self.abort = False
+
+    def write_frames(self):
+        clip_frames = os.listdir(self.folder)
+
+        frame_count = 1
+        for clip_frame in clip_frames:
+
+            if self.abort == True:
+                return
+            
+            self.do_update_callback(frame_count)
+
+            file_numbers_list = re.findall(r'\d+', clip_frame)
+            filled_number_str = str(file_numbers_list[0]).zfill(3)
+
+            clip_frame_path = os.path.join(self.folder, clip_frame)
+            rendered_file_path = self.out_folder + self.frame_name + "_" + filled_number_str + ".png"
+            
+            script_str = "gmic " + clip_frame_path + " " + self.user_script + " -output " +  rendered_file_path
+
+            if frame_count == 1: # first frame displays shell output and does error checking
+                FLOG = open(userfolders.get_cache_dir() + "log_gmic_preview", 'w')
+                p = subprocess.Popen(script_str, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
+                p.wait()
+                FLOG.close()
+ 
+                # read log
+                f = open(userfolders.get_cache_dir() + "log_gmic_preview", 'r')
+                out = f.read()
+                f.close()
+
+                self.do_render_output_callback(p, out)
+            else:
+                FLOG = open(userfolders.get_cache_dir() + "log_gmic_preview", 'w')
+                p = subprocess.Popen(script_str, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
+                p.wait()
+                FLOG.close()
+
+            frame_count = frame_count + 1
+    
+    def do_update_callback(self, frame_count):
+        self.update_callback(frame_count)
+
+    def do_render_output_callback(self, process, out_text):
+        self.render_output_callback(process, out_text)
+                
+    def abort(self):
+        self.abort = True
+
+
+# ---- Debug helper
+def prints_to_log_file(log_file):
+    so = se = open(log_file, 'w', buffering=1)
+
+    sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', buffering=1)
+
+    os.dup2(so.fileno(), sys.stdout.fileno())
+    os.dup2(se.fileno(), sys.stderr.fileno())

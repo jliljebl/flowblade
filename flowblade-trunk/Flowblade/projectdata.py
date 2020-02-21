@@ -114,7 +114,6 @@ class Project:
         thumbnailer.set_context(self.profile)
 
     def add_image_sequence_media_object(self, resource_path, name, length, ttl):
-        print(resource_path)
         media_object = self.add_media_file(resource_path)
         media_object.length = length
         media_object.name = name
@@ -159,7 +158,10 @@ class Project:
 
     def add_pattern_producer_media_object(self, media_object):
         self._add_media_object(media_object)
-
+        
+    def add_container_clip_media_object(self, media_object):
+        self._add_media_object(media_object)
+        
     def _add_media_object(self, media_object, target_bin=None):
         """
         Adds media file or color clip to project data structures.
@@ -332,6 +334,8 @@ class MediaFile:
         self.second_file_path = None # to proxy when original, to original when proxy
         
         self.current_frame = 0
+
+        self.container_data = None
 
         self.info = info
 

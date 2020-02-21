@@ -444,7 +444,10 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
         # We need this in all media files, used only by img seq media
         if not hasattr(media_file, "ttl"):
             media_file.ttl = None
-
+        # Add container data if not found.
+        if not hasattr(media_file, "container_data"):
+            media_file.container_data = None
+            
         # Use this to try to fix clips with missing proxy files.
         proxy_path_dict[media_file.path] = media_file.second_file_path
         
@@ -595,7 +598,11 @@ def fill_track_mlt(mlt_track, py_track):
         # Add img seq ttl value for all clips if not found, we need this present in every clip so we test for 'clip.ttl == None' to get stuff working
         if not hasattr(clip, "ttl"):
             clip.ttl = None
-            
+
+        # Add container data if not found.
+        if not hasattr(clip, "container_data"):
+            clip.container_data = None
+
         # normal clip
         if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):
             orig_path = clip.path # Save the path for error message
