@@ -26,6 +26,7 @@ import hashlib
 import os
 
 import appconsts
+import containeractions
 import dialogutils
 from editorstate import PROJECT
 import gui
@@ -50,18 +51,39 @@ class ContainerClipData:
             self.unrendered_length = None
             self.unrendered_type = utils.get_media_type(unrendered_media)
 
+            self.external_media_folder = None
+
         def get_unrendered_media_name(self):
             directory, file_name = os.path.split(self.unrendered_media)
             name, ext = os.path.splitext(file_name)
             return name
 
 
+# -------------------------------------------------------- Clip menu actions
+def render_full_media(data):
+    clip, track, item_id, item_data = data
+    action_object = containeractions.get_action_object(clip)
+    action_object.render_full_media()
 
-def _update_gui_for_media_object_add():
-    gui.media_list_view.fill_data_model()
-    gui.bin_list_view.fill_data_model()
+def render_clip_length(data):
+    clip, track, item_id, item_data = data
+
+def switch_to_unrendered_media(data):
+    clip, track, item_id, item_data = data
+
+def save_rendered_media_in_external_folder(data):
+    clip, track, item_id, item_data = data
+    print(clip)
+
+def save_rendered_media_in_internal_cache(data):
+    clip, track, item_id, item_data = data
+    print(clip)
 
 
+
+
+
+# -------------------------------------------------------- Media Item Creation
 # -------------------------------------------------------- G'Mic
 def create_gmic_media_item():
     script_select, row1 = _get_file_select_row_and_editor(_("Select G'Mic Tool Script:"))
@@ -70,7 +92,6 @@ def create_gmic_media_item():
 
 def _gmic_clip_create_dialog_callback(dialog, response_id, data):
     if response_id != Gtk.ResponseType.ACCEPT:
-    
         dialog.destroy()
     else:
         script_select, media_file_select = data
@@ -89,7 +110,7 @@ def _gmic_clip_create_dialog_callback(dialog, response_id, data):
         _update_gui_for_media_object_add()
 
 
-# ------------------------------------------------------------ Dialogs utils
+# ------------------------------------------------------------ Dialogs + GUI utils
 def _get_file_select_row_and_editor(label_text):
     file_chooser = Gtk.FileChooserButton()
     file_chooser.set_size_request(250, 25)
@@ -122,6 +143,9 @@ def _open_image_sequence_dialog(callback, title, rows, data):
     dialog.connect('response', callback, data)
     dialog.show_all()
 
+def _update_gui_for_media_object_add():
+    gui.media_list_view.fill_data_model()
+    gui.bin_list_view.fill_data_model()
 
 # ------------------------------------------------------------ thumbnail creation
 
@@ -191,7 +215,6 @@ class AbstractBinContainerClip: # not extends projectdata.MediaFile? too late, t
 
         self.create_icon()
 
-
     def matches_project_profile(self):
         return True # these are created to match project profile
 
@@ -215,3 +238,4 @@ class GMicContainerClip(AbstractBinContainerClip):
         icon_path, length, info = _write_thumbnail_image(PROJECT().profile, self.container_data.unrendered_media)
         self.icon = _create_image_surface(icon_path)
         self.length = length
+        self.container_data.unrendered_length = length - 1

@@ -1162,7 +1162,6 @@ class GmicEffectRendererer(threading.Thread):
         # Refuse to render into user home folder
         out_folder = _window.out_folder.get_filenames()[0] + "/"
         if out_folder == (os.path.expanduser("~") + "/"):
-            #print "home folder"
             return
             
         start_time = time.time()
@@ -1287,7 +1286,6 @@ class GmicEffectRendererer(threading.Thread):
         Gdk.threads_leave()
 
     def script_render_output_callback(self, p, out):
-        print("kkkk")
         Gdk.threads_enter()
         _window.out_view.get_buffer().set_text(out + "Return code:" + str(p.returncode))
         if p.returncode != 0:

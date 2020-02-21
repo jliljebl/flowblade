@@ -169,6 +169,8 @@ def _maybe_create_xdg_dirs():
         os.mkdir(get_render_dir())
     if not os.path.exists(get_data_dir() + appconsts.TLINE_RENDERS_DIR):
         os.mkdir(get_data_dir() + appconsts.TLINE_RENDERS_DIR)
+    if not os.path.exists(get_data_dir() + appconsts.CONTAINER_CLIPS_DIR):
+        os.mkdir(get_data_dir() + appconsts.CONTAINER_CLIPS_DIR)
 
     #----------------- CACHE
     # Data that can be regerated by app or is transient

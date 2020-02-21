@@ -162,6 +162,7 @@ TRIM_VIEW_DIR = "trim_view"
 USER_PROFILES_DIR = "user_profiles/"
 USER_PROFILES_DIR_NO_SLASH = "user_profiles"
 BATCH_DIR = "batchrender/"
+CONTAINER_CLIPS_DIR = "container_clips"
 
 # Luma bands
 SHADOWS = 0

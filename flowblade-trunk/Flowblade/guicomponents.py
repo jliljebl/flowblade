@@ -1945,17 +1945,37 @@ def _get_container_clip_menu_item(event, clip, track, callback):
     sub_menu = Gtk.Menu()
     menu_item.set_submenu(sub_menu)
 
+    clip.container_data
+
     render_full_item = _get_menu_item(_("Render Full Media..."), callback, (clip, track, "cc_render_full_media", event.x))
+    if clip.container_data.rendered_media_range_in != -1:
+        render_full_item.set_sensitive(False)
     sub_menu.append(render_full_item)
 
     render_clip_item = _get_menu_item(_("Render Clip Length..."), callback, (clip, track, "cc_render_clip", event.x))
+    if clip.container_data.rendered_media_range_in != -1:
+        render_clip_item.set_sensitive(False)
     sub_menu.append(render_clip_item)
 
     _add_separetor(sub_menu)
     
-    go_to_un_item = _get_menu_item(_("Go To Unrendered Media"), callback, (clip, track, "cc_go_to_underdered", event.x))
+    go_to_un_item = _get_menu_item(_("Switch to Unrendered Media"), callback, (clip, track, "cc_go_to_underdered", event.x))
+    if clip.container_data.rendered_media_range_in == -1:
+        go_to_un_item.set_sensitive(False)
     sub_menu.append(go_to_un_item)
-    
+
+    _add_separetor(sub_menu)
+
+    external_media_item = _get_menu_item(_("Save Rendered Media In External Folder ..."), callback, (clip, track, "cc_external_media", event.x))
+    if clip.container_data.external_media_folder != None:
+        external_media_item.set_sensitive(False)
+    sub_menu.append(external_media_item)
+
+    internal_media_item = _get_menu_item(_("Save Rendered Media In Internal Cache ..."), callback, (clip, track, "cc_internal_media", event.x))
+    if clip.container_data.external_media_folder == None:
+        internal_media_item.set_sensitive(False)
+    sub_menu.append(internal_media_item)
+
     menu_item.show()
     return menu_item
 

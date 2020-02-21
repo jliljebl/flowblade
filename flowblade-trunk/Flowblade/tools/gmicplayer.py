@@ -167,7 +167,7 @@ class FramesRangeWriter:
         """
         # Get data
         render_path = clip_folder + frame_name + "_%04d." + "png"
-
+        print("render_path", render_path, mark_in, mark_out)
         self.consumer = mlt.Consumer(self.profile, "avformat", str(render_path))
         self.consumer.set("real_time", -1)
         self.consumer.set("rescale", "bicubic")
