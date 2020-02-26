@@ -133,12 +133,7 @@ class PreviewFrameWriter:
     def __init__(self, file_path):
         self.producer = mlt.Producer(_current_profile, str(file_path))
             
-    def write_frame(self, clip_folder, frame):
-        """
-        Writes thumbnail image from file producer
-        """
-        # Get data
-        
+    def write_frame(self, clip_folder, frame):        
         frame_path = clip_folder + "frame" + str(frame) +  ".png"
 
         # Create consumer
@@ -167,7 +162,7 @@ class FramesRangeWriter:
         """
         # Get data
         render_path = clip_folder + frame_name + "_%04d." + "png"
-        print("render_path", render_path, mark_in, mark_out)
+
         self.consumer = mlt.Consumer(self.profile, "avformat", str(render_path))
         self.consumer.set("real_time", -1)
         self.consumer.set("rescale", "bicubic")
@@ -180,8 +175,6 @@ class FramesRangeWriter:
         self.frame_producer.seek(0)
         self.frame_producer.set_speed(1)
         self.consumer.start()
-
-        print("Rendering frames range")
                 
         while self.running: # set false at shutdown() for abort
             if self.frame_producer.frame() >= mark_out:
@@ -205,13 +198,14 @@ class FramesRangeWriter:
 
 class FolderFramesScriptRenderer:
 
-    def __init__(self, user_script, folder, out_folder, frame_name, update_callback, render_output_callback):
+    def __init__(self, user_script, folder, out_folder, frame_name, update_callback, render_output_callback, nice=0):
         self.user_script = user_script
         self.folder = folder
         self.out_folder = out_folder
         self.frame_name = frame_name
         self.update_callback = update_callback
         self.render_output_callback = render_output_callback
+        self.nice = nice
         self.abort = False
 
     def write_frames(self):
@@ -225,13 +219,16 @@ class FolderFramesScriptRenderer:
             
             self.do_update_callback(frame_count)
 
+            # Run with nice to lower priority if requested
+            nice_command = "nice -n " + str(self.nice) + " "
+
             file_numbers_list = re.findall(r'\d+', clip_frame)
             filled_number_str = str(file_numbers_list[0]).zfill(3)
 
             clip_frame_path = os.path.join(self.folder, clip_frame)
             rendered_file_path = self.out_folder + self.frame_name + "_" + filled_number_str + ".png"
             
-            script_str = "gmic " + clip_frame_path + " " + self.user_script + " -output " +  rendered_file_path
+            script_str = nice_command + "gmic " + clip_frame_path + " " + self.user_script + " -output " +  rendered_file_path
 
             if frame_count == 1: # first frame displays shell output and does error checking
                 FLOG = open(userfolders.get_cache_dir() + "log_gmic_preview", 'w')
@@ -252,13 +249,13 @@ class FolderFramesScriptRenderer:
                 FLOG.close()
 
             frame_count = frame_count + 1
-    
+
     def do_update_callback(self, frame_count):
         self.update_callback(frame_count)
 
     def do_render_output_callback(self, process, out_text):
         self.render_output_callback(process, out_text)
-                
+
     def abort(self):
         self.abort = True
 

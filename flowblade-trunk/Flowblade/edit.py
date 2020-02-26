@@ -2818,6 +2818,27 @@ def _reload_replace_redo(self):
     _remove_clip(self.track, self.index)
     _insert_clip(self.track, self.new_clip, self.index, self.old_clip.clip_in, self.old_clip.clip_out)
 
+# -------------------------------------------------------- CONTAINER CLIP MEDIA REPLACE
+# "old_clip", "new_clip", "track", "index"
+def container_clip_full_render_replace(data):
+    action = EditAction(_container_clip_full_render_replace_undo, _container_clip_full_render_replace_redo, data)
+    return action
+
+def _container_clip_full_render_replace_undo(self):
+    _remove_clip(self.track, self.index)
+    _insert_clip(self.track, self.old_clip, self.index, self.old_clip.clip_in, self.old_clip.clip_out)
+    
+def _container_clip_full_render_replace_redo(self):
+    _remove_clip(self.track, self.index)
+    _insert_clip(self.track, self.new_clip, self.index, self.old_clip.clip_in, self.old_clip.clip_out)
+
+    if not hasattr(self.new_clip, "container_data"):
+        self.new_clip.container_data = copy.deepcopy(self.old_clip.container_data)
+            
+    self.new_clip.container_data.rendered_media = self.new_clip
+    self.new_clip.container_data.rendered_media_range_in = 0
+    self.new_clip.container_data.rendered_media_range_out = self.old_clip.container_data.unrendered_length
+
 
 #-------------------- APPEND MEDIA LOG
 # "track","clips"
