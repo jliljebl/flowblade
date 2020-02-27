@@ -2833,7 +2833,6 @@ class TimeLineRenderingControlStrip:
         self.widget.press_func = self._press_event
         self.widget.motion_notify_func = self._motion_notify_event
         self.widget.release_func = self._release_event
-        #self.widget.mouse_scroll_func = mouse_scroll_listener
         self.widget.add_events(Gdk.EventMask.FOCUS_CHANGE_MASK)
         self.widget.connect("focus-out-event", self._focus_out_event)
     # --------------------------------------------- DRAW
@@ -2845,7 +2844,7 @@ class TimeLineRenderingControlStrip:
         tlinerender.get_renderer().draw(event, cr, allocation, pos, pix_per_frame)
 
         
-        # --------------------------------------------- MOUSE EVENTS    
+    # --------------------------------------------- MOUSE EVENTS    
     def _press_event(self, event):
         tlinerender.get_renderer().press_event(event)
 

@@ -241,6 +241,10 @@ class TimeLineRenderer:
         
     # --------------------------------------------- MOUSE EVENTS    
     def press_event(self, event):
+        if event.type == Gdk.EventType._2BUTTON_PRESS and event.button == 1:
+            self.mouse_double_clicked( _get_frame_for_x_func(event.x))
+            return
+            
         if event.button == 1:
             self.drag_on = True
             self.press_frame = _get_frame_for_x_func(event.x)
@@ -278,6 +282,9 @@ class TimeLineRenderer:
 
     def mouse_drag_edit_completed(self):
         range_start, range_end = self.get_drag_range()
+        print(range_start, range_end)
+        
+        range_end = range_end - 1
 
         start_hit_seg = self.get_hit_segment(range_start)
         end_hit_seg = self.get_hit_segment(range_end)
@@ -311,16 +318,21 @@ class TimeLineRenderer:
         hit_seg = self.get_hit_segment(self.release_frame)
         if hit_seg == None:
             return
+
+        self.clear_selection()
+        hit_seg.selected = True
+
+    def mouse_double_clicked(self, frame):
+        print("DOUBLE CLICK")
+        hit_seg = self.get_hit_segment(frame)
+        if hit_seg == None:
+            return
         
-        if get_tline_rendering_mode() == appconsts.TLINE_RENDERING_REQUEST:
-            hit_seg.segment_state = SEGMENT_DIRTY
-            self.clear_selection()
-            hit_seg.selected = True
-            self.launch_update_thread()
-        elif get_tline_rendering_mode() == appconsts.TLINE_RENDERING_AUTO:
-            self.clear_selection()
-            hit_seg.selected = True
-            
+        hit_seg.segment_state = SEGMENT_DIRTY
+        self.clear_selection()
+        hit_seg.selected = True
+        self.launch_update_thread()
+        
     def get_drag_range(self):
         range_start = self.press_frame 
         range_end = self.release_frame
@@ -359,9 +371,12 @@ class TimeLineRenderer:
     def launch_update_thread(self):
         global _update_thread
         if _update_thread != None:
+            print("_update_thread.abort_before_render_request")
             # We already have an update thread going, try to stop it before it launches renders.
             _update_thread.abort_before_render_request = True
-    
+        else:
+            print("NO _update_thread.abort_before_render_request")
+
         _update_thread = TimeLineUpdateThread()
         _update_thread.start()
 
@@ -387,11 +402,13 @@ class TimeLineRenderer:
             in_frame = 0
             index = 0
             for segment in self.segments:
+                if segment.start_frame >= seq_len:
+                    break
+                 
                 # Blank between segments/sequence start
                 if segment.start_frame > in_frame:
                     edit._insert_blank(hidden_track, index, segment.start_frame - in_frame)
                     
-                    #print("Inserting blank:", index, )
                     index += 1
                 
                 segment_length = segment.end_frame - segment.start_frame
@@ -563,7 +580,13 @@ class TimeLineSegment:
             if get_tline_rendering_mode() == appconsts.TLINE_RENDERING_AUTO:
                 self.segment_state = SEGMENT_DIRTY
                 self.producer = None
-            elif get_tline_rendering_mode() == appconsts.TLINE_RENDERING_REQUEST:
+            # With mode TLINE_RENDERING_REQUEST segment updates set segment state to SEGMENT_UNRENDERED and user double clicks
+            # set mode to SEGMENT_DIRTY and that has already happened before we get here.
+            # So if user has made designated segment to be dirty we will override him her but if user edit has changed timeline we will 
+            # update segment state.
+            elif get_tline_rendering_mode() == appconsts.TLINE_RENDERING_REQUEST and self.segment_state != SEGMENT_DIRTY: 
+
+                print("SEGMENT_UNRENDERED")
                 self.segment_state = SEGMENT_UNRENDERED
 
         self.content_hash = new_hash
@@ -654,13 +677,14 @@ class TimeLineUpdateThread(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        
+        print("RUNNING")
+        # Marks segments with changed contents dirty.
         _timeline_renderer.update_segments()
 
         self.dirty_segments = _timeline_renderer.get_dirty_segments()
-        #print("dirty segments:", len(self.dirty_segments))
         
         if len(self.dirty_segments) == 0:
+            print("no dirty segments")
             return
         
         try:
@@ -692,20 +716,45 @@ class TimeLineUpdateThread(threading.Thread):
         segments_paths = []
         segments_ins = []
         segments_outs = []
+        
+        destroy_segments = []
         for segment in self.dirty_segments:
+            if segment.start_frame >= current_sequence().seq_len:
+                segment.segment_state = SEGMENT_RENDERED
+                segment.rendered_fract = 0.0
+                segment.content_hash = "-1"
+                segment.producer = None # any attempt to display segments after sequence end should crash immediately, this will not be displayed.
+                print("segment after end")
+                continue # there can be myltple of these
+                
             clip_path = segment.get_clip_path()
             if os.path.isfile(clip_path) == True:
                 # We came here with undo or redo or new edit that recreates existing content for segment
-                #print ("CreatinG for existing")
                 segment.update_segment_as_rendered()
             else:
-                # Clip for this content does not exists
+                # Clip for this content does not exist.
+                # Cut down segment to end at sequence end.
+                if segment.end_frame >= current_sequence().seq_len:
+                    segment.end_frame = current_sequence().seq_len
+                    if  segment.end_frame - segment.start_frame < 4:
+                        # Min length for segments is for, if something gets cut shorter it gets destroyd.
+                        destroy_segments.append(segment)
+                        continue
+                        
+                    print(segment.start_frame, segment.end_frame)
+                    # We need to update content hash and clip path to match the newly cut segment.
+                    segment.content_hash = segment.get_content_hash()
+                    clip_path = segment.get_clip_path()
+
                 segments_paths.append(clip_path)
                 segments_ins.append(segment.start_frame)
                 segments_outs.append(segment.end_frame)
         
+        for seg in destroy_segments: # There can only be 1 of these but whatever.
+            _timeline_renderer.segments.remove(seg)
+        
         if len(segments_paths) == 0:
-            # clips for all new dirty segments existed
+            # clips for all new dirty segments existed or all segments after sequence end (or both in some combination)
             Gdk.threads_enter()
             gui.tline_render_strip.widget.queue_draw()
             Gdk.threads_leave()
