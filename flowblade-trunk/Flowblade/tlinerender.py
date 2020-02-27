@@ -68,7 +68,7 @@ _segment_colors = { SEGMENT_NOOP:(0.26, 0.29, 0.42),
 DRAG_RANGE_COLOR = (1,1,1,0.3)
 
 _project_session_id = -1
-_timeline_renderer = None
+_timeline_renderer = None # this gets set to NoOpRenderer on launch, is never None for long.
 
 _update_thread = None
 
@@ -93,14 +93,17 @@ def delete_session():
     _delete_session_dir()
 
 def init_for_sequence(sequence):
-    update_renderer_to_mode()
+    update_renderer_to_mode(None)
 
-def update_renderer_to_mode():   
+def update_renderer_to_mode(old_mode):
+    print("old_mode", old_mode)
     global _timeline_renderer
     if get_tline_rendering_mode() == appconsts.TLINE_RENDERING_OFF:
         _timeline_renderer = NoOpRenderer()
     else:
-        _timeline_renderer = TimeLineRenderer()
+        if old_mode == appconsts.TLINE_RENDERING_OFF:
+            print("kkkkk")
+            _timeline_renderer = TimeLineRenderer()
 
 def settings_dialog_launch(widget, event):
     global manager_window
@@ -130,19 +133,28 @@ def corner_mode_menu_launched(widget, event):
 def display_strip_context_menu(event, hit_segment):
     global strip_popup_menu
     guiutils.remove_children(strip_popup_menu)
+
+    sensitive = ((hit_segment != None) and (get_tline_rendering_mode() == appconsts.TLINE_RENDERING_REQUEST))
+    item = guiutils.get_menu_item(_("Render Segment"), _strip_menu_item_callback, ("render_segment", hit_segment), sensitive)
+    strip_popup_menu.append(item)
     
     sensitive = (len(get_renderer().segments) > 0)
     item = guiutils.get_menu_item(_("Delete All Segments"), _strip_menu_item_callback, ("delete_all", None), sensitive)
     strip_popup_menu.append(item)
-    if hit_segment != None:
-        item = guiutils.get_menu_item(_("Delete Segment"), _strip_menu_item_callback, ("delete_segment", hit_segment), True)
-        strip_popup_menu.append(item)
+
+    sensitive = (hit_segment != None)
+    item = guiutils.get_menu_item(_("Delete Segment"), _strip_menu_item_callback, ("delete_segment", hit_segment), sensitive)
+    strip_popup_menu.append(item)
 
     strip_popup_menu.popup(None, None, None, None, event.button, event.time)
 
 def _strip_menu_item_callback(widget, data):
     msg, segment = data
-    if msg == "delete_all":
+    if msg == "render_segment":
+        segment.segment_state = SEGMENT_DIRTY
+        get_renderer().clear_selection()
+        get_renderer().launch_update_thread()
+    elif msg == "delete_all":
         get_renderer().segments = []
         if timeline_visible() == True:
             current_sequence().update_hidden_track_for_timeline_rendering()
@@ -165,11 +177,14 @@ def _set_new_render_mode(new_tline_render_mode):
     elif new_tline_render_mode != appconsts.TLINE_RENDERING_OFF and get_tline_rendering_mode() == appconsts.TLINE_RENDERING_OFF: 
         gui.editor_window.show_tline_render_strip()
     
+    old_mode = current_sequence().tline_render_mode 
     current_sequence().tline_render_mode = new_tline_render_mode
-    update_renderer_to_mode()
+    update_renderer_to_mode(old_mode)
     gui.editor_window.tline_render_mode_launcher.set_pixbuf(new_tline_render_mode) 
     gui.editor_window.init_timeline_rendering_menu()
-        
+    
+    if get_tline_rendering_mode() != appconsts.TLINE_RENDERING_OFF:
+        get_renderer().launch_update_thread()
 
 # ------------------------------------------------------------ MODULE INTERNAL FUNCS
 def _get_tline_render_dir():
@@ -323,7 +338,6 @@ class TimeLineRenderer:
         hit_seg.selected = True
 
     def mouse_double_clicked(self, frame):
-        print("DOUBLE CLICK")
         hit_seg = self.get_hit_segment(frame)
         if hit_seg == None:
             return
@@ -557,8 +571,6 @@ class TimeLineSegment:
         filter_object = current_sequence().create_filter(filter_info)
         self.producer.attach(filter_object.mlt_filter)
         self.producer.filters.append(filter_object)
-        
-        #print("producer created",  self.content_hash)
 
     def hit(self, frame):
         if frame >= self.start_frame and frame < self.end_frame:
@@ -691,7 +703,7 @@ class TimeLineUpdateThread(threading.Thread):
             # Blocks untils renders are stopped and cleaned
             tlinerenderserver.abort_current_renders()
         except:
-            # Dbus default timeout of 25s was exceeded, something is very wrong, no use to attempt furher work.
+            # Dbus default timeout of 25s was exceeded, something is very wrong, no use to attempt further work.
             print("INFO: tlinerendersrver.abort_current_renders() exceeded DBus timeout of 25s.")
             return
 
@@ -724,7 +736,6 @@ class TimeLineUpdateThread(threading.Thread):
                 segment.rendered_fract = 0.0
                 segment.content_hash = "-1"
                 segment.producer = None # any attempt to display segments after sequence end should crash immediately, this will not be displayed.
-                print("segment after end")
                 continue # there can be myltple of these
                 
             clip_path = segment.get_clip_path()
@@ -741,7 +752,6 @@ class TimeLineUpdateThread(threading.Thread):
                         destroy_segments.append(segment)
                         continue
                         
-                    print(segment.start_frame, segment.end_frame)
                     # We need to update content hash and clip path to match the newly cut segment.
                     segment.content_hash = segment.get_content_hash()
                     clip_path = segment.get_clip_path()
