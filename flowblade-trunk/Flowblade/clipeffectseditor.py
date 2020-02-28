@@ -709,7 +709,7 @@ def filter_edit_done(edited_clip, index=-1):
     else:
         widgets.add_filter_mask.set_sensitive(True)
 
-    # Select row in effect stack view and so display corresponding effect editor panel.
+    # Select row in effect stack view and to display corresponding effect editor panel.
     if not(index < 0):
         widgets.effect_stack_view.treeview.get_selection().select_path(str(index))
     else: # no effects after edit, clear effect editor panel

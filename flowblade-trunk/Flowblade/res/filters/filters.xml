@@ -119,7 +119,30 @@
         <group>Alpha</group>   
         <property name="start" args="editor=no_editor">1</property>
         <property name="level" args="editor=no_editor">1</property>
-        <property name="alpha" args="range_in=0,100 range_out=0,1 editor=keyframe_editor exptype=keyframe_hcs displayname=Opacity">0=1</property>
+        <property name="alpha" args="range_in=0,100 range_out=0,1 editor=keyframe_editor_clip_fade_filter exptype=keyframe_hcs displayname=Opacity">0=1</property>
+    </filter>
+
+    <!-- FADES -->
+    <filter id="brightness">
+        <name>Fade In</name>
+        <group>Fade In/Out</group>   
+        <property name="start" args="editor=no_editor">1</property>
+        <property name="level" args="editor=no_editor">1</property>
+        <property name="alpha" args="range_in=0,100 range_out=0,1 value_replacement=fade_in_replament editor=keyframe_editor_clip_fade_filter exptype=keyframe_hcs displayname=Opacity">0=1</property>
+    </filter>
+    <filter id="brightness">
+        <name>Fade Out</name>
+        <group>Fade In/Out</group>   
+        <property name="start" args="editor=no_editor">1</property>
+        <property name="level" args="editor=no_editor">1</property>
+        <property name="alpha" args="range_in=0,100 range_out=0,1 value_replacement=fade_out_replament editor=keyframe_editor_clip_fade_filter exptype=keyframe_hcs displayname=Opacity">0=1</property>
+    </filter>
+    <filter id="brightness">
+        <name>Fade In/Fade Out</name>
+        <group>Fade In/Out</group>   
+        <property name="start" args="editor=no_editor">1</property>
+        <property name="level" args="editor=no_editor">1</property>
+        <property name="alpha" args="range_in=0,100 range_out=0,1 value_replacement=fade_in_out_replament editor=keyframe_editor_clip_fade_filter exptype=keyframe_hcs displayname=Opacity">0=1</property>
     </filter>
 
     <!-- FILTER MASK FILTERS -->

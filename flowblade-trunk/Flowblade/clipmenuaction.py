@@ -250,6 +250,8 @@ def _add_compositor(data):
     updater.repaint_tline()
 
 def _add_autofade(data):
+    # NOTE: These stay synced only in "Top Down Auto Follow" mode, see: edit.get_full_compositor_sync_data()
+    
     clip, track, item_id, item_data = data
     x, compositor_type = item_data
 
@@ -262,7 +264,7 @@ def _add_autofade(data):
     if compositor_type == "##auto_fade_in":
         compositor_in = current_sequence().tracks[track.id].clip_start(clip_index)
         compositor_out = compositor_in + int(utils.fps()) - 1
-    else:
+    else: # fade out
         clip_start = current_sequence().tracks[track.id].clip_start(clip_index)
         compositor_out = clip_start + clip_length
         compositor_in = compositor_out - int(utils.fps()) + 1

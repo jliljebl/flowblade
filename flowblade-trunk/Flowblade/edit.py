@@ -1780,6 +1780,7 @@ def _add_filter_redo(self):
         self.clip.filters.append(self.filter_object)
     except: # First do
         self.filter_object = current_sequence().create_filter(self.filter_info)
+        self.filter_object.replace_values(self.clip)
         self.clip.attach(self.filter_object.mlt_filter)
         self.clip.filters.append(self.filter_object)
         

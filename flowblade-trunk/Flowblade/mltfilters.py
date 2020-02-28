@@ -235,7 +235,7 @@ class FilterObject:
         # to be replaced now that we have profile and we are ready to connect this.
         # For example default values of some properties depend on the screen size of the project
         propertyparse.replace_value_keywords(self.properties, PROJECT().profile)
-    
+
     def create_mlt_filter(self, mlt_profile):
         self.mlt_filter = mlt.Filter(mlt_profile, str(self.info.mlt_service_id))
         mltrefhold.hold_ref(self.mlt_filter)
@@ -263,6 +263,13 @@ class FilterObject:
             self.properties[i] = (name, o_value, prop_type)
         
         self.update_mlt_filter_properties_all()
+
+    def replace_values(self, clip):
+        # We need to initilize some calues based clip langth and need wait until clip for
+        # filter is known, replace at object creation is done before clip is available
+        replacement_happened = propertyparse.replace_values_using_clip_data(self.properties, self.info, clip)
+        if replacement_happened == True:
+            self.update_mlt_filter_properties_all()
 
 
 class MultipartFilterObject:
