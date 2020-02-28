@@ -138,7 +138,7 @@ def load_filters_translations():
     filter_groups["Edge"] = _("Edge")
     filter_groups["Fix"] = _("Fix")
     filter_groups["Artistic"] = _("Artistic")
-    filter_groups["Fade In/Out"] = _("Fade In/Out")
+    filter_groups["Fade In / Out"] = _("Fade In / Out")
 
     # filter names
     global filter_names
@@ -275,6 +275,9 @@ def load_filters_translations():
     filter_names["Mask - Begin"] = "\u21c9" + " " + _("Mask - Begin")
     filter_names["Mask - End"] = "\u21c7" + " "  + _("Mask - End")
     filter_names["Opacity"] = _("Opacity")
+    filter_names["Fade In"] = _("Fade In")
+    filter_names["Fade Out"] = _("Fade Out")
+    filter_names["Fade In / Fade Out"] = _("Fade In / Fade Out")
     
     # param names
     global param_names
