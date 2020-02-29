@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 # Massimo Stella <info@massimostella.it>, 2014.
 # Enrico Bella <enricobe@hotmail.com>, 2019.
+# Albano Battistella<albano_battistella@hotmail.com>,2020.
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Floblade Italian Translation 0.14\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-12 18:20+0200\n"
-"PO-Revision-Date: 2019-04-07 10:24+0200\n"
-"Last-Translator: Enrico Bella <enricobe@hotmail.com>\n"
+"PO-Revision-Date: 2020-29-02 21:24+0200\n"
+"Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italiano\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -275,6 +276,9 @@ msgid ""
 "\n"
 "Last non-matching MLT XML file had Profile: "
 msgstr ""
+"Solo i file XML con i profili corrispondenti possono essere aperti come clip.\n"
+"\n"
+"L'ultimo file non corrispondente XML MLT aveva Profilo: "
 
 #: projectaction.py:1020
 msgid "No file was selected"
@@ -332,9 +336,8 @@ msgid "Save Sequence Compound Clip"
 msgstr "Aggiungi Sequenza di Immagini"
 
 #: projectaction.py:1387
-#, fuzzy
 msgid "frame_"
-msgstr "fotogrammi"
+msgstr "fotogramma_"
 
 #: projectaction.py:1388
 #, fuzzy
@@ -909,15 +912,15 @@ msgstr "Adatta zoom"
 
 #: editorwindow.py:1041 workflow.py:224
 msgid "Top Down Free Move"
-msgstr ""
+msgstr "Mossa libera dall'alto in basso"
 
 #: editorwindow.py:1045 workflow.py:224
 msgid "Top Down Auto Follow"
-msgstr ""
+msgstr "Seguito automatico dall'alto verso il basso"
 
 #: editorwindow.py:1049 workflow.py:224
 msgid "Standard Auto Follow"
-msgstr ""
+msgstr "Seguito automatico standard"
 
 #: editorwindow.py:1073
 msgid "Global Window Mode changed"
@@ -939,7 +942,7 @@ msgstr "Modalità di visualizzazione: Video / Vettorscopio / OscilloscopioRGB"
 
 #: editorwindow.py:1171
 msgid "Set trim view and match frames"
-msgstr ""
+msgstr "Imposta la vista di ritaglio e abbina i fotogrammi"
 
 #: editorwindow.py:1173
 msgid "Sequence / Media current position"
@@ -1077,11 +1080,11 @@ msgstr "Tracce"
 
 #: dialogs.py:97
 msgid "Copying user data to XDG folders"
-msgstr ""
+msgstr "Copia dati utente nelle cartelle XDG"
 
 #: dialogs.py:98
 msgid "This can take up to a few minutes, please wait..."
-msgstr ""
+msgstr "L'operazione può richiedere alcuni minuti, attendere..."
 
 #: dialogs.py:123 dialogs.py:181
 msgid "Change Project Profile"
@@ -1154,7 +1157,7 @@ msgstr "Nome progetto:"
 
 #: dialogs.py:271
 msgid "Save Sequence Audio As Ardour Session"
-msgstr ""
+msgstr "Salva sequenza audio come sessione Ardor"
 
 #: dialogs.py:276
 #, fuzzy
@@ -1398,7 +1401,7 @@ msgstr "Aggiorna dati lunghezza file"
 
 #: dialogs.py:812
 msgid "Comparing Audio Data..."
-msgstr ""
+msgstr "Confronta dati audio..."
 
 #: dialogs.py:851
 msgid "Are you sure you want to delete these media files?"
@@ -1879,7 +1882,7 @@ msgstr "Avanti di 10 frame"
 
 #: dialogs.py:1482
 msgid "Mouse Double Click"
-msgstr ""
+msgstr "Doppio clic del mouse"
 
 #: dialogs.py:1482
 #, fuzzy
@@ -1888,7 +1891,7 @@ msgstr "Altezza tracce:"
 
 #: dialogs.py:1483
 msgid "Track Head Column"
-msgstr ""
+msgstr "Traccia Capo Colonna"
 
 #: dialogs.py:1492
 msgid "Move Back 10 Frames"
@@ -1922,7 +1925,7 @@ msgstr "Come 1-7"
 
 #: dialogs.py:1509
 msgid "Copy Keyframe Value"
-msgstr ""
+msgstr "Copia Valore Fotogramma Chiave"
 
 #: dialogs.py:1510
 #, fuzzy
@@ -2012,7 +2015,7 @@ msgstr "Shift"
 
 #: dialogs.py:1524
 msgid "Snap to X or Y of drag start point"
-msgstr ""
+msgstr "Aggancia a X o Y del punto iniziale di trascinamento"
 
 #: dialogs.py:1525
 msgid "Geometry Editor"
@@ -2199,7 +2202,7 @@ msgstr "Sincronizza audio della timeline"
 
 #: dialogs.py:1897
 msgid "Do Audio Sync Move Edit"
-msgstr ""
+msgstr "Sincronizza Audio Sposta Modifica"
 
 #: dialogs.py:1899
 msgid "<b>Audio Sync Offset</b> between clips media is "
@@ -2215,7 +2218,7 @@ msgstr "<b>Offset dei media della timeline</b> tra le clip è di "
 
 #: dialogs.py:1904
 msgid "To audio sync clips you need move action origin clip by "
-msgstr ""
+msgstr "per sincronizzare le clip audio è necessario spostare la clip di origine dell'azione"
 
 #: dialogs.py:1924
 msgid "Can't put an audio clip on a video track."
@@ -2232,15 +2235,15 @@ msgstr ""
 
 #: dialogs.py:1930
 msgid "Confirm Compositing Mode Change"
-msgstr ""
+msgstr "Conferma la modifica della modalità di composizione"
 
 #: dialogs.py:1933
 msgid "Change Compositing Mode"
-msgstr ""
+msgstr "Cambia Modalità di Composizione"
 
 #: dialogs.py:1935
 msgid "Changing Compositing Mode destroys current Compositors and undo stack"
-msgstr ""
+msgstr "La modifica della modalità di composizione distrugge i compositori correnti e annulla lo stack"
 
 #: dialogs.py:1936
 #, fuzzy
@@ -2387,7 +2390,7 @@ msgstr "Sincronizza con clip di origine"
 
 #: guicomponents.py:1661
 msgid "Obey Auto Follow"
-msgstr ""
+msgstr "Segui automaticamente"
 
 #: guicomponents.py:1674 guicomponents.py:1695
 msgid "Add Filter"
@@ -2411,7 +2414,7 @@ msgstr "Tendina"
 
 #: guicomponents.py:1825
 msgid "Show Match Frame"
-msgstr ""
+msgstr "Mostra Corrispondenza Frame"
 
 #: guicomponents.py:1829
 msgid "First Frame in Monitor"
@@ -2431,7 +2434,7 @@ msgstr "Ultimo frame nella timeline"
 
 #: guicomponents.py:1853 guicomponents.py:2940
 msgid "Clear Match Frame"
-msgstr ""
+msgstr "Cancella Corrispondenza Frame"
 
 #: guicomponents.py:1863
 msgid "Select"
@@ -2708,7 +2711,7 @@ msgstr "Attiva tutte le tracce"
 
 #: guicomponents.py:2748
 msgid "Activate Only Current Top Active Track"
-msgstr ""
+msgstr "Attiva Solo Traccia Attiva Principale Corrente"
 
 #: guicomponents.py:2750
 msgid "Vertical Shrink Timeline"
@@ -2809,7 +2812,7 @@ msgstr "Vista Taglio On"
 
 #: guicomponents.py:2914
 msgid "Trim View Single Side Edits Only"
-msgstr ""
+msgstr "Visualizza solo le modifiche lato singolo"
 
 #: guicomponents.py:2919
 msgid "Trim View Off"
@@ -2817,7 +2820,7 @@ msgstr "Vista Taglio Off"
 
 #: guicomponents.py:2935
 msgid "Set Current Clip Frame Match Frame"
-msgstr ""
+msgstr "Imposta Corrispondenza Frame Fotogramma Corrente"
 
 #: guicomponents.py:2953
 msgid "All Files"
@@ -2990,7 +2993,7 @@ msgstr "Tipo:"
 
 #: panels.py:267
 msgid "Wipe Pattern:"
-msgstr ""
+msgstr "Pulisci modello:"
 
 #: panels.py:273
 msgid "Dip Color:"
@@ -3018,7 +3021,7 @@ msgstr "Codifica"
 
 #: panels.py:341
 msgid "Media Overlap info"
-msgstr ""
+msgstr "Informazioni sulla sovrapposizione dei media"
 
 #: panels.py:376
 msgid "Transition"
@@ -3692,7 +3695,7 @@ msgstr "Normale"
 
 #: translations.py:268
 msgid "File Luma to Alpha"
-msgstr ""
+msgstr "File Luma in Alpha"
 
 #: translations.py:269
 #, fuzzy
@@ -3884,7 +3887,7 @@ msgstr ""
 
 #: translations.py:329
 msgid "Skew"
-msgstr ""
+msgstr "Storto"
 
 #: translations.py:331 translations.py:334
 msgid "Cutoff Frequency(Hz)"
@@ -4152,7 +4155,7 @@ msgstr ""
 
 #: translations.py:419
 msgid "Difference Space"
-msgstr ""
+msgstr "Differenza Spazio"
 
 #: translations.py:420
 msgid "Block width"
@@ -4337,7 +4340,7 @@ msgstr "Duro"
 
 #: translations.py:497
 msgid "Selection subspace"
-msgstr ""
+msgstr "Sottospazio di selezione"
 
 #: translations.py:498
 msgid "R/A/Hue"
@@ -4964,7 +4967,7 @@ msgstr ""
 
 #: translations.py:688
 msgid "Radial"
-msgstr ""
+msgstr "Radiale"
 
 #: translations.py:689
 #, fuzzy
@@ -5007,11 +5010,11 @@ msgstr "Distorsione Quad"
 
 #: translations.py:701
 msgid "Equidistant"
-msgstr ""
+msgstr "Equidistante"
 
 #: translations.py:702
 msgid "Orthographic"
-msgstr ""
+msgstr "Ortografico"
 
 #: translations.py:703
 msgid "Equiarea"
@@ -5019,7 +5022,7 @@ msgstr ""
 
 #: translations.py:704
 msgid "Stereographic"
-msgstr ""
+msgstr "Stereografico"
 
 #: translations.py:705
 #, fuzzy
@@ -5075,7 +5078,7 @@ msgstr "Nuvola"
 
 #: mlttransitions.py:93
 msgid "Cross"
-msgstr ""
+msgstr "Croce"
 
 #: mlttransitions.py:94
 msgid "Diagonal 1"
@@ -5095,11 +5098,11 @@ msgstr "Diagonale 3"
 
 #: mlttransitions.py:98
 msgid "Flower"
-msgstr ""
+msgstr "Fiore"
 
 #: mlttransitions.py:99
 msgid "Fogg"
-msgstr ""
+msgstr "Nebbia"
 
 #: mlttransitions.py:100
 msgid "Free Curves"
@@ -5111,11 +5114,11 @@ msgstr "Strisce libere"
 
 #: mlttransitions.py:102
 msgid "Heart"
-msgstr ""
+msgstr "Cuore"
 
 #: mlttransitions.py:103
 msgid "Honeycomb"
-msgstr ""
+msgstr "Favo"
 
 #: mlttransitions.py:104
 msgid "Horizontal From Center"
@@ -5131,7 +5134,7 @@ msgstr "Orizzontale da destra a sinistra"
 
 #: mlttransitions.py:107
 msgid "Paint"
-msgstr ""
+msgstr "Dipingi"
 
 #: mlttransitions.py:108
 msgid "Patches"
@@ -5139,11 +5142,11 @@ msgstr "Pezze"
 
 #: mlttransitions.py:109
 msgid "Puzzle"
-msgstr ""
+msgstr "Puzzle"
 
 #: mlttransitions.py:110
 msgid "Rays"
-msgstr ""
+msgstr "Raggi"
 
 #: mlttransitions.py:111
 msgid "Rectangle Bars"
@@ -5241,7 +5244,7 @@ msgstr "Verticale dall'Alto al basso"
 
 #: mlttransitions.py:134
 msgid "Wood"
-msgstr ""
+msgstr "Legno"
 
 #: mlttransitions.py:137 mlttransitions.py:200
 msgid "Dissolve"
@@ -5377,11 +5380,11 @@ msgstr "Curve libere"
 
 #: propertyeditorbuilder.py:875
 msgid "Lauch RotoMask editor"
-msgstr ""
+msgstr "Avvia l'editor Roto Mask"
 
 #: propertyeditorbuilder.py:879
 msgid "RotoMask info"
-msgstr ""
+msgstr "RotoMask info"
 
 #: keyframeeditor.py:627 kftoolmode.py:1346
 msgid "Delete all but first Keyframe before Clip Range"
@@ -5695,7 +5698,7 @@ msgstr "Eventi del Progetto"
 
 #: projectinfogui.py:130
 msgid "Data"
-msgstr ""
+msgstr "Data"
 
 #: tools/titler.py:86
 msgid "Titler is already open"
@@ -5731,7 +5734,7 @@ msgstr "Pulisci tutto"
 
 #: tools/titler.py:501
 msgid "Font"
-msgstr ""
+msgstr "Font"
 
 #: tools/titler.py:502
 #, fuzzy
@@ -6170,11 +6173,11 @@ msgstr "Scroll verso il basso va avanti"
 
 #: preferenceswindow.py:181
 msgid "On Double Click"
-msgstr ""
+msgstr "Al Doppio Clic"
 
 #: preferenceswindow.py:182
 msgid "On Single Click"
-msgstr ""
+msgstr "Su Singolo Clic"
 
 #: preferenceswindow.py:190
 msgid "Graphics default length:"
@@ -6264,55 +6267,55 @@ msgstr "Apri nel monitor"
 
 #: preferenceswindow.py:312
 msgid "None"
-msgstr ""
+msgstr "Nessuno"
 
 #: preferenceswindow.py:313
 msgid "English"
-msgstr ""
+msgstr "Inglese"
 
 #: preferenceswindow.py:314
 msgid "Chinese, Simplified"
-msgstr ""
+msgstr "Cinese,Semplificato"
 
 #: preferenceswindow.py:315
 msgid "Chinese, Traditional"
-msgstr ""
+msgstr "Cinese,Tradizionale"
 
 #: preferenceswindow.py:316
 msgid "Czech"
-msgstr ""
+msgstr "Ceco"
 
 #: preferenceswindow.py:317
 msgid "French"
-msgstr ""
+msgstr "Francese"
 
 #: preferenceswindow.py:318
 msgid "German"
-msgstr ""
+msgstr "Tedesco"
 
 #: preferenceswindow.py:319
 msgid "Hungarian"
-msgstr ""
+msgstr "Ungherese"
 
 #: preferenceswindow.py:320
 msgid "Italian"
-msgstr ""
+msgstr "Italiano"
 
 #: preferenceswindow.py:321
 msgid "Polish"
-msgstr ""
+msgstr "Polacco"
 
 #: preferenceswindow.py:322
 msgid "Russian"
-msgstr ""
+msgstr "Russo"
 
 #: preferenceswindow.py:323
 msgid "Spanish"
-msgstr ""
+msgstr "Spagnolo"
 
 #: preferenceswindow.py:324
 msgid "Ukranian"
-msgstr ""
+msgstr "Ucraino"
 
 #: preferenceswindow.py:339
 msgid "Glass"
@@ -6364,21 +6367,20 @@ msgstr "Sempre 2 pannelli"
 
 #: preferenceswindow.py:386
 msgid "Full Display area: "
-msgstr ""
+msgstr "Visualizzazione Area Completa: "
 
 #: preferenceswindow.py:390
 #, fuzzy
 msgid "Monitor "
-msgstr "Apri la Clip nel Monitor"
+msgstr "Apri la Clip nel Monitor "
 
 #: preferenceswindow.py:395
 msgid "Application window mode:"
 msgstr "Modalità finestra applicazione:"
 
 #: preferenceswindow.py:397
-#, fuzzy
 msgid "Force Language:"
-msgstr "Forza Avvio"
+msgstr "Forza Lingua:"
 
 #: preferenceswindow.py:398
 msgid "Display splash screen"
@@ -6394,7 +6396,7 @@ msgstr "Tema, icone e colori:"
 
 #: preferenceswindow.py:401
 msgid "Theme detection fail fallback colors:"
-msgstr ""
+msgstr "Colori fallback del rilevamento temi:"
 
 #: preferenceswindow.py:402
 msgid "Default audio levels display:"
@@ -6414,7 +6416,7 @@ msgstr "Layout finestre in alto:"
 
 #: preferenceswindow.py:408
 msgid "Do GUI layout based on:"
-msgstr ""
+msgstr "Esegui layout della GUI in base a:"
 
 #: preferenceswindow.py:441
 msgid ""
@@ -6814,7 +6816,7 @@ msgstr ""
 
 #: tlineaction.py:419
 msgid "Fade/Transition cover delete failed!"
-msgstr ""
+msgstr "Eliminazione copertina dissolvenza/transizione non riuscita!"
 
 #: tlineaction.py:420
 msgid ""
@@ -7147,7 +7149,7 @@ msgstr "Crescita spontanea:"
 
 #: patternproducer.py:416
 msgid "Create Color Pulse Clip"
-msgstr ""
+msgstr "Crea Clip a Impulsi Colorati"
 
 #: patternproducer.py:428
 msgid "Speed 1:"
@@ -7360,6 +7362,8 @@ msgid ""
 "The Clip is too short to add the user set default fades on Compositor "
 "creation."
 msgstr ""
+"La clip è troppo corta per aggiungere dissolvenze predefinite impostate dall'utente sul Compositor"
+"di creazione."
 
 #: audiosync.py:142
 msgid "Cannot Timeline Audio Sync with Compound Clips!"
@@ -7607,7 +7611,7 @@ msgstr "Aggiungi marcatore"
 
 #: shortcuts.py:217
 msgid "Complete Keyboard Trim Edit"
-msgstr ""
+msgstr "Modifica completa della rifinitura della tastiera"
 
 #: shortcuts.py:218
 #, fuzzy
@@ -7631,7 +7635,7 @@ msgstr "Avanti di 10 frame"
 
 #: shortcuts.py:222
 msgid "Open Next Media Item In Monitor"
-msgstr ""
+msgstr "Apri l'elemento multimediale successivo nel monitor"
 
 #: shortcuts.py:231
 msgid "SPACE"
@@ -7758,7 +7762,7 @@ msgstr " è bloccata. Sbloccare la traccia per modificarla."
 
 #: trimmodes.py:462
 msgid "Can't use Trim tool on blank clips."
-msgstr ""
+msgstr "Impossibile utilizzare lo strumento Taglia su clip vuote."
 
 #: trimmodes.py:463
 msgid "You can use <b>Move</b> or <b>Roll</b> tools instead."
@@ -7773,6 +7777,8 @@ msgid ""
 "You are attempting a roll trim at a position in the timeline\n"
 "where it can't be performed."
 msgstr ""
+"Stai tentando un roll trim in una posizione nella timeline\n"
+"dove non può essere eseguito."
 
 #: menuactions.py:122
 msgid "Help page not found!"
@@ -8126,6 +8132,8 @@ msgid ""
 "Select this if you have installed new version and wish to keep your existing "
 "workflow."
 msgstr ""
+"Seleziona questa opzione se hai installato una nuova versione e desideri conservare il tuo esistente"
+"flusso di lavoro."
 
 #: kftoolmode.py:408
 msgid "Media Frame: "
@@ -8150,7 +8158,7 @@ msgstr "Parametri non modificabili"
 
 #: kftoolmode.py:1438
 msgid "Leading Keyframes"
-msgstr ""
+msgstr "Keyframe Principali"
 
 #: kftoolmode.py:1445
 msgid "Trailing Keyframes"
@@ -8189,7 +8197,7 @@ msgstr ""
 
 #: tools/rotomask.py:159
 msgid "Allow to add / delete points in closed masks"
-msgstr ""
+msgstr "Consentire di aggiungere / eliminare punti in maschere chiuse"
 
 #: tools/rotomask.py:161
 #, fuzzy
