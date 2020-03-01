@@ -26,6 +26,7 @@ import copy
 from gi.repository import GLib
 from gi.repository import Gtk
 import pickle
+import threading
 import time
 
 import atomicfile
@@ -42,6 +43,7 @@ import mltfilters
 import propertyedit
 import propertyeditorbuilder
 import respaths
+import tlinerender
 import translations
 import updater
 import utils
@@ -53,6 +55,12 @@ track = None # Track of the clip being editeds
 clip_index = None # Index of clip being edited
 block_changed_update = False # Used to block unwanted callback update from "changed", hack and a broken one, look to fix
 current_filter_index = -1 # Needed to find right filter object when saving/loading effect values
+
+# Property change polling.
+# We didn't put a layer of indirection to look for and launch events on filter property edits
+# so now we detect filter edits by polling. This has no performance impect, n is so small.
+_edit_polling_thread = None
+filter_changed_since_last_save = False
 
 # This is updated when filter panel is displayed and cleared when removed.
 # Used to update kfeditors with external tline frame position changes
@@ -69,6 +77,12 @@ stack_dnd_event_info = None
 
 filters_notebook_index = 2
 
+def shutdown_polling():
+    global _edit_polling_thread
+    if _edit_polling_thread != None:
+        _edit_polling_thread.shutdown()
+        _edit_polling_thread = None
+
 def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
     create_widgets()
 
@@ -76,8 +90,6 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
     
     label_row = guiutils.get_left_justified_box([stack_label])
     guiutils.set_margins(label_row, 0, 4, 0, 0)
-    
-
     
     effect_stack = widgets.effect_stack_view    
 
@@ -191,6 +203,15 @@ def set_clip(new_clip, new_track, new_index, show_tab=True):
 
     if show_tab:
         gui.middle_notebook.set_current_page(filters_notebook_index) # 2 == index of clipeditor page in notebook
+    
+    
+    global _edit_polling_thread
+    # Close old polling
+    if _edit_polling_thread != None:
+        _edit_polling_thread.shutdown()
+    # Start new polling
+    _edit_polling_thread = PropertyChangePollingThread()
+    _edit_polling_thread.start()
 
 def effect_select_row_double_clicked(treeview, tree_path, col):
     add_currently_selected_effect()
@@ -246,6 +267,7 @@ def clear_clip():
     effect_selection_changed()
     update_stack_view()
     set_enabled(False)
+    shutdown_polling()
 
 def _set_no_clip_info():
     widgets.clip_info.set_no_clip_info()
@@ -687,7 +709,7 @@ def filter_edit_done(edited_clip, index=-1):
     else:
         widgets.add_filter_mask.set_sensitive(True)
 
-    # Select row in effect stack view and so display corresponding effect editor panel.
+    # Select row in effect stack view and to display corresponding effect editor panel.
     if not(index < 0):
         widgets.effect_stack_view.treeview.get_selection().select_path(str(index))
     else: # no effects after edit, clear effect editor panel
@@ -812,6 +834,57 @@ def _reset_filter_values():
 
 def _delete_effect():
     delete_effect_pressed()
+
+
+
+class PropertyChangePollingThread(threading.Thread):
+    
+    def __init__(self):
+        threading.Thread.__init__(self)
+        self.last_properties = None
+        
+    def run(self):
+        print ("Filter PropertyChangePollingThread")
+        self.running = True
+        while self.running:
+            global clip
+            if clip == None:
+                self.shutdown()
+            else:
+                if self.last_properties == None:
+                    self.last_properties = self.get_clip_filters_properties()
+                
+                new_properties = self.get_clip_filters_properties()
+                
+                changed = False
+                for new_filt_props, old_filt_props in zip(new_properties, self.last_properties):
+                        for new_prop, old_prop in zip(new_filt_props, old_filt_props):
+                            if new_prop != old_prop:
+                                changed = True
+
+                if changed:
+                    print ("Changed")
+                    global filter_changed_since_last_save
+                    filter_changed_since_last_save = True
+                    tlinerender.get_renderer().timeline_changed()
+
+                self.last_properties = new_properties
+                
+                time.sleep(1.0)
+
+    def get_clip_filters_properties(self):
+        filters_properties = []
+        for filt in clip.filters:
+            filt_props = []
+            for prop in filt.properties:
+                filt_props.append(copy.deepcopy(prop))
+
+            filters_properties.append(filt_props)
+        
+        return filters_properties
+        
+    def shutdown(self):
+        self.running = False
 
 
 class EffectValuesSaveData:

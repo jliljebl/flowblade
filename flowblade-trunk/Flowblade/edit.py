@@ -38,6 +38,7 @@ import mltfilters
 import movemodes
 import resync
 import tlinewidgets
+import tlinerender
 import trimmodes
 import undo
 import updater
@@ -45,6 +46,9 @@ import utils
 
 # GUI updates are turned off for example when doing resync action
 do_gui_update = False
+
+# Flag for doing edits since last save
+edit_done_since_last_save = False
 
 
 # ---------------------------------- atomic edit ops
@@ -69,7 +73,7 @@ def _insert_clip(track, clip, index, clip_in, clip_out):
     resync.clip_added_to_timeline(clip, track)
 
 def _insert_blank(track, index, length):
-    track.insert_blank(index, length - 1) # -1 MLT API says so
+    track.insert_blank(index, length - 1) # end inclusive
     blank_clip = track.get_clip(index)
     current_sequence().add_clip_attr(blank_clip)
     blank_clip.clip_in = 0
@@ -331,6 +335,9 @@ class EditAction:
         if self.turn_on_stop_for_edit:
             self.stop_for_edit = True
 
+        global edit_done_since_last_save
+        edit_done_since_last_save = True
+
         # Create autofollow data if needed and update GUI.
         # If autofollow and no data, then GUI update happens in do_edit()
         # Added complexity here is to avoid two GUI updates
@@ -366,6 +373,8 @@ class EditAction:
 
         resync.calculate_and_set_child_clip_sync_states()
 
+        tlinerender.get_renderer().timeline_changed()
+        
         if self.compositor_autofollow_data != None:
             do_autofollow_undo(self)
             if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
@@ -395,8 +404,10 @@ class EditAction:
 
         _consolidate_all_blanks_redo(self)
         _remove_trailing_blanks_redo(self)
+
         resync.calculate_and_set_child_clip_sync_states()
 
+        tlinerender.get_renderer().timeline_changed()
         
         if self.compositor_autofollow_data != None: # This is not called from do_edit() if these exist, we need to do auto follow and orphan compositos management
             do_autofollow_redo(self)
@@ -432,10 +443,10 @@ class EditAction:
         else:
             updater.clear_kf_editor()
 
-        current_sequence().update_edit_tracks_length() # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
+        current_sequence().update_edit_tracks_length() # Needed for timeline render updates
         if self.update_hidden_track_blank:
-            current_sequence().update_trim_hack_blank_length() # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
-        PLAYER().display_inside_sequence_length(current_sequence().seq_len) # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
+            current_sequence().update_hidden_track_for_timeline_rendering() # Needed for timeline render updates
+        PLAYER().display_inside_sequence_length(current_sequence().seq_len)
 
         updater.update_position_bar()
 
@@ -1769,6 +1780,7 @@ def _add_filter_redo(self):
         self.clip.filters.append(self.filter_object)
     except: # First do
         self.filter_object = current_sequence().create_filter(self.filter_info)
+        self.filter_object.replace_values(self.clip)
         self.clip.attach(self.filter_object.mlt_filter)
         self.clip.filters.append(self.filter_object)
         
@@ -2806,6 +2818,27 @@ def _reload_replace_undo(self):
 def _reload_replace_redo(self):
     _remove_clip(self.track, self.index)
     _insert_clip(self.track, self.new_clip, self.index, self.old_clip.clip_in, self.old_clip.clip_out)
+
+# -------------------------------------------------------- CONTAINER CLIP MEDIA REPLACE
+# "old_clip", "new_clip", "track", "index"
+def container_clip_full_render_replace(data):
+    action = EditAction(_container_clip_full_render_replace_undo, _container_clip_full_render_replace_redo, data)
+    return action
+
+def _container_clip_full_render_replace_undo(self):
+    _remove_clip(self.track, self.index)
+    _insert_clip(self.track, self.old_clip, self.index, self.old_clip.clip_in, self.old_clip.clip_out)
+    
+def _container_clip_full_render_replace_redo(self):
+    _remove_clip(self.track, self.index)
+    _insert_clip(self.track, self.new_clip, self.index, self.old_clip.clip_in, self.old_clip.clip_out)
+
+    if not hasattr(self.new_clip, "container_data"):
+        self.new_clip.container_data = copy.deepcopy(self.old_clip.container_data)
+            
+    self.new_clip.container_data.rendered_media = self.new_clip
+    self.new_clip.container_data.rendered_media_range_in = 0
+    self.new_clip.container_data.rendered_media_range_out = self.old_clip.container_data.unrendered_length
 
 
 #-------------------- APPEND MEDIA LOG

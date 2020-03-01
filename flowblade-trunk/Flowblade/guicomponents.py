@@ -1500,30 +1500,31 @@ def display_clip_popup_menu(event, clip, track, callback):
 
     clip_menu.add(_get_filters_add_menu_item(event, clip, track, callback))
 
-    _add_separetor(clip_menu)
-    
-    # Only add compositors for video tracks V2 and higher
-    if track.id <= current_sequence().first_video_index:
-        active = False
-    else:
-        active = True
-    compositors_add_item = _get_compositors_add_menu_item(event, clip, track, callback, active)
-    if (current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW 
-        and len(current_sequence().get_clip_compositors(clip)) != 0):
-        compositors_add_item.set_sensitive(False)
-    clip_menu.add(compositors_add_item)
-    
-    if current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
-        clip_menu.add(_get_auto_fade_compositors_add_menu_item(event, clip, track, callback, active))
+    if current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+        _add_separetor(clip_menu)
+        
+        # Only add compositors for video tracks V2 and higher
+        if track.id <= current_sequence().first_video_index:
+            active = False
+        else:
+            active = True
+        compositors_add_item = _get_compositors_add_menu_item(event, clip, track, callback, active)
+        if (current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW 
+            and len(current_sequence().get_clip_compositors(clip)) != 0):
+            compositors_add_item.set_sensitive(False)
+        clip_menu.add(compositors_add_item)
+        
+        if current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
+            clip_menu.add(_get_auto_fade_compositors_add_menu_item(event, clip, track, callback, active))
 
-    if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
-        item_text = _("Delete Compositor")
-    else:
-        item_text = _("Delete Compositor/s")
-    comp_delete_item = _get_menu_item(item_text, callback, (clip, track, "delete_compositors", event.x))
-    if len(current_sequence().get_clip_compositors(clip)) == 0:
-        comp_delete_item.set_sensitive(False)
-    clip_menu.add(comp_delete_item)
+        if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
+            item_text = _("Delete Compositor")
+        else:
+            item_text = _("Delete Compositor/s")
+        comp_delete_item = _get_menu_item(item_text, callback, (clip, track, "delete_compositors", event.x))
+        if len(current_sequence().get_clip_compositors(clip)) == 0:
+            comp_delete_item.set_sensitive(False)
+        clip_menu.add(comp_delete_item)
 
     _add_separetor(clip_menu)
 
@@ -1547,7 +1548,11 @@ def display_clip_popup_menu(event, clip, track, callback):
     _add_separetor(clip_menu)
     
     clip_menu.add(_get_edit_menu_item(event, clip, track, callback))
-
+    
+    if clip.container_data != None:
+        _add_separetor(clip_menu)
+        clip_menu.add(_get_container_clip_menu_item(event, clip, track, callback))
+            
     clip_menu.popup(None, None, None, None, event.button, event.time)
 
 def display_transition_clip_popup_menu(event, clip, track, callback):
@@ -1934,7 +1939,46 @@ def _get_edit_menu_item(event, clip, track, callback):
     
     menu_item.show()
     return menu_item
+
+def _get_container_clip_menu_item(event, clip, track, callback):
+    menu_item = Gtk.MenuItem(_("Container Clip Actions"))
+    sub_menu = Gtk.Menu()
+    menu_item.set_submenu(sub_menu)
+
+    clip.container_data
+
+    render_full_item = _get_menu_item(_("Render Full Media..."), callback, (clip, track, "cc_render_full_media", event.x))
+    if clip.container_data.rendered_media_range_in != -1:
+        render_full_item.set_sensitive(False)
+    sub_menu.append(render_full_item)
+
+    render_clip_item = _get_menu_item(_("Render Clip Length..."), callback, (clip, track, "cc_render_clip", event.x))
+    if clip.container_data.rendered_media_range_in != -1:
+        render_clip_item.set_sensitive(False)
+    sub_menu.append(render_clip_item)
+
+    _add_separetor(sub_menu)
     
+    go_to_un_item = _get_menu_item(_("Switch to Unrendered Media"), callback, (clip, track, "cc_go_to_underdered", event.x))
+    if clip.container_data.rendered_media_range_in == -1:
+        go_to_un_item.set_sensitive(False)
+    sub_menu.append(go_to_un_item)
+
+    _add_separetor(sub_menu)
+
+    external_media_item = _get_menu_item(_("Save Rendered Media In External Folder ..."), callback, (clip, track, "cc_external_media", event.x))
+    if clip.container_data.external_media_folder != None:
+        external_media_item.set_sensitive(False)
+    sub_menu.append(external_media_item)
+
+    internal_media_item = _get_menu_item(_("Save Rendered Media In Internal Cache ..."), callback, (clip, track, "cc_internal_media", event.x))
+    if clip.container_data.external_media_folder == None:
+        internal_media_item.set_sensitive(False)
+    sub_menu.append(internal_media_item)
+
+    menu_item.show()
+    return menu_item
+
 def _get_clone_filters_menu_item(event, clip, track, callback):
     menu_item = Gtk.MenuItem(_("Clone Filters"))
     sub_menu = Gtk.Menu()
@@ -2558,9 +2602,10 @@ class MonitorTCInfo:
     
 
 class TimeLineLeftBottom:
-    def __init__(self, comp_mode_launch):
+    def __init__(self, comp_mode_launch, tline_render_mode_launcher):
         self.widget = Gtk.HBox()
         self.comp_mode_launch = comp_mode_launch
+        self.tline_render_mode_launcher = tline_render_mode_launcher
         self.update_gui()
 
     def update_gui(self):
@@ -2573,6 +2618,9 @@ class TimeLineLeftBottom:
             proxy_img =  Gtk.Image.new_from_file(respaths.IMAGE_PATH + "project_proxy.png")
             self.widget.pack_start(proxy_img, False, False, 0)
 
+        self.widget.pack_start(self.tline_render_mode_launcher.widget, False, False, 0)
+        self.widget.pack_start(guiutils.pad_label(8,4), False, False, 0)
+        
         self.widget.pack_start(self.comp_mode_launch.widget, False, False, 0)
         self.widget.pack_start(guiutils.pad_label(4,4), False, False, 0)
             
@@ -3066,6 +3114,7 @@ def get_shorcuts_selector():
         shortcuts_combo.set_active(0)
 
     return shortcuts_combo
+
 
 class PressLaunch:
     def __init__(self, callback, surface, w=22, h=22):

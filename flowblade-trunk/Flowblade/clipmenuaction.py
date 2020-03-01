@@ -38,6 +38,7 @@ import audiosync
 import appconsts
 import clipeffectseditor
 import compositeeditor
+import containerclip
 import dialogs
 import dialogutils
 import gui
@@ -249,6 +250,8 @@ def _add_compositor(data):
     updater.repaint_tline()
 
 def _add_autofade(data):
+    # NOTE: These stay synced only in "Top Down Auto Follow" mode, see: edit.get_full_compositor_sync_data()
+    
     clip, track, item_id, item_data = data
     x, compositor_type = item_data
 
@@ -261,7 +264,7 @@ def _add_autofade(data):
     if compositor_type == "##auto_fade_in":
         compositor_in = current_sequence().tracks[track.id].clip_start(clip_index)
         compositor_out = compositor_in + int(utils.fps()) - 1
-    else:
+    else: # fade out
         clip_start = current_sequence().tracks[track.id].clip_start(clip_index)
         compositor_out = clip_start + clip_length
         compositor_in = compositor_out - int(utils.fps()) + 1
@@ -711,4 +714,9 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "volumekf":_volume_keyframes,
                   "brightnesskf":_brightness_keyframes,
                   "delete_compositors":_delete_compositors,
-                  "reload_media":_reload_clip_media}
+                  "reload_media":_reload_clip_media,
+                  "cc_render_full_media":containerclip.render_full_media,
+                  "cc_render_clip":containerclip.render_clip_length,
+                  "cc_go_to_underdered":containerclip.switch_to_unrendered_media,
+                  "cc_external_media":containerclip.save_rendered_media_in_external_folder,
+                  "cc_internal_media":containerclip.save_rendered_media_in_internal_cache}

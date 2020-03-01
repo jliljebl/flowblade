@@ -448,7 +448,10 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
         # Avoid crash in case path attribute is missing (color clips).
         if not hasattr(media_file, "path"):
             continue
-
+        # Add container data if not found.
+        if not hasattr(media_file, "container_data"):
+            media_file.container_data = None
+            
         # Use this to try to fix clips with missing proxy files.
         proxy_path_dict[media_file.path] = media_file.second_file_path
         
@@ -546,6 +549,10 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
             compositor.origin_clip_id = py_compositor.origin_clip_id
             compositor.obey_autofollow = py_compositor.obey_autofollow
            
+            if seq.compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+                print("seq.compositing_mode", seq.compositing_mode)
+                compositor.transition.mlt_transition.set("always_active", str(1))
+                       
             mlt_compositors.append(compositor)
 
     seq.compositors = mlt_compositors
@@ -595,7 +602,11 @@ def fill_track_mlt(mlt_track, py_track):
         # Add img seq ttl value for all clips if not found, we need this present in every clip so we test for 'clip.ttl == None' to get stuff working
         if not hasattr(clip, "ttl"):
             clip.ttl = None
-            
+
+        # Add container data if not found.
+        if not hasattr(clip, "container_data"):
+            clip.container_data = None
+
         # normal clip
         if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):
             orig_path = clip.path # Save the path for error message

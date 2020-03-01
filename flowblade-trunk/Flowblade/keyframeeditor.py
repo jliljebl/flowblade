@@ -1137,7 +1137,34 @@ class KeyFrameEditorClipFade(KeyFrameEditor):
         self.editable_property.write_out_keyframes(keyframes)
         self.clip_editor.set_keyframes(self.editable_property.value, self.editable_property.get_in_value)
         self.update_editor_view()
+
+
+class KeyFrameEditorClipFadeFilter(KeyFrameEditor):
+    """
+    Used for compositors with just slider and keyframes.
+    """
+    def __init__(self, editable_property):
+        KeyFrameEditor.__init__(self, editable_property, use_clip_in=False, slider_switcher=None, fade_buttons=True)
+
+    def add_fade_in(self):
+        # The code to do fades was written originally for compositors so we are using module compositorfades with some added code for filters.
+        keyframes = compositorfades.add_filter_fade_in(self.editable_property.clip, self.editable_property, self.clip_editor.keyframes, 10)
+        if keyframes == None:
+            return # update failed, clip probably too short
+        self._update_all_for_kf_vec(keyframes)
         
+    def add_fade_out(self):
+        # The code to do fades was written originally for compositors so we are using module compositorfades with some added code for filters.
+        keyframes = compositorfades.add_filter_fade_out(self.editable_property.clip, self.editable_property, self.clip_editor.keyframes, 10)
+        if keyframes == None:
+            return # update failed, clip probably too short
+        self._update_all_for_kf_vec(keyframes)
+
+    def _update_all_for_kf_vec(self, keyframes):
+        self.editable_property.write_out_keyframes(keyframes)
+        self.clip_editor.set_keyframes(self.editable_property.value, self.editable_property.get_in_value)
+        self.update_editor_view()
+
     
 class GeometryEditor(AbstractKeyFrameEditor):
     """

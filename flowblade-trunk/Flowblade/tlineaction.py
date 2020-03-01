@@ -65,6 +65,7 @@ import renderconsumer
 import respaths
 import sequence
 import syncsplitevent
+import tlinerender
 import updater
 import userfolders
 import utils
@@ -1982,4 +1983,6 @@ def set_track_small_height(track_index):
     track.height = appconsts.TRACK_HEIGHT_SMALL
     if editorstate.SCREEN_HEIGHT < 863:
         track.height = appconsts.TRACK_HEIGHT_SMALLEST
+
+
 

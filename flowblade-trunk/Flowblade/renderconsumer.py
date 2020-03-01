@@ -35,8 +35,7 @@ import editorpersistance
 
 import mltenv
 import respaths
-from editorstate import PLAYER
-from editorstate import PROJECT
+
 
 # File describing existing encoding and quality options
 RENDER_ENCODING_FILE = "/res/render/renderencoding.xml"
@@ -468,18 +467,20 @@ class FileRenderPlayer(threading.Thread):
 
 
 class XMLRenderPlayer(threading.Thread):
-    def __init__(self, file_name, callback, data, rendered_sequence=None):
+    def __init__(self, file_name, callback, data, rendered_sequence, project, player):
         self.file_name = file_name
         self.render_done_callback = callback
         self.data = data
         self.current_playback_frame = 0
         self.rendered_sequence = rendered_sequence
-
+        self.project = project
+        self.player = player
+        
         threading.Thread.__init__(self)
 
     def run(self):
         print("Starting XML render")
-        player = PLAYER()
+        player = self.player
         
         # Don't try anything if somehow this was started 
         # while timeline rendering is running
@@ -499,13 +500,10 @@ class XMLRenderPlayer(threading.Thread):
             time.sleep(0.1)
         
         # Get render producer
-        if self.rendered_sequence == None: # default is current sequence
-            timeline_producer = PROJECT().c_seq.tractor
-        else:
-            timeline_producer = self.rendered_sequence.tractor
+        timeline_producer = self.rendered_sequence.tractor
 
         # Get render consumer
-        xml_consumer = mlt.Consumer(PROJECT().profile, "xml", str(self.file_name))
+        xml_consumer = mlt.Consumer(self.project.profile, "xml", str(self.file_name))
 
         # Connect and start rendering
         xml_consumer.connect(timeline_producer)
@@ -527,11 +525,12 @@ class XMLRenderPlayer(threading.Thread):
 
 
 class XMLCompoundRenderPlayer(threading.Thread):
-    def __init__(self, file_name, media_name, callback, tractor):
+    def __init__(self, file_name, media_name, callback, tractor, project):
         self.file_name = file_name
         self.media_name = media_name
         self.render_done_callback = callback
         self.tractor = tractor
+        self.project = project
 
         threading.Thread.__init__(self)
 
@@ -545,7 +544,7 @@ class XMLCompoundRenderPlayer(threading.Thread):
             time.sleep(0.1)
 
         # Get render consumer
-        xml_consumer = mlt.Consumer(PROJECT().profile, "xml", str(self.file_name))
+        xml_consumer = mlt.Consumer(self.project.profile, "xml", str(self.file_name))
 
         # Connect and start rendering
         xml_consumer.connect(tractor)

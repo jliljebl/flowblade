@@ -53,6 +53,7 @@ import audiowaveformrenderer
 import clipeffectseditor
 import clipmenuaction
 import compositeeditor
+import containeractions
 import dialogs
 import dialogutils
 import dnd
@@ -95,6 +96,7 @@ import shortcuts
 import snapping
 import threading
 import titler
+import tlinerender
 import tlinewidgets
 import toolsintegration
 import trimmodes
@@ -104,6 +106,7 @@ import updater
 import userfolders
 import utils
 import workflow
+
 
 AUTOSAVE_DIR = appconsts.AUTOSAVE_DIR
 AUTOSAVE_FILE = "autosave/autosave"
@@ -121,7 +124,6 @@ exit_timeout_id = -1
 window_resize_id = -1
 window_state_id = -1
 resize_timeout_id = -1
-
 
 
 _log_file = None
@@ -251,7 +253,10 @@ def main(root_path):
 
     # Create list of available mlt profiles.
     mltprofiles.load_profile_list()
-    
+
+    # If we have crashed we could have large amount of disk space wasted unless we delete all files here.
+    tlinerender.app_launch_clean_up()
+
     # Save assoc file path if found in arguments.
     global assoc_file_path
     assoc_file_path = get_assoc_file_path()
@@ -316,8 +321,11 @@ def main(root_path):
         else:
             GObject.timeout_add(10, autosaves_many_recovery_dialog)
     else:
+        tlinerender.init_session()
         start_autosave()
 
+    projectaction.clear_changed_since_last_save_flags()
+    
     # We prefer to monkeypatch some callbacks into some modules, usually to
     # maintain a simpler and/or non-circular import structure.
     monkeypatch_callbacks()
@@ -328,7 +336,7 @@ def main(root_path):
             print("Launch assoc file:", assoc_file_path)
             global assoc_timeout_id
             assoc_timeout_id = GObject.timeout_add(10, open_assoc_file)
-
+        
     if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
         gui.apply_flowblade_theme_fixes()
         
@@ -397,6 +405,12 @@ def monkeypatch_callbacks():
     multitrimmode.set_default_mode_func = modesetting.set_default_edit_mode
     
     keyframeeditor._get_current_edited_compositor = compositeeditor.get_compositor
+
+    # Not callbacks but tlinerender needs this data and we do this instead of copypaste.
+    tlinerender._get_frame_for_x_func = tlinewidgets.get_frame
+    tlinerender._get_x_for_frame_func = tlinewidgets._get_frame_x
+    tlinerender._get_last_tline_view_frame_func = tlinewidgets.get_last_tline_view_frame
+
     #keyframeeditor.add_fade_out_func = compositeeditor._add_fade_out_pressed
     # These provide clues for further module refactoring 
 
@@ -525,7 +539,7 @@ def init_project_gui():
     projectinfogui.update_project_info()
 
     titler.reset_titler()
-
+    
     # Set render folder selector to last render if prefs require 
     folder_path = editorstate.PROJECT().get_last_render_folder()
     if folder_path != None and editorpersistance.prefs.remember_last_render_dir == True:
@@ -538,9 +552,17 @@ def init_sequence_gui():
     """
     # Set correct compositing mode menu item selected
     gui.editor_window.init_compositing_mode_menu()
+    gui.editor_window.init_timeline_rendering_menu()
 
     # Set initial timeline scale draw params
     editorstate.current_sequence().update_length()
+    
+    # Handle timeline rendering GUI and data
+    tlinerender.init_for_sequence(editorstate.current_sequence())
+    gui.editor_window.hide_tline_render_strip()
+    if editorstate.get_tline_rendering_mode() != appconsts.TLINE_RENDERING_OFF: 
+        gui.editor_window.show_tline_render_strip()
+        
     updater.update_pix_per_frame_full_view()
     updater.init_tline_scale()
     updater.repaint_tline()
@@ -636,6 +658,7 @@ def open_project(new_project):
     editorstate.clear_trim_clip_cache()
     audiomonitoring.init_for_project_load()
 
+    tlinerender.init_session()
     start_autosave()
 
     if new_project.update_media_lengths_on_load == True:
@@ -652,6 +675,8 @@ def open_project(new_project):
     global resize_timeout_id
     resize_timeout_id = GLib.timeout_add(500, _do_window_resized_update)
 
+    projectaction.clear_changed_since_last_save_flags()
+
     # Set scrubbing
     editorstate.player.set_scrubbing(editorpersistance.prefs.audio_scrubbing)
     
@@ -660,6 +685,8 @@ def _do_window_resized_update():
     updater.window_resized()
     
 def change_current_sequence(index):
+    edit.do_gui_update = False  # This should not be necessery but we are doing this signal intention that GUI updates are disabled
+    
     stop_autosave()
     editorstate.project.c_seq = editorstate.project.sequences[index]
 
@@ -713,6 +740,7 @@ def autosave_dialog_callback(dialog, response):
         loaded_autosave_file = autosave_file
         projectaction.actually_load_project(autosave_file, True)
     else:
+        tlinerender.init_session()  # didn't do this in main and not going to do app-open_project
         os.remove(autosave_file)
         start_autosave()
 
@@ -741,6 +769,7 @@ def autosaves_many_dialog_callback(dialog, response, autosaves_view, autosaves):
         projectaction.actually_load_project(autosave_file, True)
     else:
         dialog.destroy()
+        tlinerender.init_session()
         start_autosave()
 
 def set_instance_autosave_id():
@@ -932,26 +961,33 @@ def log_print_output_to_file():
 
 # ------------------------------------------------------ shutdown
 def shutdown():
-    dialogs.exit_confirm_dialog(_shutdown_dialog_callback, get_save_time_msg(), gui.editor_window.window, editorstate.PROJECT().name)
-    return True # Signal that event is handled, otherwise it'll destroy window anyway
+    if projectaction.was_edited_since_last_save() == False:
+        _shutdown_dialog_callback(None, None, True)
+        return True
+    else:
+        dialogs.exit_confirm_dialog(_shutdown_dialog_callback, get_save_time_msg(), gui.editor_window.window, editorstate.PROJECT().name)
+        return True # Signal that event is handled, otherwise it'll destroy window anyway
 
 def get_save_time_msg():
     return projectaction.get_save_time_msg()
 
-def _shutdown_dialog_callback(dialog, response_id):
-    dialog.destroy()
-    if response_id == Gtk.ResponseType.CLOSE:# "Don't Save"
-        pass
-    elif response_id ==  Gtk.ResponseType.YES:# "Save"
-        if editorstate.PROJECT().last_save_path != None:
-            persistance.save_project(editorstate.PROJECT(), editorstate.PROJECT().last_save_path)
-        else:
-            dialogutils.warning_message(_("Project has not been saved previously"), 
-                                    _("Save project with File -> Save As before closing."),
-                                    gui.editor_window.window)
+def _shutdown_dialog_callback(dialog, response_id, no_dialog_shutdown=False):
+    if no_dialog_shutdown == False:
+        dialog.destroy()
+        if response_id == Gtk.ResponseType.CLOSE:# "Don't Save"
+            pass
+        elif response_id ==  Gtk.ResponseType.YES:# "Save"
+            if editorstate.PROJECT().last_save_path != None:
+                persistance.save_project(editorstate.PROJECT(), editorstate.PROJECT().last_save_path)
+            else:
+                dialogutils.warning_message(_("Project has not been saved previously"), 
+                                        _("Save project with File -> Save As before closing."),
+                                        gui.editor_window.window)
+                return
+        else: # "Cancel"
             return
-    else: # "Cancel"
-        return
+    else:
+        print("Nothing changed since last save.")
 
     # --- APP SHUT DOWN --- #
     print("Exiting app...")
@@ -967,6 +1003,12 @@ def _shutdown_dialog_callback(dialog, response_id):
     # No more auto saving
     stop_autosave()
 
+    tlinerender.delete_session()
+
+    clipeffectseditor.shutdown_polling()
+    compositeeditor.shutdown_polling()
+    containeractions.shutdown_polling()
+    
     # Save window dimensions on exit
     alloc = gui.editor_window.window.get_allocation()
     x, y, w, h = alloc.x, alloc.y, alloc.width, alloc.height 
@@ -1008,7 +1050,7 @@ def _app_destroy():
     try:
         os.remove(userfolders.get_cache_dir() + get_instance_autosave_file())
     except:
-        print("Delete autosave file FAILED")
+        print("Delete autosave file FAILED!")
 
     # Exit gtk main loop.
     Gtk.main_quit()

@@ -149,6 +149,7 @@ def repaint_tline():
     gui.tline_canvas.widget.queue_draw()
     gui.tline_column.widget.queue_draw()
     gui.tline_scale.widget.queue_draw()
+    gui.tline_render_strip.widget.queue_draw()
 
 # --- SCROLL AND LENGTH EVENTS
 def update_tline_scrollbar():
@@ -231,7 +232,7 @@ def update_pix_per_frame_full_view():
     Called at sequence init to display full sequence.
     """
     global pix_per_frame_full_view
-    length = current_sequence().get_length() + 5 # +5 is just selected end pad so that end of movie is visible
+    length = current_sequence().get_length() + (20.0 + current_sequence().get_length() * 0.1) # we added some length to make there always be some space after sequence end to to drag and drop
     pix_per_frame_full_view = float(gui.tline_canvas.widget.get_allocation().width) / length
 
 def set_info_icon(info_icon_id):

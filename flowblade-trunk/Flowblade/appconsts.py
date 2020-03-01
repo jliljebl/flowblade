@@ -151,6 +151,7 @@ AUDIO_LEVELS_DIR = "audiolevels/"
 PROXIES_DIR = "proxies/"
 THUMBNAILS_DIR = "thumbnails"
 RENDERED_CLIPS_DIR = "rendered_clips"
+TLINE_RENDERS_DIR = "tlinerenders"
 GMIC_DIR = "gmic"
 PHANTOM_DIR = "phantom2d"
 PHANTOM_DISK_CACHE_DIR = "disk_cache"
@@ -161,6 +162,7 @@ TRIM_VIEW_DIR = "trim_view"
 USER_PROFILES_DIR = "user_profiles/"
 USER_PROFILES_DIR_NO_SLASH = "user_profiles"
 BATCH_DIR = "batchrender/"
+CONTAINER_CLIPS_DIR = "container_clips"
 
 # Luma bands
 SHADOWS = 0
@@ -269,6 +271,25 @@ COPY_PASTE_GEOMETRY_EDITOR_KF_DATA = 4
 COMPOSITING_MODE_TOP_DOWN_FREE_MOVE = 0
 COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW = 1
 COMPOSITING_MODE_STANDARD_AUTO_FOLLOW = 2
+COMPOSITING_MODE_STANDARD_FULL_TRACK = 3
 
 # Magic string for selection path being user home directory root
 USER_HOME_DIR = "USER_HOME_DIERCTORY_&&##&&"
+
+# Timeline rendering modes
+TLINE_RENDERING_OFF = 0
+TLINE_RENDERING_AUTO = 1
+TLINE_RENDERING_REQUEST = 2
+
+# Timeline rendering uses these now
+PROXY_SIZE_FULL = 0
+PROXY_SIZE_HALF = 1
+PROXY_SIZE_QUARTER = 2
+
+
+# Container clip types
+CONTAINER_CLIP_GMIC = 0
+CONTAINER_CLIP_MLT_XML = 1
+CONTAINER_CLIP_CAIRO_SCRIPT = 2
+CONTAINER_CLIP_BLENDER = 3
+

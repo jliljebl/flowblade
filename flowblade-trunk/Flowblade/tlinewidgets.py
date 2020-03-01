@@ -50,6 +50,7 @@ import guiutils
 import respaths
 import sequence
 import snapping
+import tlinerender
 import trimmodes
 import userfolders
 import utils
@@ -61,6 +62,7 @@ REF_LINE_Y = 250 # Y pos of tracks are relative to this. This is recalculated on
 
 WIDTH = 430 # this has no effect if smaller then editorwindow.NOTEBOOK_WIDTH + editorwindow.MONITOR_AREA_WIDTH
 HEIGHT = appconsts.TLINE_HEIGHT # defines window min height together with editorwindow.TOP_ROW_HEIGHT
+STRIP_HEIGHT = tlinerender.STRIP_HEIGHT # timeline rendering control strip height
 
 # Timeline draw constants
 # Other elements than black outline are not drawn if clip screen size
@@ -346,7 +348,7 @@ def load_icons():
     CLIP_MARKER_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "clip_marker.png")
     COMPOSITOR_ICON = guiutils.get_cairo_image("compositor_icon")
 
-    MARKER_ICON = _load_pixbuf("marker.png")
+    MARKER_ICON = _load_pixbuf("marker_yellow.png")
     TRACK_ALL_ON_V_ICON = _load_pixbuf("track_all_on_V.png")
     TRACK_ALL_ON_A_ICON = _load_pixbuf("track_all_on_A.png")
     MUTE_AUDIO_A_ICON = _load_pixbuf("track_audio_mute_A.png") 
@@ -552,7 +554,10 @@ def compositor_hit(frame, x, y, sorted_compositors):
         track_top = _get_track_y(track.id)
     except AttributeError: # we didn't press on a editable track
         return None
-    
+
+    if editorstate.get_compositing_mode() == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+        return None
+       
     if editorstate.get_compositing_mode() == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
         return _standard_auto_follow_comp_hit(frame, track, x, y, sorted_compositors)
     
@@ -1743,7 +1748,10 @@ class TimeLineCanvas:
                         grad.add_color_stop_rgba(*BLANK_CLIP_COLOR_GRAD_L)
                         cr.set_source(grad)
                 elif track.type == sequence.VIDEO:
-                    if clip.media_type == sequence.VIDEO:
+                    if clip.container_data != None:
+                            clip_bg_col = (0.7, 0.3, 0.3)
+                            cr.set_source_rgb(*clip_bg_col)
+                    elif clip.media_type == sequence.VIDEO:
                         if not clip.selected:
                             grad = cairo.LinearGradient (0, y, 0, y + track_height)
                             grad.add_color_stop_rgba(*CLIP_COLOR_GRAD)
@@ -1763,7 +1771,7 @@ class TimeLineCanvas:
                         else:
                             cr.set_source_rgb(*IMAGE_CLIP_SELECTED_COLOR)
                             clip_bg_col = IMAGE_CLIP_SELECTED_COLOR
-                else:# Audio clip
+                else:# Audio track
                     if not clip.selected:
                         grad = cairo.LinearGradient (0, y, 0, y + track_height)
                         grad.add_color_stop_rgba(*AUDIO_CLIP_COLOR_GRAD)
@@ -2098,6 +2106,9 @@ class TimeLineCanvas:
             cr.fill()
 
     def draw_compositors(self, cr):
+        if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+            return
+            
         compositors = current_sequence().get_compositors()
         for comp in compositors:
             # compositor clip and edge
@@ -2809,6 +2820,43 @@ class TimeLineFrameScale:
         
         return grad
 
+
+class TimeLineRenderingControlStrip:
+    """
+    GUI component that passes draw and mouse events to tlinerender module with some added data.
+    """
+
+    def __init__(self):
+        self.widget = cairoarea.CairoDrawableArea2( WIDTH, 
+                                                    STRIP_HEIGHT, 
+                                                    self._draw)
+        self.widget.press_func = self._press_event
+        self.widget.motion_notify_func = self._motion_notify_event
+        self.widget.release_func = self._release_event
+        self.widget.add_events(Gdk.EventMask.FOCUS_CHANGE_MASK)
+        self.widget.connect("focus-out-event", self._focus_out_event)
+    # --------------------------------------------- DRAW
+    def _draw(self, event, cr, allocation):
+        """
+        Callback for repaint from CairoDrawableArea.
+        We get cairo contect and allocation.
+        """
+        tlinerender.get_renderer().draw(event, cr, allocation, pos, pix_per_frame)
+
+        
+    # --------------------------------------------- MOUSE EVENTS    
+    def _press_event(self, event):
+        tlinerender.get_renderer().press_event(event)
+
+    def _motion_notify_event(self, x, y, state):
+        tlinerender.get_renderer().motion_notify_event(x, y, state)
+                
+    def _release_event(self, event):
+        tlinerender.get_renderer().release_event(event)
+        
+    def _focus_out_event(self, widget, event):
+        tlinerender.get_renderer().focus_out()
+    
 class KFToolFrameScale:
     
     def __init__(self, line_color):

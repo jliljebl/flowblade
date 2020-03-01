@@ -192,6 +192,13 @@ def get_compositing_mode():
     else:
         return project.c_seq.compositing_mode
 
+def get_tline_rendering_mode():
+    if project.c_seq == None:
+        print ("get_compositing_mode(), trying to get timeline render mode when no current sequence available!") 
+        return appconsts.TLINE_RENDERING_OFF
+    else:
+        return project.c_seq.tline_render_mode
+        
 def get_track(index):
     return project.c_seq.tracks[index]
 

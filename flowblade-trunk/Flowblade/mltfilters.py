@@ -96,6 +96,7 @@ old_filters = []
 # We need this to mute clips
 _volume_filter_info = None
 _brightness_filter_info = None # for kf tool
+_colorize_filter_info = None # for tline render tests
 
 def _load_icons():
     global FILTER_DEFAULT_ICON
@@ -116,6 +117,7 @@ def _get_group_icon(group_name):
         group_icons["Transform"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "transform.png")
         group_icons["Edge"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "edge.png")
         group_icons["Fix"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "fix.png")
+        group_icons["Fade In / Out"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "fade_filter.png")
         group_icons["Artistic"] = FILTER_DEFAULT_ICON
         group_icons["FILTER_MASK"] =  GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "filter_mask.png")
     try:
@@ -135,6 +137,7 @@ def get_translated_audio_group_name():
     Not implemented.
     """
     translations.get_filter_group_name("Audio")
+
 
 class FilterInfo:
     """
@@ -233,7 +236,7 @@ class FilterObject:
         # to be replaced now that we have profile and we are ready to connect this.
         # For example default values of some properties depend on the screen size of the project
         propertyparse.replace_value_keywords(self.properties, PROJECT().profile)
-    
+
     def create_mlt_filter(self, mlt_profile):
         self.mlt_filter = mlt.Filter(mlt_profile, str(self.info.mlt_service_id))
         mltrefhold.hold_ref(self.mlt_filter)
@@ -261,6 +264,13 @@ class FilterObject:
             self.properties[i] = (name, o_value, prop_type)
         
         self.update_mlt_filter_properties_all()
+
+    def replace_values(self, clip):
+        # We need to initilize some calues based clip langth and need wait until clip for
+        # filter is known, replace at object creation is done before clip is available
+        replacement_happened = propertyparse.replace_values_using_clip_data(self.properties, self.info, clip)
+        if replacement_happened == True:
+            self.update_mlt_filter_properties_all()
 
 
 class MultipartFilterObject:
@@ -422,7 +432,11 @@ def load_filters_xml(services):
         if filter_info.mlt_service_id == "brightness": # TODO: maybe add general search fuction for these, if we need a third one this is becoming a bit silly
             global _brightness_filter_info
             _brightness_filter_info = filter_info
-            
+
+        if filter_info.mlt_service_id == "frei0r.colorize":
+            global _colorize_filter_info
+            _colorize_filter_info = filter_info
+
         # Add filter compositor filters or filter groups
         if filter_info.group == COMPOSITOR_FILTER_GROUP:
             global compositor_filters
@@ -524,6 +538,9 @@ def get_volume_filters_info():
 
 def get_brightness_filter_info():
     return _brightness_filter_info
+
+def get_colorize_filter_info():
+    return _colorize_filter_info
 
 def get_filter_mask_start_filters_data():
     filter_names = []

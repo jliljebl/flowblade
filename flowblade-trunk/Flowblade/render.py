@@ -238,7 +238,6 @@ def set_default_values_for_widgets(movie_name_too=False):
     if editorpersistance.prefs.default_render_directory == appconsts.USER_HOME_DIR:
         widgets.file_panel.out_folder.set_current_folder(os.path.expanduser("~") + "/")
     else:
-        print("hailou")
         widgets.file_panel.out_folder.set_current_folder(editorpersistance.prefs.default_render_directory)
     widgets.args_panel.use_args_check.set_active(False)
     widgets.profile_panel.use_project_profile_check.set_active(True)

@@ -51,7 +51,8 @@ BOOLEAN_CHECK_BOX = "booleancheckbox"                       # Gtk.CheckButton
 COMBO_BOX = "combobox"                                      # Gtk.Combobox
 KEYFRAME_EDITOR = "keyframe_editor"                         # keyfremeeditor.KeyFrameEditor that has all the key frames relative to MEDIA start
 KEYFRAME_EDITOR_CLIP = "keyframe_editor_clip"               # keyfremeeditor.KeyFrameEditor that has all the key frames relative to CLIP start
-KEYFRAME_EDITOR_CLIP_FADE = "keyframe_editor_clip_fade"     # keyfremeeditor.KeyFrameEditor that has all the key frames relative to CLIP start, with fade buttons
+KEYFRAME_EDITOR_CLIP_FADE = "keyframe_editor_clip_fade"     # Compositor keyfremeeditor.KeyFrameEditor that has all the key frames relative to CLIP start, with fade buttons
+KEYFRAME_EDITOR_CLIP_FADE_FILTER = "keyframe_editor_clip_fade_filter"  # Filter keyfremeeditor.KeyFrameEditor that has all the key frames relative to CLIP start, with fade buttons
 KEYFRAME_EDITOR_RELEASE = "keyframe_editor_release"         # HACK, HACK. used to prevent property update crashes in slider keyfremeeditor.KeyFrameEditor
 COLOR_SELECT = "color_select"                               # Gtk.ColorButton
 GEOMETRY_EDITOR = "geometry_editor"                         # keyframeeditor.GeometryEditor
@@ -947,6 +948,9 @@ def _get_keyframe_editor_clip(editable_property):
 
 def _get_keyframe_editor_clip_fade(editable_property):
     return keyframeeditor.KeyFrameEditorClipFade(editable_property)
+
+def _get_keyframe_editor_clip_fade_filter(editable_property):
+    return keyframeeditor.KeyFrameEditorClipFadeFilter(editable_property)
  
 def _get_keyframe_editor_release(editable_property):
     editor = keyframeeditor.KeyFrameEditor(editable_property)
@@ -1027,6 +1031,7 @@ EDITOR_ROW_CREATORS = { \
     KEYFRAME_EDITOR: lambda ep : _get_keyframe_editor(ep),
     KEYFRAME_EDITOR_CLIP: lambda ep : _get_keyframe_editor_clip(ep),
     KEYFRAME_EDITOR_CLIP_FADE: lambda ep : _get_keyframe_editor_clip_fade(ep),
+    KEYFRAME_EDITOR_CLIP_FADE_FILTER: lambda ep : _get_keyframe_editor_clip_fade_filter(ep),
     KEYFRAME_EDITOR_RELEASE: lambda ep : _get_keyframe_editor_release(ep),
     GEOMETRY_EDITOR: lambda ep : _get_geometry_editor(ep),
     COLOR_SELECT: lambda ep: _get_color_selector(ep),

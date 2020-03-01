@@ -221,8 +221,8 @@ def workflow_menu_launched(widget, event):
     default_compositing_item.show()
     
     default_compositing_menu = Gtk.Menu()
-    labels = [_("Top Down Free Move"), _("Top Down Auto Follow"), _("Standard Auto Follow")]
-    msgs = ["top down", "top down auto", "standard auto"]
+    labels = [_("Top Down Free Move"), _("Top Down Auto Follow"), _("Standard Auto Follow"),  _("Standard Full Track")]
+    msgs = ["top down", "top down auto", "standard auto", "full_track_auto"]
     active_index = editorpersistance.prefs.default_compositing_mode  # appconsts values correspond with order here.
     _build_radio_menu_items_group(default_compositing_menu, labels, msgs, _workflow_menu_callback, active_index)
 

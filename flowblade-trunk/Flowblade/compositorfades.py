@@ -61,6 +61,22 @@ def add_fade_out(compositor, fade_out_length):
             _show_length_error_dialog()
             return None
 
+def add_filter_fade_in(clip, keyframe_property, keyframes, fade_in_length):   
+    if fade_in_length > 0:
+        if fade_in_length <= clip.clip_length():
+            return _do_user_add_fade_in_filter(keyframe_property, keyframes, fade_in_length)
+        else:
+            _show_length_error_dialog()
+            return None
+
+def add_filter_fade_out(clip, keyframe_property, keyframes, fade_out_length):   
+    if fade_out_length > 0:
+        if fade_out_length <= clip.clip_length():
+            return _do_user_add_fade_out_filter(keyframe_property, keyframes, fade_out_length, clip)
+        else:
+            _show_length_error_dialog()
+            return None
+
 def set_auto_fade_in_keyframes(compositor):
     clip = _get_compositor_clip(compositor)
     keyframe_property, property_klass, keyframes = _get_kfproperty_klass_and_keyframes(compositor, clip)
@@ -251,6 +267,78 @@ def _do_user_add_fade_out(keyframe_property, property_klass, keyframes, fade_out
     # We need to return updated keyframes to update GUI in "Compositor" panel.
     return keyframes
 
+def _do_user_add_fade_in_filter(keyframe_property, keyframes, fade_in_length):
+    # Get index of first keyframe after fade_in_length
+    kf_after_fade_in_index = -1
+    for i in range (0, len(keyframes)):
+        kf = keyframes[i]
+        frame, opacity  = kf
+        
+        if frame > fade_in_length:
+            kf_after_fade_in_index = i
+            break
+
+    # Case no keyframes after fade in length
+    if kf_after_fade_in_index == -1:
+        # Remove all but first keyframe
+        for i in range(0, len(keyframes) - 1):
+            keyframes.pop(1)
+
+        frame, opacity  = keyframes.pop(0)
+        keyframes.append((frame, 0))
+        keyframes.append((frame + fade_in_length, 100))
+    # Case keyframes exists after fade in length
+    else:
+        # Remove keyframes in range 0 - kf_after_fade_in_index
+        for i in range(0, kf_after_fade_in_index - 1):
+            keyframes.pop(1)
+
+        frame, opacity  = keyframes.pop(0)
+        keyframes.insert(0, (frame, 0))
+        keyframes.insert(1, (frame + fade_in_length, 100))
+
+
+    # Because we created a SECOND SET of EditableProperties this only updates data structures (py and MLT)
+    # but not EditableProperties wrappers that are edited in GUI in "Compositor" panel.
+    keyframe_property.write_out_keyframes(keyframes)
+    
+    # We need to return updated keyframes to update GUI in "Compositor" panel.
+    return keyframes
+
+
+def _do_user_add_fade_out_filter(keyframe_property, keyframes, fade_out_length, clip):
+    # Get index of first keyframe before fade out begins
+    fade_out_frame = clip.clip_length() - fade_out_length
+    kf_after_fade_out_index = -1
+    for i in range (0, len(keyframes)):
+        kf = keyframes[i]
+        frame, opacity  = kf
+
+        if frame >= fade_out_frame:
+            kf_after_fade_out_index = i
+            break
+
+    # Case no keyframes after fade out start
+    if kf_after_fade_out_index == -1:
+        keyframes.append((clip.clip_length() - fade_out_length - 1, 100))
+        keyframes.append((clip.clip_length() - 1, 0))
+
+    # Case keyframes exists after  fade out start
+    else:
+        # Remove keyframes in range 0 - kf_after_fade_in_index
+        for i in range(kf_after_fade_out_index, len(keyframes)):
+            keyframes.pop(-1) # pop last
+            
+        keyframes.append((clip.clip_length() - fade_out_length - 1, 100))
+        keyframes.append((clip.clip_length() - 1, 0))
+
+    # Because we created a SECOND SET of EditableProperties this only updates data structures (py and MLT)
+    # but not EditableProperties wrappers that are edited in GUI in "Compositor" panel.
+    keyframe_property.write_out_keyframes(keyframes)
+
+    # We need to return updated keyframes to update GUI in "Compositor" panel.
+    return keyframes
+    
 def _show_length_error_dialog():
     parent_window = gui.editor_window.window
     primary_txt = _("Clip too short!")

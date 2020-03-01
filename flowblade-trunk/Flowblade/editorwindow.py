@@ -36,6 +36,7 @@ import boxmove
 import clipeffectseditor
 import clipmenuaction
 import compositeeditor
+import containerclip
 import dialogs
 import dialogutils
 import diskcachemanagement
@@ -69,6 +70,7 @@ import projectinfogui
 import proxyediting
 import titler
 import tlineaction
+import tlinerender
 import tlinewidgets
 import trackaction
 import updater
@@ -217,11 +219,11 @@ class EditorWindow:
             ('SequenceSplit', None, _('Split to new Sequence at Playhead Position'), None, None, lambda a:tlineaction.sequence_split_pressed()),
             ('DeleteClip', None, _('Lift'), None, None, lambda a:tlineaction.lift_button_pressed()),
             ('SpliceOutClip', None, _('Splice Out'), None, None, lambda a:tlineaction.splice_out_button_pressed()),
-            ('ResyncSelected', None, _('Resync'), None, None, lambda a:tlineaction.resync_button_pressed()),
+            ('ResyncSelected', None, _('Resync'),  '<alt>R', None, lambda a:tlineaction.resync_button_pressed()),
             ('SetSyncParent', None, _('Set Sync Parent'), None, None, lambda a:_this_is_not_used()),
             ('AddTransition', None, _('Add Single Track Transition'), None, None, lambda a:tlineaction.add_transition_menu_item_selected()),
             ('AddFade', None, _('Add Single Track Fade'), None, None, lambda a:tlineaction.add_fade_menu_item_selected()),
-            ('ClearFilters', None, _('Clear Filters'), None, None, lambda a:clipmenuaction.clear_filters()),
+            ('ClearFilters', None, _('Clear Filters'), '<alt>C', None, lambda a:clipmenuaction.clear_filters()),
             ('Timeline', None, _('Timeline')),
             ('FiltersOff', None, _('All Filters Off'), None, None, lambda a:tlineaction.all_filters_off()),
             ('FiltersOn', None, _('All Filters On'), None, None, lambda a:tlineaction.all_filters_on()),
@@ -245,6 +247,7 @@ class EditorWindow:
             ('EditSequence', None, _('Edit Selected Sequence'), None, None, lambda a:projectaction.change_edit_sequence()),
             ('DeleteSequence', None, _('Delete Selected Sequence'), None, None, lambda a:projectaction.delete_selected_sequence()),
             ('CompositingModeMenu', None, _('Compositing Mode')),
+            ('TimelineRenderingMenu', None, _('Timeline Rendering')),
             ('PatternProducersMenu', None, _('Create Pattern Producer')),
             ('CreateNoiseClip', None, _('Noise'), None, None, lambda a:patternproducer.create_noise_clip()),
             ('CreateBarsClip', None, _('EBU Bars'), None, None, lambda a:patternproducer.create_bars_clip()),
@@ -257,6 +260,8 @@ class EditorWindow:
             ('CreateSequenceFreezeCompound', None, _('From Current Sequence With Freeze Frame at Playhead Position'), None, None, lambda a:projectaction.create_sequence_freeze_frame_compound_clip()),
             ('AudioSyncCompoundClip', None, _('Audio Sync Merge Clip From 2 Media Items '), None, None, lambda a:audiosync.create_audio_sync_compound_clip()),
             ('ImportProjectMedia', None, _('Import Media From Project...'), None, None, lambda a:projectaction.import_project_media()),
+            ('ContainerClipsMenu', None, _('Create Container Clip')),
+            ('CreateGMicContainerItem', None, _("From G'Mic Script"), None, None, lambda a:containerclip.create_gmic_media_item()),
             ('CombineSequences', None, _('Import Another Sequence Into This Sequence...'), None, None, lambda a:projectaction.combine_sequences()),
             ('LogClipRange', None, _('Log Marked Clip Range'), '<control>L', None, lambda a:medialog.log_range_clicked()),
             ('ViewProjectEvents', None, _('View Project Events...'), None, None, lambda a:projectaction.view_project_events()),
@@ -364,6 +369,9 @@ class EditorWindow:
                         <menuitem action='CreateSequenceCompound'/>
                         <menuitem action='AudioSyncCompoundClip'/>
                     </menu>
+                    <menu action='ContainerClipsMenu'>
+                        <menuitem action='CreateGMicContainerItem'/>
+                    </menu>
                     <separator/>
                     <menu action='BinMenu'>
                         <menuitem action='AddBin'/>
@@ -388,6 +396,8 @@ class EditorWindow:
                     <menuitem action='DeleteSequence'/>
                     <separator/>
                     <menu action='CompositingModeMenu'/>
+                    <separator/>
+                    <menu action='TimelineRenderingMenu'/>
                     <separator/>
                     <menuitem action='CombineSequences'/>
                     <menuitem action='SequenceSplit'/>
@@ -442,7 +452,7 @@ class EditorWindow:
         self.accel_group = accel_group
 
         # Add recent projects to menu
-        editorpersistance.fill_recents_menu_widget(ui.get_widget('/MenuBar/FileMenu/OpenRecent'), projectaction.open_recent_project)
+        self.fill_recents_menu_widget(ui.get_widget('/MenuBar/FileMenu/OpenRecent'), projectaction.open_recent_project)
 
         # Disable audio mixer if not available
         if editorstate.audio_monitoring_available == False:
@@ -795,21 +805,41 @@ class EditorWindow:
         tline_hbox_2 = Gtk.HBox()
         tline_hbox_2.pack_start(self.tline_column.widget, False, False, 0)
         tline_hbox_2.pack_start(self.tline_canvas.widget, True, True, 0)
+
+        # Timeline rendereŕ row
+        self.pad_box = Gtk.HBox()
+        self.pad_box.set_size_request(tlinewidgets.COLUMN_WIDTH, tlinewidgets.STRIP_HEIGHT)
+        self.tline_render_strip = tlinewidgets.TimeLineRenderingControlStrip()
+        self.tline_renderer_hbox = Gtk.HBox()
+        self.pad_box.show()
+        self.tline_render_strip.widget.show()
         
         # Comp mode selector
         size_adj = 1
         tds = guiutils.get_cairo_image("top_down")
         tdds = guiutils.get_cairo_image("top_down_auto")
         sas = guiutils.get_cairo_image("standard_auto")
-        surfaces = [tds, tdds, sas]
+        fta = guiutils.get_cairo_image("full_track_auto")
+        surfaces = [tds, tdds, sas, fta]
         comp_mode_launcher = guicomponents.ImageMenuLaunch(projectaction.compositing_mode_menu_launched, surfaces, 22*size_adj, 20)
         comp_mode_launcher.surface_x = 0
         comp_mode_launcher.surface_y = 4
         comp_mode_launcher.widget.set_tooltip_markup(_("Current Sequence Compositing Mode"))
         self.comp_mode_launcher = comp_mode_launcher
 
+        # Tlinerender mode selector
+        tro = guiutils.get_cairo_image("tline_render_off")
+        tra = guiutils.get_cairo_image("tline_render_auto")
+        trr = guiutils.get_cairo_image("tline_render_request")
+        surfaces = [tro, tra, trr]
+        tline_render_mode_launcher = guicomponents.ImageMenuLaunch(tlinerender.corner_mode_menu_launched, surfaces, 22*size_adj, 20)
+        tline_render_mode_launcher.surface_x = 0
+        tline_render_mode_launcher.surface_y = 4
+        tline_render_mode_launcher.widget.set_tooltip_markup(_("Timeline Rendering"))
+        self.tline_render_mode_launcher = tline_render_mode_launcher
+        
         # Bottom row filler
-        self.left_corner = guicomponents.TimeLineLeftBottom(comp_mode_launcher)
+        self.left_corner = guicomponents.TimeLineLeftBottom(comp_mode_launcher, tline_render_mode_launcher)
         self.left_corner.widget.set_size_request(tlinewidgets.COLUMN_WIDTH, 20)
 
         # Timeline scroller
@@ -824,6 +854,7 @@ class EditorWindow:
         tline_vbox = Gtk.VBox()
         tline_vbox.pack_start(tline_hbox_1, False, False, 0)
         tline_vbox.pack_start(tline_hbox_2, True, True, 0)
+        tline_vbox.pack_start(self.tline_renderer_hbox, False, False, 0)
         tline_vbox.pack_start(tline_hbox_3, False, False, 0)
         
         # Timeline box 
@@ -854,6 +885,7 @@ class EditorWindow:
             top_row_window_2 = Gtk.HBox(False, 0)
             top_row_window_2.pack_start(Gtk.Label(), True, True, 0)
             top_row_window_2.pack_start(self.monitor_tc_info.widget, False, False, 0)
+
         # Pane
         pane = Gtk.VBox(False, 1)
         pane.pack_start(menu_vbox, False, True, 0)
@@ -1054,13 +1086,84 @@ class EditorWindow:
         comp_standard_auto = Gtk.RadioMenuItem.new_with_label([comp_top_free],_("Standard Auto Follow"))
         comp_standard_auto.show()
         menu.append(comp_standard_auto)
+
+        comp_standard_full = Gtk.RadioMenuItem.new_with_label([comp_top_free],_("Standard Full Track"))
+        comp_standard_full.show()
+        menu.append(comp_standard_full)
         
-        menu_items = [comp_top_free, comp_top_auto, comp_standard_auto]
+        menu_items = [comp_top_free, comp_top_auto, comp_standard_auto, comp_standard_full]
         menu_items[editorstate.get_compositing_mode()].set_active(True)
 
         comp_top_free.connect("toggled", lambda w: projectaction.change_current_sequence_compositing_mode(w, appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE))
         comp_top_auto.connect("toggled", lambda w: projectaction.change_current_sequence_compositing_mode(w, appconsts.COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW))
         comp_standard_auto.connect("toggled", lambda w: projectaction.change_current_sequence_compositing_mode(w, appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW))
+        comp_standard_full.connect("toggled", lambda w: projectaction.change_current_sequence_compositing_mode(w, appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK))
+
+    def init_timeline_rendering_menu(self):
+        menu_item = self.uimanager.get_widget('/MenuBar/SequenceMenu/TimelineRenderingMenu')
+        menu = menu_item.get_submenu()
+        guiutils.remove_children(menu)
+    
+        rendering_off = Gtk.RadioMenuItem()
+        rendering_off.set_label(_("Off"))
+        rendering_off.show()
+        menu.append(rendering_off)
+        
+        rendering_auto = Gtk.RadioMenuItem.new_with_label([rendering_off],_("Render Auto"))
+        rendering_auto.show()
+        menu.append(rendering_auto)
+        
+        rendering_request = Gtk.RadioMenuItem.new_with_label([rendering_off],_("Render On Request"))
+        rendering_request.show()
+        menu.append(rendering_request)
+        
+        menu_items = [rendering_off, rendering_auto, rendering_request]
+        menu_items[editorstate.get_tline_rendering_mode()].set_active(True)
+
+        rendering_off.connect("toggled", lambda w: tlinerender.change_current_tline_rendering_mode(w, appconsts.TLINE_RENDERING_OFF))
+        rendering_auto.connect("toggled", lambda w: tlinerender.change_current_tline_rendering_mode(w, appconsts.TLINE_RENDERING_AUTO))
+        rendering_request.connect("toggled", lambda w: tlinerender.change_current_tline_rendering_mode(w, appconsts.TLINE_RENDERING_REQUEST))
+        
+        sep = Gtk.SeparatorMenuItem()
+        sep.show()
+        menu.append(sep)
+        
+        item = guiutils.get_menu_item(_("Settings..."), tlinerender.settings_dialog_launch, None)
+        menu.append(item)
+    
+    def fill_recents_menu_widget(self, menu_item, callback):
+        """
+        Fills menu item with menuitems to open recent projects.
+        """
+        menu = menu_item.get_submenu()
+
+        # Remove current items
+        items = menu.get_children()
+        for item in items:
+            menu.remove(item)
+        
+        # Add new menu items
+        recent_proj_names = editorpersistance.get_recent_projects()
+        if len(recent_proj_names) != 0:
+            for i in range (0, len(recent_proj_names)):
+                proj_name = recent_proj_names[i]
+                new_item = Gtk.MenuItem(proj_name)
+                new_item.connect("activate", callback, i)
+                menu.append(new_item)
+                new_item.show()
+        # ...or a single non-sensitive Empty item 
+        else:
+            new_item = Gtk.MenuItem(_("Empty"))
+            new_item.set_sensitive(False)
+            menu.append(new_item)
+            new_item.show()
+        
+    def hide_tline_render_strip(self):
+        guiutils.remove_children(self.tline_renderer_hbox)
+
+    def show_tline_render_strip(self):
+        self.tline_renderer_hbox.pack_start(self.pad_box, False, False, 0)
+        self.tline_renderer_hbox.pack_start(self.tline_render_strip.widget, True, True, 0)
         
     def _init_gui_to_prefs(self):
         if editorpersistance.prefs.tabs_on_top == True:
