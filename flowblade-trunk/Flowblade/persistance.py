@@ -444,6 +444,10 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
         # We need this in all media files, used only by img seq media
         if not hasattr(media_file, "ttl"):
             media_file.ttl = None
+
+        # Avoid crash in case path attribute is missing (color clips).
+        if not hasattr(media_file, "path"):
+            continue
         # Add container data if not found.
         if not hasattr(media_file, "container_data"):
             media_file.container_data = None
