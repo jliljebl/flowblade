@@ -25,6 +25,7 @@ and sequence state changes as output.
 Edits, undos and redos are done by creating and calling methods on these 
 EditAction objects and placing them on the undo/redo stack.
 """
+import copy
 
 import appconsts
 import clipeffectseditor
@@ -2833,8 +2834,11 @@ def _container_clip_full_render_replace_redo(self):
     _remove_clip(self.track, self.index)
     _insert_clip(self.track, self.new_clip, self.index, self.old_clip.clip_in, self.old_clip.clip_out)
 
-    if not hasattr(self.new_clip, "container_data"):
+    if self.new_clip.container_data == None:
         self.new_clip.container_data = copy.deepcopy(self.old_clip.container_data)
+    
+    if self.old_clip.container_data == None:
+        print("old clip cdata None")
             
     self.new_clip.container_data.rendered_media = self.new_clip
     self.new_clip.container_data.rendered_media_range_in = 0

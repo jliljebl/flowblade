@@ -52,6 +52,8 @@ import respaths
 import translations
 import userfolders
 
+CLIP_FRAMES_DIR = "/clip_frames"
+RENDERED_FRAMES_DIR = "/rendered_frames"
 
 COMPLETED_MSG_FILE = "completed"
 STATUS_MSG_FILE = "status"
@@ -146,8 +148,8 @@ def main(root_path, session_id, script, clip_path, range_in, range_out, profile_
     mltprofiles.load_profile_list()
     global _session_folder, _clip_frames_folder, _rendered_frames_folder
     _session_folder = _get_session_folder(session_id)
-    _clip_frames_folder = _session_folder + "/clip_frames"
-    _rendered_frames_folder = _session_folder + "/rendered_frames"
+    _clip_frames_folder = _session_folder + CLIP_FRAMES_DIR
+    _rendered_frames_folder = _session_folder + RENDERED_FRAMES_DIR
 
     # Init gmic session dirs, these might exist if clip has been rendered before
     if not os.path.exists(_session_folder):

@@ -26,7 +26,7 @@ import propertyedit
 import propertyparse
 
 """
-This module handles adding fade-ins and fade-outs to compositors.
+This module handles adding fade-ins and fade-outs to compositors and filters.
 
 Creating and managing keyframes is mostly handled by editor GUI components which cannot easily 
 be used for adding fade-ins and fade outs, so this dedicated module is needed.

@@ -397,13 +397,9 @@ class Sequence:
         """
         Creates MLT Producer and adds attributes to it, but does 
         not add it to track/playlist object.
-        """        
-        #producer = mlt.Producer(self.profile, "avformat-novalidate", str(path)) # this runs 0.5s+ on some clips
-        #t = time.monotonic()
+        """
         producer = mlt.Producer(self.profile, str(path)) # this runs 0.5s+ on some clips
-        #print(time.monotonic() - t)
-        #if novalidate == True:
-        #    producer.set("mlt_service", "avformat-novalidate")
+
         mltrefhold.hold_ref(producer)
         producer.path = path
         producer.filters = []
@@ -1067,6 +1063,19 @@ class Sequence:
                     return clip
 
         return None
+
+    def get_track_and_index_for_id(self, clip_id):
+        """
+        Returns clip or None if not found.
+        """
+        for i in range(1, len(self.tracks)):
+            track = self.tracks[i]
+            for j in range(0, len(track.clips)):
+                clip = track.clips[j]
+                if clip.id == clip_id:
+                    return (track, j)
+
+        return (None, None)
         
     def set_track_mute_state(self, track_index, mute_state):
         track = self.tracks[track_index]
