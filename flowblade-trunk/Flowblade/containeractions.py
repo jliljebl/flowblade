@@ -18,7 +18,9 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
+import cairo
 import hashlib
+import mlt
 from os import listdir
 from os.path import isfile, join
 import subprocess
@@ -39,12 +41,15 @@ import utils
 FULL_RENDER = 0
 CLIP_RENDER = 1
 
+OVERLAY_COLOR = (0.17, 0.23, 0.63, 0.5)
+GMIC_TYPE_ICON = None
+
 _status_polling_thread = None
 
 # ----------------------------------------------------- interface
-def get_action_object(clip):
-    if clip.container_data.container_type == appconsts.CONTAINER_CLIP_GMIC:
-        return GMicContainerActions(clip)
+def get_action_object(container_data):
+    if container_data.container_type == appconsts.CONTAINER_CLIP_GMIC:
+        return GMicContainerActions(container_data)
 
 def shutdown_polling():
     if _status_polling_thread == None:
@@ -53,16 +58,69 @@ def shutdown_polling():
     _status_polling_thread.shutdown()
                 
 
+# ------------------------------------------------------------ thumbnail creation helpers
+def _get_type_icon(container_type):
+    global GMIC_TYPE_ICON
+    
+    if GMIC_TYPE_ICON == None:
+        GMIC_TYPE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "container_clip_gmic.png")
+        
+    
+    if container_type == appconsts.CONTAINER_CLIP_GMIC:
+        return GMIC_TYPE_ICON
+
+def _write_thumbnail_image(profile, file_path):
+    """
+    Writes thumbnail image from file producer
+    """
+    # Get data
+    md_str = hashlib.md5(file_path.encode('utf-8')).hexdigest()
+    thumbnail_path = userfolders.get_cache_dir() + appconsts.THUMBNAILS_DIR + "/" + md_str +  ".png"
+
+    # Create consumer
+    consumer = mlt.Consumer(profile, "avformat", 
+                                 thumbnail_path)
+    consumer.set("real_time", 0)
+    consumer.set("vcodec", "png")
+
+    # Create one frame producer
+    producer = mlt.Producer(profile, str(file_path))
+    if producer.is_valid() == False:
+        raise ProducerNotValidError(file_path)
+
+    info = utils.get_file_producer_info(producer)
+
+    length = producer.get_length()
+    frame = length // 2
+    producer = producer.cut(frame, frame)
+
+    # Connect and write image
+    consumer.connect(producer)
+    consumer.run()
+    
+    return (thumbnail_path, length, info)
+
+def _create_image_surface(icon_path):
+    icon = cairo.ImageSurface.create_from_png(icon_path)
+    scaled_icon = cairo.ImageSurface(cairo.FORMAT_ARGB32, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
+    cr = cairo.Context(scaled_icon)
+    cr.save()
+    cr.scale(float(appconsts.THUMB_WIDTH) / float(icon.get_width()), float(appconsts.THUMB_HEIGHT) / float(icon.get_height()))
+    cr.set_source_surface(icon, 0, 0)
+    cr.paint()
+    cr.restore()
+
+    return (cr, scaled_icon)
+
+
 # ---------------------------------------------------- action objects
 class AbstractContainerActionObject:
     
-    def __init__(self, clip):
-        self.clip = clip
-        self.container_data = clip.container_data
+    def __init__(self, container_data):
+        self.container_data = container_data
 
-    def render_full_media(self):
+    def render_full_media(self, clip):
         print("AbstractContainerActionObject.render_full_media not impl")
-
 
     def get_session_dir(self):
         return self.get_container_clips_dir() + "/" + self.get_container_program_id()
@@ -119,7 +177,11 @@ class AbstractContainerActionObject:
             return None
 
         return self.get_rendered_media_dir() + "/" + lowest_file
-        
+
+    def get_rendered_thumbnail(self):
+        print("AbstractContainerActionObject.get_rendered_thumbnail not impl")
+        return None
+    
     def update_render_status(self):
         print("AbstractContainerActionObject.update_render_status not impl")
 
@@ -130,17 +192,19 @@ class AbstractContainerActionObject:
 
 class GMicContainerActions(AbstractContainerActionObject):
 
-    def __init__(self, clip):
-        AbstractContainerActionObject.__init__(self, clip)
-        self.render_type = -1 # to be set below
-
-    def render_full_media(self):
+    def __init__(self, container_data):
+        AbstractContainerActionObject.__init__(self, container_data)
+        self.render_type = -1 # to be set in methods below
+        self.clip = None # to be set in methods below
+        
+    def render_full_media(self, clip):
         self.render_type = FULL_RENDER
-        self._launch_render(0, self.container_data.unrendered_length)
+        self.clip = clip
+        self._launch_render(clip, 0, self.container_data.unrendered_length)
 
         self.add_as_status_polling_object()
 
-    def _launch_render(self, range_in, range_out):
+    def _launch_render(self, clip, range_in, range_out):
         #print("rendering gmic container clip:", self.get_container_program_id(), range_in, range_out)
         gmicheadless.clear_flag_files(self.get_container_program_id())
         
@@ -172,7 +236,7 @@ class GMicContainerActions(AbstractContainerActionObject):
                     return
                 
                 resource_name_str = utils.get_img_seq_resource_name(frame_file, True)
-                resource_path =  self.get_rendered_media_dir() + "/" + resource_name_str
+                resource_path = self.get_rendered_media_dir() + "/" + resource_name_str
 
                 rendered_clip = current_sequence().create_file_producer_clip(resource_path, new_clip_name=None, novalidate=False, ttl=1)
                 track, clip_index = current_sequence().get_track_and_index_for_id(self.clip.id)
@@ -184,6 +248,7 @@ class GMicContainerActions(AbstractContainerActionObject):
                 # "old_clip", "new_clip", "track", "index"
                 data = {"old_clip":self.clip,
                         "new_clip":rendered_clip,
+                        "rendered_media_path":resource_path,
                         "track":track,
                         "index":clip_index}
                 action = edit.container_clip_full_render_replace(data)
@@ -198,8 +263,30 @@ class GMicContainerActions(AbstractContainerActionObject):
     def abort_render(self):
         print("AbstractContainerActionObject.abort_render not impl")
 
-
+    def create_icon(self):
+        print("kasdkasdkadskadskkk")
+        icon_path, length, info = _write_thumbnail_image(PROJECT().profile, self.container_data.unrendered_media)
+        cr, surface = _create_image_surface(icon_path)
+        cr.rectangle(0, 0, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
+        cr.set_source_rgba(*OVERLAY_COLOR)
+        cr.fill()
+        type_icon = _get_type_icon(appconsts.CONTAINER_CLIP_GMIC)
+        cr.set_source_surface(type_icon, 1, 30)
+        cr.set_operator (cairo.OPERATOR_OVERLAY)
+        cr.paint_with_alpha(0.5)
+ 
+        return (surface, length)
+        """
+        self.icon = surface
+        self.length = length
+        self.container_data.unrendered_length = length - 1
+        """
         
+    def get_rendered_thumbnail(self):
+        surface, length = self.create_icon()
+        return surface
+
+
 class ContainerStatusPollingThread(threading.Thread):
     
     def __init__(self):

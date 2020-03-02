@@ -2840,7 +2840,7 @@ def _container_clip_full_render_replace_redo(self):
     if self.old_clip.container_data == None:
         print("old clip cdata None")
             
-    self.new_clip.container_data.rendered_media = self.new_clip
+    self.new_clip.container_data.rendered_media = self.rendered_media_path
     self.new_clip.container_data.rendered_media_range_in = 0
     self.new_clip.container_data.rendered_media_range_out = self.old_clip.container_data.unrendered_length
 

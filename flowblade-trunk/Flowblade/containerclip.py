@@ -20,8 +20,7 @@
 
 from gi.repository import Gtk
 
-import cairo
-import mlt
+
 import hashlib
 import os
 
@@ -31,10 +30,12 @@ import dialogutils
 from editorstate import PROJECT
 import gui
 import guiutils
+import respaths
 import userfolders
 import utils
 
 ROW_WIDTH = 300
+
 
 
 class ContainerClipData:
@@ -57,13 +58,19 @@ class ContainerClipData:
             directory, file_name = os.path.split(self.unrendered_media)
             name, ext = os.path.splitext(file_name)
             return name
+        
+        def get_rendered_thumbnail(self):
+            action_object = containeractions.get_action_object(self)
+            return action_object.get_rendered_thumbnail()
 
+
+    
 
 # -------------------------------------------------------- Clip menu actions
 def render_full_media(data):
     clip, track, item_id, item_data = data
-    action_object = containeractions.get_action_object(clip)
-    action_object.render_full_media()
+    action_object = containeractions.get_action_object(clip.container_data)
+    action_object.render_full_media(clip)
 
 def render_clip_length(data):
     clip, track, item_id, item_data = data
@@ -147,48 +154,7 @@ def _update_gui_for_media_object_add():
     gui.media_list_view.fill_data_model()
     gui.bin_list_view.fill_data_model()
 
-# ------------------------------------------------------------ thumbnail creation
 
-def _write_thumbnail_image(profile, file_path):
-    """
-    Writes thumbnail image from file producer
-    """
-    # Get data
-    md_str = hashlib.md5(file_path.encode('utf-8')).hexdigest()
-    thumbnail_path = userfolders.get_cache_dir() + appconsts.THUMBNAILS_DIR + "/" + md_str +  ".png"
-
-    # Create consumer
-    consumer = mlt.Consumer(profile, "avformat", 
-                                 thumbnail_path)
-    consumer.set("real_time", 0)
-    consumer.set("vcodec", "png")
-
-    # Create one frame producer
-    producer = mlt.Producer(profile, str(file_path))
-    if producer.is_valid() == False:
-        raise ProducerNotValidError(file_path)
-
-    info = utils.get_file_producer_info(producer)
-
-    length = producer.get_length()
-    frame = length // 2
-    producer = producer.cut(frame, frame)
-
-    # Connect and write image
-    consumer.connect(producer)
-    consumer.run()
-    
-    return (thumbnail_path, length, info)
-
-def _create_image_surface(icon_path):
-    icon = cairo.ImageSurface.create_from_png(icon_path)
-    scaled_icon = cairo.ImageSurface(cairo.FORMAT_ARGB32, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
-    cr = cairo.Context(scaled_icon)
-    cr.scale(float(appconsts.THUMB_WIDTH) / float(icon.get_width()), float(appconsts.THUMB_HEIGHT) / float(icon.get_height()))
-    cr.set_source_surface(icon, 0, 0)
-    cr.paint()
-    
-    return scaled_icon
     
 # --------------------------------------------------- bin media objects
 class AbstractBinContainerClip: # not extends projectdata.MediaFile? too late, too late. Also better name would be AbstractBinPatternProducer
@@ -216,10 +182,10 @@ class AbstractBinContainerClip: # not extends projectdata.MediaFile? too late, t
         self.create_icon()
 
     def matches_project_profile(self):
-        return True # these are created to match project profile
+        return True # These are all created to match project profile.
 
     def create_mlt_producer(self, profile):
-        print("create_mlt_producer not implemented")
+        print("create_mlt_producer() not implemented")
 
     def create_icon(self):
         print("patter producer create_icon() not implemented")
@@ -235,7 +201,10 @@ class GMicContainerClip(AbstractBinContainerClip):
         AbstractBinContainerClip.__init__(self, media_item_id, name, container_data)
 
     def create_icon(self):
-        icon_path, length, info = _write_thumbnail_image(PROJECT().profile, self.container_data.unrendered_media)
-        self.icon = _create_image_surface(icon_path)
+        action_object = containeractions.get_action_object(self.container_data)
+        surface, length = action_object.create_icon()      
+                    
+        self.icon = surface
         self.length = length
         self.container_data.unrendered_length = length - 1
+

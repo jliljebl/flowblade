@@ -198,6 +198,12 @@ IMAGE_CLIP_COLOR_GRAD = (1, 0.1, 0.20, 0.21, 1) #(1, 0.33, 0.65, 0.69, 1)
 IMAGE_CLIP_COLOR_GRAD_L = get_multiplied_grad(0, 1, IMAGE_CLIP_COLOR_GRAD, GRAD_MULTIPLIER) 
 IMAGE_CLIP_SELECTED_COLOR = get_multiplied_color_from_grad(IMAGE_CLIP_COLOR_GRAD, SELECTED_MULTIPLIER + 0.1)
 
+
+CONTAINER_CLIP_NOT_RENDERED_COLOR = (0.7, 0.3, 0.3)
+CONTAINER_CLIP_NOT_RENDERED_SELECTED_COLOR = (0.8, 0.4, 0.4)
+CONTAINER_CLIP_RENDERED_COLOR = (0.25, 0.33, 0.78)
+CONTAINER_CLIP_RENDERED_SELECTED_COLOR = (0.35, 0.43, 0.84)
+ 
 COMPOSITOR_CLIP = (0.12, 0.12, 0.22, 0.7)
 COMPOSITOR_CLIP_AUTO_FOLLOW = (0.33, 0.05, 0.52, 0.65)
 COMPOSITOR_CLIP_SELECTED = (0.5, 0.5, 0.7, 0.8)
@@ -1749,8 +1755,22 @@ class TimeLineCanvas:
                         cr.set_source(grad)
                 elif track.type == sequence.VIDEO:
                     if clip.container_data != None:
-                            clip_bg_col = (0.7, 0.3, 0.3)
-                            cr.set_source_rgb(*clip_bg_col)
+                        if clip.container_data.rendered_media_range_in == -1: 
+                            if not clip.selected:
+                                clip_bg_col = (0.7, 0.3, 0.3)
+                                cr.set_source_rgb(*CONTAINER_CLIP_NOT_RENDERED_COLOR)
+                                clip_bg_col = CONTAINER_CLIP_NOT_RENDERED_COLOR
+                            else:
+                                cr.set_source_rgb(*CONTAINER_CLIP_NOT_RENDERED_SELECTED_COLOR)
+                                clip_bg_col = CONTAINER_CLIP_NOT_RENDERED_SELECTED_COLOR
+                        else:
+                            if not clip.selected:
+                                clip_bg_col = (0.7, 0.3, 0.3)
+                                cr.set_source_rgb(*CONTAINER_CLIP_RENDERED_COLOR)
+                                clip_bg_col = CONTAINER_CLIP_RENDERED_COLOR
+                            else:
+                                cr.set_source_rgb(*CONTAINER_CLIP_RENDERED_SELECTED_COLOR)
+                                clip_bg_col = CONTAINER_CLIP_RENDERED_SELECTED_COLOR
                     elif clip.media_type == sequence.VIDEO:
                         if not clip.selected:
                             grad = cairo.LinearGradient (0, y, 0, y + track_height)
@@ -1869,14 +1889,22 @@ class TimeLineCanvas:
                         cr.paint()
                     except: # thumbnail not found  in dict, get it and  paint it
                         try:
-                            media_file = PROJECT().get_media_file_for_path(clip.path)
-                            thumb_img = media_file.icon
+                            if clip.container_data == None:
+                                media_file = PROJECT().get_media_file_for_path(clip.path)
+                                thumb_img = media_file.icon
+                            else:
+                                if clip.container_data.rendered_media != None:
+                                    thumb_img = clip.container_data.get_rendered_thumbnail()
+                                else:
+                                    media_file = PROJECT().get_media_file_for_path(clip.path)
+                                    thumb_img = media_file.icon
                             cr.rectangle(scale_in + 4, y + 3.5, scale_length - 8, track_height - 6)
                             cr.clip()
                             cr.set_source_surface(thumb_img, scale_in, y - 20)
                             cr.paint()
                             clip_thumbnails[clip.path] = thumb_img
                         except:
+                            print("failed")
                             pass # This fails for rendered fades and transitions
                     
                     if clip.selected:
