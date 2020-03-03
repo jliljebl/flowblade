@@ -232,10 +232,11 @@ class GMicHeadlessRunnerThread(threading.Thread):
                                                                         frame_name,
                                                                         self.script_render_update_callback, 
                                                                         self.script_render_output_callback,
-                                                                        nice=10)
+                                                                        nice=10,
+                                                                        re_render_existing=False)
         self.script_renderer.write_frames()
 
-        # Write out completed flag file
+        # Write out completed flag file.
         completed_msg_file =_session_folder + "/" + COMPLETED_MSG_FILE
         script_text = "##completed##" # let's put something in here
         with atomicfile.AtomicFileWriter(completed_msg_file, "w") as afw:

@@ -25,6 +25,8 @@ Clip player used to select frames for preview and range selection.
 
 import mlt
 import os
+from os import listdir
+from os.path import isfile, join
 import re
 import sys
 import subprocess
@@ -194,11 +196,109 @@ class FramesRangeWriter:
         self.consumer.stop()
         self.frame_producer.set_speed(0)
         self.running = False
+
+
+class FolderFramesInfo:
+
+    def __init__(self, folder):
+        self.folder = folder
+
+    def get_lowest_numbered_file(self):
+        # This will not work if there are two image sequences in the same folder.
+        folder = self.folder
+
+        onlyfiles = [ f for f in listdir(folder) if isfile(join(folder,f)) ]
+        lowest_number_part = 1000000000
+        lowest_file = None
+        for f in onlyfiles:
+            try:
+                if lowest_file == None:
+                    path_name_part = self._get_path_name_part(f)
+                    lowest_file = f
+                    
+                file_number_part = int(re.findall("[0-9]+", f)[-1]) # -1, we want the last number part
+
+            except:
+                continue
+            if f.find(path_name_part) == -1:
+                # needs to part of same sequence
+                continue
+            if file_number_part < lowest_number_part:
+                lowest_number_part = file_number_part
+                lowest_file = f
+
+        if lowest_file == None:
+            return None
+
+        return folder + "/" + lowest_file
+
+    def get_highest_numbered_file(self):
+        # This will not work if there are two image sequences in the same folder.
+        folder = self.folder
+
+        onlyfiles = [ f for f in listdir(folder) if isfile(join(folder,f)) ]
+        highest_number_part = 0
+        highest_file = None
+        for f in onlyfiles:
+            try:
+                if highest_file == None:
+                    path_name_part = self._get_path_name_part(f)
+                    highest_file = f
+                    
+                file_number_part = int(re.findall("[0-9]+", f)[-1]) # -1, we want the last number part
+
+            except:
+                continue
+            if f.find(path_name_part) == -1:
+                # needs to part of same sequence
+                continue
+            if file_number_part > highest_number_part:
+                highest_number_part = file_number_part
+                highest_file = f
+
+        if highest_file == None:
+            return None
+
+        return folder + "/" + highest_file
+
+
+    def full_range_exits(self, start, end):
+        # end inclusive
+        # This will not work if there are two image sequences in the same folder.
+        folder = self.folder
+        onlyfiles = [ f for f in listdir(folder) if isfile(join(folder,f)) ]
+        existing_files = {}
+        for f in onlyfiles:
+            try:
+                file_number_part = int(re.findall("[0-9]+", f)[-1]) # -1, we want the last number part
+                print(int(file_number_part))
+                existing_files[int(file_number_part)] = f
+            except:
+                print("hhhhhhhh")
+                continue
+
+        for i in range(start, end + 1):
+            try:
+                print(i)
+                f = existing_files[i]
+                print(i, f)
+            except:
+                print("iiii")
+                return False
         
+        return True
+        
+    def _get_path_name_part(self, f):
+        number_parts = re.findall("[0-9]+", f)
+        number_part = number_parts[-1] # we want the last number part 
+        number_index = f.find(number_part)
+        path_name_part = f[0:number_index]
+        return path_name_part
 
 class FolderFramesScriptRenderer:
 
-    def __init__(self, user_script, folder, out_folder, frame_name, update_callback, render_output_callback, nice=0):
+    def __init__(   self, user_script, folder, out_folder, frame_name, update_callback, 
+                    render_output_callback, nice=0, re_render_existing=True):
         self.user_script = user_script
         self.folder = folder
         self.out_folder = out_folder
@@ -206,6 +306,8 @@ class FolderFramesScriptRenderer:
         self.update_callback = update_callback
         self.render_output_callback = render_output_callback
         self.nice = nice
+        self.re_render_existing = re_render_existing
+        
         self.abort = False
 
     def write_frames(self):
@@ -229,6 +331,11 @@ class FolderFramesScriptRenderer:
             rendered_file_path = self.out_folder + self.frame_name + "_" + filled_number_str + ".png"
             
             script_str = nice_command + "gmic " + clip_frame_path + " " + self.user_script + " -output " +  rendered_file_path
+
+            if self.re_render_existing == False:
+                if os.path.exists(rendered_file_path) == True:
+                    frame_count = frame_count + 1
+                    continue
 
             if frame_count == 1: # first frame displays shell output and does error checking
                 FLOG = open(userfolders.get_cache_dir() + "log_gmic_preview", 'w')

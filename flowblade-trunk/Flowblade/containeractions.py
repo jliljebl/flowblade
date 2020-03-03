@@ -34,6 +34,7 @@ import edit
 from editorstate import current_sequence
 from editorstate import PROJECT
 import gmicheadless
+import gmicplayer
 import respaths
 import userfolders
 import utils
@@ -147,6 +148,14 @@ class AbstractContainerActionObject:
         _status_polling_thread.poll_objects.remove(self)
 
     def get_lowest_numbered_file(self):
+        
+        frames_info = gmicplayer.FolderFramesInfo(self.get_rendered_media_dir())
+        lowest = frames_info.get_lowest_numbered_file()
+        highest =  frames_info.get_highest_numbered_file()
+        print(lowest, highest)
+        return frames_info.get_lowest_numbered_file()
+        
+        """
         # This will not work if there are two image sequences in the same folder.
         folder = self.get_rendered_media_dir()
 
@@ -177,7 +186,8 @@ class AbstractContainerActionObject:
             return None
 
         return self.get_rendered_media_dir() + "/" + lowest_file
-
+        """
+        
     def get_rendered_thumbnail(self):
         print("AbstractContainerActionObject.get_rendered_thumbnail not impl")
         return None
@@ -207,7 +217,10 @@ class GMicContainerActions(AbstractContainerActionObject):
     def _launch_render(self, clip, range_in, range_out):
         #print("rendering gmic container clip:", self.get_container_program_id(), range_in, range_out)
         gmicheadless.clear_flag_files(self.get_container_program_id())
-        
+        #print(range_in, range_out)
+        #frames_info = gmicplayer.FolderFramesInfo(self.get_session_dir() + gmicheadless.CLIP_FRAMES_DIR)
+        #print(frames_info.full_range_exits(range_in + 1, range_out + 1))
+            
         args = ("session_id:" + self.get_container_program_id(), 
                 "script:" + self.container_data.program,
                 "clip_path:" + self.container_data.unrendered_media,
@@ -234,7 +247,7 @@ class GMicContainerActions(AbstractContainerActionObject):
                     # Something is quite wrong, maybe best to just print out message and give up.
                     print("No frame file found for gmic conatainer clip")
                     return
-                
+
                 resource_name_str = utils.get_img_seq_resource_name(frame_file, True)
                 resource_path = self.get_rendered_media_dir() + "/" + resource_name_str
 
