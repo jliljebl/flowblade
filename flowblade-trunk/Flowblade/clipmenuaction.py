@@ -719,4 +719,5 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "cc_render_clip":containerclip.render_clip_length,
                   "cc_go_to_underdered":containerclip.switch_to_unrendered_media,
                   "cc_external_media":containerclip.save_rendered_media_in_external_folder,
-                  "cc_internal_media":containerclip.save_rendered_media_in_internal_cache}
+                  "cc_internal_media":containerclip.save_rendered_media_in_internal_cache,
+                  "cc_video_endoding":containerclip.set_video_endoding}

@@ -121,6 +121,14 @@ def get_profile_for_index(index):
 def get_profile_name_for_index(index):
     profile_name, profile = _profile_list[index]
     return profile_name
+
+def get_profile_index_for_profile(test_profile):
+    for i in range(0, len(_profile_list)):
+        fname, profile = _profile_list[i]
+        if profile.description() == test_profile.description():
+            return i
+    
+    return -1 # not found
     
 def get_default_profile():
     return get_profile_for_index(get_default_profile_index())

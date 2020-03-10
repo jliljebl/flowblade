@@ -31,6 +31,7 @@ from editorstate import PROJECT
 import gui
 import guiutils
 import respaths
+#import toolsencoding
 import userfolders
 import utils
 
@@ -53,6 +54,8 @@ class ContainerClipData:
             self.unrendered_type = utils.get_media_type(unrendered_media)
 
             self.external_media_folder = None
+
+            self.video_render_data = None # # values are intilized to toolsencoding.ToolsRenderData object later
 
         def get_unrendered_media_name(self):
             directory, file_name = os.path.split(self.unrendered_media)
@@ -86,8 +89,10 @@ def save_rendered_media_in_internal_cache(data):
     clip, track, item_id, item_data = data
     print(clip)
 
-
-
+def set_video_endoding(data):
+    clip, track, item_id, item_data = data
+    action_object = containeractions.get_action_object(clip.container_data)
+    action_object.set_video_endoding(clip)
 
 
 # -------------------------------------------------------- Media Item Creation

@@ -28,6 +28,16 @@ import mltprofiles
 import renderconsumer
 import utils
 
+
+
+# NOTE: 
+# On Module globals:
+# - when used by gmic.py for GMic Tool we have no problem with e.g widgets being module global
+#   because gmic.py runs in own process.
+# - when this module is used in main application process it is important that e.g.widgets object 
+#   is created each time module is used to set rendering values for e.g. container clips.
+# - when used by a rendering process like gmicheadless.py we are again good to use module freely,
+#   process cotrols values in this module fully.
 widgets = None
 disable_audio_encoding = False
 default_profile_index = None

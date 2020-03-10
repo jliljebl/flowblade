@@ -1976,6 +1976,9 @@ def _get_container_clip_menu_item(event, clip, track, callback):
         internal_media_item.set_sensitive(False)
     sub_menu.append(internal_media_item)
 
+    video_item = _get_menu_item(_("Set Video Clip Endocing..."), callback, (clip, track, "cc_video_endoding", event.x))
+    sub_menu.append(video_item)
+    
     menu_item.show()
     return menu_item
 

@@ -17,10 +17,12 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
+from gi.repository import Gtk
 
 import cairo
 import hashlib
 import mlt
+import os
 from os import listdir
 from os.path import isfile, join
 import subprocess
@@ -30,12 +32,16 @@ import threading
 import time
 
 import appconsts
+import dialogutils
 import edit
 from editorstate import current_sequence
 from editorstate import PROJECT
+import gui
 import gmicheadless
 import gmicplayer
+import mltprofiles
 import respaths
+import toolsencoding
 import userfolders
 import utils
 
@@ -152,41 +158,7 @@ class AbstractContainerActionObject:
         frames_info = gmicplayer.FolderFramesInfo(self.get_rendered_media_dir())
         lowest = frames_info.get_lowest_numbered_file()
         highest =  frames_info.get_highest_numbered_file()
-        print(lowest, highest)
         return frames_info.get_lowest_numbered_file()
-        
-        """
-        # This will not work if there are two image sequences in the same folder.
-        folder = self.get_rendered_media_dir()
-
-        onlyfiles = [ f for f in listdir(folder) if isfile(join(folder,f)) ]
-        lowest_number_part = 1000000000
-        lowest_file = None
-        for f in onlyfiles:
-            try:
-                if lowest_file == None:
-                    number_parts = re.findall("[0-9]+", f)
-                    number_part = number_parts[-1] # we want the last number part 
-                    number_index = f.find(number_part)
-                    path_name_part = f[0:number_index]
-                    lowest_file = f
-                    
-                file_number_part = int(re.findall("[0-9]+", f)[-1]) # -1, we want the last number part
-
-            except:
-                continue
-            if f.find(path_name_part) == -1:
-                # needs to part of same sequence
-                continue
-            if file_number_part < lowest_number_part:
-                lowest_number_part = file_number_part
-                lowest_file = f
-
-        if lowest_file == None:
-            return None
-
-        return self.get_rendered_media_dir() + "/" + lowest_file
-        """
         
     def get_rendered_thumbnail(self):
         print("AbstractContainerActionObject.get_rendered_thumbnail not impl")
@@ -197,8 +169,39 @@ class AbstractContainerActionObject:
 
     def abort_render(self):
         print("AbstractContainerActionObject.abort_render not impl")
-    
 
+
+    def set_video_endoding(self, clip):
+        current_profile_index = mltprofiles.get_profile_index_for_profile(current_sequence().profile)
+        # These need to re-initialized always to use this module.
+        toolsencoding.create_widgets(current_profile_index, True)
+
+        encoding_panel = toolsencoding.get_enconding_panel(self.container_data.video_render_data)
+
+        if self.container_data.video_render_data == None and toolsencoding.widgets.file_panel.movie_name.get_text() == "movie":
+            toolsencoding.widgets.file_panel.movie_name.set_text("_gmic")
+
+        align = dialogutils.get_default_alignment(encoding_panel)
+        
+        dialog = Gtk.Dialog(_("Video Encoding Settings"),
+                            gui.editor_window.window,
+                            Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                            (_("Cancel"), Gtk.ResponseType.REJECT,
+                             _("Set Encoding"), Gtk.ResponseType.ACCEPT))
+        dialog.vbox.pack_start(align, True, True, 0)
+        dialogutils.set_outer_margins(dialog.vbox)
+        dialog.set_resizable(False)
+
+        dialog.connect('response', self.encode_settings_callback)
+        dialog.show_all()
+
+    def encode_settings_callback(self, dialog, response_id):
+        if response_id == Gtk.ResponseType.ACCEPT:
+            _render_data = toolsencoding.get_render_data_for_current_selections()
+            print(_render_data)
+
+        dialog.destroy()
+        
 
 class GMicContainerActions(AbstractContainerActionObject):
 

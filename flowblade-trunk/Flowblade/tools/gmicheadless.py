@@ -67,7 +67,7 @@ _rendered_frames_folder = None
 _render_thread = None
 
 
-# ----------------------------------------------------- message files
+# ----------------------------------------------------- module interface with message files
 # We are using message files to communicate with application.
 def clear_flag_files(session_id):
     folder = _get_session_folder(session_id)
