@@ -50,6 +50,7 @@ import gmic
 import gui
 import guicomponents
 import guiutils
+import jobs
 import keyevents
 import medialinker
 import medialog
@@ -635,6 +636,13 @@ class EditorWindow:
             project_vbox.pack_start(project_info_panel, False, True, 0)
             project_vbox.pack_start(seq_panel, True, True, 0)
             project_panel = guiutils.set_margins(project_vbox, 0, 2, 6, 2)
+
+        # Jobs panel
+        jobs.create_jobs_list_view()   
+        jobs_panel = jobs.get_jobs_panel()
+        jobs_hbox = Gtk.HBox()
+        jobs_hbox.pack_start(jobs_panel, True, True, 0)
+        jobs_pane = guiutils.set_margins(jobs_hbox, 6, 6, 6, 6)
         
         # Notebook
         self.notebook = Gtk.Notebook()
@@ -648,6 +656,8 @@ class EditorWindow:
         self.notebook.append_page(self.compositors_panel, Gtk.Label(label=_("Compositors")))
         if top_level_project_panel() == False:
             self.notebook.append_page(project_panel, Gtk.Label(label=_("Project")))
+            
+        self.notebook.append_page(jobs_pane, Gtk.Label(label=_("Jobs")))
         self.notebook.append_page(render_panel, Gtk.Label(label=_("Render")))
         self.notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
 
