@@ -76,6 +76,10 @@ def clear_flag_files(session_id):
     if os.path.exists(completed_msg):
         os.remove(completed_msg)
 
+    status_msg_file = folder + "/" + STATUS_MSG_FILE
+    if os.path.exists(status_msg_file):
+        os.remove(status_msg_file)
+
 def session_render_complete(session_id):
     folder = _get_session_folder(session_id)
     completed_msg = folder + "/" + COMPLETED_MSG_FILE
@@ -92,8 +96,8 @@ def get_session_status(session_id):
     except:
         return None
         
-    step, frame, length = msg.split(" ")
-    return (step, frame, length)
+    step, frame, length, elapsed = msg.split(" ")
+    return (step, frame, length, elapsed)
     
         
 def _get_session_folder(session_id):
@@ -198,6 +202,8 @@ class GMicHeadlessRunnerThread(threading.Thread):
         self.last_frame_out_update = -1
         
     def run(self):
+        self.start_time = time.monotonic()
+        
         self.render_player = None
         self.frames_range_writer = None
         
@@ -245,12 +251,14 @@ class GMicHeadlessRunnerThread(threading.Thread):
 
     def frames_update(self, frame):
         # step 1, frame , range
-        msg = "1 " + str(frame) + " " + str(self.length)
+        elapsed = time.monotonic() - self.start_time
+        msg = "1 " + str(frame) + " " + str(self.length) + " " + str(elapsed)
         self.write_status_message(msg)
         
     def script_render_update_callback(self, frame_count):
         # step 1, frame , range
-        msg = "2 " + str(frame_count) + " " + str(self.length)
+        elapsed = time.monotonic() - self.start_time
+        msg = "2 " + str(frame_count) + " " + str(self.length) + " " + str(elapsed)
         self.write_status_message(msg)
 
     def write_status_message(self, msg):

@@ -39,6 +39,7 @@ from editorstate import PROJECT
 import gui
 import gmicheadless
 import gmicplayer
+import jobs
 import mltprofiles
 import respaths
 import toolsencoding
@@ -139,6 +140,11 @@ class AbstractContainerActionObject:
         id_md_str = str(self.container_data.container_type) + self.container_data.program + self.container_data.unrendered_media
         return hashlib.md5(id_md_str.encode('utf-8')).hexdigest()
 
+    def get_job_proxy(self):
+        job_proxy = jobs.JobProxy(self.get_container_program_id())
+        job_proxy.type = jobs.CONTAINER_CLIP_RENDER
+        return job_proxy
+
     def get_container_clips_dir(self):
         return userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_DIR
 
@@ -220,10 +226,11 @@ class GMicContainerActions(AbstractContainerActionObject):
     def _launch_render(self, clip, range_in, range_out):
         #print("rendering gmic container clip:", self.get_container_program_id(), range_in, range_out)
         gmicheadless.clear_flag_files(self.get_container_program_id())
-        #print(range_in, range_out)
-        #frames_info = gmicplayer.FolderFramesInfo(self.get_session_dir() + gmicheadless.CLIP_FRAMES_DIR)
-        #print(frames_info.full_range_exits(range_in + 1, range_out + 1))
-            
+        
+        job_proxy = self.get_job_proxy()
+        job_proxy.text = _("Render Starting..")
+        jobs.add_job(job_proxy)
+        
         args = ("session_id:" + self.get_container_program_id(), 
                 "script:" + self.container_data.program,
                 "clip_path:" + self.container_data.unrendered_media,
@@ -272,7 +279,20 @@ class GMicContainerActions(AbstractContainerActionObject):
         else:
             status = gmicheadless.get_session_status(self.get_container_program_id())
             if status != None:
-                print(status)
+                step, frame, length, elapsed = status
+                
+                msg = _("Step") + str(step) + "/3"
+                if step == "1":
+                    msg += _("Writing frames")
+                else:
+                     msg += _("Rendering G'Mic script")
+
+                job_proxy = self.get_job_proxy()
+                job_proxy.progress = float(frame)/float(length)
+                job_proxy.elapsed = float(elapsed)
+                job_proxy.text = msg
+                
+                jobs.show_message(job_proxy)
             else:
                 print("Miss")
 
