@@ -1966,18 +1966,8 @@ def _get_container_clip_menu_item(event, clip, track, callback):
 
     _add_separetor(sub_menu)
 
-    external_media_item = _get_menu_item(_("Save Rendered Media In External Folder ..."), callback, (clip, track, "cc_external_media", event.x))
-    if clip.container_data.external_media_folder != None:
-        external_media_item.set_sensitive(False)
-    sub_menu.append(external_media_item)
-
-    internal_media_item = _get_menu_item(_("Save Rendered Media In Internal Cache ..."), callback, (clip, track, "cc_internal_media", event.x))
-    if clip.container_data.external_media_folder == None:
-        internal_media_item.set_sensitive(False)
-    sub_menu.append(internal_media_item)
-
-    video_item = _get_menu_item(_("Set Video Clip Endocing..."), callback, (clip, track, "cc_video_endoding", event.x))
-    sub_menu.append(video_item)
+    settings_item = _get_menu_item(_("Render Settings..."), callback, (clip, track, "cc_render_settings", event.x))
+    sub_menu.append(settings_item)
     
     menu_item.show()
     return menu_item

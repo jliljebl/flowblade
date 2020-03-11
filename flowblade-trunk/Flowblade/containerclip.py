@@ -67,8 +67,6 @@ class ContainerClipData:
             return action_object.get_rendered_thumbnail()
 
 
-    
-
 # -------------------------------------------------------- Clip menu actions
 def render_full_media(data):
     clip, track, item_id, item_data = data
@@ -89,37 +87,10 @@ def save_rendered_media_in_internal_cache(data):
     clip, track, item_id, item_data = data
     print(clip)
 
-def set_video_endoding(data):
+def set_render_settings(data):
     clip, track, item_id, item_data = data
     action_object = containeractions.get_action_object(clip.container_data)
     action_object.set_video_endoding(clip)
-
-
-# -------------------------------------------------------- Media Item Creation
-# -------------------------------------------------------- G'Mic
-def create_gmic_media_item():
-    script_select, row1 = _get_file_select_row_and_editor(_("Select G'Mic Tool Script:"))
-    media_file_select, row2 = _get_file_select_row_and_editor(_("Video Clip:"))
-    _open_image_sequence_dialog(_gmic_clip_create_dialog_callback, _("Create G'Mic Script Container Clip"), [row1, row2], [script_select, media_file_select])
-
-def _gmic_clip_create_dialog_callback(dialog, response_id, data):
-    if response_id != Gtk.ResponseType.ACCEPT:
-        dialog.destroy()
-    else:
-        script_select, media_file_select = data
-        script_file = script_select.get_filename()
-        media_file = media_file_select.get_filename()
-        
-        dialog.destroy()
-    
-        if script_file == None or media_file == None:
-            dialogutils.info_message(_("NOt all required files were defined"), _("Select all files asked for in dialog for succesful container clip creation."), gui.editor_window.window)
-            return
-
-        container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_GMIC, script_file, media_file)
-        container_clip = GMicContainerClip(PROJECT().next_media_file_id, container_clip_data.get_unrendered_media_name(), container_clip_data)
-        PROJECT().add_container_clip_media_object(container_clip)
-        _update_gui_for_media_object_add()
 
 
 # ------------------------------------------------------------ Dialogs + GUI utils
@@ -160,8 +131,32 @@ def _update_gui_for_media_object_add():
     gui.bin_list_view.fill_data_model()
 
 
+# -------------------------------------------------------- MEDIA ITEM CREATIONS
+def create_gmic_media_item():
+    script_select, row1 = _get_file_select_row_and_editor(_("Select G'Mic Tool Script:"))
+    media_file_select, row2 = _get_file_select_row_and_editor(_("Video Clip:"))
+    _open_image_sequence_dialog(_gmic_clip_create_dialog_callback, _("Create G'Mic Script Container Clip"), [row1, row2], [script_select, media_file_select])
+
+def _gmic_clip_create_dialog_callback(dialog, response_id, data):
+    if response_id != Gtk.ResponseType.ACCEPT:
+        dialog.destroy()
+    else:
+        script_select, media_file_select = data
+        script_file = script_select.get_filename()
+        media_file = media_file_select.get_filename()
+        
+        dialog.destroy()
     
-# --------------------------------------------------- bin media objects
+        if script_file == None or media_file == None:
+            dialogutils.info_message(_("NOt all required files were defined"), _("Select all files asked for in dialog for succesful container clip creation."), gui.editor_window.window)
+            return
+
+        container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_GMIC, script_file, media_file)
+        container_clip = GMicContainerClip(PROJECT().next_media_file_id, container_clip_data.get_unrendered_media_name(), container_clip_data)
+        PROJECT().add_container_clip_media_object(container_clip)
+        _update_gui_for_media_object_add()
+
+
 class AbstractBinContainerClip: # not extends projectdata.MediaFile? too late, too late. Also better name would be AbstractBinPatternProducer
     """
     A pattern producer object presnt in Media Bin.
@@ -194,7 +189,6 @@ class AbstractBinContainerClip: # not extends projectdata.MediaFile? too late, t
 
     def create_icon(self):
         print("patter producer create_icon() not implemented")
-
 
 
 class GMicContainerClip(AbstractBinContainerClip):

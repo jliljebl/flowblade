@@ -1240,6 +1240,8 @@ class GmicEffectRendererer(threading.Thread):
             resource_path = out_folder + "/" + resource_name_str
             producer = mlt.Producer(profile, str(resource_path))
 
+            clip_frames = os.listdir(get_render_frames_dir())
+
             self.render_player = renderconsumer.FileRenderPlayer("", producer, consumer, 0, len(clip_frames) - 1)
             self.render_player.wait_for_producer_end_stop = False
             self.render_player.start()
