@@ -269,7 +269,6 @@ def create_widgets(def_profile_index, disable_audio=False):
     widgets = utils.EmptyClass()
      
     widgets.file_panel = RenderFilePanel()
-    widgets.render_type_panel = RenderTypePanel(_render_type_changed, _preset_selection_changed)
     widgets.profile_panel = RenderProfilePanel(_out_profile_changed)
     widgets.encoding_panel = RenderEncodingPanel(widgets.file_panel.extension_label)
 
@@ -280,11 +279,9 @@ def get_enconding_panel(render_data):
     file_opts_panel = guiutils.get_named_frame(_("File"), widgets.file_panel.vbox, 4)         
     profile_panel = guiutils.get_named_frame(_("Render Profile"), widgets.profile_panel.vbox, 4)
     encoding_panel = guiutils.get_named_frame(_("Encoding Format"), widgets.encoding_panel.vbox, 4)
-    render_type_panel = guiutils.get_named_frame(_("Render Type"), widgets.render_type_panel.vbox, 4)
     
     render_panel = Gtk.VBox()
     render_panel.pack_start(file_opts_panel, False, False, 0)
-    render_panel.pack_start(render_type_panel, False, False, 0)
     render_panel.pack_start(profile_panel, False, False, 0)
     render_panel.pack_start(encoding_panel, False, False, 0)
 
@@ -296,8 +293,6 @@ def get_enconding_panel(render_data):
         widgets.encoding_panel.quality_selector.widget.set_active(render_data.quality_option_index)
         widgets.profile_panel.out_profile_combo.widget.set_active(render_data.profile_index)
         widgets.profile_panel.use_project_profile_check.set_active(render_data.use_default_profile)
-        widgets.render_type_panel.presets_selector.widget.set_active(render_data.presets_index)
-        widgets.render_type_panel.type_combo.set_active(render_data.use_preset_encodings)
             
     return render_panel
 
@@ -368,8 +363,8 @@ def get_render_data_for_current_selections():
     render_data.use_default_profile = widgets.profile_panel.use_project_profile_check.get_active()
     render_data.encoding_option_index = widgets.encoding_panel.encoding_selector.widget.get_active()
     render_data.quality_option_index = widgets.encoding_panel.quality_selector.widget.get_active()
-    render_data.presets_index = widgets.render_type_panel.presets_selector.widget.get_active()
-    render_data.use_preset_encodings = (widgets.render_type_panel.type_combo.get_active() == 1)
+    render_data.presets_index = 0
+    render_data.use_preset_encodings = False
     render_data.render_dir = "/" + widgets.file_panel.out_folder.get_uri().lstrip("file:/")
     render_data.file_name = widgets.file_panel.movie_name.get_text()
     render_data.file_extension = widgets.file_panel.extension_label.get_text()
