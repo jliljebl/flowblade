@@ -18,6 +18,7 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 from gi.repository import Gtk
+from gi.repository import Gdk
 
 import cairo
 import hashlib
@@ -179,17 +180,18 @@ class AbstractContainerActionObject:
 
     def set_video_endoding(self, clip):
         current_profile_index = mltprofiles.get_profile_index_for_profile(current_sequence().profile)
-        # These need to re-initialized always to use this module.
-        toolsencoding.create_widgets(current_profile_index, True)
+        # These need to re-initialized always when using this module.
+        toolsencoding.create_widgets(current_profile_index, True, True)
+        toolsencoding.widgets.file_panel.enable_file_selections(False)
 
-        encoding_panel = toolsencoding.get_enconding_panel(self.container_data.video_render_data)
+        encoding_panel = toolsencoding.get_encoding_panel(self.container_data.video_render_data, True)
 
         if self.container_data.video_render_data == None and toolsencoding.widgets.file_panel.movie_name.get_text() == "movie":
             toolsencoding.widgets.file_panel.movie_name.set_text("_gmic")
 
         align = dialogutils.get_default_alignment(encoding_panel)
         
-        dialog = Gtk.Dialog(_("Video Encoding Settings"),
+        dialog = Gtk.Dialog(_("Container Clip Render Settings"),
                             gui.editor_window.window,
                             Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                             (_("Cancel"), Gtk.ResponseType.REJECT,
@@ -204,7 +206,7 @@ class AbstractContainerActionObject:
     def encode_settings_callback(self, dialog, response_id):
         if response_id == Gtk.ResponseType.ACCEPT:
             _render_data = toolsencoding.get_render_data_for_current_selections()
-            print(_render_data)
+            self.container_data.video_render_data = _render_data
 
         dialog.destroy()
         
@@ -226,6 +228,7 @@ class GMicContainerActions(AbstractContainerActionObject):
     def _launch_render(self, clip, range_in, range_out):
         #print("rendering gmic container clip:", self.get_container_program_id(), range_in, range_out)
         gmicheadless.clear_flag_files(self.get_container_program_id())
+        gmicheadless.set_render_data(self.get_container_program_id(), self.container_data.video_render_data)
         
         job_proxy = self.get_job_proxy()
         job_proxy.text = _("Render Starting..")
@@ -247,7 +250,9 @@ class GMicContainerActions(AbstractContainerActionObject):
         subprocess.Popen([nice_command], shell=True)
 
     def update_render_status(self):
-    
+        
+        Gdk.threads_enter()
+                    
         if gmicheadless.session_render_complete(self.get_container_program_id()) == True:
             self.remove_as_status_polling_object()
             if self.render_type == FULL_RENDER:
@@ -284,9 +289,11 @@ class GMicContainerActions(AbstractContainerActionObject):
                 msg = _("Step") + str(step) + "/3"
                 if step == "1":
                     msg += _("Writing frames")
-                else:
+                elif step == "2":
                      msg += _("Rendering G'Mic script")
-
+                else:
+                     msg += _("Encoding")
+                     
                 job_proxy = self.get_job_proxy()
                 job_proxy.progress = float(frame)/float(length)
                 job_proxy.elapsed = float(elapsed)
@@ -296,11 +303,12 @@ class GMicContainerActions(AbstractContainerActionObject):
             else:
                 print("Miss")
 
+        Gdk.threads_leave()
+
     def abort_render(self):
         print("AbstractContainerActionObject.abort_render not impl")
 
     def create_icon(self):
-        print("kasdkasdkadskadskkk")
         icon_path, length, info = _write_thumbnail_image(PROJECT().profile, self.container_data.unrendered_media)
         cr, surface = _create_image_surface(icon_path)
         cr.rectangle(0, 0, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
@@ -336,7 +344,7 @@ class ContainerStatusPollingThread(threading.Thread):
         
         while self.abort == False:
             for poll_obj in self.poll_objects:
-                poll_obj.update_render_status()
+                poll_obj.update_render_status() # make sure poll objects enter Gtk threads
                     
                 
             time.sleep(1.0)

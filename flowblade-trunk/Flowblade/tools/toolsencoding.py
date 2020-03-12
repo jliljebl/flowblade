@@ -31,7 +31,7 @@ import utils
 
 
 # NOTE: 
-# On Module globals:
+# On module globals:
 # - when used by gmic.py for GMic Tool we have no problem with e.g widgets being module global
 #   because gmic.py runs in own process.
 # - when this module is used in main application process it is important that e.g.widgets object 
@@ -42,34 +42,86 @@ widgets = None
 disable_audio_encoding = False
 default_profile_index = None
 
+
 # ----------------------------------------------------- GUI objects
 class RenderFilePanel():
 
-    def __init__(self):
+    def __init__(self, create_container_file_panel):
 
+        if create_container_file_panel == True:
+            self.render_location_combo = Gtk.ComboBoxText() # filled later when current sequence known
+            self.render_location_combo.append_text(_("Save Rendered Files Internally"))
+            self.render_location_combo.append_text(_("Save Rendered Files Externally"))
+            self.render_location_combo.set_active(0)
+        else:
+            self.render_location_combo = None
+            
         self.out_folder = Gtk.FileChooserButton(_("Select Folder"))
         self.out_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
         self.out_folder.set_current_folder(os.path.expanduser("~") + "/")
         self.out_folder.set_local_only(True)
-        out_folder_row = guiutils.get_two_column_box(Gtk.Label(label=_("Folder:")), self.out_folder, 60)
+        self.out_folder_label = Gtk.Label(label=_("Folder:"))
+        out_folder_row = guiutils.get_two_column_box(self.out_folder_label, self.out_folder, 60)
                               
         self.movie_name = Gtk.Entry()
         self.movie_name.set_text("movie")
         self.extension_label = Gtk.Label()
+        self.name_label = Gtk.Label(label=_("Name:"))
             
         name_box = Gtk.HBox(False, 8)
         name_box.pack_start(self.movie_name, True, True, 0)
         name_box.pack_start(self.extension_label, False, False, 0)
           
-        movie_name_row = guiutils.get_two_column_box(Gtk.Label(label=_("Name:")), name_box, 60)
+        movie_name_row = guiutils.get_two_column_box(self.name_label, name_box, 60)
 
         self.vbox = Gtk.VBox(False, 2)
+        if self.render_location_combo != None:
+            self.vbox.pack_start(self.render_location_combo, False, False, 0)
         self.vbox.pack_start(out_folder_row, False, False, 0)
         self.vbox.pack_start(movie_name_row, False, False, 0)
 
         self.out_folder.set_tooltip_text(_("Select folder to place rendered file in"))
         self.movie_name.set_tooltip_text(_("Give name for rendered file"))
+
+    def enable_file_selections(self, enabled):
+        self.movie_name.set_sensitive(enabled)
+        self.extension_label.set_sensitive(enabled)
+        self.out_folder.set_sensitive(enabled)
+        self.out_folder_label.set_sensitive(enabled)
+        self.name_label.set_sensitive(enabled)
+
+
+
+class RenderVideoClipPanel:
+    def __init__(self, profile_panel, encoding_panel):
+
+        self.profile_panel = profile_panel
+        self.encoding_panel = encoding_panel
+
+        self.video_clip_combo = Gtk.ComboBoxText() # filled later when current sequence known
+        self.video_clip_combo.append_text(_("Render Video Clip"))
+        self.video_clip_combo.append_text(_("Frame Sequence Only"))
+        self.video_clip_combo.set_active(0)
+
+        encoding_vbox = Gtk.VBox(False, 2)
+        encoding_vbox.pack_start(profile_panel, False, False, 0)
+        encoding_vbox.pack_start(encoding_panel, False, False, 0)
+
+        encoding_hbox = Gtk.HBox(False, 2)
+        encoding_hbox.pack_start(guiutils.pad_label(12, 12), False, False, 0)
+        encoding_hbox.pack_start(encoding_vbox, True, True, 0)
+
         
+        self.vbox = Gtk.VBox(False, 2)
+        self.vbox.pack_start(self.video_clip_combo, False, False, 0)
+        self.vbox.pack_start(encoding_hbox, False, False, 0)
+
+
+    def enable_video_encoding(self, enabled):
+        self.profile_panel.set_sensitive(enabled)
+        self.encoding_panel.set_sensitive(enabled)
+        
+
 
 class RenderTypePanel():
     
@@ -156,6 +208,7 @@ class RenderEncodingPanel():
         self.encoding_selector.widget.set_sensitive(value)
 
 
+
 class ProfileSelector():
     def __init__(self, out_profile_changed_callback=None):
         self.widget = Gtk.ComboBoxText() # filled later when current sequence known
@@ -163,7 +216,7 @@ class ProfileSelector():
             self.widget.connect('changed', lambda w:  out_profile_changed_callback(w))
         self.widget.set_sensitive(False)
         self.widget.set_tooltip_text(_("Select render profile"))
-        
+
     def fill_options(self):
         self.widget.get_model().clear()
         #self.widget.append_text(current_sequence().profile.description())
@@ -257,7 +310,7 @@ class RenderEncodingSelector():
 
 
 # ------------------------------------------------------------ interface
-def create_widgets(def_profile_index, disable_audio=False):
+def create_widgets(def_profile_index, disable_audio=True, create_container_file_panel=False):
     """
     Widgets for editing render properties and viewing render progress.
     """
@@ -268,23 +321,34 @@ def create_widgets(def_profile_index, disable_audio=False):
 
     widgets = utils.EmptyClass()
      
-    widgets.file_panel = RenderFilePanel()
+    widgets.file_panel = RenderFilePanel(create_container_file_panel)
     widgets.profile_panel = RenderProfilePanel(_out_profile_changed)
     widgets.encoding_panel = RenderEncodingPanel(widgets.file_panel.extension_label)
 
     widgets.profile_panel.out_profile_combo.fill_options()
     _display_default_profile()
     
-def get_enconding_panel(render_data):   
+def get_encoding_panel(render_data, create_container_file_panel=False):
+    # We are making two kinds of panels here:
+    # - panel for G'Mic tool
+    # - panels for Clip Containers render settings
+
     file_opts_panel = guiutils.get_named_frame(_("File"), widgets.file_panel.vbox, 4)         
     profile_panel = guiutils.get_named_frame(_("Render Profile"), widgets.profile_panel.vbox, 4)
     encoding_panel = guiutils.get_named_frame(_("Encoding Format"), widgets.encoding_panel.vbox, 4)
-    
+
+    if create_container_file_panel == True:
+        widgets.video_clip_panel = RenderVideoClipPanel(profile_panel, encoding_panel)
+        video_clip_panel = guiutils.get_named_frame(_("Video Clip"), widgets.video_clip_panel.vbox, 4)
+        
     render_panel = Gtk.VBox()
     render_panel.pack_start(file_opts_panel, False, False, 0)
-    render_panel.pack_start(profile_panel, False, False, 0)
-    render_panel.pack_start(encoding_panel, False, False, 0)
-
+    if create_container_file_panel == False:
+        render_panel.pack_start(profile_panel, False, False, 0)
+        render_panel.pack_start(encoding_panel, False, False, 0)
+    else:
+        render_panel.pack_start(video_clip_panel, False, False, 0)
+        
     if render_data != None:
         widgets.file_panel.movie_name.set_text(render_data.file_name)
         widgets.file_panel.extension_label.set_text(render_data.file_extension)
@@ -363,8 +427,8 @@ def get_render_data_for_current_selections():
     render_data.use_default_profile = widgets.profile_panel.use_project_profile_check.get_active()
     render_data.encoding_option_index = widgets.encoding_panel.encoding_selector.widget.get_active()
     render_data.quality_option_index = widgets.encoding_panel.quality_selector.widget.get_active()
-    render_data.presets_index = 0
-    render_data.use_preset_encodings = False
+    render_data.presets_index = 0 # presents rendering not available
+    render_data.use_preset_encodings = False # presents rendering not available
     render_data.render_dir = "/" + widgets.file_panel.out_folder.get_uri().lstrip("file:/")
     render_data.file_name = widgets.file_panel.movie_name.get_text()
     render_data.file_extension = widgets.file_panel.extension_label.get_text()
@@ -372,7 +436,7 @@ def get_render_data_for_current_selections():
 
 def get_args_vals_list_for_render_data(render_data):
     profile = mltprofiles.get_profile_for_index(render_data.profile_index)
-    if render_data.use_preset_encodings == 1: # Preset encodings
+    if render_data.use_preset_encodings == 1: # Preset encodings THIS HAS BEEN DEACTIVATED FOR NOW.
         encs = renderconsumer.non_user_encodings
         if disable_audio_encoding == True:
             encs = renderconsumer.get_video_non_user_encodigs()
@@ -382,7 +446,7 @@ def get_args_vals_list_for_render_data(render_data):
         args_vals_list = renderconsumer.get_args_vals_tuples_list_for_encoding_and_quality( profile, 
                                                                                             render_data.encoding_option_index, 
                                                                                             render_data.quality_option_index)
-        # sample rate not supported
+    # sample rate not supported
     # args rendering not supported
 
     return args_vals_list

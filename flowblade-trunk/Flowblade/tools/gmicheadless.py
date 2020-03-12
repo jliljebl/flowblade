@@ -32,6 +32,7 @@ from gi.repository import GLib
 import locale
 import mlt
 import os
+import pickle
 import subprocess
 import sys
 import threading
@@ -49,14 +50,17 @@ import mlttransitions
 import processutils
 import renderconsumer
 import respaths
+import toolsencoding
 import translations
 import userfolders
+import utils
 
 CLIP_FRAMES_DIR = "/clip_frames"
 RENDERED_FRAMES_DIR = "/rendered_frames"
 
 COMPLETED_MSG_FILE = "completed"
 STATUS_MSG_FILE = "status"
+RENDER_DATA_FILE = "render_data"
 
 _gmic_version = None
 
@@ -80,6 +84,17 @@ def clear_flag_files(session_id):
     if os.path.exists(status_msg_file):
         os.remove(status_msg_file)
 
+def set_render_data(session_id, video_render_data):
+    folder = _get_session_folder(session_id)
+    render_data_path = folder + "/" + RENDER_DATA_FILE
+     
+    if os.path.exists(render_data_path):
+        os.remove(render_data_path)
+    
+    with atomicfile.AtomicFileWriter(render_data_path, "wb") as afw:
+        outfile = afw.get_file()
+        pickle.dump(video_render_data, outfile)
+    
 def session_render_complete(session_id):
     folder = _get_session_folder(session_id)
     completed_msg = folder + "/" + COMPLETED_MSG_FILE
@@ -162,9 +177,13 @@ def main(root_path, session_id, script, clip_path, range_in, range_out, profile_
         os.mkdir(_clip_frames_folder)
     if not os.path.exists(_rendered_frames_folder):
         os.mkdir(_rendered_frames_folder)
-            
+
+    render_data_path = _session_folder + "/" + RENDER_DATA_FILE
+    
+    render_data = utils.unpickle(render_data_path)
+
     global _render_thread
-    _render_thread = GMicHeadlessRunnerThread(script, clip_path, range_in, range_out, profile_desc)
+    _render_thread = GMicHeadlessRunnerThread(script, render_data, clip_path, range_in, range_out, profile_desc)
     _render_thread.start()
 
 def get_gmic_version():
@@ -188,10 +207,11 @@ def get_gmic_version():
 
 class GMicHeadlessRunnerThread(threading.Thread):
 
-    def __init__(self, script, clip_path, range_in, range_out, profile_desc):
+    def __init__(self, script, render_data, clip_path, range_in, range_out, profile_desc):
         threading.Thread.__init__(self)
 
         self.script_path = script
+        self.render_data = render_data
         self.clip_path = clip_path
         self.range_in = int(range_in)
         self.range_out = int(range_out)
@@ -226,7 +246,7 @@ class GMicHeadlessRunnerThread(threading.Thread):
 
         script_file = open(self.script_path)
         user_script = script_file.read()
-        print(user_script)
+
         while len(os.listdir(_clip_frames_folder)) != self.length:
             print("WAITING")
             time.sleep(0.5)
@@ -242,6 +262,53 @@ class GMicHeadlessRunnerThread(threading.Thread):
                                                                         re_render_existing=False)
         self.script_renderer.write_frames()
 
+        # Render video
+        if True:
+            # Render consumer
+            args_vals_list = toolsencoding.get_args_vals_list_for_render_data(self.render_data)
+            print(args_vals_list)
+            profile = mltprofiles.get_profile_for_index(self.render_data.profile_index) 
+            file_path = _session_folder +  "/" + "testing"  + self.render_data.file_extension
+            print(file_path)
+            #file_path = _render_data.render_dir + "/" +  _render_data.file_name  + _render_data.file_extension
+            
+            consumer = renderconsumer.get_mlt_render_consumer(file_path, profile, args_vals_list)
+            
+            # Render producer
+            frame_file = _rendered_frames_folder + "/" + frame_name + "_0000.png"
+            if editorstate.mlt_version_is_equal_or_greater("0.8.5"):
+                resource_name_str = utils.get_img_seq_resource_name(frame_file, True)
+            else:
+                resource_name_str = utils.get_img_seq_resource_name(frame_file, False)
+            resource_path = _rendered_frames_folder + "/" + resource_name_str
+            producer = mlt.Producer(profile, str(resource_path))
+
+            clip_frames = os.listdir(_rendered_frames_folder)
+
+            self.render_player = renderconsumer.FileRenderPlayer("", producer, consumer, 0, len(clip_frames) - 5)
+            self.render_player.wait_for_producer_end_stop = False
+            self.render_player.start()
+
+            while self.render_player.stopped == False:
+
+                if self.aborted == True:
+                    print("aborted")
+                    return
+                
+                fraction = self.render_player.get_render_fraction()
+                print("running", fraction)
+
+                self.video_render_update_callback(fraction)
+    
+                #update_info = _("Rendering video, ") + str(int(fraction * 100)) + _("% done")
+                
+                #Gdk.threads_enter()
+                #_window.render_percentage.set_markup("<small>" + update_info + "</small>")
+                #_window.render_progress_bar.set_fraction(fraction)
+                #Gdk.threads_leave()
+                
+                time.sleep(0.3)
+                
         # Write out completed flag file.
         completed_msg_file =_session_folder + "/" + COMPLETED_MSG_FILE
         script_text = "##completed##" # let's put something in here
@@ -261,6 +328,12 @@ class GMicHeadlessRunnerThread(threading.Thread):
         msg = "2 " + str(frame_count) + " " + str(self.length) + " " + str(elapsed)
         self.write_status_message(msg)
 
+    def video_render_update_callback(self, fraction):
+        # step 1, frame , range
+        elapsed = time.monotonic() - self.start_time
+        msg = "3 " + str(int(fraction * self.length)) + " " + str(self.length) + " " + str(elapsed)
+        self.write_status_message(msg)
+        
     def write_status_message(self, msg):
         try:
             status_msg_file = _session_folder + "/" + STATUS_MSG_FILE

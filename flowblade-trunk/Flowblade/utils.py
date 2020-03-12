@@ -23,6 +23,7 @@ Helper functions and data
 """
 import time
 
+# TODO: THIS NEEDS TO GO, MAKE NEW utilsgtk.py MODULE.
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk

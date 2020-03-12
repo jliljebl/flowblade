@@ -94,7 +94,6 @@ def show_message(update_job_proxy):
     tree_path = Gtk.TreePath.new_from_string(str(row))
     store_iter = _jobs_list_view.storemodel.get_iter(tree_path)
 
-    
     _jobs_list_view.storemodel.set_value(store_iter, 0, job_proxy.get_type_str())
     _jobs_list_view.storemodel.set_value(store_iter, 1, job_proxy.text)
     _jobs_list_view.storemodel.set_value(store_iter, 2, job_proxy.get_elapsed_str())

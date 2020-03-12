@@ -148,7 +148,7 @@ def _gmic_clip_create_dialog_callback(dialog, response_id, data):
         dialog.destroy()
     
         if script_file == None or media_file == None:
-            dialogutils.info_message(_("NOt all required files were defined"), _("Select all files asked for in dialog for succesful container clip creation."), gui.editor_window.window)
+            dialogutils.info_message(_("Not all required files were defined"), _("Select all files asked for in dialog for succesful Container Clip creation."), gui.editor_window.window)
             return
 
         container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_GMIC, script_file, media_file)

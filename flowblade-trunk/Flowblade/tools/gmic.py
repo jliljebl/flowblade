@@ -89,7 +89,7 @@ _current_preview_surface = None
 _current_dimensions = None
 _current_fps = None
 _current_profile_index = None
-_render_data = None
+_render_data = None # toolsencoding.ToolsRenderData object
 _last_load_file = None
 
 _startup_data = None
@@ -539,10 +539,10 @@ def render_current_frame_preview():
     _preview_render.start()
 
 def _encode_settings_clicked():
-    toolsencoding.create_widgets(_current_profile_index, True)
+    toolsencoding.create_widgets(_current_profile_index)
         
     global _encoding_panel
-    _encoding_panel = toolsencoding.get_enconding_panel(_render_data)
+    _encoding_panel = toolsencoding.get_encoding_panel(_render_data)
 
     if _render_data == None and toolsencoding.widgets.file_panel.movie_name.get_text() == "movie":
         toolsencoding.widgets.file_panel.movie_name.set_text(os.path.basename(_current_path).split(".")[0] + "_gmic")
