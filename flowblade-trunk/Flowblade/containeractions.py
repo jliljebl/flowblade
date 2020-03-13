@@ -228,6 +228,12 @@ class GMicContainerActions(AbstractContainerActionObject):
     def _launch_render(self, clip, range_in, range_out):
         #print("rendering gmic container clip:", self.get_container_program_id(), range_in, range_out)
         gmicheadless.clear_flag_files(self.get_container_program_id())
+    
+        # We need data to be available for render process, 
+        # create video_render_data object with default values if not available.
+        if self.container_data.video_render_data == None:
+            self.container_data.video_render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
+            
         gmicheadless.set_render_data(self.get_container_program_id(), self.container_data.video_render_data)
         
         job_proxy = self.get_job_proxy()

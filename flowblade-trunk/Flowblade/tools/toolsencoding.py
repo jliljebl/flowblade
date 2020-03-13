@@ -50,9 +50,10 @@ class RenderFilePanel():
 
         if create_container_file_panel == True:
             self.render_location_combo = Gtk.ComboBoxText() # filled later when current sequence known
-            self.render_location_combo.append_text(_("Save Rendered Files Internally"))
-            self.render_location_combo.append_text(_("Save Rendered Files Externally"))
+            self.render_location_combo.append_text(_("Save Rendered Container Media Internally"))
+            self.render_location_combo.append_text(_("Save Rendered Container Media Externally"))
             self.render_location_combo.set_active(0)
+            self.render_location_combo.connect('changed', lambda w: self.render_location_combo_changed(w))
         else:
             self.render_location_combo = None
             
@@ -66,7 +67,10 @@ class RenderFilePanel():
         self.movie_name = Gtk.Entry()
         self.movie_name.set_text("movie")
         self.extension_label = Gtk.Label()
-        self.name_label = Gtk.Label(label=_("Name:"))
+        if create_container_file_panel == False:
+            self.name_label = Gtk.Label(label=_("Name:"))
+        else:
+            self.name_label = Gtk.Label(label=_("Clip Name:"))
             
         name_box = Gtk.HBox(False, 8)
         name_box.pack_start(self.movie_name, True, True, 0)
@@ -74,12 +78,20 @@ class RenderFilePanel():
           
         movie_name_row = guiutils.get_two_column_box(self.name_label, name_box, 60)
 
+        self.frame_name_label = Gtk.Label(label=_("Frame Name:"))
+        self.frame_name = Gtk.Entry()
+        self.frame_name.set_text("frame")
+    
+        frame_name_row = guiutils.get_two_column_box(self.frame_name_label, self.frame_name, 60)
+        
         self.vbox = Gtk.VBox(False, 2)
         if self.render_location_combo != None:
             self.vbox.pack_start(self.render_location_combo, False, False, 0)
         self.vbox.pack_start(out_folder_row, False, False, 0)
         self.vbox.pack_start(movie_name_row, False, False, 0)
-
+        if create_container_file_panel == True:
+            self.vbox.pack_start(frame_name_row, False, False, 0)
+            
         self.out_folder.set_tooltip_text(_("Select folder to place rendered file in"))
         self.movie_name.set_tooltip_text(_("Give name for rendered file"))
 
@@ -89,7 +101,14 @@ class RenderFilePanel():
         self.out_folder.set_sensitive(enabled)
         self.out_folder_label.set_sensitive(enabled)
         self.name_label.set_sensitive(enabled)
+        self.frame_name_label.set_sensitive(enabled)
+        self.frame_name.set_sensitive(enabled)
 
+    def render_location_combo_changed(self, combo):
+        if combo.get_active() == 1:
+            self.enable_file_selections(True)
+        else:
+            self.enable_file_selections(False)
 
 
 class RenderVideoClipPanel:
@@ -102,6 +121,7 @@ class RenderVideoClipPanel:
         self.video_clip_combo.append_text(_("Render Video Clip"))
         self.video_clip_combo.append_text(_("Frame Sequence Only"))
         self.video_clip_combo.set_active(0)
+        self.video_clip_combo.connect('changed', lambda w: self.video_clip_combo_changed(w))
 
         encoding_vbox = Gtk.VBox(False, 2)
         encoding_vbox.pack_start(profile_panel, False, False, 0)
@@ -114,13 +134,18 @@ class RenderVideoClipPanel:
         
         self.vbox = Gtk.VBox(False, 2)
         self.vbox.pack_start(self.video_clip_combo, False, False, 0)
+        self.vbox.pack_start(guiutils.pad_label(12, 24), False, False, 0)
         self.vbox.pack_start(encoding_hbox, False, False, 0)
-
 
     def enable_video_encoding(self, enabled):
         self.profile_panel.set_sensitive(enabled)
         self.encoding_panel.set_sensitive(enabled)
         
+    def video_clip_combo_changed(self, combo):
+        if combo.get_active() == 0:
+            self.enable_video_encoding(True)
+        else:
+            self.enable_video_encoding(False)
 
 
 class RenderTypePanel():
@@ -333,13 +358,20 @@ def get_encoding_panel(render_data, create_container_file_panel=False):
     # - panel for G'Mic tool
     # - panels for Clip Containers render settings
 
-    file_opts_panel = guiutils.get_named_frame(_("File"), widgets.file_panel.vbox, 4)         
+    if create_container_file_panel == False:
+        file_panel_title = _("File")
+    else:
+        file_panel_title = _("Save Location")
+
+    file_opts_panel = guiutils.get_named_frame(file_panel_title, widgets.file_panel.vbox, 4)         
     profile_panel = guiutils.get_named_frame(_("Render Profile"), widgets.profile_panel.vbox, 4)
     encoding_panel = guiutils.get_named_frame(_("Encoding Format"), widgets.encoding_panel.vbox, 4)
 
     if create_container_file_panel == True:
         widgets.video_clip_panel = RenderVideoClipPanel(profile_panel, encoding_panel)
         video_clip_panel = guiutils.get_named_frame(_("Video Clip"), widgets.video_clip_panel.vbox, 4)
+    else:
+        widgets.video_clip_panel = None
         
     render_panel = Gtk.VBox()
     render_panel.pack_start(file_opts_panel, False, False, 0)
@@ -357,7 +389,17 @@ def get_encoding_panel(render_data, create_container_file_panel=False):
         widgets.encoding_panel.quality_selector.widget.set_active(render_data.quality_option_index)
         widgets.profile_panel.out_profile_combo.widget.set_active(render_data.profile_index)
         widgets.profile_panel.use_project_profile_check.set_active(render_data.use_default_profile)
-            
+        
+        if create_container_file_panel == True:
+            video_clip_combo_index = render_location_combo_index = 0
+            if render_data.do_video_render == False:
+                video_clip_combo_index = 1
+            if render_data.save_internally == False:
+                render_location_combo_index = 1
+             
+            widgets.video_clip_panel.video_clip_combo.set_active(video_clip_combo_index)
+            widgets.file_panel.render_location_combo.set_active(render_location_combo_index)
+        
     return render_panel
 
 def _render_type_changed(w):
@@ -432,16 +474,26 @@ def get_render_data_for_current_selections():
     render_data.render_dir = "/" + widgets.file_panel.out_folder.get_uri().lstrip("file:/")
     render_data.file_name = widgets.file_panel.movie_name.get_text()
     render_data.file_extension = widgets.file_panel.extension_label.get_text()
+    
+    if widgets.video_clip_panel != None:
+        render_data.do_video_render = (widgets.video_clip_panel.video_clip_combo.get_active() == 0)
+        render_data.save_internally = (widgets.file_panel.render_location_combo.get_active() == 0)
+
     return render_data
 
 def get_args_vals_list_for_render_data(render_data):
     profile = mltprofiles.get_profile_for_index(render_data.profile_index)
-    if render_data.use_preset_encodings == 1: # Preset encodings THIS HAS BEEN DEACTIVATED FOR NOW.
+    if render_data.use_preset_encodings == 1:
+        # Preset encodings THIS HAS BEEN DEACTIVATED FOR NOW.
+        # Preset encodings THIS HAS BEEN DEACTIVATED FOR NOW.
+        # Preset encodings THIS HAS BEEN DEACTIVATED FOR NOW.
         encs = renderconsumer.non_user_encodings
         if disable_audio_encoding == True:
             encs = renderconsumer.get_video_non_user_encodigs()
         encoding_option = encs[render_data.presets_index]
         args_vals_list = encoding_option.get_args_vals_tuples_list(profile)
+    
+    
     else: # User encodings
         args_vals_list = renderconsumer.get_args_vals_tuples_list_for_encoding_and_quality( profile, 
                                                                                             render_data.encoding_option_index, 
@@ -469,7 +521,7 @@ def get_encoding_desc(args_vals_list):
 
 class ToolsRenderData():
     """
-    This is used to save render selections defined bt user.
+    This is used to save render selections defined by user.
     """
     def __init__(self):
         self.profile_index = None
@@ -481,4 +533,35 @@ class ToolsRenderData():
         self.render_dir = None
         self.file_name = None
         self.file_extension = None
+        
+        # Used by container clips only.
+        self.do_video_render = True
+        self.save_internally = True
 
+
+def create_container_clip_default_render_data_object(profile):
+    # When first render is attempted this created to have data availeble for render process
+    # even if user has not set any values.
+    render_data = ToolsRenderData()
+    render_data.profile_index = mltprofiles.get_profile_index_for_profile(profile)
+    render_data.use_default_profile = True
+    render_data.use_preset_encodings = False
+    render_data.presets_index = 0
+    render_data.encoding_option_index = 0
+    render_data.quality_option_index = 10
+    render_data.render_dir = None
+    render_data.file_name = None
+    render_data.file_extension = ".mp4"
+    
+    """
+    profile_index: 67,
+    use_default_profile: True, 
+    use_preset_encodings: False, 
+    presets_index: 0, 
+    encoding_option_index: 0,
+    quality_option_index: 10, 
+    render_dir: /home/janne, 
+    file_name: test_gmic, 
+    file_extension: .mp4
+    """
+    
