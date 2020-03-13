@@ -152,7 +152,6 @@ def main(root_path, force_launch=False):
     loop = GLib.MainLoop()
     global _dbus_service
     _dbus_service = TLineRenderDBUSService(loop)
-    print("tline render service running")
     loop.run()
 
 
@@ -167,7 +166,6 @@ class TLineRenderDBUSService(dbus.service.Object):
         
     @dbus.service.method('flowblade.movie.editor.tlinerenderserver')
     def render_update_clips(self, sequence_xml_path, segments_paths, segments_ins, segments_outs, profile_name):
-        #print(sequence_xml_path, profile_name)
         
         segments = []
         for i in range(0, len(segments_paths)):
@@ -175,8 +173,6 @@ class TLineRenderDBUSService(dbus.service.Object):
             clip_range_in = segments_ins[i]
             clip_range_out = segments_outs[i]
             segments.append((clip_path, clip_range_in, clip_range_out))
-            
-            #print("render segment:", clip_path, clip_range_in, clip_range_out)
 
         self.render_runner_thread = TLineRenderRunnerThread(self, sequence_xml_path, segments, profile_name)
         self.render_runner_thread.start()
@@ -196,18 +192,12 @@ class TLineRenderDBUSService(dbus.service.Object):
     @dbus.service.method('flowblade.movie.editor.tlinerenderserver')
     def abort_renders(self):
 
-        start = time.monotonic()
-        print("abort request:", start)
         if self.render_runner_thread == None:
-            print("abort doe NO self.render_runner_thread EXISTS!")
             return
         
         self.render_runner_thread.abort()
         while self.render_runner_thread.render_complete == False:
-            print("abort, waiting render complete")
             time.sleep(0.1)
-            
-        print("abort request completed:", time.monotonic() - start)
 
         return
 
@@ -242,7 +232,6 @@ class TLineRenderRunnerThread(threading.Thread):
         editorpersistance.load() # to apply possible chnages on timeline rendering
         
         start_time = time.monotonic()
-        print("active threads at run() begin", threading.active_count())
  
         width, height = _get_render_dimensions(self.profile, editorpersistance.prefs.tline_render_size)
         encoding = _get_render_encoding()

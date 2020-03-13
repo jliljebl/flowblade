@@ -38,7 +38,7 @@ from editorstate import timeline_visible
 from editorstate import get_tline_rendering_mode
 import gui
 import guiutils
-import mltfilters
+#import mltfilters can used for testing
 import renderconsumer
 import userfolders
 import tlinerenderserver
@@ -96,13 +96,12 @@ def init_for_sequence(sequence):
     update_renderer_to_mode(None)
 
 def update_renderer_to_mode(old_mode):
-    print("old_mode", old_mode)
+
     global _timeline_renderer
     if get_tline_rendering_mode() == appconsts.TLINE_RENDERING_OFF:
         _timeline_renderer = NoOpRenderer()
     else:
         if old_mode == appconsts.TLINE_RENDERING_OFF:
-            print("kkkkk")
             _timeline_renderer = TimeLineRenderer()
 
 def settings_dialog_launch(widget, event):
@@ -296,9 +295,7 @@ class TimeLineRenderer:
         gui.tline_render_strip.widget.queue_draw()
 
     def mouse_drag_edit_completed(self):
-        range_start, range_end = self.get_drag_range()
-        print(range_start, range_end)
-        
+        range_start, range_end = self.get_drag_range()        
         range_end = range_end - 1
 
         start_hit_seg = self.get_hit_segment(range_start)
@@ -385,11 +382,10 @@ class TimeLineRenderer:
     def launch_update_thread(self):
         global _update_thread
         if _update_thread != None:
-            print("_update_thread.abort_before_render_request")
             # We already have an update thread going, try to stop it before it launches renders.
             _update_thread.abort_before_render_request = True
         else:
-            print("NO _update_thread.abort_before_render_request")
+            pass
 
         _update_thread = TimeLineUpdateThread()
         _update_thread.start()
@@ -566,11 +562,13 @@ class TimeLineSegment:
     def create_clip(self):
         self.producer = current_sequence().create_file_producer_clip(str(self.get_clip_path()))
         
-        # testing
+        """
+        # THIS IS USEFUL WHEN TESTING
         filter_info = mltfilters.get_colorize_filter_info()
         filter_object = current_sequence().create_filter(filter_info)
         self.producer.attach(filter_object.mlt_filter)
         self.producer.filters.append(filter_object)
+        """
 
     def hit(self, frame):
         if frame >= self.start_frame and frame < self.end_frame:
@@ -592,13 +590,13 @@ class TimeLineSegment:
             if get_tline_rendering_mode() == appconsts.TLINE_RENDERING_AUTO:
                 self.segment_state = SEGMENT_DIRTY
                 self.producer = None
-            # With mode TLINE_RENDERING_REQUEST segment updates set segment state to SEGMENT_UNRENDERED and user double clicks
-            # set mode to SEGMENT_DIRTY and that has already happened before we get here.
-            # So if user has made designated segment to be dirty we will override him her but if user edit has changed timeline we will 
-            # update segment state.
+            # With mode TLINE_RENDERING_REQUEST:
+            # - segment updates set segment state to SEGMENT_UNRENDERED
+            # - user double clicks set segment state to SEGMENT_DIRTY and _that has already happened before we get here._
+            # So if user has double clicked to make segment to beSEGMENT_DIRTY we will ignore chnaged hash but if user edit has changed timeline we will 
+            # update segment state to be SEGMENT_UNRENDERED.
             elif get_tline_rendering_mode() == appconsts.TLINE_RENDERING_REQUEST and self.segment_state != SEGMENT_DIRTY: 
 
-                print("SEGMENT_UNRENDERED")
                 self.segment_state = SEGMENT_UNRENDERED
 
         self.content_hash = new_hash
@@ -689,14 +687,13 @@ class TimeLineUpdateThread(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        print("RUNNING")
+ 
         # Marks segments with changed contents dirty.
         _timeline_renderer.update_segments()
 
         self.dirty_segments = _timeline_renderer.get_dirty_segments()
         
         if len(self.dirty_segments) == 0:
-            print("no dirty segments")
             return
         
         try:
@@ -794,9 +791,6 @@ class TimeLineStatusPollingThread(threading.Thread):
             gui.tline_render_strip.widget.queue_draw()
             Gdk.threads_leave()
 
-            #print(rendering_file, fract, render_completed, "\n\n")
-            # print(completed_segments,"\n\n\n\n")
-
             time.sleep(0.5)
             
             if render_completed == 1: 
@@ -806,8 +800,6 @@ class TimeLineStatusPollingThread(threading.Thread):
             time.sleep(0.1)
             
         current_sequence().update_hidden_track_for_timeline_rendering() # We should have correct sequence length known because this always comes after edits.
-    
-        print("timeline update rendering done")
 
 
 
