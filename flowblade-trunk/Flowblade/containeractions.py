@@ -135,8 +135,11 @@ class AbstractContainerActionObject:
         return self.get_container_clips_dir() + "/" + self.get_container_program_id()
 
     def get_rendered_media_dir(self):
-        return self.get_session_dir() + gmicheadless.RENDERED_FRAMES_DIR
-
+        if self.container_data.render_data.save_internally == True:
+            return self.get_session_dir() + gmicheadless.RENDERED_FRAMES_DIR
+        else:
+            return self.container_data.render_data.render_dir + gmicheadless.RENDERED_FRAMES_DIR
+            
     def get_container_program_id(self):
         id_md_str = str(self.container_data.container_type) + self.container_data.program + self.container_data.unrendered_media
         return hashlib.md5(id_md_str.encode('utf-8')).hexdigest()
@@ -184,9 +187,13 @@ class AbstractContainerActionObject:
         toolsencoding.create_widgets(current_profile_index, True, True)
         toolsencoding.widgets.file_panel.enable_file_selections(False)
 
-        encoding_panel = toolsencoding.get_encoding_panel(self.container_data.video_render_data, True)
+        # Create default render data if not available, we need to know profile to do this.
+        if self.container_data.render_data == None:
+            self.container_data.render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
+            
+        encoding_panel = toolsencoding.get_encoding_panel(self.container_data.render_data, True)
 
-        if self.container_data.video_render_data == None and toolsencoding.widgets.file_panel.movie_name.get_text() == "movie":
+        if self.container_data.render_data == None and toolsencoding.widgets.file_panel.movie_name.get_text() == "movie":
             toolsencoding.widgets.file_panel.movie_name.set_text("_gmic")
 
         align = dialogutils.get_default_alignment(encoding_panel)
@@ -206,7 +213,7 @@ class AbstractContainerActionObject:
     def encode_settings_callback(self, dialog, response_id):
         if response_id == Gtk.ResponseType.ACCEPT:
             _render_data = toolsencoding.get_render_data_for_current_selections()
-            self.container_data.video_render_data = _render_data
+            self.container_data.render_data = _render_data
 
         dialog.destroy()
         
@@ -231,10 +238,10 @@ class GMicContainerActions(AbstractContainerActionObject):
     
         # We need data to be available for render process, 
         # create video_render_data object with default values if not available.
-        if self.container_data.video_render_data == None:
-            self.container_data.video_render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
+        if self.container_data.render_data == None:
+            self.container_data.render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
             
-        gmicheadless.set_render_data(self.get_container_program_id(), self.container_data.video_render_data)
+        gmicheadless.set_render_data(self.get_container_program_id(), self.container_data.render_data)
         
         job_proxy = self.get_job_proxy()
         job_proxy.text = _("Render Starting..")
@@ -263,16 +270,29 @@ class GMicContainerActions(AbstractContainerActionObject):
             self.remove_as_status_polling_object()
             if self.render_type == FULL_RENDER:
 
-                frame_file = self.get_lowest_numbered_file()
-                if frame_file == None:
-                    # Something is quite wrong, maybe best to just print out message and give up.
-                    print("No frame file found for gmic conatainer clip")
-                    return
+                # Using frame sequence as clip
+                if  self.container_data.render_data.do_video_render == False:
+                    print("frames internal , external")
+                    frame_file = self.get_lowest_numbered_file() # Works for both external and internal
+                    print(frame_file)
+                    if frame_file == None:
+                        # Something is quite wrong, maybe best to just print out message and give up.
+                        print("No frame file found for gmic conatainer clip")
+                        return
 
-                resource_name_str = utils.get_img_seq_resource_name(frame_file, True)
-                resource_path = self.get_rendered_media_dir() + "/" + resource_name_str
-
-                rendered_clip = current_sequence().create_file_producer_clip(resource_path, new_clip_name=None, novalidate=False, ttl=1)
+                    resource_name_str = utils.get_img_seq_resource_name(frame_file, True)
+                    resource_path = self.get_rendered_media_dir() + "/" + resource_name_str
+                    rendered_clip = current_sequence().create_file_producer_clip(resource_path, new_clip_name=None, novalidate=False, ttl=1)
+                    
+                # Using video clip as clip
+                else:
+                    if self.container_data.render_data.save_internally == True:
+                        resource_path = self.get_session_dir() +  "/" + gmicheadless.INTERNAL_CLIP_FILE + self.container_data.render_data.file_extension
+                    else:
+                        resource_path = self.container_data.render_data.render_dir +  "/" + self.container_data.render_data.file_name + self.container_data.render_data.file_extension
+                    print("clip", resource_path)
+                    rendered_clip = current_sequence().create_file_producer_clip(resource_path, new_clip_name=None, novalidate=False, ttl=1)
+                
                 track, clip_index = current_sequence().get_track_and_index_for_id(self.clip.id)
                 if track == None:
                     # clip was removed from timeline
@@ -291,14 +311,16 @@ class GMicContainerActions(AbstractContainerActionObject):
             status = gmicheadless.get_session_status(self.get_container_program_id())
             if status != None:
                 step, frame, length, elapsed = status
-                
-                msg = _("Step") + str(step) + "/3"
+                steps_count = 3
+                if  self.container_data.render_data.do_video_render == False:
+                    steps_count = 2
+                msg = _("Step ") + str(step) + " / " + str(steps_count) + " - "
                 if step == "1":
-                    msg += _("Writing frames")
+                    msg += _("Writing Clip Frames")
                 elif step == "2":
-                     msg += _("Rendering G'Mic script")
+                     msg += _("Rendering G'Mic Script")
                 else:
-                     msg += _("Encoding")
+                     msg += _("Encoding Video")
                      
                 job_proxy = self.get_job_proxy()
                 job_proxy.progress = float(frame)/float(length)

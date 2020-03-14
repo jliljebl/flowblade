@@ -43,7 +43,240 @@ disable_audio_encoding = False
 default_profile_index = None
 
 
-# ----------------------------------------------------- GUI objects
+
+class ToolsRenderData():
+    """
+    This is used to save render selections defined by user.
+    """
+    def __init__(self):
+        self.profile_index = None
+        self.use_default_profile = None
+        self.use_preset_encodings = None
+        self.presets_index = None
+        self.encoding_option_index = None
+        self.quality_option_index = None
+        self.render_dir = None
+        self.file_name = None
+        self.file_extension = None
+        
+        # Used by container clips only.
+        self.do_video_render = True
+        self.save_internally = True
+        self.frame_name = "frame"
+
+
+def create_container_clip_default_render_data_object(profile):
+    # When ToolsRenderData is used by G'Mic tool we need to have default values be 'None', for container clis we need different
+    # default values.
+    # 
+    # When first render is attempted this created to have data availeble for render process
+    # even if user has not set any values.
+    render_data = ToolsRenderData()
+    render_data.profile_index = mltprofiles.get_profile_index_for_profile(profile)
+    render_data.use_default_profile = True
+    render_data.use_preset_encodings = False
+    render_data.presets_index = 0
+    render_data.encoding_option_index = 0
+    render_data.quality_option_index = 10
+    render_data.render_dir = os.path.expanduser("~")
+    render_data.file_name = "container_clip"
+    render_data.file_extension = ".mp4"
+
+    return render_data
+    
+# ------------------------------------------------------------ GUI interface
+def create_widgets(def_profile_index, disable_audio=True, create_container_file_panel=False):
+    """
+    Widgets for editing render properties and viewing render progress.
+    """
+    global widgets, disable_audio_encoding, default_profile_index
+    default_profile_index = def_profile_index
+    if disable_audio:
+        disable_audio_encoding = True
+
+    widgets = utils.EmptyClass()
+     
+    widgets.file_panel = RenderFilePanel(create_container_file_panel)
+    widgets.profile_panel = RenderProfilePanel(_out_profile_changed)
+    widgets.encoding_panel = RenderEncodingPanel(widgets.file_panel.extension_label)
+
+    widgets.profile_panel.out_profile_combo.fill_options()
+    _display_default_profile()
+    
+def get_encoding_panel(render_data, create_container_file_panel=False):
+    # We are making two kinds of panels here:
+    # - panel for G'Mic tool
+    # - panels for Clip Containers render settings
+
+    if create_container_file_panel == False:
+        file_panel_title = _("File")
+    else:
+        file_panel_title = _("Save Location")
+
+    file_opts_panel = guiutils.get_named_frame(file_panel_title, widgets.file_panel.vbox, 4)         
+    profile_panel = guiutils.get_named_frame(_("Render Profile"), widgets.profile_panel.vbox, 4)
+    encoding_panel = guiutils.get_named_frame(_("Encoding Format"), widgets.encoding_panel.vbox, 4)
+
+    if create_container_file_panel == True:
+        widgets.video_clip_panel = RenderVideoClipPanel(profile_panel, encoding_panel)
+        video_clip_panel = guiutils.get_named_frame(_("Video Clip"), widgets.video_clip_panel.vbox, 4)
+    else:
+        widgets.video_clip_panel = None
+        
+    render_panel = Gtk.VBox()
+    render_panel.pack_start(file_opts_panel, False, False, 0)
+    if create_container_file_panel == False:
+        render_panel.pack_start(profile_panel, False, False, 0)
+        render_panel.pack_start(encoding_panel, False, False, 0)
+    else:
+        render_panel.pack_start(video_clip_panel, False, False, 0)
+    
+    print("render_data", render_data)
+    if render_data != None:
+        widgets.file_panel.movie_name.set_text(render_data.file_name)
+        widgets.file_panel.extension_label.set_text(render_data.file_extension)
+        widgets.file_panel.out_folder.set_current_folder(render_data.render_dir + "/")
+        widgets.encoding_panel.encoding_selector.widget.set_active(render_data.encoding_option_index) 
+        widgets.encoding_panel.quality_selector.widget.set_active(render_data.quality_option_index)
+        widgets.profile_panel.out_profile_combo.widget.set_active(render_data.profile_index)
+        widgets.profile_panel.use_project_profile_check.set_active(render_data.use_default_profile)
+        
+        if create_container_file_panel == True:
+            video_clip_combo_index = render_location_combo_index = 0
+            if render_data.do_video_render == False:
+                video_clip_combo_index = 1
+            if render_data.save_internally == False:
+                render_location_combo_index = 1
+             
+            widgets.video_clip_panel.video_clip_combo.set_active(video_clip_combo_index)
+            widgets.file_panel.render_location_combo.set_active(render_location_combo_index)
+            widgets.file_panel.frame_name.set_text(render_data.frame_name)
+            
+    return render_panel
+
+def get_profile_info_small_box(profile):
+    text = get_profile_info_text(profile)
+    label = Gtk.Label(label=text)
+
+    hbox = Gtk.HBox()
+    hbox.pack_start(label, False, False, 0)
+    
+    return hbox
+
+def get_profile_info_text(profile):
+    str_list = []
+    str_list.append(str(profile.width()))
+    str_list.append(" x ")    
+    str_list.append(str(profile.height()))
+    str_list.append(", " + str(profile.display_aspect_num()))
+    str_list.append(":")
+    str_list.append(str(profile.display_aspect_den()))
+    str_list.append(", ")
+    if profile.progressive() == True:
+        str_list.append(_("Progressive"))
+    else:
+        str_list.append(_("Interlaced"))
+        
+    str_list.append("\n")
+    str_list.append(_("Fps: ") + str(profile.fps()))
+    pix_asp = float(profile.sample_aspect_num()) / profile.sample_aspect_den()
+    pa_str =  "%.2f" % pix_asp
+    str_list.append(", " + _("Pixel Aspect: ") + pa_str)
+
+    return ''.join(str_list)
+
+def get_render_data_for_current_selections():
+    render_data = ToolsRenderData()
+    render_data.profile_index = widgets.profile_panel.out_profile_combo.widget.get_active()
+    render_data.use_default_profile = widgets.profile_panel.use_project_profile_check.get_active()
+    render_data.encoding_option_index = widgets.encoding_panel.encoding_selector.widget.get_active()
+    render_data.quality_option_index = widgets.encoding_panel.quality_selector.widget.get_active()
+    render_data.presets_index = 0 # presents rendering not available
+    render_data.use_preset_encodings = False # presents rendering not available
+    render_data.render_dir = "/" + widgets.file_panel.out_folder.get_uri().lstrip("file:/")
+    render_data.file_name = widgets.file_panel.movie_name.get_text()
+    render_data.file_extension = widgets.file_panel.extension_label.get_text()
+    
+    if widgets.video_clip_panel != None:
+        render_data.do_video_render = (widgets.video_clip_panel.video_clip_combo.get_active() == 0)
+        render_data.save_internally = (widgets.file_panel.render_location_combo.get_active() == 0)
+        render_data.frame_name = widgets.file_panel.frame_name.get_text()
+
+    return render_data
+
+def get_args_vals_list_for_render_data(render_data):
+    profile = mltprofiles.get_profile_for_index(render_data.profile_index)
+    if render_data.use_preset_encodings == 1:
+        # Preset encodings THIS HAS BEEN DEACTIVATED FOR NOW.
+        # Preset encodings THIS HAS BEEN DEACTIVATED FOR NOW.
+        # Preset encodings THIS HAS BEEN DEACTIVATED FOR NOW.
+        encs = renderconsumer.non_user_encodings
+        if disable_audio_encoding == True:
+            encs = renderconsumer.get_video_non_user_encodigs()
+        encoding_option = encs[render_data.presets_index]
+        args_vals_list = encoding_option.get_args_vals_tuples_list(profile)
+    
+    
+    else: # User encodings
+        args_vals_list = renderconsumer.get_args_vals_tuples_list_for_encoding_and_quality( profile, 
+                                                                                            render_data.encoding_option_index, 
+                                                                                            render_data.quality_option_index)
+    # sample rate not supported
+    # args rendering not supported
+
+    return args_vals_list
+
+def get_encoding_desc(args_vals_list):
+    print(args_vals_list)
+    vcodec = ""
+    vb = ""
+    for arg_val in args_vals_list:
+        k, v = arg_val
+        if k == "vcodec":
+            vcodec = v
+        if k == "vb":
+            vb = v
+
+    if vb  == "":
+        vb = "lossless"
+
+    return vcodec + ", " + vb
+
+
+# ----------------------------------------------------------------- helper functions
+def _render_type_changed(w):
+    if w.get_active() == 0: # User Defined
+        widgets.render_type_panel.presets_selector.widget.set_sensitive(False)
+        widgets.encoding_panel.encoding_selector.encoding_selection_changed()
+    else: # Preset Encodings
+        widgets.render_type_panel.presets_selector.widget.set_sensitive(True)
+        _preset_selection_changed(widgets.render_type_panel.presets_selector.widget)
+
+def _preset_selection_changed(w):
+    encs = renderconsumer.non_user_encodings
+    if disable_audio_encoding == True:
+        encs = renderconsumer.get_video_non_user_encodigs()
+
+    enc_index = w.get_active()
+    ext = encs[enc_index].extension
+    widgets.file_panel.extension_label.set_text("." + ext)
+    
+def _out_profile_changed(w):
+    profile = mltprofiles.get_profile_for_index(w.get_active())
+    _fill_info_box(profile)
+
+def _display_default_profile():
+    profile = mltprofiles.get_profile_for_index(default_profile_index)
+    _fill_info_box(profile)
+    
+def _fill_info_box(profile):
+    info_panel = get_profile_info_small_box(profile)
+    widgets.info_panel = info_panel
+    widgets.profile_panel.out_profile_info_box.display_info(info_panel)
+
+
+
+# ----------------------------------------------------- PANELS
 class RenderFilePanel():
 
     def __init__(self, create_container_file_panel):
@@ -334,234 +567,4 @@ class RenderEncodingSelector():
             self.audio_desc_label.set_markup(encoding.get_audio_description())
 
 
-# ------------------------------------------------------------ interface
-def create_widgets(def_profile_index, disable_audio=True, create_container_file_panel=False):
-    """
-    Widgets for editing render properties and viewing render progress.
-    """
-    global widgets, disable_audio_encoding, default_profile_index
-    default_profile_index = def_profile_index
-    if disable_audio:
-        disable_audio_encoding = True
 
-    widgets = utils.EmptyClass()
-     
-    widgets.file_panel = RenderFilePanel(create_container_file_panel)
-    widgets.profile_panel = RenderProfilePanel(_out_profile_changed)
-    widgets.encoding_panel = RenderEncodingPanel(widgets.file_panel.extension_label)
-
-    widgets.profile_panel.out_profile_combo.fill_options()
-    _display_default_profile()
-    
-def get_encoding_panel(render_data, create_container_file_panel=False):
-    # We are making two kinds of panels here:
-    # - panel for G'Mic tool
-    # - panels for Clip Containers render settings
-
-    if create_container_file_panel == False:
-        file_panel_title = _("File")
-    else:
-        file_panel_title = _("Save Location")
-
-    file_opts_panel = guiutils.get_named_frame(file_panel_title, widgets.file_panel.vbox, 4)         
-    profile_panel = guiutils.get_named_frame(_("Render Profile"), widgets.profile_panel.vbox, 4)
-    encoding_panel = guiutils.get_named_frame(_("Encoding Format"), widgets.encoding_panel.vbox, 4)
-
-    if create_container_file_panel == True:
-        widgets.video_clip_panel = RenderVideoClipPanel(profile_panel, encoding_panel)
-        video_clip_panel = guiutils.get_named_frame(_("Video Clip"), widgets.video_clip_panel.vbox, 4)
-    else:
-        widgets.video_clip_panel = None
-        
-    render_panel = Gtk.VBox()
-    render_panel.pack_start(file_opts_panel, False, False, 0)
-    if create_container_file_panel == False:
-        render_panel.pack_start(profile_panel, False, False, 0)
-        render_panel.pack_start(encoding_panel, False, False, 0)
-    else:
-        render_panel.pack_start(video_clip_panel, False, False, 0)
-        
-    if render_data != None:
-        widgets.file_panel.movie_name.set_text(render_data.file_name)
-        widgets.file_panel.extension_label.set_text(render_data.file_extension)
-        widgets.file_panel.out_folder.set_current_folder(render_data.render_dir + "/")
-        widgets.encoding_panel.encoding_selector.widget.set_active(render_data.encoding_option_index) 
-        widgets.encoding_panel.quality_selector.widget.set_active(render_data.quality_option_index)
-        widgets.profile_panel.out_profile_combo.widget.set_active(render_data.profile_index)
-        widgets.profile_panel.use_project_profile_check.set_active(render_data.use_default_profile)
-        
-        if create_container_file_panel == True:
-            video_clip_combo_index = render_location_combo_index = 0
-            if render_data.do_video_render == False:
-                video_clip_combo_index = 1
-            if render_data.save_internally == False:
-                render_location_combo_index = 1
-             
-            widgets.video_clip_panel.video_clip_combo.set_active(video_clip_combo_index)
-            widgets.file_panel.render_location_combo.set_active(render_location_combo_index)
-        
-    return render_panel
-
-def _render_type_changed(w):
-    if w.get_active() == 0: # User Defined
-        widgets.render_type_panel.presets_selector.widget.set_sensitive(False)
-        widgets.encoding_panel.encoding_selector.encoding_selection_changed()
-    else: # Preset Encodings
-        widgets.render_type_panel.presets_selector.widget.set_sensitive(True)
-        _preset_selection_changed(widgets.render_type_panel.presets_selector.widget)
-
-def _preset_selection_changed(w):
-    encs = renderconsumer.non_user_encodings
-    if disable_audio_encoding == True:
-        encs = renderconsumer.get_video_non_user_encodigs()
-
-    enc_index = w.get_active()
-    ext = encs[enc_index].extension
-    widgets.file_panel.extension_label.set_text("." + ext)
-    
-def _out_profile_changed(w):
-    profile = mltprofiles.get_profile_for_index(w.get_active())
-    _fill_info_box(profile)
-
-def _display_default_profile():
-    profile = mltprofiles.get_profile_for_index(default_profile_index)
-    _fill_info_box(profile)
-    
-def _fill_info_box(profile):
-    info_panel = get_profile_info_small_box(profile)
-    widgets.info_panel = info_panel
-    widgets.profile_panel.out_profile_info_box.display_info(info_panel)
-
-def get_profile_info_small_box(profile):
-    text = get_profile_info_text(profile)
-    label = Gtk.Label(label=text)
-
-    hbox = Gtk.HBox()
-    hbox.pack_start(label, False, False, 0)
-    
-    return hbox
-
-def get_profile_info_text(profile):
-    str_list = []
-    str_list.append(str(profile.width()))
-    str_list.append(" x ")    
-    str_list.append(str(profile.height()))
-    str_list.append(", " + str(profile.display_aspect_num()))
-    str_list.append(":")
-    str_list.append(str(profile.display_aspect_den()))
-    str_list.append(", ")
-    if profile.progressive() == True:
-        str_list.append(_("Progressive"))
-    else:
-        str_list.append(_("Interlaced"))
-        
-    str_list.append("\n")
-    str_list.append(_("Fps: ") + str(profile.fps()))
-    pix_asp = float(profile.sample_aspect_num()) / profile.sample_aspect_den()
-    pa_str =  "%.2f" % pix_asp
-    str_list.append(", " + _("Pixel Aspect: ") + pa_str)
-
-    return ''.join(str_list)
-
-def get_render_data_for_current_selections():
-    render_data = ToolsRenderData()
-    render_data.profile_index = widgets.profile_panel.out_profile_combo.widget.get_active()
-    render_data.use_default_profile = widgets.profile_panel.use_project_profile_check.get_active()
-    render_data.encoding_option_index = widgets.encoding_panel.encoding_selector.widget.get_active()
-    render_data.quality_option_index = widgets.encoding_panel.quality_selector.widget.get_active()
-    render_data.presets_index = 0 # presents rendering not available
-    render_data.use_preset_encodings = False # presents rendering not available
-    render_data.render_dir = "/" + widgets.file_panel.out_folder.get_uri().lstrip("file:/")
-    render_data.file_name = widgets.file_panel.movie_name.get_text()
-    render_data.file_extension = widgets.file_panel.extension_label.get_text()
-    
-    if widgets.video_clip_panel != None:
-        render_data.do_video_render = (widgets.video_clip_panel.video_clip_combo.get_active() == 0)
-        render_data.save_internally = (widgets.file_panel.render_location_combo.get_active() == 0)
-
-    return render_data
-
-def get_args_vals_list_for_render_data(render_data):
-    profile = mltprofiles.get_profile_for_index(render_data.profile_index)
-    if render_data.use_preset_encodings == 1:
-        # Preset encodings THIS HAS BEEN DEACTIVATED FOR NOW.
-        # Preset encodings THIS HAS BEEN DEACTIVATED FOR NOW.
-        # Preset encodings THIS HAS BEEN DEACTIVATED FOR NOW.
-        encs = renderconsumer.non_user_encodings
-        if disable_audio_encoding == True:
-            encs = renderconsumer.get_video_non_user_encodigs()
-        encoding_option = encs[render_data.presets_index]
-        args_vals_list = encoding_option.get_args_vals_tuples_list(profile)
-    
-    
-    else: # User encodings
-        args_vals_list = renderconsumer.get_args_vals_tuples_list_for_encoding_and_quality( profile, 
-                                                                                            render_data.encoding_option_index, 
-                                                                                            render_data.quality_option_index)
-    # sample rate not supported
-    # args rendering not supported
-
-    return args_vals_list
-
-def get_encoding_desc(args_vals_list):
-    print(args_vals_list)
-    vcodec = ""
-    vb = ""
-    for arg_val in args_vals_list:
-        k, v = arg_val
-        if k == "vcodec":
-            vcodec = v
-        if k == "vb":
-            vb = v
-
-    if vb  == "":
-        vb = "lossless"
-
-    return vcodec + ", " + vb
-
-class ToolsRenderData():
-    """
-    This is used to save render selections defined by user.
-    """
-    def __init__(self):
-        self.profile_index = None
-        self.use_default_profile = None
-        self.use_preset_encodings = None
-        self.presets_index = None
-        self.encoding_option_index = None
-        self.quality_option_index = None
-        self.render_dir = None
-        self.file_name = None
-        self.file_extension = None
-        
-        # Used by container clips only.
-        self.do_video_render = True
-        self.save_internally = True
-
-
-def create_container_clip_default_render_data_object(profile):
-    # When first render is attempted this created to have data availeble for render process
-    # even if user has not set any values.
-    render_data = ToolsRenderData()
-    render_data.profile_index = mltprofiles.get_profile_index_for_profile(profile)
-    render_data.use_default_profile = True
-    render_data.use_preset_encodings = False
-    render_data.presets_index = 0
-    render_data.encoding_option_index = 0
-    render_data.quality_option_index = 10
-    render_data.render_dir = None
-    render_data.file_name = None
-    render_data.file_extension = ".mp4"
-    
-    """
-    profile_index: 67,
-    use_default_profile: True, 
-    use_preset_encodings: False, 
-    presets_index: 0, 
-    encoding_option_index: 0,
-    quality_option_index: 10, 
-    render_dir: /home/janne, 
-    file_name: test_gmic, 
-    file_extension: .mp4
-    """
-    

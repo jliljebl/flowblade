@@ -55,7 +55,7 @@ class ContainerClipData:
 
             self.external_media_folder = None
 
-            self.video_render_data = None # # values are intilized to toolsencoding.ToolsRenderData object later
+            self.render_data = None # # values are intilized to toolsencoding.ToolsRenderData object later
 
         def get_unrendered_media_name(self):
             directory, file_name = os.path.split(self.unrendered_media)

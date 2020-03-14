@@ -61,12 +61,13 @@ RENDERED_FRAMES_DIR = "/rendered_frames"
 COMPLETED_MSG_FILE = "completed"
 STATUS_MSG_FILE = "status"
 RENDER_DATA_FILE = "render_data"
+INTERNAL_CLIP_FILE = "container_clip"
 
 _gmic_version = None
 
 _session_folder = None
-_clip_frames_folder = None
-_rendered_frames_folder = None
+_clip_frames_folder_internal = None
+_rendered_frames_folder_internal = None
 
 _render_thread = None
 
@@ -165,22 +166,22 @@ def main(root_path, session_id, script, clip_path, range_in, range_out, profile_
 
     # Create list of available mlt profiles
     mltprofiles.load_profile_list()
-    global _session_folder, _clip_frames_folder, _rendered_frames_folder
+    global _session_folder, _clip_frames_folder_internal, _rendered_frames_folder_internal
     _session_folder = _get_session_folder(session_id)
-    _clip_frames_folder = _session_folder + CLIP_FRAMES_DIR
-    _rendered_frames_folder = _session_folder + RENDERED_FRAMES_DIR
+    _clip_frames_folder_internal = _session_folder + CLIP_FRAMES_DIR
+    _rendered_frames_folder_internal = _session_folder + RENDERED_FRAMES_DIR
 
     # Init gmic session dirs, these might exist if clip has been rendered before
     if not os.path.exists(_session_folder):
         os.mkdir(_session_folder)
-    if not os.path.exists(_clip_frames_folder):
-        os.mkdir(_clip_frames_folder)
-    if not os.path.exists(_rendered_frames_folder):
-        os.mkdir(_rendered_frames_folder)
+    if not os.path.exists(_clip_frames_folder_internal):
+        os.mkdir(_clip_frames_folder_internal)
+    if not os.path.exists(_rendered_frames_folder_internal):
+        os.mkdir(_rendered_frames_folder_internal)
 
     render_data_path = _session_folder + "/" + RENDER_DATA_FILE
     
-    render_data = utils.unpickle(render_data_path)
+    render_data = utils.unpickle(render_data_path)  # toolsencoding.ToolsRenderData object
 
     global _render_thread
     _render_thread = GMicHeadlessRunnerThread(script, render_data, clip_path, range_in, range_out, profile_desc)
@@ -211,7 +212,7 @@ class GMicHeadlessRunnerThread(threading.Thread):
         threading.Thread.__init__(self)
 
         self.script_path = script
-        self.render_data = render_data
+        self.render_data = render_data # toolsencoding.ToolsRenderData object
         self.clip_path = clip_path
         self.range_in = int(range_in)
         self.range_out = int(range_out)
@@ -230,16 +231,30 @@ class GMicHeadlessRunnerThread(threading.Thread):
         self.abort = False
         self.script_renderer = None
        
-        frame_name = "frame"
+        if self.render_data.save_internally == True:
+            frame_name = "frame"
+            clip_frames_folder = _clip_frames_folder_internal
+            rendered_frames_folder = _rendered_frames_folder_internal
+            
+        else:
+            frame_name = self.render_data.frame_name
+            external_save_folder = self.render_data.render_dir
+            clip_frames_folder = external_save_folder + CLIP_FRAMES_DIR
+            rendered_frames_folder = external_save_folder + RENDERED_FRAMES_DIR
+            if not os.path.exists(clip_frames_folder):
+                os.mkdir(clip_frames_folder)
+            if not os.path.exists(rendered_frames_folder):
+                os.mkdir(rendered_frames_folder)
+                
         profile = mltprofiles.get_profile(self.profile_desc)
 
         # Delete old preview frames
-        for frame_file in os.listdir(_clip_frames_folder):
-            file_path = os.path.join(_clip_frames_folder, frame_file)
+        for frame_file in os.listdir(clip_frames_folder):
+            file_path = os.path.join(clip_frames_folder, frame_file)
             os.remove(file_path)
             
         self.frames_range_writer = gmicplayer.FramesRangeWriter(self.clip_path, self.frames_update, profile)
-        self.frames_range_writer.write_frames(_clip_frames_folder + "/", frame_name, self.range_in, self.range_out)
+        self.frames_range_writer.write_frames(clip_frames_folder + "/", frame_name, self.range_in, self.range_out)
 
         if self.abort == True:
             return
@@ -247,14 +262,14 @@ class GMicHeadlessRunnerThread(threading.Thread):
         script_file = open(self.script_path)
         user_script = script_file.read()
 
-        while len(os.listdir(_clip_frames_folder)) != self.length:
-            print("WAITING")
+        while len(os.listdir(clip_frames_folder)) != self.length:
+            print("Waiting to start gmic script rendering...")
             time.sleep(0.5)
         
         # Render frames with gmic script
         self.script_renderer = gmicplayer.FolderFramesScriptRenderer(   user_script, 
-                                                                        _clip_frames_folder,
-                                                                        _rendered_frames_folder + "/",
+                                                                        clip_frames_folder,
+                                                                        rendered_frames_folder + "/",
                                                                         frame_name,
                                                                         self.script_render_update_callback, 
                                                                         self.script_render_output_callback,
@@ -263,27 +278,28 @@ class GMicHeadlessRunnerThread(threading.Thread):
         self.script_renderer.write_frames()
 
         # Render video
-        if True:
+        if self.render_data.do_video_render == True:
             # Render consumer
             args_vals_list = toolsencoding.get_args_vals_list_for_render_data(self.render_data)
-            print(args_vals_list)
             profile = mltprofiles.get_profile_for_index(self.render_data.profile_index) 
-            file_path = _session_folder +  "/" + "testing"  + self.render_data.file_extension
-            print(file_path)
-            #file_path = _render_data.render_dir + "/" +  _render_data.file_name  + _render_data.file_extension
             
+            if self.render_data.save_internally == True:
+                file_path = _session_folder +  "/" + INTERNAL_CLIP_FILE + self.render_data.file_extension
+            else:
+                file_path = self.render_data.render_dir +  "/" + self.render_data.file_name + self.render_data.file_extension
+        
             consumer = renderconsumer.get_mlt_render_consumer(file_path, profile, args_vals_list)
             
             # Render producer
-            frame_file = _rendered_frames_folder + "/" + frame_name + "_0000.png"
+            frame_file = rendered_frames_folder + "/" + frame_name + "_0000.png"
             if editorstate.mlt_version_is_equal_or_greater("0.8.5"):
                 resource_name_str = utils.get_img_seq_resource_name(frame_file, True)
             else:
                 resource_name_str = utils.get_img_seq_resource_name(frame_file, False)
-            resource_path = _rendered_frames_folder + "/" + resource_name_str
+            resource_path = rendered_frames_folder + "/" + resource_name_str
             producer = mlt.Producer(profile, str(resource_path))
 
-            clip_frames = os.listdir(_rendered_frames_folder)
+            clip_frames = os.listdir(rendered_frames_folder)
 
             self.render_player = renderconsumer.FileRenderPlayer("", producer, consumer, 0, len(clip_frames) - 5)
             self.render_player.wait_for_producer_end_stop = False
@@ -292,20 +308,11 @@ class GMicHeadlessRunnerThread(threading.Thread):
             while self.render_player.stopped == False:
 
                 if self.aborted == True:
-                    print("aborted")
+                    print("Aborted.")
                     return
                 
                 fraction = self.render_player.get_render_fraction()
-                print("running", fraction)
-
                 self.video_render_update_callback(fraction)
-    
-                #update_info = _("Rendering video, ") + str(int(fraction * 100)) + _("% done")
-                
-                #Gdk.threads_enter()
-                #_window.render_percentage.set_markup("<small>" + update_info + "</small>")
-                #_window.render_progress_bar.set_fraction(fraction)
-                #Gdk.threads_leave()
                 
                 time.sleep(0.3)
                 
