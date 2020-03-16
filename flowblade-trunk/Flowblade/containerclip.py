@@ -20,7 +20,6 @@
 
 from gi.repository import Gtk
 
-
 import hashlib
 import os
 
@@ -42,6 +41,8 @@ ROW_WIDTH = 300
 class ContainerClipData:
     
         def __init__(self, container_type, program, unrendered_media):
+            self.container_clip_uid = -1 # This is set at clip creation time.
+
             self.container_type = container_type
             self.program = program
 
@@ -55,7 +56,7 @@ class ContainerClipData:
 
             self.external_media_folder = None
 
-            self.render_data = None # # values are intilized to toolsencoding.ToolsRenderData object later
+            self.render_data = None # initialized to a toolsencoding.ToolsRenderData object later.
 
         def get_unrendered_media_name(self):
             directory, file_name = os.path.split(self.unrendered_media)
@@ -66,6 +67,9 @@ class ContainerClipData:
             action_object = containeractions.get_action_object(self)
             return action_object.get_rendered_thumbnail()
 
+        def generate_clip_id(self):
+            self.container_clip_uid = os.urandom(16)
+
 
 # -------------------------------------------------------- Clip menu actions
 def render_full_media(data):
@@ -75,7 +79,9 @@ def render_full_media(data):
 
 def render_clip_length(data):
     clip, track, item_id, item_data = data
-
+    action_object = containeractions.get_action_object(clip.container_data)
+    action_object.render_clip_length_media(clip)
+    
 def switch_to_unrendered_media(data):
     clip, track, item_id, item_data = data
 
@@ -91,6 +97,12 @@ def set_render_settings(data):
     clip, track, item_id, item_data = data
     action_object = containeractions.get_action_object(clip.container_data)
     action_object.set_video_endoding(clip)
+
+
+#------------------------------------------------------------- Cloneing
+def clone_clip(clip):
+    action_object = containeractions.get_action_object(clip.container_data)
+    return action_object.clone_clip(clip)
 
 
 # ------------------------------------------------------------ Dialogs + GUI utils

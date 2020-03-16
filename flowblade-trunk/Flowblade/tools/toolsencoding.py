@@ -23,6 +23,7 @@ from gi.repository import GObject
 
 import os
 
+import appconsts
 import guiutils
 import mltprofiles
 import renderconsumer
@@ -79,7 +80,7 @@ def create_container_clip_default_render_data_object(profile):
     render_data.encoding_option_index = 0
     render_data.quality_option_index = 10
     render_data.render_dir = os.path.expanduser("~")
-    render_data.file_name = "container_clip"
+    render_data.file_name = appconsts.CONTAINER_CLIP_VIDEO_CLIP_NAME
     render_data.file_extension = ".mp4"
 
     return render_data

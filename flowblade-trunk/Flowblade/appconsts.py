@@ -163,6 +163,8 @@ USER_PROFILES_DIR = "user_profiles/"
 USER_PROFILES_DIR_NO_SLASH = "user_profiles"
 BATCH_DIR = "batchrender/"
 CONTAINER_CLIPS_DIR = "container_clips"
+CC_CLIP_FRAMES_DIR = "/clip_frames"
+CC_RENDERED_FRAMES_DIR = "/rendered_frames"
 
 # Luma bands
 SHADOWS = 0
@@ -293,3 +295,4 @@ CONTAINER_CLIP_MLT_XML = 1
 CONTAINER_CLIP_CAIRO_SCRIPT = 2
 CONTAINER_CLIP_BLENDER = 3
 
+CONTAINER_CLIP_VIDEO_CLIP_NAME = "container_clip"

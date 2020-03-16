@@ -28,6 +28,8 @@ import os
 
 from gi.repository import Gdk
 
+import copy
+
 import appconsts
 import audiosync
 import clipeffectseditor
@@ -501,7 +503,8 @@ def tline_media_drop(media_file, x, y, use_marks=False):
         else:
             # Container clips
             new_clip = current_sequence().create_file_producer_clip(media_file.path, media_file.name, False, media_file.ttl)
-            new_clip.container_data = media_file.container_data 
+            new_clip.container_data = copy.deepcopy(media_file.container_data)
+            new_clip.container_data.generate_clip_id()
     else:
         new_clip = current_sequence().create_pattern_producer(media_file)
             

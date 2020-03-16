@@ -298,7 +298,7 @@ class FolderFramesInfo:
 class FolderFramesScriptRenderer:
 
     def __init__(   self, user_script, folder, out_folder, frame_name, update_callback, 
-                    render_output_callback, nice=0, re_render_existing=True):
+                    render_output_callback, nice=0, re_render_existing=True, out_frame_offset=0):
         self.user_script = user_script
         self.folder = folder
         self.out_folder = out_folder
@@ -307,7 +307,8 @@ class FolderFramesScriptRenderer:
         self.render_output_callback = render_output_callback
         self.nice = nice
         self.re_render_existing = re_render_existing
-        
+        self.out_frame_offset = out_frame_offset
+
         self.abort = False
 
     def write_frames(self):
@@ -325,7 +326,7 @@ class FolderFramesScriptRenderer:
             nice_command = "nice -n " + str(self.nice) + " "
 
             file_numbers_list = re.findall(r'\d+', clip_frame)
-            filled_number_str = str(file_numbers_list[0]).zfill(3)
+            filled_number_str = str(int(file_numbers_list[0]) + self.out_frame_offset).zfill(4)
 
             clip_frame_path = os.path.join(self.folder, clip_frame)
             rendered_file_path = self.out_folder + self.frame_name + "_" + filled_number_str + ".png"

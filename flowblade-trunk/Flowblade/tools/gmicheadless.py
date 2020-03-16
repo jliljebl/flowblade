@@ -55,8 +55,8 @@ import translations
 import userfolders
 import utils
 
-CLIP_FRAMES_DIR = "/clip_frames"
-RENDERED_FRAMES_DIR = "/rendered_frames"
+CLIP_FRAMES_DIR = appconsts.CC_CLIP_FRAMES_DIR
+RENDERED_FRAMES_DIR = appconsts.CC_RENDERED_FRAMES_DIR
 
 COMPLETED_MSG_FILE = "completed"
 STATUS_MSG_FILE = "status"
@@ -121,7 +121,7 @@ def _get_session_folder(session_id):
 
 
 # --------------------------------------------------- render thread launch
-def main(root_path, session_id, script, clip_path, range_in, range_out, profile_desc):
+def main(root_path, session_id, script, clip_path, range_in, range_out, profile_desc, gmic_frame_offset):
     
     os.nice(10) # make user configurable
     
@@ -184,7 +184,7 @@ def main(root_path, session_id, script, clip_path, range_in, range_out, profile_
     render_data = utils.unpickle(render_data_path)  # toolsencoding.ToolsRenderData object
 
     global _render_thread
-    _render_thread = GMicHeadlessRunnerThread(script, render_data, clip_path, range_in, range_out, profile_desc)
+    _render_thread = GMicHeadlessRunnerThread(script, render_data, clip_path, range_in, range_out, profile_desc, gmic_frame_offset)
     _render_thread.start()
 
 def get_gmic_version():
@@ -208,7 +208,7 @@ def get_gmic_version():
 
 class GMicHeadlessRunnerThread(threading.Thread):
 
-    def __init__(self, script, render_data, clip_path, range_in, range_out, profile_desc):
+    def __init__(self, script, render_data, clip_path, range_in, range_out, profile_desc, gmic_frame_offset):
         threading.Thread.__init__(self)
 
         self.script_path = script
@@ -218,7 +218,8 @@ class GMicHeadlessRunnerThread(threading.Thread):
         self.range_out = int(range_out)
         self.length = self.range_out - self.range_in + 1
         self.profile_desc = profile_desc
-        
+        self.gmic_frame_offset = int(gmic_frame_offset)
+    
         self.aborted = False
         self.last_frame_out_update = -1
         
@@ -274,7 +275,8 @@ class GMicHeadlessRunnerThread(threading.Thread):
                                                                         self.script_render_update_callback, 
                                                                         self.script_render_output_callback,
                                                                         nice=10,
-                                                                        re_render_existing=False)
+                                                                        re_render_existing=False,
+                                                                        out_frame_offset=self.gmic_frame_offset)
         self.script_renderer.write_frames()
 
         # Render video
@@ -301,7 +303,7 @@ class GMicHeadlessRunnerThread(threading.Thread):
 
             clip_frames = os.listdir(rendered_frames_folder)
 
-            self.render_player = renderconsumer.FileRenderPlayer("", producer, consumer, 0, len(clip_frames) - 5)
+            self.render_player = renderconsumer.FileRenderPlayer("", producer, consumer, 0, len(clip_frames) - 1)
             self.render_player.wait_for_producer_end_stop = False
             self.render_player.start()
 

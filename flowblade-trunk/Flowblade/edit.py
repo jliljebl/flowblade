@@ -31,6 +31,7 @@ import appconsts
 import clipeffectseditor
 import compositeeditor
 import compositorfades
+import containerclip
 from editorstate import current_sequence
 from editorstate import get_track
 from editorstate import PLAYER
@@ -44,6 +45,7 @@ import trimmodes
 import undo
 import updater
 import utils
+
 
 # GUI updates are turned off for example when doing resync action
 do_gui_update = False
@@ -176,7 +178,9 @@ def _remove_all_trailing_blanks(self=None):
             pass
 
 def _create_clip_clone(clip):
-    if clip.media_type != appconsts.PATTERN_PRODUCER:
+    if clip.container_data != None:
+        new_clip = containerclip.clone_clip(clip)
+    elif clip.media_type != appconsts.PATTERN_PRODUCER:
         new_clip = current_sequence().create_file_producer_clip(clip.path, None, False, clip.ttl)
     else:
         new_clip = current_sequence().create_pattern_producer(clip.create_data)
@@ -2820,7 +2824,8 @@ def _reload_replace_redo(self):
     _remove_clip(self.track, self.index)
     _insert_clip(self.track, self.new_clip, self.index, self.old_clip.clip_in, self.old_clip.clip_out)
 
-# -------------------------------------------------------- CONTAINER CLIP MEDIA REPLACE
+
+# -------------------------------------------------------- CONTAINER CLIP FULL RENDER MEDIA REPLACE
 # "old_clip", "new_clip", "track", "index"
 def container_clip_full_render_replace(data):
     action = EditAction(_container_clip_full_render_replace_undo, _container_clip_full_render_replace_redo, data)
@@ -2836,10 +2841,30 @@ def _container_clip_full_render_replace_redo(self):
 
     if self.new_clip.container_data == None:
         self.new_clip.container_data = copy.deepcopy(self.old_clip.container_data)
-    
-    if self.old_clip.container_data == None:
-        print("old clip cdata None")
             
+    self.new_clip.container_data.rendered_media = self.rendered_media_path
+    self.new_clip.container_data.rendered_media_range_in = 0
+    self.new_clip.container_data.rendered_media_range_out = self.old_clip.container_data.unrendered_length
+
+
+# -------------------------------------------------------- CONTAINER CLIP CLIP RENDER MEDIA REPLACE
+# "old_clip", "new_clip", "track", "index"
+def container_clip_clip_render_replace(data):
+    action = EditAction(_container_clip_clip_render_replace_undo, _container_clip_clip_render_replace_redo, data)
+    return action
+
+def _container_clip_clip_render_replace_undo(self):
+    _remove_clip(self.track, self.index)
+    _insert_clip(self.track, self.old_clip, self.index, self.old_clip.clip_in, self.old_clip.clip_out)
+    
+def _container_clip_clip_render_replace_redo(self):
+    _remove_clip(self.track, self.index)
+    new_out =  self.old_clip.clip_out - self.old_clip.clip_in
+    _insert_clip(self.track, self.new_clip, self.index, 0, new_out)
+
+    if self.new_clip.container_data == None:
+        self.new_clip.container_data = copy.deepcopy(self.old_clip.container_data)
+
     self.new_clip.container_data.rendered_media = self.rendered_media_path
     self.new_clip.container_data.rendered_media_range_in = 0
     self.new_clip.container_data.rendered_media_range_out = self.old_clip.container_data.unrendered_length

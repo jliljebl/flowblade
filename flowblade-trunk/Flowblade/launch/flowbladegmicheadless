@@ -35,13 +35,14 @@ try:
     profile_desc_under_score = _get_arg_value(sys.argv, "profile_desc")
     profile_desc = profile_desc_under_score.replace("_", " ") # We need to put underscores in profile names to get them here in one piece.
                                                               # Now we take underscores out to get correct MLT profile names.
+    gmic_frame_offset = _get_arg_value(sys.argv, "gmic_frame_offset")
 except Exception as err:
     print ("Failed to import gmicheadless")
     print ("ERROR:", err)
     print ("Installation was assumed to be at:", modules_path)
     sys.exit(1)
 
-gmicheadless.main(modules_path, session_id, script, clip_path, range_in, range_out, profile_desc)
+gmicheadless.main(modules_path, session_id, script, clip_path, range_in, range_out, profile_desc, gmic_frame_offset)
 
 
 

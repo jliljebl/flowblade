@@ -27,6 +27,7 @@ Module handles button edit events from buttons in the middle bar.
 from gi.repository import Gtk
 from gi.repository import Gdk
 
+import copy
 import hashlib
 import os
 from operator import itemgetter
@@ -93,6 +94,10 @@ def _get_new_clip_from_clip_monitor():
         new_clip = current_sequence().create_file_producer_clip(MONITOR_MEDIA_FILE().path, None, False, MONITOR_MEDIA_FILE().ttl)
     else:
         new_clip = current_sequence().create_pattern_producer(MONITOR_MEDIA_FILE())
+    
+    if MONITOR_MEDIA_FILE().container_data != None:
+        new_clip.container_data = copy.deepcopy(MONITOR_MEDIA_FILE().container_data)
+        new_clip.container_data.container_data.generate_clip_id()
         
     # Set clip in and out points
     new_clip.mark_in = MONITOR_MEDIA_FILE().mark_in
