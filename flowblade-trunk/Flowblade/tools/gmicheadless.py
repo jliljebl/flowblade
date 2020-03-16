@@ -60,8 +60,9 @@ RENDERED_FRAMES_DIR = appconsts.CC_RENDERED_FRAMES_DIR
 
 COMPLETED_MSG_FILE = "completed"
 STATUS_MSG_FILE = "status"
+ABORT_MSG_FILE = "abort"
 RENDER_DATA_FILE = "render_data"
-INTERNAL_CLIP_FILE = "container_clip"
+
 
 _gmic_version = None
 
@@ -84,6 +85,10 @@ def clear_flag_files(session_id):
     status_msg_file = folder + "/" + STATUS_MSG_FILE
     if os.path.exists(status_msg_file):
         os.remove(status_msg_file)
+
+    abort_msg_file = folder + "/" +  ABORT_MSG_FILE
+    if os.path.exists(abort_msg_file):
+        os.remove(abort_msg_file)
 
 def set_render_data(session_id, video_render_data):
     folder = _get_session_folder(session_id)
@@ -115,6 +120,12 @@ def get_session_status(session_id):
     step, frame, length, elapsed = msg.split(" ")
     return (step, frame, length, elapsed)
     
+def abort_render(session_id):
+    folder = _get_session_folder(session_id)
+    abort_msg_file = folder + "/" +  ABORT_MSG_FILE
+    with atomicfile.AtomicFileWriter(abort_msg_file, "wb") as afw:
+        outfile = afw.get_file()
+        pickle.dump("##abort", outfile)
         
 def _get_session_folder(session_id):
     return userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_DIR +  "/" + session_id
@@ -220,7 +231,7 @@ class GMicHeadlessRunnerThread(threading.Thread):
         self.profile_desc = profile_desc
         self.gmic_frame_offset = int(gmic_frame_offset)
     
-        self.aborted = False
+        self.abort = False
         self.last_frame_out_update = -1
         
     def run(self):
@@ -229,7 +240,6 @@ class GMicHeadlessRunnerThread(threading.Thread):
         self.render_player = None
         self.frames_range_writer = None
         
-        self.abort = False
         self.script_renderer = None
        
         if self.render_data.save_internally == True:
@@ -279,6 +289,9 @@ class GMicHeadlessRunnerThread(threading.Thread):
                                                                         out_frame_offset=self.gmic_frame_offset)
         self.script_renderer.write_frames()
 
+        if self.abort == True:
+            return
+            
         # Render video
         if self.render_data.do_video_render == True:
             # Render consumer
@@ -286,7 +299,7 @@ class GMicHeadlessRunnerThread(threading.Thread):
             profile = mltprofiles.get_profile_for_index(self.render_data.profile_index) 
             
             if self.render_data.save_internally == True:
-                file_path = _session_folder +  "/" + INTERNAL_CLIP_FILE + self.render_data.file_extension
+                file_path = _session_folder +  "/" + appconsts.CONTAINER_CLIP_VIDEO_CLIP_NAME + self.render_data.file_extension
             else:
                 file_path = self.render_data.render_dir +  "/" + self.render_data.file_name + self.render_data.file_extension
         
@@ -308,8 +321,11 @@ class GMicHeadlessRunnerThread(threading.Thread):
             self.render_player.start()
 
             while self.render_player.stopped == False:
-
-                if self.aborted == True:
+                
+                self.abort_requested()
+                
+                if self.abort == True:
+                    self.render_player.shutdown()
                     print("Aborted.")
                     return
                 
@@ -325,13 +341,30 @@ class GMicHeadlessRunnerThread(threading.Thread):
             script_file = afw.get_file()
             script_file.write(script_text)
 
+    def abort_requested(self):
+        abort_file = _session_folder + "/" +  ABORT_MSG_FILE
+        if os.path.exists(abort_file):
+            self.abort = True
+            print("aborted requested...")
+            return True
+        
+        return False
+
     def frames_update(self, frame):
+        if self.abort_requested() == True:
+             self.frames_range_writer.shutdown()
+             return
+             
         # step 1, frame , range
         elapsed = time.monotonic() - self.start_time
         msg = "1 " + str(frame) + " " + str(self.length) + " " + str(elapsed)
         self.write_status_message(msg)
         
     def script_render_update_callback(self, frame_count):
+        if self.abort_requested() == True:
+             self.script_renderer.abort = True
+             return
+        
         # step 1, frame , range
         elapsed = time.monotonic() - self.start_time
         msg = "2 " + str(frame_count) + " " + str(self.length) + " " + str(elapsed)

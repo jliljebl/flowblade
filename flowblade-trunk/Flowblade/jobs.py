@@ -39,6 +39,8 @@ NOT_SET_YET = 0
 CONTAINER_CLIP_RENDER = 1
 PROXY_RENDER = 2
 
+_hamburger_menu = Gtk.Menu()
+
 _jobs_list_view = None
 
 _jobs = [] # proxy objects that represent background renders and provide info on render status.
@@ -48,13 +50,17 @@ _jobs = [] # proxy objects that represent background renders and provide info on
 class JobProxy: # Background renders provide these to give info on render status.
                   # Modules doing the rendering must manage setting all values.
 
-    def __init__(self, uid):
+    def __init__(self, uid, callback_object):
         self.proxy_uid = uid # modules doing the rendering and using this to display must make sure this matches always for a particular job
         self.type = NOT_SET_YET 
         self.status = RENDERING
         self.progress = 0.0 # 0.0. - 1.0
         self.text = ""
         self.elapsed = 0.0 # in fractional seconds
+
+        # callback_object reqiured to implement interface:
+        #     abort_render()
+        self.callback_object = callback_object
 
     def get_elapsed_str(self):
         return utils.get_time_str_for_sec_float(self.elapsed)
@@ -68,6 +74,8 @@ class JobProxy: # Background renders provide these to give info on render status
     def get_progress_str(self):
         return str(int(self.progress * 100.0)) + "%"
 
+    def abort_render(self):
+        self.callback_object.abort_render()
 
 #---------------------------------------------------------------- INTERFACE
 def add_job(job_proxy):
@@ -101,8 +109,6 @@ def show_message(update_job_proxy):
 
     _jobs_list_view.scroll.queue_draw()
 
-
-#---------------------------------------------------------------- GUI
 def create_jobs_list_view():
     global _jobs_list_view
     _jobs_list_view = JobsQueueView()
@@ -126,7 +132,32 @@ def get_jobs_panel():
     return panel
 
 def _menu_action_pressed(widget, event):
-    pass
+    menu = _hamburger_menu
+    guiutils.remove_children(menu)
+
+    menu.add(guiutils.get_menu_item(_("Cancel All Renders"), _hamburger_item_activated, "cancel_all"))
+    """
+    menu.add(_get_menu_item(_("Load Effect Values"), callback, "load"))
+    menu.add(_get_menu_item(_("Reset Effect Values"), callback, "reset"))
+    
+    _add_separetor(menu)
+    
+    menu.add(_get_menu_item(_("Delete Effect"), callback, "delete"))
+
+    _add_separetor(menu)
+    
+    menu.add(_get_menu_item(_("Close Editor"), callback, "close"))
+    """
+    
+    menu.show_all()
+    menu.popup(None, None, None, None, event.button, event.time)
+
+def _hamburger_item_activated(widget, msg):
+    if msg == "cancel_all":
+        for job in _jobs:
+            job.abort_render()
+
+
 
 
 class JobsQueueView(Gtk.VBox):

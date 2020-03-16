@@ -70,6 +70,10 @@ class ContainerClipData:
         def generate_clip_id(self):
             self.container_clip_uid = os.urandom(16)
 
+        def clear_rendered_media(self):
+            self.rendered_media = None
+            self.rendered_media_range_in = -1
+            self.rendered_media_range_out = -1
 
 # -------------------------------------------------------- Clip menu actions
 def render_full_media(data):
@@ -84,14 +88,8 @@ def render_clip_length(data):
     
 def switch_to_unrendered_media(data):
     clip, track, item_id, item_data = data
-
-def save_rendered_media_in_external_folder(data):
-    clip, track, item_id, item_data = data
-    print(clip)
-
-def save_rendered_media_in_internal_cache(data):
-    clip, track, item_id, item_data = data
-    print(clip)
+    action_object = containeractions.get_action_object(clip.container_data)
+    action_object.switch_to_unrendered_media(clip)
 
 def set_render_settings(data):
     clip, track, item_id, item_data = data

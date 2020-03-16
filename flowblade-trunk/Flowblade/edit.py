@@ -2826,7 +2826,7 @@ def _reload_replace_redo(self):
 
 
 # -------------------------------------------------------- CONTAINER CLIP FULL RENDER MEDIA REPLACE
-# "old_clip", "new_clip", "track", "index"
+# "old_clip", "new_clip","rendered_media_path","track", "index"
 def container_clip_full_render_replace(data):
     action = EditAction(_container_clip_full_render_replace_undo, _container_clip_full_render_replace_redo, data)
     return action
@@ -2848,7 +2848,7 @@ def _container_clip_full_render_replace_redo(self):
 
 
 # -------------------------------------------------------- CONTAINER CLIP CLIP RENDER MEDIA REPLACE
-# "old_clip", "new_clip", "track", "index"
+# "old_clip", "new_clip","rendered_media_path","track", "index"
 def container_clip_clip_render_replace(data):
     action = EditAction(_container_clip_clip_render_replace_undo, _container_clip_clip_render_replace_redo, data)
     return action
@@ -2869,6 +2869,28 @@ def _container_clip_clip_render_replace_redo(self):
     self.new_clip.container_data.rendered_media_range_in = 0
     self.new_clip.container_data.rendered_media_range_out = self.old_clip.container_data.unrendered_length
 
+
+# -------------------------------------------------------- CONTAINER CLIP AWITHCH TO UNRENDERED CLIP MEDIA REPLACE
+# "old_clip", "new_clip", "track", "index"
+def container_clip_switch_to_unrendered_replace(data):
+    action = EditAction(_container_clip_switch_to_unrendered_replace_undo, _container_clip_switch_to_unrendered_replace_redo, data)
+    return action
+
+def _container_clip_switch_to_unrendered_replace_undo(self):
+    _remove_clip(self.track, self.index)
+    _insert_clip(self.track, self.old_clip, self.index, self.old_clip.clip_in, self.old_clip.clip_out)
+    
+def _container_clip_switch_to_unrendered_replace_redo(self):
+    _remove_clip(self.track, self.index)
+    new_out = self.old_clip.clip_out - self.old_clip.clip_in
+    #_insert_clip(self.track, self.new_clip, self.index, 0, new_out)
+    _insert_clip(self.track, self.new_clip, self.index, self.old_clip.clip_in, self.old_clip.clip_out)
+    
+    if self.new_clip.container_data == None:
+        self.new_clip.container_data = copy.deepcopy(self.old_clip.container_data)
+
+    self.new_clip.container_data.clear_rendered_media()
+    
 
 #-------------------- APPEND MEDIA LOG
 # "track","clips"

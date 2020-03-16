@@ -183,10 +183,11 @@ class FramesRangeWriter:
                 
                 self.callback(self.frame_producer.frame() - mark_in)
                 time.sleep(2.0) # This seems enough, other methods produced bad waits
+                                # IF WE CAN REMOVE THIS WAIT. THAT WOULD BE GOOD.
 
                 self.running = False
             else:
-                self.callback(self.frame_producer.frame())
+                self.callback(self.frame_producer.frame()) # This is wrong for container clips but we fix it there not break G'mic tool, lazy yeah...
                 time.sleep(0.2)
     
     def shutdown(self):
@@ -261,7 +262,6 @@ class FolderFramesInfo:
 
         return folder + "/" + highest_file
 
-
     def full_range_exits(self, start, end):
         # end inclusive
         # This will not work if there are two image sequences in the same folder.
@@ -274,7 +274,6 @@ class FolderFramesInfo:
                 print(int(file_number_part))
                 existing_files[int(file_number_part)] = f
             except:
-                print("hhhhhhhh")
                 continue
 
         for i in range(start, end + 1):
@@ -294,6 +293,7 @@ class FolderFramesInfo:
         number_index = f.find(number_part)
         path_name_part = f[0:number_index]
         return path_name_part
+
 
 class FolderFramesScriptRenderer:
 

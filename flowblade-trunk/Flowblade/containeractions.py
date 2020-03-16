@@ -142,11 +142,14 @@ class AbstractContainerActionObject:
             os.mkdir(rendered_frames_folder)
 
     def render_full_media(self, clip):
-        print("AbstractContainerActionObject.render_full_media not impl")
+        print("AbstractContainerActionObject.render_full_media() not impl")
 
     def render_clip_length_media(self, clip):
-        print("AbstractContainerActionObject.render_clip_length_media not impl")
-        
+        print("AbstractContainerActionObject.render_clip_length_media() not impl")
+
+    def switch_to_unrendered_media(self, clip):
+        print("AbstractContainerActionObject.switch_to_unrendered_media() not impl")
+
     def get_session_dir(self):
         return self.get_container_clips_dir() + "/" + self.get_container_program_id()
 
@@ -161,7 +164,7 @@ class AbstractContainerActionObject:
         return hashlib.md5(id_md_str.encode('utf-8')).hexdigest() 
 
     def get_job_proxy(self):
-        job_proxy = jobs.JobProxy(self.get_container_program_id())
+        job_proxy = jobs.JobProxy(self.get_container_program_id(), self)
         job_proxy.type = jobs.CONTAINER_CLIP_RENDER
         return job_proxy
 
@@ -255,7 +258,6 @@ class AbstractContainerActionObject:
         return new_clip
 
     def create_container_clip_media_clone(self, container_clip):
-        self.show_cloning_clip_info()
         
         container_clip_action_object = get_action_object(container_clip.container_data)
         if container_clip.container_data.rendered_media == None:
@@ -276,11 +278,7 @@ class AbstractContainerActionObject:
             resource_path = self.get_rendered_frame_sequence_resource_path()
             clone_clip =  current_sequence().create_file_producer_clip(resource_path, None, False, container_clip.ttl)
 
-        self.info_dialog.destroy()
         return clone_clip
-
-    def show_cloning_clip_info(self):
-        self.info_dialog = dialogutils.no_button_dialog("", Gtk.Label("Cloning Contaoner Clip Media"))
 
 
 class GMicContainerActions(AbstractContainerActionObject):
@@ -304,9 +302,23 @@ class GMicContainerActions(AbstractContainerActionObject):
 
         self.add_as_status_polling_object()
 
+    def switch_to_unrendered_media(self, rendered_clip):
+        unrendered_clip = current_sequence().create_file_producer_clip(self.container_data.unrendered_media, new_clip_name=None, novalidate=True, ttl=1)
+        track, clip_index = current_sequence().get_track_and_index_for_id(rendered_clip.id)
+
+        data = {"old_clip":rendered_clip,
+                "new_clip":unrendered_clip,
+                "track":track,
+                "index":clip_index}
+        action = edit.container_clip_switch_to_unrendered_replace(data)   
+        action.do_edit()
+
     def _launch_render(self, clip, range_in, range_out, gmic_frame_offset):
         self.create_data_dirs_if_needed()
-
+        self.render_range_in = range_in
+        self.render_range_out = range_out
+        self.gmic_frame_offset = gmic_frame_offset
+ 
         gmicheadless.clear_flag_files(self.get_container_program_id())
     
         # We need data to be available for render process, 
@@ -354,11 +366,11 @@ class GMicContainerActions(AbstractContainerActionObject):
             # Using video clip as clip
             else:
                 if self.container_data.render_data.save_internally == True:
-                    resource_path = self.get_session_dir() +  "/" + gmicheadless.INTERNAL_CLIP_FILE + self.container_data.render_data.file_extension
+                    resource_path = self.get_session_dir() +  "/" + appconsts.CONTAINER_CLIP_VIDEO_CLIP_NAME + self.container_data.render_data.file_extension
                 else:
                     resource_path = self.container_data.render_data.render_dir +  "/" + self.container_data.render_data.file_name + self.container_data.render_data.file_extension
-                print("clip", resource_path)
-                rendered_clip = current_sequence().create_file_producer_clip(resource_path, new_clip_name=None, novalidate=False, ttl=1)
+
+                rendered_clip = current_sequence().create_file_producer_clip(resource_path, new_clip_name=None, novalidate=True, ttl=1)
             
             track, clip_index = current_sequence().get_track_and_index_for_id(self.clip.id)
             
@@ -386,6 +398,7 @@ class GMicContainerActions(AbstractContainerActionObject):
             status = gmicheadless.get_session_status(self.get_container_program_id())
             if status != None:
                 step, frame, length, elapsed = status
+
                 steps_count = 3
                 if  self.container_data.render_data.do_video_render == False:
                     steps_count = 2
@@ -398,18 +411,36 @@ class GMicContainerActions(AbstractContainerActionObject):
                      msg += _("Encoding Video")
                      
                 job_proxy = self.get_job_proxy()
-                job_proxy.progress = float(frame)/float(length)
+                if self.render_type == FULL_RENDER:
+                    job_proxy.progress = float(frame)/float(length)
+                else:
+                    if step == "1":
+                        render_length = self.render_range_out - self.render_range_in 
+                        frame = int(frame) - self.gmic_frame_offset
+                    else:
+                        render_length = self.render_range_out - self.render_range_in
+                    job_proxy.progress = float(frame)/float(render_length)
+                    
+                    if job_proxy.progress < 0.0:
+                        # hack to fix how gmiplayer.FramesRangeWriter works.
+                        # We would need to Patch to g'mic tool to not need this but this was just easier.
+                        job_proxy.progress = 1.0
+
+                    if job_proxy.progress > 1.0:
+                        # hack to fix how progress is caculated in gmicheadless because producers can render a bit longer then required.
+                        job_proxy.progress = 1.0
+                        
                 job_proxy.elapsed = float(elapsed)
                 job_proxy.text = msg
                 
                 jobs.show_message(job_proxy)
             else:
-                print("Miss")
+                pass # This can happen sometimes before gmicheadless.py has written a status message, we just do nothing here.
 
         Gdk.threads_leave()
 
     def abort_render(self):
-        print("AbstractContainerActionObject.abort_render not impl")
+        gmicheadless.abort_render(self.get_container_program_id())
 
     def create_icon(self):
         icon_path, length, info = _write_thumbnail_image(PROJECT().profile, self.container_data.unrendered_media)
@@ -442,7 +473,7 @@ class ContainerStatusPollingThread(threading.Thread):
         
         while self.abort == False:
             for poll_obj in self.poll_objects:
-                poll_obj.update_render_status() # make sure poll objects enter Gtk threads
+                poll_obj.update_render_status() # make sure methids enter/exit Gtk threads
                     
                 
             time.sleep(1.0)

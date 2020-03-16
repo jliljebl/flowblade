@@ -110,7 +110,8 @@ def titler_destroy():
 def reset_titler():
     global _titler_data
     _titler_data = None
-        
+
+
 # ------------------------------------------------------------- data
 class TextLayer:
     """
@@ -184,7 +185,8 @@ class TitlerData:
     def create_pango_layouts(self):
         for layer in self.layers:
             layer.pango_layout = PangoTextLayout(layer)
-            
+
+
 # ---------------------------------------------------------- editor
 class Titler(Gtk.Window):
     def __init__(self):
