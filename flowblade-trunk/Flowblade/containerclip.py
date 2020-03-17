@@ -75,6 +75,7 @@ class ContainerClipData:
             self.rendered_media_range_in = -1
             self.rendered_media_range_out = -1
 
+
 # -------------------------------------------------------- Clip menu actions
 def render_full_media(data):
     clip, track, item_id, item_data = data
@@ -141,7 +142,8 @@ def _update_gui_for_media_object_add():
     gui.bin_list_view.fill_data_model()
 
 
-# -------------------------------------------------------- MEDIA ITEM CREATIONS
+# -------------------------------------------------------- MEDIA ITEM CREATION
+# G'Mic
 def create_gmic_media_item():
     script_select, row1 = _get_file_select_row_and_editor(_("Select G'Mic Tool Script:"))
     media_file_select, row2 = _get_file_select_row_and_editor(_("Video Clip:"))
@@ -166,8 +168,17 @@ def _gmic_clip_create_dialog_callback(dialog, response_id, data):
         PROJECT().add_container_clip_media_object(container_clip)
         _update_gui_for_media_object_add()
 
+# MLT XML
+def create_mlt_xml_media_item(xml_file_path, media_name):
+    # xml file is both unrendered media and program
+    container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_MLT_XML, xml_file_path, xml_file_path)
+    container_clip = MLTXMLContainerClip(PROJECT().next_media_file_id, media_name, container_clip_data)
+    PROJECT().add_container_clip_media_object(container_clip)
+    _update_gui_for_media_object_add()
 
-class AbstractBinContainerClip: # not extends projectdata.MediaFile? too late, too late. Also better name would be AbstractBinPatternProducer
+
+# ---------------------------------------------------------------- MEDIA FILE OBJECTS
+class AbstractBinContainerClip:
     """
     A pattern producer object presnt in Media Bin.
     """
@@ -217,3 +228,19 @@ class GMicContainerClip(AbstractBinContainerClip):
         self.length = length
         self.container_data.unrendered_length = length - 1
 
+
+class MLTXMLContainerClip(AbstractBinContainerClip):
+    """
+    Color Clip that can added to and edited in Sequence.
+    """   
+    def __init__(self, media_item_id, name, container_data):
+
+        AbstractBinContainerClip.__init__(self, media_item_id, name, container_data)
+
+    def create_icon(self):
+        action_object = containeractions.get_action_object(self.container_data)
+        surface, length = action_object.create_icon()      
+                    
+        self.icon = surface
+        self.length = length
+        self.container_data.unrendered_length = length - 1

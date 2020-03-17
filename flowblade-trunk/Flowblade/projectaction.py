@@ -48,6 +48,7 @@ import appconsts
 import batchrendering
 import clipeffectseditor
 import compositeeditor
+import containerclip
 import dialogs
 import dialogutils
 import gui
@@ -1352,13 +1353,17 @@ def _do_create_selection_compound_clip(dialog, response_id, name_entry):
     render_player.start()
 
 def _xml_compound_render_done_callback(filename, media_name):
-    add_media_thread = AddMediaFilesThread([filename], media_name)
-    add_media_thread.start()
+    containerclip.create_mlt_xml_media_item(filename, media_name)
+    
+    #add_media_thread = AddMediaFilesThread([filename], media_name)
+    #add_media_thread.start()
 
 def _sequence_xml_compound_render_done_callback(data):
     filename, media_name = data
-    add_media_thread = AddMediaFilesThread([filename], media_name)
-    add_media_thread.start()
+    containerclip.create_mlt_xml_media_item(filename, media_name)
+    
+    #add_media_thread = AddMediaFilesThread([filename], media_name)
+    #add_media_thread.start()
 
 def _xml_freeze_compound_render_done_callback(filename, media_name):
     # Remove freeze filter

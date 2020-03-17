@@ -44,6 +44,7 @@ import gmicheadless
 import gmicplayer
 import jobs
 import mltprofiles
+import mltxmlheadless
 import respaths
 import toolsencoding
 import userfolders
@@ -54,6 +55,7 @@ CLIP_LENGTH_RENDER = 1
 
 OVERLAY_COLOR = (0.17, 0.23, 0.63, 0.5)
 GMIC_TYPE_ICON = None
+MLT_XML_TYPE_ICON = None
 
 _status_polling_thread = None
 
@@ -61,7 +63,9 @@ _status_polling_thread = None
 def get_action_object(container_data):
     if container_data.container_type == appconsts.CONTAINER_CLIP_GMIC:
         return GMicContainerActions(container_data)
-
+    elif container_data.container_type == appconsts.CONTAINER_CLIP_MLT_XML:
+         return MLTXMLContainerActions(container_data)
+         
 def shutdown_polling():
     if _status_polling_thread == None:
         return
@@ -71,14 +75,18 @@ def shutdown_polling():
 
 # ------------------------------------------------------------ thumbnail creation helpers
 def _get_type_icon(container_type):
-    global GMIC_TYPE_ICON
+    # TODO: When we get third move this into action objects.
+    global GMIC_TYPE_ICON, MLT_XML_TYPE_ICON
     
     if GMIC_TYPE_ICON == None:
         GMIC_TYPE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "container_clip_gmic.png")
+    if MLT_XML_TYPE_ICON == None:
+        MLT_XML_TYPE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "container_clip_mlt_xml.png")
         
-    
     if container_type == appconsts.CONTAINER_CLIP_GMIC:
         return GMIC_TYPE_ICON
+    elif container_type == appconsts.CONTAINER_CLIP_MLT_XML: 
+        return MLT_XML_TYPE_ICON
 
 def _write_thumbnail_image(profile, file_path):
     """
@@ -142,10 +150,21 @@ class AbstractContainerActionObject:
             os.mkdir(rendered_frames_folder)
 
     def render_full_media(self, clip):
-        print("AbstractContainerActionObject.render_full_media() not impl")
+        self.render_type = FULL_RENDER
+        self.clip = clip
+        self._launch_render(clip, 0, self.container_data.unrendered_length, 0)
+
+        self.add_as_status_polling_object()
 
     def render_clip_length_media(self, clip):
-        print("AbstractContainerActionObject.render_clip_length_media() not impl")
+        self.render_type = CLIP_LENGTH_RENDER
+        self.clip = clip
+        self._launch_render(clip, clip.clip_in, clip.clip_out + 1, clip.clip_in)
+
+        self.add_as_status_polling_object()
+
+    def _launch_render(self, clip, range_in, range_out, clip_start_offset):
+        print("AbstractContainerActionObject._launch_render() not impl")
 
     def switch_to_unrendered_media(self, clip):
         print("AbstractContainerActionObject.switch_to_unrendered_media() not impl")
@@ -200,8 +219,8 @@ class AbstractContainerActionObject:
         return self.get_rendered_media_dir() + "/" + resource_name_str
                 
     def get_rendered_thumbnail(self):
-        print("AbstractContainerActionObject.get_rendered_thumbnail not impl")
-        return None
+        surface, length = self.create_icon()
+        return surface
     
     def update_render_status(self):
         print("AbstractContainerActionObject.update_render_status not impl")
@@ -209,7 +228,46 @@ class AbstractContainerActionObject:
     def abort_render(self):
         print("AbstractContainerActionObject.abort_render not impl")
 
+    def create_producer_and_do_update_edit(self):
+        # Using frame sequence as clip
+        if  self.container_data.render_data.do_video_render == False:
+            resource_path = self.get_rendered_frame_sequence_resource_path()
+            if resource_path == None:
+                return # TODO: User info?
 
+            rendered_clip = current_sequence().create_file_producer_clip(resource_path, new_clip_name=None, novalidate=False, ttl=1)
+            
+        # Using video clip as clip
+        else:
+            if self.container_data.render_data.save_internally == True:
+                resource_path = self.get_session_dir() +  "/" + appconsts.CONTAINER_CLIP_VIDEO_CLIP_NAME + self.container_data.render_data.file_extension
+            else:
+                resource_path = self.container_data.render_data.render_dir +  "/" + self.container_data.render_data.file_name + self.container_data.render_data.file_extension
+
+            rendered_clip = current_sequence().create_file_producer_clip(resource_path, new_clip_name=None, novalidate=True, ttl=1)
+        
+        track, clip_index = current_sequence().get_track_and_index_for_id(self.clip.id)
+        
+        # Check if container clip still on timeline
+        if track == None:
+            # clip was removed from timeline
+            # TODO: infowindow?
+            return
+        
+        # Do replace edit
+        data = {"old_clip":self.clip,
+                "new_clip":rendered_clip,
+                "rendered_media_path":resource_path,
+                "track":track,
+                "index":clip_index}
+                
+        if self.render_type == FULL_RENDER: # unrendered -> fullrender
+            action = edit.container_clip_full_render_replace(data)
+            action.do_edit()
+        else:  # unrendered -> clip render
+            action = edit.container_clip_clip_render_replace(data)
+            action.do_edit()
+                
     def set_video_endoding(self, clip):
         current_profile_index = mltprofiles.get_profile_index_for_profile(current_sequence().profile)
         # These need to re-initialized always when using this module.
@@ -280,6 +338,19 @@ class AbstractContainerActionObject:
 
         return clone_clip
 
+    def _create_icon_default_action(self):
+        icon_path, length, info = _write_thumbnail_image(PROJECT().profile, self.container_data.unrendered_media)
+        cr, surface = _create_image_surface(icon_path)
+        cr.rectangle(0, 0, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
+        cr.set_source_rgba(*OVERLAY_COLOR)
+        cr.fill()
+        type_icon = _get_type_icon(self.container_data.container_type)
+        cr.set_source_surface(type_icon, 1, 30)
+        cr.set_operator (cairo.OPERATOR_OVERLAY)
+        cr.paint_with_alpha(0.5)
+ 
+        return (surface, length)
+
 
 class GMicContainerActions(AbstractContainerActionObject):
 
@@ -288,20 +359,6 @@ class GMicContainerActions(AbstractContainerActionObject):
         self.render_type = -1 # to be set in methods below
         self.clip = None # to be set in methods below
         
-    def render_full_media(self, clip):
-        self.render_type = FULL_RENDER
-        self.clip = clip
-        self._launch_render(clip, 0, self.container_data.unrendered_length, 0)
-
-        self.add_as_status_polling_object()
-
-    def render_clip_length_media(self, clip):
-        self.render_type = CLIP_LENGTH_RENDER
-        self.clip = clip
-        self._launch_render(clip, clip.clip_in, clip.clip_out + 1, clip.clip_in)
-
-        self.add_as_status_polling_object()
-
     def switch_to_unrendered_media(self, rendered_clip):
         unrendered_clip = current_sequence().create_file_producer_clip(self.container_data.unrendered_media, new_clip_name=None, novalidate=True, ttl=1)
         track, clip_index = current_sequence().get_track_and_index_for_id(rendered_clip.id)
@@ -455,11 +512,87 @@ class GMicContainerActions(AbstractContainerActionObject):
  
         return (surface, length)
         
-    def get_rendered_thumbnail(self):
-        surface, length = self.create_icon()
-        return surface
 
 
+
+class MLTXMLContainerActions(AbstractContainerActionObject):
+
+    def __init__(self, container_data):
+        AbstractContainerActionObject.__init__(self, container_data)
+        self.render_type = -1 # to be set in methods below
+        self.clip = None # to be set in methods below
+
+    def _launch_render(self, clip, range_in, range_out, clip_start_offset):
+        self.create_data_dirs_if_needed()
+        self.render_range_in = range_in
+        self.render_range_out = range_out
+        self.clip_start_offset = clip_start_offset
+ 
+        mltxmlheadless.clear_flag_files(self.get_container_program_id())
+    
+        # We need data to be available for render process, 
+        # create video_render_data object with default values if not available.
+        if self.container_data.render_data == None:
+            self.container_data.render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
+            
+        mltxmlheadless.set_render_data(self.get_container_program_id(), self.container_data.render_data)
+        
+        job_proxy = self.get_job_proxy()
+        job_proxy.text = _("Render Starting..")
+        jobs.add_job(job_proxy)
+        
+        args = ("session_id:" + self.get_container_program_id(), 
+                "clip_path:" + self.container_data.unrendered_media,
+                "range_in:" + str(range_in),
+                "range_out:"+ str(range_out),
+                "profile_desc:" + PROJECT().profile.description().replace(" ", "_"),
+                "xml_file_path:" + str(self.container_data.unrendered_media))
+
+        # Run with nice to lower priority if requested (currently hard coded to lower)
+        nice_command = "nice -n " + str(10) + " " + respaths.LAUNCH_DIR + "flowblademltxmlheadless"
+        for arg in args:
+            nice_command += " "
+            nice_command += arg
+
+        subprocess.Popen([nice_command], shell=True)
+        
+    def update_render_status(self):
+        print("update_render_status")
+
+        Gdk.threads_enter()
+                    
+        if mltxmlheadless.session_render_complete(self.get_container_program_id()) == True:
+            self.remove_as_status_polling_object()
+
+            self.create_producer_and_do_update_edit()
+                
+        else:
+            status = mltxmlheadless.get_session_status(self.get_container_program_id())
+
+            if status != None:
+                fraction, elapsed = status
+                print(fraction, elapsed)
+                if self.container_data.render_data.do_video_render == True:
+                    msg = _("Rendering Video")
+                elif step == "2":
+                    msg = _("Rendering Image Sequence")
+
+                job_proxy = self.get_job_proxy()
+                job_proxy.progress = float(fraction)
+                job_proxy.elapsed = float(elapsed)
+                job_proxy.text = msg
+                
+                jobs.show_message(job_proxy)
+            else:
+                pass # This can happen sometimes before gmicheadless.py has written a status message, we just do nothing here.
+                
+        Gdk.threads_leave()
+                
+    def create_icon(self):
+        return self._create_icon_default_action()
+
+
+# ----------------------------------------------------------------- polling
 class ContainerStatusPollingThread(threading.Thread):
     
     def __init__(self):

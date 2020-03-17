@@ -40,6 +40,7 @@ import time
 
 import appconsts
 import atomicfile
+import ccrutils
 import editorstate
 import editorpersistance
 import gmicplayer
@@ -58,10 +59,10 @@ import utils
 CLIP_FRAMES_DIR = appconsts.CC_CLIP_FRAMES_DIR
 RENDERED_FRAMES_DIR = appconsts.CC_RENDERED_FRAMES_DIR
 
-COMPLETED_MSG_FILE = "completed"
-STATUS_MSG_FILE = "status"
-ABORT_MSG_FILE = "abort"
-RENDER_DATA_FILE = "render_data"
+COMPLETED_MSG_FILE = ccrutils.COMPLETED_MSG_FILE
+STATUS_MSG_FILE = ccrutils.STATUS_MSG_FILE
+ABORT_MSG_FILE = ccrutils.ABORT_MSG_FILE
+RENDER_DATA_FILE = ccrutils.RENDER_DATA_FILE
 
 
 _gmic_version = None
@@ -76,20 +77,8 @@ _render_thread = None
 # ----------------------------------------------------- module interface with message files
 # We are using message files to communicate with application.
 def clear_flag_files(session_id):
-    folder = _get_session_folder(session_id)
+    ccrutils.clear_flag_files(session_id)
     
-    completed_msg = folder + "/" + COMPLETED_MSG_FILE
-    if os.path.exists(completed_msg):
-        os.remove(completed_msg)
-
-    status_msg_file = folder + "/" + STATUS_MSG_FILE
-    if os.path.exists(status_msg_file):
-        os.remove(status_msg_file)
-
-    abort_msg_file = folder + "/" +  ABORT_MSG_FILE
-    if os.path.exists(abort_msg_file):
-        os.remove(abort_msg_file)
-
 def set_render_data(session_id, video_render_data):
     folder = _get_session_folder(session_id)
     render_data_path = folder + "/" + RENDER_DATA_FILE
@@ -135,9 +124,6 @@ def _get_session_folder(session_id):
 def main(root_path, session_id, script, clip_path, range_in, range_out, profile_desc, gmic_frame_offset):
     
     os.nice(10) # make user configurable
-    
-    prints_to_log_file("/home/janne/gmicheadless")
-    print(session_id, script, clip_path, range_in, range_out, profile_desc)
 
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION
@@ -232,7 +218,6 @@ class GMicHeadlessRunnerThread(threading.Thread):
         self.gmic_frame_offset = int(gmic_frame_offset)
     
         self.abort = False
-        self.last_frame_out_update = -1
         
     def run(self):
         self.start_time = time.monotonic()
@@ -259,7 +244,7 @@ class GMicHeadlessRunnerThread(threading.Thread):
                 
         profile = mltprofiles.get_profile(self.profile_desc)
 
-        # Delete old preview frames
+        # Delete old clip frames
         for frame_file in os.listdir(clip_frames_folder):
             file_path = os.path.join(clip_frames_folder, frame_file)
             os.remove(file_path)
@@ -345,7 +330,7 @@ class GMicHeadlessRunnerThread(threading.Thread):
         abort_file = _session_folder + "/" +  ABORT_MSG_FILE
         if os.path.exists(abort_file):
             self.abort = True
-            print("aborted requested...")
+            print("Abort requested.")
             return True
         
         return False
@@ -384,7 +369,7 @@ class GMicHeadlessRunnerThread(threading.Thread):
                 script_file = afw.get_file()
                 script_file.write(msg)
         except:
-            pass # this failing because we can get file access will show as progress hickup to user, we don't care
+            pass # this failing because we can't get file access will show as progress hickup to user, we don't care
             
     def script_render_output_callback(self, p, out):
         if p.returncode != 0:
@@ -392,12 +377,5 @@ class GMicHeadlessRunnerThread(threading.Thread):
             pass
 
 
-# ---- Debug helper
-def prints_to_log_file(log_file):
-    so = se = open(log_file, 'w', buffering=1)
 
-    sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', buffering=1)
-
-    os.dup2(so.fileno(), sys.stdout.fileno())
-    os.dup2(se.fileno(), sys.stderr.fileno())
         
