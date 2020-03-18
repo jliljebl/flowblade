@@ -19,7 +19,7 @@
 """
 
 """
-Module contains constant values that are used by multiple modules in the application. 
+Module contains constant values that are used by multiple modules in the application.
 """
 
 PROJECT_FILE_EXTENSION = ".flb"
@@ -56,7 +56,7 @@ SYNC_PARENT_GONE = 2
 # Allowed editing operations on a track
 FREE = 0        # All edits allowed
 SYNC_LOCKED = 1 # No insert, splice out or one roll trim.
-                # Allowed edits do not change positions of later clips 
+                # Allowed edits do not change positions of later clips
 LOCKED = 2      # No edits allowed
 
 # Property types of mlt filters and mlt transitions in filters.xml
@@ -195,6 +195,9 @@ TRIM_VIEW_OFF = 2
 MIDBAR_TC_LEFT = 0
 MIDBAR_TC_CENTER = 1
 MIDBAR_COMPONENTS_CENTERED = 2
+#------------------------------------------ Middlebar at right
+MIDBAR_TC_RIGHT= 3
+#------------------------------------------ Middlebar at right
 
 # Windows mode
 SINGLE_WINDOW = 1
