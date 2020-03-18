@@ -50,6 +50,7 @@ import gmic
 import gui
 import guicomponents
 import guiutils
+import jobs
 import keyevents
 import medialinker
 import medialog
@@ -636,6 +637,12 @@ class EditorWindow:
             project_vbox.pack_start(seq_panel, True, True, 0)
             project_panel = guiutils.set_margins(project_vbox, 0, 2, 6, 2)
 
+        # Jobs panel
+        jobs.create_jobs_list_view()
+        jobs_panel = jobs.get_jobs_panel()
+        jobs_hbox = Gtk.HBox()
+        jobs_hbox.pack_start(jobs_panel, True, True, 0)
+        jobs_pane = guiutils.set_margins(jobs_hbox, 6, 6, 6, 6)
         # Notebook
         self.notebook = Gtk.Notebook()
         self.notebook.set_size_request(appconsts.NOTEBOOK_WIDTH, appconsts.TOP_ROW_HEIGHT)
