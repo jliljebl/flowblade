@@ -124,7 +124,7 @@ def main(root_path, session_id, xml_file_path, range_in, range_out, profile_desc
     ccrutils.init_session_folders(session_id)
     
     ccrutils.load_render_data()
-    render_data = ccrutils. get_render_data()
+    render_data = ccrutils.get_render_data()
     
     # This needs to have render data loaded to know if we are using external folders.
     ccrutils.maybe_init_external_session_folders()

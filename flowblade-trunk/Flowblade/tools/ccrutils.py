@@ -79,12 +79,10 @@ def set_render_data(session_id, video_render_data):
 def session_render_complete(session_id):
     folder = _get_session_folder(session_id)
     completed_msg_path = folder + "/" + COMPLETED_MSG_FILE
-    print("completed_msg_path", completed_msg_path)
+
     if os.path.exists(completed_msg_path):
-        print("return Treu")
         return True
     else:
-        print("return false")
         return False
 
 def get_session_status(session_id):

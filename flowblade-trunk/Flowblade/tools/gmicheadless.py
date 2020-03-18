@@ -91,31 +91,19 @@ def set_render_data(session_id, video_render_data):
         pickle.dump(video_render_data, outfile)
     
 def session_render_complete(session_id):
-    folder = _get_session_folder(session_id)
-    completed_msg = folder + "/" + COMPLETED_MSG_FILE
-    if os.path.exists(completed_msg):
-        return True
-    else:
-        return False
+    return ccrutils.session_render_complete(session_id)
 
 def get_session_status(session_id):
-    try:
-        status_msg_file = _get_session_folder(session_id) + "/" + STATUS_MSG_FILE
-        with open(status_msg_file) as f:
-            msg = f.read()
-    except:
+    msg = ccrutils.get_session_status_message(session_id)
+    if msg == None:
         return None
         
     step, frame, length, elapsed = msg.split(" ")
     return (step, frame, length, elapsed)
     
 def abort_render(session_id):
-    folder = _get_session_folder(session_id)
-    abort_msg_file = folder + "/" +  ABORT_MSG_FILE
-    with atomicfile.AtomicFileWriter(abort_msg_file, "wb") as afw:
-        outfile = afw.get_file()
-        pickle.dump("##abort", outfile)
-        
+    ccrutils.abort_render(session_id)
+
 def _get_session_folder(session_id):
     return userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_DIR +  "/" + session_id
 
