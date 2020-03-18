@@ -67,10 +67,6 @@ RENDER_DATA_FILE = ccrutils.RENDER_DATA_FILE
 
 _gmic_version = None
 
-_session_folder = None
-_clip_frames_folder_internal = None
-_rendered_frames_folder_internal = None
-
 _render_thread = None
 
 
@@ -80,15 +76,8 @@ def clear_flag_files(session_id):
     ccrutils.clear_flag_files(session_id)
     
 def set_render_data(session_id, video_render_data):
-    folder = _get_session_folder(session_id)
-    render_data_path = folder + "/" + RENDER_DATA_FILE
-     
-    if os.path.exists(render_data_path):
-        os.remove(render_data_path)
-    
-    with atomicfile.AtomicFileWriter(render_data_path, "wb") as afw:
-        outfile = afw.get_file()
-        pickle.dump(video_render_data, outfile)
+    ccrutils.set_render_data(session_id, video_render_data)
+    print("set_render_data", session_id, video_render_data)
     
 def session_render_complete(session_id):
     return ccrutils.session_render_complete(session_id)
@@ -104,15 +93,17 @@ def get_session_status(session_id):
 def abort_render(session_id):
     ccrutils.abort_render(session_id)
 
+"""
 def _get_session_folder(session_id):
     return userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_DIR +  "/" + session_id
-
+"""
 
 # --------------------------------------------------- render thread launch
 def main(root_path, session_id, script, clip_path, range_in, range_out, profile_desc, gmic_frame_offset):
     
     os.nice(10) # make user configurable
-
+    ccrutils.prints_to_log_file("/home/janne/gmicheadless")
+     
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION
     except:
@@ -151,22 +142,14 @@ def main(root_path, session_id, script, clip_path, range_in, range_out, profile_
 
     # Create list of available mlt profiles
     mltprofiles.load_profile_list()
-    global _session_folder, _clip_frames_folder_internal, _rendered_frames_folder_internal
-    _session_folder = _get_session_folder(session_id)
-    _clip_frames_folder_internal = _session_folder + CLIP_FRAMES_DIR
-    _rendered_frames_folder_internal = _session_folder + RENDERED_FRAMES_DIR
-
-    # Init gmic session dirs, these might exist if clip has been rendered before
-    if not os.path.exists(_session_folder):
-        os.mkdir(_session_folder)
-    if not os.path.exists(_clip_frames_folder_internal):
-        os.mkdir(_clip_frames_folder_internal)
-    if not os.path.exists(_rendered_frames_folder_internal):
-        os.mkdir(_rendered_frames_folder_internal)
-
-    render_data_path = _session_folder + "/" + RENDER_DATA_FILE
     
-    render_data = utils.unpickle(render_data_path)  # toolsencoding.ToolsRenderData object
+    ccrutils.init_session_folders(session_id)
+    
+    ccrutils.load_render_data()
+    render_data = ccrutils.get_render_data()
+    
+    # This needs to have render data loaded to know if we are using external folders.
+    ccrutils.maybe_init_external_session_folders()
 
     global _render_thread
     _render_thread = GMicHeadlessRunnerThread(script, render_data, clip_path, range_in, range_out, profile_desc, gmic_frame_offset)
@@ -203,7 +186,7 @@ class GMicHeadlessRunnerThread(threading.Thread):
         self.range_out = int(range_out)
         self.length = self.range_out - self.range_in + 1
         self.profile_desc = profile_desc
-        self.gmic_frame_offset = int(gmic_frame_offset)
+        self.gmic_frame_offset = int(gmic_frame_offset) # Note this not used currently can't MLT to find frame seq if not starting from 0001
     
         self.abort = False
         
@@ -216,25 +199,23 @@ class GMicHeadlessRunnerThread(threading.Thread):
         self.script_renderer = None
        
         if self.render_data.save_internally == True:
-            frame_name = "frame"
-            clip_frames_folder = _clip_frames_folder_internal
-            rendered_frames_folder = _rendered_frames_folder_internal
-            
+            frame_name = "frame"            
         else:
             frame_name = self.render_data.frame_name
-            external_save_folder = self.render_data.render_dir
-            clip_frames_folder = external_save_folder + CLIP_FRAMES_DIR
-            rendered_frames_folder = external_save_folder + RENDERED_FRAMES_DIR
-            if not os.path.exists(clip_frames_folder):
-                os.mkdir(clip_frames_folder)
-            if not os.path.exists(rendered_frames_folder):
-                os.mkdir(rendered_frames_folder)
-                
+
+        clip_frames_folder = ccrutils.clip_frames_folder()
+        rendered_frames_folder = ccrutils.rendered_frames_folder()
+
         profile = mltprofiles.get_profile(self.profile_desc)
 
-        # Delete old clip frames
+        # Delete old frames
         for frame_file in os.listdir(clip_frames_folder):
             file_path = os.path.join(clip_frames_folder, frame_file)
+            os.remove(file_path)
+
+        # Delete old frames
+        for frame_file in os.listdir(rendered_frames_folder):
+            file_path = os.path.join(rendered_frames_folder, frame_file)
             os.remove(file_path)
             
         self.frames_range_writer = gmicplayer.FramesRangeWriter(self.clip_path, self.frames_update, profile)
@@ -257,9 +238,9 @@ class GMicHeadlessRunnerThread(threading.Thread):
                                                                         frame_name,
                                                                         self.script_render_update_callback, 
                                                                         self.script_render_output_callback,
-                                                                        nice=10,
-                                                                        re_render_existing=False,
-                                                                        out_frame_offset=self.gmic_frame_offset)
+                                                                        10,
+                                                                        False,  # this is not useful until we get MLT to fin frames sequences not startin from 0001
+                                                                        0)
         self.script_renderer.write_frames()
 
         if self.abort == True:
@@ -272,7 +253,7 @@ class GMicHeadlessRunnerThread(threading.Thread):
             profile = mltprofiles.get_profile_for_index(self.render_data.profile_index) 
             
             if self.render_data.save_internally == True:
-                file_path = _session_folder +  "/" + appconsts.CONTAINER_CLIP_VIDEO_CLIP_NAME + self.render_data.file_extension
+                file_path = ccrutils.session_folder() +  "/" + appconsts.CONTAINER_CLIP_VIDEO_CLIP_NAME + self.render_data.file_extension
             else:
                 file_path = self.render_data.render_dir +  "/" + self.render_data.file_name + self.render_data.file_extension
         
@@ -308,14 +289,14 @@ class GMicHeadlessRunnerThread(threading.Thread):
                 time.sleep(0.3)
                 
         # Write out completed flag file.
-        completed_msg_file =_session_folder + "/" + COMPLETED_MSG_FILE
+        completed_msg_file = ccrutils.session_folder() + "/" + COMPLETED_MSG_FILE
         script_text = "##completed##" # let's put something in here
         with atomicfile.AtomicFileWriter(completed_msg_file, "w") as afw:
             script_file = afw.get_file()
             script_file.write(script_text)
 
     def abort_requested(self):
-        abort_file = _session_folder + "/" +  ABORT_MSG_FILE
+        abort_file = ccrutils.session_folder() + "/" +  ABORT_MSG_FILE
         if os.path.exists(abort_file):
             self.abort = True
             print("Abort requested.")
@@ -351,7 +332,7 @@ class GMicHeadlessRunnerThread(threading.Thread):
         
     def write_status_message(self, msg):
         try:
-            status_msg_file = _session_folder + "/" + STATUS_MSG_FILE
+            status_msg_file = ccrutils.session_folder() + "/" + STATUS_MSG_FILE
             
             with atomicfile.AtomicFileWriter(status_msg_file, "w") as afw:
                 script_file = afw.get_file()
