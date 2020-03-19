@@ -148,7 +148,7 @@ def _show_not_all_data_info():
         
 
 # -------------------------------------------------------- MEDIA ITEM CREATION
-# G'Mic
+# --- G'Mic
 def create_gmic_media_item():
     script_select, row1 = _get_file_select_row_and_editor(_("Select G'Mic Tool Script:"))
     media_file_select, row2 = _get_file_select_row_and_editor(_("Video Clip:"))
@@ -173,7 +173,7 @@ def _gmic_clip_create_dialog_callback(dialog, response_id, data):
         PROJECT().add_container_clip_media_object(container_clip)
         _update_gui_for_media_object_add()
 
-# MLT XML
+# --- MLT XML
 def create_mlt_xml_media_item(xml_file_path, media_name):
     # xml file is both unrendered media and program
     container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_MLT_XML, xml_file_path, xml_file_path)
@@ -182,7 +182,7 @@ def create_mlt_xml_media_item(xml_file_path, media_name):
     _update_gui_for_media_object_add()
 
 
-# Blender
+# --- Blender
 def create_blender_media_item():
     project_select, row1 = _get_file_select_row_and_editor(_("Select Blender Project File:"))
     _open_image_sequence_dialog(_blender_clip_create_dialog_callback, _("Create Blender Project Container Clip"), [row1], [project_select])
@@ -205,6 +205,10 @@ def _blender_clip_create_dialog_callback(dialog, response_id, data):
         unrendered_media_file = respaths.IMAGE_PATH + "unrendered_blender.png"
 
         container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_BLENDER, project_file, unrendered_media_file)
+        
+        action_object = containeractions.get_action_object(container_clip_data)
+        action_object.initialize_project(project_file)
+        
         container_clip = BlenderContainerClip(PROJECT().next_media_file_id, container_clip_data.get_unrendered_media_name(), container_clip_data)
         PROJECT().add_container_clip_media_object(container_clip)
         _update_gui_for_media_object_add()

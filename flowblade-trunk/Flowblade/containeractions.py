@@ -565,7 +565,6 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
         subprocess.Popen([nice_command], shell=True)
         
     def update_render_status(self):
-        print("update_render_status")
 
         Gdk.threads_enter()
                     
@@ -606,6 +605,19 @@ class BlenderContainerActions(AbstractContainerActionObject):
         AbstractContainerActionObject.__init__(self, container_data)
         self.render_type = -1 # to be set in methods below
         self.clip = None # to be set in methods below
+
+    def initialize_project(self, project_path):
+
+        FLOG = open("/home/janne/blenderlog", 'w')
+        
+        info_script = respaths.ROOT_PATH + "/tools/blenderprojectinit.py"
+        blender_launch = "/usr/bin/blender -b " + project_path + " -P " + info_script
+        # clapperless.py computes offsets and writes them to file clapperless.OFFSETS_DATA_FILE
+        #blender_launch, shell=True,
+        p = subprocess.Popen(blender_launch, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
+        p.wait()
+    
+
 
     def create_icon(self):
         return self._create_icon_default_action()
