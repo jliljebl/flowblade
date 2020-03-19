@@ -119,7 +119,7 @@ def _general_options_panel():
     load_order_combo.append_text(_("Absolute paths only"))
     load_order_combo.set_active(prefs.media_load_order)
 
-    render_folder_select = Gtk.FileChooserButton.new (_("Select Default Render Folder"), Gtk.FileChooserAction.SELECT_FOLDER)    
+    render_folder_select = Gtk.FileChooserButton.new (_("Select Default Render Folder"), Gtk.FileChooserAction.SELECT_FOLDER)
     if prefs.default_render_directory == None or prefs.default_render_directory == appconsts.USER_HOME_DIR \
         or (not os.path.exists(prefs.default_render_directory)) \
         or (not os.path.isdir(prefs.default_render_directory)):
@@ -135,7 +135,7 @@ def _general_options_panel():
     row6 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Autosave for crash recovery every:")), autosave_combo, PREFERENCES_LEFT))
     row9 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Media look-up order on load:")), load_order_combo, PREFERENCES_LEFT))
     row10 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Default render directory:")), render_folder_select, PREFERENCES_LEFT))
-    
+
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row6, False, False, 0)
@@ -149,7 +149,7 @@ def _general_options_panel():
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
     # Aug-2019 - SvdB - AS - Added autosave_combo
-    return vbox, ( default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, 
+    return vbox, ( default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check,
                     undo_max_spin, load_order_combo, autosave_combo, render_folder_select)
 
 def _edit_prefs_panel():
@@ -163,7 +163,7 @@ def _edit_prefs_panel():
 
     cover_delete = Gtk.CheckButton()
     cover_delete.set_active(prefs.trans_cover_delete)
-        
+
     active = 0
     if prefs.mouse_scroll_action_is_zoom == False:
         active = 1
@@ -187,11 +187,11 @@ def _edit_prefs_panel():
     effects_editor_clip_load.append_text(_("On Double Click"))
     effects_editor_clip_load.append_text(_("On Single Click"))
     effects_editor_clip_load.set_active(active)
-    
+
     hide_file_ext_button = Gtk.CheckButton()
     if hasattr(prefs, 'hide_file_ext'):
         hide_file_ext_button.set_active(prefs.hide_file_ext)
-    
+
     # Layout
     row4 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Graphics default length:")), gfx_length_spin, PREFERENCES_LEFT))
     row9 = _row(guiutils.get_checkbox_row_box(cover_delete, Gtk.Label(label=_("Cover Transition/Fade clips on delete if possible"))))
@@ -201,7 +201,7 @@ def _edit_prefs_panel():
     row12 = _row(guiutils.get_checkbox_row_box(hide_file_ext_button, Gtk.Label(label=_("Hide file extensions when importing Clips"))))
     row15 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Open Clip in Effects Editor")), effects_editor_clip_load, PREFERENCES_LEFT))
     # Apr-2017 - SvdB - For Fast Forward / Reverse options
-    
+
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row4, False, False, 0)
     vbox.pack_start(row9, False, False, 0)
@@ -216,7 +216,7 @@ def _edit_prefs_panel():
     # Jul-2016 - SvdB - Added play_pause_button
     # Apr-2017 - SvdB - Added ffwd / rev values
     return vbox, (gfx_length_spin, cover_delete,
-                  mouse_scroll_action, hide_file_ext_button, hor_scroll_dir, 
+                  mouse_scroll_action, hide_file_ext_button, hor_scroll_dir,
                   effects_editor_clip_load)
 
 def _playback_prefs_panel():
@@ -225,19 +225,25 @@ def _playback_prefs_panel():
     # Widgets
     auto_center_on_stop = Gtk.CheckButton()
     auto_center_on_stop.set_active(prefs.auto_center_on_play_stop)
-    
+
     # Jul-2016 - SvdB - For play_pause button
     play_pause_button = Gtk.CheckButton()
     # The following test is to make sure play_pause can be used for the initial value. If not found, then leave uninitialized
     if hasattr(prefs, 'play_pause'):
-        play_pause_button.set_active(prefs.play_pause)    
-    
+        play_pause_button.set_active(prefs.play_pause)
+
+# ------------------------------ timeline_start_end_button
+    timeline_start_end_button = Gtk.CheckButton()
+    if hasattr(prefs, 'timeline_start_end'):
+        timeline_start_end_button.set_active(prefs.timeline_start_end)
+# ------------------------------ End of timeline_start_end_button
+
     auto_center_on_updown = Gtk.CheckButton()
     auto_center_on_updown.set_active(prefs.center_on_arrow_move)
 
     follow_move_range = Gtk.CheckButton()
     follow_move_range.set_active(prefs.playback_follow_move_tline_range)
-    
+
     # Apr-2017 - SvdB - For FF/Rev speed options
     if hasattr(prefs, 'ffwd_rev_shift'):
         spin_adj = Gtk.Adjustment(value=prefs.ffwd_rev_shift, lower=1, upper=10, step_incr=1)
@@ -254,7 +260,7 @@ def _playback_prefs_panel():
     ffwd_rev_ctrl_spin = Gtk.SpinButton()
     ffwd_rev_ctrl_spin.set_adjustment(spin_adj)
     ffwd_rev_ctrl_spin.set_numeric(True)
-    
+
     if hasattr(prefs, 'ffwd_rev_caps'):
         spin_adj = Gtk.Adjustment(value=prefs.ffwd_rev_caps, lower=1, upper=10, step_incr=1)
     else:
@@ -272,6 +278,9 @@ def _playback_prefs_panel():
     # Jul-2016 - SvdB - For play_pause button
     row10 = _row(guiutils.get_checkbox_row_box(play_pause_button, Gtk.Label(label=_("Enable single Play/Pause button"))))
     # Apr-2017 - SvdB - For Fast Forward / Reverse options
+# ------------------------------ timeline_start_end_button
+    row11 = _row(guiutils.get_checkbox_row_box(timeline_start_end_button, Gtk.Label(label=_("Enable timeline at start or end  buttons"))))
+# ------------------------------ End of timeline_start_end_button
     row14 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Fast Forward / Reverse Speed for Shift Key:")), ffwd_rev_shift_spin, PREFERENCES_LEFT))
     row14.set_tooltip_text(_("Speed of Forward / Reverse will be multiplied by this value if Shift Key is held (Only using KEYS).\n" \
         "Enabling multiple modifier keys will multiply the set values.\n" \
@@ -284,7 +293,7 @@ def _playback_prefs_panel():
     row16.set_tooltip_text(_("Speed of Forward / Reverse will be multiplied by this value if Caps Lock is set (Only using KEYS)."))
     row17 = _row(guiutils.get_checkbox_row_box(follow_move_range, Gtk.Label(label=_("Move Timeline to follow Playback"))))
     row18 = _row(guiutils.get_checkbox_row_box(loop_clips, Gtk.Label(label=_("Loop Media Clips on Monitor"))))
-    
+
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row17, False, False, 0)
     vbox.pack_start(row18, False, False, 0)
@@ -292,6 +301,9 @@ def _playback_prefs_panel():
     vbox.pack_start(row13, False, False, 0)
     # Jul-2016 - SvdB - For play_pause button
     vbox.pack_start(row10, False, False, 0)
+# ------------------------------ timeline_start_end_button
+    vbox.pack_start(row11, False, False, 0)
+# ------------------------------ End of timeline_start_end_button
     # Apr-2017 - SvdB - For ffwd / rev speed
     vbox.pack_start(row14, False, False, 0)
     vbox.pack_start(row15, False, False, 0)
@@ -303,10 +315,15 @@ def _playback_prefs_panel():
 
     # Jul-2016 - SvdB - Added play_pause_button
     # Apr-2017 - SvdB - Added ffwd / rev values
-    return vbox, (auto_center_on_stop, 
-                  play_pause_button, auto_center_on_updown,
+# ------------------------------ timeline_start_end_button
+    return vbox, (auto_center_on_stop,
+                  play_pause_button, timeline_start_end_button, auto_center_on_updown,
                   ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips)
-                  
+# ------------------------------ End of timeline_start_end_button
+#    return vbox, (auto_center_on_stop,
+#                  play_pause_button, auto_center_on_updown,
+#                  ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips)
+
 def _view_prefs_panel():
     prefs = editorpersistance.prefs
 
@@ -333,7 +350,7 @@ def _view_prefs_panel():
     active_index = lang_list.index(prefs.force_language)
     force_language_combo.set_active(active_index)
     force_language_combo.lang_codes = lang_list
-    
+
     display_splash_check = Gtk.CheckButton()
     display_splash_check.set_active(prefs.display_splash_screen)
 
@@ -410,9 +427,9 @@ def _view_prefs_panel():
     # Feb-2017 - SvdB - For full file names
     row6 =  _row(guiutils.get_checkbox_row_box(show_full_file_names, Gtk.Label(label=_("Show Full File names"))))
     row8 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Top row layout:")), top_row_layout, PREFERENCES_LEFT))
-    
+
     row10 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Do GUI layout based on:")), layout_monitor, PREFERENCES_LEFT))
-    
+
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row00, False, False, 0)
     vbox.pack_start(row10, False, False, 0)
@@ -431,7 +448,7 @@ def _view_prefs_panel():
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
     # Feb-2017 - SvdB - Added code for full file names
-    return vbox, (force_language_combo, display_splash_check, buttons_combo, dark_combo, theme_combo, audio_levels_combo, 
+    return vbox, (force_language_combo, display_splash_check, buttons_combo, dark_combo, theme_combo, audio_levels_combo,
                   window_mode_combo, show_full_file_names, tracks_combo, top_row_layout, layout_monitor)
 
 def _performance_panel():
