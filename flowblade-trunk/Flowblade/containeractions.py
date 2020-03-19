@@ -54,8 +54,10 @@ FULL_RENDER = 0
 CLIP_LENGTH_RENDER = 1
 
 OVERLAY_COLOR = (0.17, 0.23, 0.63, 0.5)
+
 GMIC_TYPE_ICON = None
 MLT_XML_TYPE_ICON = None
+BLENDER_TYPE_ICON = None
 
 _status_polling_thread = None
 
@@ -65,7 +67,9 @@ def get_action_object(container_data):
         return GMicContainerActions(container_data)
     elif container_data.container_type == appconsts.CONTAINER_CLIP_MLT_XML:
          return MLTXMLContainerActions(container_data)
-         
+    elif container_data.container_type == appconsts.CONTAINER_CLIP_BLENDER:
+         return BlenderContainerActions(container_data)
+
 def shutdown_polling():
     if _status_polling_thread == None:
         return
@@ -76,17 +80,21 @@ def shutdown_polling():
 # ------------------------------------------------------------ thumbnail creation helpers
 def _get_type_icon(container_type):
     # TODO: When we get third move this into action objects.
-    global GMIC_TYPE_ICON, MLT_XML_TYPE_ICON
+    global GMIC_TYPE_ICON, MLT_XML_TYPE_ICON, BLENDER_TYPE_ICON
     
     if GMIC_TYPE_ICON == None:
         GMIC_TYPE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "container_clip_gmic.png")
     if MLT_XML_TYPE_ICON == None:
         MLT_XML_TYPE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "container_clip_mlt_xml.png")
+    if BLENDER_TYPE_ICON == None:
+        BLENDER_TYPE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "container_clip_blender.png")
         
     if container_type == appconsts.CONTAINER_CLIP_GMIC:
         return GMIC_TYPE_ICON
     elif container_type == appconsts.CONTAINER_CLIP_MLT_XML: 
         return MLT_XML_TYPE_ICON
+    elif container_type == appconsts.CONTAINER_CLIP_BLENDER:  
+        return BLENDER_TYPE_ICON
 
 def _write_thumbnail_image(profile, file_path):
     """
@@ -592,17 +600,27 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
         return self._create_icon_default_action()
 
 
+class BlenderContainerActions(AbstractContainerActionObject):
+
+    def __init__(self, container_data):
+        AbstractContainerActionObject.__init__(self, container_data)
+        self.render_type = -1 # to be set in methods below
+        self.clip = None # to be set in methods below
+
+    def create_icon(self):
+        return self._create_icon_default_action()
+
+
 # ----------------------------------------------------------------- polling
 class ContainerStatusPollingThread(threading.Thread):
     
     def __init__(self):
         self.poll_objects = []
         self.abort = False
-        #self.running = False
+
         threading.Thread.__init__(self)
 
     def run(self):
-        #self.running = True
         
         while self.abort == False:
             for poll_obj in self.poll_objects:
@@ -610,7 +628,6 @@ class ContainerStatusPollingThread(threading.Thread):
                     
                 
             time.sleep(1.0)
-            
 
     def shutdown(self):
         for poll_obj in self.poll_objects:

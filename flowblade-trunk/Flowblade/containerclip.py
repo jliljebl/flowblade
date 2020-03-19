@@ -142,6 +142,11 @@ def _update_gui_for_media_object_add():
     gui.bin_list_view.fill_data_model()
 
 
+def _show_not_all_data_info():
+    dialogutils.info_message(_("Not all required files were defined"), _("Select all files asked for in dialog for succesful Container Clip creation."), gui.editor_window.window)
+        
+        
+
 # -------------------------------------------------------- MEDIA ITEM CREATION
 # G'Mic
 def create_gmic_media_item():
@@ -160,7 +165,7 @@ def _gmic_clip_create_dialog_callback(dialog, response_id, data):
         dialog.destroy()
     
         if script_file == None or media_file == None:
-            dialogutils.info_message(_("Not all required files were defined"), _("Select all files asked for in dialog for succesful Container Clip creation."), gui.editor_window.window)
+            _show_not_all_data_info()
             return
 
         container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_GMIC, script_file, media_file)
@@ -177,7 +182,39 @@ def create_mlt_xml_media_item(xml_file_path, media_name):
     _update_gui_for_media_object_add()
 
 
+# Blender
+def create_blender_media_item():
+    project_select, row1 = _get_file_select_row_and_editor(_("Select Blender Project File:"))
+    _open_image_sequence_dialog(_blender_clip_create_dialog_callback, _("Create Blender Project Container Clip"), [row1], [project_select])
+
+def _blender_clip_create_dialog_callback(dialog, response_id, data):
+    dialog.destroy()
+
+    if response_id != Gtk.ResponseType.ACCEPT:
+        dialog.destroy()
+    else:
+        project_select = data[0]
+        project_file = project_select.get_filename()
+        
+        dialog.destroy()
+    
+        if project_file == None:
+            _show_not_all_data_info()
+            return
+
+        unrendered_media_file = respaths.IMAGE_PATH + "unrendered_blender.png"
+
+        container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_BLENDER, project_file, unrendered_media_file)
+        container_clip = BlenderContainerClip(PROJECT().next_media_file_id, container_clip_data.get_unrendered_media_name(), container_clip_data)
+        PROJECT().add_container_clip_media_object(container_clip)
+        _update_gui_for_media_object_add()
+
+
+
+
 # ---------------------------------------------------------------- MEDIA FILE OBJECTS
+# BTW, we're not getting any action from extending classes because all code is in action objects, look to kill them.
+
 class AbstractBinContainerClip:
     """
     A pattern producer object presnt in Media Bin.
@@ -209,7 +246,12 @@ class AbstractBinContainerClip:
         print("create_mlt_producer() not implemented")
 
     def create_icon(self):
-        print("patter producer create_icon() not implemented")
+        action_object = containeractions.get_action_object(self.container_data)
+        surface, length = action_object.create_icon()      
+                    
+        self.icon = surface
+        self.length = length
+        self.container_data.unrendered_length = length - 1
 
 
 class GMicContainerClip(AbstractBinContainerClip):
@@ -220,13 +262,6 @@ class GMicContainerClip(AbstractBinContainerClip):
 
         AbstractBinContainerClip.__init__(self, media_item_id, name, container_data)
 
-    def create_icon(self):
-        action_object = containeractions.get_action_object(self.container_data)
-        surface, length = action_object.create_icon()      
-                    
-        self.icon = surface
-        self.length = length
-        self.container_data.unrendered_length = length - 1
 
 
 class MLTXMLContainerClip(AbstractBinContainerClip):
@@ -237,10 +272,13 @@ class MLTXMLContainerClip(AbstractBinContainerClip):
 
         AbstractBinContainerClip.__init__(self, media_item_id, name, container_data)
 
-    def create_icon(self):
-        action_object = containeractions.get_action_object(self.container_data)
-        surface, length = action_object.create_icon()      
-                    
-        self.icon = surface
-        self.length = length
-        self.container_data.unrendered_length = length - 1
+
+class BlenderContainerClip(AbstractBinContainerClip):
+    """
+    Color Clip that can added to and edited in Sequence.
+    """   
+    def __init__(self, media_item_id, name, container_data):
+
+        AbstractBinContainerClip.__init__(self, media_item_id, name, container_data)
+
+

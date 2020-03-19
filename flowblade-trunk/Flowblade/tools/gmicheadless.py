@@ -56,6 +56,7 @@ import translations
 import userfolders
 import utils
 
+
 CLIP_FRAMES_DIR = appconsts.CC_CLIP_FRAMES_DIR
 RENDERED_FRAMES_DIR = appconsts.CC_RENDERED_FRAMES_DIR
 
@@ -93,10 +94,6 @@ def get_session_status(session_id):
 def abort_render(session_id):
     ccrutils.abort_render(session_id)
 
-"""
-def _get_session_folder(session_id):
-    return userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_DIR +  "/" + session_id
-"""
 
 # --------------------------------------------------- render thread launch
 def main(root_path, session_id, script, clip_path, range_in, range_out, profile_desc, gmic_frame_offset):
