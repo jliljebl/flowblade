@@ -47,9 +47,9 @@ JKL_STOPPED_INDEX = 4
 
 # ---------------------------------------- playback
 # Some events have different meanings depending on edit mode and
-# are handled in either movemodes.py or trimmodes.py modules depending 
+# are handled in either movemodes.py or trimmodes.py modules depending
 # on edit mode.
-def play_pressed():    
+def play_pressed():
     if editorstate.current_is_active_trim_mode() and trimmodes.submode != trimmodes.NOTHING_ON:
         return
 
@@ -73,7 +73,7 @@ def play_pressed():
         movemodes.play_pressed()
     elif EDIT_MODE() == editorstate.CUT:
         movemodes.play_pressed()
-        
+
 def stop_pressed():
     if current_is_move_mode():
         movemodes.stop_pressed()
@@ -95,8 +95,18 @@ def stop_pressed():
         movemodes.stop_pressed()
     elif EDIT_MODE() == editorstate.CUT:
         movemodes.stop_pressed()
-        
+
     updater.maybe_autocenter()
+
+#------------------------------------------  go to start, end
+def start_pressed():
+    if current_is_move_mode():
+        movemodes.start_pressed()
+
+def end_pressed():
+    if current_is_move_mode():
+        movemodes.end_pressed()
+#------------------------------------------
 
 def next_pressed():
     if current_is_move_mode():
@@ -110,11 +120,11 @@ def j_pressed():
     if timeline_visible():
         trimmodes.set_no_edit_trim_mode()
     jkl_index = _get_jkl_speed_index()
-    if jkl_index > JKL_STOPPED_INDEX - 1: # JKL_STOPPPED_INDEX - 1 is first backwards speed, any bigger is forward, j starts backwards slow from any forward speed 
+    if jkl_index > JKL_STOPPED_INDEX - 1: # JKL_STOPPPED_INDEX - 1 is first backwards speed, any bigger is forward, j starts backwards slow from any forward speed
         jkl_index = JKL_STOPPED_INDEX - 1
     else:
         jkl_index = jkl_index - 1
-    
+
     if jkl_index < 0:
         jkl_index = 0
     new_speed = JKL_SPEEDS[jkl_index]
@@ -129,16 +139,16 @@ def l_pressed():
     if timeline_visible():
         trimmodes.set_no_edit_trim_mode()
     jkl_index = _get_jkl_speed_index()
-    if jkl_index < JKL_STOPPED_INDEX + 1:# JKL_STOPPPED_INDEX + 1 is first forward speed, any smaller is backward, l starts forward slow from any backwards speed 
+    if jkl_index < JKL_STOPPED_INDEX + 1:# JKL_STOPPPED_INDEX + 1 is first forward speed, any smaller is backward, l starts forward slow from any backwards speed
         jkl_index = JKL_STOPPED_INDEX + 1
     else:
         jkl_index = jkl_index + 1
-    
+
     if jkl_index == len(JKL_SPEEDS):
         jkl_index = len(JKL_SPEEDS) - 1
     new_speed = JKL_SPEEDS[jkl_index]
     PLAYER().start_variable_speed_playback(new_speed)
-    
+
 
 def _get_jkl_speed_index():
     speed = PLAYER().producer.get_speed()
@@ -148,13 +158,13 @@ def _get_jkl_speed_index():
     for i in range(len(JKL_SPEEDS) - 1):
         if speed <= JKL_SPEEDS[i]:
             return i
-        
+
     return len(JKL_SPEEDS) - 1
-    
+
 # -------------------------------------- marks
 def mark_in_pressed():
     mark_in = PLAYER().producer.frame()
-    
+
     if timeline_visible():
         trimmodes.set_no_edit_trim_mode()
         mark_out_old = PLAYER().producer.mark_out
@@ -184,17 +194,17 @@ def mark_out_pressed():
     else:
         mark_in_old = current_sequence().monitor_clip.mark_in
         current_sequence().monitor_clip.mark_out = mark_out
-    
+
     # Clear illegal old mark in
     if mark_in_old > mark_out:
         if timeline_visible():
             PLAYER().producer.mark_in = -1
         else:
             current_sequence().monitor_clip.mark_in = -1
-            
+
     _do_marks_update()
     updater.display_marks_tc()
-    
+
 def marks_clear_pressed():
     if timeline_visible():
         trimmodes.set_no_edit_trim_mode()
@@ -239,18 +249,18 @@ def _do_marks_update():
 
     gui.pos_bar.update_display_from_producer(producer)
     gui.tline_scale.widget.queue_draw()
-    
+
 # ------------------------------------------------------------ clip arrow seeks
 def up_arrow_seek_on_monitor_clip():
     current_frame = PLAYER().producer.frame()
 
     if current_frame < MONITOR_MEDIA_FILE().mark_in:
         PLAYER().seek_frame(MONITOR_MEDIA_FILE().mark_in)
-        return 
+        return
 
     if current_frame < MONITOR_MEDIA_FILE().mark_out:
         PLAYER().seek_frame(MONITOR_MEDIA_FILE().mark_out)
-        return 
+        return
 
     PLAYER().seek_frame(PLAYER().producer.get_length() - 1)
 
@@ -261,11 +271,11 @@ def down_arrow_seek_on_monitor_clip():
 
     if current_frame > mark_out and mark_out != -1:
         PLAYER().seek_frame(MONITOR_MEDIA_FILE().mark_out)
-        return 
+        return
 
     if current_frame > mark_in and mark_in != -1:
         PLAYER().seek_frame(MONITOR_MEDIA_FILE().mark_in)
-        return 
+        return
 
     PLAYER().seek_frame(0)
 
@@ -276,7 +286,7 @@ def set_monitor_playback_interpolation(new_interpolation):
 # --------------------------------------------------------- trim view
 def trim_view_menu_launched(launcher, event):
     guicomponents.get_trim_view_popupmenu(launcher, event, _trim_view_menu_item_activated)
-    
+
 def _trim_view_menu_item_activated(widget, msg):
     if msg == "matchclear":
         gui.monitor_widget.set_default_view_force()
@@ -289,10 +299,10 @@ def _trim_view_menu_item_activated(widget, msg):
         frame = PLAYER().current_frame()
         gui.monitor_widget.set_frame_match_view(clip, frame)
         return
-    
+
     if widget.get_active() == False:
         return
-    
+
     if msg == "trimon":
         editorstate.show_trim_view = appconsts.TRIM_VIEW_ON
         editorpersistance.prefs.trim_view_default = appconsts.TRIM_VIEW_ON
@@ -317,4 +327,4 @@ def _show_trimview_info():
     secondary_txt = _("<b>Trim View</b> works best with SSDs and relatively powerful processors.\n\n") + \
                     _("Select <b>'Trim View Off'</b> or<b>'Trim View Single Side Edits Only'</b> options\nif performance is not satisfactory.")
     dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
-    
+

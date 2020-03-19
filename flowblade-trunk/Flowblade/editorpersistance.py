@@ -97,8 +97,8 @@ def load():
         with atomicfile.AtomicFileWriter(recents_file_path, "wb") as afw:
             write_file = afw.get_file()
             pickle.dump(recent_projects, write_file)
-        
-    # Versions of program may have different prefs objects and 
+
+    # Versions of program may have different prefs objects and
     # we may need to to update prefs on disk if user has e.g.
     # installed later version of Flowblade.
     current_prefs = EditorPreferences()
@@ -113,11 +113,11 @@ def load():
 
 def save():
     """
-    Write out prefs and recent_projects files 
+    Write out prefs and recent_projects files
     """
     prefs_file_path = userfolders.get_config_dir()+ PREFS_DOC
     recents_file_path = userfolders.get_config_dir() + RECENT_DOC
-    
+
     with atomicfile.AtomicFileWriter(prefs_file_path, "wb") as afw:
         write_file = afw.get_file()
         pickle.dump(prefs, write_file)
@@ -132,10 +132,10 @@ def add_recent_project_path(path):
     """
     if len(recent_projects.projects) == MAX_RECENT_PROJS:
         recent_projects.projects.pop(-1)
-        
+
     # Reject autosaves.
     autosave_dir = userfolders.get_cache_dir() + appconsts.AUTOSAVE_DIR
-    file_save_dir = os.path.dirname(path) + "/"        
+    file_save_dir = os.path.dirname(path) + "/"
     if file_save_dir == autosave_dir:
         return
 
@@ -144,8 +144,8 @@ def add_recent_project_path(path):
         recent_projects.projects.pop(index)
     except:
         pass
-    
-    recent_projects.projects.insert(0, path)    
+
+    recent_projects.projects.insert(0, path)
     save()
 
 def remove_non_existing_recent_projects():
@@ -170,7 +170,7 @@ def get_recent_projects():
     proj_list = []
     for proj_path in recent_projects.projects:
         proj_list.append(os.path.basename(proj_path))
-    
+
     return proj_list
 
 def update_prefs_from_widgets(widgets_tuples_tuple):
@@ -181,15 +181,19 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     # Aug-2019 - SvdB - AS - added autosave_combo
     default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin, load_order_combo, \
         autosave_combo, render_folder_select = gen_opts_widgets
-    
+
     # Jul-2016 - SvdB - Added play_pause_button
     # Apr-2017 - SvdB - Added ffwd / rev values
     gfx_length_spin, cover_delete, mouse_scroll_action, hide_file_ext_button, \
     hor_scroll_dir, effects_editor_clip_load = edit_prefs_widgets
-    
-    auto_center_check, play_pause_button, auto_center_on_updown, \
+
+# ------------------------------ timeline_start_end_button
+    auto_center_check, play_pause_button, timeline_start_end_button, auto_center_on_updown, \
     ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips = playback_prefs_widgets
-    
+# -------------------------------End of timeline_start_end_button
+#    auto_center_check, play_pause_button, auto_center_on_updown, \
+#    ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips = playback_prefs_widgets
+
     force_language_combo, disp_splash, buttons_style, theme, theme_combo, audio_levels_combo, \
     window_mode_combo, full_names, double_track_hights, top_row_layout, layout_monitor = view_prefs_widgets
 
@@ -209,6 +213,9 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
 
     # Jul-2016 - SvdB - For play/pause button
     prefs.play_pause = play_pause_button.get_active()
+# ------------------------------ timeline_start_end_button
+    prefs.timeline_start_end = timeline_start_end_button.get_active()
+# -------------------------------End of timeline_start_end_button
     prefs.hide_file_ext = hide_file_ext_button.get_active()
     prefs.mouse_scroll_action_is_zoom = (mouse_scroll_action.get_active() == 0)
     prefs.scroll_horizontal_dir_up_forward = (hor_scroll_dir.get_active() == 0)
@@ -218,13 +225,13 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.ffwd_rev_ctrl = int(ffwd_rev_ctrl_spin.get_adjustment().get_value())
     prefs.ffwd_rev_caps = int(ffwd_rev_caps_spin.get_adjustment().get_value())
     prefs.loop_clips = loop_clips.get_active()
-    
+
     prefs.use_english_always = False # DEPRECATED, "force_language" used instead
     prefs.force_language = force_language_combo.lang_codes[force_language_combo.get_active()]
     prefs.display_splash_screen = disp_splash.get_active()
     prefs.buttons_style = buttons_style.get_active() # styles enum values and widget indexes correspond
 
-    prefs.theme_fallback_colors = theme_combo.get_active() 
+    prefs.theme_fallback_colors = theme_combo.get_active()
     prefs.display_all_audio_levels = (audio_levels_combo.get_active() == 0)
     prefs.global_layout = window_mode_combo.get_active() + 1 # +1 'cause values are 1 and 2
     # Jan-2017 - SvdB
@@ -242,7 +249,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.layout_display_index = layout_monitor.get_active()
     if len(render_folder_select.get_filenames()) != 0:
         prefs.default_render_directory = render_folder_select.get_filename()
-    
+
 def get_graphics_default_in_out_length():
     in_fr = int(15000/2) - int(prefs.default_grfx_length/2)
     out_fr = in_fr + int(prefs.default_grfx_length) - 1 # -1, out inclusive
@@ -255,9 +262,9 @@ class EditorPreferences:
     """
 
     def __init__(self):
-        
+
         # Every preference needs to have its default value set in this constructor
-        
+
         self.open_in_last_opended_media_dir = True
         self.last_opened_media_dir = None
         self.img_length = 2000
@@ -291,7 +298,7 @@ class EditorPreferences:
         self.show_vu_meter = True  # DEPRECATED, NOT USER SETTABLE ANYMORE
         self.remember_monitor_clip_frame = True # DEPRECATED, NOT USER SETTABLE ANYMORE
         self.jack_start_up_op = appconsts.JACK_ON_START_UP_NO # not used
-        self.jack_frequency = 48000 # not used 
+        self.jack_frequency = 48000 # not used
         self.jack_output_type = appconsts.JACK_OUT_AUDIO # not used
         self.media_load_order = appconsts.LOAD_ABSOLUTE_FIRST
         self.use_english_always = False # DEPRECATED, "force_language" used instead
@@ -301,6 +308,9 @@ class EditorPreferences:
         self.trans_cover_delete = True
         # Jul-2016 - SvdB - For play/pause button
         self.play_pause = False
+        # ------------------------------ timeline_start_end_button
+        self.timeline_start_end = False
+        # ------------------------------End of timeline_start_end_button
         self.midbar_layout = appconsts.MIDBAR_TC_LEFT
         self.global_layout = appconsts.SINGLE_WINDOW
         self.trim_view_default = appconsts.TRIM_VIEW_OFF
