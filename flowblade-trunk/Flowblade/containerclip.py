@@ -21,9 +21,11 @@
 from gi.repository import Gtk
 
 import hashlib
+import json
 import os
 
 import appconsts
+import blenderclipedit
 import containeractions
 import dialogutils
 from editorstate import PROJECT
@@ -49,7 +51,7 @@ class ContainerClipData:
             self.rendered_media = None
             self.rendered_media_range_in = -1
             self.rendered_media_range_out = -1
-
+            
             self.unrendered_media = unrendered_media
             self.unrendered_length = None
             self.unrendered_type = utils.get_media_type(unrendered_media)
@@ -57,7 +59,12 @@ class ContainerClipData:
             self.external_media_folder = None
 
             self.render_data = None # initialized to a toolsencoding.ToolsRenderData object later.
-
+            
+            # Some container clips need to save additional information gathered on init.
+            self.data_slots = {}
+            
+            self.editable = False
+            
         def get_unrendered_media_name(self):
             directory, file_name = os.path.split(self.unrendered_media)
             name, ext = os.path.splitext(file_name)
@@ -169,7 +176,7 @@ def _gmic_clip_create_dialog_callback(dialog, response_id, data):
             return
 
         container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_GMIC, script_file, media_file)
-        container_clip = GMicContainerClip(PROJECT().next_media_file_id, container_clip_data.get_unrendered_media_name(), container_clip_data)
+        container_clip = ContainerClipMediaItem(PROJECT().next_media_file_id, container_clip_data.get_unrendered_media_name(), container_clip_data)
         PROJECT().add_container_clip_media_object(container_clip)
         _update_gui_for_media_object_add()
 
@@ -177,7 +184,7 @@ def _gmic_clip_create_dialog_callback(dialog, response_id, data):
 def create_mlt_xml_media_item(xml_file_path, media_name):
     # xml file is both unrendered media and program
     container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_MLT_XML, xml_file_path, xml_file_path)
-    container_clip = MLTXMLContainerClip(PROJECT().next_media_file_id, media_name, container_clip_data)
+    container_clip = ContainerClipMediaItem(PROJECT().next_media_file_id, media_name, container_clip_data)
     PROJECT().add_container_clip_media_object(container_clip)
     _update_gui_for_media_object_add()
 
@@ -207,19 +214,25 @@ def _blender_clip_create_dialog_callback(dialog, response_id, data):
         container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_BLENDER, project_file, unrendered_media_file)
         
         action_object = containeractions.get_action_object(container_clip_data)
-        action_object.initialize_project(project_file)
-        
-        container_clip = BlenderContainerClip(PROJECT().next_media_file_id, container_clip_data.get_unrendered_media_name(), container_clip_data)
+        action_object.initialize_project(project_file) # blocks until info data written
+
+        project_edit_info_path = userfolders.get_cache_dir() + "blender_container_projectinfo.json"
+        info_file = open(project_edit_info_path, "r") 
+        project_edit_info = json.load(info_file)
+        container_clip_data.data_slots["project_edit_info"] = project_edit_info
+        container_clip_data.editable = True
+    
+        container_clip = ContainerClipMediaItem(PROJECT().next_media_file_id, container_clip_data.get_unrendered_media_name(), container_clip_data)
         PROJECT().add_container_clip_media_object(container_clip)
         _update_gui_for_media_object_add()
 
-
+        #blenderclipedit.show_project_editor_manager_dialog(container_clip_data)
 
 
 # ---------------------------------------------------------------- MEDIA FILE OBJECTS
 # BTW, we're not getting any action from extending classes because all code is in action objects, look to kill them.
 
-class AbstractBinContainerClip:
+class ContainerClipMediaItem:
     """
     A pattern producer object presnt in Media Bin.
     """
@@ -257,11 +270,9 @@ class AbstractBinContainerClip:
         self.length = length
         self.container_data.unrendered_length = length - 1
 
-
+"""
 class GMicContainerClip(AbstractBinContainerClip):
-    """
-    Color Clip that can added to and edited in Sequence.
-    """   
+
     def __init__(self, media_item_id, name, container_data):
 
         AbstractBinContainerClip.__init__(self, media_item_id, name, container_data)
@@ -269,20 +280,17 @@ class GMicContainerClip(AbstractBinContainerClip):
 
 
 class MLTXMLContainerClip(AbstractBinContainerClip):
-    """
-    Color Clip that can added to and edited in Sequence.
-    """   
+
     def __init__(self, media_item_id, name, container_data):
 
         AbstractBinContainerClip.__init__(self, media_item_id, name, container_data)
 
 
 class BlenderContainerClip(AbstractBinContainerClip):
-    """
-    Color Clip that can added to and edited in Sequence.
-    """   
+
     def __init__(self, media_item_id, name, container_data):
 
         AbstractBinContainerClip.__init__(self, media_item_id, name, container_data)
+"""
 
 

@@ -617,8 +617,6 @@ class BlenderContainerActions(AbstractContainerActionObject):
         p = subprocess.Popen(blender_launch, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
         p.wait()
     
-
-
     def create_icon(self):
         return self._create_icon_default_action()
 

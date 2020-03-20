@@ -187,6 +187,73 @@ class ImageTextTextListView(Gtk.VBox):
         model, rows = self.treeview.get_selection().get_selected_rows()
         return rows
 
+
+# ------------------------------------------------- item lists
+class TextTextListView(Gtk.VBox):
+    """
+    GUI component displaying list with columns: img, text, text
+    Middle column expands.
+    """
+
+    def __init__(self):
+        GObject.GObject.__init__(self)
+
+       # Datamodel: icon, text, text
+        self.storemodel = Gtk.ListStore(str, str)
+
+        # Scroll container
+        self.scroll = Gtk.ScrolledWindow()
+        self.scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        self.scroll.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
+
+        # View
+        self.treeview = Gtk.TreeView(self.storemodel)
+        self.treeview.set_property("rules_hint", True)
+        self.treeview.set_headers_visible(False)
+        tree_sel = self.treeview.get_selection()
+        tree_sel.set_mode(Gtk.SelectionMode.SINGLE)
+
+        # Column views
+        self.text_col_1 = Gtk.TreeViewColumn("text1")
+        self.text_col_2 = Gtk.TreeViewColumn("text2")
+
+        # Cell renderers
+        self.text_rend_1 = Gtk.CellRendererText()
+        self.text_rend_1.set_property("ellipsize", Pango.EllipsizeMode.END)
+
+        self.text_rend_2 = Gtk.CellRendererText()
+        self.text_rend_2.set_property("yalign", 0.0)
+
+        # Build column views
+        self.text_col_1.set_expand(True)
+        self.text_col_1.set_spacing(5)
+        self.text_col_1.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
+        self.text_col_1.set_min_width(150)
+        self.text_col_1.pack_start(self.text_rend_1, True)
+        self.text_col_1.add_attribute(self.text_rend_1, "text", 0)
+
+        self.text_col_2.set_expand(False)
+        self.text_col_2.set_min_width(100)
+        self.text_col_2.pack_start(self.text_rend_2, True)
+        self.text_col_2.add_attribute(self.text_rend_2, "text", 1)
+
+        # Add column views to view
+        self.treeview.append_column(self.text_col_1)
+        self.treeview.append_column(self.text_col_2)
+
+        # Build widget graph and display
+        self.scroll.add(self.treeview)
+        self.pack_start(self.scroll, True, True, 0)
+        self.scroll.show_all()
+
+    def get_selected_rows_list(self):
+        model, rows = self.treeview.get_selection().get_selected_rows()
+        return rows
+
+    def get_selected_row(self):
+        model, rows = self.treeview.get_selection().get_selected_rows()
+        return rows[0]
+        
 # ------------------------------------------------- item lists
 class BinTreeView(Gtk.VBox):
     """
@@ -2129,6 +2196,11 @@ def display_media_file_popup_menu(media_file, callback, event):
         item = _get_menu_item(_("Render Proxy File"), callback, ("Render Proxy File", media_file, event))
         media_file_menu.add(item)
     
+    if hasattr(media_file, "container_data"):
+        if media_file.container_data.editable == True:
+            item = _get_menu_item(_("Edit Container Data"), callback, ("Edit Container Data", media_file, event))
+            media_file_menu.add(item)
+
     media_file_menu.popup(None, None, None, None, event.button, event.time)
 
 def display_filter_stack_popup_menu(row, treeview, callback, event):

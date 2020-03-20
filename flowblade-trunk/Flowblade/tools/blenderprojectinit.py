@@ -20,6 +20,7 @@
 
 import bpy
 
+import json
 import os
 import sys
 
@@ -27,37 +28,29 @@ import gi
 
 from gi.repository import GLib
 
-script_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
+project_data = {}
+project_data["fps"] = bpy.context.scene.render.fps
+project_data["resolution_x"] = bpy.context.scene.render.resolution_x
+project_data["resolution_y"] = bpy.context.scene.render.resolution_y
+project_data["frame_start"] = bpy.context.scene.frame_start
+project_data["frame_end"] = bpy.context.scene.frame_end
 
-msg = script_dir
-print(os.path.join(GLib.get_user_data_dir(), "flowblade"))
-print(bpy.context.scene.render.filepath)
-print(str(bpy.context.scene.render.fps)) # + "/n"
-print(str(bpy.context.scene.render.resolution_x)) #+ "/n"
-print(str(bpy.context.scene.render.resolution_y)) #+ "/n"
-print(str(bpy.context.scene.frame_start))# + "/n"
-print(str(bpy.context.scene.frame_end))# + "/n"
-
-print("objets")
+objects_list = []
 for obj in bpy.data.objects:
-    print(obj)
-    print(obj.data)
-    print(obj.name)
-    print(obj.keys())
-    print(obj.data.keys())
+    name = str(obj.name)
+    data_str = str(obj.data)
+    ri = data_str.find("(")
+    li = data_str.find(",")
+    data_str = data_str[0:ri]
+    data_str = data_str[li + 2:]
+    json_obj = [name, data_str]
+    objects_list.append(json_obj)
 
-print("CURVES")
-for obj in bpy.data.curves:
-    print(obj)
-    print(obj.data)
-    print(obj.name)
-    
-print("meshes")
-for obj in bpy.data.meshes:
-    print(obj)
-    print(obj.data)
-    print(obj.name)
-    
-#f = open("/home/janne/blenderinfo","w")
-#f.write(msg)
-#f.close()
+project_data["objects"] = objects_list
+project_data["editors"] = []
+
+save_path = os.path.join(GLib.get_user_cache_dir(), "flowblade") + "/blender_container_projectinfo.json"
+
+with open(save_path, "w") as f: 
+     json.dump(project_data, f, indent=4)
+
