@@ -183,8 +183,10 @@ def _handle_tline_key_event(event):
     if tool_was_selected == True:
         return True
     
+
     action = _get_shortcut_action(event)
     prefs = editorpersistance.prefs
+
 
     if action == 'mark_in':
         monitorevent.mark_in_pressed()

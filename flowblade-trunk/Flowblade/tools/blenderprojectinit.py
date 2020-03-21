@@ -43,14 +43,16 @@ for obj in bpy.data.objects:
     li = data_str.find(",")
     data_str = data_str[0:ri]
     data_str = data_str[li + 2:]
-    json_obj = [name, data_str]
+    json_obj = [name, data_str, []]
     objects_list.append(json_obj)
 
 project_data["objects"] = objects_list
-project_data["editors"] = []
 
 save_path = os.path.join(GLib.get_user_cache_dir(), "flowblade") + "/blender_container_projectinfo.json"
 
+if not os.path.exists(save_path):
+    os. remove(save_path)
+    
 with open(save_path, "w") as f: 
      json.dump(project_data, f, indent=4)
 

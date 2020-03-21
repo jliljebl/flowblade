@@ -246,6 +246,78 @@ class TextTextListView(Gtk.VBox):
         self.pack_start(self.scroll, True, True, 0)
         self.scroll.show_all()
 
+    def connect_selection_changed(self, selection_cb):
+        # Connect selection 'changed' signal
+        tree_sel = self.treeview.get_selection()
+        tree_sel.connect("changed", selection_cb)
+        
+    def get_selected_rows_list(self):
+        model, rows = self.treeview.get_selection().get_selected_rows()
+        return rows
+
+    def get_selected_row_index(self):
+        model, rows = self.treeview.get_selection().get_selected_rows()
+        return int(rows[0].to_string())
+
+
+class MultiTextColumnListView(Gtk.VBox):
+    """
+    GUI component displaying list with columns: img, text, text
+    Middle column expands.
+    """
+
+    def __init__(self, columns_number):
+        GObject.GObject.__init__(self)
+
+        self.columns_number = columns_number
+
+        type_list = []
+        for i in range(0, columns_number):
+            type_list.append(str)
+
+        self.storemodel = Gtk.ListStore.new(type_list)
+
+        # Scroll container
+        self.scroll = Gtk.ScrolledWindow()
+        self.scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        self.scroll.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
+
+        # View
+        self.treeview = Gtk.TreeView(self.storemodel)
+        self.treeview.set_property("rules_hint", True)
+        self.treeview.set_headers_visible(True)
+        tree_sel = self.treeview.get_selection()
+        tree_sel.set_mode(Gtk.SelectionMode.SINGLE)
+
+        # Column views
+        self.columns = []
+        self.renderers = []
+        for i in range(0, columns_number):
+            text_col = Gtk.TreeViewColumn("text1")
+            text_rend = Gtk.CellRendererText()
+            
+            text_col.set_expand(True)
+            text_col.set_spacing(5)
+            text_col.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
+            text_col.set_min_width(50)
+            text_col.pack_start(text_rend, True)
+            text_col.add_attribute(text_rend, "text", i)
+        
+            self.columns.append(text_col)
+            self.renderers.append(text_rend)
+        
+            self.treeview.append_column(text_col)
+        
+        # Build widget graph and display
+        self.scroll.add(self.treeview)
+        self.pack_start(self.scroll, True, True, 0)
+        self.scroll.show_all()
+
+    def connect_selection_changed(self, selection_cb):
+        # Connect selection 'changed' signal
+        tree_sel = self.treeview.get_selection()
+        tree_sel.connect("changed", selection_cb)
+        
     def get_selected_rows_list(self):
         model, rows = self.treeview.get_selection().get_selected_rows()
         return rows
@@ -253,6 +325,18 @@ class TextTextListView(Gtk.VBox):
     def get_selected_row(self):
         model, rows = self.treeview.get_selection().get_selected_rows()
         return rows[0]
+
+    def fill_data_model(self, data_rows):
+        self.storemodel.clear()
+        print("data_rows", data_rows)
+        for row in data_rows:
+            print("ROW", row)
+            row_data = []
+            for i in range(0, self.columns_number):
+                row_data.append(row[i])
+            self.storemodel.append(row_data)
+        
+        self.scroll.queue_draw()
         
 # ------------------------------------------------- item lists
 class BinTreeView(Gtk.VBox):
