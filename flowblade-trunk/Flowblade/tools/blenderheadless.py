@@ -81,21 +81,34 @@ def abort_render(session_id):
 
 
 # --------------------------------------------------- render thread launch
-def main(root_path, session_id, xml_file_path, range_in, range_out, profile_desc):
+def main(root_path, session_id, project_path, range_in, range_out, profile_desc):
     
     os.nice(10) # make user configurable
     
-    ccrutils.prints_to_log_file("/home/janne/xmlheadless")
-    print(session_id, xml_file_path, range_in, range_out, profile_desc)
+    ccrutils.prints_to_log_file("/home/janne/blenderheadless")
 
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION
     except:
         editorstate.mlt_version = "0.0.99" # magic string for "not found"
 
+    print(session_id, range_in, range_out, profile_desc)
+
+    print(os.path.join(GLib.get_user_cache_dir(), "flowblade") + "/blender_render_container_id")
+    print(os.path.join(GLib.get_user_data_dir(), "flowblade") +  "/" + session_id + "/blender_render_exec_lines")
+
+
     # Set paths.
     respaths.set_paths(root_path)
 
+    FLOG = open("/home/janne/blenderrenderlog", 'w')
+    render_setup_script = respaths.ROOT_PATH + "/tools/blenderrendersetup.py"
+    blender_launch = "/usr/bin/blender -b " + project_path + " -P " + render_setup_script
+
+    p = subprocess.Popen(blender_launch, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
+    p.wait()
+
+    """
     userfolders.init()
     editorpersistance.load()
 
@@ -132,7 +145,7 @@ def main(root_path, session_id, xml_file_path, range_in, range_out, profile_desc
     global _render_thread
     _render_thread = BlenderHeadlessRunnerThread(render_data, xml_file_path, range_in, range_out, profile_desc)
     _render_thread.start()
-
+    
        
 
 class MLTXMLHeadlessRunnerThread(threading.Thread):
@@ -215,5 +228,5 @@ class MLTXMLHeadlessRunnerThread(threading.Thread):
                 script_file.write(msg)
         except:
             pass # this failing because we can't get file access will show as progress hickup to user, we don't care
-
+"""
         

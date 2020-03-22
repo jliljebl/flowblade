@@ -27,6 +27,7 @@ import mlt
 import os
 from os import listdir
 from os.path import isfile, join
+import pickle
 import subprocess
 import shutil
 import re
@@ -35,6 +36,8 @@ import threading
 import time
 
 import appconsts
+import atomicfile
+import blenderheadless
 import dialogutils
 import edit
 from editorstate import current_sequence
@@ -614,8 +617,6 @@ class BlenderContainerActions(AbstractContainerActionObject):
         
         info_script = respaths.ROOT_PATH + "/tools/blenderprojectinit.py"
         blender_launch = "/usr/bin/blender -b " + project_path + " -P " + info_script
-        # clapperless.py computes offsets and writes them to file clapperless.OFFSETS_DATA_FILE
-        #blender_launch, shell=True,
         p = subprocess.Popen(blender_launch, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
         p.wait()
 
@@ -625,17 +626,31 @@ class BlenderContainerActions(AbstractContainerActionObject):
         self.render_range_out = range_out
         self.clip_start_offset = clip_start_offset
 
-        # Build render set up exec lines string.
+        blenderheadless.clear_flag_files(self.get_container_program_id())
+            # We need data to be available for render process, 
+        # create video_render_data object with default values if not available.
+        if self.container_data.render_data == None:
+            self.container_data.render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
+            
+        blenderheadless.set_render_data(self.get_container_program_id(), self.container_data.render_data)
+        
+        # Write current render target container clip for blenderrendersetup.py
+        cont_info_id_path = userfolders.get_cache_dir() + "blender_render_container_id"
+        with atomicfile.AtomicFileWriter(cont_info_id_path, "w") as afw:
+            outfile = afw.get_file()
+            outfile.write(str(self.get_container_program_id()))
+
+        # Write current render set up exec lines for blenderrendersetup.py
         render_exec_lines = 'bpy.context.scene.render.filepath = "/home/janne/test/blenderframes/"' + NEWLINE \
         + 'bpy.context.scene.render.fps = 24' + NEWLINE \
         + 'bpy.context.scene.render.image_settings.file_format = "PNG"' + NEWLINE \
         + 'bpy.context.scene.render.image_settings.color_mode = "RGBA"' + NEWLINE \
-        + 'bpy.context.scene.render.film_transparent = True' + NEWLINE \
+        + 'bpy.context.scene.render.film_transparent = 1' + NEWLINE \
         + 'bpy.context.scene.render.resolution_x = 1920' + NEWLINE \
         + 'bpy.context.scene.render.resolution_y = 1080' + NEWLINE \
         + 'bpy.context.scene.render.resolution_percentage = 100' + NEWLINE \
-        + 'bpy.context.scene.frame_start = 0' + NEWLINE \
-        + 'bpy.context.scene.frame_end = 10' + NEWLINE
+        + 'bpy.context.scene.frame_start = 90' + NEWLINE \
+        + 'bpy.context.scene.frame_end = 92' + NEWLINE
         
         edit_data_json = self.container_data.data_slots["project_edit_info"]
         objects = edit_data_json["objects"]
@@ -651,7 +666,24 @@ class BlenderContainerActions(AbstractContainerActionObject):
                 render_exec_lines += 'obj = bpy.data.objects["' + obj_name + '"]' + NEWLINE
                 render_exec_lines += 'obj.' + prop_path + " = " + value  + NEWLINE
 
-        print(render_exec_lines)
+        exec_lines_file_path = self.get_session_dir() + "/blender_render_exec_lines"
+        with atomicfile.AtomicFileWriter(exec_lines_file_path, "w") as afw:
+            outfile = afw.get_file()
+            outfile.write(render_exec_lines)
+
+        args = ("session_id:" + self.get_container_program_id(),
+                "project_path:" + self.container_data.program,
+                "range_in:" + str(range_in),
+                "range_out:"+ str(range_out),
+                "profile_desc:" + PROJECT().profile.description().replace(" ", "_"))
+
+        # Run with nice to lower priority if requested (currently hard coded to lower)
+        nice_command = "nice -n " + str(10) + " " + respaths.LAUNCH_DIR + "flowbladeblenderheadless"
+        for arg in args:
+            nice_command += " "
+            nice_command += arg
+
+        subprocess.Popen([nice_command], shell=True)
         
     def update_render_status(self):
         print("status update")
