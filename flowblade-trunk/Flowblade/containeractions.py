@@ -59,6 +59,8 @@ GMIC_TYPE_ICON = None
 MLT_XML_TYPE_ICON = None
 BLENDER_TYPE_ICON = None
 
+NEWLINE = '\n'
+
 _status_polling_thread = None
 
 # ----------------------------------------------------- interface
@@ -616,7 +618,44 @@ class BlenderContainerActions(AbstractContainerActionObject):
         #blender_launch, shell=True,
         p = subprocess.Popen(blender_launch, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
         p.wait()
-    
+
+    def _launch_render(self, clip, range_in, range_out, clip_start_offset):
+        self.create_data_dirs_if_needed()
+        self.render_range_in = range_in
+        self.render_range_out = range_out
+        self.clip_start_offset = clip_start_offset
+
+        # Build render set up exec lines string.
+        render_exec_lines = 'bpy.context.scene.render.filepath = "/home/janne/test/blenderframes/"' + NEWLINE \
+        + 'bpy.context.scene.render.fps = 24' + NEWLINE \
+        + 'bpy.context.scene.render.image_settings.file_format = "PNG"' + NEWLINE \
+        + 'bpy.context.scene.render.image_settings.color_mode = "RGBA"' + NEWLINE \
+        + 'bpy.context.scene.render.film_transparent = True' + NEWLINE \
+        + 'bpy.context.scene.render.resolution_x = 1920' + NEWLINE \
+        + 'bpy.context.scene.render.resolution_y = 1080' + NEWLINE \
+        + 'bpy.context.scene.render.resolution_percentage = 100' + NEWLINE \
+        + 'bpy.context.scene.frame_start = 0' + NEWLINE \
+        + 'bpy.context.scene.frame_end = 10' + NEWLINE
+        
+        edit_data_json = self.container_data.data_slots["project_edit_info"]
+        objects = edit_data_json["objects"]
+        for obj in objects:
+            # objects are [name, type, editorlist], see  blenderprojectinit.py
+            obj_name = obj[0]
+            editor_lines = []
+            for editor_data in obj[2]:
+                # editor_data is [prop_path, label, tooltip, editor_type, value], see blenderclipedit.EditorManagerWindow.get_current_editor_data()
+                prop_path = editor_data[0]
+                value = editor_data[4]
+                
+                render_exec_lines += 'obj = bpy.data.objects["' + obj_name + '"]' + NEWLINE
+                render_exec_lines += 'obj.' + prop_path + " = " + value  + NEWLINE
+
+        print(render_exec_lines)
+        
+    def update_render_status(self):
+        print("status update")
+            
     def create_icon(self):
         return self._create_icon_default_action()
 

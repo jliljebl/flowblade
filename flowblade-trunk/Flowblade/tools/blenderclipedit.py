@@ -23,6 +23,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk
 from gi.repository import GObject
 
+import copy
 import os
 
 import guicomponents
@@ -39,12 +40,25 @@ def show_project_editor_manager_dialog(container_data):
     _editor_manager_window = EditorManagerWindow(container_data)
 
 
+def _shutdown_save():
+    # Edits already saved, destroy window.
+    _editor_manager_window.destroy()
+    print(_editor_manager_window.container_data.data_slots["project_edit_info"])
+
+def _shutdown_cancel():
+    # Roll back changes.
+    _editor_manager_window.container_data.data_slots["project_edit_info"] =  _editor_manager_window.original_edit_data
+    
+    _editor_manager_window.destroy()
+    
+     
 class EditorManagerWindow(Gtk.Window):
     def __init__(self, container_data):
         GObject.GObject.__init__(self)
-        #self.connect("delete-event", lambda w, e:_shutdown())
+        self.connect("delete-event", lambda w, e:_shutdown_cancel())
 
         self.container_data = container_data
+        self.original_edit_data = copy.deepcopy(self.container_data.data_slots["project_edit_info"])
 
         info_row = self.get_info_row()
 
@@ -60,7 +74,9 @@ class EditorManagerWindow(Gtk.Window):
         edit_pane.set_size_request(750, 600)
         
         save_button = Gtk.Button(_("Save Changes"))
+        save_button.connect("clicked",lambda w: _shutdown_save())
         cancel_button = Gtk.Button(_("Cancel"))
+        cancel_button.connect("clicked",lambda w: _shutdown_cancel())
         buttons_box = Gtk.HBox(True, 2)
         buttons_box.pack_start(cancel_button, True, True, 0)
         buttons_box.pack_start(save_button, False, False, 0)
@@ -129,6 +145,7 @@ class EditorManagerWindow(Gtk.Window):
         add_button = Gtk.Button(label=_("Add Editor"))
         add_button.connect("clicked",lambda w: self.add_clicked())
         self.delete_button = Gtk.Button(label=_("Delete Editor"))
+        #self.delete_button.connect("clicked",lambda w: self.add_clicked())
         
         self.obj_path_entry = Gtk.Entry()
         self.editor_label_entry = Gtk.Entry()
@@ -180,16 +197,17 @@ class EditorManagerWindow(Gtk.Window):
     
     def add_clicked(self):
         editor_data = self.get_current_editor_data()
-        print(editor_data)
         obj = self.get_selected_object()
         obj[2].append(editor_data)
         self.display_object_editors_data(obj)
 
     def get_current_editor_data(self):
         editor_data = []
+        # [prop_path, label, tooltip, editor_type, value]
         editor_data.append(self.obj_path_entry.get_text())
         editor_data.append(self.editor_label_entry.get_text())
         editor_data.append(self.tooltip_info_entry.get_text())
         editor_data.append(str(self.editor_select.get_active()))
-        editor_data.append(self.default_value_entry.get_text())
+        text = '"' + self.default_value_entry.get_text() + '"' # test, remove
+        editor_data.append(text)
         return editor_data

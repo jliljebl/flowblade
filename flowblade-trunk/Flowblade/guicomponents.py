@@ -328,9 +328,7 @@ class MultiTextColumnListView(Gtk.VBox):
 
     def fill_data_model(self, data_rows):
         self.storemodel.clear()
-        print("data_rows", data_rows)
         for row in data_rows:
-            print("ROW", row)
             row_data = []
             for i in range(0, self.columns_number):
                 row_data.append(row[i])
