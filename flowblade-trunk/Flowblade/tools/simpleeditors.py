@@ -54,8 +54,8 @@ def show_blender_container_clip_program_editor(callback, container_data):
             editor_type = int(editor_type)
             editor = get_editor(editor_type, label_text, value)
             if editor_type == SIMPLE_EDITOR_TEXT:
-                editor.return_quoted_string = True # we are calling exec using the values and adding the needed quptes is best handled here.
-            editor.blender_editor_data = editor_data # We needs the later to apply the changes
+                editor.return_quoted_string = True # we are calling exec() using these values and adding the needed quptes is best handled here.
+            editor.blender_editor_data = editor_data # We need this the later to apply the changes.
             editors.append(editor)
             
             editors_panel.pack_start(editor, False, False, 0)
@@ -91,7 +91,7 @@ class TextEditor(AbstractSimpleEditor):
         
         self.return_quoted_string = False # This is set elsewhere if needed
         
-        # If input has quotes we need to strip them for editing
+        # If input value has quotes we need to strip them before editing
         # and put back when value is asked for.
         if value[0:1] == '"':
             value = value[1:len(value) - 1]
@@ -111,7 +111,6 @@ class TextEditor(AbstractSimpleEditor):
 
 
 # ----------------------------------------------- dialogs
-# We're keeping imports very much in control at a leaf module like this and wont import dialogs.py
 def _create_blender_project_edit_dialog(callback, panels, editors):
     dialog = Gtk.Dialog(_("Blender Project Edit"), gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
