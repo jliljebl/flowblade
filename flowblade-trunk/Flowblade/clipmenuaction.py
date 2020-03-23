@@ -718,4 +718,5 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "cc_render_full_media":containerclip.render_full_media,
                   "cc_render_clip":containerclip.render_clip_length,
                   "cc_go_to_underdered":containerclip.switch_to_unrendered_media,
-                  "cc_render_settings":containerclip.set_render_settings}
+                  "cc_render_settings":containerclip.set_render_settings,
+                  "cc_edit_program":containerclip.edit_program}

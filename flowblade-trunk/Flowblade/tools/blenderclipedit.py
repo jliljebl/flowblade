@@ -53,6 +53,7 @@ def _shutdown_cancel():
     
      
 class EditorManagerWindow(Gtk.Window):
+    
     def __init__(self, container_data):
         GObject.GObject.__init__(self)
         self.connect("delete-event", lambda w, e:_shutdown_cancel())
@@ -191,8 +192,7 @@ class EditorManagerWindow(Gtk.Window):
         self.display_object_editors_data(obj)
         
     def display_object_editors_data(self, obj):
-        print(obj)
-        editors_list = obj[2]
+        editors_list = obj[2]  # object is [name, type, editors_list] see blenderprojectinit.py
         self.editors_list.fill_data_model(editors_list)
     
     def add_clicked(self):
@@ -208,6 +208,6 @@ class EditorManagerWindow(Gtk.Window):
         editor_data.append(self.editor_label_entry.get_text())
         editor_data.append(self.tooltip_info_entry.get_text())
         editor_data.append(str(self.editor_select.get_active()))
-        text = '"' + self.default_value_entry.get_text() + '"' # test, remove
+        text = '"' + self.default_value_entry.get_text() + '"'
         editor_data.append(text)
         return editor_data

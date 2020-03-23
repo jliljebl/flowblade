@@ -2115,6 +2115,13 @@ def _get_container_clip_menu_item(event, clip, track, callback):
 
     _add_separetor(sub_menu)
 
+    edit_program_item = _get_menu_item(_("Edit Container Program"), callback, (clip, track, "cc_edit_program", event.x))
+    if clip.container_data.editable == False:
+        edit_program_item.set_sensitive(False)
+    sub_menu.append(edit_program_item)
+ 
+    _add_separetor(sub_menu)
+
     settings_item = _get_menu_item(_("Render Settings..."), callback, (clip, track, "cc_render_settings", event.x))
     sub_menu.append(settings_item)
     

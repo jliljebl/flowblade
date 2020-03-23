@@ -104,6 +104,10 @@ def set_render_settings(data):
     action_object = containeractions.get_action_object(clip.container_data)
     action_object.set_video_endoding(clip)
 
+def edit_program(data):
+    clip, track, item_id, item_data = data
+    action_object = containeractions.get_action_object(clip.container_data)
+    action_object.edit_program(clip)
 
 #------------------------------------------------------------- Cloneing
 def clone_clip(clip):

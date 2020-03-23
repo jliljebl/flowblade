@@ -49,6 +49,7 @@ import jobs
 import mltprofiles
 import mltxmlheadless
 import respaths
+import simpleeditors
 import toolsencoding
 import userfolders
 import utils
@@ -364,6 +365,8 @@ class AbstractContainerActionObject:
  
         return (surface, length)
 
+    def edit_program(sef, clip):
+        print("AbstractContainerActionObject.edit_program not impl")
 
 class GMicContainerActions(AbstractContainerActionObject):
 
@@ -691,6 +694,11 @@ class BlenderContainerActions(AbstractContainerActionObject):
     def create_icon(self):
         return self._create_icon_default_action()
 
+    def edit_program(self, clip):
+        simpleeditors.show_blender_container_clip_program_editor(self.project_edit_done, self.container_data)
+        
+    def project_edit_done(self, dialog, response_id, editors):
+        dialog.destroy()
 
 # ----------------------------------------------------------------- polling
 class ContainerStatusPollingThread(threading.Thread):
