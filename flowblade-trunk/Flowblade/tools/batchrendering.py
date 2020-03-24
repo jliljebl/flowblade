@@ -286,18 +286,19 @@ def _get_pid_file_path():
     user_dir = userfolders.get_cache_dir()
     return user_dir + PID_FILE
     
-def destroy_for_identifier(identifier):
+def destroy_for_identifier(identifier, destroy_project_file=True):
     try:
         item_path = get_datafiles_dir() + identifier + ".renderitem"
         os.remove(item_path)
     except:
         pass
     
-    try:
-        project_path = get_projects_dir() + identifier + ".flb"
-        os.remove(project_path)
-    except:
-        pass    
+    if destroy_project_file == True:
+        try:
+            project_path = get_projects_dir() + identifier + ".flb"
+            os.remove(project_path)
+        except:
+            pass
 
 def copy_project(render_item, file_name):
     try:
@@ -460,8 +461,10 @@ class RenderQueue:
             except Exception as e:
                 if self.error_status == None:
                     self.error_status = []
-                self.error_status.append((_(" project file load failed with ") + str(e)))
+                self.error_status.append((data_file_name, _(" project file load failed with ") + str(e)))
 
+        print(self.error_status)
+         
         if self.error_status != None:
             for file_path, error_str in self.error_status:
                 identifier = get_identifier_from_path(file_path)
@@ -788,7 +791,9 @@ class BatchRenderWindow:
             primary_txt = _("Multiple items with same render target file!")
             
             secondary_txt = _("Later items will render on top of earlier items if this queue is rendered.\n") + \
-                            _("Delete or unqueue some items with same paths:\n\n")
+                            _("Possible fixes:\n\n") + \
+                            "\u2022" + " " + _("Change item render file path from right click popup menu.\n") + \
+                            "\u2022" + " " + _("Delete or unqueue some items with same paths.\n\n")
             for k,v in same_paths.items():
                 secondary_txt = secondary_txt + str(v) + _(" items with path: ") + str(k) + "\n"
             dialogutils.warning_message(primary_txt, secondary_txt, batch_window.window)
@@ -969,6 +974,8 @@ class RenderQueueView(Gtk.VBox):
             file_name = run_save_project_as_dialog(render_item.project_name)
             if file_name != None:
                 copy_project(render_item, file_name)
+        elif msg == "changepath":
+            show_change_render_item_path_dialog(_change_render_item_path_callback, render_item)
 
     def fill_data_model(self, render_queue):
         self.storemodel.clear()        
@@ -1057,11 +1064,66 @@ def show_render_properties_panel(render_item):
 
     title = _("Render Properties")
     dialogutils.panel_ok_dialog(title, vbox)
+
+def show_change_render_item_path_dialog(callback, render_item):
+    cancel_str = _("Cancel")
+    ok_str = _("Change Path")
+    dialog = Gtk.Dialog(_("Change Render Item Path"),
+                        batch_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (cancel_str, Gtk.ResponseType.CANCEL,
+                        ok_str, Gtk.ResponseType.YES))
+
+    INPUT_LABELS_WITDH = 150
     
+    folder, f_name = os.path.split(render_item.render_path)
+
+    out_folder = Gtk.FileChooserButton(_("Select target folder"))
+    out_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
+    out_folder.set_current_folder(folder)
+    
+    folder_row = guiutils.get_two_column_box(Gtk.Label(label=_("Folder:")), out_folder, INPUT_LABELS_WITDH)
+    
+    file_name = Gtk.Entry()
+    file_name.set_text(f_name)
+
+    name_pack = Gtk.HBox(False, 4)
+    name_pack.pack_start(file_name, True, True, 0)
+
+    name_row = guiutils.get_two_column_box(Gtk.Label(label=_("Render file name:")), name_pack, INPUT_LABELS_WITDH)
+ 
+    vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(folder_row, False, False, 0)
+    vbox.pack_start(name_row, False, False, 0)
+    vbox.pack_start(guiutils.pad_label(12, 25), False, False, 0)
+    
+    alignment = guiutils.set_margins(vbox, 12, 12, 12, 12)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    dialogutils.default_behaviour(dialog)
+    dialog.connect('response', callback, (out_folder, file_name, render_item))
+    dialog.show_all()
+
+def _change_render_item_path_callback(dialog, response_id, data):
+
+    out_folder, file_name, render_item = data
+    if response_id == Gtk.ResponseType.YES:
+
+        render_path = out_folder.get_filename() + "/" + file_name.get_text()
+        render_item.render_path = render_path
+        destroy_for_identifier(render_item.generate_identifier(), False)
+        render_item.save()
+        batch_window.reload_queue()
+        dialog.destroy()
+    else:
+        dialog.destroy()
+        
 def display_render_item_popup_menu(callback, event):
     menu = render_item_menu
     guiutils.remove_children(menu)
-
+    
+    menu.add(_get_menu_item(_("Change Item Render File Path..."), callback,"changepath"))
     menu.add(_get_menu_item(_("Save Item Project As..."), callback,"saveas"))
     menu.add(_get_menu_item(_("Render Properties"), callback,"renderinfo")) 
     _add_separetor(menu)

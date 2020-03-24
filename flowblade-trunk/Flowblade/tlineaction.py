@@ -19,7 +19,7 @@
 """
 
 """
-Module handles button edit events from buttons in the middle bar.
+Module handles button edit events from buttons in the middle bar and other non-tool edits targeting timeline.
 """
 
 
