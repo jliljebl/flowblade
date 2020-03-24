@@ -1498,8 +1498,8 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     play_vbox.pack_start(_get_dynamic_kb_row(root_node, "next_cut"), False, False, 0)
     play_vbox.pack_start(_get_dynamic_kb_row(root_node, "to_start"), False, False, 0)
     play_vbox.pack_start(_get_dynamic_kb_row(root_node, "to_end"), False, False, 0)
-    play_vbox.pack_start(_get_kb_row(_("Shift + I"), _("To Mark In")), False, False, 0)
-    play_vbox.pack_start(_get_kb_row(_("Shift + O"), _("To Mark Out")), False, False, 0)
+    play_vbox.pack_start(_get_kb_row(_("Alt + I"), _("To Mark In")), False, False, 0)
+    play_vbox.pack_start(_get_kb_row(_("Alt + O"), _("To Mark Out")), False, False, 0)
     play = guiutils.get_named_frame(_("Playback"), play_vbox)
 
     tools_vbox = Gtk.VBox()
