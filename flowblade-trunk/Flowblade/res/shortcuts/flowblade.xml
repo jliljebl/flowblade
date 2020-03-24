@@ -60,6 +60,7 @@
     <event code='to_mark_out' name='Go To Mark Out' modifiers='ALT'>o</event>
     <event code='to_mark_out' name='Go To Mark Out' modifiers='SHIFT'>o</event>
     <event code='to_mark_out' name='Go To Mark Out' modifiers='ALT+SHIFT'>o</event>
+    <event code='clear_io_marks' name='Clear In/Out Marks' modifiers='ALT'>k</event>
     <event code='play_pause' name='Play / Pause'>space</event>
     <event code='prev_cut' name='Go To Previous Cut'>down</event>
     <event code='next_cut' name='Go To Next Cut'>up</event>

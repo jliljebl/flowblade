@@ -204,6 +204,9 @@ def _handle_tline_key_event(event):
     if action == 'to_mark_out':
         monitorevent.to_mark_out_pressed()
         return True
+    if action == 'clear_io_marks':
+        monitorevent.marks_clear_pressed()
+        return True
     if action == 'play_pause':
         if PLAYER().is_playing():
             monitorevent.stop_pressed()
@@ -392,6 +395,7 @@ def _handle_extended_monitor_focus_events(event):
         return True
     if action == 'overwrite_range':
         tlineaction.range_overwrite_pressed()
+        return True
     if action == 'insert':
         tlineaction.insert_button_pressed()
         return True
@@ -539,6 +543,9 @@ def _handle_clip_key_event(event):
             return True
         if action == 'to_mark_out':
             monitorevent.to_mark_out_pressed()
+            return True
+        if action == 'clear_io_marks':
+            monitorevent.marks_clear_pressed()
             return True
 
 def _handle_delete():

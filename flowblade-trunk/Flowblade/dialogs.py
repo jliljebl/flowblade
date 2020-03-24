@@ -1452,6 +1452,7 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "mark_out"), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Alt + I"), _("Go To Mark In")), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Alt + O"), _("Go To Mark Out")), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "clear_io_marks"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "cut"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "cut_all"), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("DELETE"),  _("Splice Out")), False, False, 0)

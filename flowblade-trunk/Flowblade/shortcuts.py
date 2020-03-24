@@ -181,6 +181,7 @@ def _set_keyboard_action_names():
     _keyboard_action_names = {}
     _keyboard_action_names['mark_in'] = _("Set Mark In")
     _keyboard_action_names['mark_out'] =  _("Set Mark Out")
+    _keyboard_action_names['clear_io_marks'] =  _("Clear In/Out Marks")
     _keyboard_action_names['play_pause'] = _("Start / Stop Playback")
     _keyboard_action_names['prev_cut'] = _("Prev Edit/Mark")
     _keyboard_action_names['next_cut'] = _("Next Edit/Mark")
