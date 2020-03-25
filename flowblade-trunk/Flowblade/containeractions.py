@@ -368,12 +368,18 @@ class AbstractContainerActionObject:
     def edit_program(sef, clip):
         print("AbstractContainerActionObject.edit_program not impl")
 
+
 class GMicContainerActions(AbstractContainerActionObject):
 
     def __init__(self, container_data):
         AbstractContainerActionObject.__init__(self, container_data)
         self.render_type = -1 # to be set in methods below
         self.clip = None # to be set in methods below
+
+    def get_job_proxy(self):
+        job_proxy = jobs.JobProxy(self.get_container_program_id(), self)
+        job_proxy.type = jobs.CONTAINER_CLIP_RENDER_GMIC
+        return job_proxy
         
     def switch_to_unrendered_media(self, rendered_clip):
         unrendered_clip = current_sequence().create_file_producer_clip(self.container_data.unrendered_media, new_clip_name=None, novalidate=True, ttl=1)
@@ -513,6 +519,7 @@ class GMicContainerActions(AbstractContainerActionObject):
         Gdk.threads_leave()
 
     def abort_render(self):
+        self.remove_as_status_polling_object()
         gmicheadless.abort_render(self.get_container_program_id())
 
     def create_icon(self):
@@ -529,8 +536,6 @@ class GMicContainerActions(AbstractContainerActionObject):
         return (surface, length)
         
 
-
-
 class MLTXMLContainerActions(AbstractContainerActionObject):
 
     def __init__(self, container_data):
@@ -538,6 +543,11 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
         self.render_type = -1 # to be set in methods below
         self.clip = None # to be set in methods below
 
+    def get_job_proxy(self):
+        job_proxy = jobs.JobProxy(self.get_container_program_id(), self)
+        job_proxy.type = jobs.CONTAINER_CLIP_RENDER_MLT_XML
+        return job_proxy
+        
     def _launch_render(self, clip, range_in, range_out, clip_start_offset):
         self.create_data_dirs_if_needed()
         self.render_range_in = range_in
@@ -623,6 +633,11 @@ class BlenderContainerActions(AbstractContainerActionObject):
         p = subprocess.Popen(blender_launch, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
         p.wait()
 
+    def get_job_proxy(self):
+        job_proxy = jobs.JobProxy(self.get_container_program_id(), self)
+        job_proxy.type = jobs.CONTAINER_CLIP_RENDER_BLENDER
+        return job_proxy
+        
     def _launch_render(self, clip, range_in, range_out, clip_start_offset):
         self.create_data_dirs_if_needed()
         self.render_range_in = range_in
@@ -717,6 +732,7 @@ class ContainerStatusPollingThread(threading.Thread):
                     
                 
             time.sleep(1.0)
+
 
     def shutdown(self):
         for poll_obj in self.poll_objects:

@@ -75,7 +75,7 @@ stack_dnd_state = NOT_ON
 stack_dnd_event_time = 0.0
 stack_dnd_event_info = None
 
-filters_notebook_index = 2
+filters_notebook_index = 2 # 2 for single window, app.py sets to 1 for two windows
 
 def shutdown_polling():
     global _edit_polling_thread
@@ -202,7 +202,7 @@ def set_clip(new_clip, new_track, new_index, show_tab=True):
         effect_selection_changed()
 
     if show_tab:
-        gui.middle_notebook.set_current_page(filters_notebook_index) # 2 == index of clipeditor page in notebook
+        gui.middle_notebook.set_current_page(filters_notebook_index)
     
     
     global _edit_polling_thread

@@ -64,6 +64,7 @@ import editorstate
 import editorwindow
 import gmic
 import gui
+import jobs
 import keyevents
 import keyframeeditor
 import keyframeeditcanvas
@@ -164,7 +165,7 @@ def main(root_path):
     except:
         editorstate.mlt_version = "0.0.99" # magic string for "not found"
 
-    # Create user folders if needed and determine if we're using xdg or dotfile userf folders.
+    # Create user folders if needed and determine if we're using xdg or dotfile user folders.
     userfolders.init()
 
     # Set paths.
@@ -462,6 +463,7 @@ def create_gui():
         medialog.range_log_notebook_index = 0
         compositeeditor.compositor_notebook_index = 2
         clipeffectseditor.filters_notebook_index = 1
+        jobs.jobs_notebook_index = 3
 
     # Create window and all child components
     editor_window = editorwindow.EditorWindow()

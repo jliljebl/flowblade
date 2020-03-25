@@ -27,17 +27,21 @@ import copy
 import time
 
 import editorpersistance
+import gui
 import guicomponents
 import guiutils
 import utils
 
-RENDERING = 0
-COMPLETE = 1
-ABORTED = 2
+QUEUED = 0
+RENDERING = 1
+COMPLETE = 2
+CANCELLED = 3
 
 NOT_SET_YET = 0
-CONTAINER_CLIP_RENDER = 1
-PROXY_RENDER = 2
+CONTAINER_CLIP_RENDER_GMIC = 1
+CONTAINER_CLIP_RENDER_MLT_XML = 2
+CONTAINER_CLIP_RENDER_BLENDER = 1
+
 
 _hamburger_menu = Gtk.Menu()
 
@@ -45,6 +49,7 @@ _jobs_list_view = None
 
 _jobs = [] # proxy objects that represent background renders and provide info on render status.
 
+jobs_notebook_index = 4 # 4 for single window, app.py sets to 3 for two windows
 
 
 class JobProxy: # Background renders provide these to give info on render status.
@@ -66,31 +71,45 @@ class JobProxy: # Background renders provide these to give info on render status
         return utils.get_time_str_for_sec_float(self.elapsed)
 
     def get_type_str(self):
+        c_clip_str = _("Container Clip")
         if self.type == NOT_SET_YET:
             return "NO TYPE SET" # this just error info, application has done something wrong.
-        elif self.type == CONTAINER_CLIP_RENDER:
-            return _("Container Clip")
-    
+        elif self.type == CONTAINER_CLIP_RENDER_GMIC:
+            return c_clip_str + " " +  "G'Mic"
+        elif self.type == CONTAINER_CLIP_RENDER_MLT_XML:
+            return  c_clip_str + " " +  "MLT XML"
+        elif self.type == CONTAINER_CLIP_RENDER_BLENDER:
+            return c_clip_str + " " + "Blender"
+            
     def get_progress_str(self):
+        if self.progress < 0.0:
+            return "-"
         return str(int(self.progress * 100.0)) + "%"
 
     def abort_render(self):
         self.callback_object.abort_render()
 
-#---------------------------------------------------------------- INTERFACE
+
+#---------------------------------------------------------------- interface
 def add_job(job_proxy):
-    global _jobs
+    global _jobs, _jobs_list_view 
     _jobs.insert(0, job_proxy)
     _jobs_list_view.fill_data_model()
+    if editorpersistance.prefs.open_jobs_panel_on_add == True:
+        gui.middle_notebook.set_current_page(jobs_notebook_index)
     
-def show_message(update_job_proxy):
+def show_message(update_msg_job_proxy): # We're using JobProxy objects as messages to update values on jos in _jobs list.
+    global _jobs_list_view 
     row = -1
     job_proxy = None  
     for i in range (0, len(_jobs)):
-        job_proxy = _jobs[i]
-        if job_proxy.proxy_uid == update_job_proxy.proxy_uid:
+        #job_proxy = _jobs[i]
+
+        if _jobs[i].proxy_uid == update_msg_job_proxy.proxy_uid:
+            if _jobs[i].status == CANCELLED:
+                return # it is maybe possible to get update attempt here after cancellation.         
             # Update job proxy info and remember row
-            job_proxy = copy.copy(update_job_proxy)
+            #job_proxy = copy.copy(update_job_proxy)
             row = i
             break
 
@@ -99,13 +118,18 @@ def show_message(update_job_proxy):
         print("trying to update non-existing job at jobs.show_message()!")
         return
 
+    # Copy values
+    _jobs[row].text = update_msg_job_proxy.text
+    _jobs[row].elapsed = update_msg_job_proxy.elapsed
+    _jobs[row].progress = update_msg_job_proxy.progress
+  
     tree_path = Gtk.TreePath.new_from_string(str(row))
     store_iter = _jobs_list_view.storemodel.get_iter(tree_path)
 
-    _jobs_list_view.storemodel.set_value(store_iter, 0, job_proxy.get_type_str())
-    _jobs_list_view.storemodel.set_value(store_iter, 1, job_proxy.text)
-    _jobs_list_view.storemodel.set_value(store_iter, 2, job_proxy.get_elapsed_str())
-    _jobs_list_view.storemodel.set_value(store_iter, 3, job_proxy.get_progress_str())
+    _jobs_list_view.storemodel.set_value(store_iter, 0, _jobs[row].get_type_str())
+    _jobs_list_view.storemodel.set_value(store_iter, 1, _jobs[row].text)
+    _jobs_list_view.storemodel.set_value(store_iter, 2, _jobs[row].get_elapsed_str())
+    _jobs_list_view.storemodel.set_value(store_iter, 3, _jobs[row].get_progress_str())
 
     _jobs_list_view.scroll.queue_draw()
 
@@ -131,23 +155,21 @@ def get_jobs_panel():
 
     return panel
 
+# ------------------------------------------------------------- module functions
 def _menu_action_pressed(widget, event):
     menu = _hamburger_menu
     guiutils.remove_children(menu)
 
     menu.add(guiutils.get_menu_item(_("Cancel All Renders"), _hamburger_item_activated, "cancel_all"))
-    """
-    menu.add(_get_menu_item(_("Load Effect Values"), callback, "load"))
-    menu.add(_get_menu_item(_("Reset Effect Values"), callback, "reset"))
     
-    _add_separetor(menu)
+    guiutils.add_separetor(menu)
     
-    menu.add(_get_menu_item(_("Delete Effect"), callback, "delete"))
+    open_on_add_item = Gtk.CheckMenuItem()
+    open_on_add_item.set_label(_("Show Jobs Panel on Adding New Job"))
+    open_on_add_item.set_active(editorpersistance.prefs.open_jobs_panel_on_add)
+    open_on_add_item.connect("activate", _hamburger_item_activated, "open_on_add")
 
-    _add_separetor(menu)
-    
-    menu.add(_get_menu_item(_("Close Editor"), callback, "close"))
-    """
+    menu.add(open_on_add_item)
     
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
@@ -156,10 +178,24 @@ def _hamburger_item_activated(widget, msg):
     if msg == "cancel_all":
         for job in _jobs:
             job.abort_render()
+            job.progress = -1.0
+            job.text = _("Cancelled")
+            job.status = CANCELLED
+            print("cancelling", job)
 
+        _jobs_list_view.fill_data_model()
+        _jobs_list_view.scroll.queue_draw()
+        
+    elif msg == "open_on_add":
+        editorpersistance.prefs.open_jobs_panel_on_add = widget.get_active()
+        editorpersistance.save()
 
+"""
+def _get_cancelled_job_proxy(job):
+    job = JobProxy
+"""
 
-
+# --------------------------------------------------------- GUI 
 class JobsQueueView(Gtk.VBox):
 
     def __init__(self):

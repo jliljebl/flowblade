@@ -71,14 +71,13 @@ _gmic_version = None
 _render_thread = None
 
 
-# ----------------------------------------------------- module interface with message files
+# ----------------------------------------------------- module interface to render process with message files
 # We are using message files to communicate with application.
 def clear_flag_files(session_id):
     ccrutils.clear_flag_files(session_id)
     
 def set_render_data(session_id, video_render_data):
     ccrutils.set_render_data(session_id, video_render_data)
-    print("set_render_data", session_id, video_render_data)
     
 def session_render_complete(session_id):
     return ccrutils.session_render_complete(session_id)
@@ -95,7 +94,7 @@ def abort_render(session_id):
     ccrutils.abort_render(session_id)
 
 
-# --------------------------------------------------- render thread launch
+# --------------------------------------------------- render launch
 def main(root_path, session_id, script, clip_path, range_in, range_out, profile_desc, gmic_frame_offset):
     
     os.nice(10) # make user configurable

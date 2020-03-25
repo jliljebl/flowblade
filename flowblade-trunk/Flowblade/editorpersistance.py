@@ -22,12 +22,6 @@
 Module handles saving and loading data that is related to the editor and not any particular project.
 """
 
-"""
-    Change History:
-        Aug-2019 - SvdB - AS:
-            Save value of Autosave preference.
-            See preferenceswindow.py for more info
-"""
 import os
 import pickle
 
@@ -352,4 +346,4 @@ class EditorPreferences:
         self.default_render_directory = appconsts.USER_HOME_DIR
         self.tline_render_encoding = 0 # index of available proxy encodings, timeline rendering uses same encodings.
         self.tline_render_size = appconsts.PROXY_SIZE_FULL
-
+        self.open_jobs_panel_on_add = True
