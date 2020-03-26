@@ -39,11 +39,12 @@ _panels = None
 
 class DiskFolderManagementPanel:
     
-    def __init__(self, xdg_folder, folder, info_text, warning_level):
+    def __init__(self, xdg_folder, folder, info_text, warning_level, recursive=False):
         self.xdg_folder = xdg_folder
         self.folder = folder
         self.warning_level = warning_level
-                
+        self.recursive = recursive
+        
         self.destroy_button = Gtk.Button(_("Destroy data"))
         self.destroy_button.connect("clicked", self.destroy_pressed)
         self.destroy_guard_check = Gtk.CheckButton()
@@ -84,12 +85,21 @@ class DiskFolderManagementPanel:
     def get_folder_files(self):
         data_folder = self.get_disk_folder()
         return [f for f in listdir(data_folder) if isfile(join(data_folder, f))]
-    
+        
+    def get_folder_contents(self, folder):
+        return os.listdir(self.get_disk_folder())
+        
     def get_folder_size(self):
-        files = self.get_folder_files()
+        return self.get_folder_sizes_recursively(self.get_disk_folder())
+    
+    def get_folder_sizes_recursively(self, folder):
+        files = os.listdir(folder)
         size = 0
         for f in files:
-            size += os.path.getsize(self.get_disk_folder() +"/" + f)
+            if os.path.isdir(folder + "/" + f) and self.recursive == True:
+                size += self.get_folder_sizes_recursively(folder + "/" + f)
+            else:
+                size += os.path.getsize(folder +"/" + f)
         return size
 
     def get_folder_size_str(self):
@@ -132,15 +142,23 @@ class DiskFolderManagementPanel:
         self.destroy_data()
     
     def destroy_data(self):
-        print("deleting ", self.folder)
-        
-        files = self.get_folder_files()
+        print("deleting", self.folder)
+        self.destroy_recursively(self.get_disk_folder())
+
+    def destroy_recursively(self, folder):
+        files = os.listdir(folder)
         for f in files:
-            os.remove(self.get_disk_folder() +"/" + f)
+            file_path = folder + "/" + f
+            if os.path.isdir(file_path) == True:
+                if self.recursive == True:
+                    self.destroy_recursively(file_path)
+                    os.rmdir(file_path)
+            else:
+                os.remove(file_path)
 
         self.size_info.set_text(self.get_folder_size_str())
         self.size_info.queue_draw()
-            
+
 def show_disk_management_dialog():
     dialog = Gtk.Dialog(_("Disk Cache Manager"), None,
                     Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
@@ -169,6 +187,7 @@ def _get_disk_dir_panels():
     panels.append(DiskFolderManagementPanel(userfolders.get_cache_dir(), appconsts.GMIC_DIR, _("G'Mic Tool Session Data"), NO_WARNING))
     panels.append(DiskFolderManagementPanel(userfolders.get_data_dir(), appconsts.RENDERED_CLIPS_DIR, _("Rendered Files"), PROJECT_DATA_WARNING))
     panels.append(DiskFolderManagementPanel(userfolders.get_render_dir(), "/" + appconsts.PROXIES_DIR, _("Proxy Files"), PROJECT_DATA_WARNING))
+    panels.append(DiskFolderManagementPanel(userfolders.get_data_dir(), appconsts.CONTAINER_CLIPS_DIR, _("Container Clips"), PROJECT_DATA_WARNING, True))
     panels.append(DiskFolderManagementPanel(userfolders.get_cache_dir(), appconsts.THUMBNAILS_DIR, _("Thumbnails"), RECREATE_WARNING))
     panels.append(DiskFolderManagementPanel(userfolders.get_data_dir(), appconsts.USER_PROFILES_DIR_NO_SLASH, _("User Created Custom Profiles"), PROJECT_DATA_WARNING))
 

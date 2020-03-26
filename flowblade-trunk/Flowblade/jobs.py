@@ -185,7 +185,7 @@ def get_jobs_panel():
 def _menu_action_pressed(widget, event):
     menu = _hamburger_menu
     guiutils.remove_children(menu)
-
+    menu.add(guiutils.get_menu_item(_("Cancel Selected Render"), _hamburger_item_activated, "cancel_selected"))
     menu.add(guiutils.get_menu_item(_("Cancel All Renders"), _hamburger_item_activated, "cancel_all"))
     
     guiutils.add_separetor(menu)
@@ -220,6 +220,20 @@ def _hamburger_item_activated(widget, msg):
         _jobs_list_view.scroll.queue_draw()
         GObject.timeout_add(4000, _remove_jobs)
 
+    elif msg == "cancel_selected":
+        jobs_list_index = _jobs_list_view.get_selected_row_index()
+        
+        job = _jobs[jobs_list_index]
+        job.abort_render()
+        job.progress = -1.0
+        job.text = _("Cancelled")
+        job.status = CANCELLED
+        _remove_list.append(job)
+
+        _jobs_list_view.fill_data_model()
+        _jobs_list_view.scroll.queue_draw()
+        GObject.timeout_add(4000, _remove_jobs)
+        
     elif msg == "open_on_add":
         editorpersistance.prefs.open_jobs_panel_on_add = widget.get_active()
         editorpersistance.save()
@@ -316,6 +330,10 @@ class JobsQueueView(Gtk.VBox):
         self.scroll.show_all()
         self.show_all()
 
+    def get_selected_row_index(self):
+        model, rows = self.treeview.get_selection().get_selected_rows()
+        return int(rows[0].to_string ())
+        
     def fill_data_model(self):
         self.storemodel.clear()        
         
