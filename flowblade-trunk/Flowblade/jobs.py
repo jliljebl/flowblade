@@ -34,7 +34,7 @@ import utils
 
 QUEUED = 0
 RENDERING = 1
-COMPLETE = 2
+COMPLETED = 2
 CANCELLED = 3
 
 NOT_SET_YET = 0
@@ -48,6 +48,8 @@ _hamburger_menu = Gtk.Menu()
 _jobs_list_view = None
 
 _jobs = [] # proxy objects that represent background renders and provide info on render status.
+
+_remove_list = [] # objects are removed from GUI with delay to give user time to notice copmpletion
 
 jobs_notebook_index = 4 # 4 for single window, app.py sets to 3 for two windows
 
@@ -98,8 +100,8 @@ def add_job(job_proxy):
     if editorpersistance.prefs.open_jobs_panel_on_add == True:
         gui.middle_notebook.set_current_page(jobs_notebook_index)
     
-def show_message(update_msg_job_proxy): # We're using JobProxy objects as messages to update values on jos in _jobs list.
-    global _jobs_list_view 
+def show_message(update_msg_job_proxy): # We're using JobProxy objects as messages to update values on jobs in _jobs list.
+    global _jobs_list_view, _remove_list
     row = -1
     job_proxy = None  
     for i in range (0, len(_jobs)):
@@ -122,7 +124,14 @@ def show_message(update_msg_job_proxy): # We're using JobProxy objects as messag
     _jobs[row].text = update_msg_job_proxy.text
     _jobs[row].elapsed = update_msg_job_proxy.elapsed
     _jobs[row].progress = update_msg_job_proxy.progress
-  
+
+    if update_msg_job_proxy.status == COMPLETED:
+        _jobs[row].status = COMPLETED
+        _jobs[row].text = _("Completed")
+        _jobs[row].progress = 1.0
+        _remove_list.append(_jobs[row])
+        GObject.timeout_add(2000, _remove_jobs)
+        
     tree_path = Gtk.TreePath.new_from_string(str(row))
     store_iter = _jobs_list_view.storemodel.get_iter(tree_path)
 
@@ -176,25 +185,30 @@ def _menu_action_pressed(widget, event):
 
 def _hamburger_item_activated(widget, msg):
     if msg == "cancel_all":
+        global _jobs, _remove_list
+        _remove_list = []
         for job in _jobs:
             job.abort_render()
             job.progress = -1.0
             job.text = _("Cancelled")
             job.status = CANCELLED
-            print("cancelling", job)
+            _remove_list.append(job)
 
         _jobs_list_view.fill_data_model()
         _jobs_list_view.scroll.queue_draw()
-        
+        GObject.timeout_add(2000, _remove_jobs)
+
     elif msg == "open_on_add":
         editorpersistance.prefs.open_jobs_panel_on_add = widget.get_active()
         editorpersistance.save()
 
-"""
-def _get_cancelled_job_proxy(job):
-    job = JobProxy
-"""
-
+def _remove_jobs():
+    global _jobs, _remove_list
+    for  job in _remove_list:
+        _jobs.remove(job)
+        
+    _jobs_list_view.fill_data_model()
+    _jobs_list_view.scroll.queue_draw()
 # --------------------------------------------------------- GUI 
 class JobsQueueView(Gtk.VBox):
 

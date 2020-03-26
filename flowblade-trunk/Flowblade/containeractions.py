@@ -19,6 +19,7 @@
 """
 from gi.repository import Gtk
 from gi.repository import Gdk
+from gi.repository import GLib
 
 import cairo
 import copy
@@ -201,6 +202,14 @@ class AbstractContainerActionObject:
         job_proxy.type = jobs.CONTAINER_CLIP_RENDER
         return job_proxy
 
+    def get_completed_job_proxy(self):
+        job_proxy = self.get_job_proxy()
+        job_proxy.status = jobs.COMPLETED
+        job_proxy.progress = 1.0
+        job_proxy.elapsed = 0.0 # jobs does not use this value
+        job_proxy.text = "dummy" # this will be overwritten with completion message
+        return job_proxy
+        
     def get_container_clips_dir(self):
         return userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_DIR
 
@@ -242,7 +251,7 @@ class AbstractContainerActionObject:
     def abort_render(self):
         print("AbstractContainerActionObject.abort_render not impl")
 
-    def create_producer_and_do_update_edit(self):
+    def create_producer_and_do_update_edit(self, unused_data):
         # Using frame sequence as clip
         if  self.container_data.render_data.do_video_render == False:
             resource_path = self.get_rendered_frame_sequence_resource_path()
@@ -433,46 +442,12 @@ class GMicContainerActions(AbstractContainerActionObject):
                     
         if gmicheadless.session_render_complete(self.get_container_program_id()) == True:
             self.remove_as_status_polling_object()
-
-            # Using frame sequence as clip
-            if  self.container_data.render_data.do_video_render == False:
-                resource_path = self.get_rendered_frame_sequence_resource_path()
-                if resource_path == None:
-                    return # TODO: User info?
-
-                rendered_clip = current_sequence().create_file_producer_clip(resource_path, new_clip_name=None, novalidate=False, ttl=1)
-                
-            # Using video clip as clip
-            else:
-                if self.container_data.render_data.save_internally == True:
-                    resource_path = self.get_session_dir() +  "/" + appconsts.CONTAINER_CLIP_VIDEO_CLIP_NAME + self.container_data.render_data.file_extension
-                else:
-                    resource_path = self.container_data.render_data.render_dir +  "/" + self.container_data.render_data.file_name + self.container_data.render_data.file_extension
-
-                rendered_clip = current_sequence().create_file_producer_clip(resource_path, new_clip_name=None, novalidate=True, ttl=1)
             
-            track, clip_index = current_sequence().get_track_and_index_for_id(self.clip.id)
+            job_proxy = self.get_completed_job_proxy()
+            jobs.show_message(job_proxy)
             
-            # Check if container clip still on timeline
-            if track == None:
-                # clip was removed from timeline
-                # TODO: infowindow?
-                return
-            
-            # Do replace edit
-            data = {"old_clip":self.clip,
-                    "new_clip":rendered_clip,
-                    "rendered_media_path":resource_path,
-                    "track":track,
-                    "index":clip_index}
-                    
-            if self.render_type == FULL_RENDER: # unrendered -> fullrender
-                action = edit.container_clip_full_render_replace(data)
-                action.do_edit()
-            else:  # unrendered -> clip render
-                action = edit.container_clip_clip_render_replace(data)
-                action.do_edit()
-                
+            GLib.idle_add(self.create_producer_and_do_update_edit, None)
+
         else:
             status = gmicheadless.get_session_status(self.get_container_program_id())
             if status != None:
@@ -589,7 +564,10 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
         if mltxmlheadless.session_render_complete(self.get_container_program_id()) == True:
             self.remove_as_status_polling_object()
 
-            self.create_producer_and_do_update_edit()
+            job_proxy = self.get_completed_job_proxy()
+            jobs.show_message(job_proxy)
+            
+            GLib.idle_add(self.create_producer_and_do_update_edit, None)
                 
         else:
             status = mltxmlheadless.get_session_status(self.get_container_program_id())
