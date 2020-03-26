@@ -347,3 +347,4 @@ class EditorPreferences:
         self.tline_render_encoding = 0 # index of available proxy encodings, timeline rendering uses same encodings.
         self.tline_render_size = appconsts.PROXY_SIZE_FULL
         self.open_jobs_panel_on_add = True
+        self.render_jobs_sequentially = True

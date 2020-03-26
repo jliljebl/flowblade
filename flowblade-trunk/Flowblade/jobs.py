@@ -66,6 +66,7 @@ class JobProxy: # Background renders provide these to give info on render status
         self.elapsed = 0.0 # in fractional seconds
 
         # callback_object reqiured to implement interface:
+        #     start_render()
         #     abort_render()
         self.callback_object = callback_object
 
@@ -88,6 +89,9 @@ class JobProxy: # Background renders provide these to give info on render status
             return "-"
         return str(int(self.progress * 100.0)) + "%"
 
+    def start_render(self):
+        self.callback_object.start_render()
+        
     def abort_render(self):
         self.callback_object.abort_render()
 
@@ -95,12 +99,19 @@ class JobProxy: # Background renders provide these to give info on render status
 #---------------------------------------------------------------- interface
 def add_job(job_proxy):
     global _jobs, _jobs_list_view 
-    _jobs.insert(0, job_proxy)
+    _jobs.append(job_proxy)
     _jobs_list_view.fill_data_model()
     if editorpersistance.prefs.open_jobs_panel_on_add == True:
         gui.middle_notebook.set_current_page(jobs_notebook_index)
     
-def show_message(update_msg_job_proxy): # We're using JobProxy objects as messages to update values on jobs in _jobs list.
+    if editorpersistance.prefs.render_jobs_sequentially == False:
+        job_proxy.start_render()
+    else:
+         running = _get_jobs_with_status(RENDERING)
+         if len(running) == 0:
+             job_proxy.start_render()
+            
+def update_job_queue(update_msg_job_proxy): # We're using JobProxy objects as messages to update values on jobs in _jobs list.
     global _jobs_list_view, _remove_list
     row = -1
     job_proxy = None  
@@ -130,8 +141,13 @@ def show_message(update_msg_job_proxy): # We're using JobProxy objects as messag
         _jobs[row].text = _("Completed")
         _jobs[row].progress = 1.0
         _remove_list.append(_jobs[row])
-        GObject.timeout_add(2000, _remove_jobs)
-        
+        GObject.timeout_add(4000, _remove_jobs)
+        waiting_jobs = _get_jobs_with_status(QUEUED)
+        if len(waiting_jobs) > 0:
+            waiting_jobs[0].start_render()
+    else:
+        _jobs[row].status = update_msg_job_proxy.status
+
     tree_path = Gtk.TreePath.new_from_string(str(row))
     store_iter = _jobs_list_view.storemodel.get_iter(tree_path)
 
@@ -164,6 +180,7 @@ def get_jobs_panel():
 
     return panel
 
+
 # ------------------------------------------------------------- module functions
 def _menu_action_pressed(widget, event):
     menu = _hamburger_menu
@@ -172,12 +189,17 @@ def _menu_action_pressed(widget, event):
     menu.add(guiutils.get_menu_item(_("Cancel All Renders"), _hamburger_item_activated, "cancel_all"))
     
     guiutils.add_separetor(menu)
+
+    sequential_render_item = Gtk.CheckMenuItem()
+    sequential_render_item.set_label(_("Render All Jobs Sequentially"))
+    sequential_render_item.set_active(editorpersistance.prefs.render_jobs_sequentially)
+    sequential_render_item.connect("activate", _hamburger_item_activated, "sequential_render")
+    menu.add(sequential_render_item)
     
     open_on_add_item = Gtk.CheckMenuItem()
     open_on_add_item.set_label(_("Show Jobs Panel on Adding New Job"))
     open_on_add_item.set_active(editorpersistance.prefs.open_jobs_panel_on_add)
     open_on_add_item.connect("activate", _hamburger_item_activated, "open_on_add")
-
     menu.add(open_on_add_item)
     
     menu.show_all()
@@ -187,7 +209,7 @@ def _hamburger_item_activated(widget, msg):
     if msg == "cancel_all":
         global _jobs, _remove_list
         _remove_list = []
-        for job in _jobs:
+        for job in _get_jobs_with_status(RENDERING):
             job.abort_render()
             job.progress = -1.0
             job.text = _("Cancelled")
@@ -196,19 +218,34 @@ def _hamburger_item_activated(widget, msg):
 
         _jobs_list_view.fill_data_model()
         _jobs_list_view.scroll.queue_draw()
-        GObject.timeout_add(2000, _remove_jobs)
+        GObject.timeout_add(4000, _remove_jobs)
 
     elif msg == "open_on_add":
         editorpersistance.prefs.open_jobs_panel_on_add = widget.get_active()
         editorpersistance.save()
 
+    elif msg == "sequential_render":
+        editorpersistance.prefs.render_jobs_sequentially = widget.get_active()
+        editorpersistance.save()
+
+def _get_jobs_with_status(status):
+    running = []
+    for job in _jobs:
+        if job.status == status:
+            running.append(job)
+    
+    return running
+
 def _remove_jobs():
     global _jobs, _remove_list
     for  job in _remove_list:
         _jobs.remove(job)
-        
+
     _jobs_list_view.fill_data_model()
     _jobs_list_view.scroll.queue_draw()
+
+    _remove_list = []
+
 # --------------------------------------------------------- GUI 
 class JobsQueueView(Gtk.VBox):
 

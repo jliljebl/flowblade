@@ -233,8 +233,7 @@ def _blender_clip_create_dialog_callback(dialog, response_id, data):
         #blenderclipedit.show_project_editor_manager_dialog(container_clip_data)
 
 
-# ---------------------------------------------------------------- MEDIA FILE OBJECTS
-# BTW, we're not getting any action from extending classes because all code is in action objects, look to kill them.
+# ---------------------------------------------------------------- MEDIA FILE OBJECT
 
 class ContainerClipMediaItem:
     """
@@ -274,27 +273,5 @@ class ContainerClipMediaItem:
         self.length = length
         self.container_data.unrendered_length = length - 1
 
-"""
-class GMicContainerClip(AbstractBinContainerClip):
-
-    def __init__(self, media_item_id, name, container_data):
-
-        AbstractBinContainerClip.__init__(self, media_item_id, name, container_data)
-
-
-
-class MLTXMLContainerClip(AbstractBinContainerClip):
-
-    def __init__(self, media_item_id, name, container_data):
-
-        AbstractBinContainerClip.__init__(self, media_item_id, name, container_data)
-
-
-class BlenderContainerClip(AbstractBinContainerClip):
-
-    def __init__(self, media_item_id, name, container_data):
-
-        AbstractBinContainerClip.__init__(self, media_item_id, name, container_data)
-"""
 
 

@@ -167,16 +167,31 @@ class AbstractContainerActionObject:
     def render_full_media(self, clip):
         self.render_type = FULL_RENDER
         self.clip = clip
-        self._launch_render(clip, 0, self.container_data.unrendered_length, 0)
+        self.launch_render_data = (clip, 0, self.container_data.unrendered_length, 0)
+        #self._launch_render(clip, 0, self.container_data.unrendered_length, 0)
+
+        job_proxy = self.get_launch_job_proxy()
+        jobs.add_job(job_proxy)
 
         self.add_as_status_polling_object()
-
+        
+        # Render starts on callback from jobs.py to AbstractContainerActionObject.start_render()
+        
     def render_clip_length_media(self, clip):
         self.render_type = CLIP_LENGTH_RENDER
         self.clip = clip
-        self._launch_render(clip, clip.clip_in, clip.clip_out + 1, clip.clip_in)
-
+        self.launch_render_data = (clip, clip.clip_in, clip.clip_out + 1, clip.clip_in)
+        #self._launch_render(clip, clip.clip_in, clip.clip_out + 1, clip.clip_in)
+        job_proxy = self.get_launch_job_proxy()
+        jobs.add_job(job_proxy)
+        
         self.add_as_status_polling_object()
+        
+        # Render starts on callback from jobs.py to AbstractContainerActionObject.start_render()
+
+    def start_render(self):
+        clip, range_in, range_out, clip_start_offset = self.launch_render_data
+        self._launch_render(clip, range_in, range_out, clip_start_offset)
 
     def _launch_render(self, clip, range_in, range_out, clip_start_offset):
         print("AbstractContainerActionObject._launch_render() not impl")
@@ -202,6 +217,14 @@ class AbstractContainerActionObject:
         job_proxy.type = jobs.CONTAINER_CLIP_RENDER
         return job_proxy
 
+    def get_launch_job_proxy(self):
+        job_proxy = self.get_job_proxy()
+        job_proxy.status = jobs.QUEUED
+        job_proxy.progress = 0.0
+        job_proxy.elapsed = 0.0 # jobs does not use this value
+        job_proxy.text = _("Waiting to render") + " " + self.get_job_name()
+        return job_proxy
+        
     def get_completed_job_proxy(self):
         job_proxy = self.get_job_proxy()
         job_proxy.status = jobs.COMPLETED
@@ -209,7 +232,10 @@ class AbstractContainerActionObject:
         job_proxy.elapsed = 0.0 # jobs does not use this value
         job_proxy.text = "dummy" # this will be overwritten with completion message
         return job_proxy
-        
+
+    def get_job_name(self):
+        return "get_job_name not impl"
+
     def get_container_clips_dir(self):
         return userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_DIR
 
@@ -389,7 +415,10 @@ class GMicContainerActions(AbstractContainerActionObject):
         job_proxy = jobs.JobProxy(self.get_container_program_id(), self)
         job_proxy.type = jobs.CONTAINER_CLIP_RENDER_GMIC
         return job_proxy
-        
+
+    def get_job_name(self):
+        return self.container_data.get_unrendered_media_name()
+
     def switch_to_unrendered_media(self, rendered_clip):
         unrendered_clip = current_sequence().create_file_producer_clip(self.container_data.unrendered_media, new_clip_name=None, novalidate=True, ttl=1)
         track, clip_index = current_sequence().get_track_and_index_for_id(rendered_clip.id)
@@ -418,7 +447,8 @@ class GMicContainerActions(AbstractContainerActionObject):
         
         job_proxy = self.get_job_proxy()
         job_proxy.text = _("Render Starting..")
-        jobs.add_job(job_proxy)
+        job_proxy.status = jobs.RENDERING
+        jobs.update_job_queue(job_proxy)
         
         args = ("session_id:" + self.get_container_program_id(), 
                 "script:" + self.container_data.program,
@@ -444,7 +474,7 @@ class GMicContainerActions(AbstractContainerActionObject):
             self.remove_as_status_polling_object()
             
             job_proxy = self.get_completed_job_proxy()
-            jobs.show_message(job_proxy)
+            jobs.update_job_queue(job_proxy)
             
             GLib.idle_add(self.create_producer_and_do_update_edit, None)
 
@@ -463,7 +493,9 @@ class GMicContainerActions(AbstractContainerActionObject):
                      msg += _("Rendering G'Mic Script")
                 else:
                      msg += _("Encoding Video")
-                     
+                
+                msg += " " + self.get_job_name()
+                
                 job_proxy = self.get_job_proxy()
                 if self.render_type == FULL_RENDER:
                     job_proxy.progress = float(frame)/float(length)
@@ -483,11 +515,11 @@ class GMicContainerActions(AbstractContainerActionObject):
                     if job_proxy.progress > 1.0:
                         # hack to fix how progress is caculated in gmicheadless because producers can render a bit longer then required.
                         job_proxy.progress = 1.0
-                        
+
                 job_proxy.elapsed = float(elapsed)
                 job_proxy.text = msg
                 
-                jobs.show_message(job_proxy)
+                jobs.update_job_queue(job_proxy)
             else:
                 pass # This can happen sometimes before gmicheadless.py has written a status message, we just do nothing here.
 
@@ -540,8 +572,9 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
         
         job_proxy = self.get_job_proxy()
         job_proxy.text = _("Render Starting..")
-        jobs.add_job(job_proxy)
-        
+        job_proxy.status = jobs.RENDERING
+        jobs.update_job_queue(job_proxy)
+
         args = ("session_id:" + self.get_container_program_id(), 
                 "clip_path:" + self.container_data.unrendered_media,
                 "range_in:" + str(range_in),
@@ -565,7 +598,7 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
             self.remove_as_status_polling_object()
 
             job_proxy = self.get_completed_job_proxy()
-            jobs.show_message(job_proxy)
+            jobs.update_job_queue(job_proxy)
             
             GLib.idle_add(self.create_producer_and_do_update_edit, None)
                 
@@ -585,7 +618,7 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
                 job_proxy.elapsed = float(elapsed)
                 job_proxy.text = msg
                 
-                jobs.show_message(job_proxy)
+                jobs.update_job_queue(job_proxy)
             else:
                 pass # This can happen sometimes before gmicheadless.py has written a status message, we just do nothing here.
                 
