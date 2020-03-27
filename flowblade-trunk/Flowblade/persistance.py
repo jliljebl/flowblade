@@ -611,10 +611,12 @@ def fill_track_mlt(mlt_track, py_track):
         if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):
             orig_path = clip.path # Save the path for error message
 
-            if clip.media_type != appconsts.IMAGE_SEQUENCE:
-                clip.path = get_media_asset_path(clip.path, _load_file_path)
-            else:
-                clip.path = get_img_seq_media_path(clip.path, _load_file_path)
+            # Possibly do a relative file search to all but rendered container clip media, that needs to be re-rendered.
+            if not(clip.container_data != None and clip.container_data.rendered_media != None):
+                if clip.media_type != appconsts.IMAGE_SEQUENCE:
+                    clip.path = get_media_asset_path(clip.path, _load_file_path)
+                else:
+                    clip.path = get_img_seq_media_path(clip.path, _load_file_path)
 
             # Try to fix possible missing proxy files for clips if we are in proxy mode.
             if not os.path.isfile(clip.path) and project_proxy_mode == appconsts.USE_PROXY_MEDIA:
@@ -624,6 +626,12 @@ def fill_track_mlt(mlt_track, py_track):
                         clip.path = possible_orig_file_path
                 except:
                     pass # missing proxy file fix has failed
+
+            # If container clip rendered media is missing try to use unredered media.
+            if not os.path.isfile(clip.path) and clip.container_data != None:
+                if clip.path != clip.container_data.unrendered_media:
+                    clip.path = clip.container_data.unrendered_media
+                    clip.container_data.clear_rendered_media()
                     
             mlt_clip = sequence.create_file_producer_clip(clip.path, None, False, clip.ttl)
             
