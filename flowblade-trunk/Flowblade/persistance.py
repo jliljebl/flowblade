@@ -627,7 +627,7 @@ def fill_track_mlt(mlt_track, py_track):
                 except:
                     pass # missing proxy file fix has failed
 
-            # If container clip rendered media is missing try to use unredered media.
+            # If container clip rendered media is missing try to use unrendered media.
             if not os.path.isfile(clip.path) and clip.container_data != None:
                 if clip.path != clip.container_data.unrendered_media:
                     clip.path = clip.container_data.unrendered_media

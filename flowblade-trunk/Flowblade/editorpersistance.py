@@ -174,7 +174,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
 
     # Aug-2019 - SvdB - AS - added autosave_combo
     default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin, load_order_combo, \
-        autosave_combo, render_folder_select = gen_opts_widgets
+        autosave_combo, render_folder_select, disk_cache_warning_combo = gen_opts_widgets
 
     # Jul-2016 - SvdB - Added play_pause_button
     # Apr-2017 - SvdB - Added ffwd / rev values
@@ -243,6 +243,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.layout_display_index = layout_monitor.get_active()
     if len(render_folder_select.get_filenames()) != 0:
         prefs.default_render_directory = render_folder_select.get_filename()
+    prefs.disk_space_warning = disk_cache_warning_combo.get_active()
 
 def get_graphics_default_in_out_length():
     in_fr = int(15000/2) - int(prefs.default_grfx_length/2)
@@ -348,3 +349,4 @@ class EditorPreferences:
         self.tline_render_size = appconsts.PROXY_SIZE_FULL
         self.open_jobs_panel_on_add = True
         self.render_jobs_sequentially = True
+        self.disk_space_warning = 1 #  [off, 500MB,1GB, 2GB], see preferenceswindow.py

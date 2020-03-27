@@ -127,6 +127,13 @@ def _general_options_panel():
     else:
         render_folder_select.set_current_folder_uri(prefs.default_render_directory)
 
+    disk_cache_warning_combo  = Gtk.ComboBoxText()
+    disk_cache_warning_combo.append_text(_("Off"))
+    disk_cache_warning_combo.append_text(_("500 MB"))
+    disk_cache_warning_combo.append_text(_("1 GB"))
+    disk_cache_warning_combo.append_text(_("2 GB"))
+    disk_cache_warning_combo.set_active(prefs.disk_space_warning)
+    
     # Layout
     row1 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Default Profile:")), default_profile_combo, PREFERENCES_LEFT))
     row2 = _row(guiutils.get_checkbox_row_box(open_in_last_opened_check, Gtk.Label(label=_("Remember last media directory"))))
@@ -135,6 +142,7 @@ def _general_options_panel():
     row6 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Autosave for crash recovery every:")), autosave_combo, PREFERENCES_LEFT))
     row9 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Media look-up order on load:")), load_order_combo, PREFERENCES_LEFT))
     row10 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Default render directory:")), render_folder_select, PREFERENCES_LEFT))
+    row11 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Warning on Disk Cache Size:")), disk_cache_warning_combo, PREFERENCES_LEFT))
 
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row1, False, False, 0)
@@ -144,13 +152,14 @@ def _general_options_panel():
     vbox.pack_start(row5, False, False, 0)
     vbox.pack_start(row3, False, False, 0)
     vbox.pack_start(row9, False, False, 0)
+    vbox.pack_start(row11, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
 
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
     # Aug-2019 - SvdB - AS - Added autosave_combo
     return vbox, ( default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check,
-                    undo_max_spin, load_order_combo, autosave_combo, render_folder_select)
+                    undo_max_spin, load_order_combo, autosave_combo, render_folder_select, disk_cache_warning_combo)
 
 def _edit_prefs_panel():
     prefs = editorpersistance.prefs

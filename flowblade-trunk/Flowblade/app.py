@@ -57,6 +57,7 @@ import containeractions
 import dialogs
 import dialogutils
 import dnd
+import diskcachemanagement
 import edit
 import editevent
 import editorpersistance
@@ -116,6 +117,7 @@ PID_FILE = "flowbladepidfile"
 BATCH_DIR = "batchrender/"
 autosave_timeout_id = -1
 recovery_dialog_id = -1
+disk_cache_timeout_id = -1
 sdl2_timeout_id = -1
 loaded_autosave_file = None
 
@@ -361,6 +363,9 @@ def main(root_path):
         GObject.timeout_add(500, show_user_folders_copy_dialog)
     else:
         print("No user folders actions needed.")
+
+    global disk_cache_timeout_id
+    disk_cache_timeout_id = GObject.timeout_add(2500, check_disk_cache_size)
     
     # Launch gtk+ main loop
     Gtk.main()
@@ -417,7 +422,7 @@ def monkeypatch_callbacks():
 
 # ---------------------------------- SDL2 consumer
 #def create_sdl_2_consumer():
-#    GObject.source_remove(sdl2_timeout_id)
+#    GObject.source_remove(disk_cache_timeout_id)
 #    print "Creating SDL2 consumer..."
 #    editorstate.PLAYER().create_sdl2_video_consumer()
 
@@ -802,7 +807,6 @@ def start_autosave():
         print("Autosave disabled...")
         stop_autosave()
 
-
 def get_autosave_files():
     autosave_dir = userfolders.get_cache_dir() + AUTOSAVE_DIR
     return os.listdir(autosave_dir)
@@ -848,6 +852,11 @@ def show_worflow_info_dialog():
     worflow_info_dialog = workflow.WorkflowDialog()
     return False
 
+# ------------------------------------------------------- disk cahce size check
+def check_disk_cache_size():
+    GObject.source_remove(disk_cache_timeout_id)
+    diskcachemanagement.check_disk_cache_size()
+    
 # ------------------------------------------------------- userfolders dialogs
 def show_user_folders_init_error_dialog(error_msg):
     # not done
