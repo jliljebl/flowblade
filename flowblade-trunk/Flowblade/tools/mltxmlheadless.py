@@ -84,9 +84,6 @@ def abort_render(session_id):
 def main(root_path, session_id, xml_file_path, range_in, range_out, profile_desc):
     
     os.nice(10) # make user configurable
-    
-    ccrutils.prints_to_log_file("/home/janne/xmlheadless")
-    print(session_id, xml_file_path, range_in, range_out, profile_desc)
 
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION
@@ -157,16 +154,17 @@ class MLTXMLHeadlessRunnerThread(threading.Thread):
         profile = mltprofiles.get_profile_for_index(self.render_data.profile_index)
         
         producer = mlt.Producer(profile, str(self.xml_file_path))
-        print(self.xml_file_path)
+
         # Video clip consumer
         if self.render_data.do_video_render == True:
             if self.render_data.save_internally == True:
                 file_path = ccrutils.session_folder() +  "/" + appconsts.CONTAINER_CLIP_VIDEO_CLIP_NAME + self.render_data.file_extension
             else:
                 file_path = self.render_data.render_dir +  "/" + self.render_data.file_name + self.render_data.file_extension
-            print(file_path)
+
             consumer = renderconsumer.get_mlt_render_consumer(file_path, profile, args_vals_list)
 
+            ccrutils.delete_rendered_frames() # in case we switched from img seq consumer we can now delete those frames to save space
         # img seq consumer
         else:
             # Image sequence gets project profile
@@ -193,7 +191,6 @@ class MLTXMLHeadlessRunnerThread(threading.Thread):
             
             if self.abort == True:
                 self.render_player.shutdown()
-                print("Aborted.")
                 return
             
             fraction = self.render_player.get_render_fraction()
@@ -212,7 +209,6 @@ class MLTXMLHeadlessRunnerThread(threading.Thread):
         abort_file = ccrutils.session_folder() + "/" + ccrutils.ABORT_MSG_FILE
         if os.path.exists(abort_file):
             self.abort = True
-            print("Abort requested.")
             return True
         
         return False

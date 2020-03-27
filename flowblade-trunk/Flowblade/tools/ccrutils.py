@@ -158,7 +158,20 @@ def load_render_data():
 def get_render_data():
     return _render_data
 
+def delete_clip_frames():
+    cf_folder = clip_frames_folder()
+    frames = os.listdir(cf_folder)
+    for f in frames:
+        file_path = cf_folder + "/" + f
+        os.remove(file_path)
 
+def delete_rendered_frames():
+    rf_folder = rendered_frames_folder()
+    frames = os.listdir(rf_folder)
+    for f in frames:
+        file_path = rf_folder + "/" + f
+        os.remove(file_path)
+        
 # ---- Debug helper
 def prints_to_log_file(log_file):
     so = se = open(log_file, 'w', buffering=1)

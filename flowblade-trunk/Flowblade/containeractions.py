@@ -494,7 +494,7 @@ class GMicContainerActions(AbstractContainerActionObject):
                 else:
                      msg += _("Encoding Video")
                 
-                msg += " " + self.get_job_name()
+                msg += " - " + self.get_job_name()
                 
                 job_proxy = self.get_job_proxy()
                 if self.render_type == FULL_RENDER:

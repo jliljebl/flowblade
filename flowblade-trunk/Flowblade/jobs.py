@@ -285,6 +285,7 @@ class JobsQueueView(Gtk.VBox):
 
         self.text_rend_2 = Gtk.CellRendererText()
         self.text_rend_2.set_property("yalign", 0.0)
+        self.text_rend_2.set_property("ellipsize", Pango.EllipsizeMode.END)
         
         self.text_rend_3 = Gtk.CellRendererText()
         self.text_rend_3.set_property("yalign", 0.0)

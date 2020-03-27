@@ -98,7 +98,6 @@ def abort_render(session_id):
 def main(root_path, session_id, script, clip_path, range_in, range_out, profile_desc, gmic_frame_offset):
     
     os.nice(10) # make user configurable
-    ccrutils.prints_to_log_file("/home/janne/gmicheadless")
      
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION
@@ -224,7 +223,6 @@ class GMicHeadlessRunnerThread(threading.Thread):
         user_script = script_file.read()
 
         while len(os.listdir(clip_frames_folder)) != self.length:
-            print("Waiting to start gmic script rendering...")
             time.sleep(0.5)
         
         # Render frames with gmic script
@@ -238,6 +236,8 @@ class GMicHeadlessRunnerThread(threading.Thread):
                                                                         False,  # this is not useful until we get MLT to fin frames sequences not startin from 0001
                                                                         0)
         self.script_renderer.write_frames()
+
+        ccrutils.delete_clip_frames()
 
         if self.abort == True:
             return
@@ -264,9 +264,9 @@ class GMicHeadlessRunnerThread(threading.Thread):
             resource_path = rendered_frames_folder + "/" + resource_name_str
             producer = mlt.Producer(profile, str(resource_path))
 
-            clip_frames = os.listdir(rendered_frames_folder)
+            frames_length = len(os.listdir(rendered_frames_folder))
 
-            self.render_player = renderconsumer.FileRenderPlayer("", producer, consumer, 0, len(clip_frames) - 1)
+            self.render_player = renderconsumer.FileRenderPlayer("", producer, consumer, 0, frames_length - 1)
             self.render_player.wait_for_producer_end_stop = False
             self.render_player.start()
 
@@ -276,14 +276,15 @@ class GMicHeadlessRunnerThread(threading.Thread):
                 
                 if self.abort == True:
                     self.render_player.shutdown()
-                    print("Aborted.")
                     return
                 
                 fraction = self.render_player.get_render_fraction()
                 self.video_render_update_callback(fraction)
                 
                 time.sleep(0.3)
-                
+            
+            ccrutils.delete_rendered_frames()
+            
         # Write out completed flag file.
         completed_msg_file = ccrutils.session_folder() + "/" + COMPLETED_MSG_FILE
         script_text = "##completed##" # let's put something in here
@@ -295,7 +296,6 @@ class GMicHeadlessRunnerThread(threading.Thread):
         abort_file = ccrutils.session_folder() + "/" +  ABORT_MSG_FILE
         if os.path.exists(abort_file):
             self.abort = True
-            print("Abort requested.")
             return True
         
         return False
