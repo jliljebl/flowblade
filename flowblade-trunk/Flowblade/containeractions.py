@@ -509,11 +509,11 @@ class GMicContainerActions(AbstractContainerActionObject):
                     
                     if job_proxy.progress < 0.0:
                         # hack to fix how gmiplayer.FramesRangeWriter works.
-                        # We would need to Patch to g'mic tool to not need this but this was just easier.
+                        # We would need to patch to g'mic tool to not need this but this is easier.
                         job_proxy.progress = 1.0
 
                     if job_proxy.progress > 1.0:
-                        # hack to fix how progress is caculated in gmicheadless because producers can render a bit longer then required.
+                        # hack to fix how progress is calculated in gmicheadless because producers can render a bit longer then required.
                         job_proxy.progress = 1.0
 
                 job_proxy.elapsed = float(elapsed)
@@ -681,8 +681,7 @@ class BlenderContainerActions(AbstractContainerActionObject):
         + 'bpy.context.scene.frame_start = 90' + NEWLINE \
         + 'bpy.context.scene.frame_end = 92' + NEWLINE
         
-        edit_data_json = self.container_data.data_slots["project_edit_info"]
-        objects = edit_data_json["objects"]
+        objects = self.blender_objects()
         for obj in objects:
             # objects are [name, type, editorlist], see  blenderprojectinit.py
             obj_name = obj[0]
@@ -721,10 +720,29 @@ class BlenderContainerActions(AbstractContainerActionObject):
         return self._create_icon_default_action()
 
     def edit_program(self, clip):
-        simpleeditors.show_blender_container_clip_program_editor(self.project_edit_done, self.container_data)
+        simpleeditors.show_blender_container_clip_program_editor(self.project_edit_done, self.blender_objects())
         
     def project_edit_done(self, dialog, response_id, editors):
-        dialog.destroy()
+        if response_id == Gtk.ResponseType.ACCEPT:
+            for guieditor in editors:
+                value = guieditor.get_value()
+                obj_name, prop_path = guieditor.id_data
+                objects = self.blender_objects()
+                # objects are [name, type, editorlist], see blenderprojectinit.py
+                for obj in objects:
+                    if obj[0] == obj_name:
+                        # editor_data is [prop_path, label, tooltip, editor_type, value], see blenderprojectinit.py, blenderclipedit.EditorManagerWindow.get_current_editor_data()
+                         for json_editor_data in obj[2]:
+                             if json_editor_data[0] == prop_path:
+                                 json_editor_data[4] = value
+                                 print(obj_name, prop_path, value)
+            dialog.destroy()
+        else:
+            dialog.destroy()
+
+    def blender_objects(self):
+        program_info_json = self.container_data.data_slots["project_edit_info"]
+        return program_info_json["objects"]
 
 # ----------------------------------------------------------------- polling
 class ContainerStatusPollingThread(threading.Thread):

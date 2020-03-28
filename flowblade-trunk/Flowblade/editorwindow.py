@@ -1292,26 +1292,7 @@ class EditorWindow:
                                           monitorevent.marks_clear_pressed,
                                           monitorevent.to_mark_in_pressed,
                                           monitorevent.to_mark_out_pressed]
-            # ------------------------------End of timeline_start_end_button
-#        if editorpersistance.prefs.play_pause == False:
-#            pressed_callback_funcs = [monitorevent.prev_pressed,
-#                                      monitorevent.next_pressed,
-#                                      monitorevent.play_pressed,
-#                                      monitorevent.stop_pressed,
-#                                      monitorevent.mark_in_pressed,
-#                                      monitorevent.mark_out_pressed,
-#                                      monitorevent.marks_clear_pressed,
-#                                      monitorevent.to_mark_in_pressed,
-#                                      monitorevent.to_mark_out_pressed]
-#        else:
-#            pressed_callback_funcs = [monitorevent.prev_pressed,
-#                                      monitorevent.next_pressed,
-#                                      monitorevent.play_pressed,
-#                                      monitorevent.mark_in_pressed,
-#                                      monitorevent.mark_out_pressed,
-#                                      monitorevent.marks_clear_pressed,
-#                                      monitorevent.to_mark_in_pressed,
-#                                      monitorevent.to_mark_out_pressed]
+
         self.player_buttons.set_callbacks(pressed_callback_funcs)
 
         # Monitor position bar

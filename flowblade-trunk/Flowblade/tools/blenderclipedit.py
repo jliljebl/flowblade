@@ -43,7 +43,7 @@ def show_project_editor_manager_dialog(container_data):
 def _shutdown_save():
     # Edits already saved, destroy window.
     _editor_manager_window.destroy()
-    print(_editor_manager_window.container_data.data_slots["project_edit_info"])
+    #print(_editor_manager_window.container_data.data_slots["project_edit_info"])
 
 def _shutdown_cancel():
     # Roll back changes.
@@ -60,6 +60,8 @@ class EditorManagerWindow(Gtk.Window):
 
         self.container_data = container_data
         self.original_edit_data = copy.deepcopy(self.container_data.data_slots["project_edit_info"])
+        
+        folder, project_name = os.path.split(self.container_data.program)
 
         info_row = self.get_info_row()
 
@@ -74,13 +76,15 @@ class EditorManagerWindow(Gtk.Window):
         edit_pane.pack_start(panel_editors, True, True, 0)
         edit_pane.set_size_request(750, 600)
         
-        save_button = Gtk.Button(_("Save Changes"))
-        save_button.connect("clicked",lambda w: _shutdown_save())
+        self.save_button = Gtk.Button(_("Save Changes"))
+        self.save_button.connect("clicked",lambda w: _shutdown_save())
+        self.save_button.set_sensitive(False)
+        self.save_button.set_tooltip_markup(_("Add or delete editors to enable <b>Save Changes</b> button"))
         cancel_button = Gtk.Button(_("Cancel"))
         cancel_button.connect("clicked",lambda w: _shutdown_cancel())
         buttons_box = Gtk.HBox(True, 2)
         buttons_box.pack_start(cancel_button, True, True, 0)
-        buttons_box.pack_start(save_button, False, False, 0)
+        buttons_box.pack_start(self.save_button, False, False, 0)
         
         buttons_row = Gtk.HBox(False, 2)
         buttons_row.pack_start(Gtk.Label(), True, True, 0)
@@ -88,9 +92,9 @@ class EditorManagerWindow(Gtk.Window):
 
         pane = Gtk.VBox(False, 2)
         pane.pack_start(info_row, False, False, 0)
-        pane.pack_start(edit_pane, False, False, 0)
-        pane.pack_start(guiutils.pad_label(24,24), False, False, 0)
-        pane.pack_start(buttons_row, True, True, 0)
+        pane.pack_start(edit_pane, True, True, 0)
+        #pane.pack_start(guiutils.pad_label(24,12), False, False, 0)
+        pane.pack_start(buttons_row, False, False, 0)
 
         align = guiutils.set_margins(pane, 12, 12, 12, 12)
 
@@ -99,7 +103,7 @@ class EditorManagerWindow(Gtk.Window):
         
         # Set pane and show window
         self.add(align)
-        self.set_title(_("Media Relinker"))
+        self.set_title(_("Blender Project Property Editors") + " - " + project_name)
         self.set_position(Gtk.WindowPosition.CENTER)
         self.show_all()
         self.set_resizable(False)
@@ -141,12 +145,17 @@ class EditorManagerWindow(Gtk.Window):
     def get_editors_panel(self):
         self.editors_list = guicomponents.MultiTextColumnListView(5)
         guiutils.set_margins(self.editors_list, 0, 12, 0, 6)
+        self.editors_list.set_size_request(700, 360)
 
+        titles = [_("Property Path"), _("Label"), _("Info"), _("Type"), _("Value")]
+        self.editors_list.set_column_titles(titles)
+    
         # --- widgets
         add_button = Gtk.Button(label=_("Add Editor"))
-        add_button.connect("clicked",lambda w: self.add_clicked())
+        add_button.connect("clicked", lambda w: self.add_clicked())
         self.delete_button = Gtk.Button(label=_("Delete Editor"))
-        #self.delete_button.connect("clicked",lambda w: self.add_clicked())
+        self.delete_button.set_sensitive(False)
+        self.delete_button.connect("clicked", lambda w: self.delete_clicked())
         
         self.obj_path_entry = Gtk.Entry()
         self.editor_label_entry = Gtk.Entry()
@@ -159,7 +168,7 @@ class EditorManagerWindow(Gtk.Window):
         self.editor_select.set_active(0)
 
         # --- panels
-        editor_add_right = Gtk.VBox(True, 2)
+        editor_add_right = Gtk.VBox(False, 2)
         editor_add_right.pack_start(add_button, False, False, 0)
         editor_add_right.pack_start(Gtk.Label(), True, True, 0)
         
@@ -190,7 +199,13 @@ class EditorManagerWindow(Gtk.Window):
     def object_selection_changed(self, tree_selection):
         obj = self.get_selected_object()
         self.display_object_editors_data(obj)
-        
+        if len(obj[2]) > 0:
+            path = Gtk.TreePath.new_from_indices([0])
+            self.editors_list.treeview.get_selection().select_path(path)
+            self.delete_button.set_sensitive(True)
+        else:
+            self.delete_button.set_sensitive(False)
+
     def display_object_editors_data(self, obj):
         editors_list = obj[2]  # object is [name, type, editors_list] see blenderprojectinit.py
         self.editors_list.fill_data_model(editors_list)
@@ -200,7 +215,18 @@ class EditorManagerWindow(Gtk.Window):
         obj = self.get_selected_object()
         obj[2].append(editor_data)
         self.display_object_editors_data(obj)
+        self.save_button.set_sensitive(True)
+        self.delete_button.set_sensitive(True)
+        path = Gtk.TreePath.new_from_indices([len(obj[2]) - 1])
+        self.editors_list.treeview.get_selection().select_path(path)
+        self.clear_editors()
 
+    def delete_clicked(self):
+        selected_row_index = self.editors_list.get_selected_row_index()
+        obj = self.get_selected_object()
+        obj[2].pop(selected_row_index)
+        self.object_selection_changed(None)
+        
     def get_current_editor_data(self):
         editor_data = []
         # [prop_path, label, tooltip, editor_type, value]
@@ -211,3 +237,10 @@ class EditorManagerWindow(Gtk.Window):
         text = '"' + self.default_value_entry.get_text() + '"'
         editor_data.append(text)
         return editor_data
+
+    def clear_editors(self):
+        self.obj_path_entry.set_text("")
+        self.editor_label_entry.set_text("")
+        self.tooltip_info_entry.set_text("")
+        self.editor_select.set_active(0)
+        self.default_value_entry.set_text("")

@@ -293,7 +293,7 @@ class MultiTextColumnListView(Gtk.VBox):
         self.columns = []
         self.renderers = []
         for i in range(0, columns_number):
-            text_col = Gtk.TreeViewColumn("text1")
+            text_col = Gtk.TreeViewColumn.new()#("text1")
             text_rend = Gtk.CellRendererText()
             
             text_col.set_expand(True)
@@ -313,6 +313,10 @@ class MultiTextColumnListView(Gtk.VBox):
         self.pack_start(self.scroll, True, True, 0)
         self.scroll.show_all()
 
+    def set_column_titles(self, titles):
+        for i in range(0, len(titles)):
+            self.columns[i].set_title(titles[i])
+            
     def connect_selection_changed(self, selection_cb):
         # Connect selection 'changed' signal
         tree_sel = self.treeview.get_selection()
@@ -326,6 +330,10 @@ class MultiTextColumnListView(Gtk.VBox):
         model, rows = self.treeview.get_selection().get_selected_rows()
         return rows[0]
 
+    def get_selected_row_index(self):
+        model, rows = self.treeview.get_selection().get_selected_rows()
+        return int(rows[0].to_string())
+        
     def fill_data_model(self, data_rows):
         self.storemodel.clear()
         for row in data_rows:
