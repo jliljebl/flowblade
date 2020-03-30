@@ -157,7 +157,6 @@ def main(root_path, session_id, project_path, range_in, range_out, profile_desc)
         rendered_frames_folder = ccrutils.rendered_frames_folder()
         frames_info = gmicplayer.FolderFramesInfo(rendered_frames_folder)
         frame_file = frames_info.get_lowest_numbered_file()
-        #frame_file = rendered_frames_folder + "/" + frame_name + "_0000.png"
         
         if editorstate.mlt_version_is_equal_or_greater("0.8.5"):
             resource_name_str = utils.get_img_seq_resource_name(frame_file, True)

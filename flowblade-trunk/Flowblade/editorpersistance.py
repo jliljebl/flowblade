@@ -285,7 +285,7 @@ class EditorPreferences:
         self.mm_paned_position = 260 # Paned get/set position value
         self.render_folder = None  # DEPRECATED, this set by XDG variables now
         self.show_sequence_profile = True
-        self.buttons_style = GLASS_STYLE
+        self.buttons_style = NO_DECORATIONS
         self.dark_theme = False # DEPRECATED, "theme" used instead
         self.remember_last_render_dir = True
         self.empty_click_exits_trims = True # DEPRECATED, NOT USER SETTABLE ANYMORE
