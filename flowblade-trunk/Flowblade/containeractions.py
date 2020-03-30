@@ -49,6 +49,7 @@ import gmicplayer
 import jobs
 import mltprofiles
 import mltxmlheadless
+import renderconsumer
 import respaths
 import simpleeditors
 import toolsencoding
@@ -152,7 +153,8 @@ class AbstractContainerActionObject:
     
     def __init__(self, container_data):
         self.container_data = container_data
-
+        self.render_type = -1 # to be set in methods below
+        
     def create_data_dirs_if_needed(self):
         session_folder = self.get_session_dir()
         clip_frames_folder = session_folder + appconsts.CC_CLIP_FRAMES_DIR
@@ -190,6 +192,7 @@ class AbstractContainerActionObject:
         # Render starts on callback from jobs.py to AbstractContainerActionObject.start_render()
 
     def start_render(self):
+        print("start_render")
         clip, range_in, range_out, clip_start_offset = self.launch_render_data
         self._launch_render(clip, range_in, range_out, clip_start_offset)
 
@@ -329,8 +332,8 @@ class AbstractContainerActionObject:
             
         encoding_panel = toolsencoding.get_encoding_panel(self.container_data.render_data, True)
 
-        if self.container_data.render_data == None and toolsencoding.widgets.file_panel.movie_name.get_text() == "movie":
-            toolsencoding.widgets.file_panel.movie_name.set_text("_gmic")
+        #if self.container_data.render_data == None and toolsencoding.widgets.file_panel.movie_name.get_text() == "movie":
+        #    toolsencoding.widgets.file_panel.movie_name.set_text("_gmic")
 
         align = dialogutils.get_default_alignment(encoding_panel)
         
@@ -348,8 +351,7 @@ class AbstractContainerActionObject:
 
     def encode_settings_callback(self, dialog, response_id):
         if response_id == Gtk.ResponseType.ACCEPT:
-            _render_data = toolsencoding.get_render_data_for_current_selections()
-            self.container_data.render_data = _render_data
+            self.container_data.render_data = toolsencoding.get_render_data_for_current_selections()
 
         dialog.destroy()
         
@@ -408,8 +410,6 @@ class GMicContainerActions(AbstractContainerActionObject):
 
     def __init__(self, container_data):
         AbstractContainerActionObject.__init__(self, container_data)
-        self.render_type = -1 # to be set in methods below
-        self.clip = None # to be set in methods below
 
     def get_job_proxy(self):
         job_proxy = jobs.JobProxy(self.get_container_program_id(), self)
@@ -547,13 +547,14 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
 
     def __init__(self, container_data):
         AbstractContainerActionObject.__init__(self, container_data)
-        self.render_type = -1 # to be set in methods below
-        self.clip = None # to be set in methods below
 
     def get_job_proxy(self):
         job_proxy = jobs.JobProxy(self.get_container_program_id(), self)
         job_proxy.type = jobs.CONTAINER_CLIP_RENDER_MLT_XML
         return job_proxy
+
+    def get_job_name(self):
+        return self.container_data.get_unrendered_media_name()
         
     def _launch_render(self, clip, range_in, range_out, clip_start_offset):
         self.create_data_dirs_if_needed()
@@ -632,8 +633,6 @@ class BlenderContainerActions(AbstractContainerActionObject):
 
     def __init__(self, container_data):
         AbstractContainerActionObject.__init__(self, container_data)
-        self.render_type = -1 # to be set in methods below
-        self.clip = None # to be set in methods below
 
     def initialize_project(self, project_path):
 
@@ -648,19 +647,26 @@ class BlenderContainerActions(AbstractContainerActionObject):
         job_proxy = jobs.JobProxy(self.get_container_program_id(), self)
         job_proxy.type = jobs.CONTAINER_CLIP_RENDER_BLENDER
         return job_proxy
+
+    def get_job_name(self):
+        return self.container_data.get_program_name()
         
     def _launch_render(self, clip, range_in, range_out, clip_start_offset):
         self.create_data_dirs_if_needed()
+        
         self.render_range_in = range_in
         self.render_range_out = range_out
         self.clip_start_offset = clip_start_offset
 
         blenderheadless.clear_flag_files(self.get_container_program_id())
-            # We need data to be available for render process, 
+        # We need data to be available for render process, 
         # create video_render_data object with default values if not available.
         if self.container_data.render_data == None:
             self.container_data.render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
-            
+        
+        print("jkjkjkjkjkjk")
+        print(self.container_data.render_data.__dict__)
+        
         blenderheadless.set_render_data(self.get_container_program_id(), self.container_data.render_data)
         
         # Write current render target container clip for blenderrendersetup.py
@@ -670,24 +676,24 @@ class BlenderContainerActions(AbstractContainerActionObject):
             outfile.write(str(self.get_container_program_id()))
 
         # Write current render set up exec lines for blenderrendersetup.py
-        render_exec_lines = 'bpy.context.scene.render.filepath = "/home/janne/test/blenderframes/"' + NEWLINE \
+        render_exec_lines = 'bpy.context.scene.render.filepath = "' + self.get_rendered_media_dir() + '/frame"' + NEWLINE \
         + 'bpy.context.scene.render.fps = 24' + NEWLINE \
         + 'bpy.context.scene.render.image_settings.file_format = "PNG"' + NEWLINE \
         + 'bpy.context.scene.render.image_settings.color_mode = "RGBA"' + NEWLINE \
         + 'bpy.context.scene.render.film_transparent = 1' + NEWLINE \
-        + 'bpy.context.scene.render.resolution_x = 1920' + NEWLINE \
-        + 'bpy.context.scene.render.resolution_y = 1080' + NEWLINE \
+        + 'bpy.context.scene.render.resolution_x = '+ str(current_sequence().profile.width()) + NEWLINE \
+        + 'bpy.context.scene.render.resolution_y = ' + str(current_sequence().profile.height()) + NEWLINE \
         + 'bpy.context.scene.render.resolution_percentage = 100' + NEWLINE \
-        + 'bpy.context.scene.frame_start = 90' + NEWLINE \
-        + 'bpy.context.scene.frame_end = 92' + NEWLINE
-        
+        + 'bpy.context.scene.frame_start = ' + str(range_in) + NEWLINE \
+        + 'bpy.context.scene.frame_end = ' + str(range_out)  + NEWLINE
+
         objects = self.blender_objects()
         for obj in objects:
             # objects are [name, type, editorlist], see  blenderprojectinit.py
             obj_name = obj[0]
             editor_lines = []
             for editor_data in obj[2]:
-                # editor_data is [prop_path, label, tooltip, editor_type, value], see blenderclipedit.EditorManagerWindow.get_current_editor_data()
+                # editor_data is [prop_path, label, tooltip, editor_type, value], see containerprogramedit.EditorManagerWindow.get_current_editor_data()
                 prop_path = editor_data[0]
                 value = editor_data[4]
                 
@@ -714,7 +720,39 @@ class BlenderContainerActions(AbstractContainerActionObject):
         subprocess.Popen([nice_command], shell=True)
         
     def update_render_status(self):
-        print("status update")
+        Gdk.threads_enter()
+                    
+        if blenderheadless.session_render_complete(self.get_container_program_id()) == True:
+            self.remove_as_status_polling_object()
+
+            job_proxy = self.get_completed_job_proxy()
+            jobs.update_job_queue(job_proxy)
+            
+            GLib.idle_add(self.create_producer_and_do_update_edit, None)
+                
+        else:
+            status = blenderheadless.get_session_status(self.get_container_program_id())
+
+            if status != None:
+                step, fraction, elapsed = status
+                print(step, fraction, elapsed)
+                """
+                if self.container_data.render_data.do_video_render == True:
+                    msg = _("Rendering Video")
+                elif step == "2":
+                """
+                msg = _("Rendering Image Sequence")
+
+                job_proxy = self.get_job_proxy()
+                job_proxy.progress = float(fraction)
+                job_proxy.elapsed = float(elapsed)
+                job_proxy.text = msg
+                
+                jobs.update_job_queue(job_proxy)
+            else:
+                pass # This can happen sometimes before gmicheadless.py has written a status message, we just do nothing here.
+                
+        Gdk.threads_leave()
             
     def create_icon(self):
         return self._create_icon_default_action()
@@ -731,11 +769,11 @@ class BlenderContainerActions(AbstractContainerActionObject):
                 # objects are [name, type, editorlist], see blenderprojectinit.py
                 for obj in objects:
                     if obj[0] == obj_name:
-                        # editor_data is [prop_path, label, tooltip, editor_type, value], see blenderprojectinit.py, blenderclipedit.EditorManagerWindow.get_current_editor_data()
+                        # editor_data is [prop_path, label, tooltip, editor_type, value], see blenderprojectinit.py, containerprogramedit.EditorManagerWindow.get_current_editor_data()
                          for json_editor_data in obj[2]:
                              if json_editor_data[0] == prop_path:
                                  json_editor_data[4] = value
-                                 print(obj_name, prop_path, value)
+
             dialog.destroy()
         else:
             dialog.destroy()
@@ -762,10 +800,58 @@ class ContainerStatusPollingThread(threading.Thread):
                 
             time.sleep(1.0)
 
-
     def shutdown(self):
         for poll_obj in self.poll_objects:
             poll_obj.abort_render()
         
         self.abort = True
         
+
+# -------------------------------------------------------------- creating unrendered clip
+def create_unrendered_clip(length, image_file, data, callback):
+    unrendered_creation_thread = UnrenderedCreationThread(length, image_file, data, callback)
+    unrendered_creation_thread.start()
+
+
+# Creates a set length video clip from image to act as container clip unrendered media.
+class UnrenderedCreationThread(threading.Thread):
+    
+    def __init__(self, length, image_file, data, callback):
+        self.length = length
+        self.image_file = image_file
+        self.data = data
+        self.callback = callback
+
+        threading.Thread.__init__(self)
+        
+    def run(self):
+        # Image produceer
+        img_producer = current_sequence().create_file_producer_clip(str(self.image_file)) # , new_clip_name=None, novalidate=False, ttl=None):
+
+        # Create tractor and track to get right length
+        tractor = mlt.Tractor()
+        multitrack = tractor.multitrack()
+        track0 = mlt.Playlist()
+        multitrack.connect(track0, 0)
+        track0.insert(img_producer, 0, 0, self.length)
+    
+        # Consumer
+        write_file = userfolders.get_cache_dir() + "/unrendered_clip.mp4"
+        # Delete earlier created files
+        if os.path.exists(write_file):
+            os.remove(write_file)
+        consumer = renderconsumer.get_default_render_consumer(write_file, PROJECT().profile)
+        
+        clip_renderer = renderconsumer.FileRenderPlayer(write_file, tractor, consumer, 0, self.length)
+        clip_renderer.wait_for_producer_end_stop = True
+        clip_renderer.start()
+
+        while clip_renderer.stopped == False:       
+            print(clip_renderer.get_render_fraction())
+            time.sleep(0.5)
+
+        Gdk.threads_enter()
+        
+        self.callback(write_file, self.data)
+
+        Gdk.threads_leave()

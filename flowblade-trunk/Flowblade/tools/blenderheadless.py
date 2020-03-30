@@ -41,22 +41,23 @@ import time
 import appconsts
 import atomicfile
 import ccrutils
-import editorstate
 import editorpersistance
-import mltfilters
+import editorstate
+import gmicplayer
 import mltenv
+import mltfilters
 import mltprofiles
 import mlttransitions
 import processutils
 import renderconsumer
 import respaths
+import userfolders
 import toolsencoding
 import translations
-import userfolders
 import utils
 
-
 _render_thread = None
+_start_time = -1
 
 
 # ----------------------------------------------------- module interface with message files
@@ -72,8 +73,10 @@ def session_render_complete(session_id):
 
 def get_session_status(session_id):
     msg = ccrutils.get_session_status_message(session_id)
-    fraction, elapsed = msg.split(" ")
-    return (fraction, elapsed)
+    if msg == None:
+        return None
+    step, fraction, elapsed = msg.split(" ")
+    return (step, fraction, elapsed)
     
 def abort_render(session_id):
     ccrutils.abort_render(session_id)
@@ -82,33 +85,15 @@ def abort_render(session_id):
 
 # --------------------------------------------------- render thread launch
 def main(root_path, session_id, project_path, range_in, range_out, profile_desc):
-    
-    os.nice(10) # make user configurable
-    
-    ccrutils.prints_to_log_file("/home/janne/blenderheadless")
 
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION
     except:
         editorstate.mlt_version = "0.0.99" # magic string for "not found"
-
-    print(session_id, range_in, range_out, profile_desc)
-
-    print(os.path.join(GLib.get_user_cache_dir(), "flowblade") + "/blender_render_container_id")
-    print(os.path.join(GLib.get_user_data_dir(), "flowblade") +  "/" + session_id + "/blender_render_exec_lines")
-
-
+        
     # Set paths.
     respaths.set_paths(root_path)
 
-    FLOG = open("/home/janne/blenderrenderlog", 'w')
-    render_setup_script = respaths.ROOT_PATH + "/tools/blenderrendersetup.py"
-    blender_launch = "/usr/bin/blender -b " + project_path + " -P " + render_setup_script
-
-    p = subprocess.Popen(blender_launch, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
-    p.wait()
-
-    """
     userfolders.init()
     editorpersistance.load()
 
@@ -134,99 +119,120 @@ def main(root_path, session_id, project_path, range_in, range_out, profile_desc)
     # Create list of available mlt profiles
     mltprofiles.load_profile_list()
     
+    ccrutils.prints_to_log_file("/home/janne/blenderlog")
     ccrutils.init_session_folders(session_id)
-    
     ccrutils.load_render_data()
+    
+    log_path = GLib.get_user_cache_dir() + "/blenderrenderlog"
+    FLOG = open(log_path, 'w')
+    render_setup_script = respaths.ROOT_PATH + "/tools/blenderrendersetup.py"
+    blender_launch = "/usr/bin/blender -b " + project_path + " -P " + render_setup_script
+
+    global _start_time
+    _start_time = time.monotonic()
+
+    manager_thred = ProgressPollingThread(range_in, range_out)
+    manager_thred.start()
+
+    p = subprocess.Popen(blender_launch, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
+    p.wait()
+
     render_data = ccrutils.get_render_data()
+    print(render_data.__dict__)
+ 
+    # Render video
+    if render_data.do_video_render == True:
+        # Render consumer
+        args_vals_list = toolsencoding.get_args_vals_list_for_render_data(render_data)
+        profile = mltprofiles.get_profile_for_index(render_data.profile_index) 
+        
+        if ccrutils.get_render_data().save_internally == True:
+            file_path = ccrutils.session_folder() +  "/" + appconsts.CONTAINER_CLIP_VIDEO_CLIP_NAME + render_data.file_extension
+        else:
+            file_path = render_data.render_dir +  "/" + render_data.file_name + render_data.file_extension
     
-    # This needs to have render data loaded to know if we are using external folders.
-    ccrutils.maybe_init_external_session_folders()
+        consumer = renderconsumer.get_mlt_render_consumer(file_path, profile, args_vals_list)
+        
+        # Render producer
+        rendered_frames_folder = ccrutils.rendered_frames_folder()
+        frames_info = gmicplayer.FolderFramesInfo(rendered_frames_folder)
+        frame_file = frames_info.get_lowest_numbered_file()
+        #frame_file = rendered_frames_folder + "/" + frame_name + "_0000.png"
+        
+        if editorstate.mlt_version_is_equal_or_greater("0.8.5"):
+            resource_name_str = utils.get_img_seq_resource_name(frame_file, True)
+        else:
+            resource_name_str = utils.get_img_seq_resource_name(frame_file, False)
+        resource_path = rendered_frames_folder + "/" + resource_name_str
+        producer = mlt.Producer(profile, str(resource_path))
+
+        frames_length = len(os.listdir(rendered_frames_folder))
+
+        render_player = renderconsumer.FileRenderPlayer("", producer, consumer, 0, frames_length - 1)
+        render_player.wait_for_producer_end_stop = False
+        render_player.start()
+
+        abort = False
+        while render_player.stopped == False and abort == False:
+            
+            abort_file = ccrutils.session_folder() + "/" + ccrutils.ABORT_MSG_FILE
+            if os.path.exists(abort_file):
+                abort = True
+                render_player.shutdown()
+                return
+            else:
+                fraction = render_player.get_render_fraction()
+                elapsed = time.monotonic() - _start_time
+                msg = "2 " + str(fraction) + " " + str(elapsed)
+                ccrutils.write_status_message(msg)
+            
+            time.sleep(1.0)
+        
+        ccrutils.write_completed_message()
+
+
+
+# ------------------------------------------------------------ poll thread for Blender rendering happening in different process.
+class ProgressPollingThread(threading.Thread):
     
-    global _render_thread
-    _render_thread = BlenderHeadlessRunnerThread(render_data, xml_file_path, range_in, range_out, profile_desc)
-    _render_thread.start()
-    
-       
-
-class MLTXMLHeadlessRunnerThread(threading.Thread):
-
-    def __init__(self, render_data, xml_file_path, range_in, range_out, profile_desc):
-        threading.Thread.__init__(self)
-
-        self.render_data = render_data # toolsencoding.ToolsRenderData object
-        self.xml_file_path = xml_file_path
+    def __init__(self, range_in, range_out):
+        #self.frames_folder = userfolders.get_data_dir() + "/" + appconsts.CONTAINER_CLIPS_DIR + "/" + session_id + appconsts.CC_RENDERED_FRAMES_DIR
         self.range_in = int(range_in)
         self.range_out = int(range_out)
-        self.length = self.range_out - self.range_in + 1
-        self.profile_desc = profile_desc
-    
         self.abort = False
+        threading.Thread.__init__(self)
 
-        
     def run(self):
-        self.start_time = time.monotonic()
-
-        if self.render_data.do_video_render == True:
-            args_vals_list = toolsencoding.get_args_vals_list_for_render_data(self.render_data)
-            profile = mltprofiles.get_profile_for_index(self.render_data.profile_index)
+        completed = False
+        
+        while self.abort == False and completed == False:
+            self.abort_requested()
             
-            producer = mlt.Producer(profile, str(self.xml_file_path))
+            length = self.range_out - self.range_in
+            written_frames_count = self.get_written_frames_count()
+            fraction = float(written_frames_count) / float(length)
+            self.update_status(fraction)
+            
+            if written_frames_count == length:
+                completed = True
+                
+            time.sleep(1.0)
+        
+        if ccrutils.get_render_data().do_video_render == False:
+            ccrutils.write_completed_message()
+     
+    def update_status(self, fraction):
+        elapsed = time.monotonic() - _start_time
+        msg = "1 " + str(fraction) + " " + str(elapsed)
+        ccrutils.write_status_message(msg)
 
-            # Video clip consumer
-            if self.render_data.save_internally == True:
-                file_path = ccrutils.session_folder() +  "/" + appconsts.CONTAINER_CLIP_VIDEO_CLIP_NAME + self.render_data.file_extension
-            else:
-                file_path = self.render_data.render_dir +  "/" + self.render_data.file_name + self.render_data.file_extension
-            print(file_path)
-            consumer = renderconsumer.get_mlt_render_consumer(file_path, profile, args_vals_list)
-
-            self.render_player = renderconsumer.FileRenderPlayer("", producer, consumer, self.range_in, self.range_out)
-            self.render_player.wait_for_producer_end_stop = False
-            self.render_player.start()
-
-            while self.render_player.stopped == False:
-                
-                self.abort_requested()
-                
-                if self.abort == True:
-                    self.render_player.shutdown()
-                    print("Aborted.")
-                    return
-                
-                fraction = self.render_player.get_render_fraction()
-                self.render_update_callback(fraction)
-                
-                time.sleep(0.3)
-                
-        # Write out completed flag file.
-        completed_msg_file = ccrutils.session_folder() + "/" + ccrutils.COMPLETED_MSG_FILE
-        script_text = "##completed##" # let's put something in here
-        with atomicfile.AtomicFileWriter(completed_msg_file, "w") as afw:
-            script_file = afw.get_file()
-            script_file.write(script_text)
+    def get_written_frames_count(self):
+        return len(os.listdir(ccrutils.rendered_frames_folder()))
 
     def abort_requested(self):
         abort_file = ccrutils.session_folder() + "/" + ccrutils.ABORT_MSG_FILE
         if os.path.exists(abort_file):
             self.abort = True
-            print("Abort requested.")
             return True
         
         return False
-
-    def render_update_callback(self, fraction):
-        elapsed = time.monotonic() - self.start_time
-        msg = str(fraction) + " " + str(elapsed)
-        self.write_status_message(msg)
-        
-    def write_status_message(self, msg):
-        try:
-            status_msg_file = ccrutils.session_folder() + "/" + ccrutils.STATUS_MSG_FILE
-            
-            with atomicfile.AtomicFileWriter(status_msg_file, "w") as afw:
-                script_file = afw.get_file()
-                script_file.write(msg)
-        except:
-            pass # this failing because we can't get file access will show as progress hickup to user, we don't care
-"""
-        

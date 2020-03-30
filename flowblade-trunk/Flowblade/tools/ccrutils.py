@@ -150,6 +150,23 @@ def rendered_frames_folder():
     else:
         return _render_data.render_dir + RENDERED_FRAMES_DIR
 
+def write_status_message(msg):
+    try:
+        status_msg_file = session_folder() + "/" + STATUS_MSG_FILE
+        print(msg, status_msg_file)
+        with atomicfile.AtomicFileWriter(status_msg_file, "w") as afw:
+            script_file = afw.get_file()
+            script_file.write(msg)
+    except:
+        pass # this failing because we can't get file access will show as progress hickup to user, we don't care
+
+def write_completed_message():
+    completed_msg_file = session_folder() + "/" + COMPLETED_MSG_FILE
+    script_text = "##completed##" # let's put something in here
+    with atomicfile.AtomicFileWriter(completed_msg_file, "w") as afw:
+        script_file = afw.get_file()
+        script_file.write(script_text)
+            
 def load_render_data():
     global _render_data
     render_data_path = _session_folder + "/" + RENDER_DATA_FILE

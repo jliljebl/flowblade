@@ -25,7 +25,7 @@ import json
 import os
 
 import appconsts
-import blenderclipedit
+import containerprogramedit
 import containeractions
 import dialogutils
 from editorstate import PROJECT
@@ -54,7 +54,11 @@ class ContainerClipData:
             
             self.unrendered_media = unrendered_media
             self.unrendered_length = None
-            self.unrendered_type = utils.get_media_type(unrendered_media)
+            # This can get set later for some container types
+            if unrendered_media != None:
+                self.unrendered_type = utils.get_media_type(unrendered_media)
+            else:
+                self.unrendered_type = None
 
             self.external_media_folder = None
 
@@ -64,7 +68,12 @@ class ContainerClipData:
             self.data_slots = {}
             
             self.editable = False
-            
+        
+        def get_program_name(self):
+            directory, file_name = os.path.split(self.program)
+            name, ext = os.path.splitext(file_name)
+            return name
+
         def get_unrendered_media_name(self):
             directory, file_name = os.path.split(self.unrendered_media)
             name, ext = os.path.splitext(file_name)
@@ -109,13 +118,13 @@ def edit_program(data):
     action_object = containeractions.get_action_object(clip.container_data)
     action_object.edit_program(clip)
 
-#------------------------------------------------------------- Cloneing
+#------------------------------------------------------------- Cloning
 def clone_clip(clip):
     action_object = containeractions.get_action_object(clip.container_data)
     return action_object.clone_clip(clip)
 
 
-# ------------------------------------------------------------ Dialogs + GUI utils
+# ------------------------------------------------------------ GUI
 def _get_file_select_row_and_editor(label_text):
     file_chooser = Gtk.FileChooserButton()
     file_chooser.set_size_request(250, 25)
@@ -213,24 +222,41 @@ def _blender_clip_create_dialog_callback(dialog, response_id, data):
             _show_not_all_data_info()
             return
 
-        unrendered_media_file = respaths.IMAGE_PATH + "unrendered_blender.png"
 
-        container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_BLENDER, project_file, unrendered_media_file)
+
+        container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_BLENDER, project_file, None)
         
         action_object = containeractions.get_action_object(container_clip_data)
         action_object.initialize_project(project_file) # blocks until info data written
 
         project_edit_info_path = userfolders.get_cache_dir() + "blender_container_projectinfo.json"
-        info_file = open(project_edit_info_path, "r") 
+        info_file = open(project_edit_info_path, "r")
         project_edit_info = json.load(info_file)
+        
+        length = int(project_edit_info["frame_end"]) - int(project_edit_info["frame_start"])
         container_clip_data.data_slots["project_edit_info"] = project_edit_info
         container_clip_data.editable = True
-    
-        container_clip = ContainerClipMediaItem(PROJECT().next_media_file_id, container_clip_data.get_unrendered_media_name(), container_clip_data)
-        PROJECT().add_container_clip_media_object(container_clip)
-        _update_gui_for_media_object_add()
+        container_clip_data.unrendered_length = length
 
-        #blenderclipedit.show_project_editor_manager_dialog(container_clip_data)
+        blender_unrendered_media_image = respaths.IMAGE_PATH + "unrendered_blender.png"
+
+        containeractions.create_unrendered_clip(length, blender_unrendered_media_image, container_clip_data, _blender_unredered_media_creation_complete)
+
+def _blender_unredered_media_creation_complete(created_unrendered_clip_path, container_clip_data):
+    rand_id_str = str(os.urandom(16))
+    clip_id_str = hashlib.md5(rand_id_str.encode('utf-8')).hexdigest() 
+    unrendered_clip_path = userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_UNRENDERED +"/"+ clip_id_str + ".mp4"
+
+    os.replace(created_unrendered_clip_path, unrendered_clip_path)
+
+    # Now that unrendere media has been created we have full container data info.
+    container_clip_data.unrendered_media = unrendered_clip_path
+    container_clip_data.unrendered_type = appconsts.VIDEO
+
+    container_clip = ContainerClipMediaItem(PROJECT().next_media_file_id, container_clip_data.get_program_name(), container_clip_data)
+    PROJECT().add_container_clip_media_object(container_clip)
+    _update_gui_for_media_object_add()
+
 
 
 # ---------------------------------------------------------------- MEDIA FILE OBJECT

@@ -51,7 +51,7 @@ project_data["objects"] = objects_list
 save_path = os.path.join(GLib.get_user_cache_dir(), "flowblade") + "/blender_container_projectinfo.json"
 
 if not os.path.exists(save_path):
-    os. remove(save_path)
+    os.remove(save_path)
     
 with open(save_path, "w") as f: 
      json.dump(project_data, f, indent=4)
