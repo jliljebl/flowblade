@@ -609,7 +609,7 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
 
             if status != None:
                 fraction, elapsed = status
-                print(fraction, elapsed)
+
                 if self.container_data.render_data.do_video_render == True:
                     msg = _("Rendering Video")
                 elif step == "2":
@@ -751,7 +751,11 @@ class BlenderContainerActions(AbstractContainerActionObject):
                 pass # This can happen sometimes before gmicheadless.py has written a status message, we just do nothing here.
                 
         Gdk.threads_leave()
-            
+
+    def abort_render(self):
+        self.remove_as_status_polling_object()
+        blenderheadless.abort_render(self.get_container_program_id())
+
     def create_icon(self):
         return self._create_icon_default_action()
 

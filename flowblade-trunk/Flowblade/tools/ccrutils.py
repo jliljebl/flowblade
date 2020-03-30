@@ -48,7 +48,7 @@ _rendered_frames_folder_internal = None
 _render_data = None
 
 
-# ----------------------------------------------------- interface with message files
+# ----------------------------------------------------- interface with message files, used by main appp
 # We are using message files to communicate with application.
 def clear_flag_files(session_id):
     folder = _get_session_folder(session_id)
@@ -113,7 +113,7 @@ def _get_session_folder(session_id):
     return userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_DIR +  "/" + session_id
     
 
-# ------------------------------------------------------ headless session folders and files
+# ------------------------------------------------------ headless session folders and files, used by render processes
 def init_session_folders(session_id):
     global _session_folder, _clip_frames_folder_internal, _rendered_frames_folder_internal
     _session_folder = _get_session_folder(session_id)
@@ -153,7 +153,6 @@ def rendered_frames_folder():
 def write_status_message(msg):
     try:
         status_msg_file = session_folder() + "/" + STATUS_MSG_FILE
-        print(msg, status_msg_file)
         with atomicfile.AtomicFileWriter(status_msg_file, "w") as afw:
             script_file = afw.get_file()
             script_file.write(msg)
@@ -188,7 +187,14 @@ def delete_rendered_frames():
     for f in frames:
         file_path = rf_folder + "/" + f
         os.remove(file_path)
-        
+
+def abort_requested():
+    abort_file = session_folder() + "/" + ABORT_MSG_FILE
+    if os.path.exists(abort_file):
+        return True
+    else:
+        return False
+
 # ---- Debug helper
 def prints_to_log_file(log_file):
     so = se = open(log_file, 'w', buffering=1)

@@ -71,7 +71,7 @@ _gmic_version = None
 _render_thread = None
 
 
-# ----------------------------------------------------- module interface to render process with message files
+# ----------------------------------------------------- module interface to render process with message files, used by main app
 # We are using message files to communicate with application.
 def clear_flag_files(session_id):
     ccrutils.clear_flag_files(session_id)
@@ -94,7 +94,7 @@ def abort_render(session_id):
     ccrutils.abort_render(session_id)
 
 
-# --------------------------------------------------- render launch
+# --------------------------------------------------- render process
 def main(root_path, session_id, script, clip_path, range_in, range_out, profile_desc, gmic_frame_offset):
     
     os.nice(10) # make user configurable
@@ -286,19 +286,11 @@ class GMicHeadlessRunnerThread(threading.Thread):
             ccrutils.delete_rendered_frames()
             
         # Write out completed flag file.
-        completed_msg_file = ccrutils.session_folder() + "/" + COMPLETED_MSG_FILE
-        script_text = "##completed##" # let's put something in here
-        with atomicfile.AtomicFileWriter(completed_msg_file, "w") as afw:
-            script_file = afw.get_file()
-            script_file.write(script_text)
+        ccrutils.write_completed_message()
 
     def abort_requested(self):
-        abort_file = ccrutils.session_folder() + "/" +  ABORT_MSG_FILE
-        if os.path.exists(abort_file):
-            self.abort = True
-            return True
-        
-        return False
+        self.abort = ccrutils.abort_requested()
+        return self.abort
 
     def frames_update(self, frame):
         if self.abort_requested() == True:
@@ -327,20 +319,9 @@ class GMicHeadlessRunnerThread(threading.Thread):
         self.write_status_message(msg)
         
     def write_status_message(self, msg):
-        try:
-            status_msg_file = ccrutils.session_folder() + "/" + STATUS_MSG_FILE
-            
-            with atomicfile.AtomicFileWriter(status_msg_file, "w") as afw:
-                script_file = afw.get_file()
-                script_file.write(msg)
-        except:
-            pass # this failing because we can't get file access will show as progress hickup to user, we don't care
+        ccrutils.write_status_message(msg)
             
     def script_render_output_callback(self, p, out):
         if p.returncode != 0:
             # TODO: handling errors.
             pass
-
-
-
-        

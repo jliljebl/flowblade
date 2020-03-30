@@ -33,6 +33,7 @@ import locale
 import mlt
 import os
 import pickle
+import signal
 import subprocess
 import sys
 import threading
@@ -60,7 +61,7 @@ _render_thread = None
 _start_time = -1
 
 
-# ----------------------------------------------------- module interface with message files
+# ----------------------------------------------------- module interface to render process with message files, used by main app
 # We are using message files to communicate with application.
 def clear_flag_files(session_id):
     ccrutils.clear_flag_files(session_id)
@@ -82,15 +83,15 @@ def abort_render(session_id):
     ccrutils.abort_render(session_id)
 
 
-
-# --------------------------------------------------- render thread launch
+# --------------------------------------------------- render process
 def main(root_path, session_id, project_path, range_in, range_out, profile_desc):
 
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION
     except:
         editorstate.mlt_version = "0.0.99" # magic string for "not found"
-        
+
+    ccrutils.prints_to_log_file("/home/janne/blenderlogg")
     # Set paths.
     respaths.set_paths(root_path)
 
@@ -130,11 +131,21 @@ def main(root_path, session_id, project_path, range_in, range_out, profile_desc)
     global _start_time
     _start_time = time.monotonic()
 
-    manager_thred = ProgressPollingThread(range_in, range_out)
-    manager_thred.start()
+    # Delete old frames
+    rendered_frames_folder = ccrutils.rendered_frames_folder()
+    for frame_file in os.listdir(rendered_frames_folder):
+        file_path = os.path.join(rendered_frames_folder, frame_file)
+        os.remove(file_path)
+            
+    p = subprocess.Popen(blender_launch, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG, preexec_fn=os.setsid)
 
-    p = subprocess.Popen(blender_launch, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
+    manager_thread = ProgressPollingThread(range_in, range_out, p)
+    manager_thread.start()
+    
     p.wait()
+
+    if manager_thread.abort == True:
+        return
 
     render_data = ccrutils.get_render_data()
 
@@ -172,9 +183,8 @@ def main(root_path, session_id, project_path, range_in, range_out, profile_desc)
         abort = False
         while render_player.stopped == False and abort == False:
             
-            abort_file = ccrutils.session_folder() + "/" + ccrutils.ABORT_MSG_FILE
-            if os.path.exists(abort_file):
-                abort = True
+            abort = ccrutils.abort_requested()
+            if abort == True:
                 render_player.shutdown()
                 return
             else:
@@ -192,10 +202,10 @@ def main(root_path, session_id, project_path, range_in, range_out, profile_desc)
 # ------------------------------------------------------------ poll thread for Blender rendering happening in different process.
 class ProgressPollingThread(threading.Thread):
     
-    def __init__(self, range_in, range_out):
-        #self.frames_folder = userfolders.get_data_dir() + "/" + appconsts.CONTAINER_CLIPS_DIR + "/" + session_id + appconsts.CC_RENDERED_FRAMES_DIR
+    def __init__(self, range_in, range_out, process):
         self.range_in = int(range_in)
         self.range_out = int(range_out)
+        self.process = process
         self.abort = False
         threading.Thread.__init__(self)
 
@@ -203,7 +213,7 @@ class ProgressPollingThread(threading.Thread):
         completed = False
         
         while self.abort == False and completed == False:
-            self.abort_requested()
+            self.check_abort_request()
             
             length = self.range_out - self.range_in
             written_frames_count = self.get_written_frames_count()
@@ -226,10 +236,10 @@ class ProgressPollingThread(threading.Thread):
     def get_written_frames_count(self):
         return len(os.listdir(ccrutils.rendered_frames_folder()))
 
-    def abort_requested(self):
-        abort_file = ccrutils.session_folder() + "/" + ccrutils.ABORT_MSG_FILE
-        if os.path.exists(abort_file):
+    def check_abort_request(self):
+        abort_request = ccrutils.abort_requested()
+        if abort_request == True:
+            self.process.kill()
+            os.killpg(os.getpgid(self.process.pid), signal.SIGTERM) 
             self.abort = True
-            return True
-        
-        return False
+

@@ -199,19 +199,11 @@ class MLTXMLHeadlessRunnerThread(threading.Thread):
             time.sleep(0.3)
                 
         # Write out completed flag file.
-        completed_msg_file = ccrutils.session_folder() + "/" + ccrutils.COMPLETED_MSG_FILE
-        script_text = "##completed##" # let's put something in here
-        with atomicfile.AtomicFileWriter(completed_msg_file, "w") as afw:
-            script_file = afw.get_file()
-            script_file.write(script_text)
+        ccrutils.write_completed_message()
 
     def abort_requested(self):
-        abort_file = ccrutils.session_folder() + "/" + ccrutils.ABORT_MSG_FILE
-        if os.path.exists(abort_file):
-            self.abort = True
-            return True
-        
-        return False
+        self.abort = ccrutils.abort_requested()
+        return self.abort
 
     def render_update_callback(self, fraction):
         elapsed = time.monotonic() - self.start_time
@@ -219,13 +211,6 @@ class MLTXMLHeadlessRunnerThread(threading.Thread):
         self.write_status_message(msg)
         
     def write_status_message(self, msg):
-        try:
-            status_msg_file = ccrutils.session_folder() + "/" + ccrutils.STATUS_MSG_FILE
-            
-            with atomicfile.AtomicFileWriter(status_msg_file, "w") as afw:
-                script_file = afw.get_file()
-                script_file.write(msg)
-        except:
-            pass # this failing because we can't get file access will show as progress hickup to user, we don't care
+        ccrutils.write_status_message(msg)
 
         
