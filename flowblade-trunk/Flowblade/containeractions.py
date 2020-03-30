@@ -50,6 +50,7 @@ import jobs
 import mltprofiles
 import mltxmlheadless
 import renderconsumer
+import rendergui
 import respaths
 import simpleeditors
 import toolsencoding
@@ -664,9 +665,6 @@ class BlenderContainerActions(AbstractContainerActionObject):
         if self.container_data.render_data == None:
             self.container_data.render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
         
-        print("jkjkjkjkjkjk")
-        print(self.container_data.render_data.__dict__)
-        
         blenderheadless.set_render_data(self.get_container_program_id(), self.container_data.render_data)
         
         # Write current render target container clip for blenderrendersetup.py
@@ -808,19 +806,20 @@ class ContainerStatusPollingThread(threading.Thread):
         
 
 # -------------------------------------------------------------- creating unrendered clip
-def create_unrendered_clip(length, image_file, data, callback):
-    unrendered_creation_thread = UnrenderedCreationThread(length, image_file, data, callback)
+def create_unrendered_clip(length, image_file, data, callback, window_text):
+    unrendered_creation_thread = UnrenderedCreationThread(length, image_file, data, callback, window_text)
     unrendered_creation_thread.start()
 
 
 # Creates a set length video clip from image to act as container clip unrendered media.
 class UnrenderedCreationThread(threading.Thread):
     
-    def __init__(self, length, image_file, data, callback):
+    def __init__(self, length, image_file, data, callback, window_text):
         self.length = length
         self.image_file = image_file
         self.data = data
         self.callback = callback
+        self.window_text = window_text
 
         threading.Thread.__init__(self)
         
@@ -846,8 +845,19 @@ class UnrenderedCreationThread(threading.Thread):
         clip_renderer.wait_for_producer_end_stop = True
         clip_renderer.start()
 
+        Gdk.threads_enter()
+        
+        title = _("Rendering Placeholder Media")
+
+        progress_bar = Gtk.ProgressBar()
+        dialog = rendergui.clip_render_progress_dialog(None, title, self.window_text, progress_bar, gui.editor_window.window, True)
+
+        motion_progress_update = renderconsumer.ProgressWindowThread(dialog, progress_bar, clip_renderer, self.progress_thread_complete)
+        motion_progress_update.start()
+
+        Gdk.threads_leave()
+        
         while clip_renderer.stopped == False:       
-            print(clip_renderer.get_render_fraction())
             time.sleep(0.5)
 
         Gdk.threads_enter()
@@ -855,3 +865,8 @@ class UnrenderedCreationThread(threading.Thread):
         self.callback(write_file, self.data)
 
         Gdk.threads_leave()
+
+    def progress_thread_complete(self, dialog, some_number):
+        #  Gdk.threads_enter() is done before this called from "motion_progress_update" thread.
+        dialog.destroy()
+

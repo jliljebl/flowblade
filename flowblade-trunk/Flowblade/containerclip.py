@@ -39,7 +39,6 @@ import utils
 ROW_WIDTH = 300
 
 
-
 class ContainerClipData:
     
         def __init__(self, container_type, program, unrendered_media):
@@ -117,6 +116,7 @@ def edit_program(data):
     clip, track, item_id, item_data = data
     action_object = containeractions.get_action_object(clip.container_data)
     action_object.edit_program(clip)
+
 
 #------------------------------------------------------------- Cloning
 def clone_clip(clip):
@@ -240,7 +240,9 @@ def _blender_clip_create_dialog_callback(dialog, response_id, data):
 
         blender_unrendered_media_image = respaths.IMAGE_PATH + "unrendered_blender.png"
 
-        containeractions.create_unrendered_clip(length, blender_unrendered_media_image, container_clip_data, _blender_unredered_media_creation_complete)
+        window_text = _("<b>Creating Blender Container for:</b> ") + container_clip_data.get_program_name() + ".blend"
+ 
+        containeractions.create_unrendered_clip(length, blender_unrendered_media_image, container_clip_data, _blender_unredered_media_creation_complete, window_text)
 
 def _blender_unredered_media_creation_complete(created_unrendered_clip_path, container_clip_data):
     rand_id_str = str(os.urandom(16))

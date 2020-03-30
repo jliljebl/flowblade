@@ -119,7 +119,6 @@ def main(root_path, session_id, project_path, range_in, range_out, profile_desc)
     # Create list of available mlt profiles
     mltprofiles.load_profile_list()
     
-    ccrutils.prints_to_log_file("/home/janne/blenderlog")
     ccrutils.init_session_folders(session_id)
     ccrutils.load_render_data()
     
@@ -138,8 +137,7 @@ def main(root_path, session_id, project_path, range_in, range_out, profile_desc)
     p.wait()
 
     render_data = ccrutils.get_render_data()
-    print(render_data.__dict__)
- 
+
     # Render video
     if render_data.do_video_render == True:
         # Render consumer
