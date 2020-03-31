@@ -2103,7 +2103,7 @@ def media_file_menu_item_selected(widget, data):
     if item_id == "Render Proxy File":
         proxyediting.create_proxy_menu_item_selected(media_file)
     if item_id == "Edit Container Data":
-        containerprogramedit.show_project_editor_manager_dialog(media_file.container_data)
+        containerprogramedit.show_container_data_program_editor_dialog(media_file.container_data)
 
 def _select_treeview_on_pos_and_return_row_and_column_title(event, treeview):
     selection = treeview.get_selection()

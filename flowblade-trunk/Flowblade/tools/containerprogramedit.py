@@ -29,16 +29,16 @@ import os
 import guicomponents
 import guiutils
 
-EDITOR_PANEL_LEFT_LABEL_WIDTH = 150
+EDITOR_PANEL_LEFT_LABEL_WIDTH = 220
 EDITOR_PANEL_BUTTON_WIDTH = 150
  
 
 _editor_manager_window = None
 
-def show_project_editor_manager_dialog(container_data):
+def show_container_data_program_editor_dialog(container_data):
     global _editor_manager_window
-    _editor_manager_window = EditorManagerWindow(container_data)
-
+    # Only Blender has this for now
+    _editor_manager_window = BlenderProjectEditorManagerWindow(container_data)
 
 def _shutdown_save():
     # Edits already saved, destroy window.
@@ -52,7 +52,7 @@ def _shutdown_cancel():
     _editor_manager_window.destroy()
     
      
-class EditorManagerWindow(Gtk.Window):
+class BlenderProjectEditorManagerWindow(Gtk.Window):
     
     def __init__(self, container_data):
         GObject.GObject.__init__(self)
@@ -68,13 +68,13 @@ class EditorManagerWindow(Gtk.Window):
         panel_objects = self.get_objects_panel()
         guiutils.set_margins(panel_objects, 12, 12, 12, 4)
         
-        panel_editors = self.get_editors_panel() 
+        panel_editors = self.get_editors_panel()
+        panel_editors.set_size_request(800, 400)
         guiutils.set_margins(panel_editors, 12, 12, 0, 6)
 
         edit_pane = Gtk.HBox(False, 2)
         edit_pane.pack_start(panel_objects, False, False, 0)
         edit_pane.pack_start(panel_editors, True, True, 0)
-        edit_pane.set_size_request(750, 600)
         
         self.save_button = Gtk.Button(_("Save Changes"))
         self.save_button.connect("clicked",lambda w: _shutdown_save())
@@ -167,13 +167,22 @@ class EditorManagerWindow(Gtk.Window):
         self.editor_select.append_text(_("Float Number"))
         self.editor_select.set_active(0)
 
+        # --- object path row right.
+        self.obj_path_label = Gtk.Label()
+        self.obj_path_label.set_use_markup(True)
+        obj_path_row_right = Gtk.HBox(False, 2)
+        obj_path_row_right.pack_start(guiutils.pad_label(4, 4), False, False, 0)
+        obj_path_row_right.pack_start(self.obj_path_label, False, False, 0)
+        obj_path_row_right.pack_start(self.obj_path_entry, False, False, 0)
+        
         # --- panels
         editor_add_right = Gtk.VBox(False, 2)
         editor_add_right.pack_start(add_button, False, False, 0)
         editor_add_right.pack_start(Gtk.Label(), True, True, 0)
         
         editor_add_left = Gtk.VBox(True, 2)
-        editor_add_left.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Property Path:")), self.obj_path_entry, EDITOR_PANEL_LEFT_LABEL_WIDTH), False, False, 0)
+        editor_add_left.pack_start(guiutils.bold_label(_("New Editor Properties")), False, False, 0)
+        editor_add_left.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Blender Object Property Path:")), obj_path_row_right, EDITOR_PANEL_LEFT_LABEL_WIDTH), False, False, 0)
         editor_add_left.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Editor Label:")), self.editor_label_entry, EDITOR_PANEL_LEFT_LABEL_WIDTH), False, False, 0)
         editor_add_left.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Tooltip Info:")), self.tooltip_info_entry, EDITOR_PANEL_LEFT_LABEL_WIDTH), False, False, 0)
         editor_add_left.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Editor Type:")), self.editor_select, EDITOR_PANEL_LEFT_LABEL_WIDTH), False, False, 0)
@@ -188,7 +197,8 @@ class EditorManagerWindow(Gtk.Window):
         vbox.pack_start(delete_row, False, False, 0)
 
         panel = Gtk.VBox(True, 2)
-        panel.pack_start(guiutils.get_named_frame(_("Object Editors"), vbox), True, True, 0)
+        self.object_editors_frame = guiutils.get_named_frame(_("Object Editors for "), vbox)
+        panel.pack_start(self.object_editors_frame, True, True, 0)
         return panel
 
     def get_selected_object(self):
@@ -199,6 +209,14 @@ class EditorManagerWindow(Gtk.Window):
     def object_selection_changed(self, tree_selection):
         obj = self.get_selected_object()
         self.display_object_editors_data(obj)
+        
+        obj_text = '<i>bpy.data.objects["' + obj[0] + '"].</i>'
+        self.obj_path_label.set_markup(obj_text)
+        
+        editors_frame_title = "<b>" + _("Object Editors for ") + "'" + obj[0] +  "'" + "</b>"
+        self.object_editors_frame.name_label.set_use_markup(True)
+        self.object_editors_frame.name_label.set_markup(editors_frame_title)
+        
         if len(obj[2]) > 0:
             path = Gtk.TreePath.new_from_indices([0])
             self.editors_list.treeview.get_selection().select_path(path)
@@ -209,7 +227,7 @@ class EditorManagerWindow(Gtk.Window):
     def display_object_editors_data(self, obj):
         editors_list = obj[2]  # object is [name, type, editors_list] see blenderprojectinit.py
         self.editors_list.fill_data_model(editors_list)
-    
+
     def add_clicked(self):
         editor_data = self.get_current_editor_data()
         obj = self.get_selected_object()
@@ -226,7 +244,7 @@ class EditorManagerWindow(Gtk.Window):
         obj = self.get_selected_object()
         obj[2].pop(selected_row_index)
         self.object_selection_changed(None)
-        
+
     def get_current_editor_data(self):
         editor_data = []
         # [prop_path, label, tooltip, editor_type, value]

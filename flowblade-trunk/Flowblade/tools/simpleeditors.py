@@ -41,6 +41,7 @@ SIMPLE_EDITOR_LEFT_WIDTH = 150
 
 
 def show_blender_container_clip_program_editor(callback, blender_objects):
+    # Create panels for objects
     panels = []
     editors = []
     for obj in blender_objects:
@@ -62,13 +63,31 @@ def show_blender_container_clip_program_editor(callback, blender_objects):
             panel = guiutils.get_named_frame(obj[0] + " - " + obj[1], editors_panel)
             panels.append(panel)
         
-    _create_blender_project_edit_dialog(callback, panels, editors)
+    # Create and show dialog
+    dialog = Gtk.Dialog(_("Blender Project Edit"), gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                         _("Save Changes"), Gtk.ResponseType.ACCEPT))
+
+    pane = Gtk.VBox(False, 2)
+    for panel in panels:
+        pane.pack_start(panel, False, False, 0)
+
+    alignment = dialogutils.get_default_alignment(pane)
+    dialogutils.set_outer_margins(dialog.vbox)
+    dialog.vbox.pack_start(alignment, True, True, 0)
+
+    dialog.set_default_response(Gtk.ResponseType.REJECT)
+    dialog.set_resizable(False)
+    dialog.connect('response', callback, editors)
+    dialog.show_all()
 
 
-# ----------------------------------------------------- editors
+# ----------------------------------------------------------------------- editors
 def get_editor(editor_type, id_data, label_text, value):
     if editor_type == SIMPLE_EDITOR_TEXT:
         return TextEditor(id_data, label_text, value)
+
 
 class AbstractSimpleEditor(Gtk.HBox):
     
@@ -108,23 +127,5 @@ class TextEditor(AbstractSimpleEditor):
             return self.value
 
 
-# ----------------------------------------------- dialogs
-def _create_blender_project_edit_dialog(callback, panels, editors):
-    dialog = Gtk.Dialog(_("Blender Project Edit"), gui.editor_window.window,
-                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel"), Gtk.ResponseType.REJECT,
-                         _("Save Changes"), Gtk.ResponseType.ACCEPT))
 
-    pane = Gtk.VBox(False, 2)
-    for panel in panels:
-        pane.pack_start(panel, False, False, 0)
-
-    alignment = dialogutils.get_default_alignment(pane)
-    dialogutils.set_outer_margins(dialog.vbox)
-    dialog.vbox.pack_start(alignment, True, True, 0)
-
-    dialog.set_default_response(Gtk.ResponseType.REJECT)
-    dialog.set_resizable(False)
-    dialog.connect('response', callback, editors)
-    dialog.show_all()
     

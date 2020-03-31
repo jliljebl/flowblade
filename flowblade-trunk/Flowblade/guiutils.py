@@ -309,6 +309,8 @@ def get_named_frame(name, widget, left_padding=12, right_padding=6, right_out_pa
         frame.pack_start(label_box, False, False, 0)
     frame.pack_start(alignment, True, True, 0)
     
+    frame.name_label = label
+    
     out_align = set_margins(frame, 4, 4, 0, right_out_padding)
     
     return out_align

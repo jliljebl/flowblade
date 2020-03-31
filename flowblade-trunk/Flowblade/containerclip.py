@@ -125,13 +125,14 @@ def clone_clip(clip):
 
 
 # ------------------------------------------------------------ GUI
-def _get_file_select_row_and_editor(label_text):
+def _get_file_select_row_and_editor(label_text, file_filter=None):
     file_chooser = Gtk.FileChooserButton()
     file_chooser.set_size_request(250, 25)
     file_chooser.set_current_folder(os.path.expanduser("~") + "/")
 
-    #filt = utils.get_image_sequence_file_filter()
-    #file_chooser.add_filter(filt)
+    if file_filter != None:
+        file_chooser.add_filter(file_filter)
+
     row = guiutils.get_two_column_box(Gtk.Label(label=label_text), file_chooser, ROW_WIDTH)
     return (file_chooser, row)
 
@@ -196,6 +197,9 @@ def _gmic_clip_create_dialog_callback(dialog, response_id, data):
 # --- MLT XML
 def create_mlt_xml_media_item(xml_file_path, media_name):
     # xml file is both unrendered media and program
+    #f = Gtk.FileFilter()
+    #f.set_name(_("MLT XML"))
+    #f.add_pattern("*.xml")
     container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_MLT_XML, xml_file_path, xml_file_path)
     container_clip = ContainerClipMediaItem(PROJECT().next_media_file_id, media_name, container_clip_data)
     PROJECT().add_container_clip_media_object(container_clip)
@@ -204,7 +208,11 @@ def create_mlt_xml_media_item(xml_file_path, media_name):
 
 # --- Blender
 def create_blender_media_item():
-    project_select, row1 = _get_file_select_row_and_editor(_("Select Blender Project File:"))
+    f = Gtk.FileFilter()
+    f.set_name(_("Blender Project"))
+    f.add_pattern("*.blend")
+    project_select, row1 = _get_file_select_row_and_editor(_("Select Blender Project File:"), f)
+
     _open_image_sequence_dialog(_blender_clip_create_dialog_callback, _("Create Blender Project Container Clip"), [row1], [project_select])
 
 def _blender_clip_create_dialog_callback(dialog, response_id, data):
@@ -222,8 +230,6 @@ def _blender_clip_create_dialog_callback(dialog, response_id, data):
             _show_not_all_data_info()
             return
 
-
-
         container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_BLENDER, project_file, None)
         
         action_object = containeractions.get_action_object(container_clip_data)
@@ -240,7 +246,7 @@ def _blender_clip_create_dialog_callback(dialog, response_id, data):
 
         blender_unrendered_media_image = respaths.IMAGE_PATH + "unrendered_blender.png"
 
-        window_text = _("<b>Creating Blender Container for:</b> ") + container_clip_data.get_program_name() + ".blend"
+        window_text = _("<b>Creating Container for Blender Project:</b> ") + container_clip_data.get_program_name() + ".blend"
  
         containeractions.create_unrendered_clip(length, blender_unrendered_media_image, container_clip_data, _blender_unredered_media_creation_complete, window_text)
 
