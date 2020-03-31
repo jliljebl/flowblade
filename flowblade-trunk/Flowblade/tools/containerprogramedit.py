@@ -28,6 +28,7 @@ import os
 
 import guicomponents
 import guiutils
+import simpleeditors
 
 EDITOR_PANEL_LEFT_LABEL_WIDTH = 220
 EDITOR_PANEL_BUTTON_WIDTH = 150
@@ -174,13 +175,7 @@ class BlenderProjectEditorManagerWindow(Gtk.Window):
         self.tooltip_info_entry = Gtk.Entry() 
         self.default_value_entry = Gtk.Entry() 
         
-        self.editor_select = Gtk.ComboBoxText()
-        self.editor_select.append_text(_("String"))
-        self.editor_select.append_text(_("Value"))
-        self.editor_select.append_text(_("Float"))
-        self.editor_select.append_text(_("Int"))
-        self.editor_select.append_text(_("Color"))
-        self.editor_select.set_active(0)
+        self.editor_select = simpleeditors.get_simple_editor_selector(0, self.editor_selection_changed)
 
         # --- object path row right.
         self.obj_path_label = Gtk.Label()
@@ -315,3 +310,8 @@ class BlenderProjectEditorManagerWindow(Gtk.Window):
         self.tooltip_info_entry.set_text("")
         self.editor_select.set_active(0)
         self.default_value_entry.set_text("")
+
+    def editor_selection_changed(self, combo):
+        value = simpleeditors.DEFAULT_VALUES[combo.get_active()]
+        self.default_value_entry.set_text(value)
+        

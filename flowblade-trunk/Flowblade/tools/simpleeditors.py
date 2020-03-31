@@ -32,11 +32,14 @@ import gui
 import guiutils
 
 
-SIMPLE_EDITOR_TEXT = 0
-SIMPLE_EDITOR_FLOAT = 1
-SIMPLE_EDITOR_INT = 2
-SIMPLE_EDITOR_COLOR = 3
+SIMPLE_EDITOR_STRING = 0
+SIMPLE_EDITOR_VALUE = 1
+SIMPLE_EDITOR_FLOAT = 2
+SIMPLE_EDITOR_INT = 3
+SIMPLE_EDITOR_COLOR = 4
 
+DEFAULT_VALUES = ["Text", "a value", "0.0", "0", "(1.0, 1.0, 1.0, 1.0)"]
+    
 SIMPLE_EDITOR_LEFT_WIDTH = 150
 
 
@@ -82,6 +85,19 @@ def show_blender_container_clip_program_editor(callback, blender_objects):
     dialog.connect('response', callback, editors)
     dialog.show_all()
 
+def get_simple_editor_selector(active_index, callback):
+
+    editor_select = Gtk.ComboBoxText()
+    editor_select.append_text(_("String")) # these corespond values above
+    editor_select.append_text(_("Value"))
+    editor_select.append_text(_("Float"))
+    editor_select.append_text(_("Int"))
+    editor_select.append_text(_("Color"))
+    editor_select.set_active(active_index)
+    if callback != None:
+        editor_select.connect("changed", callback)
+    
+    return editor_select
 
 # ----------------------------------------------------------------------- editors
 def get_editor(editor_type, id_data, label_text, value):
