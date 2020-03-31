@@ -46,7 +46,6 @@ def show_container_data_program_editor_dialog(container_data):
 def _shutdown_save():
     # Edits already saved, destroy window.
     _editor_manager_window.destroy()
-    #print(_editor_manager_window.container_data.data_slots["project_edit_info"])
 
 def _shutdown_cancel():
     # Roll back changes.
@@ -144,14 +143,6 @@ class BlenderProjectEditorManagerWindow(Gtk.Window):
         
         return info_row_full
 
-    def edit_targets_changed(self, w):
-        if w.get_active() == 0:
-            self.edit_targets = BLENDER_OBJECTS
-        else:
-            self.edit_targets = BLENDER_MATERIALS
-        self.fill_targets_list()
-        self.targets_list.treeview.get_selection().select_path(Gtk.TreePath.new_from_string("0"))
-                    
     def get_targets_panel(self):
         self.targets_list = guicomponents.TextTextListView()
 
@@ -162,13 +153,6 @@ class BlenderProjectEditorManagerWindow(Gtk.Window):
         vbox = Gtk.VBox(True, 2)
         vbox.pack_start(self.targets_frame, True, True, 0)
         return vbox
-
-    def fill_targets_list(self):
-        self.targets_list.storemodel.clear()
-        targets = self.get_edit_targets()
-        for t in targets:
-            row_data = [t[0], t[1]] # obj is list [name, object_type]
-            self.targets_list.storemodel.append(row_data)
 
     def get_editors_panel(self):
         self.editors_list = guicomponents.MultiTextColumnListView(5)
@@ -191,8 +175,11 @@ class BlenderProjectEditorManagerWindow(Gtk.Window):
         self.default_value_entry = Gtk.Entry() 
         
         self.editor_select = Gtk.ComboBoxText()
-        self.editor_select.append_text(_("Text Entry"))
-        self.editor_select.append_text(_("Float Number"))
+        self.editor_select.append_text(_("String"))
+        self.editor_select.append_text(_("Value"))
+        self.editor_select.append_text(_("Float"))
+        self.editor_select.append_text(_("Int"))
+        self.editor_select.append_text(_("Color"))
         self.editor_select.set_active(0)
 
         # --- object path row right.
@@ -236,6 +223,13 @@ class BlenderProjectEditorManagerWindow(Gtk.Window):
         elif self.edit_targets == BLENDER_MATERIALS:
             return info_json["materials"]
 
+    def fill_targets_list(self):
+        self.targets_list.storemodel.clear()
+        targets = self.get_edit_targets()
+        for t in targets:
+            row_data = [t[0], t[1]] # obj is list [name, object_type]
+            self.targets_list.storemodel.append(row_data)
+            
     def get_editors_list_title(self, obj_name):
         if self.edit_targets == BLENDER_OBJECTS:
             return "<b>" + _("Object Editors for ") + "'" + obj_name +  "'" + "</b>"
@@ -245,9 +239,24 @@ class BlenderProjectEditorManagerWindow(Gtk.Window):
     def get_selected_object(self):
         targets = self.get_edit_targets()
         return targets[self.targets_list.get_selected_row_index()]
-        
+
+    def edit_targets_changed(self, w):
+        if w.get_active() == 0:
+            self.edit_targets = BLENDER_OBJECTS
+        else:
+            self.edit_targets = BLENDER_MATERIALS
+        self.fill_targets_list()
+        self.targets_list.treeview.get_selection().select_path(Gtk.TreePath.new_from_string("0"))
+        #self.targets_list.treeview.get_selection().select_path(Gtk.TreePath.new_from_string("0"))
+                    
     def target_selection_changed(self, tree_selection):
-        obj = self.get_selected_object()
+        try:
+            obj = self.get_selected_object()
+        except:
+            # storemodel.clear() list triggers "changed" and self.get_selected_object() crashes if this event 
+            # is from there. We will move forward with the intentional selection made after list filled properly.
+            return
+               
         self.display_object_editors_data(obj)
         
         if self.edit_targets == BLENDER_OBJECTS:
