@@ -40,7 +40,7 @@ CANCELLED = 3
 NOT_SET_YET = 0
 CONTAINER_CLIP_RENDER_GMIC = 1
 CONTAINER_CLIP_RENDER_MLT_XML = 2
-CONTAINER_CLIP_RENDER_BLENDER = 1
+CONTAINER_CLIP_RENDER_BLENDER = 3
 
 
 _hamburger_menu = Gtk.Menu()
@@ -302,7 +302,7 @@ class JobsQueueView(Gtk.VBox):
         #self.text_col_1.set_expand(True)
         self.text_col_1.set_spacing(5)
         self.text_col_1.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
-        self.text_col_1.set_min_width(150)
+        self.text_col_1.set_min_width(200)
         self.text_col_1.pack_start(self.text_rend_1, True)
         self.text_col_1.add_attribute(self.text_rend_1, "text", 0) # <- note column index
 

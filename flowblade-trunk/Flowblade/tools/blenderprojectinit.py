@@ -48,6 +48,14 @@ for obj in bpy.data.objects:
 
 project_data["objects"] = objects_list
 
+materials_list = []
+for m in bpy.data.materials:
+    name = str(m.name)
+    json_obj = [name, "", []]
+    materials_list.append(json_obj)
+
+project_data["materials"] = materials_list
+    
 save_path = os.path.join(GLib.get_user_cache_dir(), "flowblade") + "/blender_container_projectinfo.json"
 
 if not os.path.exists(save_path):

@@ -31,7 +31,10 @@ import guiutils
 
 EDITOR_PANEL_LEFT_LABEL_WIDTH = 220
 EDITOR_PANEL_BUTTON_WIDTH = 150
- 
+
+# Editor targets
+BLENDER_OBJECTS = 1
+BLENDER_MATERIALS = 2
 
 _editor_manager_window = None
 
@@ -56,6 +59,8 @@ class BlenderProjectEditorManagerWindow(Gtk.Window):
     
     def __init__(self, container_data):
         GObject.GObject.__init__(self)
+        self.edit_targets = BLENDER_OBJECTS
+        
         self.connect("delete-event", lambda w, e:_shutdown_cancel())
 
         self.container_data = container_data
@@ -65,7 +70,7 @@ class BlenderProjectEditorManagerWindow(Gtk.Window):
 
         info_row = self.get_info_row()
 
-        panel_objects = self.get_objects_panel()
+        panel_objects = self.get_targets_panel()
         guiutils.set_margins(panel_objects, 12, 12, 12, 4)
         
         panel_editors = self.get_editors_panel()
@@ -93,13 +98,12 @@ class BlenderProjectEditorManagerWindow(Gtk.Window):
         pane = Gtk.VBox(False, 2)
         pane.pack_start(info_row, False, False, 0)
         pane.pack_start(edit_pane, True, True, 0)
-        #pane.pack_start(guiutils.pad_label(24,12), False, False, 0)
         pane.pack_start(buttons_row, False, False, 0)
 
         align = guiutils.set_margins(pane, 12, 12, 12, 12)
 
-        self.objects_list.connect_selection_changed(self.object_selection_changed)
-        self.objects_list.treeview.get_selection().select_path(Gtk.TreePath.new_from_string("0"))
+        self.targets_list.connect_selection_changed(self.target_selection_changed)
+        self.targets_list.treeview.get_selection().select_path(Gtk.TreePath.new_from_string("0"))
         
         # Set pane and show window
         self.add(align)
@@ -111,6 +115,12 @@ class BlenderProjectEditorManagerWindow(Gtk.Window):
     def get_info_row(self):
         folder, project_file = os.path.split(self.container_data.program)
         project_name_label = Gtk.Label(label=project_file)
+
+        self.targets_select = Gtk.ComboBoxText()
+        self.targets_select.append_text(_("Objects"))
+        self.targets_select.append_text(_("Materials"))
+        self.targets_select.set_active(0)
+        self.targets_select.connect("changed", self.edit_targets_changed)  
         
         project_box = Gtk.HBox(False, 2)
         project_box.pack_start(guiutils.set_margins(guiutils.bold_label("Blender Project:"), 0, 0, 0, 4), False, False, 0)
@@ -126,26 +136,44 @@ class BlenderProjectEditorManagerWindow(Gtk.Window):
         info_row = Gtk.HBox(True, 2)
         info_row.pack_start(project_box, True, True, 0)
         info_row.pack_start(editors_box, False, False, 0)
-        return info_row
         
-    def get_objects_panel(self):
-        self.objects_list = guicomponents.TextTextListView()
+        info_row_full = Gtk.HBox(False, 2)
+        info_row_full.pack_start(self.targets_select, True, True, 0)
+        info_row_full.pack_start(guiutils.pad_label(24,4), False, False, 0)
+        info_row_full.pack_start(info_row, False, False, 0)
         
-        self.objects_list.storemodel.clear()
-        info_json = self.container_data.data_slots["project_edit_info"] 
-        objects = info_json["objects"]
-        for obj in objects:
-            row_data = [obj[0], obj[1]] # obj is list [name, object_type]
-            self.objects_list.storemodel.append(row_data)
+        return info_row_full
+
+    def edit_targets_changed(self, w):
+        if w.get_active() == 0:
+            self.edit_targets = BLENDER_OBJECTS
+        else:
+            self.edit_targets = BLENDER_MATERIALS
+        self.fill_targets_list()
+        self.targets_list.treeview.get_selection().select_path(Gtk.TreePath.new_from_string("0"))
+                    
+    def get_targets_panel(self):
+        self.targets_list = guicomponents.TextTextListView()
+
+        self.fill_targets_list()
+
+        self.targets_frame = guiutils.get_named_frame(_("Blender Project Objects"), self.targets_list)
 
         vbox = Gtk.VBox(True, 2)
-        vbox.pack_start(guiutils.get_named_frame(_("Blender Project Objects"), self.objects_list), True, True, 0)
+        vbox.pack_start(self.targets_frame, True, True, 0)
         return vbox
-    
+
+    def fill_targets_list(self):
+        self.targets_list.storemodel.clear()
+        targets = self.get_edit_targets()
+        for t in targets:
+            row_data = [t[0], t[1]] # obj is list [name, object_type]
+            self.targets_list.storemodel.append(row_data)
+
     def get_editors_panel(self):
         self.editors_list = guicomponents.MultiTextColumnListView(5)
         guiutils.set_margins(self.editors_list, 0, 12, 0, 6)
-        self.editors_list.set_size_request(700, 360)
+        self.editors_list.set_size_request(900, 360)
 
         titles = [_("Property Path"), _("Label"), _("Info"), _("Type"), _("Value")]
         self.editors_list.set_column_titles(titles)
@@ -197,23 +225,39 @@ class BlenderProjectEditorManagerWindow(Gtk.Window):
         vbox.pack_start(delete_row, False, False, 0)
 
         panel = Gtk.VBox(True, 2)
-        self.object_editors_frame = guiutils.get_named_frame(_("Object Editors for "), vbox)
+        self.object_editors_frame = guiutils.get_named_frame("to be replaced", vbox)
         panel.pack_start(self.object_editors_frame, True, True, 0)
         return panel
 
-    def get_selected_object(self):
+    def get_edit_targets(self):
         info_json = self.container_data.data_slots["project_edit_info"] 
-        objects = info_json["objects"]
-        return objects[self.objects_list.get_selected_row_index()]
+        if self.edit_targets == BLENDER_OBJECTS:
+            return info_json["objects"]
+        elif self.edit_targets == BLENDER_MATERIALS:
+            return info_json["materials"]
+
+    def get_editors_list_title(self, obj_name):
+        if self.edit_targets == BLENDER_OBJECTS:
+            return "<b>" + _("Object Editors for ") + "'" + obj_name +  "'" + "</b>"
+        elif self.edit_targets == BLENDER_MATERIALS:
+            return "<b>" + _("Materials Editors for ") + "'" + obj_name +  "'" + "</b>"
+
+    def get_selected_object(self):
+        targets = self.get_edit_targets()
+        return targets[self.targets_list.get_selected_row_index()]
         
-    def object_selection_changed(self, tree_selection):
+    def target_selection_changed(self, tree_selection):
         obj = self.get_selected_object()
         self.display_object_editors_data(obj)
         
-        obj_text = '<i>bpy.data.objects["' + obj[0] + '"].</i>'
+        if self.edit_targets == BLENDER_OBJECTS:
+            obj_text = '<i>bpy.data.objects["' + obj[0] + '"].</i>'
+        elif self.edit_targets == BLENDER_MATERIALS:
+            obj_text = '<i>bpy.data.materials["' + obj[0] + '"].</i>'
+            
         self.obj_path_label.set_markup(obj_text)
         
-        editors_frame_title = "<b>" + _("Object Editors for ") + "'" + obj[0] +  "'" + "</b>"
+        editors_frame_title = self.get_editors_list_title(obj[0])
         self.object_editors_frame.name_label.set_use_markup(True)
         self.object_editors_frame.name_label.set_markup(editors_frame_title)
         

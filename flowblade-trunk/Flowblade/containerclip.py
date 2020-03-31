@@ -238,6 +238,7 @@ def _blender_clip_create_dialog_callback(dialog, response_id, data):
         project_edit_info_path = userfolders.get_cache_dir() + "blender_container_projectinfo.json"
         info_file = open(project_edit_info_path, "r")
         project_edit_info = json.load(info_file)
+        print(project_edit_info)
         
         length = int(project_edit_info["frame_end"]) - int(project_edit_info["frame_start"])
         container_clip_data.data_slots["project_edit_info"] = project_edit_info
