@@ -291,7 +291,7 @@ class BlenderProjectEditorManagerWindow(Gtk.Window):
         selected_row_index = self.editors_list.get_selected_row_index()
         obj = self.get_selected_object()
         obj[2].pop(selected_row_index)
-        self.object_selection_changed(None)
+        self.target_selection_changed(None)
 
     def get_current_editor_data(self):
         editor_data = []
@@ -300,7 +300,9 @@ class BlenderProjectEditorManagerWindow(Gtk.Window):
         editor_data.append(self.editor_label_entry.get_text())
         editor_data.append(self.tooltip_info_entry.get_text())
         editor_data.append(str(self.editor_select.get_active()))
-        text = '"' + self.default_value_entry.get_text() + '"'
+        text = self.default_value_entry.get_text()
+        if self.editor_select.get_active() == simpleeditors.SIMPLE_EDITOR_STRING:
+             text = '"' + text + '"'
         editor_data.append(text)
         return editor_data
 
