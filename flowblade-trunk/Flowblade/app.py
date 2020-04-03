@@ -143,7 +143,7 @@ def main(root_path):
     if _log_file != None:
         log_print_output_to_file()
 
-    set_quiet_if_requested()
+    act_on_args()
 
     print("Application version: " + editorstate.appversion)
 
@@ -446,12 +446,14 @@ def open_assoc_file():
     GObject.source_remove(assoc_timeout_id)
     projectaction.actually_load_project(assoc_file_path, block_recent_files=False)
 
-def set_quiet_if_requested():
+def act_on_args():
     for arg in sys.argv:
         if arg == "--quiet":
             global _log_file
             _log_file = "/dev/null"
             log_print_output_to_file()
+        if arg == "--sdl2":
+            editorstate.consumer_sdl_version = editorstate.SDL2
             
 def create_gui():
     """
