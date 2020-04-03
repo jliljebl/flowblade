@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-12 18:20+0200\n"
+"POT-Creation-Date: 2020-04-03 08:50+0300\n"
 "PO-Revision-Date: 2017-04-15 18:47+0800\n"
 "Last-Translator: wu <laowudebox@126.com>\n"
 "Language-Team: Language LANGUAGE\n"
@@ -16,81 +16,81 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: app.py:193
+#: app.py:200
 msgid "No Autosave"
 msgstr "无自动保存"
 
-#: app.py:193
+#: app.py:200
 msgid "1 min"
 msgstr "1 min"
 
-#: app.py:193
+#: app.py:200
 msgid "2 min"
 msgstr "2 min"
 
-#: app.py:193
+#: app.py:200
 msgid "5 min"
 msgstr "5 min"
 
-#: app.py:903
+#: app.py:952
 msgid "Too small screen for this application."
 msgstr "对于这个应用，画面太小。"
 
-#: app.py:906
+#: app.py:955
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr "对于这个应用，最小画面尺寸是1152 x 768.\n"
 
-#: app.py:907
+#: app.py:956
 msgid "Your screen dimensions are "
 msgstr "你的画面尺寸是 "
 
-#: app.py:940 projectaction.py:401 projectaction.py:724
+#: app.py:994 projectaction.py:418 projectaction.py:743
 msgid "Project has not been saved previously"
 msgstr "项目还未被保存过"
 
-#: app.py:941 projectaction.py:402 projectaction.py:725
+#: app.py:995 projectaction.py:419 projectaction.py:744
 msgid "Save project with File -> Save As before closing."
 msgstr "在关闭之前通过菜单 文件 -> 另存为 保存项目"
 
-#: projectaction.py:133
+#: projectaction.py:138
 msgid "Media asset was missing!"
 msgstr "有用的媒体已丢失"
 
-#: projectaction.py:134
+#: projectaction.py:139
 msgid "Path of missing asset:"
 msgstr "已丢失的有用东西的路径"
 
-#: projectaction.py:135
+#: projectaction.py:140
 msgid ""
 "Relative search for replacement file in sub folders of project file failed."
 msgstr "在失败项目文件的子文件夹中搜索相关代替文件"
 
-#: projectaction.py:136
+#: projectaction.py:141
 msgid "To load the project you will need to either:"
 msgstr "加载你将会需要的另一个项目"
 
-#: projectaction.py:137
+#: projectaction.py:142
 msgid ""
 "Open project in 'Media Relinker' tool to relink media assets to new files, or"
 msgstr "在媒体重新链接器工具中打开项目以便重新连接相关媒体到新文件，或者"
 
-#: projectaction.py:138
+#: projectaction.py:143
 msgid "Place a file with the same exact name and path on the hard drive"
 msgstr "放置一个名字和路径完全相同的的文件到硬盘上"
 
-#: projectaction.py:139
+#: projectaction.py:144
 msgid "Open project in Media Relinker tool"
 msgstr "在媒体重新链接器工具中打开项目"
 
-#: projectaction.py:158
+#: projectaction.py:163
 msgid "Profile with Description: '"
 msgstr "带有描述的配置文件"
 
-#: projectaction.py:158
+#: projectaction.py:163
 msgid "' was not found on load!"
 msgstr "未找到加载内容"
 
-#: projectaction.py:159
+#: projectaction.py:164
 msgid ""
 "It is possible to load the project by creating a User Profile with exactly "
 "the same Description\n"
@@ -99,19 +99,19 @@ msgstr ""
 "通过准确地创建一个用户配置文件来加载项目相同的描述\n"
 "作为已丢失的配置文件。 "
 
-#: projectaction.py:160
+#: projectaction.py:165
 msgid "User Profiles can be created by selecting 'Edit->Profiles Manager'."
 msgstr "用户配置文件可以通过选择“配置文件管理器”来创建"
 
-#: projectaction.py:167
+#: projectaction.py:172
 msgid "Opening"
 msgstr "正在打开"
 
-#: projectaction.py:307
+#: projectaction.py:320
 msgid "Media files already present in project were opened!"
 msgstr "媒体文件已经发送到被打开的项目"
 
-#: projectaction.py:313
+#: projectaction.py:326
 msgid ""
 "Files already present:\n"
 "\n"
@@ -119,7 +119,7 @@ msgstr ""
 "文件已经发送\n"
 "\n"
 
-#: projectaction.py:320
+#: projectaction.py:333
 msgid ""
 "\n"
 "No duplicate media items were added to project."
@@ -127,11 +127,11 @@ msgstr ""
 "\n"
 "没有复制的媒体项目被加入到项目中"
 
-#: projectaction.py:519 exporting.py:516
+#: projectaction.py:538 exporting.py:522
 msgid "Selected folder contains files"
 msgstr "选中的目录包含文件"
 
-#: projectaction.py:520
+#: projectaction.py:539
 msgid ""
 "When saving a back-up snapshot of the project, the selected folder\n"
 "has to be empty."
@@ -139,55 +139,55 @@ msgstr ""
 "当保存一个项目的快照备份时，被选中的目录\n"
 "必须为空。"
 
-#: projectaction.py:577
+#: projectaction.py:596
 msgid "Copying project media assets"
 msgstr "正在复制相关项目媒体"
 
-#: projectaction.py:578
+#: projectaction.py:597
 msgid "Saving project file"
 msgstr "正在保存项目文件"
 
-#: projectaction.py:737
+#: projectaction.py:756
 msgid "Project not found on disk"
 msgstr "项目未在磁盘找到"
 
-#: projectaction.py:738
+#: projectaction.py:757
 msgid "Project can't be loaded."
 msgstr "项目无法加载。"
 
-#: projectaction.py:746
+#: projectaction.py:765
 msgid "Project has not been saved since it was opened."
 msgstr "由于被打开，项目未被保存"
 
-#: projectaction.py:751
+#: projectaction.py:770
 msgid "Project was saved less than a minute ago."
 msgstr "不到1分钟之前，项目已被保存"
 
-#: projectaction.py:754
+#: projectaction.py:773
 msgid "Project was saved one minute ago."
 msgstr "1分钟之前，项目已被保存"
 
-#: projectaction.py:756
+#: projectaction.py:775
 msgid "Project was saved "
 msgstr "项目已被保存 "
 
-#: projectaction.py:756
+#: projectaction.py:775
 msgid " minutes ago."
 msgstr " 几分钟之前"
 
-#: projectaction.py:768
+#: projectaction.py:799
 msgid "Render target file exists!"
 msgstr "渲染目标文件已存在"
 
-#: projectaction.py:769
+#: projectaction.py:800
 msgid "Confirm overwriting existing file."
 msgstr "确认覆盖已存在文件"
 
-#: projectaction.py:775
+#: projectaction.py:806
 msgid "Project is currently using proxy media!"
 msgstr "项目目前使用代理"
 
-#: projectaction.py:776
+#: projectaction.py:807
 msgid ""
 "Rendering from proxy media will produce worse quality than rendering from "
 "original media.\n"
@@ -200,82 +200,87 @@ msgstr ""
 "\n"
 "选择'确认'以通过代理进行渲染"
 
-#: projectaction.py:864
+#: projectaction.py:895
 msgid "Render launch failed!"
 msgstr "导致启动失败！"
 
-#: projectaction.py:865 projectaction.py:879 tools/batchrendering.py:307
+#: projectaction.py:896 projectaction.py:910 tools/batchrendering.py:308
 msgid "Error message: "
 msgstr "错误信息 "
 
-#: projectaction.py:878
+#: projectaction.py:909
 msgid "Adding item to render queue failed!"
 msgstr "添加条目到渲染列队失败！"
 
-#: projectaction.py:891
+#: projectaction.py:922
 msgid "Render Proxy Files For Selected Media"
 msgstr "渲染选中媒体的代理文件"
 
-#: projectaction.py:893
+#: projectaction.py:923
+#, fuzzy
+msgid "Render Proxy Files For All Media"
+msgstr "渲染选中媒体的代理文件"
+
+#: projectaction.py:925
 msgid "Select All"
 msgstr "全选"
 
-#: projectaction.py:894
+#: projectaction.py:926
 msgid "Select None"
 msgstr "Select None"
 
-#: projectaction.py:896
+#: projectaction.py:928
 msgid "Move Selected Media To Bin"
 msgstr "把选中的媒体移动到库"
 
-#: projectaction.py:899
+#: projectaction.py:931
 msgid "No Target Bins"
 msgstr "没有目标库"
 
-#: projectaction.py:918
+#: projectaction.py:950
 msgid "Append All Media to Timeline"
 msgstr "追加所有媒体到时间线"
 
-#: projectaction.py:919
+#: projectaction.py:951
 msgid "Append Selected Media to Timeline"
 msgstr "追加选中媒体到时间线"
 
-#: projectaction.py:948 editorwindow.py:238
+#: projectaction.py:982 editorwindow.py:240
 msgid "Add Video, Audio or Image..."
 msgstr "添加视频、音频或图像"
 
-#: projectaction.py:949 editorwindow.py:239
+#: projectaction.py:983 editorwindow.py:241
 msgid "Add Image Sequence..."
 msgstr "添加影像序列..."
 
-#: projectaction.py:970
+#: projectaction.py:1004
 msgid "Open.."
 msgstr "打开.."
 
-#: projectaction.py:999
+#: projectaction.py:1033
 msgid "Opening .mlt or .xml file as media was disallowed!"
 msgstr "不允许以媒体形式打开.mlt或.xml文件！"
 
-#: projectaction.py:1000
+#: projectaction.py:1034
 msgid ""
 "Only XML files with matching Profiles can be opened as clips.\n"
 "\n"
 "Last non-matching MLT XML file had Profile: "
 msgstr ""
 
-#: projectaction.py:1020
+#: projectaction.py:1054
 msgid "No file was selected"
 msgstr "未选中文件"
 
-#: projectaction.py:1020
+#: projectaction.py:1054
 msgid "Select a numbered file to add an Image Sequence to Project."
 msgstr "选择一个编号的文件，给项目添加一个图像序列。"
 
-#: projectaction.py:1028
+#: projectaction.py:1062
 msgid "Not a sequence file!"
 msgstr "不是序列文件！"
 
-#: projectaction.py:1028
+#: projectaction.py:1062
 msgid ""
 "Selected file does not have a number part in it,\n"
 "so it can't be an image sequence file."
@@ -283,98 +288,98 @@ msgstr ""
 "选择的文件没有编号部分。\n"
 "所以它不能作为一个影像序列文件。"
 
-#: projectaction.py:1196 projectaction.py:1198 projectaction.py:1207
-#: projectaction.py:1215 projectaction.py:1222 tools/batchrendering.py:1028
-#: clipmenuaction.py:156 clipmenuaction.py:158
+#: projectaction.py:1228 projectaction.py:1230 projectaction.py:1239
+#: projectaction.py:1247 projectaction.py:1254 tools/batchrendering.py:1035
+#: clipmenuaction.py:157 clipmenuaction.py:159
 msgid "N/A"
 msgstr "N/A"
 
-#: projectaction.py:1211 guicomponents.py:2247
+#: projectaction.py:1243 guicomponents.py:2458
 msgid "Yes"
 msgstr "是(确定)"
 
-#: projectaction.py:1213 guicomponents.py:2249
+#: projectaction.py:1245 guicomponents.py:2460
 msgid "No"
 msgstr "不(同意)"
 
-#: projectaction.py:1268
+#: projectaction.py:1300
 msgid "Select Project for Media Import"
 msgstr "为导入媒体选择项目"
 
-#: projectaction.py:1288
+#: projectaction.py:1320
 msgid "selection_"
 msgstr "选择_"
 
-#: projectaction.py:1289
+#: projectaction.py:1321
 msgid "Save Selection Compound Clip"
 msgstr "保存选择合成视频剪辑"
 
-#: projectaction.py:1343 projectaction.py:1362 projectaction.py:1677
-#: projectaction.py:1693 projectdata.py:219 tlineaction.py:274
+#: projectaction.py:1379 projectaction.py:1400 projectaction.py:1717
+#: projectaction.py:1733 projectdata.py:223 tlineaction.py:280
 msgid "sequence_"
 msgstr "序列_"
 
-#: projectaction.py:1344 projectaction.py:1363
+#: projectaction.py:1380 projectaction.py:1401
 msgid "Save Sequence Compound Clip"
 msgstr "保存序列合成视频剪辑"
 
-#: projectaction.py:1387
+#: projectaction.py:1427
 msgid "frame_"
 msgstr "frame_"
 
-#: projectaction.py:1388
+#: projectaction.py:1428
 msgid "Save Freeze Frame Sequence Compound Clip"
 msgstr "Save Freeze Frame Sequence Compound Clip"
 
-#: projectaction.py:1467 editorwindow.py:242
+#: projectaction.py:1507 editorwindow.py:244
 msgid "Add Bin"
 msgstr "添加库"
 
-#: projectaction.py:1468 editorwindow.py:243
+#: projectaction.py:1508 editorwindow.py:245
 msgid "Delete Selected Bin"
 msgstr "删除选中的库"
 
-#: projectaction.py:1472
+#: projectaction.py:1512
 msgid "Move Bin"
 msgstr "移动库"
 
-#: projectaction.py:1474 editorwindow.py:976
+#: projectaction.py:1514 editorwindow.py:1037
 msgid "Up"
 msgstr "提高"
 
-#: projectaction.py:1475 editorwindow.py:980
+#: projectaction.py:1515 editorwindow.py:1041
 msgid "Down"
 msgstr "下调"
 
-#: projectaction.py:1476
+#: projectaction.py:1516
 msgid "First"
 msgstr "First"
 
-#: projectaction.py:1477
+#: projectaction.py:1517
 msgid "Last"
 msgstr "Last"
 
-#: projectaction.py:1536
+#: projectaction.py:1576
 msgid "Can't remove a non-empty bin"
 msgstr "不能移除一个非空库"
 
-#: projectaction.py:1537
+#: projectaction.py:1577
 msgid "You must remove all files from the bin before deleting it."
 msgstr "删除库之前，你必须先移除其中的所有文件。"
 
-#: projectaction.py:1545
+#: projectaction.py:1585
 msgid "Can't remove last bin"
 msgstr "不能移除最后的库"
 
-#: projectaction.py:1546
+#: projectaction.py:1586
 msgid "There must always exist at least one bin."
 msgstr "必须存在至少一个库"
 
-#: projectaction.py:1642
+#: projectaction.py:1682
 msgid "Selected sequence is already being edited"
 msgstr "选中的序列已经编辑过了"
 
-#: projectaction.py:1643
+#: projectaction.py:1683
 msgid ""
 "Select another sequence. Press Add -button to create a\n"
 "new sequence if needed."
@@ -382,24 +387,24 @@ msgstr ""
 "选择另一个序列如果需要创建新序列\n"
 "请点击添加按钮"
 
-#: projectaction.py:1657 editorwindow.py:245
+#: projectaction.py:1697 editorwindow.py:247
 msgid "Add New Sequence"
 msgstr "添加新序列"
 
-#: projectaction.py:1658 editorwindow.py:246
+#: projectaction.py:1698 editorwindow.py:248
 msgid "Edit Selected Sequence"
 msgstr "编辑选中的序列"
 
-#: projectaction.py:1659 editorwindow.py:247
+#: projectaction.py:1699 editorwindow.py:249
 msgid "Delete Selected Sequence"
 msgstr "删除选中的序列"
 
-#: projectaction.py:1661
+#: projectaction.py:1701
 #, fuzzy
 msgid "Create Compound Clip from Selected Sequence"
 msgstr "创建合成视频剪辑"
 
-#: projectaction.py:1732
+#: projectaction.py:1772
 msgid ""
 "Are you sure you want to delete\n"
 "sequence '"
@@ -407,611 +412,708 @@ msgstr ""
 "你确定要删除\n"
 "序列"
 
-#: projectaction.py:1732
+#: projectaction.py:1772
 msgid "'?"
 msgstr "？"
 
-#: projectaction.py:1733
+#: projectaction.py:1773
 msgid "This operation can not be undone. Sequence will be permanently lost."
 msgstr "此操作不可撤销序列将永久丢失"
 
-#: projectaction.py:1759
+#: projectaction.py:1799
 msgid "Can't remove last sequence"
 msgstr "不能移除最后的序列"
 
-#: projectaction.py:1760
+#: projectaction.py:1800
 msgid "There must always exist at least one sequence."
 msgstr "必须存在至少一个序列。"
 
-#: editorwindow.py:191
-msgid "_File"
-msgstr "_文件"
-
-#: editorwindow.py:192
-msgid "_New..."
-msgstr "_新建"
-
-#: editorwindow.py:193
-msgid "_Open..."
-msgstr "_打开..."
-
-#: editorwindow.py:194
-msgid "Open Recent"
-msgstr "最近打开的"
-
-#: editorwindow.py:195
-msgid "_Save"
-msgstr "_保存"
-
-#: editorwindow.py:196
-msgid "_Save As..."
-msgstr "_另存为..."
-
-#: editorwindow.py:197
-msgid "Save Backup Snapshot..."
-msgstr "保存快照备份..."
-
-#: editorwindow.py:198 dialogs.py:274 dialogs.py:391 dialogs.py:1275
-msgid "Export"
-msgstr "导出"
-
-#: editorwindow.py:199
-msgid "MLT XML"
-msgstr "MLT XML"
-
-#: editorwindow.py:200
-msgid "EDL"
-msgstr "EDL"
-
-#: editorwindow.py:201
-msgid "Current Frame"
-msgstr "当前帧"
-
-#: editorwindow.py:202
-#, fuzzy
-msgid "Current Sequence Audio As Ardour Session"
-msgstr "当前序列/剪辑名称及长度"
-
-#: editorwindow.py:203
-msgid "_Close"
-msgstr "_关闭"
-
-#: editorwindow.py:204
-msgid "_Quit"
-msgstr "_退出"
-
-#: editorwindow.py:205
-msgid "_Edit"
-msgstr "_编辑"
-
-#: editorwindow.py:206
-msgid "_Undo"
-msgstr "_撤销"
-
-#: editorwindow.py:207
-msgid "_Redo"
-msgstr "_重做"
-
-#: editorwindow.py:208
-msgid "Copy"
-msgstr "复制"
-
-#: editorwindow.py:209
-msgid "Paste"
-msgstr "粘贴"
-
-#: editorwindow.py:210
-#, fuzzy
-msgid "Paste Filters / Properties"
-msgstr "文件属性"
-
-#: editorwindow.py:211
-msgid "Add Monitor Clip"
-msgstr "添加监视器视频剪辑"
-
-#: editorwindow.py:212 shortcuts.py:190
-msgid "Append"
-msgstr "追加"
-
-#: editorwindow.py:213 shortcuts.py:189 shortcuts.py:206 workflow.py:65
-msgid "Insert"
-msgstr "插入"
-
-#: editorwindow.py:214
-msgid "Three Point Overwrite"
-msgstr "3个点覆盖"
-
-#: editorwindow.py:215
-msgid "Range Overwrite"
-msgstr "范围覆盖"
-
-#: editorwindow.py:216
-msgid "Cut Clip"
-msgstr "剪切视频剪辑"
-
-#: editorwindow.py:217
-msgid "Split to new Sequence at Playhead Position"
-msgstr "在起始播放位置拆分为新序列"
-
-#: editorwindow.py:218 dialogs.py:1458 guicomponents.py:1916
-#: translations.py:541 workflow.py:202
-msgid "Lift"
-msgstr "提升"
-
-#: editorwindow.py:219 dialogs.py:1457 workflow.py:202
-msgid "Splice Out"
-msgstr "剪接出来"
-
-#: editorwindow.py:220 guicomponents.py:1490 guicomponents.py:1613
-msgid "Resync"
-msgstr "重新同步"
-
-#: editorwindow.py:221
-msgid "Set Sync Parent"
-msgstr "设置同步参考对象"
-
-#: editorwindow.py:222
-msgid "Add Single Track Transition"
-msgstr "添加单声道转换"
-
-#: editorwindow.py:223
-msgid "Add Single Track Fade"
-msgstr "添加单声道淡入淡出"
-
-#: editorwindow.py:224 guicomponents.py:1531 guicomponents.py:1584
-msgid "Clear Filters"
-msgstr "清除滤镜"
-
-#: editorwindow.py:225 dialogs.py:1479
-msgid "Timeline"
-msgstr "时间轴"
-
-#: editorwindow.py:226
-msgid "All Filters Off"
-msgstr "关掉所有滤镜"
-
-#: editorwindow.py:227
-msgid "All Filters On"
-msgstr "打开所有滤镜"
-
-#: editorwindow.py:228
-msgid "Sync All Compositors"
-msgstr "同步所有合成"
-
-#: editorwindow.py:229
-msgid "Set Compositor Auto Fades..."
-msgstr "设置合同自动淡入淡出..."
-
-#: editorwindow.py:230
-msgid "Change Sequence Tracks Count..."
-msgstr "改变序列轨道数量..."
-
-#: editorwindow.py:231
-msgid "Watermark..."
-msgstr "水印..."
-
-#: editorwindow.py:232 diskcachemanagement.py:149
-msgid "Disk Cache Manager"
-msgstr "磁盘缓存管理器"
-
-#: editorwindow.py:233 profilesmanager.py:46
-msgid "Profiles Manager"
-msgstr "配置文件管理器"
-
-#: editorwindow.py:234
-msgid "Preferences"
-msgstr "偏好设置"
-
-#: editorwindow.py:235 preferenceswindow.py:66
-msgid "View"
-msgstr "查看"
-
-#: editorwindow.py:236
-msgid "Fullscreen"
-msgstr "全屏"
-
-#: editorwindow.py:237 editorwindow.py:641 projectinfogui.py:69
-msgid "Project"
-msgstr "项目"
-
-#: editorwindow.py:240
-msgid "Create Color Clip..."
-msgstr "创建色彩剪辑..."
-
-#: editorwindow.py:241
-msgid "Bin"
-msgstr "库"
-
-#: editorwindow.py:244
-msgid "Sequence"
-msgstr "序列"
-
-#: editorwindow.py:248
-#, fuzzy
-msgid "Compositing Mode"
-msgstr "合成"
-
-#: editorwindow.py:249
-msgid "Create Pattern Producer"
-msgstr "创建模式生产者"
-
-#: editorwindow.py:250 translations.py:423 patternproducer.py:67
-msgid "Noise"
-msgstr "声音"
-
-#: editorwindow.py:251 patternproducer.py:72
-msgid "EBU Bars"
-msgstr "EBU工具"
-
-#: editorwindow.py:252 patternproducer.py:81
-msgid "Ising"
-msgstr "lsing"
-
-#: editorwindow.py:253 patternproducer.py:98
-msgid "Color Pulse"
-msgstr "色彩节奏"
-
-#: editorwindow.py:254 patternproducer.py:114
-msgid "Count"
-msgstr "Count"
-
-#: editorwindow.py:255
-msgid "Create Compound Clip"
-msgstr "创建合成视频剪辑"
-
-#: editorwindow.py:256
-msgid "From Selected Clips"
-msgstr "从选中的剪辑"
-
-#: editorwindow.py:257
-msgid "From Current Sequence"
-msgstr "从当前剪辑"
-
-#: editorwindow.py:258
-msgid "From Current Sequence With Freeze Frame at Playhead Position"
-msgstr "From Current Sequence With Freeze Frame at Playhead Position"
-
-#: editorwindow.py:259
-msgid "Audio Sync Merge Clip From 2 Media Items "
-msgstr "Audio Sync Merge Clip From 2 Media Items "
-
-#: editorwindow.py:260
-msgid "Import Media From Project..."
-msgstr "从项目导入媒体..."
-
-#: editorwindow.py:261
-msgid "Import Another Sequence Into This Sequence..."
-msgstr "把其它序列到此序列"
-
-#: editorwindow.py:262 dialogs.py:1445 shortcuts.py:195
-msgid "Log Marked Clip Range"
-msgstr "标记视频剪辑区间"
-
-#: editorwindow.py:263
-#, fuzzy
-msgid "View Project Events..."
-msgstr "项目事件"
-
-#: editorwindow.py:264
-msgid "Recreate Media Icons..."
-msgstr "重新创建媒体图标..."
-
-#: editorwindow.py:265
-msgid "Remove Unused Media..."
-msgstr "移除无用媒体..."
-
-#: editorwindow.py:266
-msgid "Change Project Profile..."
-msgstr "更改项目配置文件..."
-
-#: editorwindow.py:267 proxyediting.py:219
-msgid "Proxy Manager"
-msgstr "代理管理器"
-
-#: editorwindow.py:268
-msgid "Project Info"
-msgstr "项目信息"
-
-#: editorwindow.py:269 editorwindow.py:642 rendergui.py:177 rendergui.py:323
-#: tools/batchrendering.py:891 tools/gmic.py:816
-msgid "Render"
-msgstr "渲染"
-
-#: editorwindow.py:270
-msgid "Add To Batch Render Queue..."
-msgstr "添加到批量渲染序列..."
-
-#: editorwindow.py:271 middlebar.py:187
-msgid "Batch Render Queue"
-msgstr "批渲染序列"
-
-#: editorwindow.py:272
-msgid "Rerender All Rendered Transitions And Fades "
-msgstr "渲染所有渲染的转场和淡入淡出 "
-
-#: editorwindow.py:273
-msgid "Render Timeline"
-msgstr "渲染时间轴"
-
-#: editorwindow.py:274 dialogs.py:1506
-msgid "Tools"
-msgstr "工具"
-
-#: editorwindow.py:275 middlebar.py:187 tools/titler.py:192
-msgid "Titler"
-msgstr "字幕"
-
-#: editorwindow.py:276 middlebar.py:187
-msgid "Audio Mixer"
-msgstr "音频混合器"
-
-#: editorwindow.py:277 tools/gmic.py:876 toolsintegration.py:108
-msgid "G'MIC Effects"
-msgstr "G'MIC 效果"
-
-#: editorwindow.py:278 medialinker.py:181
-msgid "Media Relinker"
-msgstr "媒体重新链接器"
-
-#: editorwindow.py:279
-msgid "_Help"
-msgstr "_帮助"
-
-#: editorwindow.py:280
-msgid "Contents"
-msgstr "目录"
-
-#: editorwindow.py:281 dialogs.py:617
-msgid "Runtime Environment"
-msgstr "运行时的环境"
-
-#: editorwindow.py:282 dialogs.py:1356
-msgid "Keyboard Shortcuts"
-msgstr "键盘快捷键"
-
-#: editorwindow.py:283 dialogs.py:491
-msgid "About"
-msgstr "关于"
-
-#: editorwindow.py:633
-msgid "Media"
-msgstr "媒体"
-
-#: editorwindow.py:637
-msgid "Range Log"
-msgstr "区间标记"
-
-#: editorwindow.py:638 clipeffectseditor.py:139
-msgid "Filters"
-msgstr "滤镜"
-
-#: editorwindow.py:639
-msgid "Compositors"
-msgstr "合成"
-
-#: editorwindow.py:659
-msgid "Prev Frame - Arrow Left"
-msgstr "前一帧 - 左箭头"
-
-#: editorwindow.py:659
-msgid "Next Frame - Arrow Right"
-msgstr "后一帧 - 右箭头"
-
-#: editorwindow.py:659
-msgid "Play - Space"
-msgstr "播放 - 空格"
-
-#: editorwindow.py:659
-msgid "Stop - Space"
-msgstr "停止 - 空格"
-
-#: editorwindow.py:659
-msgid "Mark In - I"
-msgstr "标记始点 - I"
-
-#: editorwindow.py:659
-msgid "Mark Out - O"
-msgstr "标记终点 - O"
-
-#: editorwindow.py:659
-msgid "Clear Marks"
-msgstr "清除标记"
-
-#: editorwindow.py:659 dialogs.py:1498
-msgid "To Mark In"
-msgstr "记作始点标记"
-
-#: editorwindow.py:659 dialogs.py:1499
-msgid "To Mark Out"
-msgstr "记作终点标记"
-
-#: editorwindow.py:926
-msgid "Window Mode"
-msgstr "窗口模式"
-
-#: editorwindow.py:929 preferenceswindow.py:365
-msgid "Single Window"
-msgstr "单窗口"
-
-#: editorwindow.py:933 preferenceswindow.py:366
-msgid "Two Windows"
-msgstr "2个窗口"
-
-#: editorwindow.py:947
-msgid "Middlebar Layout"
-msgstr "中间工具栏布局"
-
-#: editorwindow.py:950
-msgid "Timecode Left"
-msgstr "时间码靠左"
-
-#: editorwindow.py:954
-msgid "Timecode Center"
-msgstr "时间码居中"
-
-#: editorwindow.py:958
-msgid "Components Centered"
-msgstr "工具栏居中"
-
-#: editorwindow.py:973
-msgid "Tabs Position"
-msgstr "标签栏位置"
-
-#: editorwindow.py:998
-msgid "Monitor Playback Interpolation"
-msgstr "视频预览插值算法"
-
-#: editorwindow.py:1002
-msgid "Nearest Neighbour (fast)"
-msgstr "最近邻内插值(快)"
-
-#: editorwindow.py:1006
-msgid "Bilinear (good)"
-msgstr "双线性插值(好)"
-
-#: editorwindow.py:1010
-msgid "Bicubic (better)"
-msgstr "双三次插值(更好)"
-
-#: editorwindow.py:1015
-msgid "Hyper/Lanczos (best)"
-msgstr "多相伴插值(最好)"
-
-#: editorwindow.py:1025 shortcuts.py:214
-msgid "Zoom In"
-msgstr "放大"
-
-#: editorwindow.py:1028 shortcuts.py:213
-msgid "Zoom Out"
-msgstr "缩小"
-
-#: editorwindow.py:1031
-msgid "Zoom Fit"
-msgstr "缩放以适应"
-
-#: editorwindow.py:1041 workflow.py:224
+#: projectaction.py:2039 editorwindow.py:1102 workflow.py:224
 msgid "Top Down Free Move"
 msgstr ""
 
-#: editorwindow.py:1045 workflow.py:224
+#: projectaction.py:2040 editorwindow.py:1106 workflow.py:224
 #, fuzzy
 msgid "Top Down Auto Follow"
 msgstr "Compositors Auto Follow"
 
-#: editorwindow.py:1049 workflow.py:224
+#: projectaction.py:2041 editorwindow.py:1110 workflow.py:224
 #, fuzzy
 msgid "Standard Auto Follow"
 msgstr "Obey Auto Follow"
 
-#: editorwindow.py:1073
+#: projectaction.py:2042 editorwindow.py:1114 workflow.py:224
+#, fuzzy
+msgid "Standard Full Track"
+msgstr "Obey Auto Follow"
+
+#: editorwindow.py:194
+msgid "_File"
+msgstr "_文件"
+
+#: editorwindow.py:195
+msgid "_New..."
+msgstr "_新建"
+
+#: editorwindow.py:196
+msgid "_Open..."
+msgstr "_打开..."
+
+#: editorwindow.py:197
+msgid "Open Recent"
+msgstr "最近打开的"
+
+#: editorwindow.py:198
+msgid "_Save"
+msgstr "_保存"
+
+#: editorwindow.py:199
+msgid "_Save As..."
+msgstr "_另存为..."
+
+#: editorwindow.py:200
+msgid "Save Backup Snapshot..."
+msgstr "保存快照备份..."
+
+#: editorwindow.py:201 dialogs.py:274 dialogs.py:391 dialogs.py:1275
+msgid "Export"
+msgstr "导出"
+
+#: editorwindow.py:202
+msgid "MLT XML"
+msgstr "MLT XML"
+
+#: editorwindow.py:203
+msgid "EDL"
+msgstr "EDL"
+
+#: editorwindow.py:204
+msgid "Current Frame"
+msgstr "当前帧"
+
+#: editorwindow.py:205
+#, fuzzy
+msgid "Current Sequence Audio As Ardour Session"
+msgstr "当前序列/剪辑名称及长度"
+
+#: editorwindow.py:206
+msgid "_Close"
+msgstr "_关闭"
+
+#: editorwindow.py:207
+msgid "_Quit"
+msgstr "_退出"
+
+#: editorwindow.py:208
+msgid "_Edit"
+msgstr "_编辑"
+
+#: editorwindow.py:209
+msgid "_Undo"
+msgstr "_撤销"
+
+#: editorwindow.py:210
+msgid "_Redo"
+msgstr "_重做"
+
+#: editorwindow.py:211
+msgid "Copy"
+msgstr "复制"
+
+#: editorwindow.py:212
+msgid "Paste"
+msgstr "粘贴"
+
+#: editorwindow.py:213
+#, fuzzy
+msgid "Paste Filters / Properties"
+msgstr "文件属性"
+
+#: editorwindow.py:214
+msgid "Add Monitor Clip"
+msgstr "添加监视器视频剪辑"
+
+#: editorwindow.py:215 shortcuts.py:191
+msgid "Append"
+msgstr "追加"
+
+#: editorwindow.py:216 shortcuts.py:190 shortcuts.py:207 workflow.py:65
+msgid "Insert"
+msgstr "插入"
+
+#: editorwindow.py:217
+msgid "Three Point Overwrite"
+msgstr "3个点覆盖"
+
+#: editorwindow.py:218
+msgid "Range Overwrite"
+msgstr "范围覆盖"
+
+#: editorwindow.py:219
+msgid "Cut Clip"
+msgstr "剪切视频剪辑"
+
+#: editorwindow.py:220
+msgid "Split to new Sequence at Playhead Position"
+msgstr "在起始播放位置拆分为新序列"
+
+#: editorwindow.py:221 dialogs.py:1459 guicomponents.py:2083
+#: translations.py:547 workflow.py:202
+msgid "Lift"
+msgstr "提升"
+
+#: editorwindow.py:222 dialogs.py:1458 workflow.py:202
+msgid "Splice Out"
+msgstr "剪接出来"
+
+#: editorwindow.py:223 dialogs.py:1462 guicomponents.py:1647
+#: guicomponents.py:1775
+msgid "Resync"
+msgstr "重新同步"
+
+#: editorwindow.py:224
+msgid "Set Sync Parent"
+msgstr "设置同步参考对象"
+
+#: editorwindow.py:225
+msgid "Add Single Track Transition"
+msgstr "添加单声道转换"
+
+#: editorwindow.py:226
+msgid "Add Single Track Fade"
+msgstr "添加单声道淡入淡出"
+
+#: editorwindow.py:227 dialogs.py:1460 guicomponents.py:1689
+#: guicomponents.py:1746
+msgid "Clear Filters"
+msgstr "清除滤镜"
+
+#: editorwindow.py:228 dialogs.py:1483
+msgid "Timeline"
+msgstr "时间轴"
+
+#: editorwindow.py:229
+msgid "All Filters Off"
+msgstr "关掉所有滤镜"
+
+#: editorwindow.py:230
+msgid "All Filters On"
+msgstr "打开所有滤镜"
+
+#: editorwindow.py:231
+msgid "Sync All Compositors"
+msgstr "同步所有合成"
+
+#: editorwindow.py:232
+msgid "Change Sequence Tracks Count..."
+msgstr "改变序列轨道数量..."
+
+#: editorwindow.py:233
+msgid "Watermark..."
+msgstr "水印..."
+
+#: editorwindow.py:234 diskcachemanagement.py:169
+msgid "Disk Cache Manager"
+msgstr "磁盘缓存管理器"
+
+#: editorwindow.py:235 profilesmanager.py:46
+msgid "Profiles Manager"
+msgstr "配置文件管理器"
+
+#: editorwindow.py:236
+msgid "Preferences"
+msgstr "偏好设置"
+
+#: editorwindow.py:237 preferenceswindow.py:61
+msgid "View"
+msgstr "查看"
+
+#: editorwindow.py:238
+msgid "Fullscreen"
+msgstr "全屏"
+
+#: editorwindow.py:239 editorwindow.py:660 projectinfogui.py:69
+msgid "Project"
+msgstr "项目"
+
+#: editorwindow.py:242
+msgid "Create Color Clip..."
+msgstr "创建色彩剪辑..."
+
+#: editorwindow.py:243
+msgid "Bin"
+msgstr "库"
+
+#: editorwindow.py:246
+msgid "Sequence"
+msgstr "序列"
+
+#: editorwindow.py:250
+#, fuzzy
+msgid "Compositing Mode"
+msgstr "合成"
+
+#: editorwindow.py:251 editorwindow.py:862
+#, fuzzy
+msgid "Timeline Rendering"
+msgstr "开始渲染"
+
+#: editorwindow.py:252
+msgid "Create Pattern Producer"
+msgstr "创建模式生产者"
+
+#: editorwindow.py:253 translations.py:430 patternproducer.py:67
+msgid "Noise"
+msgstr "声音"
+
+#: editorwindow.py:254 patternproducer.py:72
+msgid "EBU Bars"
+msgstr "EBU工具"
+
+#: editorwindow.py:255 patternproducer.py:81
+msgid "Ising"
+msgstr "lsing"
+
+#: editorwindow.py:256 patternproducer.py:98
+msgid "Color Pulse"
+msgstr "色彩节奏"
+
+#: editorwindow.py:257 patternproducer.py:114
+msgid "Count"
+msgstr "Count"
+
+#: editorwindow.py:258
+msgid "Create Compound Clip"
+msgstr "创建合成视频剪辑"
+
+#: editorwindow.py:259
+msgid "From Selected Clips"
+msgstr "从选中的剪辑"
+
+#: editorwindow.py:260
+msgid "From Current Sequence"
+msgstr "从当前剪辑"
+
+#: editorwindow.py:261
+msgid "From Current Sequence With Freeze Frame at Playhead Position"
+msgstr "From Current Sequence With Freeze Frame at Playhead Position"
+
+#: editorwindow.py:262
+msgid "Audio Sync Merge Clip From 2 Media Items "
+msgstr "Audio Sync Merge Clip From 2 Media Items "
+
+#: editorwindow.py:263
+msgid "Import Media From Project..."
+msgstr "从项目导入媒体..."
+
+#: editorwindow.py:264
+#, fuzzy
+msgid "Create Container Clip"
+msgstr "创建彩色视频剪辑"
+
+#: editorwindow.py:265
+#, fuzzy
+msgid "From G'Mic Script"
+msgstr "加载Gmic Script"
+
+#: editorwindow.py:266
+#, fuzzy
+msgid "From Blender Project"
+msgstr "Flowblade项目"
+
+#: editorwindow.py:267
+msgid "Import Another Sequence Into This Sequence..."
+msgstr "把其它序列到此序列"
+
+#: editorwindow.py:268 dialogs.py:1445 shortcuts.py:196
+msgid "Log Marked Clip Range"
+msgstr "标记视频剪辑区间"
+
+#: editorwindow.py:269
+#, fuzzy
+msgid "View Project Events..."
+msgstr "项目事件"
+
+#: editorwindow.py:270
+msgid "Recreate Media Icons..."
+msgstr "重新创建媒体图标..."
+
+#: editorwindow.py:271
+msgid "Remove Unused Media..."
+msgstr "移除无用媒体..."
+
+#: editorwindow.py:272
+msgid "Change Project Profile..."
+msgstr "更改项目配置文件..."
+
+#: editorwindow.py:273 proxyediting.py:219
+msgid "Proxy Manager"
+msgstr "代理管理器"
+
+#: editorwindow.py:274
+msgid "Project Info"
+msgstr "项目信息"
+
+#: editorwindow.py:275 editorwindow.py:663 rendergui.py:182 rendergui.py:328
+#: tools/batchrendering.py:896 tools/gmic.py:816
+msgid "Render"
+msgstr "渲染"
+
+#: editorwindow.py:276
+msgid "Add To Batch Render Queue..."
+msgstr "添加到批量渲染序列..."
+
+#: editorwindow.py:277 middlebar.py:187
+msgid "Batch Render Queue"
+msgstr "批渲染序列"
+
+#: editorwindow.py:278
+msgid "Rerender All Rendered Transitions And Fades "
+msgstr "渲染所有渲染的转场和淡入淡出 "
+
+#: editorwindow.py:279
+msgid "Render Timeline"
+msgstr "渲染时间轴"
+
+#: editorwindow.py:280 dialogs.py:1510
+msgid "Tools"
+msgstr "工具"
+
+#: editorwindow.py:281 middlebar.py:187 tools/titler.py:194
+msgid "Titler"
+msgstr "字幕"
+
+#: editorwindow.py:282 middlebar.py:187
+msgid "Audio Mixer"
+msgstr "音频混合器"
+
+#: editorwindow.py:283 tools/gmic.py:876 toolsintegration.py:108
+msgid "G'MIC Effects"
+msgstr "G'MIC 效果"
+
+#: editorwindow.py:284 medialinker.py:181
+msgid "Media Relinker"
+msgstr "媒体重新链接器"
+
+#: editorwindow.py:285
+msgid "_Help"
+msgstr "_帮助"
+
+#: editorwindow.py:286
+msgid "Contents"
+msgstr "目录"
+
+#: editorwindow.py:287 dialogs.py:617
+msgid "Runtime Environment"
+msgstr "运行时的环境"
+
+#: editorwindow.py:288 dialogs.py:1356
+msgid "Keyboard Shortcuts"
+msgstr "键盘快捷键"
+
+#: editorwindow.py:289 dialogs.py:491
+msgid "About"
+msgstr "关于"
+
+#: editorwindow.py:652
+msgid "Media"
+msgstr "媒体"
+
+#: editorwindow.py:656
+msgid "Range Log"
+msgstr "区间标记"
+
+#: editorwindow.py:657 clipeffectseditor.py:153
+msgid "Filters"
+msgstr "滤镜"
+
+#: editorwindow.py:658
+msgid "Compositors"
+msgstr "合成"
+
+#: editorwindow.py:662
+msgid "Jobs"
+msgstr ""
+
+#: editorwindow.py:684 editorwindow.py:689
+#, fuzzy
+msgid "Start- Start key"
+msgstr "Start Opacity"
+
+#: editorwindow.py:684 editorwindow.py:689
+msgid "End- End key"
+msgstr ""
+
+#: editorwindow.py:684 editorwindow.py:686 editorwindow.py:689
+#: editorwindow.py:691
+msgid "Prev Frame - Arrow Left"
+msgstr "前一帧 - 左箭头"
+
+#: editorwindow.py:684 editorwindow.py:686 editorwindow.py:689
+#: editorwindow.py:691
+msgid "Next Frame - Arrow Right"
+msgstr "后一帧 - 右箭头"
+
+#: editorwindow.py:684
+#, fuzzy
+msgid "Play Pause- Space"
+msgstr "播放 - 空格"
+
+#: editorwindow.py:684 editorwindow.py:686 editorwindow.py:689
+#: editorwindow.py:691
+msgid "Mark In - I"
+msgstr "标记始点 - I"
+
+#: editorwindow.py:684 editorwindow.py:686 editorwindow.py:689
+#: editorwindow.py:691
+msgid "Mark Out - O"
+msgstr "标记终点 - O"
+
+#: editorwindow.py:684 editorwindow.py:686 editorwindow.py:689
+#: editorwindow.py:691
+msgid "Clear Marks"
+msgstr "清除标记"
+
+#: editorwindow.py:684 editorwindow.py:686 editorwindow.py:689
+#: editorwindow.py:691 dialogs.py:1502
+msgid "To Mark In"
+msgstr "记作始点标记"
+
+#: editorwindow.py:684 editorwindow.py:686 editorwindow.py:689
+#: editorwindow.py:691 dialogs.py:1503
+msgid "To Mark Out"
+msgstr "记作终点标记"
+
+#: editorwindow.py:686
+#, fuzzy
+msgid "Play Pause - Space"
+msgstr "播放 - 空格"
+
+#: editorwindow.py:689 editorwindow.py:691
+msgid "Play - Space"
+msgstr "播放 - 空格"
+
+#: editorwindow.py:689 editorwindow.py:691
+msgid "Stop - Space"
+msgstr "停止 - 空格"
+
+#: editorwindow.py:851
+#, fuzzy
+msgid "Current Sequence Compositing Mode"
+msgstr "序列/媒体当前位置"
+
+#: editorwindow.py:987
+msgid "Window Mode"
+msgstr "窗口模式"
+
+#: editorwindow.py:990 preferenceswindow.py:397
+msgid "Single Window"
+msgstr "单窗口"
+
+#: editorwindow.py:994 preferenceswindow.py:398
+msgid "Two Windows"
+msgstr "2个窗口"
+
+#: editorwindow.py:1008
+msgid "Middlebar Layout"
+msgstr "中间工具栏布局"
+
+#: editorwindow.py:1011
+msgid "Timecode Left"
+msgstr "时间码靠左"
+
+#: editorwindow.py:1015
+msgid "Timecode Center"
+msgstr "时间码居中"
+
+#: editorwindow.py:1019
+msgid "Components Centered"
+msgstr "工具栏居中"
+
+#: editorwindow.py:1034
+msgid "Tabs Position"
+msgstr "标签栏位置"
+
+#: editorwindow.py:1059
+msgid "Monitor Playback Interpolation"
+msgstr "视频预览插值算法"
+
+#: editorwindow.py:1063
+msgid "Nearest Neighbour (fast)"
+msgstr "最近邻内插值(快)"
+
+#: editorwindow.py:1067
+msgid "Bilinear (good)"
+msgstr "双线性插值(好)"
+
+#: editorwindow.py:1071
+msgid "Bicubic (better)"
+msgstr "双三次插值(更好)"
+
+#: editorwindow.py:1076
+msgid "Hyper/Lanczos (best)"
+msgstr "多相伴插值(最好)"
+
+#: editorwindow.py:1086 shortcuts.py:215
+msgid "Zoom In"
+msgstr "放大"
+
+#: editorwindow.py:1089 shortcuts.py:214
+msgid "Zoom Out"
+msgstr "缩小"
+
+#: editorwindow.py:1092
+msgid "Zoom Fit"
+msgstr "缩放以适应"
+
+#: editorwindow.py:1132 preferenceswindow.py:131
+#, fuzzy
+msgid "Off"
+msgstr "X Off:"
+
+#: editorwindow.py:1136
+#, fuzzy
+msgid "Render Auto"
+msgstr "执行渲染动作"
+
+#: editorwindow.py:1140
+#, fuzzy
+msgid "Render On Request"
+msgstr "渲染选项"
+
+#: editorwindow.py:1155
+#, fuzzy
+msgid "Settings..."
+msgstr "渲染开始:"
+
+#: editorwindow.py:1180
+msgid "Empty"
+msgstr "空的"
+
+#: editorwindow.py:1205
 msgid "Global Window Mode changed"
 msgstr "全局窗口模式改变"
 
-#: editorwindow.py:1074
+#: editorwindow.py:1206
 msgid "Application restart required for the new layout choice to take effect."
 msgstr "需要重启应用才能启用新布局选择的效果"
 
-#: editorwindow.py:1168
+#: editorwindow.py:1327
 msgid "Timeline current frame timecode"
 msgstr "时间轴当前帧时间码"
 
-#: editorwindow.py:1170
+#: editorwindow.py:1329
 msgid "Select view mode: Video / Vectorscope/ RGBParade"
 msgstr "选择查看模式：Video / Vectorscope/ RGBParade"
 
-#: editorwindow.py:1171
+#: editorwindow.py:1330
 msgid "Set trim view and match frames"
 msgstr "Set trim view and match frames"
 
-#: editorwindow.py:1173
+#: editorwindow.py:1332
 msgid "Sequence / Media current position"
 msgstr "序列/媒体当前位置"
 
-#: clipeffectseditor.py:75
+#: clipeffectseditor.py:89
 msgid "Clip Filters Stack"
 msgstr "剪辑过滤器堆栈"
 
-#: clipeffectseditor.py:138
+#: clipeffectseditor.py:152
 msgid "Stack"
 msgstr ""
 
-#: clipeffectseditor.py:156
+#: clipeffectseditor.py:171
 msgid "Select Filter Group"
 msgstr "选择滤镜组"
 
-#: clipeffectseditor.py:157
+#: clipeffectseditor.py:172
 msgid "Current group Filters"
 msgstr "当前组滤镜"
 
-#: clipeffectseditor.py:263
+#: clipeffectseditor.py:288
 msgid "Quit editing Clip in editor"
 msgstr "从编辑器退出视频剪辑编辑"
 
-#: clipeffectseditor.py:294
+#: clipeffectseditor.py:322
 msgid "Clip being edited"
 msgstr "视频剪辑正被编辑"
 
-#: clipeffectseditor.py:295
+#: clipeffectseditor.py:323
 msgid "Clip Filter Stack"
 msgstr "视频剪辑滤镜堆栈"
 
-#: clipeffectseditor.py:296
+#: clipeffectseditor.py:324
 msgid "Add Filter to Clip Filter Stack"
 msgstr "添加滤镜到视频剪辑滤镜堆栈"
 
-#: clipeffectseditor.py:297
+#: clipeffectseditor.py:325
 msgid "Delete Filter from Clip Filter Stack"
 msgstr "从视频剪辑滤镜堆栈中删除滤镜"
 
-#: clipeffectseditor.py:298
+#: clipeffectseditor.py:326
 msgid "Toggle all Filters On/Off"
 msgstr "开启/关闭所有滤镜"
 
-#: clipeffectseditor.py:486
+#: clipeffectseditor.py:327
+#, fuzzy
+msgid "Add Filter Mask"
+msgstr "添加滤镜"
+
+#: clipeffectseditor.py:539
 msgid "No Clip"
 msgstr "无剪辑"
 
-#: clipeffectseditor.py:492
+#: clipeffectseditor.py:545
 msgid "Clip Has No Filters"
 msgstr "剪辑无滤镜"
 
-#: clipeffectseditor.py:588
+#: clipeffectseditor.py:647
 msgid "No editable parameters"
 msgstr "不可编辑参数"
 
-#: clipeffectseditor.py:676
+#: clipeffectseditor.py:784
 msgid "_effect_values"
 msgstr "_effect_values"
 
-#: clipeffectseditor.py:710
+#: clipeffectseditor.py:818
 msgid "Saved Filter data not applicaple for this Filter!"
 msgstr "保存的滤镜数据不适用于此滤镜"
 
-#: clipeffectseditor.py:711 compositeeditor.py:327
+#: clipeffectseditor.py:819 compositeeditor.py:368
 msgid "Saved data is for "
 msgstr "Saved data is for "
 
-#: clipeffectseditor.py:711
+#: clipeffectseditor.py:819
 msgid "current edited Filter is "
 msgstr "当前编辑的滤镜是 "
 
-#: compositeeditor.py:69 compositeeditor.py:161
+#: compositeeditor.py:87 compositeeditor.py:113 compositeeditor.py:197
 msgid "No Compositor"
 msgstr "无合成"
 
-#: compositeeditor.py:196
+#: compositeeditor.py:115
+msgid "Compositor panel not used in/n Standard Full track Compositing Mode"
+msgstr ""
+
+#: compositeeditor.py:200
+msgid ""
+"This panel not used in\n"
+" Compositing Mode Standard Full Track."
+msgstr ""
+
+#: compositeeditor.py:237
 msgid "Destination Track:"
 msgstr "目标轨道："
 
-#: compositeeditor.py:296
+#: compositeeditor.py:337
 msgid "_compositor_values"
 msgstr "_compositor_values"
 
-#: compositeeditor.py:326
+#: compositeeditor.py:367
 msgid "Saved Compositor data not applicaple for this compositor!"
 msgstr "保存的合成数据不适用于此合成"
 
-#: compositeeditor.py:327
+#: compositeeditor.py:368
 msgid ", current compositor is "
 msgstr "，当前合成是 "
 
@@ -1025,23 +1127,25 @@ msgstr "新项目"
 #: dialogs.py:957 dialogs.py:991 dialogs.py:1012 dialogs.py:1053
 #: dialogs.py:1081 dialogs.py:1109 dialogs.py:1235 dialogs.py:1274
 #: dialogs.py:1288 dialogs.py:1302 dialogs.py:1316 dialogs.py:1330
-#: dialogs.py:1344 dialogs.py:1359 dialogs.py:1616 dialogs.py:1733
-#: dialogs.py:1781 dialogs.py:1896 dialogs.py:1932 propertyeditorbuilder.py:531
-#: propertyeditorbuilder.py:670 propertyeditorbuilder.py:710 rendergui.py:49
-#: rendergui.py:108 rendergui.py:122 rendergui.py:139 rendergui.py:1069
-#: preferenceswindow.py:49 tools/batchrendering.py:989 proxyediting.py:432
-#: tlineaction.py:1475 patternproducer.py:354 patternproducer.py:387
-#: patternproducer.py:418 tools/gmic.py:402 tools/gmic.py:426 tools/gmic.py:555
-#: dialogutils.py:98 dialogutils.py:158 exporting.py:436
+#: dialogs.py:1344 dialogs.py:1359 dialogs.py:1620 dialogs.py:1737
+#: dialogs.py:1784 dialogs.py:1820 propertyeditorbuilder.py:532
+#: propertyeditorbuilder.py:671 propertyeditorbuilder.py:711 rendergui.py:49
+#: rendergui.py:108 rendergui.py:122 rendergui.py:140 rendergui.py:1074
+#: preferenceswindow.py:44 tools/batchrendering.py:996
+#: tools/batchrendering.py:1069 proxyediting.py:432 tlineaction.py:1556
+#: patternproducer.py:356 patternproducer.py:389 patternproducer.py:420
+#: tools/gmic.py:402 tools/gmic.py:426 tools/gmic.py:555 dialogutils.py:108
+#: dialogutils.py:168 exporting.py:442 tools/containerprogramedit.py:88
+#: tools/simpleeditors.py:74 containeractions.py:344 containerclip.py:141
 msgid "Cancel"
 msgstr "取消"
 
 #: dialogs.py:58 dialogs.py:237 dialogs.py:308 dialogs.py:374 dialogs.py:493
-#: dialogs.py:619 dialogs.py:740 dialogs.py:753 dialogs.py:1617
-#: propertyeditorbuilder.py:532 propertyeditorbuilder.py:671
-#: propertyeditorbuilder.py:711 rendergui.py:109 preferenceswindow.py:50
-#: tools/batchrendering.py:407 tools/gmic.py:427 dialogutils.py:44
-#: dialogutils.py:65 dialogutils.py:78 dialogutils.py:93
+#: dialogs.py:619 dialogs.py:740 dialogs.py:753 dialogs.py:1621
+#: propertyeditorbuilder.py:533 propertyeditorbuilder.py:672
+#: propertyeditorbuilder.py:712 rendergui.py:109 preferenceswindow.py:45
+#: tools/batchrendering.py:408 tools/gmic.py:427 dialogutils.py:42
+#: dialogutils.py:75 dialogutils.py:88 dialogutils.py:103
 msgid "OK"
 msgstr "确定"
 
@@ -1085,12 +1189,13 @@ msgstr ""
 msgid "New Profile"
 msgstr "新配置文件"
 
-#: dialogs.py:146 dialogs.py:201 rendergui.py:672 tools/gmic.py:761
-#: tools/toolsencoding.py:40
+#: dialogs.py:146 dialogs.py:201 rendergui.py:677 tools/gmic.py:761
+#: tools/toolsencoding.py:294
 msgid "Select Folder"
 msgstr "选择目录"
 
-#: dialogs.py:150 dialogs.py:205 rendergui.py:676 tools/toolsencoding.py:44
+#: dialogs.py:150 dialogs.py:205 rendergui.py:681 tools/batchrendering.py:1085
+#: tools/toolsencoding.py:298
 msgid "Folder:"
 msgstr "目录"
 
@@ -1102,7 +1207,7 @@ msgstr "项目名称"
 msgid "New Project File"
 msgstr "新项目文件"
 
-#: dialogs.py:192 dialogs.py:1699 tools/batchrendering.py:1320
+#: dialogs.py:192 dialogs.py:1703 tools/batchrendering.py:1382
 msgid "File:"
 msgstr "文件"
 
@@ -1161,7 +1266,7 @@ msgid "Save Project As"
 msgstr "项目另存为"
 
 #: dialogs.py:325 dialogs.py:350 dialogs.py:437 dialogs.py:460 dialogs.py:482
-#: rendergui.py:123 tools/batchrendering.py:990 tools/gmic.py:403
+#: rendergui.py:123 tools/batchrendering.py:997 tools/gmic.py:403
 msgid "Save"
 msgstr "保存"
 
@@ -1189,12 +1294,12 @@ msgstr "Load Compositor Values Data"
 msgid "Export Project as XML to"
 msgstr "导出项目为XML"
 
-#: dialogs.py:406 dialogs.py:1110 patternproducer.py:355 patternproducer.py:388
-#: patternproducer.py:419
+#: dialogs.py:406 dialogs.py:1110 patternproducer.py:357 patternproducer.py:390
+#: patternproducer.py:421
 msgid "Create"
 msgstr "创建"
 
-#: dialogs.py:413 patternproducer.py:366
+#: dialogs.py:413 patternproducer.py:368 tools/toolsencoding.py:307
 msgid "Clip Name:"
 msgstr "视频剪辑名称"
 
@@ -1326,7 +1431,7 @@ msgstr " 未找到"
 msgid " FOR TRANSITION "
 msgstr " 为转场 "
 
-#: dialogs.py:683 dialogs.py:1448 preferenceswindow.py:63
+#: dialogs.py:683 dialogs.py:1448 preferenceswindow.py:58
 msgid "General"
 msgstr "常规"
 
@@ -1358,7 +1463,7 @@ msgstr "格式"
 msgid "Render Options"
 msgstr "渲染选项"
 
-#: dialogs.py:738 guicomponents.py:2078
+#: dialogs.py:738 guicomponents.py:2284
 msgid "File Properties"
 msgstr "文件属性"
 
@@ -1508,16 +1613,16 @@ msgid ""
 "track will be removed\n"
 msgstr " 减少轨道数量时，最顶部的视频轨道和/或最底部的音频轨道会被移除\n"
 
-#: dialogs.py:964 dialogs.py:1737
+#: dialogs.py:964 dialogs.py:1741
 msgid ""
 " It is recommended that you save Project before completing this operation\n"
 msgstr " 执行这个操作之前，建议你保存项目\n"
 
-#: dialogs.py:965 dialogs.py:1738
+#: dialogs.py:965 dialogs.py:1742
 msgid " There is no Undo for this operation\n"
 msgstr " 这个操作不能撤销\n"
 
-#: dialogs.py:966 dialogs.py:1739
+#: dialogs.py:966 dialogs.py:1743
 msgid " Current Undo Stack will be destroyed\n"
 msgstr " 当前可用的撤销操作会被破坏\n"
 
@@ -1530,7 +1635,7 @@ msgstr " 所有在删除轨道上的视频剪辑和合成会被永久破坏"
 msgid "Change Clip Length"
 msgstr "修改剪辑长度"
 
-#: dialogs.py:992 dialogs.py:1202 dialogs.py:1236
+#: dialogs.py:992 dialogs.py:1202 dialogs.py:1236 containerclip.py:142
 msgid "Ok"
 msgstr "确定"
 
@@ -1554,7 +1659,7 @@ msgstr "打开来编辑:"
 msgid "Rename New Media Object"
 msgstr "重命名新媒体项目"
 
-#: dialogs.py:1054 dialogs.py:1082 dialogs.py:1136 guicomponents.py:2073
+#: dialogs.py:1054 dialogs.py:1082 dialogs.py:1136 guicomponents.py:2279
 msgid "Rename"
 msgstr "重命名"
 
@@ -1562,7 +1667,7 @@ msgstr "重命名"
 msgid "New Name:"
 msgstr "新名称:"
 
-#: dialogs.py:1079 guicomponents.py:1637 guicomponents.py:2016
+#: dialogs.py:1079 guicomponents.py:1799 guicomponents.py:2222
 msgid "Rename Clip"
 msgstr "重命名视频剪辑"
 
@@ -1602,7 +1707,7 @@ msgstr ""
 msgid "New Marker"
 msgstr "新标记"
 
-#: dialogs.py:1150 dialogs.py:1172 guicomponents.py:2730
+#: dialogs.py:1150 dialogs.py:1172 guicomponents.py:2947
 msgid "Add Marker"
 msgstr "添加标记"
 
@@ -1638,9 +1743,10 @@ msgid " <b>Alpha Filters</b> work by modifying image's alpha channel.\n"
 msgstr " <b>Alpha滤镜</b>的功能是修改图像的alpha通道。\n"
 
 #: dialogs.py:1209
+#, fuzzy
 msgid ""
 " To see the effect of <b>Alpha Filter</b> you need composite this clip on "
-"track below by adding a <b>Compositor like 'Dissolve'</b> into this clip.\n"
+"track below by adding a <b>Compositor like 'Blend'</b> into this clip.\n"
 msgstr ""
 " 要想查看<b>Alpha滤镜</b>效果，您需要在当前剪辑上添加<b>合成器如 'Dissolve'</"
 "b>，让当前剪辑与其下层轨道合成。\n"
@@ -1685,7 +1791,7 @@ msgstr "应用"
 msgid "Rerender Transition"
 msgstr "重新渲染转场"
 
-#: dialogs.py:1303 dialogs.py:1317 guicomponents.py:1557
+#: dialogs.py:1303 dialogs.py:1317 guicomponents.py:1719
 msgid "Rerender"
 msgstr "渲染"
 
@@ -1701,7 +1807,7 @@ msgstr "渲染所有转场和淡入淡出"
 msgid "Rerender All"
 msgstr "全部渲染"
 
-#: dialogs.py:1342 guicomponents.py:1805
+#: dialogs.py:1342 guicomponents.py:1967
 msgid "Add Fade"
 msgstr "添加淡入淡出"
 
@@ -1773,7 +1879,7 @@ msgstr "打开项目"
 msgid "Control + L"
 msgstr "Control + L"
 
-#: dialogs.py:1453
+#: dialogs.py:1453 dialogs.py:1502
 msgid "Alt + I"
 msgstr "Alt + I"
 
@@ -1781,7 +1887,7 @@ msgstr "Alt + I"
 msgid "Go To Mark In"
 msgstr "转到始点标记位置"
 
-#: dialogs.py:1454
+#: dialogs.py:1454 dialogs.py:1503
 msgid "Alt + O"
 msgstr "Alt + O"
 
@@ -1789,289 +1895,302 @@ msgstr "Alt + O"
 msgid "Go To Mark Out"
 msgstr "转到终点标记位置"
 
-#: dialogs.py:1457
+#: dialogs.py:1458
 msgid "DELETE"
 msgstr "删除"
 
-#: dialogs.py:1458
+#: dialogs.py:1459
 msgid "Control + DELETE"
 msgstr "Control + DELETE"
 
-#: dialogs.py:1465 dialogs.py:1509
+#: dialogs.py:1460
+#, fuzzy
+msgid "Alt + C"
+msgstr "Alt + I"
+
+#: dialogs.py:1461
+#, fuzzy
+msgid "Alt + S"
+msgstr "Alt + I"
+
+#: dialogs.py:1461
+#, fuzzy
+msgid "Sync Compositor"
+msgstr "同步所有合成"
+
+#: dialogs.py:1462
+#, fuzzy
+msgid "Alt + R"
+msgstr "Alt + I"
+
+#: dialogs.py:1469 dialogs.py:1513
 msgid "Control + C"
 msgstr "Control + C"
 
-#: dialogs.py:1465
+#: dialogs.py:1469
 msgid "Copy Clips"
 msgstr "复制视频剪辑"
 
-#: dialogs.py:1466 dialogs.py:1510
+#: dialogs.py:1470 dialogs.py:1514
 msgid "Control + V"
 msgstr "Control + V"
 
-#: dialogs.py:1466
+#: dialogs.py:1470
 msgid "Paste Clips"
 msgstr "粘贴视频剪辑"
 
-#: dialogs.py:1470 dialogs.py:1514 dialogs.py:1529
+#: dialogs.py:1474 dialogs.py:1518 dialogs.py:1533
 msgid "Left Arrow "
 msgstr "左箭头 "
 
-#: dialogs.py:1470
+#: dialogs.py:1474
 msgid "Prev Frame Trim Edit"
 msgstr "上一帧修剪编辑"
 
-#: dialogs.py:1471 dialogs.py:1515 dialogs.py:1530 shortcuts.py:235
+#: dialogs.py:1475 dialogs.py:1519 dialogs.py:1534 shortcuts.py:236
 msgid "Right Arrow"
 msgstr "右箭头"
 
-#: dialogs.py:1471
+#: dialogs.py:1475
 msgid "Next Frame Trim Edit"
 msgstr "下一帧修剪编辑"
 
-#: dialogs.py:1472 dialogs.py:1492
+#: dialogs.py:1476 dialogs.py:1496
 msgid "Control + Left Arrow "
 msgstr "Control + 左箭头 "
 
-#: dialogs.py:1472
+#: dialogs.py:1476
 msgid "Back 10 Frames Trim Edit"
 msgstr "回放10帧修剪编辑"
 
-#: dialogs.py:1473 dialogs.py:1493
+#: dialogs.py:1477 dialogs.py:1497
 msgid "Control + Right Arrow"
 msgstr "Control + 右箭头"
 
-#: dialogs.py:1473
+#: dialogs.py:1477
 msgid "Forward 10 Frames Trim Edit"
 msgstr "前进10帧修剪编辑"
 
-#: dialogs.py:1482
+#: dialogs.py:1486
 msgid "Mouse Double Click"
 msgstr "双击鼠标"
 
-#: dialogs.py:1482
+#: dialogs.py:1486
 msgid "Toggle Track Height"
 msgstr "切换轨道高度"
 
-#: dialogs.py:1483
+#: dialogs.py:1487
 msgid "Track Head Column"
 msgstr "Track Head Column"
 
-#: dialogs.py:1492
+#: dialogs.py:1496
 msgid "Move Back 10 Frames"
 msgstr "往回移动10帧"
 
-#: dialogs.py:1493
+#: dialogs.py:1497
 msgid "Move Forward 10 Frames"
 msgstr "往前移动10帧"
 
-#: dialogs.py:1498
-msgid "Shift + I"
-msgstr "Shift + I"
-
-#: dialogs.py:1499
-msgid "Shift + O"
-msgstr "Shift + O"
-
-#: dialogs.py:1500 preferenceswindow.py:65
+#: dialogs.py:1504 preferenceswindow.py:60
 msgid "Playback"
 msgstr "回放"
 
-#: dialogs.py:1505
+#: dialogs.py:1509
 msgid "Keypad 1-9"
 msgstr "数字键 1-9"
 
-#: dialogs.py:1505
+#: dialogs.py:1509
 msgid "Same as 1-9"
 msgstr "等同 1-9"
 
-#: dialogs.py:1509
+#: dialogs.py:1513
 msgid "Copy Keyframe Value"
 msgstr ""
 
-#: dialogs.py:1510
+#: dialogs.py:1514
 #, fuzzy
 msgid "Paste Keyframe Value"
 msgstr "关键帧托盘"
 
-#: dialogs.py:1511
+#: dialogs.py:1515
 #, fuzzy
 msgid "Keyframe and Geometry Editor"
 msgstr "几何编辑器"
 
-#: dialogs.py:1514
+#: dialogs.py:1518
 msgid "Move Source Video Left 1px"
 msgstr "把源视频左移 1px"
 
-#: dialogs.py:1515
+#: dialogs.py:1519
 msgid "Move Source Video Right 1px"
 msgstr "把源视频右移 1px"
 
-#: dialogs.py:1516 shortcuts.py:233
+#: dialogs.py:1520 shortcuts.py:234
 msgid "Up Arrow"
 msgstr "上箭头"
 
-#: dialogs.py:1516
+#: dialogs.py:1520
 msgid "Move Source Video Up 1px"
 msgstr "把源视频上移 1px"
 
-#: dialogs.py:1517 shortcuts.py:232
+#: dialogs.py:1521 shortcuts.py:233
 msgid "Down Arrow"
 msgstr "下箭头"
 
-#: dialogs.py:1517
+#: dialogs.py:1521
 msgid "Move Source Video Down 1px"
 msgstr "把源视频下移 1px"
 
-#: dialogs.py:1518
+#: dialogs.py:1522
 msgid "Control + Arrow"
 msgstr "Control + 箭头"
 
-#: dialogs.py:1518
+#: dialogs.py:1522
 msgid "Move Source Video 10px"
 msgstr "把源视频移动 10px"
 
-#: dialogs.py:1519
+#: dialogs.py:1523
 msgid "Control + Mouse Drag"
 msgstr "Control + 鼠标拖拽"
 
-#: dialogs.py:1519
+#: dialogs.py:1523
 msgid "Keep Aspect Ratio in Affine Blend scaling"
 msgstr "保持纵横比例"
 
-#: dialogs.py:1520
+#: dialogs.py:1524
 msgid "Shift + Left Arrow "
 msgstr "Shift + 左箭头 "
 
-#: dialogs.py:1520
+#: dialogs.py:1524
 msgid "Scale Down"
 msgstr "Scale Down"
 
-#: dialogs.py:1521
+#: dialogs.py:1525
 msgid "Shift + Right Arrow"
 msgstr "Shift + 右箭头"
 
-#: dialogs.py:1521
+#: dialogs.py:1525
 msgid "Scale Up"
 msgstr "Scale Up"
 
-#: dialogs.py:1522
+#: dialogs.py:1526
 msgid "Shift + Control + Left Arrow "
 msgstr "Shift + Control + Left Arrow "
 
-#: dialogs.py:1522
+#: dialogs.py:1526
 msgid "Scale Down More"
 msgstr "Scale Down More"
 
-#: dialogs.py:1523
+#: dialogs.py:1527
 msgid "Shift + Control + Right Arrow"
 msgstr "Shift + Control + 右箭头"
 
-#: dialogs.py:1523
+#: dialogs.py:1527
 msgid "Scale Up More"
 msgstr "Scale Up More"
 
-#: dialogs.py:1524 shortcuts.py:282
+#: dialogs.py:1528 shortcuts.py:283
 msgid "Shift"
 msgstr "Shift"
 
-#: dialogs.py:1524
+#: dialogs.py:1528
 msgid "Snap to X or Y of drag start point"
 msgstr "捕捉到拖拽原点的X或Y"
 
-#: dialogs.py:1525
+#: dialogs.py:1529
 msgid "Geometry Editor"
 msgstr "几何编辑器"
 
-#: dialogs.py:1528 guicomponents.py:1594 guicomponents.py:1670
-#: guicomponents.py:1913 guicomponents.py:2074 guicomponents.py:2111
-#: panels.py:102 tools/titler.py:213 tools/batchrendering.py:1068
-#: shortcuts.py:244
+#: dialogs.py:1532 guicomponents.py:1756 guicomponents.py:1832
+#: guicomponents.py:2080 guicomponents.py:2280 guicomponents.py:2322
+#: panels.py:102 tools/titler.py:215 tools/batchrendering.py:1130
+#: shortcuts.py:245
 msgid "Delete"
 msgstr "删除"
 
-#: dialogs.py:1528
+#: dialogs.py:1532
 msgid "Deletes Selected Handle"
 msgstr "Deletes Selected Handle"
 
-#: dialogs.py:1529 keyframeeditor.py:742
+#: dialogs.py:1533 keyframeeditor.py:742
 msgid "Previous Frame"
 msgstr "上一帧"
 
-#: dialogs.py:1530 keyframeeditor.py:743 shortcuts.py:188
+#: dialogs.py:1534 keyframeeditor.py:743 shortcuts.py:189
 msgid "Next Frame"
 msgstr "下一帧"
 
-#: dialogs.py:1531
+#: dialogs.py:1535
 msgid "RotoMask Editor"
 msgstr "RotoMask Editor"
 
-#: dialogs.py:1567
+#: dialogs.py:1571
 msgid "Sequence Watermark"
 msgstr "序列水印"
 
-#: dialogs.py:1569 tools/titler.py:525 proxyediting.py:423 medialinker.py:157
-#: tools/gmic.py:847 tools/gmic.py:938 diskcachemanagement.py:151
+#: dialogs.py:1573 tools/titler.py:527 proxyediting.py:423 medialinker.py:157
+#: tools/gmic.py:847 tools/gmic.py:938 diskcachemanagement.py:171
+#: tlinerender.py:811
 msgid "Close"
 msgstr "关闭"
 
-#: dialogs.py:1571
+#: dialogs.py:1575
 msgid "Sequence:"
 msgstr "序列"
 
-#: dialogs.py:1575
+#: dialogs.py:1579
 msgid "Watermark:"
 msgstr "水印"
 
-#: dialogs.py:1577
+#: dialogs.py:1581
 msgid "Set Watermark File"
 msgstr "设置水印文件"
 
-#: dialogs.py:1578
+#: dialogs.py:1582
 msgid "Remove Watermark"
 msgstr "移除水印"
 
-#: dialogs.py:1580 menuactions.py:149
+#: dialogs.py:1584 menuactions.py:149
 msgid "Not Set"
 msgstr "未设置"
 
-#: dialogs.py:1614
+#: dialogs.py:1618
 msgid "Select Watermark File"
 msgstr "选择水印文件"
 
-#: dialogs.py:1643
+#: dialogs.py:1647
 msgid "All files"
 msgstr "所有文件"
 
-#: dialogs.py:1665
+#: dialogs.py:1669
 msgid "Saving project snapshot"
 msgstr "保存项目快照"
 
-#: dialogs.py:1687
+#: dialogs.py:1691
 msgid "Loaded Media Profile Mismatch"
 msgstr "加载的媒体配置文件不匹配"
 
-#: dialogs.py:1689
+#: dialogs.py:1693
 msgid "Keep Current Profile"
 msgstr "保持当前配置文件"
 
-#: dialogs.py:1690
+#: dialogs.py:1694
 msgid "Change To File Profile"
 msgstr "更改到文件配置文件"
 
-#: dialogs.py:1692
+#: dialogs.py:1696
 msgid "A video file was loaded that does not match the Project Profile!"
 msgstr "一个与项目配置文件不匹配的视频文件被加载！"
 
-#: dialogs.py:1700
+#: dialogs.py:1704
 msgid "File Profile:"
 msgstr "文件配置文件:"
 
-#: dialogs.py:1701
+#: dialogs.py:1705
 msgid "Project Profile:"
 msgstr "项目配置文件:"
 
-#: dialogs.py:1702
+#: dialogs.py:1706
 msgid ""
 "Using a matching profile is recommended.\n"
 "\n"
@@ -2081,757 +2200,762 @@ msgstr ""
 "\n"
 "此信息仅在导入第一个媒体文件时才会显示。"
 
-#: dialogs.py:1726
+#: dialogs.py:1730
 msgid "Cannot import sequence!"
 msgstr "不能导入序列！"
 
-#: dialogs.py:1727
+#: dialogs.py:1731
 msgid "There are no other sequences in the Project."
 msgstr "项目中没有其他序列。"
 
-#: dialogs.py:1731
+#: dialogs.py:1735
 msgid "Import Sequence"
 msgstr "导入序列"
 
-#: dialogs.py:1734
+#: dialogs.py:1738
 msgid "Import"
 msgstr "导入"
 
-#: dialogs.py:1736
+#: dialogs.py:1740
 msgid "<b>Please note:</b>\n"
 msgstr "<b>请注意:</b>\n"
 
-#: dialogs.py:1745
+#: dialogs.py:1749
 msgid "Append Sequence"
 msgstr "追加序列"
 
-#: dialogs.py:1746
+#: dialogs.py:1750
 msgid "Insert Sequence at Playhead position"
 msgstr "在播放开始位置插入序列"
 
-#: dialogs.py:1759
+#: dialogs.py:1763
 msgid "Action:"
 msgstr "行动"
 
-#: dialogs.py:1762
+#: dialogs.py:1766
 msgid "Import:"
 msgstr "导入"
 
-#: dialogs.py:1779
-msgid "Compositors Auto Fades"
-msgstr "合成自动淡入淡出"
-
 #: dialogs.py:1782
-msgid "Set Group Defaults"
-msgstr "设置组默认"
-
-#: dialogs.py:1787
-msgid "Dissolve, Blend"
-msgstr "Dissolve, Blend"
-
-#: dialogs.py:1788
-msgid "Affine Blend,  Picture-In-Picture, Region"
-msgstr "Affine Blend,  Picture-In-Picture, Region"
-
-#: dialogs.py:1793
-msgid "Compositor Auto Fades Group"
-msgstr "合成自动淡入淡出组"
-
-#: dialogs.py:1796 dialogs.py:1807 panels.py:291 panels.py:349 panels.py:386
-#: panels.py:483 tools/gmic.py:746
-msgid "Length:"
-msgstr "长度"
-
-#: dialogs.py:1797
-msgid "Add Fade In on Creation"
-msgstr "创建时添加淡入"
-
-#: dialogs.py:1808
-msgid "Add Fade Out on Creation"
-msgstr "创建时添加淡出"
-
-#: dialogs.py:1825
-msgid "Group Auto Fades"
-msgstr "组自动淡入淡出"
-
-#: dialogs.py:1894
 msgid "Timeline Audio Sync"
 msgstr "时间轴音频同步"
 
-#: dialogs.py:1897
+#: dialogs.py:1785
 msgid "Do Audio Sync Move Edit"
 msgstr "Do Audio Sync Move Edit"
 
-#: dialogs.py:1899
+#: dialogs.py:1787
 msgid "<b>Audio Sync Offset</b> between clips media is "
 msgstr "<b>Audio Sync Offset</b> between clips media is "
 
-#: dialogs.py:1899 dialogs.py:1901 dialogs.py:1904
+#: dialogs.py:1787 dialogs.py:1789 dialogs.py:1792
 msgid " frames."
 msgstr " frames."
 
-#: dialogs.py:1901
+#: dialogs.py:1789
 msgid "<b>Timeline Media Offset</b> between clips is "
 msgstr "<b>Timeline Media Offset</b> between clips is "
 
-#: dialogs.py:1904
+#: dialogs.py:1792
 msgid "To audio sync clips you need move action origin clip by "
 msgstr "To audio sync clips you need move action origin clip by "
 
-#: dialogs.py:1924
+#: dialogs.py:1812
 msgid "Can't put an audio clip on a video track."
 msgstr "不能在视频轨道放置音频剪辑。"
 
-#: dialogs.py:1925 movemodes.py:675 dialogutils.py:218
+#: dialogs.py:1813 movemodes.py:684 dialogutils.py:228
 msgid "Track "
 msgstr "轨道 "
 
-#: dialogs.py:1925
+#: dialogs.py:1813
 msgid " is a video track and can't display audio only material."
 msgstr " 是一个视频轨道，且显示仅音频素材。"
 
-#: dialogs.py:1930
+#: dialogs.py:1818
 msgid "Confirm Compositing Mode Change"
 msgstr ""
 
-#: dialogs.py:1933
+#: dialogs.py:1821
 msgid "Change Compositing Mode"
 msgstr ""
 
-#: dialogs.py:1935
+#: dialogs.py:1823
 msgid "Changing Compositing Mode destroys current Compositors and undo stack"
 msgstr ""
 
-#: dialogs.py:1936
+#: dialogs.py:1824
 #, fuzzy
 msgid "This operation cannot be undone. Are you sure you wish to proceed?"
 msgstr "此操作不可撤销序列将永久丢失"
 
-#: editorpersistance.py:193
-msgid "Empty"
-msgstr "空的"
-
-#: guicomponents.py:385
+#: guicomponents.py:542
 msgid "active"
 msgstr "活动的"
 
-#: guicomponents.py:671
+#: guicomponents.py:828
 msgid "default"
 msgstr "默认的"
 
-#: guicomponents.py:686
+#: guicomponents.py:843
 msgid "Autosave created "
 msgstr "自动保存已完成 "
 
-#: guicomponents.py:686
+#: guicomponents.py:843
 msgid " ago."
 msgstr " ago."
 
-#: guicomponents.py:705
+#: guicomponents.py:862
 msgid "Clip:"
 msgstr "剪辑"
 
-#: guicomponents.py:715
+#: guicomponents.py:872
 msgid "Track:"
 msgstr "轨道"
 
-#: guicomponents.py:736
+#: guicomponents.py:893
 msgid "<b>Clip: </b>"
 msgstr "<b>剪辑:</b>"
 
-#: guicomponents.py:738
+#: guicomponents.py:895
 msgid "<b>Track: </b>"
 msgstr "<b>轨道:</b>"
 
-#: guicomponents.py:819
+#: guicomponents.py:976
 msgid "<b>Source:</b>"
 msgstr "<b>Source:</b>"
 
-#: guicomponents.py:820
+#: guicomponents.py:977
 msgid "<b>Destination:</b>"
 msgstr "<b>Destination:</b>"
 
-#: guicomponents.py:821
+#: guicomponents.py:978
 msgid "<b>Length:</b>"
 msgstr "<b>长度:</b>"
 
-#: guicomponents.py:902
+#: guicomponents.py:1059
 msgid "<b>Items:</b>"
 msgstr "<b>Items:</b>"
 
-#: guicomponents.py:1100
+#: guicomponents.py:1257
 msgid "Right Click to Add Media."
 msgstr "点击右键添加媒体"
 
-#: guicomponents.py:1396 guicomponents.py:1400
+#: guicomponents.py:1553 guicomponents.py:1557
 msgid "Lock Track"
 msgstr "锁定轨道"
 
-#: guicomponents.py:1397 guicomponents.py:1401
+#: guicomponents.py:1554 guicomponents.py:1558
 msgid "Unlock Track"
 msgstr "解锁轨道"
 
-#: guicomponents.py:1406
+#: guicomponents.py:1563
 msgid "Large Height"
 msgstr "高的高度"
 
-#: guicomponents.py:1411
+#: guicomponents.py:1568
 msgid "Normal Height"
 msgstr "正常高度"
 
-#: guicomponents.py:1437 guicomponents.py:1559 guicomponents.py:1605
+#: guicomponents.py:1594 guicomponents.py:1721 guicomponents.py:1767
 msgid "Open in Filters Editor"
 msgstr "在滤镜编辑器中打开"
 
-#: guicomponents.py:1444 guicomponents.py:1607 guicomponents.py:2076
+#: guicomponents.py:1601 guicomponents.py:1769 guicomponents.py:2282
 msgid "Open in Clip Monitor"
 msgstr "在剪辑监视器中打开"
 
-#: guicomponents.py:1457 middlebar.py:162
+#: guicomponents.py:1614 middlebar.py:162
 msgid "Split Audio"
 msgstr "拆分音频"
 
-#: guicomponents.py:1465
+#: guicomponents.py:1622
 msgid "Split Audio Synched"
 msgstr "拆分同步的音频"
 
-#: guicomponents.py:1472 guicomponents.py:1621
+#: guicomponents.py:1629 guicomponents.py:1783
 msgid "Display Audio Level"
 msgstr "展示音频电平"
 
-#: guicomponents.py:1475 guicomponents.py:1624
+#: guicomponents.py:1632 guicomponents.py:1786
 msgid "Clear Waveform"
 msgstr "清除波形"
 
-#: guicomponents.py:1478
+#: guicomponents.py:1635
 msgid "Select Clip to Audio Sync With..."
 msgstr "Select Clip to Audio Sync With..."
 
-#: guicomponents.py:1491 guicomponents.py:1614
+#: guicomponents.py:1648 guicomponents.py:1776
 msgid "Clear Sync Relation"
 msgstr "清除同步关联"
 
-#: guicomponents.py:1493 guicomponents.py:1616
+#: guicomponents.py:1650 guicomponents.py:1778
 msgid "Select Sync Parent Clip..."
 msgstr "选择同步母剪辑..."
 
-#: guicomponents.py:1520 guicomponents.py:2843
+#: guicomponents.py:1678 guicomponents.py:3084
 msgid "Delete Compositor"
 msgstr "删除合成器"
 
-#: guicomponents.py:1522
+#: guicomponents.py:1680
 #, fuzzy
 msgid "Delete Compositor/s"
 msgstr "删除合成器"
 
-#: guicomponents.py:1537 guicomponents.py:1640
+#: guicomponents.py:1695 guicomponents.py:1802
 msgid "Clip Info"
 msgstr "剪辑信息"
 
-#: guicomponents.py:1591
+#: guicomponents.py:1753
 msgid "Strech Prev Clip to Cover"
 msgstr "拉伸前一个剪辑来覆盖"
 
-#: guicomponents.py:1592
+#: guicomponents.py:1754
 msgid "Strech Next Clip to Cover"
 msgstr "拉伸后一个剪辑来覆盖"
 
-#: guicomponents.py:1656
+#: guicomponents.py:1818
 msgid "Open In Compositor Editor"
 msgstr "在合成编辑器中打开"
 
-#: guicomponents.py:1658
+#: guicomponents.py:1820
 msgid "Sync with Origin Clip"
 msgstr "和原始剪辑同步"
 
-#: guicomponents.py:1661
+#: guicomponents.py:1823
 msgid "Obey Auto Follow"
 msgstr "Obey Auto Follow"
 
-#: guicomponents.py:1674 guicomponents.py:1695
+#: guicomponents.py:1836 guicomponents.py:1857
 msgid "Add Filter"
 msgstr "添加滤镜"
 
-#: guicomponents.py:1719
+#: guicomponents.py:1881
 msgid "Add Compositor"
 msgstr "添加合成"
 
-#: guicomponents.py:1755
+#: guicomponents.py:1917
 msgid "Blenders"
 msgstr "Blenders"
 
-#: guicomponents.py:1773 translations.py:135 translations.py:692
+#: guicomponents.py:1935 translations.py:135 translations.py:698
 msgid "Alpha"
 msgstr "Alpha"
 
-#: guicomponents.py:1789 translations.py:273 mlttransitions.py:201
+#: guicomponents.py:1951 translations.py:274 mlttransitions.py:199
 msgid "Wipe"
 msgstr "擦除"
 
-#: guicomponents.py:1825
+#: guicomponents.py:1987
 msgid "Show Match Frame"
 msgstr "显示匹配帧"
 
-#: guicomponents.py:1829
+#: guicomponents.py:1991
 msgid "First Frame in Monitor"
 msgstr "监视器中第一帧"
 
-#: guicomponents.py:1834
+#: guicomponents.py:1996
 msgid "Last Frame in Monitor"
 msgstr "监视器中最后一帧"
 
-#: guicomponents.py:1841
+#: guicomponents.py:2003
 msgid "First Frame on Timeline"
 msgstr "时间轴上第一帧"
 
-#: guicomponents.py:1846
+#: guicomponents.py:2008
 msgid "Last Frame on Timeline"
 msgstr "时间轴上最后一帧"
 
-#: guicomponents.py:1853 guicomponents.py:2940
+#: guicomponents.py:2015 guicomponents.py:3181
 msgid "Clear Match Frame"
 msgstr "清除匹配帧"
 
-#: guicomponents.py:1863
+#: guicomponents.py:2025
 msgid "Select"
 msgstr "选择"
 
-#: guicomponents.py:1867
+#: guicomponents.py:2029
 msgid "All Clips After"
 msgstr "所有之后的剪辑"
 
-#: guicomponents.py:1872
+#: guicomponents.py:2034
 msgid "All Clips Before"
 msgstr "之前所有剪辑"
 
-#: guicomponents.py:1882
+#: guicomponents.py:2044
 msgid "Export To Tool"
 msgstr "导出到工具"
 
-#: guicomponents.py:1899 panels.py:103
+#: guicomponents.py:2061 panels.py:103
 msgid "Edit"
 msgstr "编辑"
 
-#: guicomponents.py:1904 kftoolmode.py:409
+#: guicomponents.py:2066
+#, fuzzy
+msgid "Reload Media From Disk"
+msgstr "从库中删除媒体文件"
+
+#: guicomponents.py:2071 kftoolmode.py:409
 msgid "Volume Keyframes"
 msgstr "音量关键帧"
 
-#: guicomponents.py:1908 kftoolmode.py:410
+#: guicomponents.py:2075 kftoolmode.py:410
 msgid "Brightness Keyframes"
 msgstr "亮度关键帧"
 
-#: guicomponents.py:1921
+#: guicomponents.py:2088
 msgid "Set Clip Length..."
 msgstr "设置剪辑长度..."
 
-#: guicomponents.py:1924
+#: guicomponents.py:2091
 msgid "Stretch Over Next Blank"
 msgstr "拉伸过下一个空白的"
 
-#: guicomponents.py:1927
+#: guicomponents.py:2094
 msgid "Stretch Over Prev Blank"
 msgstr "拉伸过前一个空白的"
 
-#: guicomponents.py:1934
+#: guicomponents.py:2101
+msgid "Container Clip Actions"
+msgstr ""
+
+#: guicomponents.py:2107
+#, fuzzy
+msgid "Render Full Media..."
+msgstr "移除无用媒体..."
+
+#: guicomponents.py:2112
+#, fuzzy
+msgid "Render Clip Length..."
+msgstr "渲染的剪辑长度:"
+
+#: guicomponents.py:2119
+msgid "Switch to Unrendered Media"
+msgstr ""
+
+#: guicomponents.py:2126
+msgid "Edit Container Program"
+msgstr ""
+
+#: guicomponents.py:2133
+#, fuzzy
+msgid "Render Settings..."
+msgstr "渲染开始:"
+
+#: guicomponents.py:2140
 msgid "Clone Filters"
 msgstr "克隆滤镜"
 
-#: guicomponents.py:1938
+#: guicomponents.py:2144
 msgid "From Next Clip"
 msgstr "从下一个剪辑"
 
-#: guicomponents.py:1943
+#: guicomponents.py:2149
 msgid "From Previous Clip"
 msgstr "从前一个剪辑"
 
-#: guicomponents.py:1952 guicomponents.py:1972
+#: guicomponents.py:2158 guicomponents.py:2178
 msgid "Mute"
 msgstr "静音"
 
-#: guicomponents.py:1956 guicomponents.py:1976
+#: guicomponents.py:2162 guicomponents.py:2182
 msgid "Unmute"
 msgstr "取消静音"
 
-#: guicomponents.py:1962 guicomponents.py:1993
+#: guicomponents.py:2168 guicomponents.py:2199
 msgid "Mute Audio"
 msgstr "音频静音"
 
-#: guicomponents.py:1987
+#: guicomponents.py:2193
 msgid "Mute Video"
 msgstr "视频静音"
 
-#: guicomponents.py:2004
+#: guicomponents.py:2210
 msgid "Mute All"
 msgstr "全部静音"
 
-#: guicomponents.py:2014
+#: guicomponents.py:2220
 msgid "Properties"
 msgstr "属性"
 
-#: guicomponents.py:2024
+#: guicomponents.py:2230
 msgid "Clip Color"
 msgstr "剪辑色彩"
 
-#: guicomponents.py:2026
+#: guicomponents.py:2232
 msgid "Default"
 msgstr "默认"
 
-#: guicomponents.py:2027 translations.py:526 translations.py:648
+#: guicomponents.py:2233 translations.py:532 translations.py:654
 msgid "Red"
 msgstr "红色"
 
-#: guicomponents.py:2028 translations.py:527 translations.py:643
-#: translations.py:649
+#: guicomponents.py:2234 translations.py:533 translations.py:649
+#: translations.py:655
 msgid "Green"
 msgstr "绿色"
 
-#: guicomponents.py:2029 translations.py:528 translations.py:644
-#: translations.py:650
+#: guicomponents.py:2235 translations.py:534 translations.py:650
+#: translations.py:656
 msgid "Blue"
 msgstr "蓝色"
 
-#: guicomponents.py:2030
+#: guicomponents.py:2236
 msgid "Orange"
 msgstr "橙色"
 
-#: guicomponents.py:2031
+#: guicomponents.py:2237
 msgid "Brown"
 msgstr "棕色"
 
-#: guicomponents.py:2032
+#: guicomponents.py:2238
 msgid "Olive"
 msgstr "橄榄"
 
-#: guicomponents.py:2038
+#: guicomponents.py:2244
 msgid "Markers"
 msgstr "Markers"
 
-#: guicomponents.py:2051
+#: guicomponents.py:2257
 msgid "No Clip Markers"
 msgstr "No Clip Markers"
 
-#: guicomponents.py:2055
+#: guicomponents.py:2261
 msgid "Add Clip Marker At Playhead Position"
 msgstr "Add Clip Marker At Playhead Position"
 
-#: guicomponents.py:2056
+#: guicomponents.py:2262
 msgid "Delete Clip Marker At Playhead Position"
 msgstr "Delete Clip Marker At Playhead Position"
 
-#: guicomponents.py:2058
+#: guicomponents.py:2264
 msgid "Delete All Clip Markers"
 msgstr "Delete All Clip Markers"
 
-#: guicomponents.py:2083 guicomponents.py:2109
+#: guicomponents.py:2289 guicomponents.py:2320
 msgid "Render Slow/Fast Motion File"
 msgstr "渲染成慢动作/快动作文件"
 
-#: guicomponents.py:2085
+#: guicomponents.py:2291
 msgid "Render Reverse Motion File"
 msgstr "渲染成反向播放文件"
 
-#: guicomponents.py:2087
+#: guicomponents.py:2293
 msgid "Render Proxy File"
 msgstr "渲染代理文件"
 
-#: guicomponents.py:2096
+#: guicomponents.py:2298
+msgid "Edit Container Data"
+msgstr ""
+
+#: guicomponents.py:2307
 msgid "Toggle Active"
 msgstr "切换活动"
 
-#: guicomponents.py:2097
+#: guicomponents.py:2308
 msgid "Reset Values"
 msgstr "重置值"
 
-#: guicomponents.py:2099
+#: guicomponents.py:2310
 msgid "Move Up"
 msgstr "上移"
 
-#: guicomponents.py:2100
+#: guicomponents.py:2311
 msgid "Move Down"
 msgstr "下移"
 
-#: guicomponents.py:2108
+#: guicomponents.py:2319
 msgid "Display In Clip Monitor"
 msgstr "在剪辑监视器展示"
 
-#: guicomponents.py:2110
+#: guicomponents.py:2321
 msgid "Toggle Star"
 msgstr "切换星"
 
-#: guicomponents.py:2118 medialinker.py:137
+#: guicomponents.py:2329 medialinker.py:137
 msgid "Set File Relink Path"
 msgstr "设置文件的重链路径"
 
-#: guicomponents.py:2119 medialinker.py:139
+#: guicomponents.py:2330 medialinker.py:139
 msgid "Delete File Relink Path"
 msgstr "删除文件的重链路径"
 
-#: guicomponents.py:2121
+#: guicomponents.py:2332
 msgid "Show Full Paths"
 msgstr "显示完整路径"
 
-#: guicomponents.py:2187 propertyeditorbuilder.py:739
-#: propertyeditorbuilder.py:794 tools/toolsencoding.py:343
+#: guicomponents.py:2398 propertyeditorbuilder.py:740
+#: propertyeditorbuilder.py:795 tools/toolsencoding.py:177
 msgid "Progressive"
 msgstr "进行中的"
 
-#: guicomponents.py:2189 tools/toolsencoding.py:345
+#: guicomponents.py:2400 tools/toolsencoding.py:179
 msgid "Interlaced"
 msgstr "交织的"
 
-#: guicomponents.py:2194 tools/toolsencoding.py:348
+#: guicomponents.py:2405 tools/toolsencoding.py:182
 msgid "Fps: "
 msgstr "Fps: "
 
-#: guicomponents.py:2197 tools/toolsencoding.py:351
+#: guicomponents.py:2408 tools/toolsencoding.py:185
 msgid "Pixel Aspect: "
 msgstr "像素纵横比: "
 
-#: guicomponents.py:2204
+#: guicomponents.py:2415
 msgid "Description:"
 msgstr "描述:"
 
-#: guicomponents.py:2206
+#: guicomponents.py:2417
 msgid "Dimensions:"
 msgstr "尺寸:"
 
-#: guicomponents.py:2208
+#: guicomponents.py:2419
 msgid "Frames per second:"
 msgstr "每秒帧数:"
 
-#: guicomponents.py:2210 tools/titler.py:337
+#: guicomponents.py:2421 tools/titler.py:339
 msgid "Size:"
 msgstr "大小:"
 
-#: guicomponents.py:2212
+#: guicomponents.py:2423
 msgid "Pixel aspect ratio: "
 msgstr "像素高宽比: "
 
-#: guicomponents.py:2214 profilesmanager.py:139
+#: guicomponents.py:2425 profilesmanager.py:139
 msgid "Progressive:"
 msgstr "进行的:"
 
-#: guicomponents.py:2498
+#: guicomponents.py:2709
 msgid "Current Sequence / Clip name and length"
 msgstr "当前序列/剪辑名称及长度"
 
-#: guicomponents.py:2583
+#: guicomponents.py:2800
 msgid "Video:"
 msgstr "视频:"
 
-#: guicomponents.py:2588
+#: guicomponents.py:2805
 msgid "Audio:"
 msgstr "音频:"
 
-#: guicomponents.py:2593
+#: guicomponents.py:2810
 msgid "Number of Tracks:"
 msgstr "轨道数量:"
 
-#: guicomponents.py:2636
+#: guicomponents.py:2853
 msgid "Frames:"
 msgstr "帧"
 
-#: guicomponents.py:2727
+#: guicomponents.py:2944
 msgid "No Markers"
 msgstr "无标记"
 
-#: guicomponents.py:2731
+#: guicomponents.py:2948
 msgid "Delete Marker"
 msgstr "删除标记"
 
-#: guicomponents.py:2733
+#: guicomponents.py:2950
 msgid "Delete All Markers"
 msgstr "删除所有标记"
 
-#: guicomponents.py:2741
+#: guicomponents.py:2958
 msgid "Maximize Tracks"
 msgstr "最大化轨道"
 
-#: guicomponents.py:2742
+#: guicomponents.py:2959
 msgid "Maximize Video Tracks"
 msgstr "最大化视频轨道"
 
-#: guicomponents.py:2743
+#: guicomponents.py:2960
 msgid "Maximize Audio Tracks"
 msgstr "最大化音频轨道"
 
-#: guicomponents.py:2745
+#: guicomponents.py:2962
 msgid "Minimize Tracks"
 msgstr "最小化轨道"
 
-#: guicomponents.py:2747
+#: guicomponents.py:2964
 msgid "Activate All Tracks"
 msgstr "激活所有轨道"
 
-#: guicomponents.py:2748
+#: guicomponents.py:2965
 msgid "Activate Only Current Top Active Track"
 msgstr "仅激活当前顶部活跃的轨道"
 
-#: guicomponents.py:2750
+#: guicomponents.py:2967
 msgid "Vertical Shrink Timeline"
 msgstr "垂直收缩时间轴"
 
-#: guicomponents.py:2766
+#: guicomponents.py:2983
 msgid "Display Clip Media Thumbnails"
 msgstr "显示视频剪辑媒体缩略图"
 
-#: guicomponents.py:2775
+#: guicomponents.py:2992
 msgid "Snapping On"
 msgstr "拧开"
 
-#: guicomponents.py:2784
+#: guicomponents.py:3001
 msgid "Audio scrubbing"
 msgstr "Audio scrubbing"
 
-#: guicomponents.py:2793
+#: guicomponents.py:3010
 msgid "Display All Audio Levels"
 msgstr "显示所有音频电平"
 
-#: guicomponents.py:2796
+#: guicomponents.py:3013
 msgid "Display Audio Levels On Request"
 msgstr "按要求显示音频电平"
 
-#: guicomponents.py:2817
+#: guicomponents.py:3033
 msgid "Save Effect Values"
 msgstr "Save Effect Values"
 
-#: guicomponents.py:2818
+#: guicomponents.py:3034
 msgid "Load Effect Values"
 msgstr "Load Effect Values"
 
-#: guicomponents.py:2819
+#: guicomponents.py:3035
 msgid "Reset Effect Values"
 msgstr "Reset Effect Values"
 
-#: guicomponents.py:2823
+#: guicomponents.py:3039
 msgid "Delete Effect"
 msgstr "Delete Effect"
 
-#: guicomponents.py:2827 guicomponents.py:2847
+#: guicomponents.py:3043 guicomponents.py:3088
 msgid "Close Editor"
 msgstr "Close Editor"
 
-#: guicomponents.py:2837
+#: guicomponents.py:3052
+#, fuzzy
+msgid "Add Filter Mask on Selected Filter"
+msgstr "添加滤镜到视频剪辑滤镜堆栈"
+
+#: guicomponents.py:3061
+#, fuzzy
+msgid "Add Filter Mask on All Filters"
+msgstr "添加滤镜到视频剪辑滤镜堆栈"
+
+#: guicomponents.py:3078
 msgid "Save Compositor Values"
 msgstr "Save Compositor Values"
 
-#: guicomponents.py:2838
+#: guicomponents.py:3079
 msgid "Load Compositor Values"
 msgstr "Load Compositor Values"
 
-#: guicomponents.py:2839
+#: guicomponents.py:3080
 msgid "Reset Compositor Values"
 msgstr "Reset Compositor Values"
 
-#: guicomponents.py:2856
+#: guicomponents.py:3097
 msgid "Image"
 msgstr "影像"
 
-#: guicomponents.py:2858
+#: guicomponents.py:3099
 msgid "Vectorscope"
 msgstr "矢量示波器"
 
-#: guicomponents.py:2860
+#: guicomponents.py:3101
 msgid "RGB Parade"
 msgstr "RGB 系列"
 
-#: guicomponents.py:2864
+#: guicomponents.py:3105
 msgid "Overlay Opacity"
 msgstr "叠层不透明度"
 
-#: guicomponents.py:2869
+#: guicomponents.py:3110
 msgid "100%"
 msgstr "100%"
 
-#: guicomponents.py:2874
+#: guicomponents.py:3115
 msgid "80%"
 msgstr "80%"
 
-#: guicomponents.py:2879
+#: guicomponents.py:3120
 msgid "50%"
 msgstr "50%"
 
-#: guicomponents.py:2884
+#: guicomponents.py:3125
 msgid "20%"
 msgstr "20%"
 
-#: guicomponents.py:2889
+#: guicomponents.py:3130
 msgid "0%"
 msgstr "0%"
 
-#: guicomponents.py:2909
+#: guicomponents.py:3150
 msgid "Trim View On"
 msgstr "修剪查看开"
 
-#: guicomponents.py:2914
+#: guicomponents.py:3155
 msgid "Trim View Single Side Edits Only"
 msgstr "修剪查看仅单边编辑"
 
-#: guicomponents.py:2919
+#: guicomponents.py:3160
 msgid "Trim View Off"
 msgstr "修剪查看开关"
 
-#: guicomponents.py:2935
+#: guicomponents.py:3176
 msgid "Set Current Clip Frame Match Frame"
 msgstr "设置与当前剪辑帧相匹配的帧"
 
-#: guicomponents.py:2953
+#: guicomponents.py:3194
 msgid "All Files"
 msgstr "所有文件"
 
-#: guicomponents.py:2957
+#: guicomponents.py:3198
 msgid "Video Files"
 msgstr "视频文件"
 
-#: guicomponents.py:2961
+#: guicomponents.py:3202
 msgid "Audio Files"
 msgstr "音频文件"
 
-#: guicomponents.py:2965
+#: guicomponents.py:3206
 msgid "Graphics Files"
 msgstr "图像文件"
 
-#: guicomponents.py:2969
+#: guicomponents.py:3210
 msgid "Image Sequences"
 msgstr "影像序列"
 
-#: guicomponents.py:2973
+#: guicomponents.py:3214
 msgid "Pattern Producers"
 msgstr "生产模式"
 
-#: guicomponents.py:2986
+#: guicomponents.py:3227
 msgid "2 Columns"
 msgstr "2列"
 
-#: guicomponents.py:2991
+#: guicomponents.py:3232
 msgid "3 Columns"
 msgstr "3列"
 
-#: guicomponents.py:2996
+#: guicomponents.py:3237
 msgid "4 Columns"
 msgstr "4列"
 
-#: guicomponents.py:3001
+#: guicomponents.py:3242
 msgid "5 Columns"
 msgstr "5列"
 
-#: guicomponents.py:3006
+#: guicomponents.py:3247
 msgid "6 Columns"
 msgstr "6列"
 
-#: guicomponents.py:3011
+#: guicomponents.py:3252
 msgid "7 Columns"
 msgstr "7列"
 
-#: guicomponents.py:3164
+#: guicomponents.py:3416
 msgid "Display Timeline / Clip on Monitor"
 msgstr "在监视器中显示时间码/剪辑"
 
-#: movemodes.py:674
+#: movemodes.py:683
 msgid "Can't do edit on a locked track"
 msgstr "不能在被锁定轨道上编辑"
 
-#: movemodes.py:675
+#: movemodes.py:684
 msgid " is locked. Unlock track to edit it.\n"
 msgstr " 被锁定。解除轨道锁定以编辑。\n"
 
@@ -2847,8 +2971,8 @@ msgstr "显示媒体文件类型"
 msgid "Bins"
 msgstr "库"
 
-#: panels.py:101 translations.py:641 translations.py:669 translations.py:690
-#: mlttransitions.py:148 tools/titler.py:212
+#: panels.py:101 translations.py:647 translations.py:675 translations.py:696
+#: mlttransitions.py:146 tools/titler.py:214
 msgid "Add"
 msgstr "添加"
 
@@ -2874,7 +2998,7 @@ msgid ""
 "movie."
 msgstr "<b>Sequence</b>包含用于创建电影的时间轴上的全部内容。"
 
-#: panels.py:178 rendergui.py:686 tools/toolsencoding.py:54
+#: panels.py:178 rendergui.py:691 tools/toolsencoding.py:305
 msgid "Name:"
 msgstr "名称:"
 
@@ -2886,7 +3010,7 @@ msgstr "路径:"
 msgid "Image Size:"
 msgstr "大小:"
 
-#: panels.py:181 tools/batchrendering.py:1039
+#: panels.py:181 tools/batchrendering.py:1046
 msgid "Frames Per Second:"
 msgstr "每秒帧数:"
 
@@ -2938,7 +3062,7 @@ msgstr "媒体路径:"
 msgid "Composite clip on:"
 msgstr "合成剪辑在:"
 
-#: panels.py:258 panels.py:470 rendergui.py:699 tools/toolsencoding.py:67
+#: panels.py:258 panels.py:480 rendergui.py:704 tools/toolsencoding.py:388
 msgid "Type:"
 msgstr "类型:"
 
@@ -2950,47 +3074,62 @@ msgstr "擦除模式:"
 msgid "Dip Color:"
 msgstr "沾色:"
 
+#: panels.py:291 panels.py:359 panels.py:396 panels.py:493 tools/gmic.py:746
+msgid "Length:"
+msgstr "长度"
+
 #: panels.py:297
-msgid "First Clip Out Handle:"
+#, fuzzy
+msgid "First Clip Out Handle Available/Required:"
 msgstr "首次(clip out)剪辑处理:"
 
-#: panels.py:298 panels.py:301
+#: panels.py:298 panels.py:301 panels.py:304
 msgid " frame(s)"
 msgstr " 帧"
 
 #: panels.py:300
+#, fuzzy
+msgid "Second Clip In Handle Available/Required:"
+msgstr "第二次(clip in)剪辑处理:"
+
+#: panels.py:303
 msgid "Second Clip In Handle:"
 msgstr "第二次(clip in)剪辑处理:"
 
-#: panels.py:339 panels.py:513
+#: panels.py:309
+#, fuzzy
+msgid "Steal frames from clips if needed"
+msgstr "Delete all Keyframes after Clip Range"
+
+#: panels.py:349 panels.py:523
 msgid "Transition Options"
 msgstr "转场选项"
 
-#: panels.py:340 panels.py:377 panels.py:414 panels.py:457 panels.py:514
+#: panels.py:350 panels.py:387 panels.py:424 panels.py:467 panels.py:524
 msgid "Encoding"
 msgstr "编码"
 
-#: panels.py:341
+#: panels.py:351
 msgid "Media Overlap info"
 msgstr "媒体覆盖信息"
 
-#: panels.py:376
+#: panels.py:386
 msgid "Transition"
 msgstr "转场"
 
-#: panels.py:413 translations.py:590
+#: panels.py:423 translations.py:596
 msgid "Fade"
 msgstr "淡入淡出"
 
-#: panels.py:422
+#: panels.py:432
 msgid "Transitions / Fades to be rerendered:"
 msgstr "转场/淡入淡出渲染："
 
-#: panels.py:427
+#: panels.py:437
 msgid "There are "
 msgstr "这里有 "
 
-#: panels.py:427
+#: panels.py:437
 msgid ""
 " Transitions / Fades that cannot be rerendered, either because they are\n"
 "created with Flowblade version <=1.14 or the source clips are no longer on "
@@ -2999,129 +3138,131 @@ msgstr ""
 " 转场/淡入淡出无法渲染，可能是使用<=1.14版本Flowblade创建，或者源剪辑不再在时"
 "间轴上。"
 
-#: panels.py:456
+#: panels.py:466 tools/containerprogramedit.py:163 jobs.py:298
 msgid "Info"
 msgstr "Info"
 
-#: panels.py:466 mlttransitions.py:168 mlttransitions.py:203
+#: panels.py:476 translations.py:278 mlttransitions.py:166
+#: mlttransitions.py:201
 msgid "Fade In"
 msgstr "淡入"
 
-#: panels.py:467 mlttransitions.py:169 mlttransitions.py:204
+#: panels.py:477 translations.py:279 mlttransitions.py:167
+#: mlttransitions.py:202
 msgid "Fade Out"
 msgstr "淡出"
 
-#: panels.py:475
+#: panels.py:485
 msgid "Color:"
 msgstr "色彩:"
 
-#: persistance.py:429
+#: persistance.py:472
 msgid "Building sequence "
 msgstr "生成序列 "
 
-#: persistance.py:470
+#: persistance.py:494
 msgid "Loading icons"
 msgstr "加载中的图标"
 
-#: persistance.py:715 persistance.py:735
+#: persistance.py:768 persistance.py:788
 msgid "Relative file search for "
 msgstr "Relative file search for "
 
-#: projectdata.py:79
+#: projectdata.py:81
 msgid "untitled"
 msgstr "未命名的"
 
-#: projectdata.py:211
+#: projectdata.py:215
 msgid "bin_"
 msgstr "库_"
 
-#: projectdata.py:518
+#: projectdata.py:524
 msgid "Created using dialog"
 msgstr "通过对话框创建"
 
-#: projectdata.py:520
+#: projectdata.py:526
 msgid "Created using Save As... "
 msgstr "通过另存为...创建 "
 
-#: projectdata.py:522
+#: projectdata.py:528
 msgid "Saved "
 msgstr "已保存的 "
 
-#: projectdata.py:525
+#: projectdata.py:531
 msgid "Saved as "
 msgstr "另存为 "
 
-#: projectdata.py:527
+#: projectdata.py:533
 msgid "Rendered "
 msgstr "被渲染的 "
 
-#: projectdata.py:529
+#: projectdata.py:535
 msgid "Saved backup snapshot"
 msgstr "保存的备份快照"
 
-#: projectdata.py:531
+#: projectdata.py:537
 #, fuzzy
 msgid "Media load"
 msgstr "媒体路径:"
 
-#: projectdata.py:533
+#: projectdata.py:539
 #, fuzzy
 msgid "Saved with changed profile"
 msgstr "保存更改配置文件"
 
-#: render.py:219
+#: render.py:220
 msgid "Reset"
 msgstr "重置"
 
-#: render.py:221
+#: render.py:222
 msgid "To Queue"
 msgstr "排序"
 
-#: render.py:222
+#: render.py:223
 msgid "Save Project in Render Queue"
 msgstr "在渲染队列中保存项目"
 
-#: render.py:225
+#: render.py:226
 msgid "Select render range"
 msgstr "选择渲染范围"
 
-#: render.py:226
+#: render.py:227
 msgid "Reset all render options to defaults"
 msgstr "重置所有渲染选项到默认状态"
 
-#: render.py:227
+#: render.py:228
 msgid "Begin Rendering"
 msgstr "开始渲染"
 
-#: render.py:249
+#: render.py:252
 msgid "<b>Output File: </b>"
 msgstr "<b>输出文件:</b>"
 
-#: render.py:251
+#: render.py:254
 msgid "<b>Estimated time left: </b>"
 msgstr "<b>估计剩余时间:</b>"
 
-#: render.py:253
+#: render.py:256
 msgid "<b>Render time: </b>"
 msgstr "<b>渲染时间:</b>"
 
-#: render.py:270 render.py:296
+#: render.py:273 render.py:299
 msgid "<b>Render Time: </b>"
 msgstr "<b>渲染时间:</b>"
 
-#: render.py:276 render.py:294
+#: render.py:279 render.py:297
 msgid "<b>Estimated Time Left: </b>"
 msgstr "<b>估计剩余时间:</b>"
 
-#: render.py:298
+#: render.py:301
 msgid "Render Complete!"
 msgstr "渲染完成！"
 
-#: render.py:415 render.py:517
+#: render.py:418 render.py:520
 msgid "A File with given path exists!"
 msgstr "一个已经存在给定路径的文件！"
 
-#: render.py:416 render.py:518
+#: render.py:419 render.py:521
 msgid ""
 "It is not allowed to render Motion Files with same paths as existing files.\n"
 "Select another name for file."
@@ -3129,19 +3270,19 @@ msgstr ""
 "It is not allowed to render Motion Files with same paths as existing files.\n"
 "Select another name for file."
 
-#: render.py:480
+#: render.py:483
 msgid "Rendering Motion Clip"
 msgstr "渲染动画剪辑"
 
-#: render.py:481 render.py:579
+#: render.py:484 render.py:582
 msgid "<b>Motion Clip File: </b>"
 msgstr "<b>Motion Clip File: </b>"
 
-#: render.py:578
+#: render.py:581
 msgid "Rendering Reverse Clip"
 msgstr "渲染反向剪辑"
 
-#: render.py:628
+#: render.py:631
 msgid "Rendering Transition Clip"
 msgstr "渲染转场剪辑"
 
@@ -3161,7 +3302,7 @@ msgstr ""
 ".\n"
 "您必须同步到轨道V1上的剪辑。"
 
-#: translations.py:129 translations.py:444
+#: translations.py:129 translations.py:451 tools/simpleeditors.py:97
 msgid "Color"
 msgstr "色彩"
 
@@ -3177,13 +3318,13 @@ msgstr "音频"
 msgid "Audio Filter"
 msgstr "音频滤镜"
 
-#: translations.py:133 translations.py:186 translations.py:409
-#: translations.py:486
+#: translations.py:133 translations.py:187 translations.py:416
+#: translations.py:493
 msgid "Blur"
 msgstr "污迹、污斑"
 
-#: translations.py:134 translations.py:570 propertyeditorbuilder.py:754
-#: propertyeditorbuilder.py:809
+#: translations.py:134 translations.py:576 propertyeditorbuilder.py:755
+#: propertyeditorbuilder.py:810
 msgid "Distort"
 msgstr "变形"
 
@@ -3191,11 +3332,11 @@ msgstr "变形"
 msgid "Movement"
 msgstr "移动"
 
-#: translations.py:137 mlttransitions.py:143
+#: translations.py:137 mlttransitions.py:141
 msgid "Transform"
 msgstr "变换"
 
-#: translations.py:138 translations.py:505
+#: translations.py:138 translations.py:511
 msgid "Edge"
 msgstr "边缘"
 
@@ -3207,1763 +3348,1781 @@ msgstr "固定、修理"
 msgid "Artistic"
 msgstr "艺术的"
 
-#: translations.py:144
+#: translations.py:141
+#, fuzzy
+msgid "Fade In / Out"
+msgstr "淡出"
+
+#: translations.py:145
 msgid "Alpha Gradient"
 msgstr "Alpha梯度"
 
-#: translations.py:145
+#: translations.py:146
 msgid "Crop"
 msgstr "修剪"
 
-#: translations.py:146
+#: translations.py:147
 msgid "Alpha Shape"
 msgstr "Alpha形状"
 
-#: translations.py:148 translations.py:294
+#: translations.py:149 translations.py:301
 msgid "Volume"
 msgstr "音量"
 
-#: translations.py:149
+#: translations.py:150
 msgid "Pan"
 msgstr "托盘"
 
-#: translations.py:150
+#: translations.py:151
 msgid "Pan Keyframed"
 msgstr "关键帧托盘"
 
-#: translations.py:151
+#: translations.py:152
 msgid "Mono to Stereo"
 msgstr "单声道到立体声"
 
-#: translations.py:152
+#: translations.py:153
 msgid "Swap Channels"
 msgstr "交换通道"
 
-#: translations.py:154
+#: translations.py:155
 msgid "Pitchshifter"
 msgstr "变速变调"
 
-#: translations.py:155
+#: translations.py:156
 msgid "Distort - Barry's Satan"
 msgstr "扭曲-Barry's Satan"
 
-#: translations.py:156
+#: translations.py:157
 msgid "Frequency Shift - Bode/Moog"
 msgstr "频移- Bode/Moog"
 
-#: translations.py:157
+#: translations.py:158
 msgid "Equalize - DJ 3-band"
 msgstr "均衡 - DJ 3-band"
 
-#: translations.py:158
+#: translations.py:159
 msgid "Flanger - DJ"
 msgstr "镶边 - DJ"
 
-#: translations.py:159
+#: translations.py:160
 msgid "Declipper"
 msgstr "Declipper"
 
-#: translations.py:160
+#: translations.py:161
 msgid "Delayorama"
 msgstr "Delayorama"
 
-#: translations.py:161
+#: translations.py:162
 msgid "Distort - Diode Processor"
 msgstr "扭曲 - Diode Processor"
 
-#: translations.py:162
+#: translations.py:163
 msgid "Distort - Foldover"
 msgstr "扭曲 -折叠"
 
-#: translations.py:163
+#: translations.py:164
 msgid "Highpass - Butterworth"
 msgstr "Highpass - Butterworth"
 
-#: translations.py:164
+#: translations.py:165
 msgid "Lowpass - Butterworth"
 msgstr "Lowpass - Butterworth"
 
-#: translations.py:165
+#: translations.py:166
 msgid "GSM Simulator"
 msgstr "GSM 模拟器"
 
-#: translations.py:166
+#: translations.py:167
 msgid "Reverb - GVerb"
 msgstr "混响 - GVerb"
 
-#: translations.py:167
+#: translations.py:168
 msgid "Noise Gate"
 msgstr "噪声门限"
 
-#: translations.py:168
+#: translations.py:169
 msgid "Bandpass"
 msgstr "带通"
 
-#: translations.py:169
+#: translations.py:170
 msgid "Pitchscaler - High Quality"
 msgstr "Pitchscaler - 高质量"
 
-#: translations.py:170
+#: translations.py:171
 msgid "Equalize - Multiband"
 msgstr "均衡 - Multiband"
 
-#: translations.py:171
+#: translations.py:172
 msgid "Reverb - Plate"
 msgstr "混响 - Plate"
 
-#: translations.py:172
+#: translations.py:173
 msgid "Distort - Pointer cast"
 msgstr "扭曲 - Pointer cast"
 
-#: translations.py:173
+#: translations.py:174
 msgid "Rate Shifter"
 msgstr "速器"
 
-#: translations.py:174
+#: translations.py:175
 msgid "Signal Shifter"
 msgstr "信号器"
 
-#: translations.py:175
+#: translations.py:176
 msgid "Distort - Sinus Wavewrap"
 msgstr "扭曲 - Sinus Wavewrap"
 
-#: translations.py:176
+#: translations.py:177
 msgid "Vinyl Effect"
 msgstr "黑胶唱片效果"
 
-#: translations.py:177
+#: translations.py:178
 msgid "Chorus - Multivoice"
 msgstr "合唱 - Multivoice"
 
-#: translations.py:179
+#: translations.py:180
 msgid "Charcoal"
 msgstr "木炭画"
 
-#: translations.py:180
+#: translations.py:181
 msgid "Glow"
 msgstr "白热"
 
-#: translations.py:181
+#: translations.py:182
 msgid "Old Film"
 msgstr "老电影"
 
-#: translations.py:182
+#: translations.py:183
 msgid "Scanlines"
 msgstr "扫描线"
 
-#: translations.py:183
+#: translations.py:184
 msgid "Cartoon"
 msgstr "卡通"
 
-#: translations.py:185
+#: translations.py:186
 msgid "Pixelize"
 msgstr "像素化"
 
-#: translations.py:187
+#: translations.py:188
 msgid "Grain"
 msgstr "纹理"
 
-#: translations.py:189
+#: translations.py:190
 msgid "Grayscale"
 msgstr "灰度"
 
-#: translations.py:190 translations.py:424 translations.py:426
+#: translations.py:191 translations.py:431 translations.py:433
 msgid "Contrast"
 msgstr "对比"
 
-#: translations.py:191 translations.py:427 mlttransitions.py:162
+#: translations.py:192 translations.py:434 mlttransitions.py:160
 msgid "Saturation"
 msgstr "饱和"
 
-#: translations.py:192 translations.py:408 translations.py:460
-#: translations.py:485 translations.py:573 translations.py:577
+#: translations.py:193 translations.py:415 translations.py:467
+#: translations.py:492 translations.py:579 translations.py:583
 msgid "Invert"
 msgstr "插入"
 
-#: translations.py:193 translations.py:428 mlttransitions.py:158
+#: translations.py:194 translations.py:435 mlttransitions.py:156
 msgid "Hue"
 msgstr "色调"
 
-#: translations.py:194 translations.py:425 translations.py:429
-#: translations.py:430
+#: translations.py:195 translations.py:432 translations.py:436
+#: translations.py:437
 msgid "Brightness"
 msgstr "亮度"
 
-#: translations.py:195 translations.py:656
+#: translations.py:196 translations.py:662
 msgid "Sepia"
 msgstr "颜料"
 
-#: translations.py:196
+#: translations.py:197
 msgid "Tint"
 msgstr "染色"
 
-#: translations.py:197
+#: translations.py:198
 msgid "White Balance"
 msgstr "白平衡"
 
-#: translations.py:198 translations.py:510
+#: translations.py:199 translations.py:516
 msgid "Levels"
 msgstr "水平"
 
-#: translations.py:200
+#: translations.py:201
 msgid "Color Clustering"
 msgstr "颜色聚类"
 
-#: translations.py:201
+#: translations.py:202
 msgid "Chroma Hold"
 msgstr "色度把控"
 
-#: translations.py:202
+#: translations.py:203
 msgid "Three Layer"
 msgstr "三层"
 
-#: translations.py:203
+#: translations.py:204
 msgid "Threshold0r"
 msgstr "阀值"
 
-#: translations.py:204
+#: translations.py:205
 msgid "Technicolor"
 msgstr "染印法彩色"
 
-#: translations.py:205
+#: translations.py:206
 msgid "Primaries"
 msgstr "初选"
 
-#: translations.py:206
+#: translations.py:207
 msgid "Color Distance"
 msgstr "颜色距离"
 
-#: translations.py:207 translations.py:446 translations.py:451
+#: translations.py:208 translations.py:453 translations.py:458
 msgid "Threshold"
 msgstr "阀值"
 
-#: translations.py:209
+#: translations.py:210
 msgid "Waves"
 msgstr "波浪"
 
-#: translations.py:210
+#: translations.py:211
 msgid "Lens Correction"
 msgstr "镜头校正"
 
-#: translations.py:211 translations.py:458
+#: translations.py:212 translations.py:465
 msgid "Flip"
 msgstr "轻弹"
 
-#: translations.py:212
+#: translations.py:213
 msgid "Mirror"
 msgstr "反射"
 
-#: translations.py:213
+#: translations.py:214
 msgid "V Sync"
 msgstr "垂直同步"
 
-#: translations.py:215
+#: translations.py:216
 msgid "Edge Glow"
 msgstr "边缘发光"
 
-#: translations.py:216
+#: translations.py:217
 msgid "Sobel"
 msgstr "Sobel"
 
-#: translations.py:218
+#: translations.py:219
 msgid "Denoise"
 msgstr "去噪"
 
-#: translations.py:219 translations.py:533
+#: translations.py:220 translations.py:539
 msgid "Sharpness"
 msgstr "锐度"
 
-#: translations.py:220
+#: translations.py:221
 msgid "Letterbox"
 msgstr "邮筒"
 
-#: translations.py:222
+#: translations.py:223
 msgid "Baltan"
 msgstr "Baltan"
 
-#: translations.py:223
+#: translations.py:224
 msgid "Vertigo"
 msgstr "眩晕"
 
-#: translations.py:224
+#: translations.py:225
 msgid "Nervous"
 msgstr "焦虑的"
 
-#: translations.py:225
+#: translations.py:226
 msgid "Freeze"
 msgstr "冻结"
 
-#: translations.py:227 translations.py:454
+#: translations.py:228 translations.py:461
 msgid "Rotate"
 msgstr "旋转"
 
-#: translations.py:228
+#: translations.py:229
 msgid "Shear"
 msgstr "剪切"
 
-#: translations.py:229 translations.py:265
+#: translations.py:230 translations.py:266
 msgid "Translate"
 msgstr "转化"
 
-#: translations.py:232
+#: translations.py:233
 msgid "Color Select"
 msgstr "颜色选择"
 
-#: translations.py:233
+#: translations.py:234
 msgid "Alpha Modify"
 msgstr "Alpha 修改"
 
-#: translations.py:234
+#: translations.py:235
 msgid "Spill Supress"
 msgstr "溢出抑制"
 
-#: translations.py:235
+#: translations.py:236
 msgid "RGB Noise"
 msgstr "RGB Noise"
 
-#: translations.py:236
+#: translations.py:237
 msgid "Box Blur"
 msgstr "盒状模糊"
 
-#: translations.py:237
+#: translations.py:238
 msgid "IRR Blur"
 msgstr "IRR模糊"
 
-#: translations.py:238
+#: translations.py:239
 msgid "Color Halftone"
 msgstr "颜色半调"
 
-#: translations.py:239
+#: translations.py:240
 msgid "Dither"
 msgstr "抖动"
 
-#: translations.py:240
+#: translations.py:241
 msgid "Vignette"
 msgstr "晕影"
 
-#: translations.py:241
+#: translations.py:242
 msgid "Vignette Advanced"
 msgstr "Vignette Advanced"
 
-#: translations.py:242
+#: translations.py:243
 msgid "Emboss"
 msgstr "浮雕"
 
-#: translations.py:243
+#: translations.py:244
 msgid "3 Point Balance"
 msgstr "3点平衡"
 
-#: translations.py:244
+#: translations.py:245
 msgid "Colorize"
 msgstr "渲染"
 
-#: translations.py:245
+#: translations.py:246
 msgid "Brightness Keyframed"
 msgstr "关键亮度帧"
 
-#: translations.py:246
+#: translations.py:247
 msgid "RGB Adjustment"
 msgstr "RGB调整"
 
-#: translations.py:247
+#: translations.py:248
 msgid "Color Tap"
 msgstr "颜色汲取"
 
-#: translations.py:248
+#: translations.py:249
 msgid "Posterize"
 msgstr "色调分离"
 
-#: translations.py:249
+#: translations.py:250
 msgid "Soft Glow"
 msgstr "柔光"
 
-#: translations.py:250
+#: translations.py:251
 msgid "Newspaper"
 msgstr "报纸"
 
-#: translations.py:252
+#: translations.py:253
 msgid "Luma Key"
 msgstr "亮度抠像"
 
-#: translations.py:253
+#: translations.py:254
 msgid "Chroma Key"
 msgstr "色度键"
 
-#: translations.py:254
+#: translations.py:255
 msgid "Affine"
 msgstr "仿射"
 
-#: translations.py:255
+#: translations.py:256
 msgid "Color Adjustment"
 msgstr "颜色调整"
 
-#: translations.py:256
+#: translations.py:257
 msgid "Color Grading"
 msgstr "颜色分级"
 
-#: translations.py:257
+#: translations.py:258
 msgid "Curves"
 msgstr "弧线"
 
-#: translations.py:258
+#: translations.py:259
 msgid "Lift Gain Gamma"
 msgstr "提升获得Gamma"
 
-#: translations.py:259
+#: translations.py:260
 msgid "Image Grid"
 msgstr "影像网格"
 
-#: translations.py:261
+#: translations.py:262
 msgid "Color Lift Gain Gamma"
 msgstr "色彩提升获得Gamma"
 
-#: translations.py:262
+#: translations.py:263
 msgid "Color Channel Mixer"
 msgstr "颜色通道混合"
 
-#: translations.py:263
+#: translations.py:264
 msgid "Lens Correction AV"
 msgstr "镜头校正AV"
 
-#: translations.py:264
+#: translations.py:265
 msgid "Perspective"
 msgstr "Perspective"
 
-#: translations.py:266
+#: translations.py:267
 msgid "Lut3D"
 msgstr "Lut3D"
 
-#: translations.py:267
+#: translations.py:268
 msgid "Normalize"
 msgstr "Normalize"
 
-#: translations.py:268
+#: translations.py:269
 msgid "File Luma to Alpha"
 msgstr "File Luma to Alpha"
 
-#: translations.py:269
+#: translations.py:270
 msgid "Gradient Tint"
 msgstr "Gradient Tint"
 
-#: translations.py:270
+#: translations.py:271
 msgid "RotoMask"
 msgstr "RotoMask"
 
-#: translations.py:271
+#: translations.py:272
 msgid "Lens Defisher"
 msgstr ""
 
-#: translations.py:272
+#: translations.py:273
 #, fuzzy
 msgid "Position Scale"
 msgstr "位置"
 
-#: translations.py:278 translations.py:461
-msgid "Position"
-msgstr "位置"
-
-#: translations.py:279
-msgid "Grad width"
-msgstr "梯度宽度"
-
-#: translations.py:280 translations.py:292 translations.py:455
-msgid "Tilt"
-msgstr "倾斜"
-
-#: translations.py:281 translations.py:640
-msgid "Min"
-msgstr "最小化"
-
-#: translations.py:282 translations.py:639
-msgid "Max"
-msgstr "最大化"
-
-#: translations.py:283 translations.py:481
-msgid "Left"
-msgstr "左"
-
-#: translations.py:284 translations.py:482
-msgid "Right"
-msgstr "右"
-
-#: translations.py:285 translations.py:483
-msgid "Top"
-msgstr "顶部"
-
-#: translations.py:286 translations.py:484
-msgid "Bottom"
-msgstr "底部"
-
-#: translations.py:287
-msgid "Shape"
-msgstr "形状"
-
-#: translations.py:288
-msgid "Pos X"
-msgstr "Pos X"
-
-#: translations.py:289
-msgid "Pos Y"
-msgstr "Pos Y"
-
-#: translations.py:290
-msgid "Size X"
-msgstr "大小 X"
-
-#: translations.py:291
-msgid "Size Y"
-msgstr "大小 Y"
-
-#: translations.py:293
-msgid "Trans. Width"
-msgstr "Trans. 宽度"
-
-#: translations.py:295 translations.py:296
-msgid "Left/Right"
-msgstr "左/右"
-
-#: translations.py:297 translations.py:300 translations.py:303
-#: translations.py:305 translations.py:309 translations.py:313
-#: translations.py:314 translations.py:325 translations.py:327
-#: translations.py:330 translations.py:333 translations.py:336
-#: translations.py:339 translations.py:347 translations.py:355
-#: translations.py:359 translations.py:361 translations.py:377
-#: translations.py:381 translations.py:384 translations.py:386
-#: translations.py:388 translations.py:390 translations.py:396
-#: translations.py:403
-msgid "Dry/Wet"
-msgstr "干燥/潮湿"
-
-#: translations.py:298
-msgid "Pitch Shift"
-msgstr "音调转变"
-
-#: translations.py:299
-msgid "Buffer Size"
-msgstr "缓冲区大小"
-
-#: translations.py:301
-msgid "Decay Time(samples)"
-msgstr "衰减时间（样本）"
-
-#: translations.py:302
-msgid "Knee Point(dB)"
-msgstr "拐点（dB）"
-
-#: translations.py:304
-msgid "Frequency shift"
-msgstr "频移"
-
-#: translations.py:306
-msgid "Low Gain(dB)"
-msgstr "低增益（dB）"
-
-#: translations.py:307
-msgid "Mid Gain(dB)"
-msgstr "中等增益（dB）"
-
-#: translations.py:308
-msgid "High Gain(dB)"
-msgstr "高增益（dB）"
-
-#: translations.py:310
-msgid "Oscillation period(s)"
-msgstr "振荡周期（s）"
-
-#: translations.py:311
-msgid "Oscillation depth(ms)"
-msgstr "振荡深度（ms）"
-
-#: translations.py:312
-msgid "Feedback%"
-msgstr "反馈%"
-
-#: translations.py:315
-msgid "Random seed"
-msgstr "随机种子"
-
-#: translations.py:316
-msgid "Input Gain(dB)"
-msgstr "输入增益调节（dB）"
-
-#: translations.py:317
-msgid "Feedback(%)"
-msgstr "反馈（%）"
-
-#: translations.py:318
-msgid "Number of taps"
-msgstr "抽头数"
-
-#: translations.py:319
-msgid "First Delay(s)"
-msgstr "第一次延时（s）"
-
-#: translations.py:320
-msgid "Delay Range(s)"
-msgstr "延时范围（s）"
-
-#: translations.py:321
-msgid "Delay Change"
-msgstr "延时改变"
-
-#: translations.py:322
-msgid "Delay Random(%)"
-msgstr "延时随机（%）"
-
-#: translations.py:323
-msgid "Amplitude Change"
-msgstr "振幅变化"
-
-#: translations.py:324
-msgid "Amplitude Random(%)"
-msgstr "振幅随机（%）"
-
-#: translations.py:326 translations.py:389 translations.py:435
-#: translations.py:467
-msgid "Amount"
-msgstr "数量"
-
-#: translations.py:328
-msgid "Drive"
-msgstr "驱动器"
-
-#: translations.py:329
-msgid "Skew"
-msgstr "偏斜"
-
-#: translations.py:331 translations.py:334
-msgid "Cutoff Frequency(Hz)"
-msgstr "截止频率（Hz）"
-
-#: translations.py:332 translations.py:335
-msgid "Resonance"
-msgstr "共振"
-
-#: translations.py:337
-msgid "Passes"
-msgstr "通过"
-
-#: translations.py:338
-msgid "Error Rate"
-msgstr "出错率"
-
-#: translations.py:340
-msgid "Roomsize"
-msgstr "Roomsize"
-
-#: translations.py:341
-msgid "Reverb time(s)"
-msgstr "混响时间"
-
-#: translations.py:342 translations.py:379
-msgid "Damping"
-msgstr "阻尼"
-
-#: translations.py:343
-msgid "Input bandwith"
-msgstr "输入带宽"
-
-#: translations.py:344
-msgid "Dry signal level(dB)"
-msgstr "干信号水平（dB）"
-
-#: translations.py:345
-msgid "Early reflection level(dB)"
-msgstr "早期反射电平（dB）"
-
-#: translations.py:346
-msgid "Tail level(dB)"
-msgstr "尾电平（dB）"
-
-#: translations.py:348
-msgid "LF keyfilter(Hz)"
-msgstr "LF keyfilter（Hz）"
-
-#: translations.py:349
-msgid "HF keyfilter(Hz)"
-msgstr "HF keyfilter（Hz）"
-
-#: translations.py:350
-msgid "Threshold(dB)"
-msgstr "门槛（dB）"
-
-#: translations.py:351
-msgid "Attack(ms)"
-msgstr "Attack（ms）"
-
-#: translations.py:352
-msgid "Hold(ms)"
-msgstr "把持（ms）"
-
-#: translations.py:353
-msgid "Decay(ms)"
-msgstr "衰退（ms）"
-
-#: translations.py:354
-msgid "Range(dB)"
-msgstr "范围（dB）"
-
-#: translations.py:356
-msgid "Center Frequency(Hz)"
-msgstr "中心频率（Hz）"
-
-#: translations.py:357
-msgid "Bandwidth(Hz)"
-msgstr "带宽（Hz）"
-
-#: translations.py:358
-msgid "Stages"
-msgstr "阶段"
-
-#: translations.py:360
-msgid "Pitch-coefficient"
-msgstr "距-系数"
-
-#: translations.py:362
-msgid "50Hz gain"
-msgstr "50Hz增益"
-
-#: translations.py:363
-msgid "100Hz gain"
-msgstr "100Hz增益"
-
-#: translations.py:364
-msgid "156Hz gain"
-msgstr "156Hz增益"
-
-#: translations.py:365
-msgid "220Hz gain"
-msgstr "220Hz增益"
-
-#: translations.py:366
-msgid "311Hz gain"
-msgstr "311Hz增益"
-
-#: translations.py:367
-msgid "440Hz gain"
-msgstr "440Hz增益"
-
-#: translations.py:368
-msgid "622Hz gain"
-msgstr "622Hz增益"
-
-#: translations.py:369
-msgid "880Hz gain"
-msgstr "880Hz增益"
-
-#: translations.py:370
-msgid "1250Hz gain"
-msgstr "1250Hz增益"
-
-#: translations.py:371
-msgid "1750Hz gain"
-msgstr "1750Hz增益"
-
-#: translations.py:372
-msgid "2500Hz gain"
-msgstr "2500Hz增益"
-
-#: translations.py:373
-msgid "3500Hz gain"
-msgstr "3500Hz增益"
-
-#: translations.py:374
-msgid "5000Hz gain"
-msgstr "5000Hz增益"
-
-#: translations.py:375
-msgid "100000Hz gain"
-msgstr "100000Hz增益"
-
-#: translations.py:376
-msgid "200000Hz gain"
-msgstr "200000Hz增益"
-
-#: translations.py:378
-msgid "Reverb time"
-msgstr "混响时间"
-
-#: translations.py:380 translations.py:383
-msgid "Dry/Wet mix"
-msgstr "干/湿混合"
-
-#: translations.py:382
-msgid "Effect cutoff(Hz)"
-msgstr "影响截止（Hz）"
-
-#: translations.py:385
-msgid "Rate"
-msgstr "比率"
-
-#: translations.py:387
-msgid "Sift"
-msgstr "筛选"
-
-#: translations.py:391
-msgid "Year"
-msgstr "年"
-
-#: translations.py:392
-msgid "RPM"
-msgstr "RPM(可靠性能测定)"
-
-#: translations.py:393
-msgid "Surface warping"
-msgstr "表面翘曲"
-
-#: translations.py:394
-msgid "Cracle"
-msgstr "Cracle"
-
-#: translations.py:395
-msgid "Wear"
-msgstr "穿戴"
-
-#: translations.py:397
-msgid "Number of voices"
-msgstr "声音数"
-
-#: translations.py:398
-msgid "Delay base(ms)"
-msgstr "延时基础（ms）"
-
-#: translations.py:399
-msgid "Voice separation(ms)"
-msgstr "语音分离（ms）"
-
-#: translations.py:400
-msgid "Detune(%)"
-msgstr "失谐（%）"
-
-#: translations.py:401
-msgid "Oscillation frequency(Hz)"
-msgstr "震荡频率（Hz）"
-
-#: translations.py:402
-msgid "Output attenuation(dB)"
-msgstr "输出衰减（dB）"
-
-#: translations.py:404
-msgid "X Scatter"
-msgstr "X分散"
-
-#: translations.py:405
-msgid "Y Scatter"
-msgstr "Y分散"
-
-#: translations.py:406
-msgid "Scale"
-msgstr "比例"
-
-#: translations.py:407
-msgid "Mix"
-msgstr "混合"
-
-#: translations.py:410
-msgid "Delta"
-msgstr "变量增量"
-
-#: translations.py:411
-msgid "Duration"
-msgstr "持续时间"
-
-#: translations.py:412
-msgid "Bright. up"
-msgstr "Bright. up"
-
-#: translations.py:413
-msgid "Bright. down"
-msgstr "Bright. down"
-
-#: translations.py:414
-msgid "Bright. dur."
-msgstr "Bright. dur."
-
-#: translations.py:415
-msgid "Develop up"
-msgstr "发展.高"
-
-#: translations.py:416
-msgid "Develop down"
-msgstr "发展.低"
-
-#: translations.py:417
-msgid "Develop dur."
-msgstr "发展.在...期间"
-
-#: translations.py:418
-msgid "Triplevel"
-msgstr "Triplevel"
-
-#: translations.py:419
-msgid "Difference Space"
-msgstr "差异空间"
-
-#: translations.py:420
-msgid "Block width"
-msgstr "块宽度"
-
-#: translations.py:421
-msgid "Block height"
-msgstr "块高度"
-
-#: translations.py:422 translations.py:468
-msgid "Size"
-msgstr "大小"
-
-#: translations.py:431
-msgid "U"
-msgstr "U"
-
-#: translations.py:432
-msgid "V"
-msgstr "V"
-
-#: translations.py:433 translations.py:440
-msgid "Black"
-msgstr "黑色"
-
-#: translations.py:434 translations.py:441
-msgid "White"
-msgstr "白色"
-
-#: translations.py:436
-msgid "Neutral Color"
-msgstr "暗淡颜色"
-
-#: translations.py:437 translations.py:438
-msgid "Input"
-msgstr "输入"
-
-#: translations.py:439
-msgid "Gamma"
-msgstr "Gamma"
-
-#: translations.py:442
-msgid "Num"
-msgstr "Num"
-
-#: translations.py:443
-msgid "Dist. weight"
-msgstr "Dist. weight"
-
-#: translations.py:445
-msgid "Variance"
-msgstr "变动"
-
-#: translations.py:447
-msgid "Red Saturation"
-msgstr "红色饱和度"
-
-#: translations.py:448
-msgid "Yellow Saturation"
-msgstr "黄色饱和度"
-
-#: translations.py:449
-msgid "Factor"
-msgstr "因素"
-
-#: translations.py:450
-msgid "Source color"
-msgstr "源色彩"
-
-#: translations.py:452
-msgid "Amplitude"
-msgstr "振幅"
-
-#: translations.py:453
-msgid "Frequency"
-msgstr "频率"
-
-#: translations.py:456
-msgid "Center Correct"
-msgstr "正中心"
-
-#: translations.py:457
-msgid "Edges Correct"
-msgstr "合适的边"
-
-#: translations.py:459
-msgid "Axis"
-msgstr "轴"
-
-#: translations.py:462
-msgid "Edge Lightning"
-msgstr "边缘高亮"
-
-#: translations.py:463
-msgid "Edge Brightness"
-msgstr "边缘亮度"
-
-#: translations.py:464
-msgid "Non-Edge Brightness"
-msgstr "无边亮度"
-
-#: translations.py:465
-msgid "Spatial"
-msgstr "空间"
-
-#: translations.py:466
-msgid "Temporal"
-msgstr "暂存的"
-
-#: translations.py:469
-msgid "Border width"
-msgstr "边框宽度"
-
-#: translations.py:470
-msgid "Phase Incr."
-msgstr "相的增加"
-
-#: translations.py:471
-msgid "Zoom"
-msgstr "变焦"
-
-#: translations.py:472
-msgid "Freeze Frame"
-msgstr "冻结帧"
-
-#: translations.py:473
-msgid "Freeze After"
-msgstr "冻结之后"
-
-#: translations.py:474
-msgid "Freeze Before"
-msgstr "冻结之前"
-
-#: translations.py:475
-msgid "Angle"
-msgstr "角度"
-
-#: translations.py:476 translations.py:479 translations.py:480
-msgid "transition.geometry"
-msgstr "转场几何"
-
-#: translations.py:477 translations.py:568
-msgid "Shear X"
-msgstr "剪切 X"
-
-#: translations.py:478 translations.py:569
-msgid "Shear Y"
-msgstr "剪切 Y"
-
-#: translations.py:487 translations.py:488 translations.py:567
-#: translations.py:571
+#: translations.py:275
+msgid "Mask - Begin"
+msgstr ""
+
+#: translations.py:276
+msgid "Mask - End"
+msgstr ""
+
+#: translations.py:277 translations.py:494 translations.py:573
+#: translations.py:577
 msgid "Opacity"
 msgstr "不透明度"
 
-#: translations.py:489
+#: translations.py:280
+#, fuzzy
+msgid "Fade In / Fade Out"
+msgstr "添加淡出"
+
+#: translations.py:285 translations.py:468
+msgid "Position"
+msgstr "位置"
+
+#: translations.py:286
+msgid "Grad width"
+msgstr "梯度宽度"
+
+#: translations.py:287 translations.py:299 translations.py:462
+msgid "Tilt"
+msgstr "倾斜"
+
+#: translations.py:288 translations.py:646
+msgid "Min"
+msgstr "最小化"
+
+#: translations.py:289 translations.py:645
+msgid "Max"
+msgstr "最大化"
+
+#: translations.py:290 translations.py:488
+msgid "Left"
+msgstr "左"
+
+#: translations.py:291 translations.py:489
+msgid "Right"
+msgstr "右"
+
+#: translations.py:292 translations.py:490
+msgid "Top"
+msgstr "顶部"
+
+#: translations.py:293 translations.py:491
+msgid "Bottom"
+msgstr "底部"
+
+#: translations.py:294
+msgid "Shape"
+msgstr "形状"
+
+#: translations.py:295
+msgid "Pos X"
+msgstr "Pos X"
+
+#: translations.py:296
+msgid "Pos Y"
+msgstr "Pos Y"
+
+#: translations.py:297
+msgid "Size X"
+msgstr "大小 X"
+
+#: translations.py:298
+msgid "Size Y"
+msgstr "大小 Y"
+
+#: translations.py:300
+msgid "Trans. Width"
+msgstr "Trans. 宽度"
+
+#: translations.py:302 translations.py:303
+msgid "Left/Right"
+msgstr "左/右"
+
+#: translations.py:304 translations.py:307 translations.py:310
+#: translations.py:312 translations.py:316 translations.py:320
+#: translations.py:321 translations.py:332 translations.py:334
+#: translations.py:337 translations.py:340 translations.py:343
+#: translations.py:346 translations.py:354 translations.py:362
+#: translations.py:366 translations.py:368 translations.py:384
+#: translations.py:388 translations.py:391 translations.py:393
+#: translations.py:395 translations.py:397 translations.py:403
+#: translations.py:410
+msgid "Dry/Wet"
+msgstr "干燥/潮湿"
+
+#: translations.py:305
+msgid "Pitch Shift"
+msgstr "音调转变"
+
+#: translations.py:306
+msgid "Buffer Size"
+msgstr "缓冲区大小"
+
+#: translations.py:308
+msgid "Decay Time(samples)"
+msgstr "衰减时间（样本）"
+
+#: translations.py:309
+msgid "Knee Point(dB)"
+msgstr "拐点（dB）"
+
+#: translations.py:311
+msgid "Frequency shift"
+msgstr "频移"
+
+#: translations.py:313
+msgid "Low Gain(dB)"
+msgstr "低增益（dB）"
+
+#: translations.py:314
+msgid "Mid Gain(dB)"
+msgstr "中等增益（dB）"
+
+#: translations.py:315
+msgid "High Gain(dB)"
+msgstr "高增益（dB）"
+
+#: translations.py:317
+msgid "Oscillation period(s)"
+msgstr "振荡周期（s）"
+
+#: translations.py:318
+msgid "Oscillation depth(ms)"
+msgstr "振荡深度（ms）"
+
+#: translations.py:319
+msgid "Feedback%"
+msgstr "反馈%"
+
+#: translations.py:322
+msgid "Random seed"
+msgstr "随机种子"
+
+#: translations.py:323
+msgid "Input Gain(dB)"
+msgstr "输入增益调节（dB）"
+
+#: translations.py:324
+msgid "Feedback(%)"
+msgstr "反馈（%）"
+
+#: translations.py:325
+msgid "Number of taps"
+msgstr "抽头数"
+
+#: translations.py:326
+msgid "First Delay(s)"
+msgstr "第一次延时（s）"
+
+#: translations.py:327
+msgid "Delay Range(s)"
+msgstr "延时范围（s）"
+
+#: translations.py:328
+msgid "Delay Change"
+msgstr "延时改变"
+
+#: translations.py:329
+msgid "Delay Random(%)"
+msgstr "延时随机（%）"
+
+#: translations.py:330
+msgid "Amplitude Change"
+msgstr "振幅变化"
+
+#: translations.py:331
+msgid "Amplitude Random(%)"
+msgstr "振幅随机（%）"
+
+#: translations.py:333 translations.py:396 translations.py:442
+#: translations.py:474
+msgid "Amount"
+msgstr "数量"
+
+#: translations.py:335
+msgid "Drive"
+msgstr "驱动器"
+
+#: translations.py:336
+msgid "Skew"
+msgstr "偏斜"
+
+#: translations.py:338 translations.py:341
+msgid "Cutoff Frequency(Hz)"
+msgstr "截止频率（Hz）"
+
+#: translations.py:339 translations.py:342
+msgid "Resonance"
+msgstr "共振"
+
+#: translations.py:344
+msgid "Passes"
+msgstr "通过"
+
+#: translations.py:345
+msgid "Error Rate"
+msgstr "出错率"
+
+#: translations.py:347
+msgid "Roomsize"
+msgstr "Roomsize"
+
+#: translations.py:348
+msgid "Reverb time(s)"
+msgstr "混响时间"
+
+#: translations.py:349 translations.py:386
+msgid "Damping"
+msgstr "阻尼"
+
+#: translations.py:350
+msgid "Input bandwith"
+msgstr "输入带宽"
+
+#: translations.py:351
+msgid "Dry signal level(dB)"
+msgstr "干信号水平（dB）"
+
+#: translations.py:352
+msgid "Early reflection level(dB)"
+msgstr "早期反射电平（dB）"
+
+#: translations.py:353
+msgid "Tail level(dB)"
+msgstr "尾电平（dB）"
+
+#: translations.py:355
+msgid "LF keyfilter(Hz)"
+msgstr "LF keyfilter（Hz）"
+
+#: translations.py:356
+msgid "HF keyfilter(Hz)"
+msgstr "HF keyfilter（Hz）"
+
+#: translations.py:357
+msgid "Threshold(dB)"
+msgstr "门槛（dB）"
+
+#: translations.py:358
+msgid "Attack(ms)"
+msgstr "Attack（ms）"
+
+#: translations.py:359
+msgid "Hold(ms)"
+msgstr "把持（ms）"
+
+#: translations.py:360
+msgid "Decay(ms)"
+msgstr "衰退（ms）"
+
+#: translations.py:361
+msgid "Range(dB)"
+msgstr "范围（dB）"
+
+#: translations.py:363
+msgid "Center Frequency(Hz)"
+msgstr "中心频率（Hz）"
+
+#: translations.py:364
+msgid "Bandwidth(Hz)"
+msgstr "带宽（Hz）"
+
+#: translations.py:365
+msgid "Stages"
+msgstr "阶段"
+
+#: translations.py:367
+msgid "Pitch-coefficient"
+msgstr "距-系数"
+
+#: translations.py:369
+msgid "50Hz gain"
+msgstr "50Hz增益"
+
+#: translations.py:370
+msgid "100Hz gain"
+msgstr "100Hz增益"
+
+#: translations.py:371
+msgid "156Hz gain"
+msgstr "156Hz增益"
+
+#: translations.py:372
+msgid "220Hz gain"
+msgstr "220Hz增益"
+
+#: translations.py:373
+msgid "311Hz gain"
+msgstr "311Hz增益"
+
+#: translations.py:374
+msgid "440Hz gain"
+msgstr "440Hz增益"
+
+#: translations.py:375
+msgid "622Hz gain"
+msgstr "622Hz增益"
+
+#: translations.py:376
+msgid "880Hz gain"
+msgstr "880Hz增益"
+
+#: translations.py:377
+msgid "1250Hz gain"
+msgstr "1250Hz增益"
+
+#: translations.py:378
+msgid "1750Hz gain"
+msgstr "1750Hz增益"
+
+#: translations.py:379
+msgid "2500Hz gain"
+msgstr "2500Hz增益"
+
+#: translations.py:380
+msgid "3500Hz gain"
+msgstr "3500Hz增益"
+
+#: translations.py:381
+msgid "5000Hz gain"
+msgstr "5000Hz增益"
+
+#: translations.py:382
+msgid "100000Hz gain"
+msgstr "100000Hz增益"
+
+#: translations.py:383
+msgid "200000Hz gain"
+msgstr "200000Hz增益"
+
+#: translations.py:385
+msgid "Reverb time"
+msgstr "混响时间"
+
+#: translations.py:387 translations.py:390
+msgid "Dry/Wet mix"
+msgstr "干/湿混合"
+
+#: translations.py:389
+msgid "Effect cutoff(Hz)"
+msgstr "影响截止（Hz）"
+
+#: translations.py:392
+msgid "Rate"
+msgstr "比率"
+
+#: translations.py:394
+msgid "Sift"
+msgstr "筛选"
+
+#: translations.py:398
+msgid "Year"
+msgstr "年"
+
+#: translations.py:399
+msgid "RPM"
+msgstr "RPM(可靠性能测定)"
+
+#: translations.py:400
+msgid "Surface warping"
+msgstr "表面翘曲"
+
+#: translations.py:401
+msgid "Cracle"
+msgstr "Cracle"
+
+#: translations.py:402
+msgid "Wear"
+msgstr "穿戴"
+
+#: translations.py:404
+msgid "Number of voices"
+msgstr "声音数"
+
+#: translations.py:405
+msgid "Delay base(ms)"
+msgstr "延时基础（ms）"
+
+#: translations.py:406
+msgid "Voice separation(ms)"
+msgstr "语音分离（ms）"
+
+#: translations.py:407
+msgid "Detune(%)"
+msgstr "失谐（%）"
+
+#: translations.py:408
+msgid "Oscillation frequency(Hz)"
+msgstr "震荡频率（Hz）"
+
+#: translations.py:409
+msgid "Output attenuation(dB)"
+msgstr "输出衰减（dB）"
+
+#: translations.py:411
+msgid "X Scatter"
+msgstr "X分散"
+
+#: translations.py:412
+msgid "Y Scatter"
+msgstr "Y分散"
+
+#: translations.py:413
+msgid "Scale"
+msgstr "比例"
+
+#: translations.py:414
+msgid "Mix"
+msgstr "混合"
+
+#: translations.py:417
+msgid "Delta"
+msgstr "变量增量"
+
+#: translations.py:418
+msgid "Duration"
+msgstr "持续时间"
+
+#: translations.py:419
+msgid "Bright. up"
+msgstr "Bright. up"
+
+#: translations.py:420
+msgid "Bright. down"
+msgstr "Bright. down"
+
+#: translations.py:421
+msgid "Bright. dur."
+msgstr "Bright. dur."
+
+#: translations.py:422
+msgid "Develop up"
+msgstr "发展.高"
+
+#: translations.py:423
+msgid "Develop down"
+msgstr "发展.低"
+
+#: translations.py:424
+msgid "Develop dur."
+msgstr "发展.在...期间"
+
+#: translations.py:425
+msgid "Triplevel"
+msgstr "Triplevel"
+
+#: translations.py:426
+msgid "Difference Space"
+msgstr "差异空间"
+
+#: translations.py:427
+msgid "Block width"
+msgstr "块宽度"
+
+#: translations.py:428
+msgid "Block height"
+msgstr "块高度"
+
+#: translations.py:429 translations.py:475
+msgid "Size"
+msgstr "大小"
+
+#: translations.py:438
+msgid "U"
+msgstr "U"
+
+#: translations.py:439
+msgid "V"
+msgstr "V"
+
+#: translations.py:440 translations.py:447
+msgid "Black"
+msgstr "黑色"
+
+#: translations.py:441 translations.py:448
+msgid "White"
+msgstr "白色"
+
+#: translations.py:443
+msgid "Neutral Color"
+msgstr "暗淡颜色"
+
+#: translations.py:444 translations.py:445
+msgid "Input"
+msgstr "输入"
+
+#: translations.py:446
+msgid "Gamma"
+msgstr "Gamma"
+
+#: translations.py:449
+msgid "Num"
+msgstr "Num"
+
+#: translations.py:450
+msgid "Dist. weight"
+msgstr "Dist. weight"
+
+#: translations.py:452
+msgid "Variance"
+msgstr "变动"
+
+#: translations.py:454
+msgid "Red Saturation"
+msgstr "红色饱和度"
+
+#: translations.py:455
+msgid "Yellow Saturation"
+msgstr "黄色饱和度"
+
+#: translations.py:456
+msgid "Factor"
+msgstr "因素"
+
+#: translations.py:457
+msgid "Source color"
+msgstr "源色彩"
+
+#: translations.py:459
+msgid "Amplitude"
+msgstr "振幅"
+
+#: translations.py:460
+msgid "Frequency"
+msgstr "频率"
+
+#: translations.py:463
+msgid "Center Correct"
+msgstr "正中心"
+
+#: translations.py:464
+msgid "Edges Correct"
+msgstr "合适的边"
+
+#: translations.py:466
+msgid "Axis"
+msgstr "轴"
+
+#: translations.py:469
+msgid "Edge Lightning"
+msgstr "边缘高亮"
+
+#: translations.py:470
+msgid "Edge Brightness"
+msgstr "边缘亮度"
+
+#: translations.py:471
+msgid "Non-Edge Brightness"
+msgstr "无边亮度"
+
+#: translations.py:472
+msgid "Spatial"
+msgstr "空间"
+
+#: translations.py:473
+msgid "Temporal"
+msgstr "暂存的"
+
+#: translations.py:476
+msgid "Border width"
+msgstr "边框宽度"
+
+#: translations.py:477
+msgid "Phase Incr."
+msgstr "相的增加"
+
+#: translations.py:478
+msgid "Zoom"
+msgstr "变焦"
+
+#: translations.py:479
+msgid "Freeze Frame"
+msgstr "冻结帧"
+
+#: translations.py:480
+msgid "Freeze After"
+msgstr "冻结之后"
+
+#: translations.py:481
+msgid "Freeze Before"
+msgstr "冻结之前"
+
+#: translations.py:482
+msgid "Angle"
+msgstr "角度"
+
+#: translations.py:483 translations.py:486 translations.py:487
+msgid "transition.geometry"
+msgstr "转场几何"
+
+#: translations.py:484 translations.py:574
+msgid "Shear X"
+msgstr "剪切 X"
+
+#: translations.py:485 translations.py:575
+msgid "Shear Y"
+msgstr "剪切 Y"
+
+#: translations.py:495
 msgid "Rotate X"
 msgstr "旋转 X"
 
-#: translations.py:490
+#: translations.py:496
 msgid "Rotate Y"
 msgstr "旋转 Y"
 
-#: translations.py:491
+#: translations.py:497
 msgid "Rotate Z"
 msgstr "旋转 Z"
 
-#: translations.py:493
+#: translations.py:499
 msgid "Edge Mode"
 msgstr "边缘模式"
 
-#: translations.py:494
+#: translations.py:500
 msgid "Sel. Space"
 msgstr "Sel. Space"
 
-#: translations.py:495
+#: translations.py:501
 msgid "Operation"
 msgstr "操作"
 
-#: translations.py:496 translations.py:632
+#: translations.py:502 translations.py:638
 msgid "Hard"
 msgstr "坚硬的"
 
-#: translations.py:497
+#: translations.py:503
 msgid "Selection subspace"
 msgstr "选择子空间"
 
-#: translations.py:498
+#: translations.py:504
 msgid "R/A/Hue"
 msgstr "R/A/色调"
 
-#: translations.py:499
+#: translations.py:505
 msgid "G/B/Chroma"
 msgstr "G/B/色度"
 
-#: translations.py:500
+#: translations.py:506
 msgid "B/I/I"
 msgstr "B/I/I"
 
-#: translations.py:501
+#: translations.py:507
 msgid "Supress"
 msgstr "抑制"
 
-#: translations.py:502 translations.py:662
+#: translations.py:508 translations.py:668
 msgid "Horizontal"
 msgstr "水平的"
 
-#: translations.py:503 translations.py:663
+#: translations.py:509 translations.py:669
 msgid "Vertical"
 msgstr "垂直的"
 
-#: translations.py:504
+#: translations.py:510 tools/containerprogramedit.py:163 jobs.py:297
 msgid "Type"
 msgstr "类型"
 
-#: translations.py:506
+#: translations.py:512
 msgid "Dot Radius"
 msgstr "点半径"
 
-#: translations.py:507
+#: translations.py:513
 msgid "Cyan Angle"
 msgstr "青色角"
 
-#: translations.py:508
+#: translations.py:514
 msgid "Magenta Angle"
 msgstr "品红角"
 
-#: translations.py:509
+#: translations.py:515
 msgid "Yellow Angle"
 msgstr "黄色角"
 
-#: translations.py:511
+#: translations.py:517
 msgid "Matrix Type"
 msgstr "矩阵式"
 
-#: translations.py:512
+#: translations.py:518
 msgid "Aspect"
 msgstr "方位、方式"
 
-#: translations.py:513
+#: translations.py:519
 msgid "Center Size"
 msgstr "中心大小"
 
-#: translations.py:514
+#: translations.py:520
 msgid "Azimuth"
 msgstr "方位角"
 
-#: translations.py:515 translations.py:520
+#: translations.py:521 translations.py:526
 msgid "Lightness"
 msgstr "明度"
 
-#: translations.py:516
+#: translations.py:522
 msgid "Bump Height"
 msgstr "凸点高度"
 
-#: translations.py:517
+#: translations.py:523
 msgid "Gray"
 msgstr "灰色"
 
-#: translations.py:518
+#: translations.py:524
 msgid "Split Preview"
 msgstr "分裂预览"
 
-#: translations.py:519
+#: translations.py:525
 msgid "Source on Left"
 msgstr "左边源"
 
-#: translations.py:521
+#: translations.py:527
 msgid "Channel"
 msgstr "通道"
 
-#: translations.py:522
+#: translations.py:528
 msgid "Input black level"
 msgstr "输入黑色位准"
 
-#: translations.py:523
+#: translations.py:529
 msgid "Input white level"
 msgstr "输入白色位准"
 
-#: translations.py:524
+#: translations.py:530
 msgid "Black output"
 msgstr "黑色输出"
 
-#: translations.py:525
+#: translations.py:531
 msgid "White output"
 msgstr "白色输出"
 
-#: translations.py:529
+#: translations.py:535
 msgid "Action"
 msgstr "行动"
 
-#: translations.py:530
+#: translations.py:536
 msgid "Keep Luma"
 msgstr "保持亮度"
 
-#: translations.py:531
+#: translations.py:537
 msgid "Luma Formula"
 msgstr "亮度公式"
 
-#: translations.py:532
+#: translations.py:538
 msgid "Effect"
 msgstr "效果"
 
-#: translations.py:534
+#: translations.py:540
 msgid "Blend Type"
 msgstr "混合型"
 
-#: translations.py:536
+#: translations.py:542
 msgid "Key Color"
 msgstr "关键色彩"
 
-#: translations.py:537
+#: translations.py:543
 msgid "Pre-Level"
 msgstr "前水平、前级"
 
-#: translations.py:538
+#: translations.py:544
 msgid "Post-Level"
 msgstr "后水平、后级"
 
-#: translations.py:539
+#: translations.py:545
 msgid "Slope"
 msgstr "斜率"
 
-#: translations.py:540
+#: translations.py:546
 msgid "Luma Band"
 msgstr "亮度带"
 
-#: translations.py:542
+#: translations.py:548
 msgid "Gain"
 msgstr "增益"
 
-#: translations.py:543
+#: translations.py:549
 msgid "Input White Level"
 msgstr "输入白色位准"
 
-#: translations.py:544
+#: translations.py:550
 msgid "Input Black Level"
 msgstr "输入黑色位准"
 
-#: translations.py:545
+#: translations.py:551
 msgid "Black Output"
 msgstr "黑色输出"
 
-#: translations.py:546
+#: translations.py:552
 msgid "White Output"
 msgstr "白色输出"
 
-#: translations.py:547
+#: translations.py:553
 msgid "Rows"
 msgstr "行"
 
-#: translations.py:548
+#: translations.py:554
 msgid "Columns"
 msgstr "列"
 
-#: translations.py:549
+#: translations.py:555
 msgid "Color Temperature"
 msgstr "色温"
 
-#: translations.py:550 translations.py:565
+#: translations.py:556 translations.py:571
 msgid "Select .cube file"
 msgstr "Select .cube file"
 
-#: translations.py:551
+#: translations.py:557
 msgid "Red Ch. Red Gain"
 msgstr "Red Ch. Red Gain"
 
-#: translations.py:552
+#: translations.py:558
 msgid "Red Ch. Green Gain"
 msgstr "Red Ch. Green Gain"
 
-#: translations.py:553
+#: translations.py:559
 msgid "Red Ch. Blue Gain"
 msgstr "Red Ch. Blue Gain"
 
-#: translations.py:554
+#: translations.py:560
 msgid "Green Ch. Red Gain"
 msgstr "Green Ch. Red Gain"
 
-#: translations.py:555
+#: translations.py:561
 msgid "Green Ch. Green Gain"
 msgstr "Green Ch. Green Gain"
 
-#: translations.py:556
+#: translations.py:562
 msgid "Green Ch. Blue Gain"
 msgstr "Green Ch. Blue Gain"
 
-#: translations.py:557
+#: translations.py:563
 msgid "Blue Ch. Red Gain"
 msgstr "Blue Ch. Red Gain"
 
-#: translations.py:558
+#: translations.py:564
 msgid "Blue Ch. Green Gain"
 msgstr "Blue Ch. Green Gain"
 
-#: translations.py:559
+#: translations.py:565
 msgid "Blue Ch. Blue Gain"
 msgstr "Blue Ch. Blue Gain"
 
-#: translations.py:560
+#: translations.py:566
 msgid "Center X"
 msgstr "Center X"
 
-#: translations.py:561
+#: translations.py:567
 msgid "Center Y"
 msgstr "Center Y"
 
-#: translations.py:562
+#: translations.py:568
 msgid "Quad Distortion"
 msgstr "Quad Distortion"
 
-#: translations.py:563
+#: translations.py:569
 msgid "Double Quad Distortion"
 msgstr "Double Quad Distortion"
 
-#: translations.py:564
+#: translations.py:570
 msgid "Level"
 msgstr "Level"
 
-#: translations.py:572 translations.py:576
+#: translations.py:578 translations.py:582
 msgid "Wipe Type"
 msgstr "擦除类型"
 
-#: translations.py:574 translations.py:578
+#: translations.py:580 translations.py:584
 msgid "Softness"
 msgstr "柔和"
 
-#: translations.py:575
+#: translations.py:581
 msgid "Wipe Amount"
 msgstr "擦除数量"
 
-#: translations.py:579
+#: translations.py:585
 msgid "Fade Out Length"
 msgstr "淡出长度"
 
-#: translations.py:580
+#: translations.py:586
 msgid "Fade In Length"
 msgstr "淡入长度"
 
-#: translations.py:581
+#: translations.py:587
 msgid "Wipe Direction"
 msgstr "擦除方向"
 
-#: translations.py:582 translations.py:583
+#: translations.py:588 translations.py:589
 msgid "Blend Mode"
 msgstr "Blend Mode"
 
-#: translations.py:584
+#: translations.py:590
 msgid "Analysis Length"
 msgstr "Analysis Length"
 
-#: translations.py:585
+#: translations.py:591
 msgid "Max Gain"
 msgstr "Max Gain"
 
-#: translations.py:586
+#: translations.py:592
 msgid "Min Gain"
 msgstr "Min Gain"
 
-#: translations.py:587
+#: translations.py:593
 msgid "Select file"
 msgstr "选择文件"
 
-#: translations.py:588
+#: translations.py:594
 msgid "Smooth"
 msgstr "Smooth"
 
-#: translations.py:589
+#: translations.py:595
 msgid "Radius"
 msgstr "Radius"
 
-#: translations.py:591
+#: translations.py:597
 msgid "Start Opacity"
 msgstr "Start Opacity"
 
-#: translations.py:592
+#: translations.py:598
 msgid "End Opacity"
 msgstr "End Opacity"
 
-#: translations.py:593
+#: translations.py:599
 msgid "End Color"
 msgstr "End Color"
 
-#: translations.py:594
+#: translations.py:600
 msgid "Start Color"
 msgstr "Start Color"
 
-#: translations.py:595
+#: translations.py:601
 msgid "Start X"
 msgstr "Start X"
 
-#: translations.py:596
+#: translations.py:602
 msgid "Start Y"
 msgstr "Start Y"
 
-#: translations.py:597
+#: translations.py:603
 msgid "End Y"
 msgstr "End Y"
 
-#: translations.py:598
+#: translations.py:604
 msgid "End X"
 msgstr "End X"
 
-#: translations.py:599
+#: translations.py:605
 msgid "Gradient Type"
 msgstr "Gradient Type"
 
-#: translations.py:600
+#: translations.py:606
 msgid "Radial Offset"
 msgstr "Radial Offset"
 
-#: translations.py:601
+#: translations.py:607
 msgid "Feather Passes"
 msgstr "Feather Passes"
 
-#: translations.py:602
+#: translations.py:608
 msgid "Alpha Mode"
 msgstr "Alpha Mode"
 
-#: translations.py:603
+#: translations.py:609
 msgid "Feather"
 msgstr "Feather"
 
-#: translations.py:604
+#: translations.py:610
 msgid "Mode"
 msgstr "Mode"
 
-#: translations.py:605
+#: translations.py:611
 #, fuzzy
 msgid "Input Pixel Aspect Ratio"
 msgstr "像素高宽比: "
 
-#: translations.py:606
+#: translations.py:612
 #, fuzzy
 msgid "Direction"
 msgstr "擦除方向"
 
-#: translations.py:607
+#: translations.py:613
 #, fuzzy
 msgid "Lens Projection"
 msgstr "镜头校正"
 
-#: translations.py:608
+#: translations.py:614
 #, fuzzy
 msgid "Interpolator"
 msgstr "交织的"
 
-#: translations.py:609
+#: translations.py:615
 #, fuzzy
 msgid "Strength"
 msgstr "长度"
 
-#: translations.py:610
+#: translations.py:616
 #, fuzzy
 msgid "X Scale"
 msgstr "比例"
 
-#: translations.py:611
+#: translations.py:617
 #, fuzzy
 msgid "Y Scale"
 msgstr "比例"
 
-#: translations.py:612
+#: translations.py:618
 #, fuzzy
 msgid "Rotation"
 msgstr "Rotation:"
 
-#: translations.py:613
+#: translations.py:619
 #, fuzzy
 msgid "X Position"
 msgstr "位置"
 
-#: translations.py:614
+#: translations.py:620
 #, fuzzy
 msgid "Y Position"
 msgstr "位置"
 
-#: translations.py:618 translations.py:624
+#: translations.py:624 translations.py:630
 msgid "Shave"
 msgstr "修面"
 
-#: translations.py:619
+#: translations.py:625
 msgid "Rectangle"
 msgstr "矩形"
 
-#: translations.py:620
+#: translations.py:626
 msgid "Ellipse"
 msgstr "椭圆"
 
-#: translations.py:621
+#: translations.py:627
 msgid "Triangle"
 msgstr "三角形"
 
-#: translations.py:622 shortcuts.py:212 workflow.py:71
+#: translations.py:628 shortcuts.py:213 workflow.py:71
 msgid "Box"
 msgstr "盒子"
 
-#: translations.py:623 translations.py:637
+#: translations.py:629 translations.py:643
 msgid "Diamond"
 msgstr "菱形"
 
-#: translations.py:625
+#: translations.py:631
 msgid "Shrink Hard"
 msgstr "收缩硬"
 
-#: translations.py:626
+#: translations.py:632
 msgid "Shrink Soft"
 msgstr "收缩软"
 
-#: translations.py:627
+#: translations.py:633
 msgid "Grow Hard"
 msgstr "变硬"
 
-#: translations.py:628
+#: translations.py:634
 msgid "Grow Soft"
 msgstr "变软"
 
-#: translations.py:629
+#: translations.py:635
 msgid "RGB"
 msgstr "RGB"
 
-#: translations.py:630
+#: translations.py:636
 msgid "ABI"
 msgstr "ABI"
 
-#: translations.py:631
+#: translations.py:637
 msgid "HCI"
 msgstr "HCI"
 
-#: translations.py:633
+#: translations.py:639
 msgid "Fat"
 msgstr "厚的"
 
-#: translations.py:634
+#: translations.py:640
 msgid "Normal"
 msgstr "正常"
 
-#: translations.py:635
+#: translations.py:641
 msgid "Skinny"
 msgstr "极瘦的"
 
-#: translations.py:636
+#: translations.py:642
 msgid "Ellipsoid"
 msgstr "椭球"
 
-#: translations.py:638 shortcuts.py:207
+#: translations.py:644 shortcuts.py:208
 msgid "Overwrite"
 msgstr "覆盖"
 
-#: translations.py:642 translations.py:691 mlttransitions.py:165
+#: translations.py:648 translations.py:697 mlttransitions.py:163
 msgid "Subtract"
 msgstr "减去"
 
-#: translations.py:645
+#: translations.py:651
 msgid "Sharper"
 msgstr "锋利的"
 
-#: translations.py:646
+#: translations.py:652
 msgid "Fuzzier"
 msgstr "模糊的"
 
-#: translations.py:647
+#: translations.py:653
 msgid "Luma"
 msgstr "亮度"
 
-#: translations.py:651
+#: translations.py:657
 msgid "Add Constant"
 msgstr "添加常数"
 
-#: translations.py:652
+#: translations.py:658
 msgid "Change Gamma"
 msgstr "改变Gamma"
 
-#: translations.py:653 translations.py:671 mlttransitions.py:160
+#: translations.py:659 translations.py:677 mlttransitions.py:158
 msgid "Multiply"
 msgstr "乘以"
 
-#: translations.py:654
+#: translations.py:660
 msgid "XPro"
 msgstr "XPro"
 
-#: translations.py:655
+#: translations.py:661
 msgid "OldPhoto"
 msgstr "老照片"
 
-#: translations.py:657
+#: translations.py:663
 msgid "Heat"
 msgstr "激烈"
 
-#: translations.py:658
+#: translations.py:664
 msgid "XRay"
 msgstr "X射线"
 
-#: translations.py:659
+#: translations.py:665
 msgid "RedGreen"
 msgstr "红绿"
 
-#: translations.py:660
+#: translations.py:666
 msgid "YellowBlue"
 msgstr "黄蓝"
 
-#: translations.py:661
+#: translations.py:667
 msgid "Esses"
 msgstr "Esses"
 
-#: translations.py:664
+#: translations.py:670
 msgid "Shadows"
 msgstr "阴影"
 
-#: translations.py:665
+#: translations.py:671
 msgid "Midtones"
 msgstr "中间色调"
 
-#: translations.py:666
+#: translations.py:672
 msgid "Highlights"
 msgstr "亮点"
 
-#: translations.py:667
+#: translations.py:673
 msgid "Forward"
 msgstr "快进"
 
-#: translations.py:668
+#: translations.py:674
 msgid "Backward"
 msgstr "后退"
 
-#: translations.py:670
+#: translations.py:676
 msgid "Saturate"
 msgstr "Saturate"
 
-#: translations.py:672 mlttransitions.py:163
+#: translations.py:678 mlttransitions.py:161
 msgid "Screen"
 msgstr "屏幕"
 
-#: translations.py:673 mlttransitions.py:161
+#: translations.py:679 mlttransitions.py:159
 msgid "Overlay"
 msgstr "覆盖"
 
-#: translations.py:674 mlttransitions.py:151
+#: translations.py:680 mlttransitions.py:149
 msgid "Darken"
 msgstr "变暗"
 
-#: translations.py:675 mlttransitions.py:159
+#: translations.py:681 mlttransitions.py:157
 msgid "Lighten"
 msgstr "点亮"
 
-#: translations.py:676
+#: translations.py:682
 msgid "ColorDodge"
 msgstr "ColorDodge"
 
-#: translations.py:677
+#: translations.py:683
 msgid "Colorburn"
 msgstr "Colorburn"
 
-#: translations.py:678 mlttransitions.py:157
+#: translations.py:684 mlttransitions.py:155
 msgid "Hardlight"
 msgstr "强光灯"
 
-#: translations.py:679 mlttransitions.py:164
+#: translations.py:685 mlttransitions.py:162
 msgid "Softlight"
 msgstr "柔光"
 
-#: translations.py:680 mlttransitions.py:152
+#: translations.py:686 mlttransitions.py:150
 msgid "Difference"
 msgstr "差异"
 
-#: translations.py:681
+#: translations.py:687
 msgid "Exclusion"
 msgstr "Exclusion"
 
-#: translations.py:682
+#: translations.py:688
 msgid "HSLHue"
 msgstr "HSLHue"
 
-#: translations.py:683
+#: translations.py:689
 msgid "HSLSaturation"
 msgstr "HSLSaturation"
 
-#: translations.py:684
+#: translations.py:690
 msgid "HSLColor"
 msgstr "HSLColor"
 
-#: translations.py:685
+#: translations.py:691
 msgid "HSLLuminosity"
 msgstr "HSLLuminosity"
 
-#: translations.py:686
+#: translations.py:692
 msgid "Cos"
 msgstr "Cos"
 
-#: translations.py:687
+#: translations.py:693
 msgid "Linear"
 msgstr "Linear"
 
-#: translations.py:688
+#: translations.py:694
 msgid "Radial"
 msgstr "Radial"
 
-#: translations.py:689
+#: translations.py:695
 msgid "Clear"
 msgstr "Clear"
 
-#: translations.py:693
+#: translations.py:699
 msgid "Square"
 msgstr ""
 
-#: translations.py:694
+#: translations.py:700
 msgid "HDV"
 msgstr ""
 
-#: translations.py:695
+#: translations.py:701
 msgid "DV/DVD Widescreen PAL"
 msgstr ""
 
-#: translations.py:696
+#: translations.py:702
 msgid "DV/DVD Widescreen NTSC"
 msgstr ""
 
-#: translations.py:697
+#: translations.py:703
 msgid "DV/DVD PAL"
 msgstr ""
 
-#: translations.py:698
-msgid "DV/DVD NTSC"
-msgstr ""
-
-#: translations.py:699
-#, fuzzy
-msgid "Remove Lens Distortion"
-msgstr "Double Quad Distortion"
-
-#: translations.py:700
-#, fuzzy
-msgid "Apply Lens Distortion"
-msgstr "Quad Distortion"
-
-#: translations.py:701
-msgid "Equidistant"
-msgstr ""
-
-#: translations.py:702
-msgid "Orthographic"
-msgstr ""
-
-#: translations.py:703
-msgid "Equiarea"
-msgstr ""
-
 #: translations.py:704
-msgid "Stereographic"
+msgid "DV/DVD NTSC"
 msgstr ""
 
 #: translations.py:705
 #, fuzzy
+msgid "Remove Lens Distortion"
+msgstr "Double Quad Distortion"
+
+#: translations.py:706
+#, fuzzy
+msgid "Apply Lens Distortion"
+msgstr "Quad Distortion"
+
+#: translations.py:707
+msgid "Equidistant"
+msgstr ""
+
+#: translations.py:708
+msgid "Orthographic"
+msgstr ""
+
+#: translations.py:709
+msgid "Equiarea"
+msgstr ""
+
+#: translations.py:710
+msgid "Stereographic"
+msgstr ""
+
+#: translations.py:711
+#, fuzzy
 msgid "Bilinear"
 msgstr "Linear"
 
-#: translations.py:706
+#: translations.py:712
 #, fuzzy
 msgid "Bicubic Smooth"
 msgstr "双三次插值(更好)"
 
-#: translations.py:707
+#: translations.py:713
 #, fuzzy
 msgid "Bicubic Sharp"
 msgstr "双三次插值(更好)"
 
-#: translations.py:708
+#: translations.py:714
 #, fuzzy
 msgid "Spline"
 msgstr "扫描线"
@@ -5168,7 +5327,7 @@ msgstr "顶部到底部垂直"
 msgid "Wood"
 msgstr "Wood"
 
-#: mlttransitions.py:137 mlttransitions.py:200
+#: mlttransitions.py:137 mlttransitions.py:198
 msgid "Dissolve"
 msgstr "溶解"
 
@@ -5176,132 +5335,133 @@ msgstr "溶解"
 msgid "Picture in Picture"
 msgstr "画中画"
 
-#: mlttransitions.py:140
+#: mlttransitions.py:139
 msgid "Affine Blend"
 msgstr "仿射混合"
 
-#: mlttransitions.py:141
+#: mlttransitions.py:140
 msgid "Blend"
 msgstr "混合"
 
-#: mlttransitions.py:149
+#: mlttransitions.py:147
 msgid "Burn"
 msgstr "燃烧"
 
-#: mlttransitions.py:150
+#: mlttransitions.py:148
 msgid "Color only"
 msgstr "仅彩色"
 
-#: mlttransitions.py:153
+#: mlttransitions.py:151
 msgid "Divide"
 msgstr "分界线"
 
-#: mlttransitions.py:154
+#: mlttransitions.py:152
 msgid "Dodge"
 msgstr "躲避"
 
-#: mlttransitions.py:155
+#: mlttransitions.py:153
 msgid "Grain extract"
 msgstr "谷物提取物"
 
-#: mlttransitions.py:156
+#: mlttransitions.py:154
 msgid "Grain merge"
 msgstr "谷物合并"
 
-#: mlttransitions.py:166
+#: mlttransitions.py:164 tools/containerprogramedit.py:163
+#: tools/simpleeditors.py:94
 msgid "Value"
 msgstr "价值"
 
-#: mlttransitions.py:171
+#: mlttransitions.py:169
 msgid "LumaToAlpha"
 msgstr "LumaToAlpha"
 
-#: mlttransitions.py:172
+#: mlttransitions.py:170
 msgid "Alpha XOR"
 msgstr "Alpha XOR"
 
-#: mlttransitions.py:173
+#: mlttransitions.py:171
 msgid "Alpha Out"
 msgstr "Alpha Out"
 
-#: mlttransitions.py:174
+#: mlttransitions.py:172
 msgid "Alpha In"
 msgstr "Alpha In"
 
-#: mlttransitions.py:176
+#: mlttransitions.py:174
 #, fuzzy
 msgid "Wipe/Translate"
 msgstr "转化"
 
-#: mlttransitions.py:177
+#: mlttransitions.py:175
 msgid "Wipe Clip Length"
 msgstr "抹掉剪辑长度"
 
-#: mlttransitions.py:202
+#: mlttransitions.py:200
 msgid "Color Dip"
 msgstr "颜色倾向"
 
-#: propertyeditorbuilder.py:526
+#: propertyeditorbuilder.py:527
 msgid "Preset Luma"
 msgstr "预设亮度"
 
-#: propertyeditorbuilder.py:527
+#: propertyeditorbuilder.py:528
 msgid "User Luma"
 msgstr "用户亮度"
 
-#: propertyeditorbuilder.py:529
+#: propertyeditorbuilder.py:530
 msgid "Select Luma File"
 msgstr "选择亮度文件"
 
-#: propertyeditorbuilder.py:538
+#: propertyeditorbuilder.py:539
 msgid "Wipe Luma files"
 msgstr "擦除亮度文件"
 
-#: propertyeditorbuilder.py:544
+#: propertyeditorbuilder.py:545
 msgid "Luma File:"
 msgstr "亮度文件:"
 
-#: propertyeditorbuilder.py:668
+#: propertyeditorbuilder.py:669
 msgid "Select File"
 msgstr "选择文件"
 
-#: propertyeditorbuilder.py:708
+#: propertyeditorbuilder.py:709
 msgid "Select Image Producing File"
 msgstr "Select Image Producing File"
 
-#: propertyeditorbuilder.py:739 propertyeditorbuilder.py:794
+#: propertyeditorbuilder.py:740 propertyeditorbuilder.py:795
 msgid "Nothing"
 msgstr "无"
 
-#: propertyeditorbuilder.py:739 propertyeditorbuilder.py:794
+#: propertyeditorbuilder.py:740 propertyeditorbuilder.py:795
 msgid "Deinterlace"
 msgstr "逐行处理"
 
-#: propertyeditorbuilder.py:739 propertyeditorbuilder.py:794
+#: propertyeditorbuilder.py:740 propertyeditorbuilder.py:795
 msgid "Both"
 msgstr "二者都"
 
-#: propertyeditorbuilder.py:748 propertyeditorbuilder.py:803
+#: propertyeditorbuilder.py:749 propertyeditorbuilder.py:804
 msgid "Force"
 msgstr "强行"
 
-#: propertyeditorbuilder.py:753 propertyeditorbuilder.py:808
+#: propertyeditorbuilder.py:754 propertyeditorbuilder.py:809
 msgid "Align"
 msgstr "排列"
 
-#: propertyeditorbuilder.py:867
+#: propertyeditorbuilder.py:868
 msgid "Keyframes"
 msgstr "关键帧"
 
-#: propertyeditorbuilder.py:871
+#: propertyeditorbuilder.py:872
 msgid "Curve Points"
 msgstr "Curve Points"
 
-#: propertyeditorbuilder.py:875
+#: propertyeditorbuilder.py:876
 msgid "Lauch RotoMask editor"
 msgstr "Lauch RotoMask editor"
 
-#: propertyeditorbuilder.py:879
+#: propertyeditorbuilder.py:880
 msgid "RotoMask info"
 msgstr "RotoMask info"
 
@@ -5374,31 +5534,31 @@ msgstr "中心水平"
 msgid "Center Vertical"
 msgstr "中心垂直"
 
-#: keyframeeditor.py:1854 keyframeeditor.py:1893
+#: keyframeeditor.py:1889 keyframeeditor.py:1928
 msgid "X:"
 msgstr "X:"
 
-#: keyframeeditor.py:1855 keyframeeditor.py:1894
+#: keyframeeditor.py:1890 keyframeeditor.py:1929
 msgid "Y:"
 msgstr "Y:"
 
-#: keyframeeditor.py:1856 profilesmanager.py:133
+#: keyframeeditor.py:1891 profilesmanager.py:133
 msgid "Width:"
 msgstr "宽度:"
 
-#: keyframeeditor.py:1857 profilesmanager.py:134
+#: keyframeeditor.py:1892 profilesmanager.py:134
 msgid "Height:"
 msgstr "高度:"
 
-#: keyframeeditor.py:1895
+#: keyframeeditor.py:1930
 msgid "X scale:"
 msgstr "X scale:"
 
-#: keyframeeditor.py:1896
+#: keyframeeditor.py:1931
 msgid "Y scale:"
 msgstr "Y scale:"
 
-#: keyframeeditor.py:1897
+#: keyframeeditor.py:1932
 msgid "Rotation:"
 msgstr "Rotation:"
 
@@ -5450,7 +5610,7 @@ msgstr "Range Delete"
 msgid "Resync Selected"
 msgstr "Resync Selected"
 
-#: middlebar.py:171 shortcuts.py:202
+#: middlebar.py:171 shortcuts.py:203
 msgid "Overwrite Range"
 msgstr "Overwrite Range"
 
@@ -5626,59 +5786,59 @@ msgstr "字幕已打开"
 msgid "Only single instance of Titler can be opened."
 msgstr "只许单例字幕被打开"
 
-#: tools/titler.py:362
+#: tools/titler.py:364
 msgid "Opacity:"
 msgstr "Opacity:"
 
-#: tools/titler.py:363
+#: tools/titler.py:365
 msgid "X Off:"
 msgstr "X Off:"
 
-#: tools/titler.py:364
+#: tools/titler.py:366
 msgid "Y Off:"
 msgstr "Y Off:"
 
-#: tools/titler.py:412
+#: tools/titler.py:414
 msgid "Load Layers"
 msgstr "加载层"
 
-#: tools/titler.py:414
+#: tools/titler.py:416
 msgid "Save Layers"
 msgstr "保存层"
 
-#: tools/titler.py:416
+#: tools/titler.py:418
 msgid "Clear All"
 msgstr "清除所有"
 
-#: tools/titler.py:501
+#: tools/titler.py:503
 msgid "Font"
 msgstr ""
 
-#: tools/titler.py:502
+#: tools/titler.py:504
 msgid "Outline"
 msgstr "梗概"
 
-#: tools/titler.py:503
+#: tools/titler.py:505
 msgid "Shadow"
 msgstr "阴影"
 
-#: tools/titler.py:506
+#: tools/titler.py:508
 msgid "Layer Text"
 msgstr "Layer Text"
 
-#: tools/titler.py:509
+#: tools/titler.py:511
 msgid "Layers"
 msgstr "层"
 
-#: tools/titler.py:515
+#: tools/titler.py:517
 msgid "Keep Layers When Closed"
 msgstr "关闭时保持图"
 
-#: tools/titler.py:520
+#: tools/titler.py:522
 msgid "Open Saved Title In Bin"
 msgstr "从库中打开保存的字幕"
 
-#: tools/titler.py:527
+#: tools/titler.py:529
 msgid "Save Title Graphic"
 msgstr "保存字幕图形"
 
@@ -5712,196 +5872,196 @@ msgstr "加载渲染Args文件"
 msgid "Save Render Args As"
 msgstr "保存渲染Args为"
 
-#: rendergui.py:174
+#: rendergui.py:179
 msgid "Render Slow/Fast Motion Video File"
 msgstr "渲染慢/快动作视频文件"
 
-#: rendergui.py:179 rendergui.py:325
+#: rendergui.py:184 rendergui.py:330
 msgid "Source Media File: "
 msgstr "源媒体文件: "
 
-#: rendergui.py:186 rendergui.py:187 rendergui.py:332 rendergui.py:333
+#: rendergui.py:191 rendergui.py:192 rendergui.py:337 rendergui.py:338
 msgid "<b>not set</b>"
 msgstr "<b>不设置</b>"
 
-#: rendergui.py:207 rendergui.py:353
+#: rendergui.py:212 rendergui.py:358
 msgid "Select Target Folder"
 msgstr "选择目标目录"
 
-#: rendergui.py:211 rendergui.py:357
+#: rendergui.py:216 rendergui.py:362
 msgid "Speed %:"
 msgstr "速度%:"
 
-#: rendergui.py:222 rendergui.py:394
+#: rendergui.py:227 rendergui.py:399
 msgid "Full Source Length"
 msgstr "全源长度"
 
-#: rendergui.py:227 rendergui.py:399
+#: rendergui.py:232 rendergui.py:404
 msgid "Source Mark In to Mark Out"
 msgstr "从始点到终点"
 
-#: rendergui.py:246
+#: rendergui.py:251
 msgid "Rendered Length:"
 msgstr "渲染长度："
 
-#: rendergui.py:275 rendergui.py:422
+#: rendergui.py:280 rendergui.py:427
 msgid "Source Mark In: "
 msgstr "源自始点: "
 
-#: rendergui.py:276 rendergui.py:423
+#: rendergui.py:281 rendergui.py:428
 msgid "Source Mark Out: "
 msgstr "源自始点: "
 
-#: rendergui.py:281 rendergui.py:428
+#: rendergui.py:286 rendergui.py:433
 msgid "Target File:"
 msgstr "目标文件:"
 
-#: rendergui.py:282 rendergui.py:429
+#: rendergui.py:287 rendergui.py:434
 msgid "Target Folder:"
 msgstr "目标目录:"
 
-#: rendergui.py:283 rendergui.py:430
+#: rendergui.py:288 rendergui.py:435
 msgid "Target Profile:"
 msgstr "目标配置文件:"
 
-#: rendergui.py:284 rendergui.py:431
+#: rendergui.py:289 rendergui.py:436
 msgid "Target Encoding:"
 msgstr "目标编码:"
 
-#: rendergui.py:285 rendergui.py:432
+#: rendergui.py:290 rendergui.py:437
 msgid "Target Quality:"
 msgstr "目标质量"
 
-#: rendergui.py:287 rendergui.py:434 rendergui.py:623
+#: rendergui.py:292 rendergui.py:439 rendergui.py:628
 msgid "Render Range:"
 msgstr "渲染范围:"
 
-#: rendergui.py:320
+#: rendergui.py:325
 msgid "Render Reverse Motion Video File"
 msgstr "渲染逆向动作视频文件"
 
-#: rendergui.py:435
+#: rendergui.py:440
 msgid "Rendered Clip Length:"
 msgstr "渲染的剪辑长度:"
 
-#: rendergui.py:468 tools/toolsencoding.py:172
+#: rendergui.py:473 tools/toolsencoding.py:494
 msgid "Select Render quality"
 msgstr "选择渲染质量"
 
-#: rendergui.py:486
+#: rendergui.py:491
 msgid "Select audio sample frequency"
 msgstr "选择音频样本频率"
 
-#: rendergui.py:510 tools/toolsencoding.py:231
+#: rendergui.py:515 tools/toolsencoding.py:553
 msgid "Select Render encoding"
 msgstr "选择渲染编码"
 
-#: rendergui.py:547 tools/toolsencoding.py:155
+#: rendergui.py:552 tools/toolsencoding.py:477
 msgid "Select render profile"
 msgstr "选择渲染配置文件"
 
-#: rendergui.py:574
+#: rendergui.py:579
 msgid "Full Length"
 msgstr "全长"
 
-#: rendergui.py:575
+#: rendergui.py:580
 msgid "Marked Range"
 msgstr "标记的范围"
 
-#: rendergui.py:583 tools/toolsencoding.py:270
+#: rendergui.py:588 tools/toolsencoding.py:113
 msgid "File"
 msgstr "文件"
 
-#: rendergui.py:584 tools/toolsencoding.py:271
+#: rendergui.py:589 tools/toolsencoding.py:118
 msgid "Render Profile"
 msgstr "渲染配置文件"
 
-#: rendergui.py:587 rendergui.py:599 rendergui.py:609
-#: tools/toolsencoding.py:272
+#: rendergui.py:592 rendergui.py:604 rendergui.py:614
+#: tools/toolsencoding.py:119
 msgid "Encoding Format"
 msgstr "编码格式"
 
-#: rendergui.py:589 tools/toolsencoding.py:273
+#: rendergui.py:594
 msgid "Render Type"
 msgstr "渲染类型"
 
-#: rendergui.py:611 rendergui.py:1088
+#: rendergui.py:616 rendergui.py:1093
 msgid "Render Args"
 msgstr "渲染Args"
 
-#: rendergui.py:615
+#: rendergui.py:620
 msgid "Open File in Bin:"
 msgstr "从库中打开文件"
 
-#: rendergui.py:692 tools/toolsencoding.py:60
+#: rendergui.py:697 tools/toolsencoding.py:329
 msgid "Select folder to place rendered file in"
 msgstr "选择目录来放置被渲染的文件"
 
-#: rendergui.py:693 tools/toolsencoding.py:61
+#: rendergui.py:698 tools/toolsencoding.py:330
 msgid "Give name for rendered file"
 msgstr "为被渲染的文件命名"
 
-#: rendergui.py:700 tools/toolsencoding.py:68
+#: rendergui.py:705 tools/toolsencoding.py:389
 msgid "Presets:"
 msgstr "预置:"
 
-#: rendergui.py:703 tools/toolsencoding.py:71
+#: rendergui.py:708 tools/toolsencoding.py:392
 msgid "User Defined"
 msgstr "用户定义"
 
-#: rendergui.py:704 tools/toolsencoding.py:72
+#: rendergui.py:709 tools/toolsencoding.py:393
 msgid "Preset File type"
 msgstr "预置文件类型"
 
-#: rendergui.py:721 rendergui.py:798 rendergui.py:922
+#: rendergui.py:726 rendergui.py:803 rendergui.py:927
 msgid "Use Project Profile:"
 msgstr "用项目配置文件:"
 
-#: rendergui.py:722 rendergui.py:799 rendergui.py:923
+#: rendergui.py:727 rendergui.py:804 rendergui.py:928
 msgid "Render using args:"
 msgstr "渲染使用中的args:"
 
-#: rendergui.py:737
+#: rendergui.py:742
 msgid "Select used project profile for rendering"
 msgstr "为渲染选择使用的项目配置文件"
 
-#: rendergui.py:738
+#: rendergui.py:743
 msgid "Render profile info"
 msgstr "渲染配置文件信息"
 
-#: rendergui.py:824 rendergui.py:1049
+#: rendergui.py:829 rendergui.py:1054
 msgid "Load Selection"
 msgstr "加载选择"
 
-#: rendergui.py:829 rendergui.py:1052
+#: rendergui.py:834 rendergui.py:1057
 msgid "Ext.:"
 msgstr "Ext.:"
 
-#: rendergui.py:864 rendergui.py:961
+#: rendergui.py:869 rendergui.py:966
 msgid "Render using key=value rendering options"
 msgstr "用来渲染的关键=渲染选项的值"
 
-#: rendergui.py:865 rendergui.py:1059
+#: rendergui.py:870 rendergui.py:1064
 msgid "Load render options from currently selected encoding"
 msgstr "从当前选中编码中加载渲染选项"
 
-#: rendergui.py:866 rendergui.py:1060
+#: rendergui.py:871 rendergui.py:1065
 msgid "Edit render options"
 msgstr "编辑渲染选项"
 
-#: rendergui.py:867 rendergui.py:963
+#: rendergui.py:872 rendergui.py:968
 msgid "Save Render Args into a text file"
 msgstr "保存渲染Args到一个文本文件"
 
-#: rendergui.py:868 rendergui.py:964
+#: rendergui.py:873 rendergui.py:969
 msgid "Load Render Args from a text file"
 msgstr "从一个文本文件加载渲染Args"
 
-#: rendergui.py:941
+#: rendergui.py:946
 msgid "Edit Args:"
 msgstr "编辑Args:"
 
-#: rendergui.py:1071
+#: rendergui.py:1076
 msgid "Set Args"
 msgstr "设置Args"
 
@@ -5909,7 +6069,7 @@ msgstr "设置Args"
 msgid "Close Manager"
 msgstr "关闭管理器"
 
-#: profilesmanager.py:73 tools/batchrendering.py:675
+#: profilesmanager.py:73 tools/batchrendering.py:678
 msgid "Delete Selected"
 msgstr "删除选中的"
 
@@ -6005,133 +6165,163 @@ msgstr "现在您可以使用新的配置文件创建新项目。"
 msgid "Confirm user profile delete"
 msgstr "确认用户配置文件删除"
 
-#: profilesmanager.py:281 tools/batchrendering.py:758
+#: profilesmanager.py:281 tools/batchrendering.py:761
 msgid "This operation cannot be undone."
 msgstr "此操作不可撤销。"
 
-#: preferenceswindow.py:47
+#: preferenceswindow.py:42
 msgid "Editor Preferences"
 msgstr "编辑偏好设置"
 
-#: preferenceswindow.py:64
+#: preferenceswindow.py:59
 msgid "Editing"
 msgstr "编辑"
 
-#: preferenceswindow.py:67
+#: preferenceswindow.py:62
 msgid "Performance"
 msgstr "性能"
 
-#: preferenceswindow.py:84
+#: preferenceswindow.py:79
 msgid "Restart required for some setting changes to take effect."
 msgstr "为了让某些设置更改生效，需要重新启动。"
 
-#: preferenceswindow.py:85
+#: preferenceswindow.py:80
 msgid "If requested change is not in effect, restart application."
 msgstr "如果需要的更改未生效，请重启应用程序。"
 
-#: preferenceswindow.py:122
+#: preferenceswindow.py:117
 msgid "Absolute paths first, relative second"
 msgstr "绝对路径第一，相对路径第二"
 
-#: preferenceswindow.py:123
+#: preferenceswindow.py:118
 msgid "Relative paths first, absolute second"
 msgstr "相对路径第一，绝对路径第二"
 
-#: preferenceswindow.py:124
+#: preferenceswindow.py:119
 msgid "Absolute paths only"
 msgstr "仅相对路径"
 
-#: preferenceswindow.py:128
+#: preferenceswindow.py:122
+#, fuzzy
+msgid "Select Default Render Folder"
+msgstr "选择目标目录"
+
+#: preferenceswindow.py:132
+msgid "500 MB"
+msgstr ""
+
+#: preferenceswindow.py:133
+msgid "1 GB"
+msgstr ""
+
+#: preferenceswindow.py:134
+msgid "2 GB"
+msgstr ""
+
+#: preferenceswindow.py:138
 msgid "Default Profile:"
 msgstr "默认配置文件:"
 
-#: preferenceswindow.py:129
+#: preferenceswindow.py:139
 msgid "Remember last media directory"
 msgstr "记住最后媒体目录"
 
-#: preferenceswindow.py:130
+#: preferenceswindow.py:140
 msgid "Undo stack size:"
 msgstr "撤销堆栈大小:"
 
-#: preferenceswindow.py:131
+#: preferenceswindow.py:141
 msgid "Remember last render directory"
 msgstr "记住最后渲染目录"
 
-#: preferenceswindow.py:132
+#: preferenceswindow.py:142
 msgid "Autosave for crash recovery every:"
 msgstr "为每次崩溃恢复做自动保存:"
 
-#: preferenceswindow.py:133
+#: preferenceswindow.py:143
 msgid "Media look-up order on load:"
 msgstr "媒体按照载入排序:"
 
-#: preferenceswindow.py:165
+#: preferenceswindow.py:144
+#, fuzzy
+msgid "Default render directory:"
+msgstr "记住最后渲染目录"
+
+#: preferenceswindow.py:145
+msgid "Warning on Disk Cache Size:"
+msgstr ""
+
+#: preferenceswindow.py:180
 msgid "Zoom, Control to Scroll Horizontal"
 msgstr "Zoom, Control to Scroll Horizontal"
 
-#: preferenceswindow.py:166
+#: preferenceswindow.py:181
 msgid "Scroll Horizontal, Control to Zoom"
 msgstr "Scroll Horizontal, Control to Zoom"
 
-#: preferenceswindow.py:173
+#: preferenceswindow.py:188
 msgid "Scroll Up Forward"
 msgstr "Scroll Up Forward"
 
-#: preferenceswindow.py:174
+#: preferenceswindow.py:189
 msgid "Scroll Down Forward"
 msgstr "Scroll Down Forward"
 
-#: preferenceswindow.py:181
+#: preferenceswindow.py:196
 #, fuzzy
 msgid "On Double Click"
 msgstr "双击鼠标"
 
-#: preferenceswindow.py:182
+#: preferenceswindow.py:197
 msgid "On Single Click"
 msgstr ""
 
-#: preferenceswindow.py:190
+#: preferenceswindow.py:205
 msgid "Graphics default length:"
 msgstr "图形默认长度:"
 
-#: preferenceswindow.py:191
+#: preferenceswindow.py:206
 msgid "Cover Transition/Fade clips on delete if possible"
 msgstr "如果可能，在删除之上覆盖转场/淡入淡出视频剪辑"
 
-#: preferenceswindow.py:193
+#: preferenceswindow.py:208
 msgid "Mouse Middle Button Scroll Action:"
 msgstr "Mouse Middle Button Scroll Action:"
 
-#: preferenceswindow.py:194
+#: preferenceswindow.py:209
 msgid "Mouse Horizontal Scroll Direction:"
 msgstr "Mouse Horizontal Scroll Direction:"
 
-#: preferenceswindow.py:195
+#: preferenceswindow.py:210
 msgid "Hide file extensions when importing Clips"
 msgstr "当导入视频剪辑时隐藏文件扩展名"
 
-#: preferenceswindow.py:196
+#: preferenceswindow.py:211
 #, fuzzy
 msgid "Open Clip in Effects Editor"
 msgstr "在滤镜编辑器中打开"
 
-#: preferenceswindow.py:264
+#: preferenceswindow.py:285
 msgid "Center Current Frame on Playback Stop"
 msgstr "回放停止以当前帧为中心"
 
-#: preferenceswindow.py:265
+#: preferenceswindow.py:286
 msgid "Center Current Frame after Up/Down Arrow"
 msgstr "上下箭头之后以当前帧为中心"
 
-#: preferenceswindow.py:267
+#: preferenceswindow.py:288
 msgid "Enable single Play/Pause button"
 msgstr "可用单个播放/暂停按钮"
 
-#: preferenceswindow.py:269
+#: preferenceswindow.py:291
+msgid "Enable timeline at start or end  buttons"
+msgstr ""
+
+#: preferenceswindow.py:293
 msgid "Fast Forward / Reverse Speed for Shift Key:"
 msgstr "按Shift键来控制快进、快退速度："
 
-#: preferenceswindow.py:270
+#: preferenceswindow.py:294
 msgid ""
 "Speed of Forward / Reverse will be multiplied by this value if Shift Key is "
 "held (Only using KEYS).\n"
@@ -6142,189 +6332,189 @@ msgstr ""
 "Enabling multiple modifier keys will multiply the set values.\n"
 "E.g. if Shift is set to "
 
-#: preferenceswindow.py:275
+#: preferenceswindow.py:299
 msgid "Fast Forward / Reverse Speed for Control Key:"
 msgstr "按Control键来控制快进、快退速度："
 
-#: preferenceswindow.py:276
+#: preferenceswindow.py:300
 msgid ""
 "Speed of Forward / Reverse will be multiplied by this value if Ctrl Key is "
 "held (Only using KEYS)."
 msgstr "如果Control键被按住(仅用按键)，这个值表示快进、快退速度将会加快的程度."
 
-#: preferenceswindow.py:277
+#: preferenceswindow.py:301
 msgid "Fast Forward / Reverse Speed for Caps Lock Key:"
 msgstr "按Caps Lock键来控制快进、快退速度："
 
-#: preferenceswindow.py:278
+#: preferenceswindow.py:302
 msgid ""
 "Speed of Forward / Reverse will be multiplied by this value if Caps Lock is "
 "set (Only using KEYS)."
 msgstr ""
 "如果Caps Lock键被按住(仅用按键)，这个值表示快进、快退速度将会加快的程度."
 
-#: preferenceswindow.py:279
+#: preferenceswindow.py:303
 msgid "Move Timeline to follow Playback"
 msgstr "Move Timeline to follow Playback"
 
-#: preferenceswindow.py:280
+#: preferenceswindow.py:304
 msgid "Loop Media Clips on Monitor"
 msgstr "Loop Media Clips on Monitor"
 
-#: preferenceswindow.py:312
+#: preferenceswindow.py:344
 msgid "None"
 msgstr "None"
 
-#: preferenceswindow.py:313
+#: preferenceswindow.py:345
 msgid "English"
 msgstr "English"
 
-#: preferenceswindow.py:314
+#: preferenceswindow.py:346
 msgid "Chinese, Simplified"
 msgstr "简体中文"
 
-#: preferenceswindow.py:315
+#: preferenceswindow.py:347
 msgid "Chinese, Traditional"
 msgstr "繁体中文"
 
-#: preferenceswindow.py:316
+#: preferenceswindow.py:348
 msgid "Czech"
 msgstr "捷克语"
 
-#: preferenceswindow.py:317
+#: preferenceswindow.py:349
 msgid "French"
 msgstr "法语"
 
-#: preferenceswindow.py:318
+#: preferenceswindow.py:350
 msgid "German"
 msgstr "德语"
 
-#: preferenceswindow.py:319
+#: preferenceswindow.py:351
 msgid "Hungarian"
 msgstr "匈牙利语"
 
-#: preferenceswindow.py:320
+#: preferenceswindow.py:352
 msgid "Italian"
 msgstr "意大利语"
 
-#: preferenceswindow.py:321
+#: preferenceswindow.py:353
 msgid "Polish"
 msgstr "波兰语"
 
-#: preferenceswindow.py:322
+#: preferenceswindow.py:354
 msgid "Russian"
 msgstr "俄语"
 
-#: preferenceswindow.py:323
+#: preferenceswindow.py:355
 msgid "Spanish"
 msgstr "西班牙语"
 
-#: preferenceswindow.py:324
+#: preferenceswindow.py:356
 msgid "Ukranian"
 msgstr "乌克兰语"
 
-#: preferenceswindow.py:339
+#: preferenceswindow.py:371
 msgid "Glass"
 msgstr "玻璃"
 
-#: preferenceswindow.py:340
+#: preferenceswindow.py:372
 msgid "Simple"
 msgstr "简洁"
 
-#: preferenceswindow.py:341
+#: preferenceswindow.py:373
 msgid "No Decorations"
 msgstr "No Decorations"
 
-#: preferenceswindow.py:345
+#: preferenceswindow.py:377
 msgid "Flowblade Theme"
 msgstr "Flowblade主题"
 
-#: preferenceswindow.py:346
+#: preferenceswindow.py:378
 msgid "Dark Theme"
 msgstr "黑色主题"
 
-#: preferenceswindow.py:347
+#: preferenceswindow.py:379
 msgid "Light Theme"
 msgstr "浅色主题"
 
-#: preferenceswindow.py:357
+#: preferenceswindow.py:389
 msgid "Display All Levels"
 msgstr "显示所有水平"
 
-#: preferenceswindow.py:358
+#: preferenceswindow.py:390
 msgid "Display Levels On Request"
 msgstr "根据需要显示水平"
 
-#: preferenceswindow.py:373
+#: preferenceswindow.py:405
 msgid "Normal - 50px, 25px"
 msgstr "常规 - 50px, 25px"
 
-#: preferenceswindow.py:374
+#: preferenceswindow.py:406
 msgid "Double for HiDPI - 100px, 50px"
 msgstr "HiDPI - 100px, 50px"
 
-#: preferenceswindow.py:379
+#: preferenceswindow.py:411
 msgid "3 panels if width (1450px+) available"
 msgstr "三面板(1450px+)"
 
-#: preferenceswindow.py:380
+#: preferenceswindow.py:412
 msgid "2 panels always"
 msgstr "双面板"
 
-#: preferenceswindow.py:386
+#: preferenceswindow.py:418
 msgid "Full Display area: "
 msgstr ""
 
-#: preferenceswindow.py:390
+#: preferenceswindow.py:422
 #, fuzzy
 msgid "Monitor "
 msgstr "添加监视器视频剪辑"
 
-#: preferenceswindow.py:395
+#: preferenceswindow.py:427
 msgid "Application window mode:"
 msgstr "应用窗口模式:"
 
-#: preferenceswindow.py:397
+#: preferenceswindow.py:429
 msgid "Force Language:"
 msgstr "强制语言："
 
-#: preferenceswindow.py:398
+#: preferenceswindow.py:430
 msgid "Display splash screen"
 msgstr "显示启动画面"
 
-#: preferenceswindow.py:399
+#: preferenceswindow.py:431
 msgid "Buttons style:"
 msgstr "按钮风格:"
 
-#: preferenceswindow.py:400
+#: preferenceswindow.py:432
 msgid "Theme request, icons and colors:"
 msgstr "主题要求，图标和颜色:"
 
-#: preferenceswindow.py:401
+#: preferenceswindow.py:433
 msgid "Theme detection fail fallback colors:"
 msgstr "主题检测失败退回颜色:"
 
-#: preferenceswindow.py:402
+#: preferenceswindow.py:434
 msgid "Default audio levels display:"
 msgstr "默认音频电平显示:"
 
-#: preferenceswindow.py:403
+#: preferenceswindow.py:435
 msgid "Tracks Heights:"
 msgstr "轨道高度："
 
-#: preferenceswindow.py:405
+#: preferenceswindow.py:437
 msgid "Show Full File names"
 msgstr "显示文件全名"
 
-#: preferenceswindow.py:406
+#: preferenceswindow.py:438
 msgid "Top row layout:"
 msgstr "上半部分窗口布局："
 
-#: preferenceswindow.py:408
+#: preferenceswindow.py:440
 msgid "Do GUI layout based on:"
 msgstr ""
 
-#: preferenceswindow.py:441
+#: preferenceswindow.py:473
 msgid ""
 "Changing these values may cause problems with playback and rendering.\n"
 "The safe values are Render Threads:1, Allow Frame Dropping: No."
@@ -6332,233 +6522,267 @@ msgstr ""
 "这些修改会导致回放和渲染异常。\n"
 "安全设置为：渲染线程数：1，允许丢帧：否。"
 
-#: preferenceswindow.py:452
+#: preferenceswindow.py:484
 msgid "Between 1 and the number of CPU Cores"
 msgstr "在1和CPU核数之间"
 
-#: preferenceswindow.py:453
+#: preferenceswindow.py:485
 msgid "Allow Frame Dropping for real-time rendering, when needed"
 msgstr "当需要时，允许丢帧来达到实时渲染"
 
-#: preferenceswindow.py:457
+#: preferenceswindow.py:489
 msgid "Render Threads:"
 msgstr "渲染线程:"
 
-#: preferenceswindow.py:458
+#: preferenceswindow.py:490
 msgid "Allow Frame Dropping"
 msgstr "允许丢帧"
 
-#: tools/batchrendering.py:306
+#: tools/batchrendering.py:307
 msgid "Render Item Project File Copy failed!"
 msgstr "渲染条目项目文件复制失败！"
 
-#: tools/batchrendering.py:378 tools/batchrendering.py:775
+#: tools/batchrendering.py:379 tools/batchrendering.py:778
 msgid "Error loading render queue items!"
 msgstr "错误加载渲染列队条目！"
 
-#: tools/batchrendering.py:379 tools/batchrendering.py:776
+#: tools/batchrendering.py:380 tools/batchrendering.py:779
 msgid "Message:\n"
 msgstr "消息:\n"
 
-#: tools/batchrendering.py:397
+#: tools/batchrendering.py:398
 msgid "Batch Render Queue already running!"
 msgstr "批渲染列队已准备好运行！"
 
-#: tools/batchrendering.py:399
+#: tools/batchrendering.py:400
 msgid "Batch Render Queue application was detected in session dbus."
 msgstr "dbus阶段检测到批渲染列队应用"
 
-#: tools/batchrendering.py:421
+#: tools/batchrendering.py:422
 msgid "Application is rendering and cannot be closed!"
 msgstr "应用正在渲染不能被关闭！"
 
-#: tools/batchrendering.py:422
+#: tools/batchrendering.py:423
 msgid "Stop rendering before closing the application."
 msgstr "关闭这应用之前停止渲染。"
 
-#: tools/batchrendering.py:455
+#: tools/batchrendering.py:456
 msgid " datafile load failed with "
 msgstr " 数据文件加载失败因为 "
 
-#: tools/batchrendering.py:463
+#: tools/batchrendering.py:464
 msgid " project file load failed with "
 msgstr " 项目文件加载失败因为 "
 
-#: tools/batchrendering.py:585
+#: tools/batchrendering.py:588
 msgid "Queued"
 msgstr "列队的"
 
-#: tools/batchrendering.py:587
+#: tools/batchrendering.py:590
 msgid "Rendering"
 msgstr "渲染"
 
-#: tools/batchrendering.py:589
+#: tools/batchrendering.py:592
 msgid "Finished"
 msgstr "已完成"
 
-#: tools/batchrendering.py:591
+#: tools/batchrendering.py:594
 msgid "Unqueued"
 msgstr "不列队"
 
-#: tools/batchrendering.py:593
+#: tools/batchrendering.py:596
 msgid "Aborted"
 msgstr "中止"
 
-#: tools/batchrendering.py:650 tools/batchrendering.py:1319
+#: tools/batchrendering.py:653 tools/batchrendering.py:1381
 msgid "Estimated Left:"
 msgstr "估计剩余:"
 
-#: tools/batchrendering.py:651
+#: tools/batchrendering.py:654
 msgid "Current Render:"
 msgstr "当前渲染:"
 
-#: tools/batchrendering.py:652 tools/batchrendering.py:1321 proxyediting.py:367
+#: tools/batchrendering.py:655 tools/batchrendering.py:1383 proxyediting.py:367
 msgid "Elapsed:"
 msgstr "消逝的:"
 
-#: tools/batchrendering.py:663
+#: tools/batchrendering.py:666
 msgid "Items Rendered:"
 msgstr "条目渲染的:"
 
-#: tools/batchrendering.py:665
+#: tools/batchrendering.py:668
 msgid "Render Started:"
 msgstr "渲染开始:"
 
-#: tools/batchrendering.py:671
+#: tools/batchrendering.py:674
 msgid "Not Rendering"
 msgstr "未渲染"
 
-#: tools/batchrendering.py:679
+#: tools/batchrendering.py:682
 msgid "Delete Finished"
 msgstr "删除已完成的"
 
-#: tools/batchrendering.py:684
+#: tools/batchrendering.py:687
 msgid "Reload Queue"
 msgstr "重新载入列队"
 
-#: tools/batchrendering.py:695 tools/batchrendering.py:1331
+#: tools/batchrendering.py:698 tools/batchrendering.py:1393
 msgid "Stop Render"
 msgstr "停止渲染"
 
-#: tools/batchrendering.py:731
+#: tools/batchrendering.py:734
 msgid "Flowblade Batch Render"
 msgstr "Flowblade批量渲染"
 
-#: tools/batchrendering.py:757
+#: tools/batchrendering.py:760
 msgid "Delete "
 msgstr "删除 "
 
-#: tools/batchrendering.py:757
+#: tools/batchrendering.py:760
 msgid " item(s) from render queue?"
 msgstr " 条目来自渲染列队？"
 
-#: tools/batchrendering.py:788
+#: tools/batchrendering.py:791
 msgid "Multiple items with same render target file!"
 msgstr "多个条目具有相同渲染目标文件！"
 
-#: tools/batchrendering.py:790
+#: tools/batchrendering.py:793
 msgid ""
 "Later items will render on top of earlier items if this queue is rendered.\n"
 msgstr "如果这个排列被渲染，新条目将排在早期条目的前面。\n"
 
-#: tools/batchrendering.py:791
+#: tools/batchrendering.py:794
 msgid ""
-"Delete or unqueue some items with same paths:\n"
+"Possible fixes:\n"
+"\n"
+msgstr ""
+
+#: tools/batchrendering.py:795
+msgid "Change item render file path from right click popup menu.\n"
+msgstr ""
+
+#: tools/batchrendering.py:796
+#, fuzzy
+msgid ""
+"Delete or unqueue some items with same paths.\n"
 "\n"
 msgstr ""
 "删除或不排列某些带有相同路径的条目:\n"
 "\n"
 
-#: tools/batchrendering.py:793
+#: tools/batchrendering.py:798
 msgid " items with path: "
 msgstr " 带路径的条目: "
 
-#: tools/batchrendering.py:892
+#: tools/batchrendering.py:897
 msgid "Project/Sequence"
 msgstr "项目/序列"
 
-#: tools/batchrendering.py:893
+#: tools/batchrendering.py:898
 msgid "Status"
 msgstr "状态"
 
-#: tools/batchrendering.py:894
+#: tools/batchrendering.py:899
 msgid "Render File"
 msgstr "渲染文件"
 
-#: tools/batchrendering.py:895
+#: tools/batchrendering.py:900 jobs.py:299
 msgid "Render Time"
 msgstr "渲染时间"
 
-#: tools/batchrendering.py:987
+#: tools/batchrendering.py:994
 msgid "Save Render Item Project As"
 msgstr "保存渲染条目项目为"
 
-#: tools/batchrendering.py:1024 proxyediting.py:335
+#: tools/batchrendering.py:1031 proxyediting.py:335
 msgid "Using Original Media"
 msgstr "正在使用原始媒体"
 
-#: tools/batchrendering.py:1026 proxyediting.py:333
+#: tools/batchrendering.py:1033 proxyediting.py:333
 msgid "Using Proxy Media"
 msgstr "正在使用代理媒体"
 
-#: tools/batchrendering.py:1033
+#: tools/batchrendering.py:1040
 msgid "Encoding:"
 msgstr "编码:"
 
-#: tools/batchrendering.py:1034
+#: tools/batchrendering.py:1041
 msgid "Quality:"
 msgstr "质量:"
 
-#: tools/batchrendering.py:1035
+#: tools/batchrendering.py:1042
 msgid "Audio Encoding:"
 msgstr "音频编码:"
 
-#: tools/batchrendering.py:1036
+#: tools/batchrendering.py:1043
 msgid "Use User Args:"
 msgstr "使用用户Args:"
 
-#: tools/batchrendering.py:1037
+#: tools/batchrendering.py:1044
 msgid "Start:"
 msgstr "开始:"
 
-#: tools/batchrendering.py:1038
+#: tools/batchrendering.py:1045
 msgid "End:"
 msgstr "结束:"
 
-#: tools/batchrendering.py:1040
+#: tools/batchrendering.py:1047
 msgid "Render Profile Name:"
 msgstr "渲染配置文件名称:"
 
-#: tools/batchrendering.py:1041
+#: tools/batchrendering.py:1048
 msgid "Render Profile:"
 msgstr "渲染配置文件:"
 
-#: tools/batchrendering.py:1042
+#: tools/batchrendering.py:1049
 #, fuzzy
 msgid "Proxy Mode:"
 msgstr "当前代理模式:"
 
-#: tools/batchrendering.py:1058 tools/batchrendering.py:1066
+#: tools/batchrendering.py:1065 tools/batchrendering.py:1128
 msgid "Render Properties"
 msgstr "渲染属性"
 
-#: tools/batchrendering.py:1065
+#: tools/batchrendering.py:1070
+#, fuzzy
+msgid "Change Path"
+msgstr "改变Gamma"
+
+#: tools/batchrendering.py:1071
+#, fuzzy
+msgid "Change Render Item Path"
+msgstr "保存渲染条目项目为"
+
+#: tools/batchrendering.py:1081 exporting.py:470
+msgid "Select target folder"
+msgstr "选择目录"
+
+#: tools/batchrendering.py:1093
+#, fuzzy
+msgid "Render file name:"
+msgstr "渲染配置文件名称:"
+
+#: tools/batchrendering.py:1126
+msgid "Change Item Render File Path..."
+msgstr ""
+
+#: tools/batchrendering.py:1127
 msgid "Save Item Project As..."
 msgstr "保存条目项目为..."
 
-#: tools/batchrendering.py:1356
+#: tools/batchrendering.py:1418
 msgid "Flowblade Timeline Render"
 msgstr "Flowblade时间轴渲染"
 
-#: proxyediting.py:242
+#: proxyediting.py:242 tlinerender.py:834
 msgid "Project Image Size"
 msgstr "项目影像大小"
 
-#: proxyediting.py:243
+#: proxyediting.py:243 tlinerender.py:835
 msgid "Half Project Image Size"
 msgstr "一半项目影像大小"
 
-#: proxyediting.py:244
+#: proxyediting.py:244 tlinerender.py:836
 msgid "Quarter Project Image Size"
 msgstr "四分之一项目影像大小"
 
@@ -6602,7 +6826,7 @@ msgstr "项目代理模式"
 msgid "Creating Proxy Files"
 msgstr "创建中代理文件"
 
-#: proxyediting.py:356 tools/gmic.py:814 shortcuts.py:193
+#: proxyediting.py:356 tools/gmic.py:814 shortcuts.py:194
 msgid "Stop"
 msgstr "停止"
 
@@ -6686,20 +6910,20 @@ msgstr "重新渲染所有可能"
 msgid "Select Render Action: "
 msgstr "选择渲染动作 "
 
-#: proxyediting.py:671
+#: proxyediting.py:675
 msgid "Converting Project to Use Proxy Media"
 msgstr "转换项目使用代理媒体"
 
-#: proxyediting.py:684
+#: proxyediting.py:688
 msgid "Converting to Use Original Media"
 msgstr "转换项目使用原始媒体"
 
-#: tlineaction.py:195
+#: tlineaction.py:201
 #, fuzzy
 msgid "Confirm split to new Sequence at Playhead position"
 msgstr "在起始播放位置拆分为新序列"
 
-#: tlineaction.py:196
+#: tlineaction.py:202
 #, fuzzy
 msgid ""
 "This will create a new sequence from the part after playhead. That part will "
@@ -6716,11 +6940,11 @@ msgstr ""
 "\n"
 " 继续？"
 
-#: tlineaction.py:419
+#: tlineaction.py:425
 msgid "Fade/Transition cover delete failed!"
 msgstr "淡入淡出/转场覆盖删除失败！"
 
-#: tlineaction.py:420
+#: tlineaction.py:426
 msgid ""
 "There wasn't enough material available in adjacent clips.\n"
 "A normal Splice Out was done instead."
@@ -6728,11 +6952,11 @@ msgstr ""
 "相邻的剪辑中没有足够的信息。\n"
 "A normal Splice Out was done instead."
 
-#: tlineaction.py:541
+#: tlineaction.py:547
 msgid "Can't do Ripple Delete!"
 msgstr "Can't do Ripple Delete!"
 
-#: tlineaction.py:542
+#: tlineaction.py:548
 msgid ""
 "Seleted Ripple Delete would cause an overwrite and that is not permitted for "
 "this edit action.\n"
@@ -6744,19 +6968,19 @@ msgstr ""
 "\n"
 "Overwrite would happen on at track <b>"
 
-#: tlineaction.py:593
+#: tlineaction.py:599
 msgid "No Clips are selected!"
 msgstr "无选中的视频剪辑！"
 
-#: tlineaction.py:594
+#: tlineaction.py:600
 msgid "You need to select clips to overwrite to perform this edit."
 msgstr "您需要选择用来覆盖的视频剪辑来执行这个编辑。"
 
-#: tlineaction.py:712 tlineaction.py:1737
+#: tlineaction.py:720 tlineaction.py:1818
 msgid "3 point edit not defined!"
 msgstr "3点编辑未定义！"
 
-#: tlineaction.py:713 tlineaction.py:737
+#: tlineaction.py:721 tlineaction.py:745
 msgid ""
 "You need to set Timeline Range using Mark In and Mark Out buttons\n"
 "to perform this edit."
@@ -6764,15 +6988,15 @@ msgstr ""
 "您需要用节点/出点按钮设置时间轴范围\n"
 "来执行这个编辑。"
 
-#: tlineaction.py:736
+#: tlineaction.py:744
 msgid "Timeline Range not set!"
 msgstr "时间轴范围未设置！"
 
-#: tlineaction.py:771
+#: tlineaction.py:779
 msgid "Origin clip not found!"
 msgstr "源视频剪辑未找到！"
 
-#: tlineaction.py:772
+#: tlineaction.py:780
 msgid ""
 "Clip used to create this Compositor has been removed\n"
 "or moved to different track."
@@ -6780,15 +7004,15 @@ msgstr ""
 "用来创建这个排序的视频剪辑已被移除\n"
 "或者被移到其他轨道。"
 
-#: tlineaction.py:1023 tlineaction.py:1291 tlineaction.py:1390
+#: tlineaction.py:1049 tlineaction.py:1372 tlineaction.py:1471
 msgid "Rendering "
 msgstr "渲染 "
 
-#: tlineaction.py:1109
+#: tlineaction.py:1135
 msgid "Rerendering "
 msgstr "渲染 "
 
-#: tlineaction.py:1138
+#: tlineaction.py:1162
 msgid ""
 "To create a rendered transition you need enough media overlap from both "
 "clips!\n"
@@ -6797,51 +7021,111 @@ msgstr ""
 "为了创建一个渲染转场您需要足够的媒体重叠来自两个视频剪辑！\n"
 "\n"
 
-#: tlineaction.py:1143
+#: tlineaction.py:1167
 msgid "<b>FIRST CLIP MEDIA OVERLAP:</b>  "
 msgstr "<b>第一个剪辑媒体重叠:</b>  "
 
-#: tlineaction.py:1144 tlineaction.py:1152
+#: tlineaction.py:1168 tlineaction.py:1176
 msgid "Available <b>"
 msgstr "可用的<b>"
 
-#: tlineaction.py:1144 tlineaction.py:1152
+#: tlineaction.py:1168 tlineaction.py:1176 tlineaction.py:1230
+#: tlineaction.py:1238
 msgid "</b> frame(s), "
 msgstr "</b>帧， "
 
-#: tlineaction.py:1145 tlineaction.py:1153
+#: tlineaction.py:1169 tlineaction.py:1177
 msgid "Required <b>"
 msgstr "需求<b>"
 
-#: tlineaction.py:1145
+#: tlineaction.py:1169 tlineaction.py:1170 tlineaction.py:1178
+#: tlineaction.py:1231
 msgid "</b> frame(s)"
 msgstr "</b>帧"
 
-#: tlineaction.py:1151
+#: tlineaction.py:1170
+msgid "Trim first clip end back <b>"
+msgstr ""
+
+#: tlineaction.py:1175
 msgid "<b>SECOND CLIP MEDIA OVERLAP:</b> "
 msgstr "<b>第二个视频剪辑媒体重叠:</b> "
 
-#: tlineaction.py:1153
+#: tlineaction.py:1177 tlineaction.py:1239
 msgid "</b> frame(s) "
 msgstr "</b>帧 "
 
-#: tlineaction.py:1160
+#: tlineaction.py:1178
+msgid "Trim second clip start forward <b>"
+msgstr ""
+
+#: tlineaction.py:1184
 msgid "Current situation, not enought media overlap:"
 msgstr "当前情况，媒体重叠不足:"
 
-#: tlineaction.py:1162
+#: tlineaction.py:1186
 msgid "You need more media overlap:"
 msgstr "您需要更多媒体重叠:"
 
-#: tlineaction.py:1191
+#: tlineaction.py:1214
+msgid "Activating 'Steal frames from clips if needed' checkbox can help too."
+msgstr ""
+
+#: tlineaction.py:1219
 msgid "More media overlap needed to create transition!"
 msgstr "创建转场需要更多媒体重叠！"
 
-#: tlineaction.py:1210
+#: tlineaction.py:1224
+#, fuzzy
+msgid ""
+"To create a rendered Transition you need enough media overlap from both "
+"Clips!\n"
+"\n"
+msgstr ""
+"为了创建一个渲染转场您需要足够的媒体重叠来自两个视频剪辑！\n"
+"\n"
+
+#: tlineaction.py:1229
+#, fuzzy
+msgid "<b>FIRST CLIP:</b>  "
+msgstr "<b>第一个剪辑媒体重叠:</b>  "
+
+#: tlineaction.py:1230 tlineaction.py:1238
+#, fuzzy
+msgid "Length <b>"
+msgstr "<b>长度:</b>"
+
+#: tlineaction.py:1231 tlineaction.py:1239
+#, fuzzy
+msgid "Required shortning <b>"
+msgstr "需求<b>"
+
+#: tlineaction.py:1237
+#, fuzzy
+msgid "<b>SECOND CLIP:</b> "
+msgstr "<b>第二个视频剪辑媒体重叠:</b> "
+
+#: tlineaction.py:1247
+msgid "Lengthen first Clip from beginning:"
+msgstr ""
+
+#: tlineaction.py:1255 tlineaction.py:1272
+msgid "or make Transition shorter."
+msgstr ""
+
+#: tlineaction.py:1264
+msgid "Lengthen second Clip from end:"
+msgstr ""
+
+#: tlineaction.py:1276
+msgid "<b>Stealing frames from clips to transition failed!</b>"
+msgstr ""
+
+#: tlineaction.py:1291
 msgid "Only Video Track mix / fades available"
 msgstr "仅视频轨道混合/淡入淡出可用"
 
-#: tlineaction.py:1211
+#: tlineaction.py:1292
 msgid ""
 "Unfortunately rendered mixes and fades can currently\n"
 "only be applied on clips on Video Tracks."
@@ -6849,7 +7133,7 @@ msgstr ""
 "很遗憾，目前渲染的混合和淡入淡出能够\n"
 "仅被应用在视频轨道上的视频剪辑上。"
 
-#: tlineaction.py:1248
+#: tlineaction.py:1329
 msgid ""
 "Clip is too short for the requested fade:\n"
 "\n"
@@ -6857,35 +7141,35 @@ msgstr ""
 "对于淡入淡出需求视频剪辑太短:\n"
 "\n"
 
-#: tlineaction.py:1249
+#: tlineaction.py:1330
 msgid "<b>Clip Length:</b> "
 msgstr "<b>视频剪辑长度:</b> "
 
-#: tlineaction.py:1249 tlineaction.py:1250
+#: tlineaction.py:1330 tlineaction.py:1331
 msgid " frame(s)\n"
 msgstr " 帧\n"
 
-#: tlineaction.py:1250
+#: tlineaction.py:1331
 msgid "<b>Fade Length:</b> "
 msgstr "<b>淡入淡出长度:</b> "
 
-#: tlineaction.py:1251
+#: tlineaction.py:1332
 msgid "Clip is too short!"
 msgstr "视频剪辑太短！"
 
-#: tlineaction.py:1472
+#: tlineaction.py:1553
 msgid "Rerender all Rendered Transitions / Fades"
 msgstr "重新渲染所有渲染的转场/淡入淡出"
 
-#: tlineaction.py:1516
+#: tlineaction.py:1597
 msgid "Rendering item "
 msgstr "渲染条目 "
 
-#: tlineaction.py:1703 tlineaction.py:1708
+#: tlineaction.py:1784 tlineaction.py:1789
 msgid "Can't rerender this fade / transition."
 msgstr "无法渲染此淡入淡出/转场"
 
-#: tlineaction.py:1704
+#: tlineaction.py:1785
 msgid ""
 "This fade / transition was created with Flowblade <= 1.14 and does not have "
 "the necessary data embedded.\n"
@@ -6894,31 +7178,31 @@ msgstr ""
 "此淡入淡出/转场是使用Flowblade<=1.14版本创建的，其中没有嵌入需要的数据。\n"
 "Rerendering works with fades/transitions created with Flowblade >= 1.16."
 
-#: tlineaction.py:1709
+#: tlineaction.py:1790
 msgid ""
 "The clip/s used to create this fade / transition are no longer available on "
 "the timeline."
 msgstr "用于创建此淡入淡出/转场的剪辑在时间轴上不再可用。"
 
-#: tlineaction.py:1727
+#: tlineaction.py:1808
 msgid "No Clip loaded into Monitor"
 msgstr "无视频剪辑加载到监视器"
 
-#: tlineaction.py:1728
+#: tlineaction.py:1809
 msgid "Can't do the requested edit because there is no Clip in Monitor."
 msgstr "不能做这个编辑请求因为监视器里无视频剪辑。"
 
-#: tlineaction.py:1732
+#: tlineaction.py:1813
 msgid "Defined range in Monitor Clip is too short"
 msgstr "监视器中的视频剪辑定义范围太短"
 
-#: tlineaction.py:1733
+#: tlineaction.py:1814
 msgid ""
 "Can't do the requested edit because Mark In -> Mark Out Range or Clip is too "
 "short."
 msgstr "不能做此编辑请求因为节点->出点范围或视频剪辑太短。"
 
-#: tlineaction.py:1738
+#: tlineaction.py:1819
 msgid ""
 "You need to set Mark In and Mark Out on Timeline or Clip and\n"
 "additional Mark In on Timeline or Clip to perform this edit."
@@ -7008,59 +7292,59 @@ msgid ""
 "Flowblade."
 msgstr "为测试项目，关闭此工具后在Flowblade打开重新链接的版本。"
 
-#: patternproducer.py:352
+#: patternproducer.py:354
 msgid "Create Color Clip"
 msgstr "创建彩色视频剪辑"
 
-#: patternproducer.py:358
+#: patternproducer.py:360
 msgid "Color Clip"
 msgstr "彩色视频剪辑"
 
-#: patternproducer.py:367
+#: patternproducer.py:369
 msgid "Select Color:"
 msgstr "选择颜色:"
 
-#: patternproducer.py:385
+#: patternproducer.py:387
 msgid "Create Ising Clip"
 msgstr "创建lsing视频剪辑"
 
-#: patternproducer.py:394
+#: patternproducer.py:396
 msgid "Noise temperature:"
 msgstr "噪声温度:"
 
-#: patternproducer.py:395
+#: patternproducer.py:397
 msgid "Border growth:"
 msgstr "边缘绿篱:"
 
-#: patternproducer.py:396
+#: patternproducer.py:398
 msgid "Spontanious growth:"
 msgstr "自发性生长"
 
-#: patternproducer.py:416
+#: patternproducer.py:418
 msgid "Create Color Pulse Clip"
 msgstr "创建颜色脉冲视频剪辑"
 
-#: patternproducer.py:428
+#: patternproducer.py:430
 msgid "Speed 1:"
 msgstr "速度1:"
 
-#: patternproducer.py:429
+#: patternproducer.py:431
 msgid "Speed 2:"
 msgstr "速度2:"
 
-#: patternproducer.py:430
+#: patternproducer.py:432
 msgid "Speed 3:"
 msgstr "速度3:"
 
-#: patternproducer.py:431
+#: patternproducer.py:433
 msgid "Speed 4:"
 msgstr "速度4:"
 
-#: patternproducer.py:432
+#: patternproducer.py:434
 msgid "Move 1:"
 msgstr "移动1:"
 
-#: patternproducer.py:433
+#: patternproducer.py:435
 msgid "Move 2:"
 msgstr "移动2:"
 
@@ -7096,7 +7380,7 @@ msgstr "加载Gmic Script"
 msgid "Video Encoding Settings"
 msgstr "视频编码设置"
 
-#: tools/gmic.py:556
+#: tools/gmic.py:556 containeractions.py:345
 msgid "Set Encoding"
 msgstr "设置编码"
 
@@ -7176,48 +7460,81 @@ msgstr "为帧预览: "
 msgid ", render time: "
 msgstr "渲染时间: "
 
-#: tools/gmic.py:1212
+#: tools/gmic.py:1210
 msgid "Waiting for frames write to complete..."
 msgstr "等待帧写入完成..."
 
-#: tools/gmic.py:1225
-msgid "Rendering frame: "
-msgstr "渲染帧: "
-
 #: tools/gmic.py:1255
-msgid "Render error!"
-msgstr "渲染错误！"
-
-#: tools/gmic.py:1297
 msgid "Rendering video, "
 msgstr "渲染视频中， "
 
-#: tools/gmic.py:1297
+#: tools/gmic.py:1255
 #, python-format
 msgid "% done"
 msgstr "%完成"
 
-#: tools/gmic.py:1307
+#: tools/gmic.py:1265
 msgid "Render complete!"
 msgstr "渲染完成！"
 
-#: tools/gmic.py:1317
+#: tools/gmic.py:1275
 msgid "Writing clip frame: "
 msgstr "正写剪辑帧: "
 
-#: tools/gmic.py:1329
+#: tools/gmic.py:1283
+msgid "Rendering frame: "
+msgstr "渲染帧: "
+
+#: tools/gmic.py:1295
+msgid "Render error!"
+msgstr "渲染错误！"
+
+#: tools/gmic.py:1309
 msgid "Render stopped!"
 msgstr "已停止渲染"
 
-#: tools/toolsencoding.py:90
+#: tools/toolsencoding.py:115
+#, fuzzy
+msgid "Save Location"
+msgstr "保存项目"
+
+#: tools/toolsencoding.py:123
+#, fuzzy
+msgid "Video Clip"
+msgstr "无剪辑"
+
+#: tools/toolsencoding.py:287
+msgid "Save Rendered Container Media Internally"
+msgstr ""
+
+#: tools/toolsencoding.py:288
+msgid "Save Rendered Container Media Externally"
+msgstr ""
+
+#: tools/toolsencoding.py:315
+#, fuzzy
+msgid "Frame Name:"
+msgstr "帧"
+
+#: tools/toolsencoding.py:355
+#, fuzzy
+msgid "Render Video Clip"
+msgstr "渲染动画剪辑"
+
+#: tools/toolsencoding.py:356
+#, fuzzy
+msgid "Frame Sequence Only"
+msgstr "创建序列"
+
+#: tools/toolsencoding.py:411
 msgid "Use Default Profile:"
 msgstr "使用默认配置文件"
 
-#: monitorevent.py:316
+#: monitorevent.py:326
 msgid "On some systems Trim View may update slowly"
 msgstr "在某些系统上，修剪视图可能更新较慢"
 
-#: monitorevent.py:317
+#: monitorevent.py:327
 msgid ""
 "<b>Trim View</b> works best with SSDs and relatively powerful processors.\n"
 "\n"
@@ -7225,7 +7542,7 @@ msgstr ""
 "<b>修剪视图</b>在SSD硬盘和相对高性能处理器上会效果更好些。\n"
 "\n"
 
-#: monitorevent.py:318
+#: monitorevent.py:328
 msgid ""
 "Select <b>'Trim View Off'</b> or<b>'Trim View Single Side Edits Only'</b> "
 "options\n"
@@ -7234,51 +7551,51 @@ msgstr ""
 "选择<b>'修剪视图关闭‘</b>或<b>'修剪视图仅单边编辑’</b> 选项\n"
 "如果表现不尽如人意。"
 
-#: compositorfades.py:256
+#: compositorfades.py:344
 msgid "Clip too short!"
 msgstr "视频剪辑太短！"
 
-#: compositorfades.py:257
+#: compositorfades.py:345
 msgid "The Clip is too short to add the requested fade."
 msgstr "剪辑太短，无法添加指定的淡入淡出效果。"
 
-#: compositorfades.py:262
+#: compositorfades.py:350
 msgid "Clip too short for Auto Fades!"
 msgstr "剪辑太短，无法添加自动淡入淡出效果。"
 
-#: compositorfades.py:263
+#: compositorfades.py:351
 msgid ""
 "The Clip is too short to add the user set default fades on Compositor "
 "creation."
 msgstr "剪辑太短，无法添加用户在合成器中创建的指定淡入淡出效果。"
 
-#: audiosync.py:142
+#: audiosync.py:139
 msgid "Cannot Timeline Audio Sync with Compound Clips!"
 msgstr "Cannot Timeline Audio Sync with Compound Clips!"
 
-#: audiosync.py:143
+#: audiosync.py:140
 msgid "Audio syncing for Compound Clips is not supported."
 msgstr "Audio syncing for Compound Clips is not supported."
 
-#: audiosync.py:184
+#: audiosync.py:181
 msgid "Audio Sync parent clips must be on differnt tracks "
 msgstr "Audio Sync parent clips must be on differnt tracks "
 
-#: audiosync.py:185
+#: audiosync.py:182
 msgid ""
 "Selected audio sync clip is on the sametrack as the sync action origin clip."
 msgstr ""
 "Selected audio sync clip is on the sametrack as the sync action origin clip."
 
-#: audiosync.py:222
+#: audiosync.py:219
 msgid "Audio sync move not possible"
 msgstr "Audio sync move not possible"
 
-#: audiosync.py:223
+#: audiosync.py:220
 msgid "Clip starts "
 msgstr "Clip starts "
 
-#: audiosync.py:223
+#: audiosync.py:220
 msgid ""
 " frames before timeline start if it is moved \n"
 "to be in audio sync with the specified clip.\n"
@@ -7288,7 +7605,7 @@ msgstr ""
 "to be in audio sync with the specified clip.\n"
 "\n"
 
-#: audiosync.py:224
+#: audiosync.py:221
 msgid ""
 "You need to move forward or shorten the clips in question to make the "
 "operation succeed."
@@ -7296,35 +7613,35 @@ msgstr ""
 "You need to move forward or shorten the clips in question to make the "
 "operation succeed."
 
-#: audiosync.py:271
+#: audiosync.py:268
 msgid "Cannot Create Audio Sync Compound Clip from Compound Clips!"
 msgstr "Cannot Create Audio Sync Compound Clip from Compound Clips!"
 
-#: audiosync.py:272
+#: audiosync.py:269
 msgid "Audio syncing Compound Clips is not supported."
 msgstr "Audio syncing Compound Clips is not supported."
 
-#: audiosync.py:280
+#: audiosync.py:277
 msgid "Cannot Create Audio Sync Compound Clip from 2 Audio Clips!"
 msgstr "Cannot Create Audio Sync Compound Clip from 2 Audio Clips!"
 
-#: audiosync.py:281
+#: audiosync.py:278
 msgid "One of the media items needs to be a video clip."
 msgstr "其中一个媒体条目必须是视频剪辑。"
 
-#: audiosync.py:312
+#: audiosync.py:309
 msgid "SYNC_CLIP_"
 msgstr "SYNC_CLIP_"
 
-#: audiosync.py:313
+#: audiosync.py:310
 msgid "Save Sync Compound Clip XML"
 msgstr "Save Sync Compound Clip XML"
 
-#: diskcachemanagement.py:47
+#: diskcachemanagement.py:50
 msgid "Destroy data"
 msgstr "Destroy data"
 
-#: diskcachemanagement.py:71
+#: diskcachemanagement.py:70
 msgid ""
 "Destroying this data may change contents of existing\n"
 "projects and make some projects unopenable."
@@ -7332,19 +7649,19 @@ msgstr ""
 "Destroying this data may change contents of existing\n"
 "projects and make some projects unopenable."
 
-#: diskcachemanagement.py:102
+#: diskcachemanagement.py:114
 msgid " MB"
 msgstr " MB"
 
-#: diskcachemanagement.py:104
+#: diskcachemanagement.py:116
 msgid " kB"
 msgstr " kB"
 
-#: diskcachemanagement.py:114
+#: diskcachemanagement.py:126
 msgid "Confirm Destroying Cached Data!"
 msgstr "Confirm Destroying Cached Data!"
 
-#: diskcachemanagement.py:116
+#: diskcachemanagement.py:128
 msgid ""
 "Destroying this data may <b>change contents</b> of existing\n"
 "projects or <b>make some projects unopenable!</b>"
@@ -7352,7 +7669,7 @@ msgstr ""
 "Destroying this data may <b>change contents</b> of existing\n"
 "projects or <b>make some projects unopenable!</b>"
 
-#: diskcachemanagement.py:118
+#: diskcachemanagement.py:130
 msgid ""
 "You can use 'File->Save Backup Snapshot...' functionality to backup "
 "projects\n"
@@ -7362,27 +7679,61 @@ msgstr ""
 "projects\n"
 "so that they can be opened later before destroying this data."
 
-#: diskcachemanagement.py:120
+#: diskcachemanagement.py:132
 msgid "Destroying this data may require parts of it to be recreated later."
 msgstr "Destroying this data may require parts of it to be recreated later."
 
-#: diskcachemanagement.py:172
+#: diskcachemanagement.py:229
+msgid "Disk Cache Size Exceeds Current Warning Level!"
+msgstr ""
+
+#: diskcachemanagement.py:230
+#, fuzzy
+msgid "Flowblade currently uses "
+msgstr "Flowblade项目"
+
+#: diskcachemanagement.py:230
+msgid " of disk space."
+msgstr ""
+
+#: diskcachemanagement.py:231
+msgid ""
+"You can either delete saved data using dialog opened with <b>Edit->Disk "
+"Cache</b> or"
+msgstr ""
+
+#: diskcachemanagement.py:232
+msgid ""
+"change warning level in <b>Edit->Preferences 'General Options'</b> panel."
+msgstr ""
+
+#: diskcachemanagement.py:238
 msgid "Audio Levels Data"
 msgstr "Audio Levels Data"
 
-#: diskcachemanagement.py:173
+#: diskcachemanagement.py:239
 msgid "G'Mic Tool Session Data"
 msgstr "G'Mic Tool Session Data"
 
-#: diskcachemanagement.py:174
+#: diskcachemanagement.py:240
 msgid "Rendered Files"
 msgstr "Rendered Files"
 
-#: diskcachemanagement.py:175
+#: diskcachemanagement.py:241
+#, fuzzy
+msgid "Proxy Files"
+msgstr "渲染代理文件"
+
+#: diskcachemanagement.py:242
+#, fuzzy
+msgid "Container Clips"
+msgstr "复制视频剪辑"
+
+#: diskcachemanagement.py:243
 msgid "Thumbnails"
 msgstr "Thumbnails"
 
-#: diskcachemanagement.py:176
+#: diskcachemanagement.py:244
 msgid "User Created Custom Profiles"
 msgstr "用户创建自定义配置文件"
 
@@ -7407,234 +7758,239 @@ msgid "Set Mark Out"
 msgstr "设置终点标记"
 
 #: shortcuts.py:184
+#, fuzzy
+msgid "Clear In/Out Marks"
+msgstr "清除标记"
+
+#: shortcuts.py:185
 msgid "Start / Stop Playback"
 msgstr "开始 / 停止 回放"
 
-#: shortcuts.py:185
+#: shortcuts.py:186
 msgid "Prev Edit/Mark"
 msgstr "上一个编辑/标记"
 
-#: shortcuts.py:186
+#: shortcuts.py:187
 msgid "Next Edit/Mark"
 msgstr "下一个编辑/标记"
 
-#: shortcuts.py:187
+#: shortcuts.py:188
 msgid "Prev Frame"
 msgstr "上一帧"
 
-#: shortcuts.py:191
+#: shortcuts.py:192
 msgid "Append Selected Media From Bin"
 msgstr "从库中追加选中的媒体"
 
-#: shortcuts.py:192
+#: shortcuts.py:193
 msgid "Backwards Faster"
 msgstr "快退"
 
-#: shortcuts.py:194
+#: shortcuts.py:195
 msgid "Forward Faster"
 msgstr "快进"
 
-#: shortcuts.py:196
+#: shortcuts.py:197
 msgid "Resync selected Clip or Compositor"
 msgstr "重新同步选择的视频剪辑或合成"
 
-#: shortcuts.py:197
+#: shortcuts.py:198
 msgid "Delete Selected Item"
 msgstr "删除选择的条目"
 
-#: shortcuts.py:198
+#: shortcuts.py:199
 msgid "Lift Selected Item"
 msgstr "Lift Selected Item"
 
-#: shortcuts.py:199
+#: shortcuts.py:200
 msgid "Go To Start"
 msgstr "开始"
 
-#: shortcuts.py:200
+#: shortcuts.py:201
 msgid "Go To End"
 msgstr "结束"
 
-#: shortcuts.py:201
+#: shortcuts.py:202
 msgid "3 Point Overwrite"
 msgstr "3 Point Overwrite"
 
-#: shortcuts.py:203
+#: shortcuts.py:204
 msgid "Trim Tool Ripple Mode On/Off"
 msgstr "修剪工具波浪模式开/关"
 
-#: shortcuts.py:204
+#: shortcuts.py:205
 msgid "Cut Active Tracks"
 msgstr "Cut Active Tracks"
 
-#: shortcuts.py:205
+#: shortcuts.py:206
 msgid "Cut All Tracks"
 msgstr "Cut All Tracks"
 
-#: shortcuts.py:208 workflow.py:67
+#: shortcuts.py:209 workflow.py:67
 msgid "Trim"
 msgstr "修剪"
 
-#: shortcuts.py:209 workflow.py:68
+#: shortcuts.py:210 workflow.py:68
 msgid "Roll"
 msgstr "滚动"
 
-#: shortcuts.py:210 workflow.py:69
+#: shortcuts.py:211 workflow.py:69
 msgid "Slip"
 msgstr "滑动"
 
-#: shortcuts.py:211 workflow.py:70
+#: shortcuts.py:212 workflow.py:70
 msgid "Spacer"
 msgstr "间隔"
 
-#: shortcuts.py:215
+#: shortcuts.py:216
 msgid "Switch Monitor Source"
 msgstr "切换源监视器"
 
-#: shortcuts.py:216
+#: shortcuts.py:217
 msgid "Add Mark"
 msgstr "添加标记"
 
-#: shortcuts.py:217
+#: shortcuts.py:218
 msgid "Complete Keyboard Trim Edit"
 msgstr "完成键盘修剪编辑"
 
-#: shortcuts.py:218
+#: shortcuts.py:219
 msgid "Nudge Move Selection Back 1 Frame"
 msgstr "向后移动一帧"
 
-#: shortcuts.py:219
+#: shortcuts.py:220
 msgid "Nudge Move Selection Forward 1 Frame"
 msgstr "向前移动一帧"
 
-#: shortcuts.py:220
+#: shortcuts.py:221
 msgid "Nudge Move Selection Back 10 Frames"
 msgstr "向后移动十帧"
 
-#: shortcuts.py:221
+#: shortcuts.py:222
 msgid "Nudge Move Selection Forward 10 Frames"
 msgstr "向前移动十帧"
 
-#: shortcuts.py:222
+#: shortcuts.py:223
 msgid "Open Next Media Item In Monitor"
 msgstr "在监视器中打开下一个媒体"
 
-#: shortcuts.py:231
+#: shortcuts.py:232
 msgid "SPACE"
 msgstr "空格键"
 
-#: shortcuts.py:234
+#: shortcuts.py:235
 msgid "Left Arrow"
 msgstr "左箭头"
 
-#: shortcuts.py:245
+#: shortcuts.py:246
 msgid "HOME"
 msgstr "HOME"
 
-#: shortcuts.py:246
+#: shortcuts.py:247
 msgid "END"
 msgstr "结束"
 
-#: shortcuts.py:251
+#: shortcuts.py:252
 msgid "Key Pad END"
 msgstr "数字键盘END"
 
-#: shortcuts.py:252
+#: shortcuts.py:253
 msgid "Key Pad 1"
 msgstr "数字键盘1"
 
-#: shortcuts.py:254 shortcuts.py:257 shortcuts.py:258
+#: shortcuts.py:255 shortcuts.py:258 shortcuts.py:259
 msgid "Key Pad 2"
 msgstr "数字键盘2"
 
-#: shortcuts.py:255
+#: shortcuts.py:256
 msgid "Key Pad Down Arrow"
 msgstr "数字键盘下箭头"
 
-#: shortcuts.py:260
+#: shortcuts.py:261
 msgid "Key Pad 4"
 msgstr "数字键盘4"
 
-#: shortcuts.py:261
+#: shortcuts.py:262
 msgid "Key Pad Left Arrow"
 msgstr "数字键盘左箭头"
 
-#: shortcuts.py:263
+#: shortcuts.py:264
 msgid "Key Pad 5"
 msgstr "数字键盘5"
 
-#: shortcuts.py:264
+#: shortcuts.py:265
 msgid "Key Pad Begin"
 msgstr "Key Pad Begin"
 
-#: shortcuts.py:266
+#: shortcuts.py:267
 msgid "Key Pad 6"
 msgstr "数字键盘6"
 
-#: shortcuts.py:267
+#: shortcuts.py:268
 msgid "Key Pad Right Arrow"
 msgstr "数字键盘右箭头"
 
-#: shortcuts.py:269
+#: shortcuts.py:270
 msgid "Key Pad 7"
 msgstr "数字键盘7"
 
-#: shortcuts.py:270
+#: shortcuts.py:271
 msgid "Key Pad HOME"
 msgstr "数字键盘HOME"
 
-#: shortcuts.py:273
+#: shortcuts.py:274
 msgid "TAB"
 msgstr "TAB"
 
-#: shortcuts.py:275
+#: shortcuts.py:276
 msgid "ENTER"
 msgstr "回车键"
 
-#: shortcuts.py:277
+#: shortcuts.py:278
 msgid "="
 msgstr "="
 
-#: shortcuts.py:278
+#: shortcuts.py:279
 msgid ","
 msgstr ","
 
-#: shortcuts.py:279
+#: shortcuts.py:280
 msgid "."
 msgstr "."
 
-#: shortcuts.py:281
+#: shortcuts.py:282
 msgid "Alt"
 msgstr "Alt"
 
-#: shortcuts.py:283
+#: shortcuts.py:284
 msgid "Alt + Shift"
 msgstr "Alt + Shift"
 
-#: shortcuts.py:284
+#: shortcuts.py:285
 msgid "Control"
 msgstr "Control"
 
-#: clipmenuaction.py:387
+#: clipmenuaction.py:390
 msgid "Previous clip does not have enough material to cover blank area"
 msgstr "前一个剪辑没有足够的信息覆盖空白区域"
 
-#: clipmenuaction.py:388 clipmenuaction.py:417
+#: clipmenuaction.py:391 clipmenuaction.py:420
 msgid "Requested edit can't be done."
 msgstr "Requested edit can't be done."
 
-#: clipmenuaction.py:416
+#: clipmenuaction.py:419
 msgid "Next clip does not have enough material to cover blank area"
 msgstr "下一个剪辑没有足够的信息覆盖空白区域"
 
-#: dialogutils.py:91
+#: dialogutils.py:101
 msgid "Confirm"
 msgstr "确认"
 
-#: dialogutils.py:217
+#: dialogutils.py:227
 msgid "Can't edit a locked track"
 msgstr "不能编辑锁定状态轨道"
 
-#: dialogutils.py:218
+#: dialogutils.py:228
 msgid " is locked. Unlock track to edit it."
 msgstr " 被锁定。解除轨道锁定以编辑。"
 
@@ -7670,39 +8026,35 @@ msgstr ""
 "Unfortunately the webresource containing help information\n"
 "for this application was not found."
 
-#: exporting.py:378
+#: exporting.py:384
 msgid "Sequence is too short"
 msgstr "序列太短"
 
-#: exporting.py:378
+#: exporting.py:384
 msgid "Sequence needs to be at least 2 frames long to allow frame export."
 msgstr "序列至少需要两帧才能够导出帧。"
 
-#: exporting.py:437
+#: exporting.py:443
 msgid "Export Image"
 msgstr "导出Image"
 
-#: exporting.py:438
+#: exporting.py:444
 msgid "Export Frame Image"
 msgstr "Export Frame Image"
 
-#: exporting.py:462
+#: exporting.py:468
 msgid "Export file name:"
 msgstr "导出文件名称："
 
-#: exporting.py:464
-msgid "Select target folder"
-msgstr "选择目录"
-
-#: exporting.py:468
+#: exporting.py:474
 msgid "Export folder:"
 msgstr "导出目录："
 
-#: exporting.py:475
+#: exporting.py:481
 msgid "Image type:"
 msgstr "Image type:"
 
-#: exporting.py:517
+#: exporting.py:523
 #, fuzzy
 msgid ""
 "When exporting audio to Ardour, the selected folder\n"
@@ -8076,6 +8428,304 @@ msgstr "Allow to add / delete points in closed masks"
 msgid "Close Tool"
 msgstr "Close Tool"
 
+#: tools/containerprogramedit.py:84 tools/simpleeditors.py:75
+#, fuzzy
+msgid "Save Changes"
+msgstr "交换通道"
+
+#: tools/containerprogramedit.py:87
+msgid "Add or delete editors to enable <b>Save Changes</b> button"
+msgstr ""
+
+#: tools/containerprogramedit.py:110
+#, fuzzy
+msgid "Blender Project Property Editors"
+msgstr "渲染属性"
+
+#: tools/containerprogramedit.py:120
+msgid "Objects"
+msgstr ""
+
+#: tools/containerprogramedit.py:121
+msgid "Materials"
+msgstr ""
+
+#: tools/containerprogramedit.py:152
+#, fuzzy
+msgid "Blender Project Objects"
+msgstr "渲染属性"
+
+#: tools/containerprogramedit.py:163
+#, fuzzy
+msgid "Property Path"
+msgstr "属性"
+
+#: tools/containerprogramedit.py:163
+msgid "Label"
+msgstr ""
+
+#: tools/containerprogramedit.py:167
+#, fuzzy
+msgid "Add Editor"
+msgstr "添加滤镜"
+
+#: tools/containerprogramedit.py:169
+#, fuzzy
+msgid "Delete Editor"
+msgstr "删除合成器"
+
+#: tools/containerprogramedit.py:194
+#, fuzzy
+msgid "New Editor Properties"
+msgstr "渲染属性"
+
+#: tools/containerprogramedit.py:195
+msgid "Blender Object Property Path:"
+msgstr ""
+
+#: tools/containerprogramedit.py:196
+msgid "Editor Label:"
+msgstr ""
+
+#: tools/containerprogramedit.py:197
+#, fuzzy
+msgid "Tooltip Info:"
+msgstr "剪辑信息"
+
+#: tools/containerprogramedit.py:198
+#, fuzzy
+msgid "Editor Type:"
+msgstr "Gradient Type"
+
+#: tools/containerprogramedit.py:199
+#, fuzzy
+msgid "Default Value:"
+msgstr "默认配置文件:"
+
+#: tools/containerprogramedit.py:230
+msgid "Object Editors for "
+msgstr ""
+
+#: tools/containerprogramedit.py:232
+msgid "Materials Editors for "
+msgstr ""
+
+#: tools/simpleeditors.py:72
+#, fuzzy
+msgid "Blender Project Edit"
+msgstr "渲染属性"
+
+#: tools/simpleeditors.py:93
+msgid "String"
+msgstr ""
+
+#: tools/simpleeditors.py:95
+msgid "Float"
+msgstr ""
+
+#: tools/simpleeditors.py:96
+#, fuzzy
+msgid "Int"
+msgstr "输入"
+
+#: jobs.py:77
+#, fuzzy
+msgid "Container Clip"
+msgstr "彩色视频剪辑"
+
+#: jobs.py:141
+#, fuzzy
+msgid "Completed"
+msgstr "渲染完成！"
+
+#: jobs.py:188
+#, fuzzy
+msgid "Cancel Selected Render"
+msgstr "Deletes Selected Handle"
+
+#: jobs.py:189
+msgid "Cancel All Renders"
+msgstr ""
+
+#: jobs.py:194
+#, fuzzy
+msgid "Render All Jobs Sequentially"
+msgstr "重新渲染所有可能"
+
+#: jobs.py:200
+msgid "Show Jobs Panel on Adding New Job"
+msgstr ""
+
+#: jobs.py:215 jobs.py:229
+#, fuzzy
+msgid "Cancelled"
+msgstr "取消"
+
+#: jobs.py:300
+#, fuzzy
+msgid "Progress"
+msgstr "进行中的"
+
+#: containeractions.py:229
+msgid "Waiting to render"
+msgstr ""
+
+#: containeractions.py:341
+msgid "Container Clip Render Settings"
+msgstr ""
+
+#: containeractions.py:450 containeractions.py:576
+#, fuzzy
+msgid "Render Starting.."
+msgstr "渲染开始:"
+
+#: containeractions.py:490
+msgid "Step "
+msgstr ""
+
+#: containeractions.py:492
+#, fuzzy
+msgid "Writing Clip Frames"
+msgstr "正写剪辑帧: "
+
+#: containeractions.py:494
+#, fuzzy
+msgid "Rendering G'Mic Script"
+msgstr "渲染动画剪辑"
+
+#: containeractions.py:496
+#, fuzzy
+msgid "Encoding Video"
+msgstr "编码视频"
+
+#: containeractions.py:614
+#, fuzzy
+msgid "Rendering Video"
+msgstr "渲染视频中， "
+
+#: containeractions.py:616 containeractions.py:742
+#, fuzzy
+msgid "Rendering Image Sequence"
+msgstr "影像序列"
+
+#: containeractions.py:854
+#, fuzzy
+msgid "Rendering Placeholder Media"
+msgstr "渲染反向剪辑"
+
+#: containerclip.py:167
+msgid "Not all required files were defined"
+msgstr ""
+
+#: containerclip.py:167
+msgid ""
+"Select all files asked for in dialog for succesful Container Clip creation."
+msgstr ""
+
+#: containerclip.py:174
+msgid "Select G'Mic Tool Script:"
+msgstr ""
+
+#: containerclip.py:175
+#, fuzzy
+msgid "Video Clip:"
+msgstr "视频:"
+
+#: containerclip.py:176
+msgid "Create G'Mic Script Container Clip"
+msgstr ""
+
+#: containerclip.py:212
+#, fuzzy
+msgid "Blender Project"
+msgstr "打开项目"
+
+#: containerclip.py:214
+#, fuzzy
+msgid "Select Blender Project File:"
+msgstr "选择项目文件"
+
+#: containerclip.py:216
+msgid "Create Blender Project Container Clip"
+msgstr ""
+
+#: containerclip.py:250
+msgid "<b>Creating Container for Blender Project:</b> "
+msgstr ""
+
+#: tlinerender.py:118
+#, fuzzy
+msgid "Timeline Render Off"
+msgstr "Flowblade时间轴渲染"
+
+#: tlinerender.py:119
+#, fuzzy
+msgid "Timeline Render Auto"
+msgstr "Flowblade时间轴渲染"
+
+#: tlinerender.py:120
+#, fuzzy
+msgid "Timeline Render On Request"
+msgstr "时间轴范围未设置！"
+
+#: tlinerender.py:137
+#, fuzzy
+msgid "Render Segment"
+msgstr "渲染时间"
+
+#: tlinerender.py:141
+#, fuzzy
+msgid "Delete All Segments"
+msgstr "删除所有标记"
+
+#: tlinerender.py:145
+#, fuzzy
+msgid "Delete Segment"
+msgstr "删除选中的"
+
+#: tlinerender.py:809
+#, fuzzy
+msgid "Timeline Render Settings"
+msgstr "开始渲染"
+
+#: tlinerender.py:852
+#, fuzzy
+msgid "Render Encoding"
+msgstr "选择渲染编码"
+
+#~ msgid "Set Compositor Auto Fades..."
+#~ msgstr "设置合同自动淡入淡出..."
+
+#~ msgid "Shift + I"
+#~ msgstr "Shift + I"
+
+#~ msgid "Shift + O"
+#~ msgstr "Shift + O"
+
+#~ msgid "Compositors Auto Fades"
+#~ msgstr "合成自动淡入淡出"
+
+#~ msgid "Set Group Defaults"
+#~ msgstr "设置组默认"
+
+#~ msgid "Dissolve, Blend"
+#~ msgstr "Dissolve, Blend"
+
+#~ msgid "Affine Blend,  Picture-In-Picture, Region"
+#~ msgstr "Affine Blend,  Picture-In-Picture, Region"
+
+#~ msgid "Compositor Auto Fades Group"
+#~ msgstr "合成自动淡入淡出组"
+
+#~ msgid "Add Fade In on Creation"
+#~ msgstr "创建时添加淡入"
+
+#~ msgid "Add Fade Out on Creation"
+#~ msgstr "创建时添加淡出"
+
+#~ msgid "Group Auto Fades"
+#~ msgstr "组自动淡入淡出"
+
 #~ msgid "Size/Height"
 #~ msgstr "大小/重量"
 
@@ -8217,9 +8867,6 @@ msgstr "Close Tool"
 #~ msgid "Preview Frame"
 #~ msgstr "上一帧"
 
-#~ msgid "Frame:"
-#~ msgstr "帧"
-
 #~ msgid "Set Frames Folder for valid render"
 #~ msgstr "为有效渲染设置节点、出点和帧目录"
 
@@ -8228,9 +8875,6 @@ msgstr "Close Tool"
 
 #~ msgid "Save Natron Animation Values As"
 #~ msgstr "设置排序自动褪色..."
-
-#~ msgid "Render starting..."
-#~ msgstr "渲染开始:"
 
 #~ msgid "Rendering preview for frame "
 #~ msgstr "为帧预览:"
@@ -8267,9 +8911,6 @@ msgstr "Close Tool"
 
 #~ msgid "Add Media File to Bin"
 #~ msgstr "添加媒体文件到库"
-
-#~ msgid "Delete Media File from Bin"
-#~ msgstr "从库中删除媒体文件"
 
 #~ msgid "Add Bin to Project"
 #~ msgstr "为项目添加库"

@@ -830,7 +830,7 @@ class EditorWindow:
         tline_hbox_2.pack_start(self.tline_column.widget, False, False, 0)
         tline_hbox_2.pack_start(self.tline_canvas.widget, True, True, 0)
 
-        # Timeline rendereŕ row
+        # Timeline renderer row
         self.pad_box = Gtk.HBox()
         self.pad_box.set_size_request(tlinewidgets.COLUMN_WIDTH, tlinewidgets.STRIP_HEIGHT)
         self.tline_render_strip = tlinewidgets.TimeLineRenderingControlStrip()
