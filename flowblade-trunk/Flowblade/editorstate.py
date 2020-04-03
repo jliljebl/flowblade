@@ -132,10 +132,10 @@ fade_length = -1
 transition_length = -1
 steal_frames = True
 
-# SDL version (Not used currently)
-consumer_sdl_version = SDL_1
+# SDL version
 SDL_1 = 1
 SDL_2 = 2
+consumer_sdl_version = SDL_1
 
 # Trim clips cache for quicker inits, path -> clip
 _trim_clips_cache = {}

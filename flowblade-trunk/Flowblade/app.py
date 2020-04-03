@@ -267,7 +267,7 @@ def main(root_path):
     # There is always a project open, so at startup we create a default project.
     # Set default project as the project being edited.
     editorstate.project = projectdata.get_default_project()
-    check_crash = True
+    check_crash = False
 
     # Audiomonitoring being available needs to be known before GUI creation.
     audiomonitoring.init(editorstate.project.profile)
@@ -345,7 +345,7 @@ def main(root_path):
         
     # SDL 2 consumer needs to created after Gtk.main() has run enough for window to be visble
     if editorstate.get_sdl_consumer_version() == editorstate.SDL_2:
-        print "SDL2 timeout launch"
+        print("SDL2 timeout launch")
         global sdl2_timeout_id
         sdl2_timeout_id = GObject.timeout_add(1500, create_sdl_2_consumer)
     
@@ -423,7 +423,7 @@ def monkeypatch_callbacks():
 # ---------------------------------- SDL2 consumer
 def create_sdl_2_consumer():
     GObject.source_remove(disk_cache_timeout_id)
-    print "Creating SDL2 consumer..."
+    print("Creating SDL2 consumer...")
     editorstate.PLAYER().create_sdl2_video_consumer()
 
 # ---------------------------------- program, sequence and project init
@@ -447,13 +447,14 @@ def open_assoc_file():
     projectaction.actually_load_project(assoc_file_path, block_recent_files=False)
 
 def act_on_args():
+    print(sys.argv)
     for arg in sys.argv:
         if arg == "--quiet":
             global _log_file
             _log_file = "/dev/null"
             log_print_output_to_file()
         if arg == "--sdl2":
-            editorstate.consumer_sdl_version = editorstate.SDL2
+            editorstate.consumer_sdl_version = editorstate.SDL_2
             
 def create_gui():
     """

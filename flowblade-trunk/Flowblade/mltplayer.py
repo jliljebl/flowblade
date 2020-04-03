@@ -30,6 +30,7 @@ import time
 
 import gui
 from editorstate import timeline_visible
+import editorstate
 import editorpersistance
 import utils
 import updater
@@ -97,7 +98,7 @@ class Player:
         self.consumer.set("rescale", "bicubic") # MLT options "nearest", "bilinear", "bicubic", "hyper"
         self.consumer.set("resize", 1)
         self.consumer.set("progressive", 1)
-        self.consumer.set("window_id", str(self.xid))
+        self.consumer.set("window_id", int(self.xid))
         alloc = gui.editor_window.tline_display.get_allocation()
         self.consumer.set("window_width", str(alloc.width))
         self.consumer.set("window_height", str(alloc.height))
@@ -120,6 +121,7 @@ class Player:
         Connects SDL output to display widget's xwindow
         """
         os.putenv('SDL_WINDOWID', str(widget.get_window().get_xid()))
+        self.xid = widget.get_window().get_xid()
         Gdk.flush()
 
     def set_tracktor_producer(self, tractor):
@@ -139,7 +141,7 @@ class Player:
 
         if self.consumer == None: # SDL 2 gets possibly created after the first window event causing a call here
             return 
-        if editorstate.get_sdl_version() == editorstate.SDL_2:
+        if editorstate.get_sdl_consumer_version() == editorstate.SDL_2:
             alloc = gui.editor_window.tline_display.get_allocation()
             self.consumer.set("window_width", str(alloc.width))
             self.consumer.set("window_height", str(alloc.height))
@@ -162,6 +164,9 @@ class Player:
         """
         Connects current procer and consumer and
         """
+        if self.consumer == None: # SDL 2 gets possibly created after the first window event causing a call here
+            return 
+
         self.consumer.purge()
         self.producer.set_speed(0)
         self.consumer.connect(self.producer)
