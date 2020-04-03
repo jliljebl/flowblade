@@ -47,9 +47,6 @@ CUT = 13
 KF_TOOL = 14
 MULTI_TRIM = 15
 
-# SDL version (Not used currently)
-SDL_1 = 1
-SDL_2 = 2
 
 # Project being edited
 project = None
@@ -134,6 +131,11 @@ show_trim_view = appconsts.TRIM_VIEW_OFF
 fade_length = -1
 transition_length = -1
 steal_frames = True
+
+# SDL version (Not used currently)
+consumer_sdl_version = SDL_1
+SDL_1 = 1
+SDL_2 = 2
 
 # Trim clips cache for quicker inits, path -> clip
 _trim_clips_cache = {}
@@ -245,7 +247,11 @@ def runtime_version_greater_then_test_version(test_version, runtime_version):
                 return True
     
     return False
-    
+
+
+def get_sdl_consumer_version():
+    return consumer_sdl_version
+
 def set_copy_paste_objects(objs):
     global _copy_paste_objects
     _copy_paste_objects = objs

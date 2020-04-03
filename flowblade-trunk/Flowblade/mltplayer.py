@@ -40,7 +40,7 @@ RENDER_TICKER_DELAY = 0.05
 class Player:
     
     def __init__(self, profile):
-        #self.consumer = None
+        self.consumer = None
 
         self.init_for_profile(profile)
         
@@ -72,9 +72,8 @@ class Player:
         Creates consumer with sdl output to a gtk+ widget.
         """
         # SDL 2 consumer is created after
-        #if editorstate.get_sdl_version() == editorstate.SDL_2:
-        #    print "refuse SDL1 consumer"
-        #    return
+        if editorstate.get_sdl_consumer_version() == editorstate.SDL_2:
+            return
 
         print("Create SDL1 consumer...")
         # Create consumer and set params
@@ -84,18 +83,16 @@ class Player:
         self.consumer.set("resize", 1)
         self.consumer.set("progressive", 1)
 
-
         # Hold ref to switch back from rendering
         self.sdl_consumer = self.consumer 
 
-    """
     def create_sdl2_video_consumer(self):
-
+        print("Create SDL2 consumer...")
         widget = gui.editor_window.tline_display
         self.set_sdl_xwindow(widget)
         
         # Create consumer and set params
-        self.consumer = mlt.Consumer(self.profile, "sdl")
+        self.consumer = mlt.Consumer(self.profile, "sdl_widget")
         self.consumer.set("real_time", 1)
         self.consumer.set("rescale", "bicubic") # MLT options "nearest", "bilinear", "bicubic", "hyper"
         self.consumer.set("resize", 1)
@@ -104,14 +101,14 @@ class Player:
         alloc = gui.editor_window.tline_display.get_allocation()
         self.consumer.set("window_width", str(alloc.width))
         self.consumer.set("window_height", str(alloc.height))
-        self.consumer.set("window_type", "widget")
-        self.consumer.set("renderer_type", "software")
+        #self.consumer.set("window_type", "widget")
+        #self.consumer.set("renderer_type", "software")
+
         # Hold ref to switch back from rendering
         self.sdl_consumer = self.consumer 
         
         self.connect_and_start()
-    """
-    
+
     def set_scrubbing(self, scrubbing_active):
         if scrubbing_active == True:
             self.consumer.set("scrub_audio", 1)
@@ -123,7 +120,6 @@ class Player:
         Connects SDL output to display widget's xwindow
         """
         os.putenv('SDL_WINDOWID', str(widget.get_window().get_xid()))
-        #self.xid = widget.get_window().get_xid()
         Gdk.flush()
 
     def set_tracktor_producer(self, tractor):
@@ -138,11 +134,10 @@ class Player:
         self.connect_and_start()
 
     def refresh(self): # Window events need this to get picture back
-        self.consumer.stop()
-        self.consumer.start()
-   
-        """
-        if self.consumer == None:
+        #self.consumer.stop()
+        #self.consumer.start()
+
+        if self.consumer == None: # SDL 2 gets possibly created after the first window event causing a call here
             return 
         if editorstate.get_sdl_version() == editorstate.SDL_2:
             alloc = gui.editor_window.tline_display.get_allocation()
@@ -154,7 +149,7 @@ class Player:
         else:
             self.consumer.stop()
             self.consumer.start()
-        """
+
         
     def is_stopped(self):
         return (self.producer.get_speed() == 0)
@@ -167,9 +162,6 @@ class Player:
         """
         Connects current procer and consumer and
         """
-        #if self.consumer == None:
-        #    return 
-
         self.consumer.purge()
         self.producer.set_speed(0)
         self.consumer.connect(self.producer)
@@ -293,7 +285,9 @@ class Player:
         return (self.producer.get_speed() != 0)
 
     def _ticker_event(self):
-        
+        if self.consumer == None:
+            return 
+
         current_frame = self.producer.frame()
         
         loop_clips = editorpersistance.prefs.loop_clips
