@@ -347,7 +347,7 @@ def main(root_path):
     if editorstate.get_sdl_consumer_version() == editorstate.SDL_2:
         print("SDL2 timeout launch")
         global sdl2_timeout_id
-        sdl2_timeout_id = GObject.timeout_add(1500, create_sdl_2_consumer)
+        sdl2_timeout_id = GObject.timeout_add(3500, create_sdl_2_consumer)
     
     # In PositionNumericalEntries we are using Gtk.Entry objects in a way that works for us nicely, but is somehow "error" for Gtk, so we just kill this.
     Gtk.Settings.get_default().set_property("gtk-error-bell", False)

@@ -88,17 +88,19 @@ class Player:
         self.sdl_consumer = self.consumer 
 
     def create_sdl2_video_consumer(self):
-        print("Create SDL2 consumer...")
         widget = gui.editor_window.tline_display
         self.set_sdl_xwindow(widget)
         
         # Create consumer and set params
-        self.consumer = mlt.Consumer(self.profile, "sdl_widget")
+        self.consumer = mlt.Consumer(self.profile, "sdl2_widget")
+        print("consumer created")
+        if self.consumer != None:
+            print("consumer not none")
         self.consumer.set("real_time", 1)
         self.consumer.set("rescale", "bicubic") # MLT options "nearest", "bilinear", "bicubic", "hyper"
         self.consumer.set("resize", 1)
         self.consumer.set("progressive", 1)
-        self.consumer.set("window_id", int(self.xid))
+        self.consumer.set("window_id", str(self.xid))
         alloc = gui.editor_window.tline_display.get_allocation()
         self.consumer.set("window_width", str(alloc.width))
         self.consumer.set("window_height", str(alloc.height))
@@ -107,9 +109,9 @@ class Player:
 
         # Hold ref to switch back from rendering
         self.sdl_consumer = self.consumer 
-        
+        print("before connect_and_start")
         self.connect_and_start()
-
+        print("connect_and_start done")
     def set_scrubbing(self, scrubbing_active):
         if scrubbing_active == True:
             self.consumer.set("scrub_audio", 1)
@@ -122,6 +124,7 @@ class Player:
         """
         os.putenv('SDL_WINDOWID', str(widget.get_window().get_xid()))
         self.xid = widget.get_window().get_xid()
+        print(self.xid)
         Gdk.flush()
 
     def set_tracktor_producer(self, tractor):
@@ -166,8 +169,8 @@ class Player:
         """
         if self.consumer == None: # SDL 2 gets possibly created after the first window event causing a call here
             return 
-
-        self.consumer.purge()
+    
+        #self.consumer.purge()
         self.producer.set_speed(0)
         self.consumer.connect(self.producer)
         self.consumer.start()
