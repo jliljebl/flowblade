@@ -139,8 +139,8 @@ def _maybe_create_dot_dirs():
         os.mkdir(user_dir + appconsts.BATCH_DIR)
     if not os.path.exists(user_dir + appconsts.AUDIO_LEVELS_DIR):
         os.mkdir(user_dir + appconsts.AUDIO_LEVELS_DIR)
-    if not os.path.exists(utils.get_hidden_screenshot_dir_path()):
-        os.mkdir(utils.get_hidden_screenshot_dir_path())
+    if not os.path.exists(get_hidden_screenshot_dir_path()):
+        os.mkdir(get_hidden_screenshot_dir_path())
     if not os.path.exists(user_dir + appconsts.GMIC_DIR):
         os.mkdir(user_dir + appconsts.GMIC_DIR)
     if not os.path.exists(user_dir + appconsts.MATCH_FRAME_DIR):
