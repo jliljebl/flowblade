@@ -147,7 +147,9 @@ def _maybe_create_dot_dirs():
         os.mkdir(user_dir + appconsts.MATCH_FRAME_DIR)
     if not os.path.exists(user_dir + appconsts.TRIM_VIEW_DIR):
         os.mkdir(user_dir + appconsts.TRIM_VIEW_DIR)
-
+    if not os.path.exists(user_dir + appconsts.PROXIES_DIR):
+        os.mkdir(user_dir + appconsts.PROXIES_DIR)
+        
 def _maybe_create_xdg_dirs():
 
     # ---------------------- CONFIG
