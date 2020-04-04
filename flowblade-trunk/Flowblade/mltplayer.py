@@ -149,8 +149,8 @@ class Player:
             self.consumer.set("window_width", str(alloc.width))
             self.consumer.set("window_height", str(alloc.height))
             
-            self.consumer.stop()
-            self.consumer.start()
+            #self.consumer.stop()
+            #self.consumer.start()
         else:
             self.consumer.stop()
             self.consumer.start()
