@@ -2294,9 +2294,10 @@ def display_media_file_popup_menu(media_file, callback, event):
         media_file_menu.add(item)
     
     if hasattr(media_file, "container_data"):
-        if media_file.container_data.editable == True:
-            item = _get_menu_item(_("Edit Container Data"), callback, ("Edit Container Data", media_file, event))
-            media_file_menu.add(item)
+        if media_file.container_data != None:
+            if media_file.container_data.editable == True:
+                item = _get_menu_item(_("Edit Container Data"), callback, ("Edit Container Data", media_file, event))
+                media_file_menu.add(item)
 
     media_file_menu.popup(None, None, None, None, event.button, event.time)
 

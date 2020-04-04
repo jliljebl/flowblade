@@ -543,12 +543,6 @@ def create_proxy_menu_item_selected(media_file):
     _do_create_proxy_files(media_files)
 
 def _do_create_proxy_files(media_files, retry_from_render_folder_select=False):
-    
-    # Create proxies dir if does not exist
-    proxies_dir = _get_proxies_dir()
-    if not os.path.exists(proxies_dir):
-        os.mkdir(proxies_dir)
-
     proxy_profile = _get_proxy_profile(editorstate.PROJECT())
     proxy_w, proxy_h =  _get_proxy_dimensions(proxy_profile, editorstate.PROJECT().proxy_data.size)
     proxy_file_extension = _get_proxy_encoding().extension
@@ -615,9 +609,6 @@ def _create_proxy_files(media_files_to_render):
     runner_thread.start()
 
 # ------------------------------------------------------------------ module functions
-def _get_proxies_dir():
-    return userfolders.get_render_dir() + appconsts.PROXIES_DIR
-
 def _get_proxy_encoding():
     enc_index = editorstate.PROJECT().proxy_data.encoding
     return renderconsumer.proxy_encodings[enc_index]
