@@ -1053,7 +1053,7 @@ def _shutdown_dialog_callback(dialog, response_id, no_dialog_shutdown=False):
 
 def _app_destroy():
     # Close threads and stop mlt consumers
-    editorstate.player.shutdown() # has ticker thread and player threads running
+    editorstate.player.shutdown(True) # has ticker thread and player threads running
     audiomonitoring.close()
     # Wait threads to stop
     while((editorstate.player.ticker.exited == False) and

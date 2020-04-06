@@ -138,23 +138,23 @@ class Player:
         self.producer = self.tracktor_producer
         self.connect_and_start()
 
-    def refresh(self): # Window events need this to get picture back
-        #self.consumer.stop()
-        #self.consumer.start()
-
-        if self.consumer == None: # SDL 2 gets possibly created after the first window event causing a call here
+    def refresh(self): # Window events need this to get picture back for SDL 1 video display consumer
+        if self.consumer == None: # consumer gets possibly created after the first window event hits here
             return 
-        if editorstate.get_sdl_consumer_version() == editorstate.SDL_2:
-            alloc = gui.editor_window.tline_display.get_allocation()
-            self.consumer.set("window_width", str(alloc.width))
-            self.consumer.set("window_height", str(alloc.height))
-            
-            #self.consumer.stop()
-            #self.consumer.start()
-        else:
+        if editorstate.get_sdl_consumer_version() == editorstate.SDL_1:
             self.consumer.stop()
             self.consumer.start()
 
+    def monitor_widget_size_changed(self, monitor_widget):
+        # SDL 2 video display consumer needs to informed on widget size changes
+        if self.consumer == None: # consumer gets possibly created after the first window event hits here
+            return 
+        if editorstate.get_sdl_consumer_version() == editorstate.SDL_1:
+            return
+        alloc = monitor_widget.get_allocation()
+            
+        self.consumer.set("window_width", str(alloc.width))
+        self.consumer.set("window_height", str(alloc.height))
         
     def is_stopped(self):
         return (self.producer.get_speed() == 0)
@@ -442,8 +442,11 @@ class Player:
         self.render_callbacks.maybe_open_rendered_file_in_bin()
         Gdk.threads_leave()
 
-    def shutdown(self):
+    def shutdown(self, destroy_SDL=False):
         self.ticker.stop_ticker()
         self.producer.set_speed(0)
+
+        if editorstate.get_sdl_consumer_version() == editorstate.SDL_2 and destroy_SDL == True:
+            self.consumer.set("destroy_sdl_on_close", 1)
         self.consumer.stop()
 

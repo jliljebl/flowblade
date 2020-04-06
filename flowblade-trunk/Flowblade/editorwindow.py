@@ -718,6 +718,7 @@ class EditorWindow:
         monitor_widget = monitorwidget.MonitorWidget()
         self.tline_display = monitor_widget.get_monitor()
         self.monitor_widget = monitor_widget
+        self.tline_display.connect("size-allocate", lambda w, e:updater.monitor_size_changed(w))
 
         dnd.connect_video_monitor(self.tline_display)
 
