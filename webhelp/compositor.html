@@ -34,6 +34,7 @@ By combining multiple tracks and multiple Compositors complex composite images c
 
 <div id="toc"></div>
 
+
 <h3>Compositing Modes</h3>
 <p>
 The way that Compositors work is defined by a Compositing Mode. Users can select Compositing Mode to suit their preference or editing needs of a particular Sequence.
@@ -52,13 +53,38 @@ Users can set destination tracks freely and create node tree compositions if nee
 </p>
 <h4>Standard Auto Follow</h4>
 <p>
-This is the most simple and easiest to use Compositing Mode. Compositors follow their origin clips automatically and users can only add one compositor per clip. All Compositors have track V1 as their destination track. It is not possible to create node tree compositions.
+Compositors follow their origin clips automatically and users can only add one compositor per clip. All Compositors have track V1 as their destination track. It is not possible to create node tree compositions.
+</p>
+<h4>Standard Full Track</h4>
+<p>
+This is the most simple and easiest to use Compositing Mode. No Compositors are needed. Fade In/Outs, Wipes and transforms are created with Filters. Some compositing functionality is not available. It is not possible to create node tree compositions
 </p>
 
+<h2>Standard Full Track Compositing Mode</h2>
+<p>
+Compositing in Standard Full Track mode is similar to using layers in applications like Gimp and Photoshop. This mode works most similarly to way that most other video editors work. No Compositors are used.
+
+
+<h3>Workflow</h3>
+<ol>
+<li>Add Clips on Timeline
+<ul>
+<li>Images with alpha channel are composited in bottom to top order.</li>
+</ul>
+<li>Controlling image opacity</li>
+<ul>
+<li> Add <b>Fade In</b> or <b>Fade Out</b> Filters to create opacity transitions in the beginning or end of Clip.</li>
+<li> Add <b>Wipe</b> Filters on top clip to create wipe transitions.</li>
+</ul>
+<li>Transforming image</li>
+<ul>
+<li>Add <b>Position Scale</b>, <b>Rotation</b> or <b>Shear</b> filter.</li>
+</ul>
+</ol>
 
 <h2>Standard Auto Follow Compositing Mode</h2>
 <p>
-Compositing in Standard Auto Follow mode is similar to using layers in applications like Gimp and Photoshop. This mode works most similarly to way that most other video editors work.
+Compositing in Standard Auto Follow mode happens in bottom to top order like in Gimp and Photoshop. Compositors are used and they follow their origin clips automatically.
 </p>
 <p>
 On the Timeline a Compositor is displayed as a purple square with rounded corners.
@@ -69,19 +95,21 @@ Parameters defining the resulting image are edited in the <b>Compositors</b> tab
 <h3>Workflow</h3>
 <ol>
 <li>Creating a Compositor
-<ul>
-<li> Click <b>Right Mouse</b> on any clip on tracks from V5 to V2 and select for example <b>Add Compositor -> Dissolve</b> or <b>Add Blender -> Softlight</b> from popupmenu to create a new Compositor.</li>
-</ul>
-<li>Editing Compositor Parameters in Compositors Tab</li>
-<ul>
-<li> Click Compositor with <b>Left Mouse</b>.</li>
-<li> Click <b>Right Mouse</b> on any Compositor and select Open In Compositor Editor</li>
-<li> Edit parameters using value editors.</li>
-</ul>
-<li>Deleting Compositor</li>
-<ul>
-<li> Click <b>Left Mouse</b> on any Compositor to select it and press <b>Delete</b> key.</li>
-</ul>
+	<ul>
+	<li> Click <b>Right Mouse</b> on any clip on tracks from V5 to V2 and select for example <b>Add Compositor -> Dissolve</b> or <b>Add Blender -> Softlight</b> from popupmenu to create a new Compositor.</li>
+	</ul>
+<li>Editing Compositor Parameters in Compositors Tab
+	<ul>
+	<li> Click Compositor with <b>Left Mouse</b>.</li>
+	<li> Click <b>Right Mouse</b> on any Compositor and select Open In Compositor Editor</li>
+	<li> Edit parameters using value editors.</li>
+	</ul>
+</li>
+<li>Deleting Compositor
+	<ul>
+	<li> Click <b>Left Mouse</b> on any Compositor to select it and press <b>Delete</b> key.</li>
+	</ul>
+</li>
 </ol>
 
 <h3>EXAMPLE: All tracks need Compositors when creating compositions with more the 2 tracks</h3>
