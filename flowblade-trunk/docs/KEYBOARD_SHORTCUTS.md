@@ -56,7 +56,7 @@ Control + .			 |	Nudge Move Selection Forward 10 Frames
 ### Track Head Column
 Shortcut|Action
 ------------ | -------------
-Toggle Track Height			Mouse Double Click
+Toggle Track Height		|	Mouse Double Click
 --------------------------------
 ### Playback
 Shortcut|Action
