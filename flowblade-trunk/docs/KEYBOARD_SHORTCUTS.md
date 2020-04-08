@@ -52,12 +52,12 @@ Enter		 |			Enter Key Trim Editing Mode
 .			 |		Nudge Move Selection Forward 1 Frame
 Control + ,		 |		Nudge Move Selection Back 10 Frames
 Control + .			 |	Nudge Move Selection Forward 10 Frames
-
+--------------------------------
 ### Track Head Column
 Shortcut|Action
 ------------ | -------------
 Toggle Track Height			Mouse Double Click
-
+--------------------------------
 ### Playback
 Shortcut|Action
 ------------ | -------------    
@@ -76,13 +76,13 @@ End			|		Go To End
 Alt + I			|		To Mark In
 Alt + O			|		To Mark Out
 Alt + K		|			Clear In/Out Marks
-
+--------------------------------
 ### Keyframe and Geometry Editor
 Shortcut|Action
 ------------ | -------------
 Control + C			|	Copy Keyframe Value
 Control + V			|	Paste Keyframe Value
-
+--------------------------------
 ### Geometry Editor
 Shortcut|Action
 ------------ | -------------
@@ -97,7 +97,7 @@ Shift + Right 		|		Arrow Scale Upo
 Shift + Control + Left Arrow 	|	Scale Down More
 Shift + Control + Right Arrow 	|	Scale Up More
 Shift		|			Snap to X or Y of drag start point
-
+--------------------------------
 ### RotoMask Editor
 Shortcut|Action
 ------------ | -------------
