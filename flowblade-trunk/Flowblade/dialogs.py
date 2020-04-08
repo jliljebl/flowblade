@@ -1201,8 +1201,6 @@ def alpha_info_msg(callback, filter_name):
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("Ok"), Gtk.ResponseType.ACCEPT))
 
-
-    
     line_label = Gtk.Label(_("You are adding <b>Alpha Filter '") + filter_name + _("'</b> into a clip. Here is some info on how <b>Alpha Filters</b> work on Flowblade:"))
     line_label.set_use_markup(True)
     row1 = guiutils.get_left_justified_box([line_label])
