@@ -1201,9 +1201,16 @@ def alpha_info_msg(callback, filter_name):
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("Ok"), Gtk.ResponseType.ACCEPT))
 
+
+    
     line_label = Gtk.Label(_("You are adding <b>Alpha Filter '") + filter_name + _("'</b> into a clip. Here is some info on how <b>Alpha Filters</b> work on Flowblade:"))
     line_label.set_use_markup(True)
     row1 = guiutils.get_left_justified_box([line_label])
+
+    line_label = Gtk.Label(_("This applies to all <b>Compositing Modes</b> other then <b>Standard Full Track</b>."))
+    line_label.set_use_markup(True)
+    row11 = guiutils.get_left_justified_box([line_label])
+    guiutils.set_margins(row11, 12, 0, 0, 0)
     
     info_text = "\u2022" + _(" <b>Alpha Filters</b> work by modifying image's alpha channel.\n") + \
                 "\u2022" + _(" To see the effect of <b>Alpha Filter</b> you need composite this clip on track below by adding a <b>Compositor like 'Blend'</b> into this clip.\n") + \
@@ -1219,6 +1226,7 @@ def alpha_info_msg(callback, filter_name):
     vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(guiutils.pad_label(24, 12), False, False, 0)
     vbox.pack_start(info_box, False, False, 0)
+    vbox.pack_start(row11, False, False, 0)
     vbox.pack_start(guiutils.pad_label(24, 24), False, False, 0)
     vbox.pack_start(row2, False, False, 0)
     

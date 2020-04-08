@@ -29,6 +29,7 @@ import pickle
 import threading
 import time
 
+import appconsts
 import atomicfile
 import dialogs
 import dialogutils
@@ -384,7 +385,8 @@ def get_filter_add_action(filter_info, target_clip):
     return action
 
 def _alpha_filter_add_maybe_info(filter_info):
-    if editorpersistance.prefs.show_alpha_info_message == True:
+    if editorpersistance.prefs.show_alpha_info_message == True and \
+       editorstate. current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
         dialogs.alpha_info_msg(_alpha_info_dialog_cb, translations.get_filter_name(filter_info.name))
 
 def _alpha_info_dialog_cb(dialog, response_id, dont_show_check):
