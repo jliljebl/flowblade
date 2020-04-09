@@ -2628,7 +2628,7 @@ msgstr "Kein Clip in der Vorschau geladen"
 
 #: guicomponents.py:1996
 msgid "Last Frame in Monitor"
-msgstr "Letztes Einzelbil im Monitor anzeigen"
+msgstr "Letztes Einzelbild im Monitor anzeigen"
 
 #: guicomponents.py:2003
 msgid "First Frame on Timeline"
