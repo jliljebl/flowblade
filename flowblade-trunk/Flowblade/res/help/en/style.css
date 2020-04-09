@@ -31,6 +31,17 @@ body {
 	text-align: center;
 }
 
+.appendix-index{
+	margin-top: 10px;
+	width: 900px;
+	margin-bottom: 10px;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	text-align: left;
+	color: #666666;
+	font-size:18px;
+}
 
 .subject-cell {
 	padding-right: 20px;
@@ -83,6 +94,7 @@ body {
 }
 .appendix-title {
 	color: #666666;
+	font-size:20px;
 }
 
 .note {
