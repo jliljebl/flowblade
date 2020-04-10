@@ -1318,7 +1318,7 @@ def create_selection_compound_clip():
 
     # lets's just set something unique-ish 
     default_name = _("selection_") + _get_compound_clip_default_name_date_str()
-    dialogs.compound_clip_name_dialog(_do_create_selection_compound_clip, default_name, _("Save Selection Compound Clip"))
+    dialogs.compound_clip_name_dialog(_do_create_selection_compound_clip, default_name, _("Save Selection Container Clip"))
 
 def _do_create_selection_compound_clip(dialog, response_id, name_entry):
     if response_id != Gtk.ResponseType.ACCEPT:
@@ -1377,7 +1377,7 @@ def _xml_freeze_compound_render_done_callback(filename, media_name):
 def create_sequence_compound_clip():
     # lets's just set something unique-ish 
     default_name = _("sequence_") + _get_compound_clip_default_name_date_str() + ".xml"
-    dialogs.compound_clip_name_dialog(_do_create_sequence_compound_clip, default_name, _("Save Sequence Compound Clip"))
+    dialogs.compound_clip_name_dialog(_do_create_sequence_compound_clip, default_name, _("Save Sequence Container Clip"))
 
 def _do_create_sequence_compound_clip(dialog, response_id, name_entry):
     if response_id != Gtk.ResponseType.ACCEPT:
@@ -1698,7 +1698,7 @@ def sequence_panel_popup_requested(event):
     sequence_menu.add(guiutils.get_menu_item(_("Edit Selected Sequence"), _sequece_menu_item_selected, ("edit sequence", None)))
     sequence_menu.add(guiutils.get_menu_item(_("Delete Selected Sequence"), _sequece_menu_item_selected, ("delete sequence", None)))
     guiutils.add_separetor(sequence_menu)
-    sequence_menu.add(guiutils.get_menu_item(_("Create Compound Clip from Selected Sequence"), _sequece_menu_item_selected, ("compound clip", None)))
+    sequence_menu.add(guiutils.get_menu_item(_("Create Container Clip from Selected Sequence"), _sequece_menu_item_selected, ("compound clip", None)))
     
     sequence_menu.popup(None, None, None, None, event.button, event.time)    
 

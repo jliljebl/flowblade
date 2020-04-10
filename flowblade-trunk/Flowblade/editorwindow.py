@@ -255,7 +255,6 @@ class EditorWindow:
             ('CreateIsingClip', None, _('Ising'), None, None, lambda a:patternproducer.create_icing_clip()),
             ('CreateColorPulseClip', None, _('Color Pulse'), None, None, lambda a:patternproducer.create_color_pulse_clip()),
             ('CreateCountClip', None, _('Count'), None, None, lambda a:patternproducer.create_count_clip()),
-            ('CompoundClipsMenu', None, _('Create Compound Clip')),
             ('CreateSelectionCompound', None, _('From Selected Clips'), None, None, lambda a:projectaction.create_selection_compound_clip()),
             ('CreateSequenceCompound', None, _('From Current Sequence'), None, None, lambda a:projectaction.create_sequence_compound_clip()),
             ('CreateSequenceFreezeCompound', None, _('From Current Sequence With Freeze Frame at Playhead Position'), None, None, lambda a:projectaction.create_sequence_freeze_frame_compound_clip()),
@@ -366,12 +365,11 @@ class EditorWindow:
                         <menuitem action='CreateIsingClip'/>
                         <menuitem action='CreateBarsClip'/>
                     </menu>
-                    <menu action='CompoundClipsMenu'>
+                    <menu action='ContainerClipsMenu'>
                         <menuitem action='CreateSelectionCompound'/>
                         <menuitem action='CreateSequenceCompound'/>
                         <menuitem action='AudioSyncCompoundClip'/>
-                    </menu>
-                    <menu action='ContainerClipsMenu'>
+                        <separator/>
                         <menuitem action='CreateGMicContainerItem'/>
                         <menuitem action='CreateBlenderContainerItem'/>
                     </menu>
