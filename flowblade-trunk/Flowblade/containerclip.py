@@ -282,7 +282,8 @@ class ContainerClipMediaItem:
         self.length = None
         self.type = container_data.unrendered_type
         self.icon = None
-
+        self.icon_path = None
+        
         self.mark_in = -1
         self.mark_out = -1
 
@@ -302,11 +303,14 @@ class ContainerClipMediaItem:
 
     def create_icon(self):
         action_object = containeractions.get_action_object(self.container_data)
-        surface, length = action_object.create_icon()      
-                    
-        self.icon = surface
-        self.length = length
-        self.container_data.unrendered_length = length - 1
+        if self.icon_path == None:
 
+            surface, length, icon_path = action_object.create_icon()      
+            self.icon = surface
+            self.icon_path = icon_path
+            self.length = length
+            self.container_data.unrendered_length = length - 1
+        else:
+            self.icon = action_object.load_icon()
 
 

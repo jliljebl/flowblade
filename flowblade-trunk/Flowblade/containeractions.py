@@ -105,13 +105,12 @@ def _get_type_icon(container_type):
     elif container_type == appconsts.CONTAINER_CLIP_BLENDER:  
         return BLENDER_TYPE_ICON
 
-def _write_thumbnail_image(profile, file_path):
+def _write_thumbnail_image(profile, file_path, action_object):
     """
     Writes thumbnail image from file producer
     """
     # Get data
-    md_str = hashlib.md5(file_path.encode('utf-8')).hexdigest()
-    thumbnail_path = userfolders.get_cache_dir() + appconsts.THUMBNAILS_DIR + "/" + md_str +  ".png"
+    thumbnail_path = action_object.get_container_thumbnail_path()
 
     # Create consumer
     consumer = mlt.Consumer(profile, "avformat", 
@@ -216,6 +215,9 @@ class AbstractContainerActionObject:
         id_md_str = str(self.container_data.container_clip_uid) + str(self.container_data.container_type) + self.container_data.program + self.container_data.unrendered_media #
         return hashlib.md5(id_md_str.encode('utf-8')).hexdigest() 
 
+    def get_container_thumbnail_path(self):
+        return userfolders.get_cache_dir() + appconsts.THUMBNAILS_DIR + "/" + self.get_container_program_id() +  ".png"
+    
     def get_job_proxy(self):
         job_proxy = jobs.JobProxy(self.get_container_program_id(), self)
         job_proxy.type = jobs.CONTAINER_CLIP_RENDER
@@ -391,7 +393,11 @@ class AbstractContainerActionObject:
         return clone_clip
 
     def _create_icon_default_action(self):
-        icon_path, length, info = _write_thumbnail_image(PROJECT().profile, self.container_data.unrendered_media)
+        icon_path, length, info = _write_thumbnail_image(PROJECT().profile, self.container_data.unrendered_media, self)
+        surface = self._build_icon(icon_path)
+        return (surface, length, icon_path)
+        
+    def _build_icon(self, icon_path):
         cr, surface = _create_image_surface(icon_path)
         cr.rectangle(0, 0, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
         cr.set_source_rgba(*OVERLAY_COLOR)
@@ -400,9 +406,11 @@ class AbstractContainerActionObject:
         cr.set_source_surface(type_icon, 1, 30)
         cr.set_operator (cairo.OPERATOR_OVERLAY)
         cr.paint_with_alpha(0.5)
- 
-        return (surface, length)
-
+        return surface
+        
+    def load_icon(self):
+        return self._build_icon(self.get_container_thumbnail_path())
+    
     def edit_program(sef, clip):
         print("AbstractContainerActionObject.edit_program not impl")
 
@@ -531,8 +539,8 @@ class GMicContainerActions(AbstractContainerActionObject):
         gmicheadless.abort_render(self.get_container_program_id())
 
     def create_icon(self):
-        icon_path, length, info = _write_thumbnail_image(PROJECT().profile, self.container_data.unrendered_media)
-        cr, surface = _create_image_surface(icon_path)
+        icon_path, length, info = _write_thumbnail_image(PROJECT().profile, self.container_data.unrendered_media, self)
+        cr, surface, icon_path = _create_image_surface(icon_path)
         cr.rectangle(0, 0, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
         cr.set_source_rgba(*OVERLAY_COLOR)
         cr.fill()
@@ -541,7 +549,7 @@ class GMicContainerActions(AbstractContainerActionObject):
         cr.set_operator (cairo.OPERATOR_OVERLAY)
         cr.paint_with_alpha(0.5)
  
-        return (surface, length)
+        return (surface, length, icon_path)
         
 
 class MLTXMLContainerActions(AbstractContainerActionObject):
