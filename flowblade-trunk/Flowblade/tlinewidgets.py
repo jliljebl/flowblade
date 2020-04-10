@@ -1904,7 +1904,6 @@ class TimeLineCanvas:
                             cr.paint()
                             clip_thumbnails[clip.path] = thumb_img
                         except:
-                            print("failed")
                             pass # This fails for rendered fades and transitions
                     
                     if clip.selected:
