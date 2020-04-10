@@ -1631,6 +1631,11 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
             keyframes.append(clip_kf)
         return keyframes
 
+    def view_size_changed(self, selected_index):
+        y_fract = GEOM_EDITOR_SIZES[selected_index]
+        self.geom_kf_edit.set_view_size(y_fract)
+        self.update_editor_view_with_frame(self.clip_editor.current_clip_frame)
+        
     def geometry_edit_started(self): # callback from geom_kf_edit
         self.clip_editor.add_keyframe(self.clip_editor.current_clip_frame)
         self.geom_kf_edit.add_keyframe(self.clip_editor.current_clip_frame)
