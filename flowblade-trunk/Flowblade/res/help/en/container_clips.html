@@ -85,25 +85,53 @@ Every <b>Container Clip</b> has the following 3 components:
 <li>Make possible to contribute and shear interesting Blender Projects for e.g. so nice text effects.</li>
 </ul>
 
-<h3>MLT XML Container Clips</h3>
+<h3>Selection Container Clips</h3>
 <h5>Components</h5>
 <p>
 <ul style="list-style-type:none">
 <li><b>Unrendered Media</b> A MLT XML vdieo clip created from selection or sequence like Compound clips previously.</li>
-<li><b>Program</b> A MLT XML video clip cerated from selection or sequence like Compound clips previously. Here Program is the same as unrendered media.</li>
+<li><b>Program</b> A MLT XML video clip created from selection or sequence like Compound clips previously. Here Program is the same as unrendered media.</li>
 <li><b>Rendered Media</b> Clip Rendered from MLT XML Clip.</li>
 </ul>
 </p>
 <h5>Use Cases</h5>
 
 <ul>
-<li>Make possible to create Media items from Slections and full Sequences.</li>
+<li>Make possible to create Media items from selections and full Sequences.</li>
 <li>Give better timeline performance for complex multitrack container clips by pre-rendering them on timeline.Container Clip</li>
 </ul>
-<p>
-These are the same as previous <b>Compound Clips</b>. We dropped <b>Compound Clip</b> nomenclature and call these <b>Container Clips</b> now.
-</p>
 
+<h5> Creating Selection Container Clip from Selection</h5>
+
+<ol>
+<li> Select 2 or more adjacent clips from a single track.</li>
+<li> Select <b>Project->Create Container Clip->From Selected Clips</b></li>
+</ol>
+
+<h5> Creating Selection Container Clip from Sequence</h5>
+
+<ol>
+<li> Select <b>Project->Create Container Clip->From Current Sequence</b></li>
+</ol>
+
+<h5> Creating audio synced Selection Container Clip from two Media Items</h5>
+
+<ol>
+<li> Select 2 Media Items in Media panel.</b>
+	<ul>
+	<li> The expected case is to select <b>1 Video and 1 Audio Clip</b>.</li>
+	<li> If you select <b>2 Video Clips</b> then which is used as video depends on selection order.</li>
+	<li> Audio from clip treated as video is muted.</li>
+	</ul>
+</li>
+<li> Select <b>Project->Create Compound Clip->Audio Sync Merge Clip From 2 Media Items</b></li>
+<li> If audio sync is successful a dialog appers. Give a name for the new Media Item in the dialog.</li>
+<li> A new Media Item appears in the current Bin.</li>
+</ol>
+
+<div class="note">
+Audio syncing looks for best matemathical match between two audio waveforms, so <b>audio syncing non-matching audio will produce random results.</b>
+</div>
 
 
 

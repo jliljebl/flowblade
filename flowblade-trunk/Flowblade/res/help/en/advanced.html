@@ -64,57 +64,7 @@ You can import Media Items from another Project.
 
 
 
-<h2>2. Compound Clips </h2>
-
-<p>
-A <b>Compound Clip</b> is a single clip created by combining multiple clips and compositors in to a single media item.
-</p>
-
-<p>
-In Flowblade Compound Clips are <i>implemented by creating an MLT XML file</i> that is saved in a hidden folder. Note that it is currently not possible to unpack a Compound Clip back to its components.
-</p>
-
-<p>
-Compound Clips are useful when some complex sequence is more conveniently handled as a single unit.
-</p>
-
-<h3> Creating Compound Clip from Selection</h3>
-
-<ol>
-<li> Select 2 or more adjacent clips from a single track.</li>
-<li> Select <b>Project->Create Compound Clip->From Selected Clips</b></li>
-<li> Give a name for the new Media Item in the dialog.</li>
-<li> A new Media Item appears in the current Bin.</li>
-</ol>
-
-<h3> Creating Compound Clip from Sequence</h3>
-
-<ol>
-<li> Select <b>Project->Create Compound Clip->From Current Sequence</b></li>
-<li> Give a name for the new Media Item in the dialog.</li>
-<li> A new Media Item appears in the current Bin.</li>
-</ol>
-
-<h3> Creating audio synced Compound Clip from two Media Items</h3>
-
-<ol>
-<li> Select 2 Media Items in Media panel.</b>
-	<ul>
-	<li> The expected case is to select <b>1 Video and 1 Audio Clip</b>.</li>
-	<li> If you select <b>2 Video Clips</b> then which is used as video depends on selection order.</li>
-	<li> Audio from clip treated as video is muted.</li>
-	</ul>
-</li>
-<li> Select <b>Project->Create Compound Clip->Audio Sync Merge Clip From 2 Media Items</b></li>
-<li> If audio sync is successful a dialog  appers. Give a name for the new Media Item in the dialog.</li>
-<li> A new Media Item appears in the current Bin.</li>
-</ol>
-
-<div class="note">
-Audio synching looks for best matemathical match between two audio waveforms, so <b>audio syncing non-matching audio will produce random results.</b>
-</div>
-
-<h2>3. Timeline Audio Syncing</h2>
+<h2>2. Timeline Audio Syncing</h2>
 
 <p>
 You can make a clip to move to a position in timeline in which its audio is in sync with audio of another clip on timeline.
@@ -138,7 +88,7 @@ Audio synching looks for best matemathical match between two audio waveforms, so
 </div>
 
 
-<h2>4. Slow / Fast Motion and Reverse Clips</h2>
+<h2>3. Slow / Fast Motion and Reverse Clips</h2>
 
 <p>
 In Flowblade motion effects are achived by <b>rendering slow / fast motion  or reverse versions of video clips</b> and placing those on the timeline.
@@ -177,7 +127,7 @@ In Flowblade motion effects are achived by <b>rendering slow / fast motion  or r
 <li> Click <b>Render</b> button to create a new reverse Clip</li>
 </ol>
 
-<h2>5. Clip Parenting</h2>
+<h2>4. Clip Parenting</h2>
 
 <p>
 In Flowblade Movie Editor you can <b>set a clip's positions to follow another clip's positions</b> on request.
