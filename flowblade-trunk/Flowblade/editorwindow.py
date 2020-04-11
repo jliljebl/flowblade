@@ -679,12 +679,12 @@ class EditorWindow:
         if (editorpersistance.prefs.play_pause == True):
             if (editorpersistance.prefs.timeline_start_end is True):
             # ------------------------------ timeline_start_end_button
-                tooltips = [_("Start- Start key"), _("End- End key"),_("Prev Frame - Arrow Left"), _("Next Frame - Arrow Right"), _("Play Pause- Space"), _("Mark In - I"), _("Mark Out - O"), _("Clear Marks"), _("To Mark In"), _("To Mark Out")]
+                tooltips = [_("Start- Home key"), _("End- End key"),_("Prev Frame - Arrow Left"), _("Next Frame - Arrow Right"), _("Play Pause- Space"), _("Mark In - I"), _("Mark Out - O"), _("Clear Marks"), _("To Mark In"), _("To Mark Out")]
             else:
                 tooltips = [_("Prev Frame - Arrow Left"), _("Next Frame - Arrow Right"), _("Play Pause - Space"), _("Mark In - I"), _("Mark Out - O"), _("Clear Marks"), _("To Mark In"), _("To Mark Out")]
         else:
             if (editorpersistance.prefs.timeline_start_end is True):
-                tooltips = [_("Start- Start key"), _("End- End key"),_("Prev Frame - Arrow Left"), _("Next Frame - Arrow Right"), _("Play - Space"), _("Stop - Space"), _("Mark In - I"), _("Mark Out - O"), _("Clear Marks"), _("To Mark In"), _("To Mark Out")]
+                tooltips = [_("Start- Home key"), _("End- End key"),_("Prev Frame - Arrow Left"), _("Next Frame - Arrow Right"), _("Play - Space"), _("Stop - Space"), _("Mark In - I"), _("Mark Out - O"), _("Clear Marks"), _("To Mark In"), _("To Mark Out")]
             else:
                 tooltips = [_("Prev Frame - Arrow Left"), _("Next Frame - Arrow Right"), _("Play - Space"), _("Stop - Space"), _("Mark In - I"), _("Mark Out - O"), _("Clear Marks"), _("To Mark In"), _("To Mark Out")]
             # ------------------------------End of timeline_start_end_button
