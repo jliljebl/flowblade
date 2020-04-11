@@ -264,7 +264,7 @@ def create_audio_sync_compound_clip():
     
     # Can't sync coumpound clips
     if utils.is_mlt_xml_file(video_file.path) == True or utils.is_mlt_xml_file(audio_file.path) == True:
-        # This isn't translated because 1.14 translation window is close, translation coming for 1.16
+
         dialogutils.warning_message(_("Cannot Create Audio Sync Clip from  MLT XML Container Clips!"), 
                                     _("Audio syncing MLT XML Container Clips is not supported."),
                                     gui.editor_window.window,
@@ -273,7 +273,7 @@ def create_audio_sync_compound_clip():
 
     # Can't sync 2 audio clips
     if video_file.type == appconsts.AUDIO and audio_file.type == appconsts.AUDIO:
-        # This isn't translated because 1.14 translation window is close, translation coming for 1.16
+
         dialogutils.warning_message(_("Cannot Create Audio Sync Container Clip from 2 Audio Clips!"), 
                                     _("One of the media items needs to be a video clip."),
                                     gui.editor_window.window,

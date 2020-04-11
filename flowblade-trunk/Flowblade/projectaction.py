@@ -1376,7 +1376,7 @@ def _xml_freeze_compound_render_done_callback(filename, media_name):
 
 def create_sequence_compound_clip():
     # lets's just set something unique-ish 
-    default_name = _("sequence_") + _get_compound_clip_default_name_date_str() + ".xml"
+    default_name = _("sequence_") + _get_compound_clip_default_name_date_str()
     dialogs.compound_clip_name_dialog(_do_create_sequence_compound_clip, default_name, _("Save Sequence Container Clip"))
 
 def _do_create_sequence_compound_clip(dialog, response_id, name_entry):
@@ -1397,7 +1397,7 @@ def _do_create_sequence_compound_clip(dialog, response_id, name_entry):
 
 # This is called from popup menu and can be used to create compound clips from non-active sequences
 def create_sequence_compound_clip_from_selected():
-    default_name = _("sequence_") + _get_compound_clip_default_name_date_str() + ".xml"
+    default_name = _("sequence_") + _get_compound_clip_default_name_date_str()
     dialogs.compound_clip_name_dialog(_do_create_sequence_compound_clip_from_selected, default_name, _("Save Sequence Compound Clip"))
 
 def _do_create_sequence_compound_clip_from_selected(dialog, response_id, name_entry):
