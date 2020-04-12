@@ -31,7 +31,7 @@ Every <b>Container Clip</b> has the following 3 components:
 </p>
 <ol>
 <li><b>Unrendered Media</b> This is what is displayed on timeline if container clip media is not rendered.</li>
-<li><b>Program</b> This data is used to to render media clip on timeline, sometimes using unrendered media as input.</li>
+<li><b>Program</b> This data is used to render a media clip on timeline, sometimes using unrendered media as input.</li>
 <li><b>Rendered Media</b> This is what is displayed on timeline when Container Clip is rendered.</li>
 </ol>
 <h4>Rationale</h4>
@@ -67,6 +67,15 @@ Every <b>Container Clip</b> has the following 3 components:
 <li>Make easier to use single user defined G'Mic effect on multple clips.</li>
 </ul>
 
+<h5> Creating G'Mic Script Container Clips</h5>
+
+<ol>
+<li>Open <b>G'Mic tool</b>.</li>
+<li>Create G'Mic effect script. See section on <b>G'Mic Tool</b> in Chapter <b>Tools</b>.</li>
+<li>Press <b>Save Script</b> button in bottom left corner and save effect.</li>
+<li>Select menu item <b>Project -> Create Contaniner Clip -> From G'Mix Script</b>.</li>
+<li>Select the script you saved and the clip that it will be applied on to create Container Clip.</li>
+</ol>
 
 <h3>Blender Project Container Clips</h3>
 <h5>Components</h5>
@@ -84,6 +93,14 @@ Every <b>Container Clip</b> has the following 3 components:
 <li>Create editors for Blender projects so that users can edit their properies on Flowblade</li>
 <li>Make possible to contribute and shear interesting Blender Projects for e.g. so nice text effects.</li>
 </ul>
+
+<h5> Creating Blender Project Container Clips</h5>
+
+<ol>
+<li>Open <b>G'Mic tool</b>.</li>
+<li>Select menu item <b>Project -> Create Contaniner Clip -> From Blender Project</b> and select Bleder project file with <i>.blend</i> extension.</li>
+<li>You can edit values that Blender project is rendered with, see section <b>Edíting Container Programs</b> below.</li>
+</ol>
 
 <h3>Selection Container Clips</h3>
 <h5>Components</h5>
@@ -133,8 +150,10 @@ Every <b>Container Clip</b> has the following 3 components:
 Audio syncing looks for best matemathical match between two audio waveforms, so <b>audio syncing non-matching audio will produce random results.</b>
 </div>
 
-
-
+<h2>Edíting Container Programs</h2>
+<p>
+TBD
+</p>
 
 
 
