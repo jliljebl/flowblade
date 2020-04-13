@@ -31,7 +31,7 @@ This module handles adding fade-ins and fade-outs to compositors and filters.
 Creating and managing keyframes is mostly handled by editor GUI components which cannot easily 
 be used for adding fade-ins and fade outs, so this dedicated module is needed.
 
-NOTE: This can all (maybe) be killed now and done more sinply in keyframeeditor.py, original reasons for this existing
+NOTE: This can all (maybe) be killed now and done more simply in keyframeeditor.py, original reasons for this existing
 may not apply anymore.
 """
 
@@ -153,16 +153,6 @@ def _get_compositor_clip(compositor):
                 return clip
     
     return None
-
-def _get_default_fades_lengths(property_klass):
-    if property_klass in _dissolve_property_klasses:
-        fade_in_length = editorstate.PROJECT().get_project_property(appconsts.P_PROP_DISSOLVE_GROUP_FADE_IN)
-        fade_out_length = editorstate.PROJECT().get_project_property(appconsts.P_PROP_DISSOLVE_GROUP_FADE_OUT) 
-    else:
-        fade_in_length = editorstate.PROJECT().get_project_property(appconsts.P_PROP_ANIM_GROUP_FADE_IN)
-        fade_out_length = editorstate.PROJECT().get_project_property(appconsts.P_PROP_ANIM_GROUP_FADE_OUT)
-    
-    return (fade_in_length, fade_out_length)
 
 def _add_default_fade_in(keyframe_property, property_klass, keyframes, fade_in_length):
     if property_klass in _dissolve_property_klasses:

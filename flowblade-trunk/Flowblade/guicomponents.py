@@ -3040,6 +3040,10 @@ def get_clip_effects_editor_hamburger_menu(event, callback):
     menu.add(_get_menu_item(_("Delete Effect"), callback, "delete"))
 
     _add_separetor(menu)
+
+    menu.add(_get_menu_item(_("Set Fade Buttons Default Fade Length..."), callback, "fade_length"))
+
+    _add_separetor(menu)
     
     menu.add(_get_menu_item(_("Close Editor"), callback, "close"))
 
@@ -3083,6 +3087,10 @@ def get_compositor_editor_hamburger_menu(event, callback):
     _add_separetor(menu)
     
     menu.add(_get_menu_item(_("Delete Compositor"), callback, "delete"))
+
+    _add_separetor(menu)
+
+    menu.add(_get_menu_item(_("Set Fade Buttons Default Fade Length..."), callback, "fade_length"))
 
     _add_separetor(menu)
     

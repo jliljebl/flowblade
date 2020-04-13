@@ -32,11 +32,13 @@ import cairo
 from gi.repository import Gtk, GObject
 from gi.repository import Pango, PangoCairo
 
+import appconsts
 import cairoarea
 import compositorfades
 import editorpersistance
 from editorstate import PLAYER
 from editorstate import current_sequence
+from editorstate import PROJECT
 import gui
 import guicomponents
 import guiutils
@@ -93,7 +95,6 @@ DISCONNECTED_SIGNAL_HANDLER = -9999999
 
 # Callbacks to compositeeditor.py, monkeypatched at startup
 _get_current_edited_compositor = None
-#add_fade_out_func = None
 
 actions_menu = Gtk.Menu()
 oor_before_menu = Gtk.Menu()
@@ -1121,14 +1122,16 @@ class KeyFrameEditorClipFade(KeyFrameEditor):
 
     def add_fade_in(self):
         compositor = _get_current_edited_compositor()
-        keyframes = compositorfades.add_fade_in(compositor, 10) # updates editable_property.value.
+        fade_default_length = PROJECT().get_project_property(appconsts.P_PROP_DEFAULT_FADE_LENGTH)
+        keyframes = compositorfades.add_fade_in(compositor, fade_default_length) # updates editable_property.value.
         if keyframes == None:
             return # update failed, clip probably too short
         self._update_all_for_kf_vec(keyframes)
                 
     def add_fade_out(self):
         compositor = _get_current_edited_compositor()
-        keyframes = compositorfades.add_fade_out(compositor, 10) # updates editable_property.value.
+        fade_default_length = PROJECT().get_project_property(appconsts.P_PROP_DEFAULT_FADE_LENGTH)
+        keyframes = compositorfades.add_fade_out(compositor, fade_default_length) # updates editable_property.value.
         if keyframes == None:
             return # update failed, clip probably too short
         self._update_all_for_kf_vec(keyframes)
@@ -1148,14 +1151,16 @@ class KeyFrameEditorClipFadeFilter(KeyFrameEditor):
 
     def add_fade_in(self):
         # The code to do fades was written originally for compositors so we are using module compositorfades with some added code for filters.
-        keyframes = compositorfades.add_filter_fade_in(self.editable_property.clip, self.editable_property, self.clip_editor.keyframes, 10)
+        fade_default_length = PROJECT().get_project_property(appconsts.P_PROP_DEFAULT_FADE_LENGTH)
+        keyframes = compositorfades.add_filter_fade_in(self.editable_property.clip, self.editable_property, self.clip_editor.keyframes, fade_default_length)
         if keyframes == None:
             return # update failed, clip probably too short
         self._update_all_for_kf_vec(keyframes)
         
     def add_fade_out(self):
         # The code to do fades was written originally for compositors so we are using module compositorfades with some added code for filters.
-        keyframes = compositorfades.add_filter_fade_out(self.editable_property.clip, self.editable_property, self.clip_editor.keyframes, 10)
+        fade_default_length = PROJECT().get_project_property(appconsts.P_PROP_DEFAULT_FADE_LENGTH)
+        keyframes = compositorfades.add_filter_fade_out(self.editable_property.clip, self.editable_property, self.clip_editor.keyframes, fade_default_length)
         if keyframes == None:
             return # update failed, clip probably too short
         self._update_all_for_kf_vec(keyframes)
@@ -1298,14 +1303,16 @@ class GeometryEditor(AbstractKeyFrameEditor):
         
     def add_fade_in(self):
         compositor = _get_current_edited_compositor()
-        keyframes = compositorfades.add_fade_in(compositor, 10) # updates editable_property.value. Remove fade length hardcoding in 2.4
+        fade_default_length = PROJECT().get_project_property(appconsts.P_PROP_DEFAULT_FADE_LENGTH)
+        keyframes = compositorfades.add_fade_in(compositor, fade_default_length) # updates editable_property.value. Remove fade length hardcoding in 2.4
         if keyframes == None:
             return # update failed, clip probably too short
         self._update_all_for_kf_vec(keyframes)
                 
     def add_fade_out(self):
         compositor = _get_current_edited_compositor()
-        keyframes = compositorfades.add_fade_out(compositor, 10) # updates editable_property.value. Remove fade length hardcoding in 2.4
+        fade_default_length = PROJECT().get_project_property(appconsts.P_PROP_DEFAULT_FADE_LENGTH)
+        keyframes = compositorfades.add_fade_out(compositor, fade_default_length)
         if keyframes == None:
             return # update failed, clip probably too short
         self._update_all_for_kf_vec(keyframes)
@@ -1479,14 +1486,16 @@ class RotatingGeometryEditor(GeometryEditor):
 
     def add_fade_in(self):
         compositor = _get_current_edited_compositor()
-        keyframes = compositorfades.add_fade_in(compositor, 10) # updates editable_property.value. Remove fade length hardcoding in 2.4
+        fade_default_length = PROJECT().get_project_property(appconsts.P_PROP_DEFAULT_FADE_LENGTH)
+        keyframes = compositorfades.add_fade_in(compositor, fade_default_length) # updates editable_property.value. Remove fade length hardcoding in 2.4
         if keyframes == None:
             return # update failed, clip probably too short
         self._update_all_for_kf_vec(keyframes)
                 
     def add_fade_out(self):
         compositor = _get_current_edited_compositor()
-        keyframes = compositorfades.add_fade_out(compositor, 10) # updates editable_property.value. Remove fade length hardcoding in 2.4
+        fade_default_length = PROJECT().get_project_property(appconsts.P_PROP_DEFAULT_FADE_LENGTH)
+        keyframes = compositorfades.add_fade_out(compositor, fade_default_length) # updates editable_property.value. Remove fade length hardcoding in 2.4
         if keyframes == None:
             return # update failed, clip probably too short
         self._update_all_for_kf_vec(keyframes)

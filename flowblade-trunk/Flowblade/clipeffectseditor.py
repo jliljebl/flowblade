@@ -791,6 +791,8 @@ def _clip_hamburger_item_activated(widget, msg):
         _reset_filter_values()
     elif msg == "delete":
         _delete_effect()
+    elif msg == "fade_length":
+        dialogs.set_fade_length_default_dialog(_set_fade_length_dialog_callback, PROJECT().get_project_property(appconsts.P_PROP_DEFAULT_FADE_LENGTH))
     elif msg == "close":
         clear_clip()
         
@@ -837,8 +839,13 @@ def _reset_filter_values():
 def _delete_effect():
     delete_effect_pressed()
 
-
-
+def _set_fade_length_dialog_callback(dialog, response_id, spin):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        default_length = int(spin.get_value())
+        PROJECT().set_project_property(appconsts.P_PROP_DEFAULT_FADE_LENGTH, default_length)
+        
+    dialog.destroy()
+    
 class PropertyChangePollingThread(threading.Thread):
     
     def __init__(self):

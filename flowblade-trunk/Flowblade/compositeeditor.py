@@ -39,6 +39,7 @@ import guiutils
 import edit
 import editorstate
 from editorstate import current_sequence
+from editorstate import PROJECT
 import editorpersistance
 import keyframeeditor
 import mlttransitions
@@ -344,7 +345,9 @@ def _compositor_hamburger_item_activated(widget, msg):
         _delete_compositor_pressed()
     elif msg == "close":
         clear_compositor()
-        
+    elif msg == "fade_length":
+        dialogs.set_fade_length_default_dialog(_set_fade_length_dialog_callback, PROJECT().get_project_property(appconsts.P_PROP_DEFAULT_FADE_LENGTH))
+         
 def _save_compositor_values_dialog_callback(dialog, response_id):
     if response_id == Gtk.ResponseType.ACCEPT:
         save_path = dialog.get_filenames()[0]
@@ -370,6 +373,12 @@ def _load_compositor_values_dialog_callback(dialog, response_id):
 
     dialog.destroy()
 
+def _set_fade_length_dialog_callback(dialog, response_id, spin):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        default_length = int(spin.get_value())
+        PROJECT().set_project_property(appconsts.P_PROP_DEFAULT_FADE_LENGTH, default_length)
+        
+    dialog.destroy()
 
 class PropertyChangePollingThread(threading.Thread):
     

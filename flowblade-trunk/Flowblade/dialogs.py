@@ -1838,4 +1838,28 @@ def confirm_compositing_mode_change(callback, new_compositing_mode):
     dialog.connect('response', callback, new_compositing_mode)
     dialog.show_all()
 
+def set_fade_length_default_dialog(callback, current_value):
+    dialog = Gtk.Dialog(_("Fades Default Lengths"),  gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                        _("Set"), Gtk.ResponseType.ACCEPT))
+
+    length_spin = Gtk.SpinButton.new_with_range(3, 200, 1)
+    length_spin.set_value(current_value)
+    
+    hbox = Gtk.HBox(False, 2)
+    hbox.pack_start(Gtk.Label(_("Fade Buttons Fades Default Length:")), False, False, 0)
+    hbox.pack_start(length_spin, False, False, 0)
+
+    vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(hbox, False, False, 0)
+    vbox.pack_start(guiutils.get_pad_label(12, 2), False, False, 0)
+
+    alignment = dialogutils.get_alignment2(vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, length_spin)
+    dialog.show_all()
         
