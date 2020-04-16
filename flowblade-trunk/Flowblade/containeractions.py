@@ -824,6 +824,7 @@ def create_unrendered_clip(length, image_file, data, callback, window_text):
 
 
 # Creates a set length video clip from image to act as container clip unrendered media.
+# NOTE: Currently harcoded to to work on just Blender container clips, expand usage with parameter as needed.
 class UnrenderedCreationThread(threading.Thread):
     
     def __init__(self, length, image_file, data, callback, window_text):
@@ -859,10 +860,10 @@ class UnrenderedCreationThread(threading.Thread):
 
         Gdk.threads_enter()
         
-        title = _("Rendering Placeholder Media")
+        info_text = _("<b>Rendering Placeholder Media For:</b> ")  + self.data.get_program_name() + ".blend"
 
         progress_bar = Gtk.ProgressBar()
-        dialog = rendergui.clip_render_progress_dialog(None, title, self.window_text, progress_bar, gui.editor_window.window, True)
+        dialog = rendergui.clip_render_progress_dialog(None, self.window_text, info_text, progress_bar, gui.editor_window.window, True)
 
         motion_progress_update = renderconsumer.ProgressWindowThread(dialog, progress_bar, clip_renderer, self.progress_thread_complete)
         motion_progress_update.start()

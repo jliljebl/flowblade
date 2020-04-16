@@ -238,7 +238,6 @@ def _blender_clip_create_dialog_callback(dialog, response_id, data):
         project_edit_info_path = userfolders.get_cache_dir() + "blender_container_projectinfo.json"
         info_file = open(project_edit_info_path, "r")
         project_edit_info = json.load(info_file)
-        print(project_edit_info)
         
         length = int(project_edit_info["frame_end"]) - int(project_edit_info["frame_start"])
         container_clip_data.data_slots["project_edit_info"] = project_edit_info
@@ -247,7 +246,7 @@ def _blender_clip_create_dialog_callback(dialog, response_id, data):
 
         blender_unrendered_media_image = respaths.IMAGE_PATH + "unrendered_blender.png"
 
-        window_text = _("<b>Creating Container for Blender Project:</b> ") + container_clip_data.get_program_name() + ".blend"
+        window_text = _("Creating Container for Blender Project")
  
         containeractions.create_unrendered_clip(length, blender_unrendered_media_image, container_clip_data, _blender_unredered_media_creation_complete, window_text)
 
