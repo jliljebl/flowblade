@@ -47,11 +47,40 @@ MAX_VAL = pow(2, 63)
 SIMPLE_EDITOR_LEFT_WIDTH = 150
 
 
-def show_blender_container_clip_program_editor(callback, blender_objects):
+def show_blender_container_clip_program_editor(callback, program_info_json):
     # Create panels for objects
-    panels = []
     editors = []
-    for obj in blender_objects:
+    blender_objects = program_info_json["objects"]
+    materials = program_info_json["materials"]
+    objs_panel = _get_panel_and_create_editors(blender_objects, _("Objects"), editors)
+    materials_panel = _get_panel_and_create_editors(materials, _("Materials"), editors)
+    
+    pane = Gtk.VBox(False, 2)
+    if objs_panel != None:
+        pane.pack_start(objs_panel, False, False, 0)
+    if materials_panel != None:
+        pane.pack_start(materials_panel, False, False, 0)
+    
+    # Create and show dialog
+    dialog = Gtk.Dialog(_("Blender Project Edit"), gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                         _("Save Changes"), Gtk.ResponseType.ACCEPT))
+
+
+
+    alignment = dialogutils.get_default_alignment(pane)
+    dialogutils.set_outer_margins(dialog.vbox)
+    dialog.vbox.pack_start(alignment, True, True, 0)
+
+    dialog.set_default_response(Gtk.ResponseType.REJECT)
+    dialog.set_resizable(False)
+    dialog.connect('response', callback, editors)
+    dialog.show_all()
+
+def _get_panel_and_create_editors(objects, pane_title, editors):
+    panels = []
+    for obj in objects:
         # object is [name, type, editors_list] see blenderprojectinit.py
         editors_data_list = obj[2]
         editors_panel = Gtk.VBox(True, 2)
@@ -65,28 +94,22 @@ def show_blender_container_clip_program_editor(callback, blender_objects):
             editors_panel.pack_start(editor, False, False, 0)
 
         if len(editors_data_list) > 0:
-            panel = guiutils.get_named_frame(obj[0] + " - " + obj[1], editors_panel)
+            if len(obj[1]) > 0:
+                panel_text = obj[0] + " - " + obj[1]
+            else:
+                panel_text = obj[0] 
+            panel = guiutils.get_named_frame(panel_text, editors_panel)
             panels.append(panel)
-        
-    # Create and show dialog
-    dialog = Gtk.Dialog(_("Blender Project Edit"), gui.editor_window.window,
-                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel"), Gtk.ResponseType.REJECT,
-                         _("Save Changes"), Gtk.ResponseType.ACCEPT))
-
+    
     pane = Gtk.VBox(False, 2)
     for panel in panels:
         pane.pack_start(panel, False, False, 0)
-
-    alignment = dialogutils.get_default_alignment(pane)
-    dialogutils.set_outer_margins(dialog.vbox)
-    dialog.vbox.pack_start(alignment, True, True, 0)
-
-    dialog.set_default_response(Gtk.ResponseType.REJECT)
-    dialog.set_resizable(False)
-    dialog.connect('response', callback, editors)
-    dialog.show_all()
-
+    
+    if len(panels) == 0:
+        return None
+        
+    return guiutils.get_named_frame(pane_title, pane)
+     
 def get_simple_editor_selector(active_index, callback):
 
     editor_select = Gtk.ComboBoxText()
@@ -203,7 +226,6 @@ class ColorEditor(AbstractSimpleEditor):
         four_float_tuple = tuple(map(float, value.split(', '))) 
 
         rgba = Gdk.RGBA(*four_float_tuple)
-        print(rgba.to_string())
 
         self.colorbutton = Gtk.ColorButton.new_with_rgba(rgba)
         

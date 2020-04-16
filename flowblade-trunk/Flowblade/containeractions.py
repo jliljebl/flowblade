@@ -768,7 +768,7 @@ class BlenderContainerActions(AbstractContainerActionObject):
         return self._create_icon_default_action()
 
     def edit_program(self, clip):
-        simpleeditors.show_blender_container_clip_program_editor(self.project_edit_done, self.blender_objects())
+        simpleeditors.show_blender_container_clip_program_editor(self.project_edit_done, self.container_data.data_slots["project_edit_info"])
         
     def project_edit_done(self, dialog, response_id, editors):
         if response_id == Gtk.ResponseType.ACCEPT:

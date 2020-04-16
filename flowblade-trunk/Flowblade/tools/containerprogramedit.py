@@ -50,7 +50,7 @@ def _shutdown_save():
 
 def _shutdown_cancel():
     # Roll back changes.
-    _editor_manager_window.container_data.data_slots["project_edit_info"] =  _editor_manager_window.original_edit_data
+    _editor_manager_window.container_data.data_slots["project_edit_info"] = _editor_manager_window.original_edit_data
     
     _editor_manager_window.destroy()
     
