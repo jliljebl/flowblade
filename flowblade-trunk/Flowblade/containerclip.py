@@ -78,10 +78,11 @@ class ContainerClipData:
             name, ext = os.path.splitext(file_name)
             return name
         
+        """ Feature dropped from 2.6, maybe put back later. Now we same icon for rendered and unredered.
         def get_rendered_thumbnail(self):
             action_object = containeractions.get_action_object(self)
             return action_object.get_rendered_thumbnail()
-
+        """
         def generate_clip_id(self):
             self.container_clip_uid = os.urandom(16)
 

@@ -1893,11 +1893,12 @@ class TimeLineCanvas:
                                 media_file = PROJECT().get_media_file_for_path(clip.path)
                                 thumb_img = media_file.icon
                             else:
-                                if clip.container_data.rendered_media != None:
-                                    thumb_img = clip.container_data.get_rendered_thumbnail()
-                                else:
-                                    media_file = PROJECT().get_media_file_for_path(clip.path)
+                                media_file = PROJECT().get_media_file_for_path(clip.path)
+                                if media_file != None:
                                     thumb_img = media_file.icon
+                                else:
+                                    pass # TODO: Now what
+
                             cr.rectangle(scale_in + 4, y + 3.5, scale_length - 8, track_height - 6)
                             cr.clip()
                             cr.set_source_surface(thumb_img, scale_in, y - 20)
