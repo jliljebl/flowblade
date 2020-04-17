@@ -39,22 +39,12 @@ import threading
 import time
 
 import appconsts
-import atomicfile
 import ccrutils
-import editorstate
-import editorpersistance
-import mltfilters
-import mltenv
 import mltheadlessutils
 import mltprofiles
-import mlttransitions
 import processutils
 import renderconsumer
-import respaths
 import toolsencoding
-import translations
-import userfolders
-import utils
 
 
 _render_thread = None
@@ -86,52 +76,7 @@ def main(root_path, session_id, xml_file_path, range_in, range_out, profile_desc
     ccrutils.prints_to_log_file("/home/janne/xmllog")
     
     render_data = mltheadlessutils.mlt_env_init(root_path, session_id)
- 
-    """
-    os.nice(10) # make user configurable
 
-    try:
-        editorstate.mlt_version = mlt.LIBMLT_VERSION
-    except:
-        editorstate.mlt_version = "0.0.99" # magic string for "not found"
-
-    # Set paths.
-    respaths.set_paths(root_path)
-
-    userfolders.init()
-    editorpersistance.load()
-
-    # Init translations module with translations data
-    translations.init_languages()
-    translations.load_filters_translations()
-    mlttransitions.init_module()
-
-    repo = mlt.Factory().init()
-    processutils.prepare_mlt_repo(repo)
-    
-    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
-    locale.setlocale(locale.LC_NUMERIC, 'C')
-
-    # Check for codecs and formats on the system
-    mltenv.check_available_features(repo)
-    renderconsumer.load_render_profiles()
-
-    # Load filter and compositor descriptions from xml files.
-    mltfilters.load_filters_xml(mltenv.services)
-    mlttransitions.load_compositors_xml(mltenv.transitions)
-
-    # Create list of available mlt profiles
-    mltprofiles.load_profile_list()
-    
-    ccrutils.init_session_folders(session_id)
-    
-    ccrutils.load_render_data()
-    render_data = ccrutils.get_render_data()
-    
-    # This needs to have render data loaded to know if we are using external folders.
-    ccrutils.maybe_init_external_session_folders()
-    """
-    
     global _render_thread
     _render_thread = MLTXMLHeadlessRunnerThread(render_data, xml_file_path, range_in, range_out, profile_desc)
     _render_thread.start()
