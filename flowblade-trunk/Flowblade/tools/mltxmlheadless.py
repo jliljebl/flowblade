@@ -45,6 +45,7 @@ import editorstate
 import editorpersistance
 import mltfilters
 import mltenv
+import mltheadlessutils
 import mltprofiles
 import mlttransitions
 import processutils
@@ -82,7 +83,11 @@ def abort_render(session_id):
 
 # --------------------------------------------------- render thread launch
 def main(root_path, session_id, xml_file_path, range_in, range_out, profile_desc):
+    ccrutils.prints_to_log_file("/home/janne/xmllog")
     
+    render_data = mltheadlessutils.mlt_env_init(root_path, session_id)
+ 
+    """
     os.nice(10) # make user configurable
 
     try:
@@ -125,6 +130,7 @@ def main(root_path, session_id, xml_file_path, range_in, range_out, profile_desc
     
     # This needs to have render data loaded to know if we are using external folders.
     ccrutils.maybe_init_external_session_folders()
+    """
     
     global _render_thread
     _render_thread = MLTXMLHeadlessRunnerThread(render_data, xml_file_path, range_in, range_out, profile_desc)
