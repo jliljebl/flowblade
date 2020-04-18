@@ -1018,7 +1018,7 @@ def _shutdown_dialog_callback(dialog, response_id, no_dialog_shutdown=False):
 
     clipeffectseditor.shutdown_polling()
     compositeeditor.shutdown_polling()
-    containeractions.shutdown_polling()
+    jobs.shutdown_polling()
     
     # Save window dimensions on exit
     alloc = gui.editor_window.window.get_allocation()

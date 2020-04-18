@@ -19,8 +19,8 @@
 """
 
 """
-Module provides utility methods for moduless creating headless render procesesses
-for container clips rendering.
+Module provides utility methods for moduless creating headless render procesesses.
+Used mostly for container clips rendering, hence ContainerClipsRenderingUTILS.
 """
 import os
 import pickle
@@ -129,6 +129,9 @@ def init_session_folders(session_id):
         os.mkdir(_rendered_frames_folder_internal)
 
 def maybe_init_external_session_folders():
+    if _render_data == None:
+        return
+
     if _render_data.save_internally == False:
         if not os.path.exists(clip_frames_folder()):
             os.mkdir(clip_frames_folder())
@@ -168,8 +171,11 @@ def write_completed_message():
             
 def load_render_data():
     global _render_data
-    render_data_path = _session_folder + "/" + RENDER_DATA_FILE
-    _render_data = utils.unpickle(render_data_path)  # toolsencoding.ToolsRenderData object
+    try:
+        render_data_path = _session_folder + "/" + RENDER_DATA_FILE
+        _render_data = utils.unpickle(render_data_path)  # toolsencoding.ToolsRenderData object
+    except:
+        _render_data = None
 
 def get_render_data():
     return _render_data

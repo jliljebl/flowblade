@@ -257,10 +257,8 @@ class GMicHeadlessRunnerThread(threading.Thread):
             
             # Render producer
             frame_file = rendered_frames_folder + "/" + frame_name + "_0000.png"
-            if editorstate.mlt_version_is_equal_or_greater("0.8.5"):
-                resource_name_str = utils.get_img_seq_resource_name(frame_file, True)
-            else:
-                resource_name_str = utils.get_img_seq_resource_name(frame_file, False)
+            resource_name_str = utils.get_img_seq_resource_name(frame_file, True)
+
             resource_path = rendered_frames_folder + "/" + resource_name_str
             producer = mlt.Producer(profile, str(resource_path))
 

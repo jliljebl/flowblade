@@ -25,6 +25,7 @@ from gi.repository import Pango
 
 import copy
 import time
+import threading
 
 import editorpersistance
 import gui
@@ -42,6 +43,7 @@ CONTAINER_CLIP_RENDER_GMIC = 1
 CONTAINER_CLIP_RENDER_MLT_XML = 2
 CONTAINER_CLIP_RENDER_BLENDER = 3
 
+_status_polling_thread = None
 
 _hamburger_menu = Gtk.Menu()
 
@@ -179,6 +181,48 @@ def get_jobs_panel():
     panel.set_size_request(400, 10)
 
     return panel
+
+
+# ----------------------------------------------------------------- polling
+class ContainerStatusPollingThread(threading.Thread):
+    
+    def __init__(self):
+        self.poll_objects = []
+        self.abort = False
+
+        threading.Thread.__init__(self)
+
+    def run(self):
+        
+        while self.abort == False:
+            for poll_obj in self.poll_objects:
+                poll_obj.update_render_status() # make sure methids enter/exit Gtk threads
+                    
+                
+            time.sleep(1.0)
+
+    def shutdown(self):
+        for poll_obj in self.poll_objects:
+            poll_obj.abort_render()
+        
+        self.abort = True
+
+def add_as_status_polling_object(polling_object):
+    global _status_polling_thread
+    if _status_polling_thread == None:
+        _status_polling_thread = ContainerStatusPollingThread()
+        _status_polling_thread.start()
+               
+    _status_polling_thread.poll_objects.append(polling_object)
+
+def remove_as_status_polling_object(polling_object):
+    _status_polling_thread.poll_objects.remove(polling_object)
+
+def shutdown_polling():
+    if _status_polling_thread == None:
+        return
+    
+    _status_polling_thread.shutdown()
 
 
 # ------------------------------------------------------------- module functions

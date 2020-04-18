@@ -18,6 +18,11 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
+"""
+Module provides utility methods for moduless creating headless render procesesses
+in initialized Flowblade/MLT enviroment.
+"""
+
 import locale
 import mlt
 import os

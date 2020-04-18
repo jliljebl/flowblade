@@ -31,6 +31,7 @@ from gi.repository import Gtk
 import mlt
 import hashlib
 import os
+import subprocess
 import time
 import threading
 
@@ -49,6 +50,7 @@ import mltprofiles
 import mltrefhold
 import renderconsumer
 import rendergui
+import respaths
 import sequence
 import userfolders
 import utils
@@ -407,6 +409,7 @@ def render_frame_buffer_clip(media_file, default_range_render=False):
 
 def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, media_file):
     if response_id == Gtk.ResponseType.ACCEPT:
+        """
         # speed, filename folder
         speed = float(int(fb_widgets.adjustment.get_value())) / 100.0
         file_name = fb_widgets.file_name.get_text()
@@ -420,7 +423,7 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
             dialogutils.warning_message(primary_txt, secondary_txt, dialog)
             return
 
-         # Profile
+        # Profile
         profile_index = fb_widgets.out_profile_combo.get_active()
         if profile_index == 0:
             # project_profile is first selection in combo box
@@ -489,6 +492,78 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
         motion_progress_update = renderconsumer.ProgressWindowThread(dialog, progress_bar, motion_renderer, _FB_render_stop)
         motion_progress_update.start()
         
+        
+        """
+        # Get data needed for render.
+        speed = float(int(fb_widgets.adjustment.get_value())) / 100.0
+        
+        file_name = fb_widgets.file_name.get_text()
+        filenames = fb_widgets.out_folder.get_filenames()
+        folder = filenames[0]
+        write_file = folder + "/"+ file_name + fb_widgets.extension_label.get_text()
+
+        if os.path.exists(write_file):
+            primary_txt = _("A File with given path exists!")
+            secondary_txt = _("It is not allowed to render Motion Files with same paths as existing files.\nSelect another name for file.") 
+            dialogutils.warning_message(primary_txt, secondary_txt, dialog)
+            return
+            
+        profile_index = fb_widgets.out_profile_combo.get_active()
+        if profile_index == 0:
+            # project_profile is first selection in combo box
+            profile = PROJECT().profile
+        else:
+            profile = mltprofiles.get_profile_for_index(profile_index - 1)
+        profile_desc = profile.description().replace(" ", "_")
+    
+        encoding_option_index = fb_widgets.encodings_cb.get_active()
+        quality_option_index = fb_widgets.quality_cb.get_active()
+
+        range_selection = fb_widgets.render_range.get_active()
+
+        dialog.destroy()
+        
+        source_path = media_file.path
+        if media_file.is_proxy_file == True:
+            source_path = media_file.second_file_path
+
+        # start and end frames
+        motion_producer = mlt.Producer(profile, None, str("timewarp:" + str(speed) + ":" + str(source_path)))
+        start_frame = 0
+        end_frame = motion_producer.get_length() - 1
+        render_full_range = True
+        if range_selection == 1:
+            start_frame = int(float(media_file.mark_in) * (1.0 / speed))
+            end_frame = int(float(media_file.mark_out + 1) * (1.0 / speed)) + int(1.0 / speed)
+            
+            if end_frame > motion_producer.get_length() - 1:
+                end_frame = motion_producer.get_length() - 1
+            
+            render_full_range = False # consumer wont stop automatically and needs to stopped explicitly
+        
+        session_id = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
+        
+        args = ("session_id:" + str(session_id), 
+                "speed:" + str(speed), 
+                "write_file:" + str(write_file),
+                "profile_desc:" + str(profile_desc),
+                "encoding_option_index:" + str(encoding_option_index),
+                "quality_option_index:"+ str(quality_option_index),
+                "source_path:" + str(source_path),
+                "render_full_range:" + str(render_full_range),
+                "start_frame:" + str(start_frame),
+                "end_frame:" + str(end_frame))
+
+        # Run with nice to lower priority if requested (currently hard coded to lower)
+        nice_command = "nice -n " + str(10) + " " + respaths.LAUNCH_DIR + "flowblademotionheadless"
+        for arg in args:
+            nice_command += " "
+            nice_command += arg
+
+        subprocess.Popen([nice_command], shell=True)
+        
+        # speed, write_file, profile_index, encoding_option_index, quality_option_index, source_path, render_full_range, start_frame, end_frame
+        
     else:
         dialog.destroy()
 
@@ -522,7 +597,7 @@ def _render_reverse_clip_dialog_callback(dialog, response_id, fb_widgets, media_
             dialogutils.warning_message(primary_txt, secondary_txt, dialog)
             return
 
-         # Profile
+        # Profile
         profile_index = fb_widgets.out_profile_combo.get_active()
         if profile_index == 0:
             # project_profile is first selection in combo box

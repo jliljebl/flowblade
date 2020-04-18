@@ -68,8 +68,6 @@ BLENDER_TYPE_ICON = None
 
 NEWLINE = '\n'
 
-_status_polling_thread = None
-
 # ----------------------------------------------------- interface
 def get_action_object(container_data):
     if container_data.container_type == appconsts.CONTAINER_CLIP_GMIC:
@@ -78,13 +76,6 @@ def get_action_object(container_data):
          return MLTXMLContainerActions(container_data)
     elif container_data.container_type == appconsts.CONTAINER_CLIP_BLENDER:
          return BlenderContainerActions(container_data)
-
-def shutdown_polling():
-    if _status_polling_thread == None:
-        return
-    
-    _status_polling_thread.shutdown()
-                
 
 # ------------------------------------------------------------ thumbnail creation helpers
 def _get_type_icon(container_type):
@@ -170,7 +161,6 @@ class AbstractContainerActionObject:
         self.render_type = FULL_RENDER
         self.clip = clip
         self.launch_render_data = (clip, 0, self.container_data.unrendered_length, 0)
-        #self._launch_render(clip, 0, self.container_data.unrendered_length, 0)
 
         job_proxy = self.get_launch_job_proxy()
         jobs.add_job(job_proxy)
@@ -246,15 +236,10 @@ class AbstractContainerActionObject:
         return userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_DIR
 
     def add_as_status_polling_object(self):
-        global _status_polling_thread
-        if _status_polling_thread == None:
-            _status_polling_thread = ContainerStatusPollingThread()
-            _status_polling_thread.start()
-                   
-        _status_polling_thread.poll_objects.append(self)
-
+        jobs.add_as_status_polling_object(self)
+        
     def remove_as_status_polling_object(self):
-        _status_polling_thread.poll_objects.remove(self)
+        jobs.remove_as_status_polling_object(self)
 
     def get_lowest_numbered_file(self):
         
@@ -794,30 +779,6 @@ class BlenderContainerActions(AbstractContainerActionObject):
         program_info_json = self.container_data.data_slots["project_edit_info"]
         return program_info_json["objects"]
 
-# ----------------------------------------------------------------- polling
-class ContainerStatusPollingThread(threading.Thread):
-    
-    def __init__(self):
-        self.poll_objects = []
-        self.abort = False
-
-        threading.Thread.__init__(self)
-
-    def run(self):
-        
-        while self.abort == False:
-            for poll_obj in self.poll_objects:
-                poll_obj.update_render_status() # make sure methids enter/exit Gtk threads
-                    
-                
-            time.sleep(1.0)
-
-    def shutdown(self):
-        for poll_obj in self.poll_objects:
-            poll_obj.abort_render()
-        
-        self.abort = True
-        
 
 # -------------------------------------------------------------- creating unrendered clip
 def create_unrendered_clip(length, image_file, data, callback, window_text):

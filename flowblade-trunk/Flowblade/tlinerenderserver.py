@@ -235,7 +235,7 @@ class TLineRenderRunnerThread(threading.Thread):
  
         width, height = _get_render_dimensions(self.profile, editorpersistance.prefs.tline_render_size)
         encoding = _get_render_encoding()
-        self.render_profile = _get_render_profile(self.profile,  editorpersistance.prefs.tline_render_size, self.render_folder)
+        self.render_profile = _get_render_profile(self.profile, editorpersistance.prefs.tline_render_size, self.render_folder)
         
         self.current_render_file_path = None
         
