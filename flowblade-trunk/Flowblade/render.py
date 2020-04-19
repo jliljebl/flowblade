@@ -46,6 +46,7 @@ import editorpersistance
 import gui
 import guicomponents
 import guiutils
+import jobs
 import mltprofiles
 import mltrefhold
 import renderconsumer
@@ -554,6 +555,10 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
                 "start_frame:" + str(start_frame),
                 "end_frame:" + str(end_frame))
 
+        job_queue_object = jobs.MotionRenderQueueObject(session_id, write_file, args)
+        job_queue_object.add_to_queue()
+
+        """
         # Run with nice to lower priority if requested (currently hard coded to lower)
         nice_command = "nice -n " + str(10) + " " + respaths.LAUNCH_DIR + "flowblademotionheadless"
         for arg in args:
@@ -563,7 +568,7 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
         subprocess.Popen([nice_command], shell=True)
         
         # speed, write_file, profile_index, encoding_option_index, quality_option_index, source_path, render_full_range, start_frame, end_frame
-        
+        """
     else:
         dialog.destroy()
 

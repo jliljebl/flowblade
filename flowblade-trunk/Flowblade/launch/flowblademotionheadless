@@ -19,7 +19,6 @@ import processutils
 processutils.update_sys_path(modules_path)
 
 try:
-    print("hhjhjhjhjhj")
     import motionheadless
     import editorstate # Used to decide which translations from file system are used
     root_dir = modules_path.split("/")[1]
@@ -42,7 +41,6 @@ try:
     profile_desc_under_score = _get_arg_value(sys.argv, "profile_desc")
     profile_desc = profile_desc_under_score.replace("_", " ") # We need to put underscores in profile names to get them here in one piece.
                                                               # Now we take underscores out to get correct MLT profile names.
-    print("hjhjhjhjkkkkkkkkkkkkkkkk")
 except Exception as err:
     print ("Failed to import mltxmlheadless")
     print ("ERROR:", err)

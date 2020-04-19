@@ -173,7 +173,7 @@ class AbstractContainerActionObject:
         self.render_type = CLIP_LENGTH_RENDER
         self.clip = clip
         self.launch_render_data = (clip, clip.clip_in, clip.clip_out + 1, clip.clip_in)
-        #self._launch_render(clip, clip.clip_in, clip.clip_out + 1, clip.clip_in)
+
         job_proxy = self.get_launch_job_proxy()
         jobs.add_job(job_proxy)
         
@@ -321,9 +321,6 @@ class AbstractContainerActionObject:
             self.container_data.render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
             
         encoding_panel = toolsencoding.get_encoding_panel(self.container_data.render_data, True)
-
-        #if self.container_data.render_data == None and toolsencoding.widgets.file_panel.movie_name.get_text() == "movie":
-        #    toolsencoding.widgets.file_panel.movie_name.set_text("_gmic")
 
         align = dialogutils.get_default_alignment(encoding_panel)
         

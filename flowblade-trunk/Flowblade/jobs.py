@@ -19,11 +19,12 @@
 """
 
 
-from gi.repository import Gtk
+from gi.repository import Gtk, GLib, Gdk
 from gi.repository import GObject
 from gi.repository import Pango
 
 import copy
+import subprocess
 import time
 import threading
 
@@ -31,6 +32,8 @@ import editorpersistance
 import gui
 import guicomponents
 import guiutils
+import motionheadless
+import respaths
 import utils
 
 QUEUED = 0
@@ -42,6 +45,9 @@ NOT_SET_YET = 0
 CONTAINER_CLIP_RENDER_GMIC = 1
 CONTAINER_CLIP_RENDER_MLT_XML = 2
 CONTAINER_CLIP_RENDER_BLENDER = 3
+MOTION_MEDIA_ITEM_RENDER = 4
+
+open_media_file_callback = None
 
 _status_polling_thread = None
 
@@ -85,7 +91,9 @@ class JobProxy: # Background renders provide these to give info on render status
             return  c_clip_str + " " +  "MLT XML"
         elif self.type == CONTAINER_CLIP_RENDER_BLENDER:
             return c_clip_str + " " + "Blender"
-            
+        elif self.type == MOTION_MEDIA_ITEM_RENDER:
+            return _("Motion Clip render")
+        
     def get_progress_str(self):
         if self.progress < 0.0:
             return "-"
@@ -124,7 +132,6 @@ def update_job_queue(update_msg_job_proxy): # We're using JobProxy objects as me
             if _jobs[i].status == CANCELLED:
                 return # it is maybe possible to get update attempt here after cancellation.         
             # Update job proxy info and remember row
-            #job_proxy = copy.copy(update_job_proxy)
             row = i
             break
 
@@ -187,6 +194,9 @@ def get_jobs_panel():
 class ContainerStatusPollingThread(threading.Thread):
     
     def __init__(self):
+        # poll_objects reqiured to implement interface:
+        #     update_render_status()
+        #     abort_render()
         self.poll_objects = []
         self.abort = False
 
@@ -389,3 +399,112 @@ class JobsQueueView(Gtk.VBox):
                         job.get_progress_str()]
             self.storemodel.append(row_data)
             self.scroll.queue_draw()
+
+
+
+# ------------------------------------------------------------------------------- JOBS QUEUE OBJECTS
+# These objects satisfy two interfaces.
+#
+# As JobProxy.callback_objects and polling objects they implement the
+# combined interface:
+#
+#     start_render()
+#     update_render_status()
+#     abort_render()
+# 
+# We have only one of these now, extract AbstractObject out when more come.
+#
+# Objects extending containeraction.AbstractContainerActionObject implement these interfaces too.
+
+class MotionRenderQueueObject:
+    
+    def __init__(self, session_id, write_file, args):
+        self.session_id = session_id
+        self.write_file = write_file
+        self.args = args
+
+    def get_session_id(self):
+        return self.session_id
+        
+    def get_job_name(self):
+        return "job name"
+    
+    def add_to_queue(self):
+        add_job(self.get_launch_job_proxy())
+        add_as_status_polling_object(self)
+
+    def get_job_proxy(self):
+        job_proxy = JobProxy(self.get_session_id(), self)
+        job_proxy.type = MOTION_MEDIA_ITEM_RENDER
+        return job_proxy
+    
+    def get_launch_job_proxy(self):
+        job_proxy = self.get_job_proxy()
+        job_proxy.status = QUEUED
+        job_proxy.progress = 0.0
+        job_proxy.elapsed = 0.0 # jobs does not use this value
+        job_proxy.text = _("Waiting to render") + " " + self.get_job_name()
+        return job_proxy
+        
+    def get_completed_job_proxy(self):
+        job_proxy = self.get_job_proxy()
+        job_proxy.status = COMPLETED
+        job_proxy.progress = 1.0
+        job_proxy.elapsed = 0.0 # jobs does not use this value
+        job_proxy.text = "dummy" # this will be overwritten with completion message
+        return job_proxy
+        
+    def start_render(self):
+        # Run with nice to lower priority if requested (currently hard coded to lower)
+        nice_command = "nice -n " + str(10) + " " + respaths.LAUNCH_DIR + "flowblademotionheadless"
+        for arg in self.args:
+            nice_command += " "
+            nice_command += arg
+
+        subprocess.Popen([nice_command], shell=True)
+
+    def update_render_status(self):
+
+        Gdk.threads_enter()
+                    
+        if motionheadless.session_render_complete(self.get_session_id()) == True:
+            remove_as_status_polling_object(self)
+            
+            job_proxy = self.get_completed_job_proxy()
+            update_job_queue(job_proxy)
+            
+            motionheadless.delete_session_folders(self.get_session_id())
+            
+            GLib.idle_add(self.create_media_item)
+
+        else:
+            status = motionheadless.get_session_status(self.get_session_id())
+            if status != None:
+                fraction, elapsed = status
+
+                msg = "rendering slowmo clip"
+                
+                job_proxy = self.get_job_proxy()
+                
+                job_proxy.progress = float(fraction)
+                if job_proxy.progress > 1.0:
+                    # hack to fix how progress is calculated in gmicheadless because producers can render a bit longer then required.
+                    job_proxy.progress = 1.0
+
+                job_proxy.elapsed = float(elapsed)
+                job_proxy.text = msg
+                
+                update_job_queue(job_proxy)
+            else:
+                print("MotionRenderQueueObject status none")
+                pass # This can happen sometimes before gmicheadless.py has written a status message, we just do nothing here.
+
+        Gdk.threads_leave()
+    
+    def abort_render(self):
+        remove_as_status_polling_object(self)
+        motionheadless.abort_render(self.get_session_id())
+        
+    def create_media_item(self):
+        open_media_file_callback(self.write_file)
+ 

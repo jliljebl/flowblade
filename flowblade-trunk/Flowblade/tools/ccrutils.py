@@ -128,6 +128,25 @@ def init_session_folders(session_id):
     if not os.path.exists(_rendered_frames_folder_internal):
         os.mkdir(_rendered_frames_folder_internal)
 
+def delete_internal_folders(session_id):
+    # This works only if clip frames and rendered frames folder are empty already.
+    # This is used my motinheadless.py that uses container clips folders only to communicate render status
+    # back and forth.
+    _session_folder = _get_session_folder(session_id)
+    _clip_frames_folder_internal = _session_folder + CLIP_FRAMES_DIR
+    _rendered_frames_folder_internal = _session_folder + RENDERED_FRAMES_DIR
+    
+    if os.path.exists(_clip_frames_folder_internal):
+        os.rmdir(_clip_frames_folder_internal)
+    if os.path.exists(_rendered_frames_folder_internal):
+        os.rmdir(_rendered_frames_folder_internal)
+    if os.path.exists(_session_folder):
+        files = os.listdir(_session_folder)
+        for f in files:
+            file_path = _session_folder + "/" + f
+            os.remove(file_path)
+        os.rmdir(_session_folder)
+
 def maybe_init_external_session_folders():
     if _render_data == None:
         return

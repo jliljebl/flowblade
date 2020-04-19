@@ -17,6 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
+
 import mlt
 import os
 import threading
@@ -35,12 +36,14 @@ _render_thread = None
 
 # ----------------------------------------------------- module interface with message files
 # We are using message files to communicate with application.
+"""
 def clear_flag_files(session_id):
     ccrutils.clear_flag_files(session_id)
 
+
 def set_render_data(session_id, video_render_data):
     ccrutils.set_render_data(session_id, video_render_data)
-    
+"""
 def session_render_complete(session_id):
     return ccrutils.session_render_complete(session_id)
 
@@ -52,7 +55,8 @@ def get_session_status(session_id):
 def abort_render(session_id):
     ccrutils.abort_render(session_id)
 
-
+def delete_session_folders(session_id):
+     ccrutils.delete_internal_folders(session_id)
 
 # --------------------------------------------------- render thread launch
 def main(root_path, session_id, speed, write_file, profile_desc, encoding_option_index, 
@@ -123,7 +127,7 @@ class MotionClipHeadlessRunnerThread(threading.Thread):
 
         while self.render_player.stopped == False:
             
-            self.abort_requested()
+            self.check_abort_requested()
             
             if self.abort == True:
                 self.render_player.shutdown()
@@ -140,16 +144,13 @@ class MotionClipHeadlessRunnerThread(threading.Thread):
         # Write out completed flag file.
         ccrutils.write_completed_message()
 
-    def abort_requested(self):
+    def check_abort_requested(self):
         self.abort = ccrutils.abort_requested()
-        return self.abort
 
     def render_update(self, fraction):
         elapsed = time.monotonic() - self.start_time
         msg = str(fraction) + " " + str(elapsed)
-        self.write_status_message(msg)
-        
-    def write_status_message(self, msg):
         ccrutils.write_status_message(msg)
+
 
 

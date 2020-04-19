@@ -378,6 +378,7 @@ def monkeypatch_callbacks():
     # We need to do this on app start-up or
     # we'll get circular imports with projectaction->mltplayer->render->projectaction
     render.open_media_file_callback = projectaction.open_rendered_file
+    jobs.open_media_file_callback = projectaction.open_rendered_file
 
     # Set callback for undo/redo ops, batcherrender app does not need this 
     undo.set_post_undo_redo_callback(modesetting.set_post_undo_redo_edit_mode)
