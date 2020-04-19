@@ -36,14 +36,6 @@ _render_thread = None
 
 # ----------------------------------------------------- module interface with message files
 # We are using message files to communicate with application.
-"""
-def clear_flag_files(session_id):
-    ccrutils.clear_flag_files(session_id)
-
-
-def set_render_data(session_id, video_render_data):
-    ccrutils.set_render_data(session_id, video_render_data)
-"""
 def session_render_complete(session_id):
     return ccrutils.session_render_complete(session_id)
 
@@ -61,12 +53,7 @@ def delete_session_folders(session_id):
 # --------------------------------------------------- render thread launch
 def main(root_path, session_id, speed, write_file, profile_desc, encoding_option_index, 
          quality_option_index, source_path, render_full_range, start_frame, end_frame):
-
-    ccrutils.prints_to_log_file("/home/janne/motionlog")
-    
-    print(root_path, session_id, speed, write_file, profile_desc, encoding_option_index, \
-         quality_option_index,  source_path, render_full_range, start_frame, end_frame)
-         
+        
     mltheadlessutils.mlt_env_init(root_path, session_id)
 
     global _render_thread
@@ -108,8 +95,6 @@ class MotionClipHeadlessRunnerThread(threading.Thread):
         track0 = mlt.Playlist()
         multitrack.connect(track0, 0)
         track0.insert(motion_producer, 0, 0, motion_producer.get_length() - 1)
-        
-        print("Motion clip render starting...")
 
         consumer = renderconsumer.get_render_consumer_for_encoding_and_quality(self.write_file, profile, self.encoding_option_index, self.quality_option_index)
         
@@ -135,11 +120,8 @@ class MotionClipHeadlessRunnerThread(threading.Thread):
             
             fraction = self.render_player.get_render_fraction()
             self.render_update(fraction)
-            
-            print("rendering...")
-            time.sleep(0.3)
 
-        print("rendering DONE")
+            time.sleep(0.3)
 
         # Write out completed flag file.
         ccrutils.write_completed_message()
