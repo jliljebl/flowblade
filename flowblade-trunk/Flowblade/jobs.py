@@ -422,7 +422,8 @@ class MotionRenderQueueObject:
         self.session_id = session_id
         self.write_file = write_file
         self.args = args
-
+        self.job_type = MOTION_MEDIA_ITEM_RENDER
+        
     def get_session_id(self):
         return self.session_id
         
@@ -435,7 +436,7 @@ class MotionRenderQueueObject:
 
     def get_job_proxy(self):
         job_proxy = JobProxy(self.get_session_id(), self)
-        job_proxy.type = MOTION_MEDIA_ITEM_RENDER
+        job_proxy.type = self.job_type
         return job_proxy
     
     def get_launch_job_proxy(self):
