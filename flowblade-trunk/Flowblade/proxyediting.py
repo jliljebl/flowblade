@@ -58,6 +58,20 @@ PROXY_SIZE_FULL = appconsts.PROXY_SIZE_FULL
 PROXY_SIZE_HALF =  appconsts.PROXY_SIZE_HALF
 PROXY_SIZE_QUARTER =  appconsts.PROXY_SIZE_QUARTER
 
+class ProxyRenderItemData:
+    def __init__(   self, media_file_id, proxy_w, proxy_h, enc_index, 
+                    proxy_file_path, proxy_rate, media_file_path, 
+                    proxy_profile_desc, stop_frame):
+
+        self.media_file_id = media_file_id
+        self.proxy_w = proxy_w
+        self.proxy_h = proxy_h
+        self.enc_index = enc_index
+        self.proxy_file_path = proxy_file_path
+        self.proxy_rate = proxy_rate
+        self.media_file_path = media_file_path
+        self.proxy_profile_desc = proxy_profile_desc
+        self.stop_frame = stop_frame   
 
 class ProxyRenderRunnerThread(threading.Thread):
     def __init__(self, proxy_profile, files_to_render, set_as_proxy_immediately):
@@ -73,10 +87,10 @@ class ProxyRenderRunnerThread(threading.Thread):
         start = time.time()
         elapsed = 0
         proxy_w, proxy_h =  _get_proxy_dimensions(self.proxy_profile, editorstate.PROJECT().proxy_data.size)
-        proxy_encoding = _get_proxy_encoding()
-        self.current_render_file_path = None
+        enc_index = editorstate.PROJECT().proxy_data.encoding
+        #self.current_render_file_path = None
         
-        print("proxy render started, items: " + str(len(self.files_to_render)) + ", dim: " + str(proxy_w) + "x" + str(proxy_h))
+        #print("proxy render started, items: " + str(len(self.files_to_render)) + ", dim: " + str(proxy_w) + "x" + str(proxy_h))
         
         for media_file in self.files_to_render:
             if self.aborted == True:
@@ -105,6 +119,7 @@ class ProxyRenderRunnerThread(threading.Thread):
             # There are no practical reasons to have bitrates lower than 500kbs.
             if proxy_rate < 500:
                 proxy_rate = 500
+            """
             consumer.set("vb", str(int(proxy_rate)) + "k")
 
             consumer.set("rescale", "nearest")
@@ -112,7 +127,13 @@ class ProxyRenderRunnerThread(threading.Thread):
             file_producer = mlt.Producer(self.proxy_profile, str(media_file.path))
             mltrefhold.hold_ref(file_producer) # this may or may not be needed to avoid crashes
             stop_frame = file_producer.get_length() - 1
+            """
+            
+            item_data = ProxyRenderItemData(media_file.id, proxy_w, proxy_h, enc_index,
+                                            proxy_file_path, proxy_rate, media_file.path,
+                                            self.proxy_profile.description())
 
+            """
             # Create and launch render thread
             global render_thread 
             render_thread = renderconsumer.FileRenderPlayer(None, file_producer, consumer, 0, stop_frame)
@@ -165,7 +186,8 @@ class ProxyRenderRunnerThread(threading.Thread):
             _auto_re_convert_after_proxy_render_in_proxy_mode()
         
         print("proxy render done")
-
+        """
+        
     def _create_img_seq_proxy(self, media_file, proxy_w, proxy_h, items, start):
         now = time.time()
         elapsed = now - start

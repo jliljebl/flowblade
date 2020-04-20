@@ -470,7 +470,7 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
                 "start_frame:" + str(start_frame),
                 "end_frame:" + str(end_frame))
 
-        job_queue_object = jobs.MotionRenderQueueObject(session_id, write_file, args)
+        job_queue_object = jobs.MotionRenderJobQueueObject(session_id, write_file, args)
         job_queue_object.add_to_queue()
 
     else:
@@ -561,7 +561,7 @@ def _render_reverse_clip_dialog_callback(dialog, response_id, fb_widgets, media_
                 "start_frame:" + str(start_frame),
                 "end_frame:" + str(end_frame))
 
-        job_queue_object = jobs.MotionRenderQueueObject(session_id, write_file, args)
+        job_queue_object = jobs.MotionRenderJobQueueObject(session_id, write_file, args)
         job_queue_object.add_to_queue()
     else:
         dialog.destroy()

@@ -412,17 +412,14 @@ class JobsQueueView(Gtk.VBox):
 #     update_render_status()
 #     abort_render()
 # 
-# We have only one of these now, extract AbstractObject out when more come.
-#
 # Objects extending containeraction.AbstractContainerActionObject implement these interfaces too.
 
-class MotionRenderQueueObject:
+
+class AbstractJobQueueObject:
     
-    def __init__(self, session_id, write_file, args):
+    def __init__(self, session_id, job_type):
         self.session_id = session_id
-        self.write_file = write_file
-        self.args = args
-        self.job_type = MOTION_MEDIA_ITEM_RENDER
+        self.job_type = job_type
         
     def get_session_id(self):
         return self.session_id
@@ -454,7 +451,17 @@ class MotionRenderQueueObject:
         job_proxy.elapsed = 0.0 # jobs does not use this value
         job_proxy.text = "dummy" # this will be overwritten with completion message
         return job_proxy
+
+
+class MotionRenderJobQueueObject(AbstractJobQueueObject):
+
+    def __init__(self, session_id, write_file, args):
         
+        AbstractJobQueueObject.__init__(self, session_id, MOTION_MEDIA_ITEM_RENDER)
+        
+        self.write_file = write_file
+        self.args = args
+                
     def start_render(self):
         # Run with nice to lower priority if requested (currently hard coded to lower)
         nice_command = "nice -n " + str(10) + " " + respaths.LAUNCH_DIR + "flowblademotionheadless"
