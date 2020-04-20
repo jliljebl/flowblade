@@ -28,11 +28,14 @@ import subprocess
 import time
 import threading
 
+import appconsts
 import editorpersistance
+from editorstate import PROJECT
 import gui
 import guicomponents
 import guiutils
 import motionheadless
+import proxyheadless
 import respaths
 import utils
 
@@ -46,6 +49,7 @@ CONTAINER_CLIP_RENDER_GMIC = 1
 CONTAINER_CLIP_RENDER_MLT_XML = 2
 CONTAINER_CLIP_RENDER_BLENDER = 3
 MOTION_MEDIA_ITEM_RENDER = 4
+PROXY_RENDER = 5
 
 open_media_file_callback = None
 
@@ -166,6 +170,14 @@ def update_job_queue(update_msg_job_proxy): # We're using JobProxy objects as me
     _jobs_list_view.storemodel.set_value(store_iter, 3, _jobs[row].get_progress_str())
 
     _jobs_list_view.scroll.queue_draw()
+
+def get_jobs_of_type(job_type):
+    jobs_of_type = []
+    for job in _jobs:
+        job.type = job_type
+        jobs_of_type.append(job)
+    
+    return jobs_of_type
 
 def create_jobs_list_view():
     global _jobs_list_view
@@ -516,3 +528,90 @@ class MotionRenderJobQueueObject(AbstractJobQueueObject):
     def create_media_item(self):
         open_media_file_callback(self.write_file)
  
+
+class ProxyRenderJobQueueObject(AbstractJobQueueObject):
+
+    def __init__(self, session_id, render_data):
+        
+        AbstractJobQueueObject.__init__(self, session_id, PROXY_RENDER)
+        
+        self.render_data = render_data
+
+
+    def start_render(self):
+        # Run with nice to lower priority if requested (currently hard coded to lower)
+        nice_command = "nice -n " + str(10) + " " + respaths.LAUNCH_DIR + "flowbladeproxyheadless"
+        args = self.render_data.get_data_as_args_tuple()
+        for arg in args:
+            nice_command += " "
+            nice_command += arg
+
+        session_arg = "session_id:" + str(self.session_id)
+        nice_command += " "
+        nice_command += session_arg
+                
+        subprocess.Popen([nice_command], shell=True)
+
+    def update_render_status(self):
+
+        Gdk.threads_enter()
+                    
+        if proxyheadless.session_render_complete(self.get_session_id()) == True:
+            remove_as_status_polling_object(self)
+            
+            job_proxy = self.get_completed_job_proxy()
+            update_job_queue(job_proxy)
+            self.completed_job_proxy = job_proxy
+            
+            proxyheadless.delete_session_folders(self.get_session_id()) # these were created mltheadlessutils.py, see proxyheadless.py
+            
+            GLib.idle_add(self.proxy_render_complete)
+
+        else:
+            status = proxyheadless.get_session_status(self.get_session_id())
+            if status != None:
+                fraction, elapsed = status
+
+                msg = "rendering proxy clip"
+                
+                job_proxy = self.get_job_proxy()
+                
+                job_proxy.progress = float(fraction)
+                if job_proxy.progress > 1.0:
+                    # hack to fix how progress is calculated in gmicheadless because producers can render a bit longer then required.
+                    job_proxy.progress = 1.0
+
+                job_proxy.elapsed = float(elapsed)
+                job_proxy.text = msg
+                
+                update_job_queue(job_proxy)
+            else:
+                print("ProxyRenderJobQueueObject status none")
+                pass # This can happen sometimes before gmicheadless.py has written a status message, we just do nothing here.
+
+        Gdk.threads_leave()
+    
+    def abort_render(self):
+        remove_as_status_polling_object(self)
+        motionheadless.abort_render(self.get_session_id())
+        
+    def proxy_render_complete(self):
+        try:
+            media_file = PROJECT().media_files[self.render_data.media_file_id]
+        except:
+            # User has deleted media file before proxy render complete
+            return
+
+        media_file.add_proxy_file(self.render_data.proxy_file_path)
+
+        if PROJECT().proxy_data.proxy_mode == appconsts.USE_PROXY_MEDIA: # When proxy mode is USE_PROXY_MEDIA all proxy files are used all the time
+            media_file.set_as_proxy_media_file()
+        
+            proxy_jobs = get_jobs_of_type(PROXY_RENDER)
+            print(len(proxy_jobs))
+            if len(proxy_jobs) == 0:
+                self.render_data.do_auto_re_convert_func()
+            elif len(proxy_jobs) == 1:
+                print("dis one")
+                self.render_data.do_auto_re_convert_func()
+

@@ -20,6 +20,7 @@
 
 import glob
 from PIL import Image
+import hashlib
 import mlt
 import os
 import shutil
@@ -37,6 +38,7 @@ import editorpersistance
 import editorstate
 import gui
 import guiutils
+import jobs
 import mltrefhold
 import persistance
 import render
@@ -58,10 +60,11 @@ PROXY_SIZE_FULL = appconsts.PROXY_SIZE_FULL
 PROXY_SIZE_HALF =  appconsts.PROXY_SIZE_HALF
 PROXY_SIZE_QUARTER =  appconsts.PROXY_SIZE_QUARTER
 
+
 class ProxyRenderItemData:
     def __init__(   self, media_file_id, proxy_w, proxy_h, enc_index, 
                     proxy_file_path, proxy_rate, media_file_path, 
-                    proxy_profile_desc, stop_frame):
+                    proxy_profile_desc):
 
         self.media_file_id = media_file_id
         self.proxy_w = proxy_w
@@ -71,37 +74,54 @@ class ProxyRenderItemData:
         self.proxy_rate = proxy_rate
         self.media_file_path = media_file_path
         self.proxy_profile_desc = proxy_profile_desc
-        self.stop_frame = stop_frame   
+        
+        # We're packing this to go, jobs.py is imported into this module and we wish to not import this into jobs.py
+        self.do_auto_re_convert_func = _auto_re_convert_after_proxy_render_in_proxy_mode
+
+    def get_data_as_args_tuple(self):
+        args = ("media_file_id:" + str(self.media_file_id), 
+                "proxy_w:" + str(self.proxy_w), 
+                "proxy_h:" + str(self.proxy_h),
+                "enc_index:" + str(self.enc_index),
+                "proxy_file_path:" + str(self.proxy_file_path),
+                "proxy_rate:"+ str(self.proxy_rate),
+                "media_file_path:" + str(self.media_file_path),
+                "proxy_profile_desc:" + str(self.proxy_profile_desc))
+            
+        return args
+
 
 class ProxyRenderRunnerThread(threading.Thread):
-    def __init__(self, proxy_profile, files_to_render, set_as_proxy_immediately):
+    def __init__(self, proxy_profile, files_to_render):
         threading.Thread.__init__(self)
         self.proxy_profile = proxy_profile
+        print("ppr", self.proxy_profile)
+        print("ppr", self.proxy_profile.description())
         self.files_to_render = files_to_render
-        self.set_as_proxy_immediately = set_as_proxy_immediately
-        self.aborted = False
 
     def run(self):        
-        items = 1
-        global progress_window
-        start = time.time()
-        elapsed = 0
+        #items = 1
+        #global progress_window
+        #start = time.time()
+        #elapsed = 0
         proxy_w, proxy_h =  _get_proxy_dimensions(self.proxy_profile, editorstate.PROJECT().proxy_data.size)
         enc_index = editorstate.PROJECT().proxy_data.encoding
         #self.current_render_file_path = None
         
         #print("proxy render started, items: " + str(len(self.files_to_render)) + ", dim: " + str(proxy_w) + "x" + str(proxy_h))
-        
+        proxy_render_items = []
         for media_file in self.files_to_render:
-            if self.aborted == True:
-                break
+            #if self.aborted == True:
+            #    break
 
-            if media_file.type == appconsts.IMAGE_SEQUENCE:
-                self._create_img_seq_proxy(media_file, proxy_w, proxy_h, items, start)
-                continue
+            #if media_file.type == appconsts.IMAGE_SEQUENCE:
+            #    self._create_img_seq_proxy(media_file, proxy_w, proxy_h, items, start)
+            #    continue
 
             # Create render objects
+            proxy_encoding = renderconsumer.proxy_encodings[enc_index]
             proxy_file_path = media_file.create_proxy_path(proxy_w, proxy_h, proxy_encoding.extension)
+            """
             self.current_render_file_path = proxy_file_path
             renderconsumer.performance_settings_enabled = False
             consumer = renderconsumer.get_render_consumer_for_encoding(
@@ -109,6 +129,7 @@ class ProxyRenderRunnerThread(threading.Thread):
                                                         self.proxy_profile, 
                                                         proxy_encoding)
             renderconsumer.performance_settings_enabled = True
+            """
             # Bit rates for proxy files are counted using 2500kbs for 
             # PAL size image as starting point.
             pal_pix_count = 720.0 * 576.0
@@ -132,8 +153,22 @@ class ProxyRenderRunnerThread(threading.Thread):
             item_data = ProxyRenderItemData(media_file.id, proxy_w, proxy_h, enc_index,
                                             proxy_file_path, proxy_rate, media_file.path,
                                             self.proxy_profile.description())
+                                            
+            proxy_render_items.append(item_data)
+        
+        Gdk.threads_enter()
+        
+        for proxy_render_data_item in proxy_render_items:
+            session_id = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
+            job_queue_object = jobs.ProxyRenderJobQueueObject(session_id, proxy_render_data_item)
+            job_queue_object.add_to_queue()
+            
+        Gdk.threads_leave()
 
-            """
+        #if editorstate.PROJECT().proxy_data.proxy_mode == appconsts.USE_PROXY_MEDIA:
+        #    _auto_re_convert_after_proxy_render_in_proxy_mode()
+            
+        """
             # Create and launch render thread
             global render_thread 
             render_thread = renderconsumer.FileRenderPlayer(None, file_producer, consumer, 0, stop_frame)
@@ -369,7 +404,7 @@ class ProxyManagerDialog:
         self.convert_progress_bar.set_text(_("Press Button to Change Mode"))
         self.convert_progress_bar.set_fraction(0.0)
 
-
+"""
 class ProxyRenderProgressDialog:
     def __init__(self):
         self.dialog = Gtk.Dialog(_("Creating Proxy Files"),
@@ -423,7 +458,7 @@ class ProxyRenderProgressDialog:
     def stop_pressed(self, dialog, response_id):
         global runner_thread
         runner_thread.abort()
-
+"""
 
 class ProxyRenderIssuesWindow:
     def __init__(self, files_to_render, already_have_proxies, not_video_files, is_proxy_file, 
@@ -620,14 +655,9 @@ def _set_media_files_to_use_unique_proxies(media_files_list):
 def _create_proxy_files(media_files_to_render):
     proxy_profile = _get_proxy_profile(editorstate.PROJECT())
 
-    if editorstate.PROJECT().proxy_data.proxy_mode == appconsts.USE_ORIGINAL_MEDIA:
-        set_as_proxy_immediately = False
-    else:
-        set_as_proxy_immediately = True
-
-    global progress_window, runner_thread
-    progress_window = ProxyRenderProgressDialog()
-    runner_thread = ProxyRenderRunnerThread(proxy_profile, media_files_to_render, set_as_proxy_immediately)
+    global runner_thread
+    #progress_window = ProxyRenderProgressDialog()
+    runner_thread = ProxyRenderRunnerThread(proxy_profile, media_files_to_render)
     runner_thread.start()
 
 # ------------------------------------------------------------------ module functions

@@ -330,7 +330,7 @@ def get_mlt_render_consumer(file_path, profile, args_vals_list):
         args_msg = args_msg + str(k) + "="+ str(v) + ", "
         
     args_msg = args_msg.strip(", ")
-    #print "render consumer created, path:" +  str(file_path) + ", args: " + args_msg
+
     return consumer
 
 def get_args_vals_tuples_list_for_encoding_and_quality(profile, enc_opt_index, quality_opt_index):
