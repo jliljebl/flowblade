@@ -1897,7 +1897,7 @@ class TimeLineCanvas:
                                 if media_file != None:
                                     thumb_img = media_file.icon
                                 else:
-                                    pass # TODO: Now what
+                                    thumb_img = clip.container_data.get_rendered_thumbnail()
 
                             cr.rectangle(scale_in + 4, y + 3.5, scale_length - 8, track_height - 6)
                             cr.clip()

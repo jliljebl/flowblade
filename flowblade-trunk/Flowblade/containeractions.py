@@ -258,12 +258,14 @@ class AbstractContainerActionObject:
         resource_name_str = utils.get_img_seq_resource_name(frame_file, True)
         return self.get_rendered_media_dir() + "/" + resource_name_str
 
-    """ Feature dropped from 2.6, maybe put back later. Now we same icon for rendered and unredered.s
     def get_rendered_thumbnail(self):
-        surface, length = self.create_icon()
+        thumbnail_path = self.get_container_thumbnail_path()
+        if os.path.isfile(thumbnail_path) == True:
+            surface = self._build_icon(thumbnail_path)
+        else:
+            surface, length, icon_path = self.create_icon()
         return surface
-    """
-    
+
     def update_render_status(self):
         print("AbstractContainerActionObject.update_render_status not impl")
 
