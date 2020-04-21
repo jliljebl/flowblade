@@ -524,7 +524,7 @@ class GMicContainerActions(AbstractContainerActionObject):
 
     def create_icon(self):
         icon_path, length, info = _write_thumbnail_image(PROJECT().profile, self.container_data.unrendered_media, self)
-        cr, surface, icon_path = _create_image_surface(icon_path)
+        cr, surface = _create_image_surface(icon_path)
         cr.rectangle(0, 0, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
         cr.set_source_rgba(*OVERLAY_COLOR)
         cr.fill()
