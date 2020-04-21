@@ -182,7 +182,6 @@ class AbstractContainerActionObject:
         # Render starts on callback from jobs.py to AbstractContainerActionObject.start_render()
 
     def start_render(self):
-        print("start_render")
         clip, range_in, range_out, clip_start_offset = self.launch_render_data
         self._launch_render(clip, range_in, range_out, clip_start_offset)
 
@@ -218,7 +217,7 @@ class AbstractContainerActionObject:
         job_proxy.status = jobs.QUEUED
         job_proxy.progress = 0.0
         job_proxy.elapsed = 0.0 # jobs does not use this value
-        job_proxy.text = _("Waiting to render") + " " + self.get_job_name()
+        job_proxy.text = _("In Queue - ") + " " + self.get_job_name()
         return job_proxy
         
     def get_completed_job_proxy(self):
@@ -441,7 +440,7 @@ class GMicContainerActions(AbstractContainerActionObject):
         gmicheadless.set_render_data(self.get_container_program_id(), self.container_data.render_data)
         
         job_proxy = self.get_job_proxy()
-        job_proxy.text = _("Render Starting..")
+        job_proxy.text = _("Render Starting...")
         job_proxy.status = jobs.RENDERING
         jobs.update_job_queue(job_proxy)
         
@@ -567,7 +566,7 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
         mltxmlheadless.set_render_data(self.get_container_program_id(), self.container_data.render_data)
         
         job_proxy = self.get_job_proxy()
-        job_proxy.text = _("Render Starting..")
+        job_proxy.text = _("Render Starting...")
         job_proxy.status = jobs.RENDERING
         jobs.update_job_queue(job_proxy)
 
@@ -648,6 +647,11 @@ class BlenderContainerActions(AbstractContainerActionObject):
         
     def _launch_render(self, clip, range_in, range_out, clip_start_offset):
         self.create_data_dirs_if_needed()
+
+        job_proxy = self.get_job_proxy()
+        job_proxy.text = _("Render Starting...")
+        job_proxy.status = jobs.RENDERING
+        jobs.update_job_queue(job_proxy)
         
         self.render_range_in = range_in
         self.render_range_out = range_out

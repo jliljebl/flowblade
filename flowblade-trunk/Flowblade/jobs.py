@@ -24,6 +24,7 @@ from gi.repository import GObject
 from gi.repository import Pango
 
 import copy
+import os
 import subprocess
 import time
 import threading
@@ -86,18 +87,19 @@ class JobProxy: # Background renders provide these to give info on render status
         return utils.get_time_str_for_sec_float(self.elapsed)
 
     def get_type_str(self):
-        c_clip_str = _("Container Clip")
         if self.type == NOT_SET_YET:
             return "NO TYPE SET" # this just error info, application has done something wrong.
         elif self.type == CONTAINER_CLIP_RENDER_GMIC:
-            return c_clip_str + " " +  "G'Mic"
+            return _("G'Mic Clip")
         elif self.type == CONTAINER_CLIP_RENDER_MLT_XML:
-            return  c_clip_str + " " +  "MLT XML"
+            return _("Selection Clip")
         elif self.type == CONTAINER_CLIP_RENDER_BLENDER:
-            return c_clip_str + " " + "Blender"
+            return _("Blender Clip")
         elif self.type == MOTION_MEDIA_ITEM_RENDER:
-            return _("Motion Clip render")
-        
+            return _("Motion Clip")
+        elif self.type == PROXY_RENDER:
+            return _("Proxy Clip")
+            
     def get_progress_str(self):
         if self.progress < 0.0:
             return "-"
@@ -221,7 +223,7 @@ class ContainerStatusPollingThread(threading.Thread):
                 poll_obj.update_render_status() # make sure methids enter/exit Gtk threads
                     
                 
-            time.sleep(1.0)
+            time.sleep(0.5)
 
     def shutdown(self):
         for poll_obj in self.poll_objects:
@@ -256,11 +258,13 @@ def _menu_action_pressed(widget, event):
     
     guiutils.add_separetor(menu)
 
+    """ Not settable for 2.6, let's see later
     sequential_render_item = Gtk.CheckMenuItem()
     sequential_render_item.set_label(_("Render All Jobs Sequentially"))
     sequential_render_item.set_active(editorpersistance.prefs.render_jobs_sequentially)
     sequential_render_item.connect("activate", _hamburger_item_activated, "sequential_render")
     menu.add(sequential_render_item)
+    """
     
     open_on_add_item = Gtk.CheckMenuItem()
     open_on_add_item.set_label(_("Show Jobs Panel on Adding New Job"))
@@ -360,7 +364,7 @@ class JobsQueueView(Gtk.VBox):
         self.text_rend_4.set_property("yalign", 0.0)
 
         # Column views
-        self.text_col_1 = Gtk.TreeViewColumn(_("Type"))
+        self.text_col_1 = Gtk.TreeViewColumn(_("Job Type"))
         self.text_col_2 = Gtk.TreeViewColumn(_("Info"))
         self.text_col_3 = Gtk.TreeViewColumn(_("Render Time"))
         self.text_col_4 = Gtk.TreeViewColumn(_("Progress"))
@@ -453,7 +457,7 @@ class AbstractJobQueueObject:
         job_proxy.status = QUEUED
         job_proxy.progress = 0.0
         job_proxy.elapsed = 0.0 # jobs does not use this value
-        job_proxy.text = _("Waiting to render") + " " + self.get_job_name()
+        job_proxy.text = _("In Queue - ") + " " + self.get_job_name()
         return job_proxy
         
     def get_completed_job_proxy(self):
@@ -473,8 +477,18 @@ class MotionRenderJobQueueObject(AbstractJobQueueObject):
         
         self.write_file = write_file
         self.args = args
-                
+
+    def get_job_name(self):
+        folder, file_name = os.path.split(self.write_file)
+        return file_name
+        
     def start_render(self):
+        
+        job_proxy = self.get_job_proxy()
+        job_proxy.text = _("Render Starting...")
+        job_proxy.status = RENDERING
+        update_job_queue(job_proxy)
+        
         # Run with nice to lower priority if requested (currently hard coded to lower)
         nice_command = "nice -n " + str(10) + " " + respaths.LAUNCH_DIR + "flowblademotionheadless"
         for arg in self.args:
@@ -502,7 +516,7 @@ class MotionRenderJobQueueObject(AbstractJobQueueObject):
             if status != None:
                 fraction, elapsed = status
 
-                msg = "rendering slowmo clip"
+                msg = _("Rendering Motion Clip ") + self.get_job_name()
                 
                 job_proxy = self.get_job_proxy()
                 
@@ -537,8 +551,16 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
         
         self.render_data = render_data
 
-
+    def get_job_name(self):
+        folder, file_name = os.path.split(self.render_data.media_file_path)
+        return file_name
+        
     def start_render(self):
+        job_proxy = self.get_job_proxy()
+        job_proxy.text = _("Render Starting...")
+        job_proxy.status = RENDERING
+        update_job_queue(job_proxy)
+        
         # Run with nice to lower priority if requested (currently hard coded to lower)
         nice_command = "nice -n " + str(10) + " " + respaths.LAUNCH_DIR + "flowbladeproxyheadless"
         args = self.render_data.get_data_as_args_tuple()
@@ -572,7 +594,7 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
             if status != None:
                 fraction, elapsed = status
 
-                msg = "rendering proxy clip"
+                msg = _("Rendering Proxy Clip for ") + self.get_job_name()
                 
                 job_proxy = self.get_job_proxy()
                 

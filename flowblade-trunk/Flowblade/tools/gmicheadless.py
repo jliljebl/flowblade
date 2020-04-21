@@ -86,7 +86,6 @@ def get_session_status(session_id):
     msg = ccrutils.get_session_status_message(session_id)
     if msg == None:
         return None
-        
     step, frame, length, elapsed = msg.split(" ")
     return (step, frame, length, elapsed)
     
