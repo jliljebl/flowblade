@@ -629,11 +629,11 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
         if PROJECT().proxy_data.proxy_mode == appconsts.USE_PROXY_MEDIA: # When proxy mode is USE_PROXY_MEDIA all proxy files are used all the time
             media_file.set_as_proxy_media_file()
         
+            # if the rendered proxy file was the last proxy file being rendered,
+            # auto re-convert to update proxy clips.
             proxy_jobs = get_jobs_of_type(PROXY_RENDER)
-            print(len(proxy_jobs))
             if len(proxy_jobs) == 0:
                 self.render_data.do_auto_re_convert_func()
             elif len(proxy_jobs) == 1:
-                print("dis one")
                 self.render_data.do_auto_re_convert_func()
 

@@ -37,6 +37,7 @@ try:
     proxy_file_path = _get_arg_value(sys.argv, "proxy_file_path")
     proxy_rate = _get_arg_value(sys.argv, "proxy_rate")
     media_file_path = _get_arg_value(sys.argv, "media_file_path")
+    lookup_path =  _get_arg_value(sys.argv, "lookup_path")
     profile_desc_under_score = _get_arg_value(sys.argv, "proxy_profile_desc")
     profile_desc = profile_desc_under_score.replace("_", " ") # We need to put underscores in profile names to get them here in one piece.
                                                               # Now we take underscores out to get correct MLT profile names.
@@ -48,7 +49,8 @@ except Exception as err:
 
 proxyheadless.main( modules_path, session_id, media_file_id, 
                     proxy_w, proxy_h, enc_index, proxy_file_path, 
-                    proxy_rate, media_file_path, profile_desc)
+                    proxy_rate, media_file_path, profile_desc, 
+                    lookup_path)
 
 
 
