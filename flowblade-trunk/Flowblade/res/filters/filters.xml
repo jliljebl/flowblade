@@ -48,6 +48,18 @@
         <property name="use_luminance" args="editor=no_editor">1</property>
         <property name="resource" args="editor=file_select exptype=file_resource displayname=Select!file">""</property>
         <property name="use_mix" args="editor=no_editor">1</property>
+        <property name="audio_match" args="editor=no_editor">0</property>
+    </filter>
+    <filter id="shape">
+        <name>Wipe</name>
+        <group>Alpha</group>
+        <property name="resource" args="editor=filter_wipe_select exptype=filter_wipe_resource displayname=Wipe!Type">WIPE_PATHbi-linear_y.pgm</property>
+        <property name="mix" args="range_in=0.0,100.0 range_out=0,100 editor=slider displayname=Threshold">50.0</property>
+        <property name="softness" args="range_in=0.0,100.0 editor=slider displayname=Softness">0</property>
+        <property name="invert" args="editor=booleancheckbox displayname=Invert">0</property>
+        <property name="use_luminance" args="editor=no_editor">1</property>
+        <property name="use_mix" args="editor=no_editor">1</property>
+        <property name="audio_match" args="editor=no_editor">0</property>
     </filter>
    <filter id="frei0r.alpha0ps">
         <name>Alpha Modify</name>
@@ -102,13 +114,70 @@
         <property name="spline" args="editor=no_editor exptype=roto_json">{"0": []}</property>
         <extraeditor name="rotomask"></extraeditor> 
    </filter>
-   <!-- Not found on test system, so not tested, add later
-    <filter id="frei0r.premultiply">
-        <name>Unpremultiply</name>
+    <filter id="brightness">
+        <name>Opacity</name>
         <group>Alpha</group>   
-        <property name="0" args="editor=booleancheckbox displayname=Active">1</property>
+        <property name="start" args="editor=no_editor">1</property>
+        <property name="level" args="editor=no_editor">1</property>
+        <property name="alpha" args="range_in=0,100 range_out=0,1 editor=keyframe_editor_clip_fade_filter exptype=keyframe_hcs displayname=Opacity">0=1</property>
     </filter>
-    -->
+
+    <!-- FADES -->
+    <filter id="brightness">
+        <name>Fade In</name>
+        <group>Fade In / Out</group>   
+        <property name="start" args="editor=no_editor">1</property>
+        <property name="level" args="editor=no_editor">1</property>
+        <property name="alpha" args="range_in=0,100 range_out=0,1 value_replacement=fade_in_replament editor=keyframe_editor_clip_fade_filter exptype=keyframe_hcs displayname=Opacity">0=1</property>
+    </filter>
+    <filter id="brightness">
+        <name>Fade Out</name>
+        <group>Fade In / Out</group>   
+        <property name="start" args="editor=no_editor">1</property>
+        <property name="level" args="editor=no_editor">1</property>
+        <property name="alpha" args="range_in=0,100 range_out=0,1 value_replacement=fade_out_replament editor=keyframe_editor_clip_fade_filter exptype=keyframe_hcs displayname=Opacity">0=1</property>
+    </filter>
+    <filter id="brightness">
+        <name>Fade In / Fade Out</name>
+        <group>Fade In / Out</group>   
+        <property name="start" args="editor=no_editor">1</property>
+        <property name="level" args="editor=no_editor">1</property>
+        <property name="alpha" args="range_in=0,100 range_out=0,1 value_replacement=fade_in_out_replament editor=keyframe_editor_clip_fade_filter exptype=keyframe_hcs displayname=Opacity">0=1</property>
+    </filter>
+
+    <!-- FILTER MASK FILTERS -->
+    <filter id="mask_start"  filtermaskfilter="Alpha Shape">
+        <name>Mask - Begin</name>
+        <group>FILTER_MASK</group>  
+        <property name="filter" args="editor=no_editor exptype=not_parsed">frei0r.alphaspot</property>
+        <property name="filter.Shape" args="editor=combobox exptype=default cbopts=Rectangle:0.0,Ellipse:0.32,Triangle:0.68,Diamond:1.0">0.0</property>
+        <property name="filter.Position X" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Pos!X">0=0.5</property>
+        <property name="filter.Position Y" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Pos!Y">0=0.5</property>
+        <property name="filter.Size X" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Size!X">0=0.3</property>
+        <property name="filter.Size Y" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Size!Y">0=0.3</property>
+        <property name="filter.Tilt" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Tilt">0=0.5</property>
+        <property name="filter.Transition width" args="range_in=0,100 editor=keyframe_editor exptype=keyframe_hcs displayname=Trans.!Width">0=0.0</property>
+        <property name="filter.Min" args="editor=no_editor exptype=keyframe_hcs">0=0</property>
+        <property name="filter.Max" args="editor=no_editor exptype=keyframe_hcs">0=1</property>
+        <property name="filter.Operation" args="editor=combobox exptype=default cbopts=Overwrite:0.0,Add:0.7,Subtract:1.0">0.0</property>
+    </filter>
+    <filter id="mask_start" filtermaskfilter="Luma Key">
+        <name>Mask - Begin</name>
+        <group>FILTER_MASK</group>  
+        <property name="filter" args="editor=no_editor exptype=not_parsed">lumakey</property>
+        <property name="filter.threshold" args="range_in=0,255 range_out=0,255 displayname=Threshold">128</property>
+        <property name="filter.slope" args="range_in=0,128 range_out=0,128 displayname=Slope">0</property>
+        <property name="filter.prelevel" args="range_in=0,255 range_out=0,255 displayname=Pre-Level">0</property>
+        <property name="filter.postlevel" args="range_in=0,255 range_out=0,255 displayname=Post-Level">255</property>
+    </filter>
+    <filter id="mask_apply" filtermaskfilter="Mask - End">
+        <name>Mask - End</name>
+        <group>FILTER_MASK</group>  
+        <property name="transition" args="editor=no_editor exptype=not_parsed">frei0r.composition</property>
+        <property name="mlt_image_format" args="editor=no_editor exptype=not_parsed">rgb24a</property>
+    </filter>
+    
+    
     <!-- AUDIO -->
     <filter id="volume" multipart="true">
         <name>Volume</name>
@@ -673,7 +742,7 @@
     <filter id="avfilter.lut3d">
         <name>Lut3D</name>
         <group>Color</group>
-        <property name="av.file" args="editor=file_select exptype=file_resource file_types=.cube displayname=Select!.cube!file">/home/janne/Downloads/tmax.cube</property>
+        <property name="av.file" args="editor=file_select exptype=file_resource file_types=.cube.CUBE displayname=Select!.cube!file">/this/is/placeholder/value.cube</property>
    </filter>
    
    
@@ -823,14 +892,6 @@
         <property name="rows" args="range_in=1,20 displayname=Rows">0.1</property>
         <property name="columns" args="range_in=1,20 displayname=Columns">0.1</property>
     </filter>
-    <filter id="avfilter.lenscorrection">
-        <name>Lens Correction AV</name>
-        <group>Distort</group>
-        <property name="av.cx" args="range_in=0,SCREENSIZE_WIDTH range_out=0,1 displayname=Center!X">0.5</property>
-        <property name="av.cy" args="range_in=0,SCREENSIZE_HEIGHT range_out=0,1 displayname=Center!Y">0.5</property>
-        <property name="av.k1" args="range_in=0,100 range_out=-1,1 displayname=Quad!Distortion">0</property>
-        <property name="av.k2" args="range_in=0,100 range_out=-1,1 displayname=Double!Quad!Distortion">0</property>
-    </filter>
     
     <!-- for some reason avfilter.perspective gives errors:
             [filter avfilter.perspective] Unexpected return format
@@ -929,42 +990,38 @@
 
     <!-- TRANSFORM -->
     <filter id="affine">
+        <name>Position Scale</name>
+        <group>Transform</group>
+            <property name="transition.fill" args="editor=no_editor">1</property>
+            <property name="transition.distort" args="editor=no_editor">0</property>
+            <property name="transition.rect"  args="editor=filter_rect_geometry_editor range_in=0,100 range_out=0,100 exptype=geom_filt_rect_kf">0=0 0 Screensize2 1</property>
+            <property name="transition.valign" args="editor=no_editor exptype=not_parsed">top</property>
+            <property name="transition.halign" args="editor=no_editor exptype=not_parsed">left</property>
+            <property name="transition.threads" args="editor=no_editor">0</property>
+            <property name="transition.repeat_off" args="editor=no_editor">1</property>
+    </filter>
+    <filter id="affine">
         <name>Rotate</name>
         <group>Transform</group>
-        <property name="transition.fix_rotate_x" args="range_in=-180,180 range_out=-180,180 displayname=Angle">0</property>
-        <property name="transition.use_normalised" args="editor=no_editor">0</property>
-        <property name="transition.geometry" args="editor=affine_filt_geom_slider exptype=geom_in_affine_filt">0=0/0:SCREENSIZE:100</property>
+            <property name="transition.fix_rotate_x" args="range_in=-360,360 range_out=-360,360 displayname=Rotation">0</property>
+            <property name="transition.ox" args="range_in=-200,200 range_out=-3000,3000 displayname=X!Position">0</property>
+            <property name="transition.oy" args="range_in=-200,200 range_out=-3000,3000 displayname=Y!Position">0</property>
+            <property name="transition.scale_x" args="editor=slider range_in=0,500 exptype=affine_scale displayname=X!Scale">1</property>
+            <property name="transition.scale_y" args="editor=slider range_in=0,500 exptype=affine_scale displayname=Y!Scale">1</property>
+            <property name="transition.threads" args="editor=no_editor">0</property>
     </filter>
-   <filter id="affine">
+    <filter id="affine">
         <name>Shear</name>
         <group>Transform</group>
-        <property name="transition.fix_shear_x" args="range_in=-180,180 range_out=-180,180 displayname=Shear!X">0</property>
-        <property name="transition.fix_shear_y" args="range_in=-180,180 range_out=-180,180 displayname=Shear!Y">0</property>
-        <property name="transition.geometry" args="editor=affine_filt_geom_slider exptype=geom_in_affine_filt">0=0/0:SCREENSIZE:100</property>
-   </filter>
-    <filter id="affine">
-        <name>Translate</name>
-        <group>Transform</group>
-        <property name="transition.geometry" args="editor=affine_filt_geom_slider exptype=geom_in_affine_filt">0=0/0:SCREENSIZE:100</property>
+            <property name="transition.fix_shear_x" args="range_in=-180,180 range_out=-180,180 displayname=Shear!X">0</property>
+            <property name="transition.fix_shear_y" args="range_in=-180,180 range_out=-180,180 displayname=Shear!Y">0</property>
+            <property name="transition.ox" args="range_in=-200,200 range_out=-3000,3000 displayname=X!Position">0</property>
+            <property name="transition.oy" args="range_in=-200,200 range_out=-3000,3000 displayname=Y!Position">0</property>
+            <property name="transition.scale_x" args="editor=slider range_in=0,500 exptype=affine_scale displayname=X!Scale">1</property>
+            <property name="transition.scale_y" args="editor=slider range_in=0,500 exptype=affine_scale displayname=Y!Scale">1</property>
+          <property name="transition.threads" args="editor=no_editor">0</property>
     </filter>
-    <filter id="affine">
-        <name>Affine</name>
-        <group>Transform</group>
-        <property name="transition.geometry" args="editor=affine_filt_geom_slider exptype=geom_in_affine_filt">0=0/0:SCREENSIZE:100</property>
-        <property name="transition.fix_rotate_x" args="range_in=-180,180 range_out=-180,180 displayname=Angle">0</property>
-        <property name="transition.fix_shear_x" args="range_in=-180,180 range_out=-180,180 displayname=Shear!X">0</property>
-        <property name="transition.fix_shear_y" args="range_in=-180,180 range_out=-180,180 displayname=Shear!Y">0</property>
-    </filter>
-    <!--- Removed because didn't work on all media items.
-    <filter id="avfilter.zoompan">
-        <name>Zoom Pan</name>
-        <group>Transform</group>
-        <property name="av.zoom" args="range_in=100,500 range_out=1,5 displayname=Zoom">1.1</property>
-        <property name="av.x" args="range_in=0,SCREENSIZE_WIDTH range_out=0,SCREENSIZE_WIDTH displayname=x">10</property>
-        <property name="av.y" args="range_in=0,SCREENSIZE_HEIGHT range_out=0,SCREENSIZE_HEIGHT displayname=y">10</property>
-        <property name="av.d" args="editor=no_editor">1</property>
-    </filter>
-    -->
+
 
     <!-- compositor filters that are not displayed to user, not used currently -->
     <filter id="frei0r.mask0mate">

@@ -329,8 +329,6 @@ class RotoMaskEditor(Gtk.Window):
     def update_mask_create_freeze_gui(self):
         if self.roto_mask_layer.edit_point_shape.closed == True:
             self.mask_create_freeze = False
-        elif len(self.roto_mask_layer.edit_point_shape.curve_points) == 0:
-            self.mask_create_freeze = False
         else:
             self.mask_create_freeze = True
 

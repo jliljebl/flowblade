@@ -267,7 +267,7 @@ def _destroy_level_filters(destroy_track_filters=False):
         if _monitor_window == None and _master_volume_meter == None:
             seq.tractor.detach(_level_filters[0])
 
-        # Track filters are onlty detached when this called from wondow close
+        # Track filters are only detached when this called from window close
         if destroy_track_filters:
             for i in range(1, len(seq.tracks) - 1):
                 seq.tracks[i].detach(_level_filters[i])
@@ -279,6 +279,26 @@ def _destroy_level_filters(destroy_track_filters=False):
     elif _monitor_window == None:
         _level_filters = [_level_filters[0]]
         _audio_levels[0] = 0.0
+
+    if _master_volume_meter != None or _monitor_window != None:
+        _update_ticker.start_ticker()
+
+def recreate_master_meter_filter_for_new_sequence():
+    global _level_filters, _audio_levels
+
+    # We need to be sure that audio level updates are stopped before
+    # detaching and destroying them
+    _update_ticker.stop_ticker()
+
+    if len(_level_filters) != 0:
+        seq = editorstate.current_sequence()
+        # Only detach master filter if we are displaying audio master meter
+        if _master_volume_meter != None:
+            seq.tractor.detach(_level_filters[0])
+            _level_filters.pop(0)
+            _audio_levels[0] = 0.0
+            master_level_filter = _add_audio_level_filter(seq.tractor, seq.profile)
+            _level_filters.insert(0, master_level_filter)
 
     if _master_volume_meter != None or _monitor_window != None:
         _update_ticker.start_ticker()

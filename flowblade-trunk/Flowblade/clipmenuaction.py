@@ -38,6 +38,7 @@ import audiosync
 import appconsts
 import clipeffectseditor
 import compositeeditor
+import containerclip
 import dialogs
 import dialogutils
 import gui
@@ -233,11 +234,14 @@ def _add_compositor(data):
     clip_length = clip.clip_out - clip.clip_in
     compositor_out = compositor_in + clip_length
 
+    a_track = target_track_index
+    b_track = track.id
+
     edit_data = {"origin_clip_id":clip.id,
                 "in_frame":compositor_in,
                 "out_frame":compositor_out,
-                "a_track":target_track_index,
-                "b_track":track.id,
+                "a_track":a_track,
+                "b_track":b_track,
                 "compositor_type":compositor_type,
                 "clip":clip}
     action = edit.add_compositor_action(edit_data)
@@ -246,6 +250,8 @@ def _add_compositor(data):
     updater.repaint_tline()
 
 def _add_autofade(data):
+    # NOTE: These stay synced only in "Top Down Auto Follow" mode, see: edit.get_full_compositor_sync_data()
+    
     clip, track, item_id, item_data = data
     x, compositor_type = item_data
 
@@ -258,7 +264,7 @@ def _add_autofade(data):
     if compositor_type == "##auto_fade_in":
         compositor_in = current_sequence().tracks[track.id].clip_start(clip_index)
         compositor_out = compositor_in + int(utils.fps()) - 1
-    else:
+    else: # fade out
         clip_start = current_sequence().tracks[track.id].clip_start(clip_index)
         compositor_out = clip_start + clip_length
         compositor_in = compositor_out - int(utils.fps()) + 1
@@ -642,6 +648,26 @@ def _brightness_keyframes(data):
     clip, track, item_id, item_data = data
     modesetting.kftool_mode_from_popup_menu(clip, track, kftoolmode.BRIGHTNESS_KF_EDIT)
 
+def _reload_clip_media(data):
+    clip, track, item_id, item_data = data
+    
+    # TODO: This ain't doing the clip icon update as wished.
+    media_item = PROJECT().get_media_file_for_path(clip.path)
+    media_item.create_icon()
+    
+    clip_index = track.clips.index(clip)
+    new_clip = current_sequence().create_clone_clip(clip)
+    
+    data = {"old_clip":clip,
+            "new_clip":new_clip,
+            "track":track,
+            "index":clip_index}
+    action = edit.reload_replace(data)
+    action.do_edit()
+    
+    
+    
+    
 # Functions to handle popup menu selections for strings 
 # set as activation messages in guicomponents.py
 # activation_message -> _handler_func
@@ -687,4 +713,10 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "deleteall_clip_markers":_delete_all_clip_markers,
                   "volumekf":_volume_keyframes,
                   "brightnesskf":_brightness_keyframes,
-                  "delete_compositors":_delete_compositors}
+                  "delete_compositors":_delete_compositors,
+                  "reload_media":_reload_clip_media,
+                  "cc_render_full_media":containerclip.render_full_media,
+                  "cc_render_clip":containerclip.render_clip_length,
+                  "cc_go_to_underdered":containerclip.switch_to_unrendered_media,
+                  "cc_render_settings":containerclip.set_render_settings,
+                  "cc_edit_program":containerclip.edit_program}

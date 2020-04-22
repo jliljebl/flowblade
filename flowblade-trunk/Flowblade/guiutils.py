@@ -239,7 +239,7 @@ def get_slider_row_and_spin_widget(editable_property, listener, slider_name=None
     
     editable_property.value_changed_ID = adjustment.connect("value-changed", listener) # saving ID to make it available for disconnect
                                                                                        # This also needs to be available after adjustment is set to not lose exiting value for build dummy value 
-        
+    
     return (get_two_column_editor_row(name, hbox), hslider, spin)
     
 def get_non_property_slider_row(lower, upper, step, value=0, listener=None):
@@ -309,6 +309,8 @@ def get_named_frame(name, widget, left_padding=12, right_padding=6, right_out_pa
         frame.pack_start(label_box, False, False, 0)
     frame.pack_start(alignment, True, True, 0)
     
+    frame.name_label = label
+    
     out_align = set_margins(frame, 4, 4, 0, right_out_padding)
     
     return out_align
@@ -353,6 +355,25 @@ def get_menu_item(text, callback, data, sensitive=True):
     item.set_sensitive(sensitive)
     return item
 
+
+def get_image_menu_item(text, image_name, callback, tooltip_markup=None):
+    img = get_image(image_name)
+    text_label = Gtk.Label(text)
+    
+    hbox = Gtk.HBox()
+    hbox.pack_start(pad_label(4, 4), False, False, 0)
+    hbox.pack_start(img, False, False, 0)
+    hbox.pack_start(pad_label(4, 4), False, False, 0)
+    hbox.pack_start(text_label, False, False, 0)
+    hbox.show_all()
+    item = Gtk.MenuItem()
+    item.add(hbox)
+    if tooltip_markup != None:
+        item.set_tooltip_markup(tooltip_markup)
+    item.show()
+
+    return item
+    
 def get_radio_menu_items_group(menu, labels, msgs, callback, active_index):
     first_item = Gtk.RadioMenuItem()
     first_item.set_label(labels[0])

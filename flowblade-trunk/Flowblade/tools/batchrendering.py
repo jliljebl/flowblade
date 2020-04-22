@@ -45,6 +45,7 @@ import time
 import threading
 import unicodedata
 
+import atomicfile
 import appconsts
 import dialogutils
 import editorstate
@@ -123,6 +124,8 @@ class QueueRunnerThread(threading.Thread):
 
             project = persistance.load_project(project_file_path, False)
 
+            maybe_create_render_folder(render_item.render_path)
+        
             producer = project.c_seq.tractor
             profile = mltprofiles.get_profile(render_item.render_data.profile_name)
             consumer = renderconsumer.get_mlt_render_consumer(render_item.render_path, 
@@ -269,7 +272,6 @@ def init_dirs_if_needed():
     if not os.path.exists(get_projects_dir()):
         os.mkdir(get_projects_dir())
 
-
 def get_projects_dir():
     return userfolders.get_cache_dir() + PROJECTS_DIR
 
@@ -285,18 +287,19 @@ def _get_pid_file_path():
     user_dir = userfolders.get_cache_dir()
     return user_dir + PID_FILE
     
-def destroy_for_identifier(identifier):
+def destroy_for_identifier(identifier, destroy_project_file=True):
     try:
         item_path = get_datafiles_dir() + identifier + ".renderitem"
         os.remove(item_path)
     except:
         pass
     
-    try:
-        project_path = get_projects_dir() + identifier + ".flb"
-        os.remove(project_path)
-    except:
-        pass    
+    if destroy_project_file == True:
+        try:
+            project_path = get_projects_dir() + identifier + ".flb"
+            os.remove(project_path)
+        except:
+            pass
 
 def copy_project(render_item, file_name):
     try:
@@ -306,6 +309,11 @@ def copy_project(render_item, file_name):
         secondary_txt = _("Error message: ") + str(e)
         dialogutils.warning_message(primary_txt, secondary_txt, batch_window.window)
 
+def maybe_create_render_folder(render_path):
+    folder = os.path.dirname(render_path)
+    if not os.path.exists(folder):
+        os.mkdir(folder)
+        
 # --------------------------------------------------------------- app thread and data objects
 def launch_batch_rendering():
     bus = dbus.SessionBus()
@@ -445,8 +453,7 @@ class RenderQueue:
             render_item = None
             try:
                 data_file_path = data_files_dir + data_file_name
-                data_file = open(data_file_path, 'rb')
-                render_item = pickle.load(data_file)
+                render_item = utils.unpickle(data_file_path)
                 self.queue.append(render_item)
             except Exception as e:
                 print (str(e))
@@ -460,8 +467,10 @@ class RenderQueue:
             except Exception as e:
                 if self.error_status == None:
                     self.error_status = []
-                self.error_status.append((_(" project file load failed with ") + str(e)))
+                self.error_status.append((data_file_name, _(" project file load failed with ") + str(e)))
 
+        print(self.error_status)
+         
         if self.error_status != None:
             for file_path, error_str in self.error_status:
                 identifier = get_identifier_from_path(file_path)
@@ -543,12 +552,14 @@ class BatchRenderItemData:
 
     def save(self):
         item_path = get_datafiles_dir() + self.generate_identifier() + ".renderitem"
-        item_write_file = open(item_path, "wb")
-        pickle.dump(self, item_write_file)
+        with atomicfile.AtomicFileWriter(item_path, "wb") as afw:
+            item_write_file = afw.get_file()
+            pickle.dump(self, item_write_file)
 
     def save_as_single_render_item(self, item_path):
-        item_write_file = open(item_path, "wb")
-        pickle.dump(self, item_write_file)
+        with atomicfile.AtomicFileWriter(item_path, "wb") as afw:
+            item_write_file = afw.get_file()
+            pickle.dump(self, item_write_file)
 
     def delete_from_queue(self):
         identifier = self.generate_identifier()
@@ -786,7 +797,9 @@ class BatchRenderWindow:
             primary_txt = _("Multiple items with same render target file!")
             
             secondary_txt = _("Later items will render on top of earlier items if this queue is rendered.\n") + \
-                            _("Delete or unqueue some items with same paths:\n\n")
+                            _("Possible fixes:\n\n") + \
+                            "\u2022" + " " + _("Change item render file path from right click popup menu.\n") + \
+                            "\u2022" + " " + _("Delete or unqueue some items with same paths.\n\n")
             for k,v in same_paths.items():
                 secondary_txt = secondary_txt + str(v) + _(" items with path: ") + str(k) + "\n"
             dialogutils.warning_message(primary_txt, secondary_txt, batch_window.window)
@@ -967,6 +980,8 @@ class RenderQueueView(Gtk.VBox):
             file_name = run_save_project_as_dialog(render_item.project_name)
             if file_name != None:
                 copy_project(render_item, file_name)
+        elif msg == "changepath":
+            show_change_render_item_path_dialog(_change_render_item_path_callback, render_item)
 
     def fill_data_model(self, render_queue):
         self.storemodel.clear()        
@@ -1016,6 +1031,16 @@ def show_render_properties_panel(render_item):
     start_str = utils.get_tc_string_with_fps(start_frame, render_item.render_data.fps)
     end_str = utils.get_tc_string_with_fps(end_frame, render_item.render_data.fps)
     
+    
+    if hasattr(render_item.render_data, "proxy_mode"):
+        if render_item.render_data.proxy_mode == appconsts.USE_ORIGINAL_MEDIA:
+            proxy_mode = _("Using Original Media")
+        else:
+            proxy_mode = _("Using Proxy Media")
+    else:
+        proxy_mode = _("N/A")
+
+    
     LEFT_WIDTH = 200
     render_item.get_display_name()
     row0 = guiutils.get_two_column_box(guiutils.bold_label(_("Encoding:")), Gtk.Label(label=enc_desc), LEFT_WIDTH)
@@ -1027,6 +1052,7 @@ def show_render_properties_panel(render_item):
     row6 = guiutils.get_two_column_box(guiutils.bold_label(_("Frames Per Second:")), Gtk.Label(label=str(render_item.render_data.fps)), LEFT_WIDTH)
     row7 = guiutils.get_two_column_box(guiutils.bold_label(_("Render Profile Name:")), Gtk.Label(label=str(render_item.render_data.profile_name)), LEFT_WIDTH)
     row8 = guiutils.get_two_column_box(guiutils.bold_label(_("Render Profile:")), Gtk.Label(label=render_item.render_data.profile_desc), LEFT_WIDTH)
+    row8 = guiutils.get_two_column_box(guiutils.bold_label(_("Proxy Mode:")), Gtk.Label(label=proxy_mode), LEFT_WIDTH)
 
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(Gtk.Label(label=render_item.get_display_name()), False, False, 0)
@@ -1044,11 +1070,66 @@ def show_render_properties_panel(render_item):
 
     title = _("Render Properties")
     dialogutils.panel_ok_dialog(title, vbox)
+
+def show_change_render_item_path_dialog(callback, render_item):
+    cancel_str = _("Cancel")
+    ok_str = _("Change Path")
+    dialog = Gtk.Dialog(_("Change Render Item Path"),
+                        batch_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (cancel_str, Gtk.ResponseType.CANCEL,
+                        ok_str, Gtk.ResponseType.YES))
+
+    INPUT_LABELS_WITDH = 150
     
+    folder, f_name = os.path.split(render_item.render_path)
+
+    out_folder = Gtk.FileChooserButton(_("Select target folder"))
+    out_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
+    out_folder.set_current_folder(folder)
+    
+    folder_row = guiutils.get_two_column_box(Gtk.Label(label=_("Folder:")), out_folder, INPUT_LABELS_WITDH)
+    
+    file_name = Gtk.Entry()
+    file_name.set_text(f_name)
+
+    name_pack = Gtk.HBox(False, 4)
+    name_pack.pack_start(file_name, True, True, 0)
+
+    name_row = guiutils.get_two_column_box(Gtk.Label(label=_("Render file name:")), name_pack, INPUT_LABELS_WITDH)
+ 
+    vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(folder_row, False, False, 0)
+    vbox.pack_start(name_row, False, False, 0)
+    vbox.pack_start(guiutils.pad_label(12, 25), False, False, 0)
+    
+    alignment = guiutils.set_margins(vbox, 12, 12, 12, 12)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    dialogutils.default_behaviour(dialog)
+    dialog.connect('response', callback, (out_folder, file_name, render_item))
+    dialog.show_all()
+
+def _change_render_item_path_callback(dialog, response_id, data):
+
+    out_folder, file_name, render_item = data
+    if response_id == Gtk.ResponseType.YES:
+
+        render_path = out_folder.get_filename() + "/" + file_name.get_text()
+        render_item.render_path = render_path
+        destroy_for_identifier(render_item.generate_identifier(), False)
+        render_item.save()
+        batch_window.reload_queue()
+        dialog.destroy()
+    else:
+        dialog.destroy()
+        
 def display_render_item_popup_menu(callback, event):
     menu = render_item_menu
     guiutils.remove_children(menu)
-
+    
+    menu.add(_get_menu_item(_("Change Item Render File Path..."), callback,"changepath"))
     menu.add(_get_menu_item(_("Save Item Project As..."), callback,"saveas"))
     menu.add(_get_menu_item(_("Render Properties"), callback,"renderinfo")) 
     _add_separetor(menu)
@@ -1112,6 +1193,7 @@ class SingleRenderLaunchThread(threading.Thread):
 
     
 def single_render_main(root_path):
+    
     # called from .../launch/flowbladesinglerender script
     gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
     editorstate.gtk_version = gtk_version
@@ -1182,8 +1264,7 @@ class SingleRenderThread(threading.Thread):
 
         try:
             data_file_path = hidden_dir + CURRENT_RENDER_RENDER_ITEM
-            data_file = open(data_file_path, 'rb')
-            render_item = pickle.load(data_file)
+            render_item = utils.unpickle(data_file_path)
             self.error_status = None
         except Exception as e:
             if self.error_status == None:
@@ -1205,6 +1286,9 @@ class SingleRenderThread(threading.Thread):
         
         vcodec = self.get_vcodec(render_item)
         vformat = self.get_argval(render_item, "f")
+        
+        # We just autocreate folder if for some reason it has been deleted.
+        maybe_create_render_folder(render_item.render_path)
         
         if self.is_frame_sequence_render(vcodec) == True and vformat == None:
             # Frame sequence render

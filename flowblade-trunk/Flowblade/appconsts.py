@@ -148,8 +148,10 @@ AUTOSAVE_DIR = "autosave/"
 # Hidden media folders
 # NOTE: We have not been fully consistant with the ending forward slashes.
 AUDIO_LEVELS_DIR = "audiolevels/"
+PROXIES_DIR = "proxies/"
 THUMBNAILS_DIR = "thumbnails"
 RENDERED_CLIPS_DIR = "rendered_clips"
+TLINE_RENDERS_DIR = "tlinerenders"
 GMIC_DIR = "gmic"
 PHANTOM_DIR = "phantom2d"
 PHANTOM_DISK_CACHE_DIR = "disk_cache"
@@ -160,6 +162,10 @@ TRIM_VIEW_DIR = "trim_view"
 USER_PROFILES_DIR = "user_profiles/"
 USER_PROFILES_DIR_NO_SLASH = "user_profiles"
 BATCH_DIR = "batchrender/"
+CONTAINER_CLIPS_DIR = "container_clips"
+CONTAINER_CLIPS_UNRENDERED = "container_clips/unrendered"
+CC_CLIP_FRAMES_DIR = "/clip_frames"
+CC_RENDERED_FRAMES_DIR = "/rendered_frames"
 
 # Luma bands
 SHADOWS = 0
@@ -204,15 +210,10 @@ SHORTCUTS_ROOT_TAG = 'flowblade'
 SHORTCUTS_TAG = 'shortcuts'
 
 # Project properties keys
-P_PROP_DISSOLVE_GROUP_FADE_IN = "P_PROP_DISSOLVE_GROUP_FADE_IN"
-P_PROP_DISSOLVE_GROUP_FADE_OUT = "P_PROP_DISSOLVE_GROUP_FADE_OUT"
-P_PROP_ANIM_GROUP_FADE_IN = "P_PROP_ANIM_GROUP_FADE_IN"
-P_PROP_ANIM_GROUP_FADE_OUT = "P_PROP_ANIM_GROUP_FADE_OUT"
 P_PROP_TLINE_SHRINK_VERTICAL = "tline_shrink_vertical"
 P_PROP_LAST_RENDER_SELECTIONS = "P_PROP_LAST_RENDER_SELECTIONS"
 P_PROP_TRANSITION_ENCODING = "P_PROP_TRANSITION_ENCODING"
-P_PROP_AUTO_FOLLOW = "P_PROP_AUTO_FOLLOW"
-#P_PROP_COMPOSITING_MODE = "P_PROP_COMPOSITING_MODE"
+P_PROP_DEFAULT_FADE_LENGTH = "P_PROP_DEFAULT_FADE_LENGTH"
 
 # A context defining action taken when mouse press happens based on edit mode ands mouse position
 POINTER_CONTEXT_NONE = 0
@@ -268,4 +269,26 @@ COPY_PASTE_GEOMETRY_EDITOR_KF_DATA = 4
 COMPOSITING_MODE_TOP_DOWN_FREE_MOVE = 0
 COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW = 1
 COMPOSITING_MODE_STANDARD_AUTO_FOLLOW = 2
+COMPOSITING_MODE_STANDARD_FULL_TRACK = 3
 
+# Magic string for selection path being user home directory root
+USER_HOME_DIR = "USER_HOME_DIERCTORY_&&##&&"
+
+# Timeline rendering modes
+TLINE_RENDERING_OFF = 0
+TLINE_RENDERING_AUTO = 1
+TLINE_RENDERING_REQUEST = 2
+
+# Timeline rendering uses these now
+PROXY_SIZE_FULL = 0
+PROXY_SIZE_HALF = 1
+PROXY_SIZE_QUARTER = 2
+
+
+# Container clip types
+CONTAINER_CLIP_GMIC = 0
+CONTAINER_CLIP_MLT_XML = 1
+CONTAINER_CLIP_CAIRO_SCRIPT = 2
+CONTAINER_CLIP_BLENDER = 3
+
+CONTAINER_CLIP_VIDEO_CLIP_NAME = "container_clip"

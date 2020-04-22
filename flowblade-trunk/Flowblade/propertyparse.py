@@ -38,9 +38,14 @@ PROP_EXPRESSION = appconsts.PROP_EXPRESSION
 NAME = appconsts.NAME
 ARGS = appconsts.ARGS
 SCREENSIZE = "SCREENSIZE"                                   # replace with "WIDTHxHEIGHT" of profile screensize in pix
+SCREENSIZE2 = "Screensize2"                                 # replace with "WIDTH HEIGHT" of profile screensize in pix
 WIPE_PATH = "WIPE_PATH"                                     # path to folder contining wipe resource images
 SCREENSIZE_WIDTH = "SCREENSIZE_WIDTH"                       # replace with width of profile screensize in pix
 SCREENSIZE_HEIGHT = "SCREENSIZE_HEIGHT"                     # replace with height of profile screensize in pix
+VALUE_REPLACEMENT = "value_replacement"                     # attr name for replacing value after clip is known
+FADE_IN_REPLAMENT = "fade_in_replament"                     # replace with fade in keyframes
+FADE_OUT_REPLAMENT = "fade_out_replament"                   # replace with fade out keyframes
+FADE_IN_OUT_REPLAMENT = "fade_in_out_replament"             # replace with fade in and out keyframes
 
 # ------------------------------------------- parse funcs
 def node_list_to_properties_array(node_list):
@@ -110,13 +115,58 @@ def replace_value_keywords(properties, profile):
     objects first become active.
     """
     sreensize_expr = str(profile.width()) + "x" + str(profile.height())
+    sreensize_expr_2 = str(profile.width()) + " " + str(profile.height())
     for i in range(0, len(properties)):
         name, value, prop_type = properties[i]
         if prop_type == PROP_EXPRESSION:
             value = value.replace(SCREENSIZE, sreensize_expr)
+            value = value.replace(SCREENSIZE2, sreensize_expr_2)
             value = value.replace(WIPE_PATH, respaths.WIPE_RESOURCES_PATH)
             properties[i] = (name, value, prop_type)
 
+def replace_values_using_clip_data(properties, info, clip):
+    """
+    Property value expressions may need to be replaced with expressions that can only be created
+    with knowing clip.
+    """
+    replacement_happened = False
+    for i in range(0, len(properties)):
+        prop_name, value, prop_type = properties[i]
+        
+        if prop_type == PROP_EXPRESSION:
+            args_str = info.property_args[prop_name]
+            args_dict = args_string_to_args_dict(args_str)
+            
+            for arg_name in args_dict:
+                if arg_name == VALUE_REPLACEMENT:
+                    arg_val = args_dict[arg_name]
+                    clip_length = clip.clip_length()
+                    
+                    if arg_val == FADE_IN_REPLAMENT:
+                        value = "0=0;20=1"
+                        properties[i] = (prop_name, value, prop_type)
+                        replacement_happened = True
+                    elif arg_val == FADE_OUT_REPLAMENT:
+                        if clip_length > 20:
+                            value = "0=1;" + str(clip_length - 21) + "=1;" + str(clip_length - 1) + "=0"
+                        else:
+                            value = "0=1;" + str(clip_length - 1) + "=0"
+                        properties[i] = (prop_name, value, prop_type)
+                        replacement_happened = True
+                    elif arg_val == FADE_IN_OUT_REPLAMENT:
+                        if clip_length > 40:
+                            value = "0=0;20=1;" + str(clip_length - 21) + "=1;" + str(clip_length - 1) + "=0"
+                        else:
+                            clip_half = int(clip_length//2)
+                            value = "0=0;" + str(clip_half) + "=1;" + str(clip_length - 1) + "=0"
+                        properties[i] = (prop_name, value, prop_type)
+                        replacement_happened = True
+
+    return replacement_happened
+                
+
+
+            
 def get_args_num_value(val_str):
     """
     Returns numerical value for expression in property
@@ -178,7 +228,29 @@ def geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
  
     return new_keyframes
 
+def rect_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
+    # Parse "composite:geometry" properties value string into (frame, source_rect, opacity)
+    # keyframe tuples.
+    new_keyframes = []
+    keyframes_str = keyframes_str.strip('"') # expression have sometimes quotes that need to go away
+    kf_tokens =  keyframes_str.split(';')
+    for token in kf_tokens:
+        sides = token.split('=')
+        values = sides[1].split(' ')
+        x = values[0]
+        y = values[1]
+        w = values[2] 
+        h = values[3] 
+        source_rect = [int(x), int(y), int(w), int(h)] #x,y,width,height
+        add_kf = (int(sides[0]), source_rect, out_to_in_func(float(1)))
+        new_keyframes.append(add_kf)
+    
+    return new_keyframes
+    
 def rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
+    # THIS WAS CREATED FOR frei0r cairoaffineblend FILTER. That filter has to use a very particular paramter values
+    # scheme to satisty the frei0r requirement of all float values being in range 0.0 - 1.0.
+    #
     # Parse extraeditor value properties value string into (frame, [x, y, x_scale, y_scale, rotation], opacity)
     # keyframe tuples.
     new_keyframes = []
@@ -204,6 +276,32 @@ def rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_
 
     return new_keyframes
 
+def non_freior_rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
+    # Parse extraeditor value properties value string into (frame, [x, y, x_scale, y_scale, rotation], opacity)
+    # keyframe tuples.
+    new_keyframes = []
+    screen_width = current_sequence().profile.width()
+    screen_height = current_sequence().profile.height()
+    keyframes_str = keyframes_str.strip('"') # expression have sometimes quotes that need to go away
+    kf_tokens =  keyframes_str.split(';')
+    for token in kf_tokens:
+        sides = token.split('=')
+        values = sides[1].split(':')
+        frame = int(sides[0])
+        # get values and convert "frei0r.cairoaffineblend" values to editor values
+        # this because all frei0r plugins require values in range 0 - 1
+        x = float(values[0])
+        y = float(values[1])
+        x_scale = float(values[2])
+        y_scale = float(values[3])
+        rotation = float(values[4])
+        opacity = float(values[5]) * 100
+        source_rect = [x,y,x_scale,y_scale,rotation]
+        add_kf = (frame, source_rect, float(opacity))
+        new_keyframes.append(add_kf)
+
+    return new_keyframes
+    
 def rotomask_json_value_string_to_kf_array(keyframes_str, out_to_in_func):
     new_keyframes = []
     json_obj = json.loads(keyframes_str)
@@ -214,8 +312,11 @@ def rotomask_json_value_string_to_kf_array(keyframes_str, out_to_in_func):
 
     return sorted(new_keyframes, key=lambda kf_tuple: kf_tuple[0]) 
     
+    
+# ----------------------------------------------------------------------------- AFFINE BLEND
 def create_editable_property_for_affine_blend(clip, editable_properties):
     # Build a custom object that duck types for TransitionEditableProperty to use in editor
+    # 
     ep = utils.EmptyClass()
     # pack real properties to go
     ep.x = [ep for ep in editable_properties if ep.name == "x"][0]
@@ -230,7 +331,7 @@ def create_editable_property_for_affine_blend(clip, editable_properties):
     # duck type methods, using opacity is not meaningful, any property with clip member could do
     ep.get_clip_tline_pos = lambda : ep.opacity.clip.clip_in # clip is compositor, compositor in and out points straight in timeline frames
     ep.get_clip_length = lambda : ep.opacity.clip.clip_out - ep.opacity.clip.clip_in + 1
-    ep.get_input_range_adjustment = lambda : Gtk.Adjustment(float(100), float(0), float(100), float(1))
+    ep.get_input_range_adjustment = lambda : Gtk.Adjustment(value=float(100), lower=float(0), upper=float(100), step_incr=float(1))
     ep.get_display_name = lambda : "Opacity"
     ep.get_pixel_aspect_ratio = lambda : (float(current_sequence().profile.sample_aspect_num()) / current_sequence().profile.sample_aspect_den())
     ep.get_in_value = lambda out_value : out_value # hard coded for opacity 100 -> 100 range
@@ -332,11 +433,7 @@ def get_frei0r_cairo_position(pos, screen_dim):
     range_pos = pos + screen_dim * 2.0
     return range_pos / pix_range
 
-def get_on_off_txt_for_int(int_val):
-    if int_val == 0:
-        return _("Off")
-    else:
-        return _("On")
+
 
 #------------------------------------------------------ util funcs
 def _property_type(value_str):

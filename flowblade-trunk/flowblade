@@ -23,7 +23,7 @@
 import os
 import sys
 
-print ("FLOWBLADE MOVIE EDITOR 2.2")
+print ("FLOWBLADE MOVIE EDITOR 2.4")
 print ("--------------------------")
 
 
@@ -32,22 +32,22 @@ launch_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
 
 print ("Launch script dir:", launch_dir)
 
-# Update sys.path to include modules
-# When running on distro
+# Update sys.path to include modules.
+# When running on distro.
 if launch_dir == "/usr/bin":
     print ("Running from installation...")
     modules_path = "/usr/share/flowblade/Flowblade"
     if not os.path.isdir(modules_path):
         modules_path = "/usr/share/pyshared/Flowblade"
     print ("modules path:", modules_path)
-# When running in flatpak
+# When running in flatpak.
 elif launch_dir == "/app/bin":
     print ("Running from Flatpak installation...")
     modules_path = "/app/share/flowblade/Flowblade"
     if not os.path.isdir(modules_path):
         modules_path = "/app/share/pyshared/Flowblade"
     print ("modules path:", modules_path)
-# When running in filesystem
+# When running in filesystem.
 else:
     print ("Running from filesystem...")
     modules_path = launch_dir + "/Flowblade"
@@ -68,7 +68,7 @@ except Exception as err:
     print ("ERROR:", err)
     sys.exit(1)
 
-# Get app.py module and set info which type of installation is running
+# Get app.py module and set info which type of installation is running.
 try:
 
     import processutils
@@ -89,5 +89,5 @@ except Exception as err:
     print ("Installation was assumed to be at:", modules_path)
     sys.exit(1)
 
-# Launch application
+# Launch application.
 app.main(modules_path)

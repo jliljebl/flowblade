@@ -1,12 +1,14 @@
 
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
  
-**New version Flowblade 2.2 released!**
+**New release Flowblade 2.4 is now out.**
+
+**All distributions are encouraged to update to Flowblade 2.4 and MLT 6.18**  [MLT 6.18 required for Flowblade 2.4](./flowblade-trunk/docs/running_flowblade_2-4.md) **and use latest commit in fix brach** [here.](https://github.com/jliljebl/flowblade/commit/6a180252261b94b72959ac8fa562c916c99ecfaf)
 
 **Release notes [here.](./flowblade-trunk/docs/RELEASE_NOTES.md)**
 
-**[Installing](./flowblade-trunk/docs/INSTALLING.md) new version.**
-
+**[Installing Flowblade 2.4](./flowblade-trunk/docs/INSTALLING.md).**
+ 
 **Contents:**
   1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
   1. [Features](https://github.com/jliljebl/flowblade#features)
@@ -61,9 +63,9 @@ Flowblade offers a configurable workflow - toolset, its order, default tool and 
         
 # Releases
 
-**Latest release:** Flowblade Movie Editor 2.2 was released on August 2019.
+**Latest release:** Flowblade Movie Editor 2.4 was released on December 2019.
 
-**Next release:** Flowblade Movie Editor 2.4 is coming in December 2019.
+**Next release:** Flowblade Movie Editor 2.6 is coming in June 2020.
 
 # Installing Flowblade
 

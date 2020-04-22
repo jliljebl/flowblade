@@ -31,6 +31,7 @@ import re
 import shutil
 
 import appconsts
+import atomicfile
 import dialogs
 import dialogutils
 from editorstate import PLAYER
@@ -60,10 +61,13 @@ def _export_melt_xml_dialog_callback(dialog, response_id):
     if response_id == Gtk.ResponseType.ACCEPT:
         filenames = dialog.get_filenames()
         save_path = filenames[0]
-        #global _xml_render_monitor
-        _xml_render_player = renderconsumer.XMLRenderPlayer(save_path,
-                                                          _xml_render_done,
-                                                          None)
+
+        _xml_render_player = renderconsumer.XMLRenderPlayer(  save_path,
+                                                              _xml_render_done,
+                                                              None,
+                                                              PROJECT().c_seq,
+                                                              PROJECT(),
+                                                              PLAYER())
         _xml_render_player.start()
         
         dialog.destroy()
@@ -87,7 +91,10 @@ def _export_edl_dialog_callback(dialog, response_id):
         
         _xml_render_player = renderconsumer.XMLRenderPlayer(get_edl_temp_xml_path(),
                                                             _edl_xml_render_done,
-                                                            edl_path)
+                                                            edl_path,
+                                                            PROJECT().c_seq,
+                                                            PROJECT(),
+                                                            PLAYER())
         _xml_render_player.start()
 
         dialog.destroy()
@@ -98,9 +105,9 @@ def _edl_xml_render_done(data):
     edl_path  = data
     mlt_parse = MLTXMLToEDLParse(get_edl_temp_xml_path(), current_sequence())
     edl_contents = mlt_parse.create_edl()
-    f = open(edl_path, 'w')
-    f.write(edl_contents)
-    f.close()
+    with atomicfile.AtomicFileWriter(edl_path, "w") as afw:
+        f = afw.get_file()
+        f.write(edl_contents)
 
 def get_edl_temp_xml_path():
     return userfolders.get_cache_dir() + "edl_temp_xml.xml"
@@ -523,9 +530,13 @@ def _ardour_export_dialog_callback(dialog, response_id, session_folder):
     xml_save_path = userfolders.get_cache_dir() + "ardour_export.xml"
     
     global _xml_render_player
-    _xml_render_player = renderconsumer.XMLRenderPlayer(xml_save_path,
+    _xml_render_player = renderconsumer.XMLRenderPlayer(  xml_save_path,
                                                           _ardour_xml_render_done,
-                                                          None)
+                                                          None,
+                                                          PROJECT().c_seq,
+                                                          PROJECT(),
+                                                          PLAYER())
+
     _xml_render_player.ardour_session_folder = folder_path
     _xml_render_player.start()
 

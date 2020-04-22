@@ -1,0 +1,15 @@
+#!/usr/bin/python3
+
+import sys
+import os
+
+
+modules_path = os.path.dirname(os.path.abspath(sys.argv[0])).rstrip("/launch")
+
+sys.path.insert(0, modules_path)
+import processutils
+processutils.update_sys_path(modules_path)
+
+import tlinerenderserver
+
+tlinerenderserver.main(modules_path)

@@ -22,7 +22,7 @@
 Module contains class Sequence that is the multitrack media object being edited
 by the application. A project has 1-n of these.
 """
-
+import time
 import mlt
 import os
 
@@ -33,6 +33,7 @@ import mltfilters
 import mlttransitions
 import mltrefhold
 import patternproducer
+import tlinerender
 import utils
 
 # Media types for tracks or clips
@@ -112,6 +113,7 @@ class Sequence:
         self.watermark_file_path = None
         self.seq_len = 0 # used in trim crash hack, remove when fixed
         self.compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
+        self.tline_render_mode = appconsts.TLINE_RENDERING_OFF
 
         # MLT objects for a multitrack sequence
         self.init_mlt_objects()
@@ -395,10 +397,9 @@ class Sequence:
         """
         Creates MLT Producer and adds attributes to it, but does 
         not add it to track/playlist object.
-        """        
+        """
         producer = mlt.Producer(self.profile, str(path)) # this runs 0.5s+ on some clips
-        if novalidate == True:
-            producer.set("mlt_service", "avformat-novalidate")
+
         mltrefhold.hold_ref(producer)
         producer.path = path
         producer.filters = []
@@ -476,6 +477,7 @@ class Sequence:
         clip.waveform_data = None
         clip.color = None # None means that clip type default color is displayed
         clip.markers = []
+        clip.container_data = None
         
     def clone_track_clip(self, track, index):
         orig_clip = track.clips[index]
@@ -579,6 +581,11 @@ class Sequence:
         return compositor
 
     def restack_compositors(self):
+        if self.compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+            # we should only see this on sequence creation and adding removing tracks for COMPOSITING_MODE_STANDARD_FULL_TRACK
+            # remove this later
+            print("restacking compositors!")
+
         self.sort_compositors()
 
         new_compositors = []
@@ -608,6 +615,8 @@ class Sequence:
         compositor.set_in_and_out(old_compositor.clip_in, old_compositor.clip_out)
         compositor.transition.set_tracks(old_compositor.transition.a_track, old_compositor.transition.b_track)
         compositor.obey_autofollow = old_compositor.obey_autofollow
+        if self.compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+            compositor.transition.mlt_transition.set("always_active", str(1))
         self._plant_compositor(compositor)
         return compositor
     
@@ -645,13 +654,38 @@ class Sequence:
                 if comp.destroy_id == old_compositor.destroy_id:
                     found = True
                     self.compositors.remove(comp)
-                    #edit.old_compositors.append(comp)
                     old_compositor = comp
             if found == False:
                 raise ValueError('compositor not found using destroy_id')
             
         self.field.disconnect_service(old_compositor.transition.mlt_transition)
 
+    def destroy_compositors(self):
+        # This can be called when undo stack destroyd too.
+        for compositor in self.compositors:
+            self.field.disconnect_service(compositor.transition.mlt_transition)
+        self.compositors = []
+
+    def add_full_track_compositors(self):
+        print("Adding full track compositors")
+        
+        for i in range(self.first_video_index, len(self.tracks) - 1):
+            track = self.tracks[i]
+        
+            compositor = self.create_compositor("##affineblend")
+
+            a_track = self.first_video_index
+            b_track = track.id 
+            compositor.transition.set_tracks(a_track, b_track)
+            compositor.set_in_and_out(-1, -1)
+            compositor.transition.mlt_transition.set("always_active", str(1))
+            compositor.origin_clip_id = -1
+
+            self.add_compositor(compositor)
+        
+        self.restack_compositors()
+        print("Adding full track compositors DONE")
+    
     def get_compositor_for_destroy_id(self, destroy_id):
         for comp in self.compositors:
             if comp.destroy_id == destroy_id:
@@ -669,7 +703,10 @@ class Sequence:
         """
         Compositor order must be from top to bottom or will not work.
         """
-        self.compositors.sort(key=_sort_compositors_comparator)
+        if self.compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW and self.compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+            self.compositors.sort(key=_sort_compositors_comparator, reverse=True)
+        else:
+            self.compositors.sort(key=_sort_compositors_comparator)
         
     def get_track_compositors(self, track_index):
         track_compositors = []
@@ -772,27 +809,26 @@ class Sequence:
         self._unmute_editable()
 
     def update_edit_tracks_length(self):
-        # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
-        self.seq_len = 0  # muuta  arvoksi 1 ???
+        # Needed for timeline renderering updates
+        self.seq_len = 0 
         for i in range(1, len(self.tracks) - 1):
             track_len = self.tracks[i].get_length()
             if track_len > self.seq_len:
                 self.seq_len = track_len
 
-    def update_trim_hack_blank_length(self):
-        # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
+    def update_hidden_track_for_timeline_rendering(self):
+        # Needed for timeline render updates
         self.tracks[-1].clips = []
         self.tracks[-1].clear()
 
         seq_len = self.seq_len
         if seq_len < 1:
             seq_len = 1
-            
-        edit._insert_blank(self.tracks[-1], 0, seq_len)
+        
+        tlinerender.get_renderer().update_hidden_track(self.tracks[-1], seq_len)
 
     def get_seq_range_frame(self, frame):
-        # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
-        # remove TimeLineFrameScale then too
+        # Needed for timeline renderering updates
         if frame >= (self.seq_len - 1):
             return self.seq_len - 1
         else:
@@ -934,7 +970,6 @@ class Sequence:
         cut_frame = -1
         for i in range(1, len(self.tracks) - 1):
             track = self.tracks[i]
-            #print track.get_producer().get_length()
             
             # Get index and clip start
             index = track.get_clip_index_at(tline_frame)
@@ -1028,6 +1063,19 @@ class Sequence:
                     return clip
 
         return None
+
+    def get_track_and_index_for_id(self, clip_id):
+        """
+        Returns clip or None if not found.
+        """
+        for i in range(1, len(self.tracks)):
+            track = self.tracks[i]
+            for j in range(0, len(track.clips)):
+                clip = track.clips[j]
+                if clip.id == clip_id:
+                    return (track, j)
+
+        return (None, None)
         
     def set_track_mute_state(self, track_index, mute_state):
         track = self.tracks[track_index]
@@ -1090,7 +1138,6 @@ class Sequence:
             clip = track.get_clip(i)
             print(i, " in:", clip.get_in()," out:", clip.get_out())
 
-
     def print_compositors(self):
         for compositor in self.compositors:
             print("---")
@@ -1102,6 +1149,8 @@ class Sequence:
 def get_media_type(file_path):
     """
     Returns media type of file.
+    """
+    return utils.get_media_type(file_path)
     """
     if os.path.exists(file_path):
         mime_type = utils.get_file_type(file_path)
@@ -1129,7 +1178,8 @@ def get_media_type(file_path):
         return IMAGE
     
     return UNKNOWN
-
+    """
+    
 def _clip_length(clip):
     return clip.clip_out - clip.clip_in + 1
 
@@ -1155,6 +1205,10 @@ def create_sequence_clone_with_different_track_count(old_seq, v_tracks, a_tracks
     track_delta = new_seq.first_video_index - old_seq.first_video_index
     new_seq.clone_compositors_from_sequence(old_seq, track_delta)
 
+    # Copy modes values
+    new_seq.compositing_mode = old_seq.compositing_mode
+    new_seq.tline_render_mode = old_seq.tline_render_mode
+        
     # copy next clip id data
     new_seq.next_id = old_seq.next_id
     return new_seq

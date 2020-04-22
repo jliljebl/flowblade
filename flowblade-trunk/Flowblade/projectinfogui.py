@@ -98,7 +98,7 @@ def update_project_info():
 def show_project_events_dialog():
     events_list = ProjectEventListView()
     events_list.fill_data_model()
-    events_list.set_size_request(500, 600)
+    events_list.set_size_request(620, 500)
     dialogutils.panel_ok_dialog(_("Project Events"), events_list)
 
 class ProjectEventListView(Gtk.VBox):
@@ -127,7 +127,7 @@ class ProjectEventListView(Gtk.VBox):
         self.text_col_2 = Gtk.TreeViewColumn("text2")
         self.text_col_2.set_title(_("Event"))
         self.text_col_3 = Gtk.TreeViewColumn("text3")
-        self.text_col_3.set_title(_("Path"))
+        self.text_col_3.set_title(_("Data"))
 
         # Cell renderers
         self.text_rend_1 = Gtk.CellRendererText()

@@ -25,14 +25,14 @@ on user requests.
 import time
 import editorstate
 
-set_post_undo_redo_edit_mode = None # This is set at startup to avoid circular imports
+set_post_undo_redo_edit_mode = None # This is set at startup to avoid circular imports.
 repaint_tline = None
 
-# Max stack size
+# Max stack size.
 MAX_UNDOS = 35
 
 # EditActions are placed in this stack after their do_edit()
-# method has been called
+# method has been called.
 undo_stack = []
 
 # Index is the stack pointer that tracks done undos and redos.
@@ -41,7 +41,7 @@ undo_stack = []
 # no redos.
 index = 0
 
-# Some menu items are set active/deactive based on undo stack state
+# Some menu items are set active/deactive based on undo stack state.
 save_item = None
 undo_item = None 
 redo_item = None

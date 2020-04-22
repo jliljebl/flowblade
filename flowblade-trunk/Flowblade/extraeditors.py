@@ -846,7 +846,7 @@ class CatmullRomFilterEditor:
         elif self.current_edit_curve == CatmullRomFilterEditor.G:
             self.cr_filter.g_points_prop.write_property_value(points_str)
 
-        else: # CatmullRomFilterEditor.G
+        else: # CatmullRomFilterEditor.B
             self.cr_filter.b_points_prop.write_property_value(points_str)
 
         self.cr_filter.update_table_property_values()

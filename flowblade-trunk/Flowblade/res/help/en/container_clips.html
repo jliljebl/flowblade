@@ -1,0 +1,165 @@
+ <!DOCTYPE html>
+<html>
+<head>
+  <title>Container Clips</title>
+  <link rel="stylesheet" href="style.css">
+<script src="toc.js" type="text/javascript"></script>
+</head>
+
+<body>
+
+<div id="content">
+<img src="header_text_5.png">
+
+<script src="tocgen.js"></script>
+
+<div id="toccontent">
+
+<div class="subject-header">Container Clips</div>
+
+<p>
+A <b>Container Clip</b> is a Media Item and the Timeline Clip made from it that has three items packed together as a single entity: <i>Program, Unrendered Media</i> and <i>Rendered Media</i>.
+</p>
+
+<div id="toc"></div>
+
+<h2>Container Clips Concept</h2>
+
+<h4>Container Clips Components</h4>
+<p>
+Every <b>Container Clip</b> has the following 3 components:
+</p>
+<ol>
+<li><b>Unrendered Media</b> This is what is displayed on timeline if container clip media is not rendered.</li>
+<li><b>Program</b> This data is used to render a media clip on timeline, sometimes using unrendered media as input.</li>
+<li><b>Rendered Media</b> This is what is displayed on timeline when Container Clip is rendered.</li>
+</ol>
+<h4>Rationale</h4>
+<ul>
+<li><b>Performance</b> Container Clips provide means to turn resource heavy media items such as Sequence Clips into rendered media</li>
+<li><b>Resource Management</b> E.g. Blender Projects and G'Mic scripts are nicely managed by having them available via Container Clips</li>
+<li><b>Capablity extension</b> Existing technologies and applications can made to provide functionality that is not available otherwise. There wil be more developments in this area in the future.</li>
+<li><b>Sharing</b> In the future we will create a central repository to share container clip resources.</li>
+</ul>
+<h2>Workflow</h2>
+<ol>
+<li>Create Container Clip Media Item using <b>Project -> Create Contaniner Clip</b> menu.</li>
+<li>Edit properties of Container Clip with Right Mouse menu selection <b>Edit Container Data</b> if available.</li>
+<li>Add Container Clip on Timeline.</li>
+<li>Render and manage Container Clips on Timeline with Right Mouse submenu <b>Container Clip Actions</b>.</li>
+</ol>
+
+<h2>Container Clip Types</h2>
+<h3>G'Mic Script Container Clips</h3>
+
+<h5>Components</h5>
+<p>
+<ul style="list-style-type:none">
+<li><b>Unrendered Media</b> Video Clip.</li>
+<li><b>Program</b> G'Mic script created and saved from G'Mic tool.</li>
+<li><b>Rendered Media</b> A clip rendered with G'mic effect.</li>
+</ul>
+</p>
+<p>
+<h5>Use Cases</h5>
+<ul>
+<li>Render G'Mic effects only on clip ranges used on timeline.</li>
+<li>Make easier to use single user defined G'Mic effect on multple clips.</li>
+</ul>
+
+<h5> Creating G'Mic Script Container Clips</h5>
+
+<ol>
+<li>Open <b>G'Mic tool</b>.</li>
+<li>Create G'Mic effect script. See section on <b>G'Mic Tool</b> in Chapter <b>Tools</b>.</li>
+<li>Press <b>Save Script</b> button in bottom left corner and save effect.</li>
+<li>Select menu item <b>Project -> Create Contaniner Clip -> From G'Mix Script</b>.</li>
+<li>Select the script you saved and the clip that it will be applied on to create Container Clip.</li>
+</ol>
+
+<h3>Blender Project Container Clips</h3>
+<h5>Components</h5>
+
+<p>
+<ul style="list-style-type:none">
+<li><b>Unrendered Media</b> A placeholder Video Clip rendered on Media item creation.</li>
+<li><b>Program</b> Project file with *blend extension.</li>
+<li><b>Rendered Media</b> Rendered Clipfrom project file.</li>
+</ul>
+</p>
+<h5>Use Cases</h5>
+<ul>
+<li>Manage Blender projects by having handles for them in Flowblade.</li>
+<li>Create editors for Blender projects so that users can edit their properies on Flowblade</li>
+<li>Make possible to contribute and shear interesting Blender Projects for e.g. so nice text effects.</li>
+</ul>
+
+<h5> Creating Blender Project Container Clips</h5>
+
+<ol>
+<li>Open <b>G'Mic tool</b>.</li>
+<li>Select menu item <b>Project -> Create Contaniner Clip -> From Blender Project</b> and select Bleder project file with <i>.blend</i> extension.</li>
+<li>You can edit values that Blender project is rendered with, see section <b>Edíting Container Programs</b> below.</li>
+</ol>
+
+<h3>Selection Container Clips</h3>
+<h5>Components</h5>
+<p>
+<ul style="list-style-type:none">
+<li><b>Unrendered Media</b> A MLT XML vdieo clip created from selection or sequence like Compound clips previously.</li>
+<li><b>Program</b> A MLT XML video clip created from selection or sequence like Compound clips previously. Here Program is the same as unrendered media.</li>
+<li><b>Rendered Media</b> Clip Rendered from MLT XML Clip.</li>
+</ul>
+</p>
+<h5>Use Cases</h5>
+
+<ul>
+<li>Make possible to create Media items from selections and full Sequences.</li>
+<li>Give better timeline performance for complex multitrack container clips by pre-rendering them on timeline.</li>
+</ul>
+
+<h5> Creating Selection Container Clip from Selection</h5>
+
+<ol>
+<li> Select 2 or more adjacent clips from a single track.</li>
+<li> Select <b>Project->Create Container Clip->From Selected Clips</b></li>
+</ol>
+
+<h5> Creating Selection Container Clip from Sequence</h5>
+
+<ol>
+<li> Select <b>Project->Create Container Clip->From Current Sequence</b></li>
+</ol>
+
+<h5> Creating audio synced Selection Container Clip from two Media Items</h5>
+
+<ol>
+<li> Select 2 Media Items in Media panel.</b>
+	<ul>
+	<li> The expected case is to select <b>1 Video and 1 Audio Clip</b>.</li>
+	<li> If you select <b>2 Video Clips</b> then which is used as video depends on selection order.</li>
+	<li> Audio from clip treated as video is muted.</li>
+	</ul>
+</li>
+<li> Select <b>Project->Create Compound Clip->Audio Sync Merge Clip From 2 Media Items</b></li>
+<li> If audio sync is successful a dialog appers. Give a name for the new Media Item in the dialog.</li>
+<li> A new Media Item appears in the current Bin.</li>
+</ol>
+
+<div class="note">
+Audio syncing looks for best matemathical match between two audio waveforms, so <b>audio syncing non-matching audio will produce random results.</b>
+</div>
+
+<h2>Edíting Container Programs</h2>
+<p>
+TBD
+</p>
+
+
+
+</div>
+</div>
+
+</body>
+
+</html> 

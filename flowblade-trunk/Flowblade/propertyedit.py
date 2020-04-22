@@ -39,6 +39,8 @@ import mltfilters
 import propertyparse
 import utils
 
+import traceback
+
 # keys                                                      meaning of values for this key
 RANGE_IN = "range_in"                                       # values define user input range
 RANGE_OUT = "range_out"                                     # values define range of output to mlt
@@ -59,6 +61,7 @@ SINGLE_KEYFRAME = "singlekeyframe"                          # DEPRECATED, were j
 OPACITY_IN_GEOM_SINGLE_KF = "opacity_in_geom_kf_single"     # 0=0/0:SCREEN_WIDTHxSCREEN_HEIGHT:opacity
 OPACITY_IN_GEOM_KF = "opacity_in_geom_kf"                   # frame=0/0:SCREEN_WIDTHxSCREEN_HEIGHT:opacity (kf_str;kf_str;kf_str;...;kf_str)
 GEOMETRY_OPACITY_KF ="geom_opac_kf"                         # frame=x/y:widthxheight:opacity
+GEOMETRY_RECT_FILTER_KF = "geom_filt_rect_kf"               # frame=x y w h 1  with 1 being constant for full opacity
 GEOM_IN_AFFINE_FILTER = "geom_in_affine_filt"               # x/y:widthxheight:opacity
 GEOM_IN_AFFINE_FILTER_V2 =  "geom_in_affine_filt_v2"        # x/y:widthxheight:opacity
 AFFINE_SCALE = "affine_scale"                               # special property to get the 1/ x that the filter wants
@@ -71,6 +74,7 @@ COLOR = "color"                                             # #rrggbb
 CAIRO_COLOR = "cairo_color"                                             # #rrggbb but displayed as r and b switched
 LUT_TABLE = "lut_table"                                     # val;val;val;val;...;val
 WIPE_RESOURCE = "wipe_resource"                             # /path/to/resource.pgm
+FILTER_WIPE_RESOURCE = "filter_wipe_resource"               # /path/to/resource.pgm
 FILE_RESOURCE = "file_resource"                             # /path/to/somefile
 ROTO_JSON = "roto_json"                                     # JSON string of keyframes and values
 PLAIN_STRING = "plain_string"                               # String is just string, for text input
@@ -119,24 +123,26 @@ def get_filter_editable_properties(clip, filter_object, filter_index,
     return editable_properties
 
 def _create_editable_property(p_type, args_str, params):
-    
+
+    args = propertyparse.args_string_to_args_dict(args_str)
+
+    try:
+        exp_type = args[EXPRESSION_TYPE] 
+    except:
+        # This fails for PROP_INT and PROP_FLOAT properties that are edited as keyframe properties.
+        # The given exp_type is irrelevant when set for PROP_INT and PROP_FLOAT but causes crashes/undetermined behaviour if exp_type not set correctly in filters.xml
+        # when required.
+        exp_type = SINGLE_KEYFRAME
+        
     if p_type == appconsts.PROP_EXPRESSION:
         """
         For expressions we can't do straight input output numerical
-        conversion so we need a extending class for expression type.
+        conversion so we need an extending class for expression type.
         """
-        args = propertyparse.args_string_to_args_dict(args_str)
-        
-        try:
-            exp_type = args[EXPRESSION_TYPE] 
-        except:
-            # This fails PROP_INT and PROP_FLOAT properties that are edited as keyframe properties and 
-            # they will be treated as exptype = SINGLE_KEYFRAME properties.
-            # This will now hide 'exptype' args in filters.xml, so they must be there set correctly.
-            exp_type = SINGLE_KEYFRAME
-        
         creator_func = EDITABLE_PROPERTY_CREATORS[exp_type]
         ep = creator_func(params)
+    elif exp_type == AFFINE_SCALE:
+        ep = AffineScaleProperty(params) # This needs special casing because slider input is a number and output value is inverse of input, not a linear range conversion.
     else:
         """
         Properties with single numerical values (int or float) can be handled with objects of EditableProperty class.
@@ -279,7 +285,8 @@ class AbstractProperty:
             step = DEFAULT_STEP
         lower, upper = self.input_range
         value = self.get_current_in_value()
-        return Gtk.Adjustment(float(value), float(lower), float(upper), float(step))
+
+        return Gtk.Adjustment(value=float(value), lower=float(lower), upper=float(upper), step_incr=float(step))
     
     def adjustment_value_changed(self, adjustment):
         value = adjustment.get_value()
@@ -460,6 +467,9 @@ class NonMltEditableProperty(AbstractProperty):
     def _get_filter_object(self):
         return self.clip.filters[self.filter_index]
 
+    def write_value(self, val):
+        pass # There has not defined need for this.
+
     def write_number_value(self, numb):
         self.write_property_value(str(numb))
 
@@ -488,7 +498,8 @@ class SingleKeyFrameProperty(EditableProperty):
         val = self.value.strip('"')
         epxr_sides = val.split("=")
         in_value = self.get_in_value(float(epxr_sides[1]))
-        return Gtk.Adjustment(float(in_value), float(lower), float(upper), float(step))
+
+        return Gtk.Adjustment(value=float(in_value), lower=float(lower), upper=float(upper), step_incr=float(step))
 
     def adjustment_value_changed(self, adjustment):
         value = adjustment.get_value()
@@ -511,6 +522,7 @@ class AffineFilterGeomProperty(EditableProperty):
         val_str = "0=" + str(x) + "/" + str(y) + ":" + str(w) + "x" + str(h) + ":100" # 100x MLT ignores width
         self.write_value(val_str)
 
+
 class AffineFilterGeomPropertyV2(EditableProperty):
     """
     Converts values of four sliders to position and size info
@@ -525,12 +537,14 @@ class AffineFilterGeomPropertyV2(EditableProperty):
         val_str = "0=" + str(x) + "/" + str(y) + ":" + str(w) + "x" + str(height) + ":100" # 100x MLT does translate for height
         self.write_value(val_str)
 
+
 class FreiPosHCSFilterProperty(EditableProperty):    
     def adjustment_value_changed(self, adjustment):
         value = adjustment.get_value()
         out_value = self.get_out_value(value)
         val_str = "0=" + str(out_value)
         self.write_value(val_str)
+
 
 class OpacityInGeomSKFProperty(TransitionEditableProperty):
     """
@@ -552,7 +566,8 @@ class OpacityInGeomSKFProperty(TransitionEditableProperty):
             step = DEFAULT_STEP
         lower, upper = self.input_range
         in_value = self.get_in_value(float(self.value_parts[2]))
-        return Gtk.Adjustment(float(in_value), float(lower), float(upper), float(step))
+
+        return Gtk.Adjustment(value=float(in_value), lower=float(lower), upper=float(upper), step_incr=float(step))
 
     def adjustment_value_changed(self, adjustment):
         value = adjustment.get_value()
@@ -581,7 +596,8 @@ class OpacityInGeomKeyframeProperty(TransitionEditableProperty):
             step = DEFAULT_STEP
         lower, upper = self.input_range
         in_value = self.get_in_value(float(self.value_parts[2]))
-        return Gtk.Adjustment(float(in_value), float(lower), float(upper), float(step))
+
+        return Gtk.Adjustment(value=float(in_value), lower=float(lower), upper=float(upper), step_incr=float(step))
 
     def write_out_keyframes(self, keyframes):
         # key frame array of tuples (frame, opacity)
@@ -639,7 +655,7 @@ class KeyFrameGeometryOpacityProperty(TransitionEditableProperty):
             step = DEFAULT_STEP
         lower, upper = self.input_range
 
-        return Gtk.Adjustment(float(1.0), float(lower), float(upper), float(step)) # Value set later to first kf value
+        return Gtk.Adjustment(value=float(1.0), lower=float(lower), upper=float(upper), step_incr=float(step)) # Value set later to first kf value
 
     def write_out_keyframes(self, keyframes):
         # key frame array of tuples (frame, [x, y, width, height], opacity)
@@ -655,6 +671,29 @@ class KeyFrameGeometryOpacityProperty(TransitionEditableProperty):
         self.write_value(val_str)
 
 
+class KeyFrameFilterGeometryRectProperty(EditableProperty):
+
+    def get_input_range_adjustment(self):
+        # Returns DUMMY noop Adjustment tht needs to exist because AbstrackKeyframeEditor assumes a slider always exists,
+        # but this not the case for this editor/property pair.
+  
+        return Gtk.Adjustment(value=float(1.0), lower=float(0.0), upper=float(1.0), step_incr=float(0.01)) # Value set later to first kf value
+        
+    def write_out_keyframes(self, keyframes):       
+        # key frame array of tuples (frame, [x, y, width, height], opacity)
+        val_str = ""
+        for kf in keyframes:
+            frame, rect, opac = kf
+            val_str += str(int(frame)) + "=" # frame
+            val_str += str(int(rect[0])) + " " + str(int(rect[1])) + " " # pos
+            val_str += str(int(rect[2])) + " " + str(int(rect[3])) + " " # size
+            val_str += "1"
+            val_str += str(self.get_out_value(opac)) + ";" # opac with converted range from slider
+        
+        val_str = val_str.strip(";")
+        self.write_value(val_str)
+
+ 
 class FreiGeomHCSTransitionProperty(TransitionEditableProperty):
     def __init__(self, params):
         TransitionEditableProperty.__init__(self, params)
@@ -670,7 +709,8 @@ class KeyFrameHCSFilterProperty(EditableProperty):
         except:
             step = DEFAULT_STEP
         lower, upper = self.input_range
-        return Gtk.Adjustment(float(0.1), float(lower), float(upper), float(step)) # Value set later to first kf value
+ 
+        return Gtk.Adjustment(value=float(0.1), lower=float(lower), upper=float(upper), step_incr=float(step)) # Value set later to first kf value
         
     def write_out_keyframes(self, keyframes):
         val_str = ""
@@ -710,7 +750,8 @@ class KeyFrameHCSTransitionProperty(TransitionEditableProperty):
         except:
             step = DEFAULT_STEP
         lower, upper = self.input_range
-        return Gtk.Adjustment(float(0.1), float(lower), float(upper), float(step)) # Value set later to first kf value
+
+        return Gtk.Adjustment(value=float(0.1), lower=float(lower), upper=float(upper), step_incr=float(step)) # Value set later to first kf value
 
     def write_out_keyframes(self, keyframes):
         val_str = ""
@@ -789,6 +830,20 @@ class WipeResourceProperty(TransitionEditableProperty):
         self.write_value(str(res_path))
 
 
+class FilterWipeResourceProperty(EditableProperty):
+    """
+    Converts user combobox selections to absolute paths containing wipe
+    resource images.
+    """
+    def __init__(self, params):
+        EditableProperty.__init__(self, params)
+
+    def combo_selection_changed(self, combo_box, keys):
+        key = keys[combo_box.get_active()]
+        res_path = mlttransitions.get_wipe_resource_path(key)
+        self.write_value(str(res_path))
+    
+    
 class FileResourceProperty(EditableProperty):
     """
     A file path as property value set from file chooser dialog callback.
@@ -796,9 +851,9 @@ class FileResourceProperty(EditableProperty):
     def dialog_response_callback(self, dialog, response_id):
         res_path = dialog.get_filename()
         if response_id == Gtk.ResponseType.ACCEPT and res_path != None:
-            self.write_value(str(str(res_path), "utf-8"))
+            self.write_value(str(res_path))
         else:
-            self.write_value(str(str(""), "utf-8"))
+            self.write_value(str(""))
 
 
 class MultipartKeyFrameProperty(AbstractProperty):
@@ -819,7 +874,7 @@ class MultipartKeyFrameProperty(AbstractProperty):
             step = DEFAULT_STEP
         lower, upper = self.input_range
 
-        return Gtk.Adjustment(float(0.1), float(lower), float(upper), float(step)) # Value set later to first kf value
+        return Gtk.Adjustment(value=float(0.1), lower=float(lower), upper=float(upper), step_incr=float(step)) # Value set later to first kf value
 
     def write_out_keyframes(self, keyframes):
         val_str = ""
@@ -833,51 +888,134 @@ class MultipartKeyFrameProperty(AbstractProperty):
 
 
 class AffineScaleProperty(EditableProperty):
-    
-    def get_input_range_adjustment(self):
-        step = DEFAULT_STEP
-        lower = 0
-        upper = 500
-        val = self.value.strip('"')
-        epxr_sides = val.split("=")
-        in_value = self.get_in_value(float(epxr_sides[1]))
-        return Gtk.Adjustment(float(in_value), float(lower), float(upper), float(step))
-
-    def adjustment_value_changed(self, adjustment):
-        value = adjustment.get_value()
-        out_value = self.get_out_value(value)
-        val_str = "0=" + str(out_value)
-        self.write_value(val_str)
 
     def get_out_value(self, in_value):
         """
         Converts input value to output value using ranges.
         """
-        # in_range = 500 # hard coded special case
-        in_norm = in_value / 100.0 # to get 0 - 5, 1.0 no scaling
+        in_norm = float(in_value) / 100.0
         if in_norm < 0.001:
             in_norm = 0.001
-        out =  1 / in_norm
-        return out
+        out =  1.0 / in_norm
 
     def get_in_value(self, out_value):
         """
         Converts output to input value
         """
-        # out_value =  1 / in_norm, range 1 / 0.001 -> 1 / 5
         if out_value < 0.001:
             out_value = 0.001
-        in_value = (1 / (out_value)) * 100 # 0 - 500 range
+        in_value = (1.0 / float(out_value)) * 100.0
+
         return in_value  
 
-    def write_mlt_property_str_value(self, str_value):
-        val = str_value.strip('"')
-        epxr_sides = val.split("=")
-        # mlt property value
-        filter_object = self._get_filter_object()
-        filter_object.mlt_filter.set(str(self.name), str(epxr_sides[1]))
-        
 
+# ----------------------------------------------------------------------------- AFFINE FILTER TRANSFORM
+"""
+Refactor Affine Blend EditableProperty ducktyping object to be like the below instead of the current EmptyClass thing.
+
+class FilterAffineTransformEditableProperty:
+    
+    def __init__(self, clip, editable_properties):
+
+        # pack real properties to go
+        self.x = [ep for ep in editable_properties if ep.name == "transition.ox"][0]
+        self.y = [ep for ep in editable_properties if ep.name == "transition.oy"][0]
+        self.x_scale = [ep for ep in editable_properties if ep.name == "transition.scale_x"][0]
+        self.y_scale = [ep for ep in editable_properties if ep.name == "transition.scale_y"][0]
+        self.rotation = [ep for ep in editable_properties if ep.name == "transition.fix_rotate_x"][0]
+        self.opacity = [ep for ep in editable_properties if ep.name == "opacity"][0]
+        # Screen width and height are needeed for anchor point related conversions
+        self.profile_width = current_sequence().profile.width()
+        self.profile_height = current_sequence().profile.height()
+        #self.aspect_ratio = float(self.profile_width) / self.profile_height
+        # duck type methods, using opacity is not meaningful, any property with clip member could do
+        self.clip = self.x.clip
+        self.get_clip_tline_pos = lambda : clip.clip_in # clip is compositor, compositor in and out points straight in timeline frames
+        self.get_clip_length = lambda : clip.get_length()
+        self.get_input_range_adjustment = lambda : Gtk.Adjustment(float(100), float(0), float(100), float(1))
+        self.get_display_name = lambda : "GGSFSF"
+        self.get_pixel_aspect_ratio = lambda : (float(current_sequence().profile.sample_aspect_num()) / current_sequence().profile.sample_aspect_den())
+        self.get_in_value = lambda out_value : out_value # hard coded for opacity 100 -> 100 range
+        self.write_out_keyframes = lambda w_kf : self._rotating_ge_write_out_keyframes(w_kf)
+        self.update_prop_value = lambda : self._noop()
+
+        value = self._get_initial_value_str()
+        self.value = value.strip(";")
+
+    def _get_initial_value_str(self):
+        # duck type members
+        x_tokens = self.x.value.split(";")
+        y_tokens = self.y.value.split(";")
+        x_scale_tokens = self.x_scale.value.split(";")
+        y_scale_tokens = self.y_scale.value.split(";")
+        rotation_tokens = self.rotation.value.split(";")
+        opacity_tokens = self.opacity.value.split(";")
+        
+        value = ""
+        for i in range(0, len(x_tokens)): # these better match, same number of keyframes for all values, or this will not work
+            frame, x = x_tokens[i].split("=")
+            x = -float(x) + float(self.profile_width) / 2.0 # -x is how MLT wants this param, offset is to make editor and output match 
+            frame, y = y_tokens[i].split("=")
+            y = -float(y) + float(self.profile_height) / 2.0  # this how MLT want this param
+            frame, x_scale = x_scale_tokens[i].split("=")
+            x_scale = 1.0 / float(x_scale) # this how MLT want this param
+            frame, y_scale = y_scale_tokens[i].split("=")
+            y_scale = 1.0 / float(y_scale) # this how MLT want this param
+            frame, rotation = rotation_tokens[i].split("=")
+            frame, opacity = opacity_tokens[i].split("=")
+            opacity = 1.0 # we ae not editing this so let's make it alwaus constant
+            
+            frame_str = str(frame) + "=" + str(x) + ":" + str(y) + ":" + str(x_scale) + ":" + str(y_scale) + ":" + str(rotation) + ":" + str(opacity)
+            value += frame_str + ";"
+
+        return value
+
+    def _noop(self):
+        pass
+
+    def _rotating_ge_write_out_keyframes(self, keyframes):
+
+        x_val = ""
+        y_val = ""
+        x_scale_val = ""
+        y_scale_val = ""
+        rotation_val = ""
+        opacity_val = ""
+        
+        for kf in keyframes:
+            frame, transf, opacity = kf
+            x, y, x_scale, y_scale, rotation = transf
+            print (type(x), type(y), type(x_scale), type(y_scale), type(rotation))
+            print("X:", x, "Y:", y)
+            x_val += str(frame) + "=" + str(((-x)) + (float(self.profile_width)/2.0) * x_scale) + ";" # (self.profile_width/2.0)) editor thinks anchor point has been offset into middle of image, filter does this automatically.
+            y_val += str(frame) + "=" + str(((-y)) + (float(self.profile_height)/2.0) * y_scale) + ";"
+            x_scale_val += str(frame) + "=" + str(1.0/x_scale) + ";"
+            y_scale_val += str(frame) + "=" + str(1.0/y_scale) + ";"
+            rotation_val += str(frame) + "=" + str(rotation) + ";"
+            opacity_val += str(frame) + "=" + str(1.0) + ";"
+
+            print("KF ____________________________________________________________________")
+            print(x, y, x_scale, y_scale, rotation)
+            print(x_val, y_val, x_scale_val, y_scale_val, rotation_val)
+        
+        x_val = x_val.strip(";")
+        y_val = y_val.strip(";")
+        x_scale_val = x_scale_val.strip(";")
+        y_scale_val = y_scale_val.strip(";")
+        rotation_val = rotation_val.strip(";")
+        opacity_val = opacity_val.strip(";")
+       
+
+       
+        self.x.write_value(x_val)
+        self.y.write_value(y_val)
+        self.x_scale.write_value(x_scale_val)
+        self.y_scale.write_value(y_scale_val)
+        self.rotation.write_value(rotation_val)
+        self.opacity.write_value(opacity_val)
+
+        print("kf write done")
+"""
 # ------------------------------------------ creator func dicts
 # dict EXPRESSION_TYPE args value -> class extending AbstractProperty
 # Note: HCS means half comma separated
@@ -896,9 +1034,11 @@ EDITABLE_PROPERTY_CREATORS = { \
     COLOR: lambda params : ColorProperty(params),
     CAIRO_COLOR: lambda params : CairoColorProperty(params),
     GEOMETRY_OPACITY_KF: lambda params : KeyFrameGeometryOpacityProperty(params),
+    GEOMETRY_RECT_FILTER_KF: lambda params : KeyFrameFilterGeometryRectProperty(params),
     GEOM_IN_AFFINE_FILTER: lambda params : AffineFilterGeomProperty(params),
     GEOM_IN_AFFINE_FILTER_V2: lambda params :AffineFilterGeomPropertyV2(params),
     WIPE_RESOURCE : lambda params : WipeResourceProperty(params),
+    FILTER_WIPE_RESOURCE : lambda params : FilterWipeResourceProperty(params),
     FILE_RESOURCE : lambda params :FileResourceProperty(params),
     ROTO_JSON  : lambda params :RotoJSONProperty(params),
     LUT_TABLE : lambda params  : LUTTableProperty(params),

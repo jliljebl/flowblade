@@ -221,8 +221,8 @@ def workflow_menu_launched(widget, event):
     default_compositing_item.show()
     
     default_compositing_menu = Gtk.Menu()
-    labels = [_("Top Down Free Move"), _("Top Down Auto Follow"), _("Standard Auto Follow")]
-    msgs = ["top down", "top down auto", "standard auto"]
+    labels = [_("Top Down Free Move"), _("Top Down Auto Follow"), _("Standard Auto Follow"),  _("Standard Full Track")]
+    msgs = ["top down", "top down auto", "standard auto", "full_track_auto"]
     active_index = editorpersistance.prefs.default_compositing_mode  # appconsts values correspond with order here.
     _build_radio_menu_items_group(default_compositing_menu, labels, msgs, _workflow_menu_callback, active_index)
 
@@ -428,12 +428,12 @@ class WorkflowDialog(Gtk.Dialog):
 
         self.selection = STANDARD_PRESET 
         
-        info_label_text_1 = _("<b>Welcome to Flowblade 2.2</b>")
+        info_label_text_1 = _("<b>Welcome to Flowblade 2.4</b>")
         info_label_1 = Gtk.Label(info_label_text_1)
         info_label_1.set_use_markup(True)
 
 
-        info_label_text_2 = _("<b>Flowblade 2.2</b> comes with a configurable workflow.")
+        info_label_text_2 = _("<b>Flowblade 2.4</b> comes with a configurable workflow.")
         info_label_2 = Gtk.Label(info_label_text_2)
         info_label_2.set_use_markup(True)
 

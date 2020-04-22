@@ -20,6 +20,42 @@ body {
   margin-left: auto ;
   margin-right: auto ;
 }
+
+#help-index{
+	margin-top: 80px;
+	width: 900px;
+	margin-bottom: 80px;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	text-align: center;
+}
+
+.appendix-index{
+	margin-top: 10px;
+	width: 900px;
+	margin-bottom: 10px;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	text-align: left;
+	color: #666666;
+	font-size:18px;
+}
+
+.subject-cell {
+	padding-right: 20px;
+	color:#222222;
+	/*font:normal 400 14px/1 'robotoregular', Arial, sans-serif;*/
+	font-family: sans-serif;
+	word-wrap: break-word;
+	line-height: 1.4;
+	vertical-align: baseline;
+	font-weight:400;
+	font-size:30px;
+	margin-bottom: 35px;
+}
+
 .grid-container {
 	margin-top: 80px;
         width: 700px;
@@ -58,6 +94,7 @@ body {
 }
 .appendix-title {
 	color: #666666;
+	font-size:20px;
 }
 
 .note {

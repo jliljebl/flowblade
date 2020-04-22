@@ -61,6 +61,16 @@
     <qualityqroup id="variablenooption">
         <quality name="variable 1 pass"/>
     </qualityqroup>
+    <qualityqroup id="prores422" defaultindex="2">
+        <quality name="Proxy" replvalues="%PROFILE% 0" />
+        <quality name="LT" replvalues="%PROFILE% 1" />
+        <quality name="Normal" replvalues="%PROFILE% 2" />
+        <quality name="HQ" replvalues="%PROFILE% 3" />
+    </qualityqroup>
+    <qualityqroup id="prores4444" defaultindex="0">
+        <quality name="Normal" replvalues="%PROFILE% 4" />
+        <quality name="XQ" replvalues="%PROFILE% 5" />
+    </qualityqroup>
     <qualityqroup id="not_settable">
         <quality name="not settable"/>
     </qualityqroup>
@@ -92,10 +102,13 @@
         <profile args="f=mkv acodec=flac vcodec=ffv1 level=3 g=1 slicecrc=1 slices=16" />
     </encodingoption>
     <encodingoption name="Lossless HuffYUV / .avi" extension="avi" audiodesc=" pcm"  type="av" resize="True" qgroup="lossless">
-        <profile args="f=avi acodec=pcm_s16le ac=2 vcodec=huffyuv" />
+        <profile args="f=avi acodec=pcm_s24le ac=2 vcodec=huffyuv" />
     </encodingoption>
-    <encodingoption name="Apple ProRes 4:2:2 / .mov" extension="mov" audiodesc=" pcm" type="av" resize="True" qgroup="variablenooption">
-        <profile args="f=mov acodec=pcm_s16le ac=2 vcodec=prores vb=0 g=0 bf=0 threads=1 vprofile=2" />
+    <encodingoption name="Apple ProRes 422 / .mov" extension="mov" audiodesc=" pcm" type="av" resize="True" qgroup="prores422">
+        <profile args="f=mov acodec=pcm_s24le ac=2 vcodec=prores vprofile=%PROFILE% vendor=ap10 pix_fmt=yuv422p10le" />
+    </encodingoption>
+    <encodingoption name="Apple ProRes 4444 / .mov" extension="mov" audiodesc=" pcm" type="av" resize="True" qgroup="prores4444">
+        <profile args="f=mov acodec=pcm_s24le ac=2 vcodec=prores_ks vprofile=%PROFILE% vendor=ap10 pix_fmt=yuva444p10le" />
     </encodingoption>
 
 
@@ -258,6 +271,9 @@
     </proxyencodingoption>
     <proxyencodingoption name="MPEG-2 Transport Stream" audiodesc="mp2, 384kb/s, 48000Hz"  extension="m2t" type="av" resize="True" qgroup="qgroup1">
        <profile args="f=mpegts acodec=libtwolame ab=256k ar=48000 vcodec=mpeg2video g=5" />
-   </proxyencodingoption>
+    </proxyencodingoption>
+    <proxyencodingoption name="Apple ProRes 422 Proxy / .mov" extension="mov" audiodesc=" pcm" type="av" resize="True" qgroup="not_settable">
+        <profile args="f=mov acodec=pcm_s24le ac=2 vcodec=prores vprofile=0 vendor=ap10 pix_fmt=yuv422p10le" />
+    </proxyencodingoption>
 
 </renderencoding>

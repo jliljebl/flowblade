@@ -19,10 +19,7 @@
 """
 
 """
-Application module.
-
-Handles application initialization, shutdown, opening projects, autosave and changing
-sequences.
+Handles syncing clips based on their audio data.
 """
 import datetime
 import hashlib
@@ -139,8 +136,8 @@ def select_sync_clip_mouse_pressed(event, frame):
     
     if utils.is_mlt_xml_file(sync_clip.path) == True:
         # This isn't translated because 1.14 translation window is close, translation coming for 1.16
-        dialogutils.warning_message(_("Cannot Timeline Audio Sync with Compound Clips!"), 
-                                    _("Audio syncing for Compound Clips is not supported."),
+        dialogutils.warning_message(_("Cannot Timeline Audio Sync with MLT XML Container Clips!"), 
+                                    _("Audio syncing for MLT XML Container Clips is not supported."),
                                     gui.editor_window.window,
                                     True)
         return
@@ -267,17 +264,17 @@ def create_audio_sync_compound_clip():
     
     # Can't sync coumpound clips
     if utils.is_mlt_xml_file(video_file.path) == True or utils.is_mlt_xml_file(audio_file.path) == True:
-        # This isn't translated because 1.14 translation window is close, translation coming for 1.16
-        dialogutils.warning_message(_("Cannot Create Audio Sync Compound Clip from Compound Clips!"), 
-                                    _("Audio syncing Compound Clips is not supported."),
+
+        dialogutils.warning_message(_("Cannot Create Audio Sync Clip from  MLT XML Container Clips!"), 
+                                    _("Audio syncing MLT XML Container Clips is not supported."),
                                     gui.editor_window.window,
                                     True)
         return
 
     # Can't sync 2 audio clips
     if video_file.type == appconsts.AUDIO and audio_file.type == appconsts.AUDIO:
-        # This isn't translated because 1.14 translation window is close, translation coming for 1.16
-        dialogutils.warning_message(_("Cannot Create Audio Sync Compound Clip from 2 Audio Clips!"), 
+
+        dialogutils.warning_message(_("Cannot Create Audio Sync Container Clip from 2 Audio Clips!"), 
                                     _("One of the media items needs to be a video clip."),
                                     gui.editor_window.window,
                                     True)
@@ -343,7 +340,7 @@ def _do_create_sync_compound_clip(dialog, response_id, data):
     audio_clip = mlt.Producer(PROJECT().profile, str(audio_file))
     
     # Get offset
-    offset = files_offsets[audio_file]
+    offset = float(files_offsets[audio_file])
     print(audio_file, offset)
     
     # Add clips
@@ -362,7 +359,7 @@ def _do_create_sync_compound_clip(dialog, response_id, data):
         track_audio.append(audio_clip, 0, audio_clip.get_length() - 1)
 
     # render MLT XML, callback in projectaction.py creates media object
-    render_player = renderconsumer.XMLCompoundRenderPlayer(write_file, media_name, projectaction._xml_compound_render_done_callback, tractor)
+    render_player = renderconsumer.XMLCompoundRenderPlayer(write_file, media_name, projectaction._xml_compound_render_done_callback, tractor, PROJECT())
     render_player.start()
 
 

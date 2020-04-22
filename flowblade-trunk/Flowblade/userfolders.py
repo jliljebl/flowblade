@@ -139,15 +139,17 @@ def _maybe_create_dot_dirs():
         os.mkdir(user_dir + appconsts.BATCH_DIR)
     if not os.path.exists(user_dir + appconsts.AUDIO_LEVELS_DIR):
         os.mkdir(user_dir + appconsts.AUDIO_LEVELS_DIR)
-    if not os.path.exists(utils.get_hidden_screenshot_dir_path()):
-        os.mkdir(utils.get_hidden_screenshot_dir_path())
+    if not os.path.exists(get_hidden_screenshot_dir_path()):
+        os.mkdir(get_hidden_screenshot_dir_path())
     if not os.path.exists(user_dir + appconsts.GMIC_DIR):
         os.mkdir(user_dir + appconsts.GMIC_DIR)
     if not os.path.exists(user_dir + appconsts.MATCH_FRAME_DIR):
         os.mkdir(user_dir + appconsts.MATCH_FRAME_DIR)
     if not os.path.exists(user_dir + appconsts.TRIM_VIEW_DIR):
         os.mkdir(user_dir + appconsts.TRIM_VIEW_DIR)
-
+    if not os.path.exists(user_dir + appconsts.PROXIES_DIR):
+        os.mkdir(user_dir + appconsts.PROXIES_DIR)
+        
 def _maybe_create_xdg_dirs():
 
     # ---------------------- CONFIG
@@ -167,7 +169,16 @@ def _maybe_create_xdg_dirs():
         os.mkdir(get_data_dir() + appconsts.USER_PROFILES_DIR)
     if not os.path.exists(get_render_dir()):
         os.mkdir(get_render_dir())
-    
+    if not os.path.exists(get_data_dir() + appconsts.TLINE_RENDERS_DIR):
+        os.mkdir(get_data_dir() + appconsts.TLINE_RENDERS_DIR)
+    if not os.path.exists(get_data_dir() + appconsts.CONTAINER_CLIPS_DIR):
+        os.mkdir(get_data_dir() + appconsts.CONTAINER_CLIPS_DIR)
+    if not os.path.exists(get_data_dir() + appconsts.CONTAINER_CLIPS_UNRENDERED):
+        os.mkdir(get_data_dir() + appconsts.CONTAINER_CLIPS_UNRENDERED)
+    if not os.path.exists(get_render_dir() +  "/" + appconsts.PROXIES_DIR):
+        os.mkdir(get_render_dir() +  "/" + appconsts.PROXIES_DIR)
+
+
     #----------------- CACHE
     # Data that can be regerated by app or is transient
     # Cache root folder

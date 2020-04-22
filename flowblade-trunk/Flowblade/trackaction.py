@@ -214,8 +214,9 @@ def track_center_pressed(data):
         if track == None:
             return
         y_off = press_y - tlinewidgets._get_track_y(track.id)
-        ICON_WIDTH = 12
-        if press_x > tlinewidgets.COLUMN_LEFT_PAD and press_x < tlinewidgets.COLUMN_LEFT_PAD + ICON_WIDTH:
+        ICON_WIDTH = 14
+        X_CORR_OFF = 4 # icon edge not on image left edge
+        if press_x > tlinewidgets.COLUMN_LEFT_PAD + X_CORR_OFF and press_x < tlinewidgets.COLUMN_LEFT_PAD + ICON_WIDTH + X_CORR_OFF:
             # Mute icon x area hit
             ix, iy = tlinewidgets.MUTE_ICON_POS
             if track.height > appconsts.TRACK_HEIGHT_SMALL:

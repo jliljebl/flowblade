@@ -51,16 +51,17 @@ BOOLEAN_CHECK_BOX = "booleancheckbox"                       # Gtk.CheckButton
 COMBO_BOX = "combobox"                                      # Gtk.Combobox
 KEYFRAME_EDITOR = "keyframe_editor"                         # keyfremeeditor.KeyFrameEditor that has all the key frames relative to MEDIA start
 KEYFRAME_EDITOR_CLIP = "keyframe_editor_clip"               # keyfremeeditor.KeyFrameEditor that has all the key frames relative to CLIP start
-KEYFRAME_EDITOR_CLIP_FADE = "keyframe_editor_clip_fade"     # keyfremeeditor.KeyFrameEditor that has all the key frames relative to CLIP start, with fade buttons
+KEYFRAME_EDITOR_CLIP_FADE = "keyframe_editor_clip_fade"     # Compositor keyfremeeditor.KeyFrameEditor that has all the key frames relative to CLIP start, with fade buttons
+KEYFRAME_EDITOR_CLIP_FADE_FILTER = "keyframe_editor_clip_fade_filter"  # Filter keyfremeeditor.KeyFrameEditor that has all the key frames relative to CLIP start, with fade buttons
 KEYFRAME_EDITOR_RELEASE = "keyframe_editor_release"         # HACK, HACK. used to prevent property update crashes in slider keyfremeeditor.KeyFrameEditor
 COLOR_SELECT = "color_select"                               # Gtk.ColorButton
-GEOMETRY_EDITOR = "geometry_editor"                         # keyfremeeditor.GeometryEditor
-WIPE_SELECT = "wipe_select"                                 # Gtk.Combobox with options from mlttransitions.wipe_lumas
+GEOMETRY_EDITOR = "geometry_editor"                         # keyframeeditor.GeometryEditor
+FILTER_RECT_GEOM_EDITOR = "filter_rect_geometry_editor"     # keyframeeditor.FilterRectGeometryEditor
+WIPE_SELECT = "wipe_select"                                 # Gtk.Combobox with options from mlttransitions.wipe_lumas, possible to select luma from file system
+FILTER_WIPE_SELECT = "filter_wipe_select"                   #  Gtk.Combobox with options from mlttransitions.wipe_lumas
 COMBO_BOX_OPTIONS = "cbopts"                                # List of options for combo box editor displayed to user
 LADSPA_SLIDER = "ladspa_slider"                             # Gtk.HScale, does ladspa update for release changes(disconnect, reconnect)
 CLIP_FRAME_SLIDER = "clip_frame_slider"                     # Gtk.HScale, range 0 - clip length in frames
-AFFINE_GEOM_4_SLIDER = "affine_filt_geom_slider"            # 3 rows of Gtk.HScales to set the position and size
-AFFINE_GEOM_4_SLIDER_2 = "affine_filt_geom_slider_2"          # 4 rows of Gtk.HScales to set the position and size
 COLOR_CORRECTOR = "color_corrector"                         # 3 band color corrector color circle and Lift Gain Gamma sliders
 CR_CURVES = "crcurves"                                      # Curves color editor with Catmull-Rom curve
 COLOR_BOX = "colorbox"                                      # One band color editor with color box interface
@@ -76,6 +77,8 @@ NO_EDITOR = "no_editor"                                     # No editor displaye
 COMPOSITE_EDITOR_BUILDER = "composite_properties"           # Creates a single row editor for multiple properties of composite transition
 REGION_EDITOR_BUILDER = "region_properties"                 # Creates a single row editor for multiple properties of region transition
 ROTATION_GEOMETRY_EDITOR_BUILDER = "rotation_geometry_editor" # Creates a single editor for multiple geometry values
+#FILTER_AFFINE_EDITOR = "filter_rotation_geometry_editor"    # Affine aditor for filters
+
 
 SCALE_DIGITS = "scale_digits"                               # Number of decimal digits displayed in a widget
 
@@ -410,75 +413,7 @@ def _get_clip_frame_slider(editable_property):
 
     name = editable_property.get_display_name()
     return _get_two_column_editor_row(name, hbox)
-
-def _get_affine_filt_geom_sliders(ep):
-    scr_width = PROJECT().profile.width()
-    scr_height = PROJECT().profile.width()
-
-    # value str format "0=0,0:SCREENSIZE:100"
-    frame_value = ep.value.split("=")
-    tokens = frame_value[1].split(":")
-    pos_tokens = tokens[0].split("/")
-    size_tokens = tokens[1].split("x")
-
-    x_adj = Gtk.Adjustment(float(pos_tokens[0]), float(-scr_width), float(scr_width), float(1))
-    y_adj = Gtk.Adjustment(float(pos_tokens[1]), float(-scr_height), float(scr_height), float(1))
-    h_adj = Gtk.Adjustment(float(size_tokens[1]), float(0), float(scr_height * 5), float(1))
-    
-    x_slider, x_spin, x_row =  _get_affine_slider("X", x_adj)
-    y_slider, y_spin, y_row =  _get_affine_slider("Y", y_adj)
-    h_slider, h_spin, h_row =  _get_affine_slider(_("Size/Height"), h_adj)
-
-    all_sliders = (x_slider, y_slider, h_slider)
-
-    x_slider.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_width))
-    x_spin.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_width))
-    y_slider.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_width))
-    y_spin.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_width))
-    h_slider.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_width))
-    h_spin.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_width))
-
-    vbox = Gtk.VBox(False, 4)
-    vbox.pack_start(x_row, True, True, 0)
-    vbox.pack_start(y_row, True, True, 0)
-    vbox.pack_start(h_row, True, True, 0)
-    
-    return vbox
-
-def _get_affine_filt_geom_sliders_2(ep):
-    scr_width = PROJECT().profile.width()
-    scr_height = PROJECT().profile.height()
-
-    # value str format "0=0,0:SCREENSIZE:100"
-    frame_value = ep.value.split("=")
-    tokens = frame_value[1].split(":")
-    pos_tokens = tokens[0].split("/")
-    size_tokens = tokens[1].split("x")
-
-    x_adj = Gtk.Adjustment(float(pos_tokens[0]), float(-scr_width), float(scr_width), float(1))
-    y_adj = Gtk.Adjustment(float(pos_tokens[1]), float(-scr_height), float(scr_height), float(1))
-    xs_adj = Gtk.Adjustment(float(size_tokens[0]), float(10), float(scr_width * 3), float(1))
-
-    x_slider, x_spin, x_row =  _get_affine_slider("X", x_adj)
-    y_slider, y_spin, y_row =  _get_affine_slider("Y", y_adj)
-    xs_slider, xs_spin, xs_row =  _get_affine_slider(_("Width"), xs_adj)
-
-    all_sliders = (x_slider, y_slider, xs_slider)
-
-    x_slider.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_height))
-    x_spin.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_height))
-    y_slider.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_height))
-    y_spin.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_height))
-    xs_slider.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_height))
-    xs_spin.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_height))
-    
-    vbox = Gtk.VBox(False, 4)
-    vbox.pack_start(x_row, True, True, 0)
-    vbox.pack_start(y_row, True, True, 0)
-    vbox.pack_start(xs_row, True, True, 0)
-
-    return vbox
-    
+   
 def _get_affine_slider(name, adjustment):
     hslider = Gtk.HScale()
     hslider.set_adjustment(adjustment)
@@ -636,6 +571,29 @@ def _get_wipe_selector(editable_property):
     user_luma_select.connect('file-set', _wipe_lumafile_dialog_response, editable_property, widgets)
     
     return editor_pane
+
+def _get_filter_wipe_selector(editable_property):
+    # Preset luma
+    combo_box = Gtk.ComboBoxText()
+            
+    # Get options
+    keys = list(mlttransitions.wipe_lumas.keys())
+    # translate here
+    keys.sort()
+    for k in keys:
+        combo_box.append_text(k)
+ 
+    # Set initial value
+    k_index = -1
+    tokens = editable_property.value.split("/")
+    test_value = tokens[len(tokens) - 1]
+    for k,v in mlttransitions.wipe_lumas.items():
+        if v == test_value:
+            k_index = keys.index(k)
+    
+    combo_box.set_active(k_index)
+    combo_box.connect("changed", editable_property.combo_selection_changed, keys)
+    return _get_two_column_editor_row(editable_property.get_display_name(), combo_box)
 
 class FadeLengthEditor(Gtk.HBox):
     def __init__(self, editable_property):
@@ -869,6 +827,9 @@ def _create_color_grader(filt, editable_properties):
     vbox.no_separator = True
     return vbox
 
+def _get_filter_rect_geom_editor(ep):
+    return keyframeeditor.FilterRectGeometryEditor(ep)
+
 def _create_crcurves_editor(filt, editable_properties):
     curves_editor = extraeditors.CatmullRomFilterEditor(editable_properties)
 
@@ -987,6 +948,9 @@ def _get_keyframe_editor_clip(editable_property):
 
 def _get_keyframe_editor_clip_fade(editable_property):
     return keyframeeditor.KeyFrameEditorClipFade(editable_property)
+
+def _get_keyframe_editor_clip_fade_filter(editable_property):
+    return keyframeeditor.KeyFrameEditorClipFadeFilter(editable_property)
  
 def _get_keyframe_editor_release(editable_property):
     editor = keyframeeditor.KeyFrameEditor(editable_property)
@@ -1067,12 +1031,12 @@ EDITOR_ROW_CREATORS = { \
     KEYFRAME_EDITOR: lambda ep : _get_keyframe_editor(ep),
     KEYFRAME_EDITOR_CLIP: lambda ep : _get_keyframe_editor_clip(ep),
     KEYFRAME_EDITOR_CLIP_FADE: lambda ep : _get_keyframe_editor_clip_fade(ep),
+    KEYFRAME_EDITOR_CLIP_FADE_FILTER: lambda ep : _get_keyframe_editor_clip_fade_filter(ep),
     KEYFRAME_EDITOR_RELEASE: lambda ep : _get_keyframe_editor_release(ep),
     GEOMETRY_EDITOR: lambda ep : _get_geometry_editor(ep),
-    AFFINE_GEOM_4_SLIDER: lambda ep : _get_affine_filt_geom_sliders(ep),
-    AFFINE_GEOM_4_SLIDER_2: lambda ep :_get_affine_filt_geom_sliders_2(ep),
     COLOR_SELECT: lambda ep: _get_color_selector(ep),
     WIPE_SELECT: lambda ep: _get_wipe_selector(ep),
+    FILTER_WIPE_SELECT:  lambda ep: _get_filter_wipe_selector(ep),
     LADSPA_SLIDER: lambda ep: _get_ladspa_slider_row(ep),
     CLIP_FRAME_SLIDER: lambda ep: _get_clip_frame_slider(ep),
     FILE_SELECTOR: lambda ep: _get_file_select_editor(ep),
@@ -1088,6 +1052,7 @@ EDITOR_ROW_CREATORS = { \
     COLOR_LGG: lambda filt, editable_properties:_create_color_lgg_editor(filt, editable_properties),
     ROTOMASK: lambda filt, editable_properties:_create_rotomask_editor(filt, editable_properties),
     TEXT_ENTRY: lambda ep: _get_text_entry(ep),
+    FILTER_RECT_GEOM_EDITOR: lambda ep : _get_filter_rect_geom_editor(ep)
     }
 
 """

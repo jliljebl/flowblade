@@ -30,6 +30,7 @@ from gi.repository import GLib, GObject
 from gi.repository import Pango
 from gi.repository import PangoCairo
 
+import atomicfile
 import toolsdialogs
 from editorstate import PLAYER
 import editorstate
@@ -109,7 +110,8 @@ def titler_destroy():
 def reset_titler():
     global _titler_data
     _titler_data = None
-        
+
+
 # ------------------------------------------------------------- data
 class TextLayer:
     """
@@ -175,14 +177,16 @@ class TitlerData:
         save_data = copy.copy(self)
         for layer in save_data.layers:
             layer.pango_layout = None
-        write_file = open(save_file_path, 'wb')
-        pickle.dump(save_data, write_file)
+        with atomicfile.AtomicFileWriter(save_file_path, "wb") as afw:
+            write_file = afw.get_file()
+            pickle.dump(save_data, write_file)
         self.create_pango_layouts() # we just destroyed these because they don't pickle, they need to be recreated.
 
     def create_pango_layouts(self):
         for layer in self.layers:
             layer.pango_layout = PangoTextLayout(layer)
-            
+
+
 # ---------------------------------------------------------- editor
 class Titler(Gtk.Window):
     def __init__(self):
@@ -270,8 +274,7 @@ class Titler(Gtk.Window):
         combo.set_active(0)
         self.font_select = combo
         self.font_select.connect("changed", self._edit_value_changed)
-    
-        adj = Gtk.Adjustment(float(DEFAULT_FONT_SIZE), float(1), float(300), float(1))
+        adj = Gtk.Adjustment(value=float(DEFAULT_FONT_SIZE), lower=float(1), upper=float(300), step_incr=float(1))
         self.size_spin = Gtk.SpinButton()
         self.size_spin.set_adjustment(adj)
         self.size_spin.connect("changed", self._edit_value_changed)
@@ -281,7 +284,8 @@ class Titler(Gtk.Window):
         font_main_row.pack_start(self.font_select, True, True, 0)
         font_main_row.pack_start(guiutils.pad_label(5, 5), False, False, 0)
         font_main_row.pack_start(self.size_spin, False, False, 0)
-
+        guiutils.set_margins(font_main_row, 0,4,0,0)
+        
         self.bold_font = Gtk.ToggleButton()
         self.italic_font = Gtk.ToggleButton()
         bold_icon = Gtk.Image.new_from_stock(Gtk.STOCK_BOLD, 
@@ -336,8 +340,8 @@ class Titler(Gtk.Window):
         
         self.out_line_color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(red=0.3, green=0.3, blue=0.3, alpha=1.0))
         self.out_line_color_button.connect("color-set", self._edit_value_changed)
-        
-        adj2 = Gtk.Adjustment(float(3), float(1), float(50), float(1))
+
+        adj2 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(50), step_incr=float(1))
         self.out_line_size_spin = Gtk.SpinButton()
         self.out_line_size_spin.set_adjustment(adj2)
         self.out_line_size_spin.connect("changed", self._edit_value_changed)
@@ -362,19 +366,22 @@ class Titler(Gtk.Window):
         shadow_yoff = Gtk.Label(_("Y Off:"))
         
         self.shadow_opa_spin = Gtk.SpinButton()
-        adj3 = Gtk.Adjustment(float(100), float(1), float(100), float(1))
+ 
+        adj3 = Gtk.Adjustment(value=float(100), lower=float(1), upper=float(100), step_incr=float(1))
         self.shadow_opa_spin.set_adjustment(adj3)
         self.shadow_opa_spin.connect("changed", self._edit_value_changed)
         self.shadow_opa_spin.connect("key-press-event", self._key_pressed_on_widget)
 
         self.shadow_xoff_spin = Gtk.SpinButton()
-        adj4 = Gtk.Adjustment(float(3), float(1), float(100), float(1))
+
+        adj4 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(100), step_incr=float(1))
         self.shadow_xoff_spin.set_adjustment(adj4)
         self.shadow_xoff_spin.connect("changed", self._edit_value_changed)
         self.shadow_xoff_spin.connect("key-press-event", self._key_pressed_on_widget)
 
         self.shadow_yoff_spin = Gtk.SpinButton()
-        adj5 = Gtk.Adjustment(float(3), float(1), float(100), float(1))
+
+        adj5 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(100), step_incr=float(1))
         self.shadow_yoff_spin.set_adjustment(adj5)
         self.shadow_yoff_spin.connect("changed", self._edit_value_changed)
         self.shadow_yoff_spin.connect("key-press-event", self._key_pressed_on_widget)
@@ -394,6 +401,7 @@ class Titler(Gtk.Window):
         shadow_box_1.pack_start(guiutils.pad_label(2, 1), False, False, 0)
         shadow_box_1.pack_start(self.shadow_on, False, False, 0)
         shadow_box_1.pack_start(Gtk.Label(), True, True, 0)
+        guiutils.set_margins(shadow_box_1, 0,4,0,0)
 
         shadow_box_2 = Gtk.HBox()
         shadow_box_2.pack_start(shadow_xoff, False, False, 0)
@@ -414,18 +422,20 @@ class Titler(Gtk.Window):
         layers_save_buttons_row.pack_start(save_layers, False, False, 0)
         layers_save_buttons_row.pack_start(load_layers, False, False, 0)
         layers_save_buttons_row.pack_start(Gtk.Label(), True, True, 0)
-        
-        adj = Gtk.Adjustment(float(0), float(0), float(3000), float(1))
+
+        adj = Gtk.Adjustment(value=float(0), lower=float(0), upper=float(3000), step_incr=float(1))
         self.x_pos_spin = Gtk.SpinButton()
         self.x_pos_spin.set_adjustment(adj)
         self.x_pos_spin.connect("changed", self._position_value_changed)
         self.x_pos_spin.connect("key-press-event", self._key_pressed_on_widget)
-        adj = Gtk.Adjustment(float(0), float(0), float(3000), float(1))
+
+        adj = Gtk.Adjustment(value=float(0), lower=float(0), upper=float(3000), step_incr=float(1))
         self.y_pos_spin = Gtk.SpinButton()
         self.y_pos_spin.set_adjustment(adj)
         self.y_pos_spin.connect("changed", self._position_value_changed)
         self.y_pos_spin.connect("key-press-event", self._key_pressed_on_widget)
-        adj = Gtk.Adjustment(float(0), float(0), float(3000), float(1))
+
+        adj = Gtk.Adjustment(value=float(0), lower=float(0), upper=float(3000), step_incr=float(1))
         self.rotation_spin = Gtk.SpinButton()
         self.rotation_spin.set_adjustment(adj)
         self.rotation_spin.connect("changed", self._position_value_changed)
@@ -474,11 +484,11 @@ class Titler(Gtk.Window):
 
         controls_panel_1 = Gtk.VBox()
         controls_panel_1.pack_start(add_del_box, False, False, 0)
-        controls_panel_1.pack_start(self.layer_list, False, False, 0)
+        controls_panel_1.pack_start(self.layer_list, True, True, 0)
         controls_panel_1.pack_start(layers_save_buttons_row, False, False, 0)
 
         controls_panel_2 = Gtk.VBox()
-        controls_panel_2.pack_start(scroll_frame, True, True, 0)
+        #controls_panel_2.pack_start(scroll_frame, True, True, 0)
         controls_panel_2.pack_start(font_main_row, False, False, 0)
         controls_panel_2.pack_start(buttons_box, False, False, 0)
 
@@ -488,15 +498,17 @@ class Titler(Gtk.Window):
         controls_panel_4 = Gtk.VBox()
         controls_panel_4.pack_start(shadow_box_1, False, False, 0)
         controls_panel_4.pack_start(shadow_box_2, False, False, 0)
+
+        notebook = Gtk.Notebook()
+        notebook.append_page(guiutils.set_margins(controls_panel_2,8,8,8,8), Gtk.Label(label=_("Font")))
+        notebook.append_page(guiutils.set_margins(controls_panel_3,8,8,8,8), Gtk.Label(label=_("Outline")))
+        notebook.append_page(guiutils.set_margins(controls_panel_4,8,8,8,8), Gtk.Label(label=_("Shadow")))
         
         controls_panel = Gtk.VBox()
-        controls_panel.pack_start(guiutils.get_named_frame(_("Layer Text"),controls_panel_2), True, True, 0)
+        controls_panel.pack_start(guiutils.get_named_frame(_("Layer Text"), scroll_frame), True, True, 0)
+        controls_panel.pack_start(guiutils.set_margins(notebook, 0,0,10,4), False, False, 0)
         controls_panel.pack_start(guiutils.pad_label(1, 24), False, False, 0)
-        controls_panel.pack_start(guiutils.get_named_frame(_("Outline"),controls_panel_3), False, False, 0)
-        controls_panel.pack_start(guiutils.pad_label(1, 24), False, False, 0)
-        controls_panel.pack_start(guiutils.get_named_frame(_("Shadow"),controls_panel_4), False, False, 0)
-        controls_panel.pack_start(guiutils.pad_label(1, 24), False, False, 0)
-        controls_panel.pack_start(guiutils.get_named_frame(_("Layers"),controls_panel_1), False, False, 0)
+        controls_panel.pack_start(guiutils.get_named_frame(_("Layers"),controls_panel_1), True, True, 0)
  
         view_editor_editor_buttons_row = Gtk.HBox()
         view_editor_editor_buttons_row.pack_start(positions_box, False, False, 0)
@@ -645,8 +657,7 @@ class Titler(Gtk.Window):
             try:
                 filenames = dialog.get_filenames()
                 load_path = filenames[0]
-                f = open(load_path, 'rb')
-                new_data = pickle.load(f)
+                new_data = utils.unpickle(load_path)
                 global _titler_data
                 _titler_data = new_data
                 self.load_titler_data()

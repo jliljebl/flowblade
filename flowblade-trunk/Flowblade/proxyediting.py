@@ -19,7 +19,7 @@
 """
 
 import glob
-from PIL import Image
+import hashlib
 import mlt
 import os
 import shutil
@@ -30,12 +30,14 @@ from gi.repository import Gtk, Gdk
 
 import app
 import appconsts
+import atomicfile
 import dialogs
 import dialogutils
 import editorpersistance
 import editorstate
 import gui
 import guiutils
+import jobs
 import mltrefhold
 import persistance
 import render
@@ -53,159 +55,102 @@ runner_thread = None
 load_thread = None
 
 # These are made to correspond with size selector combobox indexes on manager window
-PROXY_SIZE_FULL = 0
-PROXY_SIZE_HALF = 1
-PROXY_SIZE_QUARTER = 2
+PROXY_SIZE_FULL = appconsts.PROXY_SIZE_FULL
+PROXY_SIZE_HALF =  appconsts.PROXY_SIZE_HALF
+PROXY_SIZE_QUARTER =  appconsts.PROXY_SIZE_QUARTER
+
+
+class ProxyRenderItemData:
+    def __init__(   self, media_file_id, proxy_w, proxy_h, enc_index, 
+                    proxy_file_path, proxy_rate, media_file_path, 
+                    proxy_profile_desc, lookup_path):
+
+        self.media_file_id = media_file_id
+        self.proxy_w = proxy_w
+        self.proxy_h = proxy_h
+        self.enc_index = enc_index
+        self.proxy_file_path = proxy_file_path
+        self.proxy_rate = proxy_rate
+        self.media_file_path = media_file_path
+        self.proxy_profile_desc = proxy_profile_desc
+        self.lookup_path = lookup_path
+        
+        # We're packing this to go, jobs.py is imported into this module and we wish to not import this into jobs.py
+        self.do_auto_re_convert_func = _auto_re_convert_after_proxy_render_in_proxy_mode
+
+    def get_data_as_args_tuple(self):
+        args = ("media_file_id:" + str(self.media_file_id), 
+                "proxy_w:" + str(self.proxy_w), 
+                "proxy_h:" + str(self.proxy_h),
+                "enc_index:" + str(self.enc_index),
+                "proxy_file_path:" + str(self.proxy_file_path),
+                "proxy_rate:"+ str(self.proxy_rate),
+                "media_file_path:" + str(self.media_file_path),
+                "proxy_profile_desc:" + str(self.proxy_profile_desc),
+                "lookup_path:" + str(self.lookup_path).replace(" ", "\ "))
+            
+        return args
 
 
 class ProxyRenderRunnerThread(threading.Thread):
-    def __init__(self, proxy_profile, files_to_render, set_as_proxy_immediately):
+    def __init__(self, proxy_profile, files_to_render):
         threading.Thread.__init__(self)
         self.proxy_profile = proxy_profile
         self.files_to_render = files_to_render
-        self.set_as_proxy_immediately = set_as_proxy_immediately
-        self.aborted = False
 
     def run(self):        
-        items = 1
-        global progress_window
-        start = time.time()
-        elapsed = 0
+
         proxy_w, proxy_h =  _get_proxy_dimensions(self.proxy_profile, editorstate.PROJECT().proxy_data.size)
-        proxy_encoding = _get_proxy_encoding()
-        self.current_render_file_path = None
-        
-        print("proxy render started, items: " + str(len(self.files_to_render)) + ", dim: " + str(proxy_w) + "x" + str(proxy_h))
-        
+        enc_index = editorstate.PROJECT().proxy_data.encoding
+
+        proxy_render_items = []
         for media_file in self.files_to_render:
-            if self.aborted == True:
-                break
+            if media_file.type != appconsts.IMAGE_SEQUENCE:
+                
+                
+                proxy_encoding = renderconsumer.proxy_encodings[enc_index]
+                proxy_file_path = media_file.create_proxy_path(proxy_w, proxy_h, proxy_encoding.extension)
 
-            if media_file.type == appconsts.IMAGE_SEQUENCE:
-                self._create_img_seq_proxy(media_file, proxy_w, proxy_h, items, start)
-                continue
+                # Bit rates for proxy files are counted using 2500kbs for 
+                # PAL size image as starting point.
+                pal_pix_count = 720.0 * 576.0
+                pal_proxy_rate = 2500.0
+                proxy_pix_count = float(proxy_w * proxy_h)
+                proxy_rate = pal_proxy_rate * (proxy_pix_count / pal_pix_count)
+                proxy_rate = int(proxy_rate / 100) * 100 # Make proxy rate even hundred
+                # There are no practical reasons to have bitrates lower than 500kbs.
+                if proxy_rate < 500:
+                    proxy_rate = 500
 
-            # Create render objects
-            proxy_file_path = media_file.create_proxy_path(proxy_w, proxy_h, proxy_encoding.extension)
-            self.current_render_file_path = proxy_file_path
-            renderconsumer.performance_settings_enabled = False
-            consumer = renderconsumer.get_render_consumer_for_encoding(
-                                                        proxy_file_path,
-                                                        self.proxy_profile, 
-                                                        proxy_encoding)
-            renderconsumer.performance_settings_enabled = True
-            # Bit rates for proxy files are counted using 2500kbs for 
-            # PAL size image as starting point.
-            pal_pix_count = 720.0 * 576.0
-            pal_proxy_rate = 2500.0
-            proxy_pix_count = float(proxy_w * proxy_h)
-            proxy_rate = pal_proxy_rate * (proxy_pix_count / pal_pix_count)
-            proxy_rate = int(proxy_rate / 100) * 100 # Make proxy rate even hundred
-            # There are no practical reasons to have bitrates lower than 500kbs.
-            if proxy_rate < 500:
-                proxy_rate = 500
-            consumer.set("vb", str(int(proxy_rate)) + "k")
-
-            consumer.set("rescale", "nearest")
-
-            file_producer = mlt.Producer(self.proxy_profile, str(media_file.path))
-            mltrefhold.hold_ref(file_producer) # this may or may not be needed to avoid crashes
-            stop_frame = file_producer.get_length() - 1
-
-            # Create and launch render thread
-            global render_thread 
-            render_thread = renderconsumer.FileRenderPlayer(None, file_producer, consumer, 0, stop_frame)
-            render_thread.start()
-
-            # Render view update loop
-            self.thread_running = True
-            self.aborted = False
-            while self.thread_running:
-                if self.aborted == True:
-                    break
-                render_fraction = render_thread.get_render_fraction()
-                now = time.time()
-                elapsed = now - start
-                Gdk.threads_enter()
-                progress_window.update_render_progress(render_fraction, media_file.name, items, len(self.files_to_render), elapsed)
-                Gdk.threads_leave()
-                render_thread.producer.get_length()
-                if render_thread.producer.frame() >= stop_frame:
-                    self.thread_running = False
-                    media_file.add_proxy_file(proxy_file_path)
-                    if self.set_as_proxy_immediately: # When proxy mode is USE_PROXY_MEDIA all proxy files are used all the time
-                        media_file.set_as_proxy_media_file()
-                    self.current_render_file_path = None
-                else:
-                    time.sleep(0.1)
-
-            if not self.aborted:
-                items = items + 1
-                Gdk.threads_enter()
-                progress_window.update_render_progress(0, media_file.name, items, len(self.files_to_render), elapsed)
-                Gdk.threads_leave()
+                item_data = ProxyRenderItemData(media_file.id, proxy_w, proxy_h, enc_index,
+                                                proxy_file_path, proxy_rate, media_file.path,
+                                                self.proxy_profile.description(), 
+                                                None)
             else:
-                print("proxy render aborted")
-                render_thread.shutdown()
-                break
 
-            render_thread.shutdown()
 
+                asset_folder, asset_file_name = os.path.split(media_file.path)
+                lookup_filename = utils.get_img_seq_glob_lookup_name(asset_file_name)
+                lookup_path = asset_folder + "/" + lookup_filename
+
+                proxy_file_path = media_file.create_proxy_path(proxy_w, proxy_h, None)
+        
+                # media_file.path, proxy_file_path, proxy_w, proxy_h, lookup_path
+                item_data = ProxyRenderItemData(media_file.id, proxy_w, proxy_h, -1,
+                                proxy_file_path, -1, media_file.path,
+                                self.proxy_profile.description(),
+                                lookup_path)
+                
+            proxy_render_items.append(item_data)
+        
         Gdk.threads_enter()
-        _proxy_render_stopped()
+        
+        for proxy_render_data_item in proxy_render_items:
+            session_id = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
+            job_queue_object = jobs.ProxyRenderJobQueueObject(session_id, proxy_render_data_item)
+            job_queue_object.add_to_queue()
+            
         Gdk.threads_leave()
-
-        # Remove unfinished proxy files
-        if self.current_render_file_path != None:
-            os.remove(self.current_render_file_path)
-        # If we're currently proxy editing, we need to update 
-        # all the clips on the timeline to use proxy media.
-        if editorstate.PROJECT().proxy_data.proxy_mode == appconsts.USE_PROXY_MEDIA:
-            _auto_re_convert_after_proxy_render_in_proxy_mode()
-        
-        print("proxy render done")
-
-    def _create_img_seq_proxy(self, media_file, proxy_w, proxy_h, items, start):
-        now = time.time()
-        elapsed = now - start
-        Gdk.threads_enter()
-        progress_window.update_render_progress(0.0, media_file.name, items, len(self.files_to_render), elapsed)
-        Gdk.threads_leave()
-
-        asset_folder, asset_file_name = os.path.split(media_file.path)
-        lookup_filename = utils.get_img_seq_glob_lookup_name(asset_file_name)
-        lookup_path = asset_folder + "/" + lookup_filename
-
-        proxy_file_path = media_file.create_proxy_path(proxy_w, proxy_h, None)
-        copyfolder, copyfilename = os.path.split(proxy_file_path)
-        if not os.path.isdir(copyfolder):
-            os.makedirs(copyfolder)
-        
-        listing = glob.glob(lookup_path)
-        size = proxy_w, proxy_h
-        done = 0
-        for orig_path in listing:
-            orig_folder, orig_file_name = os.path.split(orig_path)
-
-            try:
-                im = Image.open(orig_path)
-                im.thumbnail(size, Image.ANTIALIAS)
-                im.save(copyfolder + "/" + orig_file_name, "PNG")
-            except IOError:
-                print("proxy img seq frame failed for '%s'" % orig_path)
-
-            done = done + 1
-        
-            frac = float(done) / float(len(listing))
-            now = time.time()
-            elapsed = now - start
-        
-            if done % 5 == 0:
-                Gdk.threads_enter()
-                progress_window.update_render_progress(frac, media_file.name, items, len(self.files_to_render), elapsed)
-                Gdk.threads_leave()
-        
-        media_file.add_proxy_file(proxy_file_path)
 
     def abort(self):
         render_thread.shutdown()
@@ -347,61 +292,6 @@ class ProxyManagerDialog:
         self.convert_progress_bar.set_fraction(0.0)
 
 
-class ProxyRenderProgressDialog:
-    def __init__(self):
-        self.dialog = Gtk.Dialog(_("Creating Proxy Files"),
-                                 gui.editor_window.window,
-                                 Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                 (_("Stop"), Gtk.ResponseType.REJECT))
-        
-        self.render_progress_bar = Gtk.ProgressBar()
-        self.render_progress_bar.set_text("0 %")
-        prog_align = guiutils.set_margins(self.render_progress_bar, 0, 0, 6, 0)
-        prog_align.set_size_request(550, 30)
-
-        self.elapsed_value = Gtk.Label()
-        self.current_render_value = Gtk.Label()
-        self.items_value = Gtk.Label()
-        
-        est_label = guiutils.get_right_justified_box([guiutils.bold_label(_("Elapsed:"))])
-        current_label = guiutils.get_right_justified_box([guiutils.bold_label(_("Current Media File:"))])
-        items_label = guiutils.get_right_justified_box([guiutils.bold_label(_("Rendering Item:"))])
-        
-        est_label.set_size_request(250, 20)
-        current_label.set_size_request(250, 20)
-        items_label.set_size_request(250, 20)
-
-        info_vbox = Gtk.VBox(False, 0)
-        info_vbox.pack_start(guiutils.get_left_justified_box([est_label, self.elapsed_value]), False, False, 0)
-        info_vbox.pack_start(guiutils.get_left_justified_box([current_label, self.current_render_value]), False, False, 0)
-        info_vbox.pack_start(guiutils.get_left_justified_box([items_label, self.items_value]), False, False, 0)
-
-        progress_vbox = Gtk.VBox(False, 2)
-        progress_vbox.pack_start(info_vbox, False, False, 0)
-        progress_vbox.pack_start(guiutils.get_pad_label(10, 8), False, False, 0)
-        progress_vbox.pack_start(prog_align, False, False, 0)
-
-        alignment = guiutils.set_margins(progress_vbox, 12, 12, 12, 12)
-        alignment.show_all()
-
-        self.dialog.vbox.pack_start(alignment, True, True, 0)
-        dialogutils.set_outer_margins(self.dialog.vbox)
-        self.dialog.connect('response', self.stop_pressed)
-        self.dialog.show()
-
-    def update_render_progress(self, fraction, media_file_name, current_item, items, elapsed):
-        elapsed_str= "  " + utils.get_time_str_for_sec_float(elapsed)
-        self.elapsed_value .set_text(elapsed_str)
-        self.current_render_value.set_text(" " + media_file_name)
-        self.items_value.set_text( " " + str(current_item) + "/" + str(items))
-        self.render_progress_bar.set_fraction(fraction)
-        self.render_progress_bar.set_text(str(int(fraction * 100)) + " %")
-
-    def stop_pressed(self, dialog, response_id):
-        global runner_thread
-        runner_thread.abort()
-
-
 class ProxyRenderIssuesWindow:
     def __init__(self, files_to_render, already_have_proxies, not_video_files, is_proxy_file, 
                  other_project_proxies, proxy_w, proxy_h, proxy_file_extension):
@@ -520,14 +410,18 @@ def set_menu_to_proxy_state():
     else:
         gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/SaveSnapshot').set_sensitive(False)
 
-def create_proxy_files_pressed():
-    media_file_widgets = gui.media_list_view.get_selected_media_objects()
-    if len(media_file_widgets) == 0:
-        return
-
+def create_proxy_files_pressed(render_all=False):
     media_files = []
-    for w in media_file_widgets:
-        media_files.append(w.media_file)
+    if render_all == False:
+        media_file_widgets = gui.media_list_view.get_selected_media_objects()
+        if len(media_file_widgets) == 0:
+            return
+            
+        for w in media_file_widgets:
+            media_files.append(w.media_file)
+    else:
+        for item_id in editorstate.PROJECT().media_files:
+            media_files.append(editorstate.PROJECT().media_files[item_id])
     
     _do_create_proxy_files(media_files)
 
@@ -538,12 +432,6 @@ def create_proxy_menu_item_selected(media_file):
     _do_create_proxy_files(media_files)
 
 def _do_create_proxy_files(media_files, retry_from_render_folder_select=False):
-    
-    # Create proxies dir if does not exist
-    proxies_dir = _get_proxies_dir()
-    if not os.path.exists(proxies_dir):
-        os.mkdir(proxies_dir)
-
     proxy_profile = _get_proxy_profile(editorstate.PROJECT())
     proxy_w, proxy_h =  _get_proxy_dimensions(proxy_profile, editorstate.PROJECT().proxy_data.size)
     proxy_file_extension = _get_proxy_encoding().extension
@@ -599,20 +487,12 @@ def _set_media_files_to_use_unique_proxies(media_files_list):
 def _create_proxy_files(media_files_to_render):
     proxy_profile = _get_proxy_profile(editorstate.PROJECT())
 
-    if editorstate.PROJECT().proxy_data.proxy_mode == appconsts.USE_ORIGINAL_MEDIA:
-        set_as_proxy_immediately = False
-    else:
-        set_as_proxy_immediately = True
-
-    global progress_window, runner_thread
-    progress_window = ProxyRenderProgressDialog()
-    runner_thread = ProxyRenderRunnerThread(proxy_profile, media_files_to_render, set_as_proxy_immediately)
+    global runner_thread
+    #progress_window = ProxyRenderProgressDialog()
+    runner_thread = ProxyRenderRunnerThread(proxy_profile, media_files_to_render)
     runner_thread.start()
 
 # ------------------------------------------------------------------ module functions
-def _get_proxies_dir():
-    return userfolders.get_render_dir() + "/proxies"
-
 def _get_proxy_encoding():
     enc_index = editorstate.PROJECT().proxy_data.encoding
     return renderconsumer.proxy_encodings[enc_index]
@@ -648,10 +528,10 @@ def _get_proxy_profile(project):
     file_contents += "display_aspect_den=" + str(project_profile.display_aspect_den()) + "\n"
 
     proxy_profile_path = userfolders.get_cache_dir() + "temp_proxy_profile"
-    profile_file = open(proxy_profile_path, "w")
-    profile_file.write(file_contents)
-    profile_file.close()
-    
+    with atomicfile.AtomicFileWriter(proxy_profile_path, "w") as afw:
+        profile_file = afw.get_file()
+        profile_file.write(file_contents)
+
     proxy_profile = mlt.Profile(proxy_profile_path)
     return proxy_profile
 

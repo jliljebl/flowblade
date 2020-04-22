@@ -36,7 +36,7 @@ BUTTONS_GRAD_STOPS = [   (1, 1, 1, 1, 0.2),
 
 BUTTONS_PRESSED_GRAD_STOPS = [(1, 0.7, 0.7, 0.7, 1),
                              (0, 0.5, 0.5, 0.5, 1)]
-                             
+
 LINE_GRAD_STOPS = [ (1, 0.66, 0.66, 0.66, 1),
                             (0.95, 0.7, 0.7, 0.7, 1),
                             (0.65, 0.3, 0.3, 0.3, 1),
@@ -71,8 +71,8 @@ class AbstractGlassButtons:
 
     def __init__(self, button_width, button_height, button_y, widget_width, widget_height):
         # Create widget and connect listeners
-        self.widget = cairoarea.CairoDrawableArea2( widget_width, 
-                                                    widget_height, 
+        self.widget = cairoarea.CairoDrawableArea2( widget_width,
+                                                    widget_height,
                                                     self._draw)
         self.widget.press_func = self._press_event
         self.widget.motion_notify_func = self._motion_notify_event
@@ -99,9 +99,9 @@ class AbstractGlassButtons:
             self.glass_style = True
         else:
             self.glass_style = False
-        
+
         self.no_decorations = False
-        
+
         # Dark theme comes with flat buttons
         self.dark_theme = False
         if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
@@ -116,7 +116,7 @@ class AbstractGlassButtons:
         radius = corner_radius / aspect
 
         self._draw_consts = (x, y, width, height, aspect, corner_radius, radius)
-    
+
     def set_sensitive(self, value):
         self.sensitive = []
         for i in self.icons:
@@ -151,11 +151,11 @@ class AbstractGlassButtons:
             if ((x >= button_x) and (x <= button_x + self.button_width)
                 and (y >= self.button_y) and (y <= self.button_y + self.button_height)):
                     if self.sensitive[i] == True:
-                        return i 
+                        return i
             button_x += self.button_width
 
         return NO_HIT
-        
+
     def _draw_buttons(self, cr, w, h):
         # Width of buttons group
         buttons_width = self.button_width * len(self.icons)
@@ -167,13 +167,13 @@ class AbstractGlassButtons:
                 cr.set_source_surface(icon, x + self.image_x[i], self.image_y[i])
                 cr.paint()
                 x += self.button_width
-            
+
             return
 
         # Line width for all strokes
         cr.set_line_width(1.0)
 
-        # bg 
+        # bg
         self._set_button_draw_consts(self.button_x + 0.5, self.button_y + 0.5, buttons_width, self.button_height + 1.0)
         self._round_rect_path(cr)
         r, g, b, a  = gui.get_bg_color()
@@ -267,14 +267,14 @@ class AbstractGlassButtons:
                 cr.stroke()
             x += self.button_width
 
-        
+
 class PlayerButtons(AbstractGlassButtons):
 
     def __init__(self):
         # Aug-2019 - SvdB - BB - Multiple changes - size_ind, size_adj, get_cairo_image
         size_ind = 0
         size_adj = 1
-        prefs = editorpersistance.prefs 
+        prefs = editorpersistance.prefs
         if prefs.double_track_hights:
            size_ind = 1
            size_adj = 2
@@ -285,23 +285,53 @@ class PlayerButtons(AbstractGlassButtons):
         stop_icon = guiutils.get_cairo_image("stop_s")
         next_icon = guiutils.get_cairo_image("next_frame_s")
         prev_icon = guiutils.get_cairo_image("prev_frame_s")
+            # ------------------------------timeline_start_end_button
+        start_icon = guiutils.get_cairo_image("ctx_drag_left") #  go to start
+        end_icon = guiutils.get_cairo_image("ctx_drag_right") #  go to end
+            # ------------------------------timeline_start_end_button
         mark_in_icon = guiutils.get_cairo_image("mark_in_s")
         mark_out_icon = guiutils.get_cairo_image("mark_out_s")
-        marks_clear_icon = guiutils.get_cairo_image("marks_clear_s") 
-        to_mark_in_icon = guiutils.get_cairo_image("to_mark_in_s")        
-        to_mark_out_icon = guiutils.get_cairo_image("to_mark_out_s") 
+        marks_clear_icon = guiutils.get_cairo_image("marks_clear_s")
+        to_mark_in_icon = guiutils.get_cairo_image("to_mark_in_s")
+        to_mark_out_icon = guiutils.get_cairo_image("to_mark_out_s")
 
         # Jul-2016 - SvdB - For play/pause button
         if (editorpersistance.prefs.play_pause == True):
-            self.icons = [prev_icon, next_icon, play_pause_icon,
-                          mark_in_icon, mark_out_icon, 
+            # ------------------------------timeline_start_end_button
+            if (editorpersistance.prefs.timeline_start_end == True):
+                self.icons = [start_icon, end_icon, prev_icon, next_icon, play_pause_icon,
+                          mark_in_icon, mark_out_icon,
                           marks_clear_icon, to_mark_in_icon, to_mark_out_icon]
-            self.image_x = [5*size_adj, 7*size_adj, 5*size_adj, 3*size_adj, 11*size_adj, 2*size_adj, 7*size_adj, 6*size_adj]
+                #  go to start end add 5*size_adj, 5*size_adj,
+                self.image_x = [5*size_adj, 5*size_adj, 5*size_adj, 7*size_adj, 5*size_adj, 3*size_adj, 11*size_adj, 2*size_adj, 7*size_adj, 6*size_adj]
+            else:
+                self.icons = [prev_icon, next_icon, play_pause_icon,
+                          mark_in_icon, mark_out_icon,
+                          marks_clear_icon, to_mark_in_icon, to_mark_out_icon]
+                self.image_x = [ 5*size_adj, 7*size_adj, 5*size_adj, 3*size_adj, 11*size_adj, 2*size_adj, 7*size_adj, 6*size_adj]
         else:
-            self.icons = [prev_icon, next_icon, play_icon, stop_icon, 
-                          mark_in_icon, mark_out_icon, 
-                          marks_clear_icon, to_mark_in_icon, to_mark_out_icon]
-            self.image_x = [5*size_adj, 7*size_adj, 10*size_adj, 10*size_adj, 3*size_adj, 11*size_adj, 2*size_adj, 7*size_adj, 6*size_adj]
+            #  go to start end
+            if (editorpersistance.prefs.timeline_start_end == True):
+                self.icons = [start_icon, end_icon, prev_icon, next_icon, play_icon, stop_icon,
+                              mark_in_icon, mark_out_icon,
+                              marks_clear_icon, to_mark_in_icon, to_mark_out_icon]
+                #  go to start end add 5*size_adj, 5*size_adj,
+                self.image_x = [5*size_adj, 5*size_adj, 5*size_adj, 7*size_adj, 5*size_adj, 10*size_adj, 3*size_adj, 11*size_adj, 2*size_adj, 7*size_adj, 6*size_adj]
+            else:
+                self.icons = [prev_icon, next_icon, play_icon, stop_icon,
+                              mark_in_icon, mark_out_icon,
+                              marks_clear_icon, to_mark_in_icon, to_mark_out_icon]
+                self.image_x = [5*size_adj, 7*size_adj, 20*size_adj, 10*size_adj, 3*size_adj, 11*size_adj, 2*size_adj, 7*size_adj, 6*size_adj]
+            # ------------------------------End of timeline_start_end_button
+#            self.icons = [prev_icon, next_icon, play_pause_icon,
+#                          mark_in_icon, mark_out_icon,
+#                          marks_clear_icon, to_mark_in_icon, to_mark_out_icon]
+#            self.image_x = [5*size_adj, 7*size_adj, 5*size_adj, 3*size_adj, 11*size_adj, 2*size_adj, 7*size_adj, 6*size_adj]
+#        else:
+#            self.icons = [prev_icon, next_icon, play_icon, stop_icon,
+#                          mark_in_icon, mark_out_icon,
+#                          marks_clear_icon, to_mark_in_icon, to_mark_out_icon]
+#            self.image_x = [5*size_adj, 7*size_adj, 10*size_adj, 10*size_adj, 3*size_adj, 11*size_adj, 2*size_adj, 7*size_adj, 6*size_adj]
 
         for i in range(0, len(self.icons)):
             self.image_y.append(MB_BUTTON_IMAGE_Y)
@@ -309,7 +339,7 @@ class PlayerButtons(AbstractGlassButtons):
         self.pressed_callback_funcs = None # set using set_callbacks()
 
         self.set_sensitive(True)
-        
+
         focus_groups[DEFAULT_FOCUS_GROUP].append(self.widget)
 
     def set_trim_sensitive_pattern(self):
@@ -352,7 +382,7 @@ class PlayerButtons(AbstractGlassButtons):
         self.widget.queue_draw()
 
     def set_callbacks(self, pressed_callback_funcs):
-        self.pressed_callback_funcs = pressed_callback_funcs 
+        self.pressed_callback_funcs = pressed_callback_funcs
 
     # ---------------------------------------------------------------- painting
     def _draw(self, event, cr, allocation):
@@ -378,11 +408,11 @@ class GmicButtons(AbstractGlassButtons):
         prev_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "prev_frame_s.png")
         mark_in_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "mark_in_s.png")
         mark_out_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "mark_out_s.png")
-        marks_clear_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "marks_clear_s.png") 
-        to_mark_in_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "to_mark_in_s.png")        
-        to_mark_out_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "to_mark_out_s.png") 
+        marks_clear_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "marks_clear_s.png")
+        to_mark_in_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "to_mark_in_s.png")
+        to_mark_out_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "to_mark_out_s.png")
 
-        self.icons = [prev_icon, next_icon, mark_in_icon, mark_out_icon, 
+        self.icons = [prev_icon, next_icon, mark_in_icon, mark_out_icon,
                       marks_clear_icon, to_mark_in_icon, to_mark_out_icon]
         self.image_x = [8, 10, 6, 14, 5, 10, 9]
 
@@ -392,7 +422,7 @@ class GmicButtons(AbstractGlassButtons):
         self.pressed_callback_funcs = None # set using set_callbacks()
 
         self.set_sensitive(True)
-        
+
         focus_groups[DEFAULT_FOCUS_GROUP].append(self.widget)
 
 
@@ -428,7 +458,7 @@ class GmicButtons(AbstractGlassButtons):
         self.widget.queue_draw()
 
     def set_callbacks(self, pressed_callback_funcs):
-        self.pressed_callback_funcs = pressed_callback_funcs 
+        self.pressed_callback_funcs = pressed_callback_funcs
 
     # ---------------------------------------------------------------- painting
     def _draw(self, event, cr, allocation):
@@ -487,7 +517,7 @@ class GlassButtonsGroup(AbstractGlassButtons):
 
 
 
-class GlassButtonsToggleGroup(GlassButtonsGroup):    
+class GlassButtonsToggleGroup(GlassButtonsGroup):
     def set_pressed_button(self, pressed_button_index, fire_clicked_cb=False):
         self.pressed_button = pressed_button_index
         if fire_clicked_cb == True:
@@ -516,36 +546,36 @@ class GlassButtonsToggleGroup(GlassButtonsGroup):
 
 
 class TooltipRunner:
-    
+
     def __init__(self, glassbuttons, tooltips):
         self.glassbuttons = glassbuttons
         self.tooltips = tooltips
-        
+
         self.glassbuttons.widget.set_has_tooltip(True)
         self.glassbuttons.widget.connect("query-tooltip", self.tooltip_query)
         self.glassbuttons.tooltip_runner = self
-        
+
         self.last_hit_code = NO_HIT
-        
+
     def tooltip_query(self, widget, x, y, keyboard_tooltip, tooltip):
         hit_code = self.glassbuttons._get_hit_code(x, y)
         if hit_code == NO_HIT:
             return False
-        
-        # This is needed to get better position for tooltips when tooltips have significantly different amount of text displayed 
+
+        # This is needed to get better position for tooltips when tooltips have significantly different amount of text displayed
         if hit_code != self.last_hit_code:
             self.last_hit_code = hit_code
             self.glassbuttons.widget.trigger_tooltip_query()
             return False
-        
+
         tooltip.set_markup(self.tooltips[hit_code])
         return True
-        
+
 
 def focus_group_has_focus(focus_group):
     group = focus_groups[focus_group]
     for widget in group:
         if widget.has_focus():
             return True
-    
+
     return False

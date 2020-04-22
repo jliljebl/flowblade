@@ -23,13 +23,15 @@ Helper functions and data
 """
 import time
 
+# TODO: THIS NEEDS TO GO, MAKE NEW utilsgtk.py MODULE.
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, GLib
+from gi.repository import Gtk, Gdk
 
 import math
 import hashlib
 import os
+import pickle
 import re
 import threading
 import xml.dom.minidom
@@ -357,6 +359,38 @@ def file_extension_is_graphics_file(ext):
     else:
         return False
 
+# ------------------------------------------------ module util methods
+def get_media_type(file_path):
+    """
+    Returns media type of file.
+    """
+    if os.path.exists(file_path):
+        mime_type = get_file_type(file_path)
+    else:
+        # IMAGE_SEQUENCE media objects have a MLT formatted resource path that does not
+        # point to an existing file in the file system. 
+        # We're doing a heuristic here to identify those.
+        pros_index = file_path.find("%0")
+        d_index = file_path.find("d.")
+        if pros_index != -1 and d_index != -1:
+            return appconsts.IMAGE_SEQUENCE
+        all_index = file_path.find(".all")
+        if all_index != -1:
+            return appconsts.IMAGE_SEQUENCE
+            
+        return appconsts.FILE_DOES_NOT_EXIST
+        
+    if mime_type.startswith("video"):
+        return appconsts.VIDEO
+    
+    if mime_type.startswith("audio"):
+        return appconsts.AUDIO
+    
+    if mime_type.startswith("image"):
+        return appconsts.IMAGE
+    
+    return appconsts.UNKNOWN
+    
 def get_file_type(file_path):
     name, ext = os.path.splitext(file_path)
     ext = ext.lstrip(".")
@@ -671,3 +705,29 @@ def elapsed_time(msg="elapsed: ", show_in_millis=True):
     
     print(msg + " " + str(elapsed_time) + " " + unit)
 
+def get_display_monitors_size_data():
+    monitors_size_data = []
+    
+    display = Gdk.Display.get_default()
+    scr_w = Gdk.Screen.width()
+    scr_h = Gdk.Screen.height()
+    monitors_size_data.append((scr_w, scr_h))
+        
+    num_monitors = display.get_n_monitors() # Get number of monitors.
+    if num_monitors == 1:
+        return monitors_size_data
+    else:
+        for monitor_index in range(0, num_monitors):
+            monitor = display.get_monitor(monitor_index)
+            geom = monitor.get_geometry()
+            monitors_size_data.append((geom.width, geom.height))
+        
+        return monitors_size_data
+
+def unpickle(path):
+    try:
+        f = open(path, "rb")
+        return pickle.load(f)
+    except:
+        f = open(path, 'rb')
+        return pickle.load(f, encoding='latin1') 

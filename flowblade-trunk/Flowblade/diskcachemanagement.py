@@ -18,14 +18,16 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 
 from os import listdir
 from os.path import isfile, join
 import os
+import threading
 
 import appconsts
 import dialogutils
+import editorpersistance
 import gui
 import guiutils
 import userfolders
@@ -39,11 +41,12 @@ _panels = None
 
 class DiskFolderManagementPanel:
     
-    def __init__(self, xdg_folder, folder, info_text, warning_level):
+    def __init__(self, xdg_folder, folder, info_text, warning_level, recursive=False):
         self.xdg_folder = xdg_folder
         self.folder = folder
         self.warning_level = warning_level
-                
+        self.recursive = recursive
+        
         self.destroy_button = Gtk.Button(_("Destroy data"))
         self.destroy_button.connect("clicked", self.destroy_pressed)
         self.destroy_guard_check = Gtk.CheckButton()
@@ -53,13 +56,9 @@ class DiskFolderManagementPanel:
         self.size_info = Gtk.Label()
         self.size_info.set_text(self.get_folder_size_str())
 
-        folder_label = Gtk.Label("/<i>" + folder + "</i>")
-        folder_label.set_use_markup(True)
-
         info = Gtk.HBox(True, 2)
         info.pack_start(guiutils.get_left_justified_box([guiutils.bold_label(info_text)]), True, True, 0)
-        info.pack_start(guiutils.get_left_justified_box([guiutils.pad_label(40, 12), folder_label]), True, True, 0)
-        info.pack_start(guiutils.get_left_justified_box([guiutils.pad_label(12, 12), self.size_info]), True, True, 0)
+        info.pack_start(guiutils.get_left_justified_box([guiutils.pad_label(40, 12), self.size_info]), True, True, 0)
 
         button_area = Gtk.HBox(False, 2)
         if self.warning_level == PROJECT_DATA_WARNING:
@@ -88,16 +87,29 @@ class DiskFolderManagementPanel:
     def get_folder_files(self):
         data_folder = self.get_disk_folder()
         return [f for f in listdir(data_folder) if isfile(join(data_folder, f))]
-    
+        
+    def get_folder_contents(self, folder):
+        return os.listdir(self.get_disk_folder())
+        
     def get_folder_size(self):
-        files = self.get_folder_files()
+        return self.get_folder_sizes_recursively(self.get_disk_folder())
+    
+    def get_folder_sizes_recursively(self, folder):
+        files = os.listdir(folder)
         size = 0
         for f in files:
-            size += os.path.getsize(self.get_disk_folder() +"/" + f)
+            if os.path.isdir(folder + "/" + f) and self.recursive == True:
+                size += self.get_folder_sizes_recursively(folder + "/" + f)
+            else:
+                size += os.path.getsize(folder +"/" + f)
         return size
 
     def get_folder_size_str(self):
         size = self.get_folder_size()
+        self.used_disk = size
+        return self.get_size_str(size)
+
+    def get_size_str(self, size):
         if size > 1000000:
             return str(int((size + 500000) / 1000000)) + _(" MB")
         elif size > 1000:
@@ -119,7 +131,7 @@ class DiskFolderManagementPanel:
         else:
             secondary_text = _("Destroying this data may require parts of it to be recreated later.")
             
-        dialogutils. warning_confirmation(self.warning_confirmation, primaty_text, secondary_text, gui.editor_window.window, None, False, True)
+        dialogutils.warning_confirmation(self.warning_confirmation, primaty_text, secondary_text, gui.editor_window.window, None, False, True)
 
     def destroy_guard_toggled(self, check_button):
         if check_button.get_active() == True:
@@ -136,15 +148,23 @@ class DiskFolderManagementPanel:
         self.destroy_data()
     
     def destroy_data(self):
-        print("deleting ", self.folder)
-        
-        files = self.get_folder_files()
+        print("deleting", self.folder)
+        self.destroy_recursively(self.get_disk_folder())
+
+    def destroy_recursively(self, folder):
+        files = os.listdir(folder)
         for f in files:
-            os.remove(self.get_disk_folder() +"/" + f)
+            file_path = folder + "/" + f
+            if os.path.isdir(file_path) == True:
+                if self.recursive == True:
+                    self.destroy_recursively(file_path)
+                    os.rmdir(file_path)
+            else:
+                os.remove(file_path)
 
         self.size_info.set_text(self.get_folder_size_str())
         self.size_info.queue_draw()
-            
+
 def show_disk_management_dialog():
     dialog = Gtk.Dialog(_("Disk Cache Manager"), None,
                     Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
@@ -167,11 +187,59 @@ def show_disk_management_dialog():
     dialog.show_all()
     return dialog
 
+def check_disk_cache_size():
+    check_level = editorpersistance.prefs.disk_space_warning
+    # check levels [off, 500 MB,1 GB, 2 GB], see preferenceswindow.py
+    if check_level == 0:
+        return
+
+    check_thread = DiskCacheWarningThread()
+    check_thread.start()
+
+
+class DiskCacheWarningThread(threading.Thread):
+    
+    def __init__(self):
+        threading.Thread.__init__(self)
+
+    def run(self):
+        check_level = editorpersistance.prefs.disk_space_warning
+        
+        Gdk.threads_enter()
+        
+        # Get disk cache size
+        panels = _get_disk_dir_panels()
+        used_disk_cache_size = 0
+        for panel in panels:
+            used_disk_cache_size += panel.used_disk
+        
+        size_str = panels[0].get_size_str(used_disk_cache_size)
+
+        # check levels [off, 500 MB,1 GB, 2 GB], see preferenceswindow.py
+        if check_level == 1 and used_disk_cache_size > 1000000 * 500:
+            self.show_warning(size_str)
+        elif check_level == 2 and used_disk_cache_size > 1000000 * 1000:
+            self.show_warning(size_str)
+        elif check_level == 3 and used_disk_cache_size > 1000000 * 2000:
+            self.show_warning(size_str)
+
+        Gdk.threads_leave()
+
+    def show_warning(self, size_str):
+        primary_txt = _("Disk Cache Size Exceeds Current Warning Level!")
+        secondary_txt = _("Flowblade currently uses ") + size_str + _(" of disk space.") + "\n\n" + \
+                        _("You can either delete saved data using dialog opened with <b>Edit->Disk Cache</b> or") + "\n" + \
+                        _("change warning level in <b>Edit->Preferences 'General Options'</b> panel.") 
+        dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window, is_info=False)
+
+
 def _get_disk_dir_panels():
     panels = []
     panels.append(DiskFolderManagementPanel(userfolders.get_cache_dir(), appconsts.AUDIO_LEVELS_DIR, _("Audio Levels Data"), RECREATE_WARNING))
     panels.append(DiskFolderManagementPanel(userfolders.get_cache_dir(), appconsts.GMIC_DIR, _("G'Mic Tool Session Data"), NO_WARNING))
     panels.append(DiskFolderManagementPanel(userfolders.get_data_dir(), appconsts.RENDERED_CLIPS_DIR, _("Rendered Files"), PROJECT_DATA_WARNING))
+    panels.append(DiskFolderManagementPanel(userfolders.get_render_dir(), "/" + appconsts.PROXIES_DIR, _("Proxy Files"), PROJECT_DATA_WARNING))
+    panels.append(DiskFolderManagementPanel(userfolders.get_data_dir(), appconsts.CONTAINER_CLIPS_DIR, _("Container Clips"), PROJECT_DATA_WARNING, True))
     panels.append(DiskFolderManagementPanel(userfolders.get_cache_dir(), appconsts.THUMBNAILS_DIR, _("Thumbnails"), RECREATE_WARNING))
     panels.append(DiskFolderManagementPanel(userfolders.get_data_dir(), appconsts.USER_PROFILES_DIR_NO_SLASH, _("User Created Custom Profiles"), PROJECT_DATA_WARNING))
 

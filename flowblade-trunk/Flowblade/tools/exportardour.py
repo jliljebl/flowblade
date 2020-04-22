@@ -1,6 +1,26 @@
 #!/usr/bin/env python3
 
 """
+    Flowblade Movie Editor is a nonlinear video editor.
+    Copyright 2019 Janne Liljeblad and contributors.
+
+    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+
+    Flowblade Movie Editor is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Flowblade Movie Editor is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
+"""
 exportardour.py
 by Nathan Rosenquist
 
@@ -14,31 +34,17 @@ https://github.com/jliljebl/flowblade/issues/666
 
 """
 
+import atomicfile
+import editorstate
+
 import os
 import subprocess
 import sys
 import xml.etree.ElementTree
 
 ##############################################################################
-# GLOBAL BEHAVIOUR FLAG                                                      #
-##############################################################################
-# GTK only enables selecting existing directories so when used from Flowblade we can't disallow using existing directory.
-# and use this flag to use existing directory
-use_existing_basedir = False
-  
-##############################################################################
 # CONSTANTS                                                                  #
 ##############################################################################
-
-# the name of the overall program
-PROGRAM_NAME = 'Flowblade'
-
-# the name of the command-line script
-CLI_PROGRAM_NAME = 'exportardour.py'
-
-# command-line program exit codes
-EXIT_OK = 0
-EXIT_FAIL = 1
 
 # path to ffmpeg program
 CMD_FFMPEG = 'ffmpeg'
@@ -60,22 +66,80 @@ class Profile:
     """
     Project profile.
 
-    Basically just calculates the project-level frame rate from a frame
-    rate numerator and denominator.
+    Calculates the project-level frame rate from a frame rate numerator and
+    denominator.
+
+    Also keeps track of how many video and audio tracks were used on the
+    Flowblade sequence timeline, so we can decode the playlist numbering
+    in the XML file and map it back to the original track names
+    (e.g. MLT XML "playlist5" becomes "V1" in the Ardour export)
 
     """
 
-    def __init__(self, frame_rate_num, frame_rate_den):
+    def __init__(self,
+                 frame_rate_num, frame_rate_den,
+                 video_tracks, audio_tracks):
+
         # frame rate numerator and denominator
         # (to support fractional frame rates)
         # with sensible frame rates like PAL, you might get 25000/1000 == 25,
         # but with NTSC you could end up with 24000/1001 == 23.976
         self.frame_rate_num = int(frame_rate_num)
         self.frame_rate_den = int(frame_rate_den)
-        self.fps = (int(frame_rate_num) / int(frame_rate_den))
+        self.fps = self.frame_rate_num / self.frame_rate_den
+
+        # video/audio track counts
+        self.video_tracks = int(video_tracks)
+        self.audio_tracks = int(audio_tracks)
+
+        # create a map of MLT playlist ID to flowblade track name
+        # e.g. "playlist5" -> "V1"
+        self.mlt_playlist_to_flowblade_track_map = {}
+
+        # the first MLT playlist that could contain a video or audio track is 1
+        mlt_playlist_num = 1
+
+        # audio tracks
+        # (added to sequentially named MLT playlist entries first, in reverse order,
+        #  e.g. A4 = playlist1, A3 = playlist2, etc.)
+        if self.audio_tracks > 0:
+            for flowblade_track_num in reversed(range(1, (self.audio_tracks + 1))):
+                mlt_playlist = "playlist" + str(mlt_playlist_num)
+                flowblade_track = "A" + str(flowblade_track_num)
+
+                self.mlt_playlist_to_flowblade_track_map[mlt_playlist] = flowblade_track
+
+                mlt_playlist_num += 1
+
+        # video tracks
+        # (added to sequentially named MLT playlist entries after all the audio tracks
+        #  are done, in forward order (e.g. V1 = playlist5, V2 = playlist6, etc.)
+        for flowblade_track_num in range(1, (self.video_tracks + 1)):
+            mlt_playlist = "playlist" + str(mlt_playlist_num)
+            flowblade_track = "V" + str(flowblade_track_num)
+
+            self.mlt_playlist_to_flowblade_track_map[mlt_playlist] = flowblade_track
+
+            mlt_playlist_num += 1
+
+    def get_flowblade_track_by_mlt_playlist_id(self, mlt_playlist_id):
+        """
+        Attempt to get the original Flowblade track name (e.g. V1) by the MLT XML
+        playlist ID (e.g. playlist5).
+
+        If that doesn't work, we'll just return "Audio", which is a sensible base
+        name for an Ardour track.
+
+        """
+
+        if mlt_playlist_id in self.mlt_playlist_to_flowblade_track_map:
+            return self.mlt_playlist_to_flowblade_track_map[mlt_playlist_id]
+
+        return "Audio"
 
     def __str__(self):
-        return "profile: " + str(round(self.fps, 3)) + " fps"
+        return "profile: " + str(round(self.fps, 3)) + " fps, V" + \
+            str(self.video_tracks) + "/A" + str(self.audio_tracks)
 
 
 class Media:
@@ -242,37 +306,6 @@ class Playlist:
 
         self.ardour_playlist_name = name
 
-    def get_flowblade_name(self):
-        """
-        Attempt to provide the name that this playlist was probably associated
-        with in Flowblade, before it became an MLT XML file. If the playlist
-        name is not one we recognize from a typical Flowblade project, then
-        the word "Audio" is returned, which is the default name for Routes
-        in Ardour.
-
-        """
-
-        if "playlist1" == self.id:
-            return "A4"
-        if "playlist2" == self.id:
-            return "A3"
-        if "playlist3" == self.id:
-            return "A2"
-        if "playlist4" == self.id:
-            return "A1"
-        if "playlist5" == self.id:
-            return "V1"
-        if "playlist6" == self.id:
-            return "V2"
-        if "playlist7" == self.id:
-            return "V3"
-        if "playlist8" == self.id:
-            return "V4"
-        if "playlist9" == self.id:
-            return "V5"
-
-        return "Audio"
-
     def get_channel_count(self):
         """
         Get the channel count for this playlist, which is defined as the
@@ -407,7 +440,10 @@ class Project:
 # MLT XML                                                                    #
 ##############################################################################
 
-def create_project_from_mlt_xml(xml_file, project_sample_rate):
+def create_project_from_mlt_xml(xml_file,
+                                project_sample_rate,
+                                video_tracks,
+                                audio_tracks):
     """
     Parses an MLT XML file, and returns a Project containing
     the project metadata elements we care about.
@@ -439,7 +475,9 @@ def create_project_from_mlt_xml(xml_file, project_sample_rate):
     for element in root:
         if "profile" == element.tag:
             profile = Profile(element.attrib['frame_rate_num'],
-                              element.attrib['frame_rate_den'])
+                              element.attrib['frame_rate_den'],
+                              video_tracks,
+                              audio_tracks)
 
         if "producer" == element.tag:
             producer_id = element.attrib['id']
@@ -618,20 +656,16 @@ def _create_ardour_project_dirs(basedir):
     Create the directories for an Ardour project, starting with the
     given base directory.
 
+    The base directory must already exist, but be empty, because GTK only
+    enables selecting existing directories.
+
     """
-    global use_existing_basedir
-    if use_existing_basedir == False: # GTK only enables selecting existing directories so when used from Flowblade we use existing dir.
-        if os.path.exists(basedir):
-            raise Exception("Ardour project directory '" + basedir +
-                            "' already exists")
 
     # get the directory name without any other path information
     (head, subdir) = os.path.split(basedir)
     if '' == subdir:
         raise Exception("could not extract base directory")
 
-    if use_existing_basedir == False: # GTK only enables selecting existing directories so when used from Flowblade we use existing dir.
-        os.mkdir(basedir)
     os.mkdir(os.path.join(basedir, "analysis"))
     os.mkdir(os.path.join(basedir, "dead"))
     os.mkdir(os.path.join(basedir, "export"))
@@ -788,12 +822,6 @@ def create_ardour_project(basedir, project):
     if '' == basedir:
         raise Exception("invalid base directory")
 
-    global use_existing_basedir
-    if use_existing_basedir == False: # GTK only enables selecting existing directories so when used from Flowblade we use existing dir.
-        if os.path.exists(basedir):
-            raise Exception("Ardour project directory '" + basedir + \
-                            "' already exists")
-
     # create the ardour project directory hierarchy
     _create_ardour_project_dirs(basedir)
 
@@ -863,10 +891,10 @@ def _get_ardour_session_close():
 def _get_ardour_program_version():
     s = []
 
-    s.append('  <ProgramVersion created-with="')
-    s.append(_escape(PROGRAM_NAME))
-    s.append('" modified-with="')
-    s.append(_escape(PROGRAM_NAME))
+    s.append('  <ProgramVersion created-with="Flowblade ')
+    s.append(_escape(editorstate.appversion))
+    s.append('" modified-with="Flowblade ')
+    s.append(_escape(editorstate.appversion))
     s.append('"/>\n')
 
     return ''.join(s)
@@ -1291,7 +1319,7 @@ def _get_ardour_routes(project, seq):
 
         # try to use the Flowblade channel name for the route,
         # but make sure it's unique within the Ardour project
-        route_name = playlist.get_flowblade_name()
+        route_name = project.profile.get_flowblade_track_by_mlt_playlist_id(playlist.id)
         if route_name in route_names:
             found_unique_name = False
             for i in range(2, 1000000):
@@ -1749,7 +1777,10 @@ def _create_ardour_project_file(basedir, project):
     s.append(_get_ardour_extra())
 
     # write the ardour project file
-    with open(ardour_project_file_path, "w") as f:
+    with atomicfile.AtomicFileWriter(ardour_project_file_path, "w") as afw:
+        # get a reference to the temp file we're writing
+        f = afw.get_file()
+
         # XML header
         f.write(_get_ardour_xml_header())
 
@@ -1767,59 +1798,24 @@ def _create_ardour_project_file(basedir, project):
 ##############################################################################
 # FLOWBLADE EXPORT LAUNCH                                                    #
 ##############################################################################
-def launch_export_ardour_session_from_flowblade(mlt_xml_file, ardour_project_dir, sample_rate=None):
+
+def launch_export_ardour_session_from_flowblade(mlt_xml_file,
+                                                ardour_project_dir,
+                                                sample_rate=None):
+
     if sample_rate == None:
         sample_rate = DEFAULT_SAMPLE_RATE
 
+    # get the number of audio and video tracks from the current sequence
+    (video_tracks_count, audio_tracks_count) = \
+        editorstate.current_sequence().get_track_counts()
+
     # create a Project instance from a Flowblade MLT XML file
-    project = create_project_from_mlt_xml(mlt_xml_file, sample_rate)
+    project = create_project_from_mlt_xml(mlt_xml_file,
+                                          sample_rate,
+                                          video_tracks_count,
+                                          audio_tracks_count)
 
     # create a new Ardour project, using our Project instance
     create_ardour_project(ardour_project_dir, project)
 
-##############################################################################
-# CLI PROGRAM                                                                #
-##############################################################################
-
-def show_usage():
-    """
-    Show usage information and exit.
-
-    """
-
-    sys.stderr.write(CLI_PROGRAM_NAME)
-    sys.stderr.write('\n')
-
-    sys.stderr.write('Usage: ')
-    sys.stderr.write(CLI_PROGRAM_NAME)
-    sys.stderr.write(' MLT_XML_FILE NEW_ARDOUR_PROJECT_DIR [SAMPLE_RATE_HZ]\n')
-
-    sys.exit(EXIT_FAIL)
-
-def main():
-    """
-    Main program entry point.
-
-    """
-
-    # handle command-line arguments
-    if (len(sys.argv) < 3) or (len(sys.argv) > 4):
-        show_usage()
-
-    mlt_xml_file = sys.argv[1]
-    ardour_project_dir = sys.argv[2]
-
-    sample_rate = DEFAULT_SAMPLE_RATE
-    if 4 == len(sys.argv):
-        sample_rate = int(sys.argv[3])
-
-    # create a Project instance from a Flowblade MLT XML file
-    project = create_project_from_mlt_xml(mlt_xml_file, sample_rate)
-
-    # create a new Ardour project, using our Project instance
-    create_ardour_project(ardour_project_dir, project)
-
-    sys.exit(EXIT_OK)
-
-if "__main__" == __name__:
-    main()

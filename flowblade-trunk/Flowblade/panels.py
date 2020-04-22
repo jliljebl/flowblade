@@ -294,12 +294,20 @@ def get_transition_panel(trans_data):
     filler = Gtk.Label()
     filler.set_size_request(10,10)
 
-    out_clip_label = Gtk.Label(label=_("First Clip Out Handle:"))
+    out_clip_label = Gtk.Label(label=_("First Clip Out Handle Available/Required:"))
     out_clip_value = Gtk.Label(label=str(trans_data["from_handle"]) + _(" frame(s)"))
     
+    in_clip_label = Gtk.Label(label=_("Second Clip In Handle Available/Required:"))
+    in_clip_value = Gtk.Label(label=str(trans_data["to_handle"]) + _(" frame(s)"))
+
     in_clip_label = Gtk.Label(label=_("Second Clip In Handle:"))
     in_clip_value = Gtk.Label(label=str(trans_data["to_handle"]) + _(" frame(s)"))
+
+    steal_frames = Gtk.CheckButton()
+    steal_frames.set_active(editorstate.steal_frames)
     
+    steal_check_row = guiutils.get_checkbox_row_box(steal_frames, Gtk.Label(label=_("Steal frames from clips if needed")))
+
     out_handle_row = get_two_column_box(out_clip_label, 
                                         out_clip_value)
     in_handle_row = get_two_column_box(in_clip_label, 
@@ -330,6 +338,8 @@ def get_transition_panel(trans_data):
     data_vbox = Gtk.VBox(False, 2)
     data_vbox.pack_start(out_handle_row, False, False, 0)
     data_vbox.pack_start(in_handle_row, False, False, 0)
+    data_vbox.pack_start(guiutils.pad_label(4,4), False, False, 0)
+    data_vbox.pack_start(steal_check_row, False, False, 0)
     
     enconding_vbox = Gtk.VBox(False, 2)
     enconding_vbox.pack_start(encodings_cb, False, False, 0)
@@ -342,7 +352,7 @@ def get_transition_panel(trans_data):
 
     alignment = guiutils.set_margins(vbox, 12, 24, 12, 12)
 
-    return (alignment, type_combo_box, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button)
+    return (alignment, type_combo_box, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button, steal_frames)
 
 def get_transition_re_render_panel(trans_data):
     transition_length = trans_data["clip"] .clip_out - trans_data["clip"].clip_in + 1 # +1 out inclusive

@@ -19,7 +19,7 @@
 """
 
 """
-Module handles button edit events from buttons in the middle bar.
+Module handles button edit events from buttons in the middle bar and other non-tool edits targeting timeline.
 """
 
 
@@ -27,6 +27,7 @@ Module handles button edit events from buttons in the middle bar.
 from gi.repository import Gtk
 from gi.repository import Gdk
 
+import copy
 import hashlib
 import os
 from operator import itemgetter
@@ -65,6 +66,7 @@ import renderconsumer
 import respaths
 import sequence
 import syncsplitevent
+import tlinerender
 import updater
 import userfolders
 import utils
@@ -92,6 +94,10 @@ def _get_new_clip_from_clip_monitor():
         new_clip = current_sequence().create_file_producer_clip(MONITOR_MEDIA_FILE().path, None, False, MONITOR_MEDIA_FILE().ttl)
     else:
         new_clip = current_sequence().create_pattern_producer(MONITOR_MEDIA_FILE())
+    
+    if MONITOR_MEDIA_FILE().container_data != None:
+        new_clip.container_data = copy.deepcopy(MONITOR_MEDIA_FILE().container_data)
+        new_clip.container_data.container_data.generate_clip_id()
         
     # Set clip in and out points
     new_clip.mark_in = MONITOR_MEDIA_FILE().mark_in
@@ -656,6 +662,7 @@ def range_overwrite_pressed():
     mark_out_frame = current_sequence().tractor.mark_out
     
     # Case timeline marked
+    print(mark_in_frame, mark_out_frame, over_clip.mark_out, over_clip.mark_in)
     if mark_in_frame != -1 and mark_out_frame != -1:
         range_length = mark_out_frame - mark_in_frame + 1 # end is incl.
         if over_clip.mark_in == -1:
@@ -673,19 +680,18 @@ def range_overwrite_pressed():
     # Case clip marked
     elif over_clip.mark_out != -1 and over_clip.mark_in != -1:
         range_length = over_clip.mark_out - over_clip.mark_in + 1 # end is incl.
-        
-        if mark_in_frame == -1:
-            show_three_point_edit_not_defined()
-            return
 
-        over_length = track.get_length() - mark_in_frame + 1 # + 1 out incl
-        if over_length < range_length:
-            monitor_clip_too_short(gui.editor_window.window)
-            return
-            
         over_clip_out = over_clip.mark_out
-        mark_out_frame = mark_in_frame + range_length - 1 # -1 because it gets readded later
-        
+        if mark_out_frame == -1:
+            # Mark in defined
+            mark_out_frame = mark_in_frame + range_length - 1 # -1 because it gets readded later
+        else:
+            # Mark out defined
+            mark_in_frame = mark_out_frame - range_length + 1
+            if mark_in_frame < 0:
+                clip_shortning = -mark_in_frame
+                mark_in_frame = 0
+                over_clip.mark_in = over_clip.mark_in + clip_shortning # moving overclip in forward because in needs to hit timeline frame 0
     # case neither clip or timeline has both in and out points
     else:
         show_three_point_edit_not_defined()
@@ -695,6 +701,7 @@ def range_overwrite_pressed():
 
     updater.save_monitor_frame = False # hack to not get wrong value saved in MediaFile.current_frame
 
+    #print((over_clip_out- over_clip.mark_in), (mark_out_frame + 1 - mark_in_frame))
     data = {"track":track,
             "clip":over_clip,
             "clip_in":over_clip.mark_in,
@@ -703,6 +710,7 @@ def range_overwrite_pressed():
             "mark_out_frame":mark_out_frame + 1} # +1 because mark is displayed and end of frame end this 
                                                  # confirms to user expectation of
                                                  # of how this should work
+    #print(data)
     action = edit.range_overwrite_action(data)
     action.do_edit()
 
@@ -788,38 +796,6 @@ def sync_compositor(compositor):
     action = edit.move_compositor_action(data)
     action.do_edit()
         
-def set_compositors_fades_defaults():
-    dialogs.set_fades_defaults_dialog(_compositors_fades_defaults_callback)
-
-def _compositors_fades_defaults_callback(dialog, response_id, widgets):
-    group_select, fade_in_check, fade_in_spin, fade_out_check, fade_out_spin, fade_in_length_label, fade_out_length_label = widgets
-    
-    group = group_select.get_active()
-    fade_in_on = fade_in_check.get_active()
-    fade_in_length = int(fade_in_spin.get_value())
-    fade_out_on = fade_out_check.get_active()
-    fade_out_length = int(fade_out_spin.get_value())
-
-    dialog.destroy()
-    
-    if group == 0:
-        fade_in_key = appconsts.P_PROP_DISSOLVE_GROUP_FADE_IN
-        fade_out_key = appconsts.P_PROP_DISSOLVE_GROUP_FADE_OUT
-    else:
-        fade_in_key = appconsts.P_PROP_ANIM_GROUP_FADE_IN
-        fade_out_key = appconsts.P_PROP_ANIM_GROUP_FADE_OUT
-
-    if fade_in_on == False or fade_in_length == 0:
-        PROJECT().set_project_property(fade_in_key, -1)
-    else:
-        PROJECT().set_project_property(fade_in_key, fade_in_length)
-        
-    if fade_out_on == False or fade_out_length == 0:
-        PROJECT().set_project_property(fade_out_key, -1)
-    else:
-        PROJECT().set_project_property(fade_out_key, fade_out_length)
-
-
 def split_audio_button_pressed():
     if movemodes.selected_track == -1:
         return
@@ -938,13 +914,15 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
         return
 
     # Get input data
-    type_combo, length_entry, enc_combo, quality_combo, wipe_luma_combo_box, color_button = selection_widgets
+    type_combo, length_entry, enc_combo, quality_combo, wipe_luma_combo_box, color_button, steal_frames = selection_widgets
     transition_type_selection_index = type_combo.get_active()
     encoding_option_index = enc_combo.get_active()
     quality_option_index = quality_combo.get_active()
     extension_text = "." + renderconsumer.encoding_options[encoding_option_index].extension
     sorted_wipe_luma_index = wipe_luma_combo_box.get_active()
     color_str = color_button.get_color().to_string()
+    force_steal_frames = steal_frames.get_active()
+    editorstate.steal_frames = force_steal_frames # making this selection as default for next invocation
 
     try:
         length = int(length_entry.get_text())
@@ -955,9 +933,6 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
         return
 
     dialog.destroy()
-
-    # Save encoding
-    PROJECT().set_project_property(appconsts.P_PROP_TRANSITION_ENCODING,(encoding_option_index,quality_option_index))
 
     from_clip = transition_data["from_clip"]
     to_clip = transition_data["to_clip"]
@@ -973,15 +948,63 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
         add_thingy = 0
     else:
         add_thingy = 1
+
+    # Get required handle lengths.
+    from_req = from_part - add_thingy
+    to_req = to_part - (1 - add_thingy)
+    from_handle = transition_data["from_handle"]
+    to_handle = transition_data["to_handle"]
+    from_clip_index = movemodes.selected_range_in
     
-    if _check_transition_handles((from_part - add_thingy),
-                                 transition_data["from_handle"], 
-                                 to_part - (1 - add_thingy), 
-                                 transition_data["to_handle"],
-                                 length) == False:
-        return
-    
-    editorstate.transition_length = length
+    # Check that we have enough handles
+    if from_req > from_handle or to_req > to_handle:
+        if force_steal_frames == False:
+            _show_no_handles_dialog( from_req,
+                                     from_handle, 
+                                     to_req,
+                                     to_handle,
+                                     length)
+            return
+
+        # Force trim from clip if needed
+        from_needed = from_req - from_handle
+        if from_needed > 0:
+            if from_needed + 1 < from_clip.clip_length():
+                data = {"track":transition_data["track"],
+                        "clip":transition_data["from_clip"],
+                        "index":from_clip_index,
+                        "delta":-from_needed,
+                        "undo_done_callback":None, # we're not doing the callback because we are not in trim tool that needs it
+                        "first_do":False} # setting this False prevents callback
+                action = edit.trim_end_action(data)
+                edit.do_gui_update = False
+                action.do_edit()
+                edit.do_gui_update = True
+            else:
+                # Clip is not long enough for frame steeling, transition fails.
+                _show_failure_to_steal_frames_dialog(from_needed, from_clip.clip_length(), -1, -1)
+                return
+                
+        # Force trim to clip if needed
+        to_needed = to_req - to_handle
+        if to_needed > 0:
+            if to_needed + 1 < to_clip.clip_length():
+                data = {"track":transition_data["track"],
+                        "clip":transition_data["to_clip"],
+                        "index":from_clip_index + 1,
+                        "delta":to_needed,
+                        "undo_done_callback":None, # we're not doing the callback because we are not in trim tool that needs it
+                        "first_do":False} # setting this False prevents callback
+                action = edit.trim_start_action(data)
+                edit.do_gui_update = False
+                action.do_edit()
+                edit.do_gui_update = True
+            else:
+                # Clip is not long enough for frame steeling, transition fails.
+                _show_failure_to_steal_frames_dialog(-1, -1, to_needed, to_clip.clip_length())
+                return
+
+    editorstate.transition_length = length # Saved for user so that last length becomes default for next invocation.
     
     # Get from in and out frames
     from_in = from_clip.clip_out - from_part + add_thingy
@@ -991,9 +1014,12 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
     to_in = to_clip.clip_in - to_part - 1 
     to_out = to_in + length # or transition will include one frame too many
 
-    # Edit clears selection, get track index before selection is cleared
-    trans_index = movemodes.selected_range_out
+    # Edit clears selection, get transition index before selection is cleared
+    trans_index = from_clip_index + 1
     movemodes.clear_selected_clips()
+
+    # Save encoding
+    PROJECT().set_project_property(appconsts.P_PROP_TRANSITION_ENCODING, (encoding_option_index, quality_option_index))
 
     producer_tractor = mlttransitions.get_rendered_transition_tractor(  editorstate.current_sequence(),
                                                                         from_clip,
@@ -1131,69 +1157,124 @@ def _transition_RE_render_complete(clip_path):
     action = edit.replace_centered_transition_action(data)
     action.do_edit()
 
-def _check_transition_handles(from_req, from_handle, to_req, to_handle, length):
+def _show_no_handles_dialog(from_req, from_handle, to_req, to_handle, length):
+    SPACE_TAB = "    "
+    info_text = _("To create a rendered transition you need enough media overlap from both clips!\n\n")
+    first_clip_info = None
+    if from_req > from_handle:
 
-    if from_req > from_handle or to_req  > to_handle:
-        SPACE_TAB = "    "
-        info_text = _("To create a rendered transition you need enough media overlap from both clips!\n\n")
-        first_clip_info = None
-        if from_req > from_handle:
-        
-            first_clip_info = \
-                        _("<b>FIRST CLIP MEDIA OVERLAP:</b>  ") + \
-                        SPACE_TAB + _("Available <b>") + str(from_handle) + _("</b> frame(s), " ) + \
-                        SPACE_TAB + _("Required <b>") + str(from_req) + _("</b> frame(s)")
+        first_clip_info = \
+                    _("<b>FIRST CLIP MEDIA OVERLAP:</b>  ") + \
+                    SPACE_TAB + _("Available <b>") + str(from_handle) + _("</b> frame(s), " ) + \
+                    SPACE_TAB + _("Required <b>") + str(from_req) + _("</b> frame(s)") + "\n"  + \
+                    SPACE_TAB + _("Trim first clip end back <b>") + str(from_req) + _("</b> frame(s)") + "\n"
+
+    second_clip_info = None
+    if to_req  > to_handle:
+        second_clip_info = \
+                        _("<b>SECOND CLIP MEDIA OVERLAP:</b> ") + \
+                        SPACE_TAB + _("Available <b>") + str(to_handle) + _("</b> frame(s), ") + \
+                        SPACE_TAB + _("Required <b>") + str(to_req) + _("</b> frame(s) ") + "\n" + \
+                        SPACE_TAB + _("Trim second clip start forward <b>") + str(from_req) + _("</b> frame(s)") + "\n"
+
+    img = Gtk.Image.new_from_file ((respaths.IMAGE_PATH + "transition_wrong.png"))
+    img2 = Gtk.Image.new_from_file ((respaths.IMAGE_PATH + "transition_right.png"))
+    img2.set_margin_bottom(24)
+
+    label1 = Gtk.Label(_("Current situation, not enought media overlap:"))
+    label1.set_margin_bottom(12)
+    label2 = Gtk.Label(_("You need more media overlap:"))
+    label2.set_margin_bottom(12)
+    label2.set_margin_top(24)
+    label3 = Gtk.Label(info_text)
+    label3.set_use_markup(True)
+    if first_clip_info != None:
+        label4 = Gtk.Label(first_clip_info)
+        label4.set_use_markup(True)
+    if second_clip_info != None:
+        label5 = Gtk.Label(second_clip_info)
+        label5.set_use_markup(True)
+
+    row1 = guiutils.get_centered_box([label1])
+    row2 = guiutils.get_centered_box([img])
+    row3 = guiutils.get_centered_box([label2])
+    row4 = guiutils.get_centered_box([img2])
+    row5 = guiutils.get_centered_box([label3])
+
+    rows = [row1, row2, row3, row4]
 
 
-        second_clip_info = None
-        if to_req  > to_handle:
-            second_clip_info = \
-                            _("<b>SECOND CLIP MEDIA OVERLAP:</b> ") + \
-                            SPACE_TAB + _("Available <b>") + str(to_handle) + _("</b> frame(s), ") + \
-                            SPACE_TAB + _("Required <b>") + str(to_req) + _("</b> frame(s) ")
+    if first_clip_info != None:
+        row6 = guiutils.get_left_justified_box([label4])
+        rows.append(row6)
+    if second_clip_info != None:
+        row7 = guiutils.get_left_justified_box([label5])
+        rows.append(row7)
+    
+    label = Gtk.Label(_("Activating 'Steal frames from clips if needed' checkbox can help too."))
+    row = guiutils.get_left_justified_box([label])
+    row.set_margin_top(24)
+    rows.append(row)
 
-        
-        img = Gtk.Image.new_from_file ((respaths.IMAGE_PATH + "transition_wrong.png"))
-        img2 = Gtk.Image.new_from_file ((respaths.IMAGE_PATH + "transition_right.png"))
-        img2.set_margin_bottom(24)
+    dialogutils.warning_message_with_panels(_("More media overlap needed to create transition!"), 
+                                            "", gui.editor_window.window, True, dialogutils.dialog_destroy, rows)
+            
+def _show_failure_to_steal_frames_dialog(from_needed, from_length, to_needed, to_length):
+    SPACE_TAB = "    "
+    info_text = _("To create a rendered Transition you need enough media overlap from both Clips!\n\n")
+    first_clip_info = None
+    if from_needed > 0:
 
-        label1 = Gtk.Label(_("Current situation, not enought media overlap:"))
+        first_clip_info = \
+                    _("<b>FIRST CLIP:</b>  ") + \
+                    SPACE_TAB + _("Length <b>") + str(from_length) + _("</b> frame(s), " ) + \
+                    SPACE_TAB + _("Required shortning <b>") + str(from_needed) + _("</b> frame(s)")
+
+
+    second_clip_info = None
+    if to_needed  > 0:
+        second_clip_info = \
+                        _("<b>SECOND CLIP:</b> ") + \
+                        SPACE_TAB + _("Length <b>") + str(to_length) + _("</b> frame(s), ") + \
+                        SPACE_TAB + _("Required shortning <b>") + str(to_needed) + _("</b> frame(s) ")
+
+    rows = []
+    if first_clip_info != None:
+        first_clip_info_label = Gtk.Label(first_clip_info)
+        first_clip_info_label.set_use_markup(True)
+        row = guiutils.get_left_justified_box([first_clip_info_label])
+        rows.append(row)
+        label1 = Gtk.Label("\u2022" + " " + _("Lengthen first Clip from beginning:"))
         label1.set_margin_bottom(12)
-        label2 = Gtk.Label(_("You need more media overlap:"))
-        label2.set_margin_bottom(12)
-        label2.set_margin_top(24)
-        label3 = Gtk.Label(info_text)
-        label3.set_use_markup(True)
-        if first_clip_info != None:
-            label4 = Gtk.Label(first_clip_info)
-            label4.set_use_markup(True)
-        if second_clip_info != None:
-            label5 = Gtk.Label(second_clip_info)
-            label5.set_use_markup(True)
-        
-        row1 = guiutils.get_centered_box([label1])
+        label1.set_margin_top(24)
+        img = Gtk.Image.new_from_file ((respaths.IMAGE_PATH + "transition_fix_first_clip.png"))
+        row1 = guiutils.get_left_justified_box([guiutils.pad_label(40,12), label1])
         row2 = guiutils.get_centered_box([img])
-        row3 = guiutils.get_centered_box([label2])
-        row4 = guiutils.get_centered_box([img2])
-        row5 = guiutils.get_centered_box([label3])
-        
-        rows = [row1, row2, row3, row4]
+        rows.append(row1)
+        rows.append(row2)
+        label2 = Gtk.Label("\u2022" + " " + _("or make Transition shorter."))
+        row1 = guiutils.get_left_justified_box([guiutils.pad_label(40,12), label2])
+        rows.append(row1)
 
-        
-        if first_clip_info != None:
-            row6 = guiutils.get_left_justified_box([label4])
-            rows.append(row6)
-        if second_clip_info != None:
-            row7 = guiutils.get_left_justified_box([label5])
-            rows.append(row7)
-        
+    if second_clip_info != None:
+        last_clip_info_label = Gtk.Label(second_clip_info)
+        last_clip_info_label.set_use_markup(True)
+        row = guiutils.get_left_justified_box([last_clip_info_label])
+        rows.append(row)
+        label1 = Gtk.Label("\u2022" + " " + _("Lengthen second Clip from end:"))
+        label1.set_margin_bottom(12)
+        label1.set_margin_top(24)
+        img = Gtk.Image.new_from_file ((respaths.IMAGE_PATH + "transition_fix_last_clip.png"))
+        row1 = guiutils.get_left_justified_box([guiutils.pad_label(40,12), label1])
+        row2 = guiutils.get_centered_box([img])
+        rows.append(row1)
+        rows.append(row2)
+        label2 = Gtk.Label("\u2022" + " " + _("or make Transition shorter."))
+        row1 = guiutils.get_left_justified_box([guiutils.pad_label(40,12), label2])
+        rows.append(row1)
 
-        dialogutils.warning_message_with_panels(_("More media overlap needed to create transition!"), 
-                                                "", gui.editor_window.window, True, dialogutils.dialog_destroy, rows)
-                
-        return False
-
-    return True
+    dialogutils.warning_message_with_panels(_("<b>Stealing frames from clips to transition failed!</b>"), 
+                                            "", gui.editor_window.window, True, dialogutils.dialog_destroy, rows)
 
 def _do_rendered_fade(track):
     clip = track.clips[movemodes.selected_range_in]
@@ -1890,6 +1971,8 @@ def _marker_add_dialog_callback(dialog, response_id, name_entry):
 
     current_sequence().markers.append((name, current_frame))
     current_sequence().markers = sorted(current_sequence().markers, key=itemgetter(1))
+
+    updater.update_position_bar()
     updater.repaint_tline()
     
 
@@ -1907,4 +1990,6 @@ def set_track_small_height(track_index):
     track.height = appconsts.TRACK_HEIGHT_SMALL
     if editorstate.SCREEN_HEIGHT < 863:
         track.height = appconsts.TRACK_HEIGHT_SMALLEST
+
+
 
