@@ -157,12 +157,18 @@ def get_image(img_name, suffix = ".png", force = None):
 
 # Aug-2019 - SvdB - BB
 def get_cairo_image(img_name, suffix = ".png", force = None):
+    # Apr-2020 - SvdB - Make it sturdier in case a @2 image is missing. Just display the original image.
     # Use parameter force as True or False to force the track height no matter what the preferences setting
     if force == None:
         force = editorpersistance.prefs.double_track_hights
     if force:
-        img_name = img_name + "@2"
-    return cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + img_name + suffix)
+        dbl_name = img_name + "@2"
+    try:
+        img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + dbl_name + suffix)
+    except:
+        print("Double height icon not found: ", img_name)
+        img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + img_name + suffix)
+    return img
 
 # Aug-2019 - SvdB - BB
 def get_image_button(img_file_name, width, height):
