@@ -731,14 +731,10 @@ class BlenderContainerActions(AbstractContainerActionObject):
 
             if status != None:
                 step, fraction, elapsed = status
-                print(step, fraction, elapsed)
-                """
-                if self.container_data.render_data.do_video_render == True:
-                    msg = _("Rendering Video")
-                elif step == "2":
-                """
                 msg = _("Rendering Image Sequence")
-
+                if  step == "2":
+                     msg = _("Rendering Video")
+                     
                 job_proxy = self.get_job_proxy()
                 job_proxy.progress = float(fraction)
                 job_proxy.elapsed = float(elapsed)

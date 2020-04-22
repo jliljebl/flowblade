@@ -91,7 +91,6 @@ def main(root_path, session_id, project_path, range_in, range_out, profile_desc)
     except:
         editorstate.mlt_version = "0.0.99" # magic string for "not found"
 
-    ccrutils.prints_to_log_file("/home/janne/blenderlogg")
     # Set paths.
     respaths.set_paths(root_path)
 
@@ -149,8 +148,11 @@ def main(root_path, session_id, project_path, range_in, range_out, profile_desc)
 
     render_data = ccrutils.get_render_data()
 
+    print(render_data)
+
     # Render video
     if render_data.do_video_render == True:
+
         # Render consumer
         args_vals_list = toolsencoding.get_args_vals_list_for_render_data(render_data)
         profile = mltprofiles.get_profile_for_index(render_data.profile_index) 
@@ -194,8 +196,8 @@ def main(root_path, session_id, project_path, range_in, range_out, profile_desc)
                 ccrutils.write_status_message(msg)
             
             time.sleep(1.0)
-        
-        ccrutils.write_completed_message()
+    
+    ccrutils.write_completed_message()
 
 
 
@@ -222,8 +224,8 @@ class ProgressPollingThread(threading.Thread):
             
             if written_frames_count == length:
                 completed = True
-                
-            time.sleep(1.0)
+            
+            time.sleep(0.5)
         
         if ccrutils.get_render_data().do_video_render == False:
             ccrutils.write_completed_message()
