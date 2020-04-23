@@ -152,17 +152,31 @@ def get_image(img_name, suffix = ".png", force = None):
     if force == None:
         force = editorpersistance.prefs.double_track_hights
     if force:
-        img_name = img_name + "@2"
-    return Gtk.Image.new_from_file(respaths.IMAGE_PATH + img_name + suffix)
+        new_name = img_name + "@2"
+    else:
+        new_name = img_name
+    try:
+        img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + new_name + suffix)
+    except:
+        img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + img_name + suffix)
+    return img
+    
 
 # Aug-2019 - SvdB - BB
 def get_cairo_image(img_name, suffix = ".png", force = None):
+    # Apr-2020 - SvdB - Make it sturdier in case a @2 image is missing. Just display the original image.
     # Use parameter force as True or False to force the track height no matter what the preferences setting
     if force == None:
         force = editorpersistance.prefs.double_track_hights
     if force:
-        img_name = img_name + "@2"
-    return cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + img_name + suffix)
+        new_name = img_name + "@2"
+    else:
+        new_name = img_name
+    try:
+        img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + new_name + suffix)
+    except:
+        img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + img_name + suffix)
+    return img
 
 # Aug-2019 - SvdB - BB
 def get_image_button(img_file_name, width, height):
