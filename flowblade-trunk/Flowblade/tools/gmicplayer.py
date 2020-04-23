@@ -328,8 +328,8 @@ class FolderFramesScriptRenderer:
             file_numbers_list = re.findall(r'\d+', clip_frame)
             filled_number_str = str(int(file_numbers_list[0]) + self.out_frame_offset).zfill(4)
 
-            clip_frame_path = os.path.join(self.folder, clip_frame)
-            rendered_file_path = self.out_folder + self.frame_name + "_" + filled_number_str + ".png"
+            clip_frame_path = str(os.path.join(self.folder, clip_frame)).replace(" ", "\ ")
+            rendered_file_path = str(self.out_folder + self.frame_name + "_" + filled_number_str + ".png").replace(" ", "\ ")
             
             script_str = nice_command + "gmic " + clip_frame_path + " " + self.user_script + " -output " +  rendered_file_path
 
