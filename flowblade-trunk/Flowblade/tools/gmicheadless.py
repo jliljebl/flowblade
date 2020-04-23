@@ -97,7 +97,7 @@ def abort_render(session_id):
 def main(root_path, session_id, script, clip_path, range_in, range_out, profile_desc, gmic_frame_offset):
     
     os.nice(10) # make user configurable
-     
+
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION
     except:

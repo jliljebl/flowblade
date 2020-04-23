@@ -445,11 +445,11 @@ class GMicContainerActions(AbstractContainerActionObject):
         jobs.update_job_queue(job_proxy)
         
         args = ("session_id:" + self.get_container_program_id(), 
-                "script:" + self.container_data.program,
-                "clip_path:" + self.container_data.unrendered_media,
+                "script:" + str(self.container_data.program).replace(" ", "\ "),
+                "clip_path:" + str(self.container_data.unrendered_media).replace(" ", "\ "),  # This is going through Popen shell=True and needs escaped spaces.
                 "range_in:" + str(range_in),
                 "range_out:"+ str(range_out),
-                "profile_desc:" + PROJECT().profile.description().replace(" ", "_"),
+                "profile_desc:" + PROJECT().profile.description().replace(" ", "_"),  # This is going through Popen shell=True and needs escaped spaces.
                 "gmic_frame_offset:" + str(gmic_frame_offset))
 
         # Run with nice to lower priority if requested (currently hard coded to lower)
@@ -571,11 +571,11 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
         jobs.update_job_queue(job_proxy)
 
         args = ("session_id:" + self.get_container_program_id(), 
-                "clip_path:" + self.container_data.unrendered_media,
+                "clip_path:" + str(self.container_data.unrendered_media).replace(" ", "\ "),   # This is going through Popen shell=True and needs escaped spaces.
                 "range_in:" + str(range_in),
                 "range_out:"+ str(range_out),
                 "profile_desc:" + PROJECT().profile.description().replace(" ", "_"),
-                "xml_file_path:" + str(self.container_data.unrendered_media))
+                "xml_file_path:" + str(self.container_data.unrendered_media).replace(" ", "\ "))   # This is going through Popen shell=True and needs escaped spaces.
 
         # Run with nice to lower priority if requested (currently hard coded to lower)
         nice_command = "nice -n " + str(10) + " " + respaths.LAUNCH_DIR + "flowblademltxmlheadless"
@@ -702,7 +702,7 @@ class BlenderContainerActions(AbstractContainerActionObject):
             outfile.write(render_exec_lines)
 
         args = ("session_id:" + self.get_container_program_id(),
-                "project_path:" + self.container_data.program,
+                "project_path:" + str(self.container_data.program).replace(" ", "\ "),   # This is going through Popen shell=True and needs escaped spaces.
                 "range_in:" + str(range_in),
                 "range_out:"+ str(range_out),
                 "profile_desc:" + PROJECT().profile.description().replace(" ", "_"))
