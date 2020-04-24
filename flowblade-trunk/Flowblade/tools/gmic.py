@@ -593,7 +593,6 @@ class GmicWindow(Gtk.Window):
 
         app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowbladetoolicon.png")
         self.set_icon(app_icon)
-
         hamburger_launcher_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger.png")
         self.hamburger_launcher = guicomponents.PressLaunch(self.hamburger_launch_pressed, hamburger_launcher_surface)
         
@@ -1249,6 +1248,10 @@ class GmicEffectRendererer(threading.Thread):
             while self.render_player.stopped == False:
 
                 if self.abort == True:
+                    Gdk.threads_enter()
+                    _window.render_percentage.set_markup("<small>" + _("Render stopped!") + "</small>")
+                    _window.render_progress_bar.set_fraction(0.0)
+                    Gdk.threads_leave()
                     return
                 
                 fraction = self.render_player.get_render_fraction()
@@ -1301,8 +1304,9 @@ class GmicEffectRendererer(threading.Thread):
 
     def abort_render(self):
         self.abort = True
+
         if self.script_renderer != None:
-             self.script_renderer.abort()
+             self.script_renderer.abort_rendering()
 
         self.shutdown()
                          

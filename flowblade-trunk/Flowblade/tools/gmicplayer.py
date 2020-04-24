@@ -364,7 +364,7 @@ class FolderFramesScriptRenderer:
     def do_render_output_callback(self, process, out_text):
         self.render_output_callback(process, out_text)
 
-    def abort(self):
+    def abort_rendering(self):
         self.abort = True
 
 
