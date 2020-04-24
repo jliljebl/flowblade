@@ -1670,7 +1670,45 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
     
     def keyframe_dragged(self, active_kf, frame):
         self.geom_kf_edit.set_keyframe_frame(active_kf, frame)
-        
+
+    def menu_item_activated(self, widget, data):
+        if data == "reset":
+            self._reset_rect_pressed()
+        elif data == "ratio":
+            self._reset_rect_ratio_pressed()
+        elif data == "hcenter":
+            self._center_horizontal()
+        elif data == "vcenter":
+            self._center_vertical()
+
+    def _reset_rect_pressed(self):
+        self.geom_kf_edit.reset_active_keyframe_shape(self.clip_editor.active_kf_index)
+        self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+        frame = self.clip_editor.get_active_kf_frame()
+        self.update_editor_view_with_frame(frame)
+        self.update_property_value()
+
+    def _reset_rect_ratio_pressed(self):
+        self.geom_kf_edit.reset_active_keyframe_rect_shape(self.clip_editor.active_kf_index)
+        frame = self.clip_editor.get_active_kf_frame()
+        self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+        self.update_editor_view_with_frame(frame)
+        self.update_property_value()
+
+    def _center_horizontal(self):
+        self.geom_kf_edit.center_h_active_keyframe_shape(self.clip_editor.active_kf_index)
+        frame = self.clip_editor.get_active_kf_frame()
+        self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+        self.update_editor_view_with_frame(frame)
+        self.update_property_value()
+
+    def _center_vertical(self):
+        self.geom_kf_edit.center_v_active_keyframe_shape(self.clip_editor.active_kf_index)
+        frame = self.clip_editor.get_active_kf_frame()
+        self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+        self.update_editor_view_with_frame(frame)
+        self.update_property_value()
+
     def update_editor_view(self, seek_tline_frame=True):
         # This gets called when tline frame is changed from outside
         # Call update_editor_view_with_frame that is used when udating from inside the object.
