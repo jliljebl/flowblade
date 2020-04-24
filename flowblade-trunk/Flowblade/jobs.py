@@ -120,19 +120,18 @@ def add_job(job_proxy):
     if editorpersistance.prefs.open_jobs_panel_on_add == True:
         gui.middle_notebook.set_current_page(jobs_notebook_index)
     
-    if editorpersistance.prefs.render_jobs_sequentially == False:
+    if editorpersistance.prefs.render_jobs_sequentially == False: # Feature not active for first release 2.6.
         job_proxy.start_render()
     else:
          running = _get_jobs_with_status(RENDERING)
          if len(running) == 0:
              job_proxy.start_render()
-            
+
 def update_job_queue(update_msg_job_proxy): # We're using JobProxy objects as messages to update values on jobs in _jobs list.
     global _jobs_list_view, _remove_list
     row = -1
     job_proxy = None  
     for i in range (0, len(_jobs)):
-        #job_proxy = _jobs[i]
 
         if _jobs[i].proxy_uid == update_msg_job_proxy.proxy_uid:
             if _jobs[i].status == CANCELLED:
@@ -291,7 +290,10 @@ def _hamburger_item_activated(widget, msg):
         GObject.timeout_add(4000, _remove_jobs)
 
     elif msg == "cancel_selected":
-        jobs_list_index = _jobs_list_view.get_selected_row_index()
+        try:
+            jobs_list_index = _jobs_list_view.get_selected_row_index()
+        except:
+            return # nothing was selected
         
         job = _jobs[jobs_list_index]
         job.abort_render()
