@@ -1147,7 +1147,7 @@ class KeyFrameEditorClipFadeFilter(KeyFrameEditor):
     Used for compositors with just slider and keyframes.
     """
     def __init__(self, editable_property):
-        KeyFrameEditor.__init__(self, editable_property, use_clip_in=False, slider_switcher=None, fade_buttons=True)
+        KeyFrameEditor.__init__(self, editable_property, use_clip_in=True, slider_switcher=None, fade_buttons=True)
 
     def add_fade_in(self):
         # The code to do fades was written originally for compositors so we are using module compositorfades with some added code for filters.

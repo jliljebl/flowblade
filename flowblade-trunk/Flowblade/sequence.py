@@ -617,6 +617,7 @@ class Sequence:
         compositor.obey_autofollow = old_compositor.obey_autofollow
         if self.compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
             compositor.transition.mlt_transition.set("always_active", str(1))
+            compositor.transition.mlt_transition.set("disable", str(0))
         self._plant_compositor(compositor)
         return compositor
     
