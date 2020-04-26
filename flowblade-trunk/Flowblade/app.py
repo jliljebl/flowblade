@@ -561,6 +561,7 @@ def init_sequence_gui():
     # Set correct compositing mode menu item selected
     gui.editor_window.init_compositing_mode_menu()
     gui.editor_window.init_timeline_rendering_menu()
+    gui.comp_mode_launcher.set_pixbuf(editorstate.get_compositing_mode())
 
     # Set initial timeline scale draw params
     editorstate.current_sequence().update_length()

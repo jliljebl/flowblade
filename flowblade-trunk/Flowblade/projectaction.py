@@ -2080,7 +2080,6 @@ def _compositing_mode_dialog_callback(dialog, response_id, new_compositing_mode)
         current_sequence().add_full_track_compositors()
     updater.repaint_tline()
 
-    print("new_compositing_mode", new_compositing_mode)
     compositeeditor._display_compositor_edit_box()
     gui.comp_mode_launcher.set_pixbuf(new_compositing_mode) # pixbuf indexes correspond with compositing mode enums.
 
