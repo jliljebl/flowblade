@@ -77,8 +77,8 @@
 
     <!-- User editable encodings -->
     <!-- encoding options group together codecs, file formats and quality option groups -->
-    <encodingoption name="H.264 / .mp4" extension="mp4" audiodesc=" aac" type="av" resize="True" qgroup="qgroup2">
-        <profile args="f=mp4 s=%SCREENSIZE% hq=1 acodec=aac ab=256k pix_fmt=yuv420p vcodec=libx264 minrate=0 b=%BITRATE% b_strategy=1 subcmp=2 cmp=2 coder=1 flags=+loop qmax=51 subq=7 qmin=10 qcomp=0.6 qdiff=4 trellis=1 aspect=%ASPECT%"/>
+    <encodingoption name="H.264 / .mp4" extension="mp4" audiodesc=" mp3" type="av" resize="True" qgroup="qgroup2">
+        <profile args="f=mp4 s=%SCREENSIZE% hq=1 acodec=libmp3lame ab=320k ac=2 pix_fmt=yuv420p vcodec=libx264 minrate=0 b=%BITRATE% b_strategy=1 subcmp=2 cmp=2 coder=1 flags=+loop qmax=51 subq=7 qmin=10 qcomp=0.6 qdiff=4 trellis=1 aspect=%ASPECT%"/>
     </encodingoption>
     <encodingoption name="MPEG-4 / .mp4" extension="mp4" type="av" audiodesc=" mp2" resize="True" qgroup="qgroup1">
         <profile args="f=mp4 hq=1 acodec=libtwolame ab=192k vcodec=mpeg4 minrate=0 vb=%BITRATE%"/>
@@ -92,8 +92,8 @@
     <encodingoption name="Ogg Theora / .ogv" extension="ogv" audiodesc=" vorbis" type="av" resize="True" qgroup="qgroup2">
         <profile args="f=ogg acodec=libvorbis ac=2 vcodec=libtheora minrate=0 vb=%BITRATE%" />
     </encodingoption>
-    <encodingoption name="Lossless H.264 / .mp4" extension="mp4" audiodesc=" aac"  type="av" resize="True" qgroup="lossless">
-        <profile args="f=mp4 acodec=aac ab=384k ac=2 pix_fmt=yuv420p vcodec=libx264 cqp=0 me_method=esa subq=8 qmin=10 qcomp=0.6 qdiff=4 qmax=51 coder=ac partitions=+parti4x4+parti8x8+partp4x4+partp8x8+partb8x8 refs=16 trellis=1" />
+    <encodingoption name="Lossless H.264 / .mp4" extension="mp4" audiodesc=" mp3"  type="av" resize="True" qgroup="lossless">
+        <profile args="f=mp4 acodec=libmp3lame ab=320k ac=2 pix_fmt=yuv420p vcodec=libx264 cqp=0 me_method=esa subq=8 qmin=10 qcomp=0.6 qdiff=4 qmax=51 coder=ac partitions=+parti4x4+parti8x8+partp4x4+partp8x8+partb8x8 refs=16 trellis=1" />
     </encodingoption>
     <encodingoption name="Lossless MPEG-4 / .mp4" extension="mp4" audiodesc=" mp3" type="av" resize="True" qgroup="lossless">
         <profile args="f=mp4 acodec=libmp3lame ab=320k ac=2 vcodec=mpeg4 qscale=1 qmin=1" />
@@ -263,16 +263,16 @@
 
 
     <!-- Proxy encoding -->
-    <proxyencodingoption name="H.264 Preset Ultrafast" extension="mp4" type="av" audiodesc="aac, 128kb/s, 48000Hz" resize="True" qgroup="qgroup2">
-        <profile args="f=mp4 acodec=aac ab=128k ar=48000 vcodec=libx264 preset=ultrafast tune=fastdecode g=30 crf=25"/>
+    <proxyencodingoption name="H.264 Preset Ultrafast" extension="mp4" type="av" audiodesc="mp3, 192kb/s, 48000Hz" resize="True" qgroup="qgroup2">
+        <profile args="f=mp4 acodec=libmp3lame ac=2 ab=192k ar=48000 vcodec=libx264 preset=ultrafast tune=fastdecode g=30 crf=25"/>
     </proxyencodingoption>
-    <proxyencodingoption name="MPEG-4 Preset Ultrafast" extension="mp4" type="av" audiodesc="mp2, 192kb/s, 48000Hz" resize="True" qgroup="qgroup1">
+    <proxyencodingoption name="MPEG-4 Preset Ultrafast" extension="mp4" type="av" audiodesc="mp3, 192kb/s, 48000Hz" resize="True" qgroup="qgroup1">
         <profile args="f=mp4 acodec=libmp3lame ac=2 ab=192k ar=48000 vcodec=mpeg4 preset=ultrafast"/>
     </proxyencodingoption>
-    <proxyencodingoption name="MPEG-2 Transport Stream" audiodesc="mp2, 384kb/s, 48000Hz"  extension="m2t" type="av" resize="True" qgroup="qgroup1">
+    <proxyencodingoption name="MPEG-2 Transport Stream" extension="m2t" type="av" audiodesc="mp2, 256kb/s, 48000Hz" resize="True" qgroup="qgroup1">
        <profile args="f=mpegts acodec=libtwolame ab=256k ar=48000 vcodec=mpeg2video g=5" />
     </proxyencodingoption>
-    <proxyencodingoption name="Apple ProRes 422 Proxy / .mov" extension="mov" audiodesc=" pcm" type="av" resize="True" qgroup="not_settable">
+    <proxyencodingoption name="Apple ProRes 422 Proxy / .mov" extension="mov" type="av" audiodesc="pcm" resize="True" qgroup="not_settable">
         <profile args="f=mov acodec=pcm_s24le ac=2 vcodec=prores vprofile=0 vendor=ap10 pix_fmt=yuv422p10le" />
     </proxyencodingoption>
 
