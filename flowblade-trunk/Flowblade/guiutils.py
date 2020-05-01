@@ -315,7 +315,9 @@ def get_named_frame(name, widget, left_padding=12, right_padding=6, right_out_pa
         label_box.pack_start(Gtk.Label(), True, True, 0)
         if tooltip_txt != None:        
             label.set_tooltip_markup(tooltip_txt)
-            
+    else:
+        label = Gtk.Label()
+
     alignment = set_margins(widget, right_padding, 0, left_padding, 0)
 
     frame = Gtk.VBox()
