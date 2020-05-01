@@ -61,10 +61,11 @@ def init():
     try:
         _maybe_create_xdg_dirs()
     except Exception as e:
-        _init_error = "Could not create XDG folders: " + str(e)
-        _init_error += "Config dir" + _xdg_config_dir + "\n"
-        _init_error += "Data dir" + _xdg_data_dir + "\n"
-        _init_error += "Cache dir" + _xdg_cache_dir + "\n"
+        _init_error = "Error message: " + str(e) + "\n\n"
+        _init_error += "XDG Config dir: " + _xdg_config_dir + "\n"
+        _init_error += "XDG Data dir: " + _xdg_data_dir + "\n"
+        _init_error += "XDG Cache dir: " + _xdg_cache_dir + "\n"
+        return
     
     # Determine if this a clean install or do we need to copy files fron dot dir to XDG dirs
     # We think existance of prefs files will tell us what the state of the system is.

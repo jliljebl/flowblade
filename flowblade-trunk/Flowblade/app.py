@@ -210,6 +210,11 @@ def main(root_path):
     Gdk.threads_init()
     Gdk.threads_enter()
 
+    # Handle userfolders init error and quit.
+    if userfolders.get_init_error() != None:
+        _xdg_error_exit(userfolders.get_init_error())
+        return
+        
     # Themes
     if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
         success = gui.apply_gtk_css()
@@ -356,10 +361,8 @@ def main(root_path):
     if editorstate.runtime_version_greater_then_test_version(editorpersistance.prefs.workflow_dialog_last_version_shown, editorstate.appversion):
         GObject.timeout_add(500, show_worflow_info_dialog)
         
-    # Handle userfolders init error and data copy.
-    if userfolders.get_init_error() != None:
-        GObject.timeout_add(500, show_user_folders_init_error_dialog, userfolders.get_init_error())
-    elif userfolders.data_copy_needed():
+    # Copy to XDG.
+    if userfolders.data_copy_needed():
         GObject.timeout_add(500, show_user_folders_copy_dialog)
     else:
         print("No user folders actions needed.")
@@ -958,6 +961,18 @@ def _show_too_small_info():
                     _("Your screen dimensions are ") + str(scr_w) + " x " + str(scr_h) + "."
     dialogutils.warning_message_with_callback(primary_txt, secondary_txt, None, False, _early_exit)
 
+def _xdg_error_exit(error_str):
+    global exit_timeout_id
+    exit_timeout_id = GObject.timeout_add(200, _show_xdg_error_info, error_str)
+    # Launch gtk+ main loop
+    Gtk.main()
+
+def _show_xdg_error_info(error_str):
+    GObject.source_remove(exit_timeout_id)
+    primary_txt = _("Cannot launch application because XDG folders init error.")
+    secondary_txt = error_str + "."
+    dialogutils.warning_message_with_callback(primary_txt, secondary_txt, None, False, _early_exit)
+    
 def _early_exit(dialog, response):
     dialog.destroy()
     # Exit gtk main loop.
