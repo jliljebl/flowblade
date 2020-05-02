@@ -616,10 +616,11 @@ def effect_selection_changed(use_current_filter_index=False):
             if ((editor_type == propertyeditorbuilder.KEYFRAME_EDITOR)
                 or (editor_type == propertyeditorbuilder.KEYFRAME_EDITOR_RELEASE)
                 or (editor_type == propertyeditorbuilder.KEYFRAME_EDITOR_CLIP)
-                or (editor_type == propertyeditorbuilder.FILTER_RECT_GEOM_EDITOR)):
+                or (editor_type == propertyeditorbuilder.FILTER_RECT_GEOM_EDITOR)
+                or (editor_type == propertyeditorbuilder.KEYFRAME_EDITOR_CLIP_FADE_FILTER)):
                     keyframe_editor_widgets.append(editor_row)
             
-            # if slider property is being dedited as keyrame property
+            # if slider property is being edited as keyrame property
             if hasattr(editor_row, "is_kf_editor"):
                 keyframe_editor_widgets.append(editor_row)
 
