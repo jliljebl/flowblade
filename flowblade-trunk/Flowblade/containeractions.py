@@ -625,7 +625,8 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
     def abort_render(self):
         self.remove_as_status_polling_object()
         mltxmlheadless.abort_render(self.get_container_program_id())
-        
+
+
 class BlenderContainerActions(AbstractContainerActionObject):
 
     def __init__(self, container_data):

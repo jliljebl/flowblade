@@ -125,8 +125,10 @@ def clone_clip(clip):
 
 
 # ------------------------------------------------------------ GUI
-def _get_file_select_row_and_editor(label_text, file_filter=None):
-    file_chooser = Gtk.FileChooserButton()
+def _get_file_select_row_and_editor(label_text, file_filter=None, title=None):
+    if title == None:
+        title = _("Select A File")
+    file_chooser = Gtk.FileChooserButton.new(title, Gtk.FileChooserAction.OPEN)
     file_chooser.set_size_request(250, 25)
     file_chooser.set_current_folder(os.path.expanduser("~") + "/")
 
@@ -171,7 +173,7 @@ def _show_not_all_data_info():
 # -------------------------------------------------------- MEDIA ITEM CREATION
 # --- G'Mic
 def create_gmic_media_item():
-    script_select, row1 = _get_file_select_row_and_editor(_("Select G'Mic Tool Script:"))
+    script_select, row1 = _get_file_select_row_and_editor(_("G'Mic Tool Script:"), None, _("Select G'Mic Tool Script"))
     media_file_select, row2 = _get_file_select_row_and_editor(_("Video Clip:"))
     _open_image_sequence_dialog(_gmic_clip_create_dialog_callback, _("Create G'Mic Script Container Clip"), [row1, row2], [script_select, media_file_select])
 
