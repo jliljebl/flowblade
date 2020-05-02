@@ -40,7 +40,8 @@ SIMPLE_EDITOR_COLOR = 4
 
 DEFAULT_VALUES = ["Text", "a value", "0.0", "0", "(1.0, 1.0, 1.0, 1.0)"]
 
-MIN_VAL = -pow(2, 63) # Gtk.Adjustments requires some bounds
+# Gtk.Adjustments require some bounds, we dont want to get into having any for simple editors.
+MIN_VAL = -pow(2, 63) 
 MAX_VAL = pow(2, 63)
 
     
@@ -224,7 +225,7 @@ class ColorEditor(AbstractSimpleEditor):
         if value[len(value) - 1:len(value)] == ')':
             value = value[0:len(value) - 1]
         
-        value = value.replace(", ", ",") # __init__ func expects spa
+        value = value.replace(", ", ",") # input value can easily have some extra spaces, even better if we had some generic solution here
         four_float_tuple = tuple(map(float, value.split(',')))
 
         rgba = Gdk.RGBA(*four_float_tuple)
