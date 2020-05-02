@@ -574,7 +574,11 @@ class Titler(Gtk.Window):
             text_layer.mouse_released_listener  = self._editor_layer_mouse_released
             text_layer.set_rect_pos(layer.x, layer.y)
             text_layer.update_rect = True
+            text_layer.visible = True
             self.view_editor.add_layer(text_layer)
+
+        for layer in _titler_data.layers:
+            layer.visible = True
 
         self._activate_layer(0)
         self.layer_list.fill_data_model()
