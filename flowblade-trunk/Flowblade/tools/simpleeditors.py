@@ -217,13 +217,15 @@ class ColorEditor(AbstractSimpleEditor):
     def __init__(self, id_data, label_text, value, tooltip):
         AbstractSimpleEditor.__init__(self, id_data, tooltip)
 
+        # Values may have parenthesis around 
         if value[0:1] == '(':
             value = value[1:len(value) - 1]
 
         if value[len(value) - 1:len(value)] == ')':
             value = value[0:len(value) - 1]
-            
-        four_float_tuple = tuple(map(float, value.split(', '))) 
+        
+        value = value.replace(", ", ",") # __init__ func expects spa
+        four_float_tuple = tuple(map(float, value.split(',')))
 
         rgba = Gdk.RGBA(*four_float_tuple)
 
@@ -232,5 +234,18 @@ class ColorEditor(AbstractSimpleEditor):
         self.build_editor(label_text, self.colorbutton)
 
     def get_value(self):
-        self.colorbutton.get_rgba().to_string()
+        value = self.colorbutton.get_rgba().to_string()
+        value = value[4:len(value)]
+        value = value[0:len(value) - 1]
+
+        color_list = list(map(float, value.split(',')))
+        out_value = ""
+        for color_val in  color_list:
+            color_val_str = str(float(color_val) / 255.0)
+            out_value += color_val_str
+            out_value += ","
+            
+        out_value += "1.0"
+
+        return out_value
     

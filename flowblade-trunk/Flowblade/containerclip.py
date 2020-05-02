@@ -32,9 +32,9 @@ from editorstate import PROJECT
 import gui
 import guiutils
 import respaths
-#import toolsencoding
 import userfolders
 import utils
+
 
 ROW_WIDTH = 300
 
@@ -196,12 +196,9 @@ def _gmic_clip_create_dialog_callback(dialog, response_id, data):
         PROJECT().add_container_clip_media_object(container_clip)
         _update_gui_for_media_object_add()
 
+
 # --- MLT XML
 def create_mlt_xml_media_item(xml_file_path, media_name):
-    # xml file is both unrendered media and program
-    #f = Gtk.FileFilter()
-    #f.set_name(_("MLT XML"))
-    #f.add_pattern("*.xml")
     container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_MLT_XML, xml_file_path, xml_file_path)
     container_clip = ContainerClipMediaItem(PROJECT().next_media_file_id, media_name, container_clip_data)
     PROJECT().add_container_clip_media_object(container_clip)

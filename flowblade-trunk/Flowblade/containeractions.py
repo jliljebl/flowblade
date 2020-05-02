@@ -687,7 +687,8 @@ class BlenderContainerActions(AbstractContainerActionObject):
         + 'bpy.context.scene.frame_start = ' + str(range_in) + NEWLINE \
         + 'bpy.context.scene.frame_end = ' + str(range_out)  + NEWLINE
 
-        objects = self.blender_objects()
+        # materials missing
+        objects = self.blender_project_objects("objects")
         for obj in objects:
             # objects are [name, type, editorlist], see  blenderprojectinit.py
             obj_name = obj[0]
@@ -762,25 +763,34 @@ class BlenderContainerActions(AbstractContainerActionObject):
         
     def project_edit_done(self, dialog, response_id, editors):
         if response_id == Gtk.ResponseType.ACCEPT:
+            
+            objects = self.blender_project_objects("objects")
+            materials = self.blender_project_objects("materials")
+            
             for guieditor in editors:
                 value = guieditor.get_value()
                 obj_name, prop_path = guieditor.id_data
-                objects = self.blender_objects()
-                # objects are [name, type, editorlist], see blenderprojectinit.py
-                for obj in objects:
-                    if obj[0] == obj_name:
-                        # editor_data is [prop_path, label, tooltip, editor_type, value], see blenderprojectinit.py, containerprogramedit.EditorManagerWindow.get_current_editor_data()
-                         for json_editor_data in obj[2]:
-                             if json_editor_data[0] == prop_path:
-                                 json_editor_data[4] = value
+
+                self.set_edited_object_value(objects, obj_name, prop_path, value)
+                self.set_edited_object_value(materials, obj_name, prop_path, value)
 
             dialog.destroy()
         else:
             dialog.destroy()
 
-    def blender_objects(self):
+    def set_edited_object_value(self, objects, obj_name, prop_path, value):
+        print(obj_name, prop_path, value)
+        for obj in objects:
+            if obj[0] == obj_name:
+                # editor_data is [prop_path, label, tooltip, editor_type, value], see blenderprojectinit.py, containerprogramedit.EditorManagerWindow.get_current_editor_data()
+                 for json_editor_data in obj[2]:
+                     if json_editor_data[0] == prop_path:
+                         json_editor_data[4] = value
+                         print("value set", prop_path, json_editor_data[4])
+
+    def blender_project_objects(self, editable_object_type):
         program_info_json = self.container_data.data_slots["project_edit_info"]
-        return program_info_json["objects"]
+        return program_info_json[editable_object_type]
 
 
 # -------------------------------------------------------------- creating unrendered clip
