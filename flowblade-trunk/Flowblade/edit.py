@@ -2688,7 +2688,7 @@ def _ripple_delete_redo(self):
 
 
 #------------------- ADD CENTERED TRANSITION
-# "transition_clip","transition_index", "from_clip","to_clip","track","from_in","to_out"
+# "transition_clip","transition_index", "from_clip","to_clip","track","from_in","to_out", "length_fix"
 def add_centered_transition_action(data):
     action = EditAction(_add_centered_transition_undo, _add_centered_transition_redo, data)
     return action
@@ -2731,7 +2731,7 @@ def _add_centered_transition_redo(self):
     # Insert transition
     _insert_clip(track, transition_clip, 
                  self.transition_index, 1, # first frame is dropped as it is 100% from clip
-                 transition_clip.get_length() - 1)
+                 transition_clip.get_length() - 1 - self.length_fix)
 
 
 #------------------- REPLACE CENTERED TRANSITION
