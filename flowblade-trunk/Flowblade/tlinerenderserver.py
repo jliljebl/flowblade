@@ -307,6 +307,10 @@ class TLineRenderRunnerThread(threading.Thread):
         print("tline render done, time:", time.monotonic() - start_time)
 
     def get_fraction(self):
+        # Sometimes we get request of status before rendering has advanced enoufgh to create the actual redner thread.
+        if self.render_thread == None:
+            return 0.0
+    
         return self.render_thread.get_render_fraction()
 
     def abort(self):
