@@ -649,7 +649,7 @@ def _cover_delete_fade_out_redo(self):
     cover_clip = _remove_clip(self.track, self.index - 1)
     self.original_out = cover_clip.clip_out
     _insert_clip(self.track, cover_clip, self.index - 1,
-                 cover_clip.clip_in, cover_clip.clip_out + self.clip.get_length() - 1) # -1, out is iclusive
+                 cover_clip.clip_in, cover_clip.clip_out + self.clip.clip_length())
 
 #------------------ COVER DELETE FADE IN
 # "track","clip","index"
@@ -669,7 +669,7 @@ def _cover_delete_fade_in_redo(self):
     cover_clip = _remove_clip(self.track, self.index)
     self.original_in = cover_clip.clip_in
     _insert_clip(self.track, cover_clip, self.index,
-                 cover_clip.clip_in - self.clip.get_length(), cover_clip.clip_out) # -1, out is iclusive
+                 cover_clip.clip_in - self.clip.clip_length(), cover_clip.clip_out)
 
 #------------------ COVER DELETE TRANSITION
 # "track", "clip","index","to_part","from_part"
