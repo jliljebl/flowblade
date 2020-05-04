@@ -463,10 +463,19 @@ def _attempt_clip_cover_delete(clip, track, index):
         cover_form_clip = track.clips[movemodes.selected_range_in - 1]
         cover_to_clip = track.clips[movemodes.selected_range_in + 1]
         
-        real_length = clip.get_length()
+        real_length = clip.get_length() # this the mlt finction giving media length, not length on timeline
+
         to_part = real_length // 2
         from_part = real_length - to_part
-    
+
+        # Fix lengths to match what existed before adding rendered transition
+        clip_marks_length = clip.clip_out - clip.clip_in
+        if clip_marks_length % 2 == 1:
+            to_part += -1
+        else:
+            from_part += 1
+            to_part += -1
+
         if to_part > cover_to_clip.clip_in:
             return False
         if from_part > cover_form_clip.get_length() - cover_form_clip.clip_out - 1:# -1, clip_out inclusive
