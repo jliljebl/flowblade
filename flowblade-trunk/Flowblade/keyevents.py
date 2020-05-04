@@ -670,7 +670,9 @@ def copy_action():
         filter_kf_editor = _get_focus_keyframe_editor(clipeffectseditor.keyframe_editor_widgets)
         geom_kf_editor = _get_focus_keyframe_editor(compositeeditor.keyframe_editor_widgets)
         if filter_kf_editor != None:
-            value = filter_kf_editor.get_copy_kf_value() 
+            print("uiuiuiuiui")
+            value = filter_kf_editor.get_copy_kf_value()
+            print(value)
             save_data = (appconsts.COPY_PASTE_KEYFRAME_EDITOR_KF_DATA, (value, filter_kf_editor))
             editorstate.set_copy_paste_objects(save_data) 
         elif geom_kf_editor != None:
@@ -694,7 +696,9 @@ def paste_action():
             return
         data_type, paste_data = editorstate.get_copy_paste_objects()
         if data_type == appconsts.COPY_PASTE_KEYFRAME_EDITOR_KF_DATA:
+            print("kkk")
             value, kf_editor = paste_data
+            print(value)
             kf_editor.paste_kf_value(value)
         elif data_type == appconsts.COPY_PASTE_GEOMETRY_EDITOR_KF_DATA:
             value, geom_editor = paste_data

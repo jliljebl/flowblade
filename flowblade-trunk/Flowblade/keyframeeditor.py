@@ -1591,12 +1591,15 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
 
     def get_copy_kf_value(self):
-        return self.clip_editor.get_active_kf_value()
-        
+        return self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index)
+         
     def paste_kf_value(self, value_data):
-        self.clip_editor.set_active_kf_value(value_data)
-        self.update_editor_view()
+        print("valdata", value_data)
+        frame, rect, opacity = value_data
+        self.clip_editor.set_active_kf_value(opacity)
+        self.geom_kf_edit.set_keyframe_to_edit_shape(self.clip_editor.active_kf_index, rect)
         self.update_property_value()
+        self.update_editor_view()
         
     def next_pressed(self):
         self.clip_editor.set_next_active()
@@ -1731,8 +1734,8 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         write_keyframes = []
         for opa_kf, geom_kf in zip(self.clip_editor.keyframes, self.geom_kf_edit.keyframes):
             frame, opacity = opa_kf
-            frame, rect, rubbish_opacity = geom_kf # rubbish_opacity was just doing same thing twice for nothing,
-                                                   # and can be removed to clean up code, but could not bothered right now
+            frame, rect, rubbish_opacity = geom_kf
+            
             write_keyframes.append((frame, rect, opacity))
         
         self.editable_property.write_out_keyframes(write_keyframes)
