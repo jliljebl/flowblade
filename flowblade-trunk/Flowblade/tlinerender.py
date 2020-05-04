@@ -36,6 +36,7 @@ from editorstate import PROJECT
 from editorstate import PLAYER
 from editorstate import timeline_visible
 from editorstate import get_tline_rendering_mode
+import editorstate
 import gui
 import guiutils
 #import mltfilters can used for testing
@@ -92,7 +93,7 @@ def delete_session():
     tlinerenderserver.shutdown_render_server()
     _delete_session_dir()
 
-def init_for_sequence(sequence):
+def init_for_sequence():
     update_renderer_to_mode(None)
 
 def update_renderer_to_mode(old_mode):
@@ -176,8 +177,8 @@ def _set_new_render_mode(new_tline_render_mode):
     elif new_tline_render_mode != appconsts.TLINE_RENDERING_OFF and get_tline_rendering_mode() == appconsts.TLINE_RENDERING_OFF: 
         gui.editor_window.show_tline_render_strip()
     
-    old_mode = current_sequence().tline_render_mode 
-    current_sequence().tline_render_mode = new_tline_render_mode
+    old_mode = editorstate.tline_render_mode 
+    editorstate.tline_render_mode = new_tline_render_mode
     update_renderer_to_mode(old_mode)
     gui.editor_window.tline_render_mode_launcher.set_pixbuf(new_tline_render_mode) 
     gui.editor_window.init_timeline_rendering_menu()

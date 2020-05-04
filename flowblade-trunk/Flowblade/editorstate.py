@@ -135,6 +135,9 @@ fade_length = -1
 transition_length = -1
 steal_frames = True
 
+# Timeline rendering
+tline_render_mode = appconsts.TLINE_RENDERING_OFF
+
 # Trim clips cache for quicker inits, path -> clip
 _trim_clips_cache = {}
 
@@ -193,11 +196,7 @@ def get_compositing_mode():
         return project.c_seq.compositing_mode
 
 def get_tline_rendering_mode():
-    if project.c_seq == None:
-        print ("get_compositing_mode(), trying to get timeline render mode when no current sequence available!") 
-        return appconsts.TLINE_RENDERING_OFF
-    else:
-        return project.c_seq.tline_render_mode
+    return tline_render_mode
         
 def get_track(index):
     return project.c_seq.tracks[index]

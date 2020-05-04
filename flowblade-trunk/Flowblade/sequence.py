@@ -113,7 +113,6 @@ class Sequence:
         self.watermark_file_path = None
         self.seq_len = 0 # used in trim crash hack, remove when fixed
         self.compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
-        self.tline_render_mode = appconsts.TLINE_RENDERING_OFF
 
         # MLT objects for a multitrack sequence
         self.init_mlt_objects()
@@ -1208,7 +1207,6 @@ def create_sequence_clone_with_different_track_count(old_seq, v_tracks, a_tracks
 
     # Copy modes values
     new_seq.compositing_mode = old_seq.compositing_mode
-    new_seq.tline_render_mode = old_seq.tline_render_mode
         
     # copy next clip id data
     new_seq.next_id = old_seq.next_id

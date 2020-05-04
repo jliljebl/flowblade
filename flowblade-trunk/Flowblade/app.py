@@ -564,13 +564,14 @@ def init_sequence_gui():
     # Set correct compositing mode menu item selected
     gui.editor_window.init_compositing_mode_menu()
     gui.editor_window.init_timeline_rendering_menu()
+    gui.editor_window.tline_render_mode_launcher.set_pixbuf(editorstate.tline_render_mode) 
     gui.comp_mode_launcher.set_pixbuf(editorstate.get_compositing_mode())
 
     # Set initial timeline scale draw params
     editorstate.current_sequence().update_length()
     
     # Handle timeline rendering GUI and data
-    tlinerender.init_for_sequence(editorstate.current_sequence())
+    tlinerender.init_for_sequence()
     gui.editor_window.hide_tline_render_strip()
     if editorstate.get_tline_rendering_mode() != appconsts.TLINE_RENDERING_OFF: 
         gui.editor_window.show_tline_render_strip()
@@ -641,7 +642,8 @@ def open_project(new_project):
 
     editorstate.project = new_project
     editorstate.media_view_filter = appconsts.SHOW_ALL_FILES
-
+    editorstate.tline_render_mode = appconsts.TLINE_RENDERING_OFF
+    
     # Inits widgets with project data
     init_project_gui()
     
@@ -701,6 +703,8 @@ def change_current_sequence(index):
     
     stop_autosave()
     editorstate.project.c_seq = editorstate.project.sequences[index]
+
+    editorstate.tline_render_mode = appconsts.TLINE_RENDERING_OFF
 
     # Inits widgets with current sequence data
     init_sequence_gui()
