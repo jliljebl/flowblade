@@ -1594,7 +1594,6 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         return self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index)
          
     def paste_kf_value(self, value_data):
-        print("valdata", value_data)
         frame, rect, opacity = value_data
         self.clip_editor.set_active_kf_value(opacity)
         self.geom_kf_edit.set_keyframe_to_edit_shape(self.clip_editor.active_kf_index, rect)
