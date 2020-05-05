@@ -489,7 +489,7 @@ class RenderAudioRateSelector():
     def __init__(self):
         self.widget = Gtk.ComboBoxText()
         self.widget.set_tooltip_text(_("Select audio sample frequency"))
-        self.sample_rates = [8000, 12000, 16000, 22500, 32000, 44100, 48000, 96000]
+        self.sample_rates = [8000, 12000, 16000, 22500, 32000, 44100, 48000]
         for rate in self.sample_rates:
             val = rate / 1000.0
             if val == math.floor(val):
