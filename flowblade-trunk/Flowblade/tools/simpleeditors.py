@@ -53,15 +53,20 @@ def show_blender_container_clip_program_editor(callback, program_info_json):
     editors = []
     blender_objects = program_info_json["objects"]
     materials = program_info_json["materials"]
+    curves = program_info_json["curves"]
+    
     objs_panel = _get_panel_and_create_editors(blender_objects, _("Objects"), editors)
     materials_panel = _get_panel_and_create_editors(materials, _("Materials"), editors)
+    curves_panel = _get_panel_and_create_editors(curves, _("Curves"), editors)
     
     pane = Gtk.VBox(False, 2)
     if objs_panel != None:
         pane.pack_start(objs_panel, False, False, 0)
     if materials_panel != None:
         pane.pack_start(materials_panel, False, False, 0)
-    
+    if curves_panel != None:
+        pane.pack_start(curves_panel, False, False, 0)
+        
     # Create and show dialog
     dialog = Gtk.Dialog(_("Blender Project Edit"), gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,

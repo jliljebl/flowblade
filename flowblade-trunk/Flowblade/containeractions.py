@@ -634,8 +634,8 @@ class BlenderContainerActions(AbstractContainerActionObject):
 
     def initialize_project(self, project_path):
 
-        FLOG = open("/home/janne/blenderlog", 'w')
-        
+        FLOG = open(userfolders.get_cache_dir() + "/log_blender_project_init", 'w')
+
         info_script = respaths.ROOT_PATH + "/tools/blenderprojectinit.py"
         blender_launch = "/usr/bin/blender -b " + project_path + " -P " + info_script
         p = subprocess.Popen(blender_launch, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
@@ -687,19 +687,9 @@ class BlenderContainerActions(AbstractContainerActionObject):
         + 'bpy.context.scene.frame_start = ' + str(range_in) + NEWLINE \
         + 'bpy.context.scene.frame_end = ' + str(range_out)  + NEWLINE
 
-        # materials missing
-        objects = self.blender_project_objects("objects")
-        for obj in objects:
-            # objects are [name, type, editorlist], see  blenderprojectinit.py
-            obj_name = obj[0]
-            editor_lines = []
-            for editor_data in obj[2]:
-                # editor_data is [prop_path, label, tooltip, editor_type, value], see containerprogramedit.EditorManagerWindow.get_current_editor_data()
-                prop_path = editor_data[0]
-                value = editor_data[4]
-                
-                render_exec_lines += 'obj = bpy.data.objects["' + obj_name + '"]' + NEWLINE
-                render_exec_lines += 'obj.' + prop_path + " = " + value  + NEWLINE
+        render_exec_lines = self._write_exec_lines_for_obj_type(render_exec_lines, "objects")
+        render_exec_lines = self._write_exec_lines_for_obj_type(render_exec_lines, "materials")
+        render_exec_lines = self._write_exec_lines_for_obj_type(render_exec_lines, "curves")
 
         exec_lines_file_path = self.get_session_dir() + "/blender_render_exec_lines"
         with atomicfile.AtomicFileWriter(exec_lines_file_path, "w") as afw:
@@ -719,7 +709,23 @@ class BlenderContainerActions(AbstractContainerActionObject):
             nice_command += arg
 
         subprocess.Popen([nice_command], shell=True)
-        
+
+    def _write_exec_lines_for_obj_type(self, render_exec_lines, obj_type):
+        objects = self.blender_project_objects(obj_type)
+        for obj in objects:
+            # objects are lists [name, type, editorlist], see  blenderprojectinit.py
+            obj_name = obj[0]
+            editor_lines = []
+            for editor_data in obj[2]:
+                # editor_data is list [prop_path, label, tooltip, editor_type, value], see containerprogramedit.EditorManagerWindow.get_current_editor_data()
+                prop_path = editor_data[0]
+                value = editor_data[4]
+                
+                render_exec_lines += 'obj = bpy.data.' + obj_type + '["' + obj_name + '"]' + NEWLINE
+                render_exec_lines += 'obj.' + prop_path + " = " + value  + NEWLINE
+    
+        return render_exec_lines
+
     def update_render_status(self):
         Gdk.threads_enter()
                     

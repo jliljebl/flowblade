@@ -36,6 +36,7 @@ EDITOR_PANEL_BUTTON_WIDTH = 150
 # Editor targets
 BLENDER_OBJECTS = 1
 BLENDER_MATERIALS = 2
+BLENDER_CURVES = 3
 
 _editor_manager_window = None
 
@@ -119,9 +120,10 @@ class BlenderProjectEditorManagerWindow(Gtk.Window):
         self.targets_select = Gtk.ComboBoxText()
         self.targets_select.append_text(_("Objects"))
         self.targets_select.append_text(_("Materials"))
+        self.targets_select.append_text(_("Curves"))
         self.targets_select.set_active(0)
         self.targets_select.connect("changed", self.edit_targets_changed)  
-        
+
         project_box = Gtk.HBox(False, 2)
         project_box.pack_start(guiutils.set_margins(guiutils.bold_label("Blender Project:"), 0, 0, 0, 4), False, False, 0)
         project_box.pack_start(project_name_label, False, False, 0)
@@ -217,7 +219,9 @@ class BlenderProjectEditorManagerWindow(Gtk.Window):
             return info_json["objects"]
         elif self.edit_targets == BLENDER_MATERIALS:
             return info_json["materials"]
-
+        elif self.edit_targets == BLENDER_CURVES:
+            return info_json["curves"]
+            
     def fill_targets_list(self):
         self.targets_list.storemodel.clear()
         targets = self.get_edit_targets()
@@ -230,7 +234,9 @@ class BlenderProjectEditorManagerWindow(Gtk.Window):
             return "<b>" + _("Object Editors for ") + "'" + obj_name +  "'" + "</b>"
         elif self.edit_targets == BLENDER_MATERIALS:
             return "<b>" + _("Materials Editors for ") + "'" + obj_name +  "'" + "</b>"
-
+        elif self.edit_targets == BLENDER_CURVES:
+            return "<b>" + _("Curves Editors for ") + "'" + obj_name +  "'" + "</b>"
+            
     def get_selected_object(self):
         targets = self.get_edit_targets()
         return targets[self.targets_list.get_selected_row_index()]
@@ -238,8 +244,11 @@ class BlenderProjectEditorManagerWindow(Gtk.Window):
     def edit_targets_changed(self, w):
         if w.get_active() == 0:
             self.edit_targets = BLENDER_OBJECTS
-        else:
+        elif w.get_active() == 1:
             self.edit_targets = BLENDER_MATERIALS
+        else:
+            self.edit_targets = BLENDER_CURVES
+
         self.fill_targets_list()
         self.targets_list.treeview.get_selection().select_path(Gtk.TreePath.new_from_string("0"))
         #self.targets_list.treeview.get_selection().select_path(Gtk.TreePath.new_from_string("0"))
@@ -258,6 +267,8 @@ class BlenderProjectEditorManagerWindow(Gtk.Window):
             obj_text = '<i>bpy.data.objects["' + obj[0] + '"].</i>'
         elif self.edit_targets == BLENDER_MATERIALS:
             obj_text = '<i>bpy.data.materials["' + obj[0] + '"].</i>'
+        elif self.edit_targets == BLENDER_CURVES:
+            obj_text = '<i>bpy.data.curves["' + obj[0] + '"].</i>'
             
         self.obj_path_label.set_markup(obj_text)
         

@@ -55,6 +55,14 @@ for m in bpy.data.materials:
     materials_list.append(json_obj)
 
 project_data["materials"] = materials_list
+
+curves_list = []
+for c in bpy.data.curves:
+    name = str(c.name)
+    json_obj = [name, "", []]
+    curves_list.append(json_obj)
+
+project_data["curves"] = curves_list
     
 save_path = os.path.join(GLib.get_user_cache_dir(), "flowblade") + "/blender_container_projectinfo.json"
 

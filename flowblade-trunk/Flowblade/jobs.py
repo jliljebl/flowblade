@@ -106,6 +106,7 @@ class JobProxy: # Background renders provide these to give info on render status
         return str(int(self.progress * 100.0)) + "%"
 
     def start_render(self):
+        print("jjjjjjjjjjj")
         self.callback_object.start_render()
         
     def abort_render(self):
