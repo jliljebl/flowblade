@@ -772,6 +772,7 @@ class BlenderContainerActions(AbstractContainerActionObject):
             
             objects = self.blender_project_objects("objects")
             materials = self.blender_project_objects("materials")
+            curves = self.blender_project_objects("curves")
             
             for guieditor in editors:
                 value = guieditor.get_value()
@@ -779,20 +780,19 @@ class BlenderContainerActions(AbstractContainerActionObject):
 
                 self.set_edited_object_value(objects, obj_name, prop_path, value)
                 self.set_edited_object_value(materials, obj_name, prop_path, value)
+                self.set_edited_object_value(curves, obj_name, prop_path, value)
 
             dialog.destroy()
         else:
             dialog.destroy()
 
     def set_edited_object_value(self, objects, obj_name, prop_path, value):
-        print(obj_name, prop_path, value)
         for obj in objects:
             if obj[0] == obj_name:
                 # editor_data is [prop_path, label, tooltip, editor_type, value], see blenderprojectinit.py, containerprogramedit.EditorManagerWindow.get_current_editor_data()
                  for json_editor_data in obj[2]:
                      if json_editor_data[0] == prop_path:
                          json_editor_data[4] = value
-                         print("value set", prop_path, json_editor_data[4])
 
     def blender_project_objects(self, editable_object_type):
         program_info_json = self.container_data.data_slots["project_edit_info"]

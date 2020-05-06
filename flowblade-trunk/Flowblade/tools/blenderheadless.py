@@ -32,7 +32,11 @@ from gi.repository import GLib
 import locale
 import mlt
 import os
+from os import listdir
+from os.path import isfile, join
 import pickle
+from pathlib import Path
+import re
 import signal
 import subprocess
 import sys
@@ -91,6 +95,8 @@ def main(root_path, session_id, project_path, range_in, range_out, profile_desc)
     except:
         editorstate.mlt_version = "0.0.99" # magic string for "not found"
 
+    ccrutils.prints_to_log_file("/home/janne/blenderrrender")
+
     # Set paths.
     respaths.set_paths(root_path)
 
@@ -148,11 +154,25 @@ def main(root_path, session_id, project_path, range_in, range_out, profile_desc)
 
     render_data = ccrutils.get_render_data()
 
-    print(render_data)
-
     # Render video
     if render_data.do_video_render == True:
 
+        # Change file numbering to start from 0000 to please ffmpeg
+        rendered_folder = ccrutils.rendered_frames_folder() + "/"
+
+        files = [ f for f in listdir(rendered_folder) if isfile(join(rendered_folder,f)) ]
+        files.sort(key=lambda var:[int(x) if x.isdigit() else x for x in re.findall(r'[^0-9]|[0-9]+', var)])
+
+        number = 0
+        for rendered_file in files:
+            source_file = rendered_folder + rendered_file
+            
+            file_number = '{0:04d}'.format(number)
+            dst_file = rendered_folder + "videoframe" + file_number + ".png"
+            Path(source_file).rename(dst_file)
+            
+            number += 1
+    
         # Render consumer
         args_vals_list = toolsencoding.get_args_vals_list_for_render_data(render_data)
         profile = mltprofiles.get_profile_for_index(render_data.profile_index) 
