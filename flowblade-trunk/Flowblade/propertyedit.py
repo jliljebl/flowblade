@@ -185,7 +185,15 @@ def get_non_mlt_editable_properties(clip, filter_object, filter_index):
     for i in range(0, len(filter_object.non_mlt_properties)):
         prop = filter_object.non_mlt_properties[i]
         p_name, p_value, p_type = prop
-        args_str = filter_object.info.property_args[p_name]
+        try:
+            args_str = filter_object.info.property_args[p_name]
+        except:
+            # We added new parameter to rotomask after release and need fix data here.
+            # For all normal filters just create new filter, but rotomask is such a complex beast that this was needed.
+            if p_name == "mask_type":
+                args_str = "editor=no_editor"
+                filter_object.info.property_args[p_name] = args_str
+
         ep = NonMltEditableProperty(prop, args_str, clip, filter_index, i)
         editable_properties.append(ep)
     

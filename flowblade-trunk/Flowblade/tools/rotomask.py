@@ -114,6 +114,13 @@ class RotoMaskEditor(Gtk.Window):
         self.kf_editor = kf_editor
         self.kf_editor.set_parent_editor(self)
 
+        # mask type param was added later, we need handle it not existing.
+        if self.get_mask_type() == -1:
+            self.set_mask_type(vieweditorshape.LINE_MASK)
+            self.set_mask_type_on_init = False # but we don't want to destroy user's curve masks. THis is not complety back wards compatible stuff can get destroyed on second load.
+        else:
+            self.set_mask_type_on_init = True
+            
         self.value_labels = value_labels
         
         self.view_editor = vieweditor.ViewEditor(PLAYER().profile, VIEW_EDITOR_WIDTH, VIEW_EDITOR_HEIGHT)
@@ -152,7 +159,8 @@ class RotoMaskEditor(Gtk.Window):
         mask_type_combo_box.append_text(_("Line Mask"))
         mask_type_combo_box.set_active(0)
         mask_type_combo_box.connect("changed", self.mask_type_selection_changed)  
-
+        self.mask_type_combo_box = mask_type_combo_box
+        
         allow_adding_check = Gtk.CheckButton()
         allow_adding_check.set_active(False) # This shows value of self.roto_mask_layer.allow_adding_points, False is default
         allow_adding_check.connect("toggled", self.allow_adding_toggled)
@@ -228,8 +236,10 @@ class RotoMaskEditor(Gtk.Window):
     def mask_type_selection_changed(self, combo_box):
         if combo_box.get_active() == 0:
             self.roto_mask_layer.edit_point_shape.set_mask_type(vieweditorshape.CURVE_MASK)
+            self.set_mask_type(vieweditorshape.CURVE_MASK)
         else:
             self.roto_mask_layer.edit_point_shape.set_mask_type(vieweditorshape.LINE_MASK)
+            self.set_mask_type(vieweditorshape.LINE_MASK)
 
         self.roto_mask_layer.edit_point_shape.convert_shape_coords_and_update_clip_editor_keyframes()
         self.roto_mask_layer.editable_property.write_out_keyframes(self.roto_mask_layer.edit_point_shape.clip_editor.keyframes)
@@ -239,6 +249,20 @@ class RotoMaskEditor(Gtk.Window):
     def allow_adding_toggled(self, check_box):
         self.roto_mask_layer.allow_adding_points = check_box.get_active()
 
+    def get_mask_type(self):
+        try:
+            rotomask_filter = self.kf_editor.editable_property._get_filter_object()
+            name, val, param_type = rotomask_filter.non_mlt_properties[0]
+            return int(val)
+        except:
+            return -1
+
+    def set_mask_type(self, mask_type):
+        rotomask_filter = self.kf_editor.editable_property._get_filter_object()
+        if self.get_mask_type() != -1: # for older project types, this param was added later and we need to handle case that is does not exist.
+            rotomask_filter.non_mlt_properties.pop(0)
+        rotomask_filter.non_mlt_properties.append(("mask_type", mask_type, 0))
+        
     def update_view(self):
         # Callback from kf_editor
         self.show_current_frame()
@@ -329,6 +353,8 @@ class RotoMaskEditor(Gtk.Window):
     def update_mask_create_freeze_gui(self):
         if self.roto_mask_layer.edit_point_shape.closed == True:
             self.mask_create_freeze = False
+            if self.set_mask_type_on_init == True:
+                self.mask_type_combo_box.set_active(self.get_mask_type())
         else:
             self.mask_create_freeze = True
 

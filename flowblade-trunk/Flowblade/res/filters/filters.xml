@@ -112,6 +112,7 @@
         <property name="feather" args="editor=no_editor range_in=0,20 range_out=0,20 displayname=Feather">0</property>
         <property name="feather_passes" args="editor=no_editor range_in=1,5 range_out=1,5 displayname=Feather!Passes">1</property>
         <property name="spline" args="editor=no_editor exptype=roto_json">{"0": []}</property>
+        <propertynonmlt name="mask_type" args="editor=no_editor">1</propertynonmlt>
         <extraeditor name="rotomask"></extraeditor> 
    </filter>
     <filter id="brightness">

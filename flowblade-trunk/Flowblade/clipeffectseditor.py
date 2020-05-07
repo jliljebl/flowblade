@@ -635,7 +635,7 @@ def effect_selection_changed(use_current_filter_index=False):
 
         # Extra editors. Editable properties may have already been created 
         # with "editor=no_editor" and now extra editors may be created to edit those
-        # Non mlt properties are added as these are only need with extraeditors
+        # Non mlt properties are added as these are only needed with extraeditors
         editable_properties.extend(non_mlteditable_properties)
         editor_rows = propertyeditorbuilder.get_filter_extra_editor_rows(filter_object, editable_properties)
         for editor_row in editor_rows:

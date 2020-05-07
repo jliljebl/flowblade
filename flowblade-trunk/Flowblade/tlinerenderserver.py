@@ -186,6 +186,9 @@ class TLineRenderDBUSService(dbus.service.Object):
         if self.render_runner_thread.render_complete:
             return ("none", 1.0, self.render_runner_thread.render_complete, self.render_runner_thread.completed_segments)
         
+        print(self.render_runner_thread.current_render_file_path, self.render_runner_thread.get_fraction(), 
+                  self.render_runner_thread.render_complete, self.render_runner_thread.completed_segments)
+                  
         return ( self.render_runner_thread.current_render_file_path, self.render_runner_thread.get_fraction(), 
                   self.render_runner_thread.render_complete, self.render_runner_thread.completed_segments)
 
@@ -211,7 +214,7 @@ class TLineRenderDBUSService(dbus.service.Object):
 # --------------------------------------------------------------------- rendering
 class TLineRenderRunnerThread(threading.Thread):
     """
-    SINGLE THREADED RENDERING, SHOULD WE GET MULTIPLE PROCESSES GOING FOR MULTIPLE CLIPS LATER IN MODERN MULTICORE MACHINES?
+    SINGLE THREADED RENDERING, SHOULD WE GET MULTIPLE PROCESSES GOING FOR MULTIPLE CLIPS AT THE SAME TIME IN MODERN MULTICORE MACHINES?
     """
     def __init__(self, dbus_service, sequence_xml_path, segments, profile_name):
         threading.Thread.__init__(self)
