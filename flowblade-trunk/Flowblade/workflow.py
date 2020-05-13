@@ -207,7 +207,7 @@ def workflow_menu_launched(widget, event):
 
     dnd_item = Gtk.MenuItem.new_with_label(_("Drag'n'Drop Action"))
     dnd_item.show()
-    
+
     dnd_menu = Gtk.Menu()
     labels = [_("Always Overwrite Blanks"), _("Overwrite Blanks on non-V1 Tracks"), _("Always Insert")]
     msgs = ["always overwrite", "overwrite nonV1", "always insert"]
@@ -221,8 +221,8 @@ def workflow_menu_launched(widget, event):
     default_compositing_item.show()
     
     default_compositing_menu = Gtk.Menu()
-    labels = [_("Top Down Free Move"), _("Top Down Auto Follow"), _("Standard Auto Follow"),  _("Standard Full Track")]
-    msgs = ["top down", "top down auto", "standard auto", "full_track_auto"]
+    labels = [_("Top Down Free Move"), _("Top Down Auto Follow"), _("Standard Full Track")]
+    msgs = ["top down", "standard auto", "full_track_auto"]
     active_index = editorpersistance.prefs.default_compositing_mode  # appconsts values correspond with order here.
     _build_radio_menu_items_group(default_compositing_menu, labels, msgs, _workflow_menu_callback, active_index)
 
@@ -377,10 +377,10 @@ def _workflow_menu_callback(widget, data):
         editorpersistance.prefs.show_tool_tooltips = widget.get_active()
     elif  msg == "top down":
         editorpersistance.prefs.default_compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
-    elif  msg == "top down auto":
-        editorpersistance.prefs.default_compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW
     elif  msg == "standard auto":
         editorpersistance.prefs.default_compositing_mode = appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW
+    elif  msg == "standard full":
+        editorpersistance.prefs.default_compositing_mode = appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK
     elif msg == "delete lift" and widget.get_active() == True:
         print("lift")
     elif msg == "delete splice" and widget.get_active() == True:

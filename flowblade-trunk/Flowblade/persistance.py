@@ -69,7 +69,7 @@ load_dialog = None
 all_clips = {}
 sync_clips = []
 
-# Used for for convrtting to and from proxy media using projects
+# Used for for converting to and from proxy media using projects
 project_proxy_mode = -1
 proxy_path_dict = None
 
@@ -507,6 +507,11 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
     """
     # Create tractor, field, multitrack
     seq.init_mlt_objects()
+
+    # Compositing mode COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW was removed from 2.6 we just convert it 
+    # to COMPOSITING_MODE_TOP_DOWN_FREE_MOVE and everything will work like before.
+    if seq.compositing_mode == appconsts.COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW:
+        seq.compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
     
     # Grap and replace py tracks. Do this way to use same create
     # method as when originally created.

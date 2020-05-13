@@ -2159,8 +2159,6 @@ class TimeLineCanvas:
 
         if comp.selected == False:
             color = COMPOSITOR_CLIP
-            if editorstate.get_compositing_mode() == appconsts.COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW:
-                color = COMPOSITOR_CLIP_AUTO_FOLLOW
         else:
             color = COMPOSITOR_CLIP_SELECTED
             

@@ -2037,17 +2037,14 @@ def compositing_mode_menu_launched(widget, event):
     guiutils.remove_children(compositing_mode_menu)
 
     comp_top_free = guiutils.get_image_menu_item(_("Top Down Free Move"), "top_down", change_current_sequence_compositing_mode_from_corner_menu)
-    comp_top_auto = guiutils.get_image_menu_item(_("Top Down Auto Follow"), "top_down_auto", change_current_sequence_compositing_mode_from_corner_menu)
     comp_standard_auto = guiutils.get_image_menu_item(_("Standard Auto Follow"), "standard_auto", change_current_sequence_compositing_mode_from_corner_menu)
     comp_full_track = guiutils.get_image_menu_item(_("Standard Full Track"), "full_track_auto", change_current_sequence_compositing_mode_from_corner_menu)
     
     comp_top_free.connect("activate", lambda w: change_current_sequence_compositing_mode_from_corner_menu(appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE))
-    comp_top_auto.connect("activate", lambda w: change_current_sequence_compositing_mode_from_corner_menu(appconsts.COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW))
     comp_standard_auto.connect("activate", lambda w: change_current_sequence_compositing_mode_from_corner_menu(appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW))
     comp_full_track.connect("activate", lambda w: change_current_sequence_compositing_mode_from_corner_menu(appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK))
 
     compositing_mode_menu.add(comp_top_free)
-    compositing_mode_menu.add(comp_top_auto)
     compositing_mode_menu.add(comp_standard_auto)
     compositing_mode_menu.add(comp_full_track)
 
