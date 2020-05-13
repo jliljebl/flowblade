@@ -223,6 +223,8 @@ class ProxyManagerDialog:
                
         row_proxy_mode = guiutils.get_two_column_box_right_pad(proxy_mode_label, self.proxy_mode_value, 150, 150)
 
+        self.info_label = Gtk.Label()
+
         self.convert_progress_bar = Gtk.ProgressBar()
         self.convert_progress_bar.set_text(_("Press Button to Change Mode"))
             
@@ -245,6 +247,7 @@ class ProxyManagerDialog:
         vbox_onoff.pack_start(row_proxy_status, False, False, 0)
         vbox_onoff.pack_start(row_proxy_mode, False, False, 0)
         vbox_onoff.pack_start(guiutils.pad_label(12, 12), False, False, 0)
+        vbox_onoff.pack_start(self.info_label, False, False, 0)
         vbox_onoff.pack_start(self.convert_progress_bar, False, False, 0)
         vbox_onoff.pack_start(row2_onoff, False, False, 0)
 
@@ -265,7 +268,11 @@ class ProxyManagerDialog:
 
     def set_convert_buttons_state(self):
         proxy_mode = editorstate.PROJECT().proxy_data.proxy_mode
-        if proxy_mode == appconsts.USE_PROXY_MEDIA:
+        if jobs.proxy_render_ongoing() == True:
+            self.use_button.set_sensitive(False)
+            self.dont_use_button.set_sensitive(False)
+            self.info_label.set_text(_("There are on going Proxy renders, changing Proxy Mode not allowed."))
+        elif proxy_mode == appconsts.USE_PROXY_MEDIA:
             self.use_button.set_sensitive(False)
             self.dont_use_button.set_sensitive(True)
         else:
@@ -288,7 +295,6 @@ class ProxyManagerDialog:
     def update_proxy_mode_display(self):
         self.set_convert_buttons_state()
         self.set_mode_display_value()
-        self.convert_progress_bar.set_text(_("Press Button to Change Mode"))
         self.convert_progress_bar.set_fraction(0.0)
 
 

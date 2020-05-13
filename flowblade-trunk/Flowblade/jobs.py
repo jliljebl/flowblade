@@ -181,6 +181,13 @@ def get_jobs_of_type(job_type):
     
     return jobs_of_type
 
+def proxy_render_ongoing():
+    proxy_jobs = get_jobs_of_type(PROXY_RENDER)
+    if len(proxy_jobs) == 0:
+        return False
+    else:
+        return True
+
 def create_jobs_list_view():
     global _jobs_list_view
     _jobs_list_view = JobsQueueView()
