@@ -53,6 +53,7 @@ import mltfilters
 import mltprofiles
 import mlttransitions
 import monitorwidget
+import projectaction
 import respaths
 import shortcuts
 import snapping
@@ -1085,7 +1086,7 @@ class MediaPanel():
         
         self.double_click_release = False # needed to get focus over to pos bar after double click, usually media object grabs focus
         
-        global has_proxy_icon, is_proxy_icon, graphics_icon, imgseq_icon, audio_icon, pattern_icon, profile_warning_icon
+        global has_proxy_icon, is_proxy_icon, graphics_icon, imgseq_icon, audio_icon, pattern_icon, profile_warning_icon, unused_icon
         has_proxy_icon = guiutils.get_cairo_image("has_proxy_indicator")
         is_proxy_icon = guiutils.get_cairo_image("is_proxy_indicator")
         graphics_icon = guiutils.get_cairo_image("graphics_indicator")
@@ -1093,6 +1094,7 @@ class MediaPanel():
         audio_icon = guiutils.get_cairo_image("audio_indicator")
         pattern_icon = guiutils.get_cairo_image("pattern_producer_indicator")
         profile_warning_icon = guiutils.get_cairo_image("profile_warning")
+        unused_icon = guiutils.get_cairo_image("unused_indicator")
 
     def get_selected_media_objects(self):
         return self.selected_objects
@@ -1273,6 +1275,9 @@ class MediaPanel():
         row_box = Gtk.HBox()
         dnd.connect_media_drop_widget(row_box)
         row_box.set_size_request(MEDIA_OBJECT_WIDGET_WIDTH * self.columns, MEDIA_OBJECT_WIDGET_HEIGHT)
+
+        unused_list = projectaction.unused_media()
+
         for file_id in current_bin().file_ids:
             media_file = PROJECT().media_files[file_id]
 
@@ -1291,6 +1296,10 @@ class MediaPanel():
                 continue
             if ((editorstate.media_view_filter == appconsts.SHOW_PATTERN_PRODUCERS)
                 and (media_file.type != appconsts.PATTERN_PRODUCER)):
+                continue
+
+            if ((editorstate.media_view_filter == appconsts.SHOW_UNUSED_FILES)
+                and (media_file not in unused_list)):
                 continue
 
             media_object = MediaObjectWidget(media_file, self.media_object_selected, self.release_on_media_object, bin_index, self.monitor_indicator)
@@ -3223,6 +3232,11 @@ def get_file_filter_popup_menu(launcher, event, callback):
     menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
         respaths.IMAGE_PATH + "show_pattern_producers.png"), _("Pattern Producers"), callback, 5)
     menu.add(menu_item)
+
+    menu_item = _get_image_menu_item(Gtk.Image.new_from_file(
+        respaths.IMAGE_PATH + "show_unused_files.png"), _("Unused Files"), callback, 6) 
+    menu.add(menu_item)
+
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
 
