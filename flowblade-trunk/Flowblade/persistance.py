@@ -129,8 +129,6 @@ def save_project(project, file_path, changed_profile_desc=None):
         s_proj.profile_desc = changed_profile_desc
         _xml_new_paths_for_profile_change = {} # dict acts also as a flag to show that profile change save is happening
         new_profile = mltprofiles.get_profile(changed_profile_desc)
-        #print "Saving changed profile project: ", changed_profile_desc
-        #print "FPS conversion multiplier:", _fps_conv_mult
     else:
         _xml_new_paths_for_profile_change = None # None value acts also as a flag to show that profile change save is _not_ happening
 
@@ -158,7 +156,6 @@ def save_project(project, file_path, changed_profile_desc=None):
             new_xml_file_path = _save_changed_xml_file(s_media_file, new_profile)
             _xml_new_paths_for_profile_change[s_media_file.path] = new_xml_file_path
             s_media_file.path = new_xml_file_path
-            #print "XML path replace for media:", s_media_file.path,  new_xml_file_path
 
         # Remove unpicleable attrs
         remove_attrs(s_media_file, MEDIA_FILE_REMOVE)
@@ -256,7 +253,6 @@ def get_p_clip(clip):
             s_clip.path = new_path
         except:
             # Something is really wrong, this should not be possible
-            # print "Failed to find a new XML file for path:", s_clip.path
             pass 
 
     # Set 'type' attribute for MLT object type
@@ -508,8 +504,8 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
     # Create tractor, field, multitrack
     seq.init_mlt_objects()
 
-    # Compositing mode COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW was removed from 2.6 we just convert it 
-    # to COMPOSITING_MODE_TOP_DOWN_FREE_MOVE and everything will work like before.
+    # Compositing mode COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW was removed 2.6->,  we just convert it 
+    # to COMPOSITING_MODE_TOP_DOWN_FREE_MOVE and compositors now work
     if seq.compositing_mode == appconsts.COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW:
         seq.compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
     

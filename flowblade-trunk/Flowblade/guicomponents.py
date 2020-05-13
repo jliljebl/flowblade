@@ -2780,7 +2780,8 @@ class TimeLineLeftBottom:
         if PROJECT().proxy_data.proxy_mode == appconsts.USE_PROXY_MEDIA:
             proxy_img =  Gtk.Image.new_from_file(respaths.IMAGE_PATH + "project_proxy.png")
             self.widget.pack_start(proxy_img, False, False, 0)
-
+            self.widget.pack_start(guiutils.pad_label(16,4), False, False, 0)
+        
         self.widget.pack_start(self.tline_render_mode_launcher.widget, False, False, 0)
         self.widget.pack_start(guiutils.pad_label(8,4), False, False, 0)
         
