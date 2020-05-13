@@ -66,8 +66,9 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hambu
     video_pixbuf = guiutils.get_cairo_image("show_video_files")
     imgseq_pixbuf = guiutils.get_cairo_image("show_imgseq_files")
     pattern_pixbuf = guiutils.get_cairo_image("show_pattern_producers")
+    unused_pixbuf = guiutils.get_cairo_image("show_unused_files")
 
-    files_filter_launcher = guicomponents.ImageMenuLaunch(filtering_cb, [all_pixbuf, video_pixbuf, audio_pixbuf, graphics_pixbuf, imgseq_pixbuf, pattern_pixbuf], 24*size_adj, 22*size_adj)
+    files_filter_launcher = guicomponents.ImageMenuLaunch(filtering_cb, [all_pixbuf, video_pixbuf, audio_pixbuf, graphics_pixbuf, imgseq_pixbuf, pattern_pixbuf, unused_pixbuf], 24*size_adj, 22*size_adj)
     files_filter_launcher.surface_x  = 3
     files_filter_launcher.surface_y  = 4
     files_filter_launcher.widget.set_tooltip_text(_("Visible Media File types."))

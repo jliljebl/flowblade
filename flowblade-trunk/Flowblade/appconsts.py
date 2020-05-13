@@ -42,6 +42,7 @@ SHOW_AUDIO_FILES = 2
 SHOW_GRAPHICS_FILES = 3
 SHOW_IMAGE_SEQUENCES = 4
 SHOW_PATTERN_PRODUCERS = 5
+SHOW_UNUSED_FILES = 6
 
 # These are used to draw indicators that tell if more frames are available while trimming
 ON_FIRST_FRAME = 0
