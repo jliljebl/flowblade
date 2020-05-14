@@ -230,7 +230,10 @@ class AbstractContainerActionObject:
 
     def get_job_name(self):
         return "get_job_name not impl"
-
+ 
+    def get_proxy_uuid(self):
+        return self.get_container_program_id()
+ 
     def get_container_clips_dir(self):
         return userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_DIR
 

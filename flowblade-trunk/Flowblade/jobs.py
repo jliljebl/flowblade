@@ -106,7 +106,6 @@ class JobProxy: # Background renders provide these to give info on render status
         return str(int(self.progress * 100.0)) + "%"
 
     def start_render(self):
-        print("jjjjjjjjjjj")
         self.callback_object.start_render()
         
     def abort_render(self):
@@ -215,8 +214,9 @@ def get_jobs_panel():
 class ContainerStatusPollingThread(threading.Thread):
     
     def __init__(self):
-        # poll_objects reqiured to implement interface:
+        # poll_objects required to implement interface:
         #     update_render_status()
+        #     get_proxy_uuid()
         #     abort_render()
         self.poll_objects = []
         self.abort = False
@@ -232,6 +232,11 @@ class ContainerStatusPollingThread(threading.Thread):
                 
             time.sleep(0.5)
 
+    def remove_poll_object_for_matching_job_proxy(self, job_proxy):
+        for poll_obj in self.poll_objects:
+            if poll_obj.get_proxy_uuid() == job_proxy.proxy_uid:
+                self.poll_objects.remove(poll_obj)
+                
     def shutdown(self):
         for poll_obj in self.poll_objects:
             poll_obj.abort_render()
@@ -247,7 +252,11 @@ def add_as_status_polling_object(polling_object):
     _status_polling_thread.poll_objects.append(polling_object)
 
 def remove_as_status_polling_object(polling_object):
-    _status_polling_thread.poll_objects.remove(polling_object)
+    try:
+        _status_polling_thread.poll_objects.remove(polling_object)
+    except:
+        print("remove_as_status_polling_object Except for", polling_object)
+        pass
 
 def shutdown_polling():
     if _status_polling_thread == None:
@@ -286,8 +295,9 @@ def _hamburger_item_activated(widget, msg):
     if msg == "cancel_all":
         global _jobs, _remove_list
         _remove_list = []
-        for job in _get_jobs_with_status(RENDERING):
-            job.abort_render()
+        for job in _jobs:
+            if job.status == RENDERING:
+                job.abort_render()
             job.progress = -1.0
             job.text = _("Cancelled")
             job.status = CANCELLED
@@ -334,6 +344,7 @@ def _remove_jobs():
     global _jobs, _remove_list
     for  job in _remove_list:
         _jobs.remove(job)
+        _status_polling_thread.remove_poll_object_for_matching_job_proxy(job)
 
     _jobs_list_view.fill_data_model()
     _jobs_list_view.scroll.queue_draw()
@@ -429,16 +440,19 @@ class JobsQueueView(Gtk.VBox):
 
 
 # ------------------------------------------------------------------------------- JOBS QUEUE OBJECTS
-# These objects satisfy two interfaces.
+# These objects satisfy two interfaces:
 #
-# As JobProxy.callback_objects and polling objects they implement the
-# combined interface:
+# As jobs.JobProxy callback_objects :
 #
 #     start_render()
+#     abort_render()
+# 
+# As objects in ContainerStatusPollingThread,poll_objects they implement interface:
 #     update_render_status()
 #     abort_render()
 # 
-# Objects extending containeraction.AbstractContainerActionObject implement these interfaces too.
+# Objects extending containeraction.AbstractContainerActionObject in module containeractions.py
+# implement these interfaces too.
 
 
 class AbstractJobQueueObject:
@@ -446,7 +460,10 @@ class AbstractJobQueueObject:
     def __init__(self, session_id, job_type):
         self.session_id = session_id
         self.job_type = job_type
-        
+
+    def get_proxy_uuid(self):
+        return self.get_session_id()
+
     def get_session_id(self):
         return self.session_id
         
@@ -618,7 +635,7 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
                 
                 update_job_queue(job_proxy)
             else:
-                print("ProxyRenderJobQueueObject status none")
+                print("ProxyRenderJobQueueObject status none", self.get_job_name())
                 pass # This can happen sometimes before gmicheadless.py has written a status message, we just do nothing here.
 
         Gdk.threads_leave()
