@@ -105,9 +105,10 @@ _media_panel_double_click_counter = 0
 #--------------------------------------- worker threads
 class LoadThread(threading.Thread):
     
-    def __init__(self, filename, block_recent_files=False):
+    def __init__(self, filename, block_recent_files=False, is_first_video_load=False):
         self.filename = filename
-        self.block_recent_files = block_recent_files 
+        self.block_recent_files = block_recent_files
+        self.is_first_video_load = is_first_video_load
         threading.Thread.__init__(self)
 
     def run(self):
@@ -175,7 +176,8 @@ class LoadThread(threading.Thread):
         time.sleep(0.3)
 
         Gdk.threads_enter()
-        app.open_project(project)
+        
+        app.open_project(project) # <-- HERE
 
         if self.block_recent_files: # naming flipped ????
             editorpersistance.add_recent_project_path(self.filename)
@@ -198,6 +200,10 @@ class LoadThread(threading.Thread):
         gui.tline_canvas.connect_mouse_events() # mouse events during load cause crashes because there is no data to handle
         Gdk.threads_leave()
 
+        # First video load is a media file change and needs to set flag for it
+        # whereas other loads clear the flag above.
+        if self.is_first_video_load == True:
+            projectdata.media_files_changed_since_last_save = True
 
         ticker.stop_ticker()
 
@@ -359,7 +365,8 @@ def _not_matching_media_info_callback(dialog, response_id, media_file):
         
         persistance.save_project(PROJECT(), path, profile.description()) #<----- HERE
         
-        actually_load_project(path)
+        actually_load_project(path, False, True)
+
 
 def _load_pulse_bar():
     Gdk.threads_enter()
@@ -429,9 +436,9 @@ def _close_dialog_callback(dialog, response_id, no_dialog_project_close=False):
     new_project = projectdata.get_default_project()
     app.open_project(new_project)
     
-def actually_load_project(filename, block_recent_files=False):
+def actually_load_project(filename, block_recent_files=False, is_first_video_load=False):
     gui.tline_canvas.disconnect_mouse_events() # mouse events dutring load cause crashes because there is no data to handle
-    load_launch = LoadThread(filename, block_recent_files)
+    load_launch = LoadThread(filename, block_recent_files, is_first_video_load)
     load_launch.start()
 
 def save_project():
@@ -778,11 +785,13 @@ def clear_changed_since_last_save_flags():
     edit.edit_done_since_last_save = False
     compositeeditor.compositor_changed_since_last_save = False
     clipeffectseditor.filter_changed_since_last_save = False
+    projectdata.media_files_changed_since_last_save = False
 
-def was_edited_since_last_save():
+def was_edited_since_last_save():   
     if (edit.edit_done_since_last_save == False and 
         compositeeditor.compositor_changed_since_last_save == False and
-        clipeffectseditor.filter_changed_since_last_save == False):
+        clipeffectseditor.filter_changed_since_last_save == False and
+        projectdata.media_files_changed_since_last_save == False):
         return False
     
     return True

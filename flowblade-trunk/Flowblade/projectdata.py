@@ -60,12 +60,14 @@ EVENT_PROFILE_CHANGED_SAVE = 7
 
 thumbnailer = None
 
-# Look to drop unused, we're not using most of this stuff.
+# Default values for project properties.
 _project_properties_default_values = {appconsts.P_PROP_TLINE_SHRINK_VERTICAL:False, # Shink timeline max height if < 9 tracks
                                       appconsts.P_PROP_LAST_RENDER_SELECTIONS: None, # tuple for last render selections data
                                       appconsts.P_PROP_TRANSITION_ENCODING: None, # tuple for last renderered transition render selections data
                                       appconsts.P_PROP_DEFAULT_FADE_LENGTH: 10}  
 
+# Flag used to decide if user should be prompt to save project on project exit.
+media_files_changed_since_last_save = False
 
 class Project:
     """
@@ -91,7 +93,7 @@ class Project:
         self.proxy_data = miscdataobjects.ProjectProxyEditingData()
         self.update_media_lengths_on_load = False # old projects < 1.10 had wrong media length data which just was never used.
                                                   # 1.10 needed that data for the first time and required recreating it correctly for older projects
-        self.project_properties = {} # Key value pair for misc persistent properties, dict is used that we can add thesse without worrying loading
+        self.project_properties = {} # Key value pair for misc persistent properties, dict is used that we can add these without worrying loading
 
         self.SAVEFILE_VERSION = SAVEFILE_VERSION
         
@@ -163,6 +165,9 @@ class Project:
         """
         Adds media file or color clip to project data structures.
         """
+        global media_files_changed_since_last_save
+        media_files_changed_since_last_save = True
+        
         self.media_files[media_object.id] = media_object
         self.next_media_file_id += 1
 
@@ -190,6 +195,9 @@ class Project:
         return None
 
     def delete_media_file_from_current_bin(self, media_file):
+        global media_files_changed_since_last_save
+        media_files_changed_since_last_save = True
+
         self.c_bin.file_ids.pop(media_file.id)
 
     def get_current_proxy_paths(self):
