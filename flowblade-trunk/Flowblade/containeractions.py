@@ -670,6 +670,21 @@ class BlenderContainerActions(AbstractContainerActionObject):
     def __init__(self, container_data):
         AbstractContainerActionObject.__init__(self, container_data)
 
+    def validate_program(self):
+        try:
+
+            handle = open(self.container_data.program, 'rb')
+            magic = handle.read(7).decode()
+            handle.close()
+            if magic == "BLENDER":
+                return (True, None)
+            else:
+                msg = _("Wrong magic: ") + magic
+                return (False, msg)
+                
+        except Exception as e:
+            return (False, str(e))
+ 
     def initialize_project(self, project_path):
 
         FLOG = open(userfolders.get_cache_dir() + "/log_blender_project_init", 'w')

@@ -269,6 +269,13 @@ def _blender_clip_create_dialog_callback(dialog, response_id, data):
         container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_BLENDER, project_file, None)
         
         action_object = containeractions.get_action_object(container_clip_data)
+        
+        is_valid, err_msg = action_object.validate_program()
+        if is_valid == False:
+            primary_txt = _("Blender Container Clip Validation Error")
+            dialogutils.warning_message(primary_txt, err_msg, gui.editor_window.window)
+            return
+        
         action_object.initialize_project(project_file) # blocks until info data written
 
         project_edit_info_path = userfolders.get_cache_dir() + "blender_container_projectinfo.json"
