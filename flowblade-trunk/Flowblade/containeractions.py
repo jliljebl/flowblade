@@ -157,6 +157,9 @@ class AbstractContainerActionObject:
         if not os.path.exists(rendered_frames_folder):
             os.mkdir(rendered_frames_folder)
 
+    def validate_program(self):
+        print("AbstractContainerActionObject.validate_program() not impl")
+
     def render_full_media(self, clip):
         self.render_type = FULL_RENDER
         self.clip = clip
@@ -408,6 +411,33 @@ class GMicContainerActions(AbstractContainerActionObject):
     def __init__(self, container_data):
         AbstractContainerActionObject.__init__(self, container_data)
 
+    def validate_program(self):
+        try:
+            script_file = open(self.container_data.program)
+            user_script = script_file.read()
+            test_out_file = userfolders.get_cache_dir()  + "/gmic_cont_clip_test.png"
+            test_in_file = respaths.IMAGE_PATH + "unrendered_blender.png" # we just need some valid input
+            
+            script_str = "gmic " + test_in_file + " " + user_script + " -output " + test_out_file
+
+            # Render preview and write log
+            FLOG = open(userfolders.get_cache_dir() + "gmic_container_validating_log", 'w')
+            p = subprocess.Popen(script_str, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
+            p.wait()
+            FLOG.close()
+         
+            if p.returncode == 0:
+                return (True, None) # no errors
+            else:
+                # read error log, and return.
+                f = open(userfolders.get_cache_dir() + "gmic_container_validating_log", 'r')
+                out = f.read()
+                f.close()
+                return (False, out)
+    
+        except Exception as e:
+            return (False, str(e))
+        
     def get_job_proxy(self):
         job_proxy = jobs.JobProxy(self.get_container_program_id(), self)
         job_proxy.type = jobs.CONTAINER_CLIP_RENDER_GMIC
@@ -545,6 +575,11 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
     def __init__(self, container_data):
         AbstractContainerActionObject.__init__(self, container_data)
 
+    def validate_program(self):
+        # These are created by application and are quaranteed to be valid.
+        # This method is not even called.
+        return True
+        
     def get_job_proxy(self):
         job_proxy = jobs.JobProxy(self.get_container_program_id(), self)
         job_proxy.type = jobs.CONTAINER_CLIP_RENDER_MLT_XML

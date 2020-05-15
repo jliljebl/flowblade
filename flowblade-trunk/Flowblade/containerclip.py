@@ -18,11 +18,13 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 
 import hashlib
 import json
 import os
+import threading
+import time
 
 import appconsts
 import containerprogramedit
@@ -152,6 +154,9 @@ def _open_image_sequence_dialog(callback, title, rows, data):
     for row in rows:
         vbox.pack_start(row, False, False, 0)
 
+    dialog.info_label = Gtk.Label()
+    vbox.pack_start(dialog.info_label, False, False, 0)
+
     alignment = dialogutils.get_alignment2(vbox)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
@@ -185,17 +190,49 @@ def _gmic_clip_create_dialog_callback(dialog, response_id, data):
         script_file = script_select.get_filename()
         media_file = media_file_select.get_filename()
         
-        dialog.destroy()
+
     
         if script_file == None or media_file == None:
             _show_not_all_data_info()
             return
 
         container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_GMIC, script_file, media_file)
-        container_clip = ContainerClipMediaItem(PROJECT().next_media_file_id, container_clip_data.get_unrendered_media_name(), container_clip_data)
-        PROJECT().add_container_clip_media_object(container_clip)
-        _update_gui_for_media_object_add()
+        
+        dialog.info_label.set_text("Test Render to validate script...")
+        
+        # We need to exit this Gtk callback to get info text above updated.
+        completion_thread = GMicLoadCompletionThread(container_clip_data, dialog)
+        completion_thread.start()
 
+
+class GMicLoadCompletionThread(threading.Thread):
+    
+    def __init__(self, container_clip_data, dialog):
+        self.container_clip_data = container_clip_data
+        self.dialog = dialog
+
+        threading.Thread.__init__(self)
+        
+    def run(self):
+        
+        action_object = containeractions.get_action_object(self.container_clip_data)
+        is_valid, err_msg = action_object.validate_program()
+
+        time.sleep(0.5) # To make sure text is seen.
+
+        Gdk.threads_enter()
+
+        self.dialog.destroy()
+        
+        if is_valid == True:
+            container_clip = ContainerClipMediaItem(PROJECT().next_media_file_id, self.container_clip_data.get_unrendered_media_name(), self.container_clip_data)
+            PROJECT().add_container_clip_media_object(container_clip)
+            _update_gui_for_media_object_add()
+        else:
+            primary_txt = _("G'Mic Container Clip Validation Error")
+            dialogutils.warning_message(primary_txt, err_msg, gui.editor_window.window)
+            
+        Gdk.threads_leave()
 
 # --- MLT XML
 def create_mlt_xml_media_item(xml_file_path, media_name):
