@@ -1,7 +1,7 @@
 
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
  
-**New release Flowblade 2.4 is now out.**
+**Release Flowblade 2.4 is out.**
 
 **All distributions are encouraged to update to Flowblade 2.4 and MLT 6.18**  [MLT 6.18 required for Flowblade 2.4](./flowblade-trunk/docs/running_flowblade_2-4.md) **and use latest commit in fix brach** [here.](https://github.com/jliljebl/flowblade/commit/6a180252261b94b72959ac8fa562c916c99ecfaf)
 
