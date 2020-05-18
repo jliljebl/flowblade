@@ -363,30 +363,31 @@ class ContainerClipMediaItem:
             self.icon = action_object.load_icon()
 
     def save_program_edit_info(self):
-        edit_info = self.container_data.data_slots["project_edit_info"]
+        if self.container_data.container_type == appconsts.CONTAINER_CLIP_BLENDER:
+            edit_info = self.container_data.data_slots["project_edit_info"]
 
-        save_data = {}
-        save_data["objects"] = copy.copy(edit_info["objects"])
-        save_data["materials"] = copy.copy(edit_info["materials"])
-        save_data["curves"] = copy.copy(edit_info["curves"])
-        
-        default_name = self.name  + "_edit_data"
-        
-        dialogs.save_cont_clip_edit_data(self._save_program_edit_info_callback, default_name, save_data)
+            save_data = {}
+            save_data["objects"] = copy.copy(edit_info["objects"])
+            save_data["materials"] = copy.copy(edit_info["materials"])
+            save_data["curves"] = copy.copy(edit_info["curves"])
+            
+            default_name = self.name  + "_edit_data"
+            
+            dialogs.save_cont_clip_edit_data(self._save_program_edit_info_callback, default_name, save_data)
         
     def _save_program_edit_info_callback(self, dialog, response_id, edit_data):
         
         if response_id != Gtk.ResponseType.ACCEPT:
             dialog.destroy()
         else:
-
-            save_file = dialog.get_filename()
-            dialog.destroy()
-            if save_file == None:
-                return
-            
-            with open(save_file, "w") as f: 
-                 json.dump(edit_data, f, indent=4)
+            if self.container_data.container_type == appconsts.CONTAINER_CLIP_BLENDER:
+                save_file = dialog.get_filename()
+                dialog.destroy()
+                if save_file == None:
+                    return
+                
+                with open(save_file, "w") as f: 
+                     json.dump(edit_data, f, indent=4)
 
     def load_program_edit_info(self):
         dialogs.load_cont_clip_edit_data(self._load_program_edit_info_callback)
@@ -433,11 +434,12 @@ class ContainerClipMediaItem:
             dialog.destroy()
         else:
             dialog.destroy()
-            
-            edit_data = self.container_data.data_slots["project_edit_info"]
-            edit_data["objects"] = loaded_project_edit_info["objects"]
-            edit_data["materials"] = loaded_project_edit_info["materials"]
-            edit_data["curves"] = loaded_project_edit_info["curves"]
+
+            if self.container_data.container_type == appconsts.CONTAINER_CLIP_BLENDER:
+                edit_data = self.container_data.data_slots["project_edit_info"]
+                edit_data["objects"] = loaded_project_edit_info["objects"]
+                edit_data["materials"] = loaded_project_edit_info["materials"]
+                edit_data["curves"] = loaded_project_edit_info["curves"]
 
             
             
