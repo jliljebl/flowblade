@@ -175,7 +175,8 @@ class BlenderProjectEditorManagerWindow(Gtk.Window):
         self.obj_path_entry = Gtk.Entry()
         self.editor_label_entry = Gtk.Entry()
         self.tooltip_info_entry = Gtk.Entry() 
-        self.default_value_entry = Gtk.Entry() 
+        self.default_value_entry = Gtk.Entry()
+        self.default_value_entry.set_text(simpleeditors.DEFAULT_VALUES[simpleeditors.SIMPLE_EDITOR_STRING])
         
         self.editor_select = simpleeditors.get_simple_editor_selector(0, self.editor_selection_changed)
 
@@ -251,7 +252,6 @@ class BlenderProjectEditorManagerWindow(Gtk.Window):
 
         self.fill_targets_list()
         self.targets_list.treeview.get_selection().select_path(Gtk.TreePath.new_from_string("0"))
-        #self.targets_list.treeview.get_selection().select_path(Gtk.TreePath.new_from_string("0"))
                     
     def target_selection_changed(self, tree_selection):
         try:

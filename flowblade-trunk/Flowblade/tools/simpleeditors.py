@@ -68,7 +68,7 @@ def show_blender_container_clip_program_editor(callback, program_info_json):
     if curves_panel != None:
         pane.pack_start(curves_panel, False, False, 0)
     
-    # Put in scrollpane if suspision that wont fit on screen 
+    # Put in scrollpane if too many editors for screensize.
     n_editors = len(blender_objects) + len(materials) + len(curves)
     add_scroll = False
     if editorstate.screen_size_small_height() == True and n_editors > 4:
