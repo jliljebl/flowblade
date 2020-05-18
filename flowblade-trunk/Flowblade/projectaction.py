@@ -2112,7 +2112,11 @@ def media_file_menu_item_selected(widget, data):
         proxyediting.create_proxy_menu_item_selected(media_file)
     if item_id == "Edit Container Data":
         containerprogramedit.show_container_data_program_editor_dialog(media_file.container_data)
-
+    if item_id == "Save Container Data":
+        media_file.save_program_edit_info()
+    if item_id == "Load Container Data":
+        media_file.load_program_edit_info()
+        
 def _select_treeview_on_pos_and_return_row_and_column_title(event, treeview):
     selection = treeview.get_selection()
     path_pos_tuple = treeview.get_path_at_pos(int(event.x), int(event.y))

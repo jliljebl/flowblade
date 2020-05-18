@@ -66,7 +66,7 @@ class BlenderProjectEditorManagerWindow(Gtk.Window):
 
         self.container_data = container_data
         self.original_edit_data = copy.deepcopy(self.container_data.data_slots["project_edit_info"])
-        
+
         folder, project_name = os.path.split(self.container_data.program)
 
         info_row = self.get_info_row()

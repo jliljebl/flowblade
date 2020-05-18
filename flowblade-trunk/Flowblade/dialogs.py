@@ -442,6 +442,32 @@ def save_env_data_dialog(callback):
     dialog.connect('response', callback)
     dialog.show()
 
+def save_cont_clip_edit_data(callback, default_name, edit_data):
+    dialog = Gtk.FileChooserDialog(_("Save Container Clip Edit Data"),  gui.editor_window.window,
+                                   Gtk.FileChooserAction.SAVE,
+                                   (_("Cancel"), Gtk.ResponseType.CANCEL,
+                                   _("Save"), Gtk.ResponseType.ACCEPT))
+    dialog.set_action(Gtk.FileChooserAction.SAVE)
+    dialog.set_current_name(default_name)
+    dialog.set_do_overwrite_confirmation(True)
+    dialog.set_select_multiple(False)
+    dialog.connect('response', callback, edit_data)
+    dialog.show()
+
+def load_cont_clip_edit_data(callback):
+    parent = gui.editor_window.window
+
+    title_text = _("Load Container Clip Program Edit Data") 
+
+    dialog = Gtk.FileChooserDialog(title_text, parent,
+                                   Gtk.FileChooserAction.OPEN,
+                                   (_("Cancel"), Gtk.ResponseType.CANCEL,
+                                    _("OK"), Gtk.ResponseType.ACCEPT))
+    dialog.set_action(Gtk.FileChooserAction.OPEN)
+    dialog.set_select_multiple(False)
+    dialog.connect('response', callback)
+    dialog.show()
+    
 def rendered_clips_no_home_folder_dialog():
     dialogutils.warning_message(_("Can't make home folder render clips folder"),
                             _("Please create and select some other folder then \'") +

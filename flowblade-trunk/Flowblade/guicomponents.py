@@ -2305,7 +2305,11 @@ def display_media_file_popup_menu(media_file, callback, event):
     if hasattr(media_file, "container_data"):
         if media_file.container_data != None:
             if media_file.container_data.editable == True:
-                item = _get_menu_item(_("Edit Container Data"), callback, ("Edit Container Data", media_file, event))
+                item = _get_menu_item(_("Edit Container Program Edit Data"), callback, ("Edit Container Data", media_file, event))
+                media_file_menu.add(item)
+                item = _get_menu_item(_("Load Container Program Edit Data"), callback, ("Load Container Data", media_file, event))
+                media_file_menu.add(item)
+                item = _get_menu_item(_("Save Container Program Edit Data"), callback, ("Save Container Data", media_file, event))
                 media_file_menu.add(item)
 
     media_file_menu.popup(None, None, None, None, event.button, event.time)
@@ -2899,12 +2903,15 @@ def get_gpl3_scroll_widget(size):
     license_file = open(respaths.GPL_3_DOC)
     license_text = license_file.read()
 
+    return get_scroll_widget(size, license_text)
+
+def get_scroll_widget(size, text):
     view = Gtk.TextView()
     view.set_editable(False)
     view.set_pixels_above_lines(2)
     view.set_left_margin(2)
     view.set_wrap_mode(Gtk.WrapMode.WORD)
-    view.get_buffer().set_text(license_text)
+    view.get_buffer().set_text(text)
 
     sw = Gtk.ScrolledWindow()
     sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)

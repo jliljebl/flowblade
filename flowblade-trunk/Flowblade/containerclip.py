@@ -20,6 +20,7 @@
 
 from gi.repository import Gtk, Gdk
 
+import copy
 import hashlib
 import json
 import os
@@ -29,9 +30,11 @@ import time
 import appconsts
 import containerprogramedit
 import containeractions
+import dialogs
 import dialogutils
 from editorstate import PROJECT
 import gui
+import guicomponents
 import guiutils
 import respaths
 import userfolders
@@ -91,8 +94,10 @@ class ContainerClipData:
             self.rendered_media = None
             self.rendered_media_range_in = -1
             self.rendered_media_range_out = -1
+        
 
-
+            
+            
 # -------------------------------------------------------- Clip menu actions
 def render_full_media(data):
     clip, track, item_id, item_data = data
@@ -118,6 +123,8 @@ def edit_program(data):
     clip, track, item_id, item_data = data
     action_object = containeractions.get_action_object(clip.container_data)
     action_object.edit_program(clip)
+
+
 
 
 #------------------------------------------------------------- Cloning
@@ -355,4 +362,83 @@ class ContainerClipMediaItem:
         else:
             self.icon = action_object.load_icon()
 
+    def save_program_edit_info(self):
+        edit_info = self.container_data.data_slots["project_edit_info"]
 
+        save_data = {}
+        save_data["objects"] = copy.copy(edit_info["objects"])
+        save_data["materials"] = copy.copy(edit_info["materials"])
+        save_data["curves"] = copy.copy(edit_info["curves"])
+        
+        default_name = self.name  + "_edit_data"
+        
+        dialogs.save_cont_clip_edit_data(self._save_program_edit_info_callback, default_name, save_data)
+        
+    def _save_program_edit_info_callback(self, dialog, response_id, edit_data):
+        
+        if response_id != Gtk.ResponseType.ACCEPT:
+            dialog.destroy()
+        else:
+
+            save_file = dialog.get_filename()
+            dialog.destroy()
+            if save_file == None:
+                return
+            
+            with open(save_file, "w") as f: 
+                 json.dump(edit_data, f, indent=4)
+
+    def load_program_edit_info(self):
+        dialogs.load_cont_clip_edit_data(self._load_program_edit_info_callback)
+    
+    def _load_program_edit_info_callback(self, dialog, response_id):
+        if response_id != Gtk.ResponseType.ACCEPT:
+            dialog.destroy()
+        else:
+            load_file_path = dialog.get_filename()
+            dialog.destroy()
+            if load_file_path == None:
+                return
+                
+            load_file = open(load_file_path, "r")
+            loaded_project_edit_info = json.load(load_file)
+            
+            primary_txt = _("Container Program Edit Data is Executable!")
+            secondary_txt = _("Only accept Container Program Edit Data from similar trustwothy sources\nyou would accept applications!\n\nContainer Program Edit Data will be used to call Python <b>exec()</b> function and\ncan maybe used as an attack vector against your system.")
+            warning_panel = dialogutils.get_warning_message_dialog_panel(primary_txt, secondary_txt)
+            
+            sw = guicomponents.get_scroll_widget((300, 200), str(loaded_project_edit_info))
+            
+            content = Gtk.VBox(False, 2)
+            content.pack_start(warning_panel, False, False, 0)
+            content.pack_start(guiutils.bold_label("Loaded Container Program Edit Data"), False, False, 0)
+            content.pack_start(sw, False, False, 0)
+            
+            align = dialogutils.get_default_alignment(content)
+            
+            dialog = Gtk.Dialog("",
+                                 gui.editor_window.window,
+                                Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                (_("Cancel"), Gtk.ResponseType.REJECT,
+                                 _("Load Program Edit Data"), Gtk.ResponseType.ACCEPT))
+            dialog.vbox.pack_start(align, True, True, 0)
+            dialogutils.set_outer_margins(dialog.vbox)
+            dialog.set_resizable(False)
+            dialog.connect('response', self._load_warning_callback, loaded_project_edit_info)
+
+            dialog.show_all()
+            
+    def _load_warning_callback(self, dialog, response_id, loaded_project_edit_info):
+        if response_id != Gtk.ResponseType.ACCEPT:
+            dialog.destroy()
+        else:
+            dialog.destroy()
+            
+            edit_data = self.container_data.data_slots["project_edit_info"]
+            edit_data["objects"] = loaded_project_edit_info["objects"]
+            edit_data["materials"] = loaded_project_edit_info["materials"]
+            edit_data["curves"] = loaded_project_edit_info["curves"]
+
+            
+            
+            
