@@ -454,6 +454,9 @@ def _do_create_proxy_files(media_files, retry_from_render_folder_select=False):
         if f.type != appconsts.VIDEO and f.type != appconsts.IMAGE_SEQUENCE: # only video files and img seqs can have proxy files
             not_video_files = not_video_files + 1
             continue
+        if f.container_data != None:
+            not_video_files = not_video_files + 1
+            continue
         if f.has_proxy_file == True: # no need to to create proxy files again, unless forced by user
             if os.path.exists(f.second_file_path):
                 already_have_proxies.append(f)
