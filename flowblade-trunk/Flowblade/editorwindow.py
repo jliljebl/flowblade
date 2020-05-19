@@ -1110,7 +1110,13 @@ class EditorWindow:
         menu.append(comp_standard_full)
 
         menu_items = [comp_top_free, comp_standard_auto, comp_standard_full]
-        menu_items[editorstate.get_compositing_mode()].set_active(True)
+        comp_mode = editorstate.get_compositing_mode()
+        
+        # We dropped compositing mode COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW so compositing mode values no longer
+        # correspond to menu idexes.
+        comp_mode_to_menu_index = {0:0, 1:0, 2:1, 3:2}
+        menu_index = comp_mode_to_menu_index[editorstate.get_compositing_mode()]
+        menu_items[menu_index].set_active(True)
 
         comp_top_free.connect("toggled", lambda w: projectaction.change_current_sequence_compositing_mode(w, appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE))
         comp_standard_auto.connect("toggled", lambda w: projectaction.change_current_sequence_compositing_mode(w, appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW))

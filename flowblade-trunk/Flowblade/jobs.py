@@ -636,7 +636,7 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
                 update_job_queue(job_proxy)
             else:
                 print("ProxyRenderJobQueueObject status none", self.get_job_name())
-                pass # This can happen sometimes before gmicheadless.py has written a status message, we just do nothing here.
+                pass
 
         Gdk.threads_leave()
     
