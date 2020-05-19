@@ -257,6 +257,7 @@ class BinNoiseClip(AbstractBinClip):
     def create_icon(self):
         self.icon = cairo.ImageSurface.create_from_png(respaths.PATTERN_PRODUCER_PATH + "noise_icon.png")
 
+
 class BinColorBarsClip(AbstractBinClip):
     def __init__(self, id, name):
         AbstractBinClip.__init__(self, id, name)
@@ -269,6 +270,7 @@ class BinColorBarsClip(AbstractBinClip):
 
     def create_icon(self):
         self.icon = cairo.ImageSurface.create_from_png(respaths.PATTERN_PRODUCER_PATH + "bars_icon.png")
+      
         
 class BinIsingClip(AbstractBinClip):
     def __init__(self, id, name):

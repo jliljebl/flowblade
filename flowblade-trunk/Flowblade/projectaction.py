@@ -1274,7 +1274,7 @@ def unused_media():
     # Create path -> media item dict
     path_to_media_object = {}
     for key, media_item in list(PROJECT().media_files.items()):
-        if media_item.path != "" and media_item.path != None:
+        if hasattr(media_item, "path") and media_item.path != "" and media_item.path != None:
             path_to_media_object[media_item.path] = media_item
     
     # Remove all items from created dict that have a clip with same path on any of the sequences
