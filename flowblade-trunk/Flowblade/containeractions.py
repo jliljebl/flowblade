@@ -175,7 +175,7 @@ class AbstractContainerActionObject:
     def render_clip_length_media(self, clip):
         self.render_type = CLIP_LENGTH_RENDER
         self.clip = clip
-        self.launch_render_data = (clip, clip.clip_in, clip.clip_out + 1, clip.clip_in)
+        self.launch_render_data = (clip, clip.clip_in, clip.clip_out, clip.clip_in)
 
         job_proxy = self.get_launch_job_proxy()
         jobs.add_job(job_proxy)

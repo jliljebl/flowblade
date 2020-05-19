@@ -75,7 +75,6 @@ def abort_render(session_id):
 
 # --------------------------------------------------- render thread launch
 def main(root_path, session_id, xml_file_path, range_in, range_out, profile_desc):
-    ccrutils.prints_to_log_file("/home/janne/xmllog")
     
     render_data = mltheadlessutils.mlt_env_init(root_path, session_id)
 
@@ -147,6 +146,7 @@ class MLTXMLHeadlessRunnerThread(threading.Thread):
                 return
             
             fraction = self.render_player.get_render_fraction()
+
             self.render_update_callback(fraction)
             
             time.sleep(0.3)
