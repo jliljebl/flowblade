@@ -30,7 +30,7 @@ import hashlib
 import mlt
 import os
 from os import listdir
-from os.path import isfile, join
+from os.path import isfile, join, expanduser
 from PIL import Image
 import re
 import shutil
@@ -477,8 +477,13 @@ def _save_project_in_last_saved_path():
 def save_project_as():
     if  PROJECT().last_save_path != None:
         open_dir = os.path.dirname(PROJECT().last_save_path)
+        
+        # We don't  want to open hidden cache dir when saving file opened as autosave.
+        if open_dir.startswith(userfolders.get_cache_dir()) == True:
+            open_dir = expanduser("~")
     else:
-        open_dir = None
+        open_dir = expanduser("~")
+
     dialogs.save_project_as_dialog(_save_as_dialog_callback, PROJECT().name, open_dir)
     
 def _save_as_dialog_callback(dialog, response_id):
@@ -1021,7 +1026,7 @@ def _open_files_dialog_cb(file_select, response_id):
     if len(filenames) == 0:
         return
     
-    # We're disallowing opening .mlt or .xml files as media beause MLTs behaviour of overwriten project profile properties
+    # We're disallowing opening .mlt or .xml files as media beause MLTs behaviour of overwriting project profile properties
     # when opening MLT XML files as nedia
     # Underlying reason: https://github.com/mltframework/mlt/issues/212
     mlt_files_deleted = False
