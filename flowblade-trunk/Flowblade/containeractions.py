@@ -145,6 +145,7 @@ class AbstractContainerActionObject:
     def __init__(self, container_data):
         self.container_data = container_data
         self.render_type = -1 # to be set in methods below
+        self.do_filters_clone = False
         
     def create_data_dirs_if_needed(self):
         session_folder = self.get_session_dir()
@@ -308,7 +309,8 @@ class AbstractContainerActionObject:
                 "new_clip":rendered_clip,
                 "rendered_media_path":resource_path,
                 "track":track,
-                "index":clip_index}
+                "index":clip_index,
+                "do_filters_clone":self.do_filters_clone}
                 
         if self.render_type == FULL_RENDER: # unrendered -> fullrender
             action = edit.container_clip_full_render_replace(data)
@@ -410,6 +412,7 @@ class GMicContainerActions(AbstractContainerActionObject):
 
     def __init__(self, container_data):
         AbstractContainerActionObject.__init__(self, container_data)
+        self.do_filters_clone = True
 
     def validate_program(self):
         try:
@@ -574,7 +577,8 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
 
     def __init__(self, container_data):
         AbstractContainerActionObject.__init__(self, container_data)
-
+        self.do_filters_clone = True
+        
     def validate_program(self):
         # These are created by application and are quaranteed to be valid.
         # This method is not even called.
