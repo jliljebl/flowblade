@@ -192,8 +192,17 @@ class AbstractContainerActionObject:
     def _launch_render(self, clip, range_in, range_out, clip_start_offset):
         print("AbstractContainerActionObject._launch_render() not impl")
 
-    def switch_to_unrendered_media(self, clip):
-        print("AbstractContainerActionObject.switch_to_unrendered_media() not impl")
+    def switch_to_unrendered_media(self, rendered_clip):
+        unrendered_clip = current_sequence().create_file_producer_clip(self.container_data.unrendered_media, new_clip_name=None, novalidate=True, ttl=1)
+        track, clip_index = current_sequence().get_track_and_index_for_id(rendered_clip.id)
+
+        data = {"old_clip":rendered_clip,
+                "new_clip":unrendered_clip,
+                "track":track,
+                "index":clip_index,
+                "do_filters_clone":self.do_filters_clone}
+        action = edit.container_clip_switch_to_unrendered_replace(data)   
+        action.do_edit()
 
     def get_session_dir(self):
         return self.get_container_clips_dir() + "/" + self.get_container_program_id()
@@ -591,6 +600,8 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
 
     def get_job_name(self):
         return self.container_data.get_unrendered_media_name()
+
+
         
     def _launch_render(self, clip, range_in, range_out, clip_start_offset):
         self.create_data_dirs_if_needed()

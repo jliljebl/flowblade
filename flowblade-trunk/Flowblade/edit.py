@@ -2895,7 +2895,7 @@ def _container_clip_clip_render_replace_redo(self):
 
 
 # -------------------------------------------------------- CONTAINER CLIP SWITHCH TO UNRENDERED CLIP MEDIA REPLACE
-# "old_clip", "new_clip", "track", "index"
+# "old_clip", "new_clip", "track", "index", "do_filters_clone"
 def container_clip_switch_to_unrendered_replace(data):
     action = EditAction(_container_clip_switch_to_unrendered_replace_undo, _container_clip_switch_to_unrendered_replace_redo, data)
     return action
@@ -2903,7 +2903,11 @@ def container_clip_switch_to_unrendered_replace(data):
 def _container_clip_switch_to_unrendered_replace_undo(self):
     _remove_clip(self.track, self.index)
     _insert_clip(self.track, self.old_clip, self.index, self.old_clip.clip_in, self.old_clip.clip_out)
-    
+
+    if self.do_filters_clone == True:
+        _detach_all(self.new_clip)
+        self.new_clip.filters = []
+
 def _container_clip_switch_to_unrendered_replace_redo(self):
     _remove_clip(self.track, self.index)
     new_out = self.old_clip.clip_out - self.old_clip.clip_in
@@ -2912,6 +2916,14 @@ def _container_clip_switch_to_unrendered_replace_redo(self):
     
     if self.new_clip.container_data == None:
         self.new_clip.container_data = copy.deepcopy(self.old_clip.container_data)
+
+    if not hasattr(self, "clone_filters") and self.do_filters_clone == True:
+        self.clone_filters = current_sequence().clone_filters(self.old_clip)
+
+    if self.do_filters_clone == True:
+        _detach_all(self.new_clip)
+        self.new_clip.filters = self.clone_filters
+        _attach_all(self.new_clip)
 
     self.new_clip.container_data.clear_rendered_media()
     
