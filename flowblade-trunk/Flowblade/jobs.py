@@ -112,8 +112,8 @@ class JobProxy: # This object represnts job in job queue.
         self.callback_object.abort_render()
 
 
+
 class JobQueueMessage:
-    
     
     def __init__(self, uid, job_type, status, progress, text, elapsed):
         self.proxy_uid = uid # modules doing the rendering and using this to display must make sure this matches always for a particular job        
@@ -205,7 +205,7 @@ def create_jobs_list_view():
     return _jobs_list_view
 
 def get_jobs_panel():
-    global _jobs_list_view #, widgets
+    global _jobs_list_view
 
     actions_menu = guicomponents.HamburgerPressLaunch(_menu_action_pressed)
     guiutils.set_margins(actions_menu.widget, 8, 2, 2, 18)
@@ -220,8 +220,6 @@ def get_jobs_panel():
     panel.set_size_request(400, 10)
 
     return panel
-
-
 
 
 
@@ -413,10 +411,14 @@ class JobsQueueView(Gtk.VBox):
 class AbstractJobQueueObject(JobProxy):
     
     def __init__(self, session_id, job_type):
-        self.session_id = session_id
-        self.job_type = job_type
-        JobProxy.__init__(self, uid, self)
-        
+        self.session_id = session_id                # 
+                                                    # self.session_id == self.proxy_uid They have different meaning so we are keeping 2 names for same number.
+        JobProxy.__init__(self, session_id, self)   #
+                                                    # self.proxy_uid identifies job in job queue
+                                                    # self.session_id is used to create and communicate with render process
+                                                    #
+        self.type = job_type
+
     def get_proxy_uuid(self):
         return self.get_session_id()
 
@@ -427,26 +429,27 @@ class AbstractJobQueueObject(JobProxy):
         return "job name"
     
     def add_to_queue(self):
-        add_job(self.get_launch_job_proxy())
-        #add_as_status_polling_object(self)
+        
+        add_job(self.create_job_queue_proxy())
 
-    def get_job_proxy(self):
-        #job_proxy = JobProxy(self.get_session_id(), self)
-        #job_proxy.type = self.job_type
-        return self
+        # Get polling going if needed.
+        global _status_polling_thread
+        if _status_polling_thread == None:
 
+            _status_polling_thread = ContainerStatusPollingThread()
+            _status_polling_thread.start()
+    
     def get_job_queue_message(self):
         job_queue_message = JobQueueMessage(self.proxy_uid, self.type, self.status,
                                             self.progress, self.text, self.elapsed)
         return job_queue_message
 
-    def get_launch_job_proxy(self):
-        job_proxy = self.get_job_proxy()
-        job_proxy.status = QUEUED
-        job_proxy.progress = 0.0
-        job_proxy.elapsed = 0.0 # jobs does not use this value
-        job_proxy.text = _("In Queue - ") + " " + self.get_job_name()
-        return job_proxy
+    def create_job_queue_proxy(self):
+        self.status = QUEUED
+        self.progress = 0.0
+        self.elapsed = 0.0 # jobs does not use this value
+        self.text = _("In Queue - ") + " " + self.get_job_name()
+        return self
         
     def get_completed_job_message(self):
         job_queue_message = self.get_job_queue_message()
@@ -455,6 +458,7 @@ class AbstractJobQueueObject(JobProxy):
         job_queue_message.elapsed = 0.0 # jobs does not use this value
         job_queue_message.text = "dummy" # this will be overwritten with completion message
         return job_queue_message
+
 
 
 class MotionRenderJobQueueObject(AbstractJobQueueObject):
@@ -516,7 +520,7 @@ class MotionRenderJobQueueObject(AbstractJobQueueObject):
                 
                 update_job_queue(job_msg)
             else:
-                print("MotionRenderQueueObject status none")
+                # Process start/stop on their own and we hit trying to get non-existing status for e.g completed renders.
                 pass
 
         Gdk.threads_leave()
@@ -590,7 +594,7 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
                 
                 update_job_queue(job_msg)
             else:
-                print("ProxyRenderJobQueueObject status none", self.get_job_name())
+                # Process start/stop on their own and we hit trying to get non-existing status for e.g completed renders.
                 pass
 
         Gdk.threads_leave()
@@ -629,18 +633,17 @@ class ContainerStatusPollingThread(threading.Thread):
         #     update_render_status()
         #     get_proxy_uuid()
         #     abort_render()
-        self.poll_objects = []
+        # self.poll_objects = []
         self.abort = False
 
         threading.Thread.__init__(self)
 
     def run(self):
-        
         while self.abort == False:
             for job in _jobs:
-                jpb.update_render_status() # make sure methids enter/exit Gtk threads
+                if job.status != QUEUED:
+                    job.update_render_status() # make sure methids enter/exit Gtk threads
                     
-                
             time.sleep(0.5)
     """
     def remove_poll_object_for_matching_job_proxy(self, job_proxy):

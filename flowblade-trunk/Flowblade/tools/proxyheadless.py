@@ -59,7 +59,7 @@ def delete_session_folders(session_id):
 # --------------------------------------------------- render thread launch
 def main(root_path, session_id, media_file_id, proxy_w, proxy_h, enc_index, \
             proxy_file_path, proxy_rate, media_file_path, profile_desc, lookup_path):
-        
+    
     mltheadlessutils.mlt_env_init(root_path, session_id)
 
     global _render_thread
