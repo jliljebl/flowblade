@@ -206,7 +206,8 @@ class AbstractProperty:
     mltfilters.FilterObject.properties array and in
     mlttransitions.CompositorObject.transition.properties array.
 
-    This class converts input to output using set ranges.
+    This class and all extending classes convert input to output using set ranges or
+    other GUI editors. GUI input -> MLT property value.
     
     Class also creates args name->value dict used by all extending classes
     and has default versions of editor component callbacks.

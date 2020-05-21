@@ -67,8 +67,8 @@ _remove_list = [] # objects are removed from GUI with delay to give user time to
 jobs_notebook_index = 4 # 4 for single window, app.py sets to 3 for two windows
 
 
-class JobProxy: # Background renders provide these to give info on render status.
-                  # Modules doing the rendering must manage setting all values.
+class JobProxy: # This object represnts job in job queue. 
+
 
     def __init__(self, uid, callback_object):
         self.proxy_uid = uid # modules doing the rendering and using this to display must make sure this matches always for a particular job
@@ -112,6 +112,18 @@ class JobProxy: # Background renders provide these to give info on render status
         self.callback_object.abort_render()
 
 
+class JobQueueMessage:
+    
+    
+    def __init__(self, uid, job_type, status, progress, text, elapsed):
+        self.proxy_uid = uid # modules doing the rendering and using this to display must make sure this matches always for a particular job        
+        self.type = job_type 
+        self.status = status
+        self.progress = progress
+        self.text = text
+        self.elapsed = elapsed
+                 
+                  
 #---------------------------------------------------------------- interface
 def add_job(job_proxy):
     global _jobs, _jobs_list_view 
@@ -127,13 +139,13 @@ def add_job(job_proxy):
          if len(running) == 0:
              job_proxy.start_render()
 
-def update_job_queue(update_msg_job_proxy): # We're using JobProxy objects as messages to update values on jobs in _jobs list.
+def update_job_queue(job_msg): # We're using JobProxy objects as messages to update values on jobs in _jobs list.
     global _jobs_list_view, _remove_list
     row = -1
     job_proxy = None  
     for i in range (0, len(_jobs)):
 
-        if _jobs[i].proxy_uid == update_msg_job_proxy.proxy_uid:
+        if _jobs[i].proxy_uid == job_msg.proxy_uid:
             if _jobs[i].status == CANCELLED:
                 return # it is maybe possible to get update attempt here after cancellation.         
             # Update job proxy info and remember row
@@ -146,11 +158,11 @@ def update_job_queue(update_msg_job_proxy): # We're using JobProxy objects as me
         return
 
     # Copy values
-    _jobs[row].text = update_msg_job_proxy.text
-    _jobs[row].elapsed = update_msg_job_proxy.elapsed
-    _jobs[row].progress = update_msg_job_proxy.progress
+    _jobs[row].text = job_msg.text
+    _jobs[row].elapsed = job_msg.elapsed
+    _jobs[row].progress = job_msg.progress
 
-    if update_msg_job_proxy.status == COMPLETED:
+    if job_msg.status == COMPLETED:
         _jobs[row].status = COMPLETED
         _jobs[row].text = _("Completed")
         _jobs[row].progress = 1.0
@@ -160,7 +172,7 @@ def update_job_queue(update_msg_job_proxy): # We're using JobProxy objects as me
         if len(waiting_jobs) > 0:
             waiting_jobs[0].start_render()
     else:
-        _jobs[row].status = update_msg_job_proxy.status
+        _jobs[row].status = job_msg.status
 
     tree_path = Gtk.TreePath.new_from_string(str(row))
     store_iter = _jobs_list_view.storemodel.get_iter(tree_path)
@@ -210,59 +222,7 @@ def get_jobs_panel():
     return panel
 
 
-# ----------------------------------------------------------------- polling
-class ContainerStatusPollingThread(threading.Thread):
-    
-    def __init__(self):
-        # poll_objects required to implement interface:
-        #     update_render_status()
-        #     get_proxy_uuid()
-        #     abort_render()
-        self.poll_objects = []
-        self.abort = False
 
-        threading.Thread.__init__(self)
-
-    def run(self):
-        
-        while self.abort == False:
-            for poll_obj in self.poll_objects:
-                poll_obj.update_render_status() # make sure methids enter/exit Gtk threads
-                    
-                
-            time.sleep(0.5)
-
-    def remove_poll_object_for_matching_job_proxy(self, job_proxy):
-        for poll_obj in self.poll_objects:
-            if poll_obj.get_proxy_uuid() == job_proxy.proxy_uid:
-                self.poll_objects.remove(poll_obj)
-                
-    def shutdown(self):
-        for poll_obj in self.poll_objects:
-            poll_obj.abort_render()
-        
-        self.abort = True
-
-def add_as_status_polling_object(polling_object):
-    global _status_polling_thread
-    if _status_polling_thread == None:
-        _status_polling_thread = ContainerStatusPollingThread()
-        _status_polling_thread.start()
-               
-    _status_polling_thread.poll_objects.append(polling_object)
-
-def remove_as_status_polling_object(polling_object):
-    try:
-        _status_polling_thread.poll_objects.remove(polling_object)
-    except:
-        print("remove_as_status_polling_object Except for", polling_object)
-        pass
-
-def shutdown_polling():
-    if _status_polling_thread == None:
-        return
-    
-    _status_polling_thread.shutdown()
 
 
 # ------------------------------------------------------------- module functions
@@ -344,12 +304,12 @@ def _remove_jobs():
     global _jobs, _remove_list
     for  job in _remove_list:
         _jobs.remove(job)
-        _status_polling_thread.remove_poll_object_for_matching_job_proxy(job)
 
     _jobs_list_view.fill_data_model()
     _jobs_list_view.scroll.queue_draw()
 
     _remove_list = []
+
 
 # --------------------------------------------------------- GUI 
 class JobsQueueView(Gtk.VBox):
@@ -440,27 +400,23 @@ class JobsQueueView(Gtk.VBox):
 
 
 # ------------------------------------------------------------------------------- JOBS QUEUE OBJECTS
-# These objects satisfy two interfaces:
-#
-# As jobs.JobProxy callback_objects :
+# These objects satisfy interface as jobs.JobProxy callback_objects and as update polling objects.
 #
 #     start_render()
-#     abort_render()
-# 
-# As objects in ContainerStatusPollingThread,poll_objects they implement interface:
 #     update_render_status()
+#     get_proxy_uuid()
 #     abort_render()
 # 
-# Objects extending containeraction.AbstractContainerActionObject in module containeractions.py
-# implement these interfaces too.
+# ------------------------------------------------------------------------------- JOBS QUEUE OBJECTS
 
 
-class AbstractJobQueueObject:
+class AbstractJobQueueObject(JobProxy):
     
     def __init__(self, session_id, job_type):
         self.session_id = session_id
         self.job_type = job_type
-
+        JobProxy.__init__(self, uid, self)
+        
     def get_proxy_uuid(self):
         return self.get_session_id()
 
@@ -472,13 +428,18 @@ class AbstractJobQueueObject:
     
     def add_to_queue(self):
         add_job(self.get_launch_job_proxy())
-        add_as_status_polling_object(self)
+        #add_as_status_polling_object(self)
 
     def get_job_proxy(self):
-        job_proxy = JobProxy(self.get_session_id(), self)
-        job_proxy.type = self.job_type
-        return job_proxy
-    
+        #job_proxy = JobProxy(self.get_session_id(), self)
+        #job_proxy.type = self.job_type
+        return self
+
+    def get_job_queue_message(self):
+        job_queue_message = JobQueueMessage(self.proxy_uid, self.type, self.status,
+                                            self.progress, self.text, self.elapsed)
+        return job_queue_message
+
     def get_launch_job_proxy(self):
         job_proxy = self.get_job_proxy()
         job_proxy.status = QUEUED
@@ -487,13 +448,13 @@ class AbstractJobQueueObject:
         job_proxy.text = _("In Queue - ") + " " + self.get_job_name()
         return job_proxy
         
-    def get_completed_job_proxy(self):
-        job_proxy = self.get_job_proxy()
-        job_proxy.status = COMPLETED
-        job_proxy.progress = 1.0
-        job_proxy.elapsed = 0.0 # jobs does not use this value
-        job_proxy.text = "dummy" # this will be overwritten with completion message
-        return job_proxy
+    def get_completed_job_message(self):
+        job_queue_message = self.get_job_queue_message()
+        job_queue_message.status = COMPLETED
+        job_queue_message.progress = 1.0
+        job_queue_message.elapsed = 0.0 # jobs does not use this value
+        job_queue_message.text = "dummy" # this will be overwritten with completion message
+        return job_queue_message
 
 
 class MotionRenderJobQueueObject(AbstractJobQueueObject):
@@ -511,10 +472,10 @@ class MotionRenderJobQueueObject(AbstractJobQueueObject):
         
     def start_render(self):
         
-        job_proxy = self.get_job_proxy()
-        job_proxy.text = _("Render Starting...")
-        job_proxy.status = RENDERING
-        update_job_queue(job_proxy)
+        job_msg = self.get_job_queue_message()
+        job_msg.text = _("Render Starting...")
+        job_msg.status = RENDERING
+        update_job_queue(job_msg)
         
         # Run with nice to lower priority if requested (currently hard coded to lower)
         nice_command = "nice -n " + str(10) + " " + respaths.LAUNCH_DIR + "flowblademotionheadless"
@@ -529,10 +490,10 @@ class MotionRenderJobQueueObject(AbstractJobQueueObject):
         Gdk.threads_enter()
                     
         if motionheadless.session_render_complete(self.get_session_id()) == True:
-            remove_as_status_polling_object(self)
+            #remove_as_status_polling_object(self)
             
-            job_proxy = self.get_completed_job_proxy()
-            update_job_queue(job_proxy)
+            job_msg = self.get_completed_job_message()
+            update_job_queue(job_msg)
             
             motionheadless.delete_session_folders(self.get_session_id())
             
@@ -542,28 +503,26 @@ class MotionRenderJobQueueObject(AbstractJobQueueObject):
             status = motionheadless.get_session_status(self.get_session_id())
             if status != None:
                 fraction, elapsed = status
+                
+                self.progress = float(fraction)
+                if self.progress > 1.0:
+                    # A fix for how progress is calculated in gmicheadless because producers can render a bit longer then required.
+                    self.progress = 1.0
 
-                msg = _("Rendering Motion Clip ") + self.get_job_name()
+                self.elapsed = float(elapsed)
+                self.text = _("Rendering Motion Clip ") + self.get_job_name()
                 
-                job_proxy = self.get_job_proxy()
+                job_msg = self.get_job_queue_message()
                 
-                job_proxy.progress = float(fraction)
-                if job_proxy.progress > 1.0:
-                    # hack to fix how progress is calculated in gmicheadless because producers can render a bit longer then required.
-                    job_proxy.progress = 1.0
-
-                job_proxy.elapsed = float(elapsed)
-                job_proxy.text = msg
-                
-                update_job_queue(job_proxy)
+                update_job_queue(job_msg)
             else:
                 print("MotionRenderQueueObject status none")
-                pass # This can happen sometimes before gmicheadless.py has written a status message, we just do nothing here.
+                pass
 
         Gdk.threads_leave()
     
     def abort_render(self):
-        remove_as_status_polling_object(self)
+        #remove_as_status_polling_object(self)
         motionheadless.abort_render(self.get_session_id())
         
     def create_media_item(self):
@@ -583,10 +542,10 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
         return file_name
         
     def start_render(self):
-        job_proxy = self.get_job_proxy()
-        job_proxy.text = _("Render Starting...")
-        job_proxy.status = RENDERING
-        update_job_queue(job_proxy)
+        job_msg = self.get_job_queue_message()
+        job_msg.text = _("Render Starting...")
+        job_msg.status = RENDERING
+        update_job_queue(job_msg)
         
         # Run with nice to lower priority if requested (currently hard coded to lower)
         nice_command = "nice -n " + str(10) + " " + respaths.LAUNCH_DIR + "flowbladeproxyheadless"
@@ -606,11 +565,10 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
         Gdk.threads_enter()
                     
         if proxyheadless.session_render_complete(self.get_session_id()) == True:
-            remove_as_status_polling_object(self)
+            #remove_as_status_polling_object(self)
             
-            job_proxy = self.get_completed_job_proxy()
-            update_job_queue(job_proxy)
-            self.completed_job_proxy = job_proxy
+            job_msg = self.get_completed_job_message()
+            update_job_queue(job_msg)
             
             proxyheadless.delete_session_folders(self.get_session_id()) # these were created mltheadlessutils.py, see proxyheadless.py
             
@@ -620,20 +578,17 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
             status = proxyheadless.get_session_status(self.get_session_id())
             if status != None:
                 fraction, elapsed = status
+                
+                self.progress = float(fraction)
+                if self.progress > 1.0:
+                    self.progress = 1.0
 
-                msg = _("Rendering Proxy Clip for ") + self.get_job_name()
-                
-                job_proxy = self.get_job_proxy()
-                
-                job_proxy.progress = float(fraction)
-                if job_proxy.progress > 1.0:
-                    # hack to fix how progress is calculated in gmicheadless because producers can render a bit longer then required.
-                    job_proxy.progress = 1.0
+                self.elapsed = float(elapsed)
+                self.text = _("Rendering Proxy Clip for ") + self.get_job_name()
 
-                job_proxy.elapsed = float(elapsed)
-                job_proxy.text = msg
+                job_msg = self.get_job_queue_message()
                 
-                update_job_queue(job_proxy)
+                update_job_queue(job_msg)
             else:
                 print("ProxyRenderJobQueueObject status none", self.get_job_name())
                 pass
@@ -641,7 +596,7 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
         Gdk.threads_leave()
     
     def abort_render(self):
-        remove_as_status_polling_object(self)
+        # remove_as_status_polling_object(self)
         motionheadless.abort_render(self.get_session_id())
         
     def proxy_render_complete(self):
@@ -664,3 +619,59 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
             elif len(proxy_jobs) == 1:
                 self.render_data.do_auto_re_convert_func()
 
+
+
+# ----------------------------------------------------------------- polling
+class ContainerStatusPollingThread(threading.Thread):
+    
+    def __init__(self):
+        # poll_objects required to implement interface:
+        #     update_render_status()
+        #     get_proxy_uuid()
+        #     abort_render()
+        self.poll_objects = []
+        self.abort = False
+
+        threading.Thread.__init__(self)
+
+    def run(self):
+        
+        while self.abort == False:
+            for job in _jobs:
+                jpb.update_render_status() # make sure methids enter/exit Gtk threads
+                    
+                
+            time.sleep(0.5)
+    """
+    def remove_poll_object_for_matching_job_proxy(self, job_proxy):
+        for poll_obj in self.poll_objects:
+            if poll_obj.get_proxy_uuid() == job_proxy.proxy_uid:
+                self.poll_objects.remove(poll_obj)
+    """
+    def shutdown(self):
+        for job in _jobs:
+            job.abort_render()
+        
+        self.abort = True
+
+"""
+def add_as_status_polling_object(polling_object):
+    global _status_polling_thread
+    if _status_polling_thread == None:
+        _status_polling_thread = ContainerStatusPollingThread()
+        _status_polling_thread.start()
+               
+    _status_polling_thread.poll_objects.append(polling_object)
+
+def remove_as_status_polling_object(polling_object):
+    try:
+        _status_polling_thread.poll_objects.remove(polling_object)
+    except:
+        print("remove_as_status_polling_object Except for", polling_object)
+        pass
+"""
+def shutdown_polling():
+    if _status_polling_thread == None:
+        return
+    
+    _status_polling_thread.shutdown()
