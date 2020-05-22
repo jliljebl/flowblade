@@ -71,14 +71,14 @@ class JobProxy: # This object represnts job in job queue.
 
 
     def __init__(self, uid, callback_object):
-        self.proxy_uid = uid # modules doing the rendering and using this to display must make sure this matches always for a particular job
+        self.proxy_uid = uid
         self.type = NOT_SET_YET 
         self.status = RENDERING
         self.progress = 0.0 # 0.0. - 1.0
         self.text = ""
         self.elapsed = 0.0 # in fractional seconds
 
-        # callback_object reqiured to implement interface:
+        # callback_object have to implement interface:
         #     start_render()
         #     abort_render()
         self.callback_object = callback_object
@@ -139,6 +139,12 @@ def add_job(job_proxy):
          if len(running) == 0:
              job_proxy.start_render()
 
+    # Get polling going if needed.
+    global _status_polling_thread
+    if _status_polling_thread == None:
+        _status_polling_thread = ContainerStatusPollingThread()
+        _status_polling_thread.start()
+            
 def update_job_queue(job_msg): # We're using JobProxy objects as messages to update values on jobs in _jobs list.
     global _jobs_list_view, _remove_list
     row = -1
@@ -147,8 +153,8 @@ def update_job_queue(job_msg): # We're using JobProxy objects as messages to upd
 
         if _jobs[i].proxy_uid == job_msg.proxy_uid:
             if _jobs[i].status == CANCELLED:
-                return # it is maybe possible to get update attempt here after cancellation.         
-            # Update job proxy info and remember row
+                return # it is maybe possible to get update attempts here after cancellation.         
+            # Remember job row
             row = i
             break
 
@@ -301,7 +307,11 @@ def _get_jobs_with_status(status):
 def _remove_jobs():
     global _jobs, _remove_list
     for  job in _remove_list:
-        _jobs.remove(job)
+        if job in _jobs:
+            _jobs.remove(job)
+        else:
+            # We're getting attemps from container actions to release multiple times, find out why sometime.
+            pass
 
     _jobs_list_view.fill_data_model()
     _jobs_list_view.scroll.queue_draw()
@@ -398,11 +408,10 @@ class JobsQueueView(Gtk.VBox):
 
 
 # ------------------------------------------------------------------------------- JOBS QUEUE OBJECTS
-# These objects satisfy interface as jobs.JobProxy callback_objects and as update polling objects.
+# These objects satisfy combined interface as jobs.JobProxy callback_objects and as update polling objects.
 #
 #     start_render()
 #     update_render_status()
-#     get_proxy_uuid()
 #     abort_render()
 # 
 # ------------------------------------------------------------------------------- JOBS QUEUE OBJECTS
@@ -411,16 +420,10 @@ class JobsQueueView(Gtk.VBox):
 class AbstractJobQueueObject(JobProxy):
     
     def __init__(self, session_id, job_type):
-        self.session_id = session_id                # 
-                                                    # self.session_id == self.proxy_uid They have different meaning so we are keeping 2 names for same number.
-        JobProxy.__init__(self, session_id, self)   #
-                                                    # self.proxy_uid identifies job in job queue
-                                                    # self.session_id is used to create and communicate with render process
-                                                    #
-        self.type = job_type
+        self.session_id = session_id 
+        JobProxy.__init__(self, session_id, self)
 
-    def get_proxy_uuid(self):
-        return self.get_session_id()
+        self.type = job_type
 
     def get_session_id(self):
         return self.session_id
@@ -429,16 +432,8 @@ class AbstractJobQueueObject(JobProxy):
         return "job name"
     
     def add_to_queue(self):
-        
         add_job(self.create_job_queue_proxy())
 
-        # Get polling going if needed.
-        global _status_polling_thread
-        if _status_polling_thread == None:
-
-            _status_polling_thread = ContainerStatusPollingThread()
-            _status_polling_thread.start()
-    
     def get_job_queue_message(self):
         job_queue_message = JobQueueMessage(self.proxy_uid, self.type, self.status,
                                             self.progress, self.text, self.elapsed)
@@ -629,50 +624,30 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
 class ContainerStatusPollingThread(threading.Thread):
     
     def __init__(self):
-        # poll_objects required to implement interface:
-        #     update_render_status()
-        #     get_proxy_uuid()
-        #     abort_render()
-        # self.poll_objects = []
+        # To provide status updates into job queue qbjects in _jobs list must implement interface:
+        #
+        # update_render_status()
+        #
+        
         self.abort = False
 
         threading.Thread.__init__(self)
 
     def run(self):
+
         while self.abort == False:
             for job in _jobs:
                 if job.status != QUEUED:
                     job.update_render_status() # make sure methids enter/exit Gtk threads
-                    
+
             time.sleep(0.5)
-    """
-    def remove_poll_object_for_matching_job_proxy(self, job_proxy):
-        for poll_obj in self.poll_objects:
-            if poll_obj.get_proxy_uuid() == job_proxy.proxy_uid:
-                self.poll_objects.remove(poll_obj)
-    """
+
     def shutdown(self):
         for job in _jobs:
             job.abort_render()
         
         self.abort = True
 
-"""
-def add_as_status_polling_object(polling_object):
-    global _status_polling_thread
-    if _status_polling_thread == None:
-        _status_polling_thread = ContainerStatusPollingThread()
-        _status_polling_thread.start()
-               
-    _status_polling_thread.poll_objects.append(polling_object)
-
-def remove_as_status_polling_object(polling_object):
-    try:
-        _status_polling_thread.poll_objects.remove(polling_object)
-    except:
-        print("remove_as_status_polling_object Except for", polling_object)
-        pass
-"""
 def shutdown_polling():
     if _status_polling_thread == None:
         return

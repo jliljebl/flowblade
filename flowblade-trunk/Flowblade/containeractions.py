@@ -168,10 +168,8 @@ class AbstractContainerActionObject:
 
         job_proxy = self.get_launch_job_proxy()
         jobs.add_job(job_proxy)
-
-        self.add_as_status_polling_object()
         
-        # Render starts on callback from jobs.py to AbstractContainerActionObject.start_render()
+        # Render starts on callback from jobs.py
         
     def render_clip_length_media(self, clip):
         self.render_type = CLIP_LENGTH_RENDER
@@ -181,9 +179,7 @@ class AbstractContainerActionObject:
         job_proxy = self.get_launch_job_proxy()
         jobs.add_job(job_proxy)
         
-        self.add_as_status_polling_object()
-        
-        # Render starts on callback from jobs.py to AbstractContainerActionObject.start_render()
+        # Render starts on callback from jobs.py
 
     def start_render(self):
         clip, range_in, range_out, clip_start_offset = self.launch_render_data
@@ -221,9 +217,7 @@ class AbstractContainerActionObject:
         return userfolders.get_cache_dir() + appconsts.THUMBNAILS_DIR + "/" + self.get_container_program_id() +  ".png"
     
     def get_job_proxy(self):
-        job_proxy = jobs.JobProxy(self.get_container_program_id(), self)
-        job_proxy.type = jobs.CONTAINER_CLIP_RENDER
-        return job_proxy
+        print("AbstractContainerActionObject.get_job_proxy() not impl")
 
     def get_launch_job_proxy(self):
         job_proxy = self.get_job_proxy()
@@ -232,32 +226,28 @@ class AbstractContainerActionObject:
         job_proxy.elapsed = 0.0 # jobs does not use this value
         job_proxy.text = _("In Queue - ") + " " + self.get_job_name()
         return job_proxy
-        
-    def get_completed_job_proxy(self):
+
+    def get_job_queue_message(self):
         job_proxy = self.get_job_proxy()
-        job_proxy.status = jobs.COMPLETED
-        job_proxy.progress = 1.0
-        job_proxy.elapsed = 0.0 # jobs does not use this value
-        job_proxy.text = "dummy" # this will be overwritten with completion message
-        return job_proxy
+        job_queue_message = jobs.JobQueueMessage(   job_proxy.proxy_uid, job_proxy.type, job_proxy.status,
+                                                    job_proxy.progress, job_proxy.text, job_proxy.elapsed)
+        return job_queue_message
+
+    def get_completed_job_message(self):
+        job_msg = self.get_job_queue_message()
+        job_msg.status = jobs.COMPLETED
+        job_msg.progress = 1.0
+        job_msg.elapsed = 0.0 # jobs does not use this value
+        job_msg.text = "dummy" # this will be overwritten with completion message
+        return job_msg
 
     def get_job_name(self):
         return "get_job_name not impl"
  
-    def get_proxy_uuid(self):
-        return self.get_container_program_id()
- 
     def get_container_clips_dir(self):
         return userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_DIR
 
-    def add_as_status_polling_object(self):
-        jobs.add_as_status_polling_object(self)
-        
-    def remove_as_status_polling_object(self):
-        jobs.remove_as_status_polling_object(self)
-
     def get_lowest_numbered_file(self):
-        
         frames_info = gmicplayer.FolderFramesInfo(self.get_rendered_media_dir())
         lowest = frames_info.get_lowest_numbered_file()
         highest = frames_info.get_highest_numbered_file()
@@ -453,6 +443,7 @@ class GMicContainerActions(AbstractContainerActionObject):
     def get_job_proxy(self):
         job_proxy = jobs.JobProxy(self.get_container_program_id(), self)
         job_proxy.type = jobs.CONTAINER_CLIP_RENDER_GMIC
+        job_proxy.update_render_status = self.update_render_status
         return job_proxy
 
     def get_job_name(self):
@@ -473,10 +464,10 @@ class GMicContainerActions(AbstractContainerActionObject):
             
         gmicheadless.set_render_data(self.get_container_program_id(), self.container_data.render_data)
         
-        job_proxy = self.get_job_proxy()
-        job_proxy.text = _("Render Starting...")
-        job_proxy.status = jobs.RENDERING
-        jobs.update_job_queue(job_proxy)
+        job_msg = self.get_job_queue_message()
+        job_msg.text = _("Render Starting...")
+        job_msg.status = jobs.RENDERING
+        jobs.update_job_queue(job_msg)
         
         args = ("session_id:" + self.get_container_program_id(), 
                 "script:" + str(self.container_data.program).replace(" ", "\ "),
@@ -499,10 +490,9 @@ class GMicContainerActions(AbstractContainerActionObject):
         Gdk.threads_enter()
                     
         if gmicheadless.session_render_complete(self.get_container_program_id()) == True:
-            self.remove_as_status_polling_object()
             
-            job_proxy = self.get_completed_job_proxy()
-            jobs.update_job_queue(job_proxy)
+            job_msg = self.get_completed_job_message()
+            jobs.update_job_queue(job_msg)
             
             GLib.idle_add(self.create_producer_and_do_update_edit, None)
 
@@ -524,37 +514,37 @@ class GMicContainerActions(AbstractContainerActionObject):
                 
                 msg += " - " + self.get_job_name()
                 
-                job_proxy = self.get_job_proxy()
+                job_msg = self.get_job_queue_message()
                 if self.render_type == FULL_RENDER:
-                    job_proxy.progress = float(frame)/float(length)
+                    job_msg.progress = float(frame)/float(length)
                 else:
                     if step == "1":
                         render_length = self.render_range_out - self.render_range_in 
                         frame = int(frame) - self.gmic_frame_offset
                     else:
                         render_length = self.render_range_out - self.render_range_in
-                    job_proxy.progress = float(frame)/float(render_length)
+                    job_msg.progress = float(frame)/float(render_length)
                     
-                    if job_proxy.progress < 0.0:
+                    if job_msg.progress < 0.0:
                         # hack to fix how gmiplayer.FramesRangeWriter works.
-                        # We would need to patch to g'mic tool to not need this but this is easier.
+                        # We would need to patch to G'mic Tool to not need this but this is easier.
                         job_proxy.progress = 1.0
 
-                    if job_proxy.progress > 1.0:
-                        # hack to fix how progress is calculated in gmicheadless because producers can render a bit longer then required.
-                        job_proxy.progress = 1.0
+                    if job_msg.progress > 1.0:
+                        # Ffix how progress is calculated in gmicheadless because producers can render a bit longer then required.
+                        job_msg.progress = 1.0
 
-                job_proxy.elapsed = float(elapsed)
-                job_proxy.text = msg
+                job_msg.elapsed = float(elapsed)
+                job_msg.text = msg
                 
-                jobs.update_job_queue(job_proxy)
+                jobs.update_job_queue(job_msg)
             else:
                 pass # This can happen sometimes before gmicheadless.py has written a status message, we just do nothing here.
 
         Gdk.threads_leave()
 
     def abort_render(self):
-        self.remove_as_status_polling_object()
+        #self.remove_as_status_polling_object()
         gmicheadless.abort_render(self.get_container_program_id())
 
     def create_icon(self):
@@ -585,13 +575,12 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
     def get_job_proxy(self):
         job_proxy = jobs.JobProxy(self.get_container_program_id(), self)
         job_proxy.type = jobs.CONTAINER_CLIP_RENDER_MLT_XML
+        job_proxy.update_render_status = self.update_render_status
         return job_proxy
 
     def get_job_name(self):
         return self.container_data.get_unrendered_media_name()
 
-
-        
     def _launch_render(self, clip, range_in, range_out, clip_start_offset):
         self.create_data_dirs_if_needed()
         self.render_range_in = range_in
@@ -607,10 +596,10 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
             
         mltxmlheadless.set_render_data(self.get_container_program_id(), self.container_data.render_data)
         
-        job_proxy = self.get_job_proxy()
-        job_proxy.text = _("Render Starting...")
-        job_proxy.status = jobs.RENDERING
-        jobs.update_job_queue(job_proxy)
+        job_msg = self.get_job_queue_message()
+        job_msg.text = _("Render Starting...")
+        job_msg.status = jobs.RENDERING
+        jobs.update_job_queue(job_msg)
 
         args = ("session_id:" + self.get_container_program_id(), 
                 "clip_path:" + str(self.container_data.unrendered_media).replace(" ", "\ "),   # This is going through Popen shell=True and needs escaped spaces.
@@ -624,18 +613,18 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
         for arg in args:
             nice_command += " "
             nice_command += arg
-
-        subprocess.Popen([nice_command], shell=True)
         
+        subprocess.Popen([nice_command], shell=True)
+
     def update_render_status(self):
 
         Gdk.threads_enter()
                     
         if mltxmlheadless.session_render_complete(self.get_container_program_id()) == True:
-            self.remove_as_status_polling_object()
+            #self.remove_as_status_polling_object()
 
-            job_proxy = self.get_completed_job_proxy()
-            jobs.update_job_queue(job_proxy)
+            job_msg = self.get_completed_job_message()
+            jobs.update_job_queue(job_msg)
             
             GLib.idle_add(self.create_producer_and_do_update_edit, None)
                 
@@ -650,12 +639,12 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
                 elif step == "2":
                     msg = _("Rendering Image Sequence")
 
-                job_proxy = self.get_job_proxy()
-                job_proxy.progress = float(fraction)
-                job_proxy.elapsed = float(elapsed)
-                job_proxy.text = msg
+                job_msg = self.get_job_queue_message()
+                job_msg.progress = float(fraction)
+                job_msg.elapsed = float(elapsed)
+                job_msg.text = msg
                 
-                jobs.update_job_queue(job_proxy)
+                jobs.update_job_queue(job_msg)
             else:
                 pass # This can happen sometimes before gmicheadless.py has written a status message, we just do nothing here.
                 
@@ -665,7 +654,7 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
         return self._create_icon_default_action()
 
     def abort_render(self):
-        self.remove_as_status_polling_object()
+        #self.remove_as_status_polling_object()
         mltxmlheadless.abort_render(self.get_container_program_id())
 
 
@@ -701,6 +690,7 @@ class BlenderContainerActions(AbstractContainerActionObject):
     def get_job_proxy(self):
         job_proxy = jobs.JobProxy(self.get_container_program_id(), self)
         job_proxy.type = jobs.CONTAINER_CLIP_RENDER_BLENDER
+        job_proxy.update_render_status = self.update_render_status
         return job_proxy
 
     def get_job_name(self):
@@ -709,10 +699,10 @@ class BlenderContainerActions(AbstractContainerActionObject):
     def _launch_render(self, clip, range_in, range_out, clip_start_offset):
         self.create_data_dirs_if_needed()
 
-        job_proxy = self.get_job_proxy()
-        job_proxy.text = _("Render Starting...")
-        job_proxy.status = jobs.RENDERING
-        jobs.update_job_queue(job_proxy)
+        job_msg = self.get_job_queue_message()
+        job_msg.text = _("Render Starting...")
+        job_msg.status = jobs.RENDERING
+        jobs.update_job_queue(job_msg)
         
         self.render_range_in = range_in
         self.render_range_out = range_out
@@ -784,13 +774,14 @@ class BlenderContainerActions(AbstractContainerActionObject):
         return render_exec_lines
 
     def update_render_status(self):
+
         Gdk.threads_enter()
                     
         if blenderheadless.session_render_complete(self.get_container_program_id()) == True:
-            self.remove_as_status_polling_object()
+            #self.remove_as_status_polling_object()
 
-            job_proxy = self.get_completed_job_proxy()
-            jobs.update_job_queue(job_proxy)
+            job_msg = self.get_completed_job_message()
+            jobs.update_job_queue(job_msg)
             
             GLib.idle_add(self.create_producer_and_do_update_edit, None)
                 
@@ -803,19 +794,19 @@ class BlenderContainerActions(AbstractContainerActionObject):
                 if  step == "2":
                      msg = _("Rendering Video")
                      
-                job_proxy = self.get_job_proxy()
-                job_proxy.progress = float(fraction)
-                job_proxy.elapsed = float(elapsed)
-                job_proxy.text = msg
+                job_msg = self.get_job_queue_message()
+                job_msg.progress = float(fraction)
+                job_msg.elapsed = float(elapsed)
+                job_msg.text = msg
                 
-                jobs.update_job_queue(job_proxy)
+                jobs.update_job_queue(job_msg)
             else:
                 pass # This can happen sometimes before gmicheadless.py has written a status message, we just do nothing here.
                 
         Gdk.threads_leave()
 
     def abort_render(self):
-        self.remove_as_status_polling_object()
+        #self.remove_as_status_polling_object()
         blenderheadless.abort_render(self.get_container_program_id())
 
     def create_icon(self):
