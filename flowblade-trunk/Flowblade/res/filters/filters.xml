@@ -453,6 +453,12 @@
         <property name="contrast" args="range_in=-33,99 range_out=0,400 displayname=Contrast">100</property>
         <property name="brightness" args="range_in=-33,99 range_out=0,344 displayname=Brightness">85</property>
     </filter>
+    <filter id="dust">
+        <name>Dust</name>
+        <group>Artistic</group>
+        <property name="maxdiameter" args="range_in=0,100 displayname=Max!Diameter">2</property>
+        <property name="maxcount" args="range_in=0,400 displayname=Max!Count">4</property>
+    </filter>
     <filter id="oldfilm">
         <name>Old Film</name>
         <group>Artistic</group>
