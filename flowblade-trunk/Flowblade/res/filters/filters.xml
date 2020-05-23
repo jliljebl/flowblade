@@ -546,25 +546,25 @@
         <property name="contrast" args="range_in=-33,99 range_out=0,400 displayname=Contrast">100</property>
         <property name="brightness" args="range_in=-33,99 range_out=0,344 displayname=Brightness">85</property>
     </filter>
-   <filter id="frei0r.IIRblur">
-         <name>IRR Blur</name>
+    <filter id="frei0r.IIRblur">
+        <name>IRR Blur</name>
         <group>Blur</group>
         <property name="Amount" args="range_in=0,100 displayname=Amount">0.25</property>
         <property name="Type" args="editor=combobox exptype=default cbopts=Sharper:0.3,Fuzzier:0.8" >0.8</property>
         <property name="Edge" args="editor=booleancheckbox displayname=Edge">1</property>
-   </filter>
-   <filter id="boxblur">
+    </filter>
+    <filter id="boxblur">
         <name>Box Blur</name>
         <group>Blur</group>
         <property name="start" args="range_in=1,50 range_out=1,50 displayname=Amount">5</property>
         <property name="hori" args="range_in=1,50 range_out=1,50 displayname=Horizontal">7</property>
         <property name="vert" args="range_in=1,50 range_out=1,50 displayname=Vertical">7</property>
-   </filter>
-   <filter id="frei0r.rgbnoise">
+    </filter>
+    <filter id="frei0r.rgbnoise">
         <name>RGB Noise</name>
         <group>Blur</group>
         <property name="noise" args="range_in=0,100 range_out=0,1.0 displayname=Amount">0.2</property>
-   </filter>
+    </filter>
 
 
 
