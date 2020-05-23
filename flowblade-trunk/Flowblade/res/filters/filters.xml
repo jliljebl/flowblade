@@ -446,6 +446,13 @@
         <group>Artistic</group>
         <property name="Blur" args="range_in=0,10">0.0</property>
     </filter>
+    <filter id="grain">
+        <name>Grain</name>
+        <group>Artistic</group>
+        <property name="noise" args="range_in=0,100 range_out=0,200 displayname=Noise">40</property>
+        <property name="contrast" args="range_in=-33,99 range_out=0,400 displayname=Contrast">100</property>
+        <property name="brightness" args="range_in=-33,99 range_out=0,344 displayname=Brightness">85</property>
+    </filter>
     <filter id="oldfilm">
         <name>Old Film</name>
         <group>Artistic</group>
@@ -538,13 +545,6 @@
         <name>Blur</name>
         <group>Blur</group>
         <property name="Kernel size" args="range_in=0,500 editor=keyframe_editor exptype=keyframe_hcs range_out=0.0,0.5 displayname=Size">"0=0.0"</property>
-    </filter>
-    <filter id="grain">
-        <name>Grain</name>
-        <group>Blur</group>
-        <property name="noise" args="range_in=0,100 range_out=0,200 displayname=Noise">40</property>
-        <property name="contrast" args="range_in=-33,99 range_out=0,400 displayname=Contrast">100</property>
-        <property name="brightness" args="range_in=-33,99 range_out=0,344 displayname=Brightness">85</property>
     </filter>
     <filter id="frei0r.IIRblur">
         <name>IRR Blur</name>
