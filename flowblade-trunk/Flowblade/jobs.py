@@ -112,17 +112,16 @@ class JobProxy: # This object represnts job in job queue.
         self.callback_object.abort_render()
 
 
-
-class JobQueueMessage:
+class JobQueueMessage:  # Jobs communicate with job queue by sending these objecs.
     
     def __init__(self, uid, job_type, status, progress, text, elapsed):
-        self.proxy_uid = uid # modules doing the rendering and using this to display must make sure this matches always for a particular job        
+        self.proxy_uid = uid       
         self.type = job_type 
         self.status = status
         self.progress = progress
         self.text = text
         self.elapsed = elapsed
-                 
+
                   
 #---------------------------------------------------------------- interface
 def add_job(job_proxy):
@@ -638,7 +637,7 @@ class ContainerStatusPollingThread(threading.Thread):
         while self.abort == False:
             for job in _jobs:
                 if job.status != QUEUED:
-                    job.update_render_status() # make sure methids enter/exit Gtk threads
+                    job.update_render_status() # Make sure these methods enter/exit Gtk threads.
 
             time.sleep(0.5)
 
