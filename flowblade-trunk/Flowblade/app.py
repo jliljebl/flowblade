@@ -369,7 +369,7 @@ def main(root_path):
 
     global disk_cache_timeout_id
     disk_cache_timeout_id = GObject.timeout_add(2500, check_disk_cache_size)
-    
+
     # Launch gtk+ main loop
     Gtk.main()
 
@@ -1039,7 +1039,7 @@ def _shutdown_dialog_callback(dialog, response_id, no_dialog_shutdown=False):
 
     clipeffectseditor.shutdown_polling()
     compositeeditor.shutdown_polling()
-    jobs.shutdown_polling()
+
     
     # Save window dimensions on exit
     alloc = gui.editor_window.window.get_allocation()
@@ -1084,5 +1084,12 @@ def _app_destroy():
     except:
         print("Delete autosave file FAILED!")
 
-    # Exit gtk main loop.
-    Gtk.main_quit()
+    do_gtk_main_quit = jobs.handle_shutdown(get_instance_autosave_file())
+    
+    # Exit gtk main loop if no jobs unfinished.
+    if do_gtk_main_quit == True:
+        Gtk.main_quit()
+    else:
+        # Jobs lauches its own top level window to show progress on unfinished jobs renders
+        # and does Gtk.main_quit() later when done.
+        pass

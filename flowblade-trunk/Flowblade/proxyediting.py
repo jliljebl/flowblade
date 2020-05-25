@@ -31,7 +31,7 @@ from gi.repository import Gtk, Gdk
 import app
 import appconsts
 import atomicfile
-import dialogs
+#import dialogs
 import dialogutils
 import editorpersistance
 import editorstate

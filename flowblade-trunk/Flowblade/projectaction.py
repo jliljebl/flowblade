@@ -204,6 +204,7 @@ class LoadThread(threading.Thread):
         # whereas other loads clear the flag above.
         if self.is_first_video_load == True:
             projectdata.media_files_changed_since_last_save = True
+            project.last_save_path = None # This gets set to the temp file saved to change profile which is not correct.
 
         ticker.stop_ticker()
 

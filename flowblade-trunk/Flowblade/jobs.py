@@ -19,7 +19,7 @@
 """
 
 
-from gi.repository import Gtk, GLib, Gdk
+from gi.repository import Gtk, GLib, Gdk, GdkPixbuf
 from gi.repository import GObject
 from gi.repository import Pango
 
@@ -36,8 +36,10 @@ import gui
 import guicomponents
 import guiutils
 import motionheadless
+import persistance
 import proxyheadless
 import respaths
+import userfolders
 import utils
 
 QUEUED = 0
@@ -65,6 +67,8 @@ _jobs = [] # proxy objects that represent background renders and provide info on
 _remove_list = [] # objects are removed from GUI with delay to give user time to notice copmpletion
 
 jobs_notebook_index = 4 # 4 for single window, app.py sets to 3 for two windows
+
+_jobs_render_progress_window = None
 
 
 class JobProxy: # This object represnts job in job queue. 
@@ -144,7 +148,7 @@ def add_job(job_proxy):
     if _status_polling_thread == None:
         _status_polling_thread = ContainerStatusPollingThread()
         _status_polling_thread.start()
-            
+
 def update_job_queue(job_msg): # We're using JobProxy objects as messages to update values on jobs in _jobs list.
     global _jobs_list_view, _remove_list
     row = -1
@@ -226,6 +230,8 @@ def get_jobs_panel():
     panel.set_size_request(400, 10)
 
     return panel
+
+
 
 
 
@@ -636,6 +642,12 @@ class ContainerStatusPollingThread(threading.Thread):
                 if job.status != QUEUED:
                     job.callback_object.update_render_status() # Make sure these methods enter/exit Gtk threads.
 
+            if _jobs_render_progress_window != None and len(_jobs) != 0:
+                _jobs_render_progress_window.update_render_progress()
+            elif _jobs_render_progress_window != None and len(_jobs) == 0:
+                _jobs_render_progress_window.jobs_completed()
+                self.abort = True
+                
             time.sleep(0.5)
 
     def shutdown(self):
@@ -652,4 +664,128 @@ def shutdown_polling():
 
 
 
-# ---------------------------------------------------------------
+# --------------------------------------------------------------- post-close jobs progress 
+def handle_shutdown(autosave_file):
+    # Called just before maybe calling Gtk.main_quit() on app shutdown.
+    if len(_jobs) == 0:
+        # Shutdown polling thread, no jobs so no aborts are done.
+        shutdown_polling()
+        return True # Do Gtk.main_quit()
+        
+    else:
+        # Unfinished jobs, launch progress window to info user after main app closed.
+        global _jobs_render_progress_window
+        _jobs_render_progress_window = JobsRenderProgressWindow(autosave_file)
+        return False  # Do NOT do Gtk.main_quit()
+
+class JobsRenderProgressWindow:
+
+    def __init__(self, autosave_file):
+        
+        # Window
+        self.window = Gtk.Window(Gtk.WindowType.TOPLEVEL)
+        self.window.connect("delete-event", lambda w, e:self.close_window())
+        app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowbladebatchappicon.png")
+        self.window.set_icon(app_icon)
+        
+        self.last_saved_job = None
+        self.start_time = time.monotonic()
+        self.autosave_file = autosave_file
+        
+        self.render_progress_bar = Gtk.ProgressBar()
+        self.render_progress_bar.set_text("0 %")
+        
+        prog_align = guiutils.set_margins(self.render_progress_bar, 0, 0, 6, 0)
+        prog_align.set_size_request(550, 30)
+        self.elapsed_value = Gtk.Label()
+        self.current_render_value = Gtk.Label()
+        self.items_value = Gtk.Label()
+        
+        est_label = guiutils.get_right_justified_box([guiutils.bold_label(_("Elapsed:"))])
+        items_label = guiutils.get_right_justified_box([guiutils.bold_label(_("Jobs Remaining Item:"))])
+        current_label = guiutils.get_right_justified_box([guiutils.bold_label(_("Current Job:"))])
+
+        est_label.set_size_request(250, 20)
+        current_label.set_size_request(250, 20)
+        items_label.set_size_request(250, 20)
+
+        self.status_label = Gtk.Label()
+        self.status_label.set_text(_("Rendering"))
+        cancel_button = Gtk.Button(_("Cancel All Jobs"))
+        
+        control_row = Gtk.HBox(False, 0)
+        control_row.pack_start(self.status_label, False, False, 0)
+        control_row.pack_start(Gtk.Label(), True, True, 0)
+        control_row.pack_start(cancel_button, False, False, 0)
+        
+        info_vbox = Gtk.VBox(False, 0)
+        info_vbox.pack_start(guiutils.get_left_justified_box([est_label, self.elapsed_value]), False, False, 0)
+        info_vbox.pack_start(guiutils.get_left_justified_box([items_label, self.items_value]), False, False, 0)
+        info_vbox.pack_start(guiutils.get_left_justified_box([current_label, self.current_render_value]), False, False, 0)
+
+        progress_vbox = Gtk.VBox(False, 2)
+        progress_vbox.pack_start(info_vbox, False, False, 0)
+        progress_vbox.pack_start(guiutils.get_pad_label(10, 8), False, False, 0)
+        progress_vbox.pack_start(prog_align, False, False, 0)
+        progress_vbox.pack_start(control_row, False, False, 0)
+
+        alignment = guiutils.set_margins(progress_vbox, 12, 12, 12, 12)
+        alignment.show_all()
+
+        # Set pane and show window
+        self.window.add(alignment)
+        self.window.set_title(_("Jobs Render Progress"))
+        self.window.set_position(Gtk.WindowPosition.CENTER)  
+        self.window.show_all()
+    
+    def jobs_completed(self):
+        self.close_window()
+
+    def update_render_progress(self):
+        job = _jobs[0]
+        
+        if job.status == COMPLETED and self.last_saved_job != id(job):
+            
+            Gdk.threads_enter()
+            self.status_label.set_text(_("Saving..."))
+            Gdk.threads_leave()
+            
+            self.last_saved_job = id(job)
+            self.save_project()
+        else:
+            Gdk.threads_enter()
+            self.status_label.set_text(_("Rendering"))
+            Gdk.threads_leave()
+            
+        Gdk.threads_enter()
+
+        elapsed = time.monotonic() - self.start_time
+        elapsed_str= "  " + utils.get_time_str_for_sec_float(elapsed)
+        self.elapsed_value .set_text(elapsed_str)
+        self.current_render_value.set_text(" " + job.text)
+        self.items_value.set_text( " " + str(len(_jobs)))
+        self.render_progress_bar.set_fraction(job.progress)
+        self.render_progress_bar.set_text(str(int(job.progress * 100)) + " %")
+
+        Gdk.threads_leave()
+    
+    def save_project(self):
+        persistance.show_messages = False
+        if PROJECT().last_save_path != None:
+            save_path = PROJECT().last_save_path 
+        else:
+            save_path = userfolders.get_cache_dir() +  self.autosave_file # if user didn't save before exit, save in autosave file to preserve render work somehow.
+        
+        print("saving", save_path)
+        persistance.save_project(PROJECT(), save_path)
+            
+    def close_window(self):
+        if len(_jobs) != 0:
+            shutdown_polling()
+        else:
+            _status_polling_thread.abort = True
+
+        self.status_label.set_text(_("Renders Complete."))
+        self.save_project()
+            
+        Gtk.main_quit()
