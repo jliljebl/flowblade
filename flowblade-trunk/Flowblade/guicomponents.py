@@ -1568,14 +1568,19 @@ def display_tracks_popup_menu(event, track, callback):
 
     _add_separetor(track_menu)
 
-    normal_size_item = Gtk.RadioMenuItem()
-    normal_size_item.set_label(_("Large Height"))
+    high_size_item = Gtk.RadioMenuItem()
+    high_size_item.set_label(_("High Height"))
+    high_size_item.set_active(track_obj.height == appconsts.TRACK_HEIGHT_HIGH) # appconsts.py
+    high_size_item.connect("activate", callback, (track, "high_height", None))
+    track_menu.append(high_size_item)
+
+    normal_size_item = Gtk.RadioMenuItem().new_with_label([high_size_item], _("Large Height"))
     normal_size_item.set_active(track_obj.height == appconsts.TRACK_HEIGHT_NORMAL)
     normal_size_item.connect("activate", callback, (track, "normal_height", None))
     track_menu.append(normal_size_item)
 
-    small_size_item = Gtk.RadioMenuItem.new_with_label([normal_size_item], _("Normal Height"))
-    small_size_item.set_active(track_obj.height != appconsts.TRACK_HEIGHT_NORMAL)
+    small_size_item = Gtk.RadioMenuItem.new_with_label([high_size_item], _("Normal Height"))
+    small_size_item.set_active(track_obj.height == appconsts.TRACK_HEIGHT_SMALL)
     small_size_item.connect("activate", callback, (track, "small_height", None))
     track_menu.append(small_size_item)
 
