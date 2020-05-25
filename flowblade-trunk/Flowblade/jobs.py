@@ -80,6 +80,7 @@ class JobProxy: # This object represnts job in job queue.
 
         # callback_object have to implement interface:
         #     start_render()
+        #     update_render_status()
         #     abort_render()
         self.callback_object = callback_object
 
@@ -623,11 +624,7 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
 class ContainerStatusPollingThread(threading.Thread):
     
     def __init__(self):
-        # To provide status updates into job queue qbjects in _jobs list must implement interface:
-        #
-        # update_render_status()
-        #
-        
+
         self.abort = False
 
         threading.Thread.__init__(self)
@@ -637,7 +634,7 @@ class ContainerStatusPollingThread(threading.Thread):
         while self.abort == False:
             for job in _jobs:
                 if job.status != QUEUED:
-                    job.update_render_status() # Make sure these methods enter/exit Gtk threads.
+                    job.callback_object.update_render_status() # Make sure these methods enter/exit Gtk threads.
 
             time.sleep(0.5)
 
@@ -652,3 +649,7 @@ def shutdown_polling():
         return
     
     _status_polling_thread.shutdown()
+
+
+
+# ---------------------------------------------------------------

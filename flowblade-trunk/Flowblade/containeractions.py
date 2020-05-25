@@ -443,7 +443,6 @@ class GMicContainerActions(AbstractContainerActionObject):
     def get_job_proxy(self):
         job_proxy = jobs.JobProxy(self.get_container_program_id(), self)
         job_proxy.type = jobs.CONTAINER_CLIP_RENDER_GMIC
-        job_proxy.update_render_status = self.update_render_status
         return job_proxy
 
     def get_job_name(self):
@@ -575,7 +574,6 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
     def get_job_proxy(self):
         job_proxy = jobs.JobProxy(self.get_container_program_id(), self)
         job_proxy.type = jobs.CONTAINER_CLIP_RENDER_MLT_XML
-        job_proxy.update_render_status = self.update_render_status
         return job_proxy
 
     def get_job_name(self):
@@ -690,7 +688,6 @@ class BlenderContainerActions(AbstractContainerActionObject):
     def get_job_proxy(self):
         job_proxy = jobs.JobProxy(self.get_container_program_id(), self)
         job_proxy.type = jobs.CONTAINER_CLIP_RENDER_BLENDER
-        job_proxy.update_render_status = self.update_render_status
         return job_proxy
 
     def get_job_name(self):
