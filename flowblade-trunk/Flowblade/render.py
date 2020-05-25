@@ -75,6 +75,7 @@ motion_progress_update = None
 transition_render_done_callback = None
 
 # ---------------------------------- rendering action and dialogs
+"""
 class RenderLauncher(threading.Thread):
     
     def __init__(self, render_consumer, start_frame, end_frame):
@@ -100,7 +101,7 @@ class RenderLauncher(threading.Thread):
 
         PLAYER().set_render_callbacks(callbacks)
         PLAYER().start_rendering(self.render_consumer, self.start_frame, self.end_frame)
-
+"""
 def get_args_vals_list_for_current_selections():
     profile = get_current_profile()
     encoding_option_index = widgets.encoding_panel.encoding_selector.widget.get_active()
@@ -250,7 +251,7 @@ def enable_user_rendering(value):
     widgets.profile_panel.set_sensitive(value)
     widgets.info_panel.set_sensitive(value)
     widgets.args_panel.set_sensitive(value)
-
+"""
 def set_render_gui():
     progress_window.status_label.set_text(_("<b>Output File: </b>") + get_file_path())
     progress_window.status_label.set_use_markup(True)
@@ -259,11 +260,12 @@ def set_render_gui():
     progress_window.passed_time_label.set_text(_("<b>Render time: </b>"))
     progress_window.passed_time_label.set_use_markup(True)
     progress_window.progress_bar.set_text("0%")
-
+"""
 def save_render_start_time():
     global render_start_time
     render_start_time = time.time()
-    
+
+"""
 def set_render_progress_gui(fraction):
     progress_window.progress_bar.set_fraction(fraction)
     pros = int(fraction * 100)
@@ -305,6 +307,7 @@ def exit_render_gui():
     
     dialogutils.delay_destroy_window(progress_window, 2.0)
     progress_window = None
+"""
 
 def maybe_open_rendered_file_in_bin():
     if widgets.args_panel.open_in_bin.get_active() == False:
