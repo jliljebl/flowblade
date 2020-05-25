@@ -63,7 +63,7 @@ open_media_file_callback = None # monkeypatched in by app.py to avoid circular i
 
 render_start_time = 0
 widgets = utils.EmptyClass()
-progress_window = None
+# progress_window = None
 
 aborted = False
 

@@ -402,7 +402,7 @@ class Player:
         self.consumer.start()
         self.producer.set_speed(1)
         self.is_rendering = True
-        self.render_callbacks.save_render_start_time()
+        #self.render_callbacks.save_render_start_time()
         self.ticker.start_ticker(RENDER_TICKER_DELAY)
 
     def stop_rendering(self):
