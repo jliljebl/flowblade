@@ -639,9 +639,10 @@ class ContainerStatusPollingThread(threading.Thread):
 
         while self.abort == False:
             for job in _jobs:
-                if job.status != QUEUED:
+                if job.status == RENDERING:
                     job.callback_object.update_render_status() # Make sure these methods enter/exit Gtk threads.
 
+            # Handling post-app-close jobs rendering.
             if _jobs_render_progress_window != None and len(_jobs) != 0:
                 _jobs_render_progress_window.update_render_progress()
             elif _jobs_render_progress_window != None and len(_jobs) == 0:

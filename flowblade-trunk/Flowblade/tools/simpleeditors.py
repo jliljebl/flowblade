@@ -140,8 +140,21 @@ class BlenderProgramEditorWindow(Gtk.Window):
         self.show_all()
 
     def render_preview_frame(self):
-        preview_frame = int(self.preview_panel.frame_select.get_value())
-        self.container_action.render_blender_preview(self.editors, preview_frame)
+        self.preview_frame = int(self.preview_panel.frame_select.get_value())
+        self.container_action.render_blender_preview(self, self.editors, self.preview_frame)
+
+    def get_preview_file(self):
+        filled_number_str = str(self.preview_frame).zfill(4)
+        return self.container_action.get_preview_media_dir() + "/frame" + filled_number_str + ".png"
+
+    def preview_render_complete(self):
+        print("preview_render_complete")
+        self.preview_panel.preview_surface = cairo.ImageSurface.create_from_png(self.get_preview_file())
+
+        #render_time = time.time() - start_time
+        #time_str = "{0:.2f}".format(round(render_time,2))
+        self.preview_panel.preview_info.set_markup("<small>" + _("Preview for frame: ") + str(int(self.preview_panel.frame_select.get_value()))  + "</small>")
+        self.preview_panel.preview_monitor.queue_draw()
         
     def shutdown(self):
         pass
@@ -325,7 +338,9 @@ class PreviewPanel(Gtk.VBox):
         GObject.GObject.__init__(self)
 
         self.frame = 0
-
+        self.parent = parent
+        self.preview_surface = None
+        
         self.preview_info = Gtk.Label()
         self.preview_info.set_markup("<small>" + _("no preview") + "</small>" )
         preview_info_row = Gtk.HBox()
@@ -364,15 +379,16 @@ class PreviewPanel(Gtk.VBox):
 
     def _draw_preview(self, event, cr, allocation):
         x, y, w, h = allocation
-        """
-        if _current_preview_surface != None:
-            width, height, pixel_aspect = _current_dimensions
-            scale = float(MONITOR_WIDTH) / float(width)
-            cr.scale(scale * pixel_aspect, scale)
-            cr.set_source_surface(_current_preview_surface, 0, 0)
+
+        if self.preview_surface != None:
+            sw = self.preview_surface.get_width ()
+            sh = self.preview_surface.get_height ()
+            scale = float(w) / float(sw)
+            cr.scale(scale, scale) # pixel aspect ratio not used, correct result only for square pixel
+            cr.set_source_surface(self.preview_surface, 0, 0)
             cr.paint()
         else:
-        """
-        cr.set_source_rgb(0.0, 0.0, 0.0)
-        cr.rectangle(0, 0, w, h)
-        cr.fill()
+        
+            cr.set_source_rgb(0.0, 0.0, 0.0)
+            cr.rectangle(0, 0, w, h)
+            cr.fill()

@@ -271,18 +271,14 @@ class FolderFramesInfo:
         for f in onlyfiles:
             try:
                 file_number_part = int(re.findall("[0-9]+", f)[-1]) # -1, we want the last number part
-                print(int(file_number_part))
                 existing_files[int(file_number_part)] = f
             except:
                 continue
 
         for i in range(start, end + 1):
             try:
-                print(i)
                 f = existing_files[i]
-                print(i, f)
             except:
-                print("iiii")
                 return False
         
         return True

@@ -293,6 +293,7 @@ class AbstractContainerActionObject:
         print("AbstractContainerActionObject.abort_render not impl")
 
     def create_producer_and_do_update_edit(self, unused_data):
+
         # Using frame sequence as clip
         if  self.container_data.render_data.do_video_render == False:
             resource_path = self.get_rendered_frame_sequence_resource_path()
@@ -729,7 +730,6 @@ class BlenderContainerActions(AbstractContainerActionObject):
         # Make sure preview render does not try to create video clip.
         render_data = copy.deepcopy(self.container_data.render_data)
         if self.render_type == PREVIEW_RENDER:
-            print("iii PREVIEW_RENDER")
             render_data.do_video_render = False
             render_data.is_preview_render = True
     
@@ -813,7 +813,7 @@ class BlenderContainerActions(AbstractContainerActionObject):
             if self.render_type != PREVIEW_RENDER:
                 GLib.idle_add(self.create_producer_and_do_update_edit, None)
             else:
-                print("preview done")
+                self.program_editor_window.preview_render_complete()
                 
         else:
             status = blenderheadless.get_session_status(self.get_container_program_id())
@@ -845,7 +845,8 @@ class BlenderContainerActions(AbstractContainerActionObject):
     def edit_program(self, clip):
         simpleeditors.show_blender_container_clip_program_editor(self.project_edit_done, clip, self, self.container_data.data_slots["project_edit_info"])
 
-    def render_blender_preview(self, editors, preview_frame):
+    def render_blender_preview(self, program_editor_window, editors, preview_frame):
+        self.program_editor_window = program_editor_window
         self.update_program_values_from_editors(editors)
         self.render_preview(None, preview_frame, 0)
 
