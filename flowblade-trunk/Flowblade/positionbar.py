@@ -202,7 +202,7 @@ class PositionBar:
         cr.set_source_surface(self.POINTER_ICON, self._pos - 3, 0)
         cr.paint()
 
-        # This only needed when this widget is used in main app, 
+        # This is only needed when this widget is used in main app, 
         # for gmic.py process self.handle_trimmodes == False.
         if self.handle_trimmodes == True:
             speed = editorstate.PLAYER().producer.get_speed()

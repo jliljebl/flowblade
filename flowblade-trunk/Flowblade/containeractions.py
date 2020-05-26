@@ -59,6 +59,7 @@ import utils
 
 FULL_RENDER = 0
 CLIP_LENGTH_RENDER = 1
+PREVIEW_RENDER = 2
 
 OVERLAY_COLOR = (0.17, 0.23, 0.63, 0.5)
 
@@ -181,6 +182,14 @@ class AbstractContainerActionObject:
         
         # Render starts on callback from jobs.py
 
+    def render_preview(self, clip, frame, frame_start_offset):
+        self.render_type = PREVIEW_RENDER
+        self.clip = clip # This can be None because we are not doing a render update edit after render.
+        self.launch_render_data = (clip, frame, frame + 1, frame_start_offset)
+
+        job_proxy = self.get_launch_job_proxy()
+        jobs.add_job(job_proxy)
+
     def start_render(self):
         clip, range_in, range_out, clip_start_offset = self.launch_render_data
         self._launch_render(clip, range_in, range_out, clip_start_offset)
@@ -205,10 +214,16 @@ class AbstractContainerActionObject:
 
     def get_rendered_media_dir(self):
         if self.container_data.render_data.save_internally == True:
-            return self.get_session_dir() + gmicheadless.RENDERED_FRAMES_DIR
+            return self.get_session_dir() + appconsts.CC_RENDERED_FRAMES_DIR
         else:
-            return self.container_data.render_data.render_dir + gmicheadless.RENDERED_FRAMES_DIR
-            
+            return self.container_data.render_data.render_dir + appconsts.CC_RENDERED_FRAMES_DIR
+
+    def get_preview_media_dir(self):
+        if self.container_data.render_data.save_internally == True:
+            return self.get_session_dir() + appconsts.CC_PREVIEW_RENDER_DIR
+        else:
+            return self.container_data.render_data.render_dir + appconsts.CC_PREVIEW_RENDER_DIR
+
     def get_container_program_id(self):
         id_md_str = str(self.container_data.container_clip_uid) + str(self.container_data.container_type) + self.container_data.program + self.container_data.unrendered_media #
         return hashlib.md5(id_md_str.encode('utf-8')).hexdigest() 
@@ -711,7 +726,14 @@ class BlenderContainerActions(AbstractContainerActionObject):
         if self.container_data.render_data == None:
             self.container_data.render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
         
-        blenderheadless.set_render_data(self.get_container_program_id(), self.container_data.render_data)
+        # Make sure preview render does not try to create video clip.
+        render_data = copy.deepcopy(self.container_data.render_data)
+        if self.render_type == PREVIEW_RENDER:
+            print("iii PREVIEW_RENDER")
+            render_data.do_video_render = False
+            render_data.is_preview_render = True
+    
+        blenderheadless.set_render_data(self.get_container_program_id(), render_data)
         
         # Write current render target container clip for blenderrendersetup.py
         cont_info_id_path = userfolders.get_cache_dir() + "blender_render_container_id"
@@ -720,7 +742,15 @@ class BlenderContainerActions(AbstractContainerActionObject):
             outfile.write(str(self.get_container_program_id()))
 
         # Write current render set up exec lines for blenderrendersetup.py
-        render_exec_lines = 'bpy.context.scene.render.filepath = "' + self.get_rendered_media_dir() + '/frame"' + NEWLINE \
+        if self.render_type != PREVIEW_RENDER:
+            file_path_str = 'bpy.context.scene.render.filepath = "' + self.get_rendered_media_dir() + '/frame"' + NEWLINE
+        else:
+            file_path_str = 'bpy.context.scene.render.filepath = "' + self.get_preview_media_dir() + '/frame"' + NEWLINE
+            if not os.path.exists(self.get_preview_media_dir()):
+                os.mkdir(self.get_preview_media_dir())
+            
+        print(file_path_str)
+        render_exec_lines = file_path_str \
         + 'bpy.context.scene.render.fps = 24' + NEWLINE \
         + 'bpy.context.scene.render.image_settings.file_format = "PNG"' + NEWLINE \
         + 'bpy.context.scene.render.image_settings.color_mode = "RGBA"' + NEWLINE \
@@ -780,7 +810,10 @@ class BlenderContainerActions(AbstractContainerActionObject):
             job_msg = self.get_completed_job_message()
             jobs.update_job_queue(job_msg)
             
-            GLib.idle_add(self.create_producer_and_do_update_edit, None)
+            if self.render_type != PREVIEW_RENDER:
+                GLib.idle_add(self.create_producer_and_do_update_edit, None)
+            else:
+                print("preview done")
                 
         else:
             status = blenderheadless.get_session_status(self.get_container_program_id())
@@ -810,27 +843,34 @@ class BlenderContainerActions(AbstractContainerActionObject):
         return self._create_icon_default_action()
 
     def edit_program(self, clip):
-        simpleeditors.show_blender_container_clip_program_editor(self.project_edit_done, self.container_data.data_slots["project_edit_info"])
-        
+        simpleeditors.show_blender_container_clip_program_editor(self.project_edit_done, clip, self, self.container_data.data_slots["project_edit_info"])
+
+    def render_blender_preview(self, editors, preview_frame):
+        self.update_program_values_from_editors(editors)
+        self.render_preview(None, preview_frame, 0)
+
     def project_edit_done(self, dialog, response_id, editors):
         if response_id == Gtk.ResponseType.ACCEPT:
-            
-            objects = self.blender_project_objects("objects")
-            materials = self.blender_project_objects("materials")
-            curves = self.blender_project_objects("curves")
-            
-            for guieditor in editors:
-                value = guieditor.get_value()
-                obj_name, prop_path = guieditor.id_data
+            self.update_program_values_from_editors(editors)
 
-                self.set_edited_object_value(objects, obj_name, prop_path, value)
-                self.set_edited_object_value(materials, obj_name, prop_path, value)
-                self.set_edited_object_value(curves, obj_name, prop_path, value)
 
             dialog.destroy()
         else:
             dialog.destroy()
 
+    def update_program_values_from_editors(self, editors):
+        objects = self.blender_project_objects("objects")
+        materials = self.blender_project_objects("materials")
+        curves = self.blender_project_objects("curves")
+        
+        for guieditor in editors:
+            value = guieditor.get_value()
+            obj_name, prop_path = guieditor.id_data
+
+            self.set_edited_object_value(objects, obj_name, prop_path, value)
+            self.set_edited_object_value(materials, obj_name, prop_path, value)
+            self.set_edited_object_value(curves, obj_name, prop_path, value)
+                
     def set_edited_object_value(self, objects, obj_name, prop_path, value):
         for obj in objects:
             if obj[0] == obj_name:

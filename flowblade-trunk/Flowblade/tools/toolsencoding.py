@@ -38,7 +38,7 @@ import utils
 # - when this module is used in main application process it is important that e.g.widgets object 
 #   is created each time module is used to set rendering values for e.g. container clips.
 # - when used by a rendering process like gmicheadless.py we are again good to use module freely,
-#   process cotrols values in this module fully.
+#   G'Mic tool process controls values in this module fully.
 widgets = None
 disable_audio_encoding = False
 default_profile_index = None
@@ -47,7 +47,9 @@ default_profile_index = None
 
 class ToolsRenderData():
     """
-    This is used to save render selections defined by user.
+    This is used to save and communicate render selections defined by user
+    for renders other the main application timeline render such as G'Mic tool and Container 
+    clips renders.
     """
     def __init__(self):
         self.profile_index = None
@@ -64,6 +66,7 @@ class ToolsRenderData():
         self.do_video_render = True
         self.save_internally = True
         self.frame_name = "frame"
+        self.is_preview_render = False
 
 
 def create_container_clip_default_render_data_object(profile):

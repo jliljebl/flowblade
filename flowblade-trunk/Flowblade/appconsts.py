@@ -167,6 +167,7 @@ CONTAINER_CLIPS_DIR = "container_clips"
 CONTAINER_CLIPS_UNRENDERED = "container_clips/unrendered"
 CC_CLIP_FRAMES_DIR = "/clip_frames"
 CC_RENDERED_FRAMES_DIR = "/rendered_frames"
+CC_PREVIEW_RENDER_DIR = "/preview_frames"
 
 # Luma bands
 SHADOWS = 0

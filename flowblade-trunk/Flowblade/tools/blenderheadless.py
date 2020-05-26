@@ -130,17 +130,22 @@ def main(root_path, session_id, project_path, range_in, range_out, profile_desc)
     
     log_path = GLib.get_user_cache_dir() + "/blenderrenderlog"
     FLOG = open(log_path, 'w')
+    
     render_setup_script = respaths.ROOT_PATH + "/tools/blenderrendersetup.py"
     blender_launch = "/usr/bin/blender -b " + project_path + " -P " + render_setup_script
 
     global _start_time
     _start_time = time.monotonic()
 
-    # Delete old frames
-    rendered_frames_folder = ccrutils.rendered_frames_folder()
-    for frame_file in os.listdir(rendered_frames_folder):
-        file_path = os.path.join(rendered_frames_folder, frame_file)
-        os.remove(file_path)
+    render_data = ccrutils.get_render_data()
+    print(render_data.__dict__)
+    
+    # Delete old frames for non-preview renders.
+    if render_data.is_preview_render == False:
+        rendered_frames_folder = ccrutils.rendered_frames_folder()
+        for frame_file in os.listdir(rendered_frames_folder):
+            file_path = os.path.join(rendered_frames_folder, frame_file)
+            os.remove(file_path)
             
     p = subprocess.Popen(blender_launch, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG, preexec_fn=os.setsid)
 
@@ -152,7 +157,7 @@ def main(root_path, session_id, project_path, range_in, range_out, profile_desc)
     if manager_thread.abort == True:
         return
 
-    render_data = ccrutils.get_render_data()
+
 
     # Render video
     if render_data.do_video_render == True:
@@ -181,6 +186,9 @@ def main(root_path, session_id, project_path, range_in, range_out, profile_desc)
             file_path = ccrutils.session_folder() +  "/" + appconsts.CONTAINER_CLIP_VIDEO_CLIP_NAME + render_data.file_extension
         else:
             file_path = render_data.render_dir +  "/" + render_data.file_name + render_data.file_extension
+    
+        print(file_path)
+        
     
         consumer = renderconsumer.get_mlt_render_consumer(file_path, profile, args_vals_list)
         
