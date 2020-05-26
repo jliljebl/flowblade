@@ -54,6 +54,7 @@ SYNC_LOCKED = appconsts.SYNC_LOCKED # FEATURE NOT AVAILABLE TO USER CURRENTLY!
 LOCKED = appconsts.LOCKED # no edits allowed
 
 # Display heights
+TRACK_HEIGHT_HIGH = appconsts.TRACK_HEIGHT_HIGH # track height in canvas and column
 TRACK_HEIGHT_NORMAL = appconsts.TRACK_HEIGHT_NORMAL # track height in canvas and column
 TRACK_HEIGHT_SMALL = appconsts.TRACK_HEIGHT_SMALL # track height in canvas and column
 
