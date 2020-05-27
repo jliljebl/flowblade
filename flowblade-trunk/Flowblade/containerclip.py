@@ -58,7 +58,7 @@ class ContainerClipData:
             
             self.unrendered_media = unrendered_media
             self.unrendered_length = None
-            # This can get set later for some container types
+            # This gets set later for some container types
             if unrendered_media != None:
                 self.unrendered_type = utils.get_media_type(unrendered_media)
             else:

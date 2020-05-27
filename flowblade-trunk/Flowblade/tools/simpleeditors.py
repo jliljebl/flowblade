@@ -27,6 +27,8 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk
 from gi.repository import GObject
 import cairo
+import copy
+import time
 
 import cairoarea
 import editorstate
@@ -50,11 +52,11 @@ NO_PREVIEW_FILE = "fallback_thumb.png"
 MIN_VAL = -pow(2, 63) 
 MAX_VAL = pow(2, 63)
 
-    
 SIMPLE_EDITOR_LEFT_WIDTH = 150
 MONITOR_WIDTH = 500
-MONITOR_HEIGHT = 300 # initial value, this gets changed when material is loaded
+MONITOR_HEIGHT = 300
 
+# -------------------------------------------------------------------- Blender container clip program values edit
 def show_blender_container_clip_program_editor(callback, clip, container_action, program_info_json):
     editor_window = BlenderProgramEditorWindow(callback, clip, container_action, program_info_json)
 
@@ -63,10 +65,15 @@ class BlenderProgramEditorWindow(Gtk.Window):
     def __init__(self, callback, clip, container_action, program_info_json):
         
         GObject.GObject.__init__(self)
-
+        self.connect("delete-event", lambda w, e: self.cancel())
+        
+        self.callback = callback
         self.clip = clip
         self.container_action = container_action
- 
+        self.orig_program_info_json = copy.deepcopy(program_info_json)
+         
+        self.preview_frame = -1 # -1 used as flag that no preview renders ongoing and new one can be started
+         
         # Create panels for objects
         editors = []
         blender_objects = program_info_json["objects"]
@@ -112,8 +119,10 @@ class BlenderProgramEditorWindow(Gtk.Window):
             editors_panel = pane
 
         cancel_b = guiutils.get_sized_button(_("Cancel"), 150, 32)
+        cancel_b.connect("clicked", lambda w: self.cancel())
         save_b = guiutils.get_sized_button(_("Save Changes"), 150, 32)
-
+        save_b.connect("clicked", lambda w: self.save())
+        
         buttons_box = Gtk.HBox(False, 2)
         buttons_box.pack_start(Gtk.Label(), True, True, 0)
         buttons_box.pack_start(cancel_b, False, False, 0)
@@ -140,6 +149,12 @@ class BlenderProgramEditorWindow(Gtk.Window):
         self.show_all()
 
     def render_preview_frame(self):
+        if self.preview_frame != -1:
+            print("no")
+            return # There already is preview render ongoing.
+        self.start_time = time.monotonic()
+
+        self.preview_panel.preview_info.set_markup("<small>Rendering preview...</small>")
         self.preview_frame = int(self.preview_panel.frame_select.get_value())
         self.container_action.render_blender_preview(self, self.editors, self.preview_frame)
 
@@ -150,14 +165,20 @@ class BlenderProgramEditorWindow(Gtk.Window):
     def preview_render_complete(self):
         print("preview_render_complete")
         self.preview_panel.preview_surface = cairo.ImageSurface.create_from_png(self.get_preview_file())
-
-        #render_time = time.time() - start_time
-        #time_str = "{0:.2f}".format(round(render_time,2))
-        self.preview_panel.preview_info.set_markup("<small>" + _("Preview for frame: ") + str(int(self.preview_panel.frame_select.get_value()))  + "</small>")
-        self.preview_panel.preview_monitor.queue_draw()
+        self.preview_frame = -1
         
-    def shutdown(self):
-        pass
+        render_time = time.monotonic() - self.start_time
+        time_str = "{0:.2f}".format(round(render_time,2))
+        frame_str = str(int(self.preview_panel.frame_select.get_value()))
+        self.preview_panel.preview_info.set_markup("<small>" + _("Preview for frame: ") +  frame_str + _(", render time: ") + time_str +  "</small>")
+        self.preview_panel.preview_monitor.queue_draw()
+
+    def cancel(self):
+        self.callback(False, self, self.editors, self.orig_program_info_json)
+
+    def save(self):
+        self.callback(True, self, self.editors, None)
+        
     
 def _get_panel_and_create_editors(objects, pane_title, editors):
     panels = []
@@ -339,7 +360,7 @@ class PreviewPanel(Gtk.VBox):
 
         self.frame = 0
         self.parent = parent
-        self.preview_surface = None
+        self.preview_surface = None # gets set by parent on preview completion
         
         self.preview_info = Gtk.Label()
         self.preview_info.set_markup("<small>" + _("no preview") + "</small>" )
@@ -369,8 +390,6 @@ class PreviewPanel(Gtk.VBox):
         control_panel.pack_start(Gtk.Label(), True, True, 0)
         control_panel.pack_start(self.preview_button, False, False, 0)
 
-
-        #self.widget = Gtk.VBox(False, 2)
         self.pack_start(preview_info_row, False, False, 0)
         self.pack_start(self.preview_monitor, False, False, 0)
         self.pack_start(guiutils.pad_label(4,4), False, False, 0)
@@ -384,11 +403,10 @@ class PreviewPanel(Gtk.VBox):
             sw = self.preview_surface.get_width ()
             sh = self.preview_surface.get_height ()
             scale = float(w) / float(sw)
-            cr.scale(scale, scale) # pixel aspect ratio not used, correct result only for square pixel
+            cr.scale(scale, scale) # pixel aspect ratio not used in computation, correct image only for square pixel formats.
             cr.set_source_surface(self.preview_surface, 0, 0)
             cr.paint()
         else:
-        
             cr.set_source_rgb(0.0, 0.0, 0.0)
             cr.rectangle(0, 0, w, h)
             cr.fill()

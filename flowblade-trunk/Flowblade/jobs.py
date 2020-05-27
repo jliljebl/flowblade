@@ -679,6 +679,7 @@ def handle_shutdown(autosave_file):
         _jobs_render_progress_window = JobsRenderProgressWindow(autosave_file)
         return False  # Do NOT do Gtk.main_quit()
 
+
 class JobsRenderProgressWindow:
 
     def __init__(self, autosave_file):

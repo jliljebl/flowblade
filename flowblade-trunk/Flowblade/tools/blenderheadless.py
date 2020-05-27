@@ -95,8 +95,6 @@ def main(root_path, session_id, project_path, range_in, range_out, profile_desc)
     except:
         editorstate.mlt_version = "0.0.99" # magic string for "not found"
 
-    ccrutils.prints_to_log_file("/home/janne/blenderrrender")
-
     # Set paths.
     respaths.set_paths(root_path)
 
@@ -138,25 +136,32 @@ def main(root_path, session_id, project_path, range_in, range_out, profile_desc)
     _start_time = time.monotonic()
 
     render_data = ccrutils.get_render_data()
-    print(render_data.__dict__)
+
     
-    # Delete old frames for non-preview renders.
+    # Delete old rendered frames for non-preview renders.
     if render_data.is_preview_render == False:
         rendered_frames_folder = ccrutils.rendered_frames_folder()
         for frame_file in os.listdir(rendered_frames_folder):
             file_path = os.path.join(rendered_frames_folder, frame_file)
             os.remove(file_path)
-            
+    else: 
+        # For preview render delete preview frames
+        preview_frames_folder =  ccrutils.preview_frames_folder()
+        for frame_file in os.listdir(preview_frames_folder):
+            file_path = os.path.join(preview_frames_folder, frame_file)
+            os.remove(file_path)
+
+
     p = subprocess.Popen(blender_launch, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG, preexec_fn=os.setsid)
 
-    manager_thread = ProgressPollingThread(range_in, range_out, p)
+    manager_thread = ProgressPollingThread(range_in, range_out, p, render_data.is_preview_render)
     manager_thread.start()
     
     p.wait()
 
+
     if manager_thread.abort == True:
         return
-
 
 
     # Render video
@@ -187,9 +192,7 @@ def main(root_path, session_id, project_path, range_in, range_out, profile_desc)
         else:
             file_path = render_data.render_dir +  "/" + render_data.file_name + render_data.file_extension
     
-        print(file_path)
-        
-    
+
         consumer = renderconsumer.get_mlt_render_consumer(file_path, profile, args_vals_list)
         
         # Render producer
@@ -225,6 +228,9 @@ def main(root_path, session_id, project_path, range_in, range_out, profile_desc)
             
             time.sleep(1.0)
     
+    else:
+         manager_thread.abort = True # to exit while loop and end thread
+         
     ccrutils.write_completed_message()
 
 
@@ -232,10 +238,11 @@ def main(root_path, session_id, project_path, range_in, range_out, profile_desc)
 # ------------------------------------------------------------ poll thread for Blender rendering happening in different process.
 class ProgressPollingThread(threading.Thread):
     
-    def __init__(self, range_in, range_out, process):
+    def __init__(self, range_in, range_out, process, is_preview_render):
         self.range_in = int(range_in)
         self.range_out = int(range_out)
         self.process = process
+        self.is_preview_render = is_preview_render
         self.abort = False
         threading.Thread.__init__(self)
 
@@ -244,15 +251,17 @@ class ProgressPollingThread(threading.Thread):
         
         while self.abort == False and completed == False:
             self.check_abort_request()
-            
-            length = self.range_out - self.range_in
-            written_frames_count = self.get_written_frames_count()
-            fraction = float(written_frames_count) / float(length)
-            self.update_status(fraction)
-            
-            if written_frames_count == length:
-                completed = True
-            
+            if  self.is_preview_render == False:
+                length = self.range_out - self.range_in
+                written_frames_count = self.get_written_frames_count()
+                fraction = float(written_frames_count) / float(length)
+                self.update_status(fraction)
+                
+                if written_frames_count == length:
+                    completed = True
+            else:
+                self.update_status(0.0)
+
             time.sleep(0.5)
         
         if ccrutils.get_render_data().do_video_render == False:

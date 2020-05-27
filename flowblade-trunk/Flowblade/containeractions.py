@@ -185,7 +185,7 @@ class AbstractContainerActionObject:
     def render_preview(self, clip, frame, frame_start_offset):
         self.render_type = PREVIEW_RENDER
         self.clip = clip # This can be None because we are not doing a render update edit after render.
-        self.launch_render_data = (clip, frame, frame + 1, frame_start_offset)
+        self.launch_render_data = (clip, frame, frame, frame_start_offset)
 
         job_proxy = self.get_launch_job_proxy()
         jobs.add_job(job_proxy)
@@ -749,7 +749,6 @@ class BlenderContainerActions(AbstractContainerActionObject):
             if not os.path.exists(self.get_preview_media_dir()):
                 os.mkdir(self.get_preview_media_dir())
             
-        print(file_path_str)
         render_exec_lines = file_path_str \
         + 'bpy.context.scene.render.fps = 24' + NEWLINE \
         + 'bpy.context.scene.render.image_settings.file_format = "PNG"' + NEWLINE \
@@ -805,7 +804,6 @@ class BlenderContainerActions(AbstractContainerActionObject):
         Gdk.threads_enter()
                     
         if blenderheadless.session_render_complete(self.get_container_program_id()) == True:
-            #self.remove_as_status_polling_object()
 
             job_msg = self.get_completed_job_message()
             jobs.update_job_queue(job_msg)
@@ -817,10 +815,12 @@ class BlenderContainerActions(AbstractContainerActionObject):
                 
         else:
             status = blenderheadless.get_session_status(self.get_container_program_id())
-
+            
             if status != None:
                 step, fraction, elapsed = status
                 msg = _("Rendering Image Sequence")
+                if self.render_type == PREVIEW_RENDER:
+                    msg = _("Rendering Preview")
                 if  step == "2":
                      msg = _("Rendering Video")
                      
@@ -850,13 +850,12 @@ class BlenderContainerActions(AbstractContainerActionObject):
         self.update_program_values_from_editors(editors)
         self.render_preview(None, preview_frame, 0)
 
-    def project_edit_done(self, dialog, response_id, editors):
-        if response_id == Gtk.ResponseType.ACCEPT:
+    def project_edit_done(self, response_is_accept, dialog, editors, orig_program_info_json):
+        if response_is_accept == True:
             self.update_program_values_from_editors(editors)
-
-
             dialog.destroy()
         else:
+            self.container_data.data_slots["project_edit_info"] = orig_program_info_json
             dialog.destroy()
 
     def update_program_values_from_editors(self, editors):

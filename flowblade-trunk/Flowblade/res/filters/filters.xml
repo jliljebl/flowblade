@@ -648,15 +648,6 @@
         <group>Color</group>
         <property name="level" args="exptype=keyframe_hcs editor=keyframe_editor range_in=0,200 range_out=0.0,2.0 displayname=Level">0=1.0</property>
     </filter>
-    
-    <!--
-    <filter id="frei0r.balanc0r">
-        <name>White Balance</name>
-        <group>Color</group>
-        <property name="Neutral Color" args="editor=color_select exptype=color displayname=Neutral!Color">#ffffff</property>
-        <property name="Green Tint" args="editor=no_editor exptype=singlekeyframe">0=1.2</property>
-    </filter>
-    -->
     <filter id="rgblut">
         <name>Color Grading</name>
         <group>Color</group>

@@ -172,6 +172,12 @@ def rendered_frames_folder():
     else:
         return _render_data.render_dir + RENDERED_FRAMES_DIR
 
+def preview_frames_folder():
+    if _render_data.save_internally == True:
+        return  _session_folder + appconsts.CC_PREVIEW_RENDER_DIR
+    else:
+        return _render_data.render_dir + appconsts.CC_PREVIEW_RENDER_DIR
+        
 def write_status_message(msg):
     try:
         status_msg_file = session_folder() + "/" + STATUS_MSG_FILE
