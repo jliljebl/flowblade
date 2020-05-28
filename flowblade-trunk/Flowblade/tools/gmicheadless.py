@@ -202,12 +202,12 @@ class GMicHeadlessRunnerThread(threading.Thread):
 
         profile = mltprofiles.get_profile(self.profile_desc)
 
-        # Delete old frames
+        # Delete old clip frames
         for frame_file in os.listdir(clip_frames_folder):
             file_path = os.path.join(clip_frames_folder, frame_file)
             os.remove(file_path)
 
-        # Delete old frames
+        # Delete old rendered frames
         for frame_file in os.listdir(rendered_frames_folder):
             file_path = os.path.join(rendered_frames_folder, frame_file)
             os.remove(file_path)

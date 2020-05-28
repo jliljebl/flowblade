@@ -22,6 +22,7 @@
 Module provides utility methods for moduless creating headless render procesesses.
 Used mostly for container clips rendering, hence ContainerClipsRenderingUTILS.
 """
+
 import os
 import pickle
 import sys
@@ -48,7 +49,7 @@ _rendered_frames_folder_internal = None
 _render_data = None
 
 
-# ----------------------------------------------------- interface with message files, used by main appp
+# ----------------------------------------------------- interface with message files, used by main app
 # We are using message files to communicate with application.
 def clear_flag_files(session_id):
     folder = _get_session_folder(session_id)
@@ -112,7 +113,7 @@ def abort_render(session_id):
             pickle.dump("##abort", outfile)
     except atomicfile.AtomicFileWriteError:
         # Sometimes this fails and not handling it makes things worse, see if this needs more attention.
-        print("atomicfile.AtomicFileWriteError in ccrutils.abotin abort_render(), could not open  for writing: ", folder)
+        print("atomicfile.AtomicFileWriteError in ccrutils.abort_render(), could not open for writing: ", folder)
         
 def _get_session_folder(session_id):
     return userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_DIR +  "/" + session_id

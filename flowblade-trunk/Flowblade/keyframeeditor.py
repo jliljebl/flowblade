@@ -751,7 +751,7 @@ class ClipEditorButtonsRow(Gtk.HBox):
         self.kf_pos_label = Gtk.Label()
         self.modify_font(Pango.FontDescription("light 8"))
         self.kf_pos_label.set_text("0")
-
+        self.kf_pos_label.set_size_request(70, 10)
         self.kf_info_label = Gtk.Label()
         self.kf_info_label.set_text("1/1")
         
