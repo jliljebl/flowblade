@@ -164,7 +164,6 @@ class BlenderProgramEditorWindow(Gtk.Window):
         return self.container_action.get_preview_media_dir() + "/frame" + filled_number_str + ".png"
 
     def preview_render_complete(self):
-        print("preview_render_complete")
         self.preview_panel.preview_surface = cairo.ImageSurface.create_from_png(self.get_preview_file())
         self.preview_frame = -1
         
