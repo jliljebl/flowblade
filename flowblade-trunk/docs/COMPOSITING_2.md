@@ -11,8 +11,6 @@ In this document we have a list of ideas on how improve Compositng in Flowblade 
   * SUBTRACK
   * INTERSECT
   * EXCLUDE
-  
-  
 
 * Add Filter: **Alpha Blur**
 
@@ -22,6 +20,4 @@ In this document we have a list of ideas on how improve Compositng in Flowblade 
 * Individual Alpha Combiners **Alpha XOR**, **Alpha Out**, **Alpha In** replaced with a single **Porter-Duff** Compositor with all appropriate ops supported
 * **LumaToAlpha** Compositor extended with standard alpha combining operations ops, see above
 
-## 
-
-
+# 

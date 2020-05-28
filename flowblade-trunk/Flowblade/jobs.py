@@ -194,6 +194,21 @@ def update_job_queue(job_msg): # We're using JobProxy objects as messages to upd
 
     _jobs_list_view.scroll.queue_draw()
 
+def _cancel_all_jobs():
+    global _jobs, _remove_list
+    _remove_list = []
+    for job in _jobs:
+        if job.status == RENDERING:
+            job.abort_render()
+        job.progress = -1.0
+        job.text = _("Cancelled")
+        job.status = CANCELLED
+        _remove_list.append(job)
+
+    _jobs_list_view.fill_data_model()
+    _jobs_list_view.scroll.queue_draw()
+    GObject.timeout_add(4000, _remove_jobs)
+        
 def get_jobs_of_type(job_type):
     jobs_of_type = []
     for job in _jobs:
@@ -263,19 +278,7 @@ def _menu_action_pressed(widget, event):
 
 def _hamburger_item_activated(widget, msg):
     if msg == "cancel_all":
-        global _jobs, _remove_list
-        _remove_list = []
-        for job in _jobs:
-            if job.status == RENDERING:
-                job.abort_render()
-            job.progress = -1.0
-            job.text = _("Cancelled")
-            job.status = CANCELLED
-            _remove_list.append(job)
-
-        _jobs_list_view.fill_data_model()
-        _jobs_list_view.scroll.queue_draw()
-        GObject.timeout_add(4000, _remove_jobs)
+        _cancel_all_jobs()
 
     elif msg == "cancel_selected":
         try:
@@ -316,7 +319,6 @@ def _remove_jobs():
         if job in _jobs:
             _jobs.remove(job)
         else:
-            # We're getting attemps from container actions to release multiple times, find out why sometime.
             pass
 
     _jobs_list_view.fill_data_model()
@@ -683,6 +685,8 @@ def handle_shutdown(autosave_file):
 class JobsRenderProgressWindow:
 
     def __init__(self, autosave_file):
+        self.is_shutting_down = False
+        
         
         # Window
         self.window = Gtk.Window(Gtk.WindowType.TOPLEVEL)
@@ -714,6 +718,7 @@ class JobsRenderProgressWindow:
         self.status_label = Gtk.Label()
         self.status_label.set_text(_("Rendering"))
         cancel_button = Gtk.Button(_("Cancel All Jobs"))
+        cancel_button.connect("clicked", lambda w: self.cancel_all())
         
         control_row = Gtk.HBox(False, 0)
         control_row.pack_start(self.status_label, False, False, 0)
@@ -741,12 +746,18 @@ class JobsRenderProgressWindow:
         self.window.show_all()
     
     def jobs_completed(self):
+        self.is_shutting_down = True
+        
+        Gdk.threads_enter()
+        self.status_label.set_text(_("Renders Complete."))
+        Gdk.threads_leave()
+        
         self.close_window()
 
     def update_render_progress(self):
         job = _jobs[0]
         
-        if job.status == COMPLETED and self.last_saved_job != id(job):
+        if job.status == COMPLETED and self.last_saved_job != id(job) and self.is_shutting_down == False:
             
             Gdk.threads_enter()
             self.status_label.set_text(_("Saving..."))
@@ -777,8 +788,7 @@ class JobsRenderProgressWindow:
             save_path = PROJECT().last_save_path 
         else:
             save_path = userfolders.get_cache_dir() +  self.autosave_file # if user didn't save before exit, save in autosave file to preserve render work somehow.
-        
-        print("saving", save_path)
+
         persistance.save_project(PROJECT(), save_path)
             
     def close_window(self):
@@ -787,7 +797,30 @@ class JobsRenderProgressWindow:
         else:
             _status_polling_thread.abort = True
 
-        self.status_label.set_text(_("Renders Complete."))
         self.save_project()
             
+        Gtk.main_quit()
+
+    def cancel_all(self):
+        self.is_shutting_down = True
+
+        global _jobs
+        _remove_list = []
+        for job in _jobs:
+            if job.status == RENDERING:
+                job.abort_render()
+            job.progress = -1.0
+            job.text = _("Cancelled")
+            job.status = CANCELLED
+            _remove_list.append(job)
+        
+        for  job in _remove_list:
+            if job in _jobs:
+                _jobs.remove(job)
+            else:
+                pass
+
+        global _status_polling_thread
+        _status_polling_thread.abort = True
+        
         Gtk.main_quit()
