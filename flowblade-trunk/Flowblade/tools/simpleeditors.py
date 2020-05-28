@@ -53,8 +53,8 @@ MIN_VAL = -pow(2, 63)
 MAX_VAL = pow(2, 63)
 
 SIMPLE_EDITOR_LEFT_WIDTH = 150
-MONITOR_WIDTH = 500
-MONITOR_HEIGHT = 300
+MONITOR_WIDTH = 600
+MONITOR_HEIGHT = 360
 
 # -------------------------------------------------------------------- Blender container clip program values edit
 def show_blender_container_clip_program_editor(callback, clip, container_action, program_info_json):
@@ -95,7 +95,7 @@ class BlenderProgramEditorWindow(Gtk.Window):
             pane.pack_start(curves_panel, False, False, 0)
         
         # Put in scrollpane if too many editors for screensize.
-        n_editors = len(blender_objects) + len(materials) + len(curves)
+        n_editors = len(editors)
         add_scroll = False
         if editorstate.screen_size_small_height() == True and n_editors > 4:
             add_scroll = True
@@ -132,17 +132,19 @@ class BlenderProgramEditorWindow(Gtk.Window):
         
         preview_box = Gtk.VBox(False, 2)
         preview_box.pack_start(self.preview_panel, True, True, 0)
+        preview_box.pack_start(guiutils.pad_label(2, 24), False, False, 0)
         preview_box.pack_start(buttons_box, False, False, 0)
 
         main_box = Gtk.HBox(False, 2)
-        main_box.pack_start(editors_panel, False, False, 0)
-        main_box.pack_start(preview_box, False, False, 0)
+        main_box.pack_start(guiutils.get_named_frame(_("Editors"), editors_panel), False, False, 0)
+        main_box.pack_start(guiutils.get_named_frame(_("Preview"), preview_box), False, False, 0)
 
-        alignment = dialogutils.get_default_alignment(main_box)
+        alignment = guiutils.set_margins(main_box, 8,8,8,8) #dialogutils.get_default_alignment(main_box)
 
         self.set_modal(True)
         self.set_transient_for(gui.editor_window.window)
-        self.set_title(_("Blender Project Edit"))
+        self.set_position(Gtk.WindowPosition.CENTER)
+        self.set_title(_("Blender Project Edit - ") + self.container_action.container_data.get_program_name() + ".blend")
         self.set_resizable(False)
 
         self.add(alignment)
@@ -150,7 +152,6 @@ class BlenderProgramEditorWindow(Gtk.Window):
 
     def render_preview_frame(self):
         if self.preview_frame != -1:
-            print("no")
             return # There already is preview render ongoing.
         self.start_time = time.monotonic()
 
