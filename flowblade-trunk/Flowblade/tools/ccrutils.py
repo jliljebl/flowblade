@@ -105,9 +105,14 @@ def get_session_status_message(session_id):
 def abort_render(session_id):
     folder = _get_session_folder(session_id)
     abort_msg_file = folder + "/" +  ABORT_MSG_FILE
-    with atomicfile.AtomicFileWriter(abort_msg_file, "wb") as afw:
-        outfile = afw.get_file()
-        pickle.dump("##abort", outfile)
+
+    try:
+        with atomicfile.AtomicFileWriter(abort_msg_file, "wb") as afw:
+            outfile = afw.get_file()
+            pickle.dump("##abort", outfile)
+    except atomicfile.AtomicFileWriteError:
+        # Sometimes this fails and not handling it makes things worse, see if this needs more attention.
+        print("atomicfile.AtomicFileWriteError in ccrutils.abotin abort_render(), could not open  for writing: ", folder)
         
 def _get_session_folder(session_id):
     return userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_DIR +  "/" + session_id
