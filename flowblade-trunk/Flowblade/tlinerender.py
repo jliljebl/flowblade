@@ -205,12 +205,19 @@ def _delete_session_dir():
     _delete_dir_and_contents(session_dir)
 
 def _delete_dir_and_contents(del_dir):
-    files = _get_folder_files(del_dir)
+    try:
+        files = _get_folder_files(del_dir)
+    except FileNotFoundError:
+        # If we get crashes on tline render operation we can get this on shutdown.
+        # It is better to just inform and move on and not let the app crash.
+        print("_delete_dir_and_contents() - FileNotFoundError: No such file or directory:", del_dir)
+        return
+        
     for f in files:
         os.remove(del_dir +"/" + f)
 
     os.rmdir(del_dir)
-        
+
 def _get_folder_files(folder):
     return [f for f in listdir(folder) if isfile(join(folder, f))]
 
@@ -724,7 +731,7 @@ class TimeLineUpdateThread(threading.Thread):
         _xml_render_player.start()
 
     def xml_render_done(self, data):
-        PLAYER().seek_frame(self.playhead_frame) # Go back to current playhead position tha got lost on XML render
+        PLAYER().seek_frame(self.playhead_frame) # Go back to current playhead position that got lost on XML render.
         
         if self.abort_before_render_request == True:
             # A new update was requested before this update got ready to start rendering.

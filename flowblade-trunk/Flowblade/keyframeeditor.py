@@ -663,6 +663,7 @@ class ClipKeyFrameEditor:
                         keep_doing = False 
                 except:
                     keep_doing = False
+            self.parent_editor.update_property_value()
         elif data == "zero_next":
             frame_zero, frame_zero_value = self.keyframes[0]
             frame, value = self.keyframes[1]
@@ -684,6 +685,7 @@ class ClipKeyFrameEditor:
                     delete_done = True
                 if delete_done:
                     break
+            self.parent_editor.update_property_value()
         self.widget.queue_draw()
         
     def _get_menu_item(self, text, callback, data):
