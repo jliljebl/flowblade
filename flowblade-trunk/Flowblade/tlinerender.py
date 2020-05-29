@@ -146,6 +146,11 @@ def display_strip_context_menu(event, hit_segment):
     item = guiutils.get_menu_item(_("Delete Segment"), _strip_menu_item_callback, ("delete_segment", hit_segment), sensitive)
     strip_popup_menu.append(item)
 
+    guiutils.add_separetor(strip_popup_menu)
+
+    item = guiutils.get_menu_item(_("Settings..."), _strip_menu_item_callback, ("settings", None), True)
+    strip_popup_menu.append(item)
+    
     strip_popup_menu.popup(None, None, None, None, event.button, event.time)
 
 def _strip_menu_item_callback(widget, data):
@@ -159,6 +164,8 @@ def _strip_menu_item_callback(widget, data):
         if timeline_visible() == True:
             current_sequence().update_hidden_track_for_timeline_rendering()
         gui.tline_render_strip.widget.queue_draw()
+    elif msg == "settings":
+        settings_dialog_launch(None, None)
     else:
         get_renderer().delete_segment(segment)
 
