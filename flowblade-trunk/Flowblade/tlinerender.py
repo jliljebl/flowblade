@@ -383,7 +383,7 @@ class TimeLineRenderer:
     # --------------------------------------------- CONTENT UPDATES
     def timeline_changed(self):
         if self.drag_on == True:
-            return # Happens if user does keyboard edit while also doing s mouse edit on timeline render strip, we will do the update on mouse release.
+            return # Happens if user does keyboard edit while also doing mouse edit on timeline render strip, we will do the update on mouse release.
 
         self.launch_update_thread()
 
@@ -695,7 +695,7 @@ class TimeLineUpdateThread(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
- 
+        self.playhead_frame = PLAYER().producer.frame()
         # Marks segments with changed contents dirty.
         _timeline_renderer.update_segments()
 
@@ -724,6 +724,8 @@ class TimeLineUpdateThread(threading.Thread):
         _xml_render_player.start()
 
     def xml_render_done(self, data):
+        PLAYER().seek_frame(self.playhead_frame) # Go back to current playhead position tha got lost on XML render
+        
         if self.abort_before_render_request == True:
             # A new update was requested before this update got ready to start rendering.
             # This is no longer needed,  we can let the later request do the update,
