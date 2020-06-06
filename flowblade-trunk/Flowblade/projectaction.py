@@ -983,11 +983,12 @@ def _hamburger_menu_item_selected(widget, msg):
     else:
         target_bin_index = int(msg)
         
-        media_bin_indexes = []
+        moved_files = []
         for selected_object in gui.media_list_view.selected_objects:
-            media_bin_indexes.append(selected_object.bin_index)
+            # selected_object is guicomponents.MediaObjectWidget
+            moved_files.append(selected_object.media_file)
         
-        move_files_to_bin(target_bin_index, media_bin_indexes)
+        move_files_to_bin(target_bin_index, moved_files)
 
 def media_panel_popup_requested(event):
     panel_menu = media_panel_popup_menu
@@ -1127,14 +1128,12 @@ def delete_media_files(force_delete=False):
         return
     
     file_ids = []
-    bin_indexes = []
     # Get:
     # - list of integer keys to delete from Project.media_files
     # - list of indexes to delete from Bin.file_ids
     for media_obj in selection:
         file_id = media_obj.media_file.id
         file_ids.append(file_id)
-        bin_indexes.append(media_obj.bin_index)
 
         # If clip is displayed in monitor clear it and disable clip button.
         if media_obj.media_file == MONITOR_MEDIA_FILE:
@@ -1155,10 +1154,8 @@ def delete_media_files(force_delete=False):
                 return
 
     # Delete from bin
-    bin_indexes.sort()
-    bin_indexes.reverse()
-    for i in bin_indexes:
-        current_bin().file_ids.pop(i)
+    for file_id in file_ids:
+        current_bin().file_ids.remove(file_id)
     update_current_bin_files_count()
     
     # Delete from project
@@ -1662,23 +1659,17 @@ def bin_selection_changed(selection):
     gui.media_list_view.fill_data_model()
     gui.editor_window.bin_info.display_bin_info()
     
-def move_files_to_bin(new_bin, bin_indexes):
+def move_files_to_bin(new_bin, moved_files):
     # If we're moving clips to bin that they're already in, do nothing.
     if PROJECT().bins[new_bin] == current_bin():
         return
 
     source_bin_index = PROJECT().bins.index(PROJECT().c_bin) # this gets reset to 0 and it is just easier to save and set again
     
-    # Delete from current bin
-    moved_ids = []
-    bin_indexes.sort()
-    bin_indexes.reverse()
-    for i in bin_indexes:
-        moved_ids.append(current_bin().file_ids.pop(i))
-        
-    # Add to target bin
-    for file_id in moved_ids:
-        PROJECT().bins[new_bin].file_ids.append(file_id)
+    # Move
+    for media_file in moved_files:
+        current_bin().file_ids.remove(media_file.id)
+        PROJECT().bins[new_bin].file_ids.append(media_file.id)
 
     gui.media_list_view.fill_data_model()
     gui.bin_list_view.fill_data_model()

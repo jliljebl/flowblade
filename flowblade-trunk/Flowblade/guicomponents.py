@@ -1271,7 +1271,6 @@ class MediaPanel():
             return
 
         column = 0
-        bin_index = 0
         row_box = Gtk.HBox()
         dnd.connect_media_drop_widget(row_box)
         row_box.set_size_request(MEDIA_OBJECT_WIDGET_WIDTH * self.columns, MEDIA_OBJECT_WIDGET_HEIGHT)
@@ -1302,7 +1301,7 @@ class MediaPanel():
                 and (media_file not in unused_list)):
                 continue
 
-            media_object = MediaObjectWidget(media_file, self.media_object_selected, self.release_on_media_object, bin_index, self.monitor_indicator)
+            media_object = MediaObjectWidget(media_file, self.media_object_selected, self.release_on_media_object, self.monitor_indicator)
             dnd.connect_media_files_object_widget(media_object.widget)
             dnd.connect_media_files_object_cairo_widget(media_object.img)
             self.widget_for_mediafile[media_file] = media_object
@@ -1315,7 +1314,6 @@ class MediaPanel():
                 self.row_widgets.append(row_box)
                 row_box = Gtk.HBox()
                 column = 0
-            bin_index += 1
 
         if column != 0:
             filler = self._get_empty_filler()
@@ -1343,10 +1341,9 @@ class MediaPanel():
 
 class MediaObjectWidget:
 
-    def __init__(self, media_file, selected_callback, release_callback, bin_index, indicator_icon):
+    def __init__(self, media_file, selected_callback, release_callback, indicator_icon):
         self.media_file = media_file
         self.selected_callback = selected_callback
-        self.bin_index = bin_index
         self.indicator_icon = indicator_icon
         self.selected_callback = selected_callback
         self.matches_project_profile = media_file.matches_project_profile()
