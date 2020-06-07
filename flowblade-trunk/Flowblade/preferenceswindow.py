@@ -288,7 +288,7 @@ def _playback_prefs_panel():
     row10 = _row(guiutils.get_checkbox_row_box(play_pause_button, Gtk.Label(label=_("Enable single Play/Pause button"))))
     # Apr-2017 - SvdB - For Fast Forward / Reverse options
 # ------------------------------ timeline_start_end_button
-    row11 = _row(guiutils.get_checkbox_row_box(timeline_start_end_button, Gtk.Label(label=_("Enable timeline at start or end  buttons"))))
+    row11 = _row(guiutils.get_checkbox_row_box(timeline_start_end_button, Gtk.Label(label=_("Enable To Start and To End buttons"))))
 # ------------------------------ End of timeline_start_end_button
     row14 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Fast Forward / Reverse Speed for Shift Key:")), ffwd_rev_shift_spin, PREFERENCES_LEFT))
     row14.set_tooltip_text(_("Speed of Forward / Reverse will be multiplied by this value if Shift Key is held (Only using KEYS).\n" \

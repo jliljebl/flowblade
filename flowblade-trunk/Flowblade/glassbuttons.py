@@ -286,8 +286,8 @@ class PlayerButtons(AbstractGlassButtons):
         next_icon = guiutils.get_cairo_image("next_frame_s")
         prev_icon = guiutils.get_cairo_image("prev_frame_s")
             # ------------------------------timeline_start_end_button
-        start_icon = guiutils.get_cairo_image("ctx_drag_left") #  go to start
-        end_icon = guiutils.get_cairo_image("ctx_drag_right") #  go to end
+        start_icon = guiutils.get_cairo_image("to_start") #  go to start
+        end_icon = guiutils.get_cairo_image("to_end") #  go to end
             # ------------------------------timeline_start_end_button
         mark_in_icon = guiutils.get_cairo_image("mark_in_s")
         mark_out_icon = guiutils.get_cairo_image("mark_out_s")
