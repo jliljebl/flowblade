@@ -278,6 +278,8 @@ def load_filters_translations():
     filter_names["Fade In"] = _("Fade In")
     filter_names["Fade Out"] = _("Fade Out")
     filter_names["Fade In / Fade Out"] = _("Fade In / Fade Out")
+    filter_names["Lines"] = _("Lines")
+    filter_names["Dust"] = _("Dust")
     
     # param names
     global param_names
@@ -618,6 +620,13 @@ def load_filters_translations():
     param_names["Rotation"]= _("Rotation")
     param_names["X Position"] = _("X Position")
     param_names["Y Position"] = _("Y Position")
+    param_names["Max Diameter"] = _("Max Diameter")
+    param_names["Max Count"] = _("Max Count")
+    param_names["Max Count"] = _("Max Count")
+    param_names["Line Width"] = _("Line Width")
+    param_names["Number"] = _("Number")
+    param_names["Darker"] = _("Darker")
+    param_names["Lighter"] = _("Lighter")
 
     # Combo options
     global combo_options
