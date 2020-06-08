@@ -214,7 +214,12 @@ def main(root_path):
     if userfolders.get_init_error() != None:
         _xdg_error_exit(userfolders.get_init_error())
         return
-        
+
+    # After moving to Python 3 we need at least MLT 6.18
+    if editorstate.mlt_version_is_greater_correct("6.17.99") == False:
+        _too_low_mlt_version_exit()
+        return
+
     # Themes
     if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
         success = gui.apply_gtk_css()
@@ -976,7 +981,18 @@ def _show_xdg_error_info(error_str):
     primary_txt = _("Cannot launch application because XDG folders init error.")
     secondary_txt = error_str + "."
     dialogutils.warning_message_with_callback(primary_txt, secondary_txt, None, False, _early_exit)
-    
+
+def _too_low_mlt_version_exit():
+    global exit_timeout_id
+    exit_timeout_id = GObject.timeout_add(200, _show_mlt_version_exit_info)
+    # Launch gtk+ main loop
+    Gtk.main()
+
+def _show_mlt_version_exit_info():
+    primary_txt = _("Flowblade version 2.6 (or later) requires MLT version 6.18 to run")
+    secondary_txt = _("Your MLT version is: ") + editorstate.mlt_version + ".\n\n" + _("Install MLT 6.18 or higher to run Flowblade.")
+    dialogutils.warning_message_with_callback(primary_txt, secondary_txt, None, False, _early_exit)
+
 def _early_exit(dialog, response):
     dialog.destroy()
     # Exit gtk main loop.
