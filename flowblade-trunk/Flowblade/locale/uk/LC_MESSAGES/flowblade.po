@@ -58,11 +58,11 @@ msgstr ""
 #: app.py:993
 #| msgid "MLT version: "
 msgid "Your MLT version is: "
-msgstr ""
+msgstr "Ваша версія MLT:"
 
 #: app.py:993
 msgid "Install MLT 6.18 or higher to run Flowblade."
-msgstr ""
+msgstr "Встановіть MLT 6.18 або вище для запуску Flowblade."
 
 #: app.py:1031 projectaction.py:426 projectaction.py:756
 msgid "Project has not been saved previously"
