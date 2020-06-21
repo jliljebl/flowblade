@@ -324,9 +324,6 @@ class Player:
             self.render_gui_update_count = self.render_gui_update_count + 1
             if self.render_gui_update_count % 8 == 0: # we need quick updates for stop accuracy, but slower gui updating
                 self.render_gui_update_count = 1
-                #Gdk.threads_enter()
-                #self.render_callbacks.set_render_progress_gui(render_fraction)
-                #Gdk.threads_leave()
             return 
 
         # If we're out of active range seek end.
@@ -369,17 +366,6 @@ class Player:
         else:
             return float(self.producer.frame() - self.render_start_frame) / float(self.render_stop_frame - self.render_start_frame)
    
-    """ 
-    def set_render_callbacks(self, callbacks):
-        # Callbacks object interface:
-        #
-        # callbacks = utils.EmptyClass()
-        # callbacks.set_render_progress_gui(fraction)
-        # callbacks.save_render_start_time()
-        # callbacks.exit_render_gui()
-        # callbacks.maybe_open_rendered_file_in_bin()
-        self.render_callbacks = callbacks
-    """
     def start_rendering(self, render_consumer, start_frame=0, stop_frame=-1):
         if stop_frame == -1:
             stop_frame = self.producer.get_length() - 1
@@ -436,12 +422,6 @@ class Player:
         Gdk.threads_leave()
         self.seek_frame(0)
 
-        """
-        Gdk.threads_enter()
-        self.render_callbacks.exit_render_gui()
-        self.render_callbacks.maybe_open_rendered_file_in_bin()
-        Gdk.threads_leave()
-        """
     def shutdown(self):
         self.ticker.stop_ticker()
         self.producer.set_speed(0)
