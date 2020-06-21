@@ -6829,12 +6829,10 @@ msgid "Render Properties"
 msgstr "Свойства сборки"
 
 #: tools/batchrendering.py:1076
-#, fuzzy
 msgid "Change Path"
 msgstr "Сменить гамму"
 
 #: tools/batchrendering.py:1077
-#, fuzzy
 msgid "Change Render Item Path"
 msgstr "Сохранить элемент сборки проекта, как"
 
@@ -6843,7 +6841,6 @@ msgid "Select target folder"
 msgstr "Выберите целевую папку"
 
 #: tools/batchrendering.py:1099
-#, fuzzy
 msgid "Render file name:"
 msgstr "Имя профиля сборки:"
 
