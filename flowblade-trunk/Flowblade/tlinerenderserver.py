@@ -90,7 +90,10 @@ def abort_current_renders():
 def shutdown_render_server():
     iface = _get_iface("shutdown_render_server")
     if iface != None:
+        print("shutdown_render_server actually shutting down")
         iface.shutdown_render_server()
+    else:
+        print("shutdown_render_server no render server shut down")
 
 def get_encoding_extension():
     return renderconsumer.proxy_encodings[TLINE_RENDER_ENCODING_INDEX].extension
@@ -181,10 +184,13 @@ class TLineRenderDBUSService(dbus.service.Object):
     def get_render_status(self):
         dummy_list = ["nothing"]
         if self.render_runner_thread == None:
-            return ("none", 1.0,  False, dummy_list)
+            return ("none", 0.0,  False, dummy_list)
         
         if self.render_runner_thread.render_complete:
             return ("none", 1.0, self.render_runner_thread.render_complete, self.render_runner_thread.completed_segments)
+        
+        if self.render_runner_thread.current_render_file_path == None:
+            return ("none", 0.0,  False, dummy_list)
         
         print(self.render_runner_thread.current_render_file_path, self.render_runner_thread.get_fraction(), 
                   self.render_runner_thread.render_complete, self.render_runner_thread.completed_segments)
