@@ -89,11 +89,10 @@ def init_session(): # called when project is loaded
     os.mkdir(_get_session_dir())
 
     tlinerenderserver.launch_render_server()
-    print("psot launch_render_server")
 
 def delete_session():
     tlinerenderserver.shutdown_render_server()
-    print("psot shutdown_render_server")
+
     _delete_session_dir()
 
 def init_for_sequence():
@@ -141,11 +140,11 @@ def display_strip_context_menu(event, hit_segment):
     item = guiutils.get_menu_item(_("Render Segment"), _strip_menu_item_callback, ("render_segment", hit_segment), sensitive)
     strip_popup_menu.append(item)
     
-    sensitive = ((len(get_renderer().segments) > 0) and (_update_thread == None))
+    sensitive = ((len(get_renderer().segments) > 0))
     item = guiutils.get_menu_item(_("Delete All Segments"), _strip_menu_item_callback, ("delete_all", None), sensitive)
     strip_popup_menu.append(item)
 
-    sensitive = ((hit_segment != None) and (_update_thread == None))
+    sensitive = ((hit_segment != None))
     item = guiutils.get_menu_item(_("Delete Segment"), _strip_menu_item_callback, ("delete_segment", hit_segment), sensitive)
     strip_popup_menu.append(item)
 
@@ -157,21 +156,34 @@ def display_strip_context_menu(event, hit_segment):
     strip_popup_menu.popup(None, None, None, None, event.button, event.time)
 
 def _strip_menu_item_callback(widget, data):
+    global _update_thread, _status_polling_thread
+    
     msg, segment = data
     if msg == "render_segment":
         segment.segment_state = SEGMENT_DIRTY
         get_renderer().clear_selection()
         get_renderer().launch_update_thread()
     elif msg == "delete_all":
+        if _update_thread != None:
+            tlinerenderserver.abort_current_renders() # blocks
+        if _status_polling_thread != None:
+            _status_polling_thread.abort = True
+        else:
+            _update_thread = None
+
+        old_segs = get_renderer().segments 
         get_renderer().segments = []
+        get_renderer().delete_segment_files(old_segs)
+
         if timeline_visible() == True:
             current_sequence().update_hidden_track_for_timeline_rendering()
         gui.tline_render_strip.widget.queue_draw()
     elif msg == "settings":
         settings_dialog_launch(None, None)
-    else:
+    else: # single segment delete
         get_renderer().delete_segment(segment)
 
+                
 # ----------------------------------------- timeline rendering
 def change_current_tline_rendering_mode(menu_widget, new_tline_render_mode):
     if menu_widget.get_active() == False:
@@ -408,20 +420,46 @@ class TimeLineRenderer:
 
     def delete_selected_segment(self):
         # This is called from tline events and we are disabling deleting while rendering
-        if _update_thread != None:
-            return
+        #if _update_thread != None:
+        #    return
 
         for seg in self.segments:
             if seg.selected == True:
                 self.delete_segment(seg)
     
     def delete_segment(self, segment):
+        global _update_thread, _status_polling_thread
+    
+        if _update_thread != None:
+            tlinerenderserver.abort_current_renders() # blocks
+        if _status_polling_thread != None:
+            _status_polling_thread.abort = True
+        else:
+            _update_thread = None
+    
         self.segments.remove(segment)
+        self.delete_segment_files([segment])
+
+        self.delete_all_partially_rendered_segment_files()
+        self.set_all_partially_rendered_segments_not_rendered()
+
         if timeline_visible() == True:
             current_sequence().update_hidden_track_for_timeline_rendering()
         gui.tline_render_strip.widget.queue_draw()
-                
-    # --------------------------------------------- CONTENT UPDATES
+
+        # On TLINE_RENDERING_AUTO see if user added new segment while rendering.
+        if get_tline_rendering_mode() == appconsts.TLINE_RENDERING_AUTO:
+            self.update_segments()
+            if len(self.get_dirty_segments()) > 0:
+                self.launch_update_thread()
+
+    def delete_segment_files(self, segments):
+        for seg in segments:
+            clip_path = seg.get_clip_path()
+            if os.path.isfile(clip_path) == True:
+                os.remove(clip_path)
+
+# --------------------------------------------- CONTENT UPDATES
     def timeline_changed(self):
         if self.drag_on == True:
             return # Happens if user does keyboard edit while also doing mouse edit on timeline render strip, we will do the update on mouse release.
@@ -519,8 +557,18 @@ class TimeLineRenderer:
         for seg in self.segments:
             if seg.rendered_fract < 1.0:
                 seg.rendered_fract = 0.0
-        
 
+    def delete_all_partially_rendered_segment_files(self):
+        for seg in self.segments:
+            if seg.rendered_fract < 1.0:
+                clip_path = seg.get_clip_path()
+                if os.path.isfile(clip_path) == True:
+                    os.remove(clip_path)
+                    
+            seg.content_hash = "-1" # make sure this gets rendered after content hash is re-calculated (is set dirty), 
+                                    # because partially rendered segment has content_hash matching current timeline contents.
+                                    
+    
 class NoOpRenderer():
 
     
@@ -755,7 +803,7 @@ class TimeLineUpdateThread(threading.Thread):
         try:
             # Blocks untils renders are stopped and cleaned
             tlinerenderserver.abort_current_renders()
-            print("psot abort_current_renders")
+
         except:
             # Dbus default timeout of 25s was exceeded, something is very wrong, no use to attempt further work.
             print("INFO: tlinerendersrver.abort_current_renders() exceeded DBus timeout of 25s.")
@@ -831,7 +879,7 @@ class TimeLineUpdateThread(threading.Thread):
             return
 
         tlinerenderserver.render_update_clips(self.save_path, segments_paths, segments_ins, segments_outs, current_sequence().profile.description())
-        print("psot render_update_clips")
+
         global _status_polling_thread
         _status_polling_thread = TimeLineStatusPollingThread()
         _status_polling_thread.start()
@@ -848,9 +896,9 @@ class TimeLineStatusPollingThread(threading.Thread):
         running = True
         
         while running:
-            print("running while")
+
             rendering_file, fract, render_completed, completed_segments = tlinerenderserver.get_render_status()
-            print("psot get_render_status")
+
             get_renderer().update_timeline_rendering_status(rendering_file, fract, render_completed, completed_segments)
 
             Gdk.threads_enter()
@@ -863,11 +911,7 @@ class TimeLineStatusPollingThread(threading.Thread):
                 running = False
     
         while get_renderer().all_segments_ready() == False and self.abort == False:
-            print("all_segments_ready while")
             time.sleep(0.1)
-            
-        
-        print("status going out")
         
         global _update_thread, _status_polling_thread
         _update_thread = None
