@@ -150,13 +150,70 @@ Every <b>Container Clip</b> has the following 3 components:
 Audio syncing looks for best matemathical match between two audio waveforms, so <b>audio syncing non-matching audio will produce random results.</b>
 </div>
 
-<h2>Edíting Container Programs</h2>
+<h2>Creating Editable Container Programs</h2>
+<h3>Blender</h3>
 <p>
-TBD
+It is possible to create editable Container Clips from Blender project files that allow user to set objects' attribute values thereby affecting the rendered output.
 </p>
-
-
-
+<p>
+This is an advanced feature and requires a working knowledge on scripting using Blender's Python API.
+</p>
+<h4>Example</h4>
+<p>
+In this smalle example we create <b>String</b> and <b>Color</b> editors to change test and color rendered from Blender Project file.
+</p>
+<h4>Step 1: Find out object and attribute names using Blenders Script view</h4>
+<p>
+<img src="blender_script.png">
+</p>
+<p>
+<i>Scene and sript panel from Blender with our test project open.</i>
+</p>
+<p>
+Here we have established that:
+</p>
+<ul>
+<li>We need to edit object <b>bpy.data.curves["Title1"]</b> attribute <b>body</b> to set text string.</li>
+<li>We need to edit object <b>bpy.data.materials["Title1.material"]</b> attribute <b>diffuse_color</b> to set text color.</li>
+</ul>
+<h4>Step 2: Edit Container Program Edit Data</h4>
+<p>
+With this information we can create the editors that allow editing text and color of clips rendered from this project.
+</p>
+<ul>
+<li>Create Blender Container clip clip from your project.</li>
+<li>Right click the created Media item and select: Edit Container Program Edit Data</li>
+<li>
+<p>
+To create the text editor we give following data in the dialog, notice how it corresponds with the earlier information.
+</p>
+<p>
+<img src="blender_string_editor.png">
+</p>
+</li>
+<li>
+<p>
+To create the color editor we give following data in the dialog.
+</p>
+<p>
+<img src="blender_color_editor.png">
+</p>
+</li>
+<li>
+<p>
+Remember to press <b>Add Editor</b> to save given data as an editor.
+</p>
+</li>
+</ul>
+<h4>Step 3: Set values for timeline clips</h4>
+<ul>
+<li>Make a Timeline Clip .</li>
+<li>
+<p>
+Right click the clip and select <b>Container Clip Actions->Edit Container Program</b> and edit data in the dialog.
+</p>
+<img src="blender_clip_editor.png">
+</li>
 </div>
 </div>
 
