@@ -17,29 +17,28 @@
 
 <div class="subject-header">Container Clips</div>
 
-<p>
-A <b>Container Clip</b> is a Media Item and the Timeline Clip made from it that has three items packed together as a single entity: <i>Program, Unrendered Media</i> and <i>Rendered Media</i>.
-</p>
+
 
 <div id="toc"></div>
 
 <h2>Container Clips Concept</h2>
-
-<h4>Container Clips Components</h4>
 <p>
-Every <b>Container Clip</b> has the following 3 components:
+A <b>Container Clip</b> is a Media Item and the Timeline Clip made from it that has three items packed together as a single entity: <i>Program, Unrendered Media</i> and <i>Rendered Media</i>.
 </p>
+<h3>Components</h3>
 <ol>
 <li><b>Unrendered Media</b> This is what is displayed on timeline if container clip media is not rendered.</li>
 <li><b>Program</b> This data is used to render a media clip on timeline, sometimes using unrendered media as input.</li>
 <li><b>Rendered Media</b> This is what is displayed on timeline when Container Clip is rendered.</li>
 </ol>
-<h4>Rationale</h4>
+<h2>Rationale</h2>
 <ul>
-<li><b>Performance</b> Container Clips provide means to turn resource heavy media items such as Sequence Clips into rendered media</li>
-<li><b>Resource Management</b> E.g. Blender Projects and G'Mic scripts are nicely managed by having them available via Container Clips</li>
-<li><b>Capablity extension</b> Existing technologies and applications can made to provide functionality that is not available otherwise. There wil be more developments in this area in the future.</li>
-<li><b>Sharing</b> In the future we will create a central repository to share container clip resources.</li>
+<li><b>Performance</b> 
+<p>Container Clips provide means to turn resource heavy media items such as Sequence Clips into rendered media</p>
+</li>
+<li><b>Resource Management</b> <p>For example Blender Projects and G'Mic scripts are nicely managed by having them available via Container Clips</p></li>
+<li><b>Capablity extension</b> <p>Existing technologies and applications can made to provide functionality that is not available otherwise. There will be more developments in this area in the future.</p></li>
+<li><b>Sharing</b> <p>In the future we will create a central repository to share container clip resources.</p></li>
 </ul>
 <h2>Workflow</h2>
 <ol>
@@ -150,17 +149,43 @@ Every <b>Container Clip</b> has the following 3 components:
 Audio syncing looks for best matemathical match between two audio waveforms, so <b>audio syncing non-matching audio will produce random results.</b>
 </div>
 
-<h2>Creating Editable Container Programs</h2>
-<h3>Blender</h3>
+<h2>Creating Editable Blender Container Programs</h2>
+
 <p>
-It is possible to create editable Container Clips from Blender project files that allow user to set objects' attribute values thereby affecting the rendered output.
+It is possible to create and add editors to Blender Container Clips that allow users to change the rendered output.
+</p>
+<p>
+Feature uses Blender Python API and runs a script before output is rendered to change attribute values of Blender scene objects.
 </p>
 <p>
 This is an advanced feature and requires a working knowledge on scripting using Blender's Python API.
 </p>
-<h4>Example</h4>
+
+<h4>Editable Objects</h4>
 <p>
-In this smalle example we create <b>String</b> and <b>Color</b> editors to change test and color rendered from Blender Project file.
+Three types of objects are currently availabe to be user edited using this functionality.
+</p>
+<ul>
+<li> <b>Objects</b> are <b>bpy.data.objects</b> objects available for Python scripts.</li>
+<li> <b>Curves</b> are <b>bpy.data.curves</b> objects available for Python scripts.</li>
+<li> <b>Materials</b> are <b>bpy.data.materials</b> objects available for Python scripts.</li>
+</ul>
+
+<h4>Editors</h4>
+<p>
+Five different types of editors are currently availabe for editing object attributes.
+</p>
+<ul>
+<li> <b>String</b> editor outputs a quoted string in the launch script.</li>
+<li> <b>Int</b> editor outputs an integer number in the launch script.</li>
+<li> <b>Float</b> editor outputs a float number in the launch script..</li>
+<li> <b>Color</b> editor outputs a sequence of 4 comma separated floats that define a color.</li>
+<li> <b>Value</b> editor outputs a non-quoted string in the launch script. that can be used as value to any attribute.</li>
+</ul>
+
+<h3>Example</h3>
+<p>
+In this example we create <b>String</b> and <b>Color</b> editors to change text and color rendered from Blender Project file.
 </p>
 <h4>Step 1: Find out object and attribute names using Blenders Script view</h4>
 <p>
@@ -214,6 +239,35 @@ Right click the clip and select <b>Container Clip Actions->Edit Container Progra
 </p>
 <img src="blender_clip_editor.png">
 </li>
+</ul>
+<div class="note">
+<h4>Launch script</h4>
+<p>
+The editors in this example create the code lines below that set attribute values in the lauch script before render start.
+</p>
+
+<p>
+<i>
+obj = bpy.data.materials["Title1.Material"]
+</i>
+</p>
+<p>
+<i>
+obj.diffuse_color = 0.9882352941176471,0.6862745098039216,0.24313725490196078,1.0
+</i>
+</p>
+<p>
+<i>
+obj = bpy.data.curves["Title1"]
+</i>
+</p>
+<p>
+<i>
+obj.body = "Yesh, this was edited!"
+</i>
+</p>
+</div>
+
 </div>
 </div>
 
