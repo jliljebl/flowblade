@@ -459,6 +459,12 @@ class EditorWindow:
         if editorstate.audio_monitoring_available == False:
             ui.get_widget('/MenuBar/ToolsMenu/AudioMix').set_sensitive(False)
 
+        # Diable Blender and G'Mic container clip menu items if not available.
+        if containerclip.blender_available() == False:
+            ui.get_widget('/MenuBar/ProjectMenu/ContainerClipsMenu/CreateBlenderContainerItem').set_sensitive(False)
+        if gmic.gmic_available() == False:
+            ui.get_widget('/MenuBar/ProjectMenu/ContainerClipsMenu/CreateGMicContainerItem').set_sensitive(False)
+            
         # Media panel
         self.bin_list_view = guicomponents.BinTreeView(
                                         projectaction.bin_selection_changed,
@@ -1113,7 +1119,7 @@ class EditorWindow:
         comp_mode = editorstate.get_compositing_mode()
         
         # We dropped compositing mode COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW so compositing mode values no longer
-        # correspond to menu idexes.
+        # correspond to menu indexes.
         comp_mode_to_menu_index = {0:0, 1:0, 2:1, 3:2}
         menu_index = comp_mode_to_menu_index[editorstate.get_compositing_mode()]
         menu_items[menu_index].set_active(True)

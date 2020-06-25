@@ -40,6 +40,7 @@ import respaths
 import userfolders
 import utils
 
+_blender_available = False
 
 ROW_WIDTH = 300
 
@@ -96,8 +97,16 @@ class ContainerClipData:
             self.rendered_media_range_out = -1
         
 
+# ------------------------------------------------------- testing availebility on statrt up
+def test_blender_availebility():
+    global _blender_available
+    if os.path.exists("/usr/bin/blender") == True:
+        _blender_available = True
+
+def blender_available():
+    return _blender_available
             
-            
+
 # -------------------------------------------------------- Clip menu actions
 def render_full_media(data):
     clip, track, item_id, item_data = data

@@ -53,6 +53,7 @@ import audiowaveformrenderer
 import clipeffectseditor
 import clipmenuaction
 import compositeeditor
+import containerclip
 import containeractions
 import dialogs
 import dialogutils
@@ -287,6 +288,7 @@ def main(root_path):
 
     # Check for tools and init tools integration.
     gmic.test_availablity()
+    containerclip.test_blender_availebility()
     toolsintegration.init()
 
     # Create player object.
