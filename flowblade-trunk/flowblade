@@ -23,7 +23,7 @@
 import os
 import sys
 
-print ("FLOWBLADE MOVIE EDITOR 2.4")
+print ("FLOWBLADE MOVIE EDITOR 2.6")
 print ("--------------------------")
 
 
