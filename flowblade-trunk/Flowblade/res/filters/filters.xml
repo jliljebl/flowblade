@@ -456,16 +456,16 @@
     <filter id="dust">
         <name>Dust</name>
         <group>Artistic</group>
-        <property name="maxdiameter" args="range_in=0,100 displayname=Max!Diameter">2</property>
-        <property name="maxcount" args="range_in=0,400 displayname=Max!Count">4</property>
+        <property name="maxdiameter" args="range_in=0,100 range_out=0,100 displayname=Max!Diameter">2</property>
+        <property name="maxcount" args="range_in=0,400 range_out=0,400 displayname=Max!Count">4</property>
     </filter>
     <filter id="lines">
         <name>Lines</name>
         <group>Artistic</group>
-        <property name="line_width" args="range_in=0,100 displayname=Line!Width">2</property>
-        <property name="num" args="range_in=0,100 displayname=Number">4</property>
-        <property name="darker" args="range_in=0,100 displayname=Darker">20</property>
-        <property name="lighter" args="range_in=0,100 displayname=Lighter">20</property>
+        <property name="line_width" args="range_in=0,100 range_out=0,100 displayname=Line!Width">2</property>
+        <property name="num" args="range_in=0,100 range_out=0,100 displayname=Number">4</property>
+        <property name="darker" args="range_in=0,100 range_out=0,100 displayname=Darker">20</property>
+        <property name="lighter" args="range_in=0,100 range_out=0,100 displayname=Lighter">20</property>
     </filter>
     <filter id="oldfilm">
         <name>Old Film</name>
