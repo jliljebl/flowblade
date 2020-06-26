@@ -3,6 +3,7 @@
     <!-- See propertyparse.py, propertyedit.py and propertyeditorbuilder.py modules for attr and argument keys and values explanations-->
     <!-- NOTE: 'displayname' args values have spaces encoded as ! character so "X Scatter" becomes "X!Scatter" -->
     <!-- NOTE: extra spaces (more than 1) between key=value pairs crash when opening filter in editor -->
+    <!-- NOTE: If range_out arg is not set, values will converted to be in normalized range 0-1 -->
 
     <!-- ALPHA -->
     <filter id="frei0r.alphagrad">
