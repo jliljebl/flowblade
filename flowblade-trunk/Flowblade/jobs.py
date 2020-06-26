@@ -321,6 +321,12 @@ def _remove_jobs():
         else:
             pass
 
+    running = _get_jobs_with_status(RENDERING)
+    if len(running) == 0:
+        in_queue = _get_jobs_with_status(QUEUED)
+        if len(in_queue) > 0:
+            in_queue[0].start_render()
+
     _jobs_list_view.fill_data_model()
     _jobs_list_view.scroll.queue_draw()
 
