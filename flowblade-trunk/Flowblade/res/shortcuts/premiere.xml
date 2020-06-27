@@ -76,7 +76,7 @@
     <event code='faster' name='Faster'>l</event>
     <event code='log_range' name='Log Range' modifiers='CTRL'>l</event>
     <event code='log_range' name='Log Range'>g</event>
-    <event code='resync' name='Resynchronization'>s</event>
+    <event code='resync' name='Resynchronization' modifiers='ALT'>r</event>
     <event code='delete' name='Delete'>delete</event>
     <event code='lift' name='Lift' modifiers='CTRL'>delete</event>
     <event code='to_start' name='Go To Start'>home</event>

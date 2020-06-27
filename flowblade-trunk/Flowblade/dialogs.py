@@ -1500,8 +1500,6 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "add_marker"), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Control + C"), _("Copy Clips")), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Control + V"), _("Paste Clips")), False, False, 0)
-    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "toggle_ripple"), False, False, 0)
-    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "resync"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "log_range"), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Left Arrow "), _("Prev Frame Trim Edit")), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Right Arrow"), _("Next Frame Trim Edit")), False, False, 0)
