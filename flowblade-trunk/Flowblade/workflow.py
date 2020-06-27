@@ -146,7 +146,7 @@ def get_tline_tool_working_set():
     return tools
     
 def _tools_menu_hidden(tools_menu, menu_items):
-    # needed to make number 1-6 work elsewhere in the application
+    # needed to make number 1-9 work elsewhere in the application
     for menu_item in menu_items:
         menu_item.set_accel_path(None)
 

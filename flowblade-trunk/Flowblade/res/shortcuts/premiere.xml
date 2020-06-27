@@ -83,7 +83,6 @@
     <event code='to_end' name='Go To End'>end</event>
     <event code='3_point_overwrite' name='Three Point Overwrite'>t</event>
     <event code='overwrite_range' name='Overwrite Range'>r</event>
-    <event code='toggle_ripple' modifiers='ALT' name='Toggle Ripple Mode'>r</event>
     <event code='cut' name='Cut Active Tracks'>x</event>
     <event code='cut_all' name='Cut All Tracks' modifiers='SHIFT'>x</event>
     <event code='edit_mode_insert' name='Change Edit Mode to Insert'>1</event>
