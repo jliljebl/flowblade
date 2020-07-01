@@ -31,6 +31,7 @@ import appconsts
 import clipeffectseditor
 import compositeeditor
 import compositorfades
+import containeractions
 import containerclip
 from editorstate import current_sequence
 from editorstate import get_track
@@ -2911,9 +2912,15 @@ def _container_clip_switch_to_unrendered_replace_undo(self):
 def _container_clip_switch_to_unrendered_replace_redo(self):
     _remove_clip(self.track, self.index)
     new_out = self.old_clip.clip_out - self.old_clip.clip_in
-    #_insert_clip(self.track, self.new_clip, self.index, 0, new_out)
-    _insert_clip(self.track, self.new_clip, self.index, self.old_clip.container_data.rendered_media_range_in, self.old_clip.container_data.rendered_media_range_out)
     
+    if self.old_clip.container_data.last_render_type == containeractions.CLIP_LENGTH_RENDER:
+        old_clip_edited_length = self.old_clip.clip_out - self.old_clip.clip_in
+        _insert_clip(   self.track, self.new_clip, self.index, 
+                        self.old_clip.container_data.rendered_media_range_in + self.old_clip.clip_in, 
+                        self.old_clip.container_data.rendered_media_range_in + self.old_clip.clip_in + old_clip_edited_length)
+    else:
+        _insert_clip(self.track, self.new_clip, self.index, self.old_clip.clip_in, self.old_clip.clip_out)
+
     if self.new_clip.container_data == None:
         self.new_clip.container_data = copy.deepcopy(self.old_clip.container_data)
 

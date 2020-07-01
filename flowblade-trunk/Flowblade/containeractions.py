@@ -328,9 +328,11 @@ class AbstractContainerActionObject:
                 "do_filters_clone":self.do_filters_clone}
                 
         if self.render_type == FULL_RENDER: # unrendered -> fullrender
+            self.clip.container_data.last_render_type = FULL_RENDER
             action = edit.container_clip_full_render_replace(data)
             action.do_edit()
         else:  # unrendered -> clip render
+            self.clip.container_data.last_render_type = CLIP_LENGTH_RENDER
             action = edit.container_clip_clip_render_replace(data)
             action.do_edit()
                 

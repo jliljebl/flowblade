@@ -56,6 +56,7 @@ class ContainerClipData:
             self.rendered_media = None
             self.rendered_media_range_in = -1
             self.rendered_media_range_out = -1
+            self.last_render_type = containeractions.FULL_RENDER
             
             self.unrendered_media = unrendered_media
             self.unrendered_length = None
