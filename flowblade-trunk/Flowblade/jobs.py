@@ -683,6 +683,7 @@ def handle_shutdown(autosave_file):
         
     else:
         # Unfinished jobs, launch progress window to info user after main app closed.
+        print("Launch jobs dialog for unfinished jobs...")
         global _jobs_render_progress_window
         _jobs_render_progress_window = JobsRenderProgressWindow(autosave_file)
         return False  # Do NOT do Gtk.main_quit()
@@ -755,10 +756,12 @@ class JobsRenderProgressWindow:
         self.is_shutting_down = True
         
         Gdk.threads_enter()
+
         self.status_label.set_text(_("Renders Complete."))
-        Gdk.threads_leave()
-        
+
         self.close_window()
+
+        Gdk.threads_leave()
 
     def update_render_progress(self):
         job = _jobs[0]
