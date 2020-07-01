@@ -156,7 +156,7 @@ class BlenderProgramEditorWindow(Gtk.Window):
         self.start_time = time.monotonic()
 
         self.preview_panel.preview_info.set_markup("<small>Rendering preview...</small>")
-        self.preview_frame = int(self.preview_panel.frame_select.get_value())
+        self.preview_frame = int(self.preview_panel.frame_select.get_value() + self.clip.clip_in)
         self.container_action.render_blender_preview(self, self.editors, self.preview_frame)
 
     def get_preview_file(self):

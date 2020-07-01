@@ -134,8 +134,7 @@ def get_encoding_panel(render_data, create_container_file_panel=False):
         render_panel.pack_start(encoding_panel, False, False, 0)
     else:
         render_panel.pack_start(video_clip_panel, False, False, 0)
-    
-    print("render_data", render_data)
+
     if render_data != None:
         widgets.file_panel.movie_name.set_text(render_data.file_name)
         widgets.file_panel.extension_label.set_text(render_data.file_extension)
