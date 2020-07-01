@@ -66,7 +66,7 @@ project_data["curves"] = curves_list
     
 save_path = os.path.join(GLib.get_user_cache_dir(), "flowblade") + "/blender_container_projectinfo.json"
 
-if not os.path.exists(save_path):
+if os.path.exists(save_path):
     os.remove(save_path)
     
 with open(save_path, "w") as f: 
