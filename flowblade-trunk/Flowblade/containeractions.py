@@ -543,7 +543,7 @@ class GMicContainerActions(AbstractContainerActionObject):
                     if job_msg.progress < 0.0:
                         # hack to fix how gmiplayer.FramesRangeWriter works.
                         # We would need to patch to G'mic Tool to not need this but this is easier.
-                        job_proxy.progress = 1.0
+                        job_msg.progress = 1.0
 
                     if job_msg.progress > 1.0:
                         # Ffix how progress is calculated in gmicheadless because producers can render a bit longer then required.

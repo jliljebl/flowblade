@@ -2875,7 +2875,7 @@ def _container_clip_clip_render_replace_undo(self):
     
 def _container_clip_clip_render_replace_redo(self):
     _remove_clip(self.track, self.index)
-    new_out =  self.old_clip.clip_out - self.old_clip.clip_in
+    new_out = self.old_clip.clip_out - self.old_clip.clip_in
     _insert_clip(self.track, self.new_clip, self.index, 0, new_out)
 
     if self.new_clip.container_data == None:
@@ -2890,8 +2890,8 @@ def _container_clip_clip_render_replace_redo(self):
         _attach_all(self.new_clip)
 
     self.new_clip.container_data.rendered_media = self.rendered_media_path
-    self.new_clip.container_data.rendered_media_range_in = 0
-    self.new_clip.container_data.rendered_media_range_out = self.old_clip.container_data.unrendered_length
+    self.new_clip.container_data.rendered_media_range_in = self.old_clip.clip_in
+    self.new_clip.container_data.rendered_media_range_out = self.old_clip.clip_out
 
 
 # -------------------------------------------------------- CONTAINER CLIP SWITHCH TO UNRENDERED CLIP MEDIA REPLACE
@@ -2912,7 +2912,7 @@ def _container_clip_switch_to_unrendered_replace_redo(self):
     _remove_clip(self.track, self.index)
     new_out = self.old_clip.clip_out - self.old_clip.clip_in
     #_insert_clip(self.track, self.new_clip, self.index, 0, new_out)
-    _insert_clip(self.track, self.new_clip, self.index, self.old_clip.clip_in, self.old_clip.clip_out)
+    _insert_clip(self.track, self.new_clip, self.index, self.old_clip.container_data.rendered_media_range_in, self.old_clip.container_data.rendered_media_range_out)
     
     if self.new_clip.container_data == None:
         self.new_clip.container_data = copy.deepcopy(self.old_clip.container_data)
