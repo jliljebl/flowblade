@@ -39,7 +39,7 @@ from editorstate import get_tline_rendering_mode
 import editorstate
 import gui
 import guiutils
-import mltfilters # can used for testing
+#import mltfilters # can used for testing
 import renderconsumer
 import userfolders
 import tlinerenderserver
@@ -666,10 +666,10 @@ class TimeLineSegment:
         
 
         # THIS IS USEFUL WHEN TESTING
-        filter_info = mltfilters.get_colorize_filter_info()
-        filter_object = current_sequence().create_filter(filter_info)
-        self.producer.attach(filter_object.mlt_filter)
-        self.producer.filters.append(filter_object)
+        #filter_info = mltfilters.get_colorize_filter_info()
+        #filter_object = current_sequence().create_filter(filter_info)
+        #self.producer.attach(filter_object.mlt_filter)
+        #self.producer.filters.append(filter_object)
 
 
     def hit(self, frame):
