@@ -864,6 +864,10 @@ def add_to_render_queue():
     _write_out_render_item(False)
 
 def _write_out_render_item(single_render_item_item):
+    
+    # Clear hidden track, timeline rendering is not part of rendered output.
+    current_sequence().clear_hidden_track()
+    
     # Get render arga and path
     args_vals_list = render.get_args_vals_list_for_current_selections()
     render_path = render.get_file_path()
@@ -925,6 +929,9 @@ def _write_out_render_item(single_render_item_item):
             secondary_txt = _("Error message: ") + str(e)
             dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window, is_info=False)
             return False
+
+    # This puts existing rendered timeline segments back to be displayed.
+    current_sequence().update_hidden_track_for_timeline_rendering()
 
     return True
 

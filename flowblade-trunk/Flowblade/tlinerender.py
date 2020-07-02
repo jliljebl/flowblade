@@ -598,7 +598,7 @@ class NoOpRenderer():
         pass
 
     def update_hidden_track(self, hidden_track, seq_len):
-        # This was required for some real random crashes long time ago, may not be needed anymore but we're keeping this.
+        # Having this blank was required for some real random crashes long time ago, may not be needed anymore but we're keeping this.
         edit._insert_blank(hidden_track, 0, seq_len)
 
 
@@ -855,7 +855,7 @@ class TimeLineUpdateThread(threading.Thread):
                 if segment.end_frame >= current_sequence().seq_len:
                     segment.end_frame = current_sequence().seq_len
                     if  segment.end_frame - segment.start_frame < 4:
-                        # Min length for segments is for, if something gets cut shorter it gets destroyd.
+                        # Min length for segments is four, if something gets cut shorter it gets destroyd.
                         destroy_segments.append(segment)
                         continue
                         
