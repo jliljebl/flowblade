@@ -480,6 +480,11 @@ def create_gui():
         compositeeditor.compositor_notebook_index = 2
         clipeffectseditor.filters_notebook_index = 1
         jobs.jobs_notebook_index = 3
+        if editorwindow.top_level_project_panel() == False:
+            jobs.jobs_notebook_index = 4
+    else:
+        if editorwindow.top_level_project_panel() == False:
+            jobs.jobs_notebook_index = 5
 
     # Create window and all child components
     editor_window = editorwindow.EditorWindow()
