@@ -698,8 +698,8 @@ class BlenderContainerActions(AbstractContainerActionObject):
 
         FLOG = open(userfolders.get_cache_dir() + "/log_blender_project_init", 'w')
 
-        info_script = respaths.ROOT_PATH + "/tools/blenderprojectinit.py"
-        blender_launch = "/usr/bin/blender -b " + project_path + " -P " + info_script
+        info_script = str(respaths.ROOT_PATH + "/tools/blenderprojectinit.py").replace(" ", "\ ")
+        blender_launch = "/usr/bin/blender -b " + project_path.replace(" ", "\ ") + " -P " + info_script
         p = subprocess.Popen(blender_launch, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
         p.wait()
 
