@@ -436,8 +436,8 @@ class GMicContainerActions(AbstractContainerActionObject):
             script_file = open(self.container_data.program)
             user_script = script_file.read()
             test_out_file = userfolders.get_cache_dir()  + "/gmic_cont_clip_test.png"
-            test_in_file = respaths.IMAGE_PATH + "unrendered_blender.png" # we just need some valid input
-            
+            test_in_file = str(respaths.IMAGE_PATH + "unrendered_blender.png").replace(" ", "\ ")   # we just need some valid input
+
             script_str = "gmic " + test_in_file + " " + user_script + " -output " + test_out_file
 
             # Render preview and write log
@@ -495,7 +495,7 @@ class GMicContainerActions(AbstractContainerActionObject):
                 "gmic_frame_offset:" + str(gmic_frame_offset))
 
         # Run with nice to lower priority if requested (currently hard coded to lower)
-        nice_command = "nice -n " + str(10) + " " + respaths.LAUNCH_DIR + "flowbladegmicheadless"
+        nice_command = "nice -n " + str(10) + " " + str(respaths.LAUNCH_DIR + "flowbladegmicheadless").replace(" ", "\ ")
         for arg in args:
             nice_command += " "
             nice_command += arg
@@ -625,7 +625,7 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
                 "xml_file_path:" + str(self.container_data.unrendered_media).replace(" ", "\ "))   # This is going through Popen shell=True and needs escaped spaces.
 
         # Run with nice to lower priority if requested (currently hard coded to lower)
-        nice_command = "nice -n " + str(10) + " " + respaths.LAUNCH_DIR + "flowblademltxmlheadless"
+        nice_command = "nice -n " + str(10) + " " + str(respaths.LAUNCH_DIR + "flowblademltxmlheadless").replace(" ", "\ ")
         for arg in args:
             nice_command += " "
             nice_command += arg
