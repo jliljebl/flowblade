@@ -778,7 +778,7 @@ class BlenderContainerActions(AbstractContainerActionObject):
                 "profile_desc:" + PROJECT().profile.description().replace(" ", "_"))
 
         # Run with nice to lower priority if requested (currently hard coded to lower)
-        nice_command = "nice -n " + str(10) + " " + respaths.LAUNCH_DIR + "flowbladeblenderheadless"
+        nice_command = "nice -n " + str(10) + " " + str(respaths.LAUNCH_DIR + "flowbladeblenderheadless").replace(" ", "\ ")
         for arg in args:
             nice_command += " "
             nice_command += arg

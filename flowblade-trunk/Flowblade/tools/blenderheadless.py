@@ -90,6 +90,8 @@ def abort_render(session_id):
 # --------------------------------------------------- render process
 def main(root_path, session_id, project_path, range_in, range_out, profile_desc):
 
+    project_path = project_path.replace(" ", "\ ")
+
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION
     except:
@@ -129,7 +131,7 @@ def main(root_path, session_id, project_path, range_in, range_out, profile_desc)
     log_path = GLib.get_user_cache_dir() + "/blenderrenderlog"
     FLOG = open(log_path, 'w')
     
-    render_setup_script = respaths.ROOT_PATH + "/tools/blenderrendersetup.py"
+    render_setup_script = str(respaths.ROOT_PATH + "/tools/blenderrendersetup.py").replace(" ", "\ ")
     blender_launch = "/usr/bin/blender -b " + project_path + " -P " + render_setup_script
 
     global _start_time
@@ -233,6 +235,7 @@ def main(root_path, session_id, project_path, range_in, range_out, profile_desc)
          
     ccrutils.write_completed_message()
 
+    print("Blender render complete.")
 
 
 # ------------------------------------------------------------ poll thread for Blender rendering happening in different process.
