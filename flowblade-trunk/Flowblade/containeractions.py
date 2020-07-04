@@ -487,11 +487,11 @@ class GMicContainerActions(AbstractContainerActionObject):
         jobs.update_job_queue(job_msg)
         
         args = ("session_id:" + self.get_container_program_id(), 
-                "script:" + str(self.container_data.program).replace(" ", "\ "),
-                "clip_path:" + str(self.container_data.unrendered_media).replace(" ", "\ "),  # This is going through Popen shell=True and needs escaped spaces.
+                "script:" + utils.escape_shell_path(self.container_data.program),
+                "clip_path:" + utils.escape_shell_path(self.container_data.unrendered_media),  # This is going through Popen shell=True and needs escaped spaces etc..
                 "range_in:" + str(range_in),
                 "range_out:"+ str(range_out),
-                "profile_desc:" + PROJECT().profile.description().replace(" ", "_"),  # This is going through Popen shell=True and needs escaped spaces.
+                "profile_desc:" + PROJECT().profile.description().replace(" ", "_"),  # Here we have our own string space handling, maybe change later..
                 "gmic_frame_offset:" + str(gmic_frame_offset))
 
         # Run with nice to lower priority if requested (currently hard coded to lower)
@@ -772,7 +772,7 @@ class BlenderContainerActions(AbstractContainerActionObject):
             outfile.write(render_exec_lines)
 
         args = ("session_id:" + self.get_container_program_id(),
-                "project_path:" + str(self.container_data.program).replace(" ", "\ "),   # This is going through Popen shell=True and needs escaped spaces.
+                "project_path:" + utils.escape_shell_path(self.container_data.program), #.replace(" ", "\ "),   # This is going through Popen shell=True and needs escaped spaces.
                 "range_in:" + str(range_in),
                 "range_out:"+ str(range_out),
                 "profile_desc:" + PROJECT().profile.description().replace(" ", "_"))

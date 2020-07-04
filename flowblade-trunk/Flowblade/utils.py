@@ -724,6 +724,12 @@ def get_display_monitors_size_data():
         
         return monitors_size_data
 
+def escape_shell_path(path):
+    path = path.replace(" ", "\ ")
+    path = path.replace("(", "\(")
+    path = path.replace(")", "\)")
+    return path
+
 def unpickle(path):
     try:
         f = open(path, "rb")
