@@ -7,13 +7,8 @@
   1. [Installing with setup.py not supported](./INSTALLING.md#installing-with-setuppy-not-supported)   
 ### Installing deb package
 
-**Latest release Flowblade 2.4 is NOT available as .deb package. Very few disributions have the required MLT 6.18 available. Using Flatpak for 2.4 is recommended. .deb packaging will return for 2.6**
-
 #### Step 1. Download and install .deb 
-**First download .deb file** for Flowblade 2.2 from <a href="https://github.com/jliljebl/flowblade/releases">here.</a>
-
-Github user **luv** has created an **alternate package** for 2.2 that has a bug in *Affine* filter fixed <a href="https://github.com/luv/flowblade/releases/tag/v2.2-2">here.</a>
-
+**First download .deb file** for Flowblade 2.6 from <a href="https://github.com/jliljebl/flowblade/releases">here.</a>
 
 Double click on <b>.deb</b> file to install it. 
 
@@ -23,13 +18,8 @@ On some systems double clicking may not work and you need to install <b>.deb</b>
 	<li>	<p>Open terminal in the directory you saved the  downloaded <b>.deb</b> file. Give command:	</li>
 </ul>
 
-    sudo apt install ./flowblade-2.2.0-1_all.deb
+    sudo apt install ./flowblade-2.6.0-1_all.deb
 
-OR if you have Debian buster+, or Ubuntu 19.04+
-
-You can just apt-get install flowblade
-
-See: https://packages.debian.org/search?keywords=flowblade and https://launchpad.net/ubuntu/+source/flowblade
 
 ### Installing Flatpak from Flathub
 
@@ -50,6 +40,16 @@ flatpak install --from https://flathub.org/repo/appstream/io.github.jliljebl.Flo
 ```bash
 flatpak run io.github.jliljebl.Flowblade
 ```
+
+
+#### Flatpak missing few features
+Unfortanately some features are not available via Flatpak install yet.
+
+* Batch Render Queue does not work
+* Blender Comńtainer Clips are not available
+
+We are working towards solving these issues.
+
 
 ### Installing from your OS repository
 
@@ -74,7 +74,7 @@ yaourt -S flowblade-git
 
 ### Installing using Development Repository Version
 
-Before MLT 6.18 comes available in distributions, Python 3 bindings have to be build and installed to run repository Flowblade. We have some pointers here: https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/creating_user_folder_bindings.md 
+Flowblade requires MLT 6.18. If this is not available on your distirution Python 3 bindings have to be build and installed to run repository Flowblade. We have some pointers here: https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/creating_user_folder_bindings.md 
 
 Flowblade is currently a 100% script application, and all the dependencies should be available in popular distributions, so in most cases it should be possible to install and run Flowblade without compiling anything.
 
