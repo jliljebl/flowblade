@@ -4,7 +4,7 @@
 
 Date: July 5, 2020
 
-This is the second Python 3 release of the application and we introduced quite large amount of new functionality like Coantainer Clips and async rendering of resources via Jobs panel.
+This is the second Python 3 release of the application and this time we introduced a quite large amount of new functionality like Container Clips and async rendering of resources via Jobs panel.
 
 ### TECHNICAL ISSUES
 
@@ -15,7 +15,6 @@ This is the second Python 3 release of the application and we introduced quite l
 * Flatpak does not support all features, Bacth rendering and Blender Container Clips are currently not available in Flowblade Flatpak. We aim to do a point release in August addressing these issues.
 
 ###  COMPOSITING CHANGES
-
 
 In 2.4 for we added the concept of Compositing Modes enabling user to select between different ways of creating composited images. In this release we complete the approach by adding a new Compositing Mode Standard Full Track
 
@@ -35,17 +34,11 @@ User documentation on Compositing Modes is [here.](http://jliljebl.github.io/flo
 
 #### Making Standard Full Track the default Compositing Mode in the future
 
-We are considering making the new Compositing Mode Standard Full Track the default for new projects, there is more is this on  this Issue.
-
-After having Compositing Modes available we now need to answer the question on which mode should be the default. 
-
-It is quite clear that most new users will probably prefer **Standard Full Track** and exisiting users knowlable on additional power provided by **Top Down Free move** will likely be satisfied by having it available very easily.
-
-Therefore we're leaning on making **Standard Full Track** the default Compositing Mode. There is a GIthub issue available for giving comments on the idea.
+We are considering making the new Compositing Mode Standard Full Track the default for new projects, anyone having an opinion on this can comment [here.](https://github.com/jliljebl/flowblade/issues/876)
 
 ### CONTAINER CLIPS
 
-We introduced a new Media and timeline object called a Container Clip.
+We introduced a new Media and Timeline object called a Container Clip.
 
 There is a lengthy explenation on the rationale and usage of Container Clips in user documentation [here.](http://jliljebl.github.io/flowblade/webhelp/container_clips.html)
 
@@ -59,7 +52,7 @@ Clips made from selections were previously called Compound Clips but now they ar
 
 ## TIMELINE RENDERING
 
-We now offer a functionality to render one or more parts of timeline in case there are performance problems in some areas. Releated user documentation is here.
+We now offer a functionality to render one or more parts of timeline in case there are performance problems in some areas. Releated user documentation is [here.](http://jliljebl.github.io/flowblade/webhelp/advanced.html#5._Timeline_Rendering)
 
 ## JOBS PANEL
 
@@ -153,7 +146,7 @@ Functionality is provided in a new **Jobs** panel and shoukld be quite straight 
 
 * We are moving to feature branch development model so master can have quite long pauses before new work appers there.
 
-* Work SDL 1.2 replacement. We got SDL 2 software rendering video display working but the performance was much worse then what we have now. Next we will look to develop  SDL2/OpenGL based solution 
+* Work on SDL 1.2 replacement. We got SDL 2 software rendering video display working but the performance was much worse then what we have now. Next we will look to develop  SDL2/OpenGL based solution 
 
 * Improved GUI configuration. Now that we have editing tool set, workflow and compositing model user configurable we will continue to make keyboard shortcuts, middlebar contents and window layout configurable. 
 
