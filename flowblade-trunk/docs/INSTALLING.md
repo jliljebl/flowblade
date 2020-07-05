@@ -46,7 +46,7 @@ flatpak run io.github.jliljebl.Flowblade
 Unfortanately some features are not available via Flatpak install yet.
 
 * Batch Render Queue does not work
-* Blender Comńtainer Clips are not available
+* Blender Container Clips are not available
 
 We are working towards solving these issues.
 
