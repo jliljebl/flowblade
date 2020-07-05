@@ -1,5 +1,234 @@
 # Release Notes #
 
+## Flowblade 2.6
+
+Date: July 5, 2020
+
+This is the second Python 3 release of the application and we introduced quite large amount of new functionality like Coantainer Clips and async rendering of resources via Jobs panel.
+
+### TECHNICAL ISSUES
+
+* MLT 6.18 or higher is now required.
+
+* Application requires XDG user folder information to run, using dot folders as backup is no longer supported
+
+* Flatpak does not support all features, Bacth rendering and Blender Container Clips are currently not available in Flowblade Flatpak. We aim to do a point release in August addressing these issues.
+
+###  COMPOSITING CHANGES
+
+
+In 2.4 for we added the concept of Compositing Modes enabling user to select between different ways of creating composited images. In this release we complete the approach by adding a new Compositing Mode Standard Full Track
+
+#### Standard Full Track Compositing Mode - no Compositors needed
+
+The shortest way to describe this compositing mode is *"What everyone else does"*. No Compositors are needed to create composited images in this Compositing mode.
+
+We made a tutorial video explaining using Compositing Modes [here.](https://vimeo.com/427093600)
+
+User documentation on Compositing Modes is [here.](http://jliljebl.github.io/flowblade/webhelp/compositor.html)
+
+#### Other Composing Mode changes
+
+* **Top Down Auto Follow** Compositing Mode was  removed. This mode did not offer any sufficiently differetiated and useful functionality to justify any additional complexity.
+
+* Compositing Mode can now be selected from a menu in the bottom left corner.
+
+#### Making Standard Full Track the default Compositing Mode in the future
+
+We are considering making the new Compositing Mode Standard Full Track the default for new projects, there is more is this on  this Issue.
+
+After having Compositing Modes available we now need to answer the question on which mode should be the default. 
+
+It is quite clear that most new users will probably prefer **Standard Full Track** and exisiting users knowlable on additional power provided by **Top Down Free move** will likely be satisfied by having it available very easily.
+
+Therefore we're leaning on making **Standard Full Track** the default Compositing Mode. There is a GIthub issue available for giving comments on the idea.
+
+### CONTAINER CLIPS
+
+We introduced a new Media and timeline object called a Container Clip.
+
+There is a lengthy explenation on the rationale and usage of Container Clips in user documentation [here.](http://jliljebl.github.io/flowblade/webhelp/container_clips.html)
+
+This is only the first iteration on the idea to get things going. Later we will be adding at least a Python based scripting tool and Natron project file Container Clips.
+
+For 2.8 we will introduce a central repository that users can contribute to share container clip resources.
+
+#### Compound Clips are now Selection Container Clips
+
+Clips made from selections were previously called Compound Clips but now they are one type of Container Clips and Compound Clips naming is no longer used.
+
+## TIMELINE RENDERING
+
+We now offer a functionality to render one or more parts of timeline in case there are performance problems in some areas. Releated user documentation is here.
+
+## JOBS PANEL
+
+Adding Container Clips necessitated proving a way to launch, observe and abort asynchronous renders other then the existing Batch Rendring functionality.
+
+Proxy Clip rendering and rendering of Motion/Reverse clips are now asynchronous jobs instead of the previous approach where they were modal renders.
+
+Functionality is provided in a new **Jobs** panel and shoukld be quite straight forward to understand.
+
+## CONTRIBUTIONS
+
+**Albano Battistella** 
+
+* updated italian translation
+
+**驿窗**
+
+* updated Chinese ZN_ch_ translation
+
+**micitabesh**
+
+* updated Ukranian translations
+
+**Николай Смольянинов**
+
+- Updated Russian translation
+- Fixed "start key" to "home key"
+
+**jep-fa** 
+
+* Add a list of the unused files as a new Media Panel view category.
+
+* New optional playback buttons To Start/To End to go to start or end of timeline.
+
+* 75 pixels high tracks option. These larger tracks can look nicer and clearer in many situations.
+
+**Pascal de Bruijn**
+
+* add **Lines** filter
+
+* add **Dust** filter
+
+* move **Grain** from group Blur to Artistic
+
+* libmp3lame over ffmpeg's aac 
+
+* renderencoding: minor consistency changes
+
+**dvdlvr**
+
+* Add sturdier code for missing @2 icons
+
+* Added compositor_icon@2
+
+**imaami**
+
+* Fix crash on loading a project with color clips
+
+
+## OTHER NEW FEATURES
+
+* Partial filter application with filter masks .
+
+* Clips can reload clip media from disk now.
+
+* Steal frames for rendered transitions feature.
+
+* No confirm dialog asked on on project exit if nothing has been changed.
+
+* Rotomask Curve/Line type selection is now a persistent property.
+
+* New keyboard shrtcuts:
+  
+  * Alt + R is shortcut for Resync now, S no longer works for this
+  
+  * Clear Filters was changed to Alt + C
+  
+  * Alt + K for clear Mark In/Out
+  
+  * Alt + I/O is now Display going to mark in/out for all usecases, Shift + Shift + I/O still works users who prefer 
+
+* Position bar now shows timeline markers
+
+* Disk cache size warning. If Flowblade takes over 500MB space on disk user will be informed.
+
+* Range Overwrite edit action now works when only Timeline Mark Out defined.
+
+* It is now possible to change render path of a render item in  Batch Render window
+
+## FOCUS AREAS FOR NEXT DEVELOPMENT CYCLE
+
+* We are moving to feature branch development model so master can have quite long pauses before new work appers there.
+
+* Work SDL 1.2 replacement. We got SDL 2 software rendering video display working but the performance was much worse then what we have now. Next we will look to develop  SDL2/OpenGL based solution 
+
+* Improved GUI configuration. Now that we have editing tool set, workflow and compositing model user configurable we will continue to make keyboard shortcuts, middlebar contents and window layout configurable. 
+
+* Container Clips work with Natron and Python script tool features planned.
+
+* Work on Issue list.
+
+* There will no summer shutdown this year, we will remain active on PRs and Issue list, but on July there will probably be relatively few new patches.
+
+## BUG FIXES AND SMALL CHANGES
+* Fix issues with deleting and moving media items  in media Panel views.
+
+* Make out-of-range keyframes menu do write out correctly for all edit actions.
+
+* Fix slight GUI shaking in Keyframe Editor.
+
+* Make $HOME default folder for "Save As..." when no good last save data exists.
+
+* Drop 96 kHz audio sample rate option.
+
+* Fix rendered Fade out video position.
+
+* Fix rendered fades delete actions.
+
+* Fix rendered transitions Issue #836.
+
+* Make fade editors position update with timeline.
+
+* Titler: Fix layers load GUI inconsistency with layer visibility.
+
+* Escape G'Mic render paths spaces.
+
+* Make fade buttons default lengths configurable.
+
+* Player buttons tooltips fixes.
+
+* Fix double .xml in selection Container Clips.S
+
+* Autocreate user defined render folder if deleted.
+
+* Position Scale filter: Make keyframe copy paste work
+  Position Scale filter: Make menu actions work 
+  Position Scale filter: Set initial value to 0,0
+  Position Scale filter: Fix numerical inputs
+
+* Add Default Keyboard Shortcuts list is Docs.
+
+* Fix missing proxy dir on launch.
+
+* Make NO_DECORATIONS default button style.
+
+* Remove test.py module, it is not used.
+
+* Drop presets from G'Mic tool rendering options.
+
+* Add action to render proxyfiles for all project media.
+
+* Make sure there is always space displayed in GUI after sequence end.
+
+* Make dark theme timeline marker yellow to pop better.
+
+* Position bar markesrs display bug fix.
+
+* Implement default render folder feature.
+
+* Replace deprecated time.clock() with time.monotonic.
+
+* Implement quieting output prints with commandline switch --quiet.
+
+* Fix Issue #801 with unexpected save behaviour with moved project files.
+
+* Try to use original media when proxy media missing on load and project is in proxy mode.
+
+* Make proxies destroyable with cache management UI.
+
 ## Flowblade 2.4 ##
 
 Date: December 12, 2019
