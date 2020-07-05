@@ -70,7 +70,7 @@ Functionality is provided in a new **Jobs** panel and shoukld be quite straight 
 
 **驿窗**
 
-* updated Chinese ZN_ch_ translation
+* updated Chinese translation
 
 **micitabesh**
 
