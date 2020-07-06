@@ -25,7 +25,7 @@ from distutils.core import setup
 # FLOWBLADE distutils setup.py script.
 
 install_data = [('share/applications', ['installdata/io.github.jliljebl.Flowblade.desktop']),
-                ('share/appdata', ['installdata/io.github.jliljebl.Flowblade.appdata.xml']),
+                ('share/metainfo', ['installdata/io.github.jliljebl.Flowblade.appdata.xml']),
                 ('share/icons/hicolor/128x128/apps', ['installdata/io.github.jliljebl.Flowblade.png']),
                 ('share/mime/packages',['installdata/io.github.jliljebl.Flowblade.xml']),
                 ('lib/mime/packages',['installdata/flowblade']),
