@@ -100,7 +100,7 @@ class BlenderProgramEditorWindow(Gtk.Window):
         if editorstate.screen_size_small_height() == True and n_editors > 4:
             add_scroll = True
             h = 500
-        elif editorstate.screen_size_small_height() == True and editorste.screen_size_large_height() == False and n_editors > 5:
+        elif editorstate.screen_size_small_height() == True and editorstate.screen_size_large_height() == False and n_editors > 5:
             add_scroll = True
             h = 600
         elif editorstate.screen_size_large_height() == True and n_editors > 6:
