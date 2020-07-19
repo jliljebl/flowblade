@@ -1,14 +1,14 @@
 # Russian translations for Flowblade package.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the Flowblade package.
-# Николай Смольянинов <smolianinow.colya2016@yandex.ru>, 2017, 2018, 2019.
+# Николай Смольянинов <smolianinow.colya2016@yandex.ru>, 2017, 2018, 2019, 2020.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Flowblade 2.4\n"
+"Project-Id-Version: Flowblade\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-03 21:29+0300\n"
-"PO-Revision-Date: 2020-07-03 21:14+0300\n"
+"POT-Creation-Date: 2020-07-07 19:32+0300\n"
+"PO-Revision-Date: 2020-07-19 11:47+0300\n"
 "Last-Translator: Николай Смольянинов <smolianinow.colya2016@yandex.ru>\n"
 "Language-Team: vk.com/flowblade\n"
 "Language: ru_RU\n"
@@ -352,7 +352,7 @@ msgstr "последовательность_"
 #: projectaction.py:1402
 #, fuzzy
 msgid "Save Sequence Container Clip"
-msgstr "Созданиеконтейнерного клипа из последовательности"
+msgstr "Создание контейнерного клипа из последовательности"
 
 #: projectaction.py:1423
 msgid "Save Sequence Compound Clip"
@@ -428,7 +428,7 @@ msgstr "Добавить новую последовательность"
 
 #: projectaction.py:1714 editorwindow.py:248
 msgid "Edit Selected Sequence"
-msgstr "Редактировать выбранную последовательность"
+msgstr "Править выбранную последовательность"
 
 #: projectaction.py:1715 editorwindow.py:249
 msgid "Delete Selected Sequence"
@@ -2577,7 +2577,7 @@ msgstr "Переключится на несобранное медиа"
 
 #: guicomponents.py:2137
 msgid "Edit Container Program"
-msgstr "Править контейнер в программе"
+msgstr "Править контейнерную программу"
 
 #: guicomponents.py:2144
 msgid "Render Settings..."
@@ -2687,7 +2687,7 @@ msgstr "Собрать прокси"
 
 #: guicomponents.py:2310
 msgid "Edit Container Program Edit Data"
-msgstr "Редактировать данные контейнерного клипа"
+msgstr "Править данные контейнерного клипа"
 
 #: guicomponents.py:2312
 msgid "Load Container Program Edit Data"
@@ -6695,6 +6695,8 @@ msgid ""
 "Possible fixes:\n"
 "\n"
 msgstr ""
+"Варианты исправления:\n"
+"\n"
 
 #: tools/batchrendering.py:801
 msgid "Change item render file path from right click popup menu.\n"
@@ -7509,7 +7511,7 @@ msgstr "Собирается видео, "
 #: tools/gmic.py:1258
 #, fuzzy, python-format
 msgid "% done"
-msgstr "Готово."
+msgstr "% готово"
 
 #: tools/gmic.py:1268
 msgid "Render complete!"
@@ -7553,7 +7555,7 @@ msgstr "Собрать видеоклип"
 
 #: tools/toolsencoding.py:358
 msgid "Frame Sequence Only"
-msgstr "Только последовательность кадров"
+msgstr "Собрать серию изображений"
 
 #: tools/toolsencoding.py:413
 msgid "Use Default Profile:"
@@ -7730,12 +7732,11 @@ msgstr "Размер дискового кэша превышает устано
 
 #: diskcachemanagement.py:230
 msgid "Flowblade currently uses "
-msgstr ""
+msgstr "Flowblade в настоящее время использует "
 
 #: diskcachemanagement.py:230
-#, fuzzy
 msgid " of disk space."
-msgstr "Место на диске"
+msgstr " дискового пространства."
 
 #: diskcachemanagement.py:231
 msgid ""
@@ -8492,6 +8493,8 @@ msgstr "Сохранить изменения"
 #: tools/containerprogramedit.py:88
 msgid "Add or delete editors to enable <b>Save Changes</b> button"
 msgstr ""
+"Для активации кнопки <b>Сохранить изменения</b>\n"
+"добавьте или удалите редакторы"
 
 #: tools/containerprogramedit.py:111
 msgid "Blender Project Property Editors"
@@ -8535,11 +8538,11 @@ msgstr "Путь к свойствам объекта Blender:"
 
 #: tools/containerprogramedit.py:199
 msgid "Editor Label:"
-msgstr "Метка редактора:"
+msgstr "Название редактора:"
 
 #: tools/containerprogramedit.py:200
 msgid "Tooltip Info:"
-msgstr "Сведения о всплывающей подсказке:"
+msgstr "Описывающие сведения:"
 
 #: tools/containerprogramedit.py:201
 msgid "Editor Type:"
@@ -8566,9 +8569,8 @@ msgid "Editors"
 msgstr "Редакторы"
 
 #: tools/simpleeditors.py:147
-#, fuzzy
 msgid "Blender Project Edit - "
-msgstr "Проект Blender"
+msgstr "Правка проекта Blender - "
 
 #: tools/simpleeditors.py:219
 msgid "String"
@@ -8583,7 +8585,6 @@ msgid "Int"
 msgstr "Целое число"
 
 #: tools/simpleeditors.py:379
-#, fuzzy
 msgid "Clip Frame"
 msgstr "Кадр клипа"
 
@@ -8649,9 +8650,8 @@ msgid "Rendering Motion Clip "
 msgstr "Сборка клипа движения "
 
 #: jobs.py:600
-#, fuzzy
 msgid "Rendering Proxy Clip for "
-msgstr "Сборка клипа"
+msgstr "Сборка прокси-клипа для "
 
 #: jobs.py:718
 msgid "Jobs Remaining Item:"
@@ -8670,9 +8670,8 @@ msgid "Jobs Render Progress"
 msgstr "Выполнение сборки всех заданий"
 
 #: jobs.py:760
-#, fuzzy
 msgid "Renders Complete."
-msgstr "Сборка завершена!"
+msgstr "Сборка завершена."
 
 #: jobs.py:772
 msgid "Saving..."
@@ -8711,9 +8710,8 @@ msgid "Wrong magic: "
 msgstr ""
 
 #: containeractions.py:825
-#, fuzzy
 msgid "Rendering Preview"
-msgstr "Предпросмотр результата сборки"
+msgstr "Создание предпросмотра"
 
 #: containeractions.py:932
 msgid "<b>Rendering Placeholder Media For:</b> "
@@ -8724,17 +8722,15 @@ msgid "Select A File"
 msgstr "Выберите файл"
 
 #: containerclip.py:191
-#, fuzzy
 msgid "Not all required files were defined"
-msgstr "Не все необходимые файлы выбраны"
+msgstr "Не все необходимые файлы запрошенные в диалоговом окне"
 
 #: containerclip.py:191
-#, fuzzy
 msgid ""
 "Select all files asked for in dialog for succesful Container Clip creation."
 msgstr ""
-"Выберите все файлы, запрошенные в диалоговом окне, для успешного создания "
-"контейнера."
+"Для создания контейнера необходимо выбрать все файлы запрошенные в "
+"диалоговом окне."
 
 #: containerclip.py:198
 msgid "G'Mic Tool Script:"
@@ -8778,7 +8774,7 @@ msgstr "Создание контейнера для проекта Blender"
 
 #: containerclip.py:417
 msgid "Container Program Edit Data is Executable!"
-msgstr ""
+msgstr "Правка данных исполняемой контейнерной программы!"
 
 #: containerclip.py:418
 msgid ""
@@ -8789,10 +8785,16 @@ msgid ""
 "function and\n"
 "can maybe used as an attack vector against your system."
 msgstr ""
+"Применяйте правку данных только той контейнерной программы, которая\n"
+"была взята из надёжных источников!\n"
+"\n"
+"Для правки данных контейнерной программы будет использоваться вызов\n"
+"функции Python <b>exec()</b>, которая может быть использована в качестве\n"
+"вектора атаки на вашу систему."
 
 #: containerclip.py:434
 msgid "Load Program Edit Data"
-msgstr ""
+msgstr "Загрузка правки анных"
 
 #: tlinerender.py:121
 msgid "Timeline Render Off"
