@@ -428,11 +428,15 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
             FIX_N_TO_4_MEDIA_FILE_COMPATIBILITY(media_file)
             
         # Try to find relative path files if needed for non-proxy media files
+        orig_path = media_file.path # looking for missing path changes it and we need save this info for user info dialog on missing asset
         if media_file.is_proxy_file == False:
             if media_file.type != appconsts.PATTERN_PRODUCER and media_file.type != appconsts.IMAGE_SEQUENCE:
                 media_file.path = get_media_asset_path(media_file.path, _load_file_path)
             elif media_file.type == appconsts.IMAGE_SEQUENCE:
                 media_file.path = get_img_seq_media_path(media_file.path, _load_file_path)
+
+        if media_file.path == NOT_FOUND:
+            raise FileProducerNotFoundError(orig_path)
 
         # This attr was added for 1.8. It is not computed for older projects.
         if (not hasattr(media_file, "info")):
