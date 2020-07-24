@@ -57,6 +57,13 @@ def get_right_justified_box(widgets):
     for widget in widgets:
         hbox.pack_start(widget, False, False, 0)
     return hbox
+    
+def get_right_justified_box(widgets):
+    hbox = Gtk.HBox()
+    hbox.pack_start(Gtk.Label(), True, True, 0)
+    for widget in widgets:
+        hbox.pack_start(widget, False, False, 0)
+    return hbox
 
 def get_sides_justified_box(widgets, count_of_widgets_on_the_left=1):
     hbox = Gtk.HBox()
@@ -99,6 +106,17 @@ def get_two_column_box(widget1, widget2, left_width):
     hbox.pack_start(widget2, True, True, 0)
     return hbox
 
+def get_three_column_box(widget1, widget2, widget3, left_width, right_width):
+    hbox = Gtk.HBox()
+    left_box = get_left_justified_box([widget1])
+    left_box.set_size_request(left_width, TWO_COLUMN_BOX_HEIGHT)
+    right_box = get_right_justified_box([widget3])
+    right_box.set_size_request(right_width, TWO_COLUMN_BOX_HEIGHT)
+    hbox.pack_start(left_box, False, True, 0)
+    hbox.pack_start(widget2, True, True, 0)
+    hbox.pack_start(right_box, True, True, 0)
+    return hbox
+    
 def get_two_column_box_right_pad(widget1, widget2, left_width, right_pad):
     left_box = get_left_justified_box([widget1])
     left_box.set_size_request(left_width, TWO_COLUMN_BOX_HEIGHT)

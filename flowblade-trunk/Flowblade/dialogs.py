@@ -1585,17 +1585,32 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
 
 def _get_dynamic_kb_row(root_node, code):
     key_name, action_name = shortcuts.get_shortcut_info(root_node, code)
-    return _get_kb_row(key_name, action_name)
-    
-def _get_kb_row(msg1, msg2):
+    surface_active = guiutils.get_cairo_image("kb_configuration")
+    surface_not_active = guiutils.get_cairo_image("kb_configuration_not_active")
+    surfaces = [surface_active, surface_not_active]
+    edit_launch = guicomponents.HamburgerPressLaunch(   _kb_short_cut_edit, surfaces,      
+                                                        -1, (action_name, key_name))
+     
+    return _get_kb_row(key_name, action_name, edit_launch)
+
+def _get_kb_row(msg1, msg2, edit_launch=None):
     label1 = Gtk.Label(label=msg1)
     label2 = Gtk.Label(label=msg2)
-    KB_SHORTCUT_ROW_WIDTH = 400
+    if edit_launch == None:
+        widget = Gtk.Label()
+    else:
+        widget = edit_launch.widget
+        
+    KB_SHORTCUT_ROW_WIDTH = 500
     KB_SHORTCUT_ROW_HEIGHT = 22
-    row = guiutils.get_two_column_box(label1, label2, 170)
+    #get_three_column_box(widget1, widget2, widget3, left_width, right_width):
+    row = guiutils.get_three_column_box(label1, label2, widget, 170, 48)
     row.set_size_request(KB_SHORTCUT_ROW_WIDTH, KB_SHORTCUT_ROW_HEIGHT)
     row.show()
     return row
+
+def _kb_short_cut_edit(widget, event, data):
+    print(data)
 
 def watermark_dialog(add_callback, remove_callback):
     dialog = Gtk.Dialog(_("Sequence Watermark"),  gui.editor_window.window,
