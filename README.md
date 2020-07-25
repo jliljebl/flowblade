@@ -1,4 +1,3 @@
-
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
 **New release 2.6 now available.**
@@ -8,14 +7,15 @@
 **Installing instructions are available [here](./flowblade-trunk/docs/INSTALLING.md).**
 
 **Contents:**
-  1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
-  1. [Features](https://github.com/jliljebl/flowblade#features)
-  1. [Releases](https://github.com/jliljebl/flowblade#releases)
-  1. [Installing Flowblade](https://github.com/jliljebl/flowblade#installing-flowblade)
-  1. [Docs](https://github.com/jliljebl/flowblade#docs)
-  1. [Screenshot](https://github.com/jliljebl/flowblade#screenshot)
-  1. [Forum, Webpage](https://github.com/jliljebl/flowblade#forum-webpage)
-  1. [Contact](https://github.com/jliljebl/flowblade#contact)
+
+1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
+2. [Features](https://github.com/jliljebl/flowblade#features)
+3. [Releases](https://github.com/jliljebl/flowblade#releases)
+4. [Installing Flowblade](https://github.com/jliljebl/flowblade#installing-flowblade)
+5. [Docs](https://github.com/jliljebl/flowblade#docs)
+6. [Screenshot](https://github.com/jliljebl/flowblade#screenshot)
+7. [Forum, Webpage](https://github.com/jliljebl/flowblade#forum-webpage)
+8. [Contact](https://github.com/jliljebl/flowblade#contact)
 
 # Introduction
 
@@ -25,40 +25,39 @@ With Flowblade Movie Editor you can compose movies from video clips, audio clips
 
 Flowblade offers a configurable workflow - toolset, its order, default tool and certain timeline behaviours are user settable.
 
-
 # Features
 
 **Editing:**
 
-  * 11 editing tools, 9 of which can be selected to the working set
-  * 4 methods to insert / overwrite / append clips on the timeline
-  * Drag'n'Drop clips on the timeline
-  * Clip and compositor parenting with other clips
-  * Max. 9 combined video and audio tracks available
+* 11 editing tools, 9 of which can be selected to the working set
+* 4 methods to insert / overwrite / append clips on the timeline
+* Drag'n'Drop clips on the timeline
+* Clip and compositor parenting with other clips
+* Max. 9 combined video and audio tracks available
 
 **Image compositing:**
 
-  * 10 compositors. Mix, zoom, move and rotate source video with keyframed animation tools
-  * 19 blends. Stardand image blend modes like Add, Hardlight and Overlay are available
-  * 40+ pattern wipes. 
+* 10 compositors. Mix, zoom, move and rotate source video with keyframed animation tools
+* 19 blends. Stardand image blend modes like Add, Hardlight and Overlay are available
+* 40+ pattern wipes. 
 
 **Image and audio filtering:**
 
-  * 50+ image filters: color correction, image effects, distorts, alpha manipulation, blur, edge detection, motion effects, freeze frame, etc.
-  * 30+ audio filters: keyframed volume mixing, echo, reverb, distort, etc.
+* 50+ image filters: color correction, image effects, distorts, alpha manipulation, blur, edge detection, motion effects, freeze frame, etc.
+* 30+ audio filters: keyframed volume mixing, echo, reverb, distort, etc.
 
 **Supported editable media types:**
 
-  * Most common video and audio formats, depends on installed MLT/FFMPEG codecs
-  * JPEG, PNG, TGA, TIFF graphics file types
-  * SVG vector graphics
-  * Numbered frame sequences 
+* Most common video and audio formats, depends on installed MLT/FFMPEG codecs
+* JPEG, PNG, TGA, TIFF graphics file types
+* SVG vector graphics
+* Numbered frame sequences 
 
 **Output encoding:**
 
-  * Most common video and audio formats, depends on installed MLT/FFMPEG codecs
-  * User can define rendering by setting FFMpeg args individually
-        
+* Most common video and audio formats, depends on installed MLT/FFMPEG codecs
+* User can define rendering by setting FFMpeg args individually
+
 # Releases
 
 **Latest release:** Flowblade Movie Editor 2.6 was released on July 2020.
@@ -83,24 +82,17 @@ Installing instructions are available [here](./flowblade-trunk/docs/INSTALLING.m
 
 [Dependencies](./flowblade-trunk/docs/DEPENDENCIES.md)
 
-
-
 # Screenshot
 
 [Screenshot 2.0 custom theme](./flowblade-trunk/docs/Screenshot-2-0.png)
 
-[Screenshot 1.4 dark theme](./flowblade-trunk/docs/Screenshot-1-4-dark.png)
-
-
 These are in the repository */docs* folder.
-
 
 # Forum, Webpage
 
 For questions and discussion on Flowblade we have a [User Forum](https://github.com/jliljebl/flowblade-forum).
 
 [The project webpage is here](http://jliljebl.github.io/flowblade/). 
-
 
 # Contact
 
