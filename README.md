@@ -82,6 +82,8 @@ Installing instructions are available [here](./flowblade-trunk/docs/INSTALLING.m
 
 [Dependencies](./flowblade-trunk/docs/DEPENDENCIES.md)
 
+[System Requirements](./flowblade-trunk/docs/SYSTEM_REQUIREMENTS.md)
+
 # Screenshot
 
 [Screenshot 2.0 custom theme](./flowblade-trunk/docs/Screenshot-2-0.png)
