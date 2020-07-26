@@ -48,6 +48,8 @@ import utils
 import workflow
 
 
+kb_shortcut_changed_callback = None # Set when dialog lauched, using gloal saves modifying 50+ lines.
+
 def new_project_dialog(callback):
     default_profile_index = mltprofiles.get_default_profile_index()
     default_profile = mltprofiles.get_default_profile()
@@ -1384,7 +1386,12 @@ def fade_edit_dialog(callback, transition_data):
     _default_behaviour(dialog)
     dialog.show_all()
 
-def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, callback):
+def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, change_presets_callback, change_shortcut_callback):
+    
+    # This too much haslle to not use global
+    global kb_shortcut_changed_callback
+    kb_shortcut_changed_callback = change_shortcut_callback
+    
     dialog = Gtk.Dialog(_("Keyboard Shortcuts"),
                         parent_window,
                         Gtk.DialogFlags.DESTROY_WITH_PARENT,
@@ -1431,7 +1438,7 @@ def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, callback):
     dialog.vbox.pack_start(content_panel, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
-    dialog.connect('response', callback, shortcuts_combo)
+    dialog.connect('response', change_presets_callback, shortcuts_combo)
     dialog.show_all()
  
 def _shorcuts_selection_changed(combo, scroll_hold_panel, diff_data, dialog):
@@ -1585,12 +1592,7 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
 
 def _get_dynamic_kb_row(root_node, code):
     key_name, action_name = shortcuts.get_shortcut_info(root_node, code)
-    surface_active = guiutils.get_cairo_image("kb_configuration")
-    surface_not_active = guiutils.get_cairo_image("kb_configuration_not_active")
-    surfaces = [surface_active, surface_not_active]
-    edit_launch = guicomponents.HamburgerPressLaunch(   _kb_short_cut_edit, surfaces,      
-                                                        -1, (action_name, key_name))
-     
+    edit_launch = guicomponents.KBShortcutEditor(action_name, key_name, kb_shortcut_changed_callback) # kb_shortcut_changed_callback is global, set at dialog launch
     return _get_kb_row(key_name, action_name, edit_launch)
 
 def _get_kb_row(msg1, msg2, edit_launch=None):

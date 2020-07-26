@@ -3494,4 +3494,60 @@ class MonitorSwitch:
             self.callback(appconsts.MONITOR_TLINE_BUTTON_PRESSED)
         elif editorstate.timeline_visible() == True:
             self.callback(appconsts.MONITOR_CLIP_BUTTON_PRESSED)
+
+
+class KBShortcutEditor:
+
+    def __init__(self, action_name, key_name, set_shortcut_callback):
         
+        self.action_name = action_name
+        self.key_name = key_name
+        self.set_shortcut_callback = set_shortcut_callback
+        self.shortcut_label = None # set later
+         
+        surface_active = guiutils.get_cairo_image("kb_configuration")
+        surface_not_active = guiutils.get_cairo_image("kb_configuration_not_active")
+        surfaces = [surface_active, surface_not_active]
+        edit_launch = HamburgerPressLaunch(lambda w,e:self.kb_short_cut_edit(), surfaces)
+        
+        item_vbox = Gtk.HBox(False, 2)
+        item_vbox.pack_start(Gtk.Label(_("Press Key + Modifier")), True, True, 0)
+           
+        self.kb_input = Gtk.EventBox()
+        self.kb_input.add_events(Gdk.EventMask.KEY_PRESS_MASK)
+        self.kb_input.connect("key-press-event", lambda w,e: self.kb_input_listener(e))
+        self.kb_input.set_can_focus(True)
+        self.kb_input.add(item_vbox)
+
+        self.widget = Gtk.Stack()
+
+        edit_launch.widget.show()
+        self.kb_input.show()
+        
+        self.widget.add_named(edit_launch.widget, "edit_launch")
+        self.widget.add_named(self.kb_input, "kb_input")
+        self.widget.set_visible_child_name("edit_launch")
+
+    def set_shortcut_label(self, shortcut_label):
+        self.shortcut_label = shortcut_label
+  
+    def kb_short_cut_edit(self):
+        self.widget.set_visible_child_name("kb_input")
+        self.kb_input.grab_focus()
+
+    def kb_input_listener(self, event):
+        print(event.keyval)
+        
+        # Gdk.KEY_Return ? Are using this as clear and make "exit trim edit" not settable?
+        
+        # Single modifier keys are not accepted as keyboard shortcuts.
+        if  event.keyval == Gdk.KEY_Control_L or  event.keyval == Gdk.KEY_Control_R \
+            or event.keyval == Gdk.KEY_Alt_L or event.keyval == Gdk.KEY_Alt_R \
+            or event.keyval == Gdk.KEY_Shift_L or event.keyval == Gdk.KEY_Shift_R \
+            or event.keyval == Gdk.KEY_Shift_R or event.keyval == Gdk.KEY_ISO_Level3_Shift:
+
+            return
+            
+        self.widget.set_visible_child_name("edit_launch")
+
+        self.set_shortcut_callback(self.action_name, event, self.shortcut_label)

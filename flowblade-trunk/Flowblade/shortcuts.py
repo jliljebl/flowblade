@@ -135,6 +135,16 @@ def set_keyboard_shortcuts():
 
     #_print_shortcuts()
 
+def get_shortcut_info_for_keyname_and_modlist(key_val_name, mod_list):
+    out_str = ""
+    for mod in mod_list:
+        out_str += _mod_names[mod]
+        out_str += " + "
+        
+    key_name = _key_names[key_val_name]
+    out_str += key_name
+    return out_str
+
 def get_shortcuts_xml_root_node(xml_file):
     try:
         shortcuts = etree.parse(respaths.SHORTCUTS_PATH + xml_file)
@@ -242,6 +252,7 @@ def _set_key_names():
     _key_names['n'] = "N"
     _key_names['g'] = "G"
     _key_names['s'] = "S"
+    _key_names['p'] = "P"
     _key_names['delete'] = _("Delete")
     _key_names['home'] = _("HOME")
     _key_names['end'] = _("END")
