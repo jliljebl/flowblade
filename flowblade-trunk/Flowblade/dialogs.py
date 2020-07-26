@@ -1602,6 +1602,7 @@ def _get_kb_row(msg1, msg2, edit_launch=None):
         widget = Gtk.Label()
     else:
         widget = edit_launch.widget
+        edit_launch.set_shortcut_label(label1)
         
     KB_SHORTCUT_ROW_WIDTH = 500
     KB_SHORTCUT_ROW_HEIGHT = 22
@@ -1610,9 +1611,6 @@ def _get_kb_row(msg1, msg2, edit_launch=None):
     row.set_size_request(KB_SHORTCUT_ROW_WIDTH, KB_SHORTCUT_ROW_HEIGHT)
     row.show()
     return row
-
-def _kb_short_cut_edit(widget, event, data):
-    print(data)
 
 def watermark_dialog(add_callback, remove_callback):
     dialog = Gtk.Dialog(_("Sequence Watermark"),  gui.editor_window.window,

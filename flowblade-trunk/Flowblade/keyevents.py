@@ -721,4 +721,4 @@ def change_single_shortcut(action_name, event, shortcut_label):
         mods_list.append("SHIFT")
 
     shortcut_info_str = shortcuts.get_shortcut_info_for_keyname_and_modlist(key_val_name, mods_list)
-    print(shortcut_info_str)
+    shortcut_label.set_text(shortcut_info_str)
