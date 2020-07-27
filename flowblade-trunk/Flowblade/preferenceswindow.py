@@ -367,6 +367,11 @@ def _view_prefs_panel():
     show_full_file_names = Gtk.CheckButton()
     show_full_file_names.set_active(prefs.show_full_file_names)
 
+    # --------------------------------- Colorized icons
+    colorized_icons = Gtk.CheckButton()
+    colorized_icons.set_active(prefs.colorized_icons)
+    # ------------------------------------ End of Colorized icons
+
     buttons_combo = Gtk.ComboBoxText()
     buttons_combo.append_text(_("Glass"))
     buttons_combo.append_text(_("Simple"))
@@ -438,6 +443,9 @@ def _view_prefs_panel():
     row8 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Top row layout:")), top_row_layout, PREFERENCES_LEFT))
 
     row10 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Do GUI layout based on:")), layout_monitor, PREFERENCES_LEFT))
+    # --------------------------------- Colorized icons
+    row11 =  _row(guiutils.get_checkbox_row_box(colorized_icons, Gtk.Label(label=_("Toolbar color icons"))))
+    # ------------------------------------ End of Colorized icons
 
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row00, False, False, 0)
@@ -453,12 +461,17 @@ def _view_prefs_panel():
     vbox.pack_start(row6, False, False, 0)
     vbox.pack_start(row8, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
+    vbox.pack_start(row11, False, False, 0)
 
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
-    # Feb-2017 - SvdB - Added code for full file names
+    # --------------------------------- Colorized icons
     return vbox, (force_language_combo, display_splash_check, buttons_combo, dark_combo, theme_combo, audio_levels_combo,
-                  window_mode_combo, show_full_file_names, tracks_combo, top_row_layout, layout_monitor)
+                  window_mode_combo, show_full_file_names, tracks_combo, top_row_layout, layout_monitor, colorized_icons)
+#    # Feb-2017 - SvdB - Added code for full file names
+#    return vbox, (force_language_combo, display_splash_check, buttons_combo, dark_combo, theme_combo, audio_levels_combo,
+#                  window_mode_combo, show_full_file_names, tracks_combo, top_row_layout, layout_monitor)
+    # ------------------------------------ End of Colorized icons
 
 def _performance_panel():
     # Jan-2017 - SvdB

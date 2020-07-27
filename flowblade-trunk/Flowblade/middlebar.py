@@ -132,6 +132,13 @@ def _create_buttons(editor_window):
     else:
         no_decorations = False
 
+    # Colorized icons
+    if prefs.colorized_icons is True:
+        icon_color = "_color"
+    else:
+        icon_color = ""
+    # End of Colorized icons
+
     editor_window.zoom_buttons = glassbuttons.GlassButtonsGroup(38*size_adj, 23*size_adj, 2*size_adj, 8*size_adj, 5*size_adj)
     editor_window.zoom_buttons.add_button(guiutils.get_cairo_image("zoom_in"), updater.zoom_in)
     editor_window.zoom_buttons.add_button(guiutils.get_cairo_image("zoom_out"), updater.zoom_out)
@@ -141,40 +148,40 @@ def _create_buttons(editor_window):
     editor_window.zoom_buttons.no_decorations = no_decorations
     
     editor_window.edit_buttons = glassbuttons.GlassButtonsGroup(32*size_adj, 23*size_adj, 2*size_adj, 5*size_adj, 5*size_adj)
-    editor_window.edit_buttons.add_button(guiutils.get_cairo_image("dissolve"), tlineaction.add_transition_pressed)
-    editor_window.edit_buttons.add_button(guiutils.get_cairo_image("cut"), tlineaction.cut_pressed)
+    editor_window.edit_buttons.add_button(guiutils.get_cairo_image("dissolve" + icon_color), tlineaction.add_transition_pressed)
+    editor_window.edit_buttons.add_button(guiutils.get_cairo_image("cut" + icon_color), tlineaction.cut_pressed)
     tooltips = [_("Add Rendered Transition - 2 clips selected\nAdd Rendered Fade - 1 clip selected"), _("Cut Active Tracks - X\nCut All Tracks - Shift + X")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons, tooltips)
     editor_window.edit_buttons.no_decorations = no_decorations
         
     editor_window.edit_buttons_3 = glassbuttons.GlassButtonsGroup(46*size_adj, 23*size_adj, 2*size_adj, 3*size_adj, 5*size_adj)
-    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("splice_out"), tlineaction.splice_out_button_pressed)
-    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("lift"), tlineaction.lift_button_pressed)
-    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("ripple_delete"), tlineaction.ripple_delete_button_pressed)
-    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("delete_range"), tlineaction.delete_range_button_pressed)
+    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("splice_out" + icon_color), tlineaction.splice_out_button_pressed)
+    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("lift" + icon_color), tlineaction.lift_button_pressed)
+    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("ripple_delete" + icon_color), tlineaction.ripple_delete_button_pressed)
+    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("delete_range" + icon_color), tlineaction.delete_range_button_pressed)
     tooltips = [_("Splice Out - Delete"), _("Lift - Control + Delete"), _("Ripple Delete"), _("Range Delete")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons_3, tooltips)
     editor_window.edit_buttons_3.no_decorations = no_decorations
 
     editor_window.edit_buttons_2 = glassbuttons.GlassButtonsGroup(44*size_adj, 23*size_adj, 2*size_adj, 3*size_adj, 5*size_adj)
-    editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("resync"), tlineaction.resync_button_pressed)
-    editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("split_audio"), tlineaction.split_audio_button_pressed)
+    editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("resync" + icon_color), tlineaction.resync_button_pressed)
+    editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("split_audio" + icon_color), tlineaction.split_audio_button_pressed)
     tooltips = [_("Resync Selected"), _("Split Audio")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons_2, tooltips)
     editor_window.edit_buttons_2.no_decorations = no_decorations
     
     editor_window.monitor_insert_buttons = glassbuttons.GlassButtonsGroup(44*size_adj, 23*size_adj, 2*size_adj, 3*size_adj, 5*size_adj)
-    editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("overwrite_range"), tlineaction.range_overwrite_pressed)
-    editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("overwrite_clip"), tlineaction.three_point_overwrite_pressed)
-    editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("insert_clip"), tlineaction.insert_button_pressed)
-    editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("append_clip"), tlineaction.append_button_pressed)
+    editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("overwrite_range" + icon_color), tlineaction.range_overwrite_pressed)
+    editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("overwrite_clip" + icon_color), tlineaction.three_point_overwrite_pressed)
+    editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("insert_clip" + icon_color), tlineaction.insert_button_pressed)
+    editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("append_clip" + icon_color), tlineaction.append_button_pressed)
     tooltips = [_("Overwrite Range"), _("Overwrite Clip - T"), _("Insert Clip - Y"), _("Append Clip - U")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.monitor_insert_buttons, tooltips)
     editor_window.monitor_insert_buttons.no_decorations = no_decorations
     
     editor_window.undo_redo = glassbuttons.GlassButtonsGroup(28*size_adj, 23*size_adj, 2*size_adj, 2*size_adj, 7*size_adj)
-    editor_window.undo_redo.add_button(guiutils.get_cairo_image("undo"), undo.do_undo_and_repaint)
-    editor_window.undo_redo.add_button(guiutils.get_cairo_image("redo"), undo.do_redo_and_repaint)
+    editor_window.undo_redo.add_button(guiutils.get_cairo_image("undo" + icon_color), undo.do_undo_and_repaint)
+    editor_window.undo_redo.add_button(guiutils.get_cairo_image("redo" + icon_color), undo.do_redo_and_repaint)
     tooltips = [_("Undo - Ctrl + Z"), _("Redo - Ctrl + Y")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.undo_redo, tooltips)
     editor_window.undo_redo.no_decorations = no_decorations
