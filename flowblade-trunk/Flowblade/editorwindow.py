@@ -248,7 +248,7 @@ class EditorWindow:
             ('AddSequence', None, _('Add New Sequence'), None, None, lambda a:projectaction.add_new_sequence()),
             ('EditSequence', None, _('Edit Selected Sequence'), None, None, lambda a:projectaction.change_edit_sequence()),
             ('DeleteSequence', None, _('Delete Selected Sequence'), None, None, lambda a:projectaction.delete_selected_sequence()),
-            ('AddReadyMade', None, _('Add Ready Made media Item...'), None, None, lambda a:readymade.show_dialog()),
+            ('AddReadyMade', None, _('Add Ready Made Media Item...'), None, None, lambda a:readymade.show_dialog()),
             ('CompositingModeMenu', None, _('Compositing Mode')),
             ('TimelineRenderingMenu', None, _('Timeline Rendering')),
             ('PatternProducersMenu', None, _('Create Pattern Producer')),
