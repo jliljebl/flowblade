@@ -89,6 +89,7 @@ import projectdata
 import projectinfogui
 import propertyeditorbuilder
 import proxyediting
+import readymade
 import render
 import renderconsumer
 import respaths
@@ -191,6 +192,9 @@ def main(root_path):
     # Apr-2017 - SvdB - Keyboard shortcuts
     shortcuts.load_shortcut_files()
     shortcuts.load_shortcuts()
+
+    # Load readymades
+    readymade.init()
 
     # Aug-2019 - SvdB - AS
     # The test for len != 4 is to make sure that if we change the number of values below the prefs are reset to the correct list

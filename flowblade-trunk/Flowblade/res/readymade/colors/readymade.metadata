@@ -1,0 +1,10 @@
+{
+    "name": "Colors",
+    "type": "blenderproject",
+    "program": "colors.blend",
+    "editdata": "colors.editdata",
+    "category": "textanimation",
+    "author": "Janne Liljeblad",
+    "version": "1",
+    "date": "27-07-2020"
+}

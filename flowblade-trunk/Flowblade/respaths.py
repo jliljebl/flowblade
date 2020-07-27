@@ -52,7 +52,7 @@ def set_paths(root_path):
     GPL_3_DOC, ROOT_PARENT, PATTERN_PRODUCER_PATH, TRANSLATIONS_DOC, \
     LAUNCH_DIR, REPLACEMENTS_XML_DOC, GMIC_SCRIPTS_DOC,  \
     PHANTOM_JAR, PHANTOM_DIR, DEVELOPERS_DOC, CONTRIBUTORS_DOC, \
-    SHORTCUTS_PATH
+    SHORTCUTS_PATH, READYMADE_PATH
     
     ROOT_PATH = root_path
     IMAGE_PATH = root_path + "/res/img/"
@@ -76,6 +76,7 @@ def set_paths(root_path):
     PHANTOM_JAR = root_path + "/phantom2d/Phantom2D.jar"
     # Apr-2017 - SvdB
     SHORTCUTS_PATH = root_path + "/res/shortcuts/"
+    READYMADE_PATH = root_path + "/res/readymade/"
 
 def apply_dark_theme():
     global IMAGE_PATH
