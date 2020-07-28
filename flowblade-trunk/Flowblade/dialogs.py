@@ -1398,11 +1398,15 @@ def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, change_presets_
                         (_("Cancel"), Gtk.ResponseType.REJECT,
                         _("Apply"), Gtk.ResponseType.ACCEPT))
 
-    presets_label = guiutils.bold_label(_("Shortcuts Presets:"))
+    presets_label = guiutils.bold_label(_("Shortcuts Group:"))
     shortcuts_combo = guicomponents.get_shorcuts_selector()
 
+    hamburger_menu = guicomponents.HamburgerPressLaunch(_kb_menu_callback, None,  -1, shortcuts_combo)
+    guiutils.set_margins(hamburger_menu.widget, 5, 0, 0, 32)
     hbox = Gtk.HBox()
+    hbox.pack_start(hamburger_menu.widget, False, True, 0)
     hbox.pack_start(presets_label, False, True, 0)
+    hbox.pack_start(guiutils.pad_label(4, 4), False, False, 0)
     hbox.pack_start(shortcuts_combo, True, True, 0)
     
     scroll_hold_panel = Gtk.HBox()
@@ -1441,6 +1445,28 @@ def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, change_presets_
     dialog.connect('response', change_presets_callback, shortcuts_combo)
     dialog.show_all()
  
+def _kb_menu_callback(widget, event, data):
+    #print(shortcuts_combo, get_active())
+    guicomponents.get_kb_shortcuts_hamburger_menu(event, _kb_menu_item_selected, data) #:_kb_menu_item_selected, shortcuts_combo)
+
+def _kb_menu_item_selected(widget, data):
+    action, data = data
+    if action == "add":
+        dialog, entry = dialogutils.get_single_line_text_input_dialog(30, 180, _("Add New Custom Shortcuts Group"), _("Ok"),
+                                      _("Custom sShortcuts Group name:"), "")
+        dialog.connect('response', _create_new_kb_shortcuts_group, entry)
+        dialog.show_all()
+
+def _create_new_kb_shortcuts_group(dialog, response_id, entry):
+    print(entry.get_text())
+    if response_id != Gtk.ResponseType.ACCEPT:
+        name = entry.get_text()
+        if name == "": # No need for info dialog, user should really get this
+            dialog.destroy()
+            return
+        custom_xml = shortcuts.create_custom_shortcuts_xml(name)
+    dialog.destroy()
+
 def _shorcuts_selection_changed(combo, scroll_hold_panel, diff_data, dialog):
     selected_xml = shortcuts.shortcut_files[combo.get_active()]
     _display_keyboard_schortcuts(selected_xml, workflow.get_tline_tool_working_set(), scroll_hold_panel)

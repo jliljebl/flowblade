@@ -116,6 +116,7 @@ levels_menu = Gtk.Menu()
 clip_effects_hamburger_menu = Gtk.Menu()
 bin_popup_menu = Gtk.Menu()
 filter_mask_menu = Gtk.Menu()
+kb_shortcuts_hamburger_menu = Gtk.Menu()
 
 # ------------------------------------------------- item lists
 class ImageTextTextListView(Gtk.VBox):
@@ -3069,6 +3070,17 @@ def get_clip_effects_editor_hamburger_menu(event, callback):
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
 
+def get_kb_shortcuts_hamburger_menu(event, callback, data):
+    menu = kb_shortcuts_hamburger_menu
+    guiutils.remove_children(menu)
+
+    menu.add(_get_menu_item(_("Add Custom Shortcuts Group"), callback, ("add", data)))
+    menu.add(_get_menu_item(_("Delete Custom Shortcuts Group"), callback, ("delete", data)))
+    menu.add(_get_menu_item(_("Reset Shortcuts"), callback, ("reset", data)))
+
+    menu.show_all()
+    menu.popup(None, None, None, None, event.button, event.time)
+    
 def get_filter_mask_menu(event, callback, filter_names, filter_msgs):
     menu = filter_mask_menu
     guiutils.remove_children(menu)
@@ -3434,7 +3446,7 @@ class HamburgerPressLaunch:
             if self.data == None:
                 self.callback(self.widget, event)
             else:
-                self.callback(self.widget, event, data)
+                self.callback(self.widget, event, self.data)
 
 
 class MonitorSwitch:
