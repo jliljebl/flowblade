@@ -19,15 +19,19 @@
 """
 
 # Apr-2017 - SvdB - Functions to scan available shortcut files, validate and load them
-import appconsts
-import respaths
 import os
 import xml.etree.ElementTree as etree
-import editorpersistance
 import re
+
+import appconsts
+import editorpersistance
+import respaths
+import userfolders
+
 
 
 DEFAULT_SHORTCUTS_FILE = "flowblade.xml"
+CUSTOM_SHORTCUTS_FILE_NAME_START = "custom_shortcuts_"
     
 shortcut_files = []
 shortcut_files_display_names = []
@@ -40,13 +44,17 @@ _mod_names = {}
 def load_shortcut_files():
     global shortcut_files, shortcut_files_display_names
     default_shortcuts_file_found = False
+    loadable_shortcuts_files = os.listdir(respaths.SHORTCUTS_PATH) + os.listdir(userfolders.get_data_dir() + "/" + appconsts.USER_SHORTCUTS_DIR)
 
-    for f in os.listdir(respaths.SHORTCUTS_PATH):
+    for f in loadable_shortcuts_files:
         format_error = True
 
         if f[-4:] == '.xml':
+            # Get full path for either presets file on user custom shortcuts file.
+            full_path = _get_shortcut_file_fullpath(f)
+            print(full_path)
             # We have a valid file name. Now inspect the file for a valid format before loading it
-            shortcuts = etree.parse(respaths.SHORTCUTS_PATH + f)
+            shortcuts = etree.parse(full_path)
             # Verify if the file has the right format
             root = shortcuts.getroot()
             # Check the 'tag' is flowblade
@@ -97,7 +105,7 @@ def set_keyboard_shortcuts():
         # print "Switching to defaults."
         return
     try:
-        shortcuts = etree.parse(respaths.SHORTCUTS_PATH + prefs.shortcuts)
+        shortcuts = etree.parse(_get_shortcut_file_fullpath(prefs.shortcuts))
         # Verify if the file has the right format
         root = shortcuts.getroot()
         # Check the 'tag' is flowblade
@@ -147,10 +155,34 @@ def get_shortcut_info_for_keyname_and_modlist(key_val_name, mod_list):
 
 def get_shortcuts_xml_root_node(xml_file):
     try:
-        shortcuts = etree.parse(respaths.SHORTCUTS_PATH + xml_file)
+        shortcuts = etree.parse(_get_shortcut_file_fullpath(xml_file))
         return shortcuts.getroot()
     except:
         return None # This is handled at callsites
+
+def create_custom_shortcuts_xml(name):
+
+    shortcuts = etree.parse( _get_shortcut_file_fullpath(editorpersistance.prefs.shortcuts))
+
+    # Get numbered custom shortuts file path
+    lowest_ver_number = 0
+    custom_files = os.listdir(userfolders.get_data_dir() + "/" + appconsts.USER_SHORTCUTS_DIR)
+    for f in custom_files:
+        dot_pos = f.find(".")
+        num_str = f[len(CUSTOM_SHORTCUTS_FILE_NAME_START):dot_pos]
+        if int(num_str) > lowest_ver_number:
+            lowest_ver_number = int(num_str) 
+    
+    new_shortcuts_file = userfolders.get_data_dir() + "/" + appconsts.USER_SHORTCUTS_DIR + CUSTOM_SHORTCUTS_FILE_NAME_START + str(lowest_ver_number + 1) + ".xml"
+        
+    # Verify if the file has the right format
+    root = shortcuts.getroot()
+    root.set('name', name)
+    root.set('editable', 'True')
+    out_str = etree.tostring(root)#, encoding="us-ascii", method="xml")
+    
+    shortcuts.write(new_shortcuts_file)
+    #print(out_str, new_shortcuts_file)
 
 def get_shortcut_info(root, code):
     events = root.getiterator('event')
@@ -184,6 +216,12 @@ def get_diff_to_defaults(xml_file):
             diff_str = diff_str + action_name + " (" + key_name_test + ")    "
     
     return diff_str
+
+def _get_shortcut_file_fullpath(f):
+    full_path = respaths.SHORTCUTS_PATH + f
+    if os.path.isfile(full_path) == False:
+        full_path = userfolders.get_data_dir() + "/" + appconsts.USER_SHORTCUTS_DIR + f
+    return full_path
 
 def _set_keyboard_action_names():
     global _keyboard_action_names

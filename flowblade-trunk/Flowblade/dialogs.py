@@ -1465,6 +1465,7 @@ def _create_new_kb_shortcuts_group(dialog, response_id, entry):
             dialog.destroy()
             return
         custom_xml = shortcuts.create_custom_shortcuts_xml(name)
+        
     dialog.destroy()
 
 def _shorcuts_selection_changed(combo, scroll_hold_panel, diff_data, dialog):
