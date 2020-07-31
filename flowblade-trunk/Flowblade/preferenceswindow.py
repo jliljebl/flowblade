@@ -48,6 +48,10 @@ def preferences_dialog():
     edit_prefs_panel, edit_prefs_widgets = _edit_prefs_panel()
     playback_prefs_panel, playback_prefs_widgets  = _playback_prefs_panel()
     view_pres_panel, view_pref_widgets = _view_prefs_panel()
+    # Toolbar preferences panel for free elements and order
+    toolbar_pres_panel, toolbar_pref_widgets = _toolbar_prefs_panel()
+    # End of Toolbar preferences panel for free elements and order
+
     # Jan-2017 - SvdB
     performance_panel, performance_widgets = _performance_panel()
     # Apr-2017 - SvdB
@@ -59,17 +63,25 @@ def preferences_dialog():
     notebook.append_page(edit_prefs_panel, Gtk.Label(label=_("Editing")))
     notebook.append_page(playback_prefs_panel, Gtk.Label(label=_("Playback")))
     notebook.append_page(view_pres_panel, Gtk.Label(label=_("View")))
+    #   Toolbar preferences panel for free elements and order
+    notebook.append_page(toolbar_pres_panel, Gtk.Label(label=_("Toolbar")))
+    # End of Toolbar preferences panel for free elements and order
     notebook.append_page(performance_panel, Gtk.Label(label=_("Performance")))
     guiutils.set_margins(notebook, 4, 24, 6, 0)
 
+    #   Toolbar preferences panel for free elements and order
     dialog.connect('response', _preferences_dialog_callback, (gen_opts_widgets, edit_prefs_widgets, playback_prefs_widgets, view_pref_widgets, \
-        performance_widgets))
+        toolbar_pref_widgets, performance_widgets))
+    # End of Toolbar preferences panel for free elements and order
     dialog.vbox.pack_start(notebook, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     dialogutils.default_behaviour(dialog)
     # Jul-2016 - SvdB - The next line is to get rid of the message "GtkDialog mapped without a transient parent. This is discouraged."
     dialog.set_transient_for(gui.editor_window.window)
     dialog.show_all()
+    # Free toolbar (middlebar) , Gtk.Notebook refuses to switch to a page unless the child widget is visible ; see the Gtk.Notebook reference 
+    notebook.set_current_page(0) # gen_opts_widgets
+    # End of Free toolbar (middlebar)
 
 def _preferences_dialog_callback(dialog, response_id, all_widgets):
     if response_id == Gtk.ResponseType.ACCEPT:
@@ -459,6 +471,101 @@ def _view_prefs_panel():
     # Feb-2017 - SvdB - Added code for full file names
     return vbox, (force_language_combo, display_splash_check, buttons_combo, dark_combo, theme_combo, audio_levels_combo,
                   window_mode_combo, show_full_file_names, tracks_combo, top_row_layout, layout_monitor)
+
+# Toolbar preferences panel for free elements and order
+def _toolbar_prefs_panel():
+    prefs = editorpersistance.prefs
+
+    global toolbar_list, groups_tools, cbutton_flag, cbutton
+    groups_tools = prefs.groups_tools
+    cbutton_flag = prefs.cbutton
+    cbutton_flag = [True, True, True, True, True, True, True, True, True, True]    
+    # Widgets
+    vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+    choice = Gtk.Label("Check the groups of buttons visible or not in the toolbar; select one and change order")
+    
+    toolbar_list = Gtk.ListBox()
+#    toolbar_list.connect("row-selected", row_selected)
+    toolbar_list.set_selection_mode(Gtk.SelectionMode.SINGLE)
+
+    box_move = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+    button_up = Gtk.Button(label="Up")
+    button_up.connect("clicked", row_up, vbox)
+    box_move.pack_start(button_up, False, False, 0)
+    button_down = Gtk.Button(label="Down")
+    button_down.connect("clicked", row_down, vbox)
+    box_move.pack_start(button_down, False, False, 0)
+
+    vbox.pack_start(choice, False, False, 0)
+    vbox.pack_start(toolbar_list, False, False, 0)
+    vbox.pack_start(box_move, False, False, 0)
+    
+    draw_listbox(vbox)
+    print("pw 574 ",  cbutton_flag)
+    return vbox, (groups_tools, cbutton_flag)
+
+#def row_selected(event, widget):
+#    pass
+#    print("pw 566", toolbar_list.get_selected_row())
+
+    
+def toggle_click(button, row_number):
+#    print("pw 593 ", row_number, cbutton_flag)
+    cbutton_flag[row_number] = button.get_active()
+#    print("pw 595 ", row_number,  cbutton_flag)
+
+def row_up(event, vbox):
+    for row_number in range(0, len(groups_tools)):
+        row = toolbar_list.get_row_at_index(row_number)
+#        print("pw 588 ", row_number)
+        if row ==  toolbar_list.get_selected_row() and row_number > 0:
+            elem_plus_un = groups_tools[row_number]
+            groups_tools[row_number] =  groups_tools[row_number - 1]
+            groups_tools[row_number - 1] = elem_plus_un
+            check_plus_un = cbutton_flag[row_number]
+            cbutton_flag[row_number] =  cbutton_flag[row_number - 1]
+            cbutton_flag[row_number - 1] = check_plus_un
+            break
+    for row_number in range(0, len(groups_tools)):
+        print("pw 597", row_number, groups_tools[row_number], cbutton_flag[row_number])
+    toolbar_list.unselect_all()
+    for row in toolbar_list:
+        toolbar_list.remove(row)
+    draw_listbox(vbox)
+
+def row_down(event, vbox):
+    print("pw 601", toolbar_list.get_selected_row(), groups_tools)
+    for row_number in range(0, len(groups_tools)):
+        row = toolbar_list.get_row_at_index(row_number)
+        if row ==  toolbar_list.get_selected_row() and row_number < len(groups_tools) -1:
+            elem_moins_un =  groups_tools[row_number]
+            groups_tools[row_number] =  groups_tools[row_number + 1]
+            groups_tools[row_number + 1] = elem_moins_un
+            check_moins_un = cbutton_flag[row_number]
+            cbutton_flag[row_number] =  cbutton_flag[row_number + 1]
+            cbutton_flag[row_number + 1] = check_moins_un
+            break
+    toolbar_list.unselect_all()
+    for row in toolbar_list:
+        toolbar_list.remove(row)
+    draw_listbox(vbox)
+
+def draw_listbox(vbox):
+    print("pw 569", groups_tools)
+    for row_number in range(0, len(groups_tools)):
+        row = Gtk.ListBoxRow.new()
+        box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        but = Gtk.CheckButton(label=str(row_number))
+        but.connect("toggled", toggle_click, row_number)
+        but.set_active( cbutton_flag[row_number])
+        box.pack_start(but, True, True, 0)
+        lab = Gtk.Label(groups_tools[row_number])
+        box.pack_start(lab, True, True, 0)
+        row.add(box)
+        toolbar_list.add(row)
+        print("pw 582 ", row_number, groups_tools[row_number], but.get_active(), cbutton_flag[row_number])
+    vbox.show_all()
+# End of Toolbar preferences panel for free elements and order
 
 def _performance_panel():
     # Jan-2017 - SvdB

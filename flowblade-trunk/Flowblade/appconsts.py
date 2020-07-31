@@ -201,6 +201,9 @@ TRIM_VIEW_OFF = 2
 MIDBAR_TC_LEFT = 0
 MIDBAR_TC_CENTER = 1
 MIDBAR_COMPONENTS_CENTERED = 2
+# -----------------------------------------Toolbar preferences panel for free elements and order
+MIDBAR_TC_FREE =3
+# -------------------------------------------End of Toolbar preferences panel for free elements and order
 
 # Windows mode
 SINGLE_WINDOW = 1

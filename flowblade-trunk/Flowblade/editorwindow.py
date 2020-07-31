@@ -1021,6 +1021,11 @@ class EditorWindow:
         mb_menu.append(tc_middle)
 
         components_centered = Gtk.RadioMenuItem.new_with_label([tc_left], _("Components Centered"))
+# --------------------------- Toolbar preferences panel for free elements and order
+        tc_free = Gtk.RadioMenuItem.new_with_label([tc_left], _("Free bar"))
+        tc_free.connect("activate", lambda w: middlebar._show_buttons_TC_FREE_layout(w))
+        mb_menu.append(tc_free)
+# --------------------------- End of Toolbar preferences panel for free elements and order
         components_centered.connect("activate", lambda w: middlebar._show_buttons_COMPONENTS_CENTERED_layout(w))
 
         mb_menu.append(components_centered)
@@ -1313,6 +1318,10 @@ class EditorWindow:
             middlebar.fill_with_COMPONENTS_CENTERED_pattern(buttons_row, self)
         elif editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_TC_LEFT:
             middlebar.fill_with_TC_LEFT_pattern(buttons_row, self)
+# -----------------------Toolbar preferences panel for free elements and order
+        elif editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_TC_FREE:
+            middlebar.fill_with_TC_FREE_pattern(buttons_row, self)
+# ------------------------End of Toolbar preferences panel for free elements and order
         else:
             middlebar.fill_with_TC_MIDDLE_pattern(buttons_row, self)
 
