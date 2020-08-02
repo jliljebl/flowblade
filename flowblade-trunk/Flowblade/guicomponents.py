@@ -3510,20 +3510,27 @@ class MonitorSwitch:
 
 class KBShortcutEditor:
 
-    def __init__(self, action_name, key_name, set_shortcut_callback):
+    edit_ongoing = False
+    input_listener = None
+
+    def __init__(self, code, key_name, set_shortcut_callback, editable=True):
         
-        self.action_name = action_name
+        self.code = code
         self.key_name = key_name
         self.set_shortcut_callback = set_shortcut_callback
         self.shortcut_label = None # set later
-         
-        surface_active = guiutils.get_cairo_image("kb_configuration")
-        surface_not_active = guiutils.get_cairo_image("kb_configuration_not_active")
-        surfaces = [surface_active, surface_not_active]
-        edit_launch = HamburgerPressLaunch(lambda w,e:self.kb_short_cut_edit(), surfaces)
         
+        if editable == True:
+            surface_active = guiutils.get_cairo_image("kb_configuration")
+            surface_not_active = guiutils.get_cairo_image("kb_configuration_not_active")
+            surfaces = [surface_active, surface_not_active]
+            edit_launch = HamburgerPressLaunch(lambda w,e:self.kb_shortcut_edit(), surfaces)
+        else:
+            edit_launch = utils.EmptyClass()
+            edit_launch.widget = Gtk.Label()
+            
         item_vbox = Gtk.HBox(False, 2)
-        item_vbox.pack_start(Gtk.Label(_("Press Key + Modifier")), True, True, 0)
+        item_vbox.pack_start(Gtk.Label(_("Input Shortcut")), True, True, 0)
            
         self.kb_input = Gtk.EventBox()
         self.kb_input.add_events(Gdk.EventMask.KEY_PRESS_MASK)
@@ -3534,21 +3541,28 @@ class KBShortcutEditor:
         self.widget = Gtk.Stack()
 
         edit_launch.widget.show()
+        row = guiutils.get_centered_box([edit_launch.widget])
+        row.show()
         self.kb_input.show()
         
-        self.widget.add_named(edit_launch.widget, "edit_launch")
+        self.widget.add_named(row, "edit_launch")
         self.widget.add_named(self.kb_input, "kb_input")
         self.widget.set_visible_child_name("edit_launch")
 
     def set_shortcut_label(self, shortcut_label):
         self.shortcut_label = shortcut_label
   
-    def kb_short_cut_edit(self):
+    def kb_shortcut_edit(self):
+        if KBShortcutEditor.edit_ongoing == True:
+            KBShortcutEditor.input_listener.kb_input.grab_focus()
+            return
+        KBShortcutEditor.edit_ongoing = True
         self.widget.set_visible_child_name("kb_input")
         self.kb_input.grab_focus()
+        KBShortcutEditor.input_listener = self
 
     def kb_input_listener(self, event):
-        print(event.keyval)
+
         
         # Gdk.KEY_Return ? Are using this as clear and make "exit trim edit" not settable?
         
@@ -3562,4 +3576,7 @@ class KBShortcutEditor:
             
         self.widget.set_visible_child_name("edit_launch")
 
-        self.set_shortcut_callback(self.action_name, event, self.shortcut_label)
+        self.set_shortcut_callback(self.code, event, self.shortcut_label)
+
+        KBShortcutEditor.edit_ongoing = False
+        KBShortcutEditor.input_listener = None

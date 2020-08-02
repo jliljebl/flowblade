@@ -1435,6 +1435,8 @@ def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, change_presets_
 
     scroll_window = _display_keyboard_schortcuts(editorpersistance.prefs.shortcuts, get_tool_list_func(), scroll_hold_panel)
 
+    guicomponents.KBShortcutEditor.edit_ongoing = False
+        
     shortcuts_combo.connect('changed', lambda w:_shorcuts_selection_changed(w, scroll_hold_panel, diff_data, dialog))
     
     guiutils.set_margins(content_panel, 12, 12, 12, 12)
@@ -1470,6 +1472,10 @@ def _create_new_kb_shortcuts_group(dialog, response_id, entry):
 
 def _shorcuts_selection_changed(combo, scroll_hold_panel, diff_data, dialog):
     selected_xml = shortcuts.shortcut_files[combo.get_active()]
+    
+    editorpersistance.prefs.shortcuts = selected_xml   
+    shortcuts.set_keyboard_shortcuts()
+    
     _display_keyboard_schortcuts(selected_xml, workflow.get_tline_tool_working_set(), scroll_hold_panel)
     diff_data.set_text(shortcuts.get_diff_to_defaults(selected_xml))
     dialog.show_all()
@@ -1619,7 +1625,11 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
 
 def _get_dynamic_kb_row(root_node, code):
     key_name, action_name = shortcuts.get_shortcut_info(root_node, code)
-    edit_launch = guicomponents.KBShortcutEditor(action_name, key_name, kb_shortcut_changed_callback) # kb_shortcut_changed_callback is global, set at dialog launch
+    editable = shortcuts.get_shortcuts_editable()
+    if editable == True:
+        edit_launch = guicomponents.KBShortcutEditor(code, key_name, kb_shortcut_changed_callback) # kb_shortcut_changed_callback is global, set at dialog launch
+    else:
+        edit_launch = guicomponents.KBShortcutEditor(code, key_name, None, False) 
     return _get_kb_row(key_name, action_name, edit_launch)
 
 def _get_kb_row(msg1, msg2, edit_launch=None):

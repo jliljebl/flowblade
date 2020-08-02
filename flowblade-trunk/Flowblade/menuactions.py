@@ -163,6 +163,7 @@ def keyboard_shortcuts_callback(dialog, response_id, presets_combo):
     dialog.destroy()
     
     if response_id == Gtk.ResponseType.REJECT:
+        # Need to to UNDO here now after editable shortcuts changes
         return
     
     selected_xml = shortcuts.shortcut_files[selected_shortcuts_index]
@@ -170,4 +171,6 @@ def keyboard_shortcuts_callback(dialog, response_id, presets_combo):
         return
 
     editorpersistance.prefs.shortcuts = selected_xml
+    editorpersistance.save()
+    
     shortcuts.set_keyboard_shortcuts()

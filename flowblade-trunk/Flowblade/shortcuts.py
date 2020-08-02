@@ -39,7 +39,7 @@ _keyboard_actions = {}
 _keyboard_action_names = {}
 _key_names = {}
 _mod_names = {}
-
+_editable = False
 
 def load_shortcut_files():
     global shortcut_files, shortcut_files_display_names
@@ -94,7 +94,7 @@ def load_shortcuts():
     set_keyboard_shortcuts()
 
 def set_keyboard_shortcuts():
-    global _keyboard_actions
+    global _keyboard_actions, _editable
     prefs = editorpersistance.prefs
     print("Keyboard shortcuts file:",  editorpersistance.prefs.shortcuts)
     _modifier_dict = {}
@@ -113,7 +113,6 @@ def set_keyboard_shortcuts():
             # Check if this is a shortcuts file
             if root.get('file') == appconsts.SHORTCUTS_TAG:
                 # Get name and comments
-                print("Loading shortcuts: " + root.get('name'))
                 # We have good shortcuts file, destroy hardcoded defaults
                 _keyboard_actions = {}
                 # Now loop through all the events and assign them
@@ -138,6 +137,7 @@ def set_keyboard_shortcuts():
                     else:
                         _modifier_dict[''.join(sorted(re.sub('[\s]','',event.get('modifiers').lower())))] = event.get('code')
                     _keyboard_actions[event.text] = _modifier_dict
+        _editable = root.get('editable')
     except:
         print("Error opening shortcuts file:" + prefs.shortcuts)
 
@@ -160,8 +160,13 @@ def get_shortcuts_xml_root_node(xml_file):
     except:
         return None # This is handled at callsites
 
-def create_custom_shortcuts_xml(name):
+def get_shortcuts_editable():
+    if _editable == "True":
+        return True
+    else:
+        return False
 
+def create_custom_shortcuts_xml(name):
     shortcuts = etree.parse( _get_shortcut_file_fullpath(editorpersistance.prefs.shortcuts))
 
     # Get numbered custom shortuts file path
@@ -179,10 +184,42 @@ def create_custom_shortcuts_xml(name):
     root = shortcuts.getroot()
     root.set('name', name)
     root.set('editable', 'True')
-    out_str = etree.tostring(root)#, encoding="us-ascii", method="xml")
     
     shortcuts.write(new_shortcuts_file)
-    #print(out_str, new_shortcuts_file)
+
+def change_custom_shortcut(code, key_val_name, mods_list):
+    shortcuts_file = _get_shortcut_file_fullpath(editorpersistance.prefs.shortcuts)
+    shortcuts = etree.parse(shortcuts_file)
+    root = shortcuts.getroot()
+    events = root.getiterator('event')
+
+    target_event = None
+    for event in events:
+        if event.get('code') == code:
+            target_event = event
+            break
+    
+    if target_event == None:
+        # we really should not hit this
+        print("!!! no event for action name ", code, editorpersistance.prefs.shortcuts)
+        return
+    
+    mods_str = ""
+    for mod in mods_list:
+        mods_str += mod
+        mods_str += "+"
+    mods_str = mods_str[0:-1]
+
+    target_event.text = key_val_name
+    if len(mods_str) == 0:
+        try:
+            target_event.attrib.pop("modifiers")
+        except:
+            pass
+    else:
+        target_event.set("modifiers", mods_str)
+
+    shortcuts.write(shortcuts_file)
 
 def get_shortcut_info(root, code):
     events = root.getiterator('event')
@@ -341,4 +378,7 @@ def _set_key_names():
     _mod_names["ALT"] = _("Alt")
     _mod_names["SHIFT"] =  _("Shift")
     _mod_names["ALT+SHIFT"] = _("Alt + Shift")
+    _mod_names["CTRL+ALT"] = _("Control + Alt")
+    _mod_names["CTRL+SHIFT"] = _("Control + Shift")
+    _mod_names["CTRL+ALT+SHIFT"] = _("Control + Alt + Shift")
     _mod_names["CTRL"] = _("Control")

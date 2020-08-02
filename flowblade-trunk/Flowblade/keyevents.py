@@ -702,10 +702,7 @@ def paste_action():
     else:
         tlineaction.do_timeline_objects_paste()
 
-
-
-def change_single_shortcut(action_name, event, shortcut_label):
-    print(_get_shortcut_action(event))
+def change_single_shortcut(code, event, shortcut_label):
     key_val_name = Gdk.keyval_name(event.keyval).lower()
 
     mods_list = []
@@ -722,3 +719,6 @@ def change_single_shortcut(action_name, event, shortcut_label):
 
     shortcut_info_str = shortcuts.get_shortcut_info_for_keyname_and_modlist(key_val_name, mods_list)
     shortcut_label.set_text(shortcut_info_str)
+
+    shortcuts.change_custom_shortcut(code, key_val_name, mods_list)
+    shortcuts.set_keyboard_shortcuts()
