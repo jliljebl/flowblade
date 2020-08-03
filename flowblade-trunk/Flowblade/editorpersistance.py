@@ -190,8 +190,12 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
 #    auto_center_check, play_pause_button, auto_center_on_updown, \
 #    ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips = playback_prefs_widgets
 
+    # --------------------------------- Colorized icons
     force_language_combo, disp_splash, buttons_style, theme, theme_combo, audio_levels_combo, \
-    window_mode_combo, full_names, double_track_hights, top_row_layout, layout_monitor = view_prefs_widgets
+    window_mode_combo, full_names, double_track_hights, top_row_layout, layout_monitor, colorized_icons = view_prefs_widgets
+#    force_language_combo, disp_splash, buttons_style, theme, theme_combo, audio_levels_combo, \
+#    window_mode_combo, full_names, double_track_hights, top_row_layout, layout_monitor = view_prefs_widgets
+    # ------------------------------------ End of Colorized icons
 
     # Toolbar preferences panel for free elements and order
     groups_tools, cbutton_pw = toolbar_prefs_widget
@@ -253,7 +257,8 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     # Toolbar preferences panel for free elements and order
     prefs.groups_tools = groups_tools
     prefs.cbutton = cbutton_pw
-    # End of Toolbar preferences panel for free elements and order
+    # --------------------------------- Colorized icons
+    prefs.colorized_icons = colorized_icons.get_active()
 
 def get_graphics_default_in_out_length():
     in_fr = int(15000/2) - int(prefs.default_grfx_length/2)
@@ -365,3 +370,6 @@ class EditorPreferences:
             "edit_buttons",  "edit_buttons_3",  "edit_buttons_2",  "monitor_insert_buttons", "big_TC"]
         self.cbutton  = [True, True, True, True, True, True, True, True, True, True]
         # End of Toolbar preferences panel for free elements and order
+        # Colorized icons
+        self.colorized_icons = False
+        # End of Colorized icons

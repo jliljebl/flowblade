@@ -175,7 +175,16 @@ def get_cairo_image(img_name, suffix = ".png", force = None):
     try:
         img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + new_name + suffix)
     except:
-        img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + img_name + suffix)
+        # Colorized icons
+#        img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + img_name + suffix)
+        if img_name[-6:] == "_color":  #editorpersistance.prefs.colorized_icons is True:
+            try:
+                img =  cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + img_name + "_color" + suffix)
+            except:
+                img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + img_name[:-6] + suffix)
+        else:
+            img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + img_name + suffix)
+        # End of Colorized icons
     return img
 
 # Aug-2019 - SvdB - BB
