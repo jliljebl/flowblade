@@ -69,6 +69,7 @@ import preferenceswindow
 import projectaction
 import projectinfogui
 import proxyediting
+import shortcuts
 import titler
 import tlineaction
 import tlinerender
@@ -188,6 +189,13 @@ class EditorWindow:
         # Player consumer has to be stopped and started when window resized
         self.window.connect("window-state-event", lambda w, e:updater.refresh_player(e))
 
+        # Get customizable shortcuts that are displayed in menu
+        root = shortcuts.get_root()
+        resync_shortcut = shortcuts.get_shortcut_gtk_code(root, "resync")
+        clear_filters_shortcut = shortcuts.get_shortcut_gtk_code(root, "clear_filters")
+        sync_all_shortcut = shortcuts.get_shortcut_gtk_code(root, "sync_all")
+        print(sync_all_shortcut, clear_filters_shortcut)
+
         # Build menubar
         # Menubar build resources
         menu_actions = [
@@ -220,15 +228,15 @@ class EditorWindow:
             ('SequenceSplit', None, _('Split to new Sequence at Playhead Position'), None, None, lambda a:tlineaction.sequence_split_pressed()),
             ('DeleteClip', None, _('Lift'), None, None, lambda a:tlineaction.lift_button_pressed()),
             ('SpliceOutClip', None, _('Splice Out'), None, None, lambda a:tlineaction.splice_out_button_pressed()),
-            ('ResyncSelected', None, _('Resync'),  '<alt>R', None, lambda a:tlineaction.resync_button_pressed()),
+            ('ResyncSelected', None, _('Resync'),  resync_shortcut, None, lambda a:tlineaction.resync_button_pressed()),
             ('SetSyncParent', None, _('Set Sync Parent'), None, None, lambda a:_this_is_not_used()),
             ('AddTransition', None, _('Add Single Track Transition'), None, None, lambda a:tlineaction.add_transition_menu_item_selected()),
             ('AddFade', None, _('Add Single Track Fade'), None, None, lambda a:tlineaction.add_fade_menu_item_selected()),
-            ('ClearFilters', None, _('Clear Filters'), '<alt>C', None, lambda a:clipmenuaction.clear_filters()),
+            ('ClearFilters', None, _('Clear Filters'), clear_filters_shortcut, None, lambda a:clipmenuaction.clear_filters()),
             ('Timeline', None, _('Timeline')),
             ('FiltersOff', None, _('All Filters Off'), None, None, lambda a:tlineaction.all_filters_off()),
             ('FiltersOn', None, _('All Filters On'), None, None, lambda a:tlineaction.all_filters_on()),
-            ('SyncCompositors', None, _('Sync All Compositors'), '<alt>S', None, lambda a:tlineaction.sync_all_compositors()),
+            ('SyncCompositors', None, _('Sync All Compositors'), sync_all_shortcut, None, lambda a:tlineaction.sync_all_compositors()),
             ('ChangeSequenceTracks', None, _('Change Sequence Tracks Count...'), None, None, lambda a:projectaction.change_sequence_track_count()),
             ('Watermark', None, _('Watermark...'), None, None, lambda a:menuactions.edit_watermark()),
             ('DiskCacheManager', None, _('Disk Cache Manager'), None, None, lambda a:diskcachemanagement.show_disk_management_dialog()),

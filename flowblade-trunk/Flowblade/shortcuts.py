@@ -39,6 +39,7 @@ _keyboard_actions = {}
 _keyboard_action_names = {}
 _key_names = {}
 _mod_names = {}
+_gtk_mod_names = {}
 _editable = False
 
 def load_shortcut_files():
@@ -143,6 +144,10 @@ def set_keyboard_shortcuts():
 
     #_print_shortcuts()
 
+def get_root():
+        shortcuts = etree.parse(_get_shortcut_file_fullpath(editorpersistance.prefs.shortcuts))
+        return shortcuts.getroot()
+
 def get_shortcut_info_for_keyname_and_modlist(key_val_name, mod_list):
     out_str = ""
     for mod in mod_list:
@@ -233,13 +238,29 @@ def get_shortcut_info(root, code):
     
     return (None, None)
 
+def get_shortcut_gtk_code(root, code):
+    events = root.getiterator('event')
+
+    for event in events:
+        if event.get('code') == code:
+            gtk_code = ""
+            mod = event.get("modifiers")
+            if mod != "Any" and mod != None:
+                gtk_code += _gtk_mod_names[mod]
+                
+            gtk_code += event.text.upper()
+            #gtk_code = "'" + gtk_code + "'"
+            return gtk_code
+
+    return None
+
 def _get_mod_string(event):
     mod = event.get("modifiers")
     if mod == "Any" or mod == None:
         return ""
     
     return _mod_names[mod]
- 
+
 def get_diff_to_defaults(xml_file):
     diff_str = ""
     test_root = get_shortcuts_xml_root_node(xml_file)
@@ -266,6 +287,8 @@ def _set_keyboard_action_names():
     _keyboard_action_names = {}
     _keyboard_action_names['mark_in'] = _("Set Mark In")
     _keyboard_action_names['mark_out'] =  _("Set Mark Out")
+    _keyboard_action_names['to_mark_in'] =  _("Go To Mark In")
+    _keyboard_action_names['to_mark_out'] =  _("Go To Mark Out")
     _keyboard_action_names['clear_io_marks'] =  _("Clear In/Out Marks")
     _keyboard_action_names['play_pause'] = _("Start / Stop Playback")
     _keyboard_action_names['prev_cut'] = _("Prev Edit/Mark")
@@ -306,9 +329,11 @@ def _set_keyboard_action_names():
     _keyboard_action_names['nudge_back_10'] =  _("Nudge Move Selection Back 10 Frames")
     _keyboard_action_names['nudge_forward_10'] =  _("Nudge Move Selection Forward 10 Frames")
     _keyboard_action_names['open_next'] =  _("Open Next Media Item In Monitor")
-    
+    _keyboard_action_names['clear_filters'] = _("Clear Filters")
+    _keyboard_action_names['sync_all'] = _("Sync All Compositors")
+
 def _set_key_names():
-    global _key_names, _mod_names
+    global _key_names, _mod_names, _gtk_mod_names
     # Start with an empty slate
     _key_names = {}
     _key_names['i'] = "I"
@@ -382,3 +407,11 @@ def _set_key_names():
     _mod_names["CTRL+SHIFT"] = _("Control + Shift")
     _mod_names["CTRL+ALT+SHIFT"] = _("Control + Alt + Shift")
     _mod_names["CTRL"] = _("Control")
+
+    _gtk_mod_names["ALT"] = _("<alt>")
+    _gtk_mod_names["SHIFT"] =  _("<shift>")
+    _gtk_mod_names["ALT+SHIFT"] = _("<alt><shift>")
+    _gtk_mod_names["CTRL+ALT"] = _("<control><alt>")
+    _gtk_mod_names["CTRL+SHIFT"] = _("<control><shift>")
+    _gtk_mod_names["CTRL+ALT+SHIFT"] = _("<control><alt><shift>")
+    _gtk_mod_names["CTRL"] = _("<control>")

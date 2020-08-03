@@ -55,11 +55,7 @@
     <event code='mark_in' name='Mark In'>i</event>
     <event code='mark_out' name='Mark Out'>o</event>
     <event code='to_mark_in' name='Go To Mark In' modifiers='ALT'>i</event>
-    <event code='to_mark_in' name='Go To Mark In' modifiers='SHIFT'>i</event>
-    <event code='to_mark_in' name='Go To Mark In' modifiers='ALT+SHIFT'>i</event>
     <event code='to_mark_out' name='Go To Mark Out' modifiers='ALT'>o</event>
-    <event code='to_mark_out' name='Go To Mark Out' modifiers='SHIFT'>o</event>
-    <event code='to_mark_out' name='Go To Mark Out' modifiers='ALT+SHIFT'>o</event>
     <event code='clear_io_marks' name='Clear In/Out Marks' modifiers='ALT'>k</event>
     <event code='play_pause' name='Play / Pause'>space</event>
     <event code='prev_cut' name='Go To Previous Cut'>down</event>
@@ -75,8 +71,9 @@
     <event code='stop' name='Stop'>k</event>
     <event code='faster' name='Faster'>l</event>
     <event code='log_range' name='Log Range' modifiers='CTRL'>l</event>
-    <event code='log_range' name='Log Range'>g</event>
     <event code='resync' name='Resynchronization' modifiers='ALT'>r</event>
+    <event code="sync_all" name="Sync All Compositors" modifiers="ALT">s</event>
+    <event code='clear_filters' name='Clear Filters' modifiers='ALT'>c</event>
     <event code='delete' name='Delete'>delete</event>
     <event code='lift' name='Lift' modifiers='CTRL'>delete</event>
     <event code='to_start' name='Go To Start'>home</event>
