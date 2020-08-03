@@ -100,6 +100,24 @@ def _show_buttons_COMPONENTS_CENTERED_layout(widget):
     editorpersistance.prefs.midbar_layout = appconsts.MIDBAR_COMPONENTS_CENTERED
     editorpersistance.save()
 
+# ----------------------------- Toolbar preferences panel for free elements and order
+def _show_buttons_TC_FREE_layout(widget):
+    global w
+    w = gui.editor_window
+    if w == None:
+        return
+    if widget.get_active() == False:
+        return
+
+    _clear_container(w.edit_buttons_row)
+    _create_buttons(w)
+    fill_with_TC_FREE_pattern(w.edit_buttons_row, w)
+    w.window.show_all()
+
+    editorpersistance.prefs.midbar_layout = appconsts.MIDBAR_TC_FREE
+    editorpersistance.save()
+# --------------------------- End of Toolbar preferences panel for free elements and order
+
 def create_edit_buttons_row_buttons(editor_window, modes_pixbufs):
     global m_pixbufs
     m_pixbufs = modes_pixbufs
@@ -309,6 +327,29 @@ def fill_with_COMPONENTS_CENTERED_pattern(buttons_row, window):
     buttons_row.pack_start(_get_monitor_insert_buttons(), False, True, 0)
     buttons_row.pack_start(Gtk.Label(), True, True, 0)
     
+# ---------------------------  Toolbar preferences panel for free elements and order
+def fill_with_TC_FREE_pattern(buttons_row, window):
+    global w
+    w = window
+    prefs = editorpersistance.prefs
+    
+    groups_tools = prefs.groups_tools
+    cbutton_flag = prefs.cbutton
+    tools_dict = {"worflow_launch":w.worflow_launch.widget, "tool_selector":w.tool_selector.widget,  "zoom_buttons":_get_zoom_buttons_panel(),  \
+                        "undo_redo":_get_undo_buttons_panel(), "tool_buttons":_get_tools_buttons(),   "edit_buttons":_get_edit_buttons_panel(),\
+                        "edit_buttons_3":_get_edit_buttons_3_panel(),  "edit_buttons_2":_get_edit_buttons_2_panel(),  \
+                        "monitor_insert_buttons":_get_monitor_insert_buttons(),  "big_TC":w.big_TC}
+
+    buttons_row.set_homogeneous(False)
+    buttons_row.pack_start(Gtk.Label(), True, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
+    for row_number in range(0, len(groups_tools)):
+        if cbutton_flag[row_number] is True:
+            buttons_row.pack_start(tools_dict[groups_tools[row_number]], False, True, 0)
+            buttons_row.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
+    buttons_row.pack_start(Gtk.Label(), True, True, 0)
+# --------------------------- End of Toolbar preferences panel for free elements and order
+
 def _get_zoom_buttons_panel():    
     return w.zoom_buttons.widget
 

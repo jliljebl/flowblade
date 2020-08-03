@@ -170,7 +170,9 @@ def get_recent_projects():
 def update_prefs_from_widgets(widgets_tuples_tuple):
     # Aug-2019 - SvdB - BB - Replace double_track_hights by double_track_hights
     # Unpack widgets
-    gen_opts_widgets, edit_prefs_widgets, playback_prefs_widgets, view_prefs_widgets, performance_widgets = widgets_tuples_tuple
+    # Toolbar preferences panel for free elements and order
+    gen_opts_widgets, edit_prefs_widgets, playback_prefs_widgets, view_prefs_widgets, toolbar_prefs_widget, performance_widgets = widgets_tuples_tuple
+    # End of Toolbar preferences panel for free elements and order
 
     # Aug-2019 - SvdB - AS - added autosave_combo
     default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin, load_order_combo, \
@@ -194,6 +196,10 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
 #    force_language_combo, disp_splash, buttons_style, theme, theme_combo, audio_levels_combo, \
 #    window_mode_combo, full_names, double_track_hights, top_row_layout, layout_monitor = view_prefs_widgets
     # ------------------------------------ End of Colorized icons
+
+    # Toolbar preferences panel for free elements and order
+    groups_tools, cbutton_pw = toolbar_prefs_widget
+    # End of Toolbar preferences panel for free elements and order
 
     # Jan-2017 - SvdB
     perf_render_threads, perf_drop_frames = performance_widgets
@@ -248,9 +254,11 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     if len(render_folder_select.get_filenames()) != 0:
         prefs.default_render_directory = render_folder_select.get_filename()
     prefs.disk_space_warning = disk_cache_warning_combo.get_active()
+    # Toolbar preferences panel for free elements and order
+    prefs.groups_tools = groups_tools
+    prefs.cbutton = cbutton_pw
     # --------------------------------- Colorized icons
     prefs.colorized_icons = colorized_icons.get_active()
-    # ------------------------------------ End of Colorized icons
 
 def get_graphics_default_in_out_length():
     in_fr = int(15000/2) - int(prefs.default_grfx_length/2)
@@ -357,6 +365,11 @@ class EditorPreferences:
         self.open_jobs_panel_on_add = True
         self.render_jobs_sequentially = True
         self.disk_space_warning = 1 #  [off, 500MB,1GB, 2GB], see preferenceswindow.py
+        # Toolbar preferences panel for free elements and order
+        self.groups_tools =  ["worflow_launch", "tool_selector",  "zoom_buttons",  "undo_redo", "tool_buttons",    \
+            "edit_buttons",  "edit_buttons_3",  "edit_buttons_2",  "monitor_insert_buttons", "big_TC"]
+        self.cbutton  = [True, True, True, True, True, True, True, True, True, True]
+        # End of Toolbar preferences panel for free elements and order
         # Colorized icons
         self.colorized_icons = False
         # End of Colorized icons
