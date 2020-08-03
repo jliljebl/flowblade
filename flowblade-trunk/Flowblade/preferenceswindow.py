@@ -442,7 +442,6 @@ def _view_prefs_panel():
 
     # Layout
     row00 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Application window mode:")), window_mode_combo, PREFERENCES_LEFT))
-    #row0 = _row(guiutils.get_checkbox_row_box(force_english_check, Gtk.Label(label=_("Use English texts on localized OS"))))
     row9 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Force Language:")), force_language_combo, PREFERENCES_LEFT))
     row1 = _row(guiutils.get_checkbox_row_box(display_splash_check, Gtk.Label(label=_("Display splash screen"))))
     row2 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Buttons style:")), buttons_combo, PREFERENCES_LEFT))
@@ -453,12 +452,9 @@ def _view_prefs_panel():
     # Feb-2017 - SvdB - For full file names
     row6 =  _row(guiutils.get_checkbox_row_box(show_full_file_names, Gtk.Label(label=_("Show Full File names"))))
     row8 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Top row layout:")), top_row_layout, PREFERENCES_LEFT))
-
     row10 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Do GUI layout based on:")), layout_monitor, PREFERENCES_LEFT))
-    # --------------------------------- Colorized icons
     row11 =  _row(guiutils.get_checkbox_row_box(colorized_icons, Gtk.Label(label=_("Toolbar color icons"))))
-    # ------------------------------------ End of Colorized icons
-
+    
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row00, False, False, 0)
     vbox.pack_start(row10, False, False, 0)
@@ -477,13 +473,8 @@ def _view_prefs_panel():
     
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
-    # --------------------------------- Colorized icons
     return vbox, (force_language_combo, display_splash_check, buttons_combo, dark_combo, theme_combo, audio_levels_combo,
                   window_mode_combo, show_full_file_names, tracks_combo, top_row_layout, layout_monitor, colorized_icons)
-#    # Feb-2017 - SvdB - Added code for full file names
-#    return vbox, (force_language_combo, display_splash_check, buttons_combo, dark_combo, theme_combo, audio_levels_combo,
-#                  window_mode_combo, show_full_file_names, tracks_combo, top_row_layout, layout_monitor)
-    # ------------------------------------ End of Colorized icons
 
 # Toolbar preferences panel for free elements and order
 def _toolbar_prefs_panel():
@@ -498,7 +489,6 @@ def _toolbar_prefs_panel():
     choice = Gtk.Label("Check the groups of buttons visible or not in the toolbar; select one and change order")
     
     toolbar_list = Gtk.ListBox()
-#    toolbar_list.connect("row-selected", row_selected)
     toolbar_list.set_selection_mode(Gtk.SelectionMode.SINGLE)
 
     box_move = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
