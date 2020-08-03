@@ -188,8 +188,12 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
 #    auto_center_check, play_pause_button, auto_center_on_updown, \
 #    ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips = playback_prefs_widgets
 
+    # --------------------------------- Colorized icons
     force_language_combo, disp_splash, buttons_style, theme, theme_combo, audio_levels_combo, \
-    window_mode_combo, full_names, double_track_hights, top_row_layout, layout_monitor = view_prefs_widgets
+    window_mode_combo, full_names, double_track_hights, top_row_layout, layout_monitor, colorized_icons = view_prefs_widgets
+#    force_language_combo, disp_splash, buttons_style, theme, theme_combo, audio_levels_combo, \
+#    window_mode_combo, full_names, double_track_hights, top_row_layout, layout_monitor = view_prefs_widgets
+    # ------------------------------------ End of Colorized icons
 
     # Jan-2017 - SvdB
     perf_render_threads, perf_drop_frames = performance_widgets
@@ -244,6 +248,9 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     if len(render_folder_select.get_filenames()) != 0:
         prefs.default_render_directory = render_folder_select.get_filename()
     prefs.disk_space_warning = disk_cache_warning_combo.get_active()
+    # --------------------------------- Colorized icons
+    prefs.colorized_icons = colorized_icons.get_active()
+    # ------------------------------------ End of Colorized icons
 
 def get_graphics_default_in_out_length():
     in_fr = int(15000/2) - int(prefs.default_grfx_length/2)
@@ -350,3 +357,6 @@ class EditorPreferences:
         self.open_jobs_panel_on_add = True
         self.render_jobs_sequentially = True
         self.disk_space_warning = 1 #  [off, 500MB,1GB, 2GB], see preferenceswindow.py
+        # Colorized icons
+        self.colorized_icons = False
+        # End of Colorized icons
