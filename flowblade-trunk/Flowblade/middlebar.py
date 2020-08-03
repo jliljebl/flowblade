@@ -386,9 +386,9 @@ def _clear_container(cont):
     for child in children:
         cont.remove(child)
 
-# ----------------------------------------------------------------------------- Free Bar cof GUI
+# ----------------------------------------------------------------------------- Free Bar conf GUI
 def show_freebar_conf_dialog():
-    dialog = Gtk.Dialog(_("Editor Preferences"), None,
+    dialog = Gtk.Dialog(_("Free Bar Configuration"), None,
                     Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                     (_("Cancel"), Gtk.ResponseType.REJECT,
                     _("OK"), Gtk.ResponseType.ACCEPT))

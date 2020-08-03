@@ -1057,7 +1057,7 @@ class EditorWindow:
         sep = Gtk.SeparatorMenuItem()
         menu.append(sep)
 
-        freebar_conf = Gtk.MenuItem(_("Configure Free Bar"))
+        freebar_conf = Gtk.MenuItem(_("Configure Free Bar..."))
         freebar_conf.connect("activate", lambda w: middlebar.show_freebar_conf_dialog())
         #if editorpersistance.prefs.midbar_layout != appconsts.MIDBAR_TC_FREE:
         #    freebar_conf.set_sensitive(False)
