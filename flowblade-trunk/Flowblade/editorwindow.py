@@ -1041,7 +1041,7 @@ class EditorWindow:
         components_centered.connect("activate", lambda w: middlebar._show_buttons_COMPONENTS_CENTERED_layout(w))
         mb_menu.append(components_centered)
 
-        tc_free = Gtk.RadioMenuItem.new_with_label([tc_left], _("Free bar"))
+        tc_free = Gtk.RadioMenuItem.new_with_label([tc_left], _("Free Bar"))
         tc_free.connect("activate", lambda w: middlebar._show_buttons_TC_FREE_layout(w))
         mb_menu.append(tc_free)
 
@@ -1049,9 +1049,20 @@ class EditorWindow:
             components_centered.set_active(True)
         elif editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_TC_LEFT:
             tc_left.set_active(True)
+        elif editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_TC_FREE:
+            tc_free.set_active(True)
         else:
             tc_middle.set_active(True)
 
+        sep = Gtk.SeparatorMenuItem()
+        menu.append(sep)
+
+        freebar_conf = Gtk.MenuItem(_("Configure Free Bar"))
+        freebar_conf.connect("activate", lambda w: middlebar.show_freebar_conf_dialog())
+        #if editorpersistance.prefs.midbar_layout != appconsts.MIDBAR_TC_FREE:
+        #    freebar_conf.set_sensitive(False)
+        mb_menu.append(freebar_conf)
+        
         mb_menu_item.set_submenu(mb_menu)
         menu.append(mb_menu_item)
 

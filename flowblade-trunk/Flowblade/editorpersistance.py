@@ -171,7 +171,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     # Aug-2019 - SvdB - BB - Replace double_track_hights by double_track_hights
     # Unpack widgets
     # Toolbar preferences panel for free elements and order
-    gen_opts_widgets, edit_prefs_widgets, playback_prefs_widgets, view_prefs_widgets, toolbar_prefs_widget, performance_widgets = widgets_tuples_tuple
+    gen_opts_widgets, edit_prefs_widgets, playback_prefs_widgets, view_prefs_widgets, performance_widgets = widgets_tuples_tuple
     # End of Toolbar preferences panel for free elements and order
 
     # Aug-2019 - SvdB - AS - added autosave_combo
@@ -183,23 +183,11 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     gfx_length_spin, cover_delete, mouse_scroll_action, hide_file_ext_button, \
     hor_scroll_dir, effects_editor_clip_load = edit_prefs_widgets
 
-# ------------------------------ timeline_start_end_button
     auto_center_check, play_pause_button, timeline_start_end_button, auto_center_on_updown, \
     ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips = playback_prefs_widgets
-# -------------------------------End of timeline_start_end_button
-#    auto_center_check, play_pause_button, auto_center_on_updown, \
-#    ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips = playback_prefs_widgets
-
-    # --------------------------------- Colorized icons
+    
     force_language_combo, disp_splash, buttons_style, theme, theme_combo, audio_levels_combo, \
     window_mode_combo, full_names, double_track_hights, top_row_layout, layout_monitor, colorized_icons = view_prefs_widgets
-#    force_language_combo, disp_splash, buttons_style, theme, theme_combo, audio_levels_combo, \
-#    window_mode_combo, full_names, double_track_hights, top_row_layout, layout_monitor = view_prefs_widgets
-    # ------------------------------------ End of Colorized icons
-
-    # Toolbar preferences panel for free elements and order
-    groups_tools, cbutton_pw = toolbar_prefs_widget
-    # End of Toolbar preferences panel for free elements and order
 
     # Jan-2017 - SvdB
     perf_render_threads, perf_drop_frames = performance_widgets
@@ -254,9 +242,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     if len(render_folder_select.get_filenames()) != 0:
         prefs.default_render_directory = render_folder_select.get_filename()
     prefs.disk_space_warning = disk_cache_warning_combo.get_active()
-    # Toolbar preferences panel for free elements and order
-    prefs.groups_tools = groups_tools
-    prefs.cbutton = cbutton_pw
+
     # --------------------------------- Colorized icons
     prefs.colorized_icons = colorized_icons.get_active()
 

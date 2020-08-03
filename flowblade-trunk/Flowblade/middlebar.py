@@ -25,6 +25,7 @@ from gi.repository import Gtk
 import appconsts
 import audiomonitoring
 import batchrendering
+import dialogutils
 import editorpersistance
 import editorstate
 import glassbuttons
@@ -109,6 +110,9 @@ def _show_buttons_TC_FREE_layout(widget):
     if widget.get_active() == False:
         return
 
+    _do_show_buttons_TC_FREE_layout(w)
+
+def _do_show_buttons_TC_FREE_layout(w):
     _clear_container(w.edit_buttons_row)
     _create_buttons(w)
     fill_with_TC_FREE_pattern(w.edit_buttons_row, w)
@@ -116,6 +120,7 @@ def _show_buttons_TC_FREE_layout(widget):
 
     editorpersistance.prefs.midbar_layout = appconsts.MIDBAR_TC_FREE
     editorpersistance.save()
+
 # --------------------------- End of Toolbar preferences panel for free elements and order
 
 def create_edit_buttons_row_buttons(editor_window, modes_pixbufs):
@@ -326,15 +331,14 @@ def fill_with_COMPONENTS_CENTERED_pattern(buttons_row, window):
     
     buttons_row.pack_start(_get_monitor_insert_buttons(), False, True, 0)
     buttons_row.pack_start(Gtk.Label(), True, True, 0)
-    
-# ---------------------------  Toolbar preferences panel for free elements and order
+
 def fill_with_TC_FREE_pattern(buttons_row, window):
     global w
     w = window
     prefs = editorpersistance.prefs
     
-    groups_tools = prefs.groups_tools
-    cbutton_flag = prefs.cbutton
+    groups_tools_current = prefs.groups_tools
+    cbutton_active_current = prefs.cbutton
     tools_dict = {"worflow_launch":w.worflow_launch.widget, "tool_selector":w.tool_selector.widget,  "zoom_buttons":_get_zoom_buttons_panel(),  \
                         "undo_redo":_get_undo_buttons_panel(), "tool_buttons":_get_tools_buttons(),   "edit_buttons":_get_edit_buttons_panel(),\
                         "edit_buttons_3":_get_edit_buttons_3_panel(),  "edit_buttons_2":_get_edit_buttons_2_panel(),  \
@@ -343,12 +347,12 @@ def fill_with_TC_FREE_pattern(buttons_row, window):
     buttons_row.set_homogeneous(False)
     buttons_row.pack_start(Gtk.Label(), True, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
-    for row_number in range(0, len(groups_tools)):
-        if cbutton_flag[row_number] is True:
-            buttons_row.pack_start(tools_dict[groups_tools[row_number]], False, True, 0)
+    for row_number in range(0, len(groups_tools_current)):
+        if cbutton_active_current[row_number] is True:
+            buttons_row.pack_start(tools_dict[groups_tools_current[row_number]], False, True, 0)
             buttons_row.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
     buttons_row.pack_start(Gtk.Label(), True, True, 0)
-# --------------------------- End of Toolbar preferences panel for free elements and order
+
 
 def _get_zoom_buttons_panel():    
     return w.zoom_buttons.widget
@@ -381,3 +385,115 @@ def _clear_container(cont):
     children = cont.get_children()
     for child in children:
         cont.remove(child)
+
+# ----------------------------------------------------------------------------- Free Bar cof GUI
+def show_freebar_conf_dialog():
+    dialog = Gtk.Dialog(_("Editor Preferences"), None,
+                    Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                    (_("Cancel"), Gtk.ResponseType.REJECT,
+                    _("OK"), Gtk.ResponseType.ACCEPT))
+
+    panel = _get_freebar_conf_panel()
+    
+    guiutils.set_margins(panel, 4, 24, 6, 0)
+    dialog.connect('response', _freebar_dialog_callback, (None, None))
+    dialog.vbox.pack_start(panel, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    dialogutils.default_behaviour(dialog)
+    dialog.set_transient_for(gui.editor_window.window)
+    dialog.show_all()
+
+
+def _freebar_dialog_callback(dialog, response_id, data):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        editorpersistance.prefs.groups_tools = groups_tools
+        editorpersistance.prefs.cbutton = cbutton_flag
+        editorpersistance.save()
+
+        _do_show_buttons_TC_FREE_layout(gui.editor_window)
+
+    dialog.destroy()
+    
+# Toolbar preferences panel for free elements and order
+def _get_freebar_conf_panel():
+    prefs = editorpersistance.prefs
+
+    global toolbar_list, groups_tools, cbutton_flag, cbutton
+    groups_tools = prefs.groups_tools
+    cbutton_flag = prefs.cbutton
+  
+    # Widgets
+    vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+    choice = Gtk.Label("Check the groups of buttons visible or not in the toolbar; select one and change order")
+    
+    toolbar_list = Gtk.ListBox()
+    toolbar_list.set_selection_mode(Gtk.SelectionMode.SINGLE)
+
+    box_move = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+    button_up = Gtk.Button(label="Up")
+    button_up.connect("clicked", row_up, vbox)
+    box_move.pack_start(button_up, False, False, 0)
+    button_down = Gtk.Button(label="Down")
+    button_down.connect("clicked", row_down, vbox)
+    box_move.pack_start(button_down, False, False, 0)
+
+    vbox.pack_start(choice, False, False, 0)
+    vbox.pack_start(toolbar_list, False, False, 0)
+    vbox.pack_start(box_move, False, False, 0)
+    
+    draw_listbox(vbox)
+
+    return vbox
+    
+def toggle_click(button, row_number):
+    cbutton_flag[row_number] = button.get_active()
+
+def row_up(event, vbox):
+    for row_number in range(0, len(groups_tools)):
+        row = toolbar_list.get_row_at_index(row_number)
+        if row ==  toolbar_list.get_selected_row() and row_number > 0:
+            elem_plus_un = groups_tools[row_number]
+            groups_tools[row_number] =  groups_tools[row_number - 1]
+            groups_tools[row_number - 1] = elem_plus_un
+            check_plus_un = cbutton_flag[row_number]
+            cbutton_flag[row_number] =  cbutton_flag[row_number - 1]
+            cbutton_flag[row_number - 1] = check_plus_un
+            break
+
+    toolbar_list.unselect_all()
+    for row in toolbar_list:
+        toolbar_list.remove(row)
+    draw_listbox(vbox)
+
+def row_down(event, vbox):
+    for row_number in range(0, len(groups_tools)):
+        row = toolbar_list.get_row_at_index(row_number)
+        if row ==  toolbar_list.get_selected_row() and row_number < len(groups_tools) -1:
+            elem_moins_un =  groups_tools[row_number]
+            groups_tools[row_number] =  groups_tools[row_number + 1]
+            groups_tools[row_number + 1] = elem_moins_un
+            check_moins_un = cbutton_flag[row_number]
+            cbutton_flag[row_number] =  cbutton_flag[row_number + 1]
+            cbutton_flag[row_number + 1] = check_moins_un
+            break
+    toolbar_list.unselect_all()
+    for row in toolbar_list:
+        toolbar_list.remove(row)
+    draw_listbox(vbox)
+
+def draw_listbox(vbox):
+    for row_number in range(0, len(groups_tools)):
+        row = Gtk.ListBoxRow.new()
+        box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        but = Gtk.CheckButton(label=str(row_number))
+        but.connect("toggled", toggle_click, row_number)
+        but.set_active( cbutton_flag[row_number])
+        box.pack_start(but, True, True, 0)
+        lab = Gtk.Label(groups_tools[row_number])
+        box.pack_start(lab, True, True, 0)
+        row.add(box)
+        toolbar_list.add(row)
+
+    vbox.show_all()
+
+    
