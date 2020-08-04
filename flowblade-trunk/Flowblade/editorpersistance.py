@@ -352,10 +352,11 @@ class EditorPreferences:
         self.render_jobs_sequentially = True
         self.disk_space_warning = 1 #  [off, 500MB,1GB, 2GB], see preferenceswindow.py
         # Toolbar preferences panel for free elements and order
-        self.groups_tools =  ["worflow_launch", "tool_selector",  "zoom_buttons",  "undo_redo", "tool_buttons",    \
-            "edit_buttons",  "edit_buttons_3",  "edit_buttons_2",  "monitor_insert_buttons", "big_TC"]
-        self.cbutton  = [True, True, True, True, True, True, True, True, True, True]
-        # End of Toolbar preferences panel for free elements and order
-        # Colorized icons
+        self.groups_tools =  [  appconsts.WORKFLOW_LAUNCH, appconsts.TOOL_SELECT, appconsts.BUTTON_GROUP_ZOOM, \
+                                appconsts.BUTTON_GROUP_UNDO, appconsts.BUTTON_GROUP_TOOLS, appconsts.BUTTON_GROUP_EDIT, \
+                                appconsts.BUTTON_GROUP_DELETE ,  appconsts.BUTTON_GROUP_SYNC_SPLIT, \
+                                appconsts.BUTTON_GROUP_MONITOR_ADD, appconsts.BIG_TIME_CODE]
+        self.cbutton  = [True, True, True, True, True, True, True, True, True, True] # Toolbar objects active state
         self.colorized_icons = False
-        # End of Colorized icons
+
+

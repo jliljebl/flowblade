@@ -339,10 +339,10 @@ def fill_with_TC_FREE_pattern(buttons_row, window):
     
     groups_tools_current = prefs.groups_tools
     cbutton_active_current = prefs.cbutton
-    tools_dict = {"worflow_launch":w.worflow_launch.widget, "tool_selector":w.tool_selector.widget,  "zoom_buttons":_get_zoom_buttons_panel(),  \
-                        "undo_redo":_get_undo_buttons_panel(), "tool_buttons":_get_tools_buttons(),   "edit_buttons":_get_edit_buttons_panel(),\
-                        "edit_buttons_3":_get_edit_buttons_3_panel(),  "edit_buttons_2":_get_edit_buttons_2_panel(),  \
-                        "monitor_insert_buttons":_get_monitor_insert_buttons(),  "big_TC":w.big_TC}
+    tools_dict = {appconsts.WORKFLOW_LAUNCH:w.worflow_launch.widget, appconsts.TOOL_SELECT:w.tool_selector.widget, appconsts.BUTTON_GROUP_ZOOM:_get_zoom_buttons_panel(),  \
+                        appconsts.BUTTON_GROUP_UNDO:_get_undo_buttons_panel(), appconsts.BUTTON_GROUP_TOOLS:_get_tools_buttons(), appconsts.BUTTON_GROUP_EDIT:_get_edit_buttons_panel(),\
+                        appconsts.BUTTON_GROUP_DELETE:_get_edit_buttons_3_panel(),  appconsts.BUTTON_GROUP_SYNC_SPLIT:_get_edit_buttons_2_panel(),  \
+                        appconsts.BUTTON_GROUP_MONITOR_ADD:_get_monitor_insert_buttons(),  appconsts.BIG_TIME_CODE:w.big_TC}
 
     buttons_row.set_homogeneous(False)
     buttons_row.pack_start(Gtk.Label(), True, True, 0)
