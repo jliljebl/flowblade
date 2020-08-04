@@ -418,10 +418,22 @@ def _freebar_dialog_callback(dialog, response_id, data):
 def _get_freebar_conf_panel():
     prefs = editorpersistance.prefs
 
-    global toolbar_list, groups_tools, cbutton_flag, cbutton
+    global toolbar_list, groups_tools, cbutton_flag, cbutton, gui_object_names
     groups_tools = prefs.groups_tools
     cbutton_flag = prefs.cbutton
-  
+
+
+    gui_object_names = {appconsts.BUTTON_GROUP_TOOLS:_("Tools Group"),
+                        appconsts.BUTTON_GROUP_UNDO:_("Undo Group"),
+                        appconsts.BUTTON_GROUP_ZOOM:_("Zoom Group"),
+                        appconsts.BUTTON_GROUP_EDIT:_("Edit Group"),
+                        appconsts.BUTTON_GROUP_SYNC_SPLIT:_("Sync Split Group"),
+                        appconsts.BUTTON_GROUP_DELETE:_("Delete Group"),
+                        appconsts.BUTTON_GROUP_MONITOR_ADD:_("Monitor Add Group"),
+                        appconsts.BIG_TIME_CODE:_("Timecode Display"),
+                        appconsts.WORKFLOW_LAUNCH:_("Workflow Menu"),
+                        appconsts.TOOL_SELECT:_("Edit Tool Menu")}
+                        
     # Widgets
     vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
     choice = Gtk.Label("Check the groups of buttons visible or not in the toolbar; select one and change order")
@@ -489,7 +501,7 @@ def draw_listbox(vbox):
         but.connect("toggled", toggle_click, row_number)
         but.set_active( cbutton_flag[row_number])
         box.pack_start(but, True, True, 0)
-        lab = Gtk.Label(groups_tools[row_number])
+        lab = Gtk.Label(gui_object_names[groups_tools[row_number]])
         box.pack_start(lab, True, True, 0)
         row.add(box)
         toolbar_list.add(row)
