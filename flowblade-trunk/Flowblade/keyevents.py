@@ -704,7 +704,8 @@ def paste_action():
 
 def change_single_shortcut(code, event, shortcut_label):
     key_val_name = Gdk.keyval_name(event.keyval).lower()
-
+    print(key_val_name)
+    
     mods_list = []
     state = event.get_state()
     if state & Gdk.ModifierType.CONTROL_MASK:
@@ -718,7 +719,12 @@ def change_single_shortcut(code, event, shortcut_label):
         mods_list.append("SHIFT")
 
     shortcut_info_str = shortcuts.get_shortcut_info_for_keyname_and_modlist(key_val_name, mods_list)
+    if shortcuts.is_blocked_shortcut(key_val_name, mods_list):
+        return shortcut_info_str
+
     shortcut_label.set_text(shortcut_info_str)
 
     shortcuts.change_custom_shortcut(code, key_val_name, mods_list)
     shortcuts.set_keyboard_shortcuts()
+
+    return None

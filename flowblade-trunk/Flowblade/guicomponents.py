@@ -40,6 +40,7 @@ from gi.repository import GLib
 
 import appconsts
 import cairoarea
+import dialogutils
 import dnd
 import editorpersistance
 import editorstate
@@ -3070,13 +3071,15 @@ def get_clip_effects_editor_hamburger_menu(event, callback):
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
 
-def get_kb_shortcuts_hamburger_menu(event, callback, data):
+def get_kb_shortcuts_hamburger_menu(event, callback, shortcuts_combo):
     menu = kb_shortcuts_hamburger_menu
     guiutils.remove_children(menu)
 
-    menu.add(_get_menu_item(_("Add Custom Shortcuts Group"), callback, ("add", data)))
-    menu.add(_get_menu_item(_("Delete Custom Shortcuts Group"), callback, ("delete", data)))
-    menu.add(_get_menu_item(_("Reset Shortcuts"), callback, ("reset", data)))
+    menu.add(_get_menu_item(_("Add Custom Shortcuts Group"), callback, ("add", shortcuts_combo)))
+    delete_item = _get_menu_item(_("Delete Active Custom Shortcuts Group"), callback, ("delete", shortcuts_combo))
+    menu.add(delete_item)
+    if shortcuts_combo.get_active() < 2:
+        delete_item.set_sensitive(False)
 
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
@@ -3513,13 +3516,14 @@ class KBShortcutEditor:
     edit_ongoing = False
     input_listener = None
 
-    def __init__(self, code, key_name, set_shortcut_callback, editable=True):
+    def __init__(self, code, key_name, dialog_window, set_shortcut_callback, editable=True):
         
         self.code = code
         self.key_name = key_name
         self.set_shortcut_callback = set_shortcut_callback
         self.shortcut_label = None # set later
-        
+        self.dialog_window = dialog_window
+    
         if editable == True:
             surface_active = guiutils.get_cairo_image("kb_configuration")
             surface_not_active = guiutils.get_cairo_image("kb_configuration_not_active")
@@ -3530,7 +3534,10 @@ class KBShortcutEditor:
             edit_launch.widget = Gtk.Label()
             
         item_vbox = Gtk.HBox(False, 2)
-        item_vbox.pack_start(Gtk.Label(_("Input Shortcut")), True, True, 0)
+        input_label = Gtk.Label(_("Input Shortcut"))
+        SELECTED_BG = Gdk.RGBA(0.1, 0.31, 0.58,1.0)
+        input_label.override_color(Gtk.StateType.NORMAL, SELECTED_BG)
+        item_vbox.pack_start(input_label, True, True, 0)
            
         self.kb_input = Gtk.EventBox()
         self.kb_input.add_events(Gdk.EventMask.KEY_PRESS_MASK)
@@ -3576,7 +3583,12 @@ class KBShortcutEditor:
             
         self.widget.set_visible_child_name("edit_launch")
 
-        self.set_shortcut_callback(self.code, event, self.shortcut_label)
+        error = self.set_shortcut_callback(self.code, event, self.shortcut_label)
 
         KBShortcutEditor.edit_ongoing = False
         KBShortcutEditor.input_listener = None
+        
+        if error != None:
+            primary_txt = _("Reserved Shortcut!")
+            secondary_txt = "'" + error + "'" +  _(" is a reserved keyboard shortcut and\ncannot be set as a custom shortcut.")
+            dialogutils.warning_message(primary_txt, secondary_txt, self.dialog_window )

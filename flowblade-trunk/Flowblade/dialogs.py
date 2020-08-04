@@ -49,6 +49,7 @@ import workflow
 
 
 kb_shortcut_changed_callback = None # Set when dialog lauched, using gloal saves modifying 50+ lines.
+kb_shortcut_dialog = None # Set when dialog lauched, using gloal saves modifying 50+ lines.
 
 def new_project_dialog(callback):
     default_profile_index = mltprofiles.get_default_profile_index()
@@ -1388,8 +1389,7 @@ def fade_edit_dialog(callback, transition_data):
 
 def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, change_presets_callback, change_shortcut_callback):
     
-    # This too much haslle to not use global
-    global kb_shortcut_changed_callback
+    global kb_shortcut_changed_callback, kb_shortcut_dialog
     kb_shortcut_changed_callback = change_shortcut_callback
     
     dialog = Gtk.Dialog(_("Keyboard Shortcuts"),
@@ -1397,7 +1397,8 @@ def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, change_presets_
                         Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("Cancel"), Gtk.ResponseType.REJECT,
                         _("Apply"), Gtk.ResponseType.ACCEPT))
-
+    kb_shortcut_dialog = dialog
+    
     presets_label = guiutils.bold_label(_("Shortcuts Group:"))
     shortcuts_combo = guicomponents.get_shorcuts_selector()
 
@@ -1448,7 +1449,6 @@ def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, change_presets_
     dialog.show_all()
  
 def _kb_menu_callback(widget, event, data):
-    #print(shortcuts_combo, get_active())
     guicomponents.get_kb_shortcuts_hamburger_menu(event, _kb_menu_item_selected, data) #:_kb_menu_item_selected, shortcuts_combo)
 
 def _kb_menu_item_selected(widget, data):
@@ -1506,15 +1506,15 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     general_vbox = Gtk.VBox()
     general_vbox.pack_start(_get_kb_row(_("Control + N"), _("Create New Project")), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("Control + S"), _("Save Project")), False, False, 0)
-    general_vbox.pack_start(_get_dynamic_kb_row(root_node, "delete"), False, False, 0)
+    general_vbox.pack_start(_get_kb_row(_("DELETE"), _("Delete Selected Item")), False, False, 0) # _get_dynamic_kb_row(root_node, "delete"), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("ESCAPE"), _("Stop Rendering Audio Levels")), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("Control + Q"), _("Quit")), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("Control + Z"), _("Undo")), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("Control + Y"), _("Redo")), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("Control + O"), _("Open Project")), False, False, 0)
-    general_vbox.pack_start(_get_dynamic_kb_row(root_node, "switch_monitor"), False, False, 0)
+    general_vbox.pack_start(_get_kb_row(_("TAB"), _("Switch Monitor Source")), False, False, 0) #_get_dynamic_kb_row(root_node, "switch_monitor"), False, False, 0)
     general_vbox.pack_start(_get_dynamic_kb_row(root_node, "open_next"), False, False, 0)
-    general_vbox.pack_start(_get_kb_row(_("Control + L"), _("Log Marked Clip Range")), False, False, 0)
+    general_vbox.pack_start(_get_dynamic_kb_row(root_node, "log_range"), False, False, 0)
     general_vbox.pack_start(_get_dynamic_kb_row(root_node, "zoom_in"), False, False, 0)
     general_vbox.pack_start(_get_dynamic_kb_row(root_node, "zoom_out"), False, False, 0)
     general = guiutils.get_named_frame(_("General"), general_vbox)
@@ -1540,12 +1540,11 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "add_marker"), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Control + C"), _("Copy Clips")), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Control + V"), _("Paste Clips")), False, False, 0)
-    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "log_range"), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Left Arrow "), _("Prev Frame Trim Edit")), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Right Arrow"), _("Next Frame Trim Edit")), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Control + Left Arrow "), _("Back 10 Frames Trim Edit")), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Control + Right Arrow"), _("Forward 10 Frames Trim Edit")), False, False, 0)
-    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "enter_edit"), False, False, 0)
+    tline_vbox.pack_start(_get_kb_row(_("ENTER"),  _("Complete Keyboard Trim Edit")), False, False, 0) #  _get_dynamic_kb_row(root_node, "enter_edit"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "nudge_back"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "nudge_forward"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "nudge_back_10"), False, False, 0)
@@ -1561,16 +1560,16 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     play_vbox.pack_start(_get_dynamic_kb_row(root_node, "slower"), False, False, 0)
     play_vbox.pack_start(_get_dynamic_kb_row(root_node, "stop"), False, False, 0)
     play_vbox.pack_start(_get_dynamic_kb_row(root_node, "faster"), False, False, 0)
-    play_vbox.pack_start(_get_dynamic_kb_row(root_node, "prev_frame"), False, False, 0)
-    play_vbox.pack_start(_get_dynamic_kb_row(root_node, "next_frame"), False, False, 0)
+    play_vbox.pack_start(_get_kb_row(_("Left Arrow "), _("Next Frame")), False, False, 0)#_get_dynamic_kb_row(root_node, "prev_frame"), False, False, 0)
+    play_vbox.pack_start(_get_kb_row(_("Right Arrow "), _("Previous Frames")), False, False, 0)#_get_dynamic_kb_row(root_node, "next_frame"), False, False, 0)
     play_vbox.pack_start(_get_kb_row(_("Control + Left Arrow "), _("Move Back 10 Frames")), False, False, 0)
     play_vbox.pack_start(_get_kb_row(_("Control + Right Arrow"), _("Move Forward 10 Frames")), False, False, 0)
     play_vbox.pack_start(_get_dynamic_kb_row(root_node, "prev_cut"), False, False, 0)
     play_vbox.pack_start(_get_dynamic_kb_row(root_node, "next_cut"), False, False, 0)
-    play_vbox.pack_start(_get_dynamic_kb_row(root_node, "to_start"), False, False, 0)
-    play_vbox.pack_start(_get_dynamic_kb_row(root_node, "to_end"), False, False, 0)
-    play_vbox.pack_start(_get_kb_row(_("Alt + I"), _("To Mark In")), False, False, 0)
-    play_vbox.pack_start(_get_kb_row(_("Alt + O"), _("To Mark Out")), False, False, 0)
+    play_vbox.pack_start(_get_kb_row(_("Home"), _("Move Forward 10 Frames")), False, False, 0)#_get_dynamic_kb_row(root_node, "to_start"), False, False, 0)
+    play_vbox.pack_start(_get_kb_row(_("End"), _("Move Forward 10 Frames")), False, False, 0)#_get_dynamic_kb_row(root_node, "to_end"), False, False, 0)
+    play_vbox.pack_start(_get_dynamic_kb_row(root_node, "to_mark_in"), False, False, 0)
+    play_vbox.pack_start(_get_dynamic_kb_row(root_node, "to_mark_out"), False, False, 0)
     play = guiutils.get_named_frame(_("Playback"), play_vbox)
 
     tools_vbox = Gtk.VBox()
@@ -1627,9 +1626,9 @@ def _get_dynamic_kb_row(root_node, code):
     key_name, action_name = shortcuts.get_shortcut_info(root_node, code)
     editable = shortcuts.get_shortcuts_editable()
     if editable == True:
-        edit_launch = guicomponents.KBShortcutEditor(code, key_name, kb_shortcut_changed_callback) # kb_shortcut_changed_callback is global, set at dialog launch
+        edit_launch = guicomponents.KBShortcutEditor(code, key_name, kb_shortcut_dialog, kb_shortcut_changed_callback) # kb_shortcut_changed_callback is global, set at dialog launch
     else:
-        edit_launch = guicomponents.KBShortcutEditor(code, key_name, None, False) 
+        edit_launch = guicomponents.KBShortcutEditor(code, key_name, kb_shortcut_dialog, None, False) 
     return _get_kb_row(key_name, action_name, edit_launch)
 
 def _get_kb_row(msg1, msg2, edit_launch=None):
@@ -1643,7 +1642,7 @@ def _get_kb_row(msg1, msg2, edit_launch=None):
         
     KB_SHORTCUT_ROW_WIDTH = 500
     KB_SHORTCUT_ROW_HEIGHT = 22
-    #get_three_column_box(widget1, widget2, widget3, left_width, right_width):
+
     row = guiutils.get_three_column_box(label1, label2, widget, 170, 48)
     row.set_size_request(KB_SHORTCUT_ROW_WIDTH, KB_SHORTCUT_ROW_HEIGHT)
     row.show()

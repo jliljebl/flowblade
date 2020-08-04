@@ -19,6 +19,7 @@
 """
 
 # Apr-2017 - SvdB - Functions to scan available shortcut files, validate and load them
+import collections
 import os
 import xml.etree.ElementTree as etree
 import re
@@ -29,10 +30,16 @@ import respaths
 import userfolders
 
 
-
 DEFAULT_SHORTCUTS_FILE = "flowblade.xml"
 CUSTOM_SHORTCUTS_FILE_NAME_START = "custom_shortcuts_"
-    
+
+# It is not allowed to set these as custom shortcuts.
+RESERVED_SHORTCUTS = [  ("left",[]), ("right",[]), ("up",[]), ("down",[]), ("c",["CTRL"]), ("1", []), \
+                        ("2", []), ("3", []), ("4", []), ("5", []), ("6", []), ("7", []), ("8", []), ("9", []), ("0", []), \
+                        ("delete", []), ("return", []), ("tab", []), ("c", ["CTRL"]), ("v", ["CTRL"]), ("v", ["CTRL", "ALT"]),  ("n", ["CTRL"]), \
+                        ("s", ["CTRL"]), ("q", ["CTRL"]), ("z", ["CTRL"]), ("y", ["CTRL"]), ("o", ["CTRL"]), ("f11", []), ("kp_1", []), \
+                        ("kp_2", []), ("kp_3", []), ("kp_4", []), ("kp_5", []), ("kp_6", []), ("kp_7", []), ("kp_8", []), ("kp_9", []), ("kp_0", [])]
+
 shortcut_files = []
 shortcut_files_display_names = []
 _keyboard_actions = {}
@@ -225,6 +232,18 @@ def change_custom_shortcut(code, key_val_name, mods_list):
         target_event.set("modifiers", mods_str)
 
     shortcuts.write(shortcuts_file)
+
+def is_blocked_shortcut(key_val, mods_list):
+    for reserved in RESERVED_SHORTCUTS:
+        print(reserved)
+        r_key_val, r_mods_list = reserved
+        if len(r_mods_list) == 0 and key_val == r_key_val:
+            return True
+        if key_val == r_key_val:
+            if collections.Counter(mods_list) == collections.Counter(r_mods_list):
+                return True
+                
+    return False
 
 def get_shortcut_info(root, code):
     events = root.getiterator('event')
