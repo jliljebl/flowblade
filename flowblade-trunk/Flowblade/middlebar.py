@@ -461,6 +461,7 @@ def toggle_click(button, row_number):
     cbutton_flag[row_number] = button.get_active()
 
 def row_up(event, vbox):
+    reselect_row = -1
     for row_number in range(0, len(groups_tools)):
         row = toolbar_list.get_row_at_index(row_number)
         if row ==  toolbar_list.get_selected_row() and row_number > 0:
@@ -470,14 +471,21 @@ def row_up(event, vbox):
             check_plus_un = cbutton_flag[row_number]
             cbutton_flag[row_number] =  cbutton_flag[row_number - 1]
             cbutton_flag[row_number - 1] = check_plus_un
+            reselect_row = row_number - 1
             break
 
     toolbar_list.unselect_all()
     for row in toolbar_list:
         toolbar_list.remove(row)
+        
     draw_listbox(vbox)
 
+    if reselect_row != -1:
+        row = toolbar_list.get_row_at_index(reselect_row)
+        toolbar_list.select_row(row)
+    
 def row_down(event, vbox):
+    reselect_row = -1
     for row_number in range(0, len(groups_tools)):
         row = toolbar_list.get_row_at_index(row_number)
         if row ==  toolbar_list.get_selected_row() and row_number < len(groups_tools) -1:
@@ -487,11 +495,16 @@ def row_down(event, vbox):
             check_moins_un = cbutton_flag[row_number]
             cbutton_flag[row_number] =  cbutton_flag[row_number + 1]
             cbutton_flag[row_number + 1] = check_moins_un
+            reselect_row = row_number + 1
             break
     toolbar_list.unselect_all()
     for row in toolbar_list:
         toolbar_list.remove(row)
     draw_listbox(vbox)
+
+    if reselect_row != -1:
+        row = toolbar_list.get_row_at_index(reselect_row)
+        toolbar_list.select_row(row)
 
 def draw_listbox(vbox):
     for row_number in range(0, len(groups_tools)):
@@ -500,7 +513,7 @@ def draw_listbox(vbox):
         but = Gtk.CheckButton(label=str(row_number))
         but.connect("toggled", toggle_click, row_number)
         but.set_active( cbutton_flag[row_number])
-        box.pack_start(but, True, True, 0)
+        box.pack_start(but, False, False, 0)
         lab = Gtk.Label(gui_object_names[groups_tools[row_number]])
         box.pack_start(lab, True, True, 0)
         row.add(box)
