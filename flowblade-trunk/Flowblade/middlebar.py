@@ -163,8 +163,8 @@ def _create_buttons(editor_window):
     # End of Colorized icons
 
     editor_window.zoom_buttons = glassbuttons.GlassButtonsGroup(38*size_adj, 23*size_adj, 2*size_adj, 8*size_adj, 5*size_adj)
-    editor_window.zoom_buttons.add_button(guiutils.get_cairo_image("zoom_in"), updater.zoom_in)
-    editor_window.zoom_buttons.add_button(guiutils.get_cairo_image("zoom_out"), updater.zoom_out)
+    editor_window.zoom_buttons.add_button(guiutils.get_cairo_image("zoom_in" + icon_color), updater.zoom_in)
+    editor_window.zoom_buttons.add_button(guiutils.get_cairo_image("zoom_out" + icon_color), updater.zoom_out)
     editor_window.zoom_buttons.add_button(guiutils.get_cairo_image("zoom_length"), updater.zoom_project_length)
     tooltips = [_("Zoom In - Mouse Middle Scroll"), _("Zoom Out - Mouse Middle Scroll"), _("Zoom Length - Mouse Middle Click")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.zoom_buttons, tooltips)
@@ -210,10 +210,10 @@ def _create_buttons(editor_window):
     editor_window.undo_redo.no_decorations = no_decorations
     
     editor_window.tools_buttons = glassbuttons.GlassButtonsGroup(30*size_adj, 23*size_adj, 2*size_adj, 14*size_adj, 7*size_adj)
-    editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_mixer"), audiomonitoring.show_audio_monitor)
-    editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_titler"), titler.show_titler)
-    editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_gmic"), gmic.launch_gmic)
-    editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_renderqueue"), lambda :batchrendering.launch_batch_rendering())
+    editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_mixer" + icon_color), audiomonitoring.show_audio_monitor)
+    editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_titler" + icon_color), titler.show_titler)
+    editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_gmic" + icon_color), gmic.launch_gmic)
+    editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_renderqueue" + icon_color), lambda :batchrendering.launch_batch_rendering())
     tooltips = [_("Audio Mixer"), _("Titler"), _("G'Mic Effects"), _("Batch Render Queue")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.tools_buttons, tooltips)
     editor_window.tools_buttons.no_decorations = True
