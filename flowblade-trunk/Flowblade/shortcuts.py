@@ -89,7 +89,7 @@ def load_shortcut_files():
             print("Shortcuts file " + f + " found, but has incorrect format.")
     
     # Default shortcuts file always goes to index 0
-    if default_shortcuts_file_found == True:# this is a bit unneccceasy, it is there unless someone destroys it manually
+    if default_shortcuts_file_found == True:# this is a bit unnecessery, it is there unless someone destroys it manually
         shortcut_files.insert(0, DEFAULT_SHORTCUTS_FILE)
         shortcut_files_display_names.insert(0, "Flowblade Default")
 
@@ -107,10 +107,12 @@ def set_keyboard_shortcuts():
     print("Keyboard shortcuts file:",  editorpersistance.prefs.shortcuts)
     _modifier_dict = {}
 
-    # Make sure that whatever is in preferences is a valid file. If it's not in shortcut_files it's not valid
+    # Make sure that whatever is in preferences is a valid and exists file. If it's not in shortcut_files it's not valid
     if not prefs.shortcuts in shortcut_files:
-        #print "The shortcuts file selected in preferences is not valid: " + prefs.shortcuts
-        # print "Switching to defaults."
+        # Load default shortcuts.
+        prefs.shortcuts = DEFAULT_SHORTCUTS_FILE
+        editorpersistance.save()
+        set_keyboard_shortcuts()
         return
     try:
         shortcuts = etree.parse(_get_shortcut_file_fullpath(prefs.shortcuts))
@@ -152,8 +154,8 @@ def set_keyboard_shortcuts():
     #_print_shortcuts()
 
 def get_root():
-        shortcuts = etree.parse(_get_shortcut_file_fullpath(editorpersistance.prefs.shortcuts))
-        return shortcuts.getroot()
+    shortcuts = etree.parse(_get_shortcut_file_fullpath(editorpersistance.prefs.shortcuts))
+    return shortcuts.getroot()
 
 def get_shortcut_info_for_keyname_and_modlist(key_val_name, mod_list):
     out_str = ""
@@ -196,7 +198,6 @@ def create_custom_shortcuts_xml(name):
     root = shortcuts.getroot()
     root.set('name', name)
     root.set('editable', 'True')
-    
     shortcuts.write(new_shortcuts_file)
 
 def change_custom_shortcut(code, key_val_name, mods_list):
