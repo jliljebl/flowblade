@@ -3055,7 +3055,7 @@ def get_clip_effects_editor_hamburger_menu(event, callback):
     menu.add(_get_menu_item(_("Save Effect Values"), callback, "save"))
     menu.add(_get_menu_item(_("Load Effect Values"), callback, "load"))
     menu.add(_get_menu_item(_("Reset Effect Values"), callback, "reset"))
-    
+
     _add_separetor(menu)
     
     menu.add(_get_menu_item(_("Delete Effect"), callback, "delete"))
@@ -3071,12 +3071,14 @@ def get_clip_effects_editor_hamburger_menu(event, callback):
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
 
-def get_kb_shortcuts_hamburger_menu(event, callback, shortcuts_combo):
+def get_kb_shortcuts_hamburger_menu(event, callback, data):
+    shortcuts_combo, dialog = data
+    
     menu = kb_shortcuts_hamburger_menu
     guiutils.remove_children(menu)
 
-    menu.add(_get_menu_item(_("Add Custom Shortcuts Group"), callback, ("add", shortcuts_combo)))
-    delete_item = _get_menu_item(_("Delete Active Custom Shortcuts Group"), callback, ("delete", shortcuts_combo))
+    menu.add(_get_menu_item(_("Add Custom Shortcuts Group"), callback, ("add", data)))
+    delete_item = _get_menu_item(_("Delete Active Custom Shortcuts Group"), callback, ("delete", data))
     menu.add(delete_item)
     if shortcuts_combo.get_active() < 2:
         delete_item.set_sensitive(False)
@@ -3307,6 +3309,17 @@ def get_columns_count_popup_menu(event, callback):
 
 def get_shorcuts_selector():
     shortcuts_combo = Gtk.ComboBoxText()
+    return fill_shortcuts_combo(shortcuts_combo)
+
+def update_shortcuts_combo(shortcuts_combo):
+    shortcuts_combo.handler_block(shortcuts_combo.changed_id)
+    
+    shortcuts_combo.remove_all()
+    fill_shortcuts_combo(shortcuts_combo)
+    
+    shortcuts_combo.handler_block(shortcuts_combo.changed_id)
+
+def fill_shortcuts_combo(shortcuts_combo):
     current_pref_index = -1
     
     for i in range(0, len(shortcuts.shortcut_files)):

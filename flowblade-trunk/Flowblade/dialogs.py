@@ -49,7 +49,9 @@ import workflow
 
 
 kb_shortcut_changed_callback = None # Set when dialog lauched, using gloal saves modifying 50+ lines.
-kb_shortcut_dialog = None # Set when dialog lauched, using gloal saves modifying 50+ lines.
+kb_shortcut_dialog = None # Set when dialog lauched, using gloal saves modifying 50+ lines
+shortcuts_combo = None
+scroll_hold_panel = None
 
 def new_project_dialog(callback):
     default_profile_index = mltprofiles.get_default_profile_index()
@@ -1389,20 +1391,19 @@ def fade_edit_dialog(callback, transition_data):
 
 def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, change_presets_callback, change_shortcut_callback, _kb_menu_callback):
     
-    global kb_shortcut_changed_callback, kb_shortcut_dialog
+    global kb_shortcut_changed_callback, kb_shortcut_dialog, shortcuts_combo
     kb_shortcut_changed_callback = change_shortcut_callback
     
     dialog = Gtk.Dialog(_("Keyboard Shortcuts"),
                         parent_window,
                         Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel"), Gtk.ResponseType.REJECT,
-                        _("Apply"), Gtk.ResponseType.ACCEPT))
+                        (_("Done"), Gtk.ResponseType.ACCEPT))
     kb_shortcut_dialog = dialog
     
     presets_label = guiutils.bold_label(_("Shortcuts Group:"))
     shortcuts_combo = guicomponents.get_shorcuts_selector()
 
-    hamburger_menu = guicomponents.HamburgerPressLaunch(_kb_menu_callback, None,  -1, shortcuts_combo)
+    hamburger_menu = guicomponents.HamburgerPressLaunch(_kb_menu_callback, None,  -1, (shortcuts_combo, dialog))
     guiutils.set_margins(hamburger_menu.widget, 5, 0, 0, 32)
     hbox = Gtk.HBox()
     hbox.pack_start(hamburger_menu.widget, False, True, 0)
@@ -1410,6 +1411,7 @@ def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, change_presets_
     hbox.pack_start(guiutils.pad_label(4, 4), False, False, 0)
     hbox.pack_start(shortcuts_combo, True, True, 0)
     
+    global scroll_hold_panel
     scroll_hold_panel = Gtk.HBox()
 
     diff_label = guiutils.bold_label(_("Diffence to 'Flowblade Default' Presets:"))
@@ -1434,11 +1436,12 @@ def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, change_presets_
     content_panel.pack_start(guiutils.get_left_justified_box([diff_label]), False, False, 0)
     content_panel.pack_start(diff_sw, False, False, 0)
 
-    scroll_window = _display_keyboard_schortcuts(editorpersistance.prefs.shortcuts, get_tool_list_func(), scroll_hold_panel)
+    scroll_window = display_keyboard_shortcuts(editorpersistance.prefs.shortcuts, get_tool_list_func(), scroll_hold_panel)
 
     guicomponents.KBShortcutEditor.edit_ongoing = False
         
-    shortcuts_combo.connect('changed', lambda w:_shorcuts_selection_changed(w, scroll_hold_panel, diff_data, dialog))
+    changed_id = shortcuts_combo.connect('changed', lambda w:_shorcuts_selection_changed(w, scroll_hold_panel, diff_data, dialog))
+    shortcuts_combo.changed_id = changed_id
     
     guiutils.set_margins(content_panel, 12, 12, 12, 12)
     
@@ -1448,19 +1451,18 @@ def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, change_presets_
     dialog.connect('response', change_presets_callback, shortcuts_combo)
     dialog.show_all()
  
-
-
 def _shorcuts_selection_changed(combo, scroll_hold_panel, diff_data, dialog):
     selected_xml = shortcuts.shortcut_files[combo.get_active()]
     
-    editorpersistance.prefs.shortcuts = selected_xml   
+    editorpersistance.prefs.shortcuts = selected_xml
+    editorpersistance.save()
     shortcuts.set_keyboard_shortcuts()
     
-    _display_keyboard_schortcuts(selected_xml, workflow.get_tline_tool_working_set(), scroll_hold_panel)
+    display_keyboard_shortcuts(selected_xml, workflow.get_tline_tool_working_set(), scroll_hold_panel)
     diff_data.set_text(shortcuts.get_diff_to_defaults(selected_xml))
     dialog.show_all()
 
-def _display_keyboard_schortcuts(xml_file, tool_set, scroll_hold_panel):
+def display_keyboard_shortcuts(xml_file, tool_set, scroll_hold_panel):
     widgets = scroll_hold_panel.get_children()
     if len(widgets) != 0:
         scroll_hold_panel.remove(widgets[0])
@@ -1478,6 +1480,7 @@ def _display_keyboard_schortcuts(xml_file, tool_set, scroll_hold_panel):
     sw.set_size_request(420, 400)
     
     scroll_hold_panel.pack_start(sw, False, False, 0)
+    scroll_hold_panel.show_all()
     return sw
 
 def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):   

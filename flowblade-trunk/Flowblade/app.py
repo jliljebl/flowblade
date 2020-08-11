@@ -454,7 +454,7 @@ def get_assoc_file_path():
         return arg_str
 
 def open_assoc_file():
-    GObject.source_remove(assoc_timeout_id)
+    GLib.source_remove(assoc_timeout_id)
     projectaction.actually_load_project(assoc_file_path, block_recent_files=False)
 
 def set_quiet_if_requested():
@@ -707,7 +707,7 @@ def open_project(new_project):
     editorstate.player.set_scrubbing(editorpersistance.prefs.audio_scrubbing)
     
 def _do_window_resized_update():
-    GObject.source_remove(resize_timeout_id)
+    GLib.source_remove(resize_timeout_id)
     updater.window_resized()
     
 def change_current_sequence(index):
@@ -836,7 +836,7 @@ def stop_autosave():
     global autosave_timeout_id
     if autosave_timeout_id == -1:
         return
-    GObject.source_remove(autosave_timeout_id)
+    GLib.source_remove(autosave_timeout_id)
     autosave_timeout_id = -1
 
 def do_autosave():
@@ -864,7 +864,7 @@ def show_splash_screen():
 
 def destroy_splash_screen():
     splash_screen.destroy()
-    GObject.source_remove(splash_timeout_id)
+    GLib.source_remove(splash_timeout_id)
 
 def show_worflow_info_dialog():
     editorpersistance.prefs.workflow_dialog_last_version_shown = editorstate.appversion
@@ -875,7 +875,7 @@ def show_worflow_info_dialog():
 
 # ------------------------------------------------------- disk cahce size check
 def check_disk_cache_size():
-    GObject.source_remove(disk_cache_timeout_id)
+    GLib.source_remove(disk_cache_timeout_id)
     diskcachemanagement.check_disk_cache_size()
     
 # ------------------------------------------------------- userfolders dialogs
@@ -969,7 +969,7 @@ def _too_small_screen_exit():
     Gtk.main()
 
 def _show_too_small_info():
-    GObject.source_remove(exit_timeout_id)
+    GLib.source_remove(exit_timeout_id)
     primary_txt = _("Too small screen for this application.")
     scr_w = Gdk.Screen.width()
     scr_h = Gdk.Screen.height()
@@ -984,7 +984,7 @@ def _xdg_error_exit(error_str):
     Gtk.main()
 
 def _show_xdg_error_info(error_str):
-    GObject.source_remove(exit_timeout_id)
+    GLib.source_remove(exit_timeout_id)
     primary_txt = _("Cannot launch application because XDG folders init error.")
     secondary_txt = error_str + "."
     dialogutils.warning_message_with_callback(primary_txt, secondary_txt, None, False, _early_exit)

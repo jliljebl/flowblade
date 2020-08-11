@@ -60,7 +60,7 @@ def load_shortcut_files():
         if f[-4:] == '.xml':
             # Get full path for either presets file on user custom shortcuts file.
             full_path = _get_shortcut_file_fullpath(f)
-            print(full_path)
+
             # We have a valid file name. Now inspect the file for a valid format before loading it
             shortcuts = etree.parse(full_path)
             # Verify if the file has the right format
@@ -192,13 +192,28 @@ def create_custom_shortcuts_xml(name):
         if int(num_str) > lowest_ver_number:
             lowest_ver_number = int(num_str) 
     
-    new_shortcuts_file = userfolders.get_data_dir() + "/" + appconsts.USER_SHORTCUTS_DIR + CUSTOM_SHORTCUTS_FILE_NAME_START + str(lowest_ver_number + 1) + ".xml"
+    new_custom_file_name = CUSTOM_SHORTCUTS_FILE_NAME_START + str(lowest_ver_number + 1) + ".xml"
+    new_shortcuts_file_path = userfolders.get_data_dir() + "/" + appconsts.USER_SHORTCUTS_DIR + new_custom_file_name
         
     # Verify if the file has the right format
     root = shortcuts.getroot()
     root.set('name', name)
     root.set('editable', 'True')
-    shortcuts.write(new_shortcuts_file)
+    shortcuts.write(new_shortcuts_file_path)
+
+    return new_custom_file_name
+
+def delete_active_custom_shortcuts_xml():
+    root = get_root()
+    name = root.get('name')
+    shortcut_files_display_names.remove(name)
+    shortcut_files.remove(editorpersistance.prefs.shortcuts)
+    
+    file_path = _get_shortcut_file_fullpath(editorpersistance.prefs.shortcuts)
+    os.remove(file_path)
+                
+    editorpersistance.prefs.shortcuts = DEFAULT_SHORTCUTS_FILE
+    editorpersistance.save()
 
 def change_custom_shortcut(code, key_val_name, mods_list):
     shortcuts_file = _get_shortcut_file_fullpath(editorpersistance.prefs.shortcuts)
