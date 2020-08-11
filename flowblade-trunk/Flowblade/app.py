@@ -200,7 +200,7 @@ def main(root_path):
         print("Initializing Auto Save Options")
         editorpersistance.prefs.AUTO_SAVE_OPTS = ((0, _("No Autosave")),(1, _("1 min")),(2, _("2 min")),(5, _("5 min")))
 
-    # We respaths and translations data available so we need to init in a function.
+    # We need respaths and translations data available so we need to do init in a function.
     workflow.init_data()
 
     # RHEL7/CentOS compatibility fix

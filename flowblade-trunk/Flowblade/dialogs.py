@@ -1387,7 +1387,7 @@ def fade_edit_dialog(callback, transition_data):
     _default_behaviour(dialog)
     dialog.show_all()
 
-def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, change_presets_callback, change_shortcut_callback):
+def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, change_presets_callback, change_shortcut_callback, _kb_menu_callback):
     
     global kb_shortcut_changed_callback, kb_shortcut_dialog
     kb_shortcut_changed_callback = change_shortcut_callback
@@ -1448,27 +1448,7 @@ def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, change_presets_
     dialog.connect('response', change_presets_callback, shortcuts_combo)
     dialog.show_all()
  
-def _kb_menu_callback(widget, event, data):
-    guicomponents.get_kb_shortcuts_hamburger_menu(event, _kb_menu_item_selected, data) #:_kb_menu_item_selected, shortcuts_combo)
 
-def _kb_menu_item_selected(widget, data):
-    action, data = data
-    if action == "add":
-        dialog, entry = dialogutils.get_single_line_text_input_dialog(30, 180, _("Add New Custom Shortcuts Group"), _("Ok"),
-                                      _("Custom sShortcuts Group name:"), "")
-        dialog.connect('response', _create_new_kb_shortcuts_group, entry)
-        dialog.show_all()
-
-def _create_new_kb_shortcuts_group(dialog, response_id, entry):
-    print(entry.get_text())
-    if response_id != Gtk.ResponseType.ACCEPT:
-        name = entry.get_text()
-        if name == "": # No need for info dialog, user should really get this
-            dialog.destroy()
-            return
-        custom_xml = shortcuts.create_custom_shortcuts_xml(name)
-        
-    dialog.destroy()
 
 def _shorcuts_selection_changed(combo, scroll_hold_panel, diff_data, dialog):
     selected_xml = shortcuts.shortcut_files[combo.get_active()]
