@@ -1397,7 +1397,7 @@ def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, change_presets_
     dialog = Gtk.Dialog(_("Keyboard Shortcuts"),
                         parent_window,
                         Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Done"), Gtk.ResponseType.ACCEPT))
+                        (_("Close"), Gtk.ResponseType.ACCEPT))
     kb_shortcut_dialog = dialog
     
     presets_label = guiutils.bold_label(_("Shortcuts Group:"))
