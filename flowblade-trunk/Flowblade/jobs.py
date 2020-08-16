@@ -561,7 +561,8 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
         update_job_queue(job_msg)
         
         # Run with nice to lower priority if requested (currently hard coded to lower)
-        nice_command = "nice -n " + str(10) + " " + respaths.LAUNCH_DIR + "flowbladeproxyheadless"
+        # nice_command = "nice -n " + str(10) + " " + respaths.LAUNCH_DIR + "flowbladeproxyheadless"
+        nice_command = respaths.LAUNCH_DIR + "flowbladeproxyheadless"
         args = self.render_data.get_data_as_args_tuple()
         for arg in args:
             nice_command += " "
