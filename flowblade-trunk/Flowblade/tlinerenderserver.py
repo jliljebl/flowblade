@@ -64,16 +64,13 @@ _dbus_service = None
 def launch_render_server():
     bus = dbus.SessionBus()
     if bus.name_has_owner('io.github.jliljebl.Flowblade'):
-        obj = bus.get_object('io.github.jliljebl.Flowblade', '/io/github/jliljebl/Flowblade/tlinerenderer')
-        if obj != None:
-            # This happens for project profile changes e.g. when loading first video and changing to matching peofile.
-            # We are only creating on of these per project edit session, so do nothing if obejct exists.
-            print("Dbus object /io/github/jliljebl/Flowblade/tlinerenderer already available")
-            return 
-
-    print("Creating /io/github/jliljebl/Flowblade/tlinerenderer dbus object") # Launching io.github.jliljebl.Flowblade dbus service")
-    FLOG = open(userfolders.get_cache_dir() + "log_tline_render", 'w')
-    subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladetlinerender"], stdin=FLOG, stdout=FLOG, stderr=FLOG)
+        # This happens for project profile changes e.g. when loading first video and changing to matching peofile.
+        # We are only running on of these per project edit session, so do nothing.
+        print("io.github.jliljebl.Flowblade dbus service already exists")
+    else:
+        print("Launching io.github.jliljebl.Flowblade dbus service")
+        FLOG = open(userfolders.get_cache_dir() + "log_tline_render", 'w')
+        subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladetlinerender"], stdin=FLOG, stdout=FLOG, stderr=FLOG)
 
 def render_update_clips(sequence_xml_path, segments_paths, segments_ins, segments_outs, profile_name):
     iface = _get_iface("render_update_clips")
@@ -101,7 +98,7 @@ def get_encoding_extension():
 def _get_iface(method_name):
     bus = dbus.SessionBus()
     if bus.name_has_owner('io.github.jliljebl.Flowblade'):
-        obj = bus.get_object('io.github.jliljebl.Flowblade', '/io/github/jliljebl/Flowblade/tlinerenderer')
+        obj = bus.get_object('io.github.jliljebl.Flowblade', '/io/github/jliljebl/Flowblade')
         iface = dbus.Interface(obj, 'io.github.jliljebl.Flowblade')
         return iface
     else:
@@ -161,8 +158,8 @@ def main(root_path, force_launch=False):
 
 class TLineRenderDBUSService(dbus.service.Object):
     def __init__(self, loop):
-        bus_name = dbus.service.BusName('io.github.jliljebl.Flowblade', bus=dbus.SessionBus()) # Either claims named service or gets a reference to it.
-        dbus.service.Object.__init__(self, bus_name, '/io/github/jliljebl/Flowblade/tlinerenderer')
+        bus_name = dbus.service.BusName('io.github.jliljebl.Flowblade', bus=dbus.SessionBus())
+        dbus.service.Object.__init__(self, bus_name, '/io/github/jliljebl/Flowblade')
         self.main_loop = loop
 
         self.render_runner_thread = None
