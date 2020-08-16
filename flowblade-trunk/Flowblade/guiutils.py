@@ -187,7 +187,11 @@ def get_cairo_image(img_name, suffix = ".png", force = None):
     if force == None:
         force = editorpersistance.prefs.double_track_hights
     if force:
-        new_name = img_name + "@2"
+#        new_name = img_name + "@2"
+        if img_name[-6:] == "_color":  #editorpersistance.prefs.colorized_icons is True:
+             new_name = img_name[:-6] + "@2_color"
+        else:
+            new_name = img_name + "@2"
     else:
         new_name = img_name
     try:
