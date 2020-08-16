@@ -26,6 +26,7 @@ from gi.repository import Pango
 import copy
 import os
 import subprocess
+import sys
 import time
 import threading
 
@@ -562,18 +563,23 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
         
         # Run with nice to lower priority if requested (currently hard coded to lower)
         # nice_command = "nice -n " + str(10) + " " + respaths.LAUNCH_DIR + "flowbladeproxyheadless"
-        nice_command = respaths.LAUNCH_DIR + "flowbladeproxyheadless"
+        command_list = [sys.executable]
+        command_list.append(respaths.LAUNCH_DIR + "flowbladeproxyheadless")
         args = self.render_data.get_data_as_args_tuple()
         for arg in args:
-            nice_command += " "
-            nice_command += arg
-
+            #nice_command += " "
+            #nice_command += arg
+            command_list.append(arg)
+            
         session_arg = "session_id:" + str(self.session_id)
-        nice_command += " "
-        nice_command += session_arg
-                
-        subprocess.Popen([nice_command], shell=True)
-
+        #nice_command += " "
+        #nice_command += session_arg
+        command_list.append(session_arg)
+        print(command_list)
+        
+        #subprocess.Popen([nice_command], shell=True)
+        subprocess.Popen(command_list)
+    
     def update_render_status(self):
 
         Gdk.threads_enter()
