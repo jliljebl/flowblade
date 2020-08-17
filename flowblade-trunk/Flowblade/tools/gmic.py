@@ -1110,14 +1110,19 @@ class GmicPreviewRendererer(threading.Thread):
         buf = _window.script_view.get_buffer()
         view_text = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), False)
         Gdk.threads_leave()
-        
-        script_str = "gmic " + get_current_frame_file() + " " + view_text + " -output " +  get_preview_file()
 
         print("Render preview:", script_str)
-        
+    
+        # Create command list and launch process.
+        command_list = ["/usr/bin/gmic", get_current_frame_file()]
+        user_script_commands = view_text.split(" ")
+        command_list.extend(user_script_commands)
+        command_list.append("-output")
+        command_list.append(get_preview_file())
+
         # Render preview and write log
         FLOG = open(userfolders.get_cache_dir() + "log_gmic_preview", 'w')
-        p = subprocess.Popen(script_str, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
+        p = subprocess.Popen(command_list, stdin=FLOG, stdout=FLOG, stderr=FLOG)
         p.wait()
         FLOG.close()
      

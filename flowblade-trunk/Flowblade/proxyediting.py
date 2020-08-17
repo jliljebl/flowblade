@@ -87,7 +87,7 @@ class ProxyRenderItemData:
                 "proxy_rate:"+ str(self.proxy_rate),
                 "media_file_path:" + str(self.media_file_path),
                 "proxy_profile_desc:" + str(self.proxy_profile_desc),
-                "lookup_path:" + str(self.lookup_path).replace(" ", "\ ")) # This is going through Popen shell=True and needs escaped spaces.
+                "lookup_path:" + str(self.lookup_path).replace(" ", "\ "))  # This WAS going through Popen shell=True CHECK
             
         return args
 

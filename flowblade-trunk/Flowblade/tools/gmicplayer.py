@@ -301,7 +301,7 @@ class FolderFramesScriptRenderer:
         self.frame_name = frame_name
         self.update_callback = update_callback
         self.render_output_callback = render_output_callback
-        self.nice = nice
+        self.nice = nice # Not used currently, but if we find a way to set this it is good to have it here available, so keeping this for now.
         self.re_render_existing = re_render_existing
         self.out_frame_offset = out_frame_offset
 
@@ -318,16 +318,18 @@ class FolderFramesScriptRenderer:
             
             self.do_update_callback(frame_count)
 
-            # Run with nice to lower priority if requested
-            nice_command = "nice -n " + str(self.nice) + " "
-
             file_numbers_list = re.findall(r'\d+', clip_frame)
             filled_number_str = str(int(file_numbers_list[0]) + self.out_frame_offset).zfill(4)
 
             clip_frame_path = str(os.path.join(self.folder, clip_frame)).replace(" ", "\ ")
             rendered_file_path = str(self.out_folder + self.frame_name + "_" + filled_number_str + ".png").replace(" ", "\ ")
             
-            script_str = nice_command + "gmic " + clip_frame_path + " " + self.user_script + " -output " +  rendered_file_path
+            # Create command list and launch process.
+            command_list = ["/usr/bin/gmic", clip_frame_path]
+            user_script_commands = self.user_script.split(" ")
+            command_list.extend(user_script_commands)
+            command_list.append("-output")
+            command_list.append(rendered_file_path)
 
             if self.re_render_existing == False:
                 if os.path.exists(rendered_file_path) == True:
@@ -336,7 +338,7 @@ class FolderFramesScriptRenderer:
 
             if frame_count == 1: # first frame displays shell output and does error checking
                 FLOG = open(userfolders.get_cache_dir() + "log_gmic_preview", 'w')
-                p = subprocess.Popen(script_str, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
+                p = subprocess.Popen(command_list, stdin=FLOG, stdout=FLOG, stderr=FLOG)
                 p.wait()
                 FLOG.close()
  
@@ -348,7 +350,7 @@ class FolderFramesScriptRenderer:
                 self.do_render_output_callback(p, out)
             else:
                 FLOG = open(userfolders.get_cache_dir() + "log_gmic_preview", 'w')
-                p = subprocess.Popen(script_str, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
+                p = subprocess.Popen(command_list, stdin=FLOG, stdout=FLOG, stderr=FLOG)
                 p.wait()
                 FLOG.close()
 
