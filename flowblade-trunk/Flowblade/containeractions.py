@@ -438,11 +438,17 @@ class GMicContainerActions(AbstractContainerActionObject):
             test_out_file = userfolders.get_cache_dir()  + "/gmic_cont_clip_test.png"
             test_in_file = str(respaths.IMAGE_PATH + "unrendered_blender.png").replace(" ", "\ ")   # we just need some valid input
 
-            script_str = "gmic " + test_in_file + " " + user_script + " -output " + test_out_file
+            # Create command list and launch process.
+            command_list = ["/usr/bin/gmic", test_in_file]
+            user_script_commands = user_script.split(" ")
+            command_list.extend(user_script_commands)
+            command_list.append("-output")
+            command_list.append(test_out_file)
+
 
             # Render preview and write log
             FLOG = open(userfolders.get_cache_dir() + "gmic_container_validating_log", 'w')
-            p = subprocess.Popen(script_str, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
+            p = subprocess.Popen(command_list, stdin=FLOG, stdout=FLOG, stderr=FLOG)
             p.wait()
             FLOG.close()
          
@@ -695,12 +701,12 @@ class BlenderContainerActions(AbstractContainerActionObject):
             return (False, str(e))
  
     def initialize_project(self, project_path):
+        info_script = str(respaths.ROOT_PATH + "/tools/blenderprojectinit.py").replace(" ", "\ ")
+        command_list = ["/usr/bin/blender", "-b", project_path, "-P", info_script]
 
         FLOG = open(userfolders.get_cache_dir() + "/log_blender_project_init", 'w')
-
-        info_script = str(respaths.ROOT_PATH + "/tools/blenderprojectinit.py").replace(" ", "\ ")
-        blender_launch = "/usr/bin/blender -b " + project_path.replace(" ", "\ ") + " -P " + info_script
-        p = subprocess.Popen(blender_launch, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
+        
+        p = subprocess.Popen(command_list, stdin=FLOG, stdout=FLOG, stderr=FLOG)
         p.wait()
 
     def get_job_proxy(self):
@@ -773,6 +779,7 @@ class BlenderContainerActions(AbstractContainerActionObject):
 
         args = ("session_id:" + self.get_container_program_id(),
                 "project_path:" + utils.escape_shell_path(self.container_data.program), #.replace(" ", "\ "),  # This WAS going through Popen shell=True CHECK
+                "range_in:" + str(range_in),
                 "range_out:"+ str(range_out),
                 "profile_desc:" + PROJECT().profile.description().replace(" ", "_"))
         
