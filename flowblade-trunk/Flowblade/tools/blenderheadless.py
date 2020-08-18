@@ -147,6 +147,7 @@ def main(root_path, session_id, project_path, range_in, range_out, profile_desc)
             file_path = os.path.join(preview_frames_folder, frame_file)
             os.remove(file_path)
 
+
     log_path = GLib.get_user_cache_dir() + "/blenderrenderlog"
     FLOG = open(log_path, 'w')
 
