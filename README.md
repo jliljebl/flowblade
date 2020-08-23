@@ -1,12 +1,6 @@
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
-**New release 2.6 now available.**
-
-**Release notes [here.](./flowblade-trunk/docs/RELEASE_NOTES.md)**
-
-**Installing instructions are available [here](./flowblade-trunk/docs/INSTALLING.md).**
-
-**Contents:**
+**Project is on break for a few weeks. Action on issues and commits will resume in Setptember.**
 
 1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
 2. [Features](https://github.com/jliljebl/flowblade#features)
