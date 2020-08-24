@@ -284,28 +284,53 @@ def zoom_project_length():
     update_tline_scrollbar()
 
 def mouse_scroll_zoom(event):
-    do_zoom = True
-    if editorpersistance.prefs.mouse_scroll_action_is_zoom == False:
-        if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-            do_zoom = False
-    else:
-        if not(event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-            do_zoom = False
+    # Zoom in vertical scroll
+    if (event.get_state() & Gdk.ModifierType.SHIFT_MASK):
+        do_zoom = True
+        if editorpersistance.prefs.mouse_scroll_action_is_zoom == False:
+            if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+                do_zoom = False
+        else:
+            if not(event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+                do_zoom = False
 
-    if do_zoom == True: # Uh, were doing scroll here.
-        adj = gui.tline_scroll.get_adjustment()
-        incr = adj.get_step_increment()
-        if editorpersistance.prefs.scroll_horizontal_dir_up_forward == False:
-            incr = -incr
-        if event.direction == Gdk.ScrollDirection.UP:
-            adj.set_value(adj.get_value() + incr)
+        if do_zoom == True: # Uh, were doing scroll here.
+            adj = gui.tline_scroll.get_adjustment()
+            incr = adj.get_step_increment()
+            if editorpersistance.prefs.scroll_horizontal_dir_up_forward == False:
+                incr = -incr
+            if event.direction == Gdk.ScrollDirection.UP:
+                adj.set_value(adj.get_value() + incr)
+            else:
+                adj.set_value(adj.get_value() - incr)
         else:
-            adj.set_value(adj.get_value() - incr)
-    else:
-        if event.direction == Gdk.ScrollDirection.UP:
-            zoom_in()
-        else:
-            zoom_out()
+            if event.direction == Gdk.ScrollDirection.UP:
+                zoom_in()
+            else:
+                zoom_out()
+    # End of Zoom in vertical scroll
+#    do_zoom = True
+#    if editorpersistance.prefs.mouse_scroll_action_is_zoom == False:
+#        if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+#            do_zoom = False
+#    else:
+#        if not(event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+#            do_zoom = False
+#
+#    if do_zoom == True: # Uh, were doing scroll here.
+#        adj = gui.tline_scroll.get_adjustment()
+#        incr = adj.get_step_increment()
+#        if editorpersistance.prefs.scroll_horizontal_dir_up_forward == False:
+#            incr = -incr
+#        if event.direction == Gdk.ScrollDirection.UP:
+#            adj.set_value(adj.get_value() + incr)
+#        else:
+#            adj.set_value(adj.get_value() - incr)
+#    else:
+#        if event.direction == Gdk.ScrollDirection.UP:
+#            zoom_in()
+#        else:
+#            zoom_out()
 
 def maybe_autocenter():
     if timeline_visible():

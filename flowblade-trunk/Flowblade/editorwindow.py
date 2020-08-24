@@ -170,7 +170,10 @@ class EditorWindow:
         # Timeline hbox
         tline_vbox = Gtk.VBox()
         tline_vbox.pack_start(self.tline_hbox_1, False, False, 0)
-        tline_vbox.pack_start(self.tline_hbox_2, True, True, 0)
+        # tline_hbox_2 scrolled
+        tline_vbox.pack_start(self.tline_hbox_2_scroll_window, True, True, 0)
+#        tline_vbox.pack_start(self.tline_hbox_2, True, True, 0)
+        # End of tline_hbox_2 scrolled
         tline_vbox.pack_start(self.tline_renderer_hbox, False, False, 0)
         tline_vbox.pack_start(tline_hbox_3, False, False, 0)
 
@@ -400,8 +403,22 @@ class EditorWindow:
             render_hbox.pack_start(render_panel_left, True, True, 0)
             render_hbox.pack_start(render_panel_right, True, True, 0)
 
-        render_panel = guiutils.set_margins(render_hbox, 2, 6, 8, 6)
+        # Render panel scrolled
+#        render_panel = guiutils.set_margins(render_hbox, 2, 6, 8, 6)
+#        self.fblade_theme_fix_panels.append(render_panel)
+        render_view = Gtk.Viewport()
+        render_view.add(render_hbox)
+        render_view.set_shadow_type(Gtk.ShadowType.NONE)
+
+        self.render_scroll_window = Gtk.ScrolledWindow()
+        self.render_scroll_window.add(render_view)
+        self.render_scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        self.render_scroll_window.set_size_request(guicomponents.MEDIA_OBJECT_WIDGET_WIDTH * 2 + 70, guicomponents.MEDIA_OBJECT_WIDGET_HEIGHT)
+        render_panel = guiutils.set_margins(self.render_scroll_window, 2, 6, 8, 6)
         self.fblade_theme_fix_panels.append(render_panel)
+        # End of Render panel scrolled
+#        render_panel = guiutils.set_margins(render_hbox, 2, 6, 8, 6)
+#        self.fblade_theme_fix_panels.append(render_panel)
 
         # Range Log panel
         media_log_events_list_view = medialog.get_media_log_list_view()
@@ -436,8 +453,18 @@ class EditorWindow:
             top_project_vbox.pack_start(self.bins_panel, True, True, 0)
             top_project_vbox.pack_start(seq_panel, True, True, 0)
 
-            top_project_vbox.set_size_request(PANEL_WIDTH, PANEL_HEIGHT)
+#            top_project_vbox.set_size_request(PANEL_WIDTH, PANEL_HEIGHT)
             top_project_panel = guiutils.set_margins(top_project_vbox, 0, 2, 6, 2)
+#        # Project panel scrolled
+            project_view = Gtk.Viewport()
+            project_view.add(top_project_panel)
+            project_view.set_shadow_type(Gtk.ShadowType.NONE)
+
+            project_scroll_window = Gtk.ScrolledWindow()
+            project_scroll_window.add(project_view)
+            project_scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+            project_scroll_window.set_size_request(guicomponents.MEDIA_OBJECT_WIDGET_WIDTH * 2 + 70, guicomponents.MEDIA_OBJECT_WIDGET_HEIGHT)
+            top_project_panel = guiutils.set_margins(project_scroll_window, 2, 6, 8, 6)
         else:
 
             # Notebook project panel for smallest screens
@@ -643,7 +670,17 @@ class EditorWindow:
         tline_hbox_2.pack_start(self.tline_column.widget, False, False, 0)
         tline_hbox_2.pack_start(self.tline_canvas.widget, True, True, 0)
         
-        self.tline_hbox_2 = tline_hbox_2
+        # tline_hbox_2 scrolled
+#        self.tline_hbox_2 = tline_hbox_2
+        tline_hbox_2_view = Gtk.Viewport()
+        tline_hbox_2_view.add(tline_hbox_2)
+        tline_hbox_2_view.set_shadow_type(Gtk.ShadowType.NONE)
+
+        self.tline_hbox_2_scroll_window = Gtk.ScrolledWindow()
+        self.tline_hbox_2_scroll_window.add(tline_hbox_2_view)
+        self.tline_hbox_2_scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        self.tline_hbox_2_scroll_window.set_size_request(guicomponents.MEDIA_OBJECT_WIDGET_WIDTH * 2 + 70, guicomponents.MEDIA_OBJECT_WIDGET_HEIGHT)
+        # End of tline_hbox_2 scrolled
         
         # Timeline renderer row
         self.pad_box = Gtk.HBox()

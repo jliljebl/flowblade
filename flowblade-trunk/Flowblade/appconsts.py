@@ -71,12 +71,14 @@ TRACK_HEIGHT_HIGH = 75 # track height in canvas and column
 TRACK_HEIGHT_NORMAL = 50 # track height in canvas and column
 TRACK_HEIGHT_SMALL = 25  # track height in canvas and column
 TRACK_HEIGHT_SMALLEST = 25 # maybe remove this as it is no longer used
-TLINE_HEIGHT = 260
+# tline_hbox_2 scrolled
+TLINE_HEIGHT =  700 # 260
+# End of tline_hbox_2 scrolled
 
 # Notebook widths
 NOTEBOOK_WIDTH = 600 # defines app min width together with MONITOR_AREA_WIDTH
 NOTEBOOK_WIDTH_WIDESCREEN = 500
-TOP_ROW_HEIGHT = 500
+TOP_ROW_HEIGHT = 300 # 500
 
 # Property editing gui consts
 PROPERTY_ROW_HEIGHT = 22

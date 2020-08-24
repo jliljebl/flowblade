@@ -63,67 +63,114 @@ def set_track_high_height(track_index, is_retry=False):
     track = get_track(track_index)
     track.height = appconsts.TRACK_HEIGHT_HIGH
 
+    #  tline_hbox_2 scrolled
     # Check that new height tracks can be displayed and cancel if not.
     new_h = current_sequence().get_tracks_height()
     allocation = gui.tline_canvas.widget.get_allocation()
     x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
+    print("ta 72 hp", h) 
+    gui.tline_canvas.widget.allocation = (x, y, w, new_h)
+    print("ta 113 ntlc ", gui.tline_canvas.widget.allocation)
 
-    if new_h > h and is_retry == False:
-        current_paned_pos = gui.editor_window.app_v_paned.get_position()
-        new_paned_pos = current_paned_pos - (new_h - h) - 5
-        gui.editor_window.app_v_paned.set_position(new_paned_pos)
-        GObject.timeout_add(200, lambda: set_track_high_height(track_index, True))
-        return False
-    
-    allocation = gui.tline_canvas.widget.get_allocation()
-    x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
-    
-    if new_h > h:
-        track.height = appconsts.TRACK_HEIGHT_SMALL
-        dialogutils.warning_message(_("Not enough vertical space on Timeline to expand track"), 
-                                _("Maximize or resize application window to get more\nspace for tracks if possible."),
-                                gui.editor_window.window,
-                                True)
-        return False
+#    if new_h > h and is_retry == False:
+#        current_paned_pos = gui.editor_window.app_v_paned.get_position()
+#        new_paned_pos = current_paned_pos - (new_h - h) - 5
+#        gui.editor_window.app_v_paned.set_position(new_paned_pos)
+#        GObject.timeout_add(200, lambda: set_track_high_height(track_index, True))
+#        return False
+#    
+#    allocation = gui.tline_canvas.widget.get_allocation()
+#    x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
+#    
+#    if new_h > h:
+#        track.height = appconsts.TRACK_HEIGHT_SMALL
+#        dialogutils.warning_message(_("Not enough vertical space on Timeline to expand track"), 
+#                                _("Maximize or resize application window to get more\nspace for tracks if possible."),
+#                                gui.editor_window.window,
+#                                True)
+#        return False
 
     tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
     gui.tline_column.init_listeners()
+    # End of tline_hbox_2 scrolled
     updater.repaint_tline()
+#    gui.tline_column.widget.queue_draw()
 
-    return False
+#    return False
+#    # Check that new height tracks can be displayed and cancel if not.
+#    new_h = current_sequence().get_tracks_height()
+#    allocation = gui.tline_canvas.widget.get_allocation()
+#    x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
+#
+#    if new_h > h and is_retry == False:
+#        current_paned_pos = gui.editor_window.app_v_paned.get_position()
+#        new_paned_pos = current_paned_pos - (new_h - h) - 5
+#        gui.editor_window.app_v_paned.set_position(new_paned_pos)
+#        GObject.timeout_add(200, lambda: set_track_high_height(track_index, True))
+#        return False
+#    
+#    allocation = gui.tline_canvas.widget.get_allocation()
+#    x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
+#    
+#    if new_h > h:
+#        track.height = appconsts.TRACK_HEIGHT_SMALL
+#        dialogutils.warning_message(_("Not enough vertical space on Timeline to expand track"), 
+#                                _("Maximize or resize application window to get more\nspace for tracks if possible."),
+#                                gui.editor_window.window,
+#                                True)
+#        return False
+#
+#    tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
+#    gui.tline_column.init_listeners()
+#    updater.repaint_tline()
+#
+#    return False
 
 def set_track_normal_height(track_index, is_retry=False):
     track = get_track(track_index)
     track.height = appconsts.TRACK_HEIGHT_NORMAL
 
+    # tline_hbox_2 scrolled
     # Check that new height tracks can be displayed and cancel if not.
     new_h = current_sequence().get_tracks_height()
     allocation = gui.tline_canvas.widget.get_allocation()
     x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
-
-    if new_h > h and is_retry == False:
-        current_paned_pos = gui.editor_window.app_v_paned.get_position()
-        new_paned_pos = current_paned_pos - (new_h - h) - 5
-        gui.editor_window.app_v_paned.set_position(new_paned_pos)
-        GObject.timeout_add(200, lambda: set_track_normal_height(track_index, True))
-        return False
-    
-    allocation = gui.tline_canvas.widget.get_allocation()
-    x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
-    
-    if new_h > h:
-        track.height = appconsts.TRACK_HEIGHT_SMALL
-        dialogutils.warning_message(_("Not enough vertical space on Timeline to expand track"), 
-                                _("Maximize or resize application window to get more\nspace for tracks if possible."),
-                                gui.editor_window.window,
-                                True)
-        return False
-
+    print("ta 108 htlc", h) 
+    allocation1 = gui.editor_window.tline_hbox_2_scroll_window.get_allocation()
+    x1, y1, w1, h1 = allocation1.x, allocation1.y, allocation1.width, allocation1.height
+    print("ta 111 hscrbox2", h1) 
+    gui.tline_canvas.widget.allocation = (x, y, w, new_h)
+    print("ta 113 ntlc ", gui.tline_canvas.widget.allocation)
+#    # Check that new height tracks can be displayed and cancel if not.
+#    new_h = current_sequence().get_tracks_height()
+#    allocation = gui.tline_canvas.widget.get_allocation()
+#    x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
+#
+#    if new_h > h and is_retry == False:
+#        current_paned_pos = gui.editor_window.app_v_paned.get_position()
+#        new_paned_pos = current_paned_pos - (new_h - h) - 5
+#        gui.editor_window.app_v_paned.set_position(new_paned_pos)
+#        GObject.timeout_add(200, lambda: set_track_normal_height(track_index, True))
+#        return False
+#    
+#    allocation = gui.tline_canvas.widget.get_allocation()
+#    x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
+#    
+#    if new_h > h:
+#        track.height = appconsts.TRACK_HEIGHT_SMALL
+#        dialogutils.warning_message(_("Not enough vertical space on Timeline to expand track"), 
+#                                _("Maximize or resize application window to get more\nspace for tracks if possible."),
+#                                gui.editor_window.window,
+#                                True)
+#        return False
+#
     tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
     gui.tline_column.init_listeners()
+    # End of tline_hbox_2 scrolled
     updater.repaint_tline()
+#    gui.tline_column.widget.queue_draw()
 
-    return False
+#    return False
 
 def set_track_small_height(track_index):
     track = get_track(track_index)
@@ -144,21 +191,21 @@ def all_tracks_menu_launch_pressed(widget, event):
     guicomponents.get_all_tracks_popup_menu(event, _all_tracks_item_activated)
 
 def _all_tracks_item_activated(widget, msg):
-    if msg == "min":
-        current_sequence().minimize_tracks_height()
-        _tracks_resize_update()
-    
-    if msg == "max":
-        current_sequence().maximize_tracks_height(gui.tline_canvas.widget.get_allocation())
-        _tracks_resize_update()
-    
-    if msg == "maxvideo":
-        current_sequence().maximize_video_tracks_height(gui.tline_canvas.widget.get_allocation())
-        _tracks_resize_update()
-
-    if msg == "maxaudio":
-        current_sequence().maximize_audio_tracks_height(gui.tline_canvas.widget.get_allocation())
-        _tracks_resize_update()
+#    if msg == "min":
+#        current_sequence().minimize_tracks_height()
+#        _tracks_resize_update()
+#    
+#    if msg == "max":
+#        current_sequence().maximize_tracks_height(gui.tline_canvas.widget.get_allocation())
+#        _tracks_resize_update()
+#    
+#    if msg == "maxvideo":
+#        current_sequence().maximize_video_tracks_height(gui.tline_canvas.widget.get_allocation())
+#        _tracks_resize_update()
+#
+#    if msg == "maxaudio":
+#        current_sequence().maximize_audio_tracks_height(gui.tline_canvas.widget.get_allocation())
+#        _tracks_resize_update()
 
     if msg == "allactive":
         _activate_all_tracks()

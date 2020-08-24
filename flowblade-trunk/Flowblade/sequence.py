@@ -914,24 +914,26 @@ class Sequence:
         return self.multitrack.get_length()
 
     def resize_tracks_to_fit(self, allocation):
-        x, y, w, panel_height = allocation.x, allocation.y, allocation.width, allocation.height
-        track_id = 1
-        fix_next = True
-        while(fix_next):
-            tracks_height = self.get_tracks_height()
-            if tracks_height < panel_height:
-                fix_next = False
-            elif track_id == self.first_video_index:
-                # V1 should stay large and everything should still fit
-                track_id += 1
-                continue
-            elif track_id == len(self.tracks) - 2:
-                # This shold not happen because track heights should be set up so that minimized app 
-                fix_next = False
-                print("sequence.resize_tracks_to_fit (): could not make tracks fit in timeline vertical space")
-            else:
-                self.tracks[track_id].height = TRACK_HEIGHT_SMALL
-                track_id += 1
+        # tline_hbox_2 scrolled
+        pass
+#        x, y, w, panel_height = allocation.x, allocation.y, allocation.width, allocation.height
+#        track_id = 1
+#        fix_next = True
+#        while(fix_next):
+#            tracks_height = self.get_tracks_height()
+#            if tracks_height < panel_height:
+#                fix_next = False
+#            elif track_id == self.first_video_index:
+#                # V1 should stay large and everything should still fit
+#                track_id += 1
+#                continue
+#            elif track_id == len(self.tracks) - 2:
+#                # This shold not happen because track heights should be set up so that minimized app 
+#                fix_next = False
+#                print("sequence.resize_tracks_to_fit (): could not make tracks fit in timeline vertical space")
+#            else:
+#                self.tracks[track_id].height = TRACK_HEIGHT_SMALL
+#                track_id += 1
 
     def find_next_cut_frame(self, tline_frame):
         """

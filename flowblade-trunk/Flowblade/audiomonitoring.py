@@ -48,8 +48,8 @@ import guiutils
 import utils
 
 SLOT_W = 60
-METER_SLOT_H = 458
-CONTROL_SLOT_H = 300
+METER_SLOT_H = 100 #458
+CONTROL_SLOT_H = 100 #300
 Y_TOP_PAD = 12
 
 # Dash pattern used to create "LED"s
