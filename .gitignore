@@ -23,3 +23,6 @@ mlt.py
 /flowblade-trunk/Flowblade/phantom2d/phantom_build
 /flowblade-trunk/Flowblade/phantom2d/src
 
+# Flatpak whenbuilding from local
+/flowblade-trunk/.flatpak-builder/
+
