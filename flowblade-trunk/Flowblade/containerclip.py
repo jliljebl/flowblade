@@ -33,6 +33,7 @@ import containerprogramedit
 import containeractions
 import dialogs
 import dialogutils
+import editorstate
 from editorstate import PROJECT
 import gui
 import guicomponents
@@ -104,15 +105,14 @@ def test_blender_availebility():
     global _blender_available
     if os.path.exists("/usr/bin/blender") == True:
         _blender_available = True
-    if editorstate.app_running_from == RUNNING_FROM_FLATPAK:
-                command_list = ["flatpak", "list"]
-
-        #FLOG = open(userfolders.get_cache_dir() + "/log_blender_project_init", 'w')
-        command_list = ["flatpak", "list"]
-        p = subprocess.Popen(command_list, stdin=subprocess.PIPE, stdout=subprocess.PIPE, bufsize=1)#, stdin=FLOG, stdout=FLOG, stderr=FLOG)
-        out = Popen.communicate(input=None, timeout=3)
-        print(out)
-
+    elif editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
+        command_list = ["flatpak-spawn", "--host", "flatpak", "info","org.blender.Blender"]
+        p = subprocess.Popen(command_list, stdin=subprocess.PIPE, stdout=subprocess.PIPE, bufsize=1)
+        p.wait(timeout=3)
+        
+        if p.returncode == 0: # If not present we get returncode==1
+            _blender_available = True
+   
 def blender_available():
     return _blender_available
             
