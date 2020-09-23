@@ -24,6 +24,7 @@ import copy
 import hashlib
 import json
 import os
+import subprocess
 import threading
 import time
 
@@ -103,6 +104,14 @@ def test_blender_availebility():
     global _blender_available
     if os.path.exists("/usr/bin/blender") == True:
         _blender_available = True
+    if editorstate.app_running_from == RUNNING_FROM_FLATPAK:
+                command_list = ["flatpak", "list"]
+
+        #FLOG = open(userfolders.get_cache_dir() + "/log_blender_project_init", 'w')
+        command_list = ["flatpak", "list"]
+        p = subprocess.Popen(command_list, stdin=subprocess.PIPE, stdout=subprocess.PIPE, bufsize=1)#, stdin=FLOG, stdout=FLOG, stderr=FLOG)
+        out = Popen.communicate(input=None, timeout=3)
+        print(out)
 
 def blender_available():
     return _blender_available
