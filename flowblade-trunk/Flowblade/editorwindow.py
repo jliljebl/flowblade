@@ -459,7 +459,7 @@ class EditorWindow:
         if editorstate.audio_monitoring_available == False:
             ui.get_widget('/MenuBar/ToolsMenu/AudioMix').set_sensitive(False)
 
-        # Diable Blender and G'Mic container clip menu items if not available.
+        # Disable Blender and G'Mic container clip menu items if not available.
         if containerclip.blender_available() == False:
             ui.get_widget('/MenuBar/ProjectMenu/ContainerClipsMenu/CreateBlenderContainerItem').set_sensitive(False)
         if gmic.gmic_available() == False:
@@ -948,6 +948,10 @@ class EditorWindow:
         # Show window and all of its components
         self.window.show_all()
 
+        # Hidew Blender menu item for Flatpaks
+        if editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
+            ui.get_widget('/MenuBar/ProjectMenu/ContainerClipsMenu/CreateBlenderContainerItem').set_visible(False)
+            
         # Show Monitor Window in two window mode
         if editorpersistance.prefs.global_layout != appconsts.SINGLE_WINDOW:
             pane2 = Gtk.VBox(False, 1)
