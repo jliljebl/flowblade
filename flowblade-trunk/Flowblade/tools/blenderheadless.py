@@ -91,8 +91,6 @@ def abort_render(session_id):
 def main(root_path, session_id, project_path, range_in, range_out, profile_desc):
     print(root_path, session_id, project_path, range_in, range_out, profile_desc)
 
-    project_path = utils.escape_shell_path(project_path)
-
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION
     except:

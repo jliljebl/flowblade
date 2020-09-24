@@ -73,7 +73,7 @@ class ProxyRenderItemData:
         self.proxy_rate = proxy_rate
         self.media_file_path = media_file_path
         self.proxy_profile_desc = proxy_profile_desc
-        self.lookup_path = lookup_path
+        self.lookup_path = lookup_path # For img seqs only
         
         # We're packing this to go, jobs.py is imported into this module and we wish to not import this into jobs.py
         self.do_auto_re_convert_func = _auto_re_convert_after_proxy_render_in_proxy_mode
@@ -87,7 +87,7 @@ class ProxyRenderItemData:
                 "proxy_rate:"+ str(self.proxy_rate),
                 "media_file_path:" + str(self.media_file_path),
                 "proxy_profile_desc:" + str(self.proxy_profile_desc),
-                "lookup_path:" + str(self.lookup_path).replace(" ", "\ "))  # This WAS going through Popen shell=True CHECK
+                "lookup_path:" + str(self.lookup_path)) 
             
         return args
 

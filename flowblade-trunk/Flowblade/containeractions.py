@@ -437,7 +437,7 @@ class GMicContainerActions(AbstractContainerActionObject):
             script_file = open(self.container_data.program)
             user_script = script_file.read()
             test_out_file = userfolders.get_cache_dir()  + "/gmic_cont_clip_test.png"
-            test_in_file = str(respaths.IMAGE_PATH + "unrendered_blender.png").replace(" ", "\ ")   # we just need some valid input
+            test_in_file = str(respaths.IMAGE_PATH + "unrendered_blender.png") # we just need some valid input
 
             # Create command list and launch process.
             command_list = ["/usr/bin/gmic", test_in_file]
@@ -494,8 +494,8 @@ class GMicContainerActions(AbstractContainerActionObject):
         jobs.update_job_queue(job_msg)
         
         args = ("session_id:" + self.get_container_program_id(), 
-                "script:" + utils.escape_shell_path(self.container_data.program),
-                "clip_path:" + utils.escape_shell_path(self.container_data.unrendered_media),  # This WAS going through Popen shell=True CHECK
+                "script:" + str(self.container_data.program),
+                "clip_path:" + str(self.container_data.unrendered_media),
                 "range_in:" + str(range_in),
                 "range_out:"+ str(range_out),
                 "profile_desc:" + PROJECT().profile.description().replace(" ", "_"),  # Here we have our own string space handling, maybe change later..
@@ -625,11 +625,11 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
         jobs.update_job_queue(job_msg)
 
         args = ("session_id:" + self.get_container_program_id(), 
-                "clip_path:" + str(self.container_data.unrendered_media).replace(" ", "\ "),  # This WAS going through Popen shell=True CHECK
+                "clip_path:" + str(self.container_data.unrendered_media),
                 "range_in:" + str(range_in),
                 "range_out:"+ str(range_out),
                 "profile_desc:" + PROJECT().profile.description().replace(" ", "_"),
-                "xml_file_path:" + str(self.container_data.unrendered_media).replace(" ", "\ "))  # This WAS going through Popen shell=True CHECK
+                "xml_file_path:" + str(self.container_data.unrendered_media))
 
         # Create command list and launch process.
         command_list = [sys.executable]
@@ -701,11 +701,10 @@ class BlenderContainerActions(AbstractContainerActionObject):
             return (False, str(e))
 
     def initialize_project(self, project_path):
-        info_script = str(respaths.ROOT_PATH + "/tools/blenderprojectinit.py").replace(" ", "\ ")
+        info_script = str(respaths.ROOT_PATH + "/tools/blenderprojectinit.py")
         command_list = ["/usr/bin/blender", "-b", project_path, "-P", info_script]
 
         if editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
-
             info_script = utils.get_flatpak_real_path_for_app_files(info_script)
             command_list = ["flatpak-spawn", "--host", "/usr/bin/blender", "-b", project_path, "-P", info_script]
             
@@ -787,7 +786,7 @@ class BlenderContainerActions(AbstractContainerActionObject):
             outfile.write(render_exec_lines)
 
         args = ("session_id:" + self.get_container_program_id(),
-                "project_path:" + utils.escape_shell_path(self.container_data.program), #.replace(" ", "\ "),  # This WAS going through Popen shell=True CHECK
+                "project_path:" + str(self.container_data.program),
                 "range_in:" + str(range_in),
                 "range_out:"+ str(range_out),
                 "profile_desc:" + PROJECT().profile.description().replace(" ", "_"))

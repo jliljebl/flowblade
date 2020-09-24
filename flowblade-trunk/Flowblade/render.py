@@ -464,11 +464,11 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
         
         args = ("session_id:" + str(session_id), 
                 "speed:" + str(speed), 
-                "write_file:" + str(write_file).replace(" ", "\ "),
+                "write_file:" + str(write_file),
                 "profile_desc:" + str(profile_desc),
                 "encoding_option_index:" + str(encoding_option_index),
                 "quality_option_index:"+ str(quality_option_index),
-                "source_path:" + str(source_path).replace(" ", "\ "),
+                "source_path:" + str(source_path),
                 "render_full_range:" + str(render_full_range),
                 "start_frame:" + str(start_frame),
                 "end_frame:" + str(end_frame))
@@ -555,11 +555,11 @@ def _render_reverse_clip_dialog_callback(dialog, response_id, fb_widgets, media_
         
         args = ("session_id:" + str(session_id), 
                 "speed:" + str(speed), 
-                "write_file:" + str(write_file).replace(" ", "\ "),
+                "write_file:" + str(write_file),
                 "profile_desc:" + str(profile_desc),
                 "encoding_option_index:" + str(encoding_option_index),
                 "quality_option_index:"+ str(quality_option_index),
-                "source_path:" + str(source_path).replace(" ", "\ "),
+                "source_path:" + str(source_path),
                 "render_full_range:" + str(render_full_range),
                 "start_frame:" + str(start_frame),
                 "end_frame:" + str(end_frame))
