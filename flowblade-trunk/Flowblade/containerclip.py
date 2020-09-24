@@ -106,13 +106,15 @@ def test_blender_availebility():
     if os.path.exists("/usr/bin/blender") == True:
         _blender_available = True
     elif editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
+        _blender_available = False
+        """ Work o0n this continues for 2.8
         command_list = ["flatpak-spawn", "--host", "flatpak", "info","org.blender.Blender"]
         p = subprocess.Popen(command_list, stdin=subprocess.PIPE, stdout=subprocess.PIPE, bufsize=1)
         p.wait(timeout=3)
         
         if p.returncode == 0: # If not present we get returncode==1
             _blender_available = True
-   
+        """
 def blender_available():
     return _blender_available
             
