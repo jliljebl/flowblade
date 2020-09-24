@@ -67,6 +67,7 @@ class ToolsRenderData():
         self.save_internally = True
         self.frame_name = "frame"
         self.is_preview_render = False
+        self.is_flatpak_render = False
 
 
 def create_container_clip_default_render_data_object(profile):

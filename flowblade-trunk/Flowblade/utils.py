@@ -737,3 +737,15 @@ def unpickle(path):
     except:
         f = open(path, 'rb')
         return pickle.load(f, encoding='latin1') 
+
+def get_flatpak_real_path_for_app_files(app_file):
+    # Blender etc. some times need real absolute paths for application script files. 
+    f = open("/.flatpak-info", "r")
+    for line in f:
+        if line.startswith("app-path"):
+            real_path = line[9:len(line)].rstrip() # 9 strips "app-path", rstrip strips newline
+            app_file_path = real_path + app_file[4:len(app_file)] # strips "/app" from beginning of Flatpak path for files
+                                                                  # combining flatpak app-path with flatpak relative path gets real absolute path
+            return app_file_path
+    
+    return None # Hitting here needs to crash

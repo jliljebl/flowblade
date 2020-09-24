@@ -147,14 +147,20 @@ def main(root_path, session_id, project_path, range_in, range_out, profile_desc)
             file_path = os.path.join(preview_frames_folder, frame_file)
             os.remove(file_path)
 
-
     log_path = GLib.get_user_cache_dir() + "/blenderrenderlog"
     FLOG = open(log_path, 'w')
 
     # Create command list and launch process.
     render_setup_script = respaths.ROOT_PATH + "/tools/blenderrendersetup.py"
+
     command_list = ["/usr/bin/blender", "-b", project_path, "-P", render_setup_script]
 
+    # Flatpaks need some different commands and paths. 
+    if hasattr(render_data, "is_flatpak_render"):
+        if render_data.is_flatpak_render == True:
+            render_setup_script = utils.get_flatpak_real_path_for_app_files(render_setup_script)
+            command_list = ["flatpak-spawn", "--host", "/usr/bin/blender", "-b", project_path, "-P", render_setup_script]
+            
     p = subprocess.Popen(command_list, stdin=FLOG, stdout=FLOG, stderr=FLOG, preexec_fn=os.setsid)
 
     manager_thread = ProgressPollingThread(range_in, range_out, p, render_data.is_preview_render)

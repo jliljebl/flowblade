@@ -704,24 +704,13 @@ class BlenderContainerActions(AbstractContainerActionObject):
         info_script = str(respaths.ROOT_PATH + "/tools/blenderprojectinit.py").replace(" ", "\ ")
         command_list = ["/usr/bin/blender", "-b", project_path, "-P", info_script]
 
-
-        user_cache_dir = GLib.get_user_cache_dir()
-        print("user_cache_dir", user_cache_dir)
-
         if editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
-            print("hpme", os.getenv("HOME"))
-            f = open("/.flatpak-info", "r")
-            for line in f:
-                if line.startswith("app-path"):
-                    real_path = line[9:len(line)].rstrip()
-                    print(line, "real_path", real_path)
-                    info_script = real_path + info_script[4:len(info_script)]
-                    print(info_script)
-                    
+
+            info_script = utils.get_flatpak_real_path_for_app_files(info_script)
             command_list = ["flatpak-spawn", "--host", "/usr/bin/blender", "-b", project_path, "-P", info_script]
             
         FLOG = open(userfolders.get_cache_dir() + "/log_blender_project_init", 'w')
-        print(command_list, FLOG)
+
         p = subprocess.Popen(command_list, stdin=FLOG, stdout=FLOG, stderr=FLOG)
         p.wait()
 
@@ -756,7 +745,11 @@ class BlenderContainerActions(AbstractContainerActionObject):
         if self.render_type == PREVIEW_RENDER:
             render_data.do_video_render = False
             render_data.is_preview_render = True
-    
+
+
+        if editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
+            render_data.is_flatpak_render = True
+        
         blenderheadless.set_render_data(self.get_container_program_id(), render_data)
         
         # Write current render target container clip for blenderrendersetup.py
