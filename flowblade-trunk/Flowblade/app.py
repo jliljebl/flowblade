@@ -170,6 +170,10 @@ def main(root_path):
 
     # Create user folders if needed and determine if we're using xdg or dotfile user folders.
     userfolders.init()
+    
+    # Flatpak still needs to use standard home XDG cache folder for Blender.
+    if editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
+        userfolders.init_user_cache_for_flatpak()
 
     # Set paths.
     respaths.set_paths(root_path)

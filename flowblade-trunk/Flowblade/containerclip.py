@@ -305,6 +305,9 @@ def _blender_clip_create_dialog_callback(dialog, response_id, data):
         action_object.initialize_project(project_file) # blocks until info data written
 
         project_edit_info_path = userfolders.get_cache_dir() + "blender_container_projectinfo.json"
+        if editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
+            project_edit_info_path = userfolders.get_user_home_cache_for_flatpak() + "blender_container_projectinfo.json"
+        
         info_file = open(project_edit_info_path, "r")
         project_edit_info = json.load(info_file)
         

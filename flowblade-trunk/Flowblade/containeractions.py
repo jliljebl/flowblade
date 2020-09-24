@@ -41,6 +41,7 @@ import atomicfile
 import blenderheadless
 import dialogutils
 import edit
+import editorstate
 from editorstate import current_sequence
 from editorstate import PROJECT
 import gui
@@ -676,7 +677,6 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
         return self._create_icon_default_action()
 
     def abort_render(self):
-        #self.remove_as_status_polling_object()
         mltxmlheadless.abort_render(self.get_container_program_id())
 
 
@@ -699,13 +699,29 @@ class BlenderContainerActions(AbstractContainerActionObject):
                 
         except Exception as e:
             return (False, str(e))
- 
+
     def initialize_project(self, project_path):
         info_script = str(respaths.ROOT_PATH + "/tools/blenderprojectinit.py").replace(" ", "\ ")
         command_list = ["/usr/bin/blender", "-b", project_path, "-P", info_script]
 
+
+        user_cache_dir = GLib.get_user_cache_dir()
+        print("user_cache_dir", user_cache_dir)
+
+        if editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
+            print("hpme", os.getenv("HOME"))
+            f = open("/.flatpak-info", "r")
+            for line in f:
+                if line.startswith("app-path"):
+                    real_path = line[9:len(line)].rstrip()
+                    print(line, "real_path", real_path)
+                    info_script = real_path + info_script[4:len(info_script)]
+                    print(info_script)
+                    
+            command_list = ["flatpak-spawn", "--host", "/usr/bin/blender", "-b", project_path, "-P", info_script]
+            
         FLOG = open(userfolders.get_cache_dir() + "/log_blender_project_init", 'w')
-        
+        print(command_list, FLOG)
         p = subprocess.Popen(command_list, stdin=FLOG, stdout=FLOG, stderr=FLOG)
         p.wait()
 
