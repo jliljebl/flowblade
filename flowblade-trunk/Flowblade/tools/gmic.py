@@ -1110,8 +1110,6 @@ class GmicPreviewRendererer(threading.Thread):
         buf = _window.script_view.get_buffer()
         view_text = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), False)
         Gdk.threads_leave()
-
-        print("Render preview:", script_str)
     
         # Create command list and launch process.
         command_list = ["/usr/bin/gmic", get_current_frame_file()]
