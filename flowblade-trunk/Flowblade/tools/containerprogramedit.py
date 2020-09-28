@@ -303,6 +303,7 @@ class BlenderProjectEditorManagerWindow(Gtk.Window):
         obj = self.get_selected_object()
         obj[2].pop(selected_row_index)
         self.target_selection_changed(None)
+        self.save_button.set_sensitive(True)
 
     def get_current_editor_data(self):
         editor_data = []
