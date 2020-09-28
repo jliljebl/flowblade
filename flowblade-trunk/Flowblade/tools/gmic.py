@@ -1245,11 +1245,9 @@ class GmicEffectRendererer(threading.Thread):
             clip_frames = os.listdir(get_render_frames_dir())
 
             self.render_player = renderconsumer.FileRenderPlayer("", producer, consumer, 0, len(clip_frames) - 1)
-            self.render_player.wait_for_producer_end_stop = False
             self.render_player.start()
 
             while self.render_player.stopped == False:
-
                 if self.abort == True:
                     Gdk.threads_enter()
                     _window.render_percentage.set_markup("<small>" + _("Render stopped!") + "</small>")
