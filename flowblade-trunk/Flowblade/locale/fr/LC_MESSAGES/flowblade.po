@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-25 15:22+0300\n"
+"POT-Creation-Date: 2020-09-29 08:58+0300\n"
 "PO-Revision-Date: 2013-09-20 18:54+0200\n"
 "Last-Translator: Loïc Vanderstichelen <lv@loicvanderstichelen.com>\n"
 "Language-Team: French\n"
@@ -7842,50 +7842,50 @@ msgstr ""
 msgid "Rendering preview..."
 msgstr "Rendu en cours"
 
-#: tools/gmic.py:1147 tools/simpleeditors.py:175
+#: tools/gmic.py:1145 tools/simpleeditors.py:175
 #, fuzzy
 msgid "Preview for frame: "
 msgstr "Image précédente"
 
-#: tools/gmic.py:1148 tools/simpleeditors.py:175
+#: tools/gmic.py:1146 tools/simpleeditors.py:175
 #, fuzzy
 msgid ", render time: "
 msgstr "Temps de rendu"
 
-#: tools/gmic.py:1214
+#: tools/gmic.py:1212
 msgid "Waiting for frames write to complete..."
 msgstr ""
 
-#: tools/gmic.py:1257 tools/gmic.py:1318
+#: tools/gmic.py:1253 tools/gmic.py:1314
 #, fuzzy
 msgid "Render stopped!"
 msgstr "Rendu terminé!"
 
-#: tools/gmic.py:1263
+#: tools/gmic.py:1259
 #, fuzzy
 msgid "Rendering video, "
 msgstr "Rendu en cours"
 
-#: tools/gmic.py:1263
+#: tools/gmic.py:1259
 #, python-format
 msgid "% done"
 msgstr ""
 
-#: tools/gmic.py:1273
+#: tools/gmic.py:1269
 #, fuzzy
 msgid "Render complete!"
 msgstr "Rendu terminé!"
 
-#: tools/gmic.py:1283
+#: tools/gmic.py:1279
 msgid "Writing clip frame: "
 msgstr ""
 
-#: tools/gmic.py:1291
+#: tools/gmic.py:1287
 #, fuzzy
 msgid "Rendering frame: "
 msgstr "Rendu de l'élément:"
 
-#: tools/gmic.py:1303
+#: tools/gmic.py:1299
 #, fuzzy
 msgid "Render error!"
 msgstr "Progression du rendu"

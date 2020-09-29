@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-25 15:22+0300\n"
+"POT-Creation-Date: 2020-09-29 08:58+0300\n"
 "PO-Revision-Date: 2019-08-29 13:33+0200\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -7565,44 +7565,44 @@ msgstr "Internetové stránky G'Mic"
 msgid "Rendering preview..."
 msgstr "Vykreslování náhledu…"
 
-#: tools/gmic.py:1147 tools/simpleeditors.py:175
+#: tools/gmic.py:1145 tools/simpleeditors.py:175
 msgid "Preview for frame: "
 msgstr "Náhled snímku: "
 
-#: tools/gmic.py:1148 tools/simpleeditors.py:175
+#: tools/gmic.py:1146 tools/simpleeditors.py:175
 msgid ", render time: "
 msgstr ", doba vykreslování: "
 
-#: tools/gmic.py:1214
+#: tools/gmic.py:1212
 msgid "Waiting for frames write to complete..."
 msgstr "Čekání na dokončení zapsání snímků…"
 
-#: tools/gmic.py:1257 tools/gmic.py:1318
+#: tools/gmic.py:1253 tools/gmic.py:1314
 msgid "Render stopped!"
 msgstr "Vykreslování zastaveno!"
 
-#: tools/gmic.py:1263
+#: tools/gmic.py:1259
 msgid "Rendering video, "
 msgstr "Vykresluje se obraz, "
 
-#: tools/gmic.py:1263
+#: tools/gmic.py:1259
 #, python-format
 msgid "% done"
 msgstr "% hotovo"
 
-#: tools/gmic.py:1273
+#: tools/gmic.py:1269
 msgid "Render complete!"
 msgstr "Zpracování dokončeno!"
 
-#: tools/gmic.py:1283
+#: tools/gmic.py:1279
 msgid "Writing clip frame: "
 msgstr "Zapisuje se snímek se záběrem: "
 
-#: tools/gmic.py:1291
+#: tools/gmic.py:1287
 msgid "Rendering frame: "
 msgstr "Vykresluje se snímek: "
 
-#: tools/gmic.py:1303
+#: tools/gmic.py:1299
 msgid "Render error!"
 msgstr "Chyba při vykreslování!"
 

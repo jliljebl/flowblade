@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-25 15:22+0300\n"
+"POT-Creation-Date: 2020-09-29 08:58+0300\n"
 "PO-Revision-Date: 2017-03-24 08:40+0100\n"
 "Last-Translator: Péter Gábor <ptrg@freemail.hu>\n"
 "Language-Team: \n"
@@ -7709,44 +7709,44 @@ msgstr "G'Mic honlap"
 msgid "Rendering preview..."
 msgstr "Előnézet renderelése..."
 
-#: tools/gmic.py:1147 tools/simpleeditors.py:175
+#: tools/gmic.py:1145 tools/simpleeditors.py:175
 msgid "Preview for frame: "
 msgstr "Képkocka előnézete:"
 
-#: tools/gmic.py:1148 tools/simpleeditors.py:175
+#: tools/gmic.py:1146 tools/simpleeditors.py:175
 msgid ", render time: "
 msgstr ", renderelés ideje: "
 
-#: tools/gmic.py:1214
+#: tools/gmic.py:1212
 msgid "Waiting for frames write to complete..."
 msgstr "Várakozás a képkockák írásának befejezésére..."
 
-#: tools/gmic.py:1257 tools/gmic.py:1318
+#: tools/gmic.py:1253 tools/gmic.py:1314
 msgid "Render stopped!"
 msgstr "Renderelés leállítva!"
 
-#: tools/gmic.py:1263
+#: tools/gmic.py:1259
 msgid "Rendering video, "
 msgstr "Video renderelése, "
 
-#: tools/gmic.py:1263
+#: tools/gmic.py:1259
 #, python-format
 msgid "% done"
 msgstr "% kész"
 
-#: tools/gmic.py:1273
+#: tools/gmic.py:1269
 msgid "Render complete!"
 msgstr "Renderelés kész!"
 
-#: tools/gmic.py:1283
+#: tools/gmic.py:1279
 msgid "Writing clip frame: "
 msgstr "Klip képkockájának írása:"
 
-#: tools/gmic.py:1291
+#: tools/gmic.py:1287
 msgid "Rendering frame: "
 msgstr "Képkocka renderelése:"
 
-#: tools/gmic.py:1303
+#: tools/gmic.py:1299
 msgid "Render error!"
 msgstr "Renderelési hiba!"
 

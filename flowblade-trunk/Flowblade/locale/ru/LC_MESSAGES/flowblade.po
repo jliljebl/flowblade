@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Flowblade\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-25 15:22+0300\n"
+"POT-Creation-Date: 2020-09-29 08:58+0300\n"
 "PO-Revision-Date: 2020-07-19 11:47+0300\n"
 "Last-Translator: Николай Смольянинов <smolianinow.colya2016@yandex.ru>\n"
 "Language-Team: vk.com/flowblade\n"
@@ -7488,44 +7488,44 @@ msgstr "Сайт G'Mic"
 msgid "Rendering preview..."
 msgstr "Предоставление предпросмотра..."
 
-#: tools/gmic.py:1147 tools/simpleeditors.py:175
+#: tools/gmic.py:1145 tools/simpleeditors.py:175
 msgid "Preview for frame: "
 msgstr "Предпросмотр кадра: "
 
-#: tools/gmic.py:1148 tools/simpleeditors.py:175
+#: tools/gmic.py:1146 tools/simpleeditors.py:175
 msgid ", render time: "
 msgstr ", время сборки: "
 
-#: tools/gmic.py:1214
+#: tools/gmic.py:1212
 msgid "Waiting for frames write to complete..."
 msgstr "Ожидание завершения записи кадров..."
 
-#: tools/gmic.py:1257 tools/gmic.py:1318
+#: tools/gmic.py:1253 tools/gmic.py:1314
 msgid "Render stopped!"
 msgstr "Сборка остановлена!"
 
-#: tools/gmic.py:1263
+#: tools/gmic.py:1259
 msgid "Rendering video, "
 msgstr "Собирается видео, "
 
-#: tools/gmic.py:1263
+#: tools/gmic.py:1259
 #, fuzzy, python-format
 msgid "% done"
 msgstr "% готово"
 
-#: tools/gmic.py:1273
+#: tools/gmic.py:1269
 msgid "Render complete!"
 msgstr "Сборка завершена!"
 
-#: tools/gmic.py:1283
+#: tools/gmic.py:1279
 msgid "Writing clip frame: "
 msgstr "Раскадровка клипа: "
 
-#: tools/gmic.py:1291
+#: tools/gmic.py:1287
 msgid "Rendering frame: "
 msgstr "Покадровая сборка: "
 
-#: tools/gmic.py:1303
+#: tools/gmic.py:1299
 msgid "Render error!"
 msgstr "Ошибка сборки!"
 

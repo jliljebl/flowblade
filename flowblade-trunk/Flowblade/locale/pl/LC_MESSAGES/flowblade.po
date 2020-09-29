@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-25 15:22+0300\n"
+"POT-Creation-Date: 2020-09-29 08:58+0300\n"
 "PO-Revision-Date: 2018-11-15 12:12+0200\n"
 "Last-Translator: Stanislaw Polak <polak@icsr.agh.edu.pl>\n"
 "Language-Team: Polish\n"
@@ -7623,44 +7623,44 @@ msgstr "Strona G'Mic"
 msgid "Rendering preview..."
 msgstr "Podgląd renderowania..."
 
-#: tools/gmic.py:1147 tools/simpleeditors.py:175
+#: tools/gmic.py:1145 tools/simpleeditors.py:175
 msgid "Preview for frame: "
 msgstr "Podgląd dla klatki:"
 
-#: tools/gmic.py:1148 tools/simpleeditors.py:175
+#: tools/gmic.py:1146 tools/simpleeditors.py:175
 msgid ", render time: "
 msgstr ", czas renderowania: "
 
-#: tools/gmic.py:1214
+#: tools/gmic.py:1212
 msgid "Waiting for frames write to complete..."
 msgstr "Oczekiwanie na zakończenie zapisywania klatek..."
 
-#: tools/gmic.py:1257 tools/gmic.py:1318
+#: tools/gmic.py:1253 tools/gmic.py:1314
 msgid "Render stopped!"
 msgstr "Renderowanie zatrzymało się!"
 
-#: tools/gmic.py:1263
+#: tools/gmic.py:1259
 msgid "Rendering video, "
 msgstr "Renderowanie wideo, "
 
-#: tools/gmic.py:1263
+#: tools/gmic.py:1259
 #, python-format
 msgid "% done"
 msgstr "% gotowe"
 
-#: tools/gmic.py:1273
+#: tools/gmic.py:1269
 msgid "Render complete!"
 msgstr "Renderowanie zakończone!"
 
-#: tools/gmic.py:1283
+#: tools/gmic.py:1279
 msgid "Writing clip frame: "
 msgstr "Zapis klatki klipu: "
 
-#: tools/gmic.py:1291
+#: tools/gmic.py:1287
 msgid "Rendering frame: "
 msgstr "Renderowanie klatki:"
 
-#: tools/gmic.py:1303
+#: tools/gmic.py:1299
 msgid "Render error!"
 msgstr "Błąd renderowania!"
 

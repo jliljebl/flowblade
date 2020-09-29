@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Floblade Italian Translation 0.14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-25 15:22+0300\n"
+"POT-Creation-Date: 2020-09-29 08:58+0300\n"
 "PO-Revision-Date: 2020-29-02 21:24+0200\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italiano\n"
@@ -7631,44 +7631,44 @@ msgstr "Sito di G'Mic"
 msgid "Rendering preview..."
 msgstr "Elaborazione anteprima..."
 
-#: tools/gmic.py:1147 tools/simpleeditors.py:175
+#: tools/gmic.py:1145 tools/simpleeditors.py:175
 msgid "Preview for frame: "
 msgstr "Anteprima per fotogramma: "
 
-#: tools/gmic.py:1148 tools/simpleeditors.py:175
+#: tools/gmic.py:1146 tools/simpleeditors.py:175
 msgid ", render time: "
 msgstr ", tempo elaborazione: "
 
-#: tools/gmic.py:1214
+#: tools/gmic.py:1212
 msgid "Waiting for frames write to complete..."
 msgstr "Attendo scrittura fotogrammi..."
 
-#: tools/gmic.py:1257 tools/gmic.py:1318
+#: tools/gmic.py:1253 tools/gmic.py:1314
 msgid "Render stopped!"
 msgstr "Elaborazione interrotta!"
 
-#: tools/gmic.py:1263
+#: tools/gmic.py:1259
 msgid "Rendering video, "
 msgstr "Elaborazione video, "
 
-#: tools/gmic.py:1263
+#: tools/gmic.py:1259
 #, python-format
 msgid "% done"
 msgstr "% done"
 
-#: tools/gmic.py:1273
+#: tools/gmic.py:1269
 msgid "Render complete!"
 msgstr "Elaborazione completata!"
 
-#: tools/gmic.py:1283
+#: tools/gmic.py:1279
 msgid "Writing clip frame: "
 msgstr "Scrittura fotogramma clip: "
 
-#: tools/gmic.py:1291
+#: tools/gmic.py:1287
 msgid "Rendering frame: "
 msgstr "Elaborazione fotogramma: "
 
-#: tools/gmic.py:1303
+#: tools/gmic.py:1299
 msgid "Render error!"
 msgstr "Errore elaborazione!"
 
