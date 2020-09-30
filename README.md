@@ -1,3 +1,5 @@
+We are making flowblade even more fantastic
+
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
 **Project is on break for a few more weeks, we are looking forward to re-activating starting mid-October.**
