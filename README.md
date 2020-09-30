@@ -1,6 +1,6 @@
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
-**Project is on break for a few weeks. Action on issues and commits will resume in September.**
+**Project is on break for a few more weeks, we are looking forward to re-activating starting mid-October.**
 
 1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
 2. [Features](https://github.com/jliljebl/flowblade#features)
