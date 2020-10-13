@@ -272,6 +272,10 @@ class EditorWindow:
 
     def _init_panels_and_guicomponents(self):
 
+        # Look to remove
+        self.fblade_theme_fix_panels = []
+        self.fblade_theme_fix_panels_darker = []
+        
         # Disable Blender and G'Mic container clip menu items if not available.
         if containerclip.blender_available() == False:
             ui.get_widget('/MenuBar/ProjectMenu/ContainerClipsMenu/CreateBlenderContainerItem').set_sensitive(False)
