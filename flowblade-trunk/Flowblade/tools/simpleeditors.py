@@ -162,6 +162,7 @@ class BlenderProgramEditorWindow(Gtk.Window):
     def get_preview_file(self):
         filled_number_str = str(self.preview_frame).zfill(4)
         preview_file = self.container_action.get_preview_media_dir() + "/frame" + filled_number_str + ".png"
+
         return preview_file
 
     def preview_render_complete(self):

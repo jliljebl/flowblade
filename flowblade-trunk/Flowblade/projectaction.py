@@ -105,10 +105,11 @@ _media_panel_double_click_counter = 0
 #--------------------------------------- worker threads
 class LoadThread(threading.Thread):
     
-    def __init__(self, filename, block_recent_files=False, is_first_video_load=False):
+    def __init__(self, filename, block_recent_files=False, is_first_video_load=False, is_autosave_load=False):
         self.filename = filename
         self.block_recent_files = block_recent_files
         self.is_first_video_load = is_first_video_load
+        self.is_autosave_load = is_autosave_load
         threading.Thread.__init__(self)
 
     def run(self):
@@ -189,13 +190,17 @@ class LoadThread(threading.Thread):
         if selections != None:
             render.set_saved_gui_selections(selections)
         updater.set_info_icon(None)
-        
-        # If project file is moved since last save we need to update last_save_path property and save to get everything working as expected.
-        if self.filename != editorstate.project.last_save_path:
-            print("Project file moved since last save, save with updated last_save_path data.")
-            editorstate.project.last_save_path = self.filename
-            _save_project_in_last_saved_path()
-            
+
+        if self.is_autosave_load == False: # project loaded with autosave needs to keep its last_save_path data.
+            # If project file is moved since last save we need to update last_save_path property and save to get everything working as expected.
+            if self.filename != editorstate.project.last_save_path:
+                print("Project file moved since last save, save with updated last_save_path data.")
+                editorstate.project.last_save_path = self.filename
+                editorstate.project.name = os.path.basename(self.filename)
+                _save_project_in_last_saved_path()
+        else:
+            print("autosave load")
+
         dialog.destroy()
         gui.tline_canvas.connect_mouse_events() # mouse events during load cause crashes because there is no data to handle
         Gdk.threads_leave()
@@ -437,9 +442,9 @@ def _close_dialog_callback(dialog, response_id, no_dialog_project_close=False):
     new_project = projectdata.get_default_project()
     app.open_project(new_project)
     
-def actually_load_project(filename, block_recent_files=False, is_first_video_load=False):
+def actually_load_project(filename, block_recent_files=False, is_first_video_load=False, is_autosave_load=False):
     gui.tline_canvas.disconnect_mouse_events() # mouse events dutring load cause crashes because there is no data to handle
-    load_launch = LoadThread(filename, block_recent_files, is_first_video_load)
+    load_launch = LoadThread(filename, block_recent_files, is_first_video_load, is_autosave_load)
     load_launch.start()
 
 def save_project():

@@ -1110,14 +1110,17 @@ class GmicPreviewRendererer(threading.Thread):
         buf = _window.script_view.get_buffer()
         view_text = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), False)
         Gdk.threads_leave()
-        
-        script_str = "gmic " + get_current_frame_file() + " " + view_text + " -output " +  get_preview_file()
+    
+        # Create command list and launch process.
+        command_list = ["/usr/bin/gmic", get_current_frame_file()]
+        user_script_commands = view_text.split(" ")
+        command_list.extend(user_script_commands)
+        command_list.append("-output")
+        command_list.append(get_preview_file())
 
-        print("Render preview:", script_str)
-        
         # Render preview and write log
         FLOG = open(userfolders.get_cache_dir() + "log_gmic_preview", 'w')
-        p = subprocess.Popen(script_str, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
+        p = subprocess.Popen(command_list, stdin=FLOG, stdout=FLOG, stderr=FLOG)
         p.wait()
         FLOG.close()
      
@@ -1242,11 +1245,9 @@ class GmicEffectRendererer(threading.Thread):
             clip_frames = os.listdir(get_render_frames_dir())
 
             self.render_player = renderconsumer.FileRenderPlayer("", producer, consumer, 0, len(clip_frames) - 1)
-            self.render_player.wait_for_producer_end_stop = False
             self.render_player.start()
 
             while self.render_player.stopped == False:
-
                 if self.abort == True:
                     Gdk.threads_enter()
                     _window.render_percentage.set_markup("<small>" + _("Render stopped!") + "</small>")

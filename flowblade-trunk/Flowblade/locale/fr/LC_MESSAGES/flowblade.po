@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-03 21:29+0300\n"
+"POT-Creation-Date: 2020-09-29 08:58+0300\n"
 "PO-Revision-Date: 2013-09-20 18:54+0200\n"
 "Last-Translator: Loïc Vanderstichelen <lv@loicvanderstichelen.com>\n"
 "Language-Team: French\n"
@@ -17,195 +17,195 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: app.py:201
+#: app.py:205
 msgid "No Autosave"
 msgstr "Pas de sauvegarde automatique"
 
-#: app.py:201
+#: app.py:205
 msgid "1 min"
 msgstr ""
 
-#: app.py:201
+#: app.py:205
 msgid "2 min"
 msgstr ""
 
-#: app.py:201
+#: app.py:205
 msgid "5 min"
 msgstr ""
 
-#: app.py:973
+#: app.py:977
 msgid "Too small screen for this application."
 msgstr "Votre écran est trop petit pour cette application."
 
-#: app.py:976
+#: app.py:980
 msgid "Minimum screen dimensions for this application are 1152 x 768.\n"
 msgstr "La résolution minimum pour cet application est de 1152 x 768.\n"
 
-#: app.py:977
+#: app.py:981
 msgid "Your screen dimensions are "
 msgstr "Votre résolution actuelle est "
 
-#: app.py:988
+#: app.py:992
 msgid "Cannot launch application because XDG folders init error."
 msgstr ""
 
-#: app.py:999
+#: app.py:1003
 msgid "Flowblade version 2.6 (or later) requires MLT version 6.18 to run"
 msgstr ""
 
-#: app.py:1000
+#: app.py:1004
 #, fuzzy
 msgid "Your MLT version is: "
 msgstr "Version MLT: "
 
-#: app.py:1000
+#: app.py:1004
 msgid "Install MLT 6.18 or higher to run Flowblade."
 msgstr ""
 
-#: app.py:1038 projectaction.py:426 projectaction.py:756
+#: app.py:1042 projectaction.py:431 projectaction.py:761
 msgid "Project has not been saved previously"
 msgstr "Le projet n'a jamais été sauvegardé"
 
-#: app.py:1039 projectaction.py:427 projectaction.py:757
+#: app.py:1043 projectaction.py:432 projectaction.py:762
 msgid "Save project with File -> Save As before closing."
 msgstr "Sauvegardez le projet avec Fichier -> Enregistrer sous."
 
-#: projectaction.py:139
+#: projectaction.py:140
 msgid "Media asset was missing!"
 msgstr ""
 
-#: projectaction.py:140
+#: projectaction.py:141
 msgid "Path of missing asset:"
 msgstr ""
 
-#: projectaction.py:141
+#: projectaction.py:142
 msgid ""
 "Relative search for replacement file in sub folders of project file failed."
 msgstr ""
 
-#: projectaction.py:142
+#: projectaction.py:143
 msgid "To load the project you will need to either:"
 msgstr ""
 
-#: projectaction.py:143
+#: projectaction.py:144
 msgid ""
 "Open project in 'Media Relinker' tool to relink media assets to new files, or"
 msgstr ""
 
-#: projectaction.py:144
+#: projectaction.py:145
 #, fuzzy
 msgid "Place a file with the same exact name and path on the hard drive"
 msgstr "Créez un fichier de même nom au contenu similaire pour pouvoir"
 
-#: projectaction.py:145
+#: projectaction.py:146
 msgid "Open project in Media Relinker tool"
 msgstr ""
 
-#: projectaction.py:164
+#: projectaction.py:165
 #, fuzzy
 msgid "Profile with Description: '"
 msgstr "Description:"
 
-#: projectaction.py:164
+#: projectaction.py:165
 #, fuzzy
 msgid "' was not found on load!"
 msgstr " n'a pas été trouvé!"
 
-#: projectaction.py:165
+#: projectaction.py:166
 msgid ""
 "It is possible to load the project by creating a User Profile with exactly "
 "the same Description\n"
 "as the missing profile. "
 msgstr ""
 
-#: projectaction.py:166
+#: projectaction.py:167
 msgid "User Profiles can be created by selecting 'Edit->Profiles Manager'."
 msgstr ""
 
-#: projectaction.py:173
+#: projectaction.py:174
 msgid "Opening"
 msgstr "Ouverture"
 
-#: projectaction.py:327
+#: projectaction.py:332
 msgid "Media files already present in project were opened!"
 msgstr ""
 
-#: projectaction.py:333
+#: projectaction.py:338
 #, fuzzy
 msgid ""
 "Files already present:\n"
 "\n"
 msgstr " existe déjà!"
 
-#: projectaction.py:340
+#: projectaction.py:345
 msgid ""
 "\n"
 "No duplicate media items were added to project."
 msgstr ""
 
-#: projectaction.py:551 exporting.py:522
+#: projectaction.py:556 exporting.py:522
 #, fuzzy
 msgid "Selected folder contains files"
 msgstr "Sélectionner un dossier pour les nouvelles miniatures"
 
-#: projectaction.py:552
+#: projectaction.py:557
 msgid ""
 "When saving a back-up snapshot of the project, the selected folder\n"
 "has to be empty."
 msgstr ""
 
-#: projectaction.py:609
+#: projectaction.py:614
 msgid "Copying project media assets"
 msgstr ""
 
-#: projectaction.py:610
+#: projectaction.py:615
 #, fuzzy
 msgid "Saving project file"
 msgstr "Sauvegarder le projet '"
 
-#: projectaction.py:769
+#: projectaction.py:774
 msgid "Project not found on disk"
 msgstr "Le projet n'a pas été trouvé sur le disque"
 
-#: projectaction.py:770
+#: projectaction.py:775
 msgid "Project can't be loaded."
 msgstr "Le projet ne peut pas être chargé."
 
-#: projectaction.py:778
+#: projectaction.py:783
 msgid "Project has not been saved since it was opened."
 msgstr "Ce projet n'a pas été enregistré depuis qu'il a été ouvert."
 
-#: projectaction.py:783
+#: projectaction.py:788
 msgid "Project was saved less than a minute ago."
 msgstr "Le projet a été sauvegardé il y a moins d'une minute."
 
-#: projectaction.py:786
+#: projectaction.py:791
 msgid "Project was saved one minute ago."
 msgstr "Le projet a été sauvegardé il y a une minute."
 
-#: projectaction.py:788
+#: projectaction.py:793
 msgid "Project was saved "
 msgstr "Le projet a été sauvegardé il y a "
 
-#: projectaction.py:788
+#: projectaction.py:793
 msgid " minutes ago."
 msgstr " minutes."
 
-#: projectaction.py:814
+#: projectaction.py:819
 #, fuzzy
 msgid "Render target file exists!"
 msgstr "Zone de rendu non définie!"
 
-#: projectaction.py:815
+#: projectaction.py:820
 #, fuzzy
 msgid "Confirm overwriting existing file."
 msgstr "Voulez-vous écraser le fichier existant?"
 
-#: projectaction.py:821
+#: projectaction.py:826
 msgid "Project is currently using proxy media!"
 msgstr ""
 
-#: projectaction.py:822
+#: projectaction.py:827
 msgid ""
 "Rendering from proxy media will produce worse quality than rendering from "
 "original media.\n"
@@ -214,97 +214,97 @@ msgid ""
 "Select 'Confirm' to render from proxy media anyway."
 msgstr ""
 
-#: projectaction.py:914
+#: projectaction.py:919
 #, fuzzy
 msgid "Render launch failed!"
 msgstr "Zone de rendu non définie!"
 
-#: projectaction.py:915 projectaction.py:929 tools/batchrendering.py:309
+#: projectaction.py:920 projectaction.py:934 tools/batchrendering.py:309
 #, fuzzy
 msgid "Error message: "
 msgstr "Message d'erreur: "
 
-#: projectaction.py:928
+#: projectaction.py:933
 msgid "Adding item to render queue failed!"
 msgstr "Echec de l'ajout d'élément à la liste de rendu!"
 
-#: projectaction.py:944
+#: projectaction.py:949
 msgid "Render Proxy Files For Selected Media"
 msgstr "Créer des fichiers proxy pour les médias sélectionnés"
 
-#: projectaction.py:945
+#: projectaction.py:950
 #, fuzzy
 msgid "Render Proxy Files For All Media"
 msgstr "Créer des fichiers proxy pour les médias sélectionnés"
 
-#: projectaction.py:947
+#: projectaction.py:952
 #, fuzzy
 msgid "Select All"
 msgstr "Sélectionnez un répertoire"
 
-#: projectaction.py:948
+#: projectaction.py:953
 #, fuzzy
 msgid "Select None"
 msgstr "Sélection couleur"
 
-#: projectaction.py:950
+#: projectaction.py:955
 #, fuzzy
 msgid "Move Selected Media To Bin"
 msgstr "Déplacer la sélection vers groupe"
 
-#: projectaction.py:953
+#: projectaction.py:958
 #, fuzzy
 msgid "No Target Bins"
 msgstr "Fichier de destination:"
 
-#: projectaction.py:972
+#: projectaction.py:977
 #, fuzzy
 msgid "Append All Media to Timeline"
 msgstr "Ajouter la sélection au montage"
 
-#: projectaction.py:973
+#: projectaction.py:978
 #, fuzzy
 msgid "Append Selected Media to Timeline"
 msgstr "Déplacer la sélection vers groupe"
 
-#: projectaction.py:1005 editorwindow.py:240
+#: projectaction.py:1010 editorwindow.py:240
 msgid "Add Video, Audio or Image..."
 msgstr ""
 
-#: projectaction.py:1006 editorwindow.py:241
+#: projectaction.py:1011 editorwindow.py:241
 msgid "Add Image Sequence..."
 msgstr "Ajouter une séquence d'images..."
 
-#: projectaction.py:1027
+#: projectaction.py:1032
 msgid "Open.."
 msgstr "Ouvrir..."
 
-#: projectaction.py:1056
+#: projectaction.py:1061
 msgid "Opening .mlt or .xml file as media was disallowed!"
 msgstr ""
 
-#: projectaction.py:1057
+#: projectaction.py:1062
 msgid ""
 "Only XML files with matching Profiles can be opened as clips.\n"
 "\n"
 "Last non-matching MLT XML file had Profile: "
 msgstr ""
 
-#: projectaction.py:1077
+#: projectaction.py:1082
 msgid "No file was selected"
 msgstr "Aucun fichier sélectionné"
 
-#: projectaction.py:1077
+#: projectaction.py:1082
 msgid "Select a numbered file to add an Image Sequence to Project."
 msgstr ""
 "Sélectionnez un fichier numéroté pour ajouter une séquence d'images au "
 "projet."
 
-#: projectaction.py:1085
+#: projectaction.py:1090
 msgid "Not a sequence file!"
 msgstr "Ce n'est pas un fichier de séquence!"
 
-#: projectaction.py:1085
+#: projectaction.py:1090
 msgid ""
 "Selected file does not have a number part in it,\n"
 "so it can't be an image sequence file."
@@ -312,112 +312,112 @@ msgstr ""
 "Le fichier sélectionné ne contient pas de numérotation,\n"
 "il ne peut donc pas constituer une séquence d'images."
 
-#: projectaction.py:1247 projectaction.py:1249 projectaction.py:1258
-#: projectaction.py:1266 projectaction.py:1273 tools/batchrendering.py:1041
+#: projectaction.py:1252 projectaction.py:1254 projectaction.py:1263
+#: projectaction.py:1271 projectaction.py:1278 tools/batchrendering.py:1041
 #: clipmenuaction.py:157 clipmenuaction.py:159
 msgid "N/A"
 msgstr ""
 
-#: projectaction.py:1262 guicomponents.py:2474
+#: projectaction.py:1267 guicomponents.py:2474
 msgid "Yes"
 msgstr "Oui"
 
-#: projectaction.py:1264 guicomponents.py:2476
+#: projectaction.py:1269 guicomponents.py:2476
 msgid "No"
 msgstr "Non"
 
-#: projectaction.py:1322
+#: projectaction.py:1327
 #, fuzzy
 msgid "Select Project for Media Import"
 msgstr "Sélectionnez un projet"
 
-#: projectaction.py:1342
+#: projectaction.py:1347
 #, fuzzy
 msgid "selection_"
 msgstr "Charger la sélection"
 
-#: projectaction.py:1343
+#: projectaction.py:1348
 #, fuzzy
 msgid "Save Selection Container Clip"
 msgstr "Créer clip de couleur"
 
-#: projectaction.py:1401 projectaction.py:1422 projectaction.py:1733
-#: projectaction.py:1749 projectdata.py:228 tlineaction.py:280
+#: projectaction.py:1406 projectaction.py:1427 projectaction.py:1738
+#: projectaction.py:1754 projectdata.py:228 tlineaction.py:280
 msgid "sequence_"
 msgstr "séquence_"
 
-#: projectaction.py:1402
+#: projectaction.py:1407
 #, fuzzy
 msgid "Save Sequence Container Clip"
 msgstr "Ajouter un clip de séquence d'images"
 
-#: projectaction.py:1423
+#: projectaction.py:1428
 #, fuzzy
 msgid "Save Sequence Compound Clip"
 msgstr "Ajouter un clip de séquence d'images"
 
-#: projectaction.py:1449
+#: projectaction.py:1454
 #, fuzzy
 msgid "frame_"
 msgstr "Tous les fichiers"
 
-#: projectaction.py:1450
+#: projectaction.py:1455
 #, fuzzy
 msgid "Save Freeze Frame Sequence Compound Clip"
 msgstr "Ajouter un clip de séquence d'images"
 
-#: projectaction.py:1529 editorwindow.py:244
+#: projectaction.py:1534 editorwindow.py:244
 #, fuzzy
 msgid "Add Bin"
 msgstr "Ajouter une fusion"
 
-#: projectaction.py:1530 editorwindow.py:245
+#: projectaction.py:1535 editorwindow.py:245
 #, fuzzy
 msgid "Delete Selected Bin"
 msgstr "Supprimer la sélection"
 
-#: projectaction.py:1534
+#: projectaction.py:1539
 #, fuzzy
 msgid "Move Bin"
 msgstr "Bas"
 
-#: projectaction.py:1536 editorwindow.py:1041
+#: projectaction.py:1541 editorwindow.py:1045
 msgid "Up"
 msgstr "Haut"
 
-#: projectaction.py:1537 editorwindow.py:1045
+#: projectaction.py:1542 editorwindow.py:1049
 msgid "Down"
 msgstr "Bas"
 
-#: projectaction.py:1538
+#: projectaction.py:1543
 msgid "First"
 msgstr ""
 
-#: projectaction.py:1539
+#: projectaction.py:1544
 msgid "Last"
 msgstr ""
 
-#: projectaction.py:1598
+#: projectaction.py:1603
 msgid "Can't remove a non-empty bin"
 msgstr "Impossible de supprimer un bin contenant des éléments"
 
-#: projectaction.py:1599
+#: projectaction.py:1604
 msgid "You must remove all files from the bin before deleting it."
 msgstr "Vous devez supprimer tous les fichiers du bin pour pouvoir l'effacer."
 
-#: projectaction.py:1607
+#: projectaction.py:1612
 msgid "Can't remove last bin"
 msgstr "Impossible de supprimer le dernier bin"
 
-#: projectaction.py:1608
+#: projectaction.py:1613
 msgid "There must always exist at least one bin."
 msgstr "Il doit toujours y avoir au moins un bin."
 
-#: projectaction.py:1698
+#: projectaction.py:1703
 msgid "Selected sequence is already being edited"
 msgstr "La séquence sélectionnée est déjà en cours d'édition"
 
-#: projectaction.py:1699
+#: projectaction.py:1704
 msgid ""
 "Select another sequence. Press Add -button to create a\n"
 "new sequence if needed."
@@ -425,27 +425,27 @@ msgstr ""
 "Sélectionnez une autre séquence. Cliquez sur Ajouter pour créer\n"
 "une nouvelle séquence si nécéssaire."
 
-#: projectaction.py:1713 editorwindow.py:247
+#: projectaction.py:1718 editorwindow.py:247
 #, fuzzy
 msgid "Add New Sequence"
 msgstr "Ajouter une séquence d'images..."
 
-#: projectaction.py:1714 editorwindow.py:248
+#: projectaction.py:1719 editorwindow.py:248
 #, fuzzy
 msgid "Edit Selected Sequence"
 msgstr "Créer une séquence"
 
-#: projectaction.py:1715 editorwindow.py:249
+#: projectaction.py:1720 editorwindow.py:249
 #, fuzzy
 msgid "Delete Selected Sequence"
 msgstr "Supprimer l'élément sélectionné"
 
-#: projectaction.py:1717
+#: projectaction.py:1722
 #, fuzzy
 msgid "Create Container Clip from Selected Sequence"
 msgstr "Créer clip de couleur"
 
-#: projectaction.py:1788
+#: projectaction.py:1793
 msgid ""
 "Are you sure you want to delete\n"
 "sequence '"
@@ -453,33 +453,33 @@ msgstr ""
 "Êtes-vous certain de vouloir effacer\n"
 "la séquence '"
 
-#: projectaction.py:1788
+#: projectaction.py:1793
 msgid "'?"
 msgstr "'?"
 
-#: projectaction.py:1789
+#: projectaction.py:1794
 msgid "This operation can not be undone. Sequence will be permanently lost."
 msgstr ""
 "Cette opération ne peut être annulée. La séquence sera perdue définitivement."
 
-#: projectaction.py:1815
+#: projectaction.py:1820
 msgid "Can't remove last sequence"
 msgstr "Impossible de supprimer la dernière séquence"
 
-#: projectaction.py:1816
+#: projectaction.py:1821
 msgid "There must always exist at least one sequence."
 msgstr "Il doit toujours y avoit au moins une séquence."
 
-#: projectaction.py:2055 editorwindow.py:1106 workflow.py:224
+#: projectaction.py:2060 editorwindow.py:1110 workflow.py:224
 msgid "Top Down Free Move"
 msgstr ""
 
-#: projectaction.py:2056 editorwindow.py:1110
+#: projectaction.py:2061 editorwindow.py:1114
 #, fuzzy
 msgid "Standard Auto Follow"
 msgstr "Compositions"
 
-#: projectaction.py:2057 editorwindow.py:1114 workflow.py:224
+#: projectaction.py:2062 editorwindow.py:1118 workflow.py:224
 #, fuzzy
 msgid "Standard Full Track"
 msgstr "Compositions"
@@ -958,119 +958,119 @@ msgstr ""
 msgid "Current Sequence Compositing Mode"
 msgstr "Position actuelle de séquence/média du moniteur"
 
-#: editorwindow.py:991
+#: editorwindow.py:995
 msgid "Window Mode"
 msgstr ""
 
-#: editorwindow.py:994 preferenceswindow.py:397
+#: editorwindow.py:998 preferenceswindow.py:397
 msgid "Single Window"
 msgstr ""
 
-#: editorwindow.py:998 preferenceswindow.py:398
+#: editorwindow.py:1002 preferenceswindow.py:398
 msgid "Two Windows"
 msgstr ""
 
-#: editorwindow.py:1012
+#: editorwindow.py:1016
 msgid "Middlebar Layout"
 msgstr "Placement barre centrale"
 
-#: editorwindow.py:1015
+#: editorwindow.py:1019
 msgid "Timecode Left"
 msgstr "Timecode à gauche"
 
-#: editorwindow.py:1019
+#: editorwindow.py:1023
 msgid "Timecode Center"
 msgstr "Timecode au centre"
 
-#: editorwindow.py:1023
+#: editorwindow.py:1027
 msgid "Components Centered"
 msgstr ""
 
-#: editorwindow.py:1038
+#: editorwindow.py:1042
 msgid "Tabs Position"
 msgstr "Position des onglets"
 
-#: editorwindow.py:1063
+#: editorwindow.py:1067
 msgid "Monitor Playback Interpolation"
 msgstr "Type d'interpolation du moniteur"
 
-#: editorwindow.py:1067
+#: editorwindow.py:1071
 #, fuzzy
 msgid "Nearest Neighbour (fast)"
 msgstr "Interpolation de proximité"
 
-#: editorwindow.py:1071
+#: editorwindow.py:1075
 #, fuzzy
 msgid "Bilinear (good)"
 msgstr "Bilinéaire"
 
-#: editorwindow.py:1075
+#: editorwindow.py:1079
 #, fuzzy
 msgid "Bicubic (better)"
 msgstr "Bicubique"
 
-#: editorwindow.py:1080
+#: editorwindow.py:1084
 msgid "Hyper/Lanczos (best)"
 msgstr ""
 
-#: editorwindow.py:1090 shortcuts.py:215
+#: editorwindow.py:1094 shortcuts.py:215
 msgid "Zoom In"
 msgstr "Zoom avant"
 
-#: editorwindow.py:1093 shortcuts.py:214
+#: editorwindow.py:1097 shortcuts.py:214
 msgid "Zoom Out"
 msgstr "Zoom arrière"
 
-#: editorwindow.py:1096
+#: editorwindow.py:1100
 msgid "Zoom Fit"
 msgstr "Taille idéale"
 
-#: editorwindow.py:1137 preferenceswindow.py:131
+#: editorwindow.py:1141 preferenceswindow.py:131
 msgid "Off"
 msgstr ""
 
-#: editorwindow.py:1141
+#: editorwindow.py:1145
 #, fuzzy
 msgid "Render Auto"
 msgstr "Paramètres de rendu"
 
-#: editorwindow.py:1145
+#: editorwindow.py:1149
 #, fuzzy
 msgid "Render On Request"
 msgstr "Options de rendu"
 
-#: editorwindow.py:1160 tlinerender.py:153
+#: editorwindow.py:1164 tlinerender.py:153
 #, fuzzy
 msgid "Settings..."
 msgstr "Rendu démarré:"
 
-#: editorwindow.py:1185
+#: editorwindow.py:1189
 msgid "Empty"
 msgstr "Vide"
 
-#: editorwindow.py:1210
+#: editorwindow.py:1214
 msgid "Global Window Mode changed"
 msgstr ""
 
-#: editorwindow.py:1211
+#: editorwindow.py:1215
 #, fuzzy
 msgid "Application restart required for the new layout choice to take effect."
 msgstr "Relancez l'application pour prendre en compte les modifications"
 
-#: editorwindow.py:1332
+#: editorwindow.py:1336
 msgid "Timeline current frame timecode"
 msgstr "Timecode de l'image actuelle sur le montage"
 
-#: editorwindow.py:1334
+#: editorwindow.py:1338
 #, fuzzy
 msgid "Select view mode: Video / Vectorscope/ RGBParade"
 msgstr "Mode de prévisualisation: Vidéo/Vectorscope/RVB"
 
-#: editorwindow.py:1335
+#: editorwindow.py:1339
 msgid "Set trim view and match frames"
 msgstr ""
 
-#: editorwindow.py:1337
+#: editorwindow.py:1341
 #, fuzzy
 msgid "Sequence / Media current position"
 msgstr "Position actuelle de séquence/média du moniteur"
@@ -1205,7 +1205,7 @@ msgstr "Nouveau projet"
 #: patternproducer.py:391 patternproducer.py:422 tools/gmic.py:402
 #: tools/gmic.py:426 tools/gmic.py:555 dialogutils.py:108 dialogutils.py:168
 #: exporting.py:442 tools/containerprogramedit.py:89 tools/simpleeditors.py:121
-#: containeractions.py:356 containerclip.py:162 containerclip.py:433
+#: containeractions.py:357 containerclip.py:173 containerclip.py:447
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -1260,12 +1260,12 @@ msgid "New Profile"
 msgstr "Sauvegarder le nouveau profil"
 
 #: dialogs.py:146 dialogs.py:201 rendergui.py:677 tools/gmic.py:760
-#: tools/toolsencoding.py:296
+#: tools/toolsencoding.py:297
 msgid "Select Folder"
 msgstr "Sélectionnez un répertoire"
 
 #: dialogs.py:150 dialogs.py:205 rendergui.py:681 tools/batchrendering.py:1091
-#: tools/toolsencoding.py:300
+#: tools/toolsencoding.py:301
 msgid "Folder:"
 msgstr "Répertoire:"
 
@@ -1384,7 +1384,7 @@ msgstr "Exporter XML du projet vers"
 msgid "Create"
 msgstr "Créer"
 
-#: dialogs.py:413 patternproducer.py:370 tools/toolsencoding.py:309
+#: dialogs.py:413 patternproducer.py:370 tools/toolsencoding.py:310
 #, fuzzy
 msgid "Clip Name:"
 msgstr "Nom du clip"
@@ -1748,7 +1748,7 @@ msgstr ""
 msgid "Change Clip Length"
 msgstr "Durée du clip:"
 
-#: dialogs.py:1018 dialogs.py:1228 dialogs.py:1268 containerclip.py:163
+#: dialogs.py:1018 dialogs.py:1228 dialogs.py:1268 containerclip.py:174
 msgid "Ok"
 msgstr "Ok"
 
@@ -2914,19 +2914,19 @@ msgid "Show Full Paths"
 msgstr ""
 
 #: guicomponents.py:2414 propertyeditorbuilder.py:740
-#: propertyeditorbuilder.py:795 tools/toolsencoding.py:179
+#: propertyeditorbuilder.py:795 tools/toolsencoding.py:180
 msgid "Progressive"
 msgstr "Progressif"
 
-#: guicomponents.py:2416 tools/toolsencoding.py:181
+#: guicomponents.py:2416 tools/toolsencoding.py:182
 msgid "Interlaced"
 msgstr "Entrelacé"
 
-#: guicomponents.py:2421 tools/toolsencoding.py:184
+#: guicomponents.py:2421 tools/toolsencoding.py:185
 msgid "Fps: "
 msgstr "Ips: "
 
-#: guicomponents.py:2424 tools/toolsencoding.py:187
+#: guicomponents.py:2424 tools/toolsencoding.py:188
 msgid "Pixel Aspect: "
 msgstr "Proportions: "
 
@@ -3266,7 +3266,7 @@ msgid ""
 "movie."
 msgstr ""
 
-#: panels.py:179 rendergui.py:691 tools/toolsencoding.py:307
+#: panels.py:179 rendergui.py:691 tools/toolsencoding.py:308
 msgid "Name:"
 msgstr "Nom:"
 
@@ -3334,7 +3334,7 @@ msgstr "Chemin du média:"
 msgid "Composite clip on:"
 msgstr "Clip de composition sur:"
 
-#: panels.py:259 panels.py:481 rendergui.py:704 tools/toolsencoding.py:390
+#: panels.py:259 panels.py:481 rendergui.py:704 tools/toolsencoding.py:391
 msgid "Type:"
 msgstr "Type:"
 
@@ -3411,7 +3411,7 @@ msgid ""
 "timeline."
 msgstr ""
 
-#: panels.py:467 tools/containerprogramedit.py:165 jobs.py:371
+#: panels.py:467 tools/containerprogramedit.py:165 jobs.py:372
 #, fuzzy
 msgid "Info"
 msgstr "Info du clip"
@@ -3430,15 +3430,15 @@ msgstr "Fondu en fermeture"
 msgid "Color:"
 msgstr "Couleur:"
 
-#: persistance.py:468
+#: persistance.py:472
 msgid "Building sequence "
 msgstr "Construction de la séquence "
 
-#: persistance.py:490
+#: persistance.py:494
 msgid "Loading icons"
 msgstr "Chargement des icônes"
 
-#: persistance.py:769 persistance.py:789
+#: persistance.py:773 persistance.py:793
 msgid "Relative file search for "
 msgstr ""
 
@@ -3540,7 +3540,7 @@ msgstr ""
 ".\n"
 "Vous ne pouvez synchroniser que des clips se trouvant sur la piste V1."
 
-#: translations.py:129 translations.py:453 tools/simpleeditors.py:223
+#: translations.py:129 translations.py:453 tools/simpleeditors.py:224
 msgid "Color"
 msgstr "Couleur"
 
@@ -5695,7 +5695,7 @@ msgid "Grain merge"
 msgstr ""
 
 #: mlttransitions.py:164 tools/containerprogramedit.py:165
-#: tools/simpleeditors.py:220
+#: tools/simpleeditors.py:221
 msgid "Value"
 msgstr "Valeur"
 
@@ -6313,7 +6313,7 @@ msgstr "Calculer un fichier de ralenti/acceleré"
 msgid "Rendered Clip Length:"
 msgstr "Durée du clip rendu:"
 
-#: rendergui.py:473 tools/toolsencoding.py:496
+#: rendergui.py:473 tools/toolsencoding.py:497
 msgid "Select Render quality"
 msgstr "Qualité de rendu"
 
@@ -6321,11 +6321,11 @@ msgstr "Qualité de rendu"
 msgid "Select audio sample frequency"
 msgstr ""
 
-#: rendergui.py:515 tools/toolsencoding.py:555
+#: rendergui.py:515 tools/toolsencoding.py:556
 msgid "Select Render encoding"
 msgstr "Encodage du rendu"
 
-#: rendergui.py:552 tools/toolsencoding.py:479
+#: rendergui.py:552 tools/toolsencoding.py:480
 msgid "Select render profile"
 msgstr "Sélectionner profil de rendu"
 
@@ -6337,16 +6337,16 @@ msgstr "Projet complet"
 msgid "Marked Range"
 msgstr "Plage de rendu"
 
-#: rendergui.py:588 tools/toolsencoding.py:116
+#: rendergui.py:588 tools/toolsencoding.py:117
 msgid "File"
 msgstr "Fichier"
 
-#: rendergui.py:589 tools/toolsencoding.py:121
+#: rendergui.py:589 tools/toolsencoding.py:122
 msgid "Render Profile"
 msgstr "Profil de rendu"
 
 #: rendergui.py:592 rendergui.py:604 rendergui.py:614
-#: tools/toolsencoding.py:122
+#: tools/toolsencoding.py:123
 msgid "Encoding Format"
 msgstr "Format d'encodage"
 
@@ -6362,23 +6362,23 @@ msgstr "Paramètres de rendu"
 msgid "Open File in Bin:"
 msgstr "Ouvrir le fichier dans un bin"
 
-#: rendergui.py:697 tools/toolsencoding.py:331
+#: rendergui.py:697 tools/toolsencoding.py:332
 msgid "Select folder to place rendered file in"
 msgstr "Réperoire des fichiers de rendu"
 
-#: rendergui.py:698 tools/toolsencoding.py:332
+#: rendergui.py:698 tools/toolsencoding.py:333
 msgid "Give name for rendered file"
 msgstr "Nommer le fichier de rendu"
 
-#: rendergui.py:705 tools/toolsencoding.py:391
+#: rendergui.py:705 tools/toolsencoding.py:392
 msgid "Presets:"
 msgstr "Présélection:"
 
-#: rendergui.py:708 tools/toolsencoding.py:394
+#: rendergui.py:708 tools/toolsencoding.py:395
 msgid "User Defined"
 msgstr "Défini par l'utilisateur"
 
-#: rendergui.py:709 tools/toolsencoding.py:395
+#: rendergui.py:709 tools/toolsencoding.py:396
 msgid "Preset File type"
 msgstr "Type de fichier de présélection"
 
@@ -6955,7 +6955,7 @@ msgstr ""
 msgid "Queued"
 msgstr "File d'attente"
 
-#: tools/batchrendering.py:596 jobs.py:726 jobs.py:779
+#: tools/batchrendering.py:596 jobs.py:725 jobs.py:778
 msgid "Rendering"
 msgstr "Rendu"
 
@@ -6979,7 +6979,7 @@ msgstr "Temps restant:"
 msgid "Current Render:"
 msgstr "Rendu en cours:"
 
-#: tools/batchrendering.py:661 tools/batchrendering.py:1393 jobs.py:717
+#: tools/batchrendering.py:661 tools/batchrendering.py:1393 jobs.py:716
 msgid "Elapsed:"
 msgstr "Ecoulé:"
 
@@ -7060,7 +7060,7 @@ msgstr "Statuts"
 msgid "Render File"
 msgstr "Fichier de rendu"
 
-#: tools/batchrendering.py:906 jobs.py:372
+#: tools/batchrendering.py:906 jobs.py:373
 msgid "Render Time"
 msgstr "Temps de rendu"
 
@@ -7752,7 +7752,7 @@ msgstr ""
 msgid "Video Encoding Settings"
 msgstr "Encodage"
 
-#: tools/gmic.py:556 containeractions.py:357
+#: tools/gmic.py:556 containeractions.py:358
 #, fuzzy
 msgid "Set Encoding"
 msgstr "Encodage"
@@ -7767,11 +7767,11 @@ msgstr "Copier clips"
 msgid "no clip loaded"
 msgstr "Jusqu'au poignées du clip:"
 
-#: tools/gmic.py:629 tools/simpleeditors.py:367
+#: tools/gmic.py:629 tools/simpleeditors.py:368
 msgid "no preview"
 msgstr ""
 
-#: tools/gmic.py:676 tools/simpleeditors.py:140 tools/simpleeditors.py:385
+#: tools/gmic.py:676 tools/simpleeditors.py:140 tools/simpleeditors.py:386
 msgid "Preview"
 msgstr ""
 
@@ -7842,88 +7842,88 @@ msgstr ""
 msgid "Rendering preview..."
 msgstr "Rendu en cours"
 
-#: tools/gmic.py:1142 tools/simpleeditors.py:174
+#: tools/gmic.py:1145 tools/simpleeditors.py:175
 #, fuzzy
 msgid "Preview for frame: "
 msgstr "Image précédente"
 
-#: tools/gmic.py:1143 tools/simpleeditors.py:174
+#: tools/gmic.py:1146 tools/simpleeditors.py:175
 #, fuzzy
 msgid ", render time: "
 msgstr "Temps de rendu"
 
-#: tools/gmic.py:1209
+#: tools/gmic.py:1212
 msgid "Waiting for frames write to complete..."
 msgstr ""
 
-#: tools/gmic.py:1252 tools/gmic.py:1313
+#: tools/gmic.py:1253 tools/gmic.py:1314
 #, fuzzy
 msgid "Render stopped!"
 msgstr "Rendu terminé!"
 
-#: tools/gmic.py:1258
+#: tools/gmic.py:1259
 #, fuzzy
 msgid "Rendering video, "
 msgstr "Rendu en cours"
 
-#: tools/gmic.py:1258
+#: tools/gmic.py:1259
 #, python-format
 msgid "% done"
 msgstr ""
 
-#: tools/gmic.py:1268
+#: tools/gmic.py:1269
 #, fuzzy
 msgid "Render complete!"
 msgstr "Rendu terminé!"
 
-#: tools/gmic.py:1278
+#: tools/gmic.py:1279
 msgid "Writing clip frame: "
 msgstr ""
 
-#: tools/gmic.py:1286
+#: tools/gmic.py:1287
 #, fuzzy
 msgid "Rendering frame: "
 msgstr "Rendu de l'élément:"
 
-#: tools/gmic.py:1298
+#: tools/gmic.py:1299
 #, fuzzy
 msgid "Render error!"
 msgstr "Progression du rendu"
 
-#: tools/toolsencoding.py:118
+#: tools/toolsencoding.py:119
 #, fuzzy
 msgid "Save Location"
 msgstr "Enregistrer le projet"
 
-#: tools/toolsencoding.py:126
+#: tools/toolsencoding.py:127
 #, fuzzy
 msgid "Video Clip"
 msgstr "Copier clips"
 
-#: tools/toolsencoding.py:289
+#: tools/toolsencoding.py:290
 msgid "Save Rendered Container Media Internally"
 msgstr ""
 
-#: tools/toolsencoding.py:290
+#: tools/toolsencoding.py:291
 msgid "Save Rendered Container Media Externally"
 msgstr ""
 
-#: tools/toolsencoding.py:317
+#: tools/toolsencoding.py:318
 #, fuzzy
 msgid "Frame Name:"
 msgstr "Tous les fichiers"
 
-#: tools/toolsencoding.py:357
+#: tools/toolsencoding.py:358
 #, fuzzy
 msgid "Render Video Clip"
 msgstr "Rendre un clip"
 
-#: tools/toolsencoding.py:358
+#: tools/toolsencoding.py:359
 #, fuzzy
 msgid "Frame Sequence Only"
 msgstr "Créer une séquence"
 
-#: tools/toolsencoding.py:413
+#: tools/toolsencoding.py:414
 #, fuzzy
 msgid "Use Default Profile:"
 msgstr "Profil par défaut"
@@ -8665,11 +8665,11 @@ msgid "Select Preset Workflow and Continue"
 msgstr ""
 
 #: workflow.py:431
-msgid "<b>Welcome to Flowblade 2.4</b>"
+msgid "<b>Welcome to Flowblade</b>"
 msgstr ""
 
 #: workflow.py:436
-msgid "<b>Flowblade 2.4</b> comes with a configurable workflow."
+msgid "<b>Flowblade</b> comes with a configurable workflow."
 msgstr ""
 
 #: workflow.py:441
@@ -8900,243 +8900,243 @@ msgstr "Édition"
 msgid "Blender Project Edit - "
 msgstr "Propriétés du rendu"
 
-#: tools/simpleeditors.py:219
+#: tools/simpleeditors.py:220
 msgid "String"
 msgstr ""
 
-#: tools/simpleeditors.py:221
+#: tools/simpleeditors.py:222
 msgid "Float"
 msgstr ""
 
-#: tools/simpleeditors.py:222
+#: tools/simpleeditors.py:223
 #, fuzzy
 msgid "Int"
 msgstr "Entrée"
 
-#: tools/simpleeditors.py:379
+#: tools/simpleeditors.py:380
 #, fuzzy
 msgid "Clip Frame"
 msgstr "Nom du clip"
 
-#: jobs.py:98
+#: jobs.py:99
 #, fuzzy
 msgid "G'Mic Clip"
 msgstr "Copier clips"
 
-#: jobs.py:100
+#: jobs.py:101
 #, fuzzy
 msgid "Selection Clip"
 msgstr "Charger la sélection"
 
-#: jobs.py:102
+#: jobs.py:103
 #, fuzzy
 msgid "Blender Clip"
 msgstr "Rendu"
 
-#: jobs.py:104
+#: jobs.py:105
 #, fuzzy
 msgid "Motion Clip"
 msgstr "Créer clip de couleur"
 
-#: jobs.py:106
+#: jobs.py:107
 #, fuzzy
 msgid "Proxy Clip"
 msgstr "Copier clips"
 
-#: jobs.py:177
+#: jobs.py:178
 #, fuzzy
 msgid "Completed"
 msgstr "Rendu terminé!"
 
-#: jobs.py:204 jobs.py:292 jobs.py:822
+#: jobs.py:205 jobs.py:293 jobs.py:821
 #, fuzzy
 msgid "Cancelled"
 msgstr "Annuler"
 
-#: jobs.py:257
+#: jobs.py:258
 #, fuzzy
 msgid "Cancel Selected Render"
 msgstr "Supprimer la sélection"
 
-#: jobs.py:258
+#: jobs.py:259
 msgid "Cancel All Renders"
 msgstr ""
 
-#: jobs.py:271
+#: jobs.py:272
 msgid "Show Jobs Panel on Adding New Job"
 msgstr ""
 
-#: jobs.py:370
+#: jobs.py:371
 #, fuzzy
 msgid "Job Type"
 msgstr "Type:"
 
-#: jobs.py:373
+#: jobs.py:374
 #, fuzzy
 msgid "Progress"
 msgstr "Progressif"
 
-#: jobs.py:460 containeractions.py:242
+#: jobs.py:461 containeractions.py:243
 #, fuzzy
 msgid "In Queue - "
 msgstr "File de rendu"
 
-#: jobs.py:489 jobs.py:559 containeractions.py:485 containeractions.py:616
-#: containeractions.py:718
+#: jobs.py:490 jobs.py:560 containeractions.py:492 containeractions.py:623
+#: containeractions.py:728
 #, fuzzy
 msgid "Render Starting..."
 msgstr "Rendu démarré:"
 
-#: jobs.py:526
+#: jobs.py:527
 #, fuzzy
 msgid "Rendering Motion Clip "
 msgstr "Rendre un clip"
 
-#: jobs.py:600
+#: jobs.py:599
 #, fuzzy
 msgid "Rendering Proxy Clip for "
 msgstr "Rendre un clip"
 
-#: jobs.py:718
+#: jobs.py:717
 #, fuzzy
 msgid "Jobs Remaining Item:"
 msgstr "Rendu de l'élément:"
 
-#: jobs.py:719
+#: jobs.py:718
 #, fuzzy
 msgid "Current Job:"
 msgstr "Rendu en cours:"
 
-#: jobs.py:727
+#: jobs.py:726
 msgid "Cancel All Jobs"
 msgstr ""
 
-#: jobs.py:751
+#: jobs.py:750
 #, fuzzy
 msgid "Jobs Render Progress"
 msgstr "Progression du rendu"
 
-#: jobs.py:760
+#: jobs.py:759
 #, fuzzy
 msgid "Renders Complete."
 msgstr "Rendu terminé!"
 
-#: jobs.py:772
+#: jobs.py:771
 msgid "Saving..."
 msgstr ""
 
-#: containeractions.py:353
+#: containeractions.py:354
 msgid "Container Clip Render Settings"
 msgstr ""
 
-#: containeractions.py:524
+#: containeractions.py:531
 msgid "Step "
 msgstr ""
 
-#: containeractions.py:526
+#: containeractions.py:533
 #, fuzzy
 msgid "Writing Clip Frames"
 msgstr "Placer le clip du moniteur"
 
-#: containeractions.py:528
+#: containeractions.py:535
 #, fuzzy
 msgid "Rendering G'Mic Script"
 msgstr "Rendre un clip"
 
-#: containeractions.py:530
+#: containeractions.py:537
 #, fuzzy
 msgid "Encoding Video"
 msgstr "Désactiver la vidéo"
 
-#: containeractions.py:654 containeractions.py:827
+#: containeractions.py:661 containeractions.py:841
 #, fuzzy
 msgid "Rendering Video"
 msgstr "Rendu en cours"
 
-#: containeractions.py:656 containeractions.py:823
+#: containeractions.py:663 containeractions.py:837
 #, fuzzy
 msgid "Rendering Image Sequence"
 msgstr "Ajouter une séquence d'images..."
 
-#: containeractions.py:691
+#: containeractions.py:697
 msgid "Wrong magic: "
 msgstr ""
 
-#: containeractions.py:825
+#: containeractions.py:839
 #, fuzzy
 msgid "Rendering Preview"
 msgstr "Rendu en cours"
 
-#: containeractions.py:932
+#: containeractions.py:946
 #, fuzzy
 msgid "<b>Rendering Placeholder Media For:</b> "
 msgstr "Rendre un clip de transition"
 
-#: containerclip.py:149
+#: containerclip.py:160
 #, fuzzy
 msgid "Select A File"
 msgstr "Sélectionnez un répertoire"
 
-#: containerclip.py:191
+#: containerclip.py:202
 msgid "Not all required files were defined"
 msgstr ""
 
-#: containerclip.py:191
+#: containerclip.py:202
 msgid ""
 "Select all files asked for in dialog for succesful Container Clip creation."
 msgstr ""
 
-#: containerclip.py:198
+#: containerclip.py:209
 #, fuzzy
 msgid "G'Mic Tool Script:"
 msgstr "Rendre un clip"
 
-#: containerclip.py:198
+#: containerclip.py:209
 #, fuzzy
 msgid "Select G'Mic Tool Script"
 msgstr "Rendre un clip"
 
-#: containerclip.py:199
+#: containerclip.py:210
 #, fuzzy
 msgid "Video Clip:"
 msgstr "Codec vidéo:"
 
-#: containerclip.py:200
+#: containerclip.py:211
 msgid "Create G'Mic Script Container Clip"
 msgstr ""
 
-#: containerclip.py:249
+#: containerclip.py:260
 msgid "G'Mic Container Clip Validation Error"
 msgstr ""
 
-#: containerclip.py:265
+#: containerclip.py:276
 #, fuzzy
 msgid "Blender Project"
 msgstr "Ouvrir un projet"
 
-#: containerclip.py:267
+#: containerclip.py:278
 #, fuzzy
 msgid "Select Blender Project File:"
 msgstr "Sélectionnez un projet"
 
-#: containerclip.py:269
+#: containerclip.py:280
 msgid "Create Blender Project Container Clip"
 msgstr ""
 
-#: containerclip.py:292
+#: containerclip.py:303
 msgid "Blender Container Clip Validation Error"
 msgstr ""
 
-#: containerclip.py:309
+#: containerclip.py:323
 #, fuzzy
 msgid "Creating Container for Blender Project"
 msgstr "Enregistrer le projet sous"
 
-#: containerclip.py:417
+#: containerclip.py:431
 msgid "Container Program Edit Data is Executable!"
 msgstr ""
 
-#: containerclip.py:418
+#: containerclip.py:432
 msgid ""
 "Only accept Container Program Edit Data from similar trustwothy sources\n"
 "you would accept applications!\n"
@@ -9146,7 +9146,7 @@ msgid ""
 "can maybe used as an attack vector against your system."
 msgstr ""
 
-#: containerclip.py:434
+#: containerclip.py:448
 msgid "Load Program Edit Data"
 msgstr ""
 

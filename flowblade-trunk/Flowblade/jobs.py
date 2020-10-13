@@ -26,6 +26,7 @@ from gi.repository import Pango
 import copy
 import os
 import subprocess
+import sys
 import time
 import threading
 
@@ -490,14 +491,14 @@ class MotionRenderJobQueueObject(AbstractJobQueueObject):
         job_msg.status = RENDERING
         update_job_queue(job_msg)
         
-        # Run with nice to lower priority if requested (currently hard coded to lower)
-        nice_command = "nice -n " + str(10) + " " + respaths.LAUNCH_DIR + "flowblademotionheadless"
+        # Create command list and launch process.
+        command_list = [sys.executable]
+        command_list.append(respaths.LAUNCH_DIR + "flowblademotionheadless")
         for arg in self.args:
-            nice_command += " "
-            nice_command += arg
+            command_list.append(arg)
 
-        subprocess.Popen([nice_command], shell=True)
-
+        subprocess.Popen(command_list)
+        
     def update_render_status(self):
 
         Gdk.threads_enter()
@@ -560,25 +561,23 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
         job_msg.status = RENDERING
         update_job_queue(job_msg)
         
-        # Run with nice to lower priority if requested (currently hard coded to lower)
-        nice_command = "nice -n " + str(10) + " " + respaths.LAUNCH_DIR + "flowbladeproxyheadless"
+        # Create command list and launch process.
+        command_list = [sys.executable]
+        command_list.append(respaths.LAUNCH_DIR + "flowbladeproxyheadless")
         args = self.render_data.get_data_as_args_tuple()
         for arg in args:
-            nice_command += " "
-            nice_command += arg
-
+            command_list.append(arg)
+            
         session_arg = "session_id:" + str(self.session_id)
-        nice_command += " "
-        nice_command += session_arg
-                
-        subprocess.Popen([nice_command], shell=True)
+        command_list.append(session_arg)
 
+        subprocess.Popen(command_list)
+    
     def update_render_status(self):
 
         Gdk.threads_enter()
                     
         if proxyheadless.session_render_complete(self.get_session_id()) == True:
-            #remove_as_status_polling_object(self)
             
             job_msg = self.get_completed_job_message()
             update_job_queue(job_msg)

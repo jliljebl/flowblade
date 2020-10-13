@@ -17,7 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
-
+print("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
 import bpy
 
 import json
@@ -65,6 +65,7 @@ for c in bpy.data.curves:
 project_data["curves"] = curves_list
     
 save_path = os.path.join(GLib.get_user_cache_dir(), "flowblade") + "/blender_container_projectinfo.json"
+print(save_path, project_data)
 
 if os.path.exists(save_path):
     os.remove(save_path)

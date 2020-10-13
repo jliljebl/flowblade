@@ -341,7 +341,7 @@ def get_args_vals_tuples_list_for_encoding_and_quality(profile, enc_opt_index, q
         quality_option = None
 
     args_vals_list = encoding_option.get_args_vals_tuples_list(profile, quality_option)
-
+    
     # Quality options  key, value list
     if quality_option != None:
         for k, v in quality_option.add_map.items():

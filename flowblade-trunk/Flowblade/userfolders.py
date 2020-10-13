@@ -84,7 +84,18 @@ def init():
     global _user_dirs
     
     _user_dirs = USING_XDG_DIRS
-     
+
+def init_user_cache_for_flatpak():
+    try:
+        os.makedirs(get_user_home_cache_for_flatpak())
+    except:
+        pass # After first time exists.
+    
+def get_user_home_cache_for_flatpak(): # this user when communicating with Blender
+    user_home = os.getenv("HOME")
+    cache_folder = user_home + "/.cache/flowblade/"
+    return cache_folder
+    
 # --------------------------------------------------------- dirs paths
 def get_config_dir():
     return _xdg_config_dir + "/"

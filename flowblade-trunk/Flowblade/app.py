@@ -170,6 +170,10 @@ def main(root_path):
 
     # Create user folders if needed and determine if we're using xdg or dotfile user folders.
     userfolders.init()
+    
+    # Flatpak still needs to use standard home XDG cache folder for Blender.
+    if editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
+        userfolders.init_user_cache_for_flatpak()
 
     # Set paths.
     respaths.set_paths(root_path)
@@ -766,7 +770,7 @@ def autosave_dialog_callback(dialog, response):
     if response == Gtk.ResponseType.OK:
         global loaded_autosave_file
         loaded_autosave_file = autosave_file
-        projectaction.actually_load_project(autosave_file, True)
+        projectaction.actually_load_project(autosave_file, True, False, True)
     else:
         tlinerender.init_session()  # didn't do this in main and not going to do app-open_project
         os.remove(autosave_file)
@@ -794,7 +798,7 @@ def autosaves_many_dialog_callback(dialog, response, autosaves_view, autosaves):
         global loaded_autosave_file
         loaded_autosave_file = autosave_file
         dialog.destroy()
-        projectaction.actually_load_project(autosave_file, True)
+        projectaction.actually_load_project(autosave_file, True, False, True)
     else:
         dialog.destroy()
         tlinerender.init_session()

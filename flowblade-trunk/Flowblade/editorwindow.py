@@ -272,6 +272,12 @@ class EditorWindow:
 
     def _init_panels_and_guicomponents(self):
 
+        # Disable Blender and G'Mic container clip menu items if not available.
+        if containerclip.blender_available() == False:
+            ui.get_widget('/MenuBar/ProjectMenu/ContainerClipsMenu/CreateBlenderContainerItem').set_sensitive(False)
+        if gmic.gmic_available() == False:
+            ui.get_widget('/MenuBar/ProjectMenu/ContainerClipsMenu/CreateGMicContainerItem').set_sensitive(False)
+            
         # Media panel
         self.bin_list_view = guicomponents.BinTreeView(
                                         projectaction.bin_selection_changed,
@@ -973,8 +979,15 @@ class EditorWindow:
           </menubar>
         </ui>"""
 
-        self.fblade_theme_fix_panels = []
-        self.fblade_theme_fix_panels_darker = []
+        # Hide Blender menu item for Flatpaks
+        if editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
+            ui.get_widget('/MenuBar/ProjectMenu/ContainerClipsMenu/CreateBlenderContainerItem').set_visible(False)
+            
+        # Show Monitor Window in two window mode
+        if editorpersistance.prefs.global_layout != appconsts.SINGLE_WINDOW:
+            pane2 = Gtk.VBox(False, 1)
+            pane2.pack_start(top_row_window_2, False, False, 0)
+            pane2.pack_start(monitor_frame, True, True, 0)
 
         # Create global action group
         action_group = Gtk.ActionGroup('WindowActions')
