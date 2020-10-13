@@ -208,8 +208,6 @@ class EditorWindow:
         pane.pack_start(menu_vbox, False, True, 0)
         pane.pack_start(self.app_v_paned, True, True, 0)
 
-        self.fblade_theme_fix_panels_darker.append(pane)
-
         # Tooltips
         self._add_tool_tips()
 
@@ -270,12 +268,7 @@ class EditorWindow:
         self.top_paned.set_position(editorpersistance.prefs.top_paned_position)
         self.app_v_paned.set_position(editorpersistance.prefs.app_v_paned_position)
 
-    def _init_panels_and_guicomponents(self):
-
-        # Look to remove
-        self.fblade_theme_fix_panels = []
-        self.fblade_theme_fix_panels_darker = []
-        
+    def _init_panels_and_guicomponents(self):        
         # Disable Blender and G'Mic container clip menu items if not available.
         if containerclip.blender_available() == False:
             ui.get_widget('/MenuBar/ProjectMenu/ContainerClipsMenu/CreateBlenderContainerItem').set_sensitive(False)
@@ -365,8 +358,6 @@ class EditorWindow:
         else:
             self.effects_panel = effects_vbox
 
-        self.fblade_theme_fix_panels.append(self.effects_panel) # may not be needed?
-
         # Compositors panel
         action_row = compositeeditor.get_compositor_clip_panel()
         compositor_editor_panel = guiutils.set_margins(compositeeditor.widgets.value_edit_frame, 0, 0, 4, 0)
@@ -379,8 +370,6 @@ class EditorWindow:
         compositors_vbox.pack_start(action_row, False, False, 0)
 
         self.compositors_panel = guiutils.set_margins(compositors_vbox, 2, 2, 2, 2)
-
-        self.fblade_theme_fix_panels.append(self.compositors_panel)
 
         # Render panel
         try:
@@ -411,7 +400,6 @@ class EditorWindow:
             render_hbox.pack_start(render_panel_right, True, True, 0)
 
         render_panel = guiutils.set_margins(render_hbox, 2, 6, 8, 6)
-        self.fblade_theme_fix_panels.append(render_panel)
 
         # Range Log panel
         media_log_events_list_view = medialog.get_media_log_list_view()
@@ -419,11 +407,9 @@ class EditorWindow:
 
         media_log_vbox = Gtk.HBox()
         media_log_vbox.pack_start(events_panel, True, True, 0)
-        self.fblade_theme_fix_panels.append(media_log_vbox)
 
         media_log_panel = guiutils.set_margins(media_log_vbox, 6, 6, 6, 6)
         self.media_log_events_list_view = media_log_events_list_view
-        self.fblade_theme_fix_panels.append(media_log_panel)
 
         # Project Panel
         # Sequence list
@@ -526,8 +512,6 @@ class EditorWindow:
         player_buttons_row.pack_start(self.trim_view_select.widget, False, False, 0)
         player_buttons_row.pack_start(self.view_mode_select.widget, False, False, 0)
         player_buttons_row.set_margin_bottom(2)
-
-        self.fblade_theme_fix_panels_darker.append(player_buttons_row)
 
         # Switch / pos bar row
         sw_pos_hbox = Gtk.HBox(False, 1)

@@ -207,15 +207,6 @@ def set_theme_colors():
     editor_window.tline_pane.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
     editor_window.media_panel.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
     editor_window.mm_paned.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
-
-def apply_flowblade_theme_fixes():
-    fblade_bg_color = Gdk.RGBA(red=(30.0/255.0), green=(35.0/255.0), blue=(51.0/255.0), alpha=1.0)
-    fblade_bg_color_darker = Gdk.RGBA(red=(16.0/255.0), green=(19.0/255.0), blue=(30.0/255.0), alpha=1.0)
-    test_color =  Gdk.RGBA(1, 0, 0, alpha=1.0)
-    for widget in editor_window.fblade_theme_fix_panels:
-        widget.override_background_color(Gtk.StateFlags.NORMAL, fblade_bg_color)
-    for widget in editor_window.fblade_theme_fix_panels_darker:
-        widget.override_background_color(Gtk.StateFlags.NORMAL, fblade_bg_color_darker)
         
 def unpack_gdk_color(gdk_color):
     return (gdk_color.red, gdk_color.green, gdk_color.blue, gdk_color.alpha)

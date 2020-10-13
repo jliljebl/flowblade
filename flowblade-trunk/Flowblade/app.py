@@ -356,9 +356,6 @@ def main(root_path):
             global assoc_timeout_id
             assoc_timeout_id = GObject.timeout_add(10, open_assoc_file)
         
-    if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
-        gui.apply_flowblade_theme_fixes()
-        
     # SDL 2 consumer needs to created after Gtk.main() has run enough for window to be visble
     #if editorstate.get_sdl_version() == editorstate.SDL_2: # needs more state considerion still
     #    print "SDL2 timeout launch"
