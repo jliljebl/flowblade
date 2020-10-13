@@ -1,5 +1,19 @@
 # Release Notes
 
+## Flowblade 2.6.1
+
+Date: October xx, 2020
+
+This is a bug fix release.
+
+* Flatpak: Fix broken Jobs rendering 
+
+
+
+
+
+
+
 ## Flowblade 2.6
 
 Date: July 5, 2020
