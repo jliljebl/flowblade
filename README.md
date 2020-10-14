@@ -1,7 +1,9 @@
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
 **New bug fix release 2.6.1 is now out.**
+
 **[Installing Flowblade](https://github.com/jliljebl/flowblade#installing-flowblade)**
+
 **[Release notes](./flowblade-trunk/docs/RELEASE_NOTES.md)**
 
 1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
