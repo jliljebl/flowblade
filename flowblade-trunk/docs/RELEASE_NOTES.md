@@ -6,13 +6,17 @@ Date: October xx, 2020
 
 This is a bug fix release.
 
-* Flatpak: Fix broken Jobs rendering 
-
-
-
-
-
-
+* Flatpak: Fix broken Jobs rendering - Proxy, SlowMotion, Reverse, Container Clips
+* Fix autosave bug #891 with Control + S saves going into old autosave file
+* hfiguiere and eszlari: Flatpak - Remove deprecated non-unified plugins 
+* Make Delete Editor activate Save button too on Blender program editor
+* Use self.render_player.wait_for_producer_end_stop = True for G'Mic video rendering
+* Switch tlinerender to use Flatpak app-id dbus names
+* Make unused missing asset launch relinker too
+* Николай Смольянинов: UpdateRussian translations
+* Mark Mandel:  Add Paste Filter shortcut (in docs)
+* Balló György:  Install subdirectories of help
+* Fix bug in simpleexitors.py
 
 ## Flowblade 2.6
 

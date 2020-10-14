@@ -1,6 +1,8 @@
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
-**Project is on break for a few weeks. Action on issues and commits will resume in September.**
+**New bug fix release 2.6.1 is now out.**
+**[Installing Flowblade](https://github.com/jliljebl/flowblade#installing-flowblade)**
+**[Release notes](./flowblade-trunk/docs/RELEASE_NOTES.md)**
 
 1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
 2. [Features](https://github.com/jliljebl/flowblade#features)

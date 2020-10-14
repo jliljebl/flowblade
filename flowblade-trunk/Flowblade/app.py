@@ -172,6 +172,8 @@ def main(root_path):
     userfolders.init()
     
     # Flatpak still needs to use standard home XDG cache folder for Blender.
+    # Flatpak only uses XDG cache folder for Blender and we are keeping this around if we ever
+    # succeed in getting Blender going for Flatpak.
     if editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
         userfolders.init_user_cache_for_flatpak()
 
