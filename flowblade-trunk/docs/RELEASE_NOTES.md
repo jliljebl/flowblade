@@ -2,7 +2,7 @@
 
 ## Flowblade 2.6.1
 
-Date: October xx, 2020
+Date: October 14, 2020
 
 This is a bug fix release.
 
