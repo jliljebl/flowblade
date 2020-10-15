@@ -154,13 +154,15 @@ class EditorWindow:
         # Player consumer has to be stopped and started when window resized
         self.window.connect("window-state-event", lambda w, e:updater.refresh_player(e))
 
-        # Init application main menu.
-        ui = Gtk.UIManager()
-        self._init_app_menu(ui)
+ 
 
         # Create all panels and gui components 
         self._init_panels_and_guicomponents()
 
+       # Init application main menu.
+        ui = Gtk.UIManager()
+        self._init_app_menu(ui)
+        
         # Build layout
         # Timeline bottom row
         tline_hbox_3 = Gtk.HBox()
@@ -239,7 +241,7 @@ class EditorWindow:
         if editorpersistance.prefs.global_layout != appconsts.SINGLE_WINDOW:
             pane2 = Gtk.VBox(False, 1)
             pane2.pack_start(top_row_window_2, False, False, 0)
-            pane2.pack_start(monitor_frame, True, True, 0)
+            pane2.pack_start(self.monitor_frame, True, True, 0)
 
             # Set pane and show window
             self.window2.add(pane2)
@@ -534,10 +536,10 @@ class EditorWindow:
 
         monitor_align = guiutils.set_margins(monitor_vbox, 3, 0, 3, 3)
 
-        monitor_frame = Gtk.Frame()
-        monitor_frame.add(monitor_align)
-        monitor_frame.set_shadow_type(Gtk.ShadowType.ETCHED_OUT)
-        monitor_frame.set_size_request(MONITOR_AREA_WIDTH, appconsts.TOP_ROW_HEIGHT)
+        self.monitor_frame = Gtk.Frame()
+        self.monitor_frame.add(monitor_align)
+        self.monitor_frame.set_shadow_type(Gtk.ShadowType.ETCHED_OUT)
+        self.monitor_frame.set_size_request(MONITOR_AREA_WIDTH, appconsts.TOP_ROW_HEIGHT)
 
         # Notebook panel
         notebook_vbox = Gtk.VBox(False, 1)
@@ -548,7 +550,7 @@ class EditorWindow:
         self.top_paned = Gtk.HPaned()
         if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
             self.top_paned.pack1(notebook_vbox, resize=False, shrink=False)
-            self.top_paned.pack2(monitor_frame, resize=True, shrink=False)
+            self.top_paned.pack2(self.monitor_frame, resize=True, shrink=False)
         else:
             self.top_paned.pack1(mm_panel, resize=False, shrink=False)
             self.top_paned.pack2(notebook_vbox, resize=True, shrink=False)
@@ -970,13 +972,7 @@ class EditorWindow:
         # Hide Blender menu item for Flatpaks
         if editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
             ui.get_widget('/MenuBar/ProjectMenu/ContainerClipsMenu/CreateBlenderContainerItem').set_visible(False)
-            
-        # Show Monitor Window in two window mode
-        if editorpersistance.prefs.global_layout != appconsts.SINGLE_WINDOW:
-            pane2 = Gtk.VBox(False, 1)
-            pane2.pack_start(top_row_window_2, False, False, 0)
-            pane2.pack_start(monitor_frame, True, True, 0)
-
+        
         # Create global action group
         action_group = Gtk.ActionGroup('WindowActions')
         action_group.add_actions(menu_actions, user_data=None)
