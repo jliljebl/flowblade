@@ -32,6 +32,7 @@ import cairoarea
 from editorstate import PROJECT
 from editorstate import PLAYER
 import extraeditors
+import gui
 import guiutils
 import keyframeeditor
 import mltfilters
@@ -491,12 +492,26 @@ def _get_color_selector(editable_property):
     color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(*gdk_color))
     color_button.connect("color-set", editable_property.color_selected)
 
+    picker_button = Gtk.ToggleButton()
+    picker_button.set_image(Gtk.Image.new_from_icon_name(Gtk.STOCK_COLOR_PICKER, Gtk.IconSize.BUTTON))
+    picker_button.connect("toggled", _color_selector_picker_toggled, color_button)
     hbox = Gtk.HBox(False, 4)
     hbox.pack_start(color_button, False, False, 4)
+    hbox.pack_start(picker_button, False, False, 4)
     hbox.pack_start(Gtk.Label(), True, True, 0)
     
     return _get_two_column_editor_row(editable_property.get_display_name(), hbox)
 
+def _color_selector_picker_toggled(picker_button, color_button):
+    display = Gdk.Display.get_default()
+    gdk_window = gui.editor_window.window.get_window()
+    surface = guiutils.get_cairo_image("color_picker_cursor")
+    pixbuf = Gdk.pixbuf_get_from_surface(surface, 0, 0, surface.get_width(), surface.get_height())
+    #    return Gdk.Cursor.new_from_pixbuf(display, pixbuf, hotx, hoty)
+    #    
+    cursor = Gdk.Cursor.new_from_pixbuf(display, pixbuf, 0, 0)
+    gdk_window.set_cursor(cursor)
+        
 def _get_wipe_selector(editable_property):
     """
     Returns GUI component for selecting wipe type.
