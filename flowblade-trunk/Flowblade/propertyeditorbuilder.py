@@ -494,7 +494,7 @@ def _get_color_selector(editable_property):
 
     picker_button = Gtk.ToggleButton()
     picker_button.set_image(Gtk.Image.new_from_icon_name(Gtk.STOCK_COLOR_PICKER, Gtk.IconSize.BUTTON))
-    picker_button.connect("toggled", _color_selector_picker_toggled, color_button)
+    editable_property.picker_toggled_id = picker_button.connect("toggled", _color_selector_picker_toggled, editable_property, color_button)
     hbox = Gtk.HBox(False, 4)
     hbox.pack_start(color_button, False, False, 4)
     hbox.pack_start(picker_button, False, False, 4)
@@ -502,16 +502,50 @@ def _get_color_selector(editable_property):
     
     return _get_two_column_editor_row(editable_property.get_display_name(), hbox)
 
-def _color_selector_picker_toggled(picker_button, color_button):
-    display = Gdk.Display.get_default()
+def _color_selector_picker_toggled(picker_button, editable_property, color_button):
     gdk_window = gui.editor_window.window.get_window()
-    surface = guiutils.get_cairo_image("color_picker_cursor")
-    pixbuf = Gdk.pixbuf_get_from_surface(surface, 0, 0, surface.get_width(), surface.get_height())
-    #    return Gdk.Cursor.new_from_pixbuf(display, pixbuf, hotx, hoty)
-    #    
-    cursor = Gdk.Cursor.new_from_pixbuf(display, pixbuf, 0, 0)
-    gdk_window.set_cursor(cursor)
+    if picker_button.get_active() == True:
+        display = Gdk.Display.get_default()
+        gdk_window = gui.editor_window.window.get_window()
+        surface = guiutils.get_cairo_image("color_picker_cursor")
+        pixbuf = Gdk.pixbuf_get_from_surface(surface, 0, 0, surface.get_width(), surface.get_height())
+        cursor = Gdk.Cursor.new_from_pixbuf(display, pixbuf, 0, 0)
+        gdk_window.set_cursor(cursor)
+        # Connect listeners to window and monitor to get data and 
+        # to able to exit state where mouse press is assumed to be color selection.
+        editable_property.cp_window_press_id = gui.editor_window.window.connect('button-press-event', _color_picker_window_press_event, editable_property, picker_button, color_button)
+        editable_property.cp_monitor_press_id = gui.tline_display.connect('button-press-event', _color_picker_monitor_press_event, editable_property, picker_button, color_button)
+    else:
+        cursor = Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR)
+        gdk_window.set_cursor(cursor)
         
+        _maybe_disconnect_color_picker_listeners(editable_property)
+        
+def _color_picker_window_press_event(widget, event, editable_property, picker_button, color_button):
+    # Exit expecting color selection
+    _maybe_disconnect_color_picker_listeners(editable_property)
+    _maybe_untoggle_picker_botton(editable_property, picker_button)
+    return True
+    
+def _color_picker_monitor_press_event(widget, event, editable_property, picker_button, color_button):
+    # Exit expecting color selection
+    _maybe_disconnect_color_picker_listeners(editable_property)
+    _maybe_untoggle_picker_botton(editable_property, picker_button)
+    return True
+
+def _maybe_disconnect_color_picker_listeners(editable_property):
+    if editable_property.cp_window_press_id != -1:
+        gui.editor_window.window.disconnect(editable_property.cp_window_press_id)
+        gui.tline_display.disconnect(editable_property.cp_monitor_press_id)
+        editable_property.cp_window_press_id = -1
+        editable_property.cp_monitor_press_id = -1
+
+def _maybe_untoggle_picker_botton(editable_property, picker_button):
+    if picker_button.get_active() == True:
+        picker_button.handler_block(editable_property.picker_toggled_id)
+        picker_button.set_active(False)
+        picker_button.handler_unblock(editable_property.picker_toggled_id)
+
 def _get_wipe_selector(editable_property):
     """
     Returns GUI component for selecting wipe type.
