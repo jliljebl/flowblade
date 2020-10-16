@@ -302,7 +302,7 @@ class ViewEditor(Gtk.Frame):
             cr.restore()
         
         if self.write_out_layers == True:
-            # We need to go to 1.0 scale, 0,0 origo draw for out the file 
+            # We need to go to 1.0 scale, 0,0 origo draw for the out file.
             current_scale = self.scale
             self.scale = 1.0
             self.origo = (0.0, 0.0)

@@ -1525,7 +1525,6 @@ class EditorWindow:
         self.set_tool_selector_to_mode()
 
     def set_cursor_to_mode(self):
-        print("set_cursor_to_mode")
         if editorstate.cursor_on_tline == True:
             self.set_tline_cursor(editorstate.EDIT_MODE())
         else:
@@ -1627,7 +1626,6 @@ class EditorWindow:
             self.tool_selector.set_tool_pixbuf(appconsts.TLINE_TOOL_MULTI_TRIM)
 
     def tline_cursor_leave(self, event):
-        print("tline_cursor_leave")
         cursor = Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR)
         gdk_window = self.window.get_window()
         gdk_window.set_cursor(cursor)

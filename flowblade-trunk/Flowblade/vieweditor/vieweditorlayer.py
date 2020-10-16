@@ -348,7 +348,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
                     self.last_pressed_edit_point.selected = True
                     self.edit_point_shape.save_selected_point_data(self.last_pressed_edit_point)
 
-            # No point hit attempt to add a point.
+            # No point was hit, attempt to add a point.
             else:
                 if self.edit_point_shape.closed == True:
                     if self.allow_adding_points == False:
@@ -371,7 +371,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
                     self.add_edit_point(insert_index, self.mouse_press_panel_point)
                     self.edit_point_shape.set_curve_point_as_selected(insert_index)
                 else:
-                    # Open curve, add point last
+                    # Open curve, add point last.
                     self.edit_point_shape.block_shape_updates = False
 
                     if len(self.edit_point_shape.curve_points) > 1:

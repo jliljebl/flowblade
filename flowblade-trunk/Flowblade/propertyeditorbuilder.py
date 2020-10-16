@@ -494,45 +494,90 @@ def _get_color_selector(editable_property):
 
     picker_button = Gtk.ToggleButton()
     picker_button.set_image(Gtk.Image.new_from_icon_name(Gtk.STOCK_COLOR_PICKER, Gtk.IconSize.BUTTON))
-    editable_property.picker_toggled_id = picker_button.connect("toggled", _color_selector_picker_toggled, editable_property, color_button)
+
+    info_label = Gtk.Label()
+    
+    editable_property.picker_toggled_id = picker_button.connect("toggled", _color_selector_picker_toggled, editable_property, color_button, info_label)
+
     hbox = Gtk.HBox(False, 4)
     hbox.pack_start(color_button, False, False, 4)
     hbox.pack_start(picker_button, False, False, 4)
+    hbox.pack_start(info_label, False, False, 4)
     hbox.pack_start(Gtk.Label(), True, True, 0)
     
     return _get_two_column_editor_row(editable_property.get_display_name(), hbox)
 
-def _color_selector_picker_toggled(picker_button, editable_property, color_button):
+def _color_selector_picker_toggled(picker_button, editable_property, color_button, info_label):
     gdk_window = gui.editor_window.window.get_window()
     if picker_button.get_active() == True:
-        display = Gdk.Display.get_default()
-        gdk_window = gui.editor_window.window.get_window()
-        surface = guiutils.get_cairo_image("color_picker_cursor")
-        pixbuf = Gdk.pixbuf_get_from_surface(surface, 0, 0, surface.get_width(), surface.get_height())
-        cursor = Gdk.Cursor.new_from_pixbuf(display, pixbuf, 0, 0)
-        gdk_window.set_cursor(cursor)
-        # Connect listeners to window and monitor to get data and 
-        # to able to exit state where mouse press is assumed to be color selection.
-        editable_property.cp_window_press_id = gui.editor_window.window.connect('button-press-event', _color_picker_window_press_event, editable_property, picker_button, color_button)
-        editable_property.cp_monitor_press_id = gui.tline_display.connect('button-press-event', _color_picker_monitor_press_event, editable_property, picker_button, color_button)
+        editable_property.cp_window_press_id = gui.editor_window.window.connect('button-press-event', _color_picker_window_press_event, editable_property, picker_button, color_button, info_label)
+        editable_property.cp_monitor_press_id = gui.tline_display.connect('button-press-event', _color_picker_monitor_press_event, editable_property, picker_button, color_button, info_label)
+        info_label.set_markup("<small>" + _("Click Monitor to Select Color") + "</small>")
     else:
-        cursor = Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR)
-        gdk_window.set_cursor(cursor)
-        
         _maybe_disconnect_color_picker_listeners(editable_property)
+        info_label.set_markup("")
         
-def _color_picker_window_press_event(widget, event, editable_property, picker_button, color_button):
+def _color_picker_window_press_event(widget, event, editable_property, picker_button, color_button, info_label):
     # Exit expecting color selection
     _maybe_disconnect_color_picker_listeners(editable_property)
     _maybe_untoggle_picker_botton(editable_property, picker_button)
+
+    info_label.set_markup("")
+    
     return True
     
-def _color_picker_monitor_press_event(widget, event, editable_property, picker_button, color_button):
+def _color_picker_monitor_press_event(widget, event, editable_property, picker_button, color_button, info_label):
     # Exit expecting color selection
     _maybe_disconnect_color_picker_listeners(editable_property)
     _maybe_untoggle_picker_botton(editable_property, picker_button)
-    return True
 
+    # Get selected image coordinate.
+    try:
+        alloc = widget.get_allocation()
+        window_width = alloc.width
+        window_height = alloc.height
+        
+        width = PROJECT().profile.width()
+        height = PROJECT().profile.height()
+        display_ratio = float(width) / float(height) # mlt_properties_get_double( properties, "display_ratio" );
+        
+        if window_height * display_ratio > window_width:
+            rect_w = window_width
+            rect_h = int(float(window_width) / float(display_ratio))
+        else:
+            rect_w = int(float(window_height) * float(display_ratio))
+            rect_h = window_height
+
+        rect_x = int(float( window_width - rect_w ) / 2.0)
+        rect_x -= rect_x % 2
+        rect_y = int(float(window_height - rect_h ) / 2.0)
+
+        x = event.x - rect_x
+        y = event.y - rect_y
+
+        img_x = int((float(x)/float(rect_w)) * float(width))
+        img_y = int((float(y)/float(rect_h)) * float(height))
+        
+        # Get selected color and set it as color button selection and property value.
+        rgb_data = PLAYER().seek_and_get_rgb_frame(PLAYER().current_frame(), update_gui=False)
+        pixel = (img_y * 1920 + img_x) * 4
+        r = rgb_data[pixel]
+        g = rgb_data[pixel + 1]
+        b = rgb_data[pixel + 2]
+    except:
+        r = 0
+        g = 0
+        b = 0
+
+    color = Gdk.RGBA(float(r)/255.0, float(g)/255.0, float(b)/255.0, 1.0)
+
+    color_button.set_rgba(color)
+    editable_property.color_selected(color_button)
+
+    info_label.set_markup("")
+        
+    return True
+         
 def _maybe_disconnect_color_picker_listeners(editable_property):
     if editable_property.cp_window_press_id != -1:
         gui.editor_window.window.disconnect(editable_property.cp_window_press_id)
