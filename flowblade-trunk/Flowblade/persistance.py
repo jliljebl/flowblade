@@ -426,6 +426,10 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
         # This fixes Media Relinked projects with SAVEFILE_VERSION < 4:
         if (not(hasattr(media_file,  "is_proxy_file"))):
             FIX_N_TO_4_MEDIA_FILE_COMPATIBILITY(media_file)
+
+        # Avoid crash in case path attribute is missing (color clips).
+        if not hasattr(media_file, "path"):
+            continue
             
         # Try to find relative path files if needed for non-proxy media files
         orig_path = media_file.path # looking for missing path changes it and we need save this info for user info dialog on missing asset
