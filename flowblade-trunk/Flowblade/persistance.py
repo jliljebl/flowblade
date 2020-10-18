@@ -427,7 +427,7 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
         if (not(hasattr(media_file,  "is_proxy_file"))):
             FIX_N_TO_4_MEDIA_FILE_COMPATIBILITY(media_file)
 
-       # Avoid crash in case path attribute is missing (color clips).
+        # Avoid crash in case path attribute is missing (color clips).
         if not hasattr(media_file, "path"):
             continue
             
