@@ -531,8 +531,8 @@ def _color_picker_monitor_press_event(widget, event, editable_property, picker_b
     _maybe_disconnect_color_picker_listeners(editable_property)
     _maybe_untoggle_picker_botton(editable_property, picker_button)
 
-    # Get selected image coordinate.
     try:
+        # Get selected image coordinate.
         alloc = widget.get_allocation()
         window_width = alloc.width
         window_height = alloc.height
@@ -558,7 +558,7 @@ def _color_picker_monitor_press_event(widget, event, editable_property, picker_b
         img_x = int((float(x)/float(rect_w)) * float(width))
         img_y = int((float(y)/float(rect_h)) * float(height))
         
-        # Get selected color and set it as color button selection and property value.
+        # Get selected color 
         rgb_data = PLAYER().seek_and_get_rgb_frame(PLAYER().current_frame(), update_gui=False)
         pixel = (img_y * 1920 + img_x) * 4
         r = rgb_data[pixel]
@@ -569,6 +569,7 @@ def _color_picker_monitor_press_event(widget, event, editable_property, picker_b
         g = 0
         b = 0
 
+    # Set selected color as color button selection and property value.
     color = Gdk.RGBA(float(r)/255.0, float(g)/255.0, float(b)/255.0, 1.0)
 
     color_button.set_rgba(color)

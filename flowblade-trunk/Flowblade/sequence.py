@@ -399,7 +399,7 @@ class Sequence:
         not add it to track/playlist object.
         """
         producer = mlt.Producer(self.profile, str(path)) # this runs 0.5s+ on some clips
-
+    
         mltrefhold.hold_ref(producer)
         producer.path = path
         producer.filters = []
@@ -420,7 +420,7 @@ class Sequence:
         # Img seq ttl value
         producer.ttl = ttl
         if ttl != None:
-            producer.set("ttl", int(ttl))
+            producer.set("ttl", str(ttl))
 
         return producer
 
