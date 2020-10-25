@@ -53,6 +53,7 @@ ID = "id"
 REPLACEMENT_RELATION = "replacementrelation"
 USE_SERVICE = "useservice"
 DROP_SERVICE = "dropservice"
+FILTER_MASK_FILTER = "filtermaskfilter"
 
 COMPOSITOR_FILTER_GROUP = "COMPOSITOR_FILTER" # THIS IS NOT USED ANYMORE! DOUBLE CHECK THAT THIS REALLY IS THE CASE AND KILL!
 MULTIPART_FILTER = "multipart" # identifies filter as multipart filter
@@ -78,6 +79,9 @@ group_icons = None
 # THIS IS NOT USED ANYMORE! DOUBLE CHECK THAT THIS REALLY IS THE CASE AND KILL!
 compositor_filters = {}
 
+# Special filters used to achieve partial applicatiopn of other filters
+_filter_mask_filters = {}
+
 # ICONS
 FILTER_DEFAULT_ICON = None
 
@@ -92,6 +96,7 @@ old_filters = []
 # We need this to mute clips
 _volume_filter_info = None
 _brightness_filter_info = None # for kf tool
+_colorize_filter_info = None # for tline render tests
 
 def _load_icons():
     global FILTER_DEFAULT_ICON
@@ -112,8 +117,9 @@ def _get_group_icon(group_name):
         group_icons["Transform"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "transform.png")
         group_icons["Edge"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "edge.png")
         group_icons["Fix"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "fix.png")
+        group_icons["Fade In / Out"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "fade_filter.png")
         group_icons["Artistic"] = FILTER_DEFAULT_ICON
-
+        group_icons["FILTER_MASK"] =  GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "filter_mask.png")
     try:
         return group_icons[group_name]
     except:
@@ -132,6 +138,7 @@ def get_translated_audio_group_name():
     """
     translations.get_filter_group_name("Audio")
 
+
 class FilterInfo:
     """
     Info of a filter (mlt.Service) that is is available to the user.
@@ -146,16 +153,26 @@ class FilterInfo:
         except: # default is False
             self.multipart_filter = False
 
-        try:
-            self.mlt_drop_version = filter_node.getAttribute(MLT_DROP_VERSION)
-        except: 
-            self.mlt_drop_version = None
+        # NOTE, TODO: Turns out that non-existing attribute returns empty string and asking is not error.
+        # Clear these try catches towards 2.6, keep now to see if we get any problems.
+        #try:
+        self.mlt_drop_version = filter_node.getAttribute(MLT_DROP_VERSION)
+        #except: 
+        #    self.mlt_drop_version = None
 
-        try:
-            self.mlt_min_version = filter_node.getAttribute(MLT_MIN_VERSION)
-        except:
-            self.mlt_min_version = None
+        #try:
+        self.mlt_min_version = filter_node.getAttribute(MLT_MIN_VERSION)
+        #except:
+        #    self.mlt_min_version = None
 
+        #try:
+        self.filter_mask_filter = filter_node.getAttribute(FILTER_MASK_FILTER)
+        #except:
+        #    self.filter_mask_filter = None
+        
+        if self.mlt_drop_version == None:
+            print("self.mlt_drop_version==None")
+        
         self.xml = filter_node.toxml()
         self.name = filter_node.getElementsByTagName(NAME).item(0).firstChild.nodeValue
         self.group = filter_node.getElementsByTagName(GROUP).item(0).firstChild.nodeValue
@@ -219,7 +236,7 @@ class FilterObject:
         # to be replaced now that we have profile and we are ready to connect this.
         # For example default values of some properties depend on the screen size of the project
         propertyparse.replace_value_keywords(self.properties, PROJECT().profile)
-    
+
     def create_mlt_filter(self, mlt_profile):
         self.mlt_filter = mlt.Filter(mlt_profile, str(self.info.mlt_service_id))
         mltrefhold.hold_ref(self.mlt_filter)
@@ -247,6 +264,13 @@ class FilterObject:
             self.properties[i] = (name, o_value, prop_type)
         
         self.update_mlt_filter_properties_all()
+
+    def replace_values(self, clip):
+        # We need to initilize some calues based clip langth and need wait until clip for
+        # filter is known, replace at object creation is done before clip is available
+        replacement_happened = propertyparse.replace_values_using_clip_data(self.properties, self.info, clip)
+        if replacement_happened == True:
+            self.update_mlt_filter_properties_all()
 
 
 class MultipartFilterObject:
@@ -399,10 +423,20 @@ def load_filters_xml(services):
             global _volume_filter_info
             _volume_filter_info = filter_info
 
+        # These are special cased as filters added from mask add menu
+        if filter_info.mlt_service_id == "mask_start" or filter_info.mlt_service_id == "mask_apply":
+            global _filter_mask_filters
+            _filter_mask_filters[filter_info.filter_mask_filter] = filter_info
+            continue
+            
         if filter_info.mlt_service_id == "brightness": # TODO: maybe add general search fuction for these, if we need a third one this is becoming a bit silly
             global _brightness_filter_info
             _brightness_filter_info = filter_info
-            
+
+        if filter_info.mlt_service_id == "frei0r.colorize":
+            global _colorize_filter_info
+            _colorize_filter_info = filter_info
+
         # Add filter compositor filters or filter groups
         if filter_info.group == COMPOSITOR_FILTER_GROUP:
             global compositor_filters
@@ -504,7 +538,27 @@ def get_volume_filters_info():
 
 def get_brightness_filter_info():
     return _brightness_filter_info
-    
+
+def get_colorize_filter_info():
+    return _colorize_filter_info
+
+def get_filter_mask_start_filters_data():
+    filter_names = []
+    filter_msgs = []
+
+    for key in _filter_mask_filters:
+        f_info = _filter_mask_filters[key]
+        if f_info.mlt_service_id == "mask_apply":
+            continue
+        filter_names.append(translations.get_filter_name(f_info.filter_mask_filter))
+        filter_msgs.append(f_info.filter_mask_filter)
+ 
+    return (filter_names, filter_msgs)
+
+def get_filter_mask_filter(filter_name):
+    # We're using names in attribute FILTER_MASK_FILTER because different filter masks have the same mlt service "mask_start"
+    return _filter_mask_filters[filter_name]
+
 def detach_all_filters(clip):
     for f in clip.filters:
         if isinstance(f, FilterObject):

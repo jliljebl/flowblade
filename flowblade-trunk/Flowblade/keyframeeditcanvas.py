@@ -723,8 +723,10 @@ class RotatingEditCanvas(AbstractEditCanvas):
         self.x_scale = None
         self.y_scale = None
 
+        self.draw_bounding_box = True # This may be set False at creation site.
+    
     def create_edit_points_and_values(self):
-        # creates untransformed edit shape to init array, values will overridden shortly
+        # creates untransformed edit shape to init array, values will be overridden shortly
         self.edit_points.append((self.source_width / 2, self.source_height / 2)) # center
         self.edit_points.append((self.source_width, self.source_height / 2)) # x_Scale
         self.edit_points.append((self.source_width / 2, 0)) # y_Scale
@@ -986,18 +988,53 @@ class RotatingEditCanvas(AbstractEditCanvas):
             self.edit_points[i] = (x, y)
 
     def _draw_edit_shape(self, cr, allocation):
-        x, y = self.get_panel_point(*self.edit_points[3])
-        cr.move_to(x, y)
-        for i in range(4,7):
-            x, y = self.get_panel_point(*self.edit_points[i])
-            cr.line_to(x, y)
-        cr.close_path()
-        cr.stroke()
+        if self.draw_bounding_box == True:
+            x, y = self.get_panel_point(*self.edit_points[3])
+            cr.move_to(x, y)
+            for i in range(4,7):
+                x, y = self.get_panel_point(*self.edit_points[i])
+                cr.line_to(x, y)
+            cr.close_path()
+            cr.stroke()
+        else:
+            x, y = self.get_panel_point(*self.edit_points[0])
+            x2, y2 = self.get_panel_point(*self.edit_points[2])
+            cr.move_to(x, y)
+            cr.line_to(x2, y2)
+            cr.set_line_width(1.0)
+            cr.stroke()
+            x2, y2 = self.get_panel_point(*self.edit_points[1])
+            cr.move_to(x, y)
+            cr.line_to(x2, y2)
+            cr.set_line_width(1.0)
+            cr.stroke()
+            x2, y2 = self.get_panel_point(*self.edit_points[3])
+            cr.move_to(x, y)
+            cr.line_to(x2, y2)
+            cr.set_line_width(1.0)
+            cr.stroke()
+            # center cross
+            #cr.save()
+            
+            """
+            x, y = self.get_panel_point(*self.edit_points[0])
+            cr.translate(x,y)
+            cr.rotate(math.radians(self.rotation))
+            CENTER_ = 3
+            cr.move_to(-0.5, -CROSS_LENGTH-0.5)
+            cr.line_to(-0.5, CROSS_LENGTH-0.5)
+            cr.set_line_width(1.0)
+            cr.stroke()
+            cr.move_to(-CROSS_LENGTH - 0.5, -0.5)
+            cr.line_to(CROSS_LENGTH - 0.5, -0.5)
+            cr.stroke()
+                
+            cr.restore()
+            """
 
         self._draw_scale_arrow(cr, self.edit_points[2], 90)
         self._draw_scale_arrow(cr, self.edit_points[1], 0)
-
-
+            
         # center cross
         cr.save()
         
@@ -1012,8 +1049,10 @@ class RotatingEditCanvas(AbstractEditCanvas):
         cr.move_to(-CROSS_LENGTH - 0.5, -0.5)
         cr.line_to(CROSS_LENGTH - 0.5, -0.5)
         cr.stroke()
-
+            
         cr.restore()
+
+
 
         # roto handle
         x, y = self.get_panel_point(*self.edit_points[3])

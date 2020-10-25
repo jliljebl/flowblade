@@ -132,12 +132,17 @@ def save_ffmpeg_opts_dialog(callback, opts_extension):
     dialog.connect('response', callback)
     dialog.show()
 
-def clip_render_progress_dialog(callback, title, text, progress_bar, parent_window):
-    dialog = Gtk.Dialog(title,
-                         parent_window,
-                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                         (_("Cancel"), Gtk.ResponseType.REJECT))
-
+def clip_render_progress_dialog(callback, title, text, progress_bar, parent_window, no_cancel=False):
+    if no_cancel == False:
+        dialog = Gtk.Dialog( title,
+                             parent_window,
+                             Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                             (_("Cancel"), Gtk.ResponseType.REJECT))
+    else:
+        dialog = Gtk.Dialog( title,
+                             parent_window,
+                             Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT)
+                             
     dialog.text_label = Gtk.Label(label=text)
     dialog.text_label.set_use_markup(True)
     text_box = Gtk.HBox(False, 2)
@@ -153,14 +158,14 @@ def clip_render_progress_dialog(callback, title, text, progress_bar, parent_wind
     progress_vbox.pack_start(guiutils.get_pad_label(10, 10), False, False, 0)
     progress_vbox.pack_start(progress_bar, False, False, 0)
 
-
     alignment = guiutils.set_margins(progress_vbox, 12, 12, 12, 12)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     dialog.set_default_size(500, 125)
     alignment.show_all()
-    dialog.connect('response', callback)
+    if no_cancel == False:
+        dialog.connect('response', callback)
     dialog.show()
     return dialog
 
@@ -210,7 +215,7 @@ def show_slowmo_dialog(media_file, default_range_render, _response_callback):
     
     label = Gtk.Label(label=_("Speed %:"))
 
-    adjustment = Gtk.Adjustment(float(100), float(1), float(2900), float(1))
+    adjustment = Gtk.Adjustment(value=float(100), lower=float(1), upper=float(2900), step_incr=float(1))
     fb_widgets.adjustment = adjustment
 
     spin = Gtk.SpinButton()
@@ -356,7 +361,7 @@ def show_reverse_dialog(media_file, default_range_render, _response_callback):
     
     label = Gtk.Label(label=_("Speed %:"))
 
-    adjustment = Gtk.Adjustment(float(-100), float(-600), float(-1), float(1))
+    adjustment = Gtk.Adjustment(value=float(-100), lower=float(-600), upper=float(-1), step_incr=float(1))
     fb_widgets.hslider = Gtk.HScale()
     fb_widgets.hslider.set_adjustment(adjustment)
     fb_widgets.hslider.set_draw_value(False)
@@ -484,7 +489,7 @@ class RenderAudioRateSelector():
     def __init__(self):
         self.widget = Gtk.ComboBoxText()
         self.widget.set_tooltip_text(_("Select audio sample frequency"))
-        self.sample_rates = [8000, 12000, 16000, 22500, 32000, 44100, 48000, 96000]
+        self.sample_rates = [8000, 12000, 16000, 22500, 32000, 44100, 48000]
         for rate in self.sample_rates:
             val = rate / 1000.0
             if val == math.floor(val):
@@ -595,7 +600,11 @@ def get_render_panel_left(render_widgets):
     if small_height == False:
         render_panel.pack_start(encoding_panel, False, False, 0)
         render_panel.pack_start(Gtk.Label(), True, True, 0)
-        
+    elif editorstate.SCREEN_HEIGHT == 900: # 900px height screens need most small height fixes but not this
+        encoding_panel = guiutils.get_named_frame(_("Encoding Format"), render_widgets.encoding_panel.vbox, 4)
+        render_panel.pack_start(encoding_panel, False, False, 0)
+        render_panel.pack_start(Gtk.Label(), True, True, 0)
+    
     return render_panel
 
 def get_render_panel_right(render_widgets, render_clicked_cb, to_queue_clicked_cb):

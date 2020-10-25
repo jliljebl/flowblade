@@ -23,7 +23,6 @@ This module handles the less central actions inited by user from menu.
 """
 
 
-
 from gi.repository import Gtk, Gdk
 
 import threading
@@ -38,11 +37,13 @@ from editorstate import PROJECT
 from editorstate import current_sequence
 import editorstate
 import gui
+import guicomponents
 import projectdata
 import patternproducer
 import profilesmanager
 import shortcuts
 import respaths
+import workflow
 
 profile_manager_dialog = None
 
@@ -163,12 +164,55 @@ def keyboard_shortcuts_callback(dialog, response_id, presets_combo):
     selected_shortcuts_index = presets_combo.get_active()
     dialog.destroy()
     
-    if response_id == Gtk.ResponseType.REJECT:
-        return
-    
     selected_xml = shortcuts.shortcut_files[selected_shortcuts_index]
     if selected_xml == editorpersistance.prefs.shortcuts:
         return
 
     editorpersistance.prefs.shortcuts = selected_xml
+    editorpersistance.save()
+    
     shortcuts.set_keyboard_shortcuts()
+
+def keyboard_shortcuts_menu_item_selected_callback(widget, event, data):
+    guicomponents.get_kb_shortcuts_hamburger_menu(event, _kb_menu_item_selected, data) #:_kb_menu_item_selected, shortcuts_combo)
+
+def _kb_menu_item_selected(widget, data):
+    action, data = data
+    if action == "add":
+        dialog, entry = dialogutils.get_single_line_text_input_dialog(30, 180, _("Add New Custom Shortcuts Group"), _("Ok"),
+                                      _("User Shortcuts Group name:"), "")
+        dialog.connect('response', _create_new_kb_shortcuts_group, entry)
+        dialog.show_all()
+    if action == "delete":
+        primary_txt = _("Delete Current User Shortcuts?")
+        secondary_txt = _("This operation cannot be undone.")
+        shortcuts_combo, dialog = data
+        dialogutils.warning_confirmation(_delete_new_kb_shortcuts_group, primary_txt, secondary_txt, dialog)
+
+def _create_new_kb_shortcuts_group(dialog, response_id, entry):
+    if response_id != Gtk.ResponseType.REJECT:
+        name = entry.get_text()
+        if name == "": # No need for info dialog, user should really get this.
+            dialog.destroy()
+            return
+        custom_xml_file_name = shortcuts.create_custom_shortcuts_xml(name)
+        editorpersistance.prefs.shortcuts = custom_xml_file_name
+        editorpersistance.save()
+        shortcuts.shortcut_files.append(custom_xml_file_name)
+        root = shortcuts.get_root()
+        shortcuts.shortcut_files_display_names.append(root.get('name'))
+        shortcuts.set_keyboard_shortcuts()
+        guicomponents.update_shortcuts_combo(dialogs.shortcuts_combo)
+        dialogs.display_keyboard_shortcuts(editorpersistance.prefs.shortcuts, workflow.get_tline_tool_working_set(), dialogs.scroll_hold_panel)
+        
+    dialog.destroy()
+
+def _delete_new_kb_shortcuts_group(dialog, response_id):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        shortcuts.delete_active_custom_shortcuts_xml()
+        shortcuts.set_keyboard_shortcuts()
+        guicomponents.update_shortcuts_combo(dialogs.shortcuts_combo)
+        dialogs.display_keyboard_shortcuts(editorpersistance.prefs.shortcuts, workflow.get_tline_tool_working_set(), dialogs.scroll_hold_panel)
+        
+    dialog.destroy()
+

@@ -46,7 +46,7 @@
   lower case. If you want to use upper case, then use the Shift
   modifier.
 -->
-<flowblade file='shortcuts' name='Premiere-ish/ US keyboard' comment='Default values'>
+<flowblade file='shortcuts' name='Premiere-ish/ US keyboard' editable='False' comment='Default values'>
   <author name='me'>
     <name>Steven van de Beek</name>
     <date format='dd-Mmm-yyyy'>16-Apr-2017</date>
@@ -55,11 +55,8 @@
     <event code='mark_in' name='Mark In'>i</event>
     <event code='mark_out' name='Mark Out'>o</event>
     <event code='to_mark_in' name='Go To Mark In' modifiers='ALT'>i</event>
-    <event code='to_mark_in' name='Go To Mark In' modifiers='SHIFT'>i</event>
-    <event code='to_mark_in' name='Go To Mark In' modifiers='ALT+SHIFT'>i</event>
     <event code='to_mark_out' name='Go To Mark Out' modifiers='ALT'>o</event>
-    <event code='to_mark_out' name='Go To Mark Out' modifiers='SHIFT'>o</event>
-    <event code='to_mark_out' name='Go To Mark Out' modifiers='ALT+SHIFT'>o</event>
+    <event code='clear_io_marks' name='Clear In/Out Marks' modifiers='ALT'>k</event>
     <event code='play_pause' name='Play / Pause'>space</event>
     <event code='prev_cut' name='Go To Previous Cut'>up</event>
     <event code='next_cut' name='Go To Next Cut'>down</event>
@@ -74,38 +71,17 @@
     <event code='stop' name='Stop'>k</event>
     <event code='faster' name='Faster'>l</event>
     <event code='log_range' name='Log Range' modifiers='CTRL'>l</event>
-    <event code='log_range' name='Log Range'>g</event>
-    <event code='resync' name='Resynchronization'>s</event>
+    <event code='resync' name='Resynchronization' modifiers='ALT'>r</event>
+    <event code='clear_filters' name='Clear Filters' modifiers='ALT'>c</event>
+    <event code="sync_all" name="Sync All Compositors" modifiers="ALT">s</event>
     <event code='delete' name='Delete'>delete</event>
     <event code='lift' name='Lift' modifiers='CTRL'>delete</event>
     <event code='to_start' name='Go To Start'>home</event>
     <event code='to_end' name='Go To End'>end</event>
     <event code='3_point_overwrite' name='Three Point Overwrite'>t</event>
     <event code='overwrite_range' name='Overwrite Range'>r</event>
-    <event code='toggle_ripple' modifiers='ALT' name='Toggle Ripple Mode'>r</event>
     <event code='cut' name='Cut Active Tracks'>x</event>
     <event code='cut_all' name='Cut All Tracks' modifiers='SHIFT'>x</event>
-    <event code='edit_mode_insert' name='Change Edit Mode to Insert'>1</event>
-    <event code='edit_mode_insert' name='Change Edit Mode to Insert'>kp_1</event>
-    <event code='edit_mode_insert' name='Change Edit Mode to Insert'>kp_end</event>
-    <event code='edit_mode_overwrite' name='Change Edit Mode to Overwrite'>2</event>
-    <event code='edit_mode_overwrite' name='Change Edit Mode to Overwrite'>kp_2</event>
-    <event code='edit_mode_overwrite' name='Change Edit Mode to Overwrite'>kp_down</event>
-    <event code='edit_mode_trim' name='Change Edit Mode to Trim'>3</event>
-    <event code='edit_mode_trim' name='Change Edit Mode to Trim'>kp_3</event>
-    <event code='edit_mode_trim' name='Change Edit Mode to Trim'>kp_next</event>
-    <event code='edit_mode_roll' name='Change Edit Mode to Roll'>4</event>
-    <event code='edit_mode_roll' name='Change Edit Mode to Roll'>kp_4</event>
-    <event code='edit_mode_roll' name='Change Edit Mode to Roll'>kp_left</event>
-    <event code='edit_mode_slip' name='Change Edit Mode to Slip'>5</event>
-    <event code='edit_mode_slip' name='Change Edit Mode to Slip'>kp_5</event>
-    <event code='edit_mode_slip' name='Change Edit Mode to Slip'>kp_begin</event>
-    <event code='edit_mode_spacer' name='Change Edit Mode to Spacer'>6</event>
-    <event code='edit_mode_spacer' name='Change Edit Mode to Spacer'>kp_6</event>
-    <event code='edit_mode_spacer' name='Change Edit Mode to Spacer'>kp_right</event>
-    <event code='edit_mode_box' name='Change Edit Mode to Box'>7</event>
-    <event code='edit_mode_box' name='Change Edit Mode to Box'>kp_7</event>
-    <event code='edit_mode_box' name='Change Edit Mode to Box'>kp_home</event>
     <event code='zoom_out' name='Zoom Out'>minus</event>
     <event code='zoom_in' name='Zoom In'>equal</event>
     <event code='zoom_in' name='Zoom In' modifiers='SHIFT'>equal</event>

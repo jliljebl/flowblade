@@ -20,11 +20,14 @@
 
 """
 Atomic file write support.
+
+Can also be run as a stand-alone script to do ad-hoc testing of the
+AtomicFileWriter class.
 """
 
 import hashlib
 import os
-import shutil
+import sys
 
 MAX_CREATE_FILE_ATTEMPTS = 10
 
@@ -41,7 +44,7 @@ class AtomicFileWriter(object):
 
     Usage:
 
-        with AtomicFileWriter("/path/to/file") as afw:
+        with AtomicFileWriter("/path/to/file", "w") as afw:
             f = afw.get_file()
 
             # do stuff with writable file object
@@ -51,39 +54,52 @@ class AtomicFileWriter(object):
     the context manager block goes out of scope, the temp file will be
     atomically renamed to /path/to/file.
 
-    Because of the atomic nature of this write, /path/to/file will either
-    contain the complete contents of the written file, or retain its
-    previous state.
+    POSIX guarantees that rename() is an atomic operation, so on any
+    reasonable UNIX filesystem, the file will either show up in the
+    destination path with all of its contents, or it won't show up at all.
+    Additionally, if a file was already in the destination path, it will
+    not be corrupted. Either it will be cleanly overwritten, or it will
+    be preserved in its former state without modification.
     """
 
-    def __init__(self, file_path, mode=None):
+    def __init__(self, file_path, mode, debug=False):
         """
         AtomicFileWriter constructor.
 
-        Accepts a file path to write to (eventually)
+        Accepts a file path to write to (eventually), and a file write
+        mode (either "w" or "wb" for text or binary, respectively).
+
+        Also accepts an optional debug boolean argument, which will
+        print out messages for testing and troubleshooting.
         """
 
-        # absolute path to the temp file used for writing
-        self.tmp_file_path = None
+        # validate file path
+        if file_path is None:
+            raise ValueError("file_path can not be None")
 
-        if mode is None:
-            self.mode = "w"
-        elif mode in ("w", "wb"):
+        # validate mode
+        if mode in ("w", "wb"):
             self.mode = mode
         else:
             raise ValueError("AtomicFileWriter only accepts 'w' or 'wb' as valid modes")
+
+        # absolute path to the temp file used for writing
+        self.tmp_file_path = None
 
         # absolute path to the file that the caller eventually wants to write
         self.dest_file_path = os.path.abspath(file_path)
 
         # absolute path to the directory containing the files
-        self.dir_path = os.path.dirname(file_path)
+        self.dir_path = os.path.dirname(self.dest_file_path)
 
         # destination base filename (without the parent path)
-        self.basename = os.path.basename(file_path)
+        self.basename = os.path.basename(self.dest_file_path)
 
         # temp file object
         self.file_obj = None
+
+        # debugging mode
+        self.debug = debug
 
     def __enter__(self):
         """
@@ -95,7 +111,12 @@ class AtomicFileWriter(object):
         # try several times to create a new temp file
         for i in range(MAX_CREATE_FILE_ATTEMPTS):
             # pick a temp filename that we hope is unique
-            maybe_tmp_file_path = self.__get_random_filename(self.basename)
+            maybe_tmp_filename = self.__get_random_filename(self.basename)
+
+            # add the candidate temp filename to the directory where the destination
+            # file will be written. since the temp and final destination file are
+            # in the same directory, rename() will never cross filesystems.
+            maybe_tmp_file_path = os.path.join(self.dir_path, maybe_tmp_filename)
 
             try:
                 # create the temp file, with a guarantee that it didn't exist before
@@ -105,10 +126,13 @@ class AtomicFileWriter(object):
 
                 # if we didn't get an OSError by now, turn the numeric
                 # file descriptor into a Python file object
-                self.file_obj = os.fdopen(fd, "w")
+                self.file_obj = os.fdopen(fd, self.mode)
 
                 # remember the temp file path
                 self.tmp_file_path = maybe_tmp_file_path
+
+                if self.debug:
+                    print("Created temp file: '%s'" % (self.tmp_file_path))
 
                 # we created a file, stop trying
                 break
@@ -117,8 +141,13 @@ class AtomicFileWriter(object):
                 pass
 
         # if we were unable to create a temp file, raise an error
+        #
+        # the destination file path is reported in this error instead of the temp file path,
+        # and although this is slightly innacurate from this low-level context, it will be
+        # a less surprising error message for a user of the program who really intends to
+        # write the destination file eventually, and not some temp file
         if not self.tmp_file_path:
-            raise AtomicFileWriteError("could not open '%s' for writing" % (self.dest_file_path,))
+            raise AtomicFileWriteError("Could not open '%s' for writing" % (self.dest_file_path))
 
         # return a reference to this instance so it can be used as a context manager
         return self
@@ -156,10 +185,28 @@ class AtomicFileWriter(object):
             # close the file
             self.file_obj.close()
 
-        # rename the temp file into the final destination
-        # Issue 459, uncomment os.... if problems
-        #os.rename(self.tmp_file_path, self.dest_file_path)
-        shutil.move(self.tmp_file_path, self.dest_file_path)
+        try:
+            # rename the temp file into the final destination
+            os.rename(self.tmp_file_path, self.dest_file_path)
+
+            if self.debug:
+                print("Renamed temp file: '%s' to '%s'" % (self.tmp_file_path, self.dest_file_path))
+
+        except:
+            print("Error renaming temp file '%s' to '%s'" % (self.tmp_file_path, self.dest_file_path))
+
+            # if the rename didn't work, try to clean up the temp file
+            try:
+                os.unlink(self.tmp_file_path)
+
+                if self.debug:
+                    print("Removed temp file: '%s'" % (self.tmp_file_path))
+            except:
+                print("Error removing temp file '%s' after rename to '%s' failed" % \
+                      (self.tmp_file_path, self.dest_file_path))
+
+            # let the os.rename() failure exception bubble up
+            raise
 
     def get_file(self):
         """
@@ -177,4 +224,21 @@ class AtomicFileWriter(object):
 
         uuid_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
         return ".tmp-" + uuid_str + "-" + basepath
+
+# command-line mode for testing
+def main():
+    if 2 != len(sys.argv):
+        sys.stderr.write("usage: python3 atomicfile.py [file_path_to_write]\n")
+        sys.exit(1)
+
+    dest_file = sys.argv[1]
+
+    with AtomicFileWriter(dest_file, "w", True) as afw:
+        f = afw.get_file()
+        f.write("test file written by atomicfile.AtomicFileWriter\n")
+
+    sys.exit(0)
+
+if __name__ == "__main__":
+    main()
 

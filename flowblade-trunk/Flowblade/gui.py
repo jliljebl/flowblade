@@ -27,9 +27,11 @@ from gi.repository import Gtk, Gdk
 import pickle
 
 import appconsts
+import atomicfile
 import editorpersistance
 import respaths
 import userfolders
+import utils
 
 
 # Editor window
@@ -63,12 +65,13 @@ pos_bar = None
 tline_display = None
 tline_scale = None
 tline_canvas = None
+tline_render_strip = None
 tline_scroll = None
 tline_info = None # Shows save icon
 tline_column = None
 tline_left_corner = None
 big_tc = None
-
+comp_mode_launcher = None
 monitor_widget = None
 monitor_switch = None
 # indexes match editmode values in editorstate.py
@@ -79,7 +82,7 @@ sequence_editor_b = None
 
 # Theme colors
 # Theme colors are given as 4 RGB tuples and string, ((LIGHT_BG), (DARK_BG), (SELECTED_BG), (DARK_SELECTED_BG), name)
-_UBUNTU_COLORS = ((0.949020, 0.945098, 0.941176),  (0.172, 0.172, 0.172), (0.941, 0.466, 0.274, 0.9), (0.941, 0.466, 0.274, 0.9), "Ubuntu")
+_UBUNTU_COLORS = ((0.949020, 0.945098, 0.941176), (0.172, 0.172, 0.172), (0.941, 0.466, 0.274, 0.9), (0.941, 0.466, 0.274, 0.9), "Ubuntu")
 _GNOME_COLORS = ((0.929412, 0.929412, 0.929412), (0.172, 0.172, 0.172), (0.28627451, 0.560784314, 0.843137255), (0.192, 0.361, 0.608), "Gnome")
 _MINT_COLORS = ((0.839215686, 0.839215686, 0.839215686), (0.172, 0.172, 0.172), (0.556862745, 0.678431373, 0.439215686), (0.556862745, 0.678431373, 0.439215686), "Linux Mint")
 _ARC_COLORS = ((0.960784, 0.964706, 0.968627), (0.266667, 0.282353, 0.321569), (0.321568627, 0.580392157, 0.88627451), (0.321568627, 0.580392157, 0.88627451), "Arc (theme)")
@@ -102,7 +105,7 @@ def capture_references(new_editor_window):
     tline_display, tline_scale, tline_canvas, tline_scroll, tline_v_scroll, tline_info, \
     tline_column, play_b, \
     effect_select_list_view, effect_select_combo_box, project_info_vbox, middle_notebook, big_tc, editmenu, notebook_buttons, tline_left_corner, \
-    monitor_widget, bin_panel, monitor_switch
+    monitor_widget, bin_panel, monitor_switch, comp_mode_launcher, tline_render_strip
 
     editor_window = new_editor_window
 
@@ -124,10 +127,12 @@ def capture_references(new_editor_window):
     tline_display = editor_window.tline_display
     tline_scale = editor_window.tline_scale
     tline_canvas = editor_window.tline_canvas
+    tline_render_strip = editor_window.tline_render_strip
     tline_scroll = editor_window.tline_scroller
     tline_info = editor_window.tline_info
     tline_column = editor_window.tline_column
     tline_left_corner = editor_window.left_corner
+    comp_mode_launcher = editor_window.comp_mode_launcher
 
     big_tc = editor_window.big_TC
 
@@ -202,15 +207,6 @@ def set_theme_colors():
     editor_window.tline_pane.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
     editor_window.media_panel.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
     editor_window.mm_paned.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
-
-def apply_flowblade_theme_fixes():
-    fblade_bg_color = Gdk.RGBA(red=(30.0/255.0), green=(35.0/255.0), blue=(51.0/255.0), alpha=1.0)
-    fblade_bg_color_darker = Gdk.RGBA(red=(16.0/255.0), green=(19.0/255.0), blue=(30.0/255.0), alpha=1.0)
-    test_color =  Gdk.RGBA(1, 0, 0, alpha=1.0)
-    for widget in editor_window.fblade_theme_fix_panels:
-        widget.override_background_color(Gtk.StateFlags.NORMAL, fblade_bg_color)
-    for widget in editor_window.fblade_theme_fix_panels_darker:
-        widget.override_background_color(Gtk.StateFlags.NORMAL, fblade_bg_color_darker)
         
 def unpack_gdk_color(gdk_color):
     return (gdk_color.red, gdk_color.green, gdk_color.blue, gdk_color.alpha)
@@ -219,13 +215,14 @@ def save_current_colors():
     # Used to communicate theme colors to tools like gmic.py running on separate process
     colors = (unpack_gdk_color(_selected_bg_color), unpack_gdk_color(_bg_color), unpack_gdk_color(_button_colors))
     save_file_path = _colors_data_path()
-    write_file = open(save_file_path, "wb")
-    pickle.dump(colors, write_file)
+    with atomicfile.AtomicFileWriter(save_file_path, "wb") as afw:
+        write_file = afw.get_file()
+        pickle.dump(colors, write_file)
 
 def load_current_colors():
     load_path = _colors_data_path()
-    f = open(load_path, "rb")
-    colors = pickle.load(f)
+    colors = utils.unpickle(load_path)
+    
     sel, bg, button = colors
     global _selected_bg_color, _bg_color, _button_colors
     _selected_bg_color = Gdk.RGBA(*sel)

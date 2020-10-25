@@ -576,7 +576,7 @@ def main(root_path, filename):
     except:
         editorstate.mlt_version = "0.0.99" # magic string for "not found"
 
-    # Create user folders if need and determine if were using xdg or dotfile userf folders.
+    # Create user folders if needed and determine if we are using xdg or dotfile userf folders.
     userfolders.init()
 
     # Set paths.

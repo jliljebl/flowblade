@@ -25,14 +25,12 @@ Proxy editing is a method of editing in which original media clips are presented
 
 <h3>Rationale</h3>
 <p>
-Proxy clips used in proxy editing usually have smaller data rate and less CPU intensive decoding. There are two main reasons to use proxy editing:
+There are two main reasons to use proxy editing:
 </p>
 <ul>
 <li> Original media from which the program is edited makes too high demands for either disk bandwidth or CPU processing power for decoding to enable responsive editing </li>
 <li> Original is kept on network server, slow external disk or other media with restricted access and does not enable provide responsive editing if accessed directly.</li>
 </ul>
-
-
 
 <h3>Generic Proxy Editing workflow</h3>
 
@@ -49,24 +47,27 @@ All proxy editing workflows have the same phases:
 
 <h3>Flowblade proxy editing</h3>
 <ol>
-<li> Creating Proxy Media</li>
-<ol>
-<li> Select <b>Project->Proxy Manager</b> in menu and set proxy file settings in <b>Proxy Encoding</b> area  </li>
-<li> Select Video Media files in <b>'Media'</b> Panel</li>
-<li> Press button with proxy file icon next Delete button in 'Media' Panel</li>
-<li> If Project is already in <b>'Using Proxy Media'</b> proxy mode, timeline clips with original media that had proxy media rendered to will be replaced with proxy media immediately</li>
-</ol>
-<li>Converting to use Proxy media</li>
-<ol>
-<li> Select <b>Project->Proxy Manager</b> to open Proxy Manager</li>
-<li> Press <b>Use Proxy Media</b> button</li>
-</ol>
-<li>Editing with proxy media</li>
-<ol>
-<li> Clips that use proxy media have a blue stripe indicating that status</li>
-<li> A proxy editing indicator icon is displayed at left bottom corner</li>
-<li> If new proxy media is rendered timeline clips using the original media in question will be replaced with proxy media immediately</li>
-<li> Project can be saved normally and converted after load to use original media</li>
+<li> Creating Proxy Media
+	<ol>
+	<li> Select <b>Project->Proxy Manager</b> in menu and set proxy file settings in <b>Proxy Encoding</b> area  </li>
+	<li> Select Video Media files in <b>'Media'</b> Panel</li>
+	<li> Press button with proxy file icon next Delete button in 'Media' Panel</li>
+	<li> If Project is already in <b>'Using Proxy Media'</b> proxy mode, timeline clips with original media that had proxy media rendered to will be replaced with proxy media immediately</li>
+	</ol>
+</li>
+<li>Converting to use Proxy media
+	<ol>
+	<li> Select <b>Project->Proxy Manager</b> to open Proxy Manager</li>
+	<li> Press <b>Use Proxy Media</b> button</li>
+	</ol>
+</li>
+<li>Editing with proxy media
+	<ol>
+	<li> Clips that use proxy media have a blue stripe indicating that status</li>
+	<li> A proxy editing indicator icon is displayed at left bottom corner</li>
+	<li> If new proxy media is rendered timeline clips using the original media in question will be replaced with proxy media immediately</li>
+	<li> Project can be saved normally and converted after load to use original media</li>
+</li>
 </ol>
 <li>Converting to use Original Media</li>
 <ol>

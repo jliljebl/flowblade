@@ -31,6 +31,7 @@ import time
 from gi.repository import Gtk, Gdk
 
 import appconsts
+import atomicfile
 import dialogutils
 from editorstate import PROJECT
 import gui
@@ -61,8 +62,7 @@ def set_waveform_displayer_clip_from_popup(data):
 
     cache_file_path = userfolders.get_cache_dir() + appconsts.AUDIO_LEVELS_DIR + _get_unique_name_for_media(clip.path)
     if os.path.isfile(cache_file_path):
-        f = open(cache_file_path)
-        frame_levels = pickle.load(f)
+        frame_levels = utils.unpickle(cache_file_path)
         frames_cache[clip.path] = frame_levels
         clip.waveform_data = frame_levels
         updater.repaint_tline()
@@ -148,8 +148,9 @@ class WaveformCreator(threading.Thread):
 
         if not self.abort:
             self.clip.waveform_data = frame_levels
-            write_file = open(self.file_cache_path, "wb")
-            pickle.dump(frame_levels, write_file)
+            with atomicfile.AtomicFileWriter(self.file_cache_path, "wb") as afw:
+                write_file = afw.get_file()
+                pickle.dump(frame_levels, write_file)
 
             Gdk.threads_enter()
             self.dialog.progress_bar.set_fraction(1.0)

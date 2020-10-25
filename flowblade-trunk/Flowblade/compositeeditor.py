@@ -25,7 +25,10 @@ Module handles Compositors edit panel.
 import copy
 from gi.repository import Gtk
 import pickle
+import threading
+import time
 
+import appconsts
 import atomicfile
 import compositorfades
 import dialogs
@@ -34,13 +37,16 @@ import gui
 import guicomponents
 import guiutils
 import edit
+import editorstate
 from editorstate import current_sequence
+from editorstate import PROJECT
 import editorpersistance
 import keyframeeditor
 import mlttransitions
 import propertyeditorbuilder
 import propertyedit
 import propertyparse
+import tlinerender
 import utils
 
 COMPOSITOR_PANEL_LEFT_WIDTH = 160
@@ -49,11 +55,24 @@ widgets = utils.EmptyClass()
 
 compositor = None # Compositor being edited.
 
+# Edit polling.
+# We didn't put a layer of indirection to look for and launch events on edits,
+# so now we detect edits by polling. This has no performance impect, n is so small.
+_edit_polling_thread = None
+compositor_changed_since_last_save = False
+
 # This is updated when filter panel is displayed and cleared when removed.
 # Used to update kfeditors with external tline frame position changes
 keyframe_editor_widgets = []
 
 compositor_notebook_index = 3 # this is set 2 for the 2 window mode
+
+
+def shutdown_polling():
+    global _edit_polling_thread
+    if _edit_polling_thread != None:
+        _edit_polling_thread.shutdown()
+        _edit_polling_thread = None
 
 def create_widgets():
     """
@@ -63,8 +82,12 @@ def create_widgets():
     widgets.hamburger_launcher = guicomponents.HamburgerPressLaunch(_hamburger_launch_pressed)
     guiutils.set_margins(widgets.hamburger_launcher.widget, 4, 6, 6, 0)
     
-    # Edit area
+
+    # empty_label text has no effect on runtime behaviour, look to remove
+    # _display_compositor_edit_box() clearly overwrites anything we do here before user gets shown anything
     widgets.empty_label = Gtk.Label(label=_("No Compositor"))
+
+    # Edit area
     widgets.value_edit_box = Gtk.VBox()
     widgets.value_edit_box.pack_start(widgets.empty_label, True, True, 0)
     widgets.value_edit_frame = Gtk.Frame()
@@ -84,7 +107,15 @@ def get_compositor_clip_panel():
     set_enabled(False)
     
     return action_row
-    
+
+def compositing_mode_changed():
+    # Edit area
+    if current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+        widgets.empty_label.set_text(_("No Compositor"))
+    else:
+        widgets.empty_label.set_text(_("Compositor panel not used in/n Standard Full track Compositing Mode"))
+        widgets.empty_label.set_justify(Gtk.Justification.CENTER)
+        
 def set_compositor(new_compositor):
     """
     Sets clip to be edited in compositor editor.
@@ -102,12 +133,21 @@ def set_compositor(new_compositor):
     if editorpersistance.prefs.default_layout == True:
         gui.middle_notebook.set_current_page(compositor_notebook_index)
 
+    global _edit_polling_thread
+    # Close old polling
+    if _edit_polling_thread != None:
+        _edit_polling_thread.shutdown()
+    # Start new polling
+    _edit_polling_thread = PropertyChangePollingThread()
+    _edit_polling_thread.start()
+
 def clear_compositor():
     global compositor
     compositor = None
     widgets.compositor_info.set_no_compositor_info()
     _display_compositor_edit_box()
     set_enabled(False)
+    shutdown_polling()
 
 def set_enabled(value):
     widgets.empty_label.set_sensitive(value)
@@ -122,17 +162,7 @@ def maybe_clear_editor(killed_compositor):
 
 def get_compositor():
     return compositor
-"""
-def _add_fade_in_pressed():
-    compositorfades.add_fade_in(compositor, 10) # remove fade length hardcoding in 2.4
-    # We need GUI reload to show results
-    set_compositor(compositor)
 
-def _add_fade_out_pressed():
-    compositorfades.add_fade_out(compositor, 10) # remove fade legth hardcoding in 2.4
-    # We need GUI reload to show results
-    set_compositor(compositor)
-"""
 def _delete_compositor_pressed():
     data = {"compositor":compositor}
     action = edit.delete_compositor_action(data)
@@ -160,14 +190,18 @@ def _display_compositor_edit_box():
     # Case: Empty edit frame
     global compositor
     if compositor == None:
-        #widgets.empty_label = Gtk.Label(label=_("No Compositor"))
-
         filler = Gtk.EventBox()
         filler.add(Gtk.Label())
         vbox.pack_start(filler, True, True, 0)
+
+        if current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+            info = Gtk.Label(label=_("No Compositor"))
+            info.set_sensitive(False)
+        else:
+            info = Gtk.Label(label=_("This panel not used in\n Compositing Mode Standard Full Track."))
+            info.set_justify(Gtk.Justification.CENTER)
+            info.set_sensitive(False)
         
-        info = Gtk.Label(label=_("No Compositor"))
-        info.set_sensitive(False)
         filler = Gtk.EventBox()
         filler.add(info)
         vbox.pack_start(filler, False, False, 0)
@@ -193,19 +227,20 @@ def _display_compositor_edit_box():
     vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
 
     # Track editor
-    target_combo = guicomponents.get_compositor_track_select_combo(
-                    current_sequence().tracks[compositor.transition.b_track], 
-                    current_sequence().tracks[compositor.transition.a_track], 
-                    _target_track_changed)
+    if editorstate.get_compositing_mode() != appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
+        target_combo = guicomponents.get_compositor_track_select_combo(
+                        current_sequence().tracks[compositor.transition.b_track], 
+                        current_sequence().tracks[compositor.transition.a_track], 
+                        _target_track_changed)
 
-    target_row = Gtk.HBox()
-    target_row.pack_start(guiutils.get_pad_label(5, 3), False, False, 0)
-    target_row.pack_start(Gtk.Label(label=_("Destination Track:")), False, False, 0)
-    target_row.pack_start(guiutils.get_pad_label(5, 3), False, False, 0)
-    target_row.pack_start(target_combo, False, False, 0)
-    target_row.pack_start(Gtk.Label(), True, True, 0)
-    vbox.pack_start(target_row, False, False, 0)
-    vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
+        target_row = Gtk.HBox()
+        target_row.pack_start(guiutils.get_pad_label(5, 3), False, False, 0)
+        target_row.pack_start(Gtk.Label(label=_("Destination Track:")), False, False, 0)
+        target_row.pack_start(guiutils.get_pad_label(5, 3), False, False, 0)
+        target_row.pack_start(target_combo, False, False, 0)
+        target_row.pack_start(Gtk.Label(), True, True, 0)
+        vbox.pack_start(target_row, False, False, 0)
+        vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
 
     # Transition editors
     t_editable_properties = propertyedit.get_transition_editable_properties(compositor)
@@ -225,6 +260,7 @@ def _display_compositor_edit_box():
         if ((editor_type == propertyeditorbuilder.KEYFRAME_EDITOR)
             or (editor_type == propertyeditorbuilder.KEYFRAME_EDITOR_RELEASE)
             or (editor_type == propertyeditorbuilder.KEYFRAME_EDITOR_CLIP)
+            or (editor_type == propertyeditorbuilder.KEYFRAME_EDITOR_CLIP_FADE)
             or (editor_type == propertyeditorbuilder.FADE_LENGTH)
             or (editor_type == propertyeditorbuilder.GEOMETRY_EDITOR)):
                 keyframe_editor_widgets.append(editor_row)
@@ -233,7 +269,7 @@ def _display_compositor_edit_box():
     # and will be looked up by editors from clip
     editor_rows = propertyeditorbuilder.get_transition_extra_editor_rows(compositor, t_editable_properties)
     for editor_row in editor_rows:
-        # These are added to keyframe editor based on editor type, not based on EditableProperty type as above
+        # These are added to keyframe editors list based on editor type, not based on EditableProperty type as above
         # because one editor sets values for multiple EditableProperty objects
         if editor_row.__class__ == keyframeeditor.RotatingGeometryEditor:
             keyframe_editor_widgets.append(editor_row)
@@ -309,7 +345,9 @@ def _compositor_hamburger_item_activated(widget, msg):
         _delete_compositor_pressed()
     elif msg == "close":
         clear_compositor()
-        
+    elif msg == "fade_length":
+        dialogs.set_fade_length_default_dialog(_set_fade_length_dialog_callback, PROJECT().get_project_property(appconsts.P_PROP_DEFAULT_FADE_LENGTH))
+         
 def _save_compositor_values_dialog_callback(dialog, response_id):
     if response_id == Gtk.ResponseType.ACCEPT:
         save_path = dialog.get_filenames()[0]
@@ -321,8 +359,7 @@ def _save_compositor_values_dialog_callback(dialog, response_id):
 def _load_compositor_values_dialog_callback(dialog, response_id):
     if response_id == Gtk.ResponseType.ACCEPT:
         load_path = dialog.get_filenames()[0]
-        f = open(load_path)
-        compositor_data = pickle.load(f)
+        compositor_data = utils.unpickle(load_path)
 
         if compositor_data.data_applicable(compositor.transition.info):
             compositor_data.set_values(compositor)
@@ -336,6 +373,58 @@ def _load_compositor_values_dialog_callback(dialog, response_id):
 
     dialog.destroy()
 
+def _set_fade_length_dialog_callback(dialog, response_id, spin):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        default_length = int(spin.get_value())
+        PROJECT().set_project_property(appconsts.P_PROP_DEFAULT_FADE_LENGTH, default_length)
+        
+    dialog.destroy()
+
+class PropertyChangePollingThread(threading.Thread):
+    
+    def __init__(self):
+        threading.Thread.__init__(self)
+        self.last_properties = None
+        
+    def run(self):
+        self.running = True
+        while self.running:
+            global compositor
+            if compositor == None:
+                self.shutdown()
+            else:
+                if self.last_properties == None:
+                    self.last_properties = self.get_compositor_properties()
+                
+                new_properties = self.get_compositor_properties()
+                
+                changed = False
+                for new_prop, old_prop in zip(new_properties, self.last_properties):
+                    if new_prop != old_prop:
+                        changed = True
+
+                if changed:
+                    global compositor_changed_since_last_save
+                    compositor_changed_since_last_save = True
+                    tlinerender.get_renderer().timeline_changed()
+
+                self.last_properties = new_properties
+                
+                time.sleep(1.0)
+                
+    def get_compositor_properties(self):
+        compositor_properties = []
+
+        for prop in compositor.transition.properties:
+            compositor_properties.append(copy.deepcopy(prop))
+    
+        compositor_properties.append((copy.deepcopy(compositor.clip_in ), copy.deepcopy(compositor.clip_out)))
+        
+        return compositor_properties
+        
+    def shutdown(self):
+        self.running = False
+        
 
 class CompositorValuesSaveData:
     

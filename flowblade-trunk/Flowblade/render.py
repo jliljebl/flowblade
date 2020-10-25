@@ -31,9 +31,12 @@ from gi.repository import Gtk
 import mlt
 import hashlib
 import os
+import subprocess
 import time
 import threading
 
+import appconsts
+import atomicfile
 import dialogutils
 import editorstate
 from editorstate import current_sequence
@@ -43,10 +46,12 @@ import editorpersistance
 import gui
 import guicomponents
 import guiutils
+import jobs
 import mltprofiles
 import mltrefhold
 import renderconsumer
 import rendergui
+import respaths
 import sequence
 import userfolders
 import utils
@@ -58,7 +63,7 @@ open_media_file_callback = None # monkeypatched in by app.py to avoid circular i
 
 render_start_time = 0
 widgets = utils.EmptyClass()
-progress_window = None
+# progress_window = None
 
 aborted = False
 
@@ -70,6 +75,7 @@ motion_progress_update = None
 transition_render_done_callback = None
 
 # ---------------------------------- rendering action and dialogs
+"""
 class RenderLauncher(threading.Thread):
     
     def __init__(self, render_consumer, start_frame, end_frame):
@@ -95,7 +101,7 @@ class RenderLauncher(threading.Thread):
 
         PLAYER().set_render_callbacks(callbacks)
         PLAYER().start_rendering(self.render_consumer, self.start_frame, self.end_frame)
-
+"""
 def get_args_vals_list_for_current_selections():
     profile = get_current_profile()
     encoding_option_index = widgets.encoding_panel.encoding_selector.widget.get_active()
@@ -233,8 +239,10 @@ def set_default_values_for_widgets(movie_name_too=False):
         widgets.file_panel.movie_name.set_text("movie")
 
     # Default render path is ~/
-    widgets.file_panel.out_folder.set_current_folder(os.path.expanduser("~") + "/")
-
+    if editorpersistance.prefs.default_render_directory == appconsts.USER_HOME_DIR:
+        widgets.file_panel.out_folder.set_current_folder(os.path.expanduser("~") + "/")
+    else:
+        widgets.file_panel.out_folder.set_current_folder(editorpersistance.prefs.default_render_directory)
     widgets.args_panel.use_args_check.set_active(False)
     widgets.profile_panel.use_project_profile_check.set_active(True)
 
@@ -243,7 +251,7 @@ def enable_user_rendering(value):
     widgets.profile_panel.set_sensitive(value)
     widgets.info_panel.set_sensitive(value)
     widgets.args_panel.set_sensitive(value)
-
+"""
 def set_render_gui():
     progress_window.status_label.set_text(_("<b>Output File: </b>") + get_file_path())
     progress_window.status_label.set_use_markup(True)
@@ -252,11 +260,12 @@ def set_render_gui():
     progress_window.passed_time_label.set_text(_("<b>Render time: </b>"))
     progress_window.passed_time_label.set_use_markup(True)
     progress_window.progress_bar.set_text("0%")
-
+"""
 def save_render_start_time():
     global render_start_time
     render_start_time = time.time()
-    
+
+"""
 def set_render_progress_gui(fraction):
     progress_window.progress_bar.set_fraction(fraction)
     pros = int(fraction * 100)
@@ -298,6 +307,7 @@ def exit_render_gui():
     
     dialogutils.delay_destroy_window(progress_window, 2.0)
     progress_window = None
+"""
 
 def maybe_open_rendered_file_in_bin():
     if widgets.args_panel.open_in_bin.get_active() == False:
@@ -374,11 +384,11 @@ def _save_opts_pressed():
 def _save_opts_dialog_callback(dialog, response_id):
     if response_id == Gtk.ResponseType.ACCEPT:
         file_path = dialog.get_filenames()[0]
-        opts_file = open(file_path, "w")
         buf = widgets.args_panel.opts_view.get_buffer()
         opts_text = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), include_hidden_chars=True)
-        opts_file.write(opts_text)
-        opts_file.close()
+        with atomicfile.AtomicFileWriter(file_path, "w") as afw:
+            opts_file = afw.get_file()
+            opts_file.write(opts_text)
         dialog.destroy()
     else:
         dialog.destroy()
@@ -403,8 +413,9 @@ def render_frame_buffer_clip(media_file, default_range_render=False):
 
 def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, media_file):
     if response_id == Gtk.ResponseType.ACCEPT:
-        # speed, filename folder
+        # Get data needed for render.
         speed = float(int(fb_widgets.adjustment.get_value())) / 100.0
+        
         file_name = fb_widgets.file_name.get_text()
         filenames = fb_widgets.out_folder.get_filenames()
         folder = filenames[0]
@@ -415,52 +426,31 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
             secondary_txt = _("It is not allowed to render Motion Files with same paths as existing files.\nSelect another name for file.") 
             dialogutils.warning_message(primary_txt, secondary_txt, dialog)
             return
-
-         # Profile
+            
         profile_index = fb_widgets.out_profile_combo.get_active()
         if profile_index == 0:
             # project_profile is first selection in combo box
             profile = PROJECT().profile
         else:
             profile = mltprofiles.get_profile_for_index(profile_index - 1)
-
-        # Render consumer properties
+        profile_desc = profile.description().replace(" ", "_")
+    
         encoding_option_index = fb_widgets.encodings_cb.get_active()
         quality_option_index = fb_widgets.quality_cb.get_active()
 
-        # Range
         range_selection = fb_widgets.render_range.get_active()
-        
-        dialog.destroy()
 
-        # Create motion producer
+        dialog.destroy()
+        
         source_path = media_file.path
         if media_file.is_proxy_file == True:
             source_path = media_file.second_file_path
 
-        motion_producer = mlt.Producer(profile, None, str("timewarp:" + str(speed) + ":" + str(source_path)))
-        if motion_producer.is_valid() == False:
-            print("Using framebuffer producer, no sound.")
-            fr_path = "framebuffer:" + source_path + "?" + str(speed)
-            motion_producer = mlt.Producer(profile, None, str(fr_path))
-        else:
-            print("Using timewarp producer, sound available.")
-        mltrefhold.hold_ref(motion_producer)
-        
-        # Create sequence and add motion producer into it
-        seq = sequence.Sequence(profile)
-        seq.create_default_tracks()
-        track = seq.tracks[seq.first_video_index]
-        track.append(motion_producer, 0, motion_producer.get_length() - 1)
-
-        print("Motion clip render starting...")
-
-        consumer = renderconsumer.get_render_consumer_for_encoding_and_quality(write_file, profile, encoding_option_index, quality_option_index)
-        
         # start and end frames
+        motion_producer = mlt.Producer(profile, None, str("timewarp:" + str(speed) + ":" + str(source_path)))
         start_frame = 0
         end_frame = motion_producer.get_length() - 1
-        wait_for_producer_stop = True
+        render_full_range = True # REMOVE THIS DONW THE LINE, NOT USED.
         if range_selection == 1:
             start_frame = int(float(media_file.mark_in) * (1.0 / speed))
             end_frame = int(float(media_file.mark_out + 1) * (1.0 / speed)) + int(1.0 / speed)
@@ -468,23 +458,24 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
             if end_frame > motion_producer.get_length() - 1:
                 end_frame = motion_producer.get_length() - 1
             
-            wait_for_producer_stop = False # consumer wont stop automatically and needs to stopped explicitly
-
-        # Launch render
-        global motion_renderer, motion_progress_update
-        motion_renderer = renderconsumer.FileRenderPlayer(write_file, seq.tractor, consumer, start_frame, end_frame)
-        motion_renderer.wait_for_producer_end_stop = wait_for_producer_stop
-        motion_renderer.start()
-
-        title = _("Rendering Motion Clip")
-        text = _("<b>Motion Clip File: </b>") + write_file
-
-        progress_bar = Gtk.ProgressBar()
-        dialog = rendergui.clip_render_progress_dialog(_FB_render_stop, title, text, progress_bar, gui.editor_window.window)
-
-        motion_progress_update = renderconsumer.ProgressWindowThread(dialog, progress_bar, motion_renderer, _FB_render_stop)
-        motion_progress_update.start()
+            render_full_range = False # consumer wont stop automatically and needs to stopped explicitly
         
+        session_id = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
+        
+        args = ("session_id:" + str(session_id), 
+                "speed:" + str(speed), 
+                "write_file:" + str(write_file),
+                "profile_desc:" + str(profile_desc),
+                "encoding_option_index:" + str(encoding_option_index),
+                "quality_option_index:"+ str(quality_option_index),
+                "source_path:" + str(source_path),
+                "render_full_range:" + str(render_full_range),
+                "start_frame:" + str(start_frame),
+                "end_frame:" + str(end_frame))
+
+        job_queue_object = jobs.MotionRenderJobQueueObject(session_id, write_file, args)
+        job_queue_object.add_to_queue()
+
     else:
         dialog.destroy()
 
@@ -505,6 +496,8 @@ def render_reverse_clip(media_file, default_range_render=False):
 
 def _render_reverse_clip_dialog_callback(dialog, response_id, fb_widgets, media_file):
     if response_id == Gtk.ResponseType.ACCEPT:
+        print("_render_reverse_clip_dialog_callback")
+        
         # speed, filename folder
         speed = float(int(fb_widgets.hslider.get_value())) / 100.0
         file_name = fb_widgets.file_name.get_text()
@@ -518,14 +511,15 @@ def _render_reverse_clip_dialog_callback(dialog, response_id, fb_widgets, media_
             dialogutils.warning_message(primary_txt, secondary_txt, dialog)
             return
 
-         # Profile
+        # Profile
         profile_index = fb_widgets.out_profile_combo.get_active()
         if profile_index == 0:
             # project_profile is first selection in combo box
             profile = PROJECT().profile
         else:
             profile = mltprofiles.get_profile_for_index(profile_index - 1)
-
+        profile_desc = profile.description().replace(" ", "_")
+        
         # Render consumer properties
         encoding_option_index = fb_widgets.encodings_cb.get_active()
         quality_option_index = fb_widgets.quality_cb.get_active()
@@ -541,22 +535,11 @@ def _render_reverse_clip_dialog_callback(dialog, response_id, fb_widgets, media_
             source_path = media_file.second_file_path
 
         motion_producer = mlt.Producer(profile, None, str("timewarp:" + str(speed) + ":" + str(source_path)))
-        mltrefhold.hold_ref(motion_producer)
-        
-        # Create sequence and add motion producer into it
-        seq = sequence.Sequence(profile)
-        seq.create_default_tracks()
-        track = seq.tracks[seq.first_video_index]
-        track.append(motion_producer, 0, motion_producer.get_length() - 1)
-
-        print("motion clip render starting...")
-
-        consumer = renderconsumer.get_render_consumer_for_encoding_and_quality(write_file, profile, encoding_option_index, quality_option_index)
         
         # start and end frames
         start_frame = 0
         end_frame = motion_producer.get_length() - 1
-        wait_for_producer_stop = True
+        render_full_range = True
         if range_selection == 1:
             start_frame = int(float(media_file.length - media_file.mark_out - 1) * (1.0 / -speed))
             end_frame = int(float(media_file.length - media_file.mark_out + (media_file.mark_out - media_file.mark_in) + 1) * (1.0 / -speed)) + int(1.0 / -speed)
@@ -566,22 +549,23 @@ def _render_reverse_clip_dialog_callback(dialog, response_id, fb_widgets, media_
             if start_frame < 0:
                 start_frame = 0
             
-            wait_for_producer_stop = False # consumer wont stop automatically and needs to stopped explicitly
+            render_full_range = False # consumer wont stop automatically and needs to stopped explicitly
+            
+        session_id = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
+        
+        args = ("session_id:" + str(session_id), 
+                "speed:" + str(speed), 
+                "write_file:" + str(write_file),
+                "profile_desc:" + str(profile_desc),
+                "encoding_option_index:" + str(encoding_option_index),
+                "quality_option_index:"+ str(quality_option_index),
+                "source_path:" + str(source_path),
+                "render_full_range:" + str(render_full_range),
+                "start_frame:" + str(start_frame),
+                "end_frame:" + str(end_frame))
 
-        # Launch render
-        global motion_renderer, motion_progress_update
-        motion_renderer = renderconsumer.FileRenderPlayer(write_file, seq.tractor, consumer, start_frame, end_frame)
-        motion_renderer.wait_for_producer_end_stop = wait_for_producer_stop
-        motion_renderer.start()
-
-        title = _("Rendering Reverse Clip")
-        text = _("<b>Motion Clip File: </b>") + write_file
-        progress_bar = Gtk.ProgressBar()
-        dialog = rendergui.clip_render_progress_dialog(_FB_render_stop, title, text, progress_bar, gui.editor_window.window)
-
-        motion_progress_update = renderconsumer.ProgressWindowThread(dialog, progress_bar, motion_renderer, _REVERSE_render_stop)
-        motion_progress_update.start()
-
+        job_queue_object = jobs.MotionRenderJobQueueObject(session_id, write_file, args)
+        job_queue_object.add_to_queue()
     else:
         dialog.destroy()
 

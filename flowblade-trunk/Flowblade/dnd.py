@@ -192,10 +192,10 @@ def _on_effect_stack_drop(widget, context, x, y, timestamp):
     
 def _bin_drag_data_received(treeview, context, x, y, selection, info, etime, move_files_to_bin_func):
     bin_path, drop_pos = treeview.get_dest_row_at_pos(x, y)
-    moved_rows = []
+    media_files = []
     for media_object in drag_data:
-        moved_rows.append(media_object.bin_index)
-    move_files_to_bin_func(max(bin_path), moved_rows)
+        media_files.append(media_object.media_file)
+    move_files_to_bin_func(max(bin_path), media_files)
 
 def _save_treeview_selection(treeview):
     treeselection = treeview.get_selection()

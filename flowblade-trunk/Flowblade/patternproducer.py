@@ -207,6 +207,7 @@ class AbstractBinClip: # not extends projectdata.MediaFile? too late, too late. 
     def create_icon(self):
         print("patter producer create_icon() not implemented")
 
+
 class BinColorClip(AbstractBinClip):
     """
     Color Clip that can added to and edited in Sequence.
@@ -242,6 +243,7 @@ class BinColorClip(AbstractBinClip):
         cr.fill()
         self.icon = surface
 
+
 class BinNoiseClip(AbstractBinClip):
     def __init__(self, id, name):
         AbstractBinClip.__init__(self, id, name)
@@ -255,6 +257,7 @@ class BinNoiseClip(AbstractBinClip):
     def create_icon(self):
         self.icon = cairo.ImageSurface.create_from_png(respaths.PATTERN_PRODUCER_PATH + "noise_icon.png")
 
+
 class BinColorBarsClip(AbstractBinClip):
     def __init__(self, id, name):
         AbstractBinClip.__init__(self, id, name)
@@ -267,6 +270,7 @@ class BinColorBarsClip(AbstractBinClip):
 
     def create_icon(self):
         self.icon = cairo.ImageSurface.create_from_png(respaths.PATTERN_PRODUCER_PATH + "bars_icon.png")
+      
         
 class BinIsingClip(AbstractBinClip):
     def __init__(self, id, name):

@@ -32,6 +32,7 @@ import cairoarea
 from editorstate import PROJECT
 from editorstate import PLAYER
 import extraeditors
+import gui
 import guiutils
 import keyframeeditor
 import mltfilters
@@ -51,16 +52,17 @@ BOOLEAN_CHECK_BOX = "booleancheckbox"                       # Gtk.CheckButton
 COMBO_BOX = "combobox"                                      # Gtk.Combobox
 KEYFRAME_EDITOR = "keyframe_editor"                         # keyfremeeditor.KeyFrameEditor that has all the key frames relative to MEDIA start
 KEYFRAME_EDITOR_CLIP = "keyframe_editor_clip"               # keyfremeeditor.KeyFrameEditor that has all the key frames relative to CLIP start
-KEYFRAME_EDITOR_CLIP_FADE = "keyframe_editor_clip_fade"     # keyfremeeditor.KeyFrameEditor that has all the key frames relative to CLIP start, with fade buttons
+KEYFRAME_EDITOR_CLIP_FADE = "keyframe_editor_clip_fade"     # Compositor keyfremeeditor.KeyFrameEditor that has all the key frames relative to CLIP start, with fade buttons
+KEYFRAME_EDITOR_CLIP_FADE_FILTER = "keyframe_editor_clip_fade_filter"  # Filter keyfremeeditor.KeyFrameEditor that has all the key frames relative to CLIP start, with fade buttons
 KEYFRAME_EDITOR_RELEASE = "keyframe_editor_release"         # HACK, HACK. used to prevent property update crashes in slider keyfremeeditor.KeyFrameEditor
 COLOR_SELECT = "color_select"                               # Gtk.ColorButton
-GEOMETRY_EDITOR = "geometry_editor"                         # keyfremeeditor.GeometryEditor
-WIPE_SELECT = "wipe_select"                                 # Gtk.Combobox with options from mlttransitions.wipe_lumas
+GEOMETRY_EDITOR = "geometry_editor"                         # keyframeeditor.GeometryEditor
+FILTER_RECT_GEOM_EDITOR = "filter_rect_geometry_editor"     # keyframeeditor.FilterRectGeometryEditor
+WIPE_SELECT = "wipe_select"                                 # Gtk.Combobox with options from mlttransitions.wipe_lumas, possible to select luma from file system
+FILTER_WIPE_SELECT = "filter_wipe_select"                   #  Gtk.Combobox with options from mlttransitions.wipe_lumas
 COMBO_BOX_OPTIONS = "cbopts"                                # List of options for combo box editor displayed to user
 LADSPA_SLIDER = "ladspa_slider"                             # Gtk.HScale, does ladspa update for release changes(disconnect, reconnect)
 CLIP_FRAME_SLIDER = "clip_frame_slider"                     # Gtk.HScale, range 0 - clip length in frames
-AFFINE_GEOM_4_SLIDER = "affine_filt_geom_slider"            # 3 rows of Gtk.HScales to set the position and size
-AFFINE_GEOM_4_SLIDER_2 = "affine_filt_geom_slider_2"          # 4 rows of Gtk.HScales to set the position and size
 COLOR_CORRECTOR = "color_corrector"                         # 3 band color corrector color circle and Lift Gain Gamma sliders
 CR_CURVES = "crcurves"                                      # Curves color editor with Catmull-Rom curve
 COLOR_BOX = "colorbox"                                      # One band color editor with color box interface
@@ -76,6 +78,8 @@ NO_EDITOR = "no_editor"                                     # No editor displaye
 COMPOSITE_EDITOR_BUILDER = "composite_properties"           # Creates a single row editor for multiple properties of composite transition
 REGION_EDITOR_BUILDER = "region_properties"                 # Creates a single row editor for multiple properties of region transition
 ROTATION_GEOMETRY_EDITOR_BUILDER = "rotation_geometry_editor" # Creates a single editor for multiple geometry values
+#FILTER_AFFINE_EDITOR = "filter_rotation_geometry_editor"    # Affine aditor for filters
+
 
 SCALE_DIGITS = "scale_digits"                               # Number of decimal digits displayed in a widget
 
@@ -410,75 +414,7 @@ def _get_clip_frame_slider(editable_property):
 
     name = editable_property.get_display_name()
     return _get_two_column_editor_row(name, hbox)
-
-def _get_affine_filt_geom_sliders(ep):
-    scr_width = PROJECT().profile.width()
-    scr_height = PROJECT().profile.width()
-
-    # value str format "0=0,0:SCREENSIZE:100"
-    frame_value = ep.value.split("=")
-    tokens = frame_value[1].split(":")
-    pos_tokens = tokens[0].split("/")
-    size_tokens = tokens[1].split("x")
-
-    x_adj = Gtk.Adjustment(float(pos_tokens[0]), float(-scr_width), float(scr_width), float(1))
-    y_adj = Gtk.Adjustment(float(pos_tokens[1]), float(-scr_height), float(scr_height), float(1))
-    h_adj = Gtk.Adjustment(float(size_tokens[1]), float(0), float(scr_height * 5), float(1))
-    
-    x_slider, x_spin, x_row =  _get_affine_slider("X", x_adj)
-    y_slider, y_spin, y_row =  _get_affine_slider("Y", y_adj)
-    h_slider, h_spin, h_row =  _get_affine_slider(_("Size/Height"), h_adj)
-
-    all_sliders = (x_slider, y_slider, h_slider)
-
-    x_slider.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_width))
-    x_spin.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_width))
-    y_slider.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_width))
-    y_spin.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_width))
-    h_slider.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_width))
-    h_spin.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_width))
-
-    vbox = Gtk.VBox(False, 4)
-    vbox.pack_start(x_row, True, True, 0)
-    vbox.pack_start(y_row, True, True, 0)
-    vbox.pack_start(h_row, True, True, 0)
-    
-    return vbox
-
-def _get_affine_filt_geom_sliders_2(ep):
-    scr_width = PROJECT().profile.width()
-    scr_height = PROJECT().profile.height()
-
-    # value str format "0=0,0:SCREENSIZE:100"
-    frame_value = ep.value.split("=")
-    tokens = frame_value[1].split(":")
-    pos_tokens = tokens[0].split("/")
-    size_tokens = tokens[1].split("x")
-
-    x_adj = Gtk.Adjustment(float(pos_tokens[0]), float(-scr_width), float(scr_width), float(1))
-    y_adj = Gtk.Adjustment(float(pos_tokens[1]), float(-scr_height), float(scr_height), float(1))
-    xs_adj = Gtk.Adjustment(float(size_tokens[0]), float(10), float(scr_width * 3), float(1))
-
-    x_slider, x_spin, x_row =  _get_affine_slider("X", x_adj)
-    y_slider, y_spin, y_row =  _get_affine_slider("Y", y_adj)
-    xs_slider, xs_spin, xs_row =  _get_affine_slider(_("Width"), xs_adj)
-
-    all_sliders = (x_slider, y_slider, xs_slider)
-
-    x_slider.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_height))
-    x_spin.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_height))
-    y_slider.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_height))
-    y_spin.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_height))
-    xs_slider.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_height))
-    xs_spin.get_adjustment().connect("value-changed", lambda w: ep.slider_values_changed(all_sliders, scr_height))
-    
-    vbox = Gtk.VBox(False, 4)
-    vbox.pack_start(x_row, True, True, 0)
-    vbox.pack_start(y_row, True, True, 0)
-    vbox.pack_start(xs_row, True, True, 0)
-
-    return vbox
-    
+   
 def _get_affine_slider(name, adjustment):
     hslider = Gtk.HScale()
     hslider.set_adjustment(adjustment)
@@ -556,11 +492,105 @@ def _get_color_selector(editable_property):
     color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(*gdk_color))
     color_button.connect("color-set", editable_property.color_selected)
 
+    picker_button = Gtk.ToggleButton()
+    picker_button.set_image(Gtk.Image.new_from_icon_name(Gtk.STOCK_COLOR_PICKER, Gtk.IconSize.BUTTON))
+
+    info_label = Gtk.Label()
+    
+    editable_property.picker_toggled_id = picker_button.connect("toggled", _color_selector_picker_toggled, editable_property, color_button, info_label)
+
     hbox = Gtk.HBox(False, 4)
     hbox.pack_start(color_button, False, False, 4)
+    hbox.pack_start(picker_button, False, False, 4)
+    hbox.pack_start(info_label, False, False, 4)
     hbox.pack_start(Gtk.Label(), True, True, 0)
     
     return _get_two_column_editor_row(editable_property.get_display_name(), hbox)
+
+def _color_selector_picker_toggled(picker_button, editable_property, color_button, info_label):
+    gdk_window = gui.editor_window.window.get_window()
+    if picker_button.get_active() == True:
+        editable_property.cp_window_press_id = gui.editor_window.window.connect('button-press-event', _color_picker_window_press_event, editable_property, picker_button, color_button, info_label)
+        editable_property.cp_monitor_press_id = gui.tline_display.connect('button-press-event', _color_picker_monitor_press_event, editable_property, picker_button, color_button, info_label)
+        info_label.set_markup("<small>" + _("Click Monitor to Select Color") + "</small>")
+    else:
+        _maybe_disconnect_color_picker_listeners(editable_property)
+        info_label.set_markup("")
+        
+def _color_picker_window_press_event(widget, event, editable_property, picker_button, color_button, info_label):
+    # Exit expecting color selection
+    _maybe_disconnect_color_picker_listeners(editable_property)
+    _maybe_untoggle_picker_botton(editable_property, picker_button)
+
+    info_label.set_markup("")
+    
+    return True
+    
+def _color_picker_monitor_press_event(widget, event, editable_property, picker_button, color_button, info_label):
+    # Exit expecting color selection
+    _maybe_disconnect_color_picker_listeners(editable_property)
+    _maybe_untoggle_picker_botton(editable_property, picker_button)
+
+    try:
+        # Get selected image coordinate.
+        alloc = widget.get_allocation()
+        window_width = alloc.width
+        window_height = alloc.height
+        
+        width = PROJECT().profile.width()
+        height = PROJECT().profile.height()
+        display_ratio = float(width) / float(height) # mlt_properties_get_double( properties, "display_ratio" );
+        
+        if window_height * display_ratio > window_width:
+            rect_w = window_width
+            rect_h = int(float(window_width) / float(display_ratio))
+        else:
+            rect_w = int(float(window_height) * float(display_ratio))
+            rect_h = window_height
+
+        rect_x = int(float( window_width - rect_w ) / 2.0)
+        rect_x -= rect_x % 2
+        rect_y = int(float(window_height - rect_h ) / 2.0)
+
+        x = event.x - rect_x
+        y = event.y - rect_y
+
+        img_x = int((float(x)/float(rect_w)) * float(width))
+        img_y = int((float(y)/float(rect_h)) * float(height))
+        
+        # Get selected color 
+        rgb_data = PLAYER().seek_and_get_rgb_frame(PLAYER().current_frame(), update_gui=False)
+        pixel = (img_y * 1920 + img_x) * 4
+        r = rgb_data[pixel]
+        g = rgb_data[pixel + 1]
+        b = rgb_data[pixel + 2]
+    except:
+        r = 0
+        g = 0
+        b = 0
+
+    # Set selected color as color button selection and property value.
+    color = Gdk.RGBA(float(r)/255.0, float(g)/255.0, float(b)/255.0, 1.0)
+
+    color_button.set_rgba(color)
+    editable_property.color_selected(color_button)
+
+    info_label.set_markup("")
+        
+    return True
+         
+def _maybe_disconnect_color_picker_listeners(editable_property):
+    if editable_property.cp_window_press_id != -1:
+        gui.editor_window.window.disconnect(editable_property.cp_window_press_id)
+        gui.tline_display.disconnect(editable_property.cp_monitor_press_id)
+        editable_property.cp_window_press_id = -1
+        editable_property.cp_monitor_press_id = -1
+
+def _maybe_untoggle_picker_botton(editable_property, picker_button):
+    if picker_button.get_active() == True:
+        picker_button.handler_block(editable_property.picker_toggled_id)
+        picker_button.set_active(False)
+        picker_button.handler_unblock(editable_property.picker_toggled_id)
 
 def _get_wipe_selector(editable_property):
     """
@@ -636,6 +666,29 @@ def _get_wipe_selector(editable_property):
     user_luma_select.connect('file-set', _wipe_lumafile_dialog_response, editable_property, widgets)
     
     return editor_pane
+
+def _get_filter_wipe_selector(editable_property):
+    # Preset luma
+    combo_box = Gtk.ComboBoxText()
+            
+    # Get options
+    keys = list(mlttransitions.wipe_lumas.keys())
+    # translate here
+    keys.sort()
+    for k in keys:
+        combo_box.append_text(k)
+ 
+    # Set initial value
+    k_index = -1
+    tokens = editable_property.value.split("/")
+    test_value = tokens[len(tokens) - 1]
+    for k,v in mlttransitions.wipe_lumas.items():
+        if v == test_value:
+            k_index = keys.index(k)
+    
+    combo_box.set_active(k_index)
+    combo_box.connect("changed", editable_property.combo_selection_changed, keys)
+    return _get_two_column_editor_row(editable_property.get_display_name(), combo_box)
 
 class FadeLengthEditor(Gtk.HBox):
     def __init__(self, editable_property):
@@ -869,6 +922,9 @@ def _create_color_grader(filt, editable_properties):
     vbox.no_separator = True
     return vbox
 
+def _get_filter_rect_geom_editor(ep):
+    return keyframeeditor.FilterRectGeometryEditor(ep)
+
 def _create_crcurves_editor(filt, editable_properties):
     curves_editor = extraeditors.CatmullRomFilterEditor(editable_properties)
 
@@ -987,6 +1043,9 @@ def _get_keyframe_editor_clip(editable_property):
 
 def _get_keyframe_editor_clip_fade(editable_property):
     return keyframeeditor.KeyFrameEditorClipFade(editable_property)
+
+def _get_keyframe_editor_clip_fade_filter(editable_property):
+    return keyframeeditor.KeyFrameEditorClipFadeFilter(editable_property)
  
 def _get_keyframe_editor_release(editable_property):
     editor = keyframeeditor.KeyFrameEditor(editable_property)
@@ -1067,12 +1126,12 @@ EDITOR_ROW_CREATORS = { \
     KEYFRAME_EDITOR: lambda ep : _get_keyframe_editor(ep),
     KEYFRAME_EDITOR_CLIP: lambda ep : _get_keyframe_editor_clip(ep),
     KEYFRAME_EDITOR_CLIP_FADE: lambda ep : _get_keyframe_editor_clip_fade(ep),
+    KEYFRAME_EDITOR_CLIP_FADE_FILTER: lambda ep : _get_keyframe_editor_clip_fade_filter(ep),
     KEYFRAME_EDITOR_RELEASE: lambda ep : _get_keyframe_editor_release(ep),
     GEOMETRY_EDITOR: lambda ep : _get_geometry_editor(ep),
-    AFFINE_GEOM_4_SLIDER: lambda ep : _get_affine_filt_geom_sliders(ep),
-    AFFINE_GEOM_4_SLIDER_2: lambda ep :_get_affine_filt_geom_sliders_2(ep),
     COLOR_SELECT: lambda ep: _get_color_selector(ep),
     WIPE_SELECT: lambda ep: _get_wipe_selector(ep),
+    FILTER_WIPE_SELECT:  lambda ep: _get_filter_wipe_selector(ep),
     LADSPA_SLIDER: lambda ep: _get_ladspa_slider_row(ep),
     CLIP_FRAME_SLIDER: lambda ep: _get_clip_frame_slider(ep),
     FILE_SELECTOR: lambda ep: _get_file_select_editor(ep),
@@ -1088,6 +1147,7 @@ EDITOR_ROW_CREATORS = { \
     COLOR_LGG: lambda filt, editable_properties:_create_color_lgg_editor(filt, editable_properties),
     ROTOMASK: lambda filt, editable_properties:_create_rotomask_editor(filt, editable_properties),
     TEXT_ENTRY: lambda ep: _get_text_entry(ep),
+    FILTER_RECT_GEOM_EDITOR: lambda ep : _get_filter_rect_geom_editor(ep)
     }
 
 """

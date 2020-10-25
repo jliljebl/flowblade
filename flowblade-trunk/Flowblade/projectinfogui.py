@@ -23,6 +23,7 @@ from gi.repository import Gtk
 from gi.repository import GObject
 from gi.repository import Pango
 
+import dialogutils
 from editorstate import PROJECT
 import guicomponents
 import guiutils
@@ -36,7 +37,10 @@ PROJECT_TOP_LEVEL_PANE_HEIGHT = 150
 def get_project_info_panel():
     project_name_label = Gtk.Label(label=PROJECT().name)
     name_row = guiutils.get_left_justified_box([project_name_label])
-    name_panel = guiutils.get_named_frame(_("Name"), name_row, 4)
+    name_vbox = Gtk.VBox()
+    name_vbox.pack_start(name_row, False, False, 0)
+    name_vbox.pack_start(Gtk.Label(), True, True, 0)
+    name_panel = guiutils.get_named_frame(_("Name"), name_vbox, 4)
     
     profile = PROJECT().profile
     desc_label = Gtk.Label(label=profile.description())
@@ -46,23 +50,15 @@ def get_project_info_panel():
     vbox.pack_start(info_box, False, True, 0)
     profile_panel = guiutils.get_named_frame(_("Profile"), vbox, 4)
 
-    events_list = ProjectEventListView()
-    events_list.fill_data_model()
-    events_panel = guiutils.get_named_frame(_("Project Events"), events_list, 4)
-
-    project_info_vbox = Gtk.VBox()
-    project_info_vbox.pack_start(name_panel, False, True, 0)
-    project_info_vbox.pack_start(profile_panel, False, True, 0)
-    project_info_vbox.set_size_request(250, PROJECT_INFO_PANEL_HEIGHT)
-    
     project_info_hbox = Gtk.HBox()
-    project_info_hbox.pack_start(project_info_vbox, False, False, 0)
-    project_info_hbox.pack_start(events_panel, True, True, 0)
+    project_info_hbox.pack_start(name_panel, False, True, 0)
+    project_info_hbox.pack_start(guiutils.pad_label(24, 24), False, True, 0)
+    project_info_hbox.pack_start(profile_panel, False, True, 0)
+    project_info_hbox.pack_start(Gtk.Label(), True, True, 0)
     
     widgets.project_name_label = project_name_label
     widgets.desc_label = desc_label
     widgets.info_box = info_box
-    widgets.events_list = events_list
 
     return project_info_hbox
 
@@ -80,10 +76,6 @@ def get_top_level_project_info_panel():
     vbox.pack_start(info_box, False, True, 0)
     profile_panel = guiutils.get_named_frame(_("Profile"), vbox, 0, 6, 4, _("<b>Profile</b> determines frame rate per second, image size in pixels and pixel aspect ratio for all <b>Sequences</b> in <b>Project</b> ."))
 
-    events_list = ProjectEventListView()
-    events_list.fill_data_model()
-    events_panel = guiutils.get_named_frame(_("Project Events"), events_list, 0)
-
     project_info_vbox = Gtk.VBox()
     project_info_vbox.pack_start(name_panel, False, True, 0)
     project_info_vbox.pack_start(profile_panel, False, True, 0)
@@ -92,7 +84,6 @@ def get_top_level_project_info_panel():
     widgets.project_name_label = project_name_label
     widgets.desc_label = desc_label
     widgets.info_box = info_box
-    widgets.events_list = events_list
 
     return project_info_vbox
     
@@ -102,8 +93,13 @@ def update_project_info():
     widgets.desc_label.set_text(profile.description())
     profile_info_text = guicomponents.get_profile_info_text(profile)
     widgets.info_box.get_children()[0].set_text(profile_info_text)
-    widgets.events_list.fill_data_model()
 
+
+def show_project_events_dialog():
+    events_list = ProjectEventListView()
+    events_list.fill_data_model()
+    events_list.set_size_request(620, 500)
+    dialogutils.panel_ok_dialog(_("Project Events"), events_list)
 
 class ProjectEventListView(Gtk.VBox):
 
@@ -131,7 +127,7 @@ class ProjectEventListView(Gtk.VBox):
         self.text_col_2 = Gtk.TreeViewColumn("text2")
         self.text_col_2.set_title(_("Event"))
         self.text_col_3 = Gtk.TreeViewColumn("text3")
-        self.text_col_3.set_title(_("Path"))
+        self.text_col_3.set_title(_("Data"))
 
         # Cell renderers
         self.text_rend_1 = Gtk.CellRendererText()

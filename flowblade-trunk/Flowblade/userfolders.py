@@ -35,7 +35,7 @@ USING_XDG_DIRS = 1
 _user_dirs = USING_XDG_DIRS # Which dirs we are using
 
 _copy_needed = False # If this true we need to copy data from dot dir to XDG dirs
-_dot_dir_was_forced = False
+
 _init_error = None
     
 _dot_dir = None
@@ -47,7 +47,6 @@ _xdg_cache_dir = None
 # --------------------------------------------------------- interface
 def init():
     global _init_error
-    force_dot_dir = False
     
     # Get user folder locations
     global _dot_dir, _xdg_config_dir, _xdg_data_dir, _xdg_cache_dir
@@ -62,8 +61,11 @@ def init():
     try:
         _maybe_create_xdg_dirs()
     except Exception as e:
-        _init_error = "Could not create XDG folders: " + str(e)
-        force_dot_dir = True
+        _init_error = "Error message: " + str(e) + "\n\n"
+        _init_error += "XDG Config dir: " + _xdg_config_dir + "\n"
+        _init_error += "XDG Data dir: " + _xdg_data_dir + "\n"
+        _init_error += "XDG Cache dir: " + _xdg_cache_dir + "\n"
+        return
     
     # Determine if this a clean install or do we need to copy files fron dot dir to XDG dirs
     # We think existance of prefs files will tell us what the state of the system is.
@@ -81,36 +83,28 @@ def init():
     # Set folders and maybe create them
     global _user_dirs
     
-    # If we could not create XDG dirs, we will use dot dirs
-    if force_dot_dir == True:
-        print("userfolders.init():  UNABLE TO CREATE XDG FOLDERS! Usinf .flowblade dir forced!")
-        global _dot_dir_was_forced
-        _dot_dir_was_forced = True
-        _user_dirs = USING_DOT_DIRS
-        _maybe_create_dot_dirs()
-        return
-    
-    #_user_dirs = USING_DOT_DIRS #  Testing
     _user_dirs = USING_XDG_DIRS
-     
+
+def init_user_cache_for_flatpak():
+    try:
+        os.makedirs(get_user_home_cache_for_flatpak())
+    except:
+        pass # After first time exists.
+    
+def get_user_home_cache_for_flatpak(): # this user when communicating with Blender
+    user_home = os.getenv("HOME")
+    cache_folder = user_home + "/.cache/flowblade/"
+    return cache_folder
+    
 # --------------------------------------------------------- dirs paths
 def get_config_dir():
-    if _user_dirs == USING_XDG_DIRS:
-        return _xdg_config_dir + "/"
-    else:
-        return _dot_dir
+    return _xdg_config_dir + "/"
 
 def get_data_dir():
-    if _user_dirs == USING_XDG_DIRS:
-        return _xdg_data_dir + "/"
-    else:
-        return _dot_dir
+    return _xdg_data_dir + "/"
 
 def get_cache_dir():
-    if _user_dirs == USING_XDG_DIRS:
-        return _xdg_cache_dir + "/"
-    else:
-        return _dot_dir
+    return _xdg_cache_dir + "/"
 
 def get_render_dir():
     return get_data_dir() + appconsts.RENDERED_CLIPS_DIR
@@ -125,30 +119,7 @@ def data_copy_needed():
 def get_init_error():
     return _init_error
 
-# ---------------------------------------------------------------- internal functions
-def _maybe_create_dot_dirs():
-
-    user_dir = _dot_dir
-
-    if not os.path.exists(user_dir):
-        os.mkdir(user_dir)
-    if not os.path.exists(user_dir + mltprofiles.USER_PROFILES_DIR):
-        os.mkdir(user_dir + mltprofiles.USER_PROFILES_DIR)
-    if not os.path.exists(user_dir + appconsts.AUTOSAVE_DIR):
-        os.mkdir(user_dir + appconsts.AUTOSAVE_DIR)
-    if not os.path.exists(user_dir + appconsts.BATCH_DIR):
-        os.mkdir(user_dir + appconsts.BATCH_DIR)
-    if not os.path.exists(user_dir + appconsts.AUDIO_LEVELS_DIR):
-        os.mkdir(user_dir + appconsts.AUDIO_LEVELS_DIR)
-    if not os.path.exists(utils.get_hidden_screenshot_dir_path()):
-        os.mkdir(utils.get_hidden_screenshot_dir_path())
-    if not os.path.exists(user_dir + appconsts.GMIC_DIR):
-        os.mkdir(user_dir + appconsts.GMIC_DIR)
-    if not os.path.exists(user_dir + appconsts.MATCH_FRAME_DIR):
-        os.mkdir(user_dir + appconsts.MATCH_FRAME_DIR)
-    if not os.path.exists(user_dir + appconsts.TRIM_VIEW_DIR):
-        os.mkdir(user_dir + appconsts.TRIM_VIEW_DIR)
-
+# ---------------------------------------------------------------- internal functions       
 def _maybe_create_xdg_dirs():
 
     # ---------------------- CONFIG
@@ -168,7 +139,20 @@ def _maybe_create_xdg_dirs():
         os.mkdir(get_data_dir() + appconsts.USER_PROFILES_DIR)
     if not os.path.exists(get_render_dir()):
         os.mkdir(get_render_dir())
-    
+    if not os.path.exists(get_data_dir() + appconsts.TLINE_RENDERS_DIR):
+        os.mkdir(get_data_dir() + appconsts.TLINE_RENDERS_DIR)
+    if not os.path.exists(get_data_dir() + appconsts.CONTAINER_CLIPS_DIR):
+        os.mkdir(get_data_dir() + appconsts.CONTAINER_CLIPS_DIR)
+    if not os.path.exists(get_data_dir() + appconsts.CONTAINER_CLIPS_UNRENDERED):
+        os.mkdir(get_data_dir() + appconsts.CONTAINER_CLIPS_UNRENDERED)
+    if not os.path.exists(get_render_dir() +  "/" + appconsts.PROXIES_DIR):
+        os.mkdir(get_render_dir() +  "/" + appconsts.PROXIES_DIR)
+    if not os.path.exists(get_data_dir()  +  "/" + appconsts.USER_SHORTCUTS_DIR):
+        os.mkdir(get_data_dir()  +  "/" + appconsts.USER_SHORTCUTS_DIR)
+
+
+
+
     #----------------- CACHE
     # Data that can be regerated by app or is transient
     # Cache root folder
@@ -218,13 +202,6 @@ def _copy_data_from_dot_folders_xdg_folders():
     dir_util.copy_tree(_dot_dir + appconsts.RENDERED_CLIPS_DIR, get_render_dir(), verbose=1)
     
     # --------------------- CACHE
-    print("Copying CACHE...")
-    dir_util.copy_tree(_dot_dir + appconsts.AUTOSAVE_DIR, get_cache_dir() + appconsts.AUTOSAVE_DIR, verbose=1)
-    dir_util.copy_tree(_dot_dir + appconsts.THUMBNAILS_DIR, get_cache_dir() + appconsts.THUMBNAILS_DIR, verbose=1)
-    dir_util.copy_tree(_dot_dir + appconsts.GMIC_DIR, get_cache_dir() + appconsts.GMIC_DIR, verbose=1)
-    dir_util.copy_tree(_dot_dir + appconsts.MATCH_FRAME_DIR, get_cache_dir() + appconsts.MATCH_FRAME_DIR, verbose=1)
-    dir_util.copy_tree(_dot_dir + appconsts.AUDIO_LEVELS_DIR, get_cache_dir() + appconsts.AUDIO_LEVELS_DIR, verbose=1)
-    dir_util.copy_tree(_dot_dir + appconsts.TRIM_VIEW_DIR, get_cache_dir() + appconsts.TRIM_VIEW_DIR, verbose=1)
-    dir_util.copy_tree(_dot_dir + appconsts.BATCH_DIR, get_cache_dir() + appconsts.BATCH_DIR, verbose=1)
+    print("CACHE DATA WILL BE LOST...")
 
     print("XDG Copy done.")

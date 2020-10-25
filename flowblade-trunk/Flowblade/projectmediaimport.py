@@ -32,6 +32,7 @@ from gi.repository import Gtk, Gdk
 from gi.repository import GLib
 
 import appconsts
+import atomicfile
 import editorstate
 import editorpersistance
 import gui
@@ -82,10 +83,10 @@ class ProjectLoadThread(threading.Thread):
                 continue
             if os.path.isfile(media_file.path):                
                 media_assets = media_assets + str(media_file.path) + "\n"
-        
-        f = open(_get_assets_file(), 'w')
-        f.write(media_assets)
-        f.close()
+
+        with atomicfile.AtomicFileWriter(_get_assets_file(), "w") as afw:
+            f = afw.get_file()
+            f.write(media_assets)
 
         _shutdown()
 

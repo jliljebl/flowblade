@@ -22,24 +22,14 @@
 Module handles saving and loading data that is related to the editor and not any particular project.
 """
 
-"""
-    Change History:
-        Aug-2019 - SvdB - AS:
-            Save value of Autosave preference.
-            See preferenceswindow.py for more info
-"""
-
-import gi
-gi.require_version('Gtk', '3.0') 
-from gi.repository import Gtk
-
 import os
 import pickle
 
 import appconsts
+import atomicfile
 import mltprofiles
 import userfolders
-import utils
+import utils # this needs to also go to not load Gtk for background rendering process
 
 PREFS_DOC = "prefs"
 RECENT_DOC = "recent"
@@ -64,14 +54,14 @@ def load():
     recents_file_path = userfolders.get_config_dir() + RECENT_DOC
 
     global prefs, recent_projects
-        
+
     try:
-        f = open(prefs_file_path, "rb")
-        prefs = pickle.load(f)
+        prefs = utils.unpickle(prefs_file_path)
     except:
         prefs = EditorPreferences()
-        write_file = open(prefs_file_path, "wb")
-        pickle.dump(prefs, write_file)
+        with atomicfile.AtomicFileWriter(prefs_file_path, "wb") as afw:
+            write_file = afw.get_file()
+            pickle.dump(prefs, write_file)
 
     # Override deprecated preferences to default values.
     prefs.delta_overlay = True
@@ -81,13 +71,13 @@ def load():
     prefs.remember_monitor_clip_frame = True
 
     try:
-        f = open(recents_file_path)
-        recent_projects = pickle.load(f)
+        recent_projects = utils.unpickle(recents_file_path)
     except:
         recent_projects = utils.EmptyClass()
         recent_projects.projects = []
-        write_file = open(recents_file_path, "wb")
-        pickle.dump(recent_projects, write_file)
+        with atomicfile.AtomicFileWriter(recents_file_path, "wb") as afw:
+            write_file = afw.get_file()
+            pickle.dump(recent_projects, write_file)
 
     # Remove non-existing projects from recents list
     remove_list = []
@@ -98,10 +88,11 @@ def load():
     if len(remove_list) > 0:
         for proj_path in remove_list:
             recent_projects.projects.remove(proj_path)
-        write_file = open(recents_file_path, "wb")
-        pickle.dump(recent_projects, write_file)
-        
-    # Versions of program may have different prefs objects and 
+        with atomicfile.AtomicFileWriter(recents_file_path, "wb") as afw:
+            write_file = afw.get_file()
+            pickle.dump(recent_projects, write_file)
+
+    # Versions of program may have different prefs objects and
     # we may need to to update prefs on disk if user has e.g.
     # installed later version of Flowblade.
     current_prefs = EditorPreferences()
@@ -109,22 +100,25 @@ def load():
     if len(prefs.__dict__) != len(current_prefs.__dict__):
         current_prefs.__dict__.update(prefs.__dict__)
         prefs = current_prefs
-        write_file = open(prefs_file_path, "wb")
-        pickle.dump(prefs, write_file)
+        with atomicfile.AtomicFileWriter(prefs_file_path, "wb") as afw:
+            write_file = afw.get_file()
+            pickle.dump(prefs, write_file)
         print("prefs updated to new version, new param count:", len(prefs.__dict__))
 
 def save():
     """
-    Write out prefs and recent_projects files 
+    Write out prefs and recent_projects files
     """
     prefs_file_path = userfolders.get_config_dir()+ PREFS_DOC
     recents_file_path = userfolders.get_config_dir() + RECENT_DOC
-    
-    write_file = open(prefs_file_path, "wb")
-    pickle.dump(prefs, write_file)
 
-    write_file = open(recents_file_path, "wb")
-    pickle.dump(recent_projects, write_file)
+    with atomicfile.AtomicFileWriter(prefs_file_path, "wb") as afw:
+        write_file = afw.get_file()
+        pickle.dump(prefs, write_file)
+
+    with atomicfile.AtomicFileWriter(recents_file_path, "wb") as afw:
+        write_file = afw.get_file()
+        pickle.dump(recent_projects, write_file)
 
 def add_recent_project_path(path):
     """
@@ -132,10 +126,10 @@ def add_recent_project_path(path):
     """
     if len(recent_projects.projects) == MAX_RECENT_PROJS:
         recent_projects.projects.pop(-1)
-        
+
     # Reject autosaves.
     autosave_dir = userfolders.get_cache_dir() + appconsts.AUTOSAVE_DIR
-    file_save_dir = os.path.dirname(path) + "/"        
+    file_save_dir = os.path.dirname(path) + "/"
     if file_save_dir == autosave_dir:
         return
 
@@ -144,8 +138,8 @@ def add_recent_project_path(path):
         recent_projects.projects.pop(index)
     except:
         pass
-    
-    recent_projects.projects.insert(0, path)    
+
+    recent_projects.projects.insert(0, path)
     save()
 
 def remove_non_existing_recent_projects():
@@ -159,35 +153,9 @@ def remove_non_existing_recent_projects():
     if len(remove_list) > 0:
         for proj_path in remove_list:
             recent_projects.projects.remove(proj_path)
-        write_file = open(recents_file_path, "wb")
-        pickle.dump(recent_projects, write_file)
-        
-def fill_recents_menu_widget(menu_item, callback):
-    """
-    Fills menu item with menuitems to open recent projects.
-    """
-    menu = menu_item.get_submenu()
-
-    # Remove current items
-    items = menu.get_children()
-    for item in items:
-        menu.remove(item)
-    
-    # Add new menu items
-    recent_proj_names = get_recent_projects()
-    if len(recent_proj_names) != 0:
-        for i in range (0, len(recent_proj_names)):
-            proj_name = recent_proj_names[i]
-            new_item = Gtk.MenuItem(proj_name)
-            new_item.connect("activate", callback, i)
-            menu.append(new_item)
-            new_item.show()
-    # ...or a single non-sensitive Empty item 
-    else:
-        new_item = Gtk.MenuItem(_("Empty"))
-        new_item.set_sensitive(False)
-        menu.append(new_item)
-        new_item.show()
+        with atomicfile.AtomicFileWriter(recents_file_path, "wb") as afw:
+            write_file = afw.get_file()
+            pickle.dump(recent_projects, write_file)
 
 def get_recent_projects():
     """
@@ -196,27 +164,30 @@ def get_recent_projects():
     proj_list = []
     for proj_path in recent_projects.projects:
         proj_list.append(os.path.basename(proj_path))
-    
+
     return proj_list
 
 def update_prefs_from_widgets(widgets_tuples_tuple):
     # Aug-2019 - SvdB - BB - Replace double_track_hights by double_track_hights
     # Unpack widgets
+    # Toolbar preferences panel for free elements and order
     gen_opts_widgets, edit_prefs_widgets, playback_prefs_widgets, view_prefs_widgets, performance_widgets = widgets_tuples_tuple
+    # End of Toolbar preferences panel for free elements and order
 
     # Aug-2019 - SvdB - AS - added autosave_combo
     default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin, load_order_combo, \
-        autosave_combo = gen_opts_widgets
-    
+        autosave_combo, render_folder_select, disk_cache_warning_combo = gen_opts_widgets
+
     # Jul-2016 - SvdB - Added play_pause_button
     # Apr-2017 - SvdB - Added ffwd / rev values
-    gfx_length_spin, cover_delete, mouse_scroll_action, hide_file_ext_button, hor_scroll_dir, kf_edit_playhead_move = edit_prefs_widgets
-    
-    auto_center_check, play_pause_button, auto_center_on_updown, \
+    gfx_length_spin, cover_delete, mouse_scroll_action, hide_file_ext_button, \
+    hor_scroll_dir, effects_editor_clip_load = edit_prefs_widgets
+
+    auto_center_check, play_pause_button, timeline_start_end_button, auto_center_on_updown, \
     ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips = playback_prefs_widgets
     
     force_language_combo, disp_splash, buttons_style, theme, theme_combo, audio_levels_combo, \
-    window_mode_combo, full_names, double_track_hights, top_row_layout = view_prefs_widgets
+    window_mode_combo, full_names, double_track_hights, top_row_layout, layout_monitor, colorized_icons = view_prefs_widgets
 
     # Jan-2017 - SvdB
     perf_render_threads, perf_drop_frames = performance_widgets
@@ -231,24 +202,28 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.auto_center_on_play_stop = auto_center_check.get_active()
     prefs.default_grfx_length = int(gfx_length_spin.get_adjustment().get_value())
     prefs.trans_cover_delete = cover_delete.get_active()
-    prefs.kf_edit_init_affects_playhead = kf_edit_playhead_move.get_active()
+
     # Jul-2016 - SvdB - For play/pause button
     prefs.play_pause = play_pause_button.get_active()
+# ------------------------------ timeline_start_end_button
+    prefs.timeline_start_end = timeline_start_end_button.get_active()
+# -------------------------------End of timeline_start_end_button
     prefs.hide_file_ext = hide_file_ext_button.get_active()
     prefs.mouse_scroll_action_is_zoom = (mouse_scroll_action.get_active() == 0)
     prefs.scroll_horizontal_dir_up_forward = (hor_scroll_dir.get_active() == 0)
+    prefs.single_click_effects_editor_load = (effects_editor_clip_load.get_active() == 1)
     # Apr-2017 - SvdB - ffwd / rev values
     prefs.ffwd_rev_shift = int(ffwd_rev_shift_spin.get_adjustment().get_value())
     prefs.ffwd_rev_ctrl = int(ffwd_rev_ctrl_spin.get_adjustment().get_value())
     prefs.ffwd_rev_caps = int(ffwd_rev_caps_spin.get_adjustment().get_value())
     prefs.loop_clips = loop_clips.get_active()
-    
+
     prefs.use_english_always = False # DEPRECATED, "force_language" used instead
     prefs.force_language = force_language_combo.lang_codes[force_language_combo.get_active()]
     prefs.display_splash_screen = disp_splash.get_active()
     prefs.buttons_style = buttons_style.get_active() # styles enum values and widget indexes correspond
 
-    prefs.theme_fallback_colors = theme_combo.get_active() 
+    prefs.theme_fallback_colors = theme_combo.get_active()
     prefs.display_all_audio_levels = (audio_levels_combo.get_active() == 0)
     prefs.global_layout = window_mode_combo.get_active() + 1 # +1 'cause values are 1 and 2
     # Jan-2017 - SvdB
@@ -263,11 +238,13 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.top_row_layout = top_row_layout.get_active()
     # Aug-2019 - SvdB - AS
     prefs.auto_save_delay_value_index = autosave_combo.get_active()
+    prefs.layout_display_index = layout_monitor.get_active()
+    if len(render_folder_select.get_filenames()) != 0:
+        prefs.default_render_directory = render_folder_select.get_filename()
+    prefs.disk_space_warning = disk_cache_warning_combo.get_active()
 
-    #if prefs.shortcuts != shortcuts.shortcut_files[shortcuts_combo.get_active()]:
-    #    prefs.shortcuts = shortcuts.shortcut_files[shortcuts_combo.get_active()]
-    #    shortcuts.load_shortcuts()
-
+    # --------------------------------- Colorized icons
+    prefs.colorized_icons = colorized_icons.get_active()
 
 def get_graphics_default_in_out_length():
     in_fr = int(15000/2) - int(prefs.default_grfx_length/2)
@@ -281,9 +258,9 @@ class EditorPreferences:
     """
 
     def __init__(self):
-        
+
         # Every preference needs to have its default value set in this constructor
-        
+
         self.open_in_last_opended_media_dir = True
         self.last_opened_media_dir = None
         self.img_length = 2000
@@ -309,7 +286,7 @@ class EditorPreferences:
         self.mm_paned_position = 260 # Paned get/set position value
         self.render_folder = None  # DEPRECATED, this set by XDG variables now
         self.show_sequence_profile = True
-        self.buttons_style = GLASS_STYLE
+        self.buttons_style = NO_DECORATIONS
         self.dark_theme = False # DEPRECATED, "theme" used instead
         self.remember_last_render_dir = True
         self.empty_click_exits_trims = True # DEPRECATED, NOT USER SETTABLE ANYMORE
@@ -317,7 +294,7 @@ class EditorPreferences:
         self.show_vu_meter = True  # DEPRECATED, NOT USER SETTABLE ANYMORE
         self.remember_monitor_clip_frame = True # DEPRECATED, NOT USER SETTABLE ANYMORE
         self.jack_start_up_op = appconsts.JACK_ON_START_UP_NO # not used
-        self.jack_frequency = 48000 # not used 
+        self.jack_frequency = 48000 # not used
         self.jack_output_type = appconsts.JACK_OUT_AUDIO # not used
         self.media_load_order = appconsts.LOAD_ABSOLUTE_FIRST
         self.use_english_always = False # DEPRECATED, "force_language" used instead
@@ -327,6 +304,9 @@ class EditorPreferences:
         self.trans_cover_delete = True
         # Jul-2016 - SvdB - For play/pause button
         self.play_pause = False
+        # ------------------------------ timeline_start_end_button
+        self.timeline_start_end = False
+        # ------------------------------End of timeline_start_end_button
         self.midbar_layout = appconsts.MIDBAR_TC_LEFT
         self.global_layout = appconsts.SINGLE_WINDOW
         self.trim_view_default = appconsts.TRIM_VIEW_OFF
@@ -356,10 +336,26 @@ class EditorPreferences:
         self.top_row_layout = appconsts.THREE_PANELS_IF_POSSIBLE
         self.box_for_empty_press_in_overwrite_tool = False
         self.scroll_horizontal_dir_up_forward = True
-        self.kf_edit_init_affects_playhead = True
+        self.kf_edit_init_affects_playhead = False # DEPRECATED, this feature is now removed, kf editor inits no longer have effect on playhead
         self.show_tool_tooltips = True
         self.workflow_dialog_last_version_shown = "0.0.1"
         self.loop_clips = False
         self.audio_scrubbing = False
         self.force_language = "None"
+        self.default_compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
+        self.single_click_effects_editor_load = False
+        self.layout_display_index = 0 # 0 == full area - 1,2... monitor number
+        self.default_render_directory = appconsts.USER_HOME_DIR
+        self.tline_render_encoding = 0 # index of available proxy encodings, timeline rendering uses same encodings.
+        self.tline_render_size = appconsts.PROXY_SIZE_FULL
+        self.open_jobs_panel_on_add = True
+        self.render_jobs_sequentially = True
+        self.disk_space_warning = 1 #  [off, 500MB,1GB, 2GB], see preferenceswindow.py
+        # Toolbar preferences panel for free elements and order
+        self.groups_tools =  [  appconsts.WORKFLOW_LAUNCH, appconsts.TOOL_SELECT, appconsts.BUTTON_GROUP_ZOOM, \
+                                appconsts.BUTTON_GROUP_UNDO, appconsts.BUTTON_GROUP_TOOLS, appconsts.BUTTON_GROUP_EDIT, \
+                                appconsts.BUTTON_GROUP_DELETE ,  appconsts.BUTTON_GROUP_SYNC_SPLIT, \
+                                appconsts.BUTTON_GROUP_MONITOR_ADD, appconsts.BIG_TIME_CODE]
+        self.cbutton  = [True, True, True, True, True, True, True, True, True, True] # Toolbar objects active state
+        self.colorized_icons = False
         self.tools_selection = appconsts.TOOL_SELECTOR_IS_MENU

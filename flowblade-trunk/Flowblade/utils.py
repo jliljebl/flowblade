@@ -23,13 +23,15 @@ Helper functions and data
 """
 import time
 
+# TODO: THIS NEEDS TO GO, MAKE NEW utilsgtk.py MODULE.
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, GLib
+from gi.repository import Gtk, Gdk
 
 import math
 import hashlib
 import os
+import pickle
 import re
 import threading
 import xml.dom.minidom
@@ -357,6 +359,38 @@ def file_extension_is_graphics_file(ext):
     else:
         return False
 
+# ------------------------------------------------ module util methods
+def get_media_type(file_path):
+    """
+    Returns media type of file.
+    """
+    if os.path.exists(file_path):
+        mime_type = get_file_type(file_path)
+    else:
+        # IMAGE_SEQUENCE media objects have a MLT formatted resource path that does not
+        # point to an existing file in the file system. 
+        # We're doing a heuristic here to identify those.
+        pros_index = file_path.find("%0")
+        d_index = file_path.find("d.")
+        if pros_index != -1 and d_index != -1:
+            return appconsts.IMAGE_SEQUENCE
+        all_index = file_path.find(".all")
+        if all_index != -1:
+            return appconsts.IMAGE_SEQUENCE
+            
+        return appconsts.FILE_DOES_NOT_EXIST
+        
+    if mime_type.startswith("video"):
+        return appconsts.VIDEO
+    
+    if mime_type.startswith("audio"):
+        return appconsts.AUDIO
+    
+    if mime_type.startswith("image"):
+        return appconsts.IMAGE
+    
+    return appconsts.UNKNOWN
+    
 def get_file_type(file_path):
     name, ext = os.path.splitext(file_path)
     ext = ext.lstrip(".")
@@ -671,3 +705,43 @@ def elapsed_time(msg="elapsed: ", show_in_millis=True):
     
     print(msg + " " + str(elapsed_time) + " " + unit)
 
+def get_display_monitors_size_data():
+    monitors_size_data = []
+    
+    display = Gdk.Display.get_default()
+    scr_w = Gdk.Screen.width()
+    scr_h = Gdk.Screen.height()
+    monitors_size_data.append((scr_w, scr_h))
+        
+    num_monitors = display.get_n_monitors() # Get number of monitors.
+    if num_monitors == 1:
+        return monitors_size_data
+    else:
+        for monitor_index in range(0, num_monitors):
+            monitor = display.get_monitor(monitor_index)
+            geom = monitor.get_geometry()
+            monitors_size_data.append((geom.width, geom.height))
+        
+        return monitors_size_data
+
+def unpickle(path):
+    try:
+        f = open(path, "rb")
+        return pickle.load(f)
+    except:
+        f = open(path, 'rb')
+        return pickle.load(f, encoding='latin1') 
+
+def get_flatpak_real_path_for_app_files(app_file):
+    # Blender etc. some times need real absolute paths for application script files.
+    # A path like /app/share/flowblade/file.blend is only valid inside the flatpak sandbox. 
+    # You can get the real path on the host filesystem from the file /.flatpak-info (at top of the root directory inside the sandbox)
+    f = open("/.flatpak-info", "r")
+    for line in f:
+        if line.startswith("app-path"):
+            real_path = line[9:len(line)].rstrip() # 9 strips "app-path", rstrip strips newline
+            app_file_path = real_path + app_file[4:len(app_file)] # strips "/app" from beginning of Flatpak path for files
+                                                                  # combining flatpak app-path with flatpak relative path gets real absolute path
+            return app_file_path
+    
+    return None # Hitting here needs to crash

@@ -24,6 +24,7 @@ class PositionBar - Displays position on a clip or a sequence
 """
 
 import cairo
+import math
 
 from gi.repository import Gdk
 
@@ -53,6 +54,7 @@ DARK_BG_COLOR = (0.3, 0.3, 0.3)
 DARK_DISABLED_BG_COLOR = (0.1, 0.1, 0.1)
 DARK_SELECTED_RANGE_COLOR = (0.4, 0.4, 0.4)
 SPEED_TEST_COLOR = (0.5, 0.5, 0.5)
+DARK_SPEED_TEST_COLOR = (0.9, 0.9, 0.9)
 END_PAD = 6 # empty area at both ends in pixels
 MARK_CURVE = 5
 MARK_LINE_WIDTH = 4
@@ -84,13 +86,15 @@ class PositionBar:
         self.handle_trimmodes = handle_trimmodes
 
         self.POINTER_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "posbarpointer.png")
-    
+        self.MARKER_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "marker_yellow.png")
+        
         if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
-            global LINE_COLOR, DISABLED_BG_COLOR, SELECTED_RANGE_COLOR, MARK_COLOR
+            global LINE_COLOR, DISABLED_BG_COLOR, SELECTED_RANGE_COLOR, MARK_COLOR, SPEED_TEST_COLOR
             LINE_COLOR = DARK_LINE_COLOR
             DISABLED_BG_COLOR = DARK_DISABLED_BG_COLOR
             SELECTED_RANGE_COLOR = DARK_SELECTED_RANGE_COLOR
             MARK_COLOR = DARK_MARK_COLOR
+            SPEED_TEST_COLOR = DARK_SPEED_TEST_COLOR
             if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
                 MARK_COLOR = FLOWBLADE_THEME_MARK_COLOR
     
@@ -107,7 +111,9 @@ class PositionBar:
     def update_display_from_producer(self, producer):
         self.producer = producer
         length = producer.get_length() # Get from MLT
+        self.length = length 
         try:
+
             self.mark_in_norm = float(producer.mark_in) / length
             self.mark_out_norm = float(producer.mark_out) / length
             frame_pos = producer.frame()
@@ -177,13 +183,26 @@ class PositionBar:
         self.draw_mark_in(cr, h)
         self.draw_mark_out(cr, h)
 
+        # Draw timeline markers, monitor media items don't have markers only timeline clips made from them do.markers
+        if editorstate.timeline_visible():
+            try: # this gets attempted on load sotimes before current sequence is available.
+                markers = editorstate.current_sequence().markers
+                for i in range(0, len(markers)):
+                    marker_name, marker_frame = markers[i]
+                    marker_frame_norm = float(marker_frame) / self.length
+                    x = math.floor(self._get_panel_pos(marker_frame_norm))
+                    cr.set_source_surface(self.MARKER_ICON, x - 4,0)
+                    cr.paint()
+            except:
+                pass
+
         # Draw position pointer
         if self.disabled:
             return
         cr.set_source_surface(self.POINTER_ICON, self._pos - 3, 0)
         cr.paint()
 
-        # This only needed when this widget is used in main app, 
+        # This is only needed when this widget is used in main app, 
         # for gmic.py process self.handle_trimmodes == False.
         if self.handle_trimmodes == True:
             speed = editorstate.PLAYER().producer.get_speed()
@@ -192,10 +211,10 @@ class PositionBar:
                 cr.select_font_face ("sans-serif",
                                      cairo.FONT_SLANT_NORMAL,
                                      cairo.FONT_WEIGHT_BOLD)
-                cr.set_font_size(11)
+                cr.set_font_size(10)
                 disp_str = str(speed) + "x"
                 tx, ty, twidth, theight, dx, dy = cr.text_extents(disp_str)
-                cr.move_to( w/2 - twidth/2, 13)
+                cr.move_to(w/2 - twidth/2, 9)
                 cr.show_text(disp_str)
 
     def draw_mark_in(self, cr, h):

@@ -57,6 +57,13 @@ def get_right_justified_box(widgets):
     for widget in widgets:
         hbox.pack_start(widget, False, False, 0)
     return hbox
+    
+def get_right_justified_box(widgets):
+    hbox = Gtk.HBox()
+    hbox.pack_start(Gtk.Label(), True, True, 0)
+    for widget in widgets:
+        hbox.pack_start(widget, False, False, 0)
+    return hbox
 
 def get_sides_justified_box(widgets, count_of_widgets_on_the_left=1):
     hbox = Gtk.HBox()
@@ -99,6 +106,17 @@ def get_two_column_box(widget1, widget2, left_width):
     hbox.pack_start(widget2, True, True, 0)
     return hbox
 
+def get_three_column_box(widget1, widget2, widget3, left_width, right_width):
+    hbox = Gtk.HBox()
+    left_box = get_left_justified_box([widget1])
+    left_box.set_size_request(left_width, TWO_COLUMN_BOX_HEIGHT)
+    right_box = get_right_justified_box([widget3])
+    right_box.set_size_request(right_width, TWO_COLUMN_BOX_HEIGHT)
+    hbox.pack_start(left_box, False, True, 0)
+    hbox.pack_start(widget2, True, True, 0)
+    hbox.pack_start(right_box, True, True, 0)
+    return hbox
+    
 def get_two_column_box_right_pad(widget1, widget2, left_width, right_pad):
     left_box = get_left_justified_box([widget1])
     left_box.set_size_request(left_width, TWO_COLUMN_BOX_HEIGHT)
@@ -152,17 +170,44 @@ def get_image(img_name, suffix = ".png", force = None):
     if force == None:
         force = editorpersistance.prefs.double_track_hights
     if force:
-        img_name = img_name + "@2"
-    return Gtk.Image.new_from_file(respaths.IMAGE_PATH + img_name + suffix)
+        new_name = img_name + "@2"
+    else:
+        new_name = img_name
+    try:
+        img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + new_name + suffix)
+    except:
+        img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + img_name + suffix)
+    return img
+    
 
 # Aug-2019 - SvdB - BB
 def get_cairo_image(img_name, suffix = ".png", force = None):
+    # Apr-2020 - SvdB - Make it sturdier in case a @2 image is missing. Just display the original image.
     # Use parameter force as True or False to force the track height no matter what the preferences setting
     if force == None:
         force = editorpersistance.prefs.double_track_hights
     if force:
-        img_name = img_name + "@2"
-    return cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + img_name + suffix)
+#        new_name = img_name + "@2"
+        if img_name[-6:] == "_color":  #editorpersistance.prefs.colorized_icons is True:
+             new_name = img_name[:-6] + "@2_color"
+        else:
+            new_name = img_name + "@2"
+    else:
+        new_name = img_name
+    try:
+        img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + new_name + suffix)
+    except:
+        # Colorized icons
+#        img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + img_name + suffix)
+        if img_name[-6:] == "_color":  #editorpersistance.prefs.colorized_icons is True:
+            try:
+                img =  cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + img_name + "_color" + suffix)
+            except:
+                img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + img_name[:-6] + suffix)
+        else:
+            img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + img_name + suffix)
+        # End of Colorized icons
+    return img
 
 def get_scaled_cairo_image(img_name):
     icon = cairo.ImageSurface.create_from_png(img_name)
@@ -252,7 +297,7 @@ def get_slider_row_and_spin_widget(editable_property, listener, slider_name=None
     
     editable_property.value_changed_ID = adjustment.connect("value-changed", listener) # saving ID to make it available for disconnect
                                                                                        # This also needs to be available after adjustment is set to not lose exiting value for build dummy value 
-        
+    
     return (get_two_column_editor_row(name, hbox), hslider, spin)
     
 def get_non_property_slider_row(lower, upper, step, value=0, listener=None):
@@ -314,13 +359,17 @@ def get_named_frame(name, widget, left_padding=12, right_padding=6, right_out_pa
         label_box.pack_start(Gtk.Label(), True, True, 0)
         if tooltip_txt != None:        
             label.set_tooltip_markup(tooltip_txt)
-            
+    else:
+        label = Gtk.Label()
+
     alignment = set_margins(widget, right_padding, 0, left_padding, 0)
 
     frame = Gtk.VBox()
     if name != None:
         frame.pack_start(label_box, False, False, 0)
     frame.pack_start(alignment, True, True, 0)
+    
+    frame.name_label = label
     
     out_align = set_margins(frame, 4, 4, 0, right_out_padding)
     
@@ -366,6 +415,25 @@ def get_menu_item(text, callback, data, sensitive=True):
     item.set_sensitive(sensitive)
     return item
 
+
+def get_image_menu_item(text, image_name, callback, tooltip_markup=None):
+    img = get_image(image_name)
+    text_label = Gtk.Label(text)
+    
+    hbox = Gtk.HBox()
+    hbox.pack_start(pad_label(4, 4), False, False, 0)
+    hbox.pack_start(img, False, False, 0)
+    hbox.pack_start(pad_label(4, 4), False, False, 0)
+    hbox.pack_start(text_label, False, False, 0)
+    hbox.show_all()
+    item = Gtk.MenuItem()
+    item.add(hbox)
+    if tooltip_markup != None:
+        item.set_tooltip_markup(tooltip_markup)
+    item.show()
+
+    return item
+    
 def get_radio_menu_items_group(menu, labels, msgs, callback, active_index):
     first_item = Gtk.RadioMenuItem()
     first_item.set_label(labels[0])

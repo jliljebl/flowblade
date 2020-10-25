@@ -35,8 +35,7 @@ import editorpersistance
 
 import mltenv
 import respaths
-from editorstate import PLAYER
-from editorstate import PROJECT
+
 
 # File describing existing encoding and quality options
 RENDER_ENCODING_FILE = "/res/render/renderencoding.xml"
@@ -240,6 +239,11 @@ def load_render_profiles():
     global proxy_encodings
     proxy_encodings = found_proxy_encodings
 
+def get_default_render_consumer(file_path, profile):
+    return get_render_consumer_for_encoding_and_quality(file_path, profile, 0, 10) # values get their meaning from /res/renderencoding.xml
+                                                                                    # first <encodingoption> with 10th quality option
+                                                                                    # should be H.264 with 10000 kb/s
+    
 def get_render_consumer_for_encoding_and_quality(file_path, profile, enc_opt_index, quality_opt_index):
     args_vals_list = get_args_vals_tuples_list_for_encoding_and_quality(profile,
                                                                        enc_opt_index,
@@ -326,7 +330,7 @@ def get_mlt_render_consumer(file_path, profile, args_vals_list):
         args_msg = args_msg + str(k) + "="+ str(v) + ", "
         
     args_msg = args_msg.strip(", ")
-    #print "render consumer created, path:" +  str(file_path) + ", args: " + args_msg
+
     return consumer
 
 def get_args_vals_tuples_list_for_encoding_and_quality(profile, enc_opt_index, quality_opt_index):
@@ -337,7 +341,7 @@ def get_args_vals_tuples_list_for_encoding_and_quality(profile, enc_opt_index, q
         quality_option = None
 
     args_vals_list = encoding_option.get_args_vals_tuples_list(profile, quality_option)
-
+    
     # Quality options  key, value list
     if quality_option != None:
         for k, v in quality_option.add_map.items():
@@ -387,14 +391,6 @@ def _parse_line(line_start, line_end, buf):
         return (None, _("Arg name token is empty."))
     if len(v) == 0:
         return (None, _("Arg value token is empty."))
-    try:
-        k.decode('ascii')
-    except UnicodeDecodeError:
-        return (None, _("Non-ascii char in Arg name."))
-    try:
-        v.decode('ascii')
-    except UnicodeDecodeError:
-        return (None, _("Non-ascii char in Arg value."))
     if k.find(" ") != -1:
         return (None,  _("Whitespace in Arg name."))
     if v.find(" ") != -1:
@@ -476,17 +472,20 @@ class FileRenderPlayer(threading.Thread):
 
 
 class XMLRenderPlayer(threading.Thread):
-    def __init__(self, file_name, callback, data):
+    def __init__(self, file_name, callback, data, rendered_sequence, project, player):
         self.file_name = file_name
         self.render_done_callback = callback
         self.data = data
         self.current_playback_frame = 0
-
+        self.rendered_sequence = rendered_sequence
+        self.project = project
+        self.player = player
+        
         threading.Thread.__init__(self)
 
     def run(self):
         print("Starting XML render")
-        player = PLAYER()
+        player = self.player
         
         # Don't try anything if somehow this was started 
         # while timeline rendering is running
@@ -506,10 +505,10 @@ class XMLRenderPlayer(threading.Thread):
             time.sleep(0.1)
         
         # Get render producer
-        timeline_producer = PROJECT().c_seq.tractor
+        timeline_producer = self.rendered_sequence.tractor
 
         # Get render consumer
-        xml_consumer = mlt.Consumer(PROJECT().profile, "xml", str(self.file_name))
+        xml_consumer = mlt.Consumer(self.project.profile, "xml", str(self.file_name))
 
         # Connect and start rendering
         xml_consumer.connect(timeline_producer)
@@ -531,11 +530,12 @@ class XMLRenderPlayer(threading.Thread):
 
 
 class XMLCompoundRenderPlayer(threading.Thread):
-    def __init__(self, file_name, media_name, callback, tractor):
+    def __init__(self, file_name, media_name, callback, tractor, project):
         self.file_name = file_name
         self.media_name = media_name
         self.render_done_callback = callback
         self.tractor = tractor
+        self.project = project
 
         threading.Thread.__init__(self)
 
@@ -549,7 +549,7 @@ class XMLCompoundRenderPlayer(threading.Thread):
             time.sleep(0.1)
 
         # Get render consumer
-        xml_consumer = mlt.Consumer(PROJECT().profile, "xml", str(self.file_name))
+        xml_consumer = mlt.Consumer(self.project.profile, "xml", str(self.file_name))
 
         # Connect and start rendering
         xml_consumer.connect(tractor)

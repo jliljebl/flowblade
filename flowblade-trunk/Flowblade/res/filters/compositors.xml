@@ -75,12 +75,12 @@
         <property name="anchor y" args="editor=no_editor exptype=not_parsed_transition">0=0.5</property>
         <property name="opacity" args="editor=no_editor exptype=not_parsed_transition">0=1.0</property>
         <extraeditor name="rotation_geometry_editor"></extraeditor> 
-        <property name="blend mode" args="editor=combobox exptype=default_transition displayname=Blend!Mode cbopts=Normal:normal,Add:add,Saturate:saturate,Multiply:multiply,Screen:screen,Overlay:overlay,Darken:darken,Lighten:lighten,ColorDodge:colordodge,Colorburn:colorburn,Hardlight:hardlight,Softlight:softlight,Difference:difference,Exclusion:exclusion,HSLHue:hslhue,HSLSaturation:hslsaturation,HSLColor:hslcolor,HSLLuminosity:hslluminosity">normal</property>
+        <property name="blend mode" args="editor=combobox exptype=default_transition displayname=Blend!Mode cbopts=Normal:normal,Add:add,Multiply:multiply,Screen:screen,Overlay:overlay,Darken:darken,Lighten:lighten,ColorDodge:colordodge,Colorburn:colorburn,Hardlight:hardlight,Softlight:softlight,Difference:difference,Exclusion:exclusion,HSLHue:hslhue,HSLSaturation:hslsaturation,HSLColor:hslcolor,HSLLuminosity:hslluminosity">normal</property>
     </compositortransition>
     <compositortransition mlt_service="frei0r.cairoblend">
         <name>##blend</name>
-        <property name="1" args="editor=combobox exptype=default_transition displayname=Blend!Mode cbopts=Normal:normal,Add:add,Saturate:saturate,Multiply:multiply,Screen:screen,Overlay:overlay,Darken:darken,Lighten:lighten,ColorDodge:colordodge,Colorburn:colorburn,Hardlight:hardlight,Softlight:softlight,Difference:difference,Exclusion:exclusion,HSLHue:hslhue,HSLSaturation:hslsaturation,HSLColor:hslcolor,HSLLuminosity:hslluminosity">normal</property>
         <property name="0" args="editor=keyframe_editor_clip_fade range_in=0,100 range_out=0,1 exptype=keyframe_hcs_transition displayname=Opacity">0=1.0</property>
+        <property name="1" args="editor=combobox exptype=default_transition displayname=Blend!Mode cbopts=Normal:normal,Add:add,Multiply:multiply,Screen:screen,Overlay:overlay,Darken:darken,Lighten:lighten,ColorDodge:colordodge,Colorburn:colorburn,Hardlight:hardlight,Softlight:softlight,Difference:difference,Exclusion:exclusion,HSLHue:hslhue,HSLSaturation:hslsaturation,HSLColor:hslcolor,HSLLuminosity:hslluminosity">normal</property>
         <property name="automatic" args="editor=no_editor">1</property>
         <property name="force_track" args="editor=no_editor">0</property>
     </compositortransition>

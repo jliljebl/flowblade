@@ -69,7 +69,7 @@ load_dialog = None
 all_clips = {}
 sync_clips = []
 
-# Used for for convrtting to and from proxy media using projects
+# Used for for converting to and from proxy media using projects
 project_proxy_mode = -1
 proxy_path_dict = None
 
@@ -129,8 +129,6 @@ def save_project(project, file_path, changed_profile_desc=None):
         s_proj.profile_desc = changed_profile_desc
         _xml_new_paths_for_profile_change = {} # dict acts also as a flag to show that profile change save is happening
         new_profile = mltprofiles.get_profile(changed_profile_desc)
-        #print "Saving changed profile project: ", changed_profile_desc
-        #print "FPS conversion multiplier:", _fps_conv_mult
     else:
         _xml_new_paths_for_profile_change = None # None value acts also as a flag to show that profile change save is _not_ happening
 
@@ -158,7 +156,6 @@ def save_project(project, file_path, changed_profile_desc=None):
             new_xml_file_path = _save_changed_xml_file(s_media_file, new_profile)
             _xml_new_paths_for_profile_change[s_media_file.path] = new_xml_file_path
             s_media_file.path = new_xml_file_path
-            #print "XML path replace for media:", s_media_file.path,  new_xml_file_path
 
         # Remove unpicleable attrs
         remove_attrs(s_media_file, MEDIA_FILE_REMOVE)
@@ -195,16 +192,9 @@ def save_project(project, file_path, changed_profile_desc=None):
     remove_attrs(s_proj, PROJECT_REMOVE)
 
     # Write out file.
-    outfile = open(file_path,'wb')
-    pickle.dump(s_proj, outfile)
-    
-    """
-    with atomicfile.AtomicFileWriter(file_path, "w") as afw:
-        write_file = afw.get_file()
-        pickle_str =  pickle.dumps(s_proj)
-        print (pickle_str)
-        pickle.dump(pickle_str, write_file)
-    """
+    with atomicfile.AtomicFileWriter(file_path, "wb") as afw:
+        outfile = afw.get_file()
+        pickle.dump(s_proj, outfile)
 
 def get_p_sequence(sequence):
     """
@@ -263,7 +253,6 @@ def get_p_clip(clip):
             s_clip.path = new_path
         except:
             # Something is really wrong, this should not be possible
-            # print "Failed to find a new XML file for path:", s_clip.path
             pass 
 
     # Set 'type' attribute for MLT object type
@@ -396,9 +385,7 @@ def _save_changed_xml_file(s_media_file, new_profile):
 def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
     _show_msg("Unpickling")
 
-    # Load project object
-    f = open(file_path, "rb")
-    project = pickle.load(f)
+    project = utils.unpickle(file_path)
 
     # Relinker only operates on pickleable python data 
     if relinker_load:
@@ -407,6 +394,11 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
 
     global _load_file_path
     _load_file_path = file_path
+
+    # We need to collect some proxy data to try to fix projects with missing proxy files.
+    global project_proxy_mode, proxy_path_dict
+    project_proxy_mode = project.proxy_data.proxy_mode
+    proxy_path_dict = {}
     
     # editorstate.project needs to be available for sequence building
     editorstate.project = project
@@ -426,11 +418,59 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
     if project.profile == None:
         raise ProjectProfileNotFoundError(project.profile_desc)
 
+    for k, media_file in project.media_files.items():
+        if project.SAVEFILE_VERSION < 4:
+            FIX_N_TO_4_MEDIA_FILE_COMPATIBILITY(media_file)
+        media_file.current_frame = 0 # this is always reset on load, value is not considered persistent
+
+        # This fixes Media Relinked projects with SAVEFILE_VERSION < 4:
+        if (not(hasattr(media_file,  "is_proxy_file"))):
+            FIX_N_TO_4_MEDIA_FILE_COMPATIBILITY(media_file)
+
+        # Avoid crash in case path attribute is missing (color clips).
+        if not hasattr(media_file, "path"):
+            continue
+            
+        # Try to find relative path files if needed for non-proxy media files
+        orig_path = media_file.path # looking for missing path changes it and we need save this info for user info dialog on missing asset
+        if media_file.is_proxy_file == False:
+            if media_file.type != appconsts.PATTERN_PRODUCER and media_file.type != appconsts.IMAGE_SEQUENCE:
+                media_file.path = get_media_asset_path(media_file.path, _load_file_path)
+            elif media_file.type == appconsts.IMAGE_SEQUENCE:
+                media_file.path = get_img_seq_media_path(media_file.path, _load_file_path)
+
+        if media_file.path == NOT_FOUND:
+            raise FileProducerNotFoundError(orig_path)
+
+        # This attr was added for 1.8. It is not computed for older projects.
+        if (not hasattr(media_file, "info")):
+            media_file.info = None
+        # We need this in all media files, used only by img seq media
+        if not hasattr(media_file, "ttl"):
+            media_file.ttl = None
+
+ 
+        # Add container data if not found.
+        if not hasattr(media_file, "container_data"):
+            media_file.container_data = None
+            
+        # Use this to try to fix clips with missing proxy files.
+        proxy_path_dict[media_file.path] = media_file.second_file_path
+        
+        # Try to fix possible missing proxy files for media assets if we are in proxy mode.
+        if not os.path.isfile(media_file.path) and media_file.is_proxy_file and project_proxy_mode == appconsts.USE_PROXY_MEDIA:
+            if os.path.isfile(media_file.second_file_path): # Original media file exists, use it
+                media_file.set_as_original_media_file()
+
     # Add MLT objects to sequences.
     global all_clips, sync_clips
     seq_count = 1
     for seq in project.sequences:
         FIX_N_TO_3_SEQUENCE_COMPATIBILITY(seq)
+            
+        if not hasattr(seq, "compositing_mode"):
+            seq.compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
+
         _show_msg(_("Building sequence ") + str(seq_count))
         all_clips = {}
         sync_clips = []
@@ -447,25 +487,6 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
 
     all_clips = {}
     sync_clips = []
-
-    for k, media_file in project.media_files.items():
-        if project.SAVEFILE_VERSION < 4:
-            FIX_N_TO_4_MEDIA_FILE_COMPATIBILITY(media_file)
-        media_file.current_frame = 0 # this is always reset on load, value is not considered persistent
-        if media_file.type != appconsts.PATTERN_PRODUCER and media_file.type != appconsts.IMAGE_SEQUENCE:
-            media_file.path = get_media_asset_path(media_file.path, _load_file_path)
-        elif media_file.type == appconsts.IMAGE_SEQUENCE:
-            media_file.path = get_img_seq_media_path(media_file.path, _load_file_path)
-            
-        # This fixes Media Relinked projects with SAVEFILE_VERSION < 4:
-        if (not(hasattr(media_file,  "is_proxy_file"))):
-            FIX_N_TO_4_MEDIA_FILE_COMPATIBILITY(media_file)
-        # This attr was added for 1.8. It is not computed for older projects.
-        if (not hasattr(media_file, "info")):
-            media_file.info = None
-        # We need this in all media files, used only by img seq media
-        if not hasattr(media_file, "ttl"):
-            media_file.ttl = None
                 
     if(not hasattr(project, "update_media_lengths_on_load")):
         project.update_media_lengths_on_load = True # old projects < 1.10 had wrong media length data which just was never used.
@@ -488,6 +509,11 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
     """
     # Create tractor, field, multitrack
     seq.init_mlt_objects()
+
+    # Compositing mode COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW was removed 2.6->,  we just convert it 
+    # to COMPOSITING_MODE_TOP_DOWN_FREE_MOVE and compositors now work
+    if seq.compositing_mode == appconsts.COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW:
+        seq.compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
     
     # Grap and replace py tracks. Do this way to use same create
     # method as when originally created.
@@ -530,6 +556,10 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
             compositor.origin_clip_id = py_compositor.origin_clip_id
             compositor.obey_autofollow = py_compositor.obey_autofollow
            
+            if seq.compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+                print("seq.compositing_mode", seq.compositing_mode)
+                compositor.transition.mlt_transition.set("always_active", str(1))
+                       
             mlt_compositors.append(compositor)
 
     seq.compositors = mlt_compositors
@@ -579,16 +609,37 @@ def fill_track_mlt(mlt_track, py_track):
         # Add img seq ttl value for all clips if not found, we need this present in every clip so we test for 'clip.ttl == None' to get stuff working
         if not hasattr(clip, "ttl"):
             clip.ttl = None
-            
+
+        # Add container data if not found.
+        if not hasattr(clip, "container_data"):
+            clip.container_data = None
+
         # normal clip
         if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):
             orig_path = clip.path # Save the path for error message
-            
-            if clip.media_type != appconsts.IMAGE_SEQUENCE:
-                clip.path = get_media_asset_path(clip.path, _load_file_path)
-            else:
-                clip.path = get_img_seq_media_path(clip.path, _load_file_path)
-                
+
+            # Possibly do a relative file search to all but rendered container clip media, that needs to be re-rendered.
+            if not(clip.container_data != None and clip.container_data.rendered_media != None):
+                if clip.media_type != appconsts.IMAGE_SEQUENCE:
+                    clip.path = get_media_asset_path(clip.path, _load_file_path)
+                else:
+                    clip.path = get_img_seq_media_path(clip.path, _load_file_path)
+
+            # Try to fix possible missing proxy files for clips if we are in proxy mode.
+            if not os.path.isfile(clip.path) and project_proxy_mode == appconsts.USE_PROXY_MEDIA:
+                try:
+                    possible_orig_file_path = proxy_path_dict[clip.path] # This dict was filled with media file data.
+                    if os.path.isfile(possible_orig_file_path): # Original media file exists, use it
+                        clip.path = possible_orig_file_path
+                except:
+                    pass # missing proxy file fix has failed
+
+            # If container clip rendered media is missing try to use unrendered media.
+            if not os.path.isfile(clip.path) and clip.container_data != None:
+                if clip.path != clip.container_data.unrendered_media:
+                    clip.path = clip.container_data.unrendered_media
+                    clip.container_data.clear_rendered_media()
+                    
             mlt_clip = sequence.create_file_producer_clip(clip.path, None, False, clip.ttl)
             
             if mlt_clip == None:
@@ -634,6 +685,10 @@ def fill_filters_mlt(mlt_clip, sequence):
     """ 
     filters = []
     for py_filter in mlt_clip.filters:
+
+        if not hasattr(py_filter.info, "filter_mask_filter"):
+            py_filter.info.filter_mask_filter = None
+        
         if py_filter.is_multi_filter == False:
             if py_filter.info.mlt_service_id == "affine":
                 FIX_1_TO_N_BACKWARDS_FILTER_COMPABILITY(py_filter)

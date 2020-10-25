@@ -72,11 +72,15 @@ compositors = None
 blenders = None
 autofades = None
 alpha_combiners = None
+wipe_compositors = None
+
+# these are no longer presented as options for users since 2.4
+dropped_compositors = ["##pict_in_pict", "##opacity_kf", "##dodge"]
 
 def init_module():
 
     # translations and module load order make us do this in method instead of at module load
-    global wipe_lumas, compositors, blenders, name_for_type, rendered_transitions, single_track_render_type_names, autofades, alpha_combiners
+    global wipe_lumas, compositors, blenders, name_for_type, rendered_transitions, single_track_render_type_names, autofades, alpha_combiners, wipe_compositors
     wipe_lumas = { \
                 _("Burst"):"burst.pgm",
                 _("Checkerboard"):"checkerboard.pgm",
@@ -132,12 +136,9 @@ def init_module():
     # name -> mlt_compositor_transition_infos key dict.
     unsorted_compositors = [ (_("Dissolve"),"##opacity_kf"),
                              (_("Picture in Picture"),"##pict_in_pict"),
-                             (_("Region"), "##region"),
                              (_("Affine Blend"), "##affineblend"),
                              (_("Blend"), "##blend"),
-                             (_("Wipe Clip Length"),"##wipe"),
-                             (_("Transform"),"##affine"),
-                             (_("LumaToAlpha"),"##matte")]
+                             (_("Transform"),"##affine")]
 
     compositors = sorted(unsorted_compositors, key=lambda comp: comp[0])   
 
@@ -165,10 +166,14 @@ def init_module():
     autofades = [(_("Fade In"),"##auto_fade_in"),
                 (_("Fade Out"),"##auto_fade_out")]
     
-    alpha_combiners = [ (_("Alpha XOR"),"##alphaxor"),
+    alpha_combiners = [ (_("LumaToAlpha"),"##matte"), 
+                        (_("Alpha XOR"),"##alphaxor"),
                         (_("Alpha Out"),"##alphaout"),
                         (_("Alpha In"),"##alphain")]
-                        
+
+    wipe_compositors = [(_("Wipe/Translate"), "##region"), 
+                        (_("Wipe Clip Length"),"##wipe")]
+
     for comp in compositors:
         name, comp_type = comp
         name_for_type[comp_type] = name
@@ -183,6 +188,10 @@ def init_module():
 
     for acomb in alpha_combiners:
         name, comp_type = acomb
+        name_for_type[comp_type] = name
+    
+    for wc in wipe_compositors:
+        name, comp_type = wc
         name_for_type[comp_type] = name
         
     # Rendered transition names and types
@@ -383,8 +392,9 @@ class CompositorObject:
         self.transition.properties = copy.deepcopy(source_compositor.transition.properties)
         self.transition.update_editable_mlt_properties()
 
-    def get_copy_paste_objects(self):
-        # Copy-paste is handled with tuple data (properties, mlt_service_id)
+    def get_copy_paste_data(self):
+        # Copy-paste data object is tuple (properties, mlt_service_id)
+        # This saved with type info in editorstate.py
         return (copy.deepcopy(self.transition.properties), self.transition.info.mlt_service_id)
 
     def do_values_copy_paste(self, copy_paste_data):
@@ -544,7 +554,7 @@ def get_rendered_transition_tractor(current_sequence,
             track1.insert(from_clip, 0, orig_from.clip_in, orig_from.clip_in + length)
             kf_str = "0=0/0:100%x100%:0.0;"+ str(length) + "=0/0:100%x100%:100.0"
         else: # transition_type ==  RENDERED_FADE_OUT
-            track1.insert(from_clip, 0, orig_from.clip_out - length, orig_from.clip_out)
+            track1.insert(from_clip, 0, orig_from.clip_out - length + 1, orig_from.clip_out + 1)
             kf_str = "0=0/0:100%x100%:100.0;"+ str(length) + "=0/0:100%x100%:0.0"
 
     # Create transition

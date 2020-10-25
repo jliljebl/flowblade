@@ -133,6 +133,7 @@ def mouse_release(x, y, frame, state):
     global sub_mode
     tlinewidgets.pointer_context = appconsts.POINTER_CONTEXT_NONE
 
+    # Se we're only handling 3 editmodes here.
     editorstate.edit_mode = prev_edit_mode
     if editorstate.edit_mode == editorstate.INSERT_MOVE:
         tlinewidgets.set_edit_mode(None, tlinewidgets.draw_insert_overlay)

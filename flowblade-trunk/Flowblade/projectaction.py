@@ -30,7 +30,7 @@ import hashlib
 import mlt
 import os
 from os import listdir
-from os.path import isfile, join
+from os.path import isfile, join, expanduser
 from PIL import Image
 import re
 import shutil
@@ -46,6 +46,10 @@ import app
 import audiowaveformrenderer
 import appconsts
 import batchrendering
+import containerprogramedit
+import clipeffectseditor
+import compositeeditor
+import containerclip
 import dialogs
 import dialogutils
 import gui
@@ -75,6 +79,7 @@ import render
 import renderconsumer
 import rendergui
 import sequence
+import tlinerender
 import undo
 import updater
 import userfolders
@@ -84,6 +89,7 @@ media_panel_popup_menu = Gtk.Menu()
 bin_popup_menu = Gtk.Menu()
 sequence_popup_menu = Gtk.Menu()
 hamburger_popup_menu = Gtk.Menu()
+compositing_mode_menu = Gtk.Menu()
 
 save_time = None
 save_icon_remove_event_id = None
@@ -99,9 +105,11 @@ _media_panel_double_click_counter = 0
 #--------------------------------------- worker threads
 class LoadThread(threading.Thread):
     
-    def __init__(self, filename, block_recent_files=False):
+    def __init__(self, filename, block_recent_files=False, is_first_video_load=False, is_autosave_load=False):
         self.filename = filename
-        self.block_recent_files = block_recent_files 
+        self.block_recent_files = block_recent_files
+        self.is_first_video_load = is_first_video_load
+        self.is_autosave_load = is_autosave_load
         threading.Thread.__init__(self)
 
     def run(self):
@@ -169,11 +177,12 @@ class LoadThread(threading.Thread):
         time.sleep(0.3)
 
         Gdk.threads_enter()
-        app.open_project(project)
+        
+        app.open_project(project) # <-- HERE
 
         if self.block_recent_files: # naming flipped ????
             editorpersistance.add_recent_project_path(self.filename)
-            editorpersistance.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)
+            gui.editor_window.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)
         Gdk.threads_leave()
         
         Gdk.threads_enter()
@@ -181,9 +190,26 @@ class LoadThread(threading.Thread):
         if selections != None:
             render.set_saved_gui_selections(selections)
         updater.set_info_icon(None)
+
+        if self.is_autosave_load == False: # project loaded with autosave needs to keep its last_save_path data.
+            # If project file is moved since last save we need to update last_save_path property and save to get everything working as expected.
+            if self.filename != editorstate.project.last_save_path:
+                print("Project file moved since last save, save with updated last_save_path data.")
+                editorstate.project.last_save_path = self.filename
+                editorstate.project.name = os.path.basename(self.filename)
+                _save_project_in_last_saved_path()
+        else:
+            print("autosave load")
+
         dialog.destroy()
-        gui.tline_canvas.connect_mouse_events() # mouse events dutring load cause crashes because there is no data to handle
+        gui.tline_canvas.connect_mouse_events() # mouse events during load cause crashes because there is no data to handle
         Gdk.threads_leave()
+
+        # First video load is a media file change and needs to set flag for it
+        # whereas other loads clear the flag above.
+        if self.is_first_video_load == True:
+            projectdata.media_files_changed_since_last_save = True
+            project.last_save_path = None # This gets set to the temp file saved to change profile which is not correct.
 
         ticker.stop_ticker()
 
@@ -218,6 +244,7 @@ class AddMediaFilesThread(threading.Thread):
 
         is_first_video_load = PROJECT().is_first_video_load()
         duplicates = []
+        target_bin = PROJECT().c_bin
         succes_new_file = None
         filenames = self.filenames
         for new_file in filenames:
@@ -226,7 +253,7 @@ class AddMediaFilesThread(threading.Thread):
                 duplicates.append(file_name)
             else:
                 try:
-                    PROJECT().add_media_file(new_file, self.compound_clip_name)
+                    PROJECT().add_media_file(new_file, self.compound_clip_name, target_bin)
                     succes_new_file = new_file
                 except projectdata.ProducerNotValidError as err:
                     print(err.__str__())
@@ -238,6 +265,10 @@ class AddMediaFilesThread(threading.Thread):
             gui.editor_window.media_scroll_window.get_vadjustment().set_value(max_val)
             Gdk.threads_leave()
 
+        add_count = len(filenames) - len(duplicates)
+        project_event = projectdata.ProjectEvent(projectdata.EVENT_MEDIA_ADDED, str(add_count))
+        PROJECT().events.append(project_event)
+        
         if succes_new_file != None and self.compound_clip_name == None: # hidden rendered files folder for compound clips is not a last_opened_media_dir
             editorpersistance.prefs.last_opened_media_dir = os.path.dirname(succes_new_file)
             editorpersistance.save()
@@ -340,7 +371,8 @@ def _not_matching_media_info_callback(dialog, response_id, media_file):
         
         persistance.save_project(PROJECT(), path, profile.description()) #<----- HERE
         
-        actually_load_project(path)
+        actually_load_project(path, False, True)
+
 
 def _load_pulse_bar():
     Gdk.threads_enter()
@@ -382,22 +414,26 @@ def _load_project_dialog_callback(dialog, response_id):
         dialog.destroy()
 
 def close_project():
-    dialogs.close_confirm_dialog(_close_dialog_callback, app.get_save_time_msg(), gui.editor_window.window, editorstate.PROJECT().name)
+    if was_edited_since_last_save() == False:
+        _close_dialog_callback(None, None, True)
+    else:
+        dialogs.close_confirm_dialog(_close_dialog_callback, app.get_save_time_msg(), gui.editor_window.window, editorstate.PROJECT().name)
 
-def _close_dialog_callback(dialog, response_id):
-    dialog.destroy()
-    if response_id == Gtk.ResponseType.CLOSE:# "Don't Save"
-        pass
-    elif response_id ==  Gtk.ResponseType.YES:# "Save"
-        if editorstate.PROJECT().last_save_path != None:
-            persistance.save_project(editorstate.PROJECT(), editorstate.PROJECT().last_save_path)
-        else:
-            dialogutils.warning_message(_("Project has not been saved previously"), 
-                                    _("Save project with File -> Save As before closing."),
-                                    gui.editor_window.window)
+def _close_dialog_callback(dialog, response_id, no_dialog_project_close=False):
+    if no_dialog_project_close == False:
+        dialog.destroy()
+        if response_id == Gtk.ResponseType.CLOSE:# "Don't Save"
+            pass
+        elif response_id ==  Gtk.ResponseType.YES:# "Save"
+            if editorstate.PROJECT().last_save_path != None:
+                persistance.save_project(editorstate.PROJECT(), editorstate.PROJECT().last_save_path)
+            else:
+                dialogutils.warning_message(_("Project has not been saved previously"), 
+                                        _("Save project with File -> Save As before closing."),
+                                        gui.editor_window.window)
+                return
+        else: # "Cancel"
             return
-    else: # "Cancel"
-        return
         
     # This is the same as opening default project
     sequence.AUDIO_TRACKS_COUNT = appconsts.INIT_A_TRACKS
@@ -406,9 +442,9 @@ def _close_dialog_callback(dialog, response_id):
     new_project = projectdata.get_default_project()
     app.open_project(new_project)
     
-def actually_load_project(filename, block_recent_files=False):
+def actually_load_project(filename, block_recent_files=False, is_first_video_load=False, is_autosave_load=False):
     gui.tline_canvas.disconnect_mouse_events() # mouse events dutring load cause crashes because there is no data to handle
-    load_launch = LoadThread(filename, block_recent_files)
+    load_launch = LoadThread(filename, block_recent_files, is_first_video_load, is_autosave_load)
     load_launch.start()
 
 def save_project():
@@ -432,22 +468,28 @@ def _save_project_in_last_saved_path():
         return
 
     editorpersistance.add_recent_project_path(PROJECT().last_save_path)
-    editorpersistance.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)
+    gui.editor_window.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)
     PROJECT().events.append(projectdata.ProjectEvent(projectdata.EVENT_SAVED, PROJECT().last_save_path))
     
     global save_icon_remove_event_id
     save_icon_remove_event_id = GObject.timeout_add(500, remove_save_icon)
 
     global save_time
-    save_time = time.clock()
+    save_time = time.monotonic()
+    clear_changed_since_last_save_flags()
     
     projectinfogui.update_project_info()
         
 def save_project_as():
     if  PROJECT().last_save_path != None:
         open_dir = os.path.dirname(PROJECT().last_save_path)
+        
+        # We don't  want to open hidden cache dir when saving file opened as autosave.
+        if open_dir.startswith(userfolders.get_cache_dir()) == True:
+            open_dir = expanduser("~")
     else:
-        open_dir = None
+        open_dir = expanduser("~")
+
     dialogs.save_project_as_dialog(_save_as_dialog_callback, PROJECT().name, open_dir)
     
 def _save_as_dialog_callback(dialog, response_id):
@@ -483,7 +525,8 @@ def _save_as_dialog_callback(dialog, response_id):
         save_icon_remove_event_id = GObject.timeout_add(500, remove_save_icon)
 
         global save_time
-        save_time = time.clock()
+        save_time = time.monotonic()
+        clear_changed_since_last_save_flags()
 
         gui.editor_window.window.set_title(PROJECT().name + " - Flowblade")        
         gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(False)
@@ -491,7 +534,7 @@ def _save_as_dialog_callback(dialog, response_id):
         gui.editor_window.uimanager.get_widget("/MenuBar/EditMenu/Redo").set_sensitive(False)
 
         editorpersistance.add_recent_project_path(PROJECT().last_save_path)
-        editorpersistance.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)
+        gui.editor_window.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)
         
         projectinfogui.update_project_info()
         
@@ -549,6 +592,9 @@ def _change_project_profile_callback(dialog, response_id, profile_combo, out_fol
         
         persistance.save_project(PROJECT(), path, profile.description()) #<----- HERE
 
+        project_event = projectdata.ProjectEvent(projectdata.EVENT_PROFILE_CHANGED_SAVE, str(profile.description()))
+        PROJECT().events.append(project_event)
+        
         PROJECT().name = old_name
         PROJECT().update_media_lengths_on_load = False
 
@@ -724,7 +770,7 @@ def _open_recent_shutdown_dialog_callback(dialog, response_id, path):
 def _actually_open_recent(path):
     if not os.path.exists(path):
         editorpersistance.remove_non_existing_recent_projects()
-        editorpersistance.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)
+        gui.editor_window.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)
         primary_txt = _("Project not found on disk")
         secondary_txt = _("Project can't be loaded.")
         dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
@@ -736,7 +782,7 @@ def get_save_time_msg():
     if save_time == None:
         return _("Project has not been saved since it was opened.")
     
-    save_ago = (time.clock() - save_time) / 60.0
+    save_ago = (time.monotonic() - save_time) / 60.0
 
     if save_ago < 1:
         return _("Project was saved less than a minute ago.")
@@ -745,7 +791,25 @@ def get_save_time_msg():
         return _("Project was saved one minute ago.")
     
     return _("Project was saved ") + str(int(save_ago)) + _(" minutes ago.")
+
+def clear_changed_since_last_save_flags():
+    edit.edit_done_since_last_save = False
+    compositeeditor.compositor_changed_since_last_save = False
+    clipeffectseditor.filter_changed_since_last_save = False
+    projectdata.media_files_changed_since_last_save = False
+
+def was_edited_since_last_save():   
+    if (edit.edit_done_since_last_save == False and 
+        compositeeditor.compositor_changed_since_last_save == False and
+        clipeffectseditor.filter_changed_since_last_save == False and
+        projectdata.media_files_changed_since_last_save == False):
+        return False
     
+    return True
+
+def view_project_events():
+    projectinfogui.show_project_events_dialog()
+
 # ---------------------------------- rendering
 def do_rendering():
     global force_overwrite, force_proxy
@@ -780,7 +844,10 @@ def do_rendering():
         render_selections = render.get_current_gui_selections()
         PROJECT().set_project_property(appconsts.P_PROP_LAST_RENDER_SELECTIONS, render_selections)
         batchrendering.launch_single_rendering()
-
+        
+        project_event = projectdata.ProjectEvent(projectdata.EVENT_RENDERED, str(render.get_file_path()))
+        PROJECT().events.append(project_event)
+        
 def _overwrite_confirm_dialog_callback(dialog, response_id):
     dialog.destroy()
     if response_id == Gtk.ResponseType.ACCEPT:
@@ -802,6 +869,10 @@ def add_to_render_queue():
     _write_out_render_item(False)
 
 def _write_out_render_item(single_render_item_item):
+    
+    # Clear hidden track, timeline rendering is not part of rendered output.
+    current_sequence().clear_hidden_track()
+    
     # Get render arga and path
     args_vals_list = render.get_args_vals_list_for_current_selections()
     render_path = render.get_file_path()
@@ -830,7 +901,8 @@ def _write_out_render_item(single_render_item_item):
     profile_text = guicomponents.get_profile_info_text(profile)
     fps = profile.fps()
     profile_name = profile.description()
-    r_data = batchrendering.RenderData(enc_index, quality_index, user_args, profile_text, profile_name, fps) 
+    r_data = batchrendering.RenderData(enc_index, quality_index, user_args, profile_text, profile_name, fps)
+    r_data.proxy_mode = PROJECT().proxy_data.proxy_mode 
     if user_args == True:
         r_data.args_vals_list = args_vals_list # pack these to go for display purposes if used
     
@@ -863,6 +935,9 @@ def _write_out_render_item(single_render_item_item):
             dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window, is_info=False)
             return False
 
+    # This puts existing rendered timeline segments back to be displayed.
+    current_sequence().update_hidden_track_for_timeline_rendering()
+
     return True
 
 # ----------------------------------- media files
@@ -872,6 +947,7 @@ def hamburger_pressed(widget, event):
     guiutils.remove_children(hamburger_menu)
 
     hamburger_menu.add(guiutils.get_menu_item(_("Render Proxy Files For Selected Media"), _hamburger_menu_item_selected, "render proxies", ))
+    hamburger_menu.add(guiutils.get_menu_item(_("Render Proxy Files For All Media"), _hamburger_menu_item_selected, "render all proxies", ))
     guiutils.add_separetor(hamburger_menu)
     hamburger_menu.add(guiutils.get_menu_item(_("Select All"), _hamburger_menu_item_selected, "select all"))
     hamburger_menu.add(guiutils.get_menu_item(_("Select None"), _hamburger_menu_item_selected, "select none"))
@@ -906,6 +982,8 @@ def hamburger_pressed(widget, event):
 def _hamburger_menu_item_selected(widget, msg):
     if msg == "render proxies":
         proxyediting.create_proxy_files_pressed()
+    elif msg == "render all proxies":
+        proxyediting.create_proxy_files_pressed(True)
     elif msg == "select all":
         gui.media_list_view.select_all()
     elif msg == "select none":
@@ -917,11 +995,12 @@ def _hamburger_menu_item_selected(widget, msg):
     else:
         target_bin_index = int(msg)
         
-        media_bin_indexes = []
+        moved_files = []
         for selected_object in gui.media_list_view.selected_objects:
-            media_bin_indexes.append(selected_object.bin_index)
+            # selected_object is guicomponents.MediaObjectWidget
+            moved_files.append(selected_object.media_file)
         
-        move_files_to_bin(target_bin_index, media_bin_indexes)
+        move_files_to_bin(target_bin_index, moved_files)
 
 def media_panel_popup_requested(event):
     panel_menu = media_panel_popup_menu
@@ -961,22 +1040,26 @@ def _open_files_dialog_cb(file_select, response_id):
     if len(filenames) == 0:
         return
     
-    # We're disallowing opening .mlt or .xml files as media beause MLTs behaviour of overwriten project profile properties
+    # We're disallowing opening .mlt or .xml files as media beause MLTs behaviour of overwriting project profile properties
     # when opening MLT XML files as nedia
     # Underlying reason: https://github.com/mltframework/mlt/issues/212
     mlt_files_deleted = False
+    last_non_matching_profile = None
     for i in range(len(filenames) - 1, -1, -1):
         file_path = filenames[i]
         if utils.is_mlt_xml_file(file_path) == True:
-            filenames.pop(i)
-            mlt_files_deleted = True
+            match, non_matching_profile = mltprofiles.is_mlt_xml_profile_match_to_profile(file_path, current_sequence().profile)
+            if match == False:
+                filenames.pop(i)
+                mlt_files_deleted = True
+                last_non_matching_profile = non_matching_profile
     
     open_file_names(filenames)
 
     # Info on disallowed files
     if mlt_files_deleted == True:
         primary_txt = _("Opening .mlt or .xml file as media was disallowed!")
-        secondary_txt = _("Because of current MLT behaviour of overwriting projct properties when opening MLT XML files\nit is not allowed to open these files as media.")
+        secondary_txt = _("Only XML files with matching Profiles can be opened as clips.\n\nLast non-matching MLT XML file had Profile: ") + last_non_matching_profile
         dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
         
 def open_file_names(filenames):
@@ -1008,18 +1091,16 @@ def _add_image_sequence_callback(dialog, response_id, data):
         return
 
     # Create resource name with MLT syntax for MLT producer
-    number_index = file_name.find(number_part)
-    path_name_part = file_name[0:number_index]
-    end_part = file_name[number_index + len(number_part):len(file_name)]
-
     # The better version with "?begin=xxx" only available after 0.8.7
     if editorstate.mlt_version_is_equal_or_greater("0.8.5"):
         resource_name_str = utils.get_img_seq_resource_name(frame_file, True)
     else:
         resource_name_str = utils.get_img_seq_resource_name(frame_file, False)
 
-    # detect highest file
+    # Detect highest file so that we know the length of the producer.
     # FIX: this fails if two similarily numbered sequences in same dir and both have same substring in frame name
+    number_index = file_name.find(number_part)
+    path_name_part = file_name[0:number_index]
     onlyfiles = [ f for f in listdir(folder) if isfile(join(folder,f)) ]
     highest_number_part = int(number_part)
     for f in onlyfiles:
@@ -1059,14 +1140,12 @@ def delete_media_files(force_delete=False):
         return
     
     file_ids = []
-    bin_indexes = []
     # Get:
     # - list of integer keys to delete from Project.media_files
     # - list of indexes to delete from Bin.file_ids
     for media_obj in selection:
         file_id = media_obj.media_file.id
         file_ids.append(file_id)
-        bin_indexes.append(media_obj.bin_index)
 
         # If clip is displayed in monitor clear it and disable clip button.
         if media_obj.media_file == MONITOR_MEDIA_FILE:
@@ -1087,10 +1166,8 @@ def delete_media_files(force_delete=False):
                 return
 
     # Delete from bin
-    bin_indexes.sort()
-    bin_indexes.reverse()
-    for i in bin_indexes:
-        current_bin().file_ids.pop(i)
+    for file_id in file_ids:
+        current_bin().file_ids.remove(file_id)
     update_current_bin_files_count()
     
     # Delete from project
@@ -1203,10 +1280,16 @@ def _display_file_info(media_file):
     dialogs.file_properties_dialog((media_file, img, size, length, vcodec, acodec, channels, frequency, fps, match_profile_name, matches_project_profile))
 
 def remove_unused_media():
+    unused = unused_media()
+    # It is most convenient to do remove via gui object
+    gui.media_list_view.select_media_file_list(unused)
+    delete_media_files()
+
+def unused_media():
     # Create path -> media item dict
     path_to_media_object = {}
     for key, media_item in list(PROJECT().media_files.items()):
-        if media_item.path != "" and media_item.path != None:
+        if hasattr(media_item, "path") and media_item.path != "" and media_item.path != None:
             path_to_media_object[media_item.path] = media_item
     
     # Remove all items from created dict that have a clip with same path on any of the sequences
@@ -1222,10 +1305,7 @@ def remove_unused_media():
     unused = []
     for path, media_item in list(path_to_media_object.items()):
         unused.append(media_item)
-    
-    # It is most convenient to do remove via gui object
-    gui.media_list_view.select_media_file_list(unused)
-    delete_media_files()
+    return unused
 
 def media_filtering_select_pressed(widget, event):
     guicomponents.get_file_filter_popup_menu(widget, event, _media_filtering_selector_item_activated)
@@ -1265,8 +1345,7 @@ def create_selection_compound_clip():
 
     # lets's just set something unique-ish 
     default_name = _("selection_") + _get_compound_clip_default_name_date_str()
-    dialogs.compound_clip_name_dialog(_do_create_selection_compound_clip, default_name, _("Save Selection Compound Clip"))
-
+    dialogs.compound_clip_name_dialog(_do_create_selection_compound_clip, default_name, _("Save Selection Container Clip"))
 
 def _do_create_selection_compound_clip(dialog, response_id, name_entry):
     if response_id != Gtk.ResponseType.ACCEPT:
@@ -1298,17 +1377,21 @@ def _do_create_selection_compound_clip(dialog, response_id, name_entry):
         track0.append(clip, clip.clip_in, clip.clip_out)
 
     # Render compound clip as MLT XML file
-    render_player = renderconsumer.XMLCompoundRenderPlayer(write_file, media_name, _xml_compound_render_done_callback, tractor)
+    render_player = renderconsumer.XMLCompoundRenderPlayer(write_file, media_name, _xml_compound_render_done_callback, tractor, PROJECT())
     render_player.start()
 
 def _xml_compound_render_done_callback(filename, media_name):
-    add_media_thread = AddMediaFilesThread([filename], media_name)
-    add_media_thread.start()
+    containerclip.create_mlt_xml_media_item(filename, media_name)
+    
+    #add_media_thread = AddMediaFilesThread([filename], media_name)
+    #add_media_thread.start()
 
 def _sequence_xml_compound_render_done_callback(data):
     filename, media_name = data
-    add_media_thread = AddMediaFilesThread([filename], media_name)
-    add_media_thread.start()
+    containerclip.create_mlt_xml_media_item(filename, media_name)
+    
+    #add_media_thread = AddMediaFilesThread([filename], media_name)
+    #add_media_thread.start()
 
 def _xml_freeze_compound_render_done_callback(filename, media_name):
     # Remove freeze filter
@@ -1320,8 +1403,8 @@ def _xml_freeze_compound_render_done_callback(filename, media_name):
 
 def create_sequence_compound_clip():
     # lets's just set something unique-ish 
-    default_name = _("sequence_") + _get_compound_clip_default_name_date_str() + ".xml"
-    dialogs.compound_clip_name_dialog(_do_create_sequence_compound_clip, default_name, _("Save Sequence Compound Clip"))
+    default_name = _("sequence_") + _get_compound_clip_default_name_date_str()
+    dialogs.compound_clip_name_dialog(_do_create_sequence_compound_clip, default_name, _("Save Sequence Container Clip"))
 
 def _do_create_sequence_compound_clip(dialog, response_id, name_entry):
     if response_id != Gtk.ResponseType.ACCEPT:
@@ -1334,9 +1417,38 @@ def _do_create_sequence_compound_clip(dialog, response_id, name_entry):
 
     dialog.destroy()
 
-    render_player = renderconsumer.XMLRenderPlayer(write_file, _sequence_xml_compound_render_done_callback, (write_file, media_name))
+    render_player = renderconsumer.XMLRenderPlayer( write_file, _sequence_xml_compound_render_done_callback, 
+                                                    (write_file, media_name), PROJECT().c_seq, 
+                                                    PROJECT(), PLAYER())
     render_player.start()
 
+# This is called from popup menu and can be used to create compound clips from non-active sequences
+def create_sequence_compound_clip_from_selected():
+    default_name = _("sequence_") + _get_compound_clip_default_name_date_str()
+    dialogs.compound_clip_name_dialog(_do_create_sequence_compound_clip_from_selected, default_name, _("Save Sequence Compound Clip"))
+
+def _do_create_sequence_compound_clip_from_selected(dialog, response_id, name_entry):
+    if response_id != Gtk.ResponseType.ACCEPT:
+        dialog.destroy()
+        return
+
+    media_name = name_entry.get_text()
+    folder = userfolders.get_render_dir()
+    write_file = folder + "/"+ media_name + ".xml"
+
+    dialog.destroy()
+
+    selection = gui.sequence_list_view.treeview.get_selection()
+    model, iter = selection.get_selected()
+    (model, rows) = selection.get_selected_rows()
+    row = max(rows[0])
+    selected_sequence = PROJECT().sequences[row]
+
+    render_player = renderconsumer.XMLRenderPlayer( write_file, _sequence_xml_compound_render_done_callback, 
+                                                    (write_file, media_name), selected_sequence, 
+                                                    PROJECT(), PLAYER())
+    render_player.start()
+    
 def create_sequence_freeze_frame_compound_clip():
     # lets's just set something unique-ish 
     default_name = _("frame_") + utils.get_tc_string_with_fps_for_filename(PLAYER().current_frame(), utils.fps()) + ".xml"
@@ -1364,7 +1476,7 @@ def _do_create_sequence_freeze_frame_compound_clip(dialog, response_id, name_ent
     freezed_tractor.freeze_filter = freeze_filter # pack to go so it can be detached and attr removed
 
     # Render compound clip as MLT XML file
-    render_player = renderconsumer.XMLCompoundRenderPlayer(write_file, media_name, _xml_freeze_compound_render_done_callback, freezed_tractor)
+    render_player = renderconsumer.XMLCompoundRenderPlayer(write_file, media_name, _xml_freeze_compound_render_done_callback, freezed_tractor, PROJECT())
     render_player.start()
     
 def _get_compound_clip_default_name_date_str():
@@ -1559,23 +1671,17 @@ def bin_selection_changed(selection):
     gui.media_list_view.fill_data_model()
     gui.editor_window.bin_info.display_bin_info()
     
-def move_files_to_bin(new_bin, bin_indexes):
+def move_files_to_bin(new_bin, moved_files):
     # If we're moving clips to bin that they're already in, do nothing.
     if PROJECT().bins[new_bin] == current_bin():
         return
 
     source_bin_index = PROJECT().bins.index(PROJECT().c_bin) # this gets reset to 0 and it is just easier to save and set again
     
-    # Delete from current bin
-    moved_ids = []
-    bin_indexes.sort()
-    bin_indexes.reverse()
-    for i in bin_indexes:
-        moved_ids.append(current_bin().file_ids.pop(i))
-        
-    # Add to target bin
-    for file_id in moved_ids:
-        PROJECT().bins[new_bin].file_ids.append(file_id)
+    # Move
+    for media_file in moved_files:
+        current_bin().file_ids.remove(media_file.id)
+        PROJECT().bins[new_bin].file_ids.append(media_file.id)
 
     gui.media_list_view.fill_data_model()
     gui.bin_list_view.fill_data_model()
@@ -1612,6 +1718,8 @@ def sequence_panel_popup_requested(event):
     sequence_menu.add(guiutils.get_menu_item(_("Add New Sequence"), _sequece_menu_item_selected, ("add sequence", None)))
     sequence_menu.add(guiutils.get_menu_item(_("Edit Selected Sequence"), _sequece_menu_item_selected, ("edit sequence", None)))
     sequence_menu.add(guiutils.get_menu_item(_("Delete Selected Sequence"), _sequece_menu_item_selected, ("delete sequence", None)))
+    guiutils.add_separetor(sequence_menu)
+    sequence_menu.add(guiutils.get_menu_item(_("Create Container Clip from Selected Sequence"), _sequece_menu_item_selected, ("compound clip", None)))
     
     sequence_menu.popup(None, None, None, None, event.button, event.time)    
 
@@ -1623,7 +1731,9 @@ def _sequece_menu_item_selected(widget, data):
         delete_selected_sequence()
     elif msg == "edit sequence":
         change_edit_sequence()
-
+    elif msg == "compound clip":
+        create_sequence_compound_clip_from_selected()
+        
 def add_new_sequence():
     default_name = _("sequence_") + str(PROJECT().next_seq_number)
     dialogs.new_sequence_dialog(_add_new_sequence_dialog_callback, default_name)
@@ -1651,16 +1761,21 @@ def _add_new_sequence_dialog_callback(dialog, response_id, widgets):
     (model, rows) = selection.get_selected_rows()
     row = max(rows[0])
     
-    # Add new sequence
+    # Set default track counts as module global values, this is not a good design.
     sequence.AUDIO_TRACKS_COUNT = a_tracks
     sequence.VIDEO_TRACKS_COUNT = v_tracks
+
+    # Add new sequence
     PROJECT().add_named_sequence(name)
+
     gui.sequence_list_view.fill_data_model()
     
     if open_right_away == False:
         selection.select_path(str(row)) # Keep previous selection
     else:
         app.change_current_sequence(len(PROJECT().sequences) - 1)
+        PROJECT().c_seq.compositing_mode = editorpersistance.prefs.default_compositing_mode
+        gui.editor_window.init_compositing_mode_menu()
     
     dialog.destroy()
 
@@ -1752,11 +1867,22 @@ def _change_track_count_dialog_callback(dialog, response_id, tracks_select):
     if len(PROJECT().c_seq.tracks[-1].clips) == 1: # Remove hidden hack trick blank so that is does not get copied 
         edit._remove_clip(PROJECT().c_seq.tracks[-1], 0)
 
+    if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+        # These sequnces have one compositor for every non-V1 video track that will be recreated after track count changed.
+        current_sequence().destroy_compositors()
+
     new_seq = sequence.create_sequence_clone_with_different_track_count(PROJECT().c_seq, v_tracks, a_tracks)
+
     PROJECT().sequences.insert(cur_seq_index, new_seq)
     PROJECT().sequences.pop(cur_seq_index + 1)
     app.change_current_sequence(cur_seq_index)
-    
+
+    if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+        # Put track compositors back
+        current_sequence().add_full_track_compositors()
+
+    tlinerender.get_renderer().timeline_changed()
+
 def combine_sequences():
     dialogs.combine_sequences_dialog(_combine_sequences_dialog_callback)
 
@@ -1777,10 +1903,9 @@ def _combine_sequences_dialog_callback(dialog, response_id, action_select, seq_s
 
 def _append_sequence(import_seq):
     start_track_range, end_track_range = _get_sequence_import_range(import_seq)
-    
     tracks_off = current_sequence().first_video_index - import_seq.first_video_index
     orig_length = current_sequence().get_length()
-    
+
     # Justify ends
     for i in range(start_track_range, end_track_range):
         track = current_sequence().tracks[i]
@@ -1794,7 +1919,7 @@ def _append_sequence(import_seq):
     for i in range(start_track_range, end_track_range):
         track = current_sequence().tracks[i]
         
-        import_track = import_seq.tracks[i + tracks_off]
+        import_track = import_seq.tracks[i - tracks_off]
         insert_start_index = len(track.clips)
         for j in range(0, len(import_track.clips)):
             import_clip = import_track.clips[j]
@@ -1820,6 +1945,7 @@ def _append_sequence(import_seq):
                 edit._remove_clip(track, 0)
     # This method just needs some class to save data for undo which we are not using
     edit._consolidate_all_blanks_redo(utils.EmptyClass)
+    edit._remove_all_trailing_blanks()
     
     _update_gui_after_sequence_import()
 
@@ -1851,7 +1977,7 @@ def _insert_sequence(import_seq):
     for i in range(start_track_range, end_track_range):
         track = current_sequence().tracks[i]
         
-        import_track = import_seq.tracks[i + tracks_off]
+        import_track = import_seq.tracks[i - tracks_off]
         insert_start_index = track.get_clip_index_at(insert_frame)
         for j in range(0, len(import_track.clips)):
             import_clip = import_track.clips[j]
@@ -1887,7 +2013,8 @@ def _insert_sequence(import_seq):
                 edit._remove_clip(track, 0)
     # This method just needs some class to save data for undo which we are not using
     edit._consolidate_all_blanks_redo(utils.EmptyClass)
-    
+    edit._remove_all_trailing_blanks()
+        
     _update_gui_after_sequence_import()
 
     undo.clear_undos()
@@ -1897,15 +2024,21 @@ def _insert_sequence(import_seq):
 def _get_sequence_import_range(import_seq):
     # Compute corresponding tracks, import sequence may have less audio and/or video tracks
     first_video_off = current_sequence().first_video_index - import_seq.first_video_index
-    if first_video_off > 0:
-        start_track_range = 1 + first_video_off # import_seq has less audio tracks
-    else:
-        start_track_range = 1
     
-    video_tracks_count_diff = (len(current_sequence().tracks) - current_sequence().first_video_index) - (len(import_seq.tracks) - import_seq.first_video_index)
-    if video_tracks_count_diff > 0:
+    # Compare audio tracks count to determine first track from current sequence to be added clips from import sequence
+    if first_video_off > 0: # import_seq has less audio tracks
+        start_track_range = 1 + first_video_off 
+    else:  # import_seq has same number of audio tracks
+        start_track_range = 1
+
+    # Compare video tracks count to determine last track from current sequence to be added clips from import sequence
+    cur_seq_video_tracks_count = len(current_sequence().tracks) - current_sequence().first_video_index
+    import_seq_video_tracks_count = len(import_seq.tracks) - import_seq.first_video_index
+
+    video_tracks_count_diff = cur_seq_video_tracks_count - import_seq_video_tracks_count
+    if video_tracks_count_diff > 0: # Current sequence has more video tracks 
         end_track_range = len(current_sequence().tracks) - 1 - video_tracks_count_diff
-    else:
+    else:  # Current sequence has equak number or lass tracks 
         end_track_range = len(current_sequence().tracks) - 1
 
     return (start_track_range, end_track_range)
@@ -1915,12 +2048,59 @@ def _update_gui_after_sequence_import(): # This copied  with small modifications
                                      # This REPAINTS TIMELINE as a side effect.
     updater.clear_kf_editor()
 
-    current_sequence().update_edit_tracks_length() # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
-    current_sequence().update_trim_hack_blank_length() # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
-    editorstate.PLAYER().display_inside_sequence_length(current_sequence().seq_len) # NEEDED FOR TRIM CRASH HACK, REMOVE IF FIXED
+    current_sequence().update_edit_tracks_length() # Needed for timeline renderering updates
+    current_sequence().update_hidden_track_for_timeline_rendering() # Needed for timeline renderering updates
+    editorstate.PLAYER().display_inside_sequence_length(current_sequence().seq_len)
 
     updater. update_seqence_info_text()
+
+def compositing_mode_menu_launched(widget, event):
+    guiutils.remove_children(compositing_mode_menu)
+
+    comp_top_free = guiutils.get_image_menu_item(_("Top Down Free Move"), "top_down", change_current_sequence_compositing_mode_from_corner_menu)
+    comp_standard_auto = guiutils.get_image_menu_item(_("Standard Auto Follow"), "standard_auto", change_current_sequence_compositing_mode_from_corner_menu)
+    comp_full_track = guiutils.get_image_menu_item(_("Standard Full Track"), "full_track_auto", change_current_sequence_compositing_mode_from_corner_menu)
+    
+    comp_top_free.connect("activate", lambda w: change_current_sequence_compositing_mode_from_corner_menu(appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE))
+    comp_standard_auto.connect("activate", lambda w: change_current_sequence_compositing_mode_from_corner_menu(appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW))
+    comp_full_track.connect("activate", lambda w: change_current_sequence_compositing_mode_from_corner_menu(appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK))
+
+    compositing_mode_menu.add(comp_top_free)
+    compositing_mode_menu.add(comp_standard_auto)
+    compositing_mode_menu.add(comp_full_track)
+
+    compositing_mode_menu.popup(None, None, None, None, event.button, event.time)
+    
+def change_current_sequence_compositing_mode_from_corner_menu(new_compositing_mode):
+    if current_sequence().compositing_mode == new_compositing_mode:
+        return 
         
+    dialogs.confirm_compositing_mode_change(_compositing_mode_dialog_callback, new_compositing_mode)
+
+def change_current_sequence_compositing_mode(menu_widget, new_compositing_mode):
+    if menu_widget.get_active() == False:
+        return
+    
+    dialogs.confirm_compositing_mode_change(_compositing_mode_dialog_callback, new_compositing_mode)
+        
+def _compositing_mode_dialog_callback(dialog, response_id, new_compositing_mode):
+    dialog.destroy()
+    if response_id != Gtk.ResponseType.ACCEPT:
+        gui.editor_window.init_compositing_mode_menu()
+        return
+    
+    # Destroy stuff
+    compositeeditor.clear_compositor()
+    current_sequence().destroy_compositors()
+    undo.clear_undos()
+    current_sequence().compositing_mode = new_compositing_mode
+    if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK: 
+        current_sequence().add_full_track_compositors()
+    updater.repaint_tline()
+
+    compositeeditor._display_compositor_edit_box()
+    gui.comp_mode_launcher.set_pixbuf(new_compositing_mode) # pixbuf indexes correspond with compositing mode enums.
+
 # --------------------------------------------------------- pop-up menus
 def media_file_menu_item_selected(widget, data):
     item_id, media_file, event = data
@@ -1939,7 +2119,13 @@ def media_file_menu_item_selected(widget, data):
         delete_media_files()
     if item_id == "Render Proxy File":
         proxyediting.create_proxy_menu_item_selected(media_file)
-
+    if item_id == "Edit Container Data":
+        containerprogramedit.show_container_data_program_editor_dialog(media_file.container_data)
+    if item_id == "Save Container Data":
+        media_file.save_program_edit_info()
+    if item_id == "Load Container Data":
+        media_file.load_program_edit_info()
+        
 def _select_treeview_on_pos_and_return_row_and_column_title(event, treeview):
     selection = treeview.get_selection()
     path_pos_tuple = treeview.get_path_at_pos(int(event.x), int(event.y))

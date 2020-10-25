@@ -45,7 +45,7 @@ def init_languages():
     if (language):
         langs += language.split(":")
 
-    if editorstate.app_running_from == editorstate.RUNNING_FROM_INSTALLATION:
+    if editorstate.app_running_from == editorstate.RUNNING_FROM_INSTALLATION or editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
         # Use /usr/share/locale first if available and running from installation
         # Look for installed translation in distro install
         # Were using Russian as test language
@@ -94,7 +94,7 @@ def init_languages():
         lang = gettext.translation(APP_NAME, locale_path, languages=langs, fallback=True)
 
     # Un-comment for translations tests
-    #lang = gettext.translation(APP_NAME, locale_path, languages=["it"], fallback=True)
+    #lang = gettext.translation(APP_NAME, locale_path, languages=["ru"], fallback=True)
 
     lang.install(APP_NAME) # makes _() a build-in available in all modules without imports
 
@@ -138,6 +138,7 @@ def load_filters_translations():
     filter_groups["Edge"] = _("Edge")
     filter_groups["Fix"] = _("Fix")
     filter_groups["Artistic"] = _("Artistic")
+    filter_groups["Fade In / Out"] = _("Fade In / Out")
 
     # filter names
     global filter_names
@@ -249,7 +250,6 @@ def load_filters_translations():
     filter_names["Soft Glow"]= _("Soft Glow")
     filter_names["Newspaper"]= _("Newspaper")
 
-    # 0.16 added
     filter_names["Luma Key"] = _("Luma Key")
     filter_names["Chroma Key"] = _("Chroma Key")
     filter_names["Affine"] = _("Affine")
@@ -259,7 +259,6 @@ def load_filters_translations():
     filter_names["Lift Gain Gamma"] = _("Lift Gain Gamma")
     filter_names["Image Grid"] = _("Image Grid")
 
-    # Later
     filter_names["Color Lift Gain Gamma"] = _("Color Lift Gain Gamma")
     filter_names["Color Channel Mixer"] = _("Color Channel Mixer")
     filter_names["Lens Correction AV"] = _("Lens Correction AV")
@@ -270,11 +269,21 @@ def load_filters_translations():
     filter_names["File Luma to Alpha"] = _("File Luma to Alpha") 
     filter_names["Gradient Tint"] = _("Gradient Tint")
     filter_names["RotoMask"] = _("RotoMask")
+    filter_names["Lens Defisher"] = _("Lens Defisher")
+    filter_names["Position Scale"] = _("Position Scale")
+    filter_names["Wipe"] = _("Wipe")
+    filter_names["Mask - Begin"] = "\u21c9" + " " + _("Mask - Begin")
+    filter_names["Mask - End"] = "\u21c7" + " "  + _("Mask - End")
+    filter_names["Opacity"] = _("Opacity")
+    filter_names["Fade In"] = _("Fade In")
+    filter_names["Fade Out"] = _("Fade Out")
+    filter_names["Fade In / Fade Out"] = _("Fade In / Fade Out")
+    filter_names["Lines"] = _("Lines")
+    filter_names["Dust"] = _("Dust")
     
     # param names
     global param_names
 
-    # param names for filters
     param_names["Position"] = _("Position")
     param_names["Grad width"] = _("Grad width")
     param_names["Tilt"] = _("Tilt")
@@ -485,11 +494,10 @@ def load_filters_translations():
     param_names["Invert"] = _("Invert")
     param_names["Blur"] = _("Blur")
     param_names["Opacity"] = _("Opacity")
-    param_names["Opacity"] = _("Opacity")
     param_names["Rotate X"] = _("Rotate X")
     param_names["Rotate Y"] = _("Rotate Y")
     param_names["Rotate Z"] = _("Rotate Z")
-    # added 0.8
+
     param_names["Edge Mode"] = _("Edge Mode")
     param_names["Sel. Space"] = _("Sel. Space")
     param_names["Operation"] = _("Operation")
@@ -564,7 +572,6 @@ def load_filters_translations():
     param_names["Level"] = _("Level")
     param_names["Select .cube file"] = _("Select .cube file")
     
-    # param names for compositors
     param_names["Opacity"] = _("Opacity")
     param_names["Shear X"] = _("Shear X")
     param_names["Shear Y"] = _("Shear Y")
@@ -603,6 +610,23 @@ def load_filters_translations():
     param_names["Alpha Mode"] = _("Alpha Mode")
     param_names["Feather"] = _("Feather")
     param_names["Mode"] = _("Mode")
+    param_names["Input Pixel Aspect Ratio"] = _("Input Pixel Aspect Ratio")
+    param_names["Direction"] = _("Direction")
+    param_names["Lens Projection"] = _("Lens Projection")
+    param_names["Interpolator"] = _("Interpolator")
+    param_names["Strength"] = _("Strength")
+    param_names["X Scale"] = _("X Scale")
+    param_names["Y Scale"] = _("Y Scale")
+    param_names["Rotation"]= _("Rotation")
+    param_names["X Position"] = _("X Position")
+    param_names["Y Position"] = _("Y Position")
+    param_names["Max Diameter"] = _("Max Diameter")
+    param_names["Max Count"] = _("Max Count")
+    param_names["Max Count"] = _("Max Count")
+    param_names["Line Width"] = _("Line Width")
+    param_names["Number"] = _("Number")
+    param_names["Darker"] = _("Darker")
+    param_names["Lighter"] = _("Lighter")
 
     # Combo options
     global combo_options
@@ -681,3 +705,19 @@ def load_filters_translations():
     combo_options["Add"] = _("Add")
     combo_options["Subtract"] = _("Subtract")
     combo_options["Alpha"] = _("Alpha")
+    combo_options["Square"] = _("Square")
+    combo_options["HDV"] = _("HDV")
+    combo_options["DV/DVD Widescreen PAL"] = _("DV/DVD Widescreen PAL")
+    combo_options["DV/DVD Widescreen NTSC"] = _("DV/DVD Widescreen NTSC")
+    combo_options["DV/DVD PAL"] = _("DV/DVD PAL")
+    combo_options["DV/DVD NTSC"] = _("DV/DVD NTSC")
+    combo_options["Remove Lens Distortion"] = _("Remove Lens Distortion")
+    combo_options["Apply Lens Distortion"] = _("Apply Lens Distortion")
+    combo_options["Equidistant"] = _("Equidistant")
+    combo_options["Orthographic"] = _("Orthographic")
+    combo_options["Equiarea"] = _("Equiarea")
+    combo_options["Stereographic"] = _("Stereographic")
+    combo_options["Bilinear"] = _("Bilinear")
+    combo_options["Bicubic Smooth"] = _("Bicubic Smooth")
+    combo_options["Bicubic Sharp"] = _("Bicubic Sharp")
+    combo_options["Spline"] = _("Spline")

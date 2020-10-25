@@ -21,8 +21,6 @@
 Module contains functions to build generic dialogs.
 """
 from gi.repository import GObject
-
-
 from gi.repository import Gtk
 
 import appconsts
@@ -50,6 +48,18 @@ def panel_ok_dialog(title, panel):
     default_behaviour(dialog)
     dialog.connect('response', dialog_destroy)
     dialog.show_all()
+
+def no_button_dialog(title, panel):
+    dialog = Gtk.Dialog(title, None,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT)
+                        
+    alignment = get_default_alignment(panel)
+    
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    set_outer_margins(dialog.vbox)
+    dialog.set_resizable(False)
+    dialog.show_all()
+    return dialog
     
 def info_message(primary_txt, secondary_txt, parent_window):
     warning_message(primary_txt, secondary_txt, parent_window, is_info=True)
@@ -151,7 +161,7 @@ def get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info=False, 
     
     return hbox
 
-def get_single_line_text_input_dialog(chars, label_width,title, ok_button_text,
+def get_single_line_text_input_dialog(chars, label_width, title, ok_button_text,
                                       label, default_text):
     dialog = Gtk.Dialog(title, None,
                             Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
@@ -159,13 +169,13 @@ def get_single_line_text_input_dialog(chars, label_width,title, ok_button_text,
                             ok_button_text, Gtk.ResponseType.OK))
 
     entry = Gtk.Entry()
-    entry.set_width_chars(30)
+    entry.set_width_chars(chars)
     entry.set_text(default_text)
     entry.set_activates_default(True)
 
     entry_row = guiutils.get_two_column_box(Gtk.Label(label=label),
                                                entry,
-                                               180)
+                                               label_width)
 
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(entry_row, False, False, 0)

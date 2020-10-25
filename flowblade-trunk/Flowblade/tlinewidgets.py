@@ -46,9 +46,11 @@ from editorstate import EDIT_MODE
 from editorstate import current_proxy_media_paths
 import editorstate
 import gui
+import guiutils
 import respaths
 import sequence
 import snapping
+import tlinerender
 import trimmodes
 import userfolders
 import utils
@@ -60,6 +62,7 @@ REF_LINE_Y = 250 # Y pos of tracks are relative to this. This is recalculated on
 
 WIDTH = 430 # this has no effect if smaller then editorwindow.NOTEBOOK_WIDTH + editorwindow.MONITOR_AREA_WIDTH
 HEIGHT = appconsts.TLINE_HEIGHT # defines window min height together with editorwindow.TOP_ROW_HEIGHT
+STRIP_HEIGHT = tlinerender.STRIP_HEIGHT # timeline rendering control strip height
 
 # Timeline draw constants
 # Other elements than black outline are not drawn if clip screen size
@@ -68,10 +71,13 @@ TEXT_MIN = 12 # if clip shorter, no text
 EMBOSS_MIN = 8 # if clip shorter, no emboss
 FILL_MIN = 1 # if clip shorter, no fill
 TEXT_X = 6 # pos for clip text
+TEXT_Y_HIGH = 40
 TEXT_Y = 29 
 TEXT_Y_SMALL = 17
+WAVEFORM_PAD_HIGH = 50.0
 WAVEFORM_PAD_LARGE = 27
 WAVEFORM_PAD_SMALL = 8
+WAVEFORM_HEIGHT_HIGH = 25.0
 WAVEFORM_HEIGHT_LARGE = 22.0
 WAVEFORM_HEIGHT_SMALL = 17.0
 MARK_PAD = 6
@@ -92,6 +98,7 @@ COMPOSITOR_TRACK_ARROW_WIDTH = 6
 COMPOSITOR_TRACK_ARROW_HEAD_WIDTH = 10
 COMPOSITOR_TRACK_ARROW_HEAD_WIDTH_HEIGHT = 5
 ID_PAD_X = 48 # track id text pos
+ID_PAD_Y_HIGH = 30 # track id text pos for high track
 ID_PAD_Y = 16 # track id text pos
 ID_PAD_Y_SMALL = 4 # track id text pos for small track
 VIDEO_TRACK_V_ICON_POS = (5, 16)
@@ -102,7 +109,9 @@ AUDIO_TRACK_ICON_POS = (5, 18)
 AUDIO_TRACK_ICON_POS_SMALL = (5, 6)
 MUTE_ICON_POS = (5, 4)
 MUTE_ICON_POS_NORMAL = (5, 14)
+MUTE_ICON_POS_HIGH = (5, 30)
 LOCK_POS = (90, 5)
+INSRT_ICON_POS_HIGH = (108, 32)
 INSRT_ICON_POS = (108, 18)
 INSRT_ICON_POS_SMALL = (108, 6)
 
@@ -118,7 +127,6 @@ TRACK_ALL_ON_A_ICON = None
 
 # clip icons
 FILTER_CLIP_ICON = None
-COMPOSITOR_CLIP_ICON = None
 VIEW_SIDE_ICON = None
 INSERT_ARROW_ICON = None
 AUDIO_MUTE_ICON = None
@@ -130,6 +138,7 @@ LEVELS_RENDER_ICON = None
 SNAP_ICON = None
 KEYBOARD_ICON = None
 CLOSE_MATCH_ICON = None
+COMPOSITOR_ICON = None
 
 # tc scale
 TC_POINTER_HEAD = None
@@ -195,6 +204,12 @@ IMAGE_CLIP_COLOR_GRAD = (1, 0.1, 0.20, 0.21, 1) #(1, 0.33, 0.65, 0.69, 1)
 IMAGE_CLIP_COLOR_GRAD_L = get_multiplied_grad(0, 1, IMAGE_CLIP_COLOR_GRAD, GRAD_MULTIPLIER) 
 IMAGE_CLIP_SELECTED_COLOR = get_multiplied_color_from_grad(IMAGE_CLIP_COLOR_GRAD, SELECTED_MULTIPLIER + 0.1)
 
+
+CONTAINER_CLIP_NOT_RENDERED_COLOR = (0.7, 0.3, 0.3)
+CONTAINER_CLIP_NOT_RENDERED_SELECTED_COLOR = (0.8, 0.4, 0.4)
+CONTAINER_CLIP_RENDERED_COLOR = (0.25, 0.33, 0.78)
+CONTAINER_CLIP_RENDERED_SELECTED_COLOR = (0.35, 0.43, 0.84)
+ 
 COMPOSITOR_CLIP = (0.12, 0.12, 0.22, 0.7)
 COMPOSITOR_CLIP_AUTO_FOLLOW = (0.33, 0.05, 0.52, 0.65)
 COMPOSITOR_CLIP_SELECTED = (0.5, 0.5, 0.7, 0.8)
@@ -268,13 +283,22 @@ TRACK_GRAD_ORANGE_STOP3 = (0, 0.65, 0.65, 0.65, 1)
 LIGHT_MULTILPLIER = 1.14
 DARK_MULTIPLIER = 0.74
 
-# ------------------------------------------------------------------ MODULE STATE
+
+
+# ------------------------------------------------------------------ MODULE POSITION STATE
+# ------------------------------------------------------------------ MODULE POSITION STATE
+# ------------------------------------------------------------------ MODULE POSITION STATE
+
+pix_per_frame = 5.0 # Current draw scale. This is set elsewhere on init so default value irrelevant.
+pos = 0 # Current left most frame in timeline display
+
+# ------------------------------------------------------------------ MODULE POSITION STATE
+# ------------------------------------------------------------------ MODULE POSITION STATE
+# ------------------------------------------------------------------ MODULE POSITION STATE
+
+
 # debug purposes
 draw_blank_borders = True
-
-# Draw state
-pix_per_frame = 5.0 # Current draw scale. This set set elsewhere on init so default value irrelevant.
-pos = 0 # Current left most frame in timeline display
 
 # A context defining action taken when mouse press happens based on edit mode and mouse position.
 # Cursor communicates current pointer contest to user.
@@ -313,14 +337,13 @@ match_frame_height = 1
 # ------------------------------------------------------------------- module functions
 def load_icons():
     global FULL_LOCK_ICON, FILTER_CLIP_ICON, VIEW_SIDE_ICON,\
-    COMPOSITOR_CLIP_ICON, INSERT_ARROW_ICON, AUDIO_MUTE_ICON, MARKER_ICON, \
+    COMPOSITOR_ICON, INSERT_ARROW_ICON, AUDIO_MUTE_ICON, MARKER_ICON, \
     VIDEO_MUTE_ICON, ALL_MUTE_ICON, TRACK_BG_ICON, MUTE_AUDIO_ICON, MUTE_VIDEO_ICON, MUTE_ALL_ICON, \
     TRACK_ALL_ON_V_ICON, TRACK_ALL_ON_A_ICON, MUTE_AUDIO_A_ICON, TC_POINTER_HEAD, EDIT_INDICATOR, \
     LEVELS_RENDER_ICON, SNAP_ICON, KEYBOARD_ICON, CLOSE_MATCH_ICON, CLIP_MARKER_ICON
 
     FULL_LOCK_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "full_lock.png")
     FILTER_CLIP_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "filter_clip_icon_sharp.png")
-    COMPOSITOR_CLIP_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "compositor.png")
     VIEW_SIDE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "view_side.png")
     INSERT_ARROW_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insert_arrow.png")
     AUDIO_MUTE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH +"clip_audio_mute.png")
@@ -335,8 +358,9 @@ def load_icons():
     KEYBOARD_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "keyb_trim.png")
     CLOSE_MATCH_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "close_match.png")
     CLIP_MARKER_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "clip_marker.png")
+    COMPOSITOR_ICON = guiutils.get_cairo_image("compositor_icon")
 
-    MARKER_ICON = _load_pixbuf("marker.png")
+    MARKER_ICON = _load_pixbuf("marker_yellow.png")
     TRACK_ALL_ON_V_ICON = _load_pixbuf("track_all_on_V.png")
     TRACK_ALL_ON_A_ICON = _load_pixbuf("track_all_on_A.png")
     MUTE_AUDIO_A_ICON = _load_pixbuf("track_audio_mute_A.png") 
@@ -533,7 +557,7 @@ def _get_frame_x(frame):
     disp_frame = frame - pos
     return disp_frame * pix_per_frame
 
-def compositor_hit(frame, y, sorted_compositors):
+def compositor_hit(frame, x, y, sorted_compositors):
     """
     Returns compositor hit with mouse press x,y or None if nothing hit.
     """
@@ -542,7 +566,13 @@ def compositor_hit(frame, y, sorted_compositors):
         track_top = _get_track_y(track.id)
     except AttributeError: # we didn't press on a editable track
         return None
-        
+
+    if editorstate.get_compositing_mode() == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+        return None
+       
+    if editorstate.get_compositing_mode() == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
+        return _standard_auto_follow_comp_hit(frame, track, x, y, sorted_compositors)
+    
     # Test if compositor hit on track top, so compositor hit on dest track side
     if y >= track_top and y < track_top + (COMPOSITOR_HEIGHT - COMPOSITOR_HEIGHT_OFF):
        return _comp_hit_on_below_track(frame, track, sorted_compositors)
@@ -568,7 +598,27 @@ def _comp_hit_on_source_track(frame, track, sorted_compositors):
             if comp.clip_in <= frame and comp.clip_out >= frame:
                 return comp
     return None
+
+def _standard_auto_follow_comp_hit(frame, track, x, y, sorted_compositors):
+    for comp in sorted_compositors:
+        if comp.transition.b_track == track.id:
+            if comp.clip_in <= frame and comp.clip_out >= frame:
+                scale_in = (comp.clip_in - pos) * pix_per_frame
+                scale_length = (comp.clip_out - comp.clip_in + 1) * pix_per_frame # +1, out incl.
+                comp_top_y = _get_track_y(track.id) + track.height - COMPOSITOR_HEIGHT_OFF
+                tx, ty, tw, th = _get_standard_mode_compositor_rect(scale_in, scale_length, comp_top_y)
+                if x >= tx and x <= tx + tw:
+                    if y >= ty and y <= ty + th:
+                        return comp
+    return None
+
+def _get_standard_mode_compositor_rect(scale_in, scale_length, y):
+    scale_mid = int(scale_in) + int(scale_length) // 2
+    y = int(y) - 8.0
+    side_half = 11
     
+    return (scale_mid - side_half, y, side_half * 2, side_half * 2)
+        
 # --------------------------------------- edit mode overlay draw handling
 def set_edit_mode(data, draw_func):
     global canvas_widget
@@ -1256,7 +1306,11 @@ def _create_compositor_cairo_path(cr, scale_in, scale_length, y, target_y):
     cr.line_to(scale_in + 0.5 + COMPOSITOR_TRACK_X_PAD, y + 0.5 + COMPOSITOR_HEIGHT)
     cr.line_to(scale_in + 0.5, y + 0.5 + COMPOSITOR_HEIGHT)
     cr.close_path()
-            
+
+
+        
+    
+
 def _draw_two_arrows(cr, x, y, distance):
     """
     Draws two arrows indicating that user can drag in 
@@ -1477,9 +1531,12 @@ class TimeLineCanvas:
         
     def get_pointer_context(self, x, y):
         frame = get_frame(x)
-        hit_compositor = compositor_hit(frame, y, current_sequence().compositors)
+        hit_compositor = compositor_hit(frame, x, y, current_sequence().compositors)
         if hit_compositor != None:
-            if editorstate.auto_follow == False or (editorstate.auto_follow == True and hit_compositor.obey_autofollow == False):
+            if editorstate.get_compositing_mode() == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
+                return appconsts.POINTER_CONTEXT_NONE
+                                
+            if editorstate.auto_follow_active() == False or (editorstate.auto_follow_active() == True and hit_compositor.obey_autofollow == False):
                 return compositormodes.get_pointer_context(hit_compositor, x)
             else:
                 return appconsts.POINTER_CONTEXT_NONE
@@ -1489,8 +1546,7 @@ class TimeLineCanvas:
             return appconsts.POINTER_CONTEXT_NONE
 
         clip_index = current_sequence().get_clip_index(track, frame)
-        if clip_index == -1:
-            # This gets none always after track, which may not be what we want
+        if clip_index == -1: # frame after last clip on track
             return appconsts.POINTER_CONTEXT_NONE
 
         try:
@@ -1635,9 +1691,11 @@ class TimeLineCanvas:
         """
         # Get text pos for track height
         track_height = track.height
-        if track_height == sequence.TRACK_HEIGHT_NORMAL:
+        if track_height == sequence.TRACK_HEIGHT_HIGH: 
+            text_y = TEXT_Y_HIGH
+        elif track_height == sequence.TRACK_HEIGHT_NORMAL:
             text_y = TEXT_Y
-        else:
+        elif track_height == sequence.TRACK_HEIGHT_SMALL:
             text_y = TEXT_Y_SMALL
 
         # Get clip indexes for clips overlapping first and last displayed frame.
@@ -1704,7 +1762,24 @@ class TimeLineCanvas:
                         grad.add_color_stop_rgba(*BLANK_CLIP_COLOR_GRAD_L)
                         cr.set_source(grad)
                 elif track.type == sequence.VIDEO:
-                    if clip.media_type == sequence.VIDEO:
+                    if clip.container_data != None:
+                        if clip.container_data.rendered_media_range_in == -1: 
+                            if not clip.selected:
+                                clip_bg_col = (0.7, 0.3, 0.3)
+                                cr.set_source_rgb(*CONTAINER_CLIP_NOT_RENDERED_COLOR)
+                                clip_bg_col = CONTAINER_CLIP_NOT_RENDERED_COLOR
+                            else:
+                                cr.set_source_rgb(*CONTAINER_CLIP_NOT_RENDERED_SELECTED_COLOR)
+                                clip_bg_col = CONTAINER_CLIP_NOT_RENDERED_SELECTED_COLOR
+                        else:
+                            if not clip.selected:
+                                clip_bg_col = (0.7, 0.3, 0.3)
+                                cr.set_source_rgb(*CONTAINER_CLIP_RENDERED_COLOR)
+                                clip_bg_col = CONTAINER_CLIP_RENDERED_COLOR
+                            else:
+                                cr.set_source_rgb(*CONTAINER_CLIP_RENDERED_SELECTED_COLOR)
+                                clip_bg_col = CONTAINER_CLIP_RENDERED_SELECTED_COLOR
+                    elif clip.media_type == sequence.VIDEO:
                         if not clip.selected:
                             grad = cairo.LinearGradient (0, y, 0, y + track_height)
                             grad.add_color_stop_rgba(*CLIP_COLOR_GRAD)
@@ -1724,7 +1799,7 @@ class TimeLineCanvas:
                         else:
                             cr.set_source_rgb(*IMAGE_CLIP_SELECTED_COLOR)
                             clip_bg_col = IMAGE_CLIP_SELECTED_COLOR
-                else:# Audio clip
+                else:# Audio track
                     if not clip.selected:
                         grad = cairo.LinearGradient (0, y, 0, y + track_height)
                         grad.add_color_stop_rgba(*AUDIO_CLIP_COLOR_GRAD)
@@ -1822,8 +1897,16 @@ class TimeLineCanvas:
                         cr.paint()
                     except: # thumbnail not found  in dict, get it and  paint it
                         try:
-                            media_file = PROJECT().get_media_file_for_path(clip.path)
-                            thumb_img = media_file.icon
+                            if clip.container_data == None:
+                                media_file = PROJECT().get_media_file_for_path(clip.path)
+                                thumb_img = media_file.icon
+                            else:
+                                media_file = PROJECT().get_media_file_for_path(clip.path)
+                                if media_file != None:
+                                    thumb_img = media_file.icon
+                                else:
+                                    thumb_img = clip.container_data.get_rendered_thumbnail()
+
                             cr.rectangle(scale_in + 4, y + 3.5, scale_length - 8, track_height - 6)
                             cr.clip()
                             cr.set_source_surface(thumb_img, scale_in, y - 20)
@@ -1958,11 +2041,13 @@ class TimeLineCanvas:
                                              track_height)
                 cr.clip()
                                          
-                # Get level bar height and position for track height
-                if track.height == sequence.TRACK_HEIGHT_NORMAL:
+                if track.height == sequence.TRACK_HEIGHT_HIGH:
+                    y_pad = WAVEFORM_PAD_HIGH
+                    bar_height = WAVEFORM_HEIGHT_HIGH
+                elif track.height == sequence.TRACK_HEIGHT_NORMAL:
                     y_pad = WAVEFORM_PAD_LARGE
                     bar_height = WAVEFORM_HEIGHT_LARGE
-                else:
+                elif track.height == sequence.TRACK_HEIGHT_SMALL:
                     y_pad = WAVEFORM_PAD_SMALL
                     bar_height = WAVEFORM_HEIGHT_SMALL
                 
@@ -2059,6 +2144,9 @@ class TimeLineCanvas:
             cr.fill()
 
     def draw_compositors(self, cr):
+        if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+            return
+            
         compositors = current_sequence().get_compositors()
         for comp in compositors:
             # compositor clip and edge
@@ -2066,47 +2154,101 @@ class TimeLineCanvas:
             target_track =  current_sequence().tracks[comp.transition.a_track]
             
             y = _get_track_y(track.id) + track.height - COMPOSITOR_HEIGHT_OFF
-            target_y = _get_track_y(target_track.id) + target_track.height - COMPOSITOR_HEIGHT_OFF
 
             scale_in = (comp.clip_in - pos) * pix_per_frame
             scale_length = (comp.clip_out - comp.clip_in + 1) * pix_per_frame # +1, out inclusive
-
-            if comp.selected == False:
-                if editorstate.auto_follow_active() == True and comp.obey_autofollow == True:
-                    color = COMPOSITOR_CLIP_AUTO_FOLLOW
-                else:
-                    color = COMPOSITOR_CLIP
+            target_y = _get_track_y(target_track.id) + target_track.height - COMPOSITOR_HEIGHT_OFF
+                
+            if editorstate.get_compositing_mode() == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
+                self.draw_standard_mode_compositor(comp, cr, scale_in, scale_length, y, target_y)
             else:
-                color = COMPOSITOR_CLIP_SELECTED
-            cr.set_source_rgba(*color)
+                self.draw_arrow_compositor(comp, cr, scale_in, scale_length, y, target_y)
+                
+    def draw_arrow_compositor(self, comp, cr, scale_in, scale_length, y, target_y):
+        _create_compositor_cairo_path(cr, scale_in, scale_length, y, target_y)
 
-            _create_compositor_cairo_path(cr, scale_in, scale_length, y, target_y)
-
-            cr.fill_preserve()
-
-            cr.set_source_rgb(0, 0, 0)
-            cr.set_line_width(1.0)
-            cr.stroke()
-
-            # text
-            cr.save()
-
-            cr.rectangle(scale_in + 0.5,
-                         y + 0.5, scale_length, 
-                         COMPOSITOR_HEIGHT)
-            cr.clip()
-            cr.new_path()
-            cr.set_source_rgb(1, 1, 1)
-            cr.select_font_face ("sans-serif",
-                                 cairo.FONT_SLANT_NORMAL,
-                                 cairo.FONT_WEIGHT_NORMAL)
-
-            cr.set_font_size(11)
-            cr.move_to(scale_in + COMPOSITOR_TEXT_X, y + COMPOSITOR_TEXT_Y)
-            cr.show_text(comp.name.upper())
+        if comp.selected == False:
+            color = COMPOSITOR_CLIP
+        else:
+            color = COMPOSITOR_CLIP_SELECTED
             
-            cr.restore()
+        cr.set_source_rgba(*color)
+        
+        cr.fill_preserve()
 
+        cr.set_source_rgb(0, 0, 0)
+        cr.set_line_width(1.0)
+        cr.stroke()
+
+        # text
+        cr.save()
+
+        cr.rectangle(scale_in + 0.5,
+                     y + 0.5, scale_length, 
+                     COMPOSITOR_HEIGHT)
+        cr.clip()
+        cr.new_path()
+        cr.set_source_rgb(1, 1, 1)
+        cr.select_font_face ("sans-serif",
+                             cairo.FONT_SLANT_NORMAL,
+                             cairo.FONT_WEIGHT_NORMAL)
+
+        cr.set_font_size(11)
+        cr.move_to(scale_in + COMPOSITOR_TEXT_X, y + COMPOSITOR_TEXT_Y)
+        cr.show_text(comp.name.upper())
+        
+        cr.restore()
+
+    def draw_standard_mode_compositor(self, comp, cr, scale_in, scale_length, y, target_y):
+        x_draw, y_draw, width, height = _get_standard_mode_compositor_rect(scale_in, scale_length, y)
+        
+        radius = 4.0
+        degrees = M_PI / 180.0
+
+        cr.new_sub_path()
+        
+        # First two corners of round rect
+        cr.arc(x_draw + width - radius, y_draw + radius, radius, -90 * degrees, 0 * degrees)
+        cr.arc(x_draw + width - radius, y_draw + height - radius, radius, 0 * degrees, 90 * degrees)
+
+        # Arrow
+        scale_in = x_draw + width / 2.0 - COMPOSITOR_TRACK_ARROW_WIDTH / 2.0 - 5.5
+        start_y = y_draw + height
+
+        COMPOSITOR_TRACK_SMALL_ARROW_WIDTH = 4
+        COMPOSITOR_TRACK_SMALL_ARROW_HEAD_WIDTH = 8
+        COMPOSITOR_TRACK_SMALL_ARROW_HEAD_WIDTH_HEIGHT = 4
+        
+        cr.line_to(scale_in + 0.5 + COMPOSITOR_TRACK_X_PAD + 2 * COMPOSITOR_TRACK_SMALL_ARROW_WIDTH, start_y + 0.5 )
+        cr.line_to(scale_in + 0.5 + COMPOSITOR_TRACK_X_PAD + 2 * COMPOSITOR_TRACK_SMALL_ARROW_WIDTH, target_y + 0.5 - COMPOSITOR_TRACK_SMALL_ARROW_HEAD_WIDTH_HEIGHT)
+        cr.line_to(scale_in + 0.5 + COMPOSITOR_TRACK_X_PAD + COMPOSITOR_TRACK_SMALL_ARROW_WIDTH + COMPOSITOR_TRACK_SMALL_ARROW_HEAD_WIDTH, target_y + 0.5 - COMPOSITOR_TRACK_SMALL_ARROW_HEAD_WIDTH_HEIGHT)
+        cr.line_to(scale_in + 0.5 + COMPOSITOR_TRACK_X_PAD + COMPOSITOR_TRACK_SMALL_ARROW_WIDTH, target_y + 0.5)
+        cr.line_to(scale_in + 0.5 + COMPOSITOR_TRACK_X_PAD + COMPOSITOR_TRACK_SMALL_ARROW_WIDTH - COMPOSITOR_TRACK_SMALL_ARROW_HEAD_WIDTH, target_y + 0.5 - COMPOSITOR_TRACK_SMALL_ARROW_HEAD_WIDTH_HEIGHT)
+        cr.line_to(scale_in + 0.5 + COMPOSITOR_TRACK_X_PAD, target_y + 0.5 - COMPOSITOR_TRACK_SMALL_ARROW_HEAD_WIDTH_HEIGHT)
+        cr.line_to(scale_in + 0.5 + COMPOSITOR_TRACK_X_PAD, start_y + 0.5 )
+
+        # Last two corners of round rect
+        cr.arc(x_draw + radius, y_draw + height - radius, radius, 90 * degrees, 180 * degrees)
+        cr.arc(x_draw + radius, y_draw + radius, radius, 180 * degrees, 270 * degrees)
+        
+        cr.close_path()
+                
+        if comp.selected == False:
+            color = COMPOSITOR_CLIP_AUTO_FOLLOW
+        else:
+            color = COMPOSITOR_CLIP_SELECTED
+            
+        cr.set_source_rgba(*color)
+        
+        cr.fill_preserve()
+
+        cr.set_source_rgb(0, 0, 0)
+        cr.set_line_width(1.0)
+        cr.stroke()
+
+        cr.set_source_surface(COMPOSITOR_ICON, x_draw - 2, y_draw + 2)
+        cr.paint()
+    
     def draw_sync_relations(self, cr):
         parent_y = _get_track_y(current_sequence().first_video_index)
         radius = 4
@@ -2362,9 +2504,11 @@ class TimeLineColumn:
         layout.set_font_description(desc)
 
         cr.set_source_rgb(*TRACK_NAME_COLOR)
-        if track.height == sequence.TRACK_HEIGHT_NORMAL:
+        if track.height == sequence.TRACK_HEIGHT_HIGH:
+            text_y = ID_PAD_Y_HIGH
+        elif track.height == sequence.TRACK_HEIGHT_NORMAL:
             text_y = ID_PAD_Y
-        else:
+        elif track.height == sequence.TRACK_HEIGHT_SMALL:
             text_y = ID_PAD_Y_SMALL
         cr.move_to(COLUMN_LEFT_PAD + ID_PAD_X, y + text_y)
         PangoCairo.update_layout(cr, layout)
@@ -2387,17 +2531,23 @@ class TimeLineColumn:
             
         if mute_icon != None:
             ix, iy = MUTE_ICON_POS
-            if track.height > sequence.TRACK_HEIGHT_SMALL:
+            if track.height == sequence.TRACK_HEIGHT_HIGH:
+                ix, iy = MUTE_ICON_POS_HIGH
+            elif track.height == sequence.TRACK_HEIGHT_NORMAL:
                 ix, iy = MUTE_ICON_POS_NORMAL
+            elif track.height == sequence.TRACK_HEIGHT_SMALL:
+                ix, iy = MUTE_ICON_POS
             cr.set_source_surface(mute_icon, int(ix), int(y + iy))
             cr.paint()
 
         # Draw locked icon
         if track.edit_freedom == sequence.LOCKED:
             ix, iy = LOCK_POS
-            if track.height == sequence.TRACK_HEIGHT_NORMAL:
+            if track.height == sequence.TRACK_HEIGHT_HIGH: 
+                iy = ID_PAD_Y_HIGH + 4
+            elif track.height == sequence.TRACK_HEIGHT_NORMAL:
                 iy = ID_PAD_Y + 4
-            else:
+            elif track.height == sequence.TRACK_HEIGHT_SMALL:
                 iy = ID_PAD_Y_SMALL + 4
             cr.set_source_surface(FULL_LOCK_ICON, ix, int(y + iy))
             cr.paint()
@@ -2407,8 +2557,11 @@ class TimeLineColumn:
             stop, r,g,b, a = TRACK_GRAD_STOP1
             cr.set_source_rgb(r,g,b)
         if is_insert_track == True:
-            ix, iy = INSRT_ICON_POS
-            if track.height == sequence.TRACK_HEIGHT_SMALL:
+            if track.height == sequence.TRACK_HEIGHT_HIGH:
+                ix, iy = INSRT_ICON_POS_HIGH
+            elif track.height == sequence.TRACK_HEIGHT_NORMAL:
+                ix, iy = INSRT_ICON_POS
+            elif track.height == sequence.TRACK_HEIGHT_SMALL:
                 ix, iy = INSRT_ICON_POS_SMALL
             cr.set_source_surface(INSERT_ARROW_ICON, ix, y + iy)
             cr.paint()
@@ -2714,6 +2867,43 @@ class TimeLineFrameScale:
         
         return grad
 
+
+class TimeLineRenderingControlStrip:
+    """
+    GUI component that passes draw and mouse events to tlinerender module with some added data.
+    """
+
+    def __init__(self):
+        self.widget = cairoarea.CairoDrawableArea2( WIDTH, 
+                                                    STRIP_HEIGHT, 
+                                                    self._draw)
+        self.widget.press_func = self._press_event
+        self.widget.motion_notify_func = self._motion_notify_event
+        self.widget.release_func = self._release_event
+        self.widget.add_events(Gdk.EventMask.FOCUS_CHANGE_MASK)
+        self.widget.connect("focus-out-event", self._focus_out_event)
+    # --------------------------------------------- DRAW
+    def _draw(self, event, cr, allocation):
+        """
+        Callback for repaint from CairoDrawableArea.
+        We get cairo contect and allocation.
+        """
+        tlinerender.get_renderer().draw(event, cr, allocation, pos, pix_per_frame)
+
+        
+    # --------------------------------------------- MOUSE EVENTS    
+    def _press_event(self, event):
+        tlinerender.get_renderer().press_event(event)
+
+    def _motion_notify_event(self, x, y, state):
+        tlinerender.get_renderer().motion_notify_event(x, y, state)
+                
+    def _release_event(self, event):
+        tlinerender.get_renderer().release_event(event)
+        
+    def _focus_out_event(self, widget, event):
+        tlinerender.get_renderer().focus_out()
+    
 class KFToolFrameScale:
     
     def __init__(self, line_color):
@@ -2819,7 +3009,8 @@ class TimeLineScroller(Gtk.HScrollbar):
     """
     def __init__(self, scroll_listener):
         GObject.GObject.__init__(self)
-        adjustment = Gtk.Adjustment(0.0, 0.0, 100.0, 1.0, 10.0, 30.0)
+        
+        adjustment = Gtk.Adjustment(value=0.0, lower=0.0, upper=100.0, step_incr=1.0, page_increment=10.0, page_size=30.0)
         adjustment.connect("value-changed", scroll_listener)
         self.set_adjustment(adjustment)
 

@@ -28,6 +28,8 @@ import os
 
 from gi.repository import Gdk
 
+import copy
+
 import appconsts
 import audiosync
 import clipeffectseditor
@@ -92,6 +94,8 @@ def do_multiple_clip_insert(track, clips, tline_pos):
     
     # Can't put audio media on video track
     for new_clip in clips:
+        if isinstance(new_clip, int):
+            continue
         if ((new_clip.media_type == appconsts.AUDIO)
            and (track.type == appconsts.VIDEO)):        
             _display_no_audio_on_video_msg(track)
@@ -290,9 +294,15 @@ def tline_canvas_mouse_pressed(event, frame):
 
     #  Check if compositor is hit and if so, handle compositor editing
     if editorstate.current_is_move_mode() and timeline_visible():
-        hit_compositor = tlinewidgets.compositor_hit(frame, event.y, current_sequence().compositors)
-        if hit_compositor != None:         
-            if editorstate.auto_follow == False or hit_compositor.obey_autofollow == False:
+        hit_compositor = tlinewidgets.compositor_hit(frame, event.x, event.y, current_sequence().compositors)
+        if hit_compositor != None:
+            if editorstate.get_compositing_mode() == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
+                compositeeditor.set_compositor(hit_compositor)
+                compositormodes.set_compositor_selected(hit_compositor)
+                movemodes.clear_selected_clips()
+                editorstate.timeline_mouse_disabled = True
+                return
+            elif editorstate.auto_follow_active() == False or hit_compositor.obey_autofollow == False:
                 movemodes.clear_selected_clips()
                 if event.button == 1 or (event.button == 3 and event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                     compositormodes.set_compositor_mode(hit_compositor)
@@ -430,7 +440,7 @@ def tline_canvas_double_click(frame, x, y):
         modesetting.set_default_edit_mode()
         return
 
-    hit_compositor = tlinewidgets.compositor_hit(frame, y, current_sequence().compositors)
+    hit_compositor = tlinewidgets.compositor_hit(frame, x, y, current_sequence().compositors)
     if hit_compositor != None:
         compositeeditor.set_compositor(hit_compositor)
         return
@@ -487,7 +497,14 @@ def tline_media_drop(media_file, x, y, use_marks=False):
     
     # Create new clip.
     if media_file.type != appconsts.PATTERN_PRODUCER:
-        new_clip = current_sequence().create_file_producer_clip(media_file.path, media_file.name, False, media_file.ttl)
+        if media_file.container_data == None:
+            # Standard clips
+            new_clip = current_sequence().create_file_producer_clip(media_file.path, media_file.name, False, media_file.ttl)
+        else:
+            # Container clips, create new container_data object and generate uuid for clip so it gets it own folder in.$XML_DATA/.../container_clips
+            new_clip = current_sequence().create_file_producer_clip(media_file.path, media_file.name, False, media_file.ttl)
+            new_clip.container_data = copy.deepcopy(media_file.container_data)
+            new_clip.container_data.generate_clip_id()
     else:
         new_clip = current_sequence().create_pattern_producer(media_file)
             

@@ -24,6 +24,7 @@ Module handles keyevents.
 
 from gi.repository import Gdk
 
+import appconsts
 import audiowaveform
 import clipeffectseditor
 import compositeeditor
@@ -48,6 +49,7 @@ import shortcuts
 import re
 import rotomask
 import tlineaction
+import tlinerender
 import tlinewidgets
 import trimmodes
 import updater
@@ -85,7 +87,7 @@ def key_down(widget, event):
         # Stop widget focus from travelling if arrow key pressed
         gui.editor_window.window.emit_stop_by_name("key_press_event")
         return True
-    
+
     # If timeline widgets are in focus timeline keyevents are available
     if _timeline_has_focus():
         was_handled = _handle_tline_key_event(event)
@@ -177,13 +179,14 @@ def _handle_tline_key_event(event):
     Returns True for handled key presses to stop those
     keyevents from going forward.
     """
-
     tool_was_selected = workflow.tline_tool_keyboard_selected(event)
     if tool_was_selected == True:
         return True
     
+
     action = _get_shortcut_action(event)
     prefs = editorpersistance.prefs
+
 
     if action == 'mark_in':
         monitorevent.mark_in_pressed()
@@ -200,6 +203,9 @@ def _handle_tline_key_event(event):
         return True
     if action == 'to_mark_out':
         monitorevent.to_mark_out_pressed()
+        return True
+    if action == 'clear_io_marks':
+        monitorevent.marks_clear_pressed()
         return True
     if action == 'play_pause':
         if PLAYER().is_playing():
@@ -389,6 +395,7 @@ def _handle_extended_monitor_focus_events(event):
         return True
     if action == 'overwrite_range':
         tlineaction.range_overwrite_pressed()
+        return True
     if action == 'insert':
         tlineaction.insert_button_pressed()
         return True
@@ -537,6 +544,9 @@ def _handle_clip_key_event(event):
         if action == 'to_mark_out':
             monitorevent.to_mark_out_pressed()
             return True
+        if action == 'clear_io_marks':
+            monitorevent.marks_clear_pressed()
+            return True
 
 def _handle_delete():
     # Delete media file
@@ -568,6 +578,11 @@ def _handle_delete():
         medialog.delete_selected()
         return True
 
+    # Delete tline render segment
+    if gui.tline_render_strip.widget.has_focus() == True:
+        tlinerender.get_renderer().delete_selected_segment()
+        return True
+    
     focus_editor = _get_focus_keyframe_editor(compositeeditor.keyframe_editor_widgets)
     if focus_editor != None:
         focus_editor.delete_pressed()
@@ -609,13 +624,27 @@ def _handle_effects_editor_keys(event):
     action = _get_shortcut_action(event)
     focus_editor = _get_focus_keyframe_editor(clipeffectseditor.keyframe_editor_widgets)
     if focus_editor != None:
-      if action == 'play_pause':
+        if action == 'play_pause':
             if PLAYER().is_playing():
                 monitorevent.stop_pressed()
             else:
                 monitorevent.play_pressed()
             return True
-
+        if action == 'prev_frame' or action == 'next_frame':
+            prefs = editorpersistance.prefs
+            if action == 'prev_frame':
+                seek_amount = -1
+            else:
+                seek_amount = 1
+            if (event.get_state() & Gdk.ModifierType.SHIFT_MASK):
+                seek_amount = seek_amount * prefs.ffwd_rev_shift
+            if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+                seek_amount = seek_amount * prefs.ffwd_rev_ctrl
+            if (event.get_state() & Gdk.ModifierType.LOCK_MASK):
+                seek_amount = seek_amount * prefs.ffwd_rev_caps
+            PLAYER().seek_delta(seek_amount)
+            return True
+        
     return False
 
 def _get_focus_keyframe_editor(keyframe_editor_widgets):
@@ -635,3 +664,67 @@ def _move_to_end():
     updater.repaint_tline()
     updater.update_tline_scrollbar()
 
+# ----------------------------------------------------------------------- COPY PASTE ACTION FORWARDING
+def copy_action():
+    if _timeline_has_focus() == False:
+        filter_kf_editor = _get_focus_keyframe_editor(clipeffectseditor.keyframe_editor_widgets)
+        geom_kf_editor = _get_focus_keyframe_editor(compositeeditor.keyframe_editor_widgets)
+        if filter_kf_editor != None:
+            value = filter_kf_editor.get_copy_kf_value()
+            save_data = (appconsts.COPY_PASTE_KEYFRAME_EDITOR_KF_DATA, (value, filter_kf_editor))
+            editorstate.set_copy_paste_objects(save_data) 
+        elif geom_kf_editor != None:
+            value = geom_kf_editor.get_copy_kf_value() 
+            save_data = (appconsts.COPY_PASTE_GEOMETRY_EDITOR_KF_DATA, (value, geom_kf_editor))
+            editorstate.set_copy_paste_objects(save_data) 
+        else:
+            # Try to extract text to clipboard because user pressed CTRL + C
+            copy_source = gui.editor_window.window.get_focus()
+            try:
+                copy_source.copy_clipboard()
+            except:# selected widget was not a Gtk.Editable that can provide text to clipboard
+                pass
+    else:
+        tlineaction.do_timeline_objects_copy()
+
+def paste_action():
+    if _timeline_has_focus() == False:
+        copy_paste_object = editorstate.get_copy_paste_objects()
+        if copy_paste_object == None:
+            return
+        data_type, paste_data = editorstate.get_copy_paste_objects()
+        if data_type == appconsts.COPY_PASTE_KEYFRAME_EDITOR_KF_DATA:
+            value, kf_editor = paste_data
+            kf_editor.paste_kf_value(value)
+        elif data_type == appconsts.COPY_PASTE_GEOMETRY_EDITOR_KF_DATA:
+            value, geom_editor = paste_data
+            geom_editor.paste_kf_value(value)
+    else:
+        tlineaction.do_timeline_objects_paste()
+
+def change_single_shortcut(code, event, shortcut_label):
+    key_val_name = Gdk.keyval_name(event.keyval).lower()
+    print(key_val_name)
+    
+    mods_list = []
+    state = event.get_state()
+    if state & Gdk.ModifierType.CONTROL_MASK:
+        mods_list.append("CTRL")
+    if state & Gdk.ModifierType.MOD1_MASK:
+        mods_list.append("ALT")
+        
+    if state & Gdk.ModifierType.SHIFT_MASK:
+        mods_list.append("SHIFT")
+    elif state & Gdk.ModifierType.LOCK_MASK:     # CapsLock is used as an equivalent to SHIFT.
+        mods_list.append("SHIFT")
+
+    shortcut_info_str = shortcuts.get_shortcut_info_for_keyname_and_modlist(key_val_name, mods_list)
+    if shortcuts.is_blocked_shortcut(key_val_name, mods_list):
+        return shortcut_info_str
+
+    shortcut_label.set_text(shortcut_info_str)
+
+    shortcuts.change_custom_shortcut(code, key_val_name, mods_list)
+    shortcuts.set_keyboard_shortcuts()
+
+    return None

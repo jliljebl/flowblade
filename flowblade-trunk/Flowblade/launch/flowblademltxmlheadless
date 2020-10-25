@@ -1,0 +1,47 @@
+#!/usr/bin/python3
+
+import sys
+import os
+
+def _get_arg_value(args, key_str):
+    for arg in sys.argv:
+        parts = arg.split(":")
+        if len(parts) > 1:
+            if parts[0] == key_str:
+                return parts[1]
+    
+    return None
+
+modules_path = os.path.dirname(os.path.abspath(sys.argv[0])).rstrip("/launch")
+
+sys.path.insert(0, modules_path)
+import processutils
+processutils.update_sys_path(modules_path)
+
+try:
+    import mltxmlheadless
+    import editorstate # Used to decide which translations from file system are used
+    root_dir = modules_path.split("/")[1]
+    if root_dir != "home":
+        editorstate.app_running_from = editorstate.RUNNING_FROM_INSTALLATION
+    else:
+        editorstate.app_running_from = editorstate.RUNNING_FROM_DEV_VERSION
+    
+    session_id = _get_arg_value(sys.argv, "session_id")
+    xml_file_path = _get_arg_value(sys.argv, "xml_file_path")
+    range_in = _get_arg_value(sys.argv, "range_in")
+    range_out = _get_arg_value(sys.argv, "range_out")
+    profile_desc_under_score = _get_arg_value(sys.argv, "profile_desc")
+    profile_desc = profile_desc_under_score.replace("_", " ") # We need to put underscores in profile names to get them here in one piece.
+                                                              # Now we take underscores out to get correct MLT profile names.
+except Exception as err:
+    print ("Failed to import mltxmlheadless")
+    print ("ERROR:", err)
+    print ("Installation was assumed to be at:", modules_path)
+    sys.exit(1)
+
+mltxmlheadless.main(modules_path, session_id, xml_file_path, range_in, range_out, profile_desc)
+
+
+
+
