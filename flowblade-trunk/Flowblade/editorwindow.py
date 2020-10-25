@@ -172,12 +172,20 @@ class EditorWindow:
         tline_vbox.pack_start(self.tline_renderer_hbox, False, False, 0)
         tline_vbox.pack_start(tline_hbox_3, False, False, 0)
 
+        #return align
+        tline_vbox_frame = Gtk.Frame()
+        tline_vbox_frame.add(tline_vbox)
+        tline_vbox_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
+        guiutils.set_margins(tline_vbox_frame, 0, 0, 1, 0)
+        #return frame
+    
         # Timeline box
         self.tline_box = Gtk.HBox()
         self.tline_box.pack_start(self.tool_dock, False, False, 0)
-        self.tline_box.pack_start(tline_vbox, True, True, 0)
+        self.tline_box.pack_start(guiutils.pad_label(2,2), False, False, 0)
+        self.tline_box.pack_start(tline_vbox_frame, True, True, 0)
 
-
+        
         # Timeline pane
         tline_pane = Gtk.VBox(False, 1)
         tline_pane.pack_start(self.edit_buttons_frame, False, True, 0)
