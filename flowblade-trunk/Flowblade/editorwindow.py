@@ -635,7 +635,7 @@ class EditorWindow:
 
         # Timeline middle row
         tline_hbox_2 = Gtk.HBox()
-
+        tline_hbox_2.pack_start(tool_dock, False, False, 0)
         tline_hbox_2.pack_start(self.tline_column.widget, False, False, 0)
         tline_hbox_2.pack_start(self.tline_canvas.widget, True, True, 0)
         
@@ -679,56 +679,6 @@ class EditorWindow:
 
         # Timeline scroller
         self.tline_scroller = tlinewidgets.TimeLineScroller(updater.tline_scrolled)
-        
-        # Timeline bottom row
-        tline_hbox_3 = Gtk.HBox()
-        tline_hbox_3.pack_start(self.left_corner.widget, False, False, 0)
-        tline_hbox_3.pack_start(self.tline_scroller, True, True, 0)
-
-        # Timeline vbox 
-        tline_vbox = Gtk.VBox()
-        tline_vbox.pack_start(tline_hbox_1, False, False, 0)
-        tline_vbox.pack_start(tline_hbox_2, True, True, 0)
-        tline_vbox.pack_start(tline_hbox_3, False, False, 0)
-
-        # Timeline box 
-        self.tline_box = Gtk.HBox()
-        self.tline_box.pack_start(tline_vbox, True, True, 0)
-
-        # Timeline pane
-        tline_pane_v = Gtk.VBox(False, 1)
-        tline_pane_v.pack_start(self.edit_buttons_frame, False, True, 0)
-        tline_pane_v.pack_start(self.tline_box, True, True, 0)
-
-        tline_pane_h = Gtk.HBox(False, 0)
-        tline_pane_h.pack_start(tline_pane_v, True, True, 0)
-        tline_pane_h.pack_start(tool_dock, False, False, 0)
-
-        self.tline_pane = tline_pane_h
-    
-        # VPaned top row / timeline
-        self.app_v_paned = Gtk.VPaned()
-        self.app_v_paned.pack1(self.top_row_hbox, resize=False, shrink=False)
-        self.app_v_paned.pack2(self.tline_pane, resize=True, shrink=False)
-        self.app_v_paned.no_dark_bg = True
-
-
-        # Menu box
-        # menubar size 348, 28 if w want to center someting her with set_size_request
-        self.menubar.set_margin_bottom(4)
-        menu_vbox = Gtk.HBox(False, 0)
-        menu_vbox.pack_start(guiutils.get_right_justified_box([self.menubar]), False, False, 0)
-        menu_vbox.pack_start(Gtk.Label(), True, True, 0)
-        if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
-            menu_vbox.pack_start(self.monitor_tc_info.widget, False, False, 0)
-        else:
-            top_row_window_2 = Gtk.HBox(False, 0)
-            top_row_window_2.pack_start(Gtk.Label(), True, True, 0)
-            top_row_window_2.pack_start(self.monitor_tc_info.widget, False, False, 0)
-        # Pane
-        pane = Gtk.VBox(False, 1)
-        pane.pack_start(menu_vbox, False, True, 0)
-        pane.pack_start(self.app_v_paned, True, True, 0)
 
     def _init_cursors(self):
         # Read cursors
@@ -1026,7 +976,6 @@ class EditorWindow:
         # Create global action group
         action_group = Gtk.ActionGroup('WindowActions')
         action_group.add_actions(menu_actions, user_data=None)
->>>>>>> master
 
         # Use UIManager and add accelators to window.
         ui.insert_action_group(action_group, 0)
