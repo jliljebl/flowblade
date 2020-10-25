@@ -375,6 +375,13 @@ def get_named_frame(name, widget, left_padding=12, right_padding=6, right_out_pa
     
     return out_align
 
+def get_panel_etched_frame(panel):
+    frame = Gtk.Frame()
+    frame.add(panel)
+    frame.set_shadow_type(Gtk.ShadowType.ETCHED_OUT)
+    set_margins(frame, 0, 0, 1, 0)
+    return frame
+        
 def get_in_centering_alignment(widget, xsc=0.0, ysc=0.0):
     align = Gtk.HBox(False, 0)
     align.pack_start(Gtk.Label(), True, True, 0)

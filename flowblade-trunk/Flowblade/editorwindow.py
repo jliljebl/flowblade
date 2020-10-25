@@ -165,26 +165,19 @@ class EditorWindow:
         tline_hbox_3.pack_start(self.left_corner.widget, False, False, 0)
         tline_hbox_3.pack_start(self.tline_scroller, True, True, 0)
 
-        # Timeline hbox
+        # Timeline vbox
         tline_vbox = Gtk.VBox()
         tline_vbox.pack_start(self.tline_hbox_1, False, False, 0)
         tline_vbox.pack_start(self.tline_hbox_2, True, True, 0)
         tline_vbox.pack_start(self.tline_renderer_hbox, False, False, 0)
         tline_vbox.pack_start(tline_hbox_3, False, False, 0)
 
-        #return align
-        tline_vbox_frame = Gtk.Frame()
-        tline_vbox_frame.add(tline_vbox)
-        tline_vbox_frame.set_shadow_type(Gtk.ShadowType.ETCHED_OUT)
-        guiutils.set_margins(tline_vbox_frame, 0, 0, 1, 0)
-        #return frame
+        tline_vbox_frame = guiutils.get_panel_etched_frame(tline_vbox)
     
         # Timeline box
         self.tline_box = Gtk.HBox()
         self.tline_box.pack_start(self.tool_dock, False, False, 0)
-        #self.tline_box.pack_start(guiutils.pad_label(2,2), False, False, 0)
         self.tline_box.pack_start(tline_vbox_frame, True, True, 0)
-
         
         # Timeline pane
         tline_pane = Gtk.VBox(False, 1)
@@ -442,6 +435,8 @@ class EditorWindow:
 
             top_project_vbox.set_size_request(PANEL_WIDTH, PANEL_HEIGHT)
             top_project_panel = guiutils.set_margins(top_project_vbox, 0, 2, 6, 2)
+            top_project_panel_frame = guiutils.get_panel_etched_frame(top_project_panel)
+            guiutils.set_margins(top_project_panel_frame, 0, 0, 0, 1)
         else:
 
             # Notebook project panel for smallest screens
@@ -477,6 +472,9 @@ class EditorWindow:
         self.notebook.append_page(jobs_pane, Gtk.Label(label=_("Jobs")))
         self.notebook.append_page(render_panel, Gtk.Label(label=_("Render")))
         self.notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
+
+        notebook_frame = guiutils.get_panel_etched_frame(self.notebook)
+        guiutils.set_margins(notebook_frame, 0, 0, 0, 1)
 
         # Position bar and decorative frame  for it
         self.pos_bar = PositionBar()
@@ -550,7 +548,7 @@ class EditorWindow:
         # Notebook panel
         notebook_vbox = Gtk.VBox(False, 1)
         notebook_vbox.no_dark_bg = True
-        notebook_vbox.pack_start(self.notebook, True, True, 0)
+        notebook_vbox.pack_start(notebook_frame, True, True, 0)
 
         # Top row paned
         self.top_paned = Gtk.HPaned()
@@ -564,7 +562,7 @@ class EditorWindow:
         # Top row
         self.top_row_hbox = Gtk.HBox(False, 0)
         if top_level_project_panel() == True:
-            self.top_row_hbox.pack_start(top_project_panel, False, False, 0)
+            self.top_row_hbox.pack_start(top_project_panel_frame, False, False, 0)
         self.top_row_hbox.pack_start(self.top_paned, True, True, 0)
         self._update_top_row()
 
