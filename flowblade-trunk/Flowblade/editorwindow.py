@@ -175,14 +175,14 @@ class EditorWindow:
         #return align
         tline_vbox_frame = Gtk.Frame()
         tline_vbox_frame.add(tline_vbox)
-        tline_vbox_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
+        tline_vbox_frame.set_shadow_type(Gtk.ShadowType.ETCHED_OUT)
         guiutils.set_margins(tline_vbox_frame, 0, 0, 1, 0)
         #return frame
     
         # Timeline box
         self.tline_box = Gtk.HBox()
         self.tline_box.pack_start(self.tool_dock, False, False, 0)
-        self.tline_box.pack_start(guiutils.pad_label(2,2), False, False, 0)
+        #self.tline_box.pack_start(guiutils.pad_label(2,2), False, False, 0)
         self.tline_box.pack_start(tline_vbox_frame, True, True, 0)
 
         
@@ -570,14 +570,10 @@ class EditorWindow:
 
         # Edit buttons rows
         self.edit_buttons_row = self._get_edit_buttons_row()
-        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
-            self.edit_buttons_frame = Gtk.Frame()
-            self.edit_buttons_frame.add(self.edit_buttons_row)
-            self.edit_buttons_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
-        else:
-            self.edit_buttons_frame  = self.edit_buttons_row
+        self.edit_buttons_frame = Gtk.Frame()
+        self.edit_buttons_frame.add(self.edit_buttons_row)
+        self.edit_buttons_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
 
-        # Timeline scale
         self.tline_scale = tlinewidgets.TimeLineFrameScale(modesetting.set_default_edit_mode,
                                                            updater.mouse_scroll_zoom)
 
@@ -645,6 +641,7 @@ class EditorWindow:
 
         # Timeline middle row
         tline_hbox_2 = Gtk.HBox()
+        tline_hbox_2.pack_start(guiutils.pad_label(8,2), False, False, 0)
         tline_hbox_2.pack_start(self.tline_column.widget, False, False, 0)
         tline_hbox_2.pack_start(self.tline_canvas.widget, True, True, 0)
         
