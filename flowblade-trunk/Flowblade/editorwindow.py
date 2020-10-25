@@ -174,7 +174,9 @@ class EditorWindow:
 
         # Timeline box
         self.tline_box = Gtk.HBox()
+        self.tline_box.pack_start(self.tool_dock, False, False, 0)
         self.tline_box.pack_start(tline_vbox, True, True, 0)
+
 
         # Timeline pane
         tline_pane = Gtk.VBox(False, 1)
@@ -631,11 +633,10 @@ class EditorWindow:
                           editevent.tline_media_drop)
 
 
-        tool_dock = workflow.get_tline_tool_dock()
+        self.tool_dock = workflow.get_tline_tool_dock()
 
         # Timeline middle row
         tline_hbox_2 = Gtk.HBox()
-        tline_hbox_2.pack_start(tool_dock, False, False, 0)
         tline_hbox_2.pack_start(self.tline_column.widget, False, False, 0)
         tline_hbox_2.pack_start(self.tline_canvas.widget, True, True, 0)
         
