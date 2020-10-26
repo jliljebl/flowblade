@@ -53,6 +53,16 @@ BUTTON_WIDTH = 48 # middle edit buttons row
 
 NORMAL_WIDTH = 1420
 
+def do_layout_after_dock_change(w):
+    if editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_TC_LEFT:
+        _do_TC_LEFT_layout(w)
+    elif editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_TC_CENTER: 
+        _do_TC_MIDDLE_layout(w)
+    elif editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_COMPONENTS_CENTERED:
+        _do_COMPONENTS_CENTERED_layout(w)
+    elif editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_TC_FREE:
+        _do_show_buttons_TC_FREE_layout(w)
+    
 def _show_buttons_TC_LEFT_layout(widget):
     global w
     w = gui.editor_window
@@ -61,6 +71,9 @@ def _show_buttons_TC_LEFT_layout(widget):
     if widget.get_active() == False:
         return
 
+    _do_TC_LEFT_layout(w)
+    
+def _do_TC_LEFT_layout(w):
     _clear_container(w.edit_buttons_row)
     _create_buttons(w)
     fill_with_TC_LEFT_pattern(w.edit_buttons_row, w)
@@ -77,6 +90,9 @@ def _show_buttons_TC_MIDDLE_layout(widget):
     if widget.get_active() == False:
         return
 
+    _do_TC_MIDDLE_layout(w)
+    
+def _do_TC_MIDDLE_layout(w):
     _clear_container(w.edit_buttons_row)
     _create_buttons(w)
     fill_with_TC_MIDDLE_pattern(w.edit_buttons_row, w)
@@ -93,6 +109,10 @@ def _show_buttons_COMPONENTS_CENTERED_layout(widget):
     if widget.get_active() == False:
         return
 
+    _do_COMPONENTS_CENTERED_layout(w)
+    
+def _do_COMPONENTS_CENTERED_layout(w):
+    
     _clear_container(w.edit_buttons_row)
     _create_buttons(w)
     fill_with_COMPONENTS_CENTERED_pattern(w.edit_buttons_row, w)
@@ -148,7 +168,10 @@ def _create_buttons(editor_window):
     surface = guiutils.get_cairo_image("workflow")
     editor_window.worflow_launch = guicomponents.PressLaunch(workflow.workflow_menu_launched, surface, w=22*size_adj, h=22*size_adj)
 
-    editor_window.tool_selector = guicomponents.ToolSelector(editor_window.mode_selector_pressed, m_pixbufs, 40*size_adj, 22*size_adj)
+    if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
+        editor_window.tool_selector = create_tool_selector(editor_window) #guicomponents.ToolSelector(editor_window.mode_selector_pressed, m_pixbufs, 40*size_adj, 22*size_adj)
+    else:
+        editor_window.tool_selector = None
 
     if editorpersistance.prefs.buttons_style == 2: # NO_DECORATIONS
         no_decorations = True
@@ -222,6 +245,15 @@ def _create_buttons(editor_window):
         editor_window.tools_buttons.sensitive[0] = False
         editor_window.tools_buttons.widget.set_tooltip_text(_("Audio Mixer(not available)\nTitler"))
 
+def create_tool_selector(editor_window):
+    size_adj = 1
+    if editorpersistance.prefs.double_track_hights:
+       size_adj = 2
+    return guicomponents.ToolSelector(editor_window.mode_selector_pressed, m_pixbufs, 40*size_adj, 22*size_adj)
+
+def re_create_tool_selector(editor_window):
+    editor_window.tool_selector = create_tool_selector(editor_window)
+ 
 def fill_with_TC_LEFT_pattern(buttons_row, window):
     buttons_row.set_homogeneous(False)
     global w
@@ -231,12 +263,16 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) 
     buttons_row.pack_start(w.big_TC, False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
-    buttons_row.pack_start(w.tool_selector.widget, False, True, 0)
+    if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
+        buttons_row.pack_start(w.tool_selector.widget, False, True, 0)
 
     if editorstate.SCREEN_WIDTH > NORMAL_WIDTH:
         buttons_row.pack_start(guiutils.get_pad_label(24, 10), False, True, 0)
         buttons_row.pack_start(_get_tools_buttons(), False, True, 0)
-        buttons_row.pack_start(guiutils.get_pad_label(170, 10), False, True, 0)
+        if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
+            buttons_row.pack_start(guiutils.get_pad_label(170, 10), False, True, 0)
+        else:
+            buttons_row.pack_start(guiutils.get_pad_label(100, 10), False, True, 0)
     else:
         buttons_row.pack_start(guiutils.get_pad_label(30, 10), False, True, 0)
     
@@ -280,7 +316,8 @@ def fill_with_TC_MIDDLE_pattern(buttons_row, window):
     middle_panel.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) 
     middle_panel.pack_start(w.big_TC, False, True, 0)
     middle_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
-    middle_panel.pack_start(w.tool_selector.widget, False, True, 0)
+    if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
+        middle_panel.pack_start(w.tool_selector.widget, False, True, 0)
     
     right_panel = Gtk.HBox(False, 0) 
     right_panel.pack_start(Gtk.Label(), True, True, 0)
@@ -305,7 +342,8 @@ def fill_with_COMPONENTS_CENTERED_pattern(buttons_row, window):
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) 
     buttons_row.pack_start(w.big_TC, False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
-    buttons_row.pack_start(w.tool_selector.widget, False, True, 0)
+    if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
+        buttons_row.pack_start(w.tool_selector.widget, False, True, 0)
     if editorstate.SCREEN_WIDTH > NORMAL_WIDTH:
         buttons_row.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
         buttons_row.pack_start(_get_tools_buttons(), False, True, 0)
@@ -349,7 +387,8 @@ def fill_with_TC_FREE_pattern(buttons_row, window):
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
     for row_number in range(0, len(groups_tools_current)):
         if cbutton_active_current[row_number] is True:
-            buttons_row.pack_start(tools_dict[groups_tools_current[row_number]], False, True, 0)
+            tool = tools_dict[groups_tools_current[row_number]]
+            buttons_row.pack_start(tool, False, True, 0) # does not support dock yet
             buttons_row.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
     buttons_row.pack_start(Gtk.Label(), True, True, 0)
 

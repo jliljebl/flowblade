@@ -410,7 +410,7 @@ def get_tline_tool_dock():
     dock.pack_start(Gtk.Label(), True, True, 0)
 
     align = guiutils.set_margins(dock, 20, 0, 0, 0)
-    #return align
+
     frame = Gtk.Frame()
     frame.add(align)
     frame.set_shadow_type(Gtk.ShadowType.ETCHED_OUT)
@@ -420,15 +420,10 @@ def get_tline_tool_dock():
 def _get_tool_dock_item(tool_icon_file, tool_name, tool_id):
     tool_img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + tool_icon_file)
     guiutils.set_margins(tool_img, 5, 5, 9, 7)
-    
-    
-    # tool_selector_item_activated(self, source_widget, tool):
-    #     .connect("activate", callback, tool_id)
+
     dock_item = Gtk.EventBox()
-    #dock_item.widget.connect("button-press-event", lambda w,e: selected_callback(self, w, e))
     dock_item.connect("button-release-event", lambda w,e: _tool_dock_item_release(tool_id))
 
-    #dock_item.widget.set_can_focus(True)
     dock_item.add_events(Gdk.EventMask.KEY_PRESS_MASK)
     if editorpersistance.prefs.show_tool_tooltips:
         dock_item.set_tooltip_markup("<b>" + tool_name + "</b>" + "\n\n" + _get_tooltip_text(tool_id))
@@ -436,7 +431,6 @@ def _get_tool_dock_item(tool_icon_file, tool_name, tool_id):
     dock_item.add(tool_img)
 
     return dock_item
-
 
 def _tool_dock_item_release(tool_id):
     gui.editor_window.tool_selector_item_activated(None, tool_id)
