@@ -641,7 +641,7 @@ class EditorWindow:
 
         # Timeline middle row
         tline_hbox_2 = Gtk.HBox()
-        tline_hbox_2.pack_start(guiutils.pad_label(8,2), False, False, 0)
+        #tline_hbox_2.pack_start(guiutils.pad_label(8,2), False, False, 0)
         tline_hbox_2.pack_start(self.tline_column.widget, False, False, 0)
         tline_hbox_2.pack_start(self.tline_canvas.widget, True, True, 0)
         
@@ -1302,7 +1302,7 @@ class EditorWindow:
         if self.tool_dock != None:
             self.tline_box.remove(self.tool_dock)
 
-        middlebar.re_create_tool_selector()
+        middlebar.re_create_tool_selector(self)
         middlebar.do_layout_after_dock_change(self)
 
     def _show_tools_dock(self, widget):
@@ -1547,7 +1547,7 @@ class EditorWindow:
         updater.set_trim_mode_gui()
 
     def mode_selector_pressed(self, selector, event):
-        workflow.get_tline_tool_popup_menu(selector, event, self.tool_selector_item_activated)
+        workflow.get_tline_tool_popup_menu(event, self.tool_selector_item_activated)
 
     def tool_selector_item_activated(self, selector, tool):
         if tool == appconsts.TLINE_TOOL_INSERT:

@@ -2446,14 +2446,7 @@ class TimeLineColumn:
         
         # Draw bg
         if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
-            stop, r,g,b, a = TRACK_GRAD_STOP1
-            cr.set_source_rgb(r,g,b)
-            cr.rectangle(0, 0, w, h)
-            cr.fill()
-            cr.set_line_width(1.0)
-            cr.set_source_rgb(0, 0, 0)
-            cr.rectangle(0.5, 0.5, w, h - 1)
-            #cr.stroke()
+            pass # removed for better look.
         else:
             cr.set_source_rgb(*BG_COLOR)
             cr.rectangle(0, 0, w, h)
@@ -2475,7 +2468,7 @@ class TimeLineColumn:
     def draw_track(self, cr, track, y, is_insert_track):
         # Draw center area
         center_width = COLUMN_WIDTH - COLUMN_LEFT_PAD - ACTIVE_SWITCH_WIDTH
-        rect = (COLUMN_LEFT_PAD, y, center_width, track.height)
+        rect = (COLUMN_LEFT_PAD - 1, y, center_width + 1, track.height)
         grad = cairo.LinearGradient (COLUMN_LEFT_PAD, y, COLUMN_LEFT_PAD, y + track.height)
         self._add_gradient_color_stops(grad, track)
         cr.rectangle(*rect)
@@ -2579,7 +2572,6 @@ class TimeLineColumn:
         cr.set_source_rgb(0, 0, 0)
         cr.rectangle(rect[0] + 0.5, rect[1] + 0.5, rect[2] - 1, rect[3])
         cr.stroke()
-
 
 class TimeLineFrameScale:
     """
