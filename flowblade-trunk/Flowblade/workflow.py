@@ -60,6 +60,9 @@ _PREFS_TOOL_TIPS = None
 _tools_menu = Gtk.Menu()
 _workflow_menu = Gtk.Menu()
 
+# Tool items in dock if used.
+dock_items = None
+
 def init_data():
     global _TOOLS_DATA, _TOOL_TIPS, _PREFS_TOOL_TIPS
     _TOOLS_DATA = { appconsts.TLINE_TOOL_INSERT:        (_("Insert"), "insertmove_cursor.png"),
@@ -398,12 +401,13 @@ def _workflow_menu_callback(widget, data):
 # ---------------------------------------------------- tools dock
 def get_tline_tool_dock():
     dock = Gtk.VBox()
+    global dock_items
     dock_items = []
     kb_shortcut_number = 1
     for tool_id in editorpersistance.prefs.active_tools:
         tool_name, tool_icon_file = _TOOLS_DATA[tool_id]
 
-        dock_item = _get_tool_dock_item(kb_shortcut_number, tool_icon_file, tool_name, tool_id, dock_items)
+        dock_item = _get_tool_dock_item(kb_shortcut_number, tool_icon_file, tool_name, tool_id)
         dock.pack_start(dock_item.widget, False, False, 0)
         dock_items.append(dock_item)
         if kb_shortcut_number == 1:
@@ -420,11 +424,11 @@ def get_tline_tool_dock():
     guiutils.set_margins(frame, 0, 0, 1, 0)
     return frame
 
-def _get_tool_dock_item(kb_shortcut_number, tool_icon_file, tool_name, tool_id, dock_items):
-    dock_item = ToolDockItem(kb_shortcut_number, tool_icon_file, tool_name, tool_id, dock_items)
+def _get_tool_dock_item(kb_shortcut_number, tool_icon_file, tool_name, tool_id):
+    dock_item = ToolDockItem(kb_shortcut_number, tool_icon_file, tool_name, tool_id)
     return dock_item
 
-def _tool_dock_item_release(tool_id, tool_dock_item, dock_items):
+def _tool_dock_item_press(tool_id, tool_dock_item):
     for item in dock_items:
         item.set_item_color(False)
     tool_dock_item.set_item_color(True)
@@ -432,12 +436,12 @@ def _tool_dock_item_release(tool_id, tool_dock_item, dock_items):
     
 
 class ToolDockItem:
-    def __init__(self, kb_shortcut_number, tool_icon_file, tool_name, tool_id, dock_items):
+    def __init__(self, kb_shortcut_number, tool_icon_file, tool_name, tool_id):
         tool_img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + tool_icon_file)
         guiutils.set_margins(tool_img, 5, 5, 9, 7)
 
         self.widget = Gtk.EventBox()
-        self.widget.connect("button-press-event", lambda w,e: _tool_dock_item_release(tool_id, self, dock_items))
+        self.widget.connect("button-press-event", lambda w,e: _tool_dock_item_press(tool_id, self))
 
         self.widget.add_events(Gdk.EventMask.KEY_PRESS_MASK)
         if editorpersistance.prefs.show_tool_tooltips:
@@ -464,6 +468,9 @@ def tline_tool_keyboard_selected(event):
         keyboard_number = int(Gdk.keyval_name(event.keyval).lower())
         tool_id = editorpersistance.prefs.active_tools[keyboard_number - 1]
         gui.editor_window.change_tool(tool_id)
+        for item in dock_items:
+            item.set_item_color(False)
+        dock_items[keyboard_number - 1].set_item_color(True)
         return True
     except:
         # This fails if a valid number was not pressed, so probably most times.
