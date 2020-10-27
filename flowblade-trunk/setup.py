@@ -43,7 +43,7 @@ for filepath in glob.glob("Flowblade/locale/*/LC_MESSAGES/*"):
     locale_files.append(filepath)
 
 setup(  name='flowblade',
-        version='2.6.1',
+        version='2.6.3',
         author='Janne Liljeblad',
         author_email='janne.liljeblad at gmail dot com',
         description='Non-linear video editor',
