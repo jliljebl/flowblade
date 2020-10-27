@@ -478,7 +478,10 @@ def tline_tool_keyboard_selected(event):
         
     return False
 
-
+def select_default_tool():
+    tool_id = editorpersistance.prefs.active_tools[0]
+    gui.editor_window.change_tool(tool_id)
+        
 # -------------------------------------------------------------- tool prefs
 def _TLINE_TOOL_OVERWRITE_box_selection_pref(check_menu_item):
     editorpersistance.prefs.box_for_empty_press_in_overwrite_tool = check_menu_item.get_active()

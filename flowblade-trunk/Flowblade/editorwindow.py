@@ -569,8 +569,9 @@ class EditorWindow:
         self.edit_buttons_row = self._get_edit_buttons_row()
         self.edit_buttons_frame = Gtk.Frame()
         self.edit_buttons_frame.add(self.edit_buttons_row)
-        self.edit_buttons_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
-
+        self.edit_buttons_frame.set_shadow_type(Gtk.ShadowType.ETCHED_OUT)
+        guiutils.set_margins(self.edit_buttons_frame, 1, 0, 0, 0)
+    
         self.tline_scale = tlinewidgets.TimeLineFrameScale(modesetting.set_default_edit_mode,
                                                            updater.mouse_scroll_zoom)
 
@@ -1304,7 +1305,8 @@ class EditorWindow:
 
         middlebar.re_create_tool_selector(self)
         middlebar.do_layout_after_dock_change(self)
-
+        workflow.select_default_tool()
+        
     def _show_tools_dock(self, widget):
         if widget.get_active() == False:
             return
@@ -1323,6 +1325,7 @@ class EditorWindow:
 
         middlebar.do_layout_after_dock_change(self)
         self.tool_selector = None
+        workflow.select_default_tool()
 
     def _create_monitor_buttons(self):
         self.monitor_switch = guicomponents.MonitorSwitch(self._monitor_switch_handler)

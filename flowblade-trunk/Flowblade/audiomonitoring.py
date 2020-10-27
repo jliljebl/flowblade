@@ -202,7 +202,7 @@ def get_master_meter():
     frame = Gtk.Frame()
     frame.add(align)
     frame.set_shadow_type(Gtk.ShadowType.ETCHED_OUT)
-
+    guiutils.set_margins(frame, 0, 0, 1, 0)
     return frame
 
 def close_master_meter():

@@ -147,7 +147,7 @@ TC_POINTER_HEAD = None
 SCALE_LINE_Y = 4.5 # scale horizontal line pos
 SMALL_TICK_Y = 18.5 # end for tick drawn in all scales 
 BIG_TICK_Y = 12.5 # end for tick drawn in most zoomed in scales
-TC_Y = 10 # TC text pos in scale
+TC_Y = 12 # TC text pos in scale
 # Timeline scale is rendered with hardcoded steps for hardcoded 
 # pix_per_frame ranges
 DRAW_THRESHOLD_1 = 6 # if pix_per_frame below this, draw secs
@@ -2692,7 +2692,7 @@ class TimeLineFrameScale:
 
         # Get draw steps for marks and tc texts
         if fps < 20:
-            spacer_mult = 2 # for fps like 15 this looks bad with out some help
+            spacer_mult = 2 # for fps like 15 this looks bad without some help
         else:
             spacer_mult = 1
             
