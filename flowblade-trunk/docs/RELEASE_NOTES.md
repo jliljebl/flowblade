@@ -6,7 +6,7 @@
 Date: October 27, 2020
 
 This is a bug fix release.
- * fixes Color Clop load crash regression in 2.6.1
+ * fixes Color Clip load crash regression in 2.6.1
 
 ## Flowblade 2.6.1
 
