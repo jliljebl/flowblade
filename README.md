@@ -1,6 +1,6 @@
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
-**New bug fix release 2.6.1 is now out.**
+**New bug fix release 2.6.3 is now out.**
 
 **[Installing Flowblade](https://github.com/jliljebl/flowblade#installing-flowblade)**
 
@@ -58,7 +58,7 @@ Flowblade offers a configurable workflow - toolset, its order, default tool and 
 
 # Releases
 
-**Latest release:** Flowblade Movie Editor 2.6 was released on July 2020.
+**Latest release:** Flowblade Movie Editor 2.6.3 was released on August 2020.
 
 **Next release:** Flowblade Movie Editor 2.8 is planned to be released on January 2021.
 
