@@ -470,7 +470,7 @@ class WorkflowDialog(Gtk.Dialog):
         filmstyle_preset_workflow_text_2 = _("Film Style workflow has the <b>Insert</b> tool as default tool\nand employs insert style editing.\nThis was the workflow in previous versions of the application.")
         workflow_select_item_2 = self.get_workflow_select_item(FILM_STYLE_PRESET, workflow_name, filmstyle_preset_workflow_text_2)
 
-        workflow_name = _("<b>Keep Existing Worflow</b>")
+        workflow_name = _("<b>Keep Existing Workflow</b>")
         keep_workflow_text_2 = _("Select this if you have installed new version and wish to keep your existing workflow.")
         workflow_select_item_3 = self.get_workflow_select_item(KEEP_EXISTING, workflow_name, keep_workflow_text_2)
         
