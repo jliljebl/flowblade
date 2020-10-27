@@ -190,6 +190,12 @@ class EditorWindow:
         self.app_v_paned.pack2(tline_pane, resize=True, shrink=False)
         self.app_v_paned.no_dark_bg = True
 
+        self.app_h_box = Gtk.HBox(False, 0)
+        self.app_h_box.pack_start(self.mm_paned_frame , False, False, 0)
+        self.app_h_box.pack_start(self.app_v_paned, True, True, 0)
+
+        #self.mm_paned
+
         # Menu box
         # menubar size 348, 28 if w want to center someting here with set_size_request
         self.menubar.set_margin_bottom(4)
@@ -206,7 +212,7 @@ class EditorWindow:
         # Pane
         pane = Gtk.VBox(False, 1)
         pane.pack_start(menu_vbox, False, True, 0)
-        pane.pack_start(self.app_v_paned, True, True, 0)
+        pane.pack_start(self.app_h_box, True, True, 0)
 
         # Tooltips
         self._add_tool_tips()
@@ -323,7 +329,8 @@ class EditorWindow:
             self.mm_paned.pack1(self.bins_panel, resize=True, shrink=True)
             self.mm_paned.pack2(media_panel, resize=True, shrink=False)
 
-        mm_panel = guiutils.set_margins(self.mm_paned, 0, 0, 0, 0)
+        self.mm_paned_frame = guiutils.get_panel_etched_frame(self.mm_paned)
+        guiutils.set_margins(self.mm_paned_frame , 0, 0, 1, 0)
 
         # Effects panel
         self.effect_select_list_view = guicomponents.FilterListView()
@@ -461,7 +468,8 @@ class EditorWindow:
         media_label = Gtk.Label(label=_("Media"))
         media_label.no_dark_bg = True
         if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
-            self.notebook.append_page(mm_panel, media_label)
+            # self.notebook.append_page(mm_panel, media_label)
+            pass
         self.notebook.append_page(media_log_panel, Gtk.Label(label=_("Range Log")))
         self.notebook.append_page(self.effects_panel, Gtk.Label(label=_("Filters")))
         self.notebook.append_page(self.compositors_panel, Gtk.Label(label=_("Compositors")))
@@ -1017,8 +1025,9 @@ class EditorWindow:
         sep = Gtk.SeparatorMenuItem()
         menu.append(sep)
 
+        # Window Mode
         windows_menu_item = Gtk.MenuItem(_("Window Mode"))
-        windows_menu =  Gtk.Menu()
+        windows_menu = Gtk.Menu()
         one_window = Gtk.RadioMenuItem()
         one_window.set_label(_("Single Window"))
 
@@ -1038,6 +1047,29 @@ class EditorWindow:
         windows_menu_item.set_submenu(windows_menu)
         menu.append(windows_menu_item)
 
+        # Panel positions
+        panel_positions_menu_item = Gtk.MenuItem(_("Panel Placement"))
+        panel_positions_menu = Gtk.Menu()
+        panel_positions_menu_item.set_submenu(panel_positions_menu)
+        
+        media_panel_menu_item = Gtk.MenuItem(_("Media Panel"))
+        panel_positions_menu.append(media_panel_menu_item)
+        media_panel_menu = Gtk.Menu()
+        media_panel_menu_item.set_submenu(media_panel_menu)
+
+        # Panel positions - media panel
+        media_panel_top = Gtk.RadioMenuItem()
+        media_panel_top.set_label( _("Top Row"))
+        #media_panel_top.connect("activate", lambda w: self._show_tabs_up(w))
+        media_panel_menu.append(media_panel_top)
+
+        media_panel_left_column = Gtk.RadioMenuItem.new_with_label([media_panel_top], _("Lef Column"))
+        #tabs_down.connect("activate", lambda w: self._show_tabs_down(w))
+        media_panel_menu.append(media_panel_left_column)
+
+        menu.append(panel_positions_menu_item)
+        
+        # Middlebar Layout
         mb_menu_item = Gtk.MenuItem(_("Middlebar Layout"))
         mb_menu = Gtk.Menu()
         tc_left = Gtk.RadioMenuItem()
@@ -1076,6 +1108,7 @@ class EditorWindow:
         mb_menu_item.set_submenu(mb_menu)
         menu.append(mb_menu_item)
 
+        # Tabs Position
         tabs_menu_item = Gtk.MenuItem(_("Tabs Position"))
         tabs_menu =  Gtk.Menu()
         tabs_up = Gtk.RadioMenuItem()
@@ -1095,6 +1128,7 @@ class EditorWindow:
         tabs_menu_item.set_submenu(tabs_menu)
         menu.append(tabs_menu_item)
 
+        # Tool Selection Widget
         tool_selector_menu_item = Gtk.MenuItem(_("Tool Selection Widget"))
         tool_selector_menu =  Gtk.Menu()
         tools_middlebar = Gtk.RadioMenuItem()
@@ -1119,9 +1153,7 @@ class EditorWindow:
         sep = Gtk.SeparatorMenuItem()
         menu.append(sep)
 
-        sep = Gtk.SeparatorMenuItem()
-        menu.append(sep)
-
+        # Monitor Playback Interpolation
         interp_menu_item = Gtk.MenuItem(_("Monitor Playback Interpolation"))
         interp_menu = Gtk.Menu()
 
@@ -1149,6 +1181,7 @@ class EditorWindow:
         sep = Gtk.SeparatorMenuItem()
         menu.append(sep)
 
+        # Zoom
         zoom_in_menu_item = Gtk.MenuItem(_("Zoom In"))
         zoom_in_menu_item.connect("activate", lambda w: updater.zoom_in())
         menu.append(zoom_in_menu_item)
