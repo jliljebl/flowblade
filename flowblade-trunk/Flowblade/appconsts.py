@@ -301,14 +301,19 @@ CONTAINER_CLIP_BLENDER = 3
 
 CONTAINER_CLIP_VIDEO_CLIP_NAME = "container_clip"
 
-# Middlebar GUI objects
+# Middlebar button groups.
 BUTTON_GROUP_TOOLS = "tool_buttons"
 BUTTON_GROUP_UNDO = "undo_redo"
 BUTTON_GROUP_ZOOM = "zoom_buttons"
-BUTTON_GROUP_EDIT =  "edit_buttons"
+BUTTON_GROUP_EDIT = "edit_buttons"
 BUTTON_GROUP_SYNC_SPLIT = "edit_buttons_2"
 BUTTON_GROUP_DELETE = "edit_buttons_3"
 BUTTON_GROUP_MONITOR_ADD = "monitor_insert_buttons"
 BIG_TIME_CODE = "big_TC"
 WORKFLOW_LAUNCH = "worflow_launch" 
 TOOL_SELECT = "tool_selector"
+
+# Panel placement options
+PANEL_PLACEMENT_TOP_ROW_NOTEBOOK = 0
+PANEL_PLACEMENT_LEFT_COLUMN = 1
+PANEL_PLACEMENT_BOTTOM_ROW_RIGHT = 2

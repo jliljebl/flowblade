@@ -130,6 +130,9 @@ class EditorWindow:
 
     def __init__(self):
 
+        editorpersistance.prefs.placement_media_panel = appconsts.PANEL_PLACEMENT_TOP_ROW_NOTEBOOK
+        editorpersistance.save()
+    
         self._init_cursors()
 
         # Create window(s)
@@ -191,10 +194,10 @@ class EditorWindow:
         self.app_v_paned.no_dark_bg = True
 
         self.app_h_box = Gtk.HBox(False, 0)
-        self.app_h_box.pack_start(self.mm_paned_frame , False, False, 0)
+        if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
+            if editorpersistance.prefs.placement_media_panel == appconsts.PANEL_PLACEMENT_LEFT_COLUMN:
+                self.app_h_box.pack_start(self.mm_paned_frame , False, False, 0)
         self.app_h_box.pack_start(self.app_v_paned, True, True, 0)
-
-        #self.mm_paned
 
         # Menu box
         # menubar size 348, 28 if w want to center someting here with set_size_request
@@ -329,9 +332,13 @@ class EditorWindow:
             self.mm_paned.pack1(self.bins_panel, resize=True, shrink=True)
             self.mm_paned.pack2(media_panel, resize=True, shrink=False)
 
-        self.mm_paned_frame = guiutils.get_panel_etched_frame(self.mm_paned)
-        guiutils.set_margins(self.mm_paned_frame , 0, 0, 1, 0)
-
+        # This needs frame if it is not inside a notebeek.
+        if editorpersistance.prefs.placement_media_panel != appconsts.PANEL_PLACEMENT_TOP_ROW_NOTEBOOK:
+            self.mm_paned_frame = guiutils.get_panel_etched_frame(self.mm_paned)
+            guiutils.set_margins(self.mm_paned_frame, 0, 0, 1, 0)
+        else:
+            self.mm_paned_frame = None # We use this to easily know where media panel is placed.
+    
         # Effects panel
         self.effect_select_list_view = guicomponents.FilterListView()
         self.effect_select_combo_box = Gtk.ComboBoxText()
@@ -467,9 +474,10 @@ class EditorWindow:
         self.notebook.set_size_request(appconsts.NOTEBOOK_WIDTH, appconsts.TOP_ROW_HEIGHT)
         media_label = Gtk.Label(label=_("Media"))
         media_label.no_dark_bg = True
+        # Here we put media panel in notebook if that is the current user pref.
         if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
-            # self.notebook.append_page(mm_panel, media_label)
-            pass
+            if editorpersistance.prefs.placement_media_panel == appconsts.PANEL_PLACEMENT_TOP_ROW_NOTEBOOK:
+                self.notebook.append_page(self.mm_paned, media_label)
         self.notebook.append_page(media_log_panel, Gtk.Label(label=_("Range Log")))
         self.notebook.append_page(self.effects_panel, Gtk.Label(label=_("Filters")))
         self.notebook.append_page(self.compositors_panel, Gtk.Label(label=_("Compositors")))
@@ -1052,22 +1060,37 @@ class EditorWindow:
         panel_positions_menu = Gtk.Menu()
         panel_positions_menu_item.set_submenu(panel_positions_menu)
         
+        # Panel positions - media panel
         media_panel_menu_item = Gtk.MenuItem(_("Media Panel"))
         panel_positions_menu.append(media_panel_menu_item)
         media_panel_menu = Gtk.Menu()
         media_panel_menu_item.set_submenu(media_panel_menu)
-
-        # Panel positions - media panel
+        
         media_panel_top = Gtk.RadioMenuItem()
-        media_panel_top.set_label( _("Top Row"))
+        media_panel_top.set_label( _("Top Row Notebook"))
         #media_panel_top.connect("activate", lambda w: self._show_tabs_up(w))
         media_panel_menu.append(media_panel_top)
 
-        media_panel_left_column = Gtk.RadioMenuItem.new_with_label([media_panel_top], _("Lef Column"))
+        media_panel_left_column = Gtk.RadioMenuItem.new_with_label([media_panel_top], _("Left Column"))
         #tabs_down.connect("activate", lambda w: self._show_tabs_down(w))
         media_panel_menu.append(media_panel_left_column)
 
         menu.append(panel_positions_menu_item)
+
+        # Panel positions - media panel
+        filter_panel_menu_item = Gtk.MenuItem(_("Filter Panel"))
+        panel_positions_menu.append(filter_panel_menu_item)
+        filter_panel_menu = Gtk.Menu()
+        filter_panel_menu_item.set_submenu(filter_panel_menu)
+        
+        filter_panel_top = Gtk.RadioMenuItem()
+        filter_panel_top.set_label( _("Top Row Notebook"))
+        #media_panel_top.connect("activate", lambda w: self._show_tabs_up(w))
+        filter_panel_menu.append(filter_panel_top)
+
+        filter_panel_bottom_right = Gtk.RadioMenuItem.new_with_label([filter_panel_top], _("Bottom Row Right"))
+        #tabs_down.connect("activate", lambda w: self._show_tabs_down(w))
+        filter_panel_menu.append(filter_panel_bottom_right)
         
         # Middlebar Layout
         mb_menu_item = Gtk.MenuItem(_("Middlebar Layout"))
