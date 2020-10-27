@@ -79,11 +79,9 @@ import updater
 import undo
 import workflow
 
-# GUI size params
+# GUI size params.
 MEDIA_MANAGER_WIDTH = 110
-MONITOR_AREA_WIDTH = 600 # defines app min width with NOTEBOOK_WIDTH 400 for small
-
-#IMG_PATH = None
+MONITOR_AREA_WIDTH = 600 # Defines app min width with NOTEBOOK_WIDTH 400 for small screens.
 
 DARK_BG_COLOR = (0.223, 0.247, 0.247, 1.0)
 
@@ -152,8 +150,6 @@ class EditorWindow:
         # Player consumer has to be stopped and started when window resized
         self.window.connect("window-state-event", lambda w, e:updater.refresh_player(e))
 
- 
-
         # Create all panels and gui components 
         self._init_panels_and_guicomponents()
 
@@ -167,17 +163,21 @@ class EditorWindow:
         tline_hbox_3.pack_start(self.left_corner.widget, False, False, 0)
         tline_hbox_3.pack_start(self.tline_scroller, True, True, 0)
 
-        # Timeline hbox
+        # Timeline vbox
         tline_vbox = Gtk.VBox()
         tline_vbox.pack_start(self.tline_hbox_1, False, False, 0)
         tline_vbox.pack_start(self.tline_hbox_2, True, True, 0)
         tline_vbox.pack_start(self.tline_renderer_hbox, False, False, 0)
         tline_vbox.pack_start(tline_hbox_3, False, False, 0)
 
+        tline_vbox_frame = guiutils.get_panel_etched_frame(tline_vbox)
+    
         # Timeline box
         self.tline_box = Gtk.HBox()
-        self.tline_box.pack_start(tline_vbox, True, True, 0)
-
+        if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_LEFT_DOCK:
+            self.tline_box.pack_start(self.tool_dock, False, False, 0)
+        self.tline_box.pack_end(tline_vbox_frame, True, True, 0)
+        
         # Timeline pane
         tline_pane = Gtk.VBox(False, 1)
         tline_pane.pack_start(self.edit_buttons_frame, False, True, 0)
@@ -434,6 +434,8 @@ class EditorWindow:
 
             top_project_vbox.set_size_request(PANEL_WIDTH, PANEL_HEIGHT)
             top_project_panel = guiutils.set_margins(top_project_vbox, 0, 2, 6, 2)
+            top_project_panel_frame = guiutils.get_panel_etched_frame(top_project_panel)
+            guiutils.set_margins(top_project_panel_frame, 0, 0, 0, 1)
         else:
 
             # Notebook project panel for smallest screens
@@ -469,6 +471,9 @@ class EditorWindow:
         self.notebook.append_page(jobs_pane, Gtk.Label(label=_("Jobs")))
         self.notebook.append_page(render_panel, Gtk.Label(label=_("Render")))
         self.notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
+
+        notebook_frame = guiutils.get_panel_etched_frame(self.notebook)
+        guiutils.set_margins(notebook_frame, 0, 0, 0, 1)
 
         # Position bar and decorative frame  for it
         self.pos_bar = PositionBar()
@@ -542,7 +547,7 @@ class EditorWindow:
         # Notebook panel
         notebook_vbox = Gtk.VBox(False, 1)
         notebook_vbox.no_dark_bg = True
-        notebook_vbox.pack_start(self.notebook, True, True, 0)
+        notebook_vbox.pack_start(notebook_frame, True, True, 0)
 
         # Top row paned
         self.top_paned = Gtk.HPaned()
@@ -556,20 +561,17 @@ class EditorWindow:
         # Top row
         self.top_row_hbox = Gtk.HBox(False, 0)
         if top_level_project_panel() == True:
-            self.top_row_hbox.pack_start(top_project_panel, False, False, 0)
+            self.top_row_hbox.pack_start(top_project_panel_frame, False, False, 0)
         self.top_row_hbox.pack_start(self.top_paned, True, True, 0)
         self._update_top_row()
 
         # Edit buttons rows
         self.edit_buttons_row = self._get_edit_buttons_row()
-        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
-            self.edit_buttons_frame = Gtk.Frame()
-            self.edit_buttons_frame.add(self.edit_buttons_row)
-            self.edit_buttons_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
-        else:
-            self.edit_buttons_frame  = self.edit_buttons_row
-
-        # Timeline scale
+        self.edit_buttons_frame = Gtk.Frame()
+        self.edit_buttons_frame.add(self.edit_buttons_row)
+        self.edit_buttons_frame.set_shadow_type(Gtk.ShadowType.ETCHED_OUT)
+        guiutils.set_margins(self.edit_buttons_frame, 1, 0, 0, 0)
+    
         self.tline_scale = tlinewidgets.TimeLineFrameScale(modesetting.set_default_edit_mode,
                                                            updater.mouse_scroll_zoom)
 
@@ -632,8 +634,15 @@ class EditorWindow:
         dnd.connect_tline(self.tline_canvas.widget, editevent.tline_effect_drop,
                           editevent.tline_media_drop)
 
+        # Create tool dock if needed
+        if editorpersistance.prefs.tools_selection != appconsts.TOOL_SELECTOR_IS_MENU:
+            self.tool_dock = workflow.get_tline_tool_dock()
+        else:
+            self.tool_dock = None
+
         # Timeline middle row
         tline_hbox_2 = Gtk.HBox()
+        #tline_hbox_2.pack_start(guiutils.pad_label(8,2), False, False, 0)
         tline_hbox_2.pack_start(self.tline_column.widget, False, False, 0)
         tline_hbox_2.pack_start(self.tline_canvas.widget, True, True, 0)
         
@@ -1062,8 +1071,6 @@ class EditorWindow:
 
         freebar_conf = Gtk.MenuItem(_("Configure Free Bar..."))
         freebar_conf.connect("activate", lambda w: middlebar.show_freebar_conf_dialog())
-        #if editorpersistance.prefs.midbar_layout != appconsts.MIDBAR_TC_FREE:
-        #    freebar_conf.set_sensitive(False)
         mb_menu.append(freebar_conf)
         
         mb_menu_item.set_submenu(mb_menu)
@@ -1088,6 +1095,27 @@ class EditorWindow:
         tabs_menu_item.set_submenu(tabs_menu)
         menu.append(tabs_menu_item)
 
+        tool_selector_menu_item = Gtk.MenuItem(_("Tool Selection Widget"))
+        tool_selector_menu =  Gtk.Menu()
+        tools_middlebar = Gtk.RadioMenuItem()
+        tools_middlebar.set_label( _("Middlebar Menu"))
+
+        tool_selector_menu.append(tools_middlebar)
+        
+        tools_dock = Gtk.RadioMenuItem.new_with_label([tools_middlebar], _("Dock"))
+
+        if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
+            tools_middlebar.set_active(True)
+        else:
+            tools_dock.set_active(True)
+
+        tools_middlebar.connect("activate", lambda w: self._show_tools_middlebar(w))
+        tools_dock.connect("activate", lambda w: self._show_tools_dock(w))
+        
+        tool_selector_menu.append(tools_dock)
+        tool_selector_menu_item.set_submenu(tool_selector_menu)
+        menu.append(tool_selector_menu_item)
+        
         sep = Gtk.SeparatorMenuItem()
         menu.append(sep)
 
@@ -1260,17 +1288,44 @@ class EditorWindow:
         editorpersistance.prefs.tabs_on_top = False
         editorpersistance.save()
 
-    def _show_vu_meter(self, widget):
-        editorpersistance.prefs.show_vu_meter = widget.get_active()
-        editorpersistance.save()
-
-        self._update_top_row(True)
-
     def _update_top_row(self, show_all=False):
         self.top_row_hbox.pack_end(audiomonitoring.get_master_meter(), False, False, 0)
 
         if show_all:
             self.window.show_all()
+
+    def _show_tools_middlebar(self, widget):
+        if widget.get_active() == False:
+            return
+        editorpersistance.prefs.tools_selection = appconsts.TOOL_SELECTOR_IS_MENU
+        editorpersistance.save()
+
+        if self.tool_dock != None:
+            self.tline_box.remove(self.tool_dock)
+
+        middlebar.re_create_tool_selector(self)
+        middlebar.do_layout_after_dock_change(self)
+        workflow.select_default_tool()
+        
+    def _show_tools_dock(self, widget):
+        if widget.get_active() == False:
+            return
+
+        editorpersistance.prefs.tools_selection = appconsts.TOOL_SELECTOR_IS_LEFT_DOCK
+        editorpersistance.save()
+
+        if self.tool_dock != None:
+            self.tline_box.remove(self.tool_dock)
+
+        self.tool_dock = workflow.get_tline_tool_dock()
+        self.tool_dock.show_all()
+
+        if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_LEFT_DOCK:
+            self.tline_box.pack_start(self.tool_dock, False, False, 0)
+
+        middlebar.do_layout_after_dock_change(self)
+        self.tool_selector = None
+        workflow.select_default_tool()
 
     def _create_monitor_buttons(self):
         self.monitor_switch = guicomponents.MonitorSwitch(self._monitor_switch_handler)
@@ -1495,7 +1550,7 @@ class EditorWindow:
         updater.set_trim_mode_gui()
 
     def mode_selector_pressed(self, selector, event):
-        workflow.get_tline_tool_popup_menu(selector, event, self.tool_selector_item_activated)
+        workflow.get_tline_tool_popup_menu(event, self.tool_selector_item_activated)
 
     def tool_selector_item_activated(self, selector, tool):
         if tool == appconsts.TLINE_TOOL_INSERT:
@@ -1596,6 +1651,9 @@ class EditorWindow:
         gdk_window.set_cursor(cursor)
 
     def set_tool_selector_to_mode(self):
+        if self.tool_selector == None:
+            return # We are using dock
+
         if editorstate.EDIT_MODE() == editorstate.INSERT_MOVE:
             self.tool_selector.set_tool_pixbuf(appconsts.TLINE_TOOL_INSERT)
         elif editorstate.EDIT_MODE() == editorstate.OVERWRITE_MOVE:

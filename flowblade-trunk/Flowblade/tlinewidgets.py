@@ -60,7 +60,7 @@ M_PI = math.pi
 
 REF_LINE_Y = 250 # Y pos of tracks are relative to this. This is recalculated on initilization, so value here is irrelevent.
 
-WIDTH = 430 # this has no effect if smaller then editorwindow.NOTEBOOK_WIDTH + editorwindow.MONITOR_AREA_WIDTH
+WIDTH = 430 # this has no effect if smaller then editorwindow.NOTEBOOK_WIDTH + editorwindow.MONITOR_AREA_WIDTH -- so this never has effect, but we need to set heights and this can remain as dummy value.
 HEIGHT = appconsts.TLINE_HEIGHT # defines window min height together with editorwindow.TOP_ROW_HEIGHT
 STRIP_HEIGHT = tlinerender.STRIP_HEIGHT # timeline rendering control strip height
 
@@ -147,7 +147,7 @@ TC_POINTER_HEAD = None
 SCALE_LINE_Y = 4.5 # scale horizontal line pos
 SMALL_TICK_Y = 18.5 # end for tick drawn in all scales 
 BIG_TICK_Y = 12.5 # end for tick drawn in most zoomed in scales
-TC_Y = 10 # TC text pos in scale
+TC_Y = 12 # TC text pos in scale
 # Timeline scale is rendered with hardcoded steps for hardcoded 
 # pix_per_frame ranges
 DRAW_THRESHOLD_1 = 6 # if pix_per_frame below this, draw secs
@@ -2446,14 +2446,7 @@ class TimeLineColumn:
         
         # Draw bg
         if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
-            stop, r,g,b, a = TRACK_GRAD_STOP1
-            cr.set_source_rgb(r,g,b)
-            cr.rectangle(0, 0, w, h)
-            cr.fill()
-            cr.set_line_width(1.0)
-            cr.set_source_rgb(0, 0, 0)
-            cr.rectangle(0.5, 0.5, w, h - 1)
-            #cr.stroke()
+            pass # removed for better look.
         else:
             cr.set_source_rgb(*BG_COLOR)
             cr.rectangle(0, 0, w, h)
@@ -2475,7 +2468,7 @@ class TimeLineColumn:
     def draw_track(self, cr, track, y, is_insert_track):
         # Draw center area
         center_width = COLUMN_WIDTH - COLUMN_LEFT_PAD - ACTIVE_SWITCH_WIDTH
-        rect = (COLUMN_LEFT_PAD, y, center_width, track.height)
+        rect = (COLUMN_LEFT_PAD - 1, y, center_width + 1, track.height)
         grad = cairo.LinearGradient (COLUMN_LEFT_PAD, y, COLUMN_LEFT_PAD, y + track.height)
         self._add_gradient_color_stops(grad, track)
         cr.rectangle(*rect)
@@ -2579,7 +2572,6 @@ class TimeLineColumn:
         cr.set_source_rgb(0, 0, 0)
         cr.rectangle(rect[0] + 0.5, rect[1] + 0.5, rect[2] - 1, rect[3])
         cr.stroke()
-
 
 class TimeLineFrameScale:
     """
@@ -2700,7 +2692,7 @@ class TimeLineFrameScale:
 
         # Get draw steps for marks and tc texts
         if fps < 20:
-            spacer_mult = 2 # for fps like 15 this looks bad with out some help
+            spacer_mult = 2 # for fps like 15 this looks bad without some help
         else:
             spacer_mult = 1
             

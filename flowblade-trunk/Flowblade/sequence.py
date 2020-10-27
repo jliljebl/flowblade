@@ -83,13 +83,13 @@ PROGRAM_OUT_MODE = 0
 VECTORSCOPE_MODE = 1
 RGB_PARADE_MODE = 2
 
-# black clip
+# Black clip
 black_track_clip = None
 
-# Track that all audio is mixed down to combine for output.
+# The track that all audio is mixed down to combine for output.
 AUDIO_MIX_DOWN_TRACK = 0
 
-# Vectorscop and RGB Parade
+# Vectorscope and RGB Parade
 SCOPE_MIX_VALUES = [0.0, 0.2, 0.5, 0.8, 1.0]
 _scope_over_lay_mix = 2
 

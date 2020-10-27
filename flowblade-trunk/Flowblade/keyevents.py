@@ -163,14 +163,16 @@ def key_down(widget, event):
     return False
     
 def _timeline_has_focus():
+    if gui.editor_window.tool_selector != None and gui.editor_window.tool_selector.widget.has_focus():
+        return True
+    
     if(gui.tline_canvas.widget.has_focus()
        or gui.tline_column.widget.has_focus()
-       or gui.editor_window.tool_selector.widget.has_focus()
        or (gui.pos_bar.widget.has_focus() and timeline_visible())
        or gui.tline_scale.widget.has_focus()
        or glassbuttons.focus_group_has_focus(glassbuttons.DEFAULT_FOCUS_GROUP)):
         return True
-        
+
     return False
     
 def _handle_tline_key_event(event):
