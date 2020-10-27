@@ -1,5 +1,13 @@
 # Release Notes
 
+
+## Flowblade 2.6.3
+
+Date: October 27, 2020
+
+This is a bug fix release.
+ * fixes Color Clip load crash regression in 2.6.1
+
 ## Flowblade 2.6.1
 
 Date: October 14, 2020
