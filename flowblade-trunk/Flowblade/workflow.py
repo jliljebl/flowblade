@@ -43,7 +43,7 @@ import modesetting
 import respaths
 import updater
 
-
+# New version start-up toolset selections.
 STANDARD_PRESET = 0
 FILM_STYLE_PRESET = 1
 KEEP_EXISTING = 2
@@ -248,7 +248,7 @@ def workflow_menu_launched(widget, event):
         tool_id = editorpersistance.prefs.active_tools[i]
         tool_name, tool_icon_file = _TOOLS_DATA[tool_id]
         _workflow_menu.add(_get_workflow_tool_menu_item(_workflow_menu_callback, tool_id, tool_name, tool_icon_file, i+1))
-        try: # needed to prevent crashes when manually changing preset tools during dev
+        try: # needed to prevent crashes when manually changing preset tools during development.
             non_active_tools.remove(tool_id)
         except:
             pass
@@ -466,7 +466,7 @@ def tline_tool_keyboard_selected(event):
         gui.editor_window.change_tool(tool_id)
         return True
     except:
-        # This fails if not a valid number was pressed, so probably most times.
+        # This fails if a valid number was not pressed, so probably most times.
         pass
         
     return False
