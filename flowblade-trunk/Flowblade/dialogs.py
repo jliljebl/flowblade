@@ -1335,13 +1335,44 @@ def add_media_folder_dialog(callback, parent_window):
     recursively_checkbox.set_active(False)
     recursively_label = Gtk.Label(label=_("Search subfolders"))
     row3 = guiutils.get_checkbox_row_box(recursively_checkbox, recursively_label)
+
+    action_select = Gtk.ComboBoxText()
+    action_select.append_text(_("All Media Files"))
+    action_select.append_text(_("Video Files"))
+    action_select.append_text(_("Audio Files"))
+    action_select.append_text(_("Image Files"))
+    action_select.set_active(0)
+    action_label = Gtk.Label(label=_("File types to add:"))
+    row4 = guiutils.get_two_column_box(action_label, action_select, 220)
+
+    use_extension_checkbox = Gtk.CheckButton()
+    use_extension_checkbox.set_active(False)
+    use_extension_label = Gtk.Label(label=_("Filter by file extension"))
+    row5 = guiutils.get_checkbox_row_box(use_extension_checkbox, use_extension_label)
+
+    extension_entry = Gtk.Entry.new()
+    extension_entry.set_max_width_chars(6)
+    extension_entry_box = Gtk.HBox(False, 0)
+    extension_entry_box.pack_start(extension_entry, False, False, 0)
+    extension_entry_box.pack_start(guiutils.pad_label(200,10), True, True, 0)
+    extension_label = Gtk.Label(label=_("File extension:"))
+    extension_entry.set_sensitive(False)
+    extension_label.set_sensitive(False)
+    row6 = guiutils.get_two_column_box(extension_label, extension_entry_box, 100)
+
+    activateble_widgets = (action_label, action_select, extension_label, extension_entry)
+    use_extension_checkbox.connect("toggled", _use_extension_toggled, activateble_widgets)
     
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(guiutils.pad_label(12, 12), False, False, 0)
     vbox.pack_start(row2, False, False, 0)
     vbox.pack_start(row3, False, False, 0)
-
+    vbox.pack_start(guiutils.pad_label(12, 12), False, False, 0)
+    vbox.pack_start(row4, False, False, 0)
+    vbox.pack_start(row5, False, False, 0)
+    vbox.pack_start(row6, False, False, 0)
+    
     alignment = dialogutils.get_alignment2(vbox)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
@@ -1350,6 +1381,20 @@ def add_media_folder_dialog(callback, parent_window):
     dialog.connect('response', callback, (file_chooser, create_bin_checkbox, recursively_checkbox))
     dialog.show_all()
     
+    
+def _use_extension_toggled(checkbutton, widgets):
+    action_label, action_select, extension_label, extension_entry = widgets
+    if checkbutton.get_active() == True:
+        action_label.set_sensitive(False)
+        action_select.set_sensitive(False)
+        extension_label.set_sensitive(True)
+        extension_entry.set_sensitive(True)
+    else:
+        action_label.set_sensitive(True)
+        action_select.set_sensitive(True)
+        extension_label.set_sensitive(False)
+        extension_entry.set_sensitive(False)
+        
 def export_edl_dialog(callback, parent_window, project_name):
     dialog = Gtk.FileChooserDialog(_("Export EDL"), parent_window,
                                    Gtk.FileChooserAction.SAVE,
