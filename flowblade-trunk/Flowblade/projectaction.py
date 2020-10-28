@@ -1126,6 +1126,12 @@ def _add_image_sequence_callback(dialog, response_id, data):
     editorpersistance.prefs.last_opened_media_dir = os.path.dirname(resource_path)
     editorpersistance.save()
 
+def add_media_folder():
+    dialogs.add_media_folder_dialog(_add_media_folder_callback, gui.editor_window.window)
+
+def _add_media_folder_callback(dialog, response_id, data):
+    dialog.destroy()
+    
 def open_rendered_file(rendered_file_path):
     add_media_thread = AddMediaFilesThread([rendered_file_path])
     add_media_thread.start()

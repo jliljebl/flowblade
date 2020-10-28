@@ -1305,6 +1305,51 @@ def open_image_sequence_dialog(callback, parent_window):
     dialog.connect('response', callback, (file_chooser, frames_per_image))
     dialog.show_all()
 
+def add_media_folder_dialog(callback, parent_window):
+    cancel_str = _("Cancel")
+    ok_str = _("Ok")
+    dialog = Gtk.Dialog(_("Add Media From Folder"),
+                        parent_window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (cancel_str, Gtk.ResponseType.CANCEL,
+                        ok_str, Gtk.ResponseType.YES))
+
+    file_chooser = Gtk.FileChooserButton(_("Select Folder"))
+    file_chooser.set_size_request(250, 25)
+    if ((editorpersistance.prefs.open_in_last_opended_media_dir == True)
+        and (editorpersistance.prefs.last_opened_media_dir != None)):
+        file_chooser.set_current_folder(editorpersistance.prefs.last_opened_media_dir)
+    else:
+        file_chooser.set_current_folder(os.path.expanduser("~") + "/")
+    file_chooser.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
+    filt = utils.get_image_sequence_file_filter()
+    file_chooser.add_filter(filt)
+    row1 = guiutils.get_two_column_box(Gtk.Label(label=_("Add Media from Folder:")), file_chooser, 220)
+
+    create_bin_checkbox = Gtk.CheckButton()
+    create_bin_checkbox.set_active(False)
+    create_bin_label = Gtk.Label(label=_("Create new Bin"))
+    row2 = guiutils.get_checkbox_row_box(create_bin_checkbox, create_bin_label)
+
+    recursively_checkbox = Gtk.CheckButton()
+    recursively_checkbox.set_active(False)
+    recursively_label = Gtk.Label(label=_("Search subfolders"))
+    row3 = guiutils.get_checkbox_row_box(recursively_checkbox, recursively_label)
+    
+    vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(row1, False, False, 0)
+    vbox.pack_start(guiutils.pad_label(12, 12), False, False, 0)
+    vbox.pack_start(row2, False, False, 0)
+    vbox.pack_start(row3, False, False, 0)
+
+    alignment = dialogutils.get_alignment2(vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, (file_chooser, create_bin_checkbox, recursively_checkbox))
+    dialog.show_all()
+    
 def export_edl_dialog(callback, parent_window, project_name):
     dialog = Gtk.FileChooserDialog(_("Export EDL"), parent_window,
                                    Gtk.FileChooserAction.SAVE,
