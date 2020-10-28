@@ -152,14 +152,29 @@ def _watermark_remove_callback(button, widgets):
     current_sequence().remove_watermark()
       
 def toggle_fullscreen():
-    print("toggle_fullscreen")
-    if editorstate.fullscreen == False:
-       gui.editor_window.window.fullscreen()
-       editorstate.fullscreen = True
+    if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
+        if editorstate.fullscreen == False:
+           gui.editor_window.window.fullscreen()
+           editorstate.fullscreen = True
+        else:
+           gui.editor_window.window.unfullscreen()
+           editorstate.fullscreen = False
     else:
-       gui.editor_window.window.unfullscreen()
-       editorstate.fullscreen = False
-
+        if gui.editor_window.window.has_toplevel_focus() == True:
+            if editorstate.fullscreen == False:
+               gui.editor_window.window.fullscreen()
+               editorstate.fullscreen = True
+            else:
+               gui.editor_window.window.unfullscreen()
+               editorstate.fullscreen = False
+        else:
+            if editorstate.fullscreen_second_window == False:
+                gui.editor_window.window2.fullscreen()
+                editorstate.fullscreen_second_window = True
+            else:
+                gui.editor_window.window2.unfullscreen()
+                editorstate.fullscreen_second_window = False
+               
 def keyboard_shortcuts_callback(dialog, response_id, presets_combo):
     selected_shortcuts_index = presets_combo.get_active()
     dialog.destroy()
