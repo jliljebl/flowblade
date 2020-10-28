@@ -130,9 +130,6 @@ class EditorWindow:
 
     def __init__(self):
 
-        editorpersistance.prefs.placement_media_panel = appconsts.PANEL_PLACEMENT_TOP_ROW_NOTEBOOK
-        editorpersistance.save()
-    
         self._init_cursors()
 
         # Create window(s)
@@ -160,7 +157,9 @@ class EditorWindow:
         ui = Gtk.UIManager()
         self._init_app_menu(ui)
         
-        # Build layout
+        # ---------------------------------------------------- Build layout
+        # We now have all components available and can build GUI, add tools tips,
+        # set panel positions and show everything.
         # Timeline bottom row
         tline_hbox_3 = Gtk.HBox()
         tline_hbox_3.pack_start(self.left_corner.widget, False, False, 0)
@@ -191,13 +190,12 @@ class EditorWindow:
         self.app_v_paned = Gtk.VPaned()
         self.app_v_paned.pack1(self.top_row_hbox, resize=False, shrink=False)
         self.app_v_paned.pack2(tline_pane, resize=True, shrink=False)
-        self.app_v_paned.no_dark_bg = True
 
         self.app_h_box = Gtk.HBox(False, 0)
         if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
             if editorpersistance.prefs.placement_media_panel == appconsts.PANEL_PLACEMENT_LEFT_COLUMN:
-                self.app_h_box.pack_start(self.mm_paned_frame , False, False, 0)
-        self.app_h_box.pack_start(self.app_v_paned, True, True, 0)
+                self.app_h_box.pack_start(self.mm_paned_frame, False, False, 0)
+        self.app_h_box.pack_end(self.app_v_paned, True, True, 0)
 
         # Menu box
         # menubar size 348, 28 if w want to center someting here with set_size_request
@@ -335,7 +333,7 @@ class EditorWindow:
         # This needs frame if it is not inside a notebeek.
         if editorpersistance.prefs.placement_media_panel != appconsts.PANEL_PLACEMENT_TOP_ROW_NOTEBOOK:
             self.mm_paned_frame = guiutils.get_panel_etched_frame(self.mm_paned)
-            guiutils.set_margins(self.mm_paned_frame, 0, 0, 1, 0)
+            self.mm_paned_frame = guiutils.set_margins(self.mm_paned_frame, 0, 0, 1, 0)
         else:
             self.mm_paned_frame = None # We use this to easily know where media panel is placed.
     
@@ -473,7 +471,7 @@ class EditorWindow:
         self.notebook = Gtk.Notebook()
         self.notebook.set_size_request(appconsts.NOTEBOOK_WIDTH, appconsts.TOP_ROW_HEIGHT)
         media_label = Gtk.Label(label=_("Media"))
-        media_label.no_dark_bg = True
+
         # Here we put media panel in notebook if that is the current user pref.
         if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
             if editorpersistance.prefs.placement_media_panel == appconsts.PANEL_PLACEMENT_TOP_ROW_NOTEBOOK:
@@ -562,7 +560,6 @@ class EditorWindow:
 
         # Notebook panel
         notebook_vbox = Gtk.VBox(False, 1)
-        notebook_vbox.no_dark_bg = True
         notebook_vbox.pack_start(notebook_frame, True, True, 0)
 
         # Top row paned
@@ -579,7 +576,7 @@ class EditorWindow:
         if top_level_project_panel() == True:
             self.top_row_hbox.pack_start(top_project_panel_frame, False, False, 0)
         self.top_row_hbox.pack_start(self.top_paned, True, True, 0)
-        self._update_top_row()
+        self.top_row_hbox.pack_end(audiomonitoring.get_master_meter(), False, False, 0)
 
         # Edit buttons rows
         self.edit_buttons_row = self._get_edit_buttons_row()
@@ -1060,7 +1057,7 @@ class EditorWindow:
         panel_positions_menu = Gtk.Menu()
         panel_positions_menu_item.set_submenu(panel_positions_menu)
         
-        # Panel positions - media panel
+        # Panel positions - Media Panel
         media_panel_menu_item = Gtk.MenuItem(_("Media Panel"))
         panel_positions_menu.append(media_panel_menu_item)
         media_panel_menu = Gtk.Menu()
@@ -1068,16 +1065,22 @@ class EditorWindow:
         
         media_panel_top = Gtk.RadioMenuItem()
         media_panel_top.set_label( _("Top Row Notebook"))
-        #media_panel_top.connect("activate", lambda w: self._show_tabs_up(w))
         media_panel_menu.append(media_panel_top)
 
         media_panel_left_column = Gtk.RadioMenuItem.new_with_label([media_panel_top], _("Left Column"))
-        #tabs_down.connect("activate", lambda w: self._show_tabs_down(w))
+
+        if editorpersistance.prefs.placement_media_panel == appconsts.PANEL_PLACEMENT_TOP_ROW_NOTEBOOK:
+            media_panel_top.set_active(True)
+        else:
+            media_panel_left_column.set_active(True)
+            
+        media_panel_top.connect("activate", lambda w: self._show_media_panel_top_row_notebook(w))
+        media_panel_left_column.connect("activate", lambda w: self._show_media_panel_left_column(w))
         media_panel_menu.append(media_panel_left_column)
 
         menu.append(panel_positions_menu_item)
 
-        # Panel positions - media panel
+        # Panel positions - Filter Panel
         filter_panel_menu_item = Gtk.MenuItem(_("Filter Panel"))
         panel_positions_menu.append(filter_panel_menu_item)
         filter_panel_menu = Gtk.Menu()
@@ -1085,10 +1088,15 @@ class EditorWindow:
         
         filter_panel_top = Gtk.RadioMenuItem()
         filter_panel_top.set_label( _("Top Row Notebook"))
-        #media_panel_top.connect("activate", lambda w: self._show_tabs_up(w))
         filter_panel_menu.append(filter_panel_top)
 
         filter_panel_bottom_right = Gtk.RadioMenuItem.new_with_label([filter_panel_top], _("Bottom Row Right"))
+        
+        if editorpersistance.prefs.placement_media_panel == appconsts.PANEL_PLACEMENT_TOP_ROW_NOTEBOOK:
+            filter_panel_top.set_active(True)
+        else:
+            filter_panel_bottom_right.set_active(True)
+        #media_panel_top.connect("activate", lambda w: self._show_tabs_up(w))
         #tabs_down.connect("activate", lambda w: self._show_tabs_down(w))
         filter_panel_menu.append(filter_panel_bottom_right)
         
@@ -1130,27 +1138,7 @@ class EditorWindow:
         
         mb_menu_item.set_submenu(mb_menu)
         menu.append(mb_menu_item)
-
-        # Tabs Position
-        tabs_menu_item = Gtk.MenuItem(_("Tabs Position"))
-        tabs_menu =  Gtk.Menu()
-        tabs_up = Gtk.RadioMenuItem()
-        tabs_up.set_label( _("Up"))
-        tabs_up.connect("activate", lambda w: self._show_tabs_up(w))
-        tabs_menu.append(tabs_up)
-
-        tabs_down = Gtk.RadioMenuItem.new_with_label([tabs_up], _("Down"))
-        tabs_down.connect("activate", lambda w: self._show_tabs_down(w))
-
-        if editorpersistance.prefs.tabs_on_top == True:
-            tabs_up.set_active(True)
-        else:
-            tabs_down.set_active(True)
-
-        tabs_menu.append(tabs_down)
-        tabs_menu_item.set_submenu(tabs_menu)
-        menu.append(tabs_menu_item)
-
+        
         # Tool Selection Widget
         tool_selector_menu_item = Gtk.MenuItem(_("Tool Selection Widget"))
         tool_selector_menu =  Gtk.Menu()
@@ -1330,26 +1318,10 @@ class EditorWindow:
 
         dialogutils.info_message(primary_txt, secondary_txt, self.window)
 
-    def _show_tabs_up(self, widget):
-        if widget.get_active() == False:
-            return
-        self.notebook.set_tab_pos(Gtk.PositionType.TOP)
-        editorpersistance.prefs.tabs_on_top = True
-        editorpersistance.save()
-
-    def _show_tabs_down(self, widget):
-        if widget.get_active() == False:
-            return
-        self.notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
-        editorpersistance.prefs.tabs_on_top = False
-        editorpersistance.save()
-
-    def _update_top_row(self, show_all=False):
-        self.top_row_hbox.pack_end(audiomonitoring.get_master_meter(), False, False, 0)
-
-        if show_all:
-            self.window.show_all()
-
+    # --------------------------------------------------------------- LAYOUT CHANGES
+    # These methods are called from app menu and they show and hide panels or
+    # move them around. When layout is created or startup we make sure that there is enough information  to
+    # do the changes, e.g. some caontainer either exist are are set to None etc.  
     def _show_tools_middlebar(self, widget):
         if widget.get_active() == False:
             return
@@ -1383,8 +1355,47 @@ class EditorWindow:
         self.tool_selector = None
         workflow.select_default_tool()
 
+        media_panel_top.connect("activate", lambda w: self._show_media_panel_top_row_notebook(w))
+        media_panel_left_column.connect("activate", lambda w: self._show_media_panel_left_column(w))
+
+    def _show_media_panel_top_row_notebook(self, widget):
+        if widget.get_active() == False:
+            return
+
+        self.app_h_box.remove(self.mm_paned_frame)
+
+        self.mm_paned_frame.remove(self.mm_paned)
+        self.mm_paned_frame = None
+
+        media_label = Gtk.Label(label=_("Media"))
+        self.notebook.insert_page(self.mm_paned, media_label, 0)
+
+        self.window.show_all()
+        
+        editorpersistance.prefs.placement_media_panel = appconsts.PANEL_PLACEMENT_TOP_ROW_NOTEBOOK
+        editorpersistance.save()
+    
+    def _show_media_panel_left_column(self, widget):
+        if widget.get_active() == False:
+            return
+            
+        self.notebook.remove(self.mm_paned)
+
+        self.mm_paned_frame = guiutils.get_panel_etched_frame(self.mm_paned)
+        self.mm_paned_frame = guiutils.set_margins(self.mm_paned_frame, 0, 0, 1, 0)
+
+        self.app_h_box.pack_start(self.mm_paned_frame , False, False, 0)
+        self.window.show_all()
+
+        editorpersistance.prefs.placement_media_panel = appconsts.PANEL_PLACEMENT_LEFT_COLUMN
+        editorpersistance.save()
+
+    # ----------------------------------------------------------- GUI components monitor, middlebar.
     def _create_monitor_buttons(self):
         self.monitor_switch = guicomponents.MonitorSwitch(self._monitor_switch_handler)
+
+    def _create_monitor_row_widgets(self):
+        self.monitor_tc_info = guicomponents.MonitorTCInfo()
 
     def _monitor_switch_handler(self, action):
         if action == appconsts.MONITOR_TLINE_BUTTON_PRESSED:
@@ -1485,6 +1496,7 @@ class EditorWindow:
 
         self.pos_bar.widget.set_tooltip_text(_("Sequence / Media current position"))
 
+    # --------------------------------------------------------- EDIT TOOL AND CURSOR CHANGE HANDLING
     def set_default_edit_tool(self):
         # First active tool is the default tool. So we need to always have atleast one tool available.
         self.change_tool(editorpersistance.prefs.active_tools[0])
@@ -1757,8 +1769,7 @@ class EditorWindow:
         print(self.top_paned.get_position())
         print(self.mm_paned.get_position())
 
-    def _create_monitor_row_widgets(self):
-        self.monitor_tc_info = guicomponents.MonitorTCInfo()
+
 
 
 def _this_is_not_used():
