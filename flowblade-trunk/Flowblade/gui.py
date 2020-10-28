@@ -149,10 +149,6 @@ def get_bg_color():
 def get_selected_bg_color():
     return _selected_bg_color
 
-# returns Gdk.RGBA color
-#def get_buttons_color():
-#    return _button_colors
-
 def set_theme_colors():
     # Find out if theme color discovery works and set selected bg color apppropiately when
     # this is first called.
@@ -242,7 +238,7 @@ def _print_widget(widget): # debug
     path_str = path_str.replace("GtkVBox:. GtkVPaned:[2/2]. GtkHBox:. GtkHPaned:. GtkVBox:. GtkNotebook:[1/1]","notebook:")
     print(path_str)
 
-def apply_gtk_css():
+def apply_gtk_css(theme):
     gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
     if Gtk.get_major_version() == 3 and Gtk.get_minor_version() >= 22:
         print("Gtk version is " + gtk_version + ", Flowblade theme is available.")
@@ -256,6 +252,10 @@ def apply_gtk_css():
     display = Gdk.Display.get_default()
     screen = display.get_default_screen()
     Gtk.StyleContext.add_provider_for_screen (screen, provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
-    provider.load_from_path(respaths.ROOT_PATH + "/res/css/gtk-flowblade-dark.css")
+    if theme == appconsts.FLOWBLADE_THEME:
+        css_path = "/res/css/gtk-flowblade-dark.css"
+    else:
+        css_path = "/res/css2/gtk-flowblade-dark.css"
+    provider.load_from_path(respaths.ROOT_PATH + css_path)
 
     return True

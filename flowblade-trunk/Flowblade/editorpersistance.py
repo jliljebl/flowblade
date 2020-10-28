@@ -186,7 +186,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     auto_center_check, play_pause_button, timeline_start_end_button, auto_center_on_updown, \
     ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips = playback_prefs_widgets
     
-    force_language_combo, disp_splash, buttons_style, theme, theme_combo, audio_levels_combo, \
+    force_language_combo, disp_splash, buttons_style, theme, theme_fallback_combo, audio_levels_combo, \
     window_mode_combo, full_names, double_track_hights, top_row_layout, layout_monitor, colorized_icons = view_prefs_widgets
 
     # Jan-2017 - SvdB
@@ -223,7 +223,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.display_splash_screen = disp_splash.get_active()
     prefs.buttons_style = buttons_style.get_active() # styles enum values and widget indexes correspond
 
-    prefs.theme_fallback_colors = theme_combo.get_active()
+    prefs.theme_fallback_colors = theme_fallback_combo.get_active()
     prefs.display_all_audio_levels = (audio_levels_combo.get_active() == 0)
     prefs.global_layout = window_mode_combo.get_active() + 1 # +1 'cause values are 1 and 2
     # Jan-2017 - SvdB
@@ -234,7 +234,10 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.center_on_arrow_move = auto_center_on_updown.get_active()
     prefs.double_track_hights = (double_track_hights.get_active() == 1)
     prefs.playback_follow_move_tline_range = follow_move_range.get_active()
-    prefs.theme = theme.get_active()
+    if theme.get_active() == 0: # The displayed options indeces do not correspond with theme const values.
+        prefs.theme = appconsts.FLOWBLADE_THEME_GRAY
+    else:    
+        prefs.theme = theme.get_active() - 1
     prefs.top_row_layout = top_row_layout.get_active()
     # Aug-2019 - SvdB - AS
     prefs.auto_save_delay_value_index = autosave_combo.get_active()
