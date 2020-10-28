@@ -1307,7 +1307,7 @@ def open_image_sequence_dialog(callback, parent_window):
 
 def add_media_folder_dialog(callback, parent_window):
     cancel_str = _("Cancel")
-    ok_str = _("Ok")
+    ok_str = _("Add")
     dialog = Gtk.Dialog(_("Add Media From Folder"),
                         parent_window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
@@ -1360,18 +1360,28 @@ def add_media_folder_dialog(callback, parent_window):
     extension_label.set_sensitive(False)
     row6 = guiutils.get_two_column_box(extension_label, extension_entry_box, 100)
 
+    maximum_select = Gtk.ComboBoxText()
+    maximum_select.append_text(_("29"))
+    maximum_select.append_text(_("49"))
+    maximum_select.append_text(_("99"))
+    maximum_select.set_active(0)
+    maximum_label = Gtk.Label(label=_("Max. number of files to import:"))
+    row7 = guiutils.get_two_column_box(maximum_label, maximum_select, 220)
+    
     activateble_widgets = (action_label, action_select, extension_label, extension_entry)
     use_extension_checkbox.connect("toggled", _use_extension_toggled, activateble_widgets)
     
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row1, False, False, 0)
-    vbox.pack_start(guiutils.pad_label(12, 12), False, False, 0)
+    vbox.pack_start(guiutils.pad_label(12, 24), False, False, 0)
     vbox.pack_start(row2, False, False, 0)
     vbox.pack_start(row3, False, False, 0)
-    vbox.pack_start(guiutils.pad_label(12, 12), False, False, 0)
+    vbox.pack_start(guiutils.pad_label(12, 8), False, False, 0)
     vbox.pack_start(row4, False, False, 0)
     vbox.pack_start(row5, False, False, 0)
     vbox.pack_start(row6, False, False, 0)
+    #vbox.pack_start(guiutils.pad_label(12, 8), False, False, 0)
+    vbox.pack_start(row7, False, False, 0)
     
     alignment = dialogutils.get_alignment2(vbox)
 
