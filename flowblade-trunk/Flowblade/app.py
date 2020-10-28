@@ -231,6 +231,7 @@ def main(root_path):
     if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
         success = gui.apply_gtk_css(editorpersistance.prefs.theme)
         if not success:
+            print("not success")
             editorpersistance.prefs.theme = appconsts.LIGHT_THEME
             editorpersistance.save()
 

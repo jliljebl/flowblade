@@ -377,7 +377,8 @@ def load_icons():
         BG_COLOR = (0.44, 0.44, 0.46)
 
         FRAME_SCALE_LINES = (0.8, 0.8, 0.8)
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME or \
+            editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
             TRACK_GRAD_STOP1 = (1,  0.12, 0.14, 0.2, 1)
             TRACK_GRAD_STOP3 = (1,  0.12, 0.14, 0.2, 1)
             TRACK_GRAD_ORANGE_STOP1 = (1,  0.20, 0.22, 0.28, 1) # V1
@@ -2445,7 +2446,8 @@ class TimeLineColumn:
         x, y, w, h = allocation
         
         # Draw bg
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME or \
+           editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
             pass # removed for better look.
         else:
             cr.set_source_rgb(*BG_COLOR)
@@ -2546,7 +2548,8 @@ class TimeLineColumn:
             cr.paint()
         
         # Draw insert arrow
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME or \
+           editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
             stop, r,g,b, a = TRACK_GRAD_STOP1
             cr.set_source_rgb(r,g,b)
         if is_insert_track == True:
@@ -2593,7 +2596,8 @@ class TimeLineFrameScale:
             global FRAME_SCALE_SELECTED_COLOR_GRAD, FRAME_SCALE_SELECTED_COLOR_GRAD_L, MARK_COLOR 
             FRAME_SCALE_SELECTED_COLOR_GRAD = DARK_FRAME_SCALE_SELECTED_COLOR_GRAD
             FRAME_SCALE_SELECTED_COLOR_GRAD_L = DARK_FRAME_SCALE_SELECTED_COLOR_GRAD_L
-            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
+            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME or \
+               editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
                 MARK_COLOR = (0.9, 0.9, 0.9) # This needs to be light for contrast
                 
     def _press_event(self, event):

@@ -368,7 +368,9 @@ def _view_prefs_panel():
     if prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
         index = 0
     else:
-        index = prefs.theme - 1
+        index = int(prefs.theme) + 1
+    print(index)
+    
     dark_combo.set_active(index)
 
     theme_combo = Gtk.ComboBoxText()

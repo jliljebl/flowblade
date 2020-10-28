@@ -95,7 +95,8 @@ class PositionBar:
             SELECTED_RANGE_COLOR = DARK_SELECTED_RANGE_COLOR
             MARK_COLOR = DARK_MARK_COLOR
             SPEED_TEST_COLOR = DARK_SPEED_TEST_COLOR
-            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
+            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME or \
+                editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
                 MARK_COLOR = FLOWBLADE_THEME_MARK_COLOR
     
     def set_listener(self, listener):
