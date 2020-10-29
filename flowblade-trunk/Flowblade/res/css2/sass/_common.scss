@@ -1779,7 +1779,7 @@ notebook {
 
           outline-offset: -4px;
 
-          border: 1px solid transparent;
+          border: 0px solid transparent;
           border-#{$_bpos}: none;
 
           // tab overlap
@@ -1789,10 +1789,10 @@ notebook {
           }
 
           // tab border radius
-          @if $_pos==top { border-radius: 1px 1px 0 0; }
-          @else if $_pos==bottom { border-radius: 0 0 1px 1px; }
-          @else if $_pos==left { border-radius: 1px 0 0 1px; }
-          @else if $_pos==right { border-radius: 0 1px 1px 0; }
+          @if $_pos==top { border-radius: 0 0 0 0; }
+          @else if $_pos==bottom { border-radius: 0 0 0 0; }
+          @else if $_pos==left { border-radius: 0 0 0 0; }
+          @else if $_pos==right { border-radius: 0 0 0 0; }
         }
       }
     }
@@ -1827,10 +1827,10 @@ notebook {
 
     // tab colors
 
-    &.top > tabs > tab:hover:not(:checked) { box-shadow: inset 0 -1px $borders_color; }
-    &.bottom > tabs > tab:hover:not(:checked) { box-shadow: inset 0 1px $borders_color; }
-    &.left > tabs > tab:hover:not(:checked) { box-shadow: inset -1px 0 $borders_color; }
-    &.right > tabs > tab:hover:not(:checked) { box-shadow: inset 1px 0 $borders_color; }
+    //&.top > tabs > tab:hover:not(:checked) { box-shadow: inset 0 -1px $borders_color; }
+    //&.bottom > tabs > tab:hover:not(:checked) { box-shadow: inset 0 1px $borders_color; }
+    //&.left > tabs > tab:hover:not(:checked) { box-shadow: inset -1px 0 $borders_color; }
+    //&.right > tabs > tab:hover:not(:checked) { box-shadow: inset 1px 0 $borders_color; }
 
     > tabs > tab {
       color: $insensitive_fg_color;
@@ -1839,7 +1839,7 @@ notebook {
       &:hover:not(:checked) {
         color: mix($fg_color, $insensitive_fg_color, 50%);
         background-color: transparentize($base_color, 0.5);
-        border-color: $borders_color;
+        border-color: transparentize($base_color, 0.5);
       }
       &:checked {
         color: $fg_color;

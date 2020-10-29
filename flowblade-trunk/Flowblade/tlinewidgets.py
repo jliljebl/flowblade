@@ -393,6 +393,11 @@ def load_icons():
             INSERT_ARROW_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insert_arrow_fb.png")
             BLANK_CLIP_COLOR_GRAD = (1, 0.12, 0.14, 0.2, 1)
             BLANK_CLIP_COLOR_GRAD_L = (0, 0.12, 0.14, 0.2, 1)
+            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
+                TRACK_GRAD_STOP1 = (1,  0.198, 0.203, 0.225, 1)
+                TRACK_GRAD_STOP3 = (1,  0.198, 0.203, 0.225, 1)
+                TRACK_GRAD_ORANGE_STOP1 = (1,  0.20, 0.22, 0.28, 1) # V1
+                TRACK_GRAD_ORANGE_STOP3 = (1,  0.20, 0.22, 0.28, 1) # V1
     else:
         TRACK_GRAD_ORANGE_STOP1 = (1,  0.4, 0.4, 0.4, 1) # V1
         TRACK_GRAD_ORANGE_STOP3 = (0,  0.68, 0.68, 0.68, 1) # V1

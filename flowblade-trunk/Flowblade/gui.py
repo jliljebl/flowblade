@@ -185,10 +185,8 @@ def set_theme_colors():
     bg_color = style.get_background_color(Gtk.StateFlags.NORMAL)
     if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
         bg_color = Gdk.RGBA(red=(30.0/255.0), green=(35.0/255.0), blue=(51.0/255.0), alpha=1.0)
-    #elif editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
-    #    _bg_unmodified_normal = bg_color
-    #    bg_color = Gdk.RGBA(red=(49.7/255.0), green=(49.7/255.0), blue=(49.7/255.0), alpha=1.0)
-    _bg_unmodified_normal = bg_color
+
+    _bg_unmodified_normal = bg_color # this was used to work on grey, theme probablynot necessary anymore
 
     r, g, b, a = unpack_gdk_color(bg_color)
 
@@ -211,14 +209,13 @@ def set_theme_colors():
         _selected_bg_color = Gdk.RGBA(*c) 
 
     # Adwaita and some others show big area of black without this, does not bother Ambient on Ubuntu
-    #if editorpersistance.prefs.theme != appconsts.FLOWBLADE_THEME_GRAY:
     editor_window.tline_pane.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
     editor_window.media_panel.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
     editor_window.mm_paned.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
 
-    #if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
-    #    editor_window.mm_paned.override_background_color(Gtk.StateFlags.NORMAL, get_light_gray_light_color())
-    #    editor_window.media_panel.override_background_color(Gtk.StateFlags.NORMAL, get_light_gray_light_color())
+    if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
+        editor_window.mm_paned.override_background_color(Gtk.StateFlags.NORMAL, get_light_gray_light_color())
+        editor_window.media_panel.override_background_color(Gtk.StateFlags.NORMAL, get_light_gray_light_color())
     
 def unpack_gdk_color(gdk_color):
     return (gdk_color.red, gdk_color.green, gdk_color.blue, gdk_color.alpha)

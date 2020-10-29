@@ -475,6 +475,9 @@ class EditorWindow:
         notebook_frame = guiutils.get_panel_etched_frame(self.notebook)
         guiutils.set_margins(notebook_frame, 0, 0, 0, 1)
 
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
+            self.notebook.override_background_color(Gtk.StateFlags.NORMAL, gui.get_light_gray_light_color())
+        
         # Position bar and decorative frame  for it
         self.pos_bar = PositionBar()
         pos_bar_frame = Gtk.Frame()
@@ -574,7 +577,6 @@ class EditorWindow:
         guiutils.set_margins(self.edit_buttons_frame, 1, 0, 0, 0)
 
         if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
-            print("halooo")
             self.edit_buttons_frame.override_background_color(Gtk.StateFlags.NORMAL, gui.get_light_gray_light_color())
             
         self.tline_scale = tlinewidgets.TimeLineFrameScale(modesetting.set_default_edit_mode,
