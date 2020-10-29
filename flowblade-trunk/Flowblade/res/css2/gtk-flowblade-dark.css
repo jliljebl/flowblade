@@ -236,7 +236,7 @@ button {
   padding: 2px 6px;
   color: #D3DAE3;
   border-color: #1a1b1f;
-  background-color: #2d2e36; }
+  background-color: #383a43; }
   button separator {
     margin: 4px 1px; }
   button.flat, button.sidebar-button {
@@ -252,7 +252,7 @@ button {
   button:hover {
     color: #D3DAE3;
     border-color: #1a1b1f;
-    background-color: #383a43;
+    background-color: #444651;
     -gtk-icon-effect: highlight; }
   button:active, button:checked {
     color: #ffffff;
@@ -273,7 +273,7 @@ button {
     background-image: none; }
   button:disabled {
     border-color: rgba(26, 27, 31, 0.55);
-    background-color: rgba(45, 46, 54, 0.55); }
+    background-color: rgba(56, 58, 67, 0.55); }
     button:disabled label, button:disabled {
       color: rgba(211, 218, 227, 0.45); }
     button:disabled:active, button:disabled:checked {
@@ -390,7 +390,7 @@ button {
       color: rgba(211, 218, 227, 0.45); }
     button.suggested-action:disabled {
       border-color: rgba(26, 27, 31, 0.55);
-      background-color: rgba(45, 46, 54, 0.55); }
+      background-color: rgba(56, 58, 67, 0.55); }
       button.suggested-action:disabled label, button.suggested-action:disabled {
         color: rgba(211, 218, 227, 0.45); }
   button.destructive-action {
@@ -420,7 +420,7 @@ button {
       color: rgba(211, 218, 227, 0.45); }
     button.destructive-action:disabled {
       border-color: rgba(26, 27, 31, 0.55);
-      background-color: rgba(45, 46, 54, 0.55); }
+      background-color: rgba(56, 58, 67, 0.55); }
       button.destructive-action:disabled label, button.destructive-action:disabled {
         color: rgba(211, 218, 227, 0.45); }
   .stack-switcher > button {
@@ -459,18 +459,18 @@ button {
 .inline-toolbar toolbutton > button {
   color: #D3DAE3;
   border-color: #1a1b1f;
-  background-color: #2d2e36; }
+  background-color: #383a43; }
   .inline-toolbar toolbutton > button:hover {
     color: #D3DAE3;
     border-color: #1a1b1f;
-    background-color: #383a43; }
+    background-color: #444651; }
   .inline-toolbar toolbutton > button:active, .inline-toolbar toolbutton > button:checked {
     color: #ffffff;
     border-color: #1a1b1f;
     background-color: #5294e2; }
   .inline-toolbar toolbutton > button:disabled {
     border-color: rgba(26, 27, 31, 0.55);
-    background-color: rgba(45, 46, 54, 0.55); }
+    background-color: rgba(56, 58, 67, 0.55); }
     .inline-toolbar toolbutton > button:disabled label, .inline-toolbar toolbutton > button:disabled {
       color: rgba(211, 218, 227, 0.45); }
   .inline-toolbar toolbutton > button:disabled:active, .inline-toolbar toolbutton > button:disabled:checked {
@@ -2071,13 +2071,13 @@ scale {
     scale fill:disabled {
       background-color: transparent; }
   scale slider {
-    background-color: #2d2e36;
+    background-color: #383a43;
     border: 1px solid #15161a;
     border-radius: 100%;
     transition: all 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
     transition-property: background, border; }
     scale slider:hover {
-      background-color: #383a43; }
+      background-color: #444651; }
     scale slider:active {
       background-clip: border-box;
       background-color: #5294e2;
@@ -2640,11 +2640,11 @@ colorswatch#add-color-button {
   border-width: 1px;
   color: #D3DAE3;
   border-color: #1a1b1f;
-  background-color: #2d2e36; }
+  background-color: #383a43; }
   colorswatch#add-color-button:hover {
     color: #D3DAE3;
     border-color: #1a1b1f;
-    background-color: #383a43; }
+    background-color: #444651; }
   colorswatch#add-color-button overlay {
     border-color: transparent;
     background-color: transparent;
@@ -2667,7 +2667,7 @@ colorchooser .popover.osd {
 .scale-popup button:hover {
   color: #D3DAE3;
   border-color: #1a1b1f;
-  background-color: #383a43; }
+  background-color: #444651; }
 
 .context-menu, popover.touch-selection, .csd popover.touch-selection, popover.background.touch-selection, .csd popover.background.touch-selection {
   font: initial; }
@@ -3798,18 +3798,18 @@ GtkListBox .h4 {
 #content_frame button {
   color: #D3DAE3;
   border-color: #1a1b1f;
-  background-color: #2d2e36; }
+  background-color: #383a43; }
   #content_frame button:hover {
     color: #D3DAE3;
     border-color: #1a1b1f;
-    background-color: #383a43; }
+    background-color: #444651; }
   #content_frame button:active, #content_frame button:checked {
     color: #ffffff;
     border-color: #1a1b1f;
     background-color: #5294e2; }
   #content_frame button:disabled {
     border-color: rgba(26, 27, 31, 0.55);
-    background-color: rgba(45, 46, 54, 0.55); }
+    background-color: rgba(56, 58, 67, 0.55); }
     #content_frame button:disabled label, #content_frame button:disabled {
       color: rgba(211, 218, 227, 0.45); }
 
