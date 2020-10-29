@@ -176,10 +176,11 @@ def set_theme_colors():
     # Try to detect bg color and set frow fallback if fails
     style = editor_window.window.get_style_context()
     bg_color = style.get_background_color(Gtk.StateFlags.NORMAL)
-    if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME or \
-        editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
+    if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
         bg_color = Gdk.RGBA(red=(30.0/255.0), green=(35.0/255.0), blue=(51.0/255.0), alpha=1.0)
-
+    #elif editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
+    #    bg_color = Gdk.RGBA(red=(27.2/255.0), green=(27.5/255.0), blue=(120.5/255.0), alpha=1.0)
+        
     r, g, b, a = unpack_gdk_color(bg_color)
 
     if r == 0.0 and g == 0.0 and b == 0.0:

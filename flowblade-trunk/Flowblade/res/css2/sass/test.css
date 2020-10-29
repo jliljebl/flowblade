@@ -16,22 +16,22 @@
 
 .background {
   color: #D3DAE3;
-  background-color: rgba(25, 25, 25, 0.999); }
+  background-color: rgba(23, 25, 35, 0.999); }
 
 *:disabled {
   -gtk-icon-effect: dim; }
 
 .gtkstyle-fallback {
-  background-color: #191919;
+  background-color: #171923;
   color: #D3DAE3; }
   .gtkstyle-fallback:hover {
-    background-color: #333333;
+    background-color: #2b2f42;
     color: #D3DAE3; }
   .gtkstyle-fallback:active {
-    background-color: black;
+    background-color: #030304;
     color: #D3DAE3; }
   .gtkstyle-fallback:disabled {
-    background-color: #1e1e1e;
+    background-color: #1b1d29;
     color: rgba(211, 218, 227, 0.45); }
   .gtkstyle-fallback:selected {
     background-color: #5294e2;
@@ -42,7 +42,7 @@
 iconview text,
 textview text {
   color: #D3DAE3;
-  background-color: #303030; }
+  background-color: #404552; }
   .view:selected, iconview:selected, .view:selected:focus, iconview:selected:focus,
   .view text:selected,
   iconview text:selected,
@@ -53,7 +53,7 @@ textview text {
     border-radius: 2px; }
 
 textview border {
-  background-color: #252525; }
+  background-color: #2c2f3b; }
 
 rubberband, flowbox rubberband, treeview.view rubberband, .content-view rubberband,
 .rubberband {
@@ -78,8 +78,8 @@ label:disabled {
   opacity: 0.55; }
 
 assistant .sidebar {
-  background-color: #303030;
-  border-top: 1px solid #0a0a0a; }
+  background-color: #404552;
+  border-top: 1px solid #0b0c11; }
 assistant.csd .sidebar {
   border-top-style: none; }
 assistant .sidebar label {
@@ -89,7 +89,7 @@ assistant .sidebar label.highlight {
   color: #ffffff; }
 
 textview {
-  background-color: #303030; }
+  background-color: #404552; }
 
 popover.osd, popover.magnifier, .csd popover.osd, .csd popover.magnifier, popover.background.osd, popover.background.magnifier, .csd popover.background.osd, .csd popover.background.magnifier, .osd .scale-popup, .osd {
   color: #BAC3CF;
@@ -119,12 +119,12 @@ entry {
   border-radius: 3px;
   transition: all 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
   color: #D3DAE3;
-  border-color: #0a0a0a;
-  background-color: #303030; }
+  border-color: #0b0c11;
+  background-color: #404552; }
   entry.search {
     border-radius: 20px; }
   entry image {
-    color: #b2b8bf; }
+    color: #b6bcc6; }
     entry image.left {
       padding-left: 0;
       padding-right: 5px; }
@@ -140,17 +140,17 @@ entry {
   entry:focus {
     background-clip: border-box;
     color: #D3DAE3;
-    border-color: #0a0a0a;
-    background-color: #303030;
+    border-color: #0b0c11;
+    background-color: #404552;
     box-shadow: inset 1px 0 #5294e2, inset -1px 0 #5294e2, inset 0 1px #5294e2, inset 0 -1px #5294e2; }
   entry:disabled {
     color: rgba(211, 218, 227, 0.45);
-    border-color: rgba(10, 10, 10, 0.55);
-    background-color: rgba(48, 48, 48, 0.55); }
+    border-color: rgba(11, 12, 17, 0.55);
+    background-color: rgba(64, 69, 82, 0.55); }
   entry.warning {
     color: white;
-    border-color: #0a0a0a;
-    background-color: #a45b33; }
+    border-color: #0b0c11;
+    background-color: #ab6441; }
     entry.warning image {
       color: white; }
     entry.warning:focus {
@@ -162,8 +162,8 @@ entry {
       color: #F27835; }
   entry.error {
     color: white;
-    border-color: #0a0a0a;
-    background-color: #aa3a35; }
+    border-color: #0b0c11;
+    background-color: #b14342; }
     entry.error image {
       color: white; }
     entry.error:focus {
@@ -175,8 +175,8 @@ entry {
       color: #FC4138; }
   entry.search-missing {
     color: white;
-    border-color: #0a0a0a;
-    background-color: #aa3a35; }
+    border-color: #0b0c11;
+    background-color: #b14342; }
     entry.search-missing image {
       color: white; }
     entry.search-missing:focus {
@@ -218,7 +218,7 @@ entry {
 treeview entry.flat, treeview entry {
   border-radius: 0;
   background-image: none;
-  background-color: #303030; }
+  background-color: #404552; }
   treeview entry.flat:focus, treeview entry:focus {
     border-color: #5294e2; }
 
@@ -235,8 +235,8 @@ button {
   border-radius: 3px;
   padding: 2px 6px;
   color: #D3DAE3;
-  border-color: #0a0a0a;
-  background-color: #353535; }
+  border-color: #0b0c11;
+  background-color: #444a58; }
   button separator {
     margin: 4px 1px; }
   button.flat, button.sidebar-button {
@@ -251,12 +251,12 @@ button {
         transition: all 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94); }
   button:hover {
     color: #D3DAE3;
-    border-color: #0a0a0a;
-    background-color: #424242;
+    border-color: #0b0c11;
+    background-color: #505666;
     -gtk-icon-effect: highlight; }
   button:active, button:checked {
     color: #ffffff;
-    border-color: #0a0a0a;
+    border-color: #0b0c11;
     background-color: #5294e2;
     background-clip: padding-box;
     transition-duration: 50ms; }
@@ -272,8 +272,8 @@ button {
     background-color: transparent;
     background-image: none; }
   button:disabled {
-    border-color: rgba(10, 10, 10, 0.55);
-    background-color: rgba(53, 53, 53, 0.55); }
+    border-color: rgba(11, 12, 17, 0.55);
+    background-color: rgba(68, 74, 88, 0.55); }
     button:disabled label, button:disabled {
       color: rgba(211, 218, 227, 0.45); }
     button:disabled:active, button:disabled:checked {
@@ -389,8 +389,8 @@ button {
       background-image: none;
       color: rgba(211, 218, 227, 0.45); }
     button.suggested-action:disabled {
-      border-color: rgba(10, 10, 10, 0.55);
-      background-color: rgba(53, 53, 53, 0.55); }
+      border-color: rgba(11, 12, 17, 0.55);
+      background-color: rgba(68, 74, 88, 0.55); }
       button.suggested-action:disabled label, button.suggested-action:disabled {
         color: rgba(211, 218, 227, 0.45); }
   button.destructive-action {
@@ -419,8 +419,8 @@ button {
       background-image: none;
       color: rgba(211, 218, 227, 0.45); }
     button.destructive-action:disabled {
-      border-color: rgba(10, 10, 10, 0.55);
-      background-color: rgba(53, 53, 53, 0.55); }
+      border-color: rgba(11, 12, 17, 0.55);
+      background-color: rgba(68, 74, 88, 0.55); }
       button.destructive-action:disabled label, button.destructive-action:disabled {
         color: rgba(211, 218, 227, 0.45); }
   .stack-switcher > button {
@@ -458,19 +458,19 @@ button {
 
 .inline-toolbar toolbutton > button {
   color: #D3DAE3;
-  border-color: #0a0a0a;
-  background-color: #353535; }
+  border-color: #0b0c11;
+  background-color: #444a58; }
   .inline-toolbar toolbutton > button:hover {
     color: #D3DAE3;
-    border-color: #0a0a0a;
-    background-color: #424242; }
+    border-color: #0b0c11;
+    background-color: #505666; }
   .inline-toolbar toolbutton > button:active, .inline-toolbar toolbutton > button:checked {
     color: #ffffff;
-    border-color: #0a0a0a;
+    border-color: #0b0c11;
     background-color: #5294e2; }
   .inline-toolbar toolbutton > button:disabled {
-    border-color: rgba(10, 10, 10, 0.55);
-    background-color: rgba(53, 53, 53, 0.55); }
+    border-color: rgba(11, 12, 17, 0.55);
+    background-color: rgba(68, 74, 88, 0.55); }
     .inline-toolbar toolbutton > button:disabled label, .inline-toolbar toolbutton > button:disabled {
       color: rgba(211, 218, 227, 0.45); }
   .inline-toolbar toolbutton > button:disabled:active, .inline-toolbar toolbutton > button:disabled:checked {
@@ -481,55 +481,55 @@ button {
       color: rgba(255, 255, 255, 0.8); }
 
 .linked:not(.vertical):not(.path-bar) > entry + entry {
-  border-left-color: rgba(10, 10, 10, 0.3); }
+  border-left-color: rgba(11, 12, 17, 0.3); }
 .linked:not(.vertical):not(.path-bar) > entry.error + entry,
 .linked:not(.vertical):not(.path-bar) > entry + entry.error {
-  border-left-color: rgba(10, 10, 10, 0.3); }
+  border-left-color: rgba(11, 12, 17, 0.3); }
 .linked:not(.vertical):not(.path-bar) > entry.warning + entry,
 .linked:not(.vertical):not(.path-bar) > entry + entry.warning {
-  border-left-color: rgba(10, 10, 10, 0.3); }
+  border-left-color: rgba(11, 12, 17, 0.3); }
 .linked:not(.vertical):not(.path-bar) > entry.error + entry.warning,
 .linked:not(.vertical):not(.path-bar) > entry.warning + entry.error {
-  border-left-color: rgba(10, 10, 10, 0.3); }
+  border-left-color: rgba(11, 12, 17, 0.3); }
 .linked:not(.vertical):not(.path-bar) > entry + entry:focus:not(:last-child),
 .linked:not(.vertical):not(.path-bar) > entry + entry:focus:last-child {
-  border-left-color: #0a0a0a; }
+  border-left-color: #0b0c11; }
 .linked:not(.vertical):not(.path-bar) > entry:focus:not(:only-child) + entry,
 .linked:not(.vertical):not(.path-bar) > entry:focus:not(:only-child) + button,
 .linked:not(.vertical):not(.path-bar) > entry:focus:not(:only-child) + combobox > box > button.combo {
-  border-left-color: #0a0a0a; }
+  border-left-color: #0b0c11; }
 .linked:not(.vertical):not(.path-bar) > entry + entry:drop(active):not(:last-child),
 .linked:not(.vertical):not(.path-bar) > entry + entry:drop(active):last-child {
-  border-left-color: #0a0a0a; }
+  border-left-color: #0b0c11; }
 .linked:not(.vertical):not(.path-bar) > entry:drop(active):not(:only-child) + entry,
 .linked:not(.vertical):not(.path-bar) > entry:drop(active):not(:only-child) + button,
 .linked:not(.vertical):not(.path-bar) > entry:drop(active):not(:only-child) + combobox > box > button.combo {
-  border-left-color: #0a0a0a; }
+  border-left-color: #0b0c11; }
 .linked:not(.vertical):not(.path-bar) > entry + entry.warning:focus:not(:last-child),
 .linked:not(.vertical):not(.path-bar) > entry + entry.warning:focus:last-child {
-  border-left-color: #0a0a0a; }
+  border-left-color: #0b0c11; }
 .linked:not(.vertical):not(.path-bar) > entry.warning:focus:not(:only-child) + entry,
 .linked:not(.vertical):not(.path-bar) > entry.warning:focus:not(:only-child) + button,
 .linked:not(.vertical):not(.path-bar) > entry.warning:focus:not(:only-child) + combobox > box > button.combo {
-  border-left-color: #0a0a0a; }
+  border-left-color: #0b0c11; }
 .linked:not(.vertical):not(.path-bar) > entry + entry.error:focus:not(:last-child),
 .linked:not(.vertical):not(.path-bar) > entry + entry.error:focus:last-child {
-  border-left-color: #0a0a0a; }
+  border-left-color: #0b0c11; }
 .linked:not(.vertical):not(.path-bar) > entry.error:focus:not(:only-child) + entry,
 .linked:not(.vertical):not(.path-bar) > entry.error:focus:not(:only-child) + button,
 .linked:not(.vertical):not(.path-bar) > entry.error:focus:not(:only-child) + combobox > box > button.combo {
-  border-left-color: #0a0a0a; }
+  border-left-color: #0b0c11; }
 .linked:not(.vertical):not(.path-bar) > button:active + entry,
 .linked:not(.vertical):not(.path-bar) > button:checked + entry {
-  border-left-color: #0a0a0a; }
+  border-left-color: #0b0c11; }
 .linked:not(.vertical):not(.path-bar) > button + button {
   border-left-style: none; }
 .linked:not(.vertical):not(.path-bar) > button:not(:checked):not(:active):not(.suggested-action):not(.destructive-action):hover:not(:only-child),
 .linked:not(.vertical):not(.path-bar) > button:not(:checked):not(:active):not(.suggested-action):not(.destructive-action):hover + button:not(:checked):not(:active):not(.suggested-action):not(.destructive-action) {
-  box-shadow: inset 1px 0 #0a0a0a; }
+  box-shadow: inset 1px 0 #0b0c11; }
 .linked:not(.vertical):not(.path-bar) > button:not(:checked):not(:active):not(.suggested-action):not(.destructive-action):disabled:not(:only-child),
 .linked:not(.vertical):not(.path-bar) > button:not(:checked):not(:active):not(.suggested-action):not(.destructive-action):disabled + button:not(:checked):not(:active):not(.suggested-action):not(.destructive-action):not(:hover) {
-  box-shadow: inset 1px 0 rgba(10, 10, 10, 0.5); }
+  box-shadow: inset 1px 0 rgba(11, 12, 17, 0.5); }
 .linked:not(.vertical):not(.path-bar) > button:active + button:not(:checked):not(:active):not(.suggested-action):not(.destructive-action):hover,
 .linked:not(.vertical):not(.path-bar) > button:checked + button:not(:checked):not(:active):not(.suggested-action):not(.destructive-action):hover,
 .linked:not(.vertical):not(.path-bar) > button.suggested-action + button:not(:checked):not(:active):not(.suggested-action):not(.destructive-action):hover,
@@ -547,62 +547,62 @@ button {
 .linked:not(.vertical).path-bar > button + button {
   border-left-style: none; }
 .linked:not(.vertical).path-bar > button:hover:not(:checked):not(:active):not(:only-child):hover {
-  box-shadow: inset 1px 0 rgba(10, 10, 10, 0.5), inset -1px 0 rgba(10, 10, 10, 0.5); }
+  box-shadow: inset 1px 0 rgba(11, 12, 17, 0.5), inset -1px 0 rgba(11, 12, 17, 0.5); }
 .linked:not(.vertical).path-bar > button:hover:not(:checked):not(:active):not(:only-child):first-child:hover {
-  box-shadow: inset -1px 0 rgba(10, 10, 10, 0.5); }
+  box-shadow: inset -1px 0 rgba(11, 12, 17, 0.5); }
 .linked:not(.vertical).path-bar > button:hover:not(:checked):not(:active):not(:only-child):last-child:hover {
-  box-shadow: inset 1px 0 rgba(10, 10, 10, 0.5); }
+  box-shadow: inset 1px 0 rgba(11, 12, 17, 0.5); }
 
 .linked.vertical > entry + entry {
-  border-top-color: rgba(10, 10, 10, 0.3); }
+  border-top-color: rgba(11, 12, 17, 0.3); }
 .linked.vertical > entry.error + entry,
 .linked.vertical > entry + entry.error {
-  border-top-color: rgba(10, 10, 10, 0.3); }
+  border-top-color: rgba(11, 12, 17, 0.3); }
 .linked.vertical > entry.warning + entry,
 .linked.vertical > entry + entry.warning {
-  border-top-color: rgba(10, 10, 10, 0.3); }
+  border-top-color: rgba(11, 12, 17, 0.3); }
 .linked.vertical > entry.error + entry.warning,
 .linked.vertical > entry.warning + entry.error {
-  border-top-color: rgba(10, 10, 10, 0.3); }
+  border-top-color: rgba(11, 12, 17, 0.3); }
 .linked.vertical > entry + entry:focus:not(:last-child),
 .linked.vertical > entry + entry:focus:last-child {
-  border-top-color: #0a0a0a; }
+  border-top-color: #0b0c11; }
 .linked.vertical > entry:focus:not(:only-child) + entry,
 .linked.vertical > entry:focus:not(:only-child) + button,
 .linked.vertical > entry:focus:not(:only-child) + combobox > box > button.combo {
-  border-top-color: #0a0a0a; }
+  border-top-color: #0b0c11; }
 .linked.vertical > entry + entry:drop(active):not(:last-child),
 .linked.vertical > entry + entry:drop(active):last-child {
-  border-top-color: #0a0a0a; }
+  border-top-color: #0b0c11; }
 .linked.vertical > entry:drop(active):not(:only-child) + entry,
 .linked.vertical > entry:drop(active):not(:only-child) + button,
 .linked.vertical > entry:drop(active):not(:only-child) + combobox > box > button.combo {
-  border-top-color: #0a0a0a; }
+  border-top-color: #0b0c11; }
 .linked.vertical > entry + entry.warning:focus:not(:last-child),
 .linked.vertical > entry + entry.warning:focus:last-child {
-  border-top-color: #0a0a0a; }
+  border-top-color: #0b0c11; }
 .linked.vertical > entry.warning:focus:not(:only-child) + entry,
 .linked.vertical > entry.warning:focus:not(:only-child) + button,
 .linked.vertical > entry.warning:focus:not(:only-child) + combobox > box > button.combo {
-  border-top-color: #0a0a0a; }
+  border-top-color: #0b0c11; }
 .linked.vertical > entry + entry.error:focus:not(:last-child),
 .linked.vertical > entry + entry.error:focus:last-child {
-  border-top-color: #0a0a0a; }
+  border-top-color: #0b0c11; }
 .linked.vertical > entry.error:focus:not(:only-child) + entry,
 .linked.vertical > entry.error:focus:not(:only-child) + button,
 .linked.vertical > entry.error:focus:not(:only-child) + combobox > box > button.combo {
-  border-top-color: #0a0a0a; }
+  border-top-color: #0b0c11; }
 .linked.vertical > button:active + entry,
 .linked.vertical > button:checked + entry {
-  border-top-color: #0a0a0a; }
+  border-top-color: #0b0c11; }
 .linked.vertical > button + button {
   border-top-style: none; }
 .linked.vertical > button:not(:checked):not(:active):not(.suggested-action):not(.destructive-action):hover:not(:only-child),
 .linked.vertical > button:not(:checked):not(:active):not(.suggested-action):not(.destructive-action):hover + button:not(:checked):not(:active):not(.suggested-action):not(.destructive-action) {
-  box-shadow: inset 0 1px #0a0a0a; }
+  box-shadow: inset 0 1px #0b0c11; }
 .linked.vertical > button:not(:checked):not(:active):not(.suggested-action):not(.destructive-action):disabled:not(:only-child),
 .linked.vertical > button:not(:checked):not(:active):not(.suggested-action):not(.destructive-action):disabled + button:not(:checked):not(:active):not(.suggested-action):not(.destructive-action):not(:hover) {
-  box-shadow: inset 0 1px rgba(10, 10, 10, 0.5); }
+  box-shadow: inset 0 1px rgba(11, 12, 17, 0.5); }
 .linked.vertical > button:active + button:not(:checked):not(:active):not(.suggested-action):not(.destructive-action):hover,
 .linked.vertical > button:checked + button:not(:checked):not(:active):not(.suggested-action):not(.destructive-action):hover,
 .linked.vertical > button.suggested-action + button:not(:checked):not(:active):not(.suggested-action):not(.destructive-action):hover,
@@ -693,7 +693,7 @@ modelbutton.flat {
   border-radius: 2px; }
   menuitem.button.flat:hover,
   modelbutton.flat:hover {
-    background-color: #2c2c2d; }
+    background-color: #2a2c36; }
   menuitem.button.flat:checked,
   modelbutton.flat:checked {
     color: #D3DAE3; }
@@ -747,16 +747,16 @@ spinbutton:not(.vertical) > button + button {
   border-left-style: none; }
 spinbutton:not(.vertical) > button:hover:not(:active),
 spinbutton:not(.vertical) > button:hover + button {
-  box-shadow: inset 1px 0 #0a0a0a; }
+  box-shadow: inset 1px 0 #0b0c11; }
 spinbutton:not(.vertical) > button:disabled + button:not(:disabled):not(:active):not(:checked):not(:hover),
 spinbutton:not(.vertical) > button:not(:disabled):not(:active):not(:checked):not(:hover) + button:disabled {
-  box-shadow: inset 1px 0 rgba(10, 10, 10, 0.5); }
+  box-shadow: inset 1px 0 rgba(11, 12, 17, 0.5); }
 spinbutton:not(.vertical) > button:first-child:hover:not(:active),
 spinbutton:not(.vertical) > button.up:dir(rtl):hover:not(:active),
 spinbutton:not(.vertical) > entry + button:not(:active):hover {
   box-shadow: none; }
 spinbutton:not(.vertical) > entry:focus + button {
-  border-left-color: #0a0a0a; }
+  border-left-color: #0b0c11; }
 spinbutton:not(.vertical) > entry:drop(active) + button {
   border-left-color: #F08437; }
 .osd spinbutton:not(.vertical) > button:hover:not(:active),
@@ -775,7 +775,7 @@ spinbutton.vertical button, spinbutton.vertical entry {
 spinbutton.vertical button.up {
   border-radius: 3px 3px 0 0; }
 spinbutton.vertical > entry:focus + button {
-  border-top-color: #0a0a0a; }
+  border-top-color: #0b0c11; }
 spinbutton.vertical > entry:drop(active) + button {
   border-top-color: #F08437; }
 
@@ -791,7 +791,7 @@ combobox arrow {
 toolbar, .inline-toolbar {
   -GtkWidget-window-dragging: true;
   padding: 4px;
-  background-color: #191919; }
+  background-color: #171923; }
   toolbar separator, .inline-toolbar separator {
     background: none; }
   toolbar.horizontal separator, .horizontal.inline-toolbar separator {
@@ -840,24 +840,24 @@ toolbar, .inline-toolbar {
   border-image: linear-gradient(to bottom, #2f343f, rgba(32, 35, 43, 0.97)) 1 0 1 0; }
 
 .inline-toolbar {
-  background-color: #111111;
+  background-color: #11121a;
   border-style: solid;
-  border-color: #0a0a0a;
+  border-color: #0b0c11;
   border-width: 0 1px 1px;
   padding: 3px;
   border-radius: 0  0 3px 3px; }
 
 searchbar {
-  background-color: #191919;
+  background-color: #171923;
   border-style: solid;
-  border-color: #0a0a0a;
+  border-color: #0b0c11;
   border-width: 0 0 1px;
   padding: 3px; }
 
 actionbar {
   padding: 6px;
-  border-top: 1px solid #0a0a0a;
-  background-color: #111111; }
+  border-top: 1px solid #0b0c11;
+  background-color: #11121a; }
 
 headerbar, .titlebar:not(headerbar) {
   min-height: 42px;
@@ -1331,7 +1331,7 @@ treeview.view {
       border-bottom-style: none; }
   treeview.view.expander {
     -gtk-icon-source: -gtk-icontheme("pan-end-symbolic");
-    color: #82858a; }
+    color: #8a909b; }
     treeview.view.expander:dir(rtl) {
       -gtk-icon-source: -gtk-icontheme("pan-end-symbolic-rtl"); }
     treeview.view.expander:hover {
@@ -1352,7 +1352,7 @@ treeview.view {
       background-color: #ffffff; }
   treeview.view.trough {
     color: #D3DAE3;
-    background-color: #0a0a0a;
+    background-color: #0b0c11;
     border-radius: 3px;
     border-width: 0; }
     treeview.view.trough:selected, treeview.view.trough:selected:focus {
@@ -1365,22 +1365,22 @@ treeview.view {
     min-width: 0;
     padding: 3px 6px;
     font-weight: bold;
-    color: #b2b8bf;
-    background-color: #303030;
+    color: #b6bcc6;
+    background-color: #404552;
     background-image: none;
     border-style: none solid none none;
     border-radius: 0;
-    border-image: linear-gradient(to bottom, #303030 20%, rgba(255, 255, 255, 0.11) 20%, rgba(255, 255, 255, 0.11) 80%, #303030 80%) 0 1 0 0/0 1px 0 0 stretch; }
+    border-image: linear-gradient(to bottom, #404552 20%, rgba(255, 255, 255, 0.11) 20%, rgba(255, 255, 255, 0.11) 80%, #404552 80%) 0 1 0 0/0 1px 0 0 stretch; }
     treeview.view header button:hover {
       color: #5294e2; }
     treeview.view header button:active {
       color: #D3DAE3; }
     treeview.view header button:active, treeview.view header button:hover {
-      background-color: #303030; }
+      background-color: #404552; }
     treeview.view header button:active:hover {
       color: #D3DAE3; }
     treeview.view header button:disabled {
-      border-color: #191919;
+      border-color: #171923;
       background-image: none; }
     treeview.view header button:last-child {
       border-right-style: none;
@@ -1424,8 +1424,8 @@ menu, .menu {
   margin: 4px;
   padding: 0;
   border-radius: 0;
-  background-color: #191919;
-  border: 1px solid #0a0a0a; }
+  background-color: #171923;
+  border: 1px solid #0b0c11; }
   .csd menu,
   .csd .menu {
     padding: 4px 0px;
@@ -1433,9 +1433,9 @@ menu, .menu {
     border: none; }
   menu separator, .csd menu separator, .menu separator, .csd .menu separator {
     margin: 2px 0;
-    background-color: #191919; }
+    background-color: #171923; }
   menu .separator:not(label), .csd menu .separator:not(label), .menu .separator:not(label), .csd .menu .separator:not(label) {
-    color: #191919; }
+    color: #171923; }
   menu menuitem, .menu menuitem {
     min-height: 16px;
     min-width: 40px;
@@ -1472,18 +1472,18 @@ menu, .menu {
     min-width: 16px;
     min-height: 16px;
     padding: 4px;
-    background-color: #191919;
+    background-color: #171923;
     border-radius: 0; }
     menu > arrow.top, .menu > arrow.top {
       margin-top: -6px;
-      border-bottom: 1px solid #404142;
+      border-bottom: 1px solid #4f5461;
       -gtk-icon-source: -gtk-icontheme("pan-up-symbolic"); }
     menu > arrow.bottom, .menu > arrow.bottom {
       margin-bottom: -6px;
-      border-top: 1px solid #404142;
+      border-top: 1px solid #4f5461;
       -gtk-icon-source: -gtk-icontheme("pan-down-symbolic"); }
     menu > arrow:hover, .menu > arrow:hover {
-      background-color: #404142; }
+      background-color: #4f5461; }
     menu > arrow:disabled, .menu > arrow:disabled {
       color: transparent;
       background-color: transparent;
@@ -1493,13 +1493,13 @@ popover, popover.background {
   padding: 2px;
   border-radius: 3px;
   background-clip: border-box;
-  background-color: #191919;
+  background-color: #171923;
   box-shadow: 0 2px 6px 1px rgba(0, 0, 0, 0.35); }
   .csd popover, popover,
   .csd popover.background, popover.background {
-    border: 1px solid black; }
+    border: 1px solid #010101; }
   popover separator, popover.background separator {
-    background-color: #191919; }
+    background-color: #171923; }
   popover > list,
   popover > .view,
   popover > iconview,
@@ -1525,7 +1525,7 @@ cursor-handle {
 notebook {
   padding: 0; }
   notebook.frame {
-    border: 1px solid #0a0a0a; }
+    border: 1px solid #0b0c11; }
     notebook.frame > header {
       margin: -1px; }
       notebook.frame > header.top {
@@ -1543,18 +1543,18 @@ notebook {
         padding-top: 0;
         padding-bottom: 0; }
   notebook > stack:not(:only-child) {
-    background-color: #303030; }
+    background-color: #404552; }
   notebook > header {
     padding: 2px;
-    background-color: #191919; }
+    background-color: #171923; }
     notebook > header.top {
-      box-shadow: inset 0 -1px #0a0a0a; }
+      box-shadow: inset 0 -1px #0b0c11; }
     notebook > header.bottom {
-      box-shadow: inset 0 1px #0a0a0a; }
+      box-shadow: inset 0 1px #0b0c11; }
     notebook > header.right {
-      box-shadow: inset 1px 0 #0a0a0a; }
+      box-shadow: inset 1px 0 #0b0c11; }
     notebook > header.left {
-      box-shadow: inset -1px 0 #0a0a0a; }
+      box-shadow: inset -1px 0 #0b0c11; }
     notebook > header.top {
       padding-bottom: 0; }
       notebook > header.top > tabs > tab {
@@ -1628,48 +1628,48 @@ notebook {
       notebook > header > tabs > arrow:disabled {
         color: rgba(211, 218, 227, 0.15); }
     notebook > header.top > tabs > tab:hover:not(:checked) {
-      box-shadow: inset 0 -1px #0a0a0a; }
+      box-shadow: inset 0 -1px #0b0c11; }
     notebook > header.bottom > tabs > tab:hover:not(:checked) {
-      box-shadow: inset 0 1px #0a0a0a; }
+      box-shadow: inset 0 1px #0b0c11; }
     notebook > header.left > tabs > tab:hover:not(:checked) {
-      box-shadow: inset -1px 0 #0a0a0a; }
+      box-shadow: inset -1px 0 #0b0c11; }
     notebook > header.right > tabs > tab:hover:not(:checked) {
-      box-shadow: inset 1px 0 #0a0a0a; }
+      box-shadow: inset 1px 0 #0b0c11; }
     notebook > header > tabs > tab {
       color: rgba(211, 218, 227, 0.45);
-      background-color: rgba(48, 48, 48, 0); }
+      background-color: rgba(64, 69, 82, 0); }
       notebook > header > tabs > tab:hover:not(:checked) {
         color: rgba(211, 218, 227, 0.725);
-        background-color: rgba(48, 48, 48, 0.5);
-        border-color: #0a0a0a; }
+        background-color: rgba(64, 69, 82, 0.5);
+        border-color: #0b0c11; }
       notebook > header > tabs > tab:checked {
         color: #D3DAE3;
-        background-color: #303030;
-        border-color: #0a0a0a; }
+        background-color: #404552;
+        border-color: #0b0c11; }
       notebook > header > tabs > tab button.flat, notebook > header > tabs > tab button.sidebar-button {
         min-height: 22px;
         min-width: 16px;
         padding: 0;
-        color: #92969c; }
+        color: #9196a0; }
         notebook > header > tabs > tab button.flat:hover, notebook > header > tabs > tab button.sidebar-button:hover {
           color: #ff4d4d; }
         notebook > header > tabs > tab button.flat:active, notebook > header > tabs > tab button.sidebar-button:active, notebook > header > tabs > tab button.flat:active:hover, notebook > header > tabs > tab button.sidebar-button:active:hover {
           color: #5294e2; }
 
 scrollbar {
-  background-color: #2d2d2d;
+  background-color: #3e434f;
   transition: 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94); }
   * {
     -GtkScrollbar-has-backward-stepper: false;
     -GtkScrollbar-has-forward-stepper: false; }
   scrollbar.top {
-    border-bottom: 1px solid #0a0a0a; }
+    border-bottom: 1px solid #0b0c11; }
   scrollbar.bottom {
-    border-top: 1px solid #0a0a0a; }
+    border-top: 1px solid #0b0c11; }
   scrollbar.left {
-    border-right: 1px solid #0a0a0a; }
+    border-right: 1px solid #0b0c11; }
   scrollbar.right {
-    border-left: 1px solid #0a0a0a; }
+    border-left: 1px solid #0b0c11; }
   scrollbar button {
     border: none; }
   scrollbar.vertical button.down {
@@ -1687,9 +1687,9 @@ scrollbar {
     border: 4px solid transparent;
     border-radius: 8px;
     background-clip: padding-box;
-    background-color: #63666a; }
+    background-color: #626670; }
     scrollbar slider:hover {
-      background-color: #515356; }
+      background-color: #4f535d; }
     scrollbar slider:hover:active {
       background-color: #5294e2; }
     scrollbar slider:disabled {
@@ -1709,7 +1709,7 @@ scrollbar {
       margin: 0;
       min-width: 4px;
       min-height: 4px;
-      background-color: #9ba0a6;
+      background-color: #9ba0a9;
       border: 1px solid rgba(0, 0, 0, 0.3); }
     scrollbar.overlay-indicator:not(.dragging):not(.hovering).horizontal slider {
       margin: 0 2px;
@@ -2045,9 +2045,9 @@ scale {
     outline-offset: 2px;
     -gtk-outline-radius: 4.5px;
     border-radius: 2.5px;
-    background-color: #0c0c0c; }
+    background-color: #0d0e14; }
     scale trough:disabled {
-      background-color: rgba(12, 12, 12, 0.55); }
+      background-color: rgba(13, 14, 20, 0.55); }
     .osd scale trough {
       background-color: rgba(69, 74, 89, 0.95); }
       .osd scale trough highlight {
@@ -2071,20 +2071,20 @@ scale {
     scale fill:disabled {
       background-color: transparent; }
   scale slider {
-    background-color: #353535;
-    border: 1px solid #050505;
+    background-color: #444a58;
+    border: 1px solid #07070a;
     border-radius: 100%;
     transition: all 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
     transition-property: background, border; }
     scale slider:hover {
-      background-color: #424242; }
+      background-color: #505666; }
     scale slider:active {
       background-clip: border-box;
       background-color: #5294e2;
       border-color: #5294e2; }
     scale slider:disabled {
-      background-color: #262626;
-      border-color: rgba(5, 5, 5, 0.8); }
+      background-color: #2e313d;
+      border-color: rgba(7, 7, 10, 0.8); }
     menuitem:hover scale slider, row:selected scale slider, infobar scale slider {
       background-clip: border-box;
       background-color: #ffffff;
@@ -2169,7 +2169,7 @@ progressbar {
   progressbar trough {
     border: none;
     border-radius: 3px;
-    background-color: #0c0c0c; }
+    background-color: #0d0e14; }
     row:selected progressbar trough, infobar progressbar trough {
       background-color: rgba(0, 0, 0, 0.2); }
 
@@ -2183,7 +2183,7 @@ levelbar trough {
   border: none;
   padding: 3px;
   border-radius: 3px;
-  background-color: #0c0c0c; }
+  background-color: #0d0e14; }
 levelbar.horizontal.discrete block {
   margin: 0 1px; }
 levelbar.vertical.discrete block {
@@ -2202,12 +2202,12 @@ levelbar block.full {
   border-color: #73d216;
   background-color: #73d216; }
 levelbar block.empty {
-  background-color: #303030;
-  border-color: #303030; }
+  background-color: #404552;
+  border-color: #404552; }
 
 printdialog paper {
-  border: 1px solid #0a0a0a;
-  background: #303030;
+  border: 1px solid #0b0c11;
+  background: #404552;
   padding: 0; }
 printdialog .dialog-action-box {
   margin: 12px; }
@@ -2217,7 +2217,7 @@ frame > border,
   margin: 0;
   padding: 0;
   border-radius: 0;
-  border: 1px solid #0a0a0a; }
+  border: 1px solid #0b0c11; }
 
 frame.flat > border,
 frame > border.flat,
@@ -2296,8 +2296,8 @@ scrolledwindow undershoot.right {
   border: none; }
 scrolledwindow junction {
   border-color: transparent;
-  border-image: linear-gradient(to bottom, #0a0a0a 1px, transparent 1px) 0 0 0 1/0 1px stretch;
-  background-color: #2d2d2d; }
+  border-image: linear-gradient(to bottom, #0b0c11 1px, transparent 1px) 0 0 0 1/0 1px stretch;
+  background-color: #3e434f; }
   scrolledwindow junction:dir(rtl) {
     border-image-slice: 0 1 0 0; }
 
@@ -2307,8 +2307,8 @@ separator {
   min-height: 1px; }
 
 list {
-  background-color: #303030;
-  border-color: #0a0a0a; }
+  background-color: #404552;
+  border-color: #0b0c11; }
   list row {
     padding: 2px; }
 
@@ -2371,7 +2371,7 @@ expander arrow {
 
 calendar {
   color: #D3DAE3;
-  border: 1px solid #0a0a0a;
+  border: 1px solid #0b0c11;
   border-radius: 3px;
   padding: 2px; }
   calendar:selected {
@@ -2418,7 +2418,7 @@ messagedialog.csd .dialog-action-area button:only-child {
   border-right-style: none; }
 
 filechooser #pathbarbox {
-  border-bottom: 1px solid rgba(10, 10, 10, 0.5); }
+  border-bottom: 1px solid rgba(11, 12, 17, 0.5); }
 
 filechooserbutton:drop(active) {
   box-shadow: none;
@@ -2426,12 +2426,12 @@ filechooserbutton:drop(active) {
 
 .sidebar {
   border-style: none;
-  background-color: #1e1e1e; }
+  background-color: #1b1d29; }
   stacksidebar.sidebar:dir(ltr) list, stacksidebar.sidebar.left list, stacksidebar.sidebar.left:dir(rtl) list, .sidebar:dir(ltr), .sidebar.left, .sidebar.left:dir(rtl) {
-    border-right: 1px solid #0a0a0a;
+    border-right: 1px solid #0b0c11;
     border-left-style: none; }
   stacksidebar.sidebar:dir(rtl) list, stacksidebar.sidebar.right list, .sidebar:dir(rtl), .sidebar.right {
-    border-left: 1px solid #0a0a0a;
+    border-left: 1px solid #0b0c11;
     border-right-style: none; }
   .sidebar list {
     background-color: transparent; }
@@ -2502,15 +2502,15 @@ paned > separator {
   -gtk-icon-source: none;
   border-style: none;
   background-color: transparent;
-  background-image: linear-gradient(to bottom, #0a0a0a, #0a0a0a);
+  background-image: linear-gradient(to bottom, #0b0c11, #0b0c11);
   background-size: 1px 1px; }
   paned > separator:selected {
     background-image: linear-gradient(to bottom, #5294e2, #5294e2); }
   paned > separator.wide {
     min-width: 5px;
     min-height: 5px;
-    background-color: #191919;
-    background-image: linear-gradient(to bottom, #0a0a0a, #0a0a0a), linear-gradient(to bottom, #0a0a0a, #0a0a0a);
+    background-color: #171923;
+    background-image: linear-gradient(to bottom, #0b0c11, #0b0c11), linear-gradient(to bottom, #0b0c11, #0b0c11);
     background-size: 1px 1px, 1px 1px; }
 paned.horizontal > separator {
   background-repeat: repeat-y; }
@@ -2621,13 +2621,13 @@ colorswatch.right, colorswatch:last-child:not(.bottom) {
 colorswatch.dark overlay {
   color: rgba(255, 255, 255, 0.7); }
   colorswatch.dark overlay:hover {
-    border-color: #0a0a0a; }
+    border-color: #0b0c11; }
 colorswatch.light overlay {
   color: rgba(0, 0, 0, 0.7); }
   colorswatch.light overlay:hover {
-    border-color: #0a0a0a; }
+    border-color: #0b0c11; }
 colorswatch overlay {
-  border: 1px solid #0a0a0a; }
+  border: 1px solid #0b0c11; }
   colorswatch overlay:hover {
     background-color: rgba(255, 255, 255, 0.2); }
 colorswatch:disabled {
@@ -2639,12 +2639,12 @@ colorswatch#add-color-button {
   border-style: solid;
   border-width: 1px;
   color: #D3DAE3;
-  border-color: #0a0a0a;
-  background-color: #353535; }
+  border-color: #0b0c11;
+  background-color: #444a58; }
   colorswatch#add-color-button:hover {
     color: #D3DAE3;
-    border-color: #0a0a0a;
-    background-color: #424242; }
+    border-color: #0b0c11;
+    background-color: #505666; }
   colorswatch#add-color-button overlay {
     border-color: transparent;
     background-color: transparent;
@@ -2660,14 +2660,14 @@ colorchooser .popover.osd {
   border-radius: 3px; }
 
 .content-view {
-  background-color: #303030; }
+  background-color: #404552; }
   .content-view:hover {
     -gtk-icon-effect: highlight; }
 
 .scale-popup button:hover {
   color: #D3DAE3;
-  border-color: #0a0a0a;
-  background-color: #424242; }
+  border-color: #0b0c11;
+  background-color: #505666; }
 
 .context-menu, popover.touch-selection, .csd popover.touch-selection, popover.background.touch-selection, .csd popover.background.touch-selection {
   font: initial; }
@@ -2692,8 +2692,8 @@ button.circular-button {
   min-height: 20px;
   padding: 3px 6px 4px 6px;
   color: #D3DAE3;
-  background-color: #303030;
-  border: 1px solid #0a0a0a;
+  background-color: #404552;
+  border: 1px solid #0b0c11;
   border-radius: 2.5px;
   box-shadow: inset 0px -2px 0px rgba(0, 0, 0, 0.15); }
 
@@ -2726,7 +2726,7 @@ decoration {
       border-radius: 0; }
   .csd.popup decoration {
     border-radius: 2px;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.45), 0 0 0 1px black; }
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.45), 0 0 0 1px #030304; }
   tooltip.csd decoration {
     border-radius: 2px;
     box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.25); }
@@ -2867,12 +2867,12 @@ modelbutton.flat:selected arrow, treeview.view:selected, treeview.view:selected:
 
 .gedit-bottom-panel-paned notebook > header.top > tabs > tab:checked,
 terminal-window notebook > header.top > tabs > tab:checked {
-  box-shadow: inset 0 -1px #0a0a0a; }
+  box-shadow: inset 0 -1px #0b0c11; }
 
 terminal-window notebook > header.top,
 .mate-terminal notebook > header.top {
   padding-top: 3px;
-  box-shadow: inset 0 1px #262a33, inset 0 -1px #0a0a0a; }
+  box-shadow: inset 0 1px #262a33, inset 0 -1px #0b0c11; }
   terminal-window notebook > header.top button,
   .mate-terminal notebook > header.top button {
     padding: 0;
@@ -2893,20 +2893,20 @@ terminal-window notebook > header.top,
 
 .nautilus-canvas-item.dim-label, label.nautilus-canvas-item.separator, popover.background label.nautilus-canvas-item.separator, headerbar .nautilus-canvas-item.subtitle, .titlebar:not(headerbar) .nautilus-canvas-item.subtitle,
 .nautilus-list-dim-label {
-  color: #767a7e; }
+  color: #757a83; }
   .nautilus-canvas-item.dim-label:selected, label.nautilus-canvas-item.separator:selected, headerbar .nautilus-canvas-item.subtitle:selected, .titlebar:not(headerbar) .nautilus-canvas-item.subtitle:selected, .nautilus-canvas-item.dim-label:selected:focus, label.nautilus-canvas-item.separator:selected:focus, headerbar .nautilus-canvas-item.subtitle:selected:focus, .titlebar:not(headerbar) .nautilus-canvas-item.subtitle:selected:focus,
   .nautilus-list-dim-label:selected,
   .nautilus-list-dim-label:selected:focus {
     color: #dceaf9; }
 
 .nautilus-window searchbar {
-  border-top: 1px solid #0a0a0a; }
+  border-top: 1px solid #0b0c11; }
 .nautilus-window .searchbar-container {
   margin-top: -1px; }
 
 .nautilus-window notebook,
 .nautilus-window notebook > stack:not(:only-child) searchbar {
-  background-color: #303030; }
+  background-color: #404552; }
 
 .disk-space-display {
   border-style: solid;
@@ -2918,7 +2918,7 @@ terminal-window notebook > header.top,
     background-color: rgba(82, 148, 226, 0.8);
     border-color: rgba(38, 121, 219, 0.8); }
   .disk-space-display.free {
-    background-color: #111111;
+    background-color: #11121a;
     border-color: black; }
 
 @keyframes needs_attention_keyframes {
@@ -2949,13 +2949,13 @@ terminal-window notebook > header.top,
 .nemo-window .nemo-places-sidebar.frame {
   border-width: 0; }
 .nemo-window notebook {
-  background-color: #303030; }
+  background-color: #404552; }
 .nemo-window .nemo-window-pane widget.entry {
   border: 1px solid;
   border-radius: 3px;
   color: #D3DAE3;
-  border-color: #0a0a0a;
-  background-color: #303030;
+  border-color: #0b0c11;
+  background-color: #404552;
   box-shadow: inset 1px 0 #5294e2, inset -1px 0 #5294e2, inset 0 1px #5294e2, inset 0 -1px #5294e2; }
 .nemo-window .primary-toolbar widget.raised.linked:not(.vertical):not(.path-bar) > button {
   color: rgba(207, 218, 231, 0.8);
@@ -2981,7 +2981,7 @@ terminal-window notebook > header.top,
   box-shadow: inset 1px 0 rgba(21, 23, 28, 0.37); }
 
 .caja-notebook {
-  border-top: 1px solid #0a0a0a; }
+  border-top: 1px solid #0b0c11; }
 
 .caja-side-pane .frame {
   border-width: 1px 0 0; }
@@ -2991,9 +2991,9 @@ terminal-window notebook > header.top,
 
 .open-document-selector-treeview.view, iconview.open-document-selector-treeview {
   padding: 3px 6px 3px 6px;
-  border-color: #303030; }
+  border-color: #404552; }
   .open-document-selector-treeview.view:hover, iconview.open-document-selector-treeview:hover {
-    background-color: #3b3c3d; }
+    background-color: #4a4f5c; }
     .open-document-selector-treeview.view:hover:selected, iconview.open-document-selector-treeview:hover:selected {
       color: #ffffff;
       background-color: #5294e2; }
@@ -3002,7 +3002,7 @@ terminal-window notebook > header.top,
   color: #D3DAE3; }
 
 .open-document-selector-path-label {
-  color: #82858a;
+  color: #8a909b;
   font-size: smaller; }
   .open-document-selector-path-label:selected {
     color: rgba(255, 255, 255, 0.9); }
@@ -3018,7 +3018,7 @@ terminal-window notebook > header.top,
   .gedit-document-panel row button image {
     color: inherit; }
 .gedit-document-panel row:hover:not(:selected) button {
-  color: #92969c; }
+  color: #9196a0; }
   .gedit-document-panel row:hover:not(:selected) button:hover {
     color: #ff4d4d; }
   .gedit-document-panel row:hover:not(:selected) button:active {
@@ -3032,18 +3032,18 @@ terminal-window notebook > header.top,
     color: #ffffff; }
 
 .gedit-document-panel-dragged-row {
-  border: 1px solid #0a0a0a;
-  background-color: black;
+  border: 1px solid #0b0c11;
+  background-color: #030304;
   color: #D3DAE3; }
 
 .gedit-side-panel-paned statusbar {
-  border-top: 1px solid #0a0a0a;
-  background-color: #191919; }
+  border-top: 1px solid #0b0c11;
+  background-color: #171923; }
 
 .gedit-search-slider {
-  background-color: #1e1e1e;
+  background-color: #1b1d29;
   padding: 6px;
-  border-color: #0a0a0a;
+  border-color: #0b0c11;
   border-radius: 0 0 2px 2px;
   border-width: 0 1px 1px 1px;
   border-style: solid; }
@@ -3089,14 +3089,14 @@ editortweak .linked > entry.search:focus + .gb-linked-scroller {
   border-top-color: #5294e2; }
 
 layouttab {
-  background-color: #303030; }
+  background-color: #404552; }
 
 layout {
-  border: 1px solid #0a0a0a;
+  border: 1px solid #0b0c11;
   -PnlDockBin-handle-size: 1; }
 
 eggsearchbar box.search-bar {
-  border-bottom: 1px solid #0a0a0a; }
+  border-bottom: 1px solid #0b0c11; }
 
 pillbox {
   color: #ffffff;
@@ -3107,8 +3107,8 @@ pillbox {
 
 docktabstrip {
   padding: 0 6px;
-  background-color: #191919;
-  border-bottom: 1px solid #0a0a0a; }
+  background-color: #171923;
+  border-bottom: 1px solid #0b0c11; }
   docktabstrip docktab {
     min-height: 28px;
     border: solid transparent;
@@ -3118,18 +3118,18 @@ docktabstrip {
     docktabstrip docktab:checked label, docktabstrip docktab:hover label {
       opacity: 1; }
     docktabstrip docktab:checked {
-      border-color: #0a0a0a;
-      background-color: #303030; }
+      border-color: #0b0c11;
+      background-color: #404552; }
 
 dockbin {
-  border: 1px solid #0a0a0a;
+  border: 1px solid #0b0c11;
   -PnlDockBin-handle-size: 1; }
 
 dockpaned {
-  border: 1px solid #0a0a0a; }
+  border: 1px solid #0b0c11; }
 
 dockoverlayedge {
-  background-color: #191919; }
+  background-color: #171923; }
   dockoverlayedge docktabstrip {
     padding: 0;
     border: none; }
@@ -3155,18 +3155,18 @@ popover.popover-selector {
 
 entry.search.preferences-search {
   border: none;
-  border-right: 1px solid #0a0a0a;
-  border-bottom: 1px solid #0a0a0a;
+  border-right: 1px solid #0b0c11;
+  border-bottom: 1px solid #0b0c11;
   border-radius: 0; }
 
 preferences stacksidebar.sidebar list {
-  background-image: linear-gradient(to bottom, #303030, #303030); }
+  background-image: linear-gradient(to bottom, #404552, #404552); }
 preferences stacksidebar.sidebar list separator {
   background-color: transparent; }
 
 devhelppanel entry:focus,
 symboltreepanel entry:focus {
-  border-color: #0a0a0a; }
+  border-color: #0b0c11; }
 
 button.run-arrow-button {
   min-width: 12px; }
@@ -3237,7 +3237,7 @@ button.documents-favorite:active:hover {
 
 .tweak-categories,
 .tweak-category:not(:selected):not(:hover) {
-  background-image: linear-gradient(to bottom, #303030, #303030); }
+  background-image: linear-gradient(to bottom, #404552, #404552); }
 
 .tr-workarea undershoot,
 .tr-workarea overshoot {
@@ -3614,8 +3614,8 @@ GraniteWidgetsThinPaned {
   background-color: transparent;
   background-image: none;
   margin: 0;
-  border-left: 1px solid #0a0a0a;
-  border-right: 1px solid #0a0a0a; }
+  border-left: 1px solid #0b0c11;
+  border-right: 1px solid #0b0c11; }
 
 GraniteWidgetsPopOver .frame,
 GraniteWidgetsStaticNotebook .frame {
@@ -3627,7 +3627,7 @@ GraniteWidgetsStaticNotebook .frame {
 
 toolbar.secondary-toolbar, .secondary-toolbar.inline-toolbar {
   padding: 3px;
-  border-bottom: 1px solid #0a0a0a; }
+  border-bottom: 1px solid #0b0c11; }
   toolbar.secondary-toolbar button, .secondary-toolbar.inline-toolbar button {
     padding: 0 3px 0 3px; }
 
@@ -3635,8 +3635,8 @@ toolbar.bottom-toolbar, .bottom-toolbar.inline-toolbar {
   padding: 5px;
   border-width: 1px 0 0 0;
   border-style: solid;
-  border-color: #0a0a0a;
-  background-color: #191919; }
+  border-color: #0b0c11;
+  background-color: #171923; }
   toolbar.bottom-toolbar button, .bottom-toolbar.inline-toolbar button {
     padding: 2px 3px 2px 3px; }
 
@@ -3647,7 +3647,7 @@ toolbar.bottom-toolbar, .bottom-toolbar.inline-toolbar {
 .source-list,
 .source-list.view,
 iconview.source-list {
-  background-color: #191919;
+  background-color: #171923;
   color: #D3DAE3;
   -gtk-icon-style: regular; }
 
@@ -3655,7 +3655,7 @@ iconview.source-list {
   color: transparent; }
 
 .source-list.view:hover, iconview.source-list:hover {
-  background-color: #262626; }
+  background-color: #212432; }
 
 .source-list.view:selected, iconview.source-list:selected,
 .source-list.view:hover:selected,
@@ -3670,7 +3670,7 @@ iconview.source-list:selected:focus,
 .source-list junction {
   border-image: none;
   border-color: transparent;
-  background-color: #191919;
+  background-color: #171923;
   background-image: none; }
 
 .source-list.badge,
@@ -3706,10 +3706,10 @@ iconview.source-list:selected:focus,
   -gtk-icon-source: -gtk-icontheme("pan-down-symbolic"); }
 
 GraniteWidgetsWelcome {
-  background-color: #303030; }
+  background-color: #404552; }
 
 GraniteWidgetsWelcome label {
-  color: #767a7e;
+  color: #757a83;
   font-size: 11px;
   text-shadow: none; }
 
@@ -3730,7 +3730,7 @@ GraniteWidgetsPopOver {
   margin: 0; }
 
 .popover_bg {
-  background-image: linear-gradient(to bottom, #303030, #303030);
+  background-image: linear-gradient(to bottom, #404552, #404552);
   border: 1px solid rgba(0, 0, 0, 0.3); }
 
 GraniteWidgetsPopOver .sidebar.view, GraniteWidgetsPopOver iconview.sidebar,
@@ -3751,7 +3751,7 @@ GraniteWidgetsXsEntry entry {
 
 .h4,
 .category-label {
-  color: #9ba0a6;
+  color: #9ba0a9;
   font-weight: 600; }
 
 .h4 {
@@ -3789,7 +3789,7 @@ GtkListBox .h4 {
 
 #content_frame {
   padding-bottom: 14px;
-  background-color: #191919;
+  background-color: #171923;
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
   border: solid rgba(0, 0, 0, 0.1);
@@ -3797,19 +3797,19 @@ GtkListBox .h4 {
 
 #content_frame button {
   color: #D3DAE3;
-  border-color: #0a0a0a;
-  background-color: #353535; }
+  border-color: #0b0c11;
+  background-color: #444a58; }
   #content_frame button:hover {
     color: #D3DAE3;
-    border-color: #0a0a0a;
-    background-color: #424242; }
+    border-color: #0b0c11;
+    background-color: #505666; }
   #content_frame button:active, #content_frame button:checked {
     color: #ffffff;
-    border-color: #0a0a0a;
+    border-color: #0b0c11;
     background-color: #5294e2; }
   #content_frame button:disabled {
-    border-color: rgba(10, 10, 10, 0.55);
-    background-color: rgba(53, 53, 53, 0.55); }
+    border-color: rgba(11, 12, 17, 0.55);
+    background-color: rgba(68, 74, 88, 0.55); }
     #content_frame button:disabled label, #content_frame button:disabled {
       color: rgba(211, 218, 227, 0.45); }
 
@@ -3933,7 +3933,7 @@ filechooser placessidebar.sidebar,
       filechooser placessidebar.sidebar row.sidebar-row:not(:selected) button.sidebar-button:active,
       .nautilus-window placessidebar.sidebar row.sidebar-row:not(:selected) button.sidebar-button:active {
         color: #ffffff;
-        border-color: #0a0a0a;
+        border-color: #0b0c11;
         background-color: #5294e2; }
       filechooser placessidebar.sidebar row.sidebar-row:not(:selected) button.sidebar-button:not(:hover):not(:active) > image,
       .nautilus-window placessidebar.sidebar row.sidebar-row:not(:selected) button.sidebar-button:not(:hover):not(:active) > image {
@@ -4002,13 +4002,13 @@ filechooser actionbar {
     color: #BAC3CF; }
 
 .gedit-bottom-panel-paned {
-  background-color: #303030; }
+  background-color: #404552; }
 
 .gedit-side-panel-paned > separator {
   background-image: linear-gradient(to bottom, rgba(42, 45, 55, 0.95), rgba(42, 45, 55, 0.95)); }
 
 .gedit-bottom-panel-paned > separator {
-  background-image: linear-gradient(to bottom, #0a0a0a, #0a0a0a); }
+  background-image: linear-gradient(to bottom, #0b0c11, #0b0c11); }
 
 .gedit-document-panel {
   background-color: rgba(53, 57, 69, 0.95); }
@@ -4086,31 +4086,31 @@ filechooser placessidebar.sidebar scrollbar,
 
 @define-color theme_fg_color #D3DAE3;
 @define-color theme_text_color #D3DAE3;
-@define-color theme_bg_color #191919;
-@define-color theme_base_color #303030;
+@define-color theme_bg_color #171923;
+@define-color theme_base_color #404552;
 @define-color theme_selected_bg_color #5294e2;
 @define-color theme_selected_fg_color #ffffff;
 @define-color fg_color #D3DAE3;
 @define-color text_color #D3DAE3;
-@define-color bg_color #191919;
-@define-color base_color #303030;
+@define-color bg_color #171923;
+@define-color base_color #404552;
 @define-color selected_bg_color #5294e2;
 @define-color selected_fg_color #ffffff;
-@define-color insensitive_bg_color #1e1e1e;
+@define-color insensitive_bg_color #1b1d29;
 @define-color insensitive_fg_color alpha(#d3dae3, 0.5);
-@define-color insensitive_base_color #303030;
+@define-color insensitive_base_color #404552;
 @define-color theme_unfocused_fg_color #D3DAE3;
 @define-color theme_unfocused_text_color #D3DAE3;
-@define-color theme_unfocused_bg_color #191919;
-@define-color theme_unfocused_base_color #303030;
-@define-color borders #0a0a0a;
-@define-color unfocused_borders #0a0a0a;
+@define-color theme_unfocused_bg_color #171923;
+@define-color theme_unfocused_base_color #404552;
+@define-color borders #0b0c11;
+@define-color unfocused_borders #0b0c11;
 @define-color warning_color #F27835;
 @define-color error_color #FC4138;
 @define-color success_color #73d216;
 @define-color placeholder_text_color #A8A8A8;
 @define-color link_color #a9caf1;
-@define-color content_view_bg #303030;
+@define-color content_view_bg #404552;
 @define-color wm_title alpha(#cfdae7, 0.8);
 @define-color wm_unfocused_title alpha(#cfdae7, 0.5);
 @define-color wm_bg #2f343f;
@@ -4129,4 +4129,4 @@ filechooser placessidebar.sidebar scrollbar,
 @define-color wm_icon_hover_bg #C4C7CC;
 @define-color wm_icon_active_bg #ffffff;
 
-/*# sourceMappingURL=gtk-flowblade-dark.css.map */
+/*# sourceMappingURL=test.css.map */
