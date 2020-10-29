@@ -575,7 +575,7 @@ class EditorWindow:
 
         if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
             print("halooo")
-            self.edit_buttons_frame.override_background_color(Gtk.StateFlags.NORMAL, gui.get_bg_color())
+            self.edit_buttons_frame.override_background_color(Gtk.StateFlags.NORMAL, gui.get_light_gray_light_color())
             
         self.tline_scale = tlinewidgets.TimeLineFrameScale(modesetting.set_default_edit_mode,
                                                            updater.mouse_scroll_zoom)

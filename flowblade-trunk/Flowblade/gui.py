@@ -151,7 +151,7 @@ def get_selected_bg_color():
     return _selected_bg_color
 
 def get_light_gray_light_color():
-    return Gdk.RGBA(red=(46.3/255.0), green=(47.8/255.0), blue=(58.9/255.0), alpha=1.0)
+    return Gdk.RGBA(red=(49.3/255.0), green=(50.8/255.0), blue=(58.9/255.0), alpha=1.0)
 
 def get_bg_unmodified_normal_color():
     return _bg_unmodified_normal
