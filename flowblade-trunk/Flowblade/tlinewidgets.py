@@ -425,8 +425,11 @@ def set_tracks_double_height_consts():
 def set_dark_bg_color():
     if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
         return
-
+        
     r, g, b, a = gui.unpack_gdk_color(gui.get_bg_color())
+
+    if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY: 
+        r, g, b, a = gui.unpack_gdk_color(gui.get_bg_unmodified_normal_color())
 
     global BG_COLOR
     BG_COLOR = get_multiplied_color((r, g, b), 1.25)
@@ -2856,7 +2859,8 @@ class TimeLineFrameScale:
    
     def _get_dark_theme_grad(self, h):
         r, g, b, a  = gui.get_bg_color()
-           
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY: 
+            r, g, b, a = gui.unpack_gdk_color(gui.get_bg_unmodified_normal_color()) 
         grad = cairo.LinearGradient (0, 0, 0, h)
         grad.add_color_stop_rgba(1, r, g, b, 1)
         grad.add_color_stop_rgba(0, r + 0.05, g + 0.05, b + 0.05, 1)

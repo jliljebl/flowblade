@@ -95,6 +95,7 @@ _CURRENT_THEME_COLORS_FILE = "currentcolors.data" # Used to communicate theme co
 
 _selected_bg_color = None
 _bg_color = None
+_bg_unmodified_normal = None
 _button_colors = None
 
 def capture_references(new_editor_window):
@@ -149,10 +150,13 @@ def get_bg_color():
 def get_selected_bg_color():
     return _selected_bg_color
 
+def get_bg_unmodified_normal_color():
+    return _bg_unmodified_normal
+
 def set_theme_colors():
     # Find out if theme color discovery works and set selected bg color apppropiately when
     # this is first called.
-    global _selected_bg_color, _bg_color, _button_colors
+    global _selected_bg_color, _bg_color, _button_colors, _bg_unmodified_normal
 
     fallback_theme_colors = editorpersistance.prefs.theme_fallback_colors
     theme_colors = _THEME_COLORS[fallback_theme_colors]
@@ -179,8 +183,10 @@ def set_theme_colors():
     if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
         bg_color = Gdk.RGBA(red=(30.0/255.0), green=(35.0/255.0), blue=(51.0/255.0), alpha=1.0)
     #elif editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
-    #    bg_color = Gdk.RGBA(red=(27.2/255.0), green=(27.5/255.0), blue=(120.5/255.0), alpha=1.0)
-        
+    #    _bg_unmodified_normal = bg_color
+    #    bg_color = Gdk.RGBA(red=(49.7/255.0), green=(49.7/255.0), blue=(49.7/255.0), alpha=1.0)
+    _bg_unmodified_normal = bg_color
+
     r, g, b, a = unpack_gdk_color(bg_color)
 
     if r == 0.0 and g == 0.0 and b == 0.0:
@@ -202,6 +208,7 @@ def set_theme_colors():
         _selected_bg_color = Gdk.RGBA(*c) 
 
     # Adwaita and some others show big area of black without this, does not bother Ambient on Ubuntu
+    #if editorpersistance.prefs.theme != appconsts.FLOWBLADE_THEME_GRAY:
     editor_window.tline_pane.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
     editor_window.media_panel.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
     editor_window.mm_paned.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
