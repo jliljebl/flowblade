@@ -150,6 +150,9 @@ def get_bg_color():
 def get_selected_bg_color():
     return _selected_bg_color
 
+def get_light_gray_light_color():
+    return Gdk.RGBA(red=(46.3/255.0), green=(47.8/255.0), blue=(58.9/255.0), alpha=1.0)
+
 def get_bg_unmodified_normal_color():
     return _bg_unmodified_normal
 
@@ -212,7 +215,11 @@ def set_theme_colors():
     editor_window.tline_pane.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
     editor_window.media_panel.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
     editor_window.mm_paned.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
-        
+
+    if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
+        editor_window.mm_paned.override_background_color(Gtk.StateFlags.NORMAL, get_light_gray_light_color())
+        editor_window.media_panel.override_background_color(Gtk.StateFlags.NORMAL, get_light_gray_light_color())
+    
 def unpack_gdk_color(gdk_color):
     return (gdk_color.red, gdk_color.green, gdk_color.blue, gdk_color.alpha)
 
