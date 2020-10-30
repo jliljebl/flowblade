@@ -1322,8 +1322,6 @@ def add_media_folder_dialog(callback, parent_window):
     else:
         file_chooser.set_current_folder(os.path.expanduser("~") + "/")
     file_chooser.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
-    filt = utils.get_image_sequence_file_filter()
-    file_chooser.add_filter(filt)
     row1 = guiutils.get_two_column_box(Gtk.Label(label=_("Add Media from Folder:")), file_chooser, 220)
 
     create_bin_checkbox = Gtk.CheckButton()
@@ -1388,7 +1386,8 @@ def add_media_folder_dialog(callback, parent_window):
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
-    dialog.connect('response', callback, (file_chooser, create_bin_checkbox, recursively_checkbox))
+    dialog.connect('response', callback, (file_chooser, action_select, create_bin_checkbox, \
+                    recursively_checkbox, use_extension_checkbox, extension_entry, maximum_select))
     dialog.show_all()
     
     

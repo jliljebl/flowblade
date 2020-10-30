@@ -25,6 +25,7 @@ Load, save, add media file, etc...
 
 import copy
 import datetime
+import fnmatch
 import glob
 import hashlib
 import mlt
@@ -1130,7 +1131,69 @@ def add_media_folder():
     dialogs.add_media_folder_dialog(_add_media_folder_callback, gui.editor_window.window)
 
 def _add_media_folder_callback(dialog, response_id, data):
+    if response_id == Gtk.ResponseType.CANCEL:
+        dialog.destroy()
+        return
+
+    file_chooser, file_filter_select, create_bin_checkbox, recursively_checkbox, use_extension_checkbox, \
+    extension_entry, maximum_select = data
+    
+    add_folder = file_chooser.get_filenames()[0]
+    file_filter = file_filter_select.get_active()
+    create_bin = create_bin_checkbox.get_active()
+    search_recursively = recursively_checkbox.get_active()
+    use_extension = use_extension_checkbox.get_active()
+    user_extensions = extension_entry.get_text()
+    maximum_files = maximum_select.get_active()
+    
     dialog.destroy()
+
+    if add_folder == None:
+        return
+    
+    if search_recursively == True:
+        candidate_files = []
+        for root, dirnames, filenames in os.walk(add_folder):
+            for filename in filenames:
+                candidate_files.append(os.path.join(root, filename))
+    else:
+        candidate_files = [f for f in os.listdir(add_folder) if os.path.isfile(os.path.join(add_folder, f))]
+
+    if use_extension == False:
+        if file_filter == 0: # "All Files", see dialogs.py
+            filtered_files = candidate_files
+        else:
+            filtered_files = []
+            for cand_file in candidate_files:
+                file_type = utils.get_file_type(cand_file)
+                if file_filter == 1 and file_type == "video": # 1 = "Video Files", see dialogs.py
+                    filtered_files.append(cand_file)
+                elif file_filter == 2 and file_type == "audio": # 2 = "Audio Files", see dialogs.py
+                    filtered_files.append(cand_file)
+                elif file_filter == 3 and file_type == "image": # 3 = "Image Files", see dialogs.py
+                    filtered_files.append(cand_file)
+    else:
+        # Try to accept spaces and commas and the remove periods
+        stage1 = user_extensions.replace(",", " ")
+        stage2 = stage1.replace(".", " ")
+        exts = stage2.split()
+        print(exts)
+        
+
+        
+        """
+        filtered_files = []
+        for cand_file in candidate_files:
+            if fnmatch.fnmatch(cand_file, '*.txt'):
+                print(file)
+        """
+        #for filename in fnmatch.filter(filenames, asset_file_name):
+        #matches.append(os.path.join(root, filename))
+    #print(filtered_files)
+
+for file in os.listdir('.'):
+    if fnmatch.fnmatch(file, '*.txt'):
+        print(file)
     
 def open_rendered_file(rendered_file_path):
     add_media_thread = AddMediaFilesThread([rendered_file_path])
