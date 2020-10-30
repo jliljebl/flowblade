@@ -1362,6 +1362,7 @@ def add_media_folder_dialog(callback, parent_window):
     maximum_select.append_text(_("29"))
     maximum_select.append_text(_("49"))
     maximum_select.append_text(_("99"))
+    maximum_select.append_text(_("199"))
     maximum_select.set_active(0)
     maximum_label = Gtk.Label(label=_("Max. number of files to import:"))
     row7 = guiutils.get_two_column_box(maximum_label, maximum_select, 220)

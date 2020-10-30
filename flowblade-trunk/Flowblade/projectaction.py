@@ -1173,7 +1173,7 @@ def _add_media_folder_callback(dialog, response_id, data):
                 elif file_filter == 3 and file_type == "image": # 3 = "Image Files", see dialogs.py
                     filtered_files.append(cand_file)
     else:
-        # Try to accept spaces, commas and periods between extensions
+        # Try to accept spaces, commas and periods between extensions.
         stage1 = user_extensions.replace(",", " ")
         stage2 = stage1.replace(".", " ")
         exts = stage2.split()
@@ -1184,12 +1184,15 @@ def _add_media_folder_callback(dialog, response_id, data):
                 if fnmatch.fnmatch(cand_file, "*." + ext):
                     filtered_files.append(cand_file)
     
+    # This recursive, we need upper limit always
     max_files = 29
     if maximum_file_option == 1:
         max_files = 49 # see dialogs.py 
     elif maximum_file_option == 2:
         max_files = 99 # see dialogs.py
-
+    elif maximum_file_option == 3:
+        max_files = 199 # see dialogs.py
+        
     filtered_amount = len(filtered_files)
     if filtered_amount > max_files:
         filtered_files = filtered_files[0:max_files]
@@ -1207,21 +1210,26 @@ def _do_folder_media_import(add_files, create_bin, add_folder):
         add_media_thread = AddMediaFilesThread(add_files)
         add_media_thread.start()
     else:
-        """
+
         PROJECT().add_unnamed_bin()
         gui.bin_list_view.fill_data_model()
         selection = gui.bin_list_view.treeview.get_selection()
         model, iterator = selection.get_selected()
         selection.select_path(str(len(model)-1))
-        _enable_save()
-    
-        liststore, column = user_data
-        liststore[path][column] = new_text
-        PROJECT().bins[int(path)].name = new_text
+        
+        
+        folder_name = os.path.basename(add_folder)
+        model, iterator = selection.get_selected()  #if iterator is immutable?
+        model.set_value(iterator, 1, folder_name)
+        model, rows = selection.get_selected_rows()
+        row = max(rows[0])
+        PROJECT().bins[int(row)].name = folder_name
         _enable_save()
         gui.editor_window.bin_info.display_bin_info()
-        """
 
+        add_media_thread = AddMediaFilesThread(add_files)
+        add_media_thread.start()
+        
 def open_rendered_file(rendered_file_path):
     add_media_thread = AddMediaFilesThread([rendered_file_path])
     add_media_thread.start()

@@ -597,41 +597,6 @@ class MediaListView(ImageTextTextListView):
             self.scroll.queue_draw()
 
 
-class BinListView(ImageTextTextListView):
-    """
-    GUI component displaying list of media files.
-    """
-
-    def __init__(self, bin_selection_cb, bin_name_edit_cb):
-        ImageTextTextListView.__init__(self)
-
-        self.text_col_1.set_min_width(10)
-
-        # Connect selection 'changed' signal
-        tree_sel = self.treeview.get_selection()
-        tree_sel.connect("changed", bin_selection_cb)
-
-        # Set bin name editable and connect 'edited' signal
-        self.text_rend_1.set_property("editable", True)
-        self.text_rend_1.connect("edited",
-                                 bin_name_edit_cb,
-                                 (self.storemodel, 1))
-
-    def fill_data_model(self):
-        self.storemodel.clear()
-
-        for media_bin in PROJECT().bins:
-            try:
-                pixbuf = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "bin_5.png")
-                row_data = [pixbuf,
-                            media_bin.name,
-                            str(len(media_bin.file_ids))]
-                self.storemodel.append(row_data)
-                self.scroll.queue_draw()
-            except GObject.GError as exc:
-                print("can't load icon", exc)
-
-
 class FilterListView(ImageTextImageListView):
     """
     GUI component displaying list of available filters.
