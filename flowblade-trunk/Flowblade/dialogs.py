@@ -1390,7 +1390,6 @@ def add_media_folder_dialog(callback, parent_window):
                     recursively_checkbox, use_extension_checkbox, extension_entry, maximum_select))
     dialog.show_all()
     
-    
 def _use_extension_toggled(checkbutton, widgets):
     action_label, action_select, extension_label, extension_entry = widgets
     if checkbutton.get_active() == True:
@@ -1403,7 +1402,24 @@ def _use_extension_toggled(checkbutton, widgets):
         action_select.set_sensitive(True)
         extension_label.set_sensitive(False)
         extension_entry.set_sensitive(False)
-        
+
+def add_media_folder_files_exceeded(callback, filtered_amount, limit, data):
+    dialog = Gtk.Dialog(_("Media Folder Add Info"),  gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                        _("Add Files"), Gtk.ResponseType.ACCEPT))
+
+    primary_txt = _("Number of files to add exceeds currently set limit!")
+    secondary_txt = _("Search found ") + str(filtered_amount) + _(" files to add.\nLimit is set at ") + str(limit) + _(" files. Add first ") + str(limit) + _(" files?")
+
+    panel = dialogutils.get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info=True, alternative_icon=None, panels=None)
+    alignment = dialogutils.get_alignment2(panel)
+    dialog.connect('response', callback, data)
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    _default_behaviour(dialog)
+    dialog.show_all()
+
 def export_edl_dialog(callback, parent_window, project_name):
     dialog = Gtk.FileChooserDialog(_("Export EDL"), parent_window,
                                    Gtk.FileChooserAction.SAVE,

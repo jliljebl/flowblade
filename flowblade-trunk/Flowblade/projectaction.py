@@ -1144,7 +1144,7 @@ def _add_media_folder_callback(dialog, response_id, data):
     search_recursively = recursively_checkbox.get_active()
     use_extension = use_extension_checkbox.get_active()
     user_extensions = extension_entry.get_text()
-    maximum_files = maximum_select.get_active()
+    maximum_file_option = maximum_select.get_active()
     
     dialog.destroy()
 
@@ -1183,13 +1183,45 @@ def _add_media_folder_callback(dialog, response_id, data):
             for cand_file in candidate_files:
                 if fnmatch.fnmatch(cand_file, "*." + ext):
                     filtered_files.append(cand_file)
-
-    print(filtered_files)
-
-for file in os.listdir('.'):
-    if fnmatch.fnmatch(file, '*.txt'):
-        print(file)
     
+    max_files = 29
+    if maximum_file_option == 1:
+        max_files = 49 # see dialogs.py 
+    elif maximum_file_option == 2:
+        max_files = 99 # see dialogs.py
+
+    filtered_amount = len(filtered_files)
+    if filtered_amount > max_files:
+        filtered_files = filtered_files[0:max_files]
+        dialogs.add_media_folder_files_exceeded(_add_media_folder_files_exceeded_cb, filtered_amount, max_files, (filtered_files, create_bin, add_folder))
+    else:
+        _do_folder_media_import(filtered_files, create_bin, add_folder)
+
+def _add_media_folder_files_exceeded_cb(dialog, response_id, data):
+    dialog.destroy()
+    if response_id != Gtk.ResponseType.CANCEL:
+        _do_folder_media_import(*data)
+
+def _do_folder_media_import(add_files, create_bin, add_folder):
+    if create_bin == False:
+        add_media_thread = AddMediaFilesThread(add_files)
+        add_media_thread.start()
+    else:
+        """
+        PROJECT().add_unnamed_bin()
+        gui.bin_list_view.fill_data_model()
+        selection = gui.bin_list_view.treeview.get_selection()
+        model, iterator = selection.get_selected()
+        selection.select_path(str(len(model)-1))
+        _enable_save()
+    
+        liststore, column = user_data
+        liststore[path][column] = new_text
+        PROJECT().bins[int(path)].name = new_text
+        _enable_save()
+        gui.editor_window.bin_info.display_bin_info()
+        """
+
 def open_rendered_file(rendered_file_path):
     add_media_thread = AddMediaFilesThread([rendered_file_path])
     add_media_thread.start()
