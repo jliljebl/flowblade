@@ -459,8 +459,13 @@ def get_cairo_color_tuple_255_rgb(r, g, b):
     return (float(r)/255.0, float(g)/255.0, float(b)/255.0)
 
 def cairo_color_from_gdk_color(gdk_color):
-    raw_r, raw_g, raw_b = hex_to_rgb(gdk_color.to_string())
-    return (float(raw_r)/65535.0, float(raw_g)/65535.0, float(raw_b)/65535)
+    print(gdk_color.to_string())
+    print(type(gdk_color.to_string()))
+    color = gdk_color.to_string().rstrip(")").lstrip("rgb(").split(',')
+    return (float(color[0])/255.0, float(color[1])/255.0, float(color[2])/255.0)
+    #print(color_str)
+    #raw_r, raw_g, raw_b = hex_to_rgb(gdk_color.to_string())
+    #return (float(raw_r)/65535.0, float(raw_g)/65535.0, float(raw_b)/65535)
     
 def do_nothing():
     pass
