@@ -1173,23 +1173,18 @@ def _add_media_folder_callback(dialog, response_id, data):
                 elif file_filter == 3 and file_type == "image": # 3 = "Image Files", see dialogs.py
                     filtered_files.append(cand_file)
     else:
-        # Try to accept spaces and commas and the remove periods
+        # Try to accept spaces, commas and periods between extensions
         stage1 = user_extensions.replace(",", " ")
         stage2 = stage1.replace(".", " ")
         exts = stage2.split()
-        print(exts)
-        
 
-        
-        """
         filtered_files = []
-        for cand_file in candidate_files:
-            if fnmatch.fnmatch(cand_file, '*.txt'):
-                print(file)
-        """
-        #for filename in fnmatch.filter(filenames, asset_file_name):
-        #matches.append(os.path.join(root, filename))
-    #print(filtered_files)
+        for ext in exts:
+            for cand_file in candidate_files:
+                if fnmatch.fnmatch(cand_file, "*." + ext):
+                    filtered_files.append(cand_file)
+
+    print(filtered_files)
 
 for file in os.listdir('.'):
     if fnmatch.fnmatch(file, '*.txt'):
