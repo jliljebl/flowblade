@@ -2,9 +2,9 @@
 // it gets @if ed depending on $variant
 
 
-$base_color: if($variant =='light', #ffffff, #282930);
+$base_color: if($variant =='light', #ffffff, #272830);
 $text_color: if($variant == 'light', #5c616c, #D3DAE3);
-$bg_color: if($variant =='light', #F5F6F7, #282930);
+$bg_color: if($variant =='light', #F5F6F7, #272730);
 $fg_color: if($variant =='light', #5c616c, #D3DAE3);
 
 $selected_fg_color: #ffffff;
