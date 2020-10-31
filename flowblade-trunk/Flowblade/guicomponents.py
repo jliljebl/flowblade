@@ -1138,9 +1138,10 @@ class MediaPanel():
                     self.selected_objects.append(m_obj)
                     m_obj.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
             else:
-                self.clear_selection()
-                media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
-                self.selected_objects.append(media_object)
+                #self.clear_selection()
+                if not(media_object in self.selected_objects):
+                    media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
+                    self.selected_objects.append(media_object)
 
         elif event.button == 3:
             self.clear_selection()
@@ -1169,7 +1170,11 @@ class MediaPanel():
                     media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_bg_color())
                 except:
                     pass
-
+            else:
+                self.clear_selection()
+                media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
+                self.selected_objects.append(media_object)
+                          
     def select_media_file(self, media_file):
         self.clear_selection()
         self.selected_objects.append(self.widget_for_mediafile[media_file])
