@@ -752,7 +752,8 @@ def _cut_redo(self):
     if(not hasattr(self, "new_clip")):
         self.new_clip = _create_clip_clone(self.clip)
         current_sequence().copy_filters(self.clip, self.new_clip )
-        
+        self.new_clip.markers = copy.deepcopy(self.clip.markers)
+
     _cut(self.track, self.index, self.clip_cut_frame, self.clip, \
          self.new_clip)
 
@@ -792,7 +793,8 @@ def _cut_all_redo(self):
                 
         if first_redo == True:
             new_clip = _create_clip_clone(track_cut_data["clip"])
-            current_sequence().copy_filters(track_cut_data["clip"], new_clip )
+            current_sequence().copy_filters(track_cut_data["clip"], new_clip)
+            new_clip.markers = copy.deepcopy(track_cut_data["clip"].markers)
             self.new_clips.append(new_clip)
         else:
             new_clip = self.new_clips[i]
