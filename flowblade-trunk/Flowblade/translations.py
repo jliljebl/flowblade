@@ -280,6 +280,8 @@ def load_filters_translations():
     filter_names["Fade In / Fade Out"] = _("Fade In / Fade Out")
     filter_names["Lines"] = _("Lines")
     filter_names["Dust"] = _("Dust")
+    filter_names["Pan Left Channel"] = _("Pan Left Channel")
+    filter_names["Pan Right Channel"] = _("Pan Right Channel")
     
     # param names
     global param_names
