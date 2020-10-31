@@ -661,16 +661,19 @@
         <group>Color</group>
         <property name="Hue" args="range_in=0,360">0.0</property>
     </filter>
+    <!-- Dropped 31.10.2020
     <filter id="frei0r.brightness" mlt_drop_version="0.9.1">
         <name>Brightness</name>
         <group>Color</group>
         <property name="Brightness" args="range_in=-100,100">0.5</property>
     </filter>
+
     <filter id="brightness" multipart="true" mlt_drop_version="0.9.1">
         <name>Brightness Keyframed</name>
         <group>Color</group>
         <multipartproperty multistartprop="start" multiendprop="end" args="editor=keyframe_editor range_in=0,100 exptype=multipart_keyframe displayname=Brightness">"0=1.0"</multipartproperty>
     </filter>
+    -->
     <filter id="brightness" mlt_min_version="0.9.1">
         <name>Brightness</name>
         <group>Color</group>
