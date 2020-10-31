@@ -181,14 +181,23 @@
     
     
     <!-- AUDIO -->
+    <!-- DEPRECATED, replaced by non-multipart filter below.  
     <filter id="volume" multipart="true">
         <name>Volume</name>
         <group>Audio</group>
         <multipartproperty multistartprop="gain" multiendprop="end" args="editor=keyframe_editor_release range_in=0,200 range_out=0.0,2.0 exptype=multipart_keyframe displayname=Volume">"0=1.0"</multipartproperty>
         <property name="max_gain" args="editor=no_editor exptype=not_parsed">20dB</property>
         <property name="track" args="editor=no_editor">0</property>
-        <property name="gain" args="editor=no_editor">1</property> <!-- Volume at start of filter --> 
-        <property name="end" args="editor=no_editor">1</property> <!-- Volume at end of filter --> 
+        <property name="gain" args="editor=no_editor">1</property> 
+        <property name="end" args="editor=no_editor">1</property> 
+    </filter> 
+    -->
+    <filter id="volume">
+      <name>Volume</name>
+      <group>Audio</group>
+      <property name="window" args="editor=no_editor">75</property>
+      <property name="max_gain" args="editor=no_editor">20dB</property>
+      <property name="level" args="editor=keyframe_editor_release range_in=-70,20 range_out=-70,20 exptype=keyframe_hcs displayname=Volume">0=0.0</property>
     </filter>
     <filter id="panner">
         <name>Pan</name>
