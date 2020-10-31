@@ -509,7 +509,13 @@ class Sequence:
             clone_filter = mltfilters.clone_filter_object(f, self.profile)
             clone_clip.attach(clone_filter.mlt_filter)
             clone_clip.filters.append(clone_filter)
-
+    
+    def copy_filters(self, clip, clone_clip):
+        for f in clip.filters:
+            clone_filter = mltfilters.clone_filter_object(f, self.profile)
+            clone_clip.attach(clone_filter.mlt_filter)
+            clone_clip.filters.append(clone_filter)
+            
     def clone_filters(self, clip):
         clone_filters = []
         for f in clip.filters:
