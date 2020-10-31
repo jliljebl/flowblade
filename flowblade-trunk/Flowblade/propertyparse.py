@@ -104,7 +104,6 @@ def args_string_to_args_dict(args_str):
     """
     args_dict = {}
     args = args_str.split(" ")
-    print(args)
     for arg in args:
         sides = arg.split("=")
         args_dict[sides[0]] = sides[1]
