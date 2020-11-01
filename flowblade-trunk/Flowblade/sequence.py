@@ -522,7 +522,13 @@ class Sequence:
             clone_filter = mltfilters.clone_filter_object(f, self.profile)
             clone_filters.append(clone_filter)
         return clone_filters
-
+    
+    def clone_mute_state(self, clip, clone_clip):
+        # Mute 
+        if clip.mute_filter != None:
+            mute_filter = mltfilters.create_mute_volume_filter(self) 
+            mltfilters.do_clip_mute(clone_clip, mute_filter)
+            
     def get_next_id(self):
         """
         Growing id for newly created clip or transition. 
