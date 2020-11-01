@@ -108,9 +108,16 @@ def titler_destroy():
         _titler_data = None
 
 def reset_titler():
-    global _titler_data
-    _titler_data = None
+    global _titler, _keep_titler_data, _titler_data
 
+    if _titler != None:
+        temp_keep_val = _keep_titler_data
+        _keep_titler_data = True
+        titler_destroy()
+        _keep_titler_data = temp_keep_val
+        show_titler()
+    else:
+        _titler_data = None
 
 # ------------------------------------------------------------- data
 class TextLayer:
