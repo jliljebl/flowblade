@@ -170,7 +170,7 @@ def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT, param_data=None):
             action = edit.add_filter_action(data)
             action.do_edit()
             ep = _get_brightness_editable_property(clip, track, clip_index)
-            
+            print(ep)
         edit_data["editable_property"] = ep
 
         _kf_editor = TLineKeyFrameEditor(ep, True, BRIGHTNESS_KF_EDIT)
@@ -207,23 +207,7 @@ def _get_volume_editable_property(clip, track, clip_index):
     return _get_param_editable_property_with_filter_search("volume", "level", clip, track, clip_index)
 
 def _get_brightness_editable_property(clip, track, clip_index):
-    for i in range(0, len(clip.filters)):
-        filter_object = clip.filters[i]
-        if filter_object.info.mlt_service_id == "brightness":
-            editable_properties = propertyedit.get_filter_editable_properties(
-                                                           clip, 
-                                                           filter_object,
-                                                           i,
-                                                           track,
-                                                           clip_index)
-            for ep in editable_properties:          
-                try:
-                    if ep.name == "level":
-                        return ep
-                except:
-                    pass
-                    
-    return None
+    return _get_param_editable_property_with_filter_search("brightness", "level", clip, track, clip_index)
 
 def _get_param_editable_property(property_name, clip, track, clip_index, filter_object, filter_index):
     editable_properties = propertyedit.get_filter_editable_properties(
