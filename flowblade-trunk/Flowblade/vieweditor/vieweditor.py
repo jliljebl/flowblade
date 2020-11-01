@@ -205,24 +205,7 @@ class ViewEditor(Gtk.Frame):
             self.edit_target_layer.handle_mouse_release(p)
             self.edit_area.queue_draw()
         self.edit_target_layer = None
-    
-    """
-    def _mouse_scroll_listener(self, event):
-        if self.scale_select != None:
-            active_index = self.scale_select.combo.get_active()
-            if event.direction == Gdk.ScrollDirection.UP:
-                active_index = active_index + 1
-                if active_index > 7:
-                    active_index = 7
-            else:
-                active_index = active_index - 1
-                if active_index < 0:
-                    active_index = 0
-            self.scale_select.combo.set_active(active_index)
 
-        return True
-    """
-    
     # -------------------------------------------- coord conversions
     def panel_coord_to_movie_coord(self, panel_point):
         panel_x, panel_y = panel_point

@@ -191,6 +191,9 @@ class XDGCopyThread(threading.Thread):
         self.completed_callback(self.dialog)
     
 def _copy_data_from_dot_folders_xdg_folders():
+    # THIS DOES NOT WORK NOW, dir_util was not available in Ubuntu 20.10
+    
+    
     # ---------------------- CONFIG
     print("Copying CONFIG...")
     file_util.copy_file(_dot_dir + "prefs", get_config_dir() + "prefs", verbose=1)
