@@ -20,8 +20,8 @@
 import gi
 
 from gi.repository import GLib
-import distutils
-from distutils import dir_util, file_util
+#import distutils
+#from distutils import dir_util, file_util
 import os
 import threading
 
@@ -189,7 +189,7 @@ class XDGCopyThread(threading.Thread):
     def run(self):
         _copy_data_from_dot_folders_xdg_folders()
         self.completed_callback(self.dialog)
-        
+    
 def _copy_data_from_dot_folders_xdg_folders():
     # ---------------------- CONFIG
     print("Copying CONFIG...")
