@@ -269,7 +269,7 @@ class ViewEditor(Gtk.Frame):
         cr.fill()
 
 
-        if self.bg_buf is not None:
+        if (self.bg_buf is not None) and self.write_out_layers == False:
 
             # Create cairo surface
             stride = cairo.ImageSurface.format_stride_for_width(cairo.FORMAT_RGB24, self.profile_w)
@@ -283,26 +283,35 @@ class ViewEditor(Gtk.Frame):
             cr.set_source_surface(surface, 0, 0)
             cr.paint()
             cr.restore()
-        
-        if self.write_out_layers == True:
+            img_surface = None
+        elif self.write_out_layers == True:
             # We need to go to 1.0 scale, 0,0 origo draw for the out file.
+            # These values are used by editor layers.
             current_scale = self.scale
             self.scale = 1.0
             self.origo = (0.0, 0.0)
+            # For writing out image we create new surface and context from it,
+            # e.g. now we need alpha channel too.
             img_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.profile_w, self.profile_h)
             cr = cairo.Context(img_surface)
 
+        print("layers!!!!!!!!!!!!!!!")
         for editorlayer in self.edit_layers:
             if editorlayer.visible:
+                print("----------------draw")
                 editorlayer.draw(cr, self.write_out_layers, self.draw_overlays)
-        
+                if img_surface != None:
+                    cr, img_surface = editorlayer.blur_surface(img_surface, self.profile_w, self.profile_h)
+                else:
+                    cr, surface = editorlayer.blur_surface(surface, self.profile_w, self.profile_h)
+
         if self.write_out_layers == True:
             img_surface.write_to_png(self.write_file_path)
             self.write_file_path = None # to make sure user components set this every time
             self.write_out_layers = False
             self.set_scale_and_update(current_scale) # return to user set scale
-        
-        self._draw_guidelines(cr)
+        else:
+            self._draw_guidelines(cr)
         
     def _draw_guidelines(self, cr):
         ox, oy = self.origo
