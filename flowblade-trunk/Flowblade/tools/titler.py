@@ -138,7 +138,9 @@ class TextLayer:
         self.alignment = ALIGN_LEFT
         self.pixel_size = (100, 100)
         self.spacing = 5
-        
+
+        self.gradient_color_rgba = None
+
         self.outline_on = False
         self.outline_color_rgba = (0.3, 0.3, 0.3, 1.0) 
         self.outline_width = 2
@@ -344,6 +346,7 @@ class Titler(Gtk.Window):
         buttons_box.pack_start(self.fill_on, False, False, 0)
         buttons_box.pack_start(Gtk.Label(), True, True, 0)
 
+        # ------------------------------------------- Outline Panel
         outline_size = Gtk.Label(_("Size:"))
         
         self.out_line_color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(red=0.3, green=0.3, blue=0.3, alpha=1.0))
@@ -369,6 +372,7 @@ class Titler(Gtk.Window):
         outline_box.pack_start(self.outline_on, False, False, 0)
         outline_box.pack_start(Gtk.Label(), True, True, 0)
 
+        # -------------------------------------------- Shadow panel 
         shadow_opacity_label = Gtk.Label(_("Opacity:"))
         shadow_xoff = Gtk.Label(_("X Off:"))
         shadow_yoff = Gtk.Label(_("Y Off:"))
@@ -429,6 +433,18 @@ class Titler(Gtk.Window):
         shadow_box_3.pack_start(shadow_blur_label, False, False, 0)
         shadow_box_3.pack_start(self.shadow_blur_spin, False, False, 0)
         shadow_box_3.pack_start(Gtk.Label(), True, True, 0)
+
+        # ------------------------------------ Gradient panel
+        self.gradient_color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(red=0.0, green=0.0, blue=0.8, alpha=1.0))
+        #self.gradient_color_button.connect("color-set", self._edit_value_changed)
+        self.gradient_on = Gtk.CheckButton()
+        self.gradient_on.set_active(True)
+        #self.fill_on.connect("toggled", self._edit_value_changed)
+
+        gradient_box = Gtk.HBox()
+        gradient_box.pack_start(self.gradient_on, False, False, 0)
+        gradient_box.pack_start(self.gradient_color_button, False, False, 0)
+        gradient_box.pack_start(Gtk.Label(), True, True, 0)
         
         load_layers = Gtk.Button(_("Load Layers"))
         load_layers.connect("clicked", lambda w:self._load_layers_pressed())
@@ -507,7 +523,6 @@ class Titler(Gtk.Window):
         controls_panel_1.pack_start(layers_save_buttons_row, False, False, 0)
 
         controls_panel_2 = Gtk.VBox()
-        #controls_panel_2.pack_start(scroll_frame, True, True, 0)
         controls_panel_2.pack_start(font_main_row, False, False, 0)
         controls_panel_2.pack_start(buttons_box, False, False, 0)
 
@@ -519,10 +534,14 @@ class Titler(Gtk.Window):
         controls_panel_4.pack_start(shadow_box_2, False, False, 0)
         controls_panel_4.pack_start(shadow_box_3, False, False, 0)
 
+        controls_panel_5 = Gtk.VBox()
+        controls_panel_5.pack_start(gradient_box, False, False, 0)
+
         notebook = Gtk.Notebook()
         notebook.append_page(guiutils.set_margins(controls_panel_2,8,8,8,8), Gtk.Label(label=_("Font")))
         notebook.append_page(guiutils.set_margins(controls_panel_3,8,8,8,8), Gtk.Label(label=_("Outline")))
         notebook.append_page(guiutils.set_margins(controls_panel_4,8,8,8,8), Gtk.Label(label=_("Shadow")))
+        notebook.append_page(guiutils.set_margins(controls_panel_5,8,8,8,8), Gtk.Label(label=_("Gradient")))
         
         controls_panel = Gtk.VBox()
         controls_panel.pack_start(guiutils.get_named_frame(_("Layer Text"), scroll_frame), True, True, 0)
@@ -1024,7 +1043,8 @@ class PangoTextLayout:
         self.alignment = self._get_pango_alignment_for_layer(layer)
         self.pixel_size = layer.pixel_size
         self.fill_on = layer.fill_on
-        
+        self.gradient_color_rgba = layer.gradient_color_rgba
+
         self.outline_color_rgba = layer.outline_color_rgba
         self.outline_on = layer.outline_on
         self.outline_width = layer.outline_width
@@ -1044,7 +1064,6 @@ class PangoTextLayout:
         layout.set_text(self.text, -1)
         layout.set_font_description(self.font_desc)
         layout.set_alignment(self.alignment)
-    
         self.pixel_size = layout.get_pixel_size()
 
         # Shadow
@@ -1093,7 +1112,16 @@ class PangoTextLayout:
 
         # Text
         if self.fill_on:
+            #cr.set_source_rgba(*self.color_rgba)
+            w, h = self.pixel_size 
+            h = float(h) * yscale
             cr.set_source_rgba(*self.color_rgba)
+            #grad = cairo.LinearGradient (0, y, 0, y + h)
+            #CLIP_COLOR_GRAD = (1,  1.00, 0.11, 0.21, 1)  #(1, 0.62, 0.38, 0.7, 1) 
+            #CLIP_COLOR_GRAD_L = (0,  0.00, 0.11, 1.00, 1)  #(1, 0.62, 0.38, 0.7, 1) 
+            #grad.add_color_stop_rgba(*CLIP_COLOR_GRAD)
+            #grad.add_color_stop_rgba(*CLIP_COLOR_GRAD_L)
+            #cr.set_source(grad)
             cr.move_to(x, y)
             cr.scale(xscale, yscale)
             cr.rotate(rotation)
