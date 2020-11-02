@@ -35,8 +35,8 @@ ROTO_MOVE_MODE = 1
 ROTO_NO_EDIT = 0
 ROTO_POINT_MOVE_EDIT = 1
 
-    
-# Edit types, used as kind of subtypes of modes if needed, e.g. MOVE_MODE can have MOVE_EDIT or HANDLE_EDIT 
+
+# Edit types, used as kind of subtypes of modes if needed, e.g. MOVE_MODE can have MOVE_EDIT or HANDLE_EDIT
 NO_EDIT = 0 # mouse hit meaningless
 ROTATE_EDIT = 1
 MOVE_EDIT = 2
@@ -56,10 +56,10 @@ class AbstactEditorLayer:
         self.mouse_rotation_last = None
         self.last_press_hit_point = None
         self.edit_mode = None # determines how mouse press is interpreted
-        self.edit_type = None # is interpretation of purpose of mouse press, 
+        self.edit_type = None # is interpretation of purpose of mouse press,
                                # not always used if mouse press in edit_mode can only interpreted in one way
         self.mouse_released_listener = None
-    
+
     # --------------------------------------------- state changes
     def frame_changed(self, frame):
         pass # override to react to frame change
@@ -79,7 +79,7 @@ class AbstactEditorLayer:
         if self.edit_point_shape.point_in_area(p) == True:
             self.last_press_hit_point = None
             return True
-        
+
         return False
 
     # ---------------------------------------------- mouse events
@@ -118,12 +118,12 @@ class AbstactEditorLayer:
     def get_mouse_rotation_angle(self, anchor, mr_start, mr_end):
         angle = viewgeom.get_angle_in_deg(mr_start, anchor, mr_end)
         clockw = viewgeom.points_clockwise(mr_start, anchor, mr_end)
-        if not clockw: 
+        if not clockw:
             angle = -angle
 
         # Crossed angle for 180 -> 181... range
         crossed_angle = angle + 360.0
-        
+
         # Crossed angle for -180 -> 181 ...range.
         if angle > 0:
             crossed_angle = -360.0 + angle
@@ -140,11 +140,11 @@ class AbstactEditorLayer:
     def mouse_pressed(self):
         print("AbstactEditorLayer.mouse_pressed not overridden in" + self.__class__)
         sys.exit(1)
-        
+
     def mouse_dragged(self):
         print("AbstactEditorLayer.mouse_dragged not overridden in" + self.__class__)
         sys.exit(1)
-        
+
     def mouse_released(self):
         print("AbstactEditorLayer.mouse_released not overridden in" + self.__class__)
         sys.exit(1)
@@ -168,7 +168,7 @@ class AbstactEditorLayer:
         pil = Image.merge('RGBA', (r, g, b, a)) # Color swap, part 2: Rearranging the channels
 
 class SimpleRectEditLayer(AbstactEditorLayer):
-    
+
     def __init__(self, view_editor):
         AbstactEditorLayer.__init__(self, view_editor)
         self.edit_point_shape = vieweditorshape.SimpleRectEditShape()
@@ -194,7 +194,7 @@ class SimpleRectEditLayer(AbstactEditorLayer):
                 self.edit_type = MOVE_EDIT
         else: # ROTATE_MODE
             self.roto_mid = self.edit_point_shape.get_mid_point()
-        
+
     def mouse_dragged(self):
         delta = self.get_mouse_delta()
         if self.edit_mode == MOVE_MODE:
@@ -221,7 +221,7 @@ class SimpleRectEditLayer(AbstactEditorLayer):
     def _update_corner_edit(self, delta):
         if self.resizing_allowed == False:
             return
-        
+
         self.last_press_hit_point.translate_from_move_start(delta)
 
         self.guide_1.set_end_point_to_normal_projection(self.last_press_hit_point.get_pos())
@@ -263,12 +263,12 @@ class TextEditLayer(SimpleRectEditLayer):
         rotation = self.edit_point_shape.get_first_two_points_rotation_angle()
         xscale = self.view_editor.scale #* self.view_editor.aspect_ratio
         yscale = self.view_editor.scale
-        # x for write out image is on different place because computer screen has box pixels, 
+        # x for write out image is on different place because computer screen has box pixels,
         # and some video formats do not.
         # were not getting pixel perfect results here but its mostly ok
         if write_out_layers == True:
             x = x / self.view_editor.aspect_ratio
-            
+
         self.text_layout.draw_layout(cr, x, y, rotation, xscale, yscale)
 
         if self.update_rect:
@@ -303,19 +303,19 @@ class TextEditLayer(SimpleRectEditLayer):
         out[b] = buf[r]
         #self.bg_buf = out
         """
-        
+
         stride = cairo.ImageSurface.format_stride_for_width(cairo.FORMAT_ARGB32, w)
         surface = cairo.ImageSurface.create_for_data(out, cairo.FORMAT_ARGB32, w, h, stride)
         cr = cairo.Context(surface)
 
         return (cr, surface)
-        
+
 class RotoMaskEditLayer(AbstactEditorLayer):
-    
+
     def __init__(self, view_editor, clip_editor, editable_property, rotomask_editor):
         AbstactEditorLayer.__init__(self, view_editor)
         self.view_editor = view_editor
-        
+
         self.editable_property = editable_property
         self.clip_editor = clip_editor
         self.rotomask_editor = rotomask_editor
@@ -325,8 +325,8 @@ class RotoMaskEditLayer(AbstactEditorLayer):
         self.edit_point_shape = vieweditorshape.RotoMaskEditShape(view_editor, clip_editor, rotomask_editor)
         self.edit_point_shape.update_shape()
 
-        #self.block_shape_update = False 
-        
+        #self.block_shape_update = False
+
         self.ACTIVE_COLOR = (0.0,1.0,0.55,1)
         self.NOT_ACTIVE_COLOR = (0.2,0.2,0.2,1)
 
@@ -350,7 +350,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
             return True
 
         #there are no other modes
-        
+
     def mouse_pressed(self):
         self.view_editor.edit_area_update_blocked = True
         self.edit_point_shape.block_shape_updates = True
@@ -363,6 +363,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
             self.clip_editor.add_keyframe(self.clip_editor.current_clip_frame)
             self.edit_point_shape.convert_shape_coords_and_update_clip_editor_keyframes()
             self.editable_property.write_out_keyframes(self.clip_editor.keyframes)
+
 
         if self.edit_mode == ROTO_MOVE_MODE:
             pass
@@ -390,7 +391,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
                 if self.edit_point_shape.closed == True:
                     if self.allow_adding_points == False:
                         return
-                    
+
                     # Closed curve, try add point in between existing points
                     self.edit_point_shape.block_shape_updates = False
                     self.edit_point_shape.clear_selection()
@@ -419,16 +420,16 @@ class RotoMaskEditLayer(AbstactEditorLayer):
                         self.rotomask_editor.show_current_frame()
                     else:
                         self.add_edit_point(len(self.edit_point_shape.curve_points), self.mouse_press_panel_point)
-                    
-                    self.rotomask_editor.update_mask_create_freeze_gui() 
+
+                    self.rotomask_editor.update_mask_create_freeze_gui()
 
         self.clip_editor.widget.queue_draw()
-            
+
     def mouse_dragged(self):
         self.edit_point_shape.block_shape_updates = False
-        
+
         # delta is given in movie coords, RotoMaskEditShape uses panel coords (because it needs to do complex drawing in those) so we have to convert mouse delta.
-        mdx, mdy = self.view_editor.movie_coord_to_panel_coord(self.get_mouse_delta()) # panel coords mouse delta 
+        mdx, mdy = self.view_editor.movie_coord_to_panel_coord(self.get_mouse_delta()) # panel coords mouse delta
         odx, ody = self.view_editor.movie_coord_to_panel_coord((0, 0)) # movie origo in panel points
         delta = (mdx - odx, mdy - ody) # panel coords mouse delta - movie origo in panel points get delta in panel points
 
@@ -443,7 +444,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
                     self.last_pressed_edit_point.translate_from_move_start(delta)
                     hp1.translate_from_move_start(delta)
                     hp2.translate_from_move_start(delta)
-    
+
         self.edit_point_shape.maybe_force_line_mask()
 
     def mouse_released(self):
@@ -453,7 +454,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
         mdx, mdy = self.view_editor.movie_coord_to_panel_coord(self.get_mouse_delta())
         odx, ody = self.view_editor.movie_coord_to_panel_coord((0, 0))
         delta = (mdx - odx, mdy - ody)
-        
+
         if self.edit_mode == ROTO_MOVE_MODE:
             self.edit_point_shape.translate_from_move_start(delta)
         elif self.edit_mode == ROTO_POINT_MODE:
@@ -467,14 +468,14 @@ class RotoMaskEditLayer(AbstactEditorLayer):
                     hp2.translate_from_move_start(delta)
             else:
                 return # no edit point moved, no update needed
-        
+
         self.last_pressed_edit_point = None
-        
+
         self.edit_point_shape.maybe_force_line_mask()
-        
+
         self.edit_point_shape.convert_shape_coords_and_update_clip_editor_keyframes()
         self.editable_property.write_out_keyframes(self.clip_editor.keyframes)
-        
+
         self.rotomask_editor.show_current_frame()
         self.rotomask_editor.update_effects_editor_value_labels()
         self.clip_editor.widget.queue_draw()
@@ -490,7 +491,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
         if show_current_frame:
             self.rotomask_editor.show_current_frame() #  callback for full update
         self.rotomask_editor.update_effects_editor_value_labels()
-        
+
     def delete_selected_point(self):
         self.edit_point_shape.delete_selected_point()
 
@@ -506,7 +507,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
 
     def mode_changed(self):
         pass
-        
+
     # -------------------------------------------- draw
     def draw(self, cr, write_out_layers, draw_overlays):
         self.edit_point_shape.draw_line_shape(cr, self.view_editor)
@@ -514,5 +515,3 @@ class RotoMaskEditLayer(AbstactEditorLayer):
             self.edit_point_shape.draw_points(cr, self.view_editor)
         else:
             self.edit_point_shape.draw_curve_points(cr, self.view_editor)
-
-
