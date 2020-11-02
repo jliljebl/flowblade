@@ -120,7 +120,7 @@ def shutdown_polling():
         _edit_polling_thread.shutdown()
         _edit_polling_thread = None
 
-def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
+def get_clip_effects_editor_panel():
     create_widgets()
 
     #stack_label = guiutils.bold_label(_("Clip Filters Stack"))

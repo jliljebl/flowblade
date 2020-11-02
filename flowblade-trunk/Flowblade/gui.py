@@ -104,7 +104,7 @@ def capture_references(new_editor_window):
     global editor_window, media_list_view, bin_list_view, sequence_list_view, pos_bar, \
     tline_display, tline_scale, tline_canvas, tline_scroll, tline_v_scroll, tline_info, \
     tline_column, play_b, \
-    effect_select_list_view, effect_select_combo_box, project_info_vbox, middle_notebook, big_tc, editmenu, notebook_buttons, tline_left_corner, \
+    project_info_vbox, middle_notebook, big_tc, editmenu, notebook_buttons, tline_left_corner, \
     monitor_widget, bin_panel, monitor_switch, comp_mode_launcher, tline_render_strip
 
     editor_window = new_editor_window
@@ -116,8 +116,8 @@ def capture_references(new_editor_window):
 
     middle_notebook = editor_window.notebook
 
-    effect_select_list_view = editor_window.effect_select_list_view
-    effect_select_combo_box = editor_window.effect_select_combo_box
+    #effect_select_list_view = editor_window.effect_select_list_view
+    #effect_select_combo_box = editor_window.effect_select_combo_box
 
     pos_bar = editor_window.pos_bar
 

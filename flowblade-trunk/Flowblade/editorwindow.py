@@ -326,14 +326,12 @@ class EditorWindow:
         mm_panel = guiutils.set_margins(self.mm_paned, 0, 0, 0, 0)
 
         # Effects panel
-        self.effect_select_list_view = guicomponents.FilterListView()
-        self.effect_select_combo_box = Gtk.ComboBoxText()
-        self.effect_select_list_view.treeview.connect("row-activated", clipeffectseditor.effect_select_row_double_clicked)
-        dnd.connect_effects_select_tree_view(self.effect_select_list_view.treeview)
+        #self.effect_select_list_view = guicomponents.FilterListView()
+        #self.effect_select_combo_box = Gtk.ComboBoxText()
+        #self.effect_select_list_view.treeview.connect("row-activated", clipeffectseditor.effect_select_row_double_clicked)
+        #dnd.connect_effects_select_tree_view(self.effect_select_list_view.treeview)
 
-        info_row = clipeffectseditor.get_clip_effects_editor_panel(
-                                        self.effect_select_combo_box,
-                                        self.effect_select_list_view)
+        info_row = clipeffectseditor.get_clip_effects_editor_panel()
 
         #clipeffectseditor.widgets.effect_stack_view.treeview.connect("button-press-event",
         #                                      clipeffectseditor.filter_stack_button_press)
