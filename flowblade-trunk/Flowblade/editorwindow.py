@@ -331,26 +331,27 @@ class EditorWindow:
         self.effect_select_list_view.treeview.connect("row-activated", clipeffectseditor.effect_select_row_double_clicked)
         dnd.connect_effects_select_tree_view(self.effect_select_list_view.treeview)
 
-        clip_editor_panel, info_row = clipeffectseditor.get_clip_effects_editor_panel(
+        info_row = clipeffectseditor.get_clip_effects_editor_panel(
                                         self.effect_select_combo_box,
                                         self.effect_select_list_view)
 
-        clipeffectseditor.widgets.effect_stack_view.treeview.connect("button-press-event",
-                                              clipeffectseditor.filter_stack_button_press)
+        #clipeffectseditor.widgets.effect_stack_view.treeview.connect("button-press-event",
+        #                                      clipeffectseditor.filter_stack_button_press)
 
-        if not(editorstate.SCREEN_HEIGHT < 1023):
-            effects_editor_panel = guiutils.set_margins(clipeffectseditor.widgets.value_edit_frame, 0, 0, 8, 0)
-        else:
-            guiutils.set_margins(clip_editor_panel, 4, 4, 4, 0)
-            effects_editor_panel = guiutils.set_margins(clipeffectseditor.widgets.value_edit_frame, 4, 0, 4, 4)
+        #if not(editorstate.SCREEN_HEIGHT < 1023):
+        #    effects_editor_panel = guiutils.set_margins(clipeffectseditor.widgets.value_edit_frame, 0, 0, 8, 0)
+        #else:
+        #    guiutils.set_margins(clip_editor_panel, 4, 4, 4, 0)
+        
+        effects_editor_panel = guiutils.set_margins(clipeffectseditor.widgets.value_edit_frame, 4, 0, 4, 4)
 
-        effects_hbox = Gtk.HBox()
-        effects_hbox.set_border_width(0)
-        effects_hbox.pack_start(clip_editor_panel, False, False, 0)
-        effects_hbox.pack_start(effects_editor_panel, True, True, 0)
+        #effects_hbox = Gtk.HBox()
+        #effects_hbox.set_border_width(0)
+        #effects_hbox.pack_start(clip_editor_panel, False, False, 0)
+        #effects_hbox.pack_start(effects_editor_panel, True, True, 0)
 
         effects_vbox = Gtk.VBox()
-        effects_vbox.pack_start(effects_hbox, True, True, 0)
+        effects_vbox.pack_start(effects_editor_panel, True, True, 0)
         effects_vbox.pack_start(info_row, False, False, 0)
 
         if not(editorstate.SCREEN_HEIGHT < 1023):

@@ -78,10 +78,24 @@ stack_dnd_event_info = None
 
 filters_notebook_index = 2 # 2 for single window, app.py sets to 1 for two windows
 
+class FilterStackItem:
+
+    def __init__(self, filter_object, vbox):
+        self.filter_object = filter_object
+        
+        self.filter_header_row = FilterHeaderRow(filter_object)
+        
+        self.expander = Gtk.Expander()
+        self.expander.set_label_widget(self.filter_header_row.widget)
+        self.expander.add(vbox)
+        self.expander.set_resize_toplevel(True)
+        self.expander.show_all()
+    
+    
 class FilterHeaderRow:
     
     def __init__(self, filter_object):
-        self.filter_object = filter_object
+
         
         self.active_check = Gtk.CheckButton()
         self.active_check.set_active(True)
@@ -109,13 +123,13 @@ def shutdown_polling():
 def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
     create_widgets()
 
-    stack_label = guiutils.bold_label(_("Clip Filters Stack"))
+    #stack_label = guiutils.bold_label(_("Clip Filters Stack"))
     
-    label_row = guiutils.get_left_justified_box([stack_label])
-    guiutils.set_margins(label_row, 0, 4, 0, 0)
+    #label_row = guiutils.get_left_justified_box([stack_label])
+    #guiutils.set_margins(label_row, 0, 4, 0, 0)
     
-    effect_stack = widgets.effect_stack_view    
-
+    #effect_stack = widgets.effect_stack_view    
+    """
     for group in mltfilters.groups:
         group_name, filters_array = group
         group_combo_box.append_text(group_name)
@@ -125,13 +139,14 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
     group_combo_box.connect("changed", 
                             lambda w,e: _group_selection_changed(w,effects_list_view), 
                             None)
-
+                      
     widgets.group_combo = group_combo_box
     widgets.effect_list_view = effects_list_view
     set_enabled(False)
     
     exit_button_vbox = Gtk.VBox(False, 2)
     exit_button_vbox.pack_start(widgets.exit_button, False, False, 0)
+    """
 
     info_row = Gtk.HBox(False, 2)
     info_row.pack_start(widgets.hamburger_launcher.widget, False, False, 0)
@@ -139,13 +154,14 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
     info_row.pack_start(widgets.clip_info, False, False, 0)
     info_row.pack_start(Gtk.Label(), True, True, 0)
     
-    combo_row = Gtk.HBox(False, 2)
-    combo_row.pack_start(group_combo_box, True, True, 0)
+    #combo_row = Gtk.HBox(False, 2)
+    #combo_row.pack_start(group_combo_box, True, True, 0)
 
-    group_name, filters_array = mltfilters.groups[0]
-    effects_list_view.fill_data_model(filters_array)
-    effects_list_view.treeview.get_selection().select_path("0")
+    #group_name, filters_array = mltfilters.groups[0]
+    #effects_list_view.fill_data_model(filters_array)
+    #effects_list_view.treeview.get_selection().select_path("0")
 
+    """
     effects_vbox = Gtk.VBox(False, 2)
     if editorstate.SCREEN_HEIGHT < 1023:
 
@@ -191,10 +207,11 @@ def get_clip_effects_editor_panel(group_combo_box, effects_list_view):
         effects_vbox.pack_start(combo_row, False, False, 0)
         effects_vbox.pack_start(effects_list_view, True, True, 0)
     
-    widgets.group_combo.set_tooltip_text(_("Select Filter Group"))
-    widgets.effect_list_view.set_tooltip_text(_("Current group Filters"))
-
-    return effects_vbox, info_row
+    #widgets.group_combo.set_tooltip_text(_("Select Filter Group"))
+    #widgets.effect_list_view.set_tooltip_text(_("Current group Filters"))
+    """
+    
+    return info_row
 
 def _group_selection_changed(group_combo, filters_list_view):
     group_name, filters_array = mltfilters.groups[group_combo.get_active()]
@@ -304,57 +321,62 @@ def create_widgets():
 
     widgets.clip_info = guicomponents.ClipInfoPanel()
     
-    widgets.exit_button = Gtk.Button()
-    icon = Gtk.Image.new_from_stock(Gtk.STOCK_CLOSE, Gtk.IconSize.MENU)
-    widgets.exit_button.set_image(icon)
-    widgets.exit_button.connect("clicked", lambda w: _quit_editing_clip_clicked())
-    widgets.exit_button.set_tooltip_text(_("Quit editing Clip in editor"))
+    #widgets.exit_button = Gtk.Button()
+    #icon = Gtk.Image.new_from_stock(Gtk.STOCK_CLOSE, Gtk.IconSize.MENU)
+    #widgets.exit_button.set_image(icon)
+    #widgets.exit_button.connect("clicked", lambda w: _quit_editing_clip_clicked())
+    #widgets.exit_button.set_tooltip_text(_("Quit editing Clip in editor"))
 
     widgets.effect_stack_view = guicomponents.FilterSwitchListView(lambda ts: effect_selection_changed(), 
                                                                    toggle_filter_active, dnd_row_deleted, dnd_row_inserted)
                                                                    
-    widgets.effect_stack_view.treeview.connect("button-press-event", lambda w,e, wtf: stack_view_pressed(), None)
-    gui.effect_stack_list_view = widgets.effect_stack_view
+    #widgets.effect_stack_view.treeview.connect("button-press-event", lambda w,e, wtf: stack_view_pressed(), None)
+    #gui.effect_stack_list_view = widgets.effect_stack_view
     
     widgets.value_edit_box = Gtk.VBox()
     widgets.value_edit_frame = Gtk.Frame()
     widgets.value_edit_frame.set_shadow_type(Gtk.ShadowType.NONE)
     widgets.value_edit_frame.add(widgets.value_edit_box)
-
+    """
     widgets.add_effect_b = Gtk.Button()
     widgets.add_effect_b.set_image(guiutils.get_image("filter_add"))
     widgets.del_effect_b = Gtk.Button()
     widgets.del_effect_b.set_image(guiutils.get_image("filter_delete"))
+    """
     widgets.toggle_all = Gtk.Button()
     widgets.toggle_all.set_image(guiutils.get_image("filters_all_toggle"))
     filter_mask_surfaces = [guiutils.get_cairo_image("filters_mask_add"), guiutils.get_cairo_image("filters_mask_add_not_active")]
     widgets.add_filter_mask = guicomponents.HamburgerPressLaunch(_filter_mask_launch_pressed, filter_mask_surfaces, 26)
     guiutils.set_margins(widgets.add_filter_mask.widget, 10, 0, 1, 0)
 
-    widgets.add_effect_b.connect("clicked", lambda w,e: add_effect_pressed(), None)
-    widgets.del_effect_b.connect("clicked", lambda w,e: delete_effect_pressed(), None)
+    #widgets.add_effect_b.connect("clicked", lambda w,e: add_effect_pressed(), None)
+    #widgets.del_effect_b.connect("clicked", lambda w,e: delete_effect_pressed(), None)
     widgets.toggle_all.connect("clicked", lambda w: toggle_all_pressed())
 
     widgets.hamburger_launcher = guicomponents.HamburgerPressLaunch(_hamburger_launch_pressed)
     guiutils.set_margins(widgets.hamburger_launcher.widget, 6, 8, 1, 0)
 
     # These are created elsewhere and then monkeypatched here
-    widgets.group_combo = None
-    widgets.effect_list_view = None
+    #widgets.group_combo = None
+    #widgets.effect_list_view = None
 
-    widgets.clip_info.set_tooltip_text(_("Clip being edited"))
-    widgets.effect_stack_view.set_tooltip_text(_("Clip Filter Stack"))
-    widgets.add_effect_b.set_tooltip_text(_("Add Filter to Clip Filter Stack"))
-    widgets.del_effect_b.set_tooltip_text(_("Delete Filter from Clip Filter Stack"))
+    #widgets.clip_info.set_tooltip_text(_("Clip being edited"))
+    #widgets.effect_stack_view.set_tooltip_text(_("Clip Filter Stack"))
+    #widgets.add_effect_b.set_tooltip_text(_("Add Filter to Clip Filter Stack"))
+    #widgets.del_effect_b.set_tooltip_text(_("Delete Filter from Clip Filter Stack"))
     widgets.toggle_all.set_tooltip_text(_("Toggle all Filters On/Off"))
     widgets.add_filter_mask.widget.set_tooltip_text(_("Add Filter Mask"))
+    
+    widgets.panel_header = Gtk.HBox(False, 0)
+    widgets.panel_header.pack_start(widgets.toggle_all, False, False, 0)
+    widgets.panel_header.pack_start(widgets.add_filter_mask.widget, False, False, 0)
  
 def set_enabled(value):
     widgets.clip_info.set_enabled( value)
-    widgets.add_effect_b.set_sensitive(value)
-    widgets.del_effect_b.set_sensitive(value)
-    widgets.effect_stack_view.treeview.set_sensitive(value)
-    widgets.exit_button.set_sensitive(value)
+    #widgets.add_effect_b.set_sensitive(value)
+    #widgets.del_effect_b.set_sensitive(value)
+    #widgets.effect_stack_view.treeview.set_sensitive(value)
+    #widgets.exit_button.set_sensitive(value)
     widgets.toggle_all.set_sensitive(value)
     widgets.hamburger_launcher.set_sensitive(value)
     widgets.hamburger_launcher.widget.queue_draw()
@@ -679,18 +701,12 @@ def effect_selection_changed(use_current_filter_index=False):
     #scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
     #scroll_window.show_all()
 
-    filter_header_row = FilterHeaderRow(filter_object)
-    
-    expandable_row = Gtk.Expander()
-    expandable_row.set_label_widget(filter_header_row.widget)
-    expandable_row.add(vbox)
-    expandable_row.set_resize_toplevel(True)
-    expandable_row.show_all()
+    filter_stack_item = FilterStackItem(filter_object, vbox)
     
     widgets.value_edit_frame.remove(widgets.value_edit_box)
-    widgets.value_edit_frame.add(expandable_row)
+    widgets.value_edit_frame.add(filter_stack_item.expander)
 
-    widgets.value_edit_box = expandable_row
+    widgets.value_edit_box = filter_stack_item
 
 def show_text_in_edit_area(text):
     vbox = Gtk.VBox(False, 0)
