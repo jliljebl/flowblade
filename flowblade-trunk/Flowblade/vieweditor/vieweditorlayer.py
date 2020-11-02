@@ -18,7 +18,6 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 import cairo
-from PIL import Image, ImageFilter
 import numpy as np
 import sys
 
@@ -159,14 +158,6 @@ class AbstactEditorLayer:
         print("AbstactEditorLayer.draw not overridden in" + self.__class__)
         sys.exit(1)
 
-    # -------------------------------------------- blur
-    def blur_surface(self, img_surface):
-        return # This is noop unless overridden.
-        pil = Image.frombuffer(mode = 'RGBA', size = (w, h), data = surface.get_data(),)
-
-        b, g, r, a = pil.split() # Color swap, part 1: Splitting the channels
-        pil = Image.merge('RGBA', (r, g, b, a)) # Color swap, part 2: Rearranging the channels
-
 class SimpleRectEditLayer(AbstactEditorLayer):
 
     def __init__(self, view_editor):
@@ -269,7 +260,7 @@ class TextEditLayer(SimpleRectEditLayer):
         if write_out_layers == True:
             x = x / self.view_editor.aspect_ratio
 
-        self.text_layout.draw_layout(cr, x, y, rotation, xscale, yscale)
+        self.text_layout.draw_layout(cr, x, y, rotation, xscale, yscale, self.view_editor)
 
         if self.update_rect:
             # Text size in layout has changed for added text or attribute change.
@@ -280,54 +271,7 @@ class TextEditLayer(SimpleRectEditLayer):
             self.update_rect = False
         SimpleRectEditLayer.draw(self, cr, write_out_layers, draw_overlays)
 
-    # -------------------------------------------- blur
-    def blur_surface(self, img_surface, w, h):
-        # PIL Image
-        img = Image.frombuffer(mode = 'RGBA', size = (w, h), data = img_surface.get_data(),)
-        b, g, r, a = img.split() # Color swap, part 1: Splitting the channels
-        img = Image.merge('RGBA', (r, g, b, a)) # Color swap, part 2: Rearranging the channels
-        filtered_img = img.filter(ImageFilter.GaussianBlur(radius=30))
-        b, g, r, a = filtered_img.split() # Color swap, part 1: Splitting the channels
-        reswapped_img = Image.merge('RGBA', (r, g, b, a)) # Color swap, part 2: Rearranging the channels
-        #Image.getdata(band=None)
 
-        out = np.copy(np.asarray(reswapped_img))
-        """
-        # Create numpy buffer
-        buf = np.frombuffer(reswapped_img.getdata(), dtype=np.uint8)
-        buf.shape = (self.profile_h + 1, self.profile_w, 4) # +1 in h, seemeed to need it
-        out = np.copy(buf)
-        r = np.index_exp[:, :, 0]
-        b = np.index_exp[:, :, 2]
-        out[r] = buf[b]
-        out[b] = buf[r]
-        #self.bg_buf = out
-        """
-        
-        #import cairo, Image, array
-        """
-        im = cairo.ImageSurface.create_from_png("img11.png")
-
-        im1 = Image.frombuffer("RGBA",( im.get_width(),im.get_height() ),im.get_data(),"raw","RGBA",0,1)
-
-        im1 = im1.filter(ImageFilter.BLUR)
-        im1 = im1.filter(ImageFilter.BLUR)
-        im1 = im1.filter(ImageFilter.SMOOTH_MORE)
-
-        #imgd = im1.tostring("raw","RGBA",0,1)
-        imgd = im1.tostring()
-        a = array.array('B',imgd)
-
-        stride = self.width * 4
-        surface = cairo.ImageSurface.create_for_data (a, cairo.FORMAT_ARGB32,
-                                                      self.width, self.height, stride)
-        """
-
-        stride = cairo.ImageSurface.format_stride_for_width(cairo.FORMAT_ARGB32, w)
-        surface = cairo.ImageSurface.create_for_data(out, cairo.FORMAT_ARGB32, w, h, stride)
-        cr = cairo.Context(surface)
-
-        return (cr, surface)
 
 class RotoMaskEditLayer(AbstactEditorLayer):
 

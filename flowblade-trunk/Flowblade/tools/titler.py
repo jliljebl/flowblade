@@ -17,12 +17,13 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
-
+import array
+import cairo
 import copy
 import os
 import pickle
+from PIL import Image, ImageFilter
 import threading
-
 import time
 
 from gi.repository import Gtk, Gdk, GdkPixbuf
@@ -149,7 +150,7 @@ class TextLayer:
         self.shadow_yoff = 3
         self.shadow_blur = 0.0 # not impl yet, for future so that we don't need to break save format again
         
-        self.pango_layout = None # PangoTextLayout(self)
+        self.pango_layout = None # PangoTextLayout object
 
         self.layer_attributes = None # future feature 
         self.visible = True
@@ -1033,9 +1034,10 @@ class PangoTextLayout:
         self.shadow_opacity = layer.shadow_opacity
         self.shadow_xoff = layer.shadow_xoff
         self.shadow_yoff = layer.shadow_yoff
+        self.shadow_blur = layer.shadow_blur
 
     # called from vieweditor draw vieweditor-> editorlayer->here
-    def draw_layout(self, cr, x, y, rotation, xscale, yscale):
+    def draw_layout(self, cr, x, y, rotation, xscale, yscale, view_editor):
         cr.save()
         
         layout = PangoCairo.create_layout(cr)
@@ -1048,16 +1050,47 @@ class PangoTextLayout:
         # Shadow
         if self.shadow_on:
             cr.save()
+
+            # Get colors.
             r, g, b = self.shadow_color_rgb
             a = self.shadow_opacity / 100.0
-            cr.set_source_rgba(r, g, b, a)
-            cr.move_to(x + self.shadow_xoff, y + self.shadow_yoff)
-            cr.scale(xscale, yscale)
-            cr.rotate(rotation)
-            PangoCairo.update_layout(cr, layout)
-            PangoCairo.show_layout(cr, layout)
-            cr.restore()
-        
+
+            # Blurred shadow need s own ImageSurface
+            if self.shadow_blur != 0.0:
+                blurred_img = cairo.ImageSurface(cairo.FORMAT_ARGB32, view_editor.profile_w,  view_editor.profile_h)
+                cr_blurred = cairo.Context(blurred_img)
+                transform_cr = cr_blurred # Set draw transform_cr to cotext for newly created image.
+            else:
+                transform_cr = cr # Set draw transform_cr to out context.
+
+            # Transform and set color.
+            transform_cr.set_source_rgba(r, g, b, a)
+            transform_cr.move_to(x + self.shadow_xoff, y + self.shadow_yoff)
+            transform_cr.scale(xscale, yscale)
+            transform_cr.rotate(rotation)
+
+            # If no blur just draw layout on out context.
+            if self.shadow_blur == 0.0:
+                PangoCairo.update_layout(cr, layout)
+                PangoCairo.show_layout(cr, layout)
+                cr.restore()
+            else:
+                # If we have blur - draw shadow, blur it and then draw on out context.
+                PangoCairo.update_layout(cr_blurred, layout)
+                PangoCairo.show_layout(cr_blurred, layout)
+
+                img2 = Image.frombuffer("RGBA",( blurred_img.get_width(),blurred_img.get_height() ), blurred_img.get_data(),"raw","RGBA",0,1)
+                img2 = img2.filter(ImageFilter.GaussianBlur(radius=int(self.shadow_blur)))
+                imgd = img2.tobytes()
+                a = array.array('B',imgd)
+
+                stride = blurred_img.get_width() * 4
+                draw_surface = cairo.ImageSurface.create_for_data (a, cairo.FORMAT_ARGB32,
+                                                              blurred_img.get_width(), blurred_img.get_height(), stride)
+                cr.restore()
+                cr.set_source_surface(draw_surface, 0, 0)
+                cr.paint()
+
         # Text
         if self.fill_on:
             cr.set_source_rgba(*self.color_rgba)

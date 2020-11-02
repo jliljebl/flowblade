@@ -50,7 +50,6 @@ class ViewEditor(Gtk.Frame):
         self.write_out_layers = False
         self.write_file_path = None
 
-
         self.edit_area_update_blocked = False
     
         self.edit_area = cairoarea.CairoDrawableArea2(int(self.scaled_screen_width + MIN_PAD * 2), self.profile_h + MIN_PAD * 2, self._draw)
@@ -295,15 +294,9 @@ class ViewEditor(Gtk.Frame):
             img_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.profile_w, self.profile_h)
             cr = cairo.Context(img_surface)
 
-        print("layers!!!!!!!!!!!!!!!")
         for editorlayer in self.edit_layers:
             if editorlayer.visible:
-                print("----------------draw")
                 editorlayer.draw(cr, self.write_out_layers, self.draw_overlays)
-                if img_surface != None:
-                    cr, img_surface = editorlayer.blur_surface(img_surface, self.profile_w, self.profile_h)
-                else:
-                    cr, surface = editorlayer.blur_surface(surface, self.profile_w, self.profile_h)
 
         if self.write_out_layers == True:
             img_surface.write_to_png(self.write_file_path)
