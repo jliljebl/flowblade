@@ -205,7 +205,7 @@ def _save_treeview_selection(treeview):
 
 def _save_media_panel_selection():
     global drag_data, drag_source
-    drag_data = gui.media_list_view.get_selected_media_objects()
+    drag_data = gui.media_list_view.get_selected_media_objects_for_drag()
     drag_source = SOURCE_MEDIA_FILE
 
 def _save_monitor_media(widget, context, selection, target_id, timestamp):
