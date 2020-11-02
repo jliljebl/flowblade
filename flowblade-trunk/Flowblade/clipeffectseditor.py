@@ -78,6 +78,28 @@ stack_dnd_event_info = None
 
 filters_notebook_index = 2 # 2 for single window, app.py sets to 1 for two windows
 
+class FilterHeaderRow:
+    
+    def __init__(self, filter_object):
+        self.filter_object = filter_object
+        
+        self.active_check = Gtk.CheckButton()
+        self.active_check.set_active(True)
+        self.filter_name_label = Gtk.Label(label= "<b>" + filter_object.info.name + "</b>")
+        self.filter_name_label.set_use_markup(True)
+        self.icon = Gtk.Image.new_from_pixbuf(filter_object.info.get_icon())
+
+        hbox = Gtk.HBox(False, 0)
+        hbox.pack_start(self.active_check, False, False, 0)
+        hbox.pack_start(self.icon, False, False, 0)
+        hbox.pack_start(self.filter_name_label, False, False, 0)
+        hbox.pack_start(Gtk.Label(), True, True, 0)
+
+        self.widget = Gtk.EventBox()
+        #self.widget.connect("button-press-event", lambda w,e: _tool_dock_item_press(tool_id, self))
+        #self.widget.add_events(Gdk.EventMask.KEY_PRESS_MASK)
+        self.widget.add(hbox)
+        
 def shutdown_polling():
     global _edit_polling_thread
     if _edit_polling_thread != None:
@@ -595,9 +617,11 @@ def effect_selection_changed(use_current_filter_index=False):
     except KeyError:
         filter_name = filter_object.info.name
 
-    filter_name_label = Gtk.Label(label= "<b>" + filter_name + "</b>")
-    filter_name_label.set_use_markup(True)
-    vbox.pack_start(filter_name_label, False, False, 0)
+    #filter_name_label = Gtk.Label(label= "<b>" + filter_name + "</b>")
+    #filter_name_label.set_use_markup(True)
+    
+
+    #vbox.pack_start(filter_header_row.widget, False, False, 0)
     vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
 
     if len(editable_properties) > 0:
@@ -650,15 +674,23 @@ def effect_selection_changed(use_current_filter_index=False):
         vbox.pack_start(Gtk.Label(label=_("No editable parameters")), True, True, 0)
     vbox.show_all()
 
-    scroll_window = Gtk.ScrolledWindow()
-    scroll_window.add_with_viewport(vbox)
-    scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-    scroll_window.show_all()
+    #scroll_window = Gtk.ScrolledWindow()
+    #scroll_window.add_with_viewport(vbox)
+    #scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+    #scroll_window.show_all()
 
+    filter_header_row = FilterHeaderRow(filter_object)
+    
+    expandable_row = Gtk.Expander()
+    expandable_row.set_label_widget(filter_header_row.widget)
+    expandable_row.add(vbox)
+    expandable_row.set_resize_toplevel(True)
+    expandable_row.show_all()
+    
     widgets.value_edit_frame.remove(widgets.value_edit_box)
-    widgets.value_edit_frame.add(scroll_window)
+    widgets.value_edit_frame.add(expandable_row)
 
-    widgets.value_edit_box = scroll_window
+    widgets.value_edit_box = expandable_row
 
 def show_text_in_edit_area(text):
     vbox = Gtk.VBox(False, 0)
