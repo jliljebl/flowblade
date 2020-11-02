@@ -303,6 +303,25 @@ class TextEditLayer(SimpleRectEditLayer):
         out[b] = buf[r]
         #self.bg_buf = out
         """
+        
+        #import cairo, Image, array
+        """
+        im = cairo.ImageSurface.create_from_png("img11.png")
+
+        im1 = Image.frombuffer("RGBA",( im.get_width(),im.get_height() ),im.get_data(),"raw","RGBA",0,1)
+
+        im1 = im1.filter(ImageFilter.BLUR)
+        im1 = im1.filter(ImageFilter.BLUR)
+        im1 = im1.filter(ImageFilter.SMOOTH_MORE)
+
+        #imgd = im1.tostring("raw","RGBA",0,1)
+        imgd = im1.tostring()
+        a = array.array('B',imgd)
+
+        stride = self.width * 4
+        surface = cairo.ImageSurface.create_for_data (a, cairo.FORMAT_ARGB32,
+                                                      self.width, self.height, stride)
+        """
 
         stride = cairo.ImageSurface.format_stride_for_width(cairo.FORMAT_ARGB32, w)
         surface = cairo.ImageSurface.create_for_data(out, cairo.FORMAT_ARGB32, w, h, stride)

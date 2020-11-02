@@ -371,6 +371,7 @@ class Titler(Gtk.Window):
         shadow_opacity_label = Gtk.Label(_("Opacity:"))
         shadow_xoff = Gtk.Label(_("X Off:"))
         shadow_yoff = Gtk.Label(_("Y Off:"))
+        shadow_blur_label = Gtk.Label(_("Blur:"))
         
         self.shadow_opa_spin = Gtk.SpinButton()
  
@@ -400,6 +401,11 @@ class Titler(Gtk.Window):
         self.shadow_color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(red=0.3, green=0.3, blue=0.3, alpha=1.0))
         self.shadow_color_button.connect("color-set", self._edit_value_changed)
 
+        self.shadow_blur_spin = Gtk.SpinButton()
+        adj6 = Gtk.Adjustment(value=float(0), lower=float(0), upper=float(20), step_incr=float(1))
+        self.shadow_blur_spin.set_adjustment(adj6)
+        self.shadow_blur_spin.connect("changed", self._edit_value_changed)
+
         shadow_box_1 = Gtk.HBox()
         shadow_box_1.pack_start(shadow_opacity_label, False, False, 0)
         shadow_box_1.pack_start(self.shadow_opa_spin, False, False, 0)
@@ -417,6 +423,11 @@ class Titler(Gtk.Window):
         shadow_box_2.pack_start(shadow_yoff, False, False, 0)
         shadow_box_2.pack_start(self.shadow_yoff_spin, False, False, 0)
         shadow_box_2.pack_start(Gtk.Label(), True, True, 0)
+
+        shadow_box_3 = Gtk.HBox()
+        shadow_box_3.pack_start(shadow_blur_label, False, False, 0)
+        shadow_box_3.pack_start(self.shadow_blur_spin, False, False, 0)
+        shadow_box_3.pack_start(Gtk.Label(), True, True, 0)
         
         load_layers = Gtk.Button(_("Load Layers"))
         load_layers.connect("clicked", lambda w:self._load_layers_pressed())
@@ -505,6 +516,7 @@ class Titler(Gtk.Window):
         controls_panel_4 = Gtk.VBox()
         controls_panel_4.pack_start(shadow_box_1, False, False, 0)
         controls_panel_4.pack_start(shadow_box_2, False, False, 0)
+        controls_panel_4.pack_start(shadow_box_3, False, False, 0)
 
         notebook = Gtk.Notebook()
         notebook.append_page(guiutils.set_margins(controls_panel_2,8,8,8,8), Gtk.Label(label=_("Font")))
@@ -703,7 +715,7 @@ class Titler(Gtk.Window):
             self._update_active_layout()
             return True
 
-            # update layer for enter on x, y, angle
+        # update layer for enter on x, y, angle
         if ((event.keyval == Gdk.KEY_Return) and ((widget == self.x_pos_spin) or
             (widget == self.y_pos_spin) or (widget == self.rotation_spin))):
             self.x_pos_spin.update()
@@ -917,7 +929,7 @@ class Titler(Gtk.Window):
         _titler_data.active_layer.shadow_opacity = self.shadow_opa_spin.get_value()
         _titler_data.active_layer.shadow_xoff = self.shadow_xoff_spin.get_value()
         _titler_data.active_layer.shadow_yoff = self.shadow_yoff_spin.get_value()
-                
+        _titler_data.active_layer.shadow_blur = self.shadow_blur_spin.get_value()
         self.view_editor.active_layer.update_rect = True
         _titler_data.active_layer.update_pango_layout()
 
@@ -988,7 +1000,7 @@ class Titler(Gtk.Window):
         self.shadow_xoff_spin.set_value(layer.shadow_xoff)
         self.shadow_yoff_spin.set_value(layer.shadow_yoff)
         self.shadow_on.set_active(layer.shadow_on)
-        
+        self.shadow_blur_spin.set_value(layer.shadow_blur)
         self.block_updates = False
 
 
