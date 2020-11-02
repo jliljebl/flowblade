@@ -1066,6 +1066,10 @@ class MediaPanel():
     def get_selected_media_objects(self):
         return self.selected_objects
 
+    def get_selected_media_objects_for_drag(self):
+        last_pressed = self.selected_objects[-1]
+        return [last_pressed]
+ 
     def media_object_selected(self, media_object, widget, event):
         if event.type == Gdk.EventType._2BUTTON_PRESS:
             self.double_click_release = True
@@ -1138,7 +1142,6 @@ class MediaPanel():
                     self.selected_objects.append(m_obj)
                     m_obj.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
             else:
-                #self.clear_selection()
                 if not(media_object in self.selected_objects):
                     media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
                     self.selected_objects.append(media_object)
