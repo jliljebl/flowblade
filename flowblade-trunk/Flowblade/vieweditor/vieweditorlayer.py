@@ -335,10 +335,10 @@ class RotoMaskEditLayer(AbstactEditorLayer):
     # ----------------------------------------------------- mouse events
     def hit(self, p):
         self.last_pressed_edit_point = None
-        self.mouse_press_panel_point = self.view_editor.movie_coord_to_panel_coord(p) #V This needed when adding new curve points
+        self.mouse_press_panel_point = self.view_editor.movie_coord_to_panel_coord(p) # This is needed when adding new curve points
 
         if self.edit_mode == ROTO_POINT_MODE:
-            # Hit test comes as movie coord point, but rotomask stuff is running on pamel points, need to convert
+            # Hit test comes as movie coord point, but rotomask stuff is running on panel points, need to convert
             ep = self.edit_point_shape.get_edit_point(self.view_editor.movie_coord_to_panel_coord(p))
             self.last_pressed_edit_point = ep
             # We want to get "mouse_pressed()" below always called from vieweditor so we always return True for hit.
@@ -348,7 +348,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
         elif self.edit_mode == ROTO_MOVE_MODE:
             # This mode has whole edit area active.
             return True
-        
+
         #there are no other modes
         
     def mouse_pressed(self):
