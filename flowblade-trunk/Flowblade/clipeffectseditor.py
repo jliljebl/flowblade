@@ -49,13 +49,18 @@ import translations
 import updater
 import utils
 
+_filter_stack = None
+    
 widgets = utils.EmptyClass()
 
-clip = None # Clip being edited
-track = None # Track of the clip being editeds
-clip_index = None # Index of clip being edited
-block_changed_update = False # Used to block unwanted callback update from "changed", hack and a broken one, look to fix
-current_filter_index = -1 # Needed to find right filter object when saving/loading effect values
+#clip = None # Clip being edited
+#track = None # Track of the clip being editeds
+#clip_index = None # Index of clip being edited
+_block_changed_update = False # Used to block unwanted callback update from "changed"
+_block_stack_update = False # Used to block full stack update when adding new filter. 
+                            # Otherwise we got 2 updates EditAction objects must always try to update
+                            # on undo/redo.
+#current_filter_index = -1 # Needed to find right filter object when saving/loading effect values
 
 # Property change polling.
 # We didn't put a layer of indirection to look for and launch events on filter property edits
@@ -78,20 +83,7 @@ stack_dnd_event_info = None
 
 filters_notebook_index = 2 # 2 for single window, app.py sets to 1 for two windows
 
-class FilterStackItem:
-
-    def __init__(self, filter_object, vbox):
-        self.filter_object = filter_object
-        
-        self.filter_header_row = FilterHeaderRow(filter_object)
-        
-        self.expander = Gtk.Expander()
-        self.expander.set_label_widget(self.filter_header_row.widget)
-        self.expander.add(vbox)
-        self.expander.set_resize_toplevel(True)
-        self.expander.show_all()
-    
-    
+# ---------------------------------------------------------- filter stack objects
 class FilterHeaderRow:
     
     def __init__(self, filter_object):
@@ -113,12 +105,71 @@ class FilterHeaderRow:
         #self.widget.connect("button-press-event", lambda w,e: _tool_dock_item_press(tool_id, self))
         #self.widget.add_events(Gdk.EventMask.KEY_PRESS_MASK)
         self.widget.add(hbox)
+
+
+class FilterStackItem:
+
+    def __init__(self, filter_object, edit_panel):
+        self.filter_object = filter_object
         
+        self.filter_header_row = FilterHeaderRow(filter_object)
+        self.edit_panel = edit_panel
+
+        self.expander = Gtk.Expander()
+        self.expander.set_label_widget(self.filter_header_row.widget)
+        self.expander.add(self.edit_panel )
+        self.expander.set_resize_toplevel(True)
+        self.expander.show_all()
+        
+        
+class ClipFilterStack:
+
+    def __init__(self, clip, track, clip_index):
+        self.clip = clip
+        self.track = track
+        self.clip_index = clip_index
+        
+        self.current_filter_index = -1 # selected filter
+        
+        # Create filter stack and GUI
+        self.filter_stack = []
+        self.widget = Gtk.VBox(False, 0)
+        for filter_index in range(0, len(clip.filters)):
+            filter_object = clip.filters[filter_index]
+            edit_panel = _get_filter_panel(clip, filter_object, filter_index, track, clip_index)
+            stack_item = FilterStackItem(filter_object, edit_panel)
+            self.filter_stack.append(stack_item)
+            self.widget.pack_start(stack_item.expander,False, False, 0)
+        
+        self.widget.show_all()
+
+    def get_filters(self):
+        filters = []
+        for stack_item in self.filter_stack:
+            filters.append(stack_item.filter_object)
+        return filters
+
+# ------------------------------------------------------------------- interface
 def shutdown_polling():
     global _edit_polling_thread
     if _edit_polling_thread != None:
         _edit_polling_thread.shutdown()
         _edit_polling_thread = None
+
+def clip_is_being_edited(clip):
+    if _filter_stack == None:
+        return False
+    
+    if _filter_stack.clip == clip:
+        return True
+        
+    return False
+
+def get_edited_clip():
+    if _filter_stack == None:
+        return None
+    else:
+        return  _filter_stack.clip
 
 def get_clip_effects_editor_panel():
     create_widgets()
@@ -218,21 +269,24 @@ def _group_selection_changed(group_combo, filters_list_view):
     filters_list_view.fill_data_model(filters_array)
     filters_list_view.treeview.get_selection().select_path("0")
 
-def set_clip(new_clip, new_track, new_index, show_tab=True):
+def set_clip(clip, track, clip_index, show_tab=True):
     """
     Sets clip being edited and inits gui.
     """
-    global clip, track, clip_index
-    if clip == new_clip and track == new_track and clip_index == new_index and show_tab==False:
-        return
+    print("set_clip")
+    #global clip, track, clip_index
+    if _filter_stack != None:
+        if clip == _filter_stack.clip and track == _filter_stack.track and clip_index == _filter_stack.clip_index and show_tab == False:
+            print("return")
+            return
 
-    clip = new_clip
-    track = new_track
-    clip_index = new_index
+    #clip = new_clip
+    #track = new_track
+    #clip_index = new_index
     
     widgets.clip_info.display_clip_info(clip, track, clip_index)
     set_enabled(True)
-    update_stack_view()
+    update_stack(clip, track, clip_index)
 
     if len(clip.filters) > 0:
         path = str(len(clip.filters) - 1)
@@ -301,11 +355,12 @@ def clear_clip():
     """
     Removes clip from effects editing gui.
     """
-    global clip
-    clip = None
+    global _filter_stack
+    _filter_stack = None
     _set_no_clip_info()
-    effect_selection_changed()
-    update_stack_view()
+    #effect_selection_changed()
+    show_text_in_edit_area(_("No Clip"))
+
     set_enabled(False)
     shutdown_polling()
 
@@ -383,7 +438,33 @@ def set_enabled(value):
     widgets.add_filter_mask.set_sensitive(value)
     widgets.hamburger_launcher.widget.queue_draw()
 
-def update_stack_view():
+def set_stack_update_blocked():
+    global _block_stack_update
+    _block_stack_update = True
+
+def set_stack_update_unblocked():
+    global _block_stack_update
+    _block_stack_update = False
+
+def update_stack(clip, track, clip_index):
+
+        
+    new_stack = ClipFilterStack(clip, track, clip_index)
+    global _filter_stack
+    _filter_stack = new_stack
+    
+    #scroll_window = Gtk.ScrolledWindow()
+    #scroll_window.add_with_viewport(vbox)
+    #scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+    #scroll_window.show_all()
+
+    global widgets
+    widgets.value_edit_frame.remove(widgets.value_edit_box)
+    widgets.value_edit_frame.add(_filter_stack.widget)
+
+    widgets.value_edit_box = _filter_stack.widget
+    
+    """
     if clip != None:
         filter_infos = []
         for f in clip.filters:
@@ -393,12 +474,13 @@ def update_stack_view():
         widgets.effect_stack_view.fill_data_model([], [])
 
     widgets.effect_stack_view.treeview.queue_draw()
+    """
 
-def update_stack_view_changed_blocked():
-    global block_changed_update
-    block_changed_update = True
-    update_stack_view()
-    block_changed_update = False
+def update_stack_changed_blocked():
+    global _block_changed_update
+    _block_changed_update = True
+    update_stack()
+    _block_changed_update = False
     
 def add_currently_selected_effect():
     # Check we have clip
@@ -412,20 +494,15 @@ def add_currently_selected_effect():
     updater.repaint_tline()
 
 def get_filter_add_action(filter_info, target_clip):
-    if filter_info.multipart_filter == False:
-        # Maybe show info on using alpha filters
-        if filter_info.group == "Alpha":
-            GLib.idle_add(_alpha_filter_add_maybe_info, filter_info)
-    
-        data = {"clip":target_clip, 
-                "filter_info":filter_info,
-                "filter_edit_done_func":filter_edit_done}
-        action = edit.add_filter_action(data)
-    else:
-        data = {"clip":target_clip, 
-                "filter_info":filter_info,
-                "filter_edit_done_func":filter_edit_done}
-        action = edit.add_multipart_filter_action(data)
+    # Maybe show info on using alpha filters
+    if filter_info.group == "Alpha":
+        GLib.idle_add(_alpha_filter_add_maybe_info, filter_info)
+
+    data = {"clip":target_clip, 
+            "filter_info":filter_info,
+            "filter_edit_done_func":filter_edit_done_stack_update}
+    action = edit.add_filter_action(data)
+
     return action
 
 def _alpha_filter_add_maybe_info(filter_info):
@@ -468,7 +545,7 @@ def delete_effect_pressed():
         # Regular filters
         data = {"clip":clip,
                 "index":current_filter_index,
-                "filter_edit_done_func":filter_edit_done}
+                "filter_edit_done_func":filter_edit_done_stack_update}
         action = edit.remove_filter_action(data)
         action.do_edit()
     else:
@@ -486,7 +563,7 @@ def delete_effect_pressed():
         data = {"clip":clip,
                 "index_1":index_1,
                 "index_2":index_2,
-                "filter_edit_done_func":filter_edit_done}
+                "filter_edit_done_func":filter_edit_done_stack_update}
         action = edit.remove_two_filters_action(data)
         action.do_edit()
         
@@ -507,7 +584,7 @@ def toggle_all_pressed():
         filter_object.active = (filter_object.active == False)
         filter_object.update_mlt_disabled_value()
     
-    update_stack_view()
+    update_stack()
 
 def reset_filter_values():
     treeselection = widgets.effect_stack_view.treeview.get_selection()
@@ -518,12 +595,12 @@ def reset_filter_values():
     clip.filters[row_index].reset_values(PROJECT().profile, clip)
     effect_selection_changed()
 
-def toggle_filter_active(row, update_stack_view=True):
+def toggle_filter_active(row, update_stack=True):
     filter_object = clip.filters[row]
     filter_object.active = (filter_object.active == False)
     filter_object.update_mlt_disabled_value()
-    if update_stack_view == True:
-        update_stack_view_changed_blocked()
+    if update_stack == True:
+        update_stack_changed_blocked()
 
 def dnd_row_deleted(model, path):
     now = time.time()
@@ -565,7 +642,7 @@ def do_stack_move(insert_row, delete_row):
     data = {"clip":clip,
             "insert_index":insert_row,
             "delete_index":delete_row,
-            "filter_edit_done_func":filter_edit_done}
+            "filter_edit_done_func":filter_edit_done_stack_update}
     action = edit.move_filter_action(data)
     action.do_edit()
             
@@ -594,7 +671,7 @@ def effect_selection_changed(use_current_filter_index=False):
     
     # "changed" get's called twice when adding filter and selecting last
     # so we use this do this only once 
-    if block_changed_update == True:
+    if _block_changed_update == True:
         return
 
     # We need this update on clip load into editor
@@ -621,8 +698,11 @@ def effect_selection_changed(use_current_filter_index=False):
         filter_index = current_filter_index
 
     filter_object = clip.filters[filter_index]
-    
-    current_filter_index = filter_index
+
+
+def _get_filter_panel(clip, filter_object, filter_index, track, clip_index):
+ 
+    # current_filter_index = filter_index
     
     # Create EditableProperty wrappers for properties
     editable_properties = propertyedit.get_filter_editable_properties(
@@ -696,17 +776,8 @@ def effect_selection_changed(use_current_filter_index=False):
         vbox.pack_start(Gtk.Label(label=_("No editable parameters")), True, True, 0)
     vbox.show_all()
 
-    #scroll_window = Gtk.ScrolledWindow()
-    #scroll_window.add_with_viewport(vbox)
-    #scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-    #scroll_window.show_all()
+    return vbox
 
-    filter_stack_item = FilterStackItem(filter_object, vbox)
-    
-    widgets.value_edit_frame.remove(widgets.value_edit_box)
-    widgets.value_edit_frame.add(filter_stack_item.expander)
-
-    widgets.value_edit_box = filter_stack_item
 
 def show_text_in_edit_area(text):
     vbox = Gtk.VBox(False, 0)
@@ -743,17 +814,25 @@ def clear_effects_edit_panel():
     widgets.value_edit_frame.add(label)
     widgets.value_edit_box = label
 
-def filter_edit_done(edited_clip, index=-1):
+def filter_edit_done_stack_update(edited_clip, index=-1):
     """
     EditAction object calls this after edits and undos and redos.
+    Methods updates filter stack to new state. 
     """
-    if edited_clip != clip: # This gets called by all undos/redos, we only want to update if clip being edited here is affected
+    print("filter_edit_done_stack_update")
+    if _block_stack_update == True:
+        print("blocked")
+        return
+        
+    if edited_clip != get_edited_clip(): # This gets called by all undos/redos, we only want to update if clip being edited here is affected
         return
     
-    global block_changed_update
-    block_changed_update = True
-    update_stack_view()
-    block_changed_update = False
+
+    
+    global _block_changed_update
+    _block_changed_update = True
+    update_stack()
+    _block_changed_update = False
 
     if _clip_has_filter_mask_filter() == True:
         widgets.add_filter_mask.set_sensitive(False)
@@ -811,7 +890,7 @@ def _filter_mask_item_activated(widget, data):
             "filter_info_2":filter_info_2,
             "index_1":index_1,
             "index_2":index_2,
-            "filter_edit_done_func":filter_edit_done}
+            "filter_edit_done_func":filter_edit_done_stack_update}
     action = edit.add_two_filters_action(data)
     action.do_edit()
 
@@ -905,8 +984,8 @@ class PropertyChangePollingThread(threading.Thread):
 
         self.running = True
         while self.running:
-            global clip
-            if clip == None:
+            
+            if _filter_stack == None:
                 self.shutdown()
             else:
                 if self.last_properties == None:
@@ -931,7 +1010,7 @@ class PropertyChangePollingThread(threading.Thread):
 
     def get_clip_filters_properties(self):
         filters_properties = []
-        for filt in clip.filters:
+        for filt in _filter_stack.get_filters():
             filt_props = []
             for prop in filt.properties:
                 filt_props.append(copy.deepcopy(prop))

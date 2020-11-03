@@ -441,7 +441,7 @@ class EditAction:
         updater.update_tline_scrollbar() # Slider needs to adjust to possily new program length.
                                          # This REPAINTS TIMELINE as a side effect.
         if self.clear_effects_editor_for_multitrack_edit == False:
-            if current_sequence().clip_is_in_sequence(clipeffectseditor.clip) == True:
+            if current_sequence().clip_is_in_sequence(clipeffectseditor.get_edited_clip()) == True:
                 updater.update_kf_editor()
                 clipeffectseditor.reinit_current_effect()
             else:

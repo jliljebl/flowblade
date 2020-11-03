@@ -537,6 +537,9 @@ class Sequence:
         return self.next_id - 1
 
     def clip_is_in_sequence(self, test_clip):
+        if test_clip == None:
+            return False
+
         for i in range(1, len(self.tracks)):
             track = self.tracks[i]
             for clip in track.clips:
