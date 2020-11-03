@@ -150,7 +150,7 @@ class EditorWindow:
 
         # Player consumer has to be stopped and started when window resized
         self.window.connect("window-state-event", lambda w, e:updater.refresh_player(e))
-        # xxx
+
         # Init application main menu.
         self.ui = Gtk.UIManager()
         self._init_app_menu(self.ui)
@@ -163,8 +163,6 @@ class EditorWindow:
         tline_hbox_3 = Gtk.HBox()
         tline_hbox_3.pack_start(self.left_corner.widget, False, False, 0)
         tline_hbox_3.pack_start(self.tline_scroller, True, True, 0)
-
-
 
         # Timeline vbox
         tline_vbox = Gtk.VBox()
