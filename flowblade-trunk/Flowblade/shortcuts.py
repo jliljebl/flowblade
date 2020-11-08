@@ -126,7 +126,7 @@ def set_keyboard_shortcuts():
                 # We have good shortcuts file, destroy hardcoded defaults
                 _keyboard_actions = {}
                 # Now loop through all the events and assign them
-                events = root.getiterator('event')
+                events = root.iter('event')
                 for event in events:
                     # Retrieve any previous _modifier_dict values
                     try:
@@ -219,7 +219,7 @@ def change_custom_shortcut(code, key_val_name, mods_list):
     shortcuts_file = _get_shortcut_file_fullpath(editorpersistance.prefs.shortcuts)
     shortcuts = etree.parse(shortcuts_file)
     root = shortcuts.getroot()
-    events = root.getiterator('event')
+    events = root.iter('event')
 
     target_event = None
     for event in events:
@@ -262,7 +262,7 @@ def is_blocked_shortcut(key_val, mods_list):
     return False
 
 def get_shortcut_info(root, code):
-    events = root.getiterator('event')
+    events = root.iter('event')
 
     for event in events:
         if event.get('code') == code:
@@ -274,7 +274,7 @@ def get_shortcut_info(root, code):
     return (None, None)
 
 def get_shortcut_gtk_code(root, code):
-    events = root.getiterator('event')
+    events = root.iter('event')
 
     for event in events:
         if event.get('code') == code:
