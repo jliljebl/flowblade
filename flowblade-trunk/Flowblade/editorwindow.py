@@ -1330,6 +1330,14 @@ class EditorWindow:
         self.tool_selector = None
         workflow.select_default_tool()
 
+    def update_tool_dock(self):
+        self.tline_box.remove(self.tool_dock)
+
+        self.tool_dock = workflow.get_tline_tool_dock()
+        self.tool_dock.show_all()
+
+        self.tline_box.pack_start(self.tool_dock, False, False, 0)
+
     def _create_monitor_buttons(self):
         self.monitor_switch = guicomponents.MonitorSwitch(self._monitor_switch_handler)
 
