@@ -77,6 +77,9 @@ ALIGN_LEFT = 0
 ALIGN_CENTER = 1
 ALIGN_RIGHT = 2
 
+VERTICAL = 0
+HORIZONTAL = 1
+
 def show_titler():
     global _titler_data
     if _titler_data == None:
@@ -140,6 +143,7 @@ class TextLayer:
         self.spacing = 5
 
         self.gradient_color_rgba = None
+        self.gradient_direction = VERTICAL
 
         self.outline_on = False
         self.outline_color_rgba = (0.3, 0.3, 0.3, 1.0) 
@@ -150,7 +154,7 @@ class TextLayer:
         self.shadow_opacity = 100
         self.shadow_xoff = 3
         self.shadow_yoff = 3
-        self.shadow_blur = 0.0 # not impl yet, for future so that we don't need to break save format again
+        self.shadow_blur = 0.0
         
         self.pango_layout = None # PangoTextLayout object
 
@@ -436,16 +440,34 @@ class Titler(Gtk.Window):
 
         # ------------------------------------ Gradient panel
         self.gradient_color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(red=0.0, green=0.0, blue=0.8, alpha=1.0))
-        #self.gradient_color_button.connect("color-set", self._edit_value_changed)
+        self.gradient_color_button.connect("color-set", self._edit_value_changed)
         self.gradient_on = Gtk.CheckButton()
         self.gradient_on.set_active(True)
-        #self.fill_on.connect("toggled", self._edit_value_changed)
+        self.gradient_on.connect("toggled", self._edit_value_changed)
 
-        gradient_box = Gtk.HBox()
-        gradient_box.pack_start(self.gradient_on, False, False, 0)
-        gradient_box.pack_start(self.gradient_color_button, False, False, 0)
-        gradient_box.pack_start(Gtk.Label(), True, True, 0)
+        direction_label = Gtk.Label(_("Gradient Direction:"))
+        self.direction_combo = Gtk.ComboBoxText()
+        self.direction_combo.append_text(_("Vertical"))
+        self.direction_combo.append_text(_("Horizontal"))
+        self.direction_combo.set_active(0)
+        self.direction_combo.connect("changed", self._edit_value_changed)
+         
+        gradient_box_row1 = Gtk.HBox()
+        gradient_box_row1.pack_start(self.gradient_on, False, False, 0)
+        gradient_box_row1.pack_start(self.gradient_color_button, False, False, 0)
+        gradient_box_row1.pack_start(Gtk.Label(), True, True, 0)
+
+        gradient_box_row2 = Gtk.HBox()
+        gradient_box_row2.pack_start(direction_label, False, False, 0)
+        gradient_box_row2.pack_start(self.direction_combo, False, False, 0)
+        gradient_box_row2.pack_start(Gtk.Label(), True, True, 0)
         
+        gradient_box = Gtk.VBox()
+        gradient_box.pack_start(gradient_box_row1, False, False, 0)
+        gradient_box.pack_start(gradient_box_row2, False, False, 0)
+        gradient_box.pack_start(Gtk.Label(), True, True, 0)
+                
+        # ---------------------------------------------------- Save and Load buttons        
         load_layers = Gtk.Button(_("Load Layers"))
         load_layers.connect("clicked", lambda w:self._load_layers_pressed())
         save_layers = Gtk.Button(_("Save Layers"))
@@ -458,6 +480,7 @@ class Titler(Gtk.Window):
         layers_save_buttons_row.pack_start(load_layers, False, False, 0)
         layers_save_buttons_row.pack_start(Gtk.Label(), True, True, 0)
 
+        # ---------------------------------------------------- X, Y pos input
         adj = Gtk.Adjustment(value=float(0), lower=float(0), upper=float(3000), step_incr=float(1))
         self.x_pos_spin = Gtk.SpinButton()
         self.x_pos_spin.set_adjustment(adj)
@@ -481,6 +504,7 @@ class Titler(Gtk.Window):
                                        Gtk.IconSize.BUTTON)
         undo_pos.set_image(undo_icon)
 
+        # ------------------------------------------------- Timeline controls
         next_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "next_frame_s.png")
         prev_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "prev_frame_s.png")
         prev_frame = Gtk.Button()
@@ -493,6 +517,7 @@ class Titler(Gtk.Window):
         self.scale_selector = vieweditor.ScaleSelector(self)
         self.view_editor.scale_select = self.scale_selector
 
+        # ------------------------------------------------------ Panels
         timeline_box = Gtk.HBox()
         timeline_box.pack_start(self.tc_display.widget, False, False, 0)
         timeline_box.pack_start(guiutils.pad_label(12, 12), False, False, 0)
@@ -553,6 +578,7 @@ class Titler(Gtk.Window):
         view_editor_editor_buttons_row.pack_start(positions_box, False, False, 0)
         view_editor_editor_buttons_row.pack_start(Gtk.Label(), True, True, 0)
 
+        # ------------------------------------------------------- Editor buttons
         keep_label = Gtk.Label(label=_("Keep Layers When Closed"))
         self.keep_layers_check = Gtk.CheckButton()
         self.keep_layers_check.set_active(_keep_titler_data)
@@ -579,6 +605,7 @@ class Titler(Gtk.Window):
         editor_buttons_row.pack_start(exit_b, False, False, 0)
         editor_buttons_row.pack_start(save_titles_b, False, False, 0)
         
+        # ------------------------------------------------------ window layout
         editor_panel = Gtk.VBox()
         editor_panel.pack_start(self.view_editor, True, True, 0)
         editor_panel.pack_start(timeline_box, False, False, 0)
@@ -598,6 +625,7 @@ class Titler(Gtk.Window):
         self._update_gui_with_active_layer_data()
         self.show_all()
 
+        # -------------------------------------------------- window state listeners
         self.connect("size-allocate", lambda w, e:self.window_resized())
         self.connect("window-state-event", lambda w, e:self.window_resized())
     
@@ -950,6 +978,18 @@ class Titler(Gtk.Window):
         _titler_data.active_layer.shadow_xoff = self.shadow_xoff_spin.get_value()
         _titler_data.active_layer.shadow_yoff = self.shadow_yoff_spin.get_value()
         _titler_data.active_layer.shadow_blur = self.shadow_blur_spin.get_value()
+        
+        # GRADIENT
+        if self.gradient_on.get_active() == True:
+            color = self.gradient_color_button.get_color()
+            r, g, b = utils.hex_to_rgb(color.to_string())
+            new_color = (r/65535.0, g/65535.0, b/65535.0, 1.0)  
+            _titler_data.active_layer.gradient_color_rgba = new_color
+        else:
+            _titler_data.active_layer.gradient_color_rgba = None
+        _titler_data.active_layer.gradient_direction = self.direction_combo.get_active() # Combo indexes correspond with values of VERTICAL and HORIZONTAL
+        
+        
         self.view_editor.active_layer.update_rect = True
         _titler_data.active_layer.update_pango_layout()
 
@@ -958,7 +998,7 @@ class Titler(Gtk.Window):
             return
         
         # This a bit hackish, but works. Finding a method that blocks all
-        # gui events from being added to queue would be nice.
+        # gui events from being added to event queue would be nice.
         self.block_updates = True
         
         # TEXT
@@ -1021,6 +1061,19 @@ class Titler(Gtk.Window):
         self.shadow_yoff_spin.set_value(layer.shadow_yoff)
         self.shadow_on.set_active(layer.shadow_on)
         self.shadow_blur_spin.set_value(layer.shadow_blur)
+        
+        # GRADIENT
+        if layer.gradient_color_rgba != None:
+            r, g, b, a = layer.gradient_color_rgba
+            button_color = Gdk.RGBA(r, g, b, 1.0)
+            self.gradient_color_button.set_rgba(button_color)
+            self.gradient_on.set_active(True)
+        else:
+            button_color = Gdk.RGBA(0.0, 0.0, 0.6, 1.0)
+            self.gradient_color_button.set_rgba(button_color)
+            self.gradient_on.set_active(False)
+        self.direction_combo.set_active(layer.gradient_direction)
+                
         self.block_updates = False
 
 
@@ -1055,6 +1108,9 @@ class PangoTextLayout:
         self.shadow_xoff = layer.shadow_xoff
         self.shadow_yoff = layer.shadow_yoff
         self.shadow_blur = layer.shadow_blur
+        
+        self.gradient_color_rgba = layer.gradient_color_rgba
+        self.gradient_direction = layer.gradient_direction
 
     # called from vieweditor draw vieweditor-> editorlayer->here
     def draw_layout(self, cr, x, y, rotation, xscale, yscale, view_editor):
@@ -1112,16 +1168,26 @@ class PangoTextLayout:
 
         # Text
         if self.fill_on:
-            #cr.set_source_rgba(*self.color_rgba)
-            w, h = self.pixel_size 
-            h = float(h) * yscale
-            cr.set_source_rgba(*self.color_rgba)
-            #grad = cairo.LinearGradient (0, y, 0, y + h)
-            #CLIP_COLOR_GRAD = (1,  1.00, 0.11, 0.21, 1)  #(1, 0.62, 0.38, 0.7, 1) 
-            #CLIP_COLOR_GRAD_L = (0,  0.00, 0.11, 1.00, 1)  #(1, 0.62, 0.38, 0.7, 1) 
-            #grad.add_color_stop_rgba(*CLIP_COLOR_GRAD)
-            #grad.add_color_stop_rgba(*CLIP_COLOR_GRAD_L)
-            #cr.set_source(grad)
+            if self.gradient_color_rgba == None:
+                cr.set_source_rgba(*self.color_rgba)
+            else:
+                w, h = self.pixel_size
+                w = float(w) * xscale
+                h = float(h) * yscale
+                if self.gradient_direction == HORIZONTAL:
+                    grad = cairo.LinearGradient (x, 0, x + w, 0)
+                else:
+                    grad = cairo.LinearGradient (0, y, 0, y + h)
+                
+                r, g, b, a = self.color_rgba
+                rg, gg, bg, ag =  self.gradient_color_rgba 
+                    
+                CLIP_COLOR_GRAD_1 = (0,  r, g, b, 1)
+                CLIP_COLOR_GRAD_2 = (1,  rg, gg, bg, 1)
+                grad.add_color_stop_rgba(*CLIP_COLOR_GRAD_1)
+                grad.add_color_stop_rgba(*CLIP_COLOR_GRAD_2)
+                cr.set_source(grad)
+
             cr.move_to(x, y)
             cr.scale(xscale, yscale)
             cr.rotate(rotation)
