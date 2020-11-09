@@ -1140,7 +1140,9 @@ class PangoTextLayout:
 
             # Transform and set color.
             transform_cr.set_source_rgba(r, g, b, a)
-            transform_cr.move_to(x + self.shadow_xoff, y + self.shadow_yoff)
+            effective_shadow_xoff = self.shadow_xoff * xscale
+            effective_shadow_yoff = self.shadow_yoff * yscale
+            transform_cr.move_to(x + effective_shadow_xoff, y + effective_shadow_yoff)
             transform_cr.scale(xscale, yscale)
             transform_cr.rotate(rotation)
 
@@ -1154,8 +1156,10 @@ class PangoTextLayout:
                 PangoCairo.update_layout(cr_blurred, layout)
                 PangoCairo.show_layout(cr_blurred, layout)
 
-                img2 = Image.frombuffer("RGBA",( blurred_img.get_width(),blurred_img.get_height() ), blurred_img.get_data(),"raw","RGBA",0,1)
-                img2 = img2.filter(ImageFilter.GaussianBlur(radius=int(self.shadow_blur)))
+                img2 = Image.frombuffer("RGBA", (blurred_img.get_width(), blurred_img.get_height()), blurred_img.get_data(), "raw", "RGBA", 0, 1)
+                effective_blur = xscale * self.shadow_blur # This is not going to be exact
+                                                           # on non-100% scales but let's try to get approximation. 
+                img2 = img2.filter(ImageFilter.GaussianBlur(radius=int(effective_blur)))
                 imgd = img2.tobytes()
                 a = array.array('B',imgd)
 
