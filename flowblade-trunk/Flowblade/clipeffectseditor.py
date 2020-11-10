@@ -87,54 +87,63 @@ filters_notebook_index = 2 # 2 for single window, app.py sets to 1 for two windo
 class FilterHeaderRow:
     
     def __init__(self, filter_object):
-
-        
-        self.active_check = Gtk.CheckButton()
-        self.active_check.set_active(True)
         self.filter_name_label = Gtk.Label(label= "<b>" + filter_object.info.name + "</b>")
         self.filter_name_label.set_use_markup(True)
         self.icon = Gtk.Image.new_from_pixbuf(filter_object.info.get_icon())
 
         hbox = Gtk.HBox(False, 0)
-        hbox.pack_start(self.active_check, False, False, 0)
+        hbox.pack_start(guiutils.pad_label(4,5), False, False, 0)
         hbox.pack_start(self.icon, False, False, 0)
         hbox.pack_start(self.filter_name_label, False, False, 0)
         hbox.pack_start(Gtk.Label(), True, True, 0)
 
-        self.widget = Gtk.EventBox()
-        #self.widget.connect("button-press-event", lambda w,e: _tool_dock_item_press(tool_id, self))
-        #self.widget.add_events(Gdk.EventMask.KEY_PRESS_MASK)
+        self.widget = Gtk.Frame()
+        self.widget.set_shadow_type(Gtk.ShadowType.NONE)
         self.widget.add(hbox)
 
-    def updated_selected_color(self, selected):
-        SELECTED_BG = Gdk.RGBA(0.1, 0.31, 0.58,1.0) # we really need to get this theme css somehow
-        if selected == True:
-            print("POPOPOPO")
-            self.widget.override_background_color(Gtk.StateType.NORMAL, SELECTED_BG)
-        else:
-            print("normal")
-            self.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_bg_color())
-
-        self.widget.queue_draw()
 
 class FilterStackItem:
 
-    def __init__(self, filter_object, edit_panel):
+    def __init__(self, filter_object, edit_panel, filter_stack):
         self.filter_object = filter_object
         self.selected = False
         self.filter_header_row = FilterHeaderRow(filter_object)
         self.edit_panel = edit_panel
+        self.filter_stack = filter_stack
 
         self.expander = Gtk.Expander()
         self.expander.set_label_widget(self.filter_header_row.widget)
         self.expander.add(self.edit_panel )
         self.expander.set_resize_toplevel(True)
-        self.expander.show_all()
+        self.expander.set_label_fill(True)
+
+        self.active_check = Gtk.CheckButton()
+        self.active_check.set_active(True)
+        self.active_check.connect("toggled", self.toggle_filter_active)
+
+        self.active_check_vbox = Gtk.VBox(False, 0)
+        self.active_check_vbox.pack_start(self.active_check, False, False, 0)
+        self.active_check_vbox.pack_start(Gtk.Label(), True, True, 0)
+        
+        self.widget = Gtk.HBox(False, 0)
+        self.widget.pack_start(self.active_check_vbox, False, False, 0)
+        self.widget.pack_start(self.expander, True, True, 0)
+        self.widget.show_all()
 
     def set_selected(self, selected):
         self.selected = selected
-        self.filter_header_row.updated_selected_color(self.selected)
-        
+        SELECTED_BG = Gdk.RGBA(0.1, 0.31, 0.58,1.0) # we really need to get this theme css somehow
+        if selected == True:
+            self.widget.override_background_color(Gtk.StateType.NORMAL, SELECTED_BG)
+        else:
+            self.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_bg_color())
+    
+    def toggle_filter_active(self, widget):
+        self.filter_stack.set_filter_stack_item_selected(self)
+        self.filter_object.active = (self.filter_object.active == False)
+        self.filter_object.update_mlt_disabled_value()
+
+
 class ClipFilterStack:
 
     def __init__(self, clip, track, clip_index):
@@ -150,9 +159,9 @@ class ClipFilterStack:
         for filter_index in range(0, len(clip.filters)):
             filter_object = clip.filters[filter_index]
             edit_panel = _get_filter_panel(clip, filter_object, filter_index, track, clip_index)
-            stack_item = FilterStackItem(filter_object, edit_panel)
+            stack_item = FilterStackItem(filter_object, edit_panel, self)
             self.filter_stack.append(stack_item)
-            self.widget.pack_start(stack_item.expander,False, False, 0)
+            self.widget.pack_start(stack_item.widget,False, False, 0)
         
         self.widget.show_all()
 
@@ -166,12 +175,19 @@ class ClipFilterStack:
         return (self.clip, self.track, self.clip_index)
 
     def set_filter_selected(self, filter_index):
-        for filter_item in self.filter_stack:
-            filter_item.set_selected(False)
+        self.clear_selection()
                     
         filter_stack_item = self.filter_stack[filter_index]
         filter_stack_item.set_selected(True)
 
+    def set_filter_stack_item_selected(self, stack_item):
+        filter_index = self.filter_stack.index(stack_item)
+        self.set_filter_selected(filter_index)
+
+    def clear_selection(self):
+        for filter_item in self.filter_stack:
+            filter_item.set_selected(False)
+            
 # ------------------------------------------------------------------- interface
 def shutdown_polling():
     global _edit_polling_thread
@@ -313,9 +329,9 @@ def set_clip(clip, track, clip_index, show_tab=True):
 
     if len(clip.filters) > 0:
         print("set_clip-len(clip.filters) > 0")
-        path = str(len(clip.filters) - 1)
+        #path = str(len(clip.filters) - 1)
         # Causes edit_effect_selected() called as it is the "change" listener
-        widgets.effect_stack_view.treeview.get_selection().select_path(path)
+        #widgets.effect_stack_view.treeview.get_selection().select_path(path)
     else:
         print("set_clip-else-effect_selection_changed")
         effect_selection_changed()
@@ -413,8 +429,7 @@ def create_widgets():
     #widgets.exit_button.connect("clicked", lambda w: _quit_editing_clip_clicked())
     #widgets.exit_button.set_tooltip_text(_("Quit editing Clip in editor"))
 
-    widgets.effect_stack_view = guicomponents.FilterSwitchListView(lambda ts: effect_selection_changed(), 
-                                                                   toggle_filter_active, dnd_row_deleted, dnd_row_inserted)
+    #widgets.effect_stack_view = guicomponents.FilterSwitchListView(lambda ts: effect_selection_changed(), toggle_filter_active, dnd_row_deleted, dnd_row_inserted)
                                                                    
     #widgets.effect_stack_view.treeview.connect("button-press-event", lambda w,e, wtf: stack_view_pressed(), None)
     #gui.effect_stack_list_view = widgets.effect_stack_view
@@ -626,13 +641,16 @@ def reset_filter_values():
     clip.filters[row_index].reset_values(PROJECT().profile, clip)
     effect_selection_changed()
 
-def toggle_filter_active(row, update_stack=True):
+"""
+def toggle_filter_active(widget):  #row, update_stack=True):
+
     filter_object = clip.filters[row]
     filter_object.active = (filter_object.active == False)
     filter_object.update_mlt_disabled_value()
     if update_stack == True:
         update_stack_changed_blocked()
-
+"""
+    
 def dnd_row_deleted(model, path):
     now = time.time()
     global stack_dnd_state, stack_dnd_event_time, stack_dnd_event_info
