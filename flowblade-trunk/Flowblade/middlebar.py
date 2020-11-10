@@ -396,7 +396,7 @@ def fill_with_TC_FREE_pattern(buttons_row, window):
                 buttons_row.pack_start(tool, False, True, 0) # does not support dock yet
                 buttons_row.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
             except:
-                pass # This wil fail for appconsts.TOOL_SELECT if we are now using tool dock.
+                pass # This will fail for appconsts.TOOL_SELECT if we are now using tool dock.
     buttons_row.pack_start(Gtk.Label(), True, True, 0)
 
 
