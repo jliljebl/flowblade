@@ -86,7 +86,11 @@ filters_notebook_index = 2 # 2 for single window, app.py sets to 1 for two windo
 # ---------------------------------------------------------- filter stack objects
 class FilterFooterRow:
     
-    def __init__(self, filter_object):
+    def __init__(self, filter_object, filter_stack):
+        #self.clip = clip
+        self.filter_object = filter_object
+        self.filter_stack = filter_stack
+        
         surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "filter_save.png")
         save_button = guicomponents.PressLaunch(self.save_pressed, surface, w=22, h=22)
         save_button.widget.set_tooltip_markup(_("Save effect values"))
@@ -103,7 +107,6 @@ class FilterFooterRow:
         self.widget.pack_start(guiutils.pad_label(4,5), False, False, 0)
         self.widget.pack_start(save_button.widget, False, False, 0)
         self.widget.pack_start(load_button.widget, False, False, 0)
-        #self.widget.pack_start(guiutils.pad_label(4,5), False, False, 0)
         self.widget.pack_start(reset_button.widget, False, False, 0)
         self.widget.pack_start(Gtk.Label(), True, True, 0)
         
@@ -114,7 +117,8 @@ class FilterFooterRow:
         print("save")
 
     def reset_pressed(self, w, e):
-        print("save")
+        self.filter_object.reset_values()
+        self.filter_stack.reinit_stack_item(self.filter_object)
 
 
 class FilterHeaderRow:
@@ -213,7 +217,7 @@ class ClipFilterStack:
         self.track = track
         self.clip_index = clip_index
         
-        self.current_filter_index = -1 # selected filter
+        #self.current_filter_index = -1 # selected filter
         
         # Create filter stack and GUI
         self.filter_stack = []
@@ -221,7 +225,7 @@ class ClipFilterStack:
         for filter_index in range(0, len(clip.filters)):
             filter_object = clip.filters[filter_index]
             edit_panel = _get_filter_panel(clip, filter_object, filter_index, track, clip_index)
-            footer_row = FilterFooterRow(filter_object)
+            footer_row = FilterFooterRow(filter_object, self)
             edit_panel.pack_start(footer_row.widget, False, False, 0)
             edit_panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
             stack_item = FilterStackItem(filter_object, edit_panel, self)
@@ -236,6 +240,37 @@ class ClipFilterStack:
             filters.append(stack_item.filter_object)
         return filters
 
+    def reinit_stack_item(self, filter_object):
+        stack_index = -1
+        for i in range(0, len(self.filter_stack)):
+            stack_item = self.filter_stack[i]
+            if stack_item.filter_object is filter_object:
+                stack_index = i 
+        
+        if stack_index != -1:
+            # Remove panels from box
+            children = self.widget.get_children()
+            for child in children:
+                self.widget.remove(child)
+                
+            # Remove old stack item for reseted filter.
+            self.filter_stack.pop(stack_index)
+            
+            # Create new stack item
+            edit_panel = _get_filter_panel(self.clip, filter_object, stack_index, self.track, self.clip_index )
+            footer_row = FilterFooterRow(filter_object, self)
+            edit_panel.pack_start(footer_row.widget, False, False, 0)
+            edit_panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
+            stack_item = FilterStackItem(filter_object, edit_panel, self)
+            
+            # Put eveything back
+            self.filter_stack.insert(stack_index, stack_item)
+            for stack_item in self.filter_stack:
+                self.widget.pack_start(stack_item.widget,False, False, 0)
+                
+            self.set_filter_item_expanded(stack_index)
+            
+            
     def get_clip_data(self):
         return (self.clip, self.track, self.clip_index)
 
@@ -244,9 +279,10 @@ class ClipFilterStack:
         filter_stack_item.expander.set_expanded(True)
 
     def delete_filter_for_stack_item(self, stack_item):
-        print("DELETE")
         filter_index = self.filter_stack.index(stack_item)
         delete_effect_pressed(self.clip, filter_index)
+
+
 
     """
     def set_filter_selected(self, filter_index):
@@ -710,7 +746,7 @@ def toggle_all_pressed():
         filter_object.update_mlt_disabled_value()
     
     update_stack()
-
+"""
 def reset_filter_values():
     treeselection = widgets.effect_stack_view.treeview.get_selection()
     (model, rows) = treeselection.get_selected_rows()
@@ -719,7 +755,7 @@ def reset_filter_values():
     
     clip.filters[row_index].reset_values(PROJECT().profile, clip)
     effect_selection_changed()
-
+"""
 """
 def toggle_filter_active(widget):  #row, update_stack=True):
 

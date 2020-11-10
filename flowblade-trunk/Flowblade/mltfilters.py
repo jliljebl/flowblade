@@ -273,6 +273,9 @@ class FilterObject:
             self.update_mlt_filter_properties_all()
 
 
+# DEPRECATED FILTER TYPE. NO NEW MultipartFilterObject FILTERS TO BE CREATED.
+# DEPRECATED FILTER TYPE. NO NEW MultipartFilterObject FILTERS TO BE CREATED.
+# DEPRECATED FILTER TYPE. NO NEW MultipartFilterObject FILTERS TO BE CREATED.
 class MultipartFilterObject:
     """
     These objects are saved with projects. Thay are used to generate, 
