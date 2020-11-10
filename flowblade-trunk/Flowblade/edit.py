@@ -437,13 +437,14 @@ class EditAction:
            (do_gui_update and auto_follow_active() == True and self.compositor_autofollow_data != None)):
             self._update_gui()
         
-    def _update_gui(self): # This copied  with small modifications into projectaction.py for sequence imports, update there too if needed...yeah.
-        updater.update_tline_scrollbar() # Slider needs to adjust to possily new program length.
+    def _update_gui(self): # This is copied with small modifications into projectaction.py for sequence imports, update there too if needed.
+        updater.update_tline_scrollbar() # Slider needs to adjust to possibly new program length.
                                          # This REPAINTS TIMELINE as a side effect.
         if self.clear_effects_editor_for_multitrack_edit == False:
             if current_sequence().clip_is_in_sequence(clipeffectseditor.get_edited_clip()) == True:
+                print("WE'RE DOING clipeffectseditor UPDATE in edit")
                 updater.update_kf_editor()
-                clipeffectseditor.reinit_current_effect()
+                #clipeffectseditor.reinit_current_effect()
             else:
                 updater.clear_kf_editor()
         else:
@@ -1787,6 +1788,7 @@ def _add_filter_undo(self):
     self.filter_edit_done_func(self.clip, len(self.clip.filters) - 1) # updates effect stack gui
 
 def _add_filter_redo(self):
+    print("add filter in edit")
     try: # is redo, fails for first
         self.clip.attach(self.filter_object.mlt_filter)
         self.clip.filters.append(self.filter_object)
@@ -1798,6 +1800,8 @@ def _add_filter_redo(self):
         
     self.filter_edit_done_func(self.clip, len(self.clip.filters) - 1) # updates effect stack gui
 
+    print("add filter in edit DONE")
+    
 #------------------- ADD TWO FILTERS
 # NOTE: Using this requires that index_2 > index_1
 # "clip","filter_info_1",filter_info_2","index_1","index_2","filter_edit_done_func"

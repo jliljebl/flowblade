@@ -24,7 +24,7 @@ Module handles clip effects editing logic and gui
 
 import copy
 from gi.repository import GLib
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 import pickle
 import threading
 import time
@@ -106,12 +106,22 @@ class FilterHeaderRow:
         #self.widget.add_events(Gdk.EventMask.KEY_PRESS_MASK)
         self.widget.add(hbox)
 
+    def updated_selected_color(self, selected):
+        SELECTED_BG = Gdk.RGBA(0.1, 0.31, 0.58,1.0) # we really need to get this theme css somehow
+        if selected == True:
+            print("POPOPOPO")
+            self.widget.override_background_color(Gtk.StateType.NORMAL, SELECTED_BG)
+        else:
+            print("normal")
+            self.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_bg_color())
+
+        self.widget.queue_draw()
 
 class FilterStackItem:
 
     def __init__(self, filter_object, edit_panel):
         self.filter_object = filter_object
-        
+        self.selected = False
         self.filter_header_row = FilterHeaderRow(filter_object)
         self.edit_panel = edit_panel
 
@@ -120,7 +130,10 @@ class FilterStackItem:
         self.expander.add(self.edit_panel )
         self.expander.set_resize_toplevel(True)
         self.expander.show_all()
-        
+
+    def set_selected(self, selected):
+        self.selected = selected
+        self.filter_header_row.updated_selected_color(self.selected)
         
 class ClipFilterStack:
 
@@ -148,6 +161,16 @@ class ClipFilterStack:
         for stack_item in self.filter_stack:
             filters.append(stack_item.filter_object)
         return filters
+
+    def get_clip_data(self):
+        return (self.clip, self.track, self.clip_index)
+
+    def set_filter_selected(self, filter_index):
+        for filter_item in self.filter_stack:
+            filter_item.set_selected(False)
+                    
+        filter_stack_item = self.filter_stack[filter_index]
+        filter_stack_item.set_selected(True)
 
 # ------------------------------------------------------------------- interface
 def shutdown_polling():
@@ -289,10 +312,12 @@ def set_clip(clip, track, clip_index, show_tab=True):
     update_stack(clip, track, clip_index)
 
     if len(clip.filters) > 0:
+        print("set_clip-len(clip.filters) > 0")
         path = str(len(clip.filters) - 1)
         # Causes edit_effect_selected() called as it is the "change" listener
         widgets.effect_stack_view.treeview.get_selection().select_path(path)
     else:
+        print("set_clip-else-effect_selection_changed")
         effect_selection_changed()
 
     if show_tab:
@@ -306,6 +331,12 @@ def set_clip(clip, track, clip_index, show_tab=True):
     # Start new polling
     _edit_polling_thread = PropertyChangePollingThread()
     _edit_polling_thread.start()
+
+def set_filter_selected(filter_index):
+    if _filter_stack == None:
+        return 
+    
+    _filter_stack.set_filter_selected(filter_index)
 
 def effect_select_row_double_clicked(treeview, tree_path, col):
     add_currently_selected_effect()
@@ -650,8 +681,12 @@ def stack_view_pressed():
     global stack_dnd_state
     stack_dnd_state = MOUSE_PRESS_DONE
 
+""" This was called from edit gui update to fix some bug I think, look if/how we need this going forward
 def reinit_current_effect():
-    effect_selection_changed(True)
+    print("reinit_current_effect")
+    clip, track, clip_index = _filter_stack.get_clip_data()
+    set_clip(clip, track, clip_index)
+"""
 
 def effect_selection_changed(use_current_filter_index=False):
     global keyframe_editor_widgets, current_filter_index
@@ -854,8 +889,9 @@ def update_kfeditors_sliders(frame):
         kf_widget.update_slider_value_display(frame)
         
 def update_kfeditors_positions():
-    if clip == None:
-        return
+    if _filter_stack == None:
+        return 
+
     for kf_widget in keyframe_editor_widgets:
         kf_widget.update_clip_pos()
 

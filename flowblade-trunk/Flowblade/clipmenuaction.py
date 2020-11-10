@@ -219,6 +219,7 @@ def _add_filter(data):
     frame = tlinewidgets.get_frame(x)
     index = track.get_clip_index_at(frame)
     clipeffectseditor.set_clip(clip, track, index)
+    clipeffectseditor.set_filter_selected(len(clip.filters) - 1)
 
 def _add_compositor(data):
     clip, track, item_id, item_data = data
