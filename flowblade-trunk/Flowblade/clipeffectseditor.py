@@ -21,7 +21,7 @@
 """
 Module handles clip effects editing logic and gui
 """
-
+import cairo
 import copy
 from gi.repository import GLib
 from gi.repository import Gtk, Gdk
@@ -97,7 +97,7 @@ class FilterHeaderRow:
         hbox.pack_start(self.filter_name_label, False, False, 0)
         hbox.pack_start(Gtk.Label(), True, True, 0)
 
-        self.widget = Gtk.Frame()
+        self.widget = Gtk.Frame()  #We're using additional frame to able to change color, not used curretly.
         self.widget.set_shadow_type(Gtk.ShadowType.NONE)
         self.widget.add(hbox)
 
@@ -106,43 +106,75 @@ class FilterStackItem:
 
     def __init__(self, filter_object, edit_panel, filter_stack):
         self.filter_object = filter_object
-        self.selected = False
+        #self.selected = False
         self.filter_header_row = FilterHeaderRow(filter_object)
+
         self.edit_panel = edit_panel
+        self.edit_panel_frame = Gtk.Frame()
+        self.edit_panel_frame.add(edit_panel)
+        self.edit_panel_frame.set_shadow_type(Gtk.ShadowType.NONE)
+        
         self.filter_stack = filter_stack
 
         self.expander = Gtk.Expander()
         self.expander.set_label_widget(self.filter_header_row.widget)
-        self.expander.add(self.edit_panel )
+        self.expander.add(self.edit_panel_frame)
         self.expander.set_resize_toplevel(True)
         self.expander.set_label_fill(True)
 
+        self.expander_frame = Gtk.Frame()
+        self.expander_frame.add(self.expander)
+        self.expander_frame.set_shadow_type(Gtk.ShadowType.NONE)
+        guiutils.set_margins(self.expander_frame, 2, 0, 0, 0)
+        #self.expander_frame.connect("button-press-event", self.expander_frame_pressed)
+        
         self.active_check = Gtk.CheckButton()
         self.active_check.set_active(True)
         self.active_check.connect("toggled", self.toggle_filter_active)
+        guiutils.set_margins(self.active_check, 2, 0, 0, 0)
 
         self.active_check_vbox = Gtk.VBox(False, 0)
         self.active_check_vbox.pack_start(self.active_check, False, False, 0)
         self.active_check_vbox.pack_start(Gtk.Label(), True, True, 0)
+
+        surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "trash.png")
+        trash_button = guicomponents.PressLaunch(self.trash_pressed, surface, w=22, h=22)
+        
+        self.trash_vbox = Gtk.VBox(False, 0)
+        self.trash_vbox.pack_start(trash_button.widget, False, False, 0)
+        self.trash_vbox.pack_start(Gtk.Label(), True, True, 0)
         
         self.widget = Gtk.HBox(False, 0)
         self.widget.pack_start(self.active_check_vbox, False, False, 0)
-        self.widget.pack_start(self.expander, True, True, 0)
+        self.widget.pack_start(self.expander_frame, True, True, 0)
+        self.widget.pack_start(self.trash_vbox, False, False, 0)
         self.widget.show_all()
 
+    def trash_pressed(self, w, e):
+        self.filter_stack.delete_filter_for_stack_item(self)
+    
+    def toggle_filter_active(self, widget):
+        #self.filter_stack.set_filter_stack_item_selected(self)
+        self.filter_object.active = (self.filter_object.active == False)
+        self.filter_object.update_mlt_disabled_value()
+
+    """
     def set_selected(self, selected):
         self.selected = selected
         SELECTED_BG = Gdk.RGBA(0.1, 0.31, 0.58,1.0) # we really need to get this theme css somehow
         if selected == True:
-            self.widget.override_background_color(Gtk.StateType.NORMAL, SELECTED_BG)
+            self.expander_frame.override_background_color(Gtk.StateType.NORMAL, SELECTED_BG)
         else:
-            self.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_bg_color())
-    
-    def toggle_filter_active(self, widget):
-        self.filter_stack.set_filter_stack_item_selected(self)
-        self.filter_object.active = (self.filter_object.active == False)
-        self.filter_object.update_mlt_disabled_value()
+            self.expander_frame.override_background_color(Gtk.StateType.NORMAL, gui.get_bg_color())
 
+        self.edit_panel_frame.override_background_color(Gtk.StateType.NORMAL, gui.get_bg_color())
+    """
+    
+    """
+    def expander_frame_pressed(self, widget, event):
+        print(event)
+        return False
+    """
 
 class ClipFilterStack:
 
@@ -174,6 +206,16 @@ class ClipFilterStack:
     def get_clip_data(self):
         return (self.clip, self.track, self.clip_index)
 
+    def set_filter_item_expanded(self, filter_index):
+        filter_stack_item = self.filter_stack[filter_index]
+        filter_stack_item.expander.set_expanded(True)
+
+    def delete_filter_for_stack_item(self, stack_item):
+        print("DELETE")
+        filter_index = self.filter_stack.index(stack_item)
+        delete_effect_pressed(self.clip, filter_index)
+
+    """
     def set_filter_selected(self, filter_index):
         self.clear_selection()
                     
@@ -187,7 +229,9 @@ class ClipFilterStack:
     def clear_selection(self):
         for filter_item in self.filter_stack:
             filter_item.set_selected(False)
-            
+    """
+    
+
 # ------------------------------------------------------------------- interface
 def shutdown_polling():
     global _edit_polling_thread
@@ -313,33 +357,24 @@ def set_clip(clip, track, clip_index, show_tab=True):
     Sets clip being edited and inits gui.
     """
     print("set_clip")
-    #global clip, track, clip_index
+
     if _filter_stack != None:
         if clip == _filter_stack.clip and track == _filter_stack.track and clip_index == _filter_stack.clip_index and show_tab == False:
             print("return")
             return
-
-    #clip = new_clip
-    #track = new_track
-    #clip_index = new_index
     
     widgets.clip_info.display_clip_info(clip, track, clip_index)
     set_enabled(True)
     update_stack(clip, track, clip_index)
 
     if len(clip.filters) > 0:
-        print("set_clip-len(clip.filters) > 0")
-        #path = str(len(clip.filters) - 1)
-        # Causes edit_effect_selected() called as it is the "change" listener
-        #widgets.effect_stack_view.treeview.get_selection().select_path(path)
+        pass # remove if nothing needed here.
     else:
-        print("set_clip-else-effect_selection_changed")
-        effect_selection_changed()
+        show_text_in_edit_area(_("Clip Has No Filters"))
 
     if show_tab:
         gui.middle_notebook.set_current_page(filters_notebook_index)
-    
-    
+
     global _edit_polling_thread
     # Close old polling
     if _edit_polling_thread != None:
@@ -348,11 +383,11 @@ def set_clip(clip, track, clip_index, show_tab=True):
     _edit_polling_thread = PropertyChangePollingThread()
     _edit_polling_thread.start()
 
-def set_filter_selected(filter_index):
+def set_filter_item_expanded(filter_index):
     if _filter_stack == None:
         return 
     
-    _filter_stack.set_filter_selected(filter_index)
+    _filter_stack.set_filter_item_expanded(filter_index)
 
 def effect_select_row_double_clicked(treeview, tree_path, col):
     add_currently_selected_effect()
@@ -577,20 +612,24 @@ def get_selected_filter_info():
 def add_effect_pressed():
     add_currently_selected_effect()
 
-def delete_effect_pressed():
+def delete_effect_pressed(clip, filter_index):
+    """
     if len(clip.filters) == 0:
         return
 
     # Block updates until we have set selected row
     global edit_effect_update_blocked
     edit_effect_update_blocked = True
+    """
+    
+    set_stack_update_blocked()
 
-    current_filter = clip.filters[current_filter_index]
+    current_filter = clip.filters[filter_index]
     
     if current_filter.info.filter_mask_filter == "":
         # Regular filters
         data = {"clip":clip,
-                "index":current_filter_index,
+                "index":filter_index,
                 "filter_edit_done_func":filter_edit_done_stack_update}
         action = edit.remove_filter_action(data)
         action.do_edit()
@@ -612,18 +651,25 @@ def delete_effect_pressed():
                 "filter_edit_done_func":filter_edit_done_stack_update}
         action = edit.remove_two_filters_action(data)
         action.do_edit()
-        
+
+    set_stack_update_unblocked()
+
+    clip, track, clip_index = _filter_stack.get_clip_data()
+    set_clip(clip, track, clip_index)
+
     updater.repaint_tline()
 
     # Set last filter selected and display in editor
-    edit_effect_update_blocked = False
+    #edit_effect_update_blocked = False
+    """
     if len(clip.filters) == 0:
         effect_selection_changed() # to display info text
         return
     path = str(len(clip.filters) - 1)
     # Causes edit_effect_selected() called as it is the "change" listener
     widgets.effect_stack_view.treeview.get_selection().select_path(path)
-
+    """
+    
 def toggle_all_pressed():
     for i in range(0, len(clip.filters)):
         filter_object = clip.filters[i]
@@ -971,8 +1017,8 @@ def _clip_hamburger_item_activated(widget, msg):
         dialogs.load_effects_compositors_values_dialog(_load_effect_values_dialog_callback)
     elif msg == "reset":
         _reset_filter_values()
-    elif msg == "delete":
-        _delete_effect()
+    #elif msg == "delete":
+    #    _delete_effect()
     elif msg == "fade_length":
         dialogs.set_fade_length_default_dialog(_set_fade_length_dialog_callback, PROJECT().get_project_property(appconsts.P_PROP_DEFAULT_FADE_LENGTH))
     elif msg == "close":
@@ -1018,8 +1064,8 @@ def _reset_filter_values():
         
     effect_selection_changed()
 
-def _delete_effect():
-    delete_effect_pressed()
+#def _delete_effect():
+#    delete_effect_pressed()
 
 def _set_fade_length_dialog_callback(dialog, response_id, spin):
     if response_id == Gtk.ResponseType.ACCEPT:
