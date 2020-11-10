@@ -84,6 +84,39 @@ stack_dnd_event_info = None
 filters_notebook_index = 2 # 2 for single window, app.py sets to 1 for two windows
 
 # ---------------------------------------------------------- filter stack objects
+class FilterFooterRow:
+    
+    def __init__(self, filter_object):
+        surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "filter_save.png")
+        save_button = guicomponents.PressLaunch(self.save_pressed, surface, w=22, h=22)
+        save_button.widget.set_tooltip_markup(_("Save effect values"))
+        
+        surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "filter_load.png")
+        load_button = guicomponents.PressLaunch(self.load_pressed, surface, w=22, h=22)
+        load_button.widget.set_tooltip_markup(_("Load effect values"))
+
+        surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "filter_reset.png")
+        reset_button = guicomponents.PressLaunch(self.reset_pressed, surface, w=22, h=22)
+        reset_button.widget.set_tooltip_markup(_("Reset effect values"))
+        
+        self.widget = Gtk.HBox(False, 0)
+        self.widget.pack_start(guiutils.pad_label(4,5), False, False, 0)
+        self.widget.pack_start(save_button.widget, False, False, 0)
+        self.widget.pack_start(load_button.widget, False, False, 0)
+        #self.widget.pack_start(guiutils.pad_label(4,5), False, False, 0)
+        self.widget.pack_start(reset_button.widget, False, False, 0)
+        self.widget.pack_start(Gtk.Label(), True, True, 0)
+        
+    def save_pressed(self, w, e):
+        print("save")
+
+    def load_pressed(self, w, e):
+        print("save")
+
+    def reset_pressed(self, w, e):
+        print("save")
+
+
 class FilterHeaderRow:
     
     def __init__(self, filter_object):
@@ -97,9 +130,7 @@ class FilterHeaderRow:
         hbox.pack_start(self.filter_name_label, False, False, 0)
         hbox.pack_start(Gtk.Label(), True, True, 0)
 
-        self.widget = Gtk.Frame()  #We're using additional frame to able to change color, not used curretly.
-        self.widget.set_shadow_type(Gtk.ShadowType.NONE)
-        self.widget.add(hbox)
+        self.widget = hbox
 
 
 class FilterStackItem:
@@ -126,12 +157,11 @@ class FilterStackItem:
         self.expander_frame.add(self.expander)
         self.expander_frame.set_shadow_type(Gtk.ShadowType.NONE)
         guiutils.set_margins(self.expander_frame, 2, 0, 0, 0)
-        #self.expander_frame.connect("button-press-event", self.expander_frame_pressed)
         
         self.active_check = Gtk.CheckButton()
         self.active_check.set_active(True)
         self.active_check.connect("toggled", self.toggle_filter_active)
-        guiutils.set_margins(self.active_check, 2, 0, 0, 0)
+        guiutils.set_margins(self.active_check, 4, 0, 0, 0)
 
         self.active_check_vbox = Gtk.VBox(False, 0)
         self.active_check_vbox.pack_start(self.active_check, False, False, 0)
@@ -191,6 +221,9 @@ class ClipFilterStack:
         for filter_index in range(0, len(clip.filters)):
             filter_object = clip.filters[filter_index]
             edit_panel = _get_filter_panel(clip, filter_object, filter_index, track, clip_index)
+            footer_row = FilterFooterRow(filter_object)
+            edit_panel.pack_start(footer_row.widget, False, False, 0)
+            edit_panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
             stack_item = FilterStackItem(filter_object, edit_panel, self)
             self.filter_stack.append(stack_item)
             self.widget.pack_start(stack_item.widget,False, False, 0)
@@ -867,10 +900,6 @@ def _get_filter_panel(clip, filter_object, filter_index, track, clip_index):
             vbox.pack_start(editor_row, False, False, 0)
             if not hasattr(editor_row, "no_separator"):
                 vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
-        vbox.pack_start(guiutils.pad_label(12,12), False, False, 0)
-        
-        vbox.pack_start(Gtk.Label(), True, True, 0)
-
     else:
         vbox.pack_start(Gtk.Label(label=_("No editable parameters")), True, True, 0)
     vbox.show_all()
