@@ -286,94 +286,12 @@ def get_edited_clip():
 def get_clip_effects_editor_panel():
     create_widgets()
 
-    #stack_label = guiutils.bold_label(_("Clip Filters Stack"))
-    
-    #label_row = guiutils.get_left_justified_box([stack_label])
-    #guiutils.set_margins(label_row, 0, 4, 0, 0)
-    
-    #effect_stack = widgets.effect_stack_view    
-    """
-    for group in mltfilters.groups:
-        group_name, filters_array = group
-        group_combo_box.append_text(group_name)
-    group_combo_box.set_active(0)    
-
-    # Same callback function works for filter select window too
-    group_combo_box.connect("changed", 
-                            lambda w,e: _group_selection_changed(w,effects_list_view), 
-                            None)
-                      
-    widgets.group_combo = group_combo_box
-    widgets.effect_list_view = effects_list_view
-    set_enabled(False)
-    
-    exit_button_vbox = Gtk.VBox(False, 2)
-    exit_button_vbox.pack_start(widgets.exit_button, False, False, 0)
-    """
-
     info_row = Gtk.HBox(False, 2)
     info_row.pack_start(widgets.hamburger_launcher.widget, False, False, 0)
     info_row.pack_start(Gtk.Label(), True, True, 0)
     info_row.pack_start(widgets.clip_info, False, False, 0)
     info_row.pack_start(Gtk.Label(), True, True, 0)
-    
-    #combo_row = Gtk.HBox(False, 2)
-    #combo_row.pack_start(group_combo_box, True, True, 0)
 
-    #group_name, filters_array = mltfilters.groups[0]
-    #effects_list_view.fill_data_model(filters_array)
-    #effects_list_view.treeview.get_selection().select_path("0")
-
-    """
-    effects_vbox = Gtk.VBox(False, 2)
-    if editorstate.SCREEN_HEIGHT < 1023:
-
-        stack_buttons_box = Gtk.HBox(False,1)
-        stack_buttons_box.pack_start(widgets.del_effect_b, True, True, 0)
-        stack_buttons_box.pack_start(widgets.toggle_all, False, False, 0)
-        stack_buttons_box.pack_start(guiutils.pad_label(8, 10), False, False, 0)
-        stack_buttons_box.pack_start(widgets.add_filter_mask.widget, False, False, 0)
-        stack_buttons_box.pack_start(guiutils.pad_label(8, 10), False, False, 0)
-        guiutils.set_margins(stack_buttons_box, 4, 4, 0, 0)
-
-        stack_vbox = Gtk.VBox(False, 2)
-        stack_vbox.pack_start(stack_buttons_box, False, False, 0)
-        stack_vbox.pack_start(effect_stack, True, True, 0)
-
-        add_buttons_box = Gtk.HBox(True,1)
-        add_buttons_box.pack_start(widgets.add_effect_b, True, True, 0)
-        add_buttons_box.pack_start(Gtk.Label(), True, True, 0)
-        guiutils.set_margins(add_buttons_box, 4, 4, 0, 0)
-        
-        groups_vbox = Gtk.VBox(False, 2)
-        groups_vbox.pack_start(add_buttons_box, False, False, 0)
-        groups_vbox.pack_start(combo_row, False, False, 0)
-        groups_vbox.pack_start(effects_list_view, True, True, 0)
-
-        notebook = Gtk.Notebook()
-        notebook.append_page(stack_vbox, Gtk.Label(label=_("Stack")))
-        notebook.append_page(groups_vbox, Gtk.Label(label=_("Filters")))
-        effects_vbox.pack_start(notebook, True, True, 0)
-    else:
-        ad_buttons_box = Gtk.HBox(True,1)
-        ad_buttons_box.pack_start(widgets.add_effect_b, True, True, 0)
-        ad_buttons_box.pack_start(widgets.del_effect_b, True, True, 0)
-
-        stack_buttons_box = Gtk.HBox(False,1)
-        stack_buttons_box.pack_start(ad_buttons_box, True, True, 0)
-        stack_buttons_box.pack_start(widgets.toggle_all, False, False, 0)
-        stack_buttons_box.pack_start(widgets.add_filter_mask.widget, False, False, 0)
-
-        effects_vbox.pack_start(label_row, False, False, 0)
-        effects_vbox.pack_start(stack_buttons_box, False, False, 0)
-        effects_vbox.pack_start(effect_stack, True, True, 0)
-        effects_vbox.pack_start(combo_row, False, False, 0)
-        effects_vbox.pack_start(effects_list_view, True, True, 0)
-    
-    #widgets.group_combo.set_tooltip_text(_("Select Filter Group"))
-    #widgets.effect_list_view.set_tooltip_text(_("Current group Filters"))
-    """
-    
     return info_row
 
 def _group_selection_changed(group_combo, filters_list_view):
@@ -487,48 +405,23 @@ def create_widgets():
 
     widgets.clip_info = guicomponents.ClipInfoPanel()
     
-    #widgets.exit_button = Gtk.Button()
-    #icon = Gtk.Image.new_from_stock(Gtk.STOCK_CLOSE, Gtk.IconSize.MENU)
-    #widgets.exit_button.set_image(icon)
-    #widgets.exit_button.connect("clicked", lambda w: _quit_editing_clip_clicked())
-    #widgets.exit_button.set_tooltip_text(_("Quit editing Clip in editor"))
-
-    #widgets.effect_stack_view = guicomponents.FilterSwitchListView(lambda ts: effect_selection_changed(), toggle_filter_active, dnd_row_deleted, dnd_row_inserted)
-                                                                   
-    #widgets.effect_stack_view.treeview.connect("button-press-event", lambda w,e, wtf: stack_view_pressed(), None)
-    #gui.effect_stack_list_view = widgets.effect_stack_view
-    
     widgets.value_edit_box = Gtk.VBox()
     widgets.value_edit_frame = Gtk.Frame()
     widgets.value_edit_frame.set_shadow_type(Gtk.ShadowType.NONE)
     widgets.value_edit_frame.add(widgets.value_edit_box)
-    """
-    widgets.add_effect_b = Gtk.Button()
-    widgets.add_effect_b.set_image(guiutils.get_image("filter_add"))
-    widgets.del_effect_b = Gtk.Button()
-    widgets.del_effect_b.set_image(guiutils.get_image("filter_delete"))
-    """
+
     widgets.toggle_all = Gtk.Button()
     widgets.toggle_all.set_image(guiutils.get_image("filters_all_toggle"))
+    
     filter_mask_surfaces = [guiutils.get_cairo_image("filters_mask_add"), guiutils.get_cairo_image("filters_mask_add_not_active")]
     widgets.add_filter_mask = guicomponents.HamburgerPressLaunch(_filter_mask_launch_pressed, filter_mask_surfaces, 26)
     guiutils.set_margins(widgets.add_filter_mask.widget, 10, 0, 1, 0)
 
-    #widgets.add_effect_b.connect("clicked", lambda w,e: add_effect_pressed(), None)
-    #widgets.del_effect_b.connect("clicked", lambda w,e: delete_effect_pressed(), None)
     widgets.toggle_all.connect("clicked", lambda w: toggle_all_pressed())
 
     widgets.hamburger_launcher = guicomponents.HamburgerPressLaunch(_hamburger_launch_pressed)
     guiutils.set_margins(widgets.hamburger_launcher.widget, 6, 8, 1, 0)
 
-    # These are created elsewhere and then monkeypatched here
-    #widgets.group_combo = None
-    #widgets.effect_list_view = None
-
-    #widgets.clip_info.set_tooltip_text(_("Clip being edited"))
-    #widgets.effect_stack_view.set_tooltip_text(_("Clip Filter Stack"))
-    #widgets.add_effect_b.set_tooltip_text(_("Add Filter to Clip Filter Stack"))
-    #widgets.del_effect_b.set_tooltip_text(_("Delete Filter from Clip Filter Stack"))
     widgets.toggle_all.set_tooltip_text(_("Toggle all Filters On/Off"))
     widgets.add_filter_mask.widget.set_tooltip_text(_("Add Filter Mask"))
     
@@ -538,10 +431,6 @@ def create_widgets():
  
 def set_enabled(value):
     widgets.clip_info.set_enabled( value)
-    #widgets.add_effect_b.set_sensitive(value)
-    #widgets.del_effect_b.set_sensitive(value)
-    #widgets.effect_stack_view.treeview.set_sensitive(value)
-    #widgets.exit_button.set_sensitive(value)
     widgets.toggle_all.set_sensitive(value)
     widgets.hamburger_launcher.set_sensitive(value)
     widgets.hamburger_launcher.widget.queue_draw()
@@ -557,34 +446,15 @@ def set_stack_update_unblocked():
     _block_stack_update = False
 
 def update_stack(clip, track, clip_index):
-
-        
     new_stack = ClipFilterStack(clip, track, clip_index)
     global _filter_stack
     _filter_stack = new_stack
-    
-    #scroll_window = Gtk.ScrolledWindow()
-    #scroll_window.add_with_viewport(vbox)
-    #scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-    #scroll_window.show_all()
 
     global widgets
     widgets.value_edit_frame.remove(widgets.value_edit_box)
     widgets.value_edit_frame.add(_filter_stack.widget)
 
     widgets.value_edit_box = _filter_stack.widget
-    
-    """
-    if clip != None:
-        filter_infos = []
-        for f in clip.filters:
-            filter_infos.append(f.info)
-        widgets.effect_stack_view.fill_data_model(filter_infos, clip.filters)
-    else:
-        widgets.effect_stack_view.fill_data_model([], [])
-
-    widgets.effect_stack_view.treeview.queue_draw()
-    """
 
 def update_stack_changed_blocked():
     global _block_changed_update
@@ -642,15 +512,6 @@ def add_effect_pressed():
     add_currently_selected_effect()
 
 def delete_effect_pressed(clip, filter_index):
-    """
-    if len(clip.filters) == 0:
-        return
-
-    # Block updates until we have set selected row
-    global edit_effect_update_blocked
-    edit_effect_update_blocked = True
-    """
-    
     set_stack_update_blocked()
 
     current_filter = clip.filters[filter_index]
@@ -687,17 +548,6 @@ def delete_effect_pressed(clip, filter_index):
     set_clip(clip, track, clip_index)
 
     updater.repaint_tline()
-
-    # Set last filter selected and display in editor
-    #edit_effect_update_blocked = False
-    """
-    if len(clip.filters) == 0:
-        effect_selection_changed() # to display info text
-        return
-    path = str(len(clip.filters) - 1)
-    # Causes edit_effect_selected() called as it is the "change" listener
-    widgets.effect_stack_view.treeview.get_selection().select_path(path)
-    """
     
 def toggle_all_pressed():
     for i in range(0, len(clip.filters)):
@@ -706,26 +556,7 @@ def toggle_all_pressed():
         filter_object.update_mlt_disabled_value()
     
     update_stack()
-"""
-def reset_filter_values():
-    treeselection = widgets.effect_stack_view.treeview.get_selection()
-    (model, rows) = treeselection.get_selected_rows()
-    row = rows[0]
-    row_index = max(row)
-    
-    clip.filters[row_index].reset_values(PROJECT().profile, clip)
-    effect_selection_changed()
-"""
-"""
-def toggle_filter_active(widget):  #row, update_stack=True):
-
-    filter_object = clip.filters[row]
-    filter_object.active = (filter_object.active == False)
-    filter_object.update_mlt_disabled_value()
-    if update_stack == True:
-        update_stack_changed_blocked()
-"""
-    
+"""    
 def dnd_row_deleted(model, path):
     now = time.time()
     global stack_dnd_state, stack_dnd_event_time, stack_dnd_event_info
@@ -773,7 +604,7 @@ def do_stack_move(insert_row, delete_row):
 def stack_view_pressed():
     global stack_dnd_state
     stack_dnd_state = MOUSE_PRESS_DONE
-
+"""
 """ This was called from edit gui update to fix some bug I think, look if/how we need this going forward
 def reinit_current_effect():
     print("reinit_current_effect")
@@ -1034,15 +865,7 @@ def _hamburger_launch_pressed(widget, event):
     guicomponents.get_clip_effects_editor_hamburger_menu(event, _clip_hamburger_item_activated)
     
 def _clip_hamburger_item_activated(widget, msg):
-    if msg == "save":
-        filter_object = clip.filters[current_filter_index]
-        default_name = filter_object.info.name + _("_effect_values") + ".data"
-        dialogs.save_effects_compositors_values(_save_effect_values_dialog_callback, default_name)
-    elif msg == "load":
-        dialogs.load_effects_compositors_values_dialog(_load_effect_values_dialog_callback)
-    elif msg == "reset":
-        _reset_filter_values()
-    elif msg == "fade_length":
+    if msg == "fade_length":
         dialogs.set_fade_length_default_dialog(_set_fade_length_dialog_callback, PROJECT().get_project_property(appconsts.P_PROP_DEFAULT_FADE_LENGTH))
     elif msg == "close":
         clear_clip()
@@ -1079,18 +902,6 @@ def _reset_filter_values(filter_object):
         filter_object.update_mlt_filter_properties_all()
                 
         _filter_stack.reinit_stack_item(filter_object)
-"""
-    info = filter_object.info
-    if filter_object.info.multipart_filter == True:
-        filter_object.value = info.multipart_value
-
-    filter_object.properties = copy.deepcopy(info.properties)
-    filter_object.non_mlt_properties = copy.deepcopy(info.non_mlt_properties)
-        
-    _filter_stack.reinit_stack_item(filter_object)
-"""        
-#def _delete_effect():
-#    delete_effect_pressed()
 
 def _set_fade_length_dialog_callback(dialog, response_id, spin):
     if response_id == Gtk.ResponseType.ACCEPT:
