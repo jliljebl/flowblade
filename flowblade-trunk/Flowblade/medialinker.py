@@ -453,16 +453,23 @@ def _select_relink_path_dialog_callback(file_select, response_id, media_asset):
         
     global last_media_dir
     last_media_dir = folder
-    
-    if media_asset.media_type == appconsts.IMAGE_SEQUENCE: # img seqs need formatted path
-        if editorstate.mlt_version_is_equal_or_greater("0.8.5"):
-            new_style = True
-        else:
-            new_style = False
-        resource_name_str = utils.get_img_seq_resource_name(filenames[0], new_style)
-        media_asset.relink_path = folder + "/" + resource_name_str
 
-    linker_window.relink_list.fill_data_model()
+    # Relink all the files in a same directory
+    for med_asset in media_assets:
+        med_link_name = os.path.basename(med_asset.orig_path)
+        link_path = os.path.join(folder, med_link_name)
+        if os.path.isfile(link_path):
+            if med_asset.media_type == appconsts.IMAGE_SEQUENCE: # img seqs need formatted path
+                if editorstate.mlt_version_is_equal_or_greater("0.8.5"):
+                    new_style = True
+                else:
+                    new_style = False
+                resource_name_str = utils.get_img_seq_resource_name(link_path, new_style)
+                med_asset.relink_path = folder + "/" + resource_name_str
+            else:
+                med_asset.relink_path = link_path
+            linker_window.relink_list.fill_data_model()
+    # End of Relink all the files in a same directory
 
 def _delete_button_pressed():
     media_asset = linker_window.get_selected_media_asset()
