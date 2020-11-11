@@ -2291,18 +2291,6 @@ def display_media_file_popup_menu(media_file, callback, event):
 
     media_file_menu.popup(None, None, None, None, event.button, event.time)
 
-def display_filter_stack_popup_menu(row, treeview, callback, event):
-    filter_stack_menu = filter_stack_menu_popup_menu
-    guiutils.remove_children(filter_stack_menu)
-
-    filter_stack_menu.add(_get_menu_item(_("Toggle Active"), callback, ("toggle", row, treeview)))
-    filter_stack_menu.add(_get_menu_item(_("Reset Values"), callback, ("reset", row, treeview)))
-    _add_separetor(filter_stack_menu)
-    filter_stack_menu.add(_get_menu_item(_("Move Up"), callback, ("moveup", row, treeview)))
-    filter_stack_menu.add(_get_menu_item(_("Move Down"), callback, ("movedown", row, treeview)))
-    
-    filter_stack_menu.popup(None, None, None, None, event.button, event.time)
-
 def display_media_log_event_popup_menu(row, treeview, callback, event):
     log_event_menu = log_event_popup_menu
     guiutils.remove_children(log_event_menu)

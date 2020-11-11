@@ -57,7 +57,6 @@ _block_changed_update = False # Used to block unwanted callback update from "cha
 _block_stack_update = False # Used to block full stack update when adding new filter. 
                             # Otherwise we got 2 updates EditAction objects must always try to update
                             # on undo/redo.
-#current_filter_index = -1 # Needed to find right filter object when saving/loading effect values
 
 # Property change polling.
 # We didn't put a layer of indirection to look for and launch events on filter property edits
@@ -169,7 +168,7 @@ class FilterStackItem:
         guiutils.set_margins(self.expander_frame, 2, 0, 0, 0)
         
         self.active_check = Gtk.CheckButton()
-        self.active_check.set_active(True)
+        self.active_check.set_active(self.filter_object.active)
         self.active_check.connect("toggled", self.toggle_filter_active)
         guiutils.set_margins(self.active_check, 4, 0, 0, 0)
 
@@ -297,7 +296,12 @@ class ClipFilterStack:
     def set_filter_item_expanded(self, filter_index):
         filter_stack_item = self.filter_stack[filter_index]
         filter_stack_item.expander.set_expanded(True)
-        
+
+    def set_all_filters_expanded_state(self, expanded):
+        for i in range(0, len(self.filter_stack)):
+            stack_item = self.filter_stack[i]
+            stack_item.expander.set_expanded(expanded)
+            
     def get_expanded(self):
         state_list = []
         for stack_item in self.filter_stack:
@@ -420,7 +424,7 @@ def filter_stack_button_press(treeview, event):
         return True
     return False
 """
-
+"""
 def _filter_stack_menu_item_selected(widget, data):
     item_id, row, treeview = data
 
@@ -440,7 +444,8 @@ def _filter_stack_menu_item_selected(widget, data):
         if insert_row < 0:
             insert_row = 0
         do_stack_move(insert_row, delete_row)
-        
+"""
+
 def _quit_editing_clip_clicked(): # this is a button callback
     clear_clip()
 
@@ -611,13 +616,19 @@ def delete_effect_pressed(clip, filter_index):
 
     updater.repaint_tline()
     
-def _toggle_all_pressed(widget, event):
-    for i in range(0, len(clip.filters)):
-        filter_object = clip.filters[i]
+def _toggle_all_pressed():
+    if _filter_stack == None:
+        return False
+        
+    for i in range(0, len(_filter_stack.clip.filters)):
+        filter_object = _filter_stack.clip.filters[i]
         filter_object.active = (filter_object.active == False)
         filter_object.update_mlt_disabled_value()
-    
-    update_stack()
+
+    clip, track, clip_index = _filter_stack.get_clip_data()
+    expanded_panels = _filter_stack.get_expanded()
+    update_stack(clip, track, clip_index)
+    _filter_stack.set_expanded(expanded_panels)
 
 """    
 def dnd_row_deleted(model, path):
@@ -880,13 +891,23 @@ def _clip_has_filter_mask_filter():
 # ------------------------------------------------ SAVE, LOAD etc. from hamburger menu
 def _hamburger_launch_pressed(widget, event):
     guicomponents.get_clip_effects_editor_hamburger_menu(event, _clip_hamburger_item_activated)
-    
+
 def _clip_hamburger_item_activated(widget, msg):
     if msg == "fade_length":
         dialogs.set_fade_length_default_dialog(_set_fade_length_dialog_callback, PROJECT().get_project_property(appconsts.P_PROP_DEFAULT_FADE_LENGTH))
-    elif msg == "close":
+
+    if _filter_stack == None:
+        return False
+    
+    if msg == "close":
         clear_clip()
-        
+    elif  msg == "expanded":
+        _filter_stack.set_all_filters_expanded_state(True)
+    elif  msg == "unexpanded":
+        _filter_stack.set_all_filters_expanded_state(False)
+    elif  msg == "toggle":
+        _toggle_all_pressed()
+
 def _save_effect_values_dialog_callback(dialog, response_id, filter_object):
     if response_id == Gtk.ResponseType.ACCEPT:
         save_path = dialog.get_filenames()[0]
