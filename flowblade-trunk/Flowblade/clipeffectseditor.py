@@ -50,7 +50,7 @@ import updater
 import utils
 
 _filter_stack = None
-    
+
 widgets = utils.EmptyClass()
 
 #clip = None # Clip being edited
@@ -163,7 +163,6 @@ class FilterStackItem:
         self.expander = Gtk.Expander()
         self.expander.set_label_widget(self.filter_header_row.widget)
         self.expander.add(self.edit_panel_frame)
-        self.expander.set_resize_toplevel(True)
         self.expander.set_label_fill(True)
 
         self.expander_frame = Gtk.Frame()
@@ -200,7 +199,6 @@ class FilterStackItem:
         self.filter_object.active = (self.filter_object.active == False)
         self.filter_object.update_mlt_disabled_value()
 
-
 class ClipFilterStack:
 
     def __init__(self, clip, track, clip_index):
@@ -210,10 +208,12 @@ class ClipFilterStack:
         
         # Create filter stack and GUI
         self.filter_stack = []
+        self.filter_kf_editors = {} # filter_object -> [kf_editors]
         self.widget = Gtk.VBox(False, 0)
         for filter_index in range(0, len(clip.filters)):
             filter_object = clip.filters[filter_index]
-            edit_panel = _get_filter_panel(clip, filter_object, filter_index, track, clip_index)
+            edit_panel, kf_editors = _get_filter_panel(clip, filter_object, filter_index, track, clip_index)
+            self.filter_kf_editors[filter_object] = kf_editors
             footer_row = FilterFooterRow(filter_object, self)
             edit_panel.pack_start(footer_row.widget, False, False, 0)
             edit_panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
@@ -288,6 +288,19 @@ class ClipFilterStack:
 
         return False
 
+    def clear_kf_editors_from_update_list(self, filter_object):
+        kf_editors = self.filter_kf_editors[filter_object]
+        global keyframe_editor_widgets
+        for editor in kf_editors:
+            try:
+                keyframe_editor_widgets.remove(editor)
+            except:
+                pass
+                print("Trying to remove non existing from keyframe_editor_widgets")
+                
+        self.filter_kf_editors.pop(filter_object)
+        
+        
 # ------------------------------------------------------------------- interface
 def shutdown_polling():
     global _edit_polling_thread
@@ -336,7 +349,10 @@ def set_clip(clip, track, clip_index, show_tab=True):
         if clip == _filter_stack.clip and track == _filter_stack.track and clip_index == _filter_stack.clip_index and show_tab == False:
             print("return")
             return
-    
+
+    global keyframe_editor_widgets
+    keyframe_editor_widgets = []
+
     widgets.clip_info.display_clip_info(clip, track, clip_index)
     set_enabled(True)
     update_stack(clip, track, clip_index)
@@ -356,7 +372,7 @@ def set_clip(clip, track, clip_index, show_tab=True):
     # Start new polling
     _edit_polling_thread = PropertyChangePollingThread()
     _edit_polling_thread.start()
-
+    
 def set_filter_item_expanded(filter_index):
     if _filter_stack == None:
         return 
@@ -366,6 +382,7 @@ def set_filter_item_expanded(filter_index):
 def effect_select_row_double_clicked(treeview, tree_path, col):
     add_currently_selected_effect()
 
+"""
 def filter_stack_button_press(treeview, event):
     path_pos_tuple = treeview.get_path_at_pos(int(event.x), int(event.y))
     if path_pos_tuple == None:
@@ -379,10 +396,11 @@ def filter_stack_button_press(treeview, event):
         row = max(rows[0])
     if row == -1:
         return False
-    if event.button == 3:
+    if event.button == 3:do_edit
         guicomponents.display_filter_stack_popup_menu(row, treeview, _filter_stack_menu_item_selected, event)                                    
         return True
     return False
+"""
 
 def _filter_stack_menu_item_selected(widget, data):
     item_id, row, treeview = data
@@ -478,17 +496,29 @@ def update_stack(clip, track, clip_index):
     _filter_stack = new_stack
 
     global widgets
-    widgets.value_edit_frame.remove(widgets.value_edit_box)
-    widgets.value_edit_frame.add(_filter_stack.widget)
+    #widgets.value_edit_frame.remove(widgets.value_edit_box)
+    #widgets.value_edit_frame.add(_filter_stack.widget)
 
-    widgets.value_edit_box = _filter_stack.widget
+    #widgets.value_edit_box = _filter_stack.widget
+
+    scroll_window = Gtk.ScrolledWindow()
+    scroll_window.add_with_viewport(_filter_stack.widget)
+    scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+    scroll_window.show_all()
+
+    widgets.value_edit_frame.remove(widgets.value_edit_box)
+    widgets.value_edit_frame.add(scroll_window)
+
+    widgets.value_edit_box = scroll_window
+    
 
 def update_stack_changed_blocked():
     global _block_changed_update
     _block_changed_update = True
     update_stack()
     _block_changed_update = False
-    
+
+
 def add_currently_selected_effect():
     # Check we have clip
     if clip == None:
@@ -534,7 +564,7 @@ def get_selected_filter_info():
     # Add filter
     group_name, filters_array = mltfilters.groups[gui.effect_select_combo_box.get_active()]
     return filters_array[row_index]
-    
+
 def add_effect_pressed():
     add_currently_selected_effect()
 
@@ -544,12 +574,16 @@ def delete_effect_pressed(clip, filter_index):
     current_filter = clip.filters[filter_index]
     
     if current_filter.info.filter_mask_filter == "":
+        # Clear keyframe editors from update list
+        _filter_stack.clear_kf_editors_from_update_list(current_filter)
+
         # Regular filters
         data = {"clip":clip,
                 "index":filter_index,
                 "filter_edit_done_func":filter_edit_done_stack_update}
         action = edit.remove_filter_action(data)
         action.do_edit()
+
     else:
         # Filter mask filters.
         index_1 = -1
@@ -561,14 +595,21 @@ def delete_effect_pressed(clip, filter_index):
                     index_1 = i
                 else:
                     index_2 = i
+
+        # Clear keyframe editors from update list
+        filt_1 = clip.filters[index_1]
+        filt_2 = clip.filters[index_2]
+        _filter_stack.clear_kf_editors_from_update_list(filt_1)
+        _filter_stack.clear_kf_editors_from_update_list(filt_2)
         
+        # Do edit
         data = {"clip":clip,
                 "index_1":index_1,
                 "index_2":index_2,
                 "filter_edit_done_func":filter_edit_done_stack_update}
         action = edit.remove_two_filters_action(data)
         action.do_edit()
-
+        
     set_stack_update_unblocked()
 
     clip, track, clip_index = _filter_stack.get_clip_data()
@@ -711,11 +752,8 @@ def _get_filter_panel(clip, filter_object, filter_index, track, clip_index):
     except KeyError:
         filter_name = filter_object.info.name
 
-    #filter_name_label = Gtk.Label(label= "<b>" + filter_name + "</b>")
-    #filter_name_label.set_use_markup(True)
-    
+    filter_keyframe_editor_widgets = []
 
-    #vbox.pack_start(filter_header_row.widget, False, False, 0)
     vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
 
     if len(editable_properties) > 0:
@@ -737,10 +775,12 @@ def _get_filter_panel(clip, filter_object, filter_index, track, clip_index):
                 or (editor_type == propertyeditorbuilder.FILTER_RECT_GEOM_EDITOR)
                 or (editor_type == propertyeditorbuilder.KEYFRAME_EDITOR_CLIP_FADE_FILTER)):
                     keyframe_editor_widgets.append(editor_row)
-            
+                    filter_keyframe_editor_widgets.append(editor_row)
+
             # if slider property is being edited as keyrame property
             if hasattr(editor_row, "is_kf_editor"):
                 keyframe_editor_widgets.append(editor_row)
+                filter_keyframe_editor_widgets.append(editor_row)
 
             vbox.pack_start(editor_row, False, False, 0)
             if not hasattr(editor_row, "no_separator"):
@@ -764,7 +804,7 @@ def _get_filter_panel(clip, filter_object, filter_index, track, clip_index):
         vbox.pack_start(Gtk.Label(label=_("No editable parameters")), True, True, 0)
     vbox.show_all()
 
-    return vbox
+    return (vbox, filter_keyframe_editor_widgets)
 
 
 def show_text_in_edit_area(text):
@@ -814,9 +854,7 @@ def filter_edit_done_stack_update(edited_clip, index=-1):
         
     if edited_clip != get_edited_clip(): # This gets called by all undos/redos, we only want to update if clip being edited here is affected
         return
-    
 
-    
     global _block_changed_update
     _block_changed_update = True
     update_stack()
