@@ -102,11 +102,19 @@ class FilterFooterRow:
         reset_button = guicomponents.PressLaunch(self.reset_pressed, surface, w=22, h=22)
         reset_button.widget.set_tooltip_markup(_("Reset effect values"))
         
+        surface = guiutils.get_cairo_image("filters_mask_add")
+        mask_button = guicomponents.PressLaunch(self.add_mask_pressed, surface, w=22, h=22)
+        mask_button.widget.set_tooltip_markup(_("Add Filter Mask"))
+        
         self.widget = Gtk.HBox(False, 0)
         self.widget.pack_start(guiutils.pad_label(4,5), False, False, 0)
+        self.widget.pack_start(mask_button.widget, False, False, 0)
+        self.widget.pack_start(guiutils.pad_label(2,5), False, False, 0)
+        self.widget.pack_start(reset_button.widget, False, False, 0)
+        self.widget.pack_start(guiutils.pad_label(12,5), False, False, 0)
         self.widget.pack_start(save_button.widget, False, False, 0)
         self.widget.pack_start(load_button.widget, False, False, 0)
-        self.widget.pack_start(reset_button.widget, False, False, 0)
+
         self.widget.pack_start(Gtk.Label(), True, True, 0)
         
     def save_pressed(self, w, e):
@@ -119,6 +127,9 @@ class FilterFooterRow:
     def reset_pressed(self, w, e):
         _reset_filter_values(self.filter_object)
 
+    def add_mask_pressed(self, w, e):
+        filter_index = self.filter_stack.get_filter_index(self.filter_object)
+        _filter_mask_launch_pressed(w, e, filter_index)
 
 class FilterHeaderRow:
     
@@ -250,7 +261,12 @@ class ClipFilterStack:
             
     def get_clip_data(self):
         return (self.clip, self.track, self.clip_index)
-
+    
+    def get_filter_index(self, filter_object):
+        #filter_index = -1
+        #for i in range(0, ) self.filter_stack 
+        return self.clip.filters.index(filter_object)
+        
     def set_filter_item_expanded(self, filter_index):
         filter_stack_item = self.filter_stack[filter_index]
         filter_stack_item.expander.set_expanded(True)
@@ -834,15 +850,16 @@ def update_kfeditors_positions():
 
 
 # ------------------------------------------------ FILTER MASK 
-def _filter_mask_launch_pressed(widget, event):
+def _filter_mask_launch_pressed(widget, event, filter_index):
     filter_names, filter_msgs = mltfilters.get_filter_mask_start_filters_data()
-    guicomponents.get_filter_mask_menu(event, _filter_mask_item_activated, filter_names, filter_msgs)
+    guicomponents.get_filter_mask_menu(event, _filter_mask_item_activated, filter_names, filter_msgs, filter_index)
 
 def _filter_mask_item_activated(widget, data):
-    if clip == None:
-        return
-
-    full_stack_mask, msg = data
+    if _filter_stack == None:
+        return False
+    
+    clip, track, clip_index = _filter_stack.get_clip_data()
+    full_stack_mask, msg, current_filter_index = data
     
     filter_info_1 = mltfilters.get_filter_mask_filter(msg)
     filter_info_2 = mltfilters.get_filter_mask_filter("Mask - End")
@@ -857,7 +874,7 @@ def _filter_mask_item_activated(widget, data):
         else:
             index_1 = 0
             index_2 = len(clip.filters) + 1
-    
+
     data = {"clip":clip, 
             "filter_info_1":filter_info_1,
             "filter_info_2":filter_info_2,
@@ -865,7 +882,13 @@ def _filter_mask_item_activated(widget, data):
             "index_2":index_2,
             "filter_edit_done_func":filter_edit_done_stack_update}
     action = edit.add_two_filters_action(data)
+
+    set_stack_update_blocked()
     action.do_edit()
+    set_stack_update_unblocked()
+
+    set_clip(clip, track, clip_index)
+    _filter_stack.set_filter_item_expanded(current_filter_index + 1)
 
 def _clip_has_filter_mask_filter():
     if clip == None:
