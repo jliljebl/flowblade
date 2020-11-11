@@ -418,7 +418,7 @@ def monkeypatch_callbacks():
     snapping._get_x_for_frame_func = tlinewidgets._get_frame_x
 
     # Callback to reinit to change slider <-> kf editor
-    propertyeditorbuilder.re_init_editors_for_slider_type_change_func = clipeffectseditor.effect_selection_changed
+    propertyeditorbuilder.re_init_editors_for_slider_type_change_func = clipeffectseditor.refresh_clip
 
     propertyeditorbuilder.show_rotomask_func = rotomask.show_rotomask
     
@@ -617,7 +617,6 @@ def init_editor_state():
 
     # Clear editors 
     clipeffectseditor.clear_clip()
-    #clipeffectseditor.effect_selection_changed() # to get No Clip text
     compositeeditor.clear_compositor()
 
     # Show first pages on notebooks
