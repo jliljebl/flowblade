@@ -87,7 +87,6 @@ filters_notebook_index = 2 # 2 for single window, app.py sets to 1 for two windo
 class FilterFooterRow:
     
     def __init__(self, filter_object, filter_stack):
-        #self.clip = clip
         self.filter_object = filter_object
         self.filter_stack = filter_stack
         
@@ -111,14 +110,14 @@ class FilterFooterRow:
         self.widget.pack_start(Gtk.Label(), True, True, 0)
         
     def save_pressed(self, w, e):
-        print("save")
+        default_name = self.filter_object.info.name + _("_effect_values") + ".data"
+        dialogs.save_effects_compositors_values(_save_effect_values_dialog_callback, default_name, True, self.filter_object)
 
     def load_pressed(self, w, e):
-        print("save")
-
+        dialogs.load_effects_compositors_values_dialog(_load_effect_values_dialog_callback, True, self.filter_object)
+        
     def reset_pressed(self, w, e):
-        self.filter_object.reset_values()
-        self.filter_stack.reinit_stack_item(self.filter_object)
+        _reset_filter_values(self.filter_object)
 
 
 class FilterHeaderRow:
@@ -141,7 +140,6 @@ class FilterStackItem:
 
     def __init__(self, filter_object, edit_panel, filter_stack):
         self.filter_object = filter_object
-        #self.selected = False
         self.filter_header_row = FilterHeaderRow(filter_object)
 
         self.edit_panel = edit_panel
@@ -188,27 +186,9 @@ class FilterStackItem:
         self.filter_stack.delete_filter_for_stack_item(self)
     
     def toggle_filter_active(self, widget):
-        #self.filter_stack.set_filter_stack_item_selected(self)
         self.filter_object.active = (self.filter_object.active == False)
         self.filter_object.update_mlt_disabled_value()
 
-    """
-    def set_selected(self, selected):
-        self.selected = selected
-        SELECTED_BG = Gdk.RGBA(0.1, 0.31, 0.58,1.0) # we really need to get this theme css somehow
-        if selected == True:
-            self.expander_frame.override_background_color(Gtk.StateType.NORMAL, SELECTED_BG)
-        else:
-            self.expander_frame.override_background_color(Gtk.StateType.NORMAL, gui.get_bg_color())
-
-        self.edit_panel_frame.override_background_color(Gtk.StateType.NORMAL, gui.get_bg_color())
-    """
-    
-    """
-    def expander_frame_pressed(self, widget, event):
-        print(event)
-        return False
-    """
 
 class ClipFilterStack:
 
@@ -216,8 +196,6 @@ class ClipFilterStack:
         self.clip = clip
         self.track = track
         self.clip_index = clip_index
-        
-        #self.current_filter_index = -1 # selected filter
         
         # Create filter stack and GUI
         self.filter_stack = []
@@ -282,24 +260,6 @@ class ClipFilterStack:
         filter_index = self.filter_stack.index(stack_item)
         delete_effect_pressed(self.clip, filter_index)
 
-
-
-    """
-    def set_filter_selected(self, filter_index):
-        self.clear_selection()
-                    
-        filter_stack_item = self.filter_stack[filter_index]
-        filter_stack_item.set_selected(True)
-
-    def set_filter_stack_item_selected(self, stack_item):
-        filter_index = self.filter_stack.index(stack_item)
-        self.set_filter_selected(filter_index)
-
-    def clear_selection(self):
-        for filter_item in self.filter_stack:
-            filter_item.set_selected(False)
-    """
-    
 
 # ------------------------------------------------------------------- interface
 def shutdown_polling():
@@ -1082,32 +1042,27 @@ def _clip_hamburger_item_activated(widget, msg):
         dialogs.load_effects_compositors_values_dialog(_load_effect_values_dialog_callback)
     elif msg == "reset":
         _reset_filter_values()
-    #elif msg == "delete":
-    #    _delete_effect()
     elif msg == "fade_length":
         dialogs.set_fade_length_default_dialog(_set_fade_length_dialog_callback, PROJECT().get_project_property(appconsts.P_PROP_DEFAULT_FADE_LENGTH))
     elif msg == "close":
         clear_clip()
         
-def _save_effect_values_dialog_callback(dialog, response_id):
+def _save_effect_values_dialog_callback(dialog, response_id, filter_object):
     if response_id == Gtk.ResponseType.ACCEPT:
         save_path = dialog.get_filenames()[0]
-        filter_object = clip.filters[current_filter_index]
         effect_data = EffectValuesSaveData(filter_object)
         effect_data.save(save_path)
     
     dialog.destroy()
 
-def _load_effect_values_dialog_callback(dialog, response_id):
+def _load_effect_values_dialog_callback(dialog, response_id, filter_object):
     if response_id == Gtk.ResponseType.ACCEPT:
         load_path = dialog.get_filenames()[0]
         effect_data = utils.unpickle(load_path)
         
-        filter_object = clip.filters[current_filter_index]
-        
         if effect_data.data_applicable(filter_object.info):
             effect_data.set_effect_values(filter_object)
-            effect_selection_changed()
+            _filter_stack.reinit_stack_item(filter_object)
         else:
             # Info window
             saved_effect_name = effect_data.info.name
@@ -1118,8 +1073,13 @@ def _load_effect_values_dialog_callback(dialog, response_id):
     
     dialog.destroy()
 
-def _reset_filter_values():
-    filter_object = clip.filters[current_filter_index]
+def _reset_filter_values(filter_object):
+        filter_object.properties = copy.deepcopy(filter_object.info.properties)
+        filter_object.non_mlt_properties = copy.deepcopy(filter_object.info.non_mlt_properties)
+        filter_object.update_mlt_filter_properties_all()
+                
+        _filter_stack.reinit_stack_item(filter_object)
+"""
     info = filter_object.info
     if filter_object.info.multipart_filter == True:
         filter_object.value = info.multipart_value
@@ -1127,8 +1087,8 @@ def _reset_filter_values():
     filter_object.properties = copy.deepcopy(info.properties)
     filter_object.non_mlt_properties = copy.deepcopy(info.non_mlt_properties)
         
-    effect_selection_changed()
-
+    _filter_stack.reinit_stack_item(filter_object)
+"""        
 #def _delete_effect():
 #    delete_effect_pressed()
 

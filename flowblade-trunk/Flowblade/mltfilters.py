@@ -382,11 +382,11 @@ class MultipartFilterObject:
         else:
             for f in self.mlt_filters:
                 f.set("disable", str(1))
-    
+    """
     def reset_values(self, mlt_profile, clip):
         self.value = copy.deepcopy(self.info.multipart_value)
         self.update_value(self.value, clip, mlt_profile)
-
+    """
 
 def load_filters_xml(services):
     """

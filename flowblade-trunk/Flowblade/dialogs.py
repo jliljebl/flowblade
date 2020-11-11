@@ -341,7 +341,7 @@ def save_project_as_dialog(callback, current_name, open_dir, parent=None):
     dialog.connect('response', callback)
     dialog.show()
 
-def save_effects_compositors_values(callback, default_name, saving_effect=True):
+def save_effects_compositors_values(callback, default_name, saving_effect=True, filter_object=None):
     parent = gui.editor_window.window
 
     if saving_effect == True:
@@ -362,10 +362,13 @@ def save_effects_compositors_values(callback, default_name, saving_effect=True):
     file_filter.set_name(_("Effect/Compositor Values Data"))
     file_filter.add_pattern("*" + "data")
     dialog.add_filter(file_filter)
-    dialog.connect('response', callback)
+    if filter_object == None:
+        dialog.connect('response', callback)
+    else:
+        dialog.connect('response', callback, filter_object)
     dialog.show()
 
-def load_effects_compositors_values_dialog(callback, loading_effect=True):
+def load_effects_compositors_values_dialog(callback, loading_effect=True, filter_object=None):
     parent = gui.editor_window.window
 
     if loading_effect == True:
@@ -383,7 +386,10 @@ def load_effects_compositors_values_dialog(callback, loading_effect=True):
     file_filter.set_name(_("Effect/Compositor Values Data"))
     file_filter.add_pattern("*" + "data")
     dialog.add_filter(file_filter)
-    dialog.connect('response', callback)
+    if filter_object == None:
+        dialog.connect('response', callback)
+    else:
+        dialog.connect('response', callback, filter_object)
     dialog.show()
     
 def export_xml_dialog(callback, project_name):
