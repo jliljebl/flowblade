@@ -473,18 +473,12 @@ def create_widgets():
     widgets.value_edit_frame = Gtk.Frame()
     widgets.value_edit_frame.set_shadow_type(Gtk.ShadowType.NONE)
     widgets.value_edit_frame.add(widgets.value_edit_box)
-
-    widgets.toggle_all = Gtk.Button()
-    widgets.toggle_all.set_image(guiutils.get_image("filters_all_toggle"))
-    widgets.toggle_all.connect("clicked", lambda w: _toggle_all_pressed())
-    widgets.toggle_all.set_tooltip_text(_("Toggle all Filters On/Off"))
     
     widgets.hamburger_launcher = guicomponents.HamburgerPressLaunch(_hamburger_launch_pressed)
     guiutils.set_margins(widgets.hamburger_launcher.widget, 6, 8, 1, 0)
 
 def set_enabled(value):
-    widgets.clip_info.set_enabled( value)
-    widgets.toggle_all.set_sensitive(value)
+    widgets.clip_info.set_enabled(value)
     widgets.hamburger_launcher.set_sensitive(value)
     widgets.hamburger_launcher.widget.queue_draw()
 
