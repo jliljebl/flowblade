@@ -3024,14 +3024,13 @@ def get_audio_levels_popup_menu(event, callback):
 def get_clip_effects_editor_hamburger_menu(event, callback):
     menu = clip_effects_hamburger_menu
     guiutils.remove_children(menu)
-
-    menu.add(_get_menu_item(_("Save Effect Values"), callback, "save"))
-    menu.add(_get_menu_item(_("Load Effect Values"), callback, "load"))
-    menu.add(_get_menu_item(_("Reset Effect Values"), callback, "reset"))
+    
+    menu.add(_get_menu_item(_("Toggle All Effects On/Off"), callback, "toggle"))
 
     _add_separetor(menu)
-    
-    menu.add(_get_menu_item(_("Delete Effect"), callback, "delete"))
+
+    menu.add(_get_menu_item(_("Set All Expanded"), callback, "expanded"))
+    menu.add(_get_menu_item(_("Set All Unexpanded"), callback, "unexpanded"))
 
     _add_separetor(menu)
 
