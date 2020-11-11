@@ -332,6 +332,10 @@ class EditAction:
         # needs to be clearad when clips are moved to another track.
         self.clear_effects_editor_for_multitrack_edit = False  
 
+        # Pasting filters to clip might not be detected by our quite naive algorithm as
+        # clip's filters stack having being changed, so we use this to force update on that edit action. 
+        self.force_effects_editor_update = False 
+        
     def do_edit(self):
         if self.exit_active_trimmode_on_edit:
             trimmodes.set_no_edit_trim_mode()
@@ -443,12 +447,12 @@ class EditAction:
         if self.clear_effects_editor_for_multitrack_edit == False:
             if current_sequence().clip_is_in_sequence(clipeffectseditor.get_edited_clip()) == True:
                 print("WE'RE DOING clipeffectseditor UPDATE in edit")
-                updater.update_kf_editor()
-                #clipeffectseditor.reinit_current_effect()
+                updater.update_kf_editors_positions()
+                clipeffectseditor.reinit_stack_if_needed(self.force_effects_editor_update)
             else:
-                updater.clear_kf_editor()
+                updater.clear_effects_editor_clip()
         else:
-            updater.clear_kf_editor()
+            updater.clear_effects_editor_clip()
 
         current_sequence().update_edit_tracks_length() # Needed for timeline render updates
         if self.update_hidden_track_blank:
@@ -2023,6 +2027,7 @@ def _clone_filters_redo(self):
 # "clip","clone_source_clip"
 def paste_filters_action(data):
     action = EditAction(_paste_filters_undo, _paste_filters_redo, data)
+    action.force_effects_editor_update = True
     return action
 
 def _paste_filters_undo(self):
@@ -2905,7 +2910,7 @@ def _container_clip_clip_render_replace_redo(self):
     self.new_clip.container_data.rendered_media_range_out = self.old_clip.clip_out
 
 
-# -------------------------------------------------------- CONTAINER CLIP SWITHCH TO UNRENDERED CLIP MEDIA REPLACE
+# -------------------------------------------------------- CONTAINER CLIP SWITCH TO UNRENDERED CLIP MEDIA REPLACE
 # "old_clip", "new_clip", "track", "index", "do_filters_clone"
 def container_clip_switch_to_unrendered_replace(data):
     action = EditAction(_container_clip_switch_to_unrendered_replace_undo, _container_clip_switch_to_unrendered_replace_redo, data)

@@ -2150,7 +2150,7 @@ def _get_sequence_import_range(import_seq):
 def _update_gui_after_sequence_import(): # This copied  with small modifications into projectaction.py for sequence imports, update there too if needed...yeah.
     updater.update_tline_scrollbar() # Slider needs to adjust to possily new program length.
                                      # This REPAINTS TIMELINE as a side effect.
-    updater.clear_kf_editor()
+    updater.clear_effects_editor_clip()
 
     current_sequence().update_edit_tracks_length() # Needed for timeline renderering updates
     current_sequence().update_hidden_track_for_timeline_rendering() # Needed for timeline renderering updates

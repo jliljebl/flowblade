@@ -572,10 +572,10 @@ def update_position_bar():
     else:
         gui.pos_bar.update_display_from_producer(gui.pos_bar.producer)
     
-def update_kf_editor():
+def update_kf_editors_positions():
     clipeffectseditor.update_kfeditors_positions()
 
-def clear_kf_editor():
+def clear_effects_editor_clip():
     clipeffectseditor.clear_clip()
 
 # ----------------------------------------- marks

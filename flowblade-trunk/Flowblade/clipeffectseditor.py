@@ -248,7 +248,6 @@ class ClipFilterStack:
                 
             self.set_filter_item_expanded(stack_index)
             
-            
     def get_clip_data(self):
         return (self.clip, self.track, self.clip_index)
 
@@ -260,6 +259,18 @@ class ClipFilterStack:
         filter_index = self.filter_stack.index(stack_item)
         delete_effect_pressed(self.clip, filter_index)
 
+    def stack_changed(self, clip):
+        if len(clip.filters) != len(self.filter_stack):
+            return True
+
+        for i in range(0, len(clip.filters)):
+            clip_filter_info = clip.filters[i].info
+            stack_filter_info = self.filter_stack[i].info
+            
+            if stack_filter_info.mlt_service_id != clip_filter_info.mlt_service_id:
+                return True
+
+        return False
 
 # ------------------------------------------------------------------- interface
 def shutdown_polling():
@@ -611,6 +622,12 @@ def reinit_current_effect():
     clip, track, clip_index = _filter_stack.get_clip_data()
     set_clip(clip, track, clip_index)
 """
+
+def reinit_stack_if_needed(force_update):
+    clip, track, clip_index = _filter_stack.get_clip_data()
+    if _filter_stack.stack_changed(clip) == True or force_update == True:
+        print("reinit_stack_if_needed calls set clip")
+        set_clip(clip, track, clip_index, show_tab=True)
 
 def effect_selection_changed(use_current_filter_index=False):
     global keyframe_editor_widgets, current_filter_index

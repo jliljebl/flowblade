@@ -256,7 +256,7 @@ class FilterObject:
              self.mlt_filter.set("disable", str(0))
         else:
              self.mlt_filter.set("disable", str(1))
-    
+    """
     def reset_values(self,  mlt_profile=None, clip=None): # multipartfilters need profile and clip
         for i in range(0, len(self.properties)):
             name, o_value, prop_type = self.info.properties[i]
@@ -264,7 +264,8 @@ class FilterObject:
             self.properties[i] = (name, o_value, prop_type)
         
         self.update_mlt_filter_properties_all()
-
+    """
+    
     def replace_values(self, clip):
         # We need to initilize some calues based clip langth and need wait until clip for
         # filter is known, replace at object creation is done before clip is available
