@@ -71,6 +71,9 @@ keyframe_editor_widgets = []
 
 # Filter stack DND requires some state info to be maintained to make sure that it's only done when certain events
 # happen in a certain sequence.
+TOP_HALF = 0
+BOTTOM_HALF = 1
+
 NOT_ON = 0
 MOUSE_PRESS_DONE = 1
 INSERT_DONE = 2
@@ -102,12 +105,33 @@ class FilterFooterRow:
         surface = guiutils.get_cairo_image("filters_mask_add")
         mask_button = guicomponents.PressLaunch(self.add_mask_pressed, surface, w=22, h=22)
         mask_button.widget.set_tooltip_markup(_("Add Filter Mask"))
+
+        surface = guiutils.get_cairo_image("filters_move_up")
+        move_up_button = guicomponents.PressLaunch(self.move_up_pressed, surface, w=22, h=22)
+        move_up_button.widget.set_tooltip_markup(_("Move Filter Up"))
+
+        surface = guiutils.get_cairo_image("filters_move_down")
+        move_down_button = guicomponents.PressLaunch(self.move_down_pressed, surface, w=22, h=22)
+        move_down_button.widget.set_tooltip_markup(_("Move Filter Down"))
+
+        surface = guiutils.get_cairo_image("filters_move_top")
+        move_top_button = guicomponents.PressLaunch(self.move_top_pressed, surface, w=22, h=22)
+        move_top_button.widget.set_tooltip_markup(_("Move Filter To Top"))
+
+        surface = guiutils.get_cairo_image("filters_move_bottom")
+        move_bottom_button = guicomponents.PressLaunch(self.move_bottom_pressed, surface, w=22, h=22)
+        move_bottom_button.widget.set_tooltip_markup(_("Move Filter To Bottom"))
         
         self.widget = Gtk.HBox(False, 0)
         self.widget.pack_start(guiutils.pad_label(4,5), False, False, 0)
         self.widget.pack_start(mask_button.widget, False, False, 0)
         self.widget.pack_start(guiutils.pad_label(2,5), False, False, 0)
         self.widget.pack_start(reset_button.widget, False, False, 0)
+        self.widget.pack_start(guiutils.pad_label(12,5), False, False, 0)
+        self.widget.pack_start(move_up_button.widget, False, False, 0)
+        self.widget.pack_start(move_down_button.widget, False, False, 0)
+        self.widget.pack_start(move_top_button.widget, False, False, 0)
+        self.widget.pack_start(move_bottom_button.widget, False, False, 0)
         self.widget.pack_start(guiutils.pad_label(12,5), False, False, 0)
         self.widget.pack_start(save_button.widget, False, False, 0)
         self.widget.pack_start(load_button.widget, False, False, 0)
@@ -128,7 +152,42 @@ class FilterFooterRow:
         filter_index = self.filter_stack.get_filter_index(self.filter_object)
         _filter_mask_launch_pressed(w, e, filter_index)
 
-
+    def move_up_pressed(self, w, e):
+        from_index = self.filter_stack.get_filter_index(self.filter_object)
+        if len(self.filter_stack.filter_stack) == 1:
+            return
+        if from_index == 0:
+            return
+        to_index = from_index - 1
+        do_stack_move(self.filter_stack.clip, to_index, from_index)
+        
+    def move_down_pressed(self, w, e):
+        from_index = self.filter_stack.get_filter_index(self.filter_object)
+        if len(self.filter_stack.filter_stack) == 1:
+            return
+        if from_index == len(self.filter_stack.filter_stack) - 1:
+            return
+        to_index = from_index + 1
+        do_stack_move(self.filter_stack.clip, to_index, from_index)
+        
+    def move_top_pressed(self, w, e):
+        from_index = self.filter_stack.get_filter_index(self.filter_object)
+        if len(self.filter_stack.filter_stack) == 1:
+            return
+        if from_index == 0:
+            return
+        to_index = 0
+        do_stack_move(self.filter_stack.clip, to_index, from_index)
+                
+    def move_bottom_pressed(self, w, e):
+        from_index = self.filter_stack.get_filter_index(self.filter_object)
+        if len(self.filter_stack.filter_stack) == 1:
+            return
+        if from_index == len(self.filter_stack.filter_stack) - 1:
+            return
+        to_index = len(self.filter_stack.filter_stack) - 1
+        do_stack_move(self.filter_stack.clip, to_index, from_index)
+        
 class FilterHeaderRow:
     
     def __init__(self, filter_object):
@@ -189,11 +248,8 @@ class FilterStackItem:
         self.widget.pack_start(self.expander_frame, True, True, 0)
         self.widget.pack_start(self.trash_vbox, False, False, 0)
         self.widget.show_all()
-    
-        #self.widget = Gtk.Frame()
-        #self.widget.add(self.hbox)
 
-        dnd.connect_effects_stack_item_widget(self.expander)
+        dnd.connect_effects_stack_item_widget_source(self.filter_header_row.widget, self)
 
     def trash_pressed(self, w, e):
         self.filter_stack.delete_filter_for_stack_item(self)
@@ -201,6 +257,74 @@ class FilterStackItem:
     def toggle_filter_active(self, widget):
         self.filter_object.active = (self.filter_object.active == False)
         self.filter_object.update_mlt_disabled_value()
+
+    def effects_drag_data_get(self, context, target, time_):
+        self_index = self.filter_stack.get_filter_index(self.filter_object)
+
+        print("drag starting from", self_index)
+
+    def on_effect_stack_drop(self, widget, context, x, y, timestamp):
+        context.finish(True, False, timestamp)
+
+        """
+        # Get drop position
+        if (float(y) / float(widget.get_allocated_height())) > 0.5:
+            drop_half = TOP_HALF
+        else:
+            drop_half = BOTTOM_HALF
+
+        drop_item_index = -1
+        for i in range(0, len(self.filter_stack.filter_stack)):
+            stack_item = self.filter_stack.filter_stack[i]
+            if stack_item.expander == widget:
+                drop_item_index = i
+
+        if drop_half == BOTTOM_HALF:
+            drop_item_index = drop_item_index + 1
+
+        # Get this item index, this the stack item being dragged
+        self_index = self.filter_stack.get_filter_index(self.filter_object)
+
+        print("ef drop values", self_index, drop_item_index)
+        
+        #if self_index == drop_item_index:
+        #         return
+
+        # Calculate indexes, do edit and referesh
+        delete_index = self_index
+        insert_index = drop_item_index
+        
+        if insert_index < delete_index:
+            # We do insert before delete when executing this edit.
+            delete_index = delete_index + 1
+        
+        print("ef drop", insert_index, delete_index)
+        do_stack_move(self.filter_stack.clip, insert_index, delete_index)
+         
+        refresh_clip()
+         
+
+        if self_index < drop_item_index:
+            # Filter is moved towards bottom in the stack
+            delete_index = self_index
+            insert_index = drop_item_index
+        else:
+            delete_index = self_index
+            insert_index = drop_item_index
+            
+    if self.delete_index < self.insert_index:
+        # d < i, moved filter can be found at d
+        moved_filter = self.clip.filters[self.delete_index]
+        _filter_move_insert(self.clip.filters, moved_filter, self.insert_index)
+        self.clip.filters.pop(self.delete_index)
+        #active_index = self.insert_index - 1
+    else:
+        # d > i, moved filter can be found at d - 1
+        moved_filter = self.clip.filters[self.delete_index]
+        _filter_move_insert(self.clip.filters, moved_filter, self.insert_index)
+        self.clip.filters.pop(self.delete_index)
+        #active_index = self.insert_index
+        """      
 
 class ClipFilterStack:
 
@@ -282,7 +406,7 @@ class ClipFilterStack:
 
         for i in range(0, len(clip.filters)):
             clip_filter_info = clip.filters[i].info
-            stack_filter_info = self.filter_stack[i].info
+            stack_filter_info = self.filter_stack[i].filter_object.info
             
             if stack_filter_info.mlt_service_id != clip_filter_info.mlt_service_id:
                 return True
@@ -694,6 +818,22 @@ def reinit_current_effect():
     set_clip(clip, track, clip_index)
 """
 
+def do_stack_move(clip, insert_row, delete_row):
+    #if abs(insert_row - delete_row) < 2: # filter was dropped on its previous place or cannot moved further up or down
+    #    return
+    
+    # The insert insert_row and delete_row values are rows we get when listening 
+    # "row-deleted" and "row-inserted" events after setting treeview "reorderable"
+    # Dnd is detected by order and timing of these events together with mouse press event
+    data = {"clip":clip,
+            "insert_index":insert_row,
+            "delete_index":delete_row,
+            "filter_edit_done_func":filter_edit_done_stack_update}
+    action = edit.move_filter_action(data)
+    set_stack_update_blocked()
+    action.do_edit()
+    set_stack_update_unblocked()
+    
 def reinit_stack_if_needed(force_update):
     clip, track, clip_index = _filter_stack.get_clip_data()
     if _filter_stack.stack_changed(clip) == True or force_update == True:

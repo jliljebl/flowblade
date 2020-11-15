@@ -139,12 +139,14 @@ def connect_range_log(treeview):
     treeview.connect("drag_drop", _on_range_drop)
     treeview.drag_source_set_icon_pixbuf(clip_icon)
 
-def connect_effects_stack_item_widget(widget):
+def connect_effects_stack_item_widget_source(widget, stack_item):
     widget.drag_source_set(Gdk.ModifierType.BUTTON1_MASK,
                            [CLIP_EFFECTS_DND_TARGET], 
                            Gdk.DragAction.COPY)
+
+def connect_effects_stack_item_widget_dest(widget, stack_item):
     widget.drag_dest_set(Gtk.DestDefaults.ALL, [CLIP_EFFECTS_DND_TARGET], Gdk.DragAction.COPY)
-    widget.connect("drag_drop", _on_effect_stack_drop)
+    widget.connect("drag_drop", stack_item.on_effect_stack_drop)
     
 def start_tline_clips_out_drag(event, clips, widget):
     global drag_data

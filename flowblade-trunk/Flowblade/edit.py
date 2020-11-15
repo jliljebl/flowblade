@@ -1937,11 +1937,13 @@ def _move_filter_undo(self):
     for i in range(0, len(self.filters_orig)):
         self.clip.filters.append(self.filters_orig[i])
 
+    """
     if self.delete_index < self.insert_index:
         active_index = self.delete_index
     else:
         active_index = self.delete_index - 1
-        
+    """
+
     _attach_all(self.clip)
 
     self.filter_edit_done_func(self.clip, active_index)
@@ -1953,23 +1955,22 @@ def _move_filter_redo(self):
     self.filters_orig = []
     for i in range(0, len(self.clip.filters)):
         self.filters_orig.append(self.clip.filters[i])
-        
+       
     if self.delete_index < self.insert_index:
-        # d < i, moved filter can be found at d
+        # Moving up
         moved_filter = self.clip.filters[self.delete_index]
-        _filter_move_insert(self.clip.filters, moved_filter, self.insert_index)
+        _filter_move_insert(self.clip.filters, moved_filter, self.insert_index + 1)
         self.clip.filters.pop(self.delete_index)
         active_index = self.insert_index - 1
     else:
-        # d > i, moved filter can be found at d - 1
-        moved_filter = self.clip.filters[self.delete_index - 1]
+        # Moving down
+        moved_filter = self.clip.filters[self.delete_index]
         _filter_move_insert(self.clip.filters, moved_filter, self.insert_index)
-        self.clip.filters.pop(self.delete_index)
-        active_index = self.insert_index
-
+        self.clip.filters.pop(self.delete_index + 1)
+    
     _attach_all(self.clip)
 
-    self.filter_edit_done_func(self.clip, active_index)
+    self.filter_edit_done_func(self.clip)
     
 def _detach_all(clip):
     mltfilters.detach_all_filters(clip)
