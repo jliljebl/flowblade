@@ -249,8 +249,6 @@ class FilterStackItem:
         self.widget.pack_start(self.trash_vbox, False, False, 0)
         self.widget.show_all()
 
-        dnd.connect_effects_stack_item_widget_source(self.filter_header_row.widget, self)
-
     def trash_pressed(self, w, e):
         self.filter_stack.delete_filter_for_stack_item(self)
     
@@ -258,73 +256,6 @@ class FilterStackItem:
         self.filter_object.active = (self.filter_object.active == False)
         self.filter_object.update_mlt_disabled_value()
 
-    def effects_drag_data_get(self, context, target, time_):
-        self_index = self.filter_stack.get_filter_index(self.filter_object)
-
-        print("drag starting from", self_index)
-
-    def on_effect_stack_drop(self, widget, context, x, y, timestamp):
-        context.finish(True, False, timestamp)
-
-        """
-        # Get drop position
-        if (float(y) / float(widget.get_allocated_height())) > 0.5:
-            drop_half = TOP_HALF
-        else:
-            drop_half = BOTTOM_HALF
-
-        drop_item_index = -1
-        for i in range(0, len(self.filter_stack.filter_stack)):
-            stack_item = self.filter_stack.filter_stack[i]
-            if stack_item.expander == widget:
-                drop_item_index = i
-
-        if drop_half == BOTTOM_HALF:
-            drop_item_index = drop_item_index + 1
-
-        # Get this item index, this the stack item being dragged
-        self_index = self.filter_stack.get_filter_index(self.filter_object)
-
-        print("ef drop values", self_index, drop_item_index)
-        
-        #if self_index == drop_item_index:
-        #         return
-
-        # Calculate indexes, do edit and referesh
-        delete_index = self_index
-        insert_index = drop_item_index
-        
-        if insert_index < delete_index:
-            # We do insert before delete when executing this edit.
-            delete_index = delete_index + 1
-        
-        print("ef drop", insert_index, delete_index)
-        do_stack_move(self.filter_stack.clip, insert_index, delete_index)
-         
-        refresh_clip()
-         
-
-        if self_index < drop_item_index:
-            # Filter is moved towards bottom in the stack
-            delete_index = self_index
-            insert_index = drop_item_index
-        else:
-            delete_index = self_index
-            insert_index = drop_item_index
-            
-    if self.delete_index < self.insert_index:
-        # d < i, moved filter can be found at d
-        moved_filter = self.clip.filters[self.delete_index]
-        _filter_move_insert(self.clip.filters, moved_filter, self.insert_index)
-        self.clip.filters.pop(self.delete_index)
-        #active_index = self.insert_index - 1
-    else:
-        # d > i, moved filter can be found at d - 1
-        moved_filter = self.clip.filters[self.delete_index]
-        _filter_move_insert(self.clip.filters, moved_filter, self.insert_index)
-        self.clip.filters.pop(self.delete_index)
-        #active_index = self.insert_index
-        """      
 
 class ClipFilterStack:
 
