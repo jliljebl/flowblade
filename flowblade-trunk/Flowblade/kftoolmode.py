@@ -364,7 +364,7 @@ def _tline_overlay(cr):
     
     # Get y position for clip's track
     ty_bottom = tlinewidgets._get_track_y(1) + current_sequence().tracks[1].height
-    ty_top = tlinewidgets._get_track_y(len(current_sequence().tracks) - 2) - 6 # -6 is hand correction, no idea why the math isn't getting correct pos top most track
+    ty_top = tlinewidgets._get_track_y(len(current_sequence().tracks) - 2) - 6 # -6 is hand correction, no idea why the math isn't getting correct pos for top most track
     ty_top_bottom_edge = ty_top + EDIT_AREA_HEIGHT
     off_step = float(ty_bottom - ty_top_bottom_edge) / float(len(current_sequence().tracks) - 2)
     ty_off = off_step * float(track.id - 1)
