@@ -48,7 +48,7 @@ MEDIA_FILES_DND_TARGET = Gtk.TargetEntry.new('media_file', Gtk.TargetFlags.SAME_
 EFFECTS_DND_TARGET = Gtk.TargetEntry.new('effect', Gtk.TargetFlags.SAME_APP, 0)
 CLIPS_DND_TARGET = Gtk.TargetEntry.new('clip', Gtk.TargetFlags.SAME_APP, 0)
 RANGE_DND_TARGET = Gtk.TargetEntry.new('range', Gtk.TargetFlags.SAME_APP, 0)
-
+CLIP_EFFECTS_DND_TARGET = Gtk.TargetEntry.new('clip_effect', Gtk.TargetFlags.SAME_APP, 0)
 URI_DND_TARGET = Gtk.TargetEntry.new('text/uri-list', 0, 0)
 
 
@@ -138,6 +138,13 @@ def connect_range_log(treeview):
                              Gdk.DragAction.COPY)
     treeview.connect("drag_drop", _on_range_drop)
     treeview.drag_source_set_icon_pixbuf(clip_icon)
+
+def connect_effects_stack_item_widget(widget):
+    widget.drag_source_set(Gdk.ModifierType.BUTTON1_MASK,
+                           [CLIP_EFFECTS_DND_TARGET], 
+                           Gdk.DragAction.COPY)
+    widget.drag_dest_set(Gtk.DestDefaults.ALL, [CLIP_EFFECTS_DND_TARGET], Gdk.DragAction.COPY)
+    widget.connect("drag_drop", _on_effect_stack_drop)
     
 def start_tline_clips_out_drag(event, clips, widget):
     global drag_data
@@ -188,7 +195,14 @@ def _on_monitor_drop(widget, context, x, y, timestamp):
 
 def _on_effect_stack_drop(widget, context, x, y, timestamp):
     context.finish(True, False, timestamp)
-    add_current_effect()
+    print(x, y)
+    print(widget)
+    print(widget.get_allocated_height())
+    if (float(y) / float(widget.get_allocated_height())) > 0.5:
+        print("bottom half")
+    else:
+        print("top half")
+    #add_current_effect()
     
 def _bin_drag_data_received(treeview, context, x, y, selection, info, etime, move_files_to_bin_func):
     bin_path, drop_pos = treeview.get_dest_row_at_pos(x, y)

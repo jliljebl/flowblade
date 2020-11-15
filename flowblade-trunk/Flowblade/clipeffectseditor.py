@@ -33,6 +33,7 @@ import appconsts
 import atomicfile
 import dialogs
 import dialogutils
+import dnd
 import edit
 import editorpersistance
 import editorstate
@@ -188,6 +189,11 @@ class FilterStackItem:
         self.widget.pack_start(self.expander_frame, True, True, 0)
         self.widget.pack_start(self.trash_vbox, False, False, 0)
         self.widget.show_all()
+    
+        #self.widget = Gtk.Frame()
+        #self.widget.add(self.hbox)
+
+        dnd.connect_effects_stack_item_widget(self.expander)
 
     def trash_pressed(self, w, e):
         self.filter_stack.delete_filter_for_stack_item(self)
@@ -216,7 +222,7 @@ class ClipFilterStack:
             edit_panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
             stack_item = FilterStackItem(filter_object, edit_panel, self)
             self.filter_stack.append(stack_item)
-            self.widget.pack_start(stack_item.widget,False, False, 0)
+            self.widget.pack_start(stack_item.widget, False, False, 0)
         
         self.widget.show_all()
 
@@ -241,9 +247,11 @@ class ClipFilterStack:
                 
             # Remove old stack item for reseted filter.
             self.filter_stack.pop(stack_index)
-            
+            self.clear_kf_editors_from_update_list(filter_object)
+
             # Create new stack item
-            edit_panel = _get_filter_panel(self.clip, filter_object, stack_index, self.track, self.clip_index )
+            edit_panel, kf_editors = _get_filter_panel(self.clip, filter_object, stack_index, self.track, self.clip_index)
+            self.filter_kf_editors[filter_object] = kf_editors
             footer_row = FilterFooterRow(filter_object, self)
             edit_panel.pack_start(footer_row.widget, False, False, 0)
             edit_panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
