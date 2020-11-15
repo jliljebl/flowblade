@@ -678,20 +678,13 @@ class TLineKeyFrameEditor:
             cr.line_to(xe, y)
             cr.stroke()
             
-            # 50
-            y = self._get_panel_y_for_value(50)
+            # -20
+            y = self._get_panel_y_for_value(-20.0)
             cr.set_source_rgb(*FRAME_SCALE_LINES)
             cr.move_to(xs, y)
             cr.line_to(xe, y)
             cr.stroke()
-            
-            # 100
-            y = self._get_panel_y_for_value(100)
-            cr.set_source_rgb(*FRAME_SCALE_LINES)
-            cr.move_to(xs, y)
-            cr.line_to(xe, y)
-            cr.stroke()
-            
+
         elif self.edit_type == BRIGHTNESS_KF_EDIT:
             # 0
             y = self._get_panel_y_for_value(0.0)
@@ -765,29 +758,31 @@ class TLineKeyFrameEditor:
             # 0
             y = self._get_panel_y_for_value(0.0)
             
-            text = "0"
+            text = "0 dB"
             cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF)
             cr.show_text(text)
             cr.move_to(xe + TEXT_X_OFF_END + 16, y - TEXT_Y_OFF)
             cr.show_text(text)
 
-            # 50
-            y = self._get_panel_y_for_value(50)
+            # -20
+            y = self._get_panel_y_for_value(-20.0)
 
-            text = "50"
+            text = "-20 dB"
             cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF + 8)
             cr.show_text(text)
             cr.move_to(xe + TEXT_X_OFF_END + 6, y - TEXT_Y_OFF + 8)
             cr.show_text(text)
             
-            # 100
-            y = self._get_panel_y_for_value(100)
+        
+            # -70
+            y = self._get_panel_y_for_value(-70.0)
             
-            text = "100"
-            cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF + 17)
+            text = "-70 dB"
+            cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF)
             cr.show_text(text)
-            cr.move_to(xe + TEXT_X_OFF_END, y - TEXT_Y_OFF + 17)
+            cr.move_to(xe + TEXT_X_OFF_END, y - TEXT_Y_OFF)
             cr.show_text(text)
+
             
         elif self.edit_type == BRIGHTNESS_KF_EDIT:
             # 0
