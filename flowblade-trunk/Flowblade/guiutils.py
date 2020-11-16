@@ -270,7 +270,8 @@ def get_slider_row(editable_property, listener, slider_name=None):
     
     editable_property.value_changed_ID = adjustment.connect("value-changed", listener) # saving ID to make it available for disconnect
                                                                                        # This also needs to be after adjustment is set to not loose exiting value for build dummy value 
-        
+    print("editable_property.value_changed_ID")
+
     return (get_two_column_editor_row(name, hbox), hslider)
 
 def get_slider_row_and_spin_widget(editable_property, listener, slider_name=None):

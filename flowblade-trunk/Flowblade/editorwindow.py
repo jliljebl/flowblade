@@ -147,12 +147,18 @@ class EditorWindow:
         # To ask confirmation for shutdown
         self.window.connect("delete-event", lambda w, e:app.shutdown())
 
+
         # Player consumer has to be stopped and started when window resized
         self.window.connect("window-state-event", lambda w, e:updater.refresh_player(e))
+
+        # Init application main menu.
+        self.ui = Gtk.UIManager()
+        self._init_app_menu(self.ui)
 
         # Create all panels and gui components 
         self._init_panels_and_guicomponents()
 
+<<<<<<< HEAD
        # Init application main menu.
         ui = Gtk.UIManager()
         self._init_app_menu(ui)
@@ -160,6 +166,9 @@ class EditorWindow:
         # ---------------------------------------------------- Build layout
         # We now have all components available and can build GUI, add tools tips,
         # set panel positions and show everything.
+=======
+        # Build layout
+>>>>>>> master
         # Timeline bottom row
         tline_hbox_3 = Gtk.HBox()
         tline_hbox_3.pack_start(self.left_corner.widget, False, False, 0)
@@ -179,11 +188,17 @@ class EditorWindow:
         if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_LEFT_DOCK:
             self.tline_box.pack_start(self.tool_dock, False, False, 0)
         self.tline_box.pack_end(tline_vbox_frame, True, True, 0)
-        
+
         # Timeline pane
-        tline_pane = Gtk.VBox(False, 1)
-        tline_pane.pack_start(self.edit_buttons_frame, False, True, 0)
-        tline_pane.pack_start(self.tline_box, True, True, 0)
+        tline_vpane = Gtk.VBox(False, 1)
+        tline_vpane.pack_start(self.edit_buttons_frame, False, True, 0)
+        tline_vpane.pack_start(self.tline_box, True, True, 0)
+
+        tline_pane = Gtk.HBox(False, 0)
+        
+        tline_pane.pack_start(tline_vpane, True, True, 0)
+        tline_pane.pack_start(self.effect_select_panel, False, False, 0)
+                
         self.tline_pane = tline_pane
 
         # VPaned top row / timeline
@@ -222,7 +237,7 @@ class EditorWindow:
         self._init_gui_to_prefs()
 
         # Viewmenu initial state
-        self._init_view_menu(ui.get_widget('/MenuBar/ViewMenu'))
+        self._init_view_menu(self.ui.get_widget('/MenuBar/ViewMenu'))
 
         # Set pane and show window
         self.window.add(pane)
@@ -278,9 +293,9 @@ class EditorWindow:
     def _init_panels_and_guicomponents(self):        
         # Disable Blender and G'Mic container clip menu items if not available.
         if containerclip.blender_available() == False:
-            ui.get_widget('/MenuBar/ProjectMenu/ContainerClipsMenu/CreateBlenderContainerItem').set_sensitive(False)
+            self.ui.get_widget('/MenuBar/ProjectMenu/ContainerClipsMenu/CreateBlenderContainerItem').set_sensitive(False)
         if gmic.gmic_available() == False:
-            ui.get_widget('/MenuBar/ProjectMenu/ContainerClipsMenu/CreateGMicContainerItem').set_sensitive(False)
+            self.ui.get_widget('/MenuBar/ProjectMenu/ContainerClipsMenu/CreateGMicContainerItem').set_sensitive(False)
             
         # Media panel
         self.bin_list_view = guicomponents.BinTreeView(
@@ -330,6 +345,7 @@ class EditorWindow:
             self.mm_paned.pack1(self.bins_panel, resize=True, shrink=True)
             self.mm_paned.pack2(media_panel, resize=True, shrink=False)
 
+<<<<<<< HEAD
         # This needs frame if it is not inside a notebeek.
         if editorpersistance.prefs.placement_media_panel != appconsts.PANEL_PLACEMENT_TOP_ROW_NOTEBOOK:
             self.mm_paned_frame = guiutils.get_panel_etched_frame(self.mm_paned)
@@ -360,9 +376,16 @@ class EditorWindow:
         effects_hbox.set_border_width(0)
         effects_hbox.pack_start(clip_editor_panel, False, False, 0)
         effects_hbox.pack_start(effects_editor_panel, True, True, 0)
+=======
+        mm_panel = guiutils.set_margins(self.mm_paned, 0, 0, 0, 0)
+
+        # Effects edit panel
+        info_row = clipeffectseditor.get_clip_effects_editor_info_row()    
+        effects_editor_panel = guiutils.set_margins(clipeffectseditor.widgets.value_edit_frame, 4, 0, 4, 4)
+>>>>>>> master
 
         effects_vbox = Gtk.VBox()
-        effects_vbox.pack_start(effects_hbox, True, True, 0)
+        effects_vbox.pack_start(effects_editor_panel, True, True, 0)
         effects_vbox.pack_start(info_row, False, False, 0)
 
         if not(editorstate.SCREEN_HEIGHT < 1023):
@@ -370,6 +393,13 @@ class EditorWindow:
         else:
             self.effects_panel = effects_vbox
 
+        # Effects select panel
+        effect_select_panel, effect_select_list_view, effect_select_combo_box  = panels.get_effect_selection_panel(clipeffectseditor.effect_select_row_double_clicked)
+        self.effect_select_panel = effect_select_panel
+        self.effect_select_list_view = effect_select_list_view
+        self.effect_select_combo_box = effect_select_combo_box
+        dnd.connect_effects_select_tree_view(self.effect_select_list_view.treeview)
+        
         # Compositors panel
         action_row = compositeeditor.get_compositor_clip_panel()
         compositor_editor_panel = guiutils.set_margins(compositeeditor.widgets.value_edit_frame, 0, 0, 4, 0)
@@ -796,6 +826,7 @@ class EditorWindow:
             ('FullScreen', None, _('Fullscreen'), 'F11', None, lambda a:menuactions.toggle_fullscreen()),
             ('ProjectMenu', None, _('Project')),
             ('AddMediaClip', None, _('Add Video, Audio or Image...'), None, None, lambda a: projectaction.add_media_files()),
+            ('AddMediaFolder', None, _('Add Media Folder...'), None, None, lambda a: projectaction.add_media_folder()),
             ('AddImageSequence', None, _('Add Image Sequence...'), None, None, lambda a:projectaction.add_image_sequence()),
             ('CreateColorClip', None, _('Create Color Clip...'), None, None, lambda a:patternproducer.create_color_clip()),
             ('BinMenu', None, _('Bin')),
@@ -915,6 +946,7 @@ class EditorWindow:
                 <menu action='ProjectMenu'>
                     <menuitem action='AddMediaClip'/>
                     <menuitem action='AddImageSequence'/>
+                    <menuitem action='AddMediaFolder'/>
                     <separator/>
                     <menuitem action='CreateColorClip'/>
                     <menu action='PatternProducersMenu'>
@@ -991,37 +1023,37 @@ class EditorWindow:
 
         # Hide Blender menu item for Flatpaks
         if editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
-            ui.get_widget('/MenuBar/ProjectMenu/ContainerClipsMenu/CreateBlenderContainerItem').set_visible(False)
+            self.ui.get_widget('/MenuBar/ProjectMenu/ContainerClipsMenu/CreateBlenderContainerItem').set_visible(False)
         
         # Create global action group
         action_group = Gtk.ActionGroup('WindowActions')
         action_group.add_actions(menu_actions, user_data=None)
 
         # Use UIManager and add accelators to window.
-        ui.insert_action_group(action_group, 0)
-        ui.add_ui_from_string(menu_string)
-        accel_group = ui.get_accel_group()
+        self.ui.insert_action_group(action_group, 0)
+        self.ui.add_ui_from_string(menu_string)
+        accel_group = self.ui.get_accel_group()
         self.window.add_accel_group(accel_group)
 
         # Get menu bar
-        self.menubar = ui.get_widget('/MenuBar')
+        self.menubar = self.ui.get_widget('/MenuBar')
 
         # Set reference to UI manager and acclegroup
         self.uimanager = ui
         self.accel_group = accel_group
 
         # Add recent projects to menu
-        self.fill_recents_menu_widget(ui.get_widget('/MenuBar/FileMenu/OpenRecent'), projectaction.open_recent_project)
+        self.fill_recents_menu_widget(self.ui.get_widget('/MenuBar/FileMenu/OpenRecent'), projectaction.open_recent_project)
 
         # Disable audio mixer if not available
         if editorstate.audio_monitoring_available == False:
-            ui.get_widget('/MenuBar/ToolsMenu/AudioMix').set_sensitive(False)
+            self.ui.get_widget('/MenuBar/ToolsMenu/AudioMix').set_sensitive(False)
 
         # Diable Blender and G'Mic container clip menu items if not available.
         if containerclip.blender_available() == False:
-            ui.get_widget('/MenuBar/ProjectMenu/ContainerClipsMenu/CreateBlenderContainerItem').set_sensitive(False)
+            self.ui.get_widget('/MenuBar/ProjectMenu/ContainerClipsMenu/CreateBlenderContainerItem').set_sensitive(False)
         if gmic.gmic_available() == False:
-            ui.get_widget('/MenuBar/ProjectMenu/ContainerClipsMenu/CreateGMicContainerItem').set_sensitive(False)
+            self.ui.get_widget('/MenuBar/ProjectMenu/ContainerClipsMenu/CreateGMicContainerItem').set_sensitive(False)
 
     def _init_view_menu(self, menu_item):
         menu = menu_item.get_submenu()
@@ -1355,6 +1387,7 @@ class EditorWindow:
         self.tool_selector = None
         workflow.select_default_tool()
 
+<<<<<<< HEAD
         media_panel_top.connect("activate", lambda w: self._show_media_panel_top_row_notebook(w))
         media_panel_left_column.connect("activate", lambda w: self._show_media_panel_left_column(w))
 
@@ -1391,6 +1424,16 @@ class EditorWindow:
         editorpersistance.save()
 
     # ----------------------------------------------------------- GUI components monitor, middlebar.
+=======
+    def update_tool_dock(self):
+        self.tline_box.remove(self.tool_dock)
+
+        self.tool_dock = workflow.get_tline_tool_dock()
+        self.tool_dock.show_all()
+
+        self.tline_box.pack_start(self.tool_dock, False, False, 0)
+
+>>>>>>> master
     def _create_monitor_buttons(self):
         self.monitor_switch = guicomponents.MonitorSwitch(self._monitor_switch_handler)
 

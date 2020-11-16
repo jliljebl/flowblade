@@ -1897,11 +1897,6 @@ def do_timeline_filters_paste():
         
     if movemodes.selected_track == -1:
         return
-        
-    target_clips = []
-    track = current_sequence().tracks[movemodes.selected_track]
-    for i in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
-        target_clips.append(track.clips[i])
 
     # First clip of selection is used as filters source
     source_clip = paste_clips[0]

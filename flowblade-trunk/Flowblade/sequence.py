@@ -509,14 +509,26 @@ class Sequence:
             clone_filter = mltfilters.clone_filter_object(f, self.profile)
             clone_clip.attach(clone_filter.mlt_filter)
             clone_clip.filters.append(clone_filter)
-
+    
+    def copy_filters(self, clip, clone_clip):
+        for f in clip.filters:
+            clone_filter = mltfilters.clone_filter_object(f, self.profile)
+            clone_clip.attach(clone_filter.mlt_filter)
+            clone_clip.filters.append(clone_filter)
+            
     def clone_filters(self, clip):
         clone_filters = []
         for f in clip.filters:
             clone_filter = mltfilters.clone_filter_object(f, self.profile)
             clone_filters.append(clone_filter)
         return clone_filters
-
+    
+    def clone_mute_state(self, clip, clone_clip):
+        # Mute 
+        if clip.mute_filter != None:
+            mute_filter = mltfilters.create_mute_volume_filter(self) 
+            mltfilters.do_clip_mute(clone_clip, mute_filter)
+            
     def get_next_id(self):
         """
         Growing id for newly created clip or transition. 
@@ -525,6 +537,9 @@ class Sequence:
         return self.next_id - 1
 
     def clip_is_in_sequence(self, test_clip):
+        if test_clip == None:
+            return False
+
         for i in range(1, len(self.tracks)):
             track = self.tracks[i]
             for clip in track.clips:

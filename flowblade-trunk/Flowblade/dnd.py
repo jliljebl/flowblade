@@ -48,7 +48,7 @@ MEDIA_FILES_DND_TARGET = Gtk.TargetEntry.new('media_file', Gtk.TargetFlags.SAME_
 EFFECTS_DND_TARGET = Gtk.TargetEntry.new('effect', Gtk.TargetFlags.SAME_APP, 0)
 CLIPS_DND_TARGET = Gtk.TargetEntry.new('clip', Gtk.TargetFlags.SAME_APP, 0)
 RANGE_DND_TARGET = Gtk.TargetEntry.new('range', Gtk.TargetFlags.SAME_APP, 0)
-
+CLIP_EFFECTS_DND_TARGET = Gtk.TargetEntry.new('clip_effect', Gtk.TargetFlags.SAME_APP, 0)
 URI_DND_TARGET = Gtk.TargetEntry.new('text/uri-list', 0, 0)
 
 
@@ -188,7 +188,14 @@ def _on_monitor_drop(widget, context, x, y, timestamp):
 
 def _on_effect_stack_drop(widget, context, x, y, timestamp):
     context.finish(True, False, timestamp)
-    add_current_effect()
+    print(x, y)
+    print(widget)
+    print(widget.get_allocated_height())
+    if (float(y) / float(widget.get_allocated_height())) > 0.5:
+        print("bottom half")
+    else:
+        print("top half")
+    #add_current_effect()
     
 def _bin_drag_data_received(treeview, context, x, y, selection, info, etime, move_files_to_bin_func):
     bin_path, drop_pos = treeview.get_dest_row_at_pos(x, y)
@@ -205,7 +212,7 @@ def _save_treeview_selection(treeview):
 
 def _save_media_panel_selection():
     global drag_data, drag_source
-    drag_data = gui.media_list_view.get_selected_media_objects()
+    drag_data = gui.media_list_view.get_selected_media_objects_for_drag()
     drag_source = SOURCE_MEDIA_FILE
 
 def _save_monitor_media(widget, context, selection, target_id, timestamp):

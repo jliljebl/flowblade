@@ -87,7 +87,7 @@ SCALE_DIGITS = "scale_digits"                               # Number of decimal 
 # are created deterministically from those and FilterObject.info.property_args data. So we need to save data here on change request to make the change happen.
 # This data needs to be erased always after use.
 changing_slider_to_kf_property_name = None
-re_init_editors_for_slider_type_change_func = None # monkeypatched in, it is clipeffectseditor.effect_selection_changed
+re_init_editors_for_slider_type_change_func = None # monkeypatched in at app.py
 show_rotomask_func =  None # monkeypatched in, it is rotomask.py, gmic won't lauch if we import
 
 def _p(name):

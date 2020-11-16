@@ -781,11 +781,8 @@ def get_relative_path(project_file_path, asset_path):
         for filename in fnmatch.filter(filenames, asset_file_name):
             matches.append(os.path.join(root, filename))
     if len(matches) == 1:
-        #print "relative path for: ", asset_file_name
         return matches[0]
     elif  len(matches) > 1:
-        # some error handling may be needed?
-        #print "relative path for: ", asset_file_name
         return matches[0]
     else:
         return NOT_FOUND # no relative path found

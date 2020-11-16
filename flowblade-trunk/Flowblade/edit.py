@@ -332,6 +332,10 @@ class EditAction:
         # needs to be clearad when clips are moved to another track.
         self.clear_effects_editor_for_multitrack_edit = False  
 
+        # Pasting filters to clip might not be detected by our quite naive algorithm as
+        # clip's filters stack having being changed, so we use this to force update on that edit action. 
+        self.force_effects_editor_update = False 
+        
     def do_edit(self):
         if self.exit_active_trimmode_on_edit:
             trimmodes.set_no_edit_trim_mode()
@@ -437,17 +441,17 @@ class EditAction:
            (do_gui_update and auto_follow_active() == True and self.compositor_autofollow_data != None)):
             self._update_gui()
         
-    def _update_gui(self): # This copied  with small modifications into projectaction.py for sequence imports, update there too if needed...yeah.
-        updater.update_tline_scrollbar() # Slider needs to adjust to possily new program length.
+    def _update_gui(self): # This is copied with small modifications into projectaction.py for sequence imports, update there too if needed.
+        updater.update_tline_scrollbar() # Slider needs to adjust to possibly new program length.
                                          # This REPAINTS TIMELINE as a side effect.
         if self.clear_effects_editor_for_multitrack_edit == False:
-            if current_sequence().clip_is_in_sequence(clipeffectseditor.clip) == True:
-                updater.update_kf_editor()
-                clipeffectseditor.reinit_current_effect()
+            if current_sequence().clip_is_in_sequence(clipeffectseditor.get_edited_clip()) == True:
+                updater.update_kf_editors_positions()
+                clipeffectseditor.reinit_stack_if_needed(self.force_effects_editor_update)
             else:
-                updater.clear_kf_editor()
+                updater.clear_effects_editor_clip()
         else:
-            updater.clear_kf_editor()
+            updater.clear_effects_editor_clip()
 
         current_sequence().update_edit_tracks_length() # Needed for timeline render updates
         if self.update_hidden_track_blank:
@@ -751,6 +755,9 @@ def _cut_redo(self):
     # Create new second clip if does not exist
     if(not hasattr(self, "new_clip")):
         self.new_clip = _create_clip_clone(self.clip)
+        current_sequence().copy_filters(self.clip, self.new_clip )
+        self.new_clip.markers = copy.deepcopy(self.clip.markers)
+        current_sequence().clone_mute_state(self.clip, self.new_clip)
     
     _cut(self.track, self.index, self.clip_cut_frame, self.clip, \
          self.new_clip)
@@ -791,6 +798,9 @@ def _cut_all_redo(self):
                 
         if first_redo == True:
             new_clip = _create_clip_clone(track_cut_data["clip"])
+            current_sequence().copy_filters(track_cut_data["clip"], new_clip)
+            new_clip.markers = copy.deepcopy(track_cut_data["clip"].markers)
+            current_sequence().clone_mute_state(track_cut_data["clip"], new_clip)
             self.new_clips.append(new_clip)
         else:
             new_clip = self.new_clips[i]
@@ -1791,7 +1801,7 @@ def _add_filter_redo(self):
         self.clip.filters.append(self.filter_object)
         
     self.filter_edit_done_func(self.clip, len(self.clip.filters) - 1) # updates effect stack gui
-
+    
 #------------------- ADD TWO FILTERS
 # NOTE: Using this requires that index_2 > index_1
 # "clip","filter_info_1",filter_info_2","index_1","index_2","filter_edit_done_func"
@@ -1923,11 +1933,13 @@ def _move_filter_undo(self):
     for i in range(0, len(self.filters_orig)):
         self.clip.filters.append(self.filters_orig[i])
 
+    """
     if self.delete_index < self.insert_index:
         active_index = self.delete_index
     else:
         active_index = self.delete_index - 1
-        
+    """
+
     _attach_all(self.clip)
 
     self.filter_edit_done_func(self.clip, active_index)
@@ -1939,23 +1951,22 @@ def _move_filter_redo(self):
     self.filters_orig = []
     for i in range(0, len(self.clip.filters)):
         self.filters_orig.append(self.clip.filters[i])
-        
+       
     if self.delete_index < self.insert_index:
-        # d < i, moved filter can be found at d
+        # Moving up
         moved_filter = self.clip.filters[self.delete_index]
-        _filter_move_insert(self.clip.filters, moved_filter, self.insert_index)
+        _filter_move_insert(self.clip.filters, moved_filter, self.insert_index + 1)
         self.clip.filters.pop(self.delete_index)
         active_index = self.insert_index - 1
     else:
-        # d > i, moved filter can be found at d - 1
-        moved_filter = self.clip.filters[self.delete_index - 1]
+        # Moving down
+        moved_filter = self.clip.filters[self.delete_index]
         _filter_move_insert(self.clip.filters, moved_filter, self.insert_index)
-        self.clip.filters.pop(self.delete_index)
-        active_index = self.insert_index
-
+        self.clip.filters.pop(self.delete_index + 1)
+    
     _attach_all(self.clip)
 
-    self.filter_edit_done_func(self.clip, active_index)
+    self.filter_edit_done_func(self.clip)
     
 def _detach_all(clip):
     mltfilters.detach_all_filters(clip)
@@ -2013,6 +2024,7 @@ def _clone_filters_redo(self):
 # "clip","clone_source_clip"
 def paste_filters_action(data):
     action = EditAction(_paste_filters_undo, _paste_filters_redo, data)
+    action.force_effects_editor_update = True
     return action
 
 def _paste_filters_undo(self):
@@ -2895,7 +2907,7 @@ def _container_clip_clip_render_replace_redo(self):
     self.new_clip.container_data.rendered_media_range_out = self.old_clip.clip_out
 
 
-# -------------------------------------------------------- CONTAINER CLIP SWITHCH TO UNRENDERED CLIP MEDIA REPLACE
+# -------------------------------------------------------- CONTAINER CLIP SWITCH TO UNRENDERED CLIP MEDIA REPLACE
 # "old_clip", "new_clip", "track", "index", "do_filters_clone"
 def container_clip_switch_to_unrendered_replace(data):
     action = EditAction(_container_clip_switch_to_unrendered_replace_undo, _container_clip_switch_to_unrendered_replace_redo, data)
