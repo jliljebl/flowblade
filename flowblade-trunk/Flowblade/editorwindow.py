@@ -177,11 +177,17 @@ class EditorWindow:
         if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_LEFT_DOCK:
             self.tline_box.pack_start(self.tool_dock, False, False, 0)
         self.tline_box.pack_end(tline_vbox_frame, True, True, 0)
-        
+
         # Timeline pane
-        tline_pane = Gtk.VBox(False, 1)
-        tline_pane.pack_start(self.edit_buttons_frame, False, True, 0)
-        tline_pane.pack_start(self.tline_box, True, True, 0)
+        tline_vpane = Gtk.VBox(False, 1)
+        tline_vpane.pack_start(self.edit_buttons_frame, False, True, 0)
+        tline_vpane.pack_start(self.tline_box, True, True, 0)
+
+        tline_pane = Gtk.HBox(False, 0)
+        
+        tline_pane.pack_start(tline_vpane, True, True, 0)
+        tline_pane.pack_start(self.effect_select_panel, False, False, 0)
+                
         self.tline_pane = tline_pane
 
         # VPaned top row / timeline
@@ -356,6 +362,8 @@ class EditorWindow:
             self.effects_panel = guiutils.set_margins(effects_vbox, 8, 0, 7, 2)
         else:
             self.effects_panel = effects_vbox
+
+        self.effect_select_panel = panels.get_effect_selection_panel(clipeffectseditor.effect_select_row_double_clicked)
 
         # Compositors panel
         action_row = compositeeditor.get_compositor_clip_panel()

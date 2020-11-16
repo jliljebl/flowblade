@@ -32,6 +32,7 @@ import gui
 import guicomponents
 import guiutils
 import editorstate
+import mltfilters
 import mlttransitions
 import renderconsumer
 import respaths
@@ -573,6 +574,39 @@ def _transition_type_changed(transition_type_widgets):
         color_button.set_sensitive(True)
         wipe_label.set_sensitive(False)
         color_label.set_sensitive(True)
+    
+def get_effect_selection_panel(double_click_cb):
+    effects_list_view = guicomponents.FilterListView(None)
+    group_combo_box = Gtk.ComboBoxText()
+
+    for group in mltfilters.groups:
+        group_name, filters_array = group
+        group_combo_box.append_text(group_name)
+    group_combo_box.set_active(0)    
+
+    # Same callback function works for filter select window too
+    group_combo_box.connect("changed", 
+                            lambda w,e: _group_selection_changed(w,effects_list_view), 
+                            None)
+
+    combo_row = Gtk.HBox(False, 2)
+    combo_row.pack_start(group_combo_box, True, True, 0)
+    
+    group_name, filters_array = mltfilters.groups[0]
+    effects_list_view.fill_data_model(filters_array)
+    effects_list_view.treeview.get_selection().select_path("0")
+    effects_list_view.treeview.connect("row-activated", double_click_cb, group_combo_box) # clipeffectseditor.effect_select_row_double_clicked)
+      
+    effects_vbox = Gtk.VBox(False, 2)
+    effects_vbox.pack_start(combo_row, False, False, 0)
+    effects_vbox.pack_start(effects_list_view, True, True, 0)
+    
+    return guiutils.get_panel_etched_frame(guiutils.set_margins(effects_vbox, 4, 4, 4, 4))
+
+def _group_selection_changed(group_combo, filters_list_view):
+    group_name, filters_array = mltfilters.groups[group_combo.get_active()]
+    filters_list_view.fill_data_model(filters_array)
+    filters_list_view.treeview.get_selection().select_path("0")
     
 # -------------------------------------------------- guiutils
 def get_bold_label(text):

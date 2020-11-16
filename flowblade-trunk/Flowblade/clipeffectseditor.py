@@ -465,9 +465,31 @@ def set_filter_item_expanded(filter_index):
     
     _filter_stack.set_filter_item_expanded(filter_index)
 
-def effect_select_row_double_clicked(treeview, tree_path, col):
-    add_currently_selected_effect()
+def effect_select_row_double_clicked(treeview, tree_path, col, effect_select_combo_box):
+    if _filter_stack == None:
+        return
 
+    row_index = int(tree_path.get_indices()[0])
+    group_index = effect_select_combo_box.get_active()
+    print(row_index, group_index)
+    # Add filter
+    group_name, filters_array = mltfilters.groups[group_index]
+    filter_info = filters_array[row_index]
+
+    data = {"clip":_filter_stack.clip, 
+            "filter_info":filter_info,
+            "filter_edit_done_func":filter_edit_done_stack_update}
+    action = edit.add_filter_action(data)
+
+    set_stack_update_blocked()
+    action.do_edit()
+    set_stack_update_unblocked()
+
+    clip, track, clip_index = _filter_stack.get_clip_data()
+    set_clip(clip, track, clip_index)
+
+    updater.repaint_tline()
+    
 """
 def filter_stack_button_press(treeview, event):
     path_pos_tuple = treeview.get_path_at_pos(int(event.x), int(event.y))
@@ -582,6 +604,9 @@ def update_stack_changed_blocked():
 
 
 def add_currently_selected_effect():
+    print("add_currently_selected_effect")
+
+"""
     # Check we have clip
     if clip == None:
         return
@@ -591,7 +616,8 @@ def add_currently_selected_effect():
     action.do_edit() # gui update in callback from EditAction object.
     
     updater.repaint_tline()
-
+"""
+"""
 def get_filter_add_action(filter_info, target_clip):
     # Maybe show info on using alpha filters
     if filter_info.group == "Alpha":
@@ -603,7 +629,7 @@ def get_filter_add_action(filter_info, target_clip):
     action = edit.add_filter_action(data)
 
     return action
-
+"""
 def _alpha_filter_add_maybe_info(filter_info):
     if editorpersistance.prefs.show_alpha_info_message == True and \
        editorstate. current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
@@ -615,7 +641,7 @@ def _alpha_info_dialog_cb(dialog, response_id, dont_show_check):
         editorpersistance.save()
 
     dialog.destroy()
-
+"""
 def get_selected_filter_info():
     # Get current selection on effects treeview - that's a vertical list.
     treeselection = gui.effect_select_list_view.treeview.get_selection()
@@ -626,9 +652,11 @@ def get_selected_filter_info():
     # Add filter
     group_name, filters_array = mltfilters.groups[gui.effect_select_combo_box.get_active()]
     return filters_array[row_index]
-
+"""
+"""
 def add_effect_pressed():
     add_currently_selected_effect()
+"""
 
 def delete_effect_pressed(clip, filter_index):
     set_stack_update_blocked()
