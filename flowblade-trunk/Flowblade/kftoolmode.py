@@ -364,7 +364,7 @@ def _tline_overlay(cr):
     
     # Get y position for clip's track
     ty_bottom = tlinewidgets._get_track_y(1) + current_sequence().tracks[1].height
-    ty_top = tlinewidgets._get_track_y(len(current_sequence().tracks) - 2) - 6 # -6 is hand correction, no idea why the math isn't getting correct pos top most track
+    ty_top = tlinewidgets._get_track_y(len(current_sequence().tracks) - 2) - 6 # -6 is hand correction, no idea why the math isn't getting correct pos for top most track
     ty_top_bottom_edge = ty_top + EDIT_AREA_HEIGHT
     off_step = float(ty_bottom - ty_top_bottom_edge) / float(len(current_sequence().tracks) - 2)
     ty_off = off_step * float(track.id - 1)
@@ -678,20 +678,13 @@ class TLineKeyFrameEditor:
             cr.line_to(xe, y)
             cr.stroke()
             
-            # 50
-            y = self._get_panel_y_for_value(50)
+            # -20
+            y = self._get_panel_y_for_value(-20.0)
             cr.set_source_rgb(*FRAME_SCALE_LINES)
             cr.move_to(xs, y)
             cr.line_to(xe, y)
             cr.stroke()
-            
-            # 100
-            y = self._get_panel_y_for_value(100)
-            cr.set_source_rgb(*FRAME_SCALE_LINES)
-            cr.move_to(xs, y)
-            cr.line_to(xe, y)
-            cr.stroke()
-            
+
         elif self.edit_type == BRIGHTNESS_KF_EDIT:
             # 0
             y = self._get_panel_y_for_value(0.0)
@@ -765,29 +758,31 @@ class TLineKeyFrameEditor:
             # 0
             y = self._get_panel_y_for_value(0.0)
             
-            text = "0"
+            text = "0 dB"
             cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF)
             cr.show_text(text)
             cr.move_to(xe + TEXT_X_OFF_END + 16, y - TEXT_Y_OFF)
             cr.show_text(text)
 
-            # 50
-            y = self._get_panel_y_for_value(50)
+            # -20
+            y = self._get_panel_y_for_value(-20.0)
 
-            text = "50"
+            text = "-20 dB"
             cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF + 8)
             cr.show_text(text)
             cr.move_to(xe + TEXT_X_OFF_END + 6, y - TEXT_Y_OFF + 8)
             cr.show_text(text)
             
-            # 100
-            y = self._get_panel_y_for_value(100)
+        
+            # -70
+            y = self._get_panel_y_for_value(-70.0)
             
-            text = "100"
-            cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF + 17)
+            text = "-70 dB"
+            cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF)
             cr.show_text(text)
-            cr.move_to(xe + TEXT_X_OFF_END, y - TEXT_Y_OFF + 17)
+            cr.move_to(xe + TEXT_X_OFF_END, y - TEXT_Y_OFF)
             cr.show_text(text)
+
             
         elif self.edit_type == BRIGHTNESS_KF_EDIT:
             # 0

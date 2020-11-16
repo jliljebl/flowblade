@@ -195,17 +195,6 @@ def workflow_menu_launched(widget, event):
     behaviours_item.show()
 
     behaviours_menu = Gtk.Menu()
-    
-    # Delete item not currently used
-    delete_item = Gtk.MenuItem.new_with_label(_("Default Delete Action"))
-    delete_item.show()
-
-    delete_menu = Gtk.Menu()
-    labels = [_("Lift"), _("Splice Out")]
-    msgs = ["delete lift", "delete splice"]
-    _build_radio_menu_items_group(delete_menu, labels, msgs, _workflow_menu_callback, 0)
-
-    delete_item.set_submenu(delete_menu)
 
     dnd_item = Gtk.MenuItem.new_with_label(_("Drag'n'Drop Action"))
     dnd_item.show()
@@ -365,6 +354,7 @@ def _workflow_menu_callback(widget, data):
             editorpersistance.prefs.active_tools.remove(tool_id)
         else:
             editorpersistance.prefs.active_tools.append(tool_id)
+        update_tool_dock()
     elif msg == "preset standard":
         _set_workflow_STANDARD()
     elif msg == "preset filmstyle":
@@ -383,16 +373,13 @@ def _workflow_menu_callback(widget, data):
         editorpersistance.prefs.default_compositing_mode = appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW
     elif  msg == "standard full":
         editorpersistance.prefs.default_compositing_mode = appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK
-    elif msg == "delete lift" and widget.get_active() == True:
-        print("lift")
-    elif msg == "delete splice" and widget.get_active() == True:
-        print("splice")
     else:
-        try:
+        try: # Set tool position
             pos = int(msg)
             current_index = editorpersistance.prefs.active_tools.index(tool_id)
             editorpersistance.prefs.active_tools.remove(tool_id)
             editorpersistance.prefs.active_tools.insert(pos - 1, tool_id)
+            update_tool_dock()
         except:
             pass
     
@@ -423,6 +410,10 @@ def get_tline_tool_dock():
     frame.set_shadow_type(Gtk.ShadowType.ETCHED_OUT)
     guiutils.set_margins(frame, 0, 0, 1, 0)
     return frame
+
+def update_tool_dock():
+    if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_LEFT_DOCK:
+        gui.editor_window.update_tool_dock()
 
 def _get_tool_dock_item(kb_shortcut_number, tool_icon_file, tool_name, tool_id):
     dock_item = ToolDockItem(kb_shortcut_number, tool_icon_file, tool_name, tool_id)

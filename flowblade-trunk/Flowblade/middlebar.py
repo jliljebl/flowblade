@@ -377,19 +377,26 @@ def fill_with_TC_FREE_pattern(buttons_row, window):
     
     groups_tools_current = prefs.groups_tools
     cbutton_active_current = prefs.cbutton
-    tools_dict = {appconsts.WORKFLOW_LAUNCH:w.worflow_launch.widget, appconsts.TOOL_SELECT:w.tool_selector.widget, appconsts.BUTTON_GROUP_ZOOM:_get_zoom_buttons_panel(),  \
-                        appconsts.BUTTON_GROUP_UNDO:_get_undo_buttons_panel(), appconsts.BUTTON_GROUP_TOOLS:_get_tools_buttons(), appconsts.BUTTON_GROUP_EDIT:_get_edit_buttons_panel(),\
-                        appconsts.BUTTON_GROUP_DELETE:_get_edit_buttons_3_panel(),  appconsts.BUTTON_GROUP_SYNC_SPLIT:_get_edit_buttons_2_panel(),  \
-                        appconsts.BUTTON_GROUP_MONITOR_ADD:_get_monitor_insert_buttons(),  appconsts.BIG_TIME_CODE:w.big_TC}
-
+    
+    tools_dict = {appconsts.WORKFLOW_LAUNCH:w.worflow_launch.widget, appconsts.BUTTON_GROUP_ZOOM:_get_zoom_buttons_panel(), \
+                  appconsts.BUTTON_GROUP_UNDO:_get_undo_buttons_panel(), appconsts.BUTTON_GROUP_TOOLS:_get_tools_buttons(), \
+                  appconsts.BUTTON_GROUP_EDIT:_get_edit_buttons_panel(), appconsts.BUTTON_GROUP_DELETE:_get_edit_buttons_3_panel(), \
+                  appconsts.BUTTON_GROUP_SYNC_SPLIT:_get_edit_buttons_2_panel(), appconsts.BUTTON_GROUP_MONITOR_ADD:_get_monitor_insert_buttons(), \
+                  appconsts.BIG_TIME_CODE:w.big_TC}
+    if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
+        tools_dict[appconsts.TOOL_SELECT] = w.tool_selector.widget
+        
     buttons_row.set_homogeneous(False)
     buttons_row.pack_start(Gtk.Label(), True, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
     for row_number in range(0, len(groups_tools_current)):
         if cbutton_active_current[row_number] is True:
-            tool = tools_dict[groups_tools_current[row_number]]
-            buttons_row.pack_start(tool, False, True, 0) # does not support dock yet
-            buttons_row.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
+            try:
+                tool = tools_dict[groups_tools_current[row_number]]
+                buttons_row.pack_start(tool, False, True, 0) # does not support dock yet
+                buttons_row.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
+            except:
+                pass # This will fail for appconsts.TOOL_SELECT if we are now using tool dock.
     buttons_row.pack_start(Gtk.Label(), True, True, 0)
 
 
