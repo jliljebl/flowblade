@@ -490,6 +490,9 @@ def create_gui():
         if editorwindow.top_level_project_panel() == False:
             jobs.jobs_notebook_index = 5
 
+    # Make layout data available
+    editorlayout.init_layout_data()
+
     # Create window and all child components
     editor_window = editorwindow.EditorWindow()
     

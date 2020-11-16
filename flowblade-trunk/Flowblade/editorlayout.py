@@ -22,7 +22,12 @@
 This modules handles displaying and moving panels into different positions 
 in application window.
 """
+from gi.repository import Gtk
+
+import copy
+
 import appconsts
+import editorpersistance
 
 """
 # Panel placement options
@@ -58,10 +63,75 @@ DEFAULT_PANEL_POSITIONS = { \
     appconsts.PANEL_FILTER_SELECT: appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, # This is the only different default position.
 }
 
-
+# Saved data struct holding panel positions information.
 _panel_positions = None
 
+
+# ----------------------------------------------------------- INIT
 def init_layout_data():
     global _panel_positions
     _panel_positions = editorpersistance.prefs.panel_positions
     
+    if _panel_positions == None:
+        _panel_positions = copy.deepcopy(DEFAULT_PANEL_POSITIONS)
+        editorpersistance.prefs.panel_positions = _panel_positions
+        editorpersistance.save()
+
+# ---------------------------------------------------------- DATA METHODS
+def _get_panel_position(panel):
+    return _panel_positions[panel]
+
+
+# ---------------------------------------------------------- APP MENU
+def get_panel_positions_menu_item():
+    panel_positions_menu_item = Gtk.MenuItem(_("Panel Placement"))
+    panel_positions_menu = Gtk.Menu()
+    panel_positions_menu_item.set_submenu(panel_positions_menu)
+    
+    # Panel positions - Media Panel
+    media_panel_menu_item = Gtk.MenuItem(_("Media Panel"))
+    panel_positions_menu.append(media_panel_menu_item)
+    
+    media_panel_menu = Gtk.Menu()
+    media_panel_menu_item.set_submenu(media_panel_menu)
+    
+    media_panel_top = Gtk.RadioMenuItem()
+    media_panel_top.set_label( _("Top Row Notebook"))
+    media_panel_menu.append(media_panel_top)
+
+    media_panel_left_column = Gtk.RadioMenuItem.new_with_label([media_panel_top], _("Left Column"))
+
+    if _get_panel_position(appconsts.PANEL_MEDIA) == appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT:
+        media_panel_top.set_active(True)
+    else:
+        media_panel_left_column.set_active(True)
+
+    media_panel_top.set_active(True)
+    media_panel_top.connect("activate", lambda w: self._show_media_panel_top_row_notebook(w))
+    media_panel_left_column.connect("activate", lambda w: self._show_media_panel_left_column(w))
+    media_panel_menu.append(media_panel_left_column)
+
+    # Panel positions - Filter Panel
+    filter_panel_menu_item = Gtk.MenuItem(_("Filter Panel"))
+    panel_positions_menu.append(filter_panel_menu_item)
+
+    filter_panel_menu = Gtk.Menu()
+    filter_panel_menu_item.set_submenu(filter_panel_menu)
+    
+    filter_panel_top = Gtk.RadioMenuItem()
+    filter_panel_top.set_label( _("Top Row Notebook"))
+    filter_panel_menu.append(filter_panel_top)
+
+    filter_panel_bottom_right = Gtk.RadioMenuItem.new_with_label([filter_panel_top], _("Bottom Row Right"))
+
+    if _get_panel_position(appconsts.PANEL_FILTERS) == appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT:
+        filter_panel_top.set_active(True)
+    else:
+        filter_panel_bottom_right.set_active(True)
+
+    filter_panel_top.set_active(True)
+    #media_panel_top.connect("activate", lambda w: self._show_tabs_up(w))
+    #tabs_down.connect("activate", lambda w: self._show_tabs_down(w))
+    filter_panel_menu.append(filter_panel_bottom_right)
+
+    return panel_positions_menu_item
