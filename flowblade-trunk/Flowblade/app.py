@@ -61,6 +61,7 @@ import dnd
 import diskcachemanagement
 import edit
 import editevent
+import editorlayout
 import editorpersistance
 import editorstate
 import editorwindow

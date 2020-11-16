@@ -359,4 +359,4 @@ class EditorPreferences:
         self.cbutton  = [True, True, True, True, True, True, True, True, True, True] # Toolbar objects active state
         self.colorized_icons = False
         self.tools_selection = appconsts.TOOL_SELECTOR_IS_MENU
-        self.placement_media_panel = appconsts.PANEL_PLACEMENT_LEFT_COLUMN
+        self.panel_positions = None 

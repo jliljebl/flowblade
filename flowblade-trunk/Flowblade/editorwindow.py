@@ -196,9 +196,10 @@ class EditorWindow:
         self.app_v_paned.pack2(tline_pane, resize=True, shrink=False)
 
         self.app_h_box = Gtk.HBox(False, 0)
-        if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
-            if editorpersistance.prefs.placement_media_panel == appconsts.PANEL_PLACEMENT_LEFT_COLUMN:
-                self.app_h_box.pack_start(self.mm_paned_frame, False, False, 0)
+        # !!!!!!!!!!!! PANEL_PLACEMENT_LEFT_COLUMN
+        #if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
+        #    if editorpersistance.prefs.placement_media_panel == appconsts.PANEL_PLACEMENT_LEFT_COLUMN:
+        #        self.app_h_box.pack_start(self.mm_paned_frame, False, False, 0)
         self.app_h_box.pack_end(self.app_v_paned, True, True, 0)
 
         # Menu box
@@ -460,8 +461,9 @@ class EditorWindow:
 
         # Here we put media panel in notebook if that is the current user pref.
         if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
-            if editorpersistance.prefs.placement_media_panel == appconsts.PANEL_PLACEMENT_TOP_ROW_NOTEBOOK:
-                self.notebook.append_page(self.mm_paned, media_label)
+            self.notebook.append_page(self.mm_paned, media_label)
+        #    if editorpersistance.prefs.placement_media_panel == appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT:
+        #        self.notebook.append_page(self.mm_paned, media_label)
         self.notebook.append_page(media_log_panel, Gtk.Label(label=_("Range Log")))
         self.notebook.append_page(self.effects_panel, Gtk.Label(label=_("Filters")))
         self.notebook.append_page(self.compositors_panel, Gtk.Label(label=_("Compositors")))
@@ -1057,11 +1059,13 @@ class EditorWindow:
 
         media_panel_left_column = Gtk.RadioMenuItem.new_with_label([media_panel_top], _("Left Column"))
 
-        if editorpersistance.prefs.placement_media_panel == appconsts.PANEL_PLACEMENT_TOP_ROW_NOTEBOOK:
+        """
+        if editorpersistance.prefs.placement_media_panel == appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT:
             media_panel_top.set_active(True)
         else:
             media_panel_left_column.set_active(True)
-            
+        """
+        media_panel_top.set_active(True)
         media_panel_top.connect("activate", lambda w: self._show_media_panel_top_row_notebook(w))
         media_panel_left_column.connect("activate", lambda w: self._show_media_panel_left_column(w))
         media_panel_menu.append(media_panel_left_column)
@@ -1080,10 +1084,13 @@ class EditorWindow:
 
         filter_panel_bottom_right = Gtk.RadioMenuItem.new_with_label([filter_panel_top], _("Bottom Row Right"))
         
-        if editorpersistance.prefs.placement_media_panel == appconsts.PANEL_PLACEMENT_TOP_ROW_NOTEBOOK:
+        """
+        if editorpersistance.prefs.placement_media_panel == appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT:
             filter_panel_top.set_active(True)
         else:
             filter_panel_bottom_right.set_active(True)
+        """
+        filter_panel_top.set_active(True)
         #media_panel_top.connect("activate", lambda w: self._show_tabs_up(w))
         #tabs_down.connect("activate", lambda w: self._show_tabs_down(w))
         filter_panel_menu.append(filter_panel_bottom_right)
