@@ -571,6 +571,16 @@ def _alpha_info_dialog_cb(dialog, response_id, dont_show_check):
 
     dialog.destroy()
 
+def get_filter_add_action(filter_info, target_clip):
+    # Maybe show info on using alpha filters
+    if filter_info.group == "Alpha":
+        GLib.idle_add(_alpha_filter_add_maybe_info, filter_info)
+    data = {"clip":target_clip, 
+            "filter_info":filter_info,
+            "filter_edit_done_func":filter_edit_done_stack_update}
+    action = edit.add_filter_action(data)
+    return action
+
 def delete_effect_pressed(clip, filter_index):
     set_stack_update_blocked()
 
