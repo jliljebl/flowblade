@@ -471,7 +471,20 @@ def effect_select_row_double_clicked(treeview, tree_path, col, effect_select_com
 
     row_index = int(tree_path.get_indices()[0])
     group_index = effect_select_combo_box.get_active()
+    #print(row_index, group_index)
+    _add_filter_from_effect_select_panel(row_index, group_index)
+
+def add_currently_selected_effect():
+    # Get current selection on effects treeview - that's a vertical list.
+    treeselection = gui.effect_select_list_view.treeview.get_selection()
+    (model, rows) = treeselection.get_selected_rows()    
+    row = rows[0]
+    row_index = max(row)
+    group_index = gui.effect_select_combo_box.get_active()
     print(row_index, group_index)
+    _add_filter_from_effect_select_panel(row_index, group_index)
+    
+def _add_filter_from_effect_select_panel(row_index, group_index):
     # Add filter
     group_name, filters_array = mltfilters.groups[group_index]
     filter_info = filters_array[row_index]
@@ -603,8 +616,7 @@ def update_stack_changed_blocked():
     _block_changed_update = False
 
 
-def add_currently_selected_effect():
-    print("add_currently_selected_effect")
+
 
 """
     # Check we have clip
