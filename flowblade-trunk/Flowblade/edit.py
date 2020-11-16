@@ -446,7 +446,6 @@ class EditAction:
                                          # This REPAINTS TIMELINE as a side effect.
         if self.clear_effects_editor_for_multitrack_edit == False:
             if current_sequence().clip_is_in_sequence(clipeffectseditor.get_edited_clip()) == True:
-                print("WE'RE DOING clipeffectseditor UPDATE in edit")
                 updater.update_kf_editors_positions()
                 clipeffectseditor.reinit_stack_if_needed(self.force_effects_editor_update)
             else:
@@ -1792,7 +1791,6 @@ def _add_filter_undo(self):
     self.filter_edit_done_func(self.clip, len(self.clip.filters) - 1) # updates effect stack gui
 
 def _add_filter_redo(self):
-    print("add filter in edit")
     try: # is redo, fails for first
         self.clip.attach(self.filter_object.mlt_filter)
         self.clip.filters.append(self.filter_object)
@@ -1803,8 +1801,6 @@ def _add_filter_redo(self):
         self.clip.filters.append(self.filter_object)
         
     self.filter_edit_done_func(self.clip, len(self.clip.filters) - 1) # updates effect stack gui
-
-    print("add filter in edit DONE")
     
 #------------------- ADD TWO FILTERS
 # NOTE: Using this requires that index_2 > index_1

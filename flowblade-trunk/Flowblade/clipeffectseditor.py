@@ -187,7 +187,8 @@ class FilterFooterRow:
             return
         to_index = len(self.filter_stack.filter_stack) - 1
         do_stack_move(self.filter_stack.clip, to_index, from_index)
-        
+
+
 class FilterHeaderRow:
     
     def __init__(self, filter_object):
@@ -324,8 +325,6 @@ class ClipFilterStack:
     
     def get_filter_index(self, filter_object):
         return self.clip.filters.index(filter_object)
-        
-
 
     def delete_filter_for_stack_item(self, stack_item):
         filter_index = self.filter_stack.index(stack_item)
@@ -352,7 +351,7 @@ class ClipFilterStack:
                 keyframe_editor_widgets.remove(editor)
             except:
                 pass
-                print("Trying to remove non existing from keyframe_editor_widgets")
+                print("Trying to remove non-existing editor from keyframe_editor_widgets")
                 
         self.filter_kf_editors.pop(filter_object)
 
@@ -376,30 +375,10 @@ class ClipFilterStack:
             stack_item = self.filter_stack[i]
             stack_item.expander.set_expanded(state_list[i])
 
-# ------------------------------------------------------------------- interface
-def shutdown_polling():
-    global _edit_polling_thread
-    if _edit_polling_thread != None:
-        _edit_polling_thread.shutdown()
-        _edit_polling_thread = None
 
-def clip_is_being_edited(clip):
-    if _filter_stack == None:
-        return False
-    
-    if _filter_stack.clip == clip:
-        return True
-        
-    return False
-
-def get_edited_clip():
-    if _filter_stack == None:
-        return None
-    else:
-        return  _filter_stack.clip
-
-def get_clip_effects_editor_panel():
-    create_widgets()
+# -------------------------------------------------------------- GUI INIT
+def get_clip_effects_editor_info_row():
+    _create_widgets()
 
     info_row = Gtk.HBox(False, 2)
     info_row.pack_start(widgets.hamburger_launcher.widget, False, False, 0)
@@ -409,20 +388,28 @@ def get_clip_effects_editor_panel():
 
     return info_row
 
-def _group_selection_changed(group_combo, filters_list_view):
-    group_name, filters_array = mltfilters.groups[group_combo.get_active()]
-    filters_list_view.fill_data_model(filters_array)
-    filters_list_view.treeview.get_selection().select_path("0")
+def _create_widgets():
+    """
+    Widgets for editing clip effects properties.
+    """
+    widgets.clip_info = guicomponents.ClipInfoPanel()
+    
+    widgets.value_edit_box = Gtk.VBox()
+    widgets.value_edit_frame = Gtk.Frame()
+    widgets.value_edit_frame.set_shadow_type(Gtk.ShadowType.NONE)
+    widgets.value_edit_frame.add(widgets.value_edit_box)
+    
+    widgets.hamburger_launcher = guicomponents.HamburgerPressLaunch(_hamburger_launch_pressed)
+    guiutils.set_margins(widgets.hamburger_launcher.widget, 6, 8, 1, 0)
 
+
+# ------------------------------------------------------------------- interface
 def set_clip(clip, track, clip_index, show_tab=True):
     """
     Sets clip being edited and inits gui.
     """
-    print("set_clip")
-
     if _filter_stack != None:
         if clip == _filter_stack.clip and track == _filter_stack.track and clip_index == _filter_stack.clip_index and show_tab == False:
-            print("return")
             return
 
     global keyframe_editor_widgets
@@ -459,6 +446,21 @@ def refresh_clip():
 
     _filter_stack.set_expanded(expanded_panels)
 
+def clip_is_being_edited(clip):
+    if _filter_stack == None:
+        return False
+    
+    if _filter_stack.clip == clip:
+        return True
+        
+    return False
+
+def get_edited_clip():
+    if _filter_stack == None:
+        return None
+    else:
+        return  _filter_stack.clip
+
 def set_filter_item_expanded(filter_index):
     if _filter_stack == None:
         return 
@@ -471,17 +473,17 @@ def effect_select_row_double_clicked(treeview, tree_path, col, effect_select_com
 
     row_index = int(tree_path.get_indices()[0])
     group_index = effect_select_combo_box.get_active()
-    #print(row_index, group_index)
+
     _add_filter_from_effect_select_panel(row_index, group_index)
 
 def add_currently_selected_effect():
-    # Get current selection on effects treeview - that's a vertical list.
+    # Currently selected in effect select panel, not here.
     treeselection = gui.effect_select_list_view.treeview.get_selection()
     (model, rows) = treeselection.get_selected_rows()    
     row = rows[0]
     row_index = max(row)
     group_index = gui.effect_select_combo_box.get_active()
-    print(row_index, group_index)
+
     _add_filter_from_effect_select_panel(row_index, group_index)
     
 def _add_filter_from_effect_select_panel(row_index, group_index):
@@ -502,47 +504,6 @@ def _add_filter_from_effect_select_panel(row_index, group_index):
     set_clip(clip, track, clip_index)
 
     updater.repaint_tline()
-    
-"""
-def filter_stack_button_press(treeview, event):
-    path_pos_tuple = treeview.get_path_at_pos(int(event.x), int(event.y))
-    if path_pos_tuple == None:
-        row = -1 # Empty row was clicked
-    else:
-        path, column, x, y = path_pos_tuple
-        selection = treeview.get_selection()
-        selection.unselect_all()
-        selection.select_path(path)
-        (model, rows) = selection.get_selected_rows()
-        row = max(rows[0])
-    if row == -1:
-        return False
-    if event.button == 3:do_edit
-        guicomponents.display_filter_stack_popup_menu(row, treeview, _filter_stack_menu_item_selected, event)                                    
-        return True
-    return False
-"""
-"""
-def _filter_stack_menu_item_selected(widget, data):
-    item_id, row, treeview = data
-
-    if item_id == "toggle":
-        toggle_filter_active(row)
-    if item_id == "reset":
-        reset_filter_values()
-    if item_id == "movedown":
-        delete_row = row
-        insert_row = row + 2
-        if insert_row > len(clip.filters):
-            insert_row = len(clip.filters)
-        do_stack_move(insert_row, delete_row)
-    if item_id == "moveup":
-        delete_row = row + 1
-        insert_row = row - 1
-        if insert_row < 0:
-            insert_row = 0
-        do_stack_move(insert_row, delete_row)
-"""
 
 def _quit_editing_clip_clicked(): # this is a button callback
     clear_clip()
@@ -562,23 +523,6 @@ def clear_clip():
 
 def _set_no_clip_info():
     widgets.clip_info.set_no_clip_info()
-
-def create_widgets():
-    """
-    Widgets for editing clip effects properties.
-    """
-    # Aug-2019 - SvdB - BB
-    prefs = editorpersistance.prefs
-
-    widgets.clip_info = guicomponents.ClipInfoPanel()
-    
-    widgets.value_edit_box = Gtk.VBox()
-    widgets.value_edit_frame = Gtk.Frame()
-    widgets.value_edit_frame.set_shadow_type(Gtk.ShadowType.NONE)
-    widgets.value_edit_frame.add(widgets.value_edit_box)
-    
-    widgets.hamburger_launcher = guicomponents.HamburgerPressLaunch(_hamburger_launch_pressed)
-    guiutils.set_margins(widgets.hamburger_launcher.widget, 6, 8, 1, 0)
 
 def set_enabled(value):
     widgets.clip_info.set_enabled(value)
@@ -615,33 +559,6 @@ def update_stack_changed_blocked():
     update_stack()
     _block_changed_update = False
 
-
-
-
-"""
-    # Check we have clip
-    if clip == None:
-        return
-    
-    filter_info = get_selected_filter_info()
-    action = get_filter_add_action(filter_info, clip)
-    action.do_edit() # gui update in callback from EditAction object.
-    
-    updater.repaint_tline()
-"""
-"""
-def get_filter_add_action(filter_info, target_clip):
-    # Maybe show info on using alpha filters
-    if filter_info.group == "Alpha":
-        GLib.idle_add(_alpha_filter_add_maybe_info, filter_info)
-
-    data = {"clip":target_clip, 
-            "filter_info":filter_info,
-            "filter_edit_done_func":filter_edit_done_stack_update}
-    action = edit.add_filter_action(data)
-
-    return action
-"""
 def _alpha_filter_add_maybe_info(filter_info):
     if editorpersistance.prefs.show_alpha_info_message == True and \
        editorstate. current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
@@ -653,22 +570,6 @@ def _alpha_info_dialog_cb(dialog, response_id, dont_show_check):
         editorpersistance.save()
 
     dialog.destroy()
-"""
-def get_selected_filter_info():
-    # Get current selection on effects treeview - that's a vertical list.
-    treeselection = gui.effect_select_list_view.treeview.get_selection()
-    (model, rows) = treeselection.get_selected_rows()    
-    row = rows[0]
-    row_index = max(row)
-    
-    # Add filter
-    group_name, filters_array = mltfilters.groups[gui.effect_select_combo_box.get_active()]
-    return filters_array[row_index]
-"""
-"""
-def add_effect_pressed():
-    add_currently_selected_effect()
-"""
 
 def delete_effect_pressed(clip, filter_index):
     set_stack_update_blocked()
@@ -733,69 +634,7 @@ def _toggle_all_pressed():
     update_stack(clip, track, clip_index)
     _filter_stack.set_expanded(expanded_panels)
 
-"""    
-def dnd_row_deleted(model, path):
-    now = time.time()
-    global stack_dnd_state, stack_dnd_event_time, stack_dnd_event_info
-    if stack_dnd_state == INSERT_DONE:
-        if (now - stack_dnd_event_time) < 0.1:
-            stack_dnd_state = NOT_ON
-            insert_row = int(stack_dnd_event_info)
-            delete_row = int(path.to_string())
-            stack_dnd_event_info = (insert_row, delete_row)
-            # Because of dnd is gtk thing for some internal reason it needs to complete before we go on
-            # touching storemodel again with .clear() or it dies in gtktreeviewaccessible.c
-            GLib.idle_add(do_dnd_stack_move)
-        else:
-            stack_dnd_state = NOT_ON
-    else:
-        stack_dnd_state = NOT_ON
-        
-def dnd_row_inserted(model, path, tree_iter):
-    global stack_dnd_state, stack_dnd_event_time, stack_dnd_event_info
-    if stack_dnd_state == MOUSE_PRESS_DONE:
-        stack_dnd_state = INSERT_DONE
-        stack_dnd_event_time = time.time()
-        stack_dnd_event_info = path.to_string()
-    else:
-        stack_dnd_state = NOT_ON
-
-def do_dnd_stack_move():
-    insert, delete_row = stack_dnd_event_info
-    do_stack_move(insert, delete_row)
-    
-def do_stack_move(insert_row, delete_row):
-    if abs(insert_row - delete_row) < 2: # filter was dropped on its previous place or cannot moved further up or down
-        return
-    
-    # The insert insert_row and delete_row values are rows we get when listening 
-    # "row-deleted" and "row-inserted" events after setting treeview "reorderable"
-    # Dnd is detected by order and timing of these events together with mouse press event
-    data = {"clip":clip,
-            "insert_index":insert_row,
-            "delete_index":delete_row,
-            "filter_edit_done_func":filter_edit_done_stack_update}
-    action = edit.move_filter_action(data)
-    action.do_edit()
-            
-def stack_view_pressed():
-    global stack_dnd_state
-    stack_dnd_state = MOUSE_PRESS_DONE
-"""
-""" This was called from edit gui update to fix some bug I think, look if/how we need this going forward
-def reinit_current_effect():
-    print("reinit_current_effect")
-    clip, track, clip_index = _filter_stack.get_clip_data()
-    set_clip(clip, track, clip_index)
-"""
-
 def do_stack_move(clip, insert_row, delete_row):
-    #if abs(insert_row - delete_row) < 2: # filter was dropped on its previous place or cannot moved further up or down
-    #    return
-    
-    # The insert insert_row and delete_row values are rows we get when listening 
-    # "row-deleted" and "row-inserted" events after setting treeview "reorderable"
-    # Dnd is detected by order and timing of these events together with mouse press event
     data = {"clip":clip,
             "insert_index":insert_row,
             "delete_index":delete_row,
@@ -921,9 +760,7 @@ def filter_edit_done_stack_update(edited_clip, index=-1):
     EditAction object calls this after edits and undos and redos.
     Methods updates filter stack to new state. 
     """
-    print("filter_edit_done_stack_update")
     if _block_stack_update == True:
-        print("blocked")
         return
         
     if edited_clip != get_edited_clip(): # This gets called by all undos/redos, we only want to update if clip being edited here is affected
@@ -1066,7 +903,53 @@ def _set_fade_length_dialog_callback(dialog, response_id, spin):
         PROJECT().set_project_property(appconsts.P_PROP_DEFAULT_FADE_LENGTH, default_length)
         
     dialog.destroy()
+
+
+class EffectValuesSaveData:
     
+    def __init__(self, filter_object):
+        self.info = filter_object.info
+        self.multipart_filter = self.info.multipart_filter
+
+        # Values of these are edited by the user.
+        self.properties = copy.deepcopy(filter_object.properties)
+        try:
+            self.non_mlt_properties = copy.deepcopy(filter_object.non_mlt_properties)
+        except:
+            self.non_mlt_properties = [] # Versions prior 0.14 do not have non_mlt_properties and fail here on load
+
+        if self.multipart_filter == True:
+            self.value = filter_object.value
+        else:
+            self.value = None
+        
+    def save(self, save_path):
+        with atomicfile.AtomicFileWriter(save_path, "wb") as afw:
+            write_file = afw.get_file()
+            pickle.dump(self, write_file)
+        
+    def data_applicable(self, filter_info):
+        if isinstance(self.info, filter_info.__class__):
+            return self.info.__dict__ == filter_info.__dict__
+        return False
+
+    def set_effect_values(self, filter_object):
+        if self.multipart_filter == True:
+            filter_object.value = self.value
+         
+        filter_object.properties = copy.deepcopy(self.properties)
+        filter_object.non_mlt_properties = copy.deepcopy(self.non_mlt_properties)
+        filter_object.update_mlt_filter_properties_all()
+
+
+# ------------------------------------------------------- CHANGE POLLING
+def shutdown_polling():
+    global _edit_polling_thread
+    if _edit_polling_thread != None:
+        _edit_polling_thread.shutdown()
+        _edit_polling_thread = None
+
+
 class PropertyChangePollingThread(threading.Thread):
     
     def __init__(self):
@@ -1114,42 +997,3 @@ class PropertyChangePollingThread(threading.Thread):
         
     def shutdown(self):
         self.running = False
-
-
-class EffectValuesSaveData:
-    
-    def __init__(self, filter_object):
-        self.info = filter_object.info
-        self.multipart_filter = self.info.multipart_filter
-
-        # Values of these are edited by the user.
-        self.properties = copy.deepcopy(filter_object.properties)
-        try:
-            self.non_mlt_properties = copy.deepcopy(filter_object.non_mlt_properties)
-        except:
-            self.non_mlt_properties = [] # Versions prior 0.14 do not have non_mlt_properties and fail here on load
-
-        if self.multipart_filter == True:
-            self.value = filter_object.value
-        else:
-            self.value = None
-        
-    def save(self, save_path):
-        with atomicfile.AtomicFileWriter(save_path, "wb") as afw:
-            write_file = afw.get_file()
-            pickle.dump(self, write_file)
-        
-    def data_applicable(self, filter_info):
-        if isinstance(self.info, filter_info.__class__):
-            return self.info.__dict__ == filter_info.__dict__
-        return False
-
-    def set_effect_values(self, filter_object):
-        if self.multipart_filter == True:
-            filter_object.value = self.value
-         
-        filter_object.properties = copy.deepcopy(self.properties)
-        filter_object.non_mlt_properties = copy.deepcopy(self.non_mlt_properties)
-        filter_object.update_mlt_filter_properties_all()
-         
-    

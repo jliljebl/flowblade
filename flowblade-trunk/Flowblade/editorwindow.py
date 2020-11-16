@@ -331,28 +331,9 @@ class EditorWindow:
 
         mm_panel = guiutils.set_margins(self.mm_paned, 0, 0, 0, 0)
 
-        # Effects panel
-        #self.effect_select_list_view = guicomponents.FilterListView()
-        #self.effect_select_combo_box = Gtk.ComboBoxText()
-        #self.effect_select_list_view.treeview.connect("row-activated", clipeffectseditor.effect_select_row_double_clicked)
-        #dnd.connect_effects_select_tree_view(self.effect_select_list_view.treeview)
-
-        info_row = clipeffectseditor.get_clip_effects_editor_panel()
-
-        #clipeffectseditor.widgets.effect_stack_view.treeview.connect("button-press-event",
-        #                                      clipeffectseditor.filter_stack_button_press)
-
-        #if not(editorstate.SCREEN_HEIGHT < 1023):
-        #    effects_editor_panel = guiutils.set_margins(clipeffectseditor.widgets.value_edit_frame, 0, 0, 8, 0)
-        #else:
-        #    guiutils.set_margins(clip_editor_panel, 4, 4, 4, 0)
-        
+        # Effects edit panel
+        info_row = clipeffectseditor.get_clip_effects_editor_info_row()    
         effects_editor_panel = guiutils.set_margins(clipeffectseditor.widgets.value_edit_frame, 4, 0, 4, 4)
-
-        #effects_hbox = Gtk.HBox()
-        #effects_hbox.set_border_width(0)
-        #effects_hbox.pack_start(clip_editor_panel, False, False, 0)
-        #effects_hbox.pack_start(effects_editor_panel, True, True, 0)
 
         effects_vbox = Gtk.VBox()
         effects_vbox.pack_start(effects_editor_panel, True, True, 0)
@@ -363,6 +344,7 @@ class EditorWindow:
         else:
             self.effects_panel = effects_vbox
 
+        # Effects select panel
         effect_select_panel, effect_select_list_view, effect_select_combo_box  = panels.get_effect_selection_panel(clipeffectseditor.effect_select_row_double_clicked)
         self.effect_select_panel = effect_select_panel
         self.effect_select_list_view = effect_select_list_view
