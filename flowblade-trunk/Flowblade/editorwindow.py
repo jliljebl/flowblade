@@ -157,19 +157,8 @@ class EditorWindow:
 
         # Create all panels and gui components 
         self._init_panels_and_guicomponents()
-
-<<<<<<< HEAD
-       # Init application main menu.
-        ui = Gtk.UIManager()
-        self._init_app_menu(ui)
         
-        # ---------------------------------------------------- Build layout
-        # We now have all components available and can build GUI, add tools tips,
-        # set panel positions and show everything.
-=======
-        # Build layout
->>>>>>> master
-        # Timeline bottom row
+
         tline_hbox_3 = Gtk.HBox()
         tline_hbox_3.pack_start(self.left_corner.widget, False, False, 0)
         tline_hbox_3.pack_start(self.tline_scroller, True, True, 0)
@@ -345,44 +334,11 @@ class EditorWindow:
             self.mm_paned.pack1(self.bins_panel, resize=True, shrink=True)
             self.mm_paned.pack2(media_panel, resize=True, shrink=False)
 
-<<<<<<< HEAD
-        # This needs frame if it is not inside a notebeek.
-        if editorpersistance.prefs.placement_media_panel != appconsts.PANEL_PLACEMENT_TOP_ROW_NOTEBOOK:
-            self.mm_paned_frame = guiutils.get_panel_etched_frame(self.mm_paned)
-            self.mm_paned_frame = guiutils.set_margins(self.mm_paned_frame, 0, 0, 1, 0)
-        else:
-            self.mm_paned_frame = None # We use this to easily know where media panel is placed.
-    
-        # Effects panel
-        self.effect_select_list_view = guicomponents.FilterListView()
-        self.effect_select_combo_box = Gtk.ComboBoxText()
-        self.effect_select_list_view.treeview.connect("row-activated", clipeffectseditor.effect_select_row_double_clicked)
-        dnd.connect_effects_select_tree_view(self.effect_select_list_view.treeview)
-
-        clip_editor_panel, info_row = clipeffectseditor.get_clip_effects_editor_panel(
-                                        self.effect_select_combo_box,
-                                        self.effect_select_list_view)
-
-        clipeffectseditor.widgets.effect_stack_view.treeview.connect("button-press-event",
-                                              clipeffectseditor.filter_stack_button_press)
-
-        if not(editorstate.SCREEN_HEIGHT < 1023):
-            effects_editor_panel = guiutils.set_margins(clipeffectseditor.widgets.value_edit_frame, 0, 0, 8, 0)
-        else:
-            guiutils.set_margins(clip_editor_panel, 4, 4, 4, 0)
-            effects_editor_panel = guiutils.set_margins(clipeffectseditor.widgets.value_edit_frame, 4, 0, 4, 4)
-
-        effects_hbox = Gtk.HBox()
-        effects_hbox.set_border_width(0)
-        effects_hbox.pack_start(clip_editor_panel, False, False, 0)
-        effects_hbox.pack_start(effects_editor_panel, True, True, 0)
-=======
         mm_panel = guiutils.set_margins(self.mm_paned, 0, 0, 0, 0)
 
         # Effects edit panel
         info_row = clipeffectseditor.get_clip_effects_editor_info_row()    
         effects_editor_panel = guiutils.set_margins(clipeffectseditor.widgets.value_edit_frame, 4, 0, 4, 4)
->>>>>>> master
 
         effects_vbox = Gtk.VBox()
         effects_vbox.pack_start(effects_editor_panel, True, True, 0)
@@ -1387,7 +1343,6 @@ class EditorWindow:
         self.tool_selector = None
         workflow.select_default_tool()
 
-<<<<<<< HEAD
         media_panel_top.connect("activate", lambda w: self._show_media_panel_top_row_notebook(w))
         media_panel_left_column.connect("activate", lambda w: self._show_media_panel_left_column(w))
 
@@ -1424,16 +1379,6 @@ class EditorWindow:
         editorpersistance.save()
 
     # ----------------------------------------------------------- GUI components monitor, middlebar.
-=======
-    def update_tool_dock(self):
-        self.tline_box.remove(self.tool_dock)
-
-        self.tool_dock = workflow.get_tline_tool_dock()
-        self.tool_dock.show_all()
-
-        self.tline_box.pack_start(self.tool_dock, False, False, 0)
-
->>>>>>> master
     def _create_monitor_buttons(self):
         self.monitor_switch = guicomponents.MonitorSwitch(self._monitor_switch_handler)
 
