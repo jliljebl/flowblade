@@ -599,7 +599,7 @@ def get_effect_selection_panel(double_click_cb):
     effects_vbox.pack_start(combo_row, False, False, 0)
     effects_vbox.pack_start(effects_list_view, True, True, 0)
     
-    return (guiutils.get_panel_etched_frame(guiutils.set_margins(effects_vbox, 4, 4, 4, 4)), effects_list_view, group_combo_box)
+    return (guiutils.set_margins(effects_vbox, 4, 4, 4, 4), effects_list_view, group_combo_box)
 
 def _group_selection_changed(group_combo, filters_list_view):
     group_name, filters_array = mltfilters.groups[group_combo.get_active()]

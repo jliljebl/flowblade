@@ -162,7 +162,7 @@ def _get_panels_widgets_dict(editor_window):
     return _panels_widgets
         
 # ----------------------------------------------------------- PANELS PLACEMENT
-def create_position_container(editor_window, position):
+def create_position_panel(editor_window, position):
     panels = _get_position_panels(position)
     panel_widgets = _get_panels_widgets_dict(editor_window)
     if len(panels) == 0:
@@ -178,7 +178,7 @@ def create_position_container(editor_window, position):
             label = Gtk.Label(label=_panels_names[panel])
             print(_panels_names[panel])
             notebook.append_page(widget, label)
-        print("returning notebook")
+
         return notebook
             
         """

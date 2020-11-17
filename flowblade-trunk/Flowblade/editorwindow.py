@@ -118,15 +118,6 @@ def _toggle_image_switch(widget, icons):
     else:
         widget.set_image(not_pressed)
 
-"""
-def top_level_project_panel():
-    if editorpersistance.prefs.top_row_layout == appconsts.ALWAYS_TWO_PANELS:
-        return False
-    if editorpersistance.prefs.top_level_project_panel == True and editorstate.SCREEN_WIDTH > 1440 and editorstate.SCREEN_HEIGHT > 898:
-        return True
-
-    return False
-"""
 
 class EditorWindow:
 
@@ -188,7 +179,7 @@ class EditorWindow:
         tline_pane = Gtk.HBox(False, 0)
         
         tline_pane.pack_start(tline_vpane, True, True, 0)
-        tline_pane.pack_start(self.effect_select_panel, False, False, 0)
+        tline_pane.pack_start(self.bottom_right_frame, False, False, 0)
                 
         self.tline_pane = tline_pane
 
@@ -440,19 +431,7 @@ class EditorWindow:
             top_project_vbox.pack_start(project_info_panel, False, False, 0)
             top_project_vbox.pack_start(self.bins_panel, True, True, 0)
             top_project_vbox.pack_start(seq_panel, True, True, 0)
-
             top_project_vbox.set_size_request(PANEL_WIDTH, PANEL_HEIGHT)
-            self.top_project_panel = guiutils.set_margins(top_project_vbox, 0, 2, 6, 2)
-            top_project_panel_in_layout = editorlayout.create_position_container(self, \
-                            appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT) # Default is that this returns self.top_project_panel
-                                                                               # that was just created.
-            if top_project_panel_in_layout != None:
-                self.top_project_panel_frame = guiutils.get_panel_etched_frame(top_project_panel_in_layout)
-                guiutils.set_margins(self.top_project_panel_frame, 0, 0, 0, 1)
-            else:
-                # top_project_panel_frame is an etched frame and we put a non-visible dummy box in.
-                self.top_project_panel_frame = guiutils.get_panel_etched_frame(Gtk.VBox(False, 0))
-
         else:
 
             # Notebook project panel for smallest screens
@@ -466,34 +445,35 @@ class EditorWindow:
             self.project_panel = guiutils.set_margins(project_vbox, 0, 2, 6, 2)
 
 
+        # Create position panels and frames
+        # -------------- appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT
+        # -------------- This special case, it can only self.top_project_panel on None.
+        self.top_project_panel = guiutils.set_margins(top_project_vbox, 0, 2, 6, 2)
+        top_project_panel_in_layout = editorlayout.create_position_panel(self, \
+                        appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT) # Default is that this returns self.top_project_panel
+                                                                           # that was created above.
+        if top_project_panel_in_layout != None:
+            self.top_project_panel_frame = guiutils.get_panel_etched_frame(top_project_panel_in_layout)
+            guiutils.set_margins(self.top_project_panel_frame, 0, 0, 0, 1)
+        else:
+            # top_project_panel_frame is an etched frame and we put a non-visible dummy box in.
+            self.top_project_panel_frame = guiutils.get_panel_etched_frame(Gtk.VBox(False, 0))
 
-        # Notebook
-        self.notebook = editorlayout.create_position_container(self, appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT)
+        # -------------- appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT a.k.a Notebook
+        self.notebook = editorlayout.create_position_panel(self, appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT)
         self.notebook.set_size_request(appconsts.NOTEBOOK_WIDTH, appconsts.TOP_ROW_HEIGHT)
         self.notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
-        """
-        self.notebook = Gtk.Notebook()
-        self.notebook.set_size_request(appconsts.NOTEBOOK_WIDTH, appconsts.TOP_ROW_HEIGHT)
-        media_label = Gtk.Label(label=_("Media"))
-
-        # Here we put media panel in notebook if that is the current user pref.
-        if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
-            self.notebook.append_page(self.mm_paned, media_label)
-        #    if editorpersistance.prefs.placement_media_panel == appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT:
-        #        self.notebook.append_page(self.mm_paned, media_label)
-        self.notebook.append_page(self.media_log_panel, Gtk.Label(label=_("Range Log")))
-        self.notebook.append_page(self.effects_panel, Gtk.Label(label=_("Filters")))
-        self.notebook.append_page(self.compositors_panel, Gtk.Label(label=_("Compositors")))
-        if top_level_project_panel() == False:
-            self.notebook.append_page(self.project_panel, Gtk.Label(label=_("Project")))
-
-        self.notebook.append_page(self.jobs_pane, Gtk.Label(label=_("Jobs")))
-        self.notebook.append_page(self.render_panel, Gtk.Label(label=_("Render")))
-        
-        self.notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
-        """
         notebook_frame = guiutils.get_panel_etched_frame(self.notebook)
         guiutils.set_margins(notebook_frame, 0, 0, 0, 1)
+
+        # Create bottom right panel frame, Effects select panel goes in this by defalt
+        # -------------- appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, by default this has filter select panel
+        self.bottom_right_panel = editorlayout.create_position_panel(self, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT)
+        if self.bottom_right_panel != None:
+            self.bottom_right_frame = guiutils.get_panel_etched_frame(self.bottom_right_panel)
+            guiutils.set_margins(self.bottom_right_frame, 0, 0, 0, 1)
+        else:
+            self.bottom_right_frame = guiutils.get_panel_etched_frame(Gtk.VBox(False, 0))
 
         # Position bar and decorative frame  for it
         self.pos_bar = PositionBar()
@@ -509,7 +489,6 @@ class EditorWindow:
         self._create_monitor_row_widgets()
 
         self.player_buttons = glassbuttons.PlayerButtons()
-#        tooltips = [_("Prev Frame - Arrow Left"), _("Next Frame - Arrow Right"), _("Play - Space"), _("Stop - Space"), _("Mark In - I"), _("Mark Out - O"), _("Clear Marks"), _("To Mark In"), _("To Mark Out")]
         if (editorpersistance.prefs.play_pause == True):
             if (editorpersistance.prefs.timeline_start_end is True):
             # ------------------------------ timeline_start_end_button
