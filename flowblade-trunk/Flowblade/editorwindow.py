@@ -147,25 +147,22 @@ class EditorWindow:
         self.ui = Gtk.UIManager()
         self._init_app_menu(self.ui)
 
-        # Create all panels and gui components 
+        # Create all panels and gui components.
         self._init_gui_components()
         
-        # Create timeline comnponents and panels
+        # Create timeline comnponents and panels.
         self._init_tline()
 
-        # Init panels and frames needed to be able to move panels around
+        # Init panels and frames needed to be able to move panels around.
         self._init_panels_and_frames()
 
         # Build layout and put it in a single pane.
         pane = self._get_app_pane()
 
-        # Tooltips
+        # Tooltips.
         self._add_tool_tips()
 
-        # GUI preferences
-        self._init_gui_to_prefs()
-
-        # Viewmenu initial state
+        # Set view menu initial state.
         self._init_view_menu(self.ui.get_widget('/MenuBar/ViewMenu'))
 
         # Set pane and show window
@@ -1251,12 +1248,6 @@ class EditorWindow:
     def show_tline_render_strip(self):
         self.tline_renderer_hbox.pack_start(self.pad_box, False, False, 0)
         self.tline_renderer_hbox.pack_start(self.tline_render_strip.widget, True, True, 0)
-
-    def _init_gui_to_prefs(self):
-        if editorpersistance.prefs.tabs_on_top == True:
-            self.notebook.set_tab_pos(Gtk.PositionType.TOP)
-        else:
-            self.notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
 
     def _change_windows_preference(self, widget, new_window_layout):
         if widget.get_active() == False:
