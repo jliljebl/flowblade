@@ -444,8 +444,8 @@ class EditorWindow:
             top_project_vbox.set_size_request(PANEL_WIDTH, PANEL_HEIGHT)
             self.top_project_panel = guiutils.set_margins(top_project_vbox, 0, 2, 6, 2)
             top_project_panel_in_layout = editorlayout.create_position_container(self, \
-                            appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT) # default is that this returns self.top_project_panel
-                                                                               # that was just created
+                            appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT) # Default is that this returns self.top_project_panel
+                                                                               # that was just created.
             if top_project_panel_in_layout != None:
                 self.top_project_panel_frame = guiutils.get_panel_etched_frame(top_project_panel_in_layout)
                 guiutils.set_margins(self.top_project_panel_frame, 0, 0, 0, 1)
