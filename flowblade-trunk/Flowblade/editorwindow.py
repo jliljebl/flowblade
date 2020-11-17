@@ -140,7 +140,6 @@ class EditorWindow:
         # To ask confirmation for shutdown
         self.window.connect("delete-event", lambda w, e:app.shutdown())
 
-
         # Player consumer has to be stopped and started when window resized
         self.window.connect("window-state-event", lambda w, e:updater.refresh_player(e))
 
@@ -149,69 +148,16 @@ class EditorWindow:
         self._init_app_menu(self.ui)
 
         # Create all panels and gui components 
-        self._init_panels_and_guicomponents()
+        self._init_gui_components()
         
+        # Create timeline comnponents and panels
+        self._init_tline()
 
-        tline_hbox_3 = Gtk.HBox()
-        tline_hbox_3.pack_start(self.left_corner.widget, False, False, 0)
-        tline_hbox_3.pack_start(self.tline_scroller, True, True, 0)
+        # Init panels and frames needed to be able to move panels around
+        self._init_panels_and_frames()
 
-        # Timeline vbox
-        tline_vbox = Gtk.VBox()
-        tline_vbox.pack_start(self.tline_hbox_1, False, False, 0)
-        tline_vbox.pack_start(self.tline_hbox_2, True, True, 0)
-        tline_vbox.pack_start(self.tline_renderer_hbox, False, False, 0)
-        tline_vbox.pack_start(tline_hbox_3, False, False, 0)
-
-        tline_vbox_frame = guiutils.get_panel_etched_frame(tline_vbox)
-    
-        # Timeline box
-        self.tline_box = Gtk.HBox()
-        if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_LEFT_DOCK:
-            self.tline_box.pack_start(self.tool_dock, False, False, 0)
-        self.tline_box.pack_end(tline_vbox_frame, True, True, 0)
-
-        # Timeline pane
-        tline_vpane = Gtk.VBox(False, 1)
-        tline_vpane.pack_start(self.edit_buttons_frame, False, True, 0)
-        tline_vpane.pack_start(self.tline_box, True, True, 0)
-
-        tline_pane = Gtk.HBox(False, 0)
-        
-        tline_pane.pack_start(tline_vpane, True, True, 0)
-        tline_pane.pack_start(self.bottom_right_frame, False, False, 0)
-                
-        self.tline_pane = tline_pane
-
-        # VPaned top row / timeline
-        self.app_v_paned = Gtk.VPaned()
-        self.app_v_paned.pack1(self.top_row_hbox, resize=False, shrink=False)
-        self.app_v_paned.pack2(tline_pane, resize=True, shrink=False)
-
-        self.app_h_box = Gtk.HBox(False, 0)
-        # !!!!!!!!!!!! PANEL_PLACEMENT_LEFT_COLUMN
-        #if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
-        #    if editorpersistance.prefs.placement_media_panel == appconsts.PANEL_PLACEMENT_LEFT_COLUMN:
-        #        self.app_h_box.pack_start(self.mm_paned_frame, False, False, 0)
-        self.app_h_box.pack_end(self.app_v_paned, True, True, 0)
-
-        # Menu box
-        # menubar size 348, 28 if w want to center someting here with set_size_request
-        self.menubar.set_margin_bottom(4)
-        menu_vbox = Gtk.HBox(False, 0)
-        menu_vbox.pack_start(guiutils.get_right_justified_box([self.menubar]), False, False, 0)
-        menu_vbox.pack_start(Gtk.Label(), True, True, 0)
-        if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
-            menu_vbox.pack_start(self.monitor_tc_info.widget, False, False, 0)
-        else:
-            top_row_window_2 = Gtk.HBox(False, 0)
-            top_row_window_2.pack_start(Gtk.Label(), True, True, 0)
-            top_row_window_2.pack_start(self.monitor_tc_info.widget, False, False, 0)
-
-        # Pane
-        pane = Gtk.VBox(False, 1)
-        pane.pack_start(menu_vbox, False, True, 0)
-        pane.pack_start(self.app_h_box, True, True, 0)
+        # Build layout and put it in a single pane.
+        pane = self._get_app_pane()
 
         # Tooltips
         self._add_tool_tips()
@@ -273,7 +219,40 @@ class EditorWindow:
         self.top_paned.set_position(editorpersistance.prefs.top_paned_position)
         self.app_v_paned.set_position(editorpersistance.prefs.app_v_paned_position)
 
-    def _init_panels_and_guicomponents(self):        
+    def _get_app_pane(self): 
+        # VPaned top row / timeline
+        self.app_v_paned = Gtk.VPaned()
+        self.app_v_paned.pack1(self.top_row_hbox, resize=False, shrink=False)
+        self.app_v_paned.pack2(self.tline_pane, resize=True, shrink=False)
+
+        self.app_h_box = Gtk.HBox(False, 0)
+        # !!!!!!!!!!!! PANEL_PLACEMENT_LEFT_COLUMN
+        #if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
+        #    if editorpersistance.prefs.placement_media_panel == appconsts.PANEL_PLACEMENT_LEFT_COLUMN:
+        #        self.app_h_box.pack_start(self.mm_paned_frame, False, False, 0)
+        self.app_h_box.pack_end(self.app_v_paned, True, True, 0)
+
+        # Menu box
+        # menubar size 348, 28 if w want to center someting here with set_size_request
+        self.menubar.set_margin_bottom(4)
+        menu_vbox = Gtk.HBox(False, 0)
+        menu_vbox.pack_start(guiutils.get_right_justified_box([self.menubar]), False, False, 0)
+        menu_vbox.pack_start(Gtk.Label(), True, True, 0)
+        if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
+            menu_vbox.pack_start(self.monitor_tc_info.widget, False, False, 0)
+        else:
+            top_row_window_2 = Gtk.HBox(False, 0)
+            top_row_window_2.pack_start(Gtk.Label(), True, True, 0)
+            top_row_window_2.pack_start(self.monitor_tc_info.widget, False, False, 0)
+
+        # Pane
+        pane = Gtk.VBox(False, 1)
+        pane.pack_start(menu_vbox, False, True, 0)
+        pane.pack_start(self.app_h_box, True, True, 0)
+
+        return pane
+
+    def _init_gui_components(self):        
         # Disable Blender and G'Mic container clip menu items if not available.
         if containerclip.blender_available() == False:
             self.ui.get_widget('/MenuBar/ProjectMenu/ContainerClipsMenu/CreateBlenderContainerItem').set_sensitive(False)
@@ -295,8 +274,6 @@ class EditorWindow:
         self.media_list_view = guicomponents.MediaPanel(projectaction.media_file_menu_item_selected,
                                                         projectaction.media_panel_double_click,
                                                         projectaction.media_panel_popup_requested)
-
-
         view = Gtk.Viewport()
         view.add(self.media_list_view.widget)
         view.set_shadow_type(Gtk.ShadowType.NONE)
@@ -327,8 +304,9 @@ class EditorWindow:
             guiutils.set_margins(self.bins_panel, 6, 6, 8, 0)
             self.mm_paned.pack1(self.bins_panel, resize=True, shrink=True)
             self.mm_paned.pack2(media_panel, resize=True, shrink=False)
-
-        mm_panel = guiutils.set_margins(self.mm_paned, 0, 0, 0, 0)
+        
+        if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
+            mm_panel = guiutils.set_margins(self.mm_paned, 0, 0, 0, 0)
 
         # Effects edit panel
         info_row = clipeffectseditor.get_clip_effects_editor_info_row()    
@@ -432,6 +410,7 @@ class EditorWindow:
             top_project_vbox.pack_start(self.bins_panel, True, True, 0)
             top_project_vbox.pack_start(seq_panel, True, True, 0)
             top_project_vbox.set_size_request(PANEL_WIDTH, PANEL_HEIGHT)
+            self.top_project_panel = guiutils.set_margins(top_project_vbox, 0, 2, 6, 2)
         else:
 
             # Notebook project panel for smallest screens
@@ -443,37 +422,6 @@ class EditorWindow:
             project_vbox.pack_start(project_info_panel, False, True, 0)
             project_vbox.pack_start(seq_panel, True, True, 0)
             self.project_panel = guiutils.set_margins(project_vbox, 0, 2, 6, 2)
-
-
-        # Create position panels and frames
-        # -------------- appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT
-        # -------------- This special case, it can only self.top_project_panel on None.
-        self.top_project_panel = guiutils.set_margins(top_project_vbox, 0, 2, 6, 2)
-        top_project_panel_in_layout = editorlayout.create_position_panel(self, \
-                        appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT) # Default is that this returns self.top_project_panel
-                                                                           # that was created above.
-        if top_project_panel_in_layout != None:
-            self.top_project_panel_frame = guiutils.get_panel_etched_frame(top_project_panel_in_layout)
-            guiutils.set_margins(self.top_project_panel_frame, 0, 0, 0, 1)
-        else:
-            # top_project_panel_frame is an etched frame and we put a non-visible dummy box in.
-            self.top_project_panel_frame = guiutils.get_panel_etched_frame(Gtk.VBox(False, 0))
-
-        # -------------- appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT a.k.a Notebook
-        self.notebook = editorlayout.create_position_panel(self, appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT)
-        self.notebook.set_size_request(appconsts.NOTEBOOK_WIDTH, appconsts.TOP_ROW_HEIGHT)
-        self.notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
-        notebook_frame = guiutils.get_panel_etched_frame(self.notebook)
-        guiutils.set_margins(notebook_frame, 0, 0, 0, 1)
-
-        # Create bottom right panel frame, Effects select panel goes in this by defalt
-        # -------------- appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, by default this has filter select panel
-        self.bottom_right_panel = editorlayout.create_position_panel(self, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT)
-        if self.bottom_right_panel != None:
-            self.bottom_right_frame = guiutils.get_panel_etched_frame(self.bottom_right_panel)
-            guiutils.set_margins(self.bottom_right_frame, 0, 0, 0, 1)
-        else:
-            self.bottom_right_frame = guiutils.get_panel_etched_frame(Gtk.VBox(False, 0))
 
         # Position bar and decorative frame  for it
         self.pos_bar = PositionBar()
@@ -522,7 +470,7 @@ class EditorWindow:
         sw_pos_hbox.pack_start(pos_bar_frame, True, True, 0)
         sw_pos_hbox.set_margin_top(4)
         sw_pos_hbox.set_margin_left(2)
-
+        
         # Video display
         monitor_widget = monitorwidget.MonitorWidget()
         self.tline_display = monitor_widget.get_monitor()
@@ -542,19 +490,55 @@ class EditorWindow:
         self.monitor_frame.add(monitor_align)
         self.monitor_frame.set_shadow_type(Gtk.ShadowType.ETCHED_OUT)
         self.monitor_frame.set_size_request(MONITOR_AREA_WIDTH, appconsts.TOP_ROW_HEIGHT)
+        
+        # Middlebar
+        self.edit_buttons_row = self._get_edit_buttons_row()
+        self.edit_buttons_frame = Gtk.Frame()
+        self.edit_buttons_frame.add(self.edit_buttons_row)
+        self.edit_buttons_frame.set_shadow_type(Gtk.ShadowType.ETCHED_OUT)
+        guiutils.set_margins(self.edit_buttons_frame, 1, 0, 0, 0)
 
-        # Notebook panel
-        notebook_vbox = Gtk.VBox(False, 1)
-        notebook_vbox.pack_start(notebook_frame, True, True, 0)
 
+    def _init_panels_and_frames(self):     
+        # Create position panels and frames
+
+        # -------------- appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT
+        # -------------- This special case, it can only self.top_project_panel on None.
+        top_project_panel_in_layout = editorlayout.create_position_panel(self, \
+                        appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT) # Default is that this returns self.top_project_panel
+                                                                           # that was created above.
+        if top_project_panel_in_layout != None:
+            self.top_project_panel_frame = guiutils.get_panel_etched_frame(top_project_panel_in_layout)
+            guiutils.set_margins(self.top_project_panel_frame, 0, 0, 0, 1)
+        else:
+            # top_project_panel_frame is an etched frame and we put a non-visible dummy box in.
+            self.top_project_panel_frame = guiutils.get_panel_etched_frame(Gtk.VBox(False, 0))
+
+        # -------------- appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT a.k.a Notebook
+        self.notebook = editorlayout.create_position_panel(self, appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT)
+        self.notebook.set_size_request(appconsts.NOTEBOOK_WIDTH, appconsts.TOP_ROW_HEIGHT)
+        self.notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
+        self.notebook_frame = guiutils.get_panel_etched_frame(self.notebook)
+        guiutils.set_margins(self.notebook_frame, 0, 0, 0, 1)
+
+        # Create bottom right panel frame, Effects select panel goes in this by defalt
+        # -------------- appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, by default this has filter select panel
+        self.bottom_right_panel = editorlayout.create_position_panel(self, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT)
+        if self.bottom_right_panel != None:
+            self.bottom_right_frame = guiutils.get_panel_etched_frame(self.bottom_right_panel)
+            guiutils.set_margins(self.bottom_right_frame, 0, 0, 0, 1)
+        else:
+            self.bottom_right_frame = guiutils.get_panel_etched_frame(Gtk.VBox(False, 0))
+        self.tline_pane.pack_start(self.bottom_right_frame, False, False, 0)
+        
         # Top row paned
         self.top_paned = Gtk.HPaned()
         if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
-            self.top_paned.pack1(notebook_vbox, resize=False, shrink=False)
+            self.top_paned.pack1(self.notebook_frame , resize=False, shrink=False)
             self.top_paned.pack2(self.monitor_frame, resize=True, shrink=False)
         else:
             self.top_paned.pack1(mm_panel, resize=False, shrink=False)
-            self.top_paned.pack2(notebook_vbox, resize=True, shrink=False)
+            self.top_paned.pack2(self.notebook_frame, resize=True, shrink=False)
 
         # Top row
         self.top_row_hbox = Gtk.HBox(False, 0)
@@ -563,13 +547,8 @@ class EditorWindow:
         self.top_row_hbox.pack_start(self.top_paned, True, True, 0)
         self.top_row_hbox.pack_end(audiomonitoring.get_master_meter(), False, False, 0)
 
-        # Edit buttons rows
-        self.edit_buttons_row = self._get_edit_buttons_row()
-        self.edit_buttons_frame = Gtk.Frame()
-        self.edit_buttons_frame.add(self.edit_buttons_row)
-        self.edit_buttons_frame.set_shadow_type(Gtk.ShadowType.ETCHED_OUT)
-        guiutils.set_margins(self.edit_buttons_frame, 1, 0, 0, 0)
-    
+
+    def _init_tline(self):        
         self.tline_scale = tlinewidgets.TimeLineFrameScale(modesetting.set_default_edit_mode,
                                                            updater.mouse_scroll_zoom)
 
@@ -640,7 +619,6 @@ class EditorWindow:
 
         # Timeline middle row
         tline_hbox_2 = Gtk.HBox()
-        #tline_hbox_2.pack_start(guiutils.pad_label(8,2), False, False, 0)
         tline_hbox_2.pack_start(self.tline_column.widget, False, False, 0)
         tline_hbox_2.pack_start(self.tline_canvas.widget, True, True, 0)
         
@@ -684,6 +662,37 @@ class EditorWindow:
 
         # Timeline scroller
         self.tline_scroller = tlinewidgets.TimeLineScroller(updater.tline_scrolled)
+
+        tline_hbox_3 = Gtk.HBox()
+        tline_hbox_3.pack_start(self.left_corner.widget, False, False, 0)
+        tline_hbox_3.pack_start(self.tline_scroller, True, True, 0)
+
+        # Timeline vbox
+        tline_vbox = Gtk.VBox()
+        tline_vbox.pack_start(self.tline_hbox_1, False, False, 0)
+        tline_vbox.pack_start(self.tline_hbox_2, True, True, 0)
+        tline_vbox.pack_start(self.tline_renderer_hbox, False, False, 0)
+        tline_vbox.pack_start(tline_hbox_3, False, False, 0)
+
+        tline_vbox_frame = guiutils.get_panel_etched_frame(tline_vbox)
+    
+        # Timeline box
+        self.tline_box = Gtk.HBox()
+        if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_LEFT_DOCK:
+            self.tline_box.pack_start(self.tool_dock, False, False, 0)
+        self.tline_box.pack_end(tline_vbox_frame, True, True, 0)
+
+        # Timeline pane
+        tline_vpane = Gtk.VBox(False, 1)
+        tline_vpane.pack_start(self.edit_buttons_frame, False, True, 0)
+        tline_vpane.pack_start(self.tline_box, True, True, 0)
+
+        tline_pane = Gtk.HBox(False, 0)
+        
+        tline_pane.pack_start(tline_vpane, True, True, 0)
+
+                
+        self.tline_pane = tline_pane
 
     def _init_cursors(self):
         # Read cursors
