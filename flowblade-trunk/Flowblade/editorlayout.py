@@ -52,14 +52,14 @@ appconsts.PANEL_FILTER_SELECT
 
 DEFAULT_PANEL_POSITIONS = { \
     appconsts.PANEL_MEDIA: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
+    appconsts.PANEL_RANGE_LOG: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_FILTERS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_COMPOSITORS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
-    appconsts.PANEL_RANGE_LOG: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
-    appconsts.PANEL_RENDERING: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_JOBS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
-    appconsts.PANEL_PROJECT: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
-    appconsts.PANEL_PROJECT_SMALL_SCREEN: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
-    appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
+    appconsts.PANEL_RENDERING: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
+    appconsts.PANEL_PROJECT: None,
+    appconsts.PANEL_PROJECT_SMALL_SCREEN: None, # default values are for large screen single window layout, these are modified on startup if needed.
+    appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None, # default values are for large screen single window layout, these are modified on startup if needed.
     appconsts.PANEL_FILTER_SELECT: appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, # This is the only different default position.
 }
 
@@ -80,19 +80,28 @@ AVAILABLE_PANEL_POSITIONS_OPTIONS = { \
 # Saved data struct holding panel positions information.
 _panel_positions = None
 
-# Dict for translations
+# Index of noteboo
+#_panel_notebook_indexes = {}
+
+# Dicts for translations.
 _positions_names = {}
+_panels_names = {}
 
 # ----------------------------------------------------------- INIT
 def init_layout_data():
-    global _panel_positions, _positions_names
+    global _panel_positions, _positions_names, _panels_names
     _panel_positions = editorpersistance.prefs.panel_positions
-    
+
+    _panel_positions = copy.deepcopy(DEFAULT_PANEL_POSITIONS)
+    editorpersistance.prefs.panel_positions = _panel_positions
+    editorpersistance.save()
+        
     if _panel_positions == None:
         _panel_positions = copy.deepcopy(DEFAULT_PANEL_POSITIONS)
         editorpersistance.prefs.panel_positions = _panel_positions
         editorpersistance.save()
 
+    # Translations need to be inited after all modules havfe been loaded
     _positions_names = { \
         appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT: _("Top Row Notebook"),
         appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT: _("Top Row Right Notebook"),
@@ -100,12 +109,87 @@ def init_layout_data():
         appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT:  _("Bottom Row Left"),
         appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT:_("Bottom Row Right"),
     }
+    
+    _panels_names = { \
+        appconsts.PANEL_MEDIA: _("Media"),
+        appconsts.PANEL_FILTERS: _("Filters"),
+        appconsts.PANEL_COMPOSITORS: _("Compositors"),
+        appconsts.PANEL_RANGE_LOG: _("Range Log"),
+        appconsts.PANEL_RENDERING: _("Render"),
+        appconsts.PANEL_JOBS: _("Jobs"),
+        appconsts.PANEL_PROJECT: _("Project"),
+        appconsts.PANEL_PROJECT_SMALL_SCREEN: "tba",
+        appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: "tba",
+        appconsts.PANEL_FILTER_SELECT: _("Filter Select")
+    }
 
 # ---------------------------------------------------------- DATA METHODS
 def _get_panel_position(panel):
     return _panel_positions[panel]
 
+def _get_position_panels(position):
+    panels = []
+    for panel, panel_position in _panel_positions.items():
+        if position == panel_position:
+            panels.append(panel)
 
+    return panels
+
+def _get_panels_widgets_dict(editor_window):
+    _panels_widgets = { \
+        appconsts.PANEL_MEDIA: editor_window.mm_paned,
+        appconsts.PANEL_FILTERS: editor_window.effects_panel,
+        appconsts.PANEL_COMPOSITORS: editor_window.compositors_panel,
+        appconsts.PANEL_RANGE_LOG: editor_window.media_log_panel,
+        appconsts.PANEL_RENDERING: editor_window.render_panel,
+        appconsts.PANEL_JOBS: editor_window.jobs_pane,
+        appconsts.PANEL_PROJECT: editor_window.top_project_panel_frame,
+        appconsts.PANEL_FILTER_SELECT: editor_window.effect_select_panel
+    }
+    # appconsts.PANEL_PROJECT_SMALL_SCREEN, appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN
+    # not available currently
+
+    return _panels_widgets
+        
+# ----------------------------------------------------------- PANELS PLACEMENT
+def create_position_container(editor_window, position):
+    panels = _get_position_panels(position)
+    if len(panels) == 0:
+        return None 
+    elif len(panels) == 1:
+        return panels[0]
+    else:
+        notebook = Gtk.Notebook()
+        panel_widgets = _get_panels_widgets_dict(editor_window)
+        for panel in panels:
+            widget = panel_widgets[panel]
+            label = Gtk.Label(label=_panels_names[panel])
+            print(_panels_names[panel])
+            notebook.append_page(widget, label)
+        print("returning notebook")
+        return notebook
+            
+        """
+        # For multiple panels we are making notebook
+ = Gtk.Notebook()
+self.notebook.set_size_request(appconsts.NOTEBOOK_WIDTH, appconsts.TOP_ROW_HEIGHT)
+media_label = Gtk.Label(label=_("Media"))
+
+# Here we put media panel in notebook if that is the current user pref.
+if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
+    self.notebook.append_page(self.mm_paned, media_label)
+#    if editorpersistance.prefs.placement_media_panel == appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT:
+#        self.notebook.append_page(self.mm_paned, media_label)
+self.notebook.append_page(self.media_log_panel, Gtk.Label(label=_("Range Log")))
+self.notebook.append_page(self.effects_panel, Gtk.Label(label=_("Filters")))
+self.notebook.append_page(self.compositors_panel, Gtk.Label(label=_("Compositors")))
+if top_level_project_panel() == False:
+    self.notebook.append_page(self.project_panel, Gtk.Label(label=_("Project")))
+
+self.notebook.append_page(self.jobs_pane, Gtk.Label(label=_("Jobs")))
+self.notebook.append_page(self.render_panel, Gtk.Label(label=_("Render")))
+    """
+    
 # ---------------------------------------------------------- APP MENU
 def get_panel_positions_menu_item():
     panel_positions_menu_item = Gtk.MenuItem(_("Panel Placement"))

@@ -399,7 +399,7 @@ class EditorWindow:
             render_hbox.pack_start(render_panel_left, True, True, 0)
             render_hbox.pack_start(render_panel_right, True, True, 0)
 
-        render_panel = guiutils.set_margins(render_hbox, 2, 6, 8, 6)
+        self.render_panel = guiutils.set_margins(render_hbox, 2, 6, 8, 6)
 
         # Range Log panel
         media_log_events_list_view = medialog.get_media_log_list_view()
@@ -408,7 +408,7 @@ class EditorWindow:
         media_log_vbox = Gtk.HBox()
         media_log_vbox.pack_start(events_panel, True, True, 0)
 
-        media_log_panel = guiutils.set_margins(media_log_vbox, 6, 6, 6, 6)
+        self.media_log_panel = guiutils.set_margins(media_log_vbox, 6, 6, 6, 6)
         self.media_log_events_list_view = media_log_events_list_view
 
         # Project Panel
@@ -434,8 +434,8 @@ class EditorWindow:
 
             top_project_vbox.set_size_request(PANEL_WIDTH, PANEL_HEIGHT)
             top_project_panel = guiutils.set_margins(top_project_vbox, 0, 2, 6, 2)
-            top_project_panel_frame = guiutils.get_panel_etched_frame(top_project_panel)
-            guiutils.set_margins(top_project_panel_frame, 0, 0, 0, 1)
+            self.top_project_panel_frame = guiutils.get_panel_etched_frame(top_project_panel)
+            guiutils.set_margins(self.top_project_panel_frame, 0, 0, 0, 1)
         else:
 
             # Notebook project panel for smallest screens
@@ -446,16 +446,20 @@ class EditorWindow:
             project_vbox = Gtk.VBox()
             project_vbox.pack_start(project_info_panel, False, True, 0)
             project_vbox.pack_start(seq_panel, True, True, 0)
-            project_panel = guiutils.set_margins(project_vbox, 0, 2, 6, 2)
+            self.project_panel = guiutils.set_margins(project_vbox, 0, 2, 6, 2)
 
         # Jobs panel
         jobs.create_jobs_list_view()
         jobs_panel = jobs.get_jobs_panel()
         jobs_hbox = Gtk.HBox()
         jobs_hbox.pack_start(jobs_panel, True, True, 0)
-        jobs_pane = guiutils.set_margins(jobs_hbox, 6, 6, 6, 6)
+        self.jobs_pane = guiutils.set_margins(jobs_hbox, 6, 6, 6, 6)
 
         # Notebook
+        self.notebook = editorlayout.create_position_container(self, appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT)
+        self.notebook.set_size_request(appconsts.NOTEBOOK_WIDTH, appconsts.TOP_ROW_HEIGHT)
+        self.notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
+        """
         self.notebook = Gtk.Notebook()
         self.notebook.set_size_request(appconsts.NOTEBOOK_WIDTH, appconsts.TOP_ROW_HEIGHT)
         media_label = Gtk.Label(label=_("Media"))
@@ -465,16 +469,17 @@ class EditorWindow:
             self.notebook.append_page(self.mm_paned, media_label)
         #    if editorpersistance.prefs.placement_media_panel == appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT:
         #        self.notebook.append_page(self.mm_paned, media_label)
-        self.notebook.append_page(media_log_panel, Gtk.Label(label=_("Range Log")))
+        self.notebook.append_page(self.media_log_panel, Gtk.Label(label=_("Range Log")))
         self.notebook.append_page(self.effects_panel, Gtk.Label(label=_("Filters")))
         self.notebook.append_page(self.compositors_panel, Gtk.Label(label=_("Compositors")))
         if top_level_project_panel() == False:
-            self.notebook.append_page(project_panel, Gtk.Label(label=_("Project")))
+            self.notebook.append_page(self.project_panel, Gtk.Label(label=_("Project")))
 
-        self.notebook.append_page(jobs_pane, Gtk.Label(label=_("Jobs")))
-        self.notebook.append_page(render_panel, Gtk.Label(label=_("Render")))
+        self.notebook.append_page(self.jobs_pane, Gtk.Label(label=_("Jobs")))
+        self.notebook.append_page(self.render_panel, Gtk.Label(label=_("Render")))
+        
         self.notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
-
+        """
         notebook_frame = guiutils.get_panel_etched_frame(self.notebook)
         guiutils.set_margins(notebook_frame, 0, 0, 0, 1)
 
@@ -563,7 +568,7 @@ class EditorWindow:
         # Top row
         self.top_row_hbox = Gtk.HBox(False, 0)
         if top_level_project_panel() == True:
-            self.top_row_hbox.pack_start(top_project_panel_frame, False, False, 0)
+            self.top_row_hbox.pack_start(self.top_project_panel_frame, False, False, 0)
         self.top_row_hbox.pack_start(self.top_paned, True, True, 0)
         self.top_row_hbox.pack_end(audiomonitoring.get_master_meter(), False, False, 0)
 
@@ -1045,59 +1050,6 @@ class EditorWindow:
 
         # Panel positions
         panel_positions_menu_item = editorlayout.get_panel_positions_menu_item()
-        """
-        panel_positions_menu_item = Gtk.MenuItem(_("Panel Placement"))
-        panel_positions_menu = Gtk.Menu()
-        panel_positions_menu_item.set_submenu(panel_positions_menu)
-        
-        # Panel positions - Media Panel
-        media_panel_menu_item = Gtk.MenuItem(_("Media Panel"))
-        panel_positions_menu.append(media_panel_menu_item)
-        media_panel_menu = Gtk.Menu()
-        media_panel_menu_item.set_submenu(media_panel_menu)
-        
-        media_panel_top = Gtk.RadioMenuItem()
-        media_panel_top.set_label( _("Top Row Notebook"))
-        media_panel_menu.append(media_panel_top)
-
-        media_panel_left_column = Gtk.RadioMenuItem.new_with_label([media_panel_top], _("Left Column"))
-
-        if editorpersistance.prefs.placement_media_panel == appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT:
-            media_panel_top.set_active(True)
-        else:
-            media_panel_left_column.set_active(True)
-        
-        media_panel_top.set_active(True)
-        media_panel_top.connect("activate", lambda w: self._show_media_panel_top_row_notebook(w))
-        media_panel_left_column.connect("activate", lambda w: self._show_media_panel_left_column(w))
-        media_panel_menu.append(media_panel_left_column)
-
-
-        menu.append(panel_positions_menu_item)
-
-        # Panel positions - Filter Panel
-        filter_panel_menu_item = Gtk.MenuItem(_("Filter Panel"))
-        panel_positions_menu.append(filter_panel_menu_item)
-        filter_panel_menu = Gtk.Menu()
-        filter_panel_menu_item.set_submenu(filter_panel_menu)
-        
-        filter_panel_top = Gtk.RadioMenuItem()
-        filter_panel_top.set_label( _("Top Row Notebook"))
-        filter_panel_menu.append(filter_panel_top)
-
-        filter_panel_bottom_right = Gtk.RadioMenuItem.new_with_label([filter_panel_top], _("Bottom Row Right"))
-        
-
-        if editorpersistance.prefs.placement_media_panel == appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT:
-            filter_panel_top.set_active(True)
-        else:
-            filter_panel_bottom_right.set_active(True)
-
-        filter_panel_top.set_active(True)
-        #media_panel_top.connect("activate", lambda w: self._show_tabs_up(w))
-        #tabs_down.connect("activate", lambda w: self._show_tabs_down(w))
-        filter_panel_menu.append(filter_panel_bottom_right)
-        """
         menu.append(panel_positions_menu_item)
         
         # Middlebar Layout
