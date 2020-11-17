@@ -28,6 +28,7 @@ import copy
 
 import appconsts
 import editorpersistance
+import editorstate
 
 """
 # Panel placement options
@@ -57,7 +58,7 @@ DEFAULT_PANEL_POSITIONS = { \
     appconsts.PANEL_COMPOSITORS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_JOBS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_RENDERING: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
-    appconsts.PANEL_PROJECT: None,
+    appconsts.PANEL_PROJECT: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT,
     appconsts.PANEL_PROJECT_SMALL_SCREEN: None, # default values are for large screen single window layout, these are modified on startup if needed.
     appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None, # default values are for large screen single window layout, these are modified on startup if needed.
     appconsts.PANEL_FILTER_SELECT: appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, # This is the only different default position.
@@ -70,7 +71,7 @@ AVAILABLE_PANEL_POSITIONS_OPTIONS = { \
     appconsts.PANEL_RANGE_LOG: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT],
     appconsts.PANEL_RENDERING: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT],
     appconsts.PANEL_JOBS: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT],
-    appconsts.PANEL_PROJECT: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT],
+    appconsts.PANEL_PROJECT: [appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT],
     appconsts.PANEL_PROJECT_SMALL_SCREEN: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT],
     appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT],
     appconsts.PANEL_FILTER_SELECT: [appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT]
@@ -87,6 +88,15 @@ _panel_positions = None
 _positions_names = {}
 _panels_names = {}
 
+
+def top_level_project_panel():
+    if editorpersistance.prefs.top_row_layout == appconsts.ALWAYS_TWO_PANELS:
+        return False
+    if editorpersistance.prefs.top_level_project_panel == True and editorstate.SCREEN_WIDTH > 1440 and editorstate.SCREEN_HEIGHT > 898:
+        return True
+
+    return False
+    
 # ----------------------------------------------------------- INIT
 def init_layout_data():
     global _panel_positions, _positions_names, _panels_names
@@ -143,7 +153,7 @@ def _get_panels_widgets_dict(editor_window):
         appconsts.PANEL_RANGE_LOG: editor_window.media_log_panel,
         appconsts.PANEL_RENDERING: editor_window.render_panel,
         appconsts.PANEL_JOBS: editor_window.jobs_pane,
-        appconsts.PANEL_PROJECT: editor_window.top_project_panel_frame,
+        appconsts.PANEL_PROJECT: editor_window.top_project_panel,
         appconsts.PANEL_FILTER_SELECT: editor_window.effect_select_panel
     }
     # appconsts.PANEL_PROJECT_SMALL_SCREEN, appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN
@@ -154,13 +164,15 @@ def _get_panels_widgets_dict(editor_window):
 # ----------------------------------------------------------- PANELS PLACEMENT
 def create_position_container(editor_window, position):
     panels = _get_position_panels(position)
+    panel_widgets = _get_panels_widgets_dict(editor_window)
     if len(panels) == 0:
         return None 
     elif len(panels) == 1:
-        return panels[0]
+        print("returning panel it self")
+        return panel_widgets[panels[0]] # Just oanel, no notebook, we have only one panel in this position
     else:
         notebook = Gtk.Notebook()
-        panel_widgets = _get_panels_widgets_dict(editor_window)
+
         for panel in panels:
             widget = panel_widgets[panel]
             label = Gtk.Label(label=_panels_names[panel])

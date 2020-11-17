@@ -484,10 +484,10 @@ def create_gui():
         compositeeditor.compositor_notebook_index = 2
         clipeffectseditor.filters_notebook_index = 1
         jobs.jobs_notebook_index = 3
-        if editorwindow.top_level_project_panel() == False:
+        if editorlayout.top_level_project_panel() == False:
             jobs.jobs_notebook_index = 4
     else:
-        if editorwindow.top_level_project_panel() == False:
+        if editorlayout.top_level_project_panel() == False:
             jobs.jobs_notebook_index = 5
 
     # Make layout data available
@@ -1081,7 +1081,7 @@ def _shutdown_dialog_callback(dialog, response_id, no_dialog_shutdown=False):
     editorpersistance.prefs.app_v_paned_position = gui.editor_window.app_v_paned.get_position()
     editorpersistance.prefs.top_paned_position = gui.editor_window.top_paned.get_position()
     try: # This fails if preference for top row layout changed, we just ignore saving these values then.
-        if editorwindow.top_level_project_panel() == True:
+        if editorlayout.top_level_project_panel() == True:
             editorpersistance.prefs.mm_paned_position = 200  # This is not used until user sets preference to not have top level project panel
         else:
             editorpersistance.prefs.mm_paned_position = gui.editor_window.mm_paned.get_position()

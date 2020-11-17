@@ -118,6 +118,7 @@ def _toggle_image_switch(widget, icons):
     else:
         widget.set_image(not_pressed)
 
+"""
 def top_level_project_panel():
     if editorpersistance.prefs.top_row_layout == appconsts.ALWAYS_TWO_PANELS:
         return False
@@ -125,7 +126,7 @@ def top_level_project_panel():
         return True
 
     return False
-
+"""
 
 class EditorWindow:
 
@@ -275,7 +276,7 @@ class EditorWindow:
         if bin_w < MEDIA_MANAGER_WIDTH + 2:
             bin_w = 0
 
-        if top_level_project_panel() == False:
+        if editorlayout.top_level_project_panel() == False:
             self.mm_paned.set_position(bin_w)
 
         self.top_paned.set_position(editorpersistance.prefs.top_paned_position)
@@ -327,7 +328,7 @@ class EditorWindow:
         self.bin_info = bin_info
 
         # Smallest screens always get bins in same panel as media, others get top level project panel if selected
-        if top_level_project_panel() == True:
+        if editorlayout.top_level_project_panel() == True:
             self.mm_paned = Gtk.HBox()
             self.mm_paned.add(media_panel)
         else:
@@ -422,7 +423,15 @@ class EditorWindow:
                              lambda w,e: projectaction.add_new_sequence(),
                              lambda w,e: projectaction.delete_selected_sequence())
 
-        if top_level_project_panel() == True:
+        # Jobs panel
+        jobs.create_jobs_list_view()
+        jobs_panel = jobs.get_jobs_panel()
+        jobs_hbox = Gtk.HBox()
+        jobs_hbox.pack_start(jobs_panel, True, True, 0)
+        self.jobs_pane = guiutils.set_margins(jobs_hbox, 6, 6, 6, 6)
+        
+        # Project panel
+        if editorlayout.top_level_project_panel() == True:
             # Project info
             project_info_panel = projectinfogui.get_top_level_project_info_panel()
             PANEL_WIDTH = 10
@@ -433,9 +442,17 @@ class EditorWindow:
             top_project_vbox.pack_start(seq_panel, True, True, 0)
 
             top_project_vbox.set_size_request(PANEL_WIDTH, PANEL_HEIGHT)
-            top_project_panel = guiutils.set_margins(top_project_vbox, 0, 2, 6, 2)
-            self.top_project_panel_frame = guiutils.get_panel_etched_frame(top_project_panel)
-            guiutils.set_margins(self.top_project_panel_frame, 0, 0, 0, 1)
+            self.top_project_panel = guiutils.set_margins(top_project_vbox, 0, 2, 6, 2)
+            top_project_panel_in_layout = editorlayout.create_position_container(self, \
+                            appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT) # default is that this returns self.top_project_panel
+                                                                               # that was just created
+            if top_project_panel_in_layout != None:
+                self.top_project_panel_frame = guiutils.get_panel_etched_frame(top_project_panel_in_layout)
+                guiutils.set_margins(self.top_project_panel_frame, 0, 0, 0, 1)
+            else:
+                # top_project_panel_frame is an etched frame and we put a non-visible dummy box in.
+                self.top_project_panel_frame = guiutils.get_panel_etched_frame(Gtk.VBox(False, 0))
+
         else:
 
             # Notebook project panel for smallest screens
@@ -448,12 +465,7 @@ class EditorWindow:
             project_vbox.pack_start(seq_panel, True, True, 0)
             self.project_panel = guiutils.set_margins(project_vbox, 0, 2, 6, 2)
 
-        # Jobs panel
-        jobs.create_jobs_list_view()
-        jobs_panel = jobs.get_jobs_panel()
-        jobs_hbox = Gtk.HBox()
-        jobs_hbox.pack_start(jobs_panel, True, True, 0)
-        self.jobs_pane = guiutils.set_margins(jobs_hbox, 6, 6, 6, 6)
+
 
         # Notebook
         self.notebook = editorlayout.create_position_container(self, appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT)
@@ -567,7 +579,7 @@ class EditorWindow:
 
         # Top row
         self.top_row_hbox = Gtk.HBox(False, 0)
-        if top_level_project_panel() == True:
+        if editorlayout.top_level_project_panel() == True and top_project_panel_in_layout != None:
             self.top_row_hbox.pack_start(self.top_project_panel_frame, False, False, 0)
         self.top_row_hbox.pack_start(self.top_paned, True, True, 0)
         self.top_row_hbox.pack_end(audiomonitoring.get_master_meter(), False, False, 0)
