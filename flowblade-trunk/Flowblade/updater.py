@@ -587,7 +587,7 @@ def display_marks_tc():
 
 # ----------------------------------------------- clip editors    
 def clear_clip_from_editors(clip):
-    if clipeffectseditor.clip == clip:
+    if clipeffectseditor.clip_is_being_edited(clip):
         clipeffectseditor.clear_clip()
 
 def open_clip_in_effects_editor(data):
