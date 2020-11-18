@@ -222,12 +222,9 @@ class EditorWindow:
         self.app_v_paned.pack1(self.top_row_hbox, resize=False, shrink=False)
         self.app_v_paned.pack2(self.tline_pane, resize=True, shrink=False)
 
-        self.app_h_box = Gtk.HBox(False, 0)
-        # !!!!!!!!!!!! PANEL_PLACEMENT_LEFT_COLUMN
-        #if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
-        #    if editorpersistance.prefs.placement_media_panel == appconsts.PANEL_PLACEMENT_LEFT_COLUMN:
-        #        self.app_h_box.pack_start(self.mm_paned_frame, False, False, 0)
-        self.app_h_box.pack_end(self.app_v_paned, True, True, 0)
+        # self.app_h_box_frame is used to implement postion PANEL_PLACEMENT_LEFT_COLUMN
+        self.app_h_box_frame = Gtk.HBox(False, 0)
+        self.app_h_box_frame.pack_end(self.app_v_paned, True, True, 0)
 
         # Menu box
         # menubar size 348, 28 if w want to center someting here with set_size_request
@@ -245,7 +242,7 @@ class EditorWindow:
         # Pane
         pane = Gtk.VBox(False, 1)
         pane.pack_start(menu_vbox, False, True, 0)
-        pane.pack_start(self.app_h_box, True, True, 0)
+        pane.pack_start(self.app_h_box_frame, True, True, 0)
 
         return pane
 
@@ -501,7 +498,7 @@ class EditorWindow:
 
         # -------------- appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT
         # -------------- This special case, it can only self.top_project_panel on None.
-        top_project_panel_in_layout = editorlayout.create_position_panel(self, \
+        top_project_panel_in_layout = editorlayout.create_position_widget(self, \
                         appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT) # Default is that this returns self.top_project_panel
                                                                            # that was created above.
         if top_project_panel_in_layout != None:
@@ -512,7 +509,7 @@ class EditorWindow:
             self.top_project_panel_frame = guiutils.get_panel_etched_frame(Gtk.VBox(False, 0))
 
         # -------------- appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT a.k.a Notebook
-        self.notebook = editorlayout.create_position_panel(self, appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT)
+        self.notebook = editorlayout.create_position_widget(self, appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT)
         self.notebook.set_size_request(appconsts.NOTEBOOK_WIDTH, appconsts.TOP_ROW_HEIGHT)
         self.notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
         self.notebook_frame = guiutils.get_panel_etched_frame(self.notebook)
@@ -520,7 +517,7 @@ class EditorWindow:
 
         # Create bottom right panel frame, Effects select panel goes in this by defalt
         # -------------- appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, by default this has filter select panel
-        self.bottom_right_panel = editorlayout.create_position_panel(self, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT)
+        self.bottom_right_panel = editorlayout.create_position_widget(self, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT)
         if self.bottom_right_panel != None:
             self.bottom_right_frame = guiutils.get_panel_etched_frame(self.bottom_right_panel)
             guiutils.set_margins(self.bottom_right_frame, 0, 0, 0, 1)
@@ -1298,9 +1295,10 @@ class EditorWindow:
         self.tool_selector = None
         workflow.select_default_tool()
 
-        media_panel_top.connect("activate", lambda w: self._show_media_panel_top_row_notebook(w))
-        media_panel_left_column.connect("activate", lambda w: self._show_media_panel_left_column(w))
+        #media_panel_top.connect("activate", lambda w: self._show_media_panel_top_row_notebook(w))
+        #media_panel_left_column.connect("activate", lambda w: self._show_media_panel_left_column(w))
 
+    """
     def _show_media_panel_top_row_notebook(self, widget):
         if widget.get_active() == False:
             return
@@ -1332,7 +1330,8 @@ class EditorWindow:
 
         editorpersistance.prefs.placement_media_panel = appconsts.PANEL_PLACEMENT_LEFT_COLUMN
         editorpersistance.save()
-
+    """
+    
     # ----------------------------------------------------------- GUI components monitor, middlebar.
     def _create_monitor_buttons(self):
         self.monitor_switch = guicomponents.MonitorSwitch(self._monitor_switch_handler)
