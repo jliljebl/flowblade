@@ -275,20 +275,21 @@ def _get_position_selection_menu(panel):
     
     
 # ----------------------------------------------- CHANGING POSITIONS
-def _change_panel_position(widget, panel, pos_option):
+def _change_panel_position(widget, panel_id, pos_option):
     if widget.get_active() == False:
         print("not active")
         return
 
-    print(panel, pos_option)
-    _remove_panel(panel)
-
-     gui.editor_window.window.show_all()
+    print(panel_id, pos_option)
+    _remove_panel(panel_id)
+    _add_panel(panel_id, pos_option)
     
-def _remove_panel(panel):
-    current_position = _panel_positions[panel]
+    gui.editor_window.window.show_all()
+    
+def _remove_panel(panel_id):
+    current_position = _panel_positions[panel_id]
     panel_widgets = _get_panels_widgets_dict(gui.editor_window)
-    panel_widget = panel_widgets[panel]
+    panel_widget = panel_widgets[panel_id]
     notebook = _position_containers[current_position]
     
     if notebook != None:
@@ -298,7 +299,28 @@ def _remove_panel(panel):
         # Panel is in position frame as single panel
         position_frame = _get_position_frames_dict[current_position]
         position_frame.remove(panel_widget)
-        
+
+def _add_panel(panel_id, position):
+    panel_widgets = _get_panels_widgets_dict(gui.editor_window)
+    panel_widget = panel_widgets[panel_id]
+    notebook = _position_containers[position]
+    
+    if notebook != None:
+        # panel is in notebook with other panels
+        label = _panels_names[panel_id]
+        notebook.insert_page(panel_widget, label, 0)
+        notebook.remove(panel_widget)
+    else:
+        # Panel is in position frame as single panel
+        position_frames = _get_position_frames_dict()
+        position_frame = position_frames[position]
+        if position == appconsts.PANEL_PLACEMENT_LEFT_COLUMN:
+            # These are Gtk.Box widgets
+            position_frame.pack_start(panel_widget, False, False, 0)
+        else:
+            # These are gtk.Frames
+            position_frame.add(panel_widget)
+
 """
 def _show_media_panel_top_row_notebook(self, widget):
     if widget.get_active() == False:
