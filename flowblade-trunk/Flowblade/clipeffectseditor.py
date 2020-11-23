@@ -35,6 +35,7 @@ import dialogs
 import dialogutils
 import dnd
 import edit
+import editorlayout
 import editorpersistance
 import editorstate
 from editorstate import PROJECT
@@ -81,7 +82,7 @@ stack_dnd_state = NOT_ON
 stack_dnd_event_time = 0.0
 stack_dnd_event_info = None
 
-filters_notebook_index = 2 # 2 for single window, app.py sets to 1 for two windows
+
 
 # ---------------------------------------------------------- filter stack objects
 class FilterFooterRow:
@@ -425,7 +426,7 @@ def set_clip(clip, track, clip_index, show_tab=True):
         show_text_in_edit_area(_("Clip Has No Filters"))
 
     if show_tab:
-        gui.middle_notebook.set_current_page(filters_notebook_index)
+        editorlayout.show_panel(appconsts.PANEL_FILTERS)
 
     global _edit_polling_thread
     # Close old polling
@@ -515,7 +516,6 @@ def clear_clip():
     global _filter_stack
     _filter_stack = None
     _set_no_clip_info()
-    #effect_selection_changed()
     show_text_in_edit_area(_("No Clip"))
 
     set_enabled(False)

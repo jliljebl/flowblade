@@ -270,11 +270,11 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
         buttons_row.pack_start(guiutils.get_pad_label(24, 10), False, True, 0)
         buttons_row.pack_start(_get_tools_buttons(), False, True, 0)
         if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
-            buttons_row.pack_start(guiutils.get_pad_label(170, 10), False, True, 0)
+            buttons_row.pack_start(Gtk.Label(), True, True, 0)
         else:
-            buttons_row.pack_start(guiutils.get_pad_label(100, 10), False, True, 0)
+            buttons_row.pack_start(Gtk.Label(), True, True, 0)
     else:
-        buttons_row.pack_start(guiutils.get_pad_label(30, 10), False, True, 0)
+        buttons_row.pack_start(Gtk.Label(), True, True, 0)
     
     
     buttons_row.pack_start(_get_undo_buttons_panel(), False, True, 0)

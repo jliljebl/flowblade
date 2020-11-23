@@ -71,10 +71,10 @@ AVAILABLE_PANEL_POSITIONS_OPTIONS = { \
     appconsts.PANEL_RANGE_LOG: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT],
     appconsts.PANEL_RENDERING: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT],
     appconsts.PANEL_JOBS: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT],
-    appconsts.PANEL_PROJECT: [appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT],
+    appconsts.PANEL_PROJECT: [appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT],
     appconsts.PANEL_PROJECT_SMALL_SCREEN: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT],
     appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT],
-    appconsts.PANEL_FILTER_SELECT: [appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, appconsts.PANEL_PLACEMENT_NOT_VISIBLE]
+    appconsts.PANEL_FILTER_SELECT: [appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, appconsts.PANEL_PLACEMENT_NOT_VISIBLE]
 }
 
 # Saved data struct holding panel positions information.
@@ -144,6 +144,22 @@ def init_layout_data():
         appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT: None
     }
 
+def show_panel(panel_id):
+    # Iterate positions to find where panel is
+    for position in _positions_names:
+        pos_panel_ids = _get_position_panels(position)
+        if len(pos_panel_ids) == 0:
+            continue
+        if len(pos_panel_ids) == 1:
+            continue
+        
+        panel_widget = _get_panels_widgets_dict(gui.editor_window)[panel_id]
+        notebook = _position_notebooks[position]
+        for i in range(0, notebook.get_n_pages()):
+            notebook_page = notebook.get_nth_page(i)
+            if notebook_page == panel_widget:
+                notebook.set_current_page(i)
+            
 # ---------------------------------------------------------- DATA METHODS
 def _get_panel_position(panel):
     return _panel_positions[panel]
