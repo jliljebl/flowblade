@@ -33,23 +33,22 @@ import gui
 
 
 # Transforms when adding panels.
-# 0 -> 1    The pre-created Gtk.Frame is filled with added panel and 
-#           put in correct place in layout box.
+# 0 -> 1    The pre-created Gtk.Frame is filled with added panel.
 # 1 -> 2    The pre-created Gtk.Frame is removed from layout box and panel is removed from it
-#           New notebook both panels are aadded into it.
-# 2 -> N    Panel is added into existing notebook.  
+#           New notebook id created and both panels are added into it.
+# 2 -> N    Panel is added into existing notebook.
 
 # Transforms when removing panels.
 # N -> 2    Panel is removed from notebook.
-# 2 -> 1    Notebook is removed from pre-created Gtk.Frame, panel is emoved from noteboook
+# 2 -> 1    Notebook is removed from pre-created Gtk.Frame, panel is removed from noteboook
 #           and added to pre-created Gtk.Frame.
-# 1 -> 0    The pre-created Gtk.Frame is removed from layout box.
+# 1 -> 0    Panel is removed from the pre-created Gtk.Frame.
 
 # Pre-created Gtk.Frames exist all through app life-cycle, notebooks are dynamically created
 # as needed. 
 
 # The exception for these transforms here is top row default notebook 
-# that is forced to always exits with at least two panels displayed.
+# that is forced to always exit with at least two panels displayed.
 # This makes easier to add and remove top row panels.
 
 DEFAULT_PANEL_POSITIONS = { \
@@ -77,7 +76,6 @@ AVAILABLE_PANEL_POSITIONS_OPTIONS = { \
     appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT],
     appconsts.PANEL_FILTER_SELECT: [appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, appconsts.PANEL_PLACEMENT_NOT_VISIBLE]
 }
-
 
 # Saved data struct holding panel positions information.
 _panel_positions = None
@@ -191,9 +189,10 @@ def _get_position_frames_dict():
 def create_position_widget(editor_window, position):
     # This method creates and returns the widget that is put into the frame 
     # holding panel/s in given position.
-    # If no panels go into posiotn, None is returned.
-    # If 1 panel in postion, then that panel itself is the widget.
+    # If no panels go into position, None is returned.
+    # If 1 panel in position, then that panel itself is the widget.
     # If 2-N panels in position, then a notebook containing panels in position is the widget.
+    # We also return flag whether the returned widget is notebook.
     panels = _get_position_panels(position)
     panel_widgets = _get_panels_widgets_dict(editor_window)
     
@@ -201,16 +200,13 @@ def create_position_widget(editor_window, position):
     if len(panels) == 0:
         return (None, False) 
     elif len(panels) == 1:
-        print("returning panel it self")
-        _position_notebooks[position] = None # There is no notebook so panel in this position
-                                              # goes directly in to frame
-        return (panel_widgets[panels[0]], False) # Just panel, no notebook, we have only one panel in this position
+        _position_notebooks[position] = None
+        return (panel_widgets[panels[0]], False)
     else:
-        # For multiple panels we are making notebook
         notebook = _create_notebook(position, editor_window)
         _position_notebooks[position] = notebook
         return (notebook, True)
-            
+
 def _create_notebook(position, editor_window):
     notebook = Gtk.Notebook()
     panels = _get_position_panels(position)
@@ -229,47 +225,62 @@ def get_panel_positions_menu_item():
     panel_positions_menu = Gtk.Menu()
     panel_positions_menu_item.set_submenu(panel_positions_menu)
 
-    # Panel positions - Project Panel
+    # Project Panel
     project_panel_menu_item = Gtk.MenuItem(_("Project Panel"))
     panel_positions_menu.append(project_panel_menu_item)
 
     project_panel_menu = _get_position_selection_menu(appconsts.PANEL_PROJECT)
     project_panel_menu_item.set_submenu(project_panel_menu)
     
-    # Panel positions - Media Panel
+    # Media Panel
     media_panel_menu_item = Gtk.MenuItem(_("Media Panel"))
     panel_positions_menu.append(media_panel_menu_item)
     
     media_panel_menu = _get_position_selection_menu(appconsts.PANEL_MEDIA)
     media_panel_menu_item.set_submenu(media_panel_menu)
+
+    # Range Log Panel
+    range_log_panel_menu_item = Gtk.MenuItem(_("Range Log Panel"))
+    panel_positions_menu.append(range_log_panel_menu_item)
     
-    # Panel positions - Filter Panel
+    range_log_panel_menu = _get_position_selection_menu(appconsts.PANEL_RANGE_LOG)
+    range_log_panel_menu_item.set_submenu(range_log_panel_menu)
+    
+    # Filter Panel
     filter_panel_menu_item = Gtk.MenuItem(_("Filter Panel"))
     panel_positions_menu.append(filter_panel_menu_item)
 
     filter_panel_menu =  _get_position_selection_menu(appconsts.PANEL_FILTERS)
     filter_panel_menu_item.set_submenu(filter_panel_menu)
 
-    # Panel positions - Compositors Panel
+    # Compositors Panel
     compositors_panel_menu_item = Gtk.MenuItem(_("Compositors Panel"))
     panel_positions_menu.append(compositors_panel_menu_item)
 
     compositors_panel_menu =  _get_position_selection_menu(appconsts.PANEL_COMPOSITORS)
     compositors_panel_menu_item.set_submenu(compositors_panel_menu)
+
+    # Jobs
+    jobs_panel_menu_item = Gtk.MenuItem(_("Jobs Panel"))
+    panel_positions_menu.append(jobs_panel_menu_item)
+
+    jobs_panel_menu =  _get_position_selection_menu(appconsts.PANEL_JOBS)
+    jobs_panel_menu_item.set_submenu(jobs_panel_menu)
+
+    # Render
+    render_panel_menu_item = Gtk.MenuItem(_("Render Panel"))
+    panel_positions_menu.append(render_panel_menu_item)
+
+    render_panel_menu =  _get_position_selection_menu(appconsts.PANEL_RENDERING)
+    render_panel_menu_item.set_submenu(render_panel_menu)
     
-    # Panel positions - Filter Select Panel
+    # Filter Select Panel
     filter_select_panel_menu_item = Gtk.MenuItem(_("Filter Select Panel"))
     panel_positions_menu.append(filter_select_panel_menu_item)
 
     filter_select_panel_menu =  _get_position_selection_menu(appconsts.PANEL_FILTER_SELECT)
     filter_select_panel_menu_item.set_submenu(filter_select_panel_menu)
 
-    # Panel positions - Filter Select Panel
-    jobs_panel_menu_item = Gtk.MenuItem(_("Jobs Panel"))
-    panel_positions_menu.append(jobs_panel_menu_item)
-
-    jobs_panel_menu =  _get_position_selection_menu(appconsts.PANEL_JOBS)
-    jobs_panel_menu_item.set_submenu(jobs_panel_menu)
 
     return panel_positions_menu_item
 
