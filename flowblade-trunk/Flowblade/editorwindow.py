@@ -630,16 +630,11 @@ class EditorWindow:
         self.tline_box.pack_end(tline_vbox_frame, True, True, 0)
 
         # Timeline pane
-        tline_vpane = Gtk.VBox(False, 1)
-        tline_vpane.pack_start(self.edit_buttons_frame, False, True, 0)
-        tline_vpane.pack_start(self.tline_box, True, True, 0)
+        self.tline_vpane = Gtk.VBox(False, 1)
+        self.tline_vpane.pack_start(self.edit_buttons_frame, False, True, 0)
+        self.tline_vpane.pack_start(self.tline_box, True, True, 0)
 
-        tline_pane = Gtk.HBox(False, 0)
-        
-        tline_pane.pack_start(tline_vpane, True, True, 0)
 
-                
-        self.tline_pane = tline_pane
 
     def _init_panels_and_frames(self):     
         # Create position panels and frames
@@ -671,25 +666,38 @@ class EditorWindow:
             # We have note or frame with 1-n panels in it.
             self.top_right_frame = guiutils.get_panel_etched_frame(self.top_right_panel)
             guiutils.set_margins(self.top_right_frame, 0, 0, 0, 1)
-            #self.tline_pane.pack_start(self.top_right_frame, False, False, 0) # self.tline_pane was already creted in self._init_tline()
         else:
             # Position is empty.
             print("top rigyht empty")
-            self.top_right_frame = guiutils.get_empty_panel_etched_frame() # to be filled and added to layout box later if panels ared added into this position 
+            self.top_right_frame = guiutils.get_empty_panel_etched_frame() # to be filled later if panels are added into this position 
 
 
         # ---------------------------------------------------------------- BOTTOM ROW
-        # Create bottom right panel frame, Effects select panel goes in this by defalt
-        # -------------- appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, by default this has filter select panel
+        # Horizon box for bottom row GUI elements
+        self.tline_pane = Gtk.HBox(False, 0)
+                
+        # -------------- appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT, by default this is empty
+        self.bottom_left_panel, widget_is_notebook  = editorlayout.create_position_widget(self, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT)
+        if self.bottom_left_panel != None:
+            self.bottom_left_frame = guiutils.get_panel_etched_frame(self.bottom_left_panel)
+            guiutils.set_margins(self.bottom_left_frame, 0, 0, 0, 1)
+
+        else:
+            self.bottom_left_frame = guiutils.get_empty_panel_etched_frame() # to be filled later if panels are added into this position
+        self.tline_pane.pack_start(self.bottom_left_frame, False, False, 0) # self.tline_pane was already creted in self._init_tline()
+            
+        # Put timeline between left and right bottom row panels.
+        self.tline_pane.pack_start(self.tline_vpane, True, True, 0)
+        
+        # -------------- appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, by default this has filter select panel.
         self.bottom_right_panel, widget_is_notebook  = editorlayout.create_position_widget(self, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT)
         if self.bottom_right_panel != None:
-            #if widget_is_notebook == False:
             self.bottom_right_frame = guiutils.get_panel_etched_frame(self.bottom_right_panel)
             guiutils.set_margins(self.bottom_right_frame, 0, 0, 0, 1)
-            self.tline_pane.pack_start(self.bottom_right_frame, False, False, 0) # self.tline_pane was already creted in self._init_tline()
-        else:
-            self.bottom_right_frame = guiutils.get_empty_panel_etched_frame() # to be filled and added to layout box later if panels ared added into this position 
 
+        else:
+            self.bottom_right_frame = guiutils.get_empty_panel_etched_frame() # to be filled later if panels are added into this position.
+        self.tline_pane.pack_start(self.bottom_right_frame, False, False, 0) # self.tline_pane was already creted in self._init_tline().
 
 
         # Top row paned
