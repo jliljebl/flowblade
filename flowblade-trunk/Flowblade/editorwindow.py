@@ -637,18 +637,18 @@ class EditorWindow:
 
     def _init_panels_and_frames(self):     
         # Create position panels and frames
+
         # ---------------------------------------------------------------- TOP ROW
         # -------------- appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT
         # -------------- This special case, it can only self.top_project_panel on None.
-        top_project_panel_in_layout, widget_is_notebook = editorlayout.create_position_widget(self, \
-                        appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT) # Default is that this returns self.top_project_panel
-                                                                           # that was created above.
-        if top_project_panel_in_layout != None:
-            self.top_project_panel_frame = guiutils.get_panel_etched_frame(top_project_panel_in_layout)
+        top_project_panel, widget_is_notebook = editorlayout.create_position_widget(self, \
+                        appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT)
+        if top_project_panel != None:
+            self.top_project_panel_frame = guiutils.get_panel_etched_frame(top_project_panel)
             guiutils.set_margins(self.top_project_panel_frame, 0, 0, 0, 1)
         else:
             # top_project_panel_frame is an etched frame and we put a non-visible dummy box in.
-            self.top_project_panel_frame = guiutils.get_panel_etched_frame(Gtk.VBox(False, 0))
+            self.top_project_panel_frame = guiutils.get_panel_etched_frame()
             
         # -------------- appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT a.k.a Notebook 
         # --------------'this is always noteboof never Gtk.Frame or empty '
@@ -667,7 +667,6 @@ class EditorWindow:
             guiutils.set_margins(self.top_right_frame, 0, 0, 0, 1)
         else:
             # Position is empty.
-            print("top rigyht empty")
             self.top_right_frame = guiutils.get_empty_panel_etched_frame() # to be filled later if panels are added into this position 
 
 
@@ -680,7 +679,6 @@ class EditorWindow:
         if self.bottom_left_panel != None:
             self.bottom_left_frame = guiutils.get_panel_etched_frame(self.bottom_left_panel)
             guiutils.set_margins(self.bottom_left_frame, 0, 0, 0, 1)
-
         else:
             self.bottom_left_frame = guiutils.get_empty_panel_etched_frame() # to be filled later if panels are added into this position
         self.tline_pane.pack_start(self.bottom_left_frame, False, False, 0) # self.tline_pane was already creted in self._init_tline()
@@ -718,7 +716,7 @@ class EditorWindow:
 
         # Top row
         self.top_row_hbox = Gtk.HBox(False, 0)
-        if editorlayout.top_level_project_panel() == True and top_project_panel_in_layout != None:
+        if editorlayout.top_level_project_panel() == True and top_project_panel != None:
             self.top_row_hbox.pack_start(self.top_project_panel_frame, False, False, 0)
         self.top_row_hbox.pack_start(self.top_paned, True, True, 0)
         self.top_row_hbox.pack_end(self.top_right_frame, False, False, 0)

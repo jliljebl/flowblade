@@ -72,7 +72,7 @@ AVAILABLE_PANEL_POSITIONS_OPTIONS = { \
     appconsts.PANEL_RANGE_LOG: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT],
     appconsts.PANEL_RENDERING: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT],
     appconsts.PANEL_JOBS: [appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT],
-    appconsts.PANEL_PROJECT: [appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT],
+    appconsts.PANEL_PROJECT: [appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT],
     appconsts.PANEL_PROJECT_SMALL_SCREEN: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT],
     appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT],
     appconsts.PANEL_FILTER_SELECT: [appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, appconsts.PANEL_PLACEMENT_NOT_VISIBLE]
@@ -120,6 +120,7 @@ def init_layout_data():
         appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT:  _("Bottom Row Left"),
         appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT:_("Bottom Row Right"),
         appconsts.PANEL_PLACEMENT_NOT_VISIBLE:_("Not Visible"),
+        appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT:_("Top Row Project Panel Default"),
     }
     
     _panels_names = { \
@@ -180,7 +181,8 @@ def _get_position_frames_dict():
         appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT: editor_window.top_right_frame,
         appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT: editor_window.bottom_left_frame,
         appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT: editor_window.bottom_right_frame,
-        appconsts.PANEL_PLACEMENT_LEFT_COLUMN: editor_window.left_column_frame
+        appconsts.PANEL_PLACEMENT_LEFT_COLUMN: editor_window.left_column_frame,
+        appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT: editor_window.top_project_panel_frame
     }
 
     return position_frames
@@ -226,6 +228,13 @@ def get_panel_positions_menu_item():
     panel_positions_menu_item = Gtk.MenuItem(_("Panel Placement"))
     panel_positions_menu = Gtk.Menu()
     panel_positions_menu_item.set_submenu(panel_positions_menu)
+
+    # Panel positions - Project Panel
+    project_panel_menu_item = Gtk.MenuItem(_("Project Panel"))
+    panel_positions_menu.append(project_panel_menu_item)
+
+    project_panel_menu = _get_position_selection_menu(appconsts.PANEL_PROJECT)
+    project_panel_menu_item.set_submenu(project_panel_menu)
     
     # Panel positions - Media Panel
     media_panel_menu_item = Gtk.MenuItem(_("Media Panel"))
