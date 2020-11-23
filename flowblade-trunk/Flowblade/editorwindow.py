@@ -224,7 +224,8 @@ class EditorWindow:
 
         # self.app_h_box is used to implement postion PANEL_PLACEMENT_LEFT_COLUMN
         self.app_h_box = Gtk.HBox(False, 0)
-        self.app_h_box.pack_end(self.app_v_paned, True, True, 0)
+        self.app_h_box.pack_start(self.left_column_frame, False, False, 0)
+        self.app_h_box.pack_start(self.app_v_paned, True, True, 0)
 
         # Menu box
         # menubar size 348, 28 if w want to center someting here with set_size_request
@@ -634,8 +635,6 @@ class EditorWindow:
         self.tline_vpane.pack_start(self.edit_buttons_frame, False, True, 0)
         self.tline_vpane.pack_start(self.tline_box, True, True, 0)
 
-
-
     def _init_panels_and_frames(self):     
         # Create position panels and frames
         # ---------------------------------------------------------------- TOP ROW
@@ -699,6 +698,14 @@ class EditorWindow:
             self.bottom_right_frame = guiutils.get_empty_panel_etched_frame() # to be filled later if panels are added into this position.
         self.tline_pane.pack_start(self.bottom_right_frame, False, False, 0) # self.tline_pane was already creted in self._init_tline().
 
+        # ---------------------------------------------------------------- LEFT  COLUMN
+        self.left_column_panel, widget_is_notebook  = editorlayout.create_position_widget(self, appconsts.PANEL_PLACEMENT_LEFT_COLUMN)
+        if self.left_column_panel != None:
+            self.left_column_frame = guiutils.get_panel_etched_frame(self.left_column_panel)
+            guiutils.set_margins(self.left_column_frame, 0, 0, 0, 1)
+
+        else:
+            self.left_column_frame = guiutils.get_empty_panel_etched_frame() # to be filled later if panels are added into this position.
 
         # Top row paned
         self.top_paned = Gtk.HPaned()
@@ -716,8 +723,6 @@ class EditorWindow:
         self.top_row_hbox.pack_start(self.top_paned, True, True, 0)
         self.top_row_hbox.pack_end(self.top_right_frame, False, False, 0)
         self.top_row_hbox.pack_end(audiomonitoring.get_master_meter(), False, False, 0)
-
-
 
     def _init_cursors(self):
         # Read cursors
