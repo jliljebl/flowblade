@@ -643,25 +643,7 @@ class EditorWindow:
 
     def _init_panels_and_frames(self):     
         # Create position panels and frames
-        # -------------- appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT a.k.a Notebook 
-        # --------------'this is always noteboof never Gtk.Frame or empty '
-        self.notebook, widget_is_notebook = editorlayout.create_position_widget(self, appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT)
-        self.notebook.set_size_request(appconsts.NOTEBOOK_WIDTH, appconsts.TOP_ROW_HEIGHT)
-        self.notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
-        self.notebook_frame = guiutils.get_panel_etched_frame(self.notebook)
-        guiutils.set_margins(self.notebook_frame, 0, 0, 0, 1)
-
-        # Create bottom right panel frame, Effects select panel goes in this by defalt
-        # -------------- appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, by default this has filter select panel
-        self.bottom_right_panel, widget_is_notebook  = editorlayout.create_position_widget(self, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT)
-        if self.bottom_right_panel != None:
-            #if widget_is_notebook == False:
-            self.bottom_right_frame = guiutils.get_panel_etched_frame(self.bottom_right_panel)
-            guiutils.set_margins(self.bottom_right_frame, 0, 0, 0, 1)
-            self.tline_pane.pack_start(self.bottom_right_frame, False, False, 0) # self.tline_pane was already creted in self._init_tline()
-        else:
-            self.bottom_right_frame = guiutils.get_empty_panel_etched_frame() # to be filled and added to layout box later if panels ared added into this position 
-
+        # ---------------------------------------------------------------- TOP ROW
         # -------------- appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT
         # -------------- This special case, it can only self.top_project_panel on None.
         top_project_panel_in_layout, widget_is_notebook = editorlayout.create_position_widget(self, \
@@ -673,6 +655,42 @@ class EditorWindow:
         else:
             # top_project_panel_frame is an etched frame and we put a non-visible dummy box in.
             self.top_project_panel_frame = guiutils.get_panel_etched_frame(Gtk.VBox(False, 0))
+            
+        # -------------- appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT a.k.a Notebook 
+        # --------------'this is always noteboof never Gtk.Frame or empty '
+        self.notebook, widget_is_notebook = editorlayout.create_position_widget(self, appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT)
+        self.notebook.set_size_request(appconsts.NOTEBOOK_WIDTH, appconsts.TOP_ROW_HEIGHT)
+        self.notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
+        self.notebook_frame = guiutils.get_panel_etched_frame(self.notebook)
+        guiutils.set_margins(self.notebook_frame, 0, 0, 0, 1)
+
+        # -------------- appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT
+        # -------------- By default this is empty.
+        self.top_right_panel, widget_is_notebook  = editorlayout.create_position_widget(self, appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT)
+        if self.top_right_panel != None:
+            # We have note or frame with 1-n panels in it.
+            self.top_right_frame = guiutils.get_panel_etched_frame(self.top_right_panel)
+            guiutils.set_margins(self.top_right_frame, 0, 0, 0, 1)
+            #self.tline_pane.pack_start(self.top_right_frame, False, False, 0) # self.tline_pane was already creted in self._init_tline()
+        else:
+            # Position is empty.
+            print("top rigyht empty")
+            self.top_right_frame = guiutils.get_empty_panel_etched_frame() # to be filled and added to layout box later if panels ared added into this position 
+
+
+        # ---------------------------------------------------------------- BOTTOM ROW
+        # Create bottom right panel frame, Effects select panel goes in this by defalt
+        # -------------- appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, by default this has filter select panel
+        self.bottom_right_panel, widget_is_notebook  = editorlayout.create_position_widget(self, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT)
+        if self.bottom_right_panel != None:
+            #if widget_is_notebook == False:
+            self.bottom_right_frame = guiutils.get_panel_etched_frame(self.bottom_right_panel)
+            guiutils.set_margins(self.bottom_right_frame, 0, 0, 0, 1)
+            self.tline_pane.pack_start(self.bottom_right_frame, False, False, 0) # self.tline_pane was already creted in self._init_tline()
+        else:
+            self.bottom_right_frame = guiutils.get_empty_panel_etched_frame() # to be filled and added to layout box later if panels ared added into this position 
+
+
 
         # Top row paned
         self.top_paned = Gtk.HPaned()
@@ -688,7 +706,9 @@ class EditorWindow:
         if editorlayout.top_level_project_panel() == True and top_project_panel_in_layout != None:
             self.top_row_hbox.pack_start(self.top_project_panel_frame, False, False, 0)
         self.top_row_hbox.pack_start(self.top_paned, True, True, 0)
+        self.top_row_hbox.pack_end(self.top_right_frame, False, False, 0)
         self.top_row_hbox.pack_end(audiomonitoring.get_master_meter(), False, False, 0)
+
 
 
     def _init_cursors(self):

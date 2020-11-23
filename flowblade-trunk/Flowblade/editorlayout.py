@@ -57,7 +57,7 @@ DEFAULT_PANEL_POSITIONS = { \
     appconsts.PANEL_RANGE_LOG: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_FILTERS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_COMPOSITORS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
-    appconsts.PANEL_JOBS: appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT,
+    appconsts.PANEL_JOBS: appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT,
     appconsts.PANEL_RENDERING: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_PROJECT: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT,
     appconsts.PANEL_PROJECT_SMALL_SCREEN: None, # default values are for large screen single window layout, these are modified on startup if needed.
@@ -68,10 +68,10 @@ DEFAULT_PANEL_POSITIONS = { \
 AVAILABLE_PANEL_POSITIONS_OPTIONS = { \
     appconsts.PANEL_MEDIA: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT, appconsts.PANEL_PLACEMENT_LEFT_COLUMN],
     appconsts.PANEL_FILTERS: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT],
-    appconsts.PANEL_COMPOSITORS: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT],
-    appconsts.PANEL_RANGE_LOG: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT],
-    appconsts.PANEL_RENDERING: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT],
-    appconsts.PANEL_JOBS: [appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT],
+    appconsts.PANEL_COMPOSITORS: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT],
+    appconsts.PANEL_RANGE_LOG: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT],
+    appconsts.PANEL_RENDERING: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT],
+    appconsts.PANEL_JOBS: [appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT],
     appconsts.PANEL_PROJECT: [appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT],
     appconsts.PANEL_PROJECT_SMALL_SCREEN: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT],
     appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT],
@@ -114,8 +114,8 @@ def init_layout_data():
 
     # Translations need to be initialized after modules have been loaded.
     _positions_names = { \
-        appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT: _("Top Row Notebook"),
-        appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT: _("Top Row Right Notebook"),
+        appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT: _("Top Row Default Notebook"),
+        appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT: _("Top Row Right"),
         appconsts.PANEL_PLACEMENT_LEFT_COLUMN: _("Left Column"),
         appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT:  _("Bottom Row Left"),
         appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT:_("Bottom Row Right"),
@@ -178,6 +178,7 @@ def _get_position_frames_dict():
     position_frames = { \
         appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT: editor_window.notebook_frame,
         appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT: editor_window.bottom_right_frame,
+        appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT: editor_window.top_right_frame
 
     }
     # appconsts.PANEL_PLACEMENT_LEFT_COLUMN: editor_window.app_h_box  <- this layout panel not frame
@@ -239,6 +240,13 @@ def get_panel_positions_menu_item():
     filter_panel_menu =  _get_position_selection_menu(appconsts.PANEL_FILTERS)
     filter_panel_menu_item.set_submenu(filter_panel_menu)
 
+    # Panel positions - Compositors Panel
+    compositors_panel_menu_item = Gtk.MenuItem(_("Compositors Panel"))
+    panel_positions_menu.append(compositors_panel_menu_item)
+
+    compositors_panel_menu =  _get_position_selection_menu(appconsts.PANEL_COMPOSITORS)
+    compositors_panel_menu_item.set_submenu(compositors_panel_menu)
+    
     # Panel positions - Filter Select Panel
     filter_select_panel_menu_item = Gtk.MenuItem(_("Filter Select Panel"))
     panel_positions_menu.append(filter_select_panel_menu_item)
@@ -357,10 +365,10 @@ def _add_panel(panel_id, position):
         position_frames = _get_position_frames_dict()
         position_frame = position_frames[position]
         if len(_get_position_panels(position)) == 0:
-            # Panel is added into position with no panels currently
+            # Panel is added into position hat has no panels currently.
             position_frame.add(panel_widget)
         else:
-            # Panel is added into position with one panel currently.
+            # Panel is added into position that has one panel currently.
             # Remove current panel, create notebook, add two panels into it,
             # add it into layout and notebooks dict.
             position_frame.remove(position_frame.get_child())
@@ -368,8 +376,7 @@ def _add_panel(panel_id, position):
             notebook = _create_notebook(position, gui.editor_window)
             position_frame.add(notebook)
             _position_notebooks[position] = notebook
-        
-    
+
     _panel_positions[panel_id] = position
     
     """
