@@ -708,10 +708,10 @@ class EditorWindow:
         # Top row paned
         self.top_paned = Gtk.HPaned()
         if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
-            self.top_paned.pack1(self.notebook_frame , resize=False, shrink=False)
+            self.top_paned.pack1(self.notebook_frame , resize=True, shrink=False)
             self.top_paned.pack2(self.monitor_frame, resize=True, shrink=False)
         else:
-            self.top_paned.pack1(mm_panel, resize=False, shrink=False)
+            self.top_paned.pack1(mm_panel, resize=True, shrink=False)
             self.top_paned.pack2(self.notebook_frame, resize=True, shrink=False)
 
         # Top row
