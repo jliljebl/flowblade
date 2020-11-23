@@ -203,18 +203,21 @@ def create_position_widget(editor_window, position):
         return (panel_widgets[panels[0]], False) # Just panel, no notebook, we have only one panel in this position
     else:
         # For multiple panels we are making notebook
-        notebook = Gtk.Notebook()
-
-        for panel in panels:
-            widget = panel_widgets[panel]
-            label = Gtk.Label(label=_panels_names[panel])
-            print(_panels_names[panel])
-            notebook.append_page(widget, label)
-
+        notebook = _create_notebook(position, editor_window)
         _position_notebooks[position] = notebook
         return (notebook, True)
             
-
+def _create_notebook(position, editor_window):
+    notebook = Gtk.Notebook()
+    panels = _get_position_panels(position)
+    panel_widgets = _get_panels_widgets_dict(editor_window)
+    
+    for panel in panels:
+        widget = panel_widgets[panel]
+        label = Gtk.Label(label=_panels_names[panel])
+        notebook.append_page(widget, label)
+    
+    return notebook
     
 # ---------------------------------------------------------- APP MENU
 def get_panel_positions_menu_item():
@@ -252,9 +255,9 @@ def get_panel_positions_menu_item():
 
     return panel_positions_menu_item
 
-def _get_position_selection_menu(panel):
-    current_position = _get_panel_position(panel)
-    available_positions = AVAILABLE_PANEL_POSITIONS_OPTIONS[panel]
+def _get_position_selection_menu(panel_id):
+    current_position = _get_panel_position(panel_id)
+    available_positions = AVAILABLE_PANEL_POSITIONS_OPTIONS[panel_id]
     
     positions_menu  = Gtk.Menu()
     
@@ -277,22 +280,40 @@ def _get_position_selection_menu(panel):
     
     for i in range(0, len(available_positions)):
         menu_item = menu_items[i]
-        pos_option = available_positions[i]
-        menu_item.connect("activate", lambda w: _change_panel_position(w, panel, pos_option))
+        #pos_option = available_positions[i]
+        print(panel_id, available_positions[i])
+        menu_item.connect("activate", _change_panel_position, panel_id, available_positions[i])
+        #menu_item.option_index = i
     
     return positions_menu
     
     
 # ----------------------------------------------- CHANGING POSITIONS
 def _change_panel_position(widget, panel_id, pos_option):
-    if widget.get_active() == False:
-        print("not active")
-        return
-
+    print(_panel_positions)
     print(panel_id, pos_option)
-    _remove_panel(panel_id)
-    _add_panel(panel_id, pos_option)
+    if widget.get_active() == False:
+        print("not active label", widget.get_label())
+        return
     
+    print("ACTIVE label", widget.get_label())
+    #group_index = widget.get_group().index(widget)
+
+    #print(panel_id, pos_option)
+    # Remove panel if it currently has position in layout.
+    if _panel_positions[panel_id] != appconsts.PANEL_PLACEMENT_NOT_VISIBLE:
+        print("remove")
+        _remove_panel(panel_id)
+    else:
+        print("in appconsts.PANEL_PLACEMENT_NOT_VISIBLE, NO REMOVE")
+    # Add panel if new position is part of layout.
+    if pos_option != appconsts.PANEL_PLACEMENT_NOT_VISIBLE:
+        print("add")
+        _add_panel(panel_id, pos_option)
+    else:
+        print("else")
+        _panel_positions[panel_id] = pos_option
+             
     gui.editor_window.window.show_all()
     
 def _remove_panel(panel_id):
@@ -303,18 +324,20 @@ def _remove_panel(panel_id):
     
     if notebook != None:
         print("1")
-        # panel is in notebook with other panels
         notebook.remove(panel_widget)
-        # If notebook has only 1 panel left we now need to remove
+
         if len(notebook.get_children()) == 1:
             print("2")
             # 1 panel left in position, get rid of notebook and 
             # move remaining panel in frame
             position_frame = _get_position_frames_dict()[current_position]
             position_frame.remove(notebook)
+            _position_notebooks[current_position] = None
+            
             last_widget = notebook.get_children()[0]
             notebook.remove(last_widget)
             position_frame.add(last_widget)
+
     else:
         # Panel is in position frame as single panel
         position_frame = _get_position_frames_dict()[current_position]
@@ -331,16 +354,32 @@ def _add_panel(panel_id, position):
         notebook.insert_page(panel_widget, Gtk.Label(label=label_str), 0)
         #notebook.remove(panel_widget)
     else:
-        # Panel is in position frame as single panel
         position_frames = _get_position_frames_dict()
         position_frame = position_frames[position]
-        if position == appconsts.PANEL_PLACEMENT_LEFT_COLUMN:
-            # These are Gtk.Box widgets
-            position_frame.pack_start(panel_widget, False, False, 0)
-        else:
-            # These are gtk.Frames
+        if len(_get_position_panels(position)) == 0:
+            # Panel is added into position with no panels currently
             position_frame.add(panel_widget)
-
+        else:
+            # Panel is added into position with one panel currently.
+            # Remove current panel, create notebook, add two panels into it,
+            # add it into layout and notebooks dict.
+            position_frame.remove(position_frame.get_child())
+            _panel_positions[panel_id] = position
+            notebook = _create_notebook(position, gui.editor_window)
+            position_frame.add(notebook)
+            _position_notebooks[position] = notebook
+        
+    
+    _panel_positions[panel_id] = position
+    
+    """
+    if position == appconsts.PANEL_PLACEMENT_LEFT_COLUMN:
+        # These are Gtk.Box widgets
+        position_frame.pack_start(panel_widget, False, False, 0)
+    else:
+        # These are gtk.Frames
+        position_frame.add(panel_widget)
+    """
 
 """        
  = Gtk.Notebook()
