@@ -145,7 +145,7 @@ def init_layout_data():
     }
 
 def show_panel(panel_id):
-    # Iterate positions to find where panel is
+    # Iterate positions to find where panel is and bring it to front.
     for position in _positions_names:
         pos_panel_ids = _get_position_panels(position)
         if len(pos_panel_ids) == 0:

@@ -29,6 +29,7 @@ import appconsts
 import dialogs
 import dnd
 import edit
+import editorlayout
 import gui
 import guicomponents
 import guiutils
@@ -54,8 +55,6 @@ NAME_SORT = appconsts.NAME_SORT
 COMMENT_SORT = appconsts.COMMENT_SORT
 
 sorting_order = TIME_SORT
-
-range_log_notebook_index = 1 # this is set 0 for 2 window mode
 
 
 # ----------------------------------- log data object
@@ -148,7 +147,7 @@ def log_range_clicked():
 def _update_list_view(log_event):
     widgets.media_log_view.fill_data_model()
     max_val = widgets.media_log_view.treeview.get_vadjustment().get_upper()
-    gui.middle_notebook.set_current_page(range_log_notebook_index)
+    editorlayout.show_panel(appconsts.PANEL_RANGE_LOG)
     view_group = get_current_filtered_events()
     try:
         event_index = view_group.index(log_event)
