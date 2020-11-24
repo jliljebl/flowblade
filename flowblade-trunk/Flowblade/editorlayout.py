@@ -53,6 +53,7 @@ import gui
 
 DEFAULT_PANEL_POSITIONS = { \
     appconsts.PANEL_MEDIA: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
+    appconsts.PANEL_FILTER_SELECT: appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, # This is the only different default position.
     appconsts.PANEL_RANGE_LOG: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_FILTERS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_COMPOSITORS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
@@ -60,8 +61,7 @@ DEFAULT_PANEL_POSITIONS = { \
     appconsts.PANEL_RENDERING: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_PROJECT: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT,
     appconsts.PANEL_PROJECT_SMALL_SCREEN: None, # default values are for large screen single window layout, these are modified on startup if needed.
-    appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None, # default values are for large screen single window layout, these are modified on startup if needed.
-    appconsts.PANEL_FILTER_SELECT: appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, # This is the only different default position.
+    appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None # default values are for large screen single window layout, these are modified on startup if needed.
 }
 
 AVAILABLE_PANEL_POSITIONS_OPTIONS = { \
@@ -76,6 +76,12 @@ AVAILABLE_PANEL_POSITIONS_OPTIONS = { \
     appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT],
     appconsts.PANEL_FILTER_SELECT: [appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, appconsts.PANEL_PLACEMENT_NOT_VISIBLE]
 }
+
+PANEL_ORDER_IN_NOTEBOOKS = [appconsts.PANEL_MEDIA, appconsts.PANEL_FILTER_SELECT, appconsts.PANEL_RANGE_LOG, 
+                            appconsts.PANEL_FILTERS, appconsts.PANEL_COMPOSITORS,
+                            appconsts.PANEL_JOBS, appconsts.PANEL_RENDERING,
+                            appconsts.PANEL_PROJECT, appconsts.PANEL_PROJECT_SMALL_SCREEN,
+                            appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN]
 
 # Saved data struct holding panel positions information.
 _panel_positions = None
@@ -200,6 +206,30 @@ def _get_position_frames_dict():
     }
 
     return position_frames
+
+def _get_ordered_widgets_list():
+    ordered_list = []
+    panel_widgets = _get_panels_widgets_dict(gui.editor_window)
+    for panel_id in PANEL_ORDER_IN_NOTEBOOKS:
+        try:
+            ordered_list.append(panel_widgets[panel_id])
+        except:
+            pass
+    
+    return ordered_list
+
+def _get_insert_index(insert_widget, notebook):
+    panels_list = _get_ordered_widgets_list()
+    for i in range(0, notebook.get_n_pages()):
+        page_widget = notebook.get_nth_page(i)
+        page_ordinal = panels_list.index(page_widget)
+        insert_widget_ordinal = panels_list.index(insert_widget)
+        # These are inveriably not equal because the way we handle radiomenuitem events.
+        if insert_widget_ordinal < page_ordinal:
+            return i
+
+    return notebook.get_n_pages()
+
 
 # ----------------------------------------------------------- PANELS PLACEMENT
 def create_position_widget(editor_window, position):
@@ -394,10 +424,13 @@ def _add_panel(panel_id, position):
     notebook = _position_notebooks[position]
     
     if notebook != None:
-        # panel is in notebook with other panels
+        # Determine position in notebook.
+        insert_index = _get_insert_index(panel_widget, notebook)
         label_str = _panels_names[panel_id]
-        notebook.insert_page(panel_widget, Gtk.Label(label=label_str), 0)
-        #notebook.remove(panel_widget)
+        if insert_index < notebook.get_n_pages():
+            notebook.insert_page(panel_widget, Gtk.Label(label=label_str), insert_index)
+        else:
+            notebook.append_page(panel_widget, Gtk.Label(label=label_str))
     else:
         position_frames = _get_position_frames_dict()
         position_frame = position_frames[position]

@@ -61,11 +61,9 @@ open_media_file_callback = None
 _status_polling_thread = None
 
 _hamburger_menu = Gtk.Menu()
-
 _jobs_list_view = None
 
 _jobs = [] # proxy objects that represent background renders and provide info on render status.
-
 _remove_list = [] # objects are removed from GUI with delay to give user time to notice copmpletion
 
 _jobs_render_progress_window = None
