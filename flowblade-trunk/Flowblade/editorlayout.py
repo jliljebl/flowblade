@@ -375,26 +375,16 @@ def _get_position_selection_menu(panel_id):
     
     for i in range(0, len(available_positions)):
         menu_item = menu_items[i]
-        #pos_option = available_positions[i]
-        print(panel_id, available_positions[i])
         menu_item.connect("activate", _change_panel_position, panel_id, available_positions[i])
-        #menu_item.option_index = i
     
     return positions_menu
     
     
 # ----------------------------------------------- CHANGING POSITIONS
 def _change_panel_position(widget, panel_id, pos_option):
-    print(_panel_positions)
-    print(panel_id, pos_option)
     if widget.get_active() == False:
-        print("not active label", widget.get_label())
         return
-    
-    print("ACTIVE label", widget.get_label())
-    #group_index = widget.get_group().index(widget)
 
-    #print(panel_id, pos_option)
     # Remove panel if it currently has position in layout.
     if _panel_positions[panel_id] != appconsts.PANEL_PLACEMENT_NOT_VISIBLE:
         print("remove")

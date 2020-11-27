@@ -417,6 +417,7 @@ class EditorWindow:
             project_vbox.pack_start(project_info_panel, False, True, 0)
             project_vbox.pack_start(seq_panel, True, True, 0)
             self.project_panel = guiutils.set_margins(project_vbox, 0, 2, 6, 2)
+            self.top_project_panel = None 
 
         # Position bar and decorative frame  for it
         self.pos_bar = PositionBar()
@@ -648,7 +649,8 @@ class EditorWindow:
             guiutils.set_margins(self.top_project_panel_frame, 0, 0, 0, 1)
         else:
             # top_project_panel_frame is an etched frame and we put a non-visible dummy box in.
-            self.top_project_panel_frame = guiutils.get_panel_etched_frame()
+            # For small screen sizes this frame never gets used.
+            self.top_project_panel_frame = guiutils.get_empty_panel_etched_frame()
             
         # -------------- appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT a.k.a Notebook 
         # --------------'this is always noteboof never Gtk.Frame or empty '

@@ -51,7 +51,7 @@ MIDDLE_ROW_HEIGHT = 30 # height of middle row gets set here
 BUTTON_HEIGHT = 28 # middle edit buttons row
 BUTTON_WIDTH = 48 # middle edit buttons row
 
-NORMAL_WIDTH = 1420
+NORMAL_WIDTH = 1620
 
 def do_layout_after_dock_change(w):
     if editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_TC_LEFT:

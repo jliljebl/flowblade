@@ -608,7 +608,7 @@ def get_render_panel_left(render_widgets):
     return render_panel
 
 def get_render_panel_right(render_widgets, render_clicked_cb, to_queue_clicked_cb):
-    small_height = (editorstate.SCREEN_HEIGHT < 898)
+    small_height = (editorstate.SCREEN_HEIGHT < 902)
 
     if small_height:
         encoding_panel = guiutils.get_named_frame(_("Encoding Format"), render_widgets.encoding_panel.vbox, 4)
