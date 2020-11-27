@@ -83,6 +83,19 @@ PANEL_ORDER_IN_NOTEBOOKS = [appconsts.PANEL_MEDIA, appconsts.PANEL_FILTER_SELECT
                             appconsts.PANEL_PROJECT, appconsts.PANEL_PROJECT_SMALL_SCREEN,
                             appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN]
 
+PANEL_MINIMUM_SIZES = { \
+    appconsts.PANEL_MEDIA: None, 
+    appconsts.PANEL_FILTER_SELECT: None,
+    appconsts.PANEL_RANGE_LOG: None,
+    appconsts.PANEL_FILTERS: (400, 100), # This has very small default size when empty.
+    appconsts.PANEL_COMPOSITORS: (400,100), # This has very small default size when empty.
+    appconsts.PANEL_JOBS: None,
+    appconsts.PANEL_RENDERING: None,
+    appconsts.PANEL_PROJECT: None,
+    appconsts.PANEL_PROJECT_SMALL_SCREEN: None,
+    appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None
+}
+
 # Saved data struct holding panel positions information.
 _panel_positions = None
 
@@ -224,13 +237,18 @@ def _get_insert_index(insert_widget, notebook):
         page_widget = notebook.get_nth_page(i)
         page_ordinal = panels_list.index(page_widget)
         insert_widget_ordinal = panels_list.index(insert_widget)
-        # These are inveriably not equal because the way we handle radiomenuitem events.
+        # These are never equal because of the way we handle radiomenuitem events.
         if insert_widget_ordinal < page_ordinal:
             return i
 
     return notebook.get_n_pages()
 
-
+def _set_min_size(panel_id, widget):
+    min_size = PANEL_MINIMUM_SIZES[panel_id]
+    if min_size != None:
+        widget.set_size_request(*min_size)
+        
+    
 # ----------------------------------------------------------- PANELS PLACEMENT
 def create_position_widget(editor_window, position):
     # This method creates and returns the widget that is put into the frame 
@@ -247,6 +265,7 @@ def create_position_widget(editor_window, position):
         return (None, False) 
     elif len(panels) == 1:
         _position_notebooks[position] = None
+        _set_min_size(panels[0], panel_widgets[panels[0]])
         return (panel_widgets[panels[0]], False)
     else:
         notebook = _create_notebook(position, editor_window)
@@ -258,9 +277,10 @@ def _create_notebook(position, editor_window):
     panels = _get_position_panels(position)
     panel_widgets = _get_panels_widgets_dict(editor_window)
     
-    for panel in panels:
-        widget = panel_widgets[panel]
-        label = Gtk.Label(label=_panels_names[panel])
+    for panel_id in panels:
+        widget = panel_widgets[panel_id]
+        _set_min_size(panel_id, widget)
+        label = Gtk.Label(label=_panels_names[panel_id])
         notebook.append_page(widget, label)
     
     return notebook
