@@ -126,6 +126,14 @@ def init_layout_data():
         editorpersistance.prefs.panel_positions = _panel_positions
         editorpersistance.save()
 
+    # Force media panel positioning to work with both one and two window modes 
+    if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
+        if _panel_positions[appconsts.PANEL_MEDIA] == appconsts.PANEL_PLACEMENT_TWO_WINDOWS_MEDIA_PANEL_POS:
+            _panel_positions[appconsts.PANEL_MEDIA] = appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT
+    else:
+        if _panel_positions[appconsts.PANEL_MEDIA] == appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT:
+            _panel_positions[appconsts.PANEL_MEDIA] = appconsts.PANEL_PLACEMENT_TWO_WINDOWS_MEDIA_PANEL_POS
+            
     # Translations need to be initialized after modules have been loaded.
     _positions_names = { \
         appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT: _("Top Row Default Notebook"),
@@ -303,12 +311,13 @@ def get_panel_positions_menu_item():
     project_panel_menu = _get_position_selection_menu(appconsts.PANEL_PROJECT)
     project_panel_menu_item.set_submenu(project_panel_menu)
     
-    # Media Panel
-    media_panel_menu_item = Gtk.MenuItem(_("Media Panel"))
-    panel_positions_menu.append(media_panel_menu_item)
-    
-    media_panel_menu = _get_position_selection_menu(appconsts.PANEL_MEDIA)
-    media_panel_menu_item.set_submenu(media_panel_menu)
+    # Media Panel - we're forcing a position for this on two window mode for time being.
+    if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
+        media_panel_menu_item = Gtk.MenuItem(_("Media Panel"))
+        panel_positions_menu.append(media_panel_menu_item)
+        
+        media_panel_menu = _get_position_selection_menu(appconsts.PANEL_MEDIA)
+        media_panel_menu_item.set_submenu(media_panel_menu)
 
     # Range Log Panel
     range_log_panel_menu_item = Gtk.MenuItem(_("Range Log Panel"))

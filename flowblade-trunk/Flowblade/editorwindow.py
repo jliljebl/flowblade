@@ -186,7 +186,7 @@ class EditorWindow:
         # Show Monitor Window in two window mode
         if editorpersistance.prefs.global_layout != appconsts.SINGLE_WINDOW:
             pane2 = Gtk.VBox(False, 1)
-            pane2.pack_start(top_row_window_2, False, False, 0)
+            pane2.pack_start(self.top_row_window_2, False, False, 0)
             pane2.pack_start(self.monitor_frame, True, True, 0)
 
             # Set pane and show window
@@ -236,9 +236,9 @@ class EditorWindow:
         if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
             menu_vbox.pack_start(self.monitor_tc_info.widget, False, False, 0)
         else:
-            top_row_window_2 = Gtk.HBox(False, 0)
-            top_row_window_2.pack_start(Gtk.Label(), True, True, 0)
-            top_row_window_2.pack_start(self.monitor_tc_info.widget, False, False, 0)
+            self.top_row_window_2 = Gtk.HBox(False, 0)
+            self.top_row_window_2.pack_start(Gtk.Label(), True, True, 0)
+            self.top_row_window_2.pack_start(self.monitor_tc_info.widget, False, False, 0)
 
         # Pane
         pane = Gtk.VBox(False, 1)
@@ -300,8 +300,8 @@ class EditorWindow:
             self.mm_paned.pack1(self.bins_panel, resize=True, shrink=True)
             self.mm_paned.pack2(media_panel, resize=True, shrink=False)
         
-        if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
-            mm_panel = guiutils.set_margins(self.mm_paned, 0, 0, 0, 0)
+        #if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
+        #    mm_panel = guiutils.set_margins(self.editor_window.mm_paned, 0, 0, 0, 0)
 
         # Effects edit panel
         info_row = clipeffectseditor.get_clip_effects_editor_info_row()    
@@ -713,7 +713,7 @@ class EditorWindow:
             self.top_paned.pack1(self.notebook_frame , resize=True, shrink=False)
             self.top_paned.pack2(self.monitor_frame, resize=True, shrink=False)
         else:
-            self.top_paned.pack1(mm_panel, resize=True, shrink=False)
+            self.top_paned.pack1(self.mm_paned, resize=True, shrink=False)
             self.top_paned.pack2(self.notebook_frame, resize=True, shrink=False)
 
         # Top row
@@ -1334,43 +1334,6 @@ class EditorWindow:
         self.tool_selector = None
         workflow.select_default_tool()
 
-        #media_panel_top.connect("activate", lambda w: self._show_media_panel_top_row_notebook(w))
-        #media_panel_left_column.connect("activate", lambda w: self._show_media_panel_left_column(w))
-
-    """
-    def _show_media_panel_top_row_notebook(self, widget):
-        if widget.get_active() == False:
-            return
-
-        self.app_h_box.remove(self.mm_paned_frame)
-
-        self.mm_paned_frame.remove(self.mm_paned)
-        self.mm_paned_frame = None
-
-        media_label = Gtk.Label(label=_("Media"))
-        self.notebook.insert_page(self.mm_paned, media_label, 0)
-
-        self.window.show_all()
-        
-        editorpersistance.prefs.placement_media_panel = appconsts.PANEL_PLACEMENT_TOP_ROW_NOTEBOOK
-        editorpersistance.save()
-    
-    def _show_media_panel_left_column(self, widget):
-        if widget.get_active() == False:
-            return
-            
-        self.notebook.remove(self.mm_paned)
-
-        self.mm_paned_frame = guiutils.get_panel_etched_frame(self.mm_paned)
-        self.mm_paned_frame = guiutils.set_margins(self.mm_paned_frame, 0, 0, 1, 0)
-
-        self.app_h_box.pack_start(self.mm_paned_frame , False, False, 0)
-        self.window.show_all()
-
-        editorpersistance.prefs.placement_media_panel = appconsts.PANEL_PLACEMENT_LEFT_COLUMN
-        editorpersistance.save()
-    """
-    
     # ----------------------------------------------------------- GUI components monitor, middlebar.
     def _create_monitor_buttons(self):
         self.monitor_switch = guicomponents.MonitorSwitch(self._monitor_switch_handler)
