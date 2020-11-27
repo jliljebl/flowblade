@@ -1079,9 +1079,12 @@ class EditorWindow:
         menu.append(windows_menu_item)
 
         # Panel positions
-        panel_positions_menu_item = editorlayout.get_panel_positions_menu_item()
-        menu.append(panel_positions_menu_item)
-        
+        if editorlayout.panel_positioning_available() == True:
+            panel_positions_menu_item = editorlayout.get_panel_positions_menu_item()
+            menu.append(panel_positions_menu_item)
+        else:
+            print("Panel positioning feature not available, too small screen.")
+
         # Middlebar Layout
         mb_menu_item = Gtk.MenuItem(_("Middlebar Layout"))
         mb_menu = Gtk.Menu()

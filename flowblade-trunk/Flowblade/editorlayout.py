@@ -120,11 +120,8 @@ def init_layout_data():
     global _panel_positions, _positions_names, _panels_names, _position_notebooks
     _panel_positions = editorpersistance.prefs.panel_positions
 
-    _panel_positions = copy.deepcopy(DEFAULT_PANEL_POSITIONS)
-    editorpersistance.prefs.panel_positions = _panel_positions
-    editorpersistance.save()
-        
-    if _panel_positions == None:
+    # Use default panels positons if nothing available yet or too small screen
+    if panel_positioning_available() == False or _panel_positions == None:
         _panel_positions = copy.deepcopy(DEFAULT_PANEL_POSITIONS)
         editorpersistance.prefs.panel_positions = _panel_positions
         editorpersistance.save()
@@ -247,7 +244,15 @@ def _set_min_size(panel_id, widget):
     min_size = PANEL_MINIMUM_SIZES[panel_id]
     if min_size != None:
         widget.set_size_request(*min_size)
-        
+
+def panel_positioning_available():
+    # This feature now available only for 1920x1080 screens.
+    # With some more work we can make this available first for 1680x1050
+    # and maybe some reduced version later for smaller screens.
+    if editorstate.SCREEN_WIDTH > 1918 and  editorstate.SCREEN_HEIGHT > 1078:
+        return True
+    
+    return False
     
 # ----------------------------------------------------------- PANELS PLACEMENT
 def create_position_widget(editor_window, position):
@@ -387,16 +392,12 @@ def _change_panel_position(widget, panel_id, pos_option):
 
     # Remove panel if it currently has position in layout.
     if _panel_positions[panel_id] != appconsts.PANEL_PLACEMENT_NOT_VISIBLE:
-        print("remove")
         _remove_panel(panel_id)
-    else:
-        print("in appconsts.PANEL_PLACEMENT_NOT_VISIBLE, NO REMOVE")
+
     # Add panel if new position is part of layout.
     if pos_option != appconsts.PANEL_PLACEMENT_NOT_VISIBLE:
-        print("add")
         _add_panel(panel_id, pos_option)
     else:
-        print("else")
         _panel_positions[panel_id] = pos_option
              
     gui.editor_window.window.show_all()
@@ -408,11 +409,9 @@ def _remove_panel(panel_id):
     notebook = _position_notebooks[current_position]
     
     if notebook != None:
-        print("1")
         notebook.remove(panel_widget)
 
         if len(notebook.get_children()) == 1:
-            print("2")
             # 1 panel left in position, get rid of notebook and 
             # move remaining panel in frame
             position_frame = _get_position_frames_dict()[current_position]
