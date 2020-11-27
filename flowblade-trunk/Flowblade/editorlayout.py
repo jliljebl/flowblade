@@ -31,6 +31,10 @@ import editorpersistance
 import editorstate
 import gui
 
+# !!!!!!!!!!!!!! TODO first release
+#   - get 1680 x 1050 working too
+#   - make multiple panels thinner and see if we can get 1440 or something like that too 
+#   - under 1400 not likely to work 
 
 # Transforms when adding panels.
 # 0 -> 1    The pre-created Gtk.Frame is filled with added panel.
