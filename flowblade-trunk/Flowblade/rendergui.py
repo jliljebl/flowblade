@@ -669,7 +669,6 @@ def get_render_panel_right(render_widgets, render_clicked_cb, to_queue_clicked_c
     return render_panel
 
 
-    
 class RenderFilePanel():
 
     def __init__(self):

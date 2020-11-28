@@ -55,7 +55,7 @@ NAME_SORT = appconsts.NAME_SORT
 COMMENT_SORT = appconsts.COMMENT_SORT
 
 sorting_order = TIME_SORT
-
+_use_comments_for_name = False
 
 # ----------------------------------- log data object
 class MediaLogEvent:
@@ -222,6 +222,10 @@ def _log_event_menu_item_selected(widget, data):
     elif item_id == "renderslowmo":
         render_slowmo_from_item(row)
 
+def _use_comments_toggled(widget):
+    global _use_comments_for_name
+    _use_comments_for_name = widget.get_active()
+
 def render_slowmo_from_item(row):
     log_events = get_current_filtered_events()
     event_item = log_events[row]
@@ -293,7 +297,7 @@ def get_log_event_clip(log_event):
     # Set clip in and out points
     new_clip.clip_in = log_event.mark_in
     new_clip.clip_out = log_event.mark_out
-    if widgets.use_comments_check.get_active() == True:
+    if _use_comments_for_name == True:
         new_clip.name = log_event.comment
         if len(new_clip.name) == 0:
             new_clip.name = log_event.name
@@ -349,6 +353,14 @@ def _group_action_pressed(widget, event):
     _unsensitive_for_all_view(item)
     actions_menu.add(item)
 
+    guiutils.add_separetor(actions_menu)
+    
+    comments_item = Gtk.CheckMenuItem.new_with_label(label=_("Use Comments as Clip Names"))
+    comments_item.set_active(_use_comments_for_name)
+    comments_item.connect("toggled", _use_comments_toggled)
+    comments_item.show()
+    actions_menu.add(comments_item)
+    
     guiutils.add_separetor(actions_menu)
     
     sort_item = Gtk.MenuItem(_("Sort by"))
@@ -717,11 +729,6 @@ def get_media_log_events_panel(events_list_view):
     delete_button.set_size_request(80, 30)
     delete_button.connect("clicked", lambda w:delete_selected())
 
-    use_comments_label = Gtk.Label(label=_("Use Comments as Clip Names"))
-    use_comments_check =  Gtk.CheckButton()
-    use_comments_check.set_active(False)
-    widgets.use_comments_check = use_comments_check
-
     insert_displayed = Gtk.Button()
     insert_displayed.set_image(guiutils.get_image("insert_media_log"))
     insert_displayed.set_size_request(80, 22)
@@ -736,9 +743,6 @@ def get_media_log_events_panel(events_list_view):
     row2.pack_start(group_actions_menu.widget, False, True, 0)
     row2.pack_start(widgets.log_range, False, True, 0)
     row2.pack_start(delete_button, False, True, 0)
-    row2.pack_start(Gtk.Label(), True, True, 0)
-    row2.pack_start(use_comments_label, False, True, 0)
-    row2.pack_start(use_comments_check, False, True, 0)
     row2.pack_start(Gtk.Label(), True, True, 0)
     row2.pack_start(insert_displayed, False, True, 0)
     row2.pack_start(append_displayed, False, True, 0)

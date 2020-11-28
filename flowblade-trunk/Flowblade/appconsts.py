@@ -74,7 +74,7 @@ TRACK_HEIGHT_SMALLEST = 25 # maybe remove this as it is no longer used
 TLINE_HEIGHT = 260
 
 # Notebook widths
-NOTEBOOK_WIDTH = 600 # currently has no effect
+NOTEBOOK_WIDTH = 500 # currently has no effect, panels widgets size requests combined width > 500
 TOP_ROW_HEIGHT = 500
 
 # Property editing gui consts
