@@ -359,4 +359,5 @@ class EditorPreferences:
         self.cbutton  = [True, True, True, True, True, True, True, True, True, True] # Toolbar objects active state
         self.colorized_icons = False
         self.tools_selection = appconsts.TOOL_SELECTOR_IS_MENU
-        self.panel_positions = None 
+        self.panel_positions = None
+        self.force_small_midbar = False

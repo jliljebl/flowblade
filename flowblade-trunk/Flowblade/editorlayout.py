@@ -30,11 +30,7 @@ import appconsts
 import editorpersistance
 import editorstate
 import gui
-
-# !!!!!!!!!!!!!! TODO first release
-#   - get 1680 x 1050 working too
-#   - make multiple panels thinner and see if we can get 1440 or something like that too 
-#   - under 1400 not likely to work 
+import middlebar
 
 # Transforms when adding panels.
 # 0 -> 1    The pre-created Gtk.Frame is filled with added panel.
@@ -270,13 +266,21 @@ def _set_min_size(panel_id, widget):
         widget.set_size_request(*min_size)
 
 def panel_positioning_available():
-    # This feature now available only for 1920x1080 screens.
-    # With some more work we can make this available first for 1680x1050
-    # and maybe some reduced version later for smaller screens.
-    if editorstate.SCREEN_WIDTH > 1918 and  editorstate.SCREEN_HEIGHT > 1078:
+    # This feature now available only for 1680x1050 and larger screens.
+    # Maybe some reduced version later for smaller screens.
+    if editorstate.SCREEN_WIDTH > 1678 and  editorstate.SCREEN_HEIGHT > 1048:
         return True
     
     return False
+
+def get_bottom_row_minimum_width():
+    middle_bar_w, dummy = gui.editor_window.edit_buttons_row.get_preferred_width()
+    bottom_left_w, dummy = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT].get_preferred_width()
+    bottom_right_w, dummy = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT].get_preferred_width()
+    left_column_w, dummy = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_LEFT_COLUMN].get_preferred_width() 
+    combined = middle_bar_w + bottom_left_w + bottom_right_w + left_column_w
+
+    return combined
     
 # ----------------------------------------------------------- PANELS PLACEMENT
 def create_position_widget(editor_window, position):
@@ -425,14 +429,17 @@ def _change_panel_position(widget, panel_id, pos_option):
         _panel_positions[panel_id] = pos_option
              
     gui.editor_window.window.show_all()
-
-    """
-    middle_bar_w, dummy = gui.editor_window.edit_buttons_row.get_preferred_width()
-    bottom_left_w, dummy = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT].get_preferred_width()
-    bottom_right_w, dummy = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT].get_preferred_width()
-    combined = middle_bar_w + bottom_left_w + bottom_right_w
-    print(combined, middle_bar_w, bottom_left_w, bottom_right_w)
-    """
+    
+    # If bottom row items do not fit, drop some buttons middlebar.
+    bottom_row_min_width = get_bottom_row_minimum_width()
+    if bottom_row_min_width > editorstate.SCREEN_WIDTH:
+        editorpersistance.prefs.force_small_midbar = True
+        editorpersistance.save()
+        middlebar.do_layout_after_dock_change(gui.editor_window)
+    else:
+        editorpersistance.prefs.force_small_midbar = False
+        editorpersistance.save()
+        middlebar.do_layout_after_dock_change(gui.editor_window)
 
 def _remove_panel(panel_id):
     current_position = _panel_positions[panel_id]
