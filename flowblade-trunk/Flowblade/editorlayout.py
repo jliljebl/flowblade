@@ -91,8 +91,8 @@ PANEL_MINIMUM_SIZES = { \
     appconsts.PANEL_MEDIA: None, 
     appconsts.PANEL_FILTER_SELECT: None,
     appconsts.PANEL_RANGE_LOG: None,
-    appconsts.PANEL_FILTERS: (400, 100), # This has very small default size when empty.
-    appconsts.PANEL_COMPOSITORS: (400,100), # This has very small default size when empty.
+    appconsts.PANEL_FILTERS: (400, 100), # This has very small default size when empty and needs preferred size set to show properly when moved.
+    appconsts.PANEL_COMPOSITORS: (400,100), # This has very small default size when empty and needs preferred size set to show properly when moved.
     appconsts.PANEL_JOBS: None,
     appconsts.PANEL_RENDERING: None,
     appconsts.PANEL_PROJECT: None,
@@ -425,7 +425,15 @@ def _change_panel_position(widget, panel_id, pos_option):
         _panel_positions[panel_id] = pos_option
              
     gui.editor_window.window.show_all()
-    
+
+    """
+    middle_bar_w, dummy = gui.editor_window.edit_buttons_row.get_preferred_width()
+    bottom_left_w, dummy = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT].get_preferred_width()
+    bottom_right_w, dummy = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT].get_preferred_width()
+    combined = middle_bar_w + bottom_left_w + bottom_right_w
+    print(combined, middle_bar_w, bottom_left_w, bottom_right_w)
+    """
+
 def _remove_panel(panel_id):
     current_position = _panel_positions[panel_id]
     panel_widgets = _get_panels_widgets_dict(gui.editor_window)
@@ -481,33 +489,5 @@ def _add_panel(panel_id, position):
             _position_notebooks[position] = notebook
 
     _panel_positions[panel_id] = position
-    
-    """
-    if position == appconsts.PANEL_PLACEMENT_LEFT_COLUMN:
-        # These are Gtk.Box widgets
-        position_frame.pack_start(panel_widget, False, False, 0)
-    else:
-        # These are gtk.Frames
-        position_frame.add(panel_widget)
-    """
 
-"""        
- = Gtk.Notebook()
-self.notebook.set_size_request(appconsts.NOTEBOOK_WIDTH, appconsts.TOP_ROW_HEIGHT)
-media_label = Gtk.Label(label=_("Media"))
-
-# Here we put media panel in notebook if that is the current user pref.
-if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
-    self.notebook.append_page(self.mm_paned, media_label)
-#    if editorpersistance.prefs.placement_media_panel == appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT:
-#        self.notebook.append_page(self.mm_paned, media_label)
-self.notebook.append_page(self.media_log_panel, Gtk.Label(label=_("Range Log")))
-self.notebook.append_page(self.effects_panel, Gtk.Label(label=_("Filters")))
-self.notebook.append_page(self.compositors_panel, Gtk.Label(label=_("Compositors")))
-if top_level_project_panel() == False:
-    self.notebook.append_page(self.project_panel, Gtk.Label(label=_("Project")))
-
-self.notebook.append_page(self.jobs_pane, Gtk.Label(label=_("Jobs")))
-self.notebook.append_page(self.render_panel, Gtk.Label(label=_("Render")))
-    """
 
