@@ -62,9 +62,9 @@ DEFAULT_PANEL_POSITIONS = { \
     appconsts.PANEL_FILTERS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_COMPOSITORS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_JOBS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
-    appconsts.PANEL_RENDERING: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
+    appconsts.PANEL_PROJECT_SMALL_SCREEN: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT, # default values are for large screen single window layout, these are modified on init if needed.
     appconsts.PANEL_PROJECT: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT,
-    appconsts.PANEL_PROJECT_SMALL_SCREEN: None, # default values are for large screen single window layout, these are modified on startup if needed.
+    appconsts.PANEL_RENDERING: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None # default values are for large screen single window layout, these are modified on startup if needed.
 }
 
@@ -83,8 +83,8 @@ AVAILABLE_PANEL_POSITIONS_OPTIONS = { \
 
 PANEL_ORDER_IN_NOTEBOOKS = [appconsts.PANEL_MEDIA, appconsts.PANEL_FILTER_SELECT, appconsts.PANEL_RANGE_LOG, 
                             appconsts.PANEL_FILTERS, appconsts.PANEL_COMPOSITORS,
-                            appconsts.PANEL_JOBS, appconsts.PANEL_RENDERING,
-                            appconsts.PANEL_PROJECT, appconsts.PANEL_PROJECT_SMALL_SCREEN,
+                            appconsts.PANEL_JOBS, appconsts.PANEL_PROJECT_SMALL_SCREEN, 
+                            appconsts.PANEL_PROJECT, appconsts.PANEL_RENDERING,
                             appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN]
 
 PANEL_MINIMUM_SIZES = { \
@@ -137,16 +137,27 @@ def init_layout_data():
     else:
         if _panel_positions[appconsts.PANEL_MEDIA] == appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT:
             _panel_positions[appconsts.PANEL_MEDIA] = appconsts.PANEL_PLACEMENT_TWO_WINDOWS_MEDIA_PANEL_POS
+
+    # We are using different media panels for differnt screen sizes,
+    # make sure that are using and displaying the right one here even screen size has changed.
+    if top_level_project_panel() == True:
+        if appconsts.PANEL_PROJECT_SMALL_SCREEN in _panel_positions:
+            _panel_positions[appconsts.PANEL_PROJECT] = appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT
+            del(_panel_positions[appconsts.PANEL_PROJECT_SMALL_SCREEN])
+    else:
+        if appconsts.PANEL_PROJECT in _panel_positions:
+            _panel_positions[appconsts.PANEL_PROJECT_SMALL_SCREEN] = appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT
+            del(_panel_positions[appconsts.PANEL_PROJECT])
             
     # Translations need to be initialized after modules have been loaded.
     _positions_names = { \
         appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT: _("Top Row Default Notebook"),
         appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT: _("Top Row Right"),
         appconsts.PANEL_PLACEMENT_LEFT_COLUMN: _("Left Column"),
-        appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT:  _("Bottom Row Left"),
-        appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT:_("Bottom Row Right"),
-        appconsts.PANEL_PLACEMENT_NOT_VISIBLE:_("Not Visible"),
-        appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT:_("Top Row Project Panel Default"),
+        appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT: _("Bottom Row Left"),
+        appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT: _("Bottom Row Right"),
+        appconsts.PANEL_PLACEMENT_NOT_VISIBLE: _("Not Visible"),
+        appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT: _("Top Row Project Panel Default"),
     }
     
     _panels_names = { \
@@ -157,7 +168,7 @@ def init_layout_data():
         appconsts.PANEL_RENDERING: _("Render"),
         appconsts.PANEL_JOBS: _("Jobs"),
         appconsts.PANEL_PROJECT: _("Project"),
-        appconsts.PANEL_PROJECT_SMALL_SCREEN: "tba",
+        appconsts.PANEL_PROJECT_SMALL_SCREEN: _("Project"),
         appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: "tba",
         appconsts.PANEL_FILTER_SELECT: _("Filter Select")
     }
@@ -209,7 +220,8 @@ def _get_panels_widgets_dict(editor_window):
         appconsts.PANEL_RENDERING: editor_window.render_panel,
         appconsts.PANEL_JOBS: editor_window.jobs_pane,
         appconsts.PANEL_PROJECT: editor_window.top_project_panel,
-        appconsts.PANEL_FILTER_SELECT: editor_window.effect_select_panel
+        appconsts.PANEL_FILTER_SELECT: editor_window.effect_select_panel,
+        appconsts.PANEL_PROJECT_SMALL_SCREEN: editor_window.project_panel
     }
     # appconsts.PANEL_PROJECT_SMALL_SCREEN, appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN
     # not available currently
@@ -293,7 +305,6 @@ def _create_notebook(position, editor_window):
     notebook = Gtk.Notebook()
     panels = _get_position_panels(position)
     panel_widgets = _get_panels_widgets_dict(editor_window)
-    
     for panel_id in panels:
         widget = panel_widgets[panel_id]
         _set_min_size(panel_id, widget)
@@ -499,37 +510,4 @@ if top_level_project_panel() == False:
 self.notebook.append_page(self.jobs_pane, Gtk.Label(label=_("Jobs")))
 self.notebook.append_page(self.render_panel, Gtk.Label(label=_("Render")))
     """
-    
-"""
-def _show_media_panel_top_row_notebook(self, widget):
-    if widget.get_active() == False:
-        return
 
-    self.app_h_box.remove(self.mm_paned_frame)
-
-    self.mm_paned_frame.remove(self.mm_paned)
-    self.mm_paned_frame = None
-
-    media_label = Gtk.Label(label=_("Media"))
-    self.notebook.insert_page(self.mm_paned, media_label, 0)
-
-    self.window.show_all()
-    
-    editorpersistance.prefs.placement_media_panel = appconsts.PANEL_PLACEMENT_TOP_ROW_NOTEBOOK
-    editorpersistance.save()
-
-def _show_media_panel_left_column(self, widget):
-    if widget.get_active() == False:
-        return
-        
-    self.notebook.remove(self.mm_paned)
-
-    self.mm_paned_frame = guiutils.get_panel_etched_frame(self.mm_paned)
-    self.mm_paned_frame = guiutils.set_margins(self.mm_paned_frame, 0, 0, 1, 0)
-
-    self.app_h_box.pack_start(self.mm_paned_frame , False, False, 0)
-    self.window.show_all()
-
-    editorpersistance.prefs.placement_media_panel = appconsts.PANEL_PLACEMENT_LEFT_COLUMN
-    editorpersistance.save()
-"""

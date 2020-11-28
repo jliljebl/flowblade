@@ -406,8 +406,8 @@ class EditorWindow:
             top_project_vbox.pack_start(seq_panel, True, True, 0)
             top_project_vbox.set_size_request(PANEL_WIDTH, PANEL_HEIGHT)
             self.top_project_panel = guiutils.set_margins(top_project_vbox, 0, 2, 6, 2)
+            self.project_panel = None
         else:
-
             # Notebook project panel for smallest screens
             # Project info
             project_info_panel = projectinfogui.get_project_info_panel()
