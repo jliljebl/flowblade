@@ -702,7 +702,6 @@ class RenderTypePanel():
     
     def __init__(self, render_type_changed_callback, preset_selection_changed_callback):
         self.type_label = Gtk.Label(label=_("Type:"))
-        self.presets_label = Gtk.Label(label=_("Presets:")) 
         
         self.type_combo = Gtk.ComboBoxText() # filled later when current sequence known
         self.type_combo.append_text(_("User Defined"))
@@ -716,9 +715,7 @@ class RenderTypePanel():
         self.vbox.pack_start(guiutils.get_two_column_box(self.type_label,
                                                          self.type_combo, 80), 
                                                          False, False, 0)
-        self.vbox.pack_start(guiutils.get_two_column_box(self.presets_label,
-                                                         self.presets_selector.widget, 80), 
-                                                         False, False, 0)
+        self.vbox.pack_start(self.presets_selector.widget, False, False, 0)
 
 class RenderProfilePanel():
 
