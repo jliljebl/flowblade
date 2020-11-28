@@ -38,7 +38,7 @@ import utils
 
 destroy_window_event_id = -1
 
-FFMPEG_VIEW_SIZE = (20, 20) # Text edit area height for render opts. Width 200 seems to be ignored in current layout?
+FFMPEG_VIEW_SIZE = (20, 20) # Text edit area height for render opts. Width is ignored in current layout.
 
 
 # ----------------------------------------------------------- dialogs
@@ -778,7 +778,7 @@ class RenderEncodingPanel():
 
         quality_row  = Gtk.HBox()
         quality_row.pack_start(self.quality_selector.widget, False, False, 0)
-        quality_row.pack_start(Gtk.Label(), True, False, 0)
+        quality_row.pack_start(Gtk.Label(), True, True, 0)
         quality_row.pack_start(self.speaker_image, False, False, 0)
         quality_row.pack_start(self.sample_rate_selector.widget, False, False, 0)
         quality_row.pack_start(self.audio_desc, False, False, 0)
@@ -1049,7 +1049,7 @@ class RenderArgsEditWindow(Gtk.Window):
 
         scroll_frame = Gtk.Frame()
         scroll_frame.add(sw)
-        scroll_frame.set_size_request(400, 300)
+        scroll_frame.set_size_request(200, 300)
 
         self.load_selection_button = Gtk.Button(_("Load Selection"))
         self.load_selection_button.connect("clicked", lambda w: self.args_panel.display_selection_callback())

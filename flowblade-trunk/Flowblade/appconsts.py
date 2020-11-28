@@ -74,8 +74,7 @@ TRACK_HEIGHT_SMALLEST = 25 # maybe remove this as it is no longer used
 TLINE_HEIGHT = 260
 
 # Notebook widths
-NOTEBOOK_WIDTH = 600 # defines app min width together with MONITOR_AREA_WIDTH
-NOTEBOOK_WIDTH_WIDESCREEN = 500
+NOTEBOOK_WIDTH = 600 # currently has no effect
 TOP_ROW_HEIGHT = 500
 
 # Property editing gui consts

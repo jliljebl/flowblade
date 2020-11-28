@@ -357,10 +357,7 @@ class EditorWindow:
             render_panel_right = rendergui.get_render_panel_right(render.widgets,
                                                                   lambda w,e: projectaction.do_rendering(),
                                                                   lambda w,e: projectaction.add_to_render_queue())
-            if editorstate.screen_size_small_width() == False:
-                render_hbox = Gtk.HBox(True, 5)
-            else:
-                render_hbox = Gtk.HBox(False, 5)
+            render_hbox = Gtk.HBox(False, 5)
             render_hbox.pack_start(render_panel_left, True, True, 0)
             render_hbox.pack_start(render_panel_right, True, True, 0)
 
