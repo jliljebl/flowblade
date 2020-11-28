@@ -3372,7 +3372,7 @@ class ToolSelector(ImageMenuLaunch):
 
     
 class HamburgerPressLaunch:
-    def __init__(self, callback, surfaces=None, width=-1, data=None): # We are using this with other launchers that need to be able to set non sensitive
+    def __init__(self, callback, surfaces=None, width=-1, data=None):
         # Aug-2019 - SvdB - BB
         prefs = editorpersistance.prefs
         size_adj = 1
