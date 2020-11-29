@@ -61,6 +61,7 @@ import dnd
 import diskcachemanagement
 import edit
 import editevent
+import editorlayout
 import editorpersistance
 import editorstate
 import editorwindow
@@ -419,7 +420,7 @@ def monkeypatch_callbacks():
     snapping._get_x_for_frame_func = tlinewidgets._get_frame_x
 
     # Callback to reinit to change slider <-> kf editor
-    propertyeditorbuilder.re_init_editors_for_slider_type_change_func = clipeffectseditor.effect_selection_changed
+    propertyeditorbuilder.re_init_editors_for_slider_type_change_func = clipeffectseditor.refresh_clip
 
     propertyeditorbuilder.show_rotomask_func = rotomask.show_rotomask
     
@@ -478,17 +479,8 @@ def create_gui():
     updater.set_clip_edit_mode_callback = modesetting.set_clip_monitor_edit_mode
     updater.load_icons()
 
-    # Notebook indexes are different for 1 and 2 window layouts
-    if editorpersistance.prefs.global_layout != appconsts.SINGLE_WINDOW:
-        medialog.range_log_notebook_index = 0
-        compositeeditor.compositor_notebook_index = 2
-        clipeffectseditor.filters_notebook_index = 1
-        jobs.jobs_notebook_index = 3
-        if editorwindow.top_level_project_panel() == False:
-            jobs.jobs_notebook_index = 4
-    else:
-        if editorwindow.top_level_project_panel() == False:
-            jobs.jobs_notebook_index = 5
+    # Make layout data available
+    editorlayout.init_layout_data()
 
     # Create window and all child components
     editor_window = editorwindow.EditorWindow()
@@ -618,7 +610,6 @@ def init_editor_state():
 
     # Clear editors 
     clipeffectseditor.clear_clip()
-    clipeffectseditor.effect_selection_changed() # to get No Clip text
     compositeeditor.clear_compositor()
 
     # Show first pages on notebooks
@@ -1079,7 +1070,7 @@ def _shutdown_dialog_callback(dialog, response_id, no_dialog_shutdown=False):
     editorpersistance.prefs.app_v_paned_position = gui.editor_window.app_v_paned.get_position()
     editorpersistance.prefs.top_paned_position = gui.editor_window.top_paned.get_position()
     try: # This fails if preference for top row layout changed, we just ignore saving these values then.
-        if editorwindow.top_level_project_panel() == True:
+        if editorlayout.top_level_project_panel() == True:
             editorpersistance.prefs.mm_paned_position = 200  # This is not used until user sets preference to not have top level project panel
         else:
             editorpersistance.prefs.mm_paned_position = gui.editor_window.mm_paned.get_position()

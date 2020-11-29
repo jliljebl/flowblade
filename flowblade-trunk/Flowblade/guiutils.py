@@ -270,7 +270,8 @@ def get_slider_row(editable_property, listener, slider_name=None):
     
     editable_property.value_changed_ID = adjustment.connect("value-changed", listener) # saving ID to make it available for disconnect
                                                                                        # This also needs to be after adjustment is set to not loose exiting value for build dummy value 
-        
+    print("editable_property.value_changed_ID")
+
     return (get_two_column_editor_row(name, hbox), hslider)
 
 def get_slider_row_and_spin_widget(editable_property, listener, slider_name=None):
@@ -381,7 +382,13 @@ def get_panel_etched_frame(panel):
     frame.set_shadow_type(Gtk.ShadowType.ETCHED_OUT)
     set_margins(frame, 0, 0, 1, 0)
     return frame
-        
+
+def get_empty_panel_etched_frame():
+    frame = Gtk.Frame()
+    frame.set_shadow_type(Gtk.ShadowType.ETCHED_OUT)
+    set_margins(frame, 0, 0, 1, 0)
+    return frame
+    
 def get_in_centering_alignment(widget, xsc=0.0, ysc=0.0):
     align = Gtk.HBox(False, 0)
     align.pack_start(Gtk.Label(), True, True, 0)

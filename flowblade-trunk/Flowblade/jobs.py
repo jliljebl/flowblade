@@ -31,6 +31,7 @@ import time
 import threading
 
 import appconsts
+import editorlayout
 import editorpersistance
 from editorstate import PROJECT
 import gui
@@ -60,14 +61,10 @@ open_media_file_callback = None
 _status_polling_thread = None
 
 _hamburger_menu = Gtk.Menu()
-
 _jobs_list_view = None
 
 _jobs = [] # proxy objects that represent background renders and provide info on render status.
-
 _remove_list = [] # objects are removed from GUI with delay to give user time to notice copmpletion
-
-jobs_notebook_index = 4 # 4 for single window, app.py sets to 3 for two windows
 
 _jobs_render_progress_window = None
 
@@ -135,7 +132,7 @@ def add_job(job_proxy):
     _jobs.append(job_proxy)
     _jobs_list_view.fill_data_model()
     if editorpersistance.prefs.open_jobs_panel_on_add == True:
-        gui.middle_notebook.set_current_page(jobs_notebook_index)
+        editorlayout.show_panel(appconsts.PANEL_JOBS)
     
     if editorpersistance.prefs.render_jobs_sequentially == False: # Feature not active for first release 2.6.
         job_proxy.start_render()

@@ -3,6 +3,7 @@
   <mime-type type="application/vnd.flowblade-project">
     <comment>Flowblade project</comment>
     <glob pattern="*.flb"/>
+    <icon name="io.github.jliljebl.Flowblade"/>
   </mime-type>
 </mime-info>
 

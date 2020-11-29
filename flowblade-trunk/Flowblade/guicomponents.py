@@ -597,41 +597,6 @@ class MediaListView(ImageTextTextListView):
             self.scroll.queue_draw()
 
 
-class BinListView(ImageTextTextListView):
-    """
-    GUI component displaying list of media files.
-    """
-
-    def __init__(self, bin_selection_cb, bin_name_edit_cb):
-        ImageTextTextListView.__init__(self)
-
-        self.text_col_1.set_min_width(10)
-
-        # Connect selection 'changed' signal
-        tree_sel = self.treeview.get_selection()
-        tree_sel.connect("changed", bin_selection_cb)
-
-        # Set bin name editable and connect 'edited' signal
-        self.text_rend_1.set_property("editable", True)
-        self.text_rend_1.connect("edited",
-                                 bin_name_edit_cb,
-                                 (self.storemodel, 1))
-
-    def fill_data_model(self):
-        self.storemodel.clear()
-
-        for media_bin in PROJECT().bins:
-            try:
-                pixbuf = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "bin_5.png")
-                row_data = [pixbuf,
-                            media_bin.name,
-                            str(len(media_bin.file_ids))]
-                self.storemodel.append(row_data)
-                self.scroll.queue_draw()
-            except GObject.GError as exc:
-                print("can't load icon", exc)
-
-
 class FilterListView(ImageTextImageListView):
     """
     GUI component displaying list of available filters.
@@ -1101,6 +1066,10 @@ class MediaPanel():
     def get_selected_media_objects(self):
         return self.selected_objects
 
+    def get_selected_media_objects_for_drag(self):
+        last_pressed = self.selected_objects[-1]
+        return [last_pressed]
+ 
     def media_object_selected(self, media_object, widget, event):
         if event.type == Gdk.EventType._2BUTTON_PRESS:
             self.double_click_release = True
@@ -1173,9 +1142,9 @@ class MediaPanel():
                     self.selected_objects.append(m_obj)
                     m_obj.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
             else:
-                self.clear_selection()
-                media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
-                self.selected_objects.append(media_object)
+                if not(media_object in self.selected_objects):
+                    media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
+                    self.selected_objects.append(media_object)
 
         elif event.button == 3:
             self.clear_selection()
@@ -1204,7 +1173,11 @@ class MediaPanel():
                     media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_bg_color())
                 except:
                     pass
-
+            else:
+                self.clear_selection()
+                media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
+                self.selected_objects.append(media_object)
+                          
     def select_media_file(self, media_file):
         self.clear_selection()
         self.selected_objects.append(self.widget_for_mediafile[media_file])
@@ -2318,18 +2291,6 @@ def display_media_file_popup_menu(media_file, callback, event):
 
     media_file_menu.popup(None, None, None, None, event.button, event.time)
 
-def display_filter_stack_popup_menu(row, treeview, callback, event):
-    filter_stack_menu = filter_stack_menu_popup_menu
-    guiutils.remove_children(filter_stack_menu)
-
-    filter_stack_menu.add(_get_menu_item(_("Toggle Active"), callback, ("toggle", row, treeview)))
-    filter_stack_menu.add(_get_menu_item(_("Reset Values"), callback, ("reset", row, treeview)))
-    _add_separetor(filter_stack_menu)
-    filter_stack_menu.add(_get_menu_item(_("Move Up"), callback, ("moveup", row, treeview)))
-    filter_stack_menu.add(_get_menu_item(_("Move Down"), callback, ("movedown", row, treeview)))
-    
-    filter_stack_menu.popup(None, None, None, None, event.button, event.time)
-
 def display_media_log_event_popup_menu(row, treeview, callback, event):
     log_event_menu = log_event_popup_menu
     guiutils.remove_children(log_event_menu)
@@ -3051,14 +3012,13 @@ def get_audio_levels_popup_menu(event, callback):
 def get_clip_effects_editor_hamburger_menu(event, callback):
     menu = clip_effects_hamburger_menu
     guiutils.remove_children(menu)
-
-    menu.add(_get_menu_item(_("Save Effect Values"), callback, "save"))
-    menu.add(_get_menu_item(_("Load Effect Values"), callback, "load"))
-    menu.add(_get_menu_item(_("Reset Effect Values"), callback, "reset"))
+    
+    menu.add(_get_menu_item(_("Toggle All Effects On/Off"), callback, "toggle"))
 
     _add_separetor(menu)
-    
-    menu.add(_get_menu_item(_("Delete Effect"), callback, "delete"))
+
+    menu.add(_get_menu_item(_("Set All Expanded"), callback, "expanded"))
+    menu.add(_get_menu_item(_("Set All Unexpanded"), callback, "unexpanded"))
 
     _add_separetor(menu)
 
@@ -3086,7 +3046,7 @@ def get_kb_shortcuts_hamburger_menu(event, callback, data):
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
     
-def get_filter_mask_menu(event, callback, filter_names, filter_msgs):
+def get_filter_mask_menu(event, callback, filter_names, filter_msgs, filter_index):
     menu = filter_mask_menu
     guiutils.remove_children(menu)
 
@@ -3095,7 +3055,7 @@ def get_filter_mask_menu(event, callback, filter_names, filter_msgs):
     menu_item.set_submenu(sub_menu)
     #U+2192 right"\u21c9" Left U+21c7
     for f_name, f_msg in zip(filter_names, filter_msgs):
-        sub_menu.add(_get_menu_item("\u21c9" + " " + f_name, callback, (False, f_msg)))
+        sub_menu.add(_get_menu_item("\u21c9" + " " + f_name, callback, (False, f_msg, filter_index)))
 
     menu.add(menu_item)
 
@@ -3104,7 +3064,7 @@ def get_filter_mask_menu(event, callback, filter_names, filter_msgs):
     menu_item.set_submenu(sub_menu)
     
     for f_name, f_msg in zip(filter_names, filter_msgs):
-        sub_menu.add(_get_menu_item("\u21c9" + " " + f_name, callback, (True, f_msg)))
+        sub_menu.add(_get_menu_item("\u21c9" + " " + f_name, callback, (True, f_msg, filter_index)))
 
     menu.add(menu_item)
     
@@ -3412,7 +3372,7 @@ class ToolSelector(ImageMenuLaunch):
 
     
 class HamburgerPressLaunch:
-    def __init__(self, callback, surfaces=None, width=-1, data=None): # We are using this with other launchers that need to be able to set non sensitive
+    def __init__(self, callback, surfaces=None, width=-1, data=None):
         # Aug-2019 - SvdB - BB
         prefs = editorpersistance.prefs
         size_adj = 1

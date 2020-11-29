@@ -473,7 +473,7 @@ def tline_effect_drop(x, y):
         modesetting.set_default_edit_mode()
         return
         
-    if clip != clipeffectseditor.clip:
+    if clipeffectseditor.clip_is_being_edited(clip) == False:
         clipeffectseditor.set_clip(clip, track, index)
     
     clipeffectseditor.add_currently_selected_effect() # drag start selects the dragged effect

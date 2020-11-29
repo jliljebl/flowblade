@@ -126,6 +126,7 @@ display_clip_media_thumbnails = True
 
 # Flag for window being in fullscreen mode
 fullscreen = False
+fullscreen_second_window = False
 
 # Trim view mode
 show_trim_view = appconsts.TRIM_VIEW_OFF

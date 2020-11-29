@@ -272,7 +272,7 @@ class EditorPreferences:
         self.default_profile_name = 10 # index of default profile
         self.auto_play_in_clip_monitor = False  # DEPRECATED, NOT USER SETTABLE ANYMORE
         self.auto_center_on_play_stop = False
-        self.thumbnail_folder = None # DEPRECATED, this set XDG variables now
+        self.thumbnail_folder = None # DEPRECATED, this is set by XDG variables now.
         self.hidden_profile_names = []
         self.display_splash_screen = True
         self.auto_move_after_edit = False
@@ -281,7 +281,7 @@ class EditorPreferences:
         self.AUTO_SAVE_OPTS = None # not used, these are cerated and translated else where
         self.tabs_on_top = False
         self.midbar_tc_left = True
-        self.default_layout = True
+        self.default_layout = True # DEPRECATED, NOT USED ANYMORE
         self.exit_allocation = (0, 0)
         self.media_columns = 3
         self.app_v_paned_position = 500 # Paned get/set position value
@@ -362,3 +362,5 @@ class EditorPreferences:
         self.cbutton  = [True, True, True, True, True, True, True, True, True, True] # Toolbar objects active state
         self.colorized_icons = False
         self.tools_selection = appconsts.TOOL_SELECTOR_IS_MENU
+        self.panel_positions = None
+        self.force_small_midbar = False

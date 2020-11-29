@@ -2026,7 +2026,7 @@ class TimeLineCanvas:
                     cr.paint()
                     icon_slot = icon_slot + 1
 
-                if clip == clipeffectseditor.clip:
+                if clip == clipeffectseditor.clip_is_being_edited(clip):
                     icon = EDIT_INDICATOR
                     ix =  int(scale_in) + int(scale_length) / 2 - 7
                     iy = y + int(track_height) / 2 - 7

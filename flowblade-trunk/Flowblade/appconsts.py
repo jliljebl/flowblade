@@ -74,8 +74,7 @@ TRACK_HEIGHT_SMALLEST = 25 # maybe remove this as it is no longer used
 TLINE_HEIGHT = 260
 
 # Notebook widths
-NOTEBOOK_WIDTH = 600 # defines app min width together with MONITOR_AREA_WIDTH
-NOTEBOOK_WIDTH_WIDESCREEN = 500
+NOTEBOOK_WIDTH = 400 # currently has no effect, panels widgets size requests combined width > 400 (about 488), make bigger if needed.
 TOP_ROW_HEIGHT = 500
 
 # Property editing gui consts
@@ -302,14 +301,36 @@ CONTAINER_CLIP_BLENDER = 3
 
 CONTAINER_CLIP_VIDEO_CLIP_NAME = "container_clip"
 
-# Middlebar GUI objects
+# Middlebar button groups.
 BUTTON_GROUP_TOOLS = "tool_buttons"
 BUTTON_GROUP_UNDO = "undo_redo"
 BUTTON_GROUP_ZOOM = "zoom_buttons"
-BUTTON_GROUP_EDIT =  "edit_buttons"
+BUTTON_GROUP_EDIT = "edit_buttons"
 BUTTON_GROUP_SYNC_SPLIT = "edit_buttons_2"
 BUTTON_GROUP_DELETE = "edit_buttons_3"
 BUTTON_GROUP_MONITOR_ADD = "monitor_insert_buttons"
 BIG_TIME_CODE = "big_TC"
 WORKFLOW_LAUNCH = "worflow_launch" 
 TOOL_SELECT = "tool_selector"
+
+# Panel placement options
+PANEL_PLACEMENT_TOP_ROW_DEFAULT = 0
+PANEL_PLACEMENT_TOP_ROW_RIGHT = 1
+PANEL_PLACEMENT_LEFT_COLUMN = 2
+PANEL_PLACEMENT_BOTTOM_ROW_LEFT = 3
+PANEL_PLACEMENT_BOTTOM_ROW_RIGHT = 4
+PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT = 5
+PANEL_PLACEMENT_NOT_VISIBLE = 6
+PANEL_PLACEMENT_TWO_WINDOWS_MEDIA_PANEL_POS = 7
+
+# Panels
+PANEL_MEDIA = 0
+PANEL_FILTERS = 1
+PANEL_COMPOSITORS = 2
+PANEL_RANGE_LOG = 3
+PANEL_RENDERING = 4
+PANEL_JOBS = 5
+PANEL_PROJECT = 6
+PANEL_PROJECT_SMALL_SCREEN = 7
+PANEL_MEDIA_AND_BINS_SMALL_SCREEN = 8
+PANEL_FILTER_SELECT = 9
