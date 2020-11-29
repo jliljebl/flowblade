@@ -415,9 +415,6 @@ class EditorWindow:
             project_vbox.pack_start(seq_panel, True, True, 0)
             self.project_panel = guiutils.set_margins(project_vbox, 0, 2, 6, 2)
             self.top_project_panel = None 
-
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
-            self.notebook.override_background_color(Gtk.StateFlags.NORMAL, gui.get_light_gray_light_color())
         
         # Position bar and decorative frame  for it
         self.pos_bar = PositionBar()
@@ -660,7 +657,9 @@ class EditorWindow:
         self.notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
         self.notebook_frame = guiutils.get_panel_etched_frame(self.notebook)
         guiutils.set_margins(self.notebook_frame, 0, 0, 0, 1)
-
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
+            self.notebook.override_background_color(Gtk.StateFlags.NORMAL, gui.get_light_gray_light_color())
+            
         # -------------- appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT
         # -------------- By default this is empty.
         self.top_right_panel, widget_is_notebook  = editorlayout.create_position_widget(self, appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT)
