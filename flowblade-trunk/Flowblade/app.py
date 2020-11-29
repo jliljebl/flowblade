@@ -228,11 +228,13 @@ def main(root_path):
         _too_low_mlt_version_exit()
         return
 
-    # Themes
-    if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
+    # Apply custom themes.
+    if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME \
+        or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
+        or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
         success = gui.apply_gtk_css(editorpersistance.prefs.theme)
         if not success:
-            print("not success")
+            print("Applying custom theme failed.")
             editorpersistance.prefs.theme = appconsts.LIGHT_THEME
             editorpersistance.save()
 

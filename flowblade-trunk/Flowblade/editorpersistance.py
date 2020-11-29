@@ -234,10 +234,12 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.center_on_arrow_move = auto_center_on_updown.get_active()
     prefs.double_track_hights = (double_track_hights.get_active() == 1)
     prefs.playback_follow_move_tline_range = follow_move_range.get_active()
-    if theme.get_active() == 0: # The displayed options indeces do not correspond with theme const values.
+    if theme.get_active() == 1: # The displayed options indeces do not correspond with theme const values.
         prefs.theme = appconsts.FLOWBLADE_THEME_GRAY
+    elif theme.get_active() == 0: # The displayed options indeces do not correspond with theme const values.
+        prefs.theme = appconsts.FLOWBLADE_THEME_NEUTRAL
     else:    
-        prefs.theme = theme.get_active() - 1
+        prefs.theme = theme.get_active() - 2
     prefs.top_row_layout = top_row_layout.get_active()
     # Aug-2019 - SvdB - AS
     prefs.auto_save_delay_value_index = autosave_combo.get_active()

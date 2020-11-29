@@ -267,7 +267,10 @@ def apply_gtk_css(theme):
     Gtk.StyleContext.add_provider_for_screen (screen, provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
     if theme == appconsts.FLOWBLADE_THEME:
         css_path = "/res/css/gtk-flowblade-dark.css"
-    else:
+    elif theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+        print("css3")
+        css_path = "/res/css3/gtk-flowblade-dark.css"
+    else: # appconsts.FLOWBLADE_THEME_GRAY
         print("css2")
         css_path = "/res/css2/gtk-flowblade-dark.css"
     provider.load_from_path(respaths.ROOT_PATH + css_path)
