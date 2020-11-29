@@ -430,7 +430,7 @@ def _change_panel_position(widget, panel_id, pos_option):
              
     gui.editor_window.window.show_all()
     
-    # If bottom row items do not fit, drop some buttons middlebar.
+    # If bottom row items do not fit, drop some buttons in middlebar.
     bottom_row_min_width = get_bottom_row_minimum_width()
     if bottom_row_min_width > editorstate.SCREEN_WIDTH:
         editorpersistance.prefs.force_small_midbar = True
