@@ -88,10 +88,13 @@ _MINT_COLORS = ((0.839215686, 0.839215686, 0.839215686), (0.172, 0.172, 0.172), 
 _ARC_COLORS = ((0.960784, 0.964706, 0.968627), (0.266667, 0.282353, 0.321569), (0.321568627, 0.580392157, 0.88627451), (0.321568627, 0.580392157, 0.88627451), "Arc (theme)")
 _FLOWBLADE_COLORS = ((0.960784, 0.964706, 0.968627), (0.266667, 0.282353, 0.321569), (0.1, 0.31, 0.58), (0.1, 0.31, 0.58), "Flowblade Theme")
 
-
 _THEME_COLORS = (_UBUNTU_COLORS, _GNOME_COLORS, _MINT_COLORS, _ARC_COLORS, _FLOWBLADE_COLORS)
 
 _CURRENT_THEME_COLORS_FILE = "currentcolors.data" # Used to communicate theme colors to tools like gmic.py running on separate process
+
+LIGHT_GRAY_THEME_GRAY = ((50.3/255.0), (50.3/255.0), (59.9/255.0), 1.0)
+LIGHT_NEUTRAL_THEME_NEUTRAL = ((68.0/255.0), (68.0/255.0), (68.0/255.0), 1.0)
+DARKER_NEUTRAL_THEME_NEUTRAL = ((48.0/255.0), (48.0/255.0), (48.0/255.0), 1.0)
 
 _selected_bg_color = None
 _bg_color = None
@@ -151,8 +154,14 @@ def get_selected_bg_color():
     return _selected_bg_color
 
 def get_light_gray_light_color():
-    return Gdk.RGBA(red=(50.3/255.0), green=(50.3/255.0), blue=(59.9/255.0), alpha=1.0)
+    return Gdk.RGBA(*LIGHT_GRAY_THEME_GRAY)
 
+def get_light_neutral_color():
+    return Gdk.RGBA(*LIGHT_NEUTRAL_THEME_NEUTRAL)
+
+def get_darker_neutral_color():
+    return Gdk.RGBA(*DARKER_NEUTRAL_THEME_NEUTRAL)
+    
 def get_bg_unmodified_normal_color():
     return _bg_unmodified_normal
 
@@ -186,7 +195,7 @@ def set_theme_colors():
     if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
         bg_color = Gdk.RGBA(red=(30.0/255.0), green=(35.0/255.0), blue=(51.0/255.0), alpha=1.0)
 
-    _bg_unmodified_normal = bg_color # this was used to work on grey, theme probablynot necessary anymore
+    _bg_unmodified_normal = bg_color # this was used to work on grey, theme probably not necessary anymore
 
     r, g, b, a = unpack_gdk_color(bg_color)
 

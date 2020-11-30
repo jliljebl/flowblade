@@ -132,8 +132,10 @@ class PositionBar:
             return
 
         global BG_COLOR
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
             r, g, b, a = gui.unpack_gdk_color(gui.get_light_gray_light_color())
+            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+                r, g ,b, a = gui.unpack_gdk_color(gui.get_light_neutral_color())
             BG_COLOR = (r, g ,b)
         else:
             r, g, b, a = gui.unpack_gdk_color(gui.get_bg_color())

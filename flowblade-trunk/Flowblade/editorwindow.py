@@ -494,6 +494,9 @@ class EditorWindow:
 
         if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
             self.edit_buttons_frame.override_background_color(Gtk.StateFlags.NORMAL, gui.get_light_gray_light_color())
+
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+            self.edit_buttons_frame.override_background_color(Gtk.StateFlags.NORMAL, gui.get_light_neutral_color())
             
     def _init_tline(self):
         self.tline_scale = tlinewidgets.TimeLineFrameScale(modesetting.set_default_edit_mode,

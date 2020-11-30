@@ -377,8 +377,9 @@ def load_icons():
         BG_COLOR = (0.44, 0.44, 0.46)
 
         FRAME_SCALE_LINES = (0.8, 0.8, 0.8)
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME or \
-            editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME \
+            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
+            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
             TRACK_GRAD_STOP1 = (1,  0.12, 0.14, 0.2, 1)
             TRACK_GRAD_STOP3 = (1,  0.12, 0.14, 0.2, 1)
             TRACK_GRAD_ORANGE_STOP1 = (1,  0.20, 0.22, 0.28, 1) # V1
@@ -393,9 +394,12 @@ def load_icons():
             INSERT_ARROW_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insert_arrow_fb.png")
             BLANK_CLIP_COLOR_GRAD = (1, 0.12, 0.14, 0.2, 1)
             BLANK_CLIP_COLOR_GRAD_L = (0, 0.12, 0.14, 0.2, 1)
-            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
-                print("opopopoop")
+            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
+                or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
                 r, g ,b = utils.cairo_color_from_gdk_color(gui.get_light_gray_light_color())
+                if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+                    r, g ,b = utils.cairo_color_from_gdk_color(gui.get_light_neutral_color())
+                
                 TRACK_GRAD_STOP1 = (1, r, g ,b , 1)
                 TRACK_GRAD_STOP3 = (0, r, g ,b , 1)
                 rl, gl, bl, = get_multiplied_color((r, g ,b), 1.25)
@@ -2457,9 +2461,11 @@ class TimeLineColumn:
         x, y, w, h = allocation
         
         # Draw bg
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME or \
-           editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
-            pass # removed for better look.
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+            r, g, b, a = gui.unpack_gdk_color(gui.get_darker_neutral_color())
+            cr.set_source_rgb(r, g, b)
+            cr.rectangle(0, 0, w, h)
+            cr.fill()
         else:
             cr.set_source_rgb(*BG_COLOR)
             cr.rectangle(0, 0, w, h)
