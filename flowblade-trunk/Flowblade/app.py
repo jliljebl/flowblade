@@ -490,6 +490,9 @@ def create_gui():
     # Make references to various gui components available via gui module
     gui.capture_references(editor_window)
 
+    # Unused frames take 3 pixels so hide those.
+    editorlayout.set_positions_frames_visibility()
+        
     # All widgets are now realized and references captured so can find out theme colors
     gui.set_theme_colors()
     tlinewidgets.set_dark_bg_color()

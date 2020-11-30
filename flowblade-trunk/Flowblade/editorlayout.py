@@ -281,7 +281,19 @@ def get_bottom_row_minimum_width():
     combined = middle_bar_w + bottom_left_w + bottom_right_w + left_column_w
 
     return combined
-    
+
+def set_positions_frames_visibility():
+    # if frame has 0 panels in it, hide
+    for position in _positions_names:
+        if position == appconsts.PANEL_PLACEMENT_NOT_VISIBLE:
+            continue # this not applicaple here
+        frame = _get_position_frames_dict()[position]
+        panels = _get_position_panels(position)
+        if len(panels) > 0:
+            frame.show()
+        else:
+            frame.hide()
+        
 # ----------------------------------------------------------- PANELS PLACEMENT
 def create_position_widget(editor_window, position):
     # This method creates and returns the widget that is put into the frame 
@@ -440,7 +452,8 @@ def _change_panel_position(widget, panel_id, pos_option):
         middlebar.do_layout_after_dock_change(gui.editor_window)
     
     gui.editor_window.window.show_all()
-    
+    set_positions_frames_visibility()
+
 def _remove_panel(panel_id):
     current_position = _panel_positions[panel_id]
     panel_widgets = _get_panels_widgets_dict(gui.editor_window)
