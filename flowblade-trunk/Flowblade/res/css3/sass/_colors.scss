@@ -35,11 +35,7 @@ $drop_target_color: #F08437;
 $insensitive_fg_color: if($variant == 'light', transparentize($fg_color, 0.45), transparentize($fg_color, 0.55));
 $insensitive_bg_color: if($variant == 'light', mix($bg_color, $base_color, 40%), lighten($bg_color, 2%));
 
-$header_bg: red;
-@if $transparency=='true' and $variant=='light' { $header_bg: transparentize(#e7e8eb, 0.05); }
-@if $transparency=='false' and $variant=='light' { $header_bg: #e7e8eb; }
-@if $transparency=='true' and ($variant=='dark' or $darker=='true') { $header_bg: transparentize(#2f343f, 0.03); }
-@if $transparency=='false' and ($variant=='dark' or $darker=='true') { $header_bg: #2f343f; }
+$header_bg: #303030;
 
 $header_bg_backdrop: if($darker == 'true' or $variant == 'dark', lighten($header_bg, 1.5%), lighten($header_bg, 3%));
 
