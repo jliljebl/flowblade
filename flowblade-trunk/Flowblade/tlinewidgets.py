@@ -437,15 +437,19 @@ def set_tracks_double_height_consts():
 def set_dark_bg_color():
     if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
         return
-        
+    
+    global BG_COLOR
+    
     r, g, b, a = gui.unpack_gdk_color(gui.get_bg_color())
 
     if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY: 
         r, g, b, a = gui.unpack_gdk_color(gui.get_bg_unmodified_normal_color())
 
-    global BG_COLOR
     BG_COLOR = get_multiplied_color((r, g, b), 1.25)
-
+    
+    if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+        BG_COLOR = (35.0/255.0, 35.0/255.0, 35.0/255.0)
+        
 def set_match_frame(tline_match_frame, track_index, display_on_right):
     global match_frame, match_frame_track_index, image_on_right, match_frame_image
     match_frame = tline_match_frame
