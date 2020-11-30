@@ -701,6 +701,7 @@ class EditorWindow:
             self.bottom_right_frame = guiutils.get_empty_panel_etched_frame() # to be filled later if panels are added into this position.
         self.tline_pane.pack_start(self.bottom_right_frame, False, False, 0) # self.tline_pane was already creted in self._init_tline().
 
+
         # ---------------------------------------------------------------- LEFT  COLUMN
         self.left_column_panel, widget_is_notebook  = editorlayout.create_position_widget(self, appconsts.PANEL_PLACEMENT_LEFT_COLUMN)
         if self.left_column_panel != None:
@@ -721,8 +722,7 @@ class EditorWindow:
 
         # Top row
         self.top_row_hbox = Gtk.HBox(False, 0)
-        if editorlayout.top_level_project_panel() == True and top_project_panel != None:
-            self.top_row_hbox.pack_start(self.top_project_panel_frame, False, False, 0)
+        self.top_row_hbox.pack_start(self.top_project_panel_frame, False, False, 0)
         self.top_row_hbox.pack_start(self.top_paned, True, True, 0)
         self.top_row_hbox.pack_end(self.top_right_frame, False, False, 0)
         self.top_row_hbox.pack_end(audiomonitoring.get_master_meter(), False, False, 0)

@@ -427,9 +427,7 @@ def _change_panel_position(widget, panel_id, pos_option):
         _add_panel(panel_id, pos_option)
     else:
         _panel_positions[panel_id] = pos_option
-             
-    gui.editor_window.window.show_all()
-    
+
     # If bottom row items do not fit, drop some buttons in middlebar.
     bottom_row_min_width = get_bottom_row_minimum_width()
     if bottom_row_min_width > editorstate.SCREEN_WIDTH:
@@ -440,7 +438,9 @@ def _change_panel_position(widget, panel_id, pos_option):
         editorpersistance.prefs.force_small_midbar = False
         editorpersistance.save()
         middlebar.do_layout_after_dock_change(gui.editor_window)
-
+    
+    gui.editor_window.window.show_all()
+    
 def _remove_panel(panel_id):
     current_position = _panel_positions[panel_id]
     panel_widgets = _get_panels_widgets_dict(gui.editor_window)
