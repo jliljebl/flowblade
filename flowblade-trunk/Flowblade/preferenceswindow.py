@@ -368,7 +368,7 @@ def _view_prefs_panel():
     # The displayed options indeces do not correspond with theme const values.
     if prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
         index = 1
-    if prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+    elif prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
         index = 0
     else:
         index = int(prefs.theme) + 2
