@@ -195,10 +195,6 @@ def main(root_path, force_launch=False):
 
     # Load editor prefs and apply themes
     editorpersistance.load()
-    if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
-        Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
-            gui.apply_gtk_css()
             
     # Init translations module with translations data
     translations.init_languages()
@@ -226,8 +222,10 @@ def main(root_path, force_launch=False):
     if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
         respaths.apply_dark_theme()
         Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
-            gui.apply_gtk_css()
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME \
+            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
+            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+            gui.apply_gtk_css(editorpersistance.prefs.theme)
 
     repo = mlt.Factory().init()
     processutils.prepare_mlt_repo(repo)
