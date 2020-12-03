@@ -219,7 +219,6 @@ class FilterStackItem:
         self.edit_panel_frame.set_shadow_type(Gtk.ShadowType.NONE)
         
         self.filter_stack = filter_stack
-
         self.expander = Gtk.Expander()
         self.expander.set_label_widget(self.filter_header_row.widget)
         self.expander.add(self.edit_panel_frame)
@@ -250,6 +249,7 @@ class FilterStackItem:
         self.widget.pack_start(self.active_check_vbox, False, False, 0)
         self.widget.pack_start(self.expander_frame, True, True, 0)
         self.widget.pack_start(self.trash_vbox, False, False, 0)
+        self.widget.pack_start(guiutils.pad_label(10,2), False, False, 0)
         self.widget.show_all()
 
     def trash_pressed(self, w, e):
