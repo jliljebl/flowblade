@@ -193,7 +193,8 @@ class FilterFooterRow:
 class FilterHeaderRow:
     
     def __init__(self, filter_object):
-        self.filter_name_label = Gtk.Label(label= "<b>" + filter_object.info.name + "</b>")
+        name = translations.get_filter_name(filter_object.info.name)
+        self.filter_name_label = Gtk.Label(label= "<b>" + name + "</b>")
         self.filter_name_label.set_use_markup(True)
         self.icon = Gtk.Image.new_from_pixbuf(filter_object.info.get_icon())
 

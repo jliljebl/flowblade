@@ -63,7 +63,7 @@ def init_languages():
         # Use translations in program folder first if NOT running from installation
         # Were using Russian as test language
         locale_file = respaths.LOCALE_PATH + "ru/LC_MESSAGES/flowblade.mo"
-        if os.path.isfile(locale_file): # fi is the translation controlled by program author
+        if os.path.isfile(locale_file):
             print("Found translations at " +  respaths.LOCALE_PATH + ", using those.")
             locale_path = respaths.LOCALE_PATH
         else:
