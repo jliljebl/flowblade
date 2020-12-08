@@ -331,7 +331,8 @@ button {
   border: 1px solid;
   border-radius: 3px;
   padding: 2px 6px;
-
+  background-image: none;
+    
   @include button(normal);
 
   separator { margin: 4px 1px; }

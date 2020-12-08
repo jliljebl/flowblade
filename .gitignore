@@ -26,3 +26,7 @@ mlt.py
 # Flatpak when building from local
 /flowblade-trunk/.flatpak-builder/
 
+# Theme build data
+/flowblade-trunk/Flowblade/res/css2/sass/gtk-flowblade-dark-css.map
+/flowblade-trunk/Flowblade/res/css3/sass/gtk-flowblade-dark-css.map
+

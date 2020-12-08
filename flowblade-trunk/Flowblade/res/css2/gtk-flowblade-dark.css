@@ -234,6 +234,7 @@ button {
   border: 1px solid;
   border-radius: 3px;
   padding: 2px 6px;
+  background-image: none;
   color: #D3DAE3;
   border-color: #19191f;
   background-color: #373844; }

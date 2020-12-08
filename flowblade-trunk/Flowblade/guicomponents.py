@@ -837,10 +837,10 @@ class ClipInfoPanel(Gtk.HBox):
         self.name_value.set_sensitive(False)
         self.name_value.modify_font(Pango.FontDescription(font_desc))
         self.name_label.modify_font(Pango.FontDescription(font_desc))
-        
+
         self.track = guiutils.bold_label(_("Track:"))
         self.track_value = Gtk.Label()
-        
+
         self.track.set_sensitive(False)
         self.track_value.set_sensitive(False)
         self.track.modify_font(Pango.FontDescription(font_desc))
