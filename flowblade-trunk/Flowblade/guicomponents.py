@@ -831,6 +831,7 @@ class ClipInfoPanel(Gtk.HBox):
 
         self.name_value = Gtk.Label()
         self.name_value.set_ellipsize(Pango.EllipsizeMode.END)
+        self.name_value.set_max_width_chars(30)
 
         self.name_label.set_sensitive(False)
         self.name_value.set_sensitive(False)
