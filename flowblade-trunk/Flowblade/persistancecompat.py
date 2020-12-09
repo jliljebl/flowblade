@@ -29,6 +29,20 @@ import miscdataobjects
 
 
 # ------------------------------------------------------- FIXING MISSING ATTRS
+
+def FIX_MISSING_MEDIA_FILE_ATTRS(media_file):
+    # This attr was added for 1.8. It is not computed for older projects.
+    if (not hasattr(media_file, "info")):
+        media_file.info = None
+        
+    # We need this in all media files, used only by img seq media
+    if not hasattr(media_file, "ttl"):
+        media_file.ttl = None
+
+    # Add container data if not found.
+    if not hasattr(media_file, "container_data"):
+        media_file.container_data = None
+            
 def FIX_MISSING_CLIP_ATTRS(clip):
     # Add color attribute if not found
     if not hasattr(clip, "color"):

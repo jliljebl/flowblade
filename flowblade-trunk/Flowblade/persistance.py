@@ -443,16 +443,7 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
         if media_file.path == NOT_FOUND:
             raise FileProducerNotFoundError(orig_path)
 
-        # This attr was added for 1.8. It is not computed for older projects.
-        if (not hasattr(media_file, "info")):
-            media_file.info = None
-        # We need this in all media files, used only by img seq media
-        if not hasattr(media_file, "ttl"):
-            media_file.ttl = None
-
-        # Add container data if not found.
-        if not hasattr(media_file, "container_data"):
-            media_file.container_data = None
+        persistancecompat.FIX_MISSING_MEDIA_FILE_ATTRS(media_file)
             
         # Use this to try to fix clips with missing proxy files.
         proxy_path_dict[media_file.path] = media_file.second_file_path
@@ -589,7 +580,6 @@ def fill_track_mlt(mlt_track, py_track):
         mlt_clip = None
         append_created = True # blanks get appended at creation time, other clips don't
 
-        # Add color attribute if not found
         persistancecompat.FIX_MISSING_CLIP_ATTRS(clip)
 
         # normal clip
