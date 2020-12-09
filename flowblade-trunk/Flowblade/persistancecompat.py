@@ -33,4 +33,7 @@ import miscdataobjects
 def FIX_MISSING_PROJECT_ATTRS(project):
     if (not(hasattr(project, "project_properties"))):
         project.project_properties = {}
-        
+
+    if(not hasattr(project, "update_media_lengths_on_load")):
+        project.update_media_lengths_on_load = True # old projects < 1.10 had wrong media length data which just was never used.
+                                                    # 1.10 needed that data for the first time and required recreating it correctly for older projects

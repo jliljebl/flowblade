@@ -486,11 +486,7 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
 
     all_clips = {}
     sync_clips = []
-                
-    if(not hasattr(project, "update_media_lengths_on_load")):
-        project.update_media_lengths_on_load = True # old projects < 1.10 had wrong media length data which just was never used.
-                                                    # 1.10 needed that data for the first time and required recreating it correctly for older projects
-    
+
     if icons_and_thumnails == True:
         _show_msg(_("Loading icons"))
         for k, media_file in project.media_files.items():
