@@ -857,7 +857,6 @@ searchbar {
 
 actionbar {
   padding: 6px;
-  border-top: 1px solid #212121;
   background-color: #282828; }
 
 headerbar, .titlebar:not(headerbar) {
@@ -3991,6 +3990,10 @@ filechooser actionbar {
   color: #BAC3CF;
   background-color: #303030;
   border-color: #0a0a0a; }
+  filechooser actionbar box {
+    background-color: #303030; }
+  filechooser actionbar button {
+    background-color: #303030; }
   filechooser actionbar label, filechooser actionbar combobox {
     color: #BAC3CF; }
 
@@ -4023,23 +4026,10 @@ filechooser actionbar {
     .gedit-document-panel row:hover:not(:selected) button:active {
       color: #BAC3CF; }
 
-filechooser actionbar button {
-  color: #BAC3CF;
-  border-color: rgba(17, 17, 17, 0.4);
-  background-color: rgba(104, 104, 104, 0.4); }
-  .caja-side-pane > box button:hover:not(:active), filechooser actionbar button:hover {
+  .caja-side-pane > box button:hover:not(:active) {
     color: #BAC3CF;
     border-color: rgba(17, 17, 17, 0.4);
     background-color: rgba(122, 122, 122, 0.5); }
-  filechooser actionbar button:active, filechooser actionbar button:checked {
-    color: #ffffff;
-    border-color: rgba(17, 17, 17, 0.4);
-    background-color: #115098; }
-  filechooser actionbar button:disabled {
-    color: #595c60;
-    border-color: rgba(17, 17, 17, 0.4);
-    background-color: rgba(104, 104, 104, 0.25); }
-
 filechooser actionbar entry {
   color: #BAC3CF;
   border-color: rgba(17, 17, 17, 0.4);

@@ -133,7 +133,8 @@ filechooser {
     background-color: $dark_sidebar_bg;
     border-color: if($variant =='light', darken($dark_sidebar_bg, 7%), darken($dark_sidebar_bg, 15%));
 
-    button { @extend %dark_sidebar_button; }
+    box { background-color: $dark_sidebar_bg; }
+    button { background-color: $dark_sidebar_bg; }
     entry { @extend %dark_sidebar_entry; }
 
     @extend %osd_check_radio;
