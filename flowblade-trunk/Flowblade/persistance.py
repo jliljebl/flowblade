@@ -590,20 +590,7 @@ def fill_track_mlt(mlt_track, py_track):
         append_created = True # blanks get appended at creation time, other clips don't
 
         # Add color attribute if not found
-        if not hasattr(clip, "color"):
-            clip.color = None
-            
-        # Add markers list if not found
-        if not hasattr(clip, "markers"):
-            clip.markers = []
-
-        # Add img seq ttl value for all clips if not found, we need this present in every clip so we test for 'clip.ttl == None' to get stuff working
-        if not hasattr(clip, "ttl"):
-            clip.ttl = None
-
-        # Add container data if not found.
-        if not hasattr(clip, "container_data"):
-            clip.container_data = None
+        persistancecompat.FIX_MISSING_CLIP_ATTRS(clip)
 
         # normal clip
         if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):

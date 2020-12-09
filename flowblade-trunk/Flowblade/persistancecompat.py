@@ -28,8 +28,24 @@ import appconsts
 import miscdataobjects
 
 
+# ------------------------------------------------------- FIXING MISSING ATTRS
+def FIX_MISSING_CLIP_ATTRS(clip):
+    # Add color attribute if not found
+    if not hasattr(clip, "color"):
+        clip.color = None
+        
+    # Add markers list if not found
+    if not hasattr(clip, "markers"):
+        clip.markers = []
 
-# ------------------------------------------------------- legacy project fix
+    # Add img seq ttl value for all clips if not found, we need this present in every clip so we test for 'clip.ttl == None' to get stuff working
+    if not hasattr(clip, "ttl"):
+        clip.ttl = None
+
+    # Add container data if not found.
+    if not hasattr(clip, "container_data"):
+        clip.container_data = None
+            
 def FIX_MISSING_COMPOSITOR_ATTRS(compositor):
     # Keeping backwards compability
     if not hasattr(compositor, "obey_autofollow"): # "obey_autofollow" attr was added for 1.16
