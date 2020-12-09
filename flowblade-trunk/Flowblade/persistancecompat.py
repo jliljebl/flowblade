@@ -30,6 +30,11 @@ import miscdataobjects
 
 
 # ------------------------------------------------------- legacy project fix
+def FIX_MISSING_COMPOSITOR_ATTRS(compositor):
+    # Keeping backwards compability
+    if not hasattr(compositor, "obey_autofollow"): # "obey_autofollow" attr was added for 1.16
+        compositor.obey_autofollow = True
+                
 def FIX_MISSING_PROJECT_ATTRS(project):
     if (not(hasattr(project, "project_properties"))):
         project.project_properties = {}

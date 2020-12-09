@@ -532,8 +532,7 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
     mlt_compositors = []
     for py_compositor in seq.compositors:
             # Keeping backwards compability
-            if not hasattr(py_compositor, "obey_autofollow"): # "obey_autofollow" attr was added for 1.16
-                py_compositor.obey_autofollow = True
+            persistancecompat.FIX_MISSING_COMPOSITOR_ATTRS(py_compositor)
                 
             # Create new compositor object
             compositor = mlttransitions.create_compositor(py_compositor.type_id)                                        
@@ -550,7 +549,6 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
             compositor.obey_autofollow = py_compositor.obey_autofollow
            
             if seq.compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
-                print("seq.compositing_mode", seq.compositing_mode)
                 compositor.transition.mlt_transition.set("always_active", str(1))
                        
             mlt_compositors.append(compositor)
