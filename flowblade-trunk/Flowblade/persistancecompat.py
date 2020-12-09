@@ -1,6 +1,6 @@
 """
     Flowblade Movie Editor is a nonlinear video editor.
-    Copyright 2014 Janne Liljeblad.
+    Copyright 2020 Janne Liljeblad.
 
     This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
 
@@ -15,20 +15,22 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
+    along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+"""
+This module holds funtions that maintain campatibility between project savefiles
+created by different versions of application.
+
+Refactoring to move code here is an ongoing effort.
+"""
 import appconsts
+import miscdataobjects
 
-"""
-Module for data objects used my multiple modules.
-This is world's dumbest module, look to remove.
-"""
 
-class ProjectProxyEditingData:
-    
-    def __init__(self):
-        self.proxy_mode = appconsts.USE_ORIGINAL_MEDIA
-        self.create_rules = None # not impl.
-        self.encoding = 0 # default is first found encoding
-        self.size = 1 # default is half project size
+
+# ------------------------------------------------------- legacy project fix
+def FIX_MISSING_PROJECT_ATTRS(project):
+    if (not(hasattr(project, "project_properties"))):
+        project.project_properties = {}
+        

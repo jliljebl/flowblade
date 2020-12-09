@@ -41,8 +41,8 @@ import userfolders
 import utils
 
 
-SAVEFILE_VERSION = 5 # this is changed when backwards incompatible changes are introduced 
-                     # to project files to allow for fixing them at load time
+SAVEFILE_VERSION = 5 # This has freezed at 5 for long time, 
+                     # we have used just hasattr() instead.
 
 FALLBACK_THUMB = "fallback_thumb.png"
 
