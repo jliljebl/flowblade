@@ -249,7 +249,6 @@ def get_p_clip(clip):
     if _xml_new_paths_for_profile_change != None and hasattr(s_clip, "path") and s_clip.path != None and utils.is_mlt_xml_file(s_clip.path) == True:
         try:
             new_path = _xml_new_paths_for_profile_change[s_clip.path]
-            #print "XML path replace for clip:", s_clip.path, new_path
             s_clip.path = new_path
         except:
             # Something is really wrong, this should not be possible
@@ -438,6 +437,17 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
                 media_file.path = get_media_asset_path(media_file.path, _load_file_path)
             elif media_file.type == appconsts.IMAGE_SEQUENCE:
                 media_file.path = get_img_seq_media_path(media_file.path, _load_file_path)
+        else:
+            # Try to fix missing proxy project media files.
+            # This is all just best effort, proxy files should never be deleted during editing
+            # and proxy projects should not be moved.
+            if media_file.type != appconsts.PATTERN_PRODUCER and media_file.type != appconsts.IMAGE_SEQUENCE:
+                media_file.path = get_media_asset_path(media_file.path, _load_file_path)
+                if media_file.path == NOT_FOUND:
+                    fixed_second_path = get_media_asset_path(media_file.second_file_path, _load_file_path)
+                    if fixed_second_path != NOT_FOUND:
+                        media_file.path = fixed_second_path
+                        media_file.second_file_path = fixed_second_path
 
         if media_file.path == NOT_FOUND:
             raise FileProducerNotFoundError(orig_path)
@@ -628,7 +638,15 @@ def fill_track_mlt(mlt_track, py_track):
             # Try to fix possible missing proxy files for clips if we are in proxy mode.
             if not os.path.isfile(clip.path) and project_proxy_mode == appconsts.USE_PROXY_MEDIA:
                 try:
-                    possible_orig_file_path = proxy_path_dict[clip.path] # This dict was filled with media file data.
+                    try:
+                        possible_orig_file_path = proxy_path_dict[clip.path] # This dict was filled with media file data.
+                    except:
+                        # Both proxy AND original file are missing, can happen if a project file in proxy mode
+                        # is opened in another machine.
+                        # clip.path was changed by calling  get_media_asset_path() try to use fixed original
+                        possible_orig_file_path = proxy_path_dict[orig_path]
+                        possible_orig_file_path = get_media_asset_path(possible_orig_file_path, _load_file_path)
+                         
                     if os.path.isfile(possible_orig_file_path): # Original media file exists, use it
                         clip.path = possible_orig_file_path
                 except:
@@ -644,6 +662,7 @@ def fill_track_mlt(mlt_track, py_track):
             
             if mlt_clip == None:
                 raise FileProducerNotFoundError(orig_path)
+
             mlt_clip.__dict__.update(clip.__dict__)
             fill_filters_mlt(mlt_clip, sequence)
         # pattern producer
@@ -800,7 +819,6 @@ def get_img_seq_relative_path(project_file_path, asset_path):
         look_up_path = root + "/" + look_up_file_name
         listing = glob.glob(look_up_path)
         if len(listing) > 0:
-            #print "relative path for: ", asset_file_name
             return root + "/" + asset_file_name
 
     return NOT_FOUND # no relative path found

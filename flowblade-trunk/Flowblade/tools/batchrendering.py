@@ -358,7 +358,7 @@ def main(root_path, force_launch=False):
             or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
             or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
             gui.apply_gtk_css(editorpersistance.prefs.theme)
-            
+        
     repo = mlt.Factory().init()
     processutils.prepare_mlt_repo(repo)
     
