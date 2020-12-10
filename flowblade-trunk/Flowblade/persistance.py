@@ -458,8 +458,7 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
     seq_count = 1
     for seq in project.sequences:
             
-        if not hasattr(seq, "compositing_mode"):
-            seq.compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
+        persistancecompat.FIX_MISSING_SEQUENCE_ATTRS(seq)
 
         _show_msg(_("Building sequence ") + str(seq_count))
         all_clips = {}
