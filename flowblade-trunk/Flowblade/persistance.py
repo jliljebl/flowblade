@@ -663,8 +663,7 @@ def fill_filters_mlt(mlt_clip, sequence):
     filters = []
     for py_filter in mlt_clip.filters:
 
-        if not hasattr(py_filter.info, "filter_mask_filter"):
-            py_filter.info.filter_mask_filter = None
+        persistancecompat.FIX_MISSING_FILTER_ATTRS(py_filter)
         
         if py_filter.is_multi_filter == False:
             filter_object = mltfilters.FilterObject(py_filter.info)

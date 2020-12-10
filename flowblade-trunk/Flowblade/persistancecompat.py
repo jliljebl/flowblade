@@ -24,12 +24,12 @@ created by different versions of application.
 
 Refactoring to move code here is an ongoing effort.
 """
+
 import appconsts
 import miscdataobjects
 
 
 # ------------------------------------------------------- FIXING MISSING ATTRS
-
 def FIX_MISSING_MEDIA_FILE_ATTRS(media_file):
     # This attr was added for 1.8. It is not computed for older projects.
     if (not hasattr(media_file, "info")):
@@ -59,6 +59,10 @@ def FIX_MISSING_CLIP_ATTRS(clip):
     # Add container data if not found.
     if not hasattr(clip, "container_data"):
         clip.container_data = None
+
+def FIX_MISSING_FILTER_ATTRS(filter):
+    if not hasattr(filter.info, "filter_mask_filter"):
+        filter.info.filter_mask_filter = None
             
 def FIX_MISSING_COMPOSITOR_ATTRS(compositor):
     # Keeping backwards compability
