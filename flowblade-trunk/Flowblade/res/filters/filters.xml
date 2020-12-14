@@ -657,7 +657,7 @@
         <group>Color</group>
         <property name="Hue" args="range_in=0,360">0.0</property>
     </filter>
-    <!-- Dropped 31.10.2020
+    <!-- Dropped 31.10.2020, keep info on these changes available here
     <filter id="frei0r.brightness" mlt_drop_version="0.9.1">
         <name>Brightness</name>
         <group>Color</group>

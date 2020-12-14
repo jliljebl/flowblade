@@ -28,6 +28,15 @@ Refactoring to move code here is an ongoing effort.
 import appconsts
 import miscdataobjects
 
+# ----------------------------------------------------- Filter obejct replace
+def DO_DEPRECATED_FILTER_REPLACE(py_filter):
+    if py_filter.info.if == "frei0r.brightness":
+        pass
+        
+    return py_filter
+
+
+
 
 # ------------------------------------------------------- FIXING MISSING ATTRS
 def FIX_MISSING_MEDIA_FILE_ATTRS(media_file):

@@ -663,6 +663,7 @@ def fill_filters_mlt(mlt_clip, sequence):
     for py_filter in mlt_clip.filters:
 
         persistancecompat.FIX_MISSING_FILTER_ATTRS(py_filter)
+        py_filter = persistancecompat.persistancecompat(py_filter)
         
         if py_filter.is_multi_filter == False:
             filter_object = mltfilters.FilterObject(py_filter.info)
