@@ -305,7 +305,7 @@ class EditorWindow:
 
         # Effects edit panel
         info_row = clipeffectseditor.get_clip_effects_editor_info_row()    
-        effects_editor_panel = guiutils.set_margins(clipeffectseditor.widgets.value_edit_frame, 4, 0, 4, 4)
+        effects_editor_panel = guiutils.set_margins(clipeffectseditor.widgets.value_edit_frame, 4, 0, 4, 0)
 
         effects_vbox = Gtk.VBox()
         effects_vbox.pack_start(effects_editor_panel, True, True, 0)
