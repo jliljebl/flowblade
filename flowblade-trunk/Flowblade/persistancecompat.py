@@ -30,7 +30,7 @@ import miscdataobjects
 
 # ----------------------------------------------------- Filter obejct replace
 def DO_DEPRECATED_FILTER_REPLACE(py_filter):
-    if py_filter.info.if == "frei0r.brightness":
+    if py_filter.info.mlt_service_id == "frei0r.brightness":
         pass
         
     return py_filter
