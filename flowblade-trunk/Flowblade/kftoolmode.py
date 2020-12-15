@@ -170,7 +170,7 @@ def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT, param_data=None):
             action = edit.add_filter_action(data)
             action.do_edit()
             ep = _get_brightness_editable_property(clip, track, clip_index)
-            print(ep)
+
         edit_data["editable_property"] = ep
 
         _kf_editor = TLineKeyFrameEditor(ep, True, BRIGHTNESS_KF_EDIT)
@@ -241,8 +241,8 @@ def _get_param_editable_property_with_filter_search(mlt_service_id, property_nam
                         return ep
                 except:
                     pass
-                        
-        return None
+        
+    return None
     
 def _get_multipart_keyframe_ep_from_service(clip, track, clip_index, mlt_service_id):
     for i in range(0, len(clip.filters)):

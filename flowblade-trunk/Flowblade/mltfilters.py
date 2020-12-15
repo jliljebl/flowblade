@@ -153,26 +153,15 @@ class FilterInfo:
         except: # default is False
             self.multipart_filter = False
 
-        # NOTE, TODO: Turns out that non-existing attribute returns empty string and asking is not error.
-        # Clear these try catches towards 2.6, keep now to see if we get any problems.
-        #try:
+        # NOTE Turns out that non-existing attribute returns empty string and asking is not error.
+        # This has caused some bugs.
+    
         self.mlt_drop_version = filter_node.getAttribute(MLT_DROP_VERSION)
-        #except: 
-        #    self.mlt_drop_version = None
 
-        #try:
         self.mlt_min_version = filter_node.getAttribute(MLT_MIN_VERSION)
-        #except:
-        #    self.mlt_min_version = None
 
-        #try:
         self.filter_mask_filter = filter_node.getAttribute(FILTER_MASK_FILTER)
-        #except:
-        #    self.filter_mask_filter = None
-        
-        if self.mlt_drop_version == None:
-            print("self.mlt_drop_version==None")
-        
+
         self.xml = filter_node.toxml()
         self.name = filter_node.getElementsByTagName(NAME).item(0).firstChild.nodeValue
         self.group = filter_node.getElementsByTagName(GROUP).item(0).firstChild.nodeValue
@@ -201,10 +190,10 @@ class FilterInfo:
         e_node_list = filter_node.getElementsByTagName(EXTRA_EDITOR)
         self.extra_editors = propertyparse.node_list_to_extraeditors_array(e_node_list)  
 
-        # Non-MLT properties are persistent values like properties that values are not directly written out as MLT properties
+        # Non-MLT properties are persistent values like properties. but they have values are not directly written out as MLT properties.
         p_node_list = filter_node.getElementsByTagName(NON_MLT_PROPERTY)
         self.non_mlt_properties = propertyparse.node_list_to_non_mlt_properties_array(p_node_list)
-        # Property args for Non-MLT properties saved in propertyname -> propertyargs_string dict
+        # Property args for non-MLT properties saved in propertyname -> propertyargs_string dict.
         self.property_args.update(propertyparse.node_list_to_args_dict(p_node_list))
         
     def get_icon(self):
