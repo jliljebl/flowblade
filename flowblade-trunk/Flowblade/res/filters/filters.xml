@@ -197,11 +197,6 @@
       <property name="max_gain" args="editor=no_editor">20dB</property>
       <property name="level" args="editor=keyframe_editor_release range_in=-70,20 range_out=-70,20 exptype=keyframe_hcs displayname=Volume">0=0.0</property>
     </filter>
-    <filter id="panner">
-        <name>Pan</name>
-        <group>Audio</group>
-        <property name="start" args="range_in=-100,100 editor=ladspa_slider displayname=Left/Right">0.5</property>
-    </filter>
     <!-- DEPRECATED, replaced by non-multipart filters below 31.10.2020.  
     <filter id="panner" multipart="true">
         <name>Pan Keyframed</name>
@@ -211,6 +206,11 @@
         <property name="end" args="editor=no_editor">0.5</property>   
     </filter>
     -->
+    <filter id="panner">
+        <name>Pan</name>
+        <group>Audio</group>
+        <property name="start" args="range_in=-100,100 editor=ladspa_slider displayname=Left/Right">0.5</property>
+    </filter>
     <filter id="panner">
       <name>Pan Left Channel</name>
       <group>Audio</group>

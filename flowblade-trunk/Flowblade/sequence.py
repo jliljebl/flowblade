@@ -353,7 +353,8 @@ class Sequence:
         self.master_audio_gain = gain
 
     def add_track_pan_filter(self, track, value):
-        # This method is used for master too, and called with tractor then
+        # This method is used for master too, and is called with tractor then.
+        # 'channel' attr is left to -1 meaning that panner affects front balance.
         pan_filter = mlt.Filter(self.profile, "panner")
         mltrefhold.hold_ref(pan_filter)
         pan_filter.set("start", value)
