@@ -30,6 +30,7 @@ import appconsts
 import miscdataobjects
 
 # ----------------------------------------------------- Filter obejct replace
+"""
 def DO_DEPRECATED_FILTER_REPLACE(py_filter):
     if py_filter.info.mlt_service_id == "volume" and py_filter.info.multipart_filter == True:
         print("haolou")
@@ -55,7 +56,7 @@ def _get_db_for_gain_value(gain_value):
         db_val = 1.5
         
     return db_val
-
+"""
 # ------------------------------------------------------- FIXING MISSING ATTRS
 def FIX_MISSING_MEDIA_FILE_ATTRS(media_file):
     # This attr was added for 1.8. It is not computed for older projects.
