@@ -24,19 +24,37 @@ created by different versions of application.
 
 Refactoring to move code here is an ongoing effort.
 """
+import math
 
 import appconsts
 import miscdataobjects
 
 # ----------------------------------------------------- Filter obejct replace
 def DO_DEPRECATED_FILTER_REPLACE(py_filter):
-    if py_filter.info.mlt_service_id == "frei0r.brightness":
-        pass
-        
+    if py_filter.info.mlt_service_id == "volume" and py_filter.info.multipart_filter == True:
+        print("haolou")
+        keyframes = py_filter._parse_value_to_keyframes()
+        for kf in keyframes:
+            frame, gain_value = kf
+            db_value = _get_db_for_gain_value(float(gain_value))
+            print(frame, gain_value)
+            print(frame, db_value)
+
     return py_filter
 
 
-
+def _get_db_for_gain_value(gain_value):
+    if gain_value == 0.0:
+        return -70.0
+        
+    print(20 * math.log10(gain_value))
+    
+    if gain_value <= 1.0:
+        db_val = (20.0 * math.log10(gain_value))
+    else:
+        db_val = 1.5
+        
+    return db_val
 
 # ------------------------------------------------------- FIXING MISSING ATTRS
 def FIX_MISSING_MEDIA_FILE_ATTRS(media_file):
