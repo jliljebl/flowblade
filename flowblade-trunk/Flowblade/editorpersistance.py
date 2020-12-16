@@ -281,7 +281,7 @@ class EditorPreferences:
         self.default_grfx_length = 250 # value is in frames
         self.track_configuration = 0 # DEPRECATED
         self.AUTO_SAVE_OPTS = None # not used, these are cerated and translated else where
-        self.tabs_on_top = False
+        self.tabs_on_top = False # DEPRECATED, we have positions_tabs now that we have possibly multiple notebooks 
         self.midbar_tc_left = True
         self.default_layout = True # DEPRECATED, NOT USED ANYMORE
         self.exit_allocation = (0, 0)
@@ -366,3 +366,4 @@ class EditorPreferences:
         self.tools_selection = appconsts.TOOL_SELECTOR_IS_MENU
         self.panel_positions = None
         self.force_small_midbar = False
+        self.positions_tabs = None

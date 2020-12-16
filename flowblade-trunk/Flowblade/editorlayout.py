@@ -88,12 +88,22 @@ PANEL_MINIMUM_SIZES = { \
     appconsts.PANEL_FILTER_SELECT: None,
     appconsts.PANEL_RANGE_LOG: None,
     appconsts.PANEL_FILTERS: (510, 100), # This has very small default size when empty and needs preferred size set to show properly when moved.
-    appconsts.PANEL_COMPOSITORS: (510,100), # This has very small default size when empty and needs preferred size set to show properly when moved.
+    appconsts.PANEL_COMPOSITORS: (510, 100), # This has very small default size when empty and needs preferred size set to show properly when moved.
     appconsts.PANEL_JOBS: None,
     appconsts.PANEL_RENDERING: None,
     appconsts.PANEL_PROJECT: None,
     appconsts.PANEL_PROJECT_SMALL_SCREEN: None,
     appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None
+}
+
+UP  = 0
+DOWN = 1
+DEFAULT_TABS_POSITIONS = { \
+    appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT: DOWN,
+    appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT: DOWN,
+    appconsts.PANEL_PLACEMENT_LEFT_COLUMN: DOWN,
+    appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT: UP,
+    appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT: UP
 }
 
 # Saved data struct holding panel positions information.
@@ -124,6 +134,10 @@ def init_layout_data():
     if panel_positioning_available() == False or _panel_positions == None:
         _panel_positions = copy.deepcopy(DEFAULT_PANEL_POSITIONS)
         editorpersistance.prefs.panel_positions = _panel_positions
+        editorpersistance.save()
+
+    if editorpersistance.prefs.positions_tabs == None:
+        editorpersistance.prefs.positions_tabs = DEFAULT_TABS_POSITIONS
         editorpersistance.save()
 
     # Force media panel positioning to work with both one and two window modes 
@@ -391,8 +405,7 @@ def get_panel_positions_menu_item():
 
     filter_select_panel_menu =  _get_position_selection_menu(appconsts.PANEL_FILTER_SELECT)
     filter_select_panel_menu_item.set_submenu(filter_select_panel_menu)
-
-
+    
     return panel_positions_menu_item
 
 def _get_position_selection_menu(panel_id):
@@ -423,8 +436,40 @@ def _get_position_selection_menu(panel_id):
         menu_item.connect("activate", _change_panel_position, panel_id, available_positions[i])
     
     return positions_menu
+
+def get_tabs_menu_item():
+    tabs_menu_item = Gtk.MenuItem(_("Tabs Positions"))
+    tabs_menu = Gtk.Menu()
+    tabs_menu_item.set_submenu(tabs_menu)
     
+    tabs_positions = editorpersistance.prefs.positions_tabs
     
+    for position in tabs_positions:
+        tabs_pos = tabs_positions[position]
+
+        positions_tabs_pos_item = Gtk.MenuItem(_positions_names[position])
+        tabs_menu.append(positions_tabs_pos_item)
+
+        positions_menu = Gtk.Menu()
+        positions_tabs_pos_item.set_submenu(positions_menu)
+
+        up_item = Gtk.RadioMenuItem()
+        up_item.set_label(_("Up"))
+        positions_menu.append(up_item)
+
+        down_item = Gtk.RadioMenuItem.new_with_label([up_item], _("Down"))
+        positions_menu.append(down_item)
+
+        if tabs_pos == UP:
+            up_item.set_active(True)
+        else:
+            down_item.set_active(True)
+        
+        up_item.connect("activate", _change_tabs_pos, position, UP)
+        down_item.connect("activate", _change_tabs_pos, position, DOWN)
+        
+    return tabs_menu_item
+        
 # ----------------------------------------------- CHANGING POSITIONS
 def _change_panel_position(widget, panel_id, pos_option):
     if widget.get_active() == False:
@@ -509,5 +554,26 @@ def _add_panel(panel_id, position):
             _position_notebooks[position] = notebook
 
     _panel_positions[panel_id] = position
+
+def _change_tabs_pos(widget, position, direction):
+    if widget.get_active() == False:
+        return
+
+    editorpersistance.prefs.positions_tabs[position] = direction
+    editorpersistance.save()
+
+    apply_tabs_positions()
+
+def apply_tabs_positions():
+    tabs_positions = editorpersistance.prefs.positions_tabs
+    for position in tabs_positions:
+        tabs_pos = tabs_positions[position]
+        notebook = _position_notebooks[position]
+        if notebook != None:
+            if tabs_pos == UP:
+                notebook.set_tab_pos(Gtk.PositionType.TOP)
+            else:
+                notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
+
 
 

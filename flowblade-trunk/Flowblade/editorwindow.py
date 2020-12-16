@@ -727,6 +727,8 @@ class EditorWindow:
         self.top_row_hbox.pack_end(self.top_right_frame, False, False, 0)
         self.top_row_hbox.pack_end(audiomonitoring.get_master_meter(), False, False, 0)
 
+        editorlayout.apply_tabs_positions()
+        
     def _init_cursors(self):
         # Read cursors
         global INSERTMOVE_CURSOR, OVERWRITE_CURSOR, TWOROLL_CURSOR, ONEROLL_CURSOR, \
@@ -1085,6 +1087,8 @@ class EditorWindow:
         if editorlayout.panel_positioning_available() == True:
             panel_positions_menu_item = editorlayout.get_panel_positions_menu_item()
             menu.append(panel_positions_menu_item)
+            tabs_menu_item = editorlayout.get_tabs_menu_item()
+            menu.append(tabs_menu_item)
         else:
             print("Panel positioning feature not available, too small screen.")
 
