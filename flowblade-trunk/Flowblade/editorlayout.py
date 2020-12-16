@@ -88,7 +88,7 @@ PANEL_MINIMUM_SIZES = { \
     appconsts.PANEL_FILTER_SELECT: None,
     appconsts.PANEL_RANGE_LOG: None,
     appconsts.PANEL_FILTERS: (510, 100), # This has very small default size when empty and needs preferred size set to show properly when moved.
-    appconsts.PANEL_COMPOSITORS: (400,100), # This has very small default size when empty and needs preferred size set to show properly when moved.
+    appconsts.PANEL_COMPOSITORS: (510,100), # This has very small default size when empty and needs preferred size set to show properly when moved.
     appconsts.PANEL_JOBS: None,
     appconsts.PANEL_RENDERING: None,
     appconsts.PANEL_PROJECT: None,
