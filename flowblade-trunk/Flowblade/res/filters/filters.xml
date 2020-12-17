@@ -1055,7 +1055,6 @@
           <property name="transition.threads" args="editor=no_editor">0</property>
     </filter>
 
-
     <!-- compositor filters that are not displayed to user, not used currently -->
     <filter id="frei0r.mask0mate">
         <name>##crop</name>
