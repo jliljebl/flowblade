@@ -935,7 +935,7 @@ def _write_out_render_item(single_render_item_item):
             secondary_txt = _("Error message: ") + str(e)
             dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window, is_info=False)
             return False
-
+            
     # This puts existing rendered timeline segments back to be displayed.
     current_sequence().update_hidden_track_for_timeline_rendering()
 

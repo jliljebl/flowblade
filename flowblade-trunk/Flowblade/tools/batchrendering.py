@@ -124,6 +124,8 @@ class QueueRunnerThread(threading.Thread):
 
             project = persistance.load_project(project_file_path, False)
 
+            project.c_seq.fix_v1_for_render()
+
             maybe_create_render_folder(render_item.render_path)
         
             producer = project.c_seq.tractor
@@ -258,8 +260,6 @@ def add_render_item(flowblade_project, render_path, args_vals_list, mark_in, mar
         iface.render_item_added()
     else:
         launch_batch_rendering()
-
-    #print "Render queue item for rendering file into " + render_path + " with identifier " + identifier + " added."
 
 # ------------------------------------------------------- file utils
 def init_dirs_if_needed():
@@ -1284,6 +1284,8 @@ class SingleRenderThread(threading.Thread):
         persistance.show_messages = False
 
         project = persistance.load_project(project_file_path, False)
+
+        project.c_seq.fix_v1_for_render()
 
         producer = project.c_seq.tractor
         profile = mltprofiles.get_profile(render_item.render_data.profile_name)
