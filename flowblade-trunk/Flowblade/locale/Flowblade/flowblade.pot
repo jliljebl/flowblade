@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-20 20:10+0200\n"
+"POT-Creation-Date: 2020-12-20 20:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -824,7 +824,7 @@ msgstr ""
 msgid "Render Timeline"
 msgstr ""
 
-#: editorwindow.py:867 dialogs.py:1684
+#: editorwindow.py:867
 msgid "Tools"
 msgstr ""
 
@@ -2056,6 +2056,10 @@ msgstr ""
 
 #: dialogs.py:1683
 msgid "Same as 1-9"
+msgstr ""
+
+#: dialogs.py:1684
+msgid "Timeline Tools"
 msgstr ""
 
 #: dialogs.py:1687
@@ -8242,11 +8246,11 @@ msgid "Top Down Auto Follow"
 msgstr ""
 
 #: workflow.py:224
-msgid "Show Tooltips for Tools"
+msgid "Show Tooltips for Timeline Tools"
 msgstr ""
 
 #: workflow.py:312
-msgid "Tool Active"
+msgid "Timeline Tool Active"
 msgstr ""
 
 #: workflow.py:320

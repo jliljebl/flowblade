@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Flowblade\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-20 20:10+0200\n"
+"POT-Creation-Date: 2020-12-20 20:29+0200\n"
 "PO-Revision-Date: 2020-07-19 11:47+0300\n"
 "Last-Translator: Николай Смольянинов <smolianinow.colya2016@yandex.ru>\n"
 "Language-Team: vk.com/flowblade\n"
@@ -858,7 +858,7 @@ msgstr "Пересобрать все переходы и затемнения "
 msgid "Render Timeline"
 msgstr "Сборка с монтажного стола"
 
-#: editorwindow.py:867 dialogs.py:1684
+#: editorwindow.py:867
 msgid "Tools"
 msgstr "Инструменты"
 
@@ -2154,6 +2154,11 @@ msgstr "Клавиши 1-9"
 #: dialogs.py:1683
 msgid "Same as 1-9"
 msgstr "То же, что 1-9"
+
+#: dialogs.py:1684
+#, fuzzy
+msgid "Timeline Tools"
+msgstr "Монтажный стол"
 
 #: dialogs.py:1687
 msgid "Copy Keyframe Value"
@@ -8567,11 +8572,13 @@ msgid "Top Down Auto Follow"
 msgstr "Автосопровождение сверху вниз"
 
 #: workflow.py:224
-msgid "Show Tooltips for Tools"
+#, fuzzy
+msgid "Show Tooltips for Timeline Tools"
 msgstr "Подсказки к инструментам"
 
 #: workflow.py:312
-msgid "Tool Active"
+#, fuzzy
+msgid "Timeline Tool Active"
 msgstr "Включить инструмент"
 
 #: workflow.py:320

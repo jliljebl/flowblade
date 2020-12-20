@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Floblade Italian Translation 0.14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-20 20:10+0200\n"
+"POT-Creation-Date: 2020-12-20 20:29+0200\n"
 "PO-Revision-Date: 2020-29-02 21:24+0200\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italiano\n"
@@ -882,7 +882,7 @@ msgstr "Ricalcola transizioni e dissolvenze renderizzate "
 msgid "Render Timeline"
 msgstr "Esporta la timeline"
 
-#: editorwindow.py:867 dialogs.py:1684
+#: editorwindow.py:867
 msgid "Tools"
 msgstr "Strumenti"
 
@@ -2193,6 +2193,11 @@ msgstr "Tastierino 1-7"
 #, fuzzy
 msgid "Same as 1-9"
 msgstr "Come 1-7"
+
+#: dialogs.py:1684
+#, fuzzy
+msgid "Timeline Tools"
+msgstr "Timeline"
 
 #: dialogs.py:1687
 msgid "Copy Keyframe Value"
@@ -8703,12 +8708,13 @@ msgid "Top Down Auto Follow"
 msgstr "Seguito automatico dall'alto verso il basso"
 
 #: workflow.py:224
-msgid "Show Tooltips for Tools"
+#, fuzzy
+msgid "Show Tooltips for Timeline Tools"
 msgstr "Mostra suggerimenti per gli strumenti"
 
 #: workflow.py:312
 #, fuzzy
-msgid "Tool Active"
+msgid "Timeline Tool Active"
 msgstr "Attiva/Disattiva"
 
 #: workflow.py:320

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-20 20:10+0200\n"
+"POT-Creation-Date: 2020-12-20 20:29+0200\n"
 "PO-Revision-Date: 2019-08-29 13:33+0200\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -872,7 +872,7 @@ msgstr "Zpracovat všechny vykreslované přechody a stíny"
 msgid "Render Timeline"
 msgstr "Zpracovat časovou osu"
 
-#: editorwindow.py:867 dialogs.py:1684
+#: editorwindow.py:867
 msgid "Tools"
 msgstr "Nástroje"
 
@@ -2171,6 +2171,11 @@ msgstr "Tlačítkový ovladač (číselná klávesnice) 1-9"
 #: dialogs.py:1683
 msgid "Same as 1-9"
 msgstr "Stejné jako 1-9"
+
+#: dialogs.py:1684
+#, fuzzy
+msgid "Timeline Tools"
+msgstr "Časová osa"
 
 #: dialogs.py:1687
 msgid "Copy Keyframe Value"
@@ -8651,11 +8656,13 @@ msgid "Top Down Auto Follow"
 msgstr "Automatické následování sazečů"
 
 #: workflow.py:224
-msgid "Show Tooltips for Tools"
+#, fuzzy
+msgid "Show Tooltips for Timeline Tools"
 msgstr "Ukázat nástrojové rady pro nástroje"
 
 #: workflow.py:312
-msgid "Tool Active"
+#, fuzzy
+msgid "Timeline Tool Active"
 msgstr "Nástroj činný"
 
 #: workflow.py:320

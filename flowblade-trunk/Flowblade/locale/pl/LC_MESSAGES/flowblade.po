@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-20 20:10+0200\n"
+"POT-Creation-Date: 2020-12-20 20:29+0200\n"
 "PO-Revision-Date: 2018-11-15 12:12+0200\n"
 "Last-Translator: Stanislaw Polak <polak@icsr.agh.edu.pl>\n"
 "Language-Team: Polish\n"
@@ -878,7 +878,7 @@ msgstr "Renderuj wszystkie wyrenderowane przejścia oraz zanikania"
 msgid "Render Timeline"
 msgstr "Renderuj oś czasu"
 
-#: editorwindow.py:867 dialogs.py:1684
+#: editorwindow.py:867
 msgid "Tools"
 msgstr "Narzędzia"
 
@@ -2186,6 +2186,11 @@ msgstr "Klawiatura boczna 1-7"
 #, fuzzy
 msgid "Same as 1-9"
 msgstr "To samo co 1-7"
+
+#: dialogs.py:1684
+#, fuzzy
+msgid "Timeline Tools"
+msgstr "Oś czasu"
 
 #: dialogs.py:1687
 msgid "Copy Keyframe Value"
@@ -8720,11 +8725,13 @@ msgid "Top Down Auto Follow"
 msgstr "Automatyczne podążanie za kompozytorami"
 
 #: workflow.py:224
-msgid "Show Tooltips for Tools"
+#, fuzzy
+msgid "Show Tooltips for Timeline Tools"
 msgstr "Pokazuj dymki dla narzędzi"
 
 #: workflow.py:312
-msgid "Tool Active"
+#, fuzzy
+msgid "Timeline Tool Active"
 msgstr "Narzędzie aktywne"
 
 #: workflow.py:320

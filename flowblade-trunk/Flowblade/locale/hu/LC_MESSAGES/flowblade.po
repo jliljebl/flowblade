@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-20 20:10+0200\n"
+"POT-Creation-Date: 2020-12-20 20:29+0200\n"
 "PO-Revision-Date: 2017-03-24 08:40+0100\n"
 "Last-Translator: Péter Gábor <ptrg@freemail.hu>\n"
 "Language-Team: \n"
@@ -899,7 +899,7 @@ msgstr ""
 msgid "Render Timeline"
 msgstr "Idővonal renderelése"
 
-#: editorwindow.py:867 dialogs.py:1684
+#: editorwindow.py:867
 msgid "Tools"
 msgstr "Eszközök"
 
@@ -2217,6 +2217,11 @@ msgstr ""
 #, fuzzy
 msgid "Same as 1-9"
 msgstr "Mentve mint "
+
+#: dialogs.py:1684
+#, fuzzy
+msgid "Timeline Tools"
+msgstr "Idővonal"
 
 #: dialogs.py:1687
 msgid "Copy Keyframe Value"
@@ -8746,12 +8751,12 @@ msgid "Top Down Auto Follow"
 msgstr "Kompozitorok"
 
 #: workflow.py:224
-msgid "Show Tooltips for Tools"
+msgid "Show Tooltips for Timeline Tools"
 msgstr ""
 
 #: workflow.py:312
 #, fuzzy
-msgid "Tool Active"
+msgid "Timeline Tool Active"
 msgstr "Be-/Kikapcsolás"
 
 #: workflow.py:320

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-20 20:10+0200\n"
+"POT-Creation-Date: 2020-12-20 20:29+0200\n"
 "PO-Revision-Date: 2020-01-14 08:50+0300\n"
 "Last-Translator: Микита Бесчастний <micitabesh1992@rambler.ua>\n"
 "Language-Team: \n"
@@ -826,7 +826,7 @@ msgstr ""
 msgid "Render Timeline"
 msgstr "Візуалізація монтажного столу"
 
-#: editorwindow.py:867 dialogs.py:1684
+#: editorwindow.py:867
 msgid "Tools"
 msgstr "Інструменти"
 
@@ -2083,6 +2083,11 @@ msgstr "Клавіатура 1-9"
 #: dialogs.py:1683
 msgid "Same as 1-9"
 msgstr "Те саме, що 1-9"
+
+#: dialogs.py:1684
+#, fuzzy
+msgid "Timeline Tools"
+msgstr "Монтажний стіл"
 
 #: dialogs.py:1687
 msgid "Copy Keyframe Value"
@@ -8294,12 +8299,13 @@ msgid "Top Down Auto Follow"
 msgstr ""
 
 #: workflow.py:224
-msgid "Show Tooltips for Tools"
+msgid "Show Tooltips for Timeline Tools"
 msgstr ""
 
 #: workflow.py:312
-msgid "Tool Active"
-msgstr ""
+#, fuzzy
+msgid "Timeline Tool Active"
+msgstr "Позиція монтажного столу: "
 
 #: workflow.py:320
 msgid "Set Position"

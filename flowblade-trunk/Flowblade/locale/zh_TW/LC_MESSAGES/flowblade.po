@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-20 20:10+0200\n"
+"POT-Creation-Date: 2020-12-20 20:29+0200\n"
 "PO-Revision-Date: 2018-12-31 10:20+0800\n"
 "Last-Translator: Steve Nian <sdnian@gmail.com>\n"
 "Language-Team: Chinese (traditional)\n"
@@ -863,7 +863,7 @@ msgstr "重新渲染所有渲染的轉場和淡化"
 msgid "Render Timeline"
 msgstr "渲染時間軸"
 
-#: editorwindow.py:867 dialogs.py:1684
+#: editorwindow.py:867
 msgid "Tools"
 msgstr "工具"
 
@@ -2156,6 +2156,11 @@ msgstr "鍵盤 1-7"
 #, fuzzy
 msgid "Same as 1-9"
 msgstr "與 1-7 相同"
+
+#: dialogs.py:1684
+#, fuzzy
+msgid "Timeline Tools"
+msgstr "時間軸"
 
 #: dialogs.py:1687
 msgid "Copy Keyframe Value"
@@ -8609,11 +8614,13 @@ msgid "Top Down Auto Follow"
 msgstr "合成器自動跟隨"
 
 #: workflow.py:224
-msgid "Show Tooltips for Tools"
+#, fuzzy
+msgid "Show Tooltips for Timeline Tools"
 msgstr "顯示工具的工具提示"
 
 #: workflow.py:312
-msgid "Tool Active"
+#, fuzzy
+msgid "Timeline Tool Active"
 msgstr "工具啟用"
 
 #: workflow.py:320

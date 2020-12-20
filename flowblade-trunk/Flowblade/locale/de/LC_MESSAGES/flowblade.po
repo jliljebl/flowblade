@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-20 20:10+0200\n"
+"POT-Creation-Date: 2020-12-20 20:29+0200\n"
 "PO-Revision-Date: 2014-11-23 14:22+0100\n"
 "Last-Translator: Mario Dejanovic <mario.dejanovic@gmx.at>\n"
 "Language-Team: German\n"
@@ -923,7 +923,7 @@ msgstr "Alle gerenderten Übergänge und Überblendungen erneut rendern "
 msgid "Render Timeline"
 msgstr "Zeitlinie rendern"
 
-#: editorwindow.py:867 dialogs.py:1684
+#: editorwindow.py:867
 msgid "Tools"
 msgstr "Werkzeuge"
 
@@ -2277,6 +2277,11 @@ msgstr ""
 #, fuzzy
 msgid "Same as 1-9"
 msgstr "Gesichert als "
+
+#: dialogs.py:1684
+#, fuzzy
+msgid "Timeline Tools"
+msgstr "Zeitlinie"
 
 #: dialogs.py:1687
 msgid "Copy Keyframe Value"
@@ -9160,13 +9165,14 @@ msgid "Top Down Auto Follow"
 msgstr "Überblendungen"
 
 #: workflow.py:224
-msgid "Show Tooltips for Tools"
+#, fuzzy
+msgid "Show Tooltips for Timeline Tools"
 msgstr "Tooltips für Tools anzeigen"
 
 # ???
 #: workflow.py:312
 #, fuzzy
-msgid "Tool Active"
+msgid "Timeline Tool Active"
 msgstr "Aktiv umschalten"
 
 #: workflow.py:320

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-20 20:10+0200\n"
+"POT-Creation-Date: 2020-12-20 20:29+0200\n"
 "PO-Revision-Date: 2014-02-21 12:08+0200\n"
 "Last-Translator: David Gámiz Jiménez <david.gamiz@gmail.com>\n"
 "Language-Team: David Gamiz Jimenez\n"
@@ -907,7 +907,7 @@ msgstr ""
 msgid "Render Timeline"
 msgstr "Linea del tiempo de Renderizado"
 
-#: editorwindow.py:867 dialogs.py:1684
+#: editorwindow.py:867
 msgid "Tools"
 msgstr "Herramientas"
 
@@ -2268,6 +2268,11 @@ msgstr ""
 #, fuzzy
 msgid "Same as 1-9"
 msgstr "Guardado como "
+
+#: dialogs.py:1684
+#, fuzzy
+msgid "Timeline Tools"
+msgstr "Cronologia"
 
 #: dialogs.py:1687
 msgid "Copy Keyframe Value"
@@ -8915,12 +8920,12 @@ msgid "Top Down Auto Follow"
 msgstr "Compositores"
 
 #: workflow.py:224
-msgid "Show Tooltips for Tools"
+msgid "Show Tooltips for Timeline Tools"
 msgstr ""
 
 #: workflow.py:312
 #, fuzzy
-msgid "Tool Active"
+msgid "Timeline Tool Active"
 msgstr "Alternar Activo"
 
 #: workflow.py:320
