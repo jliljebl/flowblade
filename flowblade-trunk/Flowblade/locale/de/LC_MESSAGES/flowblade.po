@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-20 20:29+0200\n"
+"POT-Creation-Date: 2020-12-20 20:48+0200\n"
 "PO-Revision-Date: 2014-11-23 14:22+0100\n"
 "Last-Translator: Mario Dejanovic <mario.dejanovic@gmx.at>\n"
 "Language-Team: German\n"
@@ -2280,8 +2280,8 @@ msgstr "Gesichert als "
 
 #: dialogs.py:1684
 #, fuzzy
-msgid "Timeline Tools"
-msgstr "Zeitlinie"
+msgid "Edit Tools"
+msgstr "Bearbeiten"
 
 #: dialogs.py:1687
 msgid "Copy Keyframe Value"
@@ -9166,13 +9166,13 @@ msgstr "Überblendungen"
 
 #: workflow.py:224
 #, fuzzy
-msgid "Show Tooltips for Timeline Tools"
+msgid "Show Tooltips for Edit Tools"
 msgstr "Tooltips für Tools anzeigen"
 
 # ???
 #: workflow.py:312
 #, fuzzy
-msgid "Timeline Tool Active"
+msgid "Edit Tool Active"
 msgstr "Aktiv umschalten"
 
 #: workflow.py:320
@@ -9208,7 +9208,8 @@ msgid "<b>Flowblade</b> comes with a configurable workflow."
 msgstr "<b>Flowblade 2.0</b> verfügt über einen konfigurierbaren Workflow."
 
 #: workflow.py:502
-msgid " You can select which <b>tools</b> you want to use.\n"
+#, fuzzy
+msgid " You can select which <b>Edit Tools</b> you want to use.\n"
 msgstr ""
 " Sie können auswählen, welche <b>Werkzeuge</b> Sie verwenden möchten.\n"
 
@@ -9858,6 +9859,10 @@ msgstr "Auswahl löschen"
 #, fuzzy
 msgid "Tabs Positions"
 msgstr "Position der Reiter"
+
+#, fuzzy
+#~ msgid "Timeline Tools"
+#~ msgstr "Zeitlinie"
 
 #, fuzzy
 #~ msgid "Clip Filters Stack"

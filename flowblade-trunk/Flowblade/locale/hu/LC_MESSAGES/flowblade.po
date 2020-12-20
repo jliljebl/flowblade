@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-20 20:29+0200\n"
+"POT-Creation-Date: 2020-12-20 20:48+0200\n"
 "PO-Revision-Date: 2017-03-24 08:40+0100\n"
 "Last-Translator: Péter Gábor <ptrg@freemail.hu>\n"
 "Language-Team: \n"
@@ -2220,8 +2220,8 @@ msgstr "Mentve mint "
 
 #: dialogs.py:1684
 #, fuzzy
-msgid "Timeline Tools"
-msgstr "Idővonal"
+msgid "Edit Tools"
+msgstr "Szerkesztés"
 
 #: dialogs.py:1687
 msgid "Copy Keyframe Value"
@@ -8751,12 +8751,12 @@ msgid "Top Down Auto Follow"
 msgstr "Kompozitorok"
 
 #: workflow.py:224
-msgid "Show Tooltips for Timeline Tools"
+msgid "Show Tooltips for Edit Tools"
 msgstr ""
 
 #: workflow.py:312
 #, fuzzy
-msgid "Timeline Tool Active"
+msgid "Edit Tool Active"
 msgstr "Be-/Kikapcsolás"
 
 #: workflow.py:320
@@ -8790,7 +8790,7 @@ msgid "<b>Flowblade</b> comes with a configurable workflow."
 msgstr ""
 
 #: workflow.py:502
-msgid " You can select which <b>tools</b> you want to use.\n"
+msgid " You can select which <b>Edit Tools</b> you want to use.\n"
 msgstr ""
 
 #: workflow.py:503
@@ -9426,6 +9426,10 @@ msgstr "Kijelölt törlése"
 #, fuzzy
 msgid "Tabs Positions"
 msgstr "Fülek elhelyezése"
+
+#, fuzzy
+#~ msgid "Timeline Tools"
+#~ msgstr "Idővonal"
 
 #, fuzzy
 #~ msgid "Clip Filters Stack"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Floblade Italian Translation 0.14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-20 20:29+0200\n"
+"POT-Creation-Date: 2020-12-20 20:48+0200\n"
 "PO-Revision-Date: 2020-29-02 21:24+0200\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italiano\n"
@@ -2196,8 +2196,8 @@ msgstr "Come 1-7"
 
 #: dialogs.py:1684
 #, fuzzy
-msgid "Timeline Tools"
-msgstr "Timeline"
+msgid "Edit Tools"
+msgstr "Modifica"
 
 #: dialogs.py:1687
 msgid "Copy Keyframe Value"
@@ -8709,12 +8709,12 @@ msgstr "Seguito automatico dall'alto verso il basso"
 
 #: workflow.py:224
 #, fuzzy
-msgid "Show Tooltips for Timeline Tools"
+msgid "Show Tooltips for Edit Tools"
 msgstr "Mostra suggerimenti per gli strumenti"
 
 #: workflow.py:312
 #, fuzzy
-msgid "Timeline Tool Active"
+msgid "Edit Tool Active"
 msgstr "Attiva/Disattiva"
 
 #: workflow.py:320
@@ -8749,7 +8749,8 @@ msgid "<b>Flowblade</b> comes with a configurable workflow."
 msgstr "<b>Flowblade 2.0</b> dispone di un workflow configurabile."
 
 #: workflow.py:502
-msgid " You can select which <b>tools</b> you want to use.\n"
+#, fuzzy
+msgid " You can select which <b>Edit Tools</b> you want to use.\n"
 msgstr ""
 " Puoi selezionare quali <b>strumenti</b> vuoi utilizzare.\n"
 "\n"
@@ -9390,6 +9391,10 @@ msgstr "Elimina Raccolta selezionata"
 #, fuzzy
 msgid "Tabs Positions"
 msgstr "Posizione Schede"
+
+#, fuzzy
+#~ msgid "Timeline Tools"
+#~ msgstr "Timeline"
 
 #~ msgid "Clip Filters Stack"
 #~ msgstr "Lista filtri della Clip"

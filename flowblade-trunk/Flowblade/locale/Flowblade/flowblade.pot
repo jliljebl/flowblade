@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-20 20:29+0200\n"
+"POT-Creation-Date: 2020-12-20 20:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2059,7 +2059,7 @@ msgid "Same as 1-9"
 msgstr ""
 
 #: dialogs.py:1684
-msgid "Timeline Tools"
+msgid "Edit Tools"
 msgstr ""
 
 #: dialogs.py:1687
@@ -8246,11 +8246,11 @@ msgid "Top Down Auto Follow"
 msgstr ""
 
 #: workflow.py:224
-msgid "Show Tooltips for Timeline Tools"
+msgid "Show Tooltips for Edit Tools"
 msgstr ""
 
 #: workflow.py:312
-msgid "Timeline Tool Active"
+msgid "Edit Tool Active"
 msgstr ""
 
 #: workflow.py:320
@@ -8282,7 +8282,7 @@ msgid "<b>Flowblade</b> comes with a configurable workflow."
 msgstr ""
 
 #: workflow.py:502
-msgid " You can select which <b>tools</b> you want to use.\n"
+msgid " You can select which <b>Edit Tools</b> you want to use.\n"
 msgstr ""
 
 #: workflow.py:503

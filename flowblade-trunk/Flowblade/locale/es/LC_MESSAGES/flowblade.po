@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-20 20:29+0200\n"
+"POT-Creation-Date: 2020-12-20 20:48+0200\n"
 "PO-Revision-Date: 2014-02-21 12:08+0200\n"
 "Last-Translator: David Gámiz Jiménez <david.gamiz@gmail.com>\n"
 "Language-Team: David Gamiz Jimenez\n"
@@ -2271,8 +2271,8 @@ msgstr "Guardado como "
 
 #: dialogs.py:1684
 #, fuzzy
-msgid "Timeline Tools"
-msgstr "Cronologia"
+msgid "Edit Tools"
+msgstr "Editar"
 
 #: dialogs.py:1687
 msgid "Copy Keyframe Value"
@@ -8920,12 +8920,12 @@ msgid "Top Down Auto Follow"
 msgstr "Compositores"
 
 #: workflow.py:224
-msgid "Show Tooltips for Timeline Tools"
+msgid "Show Tooltips for Edit Tools"
 msgstr ""
 
 #: workflow.py:312
 #, fuzzy
-msgid "Timeline Tool Active"
+msgid "Edit Tool Active"
 msgstr "Alternar Activo"
 
 #: workflow.py:320
@@ -8959,7 +8959,7 @@ msgid "<b>Flowblade</b> comes with a configurable workflow."
 msgstr ""
 
 #: workflow.py:502
-msgid " You can select which <b>tools</b> you want to use.\n"
+msgid " You can select which <b>Edit Tools</b> you want to use.\n"
 msgstr ""
 
 #: workflow.py:503
@@ -9594,6 +9594,10 @@ msgstr "Eliminar  Seleccionadas (os)"
 #, fuzzy
 msgid "Tabs Positions"
 msgstr "Posición de la pestañas"
+
+#, fuzzy
+#~ msgid "Timeline Tools"
+#~ msgstr "Cronologia"
 
 #, fuzzy
 #~ msgid "Clip Filters Stack"

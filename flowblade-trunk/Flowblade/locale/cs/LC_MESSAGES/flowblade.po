@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-20 20:29+0200\n"
+"POT-Creation-Date: 2020-12-20 20:48+0200\n"
 "PO-Revision-Date: 2019-08-29 13:33+0200\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -2174,8 +2174,8 @@ msgstr "Stejné jako 1-9"
 
 #: dialogs.py:1684
 #, fuzzy
-msgid "Timeline Tools"
-msgstr "Časová osa"
+msgid "Edit Tools"
+msgstr "Úpravy"
 
 #: dialogs.py:1687
 msgid "Copy Keyframe Value"
@@ -8657,12 +8657,12 @@ msgstr "Automatické následování sazečů"
 
 #: workflow.py:224
 #, fuzzy
-msgid "Show Tooltips for Timeline Tools"
+msgid "Show Tooltips for Edit Tools"
 msgstr "Ukázat nástrojové rady pro nástroje"
 
 #: workflow.py:312
 #, fuzzy
-msgid "Timeline Tool Active"
+msgid "Edit Tool Active"
 msgstr "Nástroj činný"
 
 #: workflow.py:320
@@ -8697,7 +8697,8 @@ msgid "<b>Flowblade</b> comes with a configurable workflow."
 msgstr "<b>Flowblade 2.2</b> přichází s nastavitelným pracovním postupem."
 
 #: workflow.py:502
-msgid " You can select which <b>tools</b> you want to use.\n"
+#, fuzzy
+msgid " You can select which <b>Edit Tools</b> you want to use.\n"
 msgstr "Můžete vybrat, které <b>nástroje</b> chcete používat.\n"
 
 #: workflow.py:503
@@ -9331,6 +9332,10 @@ msgstr "Smaže vybraný úchop"
 #, fuzzy
 msgid "Tabs Positions"
 msgstr "Poloha karet"
+
+#, fuzzy
+#~ msgid "Timeline Tools"
+#~ msgstr "Časová osa"
 
 #~ msgid "Clip Filters Stack"
 #~ msgstr "Zásobník filtrů záběru"

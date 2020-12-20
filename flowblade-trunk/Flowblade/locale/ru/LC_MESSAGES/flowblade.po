@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Flowblade\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-20 20:29+0200\n"
+"POT-Creation-Date: 2020-12-20 20:48+0200\n"
 "PO-Revision-Date: 2020-07-19 11:47+0300\n"
 "Last-Translator: Николай Смольянинов <smolianinow.colya2016@yandex.ru>\n"
 "Language-Team: vk.com/flowblade\n"
@@ -2157,8 +2157,8 @@ msgstr "То же, что 1-9"
 
 #: dialogs.py:1684
 #, fuzzy
-msgid "Timeline Tools"
-msgstr "Монтажный стол"
+msgid "Edit Tools"
+msgstr "Редакторы"
 
 #: dialogs.py:1687
 msgid "Copy Keyframe Value"
@@ -8573,12 +8573,12 @@ msgstr "Автосопровождение сверху вниз"
 
 #: workflow.py:224
 #, fuzzy
-msgid "Show Tooltips for Timeline Tools"
+msgid "Show Tooltips for Edit Tools"
 msgstr "Подсказки к инструментам"
 
 #: workflow.py:312
 #, fuzzy
-msgid "Timeline Tool Active"
+msgid "Edit Tool Active"
 msgstr "Включить инструмент"
 
 #: workflow.py:320
@@ -8613,7 +8613,8 @@ msgid "<b>Flowblade</b> comes with a configurable workflow."
 msgstr "<b>Flowblade 2.6</b> поставляется с настраиваемым режимом работы."
 
 #: workflow.py:502
-msgid " You can select which <b>tools</b> you want to use.\n"
+#, fuzzy
+msgid " You can select which <b>Edit Tools</b> you want to use.\n"
 msgstr " Выбирайте, только нужные вам <b>инструменты</b>.\n"
 
 #: workflow.py:503
@@ -9205,6 +9206,10 @@ msgstr "Удалить выбранную точку"
 #, fuzzy
 msgid "Tabs Positions"
 msgstr "Расположение вкладок"
+
+#, fuzzy
+#~ msgid "Timeline Tools"
+#~ msgstr "Монтажный стол"
 
 #~ msgid "Clip Filters Stack"
 #~ msgstr "Стек эффектов клипа"

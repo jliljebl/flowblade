@@ -221,7 +221,7 @@ def workflow_menu_launched(widget, event):
     behaviours_menu.add(default_compositing_item)
     
     show_tooltips_item = Gtk.CheckMenuItem()
-    show_tooltips_item.set_label(_("Show Tooltips for Timeline Tools"))
+    show_tooltips_item.set_label(_("Show Tooltips for Edit Tools"))
     show_tooltips_item.set_active(editorpersistance.prefs.show_tool_tooltips)
     show_tooltips_item.connect("activate", _workflow_menu_callback, (None, "tooltips"))
     show_tooltips_item.show()
@@ -309,7 +309,7 @@ def _get_workflow_tool_submenu(callback, tool_id, position):
     sub_menu = Gtk.Menu()
     
     tool_active = (tool_id in editorpersistance.prefs.active_tools)
-    activity_item = Gtk.CheckMenuItem(_("Timeline Tool Active"))
+    activity_item = Gtk.CheckMenuItem(_("Edit Tool Active"))
     activity_item.set_active(tool_active)
     activity_item.connect("toggled", callback, (tool_id, "activity"))
     activity_item.show()
@@ -499,7 +499,7 @@ class WorkflowDialog(Gtk.Dialog):
         info_label_2.set_use_markup(True)
 
         INDENT = "    "
-        info_label_text_6 = INDENT + "\u2022" + _(" You can select which <b>tools</b> you want to use.\n") + \
+        info_label_text_6 = INDENT + "\u2022" + _(" You can select which <b>Edit Tools</b> you want to use.\n") + \
                             INDENT + "\u2022" + _(" Many timeline edit <b>behaviours</b> are configurable.\n")
 
         info_label_6 = Gtk.Label(info_label_text_6)

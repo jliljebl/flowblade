@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-20 20:29+0200\n"
+"POT-Creation-Date: 2020-12-20 20:48+0200\n"
 "PO-Revision-Date: 2017-04-15 18:47+0800\n"
 "Last-Translator: wu <laowudebox@126.com>\n"
 "Language-Team: Language LANGUAGE\n"
@@ -2148,8 +2148,8 @@ msgstr "等同 1-9"
 
 #: dialogs.py:1684
 #, fuzzy
-msgid "Timeline Tools"
-msgstr "时间轴"
+msgid "Edit Tools"
+msgstr "编辑"
 
 #: dialogs.py:1687
 msgid "Copy Keyframe Value"
@@ -8535,12 +8535,12 @@ msgstr ""
 
 #: workflow.py:224
 #, fuzzy
-msgid "Show Tooltips for Timeline Tools"
+msgid "Show Tooltips for Edit Tools"
 msgstr "显示工具提示"
 
 #: workflow.py:312
 #, fuzzy
-msgid "Timeline Tool Active"
+msgid "Edit Tool Active"
 msgstr "Tool Active"
 
 #: workflow.py:320
@@ -8573,7 +8573,8 @@ msgid "<b>Flowblade</b> comes with a configurable workflow."
 msgstr ""
 
 #: workflow.py:502
-msgid " You can select which <b>tools</b> you want to use.\n"
+#, fuzzy
+msgid " You can select which <b>Edit Tools</b> you want to use.\n"
 msgstr " You can select which <b>tools</b> you want to use.\n"
 
 #: workflow.py:503
@@ -9204,6 +9205,10 @@ msgstr "Deletes Selected Handle"
 #, fuzzy
 msgid "Tabs Positions"
 msgstr "标签栏位置"
+
+#, fuzzy
+#~ msgid "Timeline Tools"
+#~ msgstr "时间轴"
 
 #~ msgid "Clip Filters Stack"
 #~ msgstr "剪辑过滤器堆栈"

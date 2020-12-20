@@ -1681,7 +1681,7 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     for tool_name, kb_shortcut in tool_set:
             tools_vbox.pack_start(_get_kb_row(tool_name, kb_shortcut), False, False, 0)
     tools_vbox.pack_start(_get_kb_row(_("Keypad 1-9"), _("Same as 1-9")), False, False, 0)
-    tools = guiutils.get_named_frame(_("Timeline Tools"), tools_vbox)
+    tools = guiutils.get_named_frame(_("Edit Tools"), tools_vbox)
 
     kfs_vbox = Gtk.VBox()
     kfs_vbox.pack_start(_get_kb_row(_("Control + C"), _("Copy Keyframe Value")), False, False, 0)

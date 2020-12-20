@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-20 20:29+0200\n"
+"POT-Creation-Date: 2020-12-20 20:48+0200\n"
 "PO-Revision-Date: 2020-01-14 08:50+0300\n"
 "Last-Translator: Микита Бесчастний <micitabesh1992@rambler.ua>\n"
 "Language-Team: \n"
@@ -2086,8 +2086,8 @@ msgstr "Те саме, що 1-9"
 
 #: dialogs.py:1684
 #, fuzzy
-msgid "Timeline Tools"
-msgstr "Монтажний стіл"
+msgid "Edit Tools"
+msgstr "Редактори"
 
 #: dialogs.py:1687
 msgid "Copy Keyframe Value"
@@ -8299,12 +8299,12 @@ msgid "Top Down Auto Follow"
 msgstr ""
 
 #: workflow.py:224
-msgid "Show Tooltips for Timeline Tools"
+msgid "Show Tooltips for Edit Tools"
 msgstr ""
 
 #: workflow.py:312
 #, fuzzy
-msgid "Timeline Tool Active"
+msgid "Edit Tool Active"
 msgstr "Позиція монтажного столу: "
 
 #: workflow.py:320
@@ -8337,7 +8337,7 @@ msgid "<b>Flowblade</b> comes with a configurable workflow."
 msgstr ""
 
 #: workflow.py:502
-msgid " You can select which <b>tools</b> you want to use.\n"
+msgid " You can select which <b>Edit Tools</b> you want to use.\n"
 msgstr ""
 
 #: workflow.py:503
@@ -8906,6 +8906,10 @@ msgstr "Видаляє вибрану ручку"
 #, fuzzy
 msgid "Tabs Positions"
 msgstr "Позиція вкладок"
+
+#, fuzzy
+#~ msgid "Timeline Tools"
+#~ msgstr "Монтажний стіл"
 
 #~ msgid "Clip Filters Stack"
 #~ msgstr "Стек фільтрів кліпу"

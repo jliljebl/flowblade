@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-20 20:29+0200\n"
+"POT-Creation-Date: 2020-12-20 20:48+0200\n"
 "PO-Revision-Date: 2018-11-15 12:12+0200\n"
 "Last-Translator: Stanislaw Polak <polak@icsr.agh.edu.pl>\n"
 "Language-Team: Polish\n"
@@ -2189,8 +2189,8 @@ msgstr "To samo co 1-7"
 
 #: dialogs.py:1684
 #, fuzzy
-msgid "Timeline Tools"
-msgstr "Oś czasu"
+msgid "Edit Tools"
+msgstr "Edytuj"
 
 #: dialogs.py:1687
 msgid "Copy Keyframe Value"
@@ -8726,12 +8726,12 @@ msgstr "Automatyczne podążanie za kompozytorami"
 
 #: workflow.py:224
 #, fuzzy
-msgid "Show Tooltips for Timeline Tools"
+msgid "Show Tooltips for Edit Tools"
 msgstr "Pokazuj dymki dla narzędzi"
 
 #: workflow.py:312
 #, fuzzy
-msgid "Timeline Tool Active"
+msgid "Edit Tool Active"
 msgstr "Narzędzie aktywne"
 
 #: workflow.py:320
@@ -8768,7 +8768,8 @@ msgid "<b>Flowblade</b> comes with a configurable workflow."
 msgstr "<b>Flowblade 2.0</b> ma konfigurowalny obieg pracy."
 
 #: workflow.py:502
-msgid " You can select which <b>tools</b> you want to use.\n"
+#, fuzzy
+msgid " You can select which <b>Edit Tools</b> you want to use.\n"
 msgstr " Możesz wybrać, które <b>narzędzia</b> chcesz użyć.\n"
 
 #: workflow.py:503
@@ -9409,6 +9410,10 @@ msgstr "Usuń wybrany pojemnik"
 #, fuzzy
 msgid "Tabs Positions"
 msgstr "Umiejscowienie zakładek"
+
+#, fuzzy
+#~ msgid "Timeline Tools"
+#~ msgstr "Oś czasu"
 
 #~ msgid "Clip Filters Stack"
 #~ msgstr "Stos filtrów klipu"

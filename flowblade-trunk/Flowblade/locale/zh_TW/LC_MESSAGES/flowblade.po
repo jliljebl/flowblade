@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-20 20:29+0200\n"
+"POT-Creation-Date: 2020-12-20 20:48+0200\n"
 "PO-Revision-Date: 2018-12-31 10:20+0800\n"
 "Last-Translator: Steve Nian <sdnian@gmail.com>\n"
 "Language-Team: Chinese (traditional)\n"
@@ -2159,8 +2159,8 @@ msgstr "與 1-7 相同"
 
 #: dialogs.py:1684
 #, fuzzy
-msgid "Timeline Tools"
-msgstr "時間軸"
+msgid "Edit Tools"
+msgstr "編輯"
 
 #: dialogs.py:1687
 msgid "Copy Keyframe Value"
@@ -8615,12 +8615,12 @@ msgstr "合成器自動跟隨"
 
 #: workflow.py:224
 #, fuzzy
-msgid "Show Tooltips for Timeline Tools"
+msgid "Show Tooltips for Edit Tools"
 msgstr "顯示工具的工具提示"
 
 #: workflow.py:312
 #, fuzzy
-msgid "Timeline Tool Active"
+msgid "Edit Tool Active"
 msgstr "工具啟用"
 
 #: workflow.py:320
@@ -8655,7 +8655,8 @@ msgid "<b>Flowblade</b> comes with a configurable workflow."
 msgstr "<b>Flowblade 2.0</b> 具有可設定的工作流程。"
 
 #: workflow.py:502
-msgid " You can select which <b>tools</b> you want to use.\n"
+#, fuzzy
+msgid " You can select which <b>Edit Tools</b> you want to use.\n"
 msgstr " 您可以選擇要使用何種 <b>工貝</b>。\n"
 
 #: workflow.py:503
@@ -9290,6 +9291,10 @@ msgstr "刪除選擇的容器"
 #, fuzzy
 msgid "Tabs Positions"
 msgstr "頁籤位置"
+
+#, fuzzy
+#~ msgid "Timeline Tools"
+#~ msgstr "時間軸"
 
 #~ msgid "Clip Filters Stack"
 #~ msgstr "剪輯濾鏡堆疊"
