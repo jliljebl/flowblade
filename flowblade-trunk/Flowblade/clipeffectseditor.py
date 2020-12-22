@@ -451,10 +451,10 @@ def refresh_clip():
 def clip_is_being_edited(clip):
     if _filter_stack == None:
         return False
-    
+
     if _filter_stack.clip == clip:
         return True
-        
+
     return False
 
 def get_edited_clip():
