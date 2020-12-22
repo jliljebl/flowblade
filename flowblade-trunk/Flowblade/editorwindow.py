@@ -1132,7 +1132,7 @@ class EditorWindow:
         menu.append(mb_menu_item)
         
         # Tool Selection Widget
-        tool_selector_menu_item = Gtk.MenuItem(_("Tool Selection Widget"))
+        tool_selector_menu_item = Gtk.MenuItem(_("Edit Tool Selection Widget"))
         tool_selector_menu =  Gtk.Menu()
         tools_middlebar = Gtk.RadioMenuItem()
         tools_middlebar.set_label( _("Middlebar Menu"))

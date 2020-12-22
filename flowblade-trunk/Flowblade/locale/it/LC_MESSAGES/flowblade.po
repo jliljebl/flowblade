@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Floblade Italian Translation 0.14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-20 20:48+0200\n"
+"POT-Creation-Date: 2020-12-22 08:18+0200\n"
 "PO-Revision-Date: 2020-29-02 21:24+0200\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italiano\n"
@@ -961,7 +961,7 @@ msgstr ""
 
 #: editorwindow.py:1135
 #, fuzzy
-msgid "Tool Selection Widget"
+msgid "Edit Tool Selection Widget"
 msgstr "Carica selezione"
 
 #: editorwindow.py:1138

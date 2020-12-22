@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-20 20:48+0200\n"
+"POT-Creation-Date: 2020-12-22 08:18+0200\n"
 "PO-Revision-Date: 2019-08-29 13:33+0200\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -951,7 +951,7 @@ msgstr ""
 
 #: editorwindow.py:1135
 #, fuzzy
-msgid "Tool Selection Widget"
+msgid "Edit Tool Selection Widget"
 msgstr "Nahrát výběr"
 
 #: editorwindow.py:1138

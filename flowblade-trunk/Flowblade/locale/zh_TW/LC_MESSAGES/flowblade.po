@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-20 20:48+0200\n"
+"POT-Creation-Date: 2020-12-22 08:18+0200\n"
 "PO-Revision-Date: 2018-12-31 10:20+0800\n"
 "Last-Translator: Steve Nian <sdnian@gmail.com>\n"
 "Language-Team: Chinese (traditional)\n"
@@ -942,7 +942,7 @@ msgstr ""
 
 #: editorwindow.py:1135
 #, fuzzy
-msgid "Tool Selection Widget"
+msgid "Edit Tool Selection Widget"
 msgstr "載入選擇"
 
 #: editorwindow.py:1138
