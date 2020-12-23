@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-23 08:46+0200\n"
+"POT-Creation-Date: 2020-12-23 18:31+0200\n"
 "PO-Revision-Date: 2018-11-15 12:12+0200\n"
 "Last-Translator: Stanislaw Polak <polak@icsr.agh.edu.pl>\n"
 "Language-Team: Polish\n"
@@ -731,9 +731,8 @@ msgid "Project"
 msgstr "Projekt"
 
 #: editorwindow.py:828
-#, fuzzy
 msgid "Add Media Folder..."
-msgstr "Dodaj klip multimedialny..."
+msgstr "Dodaj folder multimediów..."
 
 #: editorwindow.py:830
 msgid "Create Color Clip..."
@@ -930,26 +929,24 @@ msgid "Components Centered"
 msgstr "Komponenty wypośrodkowane"
 
 #: editorwindow.py:1111
-#, fuzzy
 msgid "Free Bar"
-msgstr "Zamroź przed"
+msgstr "Wolny pasek"
 
 #: editorwindow.py:1127
 msgid "Configure Free Bar..."
-msgstr ""
+msgstr "Konfiguruj wolny pasek"
 
 #: editorwindow.py:1135
 msgid "Edit Tool Selection Widget"
-msgstr ""
+msgstr "Edycja widżetu wyboru narzędzia"
 
 #: editorwindow.py:1138
-#, fuzzy
 msgid "Middlebar Menu"
-msgstr "Wygląd paska środkowego"
+msgstr "Menu paska środkowego"
 
 #: editorwindow.py:1142
 msgid "Dock"
-msgstr ""
+msgstr "Dok"
 
 #: editorwindow.py:1160
 msgid "Monitor Playback Interpolation"
@@ -1030,17 +1027,14 @@ msgid "Sequence / Media current position"
 msgstr "Aktualna pozycja oglądanej sekwencji / multimediów"
 
 #: clipeffectseditor.py:96
-#, fuzzy
 msgid "Save effect values"
 msgstr "Zapisz wartości efektu"
 
 #: clipeffectseditor.py:100
-#, fuzzy
 msgid "Load effect values"
 msgstr "Załaduj wartości efektu"
 
 #: clipeffectseditor.py:104
-#, fuzzy
 msgid "Reset effect values"
 msgstr "Zresetuj wartości efektu"
 
@@ -1049,24 +1043,20 @@ msgid "Add Filter Mask"
 msgstr "Dodaj maskę filtra"
 
 #: clipeffectseditor.py:112
-#, fuzzy
 msgid "Move Filter Up"
-msgstr "Sklonuj filtry"
+msgstr "Przenieś filtr w górę"
 
 #: clipeffectseditor.py:116
-#, fuzzy
 msgid "Move Filter Down"
-msgstr "Przesuń w dół"
+msgstr "Przenieś filtr w dół"
 
 #: clipeffectseditor.py:120
-#, fuzzy
 msgid "Move Filter To Top"
-msgstr "Przenieś wybrane pozycje do grupy"
+msgstr "Przenieś filtr na szczyt"
 
 #: clipeffectseditor.py:124
-#, fuzzy
 msgid "Move Filter To Bottom"
-msgstr "Pionowo z góry na dół"
+msgstr "Przenieś filtr na spód"
 
 #: clipeffectseditor.py:143
 msgid "_effect_values"
@@ -1821,29 +1811,24 @@ msgid "Add"
 msgstr "Dodaj"
 
 #: dialogs.py:1317
-#, fuzzy
 msgid "Add Media From Folder"
-msgstr "Dodaj plik multimedialny do pojemnika"
+msgstr "Dodaj multimedia z folderu"
 
 #: dialogs.py:1331
-#, fuzzy
 msgid "Add Media from Folder:"
-msgstr "Dodaj plik multimedialny do pojemnika"
+msgstr "Dodaj multimedia z folderu:"
 
 #: dialogs.py:1335
-#, fuzzy
 msgid "Create new Bin"
-msgstr "Utwórz nową sekwencję"
+msgstr "Utwórz nowy pojemnik"
 
 #: dialogs.py:1340
-#, fuzzy
 msgid "Search subfolders"
-msgstr "Wybierz folder"
+msgstr "Przeszukaj podfoldery"
 
 #: dialogs.py:1344
-#, fuzzy
 msgid "All Media Files"
-msgstr "Wszystkie pliki"
+msgstr "Wszystkie pliki multimedialne"
 
 #: dialogs.py:1345 guicomponents.py:3204
 msgid "Video Files"
@@ -1854,22 +1839,20 @@ msgid "Audio Files"
 msgstr "Pliki dźwiękowe"
 
 #: dialogs.py:1347
-#, fuzzy
 msgid "Image Files"
-msgstr "Rozmiar obrazu:"
+msgstr "Pliki graficzne"
 
 #: dialogs.py:1349
 msgid "File types to add:"
-msgstr ""
+msgstr "Typy plików do dodania:"
 
 #: dialogs.py:1354
 msgid "Filter by file extension"
-msgstr ""
+msgstr "Filtruj według rozszerzenia pliku"
 
 #: dialogs.py:1362
-#, fuzzy
 msgid "File extension:"
-msgstr "Proporcje:"
+msgstr "Rozszerzenie pliku:"
 
 #: dialogs.py:1368
 msgid "29"
@@ -1889,40 +1872,39 @@ msgstr ""
 
 #: dialogs.py:1373
 msgid "Max. number of files to import:"
-msgstr ""
+msgstr "Maks. liczba plików do zaimportowania:"
 
 #: dialogs.py:1414
-#, fuzzy
 msgid "Media Folder Add Info"
-msgstr "Informacje o nakładających się multimediach"
+msgstr "Folder multimediów dodaj informacje"
 
 #: dialogs.py:1417
-#, fuzzy
 msgid "Add Files"
-msgstr "Dodaj filtr"
+msgstr "Dodaj pliki"
 
 #: dialogs.py:1419
 msgid "Number of files to add exceeds currently set limit!"
-msgstr ""
+msgstr "Liczba plików do dodania przekracza aktualnie ustawiony limit!"
 
 #: dialogs.py:1420
 msgid "Search found "
-msgstr ""
+msgstr "Przeszukiwanie znalazło "
 
 #: dialogs.py:1420
 msgid ""
 " files to add.\n"
 "Limit is set at "
 msgstr ""
+" plików do dodania.\n"
+"Limit jest ustawiony na "
 
 #: dialogs.py:1420
 msgid " files. Add first "
-msgstr ""
+msgstr " plików. Dodaj najpierw "
 
 #: dialogs.py:1420
-#, fuzzy
 msgid " files?"
-msgstr "Wszystkie pliki"
+msgstr " plików?"
 
 #: dialogs.py:1431
 msgid "Export EDL"
@@ -1967,9 +1949,8 @@ msgid "Close"
 msgstr "Zamknij"
 
 #: dialogs.py:1525
-#, fuzzy
 msgid "Shortcuts Group:"
-msgstr "Skróty"
+msgstr "Grupa skrótów:"
 
 #: dialogs.py:1539
 msgid "Diffence to 'Flowblade Default' Presets:"
@@ -2124,14 +2105,12 @@ msgid "Next Frame"
 msgstr "Następna klatka"
 
 #: dialogs.py:1669
-#, fuzzy
 msgid "Right Arrow "
 msgstr "Strzałka w prawo"
 
 #: dialogs.py:1669
-#, fuzzy
 msgid "Previous Frames"
-msgstr "Poprzednia klatka"
+msgstr "Poprzednie klatki"
 
 #: dialogs.py:1670
 msgid "Move Back 10 Frames"
@@ -2146,9 +2125,8 @@ msgid "Home"
 msgstr ""
 
 #: dialogs.py:1675
-#, fuzzy
 msgid "End"
-msgstr "Koniec:"
+msgstr ""
 
 #: dialogs.py:1678 preferenceswindow.py:56
 msgid "Playback"
@@ -2163,9 +2141,8 @@ msgid "Same as 1-9"
 msgstr "To samo co 1-9"
 
 #: dialogs.py:1684
-#, fuzzy
 msgid "Edit Tools"
-msgstr "Edytory"
+msgstr "Narzędzia edycji"
 
 #: dialogs.py:1687
 msgid "Copy Keyframe Value"
@@ -2963,17 +2940,16 @@ msgid "Display Audio Levels On Request"
 msgstr "Wyświetlaj poziomy dźwięku na żądanie"
 
 #: guicomponents.py:3017
-#, fuzzy
 msgid "Toggle All Effects On/Off"
-msgstr "Przełącz wszystkie filtry w pozycję włącz/wyłącz"
+msgstr "Włącz / wyłącz wszystkie efekty"
 
 #: guicomponents.py:3021
 msgid "Set All Expanded"
-msgstr ""
+msgstr "Ustaw wszystkie jako rozwinięte"
 
 #: guicomponents.py:3022
 msgid "Set All Unexpanded"
-msgstr ""
+msgstr "Ustaw wszystkie jako nierozwinięte"
 
 #: guicomponents.py:3026 guicomponents.py:3090
 msgid "Set Fade Buttons Default Fade Length..."
@@ -2985,12 +2961,11 @@ msgstr "Zamknij edytor"
 
 #: guicomponents.py:3041
 msgid "Add Custom Shortcuts Group"
-msgstr ""
+msgstr "Dodaj niestandardową grupę skrótów"
 
 #: guicomponents.py:3042
-#, fuzzy
 msgid "Delete Active Custom Shortcuts Group"
-msgstr "Usuń bieżącą grupę"
+msgstr "Usuń aktywną grupę skrótów niestandardowych"
 
 #: guicomponents.py:3054
 msgid "Add Filter Mask on Selected Filter"
@@ -3113,20 +3088,20 @@ msgid "Display Timeline / Clip on Monitor"
 msgstr "Wyświetlaj oś czasu / klip w monitorze klipu"
 
 #: guicomponents.py:3511
-#, fuzzy
 msgid "Input Shortcut"
-msgstr "Skróty"
+msgstr "Skrót wejściowy"
 
 #: guicomponents.py:3566
-#, fuzzy
 msgid "Reserved Shortcut!"
-msgstr "Skróty klawiszowe"
+msgstr "Zarezerwowany skrót!"
 
 #: guicomponents.py:3567
 msgid ""
 " is a reserved keyboard shortcut and\n"
 "cannot be set as a custom shortcut."
 msgstr ""
+" jest zarezerwowanym skrótem klawiszowym i\n"
+"nie może być ustawiony jako niestandardowy skrót."
 
 #: movemodes.py:683
 msgid "Can't do edit on a locked track"
@@ -3955,14 +3930,12 @@ msgid "Dust"
 msgstr "Kurz"
 
 #: translations.py:283
-#, fuzzy
 msgid "Pan Left Channel"
-msgstr "Zamień kanały"
+msgstr "Przesuń lewy kanał"
 
 #: translations.py:284
-#, fuzzy
 msgid "Pan Right Channel"
-msgstr "Zamień kanały"
+msgstr "Przesuń prawy kanał"
 
 #: translations.py:289 translations.py:472
 msgid "Position"
@@ -4863,7 +4836,7 @@ msgstr "Wybierz plik"
 
 #: translations.py:598
 msgid "Smooth"
-msgstr ""
+msgstr "Gładki"
 
 #: translations.py:599
 msgid "Radius"
@@ -5552,7 +5525,7 @@ msgstr "Skąpanie w kolorze"
 
 #: propertyeditorbuilder.py:515
 msgid "Click Monitor to Select Color"
-msgstr ""
+msgstr "Kliknij monitor, aby wybrać kolor"
 
 #: propertyeditorbuilder.py:622
 msgid "Preset Luma"
@@ -5802,56 +5775,47 @@ msgstr ""
 
 #: middlebar.py:453
 msgid "Free Bar Configuration"
-msgstr ""
+msgstr "Konfiguracja wolnego paska"
 
 #: middlebar.py:488
-#, fuzzy
 msgid "Tools Group"
-msgstr "Brak grup"
+msgstr "Grupa narzędzi"
 
 #: middlebar.py:489
-#, fuzzy
 msgid "Undo Group"
-msgstr "Brak grup"
+msgstr "Cofnij grupę"
 
 #: middlebar.py:490
-#, fuzzy
 msgid "Zoom Group"
-msgstr "Brak grup"
+msgstr "Powiększ grupę"
 
 #: middlebar.py:491
-#, fuzzy
 msgid "Edit Group"
-msgstr "Brak grup"
+msgstr "Edytuj grupę"
 
 #: middlebar.py:492
-#, fuzzy
 msgid "Sync Split Group"
-msgstr "Wybierz grupę filtrów"
+msgstr "Synchronizuj podzieloną grupę"
 
 #: middlebar.py:493
-#, fuzzy
 msgid "Delete Group"
-msgstr "Usuń bieżącą grupę"
+msgstr "Usuń grupę"
 
 #: middlebar.py:494
-#, fuzzy
 msgid "Monitor Add Group"
-msgstr "Grupa kompozytorów dla automatycznego wyłaniania/zanikania"
+msgstr "Monitor dodaj grupę"
 
 #: middlebar.py:495
-#, fuzzy
 msgid "Timecode Display"
-msgstr "Licznik czasu po lewej stronie"
+msgstr "Wyświetlanie kodu czasowego"
 
 #: middlebar.py:496
-#, fuzzy
 msgid "Workflow Menu"
-msgstr "Predefiniowane ustawienia obiegu pracy"
+msgstr "Menu przepływu pracy"
 
 #: middlebar.py:497
 msgid "Edit Tool Menu"
-msgstr ""
+msgstr "Edycja menu narzędzi"
 
 #: medialog.py:325
 msgid "New Group..."
@@ -6008,14 +5972,12 @@ msgid "Y Off:"
 msgstr "Przesunięcie Y:"
 
 #: tools/titler.py:383
-#, fuzzy
 msgid "Blur:"
-msgstr "Rozmycie"
+msgstr "Rozmycie:"
 
 #: tools/titler.py:448
-#, fuzzy
 msgid "Gradient Direction:"
-msgstr "Kierunek wytarcia"
+msgstr "Kierunek gradientu:"
 
 #: tools/titler.py:471
 msgid "Load Layers"
@@ -6042,9 +6004,8 @@ msgid "Shadow"
 msgstr "Cień"
 
 #: tools/titler.py:569
-#, fuzzy
 msgid "Gradient"
-msgstr "Odcień gradientu"
+msgstr ""
 
 #: tools/titler.py:572
 msgid "Layer Text"
@@ -6273,12 +6234,10 @@ msgid "Save Render Args into a text file"
 msgstr "Zapisz argumenty renderowania w pliku tekstowym"
 
 #: rendergui.py:865
-#, fuzzy
 msgid "Load Render Args from Current Encoding"
-msgstr "Załaduj argumenty renderowania z pliku tekstowego"
+msgstr "Załaduj argumenty renderowania z bieżącego kodowania"
 
 #: rendergui.py:869
-#, fuzzy
 msgid "Reset all Render Options to Defaults"
 msgstr "Zresetuj wszystkie opcje renderowania do wartości domyślnych"
 
@@ -6660,19 +6619,16 @@ msgid "No Decorations"
 msgstr "Bez dekoracji"
 
 #: preferenceswindow.py:363
-#, fuzzy
 msgid "Flowblade Theme Neutral"
-msgstr "Motyw Flowblade'a"
+msgstr "Motyw Flowblade'a neutralny"
 
 #: preferenceswindow.py:364
-#, fuzzy
 msgid "Flowblade Theme Gray"
-msgstr "Motyw Flowblade'a"
+msgstr "Motyw Flowblade'a szary"
 
 #: preferenceswindow.py:365
-#, fuzzy
 msgid "Flowblade Theme Blue"
-msgstr "Motyw Flowblade'a"
+msgstr "Motyw Flowblade'a niebieski"
 
 #: preferenceswindow.py:366
 msgid "Dark Theme"
@@ -6762,7 +6718,7 @@ msgstr "Wykonaj układ GUI oparty na:"
 
 #: preferenceswindow.py:435
 msgid "Toolbar color icons"
-msgstr ""
+msgstr "Ikony kolorów paska narzędzi"
 
 #: preferenceswindow.py:471
 msgid ""
@@ -8225,19 +8181,16 @@ msgid "Alt + Shift"
 msgstr ""
 
 #: shortcuts.py:441
-#, fuzzy
 msgid "Control + Alt"
-msgstr "Ctrl + N"
+msgstr ""
 
 #: shortcuts.py:442
-#, fuzzy
 msgid "Control + Shift"
-msgstr "Ctrl + S"
+msgstr ""
 
 #: shortcuts.py:443
-#, fuzzy
 msgid "Control + Alt + Shift"
-msgstr "Ctrl + S"
+msgstr ""
 
 #: shortcuts.py:444
 msgid "Control"
@@ -8268,9 +8221,8 @@ msgid "<control><alt><shift>"
 msgstr ""
 
 #: shortcuts.py:452
-#, fuzzy
 msgid "<control>"
-msgstr "Ctrl + N"
+msgstr ""
 
 #: clipmenuaction.py:393
 msgid "Previous clip does not have enough material to cover blank area"
@@ -8334,16 +8286,15 @@ msgstr ""
 
 #: menuactions.py:197
 msgid "Add New Custom Shortcuts Group"
-msgstr ""
+msgstr "Dodaj nową grupę niestandardowych skrótów"
 
 #: menuactions.py:198
 msgid "User Shortcuts Group name:"
-msgstr ""
+msgstr "Nazwa grupy skrótów użytkownika:"
 
 #: menuactions.py:202
-#, fuzzy
 msgid "Delete Current User Shortcuts?"
-msgstr "Usuń bieżącą grupę"
+msgstr "Usunąć bieżące skróty użytkownika?"
 
 #: exporting.py:384
 msgid "Sequence is too short"
@@ -8592,14 +8543,12 @@ msgid "Top Down Auto Follow"
 msgstr "Automatyczne śledzenie z góry na dół"
 
 #: workflow.py:224
-#, fuzzy
 msgid "Show Tooltips for Edit Tools"
-msgstr "Pokazuj dymki dla narzędzi"
+msgstr "Pokaż etykiety narzędzi do edycji"
 
 #: workflow.py:312
-#, fuzzy
 msgid "Edit Tool Active"
-msgstr "Narzędzie aktywne"
+msgstr "Narzędzie edycji aktywne"
 
 #: workflow.py:320
 msgid "Set Position"
@@ -8612,9 +8561,8 @@ msgstr ""
 "pustego miejsca"
 
 #: workflow.py:439
-#, fuzzy
 msgid "Keyboard shortcut: "
-msgstr "Skróty klawiszowe"
+msgstr "Skróty klawiszowe: "
 
 #: workflow.py:486
 msgid "Workflow First Run Wizard"
@@ -8633,9 +8581,8 @@ msgid "<b>Flowblade</b> comes with a configurable workflow."
 msgstr "<b>Flowblade</b>zawiera konfigurowalny przepływ pracy."
 
 #: workflow.py:502
-#, fuzzy
 msgid " You can select which <b>Edit Tools</b> you want to use.\n"
-msgstr " Możesz wybrać, które <b>narzędzia</b> chcesz użyć.\n"
+msgstr " Możesz wybrać, których <b>Narzędzi edycji</b> chcesz użyć.\n"
 
 #: workflow.py:503
 msgid " Many timeline edit <b>behaviours</b> are configurable.\n"
@@ -8692,7 +8639,6 @@ msgstr ""
 "Ten obieg pracy był stosowany w poprzednich wersjach aplikacji."
 
 #: workflow.py:534
-#, fuzzy
 msgid "<b>Keep Existing Workflow</b>"
 msgstr "<b>Zachowaj istniejący przepływ pracy</b>"
 
@@ -8709,6 +8655,8 @@ msgid ""
 "This Clip has a deprecated Volume filter and cannot be edited with Keyframe "
 "Tool!"
 msgstr ""
+"Ten klip ma przestarzały filtr głośności i nie można go edytować za pomocą "
+"narzędzia klatek kluczowych!"
 
 #: kftoolmode.py:325
 msgid ""
@@ -8718,6 +8666,11 @@ msgid ""
 "replaced\n"
 "to edit this Clip with Keyframe Tool."
 msgstr ""
+"Flowblade 2.8 został zmieniony, aby używać filtrów głośności z wartościami "
+"dB.\n"
+"\n"
+"Filtry głośności starego typu będą nadal działać, ale muszą byćzastąpione\n"
+"aby edytować ten klip za pomocą narzędzia klatek kluczowych."
 
 #: kftoolmode.py:426
 msgid "Media Frame: "
@@ -9125,33 +9078,31 @@ msgstr "Wybierz kodowanie dla renderera"
 
 #: editorlayout.py:164
 msgid "Top Row Default Notebook"
-msgstr ""
+msgstr "W górnym rzędzie domyślnie notatnik"
 
 #: editorlayout.py:165
 msgid "Top Row Right"
-msgstr ""
+msgstr "Górny rząd po prawej"
 
 #: editorlayout.py:166
-#, fuzzy
 msgid "Left Column"
-msgstr "2 kolumny"
+msgstr "Lewa kolumna"
 
 #: editorlayout.py:167
 msgid "Bottom Row Left"
-msgstr ""
+msgstr "Dolny rząd po lewej"
 
 #: editorlayout.py:168
 msgid "Bottom Row Right"
-msgstr ""
+msgstr "Dolny rząd po prawej"
 
 #: editorlayout.py:169
-#, fuzzy
 msgid "Not Visible"
-msgstr "Widoczny"
+msgstr "Niewidoczny"
 
 #: editorlayout.py:170
 msgid "Top Row Project Panel Default"
-msgstr ""
+msgstr "Panel projektu w górnym rzędzie, domyślnie"
 
 #: editorlayout.py:174
 msgid "Media"
@@ -9174,57 +9125,48 @@ msgid "Jobs"
 msgstr "Zadania"
 
 #: editorlayout.py:183
-#, fuzzy
 msgid "Filter Select"
-msgstr "Wybór koloru"
+msgstr "Wybór filtra"
 
 #: editorlayout.py:348
 msgid "Panel Placement"
-msgstr ""
+msgstr "Ulokowanie panelu"
 
 #: editorlayout.py:353
-#, fuzzy
 msgid "Project Panel"
-msgstr "Nazwa projektu:"
+msgstr "Panel projektu"
 
 #: editorlayout.py:361
-#, fuzzy
 msgid "Media Panel"
-msgstr "Ścieżka multimediów:"
+msgstr "Panel multimediów"
 
 #: editorlayout.py:368
-#, fuzzy
 msgid "Range Log Panel"
-msgstr "Rejestr zakresu"
+msgstr "Panel dziennika zasięgu"
 
 #: editorlayout.py:375
-#, fuzzy
 msgid "Filter Panel"
-msgstr "Filtry"
+msgstr "Panel filtrów"
 
 #: editorlayout.py:382
-#, fuzzy
 msgid "Compositors Panel"
-msgstr "Kompozytory"
+msgstr "Panel kompozytorów"
 
 #: editorlayout.py:389
 msgid "Jobs Panel"
-msgstr ""
+msgstr "Panel zadań"
 
 #: editorlayout.py:396
-#, fuzzy
 msgid "Render Panel"
-msgstr "Zakres renderowania:"
+msgstr "Panel renderowania"
 
 #: editorlayout.py:403
-#, fuzzy
 msgid "Filter Select Panel"
-msgstr "Usuń wybrany uchwyt"
+msgstr "Panel wyboru filtra"
 
 #: editorlayout.py:441
-#, fuzzy
 msgid "Tabs Positions"
-msgstr "Umiejscowienie zakładek"
+msgstr "Pozycje zakładek"
 
 #~ msgid "Clip Filters Stack"
 #~ msgstr "Stos filtrów klipu"
