@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-22 08:18+0200\n"
+"POT-Creation-Date: 2020-12-23 08:46+0200\n"
 "PO-Revision-Date: 2019-08-29 13:33+0200\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -1157,7 +1157,7 @@ msgstr "Nový projekt"
 #: propertyeditorbuilder.py:806 middlebar.py:455 rendergui.py:51
 #: rendergui.py:110 rendergui.py:124 rendergui.py:142 rendergui.py:1075
 #: preferenceswindow.py:43 tools/batchrendering.py:1004
-#: tools/batchrendering.py:1077 proxyediting.py:327 tlineaction.py:1566
+#: tools/batchrendering.py:1077 proxyediting.py:327 tlineaction.py:1573
 #: patternproducer.py:358 patternproducer.py:391 patternproducer.py:422
 #: tools/gmic.py:400 tools/gmic.py:424 tools/gmic.py:553 dialogutils.py:108
 #: dialogutils.py:168 exporting.py:442 tools/containerprogramedit.py:89
@@ -3256,7 +3256,7 @@ msgstr "Cesta k multimédiím:"
 msgid "Composite clip on:"
 msgstr "Složit záběr na:"
 
-#: panels.py:260 panels.py:482 rendergui.py:705 tools/toolsencoding.py:391
+#: panels.py:260 panels.py:491 rendergui.py:705 tools/toolsencoding.py:391
 msgid "Type:"
 msgstr "Typ:"
 
@@ -3268,7 +3268,7 @@ msgstr "Vzor stírání:"
 msgid "Dip Color:"
 msgstr "Barva poklesu:"
 
-#: panels.py:293 panels.py:361 panels.py:398 panels.py:495 tools/gmic.py:743
+#: panels.py:293 panels.py:370 panels.py:407 panels.py:504 tools/gmic.py:743
 msgid "Length:"
 msgstr "Délka:"
 
@@ -3295,35 +3295,35 @@ msgstr "Do úchopu záběru:"
 msgid "Steal frames from clips if needed"
 msgstr "Smazat všechny klíčové snímky po rozsahu záběru"
 
-#: panels.py:351 panels.py:525
+#: panels.py:348 panels.py:534
 msgid "Transition Options"
 msgstr "Volby pro přechod"
 
-#: panels.py:352 panels.py:389 panels.py:426 panels.py:469 panels.py:526
+#: panels.py:349 panels.py:398 panels.py:435 panels.py:478 panels.py:535
 msgid "Encoding"
 msgstr "Kódování"
 
-#: panels.py:353
+#: panels.py:350
 msgid "Media Overlap info"
 msgstr "Údaje o překrývání se záznamů"
 
-#: panels.py:388
+#: panels.py:397
 msgid "Transition"
 msgstr "Přechod"
 
-#: panels.py:425 translations.py:600
+#: panels.py:434 translations.py:600
 msgid "Fade"
 msgstr "Prolínání"
 
-#: panels.py:434
+#: panels.py:443
 msgid "Transitions / Fades to be rerendered:"
 msgstr "Přechody/prolínání ke znovuzpracování:"
 
-#: panels.py:439
+#: panels.py:448
 msgid "There are "
 msgstr "Jsou "
 
-#: panels.py:439
+#: panels.py:448
 msgid ""
 " Transitions / Fades that cannot be rerendered, either because they are\n"
 "created with Flowblade version <=1.14 or the source clips are no longer on "
@@ -3333,21 +3333,21 @@ msgstr ""
 "vytvořeny ve Flowblade verze <=1.14, nebo že zdrojové záběry už nejsou na "
 "časové ose."
 
-#: panels.py:468 tools/containerprogramedit.py:165 jobs.py:372
+#: panels.py:477 tools/containerprogramedit.py:165 jobs.py:372
 msgid "Info"
 msgstr "Informace"
 
-#: panels.py:478 translations.py:278 mlttransitions.py:166
+#: panels.py:487 translations.py:278 mlttransitions.py:166
 #: mlttransitions.py:201
 msgid "Fade In"
 msgstr "Postupný náběh"
 
-#: panels.py:479 translations.py:279 mlttransitions.py:167
+#: panels.py:488 translations.py:279 mlttransitions.py:167
 #: mlttransitions.py:202
 msgid "Fade Out"
 msgstr "Do ztracena"
 
-#: panels.py:487
+#: panels.py:496
 msgid "Color:"
 msgstr "Barva:"
 
@@ -7273,7 +7273,7 @@ msgstr "Nejsou vybrány žádné záběry!"
 msgid "You need to select clips to overwrite to perform this edit."
 msgstr "Musíte vybrat záběry k přepsání, aby se tato úprava provedla."
 
-#: tlineaction.py:729 tlineaction.py:1828
+#: tlineaction.py:729 tlineaction.py:1835
 msgid "3 point edit not defined!"
 msgstr "Tříbodová úprava nestanovena!"
 
@@ -7301,15 +7301,15 @@ msgstr ""
 "Záběr použitý na vytvoření tohoto sazeče byl odstraněn\n"
 "nebo přesunut do jiné stopy."
 
-#: tlineaction.py:1058 tlineaction.py:1382 tlineaction.py:1481
+#: tlineaction.py:1065 tlineaction.py:1389 tlineaction.py:1488
 msgid "Rendering "
 msgstr "Zpracování "
 
-#: tlineaction.py:1145
+#: tlineaction.py:1152
 msgid "Rerendering "
 msgstr "Znovuzpracování "
 
-#: tlineaction.py:1172
+#: tlineaction.py:1179
 msgid ""
 "To create a rendered transition you need enough media overlap from both "
 "clips!\n"
@@ -7319,61 +7319,61 @@ msgstr ""
 "u obou záběrů!\n"
 "\n"
 
-#: tlineaction.py:1177
+#: tlineaction.py:1184
 msgid "<b>FIRST CLIP MEDIA OVERLAP:</b>  "
 msgstr "<b>PŘEKRYTÍ ZÁZNAMU PRVNÍHO ZÁBĚRU:</b>  "
 
-#: tlineaction.py:1178 tlineaction.py:1186
+#: tlineaction.py:1185 tlineaction.py:1193
 msgid "Available <b>"
 msgstr "Dostupné <b>"
 
-#: tlineaction.py:1178 tlineaction.py:1186 tlineaction.py:1240
-#: tlineaction.py:1248
+#: tlineaction.py:1185 tlineaction.py:1193 tlineaction.py:1247
+#: tlineaction.py:1255
 msgid "</b> frame(s), "
 msgstr "</b> snímek(y),"
 
-#: tlineaction.py:1179 tlineaction.py:1187
+#: tlineaction.py:1186 tlineaction.py:1194
 msgid "Required <b>"
 msgstr "Požadováno </b> "
 
-#: tlineaction.py:1179 tlineaction.py:1180 tlineaction.py:1188
-#: tlineaction.py:1241
+#: tlineaction.py:1186 tlineaction.py:1187 tlineaction.py:1195
+#: tlineaction.py:1248
 msgid "</b> frame(s)"
 msgstr "</b> snímek(y)"
 
-#: tlineaction.py:1180
+#: tlineaction.py:1187
 msgid "Trim first clip end back <b>"
 msgstr ""
 
-#: tlineaction.py:1185
+#: tlineaction.py:1192
 msgid "<b>SECOND CLIP MEDIA OVERLAP:</b> "
 msgstr "<b>PŘEKRYTÍ ZÁZNAMU DRUHÉHO ZÁBĚRU:</b>  "
 
-#: tlineaction.py:1187 tlineaction.py:1249
+#: tlineaction.py:1194 tlineaction.py:1256
 msgid "</b> frame(s) "
 msgstr "</b> snímek(y) "
 
-#: tlineaction.py:1188
+#: tlineaction.py:1195
 msgid "Trim second clip start forward <b>"
 msgstr ""
 
-#: tlineaction.py:1194
+#: tlineaction.py:1201
 msgid "Current situation, not enought media overlap:"
 msgstr "Nynější situace, nedostatečné překrývání se záznamů:"
 
-#: tlineaction.py:1196
+#: tlineaction.py:1203
 msgid "You need more media overlap:"
 msgstr "Je potřeba větší překrývání se záznamů:"
 
-#: tlineaction.py:1224
+#: tlineaction.py:1231
 msgid "Activating 'Steal frames from clips if needed' checkbox can help too."
 msgstr ""
 
-#: tlineaction.py:1229
+#: tlineaction.py:1236
 msgid "More media overlap needed to create transition!"
 msgstr "Pro vytvoření přechodu je potřeba větší překrývání se záznamů!"
 
-#: tlineaction.py:1234
+#: tlineaction.py:1241
 #, fuzzy
 msgid ""
 "To create a rendered Transition you need enough media overlap from both "
@@ -7384,47 +7384,47 @@ msgstr ""
 "u obou záběrů!\n"
 "\n"
 
-#: tlineaction.py:1239
+#: tlineaction.py:1246
 #, fuzzy
 msgid "<b>FIRST CLIP:</b>  "
 msgstr "<b>PŘEKRYTÍ ZÁZNAMU PRVNÍHO ZÁBĚRU:</b>  "
 
-#: tlineaction.py:1240 tlineaction.py:1248
+#: tlineaction.py:1247 tlineaction.py:1255
 #, fuzzy
 msgid "Length <b>"
 msgstr "<b>Délka: </b>"
 
-#: tlineaction.py:1241 tlineaction.py:1249
+#: tlineaction.py:1248 tlineaction.py:1256
 #, fuzzy
 msgid "Required shortning <b>"
 msgstr "Požadováno </b> "
 
-#: tlineaction.py:1247
+#: tlineaction.py:1254
 #, fuzzy
 msgid "<b>SECOND CLIP:</b> "
 msgstr "<b>PŘEKRYTÍ ZÁZNAMU DRUHÉHO ZÁBĚRU:</b>  "
 
-#: tlineaction.py:1257
+#: tlineaction.py:1264
 msgid "Lengthen first Clip from beginning:"
 msgstr ""
 
-#: tlineaction.py:1265 tlineaction.py:1282
+#: tlineaction.py:1272 tlineaction.py:1289
 msgid "or make Transition shorter."
 msgstr ""
 
-#: tlineaction.py:1274
+#: tlineaction.py:1281
 msgid "Lengthen second Clip from end:"
 msgstr ""
 
-#: tlineaction.py:1286
+#: tlineaction.py:1293
 msgid "<b>Stealing frames from clips to transition failed!</b>"
 msgstr ""
 
-#: tlineaction.py:1301
+#: tlineaction.py:1308
 msgid "Only Video Track mix / fades available"
 msgstr "Jsou dostupné pouze směsi/prolínání pro obrazovou stopu"
 
-#: tlineaction.py:1302
+#: tlineaction.py:1309
 msgid ""
 "Unfortunately rendered mixes and fades can currently\n"
 "only be applied on clips on Video Tracks."
@@ -7432,7 +7432,7 @@ msgstr ""
 "Bohužel lze zpracované směsi a prolínání nyní použít jen na záběry na "
 "obrazových stopách."
 
-#: tlineaction.py:1339
+#: tlineaction.py:1346
 msgid ""
 "Clip is too short for the requested fade:\n"
 "\n"
@@ -7440,35 +7440,35 @@ msgstr ""
 "Záběr je pro požadované prolínání příliš krátký:\n"
 "\n"
 
-#: tlineaction.py:1340
+#: tlineaction.py:1347
 msgid "<b>Clip Length:</b> "
 msgstr "<b>Délka záběru: </b>"
 
-#: tlineaction.py:1340 tlineaction.py:1341
+#: tlineaction.py:1347 tlineaction.py:1348
 msgid " frame(s)\n"
 msgstr " snímek(y).\n"
 
-#: tlineaction.py:1341
+#: tlineaction.py:1348
 msgid "<b>Fade Length:</b> "
 msgstr "<b>Délka prolínání: </b>"
 
-#: tlineaction.py:1342
+#: tlineaction.py:1349
 msgid "Clip is too short!"
 msgstr "Záběr je příliš krátký!"
 
-#: tlineaction.py:1563
+#: tlineaction.py:1570
 msgid "Rerender all Rendered Transitions / Fades"
 msgstr "Zpracovat všechny vykreslované přechody/prolínání"
 
-#: tlineaction.py:1607
+#: tlineaction.py:1614
 msgid "Rendering item "
 msgstr "Zpracovává se položka "
 
-#: tlineaction.py:1794 tlineaction.py:1799
+#: tlineaction.py:1801 tlineaction.py:1806
 msgid "Can't rerender this fade / transition."
 msgstr "Nelze zpracovat znovu toto prolínání/tento přechod."
 
-#: tlineaction.py:1795
+#: tlineaction.py:1802
 msgid ""
 "This fade / transition was created with Flowblade <= 1.14 and does not have "
 "the necessary data embedded.\n"
@@ -7479,7 +7479,7 @@ msgstr ""
 "Znovuzpracování pracuje s prolínáními/přechody vytvořenými s Flowblade >= "
 "1.16."
 
-#: tlineaction.py:1800
+#: tlineaction.py:1807
 msgid ""
 "The clip/s used to create this fade / transition are no longer available on "
 "the timeline."
@@ -7487,21 +7487,21 @@ msgstr ""
 "Záběr(y) použitý k vytvoření tohoto prolínání/přechodu už nadále není v "
 "časové ose dostupný."
 
-#: tlineaction.py:1818
+#: tlineaction.py:1825
 msgid "No Clip loaded into Monitor"
 msgstr "V okně pro sledování obrazového záznamu není nahrán žádný záběr"
 
-#: tlineaction.py:1819
+#: tlineaction.py:1826
 msgid "Can't do the requested edit because there is no Clip in Monitor."
 msgstr ""
 "Nelze provést požadovanou úpravu, protože v okně pro sledování obrazového "
 "záznamu není žádný záběr."
 
-#: tlineaction.py:1823
+#: tlineaction.py:1830
 msgid "Defined range in Monitor Clip is too short"
 msgstr "Stanovený rozsah záběru v náhledu záběru je příliš krátký"
 
-#: tlineaction.py:1824
+#: tlineaction.py:1831
 msgid ""
 "Can't do the requested edit because Mark In -> Mark Out Range or Clip is too "
 "short."
@@ -7509,7 +7509,7 @@ msgstr ""
 "Nelze provést požadovanou úpravu, protože rozsah od značky pro začátek "
 "záběru po značku pro konec záběru nebo záběr je příliš krátký."
 
-#: tlineaction.py:1829
+#: tlineaction.py:1836
 msgid ""
 "You need to set Mark In and Mark Out on Timeline or Clip and\n"
 "additional Mark In on Timeline or Clip to perform this edit."
