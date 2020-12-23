@@ -1447,8 +1447,8 @@ def transition_edit_dialog(callback, transition_data):
                         (_("Cancel"), Gtk.ResponseType.REJECT,
                         _("Apply"), Gtk.ResponseType.ACCEPT))
 
-    alignment, type_combo, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button, steal_check = panels.get_transition_panel(transition_data)
-    widgets = (type_combo, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button, steal_check)
+    alignment, type_combo, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button, steal_check, encodings = panels.get_transition_panel(transition_data)
+    widgets = (type_combo, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button, steal_check, encodings)
     dialog.connect('response', callback, widgets, transition_data)
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)

@@ -862,8 +862,6 @@ def add_transition_pressed(retry_from_render_folder_select=False):
     clip_count = movemodes.selected_range_out - movemodes.selected_range_in + 1 # +1 out incl.
 
     if not ((clip_count == 2) or (clip_count == 1)):
-        # INFOWINDOW
-        print("clip count")
         return
 
     if track.id < current_sequence().first_video_index and clip_count == 1:
@@ -923,10 +921,19 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
         return
 
     # Get input data
-    type_combo, length_entry, enc_combo, quality_combo, wipe_luma_combo_box, color_button, steal_frames = selection_widgets
+    type_combo, length_entry, enc_combo, quality_combo, wipe_luma_combo_box, color_button, steal_frames, encodings = selection_widgets
     transition_type_selection_index = type_combo.get_active()
-    encoding_option_index = enc_combo.get_active()
+
     quality_option_index = quality_combo.get_active()
+    
+    # 'encodings' is subset of 'renderconsumer.encoding_options' because libx264 was always buggy for this 
+    # use. We find out right 'renderconsumer.encoding_options' index for rendering.
+    selected_encoding_option_index = enc_combo.get_active()
+    enc = encodings[selected_encoding_option_index]
+    encoding_option_index = renderconsumer.encoding_options.index(enc)
+
+    print("selected_encoding_option_index", selected_encoding_option_index, "encoding_option_index", encoding_option_index)
+    
     extension_text = "." + renderconsumer.encoding_options[encoding_option_index].extension
     sorted_wipe_luma_index = wipe_luma_combo_box.get_active()
     color_str = color_button.get_color().to_string()
@@ -1331,7 +1338,7 @@ def _add_fade_dialog_callback(dialog, response_id, selection_widgets, transition
         return
 
     # Save encoding
-    PROJECT().set_project_property(appconsts.P_PROP_TRANSITION_ENCODING,(encoding_option_index,quality_option_index))
+    PROJECT().set_project_property(appconsts.P_PROP_TRANSITION_ENCODING, (encoding_option_index,quality_option_index))
     
     clip = transition_data["clip"]
     
@@ -1455,7 +1462,7 @@ def _fade_RE_render_dialog_callback(dialog, response_id, selection_widgets, fade
         from_clone.clip_out = from_clone.clip_out + length
     
     # Save encoding
-    PROJECT().set_project_property(appconsts.P_PROP_TRANSITION_ENCODING,(encoding_option_index, quality_option_index))
+    PROJECT().set_project_property(appconsts.P_PROP_TRANSITION_ENCODING, (encoding_option_index, quality_option_index))
 
     # Remember fade and transition lengths for next invocation, users prefer this over one default value.
     editorstate.fade_length = length

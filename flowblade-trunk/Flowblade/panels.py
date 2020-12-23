@@ -316,13 +316,10 @@ def get_transition_panel(trans_data):
                                        in_clip_value)
 
     # Encoding widgets
-    encodings_cb = Gtk.ComboBoxText()
-    for encoding in renderconsumer.encoding_options:
-        encodings_cb.append_text(encoding.name)
-    encodings_cb.set_active(0)
+    encodings, encodings_cb = _get_encodings_widget_and_list()
 
     quality_cb = Gtk.ComboBoxText()
-    transition_widgets = (encodings_cb, quality_cb)
+    transition_widgets = (encodings_cb, encodings, quality_cb)
     encodings_cb.connect("changed", 
                               lambda w,e: _transition_encoding_changed(transition_widgets), 
                               None)
@@ -354,7 +351,19 @@ def get_transition_panel(trans_data):
 
     alignment = guiutils.set_margins(vbox, 12, 24, 12, 12)
 
-    return (alignment, type_combo_box, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button, steal_frames)
+    return (alignment, type_combo_box, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button, steal_frames, encodings)
+
+def _get_encodings_widget_and_list():
+    # We have unexplauined issue with rendering with libx264 
+    # that needs to papered over with this.
+    encodings_cb = Gtk.ComboBoxText()
+    encodings = []
+    for encoding in renderconsumer.encoding_options:
+        if encoding.vcodec != "libx264":
+            encodings_cb.append_text(encoding.name)
+            encodings.append(encoding)
+    encodings_cb.set_active(0)
+    return (encodings, encodings_cb)
 
 def get_transition_re_render_panel(trans_data):
     transition_length = trans_data["clip"] .clip_out - trans_data["clip"].clip_in + 1 # +1 out inclusive
@@ -533,8 +542,10 @@ def _transition_encoding_changed(widgets):
     _fill_transition_quality_combo_box(widgets)
  
 def _fill_transition_quality_combo_box(widgets, quality_index=-1):
-    encodings_cb, quality_cb = widgets
-    enc_index = encodings_cb.get_active()
+    encodings_cb, encodings, quality_cb = widgets
+    sel_enc_index = encodings_cb.get_active()
+    sel_enc = encodings[sel_enc_index]
+    enc_index = renderconsumer.encoding_options.index(sel_enc)
     encoding = renderconsumer.encoding_options[enc_index]
 
     quality_cb.get_model().clear()
