@@ -245,11 +245,21 @@ class AddMediaFilesThread(threading.Thread):
 
         is_first_video_load = PROJECT().is_first_video_load()
         duplicates = []
+        anim_gif_name = None
         target_bin = PROJECT().c_bin
         succes_new_file = None
         filenames = self.filenames
         for new_file in filenames:
             (folder, file_name) = os.path.split(new_file)
+            
+            # Refuse to load animated gifs
+            extension = os.path.splitext(file_name)[1].lower()
+            if extension == ".gif":
+                 if Image.open(new_file).is_animated == True:
+                     anim_gif_name = file_name
+                     continue
+                     
+            
             if PROJECT().media_file_exists(new_file):
                 duplicates.append(file_name)
             else:
@@ -283,6 +293,13 @@ class AddMediaFilesThread(threading.Thread):
         normal_cursor = Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR) #RTL
         gui.editor_window.window.get_window().set_cursor(normal_cursor)
         gui.editor_window.bin_info.display_bin_info()
+        
+        if anim_gif_name != None: # Tell we won't load animated gifs.
+            primary_txt = _("Opening animated .gif file was refused!")
+            secondary_txt = _("Flowblade does not support displaying animated GIF files as media objects.\n")
+            secondary_txt = secondary_txt + _("A possible workaround is to render GIF into a frame sequence and\nopen that as a media item.")
+            dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+
         Gdk.threads_leave()
 
         if len(duplicates) > 0:
