@@ -1315,12 +1315,18 @@ def _add_fade_dialog_callback(dialog, response_id, selection_widgets, transition
         return
 
     # Get input data
-    type_combo, length_entry, enc_combo, quality_combo, color_button = selection_widgets
+    type_combo, length_entry, enc_combo, quality_combo, color_button, encodings = selection_widgets
 
     transition_type_selection_index = type_combo.get_active() + 3 # +3 because mlttransitions.RENDERED_FADE_IN = 3 and mlttransitions.RENDERED_FADE_OUT = 4
                                                                   # and fade in/out selection indexes are 0 and 1
-    encoding_option_index = enc_combo.get_active()
     quality_option_index = quality_combo.get_active()
+
+    # 'encodings' is subset of 'renderconsumer.encoding_options' because libx264 was always buggy for this 
+    # use. We find out right 'renderconsumer.encoding_options' index for rendering.
+    selected_encoding_option_index = enc_combo.get_active()
+    enc = encodings[selected_encoding_option_index]
+    encoding_option_index = renderconsumer.encoding_options.index(enc)
+    
     extension_text = "." + renderconsumer.encoding_options[encoding_option_index].extension
     color_str = color_button.get_color().to_string()
 
@@ -1338,7 +1344,7 @@ def _add_fade_dialog_callback(dialog, response_id, selection_widgets, transition
         return
 
     # Save encoding
-    PROJECT().set_project_property(appconsts.P_PROP_TRANSITION_ENCODING, (encoding_option_index,quality_option_index))
+    PROJECT().set_project_property(appconsts.P_PROP_TRANSITION_ENCODING, (encoding_option_index, quality_option_index))
     
     clip = transition_data["clip"]
     
@@ -1437,11 +1443,17 @@ def _fade_RE_render_dialog_callback(dialog, response_id, selection_widgets, fade
     if response_id != Gtk.ResponseType.ACCEPT:
         dialog.destroy()
         return
-    
+
     # Get input data
-    enc_combo, quality_combo = selection_widgets
-    encoding_option_index = enc_combo.get_active()
+    enc_combo, quality_combo, encodings = selection_widgets
     quality_option_index = quality_combo.get_active()
+
+    # 'encodings' is subset of 'renderconsumer.encoding_options' because libx264 was always buggy for this 
+    # use. We find out right 'renderconsumer.encoding_options' index for rendering.
+    selected_encoding_option_index = enc_combo.get_active()
+    enc = encodings[selected_encoding_option_index]
+    encoding_option_index = renderconsumer.encoding_options.index(enc)
+
     extension_text = "." + renderconsumer.encoding_options[encoding_option_index].extension
 
     dialog.destroy()

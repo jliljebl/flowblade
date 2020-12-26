@@ -1475,8 +1475,8 @@ def fade_re_render_dialog(callback, fade_data):
                         (_("Cancel"), Gtk.ResponseType.REJECT,
                         _("Rerender"), Gtk.ResponseType.ACCEPT))
 
-    alignment, encodings_cb, quality_cb = panels.get_fade_re_render_panel(fade_data)
-    widgets = (encodings_cb, quality_cb)
+    alignment, encodings_cb, quality_cb, encodings = panels.get_fade_re_render_panel(fade_data)
+    widgets = (encodings_cb, quality_cb, encodings)
     dialog.connect('response', callback, widgets, fade_data)
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
@@ -1503,8 +1503,8 @@ def fade_edit_dialog(callback, transition_data):
                         (_("Cancel"), Gtk.ResponseType.REJECT,
                         _("Apply"), Gtk.ResponseType.ACCEPT))
 
-    alignment, type_combo, length_entry, encodings_cb, quality_cb, color_button = panels.get_fade_panel(transition_data)
-    widgets = (type_combo, length_entry, encodings_cb, quality_cb, color_button)
+    alignment, type_combo, length_entry, encodings_cb, quality_cb, color_button, encodings = panels.get_fade_panel(transition_data)
+    widgets = (type_combo, length_entry, encodings_cb, quality_cb, color_button, encodings)
     dialog.connect('response', callback, widgets, transition_data)
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
