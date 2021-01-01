@@ -273,7 +273,7 @@ msgstr "La requête d'edition ne peut être effectuée."
 
 #: clipmenuaction.py:422
 msgid "Next clip does not have enough material to cover blank area"
-msgstr "La durée du clip suivant n'est pas suffisante pour couvrir la plage vide"
+msgstr "La durée du clip suivant n'est pas Cousuffisante pour couvrir la plage vide"
 
 #: compositeeditor.py:84 compositeeditor.py:110 compositeeditor.py:193
 msgid "No Compositor"
@@ -5920,7 +5920,7 @@ msgstr "Déplacer un raccord"
 
 #: shortcuts.py:354 workflow.py:72
 msgid "Slip"
-msgstr "Coulisser dans une fenêtre"
+msgstr "Coulisser dans le clip"
 
 #: shortcuts.py:355 workflow.py:73
 msgid "Spacer"
