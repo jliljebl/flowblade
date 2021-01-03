@@ -610,30 +610,28 @@ def get_render_panel_left(render_widgets):
     return render_panel
 
 def get_render_panel_right(render_widgets, render_clicked_cb, to_queue_clicked_cb):
-    small_height = (editorstate.SCREEN_HEIGHT < 902)
 
-    if small_height:
+
+    if editorstate.SCREEN_HEIGHT < 900:
         encoding_panel = guiutils.get_named_frame(_("Encoding Format"), render_widgets.encoding_panel.vbox, 4)
-           
+
+    small_height = (editorstate.SCREEN_HEIGHT < 902)
+    
     opts_panel = guiutils.get_named_frame(_("Render Args"), render_widgets.args_panel.vbox, 4)
     
     bin_row = Gtk.HBox()
     bin_row.pack_start(guiutils.get_pad_label(10, 8),  False, False, 0)
-    bin_row.pack_start(Gtk.Label(label=_("Open File in Bin:")),  False, False, 0)
-    bin_row.pack_start(guiutils.get_pad_label(10, 2),  False, False, 0)
     bin_row.pack_start(render_widgets.args_panel.open_in_bin,  False, False, 0)
+    bin_row.pack_start(guiutils.get_pad_label(4, 1),  False, False, 0)
+    bin_row.pack_start(Gtk.Label(label=_("Open File in Bin")),  False, False, 0)
     bin_row.pack_start(Gtk.Label(), True, True, 0)
+    guiutils.set_margins(bin_row, 0,2,0,0)
 
     range_row = Gtk.HBox()
     range_row.pack_start(guiutils.get_pad_label(10, 8),  False, False, 0)
-    #if not editorstate.screen_size_small_width():
-    #    range_row.pack_start(Gtk.Label(label=_("Range:")),  False, False, 0)
-    #    range_row.pack_start(guiutils.get_pad_label(10, 2),  False, False, 0)
     range_row.pack_start(render_widgets.range_cb,  True, True, 0)
 
     buttons_panel = Gtk.HBox()
-    #buttons_panel.pack_start(guiutils.get_pad_label(10, 8), False, False, 0)
-    #buttons_panel.pack_start(render_widgets.reset_button, False, False, 0)
     if not  editorstate.screen_size_small_width():
         buttons_panel.pack_start(Gtk.Label(), True, True, 0)
         buttons_panel.pack_start(render_widgets.queue_button, False, False, 0)
@@ -650,9 +648,9 @@ def get_render_panel_right(render_widgets, render_clicked_cb, to_queue_clicked_c
 
     render_panel = Gtk.VBox()
     if small_height:
-        render_panel.pack_start(encoding_panel, False, False, 0)
+        if editorstate.SCREEN_HEIGHT < 900:
+            render_panel.pack_start(encoding_panel, False, False, 0)
         render_panel.pack_start(opts_panel, True, True, 0)
-        #render_panel.pack_start(Gtk.Label(), True, True, 0)
     else:
         render_panel.pack_start(opts_panel, True, True, 0)
     if small_height == False:
@@ -721,8 +719,7 @@ class RenderTypePanel():
 class RenderProfilePanel():
 
     def __init__(self, out_profile_changed_callback):
-        self.use_project_label = Gtk.Label(label=_("Use Project Profile:"))
-        self.use_args_label = Gtk.Label(label=_("Render using args:"))
+        self.use_project_label = Gtk.Label(label=_("Use Project Profile"))
 
         self.use_project_profile_check = Gtk.CheckButton()
         self.use_project_profile_check.set_active(True)
@@ -733,8 +730,9 @@ class RenderProfilePanel():
         self.out_profile_info_box = ProfileInfoBox() # filled later when current sequence known
         
         use_project_profile_row = Gtk.HBox()
-        use_project_profile_row.pack_start(self.use_project_label,  False, False, 0)
         use_project_profile_row.pack_start(self.use_project_profile_check,  False, False, 0)
+        use_project_profile_row.pack_start(guiutils.get_pad_label(4, 1), False, False, 0)
+        use_project_profile_row.pack_start(self.use_project_label,  False, False, 0)
         use_project_profile_row.pack_start(Gtk.Label(), True, True, 0)
 
         self.use_project_profile_check.set_tooltip_text(_("Select used project profile for rendering"))
@@ -802,8 +800,8 @@ class RenderArgsPanel():
         self.display_selection_callback = display_selection_callback
         self.set_default_values_callback = set_default_values_callback
         
-        self.use_project_label = Gtk.Label(label=_("Use Project Profile:"))
-        self.use_args_label = Gtk.Label(label=_("Render using args:"))
+        self.use_project_label = Gtk.Label(label=_("Use Project Profile"))
+        self.use_args_label = Gtk.Label(label=_("Render using args"))
         self.text_buffer = None # only used for small screen heights with dialog for setting args, but this value is tested to determine where to get args from.
         
         self.use_args_check = Gtk.CheckButton()
@@ -824,8 +822,9 @@ class RenderArgsPanel():
         self.open_in_bin = Gtk.CheckButton()
 
         use_opts_row = Gtk.HBox()
-        use_opts_row.pack_start(self.use_args_label,  False, False, 0)
         use_opts_row.pack_start(self.use_args_check,  False, False, 0)
+        use_opts_row.pack_start(guiutils.get_pad_label(4, 1), False, False, 0)
+        use_opts_row.pack_start(self.use_args_label,  False, False, 0)
         use_opts_row.pack_start(Gtk.Label(), True, True, 0)
 
         sw = Gtk.ScrolledWindow()
@@ -925,8 +924,7 @@ class RenderArgsPanelSmall():
         self.text_buffer = None # only used here for small screen heights with dialog for setting agrs, but this value is always tested to determine where to get agrs if set
         self.ext = ""
                 
-        self.use_project_label = Gtk.Label(label=_("Use Project Profile:"))
-        self.use_args_label = Gtk.Label(label=_("Render using args:"))
+        self.use_args_label = Gtk.Label(label=_("Render using args"))
     
         self.use_args_check = Gtk.CheckButton()
         self.use_args_check.connect("toggled", self.use_args_toggled)
@@ -953,8 +951,9 @@ class RenderArgsPanelSmall():
         self.args_info.set_ellipsize(Pango.EllipsizeMode.END)
         
         use_opts_row = Gtk.HBox()
-        use_opts_row.pack_start(self.use_args_label,  False, False, 0)
         use_opts_row.pack_start(self.use_args_check,  False, False, 0)
+        use_opts_row.pack_start(guiutils.pad_label(4, 1),  False, False, 0)
+        use_opts_row.pack_start(self.use_args_label,  False, False, 0)
         use_opts_row.pack_start(Gtk.Label(), True, True, 0)
         use_opts_row.pack_start(self.opts_load_button,  False, False, 0)
         use_opts_row.pack_start(self.opts_save_button,  False, False, 0)

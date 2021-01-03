@@ -135,7 +135,7 @@ class LoadThread(threading.Thread):
             editorstate.project_is_loading = False
 
         except persistance.FileProducerNotFoundError as e:
-            print("did not find a file")
+            print("LoadThread.run() - FileProducerNotFoundError")
             self._error_stop(dialog, ticker)
             Gdk.threads_enter()
             primary_txt = _("Media asset was missing!")

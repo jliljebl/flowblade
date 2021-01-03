@@ -299,9 +299,6 @@ class EditorWindow:
             guiutils.set_margins(self.bins_panel, 6, 6, 8, 0)
             self.mm_paned.pack1(self.bins_panel, resize=True, shrink=True)
             self.mm_paned.pack2(media_panel, resize=True, shrink=False)
-        
-        #if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
-        #    mm_panel = guiutils.set_margins(self.editor_window.mm_paned, 0, 0, 0, 0)
 
         # Effects edit panel
         info_row = clipeffectseditor.get_clip_effects_editor_info_row()    
