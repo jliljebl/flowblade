@@ -596,12 +596,14 @@ class Titler(Gtk.Window):
         
         editor_buttons_row = Gtk.HBox()
         editor_buttons_row.pack_start(Gtk.Label(), True, True, 0)
-        editor_buttons_row.pack_start(keep_label, False, False, 0)
         editor_buttons_row.pack_start(self.keep_layers_check, False, False, 0)
+        editor_buttons_row.pack_start(guiutils.pad_label(4, 1), False, False, 0)
+        editor_buttons_row.pack_start(keep_label, False, False, 0)
         editor_buttons_row.pack_start(guiutils.pad_label(24, 2), False, False, 0)
-        editor_buttons_row.pack_start(open_label, False, False, 0)
         editor_buttons_row.pack_start(self.open_in_current_check, False, False, 0)
-        editor_buttons_row.pack_start(guiutils.pad_label(24, 2), False, False, 0)
+        editor_buttons_row.pack_start(guiutils.pad_label(4, 1), False, False, 0)
+        editor_buttons_row.pack_start(open_label, False, False, 0)
+        editor_buttons_row.pack_start(guiutils.pad_label(32, 2), False, False, 0)
         editor_buttons_row.pack_start(exit_b, False, False, 0)
         editor_buttons_row.pack_start(save_titles_b, False, False, 0)
         
