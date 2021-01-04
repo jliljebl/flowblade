@@ -152,7 +152,7 @@ def load_filters_translations():
     filter_names["Mono to Stereo"]= _("Mono to Stereo")
     filter_names["Swap Channels"]= _("Swap Channels")
 
-    filter_names["Pitchshifter"]= _("Pitchshifter")
+    filter_names["Pitchshifter - AM"]= _("Pitchshifter - AM")
     filter_names["Distort - Barry's Satan"]= _("Distort - Barry's Satan")
     filter_names["Frequency Shift - Bode/Moog"]= _("Frequency Shift - Bode/Moog")
     filter_names["Equalize - DJ 3-band"]= _("Equalize - DJ 3-band")
