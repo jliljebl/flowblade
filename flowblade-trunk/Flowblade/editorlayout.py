@@ -454,10 +454,10 @@ def get_tabs_menu_item():
         positions_tabs_pos_item.set_submenu(positions_menu)
 
         up_item = Gtk.RadioMenuItem()
-        up_item.set_label(_("Up"))
+        up_item.set_label(_("Top"))
         positions_menu.append(up_item)
 
-        down_item = Gtk.RadioMenuItem.new_with_label([up_item], _("Down"))
+        down_item = Gtk.RadioMenuItem.new_with_label([up_item], _("Bottom"))
         positions_menu.append(down_item)
 
         if tabs_pos == UP:
