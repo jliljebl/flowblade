@@ -3,7 +3,7 @@ name: flowblade-build
 on:
   workflow_dispatch:
   schedule:
-    # nightly
+    # 1st of month
     - cron: '0 0 1 * *'
 
 jobs:
