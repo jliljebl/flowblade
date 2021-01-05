@@ -33,8 +33,14 @@ jobs:
           curl -LO https://raw.githubusercontent.com/mltframework/mlt-scripts/master/build/build-flowblade.sh
           bash build-flowblade.sh
 
+      # tar flowblade/ into work root
+      - name: Create tar
+        run: | 
+          tar -zcvf flowblade.tar.gz flowblade/ 
+
+      # flowblade.tar.gz in work root after 'Create tar' action
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v1
         with:
           name: linux-tarball
-          path: flowblade/
+          path: flowblade.tar.gz
