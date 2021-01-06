@@ -652,7 +652,8 @@ class Titler(Gtk.Window):
         self._activate_layer(0)
         self.layer_list.fill_data_model()
         self.view_editor.edit_area.queue_draw()
-
+        self._select_layer(0)
+        
     def show_current_frame(self):
         frame = PLAYER().current_frame()
         length = PLAYER().producer.get_length()
@@ -792,20 +793,22 @@ class Titler(Gtk.Window):
         view_editor_layer.mouse_released_listener  = self._editor_layer_mouse_released
         self.view_editor.edit_layers.append(view_editor_layer)
         
+        layer_index = len(_titler_data.layers) - 1
         self.layer_list.fill_data_model()
-        self._activate_layer(len(_titler_data.layers) - 1, True)
+        self._activate_layer(layer_index, True)
+        self._select_layer(layer_index)
         
     def _del_layer_pressed(self):
         # we always need 1 layer
         if len(_titler_data.layers) < 2:
             return
 
-        #active_index = _titler_data.get_active_layer_index()
         _titler_data.layers.remove(_titler_data.active_layer)
         self.view_editor.edit_layers.remove(self.view_editor.active_layer)
         self.layer_list.fill_data_model()
         self._activate_layer(0)
-
+        self._select_layer(0)
+        
     def _layer_visibility_toggled(self, layer_index):
         toggled_visible = (self.view_editor.edit_layers[layer_index].visible == False)
         self.view_editor.edit_layers[layer_index].visible = toggled_visible
@@ -865,6 +868,7 @@ class Titler(Gtk.Window):
         _titler_data.active_layer = _titler_data.layers[layer_index]
         self._update_gui_with_active_layer_data()
         _titler_data.active_layer.update_pango_layout()
+        self._select_layer(layer_index)
 
     def _activate_layer(self, layer_index, is_new_layer=False):
         global _titler_data
@@ -874,11 +878,16 @@ class Titler(Gtk.Window):
             self._update_gui_with_active_layer_data() # Update GUI with layer data
         else:
             self._update_active_layout_font_properties() # Update layer font properties with current GUI values.
-
+            self._update_gui_with_active_layer_data() # Update GUI with layer data
+            
         _titler_data.active_layer.update_pango_layout()
         self.view_editor.activate_layer(layer_index)
         self.view_editor.active_layer.update_rect = True
         self.view_editor.edit_area.queue_draw()
+
+    def _select_layer(self, layer_index):
+        self.layer_list.treeview.get_selection().select_path(Gtk.TreePath.new_from_indices([layer_index]))
+        self.layer_list.queue_draw()
 
     def _editor_layer_mouse_released(self):
         p = self.view_editor.active_layer.edit_point_shape.edit_points[0]
@@ -895,6 +904,7 @@ class Titler(Gtk.Window):
 
     def _text_changed(self, widget):
         self._update_active_layout()
+        self._select_layer(_titler_data.get_active_layer_index())
 
     def _position_value_changed(self, widget):
         # mouse release when layer is moved causes this method to be called,
