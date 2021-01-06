@@ -557,7 +557,10 @@ def _set_saved_encoding(transition_widgets):
         # combobox only displays subset (because of h264 audio bug) and we need find out 
         # index for it from encdoings list that holds the same subset.
         encoding = renderconsumer.encoding_options[enc_index]
-        selected_encoding_option_index = encodings.index(encoding)
+        try:
+            selected_encoding_option_index = encodings.index(encoding)
+        except:
+            selected_encoding_option_index = 0
         encodings_cb.set_active(selected_encoding_option_index)
         quality_cb.set_active(quality_index)
     
