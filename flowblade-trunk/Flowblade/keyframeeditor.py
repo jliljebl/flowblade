@@ -1740,7 +1740,21 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
             write_keyframes.append((frame, rect, opacity))
         
         self.editable_property.write_out_keyframes(write_keyframes)
+        
+    def mouse_scroll_up(self):
+        view_size_index = self.geom_buttons_row.size_select.get_active()
+        view_size_index = view_size_index - 1
+        if view_size_index < 0:
+            view_size_index = 0
+        self.geom_buttons_row.size_select.set_active(view_size_index)
 
+    def mouse_scroll_down(self):
+        view_size_index = self.geom_buttons_row.size_select.get_active()
+        view_size_index = view_size_index + 1
+        if view_size_index > 2:
+            view_size_index = 2
+        self.geom_buttons_row.size_select.set_active(view_size_index)
+        
 class RotoMaskKeyFrameEditor(Gtk.VBox):
     """
     Class combines named value slider with ClipKeyFrameEditor and 
