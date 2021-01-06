@@ -1461,8 +1461,8 @@ def transition_re_render_dialog(callback, transition_data):
                         (_("Cancel"), Gtk.ResponseType.REJECT,
                         _("Rerender"), Gtk.ResponseType.ACCEPT))
 
-    alignment, encodings_cb, quality_cb = panels.get_transition_re_render_panel(transition_data)
-    widgets = (encodings_cb, quality_cb)
+    alignment, encodings_cb, quality_cb, encodings = panels.get_transition_re_render_panel(transition_data)
+    widgets = (encodings_cb, quality_cb, encodings)
     dialog.connect('response', callback, widgets, transition_data)
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
@@ -1489,8 +1489,8 @@ def re_render_all_dialog(callback, rerender_list, unrenderable):
                         (_("Cancel"), Gtk.ResponseType.REJECT,
                         _("Rerender All"), Gtk.ResponseType.ACCEPT))
 
-    alignment, encodings_cb, quality_cb = panels.get_re_render_all_panel(rerender_list, unrenderable)
-    widgets = (encodings_cb, quality_cb)
+    alignment, encodings_cb, quality_cb, encodings = panels.get_re_render_all_panel(rerender_list, unrenderable)
+    widgets = (encodings_cb, quality_cb, encodings)
     dialog.connect('response', callback, widgets, rerender_list)
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)

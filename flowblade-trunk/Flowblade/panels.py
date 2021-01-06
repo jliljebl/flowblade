@@ -354,8 +354,8 @@ def get_transition_panel(trans_data):
     return (alignment, type_combo_box, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button, steal_frames, encodings)
 
 def _get_encodings_widget_and_list():
-    # We have unexplauined issue with rendering with libx264 
-    # that needs to papered over with this.
+    # We have an unexplained issue with rendering using libx264 vcodec
+    # that needs to be papered over with this.
     encodings_cb = Gtk.ComboBoxText()
     encodings = []
     for encoding in renderconsumer.encoding_options:
@@ -397,7 +397,7 @@ def get_transition_re_render_panel(trans_data):
     alignment = guiutils.set_margins(vbox, 12, 24, 12, 12)
     alignment.set_size_request(450, 200)
     
-    return (alignment, encodings_cb, quality_cb)
+    return (alignment, encodings_cb, quality_cb, encodings)
 
 def get_fade_re_render_panel(trans_data):
     fade_length = trans_data["clip"] .clip_out - trans_data["clip"].clip_in + 1 # +1 out inclusive
@@ -471,7 +471,7 @@ def get_re_render_all_panel(rerender_list, unrenderable):
     alignment = guiutils.set_margins(vbox, 12, 24, 12, 12)
     alignment.set_size_request(450, 120)
     
-    return (alignment, encodings_cb, quality_cb)
+    return (alignment, encodings_cb, quality_cb, encodings)
     
 def get_fade_panel(fade_data):
     type_combo_box = Gtk.ComboBoxText()    
@@ -507,7 +507,6 @@ def get_fade_panel(fade_data):
     _fill_transition_quality_combo_box(transition_widgets, 10)
     _set_saved_encoding(transition_widgets)
     
-    
     # Build panel
     edit_vbox = Gtk.VBox(False, 2)
     edit_vbox.pack_start(type_row, False, False, 0)
@@ -530,6 +529,7 @@ def _transition_encoding_changed(widgets):
     _fill_transition_quality_combo_box(widgets)
  
 def _fill_transition_quality_combo_box(widgets, quality_index=-1):
+
     encodings_cb, encodings, quality_cb = widgets
     sel_enc_index = encodings_cb.get_active()
     sel_enc = encodings[sel_enc_index]
