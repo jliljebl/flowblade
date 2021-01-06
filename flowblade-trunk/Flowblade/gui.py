@@ -45,9 +45,7 @@ media_list_view = None
 bin_list_view = None
 bin_panel = None
 sequence_list_view = None
-effect_stack_list_view = None
 
-middle_notebook = None # This is now the only notebook, maybe update name sometime
 project_info_vbox = None
 
 effect_select_list_view = None
@@ -108,7 +106,7 @@ def capture_references(new_editor_window):
     global editor_window, media_list_view, bin_list_view, sequence_list_view, pos_bar, \
     tline_display, tline_scale, tline_canvas, tline_scroll, tline_v_scroll, tline_info, \
     tline_column, play_b, effect_select_list_view, effect_select_combo_box, \
-    project_info_vbox, middle_notebook, big_tc, editmenu, notebook_buttons, tline_left_corner, \
+    project_info_vbox, big_tc, editmenu, notebook_buttons, tline_left_corner, \
     monitor_widget, bin_panel, monitor_switch, comp_mode_launcher, tline_render_strip
 
     editor_window = new_editor_window
@@ -117,8 +115,6 @@ def capture_references(new_editor_window):
     bin_list_view = editor_window.bin_list_view
     bin_panel = editor_window.bins_panel
     sequence_list_view = editor_window.sequence_list_view
-
-    middle_notebook = editor_window.notebook
 
     effect_select_list_view = editor_window.effect_select_list_view
     effect_select_combo_box = editor_window.effect_select_combo_box

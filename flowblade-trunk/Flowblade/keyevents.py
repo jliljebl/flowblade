@@ -570,11 +570,6 @@ def _handle_delete():
         projectaction.delete_selected_sequence()
         return True
 
-    # Delete effect
-    if gui.effect_stack_list_view.get_focus_child() != None:
-        clipeffectseditor.delete_effect_pressed()
-        return True
-
     # Delete media log event
     if gui.editor_window.media_log_events_list_view.get_focus_child() != None:
         medialog.delete_selected()
