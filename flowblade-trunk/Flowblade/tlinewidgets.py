@@ -2148,11 +2148,11 @@ class TimeLineCanvas:
             if len(clip.markers) > 0 and scale_length > TEXT_MIN:
                 for marker in clip.markers:
                     name, clip_marker_frame = marker
-                    marker_x = (clip_start_frame + clip_marker_frame - clip.clip_in) * pix_per_frame
-                    cr.set_source_surface(CLIP_MARKER_ICON, int(marker_x) - 4, y)
-                    cr.paint()
-                    
-                    
+                    if clip_marker_frame >= clip.clip_in and clip_marker_frame <= clip.clip_out + 1:
+                        marker_x = (clip_start_frame + clip_marker_frame - clip.clip_in) * pix_per_frame
+                        cr.set_source_surface(CLIP_MARKER_ICON, int(marker_x) - 4, y)
+                        cr.paint()
+
             # Get next draw position
             clip_start_frame += clip_length
 
