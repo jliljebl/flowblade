@@ -20,8 +20,8 @@
 import gi
 
 from gi.repository import GLib
-#import distutils
-#from distutils import dir_util, file_util
+import distutils
+from distutils import dir_util, file_util
 import os
 import threading
 
