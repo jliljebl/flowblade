@@ -195,11 +195,10 @@ def main(root_path):
     translations.load_filters_translations()
     mlttransitions.init_module()
 
-    # Apr-2017 - SvdB - Keyboard shortcuts
+    # Keyboard shortcuts
     shortcuts.load_shortcut_files()
     shortcuts.load_shortcuts()
 
-    # Aug-2019 - SvdB - AS
     # The test for len != 4 is to make sure that if we change the number of values below the prefs are reset to the correct list
     # So when we add or remove a value, make sure we also change the len test
     # Only use positive numbers.
