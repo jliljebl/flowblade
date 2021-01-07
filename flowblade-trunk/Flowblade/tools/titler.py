@@ -200,6 +200,12 @@ class TitlerData:
         for layer in self.layers:
             layer.pango_layout = PangoTextLayout(layer)
 
+    def data_compatibility_update(self):
+        # We added new stuff for 2.8 and need to update data created with older versions.
+        for layer in self.layers:
+            if hasattr("gradient_color_rgba", layer) == False:
+                layer.gradient_color_rgba = None
+        
 
 # ---------------------------------------------------------- editor
 class Titler(Gtk.Window):
@@ -732,6 +738,7 @@ class Titler(Gtk.Window):
                 filenames = dialog.get_filenames()
                 load_path = filenames[0]
                 new_data = utils.unpickle(load_path)
+                new_data.data_compatibility_update()
                 global _titler_data
                 _titler_data = new_data
                 self.load_titler_data()
