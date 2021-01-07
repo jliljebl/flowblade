@@ -203,9 +203,9 @@ class TitlerData:
     def data_compatibility_update(self):
         # We added new stuff for 2.8 and need to update data created with older versions.
         for layer in self.layers:
-            if hasattr("gradient_color_rgba", layer) == False:
+            if hasattr(layer, "gradient_color_rgba") == False:
                 layer.gradient_color_rgba = None
-        
+                layer.gradient_direction = VERTICAL
 
 # ---------------------------------------------------------- editor
 class Titler(Gtk.Window):
@@ -742,7 +742,8 @@ class Titler(Gtk.Window):
                 global _titler_data
                 _titler_data = new_data
                 self.load_titler_data()
-            except:
+            except Exception as e:
+                print("Titler._load_layers_dialog_callback", e)
                 dialog.destroy()
                 # INFOWINDOW
                 return
