@@ -195,7 +195,7 @@
       <group>Audio</group>
       <property name="window" args="editor=no_editor">75</property>
       <property name="max_gain" args="editor=no_editor">20dB</property>
-      <property name="level" args="editor=keyframe_editor_release range_in=-70,20 range_out=-70,20 exptype=keyframe_hcs displayname=Volume">0=0.0</property>
+      <property name="level" args="editor=keyframe_editor_release range_in=-70,20 range_out=-70,20 exptype=keyframe_hcs displayname=Volume!dB">0=0.0</property>
     </filter>
     <!-- DEPRECATED, replaced by non-multipart filters below 31.10.2020.  
     <filter id="panner" multipart="true">

@@ -302,7 +302,7 @@ def load_filters_translations():
     param_names["Size Y"] = _("Size Y")
     param_names["Tilt"] = _("Tilt")
     param_names["Trans. Width"] = _("Trans. Width")
-    param_names["Volume"] = _("Volume")
+    param_names["Volume dB"] = _("Volume dB")
     param_names["Left/Right"] = _("Left/Right")
     param_names["Left/Right"] = _("Left/Right")
     param_names["Dry/Wet"] = _("Dry/Wet")
