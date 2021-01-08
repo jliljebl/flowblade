@@ -591,7 +591,9 @@ class GainControl(Gtk.Frame):
         self.pan_slider.set_adjustment(self.pan_adjustment)
         self.pan_slider.connect("value-changed", self.pan_changed)
 
-        self.pan_button = Gtk.ToggleButton(_("Pan"))
+        self.pan_button = Gtk.ToggleButton()
+        surface = guiutils.get_cairo_image("pan_track")
+        self.pan_button.set_image(Gtk.Image.new_from_surface (surface))
         self.pan_button.connect("toggled", self.pan_active_toggled)
         
         if pan_value == 0.0:
