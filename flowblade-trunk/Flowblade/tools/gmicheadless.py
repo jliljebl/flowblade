@@ -65,9 +65,6 @@ STATUS_MSG_FILE = ccrutils.STATUS_MSG_FILE
 ABORT_MSG_FILE = ccrutils.ABORT_MSG_FILE
 RENDER_DATA_FILE = ccrutils.RENDER_DATA_FILE
 
-
-_gmic_version = None
-
 _render_thread = None
 
 
@@ -106,12 +103,6 @@ def main(root_path, session_id, script, clip_path, range_in, range_out, profile_
     # Set paths.
     respaths.set_paths(root_path)
 
-    # Check G'MIC version
-    global _gmic_version
-    _gmic_version = get_gmic_version()
-    if _gmic_version == 2:
-        respaths.set_gmic2(root_path)
-
     userfolders.init()
     editorpersistance.load()
 
@@ -149,24 +140,6 @@ def main(root_path, session_id, script, clip_path, range_in, range_out, profile_
     _render_thread = GMicHeadlessRunnerThread(script, render_data, clip_path, range_in, range_out, profile_desc, gmic_frame_offset)
     _render_thread.start()
 
-def get_gmic_version():
-    gmic_ver = 1
-    cmd = "gmic -version"
-    process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
-    output, error = process.communicate()
-    tokens = output.split()
-    clended = []
-    for token in tokens:
-        token = token.decode("utf-8")
-        str1 = token.replace('.','')
-        str2 = str1.replace(',','')
-        if str2.isdigit(): # this is based on assumtion that str2 ends up being number like "175" or 215" etc. only for version number token
-            if str2[0] == '2':
-                gmic_ver = 2
-
-    return gmic_ver
-
-        
 
 class GMicHeadlessRunnerThread(threading.Thread):
 
