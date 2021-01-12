@@ -45,7 +45,7 @@ import utils
 _blender_available = False
 
 ROW_WIDTH = 300
-
+FALLBACK_THUMB = "fallback_thumb.png"
 
 class ContainerClipData:
     
@@ -345,7 +345,8 @@ def _blender_unredered_media_creation_complete(created_unrendered_clip_path, con
 
 class ContainerClipMediaItem:
     """
-    A pattern producer object presnt in Media Bin.
+    Container clip media iem in Media Bin.
+    1-N container clips can be created from this.
     """
     def __init__(self, media_item_id, name, container_data):
         self.id = media_item_id
@@ -375,17 +376,22 @@ class ContainerClipMediaItem:
         print("create_mlt_producer() not implemented")
 
     def create_icon(self):
-        action_object = containeractions.get_action_object(self.container_data)
-        if self.icon_path == None:
+        try:
+            action_object = containeractions.get_action_object(self.container_data)
+            if self.icon_path == None:
 
-            surface, length, icon_path = action_object.create_icon()      
-            self.icon = surface
-            self.icon_path = icon_path
-            self.length = length
-            self.container_data.unrendered_length = length - 1
-        else:
-            self.icon = action_object.load_icon()
-
+                surface, length, icon_path = action_object.create_icon()      
+                self.icon = surface
+                self.icon_path = icon_path
+                self.length = length
+                self.container_data.unrendered_length = length - 1
+            else:
+                self.icon = action_object.load_icon()
+        except:
+            self.icon_path = respaths.IMAGE_PATH + FALLBACK_THUMB
+            cr, scaled_icon = containeractions._create_image_surface(self.icon_path)
+            self.icon = scaled_icon
+            
     def save_program_edit_info(self):
         if self.container_data.container_type == appconsts.CONTAINER_CLIP_BLENDER:
             edit_info = self.container_data.data_slots["project_edit_info"]
