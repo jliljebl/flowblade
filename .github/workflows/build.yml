@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   schedule:
     # 1st of month
-    - cron: '0 0 1 * *'
+    - cron: '0 0 * * *'
 
 jobs:
   build:
@@ -44,3 +44,4 @@ jobs:
         with:
           name: linux-tarball
           path: flowblade.tar.gz
+          retention-days: 5   
