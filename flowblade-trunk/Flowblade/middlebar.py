@@ -213,7 +213,7 @@ def _create_buttons(editor_window):
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons_3, tooltips)
     editor_window.edit_buttons_3.no_decorations = no_decorations
 
-    # Resunc and split audio
+    # Resync and split audio
     editor_window.edit_buttons_2 = glassbuttons.GlassButtonsGroup(44*size_adj, 23*size_adj, 2*size_adj, 3*size_adj, 5*size_adj)
     editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("resync" + icon_color), tlineaction.resync_button_pressed)
     editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("split_audio" + icon_color), tlineaction.split_audio_button_pressed)
@@ -292,7 +292,8 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
     buttons_row.pack_start(guiutils.get_pad_label(30, 10), False, True, 0)
     
     if editorpersistance.prefs.force_small_midbar == False:
-        buttons_row.pack_start(_get_edit_buttons_2_panel(),False, True, 0)
+        if editorstate.screen_size_small_width() == False:
+            buttons_row.pack_start(_get_edit_buttons_2_panel(),False, True, 0)
         buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
     
     buttons_row.pack_start(_get_edit_buttons_3_panel(),False, True, 0)
@@ -339,7 +340,8 @@ def fill_with_TC_MIDDLE_pattern(buttons_row, window):
     right_panel.pack_start(_get_edit_buttons_3_panel(), False, True, 0)
     right_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
     if editorpersistance.prefs.force_small_midbar == False:
-        right_panel.pack_start(_get_edit_buttons_2_panel(),False, True, 0)
+        if editorstate.screen_size_small_width() == False:
+            right_panel.pack_start(_get_edit_buttons_2_panel(),False, True, 0)
         right_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
     right_panel.pack_start(_get_monitor_insert_buttons(), False, True, 0)
 
@@ -377,7 +379,8 @@ def fill_with_COMPONENTS_CENTERED_pattern(buttons_row, window):
     buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
 
     if editorpersistance.prefs.force_small_midbar == False:
-        buttons_row.pack_start(_get_edit_buttons_2_panel(),False, True, 0)
+        if editorstate.screen_size_small_width() == False:
+            buttons_row.pack_start(_get_edit_buttons_2_panel(),False, True, 0)
         buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
     
     buttons_row.pack_start(_get_edit_buttons_3_panel(),False, True, 0)

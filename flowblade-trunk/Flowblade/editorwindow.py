@@ -80,9 +80,9 @@ import updater
 import undo
 import workflow
 
-# GUI size params.
+# GUI min size params, these have probably no effect on layout.
 MEDIA_MANAGER_WIDTH = 110
-MONITOR_AREA_WIDTH = 600 # Defines app min width with NOTEBOOK_WIDTH 400 for small screens.
+MONITOR_AREA_WIDTH = 400
 
 DARK_BG_COLOR = (0.223, 0.247, 0.247, 1.0)
 
