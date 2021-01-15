@@ -319,10 +319,7 @@ def _render_type_changed():
         enable_user_rendering(False)
         widgets.render_type_panel.presets_selector.widget.set_sensitive(True)
         _preset_selection_changed()
-        widgets.args_panel.opts_save_button.set_sensitive(False)
-        widgets.args_panel.opts_load_button.set_sensitive(False)
         if editorstate.screen_size_small_height() == False:
-            widgets.args_panel.load_selection_button.set_sensitive(False)
             widgets.args_panel.opts_view.set_sensitive(False)
             widgets.args_panel.opts_view.get_buffer().set_text("")
 
