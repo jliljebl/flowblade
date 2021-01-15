@@ -399,7 +399,9 @@ def load_icons():
                 r, g ,b = utils.cairo_color_from_gdk_color(gui.get_light_gray_light_color())
                 if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
                     r, g ,b = utils.cairo_color_from_gdk_color(gui.get_light_neutral_color())
-                
+                BLANK_CLIP_COLOR_GRAD = (1, 0.20, 0.20, 0.20, 1)
+                BLANK_CLIP_COLOR_GRAD_L = (1, 0.20, 0.20, 0.20, 1)
+                            
                 TRACK_GRAD_STOP1 = (1, r, g ,b , 1)
                 TRACK_GRAD_STOP3 = (0, r, g ,b , 1)
                 rl, gl, bl, = get_multiplied_color((r, g ,b), 1.25)
