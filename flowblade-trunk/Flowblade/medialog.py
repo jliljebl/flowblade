@@ -21,6 +21,7 @@
 import datetime
 
 from gi.repository import Gtk
+from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import GdkPixbuf
 from gi.repository import Pango
@@ -146,16 +147,22 @@ def log_range_clicked():
 
 def _update_list_view(log_event):
     widgets.media_log_view.fill_data_model()
-    max_val = widgets.media_log_view.treeview.get_vadjustment().get_upper()
+    max_val = widgets.media_log_view.scroll.get_vadjustment().get_upper()
     editorlayout.show_panel(appconsts.PANEL_RANGE_LOG)
     view_group = get_current_filtered_events()
     try:
         event_index = view_group.index(log_event)
         widgets.media_log_view.treeview.get_selection().select_path(str(event_index))
-        widgets.media_log_view.treeview.get_vadjustment().set_value(max_val)
+        #widgets.media_log_view.scroll.get_vadjustment().set_value(max_val)
     except:
         pass # if non-starred are not displayed currently. TODO: think of logic, should new items into displayed category?
-        
+
+    GLib.idle_add(_scroll_window, max_val)
+
+def _scroll_window(max_val):
+    widgets.media_log_view.scroll.get_vadjustment().set_value(max_val)
+    return False
+
 def log_item_name_edited(cell, path, new_text, user_data):
     if len(new_text) == 0:
         return
