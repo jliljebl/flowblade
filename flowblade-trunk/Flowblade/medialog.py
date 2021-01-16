@@ -92,6 +92,22 @@ class MediaLogEvent:
 def clips_drop(clips):
     for clip in clips:
         if clip.media_type == appconsts.VIDEO or clip.media_type == appconsts.AUDIO or clip.media_type == appconsts.IMAGE_SEQUENCE:
+            if PROJECT().proxy_data.proxy_mode == appconsts.USE_ORIGINAL_MEDIA:
+                clip_path = clip.path
+            else:
+                # We are in proxy mode, find out original media path
+                media_item = PROJECT().get_media_file_for_path(clip.path)
+                if media_item != None:
+                    # 'media_item.second_file_path' points now to original media
+                    # if proxy file exits.
+                    clip_path = media_item.second_file_path
+                    if clip_path == None:
+                        # no proxy for this clip, use media from dragged clip
+                        clip_path = clip.path
+                else:
+                    # no media item for this clip, use media from dragged clip
+                    clip_path = clip.path
+
             log_event = MediaLogEvent(  appconsts.MEDIA_LOG_MARKS_SET,
                                         clip.clip_in,
                                         clip.clip_out,
@@ -133,12 +149,19 @@ def log_range_clicked():
        return 
     if media_file.mark_in == -1 or media_file.mark_out == -1:
         return
-
+    
+    file_path = media_file.path
+    if PROJECT().proxy_data.proxy_mode == appconsts.USE_PROXY_MEDIA:
+        if media_file.second_file_path != None:
+            file_path = media_file.second_file_path # proxy file exists
+        else:
+            file_path = media_file.path # no proxy file created
+            
     log_event = MediaLogEvent(  appconsts.MEDIA_LOG_MARKS_SET,
                                 media_file.mark_in,
                                 media_file.mark_out,
                                 media_file.name,
-                                media_file.path)
+                                file_path)
     log_event.ttl = media_file.ttl
 
     editorstate.PROJECT().media_log.append(log_event)
@@ -153,7 +176,6 @@ def _update_list_view(log_event):
     try:
         event_index = view_group.index(log_event)
         widgets.media_log_view.treeview.get_selection().select_path(str(event_index))
-        #widgets.media_log_view.scroll.get_vadjustment().set_value(max_val)
     except:
         pass # if non-starred are not displayed currently. TODO: think of logic, should new items into displayed category?
 
@@ -294,13 +316,22 @@ def insert_selected_log_events():
     do_multiple_clip_insert_func(track, clips, tline_pos)
 
 def get_log_event_clip(log_event):
-    # pre versions 1.16 do not have this attr in log_event objects
+    # Versions before 1.16 do not have this attr in log_event objects
     if not hasattr(log_event, "ttl"):
         log_event.ttl = None
 
     # currently quaranteed not to be a pattern producer
-    new_clip = editorstate.current_sequence().create_file_producer_clip(log_event.path, None, False, log_event.ttl)
-        
+    if PROJECT().proxy_data.proxy_mode == appconsts.USE_ORIGINAL_MEDIA:
+        new_clip = editorstate.current_sequence().create_file_producer_clip(log_event.path, None, False, log_event.ttl)
+    else:
+        # We are in proxy mode, use proxy clip if available.
+        media_item = PROJECT().get_media_file_for_second_path(log_event.path) # 'log_event.path' is always original media,
+                                                                              # if we are in proxy mode we want to use proxy media if possible
+        if media_item != None:
+            new_clip = editorstate.current_sequence().create_file_producer_clip(media_item.path, None, False, log_event.ttl)
+        else:
+            new_clip = editorstate.current_sequence().create_file_producer_clip(log_event.path, None, False, log_event.ttl)
+            
     # Set clip in and out points
     new_clip.clip_in = log_event.mark_in
     new_clip.clip_out = log_event.mark_out

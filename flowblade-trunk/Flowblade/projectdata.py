@@ -194,6 +194,16 @@ class Project:
                 return media_file
         return None
 
+    def get_media_file_for_second_path(self, file_path):
+        for key, media_file in list(self.media_files.items()):
+            if media_file.type == appconsts.PATTERN_PRODUCER:
+                continue
+            print(file_path, media_file.path, media_file.second_file_path)
+            
+            if file_path == media_file.second_file_path:
+                return media_file
+        return None
+        
     def delete_media_file_from_current_bin(self, media_file):
         global media_files_changed_since_last_save
         media_files_changed_since_last_save = True
