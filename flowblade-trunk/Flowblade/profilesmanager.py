@@ -294,7 +294,7 @@ def _profiles_delete_confirm_callback(dialog, response_id, data):
         pname, profile = mltprofiles.get_user_profiles()[i]
         profile_file_name = pname.lower().replace(os.sep, "_").replace(" ","_")
         profile_path = userfolders.get_data_dir() + mltprofiles.USER_PROFILES_DIR + profile_file_name
-        print(profile_path)
+
         try:
             os.remove(profile_path)
         except:

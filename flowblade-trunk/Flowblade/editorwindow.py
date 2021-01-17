@@ -1713,11 +1713,7 @@ class EditorWindow:
         self.set_cursor_to_mode()
 
     def top_paned_resized(self, w, req):
-        print(self.app_v_paned.get_position())
-        print(self.top_paned.get_position())
-        print(self.mm_paned.get_position())
-
-
+        pass
 
 
 def _this_is_not_used():

@@ -117,8 +117,6 @@ def environment():
 def quick_reference():
     try:
         url = "file://" + respaths.HELP_DOC
-        print(url) 
-        #webbrowser.open('http://code.google.com/p/flowblade/wiki/FlowbladeReference')
         webbrowser.open(url)
     except:
         dialogutils.info_message(_("Help page not found!"), _("Unfortunately the webresource containing help information\nfor this application was not found."), None)

@@ -372,7 +372,6 @@ def _view_prefs_panel():
         index = 0
     else:
         index = int(prefs.theme) + 2
-    print(index)
     
     dark_combo.set_active(index)
 

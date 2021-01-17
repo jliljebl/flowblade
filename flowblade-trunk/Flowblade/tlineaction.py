@@ -937,8 +937,6 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
         length = int(length_entry.get_text())
     except Exception as e:
         # INFOWINDOW, bad input
-        print(str(e))
-        print("entry")
         return
 
     dialog.destroy()
@@ -1333,8 +1331,6 @@ def _add_fade_dialog_callback(dialog, response_id, selection_widgets, transition
         length = int(length_entry.get_text())
     except Exception as e:
         # INFOWINDOW, bad input
-        print(str(e))
-        print("entry")
         return
 
     dialog.destroy()
@@ -1939,7 +1935,7 @@ def do_timeline_filters_paste():
 def do_compositor_data_paste(paste_objs):
     data_type, paste_data = paste_objs
     if data_type != COPY_PASTE_DATA_COMPOSITOR_PROPERTIES:
-        print("supposedly unreahcable if in do_compositor_data_paste")
+        print("supposedly unreachable if in do_compositor_data_paste")
         return
         
     if compositormodes.compositor != None and compositormodes.compositor.selected == True:

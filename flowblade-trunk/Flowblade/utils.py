@@ -459,13 +459,8 @@ def get_cairo_color_tuple_255_rgb(r, g, b):
     return (float(r)/255.0, float(g)/255.0, float(b)/255.0)
 
 def cairo_color_from_gdk_color(gdk_color):
-    print(gdk_color.to_string())
-    print(type(gdk_color.to_string()))
     color = gdk_color.to_string().rstrip(")").lstrip("rgb(").split(',')
     return (float(color[0])/255.0, float(color[1])/255.0, float(color[2])/255.0)
-    #print(color_str)
-    #raw_r, raw_g, raw_b = hex_to_rgb(gdk_color.to_string())
-    #return (float(raw_r)/65535.0, float(raw_g)/65535.0, float(raw_b)/65535)
     
 def do_nothing():
     pass
@@ -555,8 +550,6 @@ def update_xml_file_producer_info(resource, info):
     info["fps_num"] = float(profile_node.getAttribute("frame_rate_num"))
     info["fps_den"] = float(profile_node.getAttribute("frame_rate_den"))
     info["progressive"] = int(profile_node.getAttribute("progressive"))
-    
-    print(info)
     #  <profile description="HD 720p 29.97 fps" width="1280" height="720" progressive="1" sample_aspect_num="1" sample_aspect_den="1" display_aspect_num="16" display_aspect_den="9" frame_rate_num="30000" frame_rate_den="1001" colorspace="0"/>
     
 def is_media_file(file_path):
@@ -707,8 +700,6 @@ def elapsed_time(msg="elapsed: ", show_in_millis=True):
         unit = "ms"
     else:
         unit = "s"
-    
-    print(msg + " " + str(elapsed_time) + " " + unit)
 
 def get_display_monitors_size_data():
     monitors_size_data = []

@@ -918,7 +918,7 @@ class RenderArgsPanelSmall():
 
     def __init__(self, save_args_callback, 
                  load_args_callback, display_selection_callback):
-        print("---------------------------------------------------------------")
+                 
         self.display_selection_callback = display_selection_callback
         
         self.args_edit_window = None

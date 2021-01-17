@@ -320,7 +320,6 @@ def _audio_monitor_update():
     global _audio_levels
     _audio_levels = []
     for i in range(0, len(_level_filters)):
-        #print i
         audio_level_filter = _level_filters[i]
         l_val = _get_channel_value(audio_level_filter, LEFT_CHANNEL)
         r_val = _get_channel_value(audio_level_filter, RIGHT_CHANNEL)

@@ -188,14 +188,6 @@ def _on_monitor_drop(widget, context, x, y, timestamp):
 
 def _on_effect_stack_drop(widget, context, x, y, timestamp):
     context.finish(True, False, timestamp)
-    print(x, y)
-    print(widget)
-    print(widget.get_allocated_height())
-    if (float(y) / float(widget.get_allocated_height())) > 0.5:
-        print("bottom half")
-    else:
-        print("top half")
-    #add_current_effect()
     
 def _bin_drag_data_received(treeview, context, x, y, selection, info, etime, move_files_to_bin_func):
     bin_path, drop_pos = treeview.get_dest_row_at_pos(x, y)
