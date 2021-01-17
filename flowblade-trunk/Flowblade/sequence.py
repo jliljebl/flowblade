@@ -83,13 +83,13 @@ PROGRAM_OUT_MODE = 0
 VECTORSCOPE_MODE = 1
 RGB_PARADE_MODE = 2
 
-# black clip
+# Black clip
 black_track_clip = None
 
-# Track that all audio is mixed down to combine for output.
+# The track that all audio is mixed down to combine for output.
 AUDIO_MIX_DOWN_TRACK = 0
 
-# Vectorscop and RGB Parade
+# Vectorscope and RGB Parade
 SCOPE_MIX_VALUES = [0.0, 0.2, 0.5, 0.8, 1.0]
 _scope_over_lay_mix = 2
 
@@ -210,11 +210,22 @@ class Sequence:
         
         # This is not an actual bin clip so id can be -1, it is just used to create the producer
         pattern_producer_data = patternproducer.BinColorClip(-1, "black_bg", "#000000000000")
-            
+
         black_track_clip = self.create_pattern_producer(pattern_producer_data)
         black_track_clip.clip_in = 0
         black_track_clip.clip_out = 0
 
+    def _create_white_clip(self, length):
+        
+        # This is not an actual bin clip so id can be -1, it is just used to create the producer
+        pattern_producer_data = patternproducer.BinColorClip(-1, "white_bg", "#ffffffffffff")
+            
+        white_clip = self.create_pattern_producer(pattern_producer_data)
+        white_clip.clip_in = 0
+        white_clip.clip_out = length - 1
+        
+        return white_clip
+        
     def add_track(self, track_type, is_hidden=False):
         """ 
         Creates a MLT playlist object, adds project
@@ -353,7 +364,8 @@ class Sequence:
         self.master_audio_gain = gain
 
     def add_track_pan_filter(self, track, value):
-        # This method is used for master too, and called with tractor then
+        # This method is used for master too, and is called with tractor then.
+        # 'channel' attr is left to -1 meaning that panner affects front balance.
         pan_filter = mlt.Filter(self.profile, "panner")
         mltrefhold.hold_ref(pan_filter)
         pan_filter.set("start", value)
@@ -399,7 +411,7 @@ class Sequence:
         not add it to track/playlist object.
         """
         producer = mlt.Producer(self.profile, str(path)) # this runs 0.5s+ on some clips
-
+    
         mltrefhold.hold_ref(producer)
         producer.path = path
         producer.filters = []
@@ -420,7 +432,7 @@ class Sequence:
         # Img seq ttl value
         producer.ttl = ttl
         if ttl != None:
-            producer.set("ttl", int(ttl))
+            producer.set("ttl", str(ttl))
 
         return producer
 
@@ -509,14 +521,26 @@ class Sequence:
             clone_filter = mltfilters.clone_filter_object(f, self.profile)
             clone_clip.attach(clone_filter.mlt_filter)
             clone_clip.filters.append(clone_filter)
-
+    
+    def copy_filters(self, clip, clone_clip):
+        for f in clip.filters:
+            clone_filter = mltfilters.clone_filter_object(f, self.profile)
+            clone_clip.attach(clone_filter.mlt_filter)
+            clone_clip.filters.append(clone_filter)
+            
     def clone_filters(self, clip):
         clone_filters = []
         for f in clip.filters:
             clone_filter = mltfilters.clone_filter_object(f, self.profile)
             clone_filters.append(clone_filter)
         return clone_filters
-
+    
+    def clone_mute_state(self, clip, clone_clip):
+        # Mute 
+        if clip.mute_filter != None:
+            mute_filter = mltfilters.create_mute_volume_filter(self) 
+            mltfilters.do_clip_mute(clone_clip, mute_filter)
+            
     def get_next_id(self):
         """
         Growing id for newly created clip or transition. 
@@ -525,6 +549,9 @@ class Sequence:
         return self.next_id - 1
 
     def clip_is_in_sequence(self, test_clip):
+        if test_clip == None:
+            return False
+
         for i in range(1, len(self.tracks)):
             track = self.tracks[i]
             for clip in track.clips:
@@ -827,6 +854,26 @@ class Sequence:
             seq_len = 1
         
         tlinerender.get_renderer().update_hidden_track(self.tracks[-1], seq_len)
+
+    def fix_v1_for_render(self): 
+        # This is a workaround to fix Issue #941 with H248 encoder not being able handle 
+        # blanks and crashing or losing working audio. Underlying reason still 
+        # not known.
+        track_v1 = self.tracks[self.first_video_index]
+        for i in range(0, len(track_v1.clips)):
+            clip = track_v1.clips[i]
+            if clip.is_blanck_clip == False:
+                continue
+            track_v1.remove(i)
+            track_v1.clips.pop(i)
+            length = clip.clip_out - clip.clip_in + 1
+            white_clip = self._create_white_clip(length)
+            edit._insert_clip(track_v1, white_clip, i, white_clip.clip_in, white_clip.clip_out)
+
+        if track_v1.get_length() < self.get_length():
+            length = self.get_length() - track_v1.get_length()
+            white_clip = self._create_white_clip(length)
+            edit.append_clip(track_v1, white_clip, white_clip.clip_in, white_clip.clip_out)
 
     def get_seq_range_frame(self, frame):
         # Needed for timeline renderering updates

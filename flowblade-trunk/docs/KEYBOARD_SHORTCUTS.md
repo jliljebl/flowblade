@@ -40,6 +40,7 @@ A 			 |		Append Selected Media From Bin
 M			 |		Add Marker
 Control + C 		 |		Copy Clips
 Control + V 		 |		Paste Clips
+Control + Alt + V | Paste Filters
 Alt R		 |			Toggle Ripple Mode
 S			 |		Resynchronization
 Control +L 		 |		Log Range

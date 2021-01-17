@@ -63,12 +63,12 @@ _dbus_service = None
 # --------------------------------------------------------------- interface
 def launch_render_server():
     bus = dbus.SessionBus()
-    if bus.name_has_owner('flowblade.movie.editor.tlinerenderserver'):
+    if bus.name_has_owner('io.github.jliljebl.Flowblade'):
         # This happens for project profile changes e.g. when loading first video and changing to matching peofile.
         # We are only running on of these per project edit session, so do nothing.
-        print("flowblade.movie.editor.tlinerenderserver dbus service already exists")
+        print("io.github.jliljebl.Flowblade dbus service already exists")
     else:
-        print("Launching flowblade.movie.editor.tlinerenderserver dbus service")
+        print("Launching io.github.jliljebl.Flowblade dbus service")
         FLOG = open(userfolders.get_cache_dir() + "log_tline_render", 'w')
         subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladetlinerender"], stdin=FLOG, stdout=FLOG, stderr=FLOG)
 
@@ -97,9 +97,9 @@ def get_encoding_extension():
 
 def _get_iface(method_name):
     bus = dbus.SessionBus()
-    if bus.name_has_owner('flowblade.movie.editor.tlinerenderserver'):
-        obj = bus.get_object('flowblade.movie.editor.tlinerenderserver', '/flowblade/movie/editor/tlinerenderserver')
-        iface = dbus.Interface(obj, 'flowblade.movie.editor.tlinerenderserver')
+    if bus.name_has_owner('io.github.jliljebl.Flowblade'):
+        obj = bus.get_object('io.github.jliljebl.Flowblade', '/io/github/jliljebl/Flowblade')
+        iface = dbus.Interface(obj, 'io.github.jliljebl.Flowblade')
         return iface
     else:
         print("Timeline background render service not available on DBus at", method_name)
@@ -158,13 +158,13 @@ def main(root_path, force_launch=False):
 
 class TLineRenderDBUSService(dbus.service.Object):
     def __init__(self, loop):
-        bus_name = dbus.service.BusName('flowblade.movie.editor.tlinerenderserver', bus=dbus.SessionBus())
-        dbus.service.Object.__init__(self, bus_name, '/flowblade/movie/editor/tlinerenderserver')
+        bus_name = dbus.service.BusName('io.github.jliljebl.Flowblade', bus=dbus.SessionBus())
+        dbus.service.Object.__init__(self, bus_name, '/io/github/jliljebl/Flowblade')
         self.main_loop = loop
 
         self.render_runner_thread = None
         
-    @dbus.service.method('flowblade.movie.editor.tlinerenderserver')
+    @dbus.service.method('io.github.jliljebl.Flowblade')
     def render_update_clips(self, sequence_xml_path, segments_paths, segments_ins, segments_outs, profile_name):
         
         segments = []
@@ -177,7 +177,7 @@ class TLineRenderDBUSService(dbus.service.Object):
         self.render_runner_thread = TLineRenderRunnerThread(self, sequence_xml_path, segments, profile_name)
         self.render_runner_thread.start()
 
-    @dbus.service.method('flowblade.movie.editor.tlinerenderserver')
+    @dbus.service.method('io.github.jliljebl.Flowblade')
     def get_render_status(self):
         dummy_list = ["nothing"]
         if self.render_runner_thread == None:
@@ -195,7 +195,7 @@ class TLineRenderDBUSService(dbus.service.Object):
         return ( self.render_runner_thread.current_render_file_path, self.render_runner_thread.get_fraction(), 
                   self.render_runner_thread.render_complete, self.render_runner_thread.completed_segments)
 
-    @dbus.service.method('flowblade.movie.editor.tlinerenderserver')
+    @dbus.service.method('io.github.jliljebl.Flowblade')
     def abort_renders(self):
 
         if self.render_runner_thread == None:
@@ -207,7 +207,7 @@ class TLineRenderDBUSService(dbus.service.Object):
 
         return
 
-    @dbus.service.method('flowblade.movie.editor.tlinerenderserver')
+    @dbus.service.method('io.github.jliljebl.Flowblade')
     def shutdown_render_server(self):
         self.remove_from_connection()
         self.main_loop.quit()

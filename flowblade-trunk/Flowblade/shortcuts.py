@@ -19,34 +19,50 @@
 """
 
 # Apr-2017 - SvdB - Functions to scan available shortcut files, validate and load them
-import appconsts
-import respaths
+import collections
 import os
 import xml.etree.ElementTree as etree
-import editorpersistance
 import re
+
+import appconsts
+import editorpersistance
+import respaths
+import userfolders
 
 
 DEFAULT_SHORTCUTS_FILE = "flowblade.xml"
-    
+CUSTOM_SHORTCUTS_FILE_NAME_START = "custom_shortcuts_"
+
+# It is not allowed to set these as custom shortcuts.
+RESERVED_SHORTCUTS = [  ("left",[]), ("right",[]), ("up",[]), ("down",[]), ("c",["CTRL"]), ("1", []), \
+                        ("2", []), ("3", []), ("4", []), ("5", []), ("6", []), ("7", []), ("8", []), ("9", []), ("0", []), \
+                        ("delete", []), ("return", []), ("tab", []), ("c", ["CTRL"]), ("v", ["CTRL"]), ("v", ["CTRL", "ALT"]),  ("n", ["CTRL"]), \
+                        ("s", ["CTRL"]), ("q", ["CTRL"]), ("z", ["CTRL"]), ("y", ["CTRL"]), ("o", ["CTRL"]), ("f11", []), ("kp_1", []), \
+                        ("kp_2", []), ("kp_3", []), ("kp_4", []), ("kp_5", []), ("kp_6", []), ("kp_7", []), ("kp_8", []), ("kp_9", []), ("kp_0", [])]
+
 shortcut_files = []
 shortcut_files_display_names = []
 _keyboard_actions = {}
 _keyboard_action_names = {}
 _key_names = {}
 _mod_names = {}
-
+_gtk_mod_names = {}
+_editable = False
 
 def load_shortcut_files():
     global shortcut_files, shortcut_files_display_names
     default_shortcuts_file_found = False
+    loadable_shortcuts_files = os.listdir(respaths.SHORTCUTS_PATH) + os.listdir(userfolders.get_data_dir() + "/" + appconsts.USER_SHORTCUTS_DIR)
 
-    for f in os.listdir(respaths.SHORTCUTS_PATH):
+    for f in loadable_shortcuts_files:
         format_error = True
 
         if f[-4:] == '.xml':
+            # Get full path for either presets file on user custom shortcuts file.
+            full_path = _get_shortcut_file_fullpath(f)
+
             # We have a valid file name. Now inspect the file for a valid format before loading it
-            shortcuts = etree.parse(respaths.SHORTCUTS_PATH + f)
+            shortcuts = etree.parse(full_path)
             # Verify if the file has the right format
             root = shortcuts.getroot()
             # Check the 'tag' is flowblade
@@ -73,7 +89,7 @@ def load_shortcut_files():
             print("Shortcuts file " + f + " found, but has incorrect format.")
     
     # Default shortcuts file always goes to index 0
-    if default_shortcuts_file_found == True:# this is a bit unneccceasy, it is there unless someone destroys it manually
+    if default_shortcuts_file_found == True:# this is a bit unnecessery, it is there unless someone destroys it manually
         shortcut_files.insert(0, DEFAULT_SHORTCUTS_FILE)
         shortcut_files_display_names.insert(0, "Flowblade Default")
 
@@ -86,18 +102,20 @@ def load_shortcuts():
     set_keyboard_shortcuts()
 
 def set_keyboard_shortcuts():
-    global _keyboard_actions
+    global _keyboard_actions, _editable
     prefs = editorpersistance.prefs
     print("Keyboard shortcuts file:",  editorpersistance.prefs.shortcuts)
     _modifier_dict = {}
 
-    # Make sure that whatever is in preferences is a valid file. If it's not in shortcut_files it's not valid
+    # Make sure that whatever is in preferences is a valid and exists file. If it's not in shortcut_files it's not valid
     if not prefs.shortcuts in shortcut_files:
-        #print "The shortcuts file selected in preferences is not valid: " + prefs.shortcuts
-        # print "Switching to defaults."
+        # Load default shortcuts.
+        prefs.shortcuts = DEFAULT_SHORTCUTS_FILE
+        editorpersistance.save()
+        set_keyboard_shortcuts()
         return
     try:
-        shortcuts = etree.parse(respaths.SHORTCUTS_PATH + prefs.shortcuts)
+        shortcuts = etree.parse(_get_shortcut_file_fullpath(prefs.shortcuts))
         # Verify if the file has the right format
         root = shortcuts.getroot()
         # Check the 'tag' is flowblade
@@ -105,11 +123,10 @@ def set_keyboard_shortcuts():
             # Check if this is a shortcuts file
             if root.get('file') == appconsts.SHORTCUTS_TAG:
                 # Get name and comments
-                print("Loading shortcuts: " + root.get('name'))
                 # We have good shortcuts file, destroy hardcoded defaults
                 _keyboard_actions = {}
                 # Now loop through all the events and assign them
-                events = root.getiterator('event')
+                events = root.iter('event')
                 for event in events:
                     # Retrieve any previous _modifier_dict values
                     try:
@@ -130,20 +147,122 @@ def set_keyboard_shortcuts():
                     else:
                         _modifier_dict[''.join(sorted(re.sub('[\s]','',event.get('modifiers').lower())))] = event.get('code')
                     _keyboard_actions[event.text] = _modifier_dict
+        _editable = root.get('editable')
     except:
         print("Error opening shortcuts file:" + prefs.shortcuts)
 
     #_print_shortcuts()
 
+def get_root():
+    shortcuts = etree.parse(_get_shortcut_file_fullpath(editorpersistance.prefs.shortcuts))
+    return shortcuts.getroot()
+
+def get_shortcut_info_for_keyname_and_modlist(key_val_name, mod_list):
+    out_str = ""
+    for mod in mod_list:
+        out_str += _mod_names[mod]
+        out_str += " + "
+        
+    key_name = _key_names[key_val_name]
+    out_str += key_name
+    return out_str
+
 def get_shortcuts_xml_root_node(xml_file):
     try:
-        shortcuts = etree.parse(respaths.SHORTCUTS_PATH + xml_file)
+        shortcuts = etree.parse(_get_shortcut_file_fullpath(xml_file))
         return shortcuts.getroot()
     except:
         return None # This is handled at callsites
 
+def get_shortcuts_editable():
+    if _editable == "True":
+        return True
+    else:
+        return False
+
+def create_custom_shortcuts_xml(name):
+    shortcuts = etree.parse( _get_shortcut_file_fullpath(editorpersistance.prefs.shortcuts))
+
+    # Get numbered custom shortuts file path
+    lowest_ver_number = 0
+    custom_files = os.listdir(userfolders.get_data_dir() + "/" + appconsts.USER_SHORTCUTS_DIR)
+    for f in custom_files:
+        dot_pos = f.find(".")
+        num_str = f[len(CUSTOM_SHORTCUTS_FILE_NAME_START):dot_pos]
+        if int(num_str) > lowest_ver_number:
+            lowest_ver_number = int(num_str) 
+    
+    new_custom_file_name = CUSTOM_SHORTCUTS_FILE_NAME_START + str(lowest_ver_number + 1) + ".xml"
+    new_shortcuts_file_path = userfolders.get_data_dir() + "/" + appconsts.USER_SHORTCUTS_DIR + new_custom_file_name
+        
+    # Verify if the file has the right format
+    root = shortcuts.getroot()
+    root.set('name', name)
+    root.set('editable', 'True')
+    shortcuts.write(new_shortcuts_file_path)
+
+    return new_custom_file_name
+
+def delete_active_custom_shortcuts_xml():
+    root = get_root()
+    name = root.get('name')
+    shortcut_files_display_names.remove(name)
+    shortcut_files.remove(editorpersistance.prefs.shortcuts)
+    
+    file_path = _get_shortcut_file_fullpath(editorpersistance.prefs.shortcuts)
+    os.remove(file_path)
+                
+    editorpersistance.prefs.shortcuts = DEFAULT_SHORTCUTS_FILE
+    editorpersistance.save()
+
+def change_custom_shortcut(code, key_val_name, mods_list):
+    shortcuts_file = _get_shortcut_file_fullpath(editorpersistance.prefs.shortcuts)
+    shortcuts = etree.parse(shortcuts_file)
+    root = shortcuts.getroot()
+    events = root.iter('event')
+
+    target_event = None
+    for event in events:
+        if event.get('code') == code:
+            target_event = event
+            break
+    
+    if target_event == None:
+        # we really should not hit this
+        print("!!! no event for action name ", code, editorpersistance.prefs.shortcuts)
+        return
+    
+    mods_str = ""
+    for mod in mods_list:
+        mods_str += mod
+        mods_str += "+"
+    mods_str = mods_str[0:-1]
+
+    target_event.text = key_val_name
+    if len(mods_str) == 0:
+        try:
+            target_event.attrib.pop("modifiers")
+        except:
+            pass
+    else:
+        target_event.set("modifiers", mods_str)
+
+    shortcuts.write(shortcuts_file)
+
+def is_blocked_shortcut(key_val, mods_list):
+    for reserved in RESERVED_SHORTCUTS:
+        print(reserved)
+        r_key_val, r_mods_list = reserved
+        if len(r_mods_list) == 0 and key_val == r_key_val:
+            return True
+        if key_val == r_key_val:
+            if collections.Counter(mods_list) == collections.Counter(r_mods_list):
+                return True
+                
+    return False
+
 def get_shortcut_info(root, code):
-    events = root.getiterator('event')
+    events = root.iter('event')
 
     for event in events:
         if event.get('code') == code:
@@ -154,13 +273,29 @@ def get_shortcut_info(root, code):
     
     return (None, None)
 
+def get_shortcut_gtk_code(root, code):
+    events = root.iter('event')
+
+    for event in events:
+        if event.get('code') == code:
+            gtk_code = ""
+            mod = event.get("modifiers")
+            if mod != "Any" and mod != None:
+                gtk_code += _gtk_mod_names[mod]
+                
+            gtk_code += event.text.upper()
+            #gtk_code = "'" + gtk_code + "'"
+            return gtk_code
+
+    return None
+
 def _get_mod_string(event):
     mod = event.get("modifiers")
     if mod == "Any" or mod == None:
         return ""
     
     return _mod_names[mod]
- 
+
 def get_diff_to_defaults(xml_file):
     diff_str = ""
     test_root = get_shortcuts_xml_root_node(xml_file)
@@ -175,12 +310,20 @@ def get_diff_to_defaults(xml_file):
     
     return diff_str
 
+def _get_shortcut_file_fullpath(f):
+    full_path = respaths.SHORTCUTS_PATH + f
+    if os.path.isfile(full_path) == False:
+        full_path = userfolders.get_data_dir() + "/" + appconsts.USER_SHORTCUTS_DIR + f
+    return full_path
+
 def _set_keyboard_action_names():
     global _keyboard_action_names
     # Start with an empty slate
     _keyboard_action_names = {}
     _keyboard_action_names['mark_in'] = _("Set Mark In")
     _keyboard_action_names['mark_out'] =  _("Set Mark Out")
+    _keyboard_action_names['to_mark_in'] =  _("Go To Mark In")
+    _keyboard_action_names['to_mark_out'] =  _("Go To Mark Out")
     _keyboard_action_names['clear_io_marks'] =  _("Clear In/Out Marks")
     _keyboard_action_names['play_pause'] = _("Start / Stop Playback")
     _keyboard_action_names['prev_cut'] = _("Prev Edit/Mark")
@@ -221,19 +364,16 @@ def _set_keyboard_action_names():
     _keyboard_action_names['nudge_back_10'] =  _("Nudge Move Selection Back 10 Frames")
     _keyboard_action_names['nudge_forward_10'] =  _("Nudge Move Selection Forward 10 Frames")
     _keyboard_action_names['open_next'] =  _("Open Next Media Item In Monitor")
-    
+    _keyboard_action_names['clear_filters'] = _("Clear Filters")
+    _keyboard_action_names['sync_all'] = _("Sync All Compositors")
+
 def _set_key_names():
-    global _key_names, _mod_names
+    global _key_names, _mod_names, _gtk_mod_names
     # Start with an empty slate
     _key_names = {}
     _key_names['i'] = "I"
     _key_names['a'] = "A"
     _key_names['o'] = "O"
-    _key_names['space'] = _("SPACE")
-    _key_names['down'] = _("Down Arrow")
-    _key_names['up'] = _("Up Arrow")
-    _key_names['left'] = _("Left Arrow")
-    _key_names['right'] = _("Right Arrow")
     _key_names['y'] = "Y"
     _key_names['u'] = "U"
     _key_names['j'] = "J"
@@ -242,12 +382,30 @@ def _set_key_names():
     _key_names['n'] = "N"
     _key_names['g'] = "G"
     _key_names['s'] = "S"
-    _key_names['delete'] = _("Delete")
-    _key_names['home'] = _("HOME")
-    _key_names['end'] = _("END")
+    _key_names['p'] = "P"
     _key_names['t'] = "T"
     _key_names['r'] = "R"
     _key_names['x'] = "X"
+    _key_names['y'] = "Y"
+    _key_names['m'] = "M"
+    _key_names['q'] = "Q"
+    _key_names['w'] = "W"
+    _key_names['e'] = "E"
+    _key_names['d'] = "D"
+    _key_names['f'] = "F"
+    _key_names['h'] = "H"
+    _key_names['z'] = "Z"
+    _key_names['c'] = "C"
+    _key_names['v'] = "V"
+    _key_names['b'] = "B"
+    _key_names['space'] = _("SPACE")
+    _key_names['down'] = _("Down Arrow")
+    _key_names['up'] = _("Up Arrow")
+    _key_names['left'] = _("Left Arrow")
+    _key_names['right'] = _("Right Arrow")
+    _key_names['delete'] = _("Delete")
+    _key_names['home'] = _("HOME")
+    _key_names['end'] = _("END")
     _key_names['1'] = "1"
     _key_names['kp_end'] = _("Key Pad END")
     _key_names['kp_1'] = _("Key Pad 1")
@@ -272,9 +430,7 @@ def _set_key_names():
     _key_names['minus'] = "-"
     _key_names['plus'] = "+"
     _key_names['tab'] = _("TAB")
-    _key_names['m'] = "M"
     _key_names['return'] = _("ENTER")
-    _key_names['y'] = ("Y")
     _key_names['equal'] = _("=")
     _key_names['comma'] = _(",")
     _key_names['period'] = _(".")
@@ -282,4 +438,15 @@ def _set_key_names():
     _mod_names["ALT"] = _("Alt")
     _mod_names["SHIFT"] =  _("Shift")
     _mod_names["ALT+SHIFT"] = _("Alt + Shift")
+    _mod_names["CTRL+ALT"] = _("Control + Alt")
+    _mod_names["CTRL+SHIFT"] = _("Control + Shift")
+    _mod_names["CTRL+ALT+SHIFT"] = _("Control + Alt + Shift")
     _mod_names["CTRL"] = _("Control")
+
+    _gtk_mod_names["ALT"] = _("<alt>")
+    _gtk_mod_names["SHIFT"] =  _("<shift>")
+    _gtk_mod_names["ALT+SHIFT"] = _("<alt><shift>")
+    _gtk_mod_names["CTRL+ALT"] = _("<control><alt>")
+    _gtk_mod_names["CTRL+SHIFT"] = _("<control><shift>")
+    _gtk_mod_names["CTRL+ALT+SHIFT"] = _("<control><alt><shift>")
+    _gtk_mod_names["CTRL"] = _("<control>")

@@ -89,8 +89,7 @@ def abort_render(session_id):
 
 # --------------------------------------------------- render process
 def main(root_path, session_id, project_path, range_in, range_out, profile_desc):
-
-    project_path = utils.escape_shell_path(project_path)
+    print(root_path, session_id, project_path, range_in, range_out, profile_desc)
 
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION
@@ -128,18 +127,11 @@ def main(root_path, session_id, project_path, range_in, range_out, profile_desc)
     ccrutils.init_session_folders(session_id)
     ccrutils.load_render_data()
     
-    log_path = GLib.get_user_cache_dir() + "/blenderrenderlog"
-    FLOG = open(log_path, 'w')
-    
-    render_setup_script = respaths.ROOT_PATH + "/tools/blenderrendersetup.py"
-    blender_launch = "/usr/bin/blender -b " + project_path + " -P " + utils.escape_shell_path(render_setup_script)
-
     global _start_time
     _start_time = time.monotonic()
 
     render_data = ccrutils.get_render_data()
 
-    
     # Delete old rendered frames for non-preview renders.
     if render_data.is_preview_render == False:
         rendered_frames_folder = ccrutils.rendered_frames_folder()
@@ -153,14 +145,26 @@ def main(root_path, session_id, project_path, range_in, range_out, profile_desc)
             file_path = os.path.join(preview_frames_folder, frame_file)
             os.remove(file_path)
 
+    log_path = GLib.get_user_cache_dir() + "/blenderrenderlog"
+    FLOG = open(log_path, 'w')
 
-    p = subprocess.Popen(blender_launch, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG, preexec_fn=os.setsid)
+    # Create command list and launch process.
+    render_setup_script = respaths.ROOT_PATH + "/tools/blenderrendersetup.py"
+
+    command_list = ["/usr/bin/blender", "-b", project_path, "-P", render_setup_script]
+
+    # Flatpaks need some different commands and paths. 
+    if hasattr(render_data, "is_flatpak_render"):
+        if render_data.is_flatpak_render == True:
+            render_setup_script = utils.get_flatpak_real_path_for_app_files(render_setup_script)
+            command_list = ["flatpak-spawn", "--host", "/usr/bin/blender", "-b", project_path, "-P", render_setup_script]
+            
+    p = subprocess.Popen(command_list, stdin=FLOG, stdout=FLOG, stderr=FLOG, preexec_fn=os.setsid)
 
     manager_thread = ProgressPollingThread(range_in, range_out, p, render_data.is_preview_render)
     manager_thread.start()
     
     p.wait()
-
 
     if manager_thread.abort == True:
         return

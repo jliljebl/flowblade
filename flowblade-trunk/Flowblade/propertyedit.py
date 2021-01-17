@@ -906,6 +906,8 @@ class AffineScaleProperty(EditableProperty):
         if in_norm < 0.001:
             in_norm = 0.001
         out =  1.0 / in_norm
+        
+        return out
 
     def get_in_value(self, out_value):
         """

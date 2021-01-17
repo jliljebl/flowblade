@@ -48,6 +48,11 @@ import utils
 import workflow
 
 
+kb_shortcut_changed_callback = None # Set when dialog lauched, using gloal saves modifying 50+ lines.
+kb_shortcut_dialog = None # Set when dialog lauched, using gloal saves modifying 50+ lines
+shortcuts_combo = None
+scroll_hold_panel = None
+
 def new_project_dialog(callback):
     default_profile_index = mltprofiles.get_default_profile_index()
     default_profile = mltprofiles.get_default_profile()
@@ -336,7 +341,7 @@ def save_project_as_dialog(callback, current_name, open_dir, parent=None):
     dialog.connect('response', callback)
     dialog.show()
 
-def save_effects_compositors_values(callback, default_name, saving_effect=True):
+def save_effects_compositors_values(callback, default_name, saving_effect=True, filter_object=None):
     parent = gui.editor_window.window
 
     if saving_effect == True:
@@ -357,10 +362,13 @@ def save_effects_compositors_values(callback, default_name, saving_effect=True):
     file_filter.set_name(_("Effect/Compositor Values Data"))
     file_filter.add_pattern("*" + "data")
     dialog.add_filter(file_filter)
-    dialog.connect('response', callback)
+    if filter_object == None:
+        dialog.connect('response', callback)
+    else:
+        dialog.connect('response', callback, filter_object)
     dialog.show()
 
-def load_effects_compositors_values_dialog(callback, loading_effect=True):
+def load_effects_compositors_values_dialog(callback, loading_effect=True, filter_object=None):
     parent = gui.editor_window.window
 
     if loading_effect == True:
@@ -378,7 +386,10 @@ def load_effects_compositors_values_dialog(callback, loading_effect=True):
     file_filter.set_name(_("Effect/Compositor Values Data"))
     file_filter.add_pattern("*" + "data")
     dialog.add_filter(file_filter)
-    dialog.connect('response', callback)
+    if filter_object == None:
+        dialog.connect('response', callback)
+    else:
+        dialog.connect('response', callback, filter_object)
     dialog.show()
     
 def export_xml_dialog(callback, project_name):
@@ -521,7 +532,7 @@ def about_dialog(parent_window):
     # Application tab
     img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
     flow_label = Gtk.Label(label="Flowblade Movie Editor")
-    ver_label = Gtk.Label(label="2.6.0")
+    ver_label = Gtk.Label(label="2.6.1")
     janne_label = Gtk.Label(label="Copyright 2020 Janne Liljeblad and contributors")
     page_label = Gtk.Label(label=_("Project page:") + " " + "<a href=\"https://github.com/jliljebl/flowblade\">https://github.com/jliljebl/flowblade</a>")
     page_label.set_use_markup(True)
@@ -1300,6 +1311,122 @@ def open_image_sequence_dialog(callback, parent_window):
     dialog.connect('response', callback, (file_chooser, frames_per_image))
     dialog.show_all()
 
+def add_media_folder_dialog(callback, parent_window):
+    cancel_str = _("Cancel")
+    ok_str = _("Add")
+    dialog = Gtk.Dialog(_("Add Media From Folder"),
+                        parent_window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (cancel_str, Gtk.ResponseType.CANCEL,
+                        ok_str, Gtk.ResponseType.YES))
+
+    file_chooser = Gtk.FileChooserButton(_("Select Folder"))
+    file_chooser.set_size_request(250, 25)
+    if ((editorpersistance.prefs.open_in_last_opended_media_dir == True)
+        and (editorpersistance.prefs.last_opened_media_dir != None)):
+        file_chooser.set_current_folder(editorpersistance.prefs.last_opened_media_dir)
+    else:
+        file_chooser.set_current_folder(os.path.expanduser("~") + "/")
+    file_chooser.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
+    row1 = guiutils.get_two_column_box(Gtk.Label(label=_("Add Media from Folder:")), file_chooser, 220)
+
+    create_bin_checkbox = Gtk.CheckButton()
+    create_bin_checkbox.set_active(False)
+    create_bin_label = Gtk.Label(label=_("Create new Bin"))
+    row2 = guiutils.get_checkbox_row_box(create_bin_checkbox, create_bin_label)
+
+    recursively_checkbox = Gtk.CheckButton()
+    recursively_checkbox.set_active(False)
+    recursively_label = Gtk.Label(label=_("Search subfolders"))
+    row3 = guiutils.get_checkbox_row_box(recursively_checkbox, recursively_label)
+
+    action_select = Gtk.ComboBoxText()
+    action_select.append_text(_("All Media Files"))
+    action_select.append_text(_("Video Files"))
+    action_select.append_text(_("Audio Files"))
+    action_select.append_text(_("Image Files"))
+    action_select.set_active(0)
+    action_label = Gtk.Label(label=_("File types to add:"))
+    row4 = guiutils.get_two_column_box(action_label, action_select, 220)
+
+    use_extension_checkbox = Gtk.CheckButton()
+    use_extension_checkbox.set_active(False)
+    use_extension_label = Gtk.Label(label=_("Filter by file extension"))
+    row5 = guiutils.get_checkbox_row_box(use_extension_checkbox, use_extension_label)
+
+    extension_entry = Gtk.Entry.new()
+    extension_entry.set_max_width_chars(6)
+    extension_entry_box = Gtk.HBox(False, 0)
+    extension_entry_box.pack_start(extension_entry, False, False, 0)
+    extension_entry_box.pack_start(guiutils.pad_label(200,10), True, True, 0)
+    extension_label = Gtk.Label(label=_("File extension:"))
+    extension_entry.set_sensitive(False)
+    extension_label.set_sensitive(False)
+    row6 = guiutils.get_two_column_box(extension_label, extension_entry_box, 100)
+
+    maximum_select = Gtk.ComboBoxText()
+    maximum_select.append_text(_("29"))
+    maximum_select.append_text(_("49"))
+    maximum_select.append_text(_("99"))
+    maximum_select.append_text(_("199"))
+    maximum_select.set_active(0)
+    maximum_label = Gtk.Label(label=_("Max. number of files to import:"))
+    row7 = guiutils.get_two_column_box(maximum_label, maximum_select, 220)
+    
+    activateble_widgets = (action_label, action_select, extension_label, extension_entry)
+    use_extension_checkbox.connect("toggled", _use_extension_toggled, activateble_widgets)
+    
+    vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(row1, False, False, 0)
+    vbox.pack_start(guiutils.pad_label(12, 24), False, False, 0)
+    vbox.pack_start(row2, False, False, 0)
+    vbox.pack_start(row3, False, False, 0)
+    vbox.pack_start(guiutils.pad_label(12, 8), False, False, 0)
+    vbox.pack_start(row4, False, False, 0)
+    vbox.pack_start(row5, False, False, 0)
+    vbox.pack_start(row6, False, False, 0)
+    #vbox.pack_start(guiutils.pad_label(12, 8), False, False, 0)
+    vbox.pack_start(row7, False, False, 0)
+    
+    alignment = dialogutils.get_alignment2(vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, (file_chooser, action_select, create_bin_checkbox, \
+                    recursively_checkbox, use_extension_checkbox, extension_entry, maximum_select))
+    dialog.show_all()
+    
+def _use_extension_toggled(checkbutton, widgets):
+    action_label, action_select, extension_label, extension_entry = widgets
+    if checkbutton.get_active() == True:
+        action_label.set_sensitive(False)
+        action_select.set_sensitive(False)
+        extension_label.set_sensitive(True)
+        extension_entry.set_sensitive(True)
+    else:
+        action_label.set_sensitive(True)
+        action_select.set_sensitive(True)
+        extension_label.set_sensitive(False)
+        extension_entry.set_sensitive(False)
+
+def add_media_folder_files_exceeded(callback, filtered_amount, limit, data):
+    dialog = Gtk.Dialog(_("Media Folder Add Info"),  gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                        _("Add Files"), Gtk.ResponseType.ACCEPT))
+
+    primary_txt = _("Number of files to add exceeds currently set limit!")
+    secondary_txt = _("Search found ") + str(filtered_amount) + _(" files to add.\nLimit is set at ") + str(limit) + _(" files. Add first ") + str(limit) + _(" files?")
+
+    panel = dialogutils.get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info=True, alternative_icon=None, panels=None)
+    alignment = dialogutils.get_alignment2(panel)
+    dialog.connect('response', callback, data)
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    _default_behaviour(dialog)
+    dialog.show_all()
+
 def export_edl_dialog(callback, parent_window, project_name):
     dialog = Gtk.FileChooserDialog(_("Export EDL"), parent_window,
                                    Gtk.FileChooserAction.SAVE,
@@ -1320,8 +1447,8 @@ def transition_edit_dialog(callback, transition_data):
                         (_("Cancel"), Gtk.ResponseType.REJECT,
                         _("Apply"), Gtk.ResponseType.ACCEPT))
 
-    alignment, type_combo, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button, steal_check = panels.get_transition_panel(transition_data)
-    widgets = (type_combo, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button, steal_check)
+    alignment, type_combo, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button, steal_check, encodings = panels.get_transition_panel(transition_data)
+    widgets = (type_combo, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button, steal_check, encodings)
     dialog.connect('response', callback, widgets, transition_data)
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
@@ -1334,8 +1461,8 @@ def transition_re_render_dialog(callback, transition_data):
                         (_("Cancel"), Gtk.ResponseType.REJECT,
                         _("Rerender"), Gtk.ResponseType.ACCEPT))
 
-    alignment, encodings_cb, quality_cb = panels.get_transition_re_render_panel(transition_data)
-    widgets = (encodings_cb, quality_cb)
+    alignment, encodings_cb, quality_cb, encodings = panels.get_transition_re_render_panel(transition_data)
+    widgets = (encodings_cb, quality_cb, encodings)
     dialog.connect('response', callback, widgets, transition_data)
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
@@ -1348,8 +1475,8 @@ def fade_re_render_dialog(callback, fade_data):
                         (_("Cancel"), Gtk.ResponseType.REJECT,
                         _("Rerender"), Gtk.ResponseType.ACCEPT))
 
-    alignment, encodings_cb, quality_cb = panels.get_fade_re_render_panel(fade_data)
-    widgets = (encodings_cb, quality_cb)
+    alignment, encodings_cb, quality_cb, encodings = panels.get_fade_re_render_panel(fade_data)
+    widgets = (encodings_cb, quality_cb, encodings)
     dialog.connect('response', callback, widgets, fade_data)
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
@@ -1362,8 +1489,8 @@ def re_render_all_dialog(callback, rerender_list, unrenderable):
                         (_("Cancel"), Gtk.ResponseType.REJECT,
                         _("Rerender All"), Gtk.ResponseType.ACCEPT))
 
-    alignment, encodings_cb, quality_cb = panels.get_re_render_all_panel(rerender_list, unrenderable)
-    widgets = (encodings_cb, quality_cb)
+    alignment, encodings_cb, quality_cb, encodings = panels.get_re_render_all_panel(rerender_list, unrenderable)
+    widgets = (encodings_cb, quality_cb, encodings)
     dialog.connect('response', callback, widgets, rerender_list)
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
@@ -1376,28 +1503,37 @@ def fade_edit_dialog(callback, transition_data):
                         (_("Cancel"), Gtk.ResponseType.REJECT,
                         _("Apply"), Gtk.ResponseType.ACCEPT))
 
-    alignment, type_combo, length_entry, encodings_cb, quality_cb, color_button = panels.get_fade_panel(transition_data)
-    widgets = (type_combo, length_entry, encodings_cb, quality_cb, color_button)
+    alignment, type_combo, length_entry, encodings_cb, quality_cb, color_button, encodings = panels.get_fade_panel(transition_data)
+    widgets = (type_combo, length_entry, encodings_cb, quality_cb, color_button, encodings)
     dialog.connect('response', callback, widgets, transition_data)
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
     dialog.show_all()
 
-def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, callback):
+def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, change_presets_callback, change_shortcut_callback, _kb_menu_callback):
+    
+    global kb_shortcut_changed_callback, kb_shortcut_dialog, shortcuts_combo
+    kb_shortcut_changed_callback = change_shortcut_callback
+    
     dialog = Gtk.Dialog(_("Keyboard Shortcuts"),
                         parent_window,
                         Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel"), Gtk.ResponseType.REJECT,
-                        _("Apply"), Gtk.ResponseType.ACCEPT))
-
-    presets_label = guiutils.bold_label(_("Shortcuts Presets:"))
+                        (_("Close"), Gtk.ResponseType.ACCEPT))
+    kb_shortcut_dialog = dialog
+    
+    presets_label = guiutils.bold_label(_("Shortcuts Group:"))
     shortcuts_combo = guicomponents.get_shorcuts_selector()
 
+    hamburger_menu = guicomponents.HamburgerPressLaunch(_kb_menu_callback, None,  -1, (shortcuts_combo, dialog))
+    guiutils.set_margins(hamburger_menu.widget, 5, 0, 0, 32)
     hbox = Gtk.HBox()
+    hbox.pack_start(hamburger_menu.widget, False, True, 0)
     hbox.pack_start(presets_label, False, True, 0)
+    hbox.pack_start(guiutils.pad_label(4, 4), False, False, 0)
     hbox.pack_start(shortcuts_combo, True, True, 0)
     
+    global scroll_hold_panel
     scroll_hold_panel = Gtk.HBox()
 
     diff_label = guiutils.bold_label(_("Diffence to 'Flowblade Default' Presets:"))
@@ -1422,25 +1558,33 @@ def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, callback):
     content_panel.pack_start(guiutils.get_left_justified_box([diff_label]), False, False, 0)
     content_panel.pack_start(diff_sw, False, False, 0)
 
-    scroll_window = _display_keyboard_schortcuts(editorpersistance.prefs.shortcuts, get_tool_list_func(), scroll_hold_panel)
+    scroll_window = display_keyboard_shortcuts(editorpersistance.prefs.shortcuts, get_tool_list_func(), scroll_hold_panel)
 
-    shortcuts_combo.connect('changed', lambda w:_shorcuts_selection_changed(w, scroll_hold_panel, diff_data, dialog))
+    guicomponents.KBShortcutEditor.edit_ongoing = False
+        
+    changed_id = shortcuts_combo.connect('changed', lambda w:_shorcuts_selection_changed(w, scroll_hold_panel, diff_data, dialog))
+    shortcuts_combo.changed_id = changed_id
     
     guiutils.set_margins(content_panel, 12, 12, 12, 12)
     
     dialog.vbox.pack_start(content_panel, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
-    dialog.connect('response', callback, shortcuts_combo)
+    dialog.connect('response', change_presets_callback, shortcuts_combo)
     dialog.show_all()
  
 def _shorcuts_selection_changed(combo, scroll_hold_panel, diff_data, dialog):
     selected_xml = shortcuts.shortcut_files[combo.get_active()]
-    _display_keyboard_schortcuts(selected_xml, workflow.get_tline_tool_working_set(), scroll_hold_panel)
+    
+    editorpersistance.prefs.shortcuts = selected_xml
+    editorpersistance.save()
+    shortcuts.set_keyboard_shortcuts()
+    
+    display_keyboard_shortcuts(selected_xml, workflow.get_tline_tool_working_set(), scroll_hold_panel)
     diff_data.set_text(shortcuts.get_diff_to_defaults(selected_xml))
     dialog.show_all()
 
-def _display_keyboard_schortcuts(xml_file, tool_set, scroll_hold_panel):
+def display_keyboard_shortcuts(xml_file, tool_set, scroll_hold_panel):
     widgets = scroll_hold_panel.get_children()
     if len(widgets) != 0:
         scroll_hold_panel.remove(widgets[0])
@@ -1458,6 +1602,7 @@ def _display_keyboard_schortcuts(xml_file, tool_set, scroll_hold_panel):
     sw.set_size_request(420, 400)
     
     scroll_hold_panel.pack_start(sw, False, False, 0)
+    scroll_hold_panel.show_all()
     return sw
 
 def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):   
@@ -1466,15 +1611,15 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     general_vbox = Gtk.VBox()
     general_vbox.pack_start(_get_kb_row(_("Control + N"), _("Create New Project")), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("Control + S"), _("Save Project")), False, False, 0)
-    general_vbox.pack_start(_get_dynamic_kb_row(root_node, "delete"), False, False, 0)
+    general_vbox.pack_start(_get_kb_row(_("DELETE"), _("Delete Selected Item")), False, False, 0) # _get_dynamic_kb_row(root_node, "delete"), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("ESCAPE"), _("Stop Rendering Audio Levels")), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("Control + Q"), _("Quit")), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("Control + Z"), _("Undo")), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("Control + Y"), _("Redo")), False, False, 0)
     general_vbox.pack_start(_get_kb_row(_("Control + O"), _("Open Project")), False, False, 0)
-    general_vbox.pack_start(_get_dynamic_kb_row(root_node, "switch_monitor"), False, False, 0)
+    general_vbox.pack_start(_get_kb_row(_("TAB"), _("Switch Monitor Source")), False, False, 0) #_get_dynamic_kb_row(root_node, "switch_monitor"), False, False, 0)
     general_vbox.pack_start(_get_dynamic_kb_row(root_node, "open_next"), False, False, 0)
-    general_vbox.pack_start(_get_kb_row(_("Control + L"), _("Log Marked Clip Range")), False, False, 0)
+    general_vbox.pack_start(_get_dynamic_kb_row(root_node, "log_range"), False, False, 0)
     general_vbox.pack_start(_get_dynamic_kb_row(root_node, "zoom_in"), False, False, 0)
     general_vbox.pack_start(_get_dynamic_kb_row(root_node, "zoom_out"), False, False, 0)
     general = guiutils.get_named_frame(_("General"), general_vbox)
@@ -1482,16 +1627,16 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     tline_vbox = Gtk.VBox()
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "mark_in"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "mark_out"), False, False, 0)
-    tline_vbox.pack_start(_get_kb_row(_("Alt + I"), _("Go To Mark In")), False, False, 0)
-    tline_vbox.pack_start(_get_kb_row(_("Alt + O"), _("Go To Mark Out")), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "to_mark_in"), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "to_mark_out"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "clear_io_marks"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "cut"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "cut_all"), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("DELETE"),  _("Splice Out")), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Control + DELETE"),  _("Lift")), False, False, 0)
-    tline_vbox.pack_start(_get_kb_row(_("Alt + C"), _("Clear Filters")), False, False, 0)
-    tline_vbox.pack_start(_get_kb_row(_("Alt + S"), _("Sync Compositor")), False, False, 0)
-    tline_vbox.pack_start(_get_kb_row(_("Alt + R"), _("Resync")), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "clear_filters"), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "sync_all"), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "resync"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "insert"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "append"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "3_point_overwrite"), False, False, 0)
@@ -1500,12 +1645,11 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "add_marker"), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Control + C"), _("Copy Clips")), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Control + V"), _("Paste Clips")), False, False, 0)
-    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "log_range"), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Left Arrow "), _("Prev Frame Trim Edit")), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Right Arrow"), _("Next Frame Trim Edit")), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Control + Left Arrow "), _("Back 10 Frames Trim Edit")), False, False, 0)
     tline_vbox.pack_start(_get_kb_row(_("Control + Right Arrow"), _("Forward 10 Frames Trim Edit")), False, False, 0)
-    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "enter_edit"), False, False, 0)
+    tline_vbox.pack_start(_get_kb_row(_("ENTER"),  _("Complete Keyboard Trim Edit")), False, False, 0) #  _get_dynamic_kb_row(root_node, "enter_edit"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "nudge_back"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "nudge_forward"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "nudge_back_10"), False, False, 0)
@@ -1521,23 +1665,23 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     play_vbox.pack_start(_get_dynamic_kb_row(root_node, "slower"), False, False, 0)
     play_vbox.pack_start(_get_dynamic_kb_row(root_node, "stop"), False, False, 0)
     play_vbox.pack_start(_get_dynamic_kb_row(root_node, "faster"), False, False, 0)
-    play_vbox.pack_start(_get_dynamic_kb_row(root_node, "prev_frame"), False, False, 0)
-    play_vbox.pack_start(_get_dynamic_kb_row(root_node, "next_frame"), False, False, 0)
+    play_vbox.pack_start(_get_kb_row(_("Left Arrow "), _("Next Frame")), False, False, 0)#_get_dynamic_kb_row(root_node, "prev_frame"), False, False, 0)
+    play_vbox.pack_start(_get_kb_row(_("Right Arrow "), _("Previous Frames")), False, False, 0)#_get_dynamic_kb_row(root_node, "next_frame"), False, False, 0)
     play_vbox.pack_start(_get_kb_row(_("Control + Left Arrow "), _("Move Back 10 Frames")), False, False, 0)
     play_vbox.pack_start(_get_kb_row(_("Control + Right Arrow"), _("Move Forward 10 Frames")), False, False, 0)
     play_vbox.pack_start(_get_dynamic_kb_row(root_node, "prev_cut"), False, False, 0)
     play_vbox.pack_start(_get_dynamic_kb_row(root_node, "next_cut"), False, False, 0)
-    play_vbox.pack_start(_get_dynamic_kb_row(root_node, "to_start"), False, False, 0)
-    play_vbox.pack_start(_get_dynamic_kb_row(root_node, "to_end"), False, False, 0)
-    play_vbox.pack_start(_get_kb_row(_("Alt + I"), _("To Mark In")), False, False, 0)
-    play_vbox.pack_start(_get_kb_row(_("Alt + O"), _("To Mark Out")), False, False, 0)
+    play_vbox.pack_start(_get_kb_row(_("Home"), _("Move Forward 10 Frames")), False, False, 0)#_get_dynamic_kb_row(root_node, "to_start"), False, False, 0)
+    play_vbox.pack_start(_get_kb_row(_("End"), _("Move Forward 10 Frames")), False, False, 0)#_get_dynamic_kb_row(root_node, "to_end"), False, False, 0)
+    play_vbox.pack_start(_get_dynamic_kb_row(root_node, "to_mark_in"), False, False, 0)
+    play_vbox.pack_start(_get_dynamic_kb_row(root_node, "to_mark_out"), False, False, 0)
     play = guiutils.get_named_frame(_("Playback"), play_vbox)
 
     tools_vbox = Gtk.VBox()
     for tool_name, kb_shortcut in tool_set:
             tools_vbox.pack_start(_get_kb_row(tool_name, kb_shortcut), False, False, 0)
     tools_vbox.pack_start(_get_kb_row(_("Keypad 1-9"), _("Same as 1-9")), False, False, 0)
-    tools = guiutils.get_named_frame(_("Tools"), tools_vbox)
+    tools = guiutils.get_named_frame(_("Edit Tools"), tools_vbox)
 
     kfs_vbox = Gtk.VBox()
     kfs_vbox.pack_start(_get_kb_row(_("Control + C"), _("Copy Keyframe Value")), False, False, 0)
@@ -1585,14 +1729,26 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
 
 def _get_dynamic_kb_row(root_node, code):
     key_name, action_name = shortcuts.get_shortcut_info(root_node, code)
-    return _get_kb_row(key_name, action_name)
-    
-def _get_kb_row(msg1, msg2):
+    editable = shortcuts.get_shortcuts_editable()
+    if editable == True:
+        edit_launch = guicomponents.KBShortcutEditor(code, key_name, kb_shortcut_dialog, kb_shortcut_changed_callback) # kb_shortcut_changed_callback is global, set at dialog launch
+    else:
+        edit_launch = guicomponents.KBShortcutEditor(code, key_name, kb_shortcut_dialog, None, False) 
+    return _get_kb_row(key_name, action_name, edit_launch)
+
+def _get_kb_row(msg1, msg2, edit_launch=None):
     label1 = Gtk.Label(label=msg1)
     label2 = Gtk.Label(label=msg2)
-    KB_SHORTCUT_ROW_WIDTH = 400
+    if edit_launch == None:
+        widget = Gtk.Label()
+    else:
+        widget = edit_launch.widget
+        edit_launch.set_shortcut_label(label1)
+        
+    KB_SHORTCUT_ROW_WIDTH = 500
     KB_SHORTCUT_ROW_HEIGHT = 22
-    row = guiutils.get_two_column_box(label1, label2, 170)
+
+    row = guiutils.get_three_column_box(label1, label2, widget, 170, 48)
     row.set_size_request(KB_SHORTCUT_ROW_WIDTH, KB_SHORTCUT_ROW_HEIGHT)
     row.show()
     return row

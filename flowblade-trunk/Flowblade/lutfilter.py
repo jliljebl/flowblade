@@ -353,9 +353,6 @@ class ColorGradeBandCorrection:
         self.r_mult = (r - 0.5) / 0.5 
         self.g_mult = (g - 0.5) / 0.5
         self.b_mult = (b - 0.5) / 0.5
-        
-        #print r, g, b
-        #print self.r_mult, self.g_mult, self.b_mult
 
     def set_mask_points(self, points_str, range_in, range_out):
         self.mask_curve.set_points_from_str(points_str)
@@ -367,23 +364,17 @@ class ColorGradeBandCorrection:
         for i in range(range_out, 256):
             self.mask_curve.curve[i] = 128
 
-        #self.print_table(self.mask_curve.curve)
-
     def update_correction(self):
         for i in range(0, 256):
             self.r_mult_table[i] = (float(self.mask_curve.curve[i] - 128) / 128.0) * self.r_mult
             self.g_mult_table[i] = (float(self.mask_curve.curve[i] - 128) / 128.0) * self.g_mult
             self.b_mult_table[i] = (float(self.mask_curve.curve[i] - 128) / 128.0) * self.b_mult
-        
-        #self.print_table(self.r_mult_table)
 
         CORRECTION_STRENGTH_MULT = 100.0
         for i in range(0, 256):    
             self.r_correction_look_up[i] = int(self.r_mult_table[i] * CORRECTION_STRENGTH_MULT) #- LINEAR_LUT_256[i]
             self.g_correction_look_up[i] = int(self.g_mult_table[i] * CORRECTION_STRENGTH_MULT) #- LINEAR_LUT_256[i]
             self.b_correction_look_up[i] = int(self.b_mult_table[i] * CORRECTION_STRENGTH_MULT) #- LINEAR_LUT_256[i]
-        
-        #self.print_table(self.r_correction_look_up)
         
     def print_table(self, table):
         for i in range(0, len(table)):

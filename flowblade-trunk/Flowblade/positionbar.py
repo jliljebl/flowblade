@@ -95,7 +95,8 @@ class PositionBar:
             SELECTED_RANGE_COLOR = DARK_SELECTED_RANGE_COLOR
             MARK_COLOR = DARK_MARK_COLOR
             SPEED_TEST_COLOR = DARK_SPEED_TEST_COLOR
-            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
+            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME or \
+                editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
                 MARK_COLOR = FLOWBLADE_THEME_MARK_COLOR
     
     def set_listener(self, listener):
@@ -130,10 +131,17 @@ class PositionBar:
         if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
             return
 
-        r, g, b, a = gui.unpack_gdk_color(gui.get_bg_color())
-
         global BG_COLOR
-        BG_COLOR = guiutils.get_multiplied_color((r, g, b), 1.25)
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+            r, g, b, a = gui.unpack_gdk_color(gui.get_light_gray_light_color())
+            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+                r, g ,b, a = gui.unpack_gdk_color(gui.get_light_neutral_color())
+            BG_COLOR = (r, g ,b)
+        else:
+            r, g, b, a = gui.unpack_gdk_color(gui.get_bg_color())
+
+
+            BG_COLOR = guiutils.get_multiplied_color((r, g, b), 1.25)
     
     def _get_panel_pos(self, norm_pos):
         return END_PAD + int(norm_pos * 

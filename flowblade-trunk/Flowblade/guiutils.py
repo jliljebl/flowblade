@@ -57,6 +57,13 @@ def get_right_justified_box(widgets):
     for widget in widgets:
         hbox.pack_start(widget, False, False, 0)
     return hbox
+    
+def get_right_justified_box(widgets):
+    hbox = Gtk.HBox()
+    hbox.pack_start(Gtk.Label(), True, True, 0)
+    for widget in widgets:
+        hbox.pack_start(widget, False, False, 0)
+    return hbox
 
 def get_sides_justified_box(widgets, count_of_widgets_on_the_left=1):
     hbox = Gtk.HBox()
@@ -99,6 +106,17 @@ def get_two_column_box(widget1, widget2, left_width):
     hbox.pack_start(widget2, True, True, 0)
     return hbox
 
+def get_three_column_box(widget1, widget2, widget3, left_width, right_width):
+    hbox = Gtk.HBox()
+    left_box = get_left_justified_box([widget1])
+    left_box.set_size_request(left_width, TWO_COLUMN_BOX_HEIGHT)
+    right_box = get_right_justified_box([widget3])
+    right_box.set_size_request(right_width, TWO_COLUMN_BOX_HEIGHT)
+    hbox.pack_start(left_box, False, True, 0)
+    hbox.pack_start(widget2, True, True, 0)
+    hbox.pack_start(right_box, True, True, 0)
+    return hbox
+    
 def get_two_column_box_right_pad(widget1, widget2, left_width, right_pad):
     left_box = get_left_justified_box([widget1])
     left_box.set_size_request(left_width, TWO_COLUMN_BOX_HEIGHT)
@@ -169,15 +187,41 @@ def get_cairo_image(img_name, suffix = ".png", force = None):
     if force == None:
         force = editorpersistance.prefs.double_track_hights
     if force:
-        new_name = img_name + "@2"
+#        new_name = img_name + "@2"
+        if img_name[-6:] == "_color":  #editorpersistance.prefs.colorized_icons is True:
+             new_name = img_name[:-6] + "@2_color"
+        else:
+            new_name = img_name + "@2"
     else:
         new_name = img_name
     try:
         img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + new_name + suffix)
     except:
-        img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + img_name + suffix)
+        # Colorized icons
+#        img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + img_name + suffix)
+        if img_name[-6:] == "_color":  #editorpersistance.prefs.colorized_icons is True:
+            try:
+                img =  cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + img_name + "_color" + suffix)
+            except:
+                img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + img_name[:-6] + suffix)
+        else:
+            img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + img_name + suffix)
+        # End of Colorized icons
     return img
 
+def get_scaled_cairo_image(img_name):
+    icon = cairo.ImageSurface.create_from_png(img_name)
+    if editorpersistance.prefs.double_track_hights  == False:
+        return icon
+    
+    scaled_icon = cairo.ImageSurface(cairo.FORMAT_ARGB32, icon.get_width() * 2, icon.get_height() * 2)
+    cr = cairo.Context(scaled_icon)
+    cr.scale(2.0, 2.0)
+    cr.set_source_surface(icon, 0, 0)
+    cr.paint()
+
+    return scaled_icon
+        
 # Aug-2019 - SvdB - BB
 def get_image_button(img_file_name, width, height):
     button = Gtk.Button()
@@ -226,7 +270,8 @@ def get_slider_row(editable_property, listener, slider_name=None):
     
     editable_property.value_changed_ID = adjustment.connect("value-changed", listener) # saving ID to make it available for disconnect
                                                                                        # This also needs to be after adjustment is set to not loose exiting value for build dummy value 
-        
+    print("editable_property.value_changed_ID")
+
     return (get_two_column_editor_row(name, hbox), hslider)
 
 def get_slider_row_and_spin_widget(editable_property, listener, slider_name=None):
@@ -331,6 +376,19 @@ def get_named_frame(name, widget, left_padding=12, right_padding=6, right_out_pa
     
     return out_align
 
+def get_panel_etched_frame(panel):
+    frame = Gtk.Frame()
+    frame.add(panel)
+    frame.set_shadow_type(Gtk.ShadowType.ETCHED_OUT)
+    set_margins(frame, 0, 0, 1, 0)
+    return frame
+
+def get_empty_panel_etched_frame():
+    frame = Gtk.Frame()
+    frame.set_shadow_type(Gtk.ShadowType.ETCHED_OUT)
+    set_margins(frame, 0, 0, 1, 0)
+    return frame
+    
 def get_in_centering_alignment(widget, xsc=0.0, ysc=0.0):
     align = Gtk.HBox(False, 0)
     align.pack_start(Gtk.Label(), True, True, 0)

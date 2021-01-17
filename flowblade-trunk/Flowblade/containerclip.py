@@ -24,6 +24,7 @@ import copy
 import hashlib
 import json
 import os
+import subprocess
 import threading
 import time
 
@@ -32,6 +33,7 @@ import containerprogramedit
 import containeractions
 import dialogs
 import dialogutils
+import editorstate
 from editorstate import PROJECT
 import gui
 import guicomponents
@@ -43,7 +45,7 @@ import utils
 _blender_available = False
 
 ROW_WIDTH = 300
-
+FALLBACK_THUMB = "fallback_thumb.png"
 
 class ContainerClipData:
     
@@ -103,7 +105,16 @@ def test_blender_availebility():
     global _blender_available
     if os.path.exists("/usr/bin/blender") == True:
         _blender_available = True
-
+    elif editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
+        _blender_available = False
+        """ Work o0n this continues for 2.8
+        command_list = ["flatpak-spawn", "--host", "flatpak", "info","org.blender.Blender"]
+        p = subprocess.Popen(command_list, stdin=subprocess.PIPE, stdout=subprocess.PIPE, bufsize=1)
+        p.wait(timeout=3)
+        
+        if p.returncode == 0: # If not present we get returncode==1
+            _blender_available = True
+        """
 def blender_available():
     return _blender_available
             
@@ -296,6 +307,9 @@ def _blender_clip_create_dialog_callback(dialog, response_id, data):
         action_object.initialize_project(project_file) # blocks until info data written
 
         project_edit_info_path = userfolders.get_cache_dir() + "blender_container_projectinfo.json"
+        if editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
+            project_edit_info_path = userfolders.get_user_home_cache_for_flatpak() + "blender_container_projectinfo.json"
+        
         info_file = open(project_edit_info_path, "r")
         project_edit_info = json.load(info_file)
         
@@ -331,7 +345,8 @@ def _blender_unredered_media_creation_complete(created_unrendered_clip_path, con
 
 class ContainerClipMediaItem:
     """
-    A pattern producer object presnt in Media Bin.
+    Container clip media iem in Media Bin.
+    1-N container clips can be created from this.
     """
     def __init__(self, media_item_id, name, container_data):
         self.id = media_item_id
@@ -361,17 +376,22 @@ class ContainerClipMediaItem:
         print("create_mlt_producer() not implemented")
 
     def create_icon(self):
-        action_object = containeractions.get_action_object(self.container_data)
-        if self.icon_path == None:
+        try:
+            action_object = containeractions.get_action_object(self.container_data)
+            if self.icon_path == None:
 
-            surface, length, icon_path = action_object.create_icon()      
-            self.icon = surface
-            self.icon_path = icon_path
-            self.length = length
-            self.container_data.unrendered_length = length - 1
-        else:
-            self.icon = action_object.load_icon()
-
+                surface, length, icon_path = action_object.create_icon()      
+                self.icon = surface
+                self.icon_path = icon_path
+                self.length = length
+                self.container_data.unrendered_length = length - 1
+            else:
+                self.icon = action_object.load_icon()
+        except:
+            self.icon_path = respaths.IMAGE_PATH + FALLBACK_THUMB
+            cr, scaled_icon = containeractions._create_image_surface(self.icon_path)
+            self.icon = scaled_icon
+            
     def save_program_edit_info(self):
         if self.container_data.container_type == appconsts.CONTAINER_CLIP_BLENDER:
             edit_info = self.container_data.data_slots["project_edit_info"]

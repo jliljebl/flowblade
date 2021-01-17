@@ -123,7 +123,6 @@
         <property name="level" args="editor=no_editor">1</property>
         <property name="alpha" args="range_in=0,100 range_out=0,1 editor=keyframe_editor_clip_fade_filter exptype=keyframe_hcs displayname=Opacity">0=1</property>
     </filter>
-
     <!-- FADES -->
     <filter id="brightness">
         <name>Fade In</name>
@@ -146,7 +145,6 @@
         <property name="level" args="editor=no_editor">1</property>
         <property name="alpha" args="range_in=0,100 range_out=0,1 value_replacement=fade_in_out_replament editor=keyframe_editor_clip_fade_filter exptype=keyframe_hcs displayname=Opacity">0=1</property>
     </filter>
-
     <!-- FILTER MASK FILTERS -->
     <filter id="mask_start"  filtermaskfilter="Alpha Shape">
         <name>Mask - Begin</name>
@@ -181,26 +179,51 @@
     
     
     <!-- AUDIO -->
+    <!-- DEPRECATED, replaced by non-multipart filter below 31.10.2020.  
     <filter id="volume" multipart="true">
         <name>Volume</name>
         <group>Audio</group>
         <multipartproperty multistartprop="gain" multiendprop="end" args="editor=keyframe_editor_release range_in=0,200 range_out=0.0,2.0 exptype=multipart_keyframe displayname=Volume">"0=1.0"</multipartproperty>
         <property name="max_gain" args="editor=no_editor exptype=not_parsed">20dB</property>
         <property name="track" args="editor=no_editor">0</property>
-        <property name="gain" args="editor=no_editor">1</property> <!-- Volume at start of filter --> 
-        <property name="end" args="editor=no_editor">1</property> <!-- Volume at end of filter --> 
+        <property name="gain" args="editor=no_editor">1</property> 
+        <property name="end" args="editor=no_editor">1</property> 
+    </filter> 
+    -->
+    <filter id="volume">
+      <name>Volume</name>
+      <group>Audio</group>
+      <property name="window" args="editor=no_editor">75</property>
+      <property name="max_gain" args="editor=no_editor">20dB</property>
+      <property name="level" args="editor=keyframe_editor_release range_in=-70,20 range_out=-70,20 exptype=keyframe_hcs displayname=Volume!dB">0=0.0</property>
     </filter>
-    <filter id="panner">
-        <name>Pan</name>
-        <group>Audio</group>
-        <property name="start" args="range_in=-100,100 editor=ladspa_slider displayname=Left/Right">0.5</property>
-    </filter>
+    <!-- DEPRECATED, replaced by non-multipart filters below 31.10.2020.  
     <filter id="panner" multipart="true">
         <name>Pan Keyframed</name>
         <group>Audio</group>
         <multipartproperty multistartprop="start" multiendprop="end" args="editor=keyframe_editor_release range_in=-100,100 exptype=multipart_keyframe displayname=Left/Right">"0=0.5"</multipartproperty>
         <property name="start" args="editor=no_editor">0.5</property>
         <property name="end" args="editor=no_editor">0.5</property>   
+    </filter>
+    -->
+    <filter id="panner">
+        <name>Pan</name>
+        <group>Audio</group>
+        <property name="start" args="range_in=-100,100 editor=ladspa_slider displayname=Left/Right">0.5</property>
+    </filter>
+    <filter id="panner">
+      <name>Pan Left Channel</name>
+      <group>Audio</group>
+      <property name="channel" args="editor=no_editor">0</property>
+        <property name="start" args="editor=no_editor">0</property>
+      <property name="split" args="editor=keyframe_editor_release range_in=-100,100 exptype=keyframe_hcs displayname=Left/Right">0=0.0</property>
+    </filter>
+    <filter id="panner">
+      <name>Pan Right Channel</name>
+      <group>Audio</group>
+      <property name="channel" args="editor=no_editor">1</property>
+      <property name="start" args="editor=no_editor">1</property>
+      <property name="split" args="editor=keyframe_editor_release range_in=-100,100 exptype=keyframe_hcs displayname=Left/Right">0=1.0</property>
     </filter>
     <filter id="ladspa.1406">
         <name>Mono to Stereo</name>
@@ -634,16 +657,19 @@
         <group>Color</group>
         <property name="Hue" args="range_in=0,360">0.0</property>
     </filter>
+    <!-- Dropped 31.10.2020, keep info on these changes available here
     <filter id="frei0r.brightness" mlt_drop_version="0.9.1">
         <name>Brightness</name>
         <group>Color</group>
         <property name="Brightness" args="range_in=-100,100">0.5</property>
     </filter>
+
     <filter id="brightness" multipart="true" mlt_drop_version="0.9.1">
         <name>Brightness Keyframed</name>
         <group>Color</group>
         <multipartproperty multistartprop="start" multiendprop="end" args="editor=keyframe_editor range_in=0,100 exptype=multipart_keyframe displayname=Brightness">"0=1.0"</multipartproperty>
     </filter>
+    -->
     <filter id="brightness" mlt_min_version="0.9.1">
         <name>Brightness</name>
         <group>Color</group>
@@ -1000,7 +1026,7 @@
         <name>Position Scale</name>
         <group>Transform</group>
             <property name="transition.fill" args="editor=no_editor">1</property>
-            <property name="transition.distort" args="editor=no_editor">0</property>
+            <property name="transition.distort" args="editor=no_editor">1</property>
             <property name="transition.rect"  args="editor=filter_rect_geometry_editor range_in=0,100 range_out=0,100 exptype=geom_filt_rect_kf">0=0 0 Screensize2 1</property>
             <property name="transition.valign" args="editor=no_editor exptype=not_parsed">top</property>
             <property name="transition.halign" args="editor=no_editor exptype=not_parsed">left</property>
@@ -1028,7 +1054,6 @@
             <property name="transition.scale_y" args="editor=slider range_in=0,500 exptype=affine_scale displayname=Y!Scale">1</property>
           <property name="transition.threads" args="editor=no_editor">0</property>
     </filter>
-
 
     <!-- compositor filters that are not displayed to user, not used currently -->
     <filter id="frei0r.mask0mate">

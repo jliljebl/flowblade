@@ -211,12 +211,15 @@ def _add_filter(data):
     clip, track, item_id, item_data = data
     x, filter_info = item_data
     action = clipeffectseditor.get_filter_add_action(filter_info, clip)
+    clipeffectseditor.set_stack_update_blocked() # We update stack on set_clip below
     action.do_edit()
-    
+    clipeffectseditor.set_stack_update_unblocked()
+
     # (re)open clip in editor
     frame = tlinewidgets.get_frame(x)
     index = track.get_clip_index_at(frame)
     clipeffectseditor.set_clip(clip, track, index)
+    clipeffectseditor.set_filter_item_expanded(len(clip.filters) - 1)
 
 def _add_compositor(data):
     clip, track, item_id, item_data = data

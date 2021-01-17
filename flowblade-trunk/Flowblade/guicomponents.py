@@ -40,6 +40,7 @@ from gi.repository import GLib
 
 import appconsts
 import cairoarea
+import dialogutils
 import dnd
 import editorpersistance
 import editorstate
@@ -116,6 +117,7 @@ levels_menu = Gtk.Menu()
 clip_effects_hamburger_menu = Gtk.Menu()
 bin_popup_menu = Gtk.Menu()
 filter_mask_menu = Gtk.Menu()
+kb_shortcuts_hamburger_menu = Gtk.Menu()
 
 # ------------------------------------------------- item lists
 class ImageTextTextListView(Gtk.VBox):
@@ -595,41 +597,6 @@ class MediaListView(ImageTextTextListView):
             self.scroll.queue_draw()
 
 
-class BinListView(ImageTextTextListView):
-    """
-    GUI component displaying list of media files.
-    """
-
-    def __init__(self, bin_selection_cb, bin_name_edit_cb):
-        ImageTextTextListView.__init__(self)
-
-        self.text_col_1.set_min_width(10)
-
-        # Connect selection 'changed' signal
-        tree_sel = self.treeview.get_selection()
-        tree_sel.connect("changed", bin_selection_cb)
-
-        # Set bin name editable and connect 'edited' signal
-        self.text_rend_1.set_property("editable", True)
-        self.text_rend_1.connect("edited",
-                                 bin_name_edit_cb,
-                                 (self.storemodel, 1))
-
-    def fill_data_model(self):
-        self.storemodel.clear()
-
-        for media_bin in PROJECT().bins:
-            try:
-                pixbuf = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "bin_5.png")
-                row_data = [pixbuf,
-                            media_bin.name,
-                            str(len(media_bin.file_ids))]
-                self.storemodel.append(row_data)
-                self.scroll.queue_draw()
-            except GObject.GError as exc:
-                print("can't load icon", exc)
-
-
 class FilterListView(ImageTextImageListView):
     """
     GUI component displaying list of available filters.
@@ -864,15 +831,16 @@ class ClipInfoPanel(Gtk.HBox):
 
         self.name_value = Gtk.Label()
         self.name_value.set_ellipsize(Pango.EllipsizeMode.END)
+        self.name_value.set_max_width_chars(30)
 
         self.name_label.set_sensitive(False)
         self.name_value.set_sensitive(False)
         self.name_value.modify_font(Pango.FontDescription(font_desc))
         self.name_label.modify_font(Pango.FontDescription(font_desc))
-        
+
         self.track = guiutils.bold_label(_("Track:"))
         self.track_value = Gtk.Label()
-        
+
         self.track.set_sensitive(False)
         self.track_value.set_sensitive(False)
         self.track.modify_font(Pango.FontDescription(font_desc))
@@ -1099,6 +1067,10 @@ class MediaPanel():
     def get_selected_media_objects(self):
         return self.selected_objects
 
+    def get_selected_media_objects_for_drag(self):
+        last_pressed = self.selected_objects[-1]
+        return [last_pressed]
+ 
     def media_object_selected(self, media_object, widget, event):
         if event.type == Gdk.EventType._2BUTTON_PRESS:
             self.double_click_release = True
@@ -1171,9 +1143,9 @@ class MediaPanel():
                     self.selected_objects.append(m_obj)
                     m_obj.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
             else:
-                self.clear_selection()
-                media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
-                self.selected_objects.append(media_object)
+                if not(media_object in self.selected_objects):
+                    media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
+                    self.selected_objects.append(media_object)
 
         elif event.button == 3:
             self.clear_selection()
@@ -1202,7 +1174,11 @@ class MediaPanel():
                     media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_bg_color())
                 except:
                     pass
-
+            else:
+                self.clear_selection()
+                media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
+                self.selected_objects.append(media_object)
+                          
     def select_media_file(self, media_file):
         self.clear_selection()
         self.selected_objects.append(self.widget_for_mediafile[media_file])
@@ -2316,18 +2292,6 @@ def display_media_file_popup_menu(media_file, callback, event):
 
     media_file_menu.popup(None, None, None, None, event.button, event.time)
 
-def display_filter_stack_popup_menu(row, treeview, callback, event):
-    filter_stack_menu = filter_stack_menu_popup_menu
-    guiutils.remove_children(filter_stack_menu)
-
-    filter_stack_menu.add(_get_menu_item(_("Toggle Active"), callback, ("toggle", row, treeview)))
-    filter_stack_menu.add(_get_menu_item(_("Reset Values"), callback, ("reset", row, treeview)))
-    _add_separetor(filter_stack_menu)
-    filter_stack_menu.add(_get_menu_item(_("Move Up"), callback, ("moveup", row, treeview)))
-    filter_stack_menu.add(_get_menu_item(_("Move Down"), callback, ("movedown", row, treeview)))
-    
-    filter_stack_menu.popup(None, None, None, None, event.button, event.time)
-
 def display_media_log_event_popup_menu(row, treeview, callback, event):
     log_event_menu = log_event_popup_menu
     guiutils.remove_children(log_event_menu)
@@ -3049,14 +3013,13 @@ def get_audio_levels_popup_menu(event, callback):
 def get_clip_effects_editor_hamburger_menu(event, callback):
     menu = clip_effects_hamburger_menu
     guiutils.remove_children(menu)
+    
+    menu.add(_get_menu_item(_("Toggle All Effects On/Off"), callback, "toggle"))
 
-    menu.add(_get_menu_item(_("Save Effect Values"), callback, "save"))
-    menu.add(_get_menu_item(_("Load Effect Values"), callback, "load"))
-    menu.add(_get_menu_item(_("Reset Effect Values"), callback, "reset"))
-    
     _add_separetor(menu)
-    
-    menu.add(_get_menu_item(_("Delete Effect"), callback, "delete"))
+
+    menu.add(_get_menu_item(_("Set All Expanded"), callback, "expanded"))
+    menu.add(_get_menu_item(_("Set All Unexpanded"), callback, "unexpanded"))
 
     _add_separetor(menu)
 
@@ -3069,7 +3032,22 @@ def get_clip_effects_editor_hamburger_menu(event, callback):
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
 
-def get_filter_mask_menu(event, callback, filter_names, filter_msgs):
+def get_kb_shortcuts_hamburger_menu(event, callback, data):
+    shortcuts_combo, dialog = data
+    
+    menu = kb_shortcuts_hamburger_menu
+    guiutils.remove_children(menu)
+
+    menu.add(_get_menu_item(_("Add Custom Shortcuts Group"), callback, ("add", data)))
+    delete_item = _get_menu_item(_("Delete Active Custom Shortcuts Group"), callback, ("delete", data))
+    menu.add(delete_item)
+    if shortcuts_combo.get_active() < 2:
+        delete_item.set_sensitive(False)
+
+    menu.show_all()
+    menu.popup(None, None, None, None, event.button, event.time)
+    
+def get_filter_mask_menu(event, callback, filter_names, filter_msgs, filter_index):
     menu = filter_mask_menu
     guiutils.remove_children(menu)
 
@@ -3078,7 +3056,7 @@ def get_filter_mask_menu(event, callback, filter_names, filter_msgs):
     menu_item.set_submenu(sub_menu)
     #U+2192 right"\u21c9" Left U+21c7
     for f_name, f_msg in zip(filter_names, filter_msgs):
-        sub_menu.add(_get_menu_item("\u21c9" + " " + f_name, callback, (False, f_msg)))
+        sub_menu.add(_get_menu_item("\u21c9" + " " + f_name, callback, (False, f_msg, filter_index)))
 
     menu.add(menu_item)
 
@@ -3087,7 +3065,7 @@ def get_filter_mask_menu(event, callback, filter_names, filter_msgs):
     menu_item.set_submenu(sub_menu)
     
     for f_name, f_msg in zip(filter_names, filter_msgs):
-        sub_menu.add(_get_menu_item("\u21c9" + " " + f_name, callback, (True, f_msg)))
+        sub_menu.add(_get_menu_item("\u21c9" + " " + f_name, callback, (True, f_msg, filter_index)))
 
     menu.add(menu_item)
     
@@ -3292,6 +3270,17 @@ def get_columns_count_popup_menu(event, callback):
 
 def get_shorcuts_selector():
     shortcuts_combo = Gtk.ComboBoxText()
+    return fill_shortcuts_combo(shortcuts_combo)
+
+def update_shortcuts_combo(shortcuts_combo):
+    shortcuts_combo.handler_block(shortcuts_combo.changed_id)
+    
+    shortcuts_combo.remove_all()
+    fill_shortcuts_combo(shortcuts_combo)
+    
+    shortcuts_combo.handler_block(shortcuts_combo.changed_id)
+
+def fill_shortcuts_combo(shortcuts_combo):
     current_pref_index = -1
     
     for i in range(0, len(shortcuts.shortcut_files)):
@@ -3384,7 +3373,7 @@ class ToolSelector(ImageMenuLaunch):
 
     
 class HamburgerPressLaunch:
-    def __init__(self, callback, surfaces=None, width=-1): # We are using this with other launchers that need to be able to set non sensitive
+    def __init__(self, callback, surfaces=None, width=-1, data=None):
         # Aug-2019 - SvdB - BB
         prefs = editorpersistance.prefs
         size_adj = 1
@@ -3404,6 +3393,7 @@ class HamburgerPressLaunch:
         self.widget.press_func = self._press_event
         self.sensitive = True
         self.callback = callback
+        self.data = data
         
         if surfaces == None:
             self.surface_active = guiutils.get_cairo_image("hamburger")
@@ -3430,7 +3420,10 @@ class HamburgerPressLaunch:
 
     def _press_event(self, event):
         if self.sensitive == True:
-            self.callback(self.widget, event)
+            if self.data == None:
+                self.callback(self.widget, event)
+            else:
+                self.callback(self.widget, event, self.data)
 
 
 class MonitorSwitch:
@@ -3490,4 +3483,86 @@ class MonitorSwitch:
             self.callback(appconsts.MONITOR_TLINE_BUTTON_PRESSED)
         elif editorstate.timeline_visible() == True:
             self.callback(appconsts.MONITOR_CLIP_BUTTON_PRESSED)
+
+
+class KBShortcutEditor:
+
+    edit_ongoing = False
+    input_listener = None
+
+    def __init__(self, code, key_name, dialog_window, set_shortcut_callback, editable=True):
         
+        self.code = code
+        self.key_name = key_name
+        self.set_shortcut_callback = set_shortcut_callback
+        self.shortcut_label = None # set later
+        self.dialog_window = dialog_window
+    
+        if editable == True:
+            surface_active = guiutils.get_cairo_image("kb_configuration")
+            surface_not_active = guiutils.get_cairo_image("kb_configuration_not_active")
+            surfaces = [surface_active, surface_not_active]
+            edit_launch = HamburgerPressLaunch(lambda w,e:self.kb_shortcut_edit(), surfaces)
+        else:
+            edit_launch = utils.EmptyClass()
+            edit_launch.widget = Gtk.Label()
+            
+        item_vbox = Gtk.HBox(False, 2)
+        input_label = Gtk.Label(_("Input Shortcut"))
+        SELECTED_BG = Gdk.RGBA(0.1, 0.31, 0.58,1.0)
+        input_label.override_color(Gtk.StateType.NORMAL, SELECTED_BG)
+        item_vbox.pack_start(input_label, True, True, 0)
+           
+        self.kb_input = Gtk.EventBox()
+        self.kb_input.add_events(Gdk.EventMask.KEY_PRESS_MASK)
+        self.kb_input.connect("key-press-event", lambda w,e: self.kb_input_listener(e))
+        self.kb_input.set_can_focus(True)
+        self.kb_input.add(item_vbox)
+
+        self.widget = Gtk.Stack()
+
+        edit_launch.widget.show()
+        row = guiutils.get_centered_box([edit_launch.widget])
+        row.show()
+        self.kb_input.show()
+        
+        self.widget.add_named(row, "edit_launch")
+        self.widget.add_named(self.kb_input, "kb_input")
+        self.widget.set_visible_child_name("edit_launch")
+
+    def set_shortcut_label(self, shortcut_label):
+        self.shortcut_label = shortcut_label
+  
+    def kb_shortcut_edit(self):
+        if KBShortcutEditor.edit_ongoing == True:
+            KBShortcutEditor.input_listener.kb_input.grab_focus()
+            return
+        KBShortcutEditor.edit_ongoing = True
+        self.widget.set_visible_child_name("kb_input")
+        self.kb_input.grab_focus()
+        KBShortcutEditor.input_listener = self
+
+    def kb_input_listener(self, event):
+
+        
+        # Gdk.KEY_Return ? Are using this as clear and make "exit trim edit" not settable?
+        
+        # Single modifier keys are not accepted as keyboard shortcuts.
+        if  event.keyval == Gdk.KEY_Control_L or  event.keyval == Gdk.KEY_Control_R \
+            or event.keyval == Gdk.KEY_Alt_L or event.keyval == Gdk.KEY_Alt_R \
+            or event.keyval == Gdk.KEY_Shift_L or event.keyval == Gdk.KEY_Shift_R \
+            or event.keyval == Gdk.KEY_Shift_R or event.keyval == Gdk.KEY_ISO_Level3_Shift:
+
+            return
+            
+        self.widget.set_visible_child_name("edit_launch")
+
+        error = self.set_shortcut_callback(self.code, event, self.shortcut_label)
+
+        KBShortcutEditor.edit_ongoing = False
+        KBShortcutEditor.input_listener = None
+        
+        if error != None:
+            primary_txt = _("Reserved Shortcut!")
+            secondary_txt = "'" + error + "'" +  _(" is a reserved keyboard shortcut and\ncannot be set as a custom shortcut.")
+            dialogutils.warning_message(primary_txt, secondary_txt, self.dialog_window )

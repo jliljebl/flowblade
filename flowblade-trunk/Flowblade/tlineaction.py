@@ -530,9 +530,7 @@ def lift_button_pressed():
 
     updater.repaint_tline()
 
-
 def ripple_delete_button_pressed():
-    print("Ripple delete")
     if movemodes.selected_track == -1:
         return
 
@@ -671,7 +669,6 @@ def range_overwrite_pressed():
     mark_out_frame = current_sequence().tractor.mark_out
     
     # Case timeline marked
-    print(mark_in_frame, mark_out_frame, over_clip.mark_out, over_clip.mark_in)
     if mark_in_frame != -1 and mark_out_frame != -1:
         range_length = mark_out_frame - mark_in_frame + 1 # end is incl.
         if over_clip.mark_in == -1:
@@ -710,7 +707,6 @@ def range_overwrite_pressed():
 
     updater.save_monitor_frame = False # hack to not get wrong value saved in MediaFile.current_frame
 
-    #print((over_clip_out- over_clip.mark_in), (mark_out_frame + 1 - mark_in_frame))
     data = {"track":track,
             "clip":over_clip,
             "clip_in":over_clip.mark_in,
@@ -719,7 +715,6 @@ def range_overwrite_pressed():
             "mark_out_frame":mark_out_frame + 1} # +1 because mark is displayed and end of frame end this 
                                                  # confirms to user expectation of
                                                  # of how this should work
-    #print(data)
     action = edit.range_overwrite_action(data)
     action.do_edit()
 
@@ -842,7 +837,7 @@ def add_transition_menu_item_selected():
     
 def add_fade_menu_item_selected():
     if movemodes.selected_track == -1:
-        print("so selection track")
+        print("no selection track")
         # INFOWINDOW
         return
 
@@ -854,7 +849,7 @@ def add_fade_menu_item_selected():
 
 def add_transition_pressed(retry_from_render_folder_select=False):
     if movemodes.selected_track == -1:
-        print("so selection track")
+        print("no selection track")
         # INFOWINDOW
         return
 
@@ -862,8 +857,6 @@ def add_transition_pressed(retry_from_render_folder_select=False):
     clip_count = movemodes.selected_range_out - movemodes.selected_range_in + 1 # +1 out incl.
 
     if not ((clip_count == 2) or (clip_count == 1)):
-        # INFOWINDOW
-        print("clip count")
         return
 
     if track.id < current_sequence().first_video_index and clip_count == 1:
@@ -923,10 +916,17 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
         return
 
     # Get input data
-    type_combo, length_entry, enc_combo, quality_combo, wipe_luma_combo_box, color_button, steal_frames = selection_widgets
+    type_combo, length_entry, enc_combo, quality_combo, wipe_luma_combo_box, color_button, steal_frames, encodings = selection_widgets
     transition_type_selection_index = type_combo.get_active()
-    encoding_option_index = enc_combo.get_active()
+
     quality_option_index = quality_combo.get_active()
+    
+    # 'encodings' is subset of 'renderconsumer.encoding_options' because libx264 was always buggy for this 
+    # use. We find out right 'renderconsumer.encoding_options' index for rendering.
+    selected_encoding_option_index = enc_combo.get_active()
+    enc = encodings[selected_encoding_option_index]
+    encoding_option_index = renderconsumer.encoding_options.index(enc)
+    
     extension_text = "." + renderconsumer.encoding_options[encoding_option_index].extension
     sorted_wipe_luma_index = wipe_luma_combo_box.get_active()
     color_str = color_button.get_color().to_string()
@@ -937,8 +937,6 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
         length = int(length_entry.get_text())
     except Exception as e:
         # INFOWINDOW, bad input
-        print(str(e))
-        print("entry")
         return
 
     dialog.destroy()
@@ -1111,12 +1109,18 @@ def _transition_RE_render_dialog_callback(dialog, response_id, selection_widgets
     if response_id != Gtk.ResponseType.ACCEPT:
         dialog.destroy()
         return
+
+    enc_combo, quality_combo, encodings = selection_widgets
+    quality_option_index = quality_combo.get_active()
+
+    # 'encodings' is subset of 'renderconsumer.encoding_options' because libx264 was always buggy for this 
+    # use. We find out right 'renderconsumer.encoding_options' index for rendering.
+    selected_encoding_option_index = enc_combo.get_active()
+    enc = encodings[selected_encoding_option_index]
+    encoding_option_index = renderconsumer.encoding_options.index(enc)
     
     dialog.destroy()
-    
-    enc_combo, quality_combo = selection_widgets
-    encoding_option_index = enc_combo.get_active()
-    quality_option_index = quality_combo.get_active()
+        
     extension_text = "." + renderconsumer.encoding_options[encoding_option_index].extension
 
     clip = transition_data["clip"]
@@ -1308,12 +1312,18 @@ def _add_fade_dialog_callback(dialog, response_id, selection_widgets, transition
         return
 
     # Get input data
-    type_combo, length_entry, enc_combo, quality_combo, color_button = selection_widgets
+    type_combo, length_entry, enc_combo, quality_combo, color_button, encodings = selection_widgets
 
     transition_type_selection_index = type_combo.get_active() + 3 # +3 because mlttransitions.RENDERED_FADE_IN = 3 and mlttransitions.RENDERED_FADE_OUT = 4
                                                                   # and fade in/out selection indexes are 0 and 1
-    encoding_option_index = enc_combo.get_active()
     quality_option_index = quality_combo.get_active()
+
+    # 'encodings' is subset of 'renderconsumer.encoding_options' because libx264 was always buggy for this 
+    # use. We find out right 'renderconsumer.encoding_options' index for rendering.
+    selected_encoding_option_index = enc_combo.get_active()
+    enc = encodings[selected_encoding_option_index]
+    encoding_option_index = renderconsumer.encoding_options.index(enc)
+    
     extension_text = "." + renderconsumer.encoding_options[encoding_option_index].extension
     color_str = color_button.get_color().to_string()
 
@@ -1321,8 +1331,6 @@ def _add_fade_dialog_callback(dialog, response_id, selection_widgets, transition
         length = int(length_entry.get_text())
     except Exception as e:
         # INFOWINDOW, bad input
-        print(str(e))
-        print("entry")
         return
 
     dialog.destroy()
@@ -1331,7 +1339,7 @@ def _add_fade_dialog_callback(dialog, response_id, selection_widgets, transition
         return
 
     # Save encoding
-    PROJECT().set_project_property(appconsts.P_PROP_TRANSITION_ENCODING,(encoding_option_index,quality_option_index))
+    PROJECT().set_project_property(appconsts.P_PROP_TRANSITION_ENCODING, (encoding_option_index, quality_option_index))
     
     clip = transition_data["clip"]
     
@@ -1430,13 +1438,19 @@ def _fade_RE_render_dialog_callback(dialog, response_id, selection_widgets, fade
     if response_id != Gtk.ResponseType.ACCEPT:
         dialog.destroy()
         return
-    
-    # Get input data
-    enc_combo, quality_combo = selection_widgets
-    encoding_option_index = enc_combo.get_active()
-    quality_option_index = quality_combo.get_active()
-    extension_text = "." + renderconsumer.encoding_options[encoding_option_index].extension
 
+    # Get input data
+    enc_combo, quality_combo, encodings = selection_widgets
+    quality_option_index = quality_combo.get_active()
+
+    # 'encodings' is subset of 'renderconsumer.encoding_options' because libx264 was always buggy for this 
+    # use. We find out right 'renderconsumer.encoding_options' index for rendering.
+    selected_encoding_option_index = enc_combo.get_active()
+    enc = encodings[selected_encoding_option_index]
+    encoding_option_index = renderconsumer.encoding_options.index(enc)
+
+    extension_text = "." + renderconsumer.encoding_options[encoding_option_index].extension
+    
     dialog.destroy()
         
     track = fade_data["track"]
@@ -1455,7 +1469,7 @@ def _fade_RE_render_dialog_callback(dialog, response_id, selection_widgets, fade
         from_clone.clip_out = from_clone.clip_out + length
     
     # Save encoding
-    PROJECT().set_project_property(appconsts.P_PROP_TRANSITION_ENCODING,(encoding_option_index, quality_option_index))
+    PROJECT().set_project_property(appconsts.P_PROP_TRANSITION_ENCODING, (encoding_option_index, quality_option_index))
 
     # Remember fade and transition lengths for next invocation, users prefer this over one default value.
     editorstate.fade_length = length
@@ -1542,9 +1556,15 @@ def _RE_render_all_dialog_callback(dialog, response_id, selection_widgets, reren
     
 
     # Get input data
-    enc_combo, quality_combo = selection_widgets
-    encoding_option_index = enc_combo.get_active()
+    enc_combo, quality_combo, encodings = selection_widgets
     quality_option_index = quality_combo.get_active()
+    
+    # 'encodings' is subset of 'renderconsumer.encoding_options' because libx264 was always buggy for this 
+    # use. We find out right 'renderconsumer.encoding_options' index for rendering.
+    selected_encoding_option_index = enc_combo.get_active()
+    enc = encodings[selected_encoding_option_index]
+    encoding_option_index = renderconsumer.encoding_options.index(enc)
+    
     extension_text = "." + renderconsumer.encoding_options[encoding_option_index].extension
 
     dialog.destroy()
@@ -1897,11 +1917,6 @@ def do_timeline_filters_paste():
         
     if movemodes.selected_track == -1:
         return
-        
-    target_clips = []
-    track = current_sequence().tracks[movemodes.selected_track]
-    for i in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
-        target_clips.append(track.clips[i])
 
     # First clip of selection is used as filters source
     source_clip = paste_clips[0]
@@ -1920,7 +1935,7 @@ def do_timeline_filters_paste():
 def do_compositor_data_paste(paste_objs):
     data_type, paste_data = paste_objs
     if data_type != COPY_PASTE_DATA_COMPOSITOR_PROPERTIES:
-        print("supposed unreahcable if in do_compositor_data_paste")
+        print("supposedly unreachable if in do_compositor_data_paste")
         return
         
     if compositormodes.compositor != None and compositormodes.compositor.selected == True:

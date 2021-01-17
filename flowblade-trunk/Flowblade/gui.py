@@ -45,9 +45,7 @@ media_list_view = None
 bin_list_view = None
 bin_panel = None
 sequence_list_view = None
-effect_stack_list_view = None
 
-middle_notebook = None # This is now the only notebook, maybe update name sometime
 project_info_vbox = None
 
 effect_select_list_view = None
@@ -88,13 +86,17 @@ _MINT_COLORS = ((0.839215686, 0.839215686, 0.839215686), (0.172, 0.172, 0.172), 
 _ARC_COLORS = ((0.960784, 0.964706, 0.968627), (0.266667, 0.282353, 0.321569), (0.321568627, 0.580392157, 0.88627451), (0.321568627, 0.580392157, 0.88627451), "Arc (theme)")
 _FLOWBLADE_COLORS = ((0.960784, 0.964706, 0.968627), (0.266667, 0.282353, 0.321569), (0.1, 0.31, 0.58), (0.1, 0.31, 0.58), "Flowblade Theme")
 
-
 _THEME_COLORS = (_UBUNTU_COLORS, _GNOME_COLORS, _MINT_COLORS, _ARC_COLORS, _FLOWBLADE_COLORS)
 
 _CURRENT_THEME_COLORS_FILE = "currentcolors.data" # Used to communicate theme colors to tools like gmic.py running on separate process
 
+LIGHT_GRAY_THEME_GRAY = ((50.3/255.0), (50.3/255.0), (59.9/255.0), 1.0)
+LIGHT_NEUTRAL_THEME_NEUTRAL = ((68.0/255.0), (68.0/255.0), (68.0/255.0), 1.0)
+DARKER_NEUTRAL_THEME_NEUTRAL = ((48.0/255.0), (48.0/255.0), (48.0/255.0), 1.0)
+
 _selected_bg_color = None
 _bg_color = None
+_bg_unmodified_normal = None
 _button_colors = None
 
 def capture_references(new_editor_window):
@@ -103,8 +105,8 @@ def capture_references(new_editor_window):
     """
     global editor_window, media_list_view, bin_list_view, sequence_list_view, pos_bar, \
     tline_display, tline_scale, tline_canvas, tline_scroll, tline_v_scroll, tline_info, \
-    tline_column, play_b, \
-    effect_select_list_view, effect_select_combo_box, project_info_vbox, middle_notebook, big_tc, editmenu, notebook_buttons, tline_left_corner, \
+    tline_column, play_b, effect_select_list_view, effect_select_combo_box, \
+    project_info_vbox, big_tc, editmenu, notebook_buttons, tline_left_corner, \
     monitor_widget, bin_panel, monitor_switch, comp_mode_launcher, tline_render_strip
 
     editor_window = new_editor_window
@@ -113,8 +115,6 @@ def capture_references(new_editor_window):
     bin_list_view = editor_window.bin_list_view
     bin_panel = editor_window.bins_panel
     sequence_list_view = editor_window.sequence_list_view
-
-    middle_notebook = editor_window.notebook
 
     effect_select_list_view = editor_window.effect_select_list_view
     effect_select_combo_box = editor_window.effect_select_combo_box
@@ -149,14 +149,22 @@ def get_bg_color():
 def get_selected_bg_color():
     return _selected_bg_color
 
-# returns Gdk.RGBA color
-#def get_buttons_color():
-#    return _button_colors
+def get_light_gray_light_color():
+    return Gdk.RGBA(*LIGHT_GRAY_THEME_GRAY)
+
+def get_light_neutral_color():
+    return Gdk.RGBA(*LIGHT_NEUTRAL_THEME_NEUTRAL)
+
+def get_darker_neutral_color():
+    return Gdk.RGBA(*DARKER_NEUTRAL_THEME_NEUTRAL)
+    
+def get_bg_unmodified_normal_color():
+    return _bg_unmodified_normal
 
 def set_theme_colors():
     # Find out if theme color discovery works and set selected bg color apppropiately when
     # this is first called.
-    global _selected_bg_color, _bg_color, _button_colors
+    global _selected_bg_color, _bg_color, _button_colors, _bg_unmodified_normal
 
     fallback_theme_colors = editorpersistance.prefs.theme_fallback_colors
     theme_colors = _THEME_COLORS[fallback_theme_colors]
@@ -183,6 +191,8 @@ def set_theme_colors():
     if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
         bg_color = Gdk.RGBA(red=(30.0/255.0), green=(35.0/255.0), blue=(51.0/255.0), alpha=1.0)
 
+    _bg_unmodified_normal = bg_color # this was used to work on grey, theme probably not necessary anymore
+
     r, g, b, a = unpack_gdk_color(bg_color)
 
     if r == 0.0 and g == 0.0 and b == 0.0:
@@ -208,15 +218,10 @@ def set_theme_colors():
     editor_window.media_panel.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
     editor_window.mm_paned.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
 
-def apply_flowblade_theme_fixes():
-    fblade_bg_color = Gdk.RGBA(red=(30.0/255.0), green=(35.0/255.0), blue=(51.0/255.0), alpha=1.0)
-    fblade_bg_color_darker = Gdk.RGBA(red=(16.0/255.0), green=(19.0/255.0), blue=(30.0/255.0), alpha=1.0)
-    test_color =  Gdk.RGBA(1, 0, 0, alpha=1.0)
-    for widget in editor_window.fblade_theme_fix_panels:
-        widget.override_background_color(Gtk.StateFlags.NORMAL, fblade_bg_color)
-    for widget in editor_window.fblade_theme_fix_panels_darker:
-        widget.override_background_color(Gtk.StateFlags.NORMAL, fblade_bg_color_darker)
-        
+    if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
+        editor_window.mm_paned.override_background_color(Gtk.StateFlags.NORMAL, get_light_gray_light_color())
+        editor_window.media_panel.override_background_color(Gtk.StateFlags.NORMAL, get_light_gray_light_color())
+    
 def unpack_gdk_color(gdk_color):
     return (gdk_color.red, gdk_color.green, gdk_color.blue, gdk_color.alpha)
 
@@ -251,7 +256,7 @@ def _print_widget(widget): # debug
     path_str = path_str.replace("GtkVBox:. GtkVPaned:[2/2]. GtkHBox:. GtkHPaned:. GtkVBox:. GtkNotebook:[1/1]","notebook:")
     print(path_str)
 
-def apply_gtk_css():
+def apply_gtk_css(theme):
     gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
     if Gtk.get_major_version() == 3 and Gtk.get_minor_version() >= 22:
         print("Gtk version is " + gtk_version + ", Flowblade theme is available.")
@@ -265,6 +270,12 @@ def apply_gtk_css():
     display = Gdk.Display.get_default()
     screen = display.get_default_screen()
     Gtk.StyleContext.add_provider_for_screen (screen, provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
-    provider.load_from_path(respaths.ROOT_PATH + "/res/css/gtk-flowblade-dark.css")
+    if theme == appconsts.FLOWBLADE_THEME:
+        css_path = "/res/css/gtk-flowblade-dark.css"
+    elif theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+        css_path = "/res/css3/gtk-flowblade-dark.css"
+    else: # appconsts.FLOWBLADE_THEME_GRAY
+        css_path = "/res/css2/gtk-flowblade-dark.css"
+    provider.load_from_path(respaths.ROOT_PATH + css_path)
 
     return True

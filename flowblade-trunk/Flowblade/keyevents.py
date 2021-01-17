@@ -163,14 +163,16 @@ def key_down(widget, event):
     return False
     
 def _timeline_has_focus():
+    if gui.editor_window.tool_selector != None and gui.editor_window.tool_selector.widget.has_focus():
+        return True
+    
     if(gui.tline_canvas.widget.has_focus()
        or gui.tline_column.widget.has_focus()
-       or gui.editor_window.tool_selector.widget.has_focus()
        or (gui.pos_bar.widget.has_focus() and timeline_visible())
        or gui.tline_scale.widget.has_focus()
        or glassbuttons.focus_group_has_focus(glassbuttons.DEFAULT_FOCUS_GROUP)):
         return True
-        
+
     return False
     
 def _handle_tline_key_event(event):
@@ -568,11 +570,6 @@ def _handle_delete():
         projectaction.delete_selected_sequence()
         return True
 
-    # Delete effect
-    if gui.effect_stack_list_view.get_focus_child() != None:
-        clipeffectseditor.delete_effect_pressed()
-        return True
-
     # Delete media log event
     if gui.editor_window.media_log_events_list_view.get_focus_child() != None:
         medialog.delete_selected()
@@ -702,3 +699,29 @@ def paste_action():
     else:
         tlineaction.do_timeline_objects_paste()
 
+def change_single_shortcut(code, event, shortcut_label):
+    key_val_name = Gdk.keyval_name(event.keyval).lower()
+    print(key_val_name)
+    
+    mods_list = []
+    state = event.get_state()
+    if state & Gdk.ModifierType.CONTROL_MASK:
+        mods_list.append("CTRL")
+    if state & Gdk.ModifierType.MOD1_MASK:
+        mods_list.append("ALT")
+        
+    if state & Gdk.ModifierType.SHIFT_MASK:
+        mods_list.append("SHIFT")
+    elif state & Gdk.ModifierType.LOCK_MASK:     # CapsLock is used as an equivalent to SHIFT.
+        mods_list.append("SHIFT")
+
+    shortcut_info_str = shortcuts.get_shortcut_info_for_keyname_and_modlist(key_val_name, mods_list)
+    if shortcuts.is_blocked_shortcut(key_val_name, mods_list):
+        return shortcut_info_str
+
+    shortcut_label.set_text(shortcut_info_str)
+
+    shortcuts.change_custom_shortcut(code, key_val_name, mods_list)
+    shortcuts.set_keyboard_shortcuts()
+
+    return None

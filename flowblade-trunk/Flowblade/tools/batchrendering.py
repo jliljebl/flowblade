@@ -124,6 +124,8 @@ class QueueRunnerThread(threading.Thread):
 
             project = persistance.load_project(project_file_path, False)
 
+            project.c_seq.fix_v1_for_render()
+
             maybe_create_render_folder(render_item.render_path)
         
             producer = project.c_seq.tractor
@@ -259,8 +261,6 @@ def add_render_item(flowblade_project, render_path, args_vals_list, mark_in, mar
     else:
         launch_batch_rendering()
 
-    #print "Render queue item for rendering file into " + render_path + " with identifier " + identifier + " added."
-
 # ------------------------------------------------------- file utils
 def init_dirs_if_needed():
     user_dir = userfolders.get_cache_dir()
@@ -354,9 +354,11 @@ def main(root_path, force_launch=False):
     editorpersistance.load()
     if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
         Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
-            gui.apply_gtk_css()
-            
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME \
+            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
+            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+            gui.apply_gtk_css(editorpersistance.prefs.theme)
+        
     repo = mlt.Factory().init()
     processutils.prepare_mlt_repo(repo)
     
@@ -1224,8 +1226,10 @@ def single_render_main(root_path):
     editorpersistance.load()
     if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
         Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
-            gui.apply_gtk_css()
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME \
+            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
+            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+            gui.apply_gtk_css(editorpersistance.prefs.theme)
 
     repo = mlt.Factory().init()
     processutils.prepare_mlt_repo(repo)
@@ -1280,6 +1284,8 @@ class SingleRenderThread(threading.Thread):
         persistance.show_messages = False
 
         project = persistance.load_project(project_file_path, False)
+
+        project.c_seq.fix_v1_for_render()
 
         producer = project.c_seq.tractor
         profile = mltprofiles.get_profile(render_item.render_data.profile_name)

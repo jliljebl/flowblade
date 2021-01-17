@@ -84,7 +84,18 @@ def init():
     global _user_dirs
     
     _user_dirs = USING_XDG_DIRS
-     
+
+def init_user_cache_for_flatpak():
+    try:
+        os.makedirs(get_user_home_cache_for_flatpak())
+    except:
+        pass # After first time exists.
+    
+def get_user_home_cache_for_flatpak(): # this user when communicating with Blender
+    user_home = os.getenv("HOME")
+    cache_folder = user_home + "/.cache/flowblade/"
+    return cache_folder
+    
 # --------------------------------------------------------- dirs paths
 def get_config_dir():
     return _xdg_config_dir + "/"
@@ -136,6 +147,10 @@ def _maybe_create_xdg_dirs():
         os.mkdir(get_data_dir() + appconsts.CONTAINER_CLIPS_UNRENDERED)
     if not os.path.exists(get_render_dir() +  "/" + appconsts.PROXIES_DIR):
         os.mkdir(get_render_dir() +  "/" + appconsts.PROXIES_DIR)
+    if not os.path.exists(get_data_dir()  +  "/" + appconsts.USER_SHORTCUTS_DIR):
+        os.mkdir(get_data_dir()  +  "/" + appconsts.USER_SHORTCUTS_DIR)
+
+
 
 
     #----------------- CACHE
@@ -174,8 +189,11 @@ class XDGCopyThread(threading.Thread):
     def run(self):
         _copy_data_from_dot_folders_xdg_folders()
         self.completed_callback(self.dialog)
-        
+    
 def _copy_data_from_dot_folders_xdg_folders():
+    # THIS DOES NOT WORK NOW, dir_util was not available in Ubuntu 20.10
+    
+    
     # ---------------------- CONFIG
     print("Copying CONFIG...")
     file_util.copy_file(_dot_dir + "prefs", get_config_dir() + "prefs", verbose=1)

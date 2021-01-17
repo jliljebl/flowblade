@@ -11,7 +11,7 @@
 
 * window layout configuration window
 
-* user setable keyboard shortcuts
+* user settable keyboard shortcuts
 
 ## Container Clips
 
@@ -21,6 +21,3 @@
 
 * repository for sharing user created Container Clip resources
 
-## Compositing
-
-See document **./COMPOSITING_2.md**

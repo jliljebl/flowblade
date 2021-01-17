@@ -61,6 +61,7 @@ import dnd
 import diskcachemanagement
 import edit
 import editevent
+import editorlayout
 import editorpersistance
 import editorstate
 import editorwindow
@@ -170,6 +171,12 @@ def main(root_path):
 
     # Create user folders if needed and determine if we're using xdg or dotfile user folders.
     userfolders.init()
+    
+    # Flatpak still needs to use standard home XDG cache folder for Blender.
+    # Flatpak only uses XDG cache folder for Blender and we are keeping this around if we ever
+    # succeed in getting Blender going for Flatpak.
+    if editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
+        userfolders.init_user_cache_for_flatpak()
 
     # Set paths.
     respaths.set_paths(root_path)
@@ -188,11 +195,10 @@ def main(root_path):
     translations.load_filters_translations()
     mlttransitions.init_module()
 
-    # Apr-2017 - SvdB - Keyboard shortcuts
+    # Keyboard shortcuts
     shortcuts.load_shortcut_files()
     shortcuts.load_shortcuts()
 
-    # Aug-2019 - SvdB - AS
     # The test for len != 4 is to make sure that if we change the number of values below the prefs are reset to the correct list
     # So when we add or remove a value, make sure we also change the len test
     # Only use positive numbers.
@@ -200,7 +206,7 @@ def main(root_path):
         print("Initializing Auto Save Options")
         editorpersistance.prefs.AUTO_SAVE_OPTS = ((0, _("No Autosave")),(1, _("1 min")),(2, _("2 min")),(5, _("5 min")))
 
-    # We respaths and translations data available so we need to init in a function.
+    # We need respaths and translations data available so we need to do init in a function.
     workflow.init_data()
 
     # RHEL7/CentOS compatibility fix
@@ -221,10 +227,13 @@ def main(root_path):
         _too_low_mlt_version_exit()
         return
 
-    # Themes
-    if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
-        success = gui.apply_gtk_css()
+    # Apply custom themes.
+    if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME \
+        or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
+        or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+        success = gui.apply_gtk_css(editorpersistance.prefs.theme)
         if not success:
+            print("Applying custom theme failed.")
             editorpersistance.prefs.theme = appconsts.LIGHT_THEME
             editorpersistance.save()
 
@@ -352,9 +361,6 @@ def main(root_path):
             global assoc_timeout_id
             assoc_timeout_id = GObject.timeout_add(10, open_assoc_file)
         
-    if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
-        gui.apply_flowblade_theme_fixes()
-        
     # SDL 2 consumer needs to created after Gtk.main() has run enough for window to be visble
     #if editorstate.get_sdl_version() == editorstate.SDL_2: # needs more state considerion still
     #    print "SDL2 timeout launch"
@@ -415,7 +421,7 @@ def monkeypatch_callbacks():
     snapping._get_x_for_frame_func = tlinewidgets._get_frame_x
 
     # Callback to reinit to change slider <-> kf editor
-    propertyeditorbuilder.re_init_editors_for_slider_type_change_func = clipeffectseditor.effect_selection_changed
+    propertyeditorbuilder.re_init_editors_for_slider_type_change_func = clipeffectseditor.refresh_clip
 
     propertyeditorbuilder.show_rotomask_func = rotomask.show_rotomask
     
@@ -454,7 +460,7 @@ def get_assoc_file_path():
         return arg_str
 
 def open_assoc_file():
-    GObject.source_remove(assoc_timeout_id)
+    GLib.source_remove(assoc_timeout_id)
     projectaction.actually_load_project(assoc_file_path, block_recent_files=False)
 
 def set_quiet_if_requested():
@@ -474,17 +480,8 @@ def create_gui():
     updater.set_clip_edit_mode_callback = modesetting.set_clip_monitor_edit_mode
     updater.load_icons()
 
-    # Notebook indexes are different for 1 and 2 window layouts
-    if editorpersistance.prefs.global_layout != appconsts.SINGLE_WINDOW:
-        medialog.range_log_notebook_index = 0
-        compositeeditor.compositor_notebook_index = 2
-        clipeffectseditor.filters_notebook_index = 1
-        jobs.jobs_notebook_index = 3
-        if editorwindow.top_level_project_panel() == False:
-            jobs.jobs_notebook_index = 4
-    else:
-        if editorwindow.top_level_project_panel() == False:
-            jobs.jobs_notebook_index = 5
+    # Make layout data available
+    editorlayout.init_layout_data()
 
     # Create window and all child components
     editor_window = editorwindow.EditorWindow()
@@ -492,6 +489,9 @@ def create_gui():
     # Make references to various gui components available via gui module
     gui.capture_references(editor_window)
 
+    # Unused frames take 3 pixels so hide those.
+    editorlayout.set_positions_frames_visibility()
+        
     # All widgets are now realized and references captured so can find out theme colors
     gui.set_theme_colors()
     tlinewidgets.set_dark_bg_color()
@@ -614,11 +614,10 @@ def init_editor_state():
 
     # Clear editors 
     clipeffectseditor.clear_clip()
-    clipeffectseditor.effect_selection_changed() # to get No Clip text
     compositeeditor.clear_compositor()
 
     # Show first pages on notebooks
-    gui.middle_notebook.set_current_page(0)
+    gui.editor_window.notebook.set_current_page(0)
 
     # Clear clip selection.
     movemodes.clear_selection_values()
@@ -707,7 +706,7 @@ def open_project(new_project):
     editorstate.player.set_scrubbing(editorpersistance.prefs.audio_scrubbing)
     
 def _do_window_resized_update():
-    GObject.source_remove(resize_timeout_id)
+    GLib.source_remove(resize_timeout_id)
     updater.window_resized()
     
 def change_current_sequence(index):
@@ -766,7 +765,7 @@ def autosave_dialog_callback(dialog, response):
     if response == Gtk.ResponseType.OK:
         global loaded_autosave_file
         loaded_autosave_file = autosave_file
-        projectaction.actually_load_project(autosave_file, True)
+        projectaction.actually_load_project(autosave_file, True, False, True)
     else:
         tlinerender.init_session()  # didn't do this in main and not going to do app-open_project
         os.remove(autosave_file)
@@ -794,7 +793,7 @@ def autosaves_many_dialog_callback(dialog, response, autosaves_view, autosaves):
         global loaded_autosave_file
         loaded_autosave_file = autosave_file
         dialog.destroy()
-        projectaction.actually_load_project(autosave_file, True)
+        projectaction.actually_load_project(autosave_file, True, False, True)
     else:
         dialog.destroy()
         tlinerender.init_session()
@@ -836,7 +835,7 @@ def stop_autosave():
     global autosave_timeout_id
     if autosave_timeout_id == -1:
         return
-    GObject.source_remove(autosave_timeout_id)
+    GLib.source_remove(autosave_timeout_id)
     autosave_timeout_id = -1
 
 def do_autosave():
@@ -864,7 +863,7 @@ def show_splash_screen():
 
 def destroy_splash_screen():
     splash_screen.destroy()
-    GObject.source_remove(splash_timeout_id)
+    GLib.source_remove(splash_timeout_id)
 
 def show_worflow_info_dialog():
     editorpersistance.prefs.workflow_dialog_last_version_shown = editorstate.appversion
@@ -875,7 +874,7 @@ def show_worflow_info_dialog():
 
 # ------------------------------------------------------- disk cahce size check
 def check_disk_cache_size():
-    GObject.source_remove(disk_cache_timeout_id)
+    GLib.source_remove(disk_cache_timeout_id)
     diskcachemanagement.check_disk_cache_size()
     
 # ------------------------------------------------------- userfolders dialogs
@@ -969,7 +968,7 @@ def _too_small_screen_exit():
     Gtk.main()
 
 def _show_too_small_info():
-    GObject.source_remove(exit_timeout_id)
+    GLib.source_remove(exit_timeout_id)
     primary_txt = _("Too small screen for this application.")
     scr_w = Gdk.Screen.width()
     scr_h = Gdk.Screen.height()
@@ -984,7 +983,7 @@ def _xdg_error_exit(error_str):
     Gtk.main()
 
 def _show_xdg_error_info(error_str):
-    GObject.source_remove(exit_timeout_id)
+    GLib.source_remove(exit_timeout_id)
     primary_txt = _("Cannot launch application because XDG folders init error.")
     secondary_txt = error_str + "."
     dialogutils.warning_message_with_callback(primary_txt, secondary_txt, None, False, _early_exit)
@@ -1075,7 +1074,7 @@ def _shutdown_dialog_callback(dialog, response_id, no_dialog_shutdown=False):
     editorpersistance.prefs.app_v_paned_position = gui.editor_window.app_v_paned.get_position()
     editorpersistance.prefs.top_paned_position = gui.editor_window.top_paned.get_position()
     try: # This fails if preference for top row layout changed, we just ignore saving these values then.
-        if editorwindow.top_level_project_panel() == True:
+        if editorlayout.top_level_project_panel() == True:
             editorpersistance.prefs.mm_paned_position = 200  # This is not used until user sets preference to not have top level project panel
         else:
             editorpersistance.prefs.mm_paned_position = gui.editor_window.mm_paned.get_position()

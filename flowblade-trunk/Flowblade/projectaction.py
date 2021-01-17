@@ -25,6 +25,7 @@ Load, save, add media file, etc...
 
 import copy
 import datetime
+import fnmatch
 import glob
 import hashlib
 import mlt
@@ -105,10 +106,11 @@ _media_panel_double_click_counter = 0
 #--------------------------------------- worker threads
 class LoadThread(threading.Thread):
     
-    def __init__(self, filename, block_recent_files=False, is_first_video_load=False):
+    def __init__(self, filename, block_recent_files=False, is_first_video_load=False, is_autosave_load=False):
         self.filename = filename
         self.block_recent_files = block_recent_files
         self.is_first_video_load = is_first_video_load
+        self.is_autosave_load = is_autosave_load
         threading.Thread.__init__(self)
 
     def run(self):
@@ -133,7 +135,7 @@ class LoadThread(threading.Thread):
             editorstate.project_is_loading = False
 
         except persistance.FileProducerNotFoundError as e:
-            print("did not find a file")
+            print("LoadThread.run() - FileProducerNotFoundError")
             self._error_stop(dialog, ticker)
             Gdk.threads_enter()
             primary_txt = _("Media asset was missing!")
@@ -189,13 +191,17 @@ class LoadThread(threading.Thread):
         if selections != None:
             render.set_saved_gui_selections(selections)
         updater.set_info_icon(None)
-        
-        # If project file is moved since last save we need to update last_save_path property and save to get everything working as expected.
-        if self.filename != editorstate.project.last_save_path:
-            print("Project file moved since last save, save with updated last_save_path data.")
-            editorstate.project.last_save_path = self.filename
-            _save_project_in_last_saved_path()
-            
+
+        if self.is_autosave_load == False: # project loaded with autosave needs to keep its last_save_path data.
+            # If project file is moved since last save we need to update last_save_path property and save to get everything working as expected.
+            if self.filename != editorstate.project.last_save_path:
+                print("Project file moved since last save, save with updated last_save_path data.")
+                editorstate.project.last_save_path = self.filename
+                editorstate.project.name = os.path.basename(self.filename)
+                _save_project_in_last_saved_path()
+        else:
+            print("autosave load")
+
         dialog.destroy()
         gui.tline_canvas.connect_mouse_events() # mouse events during load cause crashes because there is no data to handle
         Gdk.threads_leave()
@@ -239,11 +245,21 @@ class AddMediaFilesThread(threading.Thread):
 
         is_first_video_load = PROJECT().is_first_video_load()
         duplicates = []
+        anim_gif_name = None
         target_bin = PROJECT().c_bin
         succes_new_file = None
         filenames = self.filenames
         for new_file in filenames:
             (folder, file_name) = os.path.split(new_file)
+            
+            # Refuse to load animated gifs
+            extension = os.path.splitext(file_name)[1].lower()
+            if extension == ".gif":
+                 if Image.open(new_file).is_animated == True:
+                     anim_gif_name = file_name
+                     continue
+                     
+            
             if PROJECT().media_file_exists(new_file):
                 duplicates.append(file_name)
             else:
@@ -277,6 +293,13 @@ class AddMediaFilesThread(threading.Thread):
         normal_cursor = Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR) #RTL
         gui.editor_window.window.get_window().set_cursor(normal_cursor)
         gui.editor_window.bin_info.display_bin_info()
+        
+        if anim_gif_name != None: # Tell we won't load animated gifs.
+            primary_txt = _("Opening animated .gif file was refused!")
+            secondary_txt = _("Flowblade does not support displaying animated GIF files as media objects.\n")
+            secondary_txt = secondary_txt + _("A possible workaround is to render GIF into a frame sequence and\nopen that as a media item.")
+            dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+
         Gdk.threads_leave()
 
         if len(duplicates) > 0:
@@ -437,9 +460,9 @@ def _close_dialog_callback(dialog, response_id, no_dialog_project_close=False):
     new_project = projectdata.get_default_project()
     app.open_project(new_project)
     
-def actually_load_project(filename, block_recent_files=False, is_first_video_load=False):
+def actually_load_project(filename, block_recent_files=False, is_first_video_load=False, is_autosave_load=False):
     gui.tline_canvas.disconnect_mouse_events() # mouse events dutring load cause crashes because there is no data to handle
-    load_launch = LoadThread(filename, block_recent_files, is_first_video_load)
+    load_launch = LoadThread(filename, block_recent_files, is_first_video_load, is_autosave_load)
     load_launch.start()
 
 def save_project():
@@ -929,7 +952,7 @@ def _write_out_render_item(single_render_item_item):
             secondary_txt = _("Error message: ") + str(e)
             dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window, is_info=False)
             return False
-
+            
     # This puts existing rendered timeline segments back to be displayed.
     current_sequence().update_hidden_track_for_timeline_rendering()
 
@@ -1121,6 +1144,109 @@ def _add_image_sequence_callback(dialog, response_id, data):
     editorpersistance.prefs.last_opened_media_dir = os.path.dirname(resource_path)
     editorpersistance.save()
 
+def add_media_folder():
+    dialogs.add_media_folder_dialog(_add_media_folder_callback, gui.editor_window.window)
+
+def _add_media_folder_callback(dialog, response_id, data):
+    if response_id == Gtk.ResponseType.CANCEL:
+        dialog.destroy()
+        return
+
+    file_chooser, file_filter_select, create_bin_checkbox, recursively_checkbox, use_extension_checkbox, \
+    extension_entry, maximum_select = data
+    
+    add_folder = file_chooser.get_filenames()[0]
+    file_filter = file_filter_select.get_active()
+    create_bin = create_bin_checkbox.get_active()
+    search_recursively = recursively_checkbox.get_active()
+    use_extension = use_extension_checkbox.get_active()
+    user_extensions = extension_entry.get_text()
+    maximum_file_option = maximum_select.get_active()
+    
+    dialog.destroy()
+
+    if add_folder == None:
+        return
+    
+    if search_recursively == True:
+        candidate_files = []
+        for root, dirnames, filenames in os.walk(add_folder):
+            for filename in filenames:
+                candidate_files.append(os.path.join(root, filename))
+    else:
+        candidate_files = [f for f in os.listdir(add_folder) if os.path.isfile(os.path.join(add_folder, f))]
+
+    if use_extension == False:
+        if file_filter == 0: # "All Files", see dialogs.py
+            filtered_files = candidate_files
+        else:
+            filtered_files = []
+            for cand_file in candidate_files:
+                file_type = utils.get_file_type(cand_file)
+                if file_filter == 1 and file_type == "video": # 1 = "Video Files", see dialogs.py
+                    filtered_files.append(cand_file)
+                elif file_filter == 2 and file_type == "audio": # 2 = "Audio Files", see dialogs.py
+                    filtered_files.append(cand_file)
+                elif file_filter == 3 and file_type == "image": # 3 = "Image Files", see dialogs.py
+                    filtered_files.append(cand_file)
+    else:
+        # Try to accept spaces, commas and periods between extensions.
+        stage1 = user_extensions.replace(",", " ")
+        stage2 = stage1.replace(".", " ")
+        exts = stage2.split()
+
+        filtered_files = []
+        for ext in exts:
+            for cand_file in candidate_files:
+                if fnmatch.fnmatch(cand_file, "*." + ext):
+                    filtered_files.append(cand_file)
+    
+    # This recursive, we need upper limit always
+    max_files = 29
+    if maximum_file_option == 1:
+        max_files = 49 # see dialogs.py 
+    elif maximum_file_option == 2:
+        max_files = 99 # see dialogs.py
+    elif maximum_file_option == 3:
+        max_files = 199 # see dialogs.py
+        
+    filtered_amount = len(filtered_files)
+    if filtered_amount > max_files:
+        filtered_files = filtered_files[0:max_files]
+        dialogs.add_media_folder_files_exceeded(_add_media_folder_files_exceeded_cb, filtered_amount, max_files, (filtered_files, create_bin, add_folder))
+    else:
+        _do_folder_media_import(filtered_files, create_bin, add_folder)
+
+def _add_media_folder_files_exceeded_cb(dialog, response_id, data):
+    dialog.destroy()
+    if response_id != Gtk.ResponseType.CANCEL:
+        _do_folder_media_import(*data)
+
+def _do_folder_media_import(add_files, create_bin, add_folder):
+    if create_bin == False:
+        add_media_thread = AddMediaFilesThread(add_files)
+        add_media_thread.start()
+    else:
+
+        PROJECT().add_unnamed_bin()
+        gui.bin_list_view.fill_data_model()
+        selection = gui.bin_list_view.treeview.get_selection()
+        model, iterator = selection.get_selected()
+        selection.select_path(str(len(model)-1))
+        
+        
+        folder_name = os.path.basename(add_folder)
+        model, iterator = selection.get_selected()  #if iterator is immutable?
+        model.set_value(iterator, 1, folder_name)
+        model, rows = selection.get_selected_rows()
+        row = max(rows[0])
+        PROJECT().bins[int(row)].name = folder_name
+        _enable_save()
+        gui.editor_window.bin_info.display_bin_info()
+
+        add_media_thread = AddMediaFilesThread(add_files)
+        add_media_thread.start()
+        
 def open_rendered_file(rendered_file_path):
     add_media_thread = AddMediaFilesThread([rendered_file_path])
     add_media_thread.start()
@@ -2041,7 +2167,7 @@ def _get_sequence_import_range(import_seq):
 def _update_gui_after_sequence_import(): # This copied  with small modifications into projectaction.py for sequence imports, update there too if needed...yeah.
     updater.update_tline_scrollbar() # Slider needs to adjust to possily new program length.
                                      # This REPAINTS TIMELINE as a side effect.
-    updater.clear_kf_editor()
+    updater.clear_effects_editor_clip()
 
     current_sequence().update_edit_tracks_length() # Needed for timeline renderering updates
     current_sequence().update_hidden_track_for_timeline_rendering() # Needed for timeline renderering updates

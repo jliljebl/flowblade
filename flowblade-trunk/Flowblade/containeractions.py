@@ -41,6 +41,7 @@ import atomicfile
 import blenderheadless
 import dialogutils
 import edit
+import editorstate
 from editorstate import current_sequence
 from editorstate import PROJECT
 import gui
@@ -436,13 +437,19 @@ class GMicContainerActions(AbstractContainerActionObject):
             script_file = open(self.container_data.program)
             user_script = script_file.read()
             test_out_file = userfolders.get_cache_dir()  + "/gmic_cont_clip_test.png"
-            test_in_file = str(respaths.IMAGE_PATH + "unrendered_blender.png").replace(" ", "\ ")   # we just need some valid input
+            test_in_file = str(respaths.IMAGE_PATH + "unrendered_blender.png") # we just need some valid input
 
-            script_str = "gmic " + test_in_file + " " + user_script + " -output " + test_out_file
+            # Create command list and launch process.
+            command_list = ["/usr/bin/gmic", test_in_file]
+            user_script_commands = user_script.split(" ")
+            command_list.extend(user_script_commands)
+            command_list.append("-output")
+            command_list.append(test_out_file)
+
 
             # Render preview and write log
             FLOG = open(userfolders.get_cache_dir() + "gmic_container_validating_log", 'w')
-            p = subprocess.Popen(script_str, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
+            p = subprocess.Popen(command_list, stdin=FLOG, stdout=FLOG, stderr=FLOG)
             p.wait()
             FLOG.close()
          
@@ -487,21 +494,21 @@ class GMicContainerActions(AbstractContainerActionObject):
         jobs.update_job_queue(job_msg)
         
         args = ("session_id:" + self.get_container_program_id(), 
-                "script:" + utils.escape_shell_path(self.container_data.program),
-                "clip_path:" + utils.escape_shell_path(self.container_data.unrendered_media),  # This is going through Popen shell=True and needs escaped spaces etc..
+                "script:" + str(self.container_data.program),
+                "clip_path:" + str(self.container_data.unrendered_media),
                 "range_in:" + str(range_in),
                 "range_out:"+ str(range_out),
                 "profile_desc:" + PROJECT().profile.description().replace(" ", "_"),  # Here we have our own string space handling, maybe change later..
                 "gmic_frame_offset:" + str(gmic_frame_offset))
 
-        # Run with nice to lower priority if requested (currently hard coded to lower)
-        nice_command = "nice -n " + str(10) + " " + str(respaths.LAUNCH_DIR + "flowbladegmicheadless").replace(" ", "\ ")
+        # Create command list and launch process.
+        command_list = [sys.executable]
+        command_list.append(respaths.LAUNCH_DIR + "flowbladegmicheadless")
         for arg in args:
-            nice_command += " "
-            nice_command += arg
+            command_list.append(arg)
 
-        subprocess.Popen([nice_command], shell=True)
-
+        subprocess.Popen(command_list)
+        
     def update_render_status(self):
         
         Gdk.threads_enter()
@@ -618,19 +625,19 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
         jobs.update_job_queue(job_msg)
 
         args = ("session_id:" + self.get_container_program_id(), 
-                "clip_path:" + str(self.container_data.unrendered_media).replace(" ", "\ "),   # This is going through Popen shell=True and needs escaped spaces.
+                "clip_path:" + str(self.container_data.unrendered_media),
                 "range_in:" + str(range_in),
                 "range_out:"+ str(range_out),
                 "profile_desc:" + PROJECT().profile.description().replace(" ", "_"),
-                "xml_file_path:" + str(self.container_data.unrendered_media).replace(" ", "\ "))   # This is going through Popen shell=True and needs escaped spaces.
+                "xml_file_path:" + str(self.container_data.unrendered_media))
 
-        # Run with nice to lower priority if requested (currently hard coded to lower)
-        nice_command = "nice -n " + str(10) + " " + str(respaths.LAUNCH_DIR + "flowblademltxmlheadless").replace(" ", "\ ")
+        # Create command list and launch process.
+        command_list = [sys.executable]
+        command_list.append(respaths.LAUNCH_DIR + "flowblademltxmlheadless")
         for arg in args:
-            nice_command += " "
-            nice_command += arg
-        
-        subprocess.Popen([nice_command], shell=True)
+            command_list.append(arg)
+
+        subprocess.Popen(command_list)
 
     def update_render_status(self):
 
@@ -670,7 +677,6 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
         return self._create_icon_default_action()
 
     def abort_render(self):
-        #self.remove_as_status_polling_object()
         mltxmlheadless.abort_render(self.get_container_program_id())
 
 
@@ -693,14 +699,18 @@ class BlenderContainerActions(AbstractContainerActionObject):
                 
         except Exception as e:
             return (False, str(e))
- 
-    def initialize_project(self, project_path):
 
+    def initialize_project(self, project_path):
+        info_script = str(respaths.ROOT_PATH + "/tools/blenderprojectinit.py")
+        command_list = ["/usr/bin/blender", "-b", project_path, "-P", info_script]
+
+        if editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
+            info_script = utils.get_flatpak_real_path_for_app_files(info_script)
+            command_list = ["flatpak-spawn", "--host", "/usr/bin/blender", "-b", project_path, "-P", info_script]
+            
         FLOG = open(userfolders.get_cache_dir() + "/log_blender_project_init", 'w')
 
-        info_script = str(respaths.ROOT_PATH + "/tools/blenderprojectinit.py").replace(" ", "\ ")
-        blender_launch = "/usr/bin/blender -b " + project_path.replace(" ", "\ ") + " -P " + info_script
-        p = subprocess.Popen(blender_launch, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
+        p = subprocess.Popen(command_list, stdin=FLOG, stdout=FLOG, stderr=FLOG)
         p.wait()
 
     def get_job_proxy(self):
@@ -734,7 +744,11 @@ class BlenderContainerActions(AbstractContainerActionObject):
         if self.render_type == PREVIEW_RENDER:
             render_data.do_video_render = False
             render_data.is_preview_render = True
-    
+
+
+        if editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
+            render_data.is_flatpak_render = True
+        
         blenderheadless.set_render_data(self.get_container_program_id(), render_data)
         
         # Write current render target container clip for blenderrendersetup.py
@@ -772,19 +786,19 @@ class BlenderContainerActions(AbstractContainerActionObject):
             outfile.write(render_exec_lines)
 
         args = ("session_id:" + self.get_container_program_id(),
-                "project_path:" + utils.escape_shell_path(self.container_data.program), #.replace(" ", "\ "),   # This is going through Popen shell=True and needs escaped spaces.
+                "project_path:" + str(self.container_data.program),
                 "range_in:" + str(range_in),
                 "range_out:"+ str(range_out),
                 "profile_desc:" + PROJECT().profile.description().replace(" ", "_"))
-
-        # Run with nice to lower priority if requested (currently hard coded to lower)
-        nice_command = "nice -n " + str(10) + " " + str(respaths.LAUNCH_DIR + "flowbladeblenderheadless").replace(" ", "\ ")
+        
+        # Create command list and launch process.
+        command_list = [sys.executable]
+        command_list.append(respaths.LAUNCH_DIR + "flowbladeblenderheadless")
         for arg in args:
-            nice_command += " "
-            nice_command += arg
+            command_list.append(arg)
 
-        subprocess.Popen([nice_command], shell=True)
-
+        subprocess.Popen(command_list)
+        
     def _write_exec_lines_for_obj_type(self, render_exec_lines, obj_type):
         objects = self.blender_project_objects(obj_type)
         for obj in objects:

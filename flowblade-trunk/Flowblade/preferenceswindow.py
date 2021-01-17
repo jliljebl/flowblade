@@ -38,7 +38,6 @@ PREFERENCES_LEFT = 410
 
 def preferences_dialog():
 
-
     dialog = Gtk.Dialog(_("Editor Preferences"), None,
                     Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                     (_("Cancel"), Gtk.ResponseType.REJECT,
@@ -48,10 +47,7 @@ def preferences_dialog():
     edit_prefs_panel, edit_prefs_widgets = _edit_prefs_panel()
     playback_prefs_panel, playback_prefs_widgets  = _playback_prefs_panel()
     view_pres_panel, view_pref_widgets = _view_prefs_panel()
-    # Jan-2017 - SvdB
     performance_panel, performance_widgets = _performance_panel()
-    # Apr-2017 - SvdB
-    #shortcuts_panel, shortcuts_widgets = _shortcuts_panel()
 
     notebook = Gtk.Notebook()
     notebook.set_size_request(PREFERENCES_WIDTH, PREFERENCES_HEIGHT)
@@ -67,9 +63,11 @@ def preferences_dialog():
     dialog.vbox.pack_start(notebook, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     dialogutils.default_behaviour(dialog)
-    # Jul-2016 - SvdB - The next line is to get rid of the message "GtkDialog mapped without a transient parent. This is discouraged."
     dialog.set_transient_for(gui.editor_window.window)
     dialog.show_all()
+
+    notebook.set_current_page(0) # gen_opts_widgets
+
 
 def _preferences_dialog_callback(dialog, response_id, all_widgets):
     if response_id == Gtk.ResponseType.ACCEPT:
@@ -241,11 +239,9 @@ def _playback_prefs_panel():
     if hasattr(prefs, 'play_pause'):
         play_pause_button.set_active(prefs.play_pause)
 
-# ------------------------------ timeline_start_end_button
     timeline_start_end_button = Gtk.CheckButton()
     if hasattr(prefs, 'timeline_start_end'):
         timeline_start_end_button.set_active(prefs.timeline_start_end)
-# ------------------------------ End of timeline_start_end_button
 
     auto_center_on_updown = Gtk.CheckButton()
     auto_center_on_updown.set_active(prefs.center_on_arrow_move)
@@ -284,12 +280,8 @@ def _playback_prefs_panel():
     # Layout
     row2 = _row(guiutils.get_checkbox_row_box(auto_center_on_stop, Gtk.Label(label=_("Center Current Frame on Playback Stop"))))
     row13 = _row(guiutils.get_checkbox_row_box(auto_center_on_updown, Gtk.Label(label=_("Center Current Frame after Up/Down Arrow"))))
-    # Jul-2016 - SvdB - For play_pause button
     row10 = _row(guiutils.get_checkbox_row_box(play_pause_button, Gtk.Label(label=_("Enable single Play/Pause button"))))
-    # Apr-2017 - SvdB - For Fast Forward / Reverse options
-# ------------------------------ timeline_start_end_button
     row11 = _row(guiutils.get_checkbox_row_box(timeline_start_end_button, Gtk.Label(label=_("Enable To Start and To End buttons"))))
-# ------------------------------ End of timeline_start_end_button
     row14 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Fast Forward / Reverse Speed for Shift Key:")), ffwd_rev_shift_spin, PREFERENCES_LEFT))
     row14.set_tooltip_text(_("Speed of Forward / Reverse will be multiplied by this value if Shift Key is held (Only using KEYS).\n" \
         "Enabling multiple modifier keys will multiply the set values.\n" \
@@ -308,12 +300,8 @@ def _playback_prefs_panel():
     vbox.pack_start(row18, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
     vbox.pack_start(row13, False, False, 0)
-    # Jul-2016 - SvdB - For play_pause button
     vbox.pack_start(row10, False, False, 0)
-# ------------------------------ timeline_start_end_button
     vbox.pack_start(row11, False, False, 0)
-# ------------------------------ End of timeline_start_end_button
-    # Apr-2017 - SvdB - For ffwd / rev speed
     vbox.pack_start(row14, False, False, 0)
     vbox.pack_start(row15, False, False, 0)
     vbox.pack_start(row16, False, False, 0)
@@ -322,16 +310,9 @@ def _playback_prefs_panel():
 
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
-    # Jul-2016 - SvdB - Added play_pause_button
-    # Apr-2017 - SvdB - Added ffwd / rev values
-# ------------------------------ timeline_start_end_button
     return vbox, (auto_center_on_stop,
                   play_pause_button, timeline_start_end_button, auto_center_on_updown,
                   ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips)
-# ------------------------------ End of timeline_start_end_button
-#    return vbox, (auto_center_on_stop,
-#                  play_pause_button, auto_center_on_updown,
-#                  ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips)
 
 def _view_prefs_panel():
     prefs = editorpersistance.prefs
@@ -367,6 +348,11 @@ def _view_prefs_panel():
     show_full_file_names = Gtk.CheckButton()
     show_full_file_names.set_active(prefs.show_full_file_names)
 
+    # --------------------------------- Colorized icons
+    colorized_icons = Gtk.CheckButton()
+    colorized_icons.set_active(prefs.colorized_icons)
+    # ------------------------------------ End of Colorized icons
+
     buttons_combo = Gtk.ComboBoxText()
     buttons_combo.append_text(_("Glass"))
     buttons_combo.append_text(_("Simple"))
@@ -374,11 +360,20 @@ def _view_prefs_panel():
     buttons_combo.set_active( prefs.buttons_style )
 
     dark_combo = Gtk.ComboBoxText()
-    dark_combo.append_text(_("Flowblade Theme"))
+    dark_combo.append_text(_("Flowblade Theme Neutral"))
+    dark_combo.append_text(_("Flowblade Theme Gray"))
+    dark_combo.append_text(_("Flowblade Theme Blue"))
     dark_combo.append_text(_("Dark Theme"))
     dark_combo.append_text(_("Light Theme"))
-    dark_combo.set_active(prefs.theme)
-
+    # The displayed options indeces do not correspond with theme const values.
+    if prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
+        index = 1
+    elif prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+        index = 0
+    else:
+        index = int(prefs.theme) + 2
+    
+    dark_combo.set_active(index)
 
     theme_combo = Gtk.ComboBoxText()
     for theme in gui._THEME_COLORS:
@@ -425,7 +420,6 @@ def _view_prefs_panel():
 
     # Layout
     row00 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Application window mode:")), window_mode_combo, PREFERENCES_LEFT))
-    #row0 = _row(guiutils.get_checkbox_row_box(force_english_check, Gtk.Label(label=_("Use English texts on localized OS"))))
     row9 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Force Language:")), force_language_combo, PREFERENCES_LEFT))
     row1 = _row(guiutils.get_checkbox_row_box(display_splash_check, Gtk.Label(label=_("Display splash screen"))))
     row2 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Buttons style:")), buttons_combo, PREFERENCES_LEFT))
@@ -436,9 +430,9 @@ def _view_prefs_panel():
     # Feb-2017 - SvdB - For full file names
     row6 =  _row(guiutils.get_checkbox_row_box(show_full_file_names, Gtk.Label(label=_("Show Full File names"))))
     row8 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Top row layout:")), top_row_layout, PREFERENCES_LEFT))
-
     row10 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Do GUI layout based on:")), layout_monitor, PREFERENCES_LEFT))
-
+    row11 =  _row(guiutils.get_checkbox_row_box(colorized_icons, Gtk.Label(label=_("Toolbar color icons"))))
+    
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(row00, False, False, 0)
     vbox.pack_start(row10, False, False, 0)
@@ -452,13 +446,16 @@ def _view_prefs_panel():
     # Feb-2017 - SvdB - For full file names
     vbox.pack_start(row6, False, False, 0)
     vbox.pack_start(row8, False, False, 0)
+    vbox.pack_start(row11, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
-
+    
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
-    # Feb-2017 - SvdB - Added code for full file names
     return vbox, (force_language_combo, display_splash_check, buttons_combo, dark_combo, theme_combo, audio_levels_combo,
-                  window_mode_combo, show_full_file_names, tracks_combo, top_row_layout, layout_monitor)
+                  window_mode_combo, show_full_file_names, tracks_combo, top_row_layout, layout_monitor, colorized_icons)
+
+
+
 
 def _performance_panel():
     # Jan-2017 - SvdB

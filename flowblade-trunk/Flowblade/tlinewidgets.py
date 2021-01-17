@@ -60,7 +60,7 @@ M_PI = math.pi
 
 REF_LINE_Y = 250 # Y pos of tracks are relative to this. This is recalculated on initilization, so value here is irrelevent.
 
-WIDTH = 430 # this has no effect if smaller then editorwindow.NOTEBOOK_WIDTH + editorwindow.MONITOR_AREA_WIDTH
+WIDTH = 430 # this has no effect if smaller then editorwindow.NOTEBOOK_WIDTH + editorwindow.MONITOR_AREA_WIDTH -- so this never has effect, but we need to set heights and this can remain as dummy value.
 HEIGHT = appconsts.TLINE_HEIGHT # defines window min height together with editorwindow.TOP_ROW_HEIGHT
 STRIP_HEIGHT = tlinerender.STRIP_HEIGHT # timeline rendering control strip height
 
@@ -147,7 +147,7 @@ TC_POINTER_HEAD = None
 SCALE_LINE_Y = 4.5 # scale horizontal line pos
 SMALL_TICK_Y = 18.5 # end for tick drawn in all scales 
 BIG_TICK_Y = 12.5 # end for tick drawn in most zoomed in scales
-TC_Y = 10 # TC text pos in scale
+TC_Y = 12 # TC text pos in scale
 # Timeline scale is rendered with hardcoded steps for hardcoded 
 # pix_per_frame ranges
 DRAW_THRESHOLD_1 = 6 # if pix_per_frame below this, draw secs
@@ -377,7 +377,9 @@ def load_icons():
         BG_COLOR = (0.44, 0.44, 0.46)
 
         FRAME_SCALE_LINES = (0.8, 0.8, 0.8)
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME \
+            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
+            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
             TRACK_GRAD_STOP1 = (1,  0.12, 0.14, 0.2, 1)
             TRACK_GRAD_STOP3 = (1,  0.12, 0.14, 0.2, 1)
             TRACK_GRAD_ORANGE_STOP1 = (1,  0.20, 0.22, 0.28, 1) # V1
@@ -392,6 +394,19 @@ def load_icons():
             INSERT_ARROW_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insert_arrow_fb.png")
             BLANK_CLIP_COLOR_GRAD = (1, 0.12, 0.14, 0.2, 1)
             BLANK_CLIP_COLOR_GRAD_L = (0, 0.12, 0.14, 0.2, 1)
+            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
+                or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+                r, g ,b = utils.cairo_color_from_gdk_color(gui.get_light_gray_light_color())
+                if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+                    r, g ,b = utils.cairo_color_from_gdk_color(gui.get_light_neutral_color())
+                BLANK_CLIP_COLOR_GRAD = (1, 0.20, 0.20, 0.20, 1)
+                BLANK_CLIP_COLOR_GRAD_L = (1, 0.20, 0.20, 0.20, 1)
+                            
+                TRACK_GRAD_STOP1 = (1, r, g ,b , 1)
+                TRACK_GRAD_STOP3 = (0, r, g ,b , 1)
+                rl, gl, bl, = get_multiplied_color((r, g ,b), 1.25)
+                TRACK_GRAD_ORANGE_STOP1 = (1, rl, gl, bl, 1) # V1
+                TRACK_GRAD_ORANGE_STOP3 = (1, rl, gl, bl, 1) # V1
     else:
         TRACK_GRAD_ORANGE_STOP1 = (1,  0.4, 0.4, 0.4, 1) # V1
         TRACK_GRAD_ORANGE_STOP3 = (0,  0.68, 0.68, 0.68, 1) # V1
@@ -424,12 +439,19 @@ def set_tracks_double_height_consts():
 def set_dark_bg_color():
     if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
         return
-
+    
+    global BG_COLOR
+    
     r, g, b, a = gui.unpack_gdk_color(gui.get_bg_color())
 
-    global BG_COLOR
-    BG_COLOR = get_multiplied_color((r, g, b), 1.25)
+    if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY: 
+        r, g, b, a = gui.unpack_gdk_color(gui.get_bg_unmodified_normal_color())
 
+    BG_COLOR = get_multiplied_color((r, g, b), 1.25)
+    
+    if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+        BG_COLOR = (35.0/255.0, 35.0/255.0, 35.0/255.0)
+        
 def set_match_frame(tline_match_frame, track_index, display_on_right):
     global match_frame, match_frame_track_index, image_on_right, match_frame_image
     match_frame = tline_match_frame
@@ -2014,7 +2036,7 @@ class TimeLineCanvas:
                     cr.paint()
                     icon_slot = icon_slot + 1
 
-                if clip == clipeffectseditor.clip:
+                if clipeffectseditor.clip_is_being_edited(clip) == True:
                     icon = EDIT_INDICATOR
                     ix =  int(scale_in) + int(scale_length) / 2 - 7
                     iy = y + int(track_height) / 2 - 7
@@ -2128,11 +2150,11 @@ class TimeLineCanvas:
             if len(clip.markers) > 0 and scale_length > TEXT_MIN:
                 for marker in clip.markers:
                     name, clip_marker_frame = marker
-                    marker_x = (clip_start_frame + clip_marker_frame - clip.clip_in) * pix_per_frame
-                    cr.set_source_surface(CLIP_MARKER_ICON, int(marker_x) - 4, y)
-                    cr.paint()
-                    
-                    
+                    if clip_marker_frame >= clip.clip_in and clip_marker_frame <= clip.clip_out + 1:
+                        marker_x = (clip_start_frame + clip_marker_frame - clip.clip_in) * pix_per_frame
+                        cr.set_source_surface(CLIP_MARKER_ICON, int(marker_x) - 4, y)
+                        cr.paint()
+
             # Get next draw position
             clip_start_frame += clip_length
 
@@ -2445,15 +2467,11 @@ class TimeLineColumn:
         x, y, w, h = allocation
         
         # Draw bg
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
-            stop, r,g,b, a = TRACK_GRAD_STOP1
-            cr.set_source_rgb(r,g,b)
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+            r, g, b, a = gui.unpack_gdk_color(gui.get_darker_neutral_color())
+            cr.set_source_rgb(r, g, b)
             cr.rectangle(0, 0, w, h)
             cr.fill()
-            cr.set_line_width(1.0)
-            cr.set_source_rgb(0, 0, 0)
-            cr.rectangle(0.5, 0.5, w, h - 1)
-            #cr.stroke()
         else:
             cr.set_source_rgb(*BG_COLOR)
             cr.rectangle(0, 0, w, h)
@@ -2475,7 +2493,7 @@ class TimeLineColumn:
     def draw_track(self, cr, track, y, is_insert_track):
         # Draw center area
         center_width = COLUMN_WIDTH - COLUMN_LEFT_PAD - ACTIVE_SWITCH_WIDTH
-        rect = (COLUMN_LEFT_PAD, y, center_width, track.height)
+        rect = (COLUMN_LEFT_PAD - 1, y, center_width + 1, track.height)
         grad = cairo.LinearGradient (COLUMN_LEFT_PAD, y, COLUMN_LEFT_PAD, y + track.height)
         self._add_gradient_color_stops(grad, track)
         cr.rectangle(*rect)
@@ -2553,7 +2571,8 @@ class TimeLineColumn:
             cr.paint()
         
         # Draw insert arrow
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME or \
+           editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
             stop, r,g,b, a = TRACK_GRAD_STOP1
             cr.set_source_rgb(r,g,b)
         if is_insert_track == True:
@@ -2580,7 +2599,6 @@ class TimeLineColumn:
         cr.rectangle(rect[0] + 0.5, rect[1] + 0.5, rect[2] - 1, rect[3])
         cr.stroke()
 
-
 class TimeLineFrameScale:
     """
     GUI component for displaying frame tme value scale.
@@ -2601,7 +2619,8 @@ class TimeLineFrameScale:
             global FRAME_SCALE_SELECTED_COLOR_GRAD, FRAME_SCALE_SELECTED_COLOR_GRAD_L, MARK_COLOR 
             FRAME_SCALE_SELECTED_COLOR_GRAD = DARK_FRAME_SCALE_SELECTED_COLOR_GRAD
             FRAME_SCALE_SELECTED_COLOR_GRAD_L = DARK_FRAME_SCALE_SELECTED_COLOR_GRAD_L
-            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
+            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME or \
+               editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
                 MARK_COLOR = (0.9, 0.9, 0.9) # This needs to be light for contrast
                 
     def _press_event(self, event):
@@ -2700,7 +2719,7 @@ class TimeLineFrameScale:
 
         # Get draw steps for marks and tc texts
         if fps < 20:
-            spacer_mult = 2 # for fps like 15 this looks bad with out some help
+            spacer_mult = 2 # for fps like 15 this looks bad without some help
         else:
             spacer_mult = 1
             
@@ -2860,7 +2879,8 @@ class TimeLineFrameScale:
    
     def _get_dark_theme_grad(self, h):
         r, g, b, a  = gui.get_bg_color()
-           
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY: 
+            r, g, b, a = gui.unpack_gdk_color(gui.get_bg_unmodified_normal_color()) 
         grad = cairo.LinearGradient (0, 0, 0, h)
         grad.add_color_stop_rgba(1, r, g, b, 1)
         grad.add_color_stop_rgba(0, r + 0.05, g + 0.05, b + 0.05, 1)

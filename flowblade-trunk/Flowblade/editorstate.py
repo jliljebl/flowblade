@@ -96,7 +96,7 @@ SCREEN_WIDTH = -1
 # Runtime environment data
 gtk_version = None
 mlt_version = None
-appversion = "2.6.0"
+appversion = "2.6.1"
 RUNNING_FROM_INSTALLATION = 0
 RUNNING_FROM_DEV_VERSION = 1
 RUNNING_FROM_FLATPAK = 2
@@ -126,6 +126,7 @@ display_clip_media_thumbnails = True
 
 # Flag for window being in fullscreen mode
 fullscreen = False
+fullscreen_second_window = False
 
 # Trim view mode
 show_trim_view = appconsts.TRIM_VIEW_OFF

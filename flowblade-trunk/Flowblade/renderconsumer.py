@@ -223,7 +223,6 @@ def load_render_profiles():
         else:
             msg = "...NOT available, " + encoding_option.err_msg + " missing"
             not_supported_encoding_options.append(encoding_option)
-            #print encoding_option.name + msg
 
     # Proxy encoding
     proxy_encoding_nodes = render_encoding_doc.getElementsByTagName(PROXY_ENCODING_OPTION)
@@ -235,7 +234,7 @@ def load_render_profiles():
             found_proxy_encodings.append(proxy_encoding_option)
         else:
             msg = " ...NOT available, " + encoding_option.err_msg + " missing"
-        #print "Proxy encoding " + proxy_encoding_option.name + msg
+
     global proxy_encodings
     proxy_encodings = found_proxy_encodings
 
@@ -341,7 +340,7 @@ def get_args_vals_tuples_list_for_encoding_and_quality(profile, enc_opt_index, q
         quality_option = None
 
     args_vals_list = encoding_option.get_args_vals_tuples_list(profile, quality_option)
-
+    
     # Quality options  key, value list
     if quality_option != None:
         for k, v in quality_option.add_map.items():

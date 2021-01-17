@@ -139,7 +139,6 @@ def _get_kfproperty_klass_and_keyframes(compositor, clip):
                 break
 
         if keyframe_property == None:
-            #print "didn't find keyframe_property in _get_kfproperty_klass_and_keyframes"
             return (None, None, None)
 
         return (keyframe_property, property_klass, keyframes)

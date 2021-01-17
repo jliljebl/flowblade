@@ -23,3 +23,13 @@ mlt.py
 /flowblade-trunk/Flowblade/phantom2d/phantom_build
 /flowblade-trunk/Flowblade/phantom2d/src
 
+# Flatpak when building from local
+/flowblade-trunk/.flatpak-builder/
+
+# Theme build data
+/flowblade-trunk/Flowblade/res/css2/sass/gtk-flowblade-dark.css.map
+/flowblade-trunk/Flowblade/res/css3/sass/gtk-flowblade-dark.css.map
+/flowblade-trunk/Flowblade/res/css2/sass/.sass-cache
+/flowblade-trunk/Flowblade/res/css3/sass/.sass-cache
+/flowblade-trunk/Flowblade/res/css2/sass/gtk-flowblade-dark.css
+/flowblade-trunk/Flowblade/res/css3/sass/gtk-flowblade-dark.css

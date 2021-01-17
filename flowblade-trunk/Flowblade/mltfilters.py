@@ -153,26 +153,15 @@ class FilterInfo:
         except: # default is False
             self.multipart_filter = False
 
-        # NOTE, TODO: Turns out that non-existing attribute returns empty string and asking is not error.
-        # Clear these try catches towards 2.6, keep now to see if we get any problems.
-        #try:
+        # NOTE Turns out that non-existing attribute returns empty string and asking is not error.
+        # This has caused some bugs.
+    
         self.mlt_drop_version = filter_node.getAttribute(MLT_DROP_VERSION)
-        #except: 
-        #    self.mlt_drop_version = None
 
-        #try:
         self.mlt_min_version = filter_node.getAttribute(MLT_MIN_VERSION)
-        #except:
-        #    self.mlt_min_version = None
 
-        #try:
         self.filter_mask_filter = filter_node.getAttribute(FILTER_MASK_FILTER)
-        #except:
-        #    self.filter_mask_filter = None
-        
-        if self.mlt_drop_version == None:
-            print("self.mlt_drop_version==None")
-        
+
         self.xml = filter_node.toxml()
         self.name = filter_node.getElementsByTagName(NAME).item(0).firstChild.nodeValue
         self.group = filter_node.getElementsByTagName(GROUP).item(0).firstChild.nodeValue
@@ -201,10 +190,10 @@ class FilterInfo:
         e_node_list = filter_node.getElementsByTagName(EXTRA_EDITOR)
         self.extra_editors = propertyparse.node_list_to_extraeditors_array(e_node_list)  
 
-        # Non-MLT properties are persistent values like properties that values are not directly written out as MLT properties
+        # Non-MLT properties are persistent values like properties. but they have values are not directly written out as MLT properties.
         p_node_list = filter_node.getElementsByTagName(NON_MLT_PROPERTY)
         self.non_mlt_properties = propertyparse.node_list_to_non_mlt_properties_array(p_node_list)
-        # Property args for Non-MLT properties saved in propertyname -> propertyargs_string dict
+        # Property args for non-MLT properties saved in propertyname -> propertyargs_string dict.
         self.property_args.update(propertyparse.node_list_to_args_dict(p_node_list))
         
     def get_icon(self):
@@ -256,14 +245,6 @@ class FilterObject:
              self.mlt_filter.set("disable", str(0))
         else:
              self.mlt_filter.set("disable", str(1))
-    
-    def reset_values(self,  mlt_profile=None, clip=None): # multipartfilters need profile and clip
-        for i in range(0, len(self.properties)):
-            name, o_value, prop_type = self.info.properties[i]
-            name, value, prop_type = self.properties[i]
-            self.properties[i] = (name, o_value, prop_type)
-        
-        self.update_mlt_filter_properties_all()
 
     def replace_values(self, clip):
         # We need to initilize some calues based clip langth and need wait until clip for
@@ -273,6 +254,9 @@ class FilterObject:
             self.update_mlt_filter_properties_all()
 
 
+# DEPRECATED FILTER TYPE. NO NEW MultipartFilterObject FILTERS TO BE CREATED.
+# DEPRECATED FILTER TYPE. NO NEW MultipartFilterObject FILTERS TO BE CREATED.
+# DEPRECATED FILTER TYPE. NO NEW MultipartFilterObject FILTERS TO BE CREATED.
 class MultipartFilterObject:
     """
     These objects are saved with projects. Thay are used to generate, 
@@ -379,10 +363,6 @@ class MultipartFilterObject:
         else:
             for f in self.mlt_filters:
                 f.set("disable", str(1))
-    
-    def reset_values(self, mlt_profile, clip):
-        self.value = copy.deepcopy(self.info.multipart_value)
-        self.update_value(self.value, clip, mlt_profile)
 
 
 def load_filters_xml(services):
@@ -429,7 +409,7 @@ def load_filters_xml(services):
             _filter_mask_filters[filter_info.filter_mask_filter] = filter_info
             continue
             
-        if filter_info.mlt_service_id == "brightness": # TODO: maybe add general search fuction for these, if we need a third one this is becoming a bit silly
+        if filter_info.mlt_service_id == "brightness":
             global _brightness_filter_info
             _brightness_filter_info = filter_info
 
@@ -594,8 +574,7 @@ def print_not_found_filters():
 # We have some helper functions here for muting clips
 def create_mute_volume_filter(seq):    
     mute_filter = seq.create_filter(get_volume_filters_info())
-    mute_filter.mlt_filter.set("gain","0")
-    mute_filter.mlt_filter.set("end","0")
+    mute_filter.mlt_filter.set("level", "0=-70.0")
     return mute_filter
 
 def do_clip_mute(clip, volume_filter):

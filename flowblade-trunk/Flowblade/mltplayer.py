@@ -273,12 +273,11 @@ class Player:
         self.producer.seek(frame) 
 
         # GUI update path starts here.
-        # All user or program initiated seeks go through this method.
         if update_gui:
             updater.update_frame_displayers(frame)
             
         frame = self.producer.get_frame()
-        # And make sure we deinterlace if input is interlaced
+        # And make sure we deinterlace if input is interlaced.
         frame.set("consumer_deinterlace", 1)
 
         # Now we are ready to get the image and save it.        

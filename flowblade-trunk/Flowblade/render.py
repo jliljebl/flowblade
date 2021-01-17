@@ -75,33 +75,6 @@ motion_progress_update = None
 transition_render_done_callback = None
 
 # ---------------------------------- rendering action and dialogs
-"""
-class RenderLauncher(threading.Thread):
-    
-    def __init__(self, render_consumer, start_frame, end_frame):
-        threading.Thread.__init__(self)
-        self.render_consumer = render_consumer
-        
-        # Hack. We seem to be getting range rendering starting 1-2 frame too late.
-        # Changing in out frame logic in monitor is not a good idea,
-        # especially as this may be mlt issue, so we just try this.
-        start_frame += -1
-        if start_frame < 0:
-            start_frame = 0
-        
-        self.start_frame = start_frame
-        self.end_frame = end_frame
-
-    def run(self):
-        callbacks = utils.EmptyClass()
-        callbacks.set_render_progress_gui = set_render_progress_gui
-        callbacks.save_render_start_time = save_render_start_time
-        callbacks.exit_render_gui = exit_render_gui
-        callbacks.maybe_open_rendered_file_in_bin = maybe_open_rendered_file_in_bin
-
-        PLAYER().set_render_callbacks(callbacks)
-        PLAYER().start_rendering(self.render_consumer, self.start_frame, self.end_frame)
-"""
 def get_args_vals_list_for_current_selections():
     profile = get_current_profile()
     encoding_option_index = widgets.encoding_panel.encoding_selector.widget.get_active()
@@ -213,7 +186,8 @@ def create_widgets():
     widgets.encoding_panel = rendergui.RenderEncodingPanel(widgets.file_panel.extension_label)
     if (editorstate.SCREEN_HEIGHT > 898):
         widgets.args_panel = rendergui.RenderArgsPanel(_save_opts_pressed, _load_opts_pressed,
-                                                       _display_selection_in_opts_view)
+                                                       _display_selection_in_opts_view,
+                                                       set_default_values_for_widgets)
     else:
         widgets.args_panel = rendergui.RenderArgsPanelSmall(_save_opts_pressed, _load_opts_pressed,
                                                             _display_selection_in_opts_view)
@@ -221,14 +195,12 @@ def create_widgets():
     # Range, Render, Reset, Render Queue
     widgets.render_button = guiutils.get_render_button()
     widgets.range_cb = rendergui.get_range_selection_combo()
-    widgets.reset_button = Gtk.Button(_("Reset"))
-    widgets.reset_button.connect("clicked", lambda w: set_default_values_for_widgets())
     widgets.queue_button = Gtk.Button(_("To Queue"))
     widgets.queue_button.set_tooltip_text(_("Save Project in Render Queue"))
     
     # Tooltips
     widgets.range_cb.set_tooltip_text(_("Select render range"))
-    widgets.reset_button.set_tooltip_text(_("Reset all render options to defaults"))
+
     widgets.render_button.set_tooltip_text(_("Begin Rendering"))
 
 def set_default_values_for_widgets(movie_name_too=False):
@@ -347,10 +319,7 @@ def _render_type_changed():
         enable_user_rendering(False)
         widgets.render_type_panel.presets_selector.widget.set_sensitive(True)
         _preset_selection_changed()
-        widgets.args_panel.opts_save_button.set_sensitive(False)
-        widgets.args_panel.opts_load_button.set_sensitive(False)
         if editorstate.screen_size_small_height() == False:
-            widgets.args_panel.load_selection_button.set_sensitive(False)
             widgets.args_panel.opts_view.set_sensitive(False)
             widgets.args_panel.opts_view.get_buffer().set_text("")
 
@@ -464,11 +433,11 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
         
         args = ("session_id:" + str(session_id), 
                 "speed:" + str(speed), 
-                "write_file:" + str(write_file).replace(" ", "\ "),
+                "write_file:" + str(write_file),
                 "profile_desc:" + str(profile_desc),
                 "encoding_option_index:" + str(encoding_option_index),
                 "quality_option_index:"+ str(quality_option_index),
-                "source_path:" + str(source_path).replace(" ", "\ "),
+                "source_path:" + str(source_path),
                 "render_full_range:" + str(render_full_range),
                 "start_frame:" + str(start_frame),
                 "end_frame:" + str(end_frame))
@@ -555,11 +524,11 @@ def _render_reverse_clip_dialog_callback(dialog, response_id, fb_widgets, media_
         
         args = ("session_id:" + str(session_id), 
                 "speed:" + str(speed), 
-                "write_file:" + str(write_file).replace(" ", "\ "),
+                "write_file:" + str(write_file),
                 "profile_desc:" + str(profile_desc),
                 "encoding_option_index:" + str(encoding_option_index),
                 "quality_option_index:"+ str(quality_option_index),
-                "source_path:" + str(source_path).replace(" ", "\ "),
+                "source_path:" + str(source_path),
                 "render_full_range:" + str(render_full_range),
                 "start_frame:" + str(start_frame),
                 "end_frame:" + str(end_frame))
