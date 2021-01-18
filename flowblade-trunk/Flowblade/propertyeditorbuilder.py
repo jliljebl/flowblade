@@ -318,7 +318,8 @@ class KeyframesToggler:
 
 def _get_ladspa_slider_row(editable_property, slider_name=None):
     adjustment = editable_property.get_input_range_adjustment()
-
+    adjustment.connect("value-changed", editable_property.adjustment_value_changed)
+        
     hslider = Gtk.HScale()
     hslider.set_adjustment(adjustment)
     hslider.set_draw_value(False)
@@ -328,6 +329,7 @@ def _get_ladspa_slider_row(editable_property, slider_name=None):
     spin.set_numeric(True)
     spin.set_adjustment(adjustment)
     spin.connect("button-release-event", lambda w, e: _ladspa_slider_update(editable_property, adjustment))
+    spin.connect("activate", lambda w: _ladspa_spinner_update(editable_property, spin, adjustment))
 
     _set_digits(editable_property, hslider, spin)
 
@@ -1097,8 +1099,18 @@ def _get_combo_box_column(name, values, editable_property):
 # ------------------------------------ SPECIAL VALUE UPDATE METHODS
 # LADSPA filters do not respond to MLT property updates and 
 # need to be recreated to update output
+def _ladspa_spinner_update(editable_property, spinner, adjustment):
+    try:
+        # spin and slider use same adjustment and we seem to be get unchanged value 
+        # on enter press, so we are using SpinButton text to get changed value.
+        value = float(spinner.get_text())
+        adjustment.set_value(value)
+        _ladspa_slider_update(editable_property, adjustment)
+    except:
+        pass # text is not number. do nothing
+
 def _ladspa_slider_update(editable_property, adjustment):
-    # ...or segphault
+    # ...or segfault
     PLAYER().stop_playback()
     
     # Change property value
