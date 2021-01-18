@@ -501,16 +501,16 @@ def _get_freebar_conf_panel():
                         
     # Widgets
     vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-    choice = Gtk.Label("Check the groups of buttons visible or not in the toolbar; select one and change order")
+    choice = Gtk.Label(_("Set button group active state and position."))
     
     toolbar_list = Gtk.ListBox()
     toolbar_list.set_selection_mode(Gtk.SelectionMode.SINGLE)
 
     box_move = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
-    button_up = Gtk.Button(label="Up")
+    button_up = Gtk.Button(label=_("Up"))
     button_up.connect("clicked", row_up, vbox)
     box_move.pack_start(button_up, False, False, 0)
-    button_down = Gtk.Button(label="Down")
+    button_down = Gtk.Button(label=_("Down"))
     button_down.connect("clicked", row_down, vbox)
     box_move.pack_start(button_down, False, False, 0)
 
@@ -519,7 +519,7 @@ def _get_freebar_conf_panel():
     vbox.pack_start(box_move, False, False, 0)
     
     draw_listbox(vbox)
-
+    vbox.set_size_request(400, 200)
     return vbox
     
 def toggle_click(button, row_number):

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-08 10:42+0300\n"
+"POT-Creation-Date: 2021-01-18 10:56+0200\n"
 "PO-Revision-Date: 2021-01-15 21:19+0300\n"
 "Last-Translator: Микита Бесчастний <micitabesh1992@rambler.ua>\n"
 "Language-Team: \n"
@@ -167,7 +167,7 @@ msgstr ""
 "\n"
 "До проекту не додано дублікатів медіа-матеріалів."
 
-#: projectaction.py:574 exporting.py:522
+#: projectaction.py:574 exporting.py:520
 msgid "Selected folder contains files"
 msgstr "Типова тека для файлів проекту"
 
@@ -360,7 +360,7 @@ msgid "Save Selection Container Clip"
 msgstr "Зберегти кліп контейнера для вибору"
 
 #: projectaction.py:1527 projectaction.py:1548 projectaction.py:1859
-#: projectaction.py:1875 projectdata.py:228 tlineaction.py:280
+#: projectaction.py:1875 projectdata.py:238 tlineaction.py:280
 msgid "sequence_"
 msgstr "послідовність_"
 
@@ -392,11 +392,11 @@ msgstr "Вилучити позначений контейнер"
 msgid "Move Bin"
 msgstr "Пересунути контейнер"
 
-#: projectaction.py:1662
+#: projectaction.py:1662 middlebar.py:510
 msgid "Up"
 msgstr "↑"
 
-#: projectaction.py:1663
+#: projectaction.py:1663 middlebar.py:513
 msgid "Down"
 msgstr "↓"
 
@@ -852,7 +852,7 @@ msgid "Project Info"
 msgstr "Інформація про проект"
 
 #: editorwindow.py:859 rendergui.py:184 rendergui.py:330
-#: tools/batchrendering.py:904 tools/gmic.py:813 editorlayout.py:178
+#: tools/batchrendering.py:904 tools/gmic.py:788 editorlayout.py:178
 msgid "Render"
 msgstr "Візуалізація"
 
@@ -884,7 +884,7 @@ msgstr "Титлер"
 msgid "Audio Mixer"
 msgstr "Звуковий мікшер"
 
-#: editorwindow.py:867 tools/gmic.py:873 toolsintegration.py:108
+#: editorwindow.py:867 tools/gmic.py:848 toolsintegration.py:108
 msgid "G'MIC Effects"
 msgstr "G'Mic Ефекти"
 
@@ -916,11 +916,11 @@ msgstr "Про програму"
 msgid "Window Mode"
 msgstr "Режим вікна"
 
-#: editorwindow.py:1065 preferenceswindow.py:393
+#: editorwindow.py:1065 preferenceswindow.py:392
 msgid "Single Window"
 msgstr "Одне вікно"
 
-#: editorwindow.py:1069 preferenceswindow.py:394
+#: editorwindow.py:1069 preferenceswindow.py:393
 msgid "Two Windows"
 msgstr "Два вікна"
 
@@ -1144,23 +1144,23 @@ msgstr "Новий проект"
 #: dialogs.py:1461 dialogs.py:1475 dialogs.py:1489 dialogs.py:1503
 #: dialogs.py:1806 dialogs.py:1923 dialogs.py:1970 dialogs.py:2006
 #: dialogs.py:2024 propertyeditorbuilder.py:627 propertyeditorbuilder.py:766
-#: propertyeditorbuilder.py:806 middlebar.py:455 rendergui.py:51
-#: rendergui.py:110 rendergui.py:124 rendergui.py:142 rendergui.py:1074
+#: propertyeditorbuilder.py:806 middlebar.py:458 rendergui.py:51
+#: rendergui.py:110 rendergui.py:124 rendergui.py:142 rendergui.py:1075
 #: preferenceswindow.py:43 tools/batchrendering.py:1004
-#: tools/batchrendering.py:1077 proxyediting.py:327 tlineaction.py:1590
+#: tools/batchrendering.py:1077 proxyediting.py:327 tlineaction.py:1586
 #: patternproducer.py:358 patternproducer.py:391 patternproducer.py:422
-#: tools/gmic.py:400 tools/gmic.py:424 tools/gmic.py:553 dialogutils.py:108
-#: dialogutils.py:168 exporting.py:442 tools/containerprogramedit.py:89
+#: tools/gmic.py:375 tools/gmic.py:399 tools/gmic.py:528 dialogutils.py:108
+#: dialogutils.py:168 exporting.py:440 tools/containerprogramedit.py:89
 #: tools/simpleeditors.py:121 containeractions.py:357 containerclip.py:173
-#: containerclip.py:447
+#: containerclip.py:453
 msgid "Cancel"
 msgstr "Скасувати"
 
 #: dialogs.py:63 dialogs.py:242 dialogs.py:313 dialogs.py:382 dialogs.py:476
 #: dialogs.py:530 dialogs.py:656 dialogs.py:777 dialogs.py:790 dialogs.py:1807
 #: propertyeditorbuilder.py:628 propertyeditorbuilder.py:767
-#: propertyeditorbuilder.py:807 middlebar.py:456 rendergui.py:111
-#: preferenceswindow.py:44 tools/batchrendering.py:416 tools/gmic.py:425
+#: propertyeditorbuilder.py:807 middlebar.py:459 rendergui.py:111
+#: preferenceswindow.py:44 tools/batchrendering.py:416 tools/gmic.py:400
 #: dialogutils.py:42 dialogutils.py:75 dialogutils.py:88 dialogutils.py:103
 msgid "OK"
 msgstr "Гаразд"
@@ -1206,7 +1206,7 @@ msgid "New Profile"
 msgstr "Новий профіль"
 
 #: dialogs.py:151 dialogs.py:206 dialogs.py:1323 rendergui.py:676
-#: tools/gmic.py:758 tools/toolsencoding.py:297
+#: tools/gmic.py:733 tools/toolsencoding.py:297
 msgid "Select Folder"
 msgstr "Вибір теки"
 
@@ -1281,7 +1281,7 @@ msgstr "Зберегти проект як"
 
 #: dialogs.py:330 dialogs.py:355 dialogs.py:448 dialogs.py:460 dialogs.py:497
 #: dialogs.py:519 rendergui.py:125 tools/batchrendering.py:1005
-#: tools/gmic.py:401
+#: tools/gmic.py:376
 msgid "Save"
 msgstr "Зберегти"
 
@@ -1664,7 +1664,7 @@ msgstr ""
 msgid "Change Clip Length"
 msgstr "Зміна довжини кліпу"
 
-#: dialogs.py:1029 dialogs.py:1239 dialogs.py:1279 menuactions.py:197
+#: dialogs.py:1029 dialogs.py:1239 dialogs.py:1279 menuactions.py:195
 #: containerclip.py:174
 msgid "Ok"
 msgstr "Гаразд"
@@ -1954,7 +1954,7 @@ msgid "Add Fade"
 msgstr "Додати Fade"
 
 #: dialogs.py:1522 dialogs.py:1759 tools/titler.py:598 proxyediting.py:318
-#: medialinker.py:157 tools/gmic.py:844 tools/gmic.py:935
+#: medialinker.py:157 tools/gmic.py:819 tools/gmic.py:910
 #: diskcachemanagement.py:171 tlinerender.py:934
 msgid "Close"
 msgstr "Закрити"
@@ -2291,7 +2291,7 @@ msgstr "Встановити файл водяних знаків"
 msgid "Remove Watermark"
 msgstr "Видалити водяний знак"
 
-#: dialogs.py:1770 menuactions.py:151
+#: dialogs.py:1770 menuactions.py:149
 msgid "Not Set"
 msgstr "Не встановлено"
 
@@ -3199,11 +3199,11 @@ msgstr "Найкращий профіль:"
 msgid "Matches Project Profile:"
 msgstr "Профайл проекту:"
 
-#: panels.py:213 tools/gmic.py:741
+#: panels.py:213 tools/gmic.py:716
 msgid "Mark In:"
 msgstr "Вихідна точка:"
 
-#: panels.py:214 tools/gmic.py:742
+#: panels.py:214 tools/gmic.py:717
 msgid "Mark Out:"
 msgstr "Вихідна точка:"
 
@@ -3231,7 +3231,7 @@ msgstr "Шаблон видалення:"
 msgid "Dip Color:"
 msgstr "Колір:"
 
-#: panels.py:293 panels.py:370 panels.py:404 panels.py:495 tools/gmic.py:743
+#: panels.py:293 panels.py:370 panels.py:404 panels.py:495 tools/gmic.py:718
 msgid "Length:"
 msgstr "Довжина:"
 
@@ -3324,39 +3324,39 @@ msgstr "Відносний пошук файлів "
 msgid "untitled"
 msgstr "без назви"
 
-#: projectdata.py:220
+#: projectdata.py:230
 msgid "bin_"
 msgstr "контейнер_"
 
-#: projectdata.py:529
+#: projectdata.py:539
 msgid "Created using dialog"
 msgstr "Створено за допомогою діалогового вікна"
 
-#: projectdata.py:531
+#: projectdata.py:541
 msgid "Created using Save As... "
 msgstr "Зберегти поточний проект як... "
 
-#: projectdata.py:533
+#: projectdata.py:543
 msgid "Saved "
 msgstr "Зберегти "
 
-#: projectdata.py:536
+#: projectdata.py:546
 msgid "Saved as "
 msgstr "Зберегти як "
 
-#: projectdata.py:538
+#: projectdata.py:548
 msgid "Rendered "
 msgstr "Надані "
 
-#: projectdata.py:540
+#: projectdata.py:550
 msgid "Saved backup snapshot"
 msgstr "Збережений знімок резервного копіювання"
 
-#: projectdata.py:542
+#: projectdata.py:552
 msgid "Media load"
 msgstr "Завантаження медіа"
 
-#: projectdata.py:544
+#: projectdata.py:554
 msgid "Saved with changed profile"
 msgstr "Збережено зі зміненим профілем"
 
@@ -3376,17 +3376,17 @@ msgstr "Виберіть діапазон візуалізації"
 msgid "Begin Rendering"
 msgstr "Почніть рендерінг"
 
-#: render.py:397 render.py:481
+#: render.py:394 render.py:478
 msgid "A File with given path exists!"
 msgstr ""
 
-#: render.py:398 render.py:482
+#: render.py:395 render.py:479
 msgid ""
 "It is not allowed to render Motion Files with same paths as existing files.\n"
 "Select another name for file."
 msgstr ""
 
-#: render.py:583
+#: render.py:580
 msgid "Rendering Transition Clip"
 msgstr ""
 
@@ -3466,7 +3466,7 @@ msgstr "Обрізати"
 msgid "Alpha Shape"
 msgstr "Форма рамки"
 
-#: translations.py:149 translations.py:305
+#: translations.py:149
 msgid "Volume"
 msgstr "Гучність"
 
@@ -3487,7 +3487,6 @@ msgid "Swap Channels"
 msgstr "Поміняти місцями канали"
 
 #: translations.py:155
-#| msgid "Pitchshifter"
 msgid "Pitchshifter - AM"
 msgstr ""
 
@@ -3998,6 +3997,11 @@ msgstr "Розмір за Y"
 #: translations.py:304
 msgid "Trans. Width"
 msgstr "Ширина переходу"
+
+#: translations.py:305
+#, fuzzy
+msgid "Volume dB"
+msgstr "Гучність"
 
 #: translations.py:306 translations.py:307
 msgid "Left/Right"
@@ -5408,7 +5412,7 @@ msgstr "Спіраль"
 msgid "Spots"
 msgstr "Плями"
 
-#: mlttransitions.py:124 medialog.py:557
+#: mlttransitions.py:124 medialog.py:595
 msgid "Star"
 msgstr "Червона зірка"
 
@@ -5768,151 +5772,155 @@ msgid ""
 "Titler"
 msgstr ""
 
-#: middlebar.py:453
+#: middlebar.py:456
 msgid "Free Bar Configuration"
 msgstr ""
 
-#: middlebar.py:488
+#: middlebar.py:491
 msgid "Tools Group"
 msgstr "Група інструментів"
 
-#: middlebar.py:489
+#: middlebar.py:492
 msgid "Undo Group"
 msgstr "Скасувати групу"
 
-#: middlebar.py:490
+#: middlebar.py:493
 msgid "Zoom Group"
 msgstr "Збільшити групу"
 
-#: middlebar.py:491
+#: middlebar.py:494
 msgid "Edit Group"
 msgstr "Редагувати групу"
 
-#: middlebar.py:492
+#: middlebar.py:495
 msgid "Sync Split Group"
 msgstr "Синхронізація розділеної групи"
 
-#: middlebar.py:493
+#: middlebar.py:496
 msgid "Delete Group"
 msgstr "Вилучити групу"
 
-#: middlebar.py:494
+#: middlebar.py:497
 msgid "Monitor Add Group"
 msgstr "Додати кліп монітора"
 
-#: middlebar.py:495
+#: middlebar.py:498
 msgid "Timecode Display"
 msgstr "Відображення тимчасового коду"
 
-#: middlebar.py:496
+#: middlebar.py:499
 msgid "Workflow Menu"
 msgstr ""
 
-#: middlebar.py:497
+#: middlebar.py:500
 msgid "Edit Tool Menu"
 msgstr ""
 
-#: medialog.py:325
+#: middlebar.py:504
+msgid "Set button group active state and position."
+msgstr ""
+
+#: medialog.py:363
 msgid "New Group..."
 msgstr "Нова група..."
 
-#: medialog.py:326
+#: medialog.py:364
 msgid "New Group From Selected..."
 msgstr ""
 
-#: medialog.py:330
+#: medialog.py:368
 msgid "Rename Current Group..."
 msgstr "Перейменувати групу..."
 
-#: medialog.py:336
+#: medialog.py:374
 msgid "Move Selected Items To Group"
 msgstr ""
 
-#: medialog.py:339
+#: medialog.py:377
 msgid "No Groups"
 msgstr "Немає груп"
 
-#: medialog.py:352
+#: medialog.py:390
 msgid "Delete Current Group"
 msgstr ""
 
-#: medialog.py:358
+#: medialog.py:396
 msgid "Use Comments as Clip Names"
 msgstr ""
 
-#: medialog.py:366
+#: medialog.py:404
 msgid "Sort by"
 msgstr "Впорядкувати список"
 
-#: medialog.py:369
+#: medialog.py:407
 msgid "Time"
 msgstr "Час"
 
-#: medialog.py:375 medialog.py:563
+#: medialog.py:413 medialog.py:601
 msgid "File Name"
 msgstr "Назва файла"
 
-#: medialog.py:380 medialog.py:561
+#: medialog.py:418 medialog.py:599
 msgid "Comment"
 msgstr "Коментар"
 
-#: medialog.py:487
+#: medialog.py:525
 msgid "Group "
 msgstr "Згрупувати "
 
-#: medialog.py:559 projectinfogui.py:128
+#: medialog.py:597 projectinfogui.py:128
 msgid "Event"
 msgstr "Подія"
 
-#: medialog.py:565
+#: medialog.py:603
 msgid "Mark In"
 msgstr "Позначити в"
 
-#: medialog.py:567
+#: medialog.py:605
 msgid "Mark Out"
 msgstr "Позначити"
 
-#: medialog.py:569 projectinfogui.py:126
+#: medialog.py:607 projectinfogui.py:126
 msgid "Date"
 msgstr "Дата"
 
-#: medialog.py:756
+#: medialog.py:794
 msgid "Display starred ranges"
 msgstr "Показати червоноармійців"
 
-#: medialog.py:757
+#: medialog.py:795
 msgid "Display non-starred ranges"
 msgstr "Показати бендер"
 
-#: medialog.py:758
+#: medialog.py:796
 msgid "Set selected ranges starred"
 msgstr ""
 
-#: medialog.py:759
+#: medialog.py:797
 msgid "Set selected ranges non-starred"
 msgstr ""
 
-#: medialog.py:760
+#: medialog.py:798
 msgid "Log current marked range"
 msgstr "Записаний діапазон поточного часу"
 
-#: medialog.py:761
+#: medialog.py:799
 msgid "Delete selected ranges"
 msgstr ""
 
-#: medialog.py:762
+#: medialog.py:800
 msgid "Insert selected ranges on Timeline"
 msgstr ""
 
-#: medialog.py:763
+#: medialog.py:801
 msgid "Append displayed ranges on Timeline"
 msgstr "Додавання відображуваних діапазонів на шкалі часу"
 
-#: medialog.py:780
+#: medialog.py:818
 msgid "All Items"
 msgstr "Всі об’єкти"
 
-#: medialog.py:787
+#: medialog.py:825
 msgid "Select viewed Range Log Items Group"
 msgstr ""
 
@@ -6157,12 +6165,11 @@ msgstr "Формат кодування"
 msgid "Render Type"
 msgstr "Тип візуалізації"
 
-#: rendergui.py:620 rendergui.py:1093
+#: rendergui.py:620 rendergui.py:1094
 msgid "Render Args"
 msgstr "Ааргументі візуалізації"
 
 #: rendergui.py:626
-#| msgid "Open For Editing:"
 msgid "Open File in Bin"
 msgstr ""
 
@@ -6183,7 +6190,6 @@ msgid "Preset File type"
 msgstr "Попередній тип файлу"
 
 #: rendergui.py:722 rendergui.py:803
-#| msgid "Project Profile:"
 msgid "Use Project Profile"
 msgstr ""
 
@@ -6195,28 +6201,27 @@ msgstr ""
 msgid "Render profile info"
 msgstr "Інформація профілю візуалізації"
 
-#: rendergui.py:804 rendergui.py:927
-#| msgid "Rendering "
+#: rendergui.py:804 rendergui.py:928
 msgid "Render using args"
 msgstr ""
 
-#: rendergui.py:810 rendergui.py:1057
+#: rendergui.py:810 rendergui.py:1058
 msgid "Ext.:"
 msgstr "Суфікс:"
 
-#: rendergui.py:847 rendergui.py:966
+#: rendergui.py:847 rendergui.py:967
 msgid "Render using key=value rendering options"
 msgstr ""
 
-#: rendergui.py:848 rendergui.py:1065
+#: rendergui.py:848 rendergui.py:1066
 msgid "Edit render options"
 msgstr ""
 
-#: rendergui.py:859 rendergui.py:969
+#: rendergui.py:859 rendergui.py:970
 msgid "Load Render Args from a text file"
 msgstr ""
 
-#: rendergui.py:860 rendergui.py:968
+#: rendergui.py:860 rendergui.py:969
 msgid "Save Render Args into a text file"
 msgstr ""
 
@@ -6228,19 +6233,19 @@ msgstr ""
 msgid "Reset all Render Options to Defaults"
 msgstr ""
 
-#: rendergui.py:945
+#: rendergui.py:946
 msgid "Edit Args:"
 msgstr "Змінити аргументи:"
 
-#: rendergui.py:1054
+#: rendergui.py:1055
 msgid "Load Selection"
 msgstr "Завантажити вибір"
 
-#: rendergui.py:1064
+#: rendergui.py:1065
 msgid "Load render options from currently selected encoding"
 msgstr ""
 
-#: rendergui.py:1076
+#: rendergui.py:1077
 msgid "Set Args"
 msgstr "Визначити аргументи"
 
@@ -6344,7 +6349,7 @@ msgstr ""
 msgid "Confirm user profile delete"
 msgstr ""
 
-#: profilesmanager.py:281 tools/batchrendering.py:769 menuactions.py:203
+#: profilesmanager.py:281 tools/batchrendering.py:769 menuactions.py:201
 msgid "This operation cannot be undone."
 msgstr ""
 
@@ -6616,105 +6621,105 @@ msgstr "Темна тема"
 msgid "Light Theme"
 msgstr "Проста і легка тема"
 
-#: preferenceswindow.py:385
+#: preferenceswindow.py:384
 msgid "Display All Levels"
 msgstr "Показувати всі рівні"
 
-#: preferenceswindow.py:386
+#: preferenceswindow.py:385
 msgid "Display Levels On Request"
 msgstr ""
 
-#: preferenceswindow.py:401
+#: preferenceswindow.py:400
 msgid "Normal - 50px, 25px"
 msgstr "Звичайний - 50px, 25px"
 
-#: preferenceswindow.py:402
+#: preferenceswindow.py:401
 msgid "Double for HiDPI - 100px, 50px"
 msgstr ""
 
-#: preferenceswindow.py:407
+#: preferenceswindow.py:406
 msgid "3 panels if width (1450px+) available"
 msgstr ""
 
-#: preferenceswindow.py:408
+#: preferenceswindow.py:407
 msgid "2 panels always"
 msgstr ""
 
-#: preferenceswindow.py:414
+#: preferenceswindow.py:413
 msgid "Full Display area: "
 msgstr ""
 
-#: preferenceswindow.py:418
+#: preferenceswindow.py:417
 msgid "Monitor "
 msgstr "Монітор "
 
-#: preferenceswindow.py:423
+#: preferenceswindow.py:422
 msgid "Application window mode:"
 msgstr ""
 
-#: preferenceswindow.py:424
+#: preferenceswindow.py:423
 msgid "Force Language:"
 msgstr "Мова примусово:"
 
-#: preferenceswindow.py:425
+#: preferenceswindow.py:424
 msgid "Display splash screen"
 msgstr ""
 
-#: preferenceswindow.py:426
+#: preferenceswindow.py:425
 msgid "Buttons style:"
 msgstr ""
 
-#: preferenceswindow.py:427
+#: preferenceswindow.py:426
 msgid "Theme request, icons and colors:"
 msgstr ""
 
-#: preferenceswindow.py:428
+#: preferenceswindow.py:427
 msgid "Theme detection fail fallback colors:"
 msgstr ""
 
-#: preferenceswindow.py:429
+#: preferenceswindow.py:428
 msgid "Default audio levels display:"
 msgstr ""
 
-#: preferenceswindow.py:430
+#: preferenceswindow.py:429
 msgid "Tracks Heights:"
 msgstr ""
 
-#: preferenceswindow.py:432
+#: preferenceswindow.py:431
 msgid "Show Full File names"
 msgstr ""
 
-#: preferenceswindow.py:433
+#: preferenceswindow.py:432
 msgid "Top row layout:"
 msgstr ""
 
-#: preferenceswindow.py:434
+#: preferenceswindow.py:433
 msgid "Do GUI layout based on:"
 msgstr ""
 
-#: preferenceswindow.py:435
+#: preferenceswindow.py:434
 msgid "Toolbar color icons"
 msgstr ""
 
-#: preferenceswindow.py:471
+#: preferenceswindow.py:470
 msgid ""
 "Changing these values may cause problems with playback and rendering.\n"
 "The safe values are Render Threads:1, Allow Frame Dropping: No."
 msgstr ""
 
-#: preferenceswindow.py:482
+#: preferenceswindow.py:481
 msgid "Between 1 and the number of CPU Cores"
 msgstr ""
 
-#: preferenceswindow.py:483
+#: preferenceswindow.py:482
 msgid "Allow Frame Dropping for real-time rendering, when needed"
 msgstr ""
 
-#: preferenceswindow.py:487
+#: preferenceswindow.py:486
 msgid "Render Threads:"
 msgstr "Потоки візуалізації:"
 
-#: preferenceswindow.py:488
+#: preferenceswindow.py:487
 msgid "Allow Frame Dropping"
 msgstr "Дозволити викидання кадрів"
 
@@ -6927,7 +6932,7 @@ msgstr ""
 msgid "Change Render Item Path"
 msgstr ""
 
-#: tools/batchrendering.py:1089 exporting.py:470
+#: tools/batchrendering.py:1089 exporting.py:468
 msgid "Select target folder"
 msgstr ""
 
@@ -7118,7 +7123,7 @@ msgstr ""
 msgid "You need to select clips to overwrite to perform this edit."
 msgstr ""
 
-#: tlineaction.py:724 tlineaction.py:1852
+#: tlineaction.py:724 tlineaction.py:1848
 msgid "3 point edit not defined!"
 msgstr ""
 
@@ -7142,190 +7147,190 @@ msgid ""
 "or moved to different track."
 msgstr ""
 
-#: tlineaction.py:1058 tlineaction.py:1394 tlineaction.py:1499
+#: tlineaction.py:1056 tlineaction.py:1390 tlineaction.py:1495
 msgid "Rendering "
 msgstr "Візуалізація "
 
-#: tlineaction.py:1151
+#: tlineaction.py:1149
 msgid "Rerendering "
 msgstr "Рендеринг "
 
-#: tlineaction.py:1178
+#: tlineaction.py:1176
 msgid ""
 "To create a rendered transition you need enough media overlap from both "
 "clips!\n"
 "\n"
 msgstr ""
 
-#: tlineaction.py:1183
+#: tlineaction.py:1181
 msgid "<b>FIRST CLIP MEDIA OVERLAP:</b>  "
 msgstr ""
 
-#: tlineaction.py:1184 tlineaction.py:1192
+#: tlineaction.py:1182 tlineaction.py:1190
 msgid "Available <b>"
 msgstr "Наявні <b>"
 
-#: tlineaction.py:1184 tlineaction.py:1192 tlineaction.py:1246
-#: tlineaction.py:1254
+#: tlineaction.py:1182 tlineaction.py:1190 tlineaction.py:1244
+#: tlineaction.py:1252
 msgid "</b> frame(s), "
 msgstr "</b> кадрів, "
 
-#: tlineaction.py:1185 tlineaction.py:1193
+#: tlineaction.py:1183 tlineaction.py:1191
 msgid "Required <b>"
 msgstr ""
 
-#: tlineaction.py:1185 tlineaction.py:1186 tlineaction.py:1194
-#: tlineaction.py:1247
+#: tlineaction.py:1183 tlineaction.py:1184 tlineaction.py:1192
+#: tlineaction.py:1245
 msgid "</b> frame(s)"
 msgstr "</b> кадрів"
 
-#: tlineaction.py:1186
+#: tlineaction.py:1184
 msgid "Trim first clip end back <b>"
 msgstr ""
 
-#: tlineaction.py:1191
+#: tlineaction.py:1189
 msgid "<b>SECOND CLIP MEDIA OVERLAP:</b> "
 msgstr ""
 
-#: tlineaction.py:1193 tlineaction.py:1255
+#: tlineaction.py:1191 tlineaction.py:1253
 msgid "</b> frame(s) "
 msgstr "</b> Кадрів, "
 
-#: tlineaction.py:1194
+#: tlineaction.py:1192
 msgid "Trim second clip start forward <b>"
 msgstr ""
 
-#: tlineaction.py:1200
+#: tlineaction.py:1198
 msgid "Current situation, not enought media overlap:"
 msgstr ""
 
-#: tlineaction.py:1202
+#: tlineaction.py:1200
 msgid "You need more media overlap:"
 msgstr ""
 
-#: tlineaction.py:1230
+#: tlineaction.py:1228
 msgid "Activating 'Steal frames from clips if needed' checkbox can help too."
 msgstr ""
 
-#: tlineaction.py:1235
+#: tlineaction.py:1233
 msgid "More media overlap needed to create transition!"
 msgstr ""
 
-#: tlineaction.py:1240
+#: tlineaction.py:1238
 msgid ""
 "To create a rendered Transition you need enough media overlap from both "
 "Clips!\n"
 "\n"
 msgstr ""
 
-#: tlineaction.py:1245
+#: tlineaction.py:1243
 msgid "<b>FIRST CLIP:</b>  "
 msgstr ""
 
-#: tlineaction.py:1246 tlineaction.py:1254
+#: tlineaction.py:1244 tlineaction.py:1252
 msgid "Length <b>"
 msgstr ""
 
-#: tlineaction.py:1247 tlineaction.py:1255
+#: tlineaction.py:1245 tlineaction.py:1253
 msgid "Required shortning <b>"
 msgstr ""
 
-#: tlineaction.py:1253
+#: tlineaction.py:1251
 msgid "<b>SECOND CLIP:</b> "
 msgstr ""
 
-#: tlineaction.py:1263
+#: tlineaction.py:1261
 msgid "Lengthen first Clip from beginning:"
 msgstr ""
 
-#: tlineaction.py:1271 tlineaction.py:1288
+#: tlineaction.py:1269 tlineaction.py:1286
 msgid "or make Transition shorter."
 msgstr ""
 
-#: tlineaction.py:1280
+#: tlineaction.py:1278
 msgid "Lengthen second Clip from end:"
 msgstr ""
 
-#: tlineaction.py:1292
+#: tlineaction.py:1290
 msgid "<b>Stealing frames from clips to transition failed!</b>"
 msgstr ""
 
-#: tlineaction.py:1307
+#: tlineaction.py:1305
 msgid "Only Video Track mix / fades available"
 msgstr ""
 
-#: tlineaction.py:1308
+#: tlineaction.py:1306
 msgid ""
 "Unfortunately rendered mixes and fades can currently\n"
 "only be applied on clips on Video Tracks."
 msgstr ""
 
-#: tlineaction.py:1351
+#: tlineaction.py:1347
 msgid ""
 "Clip is too short for the requested fade:\n"
 "\n"
 msgstr ""
 
-#: tlineaction.py:1352
+#: tlineaction.py:1348
 msgid "<b>Clip Length:</b> "
 msgstr "<b>Довжина кліпу:</b> "
 
-#: tlineaction.py:1352 tlineaction.py:1353
+#: tlineaction.py:1348 tlineaction.py:1349
 msgid " frame(s)\n"
 msgstr " кадрів\n"
 
-#: tlineaction.py:1353
+#: tlineaction.py:1349
 msgid "<b>Fade Length:</b> "
 msgstr "<b>Довжина Fade:</b> "
 
-#: tlineaction.py:1354
+#: tlineaction.py:1350
 msgid "Clip is too short!"
 msgstr ""
 
-#: tlineaction.py:1587
+#: tlineaction.py:1583
 msgid "Rerender all Rendered Transitions / Fades"
 msgstr ""
 
-#: tlineaction.py:1631
+#: tlineaction.py:1627
 msgid "Rendering item "
 msgstr "Візуалізація елементу "
 
-#: tlineaction.py:1818 tlineaction.py:1823
+#: tlineaction.py:1814 tlineaction.py:1819
 msgid "Can't rerender this fade / transition."
 msgstr ""
 
-#: tlineaction.py:1819
+#: tlineaction.py:1815
 msgid ""
 "This fade / transition was created with Flowblade <= 1.14 and does not have "
 "the necessary data embedded.\n"
 "Rerendering works with fades/transitions created with Flowblade >= 1.16."
 msgstr ""
 
-#: tlineaction.py:1824
+#: tlineaction.py:1820
 msgid ""
 "The clip/s used to create this fade / transition are no longer available on "
 "the timeline."
 msgstr ""
 
-#: tlineaction.py:1842
+#: tlineaction.py:1838
 msgid "No Clip loaded into Monitor"
 msgstr ""
 
-#: tlineaction.py:1843
+#: tlineaction.py:1839
 msgid "Can't do the requested edit because there is no Clip in Monitor."
 msgstr ""
 
-#: tlineaction.py:1847
+#: tlineaction.py:1843
 msgid "Defined range in Monitor Clip is too short"
 msgstr ""
 
-#: tlineaction.py:1848
+#: tlineaction.py:1844
 msgid ""
 "Can't do the requested edit because Mark In -> Mark Out Range or Clip is too "
 "short."
 msgstr ""
 
-#: tlineaction.py:1853
+#: tlineaction.py:1849
 msgid ""
 "You need to set Mark In and Mark Out on Timeline or Clip and\n"
 "additional Mark In on Timeline or Clip to perform this edit."
@@ -7467,150 +7472,150 @@ msgstr "Пересунути 1:"
 msgid "Move 2:"
 msgstr "Пересунути 2:"
 
-#: tools/gmic.py:133
+#: tools/gmic.py:115
 msgid "G'Mic not found!"
 msgstr ""
 
-#: tools/gmic.py:134
+#: tools/gmic.py:116
 msgid ""
 "G'Mic binary was not present at <b>/usr/bin/gmic</b>.\n"
 "Install G'MIC to use this tool."
 msgstr ""
 
-#: tools/gmic.py:305
+#: tools/gmic.py:280
 msgid "Select Video Media"
 msgstr ""
 
-#: tools/gmic.py:380 tools/gmic.py:780
+#: tools/gmic.py:355 tools/gmic.py:755
 msgid "not set"
 msgstr "не встановлено"
 
-#: tools/gmic.py:398
+#: tools/gmic.py:373
 msgid "Save Gmic Script As"
 msgstr "Зберегти сценарій Gmic як"
 
-#: tools/gmic.py:422
+#: tools/gmic.py:397
 msgid "Load Gmic Script"
 msgstr ""
 
-#: tools/gmic.py:550
+#: tools/gmic.py:525
 msgid "Video Encoding Settings"
 msgstr ""
 
-#: tools/gmic.py:554 containeractions.py:358
+#: tools/gmic.py:529 containeractions.py:358
 msgid "Set Encoding"
 msgstr "Встановити кодування"
 
-#: tools/gmic.py:598 tools/gmic.py:932
+#: tools/gmic.py:573 tools/gmic.py:907
 msgid "Load Clip"
 msgstr ""
 
-#: tools/gmic.py:602
+#: tools/gmic.py:577
 msgid "no clip loaded"
 msgstr ""
 
-#: tools/gmic.py:627 tools/simpleeditors.py:368
+#: tools/gmic.py:602 tools/simpleeditors.py:368
 msgid "no preview"
 msgstr "без перегляду"
 
-#: tools/gmic.py:674 tools/simpleeditors.py:140 tools/simpleeditors.py:386
+#: tools/gmic.py:649 tools/simpleeditors.py:140 tools/simpleeditors.py:386
 msgid "Preview"
 msgstr "Перегляд"
 
-#: tools/gmic.py:701
+#: tools/gmic.py:676
 msgid "Add to Script"
 msgstr "Додати новий скрипт"
 
-#: tools/gmic.py:761
+#: tools/gmic.py:736
 msgid "Frames Folder:"
 msgstr ""
 
-#: tools/gmic.py:772
+#: tools/gmic.py:747
 msgid "Encode Video"
 msgstr "Кодування відео"
 
-#: tools/gmic.py:777
+#: tools/gmic.py:752
 msgid "Encoding settings"
 msgstr ""
 
-#: tools/gmic.py:796
+#: tools/gmic.py:771
 msgid "Set Mark In, Mark Out and Frames Folder for valid render"
 msgstr ""
 
-#: tools/gmic.py:811 shortcuts.py:337
+#: tools/gmic.py:786 shortcuts.py:337
 msgid "Stop"
 msgstr "Зупинка"
 
-#: tools/gmic.py:839
+#: tools/gmic.py:814
 msgid "Load Script"
 msgstr "Завантажити скрипт"
 
-#: tools/gmic.py:841
+#: tools/gmic.py:816
 msgid "Save Script"
 msgstr "Зберегти сценарій"
 
-#: tools/gmic.py:900
+#: tools/gmic.py:875
 msgid "frames"
 msgstr "кадрів"
 
-#: tools/gmic.py:918
+#: tools/gmic.py:893
 msgid " no video file"
 msgstr ""
 
-#: tools/gmic.py:920
+#: tools/gmic.py:895
 msgid " render video file"
 msgstr " обробити відеофайл"
 
-#: tools/gmic.py:921
+#: tools/gmic.py:896
 msgid " frame(s),"
 msgstr " кадрів,"
 
-#: tools/gmic.py:933
+#: tools/gmic.py:908
 msgid "G'Mic Webpage"
 msgstr ""
 
-#: tools/gmic.py:1107
+#: tools/gmic.py:1082
 msgid "Rendering preview..."
 msgstr "Перегляд обробленого..."
 
-#: tools/gmic.py:1143 tools/simpleeditors.py:175
+#: tools/gmic.py:1118 tools/simpleeditors.py:175
 msgid "Preview for frame: "
 msgstr ""
 
-#: tools/gmic.py:1144 tools/simpleeditors.py:175
+#: tools/gmic.py:1119 tools/simpleeditors.py:175
 msgid ", render time: "
 msgstr ", час візуалізації: "
 
-#: tools/gmic.py:1210
+#: tools/gmic.py:1185
 msgid "Waiting for frames write to complete..."
 msgstr ""
 
-#: tools/gmic.py:1251 tools/gmic.py:1312
+#: tools/gmic.py:1226 tools/gmic.py:1287
 msgid "Render stopped!"
 msgstr ""
 
-#: tools/gmic.py:1257
+#: tools/gmic.py:1232
 msgid "Rendering video, "
 msgstr "Візуалізація відео, "
 
-#: tools/gmic.py:1257
+#: tools/gmic.py:1232
 #, python-format
 msgid "% done"
 msgstr ""
 
-#: tools/gmic.py:1267
+#: tools/gmic.py:1242
 msgid "Render complete!"
 msgstr "Візуалізація завершена!"
 
-#: tools/gmic.py:1277
+#: tools/gmic.py:1252
 msgid "Writing clip frame: "
 msgstr ""
 
-#: tools/gmic.py:1285
+#: tools/gmic.py:1260
 msgid "Rendering frame: "
 msgstr ""
 
-#: tools/gmic.py:1297
+#: tools/gmic.py:1272
 msgid "Render error!"
 msgstr "Помилка візуалізації!"
 
@@ -7667,19 +7672,19 @@ msgid ""
 "if performance is not satisfactory."
 msgstr ""
 
-#: compositorfades.py:334
+#: compositorfades.py:333
 msgid "Clip too short!"
 msgstr ""
 
-#: compositorfades.py:335
+#: compositorfades.py:334
 msgid "The Clip is too short to add the requested fade."
 msgstr ""
 
-#: compositorfades.py:340
+#: compositorfades.py:339
 msgid "Clip too short for Auto Fades!"
 msgstr "Кліп занадто короткий для автоматичного появи/загасання!"
 
-#: compositorfades.py:341
+#: compositorfades.py:340
 msgid ""
 "The Clip is too short to add the user set default fades on Compositor "
 "creation."
@@ -8139,57 +8144,57 @@ msgid ""
 "where it can't be performed."
 msgstr ""
 
-#: menuactions.py:124
+#: menuactions.py:122
 msgid "Help page not found!"
 msgstr ""
 
-#: menuactions.py:124
+#: menuactions.py:122
 msgid ""
 "Unfortunately the webresource containing help information\n"
 "for this application was not found."
 msgstr ""
 
-#: menuactions.py:197
+#: menuactions.py:195
 msgid "Add New Custom Shortcuts Group"
 msgstr ""
 
-#: menuactions.py:198
+#: menuactions.py:196
 msgid "User Shortcuts Group name:"
 msgstr ""
 
-#: menuactions.py:202
+#: menuactions.py:200
 msgid "Delete Current User Shortcuts?"
 msgstr ""
 
-#: exporting.py:384
+#: exporting.py:382
 msgid "Sequence is too short"
 msgstr ""
 
-#: exporting.py:384
+#: exporting.py:382
 msgid "Sequence needs to be at least 2 frames long to allow frame export."
 msgstr ""
 
-#: exporting.py:443
+#: exporting.py:441
 msgid "Export Image"
 msgstr "Експортувати зображення"
 
-#: exporting.py:444
+#: exporting.py:442
 msgid "Export Frame Image"
 msgstr ""
 
-#: exporting.py:468
+#: exporting.py:466
 msgid "Export file name:"
 msgstr ""
 
-#: exporting.py:474
+#: exporting.py:472
 msgid "Export folder:"
 msgstr "Експортувати:"
 
-#: exporting.py:481
+#: exporting.py:479
 msgid "Image type:"
 msgstr "Тип зображення:"
 
-#: exporting.py:523
+#: exporting.py:521
 msgid ""
 "When exporting audio to Ardour, the selected folder\n"
 "has to be empty."
@@ -8808,11 +8813,11 @@ msgstr ""
 msgid "Creating Container for Blender Project"
 msgstr ""
 
-#: containerclip.py:431
+#: containerclip.py:437
 msgid "Container Program Edit Data is Executable!"
 msgstr ""
 
-#: containerclip.py:432
+#: containerclip.py:438
 msgid ""
 "Only accept Container Program Edit Data from similar trustwothy sources\n"
 "you would accept applications!\n"
@@ -8822,7 +8827,7 @@ msgid ""
 "can maybe used as an attack vector against your system."
 msgstr ""
 
-#: containerclip.py:448
+#: containerclip.py:454
 msgid "Load Program Edit Data"
 msgstr ""
 

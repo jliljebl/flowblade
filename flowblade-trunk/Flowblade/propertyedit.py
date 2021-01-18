@@ -165,7 +165,7 @@ def get_transition_editable_properties(compositor):
 
         if p_type == mltfilters.PROP_EXPRESSION:
             """
-            For expressions we can't do straight input output numerical
+            For expressions we can't do straight input->output numerical
             conversion so we need a extending class for expression type.
             """
             args = propertyparse.args_string_to_args_dict(args_str)
