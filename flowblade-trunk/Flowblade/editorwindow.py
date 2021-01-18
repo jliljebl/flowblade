@@ -942,7 +942,6 @@ class EditorWindow:
                 <menu action='ProjectMenu'>
                     <menuitem action='AddMediaClip'/>
                     <menuitem action='AddImageSequence'/>
-                    <menuitem action='AddMediaFolder'/>
                     <separator/>
                     <menuitem action='CreateColorClip'/>
                     <menu action='PatternProducersMenu'>
