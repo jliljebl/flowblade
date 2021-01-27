@@ -192,9 +192,10 @@ def log_item_name_edited(cell, path, new_text, user_data):
     item_index = int(path)
     current_view_events = get_current_filtered_events()
     current_view_events[item_index].comment = new_text
-
-    widgets.media_log_view.fill_data_model()
-
+    tree_path = Gtk.TreePath.new_from_indices([item_index])
+    iter = widgets.media_log_view.storemodel.get_iter(tree_path)
+    widgets.media_log_view.storemodel.set_value (iter, 1, new_text)
+    
 def delete_selected():
     selected = widgets.media_log_view.get_selected_rows_list()
     log_events = get_current_filtered_events()
