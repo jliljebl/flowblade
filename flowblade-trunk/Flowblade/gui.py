@@ -91,6 +91,7 @@ _THEME_COLORS = (_UBUNTU_COLORS, _GNOME_COLORS, _MINT_COLORS, _ARC_COLORS, _FLOW
 _CURRENT_THEME_COLORS_FILE = "currentcolors.data" # Used to communicate theme colors to tools like gmic.py running on separate process
 
 LIGHT_GRAY_THEME_GRAY = ((50.3/255.0), (50.3/255.0), (59.9/255.0), 1.0)
+LIGHT_GRAY_THEME_BG = (0.153, 0.153, 0.188, 1.0)
 LIGHT_NEUTRAL_THEME_NEUTRAL = ((68.0/255.0), (68.0/255.0), (68.0/255.0), 1.0)
 DARKER_NEUTRAL_THEME_NEUTRAL = ((48.0/255.0), (48.0/255.0), (48.0/255.0), 1.0)
 
@@ -151,6 +152,9 @@ def get_selected_bg_color():
 
 def get_light_gray_light_color():
     return Gdk.RGBA(*LIGHT_GRAY_THEME_GRAY)
+    
+def get_light_gray_bg_in_cairo_rgb():
+    return LIGHT_GRAY_THEME_BG
 
 def get_light_neutral_color():
     return Gdk.RGBA(*LIGHT_NEUTRAL_THEME_NEUTRAL)

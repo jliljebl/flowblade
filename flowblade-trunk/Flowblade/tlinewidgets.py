@@ -204,7 +204,6 @@ IMAGE_CLIP_COLOR_GRAD = (1, 0.1, 0.20, 0.21, 1) #(1, 0.33, 0.65, 0.69, 1)
 IMAGE_CLIP_COLOR_GRAD_L = get_multiplied_grad(0, 1, IMAGE_CLIP_COLOR_GRAD, GRAD_MULTIPLIER) 
 IMAGE_CLIP_SELECTED_COLOR = get_multiplied_color_from_grad(IMAGE_CLIP_COLOR_GRAD, SELECTED_MULTIPLIER + 0.1)
 
-
 CONTAINER_CLIP_NOT_RENDERED_COLOR = (0.7, 0.3, 0.3)
 CONTAINER_CLIP_NOT_RENDERED_SELECTED_COLOR = (0.8, 0.4, 0.4)
 CONTAINER_CLIP_RENDERED_COLOR = (0.25, 0.33, 0.78)
@@ -251,7 +250,6 @@ FRAME_SCALE_LINES = (0, 0, 0)
 
 BG_COLOR = (0.5, 0.5, 0.55)
 
-#COLUMN_NOT_ACTIVE_COLOR = (0.65, 0.65, 0.65)
 COLUMN_NOT_ACTIVE_COLOR = (0.32, 0.32, 0.34)
 
 OVERLAY_COLOR = (0.9,0.9,0.9)
@@ -335,7 +333,7 @@ match_frame_height = 1
 
 
 # ------------------------------------------------------------------- module functions
-def load_icons():
+def load_icons_and_set_colors():
     global FULL_LOCK_ICON, FILTER_CLIP_ICON, VIEW_SIDE_ICON,\
     COMPOSITOR_ICON, INSERT_ARROW_ICON, AUDIO_MUTE_ICON, MARKER_ICON, \
     VIDEO_MUTE_ICON, ALL_MUTE_ICON, TRACK_BG_ICON, MUTE_AUDIO_ICON, MUTE_VIDEO_ICON, MUTE_ALL_ICON, \
@@ -368,7 +366,7 @@ def load_icons():
     EDIT_INDICATOR = _load_pixbuf("clip_edited.png")
 
     global FRAME_SCALE_COLOR_GRAD, FRAME_SCALE_COLOR_GRAD_L, BG_COLOR, FRAME_SCALE_LINES, TRACK_GRAD_STOP1, TRACK_GRAD_STOP3, TRACK_NAME_COLOR,  \
-            TRACK_GRAD_ORANGE_STOP1, TRACK_GRAD_ORANGE_STOP3, BLANK_CLIP_COLOR_GRAD, BLANK_CLIP_COLOR_GRAD_L
+            TRACK_GRAD_ORANGE_STOP1, TRACK_GRAD_ORANGE_STOP3, BLANK_CLIP_COLOR_GRAD, BLANK_CLIP_COLOR_GRAD_L, COLUMN_NOT_ACTIVE_COLOR
                 
     if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
 
@@ -407,6 +405,11 @@ def load_icons():
                 rl, gl, bl, = get_multiplied_color((r, g ,b), 1.25)
                 TRACK_GRAD_ORANGE_STOP1 = (1, rl, gl, bl, 1) # V1
                 TRACK_GRAD_ORANGE_STOP3 = (1, rl, gl, bl, 1) # V1
+            
+                COLUMN_NOT_ACTIVE_COLOR = (0.40, 0.40, 0.40)
+                if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
+                    COLUMN_NOT_ACTIVE_COLOR = (0.40, 0.40, 0.44)
+                    
     else:
         TRACK_GRAD_ORANGE_STOP1 = (1,  0.4, 0.4, 0.4, 1) # V1
         TRACK_GRAD_ORANGE_STOP3 = (0,  0.68, 0.68, 0.68, 1) # V1
@@ -1451,6 +1454,7 @@ def _get_signed_tc_str(tc_str, delta):
         tc_str = "+" + tc_str
     return tc_str
 
+
 # ------------------------------- WIDGETS
 class TimeLineCanvas:
     """
@@ -2467,8 +2471,10 @@ class TimeLineColumn:
         x, y, w, h = allocation
         
         # Draw bg
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
             r, g, b, a = gui.unpack_gdk_color(gui.get_darker_neutral_color())
+            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
+                r, g, b, a = gui.get_light_gray_bg_in_cairo_rgb()
             cr.set_source_rgb(r, g, b)
             cr.rectangle(0, 0, w, h)
             cr.fill()

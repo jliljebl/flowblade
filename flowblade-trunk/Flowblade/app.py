@@ -474,7 +474,7 @@ def create_gui():
     """
     Called at app start to create gui objects and handles for them.
     """
-    tlinewidgets.load_icons()
+    tlinewidgets.load_icons_and_set_colors()
     kftoolmode.load_icons()
 
     updater.set_clip_edit_mode_callback = modesetting.set_clip_monitor_edit_mode
