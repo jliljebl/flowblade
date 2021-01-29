@@ -67,6 +67,7 @@ from editorstate import EDIT_MODE
 import editorpersistance
 import kftoolmode
 import medialinker
+import medialog
 import modesetting
 import movemodes
 import mltprofiles
@@ -815,11 +816,13 @@ def clear_changed_since_last_save_flags():
     compositeeditor.compositor_changed_since_last_save = False
     clipeffectseditor.filter_changed_since_last_save = False
     projectdata.media_files_changed_since_last_save = False
+    medialog.log_changed_since_last_save = False
 
 def was_edited_since_last_save():   
     if (edit.edit_done_since_last_save == False and 
         compositeeditor.compositor_changed_since_last_save == False and
         clipeffectseditor.filter_changed_since_last_save == False and
+        medialog.log_changed_since_last_save == False and
         projectdata.media_files_changed_since_last_save == False):
         return False
     

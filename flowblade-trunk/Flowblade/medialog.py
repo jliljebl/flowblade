@@ -47,7 +47,7 @@ import utils
 widgets = utils.EmptyClass()
 
 do_multiple_clip_insert_func = None # this is monkeypathched here in app.py
-
+log_changed_since_last_save = False
 actions_popup_menu = Gtk.Menu()        
 
 # Sort order
@@ -87,6 +87,9 @@ class MediaLogEvent:
         date_str = date_str.lstrip('0')
         return date_str
 
+def _mark_log_changed():
+    global log_changed_since_last_save
+    log_changed_since_last_save = True
 
 # ----------------------------------------------------------- dnd drop
 def clips_drop(clips):
@@ -116,7 +119,7 @@ def clips_drop(clips):
             log_event.ttl = clip.ttl
             editorstate.PROJECT().media_log.append(log_event)
     _update_list_view(log_event)
-    
+    _mark_log_changed()
 
 # ----------------------------------------------------------- gui events
 def media_log_filtering_changed():
@@ -130,7 +133,8 @@ def media_log_star_button_pressed():
         log_events[index].starred = True
 
     widgets.media_log_view.fill_data_model()
-
+    _mark_log_changed()
+    
 def media_log_no_star_button_pressed():
     selected = widgets.media_log_view.get_selected_rows_list()
     log_events = get_current_filtered_events()
@@ -139,7 +143,8 @@ def media_log_no_star_button_pressed():
         log_events[index].starred = False
 
     widgets.media_log_view.fill_data_model()
-
+    _mark_log_changed()
+    
 def log_range_clicked():
     media_file = editorstate.MONITOR_MEDIA_FILE()
     if media_file == None:
@@ -167,7 +172,8 @@ def log_range_clicked():
     editorstate.PROJECT().media_log.append(log_event)
     editorstate.PROJECT().add_to_group(_get_current_group_index(), [log_event])
     _update_list_view(log_event)
-
+    _mark_log_changed()
+    
 def _update_list_view(log_event):
     widgets.media_log_view.fill_data_model()
     max_val = widgets.media_log_view.scroll.get_vadjustment().get_upper()
@@ -195,7 +201,8 @@ def log_item_name_edited(cell, path, new_text, user_data):
     tree_path = Gtk.TreePath.new_from_indices([item_index])
     iter = widgets.media_log_view.storemodel.get_iter(tree_path)
     widgets.media_log_view.storemodel.set_value (iter, 1, new_text)
-    
+    _mark_log_changed()
+        
 def delete_selected():
     selected = widgets.media_log_view.get_selected_rows_list()
     log_events = get_current_filtered_events()
@@ -203,6 +210,7 @@ def delete_selected():
     for row in selected:
         index = max(row) # these are tuple, max to extract only value
         delete_events.append(log_events[index])
+        
     current_group_index = _get_current_group_index()
     if current_group_index != -1: # When user created group is displayed item is only deleted from that group
         PROJECT().remove_from_group(current_group_index, delete_events)
@@ -212,7 +220,8 @@ def delete_selected():
         PROJECT().delete_media_log_events(delete_events)
 
     widgets.media_log_view.fill_data_model()
-
+    _mark_log_changed()
+    
 def display_item(row):
     log_events = get_current_filtered_events()
     event_item = log_events[row]
@@ -493,7 +502,8 @@ def _delete_with_items_dialog_callback(dialog, response_id):
     PROJECT().media_log_groups.pop(current_group_index)
     _create_group_select()
     widgets.group_view_select.set_active(0)
-    
+    _mark_log_changed()
+        
 def _rename_callback(dialog, response_id, entry):
     new_name = entry.get_text()
     dialog.destroy()
@@ -509,7 +519,8 @@ def _rename_callback(dialog, response_id, entry):
     PROJECT().media_log_groups.insert(current_group_index, (new_name, items))
     _create_group_select()
     widgets.group_view_select.set_active(current_group_index + 1)
-
+    _mark_log_changed()
+    
 def _viewed_group_changed(widget):
     update_media_log_view()
 
@@ -543,7 +554,8 @@ def _new_group_name_callback(dialog, response_id, data):
     _create_group_select()
     widgets.group_view_select.set_active(len(PROJECT().media_log_groups))
     update_media_log_view()
-
+    _mark_log_changed()
+    
 def _sorting_changed(msg):
     global sorting_order
     if msg == "time":
