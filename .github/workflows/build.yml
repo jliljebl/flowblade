@@ -3,7 +3,7 @@ name: flowblade-build
 on:
   workflow_dispatch:
   schedule:
-    # 1st of month
+    # Nightly
     - cron: '0 0 * * *'
 
 jobs:
@@ -44,4 +44,3 @@ jobs:
         with:
           name: linux-tarball
           path: flowblade.tar.gz
-          retention-days: 5   
