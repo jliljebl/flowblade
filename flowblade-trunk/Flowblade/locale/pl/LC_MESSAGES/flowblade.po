@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-18 10:56+0200\n"
+"POT-Creation-Date: 2021-01-30 13:45+0200\n"
 "PO-Revision-Date: 2018-11-15 12:12+0200\n"
 "Last-Translator: Stanislaw Polak <polak@icsr.agh.edu.pl>\n"
 "Language-Team: Polish\n"
@@ -64,57 +64,57 @@ msgstr "Twoja wersja MLT to: "
 msgid "Install MLT 6.18 or higher to run Flowblade."
 msgstr "Zainstaluj MLT 6.18 lub nowszy, aby uruchomić Flowblade."
 
-#: app.py:1037 projectaction.py:449 projectaction.py:779
+#: app.py:1037 projectaction.py:450 projectaction.py:780
 msgid "Project has not been saved previously"
 msgstr "Projekt nie został wcześniej zapisany"
 
-#: app.py:1038 projectaction.py:450 projectaction.py:780
+#: app.py:1038 projectaction.py:451 projectaction.py:781
 msgid "Save project with File -> Save As before closing."
 msgstr "Przed zamknięciem, zapisz projekt za pomocą Plik -> Zapisz jako."
 
-#: projectaction.py:141
+#: projectaction.py:142
 msgid "Media asset was missing!"
 msgstr "Brak zasobów multimedialnych!"
 
-#: projectaction.py:142
+#: projectaction.py:143
 msgid "Path of missing asset:"
 msgstr "Ścieżka brakującego zasobu:"
 
-#: projectaction.py:143
+#: projectaction.py:144
 msgid ""
 "Relative search for replacement file in sub folders of project file failed."
 msgstr ""
 "Względne wyszukiwanie plików zastępczych w podfolderach pliku projektu nie "
 "powiodło się."
 
-#: projectaction.py:144
+#: projectaction.py:145
 msgid "To load the project you will need to either:"
 msgstr "Aby załadować projekt, musisz również:"
 
-#: projectaction.py:145
+#: projectaction.py:146
 msgid ""
 "Open project in 'Media Relinker' tool to relink media assets to new files, or"
 msgstr ""
 "Otwórz projekt w narzędziu 'Relinker multimediów', aby powiązać zasoby "
 "multimedialne z nowymi plikami, lub"
 
-#: projectaction.py:146
+#: projectaction.py:147
 msgid "Place a file with the same exact name and path on the hard drive"
 msgstr "Umieść plik o tej samej nazwie i ścieżce na dysku twardym"
 
-#: projectaction.py:147
+#: projectaction.py:148
 msgid "Open project in Media Relinker tool"
 msgstr "Otwórz projekt w narzędziu Relinker multimediów"
 
-#: projectaction.py:166
+#: projectaction.py:167
 msgid "Profile with Description: '"
 msgstr "Profil z Opisem: '"
 
-#: projectaction.py:166
+#: projectaction.py:167
 msgid "' was not found on load!"
 msgstr "' nie został znaleziony podczas ładowania!"
 
-#: projectaction.py:167
+#: projectaction.py:168
 msgid ""
 "It is possible to load the project by creating a User Profile with exactly "
 "the same Description\n"
@@ -124,35 +124,35 @@ msgstr ""
 "dokładnie tym samym opisem \n"
 "jak w przypadku brakującego profilu. "
 
-#: projectaction.py:168
+#: projectaction.py:169
 msgid "User Profiles can be created by selecting 'Edit->Profiles Manager'."
 msgstr ""
 "Profile Użytkowników można tworzyć, wybierając 'Edytuj -> Manager Profili'."
 
-#: projectaction.py:175
+#: projectaction.py:176
 msgid "Opening"
 msgstr "Otwieranie"
 
-#: projectaction.py:298
+#: projectaction.py:299
 msgid "Opening animated .gif file was refused!"
 msgstr ""
 
-#: projectaction.py:299
+#: projectaction.py:300
 msgid ""
 "Flowblade does not support displaying animated GIF files as media objects.\n"
 msgstr ""
 
-#: projectaction.py:300
+#: projectaction.py:301
 msgid ""
 "A possible workaround is to render GIF into a frame sequence and\n"
 "open that as a media item."
 msgstr ""
 
-#: projectaction.py:350
+#: projectaction.py:351
 msgid "Media files already present in project were opened!"
 msgstr "Otwarto pliki multimedialne, które już występują w projekcie!"
 
-#: projectaction.py:356
+#: projectaction.py:357
 msgid ""
 "Files already present:\n"
 "\n"
@@ -160,7 +160,7 @@ msgstr ""
 "Pliki, które już występują:\n"
 "\n"
 
-#: projectaction.py:363
+#: projectaction.py:364
 msgid ""
 "\n"
 "No duplicate media items were added to project."
@@ -169,11 +169,11 @@ msgstr ""
 "Żadne ze zduplikowanych elementów multimedialnych nie zostały dodane do "
 "projektu."
 
-#: projectaction.py:574 exporting.py:520
+#: projectaction.py:575 exporting.py:520
 msgid "Selected folder contains files"
 msgstr "Wybrany folder zawiera pliki"
 
-#: projectaction.py:575
+#: projectaction.py:576
 msgid ""
 "When saving a back-up snapshot of the project, the selected folder\n"
 "has to be empty."
@@ -181,55 +181,55 @@ msgstr ""
 "Podczas zapisywania kopii migawkowej projektu, wybrany folder\n"
 "musi być pusty."
 
-#: projectaction.py:632
+#: projectaction.py:633
 msgid "Copying project media assets"
 msgstr "Kopiowanie zasobów multimedialnych projektu"
 
-#: projectaction.py:633
+#: projectaction.py:634
 msgid "Saving project file"
 msgstr "Zapisywanie pliku projektu"
 
-#: projectaction.py:792
+#: projectaction.py:793
 msgid "Project not found on disk"
 msgstr "Nie znaleziono projektu na dysku"
 
-#: projectaction.py:793
+#: projectaction.py:794
 msgid "Project can't be loaded."
 msgstr "Nie można załadować projektu."
 
-#: projectaction.py:801
+#: projectaction.py:802
 msgid "Project has not been saved since it was opened."
 msgstr "Od czasu jego otwarcia projekt nie został zapisany."
 
-#: projectaction.py:806
+#: projectaction.py:807
 msgid "Project was saved less than a minute ago."
 msgstr "Projekt został zapisany mniej niż minutę temu."
 
-#: projectaction.py:809
+#: projectaction.py:810
 msgid "Project was saved one minute ago."
 msgstr "Projekt został zapisany minutę temu."
 
-#: projectaction.py:811
+#: projectaction.py:812
 msgid "Project was saved "
 msgstr "Projekt został zapisany "
 
-#: projectaction.py:811
+#: projectaction.py:812
 msgid " minutes ago."
 msgstr " minut temu."
 
-#: projectaction.py:837
+#: projectaction.py:840
 msgid "Render target file exists!"
 msgstr "Plik docelowy renderowani już istnieje!"
 
-#: projectaction.py:838
+#: projectaction.py:841
 msgid "Confirm overwriting existing file."
 msgstr "Potwierdź nadpisanie istniejącego pliku."
 
-#: projectaction.py:844
+#: projectaction.py:847
 msgid "Project is currently using proxy media!"
 msgstr "Projekt obecnie korzysta z mediów proxy!"
 
-#: projectaction.py:845
+#: projectaction.py:848
 msgid ""
 "Rendering from proxy media will produce worse quality than rendering from "
 "original media.\n"
@@ -244,67 +244,67 @@ msgstr ""
 "\n"
 "Wybierz 'Potwierdź', aby zrezygnować z renderowania z mediów proxy."
 
-#: projectaction.py:937
+#: projectaction.py:940
 msgid "Render launch failed!"
 msgstr "Renderowanie nie powiodło się!"
 
-#: projectaction.py:938 projectaction.py:952 tools/batchrendering.py:309
+#: projectaction.py:941 projectaction.py:955 tools/batchrendering.py:309
 msgid "Error message: "
 msgstr "Komunikat o błędzie: "
 
-#: projectaction.py:951
+#: projectaction.py:954
 msgid "Adding item to render queue failed!"
 msgstr "Dodawanie elementu do kolejki renderowania nie powiodło się!"
 
-#: projectaction.py:967
+#: projectaction.py:970
 msgid "Render Proxy Files For Selected Media"
 msgstr "Renderuj pliki Proxy dla wybranych multimediów"
 
-#: projectaction.py:968
+#: projectaction.py:971
 msgid "Render Proxy Files For All Media"
 msgstr "Renderuj pliki Proxy dla wszystkich multimediów"
 
-#: projectaction.py:970
+#: projectaction.py:973
 msgid "Select All"
 msgstr "Wybierz Wszystkie"
 
-#: projectaction.py:971
+#: projectaction.py:974
 msgid "Select None"
 msgstr "Nie wybieraj żadnego"
 
-#: projectaction.py:973
+#: projectaction.py:976
 msgid "Move Selected Media To Bin"
 msgstr "Przenieś wybrane multimedia do pojemnika"
 
-#: projectaction.py:976
+#: projectaction.py:979
 msgid "No Target Bins"
 msgstr "Brak docelowych pojemników"
 
-#: projectaction.py:995
+#: projectaction.py:998
 msgid "Append All Media to Timeline"
 msgstr "Dołącz wszystkie multimedia do osi czasu"
 
-#: projectaction.py:996
+#: projectaction.py:999
 msgid "Append Selected Media to Timeline"
 msgstr "Dołącz wybrane multimedia do osi czasu"
 
-#: projectaction.py:1028 editorwindow.py:824
+#: projectaction.py:1031 editorwindow.py:824
 msgid "Add Video, Audio or Image..."
 msgstr "Dodaj Wideo, Audio lub Obraz"
 
-#: projectaction.py:1029 editorwindow.py:826
+#: projectaction.py:1032 editorwindow.py:826
 msgid "Add Image Sequence..."
 msgstr "Dodaj sekwencję zdjęć..."
 
-#: projectaction.py:1050
+#: projectaction.py:1053
 msgid "Open.."
 msgstr "Otwórz.."
 
-#: projectaction.py:1079
+#: projectaction.py:1082
 msgid "Opening .mlt or .xml file as media was disallowed!"
 msgstr "Otwarcie pliku .mlt lub .xml jako multimediów było niedozwolone!"
 
-#: projectaction.py:1080
+#: projectaction.py:1083
 msgid ""
 "Only XML files with matching Profiles can be opened as clips.\n"
 "\n"
@@ -314,19 +314,19 @@ msgstr ""
 "\n"
 "Ostatni niezgodny plik XML MLT miał profil:"
 
-#: projectaction.py:1100
+#: projectaction.py:1103
 msgid "No file was selected"
 msgstr "Nie wybrano żadnego pliku"
 
-#: projectaction.py:1100
+#: projectaction.py:1103
 msgid "Select a numbered file to add an Image Sequence to Project."
 msgstr "Wybierz numerowany plik, aby dodać sekwencję obrazów do projektu."
 
-#: projectaction.py:1108
+#: projectaction.py:1111
 msgid "Not a sequence file!"
 msgstr "Nie jest plikem sekwencji!"
 
-#: projectaction.py:1108
+#: projectaction.py:1111
 msgid ""
 "Selected file does not have a number part in it,\n"
 "so it can't be an image sequence file."
@@ -334,104 +334,104 @@ msgstr ""
 "Wybrany plik nie posiada numerów,\n"
 "więc nie może on być plikiem sekwencji obrazów."
 
-#: projectaction.py:1373 projectaction.py:1375 projectaction.py:1384
-#: projectaction.py:1392 projectaction.py:1399 tools/batchrendering.py:1043
+#: projectaction.py:1376 projectaction.py:1378 projectaction.py:1387
+#: projectaction.py:1395 projectaction.py:1402 tools/batchrendering.py:1043
 #: clipmenuaction.py:157 clipmenuaction.py:159
 msgid "N/A"
 msgstr "Niedostępny"
 
-#: projectaction.py:1388 guicomponents.py:2438
+#: projectaction.py:1391 guicomponents.py:2438
 msgid "Yes"
 msgstr "Tak"
 
-#: projectaction.py:1390 guicomponents.py:2440
+#: projectaction.py:1393 guicomponents.py:2440
 msgid "No"
 msgstr "Nie"
 
-#: projectaction.py:1448
+#: projectaction.py:1451
 msgid "Select Project for Media Import"
 msgstr "Wybierz projekt dla importu multimediów"
 
-#: projectaction.py:1468
+#: projectaction.py:1471
 msgid "selection_"
 msgstr "wybór_"
 
-#: projectaction.py:1469
+#: projectaction.py:1472
 msgid "Save Selection Container Clip"
 msgstr "Zapisz klip kontenerowy zaznaczenia"
 
-#: projectaction.py:1527 projectaction.py:1548 projectaction.py:1859
-#: projectaction.py:1875 projectdata.py:238 tlineaction.py:280
+#: projectaction.py:1530 projectaction.py:1551 projectaction.py:1862
+#: projectaction.py:1878 projectdata.py:238 tlineaction.py:280
 msgid "sequence_"
 msgstr "sekwencja_"
 
-#: projectaction.py:1528
+#: projectaction.py:1531
 msgid "Save Sequence Container Clip"
 msgstr "Zapisz klip kontenerowy sekwencji"
 
-#: projectaction.py:1549
+#: projectaction.py:1552
 msgid "Save Sequence Compound Clip"
 msgstr "Zapisz klip złożony sekwencji"
 
-#: projectaction.py:1575
+#: projectaction.py:1578
 msgid "frame_"
 msgstr "klatka_"
 
-#: projectaction.py:1576
+#: projectaction.py:1579
 msgid "Save Freeze Frame Sequence Compound Clip"
 msgstr "Zapisz klip złożony sekwencji zamrożonych klatek"
 
-#: projectaction.py:1655 editorwindow.py:829
+#: projectaction.py:1658 editorwindow.py:829
 msgid "Add Bin"
 msgstr "Dodaj pojemnik"
 
-#: projectaction.py:1656 editorwindow.py:830
+#: projectaction.py:1659 editorwindow.py:830
 msgid "Delete Selected Bin"
 msgstr "Usuń wybrany pojemnik"
 
-#: projectaction.py:1660
+#: projectaction.py:1663
 msgid "Move Bin"
 msgstr "Przesuń pojemnik"
 
-#: projectaction.py:1662 middlebar.py:510
+#: projectaction.py:1665 middlebar.py:510
 msgid "Up"
 msgstr "Na górze"
 
-#: projectaction.py:1663 middlebar.py:513
+#: projectaction.py:1666 middlebar.py:513
 msgid "Down"
 msgstr "Na dole"
 
-#: projectaction.py:1664
+#: projectaction.py:1667
 msgid "First"
 msgstr "Pierwszy"
 
-#: projectaction.py:1665
+#: projectaction.py:1668
 msgid "Last"
 msgstr "Ostatni"
 
-#: projectaction.py:1724
+#: projectaction.py:1727
 msgid "Can't remove a non-empty bin"
 msgstr "Nie można usunąć niepustego pojemnika"
 
-#: projectaction.py:1725
+#: projectaction.py:1728
 msgid "You must remove all files from the bin before deleting it."
 msgstr ""
 "Przed usunięciem pojemnika należy usunąć wszystkie znajdujące się w nim "
 "pliki."
 
-#: projectaction.py:1733
+#: projectaction.py:1736
 msgid "Can't remove last bin"
 msgstr "Nie można usunąć ostatniego pojemnika"
 
-#: projectaction.py:1734
+#: projectaction.py:1737
 msgid "There must always exist at least one bin."
 msgstr "Zawsze musi istnieć, co najmniej, jeden pojemnik."
 
-#: projectaction.py:1824
+#: projectaction.py:1827
 msgid "Selected sequence is already being edited"
 msgstr "Wybrana sekwencja jest już edytowana"
 
-#: projectaction.py:1825
+#: projectaction.py:1828
 msgid ""
 "Select another sequence. Press Add -button to create a\n"
 "new sequence if needed."
@@ -439,23 +439,23 @@ msgstr ""
 "Wybierz inną sekwencję. Naciśnij przycisk Dodaj, aby utworzyć \n"
 "nową sekwencję, w razie potrzeby."
 
-#: projectaction.py:1839 editorwindow.py:832
+#: projectaction.py:1842 editorwindow.py:832
 msgid "Add New Sequence"
 msgstr "Dodaj nową sekwencję"
 
-#: projectaction.py:1840 editorwindow.py:833
+#: projectaction.py:1843 editorwindow.py:833
 msgid "Edit Selected Sequence"
 msgstr "Edytuj wybraną sekwencję"
 
-#: projectaction.py:1841 editorwindow.py:834
+#: projectaction.py:1844 editorwindow.py:834
 msgid "Delete Selected Sequence"
 msgstr "Usuń wybraną sekwencję"
 
-#: projectaction.py:1843
+#: projectaction.py:1846
 msgid "Create Container Clip from Selected Sequence"
 msgstr "Utwórz klip kontenerowy z wybranych sekwencji"
 
-#: projectaction.py:1914
+#: projectaction.py:1917
 msgid ""
 "Are you sure you want to delete\n"
 "sequence '"
@@ -463,31 +463,31 @@ msgstr ""
 "Jesteś pewny, że chcesz usunąć\n"
 "sekwencję '"
 
-#: projectaction.py:1914
+#: projectaction.py:1917
 msgid "'?"
 msgstr "?"
 
-#: projectaction.py:1915
+#: projectaction.py:1918
 msgid "This operation can not be undone. Sequence will be permanently lost."
 msgstr "Tej operacji nie można cofnąć. Sekwencja zostanie trwale usunięta."
 
-#: projectaction.py:1941
+#: projectaction.py:1944
 msgid "Can't remove last sequence"
 msgstr "Nie można usunąć ostatniej sekwencji"
 
-#: projectaction.py:1942
+#: projectaction.py:1945
 msgid "There must always exist at least one sequence."
 msgstr "Zawsze musi istnieć, co najmniej, jedna sekwencja."
 
-#: projectaction.py:2181 editorwindow.py:1201 workflow.py:215
+#: projectaction.py:2184 editorwindow.py:1198 workflow.py:215
 msgid "Top Down Free Move"
 msgstr "Ruch swobodny z góry na dół"
 
-#: projectaction.py:2182 editorwindow.py:1205
+#: projectaction.py:2185 editorwindow.py:1202
 msgid "Standard Auto Follow"
 msgstr "Standardowe automatyczne śledzenie"
 
-#: projectaction.py:2183 editorwindow.py:1209 workflow.py:215
+#: projectaction.py:2186 editorwindow.py:1206 workflow.py:215
 msgid "Standard Full Track"
 msgstr "Standardowa pełna ścieżka"
 
@@ -781,263 +781,259 @@ msgstr "Paski EBU"
 msgid "Ising"
 msgstr "Model Isinga"
 
-#: editorwindow.py:841 patternproducer.py:98
-msgid "Color Pulse"
-msgstr "Kolorowy impuls"
-
-#: editorwindow.py:842 patternproducer.py:114
+#: editorwindow.py:841 patternproducer.py:114
 msgid "Count"
 msgstr "Licz"
 
-#: editorwindow.py:843
+#: editorwindow.py:842
 msgid "From Selected Clips"
 msgstr "Z wybranego klipu"
 
-#: editorwindow.py:844
+#: editorwindow.py:843
 msgid "From Current Sequence"
 msgstr "Z bieżącej sekwencji"
 
-#: editorwindow.py:845
+#: editorwindow.py:844
 msgid "From Current Sequence With Freeze Frame at Playhead Position"
 msgstr ""
 "Z bieżącej sekwencji z zatrzymaniem klatki w pozycji głowicy odtwarzającej"
 
-#: editorwindow.py:846
+#: editorwindow.py:845
 msgid "Audio Sync Merge Clip From 2 Media Items "
 msgstr "Scalony klip synchronizacji dźwięku z 2 elementów multimedialnych"
 
-#: editorwindow.py:847
+#: editorwindow.py:846
 msgid "Import Media From Project..."
 msgstr "Importowanie multimediów z projektu..."
 
-#: editorwindow.py:848
+#: editorwindow.py:847
 msgid "Create Container Clip"
 msgstr "Utwórz klip kontenerowy"
 
-#: editorwindow.py:849
+#: editorwindow.py:848
 msgid "From G'Mic Script"
 msgstr "Ze skryptu Gmic"
 
-#: editorwindow.py:850
+#: editorwindow.py:849
 msgid "From Blender Project"
 msgstr "Z projektu Blendera"
 
-#: editorwindow.py:851
+#: editorwindow.py:850
 msgid "Import Another Sequence Into This Sequence..."
 msgstr "Importuj inną sekwencję do tej sekwencji"
 
-#: editorwindow.py:852 shortcuts.py:339
+#: editorwindow.py:851 shortcuts.py:339
 msgid "Log Marked Clip Range"
 msgstr "Umieść zaznaczony zakres klipu w rejestrze"
 
-#: editorwindow.py:853
+#: editorwindow.py:852
 msgid "View Project Events..."
 msgstr "Wyświetl zdarzenia związane z projektem..."
 
-#: editorwindow.py:854
+#: editorwindow.py:853
 msgid "Recreate Media Icons..."
 msgstr "Odtwórz ikony multimediów..."
 
-#: editorwindow.py:855
+#: editorwindow.py:854
 msgid "Remove Unused Media..."
 msgstr "Usuń nieużywane multimedia..."
 
-#: editorwindow.py:856
+#: editorwindow.py:855
 msgid "Change Project Profile..."
 msgstr "Zmień profil projektu..."
 
-#: editorwindow.py:857 proxyediting.py:163
+#: editorwindow.py:856 proxyediting.py:163
 msgid "Proxy Manager"
 msgstr "Menedżer Proxy"
 
-#: editorwindow.py:858
+#: editorwindow.py:857
 msgid "Project Info"
 msgstr "Informacje o projekcie"
 
-#: editorwindow.py:859 rendergui.py:184 rendergui.py:330
+#: editorwindow.py:858 rendergui.py:184 rendergui.py:330
 #: tools/batchrendering.py:904 tools/gmic.py:788 editorlayout.py:178
 msgid "Render"
 msgstr "Renderowanie"
 
-#: editorwindow.py:860
+#: editorwindow.py:859
 msgid "Add To Batch Render Queue..."
 msgstr "Dodaj do kolejki renderowania wsadowego..."
 
-#: editorwindow.py:861 middlebar.py:245
+#: editorwindow.py:860 middlebar.py:245
 msgid "Batch Render Queue"
 msgstr "Kolejka renderowania wsadowego"
 
-#: editorwindow.py:862
+#: editorwindow.py:861
 msgid "Rerender All Rendered Transitions And Fades "
 msgstr "Renderuj wszystkie wyrenderowane przejścia oraz zanikania"
 
-#: editorwindow.py:863
+#: editorwindow.py:862
 msgid "Render Timeline"
 msgstr "Renderuj oś czasu"
 
-#: editorwindow.py:864
+#: editorwindow.py:863
 msgid "Tools"
 msgstr "Narzędzia"
 
-#: editorwindow.py:865 middlebar.py:245 tools/titler.py:214
+#: editorwindow.py:864 middlebar.py:245 tools/titler.py:214
 msgid "Titler"
 msgstr "Edytor tytułów"
 
-#: editorwindow.py:866 middlebar.py:245
+#: editorwindow.py:865 middlebar.py:245
 msgid "Audio Mixer"
 msgstr "Mikser dźwięku"
 
-#: editorwindow.py:867 tools/gmic.py:848 toolsintegration.py:108
+#: editorwindow.py:866 tools/gmic.py:848 toolsintegration.py:108
 msgid "G'MIC Effects"
 msgstr "Efekty G'MIC"
 
-#: editorwindow.py:868 medialinker.py:181
+#: editorwindow.py:867 medialinker.py:181
 msgid "Media Relinker"
 msgstr "Relinker multimediów"
 
-#: editorwindow.py:869
+#: editorwindow.py:868
 msgid "_Help"
 msgstr "_Pomoc"
 
-#: editorwindow.py:870
+#: editorwindow.py:869
 msgid "Contents"
 msgstr "Treść"
 
-#: editorwindow.py:871 dialogs.py:654
+#: editorwindow.py:870 dialogs.py:654
 msgid "Runtime Environment"
 msgstr "Środowisko wykonawcze"
 
-#: editorwindow.py:872 dialogs.py:1519
+#: editorwindow.py:871 dialogs.py:1519
 msgid "Keyboard Shortcuts"
 msgstr "Skróty klawiszowe"
 
-#: editorwindow.py:873 dialogs.py:528
+#: editorwindow.py:872 dialogs.py:528
 msgid "About"
 msgstr "O"
 
-#: editorwindow.py:1062
+#: editorwindow.py:1059
 msgid "Window Mode"
 msgstr "Tryb okna"
 
-#: editorwindow.py:1065 preferenceswindow.py:392
+#: editorwindow.py:1062 preferenceswindow.py:392
 msgid "Single Window"
 msgstr "Pojedyncze okno"
 
-#: editorwindow.py:1069 preferenceswindow.py:393
+#: editorwindow.py:1066 preferenceswindow.py:393
 msgid "Two Windows"
 msgstr "Dwa okna"
 
-#: editorwindow.py:1093
+#: editorwindow.py:1090
 msgid "Middlebar Layout"
 msgstr "Wygląd paska środkowego"
 
-#: editorwindow.py:1096
+#: editorwindow.py:1093
 msgid "Timecode Left"
 msgstr "Licznik czasu po lewej stronie"
 
-#: editorwindow.py:1100
+#: editorwindow.py:1097
 msgid "Timecode Center"
 msgstr "Licznik czasu na środku"
 
-#: editorwindow.py:1104
+#: editorwindow.py:1101
 msgid "Components Centered"
 msgstr "Komponenty wypośrodkowane"
 
-#: editorwindow.py:1108
+#: editorwindow.py:1105
 msgid "Free Bar"
 msgstr "Wolny pasek"
 
-#: editorwindow.py:1124
+#: editorwindow.py:1121
 msgid "Configure Free Bar..."
 msgstr "Konfiguruj wolny pasek"
 
-#: editorwindow.py:1132
+#: editorwindow.py:1129
 msgid "Edit Tool Selection Widget"
 msgstr "Edycja widżetu wyboru narzędzia"
 
-#: editorwindow.py:1135
+#: editorwindow.py:1132
 msgid "Middlebar Menu"
 msgstr "Menu paska środkowego"
 
-#: editorwindow.py:1139
+#: editorwindow.py:1136
 msgid "Dock"
 msgstr "Dok"
 
-#: editorwindow.py:1157
+#: editorwindow.py:1154
 msgid "Monitor Playback Interpolation"
 msgstr "Metoda interpolacji odtwarzania klipów monitora"
 
-#: editorwindow.py:1161
+#: editorwindow.py:1158
 msgid "Nearest Neighbour (fast)"
 msgstr "Najbliższy sąsiad (szybka)"
 
-#: editorwindow.py:1165
+#: editorwindow.py:1162
 msgid "Bilinear (good)"
 msgstr "Dwuliniowa (dobra)"
 
-#: editorwindow.py:1169
+#: editorwindow.py:1166
 msgid "Bicubic (better)"
 msgstr "Dwusześcienna (lepsza)"
 
-#: editorwindow.py:1174
+#: editorwindow.py:1171
 msgid "Hyper/Lanczos (best)"
 msgstr "Hyper/Lanczos (najlepsza)"
 
-#: editorwindow.py:1185 shortcuts.py:358
+#: editorwindow.py:1182 shortcuts.py:358
 msgid "Zoom In"
 msgstr "Przybliżenie"
 
-#: editorwindow.py:1188 shortcuts.py:357
+#: editorwindow.py:1185 shortcuts.py:357
 msgid "Zoom Out"
 msgstr "Oddalenie"
 
-#: editorwindow.py:1191
+#: editorwindow.py:1188
 msgid "Zoom Fit"
 msgstr "Dopasowanie transfokacji (zoom)"
 
-#: editorwindow.py:1232 preferenceswindow.py:129
+#: editorwindow.py:1229 preferenceswindow.py:129
 msgid "Off"
 msgstr "Poza"
 
-#: editorwindow.py:1236
+#: editorwindow.py:1233
 msgid "Render Auto"
 msgstr "Renderuj automatycznie"
 
-#: editorwindow.py:1240
+#: editorwindow.py:1237
 msgid "Render On Request"
 msgstr "Renderuj na żądanie"
 
-#: editorwindow.py:1255 tlinerender.py:153
+#: editorwindow.py:1252 tlinerender.py:153
 msgid "Settings..."
 msgstr "Ustawienia..."
 
-#: editorwindow.py:1280
+#: editorwindow.py:1277
 msgid "Empty"
 msgstr "Pusty"
 
-#: editorwindow.py:1299
+#: editorwindow.py:1296
 msgid "Global Window Mode changed"
 msgstr "Zmieniono tryb globalnego okna"
 
-#: editorwindow.py:1300
+#: editorwindow.py:1297
 msgid "Application restart required for the new layout choice to take effect."
 msgstr ""
 "Wymagane jest ponowne uruchomienie aplikacji, aby wybór nowego układu "
 "przyniósł efekt."
 
-#: editorwindow.py:1440
+#: editorwindow.py:1437
 msgid "Timeline current frame timecode"
 msgstr "Czas bieżącej klatki na osi czasu"
 
-#: editorwindow.py:1442
+#: editorwindow.py:1439
 msgid "Select view mode: Video / Vectorscope/ RGBParade"
 msgstr "Wybierz tryb wyświetlania: Wideo/Wektoroskop/Parada RGB"
 
-#: editorwindow.py:1443
+#: editorwindow.py:1440
 msgid "Set trim view and match frames"
 msgstr "Ustaw widok przycinania oraz dopasowywanie klatek"
 
-#: editorwindow.py:1445
+#: editorwindow.py:1442
 msgid "Sequence / Media current position"
 msgstr "Aktualna pozycja oglądanej sekwencji / multimediów"
 
@@ -1147,8 +1143,8 @@ msgstr "Nowy projekt"
 #: dialogs.py:1315 dialogs.py:1416 dialogs.py:1433 dialogs.py:1447
 #: dialogs.py:1461 dialogs.py:1475 dialogs.py:1489 dialogs.py:1503
 #: dialogs.py:1806 dialogs.py:1923 dialogs.py:1970 dialogs.py:2006
-#: dialogs.py:2024 propertyeditorbuilder.py:627 propertyeditorbuilder.py:766
-#: propertyeditorbuilder.py:806 middlebar.py:458 rendergui.py:51
+#: dialogs.py:2024 propertyeditorbuilder.py:629 propertyeditorbuilder.py:768
+#: propertyeditorbuilder.py:808 middlebar.py:458 rendergui.py:51
 #: rendergui.py:110 rendergui.py:124 rendergui.py:142 rendergui.py:1075
 #: preferenceswindow.py:43 tools/batchrendering.py:1004
 #: tools/batchrendering.py:1077 proxyediting.py:327 tlineaction.py:1586
@@ -1162,8 +1158,8 @@ msgstr "Anuluj"
 
 #: dialogs.py:63 dialogs.py:242 dialogs.py:313 dialogs.py:382 dialogs.py:476
 #: dialogs.py:530 dialogs.py:656 dialogs.py:777 dialogs.py:790 dialogs.py:1807
-#: propertyeditorbuilder.py:628 propertyeditorbuilder.py:767
-#: propertyeditorbuilder.py:807 middlebar.py:459 rendergui.py:111
+#: propertyeditorbuilder.py:630 propertyeditorbuilder.py:769
+#: propertyeditorbuilder.py:809 middlebar.py:459 rendergui.py:111
 #: preferenceswindow.py:44 tools/batchrendering.py:416 tools/gmic.py:400
 #: dialogutils.py:42 dialogutils.py:75 dialogutils.py:88 dialogutils.py:103
 msgid "OK"
@@ -2833,8 +2829,8 @@ msgstr "Usuń ścieżkę relinkowanego pliku"
 msgid "Show Full Paths"
 msgstr "Pokaż pełne ścieżki"
 
-#: guicomponents.py:2378 propertyeditorbuilder.py:835
-#: propertyeditorbuilder.py:890 tools/toolsencoding.py:180
+#: guicomponents.py:2378 propertyeditorbuilder.py:837
+#: propertyeditorbuilder.py:892 tools/toolsencoding.py:180
 msgid "Progressive"
 msgstr "Progresywny"
 
@@ -3439,8 +3435,8 @@ msgstr "Filtr audio"
 msgid "Blur"
 msgstr "Rozmycie"
 
-#: translations.py:134 translations.py:580 propertyeditorbuilder.py:850
-#: propertyeditorbuilder.py:905
+#: translations.py:134 translations.py:580 propertyeditorbuilder.py:852
+#: propertyeditorbuilder.py:907
 msgid "Distort"
 msgstr "Zniekształcanie"
 
@@ -5427,7 +5423,7 @@ msgstr "Spirala"
 msgid "Spots"
 msgstr "Miejsca"
 
-#: mlttransitions.py:124 medialog.py:595
+#: mlttransitions.py:124 medialog.py:608
 msgid "Star"
 msgstr "Gwiazdka"
 
@@ -5544,71 +5540,71 @@ msgstr "Wytarcie o długości klipu"
 msgid "Color Dip"
 msgstr "Skąpanie w kolorze"
 
-#: propertyeditorbuilder.py:515
+#: propertyeditorbuilder.py:517
 msgid "Click Monitor to Select Color"
 msgstr "Kliknij monitor, aby wybrać kolor"
 
-#: propertyeditorbuilder.py:622
+#: propertyeditorbuilder.py:624
 msgid "Preset Luma"
 msgstr "Ustalona luminancja"
 
-#: propertyeditorbuilder.py:623
+#: propertyeditorbuilder.py:625
 msgid "User Luma"
 msgstr "Luminancja użytkownika"
 
-#: propertyeditorbuilder.py:625
+#: propertyeditorbuilder.py:627
 msgid "Select Luma File"
 msgstr "Wybierz plik luminancji"
 
-#: propertyeditorbuilder.py:634
+#: propertyeditorbuilder.py:636
 msgid "Wipe Luma files"
 msgstr "Wyczyść plik luminancji"
 
-#: propertyeditorbuilder.py:640
+#: propertyeditorbuilder.py:642
 msgid "Luma File:"
 msgstr "Plik luminancji:"
 
-#: propertyeditorbuilder.py:764
+#: propertyeditorbuilder.py:766
 msgid "Select File"
 msgstr "Wybierz plik"
 
-#: propertyeditorbuilder.py:804
+#: propertyeditorbuilder.py:806
 msgid "Select Image Producing File"
 msgstr "Wybierz plik tworzenia obrazu"
 
-#: propertyeditorbuilder.py:835 propertyeditorbuilder.py:890
+#: propertyeditorbuilder.py:837 propertyeditorbuilder.py:892
 msgid "Nothing"
 msgstr "Nic"
 
-#: propertyeditorbuilder.py:835 propertyeditorbuilder.py:890
+#: propertyeditorbuilder.py:837 propertyeditorbuilder.py:892
 msgid "Deinterlace"
 msgstr "Usuń przeplot"
 
-#: propertyeditorbuilder.py:835 propertyeditorbuilder.py:890
+#: propertyeditorbuilder.py:837 propertyeditorbuilder.py:892
 msgid "Both"
 msgstr "Oba"
 
-#: propertyeditorbuilder.py:844 propertyeditorbuilder.py:899
+#: propertyeditorbuilder.py:846 propertyeditorbuilder.py:901
 msgid "Force"
 msgstr "Wymuś"
 
-#: propertyeditorbuilder.py:849 propertyeditorbuilder.py:904
+#: propertyeditorbuilder.py:851 propertyeditorbuilder.py:906
 msgid "Align"
 msgstr "Wyrównanie"
 
-#: propertyeditorbuilder.py:963
+#: propertyeditorbuilder.py:965
 msgid "Keyframes"
 msgstr "Klatki kluczowe"
 
-#: propertyeditorbuilder.py:967
+#: propertyeditorbuilder.py:969
 msgid "Curve Points"
 msgstr "Punkty krzywej"
 
-#: propertyeditorbuilder.py:971
+#: propertyeditorbuilder.py:973
 msgid "Lauch RotoMask editor"
 msgstr "Uruchom edytor RotoMaski"
 
-#: propertyeditorbuilder.py:975
+#: propertyeditorbuilder.py:977
 msgid "RotoMask info"
 msgstr "Informacje o RotoMasce"
 
@@ -5842,107 +5838,107 @@ msgstr "Edycja menu narzędzi"
 msgid "Set button group active state and position."
 msgstr ""
 
-#: medialog.py:363
+#: medialog.py:373
 msgid "New Group..."
 msgstr "Nowa grupa..."
 
-#: medialog.py:364
+#: medialog.py:374
 msgid "New Group From Selected..."
 msgstr "Nowa grupa z wybranego..."
 
-#: medialog.py:368
+#: medialog.py:378
 msgid "Rename Current Group..."
 msgstr "Zmień nazwę bieżącej grupy..."
 
-#: medialog.py:374
+#: medialog.py:384
 msgid "Move Selected Items To Group"
 msgstr "Przenieś wybrane pozycje do grupy"
 
-#: medialog.py:377
+#: medialog.py:387
 msgid "No Groups"
 msgstr "Brak grup"
 
-#: medialog.py:390
+#: medialog.py:400
 msgid "Delete Current Group"
 msgstr "Usuń bieżącą grupę"
 
-#: medialog.py:396
+#: medialog.py:406
 msgid "Use Comments as Clip Names"
 msgstr "Używaj komentarzy jako nazw klipów"
 
-#: medialog.py:404
+#: medialog.py:414
 msgid "Sort by"
 msgstr "Sortuj według"
 
-#: medialog.py:407
+#: medialog.py:417
 msgid "Time"
 msgstr "Czas"
 
-#: medialog.py:413 medialog.py:601
+#: medialog.py:423 medialog.py:614
 msgid "File Name"
 msgstr "Nazwa pliku"
 
-#: medialog.py:418 medialog.py:599
+#: medialog.py:428 medialog.py:612
 msgid "Comment"
 msgstr "Komentarz"
 
-#: medialog.py:525
+#: medialog.py:537
 msgid "Group "
 msgstr "Grupa"
 
-#: medialog.py:597 projectinfogui.py:128
+#: medialog.py:610 projectinfogui.py:128
 msgid "Event"
 msgstr "Zdarzenie"
 
-#: medialog.py:603
+#: medialog.py:616
 msgid "Mark In"
 msgstr "Początek zaznaczenia"
 
-#: medialog.py:605
+#: medialog.py:618
 msgid "Mark Out"
 msgstr "Koniec zaznaczenia"
 
-#: medialog.py:607 projectinfogui.py:126
+#: medialog.py:620 projectinfogui.py:126
 msgid "Date"
 msgstr "Data"
 
-#: medialog.py:794
+#: medialog.py:807
 msgid "Display starred ranges"
 msgstr "Wyświetl zakresy oznaczone gwiazdką"
 
-#: medialog.py:795
+#: medialog.py:808
 msgid "Display non-starred ranges"
 msgstr "Wyświetl zakresy nie oznaczone gwiazdką"
 
-#: medialog.py:796
+#: medialog.py:809
 msgid "Set selected ranges starred"
 msgstr "Oznacz wybrane zakresy gwiazdką"
 
-#: medialog.py:797
+#: medialog.py:810
 msgid "Set selected ranges non-starred"
 msgstr "Usuń oznaczenie gwiazdką dla wybranych zakresów"
 
-#: medialog.py:798
+#: medialog.py:811
 msgid "Log current marked range"
 msgstr "Umieść zaznaczony zakres w rejestrze"
 
-#: medialog.py:799
+#: medialog.py:812
 msgid "Delete selected ranges"
 msgstr "Usuń wybrane zakresy"
 
-#: medialog.py:800
+#: medialog.py:813
 msgid "Insert selected ranges on Timeline"
 msgstr "Wstaw wybrane zakresy na oś czasu"
 
-#: medialog.py:801
+#: medialog.py:814
 msgid "Append displayed ranges on Timeline"
 msgstr "Dołącz wyświetlane zakresy do osi czasu"
 
-#: medialog.py:818
+#: medialog.py:831
 msgid "All Items"
 msgstr "Wszystkie elementy"
 
-#: medialog.py:825
+#: medialog.py:838
 msgid "Select viewed Range Log Items Group"
 msgstr "Wybierz przeglądaną grupę elementów z rejestru zakresu"
 
@@ -9195,6 +9191,9 @@ msgstr "Panel wyboru filtra"
 #: editorlayout.py:441
 msgid "Tabs Positions"
 msgstr "Pozycje zakładek"
+
+#~ msgid "Color Pulse"
+#~ msgstr "Kolorowy impuls"
 
 #~ msgid "Clip Filters Stack"
 #~ msgstr "Stos filtrów klipu"
