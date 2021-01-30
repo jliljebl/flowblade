@@ -2469,12 +2469,14 @@ class TimeLineColumn:
     # --------------------------------------------- DRAW
     def _draw(self, event, cr, allocation):
         x, y, w, h = allocation
-        
         # Draw bg
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY or \
+            editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
             r, g, b, a = gui.unpack_gdk_color(gui.get_darker_neutral_color())
             if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
                 r, g, b, a = gui.get_light_gray_bg_in_cairo_rgb()
+            elif editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
+                r, g, b, a = gui.unpack_gdk_color(gui.get_bg_color())
             cr.set_source_rgb(r, g, b)
             cr.rectangle(0, 0, w, h)
             cr.fill()
