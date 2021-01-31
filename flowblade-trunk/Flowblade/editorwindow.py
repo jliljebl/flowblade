@@ -1013,10 +1013,6 @@ class EditorWindow:
                 </menu>
           </menubar>
         </ui>"""
-
-        # Hide Blender menu item for Flatpaks
-        if editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
-            self.ui.get_widget('/MenuBar/ProjectMenu/ContainerClipsMenu/CreateBlenderContainerItem').set_visible(False)
         
         # Create global action group
         action_group = Gtk.ActionGroup('WindowActions')
@@ -1042,9 +1038,12 @@ class EditorWindow:
         if editorstate.audio_monitoring_available == False:
             self.ui.get_widget('/MenuBar/ToolsMenu/AudioMix').set_sensitive(False)
 
-        # Diable Blender and G'Mic container clip menu items if not available.
-        if containerclip.blender_available() == False:
+        # Hide Blender menu item for Flatpaks or if not available.
+        if editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
+            self.ui.get_widget('/MenuBar/ProjectMenu/ContainerClipsMenu/CreateBlenderContainerItem').set_visible(False)
+        elif containerclip.blender_available() == False:
             self.ui.get_widget('/MenuBar/ProjectMenu/ContainerClipsMenu/CreateBlenderContainerItem').set_sensitive(False)
+        # Hide G'Mic if not available.
         if gmic.gmic_available() == False:
             self.ui.get_widget('/MenuBar/ProjectMenu/ContainerClipsMenu/CreateGMicContainerItem').set_sensitive(False)
 
