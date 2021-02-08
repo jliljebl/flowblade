@@ -35,7 +35,7 @@ import middlebar
 # Transforms when adding panels.
 # 0 -> 1    The pre-created Gtk.Frame is filled with added panel.
 # 1 -> 2    The pre-created Gtk.Frame is removed from layout box and panel is removed from it
-#           New notebook id created and both panels are added into it.
+#           New notebook is created and both panels are added into it.
 # 2 -> N    Panel is added into existing notebook.
 
 # Transforms when removing panels.
@@ -45,7 +45,7 @@ import middlebar
 # 1 -> 0    Panel is removed from the pre-created Gtk.Frame.
 
 # Pre-created Gtk.Frames exist all through app life-cycle, notebooks are dynamically created
-# as needed. 
+# as needed.
 
 # The exception for these transforms here is top row default notebook 
 # that is forced to always exit with at least two panels displayed.
@@ -341,6 +341,13 @@ def _create_notebook(position, editor_window):
         label = Gtk.Label(label=_panels_names[panel_id])
         notebook.append_page(widget, label)
     
+    tabs_positions = editorpersistance.prefs.positions_tabs
+    tabs_pos = tabs_positions[position]
+    if tabs_pos == UP:
+        notebook.set_tab_pos(Gtk.PositionType.TOP)
+    else:
+        notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
+        
     return notebook
     
 # ---------------------------------------------------------- APP MENU
