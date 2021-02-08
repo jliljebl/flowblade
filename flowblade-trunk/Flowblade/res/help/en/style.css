@@ -43,6 +43,17 @@ body {
 	font-size:18px;
 }
 
+.french-link{
+	margin-top: 40px;
+	width: 900px;
+	margin-bottom: 0px;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	text-align: left;
+	font-size:18px;
+}
+
 .subject-cell {
 	padding-right: 20px;
 	color:#222222;
