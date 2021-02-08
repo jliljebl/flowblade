@@ -215,6 +215,17 @@ p {
 	margin-bottom:10px;
 }
 
+.french-link{
+	margin-top: 40px;
+	width: 900px;
+	margin-bottom: 0px;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	text-align: left;
+	font-size:18px;
+}
+
 /* Otsikot 1 */
 h1, h2, h3, h4, h5, h6{
 	text-transform: uppercase;
