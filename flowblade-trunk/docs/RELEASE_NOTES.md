@@ -1,5 +1,118 @@
 # Release Notes
 
+*Next release coming shortly.*
+
+## FLOWBLADE 2.8
+
+Date: February X, 2021
+
+In this development cycle we focused on making the application more configurable. Among other new features we made panels layout, keyboard shortcuts and middlebar customizable.
+
+### CONFIGURABLE PANEL POSITIONING
+
+For the first time it is now possible to change the layout of the application by moving panels to different positions using **View->Panel Placement** submenu. Currently the feature is only available for screens with resolution of 1680 x 1050 and up. 
+
+### NEW THEMES
+
+Application look'n'feel was updated by adding two new custom themes. 
+
+* **Flowblade Neutral** is a dark theme with equal RGB values for all hues providing a neutral backgroud. [Screenshot](https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/Screenshot_THEME_FLOWBLADE_NEUTRAL.png)  
+
+* **Flowblade Gray** is a dark theme with very light blue tint. [Screenshot](https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/Screenshot_THEME_FLOWBLADE_GRAY.png)  
+
+* Previous default theme remains available as **Flowblade Blue**.
+
+### FREEBAR
+
+**jep-fa** provided a feature allowing users to select which items in Middlebar are displayed and in which order. Feature is available by selecting **View->Middlebar layout->Free Bar** and then **View->Middlebar layout->Configure Free Bar...**. 
+
+### CONFIGURABLE KEYBOARD SHORTCUTS
+
+A subset of keyboard shortcuts can now be changed. From the hamburger menu in **Keyboard Shortcuts** dialog select **Add Custom Shortcuts Group** and click on gear icons to set shortcuts.
+
+### TOOLDOCK
+
+User can now optionally use Tool Dock widget to select Timeline Edit Tools instead of the middlebar drop down menu.
+
+### FILTER EDIT PANEL UPDATE
+
+Filter panel was updated. The previous left size **Filter Stack** and **Filter Selection** list boxes were removed in favor of the more common approach of having **Filter Edit Panels** themselves being arranged in stack.
+
+### NEW FILTER SELECT PANEL
+
+**Filter Selection** panel was moved to right side of the Timeline. User can add filters by double clicking on filter items or by doing a drag-and-drop on top of Timeline Clips.
+
+### COLOR ICONS
+
+**jep-fa** provided a set colored of icons to be optionally used in the Middlebar with **Николай Смольянинов** providing some additional contributions. The feature provides a differentiated, bright and colorful look for users who prefer it.
+
+### OTHER CONTRIBUTIONS
+
+* **Relink a directory** feature for **Media Relinker** contributed by **jep-fa**
+* GitHub Actions build workflow contributed by **Dan Dennedy**.
+* Fix broken 'ui' object references in editorwindow.py **Nathan Rosenquist**.
+* startup: support usr-merge by **sgn**.
+* Don't use legacy directory for Appstream metadata **City-busz**.
+
+### NEW FRENCH USER MANUAL
+
+**jep-fa** created a new French language user manual with large amount of up-to-date screenshots and icons shown and explained. The manual is substantially longer and more detailed then the current user manual and it might very well be worth the effort to translate this to English to use it as the new project official user guide.
+
+### TRANSLATIONS UPDATES
+
+* **Николай Смольянинов** updated the Russian translation
+
+* **jep-fa** updated the French translation
+
+* **micitabesh** updated the Ukrainian translation
+
+* **Stanisław Polak** updated the Polish translation
+
+### OTHER CHANGES
+
+* MultipartFilterObject filters were decracated and replaced with standard filters.
+
+* Cutting clips now keep filters and mute state of original clips on both new clips. 
+
+* Gradient and Shadow blur features were added into Titler.
+
+* Color Picker feature for selecting colors from monitor was added into color selection widgets.
+
+
+### NEXT CYCLE PLANS
+
+In next cycle we plan among other things to improve the current rendering functionality and create a new scripting tool for creating custom effects, transitions and rendered backgrounds.
+
+
+### BUG FIXES AND OTHER CHANGES
+
+* Fix Issue #969 with non-updating LADSPA filters
+* Fix problems with using Range Log in Proxy Mode
+* Fix Issue #960 with Range Log treeview failing to hold scroll position after adding item
+* Load project even if container clip fails to make media item icon, Issue #919
+* Drop support for G'Mic version 1, fixes Issue #900
+* Drop word 'Pan' from Audio Mixer and use icon instead
+* Fix FilterRectGeometryEditor mouse scroll zoom
+* Fix Range Log Delete key action
+* Don't draw out of clip range clip markers
+* Make Titler layer list treeview selection follow state
+* Drop H.264 for single track rendered fades/transitions
+* Fix trim view second image
+* Change Titler to use left side checkboxes
+* Change top level checkboxes to be on left
+* 900px height screen render panel GUI fix
+* Refuse to open animated GIF files
+* Fix Issue #941 with crashing renders when using H.264 and timeline having blanks
+* Make possible to change aspect ratio with Position Scale filter
+* Fix X and Y scale in Rotate and Shear filters, Issue #943
+* Add module persistancecompat.py and refactor compatibility code into it
+* Add code to try to open moved proxy projects
+* mime: add icon, fixes #905 eszlari
+* Remove deprecated getiterator() method
+* Keep Titler open but re-init for screensize on project load
+* Add offline docs as .pdf and .docx files
+* Make second window fullscreen with F11 if it has toplevel focus
+* Fix intro dialog typo, Issue #921
 
 ## Flowblade 2.6.3
 
