@@ -1,10 +1,10 @@
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
-**New bug fix release 2.6.3 is now out.**
+**NEW RELEASE 2.8 IS OUT NOW.**
 
-**[Installing Flowblade](https://github.com/jliljebl/flowblade#installing-flowblade)**
+**INSTALLING: see[ here.](https://github.com/jliljebl/flowblade#installing-flowblade)**
 
-**[Release notes](./flowblade-trunk/docs/RELEASE_NOTES.md)**
+**RELEASE NOTES AVAILABLE[ here.](./flowblade-trunk/docs/RELEASE_NOTES.md)**
 
 1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
 2. [Features](https://github.com/jliljebl/flowblade#features)
@@ -58,9 +58,9 @@ Flowblade offers a configurable workflow - toolset, its order, default tool and 
 
 # Releases
 
-**Latest release:** Flowblade Movie Editor 2.6.3 was released on August 2020.
+**Latest release:** Flowblade Movie Editor 2.8 was released on February 2021.
 
-**Next release:** Flowblade Movie Editor 2.8 is coming in released if first half of February 2021.
+**Next release:** Flowblade Movie Editor 2.10 is targeted to be release in June 2021.
 
 # Installing Flowblade
 
@@ -82,8 +82,9 @@ Installing instructions are available [here](./flowblade-trunk/docs/INSTALLING.m
 
 [System Requirements](./flowblade-trunk/docs/SYSTEM_REQUIREMENTS.md)
 
-# Screenshot
-
+# Screenshot2
+[Screenshot 2.8 neutral theme](./flowblade-trunk/docs/Screenshot_THEME_FLOWBLADE_NEUTRAL.png)
+[Screenshot 2.8 grey theme](./flowblade-trunk/docs/Screenshot_THEME_FLOWBLADE_GRAY.png)
 [Screenshot 2.0 custom theme](./flowblade-trunk/docs/Screenshot-2-0.png)
 
 These are in the repository */docs* folder.
