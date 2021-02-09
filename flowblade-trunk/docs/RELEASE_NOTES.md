@@ -34,7 +34,7 @@ User can now optionally use Tool Dock widget to select Timeline Edit Tools inste
 
 ### FILTER EDIT PANEL UPDATE
 
-Filter panel was updated. The previous left size **Filter Stack** and **Filter Selection** list boxes were removed in favor of the more common approach of having **Filter Edit Panels** themselves being arranged in stack.
+Filter panel was updated. The previous left side **Filter Stack** and **Filter Selection** list boxes were removed in favor of the more common approach of having **Filter Edit Panels** themselves being arranged in stack.
 
 ### NEW FILTER SELECT PANEL
 
