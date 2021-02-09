@@ -1,10 +1,8 @@
 # Release Notes
 
-*Next release coming shortly.*
-
 ## FLOWBLADE 2.8
 
-Date: February X, 2021
+Date: February 9, 2021
 
 In this development cycle we focused on making the application more configurable. Among other new features we made panels layout, keyboard shortcuts and middlebar customizable.
 
