@@ -87,7 +87,7 @@ Installing instructions are available [here](./flowblade-trunk/docs/INSTALLING.m
 
 [Screenshot 2.8 grey theme](./flowblade-trunk/docs/Screenshot_THEME_FLOWBLADE_GRAY.png)
 
-[Screenshot 2.0 custom theme](./flowblade-trunk/docs/Screenshot-2-0.png)
+[Screenshot 2.0 blue theme](./flowblade-trunk/docs/Screenshot-2-0.png)
 
 These are in the repository */docs* folder.
 
