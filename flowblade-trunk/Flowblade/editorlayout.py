@@ -315,7 +315,7 @@ def create_position_widget(editor_window, position):
     # If no panels go into position, None is returned.
     # If 1 panel in position, then that panel itself is the widget.
     # If 2-N panels in position, then a notebook containing panels in position is the widget.
-    # We also return flag whether the returned widget is notebook.
+    # We also return flag telling whether the returned widget is notebook.
     panels = _get_position_panels(position)
     panel_widgets = _get_panels_widgets_dict(editor_window)
     
