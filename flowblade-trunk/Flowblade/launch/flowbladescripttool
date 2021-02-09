@@ -1,0 +1,28 @@
+#!/usr/bin/python3
+
+import sys
+import os
+
+
+modules_path = os.path.dirname(os.path.abspath(sys.argv[0])).rstrip("/launch")
+
+sys.path.insert(0, modules_path)
+import processutils
+processutils.update_sys_path(modules_path)
+
+try:
+    import scripttool
+    import editorstate # Used to decide which translations from file system are used
+    root_dir = modules_path.split("/")[1]
+    if root_dir != "home":
+        editorstate.app_running_from = editorstate.RUNNING_FROM_INSTALLATION
+    else:
+        editorstate.app_running_from = editorstate.RUNNING_FROM_DEV_VERSION
+except Exception as err:
+    print ("Failed to import gmic")
+    print ("ERROR:", err)
+    print ("Installation was assumed to be at:", modules_path)
+    sys.exit(1)
+
+
+scripttool.main(modules_path)

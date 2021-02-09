@@ -70,6 +70,7 @@ import preferenceswindow
 import projectaction
 import projectinfogui
 import proxyediting
+import scripttool
 import shortcuts
 import titler
 import tlineaction
@@ -864,6 +865,7 @@ class EditorWindow:
             ('Titler', None, _('Titler'), None, None, lambda a:titler.show_titler()),
             ('AudioMix', None, _('Audio Mixer'), None, None, lambda a:audiomonitoring.show_audio_monitor()),
             ('GMIC', None, _("G'MIC Effects"), None, None, lambda a:gmic.launch_gmic()),
+            ('Scripttool', None, _("FBlade Scriptool"), None, None, lambda a:scripttool.launch_scripttool()),
             ('MediaLink', None, _('Media Relinker'), None, None, lambda a:medialinker.display_linker()),
             ('HelpMenu', None, _('_Help')),
             ('QuickReference', None, _('Contents'), None, None, lambda a:menuactions.quick_reference()),
@@ -1002,6 +1004,7 @@ class EditorWindow:
                     <separator/>
                     <menuitem action='Titler'/>
                     <menuitem action='GMIC'/>
+                    <menuitem action='Scripttool'/>
                     <separator/>
                     <menuitem action='MediaLink'/>
                 </menu>
