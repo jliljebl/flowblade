@@ -49,7 +49,7 @@ flatpak run io.github.jliljebl.Flowblade
 
 #### Flatpak missing few features
 
-Unfortanately some features are not available via Flatpak install yet.
+Unfortunately some features are not available via Flatpak install yet.
 
 * Batch Render Queue does not work
 * Blender Container Clips are not available
@@ -68,7 +68,7 @@ sudo apt-get install flowblade
 
 #### Archlinux
 
-_Latest release_. Visit the <a href="https://aur.archlinux.org/packages/flowblade/">AUR</a> page or use terminal command:
+_Latest release_. Visit the <a href="https://archlinux.org/packages/community/any/flowblade/">AUR</a> page or use terminal command:
 
 ```bash
 yaourt -S flowblade
