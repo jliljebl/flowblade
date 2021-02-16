@@ -12,7 +12,7 @@
 
 **NOTE: Flowblade now requires MLT 6.18 that is NOT availble on e.g. Ubuntu 18.04. The reason for this situation is the recent move to Python3.**
 
-**First download .deb file** for Flowblade 2.8 from <a href="https://github.com/jliljebl/flowblade/releases">here.</a>
+**First download .deb file** for Flowblade 2.8.0.1 from <a href="https://github.com/jliljebl/flowblade/releases">here.</a>
 
 Double click on <b>.deb</b> file to install it. 
 
@@ -22,7 +22,7 @@ On some systems double clicking may not work and you need to install <b>.deb</b>
     <li>    <p>Open terminal in the directory you saved the  downloaded <b>.deb</b> file. Give command:    </li>
 </ul>
 
-    sudo apt install ./flowblade-2.8.0-1_all.deb
+    sudo apt install ./flowblade-2.8.0.1-1_all.deb
 
 ### Installing Flatpak from Flathub
 
