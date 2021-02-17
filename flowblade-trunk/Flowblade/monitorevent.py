@@ -303,19 +303,22 @@ def select_next_clip_for_filter_edit():
     clipeffectseditor.set_clip(clip, track, range_in)
 
 def select_prev_clip_for_filter_edit():
-    print("prev")
-    """
+    if not editorstate.timeline_visible():
+        updater.display_sequence_in_monitor()
+    tline_frame = PLAYER().tracktor_producer.frame() - 1
 
-                if action == 'prev_cut':
-                    if editorstate.timeline_visible():
-                        tline_frame = PLAYER().tracktor_producer.frame()
-                        frame = current_sequence().find_prev_cut_frame(tline_frame)
-                        if frame != -1:
-                            PLAYER().seek_frame(frame)
-                            if editorpersistance.prefs.center_on_arrow_move == True:
-                                updater.center_tline_to_current_frame()
-                            return True
-    """
+    clip, track = current_sequence().find_prev_editable_clip_and_track(tline_frame)
+    if clip == None:
+        return
+    
+    range_in = track.clips.index(clip)
+    frame = track.clip_start(range_in)
+
+    movemodes.select_clip(track.id, range_in)
+    PLAYER().seek_frame(frame)
+
+    clipeffectseditor.set_clip(clip, track, range_in)
+
 # --------------------------------------------------------- trim view
 def trim_view_menu_launched(launcher, event):
     guicomponents.get_trim_view_popupmenu(launcher, event, _trim_view_menu_item_activated)
