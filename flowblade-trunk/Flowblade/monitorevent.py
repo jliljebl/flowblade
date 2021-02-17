@@ -364,3 +364,22 @@ def _show_trimview_info():
                     _("Select <b>'Trim View Off'</b> or<b>'Trim View Single Side Edits Only'</b> options\nif performance is not satisfactory.")
     dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
 
+# --------------------------------------------------------- trim view
+def start_marks_looping():
+    if PLAYER().looping():
+        PLAYER().stop_loop_playback()
+    if PLAYER().is_playing():
+        PLAYER().stop_playback()
+
+    if timeline_visible():
+        mark_in = PLAYER().producer.mark_in
+        mark_out = PLAYER().producer.mark_out
+    else:
+        mark_in = current_sequence().monitor_clip.mark_in
+        mark_out = current_sequence().monitor_clip.mark_out
+    
+    if mark_in == -1 or mark_out == -1:
+        return
+    
+    PLAYER().start_loop_playback_range(mark_in, mark_out)
+

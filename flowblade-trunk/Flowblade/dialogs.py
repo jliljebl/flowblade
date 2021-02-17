@@ -1668,6 +1668,7 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     play_vbox.pack_start(_get_dynamic_kb_row(root_node, "slower"), False, False, 0)
     play_vbox.pack_start(_get_dynamic_kb_row(root_node, "stop"), False, False, 0)
     play_vbox.pack_start(_get_dynamic_kb_row(root_node, "faster"), False, False, 0)
+    play_vbox.pack_start(_get_dynamic_kb_row(root_node, "play_pause_loop_marks"), False, False, 0)
     play_vbox.pack_start(_get_kb_row(_("Left Arrow "), _("Next Frame")), False, False, 0)#_get_dynamic_kb_row(root_node, "prev_frame"), False, False, 0)
     play_vbox.pack_start(_get_kb_row(_("Right Arrow "), _("Previous Frames")), False, False, 0)#_get_dynamic_kb_row(root_node, "next_frame"), False, False, 0)
     play_vbox.pack_start(_get_kb_row(_("Control + Left Arrow "), _("Move Back 10 Frames")), False, False, 0)

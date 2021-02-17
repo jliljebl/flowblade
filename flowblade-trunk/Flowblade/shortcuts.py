@@ -395,7 +395,8 @@ def _set_keyboard_action_names():
     _keyboard_action_names['sync_all'] = _("Sync All Compositors")
     _keyboard_action_names['select_next'] = _("Open Next Clip In Filter Editor")
     _keyboard_action_names['select_prev'] = _("Open Previous Clip In Filter Editor")
-    
+    _keyboard_action_names['play_pause_loop_marks'] = _("Play / Pause Mark In to Mark Out Loop")
+
 def _set_key_names():
     global _key_names, _mod_names, _gtk_mod_names
     # Start with an empty slate

@@ -216,6 +216,12 @@ def _handle_tline_key_event(event):
         else:
             monitorevent.play_pressed()
         return True
+    if action == 'play_pause_loop_marks':
+        if PLAYER().is_playing():
+            monitorevent.stop_pressed()
+        else:
+            monitorevent.start_marks_looping()
+        return True
     if action == 'switch_monitor':
         updater.switch_monitor_display()
         return True
@@ -541,6 +547,13 @@ def _handle_clip_key_event(event):
                 monitorevent.stop_pressed()
             else:
                 monitorevent.play_pressed()
+            return True
+        if action == 'play_pause_loop_marks':
+            if PLAYER().is_playing():
+                monitorevent.stop_pressed()
+            else:
+                monitorevent.start_marks_looping()
+            return True
         if action == 'mark_in':
             monitorevent.mark_in_pressed()
             return True
@@ -622,6 +635,12 @@ def _handle_geometry_editor_keys(event):
                         else:
                             monitorevent.play_pressed()
                         return True
+                    if action == 'play_pause_loop_marks':
+                        if PLAYER().is_playing():
+                            monitorevent.stop_pressed()
+                        else:
+                            monitorevent.start_marks_looping()
+                        return True
     return False
 
 def _handle_effects_editor_keys(event):
@@ -634,6 +653,12 @@ def _handle_effects_editor_keys(event):
             else:
                 monitorevent.play_pressed()
             return True
+        if action == 'play_pause_loop_marks':
+            if PLAYER().is_playing():
+                monitorevent.stop_pressed()
+            else:
+                monitorevent.start_marks_looping()
+        return True
         if action == 'prev_frame' or action == 'next_frame':
             prefs = editorpersistance.prefs
             if action == 'prev_frame':
