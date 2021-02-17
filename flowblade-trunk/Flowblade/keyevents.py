@@ -114,10 +114,11 @@ def key_down(widget, event):
         _handle_tline_key_event(event)
         return True
 
+    # Events that are available when monitor displays clip
     if gui.monitor_switch.widget.has_focus() and (not timeline_visible()):
         _handle_clip_key_event(event)
         return True
-        
+    # Events that are available when monitor displays clip
     if gui.pos_bar.widget.is_focus() and (not timeline_visible()):
         _handle_clip_key_event(event)
         return True
@@ -236,7 +237,13 @@ def _handle_tline_key_event(event):
     if action == 'toggle_ripple':
         gui.editor_window.toggle_trim_ripple_mode()
         return True
-
+    if action == 'select_next':
+        monitorevent.select_next_clip_for_filter_edit()
+        return True
+    if action == 'select_prev':
+        monitorevent.select_prev_clip_for_filter_edit()
+        return True
+        
     # Key bindings for keyboard trimming
     if editorstate.current_is_active_trim_mode() == True:
         if action == 'prev_frame':

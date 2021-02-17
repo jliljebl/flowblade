@@ -1654,6 +1654,8 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "nudge_forward"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "nudge_back_10"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "nudge_forward_10"), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "select_next"), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "select_prev"), False, False, 0)
     tline = guiutils.get_named_frame(_("Timeline"), tline_vbox)
 
     track_head_vbox = Gtk.VBox()

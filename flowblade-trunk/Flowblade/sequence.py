@@ -1046,7 +1046,46 @@ class Sequence:
                 cut_frame = prev_cut_frame
             
         return cut_frame
-    
+
+    def find_next_editable_clip_and_track(self, tline_frame):
+        """
+        Returns next selectable clip and track.
+        """
+        cut_frame = -1
+        clip_track = None
+        select_clip = None
+        for i in range(1, len(self.tracks) - 1):
+            track = self.tracks[i]
+            
+            # Get index and clip
+            index = track.get_clip_index_at(tline_frame)
+            try:
+                clip = track.clips[index]
+                # We are looking for media clips only.
+                if clip.is_blanck_clip == True:
+                    clip = track.clips[index + 1] # no need to search, only one blank always between media clips.
+            except Exception:
+                continue # Frame after last clip in track
+
+
+
+            # Get next cut frame
+            clip_start_in_tline = track.clip_start(index)
+            length = clip.clip_out - clip.clip_in 
+            next_cut_frame = clip_start_in_tline + length + 1 # +1 clip out inclusive
+ 
+            # Set cut frame
+            if cut_frame == -1:
+                cut_frame = next_cut_frame
+                clip_track = track
+                select_clip = clip
+            elif next_cut_frame < cut_frame:
+                cut_frame = next_cut_frame
+                clip_track = track
+                select_clip = clip
+                
+        return (select_clip, clip_track)
+        
     def get_closest_cut_frame(self, track_id, frame):
         track = self.tracks[track_id]
         index = track.get_clip_index_at(frame)
