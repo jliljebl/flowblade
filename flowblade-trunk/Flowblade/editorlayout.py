@@ -103,7 +103,8 @@ DEFAULT_TABS_POSITIONS = { \
     appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT: DOWN,
     appconsts.PANEL_PLACEMENT_LEFT_COLUMN: DOWN,
     appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT: UP,
-    appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT: UP
+    appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT: UP,
+    appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT: DOWN
 }
 
 # Saved data struct holding panel positions information.
@@ -339,8 +340,15 @@ def _create_notebook(position, editor_window):
         label = Gtk.Label(label=_panels_names[panel_id])
         notebook.append_page(widget, label)
     
-    tabs_positions = editorpersistance.prefs.positions_tabs
-    tabs_pos = tabs_positions[position]
+    try:
+        tabs_positions = editorpersistance.prefs.positions_tabs
+        tabs_pos = tabs_positions[position]
+    except:
+        editorpersistance.prefs.positions_tabs = DEFAULT_TABS_POSITIONS
+        editorpersistance.save()
+        tabs_positions = editorpersistance.prefs.positions_tabs
+        tabs_pos = tabs_positions[position]
+        
     if tabs_pos == UP:
         notebook.set_tab_pos(Gtk.PositionType.TOP)
     else:
