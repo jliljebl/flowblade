@@ -809,6 +809,7 @@ def load_dialog():
     dialog.set_title(_("Loading project"))
 
     info_label = Gtk.Label(label="")
+    info_label.set_ellipsize(Pango.EllipsizeMode.END)
     status_box = Gtk.HBox(False, 2)
     status_box.pack_start(info_label, False, False, 0)
     status_box.pack_start(Gtk.Label(), True, True, 0)
@@ -829,7 +830,7 @@ def load_dialog():
     alignment = guiutils.set_margins(progress_vbox, 12, 12, 12, 12)
 
     dialog.add(alignment)
-    dialog.set_default_size(400, 70)
+    dialog.set_default_size(500, 70)
     dialog.set_position(Gtk.WindowPosition.CENTER)
     dialog.show_all()
 
