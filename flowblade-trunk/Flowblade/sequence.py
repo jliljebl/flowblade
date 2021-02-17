@@ -1061,29 +1061,30 @@ class Sequence:
             index = track.get_clip_index_at(tline_frame)
             try:
                 clip = track.clips[index]
-                # We are looking for media clips only.
-                if clip.is_blanck_clip == True:
-                    clip = track.clips[index + 1] # no need to search, only one blank always between media clips.
-            except Exception:
-                continue # Frame after last clip in track
-
-
+                clip_start_in_tline = track.clip_start(index)
+                # We are looking for media clips only and after tline_frame.
+                while clip.is_blanck_clip == True or clip_start_in_tline < tline_frame:
+                    clip = track.clips[index + 1]
+                    clip_start_in_tline = track.clip_start(index + 1)
+                    index = index + 1
+            except Exception as e:
+                continue # No selectable clip on track after frame
 
             # Get next cut frame
             clip_start_in_tline = track.clip_start(index)
             length = clip.clip_out - clip.clip_in 
             next_cut_frame = clip_start_in_tline + length + 1 # +1 clip out inclusive
- 
+                     
             # Set cut frame
-            if cut_frame == -1:
+            if cut_frame == -1 and next_cut_frame > tline_frame:
                 cut_frame = next_cut_frame
                 clip_track = track
                 select_clip = clip
-            elif next_cut_frame < cut_frame:
+            elif next_cut_frame < cut_frame and next_cut_frame > tline_frame:
                 cut_frame = next_cut_frame
                 clip_track = track
                 select_clip = clip
-                
+
         return (select_clip, clip_track)
         
     def get_closest_cut_frame(self, track_id, frame):
