@@ -101,6 +101,26 @@ def load_shortcuts():
     _set_key_names()
     set_keyboard_shortcuts()
 
+def update_custom_shortcuts(xml_file):
+    # If new shortcuts have been added and user is using custom shortcuts when updating, we need to update customn shortcuts.
+    custom_files = os.listdir(userfolders.get_data_dir() + "/" + appconsts.USER_SHORTCUTS_DIR)
+    if not(xml_file in custom_files):
+        return
+
+    test_root = get_shortcuts_xml_root_node(xml_file)
+    def_root = get_shortcuts_xml_root_node(DEFAULT_SHORTCUTS_FILE)
+    
+    for code, action_name in _keyboard_action_names.items():
+        key_name_test, action_name = get_shortcut_info(test_root, code)
+        key_name_def, action_name = get_shortcut_info(def_root , code)
+        if key_name_test != key_name_def:
+            events = def_root.iter('event')
+            for event in events:
+                if event.get('code') == code:
+                    key_val_name = event.text
+                    mods_list = event.get('modifiers')                                
+                    change_custom_shortcut(code, key_val_name, [mods_list], True)
+    
 def set_keyboard_shortcuts():
     global _keyboard_actions, _editable
     prefs = editorpersistance.prefs
@@ -215,12 +235,21 @@ def delete_active_custom_shortcuts_xml():
     editorpersistance.prefs.shortcuts = DEFAULT_SHORTCUTS_FILE
     editorpersistance.save()
 
-def change_custom_shortcut(code, key_val_name, mods_list):
+def change_custom_shortcut(code, key_val_name, mods_list, add_event=False):
     shortcuts_file = _get_shortcut_file_fullpath(editorpersistance.prefs.shortcuts)
     shortcuts = etree.parse(shortcuts_file)
     root = shortcuts.getroot()
-    events = root.iter('event')
 
+    # Add new element if so ordered.
+    if add_event == True:
+        new_event = etree.Element("event")    
+        new_event.text = key_val_name
+        new_event.set('code', code)
+        shortcuts_node = root.find("shortcuts")
+        shortcuts_node.append(new_event)
+        
+    events = root.iter('event')
+    
     target_event = None
     for event in events:
         if event.get('code') == code:
@@ -251,7 +280,6 @@ def change_custom_shortcut(code, key_val_name, mods_list):
 
 def is_blocked_shortcut(key_val, mods_list):
     for reserved in RESERVED_SHORTCUTS:
-        print(reserved)
         r_key_val, r_mods_list = reserved
         if len(r_mods_list) == 0 and key_val == r_key_val:
             return True
@@ -304,7 +332,6 @@ def get_diff_to_defaults(xml_file):
     for code, action_name in _keyboard_action_names.items():
         key_name_test, action_name = get_shortcut_info(test_root, code)
         key_name_def, action_name = get_shortcut_info(def_root , code)
-    
         if key_name_def != key_name_test:
             diff_str = diff_str + action_name + " (" + key_name_test + ")    "
     
@@ -366,7 +393,9 @@ def _set_keyboard_action_names():
     _keyboard_action_names['open_next'] =  _("Open Next Media Item In Monitor")
     _keyboard_action_names['clear_filters'] = _("Clear Filters")
     _keyboard_action_names['sync_all'] = _("Sync All Compositors")
-
+    _keyboard_action_names['select_next'] = _("Open Next Clip In Filter Editor")
+    _keyboard_action_names['select_prev'] = _("Open Previous Clip In Filter Editor")
+    
 def _set_key_names():
     global _key_names, _mod_names, _gtk_mod_names
     # Start with an empty slate

@@ -448,6 +448,12 @@ def refresh_clip():
 
     _filter_stack.set_expanded(expanded_panels)
 
+def get_clip_editor_clip_data():
+    if _filter_stack == None:
+        return None
+    else:
+        return _filter_stack.get_clip_data()
+
 def clip_is_being_edited(clip):
     if _filter_stack == None:
         return False

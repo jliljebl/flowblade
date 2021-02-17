@@ -23,6 +23,7 @@ Module handles button presses from monitor control buttons row.
 """
 
 import appconsts
+import clipeffectseditor
 import dialogutils
 import editorpersistance
 import editorstate
@@ -282,6 +283,41 @@ def down_arrow_seek_on_monitor_clip():
 # -------------------------------------------------- monitor playback interpolation
 def set_monitor_playback_interpolation(new_interpolation):
     PLAYER().consumer.set("rescale", str(new_interpolation)) # MLT options "nearest", "bilinear", "bicubic", "hyper" hardcoded into menu items
+
+# -------------------------------------------------- selecting clips for filter editing
+def select_next_clip_for_filter_edit():
+    if not editorstate.timeline_visible():
+        updater.display_sequence_in_monitor()
+    tline_frame = PLAYER().tracktor_producer.frame() + 1
+
+    clip, track = current_sequence().find_next_editable_clip_and_track(tline_frame)
+    if clip == None:
+        return
+    
+    range_in = track.clips.index(clip)
+    frame = track.clip_start(range_in)
+
+    movemodes.select_clip(track.id, range_in)
+    PLAYER().seek_frame(frame)
+
+    clipeffectseditor.set_clip(clip, track, range_in)
+
+def select_prev_clip_for_filter_edit():
+    if not editorstate.timeline_visible():
+        updater.display_sequence_in_monitor()
+    tline_frame = PLAYER().tracktor_producer.frame() - 1
+
+    clip, track = current_sequence().find_prev_editable_clip_and_track(tline_frame)
+    if clip == None:
+        return
+    
+    range_in = track.clips.index(clip)
+    frame = track.clip_start(range_in)
+
+    movemodes.select_clip(track.id, range_in)
+    PLAYER().seek_frame(frame)
+
+    clipeffectseditor.set_clip(clip, track, range_in)
 
 # --------------------------------------------------------- trim view
 def trim_view_menu_launched(launcher, event):
