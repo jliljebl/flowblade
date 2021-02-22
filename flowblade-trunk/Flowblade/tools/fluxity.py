@@ -18,26 +18,94 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
-#script_running_stub = \
+import cairo
+import mlt
+import os
 
 
-def print_names(input_string):
-    #allowed_names = {"sum": sum}
-    code = compile(input_string, "<string>", "exec")
-    names = []
-    for name in code.co_names:
-        names.append(name)
-        #if name not in allowed_names:
-        #    raise NameError(f"Use of {name} not allowed")
+# Script displayed at Flowblade Script tool on init.
+DEFAULT_SCRIPT = \
+"""
+import cairo
+import mlt
 
-    try:
-        #eval(code)
-        namespace = {}
-        exec(code, namespace)
-        init_msg = namespace['init_script'](None)
-        #init_msg = init_script(None)
-        names.append(init_msg)
-    except Exception as e:
-        return "EORORORORO" + str(e)
+def init_script(fctx):
+    # Script init here
+    pass
+    print("klklkl")
+    return "init_script_done"
+
+def init_render(fctx):
+    # Render init here
+    pass
+ 
+def render_frame(frame, fctx):
+    # Render init here
+    cairo_surface = cairo.ImageSurface(cairo.Format.RGB24, 200, 200)
+"""
+
+# ---------------------------------------------------------- script object
+class FluxityScript:
     
-    return names
+    def __init__(self, script_str):
+        self.script = script_str
+        self.code = None
+        self.namespace = {}
+    
+    def compile_script(self):
+        try:
+            self.code = compile(self.script, "<fluxityscript>", "exec")
+        except Exception as e:
+            _raise_compile_error(str(e))
+        
+        code_names = sorted(self.code.co_names)
+        required_names = sorted(["init_script","init_render","render_frame"])
+        contains_all = all(elem in code_names for elem in required_names)
+        if contains_all == False:
+            _raise_fluxity_error("Functions names " + str(required_names) + " all required to be in script, you have: " + str(code_names))
+  
+        try:
+            exec(self.code, self.namespace)
+        except Exception as e:
+            _raise_exec_error(str(e))
+              
+    def call_render_frame(self, frame, fctx):
+        try:
+          self.namespace['render_frame'](frame, fctx)
+        except Exception as e:
+          _raise_fluxity_error("error calling function'render_frame()':\n\n" + str(e))
+
+
+# ---------------------------------------------------------- context object
+class FluxityContext:
+    
+    def __init__(self):
+        self.profile = None
+    
+    def load_profile(self, mlt_profile_path):
+        lines = []
+        with open(mlt_profile_path, "r") as f:
+            for line in f:
+                lines.append(line.strip())
+        
+        return lines
+
+
+        
+        
+
+# ---------------------------------------------------------- Errors 
+class FluxityError(Exception):
+
+    def __init__(self, msg):
+        self.message = msg
+        super().__init__(self.message)
+
+def _raise_fluxity_error(exception_msg):
+    raise FluxityError("Fluxity Error: " + exception_msg)
+    
+def _raise_compile_error(exception_msg):
+    raise FluxityError("Error compiling Fluxity script:\n" + exception_msg)
+
+def _raise_exec_error(exception_msg):
+    raise FluxityError("Error on doing exec() script code object:\n" + exception_msg)

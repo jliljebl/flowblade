@@ -83,6 +83,9 @@ _preview_render = None
 _frame_writer = None
 _effect_renderer = None
 
+
+_launch_profile_name = None
+
 _current_path = None
 _current_preview_surface = None
 _current_dimensions = None
@@ -103,7 +106,8 @@ def launch_scripttool(launch_data=None):
     gui.save_current_colors()
 
     # no args yet
-    args = None
+    args = ["profile_name:" + editorstate.PROJECT().profile.description()]
+
     #if launch_data != None:
     #    clip, track = launch_data # from guicomponwnts._get_tool_integration_menu_item()
     #    args = ("path:" + str(clip.path), "clip_in:" + str(clip.clip_in), "clip_out:" + str(clip.clip_out))
@@ -113,7 +117,7 @@ def launch_scripttool(launch_data=None):
     if args == None:
         subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladescripttool"], stdin=FLOG, stdout=FLOG, stderr=FLOG)
     else:
-        subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladescripttool", args[0], args[1], args[2]], stdin=FLOG, stdout=FLOG, stderr=FLOG)
+        subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladescripttool", args[0]], stdin=FLOG, stdout=FLOG, stderr=FLOG)
 
 def _get_arg_value(args, key_str):
     for arg in sys.argv:
@@ -141,7 +145,7 @@ def main(root_path, force_launch=False):
 
     # Write stdout to log file
     userfolders.init()
-    sys.stdout = open(userfolders.get_cache_dir() + "log_gmic", 'w')
+    sys.stdout = open(userfolders.get_cache_dir() + "log_scripttool", 'w')
 
     # Init gmic tool session dirs
     if os.path.exists(get_session_folder()):
@@ -213,12 +217,11 @@ def main(root_path, force_launch=False):
 
     # Start with a clip loaded if data provided
     if len(sys.argv) > 1:
-        path = _get_arg_value(sys.argv, "path")
-        mark_in = int(_get_arg_value(sys.argv, "clip_in"))
-        mark_out = int(_get_arg_value(sys.argv, "clip_out"))
-        global _startup_data
-        _startup_data = (path, mark_in, mark_out)
-        GLib.idle_add(_load_startup_data)
+        global _launch_profile_name
+        _launch_profile_name = _get_arg_value(sys.argv, "profile_name")
+
+    else:
+        print( len(sys.argv) , "kjokjkjkjkjkjkjkj")
         
     Gtk.main()
     Gdk.threads_leave()
@@ -401,10 +404,26 @@ def _render_script():
     buf = _window.script_view.get_buffer()
     script = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), False)
 
-    names = fluxity.print_names(script)
-    script = script + str(names)
+    try:
+        fscript = fluxity.FluxityScript(script)
+        fscript.compile_script()
+        if _launch_profile_name != None:
+            _profile_file_path = mltprofiles.get_profile_file_path(_launch_profile_name)
+        else:
+            _profile_file_path = None # we need to fail here
+        
+        fctx = fluxity.FluxityContext()
+        msg = str(fctx.load_profile(_profile_file_path))
+        
+        fscript.call_render_frame(1, None)
+        success = True
+    except Exception as e:
+        _window.out_view.get_buffer().set_text(str(e))
+        success = False
+    #script = script + str(names)
     
-    _window.out_view.get_buffer().set_text(script)
+    if success:
+        _window.out_view.get_buffer().set_text("success:\n" + script + msg)
     
 #-------------------------------------------------- menu
 def _hamburger_menu_callback(widget, msg):
@@ -779,9 +798,11 @@ class ScriptToolWindow(Gtk.Window):
         preset_row.pack_start(self.action_label, False, False, 0)
                 
         self.script_view = Gtk.TextView()
-        self.script_view.set_sensitive(False)
+        self.script_view.set_sensitive(True)
+        self.script_view.set_editable(True)
         self.script_view.set_pixels_above_lines(2)
         self.script_view.set_left_margin(2)
+        self.script_view.set_monospace(True)
         self.script_view.set_wrap_mode(Gtk.WrapMode.CHAR)
         
         script_sw = Gtk.ScrolledWindow()
@@ -793,6 +814,7 @@ class ScriptToolWindow(Gtk.Window):
         self.out_view.set_sensitive(False)
         self.out_view.set_pixels_above_lines(2)
         self.out_view.set_left_margin(2)
+        self.out_view.set_monospace(True)
         self.out_view.set_wrap_mode(Gtk.WrapMode.WORD)
         fd = Pango.FontDescription.from_string("Sans 8")
         self.out_view.override_font(fd)
@@ -836,7 +858,7 @@ class ScriptToolWindow(Gtk.Window):
         align = guiutils.set_margins(pane, 12, 12, 12, 12)
 
         script = gmicscript.get_default_script()
-        self.script_view.get_buffer().set_text(script.script)
+        self.script_view.get_buffer().set_text(fluxity.DEFAULT_SCRIPT)
         self.preset_label.set_text(script.name)
 
         self.update_encode_sensitive()
@@ -848,7 +870,7 @@ class ScriptToolWindow(Gtk.Window):
         self.add(align)
         self.set_title(_("Fluxity Scripting"))
         self.set_position(Gtk.WindowPosition.CENTER)
-        self.set_widgets_sensitive(False)
+        #self.set_widgets_sensitive(False)
         self.show_all()
         self.set_resizable(False)
         self.set_active_state(False)

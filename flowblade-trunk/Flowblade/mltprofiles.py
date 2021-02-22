@@ -114,6 +114,15 @@ def get_profile(profile_name):
         if profile_name == profile.description():
             return profile
     
+    return None
+
+def get_profile_file_path(profile_name):
+    profile = get_profile(profile_name)
+    if profile != None:
+        return profile.file_path
+    else:
+        return None
+
 def get_profile_for_index(index):
     profile_name, profile = _profile_list[index]
     return profile
