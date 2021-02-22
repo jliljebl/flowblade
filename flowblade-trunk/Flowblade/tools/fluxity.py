@@ -76,19 +76,65 @@ class FluxityScript:
           _raise_fluxity_error("error calling function'render_frame()':\n\n" + str(e))
 
 
+# ---------------------------------------------------------- mlt profile
+class FluxityProfile:
+
+    DESCRIPTION = "description"
+    FRAME_RATE_NUM = "frame_rate_num"
+    FRAME_RATE_DEN = "frame_rate_den"
+    WIDTH = "width"
+    HEIGHT = "height"
+    PROGRESSIVE = "progressive"
+    SAMPLE_ASPECT_NUM = "sample_aspect_num"
+    SAMPLE_ASPECT_DEN = "sample_aspect_den"
+    DISPLAY_ASPECT_NUM = "display_aspect_num"
+    DISPLAY_ASPECT_DEN = "display_aspect_den"
+    COLORSPACE = "colorspace"
+        
+    def __init__(self, profile_data):
+        self.profile_data = profile_data
+    
+    def get_profile_property(self, prop):
+        return self.profile_data[prop]
+
+def _read_profile_prop_from_lines(lines, prop):
+    for line in lines:
+        sides = line.split("=")
+        if sides[0] == prop:
+            return sides[1]
+
+    return None
+        
+
 # ---------------------------------------------------------- context object
 class FluxityContext:
     
     def __init__(self):
         self.profile = None
+        self.mlt_profile_path = None # We need a file for mlt.Profile so if one exits let's remember path
     
     def load_profile(self, mlt_profile_path):
         lines = []
         with open(mlt_profile_path, "r") as f:
             for line in f:
                 lines.append(line.strip())
+        data = {}
+        data[FluxityProfile.DESCRIPTION] = _read_profile_prop_from_lines(lines, FluxityProfile.DESCRIPTION)
+        data[FluxityProfile.FRAME_RATE_NUM] = _read_profile_prop_from_lines(lines, FluxityProfile.FRAME_RATE_NUM)
+        data[FluxityProfile.FRAME_RATE_DEN] = _read_profile_prop_from_lines(lines, FluxityProfile.FRAME_RATE_DEN)
+        data[FluxityProfile.WIDTH] = _read_profile_prop_from_lines(lines, FluxityProfile.WIDTH)
+        data[FluxityProfile.HEIGHT] = _read_profile_prop_from_lines(lines, FluxityProfile.HEIGHT)
+        data[FluxityProfile.PROGRESSIVE] = _read_profile_prop_from_lines(lines, FluxityProfile.PROGRESSIVE)
+        data[FluxityProfile.SAMPLE_ASPECT_NUM] = _read_profile_prop_from_lines(lines, FluxityProfile.SAMPLE_ASPECT_NUM)
+        data[FluxityProfile.SAMPLE_ASPECT_DEN] = _read_profile_prop_from_lines(lines, FluxityProfile.SAMPLE_ASPECT_DEN)
+        data[FluxityProfile.DISPLAY_ASPECT_NUM] = _read_profile_prop_from_lines(lines, FluxityProfile.DISPLAY_ASPECT_NUM)
+        data[FluxityProfile.DISPLAY_ASPECT_DEN] = _read_profile_prop_from_lines(lines, FluxityProfile.DISPLAY_ASPECT_DEN)
+        data[FluxityProfile.COLORSPACE] = _read_profile_prop_from_lines(lines, FluxityProfile.COLORSPACE)
+
+        self.profile = FluxityProfile(data)
+        self.mlt_profile_path = mlt_profile_path
         
-        return lines
+        return self.profile.profile_data
 
 
         
