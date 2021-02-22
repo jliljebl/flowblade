@@ -1343,11 +1343,22 @@ class TextLayerListView(Gtk.VBox):
                 visible_icon = self.eye_icon
             else:
                 visible_icon = None 
-            row_data = [self.layer_icon, layer.text, visible_icon]
+            #row_data = [self.layer_icon, layer.text, visible_icon]
+            text = self.find_char_in_text(layer.text)
+            row_data = [self.layer_icon, text, visible_icon]
             self.storemodel.append(row_data)
         
         self.scroll.queue_draw()
         _filling_layer_list = False
+
+    def find_char_in_text(self, text):
+        while text.find(" ") == 0 or text.find("\n") == 0:
+            text = text[1:]
+        line_end =text.find("\n")
+        if  line_end != -1:
+            text = text[:line_end]
+        return text
+        
 
 
 class OpenFileThread(threading.Thread):
