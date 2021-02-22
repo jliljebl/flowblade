@@ -1,6 +1,6 @@
 """
     Flowblade Movie Editor is a nonlinear video editor.
-    Copyright 2012 Janne Liljeblad.
+    Copyright 2021 Janne Liljeblad.
 
     This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
 
@@ -44,6 +44,7 @@ import cairoarea
 import dialogutils
 import editorstate
 import editorpersistance
+import fluxity
 import gui
 import guicomponents
 import guiutils
@@ -73,7 +74,6 @@ RENDER_FRAMES_DIR = "/render_frames"
 PREVIEW_FILE = "preview.png"
 NO_PREVIEW_FILE = "fallback_thumb.png"
 
-_gmic_found = False
 _session_id = None
 
 _window = None
@@ -205,7 +205,7 @@ def main(root_path, force_launch=False):
     gui.load_current_colors()
     
     global _window
-    _window = GmicWindow()
+    _window = ScriptToolWindow()
     _window.pos_bar.set_dark_bg_color()
 
     os.putenv('SDL_WINDOWID', str(_window.monitor.get_window().get_xid()))
@@ -377,7 +377,7 @@ def _save_script_dialog_callback(dialog, response_id):
         dialog.destroy()
 
 def load_script_dialog(callback):
-    dialog = Gtk.FileChooserDialog(_("Load Gmic Script"), None, 
+    dialog = Gtk.FileChooserDialog(_("Load Fluxity Script"), None, 
                                    Gtk.FileChooserAction.OPEN, 
                                    (_("Cancel"), Gtk.ResponseType.CANCEL,
                                     _("OK"), Gtk.ResponseType.ACCEPT))
@@ -396,10 +396,22 @@ def _load_script_dialog_callback(dialog, response_id):
     else:
         dialog.destroy()
 
+
+def _render_script():
+    buf = _window.script_view.get_buffer()
+    script = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), False)
+
+    names = fluxity.print_names(script)
+    script = script + str(names)
+    
+    _window.out_view.get_buffer().set_text(script)
+    
 #-------------------------------------------------- menu
 def _hamburger_menu_callback(widget, msg):
-    if msg == "load":
-        open_clip_dialog()
+    if msg == "load_script":
+        load_script_dialog(_load_script_dialog_callback)
+    elif msg == "render_script":
+        _render_script()
     elif msg == "close":
         _shutdown()
     elif msg == "docs":
@@ -542,7 +554,7 @@ def _shutdown():
 
 
 #------------------------------------------------- window
-class GmicWindow(Gtk.Window):
+class ScriptToolWindow(Gtk.Window):
     def __init__(self):
         GObject.GObject.__init__(self)
         self.connect("delete-event", lambda w, e:_shutdown())
@@ -893,7 +905,8 @@ class GmicWindow(Gtk.Window):
         menu = _hamburger_menu
         guiutils.remove_children(menu)
         
-        menu.add(_get_menu_item(_("Load Clip") + "...", _hamburger_menu_callback, "load" ))
+        menu.add(_get_menu_item(_("Load Script") + "...", _hamburger_menu_callback, "load_script" ))
+        menu.add(_get_menu_item(_("Render Script") + "...", _hamburger_menu_callback, "render_script" ))
         menu.add(_get_menu_item(_("G'Mic Webpage"), _hamburger_menu_callback, "docs" ))
         _add_separetor(menu)
         menu.add(_get_menu_item(_("Close"), _hamburger_menu_callback, "close" ))
