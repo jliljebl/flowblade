@@ -1343,7 +1343,6 @@ class TextLayerListView(Gtk.VBox):
                 visible_icon = self.eye_icon
             else:
                 visible_icon = None 
-            #row_data = [self.layer_icon, layer.text, visible_icon]
             text = self.find_char_in_text(layer.text)
             row_data = [self.layer_icon, text, visible_icon]
             self.storemodel.append(row_data)
