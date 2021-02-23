@@ -169,6 +169,7 @@ CC_CLIP_FRAMES_DIR = "/clip_frames"
 CC_RENDERED_FRAMES_DIR = "/rendered_frames"
 CC_PREVIEW_RENDER_DIR = "/preview_frames"
 USER_SHORTCUTS_DIR =  "user_shortcuts/"
+SCRIP_TOOL_DIR = "scriptool"
 
 # Luma bands
 SHADOWS = 0

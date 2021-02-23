@@ -65,7 +65,7 @@ import userfolders
 import utils
 
 import gmicplayer
-import gmicscript
+#import gmicscript
 
 MONITOR_WIDTH = 500
 MONITOR_HEIGHT = 300 # initial value, this gets changed when material is loaded
@@ -83,6 +83,10 @@ _preview_render = None
 _frame_writer = None
 _effect_renderer = None
 
+# Script length and in out marks. These can be modifies from GUI or rendered script.
+_script_length = fluxity.DEFAULT_LENGTH
+_mark_in = 0 # inclusive
+_mark_out = 199 # inclusive
 
 _launch_profile_name = None
 
@@ -147,7 +151,7 @@ def main(root_path, force_launch=False):
     userfolders.init()
     sys.stdout = open(userfolders.get_cache_dir() + "log_scripttool", 'w')
 
-    # Init gmic tool session dirs
+    # Init script tool session dirs
     if os.path.exists(get_session_folder()):
         shutil.rmtree(get_session_folder())
         
@@ -164,7 +168,7 @@ def main(root_path, force_launch=False):
     mlttransitions.init_module()
 
     # Load preset gmic scripts
-    gmicscript.load_preset_scripts_xml()
+    #gmicscript.load_preset_scripts_xml()
 
     # Init gtk threads
     Gdk.threads_init()
@@ -211,6 +215,7 @@ def main(root_path, force_launch=False):
     global _window
     _window = ScriptToolWindow()
     _window.pos_bar.set_dark_bg_color()
+    _window.update_marks_display()
 
     os.putenv('SDL_WINDOWID', str(_window.monitor.get_window().get_xid()))
     Gdk.flush()
@@ -246,7 +251,7 @@ def init_frames_dirs():
 
 #----------------------------------------------- session folders and files
 def get_session_folder():
-    return userfolders.get_cache_dir() + appconsts.GMIC_DIR + "/session_" + str(_session_id)
+    return userfolders.get_cache_dir() + appconsts.SCRIP_TOOL_DIR + "/session_" + str(_session_id)
 
 def get_clip_frames_dir():
     return get_session_folder() + CLIP_FRAMES_DIR
@@ -344,9 +349,9 @@ def _finish_clip_open():
 
 
 #-------------------------------------------------- script setting and save/load
-def script_menu_lauched(launcher, event):
-    gmicscript.show_menu(event, script_menu_item_selected)
-
+#def script_menu_lauched(launcher, event):
+#    gmicscript.show_menu(event, script_menu_item_selected)
+"""
 def script_menu_item_selected(item, script):
     if _window.action_select.get_active() == False:
         _window.script_view.get_buffer().set_text(script.script)
@@ -354,6 +359,7 @@ def script_menu_item_selected(item, script):
         buf = _window.script_view.get_buffer()
         buf.insert(buf.get_end_iter(), " " + script.script)
     _window.preset_label.set_text(script.name)
+"""
 
 def save_script_dialog(callback):
     dialog = Gtk.FileChooserDialog(_("Save Gmic Script As"), None, 
@@ -681,9 +687,11 @@ class ScriptToolWindow(Gtk.Window):
         self.mark_out_label = guiutils.bold_label(_("Mark Out:"))
         self.length_label = guiutils.bold_label(_("Length:"))
 
-        self.mark_in_info = Gtk.Label("-")
-        self.mark_out_info = Gtk.Label("-")
-        self.length_info = Gtk.Label("-")
+        self.mark_in_info = Gtk.Label("")
+        self.mark_out_info = Gtk.Label("")
+        self.length_info = Gtk.Label("")
+        
+        #self.update_length_and_marks_info()
 
         in_row = guiutils.get_two_column_box(self.mark_in_label, self.mark_in_info, 150)
         out_row = guiutils.get_two_column_box(self.mark_out_label, self.mark_out_info, 150)
@@ -780,22 +788,22 @@ class ScriptToolWindow(Gtk.Window):
         self.preset_label = Gtk.Label()
         self.present_event_box = Gtk.EventBox()
         self.present_event_box.add(self.preset_label)
-        self.present_event_box.connect("button-press-event",  script_menu_lauched)
+        #self.present_event_box.connect("button-press-event",  script_menu_lauched)
 
-        self.script_menu = toolguicomponents.PressLaunch(script_menu_lauched)
+        #self.script_menu = toolguicomponents.PressLaunch(script_menu_lauched)
         
         self.action_select = Gtk.CheckButton()
         self.action_select.set_active(False)
                 
-        self.action_label = Gtk.Label(_("Add to Script"))
+        #self.action_label = Gtk.Label(_("Add to Script"))
 
-        preset_row = Gtk.HBox(False, 2)
-        preset_row.pack_start(self.present_event_box, False, False, 0)
-        preset_row.pack_start(self.script_menu.widget, False, False, 0)
-        preset_row.pack_start(guiutils.pad_label(2, 30), False, False, 0)
-        preset_row.pack_start(Gtk.Label(), True, True, 0)
-        preset_row.pack_start(self.action_select, False, False, 0)
-        preset_row.pack_start(self.action_label, False, False, 0)
+        #preset_row = Gtk.HBox(False, 2)
+        #preset_row.pack_start(self.present_event_box, False, False, 0)
+        #preset_row.pack_start(self.script_menu.widget, False, False, 0)
+        #preset_row.pack_start(guiutils.pad_label(2, 30), False, False, 0)
+        #preset_row.pack_start(Gtk.Label(), True, True, 0)
+        #preset_row.pack_start(self.action_select, False, False, 0)
+        #preset_row.pack_start(self.action_label, False, False, 0)
                 
         self.script_view = Gtk.TextView()
         self.script_view.set_sensitive(True)
@@ -825,10 +833,10 @@ class ScriptToolWindow(Gtk.Window):
         out_sw.set_size_request(MONITOR_WIDTH - 150, 100)
         
         script_vbox = Gtk.VBox(False, 2)
-        script_vbox.pack_start(preset_row, False, False, 0)
+        #script_vbox.pack_start(preset_row, False, False, 0)
         script_vbox.pack_start(script_sw, True, True, 0)
         script_vbox.pack_start(out_sw, True, True, 0)
-
+        script_vbox.set_margin_right(4)
 
         # ------------------------------------------------------------ EDITOR BUTTONS ROW
         # ------------------------------------------------------------ EDITOR BUTTONS ROW
@@ -857,9 +865,9 @@ class ScriptToolWindow(Gtk.Window):
 
         align = guiutils.set_margins(pane, 12, 12, 12, 12)
 
-        script = gmicscript.get_default_script()
+        #script = gmicscript.get_default_script()
         self.script_view.get_buffer().set_text(fluxity.DEFAULT_SCRIPT)
-        self.preset_label.set_text(script.name)
+        #self.preset_label.set_text(script.name)
 
         self.update_encode_sensitive()
 
@@ -882,20 +890,18 @@ class ScriptToolWindow(Gtk.Window):
         self.media_info.set_markup("<small>" + os.path.basename(clip_path) + ", " + profile_name + "</small>")
 
     def update_marks_display(self):
-        if _player.producer.mark_in == -1:
+
+        if _mark_in == -1:
             self.mark_in_info.set_text("-")
         else:
-            self.mark_in_info.set_text(utils.get_tc_string_with_fps(_player.producer.mark_in, _current_fps))
+            self.mark_in_info.set_text(str(_mark_in))
         
-        if  _player.producer.mark_out == -1:
+        if _mark_out == -1:
             self.mark_out_info.set_text("-")
         else:
-            self.mark_out_info.set_text(utils.get_tc_string_with_fps(_player.producer.mark_out + 1, _current_fps))
+            self.mark_out_info.set_text(str(_mark_out))
 
-        if _player.producer.mark_in == -1 or  _player.producer.mark_out == -1:
-            self.length_info.set_text("-")
-        else:
-            self.length_info.set_text(str(_player.producer.mark_out - _player.producer.mark_in + 1) + " " + _("frames"))
+        self.length_info.set_text(str(_script_length) + " " + _("frames"))
 
         self.mark_in_info.queue_draw()
         self.mark_out_info.queue_draw()
@@ -1020,7 +1026,7 @@ class ScriptToolWindow(Gtk.Window):
         self.out_label.set_sensitive(value)
         self.media_info.set_sensitive(value)
         self.present_event_box.set_sensitive(value)
-        self.script_menu.set_sensitive(value)
+        #self.script_menu.set_sensitive(value)
  
         self.update_encode_sensitive()
 

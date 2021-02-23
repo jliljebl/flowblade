@@ -22,6 +22,8 @@ import cairo
 import mlt
 import os
 
+# Default length in frames for script duration
+DEFAULT_LENGTH = 200
 
 # Script displayed at Flowblade Script tool on init.
 DEFAULT_SCRIPT = \

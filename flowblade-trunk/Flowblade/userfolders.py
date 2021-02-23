@@ -176,7 +176,8 @@ def _maybe_create_xdg_dirs():
         os.mkdir(get_cache_dir() + appconsts.BATCH_DIR)
     if not os.path.exists(get_hidden_screenshot_dir_path()):
         os.mkdir(get_hidden_screenshot_dir_path())
-
+    if not os.path.exists(get_cache_dir() + appconsts.SCRIP_TOOL_DIR):
+        os.mkdir(get_cache_dir() + appconsts.SCRIP_TOOL_DIR)
 
 # --------------------------------------------------------------- copying existing data to XDG folders
 class XDGCopyThread(threading.Thread):
