@@ -415,7 +415,7 @@ def _render_script():
         fctx = fluxity.FluxityContext()
         msg = str(fctx.load_profile(_profile_file_path))
         
-        fscript.call_render_frame(1, None)
+        fscript.call_render_frame(1, fctx)
         success = True
     except Exception as e:
         _window.out_view.get_buffer().set_text(str(e))
