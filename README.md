@@ -1,6 +1,6 @@
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
-*Poject on break until late March.**
+**Project on break until late March.**
 
 **NEW RELEASE 2.8 IS OUT NOW.**
 
