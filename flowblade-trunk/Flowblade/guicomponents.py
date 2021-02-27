@@ -3569,10 +3569,10 @@ class KBShortcutEditor:
 
 
 def get_profiles_combo():
-    return ModelComboBox(mltprofiles._categorized_profiles)
+    return CategoriesModelComboBox(mltprofiles._categorized_profiles)
 
 
-class ModelComboBox:
+class CategoriesModelComboBox:
     
     def __init__(self, categories_list):
         self.categories_list = categories_list # categories_list is list of form [("category_name", [category_items]), ...]

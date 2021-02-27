@@ -414,7 +414,9 @@ def _new_project_dialog_callback(dialog, response_id, profile_combo, tracks_sele
     v_tracks, a_tracks = tracks_select.get_tracks()
     
     if response_id == Gtk.ResponseType.ACCEPT:
-        app.new_project(profile_combo.get_active(), v_tracks, a_tracks)
+        profile_name = profile_combo.get_selected()
+        profile_index = mltprofiles.get_index_for_name(profile_name)
+        app.new_project(profile_index, v_tracks, a_tracks)
         dialog.destroy()
         project_event = projectdata.ProjectEvent(projectdata.EVENT_CREATED_BY_NEW_DIALOG, None)
         PROJECT().events.append(project_event)
