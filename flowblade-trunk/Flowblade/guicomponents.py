@@ -3566,3 +3566,61 @@ class KBShortcutEditor:
             primary_txt = _("Reserved Shortcut!")
             secondary_txt = "'" + error + "'" +  _(" is a reserved keyboard shortcut and\ncannot be set as a custom shortcut.")
             dialogutils.warning_message(primary_txt, secondary_txt, self.dialog_window )
+
+
+def get_profiles_combo():
+    profiles_model = Gtk.TreeStore.new([str])
+    text_col_1 = Gtk.TreeViewColumn("text1")
+    """
+            self.text_col_2 = Gtk.TreeViewColumn("text2")
+
+            # Cell renderers
+            self.icon_rend = Gtk.CellRendererPixbuf()
+            self.icon_rend.props.xpad = 6
+
+            self.text_rend_1 = Gtk.CellRendererText()
+            self.text_rend_1.set_property("ellipsize", Pango.EllipsizeMode.END)
+
+            self.text_rend_2 = Gtk.CellRendererText()
+            self.text_rend_2.set_property("yalign", 0.0)
+
+            # Build column views
+            self.icon_col.set_expand(False)
+            self.icon_col.set_spacing(5)
+            self.icon_col.pack_start(self.icon_rend, False)
+            self.icon_col.add_attribute(self.icon_rend, 'pixbuf', 0)
+    """
+    """
+    text_rend_1 = Gtk.CellRendererText()
+    text_rend_1.set_property("ellipsize", Pango.EllipsizeMode.END)
+    
+    text_col_1.set_expand(True)
+    text_col_1.set_spacing(5)
+    text_col_1.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
+    text_col_1.set_min_width(150)
+    text_col_1.pack_start(text_rend_1, True)
+    text_col_1.add_attribute(text_rend_1, "text", 1)
+
+    profiles_model.append_column(text_col_1)
+    """
+    
+    profiles_model.append(None,["yksi"])
+    profiles_model.append(None,["kaksi"])
+    yksi_root = profiles_model.get_iter_first()
+    profiles_model.append(yksi_root,["yksi-yksi"])
+    profiles_model.append(yksi_root,["yksi-kaksi"])
+
+    #tree = Gtk.TreeView(model=profiles_model)
+    #renderer = Gtk.CellRendererText()
+    #column = Gtk.TreeViewColumn("Title", renderer, text=0)
+    #tree.append_column(column)
+
+    return ModelComboBox(profiles_model)
+    
+class ModelComboBox:
+    
+    def __init__(self, model):
+        self.widget = Gtk.ComboBox.new_with_model(model)
+        renderer_text = Gtk.CellRendererText()
+        self.widget.pack_start(renderer_text, True)
+        self.widget.add_attribute(renderer_text, "text", 0)

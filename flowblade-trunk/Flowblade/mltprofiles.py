@@ -39,13 +39,15 @@ _profile_list = []
 _factory_profiles = []
 _hidden_factory_profiles = []
 _user_profiles = []
+_categorized_profiles = []
 
 def load_profile_list():
     """ 
     Creates a list of MLT profile objects.
     Called at app start.
     """
-    global _profile_list,_factory_profiles, _hidden_factory_profiles, _user_profiles, _proxy_profiles
+    global _profile_list,_factory_profiles, _hidden_factory_profiles, \
+    _user_profiles, _proxy_profiles, _categorized_profiles
 
     user_profiles_dir = userfolders.get_data_dir() + USER_PROFILES_DIR
     _user_profiles = _load_profiles_list(user_profiles_dir)
@@ -57,6 +59,29 @@ def load_profile_list():
     _factory_profiles.sort(key=_sort_profiles)
     _hidden_factory_profiles.sort(key=_sort_profiles)
     _user_profiles.sort(key=_sort_profiles)
+
+    # Build catogórized representation of available profiles.
+    HD_profiles = []
+    UHD_profiles = []
+    SD_profiles = []
+    MISC_profiles = []
+    #print(_profile_list)
+    for prof in _profile_list:
+        desc, mlt_profile = prof
+        if desc.startswith("HD") and not desc.startswith("HDV") :
+            HD_profiles.append(desc)
+        elif desc.startswith("4K") or desc.startswith("DCI 4K"):
+            UHD_profiles.append(desc)
+        elif desc.startswith("DV/DVD"):
+            SD_profiles.append(desc)            
+        else:
+            MISC_profiles.append(desc)
+    
+    _categorized_profiles.append(("HD", HD_profiles))
+    _categorized_profiles.append(("4K", UHD_profiles))
+    _categorized_profiles.append(("SD", SD_profiles))
+    _categorized_profiles.append(("Misc.", MISC_profiles))
+    _categorized_profiles.append(("User Custom", _user_profiles))
 
 def _load_profiles_list(dir_path):
     load_profiles = []
