@@ -76,11 +76,16 @@ def load_profile_list():
         else:
             OTHER_profiles.append(desc)
     
-    _categorized_profiles.append(("HD", HD_profiles))
-    _categorized_profiles.append(("4K", UHD_profiles))
-    _categorized_profiles.append(("SD", SD_profiles))
-    _categorized_profiles.append(("Other", OTHER_profiles))
-    _categorized_profiles.append(("User Custom", _user_profiles))
+    if len(HD_profiles) > 0:
+        _categorized_profiles.append(("HD", HD_profiles))
+    if len(UHD_profiles) > 0:
+        _categorized_profiles.append(("4K", UHD_profiles))
+    if len(SD_profiles) > 0:
+        _categorized_profiles.append(("SD", SD_profiles))
+    if len(OTHER_profiles) > 0:
+        _categorized_profiles.append(("Other", OTHER_profiles))
+    if len(_user_profiles) > 0:
+        _categorized_profiles.append(("User Custom", _user_profiles))
 
 def _load_profiles_list(dir_path):
     load_profiles = []

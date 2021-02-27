@@ -130,14 +130,15 @@ def change_profile_project_dialog(project, callback):
 
     info_label = guiutils.bold_label(_("Project Profile can only changed by saving a version\nwith different profile."))
 
-    out_profile_combo = Gtk.ComboBoxText()
-    profiles = mltprofiles.get_profiles()
-    for profile in profiles:
-        out_profile_combo.append_text(profile[0])
+    default_desc = mltprofiles.get_profile_name_for_index(mltprofiles.get_default_profile_index())
+    default_profile = mltprofiles.get_default_profile()
 
-    out_profile_combo.set_active(default_profile_index)
+
+    out_profile_combo = guicomponents.get_profiles_combo()
+    out_profile_combo.set_selected(default_desc)
+    
     profile_select = panels.get_two_column_box(Gtk.Label(label=_("Project profile:")),
-                                               out_profile_combo,
+                                               out_profile_combo.widget,
                                                250)
 
     profile_info_panel = guicomponents.get_profile_info_box(default_profile, False)
@@ -159,7 +160,7 @@ def change_profile_project_dialog(project, callback):
     name_box = Gtk.HBox(False, 8)
     name_box.pack_start(project_name_entry, True, True, 0)
 
-    movie_name_row =  panels.get_two_column_box(Gtk.Label(label=_("Project Name:")), name_box,  250)
+    movie_name_row = panels.get_two_column_box(Gtk.Label(label=_("Project Name:")), name_box,  250)
 
     new_file_vbox = guiutils.get_vbox([out_folder_row, movie_name_row], False)
 
@@ -171,9 +172,9 @@ def change_profile_project_dialog(project, callback):
     dialogutils.set_outer_margins(dialog.vbox)
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
-    dialog.connect('response', callback, out_profile_combo, out_folder, project_name_entry)#, project_type_combo,
-                   #project_folder, compact_name_entry)
-    out_profile_combo.connect('changed', lambda w: _new_project_profile_changed(w, profile_info_box))
+    dialog.connect('response', callback, out_profile_combo, out_folder, project_name_entry)
+    
+    out_profile_combo.widget.connect('changed', lambda w: _new_project_profile_changed(out_profile_combo, profile_info_box))
     dialog.show_all()
 
 def change_profile_project_to_match_media_dialog(project, media_file, callback):

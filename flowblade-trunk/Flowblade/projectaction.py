@@ -604,7 +604,8 @@ def _change_project_profile_callback(dialog, response_id, profile_combo, out_fol
         ou = out_folder.get_filename()
         folder = ("/" + ou.lstrip("file:/"))
         name = project_name_entry.get_text()
-        profile = mltprofiles.get_profile_for_index(profile_combo.get_active())
+        profile_name = profile_combo.get_selected()
+        profile = mltprofiles.get_profile(profile_name)
         path = (folder + "/" + name)
 
         PROJECT().update_media_lengths_on_load = True # saved version needs to do this
