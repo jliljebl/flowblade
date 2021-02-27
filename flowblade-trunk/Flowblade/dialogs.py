@@ -54,7 +54,7 @@ shortcuts_combo = None
 scroll_hold_panel = None
 
 def new_project_dialog(callback):
-    default_profile_index = mltprofiles.get_default_profile_index()
+    default_desc = mltprofiles.get_profile_name_for_index(mltprofiles.get_default_profile_index())
     default_profile = mltprofiles.get_default_profile()
 
     dialog = Gtk.Dialog(_("New Project"), gui.editor_window.window,
@@ -62,13 +62,9 @@ def new_project_dialog(callback):
                         (_("Cancel"), Gtk.ResponseType.REJECT,
                          _("OK"), Gtk.ResponseType.ACCEPT))
 
-    out_profile_combo = Gtk.ComboBoxText()
-    profiles = mltprofiles.get_profiles()
-    for profile in profiles:
-        out_profile_combo.append_text(profile[0])
-
-    out_profile_combo.set_active(default_profile_index)
     out_profile_combo = guicomponents.get_profiles_combo()
+    out_profile_combo.set_selected(default_desc)
+    
     profile_select = panels.get_two_column_box(Gtk.Label(label=_("Project profile:")),
                                                out_profile_combo.widget,
                                                250)
@@ -93,7 +89,7 @@ def new_project_dialog(callback):
     _default_behaviour(dialog)
     dialog.connect('response', callback, out_profile_combo, tracks_select)
                    
-    #out_profile_combo.connect('changed', lambda w: _new_project_profile_changed(w, profile_info_box))
+    out_profile_combo.widget.connect('changed', lambda w: _new_project_profile_changed(out_profile_combo, profile_info_box))
     dialog.show_all()
 
 def xdg_copy_dialog():
@@ -109,8 +105,9 @@ def xdg_copy_dialog():
     dialog.show_all()
     return dialog
 
-def _new_project_profile_changed(combo_box, profile_info_box):
-    profile = mltprofiles.get_profile_for_index(combo_box.get_active())
+def _new_project_profile_changed(out_profile_combo, profile_info_box):
+    profile_name = out_profile_combo.get_selected()
+    profile = mltprofiles.get_profile(profile_name)
 
     info_box_children = profile_info_box.get_children()
     for child in info_box_children:
