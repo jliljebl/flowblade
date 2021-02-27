@@ -68,8 +68,9 @@ def new_project_dialog(callback):
         out_profile_combo.append_text(profile[0])
 
     out_profile_combo.set_active(default_profile_index)
+    out_profile_combo = guicomponents.get_profiles_combo()
     profile_select = panels.get_two_column_box(Gtk.Label(label=_("Project profile:")),
-                                               out_profile_combo,
+                                               out_profile_combo.widget,
                                                250)
 
     profile_info_panel = guicomponents.get_profile_info_box(default_profile, False)
@@ -92,7 +93,7 @@ def new_project_dialog(callback):
     _default_behaviour(dialog)
     dialog.connect('response', callback, out_profile_combo, tracks_select)
                    
-    out_profile_combo.connect('changed', lambda w: _new_project_profile_changed(w, profile_info_box))
+    #out_profile_combo.connect('changed', lambda w: _new_project_profile_changed(w, profile_info_box))
     dialog.show_all()
 
 def xdg_copy_dialog():
