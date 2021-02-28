@@ -547,19 +547,15 @@ class PresetEncodingsSelector():
 
 class ProfileSelector():
     def __init__(self, out_profile_changed_callback=None):
-        self.widget = Gtk.ComboBoxText() # filled later when current sequence known
+        self.categories_combo = guicomponents.get_profiles_combo()
+        self.widget = self.categories_combo.widget
         if out_profile_changed_callback != None:
-            self.widget.connect('changed', lambda w:  out_profile_changed_callback())
+            self.widget.connect('changed', lambda w:  out_profile_changed_callback(self.categories_combo))
         self.widget.set_sensitive(False)
         self.widget.set_tooltip_text(_("Select render profile"))
         
     def fill_options(self):
-        self.widget.get_model().clear()
-        self.widget.append_text(current_sequence().profile.description())
-        profiles = mltprofiles.get_profiles()
-        for profile in profiles:
-            self.widget.append_text(profile[0])
-        self.widget.set_active(0)
+        self.categories_combo.set_selected(current_sequence().profile.description())
 
 
 class ProfileInfoBox(Gtk.VBox):
@@ -610,7 +606,6 @@ def get_render_panel_left(render_widgets):
     return render_panel
 
 def get_render_panel_right(render_widgets, render_clicked_cb, to_queue_clicked_cb):
-
 
     if editorstate.SCREEN_HEIGHT < 900:
         encoding_panel = guiutils.get_named_frame(_("Encoding Format"), render_widgets.encoding_panel.vbox, 4)
@@ -725,7 +720,8 @@ class RenderProfilePanel():
         self.use_project_profile_check.set_active(True)
         self.use_project_profile_check.connect("toggled", self.use_project_check_toggled)
 
-        self.out_profile_combo = ProfileSelector(out_profile_changed_callback)
+        self.out_profile_combo = ProfileSelector(out_profile_changed_callback) # this is actually not a combobox,
+                                                                               # but a panel containing combobox.
         
         self.out_profile_info_box = ProfileInfoBox() # filled later when current sequence known
         
@@ -752,7 +748,7 @@ class RenderProfilePanel():
     def use_project_check_toggled(self, checkbutton):
         self.out_profile_combo.widget.set_sensitive(checkbutton.get_active() == False)
         if checkbutton.get_active() == True:
-            self.out_profile_combo.widget.set_active(0)
+            self.out_profile_combo.categories_combo.set_selected(current_sequence().profile.description())
         
 
 class RenderEncodingPanel():

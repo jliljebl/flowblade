@@ -3586,7 +3586,6 @@ class CategoriesModelComboBox:
                 category_iter = self.model.get_iter_from_string(str(i))
                 self.model.append(category_iter, [item_name])
 
-            
         self.widget = Gtk.ComboBox.new_with_model(self.model)
         renderer_text = Gtk.CellRendererText()
         self.widget.pack_start(renderer_text, True)

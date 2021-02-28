@@ -238,6 +238,7 @@ def save_render_start_time():
     render_start_time = time.time()
 
 """
+FIXME: delete this and above
 def set_render_progress_gui(fraction):
     progress_window.progress_bar.set_fraction(fraction)
     pros = int(fraction * 100)
@@ -289,12 +290,8 @@ def maybe_open_rendered_file_in_bin():
     open_media_file_callback(file_path)
 
 def get_current_profile():
-    profile_index = widgets.profile_panel.out_profile_combo.widget.get_active()
-    if profile_index == 0:
-        # project_profile is first selection in combo box
-        profile = PROJECT().profile
-    else:
-        profile = mltprofiles.get_profile_for_index(profile_index - 1)
+    profile_desc = widgets.profile_panel.out_profile_combo.categories_combo.get_selected()
+    profile = mltprofiles.get_profile(profile_desc)
     return profile
 
 def fill_out_profile_widgets():
@@ -323,13 +320,11 @@ def _render_type_changed():
             widgets.args_panel.opts_view.set_sensitive(False)
             widgets.args_panel.opts_view.get_buffer().set_text("")
 
-def _out_profile_changed():
-    selected_index = widgets.profile_panel.out_profile_combo.widget.get_active()
-    if selected_index == 0:
-        _fill_info_box(current_sequence().profile)
-    else:
-        profile = mltprofiles.get_profile_for_index(selected_index - 1)
-        _fill_info_box(profile)
+def _out_profile_changed(categories_combo):
+    # FIXME: 'out_profile_combo' is actually the panel containing the combobox
+    profile_desc = widgets.profile_panel.out_profile_combo.categories_combo.get_selected()
+    profile = mltprofiles.get_profile(profile_desc)
+    _fill_info_box(profile)
 
 def _fill_info_box(profile):
     info_panel = guicomponents.get_profile_info_small_box(profile)
