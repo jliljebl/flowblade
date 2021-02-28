@@ -506,11 +506,9 @@ class RenderAudioRateSelector():
 class RenderEncodingSelector():
 
     def __init__(self, quality_selector, extension_label, audio_desc_label):
-        self.widget = Gtk.ComboBoxText()
-        for encoding in renderconsumer.encoding_options:
-            self.widget.append_text(encoding.name)
-            
-        self.widget.set_active(0)
+        self.categorised_combo = guicomponents.get_encodings_combo()
+        self.widget = self.categorised_combo.widget
+        self.categorised_combo.set_selected(renderconsumer.DEFAULT_ENCODING_NAME)
         self.widget.connect("changed", 
                             lambda w,e: self.encoding_selection_changed(), 
                             None)

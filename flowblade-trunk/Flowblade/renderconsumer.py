@@ -60,6 +60,13 @@ QUALITY = "quality"
 BITRATE = "bitrate"
 AUDIO_DESCRIPTION = "audiodesc"
 NON_USER = "nonuser"
+PRESET_GROUP = "presetgroup"
+PRESET_GROUP_H264 = "H.264"
+PRESET_GROUP_MPEG = "MPEG"
+PRESET_GROUP_LOSSLESS = "Lossless"
+
+# Default encoding name
+DEFAULT_ENCODING_NAME = "H.264 / .mp4" 
 
 # Replace strings and attribute values
 BITRATE_RPL = "%BITRATE%"
@@ -69,6 +76,7 @@ ASPECT_RPL = "%ASPECT%"
 
 render_encoding_doc = None
 encoding_options = []
+categorized_encoding_options = []
 not_supported_encoding_options = []
 quality_option_groups = {}
 quality_option_groups_default_index = {}
@@ -122,6 +130,7 @@ class EncodingOption:
     def __init__(self, option_node):
         self.name = _get_attribute(option_node, NAME)
         self.type = _get_attribute(option_node, TYPE)
+        self.presetgroup = _get_attribute(option_node, PRESET_GROUP)
         self.resizable = (_get_attribute(option_node, RESIZABLE) == "True")
         self.extension = _get_attribute(option_node, EXTENSION)
         self.nonuser = _get_attribute(option_node, NON_USER)
@@ -183,7 +192,6 @@ class EncodingOption:
         else:
             desc = self.audio_desc 
         return "<small>" + desc + "</small>"
-
     
 def load_render_profiles():
     """
@@ -223,6 +231,31 @@ def load_render_profiles():
         else:
             msg = "...NOT available, " + encoding_option.err_msg + " missing"
             not_supported_encoding_options.append(encoding_option)
+
+    # Create categorised structure.
+    global categorized_encoding_options
+    H264_encs = []
+    MPEG_encs = []
+    LOSSLESS_encs = []
+    LEGACY_encs = []
+    for enc in encoding_options:
+        if enc.presetgroup == PRESET_GROUP_H264:
+            H264_encs.append((enc.name, enc))
+        elif enc.presetgroup == PRESET_GROUP_MPEG:
+            MPEG_encs.append((enc.name, enc))
+        elif enc.presetgroup == PRESET_GROUP_LOSSLESS:
+            LOSSLESS_encs.append((enc.name, enc))
+        else:
+            LEGACY_encs.append((enc.name, enc))
+
+    if len(H264_encs) > 0:
+        categorized_encoding_options.append((PRESET_GROUP_H264, H264_encs))
+    if len(MPEG_encs) > 0:
+        categorized_encoding_options.append((PRESET_GROUP_MPEG, MPEG_encs))
+    if len(LOSSLESS_encs) > 0:
+        categorized_encoding_options.append((PRESET_GROUP_LOSSLESS, LOSSLESS_encs))
+
+    print(categorized_encoding_options)
 
     # Proxy encoding
     proxy_encoding_nodes = render_encoding_doc.getElementsByTagName(PROXY_ENCODING_OPTION)
