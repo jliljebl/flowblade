@@ -391,13 +391,9 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
             dialogutils.warning_message(primary_txt, secondary_txt, dialog)
             return
             
-        profile_index = fb_widgets.out_profile_combo.get_active()
-        if profile_index == 0:
-            # project_profile is first selection in combo box
-            profile = PROJECT().profile
-        else:
-            profile = mltprofiles.get_profile_for_index(profile_index - 1)
-        profile_desc = profile.description().replace(" ", "_")
+        profile_desc = fb_widgets.categories_combo.get_selected()
+        profile = mltprofiles.get_profile(profile_desc)
+        profile_desc = profile_desc.replace(" ", "_")
     
         encoding_option_index = fb_widgets.encodings_cb.get_active()
         quality_option_index = fb_widgets.quality_cb.get_active()
@@ -476,14 +472,10 @@ def _render_reverse_clip_dialog_callback(dialog, response_id, fb_widgets, media_
             return
 
         # Profile
-        profile_index = fb_widgets.out_profile_combo.get_active()
-        if profile_index == 0:
-            # project_profile is first selection in combo box
-            profile = PROJECT().profile
-        else:
-            profile = mltprofiles.get_profile_for_index(profile_index - 1)
-        profile_desc = profile.description().replace(" ", "_")
-        
+        profile_desc = fb_widgets.categories_combo.get_selected()
+        profile = mltprofiles.get_profile(profile_desc)
+        profile_desc = profile_desc.replace(" ", "_")
+
         # Render consumer properties
         encoding_option_index = fb_widgets.encodings_cb.get_active()
         quality_option_index = fb_widgets.quality_cb.get_active()

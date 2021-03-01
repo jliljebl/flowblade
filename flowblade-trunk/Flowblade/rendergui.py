@@ -262,7 +262,7 @@ def show_slowmo_dialog(media_file, default_range_render, _response_callback):
     profile_selector = ProfileSelector()
     profile_selector.fill_options()
     profile_selector.widget.set_sensitive(True)
-    fb_widgets.out_profile_combo = profile_selector.widget
+    fb_widgets.categories_combo = profile_selector.categories_combo
 
     quality_selector = RenderQualitySelector()
     fb_widgets.quality_cb = quality_selector.widget
@@ -287,7 +287,7 @@ def show_slowmo_dialog(media_file, default_range_render, _response_callback):
     vbox.pack_start(guiutils.pad_label(24, 12), False, False, 0)
     vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target File:")), name_row, 120), False, False, 0)
     vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target Folder:")), fb_widgets.out_folder, 120), False, False, 0)
-    vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target Profile:")), fb_widgets.out_profile_combo, 200), False, False, 0)
+    vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target Profile:")), fb_widgets.categories_combo.widget, 200), False, False, 0)
     vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target Encoding:")), fb_widgets.encodings_cb, 200), False, False, 0)
     vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target Quality:")), fb_widgets.quality_cb, 200), False, False, 0)
     vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)
@@ -387,7 +387,7 @@ def show_reverse_dialog(media_file, default_range_render, _response_callback):
     profile_selector = ProfileSelector()
     profile_selector.fill_options()
     profile_selector.widget.set_sensitive(True)
-    fb_widgets.out_profile_combo = profile_selector.widget
+    fb_widgets.categories_combo = profile_selector.categories_combo
 
     quality_selector = RenderQualitySelector()
     fb_widgets.quality_cb = quality_selector.widget
@@ -434,7 +434,7 @@ def show_reverse_dialog(media_file, default_range_render, _response_callback):
     vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)
     vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target File:")), name_row, 120), False, False, 0)
     vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target Folder:")), fb_widgets.out_folder, 120), False, False, 0)
-    vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target Profile:")), fb_widgets.out_profile_combo, 200), False, False, 0)
+    vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target Profile:")), fb_widgets.categories_combo.widget, 200), False, False, 0)
     vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target Encoding:")), fb_widgets.encodings_cb, 200), False, False, 0)
     vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target Quality:")), fb_widgets.quality_cb, 200), False, False, 0)
     vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)
