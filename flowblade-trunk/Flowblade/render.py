@@ -77,7 +77,7 @@ transition_render_done_callback = None
 # ---------------------------------- rendering action and dialogs
 def get_args_vals_list_for_current_selections():
     profile = get_current_profile()
-    encoding_option_index = widgets.encoding_panel.encoding_selector.widget.get_active()
+    encoding_option_index = widgets.encoding_panel.encoding_selector.get_selected_encoding_index()
     quality_option_index = widgets.encoding_panel.quality_selector.widget.get_active()
         
     if widgets.render_type_panel.type_combo.get_active() == 1: # Preset encodings                                                                             -1)
@@ -106,7 +106,7 @@ def get_args_vals_list_for_current_selections():
 def get_current_gui_selections():
     selections = {}
     selections["use_user_encodings"] = widgets.render_type_panel.type_combo.get_active()
-    selections["encoding_option_index"] = widgets.encoding_panel.encoding_selector.widget.get_active()
+    selections["encoding_option_index"] = widgets.encoding_panel.encoding_selector.get_selected_encoding_index()
     selections["quality_option_index"]= widgets.encoding_panel.quality_selector.widget.get_active()
     selections["presets_index"] = widgets.render_type_panel.presets_selector.widget.get_active()
     selections["folder"] = widgets.file_panel.out_folder.get_current_folder()
@@ -131,7 +131,7 @@ def get_current_gui_selections():
 
 def set_saved_gui_selections(selections):
     widgets.render_type_panel.type_combo.set_active(selections["use_user_encodings"])
-    widgets.encoding_panel.encoding_selector.widget.set_active(selections["encoding_option_index"])
+    widgets.encoding_panel.encoding_selector.categorised_combo.set_active(selections["encoding_option_index"]) # FIXME
     widgets.encoding_panel.quality_selector.widget.set_active(selections["quality_option_index"])
     widgets.render_type_panel.presets_selector.widget.set_active(selections["presets_index"])
     widgets.file_panel.out_folder.set_current_folder(selections["folder"])
@@ -206,7 +206,7 @@ def create_widgets():
 def set_default_values_for_widgets(movie_name_too=False):
     if len(renderconsumer.encoding_options) == 0:# this won't work if no encoding options available
         return                   # but we don't want crash, so that we can inform user
-    widgets.encoding_panel.encoding_selector.widget.set_active(0)
+    widgets.encoding_panel.encoding_selector.categorised_combo.set_selected(renderconsumer.DEFAULT_ENCODING_NAME)
     if movie_name_too == True:
         widgets.file_panel.movie_name.set_text("movie")
 
@@ -311,7 +311,7 @@ def _render_type_changed():
         set_default_values_for_widgets()
         widgets.render_type_panel.presets_selector.widget.set_sensitive(False)
         _preset_selection_changed()
-        widgets.encoding_panel.encoding_selector.encoding_selection_changed()
+        widgets.encoding_panel.encoding_selector.categorised_combo.encoding_selection_changed()
     else: # Preset Encodings
         enable_user_rendering(False)
         widgets.render_type_panel.presets_selector.widget.set_sensitive(True)
@@ -339,7 +339,7 @@ def _preset_selection_changed():
 def _display_selection_in_opts_view():
     profile = get_current_profile()
     widgets.args_panel.display_encoding_args(profile,
-                                             widgets.encoding_panel.encoding_selector.widget.get_active(), 
+                                             widgets.encoding_panel.encoding_selector.get_selected_encoding_index(), 
                                              widgets.encoding_panel.quality_selector.widget.get_active())
     
 def _save_opts_pressed():

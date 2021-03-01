@@ -519,16 +519,21 @@ class RenderEncodingSelector():
         self.audio_desc_label = audio_desc_label
         
     def encoding_selection_changed(self):
-        enc_index = self.widget.get_active()
-        
-        self.quality_selector.update_quality_selection(enc_index)
-        
-        encoding = renderconsumer.encoding_options[enc_index]
-        self.extension_label.set_text("." + encoding.extension)
+        try:
+            name, encoding = self.categorised_combo.get_selected()
+            enc_index = renderconsumer.get_encoding_index(encoding)
+            self.quality_selector.update_quality_selection(enc_index)
+            
+            self.extension_label.set_text("." + encoding.extension)
 
-        if self.audio_desc_label != None:
-            self.audio_desc_label.set_markup(encoding.get_audio_description())
+            if self.audio_desc_label != None:
+                self.audio_desc_label.set_markup(encoding.get_audio_description())
+        except:
+            pass # this gets called too early on start-up
 
+    def get_selected_encoding_index(self):
+        name, encoding = self.categorised_combo.get_selected()
+        return renderconsumer.get_encoding_index(encoding)
 
 class PresetEncodingsSelector():
     

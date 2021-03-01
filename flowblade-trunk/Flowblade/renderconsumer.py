@@ -64,6 +64,11 @@ PRESET_GROUP = "presetgroup"
 PRESET_GROUP_H264 = "H.264"
 PRESET_GROUP_MPEG = "MPEG"
 PRESET_GROUP_LOSSLESS = "Lossless"
+PRESET_GROUP_IMAGE_SEQUENCE = "Image Sequence"
+PRESET_GROUP_AUDIO = "Audio" 
+
+
+
 
 # Default encoding name
 DEFAULT_ENCODING_NAME = "H.264 / .mp4" 
@@ -93,7 +98,14 @@ def _get_attribute(node, attr_name):
         return None
     
     return value
-    
+
+def get_encoding_index(encoding):
+    for i in range(0, len(encoding_options)):
+        if encoding == encoding_options[i]:
+            return i
+            
+    return -1
+
 class QualityOption:
     """
     A render quality option for an EncodingOption.
@@ -237,6 +249,8 @@ def load_render_profiles():
     H264_encs = []
     MPEG_encs = []
     LOSSLESS_encs = []
+    IMG_SEQ_encs = []
+    AUDIO_encs = []
     LEGACY_encs = []
     for enc in encoding_options:
         if enc.presetgroup == PRESET_GROUP_H264:
@@ -245,6 +259,10 @@ def load_render_profiles():
             MPEG_encs.append((enc.name, enc))
         elif enc.presetgroup == PRESET_GROUP_LOSSLESS:
             LOSSLESS_encs.append((enc.name, enc))
+        elif enc.presetgroup == PRESET_GROUP_IMAGE_SEQUENCE:
+            IMG_SEQ_encs.append((enc.name, enc))
+        elif enc.presetgroup == PRESET_GROUP_AUDIO:
+            AUDIO_encs.append((enc.name, enc))
         else:
             LEGACY_encs.append((enc.name, enc))
 
@@ -254,8 +272,10 @@ def load_render_profiles():
         categorized_encoding_options.append((PRESET_GROUP_MPEG, MPEG_encs))
     if len(LOSSLESS_encs) > 0:
         categorized_encoding_options.append((PRESET_GROUP_LOSSLESS, LOSSLESS_encs))
-
-    print(categorized_encoding_options)
+    if len(IMG_SEQ_encs) > 0:
+        categorized_encoding_options.append((PRESET_GROUP_IMAGE_SEQUENCE, IMG_SEQ_encs))
+    if len(AUDIO_encs) > 0:
+        categorized_encoding_options.append((PRESET_GROUP_AUDIO, AUDIO_encs))
 
     # Proxy encoding
     proxy_encoding_nodes = render_encoding_doc.getElementsByTagName(PROXY_ENCODING_OPTION)

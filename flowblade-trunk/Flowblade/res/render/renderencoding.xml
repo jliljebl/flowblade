@@ -92,6 +92,16 @@
     <encodingoption name="Ogg Theora / .ogv" extension="ogv" audiodesc=" vorbis" type="av" resize="True" qgroup="qgroup2">
         <profile args="f=ogg acodec=libvorbis ac=2 vcodec=libtheora minrate=0 vb=%BITRATE%" />
     </encodingoption>
+
+    <encodingoption name="Apple ProRes 422 / .mov" extension="mov" audiodesc=" pcm" type="av" resize="True" qgroup="prores422">
+        <profile args="f=mov acodec=pcm_s24le ac=2 vcodec=prores vprofile=%PROFILE% vendor=ap10 pix_fmt=yuv422p10le" />
+    </encodingoption>
+    <encodingoption name="Apple ProRes 4444 / .mov" extension="mov" audiodesc=" pcm" type="av" resize="True" qgroup="prores4444">
+        <profile args="f=mov acodec=pcm_s24le ac=2 vcodec=prores_ks vprofile=%PROFILE% vendor=ap10 pix_fmt=yuva444p10le" />
+    </encodingoption>
+
+
+    <!-- Lossless --> 
     <encodingoption name="Lossless H.264 / .mp4" extension="mp4" presetgroup="Lossless" audiodesc=" mp3"  type="av" resize="True" qgroup="lossless">
         <profile args="f=mp4 acodec=libmp3lame ab=320k ac=2 pix_fmt=yuv420p vcodec=libx264 cqp=0 me_method=esa subq=8 qmin=10 qcomp=0.6 qdiff=4 qmax=51 coder=ac partitions=+parti4x4+parti8x8+partp4x4+partp8x8+partb8x8 refs=16 trellis=1" />
     </encodingoption>
@@ -104,39 +114,39 @@
     <encodingoption name="Lossless HuffYUV / .avi" extension="avi" presetgroup="Lossless" audiodesc=" pcm" type="av" resize="True" qgroup="lossless">
         <profile args="f=avi acodec=pcm_s24le ac=2 vcodec=huffyuv" />
     </encodingoption>
-    <encodingoption name="Apple ProRes 422 / .mov" extension="mov" audiodesc=" pcm" type="av" resize="True" qgroup="prores422">
-        <profile args="f=mov acodec=pcm_s24le ac=2 vcodec=prores vprofile=%PROFILE% vendor=ap10 pix_fmt=yuv422p10le" />
-    </encodingoption>
-    <encodingoption name="Apple ProRes 4444 / .mov" extension="mov" audiodesc=" pcm" type="av" resize="True" qgroup="prores4444">
-        <profile args="f=mov acodec=pcm_s24le ac=2 vcodec=prores_ks vprofile=%PROFILE% vendor=ap10 pix_fmt=yuva444p10le" />
-    </encodingoption>
 
 
-    <!-- Preset encodings -->
-    <encodingoption name="Audio PCM/.wav 48kHz" extension="wav" nonuser="True" audiodesc="NA" type="audio" resize="NA" qgroup="lossless"> 
+    <!-- Audio encodings --> 
+    <encodingoption name="Audio PCM/.wav 48kHz" extension="wav" presetgroup="Audio" audiodesc="NA" type="audio" resize="NA" qgroup="lossless"> 
         <profile args="f=wav ar=48000 video_off=1" />
     </encodingoption>
-    <encodingoption name="Audio PCM/.wav 44.1kHz" extension="wav" nonuser="True" audiodesc="NA" type="audio" resize="NA" qgroup="lossless"> 
+    <encodingoption name="Audio PCM/.wav 44.1kHz" extension="wav" presetgroup="Audio" audiodesc="NA" type="audio" resize="NA" qgroup="lossless"> 
         <profile args="f=wav ar=44100 video_off=1" />
     </encodingoption>
-    <encodingoption name="Image Sequence BMP" extension="bmp" nonuser="True" audiodesc="NA" type="img_seq" resize="NA" qgroup="lossless">
-        <profile args="vcodec=bmp" />
+
+
+    <!-- Image Sequences encodings --> 
+    <encodingoption name="Image Sequence BMP" extension="bmp" presetgroup="Image Sequence" audiodesc="NA" type="img_seq" resize="NA" qgroup="lossless">
+        <profile args="vcodec=bmp f=image2 an=1 audio_off=1 g=1 bf=0" />
     </encodingoption>
-    <encodingoption name="Image Sequence DPX" extension="dpx" nonuser="True" audiodesc="NA" type="img_seq" resize="NA" qgroup="lossless">
+    <encodingoption name="Image Sequence DPX" extension="dpx" presetgroup="Image Sequence" audiodesc="NA" type="img_seq" resize="NA" qgroup="lossless">
         <profile args="vcodec=dpx" />
     </encodingoption>
-    <encodingoption name="Image Sequence PNG" extension="png" nonuser="True" audiodesc="NA" type="img_seq" resize="NA" qgroup="lossless">
+    <encodingoption name="Image Sequence PNG" extension="png" presetgroup="Image Sequence" audiodesc="NA" type="img_seq" resize="NA" qgroup="lossless">
         <profile args="vcodec=png" />
     </encodingoption>
-    <encodingoption name="Image Sequence PPM" extension="ppm" nonuser="True" audiodesc="NA" type="img_seq" resize="NA" qgroup="lossless">
+    <encodingoption name="Image Sequence PPM" extension="ppm" presetgroup="Image Sequence" audiodesc="NA" type="img_seq" resize="NA" qgroup="lossless">
         <profile args="vcodec=ppm" />
     </encodingoption>
-    <encodingoption name="Image Sequence TGA" extension="tga" nonuser="True" audiodesc="NA" type="img_seq" resize="NA" qgroup="lossless">
+    <encodingoption name="Image Sequence TGA" extension="tga" presetgroup="Image Sequence" audiodesc="NA" type="img_seq" resize="NA" qgroup="lossless">
         <profile args="vcodec=targa" />
     </encodingoption>
-    <encodingoption name="Image Sequence TIFF" extension="tif" nonuser="True" audiodesc="NA" type="img_seq" resize="NA" qgroup="lossless">
+    <encodingoption name="Image Sequence TIFF" extension="tif" presetgroup="Image Sequence" audiodesc="NA" type="img_seq" resize="NA" qgroup="lossless">
         <profile args="vcodec=tiff" />
     </encodingoption>
+    
+
+    <!-- Preset encodings -->
     <encodingoption name="Android 480x320" extension="mpg" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
         <profile args="f=mpeg s=480x320 progressive=1 acodec=aac ab=128k vcodec=libx264 vb=700k flags=+loop cmp=+chroma partitions=+parti8x8+parti4x4+partp8x8+partb8x8 me_method=umh subq=7 me_range=16 g=250 keyint_min=25 sc_threshold=40 i_qfactor=0.71 qcomp=0.6 qmin=10 qmax=51 qdiff=4 directpred=1 trellis=1 coder=0 bf=0 refs=1 level=30 maxrate=10000k bufsize=10000k wpredp=0 pass=1" />
     </encodingoption>
