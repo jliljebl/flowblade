@@ -25,6 +25,10 @@ import os
 import subprocess
 import sys
 import threading
+# Default file for missing files to relink
+from PIL import Image,  ImageFont, ImageDraw
+import time
+# End of Default file for missing files to relink
 
 import gi
 gi.require_version('Gtk', '3.0')
@@ -59,6 +63,9 @@ linker_window = None
 target_project = None
 last_media_dir = None
 media_assets = []
+# Default file for missing files to relink
+files_temp_dir = "/tmp"
+# End of Default file for missing files to relink
 
 NO_PROJECT_AT_LAUNCH = "##&&noproject&&##"
 
@@ -103,6 +110,9 @@ class MediaLinkerWindow(Gtk.Window):
 
         app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowblademedialinker.png")
         self.set_icon(app_icon)
+        # Default file for missing files to relink
+        self.check_relink_yes = False 
+        # End of Default file for missing files to relink
 
         load_button = Gtk.Button(_("Load Project For Relinking"))
         load_button.connect("clicked",
@@ -139,6 +149,12 @@ class MediaLinkerWindow(Gtk.Window):
         self.delete_button = Gtk.Button(_("Delete File Relink Path"))
         self.delete_button.connect("clicked", lambda w: _delete_button_pressed())
 
+        # Default file for missing files to relink
+        self.no_file_button = Gtk.CheckButton(_("Default file for missing files to relink"))
+        self.no_file_button.connect("toggled", lambda w: _set_no_file_button_pressed())
+        self.no_file_button.set_active(self.check_relink_yes)
+        # End of Default file for missing files to relink
+
         self.display_combo = Gtk.ComboBoxText()
         self.display_combo.append_text(_("Display Missing Media Files"))
         self.display_combo.append_text(_("Display Found Media Files"))
@@ -148,6 +164,9 @@ class MediaLinkerWindow(Gtk.Window):
         buttons_row = Gtk.HBox(False, 2)
         buttons_row.pack_start(self.display_combo, False, False, 0)
         buttons_row.pack_start(Gtk.Label(), True, True, 0)
+        # Default file for missing files to relink
+        buttons_row.pack_start(self.no_file_button, False, False, 0)
+        # End of Default file for missing files to relink
         buttons_row.pack_start(self.delete_button, False, False, 0)
         buttons_row.pack_start(guiutils.pad_label(4, 4), False, False, 0)
         buttons_row.pack_start(self.find_button, False, False, 0)
@@ -160,8 +179,11 @@ class MediaLinkerWindow(Gtk.Window):
         dialog_buttons_box.pack_start(cancel_button, True, True, 0)
         dialog_buttons_box.pack_start(self.save_button, False, False, 0)
         
+        # Default file for missing files to relink
+        self.msg_label = Gtk.Label("Coucou")
         dialog_buttons_row = Gtk.HBox(False, 2)
-        dialog_buttons_row.pack_start(Gtk.Label(), True, True, 0)
+        dialog_buttons_row.pack_start(self.msg_label, True, True, 0)
+        # End of Default file for missing files to relink
         dialog_buttons_row.pack_start(dialog_buttons_box, False, False, 0)
 
         pane = Gtk.VBox(False, 2)
@@ -223,6 +245,9 @@ class MediaLinkerWindow(Gtk.Window):
         self.found_count.set_sensitive(active) 
         self.project_label.set_sensitive(active) 
         self.proj.set_sensitive(active) 
+        # Default file for missing files to relink
+        self.no_file_button.set_sensitive(active)
+        # End of Default file for missing files to relink
 
     def update_files_info(self):
         found = 0
@@ -353,9 +378,12 @@ class MediaRelinkListView(Gtk.VBox):
 # ----------------------------------------------------------- logic
 class MediaAsset:
 
-    def __init__(self, orig_path, media_type):
+    # Default file for missing files to relink
+    def __init__(self, orig_path, media_type, media_length=0):
         self.orig_path = orig_path
         self.media_type = media_type
+        self.length = media_length
+    # End of Default file for missing files to relink
 
         self.orig_file_exists = os.path.isfile(orig_path)
         if self.media_type == appconsts.IMAGE_SEQUENCE:
@@ -385,7 +413,9 @@ def _update_media_assets():
         if isinstance(media_file, patternproducer.AbstractBinClip):
             continue
         try:
-            new_assets.append(MediaAsset(media_file.path, media_file.type))
+            # Default file for missing files to relink
+            new_assets.append(MediaAsset(media_file.path, media_file.type, media_file.length))
+            # End of Default file for missing files to relink
             asset_paths[media_file.path] = media_file.path
         except:
             print("failed loading:", media_file)
@@ -398,7 +428,9 @@ def _update_media_assets():
                 # Only producer clips are affected
                 if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):
                     if not(clip.path in asset_paths):
-                        new_assets.append(MediaAsset(clip.path, clip.media_type))
+                        # Default file for missing files to relink
+                        new_assets.append(MediaAsset(clip.path, clip.media_type,clip.clip_out - clip.clip_in + 1))  #clip.get_length()))
+                        # End of Default file for missing files to relink
                         asset_paths[clip.path] = clip.path
         # Wipe lumas
         for compositor in seq.compositors:
@@ -433,8 +465,32 @@ def _set_button_pressed():
         return
     _set_relink_path(media_asset)
 
+# Default file for missing files to relink
+def _set_no_file_button_pressed():
+    linker_window.check_relink_yes = not linker_window.check_relink_yes
+# End of Default file for missing files to relink
+
 def _set_relink_path(media_asset):
     file_name = os.path.basename(media_asset.orig_path)
+    # Default file for missing files to relink
+    if linker_window.check_relink_yes:
+        linker_window.msg_label.set_text("Relink..." +  file_name)
+        if media_asset.media_type == appconsts.IMAGE:
+            linker_window.msg_label.set_text("Creating Image...")
+            link_path = background_missing_image(files_temp_dir, file_name)
+        elif media_asset.media_type == appconsts.AUDIO:
+            linker_window.msg_label.set_text("Creating audio..." +  file_name)
+            link_path = sine_wav(files_temp_dir, file_name, media_asset.length)
+        elif media_asset.media_type == appconsts.VIDEO:
+            linker_window.msg_label.set_text("Creating vidéo..." +  file_name)
+            link_path = video_file_replace(files_temp_dir, file_name, media_asset.length)
+
+        media_asset.relink_path = link_path
+        linker_window.msg_label.set_text("End of relink. " + link_path)
+        linker_window.relink_list.fill_data_model()
+        #guicomponents.fill_data_model()
+        return
+    # End of Default file for missing files to relink
     dialogs.media_file_dialog(_("Select Media File To Relink To") + " " + file_name, 
                                 _select_relink_path_dialog_callback, False, 
                                 media_asset, linker_window, last_media_dir)
@@ -453,6 +509,10 @@ def _select_relink_path_dialog_callback(file_select, response_id, media_asset):
         
     global last_media_dir
     last_media_dir = folder
+
+    # Default file for missing files to relink
+    linker_window.set_title( folder + " " + file_name )    
+    #End of Default file for missing files to relink
 
     # Relink all the files in a same directory
     for med_asset in media_assets:
@@ -571,6 +631,65 @@ def _relink_project_media_paths():
                 res_path = propertyparse.get_property_value(compositor.transition.properties, "composite.luma")
                 if res_path in relinked_paths:
                     propertyparse.set_property_value(compositor.transition.properties,  "composite.luma", relinked_paths[res_path])
+
+# Default file for missing files to relink
+
+def background_missing_image(dir_image,  file_name):
+    screen_width = 1920 #target_project.profile.width()
+    screen_height  = 1080 #target_project.profile.height()
+    im_orig = file_name.split(".")[0] 
+    img_replace = im_orig + "_replace.png"
+    link_path = os.path.join(dir_image, img_replace)
+    if os.path.isfile(link_path):
+        os.remove(link_path)
+
+    size = (screen_width, screen_height)
+    font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 40)
+    img = Image.new("RGBA",size, (200,40, 40))
+    draw = ImageDraw.Draw(img)
+    draw.text((30,20), " >>>  " +  img_replace + "\n\nreplaces the missing file:\n\n<<<  " + file_name, (255,255,0), font=font)
+    draw = ImageDraw.Draw(img)
+    img.save(link_path)
+    if os.path.isfile(link_path):
+        linker_window.msg_label.set_text("Image ok.")
+        return link_path
+    else:
+        return ""
+    #return link_path
+
+def sine_wav(dir_sine,  file_name, duration):
+    linker_window.msg_label.set_text("Audio wav." +  str(duration))
+    output = file_name.split(".")[0] + "_replace.wav"
+    link_path =  os.path.join(dir_sine, output)    
+    if os.path.isfile(link_path):
+        os.remove(link_path)
+    duration = int(duration/25) + 1
+    dur = '\"sine=frequency=1000:duration="' + str(duration) + '"\" '
+    command = 'ffmpeg -f lavfi -i ' +  dur + ' ' + link_path
+    print("ml 683",  command)
+    os.system(command)
+    if os.path.isfile(link_path):
+        linker_window.msg_label.set_text("Audio ok.")
+        return link_path
+    else:
+        return ""
+
+def  video_file_replace(dir_video, file_name, duration):
+    linker_window.msg_label.set_text("Video mp4")
+    time.sleep(1)
+    image_file =  background_missing_image(dir_video, file_name) 
+    audio_file = sine_wav(dir_video, file_name, duration)
+    output = file_name.split(".")[0]  +  "_replace.mp4"
+    link_path =  os.path.join(dir_video, output)    
+    if os.path.isfile(link_path):
+        os.remove(link_path)
+    command = "ffmpeg -loop 1 -i "+ image_file + " -i " +  audio_file  + " -c:v libx264 -c:a aac -strict experimental -b:a 192k -shortest " + link_path
+    print("ml 696",  command)
+    os.system(command)
+    if os.path.isfile(link_path):
+        return link_path
+    else:
+        return ""
 
 
 # ----------------------------------------------------------- main
