@@ -44,6 +44,13 @@
         <quality name="70000 kb/s" replvalues="%BITRATE% 70000k" />
         <quality name="80000 kb/s" replvalues="%BITRATE% 80000k" />
     </qualityqroup>
+    <qualityqroup id="qgroup3" defaultindex="2">
+        <quality name="90M b/s" replvalues="%BITRATE% 90M" />
+        <quality name="120M b/s" replvalues="%BITRATE% 120M" />
+        <quality name="150M b/s" replvalues="%BITRATE% 150M" />
+        <quality name="180M b/s" replvalues="%BITRATE% 180M" />
+        <quality name="220M b/s" replvalues="%BITRATE% 220M" />
+    </qualityqroup>
     <qualityqroup id="proxyqgroup" defaultindex="1">
         <quality name="400 kb/s" replvalues="%BITRATE% 400k" />
         <quality name="600 kb/s" replvalues="%BITRATE% 600k" />
@@ -100,22 +107,26 @@
         <profile args="f=mpeg acodec=libtwolame ab=384k vcodec=mpeg2video minrate=0 vb=%BITRATE% bf=2 b_strategy=1 trellis=1" />
     </encodingoption>
     
-    
-    <encodingoption name="WebM VP8 / .webm" extension="webm" audiodesc=" vorbis" type="av" resize="True" qgroup="qgroup2">
-        <profile args="f=webm acodec=libvorbis ab=128k vcodec=libvpx g=120 rc_lookahead=16 quality=good speed=0 vprofile=0 qmax=51 qmin=11 slices=4 vb=%BITRATE% maxrate=24M minrate=100k arnr_max_frames=7 arnr_strength=5 arnr_type=3 auto-alt-ref=0 mlt_image_format=rgb24a pix_fmt=yuva420p" />
-    </encodingoption>
-    <encodingoption name="Ogg Theora / .ogv" extension="ogv" audiodesc=" vorbis" type="av" resize="True" qgroup="qgroup2">
+
+
+    <!--WebM, Ogg, Prores -->
+    <encodingoption name="Ogg Theora / .ogv" extension="ogv" presetgroup="oggwebmetc" audiodesc=" vorbis" type="av" resize="True" qgroup="qgroup2">
         <profile args="f=ogg acodec=libvorbis ac=2 vcodec=libtheora minrate=0 vb=%BITRATE%" />
     </encodingoption>
-
-    <!-- Apple --> 
-    <encodingoption name="Apple ProRes 422 / .mov" extension="mov" audiodesc=" pcm" type="av" resize="True" qgroup="prores422">
+    <encodingoption name="WebM VP8 / .webm" extension="webm" presetgroup="oggwebmetc" audiodesc=" vorbis" type="av" resize="True" qgroup="qgroup2">
+        <profile args="f=webm acodec=libvorbis ab=128k vcodec=libvpx g=120 rc_lookahead=16 quality=good speed=0 vprofile=0 qmax=51 qmin=11 slices=4 vb=%BITRATE% maxrate=24M minrate=100k arnr_max_frames=7 arnr_strength=5 arnr_type=3 auto-alt-ref=0 mlt_image_format=rgb24a pix_fmt=yuva420p" />
+    </encodingoption>
+    <encodingoption name="Apple ProRes 422 / .mov" extension="mov" presetgroup="oggwebmetc" audiodesc=" pcm" type="av" resize="True" qgroup="prores422">
         <profile args="f=mov acodec=pcm_s24le ac=2 vcodec=prores vprofile=%PROFILE% vendor=ap10 pix_fmt=yuv422p10le" />
     </encodingoption>
-    <encodingoption name="Apple ProRes 4444 / .mov" extension="mov" audiodesc=" pcm" type="av" resize="True" qgroup="prores4444">
+    <encodingoption name="Apple ProRes 4444 / .mov" extension="mov" presetgroup="oggwebmetc" audiodesc=" pcm" type="av" resize="True" qgroup="prores4444">
         <profile args="f=mov acodec=pcm_s24le ac=2 vcodec=prores_ks vprofile=%PROFILE% vendor=ap10 pix_fmt=yuva444p10le" />
-    </encodingoption>
+    </encodingoption>    
+    <encodingoption name="DNxHD / .mov" extension="mov" presetgroup="oggwebmetc" audiodesc=" pcm" type="av" resize="True" qgroup="qgroup3">
+        <profile args="pix_fmt=yuv422p progressive=1 vcodec=dnxhd vprofile=dnxhr_hq qscale=1 vb=%BITRATE% g=1 bf=0 acodec=pcm_s24le f=mov movflags=+write_colr+faststart" />
+    </encodingoption> 
 
+    
     <!-- Lossless --> 
     <encodingoption name="Lossless H.264 / .mp4" extension="mp4" presetgroup="Lossless" audiodesc=" mp3"  type="av" resize="True" qgroup="lossless">
         <profile args="f=mp4 acodec=libmp3lame ab=320k ac=2 pix_fmt=yuv420p vcodec=libx264 cqp=0 me_method=esa subq=8 qmin=10 qcomp=0.6 qdiff=4 qmax=51 coder=ac partitions=+parti4x4+parti8x8+partp4x4+partp8x8+partb8x8 refs=16 trellis=1" />

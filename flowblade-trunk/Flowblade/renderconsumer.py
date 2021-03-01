@@ -66,7 +66,7 @@ PRESET_GROUP_MPEG = "MPEG"
 PRESET_GROUP_LOSSLESS = "Lossless"
 PRESET_GROUP_IMAGE_SEQUENCE = "Image Sequence"
 PRESET_GROUP_AUDIO = "Audio" 
-
+PRESET_GROUP_OGG_ETC = "oggwebmetc"
 
 
 
@@ -248,15 +248,19 @@ def load_render_profiles():
     global categorized_encoding_options
     H264_encs = []
     MPEG_encs = []
+    OGG_ETC_encs = []
     LOSSLESS_encs = []
     IMG_SEQ_encs = []
     AUDIO_encs = []
     LEGACY_encs = []
+    
     for enc in encoding_options:
         if enc.presetgroup == PRESET_GROUP_H264:
             H264_encs.append((enc.name, enc))
         elif enc.presetgroup == PRESET_GROUP_MPEG:
             MPEG_encs.append((enc.name, enc))
+        elif enc.presetgroup == PRESET_GROUP_OGG_ETC:
+            OGG_ETC_encs.append((enc.name, enc))
         elif enc.presetgroup == PRESET_GROUP_LOSSLESS:
             LOSSLESS_encs.append((enc.name, enc))
         elif enc.presetgroup == PRESET_GROUP_IMAGE_SEQUENCE:
@@ -270,6 +274,8 @@ def load_render_profiles():
         categorized_encoding_options.append((PRESET_GROUP_H264, H264_encs))
     if len(MPEG_encs) > 0:
         categorized_encoding_options.append((PRESET_GROUP_MPEG, MPEG_encs))
+    if len(OGG_ETC_encs) > 0:
+        categorized_encoding_options.append(("Ogg, WebM, Prores", OGG_ETC_encs))
     if len(LOSSLESS_encs) > 0:
         categorized_encoding_options.append((PRESET_GROUP_LOSSLESS, LOSSLESS_encs))
     if len(IMG_SEQ_encs) > 0:
