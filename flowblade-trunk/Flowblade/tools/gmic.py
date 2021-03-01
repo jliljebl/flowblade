@@ -538,6 +538,7 @@ def _encode_settings_callback(dialog, response_id):
     if response_id == Gtk.ResponseType.ACCEPT:
         global _render_data
         _render_data = toolsencoding.get_render_data_for_current_selections()
+        print(_render_data)
         _window.update_encode_desc()
     
     dialog.destroy()

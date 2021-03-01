@@ -29,7 +29,6 @@ import mltheadlessutils
 import mltprofiles
 import processutils
 import renderconsumer
-import toolsencoding
 
 _render_thread = None
 

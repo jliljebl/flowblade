@@ -62,6 +62,7 @@ def load_profile_list():
 
     # Build categorized representation of available profiles.
     HD_profiles = []
+    HD720_profiles = []
     UHD_profiles = []
     SD_profiles = []
     OTHER_profiles = []
@@ -69,7 +70,9 @@ def load_profile_list():
         desc, mlt_profile = prof
         if desc.startswith("HD") and not desc.startswith("HDV") and not desc.startswith("HD 720p"):
             HD_profiles.append(desc)
-        elif desc.startswith("4K") or desc.startswith("DCI 4K"):
+        elif desc.startswith("HD 720p"):
+            HD720_profiles.append(desc)
+        elif desc.startswith("4K UHD"):
             UHD_profiles.append(desc)
         elif desc.startswith("DV/DVD"):
             SD_profiles.append(desc)            
@@ -78,8 +81,10 @@ def load_profile_list():
     
     if len(HD_profiles) > 0:
         _categorized_profiles.append(("HD", HD_profiles))
+    if len(HD720_profiles) > 0:
+        _categorized_profiles.append(("HD 720p", HD720_profiles))
     if len(UHD_profiles) > 0:
-        _categorized_profiles.append(("4K", UHD_profiles))
+        _categorized_profiles.append(("4K UHD", UHD_profiles))
     if len(SD_profiles) > 0:
         _categorized_profiles.append(("SD", SD_profiles))
     if len(OTHER_profiles) > 0:
@@ -188,7 +193,7 @@ def get_index_for_name(lookup_profile_name):
     return -1
 
 def get_profile_node(profile):
-    node_str = '<profile description="' +  profile.description() + '" '
+    node_str = '<profile description="' + profile.description() + '" '
     node_str += 'width="' + str(profile.width()) + '" '
     node_str += 'height="' +  str(profile.height()) + '" '
     if profile.progressive() == True:
