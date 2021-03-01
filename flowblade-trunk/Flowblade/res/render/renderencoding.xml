@@ -77,15 +77,30 @@
 
     <!-- User editable encodings -->
     <!-- encoding options group together codecs, file formats and quality option groups -->
+
+    <!-- H.264 --> 
     <encodingoption name="H.264 / .mp4" extension="mp4" presetgroup="H.264" audiodesc=" mp3" type="av" resize="True" qgroup="qgroup2">
         <profile args="f=mp4 s=%SCREENSIZE% hq=1 acodec=libmp3lame ab=320k ac=2 pix_fmt=yuv420p vcodec=libx264 minrate=0 b=%BITRATE% b_strategy=1 subcmp=2 cmp=2 coder=1 flags=+loop qmax=51 subq=7 qmin=10 qcomp=0.6 qdiff=4 trellis=1 aspect=%ASPECT%"/>
     </encodingoption>
+    <encodingoption name="H.264 Baseline Profile / .mp4" extension="mp4" presetgroup="H.264" audiodesc=" aac" type="av" resize="True" qgroup="not_settable">
+        <profile args="f=mp4 acodec=aac ab=256k vcodec=libx264 threads=0 vpre=medium preset=medium vprofile=baseline coder=0 bf=0 flags2=-wpred-dct8x8 wpredp=0 movflags=+faststart"/>
+    </encodingoption>
+    <encodingoption name="H.264 Main Profile / .mp4" extension="mp4" presetgroup="H.264" audiodesc=" aac" type="av" resize="True" qgroup="not_settable">
+        <profile args="f=mp4 acodec=aac ab=256k vcodec=libx264 threads=0 vpre=medium preset=medium vprofile=main flags2=-dct8x8 movflags=+faststart"/>
+    </encodingoption>
+    <encodingoption name="H.264 High Profile / .mp4" extension="mp4" presetgroup="H.264" audiodesc=" aac" type="av" resize="True" qgroup="not_settable">
+        <profile args="f=mp4 acodec=aac ab=256k vcodec=libx264 threads=0 vpre=medium preset=medium vprofile=high flags2=-dct8x8 movflags=+faststart"/>
+    </encodingoption>
+    
+    <!-- MPEG --> 
     <encodingoption name="MPEG-4 / .mp4" extension="mp4" presetgroup="MPEG" type="av" audiodesc=" mp2" resize="True" qgroup="qgroup1">
         <profile args="f=mp4 hq=1 acodec=libtwolame ab=192k vcodec=mpeg4 minrate=0 vb=%BITRATE%"/>
     </encodingoption>
     <encodingoption name="MPEG-2 / .mpg" extension="mpg" presetgroup="MPEG" audiodesc=" mp2" type="av" resize="True" qgroup="qgroup1">
         <profile args="f=mpeg acodec=libtwolame ab=384k vcodec=mpeg2video minrate=0 vb=%BITRATE% bf=2 b_strategy=1 trellis=1" />
     </encodingoption>
+    
+    
     <encodingoption name="WebM VP8 / .webm" extension="webm" audiodesc=" vorbis" type="av" resize="True" qgroup="qgroup2">
         <profile args="f=webm acodec=libvorbis ab=128k vcodec=libvpx g=120 rc_lookahead=16 quality=good speed=0 vprofile=0 qmax=51 qmin=11 slices=4 vb=%BITRATE% maxrate=24M minrate=100k arnr_max_frames=7 arnr_strength=5 arnr_type=3 auto-alt-ref=0 mlt_image_format=rgb24a pix_fmt=yuva420p" />
     </encodingoption>
@@ -93,13 +108,13 @@
         <profile args="f=ogg acodec=libvorbis ac=2 vcodec=libtheora minrate=0 vb=%BITRATE%" />
     </encodingoption>
 
+    <!-- Apple --> 
     <encodingoption name="Apple ProRes 422 / .mov" extension="mov" audiodesc=" pcm" type="av" resize="True" qgroup="prores422">
         <profile args="f=mov acodec=pcm_s24le ac=2 vcodec=prores vprofile=%PROFILE% vendor=ap10 pix_fmt=yuv422p10le" />
     </encodingoption>
     <encodingoption name="Apple ProRes 4444 / .mov" extension="mov" audiodesc=" pcm" type="av" resize="True" qgroup="prores4444">
         <profile args="f=mov acodec=pcm_s24le ac=2 vcodec=prores_ks vprofile=%PROFILE% vendor=ap10 pix_fmt=yuva444p10le" />
     </encodingoption>
-
 
     <!-- Lossless --> 
     <encodingoption name="Lossless H.264 / .mp4" extension="mp4" presetgroup="Lossless" audiodesc=" mp3"  type="av" resize="True" qgroup="lossless">
@@ -114,7 +129,6 @@
     <encodingoption name="Lossless HuffYUV / .avi" extension="avi" presetgroup="Lossless" audiodesc=" pcm" type="av" resize="True" qgroup="lossless">
         <profile args="f=avi acodec=pcm_s24le ac=2 vcodec=huffyuv" />
     </encodingoption>
-
 
     <!-- Audio encodings --> 
     <encodingoption name="Audio PCM/.wav 48kHz" extension="wav" presetgroup="Audio" audiodesc="NA" type="audio" resize="NA" qgroup="lossless"> 
