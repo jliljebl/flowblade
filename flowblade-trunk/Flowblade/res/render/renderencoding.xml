@@ -86,19 +86,23 @@
     <!-- encoding options group together codecs, file formats and quality option groups -->
 
     <!-- H.264 --> 
-    <encodingoption name="H.264 / .mp4" extension="mp4" presetgroup="H.264" audiodesc=" mp3" type="av" resize="True" qgroup="qgroup2">
+    <encodingoption name="H.264 / .mp4" extension="mp4" presetgroup="H.264 / HEVC" audiodesc=" mp3" type="av" resize="True" qgroup="qgroup2">
         <profile args="f=mp4 s=%SCREENSIZE% hq=1 acodec=libmp3lame ab=320k ac=2 pix_fmt=yuv420p vcodec=libx264 minrate=0 b=%BITRATE% b_strategy=1 subcmp=2 cmp=2 coder=1 flags=+loop qmax=51 subq=7 qmin=10 qcomp=0.6 qdiff=4 trellis=1 aspect=%ASPECT%"/>
     </encodingoption>
-    <encodingoption name="H.264 Baseline Profile / .mp4" extension="mp4" presetgroup="H.264" audiodesc=" aac" type="av" resize="True" qgroup="not_settable">
+    <encodingoption name="H.264 Baseline Profile / .mp4" extension="mp4" presetgroup="H.264 / HEVC" audiodesc=" aac" type="av" resize="True" qgroup="not_settable">
         <profile args="f=mp4 acodec=aac ab=256k vcodec=libx264 threads=0 vpre=medium preset=medium vprofile=baseline coder=0 bf=0 flags2=-wpred-dct8x8 wpredp=0 movflags=+faststart"/>
     </encodingoption>
-    <encodingoption name="H.264 Main Profile / .mp4" extension="mp4" presetgroup="H.264" audiodesc=" aac" type="av" resize="True" qgroup="not_settable">
+    <encodingoption name="H.264 Main Profile / .mp4" extension="mp4" presetgroup="H.264 / HEVC" audiodesc=" aac" type="av" resize="True" qgroup="not_settable">
         <profile args="f=mp4 acodec=aac ab=256k vcodec=libx264 threads=0 vpre=medium preset=medium vprofile=main flags2=-dct8x8 movflags=+faststart"/>
     </encodingoption>
-    <encodingoption name="H.264 High Profile / .mp4" extension="mp4" presetgroup="H.264" audiodesc=" aac" type="av" resize="True" qgroup="not_settable">
+    <encodingoption name="H.264 High Profile / .mp4" extension="mp4" presetgroup="H.264 / HEVC" audiodesc=" aac" type="av" resize="True" qgroup="not_settable">
         <profile args="f=mp4 acodec=aac ab=256k vcodec=libx264 threads=0 vpre=medium preset=medium vprofile=high flags2=-dct8x8 movflags=+faststart"/>
     </encodingoption>
-    
+    <encodingoption name="HEVC Main Profile / .mp4" extension="mp4" presetgroup="H.264 / HEVC" audiodesc=" aac" type="av" resize="True" qgroup="not_settable">
+        <profile args="f=mp4 acodec=aac ab=256k vcodec=libx265 threads=0 preset=medium movflags=+faststart"/>
+    </encodingoption>
+
+
     <!-- MPEG --> 
     <encodingoption name="MPEG-4 / .mp4" extension="mp4" presetgroup="MPEG" type="av" audiodesc=" mp2" resize="True" qgroup="qgroup1">
         <profile args="f=mp4 hq=1 acodec=libtwolame ab=192k vcodec=mpeg4 minrate=0 vb=%BITRATE%"/>
@@ -107,9 +111,8 @@
         <profile args="f=mpeg acodec=libtwolame ab=384k vcodec=mpeg2video minrate=0 vb=%BITRATE% bf=2 b_strategy=1 trellis=1" />
     </encodingoption>
     
-
-
-    <!--WebM, Ogg, Prores -->
+    
+    <!--WebM, Ogg, Prores, DNxHD -->
     <encodingoption name="Ogg Theora / .ogv" extension="ogv" presetgroup="oggwebmetc" audiodesc=" vorbis" type="av" resize="True" qgroup="qgroup2">
         <profile args="f=ogg acodec=libvorbis ac=2 vcodec=libtheora minrate=0 vb=%BITRATE%" />
     </encodingoption>
@@ -141,7 +144,8 @@
         <profile args="f=avi acodec=pcm_s24le ac=2 vcodec=huffyuv" />
     </encodingoption>
 
-    <!-- Audio encodings --> 
+
+    <!-- Audio --> 
     <encodingoption name="Audio PCM/.wav 48kHz" extension="wav" presetgroup="Audio" audiodesc="NA" type="audio" resize="NA" qgroup="lossless"> 
         <profile args="f=wav ar=48000 video_off=1" />
     </encodingoption>
@@ -150,7 +154,7 @@
     </encodingoption>
 
 
-    <!-- Image Sequences encodings --> 
+    <!-- Image Sequence  --> 
     <encodingoption name="Image Sequence BMP" extension="bmp" presetgroup="Image Sequence" audiodesc="NA" type="img_seq" resize="NA" qgroup="lossless">
         <profile args="vcodec=bmp f=image2 an=1 audio_off=1 g=1 bf=0" />
     </encodingoption>
@@ -170,132 +174,41 @@
         <profile args="vcodec=tiff" />
     </encodingoption>
     
+    
+    <!-- Alpha -->
+    <encodingoption name="UT Video Alpha" extension="avi" presetgroup="Alpha" audiodesc="pcm" type="av" resize="True" qgroup="not_settable">
+        <profile args="f=avi vcodec=utvideo mlt_image_format=rgb24a pix_fmt=gbrap g=1 bf=0 acodec=pcm_s24le" />
+    </encodingoption>
+    <encodingoption name="WebM VP9 Alpha" extension="webm" presetgroup="Alpha" audiodesc="opus" type="av" resize="True" qgroup="not_settable">
+        <profile args="f=webm acodec=libopus ar=48000 ab=128k vcodec=libvpx-vp9 vb=2M g=120 bf=2 threads=0 rc_lookahead=16 quality=good speed=3 vprofile=0 qmax=51 qmin=4 slices=4 tile-columns=6 frame-parallel=1 lag-in-frames=25 row-mt=1 auto-alt-ref=0 mlt_image_format=rgb24a pix_fmt=yuva420p" />
+    </encodingoption>
+    
+    
+    f=webm
 
-    <!-- Preset encodings -->
-    <encodingoption name="Android 480x320" extension="mpg" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=mpeg s=480x320 progressive=1 acodec=aac ab=128k vcodec=libx264 vb=700k flags=+loop cmp=+chroma partitions=+parti8x8+parti4x4+partp8x8+partb8x8 me_method=umh subq=7 me_range=16 g=250 keyint_min=25 sc_threshold=40 i_qfactor=0.71 qcomp=0.6 qmin=10 qmax=51 qdiff=4 directpred=1 trellis=1 coder=0 bf=0 refs=1 level=30 maxrate=10000k bufsize=10000k wpredp=0 pass=1" />
-    </encodingoption>
-    <encodingoption name="iPod Classic" extension="m4v" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless"> 
-        <profile args="f=m4v s=320x240 aspect=%dar progressive=1 acodec=aac ab=128k vcodec=libx264 vb=500k flags=+loop cmp=+chroma partitions=+parti8x8+parti4x4+partp8x8+partb8x8 me_method=umh subq=5 me_range=16 g=250 keyint_min=25 sc_threshold=40 i_qfactor=0.71 qcomp=0.6 qmin=10 qmax=51 qdiff=4 directpred=1 trellis=1 coder=0 bf=0 refs=1 level=13 maxrate=3000k bufsize=768k wpredp=0 bt=256k pass=1" />
-    </encodingoption>
-    <encodingoption name="iPhone/iPod Touch" extension="m4v" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless"> 
-        <profile args="f=m4v s=480x320 aspect=%dar progressive=1 acodec=aac ab=128k vcodec=libx264 vb=700k flags=+loop cmp=+chroma partitions=+parti8x8+parti4x4+partp8x8+partb8x8 me_method=umh subq=7 me_range=16 g=250 keyint_min=25 sc_threshold=40 i_qfactor=0.71 qcomp=0.6 qmin=10 qmax=51 qdiff=4 directpred=1 trellis=1 coder=0 bf=0 refs=3 level=30 maxrate=10000k bufsize=10000k wpredp=0 pass=1" />
-    </encodingoption>
-    <encodingoption name="HDV PAL 1080 50i" extension="m2t" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=mpegts acodec=libtwolame ab=384k ar=48000 ac=2 vcodec=mpeg2video s=1440x1080 vb=25000k g=12 trellis=1 mlt_profile=hdv_1080_50i pass=1" />
-    </encodingoption>
-        <encodingoption name="HDV PAL 1080 25p" extension="m2t" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-    <profile name="PAL 1080 25p" standard="PAL" args="f=mpegts acodec=libtwolame ab=384k ar=48000 ac=2 vcodec=mpeg2video s=1440x1080 vb=25000k g=12 trellis=1 mlt_profile=hdv_1080_25p pass=1" />
-    </encodingoption>
-    <encodingoption name="HDV PAL 720 25p" extension="m2t" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=mpegts acodec=libtwolame ab=384k ar=48000 ac=2 vcodec=mpeg2video s=1280x720 vb=19700k g=12 trellis=1 mlt_profile=hdv_720_25p pass=1" />
-    </encodingoption>
-    <encodingoption name="HDV NTSC 1080 60i" extension="m2t" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=mpegts acodec=libtwolame ab=384k ar=48000 ac=2 vcodec=mpeg2video s=1440x1080 vb=25000k g=15 trellis=1 mlt_profile=hdv_1080_60i pass=1" />
-    </encodingoption>
-    <encodingoption name="HDV NTSC 1080 30p" extension="m2t" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=mpegts acodec=libtwolame ab=384k ar=48000 ac=2 vcodec=mpeg2video s=1440x1080 vb=25000k g=15 trellis=1 mlt_profile=hdv_1080_30p pass=1" />
-    </encodingoption>
-    <encodingoption name="HDV NTSC 720 30p" extension="m2t" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=mpegts acodec=libtwolame ab=384k ar=48000 ac=2 vcodec=mpeg2video s=1280x720 vb=19700k g=15 trellis=1 mlt_profile=hdv_720_30p pass=%passes" />
-    </encodingoption>
-    <encodingoption name="DVD MPEG PAL" extension="mpg" nonuser="True" audiodesc="NA"  type="av" resize="NA" qgroup="lossless">
-        <profile args="f=mpeg vcodec=mpeg2video acodec=ac3 b=5000k maxrate=8000k minrate=0 bufsize=1835008 packetsize=2048 muxrate=10080000 ab=192k ar=48000 s=720x576 g=15 me_range=63 trellis=1" />
-    </encodingoption>
-    <encodingoption name="DVD MPEG PAL Widescreen" extension="mpg" nonuser="True" audiodesc="NA"  type="av" resize="NA" qgroup="lossless">
-        <profile args="f=mpeg vcodec=mpeg2video acodec=ac3 b=5000k maxrate=8000k minrate=0 bufsize=1835008 packetsize=2048 muxrate=10080000 ab=192k ar=48000 s=720x576 g=15 me_range=63 trellis=1" />
-    </encodingoption>
-    <encodingoption name="DVD MPEG NTSC" extension="mpg" nonuser="True" audiodesc="NA"  type="av" resize="NA" qgroup="lossless">
-        <profile args="f=mpeg vcodec=mpeg2video acodec=ac3 s=720x480 b=6000k maxrate=9000k minrate=0 bufsize=1835008 packetsize=2048 muxrate=10080000 ab=192k ar=48000 g=18 me_range=63 trellis=1" />
-    </encodingoption>
-    <encodingoption name="DVD MPEG NTSC Widescreen" extension="mpg" nonuser="True" audiodesc="NA"  type="av" resize="NA" qgroup="lossless">
-        <profile args="f=mpeg vcodec=mpeg2video acodec=ac3 s=720x480 b=6000k maxrate=9000k minrate=0 bufsize=1835008 packetsize=2048 muxrate=10080000 ab=192k ar=48000 g=18 me_range=63 trellis=1" />
-    </encodingoption>
-    <encodingoption name="DVD PAL 4:3 VOB" extension="vob" nonuser="True" audiodesc="NA"  type="av" resize="NA" qgroup="lossless">
-        <profile args="f=dvd vcodec=mpeg2video acodec=ac3 vb=5000k maxrate=8000k minrate=0 bufsize=1835008 packetsize=2048 muxrate=10080000 ab=192k ar=48000 s=720x576 g=15 me_range=63 trellis=1 mlt_profile=dv_pal pass=%passes" />
-    </encodingoption>
-    <encodingoption name="DVD PAL 16:9 VOB" extension="vob" nonuser="True" audiodesc="NA"  type="av" resize="NA" qgroup="lossless">
-        <profile args="f=dvd vcodec=mpeg2video acodec=ac3 vb=5000k maxrate=8000k minrate=0 bufsize=1835008 packetsize=2048 muxrate=10080000 ab=192k ar=48000 s=720x576 g=15 me_range=63 trellis=1 mlt_profile=dv_pal_wide pass=%passes" />
-    </encodingoption>
-    <encodingoption name="DVD NTSC 4:3 VOB" extension="vob" nonuser="True" audiodesc="NA"  type="av" resize="NA" qgroup="lossless">
-        <profile args="f=dvd vcodec=mpeg2video acodec=ac3 s=720x480 vb=6000k maxrate=9000k minrate=0 bufsize=1835008 packetsize=2048 muxrate=10080000 ab=192k ar=48000 g=18 me_range=63 trellis=1 mlt_profile=dv_ntsc pass=%passes" />
-    </encodingoption>
-    <encodingoption name="DVD NTSC 16:9 VOB" extension="vob" nonuser="True" audiodesc="NA"  type="av" resize="NA" qgroup="lossless">
-        <profile args="f=dvd vcodec=mpeg2video acodec=ac3 s=720x480 vb=6000k maxrate=9000k minrate=0 bufsize=1835008 packetsize=2048 muxrate=10080000 ab=192k ar=48000 g=18 me_range=63 trellis=1 mlt_profile=dv_ntsc_wide pass=%passes" />
-    </encodingoption>
-    <encodingoption name="Raw DV PAL 4:3" extension="dv" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=dv pix_fmt=yuv420p s=720x576 mlt_profile=dv_pal" />
-    </encodingoption>
-    <encodingoption name="Raw DV PAL 16:9" extension="dv" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=dv pix_fmt=yuv420p s=720x576 mlt_profile=dv_pal_wide" />
-    </encodingoption>
-    <encodingoption name="Raw DV DVCPRO25 PAL 4:3" extension="dv" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=dv pix_fmt=yuv411p s=720x576 mlt_profile=dv_pal" />
-    </encodingoption>
-    <encodingoption name="Raw DV DVCPRO25 PAL 16:9" extension="dv" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=dv pix_fmt=yuv411p s=720x576 mlt_profile=dv_pal_wide" />
-    </encodingoption>
-    <encodingoption name="Raw DV DVCPRO50 PAL 4:3" extension="dv" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=dv pix_fmt=yuv422p s=720x576 mlt_profile=dv_pal" />
-    </encodingoption>
-    <encodingoption name="Raw DV DVCPRO50 PAL 16:9" extension="dv" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=dv pix_fmt=yuv422p s=720x576 mlt_profile=dv_pal_wide" />
-    </encodingoption>
-    <encodingoption name="Raw DV NTSC 4:3" extension="dv" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=dv pix_fmt=yuv411p s=720x480 mlt_profile=dv_ntsc" />
-    </encodingoption>
-    <encodingoption name="Raw DV NTSC 16:9" extension="dv" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=dv pix_fmt=yuv411p s=720x480 mlt_profile=dv_ntsc_wide" />
-    </encodingoption>
-    <encodingoption name="Raw DV DVCPRO25 NTSC 4:3" extension="dv" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=dv pix_fmt=yuv411p s=720x480 mlt_profile=dv_ntsc" />
-    </encodingoption>
-    <encodingoption name="Raw DV DVCPRO25 NTSC 16:9" extension="dv" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=dv pix_fmt=yuv411p s=720x480 mlt_profile=dv_ntsc_wide" />
-    </encodingoption>
-    <encodingoption name="Raw DV DVCPRO50 NTSC 4:3" extension="dv" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=dv pix_fmt=yuv422p s=720x480 mlt_profile=dv_ntsc" />
-    </encodingoption>
-    <encodingoption name="Raw DV DVCPRO50 NTSC 16:9" extension="dv" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=dv pix_fmt=yuv422p s=720x480 mlt_profile=dv_ntsc_wide" />
-    </encodingoption>
-    <encodingoption name="AVI DV PAL 4:3" extension="avi" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=avi vcodec=dvvideo pix_fmt=yuv420p acodec=pcm_s16le s=720x576 mlt_profile=dv_pal" />
-    </encodingoption>
-    <encodingoption name="AVI DV PAL 16:9" extension="avi" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=avi vcodec=dvvideo pix_fmt=yuv420p acodec=pcm_s16le s=720x576 mlt_profile=dv_pal_wide" />
-    </encodingoption>
-    <encodingoption name="AVI DVCPRO25 PAL 4:3" extension="avi" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=avi vcodec=dvvideo pix_fmt=yuv411p acodec=pcm_s16le s=720x576 mlt_profile=dv_pal" />
-    </encodingoption>
-    <encodingoption name="AVI DVCPRO25 PAL 16:9" extension="avi" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=avi vcodec=dvvideo pix_fmt=yuv411p acodec=pcm_s16le s=720x576 mlt_profile=dv_pal_wide" />
-    </encodingoption>
-    <encodingoption name="AVI DVCPRO50 PAL 4:3" extension="avi" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=avi vcodec=dvvideo pix_fmt=yuv422p acodec=pcm_s16le s=720x576 mlt_profile=dv_pal" />
-    </encodingoption>
-    <encodingoption name="AVI DVCPRO50 PAL 16:9" extension="avi" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=avi vcodec=dvvideo pix_fmt=yuv422p acodec=pcm_s16le s=720x576 mlt_profile=dv_pal_wide" />
-    </encodingoption>
-    <encodingoption name="AVI DV NTSC 4:3" extension="avi" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=avi vcodec=dvvideo pix_fmt=yuv411p acodec=pcm_s16le s=720x480 mlt_profile=dv_ntsc" />
-    </encodingoption>
-    <encodingoption name="AVI DV NTSC 16:9" extension="avi" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=avi vcodec=dvvideo pix_fmt=yuv411p acodec=pcm_s16le s=720x480 mlt_profile=dv_ntsc_wide" />
-    </encodingoption>
-    <encodingoption name="AVI DVCPRO25 NTSC 4:3" extension="avi" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=avi vcodec=dvvideo pix_fmt=yuv411p acodec=pcm_s16le s=720x480 mlt_profile=dv_ntsc" />
-    </encodingoption>
-    <encodingoption name="AVI DVCPRO25 NTSC 16:9" extension="avi" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=avi vcodec=dvvideo pix_fmt=yuv411p acodec=pcm_s16le s=720x480 mlt_profile=dv_ntsc_wide" />
-    </encodingoption>
-    <encodingoption name="AVI DVCPRO50 NTSC 4:3" extension="avi" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=avi vcodec=dvvideo pix_fmt=yuv422p acodec=pcm_s16le s=720x480 mlt_profile=dv_ntsc" />
-    </encodingoption>
-    <encodingoption name="AVI DVCPRO50 NTSC 16:9" extension="avi" nonuser="True" audiodesc="NA" type="av" resize="NA" qgroup="lossless">
-        <profile args="f=avi vcodec=dvvideo pix_fmt=yuv422p acodec=pcm_s16le s=720x480 mlt_profile=dv_ntsc_wide" />
-    </encodingoption>
+acodec=libopus
+ar=48000
+ab=128k
 
+vcodec=libvpx-vp9
+vb=2M
+g=120
+bf=2
+threads=0
+rc_lookahead=16
+quality=good
+speed=3
+vprofile=0
+qmax=51
+qmin=4
+slices=4
+tile-columns=6
+frame-parallel=1
+lag-in-frames=25
+row-mt=1
+auto-alt-ref=0
+mlt_image_format=rgb24a
+pix_fmt=yuva420p
 
     <!-- Proxy encoding -->
     <proxyencodingoption name="H.264 Preset Ultrafast" extension="mp4" type="av" audiodesc="mp3, 192kb/s, 48000Hz" resize="True" qgroup="qgroup2">

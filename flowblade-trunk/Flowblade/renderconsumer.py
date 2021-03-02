@@ -61,13 +61,13 @@ BITRATE = "bitrate"
 AUDIO_DESCRIPTION = "audiodesc"
 NON_USER = "nonuser"
 PRESET_GROUP = "presetgroup"
-PRESET_GROUP_H264 = "H.264"
+PRESET_GROUP_H264 = "H.264 / HEVC"
 PRESET_GROUP_MPEG = "MPEG"
 PRESET_GROUP_LOSSLESS = "Lossless"
 PRESET_GROUP_IMAGE_SEQUENCE = "Image Sequence"
 PRESET_GROUP_AUDIO = "Audio" 
 PRESET_GROUP_OGG_ETC = "oggwebmetc"
-
+PRESET_GROUP_ALPHA = "Alpha"
 
 
 # Default encoding name
@@ -252,7 +252,7 @@ def load_render_profiles():
     LOSSLESS_encs = []
     IMG_SEQ_encs = []
     AUDIO_encs = []
-    LEGACY_encs = []
+    ALPHA_encs = []
     
     for enc in encoding_options:
         if enc.presetgroup == PRESET_GROUP_H264:
@@ -267,8 +267,8 @@ def load_render_profiles():
             IMG_SEQ_encs.append((enc.name, enc))
         elif enc.presetgroup == PRESET_GROUP_AUDIO:
             AUDIO_encs.append((enc.name, enc))
-        else:
-            LEGACY_encs.append((enc.name, enc))
+        elif enc.presetgroup == PRESET_GROUP_ALPHA:
+            ALPHA_encs.append((enc.name, enc))
 
     if len(H264_encs) > 0:
         categorized_encoding_options.append((PRESET_GROUP_H264, H264_encs))
@@ -282,7 +282,9 @@ def load_render_profiles():
         categorized_encoding_options.append((PRESET_GROUP_IMAGE_SEQUENCE, IMG_SEQ_encs))
     if len(AUDIO_encs) > 0:
         categorized_encoding_options.append((PRESET_GROUP_AUDIO, AUDIO_encs))
-
+    if len(ALPHA_encs) > 0:
+        categorized_encoding_options.append((PRESET_GROUP_ALPHA, ALPHA_encs))
+        
     # Proxy encoding
     proxy_encoding_nodes = render_encoding_doc.getElementsByTagName(PROXY_ENCODING_OPTION)
     found_proxy_encodings = []
