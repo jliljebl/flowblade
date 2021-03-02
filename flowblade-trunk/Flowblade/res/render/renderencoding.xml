@@ -123,6 +123,9 @@
     <encodingoption name="WebM VP8 / .webm" extension="webm" presetgroup="oggwebmetc" audiodesc=" vorbis" type="av" resize="True" qgroup="qgroup2">
         <profile args="f=webm acodec=libvorbis ab=128k vcodec=libvpx g=120 rc_lookahead=16 quality=good speed=0 vprofile=0 qmax=51 qmin=11 slices=4 vb=%BITRATE% maxrate=24M minrate=100k arnr_max_frames=7 arnr_strength=5 arnr_type=3 auto-alt-ref=0 mlt_image_format=rgb24a pix_fmt=yuva420p" />
     </encodingoption>
+    <encodingoption name="WebM VP9 / .webm" extension="webm" presetgroup="oggwebmetc" audiodesc=" opus" type="av" resize="True" qgroup="qgroup2">
+        <profile args="f=webm acodec=libopus ar=48000 ab=128k vcodec=libvpx-vp9 vb=%BITRATE% g=120 bf=2 threads=0 rc_lookahead=16 quality=good speed=3 vprofile=0 qmax=51 qmin=4 slices=4 tile-columns=6 frame-parallel=1 auto-alt-ref=1 lag-in-frames=25 row-mt=1" />
+    </encodingoption>
     <encodingoption name="Apple ProRes 422 / .mov" extension="mov" presetgroup="oggwebmetc" audiodesc=" pcm" type="av" resize="True" qgroup="prores422">
         <profile args="f=mov acodec=pcm_s24le ac=2 vcodec=prores vprofile=%PROFILE% vendor=ap10 pix_fmt=yuv422p10le" />
     </encodingoption>
@@ -150,12 +153,19 @@
 
 
     <!-- Audio --> 
-    <encodingoption name="Audio PCM/.wav 48kHz" extension="wav" presetgroup="Audio" audiodesc="NA" type="audio" resize="NA" qgroup="lossless"> 
-        <profile args="f=wav ar=48000 video_off=1" />
+    <encodingoption name="PCM / .wav" extension="wav" presetgroup="Audio" audiodesc="pcm" type="audio" resize="NA" qgroup="not_settable"> 
+        <profile args="f=wav video_off=1" />
     </encodingoption>
-    <encodingoption name="Audio PCM/.wav 44.1kHz" extension="wav" presetgroup="Audio" audiodesc="NA" type="audio" resize="NA" qgroup="lossless"> 
-        <profile args="f=wav ar=44100 video_off=1" />
+    <encodingoption name="FLAC / .mka" extension="mka" presetgroup="Audio" audiodesc="pcm" type="audio" resize="NA" qgroup="not_settable"> 
+        <profile args="f=matroska acodec=flac vn=1 video_off=1" />
     </encodingoption>
+    <encodingoption name="AAC / .m4a" extension="mka" presetgroup="Audio" audiodesc="m4a" type="audio" resize="NA" qgroup="not_settable"> 
+        <profile args="f=mp4 acodec=aac ab=256k vn=1 video_off=1" />
+    </encodingoption>
+    <encodingoption name="VORBIS / .ogg" extension="ogg" presetgroup="Audio" audiodesc="ogg" type="audio" resize="NA" qgroup="not_settable"> 
+        <profile args="f=ogg acodec=vorbis ab=256k vn=1 video_off=1" />
+    </encodingoption>
+
 
 
     <!-- Image Sequence  --> 
@@ -180,11 +190,14 @@
     
     
     <!-- Alpha -->
-    <encodingoption name="UT Video Alpha" extension="avi" presetgroup="Alpha" audiodesc="pcm" type="av" resize="True" qgroup="not_settable">
-        <profile args="f=avi vcodec=utvideo mlt_image_format=rgb24a pix_fmt=gbrap g=1 bf=0 acodec=pcm_s24le" />
-    </encodingoption>
     <encodingoption name="WebM VP9 Alpha" extension="webm" presetgroup="Alpha" audiodesc="opus" type="av" resize="True" qgroup="not_settable">
         <profile args="f=webm acodec=libopus ar=48000 ab=128k vcodec=libvpx-vp9 vb=2M g=120 bf=2 threads=0 rc_lookahead=16 quality=good speed=3 vprofile=0 qmax=51 qmin=4 slices=4 tile-columns=6 frame-parallel=1 lag-in-frames=25 row-mt=1 auto-alt-ref=0 mlt_image_format=rgb24a pix_fmt=yuva420p" />
+    </encodingoption>
+    <encodingoption name="QT Alpha" extension="mov" presetgroup="Alpha" audiodesc="NA" type="v" resize="True" qgroup="not_settable">
+        <profile args="f=mov vcodec=qtrle g=1 bf=0 progressive=1 mlt_image_format=rgb24a pix_fmt=argb" />
+    </encodingoption>
+    <encodingoption name="UT Video Alpha" extension="avi" presetgroup="Alpha" audiodesc="pcm" type="av" resize="True" qgroup="not_settable">
+        <profile args="f=avi vcodec=utvideo mlt_image_format=rgb24a pix_fmt=gbrap g=1 bf=0 acodec=pcm_s24le" />
     </encodingoption>
 
 
