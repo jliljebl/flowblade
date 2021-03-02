@@ -275,7 +275,7 @@ def load_render_profiles():
     if len(MPEG_encs) > 0:
         categorized_encoding_options.append((PRESET_GROUP_MPEG, MPEG_encs))
     if len(OGG_ETC_encs) > 0:
-        categorized_encoding_options.append(("Ogg, WebM, Prores", OGG_ETC_encs))
+        categorized_encoding_options.append(("Ogg, WebM, ProRes, DNxHD", OGG_ETC_encs))
     if len(LOSSLESS_encs) > 0:
         categorized_encoding_options.append((PRESET_GROUP_LOSSLESS, LOSSLESS_encs))
     if len(IMG_SEQ_encs) > 0:
