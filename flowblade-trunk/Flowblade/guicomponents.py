@@ -3569,9 +3569,9 @@ class KBShortcutEditor:
             dialogutils.warning_message(primary_txt, secondary_txt, self.dialog_window )
 
 
+# ------------------------------------------------------- combo boxes with categories
 def get_profiles_combo():
     return CategoriesModelComboBox(mltprofiles._categorized_profiles)
-
 
 class CategoriesModelComboBox:
     
@@ -3604,6 +3604,7 @@ class CategoriesModelComboBox:
         indices = self.model.get_path(self.widget.get_active_iter()).get_indices()
         name, items = self.categories_list[indices[0]]
         return items[indices[1]]
+
 
 def get_encodings_combo():
     return CategoriesModelComboBoxWithData(renderconsumer.categorized_encoding_options)

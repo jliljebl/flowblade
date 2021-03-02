@@ -535,6 +535,7 @@ class RenderEncodingSelector():
         name, encoding = self.categorised_combo.get_selected()
         return renderconsumer.get_encoding_index(encoding)
 
+
 class PresetEncodingsSelector():
     
      def __init__(self, selection_changed_callback):

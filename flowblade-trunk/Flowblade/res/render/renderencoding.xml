@@ -45,6 +45,10 @@
         <quality name="80000 kb/s" replvalues="%BITRATE% 80000k" />
     </qualityqroup>
     <qualityqroup id="qgroup3" defaultindex="2">
+        <quality name="10M b/s" replvalues="%BITRATE% 10M" />
+        <quality name="20M b/s" replvalues="%BITRATE% 20M" />
+        <quality name="40M b/s" replvalues="%BITRATE% 40M" />
+        <quality name="60M b/s" replvalues="%BITRATE% 60M" />
         <quality name="90M b/s" replvalues="%BITRATE% 90M" />
         <quality name="120M b/s" replvalues="%BITRATE% 120M" />
         <quality name="150M b/s" replvalues="%BITRATE% 150M" />
@@ -86,19 +90,19 @@
     <!-- encoding options group together codecs, file formats and quality option groups -->
 
     <!-- H.264 --> 
-    <encodingoption name="H.264 / .mp4" extension="mp4" presetgroup="H.264 / HEVC" audiodesc=" mp3" type="av" resize="True" qgroup="qgroup2">
+    <encodingoption name="H.264 / .mp4" extension="mp4" presetgroup="H.264, HEVC" audiodesc=" mp3" type="av" resize="True" qgroup="qgroup2">
         <profile args="f=mp4 s=%SCREENSIZE% hq=1 acodec=libmp3lame ab=320k ac=2 pix_fmt=yuv420p vcodec=libx264 minrate=0 b=%BITRATE% b_strategy=1 subcmp=2 cmp=2 coder=1 flags=+loop qmax=51 subq=7 qmin=10 qcomp=0.6 qdiff=4 trellis=1 aspect=%ASPECT%"/>
     </encodingoption>
-    <encodingoption name="H.264 Baseline Profile / .mp4" extension="mp4" presetgroup="H.264 / HEVC" audiodesc=" aac" type="av" resize="True" qgroup="not_settable">
+    <encodingoption name="H.264 Baseline Profile / .mp4" extension="mp4" presetgroup="H.264, HEVC" audiodesc=" aac" type="av" resize="True" qgroup="not_settable">
         <profile args="f=mp4 acodec=aac ab=256k vcodec=libx264 threads=0 vpre=medium preset=medium vprofile=baseline coder=0 bf=0 flags2=-wpred-dct8x8 wpredp=0 movflags=+faststart"/>
     </encodingoption>
-    <encodingoption name="H.264 Main Profile / .mp4" extension="mp4" presetgroup="H.264 / HEVC" audiodesc=" aac" type="av" resize="True" qgroup="not_settable">
+    <encodingoption name="H.264 Main Profile / .mp4" extension="mp4" presetgroup="H.264, HEVC" audiodesc=" aac" type="av" resize="True" qgroup="not_settable">
         <profile args="f=mp4 acodec=aac ab=256k vcodec=libx264 threads=0 vpre=medium preset=medium vprofile=main flags2=-dct8x8 movflags=+faststart"/>
     </encodingoption>
-    <encodingoption name="H.264 High Profile / .mp4" extension="mp4" presetgroup="H.264 / HEVC" audiodesc=" aac" type="av" resize="True" qgroup="not_settable">
+    <encodingoption name="H.264 High Profile / .mp4" extension="mp4" presetgroup="H.264, HEVC" audiodesc=" aac" type="av" resize="True" qgroup="not_settable">
         <profile args="f=mp4 acodec=aac ab=256k vcodec=libx264 threads=0 vpre=medium preset=medium vprofile=high flags2=-dct8x8 movflags=+faststart"/>
     </encodingoption>
-    <encodingoption name="HEVC Main Profile / .mp4" extension="mp4" presetgroup="H.264 / HEVC" audiodesc=" aac" type="av" resize="True" qgroup="not_settable">
+    <encodingoption name="HEVC Main Profile / .mp4" extension="mp4" presetgroup="H.264, HEVC" audiodesc=" aac" type="av" resize="True" qgroup="not_settable">
         <profile args="f=mp4 acodec=aac ab=256k vcodec=libx265 threads=0 preset=medium movflags=+faststart"/>
     </encodingoption>
 
@@ -182,33 +186,7 @@
     <encodingoption name="WebM VP9 Alpha" extension="webm" presetgroup="Alpha" audiodesc="opus" type="av" resize="True" qgroup="not_settable">
         <profile args="f=webm acodec=libopus ar=48000 ab=128k vcodec=libvpx-vp9 vb=2M g=120 bf=2 threads=0 rc_lookahead=16 quality=good speed=3 vprofile=0 qmax=51 qmin=4 slices=4 tile-columns=6 frame-parallel=1 lag-in-frames=25 row-mt=1 auto-alt-ref=0 mlt_image_format=rgb24a pix_fmt=yuva420p" />
     </encodingoption>
-    
-    
-    f=webm
 
-acodec=libopus
-ar=48000
-ab=128k
-
-vcodec=libvpx-vp9
-vb=2M
-g=120
-bf=2
-threads=0
-rc_lookahead=16
-quality=good
-speed=3
-vprofile=0
-qmax=51
-qmin=4
-slices=4
-tile-columns=6
-frame-parallel=1
-lag-in-frames=25
-row-mt=1
-auto-alt-ref=0
-mlt_image_format=rgb24a
-pix_fmt=yuva420p
 
     <!-- Proxy encoding -->
     <proxyencodingoption name="H.264 Preset Ultrafast" extension="mp4" type="av" audiodesc="mp3, 192kb/s, 48000Hz" resize="True" qgroup="qgroup2">

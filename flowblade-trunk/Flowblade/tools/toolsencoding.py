@@ -140,7 +140,7 @@ def get_encoding_panel(render_data, create_container_file_panel=False):
         widgets.file_panel.movie_name.set_text(render_data.file_name)
         widgets.file_panel.extension_label.set_text(render_data.file_extension)
         widgets.file_panel.out_folder.set_current_folder(render_data.render_dir + "/")
-        widgets.encoding_panel.encoding_selector.widget.set_active(render_data.encoding_option_index) 
+        widgets.encoding_panel.encoding_selector.categorised_combo.set_selected(mltprofiles.get_profile_for_index(render_data.encoding_option_index).description())
         widgets.encoding_panel.quality_selector.widget.set_active(render_data.quality_option_index)
         profile_desc = mltprofiles.get_profile_for_index(render_data.profile_index).description()
         widgets.profile_panel.out_profile_combo.categories_combo.set_selected(profile_desc)
@@ -195,7 +195,7 @@ def get_render_data_for_current_selections():
     profile_desc = widgets.profile_panel.out_profile_combo.categories_combo.get_selected()
     render_data.profile_index = mltprofiles.get_profile_index_for_profile(mltprofiles.get_profile(profile_desc))
     render_data.use_default_profile = widgets.profile_panel.use_project_profile_check.get_active()
-    render_data.encoding_option_index = widgets.encoding_panel.encoding_selector.widget.get_active()
+    render_data.encoding_option_index = widgets.encoding_panel.encoding_selector.get_selected_encoding_index()
     render_data.quality_option_index = widgets.encoding_panel.quality_selector.widget.get_active()
     render_data.presets_index = 0 # presents rendering not available
     render_data.use_preset_encodings = False # presents rendering not available
@@ -533,11 +533,9 @@ class ProfileInfoBox(Gtk.VBox):
 class RenderEncodingSelector():
 
     def __init__(self, quality_selector, extension_label, audio_desc_label):
-        self.widget = Gtk.ComboBoxText()
-        for encoding in renderconsumer.encoding_options:
-            self.widget.append_text(encoding.name)
-            
-        self.widget.set_active(0)
+        self.categorised_combo = get_encodings_combo()
+        self.widget = self.categorised_combo.widget
+        self.categorised_combo.set_selected(renderconsumer.DEFAULT_ENCODING_NAME)
         self.widget.connect("changed", 
                             lambda w,e: self.encoding_selection_changed(), 
                             None)
@@ -548,16 +546,22 @@ class RenderEncodingSelector():
         self.audio_desc_label = audio_desc_label
         
     def encoding_selection_changed(self):
-        enc_index = self.widget.get_active()
-        
-        self.quality_selector.update_quality_selection(enc_index)
-        
-        encoding = renderconsumer.encoding_options[enc_index]
-        self.extension_label.set_text("." + encoding.extension)
+        try:
+            name, encoding = self.categorised_combo.get_selected()
+            enc_index = renderconsumer.get_encoding_index(encoding)
+            self.quality_selector.update_quality_selection(enc_index)
+            
+            self.extension_label.set_text("." + encoding.extension)
 
-        if self.audio_desc_label != None:
-            self.audio_desc_label.set_markup(encoding.get_audio_description())
+            if self.audio_desc_label != None:
+                self.audio_desc_label.set_markup(encoding.get_audio_description())
+        except:
+            pass # this gets called too early on start-up
 
+    def get_selected_encoding_index(self):
+        name, encoding = self.categorised_combo.get_selected()
+        return renderconsumer.get_encoding_index(encoding)
+        
 
 
 def get_profiles_combo():

@@ -61,7 +61,7 @@ BITRATE = "bitrate"
 AUDIO_DESCRIPTION = "audiodesc"
 NON_USER = "nonuser"
 PRESET_GROUP = "presetgroup"
-PRESET_GROUP_H264 = "H.264 / HEVC"
+PRESET_GROUP_H264 = "H.264, HEVC"
 PRESET_GROUP_MPEG = "MPEG"
 PRESET_GROUP_LOSSLESS = "Lossless"
 PRESET_GROUP_IMAGE_SEQUENCE = "Image Sequence"
@@ -280,10 +280,11 @@ def load_render_profiles():
         categorized_encoding_options.append((PRESET_GROUP_LOSSLESS, LOSSLESS_encs))
     if len(IMG_SEQ_encs) > 0:
         categorized_encoding_options.append((PRESET_GROUP_IMAGE_SEQUENCE, IMG_SEQ_encs))
-    if len(AUDIO_encs) > 0:
-        categorized_encoding_options.append((PRESET_GROUP_AUDIO, AUDIO_encs))
     if len(ALPHA_encs) > 0:
         categorized_encoding_options.append((PRESET_GROUP_ALPHA, ALPHA_encs))
+    if len(AUDIO_encs) > 0:
+        categorized_encoding_options.append((PRESET_GROUP_AUDIO, AUDIO_encs))
+
         
     # Proxy encoding
     proxy_encoding_nodes = render_encoding_doc.getElementsByTagName(PROXY_ENCODING_OPTION)
