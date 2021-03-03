@@ -53,7 +53,7 @@ class ToolsRenderData():
     """
     def __init__(self):
         self.profile_index = None
-        self.use_default_profile = None
+        self.use_default_profile = None # NOT USED, 'profile_index' is the meaningful data here, this one should not have been included in this data struct.
         self.use_preset_encodings = None
         self.presets_index = None
         self.encoding_option_index = None
