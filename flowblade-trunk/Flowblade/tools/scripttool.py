@@ -74,6 +74,9 @@ RENDER_FRAMES_DIR = "/render_frames"
 PREVIEW_FILE = "preview.png"
 NO_PREVIEW_FILE = "fallback_thumb.png"
 
+MLT_PLAYER_MONITOR = "mlt_player_monitor" # This one used to play clips
+CAIRO_DRAW_MONITOR = "cairo_draw_monitor"  # This one used to show single frames
+
 _session_id = None
 
 _window = None
@@ -616,9 +619,6 @@ class ScriptToolWindow(Gtk.Window):
                                   # is used to position and scale SDL overlay that actually displays video.
         self.monitor.set_size_request(MONITOR_WIDTH, MONITOR_HEIGHT)
 
-        left_vbox = Gtk.VBox(False, 0)
-        left_vbox.pack_start(self.monitor, True, True, 0)
-
         self.preview_info = Gtk.Label()
         self.preview_info.set_markup("<small>" + _("no preview") + "</small>" )
         preview_info_row = Gtk.HBox()
@@ -629,18 +629,11 @@ class ScriptToolWindow(Gtk.Window):
 
         self.preview_monitor = cairoarea.CairoDrawableArea2(MONITOR_WIDTH, MONITOR_HEIGHT, self._draw_preview)
 
-        self.no_preview_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + NO_PREVIEW_FILE)
-
-        right_vbox = Gtk.VBox(False, 2)
-        right_vbox.pack_start(preview_info_row, False, False, 0)
-        right_vbox.pack_start(self.preview_monitor, True, True, 0)
-
-        # Monitors panel
-        monitors_panel = Gtk.HBox(False, 2)
-        #monitors_panel.pack_start(right_vbox, False, False, 0)
-        #monitors_panel.pack_start(Gtk.Label(), True, True, 0)
-        monitors_panel.pack_start(left_vbox, False, False, 0)
-        
+        self.monitors_switcher = Gtk.Stack()    
+        self.monitors_switcher.add_named(self.monitor, MLT_PLAYER_MONITOR)
+        self.monitors_switcher.add_named(self.preview_monitor, CAIRO_DRAW_MONITOR)
+        self.monitors_switcher.set_visible_child_name(MLT_PLAYER_MONITOR)
+    
         # Control row
         self.tc_display = guicomponents.MonitorTCDisplay()
         self.tc_display.use_internal_frame = True
@@ -678,7 +671,7 @@ class ScriptToolWindow(Gtk.Window):
         control_panel.pack_start(self.preview_button, False, False, 0)
 
         preview_panel = Gtk.VBox(False, 2)
-        preview_panel.pack_start(monitors_panel, False, False, 0)
+        preview_panel.pack_start(self.monitors_switcher, False, False, 0)
         preview_panel.pack_start(control_panel, False, False, 0)
         preview_panel.set_margin_bottom(8)
 
