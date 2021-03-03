@@ -619,14 +619,6 @@ class ScriptToolWindow(Gtk.Window):
                                   # is used to position and scale SDL overlay that actually displays video.
         self.monitor.set_size_request(MONITOR_WIDTH, MONITOR_HEIGHT)
 
-        self.preview_info = Gtk.Label()
-        self.preview_info.set_markup("<small>" + _("no preview") + "</small>" )
-        preview_info_row = Gtk.HBox()
-        preview_info_row.pack_start(self.preview_info, False, False, 0)
-        preview_info_row.pack_start(Gtk.Label(), True, True, 0)
-        preview_info_row.set_margin_top(6)
-        preview_info_row.set_margin_bottom(8)
-
         self.preview_monitor = cairoarea.CairoDrawableArea2(MONITOR_WIDTH, MONITOR_HEIGHT, self._draw_preview)
 
         self.monitors_switcher = Gtk.Stack()    
