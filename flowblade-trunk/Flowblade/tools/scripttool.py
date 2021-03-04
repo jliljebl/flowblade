@@ -414,9 +414,20 @@ def _render_script():
     script = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), False)
     _profile_file_path = mltprofiles.get_profile_file_path(_launch_profile_name)
 
+    profile = mltprofiles.get_profile(_launch_profile_name)
+    global _current_dimensions
+    _current_dimensions = (profile.width(), profile.height(), 1.0)
+    
     error, frame_img = fluxity.render_preview_frame(script, 0, get_session_folder(), _profile_file_path)
 
     if error == None:
+        print(frame_img)
+        global _current_preview_surface
+        _current_preview_surface = frame_img
+        _window.preview_monitor.show()
+        _window.monitors_switcher.set_visible_child_name(CAIRO_DRAW_MONITOR)
+        _window.monitors_switcher.queue_draw()
+        _window.preview_monitor.queue_draw()
         _window.out_view.get_buffer().set_text("success:\n" + script)
     else:
         _window.out_view.get_buffer().set_text(error)
@@ -607,11 +618,13 @@ class ScriptToolWindow(Gtk.Window):
         self.monitor.set_size_request(MONITOR_WIDTH, MONITOR_HEIGHT)
 
         self.preview_monitor = cairoarea.CairoDrawableArea2(MONITOR_WIDTH, MONITOR_HEIGHT, self._draw_preview)
+        #self.preview_monitor.set_size_request(MONITOR_WIDTH, MONITOR_HEIGHT)
 
         self.monitors_switcher = Gtk.Stack()    
         self.monitors_switcher.add_named(self.monitor, MLT_PLAYER_MONITOR)
         self.monitors_switcher.add_named(self.preview_monitor, CAIRO_DRAW_MONITOR)
-        self.monitors_switcher.set_visible_child_name(MLT_PLAYER_MONITOR)
+        self.monitors_switcher.set_visible_child_name(CAIRO_DRAW_MONITOR)
+
     
         # Control row
         self.tc_display = guicomponents.MonitorTCDisplay()
@@ -928,7 +941,7 @@ class ScriptToolWindow(Gtk.Window):
 
     def _draw_preview(self, event, cr, allocation):
         x, y, w, h = allocation
-
+        print(x, y, w, h)
         if _current_preview_surface != None:
             width, height, pixel_aspect = _current_dimensions
             scale = float(MONITOR_WIDTH) / float(width)

@@ -39,10 +39,13 @@ def init_render(fctx):
     # Render init here
     fctx.set_data("bg_color", cairo.SolidPattern(0.8, 0.2, 0.2, 1.0))
  
-def render_frame(frame, fctx):
-    # Render init here
+def render_frame(frame, fctx, w, h):
+    # Frame Render code here
     cr = fctx.get_frame_cr()
-    
+    color = fctx.get_data("bg_color")
+    cr.set_source(color)
+    cr.rectangle(0, 0, w, h)
+    cr.fill()
     fctx.write_out_frame()
 """
 
@@ -83,9 +86,9 @@ class FluxityScript:
         except Exception as e:
           _raise_fluxity_error("error calling function'init_render()':\n\n" + str(e))
           
-    def call_render_frame(self, frame, fctx):
+    def call_render_frame(self, frame, fctx, w, h):
         try:
-          self.namespace['render_frame'](frame, fctx)
+          self.namespace['render_frame'](frame, fctx, w, h)
         except Exception as e:
           _raise_fluxity_error("error calling function'render_frame()':\n\n" + str(e))
 
@@ -129,14 +132,21 @@ class FluxityContext:
 
     def get_frame_cr(self):
         return self.priv_context.frame_cr
-        
+
+    def get_dimensions(self):
+        w = self.priv_context.profile.get_profile_property(FluxityProfile.WIDTH)
+        h = self.priv_context.profile.get_profile_property(FluxityProfile.HEIGHT)
+        return (w, h)
+
     def write_out_frame(self):
         self.priv_context.write_out_frame()
 
     def set_data(self, label, item):
         self.data[label] = item
 
-
+    def get_data(self, label):
+        return self.data[label]
+        
 class FluxityContextPrivate:
     """
     This object exists to keep FluxityContext API clean for script developers.
@@ -148,6 +158,8 @@ class FluxityContextPrivate:
         
         self.preview_render = preview_render
         self.output_folder = output_folder
+        
+        self.frame = -1
         
         self.frame_surface = None
         self.frame_cr = None
@@ -175,15 +187,17 @@ class FluxityContextPrivate:
         
         return self.profile.profile_data
         
-    def create_frame_surface(self):
+    def create_frame_surface(self, frame):
+        self.frame = frame
         w = self.profile.profile_data[FluxityProfile.WIDTH]
         h = self.profile.profile_data[FluxityProfile.HEIGHT]
-        print(w, h, type(w), type(h))
         self.frame_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
         self.frame_cr = cairo.Context(self.frame_surface)
 
     def write_out_frame(self):
-        print("wrie out frame")
+        if self.preview_render:
+            return
+        #self.frame_surface.write_to_png(filepath)
 
 # ---------------------------------------------------------- Errors 
 class FluxityError(Exception):
@@ -213,16 +227,15 @@ def render_preview_frame(script, frame, out_folder, _profile_file_path):
         fctx = FluxityContext(True, out_folder)
         fctx.priv_context.load_profile(_profile_file_path)
 
-        print("1")
         fscript.call_init_script(fctx)
-        print("1")
+
         fscript.call_init_render(fctx)
-        print("1")
-        fctx.priv_context.create_frame_surface()
-        print("1")
-        fscript.call_render_frame(frame, fctx)
+
+        fctx.priv_context.create_frame_surface(frame)
+        w, h = fctx.get_dimensions()
+        fscript.call_render_frame(frame, fctx, w, h)
         
-        frame_img = None
+        frame_img = fctx.priv_context.frame_surface
         return (None, frame_img) # (error_msg, frame_iamge)
     except Exception as e:
         msg = str(e)
