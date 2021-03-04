@@ -412,27 +412,14 @@ def _load_script_dialog_callback(dialog, response_id):
 def _render_script():
     buf = _window.script_view.get_buffer()
     script = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), False)
+    _profile_file_path = mltprofiles.get_profile_file_path(_launch_profile_name)
 
-    try:
-        fscript = fluxity.FluxityScript(script)
-        fscript.compile_script()
-        if _launch_profile_name != None:
-            _profile_file_path = mltprofiles.get_profile_file_path(_launch_profile_name)
-        else:
-            _profile_file_path = None # we need to fail here
-        
-        fctx = fluxity.FluxityContext()
-        msg = str(fctx.load_profile(_profile_file_path))
-        
-        fscript.call_render_frame(1, fctx)
-        success = True
-    except Exception as e:
-        _window.out_view.get_buffer().set_text(str(e))
-        success = False
-    #script = script + str(names)
-    
-    if success:
-        _window.out_view.get_buffer().set_text("success:\n" + script + msg)
+    error, frame_img = fluxity.render_preview_frame(script, 0, get_session_folder(), _profile_file_path)
+
+    if error == None:
+        _window.out_view.get_buffer().set_text("success:\n" + script)
+    else:
+        _window.out_view.get_buffer().set_text(error)
     
 #-------------------------------------------------- menu
 def _hamburger_menu_callback(widget, msg):
