@@ -223,14 +223,10 @@ def main(root_path, force_launch=False):
     os.putenv('SDL_WINDOWID', str(_window.monitor.get_window().get_xid()))
     Gdk.flush()
 
-    # Start with a clip loaded if data provided
-    if len(sys.argv) > 1:
-        global _launch_profile_name
-        _launch_profile_name = _get_arg_value(sys.argv, "profile_name")
+    # Get launch profile.
+    global _launch_profile_name
+    _launch_profile_name = _get_arg_value(sys.argv, "profile_name")
 
-    else:
-        print( len(sys.argv) , "kjokjkjkjkjkjkjkj")
-        
     Gtk.main()
     Gdk.threads_leave()
 
@@ -267,7 +263,8 @@ def get_current_frame_file():
 
 def get_preview_file():
     return get_session_folder() + "/" + PREVIEW_FILE
-    
+
+"""
 # --------------------------------------------- load clip
 def open_clip_dialog():
     
@@ -354,7 +351,7 @@ def _finish_clip_open():
 #-------------------------------------------------- script setting and save/load
 #def script_menu_lauched(launcher, event):
 #    gmicscript.show_menu(event, script_menu_item_selected)
-"""
+
 def script_menu_item_selected(item, script):
     if _window.action_select.get_active() == False:
         _window.script_view.get_buffer().set_text(script.script)
@@ -365,12 +362,12 @@ def script_menu_item_selected(item, script):
 """
 
 def save_script_dialog(callback):
-    dialog = Gtk.FileChooserDialog(_("Save Gmic Script As"), None, 
+    dialog = Gtk.FileChooserDialog(_("Save Script As"), None, 
                                    Gtk.FileChooserAction.SAVE, 
                                    (_("Cancel"), Gtk.ResponseType.CANCEL,
                                    _("Save"), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.SAVE)
-    dialog.set_current_name("gmic_script")
+    dialog.set_current_name("flowblade_script")
     dialog.set_do_overwrite_confirmation(True)
     dialog.set_select_multiple(False)
     dialog.connect('response', callback)
@@ -389,7 +386,7 @@ def _save_script_dialog_callback(dialog, response_id):
         dialog.destroy()
 
 def load_script_dialog(callback):
-    dialog = Gtk.FileChooserDialog(_("Load Fluxity Script"), None, 
+    dialog = Gtk.FileChooserDialog(_("Load Script"), None, 
                                    Gtk.FileChooserAction.OPEN, 
                                    (_("Cancel"), Gtk.ResponseType.CANCEL,
                                     _("OK"), Gtk.ResponseType.ACCEPT))
@@ -409,35 +406,16 @@ def _load_script_dialog_callback(dialog, response_id):
         dialog.destroy()
 
 
-def _render_script():
-    buf = _window.script_view.get_buffer()
-    script = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), False)
-    _profile_file_path = mltprofiles.get_profile_file_path(_launch_profile_name)
 
-    profile = mltprofiles.get_profile(_launch_profile_name)
-    global _current_dimensions
-    _current_dimensions = (profile.width(), profile.height(), 1.0)
-    
-    error, frame_img = fluxity.render_preview_frame(script, 0, get_session_folder(), _profile_file_path)
-
-    if error == None:
-        print(frame_img)
-        global _current_preview_surface
-        _current_preview_surface = frame_img
-        _window.preview_monitor.show()
-        _window.monitors_switcher.set_visible_child_name(CAIRO_DRAW_MONITOR)
-        _window.monitors_switcher.queue_draw()
-        _window.preview_monitor.queue_draw()
-        _window.out_view.get_buffer().set_text("success:\n" + script)
-    else:
-        _window.out_view.get_buffer().set_text(error)
     
 #-------------------------------------------------- menu
 def _hamburger_menu_callback(widget, msg):
     if msg == "load_script":
         load_script_dialog(_load_script_dialog_callback)
-    elif msg == "render_script":
-        _render_script()
+    elif msg == "save_script":
+        save_script_dialog(_save_script_dialog_callback)
+    elif msg == "render_preview":
+        render_preview()
     elif msg == "close":
         _shutdown()
     elif msg == "docs":
@@ -523,9 +501,27 @@ def abort_render():
     _effect_renderer.abort_render()
 
 def render_preview_frame():
-    _frame_writer.write_frame(get_clip_frames_dir() + "/", _player.current_frame())
-    render_current_frame_preview()
-    _window.preview_monitor.queue_draw()
+    buf = _window.script_view.get_buffer()
+    script = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), False)
+    _profile_file_path = mltprofiles.get_profile_file_path(_launch_profile_name)
+
+    profile = mltprofiles.get_profile(_launch_profile_name)
+    global _current_dimensions
+    _current_dimensions = (profile.width(), profile.height(), 1.0)
+    
+    error, frame_img = fluxity.render_preview_frame(script, 0, get_session_folder(), _profile_file_path)
+
+    if error == None:
+        print(frame_img)
+        global _current_preview_surface
+        _current_preview_surface = frame_img
+        _window.preview_monitor.show()
+        _window.monitors_switcher.set_visible_child_name(CAIRO_DRAW_MONITOR)
+        _window.monitors_switcher.queue_draw()
+        _window.preview_monitor.queue_draw()
+        _window.out_view.get_buffer().set_text("success:\n" + script)
+    else:
+        _window.out_view.get_buffer().set_text(error)
     
 def render_current_frame_preview():
     global _preview_render
@@ -618,14 +614,12 @@ class ScriptToolWindow(Gtk.Window):
         self.monitor.set_size_request(MONITOR_WIDTH, MONITOR_HEIGHT)
 
         self.preview_monitor = cairoarea.CairoDrawableArea2(MONITOR_WIDTH, MONITOR_HEIGHT, self._draw_preview)
-        #self.preview_monitor.set_size_request(MONITOR_WIDTH, MONITOR_HEIGHT)
 
         self.monitors_switcher = Gtk.Stack()    
         self.monitors_switcher.add_named(self.monitor, MLT_PLAYER_MONITOR)
         self.monitors_switcher.add_named(self.preview_monitor, CAIRO_DRAW_MONITOR)
         self.monitors_switcher.set_visible_child_name(CAIRO_DRAW_MONITOR)
 
-    
         # Control row
         self.tc_display = guicomponents.MonitorTCDisplay()
         self.tc_display.use_internal_frame = True
@@ -654,13 +648,24 @@ class ScriptToolWindow(Gtk.Window):
         
         self.preview_button = Gtk.Button(_("Preview"))
         self.preview_button.connect("clicked", lambda w: render_preview_frame())
-                            
-        control_panel = Gtk.HBox(False, 2)
-        control_panel.pack_start(self.tc_display.widget, False, False, 0)
-        control_panel.pack_start(pos_bar_frame, True, True, 0)
-        control_panel.pack_start(self.control_buttons.widget, False, False, 0)
-        control_panel.pack_start(guiutils.pad_label(2, 2), False, False, 0)
-        control_panel.pack_start(self.preview_button, False, False, 0)
+        self.preview_range_button = Gtk.Button(_("Preview Range"))
+        self.preview_range_button.connect("clicked", lambda w: render_preview_frame())
+        
+        control_top = Gtk.HBox(False, 2)
+        control_top.pack_start(self.tc_display.widget, False, False, 0)
+        control_top.pack_start(pos_bar_frame, True, True, 0)
+        control_top.pack_start(guiutils.pad_label(2, 2), False, False, 0)
+        control_top.pack_start(self.preview_button, False, False, 0)
+        control_top.pack_start(self.preview_range_button, False, False, 0)
+
+        control_bottom = Gtk.HBox(False, 2)
+        control_bottom.pack_start(Gtk.Label(), True, True, 0)
+        control_bottom.pack_start(self.control_buttons.widget, False, False, 0)
+        control_bottom.pack_start(Gtk.Label(), True, True, 0)
+        
+        control_panel = Gtk.VBox(False, 2)
+        control_panel.pack_start(control_top, False, False, 0)
+        control_panel.pack_start(control_bottom, True, True, 0)
 
         preview_panel = Gtk.VBox(False, 2)
         preview_panel.pack_start(self.monitors_switcher, False, False, 0)
@@ -675,8 +680,6 @@ class ScriptToolWindow(Gtk.Window):
         self.mark_in_info = Gtk.Label("")
         self.mark_out_info = Gtk.Label("")
         self.length_info = Gtk.Label("")
-        
-        #self.update_length_and_marks_info()
 
         in_row = guiutils.get_two_column_box(self.mark_in_label, self.mark_in_info, 150)
         out_row = guiutils.get_two_column_box(self.mark_out_label, self.mark_out_info, 150)
@@ -769,27 +772,7 @@ class ScriptToolWindow(Gtk.Window):
 
         # --------------------------------------------------- LEFT SIDE: SCRIPTING
         # --------------------------------------------------- LEFT SIDE: SCRIPTING
-        # --------------------------------------------------- LEFT SIDE: SCRIPTING
-        self.preset_label = Gtk.Label()
-        self.present_event_box = Gtk.EventBox()
-        self.present_event_box.add(self.preset_label)
-        #self.present_event_box.connect("button-press-event",  script_menu_lauched)
-
-        #self.script_menu = toolguicomponents.PressLaunch(script_menu_lauched)
-        
-        self.action_select = Gtk.CheckButton()
-        self.action_select.set_active(False)
-                
-        #self.action_label = Gtk.Label(_("Add to Script"))
-
-        #preset_row = Gtk.HBox(False, 2)
-        #preset_row.pack_start(self.present_event_box, False, False, 0)
-        #preset_row.pack_start(self.script_menu.widget, False, False, 0)
-        #preset_row.pack_start(guiutils.pad_label(2, 30), False, False, 0)
-        #preset_row.pack_start(Gtk.Label(), True, True, 0)
-        #preset_row.pack_start(self.action_select, False, False, 0)
-        #preset_row.pack_start(self.action_label, False, False, 0)
-                
+        # --------------------------------------------------- LEFT SIDE: SCRIPTING    
         self.script_view = Gtk.TextView()
         self.script_view.set_sensitive(True)
         self.script_view.set_editable(True)
@@ -861,7 +844,7 @@ class ScriptToolWindow(Gtk.Window):
 
         # Set pane and show window
         self.add(align)
-        self.set_title(_("Fluxity Scripting"))
+        self.set_title(_("Scripting Tool"))
         self.set_position(Gtk.WindowPosition.CENTER)
         #self.set_widgets_sensitive(False)
         self.show_all()
@@ -919,7 +902,11 @@ class ScriptToolWindow(Gtk.Window):
         guiutils.remove_children(menu)
         
         menu.add(_get_menu_item(_("Load Script") + "...", _hamburger_menu_callback, "load_script" ))
-        menu.add(_get_menu_item(_("Render Script") + "...", _hamburger_menu_callback, "render_script" ))
+        menu.add(_get_menu_item(_("Save Script") + "...", _hamburger_menu_callback, "save_script" ))
+        _add_separetor(menu)
+        menu.add(_get_menu_item(_("Render Frame Preview") + "...", _hamburger_menu_callback, "render_preview" ))
+        menu.add(_get_menu_item(_("Render Range Preview") + "...", _hamburger_menu_callback, "render_range_preview" ))
+        _add_separetor(menu)
         menu.add(_get_menu_item(_("G'Mic Webpage"), _hamburger_menu_callback, "docs" ))
         _add_separetor(menu)
         menu.add(_get_menu_item(_("Close"), _hamburger_menu_callback, "close" ))
@@ -983,7 +970,6 @@ class ScriptToolWindow(Gtk.Window):
         self.pos_bar.widget.set_sensitive(value)      
         self.control_buttons.set_sensitive(value)
         self.preset_label.set_sensitive(value)
-        self.action_select.set_sensitive(value)
         self.action_label.set_sensitive(value)
         self.script_view.set_sensitive(value) 
         self.out_view.set_sensitive(value)       
@@ -1003,15 +989,11 @@ class ScriptToolWindow(Gtk.Window):
         self.stop_button.set_sensitive(False)
         self.render_button.set_sensitive(value)
         self.preview_button.set_sensitive(value)
-        #self.load_script.set_sensitive(value)
-        #self.save_script.set_sensitive(value)
         self.mark_in_label.set_sensitive(value)
         self.mark_out_label.set_sensitive(value)
         self.length_label.set_sensitive(value)
         self.out_label.set_sensitive(value)
         self.media_info.set_sensitive(value)
-        self.present_event_box.set_sensitive(value)
-        #self.script_menu.set_sensitive(value)
  
         self.update_encode_sensitive()
 
