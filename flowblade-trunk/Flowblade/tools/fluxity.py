@@ -220,13 +220,13 @@ def _raise_exec_error(exception_msg):
 # ------------------------------------------------------ rendering
 def render_preview_frame(script, frame, out_folder, profile_file_path):
     try:
-        # Init
+        # Init script and context.
         error_msg, results = _init_script_and_context(script, out_folder, profile_file_path)
         if error_msg != None:
             return (error_msg, None)
         fscript, fctx = results
 
-        # Execute script to render preview frame
+        # Execute script to render a preview frame.
         fscript.call_init_script(fctx)
 
         fscript.call_init_render(fctx)
@@ -243,7 +243,7 @@ def render_preview_frame(script, frame, out_folder, profile_file_path):
 
 def render_frame_sequence(script, in_frame, out_frame, out_folder, profile_file_path):
     try:
-        # Init
+        # Init script and context.
         error_msg, results = _init_script_and_context(script, out_folder, profile_file_path)
         if error_msg != None:
             return error_msg

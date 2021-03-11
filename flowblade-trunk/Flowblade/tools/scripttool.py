@@ -214,7 +214,12 @@ def main(root_path, force_launch=False):
     mltprofiles.load_profile_list()
 
     gui.load_current_colors()
-    
+
+    # Get launch profile and init player and display GUI params for it. 
+    global _launch_profile_name
+    _launch_profile_name = _get_arg_value(sys.argv, "profile_name")
+    _init_player_and_profile_data(_launch_profile_name)
+
     global _window
     _window = ScriptToolWindow()
     _window.pos_bar.set_dark_bg_color()
@@ -223,13 +228,14 @@ def main(root_path, force_launch=False):
     os.putenv('SDL_WINDOWID', str(_window.monitor.get_window().get_xid()))
     Gdk.flush()
 
-    # Get launch profile.
-    global _launch_profile_name
-    _launch_profile_name = _get_arg_value(sys.argv, "profile_name")
+    _init_playback()
+
+    print(_launch_profile_name)
 
     Gtk.main()
     Gdk.threads_leave()
 
+# ------------------------------------------------- data, folders init
 def _load_startup_data():
     path, mark_in, mark_out = _startup_data
     _do_file_load(path)
@@ -243,10 +249,38 @@ def _finish_load_startup_data():
     _window.update_marks_display()
     _window.pos_bar.update_display_from_producer(_player.producer)
     _window.update_render_status_info()
-    
+
 def init_frames_dirs():
     os.mkdir(get_clip_frames_dir())
     os.mkdir(get_render_frames_dir())
+    
+# ----------------------------------------------------------- MLT player init
+def _init_player_and_profile_data(profile_name):
+    gmicplayer.set_current_profile_for_profile_name(profile_name)
+    new_profile = mltprofiles.get_profile(profile_name)
+
+    global _current_dimensions, _current_fps, _current_profile_index
+    _current_dimensions = (new_profile.width(), new_profile.height(), 1.0)
+    _current_fps = float(new_profile.frame_rate_num())/float(new_profile.frame_rate_den())
+    _current_profile_index = mltprofiles.get_profile_index_for_profile(new_profile)
+
+    global _player, _frame_writer, _current_path
+    _current_path = respaths.ROOT_PATH + "/res/scripttool/not_rendered.png"
+    _player = gmicplayer.GmicPlayer(_current_path)
+
+def _init_playback():
+
+    _window.set_fps()
+    _window.pos_bar.update_display_from_producer(_player.producer)
+    _window.set_monitor_sizes()
+    #_window.set_widgets_sensitive(True)
+    #_window.render_button.set_sensitive(False)
+    #_window.encode_desc.set_markup("<small>" + _("not set")  + "</small>")
+    _player.create_sdl_consumer()
+    _player.connect_and_start()
+
+    
+
 
 #----------------------------------------------- session folders and files
 def get_session_folder():
@@ -264,6 +298,8 @@ def get_current_frame_file():
 def get_preview_file():
     return get_session_folder() + "/" + PREVIEW_FILE
 
+
+    
 """
 # --------------------------------------------- load clip
 def open_clip_dialog():
@@ -871,9 +907,9 @@ class ScriptToolWindow(Gtk.Window):
         #self.set_widgets_sensitive(False)
         self.show_all()
         self.set_resizable(False)
-        self.set_active_state(False)
+        self.set_active_state(True)
 
-    def init_for_new_clip(self, clip_path, profile_name):
+    def init_for_new_clip(self, profile_name):
         self.clip_path = clip_path
         self.set_active_state(True)
         self.pos_bar.update_display_from_producer(_player.producer)

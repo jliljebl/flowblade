@@ -49,6 +49,10 @@ def set_current_profile(clip_path):
     _current_profile = mltprofiles.get_profile_for_index(profile_index)
     return profile_index
 
+def set_current_profile_for_profile_name(profile_name):
+    global _current_profile
+    _current_profile = mltprofiles.get_profile(profile_name)
+
 def get_frames_range_writer_for_current_profile(file_path, callback):
     return FramesRangeWriter(file_path, callback, _current_profile)
 
