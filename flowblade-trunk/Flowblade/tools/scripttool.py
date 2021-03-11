@@ -522,7 +522,29 @@ def render_preview_frame():
         _window.out_view.get_buffer().set_text("success:\n" + script)
     else:
         _window.out_view.get_buffer().set_text(error)
+
+def render_range():
+    buf = _window.script_view.get_buffer()
+    script = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), False)
+    _profile_file_path = mltprofiles.get_profile_file_path(_launch_profile_name)
+
+    profile = mltprofiles.get_profile(_launch_profile_name)
+    global _current_dimensions
+    _current_dimensions = (profile.width(), profile.height(), 1.0)
     
+    error = fluxity.render_frame_sequence(script, 0, 20, get_render_frames_dir(), _profile_file_path)
+
+    if error == None:
+        #global _current_preview_surface
+        #_current_preview_surface = frame_img
+        #_window.preview_monitor.show()
+        #_window.monitors_switcher.set_visible_child_name(CAIRO_DRAW_MONITOR)
+        #_window.monitors_switcher.queue_draw()
+        #_window.preview_monitor.queue_draw()
+        _window.out_view.get_buffer().set_text("success:\n" + "rendered some frames!")
+    else:
+        _window.out_view.get_buffer().set_text(error)
+        
 def render_current_frame_preview():
     global _preview_render
     _preview_render = GmicPreviewRendererer()
@@ -649,7 +671,7 @@ class ScriptToolWindow(Gtk.Window):
         self.preview_button = Gtk.Button(_("Preview"))
         self.preview_button.connect("clicked", lambda w: render_preview_frame())
         self.preview_range_button = Gtk.Button(_("Preview Range"))
-        self.preview_range_button.connect("clicked", lambda w: render_preview_frame())
+        self.preview_range_button.connect("clicked", lambda w: render_range())
         
         control_top = Gtk.HBox(False, 2)
         control_top.pack_start(self.tc_display.widget, False, False, 0)

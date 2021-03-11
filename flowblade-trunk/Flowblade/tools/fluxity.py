@@ -46,7 +46,6 @@ def render_frame(frame, fctx, w, h):
     cr.set_source(color)
     cr.rectangle(0, 0, w, h)
     cr.fill()
-    fctx.write_out_frame()
 """
 
 # ---------------------------------------------------------- script object
@@ -195,9 +194,12 @@ class FluxityContextPrivate:
         self.frame_cr = cairo.Context(self.frame_surface)
 
     def write_out_frame(self):
-        if self.preview_render:
-            return
-        #self.frame_surface.write_to_png(filepath)
+        if self.output_folder == None or os.path.isdir(self.output_folder) == False:
+            exception_msg = "Output folder " + self.output_folder + " does not exist."
+            _raise_fluxity_error(exception_msg)
+        
+        filepath = self.output_folder + "/frame_" + str(self.frame) + ".png"
+        self.frame_surface.write_to_png(filepath)
 
 # ---------------------------------------------------------- Errors 
 class FluxityError(Exception):
@@ -214,19 +216,17 @@ def _raise_compile_error(exception_msg):
 
 def _raise_exec_error(exception_msg):
     raise FluxityError("Error on doing exec() script code object:\n" + exception_msg)
-    
-    
-    
 
 # ------------------------------------------------------ rendering
-def render_preview_frame(script, frame, out_folder, _profile_file_path):
+def render_preview_frame(script, frame, out_folder, profile_file_path):
     try:
-        fscript = FluxityScript(script)
-        fscript.compile_script()
-        
-        fctx = FluxityContext(True, out_folder)
-        fctx.priv_context.load_profile(_profile_file_path)
+        # Init
+        error_msg, results = _init_script_and_context(script, out_folder, profile_file_path)
+        if error_msg != None:
+            return (error_msg, None)
+        fscript, fctx = results
 
+        # Execute script to render preview frame
         fscript.call_init_script(fctx)
 
         fscript.call_init_render(fctx)
@@ -237,6 +237,44 @@ def render_preview_frame(script, frame, out_folder, _profile_file_path):
         
         frame_img = fctx.priv_context.frame_surface
         return (None, frame_img) # (error_msg, frame_iamge)
+    except Exception as e:
+        msg = str(e)
+        return (msg, None) # (error_msg, frame_iamge)
+
+def render_frame_sequence(script, in_frame, out_frame, out_folder, profile_file_path):
+    try:
+        # Init
+        error_msg, results = _init_script_and_context(script, out_folder, profile_file_path)
+        if error_msg != None:
+            return error_msg
+        fscript, fctx = results
+        
+        # Execute script to write frame sequence.
+        fscript.call_init_script(fctx)
+
+        fscript.call_init_render(fctx)
+
+        for frame in range(in_frame, out_frame):
+            fctx.priv_context.create_frame_surface(frame)
+            w, h = fctx.get_dimensions()
+            fscript.call_render_frame(frame, fctx, w, h)
+            fctx.write_out_frame()
+
+        return None
+        
+    except Exception as e:
+        msg = str(e)
+        return msg
+
+def _init_script_and_context(script, out_folder, profile_file_path):
+    try:
+        fscript = FluxityScript(script)
+        fscript.compile_script()
+        
+        fctx = FluxityContext(True, out_folder)
+        fctx.priv_context.load_profile(profile_file_path)
+
+        return (None, (fscript, fctx)) # (error_msg, frame_iamge)
     except Exception as e:
         msg = str(e)
         return (msg, None) # (error_msg, frame_iamge)
