@@ -2583,8 +2583,8 @@ class MonitorTCDisplay:
     Mostly copy-pasted from BigTCDisplay, just enough different to make common inheritance
     annoying.
     """
-    def __init__(self):
-        self.widget = cairoarea.CairoDrawableArea2( 94,
+    def __init__(self, widget_width=94):
+        self.widget = cairoarea.CairoDrawableArea2( widget_width,
                                                     20,
                                                     self._draw)
         self.font_desc = Pango.FontDescription("Bitstream Vera Sans Mono Condensed 9")
@@ -2592,7 +2592,7 @@ class MonitorTCDisplay:
         # Draw consts
         x = 2
         y = 2
-        width = 90
+        width = widget_width - 4
         height = 16
         aspect = 1.0
         corner_radius = height / 3.5
@@ -2608,6 +2608,7 @@ class MonitorTCDisplay:
 
         self.use_internal_fps = False # if False, fps value for calulating tc comes from utils.fps(),
                                        # if True, fps value from self.fps that will have to be set from user site
+        self.display_tc = True # if this is False the frame number is displayed instead of timecode
         self.fps = self.FPS_NOT_SET # this will have to be set from user site
 
     def set_frame(self, frame):
@@ -2649,14 +2650,17 @@ class MonitorTCDisplay:
         else:
             frame = PLAYER().tracktor_producer.frame() # is this used actually?
 
-        if self.use_internal_fps == False:
-            frame_str = utils.get_tc_string(frame)
-        else:
-            if  self.fps != self.FPS_NOT_SET:
-                frame_str = utils.get_tc_string_with_fps(frame, self.fps)
+        if self.display_tc == True:
+            if self.use_internal_fps == False:
+                frame_str = utils.get_tc_string(frame)
             else:
-                frame_str = ""
-
+                if  self.fps != self.FPS_NOT_SET:
+                    frame_str = utils.get_tc_string_with_fps(frame, self.fps)
+                else:
+                    frame_str = ""
+        else:
+            frame_str = str(self._frame).rjust(6)
+    
         # Text
         layout = PangoCairo.create_layout(cr)
         layout.set_text(frame_str, -1)

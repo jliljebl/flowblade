@@ -215,7 +215,7 @@ def _raise_compile_error(exception_msg):
     raise FluxityError("Error compiling Fluxity script:\n" + exception_msg)
 
 def _raise_exec_error(exception_msg):
-    raise FluxityError("Error on doing exec() script code object:\n" + exception_msg)
+    raise FluxityError("Error on doing exec() to create script code object:\n" + exception_msg)
 
 # ------------------------------------------------------ rendering
 def render_preview_frame(script, frame, out_folder, profile_file_path):

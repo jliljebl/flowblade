@@ -77,6 +77,8 @@ NO_PREVIEW_FILE = "fallback_thumb.png"
 MLT_PLAYER_MONITOR = "mlt_player_monitor" # This one used to play clips
 CAIRO_DRAW_MONITOR = "cairo_draw_monitor"  # This one used to show single frames
 
+EMPTY_BG_RES_PATH = "/res/scripttool/not_rendered.png"
+
 _session_id = None
 
 _window = None
@@ -88,10 +90,8 @@ _effect_renderer = None
 
 # Script length and in out marks. These can be modifies from GUI or rendered script.
 _script_length = fluxity.DEFAULT_LENGTH
-_mark_in = 0 # inclusive
-_mark_out = 199 # inclusive
 
-_launch_profile_name = None
+_current_profile_name = None
 
 _current_path = None
 _current_preview_surface = None
@@ -216,10 +216,11 @@ def main(root_path, force_launch=False):
     gui.load_current_colors()
 
     # Get launch profile and init player and display GUI params for it. 
-    global _launch_profile_name
-    _launch_profile_name = _get_arg_value(sys.argv, "profile_name")
-    _init_player_and_profile_data(_launch_profile_name)
+    global _current_profile_name
+    _current_profile_name = _get_arg_value(sys.argv, "profile_name")
+    _init_player_and_profile_data(_current_profile_name)
 
+    # Show window.
     global _window
     _window = ScriptToolWindow()
     _window.pos_bar.set_dark_bg_color()
@@ -229,8 +230,9 @@ def main(root_path, force_launch=False):
     Gdk.flush()
 
     _init_playback()
+    update_length(_script_length)
 
-    print(_launch_profile_name)
+    print(_current_profile_name)
 
     Gtk.main()
     Gdk.threads_leave()
@@ -254,7 +256,7 @@ def init_frames_dirs():
     os.mkdir(get_clip_frames_dir())
     os.mkdir(get_render_frames_dir())
     
-# ----------------------------------------------------------- MLT player init
+# ----------------------------------------------------------- MLT player playback
 def _init_player_and_profile_data(profile_name):
     gmicplayer.set_current_profile_for_profile_name(profile_name)
     new_profile = mltprofiles.get_profile(profile_name)
@@ -265,23 +267,33 @@ def _init_player_and_profile_data(profile_name):
     _current_profile_index = mltprofiles.get_profile_index_for_profile(new_profile)
 
     global _player, _frame_writer, _current_path
-    _current_path = respaths.ROOT_PATH + "/res/scripttool/not_rendered.png"
+    _current_path = respaths.ROOT_PATH + EMPTY_BG_RES_PATH
     _player = gmicplayer.GmicPlayer(_current_path)
 
 def _init_playback():
-
     _window.set_fps()
     _window.pos_bar.update_display_from_producer(_player.producer)
     _window.set_monitor_sizes()
-    #_window.set_widgets_sensitive(True)
-    #_window.render_button.set_sensitive(False)
-    #_window.encode_desc.set_markup("<small>" + _("not set")  + "</small>")
+
     _player.create_sdl_consumer()
     _player.connect_and_start()
 
+def get_playback_tractor(length, is_empty):
+    # Create tractor and tracks
+    tractor = mlt.Tractor()
+    multitrack = tractor.multitrack()
+    track0 = mlt.Playlist()
+    multitrack.connect(track0, 0)
+    if is_empty == True:
+        bg_path = respaths.ROOT_PATH + EMPTY_BG_RES_PATH
+        profile = mltprofiles.get_profile(_current_profile_name)
+        bg_clip = mlt.Producer(profile, str(bg_path))
+        print(bg_clip)
+        track0.insert(bg_clip, 0, 0, length - 1)
+        print("track0", track0.get_length())
+
+    return tractor
     
-
-
 #----------------------------------------------- session folders and files
 def get_session_folder():
     return userfolders.get_cache_dir() + appconsts.SCRIP_TOOL_DIR + "/session_" + str(_session_id)
@@ -527,6 +539,16 @@ def update_frame_displayers():
     _window.tc_display.set_frame(frame)
     _window.pos_bar.update_display_from_producer(_player.producer)
 
+def update_length(new_length):
+    global _script_length
+    _script_length = new_length
+
+    new_playback_producer = get_playback_tractor(_script_length, True)
+    _player.set_producer(new_playback_producer)
+
+    _window.update_marks_display()
+    _window.pos_bar.update_display_from_producer(_player.producer)
+
 #-------------------------------------------------- render and preview
 def render_output():
     global _effect_renderer
@@ -539,9 +561,9 @@ def abort_render():
 def render_preview_frame():
     buf = _window.script_view.get_buffer()
     script = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), False)
-    _profile_file_path = mltprofiles.get_profile_file_path(_launch_profile_name)
+    _profile_file_path = mltprofiles.get_profile_file_path(_current_profile_name)
 
-    profile = mltprofiles.get_profile(_launch_profile_name)
+    profile = mltprofiles.get_profile(_current_profile_name)
     global _current_dimensions
     _current_dimensions = (profile.width(), profile.height(), 1.0)
     
@@ -562,9 +584,9 @@ def render_preview_frame():
 def render_range():
     buf = _window.script_view.get_buffer()
     script = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), False)
-    _profile_file_path = mltprofiles.get_profile_file_path(_launch_profile_name)
+    _profile_file_path = mltprofiles.get_profile_file_path(_current_profile_name)
 
-    profile = mltprofiles.get_profile(_launch_profile_name)
+    profile = mltprofiles.get_profile(_current_profile_name)
     global _current_dimensions
     _current_dimensions = (profile.width(), profile.height(), 1.0)
     
@@ -679,10 +701,11 @@ class ScriptToolWindow(Gtk.Window):
         self.monitors_switcher.set_visible_child_name(CAIRO_DRAW_MONITOR)
 
         # Control row
-        self.tc_display = guicomponents.MonitorTCDisplay()
+        self.tc_display = guicomponents.MonitorTCDisplay(56)
         self.tc_display.use_internal_frame = True
         self.tc_display.widget.set_valign(Gtk.Align.CENTER)
         self.tc_display.use_internal_fps = True
+        self.tc_display.display_tc = False
         
         self.pos_bar = positionbar.PositionBar(False)
         self.pos_bar.set_listener(self.position_listener)
@@ -917,15 +940,15 @@ class ScriptToolWindow(Gtk.Window):
 
     def update_marks_display(self):
 
-        if _mark_in == -1:
+        if _player.producer.mark_in  == -1:
             self.mark_in_info.set_text("-")
         else:
-            self.mark_in_info.set_text(str(_mark_in))
+            self.mark_in_info.set_text(str(_player.producer.mark_in))
         
-        if _mark_out == -1:
+        if _player.producer.mark_out == -1:
             self.mark_out_info.set_text("-")
         else:
-            self.mark_out_info.set_text(str(_mark_out))
+            self.mark_out_info.set_text(str(_player.producer.mark_out))
 
         self.length_info.set_text(str(_script_length) + " " + _("frames"))
 
@@ -1360,4 +1383,8 @@ class GmicEffectRendererer(threading.Thread):
         
         if self.render_player != None:
             self.render_player.shutdown()        
+
+
+
+
 
