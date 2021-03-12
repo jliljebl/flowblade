@@ -128,6 +128,7 @@ class FluxityContext:
     def __init__(self, preview_render, output_folder):
         self.priv_context = FluxityContextPrivate(preview_render, output_folder)
         self.data = {}
+        self.error = None
 
     def get_frame_cr(self):
         return self.priv_context.frame_cr
@@ -136,16 +137,17 @@ class FluxityContext:
         w = self.priv_context.profile.get_profile_property(FluxityProfile.WIDTH)
         h = self.priv_context.profile.get_profile_property(FluxityProfile.HEIGHT)
         return (w, h)
-
-    def write_out_frame(self):
-        self.priv_context.write_out_frame()
+ 
+    def set_frame_name(self, frame_name):
+        self.priv_context.frame_name = frame_name
 
     def set_data(self, label, item):
         self.data[label] = item
 
     def get_data(self, label):
         return self.data[label]
-        
+
+    
 class FluxityContextPrivate:
     """
     This object exists to keep FluxityContext API clean for script developers.
@@ -163,6 +165,9 @@ class FluxityContextPrivate:
         self.frame_surface = None
         self.frame_cr = None
 
+        self.frame_name = "frame"
+        self.first_rendered_frame_path = None # This is cleared by rendering routines.
+        
     def load_profile(self, mlt_profile_path):
         lines = []
         with open(mlt_profile_path, "r") as f:
@@ -198,9 +203,15 @@ class FluxityContextPrivate:
             exception_msg = "Output folder " + self.output_folder + " does not exist."
             _raise_fluxity_error(exception_msg)
         
-        filepath = self.output_folder + "/frame_" + str(self.frame) + ".png"
+        filepath = self.output_folder + "/" + self.frame_name + "_" + str(self.frame).rjust(5, "0") + ".png"
         self.frame_surface.write_to_png(filepath)
 
+        if self.first_rendered_frame_path == None:
+            self.first_rendered_frame_path = filepath
+        
+class FluxityEmptyClass:
+    pass
+    
 # ---------------------------------------------------------- Errors 
 class FluxityError(Exception):
 
@@ -246,7 +257,10 @@ def render_frame_sequence(script, in_frame, out_frame, out_folder, profile_file_
         # Init script and context.
         error_msg, results = _init_script_and_context(script, out_folder, profile_file_path)
         if error_msg != None:
-            return error_msg
+            fake_fctx = FluxityEmptyClass()
+            fake_fctx.error = error_msg
+            return fake_fctx
+
         fscript, fctx = results
         
         # Execute script to write frame sequence.
@@ -254,17 +268,19 @@ def render_frame_sequence(script, in_frame, out_frame, out_folder, profile_file_
 
         fscript.call_init_render(fctx)
 
+        fctx.priv_context.first_rendered_frame_path = None # Should be clear but make sure. 
+
         for frame in range(in_frame, out_frame):
             fctx.priv_context.create_frame_surface(frame)
             w, h = fctx.get_dimensions()
             fscript.call_render_frame(frame, fctx, w, h)
-            fctx.write_out_frame()
+            fctx.priv_context.write_out_frame()
 
-        return None
+        return fctx
         
     except Exception as e:
-        msg = str(e)
-        return msg
+        fctx.error = str(e)
+        return fctx
 
 def _init_script_and_context(script, out_folder, profile_file_path):
     try:

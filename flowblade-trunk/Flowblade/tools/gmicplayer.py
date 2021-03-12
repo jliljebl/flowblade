@@ -66,7 +66,6 @@ class GmicPlayer:
         
     def set_producer(self, producer):
         if self.producer != None:
-            print("1")
             self.consumer.stop()
             self.consumer.disconnect_all_producers()
 
@@ -74,14 +73,12 @@ class GmicPlayer:
             producer.mark_out = self.producer.mark_out
 
         else:
-            print("12")
             producer.mark_in = -1
             producer.mark_out = -1
 
         self.producer = producer
             
         new_length = self.get_active_length()
-        print("new_length", new_length, type(self.producer))
         if new_length <= self.producer.mark_in:
             self.producer.mark_in = -1
         if new_length <= self.producer.mark_out:
@@ -123,8 +120,6 @@ class GmicPlayer:
 
     def get_active_length(self):
         return self.producer.get_length()
-        #else:
-        #    return self.producer.multitrack().get_length()
         
     def seek_position_normalized(self, pos, length):
         frame_number = pos * length

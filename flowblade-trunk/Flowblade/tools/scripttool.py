@@ -278,20 +278,34 @@ def _init_playback():
     _player.create_sdl_consumer()
     _player.connect_and_start()
 
-def get_playback_tractor(length, is_empty):
+def get_playback_tractor(length, range_frame_res_str=None, in_frame=-1, out_frame=-1):
     # Create tractor and tracks
     tractor = mlt.Tractor()
     multitrack = tractor.multitrack()
     track0 = mlt.Playlist()
     multitrack.connect(track0, 0)
-    if is_empty == True:
-        bg_path = respaths.ROOT_PATH + EMPTY_BG_RES_PATH
-        profile = mltprofiles.get_profile(_current_profile_name)
-        bg_clip = mlt.Producer(profile, str(bg_path))
-        print(bg_clip)
-        track0.insert(bg_clip, 0, 0, length - 1)
-        print("track0", track0.get_length())
 
+    bg_path = respaths.ROOT_PATH + EMPTY_BG_RES_PATH
+    profile = mltprofiles.get_profile(_current_profile_name)
+        
+    if range_frame_res_str == None:
+        bg_clip = mlt.Producer(profile, str(bg_path))
+        track0.insert(bg_clip, 0, 0, length - 1)
+    else:
+        indx = 0
+        if in_frame > 0:
+            bg_clip1 = mlt.Producer(profile, str(bg_path))
+            track0.insert(bg_clip1, indx, 0, in_frame - 1)
+            indx += 1
+    
+        range_producer = mlt.Producer(profile, range_frame_res_str)
+        track0.insert(range_producer, indx, in_frame, out_frame)
+        indx += 1
+        
+        if out_frame < length - 1:
+            bg_clip2 = mlt.Producer(profile, str(bg_path))
+            track0.insert(bg_clip2, indx, out_frame, length - 1)
+        
     return tractor
     
 #----------------------------------------------- session folders and files
@@ -543,7 +557,7 @@ def update_length(new_length):
     global _script_length
     _script_length = new_length
 
-    new_playback_producer = get_playback_tractor(_script_length, True)
+    new_playback_producer = get_playback_tractor(_script_length)
     _player.set_producer(new_playback_producer)
 
     _window.update_marks_display()
@@ -590,18 +604,25 @@ def render_range():
     global _current_dimensions
     _current_dimensions = (profile.width(), profile.height(), 1.0)
     
-    error = fluxity.render_frame_sequence(script, 0, 20, get_render_frames_dir(), _profile_file_path)
+    # GUI quarantees valid range here.
+    in_frame = _player.producer.mark_in
+    out_frame = _player.producer.mark_out
+    
+    fctx = fluxity.render_frame_sequence(script, in_frame, out_frame, get_render_frames_dir(), _profile_file_path)
 
-    if error == None:
-        #global _current_preview_surface
-        #_current_preview_surface = frame_img
-        #_window.preview_monitor.show()
-        #_window.monitors_switcher.set_visible_child_name(CAIRO_DRAW_MONITOR)
-        #_window.monitors_switcher.queue_draw()
-        #_window.preview_monitor.queue_draw()
+    if fctx.error == None:
+        frame_file = fctx.priv_context.first_rendered_frame_path
+        resource_name_str = utils.get_img_seq_resource_name(frame_file, True)
+        range_resourse_mlt_path = get_render_frames_dir() + "/" + resource_name_str
+        new_playback_producer = get_playback_tractor(_script_length, range_resourse_mlt_path, in_frame, out_frame)
+        _player.set_producer(new_playback_producer)
+    
+        _window.monitors_switcher.set_visible_child_name(MLT_PLAYER_MONITOR)
+        _window.monitors_switcher.queue_draw()
+        _window.preview_monitor.queue_draw()
         _window.out_view.get_buffer().set_text("success:\n" + "rendered some frames!")
     else:
-        _window.out_view.get_buffer().set_text(error)
+        _window.out_view.get_buffer().set_text(fctx.error)
         
 def render_current_frame_preview():
     global _preview_render
@@ -731,7 +752,8 @@ class ScriptToolWindow(Gtk.Window):
         self.preview_button.connect("clicked", lambda w: render_preview_frame())
         self.preview_range_button = Gtk.Button(_("Preview Range"))
         self.preview_range_button.connect("clicked", lambda w: render_range())
-        
+        self.preview_range_button.set_sensitive(False)
+            
         control_top = Gtk.HBox(False, 2)
         control_top.pack_start(self.tc_display.widget, False, False, 0)
         control_top.pack_start(pos_bar_frame, True, True, 0)
@@ -950,6 +972,11 @@ class ScriptToolWindow(Gtk.Window):
         else:
             self.mark_out_info.set_text(str(_player.producer.mark_out))
 
+        if _player.producer.mark_in  == -1 or _player.producer.mark_out == -1:
+            self.preview_range_button.set_sensitive(False)
+        else:
+            self.preview_range_button.set_sensitive(True)
+            
         self.length_info.set_text(str(_script_length) + " " + _("frames"))
 
         self.mark_in_info.queue_draw()
