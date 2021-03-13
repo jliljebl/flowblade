@@ -46,6 +46,7 @@ import editorstate
 from editorstate import current_sequence
 from editorstate import PROJECT
 import fluxity
+import fluxityheadless
 import gui
 import gmicheadless
 import gmicplayer
@@ -619,7 +620,7 @@ class FluxityContainerActions(AbstractContainerActionObject):
         return job_proxy
 
     def get_job_name(self):
-        data_object = self.container_clip_data.data_slots["fluxity_plugin_edit_data"] 
+        data_object = self.container_data.data_slots["fluxity_plugin_edit_data"] 
         return data_object["name"]
 
     def _launch_render(self, clip, range_in, range_out, fluxity_frame_offset):
@@ -634,7 +635,8 @@ class FluxityContainerActions(AbstractContainerActionObject):
         # create video_render_data object with default values if not available.
         if self.container_data.render_data == None:
             self.container_data.render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
-            
+            self.container_data.render_data.do_video_render = False 
+    
         fluxityheadless.set_render_data(self.get_container_program_id(), self.container_data.render_data)
         
         job_msg = self.get_job_queue_message()

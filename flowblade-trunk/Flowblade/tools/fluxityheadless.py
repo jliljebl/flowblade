@@ -167,8 +167,6 @@ class FluxityHeadlessRunnerThread(threading.Thread):
 
         rendered_frames_folder = ccrutils.rendered_frames_folder()
 
-        profile = mltprofiles.get_profile(self.profile_desc)
-
         # Delete old rendered frames
         for frame_file in os.listdir(rendered_frames_folder):
             file_path = os.path.join(rendered_frames_folder, frame_file)
@@ -179,10 +177,12 @@ class FluxityHeadlessRunnerThread(threading.Thread):
 
         script_file = open(self.script_path)
         user_script = script_file.read()
-
-        fluxity.render_frame_sequence(script, in_frame, out_frame, out_folder, profile_file_path, self.frames_update)
         
-        while len(os.listdir(rendered_frames_folder)) != self.length:
+        profile_file_path = mltprofiles.get_profile_file_path(self.profile_desc)
+        print("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk", self.range_in, self.range_out)
+        fluxity.render_frame_sequence(user_script, self.range_in, self.range_out, rendered_frames_folder, profile_file_path, self.frames_update)
+        render_length = self.range_out - self.range_in 
+        while len(os.listdir(rendered_frames_folder)) != render_length:
             if self.abort == True:
                 return
             time.sleep(0.5)
