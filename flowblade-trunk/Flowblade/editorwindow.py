@@ -123,7 +123,7 @@ def _toggle_image_switch(widget, icons):
 class EditorWindow:
 
     def __init__(self):
-        print("######################################################################################")
+        print("#########################################################################")
         self._init_cursors()
 
         # Create window(s)
