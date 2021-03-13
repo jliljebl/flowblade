@@ -168,7 +168,7 @@ def _get_file_select_row_and_editor(label_text, file_filter=None, title=None):
     row = guiutils.get_two_column_box(Gtk.Label(label=label_text), file_chooser, ROW_WIDTH)
     return (file_chooser, row)
 
-def _open_image_sequence_dialog(callback, title, rows, data):
+def _open_rows_dialog(callback, title, rows, data):
     parent_window = gui.editor_window.window
     cancel_str = _("Cancel")
     ok_str = _("Ok")
@@ -208,7 +208,7 @@ def _show_not_all_data_info():
 def create_gmic_media_item():
     script_select, row1 = _get_file_select_row_and_editor(_("G'Mic Tool Script:"), None, _("Select G'Mic Tool Script"))
     media_file_select, row2 = _get_file_select_row_and_editor(_("Video Clip:"))
-    _open_image_sequence_dialog(_gmic_clip_create_dialog_callback, _("Create G'Mic Script Container Clip"), [row1, row2], [script_select, media_file_select])
+    _open_rows_dialog(_gmic_clip_create_dialog_callback, _("Create G'Mic Script Container Clip"), [row1, row2], [script_select, media_file_select])
 
 def _gmic_clip_create_dialog_callback(dialog, response_id, data):
     if response_id != Gtk.ResponseType.ACCEPT:
@@ -262,6 +262,9 @@ class GMicLoadCompletionThread(threading.Thread):
             
         Gdk.threads_leave()
 
+def create_fluxity_media_item():
+    print("haloo")
+
 # --- MLT XML
 def create_mlt_xml_media_item(xml_file_path, media_name):
     container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_MLT_XML, xml_file_path, xml_file_path)
@@ -277,7 +280,7 @@ def create_blender_media_item():
     f.add_pattern("*.blend")
     project_select, row1 = _get_file_select_row_and_editor(_("Select Blender Project File:"), f)
 
-    _open_image_sequence_dialog(_blender_clip_create_dialog_callback, _("Create Blender Project Container Clip"), [row1], [project_select])
+    _open_rows_dialog(_blender_clip_create_dialog_callback, _("Create Blender Project Container Clip"), [row1], [project_select])
 
 def _blender_clip_create_dialog_callback(dialog, response_id, data):
     dialog.destroy()

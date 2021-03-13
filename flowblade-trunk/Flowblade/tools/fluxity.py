@@ -19,6 +19,7 @@
 """
 
 import cairo
+import json
 import mlt
 import os
 
@@ -33,7 +34,7 @@ import mlt
 
 def init_script(fctx):
     # Script init here
-    pass
+    fctx.add_editor("float_editor", fctx.EDITOR_FLOAT, 1.0)
     
 def init_render(fctx):
     # Render init here
@@ -47,6 +48,7 @@ def render_frame(frame, fctx, w, h):
     cr.rectangle(0, 0, w, h)
     cr.fill()
 """
+
 
 # ---------------------------------------------------------- script object
 class FluxityScript:
@@ -124,10 +126,30 @@ def _read_profile_prop_from_lines(lines, prop):
 
 # ---------------------------------------------------------- context object
 class FluxityContext:
+
+    EDITOR_STRING = 0
+    EDITOR_VALUE = 1
+    EDITOR_FLOAT = 2
+    EDITOR_INT = 3
+    EDITOR_COLOR = 4
     
+    PROFILE_DESCRIPTION = FluxityProfile.DESCRIPTION
+    PROFILE_FRAME_RATE_NUM = FluxityProfile.FRAME_RATE_NUM
+    PROFILE_FRAME_RATE_DEN = FluxityProfile.FRAME_RATE_DEN
+    PROFILE_WIDTH = FluxityProfile.WIDTH
+    PROFILE_HEIGHT = FluxityProfile.HEIGHT
+    PROFILE_PROGRESSIVE = FluxityProfile.PROGRESSIVE
+    PROFILE_SAMPLE_ASPECT_NUM = FluxityProfile.SAMPLE_ASPECT_NUM
+    PROFILE_SAMPLE_ASPECT_DEN = FluxityProfile.SAMPLE_ASPECT_DEN
+    PROFILE_DISPLAY_ASPECT_NUM = FluxityProfile.DISPLAY_ASPECT_NUM
+    PROFILE_DISPLAY_ASPECT_DEN = FluxityProfile.DISPLAY_ASPECT_DEN
+    PROFILE_COLORSPACE = FluxityProfile.COLORSPACE
+
     def __init__(self, preview_render, output_folder):
         self.priv_context = FluxityContextPrivate(preview_render, output_folder)
         self.data = {}
+        self.editors = {} # editors and script length
+        self.length = DEFAULT_LENGTH
         self.error = None
 
     def get_frame_cr(self):
@@ -138,6 +160,9 @@ class FluxityContext:
         h = self.priv_context.profile.get_profile_property(FluxityProfile.HEIGHT)
         return (w, h)
  
+    def get_profile_property(self, p_property):
+        return self.priv_context.profile.get_profile_property(p_property)
+ 
     def set_frame_name(self, frame_name):
         self.priv_context.frame_name = frame_name
 
@@ -147,7 +172,29 @@ class FluxityContext:
     def get_data(self, label):
         return self.data[label]
 
-    
+    def set_length(self, length):
+        self.length = length
+
+    def get_length(self, label):
+        return self.length
+
+    def add_editor(self, name, type, default_value):
+        self.editors[name] = (type, default_value)
+
+    def get_script_data(self):
+        script_data = {}
+        script_data["length"] = self.length
+        
+        editors_list = []
+        for name in self.editors:
+            type, value = self.editors[name]
+            json_obj = [name, type, value]
+            editors_list.append(json_obj)
+
+        script_data["editors_list"] = editors_list
+
+        return json.dumps(script_data)
+
 class FluxityContextPrivate:
     """
     This object exists to keep FluxityContext API clean for script developers.
@@ -239,6 +286,8 @@ def render_preview_frame(script, frame, out_folder, profile_file_path):
 
         # Execute script to render a preview frame.
         fscript.call_init_script(fctx)
+
+        print(fctx.get_script_data())
 
         fscript.call_init_render(fctx)
 
