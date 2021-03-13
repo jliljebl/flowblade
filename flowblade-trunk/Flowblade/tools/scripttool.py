@@ -77,8 +77,6 @@ NO_PREVIEW_FILE = "fallback_thumb.png"
 MLT_PLAYER_MONITOR = "mlt_player_monitor" # This one used to play clips
 CAIRO_DRAW_MONITOR = "cairo_draw_monitor"  # This one used to show single frames
 
-EMPTY_BG_RES_PATH = "/res/scripttool/not_rendered.png"
-
 _session_id = None
 
 _window = None
@@ -267,7 +265,7 @@ def _init_player_and_profile_data(profile_name):
     _current_profile_index = mltprofiles.get_profile_index_for_profile(new_profile)
 
     global _player, _frame_writer, _current_path
-    _current_path = respaths.ROOT_PATH + EMPTY_BG_RES_PATH
+    _current_path = respaths.FLUXITY_EMPTY_BG_RES_PATH
     _player = gmicplayer.GmicPlayer(_current_path)
 
 def _init_playback():
@@ -285,7 +283,7 @@ def get_playback_tractor(length, range_frame_res_str=None, in_frame=-1, out_fram
     track0 = mlt.Playlist()
     multitrack.connect(track0, 0)
 
-    bg_path = respaths.ROOT_PATH + EMPTY_BG_RES_PATH
+    bg_path = respaths.FLUXITY_EMPTY_BG_RES_PATH
     profile = mltprofiles.get_profile(_current_profile_name)
         
     if range_frame_res_str == None:
@@ -581,19 +579,18 @@ def render_preview_frame():
     global _current_dimensions
     _current_dimensions = (profile.width(), profile.height(), 1.0)
     
-    error, frame_img = fluxity.render_preview_frame(script, 0, get_session_folder(), _profile_file_path)
+    fctx = fluxity.render_preview_frame(script, 0, get_session_folder(), _profile_file_path)
 
-    if error == None:
-        print(frame_img)
+    if fctx.error == None:
         global _current_preview_surface
-        _current_preview_surface = frame_img
+        _current_preview_surface = fctx.priv_context.frame_surface
         _window.preview_monitor.show()
         _window.monitors_switcher.set_visible_child_name(CAIRO_DRAW_MONITOR)
         _window.monitors_switcher.queue_draw()
         _window.preview_monitor.queue_draw()
         _window.out_view.get_buffer().set_text("success:\n" + script)
     else:
-        _window.out_view.get_buffer().set_text(error)
+        _window.out_view.get_buffer().set_text(fctx.error)
 
 def render_range():
     buf = _window.script_view.get_buffer()

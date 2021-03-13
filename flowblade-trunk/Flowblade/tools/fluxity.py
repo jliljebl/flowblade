@@ -35,7 +35,8 @@ import mlt
 def init_script(fctx):
     # Script init here
     fctx.add_editor("float_editor", fctx.EDITOR_FLOAT, 1.0)
-    
+    fctx.set_name("Default Test Plugin")
+
 def init_render(fctx):
     # Render init here
     fctx.set_data("bg_color", cairo.SolidPattern(0.8, 0.2, 0.2, 1.0))
@@ -150,6 +151,9 @@ class FluxityContext:
         self.data = {}
         self.editors = {} # editors and script length
         self.length = DEFAULT_LENGTH
+        self.name = "Name Not Set"
+        self.version = 1
+        self.author = "Author Not Set"
         self.error = None
 
     def get_frame_cr(self):
@@ -163,6 +167,15 @@ class FluxityContext:
     def get_profile_property(self, p_property):
         return self.priv_context.profile.get_profile_property(p_property)
  
+    def set_name(self, name):
+        self.name = name
+ 
+    def set_version(self, version):
+        self.version = version
+
+    def set_author(self, author):
+        self.author = author
+
     def set_frame_name(self, frame_name):
         self.priv_context.frame_name = frame_name
 
@@ -184,7 +197,10 @@ class FluxityContext:
     def get_script_data(self):
         script_data = {}
         script_data["length"] = self.length
-        
+        script_data["name"] = self.name
+        script_data["version"] = self.version
+        script_data["author"] = self.author
+
         editors_list = []
         for name in self.editors:
             type, value = self.editors[name]
@@ -281,25 +297,25 @@ def render_preview_frame(script, frame, out_folder, profile_file_path):
         # Init script and context.
         error_msg, results = _init_script_and_context(script, out_folder, profile_file_path)
         if error_msg != None:
-            return (error_msg, None)
+            fake_fctx = FluxityEmptyClass()
+            fake_fctx.error = error_msg
+            return fake_fctx
+            
         fscript, fctx = results
 
         # Execute script to render a preview frame.
         fscript.call_init_script(fctx)
-
-        print(fctx.get_script_data())
 
         fscript.call_init_render(fctx)
 
         fctx.priv_context.create_frame_surface(frame)
         w, h = fctx.get_dimensions()
         fscript.call_render_frame(frame, fctx, w, h)
-        
-        frame_img = fctx.priv_context.frame_surface
-        return (None, frame_img) # (error_msg, frame_iamge)
+
+        return fctx
     except Exception as e:
-        msg = str(e)
-        return (msg, None) # (error_msg, frame_iamge)
+        fctx.error = str(e)
+        return fctx
 
 def render_frame_sequence(script, in_frame, out_frame, out_folder, profile_file_path):
     try:
