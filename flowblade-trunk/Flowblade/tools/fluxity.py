@@ -317,7 +317,7 @@ def render_preview_frame(script, frame, out_folder, profile_file_path):
         fctx.error = str(e)
         return fctx
 
-def render_frame_sequence(script, in_frame, out_frame, out_folder, profile_file_path):
+def render_frame_sequence(script, in_frame, out_frame, out_folder, profile_file_path, frame_write_callback=None):
     try:
         # Init script and context.
         error_msg, results = _init_script_and_context(script, out_folder, profile_file_path)
@@ -340,7 +340,8 @@ def render_frame_sequence(script, in_frame, out_frame, out_folder, profile_file_
             w, h = fctx.get_dimensions()
             fscript.call_render_frame(frame, fctx, w, h)
             fctx.priv_context.write_out_frame()
-
+            if frame_write_callback != None:
+                frame_write_callback(frame) # for GUI app opdates.
         return fctx
         
     except Exception as e:

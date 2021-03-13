@@ -615,26 +615,27 @@ class FluxityContainerActions(AbstractContainerActionObject):
         
     def get_job_proxy(self):
         job_proxy = jobs.JobProxy(self.get_container_program_id(), self)
-        job_proxy.type = jobs.CONTAINER_CLIP_RENDER_GMIC
+        job_proxy.type = jobs.CONTAINER_CLIP_RENDER_FLUXITY
         return job_proxy
 
     def get_job_name(self):
-        return self.container_data.get_unrendered_media_name()
+        data_object = self.container_clip_data.data_slots["fluxity_plugin_edit_data"] 
+        return data_object["name"]
 
-    def _launch_render(self, clip, range_in, range_out, gmic_frame_offset):
+    def _launch_render(self, clip, range_in, range_out, fluxity_frame_offset):
         self.create_data_dirs_if_needed()
         self.render_range_in = range_in
         self.render_range_out = range_out
-        self.gmic_frame_offset = gmic_frame_offset
+        self.fluxity_frame_offset = fluxity_frame_offset
  
-        gmicheadless.clear_flag_files(self.get_container_program_id())
+        fluxityheadless.clear_flag_files(self.get_container_program_id())
     
         # We need data to be available for render process, 
         # create video_render_data object with default values if not available.
         if self.container_data.render_data == None:
             self.container_data.render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
             
-        gmicheadless.set_render_data(self.get_container_program_id(), self.container_data.render_data)
+        fluxityheadless.set_render_data(self.get_container_program_id(), self.container_data.render_data)
         
         job_msg = self.get_job_queue_message()
         job_msg.text = _("Render Starting...")
@@ -647,11 +648,11 @@ class FluxityContainerActions(AbstractContainerActionObject):
                 "range_in:" + str(range_in),
                 "range_out:"+ str(range_out),
                 "profile_desc:" + PROJECT().profile.description().replace(" ", "_"),  # Here we have our own string space handling, maybe change later..
-                "gmic_frame_offset:" + str(gmic_frame_offset))
+                "fluxity_frame_offset:" + str(fluxity_frame_offset))
 
         # Create command list and launch process.
         command_list = [sys.executable]
-        command_list.append(respaths.LAUNCH_DIR + "flowbladegmicheadless")
+        command_list.append(respaths.LAUNCH_DIR + "flowbladefluxityheadless")
         for arg in args:
             command_list.append(arg)
 
@@ -661,7 +662,7 @@ class FluxityContainerActions(AbstractContainerActionObject):
         
         Gdk.threads_enter()
                     
-        if gmicheadless.session_render_complete(self.get_container_program_id()) == True:
+        if fluxityheadless.session_render_complete(self.get_container_program_id()) == True:
             
             job_msg = self.get_completed_job_message()
             jobs.update_job_queue(job_msg)
@@ -669,18 +670,16 @@ class FluxityContainerActions(AbstractContainerActionObject):
             GLib.idle_add(self.create_producer_and_do_update_edit, None)
 
         else:
-            status = gmicheadless.get_session_status(self.get_container_program_id())
+            status = fluxityheadless.get_session_status(self.get_container_program_id())
             if status != None:
                 step, frame, length, elapsed = status
 
-                steps_count = 3
-                if  self.container_data.render_data.do_video_render == False:
-                    steps_count = 2
+                steps_count = 2
+                if self.container_data.render_data.do_video_render == False:
+                    steps_count = 1
                 msg = _("Step ") + str(step) + " / " + str(steps_count) + " - "
                 if step == "1":
                     msg += _("Writing Clip Frames")
-                elif step == "2":
-                     msg += _("Rendering G'Mic Script")
                 else:
                      msg += _("Encoding Video")
                 
@@ -692,7 +691,7 @@ class FluxityContainerActions(AbstractContainerActionObject):
                 else:
                     if step == "1":
                         render_length = self.render_range_out - self.render_range_in 
-                        frame = int(frame) - self.gmic_frame_offset
+                        frame = int(frame) - self.fluxity_frame_offset
                     else:
                         render_length = self.render_range_out - self.render_range_in
                     job_msg.progress = float(frame)/float(render_length)
@@ -717,7 +716,7 @@ class FluxityContainerActions(AbstractContainerActionObject):
 
     def abort_render(self):
         #self.remove_as_status_polling_object()
-        gmicheadless.abort_render(self.get_container_program_id())
+        fluxityheadless.abort_render(self.get_container_program_id())
 
     def create_icon(self):
         icon_path, length, info = _write_thumbnail_image(PROJECT().profile, self.container_data.unrendered_media, self)
