@@ -123,7 +123,7 @@ def _toggle_image_switch(widget, icons):
 class EditorWindow:
 
     def __init__(self):
-        print("#########################################################################")
+
         self._init_cursors()
 
         # Create window(s)
@@ -847,7 +847,7 @@ class EditorWindow:
             ('ImportProjectMedia', None, _('Import Media From Project...'), None, None, lambda a:projectaction.import_project_media()),
             ('ContainerClipsMenu', None, _('Create Container Clip')),
             ('CreateGMicContainerItem', None, _("From G'Mic Script"), None, None, lambda a:containerclip.create_gmic_media_item()),
-            ('CreateFluxityContainerItem', None, _("From Flowblade Plugin Script"), None, None, lambda a:containerclip.create_fluxity_media_item()),
+            ('CreateFluxityContainerItem', None, _("From Flowblade Media Plugin Script"), None, None, lambda a:containerclip.create_fluxity_media_item()),
             ('CreateBlenderContainerItem', None, _("From Blender Project"), None, None, lambda a:containerclip.create_blender_media_item()),
             ('CombineSequences', None, _('Import Another Sequence Into This Sequence...'), None, None, lambda a:projectaction.combine_sequences()),
             ('LogClipRange', None, _('Log Marked Clip Range'), '<control>L', None, lambda a:medialog.log_range_clicked()),
@@ -957,6 +957,7 @@ class EditorWindow:
                         <menuitem action='AudioSyncCompoundClip'/>
                         <separator/>
                         <menuitem action='CreateFluxityContainerItem'/>
+                        <menuitem action='CreateGMicContainerItem'/>
                         <menuitem action='CreateBlenderContainerItem'/>
                     </menu>
                     <separator/>
