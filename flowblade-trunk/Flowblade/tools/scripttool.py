@@ -90,12 +90,13 @@ _effect_renderer = None
 _script_length = fluxity.DEFAULT_LENGTH
 
 _current_profile_name = None
+_current_profile_index = None # We necesserily would not need this too.
 
 _current_path = None
 _current_preview_surface = None
 _current_dimensions = None
 _current_fps = None
-_current_profile_index = None
+
 _render_data = None # toolsencoding.ToolsRenderData object
 _last_load_file = None
 
@@ -564,7 +565,7 @@ def update_length(new_length):
 #-------------------------------------------------- render and preview
 def render_output():
     global _effect_renderer
-    _effect_renderer = GmicEffectRendererer()
+    _effect_renderer = FluxityPluginRenderer()
     _effect_renderer.start()
 
 def abort_render():
@@ -613,39 +614,6 @@ def render_range():
 
     range_renderer = FluxityRangeRenderer(script, get_render_frames_dir(), profile_file_path)
     range_renderer.start()
-    """
-    # GUI quarantees valid range here.
-    in_frame = _player.producer.mark_in
-    out_frame = _player.producer.mark_out
-    
-    fctx = fluxity.render_frame_sequence(script, in_frame, out_frame, get_render_frames_dir(), _profile_file_path, _frame_write_update)
-
-    if fctx.error == None:
-        frame_file = fctx.priv_context.first_rendered_frame_path
-        resource_name_str = utils.get_img_seq_resource_name(frame_file, True)
-        range_resourse_mlt_path = get_render_frames_dir() + "/" + resource_name_str
-        new_playback_producer = get_playback_tractor(_script_length, range_resourse_mlt_path, in_frame, out_frame)
-        _player.set_producer(new_playback_producer)
-    
-        _window.monitors_switcher.set_visible_child_name(MLT_PLAYER_MONITOR)
-        _window.monitors_switcher.queue_draw()
-        _window.preview_monitor.queue_draw()
-        _window.out_view.get_buffer().set_text("success:\n" + "rendered some frames!")
-        _window.media_info.set_markup("<small>" + _("Range preview for frame range ") + str(in_frame) + " - " + str(out_frame)  +"</small>")
-    else:
-        _window.out_view.get_buffer().set_text(fctx.error)
-        _window.media_info.set_markup("<small>" + _("No Preview") +"</small>")
-        global _current_preview_surface
-        _current_preview_surface = None
-        _window.monitors_switcher.set_visible_child_name(CAIRO_DRAW_MONITOR)
-        _window.monitors_switcher.queue_draw()
-        _window.preview_monitor.queue_draw()
-    """
-
-def render_current_frame_preview():
-    global _preview_render
-    _preview_render = GmicPreviewRendererer()
-    _preview_render.start()
 
 def _encode_settings_clicked():
     toolsencoding.create_widgets(_current_profile_index)
@@ -654,7 +622,7 @@ def _encode_settings_clicked():
     _encoding_panel = toolsencoding.get_encoding_panel(_render_data)
 
     if _render_data == None and toolsencoding.widgets.file_panel.movie_name.get_text() == "movie":
-        toolsencoding.widgets.file_panel.movie_name.set_text(os.path.basename(_current_path).split(".")[0] + "_gmic")
+        toolsencoding.widgets.file_panel.movie_name.set_text("plugin_clip")
 
     align = dialogutils.get_default_alignment(_encoding_panel)
     
@@ -849,7 +817,7 @@ class ScriptToolWindow(Gtk.Window):
 
         self.render_percentage = Gtk.Label("")
 
-        self.status_no_render = _("Set Mark In, Mark Out and Frames Folder for valid render")
+        self.status_no_render = _("Set Frames Folder for valid render")
          
         self.render_status_info = Gtk.Label()
         self.render_status_info.set_markup("<small>" + self.status_no_render  + "</small>") 
@@ -949,17 +917,13 @@ class ScriptToolWindow(Gtk.Window):
         pane = Gtk.VBox(False, 2)
         pane.pack_start(top_row, False, False, 0)
         pane.pack_start(main_hbox, True, True, 0)
-        #pane.pack_start(editor_buttons_row, False, False, 0)
 
         align = guiutils.set_margins(pane, 12, 12, 12, 12)
 
-        #script = gmicscript.get_default_script()
         self.script_view.get_buffer().set_text(fluxity.DEFAULT_SCRIPT)
-        #self.preset_label.set_text(script.name)
 
         self.update_encode_sensitive()
 
-        # Connect global key listener
         self.connect("key-press-event", _global_key_down_listener)
 
         # Set pane and show window
@@ -968,13 +932,7 @@ class ScriptToolWindow(Gtk.Window):
         self.set_position(Gtk.WindowPosition.CENTER)
         self.show_all()
         self.set_active_state(True)
-    """
-    def init_for_new_clip(self, profile_name):
-        self.clip_path = clip_path
-        self.set_active_state(True)
-        self.pos_bar.update_display_from_producer(_player.producer)
-        self.media_info.set_markup("<small>" + os.path.basename(clip_path) + ", " + profile_name + "</small>")
-    """
+
     def update_marks_display(self):
 
         if _player.producer.mark_in  == -1:
@@ -1004,17 +962,22 @@ class ScriptToolWindow(Gtk.Window):
             self.render_button.set_sensitive(False)
             return
         
-        if  _player.producer.mark_in == -1 or _player.producer.mark_out == -1 \
-            or self.out_folder.get_filename() == None:
+        if  self.out_folder.get_filename() == None:
             self.render_status_info.set_markup("<small>" + self.status_no_render  + "</small>")
             self.render_button.set_sensitive(False)
         else:
-            length = _player.producer.mark_out - _player.producer.mark_in + 1
+            start =  _player.producer.mark_in
+            end = _player.producer.mark_out
+            if start == -1:
+                start = 0
+            if end == -1:
+                end = _player.get_active_length()
+            length = end - start
             video_info = _(" no video file")
             if self.encode_check.get_active() == True:
                 video_info = _(" render video file")
             info_str = str(length) + _(" frame(s),") + video_info
-            self.render_status_info.set_markup("<small>" + info_str +  "</small>")
+            self.render_status_info.set_markup("<small>" + info_str + "</small>")
             self.render_button.set_sensitive(True)
             
     def folder_selection_changed(self, chooser):
@@ -1087,13 +1050,10 @@ class ScriptToolWindow(Gtk.Window):
 
     def set_widgets_sensitive(self, value):
         self.monitor.set_sensitive(value)
-        self.preview_info.set_sensitive(value)
         self.preview_monitor.set_sensitive(value)
         self.tc_display.widget.set_sensitive(value)
         self.pos_bar.widget.set_sensitive(value)      
         self.control_buttons.set_sensitive(value)
-        self.preset_label.set_sensitive(value)
-        self.action_label.set_sensitive(value)
         self.script_view.set_sensitive(value) 
         self.out_view.set_sensitive(value)       
         self.mark_in_info.set_sensitive(value)
@@ -1231,18 +1191,22 @@ class FluxityRangeRenderer(threading.Thread):
         Gdk.threads_leave()
 
 
-class GmicEffectRendererer(threading.Thread):
+class FluxityPluginRenderer(threading.Thread):
 
     def __init__(self):
         threading.Thread.__init__(self)
 
     def run(self):
-        self.render_player = None
-        self.frames_range_writer = None
-        
+        #sys.stdout = open(userfolders.get_cache_dir() + "log_scripttool_render", 'w')
+        so = se = open(userfolders.get_cache_dir() + "log_scripttool_render", 'w', buffering=1)
+
+        sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', buffering=1)
+
+        os.dup2(so.fileno(), sys.stdout.fileno())
+    
+        self.render_player = None        
         self.abort = False
-        self.script_renderer = None
-        
+
         # Refuse to render into user home folder
         out_folder = _window.out_folder.get_filenames()[0] + "/"
         if out_folder == (os.path.expanduser("~") + "/"):
@@ -1264,69 +1228,59 @@ class GmicEffectRendererer(threading.Thread):
         _window.hamburger_launcher.widget.set_sensitive(False)
         _window.load_button.set_sensitive(False)
         Gdk.threads_leave()
-            
-        # Delete old preview frames
-        folder = get_render_frames_dir()
-        for frame_file in os.listdir(folder):
-            file_path = os.path.join(folder, frame_file)
-            os.remove(file_path)
         
-        # Render clip frames for range
-        mark_in = _player.producer.mark_in
-        mark_out = _player.producer.mark_out
-        self.length = mark_out - mark_in + 1
-        self.mark_in = mark_in
-        self.mark_out = mark_out
+        # Get render data.
+        in_frame =  _player.producer.mark_in
+        out_frame = _player.producer.mark_out
+        if in_frame == -1:
+            in_frame = 0
+        if out_frame == -1:
+            out_frame = _player.get_active_length()
+        length = out_frame - in_frame
+        self.length = out_frame - in_frame
+        self.mark_in = in_frame
+        self.mark_out = out_frame
         
         frame_name = _window.frame_name.get_text()
 
-        self.frames_range_writer = gmicplayer.get_frames_range_writer_for_current_profile(_current_path, self.frames_update)
-        self.frames_range_writer.write_frames(get_render_frames_dir() + "/", frame_name, mark_in, mark_out)
-
-        if self.abort == True:
-            return
-        
-        # Render effect for frames
-        # Get user script 
-        Gdk.threads_enter()
         buf = _window.script_view.get_buffer()
-        user_script = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), False)
-        _window.render_percentage.set_markup("<small>" + _("Waiting for frames write to complete...") + "</small>")
-        Gdk.threads_leave()
+        script_text = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), include_hidden_chars=True)
+        profile_file_path = mltprofiles.get_profile_file_path(_current_profile_name)
+    
+        # Render frames
+        fctx = fluxity.render_frame_sequence(script_text, in_frame, out_frame, out_folder, profile_file_path, self.frames_update)
 
-        while len(os.listdir(folder)) != self.length:
-            time.sleep(0.5)
-        
-        # Render frames with gmic script
-        self.script_renderer = gmicplayer.FolderFramesScriptRenderer(   user_script, 
-                                                                        folder,
-                                                                        out_folder,
-                                                                        frame_name,
-                                                                        self.script_render_update_callback, 
-                                                                        self.script_render_output_callback)
-        self.script_renderer.write_frames()
-        
+        # Set GUI state and exit on error.
+        if fctx.error != None:
+            Gdk.threads_enter()
+            _window.out_view.get_buffer().set_text(fctx.error)
+            _window.media_info.set_markup("<small>" + _("No Preview") +"</small>")
+            _current_preview_surface = None
+            _window.monitors_switcher.queue_draw()
+            _window.preview_monitor.queue_draw()
+            self.set_render_stopped_gui_state()
+            Gdk.threads_leave()
+            
+            return
+                    
         # Render video
         if _window.encode_check.get_active() == True:
+            print("video")
             # Render consumer
             args_vals_list = toolsencoding.get_args_vals_list_for_render_data(_render_data)
             profile = mltprofiles.get_profile_for_index(_current_profile_index) 
             file_path = _render_data.render_dir + "/" +  _render_data.file_name  + _render_data.file_extension
             
             consumer = renderconsumer.get_mlt_render_consumer(file_path, profile, args_vals_list)
-            
+
             # Render producer
-            frame_file = out_folder + frame_name + "_0000.png"
-            if editorstate.mlt_version_is_equal_or_greater("0.8.5"):
-                resource_name_str = utils.get_img_seq_resource_name(frame_file, True)
-            else:
-                resource_name_str = utils.get_img_seq_resource_name(frame_file, False)
-            resource_path = out_folder + "/" + resource_name_str
-            producer = mlt.Producer(profile, str(resource_path))
+            frame_file = fctx.priv_context.first_rendered_frame_path
+            resource_name_str = utils.get_img_seq_resource_name(frame_file, True)
+            range_resourse_mlt_path = out_folder + resource_name_str
+            print("range_resourse_mlt_path", range_resourse_mlt_path)
+            producer = mlt.Producer(profile, str(range_resourse_mlt_path))
 
-            clip_frames = os.listdir(get_render_frames_dir())
-
-            self.render_player = renderconsumer.FileRenderPlayer("", producer, consumer, 0, len(clip_frames) - 1)
+            self.render_player = renderconsumer.FileRenderPlayer("", producer, consumer, in_frame, out_frame - 1)
             self.render_player.start()
 
             while self.render_player.stopped == False:
@@ -1364,26 +1318,6 @@ class GmicEffectRendererer(threading.Thread):
         _window.render_percentage.set_markup("<small>" + update_info + "</small>")
         _window.render_progress_bar.set_fraction(float(frame + 1)/float(self.length))
         Gdk.threads_leave()
-
-    def script_render_update_callback(self, frame_count):
-        update_info = _("Rendering frame: ") + str(frame_count) + "/" +  str(self.length)
-
-        Gdk.threads_enter()
-        _window.render_percentage.set_markup("<small>" + update_info + "</small>")
-        _window.render_progress_bar.set_fraction(float(frame_count)/float(self.length))
-        Gdk.threads_leave()
-
-    def script_render_output_callback(self, p, out):
-        Gdk.threads_enter()
-        _window.out_view.get_buffer().set_text(out + "Return code:" + str(p.returncode))
-        if p.returncode != 0:
-            _window.out_view.override_color((Gtk.StateFlags.NORMAL and Gtk.StateFlags.ACTIVE), Gdk.RGBA(red=1.0, green=0.0, blue=0.0))
-            _window.render_percentage.set_text(_("Render error!"))
-            Gdk.threads_leave()
-            return
-        else:
-            _window.out_view.override_color((Gtk.StateFlags.NORMAL and Gtk.StateFlags.ACTIVE), None)
-            Gdk.threads_leave()
 
     def abort_render(self):
         self.abort = True
