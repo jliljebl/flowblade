@@ -768,7 +768,7 @@ class ScriptToolWindow(Gtk.Window):
         control_panel.pack_start(control_bottom, True, True, 0)
 
         preview_panel = Gtk.VBox(False, 2)
-        preview_panel.pack_start(self.monitors_switcher, False, False, 0)
+        preview_panel.pack_start(self.monitors_switcher, True, True, 0)
         preview_panel.pack_start(control_panel, False, False, 0)
         preview_panel.set_margin_bottom(8)
 
@@ -865,10 +865,19 @@ class ScriptToolWindow(Gtk.Window):
         render_vbox.pack_start(render_row, False, False, 0)
         render_vbox.pack_start(guiutils.pad_label(24, 24), False, False, 0)
 
-        preview_render_vbox = Gtk.VBox(False, 2)
-        preview_render_vbox.pack_start(preview_panel, False, False, 0)
-        preview_render_vbox.pack_start(render_vbox, False, False, 0)
+        exit_b = guiutils.get_sized_button(_("Close"), 150, 32)
+        exit_b.connect("clicked", lambda w:_shutdown())
+        self.close_button = exit_b
+        
+        editor_buttons_row = Gtk.HBox()
+        editor_buttons_row.pack_start(Gtk.Label(), True, True, 0)
+        editor_buttons_row.pack_start(exit_b, False, False, 0)
 
+        preview_render_vbox = Gtk.VBox(False, 2)
+        preview_render_vbox.pack_start(preview_panel, True, True, 0)
+        preview_render_vbox.pack_start(render_vbox, False, False, 0)
+        preview_render_vbox.pack_start(editor_buttons_row, False, False, 0)
+        preview_render_vbox.set_margin_left(4)
 
         # --------------------------------------------------- LEFT SIDE: SCRIPTING
         # --------------------------------------------------- LEFT SIDE: SCRIPTING
@@ -884,7 +893,8 @@ class ScriptToolWindow(Gtk.Window):
         script_sw = Gtk.ScrolledWindow()
         script_sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         script_sw.add(self.script_view)
-        script_sw.set_size_request(MONITOR_WIDTH - 100, 125)
+        script_sw.set_size_request(MONITOR_WIDTH - 100, 225)
+        script_sw.set_margin_bottom(4)
 
         self.out_view = Gtk.TextView()
         self.out_view.set_sensitive(False)
@@ -898,38 +908,27 @@ class ScriptToolWindow(Gtk.Window):
         out_sw = Gtk.ScrolledWindow()
         out_sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         out_sw.add(self.out_view)
-        out_sw.set_size_request(MONITOR_WIDTH - 150, 100)
-        
-        script_vbox = Gtk.VBox(False, 2)
-        #script_vbox.pack_start(preset_row, False, False, 0)
-        script_vbox.pack_start(script_sw, True, True, 0)
-        script_vbox.pack_start(out_sw, True, True, 0)
+        out_sw.set_size_request(MONITOR_WIDTH - 150, 200)
+        out_sw.set_margin_top(4)
+
+        script_vbox = Gtk.Paned.new(Gtk.Orientation.VERTICAL) 
+        script_vbox.pack1(script_sw, True, False)
+        script_vbox.pack2(out_sw, False, False)
         script_vbox.set_margin_right(4)
-
-        # ------------------------------------------------------------ EDITOR BUTTONS ROW
-        # ------------------------------------------------------------ EDITOR BUTTONS ROW
-        # ------------------------------------------------------------ EDITOR BUTTONS ROW
-        exit_b = guiutils.get_sized_button(_("Close"), 150, 32)
-        exit_b.connect("clicked", lambda w:_shutdown())
-        self.close_button = exit_b
         
-        editor_buttons_row = Gtk.HBox()
-        editor_buttons_row.pack_start(Gtk.Label(), True, True, 0)
-        editor_buttons_row.pack_start(exit_b, False, False, 0)
-
 
         # ------------------------------------------------------------ BUILD WINDOW
         # ------------------------------------------------------------ BUILD WINDOW
         # ------------------------------------------------------------ BUILD WINDOW
-        main_hbox = Gtk.HBox(False, 2)
-        main_hbox.pack_start(script_vbox, False, False, 0)
-        main_hbox.pack_start(preview_render_vbox, False, False, 0)
+        main_hbox = Gtk.Paned.new(Gtk.Orientation.HORIZONTAL) #Gtk.HBox(False, 2)
+        main_hbox.pack1(script_vbox, True, False)
+        main_hbox.pack2(preview_render_vbox, False, False)
 
         # Build window
         pane = Gtk.VBox(False, 2)
         pane.pack_start(top_row, False, False, 0)
-        pane.pack_start(main_hbox, False, False, 0)
-        pane.pack_start(editor_buttons_row, False, False, 0)
+        pane.pack_start(main_hbox, True, True, 0)
+        #pane.pack_start(editor_buttons_row, False, False, 0)
 
         align = guiutils.set_margins(pane, 12, 12, 12, 12)
 
@@ -944,11 +943,10 @@ class ScriptToolWindow(Gtk.Window):
 
         # Set pane and show window
         self.add(align)
-        self.set_title(_("Scripting Tool"))
+        self.set_title(_("Flowblade Media Plugin Editor"))
         self.set_position(Gtk.WindowPosition.CENTER)
         #self.set_widgets_sensitive(False)
         self.show_all()
-        self.set_resizable(False)
         self.set_active_state(True)
 
     def init_for_new_clip(self, profile_name):

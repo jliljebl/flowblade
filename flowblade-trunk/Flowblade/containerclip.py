@@ -279,8 +279,6 @@ def _fluxity_clip_create_dialog_callback(dialog, response_id, data):
             _show_not_all_data_info()
             return
 
-        #dialog.destroy()
-
         container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_FLUXITY, script_file, None)
         
         dialog.info_label.set_text("Test Render to validate script...")
