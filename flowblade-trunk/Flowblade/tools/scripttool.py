@@ -578,34 +578,47 @@ def render_preview_frame():
     profile = mltprofiles.get_profile(_current_profile_name)
     global _current_dimensions
     _current_dimensions = (profile.width(), profile.height(), 1.0)
+    frame = _player.current_frame()
     
-    fctx = fluxity.render_preview_frame(script, 0, get_session_folder(), _profile_file_path)
+    _window.out_view.get_buffer().set_text("Rendering...")
 
+    fctx = fluxity.render_preview_frame(script, frame, get_session_folder(), _profile_file_path)
+
+    global _current_preview_surface
     if fctx.error == None:
-        global _current_preview_surface
         _current_preview_surface = fctx.priv_context.frame_surface
         _window.preview_monitor.show()
         _window.monitors_switcher.set_visible_child_name(CAIRO_DRAW_MONITOR)
         _window.monitors_switcher.queue_draw()
         _window.preview_monitor.queue_draw()
-        _window.out_view.get_buffer().set_text("success:\n" + script)
+        _window.out_view.get_buffer().set_text("success:\n" + "Preview rendered for frame " + str(frame))
+        _window.media_info.set_markup("<small>" + _("Preview for frame: ") + str(frame) + "</small>")
     else:
         _window.out_view.get_buffer().set_text(fctx.error)
-
+        _window.media_info.set_markup("<small>" + _("No Preview") +"</small>")
+        _current_preview_surface = None
+        _window.monitors_switcher.queue_draw()
+        _window.preview_monitor.queue_draw()
+        
 def render_range():
     buf = _window.script_view.get_buffer()
     script = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), False)
-    _profile_file_path = mltprofiles.get_profile_file_path(_current_profile_name)
+    profile_file_path = mltprofiles.get_profile_file_path(_current_profile_name)
 
     profile = mltprofiles.get_profile(_current_profile_name)
     global _current_dimensions
     _current_dimensions = (profile.width(), profile.height(), 1.0)
-    
+
+    _window.out_view.get_buffer().set_text("Rendering...")
+
+    range_renderer = FluxityRangeRenderer(script, get_render_frames_dir(), profile_file_path)
+    range_renderer.start()
+    """
     # GUI quarantees valid range here.
     in_frame = _player.producer.mark_in
     out_frame = _player.producer.mark_out
     
-    fctx = fluxity.render_frame_sequence(script, in_frame, out_frame, get_render_frames_dir(), _profile_file_path)
+    fctx = fluxity.render_frame_sequence(script, in_frame, out_frame, get_render_frames_dir(), _profile_file_path, _frame_write_update)
 
     if fctx.error == None:
         frame_file = fctx.priv_context.first_rendered_frame_path
@@ -618,9 +631,17 @@ def render_range():
         _window.monitors_switcher.queue_draw()
         _window.preview_monitor.queue_draw()
         _window.out_view.get_buffer().set_text("success:\n" + "rendered some frames!")
+        _window.media_info.set_markup("<small>" + _("Range preview for frame range ") + str(in_frame) + " - " + str(out_frame)  +"</small>")
     else:
         _window.out_view.get_buffer().set_text(fctx.error)
-        
+        _window.media_info.set_markup("<small>" + _("No Preview") +"</small>")
+        global _current_preview_surface
+        _current_preview_surface = None
+        _window.monitors_switcher.set_visible_child_name(CAIRO_DRAW_MONITOR)
+        _window.monitors_switcher.queue_draw()
+        _window.preview_monitor.queue_draw()
+    """
+
 def render_current_frame_preview():
     global _preview_render
     _preview_render = GmicPreviewRendererer()
@@ -691,7 +712,7 @@ class ScriptToolWindow(Gtk.Window):
         self.load_button.connect("clicked", lambda w: open_clip_dialog())
 
         self.media_info = Gtk.Label()
-        self.media_info.set_markup("<small>" + _("no clip loaded") + "</small>")
+        self.media_info.set_markup("<small>" + _("No Preview") + "</small>")
 
         top_row = Gtk.HBox(False, 2)
         top_row.pack_start(self.hamburger_launcher.widget, False, False, 0)
@@ -945,16 +966,15 @@ class ScriptToolWindow(Gtk.Window):
         self.add(align)
         self.set_title(_("Flowblade Media Plugin Editor"))
         self.set_position(Gtk.WindowPosition.CENTER)
-        #self.set_widgets_sensitive(False)
         self.show_all()
         self.set_active_state(True)
-
+    """
     def init_for_new_clip(self, profile_name):
         self.clip_path = clip_path
         self.set_active_state(True)
         self.pos_bar.update_display_from_producer(_player.producer)
         self.media_info.set_markup("<small>" + os.path.basename(clip_path) + ", " + profile_name + "</small>")
-
+    """
     def update_marks_display(self):
 
         if _player.producer.mark_in  == -1:
@@ -1031,7 +1051,7 @@ class ScriptToolWindow(Gtk.Window):
 
     def _draw_preview(self, event, cr, allocation):
         x, y, w, h = allocation
-        print(x, y, w, h)
+
         if _current_preview_surface != None:
             width, height, pixel_aspect = _current_dimensions
             scale = float(MONITOR_WIDTH) / float(width)
@@ -1159,66 +1179,55 @@ def _global_key_down_listener(widget, event):
     return True
 
 #------------------------------------------------- render threads
-class GmicPreviewRendererer(threading.Thread):
+class FluxityRangeRenderer(threading.Thread):
 
-    def __init__(self):
+    def __init__(self, script, render_folder, profile_file_path):
         threading.Thread.__init__(self)
+        self.script = script
+        self.render_folder = render_folder
+        self.profile_file_path = profile_file_path
 
     def run(self):
-        start_time = time.time()
-            
-        try:
-            # For the case the render fails
-            shutil.copyfile(get_current_frame_file(), get_preview_file())
-        except IOError:
-            # We have failed to extract a png file from source file
-            Gdk.threads_enter()
-            _window.out_view.override_color((Gtk.StateFlags.NORMAL and Gtk.StateFlags.ACTIVE), Gdk.RGBA(red=1.0, green=0.0, blue=0.0))
-            _window.out_view.get_buffer().set_text("Extracting PNG frames from this file failed!")
-            Gdk.threads_leave()
-            return
-            
-        Gdk.threads_enter()
-        _window.preview_info.set_markup("<small>" + _("Rendering preview...") + "</small>" )
-        buf = _window.script_view.get_buffer()
-        view_text = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), False)
-        Gdk.threads_leave()
+        #start_time = time.time()
     
-        # Create command list and launch process.
-        command_list = ["/usr/bin/gmic", get_current_frame_file()]
-        user_script_commands = view_text.split(" ")
-        command_list.extend(user_script_commands)
-        command_list.append("-output")
-        command_list.append(get_preview_file())
-
-        # Render preview and write log
-        FLOG = open(userfolders.get_cache_dir() + "log_gmic_preview", 'w')
-        p = subprocess.Popen(command_list, stdin=FLOG, stdout=FLOG, stderr=FLOG)
-        p.wait()
-        FLOG.close()
-     
-        # read log
-        f = open(userfolders.get_cache_dir() + "log_gmic_preview", 'r')
-        out = f.read()
-        f.close()
-
-        global _current_preview_surface
-        _current_preview_surface = cairo.ImageSurface.create_from_png(get_preview_file())
+        Gdk.threads_enter()
+        _window.out_view.get_buffer().set_text("Rendering...")
+        Gdk.threads_leave()
+            
+        # GUI quarantees valid range here.
+        in_frame = _player.producer.mark_in
+        out_frame = _player.producer.mark_out
+        
+        fctx = fluxity.render_frame_sequence(self.script, in_frame, out_frame, self.render_folder, self.profile_file_path, self.frame_write_update)
 
         Gdk.threads_enter()
-        if p.returncode != 0:
-           _window.out_view.override_color((Gtk.StateFlags.NORMAL and Gtk.StateFlags.ACTIVE), Gdk.RGBA(red=1.0, green=0.0, blue=0.0))
+        
+        if fctx.error == None:
+            frame_file = fctx.priv_context.first_rendered_frame_path
+            resource_name_str = utils.get_img_seq_resource_name(frame_file, True)
+            range_resourse_mlt_path = get_render_frames_dir() + "/" + resource_name_str
+            new_playback_producer = get_playback_tractor(_script_length, range_resourse_mlt_path, in_frame, out_frame)
+            _player.set_producer(new_playback_producer)
+        
+            _window.monitors_switcher.set_visible_child_name(MLT_PLAYER_MONITOR)
+            _window.monitors_switcher.queue_draw()
+            _window.preview_monitor.queue_draw()
+            _window.out_view.get_buffer().set_text("success:\n" + "rendered some frames!")
+            _window.media_info.set_markup("<small>" + _("Range preview for frame range ") + str(in_frame) + " - " + str(out_frame)  +"</small>")
         else:
-            _window.out_view.override_color((Gtk.StateFlags.NORMAL and Gtk.StateFlags.ACTIVE), None)
-            
-        _window.out_view.get_buffer().set_text(out + "Return code:" + str(p.returncode))
+            _window.out_view.get_buffer().set_text(fctx.error)
+            _window.media_info.set_markup("<small>" + _("No Preview") +"</small>")
+            global _current_preview_surface
+            _current_preview_surface = None
+            _window.monitors_switcher.set_visible_child_name(CAIRO_DRAW_MONITOR)
+            _window.monitors_switcher.queue_draw()
+            _window.preview_monitor.queue_draw()
 
-        render_time = time.time() - start_time
-        time_str = "{0:.2f}".format(round(render_time,2))
-        _window.preview_info.set_markup("<small>" + _("Preview for frame: ") + \
-            utils.get_tc_string_with_fps(_player.current_frame(), _current_fps) + _(", render time: ") + time_str +  "</small>" )
-            
-        _window.preview_monitor.queue_draw()
+        Gdk.threads_leave()
+
+    def frame_write_update(self, frame):
+        Gdk.threads_enter()
+        _window.media_info.set_markup("<small>" + _("Rendered frame ") + str(frame) + "</small>")
         Gdk.threads_leave()
 
 
