@@ -30,11 +30,13 @@ import time
 import threading
 import xml.dom.minidom
 import os
+import sys # debugging
 # Jan-2017 - SvdB
 import editorpersistance
 
 import mltenv
 import respaths
+import userfolders # debugging
 
 
 # File describing existing encoding and quality options
@@ -409,11 +411,17 @@ class FileRenderPlayer(threading.Thread):
         self.wait_for_producer_end_stop = True
         self.running = False
         self.has_started_running = False
+        self.do_consumer_position_wait = True
         print("FileRenderPlayer started, start frame: " + str(self.start_frame) + ", stop frame: " + str(self.stop_frame))
         self.consumer_pos_stop_add = 1 # HACK!!! File renders work then this is one, screenshot render requires this to be 2 to work 
         threading.Thread.__init__(self)
 
     def run(self):
+        # Uncomment in to get debug printing.
+        #so = se = open(userfolders.get_cache_dir() + "log_renderplayer", 'w', buffering=1)
+        #sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', buffering=1)
+        #os.dup2(so.fileno(), sys.stdout.fileno())
+        
         self.running = True
         self.has_started_running = True
         self.connect_and_start()
@@ -433,8 +441,9 @@ class FileRenderPlayer(threading.Thread):
                 else:
                     self.producer.set_speed(0)
                     last_frame = self.producer.frame()
-                    while self.consumer.position() + self.consumer_pos_stop_add < last_frame:
-                        time.sleep(0.2)
+                    if self.do_consumer_position_wait == True:
+                        while self.consumer.position() + self.consumer_pos_stop_add < last_frame:
+                            time.sleep(0.2)
 
                     self.consumer.stop()
                                         

@@ -65,7 +65,6 @@ import userfolders
 import utils
 
 import gmicplayer
-#import gmicscript
 
 MONITOR_WIDTH = 500
 MONITOR_HEIGHT = 300 # initial value, this gets changed when material is loaded
@@ -82,11 +81,8 @@ _session_id = None
 _window = None
 
 _player = None
-_preview_render = None
-_frame_writer = None
 _effect_renderer = None
 
-# Script length and in out marks. These can be modifies from GUI or rendered script.
 _script_length = fluxity.DEFAULT_LENGTH
 
 _current_profile_name = None
@@ -98,9 +94,6 @@ _current_dimensions = None
 _current_fps = None
 
 _render_data = None # toolsencoding.ToolsRenderData object
-_last_load_file = None
-
-_startup_data = None
 
 _encoding_panel = None
 
@@ -236,21 +229,7 @@ def main(root_path, force_launch=False):
     Gtk.main()
     Gdk.threads_leave()
 
-# ------------------------------------------------- data, folders init
-def _load_startup_data():
-    path, mark_in, mark_out = _startup_data
-    _do_file_load(path)
-    GLib.idle_add(_finish_load_startup_data)
-
-def _finish_load_startup_data():
-    path, mark_in, mark_out = _startup_data
-    _player.producer.mark_in = mark_in
-    _player.producer.mark_out = mark_out
-
-    _window.update_marks_display()
-    _window.pos_bar.update_display_from_producer(_player.producer)
-    _window.update_render_status_info()
-
+# ------------------------------------------------- folders init
 def init_frames_dirs():
     os.mkdir(get_clip_frames_dir())
     os.mkdir(get_render_frames_dir())
@@ -265,7 +244,7 @@ def _init_player_and_profile_data(profile_name):
     _current_fps = float(new_profile.frame_rate_num())/float(new_profile.frame_rate_den())
     _current_profile_index = mltprofiles.get_profile_index_for_profile(new_profile)
 
-    global _player, _frame_writer, _current_path
+    global _player, _current_path
     _current_path = respaths.FLUXITY_EMPTY_BG_RES_PATH
     _player = gmicplayer.GmicPlayer(_current_path)
 
@@ -326,89 +305,6 @@ def get_preview_file():
 
     
 """
-# --------------------------------------------- load clip
-def open_clip_dialog():
-    
-    file_select = Gtk.FileChooserDialog(_("Select Video Media"), _window, Gtk.FileChooserAction.OPEN,
-                                    (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-                                    Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
-
-    file_select.set_default_response(Gtk.ResponseType.CANCEL)
-    file_select.set_select_multiple(False)
-
-    media_filter = utils.get_video_source_file_filter()
-    all_filter = Gtk.FileFilter()
-    file_select.add_filter(media_filter)
-
-    if _last_load_file != None:
-        file_select.set_current_folder(os.path.dirname(_last_load_file))
-    elif ((editorpersistance.prefs.open_in_last_opended_media_dir == True) 
-        and (editorpersistance.prefs.last_opened_media_dir != None)):
-        file_select.set_current_folder(editorpersistance.prefs.last_opened_media_dir)
-    
-    file_select.connect('response', _open_files_dialog_cb)
-
-    file_select.set_modal(True)
-    file_select.show()
-
-def _open_files_dialog_cb(file_select, response_id):
-    filenames = file_select.get_filenames()
-    file_select.destroy()
-
-    if response_id != Gtk.ResponseType.OK:
-        return
-    if len(filenames) == 0:
-        return
-
-    # Only accept video files
-    if utils.get_file_type(filenames[0]) != "video":
-        return
-
-    _do_file_load(filenames[0])
-
-def _do_file_load(file_path):
-    global _last_load_file
-    _last_load_file = file_path
-    
-    global _current_path, _render_data
-
-    # if another clip has already been opened then we need to shutdown players.
-    # and reset render data
-    if _current_path != None:
-        _render_data = None
-        if _player != None:
-            _player.shutdown()
-        if _effect_renderer != None:
-            _effect_renderer.shutdown()
-
-    _current_path = file_path
-    
-    # Finish clip open when dialog has been destroyed
-    GLib.idle_add(_finish_clip_open)
-    
-def _finish_clip_open():
-    new_profile_index = gmicplayer.set_current_profile(_current_path)
-    new_profile = mltprofiles.get_profile_for_index(new_profile_index)
-
-    global _current_dimensions, _current_fps, _current_profile_index
-    _current_dimensions = (new_profile.width(), new_profile.height(), 1.0)
-    _current_fps = float(new_profile.frame_rate_num())/float(new_profile.frame_rate_den())
-    _current_profile_index = new_profile_index
-
-    global _player, _frame_writer
-    _player = gmicplayer.GmicPlayer(_current_path)
-    _frame_writer = gmicplayer.PreviewFrameWriter(_current_path)
-
-    _window.set_fps()
-    _window.init_for_new_clip(_current_path, new_profile.description())
-    _window.set_monitor_sizes()
-    _window.set_widgets_sensitive(True)
-    _window.render_button.set_sensitive(False)
-    _window.encode_desc.set_markup("<small>" + _("not set")  + "</small>")
-    _player.create_sdl_consumer()
-    _player.connect_and_start()
-
-
 #-------------------------------------------------- script setting and save/load
 #def script_menu_lauched(launcher, event):
 #    gmicscript.show_menu(event, script_menu_item_selected)
@@ -1198,11 +1094,9 @@ class FluxityPluginRenderer(threading.Thread):
 
     def run(self):
         #sys.stdout = open(userfolders.get_cache_dir() + "log_scripttool_render", 'w')
-        so = se = open(userfolders.get_cache_dir() + "log_scripttool_render", 'w', buffering=1)
-
-        sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', buffering=1)
-
-        os.dup2(so.fileno(), sys.stdout.fileno())
+        #so = se = open(userfolders.get_cache_dir() + "log_scripttool_render", 'w', buffering=1)
+        #sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', buffering=1)
+        #os.dup2(so.fileno(), sys.stdout.fileno())
     
         self.render_player = None        
         self.abort = False
@@ -1265,22 +1159,22 @@ class FluxityPluginRenderer(threading.Thread):
                     
         # Render video
         if _window.encode_check.get_active() == True:
-            print("video")
             # Render consumer
             args_vals_list = toolsencoding.get_args_vals_list_for_render_data(_render_data)
             profile = mltprofiles.get_profile_for_index(_current_profile_index) 
             file_path = _render_data.render_dir + "/" +  _render_data.file_name  + _render_data.file_extension
-            
             consumer = renderconsumer.get_mlt_render_consumer(file_path, profile, args_vals_list)
 
             # Render producer
             frame_file = fctx.priv_context.first_rendered_frame_path
             resource_name_str = utils.get_img_seq_resource_name(frame_file, True)
             range_resourse_mlt_path = out_folder + resource_name_str
-            print("range_resourse_mlt_path", range_resourse_mlt_path)
             producer = mlt.Producer(profile, str(range_resourse_mlt_path))
 
             self.render_player = renderconsumer.FileRenderPlayer("", producer, consumer, in_frame, out_frame - 1)
+            self.render_player.wait_for_producer_end_stop = False
+            self.render_player.consumer_pos_stop_add = 1
+            self.do_consumer_position_wait = False
             self.render_player.start()
 
             while self.render_player.stopped == False:
@@ -1293,6 +1187,8 @@ class FluxityPluginRenderer(threading.Thread):
                 
                 fraction = self.render_player.get_render_fraction()
                 update_info = _("Rendering video, ") + str(int(fraction * 100)) + _("% done")
+                
+                print(fraction, self.render_player.producer.frame(), self.render_player.stop_frame, self.render_player.producer.get_speed(), self.render_player.consumer.is_stopped())
                 
                 Gdk.threads_enter()
                 _window.render_percentage.set_markup("<small>" + update_info + "</small>")
