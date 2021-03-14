@@ -41,7 +41,6 @@ import ccrutils
 import editorstate
 import editorpersistance
 import fluxity
-#import gmicplayer
 import mltfilters
 import mltenv
 import mltprofiles
@@ -179,7 +178,7 @@ class FluxityHeadlessRunnerThread(threading.Thread):
         user_script = script_file.read()
         
         profile_file_path = mltprofiles.get_profile_file_path(self.profile_desc)
-        print("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk", self.range_in, self.range_out)
+
         fluxity.render_frame_sequence(user_script, self.range_in, self.range_out, rendered_frames_folder, profile_file_path, self.frames_update)
         render_length = self.range_out - self.range_in 
         while len(os.listdir(rendered_frames_folder)) != render_length:

@@ -1112,6 +1112,7 @@ class UnrenderedCreationThread(threading.Thread):
         Gdk.threads_leave()
 
     def progress_thread_complete(self, dialog, some_number):
+        print("werwerewrwer")
         #  Gdk.threads_enter() is done before this called from "motion_progress_update" thread.
         dialog.destroy()
-
+        print("werwerewrwer")

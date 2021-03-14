@@ -76,7 +76,7 @@ class ContainerClipData:
             self.data_slots = {}
             
             self.editable = False
-        
+                
         def get_program_name(self):
             directory, file_name = os.path.split(self.program)
             name, ext = os.path.splitext(file_name)
@@ -260,7 +260,8 @@ class GMicLoadCompletionThread(threading.Thread):
             dialogutils.warning_message(primary_txt, err_msg, gui.editor_window.window)
             
         Gdk.threads_leave()
-
+        
+# --- Fluxity
 def create_fluxity_media_item():
     script_select, row1 = _get_file_select_row_and_editor(_("Flowblade Media Plugin Script:"), None, _("Flowblade Media Plugin Script"))
     #media_file_select, row2 = _get_file_select_row_and_editor(_("Video Clip:"))
@@ -280,7 +281,7 @@ def _fluxity_clip_create_dialog_callback(dialog, response_id, data):
 
         #dialog.destroy()
 
-        container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_FLUXITY, script_file, respaths.FLUXITY_EMPTY_BG_RES_PATH)
+        container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_FLUXITY, script_file, None)
         
         dialog.info_label.set_text("Test Render to validate script...")
         
@@ -297,26 +298,43 @@ class FluxityLoadCompletionThread(threading.Thread):
         threading.Thread.__init__(self)
         
     def run(self):
-        
         action_object = containeractions.get_action_object(self.container_clip_data)
         is_valid, err_msg = action_object.validate_program()
 
         time.sleep(0.5) # To make sure text is seen.
 
         Gdk.threads_enter()
-
         self.dialog.destroy()
-        
-        if is_valid == True:
-            data_object = self.container_clip_data.data_slots["fluxity_plugin_edit_data"] 
-            container_clip = ContainerClipMediaItem(PROJECT().next_media_file_id, data_object["name"], self.container_clip_data)
-            PROJECT().add_container_clip_media_object(container_clip)
-            _update_gui_for_media_object_add()
-        else:
+
+        if is_valid == False:
             primary_txt = _("Flowblade Media Plugin Container Clip Validation Error")
             dialogutils.warning_message(primary_txt, err_msg, gui.editor_window.window)
-            
+                
         Gdk.threads_leave()
+
+        if is_valid == False:
+            return 
+    
+        data_object = self.container_clip_data.data_slots["fluxity_plugin_edit_data"]
+        length = data_object["length"]
+        fluxity_unrendered_media_image = respaths.IMAGE_PATH + "unrendered_fluxity.png"
+        window_text = _("Creating Container for Flowblade Media Plugin...")
+        containeractions.create_unrendered_clip(length, fluxity_unrendered_media_image, self.container_clip_data, _fluxity_unredered_media_creation_complete, window_text)
+
+def _fluxity_unredered_media_creation_complete(created_unrendered_clip_path, container_clip_data):
+
+    # This called from inside Gdk.threads_enter(), entering second time here crashes.
+    # Now that unrendered media has been created we have full container data info.
+    data_object = container_clip_data.data_slots["fluxity_plugin_edit_data"]
+    container_clip_data.editable = True
+    container_clip_data.unrendered_length = data_object["length"]
+    container_clip_data.unrendered_media = created_unrendered_clip_path
+    container_clip_data.unrendered_type = appconsts.VIDEO
+
+    container_clip = ContainerClipMediaItem(PROJECT().next_media_file_id, data_object["name"], container_clip_data)
+    PROJECT().add_container_clip_media_object(container_clip)
+    _update_gui_for_media_object_add()
+
         
 # --- MLT XML
 def create_mlt_xml_media_item(xml_file_path, media_name):
@@ -387,7 +405,7 @@ def _blender_unredered_media_creation_complete(created_unrendered_clip_path, con
 
     os.replace(created_unrendered_clip_path, unrendered_clip_path)
 
-    # Now that unrendere media has been created we have full container data info.
+    # Now that unrendered media has been created we have full container data info.
     container_clip_data.unrendered_media = unrendered_clip_path
     container_clip_data.unrendered_type = appconsts.VIDEO
 
