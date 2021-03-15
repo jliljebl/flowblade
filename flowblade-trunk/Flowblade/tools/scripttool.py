@@ -89,7 +89,7 @@ _current_profile_name = None
 _current_profile_index = None # We necesserily would not need this too.
 
 _current_path = None
-_current_preview_surface = None
+#_current_preview_surface = None
 _current_dimensions = None
 _current_fps = None
 
@@ -480,27 +480,28 @@ def render_preview_frame():
     _window.out_view.get_buffer().set_text("Rendering...")
 
     fctx = fluxity.render_preview_frame(script, frame, get_session_folder(), _profile_file_path)
-
+    _window.pos_bar.preview_range = None # frame or black for fail, no range anyway
+        
     if fctx.error == None:
         fctx.priv_context.frame_surface.write_to_png(respaths.FLUXITY_PREVIEW_IMG_PATH,)
-        new_playback_producer = get_playback_tractor(_script_length, respaths.FLUXITY_PREVIEW_IMG_PATH, frame, frame)
+        new_playback_producer = get_playback_tractor(_script_length, respaths.FLUXITY_PREVIEW_IMG_PATH, 0, _script_length)
         _player.set_producer(new_playback_producer)
         _player.seek_frame(frame)
 
         _window.monitors_switcher.set_visible_child_name(MLT_PLAYER_MONITOR)
-        _window.pos_bar.preview_frame = frame
+
         _window.monitors_switcher.queue_draw()
         _window.preview_monitor.queue_draw()
         _window.pos_bar.widget.queue_draw()
         _window.out_view.get_buffer().set_text("Preview rendered for frame " + str(frame))
         _window.media_info.set_markup("<small>" + _("Preview for frame: ") + str(frame) + "</small>")
     else:
-        global _current_preview_surface
-        _current_preview_surface = None
+        #global _current_preview_surface
+        #_current_preview_surface = None
         _window.monitors_switcher.set_visible_child_name(CAIRO_DRAW_MONITOR)
         _window.out_view.get_buffer().set_text(fctx.error)
         _window.media_info.set_markup("<small>" + _("No Preview") +"</small>")
-        _current_preview_surface = None
+        #_current_preview_surface = None
         _window.monitors_switcher.queue_draw()
         _window.preview_monitor.queue_draw()
         
@@ -917,7 +918,7 @@ class ScriptToolWindow(Gtk.Window):
 
     def _draw_preview(self, event, cr, allocation):
         x, y, w, h = allocation
-
+        """
         if _current_preview_surface != None:
             width, height, pixel_aspect = _current_dimensions
             scale = float(MONITOR_WIDTH) / float(width)
@@ -925,9 +926,10 @@ class ScriptToolWindow(Gtk.Window):
             cr.set_source_surface(_current_preview_surface, 0, 0)
             cr.paint()
         else:
-            cr.set_source_rgb(0.0, 0.0, 0.0)
-            cr.rectangle(0, 0, w, h)
-            cr.fill()
+        """
+        cr.set_source_rgb(0.0, 0.0, 0.0)
+        cr.rectangle(0, 0, w, h)
+        cr.fill()
     
     def set_monitor_sizes(self):
         w, h, pixel_aspect = _current_dimensions
@@ -1083,8 +1085,9 @@ class FluxityRangeRenderer(threading.Thread):
         else:
             _window.out_view.get_buffer().set_text(fctx.error)
             _window.media_info.set_markup("<small>" + _("No Preview") +"</small>")
-            global _current_preview_surface
-            _current_preview_surface = None
+            _window.pos_bar.preview_range = None
+            #global _current_preview_surface
+            #_current_preview_surface = None
             _window.monitors_switcher.set_visible_child_name(CAIRO_DRAW_MONITOR)
             _window.monitors_switcher.queue_draw()
             _window.preview_monitor.queue_draw()
@@ -1159,7 +1162,7 @@ class FluxityPluginRenderer(threading.Thread):
             Gdk.threads_enter()
             _window.out_view.get_buffer().set_text(fctx.error)
             _window.media_info.set_markup("<small>" + _("No Preview") +"</small>")
-            _current_preview_surface = None
+            #_current_preview_surface = None
             _window.monitors_switcher.queue_draw()
             _window.preview_monitor.queue_draw()
             self.set_render_stopped_gui_state()
