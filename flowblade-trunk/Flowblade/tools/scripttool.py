@@ -89,7 +89,6 @@ _current_profile_name = None
 _current_profile_index = None # We necesserily would not need this too.
 
 _current_path = None
-#_current_preview_surface = None
 _current_dimensions = None
 _current_fps = None
 
@@ -106,10 +105,6 @@ def launch_scripttool(launch_data=None):
 
     # no args yet
     args = ["profile_name:" + editorstate.PROJECT().profile.description()]
-
-    #if launch_data != None:
-    #    clip, track = launch_data # from guicomponwnts._get_tool_integration_menu_item()
-    #    args = ("path:" + str(clip.path), "clip_in:" + str(clip.clip_in), "clip_out:" + str(clip.clip_out))
         
     print("Launch scripttool...")
     FLOG = open(userfolders.get_cache_dir() + "log_scripttool", 'w')
@@ -496,12 +491,9 @@ def render_preview_frame():
         _window.out_view.get_buffer().set_text("Preview rendered for frame " + str(frame))
         _window.media_info.set_markup("<small>" + _("Preview for frame: ") + str(frame) + "</small>")
     else:
-        #global _current_preview_surface
-        #_current_preview_surface = None
         _window.monitors_switcher.set_visible_child_name(CAIRO_DRAW_MONITOR)
         _window.out_view.get_buffer().set_text(fctx.error)
         _window.media_info.set_markup("<small>" + _("No Preview") +"</small>")
-        #_current_preview_surface = None
         _window.monitors_switcher.queue_draw()
         _window.preview_monitor.queue_draw()
         
@@ -918,15 +910,6 @@ class ScriptToolWindow(Gtk.Window):
 
     def _draw_preview(self, event, cr, allocation):
         x, y, w, h = allocation
-        """
-        if _current_preview_surface != None:
-            width, height, pixel_aspect = _current_dimensions
-            scale = float(MONITOR_WIDTH) / float(width)
-            cr.scale(scale * pixel_aspect, scale)
-            cr.set_source_surface(_current_preview_surface, 0, 0)
-            cr.paint()
-        else:
-        """
         cr.set_source_rgb(0.0, 0.0, 0.0)
         cr.rectangle(0, 0, w, h)
         cr.fill()
@@ -1086,8 +1069,6 @@ class FluxityRangeRenderer(threading.Thread):
             _window.out_view.get_buffer().set_text(fctx.error)
             _window.media_info.set_markup("<small>" + _("No Preview") +"</small>")
             _window.pos_bar.preview_range = None
-            #global _current_preview_surface
-            #_current_preview_surface = None
             _window.monitors_switcher.set_visible_child_name(CAIRO_DRAW_MONITOR)
             _window.monitors_switcher.queue_draw()
             _window.preview_monitor.queue_draw()
@@ -1106,7 +1087,6 @@ class FluxityPluginRenderer(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        #sys.stdout = open(userfolders.get_cache_dir() + "log_scripttool_render", 'w')
         #so = se = open(userfolders.get_cache_dir() + "log_scripttool_render", 'w', buffering=1)
         #sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', buffering=1)
         #os.dup2(so.fileno(), sys.stdout.fileno())
@@ -1162,7 +1142,6 @@ class FluxityPluginRenderer(threading.Thread):
             Gdk.threads_enter()
             _window.out_view.get_buffer().set_text(fctx.error)
             _window.media_info.set_markup("<small>" + _("No Preview") +"</small>")
-            #_current_preview_surface = None
             _window.monitors_switcher.queue_draw()
             _window.preview_monitor.queue_draw()
             self.set_render_stopped_gui_state()
