@@ -45,6 +45,7 @@ GMIC_SCRIPTS_DOC = None
 PHANTOM_JAR = None
 FLUXITY_EMPTY_BG_RES_PATH = None
 FLUXITY_PREVIEW_IMG_PATH = None
+MEDIA_PLUGINS_PATH = None
 
 def set_paths(root_path):
     # Apr-2017 - SvdB - Added SHORTCUTS_PATH for keyboard shortcuts files
@@ -54,7 +55,8 @@ def set_paths(root_path):
     GPL_3_DOC, ROOT_PARENT, PATTERN_PRODUCER_PATH, TRANSLATIONS_DOC, \
     LAUNCH_DIR, REPLACEMENTS_XML_DOC, GMIC_SCRIPTS_DOC,  \
     PHANTOM_JAR, PHANTOM_DIR, DEVELOPERS_DOC, CONTRIBUTORS_DOC, \
-    SHORTCUTS_PATH, FLUXITY_EMPTY_BG_RES_PATH, FLUXITY_PREVIEW_IMG_PATH
+    SHORTCUTS_PATH, FLUXITY_EMPTY_BG_RES_PATH, FLUXITY_PREVIEW_IMG_PATH, \
+    MEDIA_PLUGINS_PATH
     
     ROOT_PATH = root_path
     IMAGE_PATH = root_path + "/res/img/"
@@ -80,7 +82,8 @@ def set_paths(root_path):
     SHORTCUTS_PATH = root_path + "/res/shortcuts/"
     FLUXITY_EMPTY_BG_RES_PATH = root_path + "/res/scripttool/not_rendered.png"
     FLUXITY_PREVIEW_IMG_PATH = root_path + "/res/scripttool/preview.png"
-
+    MEDIA_PLUGINS_PATH = root_path + "/res/mediaplugins/"
+    
 def apply_dark_theme():
     global IMAGE_PATH
     IMAGE_PATH = ROOT_PATH + "/res/darktheme/"

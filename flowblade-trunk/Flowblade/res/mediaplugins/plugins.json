@@ -1,0 +1,6 @@
+{
+"plugins":[ 
+	{ "folder":"test1", "name":"Default Plugin", "category":"animation"},
+	{ "folder":"test2", "name":"Not Default Plugin", "category":"effect"}
+	]
+} 

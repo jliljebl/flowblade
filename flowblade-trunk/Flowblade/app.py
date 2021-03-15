@@ -73,6 +73,7 @@ import keyframeeditor
 import keyframeeditcanvas
 import kftoolmode
 import medialog
+import mediaplugin
 import mltenv
 import mltfilters
 import mltplayer
@@ -299,6 +300,9 @@ def main(root_path):
     gmic.test_availablity()
     containerclip.test_blender_availebility()
     toolsintegration.init()
+
+    # Media Plugins
+    mediaplugin.init()
 
     # Create player object.
     create_player()
