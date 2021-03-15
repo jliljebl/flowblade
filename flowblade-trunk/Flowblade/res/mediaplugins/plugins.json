@@ -1,6 +1,11 @@
 {
 "plugins":[ 
-	{ "folder":"test1", "name":"Default Plugin", "category":"animation"},
-	{ "folder":"test2", "name":"Not Default Plugin", "category":"effect"}
-	]
-} 
+		{ "folder":"test1", "name":"Default Plugin", "category":"Animations"},
+		{ "folder":"testjooo", "name":"BG anim Plugin", "category":"Animations"},	
+		{ "folder":"testmyös", "name":"Default Plugin", "category":"Animations"},
+		{ "folder":"test2", "name":"Not Default Plugin", "category":"Effects"},
+		{ "folder":"test4", "name":"Also Not Default Plugin", "category":"Effects"},
+		{ "folder":"test5", "name":"Transu1", "category":"Cover Transitions"},
+		{ "folder":"test6", "name":"Transu2", "category":"Cover Transitions"}
+	 ]
+}
