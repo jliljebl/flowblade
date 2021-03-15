@@ -152,7 +152,7 @@ def main(root_path, force_launch=False):
         
     os.mkdir(get_session_folder())
 
-    init_frames_dirs()
+    _init_frames_dirs()
 
     # Load editor prefs and apply themes
     editorpersistance.load()
@@ -230,7 +230,7 @@ def main(root_path, force_launch=False):
     Gdk.threads_leave()
 
 # ------------------------------------------------- folders init
-def init_frames_dirs():
+def _init_frames_dirs():
     os.mkdir(get_clip_frames_dir())
     os.mkdir(get_render_frames_dir())
     
@@ -481,16 +481,23 @@ def render_preview_frame():
 
     fctx = fluxity.render_preview_frame(script, frame, get_session_folder(), _profile_file_path)
 
-    global _current_preview_surface
     if fctx.error == None:
-        _current_preview_surface = fctx.priv_context.frame_surface
-        _window.preview_monitor.show()
-        _window.monitors_switcher.set_visible_child_name(CAIRO_DRAW_MONITOR)
+        fctx.priv_context.frame_surface.write_to_png(respaths.FLUXITY_PREVIEW_IMG_PATH,)
+        new_playback_producer = get_playback_tractor(_script_length, respaths.FLUXITY_PREVIEW_IMG_PATH, frame, frame)
+        _player.set_producer(new_playback_producer)
+        _player.seek_frame(frame)
+
+        _window.monitors_switcher.set_visible_child_name(MLT_PLAYER_MONITOR)
+        _window.pos_bar.preview_frame = frame
         _window.monitors_switcher.queue_draw()
         _window.preview_monitor.queue_draw()
-        _window.out_view.get_buffer().set_text("success:\n" + "Preview rendered for frame " + str(frame))
+        _window.pos_bar.widget.queue_draw()
+        _window.out_view.get_buffer().set_text("Preview rendered for frame " + str(frame))
         _window.media_info.set_markup("<small>" + _("Preview for frame: ") + str(frame) + "</small>")
     else:
+        global _current_preview_surface
+        _current_preview_surface = None
+        _window.monitors_switcher.set_visible_child_name(CAIRO_DRAW_MONITOR)
         _window.out_view.get_buffer().set_text(fctx.error)
         _window.media_info.set_markup("<small>" + _("No Preview") +"</small>")
         _current_preview_surface = None
@@ -1064,10 +1071,13 @@ class FluxityRangeRenderer(threading.Thread):
             range_resourse_mlt_path = get_render_frames_dir() + "/" + resource_name_str
             new_playback_producer = get_playback_tractor(_script_length, range_resourse_mlt_path, in_frame, out_frame)
             _player.set_producer(new_playback_producer)
-        
+            _player.seek_frame(in_frame)
+            _window.pos_bar.preview_range = (in_frame, out_frame)
+
             _window.monitors_switcher.set_visible_child_name(MLT_PLAYER_MONITOR)
             _window.monitors_switcher.queue_draw()
             _window.preview_monitor.queue_draw()
+            _window.pos_bar.widget.queue_draw()
             _window.out_view.get_buffer().set_text("success:\n" + "rendered some frames!")
             _window.media_info.set_markup("<small>" + _("Range preview for frame range ") + str(in_frame) + " - " + str(out_frame)  +"</small>")
         else:

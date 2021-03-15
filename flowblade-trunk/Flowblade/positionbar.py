@@ -64,6 +64,8 @@ MARK_COLOR = (0.3, 0.3, 0.3)
 DARK_MARK_COLOR = (0.0, 0.0, 0.0)
 FLOWBLADE_THEME_MARK_COLOR = (1, 1, 1)
 
+PREVIEW_FRAME_COLOR = (0.8, 0.8, 0.9)
+PREVIEW_RANGE_COLOR = (0.4, 0.8, 0.4)
 
 class PositionBar:
     """
@@ -84,6 +86,9 @@ class PositionBar:
         self.mouse_release_listener = None # when used in tools (Titler ate.) this used to update bg image
 
         self.handle_trimmodes = handle_trimmodes
+
+        self.preview_frame = -1
+        self.preview_range = None
 
         self.POINTER_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "posbarpointer.png")
         self.MARKER_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "marker_yellow.png")
@@ -203,6 +208,18 @@ class PositionBar:
                     cr.paint()
             except:
                 pass
+
+        # Draw preview frame if set, scripttool.py only uses this.
+        
+        if self.preview_range != None:
+            in_f, out_f = self.preview_range
+            in_f_norm = float(in_f) / self.length
+            in_x = math.floor(self._get_panel_pos(in_f_norm))
+            out_f_norm = float(out_f) / self.length
+            out_x = math.floor(self._get_panel_pos(out_f_norm))
+            cr.rectangle(in_x, 4, out_x - in_x, 2)
+            cr.set_source_rgb(*PREVIEW_RANGE_COLOR)
+            cr.fill()
 
         # Draw position pointer
         if self.disabled:
