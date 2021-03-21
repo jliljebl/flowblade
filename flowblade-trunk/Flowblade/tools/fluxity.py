@@ -150,6 +150,7 @@ class FluxityContext:
         self.priv_context = FluxityContextPrivate(preview_render, output_folder)
         self.data = {}
         self.editors = {} # editors and script length
+        self.editor_tooltips = {}
         self.length = DEFAULT_LENGTH
         self.name = "Name Not Set"
         self.version = 1
@@ -191,9 +192,12 @@ class FluxityContext:
     def get_length(self, label):
         return self.length
 
-    def add_editor(self, name, type, default_value):
+    def add_editor(self, name, type, default_value, tooltip=None):
         self.editors[name] = (type, default_value)
 
+        if tooltip != None:
+            self.editor_tooltips[name] = tooltip
+        
     def get_script_data(self):
         script_data = {}
         script_data["length"] = self.length
@@ -208,7 +212,8 @@ class FluxityContext:
             editors_list.append(json_obj)
 
         script_data["editors_list"] = editors_list
-
+        script_data["tooltips_list"] = self.editor_tooltips
+        
         return json.dumps(script_data)
 
 class FluxityContextPrivate:

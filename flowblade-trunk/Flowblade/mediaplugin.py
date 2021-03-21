@@ -19,6 +19,7 @@
 """
 from gi.repository import Gtk
 
+import copy
 import json
 
 import containerclip
@@ -75,14 +76,15 @@ def fill_media_plugin_sub_menu(menu):
         menu_item.set_submenu(sub_menu)
         for plugin in group:
             plugin_menu_item = Gtk.MenuItem.new_with_label(plugin.name)
-            plugin_menu_item.connect("activate", lambda w: _add_media_plugin(plugin))
+            plugin_menu_item.connect("activate", _add_media_plugin, plugin.folder)
             sub_menu.append(plugin_menu_item)
 
         menu.append(menu_item)
     menu.show_all()
 
-def _add_media_plugin(plugin):
-    script_file = respaths.MEDIA_PLUGINS_PATH + plugin.folder + "/plugin_script"
+def _add_media_plugin(widget, plugin_folder):
+    script_file = respaths.MEDIA_PLUGINS_PATH + plugin_folder + "/plugin_script"
+    print("!!!!!!!!_add_media_plugin", script_file)
     containerclip.create_fluxity_media_item_from_plugin(script_file)
 
 

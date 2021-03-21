@@ -1,6 +1,6 @@
 {
 "plugins":[ 
-		{ "folder":"animations_1", "name":"Default Plugin", "category":"Animations"},
+		{ "folder":"animations_1", "name":"Animations 1", "category":"Animations"},
 		{ "folder":"animations_2", "name":"BG anim Plugin", "category":"Animations"},	
 		{ "folder":"animations_3", "name":"Default Plugin", "category":"Animations"},
 		{ "folder":"effects_1", "name":"Not Default Plugin", "category":"Effects"},

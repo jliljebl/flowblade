@@ -606,7 +606,7 @@ class FluxityContainerActions(AbstractContainerActionObject):
             if fctx.error == None:
                 data_json = fctx.get_script_data()
                 self.container_data.data_slots["fluxity_plugin_edit_data"] = json.loads(data_json)
-                
+
                 return (True, None) # no errors
             else:
                 return (False,  fctx.error)
@@ -733,7 +733,17 @@ class FluxityContainerActions(AbstractContainerActionObject):
  
         return (surface, length, icon_path)
 
+    def edit_program(self, clip):
+        simpleeditors.show_fluxity_container_clip_program_editor(self.project_edit_done, clip, self, self.container_data.data_slots["fluxity_plugin_edit_data"])
 
+    def project_edit_done(self, response_is_accept, dialog, editors, orig_program_info_json):
+        if response_is_accept == True:
+            self.update_program_values_from_editors(editors)
+            dialog.destroy()
+        else:
+            self.container_data.data_slots["project_edit_info"] = orig_program_info_json
+            dialog.destroy()
+            
 class MLTXMLContainerActions(AbstractContainerActionObject):
 
     def __init__(self, container_data):
@@ -1112,7 +1122,5 @@ class UnrenderedCreationThread(threading.Thread):
         Gdk.threads_leave()
 
     def progress_thread_complete(self, dialog, some_number):
-        print("werwerewrwer")
-        #  Gdk.threads_enter() is done before this called from "motion_progress_update" thread.
+        #  Gdk.threads_enter() is done before this is called from "motion_progress_update" thread.
         dialog.destroy()
-        print("werwerewrwer")

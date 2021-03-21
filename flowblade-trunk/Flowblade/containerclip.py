@@ -426,8 +426,8 @@ def _blender_unredered_media_creation_complete(created_unrendered_clip_path, con
 
 class ContainerClipMediaItem:
     """
-    Container clip media iem in Media Bin.
-    1-N container clips can be created from this.
+    Container clip media item in Media Bin.
+    Any number of container clips can be created from this.
     """
     def __init__(self, media_item_id, name, container_data):
         self.id = media_item_id

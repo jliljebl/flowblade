@@ -38,6 +38,7 @@ import guiutils
 import positionbar
 import respaths
 
+# NOTE: These need to correspond exacty with fluxity.FluxityContext.<editor> values because we do not want to import anything into fluxity.py.    
 SIMPLE_EDITOR_STRING = 0
 SIMPLE_EDITOR_VALUE = 1
 SIMPLE_EDITOR_FLOAT = 2
@@ -180,8 +181,7 @@ class BlenderProgramEditorWindow(Gtk.Window):
 
     def save(self):
         self.callback(True, self, self.editors, None)
-        
-    
+
 def _get_panel_and_create_editors(objects, pane_title, editors):
     panels = []
     for obj in objects:
@@ -191,7 +191,7 @@ def _get_panel_and_create_editors(objects, pane_title, editors):
         for editor_data in editors_data_list:
             prop_path, label_text, tooltip, editor_type, value = editor_data
             editor_type = int(editor_type)
-            editor = get_editor(editor_type, (obj[0], prop_path), label_text, value, tooltip)
+            editor = _get_editor(editor_type, (obj[0], prop_path), label_text, value, tooltip)
             editor.blender_editor_data = editor_data # We need this the later to apply the changes.
             editors.append(editor)
             
@@ -214,7 +214,7 @@ def _get_panel_and_create_editors(objects, pane_title, editors):
         
     return guiutils.get_named_frame(pane_title, pane)
      
-def get_simple_editor_selector(active_index, callback):
+def get_simple_editor_selector(active_index, callback): # used in containerprogramedit.py to create editor for blender programs
 
     editor_select = Gtk.ComboBoxText()
     editor_select.append_text(_("String")) # these corespond values above
@@ -228,8 +228,135 @@ def get_simple_editor_selector(active_index, callback):
     
     return editor_select
 
+
+
+# -------------------------------------------------------------------- Fluxity script editors dialog
+def show_fluxity_container_clip_program_editor(callback, clip, container_action, script_data_object):
+    print(script_data_object)
+    editor_window = FluxityScriptEditorWindow(callback, clip, container_action, script_data_object)
+
+class FluxityScriptEditorWindow(Gtk.Window):
+    def __init__(self, callback, clip, container_action, script_data_object):
+        
+        GObject.GObject.__init__(self)
+        self.connect("delete-event", lambda w, e: self.cancel())
+        
+        self.callback = callback
+        self.clip = clip
+        self.container_action = container_action
+        self.script_data_object = copy.deepcopy(script_data_object)
+        print(self.script_data_object)
+         
+        self.preview_frame = -1 # -1 used as flag that no preview renders ongoing and new one can be started
+         
+        # Create panels for objects
+        self.editor_widgets = []
+        editors_list = self.script_data_object["editors_list"]
+
+        for editor_data in editors_list:
+            name, type, value = editor_data
+            editor_type = int(type)
+            self.editor_widgets.append(_get_editor(editor_type, name, name, value, ""))
+
+        editors_v_panel = Gtk.VBox(True, 2)
+        for w in self.editor_widgets:        
+            editors_v_panel.pack_start(w, False, False, 0)
+
+        pane = Gtk.VBox(False, 2)
+        if len(self.editor_widgets) != 0:
+            pane.pack_start(editors_v_panel, False, False, 0)
+        else:
+            pane.pack_start(Gtk.Label(_("No Editors for this script")), False, False, 0)
+            
+        # Put in scrollpane if too many editors for screensize.
+        n_editors = len(self.editor_widgets )
+        add_scroll = False
+        if editorstate.screen_size_small_height() == True and n_editors > 4:
+            add_scroll = True
+            h = 500
+        elif editorstate.screen_size_small_height() == True and editorstate.screen_size_large_height() == False and n_editors > 5:
+            add_scroll = True
+            h = 600
+        elif editorstate.screen_size_large_height() == True and n_editors > 6:
+            add_scroll = True
+            h = 700
+            
+        if add_scroll == True:
+            sw = Gtk.ScrolledWindow()
+            sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+            sw.add(pane)
+            sw.set_size_request(400, h)
+
+        if add_scroll == True:
+            editors_panel = sw
+        else:
+            editors_panel = pane
+
+        cancel_b = guiutils.get_sized_button(_("Cancel"), 150, 32)
+        cancel_b.connect("clicked", lambda w: self.cancel())
+        save_b = guiutils.get_sized_button(_("Save Changes"), 150, 32)
+        save_b.connect("clicked", lambda w: self.save())
+        
+        buttons_box = Gtk.HBox(False, 2)
+        buttons_box.pack_start(Gtk.Label(), True, True, 0)
+        buttons_box.pack_start(cancel_b, False, False, 0)
+        buttons_box.pack_start(save_b, False, False, 0)
+
+        self.preview_panel = PreviewPanel(self, clip)
+        
+        preview_box = Gtk.VBox(False, 2)
+        preview_box.pack_start(self.preview_panel, True, True, 0)
+        preview_box.pack_start(guiutils.pad_label(2, 24), False, False, 0)
+        preview_box.pack_start(buttons_box, False, False, 0)
+
+        main_box = Gtk.HBox(False, 2)
+        main_box.pack_start(guiutils.get_named_frame(_("Editors"), editors_panel), False, False, 0)
+        main_box.pack_start(guiutils.get_named_frame(_("Preview"), preview_box), False, False, 0)
+
+        alignment = guiutils.set_margins(main_box, 8,8,8,8) #dialogutils.get_default_alignment(main_box)
+
+        self.set_modal(True)
+        self.set_transient_for(gui.editor_window.window)
+        self.set_position(Gtk.WindowPosition.CENTER)
+        self.set_title(_("Media Plugin Values Edit - ") + self.container_action.container_data.get_program_name())
+        self.set_resizable(False)
+
+        self.add(alignment)
+        self.show_all()
+
+    def render_preview_frame(self):
+        if self.preview_frame != -1:
+            return # There already is preview render ongoing.
+        self.start_time = time.monotonic()
+
+        self.preview_panel.preview_info.set_markup("<small>Rendering preview...</small>")
+        self.preview_frame = int(self.preview_panel.frame_select.get_value() + self.clip.clip_in)
+        self.container_action.render_blender_preview(self, self.editors, self.preview_frame)
+
+    def get_preview_file(self):
+        filled_number_str = str(self.preview_frame).zfill(4)
+        preview_file = self.container_action.get_preview_media_dir() + "/frame" + filled_number_str + ".png"
+
+        return preview_file
+
+    def preview_render_complete(self):
+        self.preview_panel.preview_surface = cairo.ImageSurface.create_from_png(self.get_preview_file())
+        self.preview_frame = -1
+        
+        render_time = time.monotonic() - self.start_time
+        time_str = "{0:.2f}".format(round(render_time,2))
+        frame_str = str(int(self.preview_panel.frame_select.get_value()))
+        self.preview_panel.preview_info.set_markup("<small>" + _("Preview for frame: ") +  frame_str + _(", render time: ") + time_str +  "</small>")
+        self.preview_panel.preview_monitor.queue_draw()
+
+    def cancel(self):
+        self.callback(False, self, self.editors, self.orig_program_info_json)
+
+    def save(self):
+        self.callback(True, self, self.editors, None)
+
 # ----------------------------------------------------------------------- editors
-def get_editor(editor_type, id_data, label_text, value, tooltip):
+def _get_editor(editor_type, id_data, label_text, value, tooltip):
     if editor_type == SIMPLE_EDITOR_STRING:
         editor = TextEditor(id_data, label_text, value, tooltip)
         editor.return_quoted_string = True
@@ -321,15 +448,20 @@ class ColorEditor(AbstractSimpleEditor):
     def __init__(self, id_data, label_text, value, tooltip):
         AbstractSimpleEditor.__init__(self, id_data, tooltip)
 
-        # Values may have parenthesis around 
-        if value[0:1] == '(':
-            value = value[1:len(value) - 1]
+        try:
+            # This works for blender program input data.
+            # Values may have parenthesis around 
+            if value[0:1] == '(':
+                value = value[1:len(value) - 1]
 
-        if value[len(value) - 1:len(value)] == ')':
-            value = value[0:len(value) - 1]
-        
-        value = value.replace(", ", ",") # input value can easily have some extra spaces, even better if we had some generic solution here
-        four_float_tuple = tuple(map(float, value.split(',')))
+            if value[len(value) - 1:len(value)] == ')':
+                value = value[0:len(value) - 1]
+            
+            value = value.replace(", ", ",") # input value can easily have some extra spaces, even better if we had some generic solution here
+            four_float_tuple = tuple(map(float, value.split(',')))
+        except:
+            # This works for Media Plugins script input data.
+            four_float_tuple = value
 
         rgba = Gdk.RGBA(*four_float_tuple)
 
