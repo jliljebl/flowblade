@@ -17,7 +17,11 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
+from gi.repository import Gtk
+
 import json
+
+import containerclip
 import respaths
 
 _plugins = []
@@ -61,25 +65,26 @@ def init():
         add_group = sorted(group, key=lambda plugin: plugin.name)
         _plugins_groups.append((gkey, add_group))
 
-    """
+    
+def fill_media_plugin_sub_menu(menu):
     for group_data in _plugins_groups:
-        group_name, group = group_data
-        print(group_name)
-        for plugin in group:
-            print(plugin.name)
-    """
 
-#def get_plugin_groups():
-#    return _plugins_groups
-    
-def fill_app_menu(menu):
-    for group_data in _plugins_groups:
-        
         group_name, group = group_data
-        print(group_name)
+        menu_item = Gtk.MenuItem.new_with_label(group_name)
+        sub_menu = Gtk.Menu.new()
+        menu_item.set_submenu(sub_menu)
         for plugin in group:
-            print(plugin.name)
-    
+            plugin_menu_item = Gtk.MenuItem.new_with_label(plugin.name)
+            plugin_menu_item.connect("activate", lambda w: _add_media_plugin(plugin))
+            sub_menu.append(plugin_menu_item)
+
+        menu.append(menu_item)
+    menu.show_all()
+
+def _add_media_plugin(plugin):
+    script_file = respaths.MEDIA_PLUGINS_PATH + plugin.folder + "/plugin_script"
+    containerclip.create_fluxity_media_item_from_plugin(script_file)
+
 
 class MediaPlugin:
     

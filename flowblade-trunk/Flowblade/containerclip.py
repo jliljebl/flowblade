@@ -204,7 +204,7 @@ def _show_not_all_data_info():
         
 
 # -------------------------------------------------------- MEDIA ITEM CREATION
-# --- G'Mic
+# -------------------------------------------------------- G'Mic
 def create_gmic_media_item():
     script_select, row1 = _get_file_select_row_and_editor(_("G'Mic Tool Script:"), None, _("Select G'Mic Tool Script"))
     media_file_select, row2 = _get_file_select_row_and_editor(_("Video Clip:"))
@@ -261,12 +261,19 @@ class GMicLoadCompletionThread(threading.Thread):
             
         Gdk.threads_leave()
         
-# --- Fluxity
+# ------------------------------------------------------- Fluxity
 def create_fluxity_media_item():
     script_select, row1 = _get_file_select_row_and_editor(_("Flowblade Media Plugin Script:"), None, _("Flowblade Media Plugin Script"))
     #media_file_select, row2 = _get_file_select_row_and_editor(_("Video Clip:"))
     _open_rows_dialog(_fluxity_clip_create_dialog_callback, _("Create Flowblade Media Plugin Script Container Clip"), [row1], [script_select])
 
+def create_fluxity_media_item_from_plugin(script_file):
+    container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_FLUXITY, script_file, None)
+    
+    # We need to exit this Gtk callback to get info text above updated.
+    completion_thread = FluxityLoadCompletionThread(container_clip_data, None)
+    completion_thread.start()
+        
 def _fluxity_clip_create_dialog_callback(dialog, response_id, data):
     if response_id != Gtk.ResponseType.ACCEPT:
         dialog.destroy()
@@ -301,16 +308,18 @@ class FluxityLoadCompletionThread(threading.Thread):
 
         time.sleep(0.5) # To make sure text is seen.
 
-        Gdk.threads_enter()
-        self.dialog.destroy()
+        if self.dialog != None:
+            Gdk.threads_enter()
+            self.dialog.destroy()
+
+            if is_valid == False:
+                primary_txt = _("Flowblade Media Plugin Container Clip Validation Error")
+                dialogutils.warning_message(primary_txt, err_msg, gui.editor_window.window)
+                    
+            Gdk.threads_leave()
 
         if is_valid == False:
-            primary_txt = _("Flowblade Media Plugin Container Clip Validation Error")
-            dialogutils.warning_message(primary_txt, err_msg, gui.editor_window.window)
-                
-        Gdk.threads_leave()
-
-        if is_valid == False:
+            # ready made plugins should always work.
             return 
     
         data_object = self.container_clip_data.data_slots["fluxity_plugin_edit_data"]
@@ -334,7 +343,7 @@ def _fluxity_unredered_media_creation_complete(created_unrendered_clip_path, con
     _update_gui_for_media_object_add()
 
         
-# --- MLT XML
+# ---------------------------------------------------------------------- MLT XML
 def create_mlt_xml_media_item(xml_file_path, media_name):
     container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_MLT_XML, xml_file_path, xml_file_path)
     container_clip = ContainerClipMediaItem(PROJECT().next_media_file_id, media_name, container_clip_data)
@@ -342,7 +351,7 @@ def create_mlt_xml_media_item(xml_file_path, media_name):
     _update_gui_for_media_object_add()
 
 
-# --- Blender
+# ---------------------------------------------------------------------- Blender
 def create_blender_media_item():
     f = Gtk.FileFilter()
     f.set_name(_("Blender Project"))

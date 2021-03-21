@@ -55,6 +55,7 @@ import jobs
 import keyevents
 import medialinker
 import medialog
+import mediaplugin
 import menuactions
 import middlebar
 import modesetting
@@ -1042,7 +1043,7 @@ class EditorWindow:
         self.fill_recents_menu_widget(self.ui.get_widget('/MenuBar/FileMenu/OpenRecent'), projectaction.open_recent_project)
         
         # Add media plugins
-        self.fill_media_plugins_menu_widget(self.ui.get_widget('/MenuBar/ProjectMenu/MediaPluginsMenu'), projectaction.open_recent_project)
+        self.fill_media_plugins_menu_widget(self.ui.get_widget('/MenuBar/ProjectMenu/MediaPluginsMenu'))
         
         # Disable audio mixer if not available
         if editorstate.audio_monitoring_available == False:
@@ -1296,7 +1297,7 @@ class EditorWindow:
         for item in items:
             menu.remove(item)
         
-        mediaplugin.fill_app_menu(menu)
+        mediaplugin.fill_media_plugin_sub_menu(menu)
         
     def hide_tline_render_strip(self):
         guiutils.remove_children(self.tline_renderer_hbox)
