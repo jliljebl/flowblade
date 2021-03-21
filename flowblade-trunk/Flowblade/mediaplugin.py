@@ -69,6 +69,18 @@ def init():
             print(plugin.name)
     """
 
+#def get_plugin_groups():
+#    return _plugins_groups
+    
+def fill_app_menu(menu):
+    for group_data in _plugins_groups:
+        
+        group_name, group = group_data
+        print(group_name)
+        for plugin in group:
+            print(plugin.name)
+    
+
 class MediaPlugin:
     
     def __init__(self, folder, name, category):

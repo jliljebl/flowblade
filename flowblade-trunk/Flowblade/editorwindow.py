@@ -836,6 +836,7 @@ class EditorWindow:
             ('CompositingModeMenu', None, _('Compositing Mode')),
             ('TimelineRenderingMenu', None, _('Timeline Rendering')),
             ('PatternProducersMenu', None, _('Create Pattern Producer')),
+            ('MediaPluginsMenu', None, _('Add Media Plugin Item')),
             ('CreateNoiseClip', None, _('Noise'), None, None, lambda a:patternproducer.create_noise_clip()),
             ('CreateBarsClip', None, _('EBU Bars'), None, None, lambda a:patternproducer.create_bars_clip()),
             ('CreateIsingClip', None, _('Ising'), None, None, lambda a:patternproducer.create_icing_clip()),
@@ -946,6 +947,7 @@ class EditorWindow:
                     <menuitem action='AddImageSequence'/>
                     <separator/>
                     <menuitem action='CreateColorClip'/>
+                    <menu action='MediaPluginsMenu'/>
                     <menu action='PatternProducersMenu'>
                         <menuitem action='CreateNoiseClip'/>
                         <menuitem action='CreateIsingClip'/>
@@ -1038,7 +1040,10 @@ class EditorWindow:
 
         # Add recent projects to menu
         self.fill_recents_menu_widget(self.ui.get_widget('/MenuBar/FileMenu/OpenRecent'), projectaction.open_recent_project)
-
+        
+        # Add media plugins
+        self.fill_media_plugins_menu_widget(self.ui.get_widget('/MenuBar/ProjectMenu/MediaPluginsMenu'), projectaction.open_recent_project)
+        
         # Disable audio mixer if not available
         if editorstate.audio_monitoring_available == False:
             self.ui.get_widget('/MenuBar/ToolsMenu/AudioMix').set_sensitive(False)
@@ -1283,6 +1288,16 @@ class EditorWindow:
             menu.append(new_item)
             new_item.show()
 
+    def fill_media_plugins_menu_widget(self, menu_item):
+        menu = menu_item.get_submenu()
+
+        # Remove current items
+        items = menu.get_children()
+        for item in items:
+            menu.remove(item)
+        
+        mediaplugin.fill_app_menu(menu)
+        
     def hide_tline_render_strip(self):
         guiutils.remove_children(self.tline_renderer_hbox)
 
