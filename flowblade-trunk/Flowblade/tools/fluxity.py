@@ -266,12 +266,14 @@ class FluxityContextPrivate:
         self.frame_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
         self.frame_cr = cairo.Context(self.frame_surface)
 
-    def write_out_frame(self):
+    def write_out_frame(self, is_preview_frame=False):
         if self.output_folder == None or os.path.isdir(self.output_folder) == False:
             exception_msg = "Output folder " + self.output_folder + " does not exist."
             _raise_fluxity_error(exception_msg)
         
         filepath = self.output_folder + "/" + self.frame_name + "_" + str(self.frame).rjust(5, "0") + ".png"
+        if is_preview_frame == True:
+            filepath = self.output_folder + "/preview.png"
         self.frame_surface.write_to_png(filepath)
 
         if self.first_rendered_frame_path == None:
@@ -297,26 +299,27 @@ def _raise_exec_error(exception_msg):
     raise FluxityError("Error on doing exec() to create script code object:\n" + exception_msg)
 
 # ------------------------------------------------------ rendering
-def render_preview_frame(script, frame, out_folder, profile_file_path):
+def render_preview_frame(script, frame, out_folder, profile_file_path, script_data_json=None):
     try:
         # Init script and context.
+        print("W1")
         error_msg, results = _init_script_and_context(script, out_folder, profile_file_path)
         if error_msg != None:
             fake_fctx = FluxityEmptyClass()
             fake_fctx.error = error_msg
             return fake_fctx
-            
+        print("W2")
         fscript, fctx = results
-
+        print("W3")
         # Execute script to render a preview frame.
         fscript.call_init_script(fctx)
-
+        print("W4")
         fscript.call_init_render(fctx)
-
+        print("W5")
         fctx.priv_context.create_frame_surface(frame)
         w, h = fctx.get_dimensions()
         fscript.call_render_frame(frame, fctx, w, h)
-
+        print("W6")
         return fctx
     except Exception as e:
         fctx.error = str(e)

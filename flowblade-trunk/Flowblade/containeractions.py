@@ -61,6 +61,14 @@ import toolsencoding
 import userfolders
 import utils
 
+"""
+This module creates <ConatainerClipType>Actions wrapper objects for container clips data that are used to execute
+all actions on container clips data.
+
+Objects of class containerclips.ContainerData are persistent data for container clips, 
+objects in this module created and discarded as needed.
+"""
+
 FULL_RENDER = 0
 CLIP_LENGTH_RENDER = 1
 PREVIEW_RENDER = 2
@@ -737,13 +745,55 @@ class FluxityContainerActions(AbstractContainerActionObject):
         simpleeditors.show_fluxity_container_clip_program_editor(self.project_edit_done, clip, self, self.container_data.data_slots["fluxity_plugin_edit_data"])
 
     def project_edit_done(self, response_is_accept, dialog, editors, orig_program_info_json):
+        dialog.destroy()
+        """
         if response_is_accept == True:
             self.update_program_values_from_editors(editors)
             dialog.destroy()
         else:
             self.container_data.data_slots["project_edit_info"] = orig_program_info_json
             dialog.destroy()
-            
+        """
+    
+    def render_fluxity_preview(self, program_editor_window, editors, preview_frame):
+        self.create_data_dirs_if_needed() # This could be first time we are writing
+                                          # data related to this container clip to disk.
+        
+        self.program_editor_window = program_editor_window
+        new_editors_list = self.get_editors_data_as_editors_list(editors)
+        script_data_copy = copy.deepcopy(self.container_data.data_slots["fluxity_plugin_edit_data"])
+        script_data_copy["editors_list"] = new_editors_list
+        script_data_json = json.dumps(script_data_copy)
+
+        script_file = open(self.container_data.program)
+        user_script = script_file.read()
+        profile_file_path = mltprofiles.get_profile_file_path(current_sequence().profile.description())
+        
+        self.container_data.render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
+        self.container_data.render_data.do_video_render = False 
+        out_folder = self.get_preview_media_dir()
+        print("render_fluxity_preview", out_folder)
+        if not os.path.exists(out_folder):
+            os.mkdir(out_folder)
+
+        fctx = fluxity.render_preview_frame(user_script, preview_frame, out_folder, profile_file_path, script_data_json)
+        fctx.priv_context.write_out_frame(True)
+        if fctx.error != None:
+            print(fctx.error)
+        
+        self.program_editor_window.preview_render_complete()
+
+    def get_editors_data_as_editors_list(self, editor_widgets):
+        new_editors_list = [] # This the editors list in format created in
+                            # fluxity.FluxityContext.get_script_data()
+        for editor in editor_widgets:
+            new_editor = [editor.id_data, editor.editor_type, editor.get_value()]
+            new_editors_list.append(new_editor)
+        
+        return new_editors_list
+
+    
+    
 class MLTXMLContainerActions(AbstractContainerActionObject):
 
     def __init__(self, container_data):

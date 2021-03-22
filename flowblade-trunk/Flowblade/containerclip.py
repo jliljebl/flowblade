@@ -42,6 +42,15 @@ import respaths
 import userfolders
 import utils
 
+"""
+This module handles creating ContainerClipData objects that are the persistent
+data representations of container clips, and ContainerClipMediaItem objects that represent
+data in Media Bins that can be used to create container clips.
+
+Wrapper objects of type extending containeactions.AbstractContainerActionObject are created and discarded
+as needed to execute all actions on container clips.
+"""
+
 _blender_available = False
 
 ROW_WIDTH = 300
@@ -53,7 +62,7 @@ class ContainerClipData:
             self.container_clip_uid = -1 # This is set at clip creation time.
 
             self.container_type = container_type
-            self.program = program
+            self.program = program # path to program file
 
             self.rendered_media = None
             self.rendered_media_range_in = -1

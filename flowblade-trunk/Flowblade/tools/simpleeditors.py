@@ -71,7 +71,8 @@ class BlenderProgramEditorWindow(Gtk.Window):
         self.callback = callback
         self.clip = clip
         self.container_action = container_action
-        self.orig_program_info_json = copy.deepcopy(program_info_json)
+        self.orig_program_info_json = copy.deepcopy(program_info_json) # We need to sabvre this for 'Cancel'because doing a preview updates edited values
+                                                                       # in containeractions.BlenderContainerActions.render_blender_preview().
          
         self.preview_frame = -1 # -1 used as flag that no preview renders ongoing and new one can be started
          
@@ -331,11 +332,10 @@ class FluxityScriptEditorWindow(Gtk.Window):
 
         self.preview_panel.preview_info.set_markup("<small>Rendering preview...</small>")
         self.preview_frame = int(self.preview_panel.frame_select.get_value() + self.clip.clip_in)
-        self.container_action.render_blender_preview(self, self.editors, self.preview_frame)
+        self.container_action.render_fluxity_preview(self, self.editor_widgets, self.preview_frame)
 
     def get_preview_file(self):
-        filled_number_str = str(self.preview_frame).zfill(4)
-        preview_file = self.container_action.get_preview_media_dir() + "/frame" + filled_number_str + ".png"
+        preview_file = self.container_action.get_preview_media_dir() + "/preview.png"
 
         return preview_file
 
@@ -360,9 +360,12 @@ def _get_editor(editor_type, id_data, label_text, value, tooltip):
     if editor_type == SIMPLE_EDITOR_STRING:
         editor = TextEditor(id_data, label_text, value, tooltip)
         editor.return_quoted_string = True
+        editor.editor_type = SIMPLE_EDITOR_STRING
         return editor
     elif editor_type == SIMPLE_EDITOR_VALUE:
-        return  TextEditor(id_data, label_text, value, tooltip)
+        editor = TextEditor(id_data, label_text, value, tooltip)
+        editor.editor_type = SIMPLE_EDITOR_VALUE
+        return editor
     elif editor_type == SIMPLE_EDITOR_FLOAT:
         return FloatEditor(id_data, label_text, value, tooltip)
     elif editor_type == SIMPLE_EDITOR_INT:
@@ -377,6 +380,7 @@ class AbstractSimpleEditor(Gtk.HBox):
         GObject.GObject.__init__(self)
         self.id_data = id_data # the data needed to target edited values on correct object.
         self.tooltip = tooltip
+        self.editor_type = -1
         
     def build_editor(self, label_text, widget):
         widget.set_tooltip_text (self.tooltip)
@@ -402,6 +406,7 @@ class TextEditor(AbstractSimpleEditor):
         self.entry.set_text(value)
         
         self.build_editor(label_text, self.entry)
+        #self.editor_type is set in _get_editor() above.
 
     def get_value(self):
         value = self.entry.get_text()
@@ -422,9 +427,10 @@ class FloatEditor(AbstractSimpleEditor):
         self.spinbutton.set_value(float(value))
         
         self.build_editor(label_text, self.spinbutton)
+        self.editor_type = SIMPLE_EDITOR_FLOAT
 
     def get_value(self):
-        self.spinbutton.get_value()
+        return self.spinbutton.get_value()
             
 
 class IntEditor(AbstractSimpleEditor):
@@ -438,9 +444,10 @@ class IntEditor(AbstractSimpleEditor):
         self.spinbutton.set_value(int(value))
         
         self.build_editor(label_text, self.spinbutton)
-
+        self.editor_type = SIMPLE_EDITOR_INT
+        
     def get_value(self):
-        self.spinbutton.get_value_as_int()
+        return self.spinbutton.get_value_as_int()
 
 
 class ColorEditor(AbstractSimpleEditor):
@@ -468,7 +475,8 @@ class ColorEditor(AbstractSimpleEditor):
         self.colorbutton = Gtk.ColorButton.new_with_rgba(rgba)
         
         self.build_editor(label_text, self.colorbutton)
-
+        self.editor_type = SIMPLE_EDITOR_COLOR
+        
     def get_value(self):
         value = self.colorbutton.get_rgba().to_string()
         value = value[4:len(value)]
@@ -476,7 +484,7 @@ class ColorEditor(AbstractSimpleEditor):
 
         color_list = list(map(float, value.split(',')))
         out_value = ""
-        for color_val in  color_list:
+        for color_val in color_list:
             color_val_str = str(float(color_val) / 255.0)
             out_value += color_val_str
             out_value += ","
