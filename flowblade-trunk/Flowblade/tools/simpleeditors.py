@@ -233,7 +233,6 @@ def get_simple_editor_selector(active_index, callback): # used in containerprogr
 
 # -------------------------------------------------------------------- Fluxity script editors dialog
 def show_fluxity_container_clip_program_editor(callback, clip, container_action, script_data_object):
-    print(script_data_object)
     editor_window = FluxityScriptEditorWindow(callback, clip, container_action, script_data_object)
 
 class FluxityScriptEditorWindow(Gtk.Window):
@@ -246,7 +245,6 @@ class FluxityScriptEditorWindow(Gtk.Window):
         self.clip = clip
         self.container_action = container_action
         self.script_data_object = copy.deepcopy(script_data_object)
-        print(self.script_data_object)
          
         self.preview_frame = -1 # -1 used as flag that no preview renders ongoing and new one can be started
          
@@ -349,6 +347,13 @@ class FluxityScriptEditorWindow(Gtk.Window):
         self.preview_panel.preview_info.set_markup("<small>" + _("Preview for frame: ") +  frame_str + _(", render time: ") + time_str +  "</small>")
         self.preview_panel.preview_monitor.queue_draw()
 
+    def preview_render_complete_error(self, error_msg):
+        self.preview_panel.preview_surface = None
+        self.preview_frame = -1
+        
+        self.preview_panel.preview_info.set_markup("<small>" + _("Error in Preview for frame: ") +  error_msg +  "</small>")
+        self.preview_panel.preview_monitor.queue_draw()
+        
     def cancel(self):
         self.callback(False, self, self.editors, self.orig_program_info_json)
 
@@ -478,6 +483,7 @@ class ColorEditor(AbstractSimpleEditor):
         self.editor_type = SIMPLE_EDITOR_COLOR
         
     def get_value(self):
+        # Blender projects use this output
         value = self.colorbutton.get_rgba().to_string()
         value = value[4:len(value)]
         value = value[0:len(value) - 1]
@@ -493,6 +499,10 @@ class ColorEditor(AbstractSimpleEditor):
 
         return out_value
     
+    def get_value_as_color_tuple(self):
+        color = self.colorbutton.get_rgba()
+        return (color.red, color.green, color.blue, 1.0)
+        
 
 # ------------------------------------------------------------------- preview
 class PreviewPanel(Gtk.VBox):

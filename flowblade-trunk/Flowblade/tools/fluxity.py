@@ -197,7 +197,16 @@ class FluxityContext:
 
         if tooltip != None:
             self.editor_tooltips[name] = tooltip
-        
+            
+    def get_editor_value(self, name, frame=0):
+        # frame will be used when we have animated values
+        try:
+            type, value = self.editors[name]
+            return value
+        except:
+            exception_msg = "No editor for name '" + name + "' found."
+            _raise_fluxity_error(exception_msg)
+
     def get_script_data(self):
         script_data = {}
         script_data["length"] = self.length
@@ -211,11 +220,19 @@ class FluxityContext:
             json_obj = [name, type, value]
             editors_list.append(json_obj)
 
-        script_data["editors_list"] = editors_list
+        script_data["editors_list"] = editors_list # this is dict inside, but is given out as list for convenience of Flowblade app integration.
         script_data["tooltips_list"] = self.editor_tooltips
         
         return json.dumps(script_data)
 
+    def set_editors_data(self, editors_data_json):
+        # this is provide as list, but is dict in here, was convenient for app integration.
+        new_editors_list = json.loads(editors_data_json)
+        for editor in new_editors_list:
+            name, type, value = editor
+            self.editors[name] = (type, value)
+
+        
 class FluxityContextPrivate:
     """
     This object exists to keep FluxityContext API clean for script developers.
@@ -299,27 +316,29 @@ def _raise_exec_error(exception_msg):
     raise FluxityError("Error on doing exec() to create script code object:\n" + exception_msg)
 
 # ------------------------------------------------------ rendering
-def render_preview_frame(script, frame, out_folder, profile_file_path, script_data_json=None):
+def render_preview_frame(script, frame, out_folder, profile_file_path, editors_data_json=None):
     try:
         # Init script and context.
-        print("W1")
         error_msg, results = _init_script_and_context(script, out_folder, profile_file_path)
         if error_msg != None:
             fake_fctx = FluxityEmptyClass()
             fake_fctx.error = error_msg
             return fake_fctx
-        print("W2")
+
         fscript, fctx = results
-        print("W3")
+
         # Execute script to render a preview frame.
         fscript.call_init_script(fctx)
-        print("W4")
+
+        if editors_data_json != None:
+            fctx.set_editors_data(editors_data_json)
+        
         fscript.call_init_render(fctx)
-        print("W5")
+
         fctx.priv_context.create_frame_surface(frame)
         w, h = fctx.get_dimensions()
         fscript.call_render_frame(frame, fctx, w, h)
-        print("W6")
+
         return fctx
     except Exception as e:
         fctx.error = str(e)
@@ -341,7 +360,7 @@ def render_frame_sequence(script, in_frame, out_frame, out_folder, profile_file_
 
         fscript.call_init_render(fctx)
 
-        fctx.priv_context.first_rendered_frame_path = None # Should be clear but make sure. 
+        fctx.priv_context.first_rendered_frame_path = None # Should be clear but let's make sure. 
 
         for frame in range(in_frame, out_frame):
             fctx.priv_context.create_frame_surface(frame)

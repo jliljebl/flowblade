@@ -328,7 +328,10 @@ class FluxityLoadCompletionThread(threading.Thread):
             Gdk.threads_leave()
 
         if is_valid == False:
-            # ready made plugins should always work.
+            Gdk.threads_enter()
+            primary_txt = _("Flowblade Media Plugin Container Clip Validation Error")
+            dialogutils.warning_message(primary_txt, err_msg, gui.editor_window.window)
+            Gdk.threads_leave()
             return 
     
         data_object = self.container_clip_data.data_slots["fluxity_plugin_edit_data"]

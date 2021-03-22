@@ -761,9 +761,7 @@ class FluxityContainerActions(AbstractContainerActionObject):
         
         self.program_editor_window = program_editor_window
         new_editors_list = self.get_editors_data_as_editors_list(editors)
-        script_data_copy = copy.deepcopy(self.container_data.data_slots["fluxity_plugin_edit_data"])
-        script_data_copy["editors_list"] = new_editors_list
-        script_data_json = json.dumps(script_data_copy)
+        editors_data_json = json.dumps(new_editors_list)
 
         script_file = open(self.container_data.program)
         user_script = script_file.read()
@@ -771,29 +769,33 @@ class FluxityContainerActions(AbstractContainerActionObject):
         
         self.container_data.render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
         self.container_data.render_data.do_video_render = False 
+        
         out_folder = self.get_preview_media_dir()
-        print("render_fluxity_preview", out_folder)
         if not os.path.exists(out_folder):
             os.mkdir(out_folder)
 
-        fctx = fluxity.render_preview_frame(user_script, preview_frame, out_folder, profile_file_path, script_data_json)
-        fctx.priv_context.write_out_frame(True)
+        fctx = fluxity.render_preview_frame(user_script, preview_frame, out_folder, profile_file_path, editors_data_json)
         if fctx.error != None:
-            print(fctx.error)
+            self.program_editor_window.preview_render_complete_error(fctx.error)
+            return
+                    
+        fctx.priv_context.write_out_frame(True)
         
         self.program_editor_window.preview_render_complete()
 
     def get_editors_data_as_editors_list(self, editor_widgets):
-        new_editors_list = [] # This the editors list in format created in
-                            # fluxity.FluxityContext.get_script_data()
+        new_editors_list = [] # This is the editors list in format created in
+                              # fluxity.FluxityContext.get_script_data()
         for editor in editor_widgets:
-            new_editor = [editor.id_data, editor.editor_type, editor.get_value()]
+            value = editor.get_value()
+            if editor.editor_type == simpleeditors.SIMPLE_EDITOR_COLOR:
+                value = editor.get_value_as_color_tuple()
+            new_editor = [editor.id_data, editor.editor_type, value]
             new_editors_list.append(new_editor)
         
         return new_editors_list
 
-    
-    
+
 class MLTXMLContainerActions(AbstractContainerActionObject):
 
     def __init__(self, container_data):
