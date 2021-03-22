@@ -80,19 +80,19 @@ class FluxityScript:
         try:
           self.namespace['init_script'](fctx)
         except Exception as e:
-          _raise_fluxity_error("error calling function'init_script()':\n\n" + str(e))
+          _raise_fluxity_error("error calling function 'init_script()':\n\n" + str(e))
 
     def call_init_render(self, fctx):
         try:
           self.namespace['init_render'](fctx)
         except Exception as e:
-          _raise_fluxity_error("error calling function'init_render()':\n\n" + str(e))
+          _raise_fluxity_error("error calling function 'init_render()':\n\n" + str(e))
           
     def call_render_frame(self, frame, fctx, w, h):
         try:
           self.namespace['render_frame'](frame, fctx, w, h)
         except Exception as e:
-          _raise_fluxity_error("error calling function'render_frame()':\n\n" + str(e))
+          _raise_fluxity_error("error calling function 'render_frame()':\n\n" + str(e))
 
 
 # ---------------------------------------------------------- mlt profile
@@ -344,7 +344,7 @@ def render_preview_frame(script, frame, out_folder, profile_file_path, editors_d
         fctx.error = str(e)
         return fctx
 
-def render_frame_sequence(script, in_frame, out_frame, out_folder, profile_file_path, frame_write_callback=None):
+def render_frame_sequence(script, in_frame, out_frame, out_folder, profile_file_path, frame_write_callback=None, editors_data_json=None):
     try:
         # Init script and context.
         error_msg, results = _init_script_and_context(script, out_folder, profile_file_path)
@@ -357,6 +357,9 @@ def render_frame_sequence(script, in_frame, out_frame, out_folder, profile_file_
         
         # Execute script to write frame sequence.
         fscript.call_init_script(fctx)
+
+        if editors_data_json != None:
+            fctx.set_editors_data(editors_data_json)
 
         fscript.call_init_render(fctx)
 

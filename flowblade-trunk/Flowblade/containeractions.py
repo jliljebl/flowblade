@@ -459,7 +459,6 @@ class GMicContainerActions(AbstractContainerActionObject):
             command_list.append("-output")
             command_list.append(test_out_file)
 
-
             # Render preview and write log
             FLOG = open(userfolders.get_cache_dir() + "gmic_container_validating_log", 'w')
             p = subprocess.Popen(command_list, stdin=FLOG, stdout=FLOG, stderr=FLOG)

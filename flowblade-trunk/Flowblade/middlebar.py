@@ -34,6 +34,7 @@ import gui
 import guicomponents
 import guiutils
 import respaths
+import scripttool
 import titler
 import tlineaction
 import updater
@@ -241,8 +242,9 @@ def _create_buttons(editor_window):
     editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_mixer" + icon_color), audiomonitoring.show_audio_monitor)
     editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_titler" + icon_color), titler.show_titler)
     editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_gmic" + icon_color), gmic.launch_gmic)
+    editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_fluxity" + icon_color), scripttool.launch_scripttool)
     editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_renderqueue" + icon_color), lambda :batchrendering.launch_batch_rendering())
-    tooltips = [_("Audio Mixer"), _("Titler"), _("G'Mic Effects"), _("Batch Render Queue")]
+    tooltips = [_("Audio Mixer"), _("Titler"), _("G'Mic Effects"),_("Media Plugin Editor"), _("Batch Render Queue")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.tools_buttons, tooltips)
     editor_window.tools_buttons.no_decorations = True
     
