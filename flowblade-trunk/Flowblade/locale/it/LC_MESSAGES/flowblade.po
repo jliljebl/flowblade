@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # Massimo Stella <info@massimostella.it>, 2014.
 # Enrico Bella <enricobe@hotmail.com>, 2019.
-# Albano Battistella<albano_battistella@hotmail.com>,2020.
+# Albano Battistella<albano_battistella@hotmail.com>,2020,2021.
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Floblade Italian Translation 0.14\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-03-02 08:27+0200\n"
-"PO-Revision-Date: 2020-29-02 21:24+0200\n"
+"PO-Revision-Date: 2021-27-03 13:24+0100\n"
 "Last-Translator: Albano Battistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italiano\n"
 "Language: it\n"
@@ -50,20 +50,19 @@ msgstr "La risoluzione corrente è "
 
 #: app.py:988
 msgid "Cannot launch application because XDG folders init error."
-msgstr ""
+msgstr "Impossibile avviare l'applicazione a causa dell'errore di inizializzazione delle cartelle XDG."
 
 #: app.py:999
 msgid "Flowblade version 2.6 (or later) requires MLT version 6.18 to run"
-msgstr ""
+msgstr "Flowblade versione 2.6 (o successiva) richiede l'esecuzione di MLT versione 6.18"
 
 #: app.py:1000
-#, fuzzy
 msgid "Your MLT version is: "
-msgstr "Versione MLT: "
+msgstr "La tua versione MLT è: "
 
 #: app.py:1000
 msgid "Install MLT 6.18 or higher to run Flowblade."
-msgstr ""
+msgstr "Installa MLT 6.18 o versione successiva per eseguire Flowblade."
 
 #: app.py:1038 projectaction.py:450 projectaction.py:780
 msgid "Project has not been saved previously"
@@ -135,18 +134,21 @@ msgstr "Apertura"
 
 #: projectaction.py:299
 msgid "Opening animated .gif file was refused!"
-msgstr ""
+msgstr "L'apertura del file animato .gif è stata rifiutata!"
 
 #: projectaction.py:300
 msgid ""
 "Flowblade does not support displaying animated GIF files as media objects.\n"
 msgstr ""
+"Flowblade non supporta la visualizzazione di file GIF animati come oggetti multimediali.\n"
 
 #: projectaction.py:301
 msgid ""
 "A possible workaround is to render GIF into a frame sequence and\n"
 "open that as a media item."
 msgstr ""
+"Una possibile soluzione alternativa è eseguire il rendering della GIF in una sequenza di fotogrammi e\n"
+"aprilo come elemento multimediale."
 
 #: projectaction.py:351
 msgid "Media files already present in project were opened!"
@@ -261,9 +263,8 @@ msgid "Render Proxy Files For Selected Media"
 msgstr "Genera file proxy dai sorgenti selezionati"
 
 #: projectaction.py:971
-#, fuzzy
 msgid "Render Proxy Files For All Media"
-msgstr "Genera file proxy dai sorgenti selezionati"
+msgstr "Renderizza file proxy per tutti i media"
 
 #: projectaction.py:973
 msgid "Select All"
@@ -282,14 +283,12 @@ msgid "No Target Bins"
 msgstr "Nessuna Raccolta di destinazione"
 
 #: projectaction.py:998
-#, fuzzy
 msgid "Append All Media to Timeline"
-msgstr "Accoda sotto-clip nella timeline"
+msgstr "Aggiungi Tutti i Media alla sequenza alla Timeline"
 
 #: projectaction.py:999
-#, fuzzy
 msgid "Append Selected Media to Timeline"
-msgstr "Sposta oggetti selezionati alla Raccolta"
+msgstr "Aggiungi file multimediali selezionati alla timeline"
 
 #: projectaction.py:1031 editorwindow.py:824
 msgid "Add Video, Audio or Image..."
@@ -496,18 +495,16 @@ msgid "Standard Auto Follow"
 msgstr "Seguito automatico standard"
 
 #: projectaction.py:2186 editorwindow.py:1205 workflow.py:215
-#, fuzzy
 msgid "Standard Full Track"
-msgstr "Seguito automatico standard"
+msgstr "Traccia completa standard"
 
 #: editorwindow.py:433 editorwindow.py:438
-#, fuzzy
 msgid "Start - Home key"
-msgstr "Opacità"
+msgstr "Inizio - tasto Home"
 
 #: editorwindow.py:433 editorwindow.py:438
 msgid "End - End key"
-msgstr ""
+msgstr "Fine: tasto End"
 
 #: editorwindow.py:433 editorwindow.py:435 editorwindow.py:438
 #: editorwindow.py:440
@@ -520,9 +517,8 @@ msgid "Next Frame - Arrow Right"
 msgstr "Fotogramma Suc - Freccia destra"
 
 #: editorwindow.py:433
-#, fuzzy
 msgid "Play/Pause- Space"
-msgstr "Play - Spazio"
+msgstr "Avvia/Pausa - Spazio"
 
 #: editorwindow.py:433 editorwindow.py:435 editorwindow.py:438
 #: editorwindow.py:440
@@ -550,9 +546,8 @@ msgid "To Mark Out"
 msgstr "Vai a OUT"
 
 #: editorwindow.py:435
-#, fuzzy
 msgid "Play/Pause - Space"
-msgstr "Play - Spazio"
+msgstr "Avvia/Pausa - Spazio"
 
 #: editorwindow.py:438 editorwindow.py:440
 msgid "Play - Space"
@@ -563,14 +558,12 @@ msgid "Stop - Space"
 msgstr "Stop - Spazio"
 
 #: editorwindow.py:592
-#, fuzzy
 msgid "Current Sequence Compositing Mode"
-msgstr "Posizione corrente Clip/Sequenza"
+msgstr "Modalità di composizione della sequenza corrente"
 
 #: editorwindow.py:603 editorwindow.py:836
-#, fuzzy
 msgid "Timeline Rendering"
-msgstr "Avvia esportazione"
+msgstr "Rendering della sequenza temporale"
 
 #: editorwindow.py:778
 msgid "_File"
@@ -617,9 +610,8 @@ msgid "Current Frame"
 msgstr "Fotogramma corrente"
 
 #: editorwindow.py:789
-#, fuzzy
 msgid "Current Sequence Audio As Ardour Session"
-msgstr "Nome e durata della Clip/Sequenza"
+msgstr "Sequenza corrente audio come sessione Ardour"
 
 #: editorwindow.py:790
 msgid "_Close"
@@ -762,9 +754,8 @@ msgid "Project"
 msgstr "Progetto"
 
 #: editorwindow.py:825
-#, fuzzy
 msgid "Add Media Folder..."
-msgstr "Aggiungi Clip..."
+msgstr "Aggiungi cartella multimediale..."
 
 #: editorwindow.py:827
 msgid "Create Color Clip..."
@@ -779,9 +770,8 @@ msgid "Sequence"
 msgstr "Sequenza"
 
 #: editorwindow.py:835
-#, fuzzy
 msgid "Compositing Mode"
-msgstr "Compositing"
+msgstr "Modalità compositing"
 
 #: editorwindow.py:837
 msgid "Create Pattern Producer"
@@ -812,9 +802,8 @@ msgid "From Current Sequence"
 msgstr "Dalla sequenza corrente"
 
 #: editorwindow.py:844
-#, fuzzy
 msgid "From Current Sequence With Freeze Frame at Playhead Position"
-msgstr "Crea nuova Sequenza dalla posizione attuale"
+msgstr "Dalla sequenza corrente con fermo immagine nella posizione della testina di riproduzione"
 
 #: editorwindow.py:845
 msgid "Audio Sync Merge Clip From 2 Media Items "
@@ -830,14 +819,12 @@ msgid "Create Container Clip"
 msgstr "Crea clip di colore"
 
 #: editorwindow.py:848
-#, fuzzy
 msgid "From G'Mic Script"
-msgstr "Salva script Gmic"
+msgstr "Da G'Mic Script"
 
 #: editorwindow.py:849
-#, fuzzy
 msgid "From Blender Project"
-msgstr "Progetti Flowblade"
+msgstr "Dal progetto Blender"
 
 #: editorwindow.py:850
 msgid "Import Another Sequence Into This Sequence..."
@@ -848,9 +835,8 @@ msgid "Log Marked Clip Range"
 msgstr "Memorizza l'area selezionata della clip"
 
 #: editorwindow.py:852
-#, fuzzy
 msgid "View Project Events..."
-msgstr "Eventi del Progetto"
+msgstr "Visualizza gli eventi del progetto..."
 
 #: editorwindow.py:853
 msgid "Recreate Media Icons..."
@@ -971,14 +957,12 @@ msgid "Configure Free Bar..."
 msgstr ""
 
 #: editorwindow.py:1128
-#, fuzzy
 msgid "Edit Tool Selection Widget"
-msgstr "Carica selezione"
+msgstr "Modifica widget di selezione dello strumento"
 
 #: editorwindow.py:1131
-#, fuzzy
 msgid "Middlebar Menu"
-msgstr "Posizione Barra centrale"
+msgstr "Menu della barra centrale"
 
 #: editorwindow.py:1135
 msgid "Dock"
@@ -1017,24 +1001,20 @@ msgid "Zoom Fit"
 msgstr "Adatta zoom"
 
 #: editorwindow.py:1228 preferenceswindow.py:129
-#, fuzzy
 msgid "Off"
-msgstr "X Off:"
+msgstr "Off"
 
 #: editorwindow.py:1232
-#, fuzzy
 msgid "Render Auto"
-msgstr "Elabora"
+msgstr "Render Automatico"
 
 #: editorwindow.py:1236
-#, fuzzy
 msgid "Render On Request"
-msgstr "Opzioni di rendering"
+msgstr "Rendering su richiesta"
 
 #: editorwindow.py:1251 tlinerender.py:153
-#, fuzzy
 msgid "Settings..."
-msgstr "Elaborazione iniziata..."
+msgstr "Impostazioni..."
 
 #: editorwindow.py:1276
 msgid "Empty"
@@ -1067,44 +1047,36 @@ msgid "Sequence / Media current position"
 msgstr "Posizione corrente Clip/Sequenza"
 
 #: clipeffectseditor.py:96
-#, fuzzy
 msgid "Save effect values"
-msgstr "Salva valori effetto"
+msgstr "Salva i valori degli effetti"
 
 #: clipeffectseditor.py:100
-#, fuzzy
 msgid "Load effect values"
-msgstr "Carica valori effetto"
+msgstr "Carica i valori degli effetti"
 
 #: clipeffectseditor.py:104
-#, fuzzy
 msgid "Reset effect values"
-msgstr "Resetta valori effetto"
+msgstr "Resetta  ivalori degli effetti"
 
 #: clipeffectseditor.py:108
-#, fuzzy
 msgid "Add Filter Mask"
-msgstr "Aggiungi filtro"
+msgstr "Aggiungi Filtro Maschera"
 
 #: clipeffectseditor.py:112
-#, fuzzy
 msgid "Move Filter Up"
-msgstr "Clona i filtri"
+msgstr "Sposta filtro in alto"
 
 #: clipeffectseditor.py:116
-#, fuzzy
 msgid "Move Filter Down"
-msgstr "Muovi giù"
+msgstr "Sposta filtro in basso"
 
 #: clipeffectseditor.py:120
-#, fuzzy
 msgid "Move Filter To Top"
-msgstr "Sposta elementi selezionati nel gruppo"
+msgstr "Sposta il Filtro in Alto"
 
 #: clipeffectseditor.py:124
-#, fuzzy
 msgid "Move Filter To Bottom"
-msgstr "Verticale dall'Alto al basso"
+msgstr "Sposta il Filtro in Basso"
 
 #: clipeffectseditor.py:143
 msgid "_effect_values"
@@ -1140,13 +1112,15 @@ msgstr "Nessun Compositing"
 
 #: compositeeditor.py:112
 msgid "Compositor panel not used in/n Standard Full track Compositing Mode"
-msgstr ""
+msgstr "Pannello Compositor non utilizzato in/n Modalità di composizione standard a traccia intera"
 
 #: compositeeditor.py:196
 msgid ""
 "This panel not used in\n"
 " Compositing Mode Standard Full Track."
 msgstr ""
+"Questo pannello non è utilizzato in\n"
+"MOdalità Compositing Standard Full Track."
 
 #: compositeeditor.py:233
 msgid "Destination Track:"
@@ -1293,14 +1267,12 @@ msgid "Save Sequence Audio As Ardour Session"
 msgstr "Salva sequenza audio come sessione Ardor"
 
 #: dialogs.py:281
-#, fuzzy
 msgid "Select Ardour Session Folder"
-msgstr "Selezionare la Cartella di Lavoro:"
+msgstr "Seleziona la cartella della sessione di Ardour"
 
 #: dialogs.py:285
-#, fuzzy
 msgid "Select Ardour Session Folder:"
-msgstr "Selezionare la Cartella di Lavoro:"
+msgstr "Seleziona la cartella della sessione di Ardour:"
 
 #: dialogs.py:308
 msgid "Select Project File"
@@ -1400,7 +1372,7 @@ msgstr "Pagina progetto:"
 
 #: dialogs.py:558
 msgid "Upstream:"
-msgstr ""
+msgstr "Upstream:"
 
 #: dialogs.py:561
 msgid "Tools:"
@@ -1824,7 +1796,7 @@ msgid ""
 " To see the effect of <b>Alpha Filter</b> you need composite this clip on "
 "track below by adding a <b>Compositor like 'Blend'</b> into this clip.\n"
 msgstr ""
-" Per notare l'effetto dei <b>filtri Alpha</b> è necessario applicare alla "
+" Per notare l'effetto del <b>filtro Alpha</b> è necessario applicare alla "
 "traccia sottostante un elemento di <b>compositing come 'Dissolvenza'</b>.\n"
 
 #: dialogs.py:1253
@@ -1858,14 +1830,12 @@ msgid "Add"
 msgstr "Aggiungi"
 
 #: dialogs.py:1318
-#, fuzzy
 msgid "Add Media From Folder"
-msgstr "Aggiungi Media al Bin"
+msgstr "Aggiungi Media dalla Cartella"
 
 #: dialogs.py:1332
-#, fuzzy
 msgid "Add Media from Folder:"
-msgstr "Aggiungi Media al Bin"
+msgstr "Aggiungi Media dalla Cartella:"
 
 #: dialogs.py:1336
 #, fuzzy
@@ -1873,14 +1843,12 @@ msgid "Create new Bin"
 msgstr "Crea una Nuova Sequenza"
 
 #: dialogs.py:1341
-#, fuzzy
 msgid "Search subfolders"
-msgstr "Seleziona cartella"
+msgstr "Cerca sottocartelle"
 
 #: dialogs.py:1345
-#, fuzzy
 msgid "All Media Files"
-msgstr "Tutti i file"
+msgstr Tutti i File Multimediali"
 
 #: dialogs.py:1346 guicomponents.py:3204
 msgid "Video Files"
@@ -1891,22 +1859,20 @@ msgid "Audio Files"
 msgstr "File audio"
 
 #: dialogs.py:1348
-#, fuzzy
 msgid "Image Files"
-msgstr "Risoluzione:"
+msgstr "File Immagineone:"
 
 #: dialogs.py:1350
 msgid "File types to add:"
-msgstr ""
+msgstr "Tipi di file da aggiungere:"
 
 #: dialogs.py:1355
 msgid "Filter by file extension"
-msgstr ""
+msgstr "Filtra per estensione del file"
 
 #: dialogs.py:1363
-#, fuzzy
 msgid "File extension:"
-msgstr "Dimensione:"
+msgstr "Estensione del file:"
 
 #: dialogs.py:1369
 msgid "29"
@@ -1926,40 +1892,39 @@ msgstr ""
 
 #: dialogs.py:1374
 msgid "Max. number of files to import:"
-msgstr ""
+msgstr "Max. numero di file da importare:"
 
 #: dialogs.py:1415
-#, fuzzy
 msgid "Media Folder Add Info"
-msgstr "Informazioni sulla sovrapposizione dei media"
+msgstr "Aggiungi Informazioni Cartella Multimediale"
 
 #: dialogs.py:1418
-#, fuzzy
 msgid "Add Files"
-msgstr "Aggiungi filtro"
+msgstr "Aggiungi File"
 
 #: dialogs.py:1420
 msgid "Number of files to add exceeds currently set limit!"
-msgstr ""
+msgstr "Il numero di file da aggiungere supera il limite attualmente impostato!"
 
 #: dialogs.py:1421
 msgid "Search found "
-msgstr ""
+msgstr "Ricerca trovata "
 
 #: dialogs.py:1421
 msgid ""
 " files to add.\n"
 "Limit is set at "
 msgstr ""
+"file da aggiungere.\n"
+"Il limite è impostato a "
 
 #: dialogs.py:1421
 msgid " files. Add first "
-msgstr ""
+msgstr "File. Aggiungi primo "
 
 #: dialogs.py:1421
-#, fuzzy
 msgid " files?"
-msgstr "Tutti i file"
+msgstr "File?"
 
 #: dialogs.py:1432
 msgid "Export EDL"
@@ -2004,9 +1969,8 @@ msgid "Close"
 msgstr "Chiudi"
 
 #: dialogs.py:1526
-#, fuzzy
 msgid "Shortcuts Group:"
-msgstr "Scorciatoie da Tastiera"
+msgstr "Gruppo di scorciatoie:"
 
 #: dialogs.py:1540
 msgid "Diffence to 'Flowblade Default' Presets:"
@@ -2085,9 +2049,8 @@ msgid "Switch Monitor Source"
 msgstr "Cambia sorgente del Monitor"
 
 #: dialogs.py:1637
-#, fuzzy
 msgid "Control + DELETE"
-msgstr "Control + L"
+msgstr "Control + DELETE"
 
 #: dialogs.py:1647 dialogs.py:1691
 msgid "Control + C"
