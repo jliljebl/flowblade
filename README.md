@@ -1,7 +1,5 @@
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
-**Project on break until late March.**
-
 **NEW RELEASE 2.8 IS OUT NOW.**
 
 **INSTALLING: see[ here.](https://github.com/jliljebl/flowblade#installing-flowblade)**
