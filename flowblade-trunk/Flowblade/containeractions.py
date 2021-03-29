@@ -78,6 +78,7 @@ OVERLAY_COLOR = (0.17, 0.23, 0.63, 0.5)
 GMIC_TYPE_ICON = None
 MLT_XML_TYPE_ICON = None
 BLENDER_TYPE_ICON = None
+FLUXITY_TYPE_ICON = None
 
 NEWLINE = '\n'
 
@@ -95,7 +96,7 @@ def get_action_object(container_data):
 # ------------------------------------------------------------ thumbnail creation helpers
 def _get_type_icon(container_type):
     # TODO: When we get third move this into action objects.
-    global GMIC_TYPE_ICON, MLT_XML_TYPE_ICON, BLENDER_TYPE_ICON
+    global GMIC_TYPE_ICON, MLT_XML_TYPE_ICON, BLENDER_TYPE_ICON, FLUXITY_TYPE_ICON
     
     if GMIC_TYPE_ICON == None:
         GMIC_TYPE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "container_clip_gmic.png")
@@ -103,6 +104,8 @@ def _get_type_icon(container_type):
         MLT_XML_TYPE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "container_clip_mlt_xml.png")
     if BLENDER_TYPE_ICON == None:
         BLENDER_TYPE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "container_clip_blender.png")
+    if FLUXITY_TYPE_ICON == None:
+        FLUXITY_TYPE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "container_clip_fluxity.png")
         
     if container_type == appconsts.CONTAINER_CLIP_GMIC:
         return GMIC_TYPE_ICON
@@ -110,7 +113,9 @@ def _get_type_icon(container_type):
         return MLT_XML_TYPE_ICON
     elif container_type == appconsts.CONTAINER_CLIP_BLENDER:  
         return BLENDER_TYPE_ICON
-
+    elif container_type == appconsts.CONTAINER_CLIP_FLUXITY:  
+        return FLUXITY_TYPE_ICON
+        
 def _write_thumbnail_image(profile, file_path, action_object):
     """
     Writes thumbnail image from file producer
@@ -733,7 +738,7 @@ class FluxityContainerActions(AbstractContainerActionObject):
         cr.rectangle(0, 0, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
         cr.set_source_rgba(*OVERLAY_COLOR)
         cr.fill()
-        type_icon = _get_type_icon(appconsts.CONTAINER_CLIP_GMIC)
+        type_icon = _get_type_icon(appconsts.CONTAINER_CLIP_FLUXITY)
         cr.set_source_surface(type_icon, 1, 30)
         cr.set_operator (cairo.OPERATOR_OVERLAY)
         cr.paint_with_alpha(0.5)
