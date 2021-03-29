@@ -82,7 +82,7 @@ Installing instructions are available [here](./flowblade-trunk/docs/INSTALLING.m
 
 [System Requirements](./flowblade-trunk/docs/SYSTEM_REQUIREMENTS.md)
 
-# Screenshot2
+# Screenshots
 [Screenshot 2.8 neutral theme](./flowblade-trunk/docs/Screenshot_THEME_FLOWBLADE_NEUTRAL.png)
 
 [Screenshot 2.8 grey theme](./flowblade-trunk/docs/Screenshot_THEME_FLOWBLADE_GRAY.png)
