@@ -142,6 +142,10 @@ tline_render_mode = appconsts.TLINE_RENDERING_OFF
 # Trim clips cache for quicker inits, path -> clip
 _trim_clips_cache = {}
 
+# Normal installs and Flatpaks have G'Mic bin in different locations.
+# Value set in gmic.py module. 
+gmic_path = None
+
 def current_is_move_mode():
     if ((edit_mode == INSERT_MOVE) or (edit_mode == OVERWRITE_MOVE) or (edit_mode == MULTI_MOVE)):
         return True

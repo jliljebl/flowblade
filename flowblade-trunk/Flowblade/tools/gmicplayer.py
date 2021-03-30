@@ -32,6 +32,7 @@ import sys
 import subprocess
 import time
 
+import editorstate
 import mltprofiles
 import userfolders
 import utils
@@ -325,7 +326,7 @@ class FolderFramesScriptRenderer:
             rendered_file_path = str(self.out_folder + self.frame_name + "_" + filled_number_str + ".png")
             
             # Create command list and launch process.
-            command_list = ["/usr/bin/gmic", clip_frame_path]
+            command_list = [editorstate.gmic_path, clip_frame_path]
             user_script_commands = self.user_script.split(" ")
             command_list.extend(user_script_commands)
             command_list.append("-output")
