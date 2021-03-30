@@ -301,6 +301,9 @@ class PlayerButtons(AbstractGlassButtons):
         to_mark_in_icon = guiutils.get_cairo_image("to_mark_in_s")
         to_mark_out_icon = guiutils.get_cairo_image("to_mark_out_s")
 
+        timeline_start_end = editorpersistance.prefs.timeline_start_end
+        print("timeline_start_en", timeline_start_end)
+
         # Jul-2016 - SvdB - For play/pause button
         if (editorpersistance.prefs.play_pause == True):
             # ------------------------------timeline_start_end_button
@@ -329,15 +332,7 @@ class PlayerButtons(AbstractGlassButtons):
                               marks_clear_icon, to_mark_in_icon, to_mark_out_icon]
                 self.image_x = [5*size_adj, 7*size_adj, 20*size_adj, 10*size_adj, 3*size_adj, 11*size_adj, 2*size_adj, 7*size_adj, 6*size_adj]
             # ------------------------------End of timeline_start_end_button
-#            self.icons = [prev_icon, next_icon, play_pause_icon,
-#                          mark_in_icon, mark_out_icon,
-#                          marks_clear_icon, to_mark_in_icon, to_mark_out_icon]
-#            self.image_x = [5*size_adj, 7*size_adj, 5*size_adj, 3*size_adj, 11*size_adj, 2*size_adj, 7*size_adj, 6*size_adj]
-#        else:
-#            self.icons = [prev_icon, next_icon, play_icon, stop_icon,
-#                          mark_in_icon, mark_out_icon,
-#                          marks_clear_icon, to_mark_in_icon, to_mark_out_icon]
-#            self.image_x = [5*size_adj, 7*size_adj, 10*size_adj, 10*size_adj, 3*size_adj, 11*size_adj, 2*size_adj, 7*size_adj, 6*size_adj]
+
 
         for i in range(0, len(self.icons)):
             self.image_y.append(MB_BUTTON_IMAGE_Y)

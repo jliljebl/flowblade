@@ -76,6 +76,8 @@ NO_PREVIEW_FILE = "fallback_thumb.png"
 MLT_PLAYER_MONITOR = "mlt_player_monitor" # This one used to play clips
 CAIRO_DRAW_MONITOR = "cairo_draw_monitor"  # This one used to show single frames
 
+TICKER_DELAY = 0.25
+
 _session_id = None
 
 _window = None
@@ -239,9 +241,10 @@ def _init_player_and_profile_data(profile_name):
     _current_fps = float(new_profile.frame_rate_num())/float(new_profile.frame_rate_den())
     _current_profile_index = mltprofiles.get_profile_index_for_profile(new_profile)
 
-    global _player, _current_path
+    global _player, _current_path, _ticker
     _current_path = respaths.FLUXITY_EMPTY_BG_RES_PATH
-    _player = gmicplayer.GmicPlayer(_current_path)
+    _ticker = utils.Ticker(_ticker_event, TICKER_DELAY)
+    _player = gmicplayer.GmicPlayer(_current_path, _ticker)
 
 def _init_playback():
     _window.set_fps()
@@ -394,6 +397,12 @@ def next_pressed(delta=1):
     _player.seek_delta(delta)
     update_frame_displayers()
 
+def play_pressed():
+    _player.start_playback()
+
+def stop_pressed():
+    _player.stop_playback()
+    
 def start_pressed():
     _player.seek_frame(0)
     update_frame_displayers()
@@ -452,6 +461,13 @@ def update_length(new_length):
 
     _window.update_marks_display()
     _window.pos_bar.update_display_from_producer(_player.producer)
+
+def _ticker_event():
+    frame = _player.current_frame()
+    norm_pos = frame / float(_player.get_active_length()) 
+    
+    _window.tc_display.set_frame(frame)
+    _window.pos_bar.set_normalized_pos(norm_pos)
 
 #-------------------------------------------------- render and preview
 def render_output():
@@ -619,17 +635,57 @@ class ScriptToolWindow(Gtk.Window):
         pos_bar_frame.set_margin_bottom(9)
         pos_bar_frame.set_margin_left(6)
         pos_bar_frame.set_margin_right(2)
-        
-        self.control_buttons = glassbuttons.GmicButtons()
-        pressed_callback_funcs = [prev_pressed,
-                                  next_pressed,
-                                  mark_in_pressed,
-                                  mark_out_pressed,
-                                  marks_clear_pressed,
-                                  to_mark_in_pressed,
-                                  to_mark_out_pressed]
+                                                  
+        self.control_buttons = glassbuttons.PlayerButtons()
+        if editorpersistance.prefs.play_pause == False:
+            if (editorpersistance.prefs.timeline_start_end is True):
+                pressed_callback_funcs = [start_pressed,  #  go to start
+                                          end_pressed,   #  go to  end
+                                          prev_pressed,
+                                          next_pressed,
+                                          play_pressed,
+                                          stop_pressed,
+                                          mark_in_pressed,
+                                          mark_out_pressed,
+                                          marks_clear_pressed,
+                                          to_mark_in_pressed,
+                                          to_mark_out_pressed]
+            else:
+                pressed_callback_funcs = [prev_pressed,
+                                          next_pressed,
+                                          play_pressed,
+                                          stop_pressed,
+                                          mark_in_pressed,
+                                          mark_out_pressed,
+                                          marks_clear_pressed,
+                                          to_mark_in_pressed,
+                                          to_mark_out_pressed]
+        else:
+            if (editorpersistance.prefs.timeline_start_end is True):
+                pressed_callback_funcs = [start_pressed,  #  go to start
+                                          end_pressed,   #  go to  end
+                                          prev_pressed,
+                                          next_pressed,
+                                          play_pressed,
+                                          mark_in_pressed,
+                                          mark_out_pressed,
+                                          marks_clear_pressed,
+                                          to_mark_in_pressed,
+                                          to_mark_out_pressed]
+            else:
+                pressed_callback_funcs = [prev_pressed,
+                                          next_pressed,
+                                          play_pressed,
+                                          mark_in_pressed,
+                                          mark_out_pressed,
+                                          marks_clear_pressed,
+                                          to_mark_in_pressed,
+                                          to_mark_out_pressed]
         self.control_buttons.set_callbacks(pressed_callback_funcs)
-        
+
+        if editorpersistance.prefs.buttons_style == 2: # NO_DECORATIONS
+            self.control_buttons.no_decorations = True 
+
         self.preview_button = Gtk.Button(_("Preview"))
         self.preview_button.connect("clicked", lambda w: render_preview_frame())
         self.preview_range_button = Gtk.Button(_("Preview Range"))

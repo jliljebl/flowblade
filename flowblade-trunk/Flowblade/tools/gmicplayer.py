@@ -59,10 +59,11 @@ def get_frames_range_writer_for_current_profile(file_path, callback):
         
 class GmicPlayer:
     
-    def __init__(self, clip_path):
+    def __init__(self, clip_path, ticker=None):
         self.producer = mlt.Producer(_current_profile, str(clip_path))
         self.producer.mark_in = -1
         self.producer.mark_out = -1
+        self.ticker = ticker
         
     def set_producer(self, producer):
         if self.producer != None:
@@ -84,7 +85,7 @@ class GmicPlayer:
         if new_length <= self.producer.mark_out:
             self.producer.mark_in = -1
             self.producer.mark_out = -1
-        
+    
         self.connect_and_start()
                 
     def create_sdl_consumer(self):
@@ -114,12 +115,23 @@ class GmicPlayer:
         self.producer.set_speed(0)
         self.consumer.connect(self.producer)
         self.consumer.start()
-
+        if self.ticker != None:
+            self.ticker.start_ticker()
+            
     def current_frame(self):
         return self.producer.frame()
 
     def get_active_length(self):
         return self.producer.get_length()
+
+    def start_playback(self):
+        self.producer.set_speed(1)
+        self.ticker.stop_ticker()
+        self.ticker.start_ticker()
+
+    def stop_playback(self):
+        self.ticker.stop_ticker()
+        self.producer.set_speed(0)
         
     def seek_position_normalized(self, pos, length):
         frame_number = pos * length
@@ -155,7 +167,8 @@ class GmicPlayer:
     def shutdown(self):
         self.producer.set_speed(0)
         self.consumer.stop()
-
+        if self.ticker != None:
+            self.ticker.stop_ticker()
 
 class PreviewFrameWriter:
 

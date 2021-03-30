@@ -645,6 +645,8 @@ class GmicWindow(Gtk.Window):
                                   to_mark_in_pressed,
                                   to_mark_out_pressed]
         self.control_buttons.set_callbacks(pressed_callback_funcs)
+        if editorpersistance.prefs.buttons_style == 2: # NO_DECORATIONS
+            self.control_buttons.no_decorations = True 
         
         self.preview_button = Gtk.Button(_("Preview"))
         self.preview_button.connect("clicked", lambda w: render_preview_frame())
