@@ -221,8 +221,6 @@ def main(root_path, force_launch=False):
     _init_playback()
     update_length(_script_length)
 
-    print(_current_profile_name)
-
     Gtk.main()
     Gdk.threads_leave()
 
@@ -254,7 +252,15 @@ def _init_playback():
     _player.create_sdl_consumer()
     _player.connect_and_start()
 
-def get_playback_tractor(length, range_frame_res_str=None, in_frame=-1, out_frame=-1):
+def _reinit_init_playback():
+    tractor = _get_playback_tractor(200)
+    tractor.mark_in  = -1
+    tractor.mark_out = -1
+    _player.set_producer(tractor)
+    _window.pos_bar.clear()
+    _player.seek_frame(0)
+
+def _get_playback_tractor(length, range_frame_res_str=None, in_frame=-1, out_frame=-1):
     # Create tractor and tracks
     tractor = mlt.Tractor()
     multitrack = tractor.multitrack()
@@ -264,10 +270,10 @@ def get_playback_tractor(length, range_frame_res_str=None, in_frame=-1, out_fram
     bg_path = respaths.FLUXITY_EMPTY_BG_RES_PATH
     profile = mltprofiles.get_profile(_current_profile_name)
         
-    if range_frame_res_str == None:
+    if range_frame_res_str == None:  # producer displaying 'not rendered' bg image
         bg_clip = mlt.Producer(profile, str(bg_path))
         track0.insert(bg_clip, 0, 0, length - 1)
-    else:
+    else:  # producer displaying frame sequence
         indx = 0
         if in_frame > 0:
             bg_clip1 = mlt.Producer(profile, str(bg_path))
@@ -356,6 +362,7 @@ def _load_script_dialog_callback(dialog, response_id):
         args_file = open(filename)
         args_text = args_file.read()
         _window.script_view.get_buffer().set_text(args_text)
+        _reinit_init_playback()
         dialog.destroy()
     else:
         dialog.destroy()
@@ -456,7 +463,7 @@ def update_length(new_length):
     global _script_length
     _script_length = new_length
 
-    new_playback_producer = get_playback_tractor(_script_length)
+    new_playback_producer = _get_playback_tractor(_script_length)
     _player.set_producer(new_playback_producer)
 
     _window.update_marks_display()
@@ -495,7 +502,7 @@ def render_preview_frame():
         
     if fctx.error == None:
         fctx.priv_context.frame_surface.write_to_png(respaths.FLUXITY_PREVIEW_IMG_PATH,)
-        new_playback_producer = get_playback_tractor(_script_length, respaths.FLUXITY_PREVIEW_IMG_PATH, 0, _script_length)
+        new_playback_producer = _get_playback_tractor(_script_length, respaths.FLUXITY_PREVIEW_IMG_PATH, 0, _script_length)
         _player.set_producer(new_playback_producer)
         _player.seek_frame(frame)
 
@@ -1110,7 +1117,7 @@ class FluxityRangeRenderer(threading.Thread):
             frame_file = fctx.priv_context.first_rendered_frame_path
             resource_name_str = utils.get_img_seq_resource_name(frame_file, True)
             range_resourse_mlt_path = get_render_frames_dir() + "/" + resource_name_str
-            new_playback_producer = get_playback_tractor(_script_length, range_resourse_mlt_path, in_frame, out_frame)
+            new_playback_producer = _get_playback_tractor(_script_length, range_resourse_mlt_path, in_frame, out_frame)
             _player.set_producer(new_playback_producer)
             _player.seek_frame(in_frame)
             _window.pos_bar.preview_range = (in_frame, out_frame)

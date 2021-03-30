@@ -126,11 +126,13 @@ class GmicPlayer:
 
     def start_playback(self):
         self.producer.set_speed(1)
-        self.ticker.stop_ticker()
-        self.ticker.start_ticker()
+        if self.ticker != None:
+            self.ticker.stop_ticker()
+            self.ticker.start_ticker()
 
     def stop_playback(self):
-        self.ticker.stop_ticker()
+        if self.ticker != None:
+            self.ticker.stop_ticker()
         self.producer.set_speed(0)
         
     def seek_position_normalized(self, pos, length):

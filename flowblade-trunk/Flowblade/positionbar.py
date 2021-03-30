@@ -119,7 +119,6 @@ class PositionBar:
         length = producer.get_length() # Get from MLT
         self.length = length 
         try:
-
             self.mark_in_norm = float(producer.mark_in) / length
             self.mark_out_norm = float(producer.mark_out) / length
             frame_pos = producer.frame()
@@ -132,6 +131,14 @@ class PositionBar:
 
         self.widget.queue_draw()
 
+    def clear(self):
+        self.mark_in_norm = -1.0 # program length normalized
+        self.mark_out_norm = -1.0
+        self.preview_frame = -1
+        self.preview_range = None
+
+        self.widget.queue_draw()
+        
     def set_dark_bg_color(self):
         if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
             return
