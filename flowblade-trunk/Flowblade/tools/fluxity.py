@@ -16,6 +16,9 @@
 
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
+    
+    
+    # FLUXITY SCRIPTING
 """
 
 import cairo
@@ -25,6 +28,10 @@ import os
 
 # Default length in frames for script duration
 DEFAULT_LENGTH = 200
+
+METHOD_INIT_SCRIPT = 0
+METHOD_INIT_RENDER = 1
+METHOD_RENDER_FRAME = 2
 
 # Script displayed at Flowblade Script tool on init.
 DEFAULT_SCRIPT = \
@@ -53,6 +60,11 @@ def render_frame(frame, fctx, w, h):
 
 # ---------------------------------------------------------- script object
 class FluxityScript:
+    """
+    Compiles scripts to executable object and calls methods *init_script()*, *init_render()*, *render_frame()* on it.
+    
+    Internal class, do not use objects of this class directly in scripts.
+    """
     
     def __init__(self, script_str):
         self.script = script_str
@@ -60,6 +72,9 @@ class FluxityScript:
         self.namespace = {}
     
     def compile_script(self):
+        """
+        Compiles user script.
+        """
         try:
             self.code = compile(self.script, "<fluxityscript>", "exec")
         except Exception as e:
@@ -77,18 +92,27 @@ class FluxityScript:
             _raise_exec_error(str(e))
     
     def call_init_script(self, fctx):
+        """
+        Calls method *init_script()* on script.
+        """
         try:
           self.namespace['init_script'](fctx)
         except Exception as e:
-          _raise_fluxity_error("error calling function 'init_script()':\n\n" + str(e))
+          _raise_fluxity_error("error calling function 'init_script()':" + str(e))
 
     def call_init_render(self, fctx):
+        """
+        Calls method *init_render()* on script.
+        """
         try:
           self.namespace['init_render'](fctx)
         except Exception as e:
           _raise_fluxity_error("error calling function 'init_render()':\n\n" + str(e))
           
     def call_render_frame(self, frame, fctx, w, h):
+        """
+        Calls method *render_frame()* on script.
+        """
         try:
           self.namespace['render_frame'](frame, fctx, w, h)
         except Exception as e:
@@ -97,7 +121,11 @@ class FluxityScript:
 
 # ---------------------------------------------------------- mlt profile
 class FluxityProfile:
-
+    """
+    Properties of this class correspond MLT profile objects.
+    
+    Internal class, do not use objects of this class directly in scripts. 
+    """
     DESCRIPTION = "description"
     FRAME_RATE_NUM = "frame_rate_num"
     FRAME_RATE_DEN = "frame_rate_den"
@@ -129,22 +157,44 @@ def _read_profile_prop_from_lines(lines, prop):
 class FluxityContext:
 
     EDITOR_STRING = 0
+    """ Editor for strings"""
     EDITOR_VALUE = 1
+    """ Editor for values that are saved as strings but be could interpreted as other data."""
     EDITOR_FLOAT = 2
+    """ Editor for float values."""
     EDITOR_INT = 3
+    """ Editor for integer values."""
     EDITOR_COLOR = 4
+    """ Editor for colors. Value is a (R,G,B,A) tuple with values in range 0-1."""
     
     PROFILE_DESCRIPTION = FluxityProfile.DESCRIPTION
+    """MLT Profile descriptiption string."""
     PROFILE_FRAME_RATE_NUM = FluxityProfile.FRAME_RATE_NUM
+    """Frame rate numerator."""
     PROFILE_FRAME_RATE_DEN = FluxityProfile.FRAME_RATE_DEN
+    """Frame rate denominator."""
     PROFILE_WIDTH = FluxityProfile.WIDTH
+    """Output image width in pixels."""
     PROFILE_HEIGHT = FluxityProfile.HEIGHT
+    """Output image height in pixels."""
     PROFILE_PROGRESSIVE = FluxityProfile.PROGRESSIVE
+    """
+    MLT Profile image is progressive if value is *True*, if value is *False* image is interlaced.
+    """
     PROFILE_SAMPLE_ASPECT_NUM = FluxityProfile.SAMPLE_ASPECT_NUM
+    """
+    Pixel size fraction numerator.
+    """
     PROFILE_SAMPLE_ASPECT_DEN = FluxityProfile.SAMPLE_ASPECT_DEN
+    """
+    Pixel size fraction denominator.
+    """
     PROFILE_DISPLAY_ASPECT_NUM = FluxityProfile.DISPLAY_ASPECT_NUM
+    """Output image size fraction numerator."""
     PROFILE_DISPLAY_ASPECT_DEN = FluxityProfile.DISPLAY_ASPECT_DEN
+    """Output image size fraction denominator."""
     PROFILE_COLORSPACE = FluxityProfile.COLORSPACE
+    """Profile colorspace, value is either 709, 601 or 2020."""
 
     def __init__(self, preview_render, output_folder):
         self.priv_context = FluxityContextPrivate(preview_render, output_folder)
@@ -164,15 +214,27 @@ class FluxityContext:
         w = self.priv_context.profile.get_profile_property(FluxityProfile.WIDTH)
         h = self.priv_context.profile.get_profile_property(FluxityProfile.HEIGHT)
         return (w, h)
- 
+
     def get_profile_property(self, p_property):
         return self.priv_context.profile.get_profile_property(p_property)
  
     def set_name(self, name):
+        """
+        **name(str):** name of script displayed to user.
+        
+        Must be called in script method *init_script()*.
+        """
         self.name = name
- 
+        self.priv_context.error_on_wrong_method("set_name()", METHOD_INIT_SCRIPT)
+
     def set_version(self, version):
+        """
+        **version(int):** version of script, use increasing integer numbering. Default value is *1*.
+        
+        Must be called in script method *init_script()*.
+        """
         self.version = version
+        self.priv_context.error_on_wrong_method("set_version()", METHOD_INIT_SCRIPT)
 
     def set_author(self, author):
         self.author = author
@@ -189,7 +251,10 @@ class FluxityContext:
     def set_length(self, length):
         self.length = length
 
-    def get_length(self, label):
+    def get_length(self):
+        """
+        **returns(int):** Length of script in frames.
+        """
         return self.length
 
     def add_editor(self, name, type, default_value, tooltip=None):
@@ -235,7 +300,9 @@ class FluxityContext:
         
 class FluxityContextPrivate:
     """
-    This object exists to keep FluxityContext API clean for script developers.
+    This class exists to keep FluxityContext API clean for script developers.
+    
+    Internal class, do not use objects of this class directly in scripts.
     """
     def __init__(self, preview_render, output_folder):
 
@@ -252,6 +319,9 @@ class FluxityContextPrivate:
 
         self.frame_name = "frame"
         self.first_rendered_frame_path = None # This is cleared by rendering routines.
+
+        self.current_method = None
+        self.method_name = {METHOD_INIT_SCRIPT:"init_script()", METHOD_INIT_RENDER:"init_render()", METHOD_RENDER_FRAME:"render_frame()"}
         
     def load_profile(self, mlt_profile_path):
         lines = []
@@ -295,17 +365,34 @@ class FluxityContextPrivate:
 
         if self.first_rendered_frame_path == None:
             self.first_rendered_frame_path = filepath
+    
+    def error_on_wrong_method(self, method_name, required_method):
+        if required_method == self.current_method:
+            return
         
+        error_str = "'FluxityContext." + method_name + "' has to called in script method '" + self.method_name[required_method] + "'."
+        _raise_contained_error(error_str)
+    
 class FluxityEmptyClass:
+    """
+    Internal class, do not use objects of this class directly in scripts.
+    """
     pass
     
 # ---------------------------------------------------------- Errors 
 class FluxityError(Exception):
-
+    """
+    Errors specific to using Fluxity API.
+    
+    Internal class, do not use objects of this class directly in scripts. 
+    """
     def __init__(self, msg):
         self.message = msg
         super().__init__(self.message)
 
+def _raise_contained_error(exception_msg):
+    raise FluxityError(exception_msg)
+    
 def _raise_fluxity_error(exception_msg):
     raise FluxityError("Fluxity Error: " + exception_msg)
     
@@ -356,15 +443,18 @@ def render_frame_sequence(script, in_frame, out_frame, out_folder, profile_file_
         fscript, fctx = results
         
         # Execute script to write frame sequence.
+        fctx.priv_context.current_method = METHOD_INIT_SCRIPT
         fscript.call_init_script(fctx)
 
         if editors_data_json != None:
             fctx.set_editors_data(editors_data_json)
-
+            
+        fctx.priv_context.current_method = METHOD_INIT_RENDER
         fscript.call_init_render(fctx)
 
         fctx.priv_context.first_rendered_frame_path = None # Should be clear but let's make sure. 
-
+        fctx.priv_context.current_method = METHOD_RENDER_FRAME
+        
         for frame in range(in_frame, out_frame):
             fctx.priv_context.create_frame_surface(frame)
             w, h = fctx.get_dimensions()
