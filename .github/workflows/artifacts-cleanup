@@ -1,0 +1,14 @@
+  
+name: 'artifacts cleanup'
+on:
+  schedule:
+    - cron: '* 1 1 1 *' # once a year auto
+
+jobs:
+  delete-artifacts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: kolpav/purge-artifacts-action@v1
+        with:
+          token: $
+          expire-in: 0 # Set this to 0 to delete all artifacts
