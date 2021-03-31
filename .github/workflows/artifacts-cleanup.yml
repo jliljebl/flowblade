@@ -1,8 +1,7 @@
   
 name: 'artifacts cleanup'
 on:
-  schedule:
-    - cron: '* 1 1 1 *' # once a year auto
+  workflow_dispatch:
 
 jobs:
   delete-artifacts:
