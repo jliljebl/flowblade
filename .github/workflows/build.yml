@@ -24,12 +24,6 @@ jobs:
       - name: Build
         run: |
           PATH=/usr/lib/nasm-mozilla/bin:$PATH
-          echo Preparing version
-          VERSION=$(date +"%y.%m.%d")
-          echo VERSION=$VERSION
-          echo INSTALL_DIR="$PWD/flowblade" > build-flowblade.conf
-          echo AUTO_APPEND_DATE=0 >> build-flowblade.conf
-          echo SOURCE_DIR="$PWD/src" >> build-flowblade.conf
           curl -LO https://raw.githubusercontent.com/jliljebl/flowblade-packaging/master/buildscript/flowblade-build.sh
           bash flowblade-build.sh
 
