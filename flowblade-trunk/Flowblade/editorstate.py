@@ -63,7 +63,7 @@ edit_mode = INSERT_MOVE
 # Ripple Trim tool is ONE_ROLL_TRIM mode + True on this flag
 trim_mode_ripple = False
 
-# Box tool OVERWRITE_MOVE tool mode + True on this flag
+# Box tool is OVERWRITE_MOVE tool mode + True on this flag
 overwrite_mode_box = False
 
 # Media files view filter for selecting displayed media objects in bin
