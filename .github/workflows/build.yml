@@ -30,7 +30,7 @@ jobs:
       # tar flowblade/ into work root
       - name: Create tar
         run: | 
-          tar -zcvf flowblade.tar.gz flowblade/ 
+          tar -zcvf flowblade.tar.gz flowblade/Flowblade 
 
       # flowblade.tar.gz in work root after 'Create tar' action
       - name: Upload artifact
