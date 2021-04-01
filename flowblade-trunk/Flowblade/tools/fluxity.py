@@ -208,14 +208,35 @@ class FluxityContext:
         self.error = None
 
     def get_frame_cr(self):
+        """
+        For every rendered frame method *render_frame()* is called and a new **cairo.ImageSurface** object is created.
+        
+        This method provides access to **cairo.Context** object that can be used to draw onto that image surface. This is the way that output is achieved with **Flowblade Media Plugins**. 
+        
+        After method *render_frame()* exits, contents of **cairo.ImageSurface** are saved to disk.
+        
+        Must be called in script method *render_frame()*.
+        
+        **Returns:** (**cairo.Context**) Context object that can be drawn onto.
+        """
         return self.priv_context.frame_cr
 
     def get_dimensions(self):
+        """
+        Pixel size of output image.
+        
+        **Returns:** (tuple(width, height)) Image size.
+        """
         w = self.priv_context.profile.get_profile_property(FluxityProfile.WIDTH)
         h = self.priv_context.profile.get_profile_property(FluxityProfile.HEIGHT)
         return (w, h)
 
     def get_profile_property(self, p_property):
+        """
+        Used to access properties of MLT profile set before running the script that defines e.g. output image size.
+        
+        **Returns:** (int, boolean, string) Value depends on which profile property is being accessed.
+        """
         return self.priv_context.profile.get_profile_property(p_property)
  
     def set_name(self, name):
@@ -237,34 +258,90 @@ class FluxityContext:
         self.priv_context.error_on_wrong_method("set_version()", METHOD_INIT_SCRIPT)
 
     def set_author(self, author):
+        """
+        **author(str):** name of script creator.
+        
+        Must be called in script method *init_script()*.
+        """
         self.author = author
 
     def set_frame_name(self, frame_name):
+        """        
+        **frame_name(str):** name used before number part in rendered frame files.
+        """
         self.priv_context.frame_name = frame_name
 
     def set_data(self, label, item):
+        """
+        **label(str):** lable used to access data later using *get_data(self, label)*.
+
+        **item(obj):** data item being saved.
+        
+        Saves data to be used later during execution of script. Using **global** would obivously be possible to replace this, but this is made available as a more clean solution.
+        """
         self.data[label] = item
 
     def get_data(self, label):
+        """
+        **label(str):** lable of saved data item.
+        
+        Gives access to previously saved data.
+        
+        **Returns:** (obj) Saved data item.
+        """
         return self.data[label]
 
     def set_length(self, length):
+        """
+        **length(int):** New length of script in frames.
+        
+        Sets length of script output in frames.
+        
+        Must *not* be called in  *render_frames()*.
+        """
         self.length = length
 
     def get_length(self):
         """
-        **returns(int):** Length of script in frames.
+        **Returns:** (int) Length of script in frames.
         """
         return self.length
 
     def add_editor(self, name, type, default_value, tooltip=None):
+        """     
+        **name(str):** Name for editor.
+        
+        **type(int):** Value either *EDITOR_STRING, EDITOR_VALUE, EDITOR_FLOAT, EDITOR_INT, EDITOR_COLOR.*
+        
+        **default_value():** Data type depends on editor type: *EDITOR_STRING(str), EDITOR_VALUE(str), EDITOR_FLOAT(float), EDITOR_INT(int), EDITOR_COLOR(tuple(R,G,B,A)).*
+        
+        **tooltip(str, optional):** Tooltip for editor if presented in GUI.
+        
+        Defines possible GUI editors used to affect script rendering. Edited value is accessed with method *get_editor_value(self, name, frame=0)*.
+        
+        Data describing editors can be accessed with *get_script_data(self)*. Edited values are made available for script with *set_editors_data(self, editors_data_json)*.
+        
+        Must be called in script method *init_script()*.
+        """
         self.editors[name] = (type, default_value)
 
         if tooltip != None:
             self.editor_tooltips[name] = tooltip
-            
+
+        self.priv_context.error_on_wrong_method("add_editor()", METHOD_INIT_SCRIPT)
+        
     def get_editor_value(self, name, frame=0):
-        # frame will be used when we have animated values
+        """     
+        **name(str):** Name of editor.
+        
+        **frame(int):** Frame in range 0 - (script length - 1).
+        
+        Value of edited data at given frame. We currently have no animated values, but they will added with future API updates.
+        
+        Returned data type depends on editor type: *EDITOR_STRING(str), EDITOR_VALUE(str), EDITOR_FLOAT(float), EDITOR_INT(int), EDITOR_COLOR(tuple(R,G,B,A)).*
+        
+        **Returns:** (obj) Value at frame.
+        """
         try:
             type, value = self.editors[name]
             return value
@@ -273,6 +350,13 @@ class FluxityContext:
             _raise_fluxity_error(exception_msg)
 
     def get_script_data(self):
+        """             
+        Returns data of all editors and their default values, and script metadata like script author and version. 
+        
+        Output can be turned into Python object tree using *json.loads()* method.
+        
+        **Returns:** (str) string representation of JSON object.
+        """
         script_data = {}
         script_data["length"] = self.length
         script_data["name"] = self.name
@@ -291,7 +375,35 @@ class FluxityContext:
         return json.dumps(script_data)
 
     def set_editors_data(self, editors_data_json):
-        # this is provide as list, but is dict in here, was convenient for app integration.
+        """
+        **editors_data_json(str):** string representation of JSON object.
+                 
+        Sets edited data to be used when rendering.
+        
+        Input string must describe JSON object that can be turned into usable editor data.
+        
+        *Example with EDITOR_FLOAT and EDITOR_COLOR:*
+        
+        ```
+        [
+            ["Position X", 2, 1.0], 
+            ["BG Color", 4, [0.8, 0.2, 0.2, 1.0]]
+        ]
+        ```
+        
+        *General form:*
+        
+        ```
+        [
+            [<name>, <type>, <value>], 
+            ...
+        ]
+        ```
+        
+        Using this method is not needed when creating **Flowblade Media Plugins**, application handles setting editors data.
+        
+        Should be called in script method *init_render()*.
+        """
         new_editors_list = json.loads(editors_data_json)
         for editor in new_editors_list:
             name, type, value = editor
@@ -415,13 +527,16 @@ def render_preview_frame(script, frame, out_folder, profile_file_path, editors_d
         fscript, fctx = results
 
         # Execute script to render a preview frame.
+        fctx.priv_context.current_method = METHOD_INIT_SCRIPT
         fscript.call_init_script(fctx)
 
         if editors_data_json != None:
             fctx.set_editors_data(editors_data_json)
-        
+
+        fctx.priv_context.current_method = METHOD_INIT_RENDER
         fscript.call_init_render(fctx)
 
+        fctx.priv_context.current_method = METHOD_RENDER_FRAME
         fctx.priv_context.create_frame_surface(frame)
         w, h = fctx.get_dimensions()
         fscript.call_render_frame(frame, fctx, w, h)

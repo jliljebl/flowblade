@@ -766,7 +766,7 @@ class FluxityContainerActions(AbstractContainerActionObject):
         self.program_editor_window = program_editor_window
         new_editors_list = self.get_editors_data_as_editors_list(editors)
         editors_data_json = json.dumps(new_editors_list)
-
+        print("editors_data_json", editors_data_json)
         script_file = open(self.container_data.program)
         user_script = script_file.read()
         profile_file_path = mltprofiles.get_profile_file_path(current_sequence().profile.description())
