@@ -40,6 +40,7 @@ import time
 import appconsts
 import atomicfile
 import blenderheadless
+import ccrutils
 import dialogutils
 import edit
 import editorstate
@@ -617,7 +618,7 @@ class FluxityContainerActions(AbstractContainerActionObject):
          
             if fctx.error == None:
                 data_json = fctx.get_script_data()
-                self.container_data.data_slots["fluxity_plugin_edit_data"] = json.loads(data_json)
+                self.container_data.data_slots["fluxity_plugin_edit_data"] = json.loads(data_json) # script data saved as Python object, not json str.
 
                 return (True, None) # no errors
             else:
@@ -655,6 +656,9 @@ class FluxityContainerActions(AbstractContainerActionObject):
         job_msg.text = _("Render Starting...")
         job_msg.status = jobs.RENDERING
         jobs.update_job_queue(job_msg)
+
+        # we could drop sending args if we wanted and just use this. 
+        ccrutils.write_misc_session_data(self.get_container_program_id(), "fluxity_plugin_edit_data", self.container_data.data_slots["fluxity_plugin_edit_data"])
         
         args = ("session_id:" + self.get_container_program_id(), 
                 "script:" + str(self.container_data.program),
@@ -749,16 +753,15 @@ class FluxityContainerActions(AbstractContainerActionObject):
         simpleeditors.show_fluxity_container_clip_program_editor(self.project_edit_done, clip, self, self.container_data.data_slots["fluxity_plugin_edit_data"])
 
     def project_edit_done(self, response_is_accept, dialog, editors, orig_program_info_json):
-        dialog.destroy()
-        """
+
         if response_is_accept == True:
-            self.update_program_values_from_editors(editors)
+            new_editors_list = self.get_editors_data_as_editors_list(editors)
+            self.container_data.data_slots["fluxity_plugin_edit_data"]["editors_list"] = new_editors_list
             dialog.destroy()
         else:
-            self.container_data.data_slots["project_edit_info"] = orig_program_info_json
+            # For fluxity edits we don't need to reset edita data like we do in Blender.
             dialog.destroy()
-        """
-    
+
     def render_fluxity_preview(self, program_editor_window, editors, preview_frame):
         self.create_data_dirs_if_needed() # This could be first time we are writing
                                           # data related to this container clip to disk.
@@ -766,7 +769,6 @@ class FluxityContainerActions(AbstractContainerActionObject):
         self.program_editor_window = program_editor_window
         new_editors_list = self.get_editors_data_as_editors_list(editors)
         editors_data_json = json.dumps(new_editors_list)
-        print("editors_data_json", editors_data_json)
         script_file = open(self.container_data.program)
         user_script = script_file.read()
         profile_file_path = mltprofiles.get_profile_file_path(current_sequence().profile.description())

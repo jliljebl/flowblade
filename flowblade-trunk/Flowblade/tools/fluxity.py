@@ -377,7 +377,7 @@ class FluxityContext:
             json_obj = [name, type, value]
             editors_list.append(json_obj)
 
-        script_data["editors_list"] = editors_list # this is dict inside, but is given out as list for convenience of Flowblade app integration.
+        script_data["editors_list"] = editors_list # this is dict inside FluxityContext object, but is given out as list for convenience of Flowblade app integration.
         script_data["tooltips_list"] = self.editor_tooltips
         
         return json.dumps(script_data)

@@ -358,10 +358,10 @@ class FluxityScriptEditorWindow(Gtk.Window):
         self.preview_panel.preview_monitor.queue_draw()
         
     def cancel(self):
-        self.callback(False, self, self.editors, self.orig_program_info_json)
+        self.callback(False, self, self.editor_widgets, self.orig_program_info_json)
 
     def save(self):
-        self.callback(True, self, self.editors, None)
+        self.callback(True, self, self.editor_widgets, None)
 
 # ----------------------------------------------------------------------- editors
 def _get_editor(editor_type, id_data, label_text, value, tooltip):
@@ -521,7 +521,7 @@ class CheckboxEditor(AbstractSimpleEditor):
         self.build_editor(label_text, self.checkbox)
 
     def get_value(self):
-        return chekbox.get_active()
+        return self.checkbox.get_active()
 
 class OptionsEditor(AbstractSimpleEditor):
 
@@ -537,7 +537,7 @@ class OptionsEditor(AbstractSimpleEditor):
         self.build_editor(label_text, self.combo)
 
     def get_value(self):
-        return combo.get_active()
+        return self.combo.get_active()
 
 class FilePathEditor(AbstractSimpleEditor):
 

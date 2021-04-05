@@ -1115,8 +1115,6 @@ class FluxityRangeRenderer(threading.Thread):
         out_frame = _player.producer.mark_out
         
         fctx = fluxity.render_frame_sequence(self.script, in_frame, out_frame, self.render_folder, self.profile_file_path, self.frame_write_update)
-
-        Gdk.threads_enter()
         
         if fctx.error == None:
             frame_file = fctx.priv_context.first_rendered_frame_path
@@ -1125,6 +1123,8 @@ class FluxityRangeRenderer(threading.Thread):
             new_playback_producer = _get_playback_tractor(_script_length, range_resourse_mlt_path, in_frame, out_frame)
             _player.set_producer(new_playback_producer)
             _player.seek_frame(in_frame)
+            
+            Gdk.threads_enter()
             _window.pos_bar.preview_range = (in_frame, out_frame)
 
             _window.monitors_switcher.set_visible_child_name(MLT_PLAYER_MONITOR)
@@ -1133,7 +1133,12 @@ class FluxityRangeRenderer(threading.Thread):
             _window.pos_bar.widget.queue_draw()
             _window.out_view.get_buffer().set_text("success:\n" + "rendered some frames!")
             _window.media_info.set_markup("<small>" + _("Range preview for frame range ") + str(in_frame) + " - " + str(out_frame)  +"</small>")
+            
+            
+            Gdk.threads_leave()
         else:
+            Gdk.threads_enter()
+                    
             _window.out_view.get_buffer().set_text(fctx.error)
             _window.media_info.set_markup("<small>" + _("No Preview") +"</small>")
             _window.pos_bar.preview_range = None
@@ -1141,7 +1146,7 @@ class FluxityRangeRenderer(threading.Thread):
             _window.monitors_switcher.queue_draw()
             _window.preview_monitor.queue_draw()
 
-        Gdk.threads_leave()
+            Gdk.threads_leave()
 
     def frame_write_update(self, frame):
         Gdk.threads_enter()

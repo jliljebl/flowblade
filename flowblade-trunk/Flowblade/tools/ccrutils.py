@@ -76,7 +76,26 @@ def set_render_data(session_id, video_render_data):
     with atomicfile.AtomicFileWriter(render_data_path, "wb") as afw:
         outfile = afw.get_file()
         pickle.dump(video_render_data, outfile)
+
+def write_misc_session_data(session_id, file_name, misc_data):
+    folder = _get_session_folder(session_id)
+    data_path = folder + "/" + file_name
+     
+    if os.path.exists(data_path):
+        os.remove(data_path)
     
+    with atomicfile.AtomicFileWriter(data_path, "wb") as afw:
+        outfile = afw.get_file()
+        pickle.dump(misc_data, outfile)
+
+def read_misc_session_data(session_id, file_name):
+    folder = _get_session_folder(session_id)
+    data_path = folder + "/" + file_name
+
+    misc_data = utils.unpickle(data_path)  # toolsencoding.ToolsRenderData object
+    
+    return misc_data
+        
 def session_render_complete(session_id):
     folder = _get_session_folder(session_id)
     completed_msg_path = folder + "/" + COMPLETED_MSG_FILE

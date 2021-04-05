@@ -29,6 +29,7 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import GLib
 
+import json
 import locale
 import mlt
 import os
@@ -89,8 +90,6 @@ def abort_render(session_id):
 
 # --------------------------------------------------- render process
 def main(root_path, session_id, script, clip_path, range_in, range_out, profile_desc, fluxity_frame_offset):
-    
-    # os.nice(10) # make user configurable
 
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION
@@ -129,21 +128,25 @@ def main(root_path, session_id, script, clip_path, range_in, range_out, profile_
     
     ccrutils.load_render_data()
     render_data = ccrutils.get_render_data()
+
+    fluxity_plugin_edit_data = ccrutils.read_misc_session_data(session_id, "fluxity_plugin_edit_data")
+    print(json.dumps(fluxity_plugin_edit_data["editors_list"])) # See fluxity.FluxityContext.get_script_data()
     
     # This needs to have render data loaded to know if we are using external folders.
     ccrutils.maybe_init_external_session_folders()
 
     global _render_thread
-    _render_thread = FluxityHeadlessRunnerThread(script, render_data, clip_path, range_in, range_out, profile_desc, fluxity_frame_offset)
+    _render_thread = FluxityHeadlessRunnerThread(script, fluxity_plugin_edit_data, render_data, clip_path, range_in, range_out, profile_desc, fluxity_frame_offset)
     _render_thread.start()
 
 
 class FluxityHeadlessRunnerThread(threading.Thread):
 
-    def __init__(self, script, render_data, clip_path, range_in, range_out, profile_desc, fluxity_frame_offset):
+    def __init__(self, script, fluxity_plugin_edit_data, render_data, clip_path, range_in, range_out, profile_desc, fluxity_frame_offset):
         threading.Thread.__init__(self)
 
         self.script_path = script
+        self.fluxity_plugin_edit_data = fluxity_plugin_edit_data
         self.render_data = render_data # toolsencoding.ToolsRenderData object
         self.clip_path = clip_path
         self.range_in = int(range_in)
@@ -179,7 +182,9 @@ class FluxityHeadlessRunnerThread(threading.Thread):
         
         profile_file_path = mltprofiles.get_profile_file_path(self.profile_desc)
 
-        fluxity.render_frame_sequence(user_script, self.range_in, self.range_out, rendered_frames_folder, profile_file_path, self.frames_update)
+        editors_data_json = json.dumps(self.fluxity_plugin_edit_data["editors_list"]) # See fluxity.FluxityContext.get_script_data()
+        
+        fluxity.render_frame_sequence(user_script, self.range_in, self.range_out, rendered_frames_folder, profile_file_path, self.frames_update, editors_data_json)
         render_length = self.range_out - self.range_in 
         while len(os.listdir(rendered_frames_folder)) != render_length:
             if self.abort == True:
