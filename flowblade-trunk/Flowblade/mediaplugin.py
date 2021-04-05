@@ -67,7 +67,7 @@ def init():
         _plugins_groups.append((gkey, add_group))
 
     
-def fill_media_plugin_sub_menu(menu):
+def fill_media_plugin_sub_menu(menu, callback=None):
     for group_data in _plugins_groups:
 
         group_name, group = group_data
@@ -76,7 +76,10 @@ def fill_media_plugin_sub_menu(menu):
         menu_item.set_submenu(sub_menu)
         for plugin in group:
             plugin_menu_item = Gtk.MenuItem.new_with_label(plugin.name)
-            plugin_menu_item.connect("activate", _add_media_plugin, plugin.folder)
+            if callback == None:
+                plugin_menu_item.connect("activate", _add_media_plugin, plugin.folder)
+            else:
+                plugin_menu_item.connect("activate", callback, plugin.folder)
             sub_menu.append(plugin_menu_item)
 
         menu.append(menu_item)
@@ -84,9 +87,13 @@ def fill_media_plugin_sub_menu(menu):
 
 def _add_media_plugin(widget, plugin_folder):
     script_file = respaths.MEDIA_PLUGINS_PATH + plugin_folder + "/plugin_script"
-    print("!!!!!!!!_add_media_plugin", script_file)
     containerclip.create_fluxity_media_item_from_plugin(script_file)
 
+def get_plugin_code(plugin_folder):
+    script_file = respaths.MEDIA_PLUGINS_PATH + plugin_folder + "/plugin_script"
+    args_file = open(script_file)
+    return args_file.read()
+        
 
 class MediaPlugin:
     

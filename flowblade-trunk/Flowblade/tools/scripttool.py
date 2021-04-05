@@ -49,6 +49,7 @@ import gui
 import guicomponents
 import guiutils
 import glassbuttons
+import mediaplugin
 import mltenv
 import mltprofiles
 import mlttransitions
@@ -100,6 +101,7 @@ _encoding_panel = None
 
 # GTK3 requires this to be created outside of callback
 _hamburger_menu = Gtk.Menu()
+
 
 #-------------------------------------------------- launch and inits
 def launch_scripttool(launch_data=None):
@@ -159,8 +161,8 @@ def main(root_path, force_launch=False):
     translations.load_filters_translations()
     mlttransitions.init_module()
 
-    # Load preset gmic scripts
-    #gmicscript.load_preset_scripts_xml()
+    # Init plugins module
+    mediaplugin.init()
 
     # Init gtk threads
     Gdk.threads_init()
@@ -359,9 +361,9 @@ def load_script_dialog(callback):
 def _load_script_dialog_callback(dialog, response_id):
     if response_id == Gtk.ResponseType.ACCEPT:
         filename = dialog.get_filenames()[0]
-        args_file = open(filename)
-        args_text = args_file.read()
-        _window.script_view.get_buffer().set_text(args_text)
+        script_file = open(filename)
+        script_text = script_file.read()
+        _window.script_view.get_buffer().set_text(script_text)
         _reinit_init_playback()
         dialog.destroy()
     else:
@@ -382,7 +384,11 @@ def _hamburger_menu_callback(widget, msg):
         _shutdown()
     elif msg == "docs":
         webbrowser.open(url="http://gmic.eu/", new=0, autoraise=True)
-
+    else:
+        script_text = mediaplugin.get_plugin_code(msg)
+        _window.script_view.get_buffer().set_text(script_text)
+        _reinit_init_playback()
+        
 def _get_menu_item(text, callback, data, sensitive=True):
     item = Gtk.MenuItem.new_with_label(text)
     item.connect("activate", callback, data)
@@ -951,13 +957,24 @@ class ScriptToolWindow(Gtk.Window):
         menu = _hamburger_menu
         guiutils.remove_children(menu)
         
-        menu.add(_get_menu_item(_("Load Script") + "...", _hamburger_menu_callback, "load_script" ))
-        menu.add(_get_menu_item(_("Save Script") + "...", _hamburger_menu_callback, "save_script" ))
+        menu.add(_get_menu_item(_("Open Script File") + "...", _hamburger_menu_callback, "load_script" ))
+        menu.add(_get_menu_item(_("Save Script File") + "...", _hamburger_menu_callback, "save_script" ))
+        _add_separetor(menu)
+        plugin_menu_item = Gtk.MenuItem.new_with_label(_("Load Plugin Code"))
+        plugin_menu = Gtk.Menu()
+        # Remove current items
+        #items = _plugin_menu.get_children()
+        #for item in items:
+        #    _plugin_menu.remove(item)
+        mediaplugin.fill_media_plugin_sub_menu(plugin_menu, _hamburger_menu_callback)
+        plugin_menu_item.set_submenu(plugin_menu)
+        plugin_menu_item.show_all()
+        menu.add(plugin_menu_item)
         _add_separetor(menu)
         menu.add(_get_menu_item(_("Render Frame Preview") + "...", _hamburger_menu_callback, "render_preview" ))
         menu.add(_get_menu_item(_("Render Range Preview") + "...", _hamburger_menu_callback, "render_range_preview" ))
         _add_separetor(menu)
-        menu.add(_get_menu_item(_("G'Mic Webpage"), _hamburger_menu_callback, "docs" ))
+        menu.add(_get_menu_item(_("API Docs"), _hamburger_menu_callback, "docs" ))
         _add_separetor(menu)
         menu.add(_get_menu_item(_("Close"), _hamburger_menu_callback, "close" ))
         
