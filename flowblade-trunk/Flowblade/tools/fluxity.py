@@ -63,7 +63,7 @@ def render_frame(frame, fctx, w, h):
 # ---------------------------------------------------------- script object
 class FluxityScript:
     """
-    Compiles scripts to executable object and calls methods *init_script()*, *init_render()*, *render_frame()* on it.
+    Compiles script to an executable object and calls methods *init_script()*, *init_render()*, *render_frame()* on it.
     
     Internal class, do not use objects of this class directly in scripts.
     """
@@ -161,13 +161,19 @@ class FluxityContext:
     EDITOR_STRING = 0
     """ Editor for strings"""
     EDITOR_VALUE = 1
-    """ Editor for values that are saved as strings but be could interpreted as other data."""
+    """ Editor for values that are saved as strings but that be could interpreted as other data. Could be useful for inputting data programmatically."""
     EDITOR_FLOAT = 2
     """ Editor for float values."""
     EDITOR_INT = 3
     """ Editor for integer values."""
     EDITOR_COLOR = 4
-    """ Editor for colors. Value is a (R,G,B,A) tuple with values in range 0-1."""
+    """ Editor for colors. Value is a *(R,G,B,A)* tuple with values in range 0-1."""
+    EDITOR_FILE_PATH = 5
+    """ Editor for selecting a file path. Value is *str* describing absolute path *or* a file name when resource is assumed to be in the same directory as the script."""
+    EDITOR_OPTIONS = 6
+    """ Editor for selecting between  2 - N  defined string options. Value is tuple *(selected_index,[option_str_1, option_str_2, ...])*."""
+    EDITOR_CHECK_BOX = 7
+    """ Editor for boolean value. Value is either *True* or *False*"""
     
     PROFILE_DESCRIPTION = FluxityProfile.DESCRIPTION
     """MLT Profile descriptiption string."""
