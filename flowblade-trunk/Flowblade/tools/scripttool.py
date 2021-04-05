@@ -473,8 +473,13 @@ def _ticker_event():
     frame = _player.current_frame()
     norm_pos = frame / float(_player.get_active_length()) 
     
+    Gdk.threads_enter()
+                
     _window.tc_display.set_frame(frame)
     _window.pos_bar.set_normalized_pos(norm_pos)
+
+    Gdk.threads_leave()
+                
 
 #-------------------------------------------------- render and preview
 def render_output():
