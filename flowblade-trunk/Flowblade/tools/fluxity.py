@@ -1,4 +1,6 @@
 """
+    ### GPL Licence text
+
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2021 Janne Liljeblad.
 
