@@ -6,11 +6,16 @@ def init_script(fctx):
     # Script init here
     fctx.add_editor("Position X", fctx.EDITOR_FLOAT, 1.0)
     fctx.add_editor("BG Color", fctx.EDITOR_COLOR, (0.8, 0.2, 0.2, 1.0))  # This is RGBA in 0-1 range
+    fctx.add_editor("Show Shadow", fctx.EDITOR_CHECK_BOX, True)
+    color_list = ["Yellow", "Pink", "Red"]
+    fctx.add_editor("Color Options", fctx.EDITOR_OPTIONS, (0, ["Yellow", "Pink", "Red"]))
+    fctx.add_editor("File Image", fctx.EDITOR_FILE_PATH, None)
     fctx.set_name("Animations 1")
 
 def init_render(fctx):
     # Render resourse init here if needed.
     bg_color_tuple = fctx.get_editor_value("BG Color")
+    print("Show shadow", fctx.get_editor_value("Show Shadow"))
     fctx.set_data("bg_color", cairo.SolidPattern(*bg_color_tuple))
     fctx.set_data("fg_color", cairo.SolidPattern(0.2, 0.8, 0.2, 1.0))
     

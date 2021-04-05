@@ -169,12 +169,12 @@ class FluxityContext:
     EDITOR_COLOR = 4
     """ Editor for colors. Value is a *(R,G,B,A)* tuple with values in range 0-1."""
     EDITOR_FILE_PATH = 5
-    """ Editor for selecting a file path. Value is *str* describing absolute path *or* a file name when resource is assumed to be in the same directory as the script."""
+    """ Editor for selecting a file path. Value is Python pathname or *None*."""
     EDITOR_OPTIONS = 6
-    """ Editor for selecting between  2 - N  defined string options. Value is tuple *(selected_index,[option_str_1, option_str_2, ...])*."""
+    """ Editor for selecting between  2 - N  string options. Value is tuple *(selected_index,[option_str_1, option_str_2, ...])*."""
     EDITOR_CHECK_BOX = 7
     """ Editor for boolean value. Value is either *True* or *False*"""
-    
+
     PROFILE_DESCRIPTION = FluxityProfile.DESCRIPTION
     """MLT Profile descriptiption string."""
     PROFILE_FRAME_RATE_NUM = FluxityProfile.FRAME_RATE_NUM

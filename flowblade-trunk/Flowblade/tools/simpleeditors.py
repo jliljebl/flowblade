@@ -44,7 +44,10 @@ SIMPLE_EDITOR_VALUE = 1
 SIMPLE_EDITOR_FLOAT = 2
 SIMPLE_EDITOR_INT = 3
 SIMPLE_EDITOR_COLOR = 4
-
+SIMPLE_EDITOR_FILE_PATH = 5
+SIMPLE_EDITOR_OPTIONS = 6
+SIMPLE_EDITOR_CHECK_BOX = 7
+    
 DEFAULT_VALUES = ["Text", "a value", "0.0", "0", "(1.0, 1.0, 1.0, 1.0)"]
 
 NO_PREVIEW_FILE = "fallback_thumb.png"
@@ -377,7 +380,12 @@ def _get_editor(editor_type, id_data, label_text, value, tooltip):
         return IntEditor(id_data, label_text, value, tooltip)
     elif editor_type == SIMPLE_EDITOR_COLOR:
         return ColorEditor(id_data, label_text, value, tooltip)
-
+    elif editor_type == SIMPLE_EDITOR_FILE_PATH:
+        return FilePathEditor(id_data, label_text, value, tooltip)
+    elif editor_type == SIMPLE_EDITOR_OPTIONS:
+        return OptionsEditor(id_data, label_text, value, tooltip)
+    elif editor_type == SIMPLE_EDITOR_CHECK_BOX:
+        return CheckboxEditor(id_data, label_text, value, tooltip)
 
 class AbstractSimpleEditor(Gtk.HBox):
     
@@ -503,6 +511,46 @@ class ColorEditor(AbstractSimpleEditor):
         color = self.colorbutton.get_rgba()
         return (color.red, color.green, color.blue, 1.0)
         
+class CheckboxEditor(AbstractSimpleEditor):
+
+    def __init__(self, id_data, label_text, value, tooltip):
+        AbstractSimpleEditor.__init__(self, id_data, tooltip)
+        self.checkbox = Gtk.CheckButton.new()
+        self.checkbox.set_active(bool(value))
+        
+        self.build_editor(label_text, self.checkbox)
+
+    def get_value(self):
+        return chekbox.get_active()
+
+class OptionsEditor(AbstractSimpleEditor):
+
+    def __init__(self, id_data, label_text, value, tooltip):
+        AbstractSimpleEditor.__init__(self, id_data, tooltip)
+        
+        active_index, options = value
+        self.combo = Gtk.ComboBoxText.new()
+        for opt in options:
+            self.combo.append_text(opt)
+        self.combo.set_active(active_index)
+        
+        self.build_editor(label_text, self.combo)
+
+    def get_value(self):
+        return combo.get_active()
+
+class FilePathEditor(AbstractSimpleEditor):
+
+    def __init__(self, id_data, label_text, value, tooltip):
+        AbstractSimpleEditor.__init__(self, id_data, tooltip)
+
+        self.file_choose = Gtk.FileChooserButton.new("", Gtk.FileChooserAction.OPEN)
+        
+        self.build_editor(label_text, self.file_choose)
+
+    def get_value(self):
+        return self.file_choose.get_filename()
+
 
 # ------------------------------------------------------------------- preview
 class PreviewPanel(Gtk.VBox):
