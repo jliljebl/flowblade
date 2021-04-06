@@ -49,6 +49,7 @@ import gui
 import guicomponents
 import guiutils
 import glassbuttons
+import gmicplayer
 import mediaplugin
 import mltenv
 import mltprofiles
@@ -65,14 +66,12 @@ import threading
 import userfolders
 import utils
 
-import gmicplayer
+
 
 MONITOR_WIDTH = 500
 MONITOR_HEIGHT = 300 # initial value, this gets changed when material is loaded
 CLIP_FRAMES_DIR = "/clip_frames"
 RENDER_FRAMES_DIR = "/render_frames"
-PREVIEW_FILE = "preview.png"
-NO_PREVIEW_FILE = "fallback_thumb.png"
 
 MLT_PLAYER_MONITOR = "mlt_player_monitor" # This one used to play clips
 CAIRO_DRAW_MONITOR = "cairo_draw_monitor"  # This one used to show single frames
@@ -84,14 +83,13 @@ _session_id = None
 _window = None
 
 _player = None
-_effect_renderer = None
+_plugin_renderer = None
 
 _script_length = fluxity.DEFAULT_LENGTH
 
 _current_profile_name = None
 _current_profile_index = None # We necesserily would not need this too.
 
-_current_path = None
 _current_dimensions = None
 _current_fps = None
 
@@ -241,10 +239,9 @@ def _init_player_and_profile_data(profile_name):
     _current_fps = float(new_profile.frame_rate_num())/float(new_profile.frame_rate_den())
     _current_profile_index = mltprofiles.get_profile_index_for_profile(new_profile)
 
-    global _player, _current_path, _ticker
-    _current_path = respaths.FLUXITY_EMPTY_BG_RES_PATH
+    global _player, _ticker
     _ticker = utils.Ticker(_ticker_event, TICKER_DELAY)
-    _player = gmicplayer.GmicPlayer(_current_path, _ticker)
+    _player = gmicplayer.GmicPlayer(respaths.FLUXITY_EMPTY_BG_RES_PATH, _ticker)
 
 def _init_playback():
     _window.set_fps()
@@ -305,25 +302,7 @@ def get_render_frames_dir():
 def get_current_frame_file():
     return get_clip_frames_dir() + "/frame" + str(_player.current_frame()) + ".png"
 
-def get_preview_file():
-    return get_session_folder() + "/" + PREVIEW_FILE
-
-
-    
-"""
 #-------------------------------------------------- script setting and save/load
-#def script_menu_lauched(launcher, event):
-#    gmicscript.show_menu(event, script_menu_item_selected)
-
-def script_menu_item_selected(item, script):
-    if _window.action_select.get_active() == False:
-        _window.script_view.get_buffer().set_text(script.script)
-    else:
-        buf = _window.script_view.get_buffer()
-        buf.insert(buf.get_end_iter(), " " + script.script)
-    _window.preset_label.set_text(script.name)
-"""
-
 def save_script_dialog(callback):
     dialog = Gtk.FileChooserDialog(_("Save Script As"), None, 
                                    Gtk.FileChooserAction.SAVE, 
@@ -369,9 +348,6 @@ def _load_script_dialog_callback(dialog, response_id):
     else:
         dialog.destroy()
 
-
-
-    
 #-------------------------------------------------- menu
 def _hamburger_menu_callback(widget, msg):
     if msg == "load_script":
@@ -489,12 +465,12 @@ def _ticker_event():
 
 #-------------------------------------------------- render and preview
 def render_output():
-    global _effect_renderer
-    _effect_renderer = FluxityPluginRenderer()
-    _effect_renderer.start()
+    global _plugin_renderer
+    _plugin_renderer = FluxityPluginRenderer()
+    _plugin_renderer.start()
 
 def abort_render():
-    _effect_renderer.abort_render()
+    _plugin_renderer.abort_render()
 
 def render_preview_frame():
     buf = _window.script_view.get_buffer()
@@ -531,7 +507,7 @@ def render_preview_frame():
         _window.monitors_switcher.queue_draw()
         _window.preview_monitor.queue_draw()
         
-def render_range():
+def render_preview_range():
     buf = _window.script_view.get_buffer()
     script = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), False)
     profile_file_path = mltprofiles.get_profile_file_path(_current_profile_name)
@@ -582,8 +558,8 @@ def _shutdown():
     # Stop all possibly running threads and consumers
     if _player != None:
         _player.shutdown()
-    if _effect_renderer != None:
-        _effect_renderer.shutdown()
+    if _plugin_renderer != None:
+        _plugin_renderer.shutdown()
 
     # Delete session folder
     shutil.rmtree(get_session_folder())
@@ -707,7 +683,7 @@ class ScriptToolWindow(Gtk.Window):
         self.preview_button = Gtk.Button(_("Preview"))
         self.preview_button.connect("clicked", lambda w: render_preview_frame())
         self.preview_range_button = Gtk.Button(_("Preview Range"))
-        self.preview_range_button.connect("clicked", lambda w: render_range())
+        self.preview_range_button.connect("clicked", lambda w: render_preview_range())
         self.preview_range_button.set_sensitive(False)
             
         control_top = Gtk.HBox(False, 2)
@@ -962,10 +938,6 @@ class ScriptToolWindow(Gtk.Window):
         _add_separetor(menu)
         plugin_menu_item = Gtk.MenuItem.new_with_label(_("Load Plugin Code"))
         plugin_menu = Gtk.Menu()
-        # Remove current items
-        #items = _plugin_menu.get_children()
-        #for item in items:
-        #    _plugin_menu.remove(item)
         mediaplugin.fill_media_plugin_sub_menu(plugin_menu, _hamburger_menu_callback)
         plugin_menu_item.set_submenu(plugin_menu)
         plugin_menu_item.show_all()
