@@ -41,7 +41,6 @@ STATUS_MSG_FILE = "status"
 ABORT_MSG_FILE = "abort"
 RENDER_DATA_FILE = "render_data"
 
-
 _session_folder = None
 _clip_frames_folder_internal = None
 _rendered_frames_folder_internal = None

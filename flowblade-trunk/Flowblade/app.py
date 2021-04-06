@@ -363,10 +363,10 @@ def main(root_path):
             assoc_timeout_id = GObject.timeout_add(10, open_assoc_file)
         
     # SDL 2 consumer needs to created after Gtk.main() has run enough for window to be visble
-    #if editorstate.get_sdl_version() == editorstate.SDL_2: # needs more state considerion still
-    #    print "SDL2 timeout launch"
-    #    global sdl2_timeout_id
-    #    sdl2_timeout_id = GObject.timeout_add(1500, create_sdl_2_consumer)
+    if editorstate.get_sdl_version() == editorstate.SDL_2: # needs more state considerion still
+        print "SDL2 timeout launch"
+        global sdl2_timeout_id
+        sdl2_timeout_id = GObject.timeout_add(1500, create_sdl_2_consumer)
     
     # In PositionNumericalEntries we are using Gtk.Entry objects in a way that works for us nicely, but is somehow "error" for Gtk, so we just kill this.
     Gtk.Settings.get_default().set_property("gtk-error-bell", False)
@@ -439,10 +439,10 @@ def monkeypatch_callbacks():
     # These provide clues for further module refactoring 
 
 # ---------------------------------- SDL2 consumer
-#def create_sdl_2_consumer():
-#    GObject.source_remove(disk_cache_timeout_id)
-#    print "Creating SDL2 consumer..."
-#    editorstate.PLAYER().create_sdl2_video_consumer()
+def create_sdl_2_consumer():
+    GObject.source_remove(disk_cache_timeout_id)
+    print "Creating SDL2 consumer..."
+    editorstate.PLAYER().create_sdl2_video_consumer()
 
 # ---------------------------------- program, sequence and project init
 def get_assoc_file_path():

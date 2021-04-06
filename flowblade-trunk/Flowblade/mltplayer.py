@@ -72,9 +72,9 @@ class Player:
         Creates consumer with sdl output to a gtk+ widget.
         """
         # SDL 2 consumer is created after
-        #if editorstate.get_sdl_version() == editorstate.SDL_2:
-        #    print "refuse SDL1 consumer"
-        #    return
+        if editorstate.get_sdl_version() == editorstate.SDL_2:
+            print "refuse SDL1 consumer"
+            return
 
         print("Create SDL1 consumer...")
         # Create consumer and set params
@@ -88,7 +88,7 @@ class Player:
         # Hold ref to switch back from rendering
         self.sdl_consumer = self.consumer 
 
-    """
+
     def create_sdl2_video_consumer(self):
 
         widget = gui.editor_window.tline_display
@@ -110,7 +110,6 @@ class Player:
         self.sdl_consumer = self.consumer 
         
         self.connect_and_start()
-    """
     
     def set_scrubbing(self, scrubbing_active):
         if scrubbing_active == True:
@@ -123,7 +122,7 @@ class Player:
         Connects SDL output to display widget's xwindow
         """
         os.putenv('SDL_WINDOWID', str(widget.get_window().get_xid()))
-        #self.xid = widget.get_window().get_xid()
+        self.xid = widget.get_window().get_xid()
         Gdk.flush()
 
     def set_tracktor_producer(self, tractor):
@@ -141,7 +140,7 @@ class Player:
         self.consumer.stop()
         self.consumer.start()
    
-        """
+
         if self.consumer == None:
             return 
         if editorstate.get_sdl_version() == editorstate.SDL_2:
@@ -154,7 +153,7 @@ class Player:
         else:
             self.consumer.stop()
             self.consumer.start()
-        """
+
         
     def is_stopped(self):
         return (self.producer.get_speed() == 0)
