@@ -22,6 +22,9 @@
 Module handles Keyframe tool functionality
 """
 from gi.repository import Pango, PangoCairo, Gtk
+# ------------------------ Modify kf curve between two kf---------------------------------------
+from gi.repository import  Gdk
+# ------------- End of Modify kf curve between two kf---------------------------------------
 
 import cairo
 import math
@@ -879,8 +882,8 @@ class TLineKeyFrameEditor:
         PangoCairo.show_layout(cr, layout)
 
     def _draw_value_text_box(self, cr, x, y, text):
-        x = int(x)
-        y = int(y)
+        x = int(x) + 10
+        y = int(y) - 10
         cr.set_source_rgb(1, 1, 1)
         cr.select_font_face ("sans-serif",
                          cairo.FONT_SLANT_NORMAL,
@@ -925,6 +928,7 @@ class TLineKeyFrameEditor:
         """
         Mouse button callback
         """
+        ctrl_press = False # ---Horizontal keyframes-------------------------------------
         # Check if menu icons hit
         if self._oor_start_kf_hit(event.x, event.y) == True:
             self._show_oor_before_menu(gui.tline_canvas.widget, event)
@@ -946,7 +950,11 @@ class TLineKeyFrameEditor:
 
         self.mouse_x = lx
         self.mouse_y = ly
-
+        # ------------- Modify kf curve between two kf---------------------------------------
+        if ((event.get_state() & Gdk.ModifierType.CONTROL_MASK)): #SHIFT_MASK)):
+            ctrl_press = True
+            self.current_mouse_action = KF_DRAG_DISABLED
+        # ------------- End of Modify kf curve between two kf---------------------------------------
         if event.button == 3: # right mouse
             self.current_mouse_action = POSITION_DRAG
             
@@ -961,20 +969,38 @@ class TLineKeyFrameEditor:
             
         hit_kf = self._key_frame_hit(lx, ly)
 
+        #if hit_kf == None: # nothing was hit, add new keyframe and set it active
+            #frame =  self._get_frame_for_panel_pos(lx)
+            #value = round(self._get_value_for_panel_y(ly))
+            #self.add_keyframe(frame, value)
+            #hit_kf = self.active_kf_index 
+        #else: # some keyframe was pressed
+            #self.active_kf_index = hit_kf
+            #
+        #frame, value = self.keyframes[hit_kf]
+        #self.edit_value = round(value)
+        #self.current_clip_frame = frame
         if hit_kf == None: # nothing was hit, add new keyframe and set it active
             frame =  self._get_frame_for_panel_pos(lx)
             value = round(self._get_value_for_panel_y(ly))
-            self.add_keyframe(frame, value)
-            hit_kf = self.active_kf_index 
+         #----------------------------- Modify kf curve between two kf  ---------------------------
+            if ctrl_press is True:
+                hit_kf = -1
+            else:
+                self.add_keyframe(frame, value)
+                hit_kf = self.active_kf_index 
         else: # some keyframe was pressed
             self.active_kf_index = hit_kf
             
-        frame, value = self.keyframes[hit_kf]
-        self.edit_value = round(value)
-        self.current_clip_frame = frame
+        if hit_kf == - 1:
+            self.edit_value = round(value)
+        else:
+            frame, value = self.keyframes[hit_kf]
+            self.edit_value = round(value)
+            self.current_clip_frame = frame
         if hit_kf == 0:
             self.current_mouse_action = KF_DRAG_FRAME_ZERO_KF
-        else:
+        elif hit_kf != -1:
             self.current_mouse_action = KF_DRAG
             
             prev_frame, val = self.keyframes[hit_kf - 1]
@@ -984,6 +1010,19 @@ class TLineKeyFrameEditor:
                 self.drag_max = next_frame - 1
             except:
                 self.drag_max = self.clip_in + self.clip_length
+         #-----------------------------End of Modify kf curve between two kf  ---------------------------
+        #if hit_kf == 0:
+            #self.current_mouse_action = KF_DRAG_FRAME_ZERO_KF
+        #else:
+            #self.current_mouse_action = KF_DRAG
+            #
+            #prev_frame, val = self.keyframes[hit_kf - 1]
+            #self.drag_min = prev_frame  + 1
+            #try:
+                #next_frame, val = self.keyframes[hit_kf + 1]
+                #self.drag_max = next_frame - 1
+            #except:
+                #self.drag_max = self.clip_in + self.clip_length
                 
         updater.repaint_tline()
 
@@ -1023,6 +1062,9 @@ class TLineKeyFrameEditor:
                 self.current_clip_frame = frame
                 self.clip_editor_frame_changed(self.current_clip_frame)
 
+         #----------------------------  Modify kf curve between two kf    ---------------------------
+        self.edit_value = round(self._get_value_for_panel_y(ly))
+         #----------------------------- End of Modify kf curve between two kf   --------------------------- 
         updater.repaint_tline()
         
     def release_event(self, x,y):
@@ -1063,6 +1105,27 @@ class TLineKeyFrameEditor:
                 self.current_clip_frame = frame
                 self.clip_editor_frame_changed(self.current_clip_frame)
             self.update_property_value()
+
+        # -------------- Modify kf curve between two kf---------------------------------------
+        elif self.current_mouse_action == KF_DRAG_DISABLED :
+            clip = edit_data["clip"]
+            if self.frame_has_keyframe(clip.clip_out + 1) == -1: # Sometimes (?), there is no end keyframe : so we add it
+                self.add_keyframe(clip.clip_out + 1, self.keyframes[-1][1])
+
+            # Search the previous keyframe of event.x, remove it and add new with the value of the previous kf
+            i = self.prev_frame_line(lx) - 1
+            frame, val = self.keyframes[i]
+            self.keyframes.pop(i)
+            value = round(self._get_value_for_panel_y(ly))
+            self.add_keyframe(frame, value)
+            # Search the next keyframe of event.x, remove it and add new with the value of the next kf
+            i = self.next_frame_line(lx) + 1
+            frame, val = self.keyframes[i]
+            self.keyframes.pop(i)
+            value = round(self._get_value_for_panel_y(ly))
+            self.add_keyframe(frame, value)
+            self.update_property_value()
+        # --------------End of Modify kf curve between two kf-------------        
 
         self.edit_value = None
         
@@ -1588,4 +1651,25 @@ class TLineKeyFrameEditor:
         item.show()
         return item
 
+    # ---------------------------------- Modify kf curve between two kf ------------------
+    def prev_frame_line(self, lx):
+        """Find the index of the keyframe before the event.x."""
+        for i in range(0, len(self.keyframes)):
+            frame, val = self.keyframes[i]
+            frame_x = self._get_panel_pos_for_frame(frame)
+            if frame_x < lx:
+                continue
+            else:
+                return i
+
+    def next_frame_line(self, lx):
+        """Find the index of the keyframe after the event.x."""
+        for i in range(len(self.keyframes) - 1, -1, -1):
+            frame, val = self.keyframes[i]
+            frame_x = self._get_panel_pos_for_frame(frame)
+            if frame_x > lx:
+                continue
+            else:
+                return i
+    # ---------------------------------- End of Modify kf curve between two kf ------------------
 
