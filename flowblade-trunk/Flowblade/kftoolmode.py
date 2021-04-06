@@ -22,6 +22,9 @@
 Module handles Keyframe tool functionality
 """
 from gi.repository import Pango, PangoCairo, Gtk
+# ------------------------ Modify kf curve between two kf---------------------------------------
+from gi.repository import  Gdk
+# ------------- End of Modify kf curve between two kf---------------------------------------
 
 import cairo
 import math
@@ -115,10 +118,10 @@ def load_icons():
     NON_ACTIVE_KF_ICON = guiutils.get_cairo_image("kf_not_active_tool")    
 
 def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT, param_data=None):
-    # These can produce data for same objects we choose not to commit to updating
+    # These can produce data for same objects and we are not (currently) updating
     # clipeffectseditor/kftool with events from each other.
     clipeffectseditor.clear_clip()
-    
+
     clip_index = track.clips.index(clip)
 
     # Save data needed to do the keyframe edits.
@@ -151,7 +154,7 @@ def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT, param_data=None):
             data = {"clip":clip, 
                     "filter_info":filter_info,
                     "filter_edit_done_func":_filter_create_dummy_func}
-            action = edit.add_multipart_filter_action(data)
+            action = edit.add_filter_action(data)
             action.do_edit()
             ep = _get_volume_editable_property(clip, track, clip_index)
 
@@ -170,7 +173,7 @@ def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT, param_data=None):
             action = edit.add_filter_action(data)
             action.do_edit()
             ep = _get_brightness_editable_property(clip, track, clip_index)
-            
+
         edit_data["editable_property"] = ep
 
         _kf_editor = TLineKeyFrameEditor(ep, True, BRIGHTNESS_KF_EDIT)
@@ -194,7 +197,7 @@ def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT, param_data=None):
         filter_param_name = filter_object.info.name + ":" + disp_name
 
         _kf_editor = TLineKeyFrameEditor(ep, True, PARAM_KF_EDIT, filter_param_name)
-
+    
     tlinewidgets.set_edit_mode_data(edit_data)
     updater.repaint_tline()
 
@@ -204,26 +207,10 @@ def update_clip_frame(tline_frame):
         _kf_editor.set_and_display_clip_frame(clip_frame)
 
 def _get_volume_editable_property(clip, track, clip_index):
-    return _get_multipart_keyframe_ep_from_service(clip, track, clip_index, "volume")
-
+    return _get_param_editable_property_with_filter_search("volume", "level", clip, track, clip_index)
+    
 def _get_brightness_editable_property(clip, track, clip_index):
-    for i in range(0, len(clip.filters)):
-        filter_object = clip.filters[i]
-        if filter_object.info.mlt_service_id == "brightness":
-            editable_properties = propertyedit.get_filter_editable_properties(
-                                                           clip, 
-                                                           filter_object,
-                                                           i,
-                                                           track,
-                                                           clip_index)
-            for ep in editable_properties:          
-                try:
-                    if ep.name == "level":
-                        return ep
-                except:
-                    pass
-                    
-    return None
+    return _get_param_editable_property_with_filter_search("brightness", "level", clip, track, clip_index)
 
 def _get_param_editable_property(property_name, clip, track, clip_index, filter_object, filter_index):
     editable_properties = propertyedit.get_filter_editable_properties(
@@ -239,6 +226,25 @@ def _get_param_editable_property(property_name, clip, track, clip_index, filter_
         except:
             pass
                     
+    return None
+
+def _get_param_editable_property_with_filter_search(mlt_service_id, property_name, clip, track, clip_index):
+    for i in range(0, len(clip.filters)):
+        filter_object = clip.filters[i]
+        if filter_object.info.mlt_service_id == mlt_service_id:
+            editable_properties = propertyedit.get_filter_editable_properties(
+                                                           clip, 
+                                                           filter_object,
+                                                           i,
+                                                           track,
+                                                           clip_index)
+            for ep in editable_properties:          
+                try:
+                    if ep.name == property_name:
+                        return ep
+                except:
+                    pass
+        
     return None
     
 def _get_multipart_keyframe_ep_from_service(clip, track, clip_index, mlt_service_id):
@@ -260,7 +266,14 @@ def _get_multipart_keyframe_ep_from_service(clip, track, clip_index, mlt_service
                     
     return None
 
+def _has_deprecated_volume_filter(clip):
+    for i in range(0, len(clip.filters)):
+        filter_object = clip.filters[i]
+        if filter_object.info.multipart_filter == True and filter_object.info.mlt_service_id == "volume":
+            return True 
 
+    return False
+            
 def exit_tool():
     set_no_clip_edit_data()
     global enter_mode
@@ -307,6 +320,14 @@ def mouse_press(event, frame):
         return
 
     clip = track.clips[clip_index]
+
+
+    if _has_deprecated_volume_filter(clip) == True:
+        set_no_clip_edit_data()
+        primary_txt = _("This Clip has a deprecated Volume filter and cannot be edited with Keyframe Tool!")
+        secondary_txt = _("Flowblade 2.8 changed to use Volume filtes with dB values.\n\nOld style Volume filters will continue to function but they need be replaced\nto edit this Clip with Keyframe Tool.")
+        dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+        return
 
     init_tool_for_clip(clip, track)
 
@@ -361,7 +382,7 @@ def _tline_overlay(cr):
     
     # Get y position for clip's track
     ty_bottom = tlinewidgets._get_track_y(1) + current_sequence().tracks[1].height
-    ty_top = tlinewidgets._get_track_y(len(current_sequence().tracks) - 2) - 6 # -6 is hand correction, no idea why the math isn't getting correct pos top most track
+    ty_top = tlinewidgets._get_track_y(len(current_sequence().tracks) - 2) - 6 # -6 is hand correction, no idea why the math isn't getting correct pos for top most track
     ty_top_bottom_edge = ty_top + EDIT_AREA_HEIGHT
     off_step = float(ty_bottom - ty_top_bottom_edge) / float(len(current_sequence().tracks) - 2)
     ty_off = off_step * float(track.id - 1)
@@ -675,20 +696,13 @@ class TLineKeyFrameEditor:
             cr.line_to(xe, y)
             cr.stroke()
             
-            # 50
-            y = self._get_panel_y_for_value(50)
+            # -20
+            y = self._get_panel_y_for_value(-20.0)
             cr.set_source_rgb(*FRAME_SCALE_LINES)
             cr.move_to(xs, y)
             cr.line_to(xe, y)
             cr.stroke()
-            
-            # 100
-            y = self._get_panel_y_for_value(100)
-            cr.set_source_rgb(*FRAME_SCALE_LINES)
-            cr.move_to(xs, y)
-            cr.line_to(xe, y)
-            cr.stroke()
-            
+
         elif self.edit_type == BRIGHTNESS_KF_EDIT:
             # 0
             y = self._get_panel_y_for_value(0.0)
@@ -762,29 +776,31 @@ class TLineKeyFrameEditor:
             # 0
             y = self._get_panel_y_for_value(0.0)
             
-            text = "0"
+            text = "0 dB"
             cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF)
             cr.show_text(text)
             cr.move_to(xe + TEXT_X_OFF_END + 16, y - TEXT_Y_OFF)
             cr.show_text(text)
 
-            # 50
-            y = self._get_panel_y_for_value(50)
+            # -20
+            y = self._get_panel_y_for_value(-20.0)
 
-            text = "50"
+            text = "-20 dB"
             cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF + 8)
             cr.show_text(text)
             cr.move_to(xe + TEXT_X_OFF_END + 6, y - TEXT_Y_OFF + 8)
             cr.show_text(text)
             
-            # 100
-            y = self._get_panel_y_for_value(100)
+        
+            # -70
+            y = self._get_panel_y_for_value(-70.0)
             
-            text = "100"
-            cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF + 17)
+            text = "-70 dB"
+            cr.move_to(xs + TEXT_X_OFF, y - TEXT_Y_OFF)
             cr.show_text(text)
-            cr.move_to(xe + TEXT_X_OFF_END, y - TEXT_Y_OFF + 17)
+            cr.move_to(xe + TEXT_X_OFF_END, y - TEXT_Y_OFF)
             cr.show_text(text)
+
             
         elif self.edit_type == BRIGHTNESS_KF_EDIT:
             # 0
@@ -866,8 +882,8 @@ class TLineKeyFrameEditor:
         PangoCairo.show_layout(cr, layout)
 
     def _draw_value_text_box(self, cr, x, y, text):
-        x = int(x)
-        y = int(y)
+        x = int(x) + 10
+        y = int(y) - 10
         cr.set_source_rgb(1, 1, 1)
         cr.select_font_face ("sans-serif",
                          cairo.FONT_SLANT_NORMAL,
@@ -912,6 +928,7 @@ class TLineKeyFrameEditor:
         """
         Mouse button callback
         """
+        ctrl_press = False # ---Horizontal keyframes-------------------------------------
         # Check if menu icons hit
         if self._oor_start_kf_hit(event.x, event.y) == True:
             self._show_oor_before_menu(gui.tline_canvas.widget, event)
@@ -933,7 +950,11 @@ class TLineKeyFrameEditor:
 
         self.mouse_x = lx
         self.mouse_y = ly
-
+        # ------------- Modify kf curve between two kf---------------------------------------
+        if ((event.get_state() & Gdk.ModifierType.CONTROL_MASK)): #SHIFT_MASK)):
+            ctrl_press = True
+            self.current_mouse_action = KF_DRAG_DISABLED
+        # ------------- End of Modify kf curve between two kf---------------------------------------
         if event.button == 3: # right mouse
             self.current_mouse_action = POSITION_DRAG
             
@@ -948,20 +969,38 @@ class TLineKeyFrameEditor:
             
         hit_kf = self._key_frame_hit(lx, ly)
 
+        #if hit_kf == None: # nothing was hit, add new keyframe and set it active
+            #frame =  self._get_frame_for_panel_pos(lx)
+            #value = round(self._get_value_for_panel_y(ly))
+            #self.add_keyframe(frame, value)
+            #hit_kf = self.active_kf_index 
+        #else: # some keyframe was pressed
+            #self.active_kf_index = hit_kf
+            #
+        #frame, value = self.keyframes[hit_kf]
+        #self.edit_value = round(value)
+        #self.current_clip_frame = frame
         if hit_kf == None: # nothing was hit, add new keyframe and set it active
             frame =  self._get_frame_for_panel_pos(lx)
             value = round(self._get_value_for_panel_y(ly))
-            self.add_keyframe(frame, value)
-            hit_kf = self.active_kf_index 
+         #----------------------------- Modify kf curve between two kf  ---------------------------
+            if ctrl_press is True:
+                hit_kf = -1
+            else:
+                self.add_keyframe(frame, value)
+                hit_kf = self.active_kf_index 
         else: # some keyframe was pressed
             self.active_kf_index = hit_kf
             
-        frame, value = self.keyframes[hit_kf]
-        self.edit_value = round(value)
-        self.current_clip_frame = frame
+        if hit_kf == - 1:
+            self.edit_value = round(value)
+        else:
+            frame, value = self.keyframes[hit_kf]
+            self.edit_value = round(value)
+            self.current_clip_frame = frame
         if hit_kf == 0:
             self.current_mouse_action = KF_DRAG_FRAME_ZERO_KF
-        else:
+        elif hit_kf != -1:
             self.current_mouse_action = KF_DRAG
             
             prev_frame, val = self.keyframes[hit_kf - 1]
@@ -971,6 +1010,19 @@ class TLineKeyFrameEditor:
                 self.drag_max = next_frame - 1
             except:
                 self.drag_max = self.clip_in + self.clip_length
+         #-----------------------------End of Modify kf curve between two kf  ---------------------------
+        #if hit_kf == 0:
+            #self.current_mouse_action = KF_DRAG_FRAME_ZERO_KF
+        #else:
+            #self.current_mouse_action = KF_DRAG
+            #
+            #prev_frame, val = self.keyframes[hit_kf - 1]
+            #self.drag_min = prev_frame  + 1
+            #try:
+                #next_frame, val = self.keyframes[hit_kf + 1]
+                #self.drag_max = next_frame - 1
+            #except:
+                #self.drag_max = self.clip_in + self.clip_length
                 
         updater.repaint_tline()
 
@@ -1010,6 +1062,9 @@ class TLineKeyFrameEditor:
                 self.current_clip_frame = frame
                 self.clip_editor_frame_changed(self.current_clip_frame)
 
+         #----------------------------  Modify kf curve between two kf    ---------------------------
+        self.edit_value = round(self._get_value_for_panel_y(ly))
+         #----------------------------- End of Modify kf curve between two kf   --------------------------- 
         updater.repaint_tline()
         
     def release_event(self, x,y):
@@ -1050,6 +1105,27 @@ class TLineKeyFrameEditor:
                 self.current_clip_frame = frame
                 self.clip_editor_frame_changed(self.current_clip_frame)
             self.update_property_value()
+
+        # -------------- Modify kf curve between two kf---------------------------------------
+        elif self.current_mouse_action == KF_DRAG_DISABLED :
+            clip = edit_data["clip"]
+            if self.frame_has_keyframe(clip.clip_out + 1) == -1: # Sometimes (?), there is no end keyframe : so we add it
+                self.add_keyframe(clip.clip_out + 1, self.keyframes[-1][1])
+
+            # Search the previous keyframe of event.x, remove it and add new with the value of the previous kf
+            i = self.prev_frame_line(lx) - 1
+            frame, val = self.keyframes[i]
+            self.keyframes.pop(i)
+            value = round(self._get_value_for_panel_y(ly))
+            self.add_keyframe(frame, value)
+            # Search the next keyframe of event.x, remove it and add new with the value of the next kf
+            i = self.next_frame_line(lx) + 1
+            frame, val = self.keyframes[i]
+            self.keyframes.pop(i)
+            value = round(self._get_value_for_panel_y(ly))
+            self.add_keyframe(frame, value)
+            self.update_property_value()
+        # --------------End of Modify kf curve between two kf-------------        
 
         self.edit_value = None
         
@@ -1575,4 +1651,25 @@ class TLineKeyFrameEditor:
         item.show()
         return item
 
+    # ---------------------------------- Modify kf curve between two kf ------------------
+    def prev_frame_line(self, lx):
+        """Find the index of the keyframe before the event.x."""
+        for i in range(0, len(self.keyframes)):
+            frame, val = self.keyframes[i]
+            frame_x = self._get_panel_pos_for_frame(frame)
+            if frame_x < lx:
+                continue
+            else:
+                return i
+
+    def next_frame_line(self, lx):
+        """Find the index of the keyframe after the event.x."""
+        for i in range(len(self.keyframes) - 1, -1, -1):
+            frame, val = self.keyframes[i]
+            frame_x = self._get_panel_pos_for_frame(frame)
+            if frame_x > lx:
+                continue
+            else:
+                return i
+    # ---------------------------------- End of Modify kf curve between two kf ------------------
 

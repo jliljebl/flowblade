@@ -41,8 +41,8 @@ import userfolders
 import utils
 
 
-SAVEFILE_VERSION = 5 # this is changed when backwards incompatible changes are introduced 
-                     # to project files to allow for fixing them at load time
+SAVEFILE_VERSION = 5 # This has freezed at 5 for long time, 
+                     # we have used just hasattr() instead.
 
 FALLBACK_THUMB = "fallback_thumb.png"
 
@@ -60,15 +60,14 @@ EVENT_PROFILE_CHANGED_SAVE = 7
 
 thumbnailer = None
 
-# Look to drop unused, we're not using most of this stuff.
+# Default values for project properties.
 _project_properties_default_values = {appconsts.P_PROP_TLINE_SHRINK_VERTICAL:False, # Shink timeline max height if < 9 tracks
-                                      appconsts.P_PROP_DISSOLVE_GROUP_FADE_IN:-1, # not used, dropped feature (auto fades on creation)
-                                      appconsts.P_PROP_DISSOLVE_GROUP_FADE_OUT:-1, # not used, dropped feature (auto fades on creation)
-                                      appconsts.P_PROP_ANIM_GROUP_FADE_IN:-1, # not used, dropped feature (auto fades on creation)
-                                      appconsts.P_PROP_ANIM_GROUP_FADE_OUT:-1, # not used, dropped feature (auto fades on creation)
                                       appconsts.P_PROP_LAST_RENDER_SELECTIONS: None, # tuple for last render selections data
-                                      appconsts.P_PROP_TRANSITION_ENCODING: None,  # tuple for last renderered transition render selections data
-                                      appconsts.P_PROP_AUTO_FOLLOW: False} # not here anymore, this is now function of current_sequence().compositing_mode
+                                      appconsts.P_PROP_TRANSITION_ENCODING: None, # tuple for last renderered transition render selections data
+                                      appconsts.P_PROP_DEFAULT_FADE_LENGTH: 10}  
+
+# Flag used to decide if user should be prompt to save project on project exit.
+media_files_changed_since_last_save = False
 
 class Project:
     """
@@ -94,7 +93,7 @@ class Project:
         self.proxy_data = miscdataobjects.ProjectProxyEditingData()
         self.update_media_lengths_on_load = False # old projects < 1.10 had wrong media length data which just was never used.
                                                   # 1.10 needed that data for the first time and required recreating it correctly for older projects
-        self.project_properties = {} # Key value pair for misc persistent properties, dict is used that we can add thesse without worrying loading
+        self.project_properties = {} # Key value pair for misc persistent properties, dict is used that we can add these without worrying loading
 
         self.SAVEFILE_VERSION = SAVEFILE_VERSION
         
@@ -166,6 +165,9 @@ class Project:
         """
         Adds media file or color clip to project data structures.
         """
+        global media_files_changed_since_last_save
+        media_files_changed_since_last_save = True
+        
         self.media_files[media_object.id] = media_object
         self.next_media_file_id += 1
 
@@ -192,7 +194,20 @@ class Project:
                 return media_file
         return None
 
+    def get_media_file_for_second_path(self, file_path):
+        for key, media_file in list(self.media_files.items()):
+            if media_file.type == appconsts.PATTERN_PRODUCER:
+                continue
+            print(file_path, media_file.path, media_file.second_file_path)
+            
+            if file_path == media_file.second_file_path:
+                return media_file
+        return None
+        
     def delete_media_file_from_current_bin(self, media_file):
+        global media_files_changed_since_last_save
+        media_files_changed_since_last_save = True
+
         self.c_bin.file_ids.pop(media_file.id)
 
     def get_current_proxy_paths(self):
@@ -379,7 +394,7 @@ class MediaFile:
         folder, file_name = os.path.split(self.path)
         proxy_md_key = self.path + str(proxy_width) + str(proxy_height)
         if hasattr(self, "use_unique_proxy"): # This may have been added in proxyediting.py to prevent interfering with existing projects
-            proxy_md_key = proxy_md_key + os.urandom(16)
+            proxy_md_key = proxy_md_key + str(os.urandom(16))
         md_str = hashlib.md5(proxy_md_key.encode('utf-8')).hexdigest()
         return str(userfolders.get_render_dir() + "/"+ appconsts.PROXIES_DIR + md_str + "/" + file_name)
 

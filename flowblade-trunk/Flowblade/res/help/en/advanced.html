@@ -16,7 +16,7 @@
 <div id="toccontent">
 
 <div id="advtoc">
-<div class="subject-header">Advanced Editing</div>
+<div class="subject-header">Advanced Editing Features</div>
 </div>
 
 <div id="toc"></div>
@@ -64,56 +64,7 @@ You can import Media Items from another Project.
 
 
 
-<h2>2. Compound Clips </h2>
-
-<p>
-A <b>Compound Clip</b> is a single clip created by combining multiple clips and compositors in to a single media item.
-</p>
-
-<p>
-In Flowblade Compound Clips are <i>implemented by creating an MLT XML file</i> that is saved in a hidden folder. Note that it is currently not possible to unpack a Compound Clip back to its components.
-</p>
-
-<p>
-Compound Clips are useful when some complex sequence is more conveniently handled as a single unit.
-</p>
-
-<h3> Creating Compound Clip from Selection</h3>
-
-<ol>
-<li> Select 2 or more adjacent clips from a single track.</li>
-<li> Select <b>Project->Create Compound Clip->From Selected Clips</b></li>
-<li> Give a name for the new Media Item in the dialog.</li>
-<li> A new Media Item appears in the current Bin.</li>
-</ol>
-
-<h3> Creating Compound Clip from Sequence</h3>
-
-<ol>
-<li> Select <b>Project->Create Compound Clip->From Current Sequence</b></li>
-<li> Give a name for the new Media Item in the dialog.</li>
-<li> A new Media Item appears in the current Bin.</li>
-</ol>
-
-<h3> Creating audio synced Compound Clip from two Media Items</h3>
-
-<ol>
-<li> Select 2 Media Items in Media panel.</b></li>
-<ul>
-<li> The expected case is to select <b>1 Video and 1 Audio Clip</b>.</li>
-<li> If you select <b>2 Video Clips</b> then which is used as video depends on selection order.</li>
-<li> Audio from clip treated as video is muted.</li>
-</ul>
-<li> Select <b>Project->Create Compound Clip->Audio Sync Merge Clip From 2 Media Items</b></li>
-<li> If audio sync is successful a dialog  appers. Give a name for the new Media Item in the dialog.</li>
-<li> A new Media Item appears in the current Bin.</li>
-</ol>
-
-<div class="note">
-Audio synching looks for best matemathical match between two audio waveforms, so <b>audio syncing non-matching audio will produce random results.</b>
-</div>
-
-<h2>3. Timeline Audio Syncing</h2>
+<h2>2. Timeline Audio Syncing</h2>
 
 <p>
 You can make a clip to move to a position in timeline in which its audio is in sync with audio of another clip on timeline.
@@ -137,7 +88,7 @@ Audio synching looks for best matemathical match between two audio waveforms, so
 </div>
 
 
-<h2>4. Slow / Fast Motion and Reverse Clips</h2>
+<h2>3. Slow / Fast Motion and Reverse Clips</h2>
 
 <p>
 In Flowblade motion effects are achived by <b>rendering slow / fast motion  or reverse versions of video clips</b> and placing those on the timeline.
@@ -176,7 +127,7 @@ In Flowblade motion effects are achived by <b>rendering slow / fast motion  or r
 <li> Click <b>Render</b> button to create a new reverse Clip</li>
 </ol>
 
-<h2>5. Clip Parenting</h2>
+<h2>4. Clip Parenting</h2>
 
 <p>
 In Flowblade Movie Editor you can <b>set a clip's positions to follow another clip's positions</b> on request.
@@ -226,6 +177,74 @@ In Flowblade Movie Editor you can <b>set a clip's positions to follow another cl
 <li> Edit audio split using Two Roll Trim mode to maintain sync with parent clip.</li>
 <li> Resync Audio as needed.</li>
 </ul>
+
+<h2>5. Timeline Rendering</h2>
+
+<p>
+<b>Timeline rendering</b> is way to achieve smooth playback on areas of timeline that place to heavy demands on system resources for acceptable playback.
+</p>
+
+
+
+<h3>Turning timeline rendering on</h3>
+<p>
+ There are two places user can swicth timeline rendering on
+<ul>
+<li>Menu in bottom left corner.</li>
+<li>Menu item <b>Sequence->Timeline Rendering</b>.</li>
+</ul>
+</p>
+
+<img src="tlinerender.png">
+
+<p>
+<i>Timeline render menu launcher at left, rendered and unrendered range shown on Timeline Render Control Strip.</i>
+</p>
+
+<h3>Timeline Render Modes</h3> 
+<p>
+User can select from two different modes when activating timeline rendering.
+<ul> 
+<li><b>Render Auto</b>. In this mode defined ranges are rendered automatically if timeline content in range changes.</li> 
+<li><b>Render On Request</b>. In this mode renges are renderd on user request.</li>
+</ul>
+</p>
+
+
+<h3>User actions</h3> 
+<p>
+<ul> 
+<li><b>Creating render range</b>. Drag with <i>Mouse Left</i> on Timeline Render Control Strip to create new range.</li>
+<li><b>Making render range bigger</b>. Drag with <i>Mouse Left</i> on Timeline Render Control Strip from center over one side to make range larger in that direction. To make range larger on both sides drag over current full range.</li>
+<li><b>Combining render ranges</b>. Drag with <i>Mouse Left</i> over multiple ranges.</li>
+<li><b>Deleting render ranges</b>. Click on range to select it and press Delete key or click with <i>Mouse Right</i> on Timeline Render Control Strip and select item from menu to delete range.</li>
+<li><b>Requesting render in Mode 'Render On Request'</b>. Double click on render range or click with <i>Mouse Right</i> on Timeline Render Control Strip and select item from menu render range.</li>
+</ul>
+</p>
+
+<h3>Settings</h3> 
+
+<p>
+Timeline rendering encoding can be selected from <b>Sequence->Timeline Rendering->Settings</b>.
+</p>
+
+
+<h2>6. Filter Masking</h2>
+<p>
+Filter masking allows for one or more filters to be applied only on some user defined part of image</b>.
+</p>
+
+<img src="filter_mask.png">
+<p>
+<i>Filter masking menu launch button above 'Add Filter Mask' tootip, Mask - Begin and Mask - End filters defining which filters are masked, on the right image with masked Sepia filter.</i>
+</p>
+
+<ol>
+<li> Click Filter Mask Menu launch button and select if you wish to apply mask on one or all filters.</li>
+<li> In submenu select between <b>Alpha Shape</b> and <b>Luma Key</b> masks.</li>
+<li> Edit mask parameters in filter edit panel for <b>Mask - Begin</b> filter.</li>
+<li> You can drag and drop filters in and out of the masked range of filter stack.</li>
+<ul>
 
 </div>
 </div>

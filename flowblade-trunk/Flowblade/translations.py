@@ -63,7 +63,7 @@ def init_languages():
         # Use translations in program folder first if NOT running from installation
         # Were using Russian as test language
         locale_file = respaths.LOCALE_PATH + "ru/LC_MESSAGES/flowblade.mo"
-        if os.path.isfile(locale_file): # fi is the translation controlled by program author
+        if os.path.isfile(locale_file):
             print("Found translations at " +  respaths.LOCALE_PATH + ", using those.")
             locale_path = respaths.LOCALE_PATH
         else:
@@ -94,7 +94,7 @@ def init_languages():
         lang = gettext.translation(APP_NAME, locale_path, languages=langs, fallback=True)
 
     # Un-comment for translations tests
-    #lang = gettext.translation(APP_NAME, locale_path, languages=["it"], fallback=True)
+    #lang = gettext.translation(APP_NAME, locale_path, languages=["ru"], fallback=True)
 
     lang.install(APP_NAME) # makes _() a build-in available in all modules without imports
 
@@ -152,7 +152,7 @@ def load_filters_translations():
     filter_names["Mono to Stereo"]= _("Mono to Stereo")
     filter_names["Swap Channels"]= _("Swap Channels")
 
-    filter_names["Pitchshifter"]= _("Pitchshifter")
+    filter_names["Pitchshifter - AM"]= _("Pitchshifter - AM")
     filter_names["Distort - Barry's Satan"]= _("Distort - Barry's Satan")
     filter_names["Frequency Shift - Bode/Moog"]= _("Frequency Shift - Bode/Moog")
     filter_names["Equalize - DJ 3-band"]= _("Equalize - DJ 3-band")
@@ -278,6 +278,10 @@ def load_filters_translations():
     filter_names["Fade In"] = _("Fade In")
     filter_names["Fade Out"] = _("Fade Out")
     filter_names["Fade In / Fade Out"] = _("Fade In / Fade Out")
+    filter_names["Lines"] = _("Lines")
+    filter_names["Dust"] = _("Dust")
+    filter_names["Pan Left Channel"] = _("Pan Left Channel")
+    filter_names["Pan Right Channel"] = _("Pan Right Channel")
     
     # param names
     global param_names
@@ -298,7 +302,7 @@ def load_filters_translations():
     param_names["Size Y"] = _("Size Y")
     param_names["Tilt"] = _("Tilt")
     param_names["Trans. Width"] = _("Trans. Width")
-    param_names["Volume"] = _("Volume")
+    param_names["Volume dB"] = _("Volume dB")
     param_names["Left/Right"] = _("Left/Right")
     param_names["Left/Right"] = _("Left/Right")
     param_names["Dry/Wet"] = _("Dry/Wet")
@@ -618,6 +622,13 @@ def load_filters_translations():
     param_names["Rotation"]= _("Rotation")
     param_names["X Position"] = _("X Position")
     param_names["Y Position"] = _("Y Position")
+    param_names["Max Diameter"] = _("Max Diameter")
+    param_names["Max Count"] = _("Max Count")
+    param_names["Max Count"] = _("Max Count")
+    param_names["Line Width"] = _("Line Width")
+    param_names["Number"] = _("Number")
+    param_names["Darker"] = _("Darker")
+    param_names["Lighter"] = _("Lighter")
 
     # Combo options
     global combo_options

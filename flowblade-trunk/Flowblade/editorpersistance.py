@@ -170,7 +170,9 @@ def get_recent_projects():
 def update_prefs_from_widgets(widgets_tuples_tuple):
     # Aug-2019 - SvdB - BB - Replace double_track_hights by double_track_hights
     # Unpack widgets
+    # Toolbar preferences panel for free elements and order
     gen_opts_widgets, edit_prefs_widgets, playback_prefs_widgets, view_prefs_widgets, performance_widgets = widgets_tuples_tuple
+    # End of Toolbar preferences panel for free elements and order
 
     # Aug-2019 - SvdB - AS - added autosave_combo
     default_profile_combo, open_in_last_opened_check, open_in_last_rendered_check, undo_max_spin, load_order_combo, \
@@ -181,15 +183,11 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     gfx_length_spin, cover_delete, mouse_scroll_action, hide_file_ext_button, \
     hor_scroll_dir, effects_editor_clip_load = edit_prefs_widgets
 
-# ------------------------------ timeline_start_end_button
     auto_center_check, play_pause_button, timeline_start_end_button, auto_center_on_updown, \
     ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips = playback_prefs_widgets
-# -------------------------------End of timeline_start_end_button
-#    auto_center_check, play_pause_button, auto_center_on_updown, \
-#    ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips = playback_prefs_widgets
-
-    force_language_combo, disp_splash, buttons_style, theme, theme_combo, audio_levels_combo, \
-    window_mode_combo, full_names, double_track_hights, top_row_layout, layout_monitor = view_prefs_widgets
+    
+    force_language_combo, disp_splash, buttons_style, theme, theme_fallback_combo, audio_levels_combo, \
+    window_mode_combo, full_names, double_track_hights, top_row_layout, layout_monitor, colorized_icons = view_prefs_widgets
 
     # Jan-2017 - SvdB
     perf_render_threads, perf_drop_frames = performance_widgets
@@ -225,7 +223,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.display_splash_screen = disp_splash.get_active()
     prefs.buttons_style = buttons_style.get_active() # styles enum values and widget indexes correspond
 
-    prefs.theme_fallback_colors = theme_combo.get_active()
+    prefs.theme_fallback_colors = theme_fallback_combo.get_active()
     prefs.display_all_audio_levels = (audio_levels_combo.get_active() == 0)
     prefs.global_layout = window_mode_combo.get_active() + 1 # +1 'cause values are 1 and 2
     # Jan-2017 - SvdB
@@ -236,7 +234,12 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.center_on_arrow_move = auto_center_on_updown.get_active()
     prefs.double_track_hights = (double_track_hights.get_active() == 1)
     prefs.playback_follow_move_tline_range = follow_move_range.get_active()
-    prefs.theme = theme.get_active()
+    if theme.get_active() == 1: # The displayed options indeces do not correspond with theme const values.
+        prefs.theme = appconsts.FLOWBLADE_THEME_GRAY
+    elif theme.get_active() == 0: # The displayed options indeces do not correspond with theme const values.
+        prefs.theme = appconsts.FLOWBLADE_THEME_NEUTRAL
+    else:    
+        prefs.theme = theme.get_active() - 2
     prefs.top_row_layout = top_row_layout.get_active()
     # Aug-2019 - SvdB - AS
     prefs.auto_save_delay_value_index = autosave_combo.get_active()
@@ -244,6 +247,9 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     if len(render_folder_select.get_filenames()) != 0:
         prefs.default_render_directory = render_folder_select.get_filename()
     prefs.disk_space_warning = disk_cache_warning_combo.get_active()
+
+    # --------------------------------- Colorized icons
+    prefs.colorized_icons = colorized_icons.get_active()
 
 def get_graphics_default_in_out_length():
     in_fr = int(15000/2) - int(prefs.default_grfx_length/2)
@@ -268,16 +274,16 @@ class EditorPreferences:
         self.default_profile_name = 10 # index of default profile
         self.auto_play_in_clip_monitor = False  # DEPRECATED, NOT USER SETTABLE ANYMORE
         self.auto_center_on_play_stop = False
-        self.thumbnail_folder = None # DEPRECATED, this set XDG variables now
+        self.thumbnail_folder = None # DEPRECATED, this is set by XDG variables now.
         self.hidden_profile_names = []
         self.display_splash_screen = True
         self.auto_move_after_edit = False
         self.default_grfx_length = 250 # value is in frames
         self.track_configuration = 0 # DEPRECATED
         self.AUTO_SAVE_OPTS = None # not used, these are cerated and translated else where
-        self.tabs_on_top = False
+        self.tabs_on_top = False # DEPRECATED, we have positions_tabs now that we possibly have possibly multiple notebooks 
         self.midbar_tc_left = True
-        self.default_layout = True
+        self.default_layout = True # DEPRECATED, NOT USED ANYMORE
         self.exit_allocation = (0, 0)
         self.media_columns = 3
         self.app_v_paned_position = 500 # Paned get/set position value
@@ -329,7 +335,7 @@ class EditorPreferences:
         self.show_alpha_info_message = True
         self.playback_follow_move_tline_range = True
         self.active_tools = [1, 2, 3, 4, 5, 6, 7]
-        self.top_level_project_panel = True
+        self.top_level_project_panel = True # DEPRECATED, NOT USER SETTABLE ANYMORE
         self.theme = appconsts.FLOWBLADE_THEME
         self.dnd_action = appconsts.DND_OVERWRITE_NON_V1
         self.top_row_layout = appconsts.THREE_PANELS_IF_POSSIBLE
@@ -350,3 +356,15 @@ class EditorPreferences:
         self.open_jobs_panel_on_add = True
         self.render_jobs_sequentially = True
         self.disk_space_warning = 1 #  [off, 500MB,1GB, 2GB], see preferenceswindow.py
+        # Toolbar preferences panel for free elements and order
+        self.groups_tools =  [  appconsts.WORKFLOW_LAUNCH, appconsts.TOOL_SELECT, appconsts.BUTTON_GROUP_ZOOM, \
+                                appconsts.BUTTON_GROUP_UNDO, appconsts.BUTTON_GROUP_TOOLS, appconsts.BUTTON_GROUP_EDIT, \
+                                appconsts.BUTTON_GROUP_DELETE ,  appconsts.BUTTON_GROUP_SYNC_SPLIT, \
+                                appconsts.BUTTON_GROUP_MONITOR_ADD, appconsts.BIG_TIME_CODE]
+        self.cbutton  = [True, True, True, True, True, True, True, True, True, True] # Toolbar objects active state
+        self.colorized_icons = False
+        self.tools_selection = appconsts.TOOL_SELECTOR_IS_MENU
+        self.panel_positions = None
+        self.force_small_midbar = False
+        self.positions_tabs = None
+        

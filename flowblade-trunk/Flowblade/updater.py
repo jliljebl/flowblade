@@ -579,10 +579,10 @@ def update_position_bar():
     else:
         gui.pos_bar.update_display_from_producer(gui.pos_bar.producer)
     
-def update_kf_editor():
+def update_kf_editors_positions():
     clipeffectseditor.update_kfeditors_positions()
 
-def clear_kf_editor():
+def clear_effects_editor_clip():
     clipeffectseditor.clear_clip()
 
 # ----------------------------------------- marks
@@ -594,7 +594,7 @@ def display_marks_tc():
 
 # ----------------------------------------------- clip editors    
 def clear_clip_from_editors(clip):
-    if clipeffectseditor.clip == clip:
+    if clipeffectseditor.clip_is_being_edited(clip):
         clipeffectseditor.clear_clip()
 
 def open_clip_in_effects_editor(data):
@@ -603,7 +603,7 @@ def open_clip_in_effects_editor(data):
     index = current_sequence().get_clip_index(track, frame)
 
     clipeffectseditor.set_clip(clip, track, index)
-    
+
 # ----------------------------------------- edit modes
 def set_trim_mode_gui():
     """

@@ -22,8 +22,7 @@ import appconsts
 
 """
 Module for data objects used my multiple modules.
-
-BTW, dis is world's dummest module, look to remove.
+This is world's dumbest module, look to remove.
 """
 
 class ProjectProxyEditingData:

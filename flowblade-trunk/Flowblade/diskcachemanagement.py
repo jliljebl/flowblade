@@ -131,7 +131,7 @@ class DiskFolderManagementPanel:
         else:
             secondary_text = _("Destroying this data may require parts of it to be recreated later.")
             
-        dialogutils. warning_confirmation(self.warning_confirmation, primaty_text, secondary_text, gui.editor_window.window, None, False, True)
+        dialogutils.warning_confirmation(self.warning_confirmation, primaty_text, secondary_text, gui.editor_window.window, None, False, True)
 
     def destroy_guard_toggled(self, check_button):
         if check_button.get_active() == True:

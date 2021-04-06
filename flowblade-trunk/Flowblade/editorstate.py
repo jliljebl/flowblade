@@ -60,7 +60,7 @@ edit_mode = INSERT_MOVE
 # Ripple Trim tool is ONE_ROLL_TRIM mode + True on this flag
 trim_mode_ripple = False
 
-# Box tool OVERWRITE_MOVE tool mode + True on this flag
+# Box tool is OVERWRITE_MOVE tool mode + True on this flag
 overwrite_mode_box = False
 
 # Media files view filter for selecting displayed media objects in bin
@@ -93,7 +93,7 @@ SCREEN_WIDTH = -1
 # Runtime environment data
 gtk_version = None
 mlt_version = None
-appversion = "2.4.0"
+appversion = "2.8.0"
 RUNNING_FROM_INSTALLATION = 0
 RUNNING_FROM_DEV_VERSION = 1
 RUNNING_FROM_FLATPAK = 2
@@ -123,6 +123,7 @@ display_clip_media_thumbnails = True
 
 # Flag for window being in fullscreen mode
 fullscreen = False
+fullscreen_second_window = False
 
 # Trim view mode
 show_trim_view = appconsts.TRIM_VIEW_OFF
@@ -139,6 +140,10 @@ consumer_sdl_version = SDL_1
 
 # Trim clips cache for quicker inits, path -> clip
 _trim_clips_cache = {}
+
+# Normal installs and Flatpaks have G'Mic bin in different locations.
+# Value set in gmic.py module. 
+gmic_path = None
 
 def current_is_move_mode():
     if ((edit_mode == INSERT_MOVE) or (edit_mode == OVERWRITE_MOVE) or (edit_mode == MULTI_MOVE)):
@@ -195,11 +200,7 @@ def get_compositing_mode():
         return project.c_seq.compositing_mode
 
 def get_tline_rendering_mode():
-    if project.c_seq == None:
-        print ("get_compositing_mode(), trying to get timeline render mode when no current sequence available!") 
-        return appconsts.TLINE_RENDERING_OFF
-    else:
-        return project.c_seq.tline_render_mode
+    return tline_render_mode
         
 def get_track(index):
     return project.c_seq.tracks[index]
@@ -301,7 +302,7 @@ def clear_trim_clip_cache():
 
 
 # Called from tline "motion_notify_event" when drag is not on.
-# This is only used by multitrimmode.py to have data to enter trims with keyboard correctly
+# This is only used by multitrimmode.py to have data to enter trims with keyboard correctly.
 def set_mouse_current_non_drag_pos(x, y):
     global last_mouse_x, last_mouse_y
     last_mouse_x = x

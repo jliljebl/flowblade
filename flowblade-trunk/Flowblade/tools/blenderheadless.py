@@ -32,7 +32,11 @@ from gi.repository import GLib
 import locale
 import mlt
 import os
+from os import listdir
+from os.path import isfile, join
 import pickle
+from pathlib import Path
+import re
 import signal
 import subprocess
 import sys
@@ -85,13 +89,13 @@ def abort_render(session_id):
 
 # --------------------------------------------------- render process
 def main(root_path, session_id, project_path, range_in, range_out, profile_desc):
+    print(root_path, session_id, project_path, range_in, range_out, profile_desc)
 
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION
     except:
         editorstate.mlt_version = "0.0.99" # magic string for "not found"
 
-    ccrutils.prints_to_log_file("/home/janne/blenderlogg")
     # Set paths.
     respaths.set_paths(root_path)
 
@@ -123,23 +127,41 @@ def main(root_path, session_id, project_path, range_in, range_out, profile_desc)
     ccrutils.init_session_folders(session_id)
     ccrutils.load_render_data()
     
-    log_path = GLib.get_user_cache_dir() + "/blenderrenderlog"
-    FLOG = open(log_path, 'w')
-    render_setup_script = respaths.ROOT_PATH + "/tools/blenderrendersetup.py"
-    blender_launch = "/usr/bin/blender -b " + project_path + " -P " + render_setup_script
-
     global _start_time
     _start_time = time.monotonic()
 
-    # Delete old frames
-    rendered_frames_folder = ccrutils.rendered_frames_folder()
-    for frame_file in os.listdir(rendered_frames_folder):
-        file_path = os.path.join(rendered_frames_folder, frame_file)
-        os.remove(file_path)
-            
-    p = subprocess.Popen(blender_launch, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG, preexec_fn=os.setsid)
+    render_data = ccrutils.get_render_data()
 
-    manager_thread = ProgressPollingThread(range_in, range_out, p)
+    # Delete old rendered frames for non-preview renders.
+    if render_data.is_preview_render == False:
+        rendered_frames_folder = ccrutils.rendered_frames_folder()
+        for frame_file in os.listdir(rendered_frames_folder):
+            file_path = os.path.join(rendered_frames_folder, frame_file)
+            os.remove(file_path)
+    else: 
+        # For preview render delete preview frames
+        preview_frames_folder =  ccrutils.preview_frames_folder()
+        for frame_file in os.listdir(preview_frames_folder):
+            file_path = os.path.join(preview_frames_folder, frame_file)
+            os.remove(file_path)
+
+    log_path = GLib.get_user_cache_dir() + "/blenderrenderlog"
+    FLOG = open(log_path, 'w')
+
+    # Create command list and launch process.
+    render_setup_script = respaths.ROOT_PATH + "/tools/blenderrendersetup.py"
+
+    command_list = ["/usr/bin/blender", "-b", project_path, "-P", render_setup_script]
+
+    # Flatpaks need some different commands and paths. 
+    if hasattr(render_data, "is_flatpak_render"):
+        if render_data.is_flatpak_render == True:
+            render_setup_script = utils.get_flatpak_real_path_for_app_files(render_setup_script)
+            command_list = ["flatpak-spawn", "--host", "/usr/bin/blender", "-b", project_path, "-P", render_setup_script]
+            
+    p = subprocess.Popen(command_list, stdin=FLOG, stdout=FLOG, stderr=FLOG, preexec_fn=os.setsid)
+
+    manager_thread = ProgressPollingThread(range_in, range_out, p, render_data.is_preview_render)
     manager_thread.start()
     
     p.wait()
@@ -147,10 +169,26 @@ def main(root_path, session_id, project_path, range_in, range_out, profile_desc)
     if manager_thread.abort == True:
         return
 
-    render_data = ccrutils.get_render_data()
 
     # Render video
     if render_data.do_video_render == True:
+
+        # Change file numbering to start from 0000 to please ffmpeg
+        rendered_folder = ccrutils.rendered_frames_folder() + "/"
+
+        files = [ f for f in listdir(rendered_folder) if isfile(join(rendered_folder,f)) ]
+        files.sort(key=lambda var:[int(x) if x.isdigit() else x for x in re.findall(r'[^0-9]|[0-9]+', var)])
+
+        number = 0
+        for rendered_file in files:
+            source_file = rendered_folder + rendered_file
+            
+            file_number = '{0:04d}'.format(number)
+            dst_file = rendered_folder + "videoframe" + file_number + ".png"
+            Path(source_file).rename(dst_file)
+            
+            number += 1
+    
         # Render consumer
         args_vals_list = toolsencoding.get_args_vals_list_for_render_data(render_data)
         profile = mltprofiles.get_profile_for_index(render_data.profile_index) 
@@ -160,13 +198,15 @@ def main(root_path, session_id, project_path, range_in, range_out, profile_desc)
         else:
             file_path = render_data.render_dir +  "/" + render_data.file_name + render_data.file_extension
     
+
         consumer = renderconsumer.get_mlt_render_consumer(file_path, profile, args_vals_list)
         
         # Render producer
         rendered_frames_folder = ccrutils.rendered_frames_folder()
+
         frames_info = gmicplayer.FolderFramesInfo(rendered_frames_folder)
         frame_file = frames_info.get_lowest_numbered_file()
-        
+
         if editorstate.mlt_version_is_equal_or_greater("0.8.5"):
             resource_name_str = utils.get_img_seq_resource_name(frame_file, True)
         else:
@@ -194,18 +234,23 @@ def main(root_path, session_id, project_path, range_in, range_out, profile_desc)
                 ccrutils.write_status_message(msg)
             
             time.sleep(1.0)
-        
-        ccrutils.write_completed_message()
+    
+    else:
+         manager_thread.abort = True # to exit while loop and end thread
+         
+    ccrutils.write_completed_message()
 
+    print("Blender render complete.")
 
 
 # ------------------------------------------------------------ poll thread for Blender rendering happening in different process.
 class ProgressPollingThread(threading.Thread):
     
-    def __init__(self, range_in, range_out, process):
+    def __init__(self, range_in, range_out, process, is_preview_render):
         self.range_in = int(range_in)
         self.range_out = int(range_out)
         self.process = process
+        self.is_preview_render = is_preview_render
         self.abort = False
         threading.Thread.__init__(self)
 
@@ -214,16 +259,18 @@ class ProgressPollingThread(threading.Thread):
         
         while self.abort == False and completed == False:
             self.check_abort_request()
-            
-            length = self.range_out - self.range_in
-            written_frames_count = self.get_written_frames_count()
-            fraction = float(written_frames_count) / float(length)
-            self.update_status(fraction)
-            
-            if written_frames_count == length:
-                completed = True
+            if  self.is_preview_render == False:
+                length = self.range_out - self.range_in
+                written_frames_count = self.get_written_frames_count()
+                fraction = float(written_frames_count) / float(length)
+                self.update_status(fraction)
                 
-            time.sleep(1.0)
+                if written_frames_count == length:
+                    completed = True
+            else:
+                self.update_status(0.0)
+
+            time.sleep(0.5)
         
         if ccrutils.get_render_data().do_video_render == False:
             ccrutils.write_completed_message()

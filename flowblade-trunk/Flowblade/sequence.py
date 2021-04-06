@@ -54,6 +54,7 @@ SYNC_LOCKED = appconsts.SYNC_LOCKED # FEATURE NOT AVAILABLE TO USER CURRENTLY!
 LOCKED = appconsts.LOCKED # no edits allowed
 
 # Display heights
+TRACK_HEIGHT_HIGH = appconsts.TRACK_HEIGHT_HIGH # track height in canvas and column
 TRACK_HEIGHT_NORMAL = appconsts.TRACK_HEIGHT_NORMAL # track height in canvas and column
 TRACK_HEIGHT_SMALL = appconsts.TRACK_HEIGHT_SMALL # track height in canvas and column
 
@@ -82,13 +83,13 @@ PROGRAM_OUT_MODE = 0
 VECTORSCOPE_MODE = 1
 RGB_PARADE_MODE = 2
 
-# black clip
+# Black clip
 black_track_clip = None
 
-# Track that all audio is mixed down to combine for output.
+# The track that all audio is mixed down to combine for output.
 AUDIO_MIX_DOWN_TRACK = 0
 
-# Vectorscop and RGB Parade
+# Vectorscope and RGB Parade
 SCOPE_MIX_VALUES = [0.0, 0.2, 0.5, 0.8, 1.0]
 _scope_over_lay_mix = 2
 
@@ -113,7 +114,6 @@ class Sequence:
         self.watermark_file_path = None
         self.seq_len = 0 # used in trim crash hack, remove when fixed
         self.compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
-        self.tline_render_mode = appconsts.TLINE_RENDERING_OFF
 
         # MLT objects for a multitrack sequence
         self.init_mlt_objects()
@@ -210,11 +210,22 @@ class Sequence:
         
         # This is not an actual bin clip so id can be -1, it is just used to create the producer
         pattern_producer_data = patternproducer.BinColorClip(-1, "black_bg", "#000000000000")
-            
+
         black_track_clip = self.create_pattern_producer(pattern_producer_data)
         black_track_clip.clip_in = 0
         black_track_clip.clip_out = 0
 
+    def _create_white_clip(self, length):
+        
+        # This is not an actual bin clip so id can be -1, it is just used to create the producer
+        pattern_producer_data = patternproducer.BinColorClip(-1, "white_bg", "#ffffffffffff")
+            
+        white_clip = self.create_pattern_producer(pattern_producer_data)
+        white_clip.clip_in = 0
+        white_clip.clip_out = length - 1
+        
+        return white_clip
+        
     def add_track(self, track_type, is_hidden=False):
         """ 
         Creates a MLT playlist object, adds project
@@ -353,7 +364,8 @@ class Sequence:
         self.master_audio_gain = gain
 
     def add_track_pan_filter(self, track, value):
-        # This method is used for master too, and called with tractor then
+        # This method is used for master too, and is called with tractor then.
+        # 'channel' attr is left to -1 meaning that panner affects front balance.
         pan_filter = mlt.Filter(self.profile, "panner")
         mltrefhold.hold_ref(pan_filter)
         pan_filter.set("start", value)
@@ -399,7 +411,7 @@ class Sequence:
         not add it to track/playlist object.
         """
         producer = mlt.Producer(self.profile, str(path)) # this runs 0.5s+ on some clips
-
+    
         mltrefhold.hold_ref(producer)
         producer.path = path
         producer.filters = []
@@ -420,7 +432,7 @@ class Sequence:
         # Img seq ttl value
         producer.ttl = ttl
         if ttl != None:
-            producer.set("ttl", int(ttl))
+            producer.set("ttl", str(ttl))
 
         return producer
 
@@ -509,14 +521,26 @@ class Sequence:
             clone_filter = mltfilters.clone_filter_object(f, self.profile)
             clone_clip.attach(clone_filter.mlt_filter)
             clone_clip.filters.append(clone_filter)
-
+    
+    def copy_filters(self, clip, clone_clip):
+        for f in clip.filters:
+            clone_filter = mltfilters.clone_filter_object(f, self.profile)
+            clone_clip.attach(clone_filter.mlt_filter)
+            clone_clip.filters.append(clone_filter)
+            
     def clone_filters(self, clip):
         clone_filters = []
         for f in clip.filters:
             clone_filter = mltfilters.clone_filter_object(f, self.profile)
             clone_filters.append(clone_filter)
         return clone_filters
-
+    
+    def clone_mute_state(self, clip, clone_clip):
+        # Mute 
+        if clip.mute_filter != None:
+            mute_filter = mltfilters.create_mute_volume_filter(self) 
+            mltfilters.do_clip_mute(clone_clip, mute_filter)
+            
     def get_next_id(self):
         """
         Growing id for newly created clip or transition. 
@@ -525,6 +549,9 @@ class Sequence:
         return self.next_id - 1
 
     def clip_is_in_sequence(self, test_clip):
+        if test_clip == None:
+            return False
+
         for i in range(1, len(self.tracks)):
             track = self.tracks[i]
             for clip in track.clips:
@@ -617,6 +644,7 @@ class Sequence:
         compositor.obey_autofollow = old_compositor.obey_autofollow
         if self.compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
             compositor.transition.mlt_transition.set("always_active", str(1))
+            compositor.transition.mlt_transition.set("disable", str(0))
         self._plant_compositor(compositor)
         return compositor
     
@@ -827,6 +855,26 @@ class Sequence:
         
         tlinerender.get_renderer().update_hidden_track(self.tracks[-1], seq_len)
 
+    def fix_v1_for_render(self): 
+        # This is a workaround to fix Issue #941 with H248 encoder not being able handle 
+        # blanks and crashing or losing working audio. Underlying reason still 
+        # not known.
+        track_v1 = self.tracks[self.first_video_index]
+        for i in range(0, len(track_v1.clips)):
+            clip = track_v1.clips[i]
+            if clip.is_blanck_clip == False:
+                continue
+            track_v1.remove(i)
+            track_v1.clips.pop(i)
+            length = clip.clip_out - clip.clip_in + 1
+            white_clip = self._create_white_clip(length)
+            edit._insert_clip(track_v1, white_clip, i, white_clip.clip_in, white_clip.clip_out)
+
+        if track_v1.get_length() < self.get_length():
+            length = self.get_length() - track_v1.get_length()
+            white_clip = self._create_white_clip(length)
+            edit.append_clip(track_v1, white_clip, white_clip.clip_in, white_clip.clip_out)
+
     def get_seq_range_frame(self, frame):
         # Needed for timeline renderering updates
         if frame >= (self.seq_len - 1):
@@ -998,7 +1046,85 @@ class Sequence:
                 cut_frame = prev_cut_frame
             
         return cut_frame
-    
+
+    def find_next_editable_clip_and_track(self, tline_frame):
+        """
+        Returns next selectable clip and track.
+        """
+        cut_frame = -1
+        clip_track = None
+        select_clip = None
+        for i in range(1, len(self.tracks) - 1):
+            track = self.tracks[i]
+            
+            # Get index and clip
+            index = track.get_clip_index_at(tline_frame)
+            try:
+                clip = track.clips[index]
+                clip_start_in_tline = track.clip_start(index)
+                # We are looking for media clips only and after tline_frame.
+                while clip.is_blanck_clip == True or clip_start_in_tline < tline_frame:
+                    clip = track.clips[index + 1]
+                    clip_start_in_tline = track.clip_start(index + 1)
+                    index = index + 1
+            except Exception as e:
+                continue # No selectable clip on track after frame
+
+            # Get next cut frame
+            clip_start_in_tline = track.clip_start(index)
+            length = clip.clip_out - clip.clip_in 
+            next_cut_frame = clip_start_in_tline + length + 1 # +1 clip out inclusive
+                     
+            # Set cut frame
+            if cut_frame == -1 and next_cut_frame > tline_frame:
+                cut_frame = next_cut_frame
+                clip_track = track
+                select_clip = clip
+            elif next_cut_frame < cut_frame and next_cut_frame > tline_frame:
+                cut_frame = next_cut_frame
+                clip_track = track
+                select_clip = clip
+
+        return (select_clip, clip_track)
+
+    def find_prev_editable_clip_and_track(self, tline_frame):
+        """
+        Returns prev selectable clip and track.
+        """
+        cut_frame = -1
+        clip_track = None
+        select_clip = None
+        for i in range(1, len(self.tracks) - 1):
+            track = self.tracks[i]
+            
+            # Get index and clip
+            index = track.get_clip_index_at(tline_frame)
+            try:
+                clip = track.clips[index]
+                clip_start_in_tline = track.clip_start(index)
+                # We are looking for media clips only and before tline_frame.
+                while clip.is_blanck_clip == True or clip_start_in_tline > tline_frame:
+                    clip = track.clips[index - 1]
+                    clip_start_in_tline = track.clip_start(index - 1)
+                    index = index - 1
+            except Exception as e:
+                continue # No selectable clip on track before frame
+
+            # Get prev cut frame
+            prev_cut_frame = clip_start_in_tline
+                     
+            # Set cut frame
+            if cut_frame == -1 and prev_cut_frame < tline_frame:
+                cut_frame = prev_cut_frame
+                clip_track = track
+                select_clip = clip
+            elif prev_cut_frame > cut_frame and prev_cut_frame < tline_frame:
+                cut_frame = prev_cut_frame
+                clip_track = track
+                select_clip = clip
+
+        return (select_clip, clip_track)
+
     def get_closest_cut_frame(self, track_id, frame):
         track = self.tracks[track_id]
         index = track.get_clip_index_at(frame)
@@ -1207,7 +1333,6 @@ def create_sequence_clone_with_different_track_count(old_seq, v_tracks, a_tracks
 
     # Copy modes values
     new_seq.compositing_mode = old_seq.compositing_mode
-    new_seq.tline_render_mode = old_seq.tline_render_mode
         
     # copy next clip id data
     new_seq.next_id = old_seq.next_id

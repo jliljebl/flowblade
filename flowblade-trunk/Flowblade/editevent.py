@@ -473,7 +473,7 @@ def tline_effect_drop(x, y):
         modesetting.set_default_edit_mode()
         return
         
-    if clip != clipeffectseditor.clip:
+    if clipeffectseditor.clip_is_being_edited(clip) == False:
         clipeffectseditor.set_clip(clip, track, index)
     
     clipeffectseditor.add_currently_selected_effect() # drag start selects the dragged effect
@@ -501,7 +501,7 @@ def tline_media_drop(media_file, x, y, use_marks=False):
             # Standard clips
             new_clip = current_sequence().create_file_producer_clip(media_file.path, media_file.name, False, media_file.ttl)
         else:
-            # Container clips
+            # Container clips, create new container_data object and generate uuid for clip so it gets it own folder in.$XML_DATA/.../container_clips
             new_clip = current_sequence().create_file_producer_clip(media_file.path, media_file.name, False, media_file.ttl)
             new_clip.container_data = copy.deepcopy(media_file.container_data)
             new_clip.container_data.generate_clip_id()

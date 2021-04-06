@@ -37,8 +37,10 @@ import gui
 import guicomponents
 import guiutils
 import edit
+import editorlayout
 import editorstate
 from editorstate import current_sequence
+from editorstate import PROJECT
 import editorpersistance
 import keyframeeditor
 import mlttransitions
@@ -61,10 +63,8 @@ _edit_polling_thread = None
 compositor_changed_since_last_save = False
 
 # This is updated when filter panel is displayed and cleared when removed.
-# Used to update kfeditors with external tline frame position changes
+# Used to update kfeditors with external tline frame position changes.
 keyframe_editor_widgets = []
-
-compositor_notebook_index = 3 # this is set 2 for the 2 window mode
 
 
 def shutdown_polling():
@@ -80,13 +80,10 @@ def create_widgets():
     widgets.compositor_info = guicomponents.CompositorInfoPanel()
     widgets.hamburger_launcher = guicomponents.HamburgerPressLaunch(_hamburger_launch_pressed)
     guiutils.set_margins(widgets.hamburger_launcher.widget, 4, 6, 6, 0)
-    
 
-    # empty_label text has no effect on runtime behaviour, look to remove
-    # _display_compositor_edit_box() clearly overwrites anything we do here before user gets shown anything
     widgets.empty_label = Gtk.Label(label=_("No Compositor"))
 
-    # Edit area
+    # Edit area.
     widgets.value_edit_box = Gtk.VBox()
     widgets.value_edit_box.pack_start(widgets.empty_label, True, True, 0)
     widgets.value_edit_frame = Gtk.Frame()
@@ -96,7 +93,7 @@ def create_widgets():
 def get_compositor_clip_panel():
     create_widgets()
     
-    # Action row
+    # Action row.
     action_row = Gtk.HBox(False, 2)
     action_row.pack_start(widgets.hamburger_launcher.widget, False, False, 0)
     action_row.pack_start(Gtk.Label(), True, True, 0)
@@ -129,8 +126,7 @@ def set_compositor(new_compositor):
     set_enabled(True)
     _display_compositor_edit_box()
 
-    if editorpersistance.prefs.default_layout == True:
-        gui.middle_notebook.set_current_page(compositor_notebook_index)
+    editorlayout.show_panel(appconsts.PANEL_COMPOSITORS)
 
     global _edit_polling_thread
     # Close old polling
@@ -344,7 +340,9 @@ def _compositor_hamburger_item_activated(widget, msg):
         _delete_compositor_pressed()
     elif msg == "close":
         clear_compositor()
-        
+    elif msg == "fade_length":
+        dialogs.set_fade_length_default_dialog(_set_fade_length_dialog_callback, PROJECT().get_project_property(appconsts.P_PROP_DEFAULT_FADE_LENGTH))
+         
 def _save_compositor_values_dialog_callback(dialog, response_id):
     if response_id == Gtk.ResponseType.ACCEPT:
         save_path = dialog.get_filenames()[0]
@@ -370,6 +368,12 @@ def _load_compositor_values_dialog_callback(dialog, response_id):
 
     dialog.destroy()
 
+def _set_fade_length_dialog_callback(dialog, response_id, spin):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        default_length = int(spin.get_value())
+        PROJECT().set_project_property(appconsts.P_PROP_DEFAULT_FADE_LENGTH, default_length)
+        
+    dialog.destroy()
 
 class PropertyChangePollingThread(threading.Thread):
     

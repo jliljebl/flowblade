@@ -31,6 +31,7 @@ import appconsts
 import clipeffectseditor
 import compositeeditor
 import compositorfades
+import containeractions
 import containerclip
 from editorstate import current_sequence
 from editorstate import get_track
@@ -331,6 +332,10 @@ class EditAction:
         # needs to be clearad when clips are moved to another track.
         self.clear_effects_editor_for_multitrack_edit = False  
 
+        # Pasting filters to clip might not be detected by our quite naive algorithm as
+        # clip's filters stack having being changed, so we use this to force update on that edit action. 
+        self.force_effects_editor_update = False 
+        
     def do_edit(self):
         if self.exit_active_trimmode_on_edit:
             trimmodes.set_no_edit_trim_mode()
@@ -436,17 +441,17 @@ class EditAction:
            (do_gui_update and auto_follow_active() == True and self.compositor_autofollow_data != None)):
             self._update_gui()
         
-    def _update_gui(self): # This copied  with small modifications into projectaction.py for sequence imports, update there too if needed...yeah.
-        updater.update_tline_scrollbar() # Slider needs to adjust to possily new program length.
+    def _update_gui(self): # This is copied with small modifications into projectaction.py for sequence imports, update there too if needed.
+        updater.update_tline_scrollbar() # Slider needs to adjust to possibly new program length.
                                          # This REPAINTS TIMELINE as a side effect.
         if self.clear_effects_editor_for_multitrack_edit == False:
-            if current_sequence().clip_is_in_sequence(clipeffectseditor.clip) == True:
-                updater.update_kf_editor()
-                clipeffectseditor.reinit_current_effect()
+            if current_sequence().clip_is_in_sequence(clipeffectseditor.get_edited_clip()) == True:
+                updater.update_kf_editors_positions()
+                clipeffectseditor.reinit_stack_if_needed(self.force_effects_editor_update)
             else:
-                updater.clear_kf_editor()
+                updater.clear_effects_editor_clip()
         else:
-            updater.clear_kf_editor()
+            updater.clear_effects_editor_clip()
 
         current_sequence().update_edit_tracks_length() # Needed for timeline render updates
         if self.update_hidden_track_blank:
@@ -649,7 +654,7 @@ def _cover_delete_fade_out_redo(self):
     cover_clip = _remove_clip(self.track, self.index - 1)
     self.original_out = cover_clip.clip_out
     _insert_clip(self.track, cover_clip, self.index - 1,
-                 cover_clip.clip_in, cover_clip.clip_out + self.clip.get_length() - 1) # -1, out is iclusive
+                 cover_clip.clip_in, cover_clip.clip_out + self.clip.clip_length())
 
 #------------------ COVER DELETE FADE IN
 # "track","clip","index"
@@ -669,7 +674,7 @@ def _cover_delete_fade_in_redo(self):
     cover_clip = _remove_clip(self.track, self.index)
     self.original_in = cover_clip.clip_in
     _insert_clip(self.track, cover_clip, self.index,
-                 cover_clip.clip_in - self.clip.get_length(), cover_clip.clip_out) # -1, out is iclusive
+                 cover_clip.clip_in - self.clip.clip_length(), cover_clip.clip_out)
 
 #------------------ COVER DELETE TRANSITION
 # "track", "clip","index","to_part","from_part"
@@ -750,6 +755,9 @@ def _cut_redo(self):
     # Create new second clip if does not exist
     if(not hasattr(self, "new_clip")):
         self.new_clip = _create_clip_clone(self.clip)
+        current_sequence().copy_filters(self.clip, self.new_clip )
+        self.new_clip.markers = copy.deepcopy(self.clip.markers)
+        current_sequence().clone_mute_state(self.clip, self.new_clip)
     
     _cut(self.track, self.index, self.clip_cut_frame, self.clip, \
          self.new_clip)
@@ -790,6 +798,9 @@ def _cut_all_redo(self):
                 
         if first_redo == True:
             new_clip = _create_clip_clone(track_cut_data["clip"])
+            current_sequence().copy_filters(track_cut_data["clip"], new_clip)
+            new_clip.markers = copy.deepcopy(track_cut_data["clip"].markers)
+            current_sequence().clone_mute_state(track_cut_data["clip"], new_clip)
             self.new_clips.append(new_clip)
         else:
             new_clip = self.new_clips[i]
@@ -1790,7 +1801,7 @@ def _add_filter_redo(self):
         self.clip.filters.append(self.filter_object)
         
     self.filter_edit_done_func(self.clip, len(self.clip.filters) - 1) # updates effect stack gui
-
+    
 #------------------- ADD TWO FILTERS
 # NOTE: Using this requires that index_2 > index_1
 # "clip","filter_info_1",filter_info_2","index_1","index_2","filter_edit_done_func"
@@ -1922,11 +1933,13 @@ def _move_filter_undo(self):
     for i in range(0, len(self.filters_orig)):
         self.clip.filters.append(self.filters_orig[i])
 
+    """
     if self.delete_index < self.insert_index:
         active_index = self.delete_index
     else:
         active_index = self.delete_index - 1
-        
+    """
+
     _attach_all(self.clip)
 
     self.filter_edit_done_func(self.clip, active_index)
@@ -1938,23 +1951,22 @@ def _move_filter_redo(self):
     self.filters_orig = []
     for i in range(0, len(self.clip.filters)):
         self.filters_orig.append(self.clip.filters[i])
-        
+       
     if self.delete_index < self.insert_index:
-        # d < i, moved filter can be found at d
+        # Moving up
         moved_filter = self.clip.filters[self.delete_index]
-        _filter_move_insert(self.clip.filters, moved_filter, self.insert_index)
+        _filter_move_insert(self.clip.filters, moved_filter, self.insert_index + 1)
         self.clip.filters.pop(self.delete_index)
         active_index = self.insert_index - 1
     else:
-        # d > i, moved filter can be found at d - 1
-        moved_filter = self.clip.filters[self.delete_index - 1]
+        # Moving down
+        moved_filter = self.clip.filters[self.delete_index]
         _filter_move_insert(self.clip.filters, moved_filter, self.insert_index)
-        self.clip.filters.pop(self.delete_index)
-        active_index = self.insert_index
-
+        self.clip.filters.pop(self.delete_index + 1)
+    
     _attach_all(self.clip)
 
-    self.filter_edit_done_func(self.clip, active_index)
+    self.filter_edit_done_func(self.clip)
     
 def _detach_all(clip):
     mltfilters.detach_all_filters(clip)
@@ -2012,6 +2024,7 @@ def _clone_filters_redo(self):
 # "clip","clone_source_clip"
 def paste_filters_action(data):
     action = EditAction(_paste_filters_undo, _paste_filters_redo, data)
+    action.force_effects_editor_update = True
     return action
 
 def _paste_filters_undo(self):
@@ -2688,7 +2701,7 @@ def _ripple_delete_redo(self):
 
 
 #------------------- ADD CENTERED TRANSITION
-# "transition_clip","transition_index", "from_clip","to_clip","track","from_in","to_out"
+# "transition_clip","transition_index", "from_clip","to_clip","track","from_in","to_out", "length_fix"
 def add_centered_transition_action(data):
     action = EditAction(_add_centered_transition_undo, _add_centered_transition_redo, data)
     return action
@@ -2731,7 +2744,7 @@ def _add_centered_transition_redo(self):
     # Insert transition
     _insert_clip(track, transition_clip, 
                  self.transition_index, 1, # first frame is dropped as it is 100% from clip
-                 transition_clip.get_length() - 1)
+                 transition_clip.get_length() - 1 - self.length_fix)
 
 
 #------------------- REPLACE CENTERED TRANSITION
@@ -2826,7 +2839,7 @@ def _reload_replace_redo(self):
 
 
 # -------------------------------------------------------- CONTAINER CLIP FULL RENDER MEDIA REPLACE
-# "old_clip", "new_clip","rendered_media_path","track", "index"
+# "old_clip", "new_clip","rendered_media_path","track", "index", "do_filters_clone"
 def container_clip_full_render_replace(data):
     action = EditAction(_container_clip_full_render_replace_undo, _container_clip_full_render_replace_redo, data)
     return action
@@ -2834,21 +2847,33 @@ def container_clip_full_render_replace(data):
 def _container_clip_full_render_replace_undo(self):
     _remove_clip(self.track, self.index)
     _insert_clip(self.track, self.old_clip, self.index, self.old_clip.clip_in, self.old_clip.clip_out)
-    
+
+    if self.do_filters_clone == True:
+        _detach_all(self.new_clip)
+        self.new_clip.filters = []
+
 def _container_clip_full_render_replace_redo(self):
     _remove_clip(self.track, self.index)
     _insert_clip(self.track, self.new_clip, self.index, self.old_clip.clip_in, self.old_clip.clip_out)
 
     if self.new_clip.container_data == None:
         self.new_clip.container_data = copy.deepcopy(self.old_clip.container_data)
-            
+
+    if not hasattr(self, "clone_filters") and self.do_filters_clone == True:
+        self.clone_filters = current_sequence().clone_filters(self.old_clip)
+
+    if self.do_filters_clone == True:
+        _detach_all(self.new_clip)
+        self.new_clip.filters = self.clone_filters
+        _attach_all(self.new_clip)
+
     self.new_clip.container_data.rendered_media = self.rendered_media_path
     self.new_clip.container_data.rendered_media_range_in = 0
     self.new_clip.container_data.rendered_media_range_out = self.old_clip.container_data.unrendered_length
 
 
 # -------------------------------------------------------- CONTAINER CLIP CLIP RENDER MEDIA REPLACE
-# "old_clip", "new_clip","rendered_media_path","track", "index"
+# "old_clip", "new_clip","rendered_media_path","track", "index", "do_filters_clone"
 def container_clip_clip_render_replace(data):
     action = EditAction(_container_clip_clip_render_replace_undo, _container_clip_clip_render_replace_redo, data)
     return action
@@ -2856,22 +2881,34 @@ def container_clip_clip_render_replace(data):
 def _container_clip_clip_render_replace_undo(self):
     _remove_clip(self.track, self.index)
     _insert_clip(self.track, self.old_clip, self.index, self.old_clip.clip_in, self.old_clip.clip_out)
+
+    if self.do_filters_clone == True:
+        _detach_all(self.new_clip)
+        self.new_clip.filters = []
     
 def _container_clip_clip_render_replace_redo(self):
     _remove_clip(self.track, self.index)
-    new_out =  self.old_clip.clip_out - self.old_clip.clip_in
+    new_out = self.old_clip.clip_out - self.old_clip.clip_in
     _insert_clip(self.track, self.new_clip, self.index, 0, new_out)
 
     if self.new_clip.container_data == None:
         self.new_clip.container_data = copy.deepcopy(self.old_clip.container_data)
+        
+    if not hasattr(self, "clone_filters") and self.do_filters_clone == True:
+        self.clone_filters = current_sequence().clone_filters(self.old_clip)
+
+    if self.do_filters_clone == True:
+        _detach_all(self.new_clip)
+        self.new_clip.filters = self.clone_filters
+        _attach_all(self.new_clip)
 
     self.new_clip.container_data.rendered_media = self.rendered_media_path
-    self.new_clip.container_data.rendered_media_range_in = 0
-    self.new_clip.container_data.rendered_media_range_out = self.old_clip.container_data.unrendered_length
+    self.new_clip.container_data.rendered_media_range_in = self.old_clip.clip_in
+    self.new_clip.container_data.rendered_media_range_out = self.old_clip.clip_out
 
 
-# -------------------------------------------------------- CONTAINER CLIP AWITHCH TO UNRENDERED CLIP MEDIA REPLACE
-# "old_clip", "new_clip", "track", "index"
+# -------------------------------------------------------- CONTAINER CLIP SWITCH TO UNRENDERED CLIP MEDIA REPLACE
+# "old_clip", "new_clip", "track", "index", "do_filters_clone"
 def container_clip_switch_to_unrendered_replace(data):
     action = EditAction(_container_clip_switch_to_unrendered_replace_undo, _container_clip_switch_to_unrendered_replace_redo, data)
     return action
@@ -2879,15 +2916,33 @@ def container_clip_switch_to_unrendered_replace(data):
 def _container_clip_switch_to_unrendered_replace_undo(self):
     _remove_clip(self.track, self.index)
     _insert_clip(self.track, self.old_clip, self.index, self.old_clip.clip_in, self.old_clip.clip_out)
-    
+
+    if self.do_filters_clone == True:
+        _detach_all(self.new_clip)
+        self.new_clip.filters = []
+
 def _container_clip_switch_to_unrendered_replace_redo(self):
     _remove_clip(self.track, self.index)
     new_out = self.old_clip.clip_out - self.old_clip.clip_in
-    #_insert_clip(self.track, self.new_clip, self.index, 0, new_out)
-    _insert_clip(self.track, self.new_clip, self.index, self.old_clip.clip_in, self.old_clip.clip_out)
     
+    if self.old_clip.container_data.last_render_type == containeractions.CLIP_LENGTH_RENDER:
+        old_clip_edited_length = self.old_clip.clip_out - self.old_clip.clip_in
+        _insert_clip(   self.track, self.new_clip, self.index, 
+                        self.old_clip.container_data.rendered_media_range_in + self.old_clip.clip_in, 
+                        self.old_clip.container_data.rendered_media_range_in + self.old_clip.clip_in + old_clip_edited_length)
+    else:
+        _insert_clip(self.track, self.new_clip, self.index, self.old_clip.clip_in, self.old_clip.clip_out)
+
     if self.new_clip.container_data == None:
         self.new_clip.container_data = copy.deepcopy(self.old_clip.container_data)
+
+    if not hasattr(self, "clone_filters") and self.do_filters_clone == True:
+        self.clone_filters = current_sequence().clone_filters(self.old_clip)
+
+    if self.do_filters_clone == True:
+        _detach_all(self.new_clip)
+        self.new_clip.filters = self.clone_filters
+        _attach_all(self.new_clip)
 
     self.new_clip.container_data.clear_rendered_media()
     

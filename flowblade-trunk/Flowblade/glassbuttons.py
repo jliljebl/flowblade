@@ -275,19 +275,25 @@ class PlayerButtons(AbstractGlassButtons):
         size_ind = 0
         size_adj = 1
         prefs = editorpersistance.prefs
+        # Colorized icons
+        if prefs.colorized_icons is True:
+            icon_color = "_color"
+        else:
+            icon_color = ""
+        # End of Colorized icons
         if prefs.double_track_hights:
            size_ind = 1
            size_adj = 2
         AbstractGlassButtons.__init__(self, MB_BUTTON_WIDTH[size_ind], MB_BUTTON_HEIGHT[size_ind], MB_BUTTON_Y, MB_BUTTONS_WIDTH[size_ind], MB_BUTTONS_HEIGHT[size_ind])
 
-        play_pause_icon = guiutils.get_cairo_image("play_pause_s")
-        play_icon = guiutils.get_cairo_image("play_2_s")
-        stop_icon = guiutils.get_cairo_image("stop_s")
+        play_pause_icon = guiutils.get_cairo_image("play_pause_s" + icon_color)
+        play_icon = guiutils.get_cairo_image("play_2_s"+ icon_color)
+        stop_icon = guiutils.get_cairo_image("stop_s"+ icon_color)
         next_icon = guiutils.get_cairo_image("next_frame_s")
         prev_icon = guiutils.get_cairo_image("prev_frame_s")
             # ------------------------------timeline_start_end_button
-        start_icon = guiutils.get_cairo_image("ctx_drag_left") #  go to start
-        end_icon = guiutils.get_cairo_image("ctx_drag_right") #  go to end
+        start_icon = guiutils.get_cairo_image("to_start") #  go to start
+        end_icon = guiutils.get_cairo_image("to_end") #  go to end
             # ------------------------------timeline_start_end_button
         mark_in_icon = guiutils.get_cairo_image("mark_in_s")
         mark_out_icon = guiutils.get_cairo_image("mark_out_s")

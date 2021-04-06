@@ -595,7 +595,7 @@ class MonitorWidget:
         return scaled_surface
     
     def _get_cairo_buf_from_mlt_rgb(self, screen_rgb_data, img_w, img_h ):
-        buf = np.fromstring(screen_rgb_data, dtype=np.uint8)
+        buf = np.frombuffer(screen_rgb_data, dtype=np.uint8)
         buf.shape = (img_h + 1, img_w, 4) # +1 in h, seemeed to need it
         out = np.copy(buf)
         r = np.index_exp[:, :, 0]

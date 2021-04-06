@@ -39,13 +39,15 @@ _profile_list = []
 _factory_profiles = []
 _hidden_factory_profiles = []
 _user_profiles = []
+_categorized_profiles = []
 
 def load_profile_list():
     """ 
     Creates a list of MLT profile objects.
     Called at app start.
     """
-    global _profile_list,_factory_profiles, _hidden_factory_profiles, _user_profiles, _proxy_profiles
+    global _profile_list,_factory_profiles, _hidden_factory_profiles, \
+    _user_profiles, _proxy_profiles, _categorized_profiles
 
     user_profiles_dir = userfolders.get_data_dir() + USER_PROFILES_DIR
     _user_profiles = _load_profiles_list(user_profiles_dir)
@@ -57,6 +59,38 @@ def load_profile_list():
     _factory_profiles.sort(key=_sort_profiles)
     _hidden_factory_profiles.sort(key=_sort_profiles)
     _user_profiles.sort(key=_sort_profiles)
+
+    # Build categorized representation of available profiles.
+    HD_profiles = []
+    HD720_profiles = []
+    UHD_profiles = []
+    SD_profiles = []
+    OTHER_profiles = []
+    for prof in _profile_list:
+        desc, mlt_profile = prof
+        if desc.startswith("HD") and not desc.startswith("HDV") and not desc.startswith("HD 720p"):
+            HD_profiles.append(desc)
+        elif desc.startswith("HD 720p"):
+            HD720_profiles.append(desc)
+        elif desc.startswith("4K UHD"):
+            UHD_profiles.append(desc)
+        elif desc.startswith("DV/DVD"):
+            SD_profiles.append(desc)            
+        else:
+            OTHER_profiles.append(desc)
+    
+    if len(HD_profiles) > 0:
+        _categorized_profiles.append(("HD", HD_profiles))
+    if len(HD720_profiles) > 0:
+        _categorized_profiles.append(("HD 720p", HD720_profiles))
+    if len(UHD_profiles) > 0:
+        _categorized_profiles.append(("4K UHD", UHD_profiles))
+    if len(SD_profiles) > 0:
+        _categorized_profiles.append(("SD", SD_profiles))
+    if len(OTHER_profiles) > 0:
+        _categorized_profiles.append(("Other", OTHER_profiles))
+    if len(_user_profiles) > 0:
+        _categorized_profiles.append(("User Custom", _user_profiles))
 
 def _load_profiles_list(dir_path):
     load_profiles = []
@@ -159,7 +193,7 @@ def get_index_for_name(lookup_profile_name):
     return -1
 
 def get_profile_node(profile):
-    node_str = '<profile description="' +  profile.description() + '" '
+    node_str = '<profile description="' + profile.description() + '" '
     node_str += 'width="' + str(profile.width()) + '" '
     node_str += 'height="' +  str(profile.height()) + '" '
     if profile.progressive() == True:

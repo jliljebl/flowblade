@@ -18,26 +18,34 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 
+import copy
 import hashlib
 import json
 import os
+import subprocess
+import threading
+import time
 
 import appconsts
 import containerprogramedit
 import containeractions
+import dialogs
 import dialogutils
+import editorstate
 from editorstate import PROJECT
 import gui
+import guicomponents
 import guiutils
 import respaths
-#import toolsencoding
 import userfolders
 import utils
 
-ROW_WIDTH = 300
+_blender_available = False
 
+ROW_WIDTH = 300
+FALLBACK_THUMB = "fallback_thumb.png"
 
 class ContainerClipData:
     
@@ -50,10 +58,11 @@ class ContainerClipData:
             self.rendered_media = None
             self.rendered_media_range_in = -1
             self.rendered_media_range_out = -1
+            self.last_render_type = containeractions.FULL_RENDER
             
             self.unrendered_media = unrendered_media
             self.unrendered_length = None
-            # This can get set later for some container types
+            # This gets set later for some container types
             if unrendered_media != None:
                 self.unrendered_type = utils.get_media_type(unrendered_media)
             else:
@@ -89,7 +98,26 @@ class ContainerClipData:
             self.rendered_media = None
             self.rendered_media_range_in = -1
             self.rendered_media_range_out = -1
+        
 
+# ------------------------------------------------------- testing availebility on statrt up
+def test_blender_availebility():
+    global _blender_available
+    if os.path.exists("/usr/bin/blender") == True:
+        _blender_available = True
+    elif editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
+        _blender_available = False
+        """ Work o0n this continues for 2.8
+        command_list = ["flatpak-spawn", "--host", "flatpak", "info","org.blender.Blender"]
+        p = subprocess.Popen(command_list, stdin=subprocess.PIPE, stdout=subprocess.PIPE, bufsize=1)
+        p.wait(timeout=3)
+        
+        if p.returncode == 0: # If not present we get returncode==1
+            _blender_available = True
+        """
+def blender_available():
+    return _blender_available
+            
 
 # -------------------------------------------------------- Clip menu actions
 def render_full_media(data):
@@ -118,6 +146,8 @@ def edit_program(data):
     action_object.edit_program(clip)
 
 
+
+
 #------------------------------------------------------------- Cloning
 def clone_clip(clip):
     action_object = containeractions.get_action_object(clip.container_data)
@@ -125,8 +155,10 @@ def clone_clip(clip):
 
 
 # ------------------------------------------------------------ GUI
-def _get_file_select_row_and_editor(label_text, file_filter=None):
-    file_chooser = Gtk.FileChooserButton()
+def _get_file_select_row_and_editor(label_text, file_filter=None, title=None):
+    if title == None:
+        title = _("Select A File")
+    file_chooser = Gtk.FileChooserButton.new(title, Gtk.FileChooserAction.OPEN)
     file_chooser.set_size_request(250, 25)
     file_chooser.set_current_folder(os.path.expanduser("~") + "/")
 
@@ -150,6 +182,9 @@ def _open_image_sequence_dialog(callback, title, rows, data):
     for row in rows:
         vbox.pack_start(row, False, False, 0)
 
+    dialog.info_label = Gtk.Label()
+    vbox.pack_start(dialog.info_label, False, False, 0)
+
     alignment = dialogutils.get_alignment2(vbox)
 
     dialog.vbox.pack_start(alignment, True, True, 0)
@@ -171,7 +206,7 @@ def _show_not_all_data_info():
 # -------------------------------------------------------- MEDIA ITEM CREATION
 # --- G'Mic
 def create_gmic_media_item():
-    script_select, row1 = _get_file_select_row_and_editor(_("Select G'Mic Tool Script:"))
+    script_select, row1 = _get_file_select_row_and_editor(_("G'Mic Tool Script:"), None, _("Select G'Mic Tool Script"))
     media_file_select, row2 = _get_file_select_row_and_editor(_("Video Clip:"))
     _open_image_sequence_dialog(_gmic_clip_create_dialog_callback, _("Create G'Mic Script Container Clip"), [row1, row2], [script_select, media_file_select])
 
@@ -183,23 +218,52 @@ def _gmic_clip_create_dialog_callback(dialog, response_id, data):
         script_file = script_select.get_filename()
         media_file = media_file_select.get_filename()
         
-        dialog.destroy()
+
     
         if script_file == None or media_file == None:
             _show_not_all_data_info()
             return
 
         container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_GMIC, script_file, media_file)
-        container_clip = ContainerClipMediaItem(PROJECT().next_media_file_id, container_clip_data.get_unrendered_media_name(), container_clip_data)
-        PROJECT().add_container_clip_media_object(container_clip)
-        _update_gui_for_media_object_add()
+        
+        dialog.info_label.set_text("Test Render to validate script...")
+        
+        # We need to exit this Gtk callback to get info text above updated.
+        completion_thread = GMicLoadCompletionThread(container_clip_data, dialog)
+        completion_thread.start()
+
+
+class GMicLoadCompletionThread(threading.Thread):
+    
+    def __init__(self, container_clip_data, dialog):
+        self.container_clip_data = container_clip_data
+        self.dialog = dialog
+
+        threading.Thread.__init__(self)
+        
+    def run(self):
+        
+        action_object = containeractions.get_action_object(self.container_clip_data)
+        is_valid, err_msg = action_object.validate_program()
+
+        time.sleep(0.5) # To make sure text is seen.
+
+        Gdk.threads_enter()
+
+        self.dialog.destroy()
+        
+        if is_valid == True:
+            container_clip = ContainerClipMediaItem(PROJECT().next_media_file_id, self.container_clip_data.get_unrendered_media_name(), self.container_clip_data)
+            PROJECT().add_container_clip_media_object(container_clip)
+            _update_gui_for_media_object_add()
+        else:
+            primary_txt = _("G'Mic Container Clip Validation Error")
+            dialogutils.warning_message(primary_txt, err_msg, gui.editor_window.window)
+            
+        Gdk.threads_leave()
 
 # --- MLT XML
 def create_mlt_xml_media_item(xml_file_path, media_name):
-    # xml file is both unrendered media and program
-    #f = Gtk.FileFilter()
-    #f.set_name(_("MLT XML"))
-    #f.add_pattern("*.xml")
     container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_MLT_XML, xml_file_path, xml_file_path)
     container_clip = ContainerClipMediaItem(PROJECT().next_media_file_id, media_name, container_clip_data)
     PROJECT().add_container_clip_media_object(container_clip)
@@ -233,12 +297,21 @@ def _blender_clip_create_dialog_callback(dialog, response_id, data):
         container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_BLENDER, project_file, None)
         
         action_object = containeractions.get_action_object(container_clip_data)
+        
+        is_valid, err_msg = action_object.validate_program()
+        if is_valid == False:
+            primary_txt = _("Blender Container Clip Validation Error")
+            dialogutils.warning_message(primary_txt, err_msg, gui.editor_window.window)
+            return
+        
         action_object.initialize_project(project_file) # blocks until info data written
 
         project_edit_info_path = userfolders.get_cache_dir() + "blender_container_projectinfo.json"
+        if editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
+            project_edit_info_path = userfolders.get_user_home_cache_for_flatpak() + "blender_container_projectinfo.json"
+        
         info_file = open(project_edit_info_path, "r")
         project_edit_info = json.load(info_file)
-        print(project_edit_info)
         
         length = int(project_edit_info["frame_end"]) - int(project_edit_info["frame_start"])
         container_clip_data.data_slots["project_edit_info"] = project_edit_info
@@ -247,7 +320,7 @@ def _blender_clip_create_dialog_callback(dialog, response_id, data):
 
         blender_unrendered_media_image = respaths.IMAGE_PATH + "unrendered_blender.png"
 
-        window_text = _("<b>Creating Container for Blender Project:</b> ") + container_clip_data.get_program_name() + ".blend"
+        window_text = _("Creating Container for Blender Project")
  
         containeractions.create_unrendered_clip(length, blender_unrendered_media_image, container_clip_data, _blender_unredered_media_creation_complete, window_text)
 
@@ -272,7 +345,8 @@ def _blender_unredered_media_creation_complete(created_unrendered_clip_path, con
 
 class ContainerClipMediaItem:
     """
-    A pattern producer object presnt in Media Bin.
+    Container clip media iem in Media Bin.
+    1-N container clips can be created from this.
     """
     def __init__(self, media_item_id, name, container_data):
         self.id = media_item_id
@@ -282,7 +356,8 @@ class ContainerClipMediaItem:
         self.length = None
         self.type = container_data.unrendered_type
         self.icon = None
-
+        self.icon_path = None
+        
         self.mark_in = -1
         self.mark_out = -1
 
@@ -301,12 +376,101 @@ class ContainerClipMediaItem:
         print("create_mlt_producer() not implemented")
 
     def create_icon(self):
-        action_object = containeractions.get_action_object(self.container_data)
-        surface, length = action_object.create_icon()      
-                    
-        self.icon = surface
-        self.length = length
-        self.container_data.unrendered_length = length - 1
+        try:
+            action_object = containeractions.get_action_object(self.container_data)
+            if self.icon_path == None:
 
+                surface, length, icon_path = action_object.create_icon()      
+                self.icon = surface
+                self.icon_path = icon_path
+                self.length = length
+                self.container_data.unrendered_length = length - 1
+            else:
+                self.icon = action_object.load_icon()
+        except:
+            self.icon_path = respaths.IMAGE_PATH + FALLBACK_THUMB
+            cr, scaled_icon = containeractions._create_image_surface(self.icon_path)
+            self.icon = scaled_icon
+            
+    def save_program_edit_info(self):
+        if self.container_data.container_type == appconsts.CONTAINER_CLIP_BLENDER:
+            edit_info = self.container_data.data_slots["project_edit_info"]
 
+            save_data = {}
+            save_data["objects"] = copy.copy(edit_info["objects"])
+            save_data["materials"] = copy.copy(edit_info["materials"])
+            save_data["curves"] = copy.copy(edit_info["curves"])
+            
+            default_name = self.name  + "_edit_data"
+            
+            dialogs.save_cont_clip_edit_data(self._save_program_edit_info_callback, default_name, save_data)
+        
+    def _save_program_edit_info_callback(self, dialog, response_id, edit_data):
+        
+        if response_id != Gtk.ResponseType.ACCEPT:
+            dialog.destroy()
+        else:
+            if self.container_data.container_type == appconsts.CONTAINER_CLIP_BLENDER:
+                save_file = dialog.get_filename()
+                dialog.destroy()
+                if save_file == None:
+                    return
+                
+                with open(save_file, "w") as f: 
+                     json.dump(edit_data, f, indent=4)
 
+    def load_program_edit_info(self):
+        dialogs.load_cont_clip_edit_data(self._load_program_edit_info_callback)
+    
+    def _load_program_edit_info_callback(self, dialog, response_id):
+        if response_id != Gtk.ResponseType.ACCEPT:
+            dialog.destroy()
+        else:
+            load_file_path = dialog.get_filename()
+            dialog.destroy()
+            if load_file_path == None:
+                return
+                
+            load_file = open(load_file_path, "r")
+            loaded_project_edit_info = json.load(load_file)
+            
+            primary_txt = _("Container Program Edit Data is Executable!")
+            secondary_txt = _("Only accept Container Program Edit Data from similar trustwothy sources\nyou would accept applications!\n\nContainer Program Edit Data will be used to call Python <b>exec()</b> function and\ncan maybe used as an attack vector against your system.")
+            warning_panel = dialogutils.get_warning_message_dialog_panel(primary_txt, secondary_txt)
+            
+            sw = guicomponents.get_scroll_widget((300, 200), str(loaded_project_edit_info))
+            
+            content = Gtk.VBox(False, 2)
+            content.pack_start(warning_panel, False, False, 0)
+            content.pack_start(guiutils.bold_label("Loaded Container Program Edit Data"), False, False, 0)
+            content.pack_start(sw, False, False, 0)
+            
+            align = dialogutils.get_default_alignment(content)
+            
+            dialog = Gtk.Dialog("",
+                                 gui.editor_window.window,
+                                Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                (_("Cancel"), Gtk.ResponseType.REJECT,
+                                 _("Load Program Edit Data"), Gtk.ResponseType.ACCEPT))
+            dialog.vbox.pack_start(align, True, True, 0)
+            dialogutils.set_outer_margins(dialog.vbox)
+            dialog.set_resizable(False)
+            dialog.connect('response', self._load_warning_callback, loaded_project_edit_info)
+
+            dialog.show_all()
+            
+    def _load_warning_callback(self, dialog, response_id, loaded_project_edit_info):
+        if response_id != Gtk.ResponseType.ACCEPT:
+            dialog.destroy()
+        else:
+            dialog.destroy()
+
+            if self.container_data.container_type == appconsts.CONTAINER_CLIP_BLENDER:
+                edit_data = self.container_data.data_slots["project_edit_info"]
+                edit_data["objects"] = loaded_project_edit_info["objects"]
+                edit_data["materials"] = loaded_project_edit_info["materials"]
+                edit_data["curves"] = loaded_project_edit_info["curves"]
+
+            
+            
+            

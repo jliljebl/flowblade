@@ -72,7 +72,7 @@ def set_paths(root_path):
     ROOT_PARENT = ROOT_PATH.strip("Flowblade")
     PATTERN_PRODUCER_PATH = root_path + "/res/patternproducer/"
     LAUNCH_DIR = root_path + "/launch/"
-    GMIC_SCRIPTS_DOC = root_path + "/res/gmic/gmicscripts.xml"
+    GMIC_SCRIPTS_DOC = root_path + "/res/gmic/gmic2scripts.xml"
     PHANTOM_JAR = root_path + "/phantom2d/Phantom2D.jar"
     # Apr-2017 - SvdB
     SHORTCUTS_PATH = root_path + "/res/shortcuts/"
@@ -80,8 +80,4 @@ def set_paths(root_path):
 def apply_dark_theme():
     global IMAGE_PATH
     IMAGE_PATH = ROOT_PATH + "/res/darktheme/"
-
-def set_gmic2(root_path):
-    global GMIC_SCRIPTS_DOC
-    GMIC_SCRIPTS_DOC = root_path + "/res/gmic/gmic2scripts.xml"
     

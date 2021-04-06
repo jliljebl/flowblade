@@ -74,7 +74,6 @@ PREVIEW_FILE = "preview.png"
 NO_PREVIEW_FILE = "fallback_thumb.png"
 
 _gmic_found = False
-_gmic_version = 1
 _session_id = None
 
 _window = None
@@ -101,30 +100,20 @@ _hamburger_menu = Gtk.Menu()
 
 #-------------------------------------------------- launch and inits
 def test_availablity():
-    if os.path.exists("/usr/bin/gmic") == True or os.path.exists("/app/bin/gmic") == True: # File system and flatpak
+    global _gmic_found
+    set_gmic_path()
+    if editorstate.gmic_path != None:
         print("G'MIC found")
-        global _gmic_found
         _gmic_found = True
     else:
         print("G'MIC NOT found")
 
-def get_gmic_version():
-    gmic_ver = 1
-    cmd = "gmic -version"
-    process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
-    output, error = process.communicate()
-    tokens = output.split()
-    clended = []
-    for token in tokens:
-        token = token.decode("utf-8")
-        str1 = token.replace('.','')
-        str2 = str1.replace(',','')
-        if str2.isdigit(): # this is based on assumtion that str2 ends up being number like "175" or 215" etc. only for version number token
-            if str2[0] == '2':
-                gmic_ver = 2
+def set_gmic_path():
+    if os.path.exists("/usr/bin/gmic") == True:
+        editorstate.gmic_path = "/usr/bin/gmic"
+    elif os.path.exists("/app/bin/gmic") == True: # File system and flatpak
+        editorstate.gmic_path = "/app/bin/gmic"
 
-    return gmic_ver
-                
 def gmic_available():
     return _gmic_found
     
@@ -173,17 +162,11 @@ def main(root_path, force_launch=False):
 
     # Set paths.
     respaths.set_paths(root_path)
-
-    # Check G'MIC version
-    global _gmic_version
-    _gmic_version = get_gmic_version()
-    if _gmic_version == 2:
-        respaths.set_gmic2(root_path)
+    set_gmic_path() # Flatpak has gmic binary in different place.
 
     # Write stdout to log file
     userfolders.init()
     sys.stdout = open(userfolders.get_cache_dir() + "log_gmic", 'w')
-    print("G'MIC version:", str(_gmic_version))
 
     # Init gmic tool session dirs
     if os.path.exists(get_session_folder()):
@@ -195,10 +178,6 @@ def main(root_path, force_launch=False):
 
     # Load editor prefs and apply themes
     editorpersistance.load()
-    if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
-        Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
-            gui.apply_gtk_css()
             
     # Init translations module with translations data
     translations.init_languages()
@@ -226,8 +205,10 @@ def main(root_path, force_launch=False):
     if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
         respaths.apply_dark_theme()
         Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
-            gui.apply_gtk_css()
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME \
+            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
+            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+            gui.apply_gtk_css(editorpersistance.prefs.theme)
 
     repo = mlt.Factory().init()
     processutils.prepare_mlt_repo(repo)
@@ -565,6 +546,7 @@ def _encode_settings_callback(dialog, response_id):
     if response_id == Gtk.ResponseType.ACCEPT:
         global _render_data
         _render_data = toolsencoding.get_render_data_for_current_selections()
+        print(_render_data)
         _window.update_encode_desc()
     
     dialog.destroy()
@@ -593,7 +575,6 @@ class GmicWindow(Gtk.Window):
 
         app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowbladetoolicon.png")
         self.set_icon(app_icon)
-
         hamburger_launcher_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger.png")
         self.hamburger_launcher = guicomponents.PressLaunch(self.hamburger_launch_pressed, hamburger_launcher_surface)
         
@@ -1111,14 +1092,17 @@ class GmicPreviewRendererer(threading.Thread):
         buf = _window.script_view.get_buffer()
         view_text = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), False)
         Gdk.threads_leave()
-        
-        script_str = "gmic " + get_current_frame_file() + " " + view_text + " -output " +  get_preview_file()
+    
+        # Create command list and launch process.
+        command_list = [editorstate.gmic_path, get_current_frame_file()]
+        user_script_commands = view_text.split(" ")
+        command_list.extend(user_script_commands)
+        command_list.append("-output")
+        command_list.append(get_preview_file())
 
-        print("Render preview:", script_str)
-        
         # Render preview and write log
         FLOG = open(userfolders.get_cache_dir() + "log_gmic_preview", 'w')
-        p = subprocess.Popen(script_str, shell=True, stdin=FLOG, stdout=FLOG, stderr=FLOG)
+        p = subprocess.Popen(command_list, stdin=FLOG, stdout=FLOG, stderr=FLOG)
         p.wait()
         FLOG.close()
      
@@ -1243,12 +1227,14 @@ class GmicEffectRendererer(threading.Thread):
             clip_frames = os.listdir(get_render_frames_dir())
 
             self.render_player = renderconsumer.FileRenderPlayer("", producer, consumer, 0, len(clip_frames) - 1)
-            self.render_player.wait_for_producer_end_stop = False
             self.render_player.start()
 
             while self.render_player.stopped == False:
-
                 if self.abort == True:
+                    Gdk.threads_enter()
+                    _window.render_percentage.set_markup("<small>" + _("Render stopped!") + "</small>")
+                    _window.render_progress_bar.set_fraction(0.0)
+                    Gdk.threads_leave()
                     return
                 
                 fraction = self.render_player.get_render_fraction()
@@ -1301,8 +1287,9 @@ class GmicEffectRendererer(threading.Thread):
 
     def abort_render(self):
         self.abort = True
+
         if self.script_renderer != None:
-             self.script_renderer.abort()
+             self.script_renderer.abort_rendering()
 
         self.shutdown()
                          

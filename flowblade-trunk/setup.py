@@ -25,7 +25,7 @@ from distutils.core import setup
 # FLOWBLADE distutils setup.py script.
 
 install_data = [('share/applications', ['installdata/io.github.jliljebl.Flowblade.desktop']),
-                ('share/appdata', ['installdata/io.github.jliljebl.Flowblade.appdata.xml']),
+                ('share/metainfo', ['installdata/io.github.jliljebl.Flowblade.appdata.xml']),
                 ('share/icons/hicolor/128x128/apps', ['installdata/io.github.jliljebl.Flowblade.png']),
                 ('share/mime/packages',['installdata/io.github.jliljebl.Flowblade.xml']),
                 ('lib/mime/packages',['installdata/flowblade']),
@@ -33,9 +33,11 @@ install_data = [('share/applications', ['installdata/io.github.jliljebl.Flowblad
 
 flowblade_package_data = ['res/filters/*.xml','res/filters/wipes/*','res/img/*',
                           'res/profiles/*','res/render/renderencoding.xml',
-                          'res/patternproducer/*','res/help/*','locale/Flowblade/*',
+                          'res/patternproducer/*','res/help/*','res/help/*/*','locale/Flowblade/*',
                           'res/proxyprofiles/*','res/darktheme/*','launch/*','res/gmic/*',
-                          'res/shortcuts/*','res/css/*','res/css/assets/*','res/css/sass/*']
+                          'res/shortcuts/*','res/css/*','res/css/assets/*','res/css/sass/*',
+                          'res/css2/*','res/css2/assets/*','res/css2/sass/*',
+                          'res/css3/*','res/css3/assets/*','res/css3/sass/*']
 
 locale_files = []
 for filepath in glob.glob("Flowblade/locale/*/LC_MESSAGES/*"):
@@ -43,7 +45,7 @@ for filepath in glob.glob("Flowblade/locale/*/LC_MESSAGES/*"):
     locale_files.append(filepath)
 
 setup(  name='flowblade',
-        version='2.4.0',
+        version='2.8.0.3',
         author='Janne Liljeblad',
         author_email='janne.liljeblad at gmail dot com',
         description='Non-linear video editor',

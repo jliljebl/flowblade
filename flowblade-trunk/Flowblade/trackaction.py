@@ -59,6 +59,39 @@ def unlock_track(track_index):
     track.edit_freedom = appconsts.FREE
     updater.repaint_tline()
 
+def set_track_high_height(track_index, is_retry=False):
+    track = get_track(track_index)
+    track.height = appconsts.TRACK_HEIGHT_HIGH
+
+    # Check that new height tracks can be displayed and cancel if not.
+    new_h = current_sequence().get_tracks_height()
+    allocation = gui.tline_canvas.widget.get_allocation()
+    x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
+
+    if new_h > h and is_retry == False:
+        current_paned_pos = gui.editor_window.app_v_paned.get_position()
+        new_paned_pos = current_paned_pos - (new_h - h) - 5
+        gui.editor_window.app_v_paned.set_position(new_paned_pos)
+        GObject.timeout_add(200, lambda: set_track_high_height(track_index, True))
+        return False
+    
+    allocation = gui.tline_canvas.widget.get_allocation()
+    x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
+    
+    if new_h > h:
+        track.height = appconsts.TRACK_HEIGHT_SMALL
+        dialogutils.warning_message(_("Not enough vertical space on Timeline to expand track"), 
+                                _("Maximize or resize application window to get more\nspace for tracks if possible."),
+                                gui.editor_window.window,
+                                True)
+        return False
+
+    tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
+    gui.tline_column.init_listeners()
+    updater.repaint_tline()
+
+    return False
+
 def set_track_normal_height(track_index, is_retry=False):
     track = get_track(track_index)
     track.height = appconsts.TRACK_HEIGHT_NORMAL
@@ -200,9 +233,11 @@ def track_active_switch_pressed(data):
 
 def track_double_click(track_id):
     track = get_track(track_id) # data.track is index, not object
-    if track.height == appconsts.TRACK_HEIGHT_NORMAL:
+    if track.height == appconsts.TRACK_HEIGHT_HIGH:
         set_track_small_height(track_id)
-    else:
+    elif track.height == appconsts.TRACK_HEIGHT_NORMAL:
+        set_track_high_height(track_id)
+    elif track.height == appconsts.TRACK_HEIGHT_SMALL:
         set_track_normal_height(track_id)
     
 def track_center_pressed(data):
@@ -219,7 +254,9 @@ def track_center_pressed(data):
         if press_x > tlinewidgets.COLUMN_LEFT_PAD + X_CORR_OFF and press_x < tlinewidgets.COLUMN_LEFT_PAD + ICON_WIDTH + X_CORR_OFF:
             # Mute icon x area hit
             ix, iy = tlinewidgets.MUTE_ICON_POS
-            if track.height > appconsts.TRACK_HEIGHT_SMALL:
+            if track.height == appconsts.TRACK_HEIGHT_HIGH:
+                ix, iy = tlinewidgets.MUTE_ICON_POS_HIGH
+            elif track.height == appconsts.TRACK_HEIGHT_NORMAL: 
                 ix, iy = tlinewidgets.MUTE_ICON_POS_NORMAL
             ICON_HEIGHT = 10
             if track.id >= current_sequence().first_video_index:
@@ -270,6 +307,7 @@ def track_center_pressed(data):
 
 POPUP_HANDLERS = {"lock":lock_track,
                   "unlock":unlock_track,
+                  "high_height":set_track_high_height,
                   "normal_height":set_track_normal_height,
                   "small_height":set_track_small_height,
                   "mute_track":mute_track}

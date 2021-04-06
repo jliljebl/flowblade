@@ -44,6 +44,7 @@ import mltprofiles
 import mltfilters
 import mlttransitions
 import miscdataobjects
+import persistancecompat
 import propertyparse
 import resync
 import userfolders
@@ -62,14 +63,14 @@ MEDIA_FILE_REMOVE = ['icon']
 # Used to flag a not found relative path
 NOT_FOUND = "/not_found_not_found/not_found"
 
-# Used to send messages when loading project
+# Used to send messages when loading project, set at callsite.
 load_dialog = None
 
 # These are used to recrete parenting relationships
 all_clips = {}
 sync_clips = []
 
-# Used for for convrtting to and from proxy media using projects
+# Used for for converting to and from proxy media using projects
 project_proxy_mode = -1
 proxy_path_dict = None
 
@@ -129,8 +130,6 @@ def save_project(project, file_path, changed_profile_desc=None):
         s_proj.profile_desc = changed_profile_desc
         _xml_new_paths_for_profile_change = {} # dict acts also as a flag to show that profile change save is happening
         new_profile = mltprofiles.get_profile(changed_profile_desc)
-        #print "Saving changed profile project: ", changed_profile_desc
-        #print "FPS conversion multiplier:", _fps_conv_mult
     else:
         _xml_new_paths_for_profile_change = None # None value acts also as a flag to show that profile change save is _not_ happening
 
@@ -158,7 +157,6 @@ def save_project(project, file_path, changed_profile_desc=None):
             new_xml_file_path = _save_changed_xml_file(s_media_file, new_profile)
             _xml_new_paths_for_profile_change[s_media_file.path] = new_xml_file_path
             s_media_file.path = new_xml_file_path
-            #print "XML path replace for media:", s_media_file.path,  new_xml_file_path
 
         # Remove unpicleable attrs
         remove_attrs(s_media_file, MEDIA_FILE_REMOVE)
@@ -252,11 +250,9 @@ def get_p_clip(clip):
     if _xml_new_paths_for_profile_change != None and hasattr(s_clip, "path") and s_clip.path != None and utils.is_mlt_xml_file(s_clip.path) == True:
         try:
             new_path = _xml_new_paths_for_profile_change[s_clip.path]
-            #print "XML path replace for clip:", s_clip.path, new_path
             s_clip.path = new_path
         except:
             # Something is really wrong, this should not be possible
-            # print "Failed to find a new XML file for path:", s_clip.path
             pass 
 
     # Set 'type' attribute for MLT object type
@@ -393,7 +389,7 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
 
     # Relinker only operates on pickleable python data 
     if relinker_load:
-        FIX_MISSING_PROJECT_ATTRS(project)
+        persistancecompat.FIX_MISSING_PROJECT_ATTRS(project)
         return project
 
     global _load_file_path
@@ -407,15 +403,10 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
     # editorstate.project needs to be available for sequence building
     editorstate.project = project
 
-    if(not hasattr(project, "SAVEFILE_VERSION")):
-        project.SAVEFILE_VERSION = 1 # first save files did not have this
-    # SvdB - Feb-2017 - Removed project.name from print. It causes problems with non-latin characters, in some cases. Not sure why, yet.
-    print("Loading Project, SAVEFILE_VERSION:", project.SAVEFILE_VERSION)
-
     # Set MLT profile. NEEDS INFO USER ON MISSING PROFILE!!!!!
     project.profile = mltprofiles.get_profile(project.profile_desc)
 
-    FIX_MISSING_PROJECT_ATTRS(project)
+    persistancecompat.FIX_MISSING_PROJECT_ATTRS(project)
 
     # Some profiles may not be available in system
     # inform user on fix
@@ -423,34 +414,36 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
         raise ProjectProfileNotFoundError(project.profile_desc)
 
     for k, media_file in project.media_files.items():
-        if project.SAVEFILE_VERSION < 4:
-            FIX_N_TO_4_MEDIA_FILE_COMPATIBILITY(media_file)
         media_file.current_frame = 0 # this is always reset on load, value is not considered persistent
 
-        # This fixes Media Relinked projects with SAVEFILE_VERSION < 4:
-        if (not(hasattr(media_file,  "is_proxy_file"))):
-            FIX_N_TO_4_MEDIA_FILE_COMPATIBILITY(media_file)
+        # Avoid crash in case path attribute is missing (color clips).
+        # All code in loop below handles issues not related to color clips.
+        if not hasattr(media_file, "path"):
+            continue
             
         # Try to find relative path files if needed for non-proxy media files
+        orig_path = media_file.path # looking for missing path changes it and we need save this info for user info dialog on missing asset
         if media_file.is_proxy_file == False:
             if media_file.type != appconsts.PATTERN_PRODUCER and media_file.type != appconsts.IMAGE_SEQUENCE:
                 media_file.path = get_media_asset_path(media_file.path, _load_file_path)
             elif media_file.type == appconsts.IMAGE_SEQUENCE:
                 media_file.path = get_img_seq_media_path(media_file.path, _load_file_path)
+        else:
+            # Try to fix missing proxy project media files.
+            # This is all just best effort, proxy files should never be deleted during editing
+            # and proxy projects should not be moved.
+            if media_file.type != appconsts.PATTERN_PRODUCER and media_file.type != appconsts.IMAGE_SEQUENCE:
+                media_file.path = get_media_asset_path(media_file.path, _load_file_path)
+                if media_file.path == NOT_FOUND:
+                    fixed_second_path = get_media_asset_path(media_file.second_file_path, _load_file_path)
+                    if fixed_second_path != NOT_FOUND:
+                        media_file.path = fixed_second_path
+                        media_file.second_file_path = fixed_second_path
 
-        # This attr was added for 1.8. It is not computed for older projects.
-        if (not hasattr(media_file, "info")):
-            media_file.info = None
-        # We need this in all media files, used only by img seq media
-        if not hasattr(media_file, "ttl"):
-            media_file.ttl = None
+        if media_file.path == NOT_FOUND:
+            raise FileProducerNotFoundError(orig_path)
 
-        # Avoid crash in case path attribute is missing (color clips).
-        if not hasattr(media_file, "path"):
-            continue
-        # Add container data if not found.
-        if not hasattr(media_file, "container_data"):
-            media_file.container_data = None
+        persistancecompat.FIX_MISSING_MEDIA_FILE_ATTRS(media_file)
             
         # Use this to try to fix clips with missing proxy files.
         proxy_path_dict[media_file.path] = media_file.second_file_path
@@ -460,14 +453,14 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
             if os.path.isfile(media_file.second_file_path): # Original media file exists, use it
                 media_file.set_as_original_media_file()
 
+        _show_msg("Loading Media Item: " + media_file.name)
+
     # Add MLT objects to sequences.
     global all_clips, sync_clips
     seq_count = 1
     for seq in project.sequences:
-        FIX_N_TO_3_SEQUENCE_COMPATIBILITY(seq)
             
-        if not hasattr(seq, "compositing_mode"):
-            seq.compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
+        persistancecompat.FIX_MISSING_SEQUENCE_ATTRS(seq)
 
         _show_msg(_("Building sequence ") + str(seq_count))
         all_clips = {}
@@ -485,11 +478,7 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
 
     all_clips = {}
     sync_clips = []
-                
-    if(not hasattr(project, "update_media_lengths_on_load")):
-        project.update_media_lengths_on_load = True # old projects < 1.10 had wrong media length data which just was never used.
-                                                    # 1.10 needed that data for the first time and required recreating it correctly for older projects
-    
+
     if icons_and_thumnails == True:
         _show_msg(_("Loading icons"))
         for k, media_file in project.media_files.items():
@@ -507,6 +496,11 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
     """
     # Create tractor, field, multitrack
     seq.init_mlt_objects()
+
+    # Compositing mode COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW was removed 2.6->,  we just convert it 
+    # to COMPOSITING_MODE_TOP_DOWN_FREE_MOVE and compositors now work
+    if seq.compositing_mode == appconsts.COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW:
+        seq.compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
     
     # Grap and replace py tracks. Do this way to use same create
     # method as when originally created.
@@ -530,10 +524,7 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
     mlt_compositors = []
     for py_compositor in seq.compositors:
             # Keeping backwards compability
-            if SAVEFILE_VERSION < 3:
-                FIX_N_TO_3_COMPOSITOR_COMPABILITY(py_compositor, SAVEFILE_VERSION)
-            if not hasattr(py_compositor, "obey_autofollow"): # "obey_autofollow" attr was added for 1.16
-                py_compositor.obey_autofollow = True
+            persistancecompat.FIX_MISSING_COMPOSITOR_ATTRS(py_compositor)
                 
             # Create new compositor object
             compositor = mlttransitions.create_compositor(py_compositor.type_id)                                        
@@ -550,7 +541,6 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
             compositor.obey_autofollow = py_compositor.obey_autofollow
            
             if seq.compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
-                print("seq.compositing_mode", seq.compositing_mode)
                 compositor.transition.mlt_transition.set("always_active", str(1))
                        
             mlt_compositors.append(compositor)
@@ -588,24 +578,13 @@ def fill_track_mlt(mlt_track, py_track):
     sequence = mlt_track.sequence
     for i in range(0, len(py_track.clips)):
         clip = py_track.clips[i]
+        if clip.is_blanck_clip == False:
+            _show_msg(_("Building track ") + str(py_track.id) + " - " + clip.name)
+                
         mlt_clip = None
         append_created = True # blanks get appended at creation time, other clips don't
 
-        # Add color attribute if not found
-        if not hasattr(clip, "color"):
-            clip.color = None
-            
-        # Add markers list if not found
-        if not hasattr(clip, "markers"):
-            clip.markers = []
-
-        # Add img seq ttl value for all clips if not found, we need this present in every clip so we test for 'clip.ttl == None' to get stuff working
-        if not hasattr(clip, "ttl"):
-            clip.ttl = None
-
-        # Add container data if not found.
-        if not hasattr(clip, "container_data"):
-            clip.container_data = None
+        persistancecompat.FIX_MISSING_CLIP_ATTRS(clip)
 
         # normal clip
         if (clip.is_blanck_clip == False and (clip.media_type != appconsts.PATTERN_PRODUCER)):
@@ -621,7 +600,15 @@ def fill_track_mlt(mlt_track, py_track):
             # Try to fix possible missing proxy files for clips if we are in proxy mode.
             if not os.path.isfile(clip.path) and project_proxy_mode == appconsts.USE_PROXY_MEDIA:
                 try:
-                    possible_orig_file_path = proxy_path_dict[clip.path] # This dict was filled with media file data.
+                    try:
+                        possible_orig_file_path = proxy_path_dict[clip.path] # This dict was filled with media file data.
+                    except:
+                        # Both proxy AND original file are missing, can happen if a project file in proxy mode
+                        # is opened in another machine.
+                        # clip.path was changed by calling  get_media_asset_path() try to use fixed original
+                        possible_orig_file_path = proxy_path_dict[orig_path]
+                        possible_orig_file_path = get_media_asset_path(possible_orig_file_path, _load_file_path)
+                         
                     if os.path.isfile(possible_orig_file_path): # Original media file exists, use it
                         clip.path = possible_orig_file_path
                 except:
@@ -637,6 +624,7 @@ def fill_track_mlt(mlt_track, py_track):
             
             if mlt_clip == None:
                 raise FileProducerNotFoundError(orig_path)
+
             mlt_clip.__dict__.update(clip.__dict__)
             fill_filters_mlt(mlt_clip, sequence)
         # pattern producer
@@ -679,12 +667,9 @@ def fill_filters_mlt(mlt_clip, sequence):
     filters = []
     for py_filter in mlt_clip.filters:
 
-        if not hasattr(py_filter.info, "filter_mask_filter"):
-            py_filter.info.filter_mask_filter = None
+        persistancecompat.FIX_MISSING_FILTER_ATTRS(py_filter)
         
         if py_filter.is_multi_filter == False:
-            if py_filter.info.mlt_service_id == "affine":
-                FIX_1_TO_N_BACKWARDS_FILTER_COMPABILITY(py_filter)
             filter_object = mltfilters.FilterObject(py_filter.info)
             filter_object.__dict__.update(py_filter.__dict__)
             filter_object.create_mlt_filter(sequence.profile)
@@ -703,7 +688,7 @@ def fill_filters_mlt(mlt_clip, sequence):
     mlt_clip.filters = filters
     
 #------------------------------------------------------------ track building
-# THIS IS COPYPASTED FROM edit.py TO NOT IMPORT IT.
+# THIS IS COPYPASTED FROM edit.py TO AVOID IMPORTING IMPORT IT.
 def append_clip(track, clip, clip_in, clip_out):
     """
     Affects MLT c-struct and python obj values.
@@ -774,11 +759,8 @@ def get_relative_path(project_file_path, asset_path):
         for filename in fnmatch.filter(filenames, asset_file_name):
             matches.append(os.path.join(root, filename))
     if len(matches) == 1:
-        #print "relative path for: ", asset_file_name
         return matches[0]
     elif  len(matches) > 1:
-        # some error handling may be needed?
-        #print "relative path for: ", asset_file_name
         return matches[0]
     else:
         return NOT_FOUND # no relative path found
@@ -796,67 +778,12 @@ def get_img_seq_relative_path(project_file_path, asset_path):
         look_up_path = root + "/" + look_up_file_name
         listing = glob.glob(look_up_path)
         if len(listing) > 0:
-            #print "relative path for: ", asset_file_name
             return root + "/" + asset_file_name
 
     return NOT_FOUND # no relative path found
         
     
 # ------------------------------------------------------- backwards compability
-def FIX_N_TO_3_COMPOSITOR_COMPABILITY(compositor, SAVEFILE_VERSION):
-    if SAVEFILE_VERSION == 1:
-        FIX_1_TO_2_BACKWARDS_COMPOSITOR_COMPABILITY(compositor)
-    
-    FIX_2_TO_N_BACKWARDS_COMPOSITOR_COMPABILITY(compositor)
-    
-def FIX_1_TO_2_BACKWARDS_COMPOSITOR_COMPABILITY(compositor):
-    # fix SAVEFILE_VERSION 1 -> N compability issue with x,y -> x/y in compositors
-    new_properties = []
-    for prop in compositor.transition.properties:
-        name, value, prop_type = prop
-        value = value.replace(",","/")
-        new_properties.append((name, value, prop_type))
-    compositor.transition.properties = new_properties
-
-def FIX_2_TO_N_BACKWARDS_COMPOSITOR_COMPABILITY(compositor):
-    compositor.type_id = compositors_index_to_type_id[compositor.compositor_index]
-
-def FIX_1_TO_N_BACKWARDS_FILTER_COMPABILITY(py_filter):
-    # This is only called on "affine" filters
-    # fix SAVEFILE_VERSION 1 -> N compability issue with x,y -> x/y in compositors
-    new_properties = []
-    for prop in py_filter.properties:
-        name, value, prop_type = prop
-        value = value.replace(",","/")
-        new_properties.append((name, value, prop_type))
-    py_filter.properties = new_properties
-
-def FIX_N_TO_3_SEQUENCE_COMPATIBILITY(seq):
-    if not hasattr(seq, "master_audio_pan"):
-        seq.master_audio_pan = appconsts.NO_PAN
-        seq.master_audio_gain = 1.0
-
-def FIX_N_TO_4_MEDIA_FILE_COMPATIBILITY(media_file):
-    media_file.has_proxy_file = False
-    media_file.is_proxy_file = False
-    media_file.second_file_path = None
-
-def FIX_MISSING_PROJECT_ATTRS(project):
-    if (not(hasattr(project, "proxy_data"))):
-        project.proxy_data = miscdataobjects.ProjectProxyEditingData()
-
-    if (not(hasattr(project, "media_log"))):
-        project.media_log = []
-
-    if (not(hasattr(project, "events"))):
-        project.events = []
-
-    if (not(hasattr(project, "media_log_groups"))):
-        project.media_log_groups = []
-
-    if (not(hasattr(project, "project_properties"))):
-        project.project_properties = {}
-        
 def _fix_wipe_relative_path(compositor):
     if compositor.type_id == "##wipe": # Wipe may have user luma and needs to be looked up relatively
         _set_wipe_res_path(compositor, "resource")

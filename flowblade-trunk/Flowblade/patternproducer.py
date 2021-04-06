@@ -89,7 +89,7 @@ def _create_ising_clip_callback(dialog, response_id, widgets):
         _update_gui_for_pattern_producer_media_object_add()
         
     dialog.destroy()
-
+"""
 def create_color_pulse_clip():
     _color_pulse_clip_dialog(_create_color_pulse_clip_callback)
 
@@ -109,7 +109,7 @@ def _create_color_pulse_clip_callback(dialog, response_id, widgets):
         _update_gui_for_pattern_producer_media_object_add()
 
     dialog.destroy()
-
+"""
 def create_count_clip():
     media_object = BinCountClip(PROJECT().next_media_file_id, _("Count"))
     PROJECT().add_pattern_producer_media_object(media_object)
@@ -257,6 +257,7 @@ class BinNoiseClip(AbstractBinClip):
     def create_icon(self):
         self.icon = cairo.ImageSurface.create_from_png(respaths.PATTERN_PRODUCER_PATH + "noise_icon.png")
 
+
 class BinColorBarsClip(AbstractBinClip):
     def __init__(self, id, name):
         AbstractBinClip.__init__(self, id, name)
@@ -269,6 +270,7 @@ class BinColorBarsClip(AbstractBinClip):
 
     def create_icon(self):
         self.icon = cairo.ImageSurface.create_from_png(respaths.PATTERN_PRODUCER_PATH + "bars_icon.png")
+      
         
 class BinIsingClip(AbstractBinClip):
     def __init__(self, id, name):

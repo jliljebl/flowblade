@@ -124,6 +124,10 @@ class QueueRunnerThread(threading.Thread):
 
             project = persistance.load_project(project_file_path, False)
 
+            project.c_seq.fix_v1_for_render()
+
+            maybe_create_render_folder(render_item.render_path)
+        
             producer = project.c_seq.tractor
             profile = mltprofiles.get_profile(render_item.render_data.profile_name)
             consumer = renderconsumer.get_mlt_render_consumer(render_item.render_path, 
@@ -257,8 +261,6 @@ def add_render_item(flowblade_project, render_path, args_vals_list, mark_in, mar
     else:
         launch_batch_rendering()
 
-    #print "Render queue item for rendering file into " + render_path + " with identifier " + identifier + " added."
-
 # ------------------------------------------------------- file utils
 def init_dirs_if_needed():
     user_dir = userfolders.get_cache_dir()
@@ -269,7 +271,6 @@ def init_dirs_if_needed():
         os.mkdir(get_datafiles_dir())
     if not os.path.exists(get_projects_dir()):
         os.mkdir(get_projects_dir())
-
 
 def get_projects_dir():
     return userfolders.get_cache_dir() + PROJECTS_DIR
@@ -308,6 +309,11 @@ def copy_project(render_item, file_name):
         secondary_txt = _("Error message: ") + str(e)
         dialogutils.warning_message(primary_txt, secondary_txt, batch_window.window)
 
+def maybe_create_render_folder(render_path):
+    folder = os.path.dirname(render_path)
+    if not os.path.exists(folder):
+        os.mkdir(folder)
+        
 # --------------------------------------------------------------- app thread and data objects
 def launch_batch_rendering():
     bus = dbus.SessionBus()
@@ -348,9 +354,11 @@ def main(root_path, force_launch=False):
     editorpersistance.load()
     if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
         Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
-            gui.apply_gtk_css()
-            
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME \
+            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
+            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+            gui.apply_gtk_css(editorpersistance.prefs.theme)
+        
     repo = mlt.Factory().init()
     processutils.prepare_mlt_repo(repo)
     
@@ -1187,6 +1195,7 @@ class SingleRenderLaunchThread(threading.Thread):
 
     
 def single_render_main(root_path):
+    
     # called from .../launch/flowbladesinglerender script
     gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
     editorstate.gtk_version = gtk_version
@@ -1217,8 +1226,10 @@ def single_render_main(root_path):
     editorpersistance.load()
     if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
         Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
-            gui.apply_gtk_css()
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME \
+            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
+            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+            gui.apply_gtk_css(editorpersistance.prefs.theme)
 
     repo = mlt.Factory().init()
     processutils.prepare_mlt_repo(repo)
@@ -1274,11 +1285,16 @@ class SingleRenderThread(threading.Thread):
 
         project = persistance.load_project(project_file_path, False)
 
+        project.c_seq.fix_v1_for_render()
+
         producer = project.c_seq.tractor
         profile = mltprofiles.get_profile(render_item.render_data.profile_name)
         
         vcodec = self.get_vcodec(render_item)
         vformat = self.get_argval(render_item, "f")
+        
+        # We just autocreate folder if for some reason it has been deleted.
+        maybe_create_render_folder(render_item.render_path)
         
         if self.is_frame_sequence_render(vcodec) == True and vformat == None:
             # Frame sequence render

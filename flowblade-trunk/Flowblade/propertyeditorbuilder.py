@@ -32,6 +32,7 @@ import cairoarea
 from editorstate import PROJECT
 from editorstate import PLAYER
 import extraeditors
+import gui
 import guiutils
 import keyframeeditor
 import mltfilters
@@ -86,7 +87,7 @@ SCALE_DIGITS = "scale_digits"                               # Number of decimal 
 # are created deterministically from those and FilterObject.info.property_args data. So we need to save data here on change request to make the change happen.
 # This data needs to be erased always after use.
 changing_slider_to_kf_property_name = None
-re_init_editors_for_slider_type_change_func = None # monkeypatched in, it is clipeffectseditor.effect_selection_changed
+re_init_editors_for_slider_type_change_func = None # monkeypatched in at app.py
 show_rotomask_func =  None # monkeypatched in, it is rotomask.py, gmic won't lauch if we import
 
 def _p(name):
@@ -317,7 +318,8 @@ class KeyframesToggler:
 
 def _get_ladspa_slider_row(editable_property, slider_name=None):
     adjustment = editable_property.get_input_range_adjustment()
-
+    adjustment.connect("value-changed", editable_property.adjustment_value_changed)
+        
     hslider = Gtk.HScale()
     hslider.set_adjustment(adjustment)
     hslider.set_draw_value(False)
@@ -327,6 +329,7 @@ def _get_ladspa_slider_row(editable_property, slider_name=None):
     spin.set_numeric(True)
     spin.set_adjustment(adjustment)
     spin.connect("button-release-event", lambda w, e: _ladspa_slider_update(editable_property, adjustment))
+    spin.connect("activate", lambda w: _ladspa_spinner_update(editable_property, spin, adjustment))
 
     _set_digits(editable_property, hslider, spin)
 
@@ -491,11 +494,105 @@ def _get_color_selector(editable_property):
     color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(*gdk_color))
     color_button.connect("color-set", editable_property.color_selected)
 
+    picker_button = Gtk.ToggleButton()
+    picker_button.set_image(Gtk.Image.new_from_icon_name(Gtk.STOCK_COLOR_PICKER, Gtk.IconSize.BUTTON))
+
+    info_label = Gtk.Label()
+    
+    editable_property.picker_toggled_id = picker_button.connect("toggled", _color_selector_picker_toggled, editable_property, color_button, info_label)
+
     hbox = Gtk.HBox(False, 4)
     hbox.pack_start(color_button, False, False, 4)
+    hbox.pack_start(picker_button, False, False, 4)
+    hbox.pack_start(info_label, False, False, 4)
     hbox.pack_start(Gtk.Label(), True, True, 0)
     
     return _get_two_column_editor_row(editable_property.get_display_name(), hbox)
+
+def _color_selector_picker_toggled(picker_button, editable_property, color_button, info_label):
+    gdk_window = gui.editor_window.window.get_window()
+    if picker_button.get_active() == True:
+        editable_property.cp_window_press_id = gui.editor_window.window.connect('button-press-event', _color_picker_window_press_event, editable_property, picker_button, color_button, info_label)
+        editable_property.cp_monitor_press_id = gui.tline_display.connect('button-press-event', _color_picker_monitor_press_event, editable_property, picker_button, color_button, info_label)
+        info_label.set_markup("<small>" + _("Click Monitor to Select Color") + "</small>")
+    else:
+        _maybe_disconnect_color_picker_listeners(editable_property)
+        info_label.set_markup("")
+        
+def _color_picker_window_press_event(widget, event, editable_property, picker_button, color_button, info_label):
+    # Exit expecting color selection
+    _maybe_disconnect_color_picker_listeners(editable_property)
+    _maybe_untoggle_picker_botton(editable_property, picker_button)
+
+    info_label.set_markup("")
+    
+    return True
+    
+def _color_picker_monitor_press_event(widget, event, editable_property, picker_button, color_button, info_label):
+    # Exit expecting color selection
+    _maybe_disconnect_color_picker_listeners(editable_property)
+    _maybe_untoggle_picker_botton(editable_property, picker_button)
+
+    try:
+        # Get selected image coordinate.
+        alloc = widget.get_allocation()
+        window_width = alloc.width
+        window_height = alloc.height
+        
+        width = PROJECT().profile.width()
+        height = PROJECT().profile.height()
+        display_ratio = float(width) / float(height) # mlt_properties_get_double( properties, "display_ratio" );
+        
+        if window_height * display_ratio > window_width:
+            rect_w = window_width
+            rect_h = int(float(window_width) / float(display_ratio))
+        else:
+            rect_w = int(float(window_height) * float(display_ratio))
+            rect_h = window_height
+
+        rect_x = int(float( window_width - rect_w ) / 2.0)
+        rect_x -= rect_x % 2
+        rect_y = int(float(window_height - rect_h ) / 2.0)
+
+        x = event.x - rect_x
+        y = event.y - rect_y
+
+        img_x = int((float(x)/float(rect_w)) * float(width))
+        img_y = int((float(y)/float(rect_h)) * float(height))
+        
+        # Get selected color 
+        rgb_data = PLAYER().seek_and_get_rgb_frame(PLAYER().current_frame(), update_gui=False)
+        pixel = (img_y * 1920 + img_x) * 4
+        r = rgb_data[pixel]
+        g = rgb_data[pixel + 1]
+        b = rgb_data[pixel + 2]
+    except:
+        r = 0
+        g = 0
+        b = 0
+
+    # Set selected color as color button selection and property value.
+    color = Gdk.RGBA(float(r)/255.0, float(g)/255.0, float(b)/255.0, 1.0)
+
+    color_button.set_rgba(color)
+    editable_property.color_selected(color_button)
+
+    info_label.set_markup("")
+        
+    return True
+         
+def _maybe_disconnect_color_picker_listeners(editable_property):
+    if editable_property.cp_window_press_id != -1:
+        gui.editor_window.window.disconnect(editable_property.cp_window_press_id)
+        gui.tline_display.disconnect(editable_property.cp_monitor_press_id)
+        editable_property.cp_window_press_id = -1
+        editable_property.cp_monitor_press_id = -1
+
+def _maybe_untoggle_picker_botton(editable_property, picker_button):
+    if picker_button.get_active() == True:
+        picker_button.handler_block(editable_property.picker_toggled_id)
+        picker_button.set_active(False)
+        picker_button.handler_unblock(editable_property.picker_toggled_id)
 
 def _get_wipe_selector(editable_property):
     """
@@ -1002,8 +1099,18 @@ def _get_combo_box_column(name, values, editable_property):
 # ------------------------------------ SPECIAL VALUE UPDATE METHODS
 # LADSPA filters do not respond to MLT property updates and 
 # need to be recreated to update output
+def _ladspa_spinner_update(editable_property, spinner, adjustment):
+    try:
+        # spin and slider use same adjustment and we seem to be get unchanged value 
+        # on enter press, so we are using SpinButton text to get changed value.
+        value = float(spinner.get_text())
+        adjustment.set_value(value)
+        _ladspa_slider_update(editable_property, adjustment)
+    except:
+        pass # text is not number. do nothing
+
 def _ladspa_slider_update(editable_property, adjustment):
-    # ...or segphault
+    # ...or segfault
     PLAYER().stop_playback()
     
     # Change property value

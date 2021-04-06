@@ -459,8 +459,8 @@ def get_cairo_color_tuple_255_rgb(r, g, b):
     return (float(r)/255.0, float(g)/255.0, float(b)/255.0)
 
 def cairo_color_from_gdk_color(gdk_color):
-    raw_r, raw_g, raw_b = hex_to_rgb(gdk_color.to_string())
-    return (float(raw_r)/65535.0, float(raw_g)/65535.0, float(raw_b)/65535)
+    color = gdk_color.to_string().rstrip(")").lstrip("rgb(").split(',')
+    return (float(color[0])/255.0, float(color[1])/255.0, float(color[2])/255.0)
     
 def do_nothing():
     pass
@@ -550,8 +550,6 @@ def update_xml_file_producer_info(resource, info):
     info["fps_num"] = float(profile_node.getAttribute("frame_rate_num"))
     info["fps_den"] = float(profile_node.getAttribute("frame_rate_den"))
     info["progressive"] = int(profile_node.getAttribute("progressive"))
-    
-    print(info)
     #  <profile description="HD 720p 29.97 fps" width="1280" height="720" progressive="1" sample_aspect_num="1" sample_aspect_den="1" display_aspect_num="16" display_aspect_den="9" frame_rate_num="30000" frame_rate_den="1001" colorspace="0"/>
     
 def is_media_file(file_path):
@@ -596,6 +594,7 @@ _audio_file_extensions = [  "act",
                             "iklax",
                             "m4a",
                             "m4p",
+                            "mka",
                             "mmf",
                             "mp2",
                             "mp3",
@@ -702,8 +701,6 @@ def elapsed_time(msg="elapsed: ", show_in_millis=True):
         unit = "ms"
     else:
         unit = "s"
-    
-    print(msg + " " + str(elapsed_time) + " " + unit)
 
 def get_display_monitors_size_data():
     monitors_size_data = []
@@ -731,3 +728,17 @@ def unpickle(path):
     except:
         f = open(path, 'rb')
         return pickle.load(f, encoding='latin1') 
+
+def get_flatpak_real_path_for_app_files(app_file):
+    # Blender etc. some times need real absolute paths for application script files.
+    # A path like /app/share/flowblade/file.blend is only valid inside the flatpak sandbox. 
+    # You can get the real path on the host filesystem from the file /.flatpak-info (at top of the root directory inside the sandbox)
+    f = open("/.flatpak-info", "r")
+    for line in f:
+        if line.startswith("app-path"):
+            real_path = line[9:len(line)].rstrip() # 9 strips "app-path", rstrip strips newline
+            app_file_path = real_path + app_file[4:len(app_file)] # strips "/app" from beginning of Flatpak path for files
+                                                                  # combining flatpak app-path with flatpak relative path gets real absolute path
+            return app_file_path
+    
+    return None # Hitting here needs to crash

@@ -23,6 +23,7 @@ Module handles button presses from monitor control buttons row.
 """
 
 import appconsts
+import clipeffectseditor
 import dialogutils
 import editorpersistance
 import editorstate
@@ -283,6 +284,41 @@ def down_arrow_seek_on_monitor_clip():
 def set_monitor_playback_interpolation(new_interpolation):
     PLAYER().consumer.set("rescale", str(new_interpolation)) # MLT options "nearest", "bilinear", "bicubic", "hyper" hardcoded into menu items
 
+# -------------------------------------------------- selecting clips for filter editing
+def select_next_clip_for_filter_edit():
+    if not editorstate.timeline_visible():
+        updater.display_sequence_in_monitor()
+    tline_frame = PLAYER().tracktor_producer.frame() + 1
+
+    clip, track = current_sequence().find_next_editable_clip_and_track(tline_frame)
+    if clip == None:
+        return
+    
+    range_in = track.clips.index(clip)
+    frame = track.clip_start(range_in)
+
+    movemodes.select_clip(track.id, range_in)
+    PLAYER().seek_frame(frame)
+
+    clipeffectseditor.set_clip(clip, track, range_in)
+
+def select_prev_clip_for_filter_edit():
+    if not editorstate.timeline_visible():
+        updater.display_sequence_in_monitor()
+    tline_frame = PLAYER().tracktor_producer.frame() - 1
+
+    clip, track = current_sequence().find_prev_editable_clip_and_track(tline_frame)
+    if clip == None:
+        return
+    
+    range_in = track.clips.index(clip)
+    frame = track.clip_start(range_in)
+
+    movemodes.select_clip(track.id, range_in)
+    PLAYER().seek_frame(frame)
+
+    clipeffectseditor.set_clip(clip, track, range_in)
+
 # --------------------------------------------------------- trim view
 def trim_view_menu_launched(launcher, event):
     guicomponents.get_trim_view_popupmenu(launcher, event, _trim_view_menu_item_activated)
@@ -327,4 +363,23 @@ def _show_trimview_info():
     secondary_txt = _("<b>Trim View</b> works best with SSDs and relatively powerful processors.\n\n") + \
                     _("Select <b>'Trim View Off'</b> or<b>'Trim View Single Side Edits Only'</b> options\nif performance is not satisfactory.")
     dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+
+# --------------------------------------------------------- trim view
+def start_marks_looping():
+    if PLAYER().looping():
+        PLAYER().stop_loop_playback()
+    if PLAYER().is_playing():
+        PLAYER().stop_playback()
+
+    if timeline_visible():
+        mark_in = PLAYER().producer.mark_in
+        mark_out = PLAYER().producer.mark_out
+    else:
+        mark_in = current_sequence().monitor_clip.mark_in
+        mark_out = current_sequence().monitor_clip.mark_out
+    
+    if mark_in == -1 or mark_out == -1:
+        return
+    
+    PLAYER().start_loop_playback_range(mark_in, mark_out)
 

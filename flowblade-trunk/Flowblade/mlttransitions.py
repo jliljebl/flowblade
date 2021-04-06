@@ -554,7 +554,7 @@ def get_rendered_transition_tractor(current_sequence,
             track1.insert(from_clip, 0, orig_from.clip_in, orig_from.clip_in + length)
             kf_str = "0=0/0:100%x100%:0.0;"+ str(length) + "=0/0:100%x100%:100.0"
         else: # transition_type ==  RENDERED_FADE_OUT
-            track1.insert(from_clip, 0, orig_from.clip_out - length, orig_from.clip_out)
+            track1.insert(from_clip, 0, orig_from.clip_out - length + 1, orig_from.clip_out + 1)
             kf_str = "0=0/0:100%x100%:100.0;"+ str(length) + "=0/0:100%x100%:0.0"
 
     # Create transition

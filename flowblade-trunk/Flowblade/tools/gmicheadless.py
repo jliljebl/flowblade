@@ -65,9 +65,6 @@ STATUS_MSG_FILE = ccrutils.STATUS_MSG_FILE
 ABORT_MSG_FILE = ccrutils.ABORT_MSG_FILE
 RENDER_DATA_FILE = ccrutils.RENDER_DATA_FILE
 
-
-_gmic_version = None
-
 _render_thread = None
 
 
@@ -86,7 +83,6 @@ def get_session_status(session_id):
     msg = ccrutils.get_session_status_message(session_id)
     if msg == None:
         return None
-        
     step, frame, length, elapsed = msg.split(" ")
     return (step, frame, length, elapsed)
     
@@ -98,7 +94,7 @@ def abort_render(session_id):
 def main(root_path, session_id, script, clip_path, range_in, range_out, profile_desc, gmic_frame_offset):
     
     os.nice(10) # make user configurable
-     
+
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION
     except:
@@ -107,11 +103,12 @@ def main(root_path, session_id, script, clip_path, range_in, range_out, profile_
     # Set paths.
     respaths.set_paths(root_path)
 
-    # Check G'MIC version
-    global _gmic_version
-    _gmic_version = get_gmic_version()
-    if _gmic_version == 2:
-        respaths.set_gmic2(root_path)
+    if os.path.exists("/usr/bin/gmic") == True: # distro install an dev.
+        editorstate.gmic_path = "/usr/bin/gmic"
+    elif os.path.exists("/app/bin/gmic") == True: # Flatpak
+        editorstate.gmic_path = "/app/bin/gmic"
+    else:
+        print("No G'Mic in gmicheadless main(), something is wrong.") # Should not be possible
 
     userfolders.init()
     editorpersistance.load()
@@ -150,24 +147,6 @@ def main(root_path, session_id, script, clip_path, range_in, range_out, profile_
     _render_thread = GMicHeadlessRunnerThread(script, render_data, clip_path, range_in, range_out, profile_desc, gmic_frame_offset)
     _render_thread.start()
 
-def get_gmic_version():
-    gmic_ver = 1
-    cmd = "gmic -version"
-    process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
-    output, error = process.communicate()
-    tokens = output.split()
-    clended = []
-    for token in tokens:
-        token = token.decode("utf-8")
-        str1 = token.replace('.','')
-        str2 = str1.replace(',','')
-        if str2.isdigit(): # this is based on assumtion that str2 ends up being number like "175" or 215" etc. only for version number token
-            if str2[0] == '2':
-                gmic_ver = 2
-
-    return gmic_ver
-
-        
 
 class GMicHeadlessRunnerThread(threading.Thread):
 
@@ -203,12 +182,12 @@ class GMicHeadlessRunnerThread(threading.Thread):
 
         profile = mltprofiles.get_profile(self.profile_desc)
 
-        # Delete old frames
+        # Delete old clip frames
         for frame_file in os.listdir(clip_frames_folder):
             file_path = os.path.join(clip_frames_folder, frame_file)
             os.remove(file_path)
 
-        # Delete old frames
+        # Delete old rendered frames
         for frame_file in os.listdir(rendered_frames_folder):
             file_path = os.path.join(rendered_frames_folder, frame_file)
             os.remove(file_path)
@@ -257,10 +236,8 @@ class GMicHeadlessRunnerThread(threading.Thread):
             
             # Render producer
             frame_file = rendered_frames_folder + "/" + frame_name + "_0000.png"
-            if editorstate.mlt_version_is_equal_or_greater("0.8.5"):
-                resource_name_str = utils.get_img_seq_resource_name(frame_file, True)
-            else:
-                resource_name_str = utils.get_img_seq_resource_name(frame_file, False)
+            resource_name_str = utils.get_img_seq_resource_name(frame_file, True)
+
             resource_path = rendered_frames_folder + "/" + resource_name_str
             producer = mlt.Producer(profile, str(resource_path))
 

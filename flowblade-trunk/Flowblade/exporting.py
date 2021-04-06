@@ -18,8 +18,6 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-
-
 from gi.repository import Gtk
 import os
 from xml.dom import minidom
@@ -44,6 +42,7 @@ import renderconsumer
 import utils
 import userfolders
 
+
 REEL_NAME_HASH_8_NUMBER = 1
 REEL_NAME_FILE_NAME_START = 2
 
@@ -52,6 +51,7 @@ _xml_render_player = None
 _screenshot_img = None
 _img_types = ["png", "bmp", "targa","tiff"]
 _img_extensions = ["png", "bmp", "tga","tif"]
+
 
 ####---------------MLT--------------####    
 def MELT_XML_export():
@@ -320,8 +320,6 @@ class MLTXMLToEDLParse:
    
                 prog_in += src_len
 
-                
-        #print ''.join(str_list).strip("\n")
         return ''.join(str_list).strip("\n")
 
     def frames_to_tc(self, frame):

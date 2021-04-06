@@ -202,7 +202,7 @@ def get_master_meter():
     frame = Gtk.Frame()
     frame.add(align)
     frame.set_shadow_type(Gtk.ShadowType.ETCHED_OUT)
-
+    guiutils.set_margins(frame, 0, 0, 1, 0)
     return frame
 
 def close_master_meter():
@@ -320,7 +320,6 @@ def _audio_monitor_update():
     global _audio_levels
     _audio_levels = []
     for i in range(0, len(_level_filters)):
-        #print i
         audio_level_filter = _level_filters[i]
         l_val = _get_channel_value(audio_level_filter, LEFT_CHANNEL)
         r_val = _get_channel_value(audio_level_filter, RIGHT_CHANNEL)
@@ -591,7 +590,9 @@ class GainControl(Gtk.Frame):
         self.pan_slider.set_adjustment(self.pan_adjustment)
         self.pan_slider.connect("value-changed", self.pan_changed)
 
-        self.pan_button = Gtk.ToggleButton(_("Pan"))
+        self.pan_button = Gtk.ToggleButton()
+        surface = guiutils.get_cairo_image("pan_track")
+        self.pan_button.set_image(Gtk.Image.new_from_surface (surface))
         self.pan_button.connect("toggled", self.pan_active_toggled)
         
         if pan_value == 0.0:

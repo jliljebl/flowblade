@@ -1,0 +1,277 @@
+ <!DOCTYPE html>
+<html>
+<head>
+  <title>Container Clips</title>
+  <link rel="stylesheet" href="style.css">
+<script src="toc.js" type="text/javascript"></script>
+</head>
+
+<body>
+
+<div id="content">
+<img src="header_text_5.png">
+
+<script src="tocgen.js"></script>
+
+<div id="toccontent">
+
+<div class="subject-header">Container Clips</div>
+
+
+
+<div id="toc"></div>
+
+<h2>Container Clips Concept</h2>
+<p>
+A <b>Container Clip</b> is a Media Item and the Timeline Clip made from it that has three items packed together as a single entity: <i>Program, Unrendered Media</i> and <i>Rendered Media</i>.
+</p>
+<h3>Components</h3>
+<ol>
+<li><b>Unrendered Media</b> This is what is displayed on timeline if container clip media is not rendered.</li>
+<li><b>Program</b> This data is used to render a media clip on timeline, sometimes using unrendered media as input.</li>
+<li><b>Rendered Media</b> This is what is displayed on timeline when Container Clip is rendered.</li>
+</ol>
+<h2>Rationale</h2>
+<ul>
+<li><b>Performance</b> 
+<p>Container Clips provide means to turn resource heavy media items such as Sequence Clips into rendered media</p>
+</li>
+<li><b>Resource Management</b> <p>For example Blender Projects and G'Mic scripts are nicely managed by having them available via Container Clips</p></li>
+<li><b>Capablity extension</b> <p>Existing technologies and applications can made to provide functionality that is not available otherwise. There will be more developments in this area in the future.</p></li>
+<li><b>Sharing</b> <p>In the future we will create a central repository to share container clip resources.</p></li>
+</ul>
+<h2>Workflow</h2>
+<ol>
+<li>Create Container Clip Media Item using <b>Project -> Create Contaniner Clip</b> menu.</li>
+<li>Edit properties of Container Clip with Right Mouse menu selection <b>Edit Container Data</b> if available.</li>
+<li>Add Container Clip on Timeline.</li>
+<li>Render and manage Container Clips on Timeline with Right Mouse submenu <b>Container Clip Actions</b>.</li>
+</ol>
+
+<h2>Container Clip Types</h2>
+<h3>G'Mic Script Container Clips</h3>
+
+<h5>Components</h5>
+<p>
+<ul style="list-style-type:none">
+<li><b>Unrendered Media</b> Video Clip.</li>
+<li><b>Program</b> G'Mic script created and saved from G'Mic tool.</li>
+<li><b>Rendered Media</b> A clip rendered with G'mic effect.</li>
+</ul>
+</p>
+<p>
+<h5>Use Cases</h5>
+<ul>
+<li>Render G'Mic effects only on clip ranges used on timeline.</li>
+<li>Make easier to use single user defined G'Mic effect on multple clips.</li>
+</ul>
+
+<h5> Creating G'Mic Script Container Clips</h5>
+
+<ol>
+<li>Open <b>G'Mic tool</b>.</li>
+<li>Create G'Mic effect script. See section on <b>G'Mic Effects</b> in Chapter <b>Tools</b>.</li>
+<li>Press <b>Save Script</b> button in bottom left corner and save effect.</li>
+<li>Select menu item <b>Project -> Create Contaniner Clip -> From G'Mic Script</b>.</li>
+<li>Select the script you saved and the clip that it will be applied on to create Container Clip.</li>
+</ol>
+
+<h3>Blender Project Container Clips</h3>
+<h5>Components</h5>
+
+<p>
+<ul style="list-style-type:none">
+<li><b>Unrendered Media</b> A placeholder Video Clip rendered on Media item creation.</li>
+<li><b>Program</b> Project file with *blend extension.</li>
+<li><b>Rendered Media</b> Rendered Clipfrom project file.</li>
+</ul>
+</p>
+<h5>Use Cases</h5>
+<ul>
+<li>Manage Blender projects by having handles for them in Flowblade.</li>
+<li>Create editors for Blender projects so that users can edit their properies on Flowblade</li>
+<li>Make possible to contribute and shear interesting Blender Projects for e.g. so nice text effects.</li>
+</ul>
+
+<h5> Creating Blender Project Container Clips</h5>
+
+<ol>
+<li>Select menu item <b>Project -> Create Contaniner Clip -> From Blender Project</b> and select Blender project file with <i>.blend</i> extension.</li>
+<li>You can edit values that Blender project is rendered with, see section <b>Edíting Container Programs</b> below.</li>
+</ol>
+
+<h3>Selection Container Clips</h3>
+<h5>Components</h5>
+<p>
+<ul style="list-style-type:none">
+<li><b>Unrendered Media</b> A MLT XML vdieo clip created from selection or sequence like Compound clips previously.</li>
+<li><b>Program</b> A MLT XML video clip created from selection or sequence like Compound clips previously. Here Program is the same as unrendered media.</li>
+<li><b>Rendered Media</b> Clip Rendered from MLT XML Clip.</li>
+</ul>
+</p>
+<h5>Use Cases</h5>
+
+<ul>
+<li>Make possible to create Media items from selections and full Sequences.</li>
+<li>Give better timeline performance for complex multitrack container clips by pre-rendering them on timeline.</li>
+</ul>
+
+<h5> Creating Selection Container Clip from Selection</h5>
+
+<ol>
+<li> Select 2 or more adjacent clips from a single track.</li>
+<li> Select <b>Project->Create Container Clip->From Selected Clips</b></li>
+<li> A new Media Item appears in the current Bin.</li>
+</ol>
+
+<h5> Creating Selection Container Clip from Sequence</h5>
+
+<ol>
+<li> Select <b>Project->Create Container Clip->From Current Sequence</b></li>
+<li> A new Media Item appears in the current Bin.</li>
+</ol>
+
+<h5> Creating audio synced Selection Container Clip from two Media Items</h5>
+
+<ol>
+<li> Select 2 Media Items in Media panel.</b>
+	<ul>
+	<li> The expected case is to select <b>1 Video and 1 Audio Clip</b>.</li>
+	<li> If you select <b>2 Video Clips</b> then which is used as video depends on selection order.</li>
+	<li> Audio from clip treated as video is muted.</li>
+	</ul>
+</li>
+<li> Select <b>Project->Create Compound Clip->Audio Sync Merge Clip From 2 Media Items</b></li>
+<li> If audio sync is successful a dialog appers. Give a name for the new Media Item in the dialog.</li>
+<li> A new Media Item appears in the current Bin.</li>
+</ol>
+
+<div class="note">
+Audio syncing looks for best matemathical match between two audio waveforms, so <b>audio syncing non-matching audio will produce random results.</b>
+</div>
+
+<h2>Creating Editable Blender Container Programs</h2>
+
+<p>
+It is possible to create and add editors to Blender Container Clips that allow users to change the rendered output.
+</p>
+<p>
+Feature uses Blender Python API and runs a script before output is rendered to change attribute values of Blender scene objects.
+</p>
+<p>
+This is an advanced feature and requires a working knowledge on scripting using Blender's Python API.
+</p>
+
+<h4>Editable Objects</h4>
+<p>
+Three types of objects are currently availabe to be user edited using this functionality.
+</p>
+<ul>
+<li> <b>Objects</b> are <b>bpy.data.objects</b> objects available for Python scripts.</li>
+<li> <b>Curves</b> are <b>bpy.data.curves</b> objects available for Python scripts.</li>
+<li> <b>Materials</b> are <b>bpy.data.materials</b> objects available for Python scripts.</li>
+</ul>
+
+<h4>Editors</h4>
+<p>
+Five different types of editors are currently availabe for editing object attributes.
+</p>
+<ul>
+<li> <b>String</b> editor outputs a quoted string in the launch script.</li>
+<li> <b>Int</b> editor outputs an integer number in the launch script.</li>
+<li> <b>Float</b> editor outputs a float number in the launch script.</li>
+<li> <b>Color</b> editor outputs a sequence of 4 comma separated floats that define a color.</li>
+<li> <b>Value</b> editor outputs a non-quoted string in the launch script. That can be used as value to any attribute.</li>
+</ul>
+
+<h3>Example</h3>
+<p>
+In this example we create <b>String</b> and <b>Color</b> editors to change text and color rendered from Blender Project file.
+</p>
+<h4>Step 1: Find out object and attribute names using Blenders Script view</h4>
+<p>
+<img src="blender_script.png">
+</p>
+<p>
+<i>Scene and sript panel from Blender with our test project open.</i>
+</p>
+<p>
+Here we have established that:
+</p>
+<ul>
+<li>We need to edit object <b>bpy.data.curves["Title1"]</b> attribute <b>body</b> to set text string.</li>
+<li>We need to edit object <b>bpy.data.materials["Title1.material"]</b> attribute <b>diffuse_color</b> to set text color.</li>
+</ul>
+<h4>Step 2: Edit Container Program Edit Data</h4>
+<p>
+With this information we can create the editors that allow editing text and color of clips rendered from this project.
+</p>
+<ul>
+<li>Create Blender Container clip clip from your project.</li>
+<li>Right click the created Media item and select: Edit Container Program Edit Data</li>
+<li>
+<p>
+To create the text editor we give following data in the dialog, notice how it corresponds with the earlier information.
+</p>
+<p>
+<img src="blender_string_editor.png">
+</p>
+</li>
+<li>
+<p>
+To create the color editor we give following data in the dialog.
+</p>
+<p>
+<img src="blender_color_editor.png">
+</p>
+</li>
+<li>
+<p>
+Remember to press <b>Add Editor</b> to save given data as an editor.
+</p>
+</li>
+</ul>
+<h4>Step 3: Set values for timeline clips</h4>
+<ul>
+<li>Make a Timeline Clip .</li>
+<li>
+<p>
+Right click the clip and select <b>Container Clip Actions->Edit Container Program</b> and edit data in the dialog.
+</p>
+<img src="blender_clip_editor.png">
+</li>
+</ul>
+<div class="note">
+<h4>Launch script</h4>
+<p>
+The editors in this example create the code lines below that set attribute values in the lauch script before render start.
+</p>
+
+<p>
+<i>
+obj = bpy.data.materials["Title1.Material"]
+</i>
+</p>
+<p>
+<i>
+obj.diffuse_color = 0.9882352941176471,0.6862745098039216,0.24313725490196078,1.0
+</i>
+</p>
+<p>
+<i>
+obj = bpy.data.curves["Title1"]
+</i>
+</p>
+<p>
+<i>
+obj.body = "Yesh, this was edited!"
+</i>
+</p>
+</div>
+
+</div>
+</div>
+
+</body>
+
+</html> 

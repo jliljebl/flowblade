@@ -161,7 +161,7 @@ def get_warning_message_dialog_panel(primary_txt, secondary_txt, is_info=False, 
     
     return hbox
 
-def get_single_line_text_input_dialog(chars, label_width,title, ok_button_text,
+def get_single_line_text_input_dialog(chars, label_width, title, ok_button_text,
                                       label, default_text):
     dialog = Gtk.Dialog(title, None,
                             Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
@@ -169,13 +169,13 @@ def get_single_line_text_input_dialog(chars, label_width,title, ok_button_text,
                             ok_button_text, Gtk.ResponseType.OK))
 
     entry = Gtk.Entry()
-    entry.set_width_chars(30)
+    entry.set_width_chars(chars)
     entry.set_text(default_text)
     entry.set_activates_default(True)
 
     entry_row = guiutils.get_two_column_box(Gtk.Label(label=label),
                                                entry,
-                                               180)
+                                               label_width)
 
     vbox = Gtk.VBox(False, 2)
     vbox.pack_start(entry_row, False, False, 0)

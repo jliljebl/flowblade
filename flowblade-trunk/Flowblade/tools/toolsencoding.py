@@ -38,7 +38,7 @@ import utils
 # - when this module is used in main application process it is important that e.g.widgets object 
 #   is created each time module is used to set rendering values for e.g. container clips.
 # - when used by a rendering process like gmicheadless.py we are again good to use module freely,
-#   process cotrols values in this module fully.
+#   G'Mic tool process controls values in this module fully.
 widgets = None
 disable_audio_encoding = False
 default_profile_index = None
@@ -47,11 +47,13 @@ default_profile_index = None
 
 class ToolsRenderData():
     """
-    This is used to save render selections defined by user.
+    This is used to save and communicate render selections defined by user
+    for renders other the main application timeline render such as G'Mic tool and Container 
+    clips renders.
     """
     def __init__(self):
         self.profile_index = None
-        self.use_default_profile = None
+        self.use_default_profile = None # NOT USED, 'profile_index' is the meaningful data here, this one should not have been included in this data struct.
         self.use_preset_encodings = None
         self.presets_index = None
         self.encoding_option_index = None
@@ -64,6 +66,8 @@ class ToolsRenderData():
         self.do_video_render = True
         self.save_internally = True
         self.frame_name = "frame"
+        self.is_preview_render = False
+        self.is_flatpak_render = False
 
 
 def create_container_clip_default_render_data_object(profile):
@@ -131,15 +135,15 @@ def get_encoding_panel(render_data, create_container_file_panel=False):
         render_panel.pack_start(encoding_panel, False, False, 0)
     else:
         render_panel.pack_start(video_clip_panel, False, False, 0)
-    
-    print("render_data", render_data)
+
     if render_data != None:
         widgets.file_panel.movie_name.set_text(render_data.file_name)
         widgets.file_panel.extension_label.set_text(render_data.file_extension)
         widgets.file_panel.out_folder.set_current_folder(render_data.render_dir + "/")
-        widgets.encoding_panel.encoding_selector.widget.set_active(render_data.encoding_option_index) 
+        widgets.encoding_panel.encoding_selector.categorised_combo.set_selected(mltprofiles.get_profile_for_index(render_data.encoding_option_index).description())
         widgets.encoding_panel.quality_selector.widget.set_active(render_data.quality_option_index)
-        widgets.profile_panel.out_profile_combo.widget.set_active(render_data.profile_index)
+        profile_desc = mltprofiles.get_profile_for_index(render_data.profile_index).description()
+        widgets.profile_panel.out_profile_combo.categories_combo.set_selected(profile_desc)
         widgets.profile_panel.use_project_profile_check.set_active(render_data.use_default_profile)
         
         if create_container_file_panel == True:
@@ -188,9 +192,10 @@ def get_profile_info_text(profile):
 
 def get_render_data_for_current_selections():
     render_data = ToolsRenderData()
-    render_data.profile_index = widgets.profile_panel.out_profile_combo.widget.get_active()
+    profile_desc = widgets.profile_panel.out_profile_combo.categories_combo.get_selected()
+    render_data.profile_index = mltprofiles.get_profile_index_for_profile(mltprofiles.get_profile(profile_desc))
     render_data.use_default_profile = widgets.profile_panel.use_project_profile_check.get_active()
-    render_data.encoding_option_index = widgets.encoding_panel.encoding_selector.widget.get_active()
+    render_data.encoding_option_index = widgets.encoding_panel.encoding_selector.get_selected_encoding_index()
     render_data.quality_option_index = widgets.encoding_panel.quality_selector.widget.get_active()
     render_data.presets_index = 0 # presents rendering not available
     render_data.use_preset_encodings = False # presents rendering not available
@@ -207,21 +212,10 @@ def get_render_data_for_current_selections():
 
 def get_args_vals_list_for_render_data(render_data):
     profile = mltprofiles.get_profile_for_index(render_data.profile_index)
-    if render_data.use_preset_encodings == 1:
-        # Preset encodings THIS HAS BEEN DEACTIVATED FOR NOW.
-        # Preset encodings THIS HAS BEEN DEACTIVATED FOR NOW.
-        # Preset encodings THIS HAS BEEN DEACTIVATED FOR NOW.
-        encs = renderconsumer.non_user_encodings
-        if disable_audio_encoding == True:
-            encs = renderconsumer.get_video_non_user_encodigs()
-        encoding_option = encs[render_data.presets_index]
-        args_vals_list = encoding_option.get_args_vals_tuples_list(profile)
-    
-    
-    else: # User encodings
-        args_vals_list = renderconsumer.get_args_vals_tuples_list_for_encoding_and_quality( profile, 
-                                                                                            render_data.encoding_option_index, 
-                                                                                            render_data.quality_option_index)
+
+    args_vals_list = renderconsumer.get_args_vals_tuples_list_for_encoding_and_quality( profile, 
+                                                                                        render_data.encoding_option_index, 
+                                                                                        render_data.quality_option_index)
     # sample rate not supported
     # args rendering not supported
 
@@ -262,8 +256,8 @@ def _preset_selection_changed(w):
     ext = encs[enc_index].extension
     widgets.file_panel.extension_label.set_text("." + ext)
     
-def _out_profile_changed(w):
-    profile = mltprofiles.get_profile_for_index(w.get_active())
+def _out_profile_changed(categorized_combo):
+    profile = mltprofiles.get_profile(categorized_combo.get_selected())
     _fill_info_box(profile)
 
 def _display_default_profile():
@@ -437,7 +431,6 @@ class RenderProfilePanel():
         self.out_profile_combo.widget.set_sensitive(checkbutton.get_active() == False)
         if checkbutton.get_active() == True:
             self.out_profile_combo.widget.set_active(default_profile_index)
-            #_display_default_profile()
             
 
 class RenderEncodingPanel():
@@ -470,19 +463,17 @@ class RenderEncodingPanel():
 
 class ProfileSelector():
     def __init__(self, out_profile_changed_callback=None):
-        self.widget = Gtk.ComboBoxText() # filled later when current sequence known
+        self.categories_combo = get_profiles_combo()
+        self.widget = self.categories_combo.widget
         if out_profile_changed_callback != None:
-            self.widget.connect('changed', lambda w:  out_profile_changed_callback(w))
+            self.widget.connect('changed', lambda w:  out_profile_changed_callback(self.categories_combo))
         self.widget.set_sensitive(False)
         self.widget.set_tooltip_text(_("Select render profile"))
-
+        
     def fill_options(self):
-        self.widget.get_model().clear()
-        #self.widget.append_text(current_sequence().profile.description())
-        profiles = mltprofiles.get_profiles()
-        for profile in profiles:
-            self.widget.append_text(profile[0])
-        self.widget.set_active(default_profile_index)
+        default_profile = mltprofiles.get_profile_for_index(default_profile_index)
+        self.categories_combo.set_selected(default_profile.description())
+
 
 
 class RenderQualitySelector():
@@ -542,11 +533,9 @@ class ProfileInfoBox(Gtk.VBox):
 class RenderEncodingSelector():
 
     def __init__(self, quality_selector, extension_label, audio_desc_label):
-        self.widget = Gtk.ComboBoxText()
-        for encoding in renderconsumer.encoding_options:
-            self.widget.append_text(encoding.name)
-            
-        self.widget.set_active(0)
+        self.categorised_combo = get_encodings_combo()
+        self.widget = self.categorised_combo.widget
+        self.categorised_combo.set_selected(renderconsumer.DEFAULT_ENCODING_NAME)
         self.widget.connect("changed", 
                             lambda w,e: self.encoding_selection_changed(), 
                             None)
@@ -557,15 +546,93 @@ class RenderEncodingSelector():
         self.audio_desc_label = audio_desc_label
         
     def encoding_selection_changed(self):
-        enc_index = self.widget.get_active()
+        try:
+            name, encoding = self.categorised_combo.get_selected()
+            enc_index = renderconsumer.get_encoding_index(encoding)
+            self.quality_selector.update_quality_selection(enc_index)
+            
+            self.extension_label.set_text("." + encoding.extension)
+
+            if self.audio_desc_label != None:
+                self.audio_desc_label.set_markup(encoding.get_audio_description())
+        except:
+            pass # this gets called too early on start-up
+
+    def get_selected_encoding_index(self):
+        name, encoding = self.categorised_combo.get_selected()
+        return renderconsumer.get_encoding_index(encoding)
         
-        self.quality_selector.update_quality_selection(enc_index)
+
+
+def get_profiles_combo():
+    return CategoriesModelComboBox(mltprofiles._categorized_profiles)
+
+
+class CategoriesModelComboBox:
+    
+    def __init__(self, categories_list):
+        self.categories_list = categories_list # categories_list is list of form [("category_name", [category_items]), ...]
+                                               # with category_items list of form ["item_name", ...]
+        self.model = Gtk.TreeStore.new([str])
         
-        encoding = renderconsumer.encoding_options[enc_index]
-        self.extension_label.set_text("." + encoding.extension)
+        for i in range(0, len(categories_list)):
+            name, items = categories_list[i]
+            self.model.append(None, [name])
+            for item_name in items:
+                category_iter = self.model.get_iter_from_string(str(i))
+                self.model.append(category_iter, [item_name])
 
-        if self.audio_desc_label != None:
-            self.audio_desc_label.set_markup(encoding.get_audio_description())
+        self.widget = Gtk.ComboBox.new_with_model(self.model)
+        renderer_text = Gtk.CellRendererText()
+        self.widget.pack_start(renderer_text, True)
+        self.widget.add_attribute(renderer_text, "text", 0)
 
+    def set_selected(self, active_item_name):
+        for i in range(0, len(self.categories_list)):
+            name, items = self.categories_list[i]
+            for j in range(0, len(items)):
+                if items[j] == active_item_name:
+                    iter = self.model.get_iter_from_string(str(i) + ":" + str(j))
+                    self.widget.set_active_iter(iter)
+                    
+    def get_selected(self):        
+        indices = self.model.get_path(self.widget.get_active_iter()).get_indices()
+        name, items = self.categories_list[indices[0]]
+        return items[indices[1]]
 
+def get_encodings_combo():
+    return CategoriesModelComboBoxWithData(renderconsumer.categorized_encoding_options)
 
+class CategoriesModelComboBoxWithData:
+    
+    def __init__(self, categories_list):
+        self.categories_list = categories_list # categories_list is list of form [("category_name", [category_items]), ...]
+                                               # with category_items list of form [("item_name", data_object), ...]
+        self.model = Gtk.TreeStore.new([str])
+        
+        for i in range(0, len(categories_list)):
+            name, items = categories_list[i]
+            self.model.append(None, [name])
+            for item in items:
+                item_name, item_data = item
+                category_iter = self.model.get_iter_from_string(str(i))
+                self.model.append(category_iter, [item_name])
+
+        self.widget = Gtk.ComboBox.new_with_model(self.model)
+        renderer_text = Gtk.CellRendererText()
+        self.widget.pack_start(renderer_text, True)
+        self.widget.add_attribute(renderer_text, "text", 0)
+
+    def set_selected(self, active_item_name):
+        for i in range(0, len(self.categories_list)):
+            name, items = self.categories_list[i]
+            for j in range(0, len(items)):
+                item_name, item_data = items[j]
+                if item_name == active_item_name:
+                    iter = self.model.get_iter_from_string(str(i) + ":" + str(j))
+                    self.widget.set_active_iter(iter)
+                    
+    def get_selected(self):        
+        indices = self.model.get_path(self.widget.get_active_iter()).get_indices()
+        name, items = self.categories_list[indices[0]]
+        return items[indices[1]]

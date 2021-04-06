@@ -3,6 +3,7 @@
     <!-- See propertyparse.py, propertyedit.py and propertyeditorbuilder.py modules for attr and argument keys and values explanations-->
     <!-- NOTE: 'displayname' args values have spaces encoded as ! character so "X Scatter" becomes "X!Scatter" -->
     <!-- NOTE: extra spaces (more than 1) between key=value pairs crash when opening filter in editor -->
+    <!-- NOTE: If range_out arg is not set, values will converted to be in normalized range 0-1 -->
 
     <!-- ALPHA -->
     <filter id="frei0r.alphagrad">
@@ -112,6 +113,7 @@
         <property name="feather" args="editor=no_editor range_in=0,20 range_out=0,20 displayname=Feather">0</property>
         <property name="feather_passes" args="editor=no_editor range_in=1,5 range_out=1,5 displayname=Feather!Passes">1</property>
         <property name="spline" args="editor=no_editor exptype=roto_json">{"0": []}</property>
+        <propertynonmlt name="mask_type" args="editor=no_editor">1</propertynonmlt>
         <extraeditor name="rotomask"></extraeditor> 
    </filter>
     <filter id="brightness">
@@ -121,7 +123,6 @@
         <property name="level" args="editor=no_editor">1</property>
         <property name="alpha" args="range_in=0,100 range_out=0,1 editor=keyframe_editor_clip_fade_filter exptype=keyframe_hcs displayname=Opacity">0=1</property>
     </filter>
-
     <!-- FADES -->
     <filter id="brightness">
         <name>Fade In</name>
@@ -144,7 +145,6 @@
         <property name="level" args="editor=no_editor">1</property>
         <property name="alpha" args="range_in=0,100 range_out=0,1 value_replacement=fade_in_out_replament editor=keyframe_editor_clip_fade_filter exptype=keyframe_hcs displayname=Opacity">0=1</property>
     </filter>
-
     <!-- FILTER MASK FILTERS -->
     <filter id="mask_start"  filtermaskfilter="Alpha Shape">
         <name>Mask - Begin</name>
@@ -179,26 +179,51 @@
     
     
     <!-- AUDIO -->
+    <!-- DEPRECATED, replaced by non-multipart filter below 31.10.2020.  
     <filter id="volume" multipart="true">
         <name>Volume</name>
         <group>Audio</group>
         <multipartproperty multistartprop="gain" multiendprop="end" args="editor=keyframe_editor_release range_in=0,200 range_out=0.0,2.0 exptype=multipart_keyframe displayname=Volume">"0=1.0"</multipartproperty>
         <property name="max_gain" args="editor=no_editor exptype=not_parsed">20dB</property>
         <property name="track" args="editor=no_editor">0</property>
-        <property name="gain" args="editor=no_editor">1</property> <!-- Volume at start of filter --> 
-        <property name="end" args="editor=no_editor">1</property> <!-- Volume at end of filter --> 
+        <property name="gain" args="editor=no_editor">1</property> 
+        <property name="end" args="editor=no_editor">1</property> 
+    </filter> 
+    -->
+    <filter id="volume">
+      <name>Volume</name>
+      <group>Audio</group>
+      <property name="window" args="editor=no_editor">75</property>
+      <property name="max_gain" args="editor=no_editor">20dB</property>
+      <property name="level" args="editor=keyframe_editor_release range_in=-70,20 range_out=-70,20 exptype=keyframe_hcs displayname=Volume!dB">0=0.0</property>
     </filter>
-    <filter id="panner">
-        <name>Pan</name>
-        <group>Audio</group>
-        <property name="start" args="range_in=-100,100 editor=ladspa_slider displayname=Left/Right">0.5</property>
-    </filter>
+    <!-- DEPRECATED, replaced by non-multipart filters below 31.10.2020.  
     <filter id="panner" multipart="true">
         <name>Pan Keyframed</name>
         <group>Audio</group>
         <multipartproperty multistartprop="start" multiendprop="end" args="editor=keyframe_editor_release range_in=-100,100 exptype=multipart_keyframe displayname=Left/Right">"0=0.5"</multipartproperty>
         <property name="start" args="editor=no_editor">0.5</property>
         <property name="end" args="editor=no_editor">0.5</property>   
+    </filter>
+    -->
+    <filter id="panner">
+        <name>Pan</name>
+        <group>Audio</group>
+        <property name="start" args="range_in=-100,100 editor=ladspa_slider displayname=Left/Right">0.5</property>
+    </filter>
+    <filter id="panner">
+      <name>Pan Left Channel</name>
+      <group>Audio</group>
+      <property name="channel" args="editor=no_editor">0</property>
+        <property name="start" args="editor=no_editor">0</property>
+      <property name="split" args="editor=keyframe_editor_release range_in=-100,100 exptype=keyframe_hcs displayname=Left/Right">0=0.0</property>
+    </filter>
+    <filter id="panner">
+      <name>Pan Right Channel</name>
+      <group>Audio</group>
+      <property name="channel" args="editor=no_editor">1</property>
+      <property name="start" args="editor=no_editor">1</property>
+      <property name="split" args="editor=keyframe_editor_release range_in=-100,100 exptype=keyframe_hcs displayname=Left/Right">0=1.0</property>
     </filter>
     <filter id="ladspa.1406">
         <name>Mono to Stereo</name>
@@ -445,6 +470,27 @@
         <group>Artistic</group>
         <property name="Blur" args="range_in=0,10">0.0</property>
     </filter>
+    <filter id="grain">
+        <name>Grain</name>
+        <group>Artistic</group>
+        <property name="noise" args="range_in=0,100 range_out=0,200 displayname=Noise">40</property>
+        <property name="contrast" args="range_in=-33,99 range_out=0,400 displayname=Contrast">100</property>
+        <property name="brightness" args="range_in=-33,99 range_out=0,344 displayname=Brightness">85</property>
+    </filter>
+    <filter id="dust">
+        <name>Dust</name>
+        <group>Artistic</group>
+        <property name="maxdiameter" args="range_in=0,100 range_out=0,100 displayname=Max!Diameter">2</property>
+        <property name="maxcount" args="range_in=0,400 range_out=0,400 displayname=Max!Count">4</property>
+    </filter>
+    <filter id="lines">
+        <name>Lines</name>
+        <group>Artistic</group>
+        <property name="line_width" args="range_in=0,100 range_out=0,100 displayname=Line!Width">2</property>
+        <property name="num" args="range_in=0,100 range_out=0,100 displayname=Number">4</property>
+        <property name="darker" args="range_in=0,100 range_out=0,100 displayname=Darker">20</property>
+        <property name="lighter" args="range_in=0,100 range_out=0,100 displayname=Lighter">20</property>
+    </filter>
     <filter id="oldfilm">
         <name>Old Film</name>
         <group>Artistic</group>
@@ -538,32 +584,25 @@
         <group>Blur</group>
         <property name="Kernel size" args="range_in=0,500 editor=keyframe_editor exptype=keyframe_hcs range_out=0.0,0.5 displayname=Size">"0=0.0"</property>
     </filter>
-    <filter id="grain">
-        <name>Grain</name>
-        <group>Blur</group>
-        <property name="noise" args="range_in=0,100 range_out=0,200 displayname=Noise">40</property>
-        <property name="contrast" args="range_in=-33,99 range_out=0,400 displayname=Contrast">100</property>
-        <property name="brightness" args="range_in=-33,99 range_out=0,344 displayname=Brightness">85</property>
-    </filter>
-   <filter id="frei0r.IIRblur">
-         <name>IRR Blur</name>
+    <filter id="frei0r.IIRblur">
+        <name>IRR Blur</name>
         <group>Blur</group>
         <property name="Amount" args="range_in=0,100 displayname=Amount">0.25</property>
         <property name="Type" args="editor=combobox exptype=default cbopts=Sharper:0.3,Fuzzier:0.8" >0.8</property>
         <property name="Edge" args="editor=booleancheckbox displayname=Edge">1</property>
-   </filter>
-   <filter id="boxblur">
+    </filter>
+    <filter id="boxblur">
         <name>Box Blur</name>
         <group>Blur</group>
         <property name="start" args="range_in=1,50 range_out=1,50 displayname=Amount">5</property>
         <property name="hori" args="range_in=1,50 range_out=1,50 displayname=Horizontal">7</property>
         <property name="vert" args="range_in=1,50 range_out=1,50 displayname=Vertical">7</property>
-   </filter>
-   <filter id="frei0r.rgbnoise">
+    </filter>
+    <filter id="frei0r.rgbnoise">
         <name>RGB Noise</name>
         <group>Blur</group>
         <property name="noise" args="range_in=0,100 range_out=0,1.0 displayname=Amount">0.2</property>
-   </filter>
+    </filter>
 
 
 
@@ -618,30 +657,24 @@
         <group>Color</group>
         <property name="Hue" args="range_in=0,360">0.0</property>
     </filter>
+    <!-- Dropped 31.10.2020, keep info on these changes available here
     <filter id="frei0r.brightness" mlt_drop_version="0.9.1">
         <name>Brightness</name>
         <group>Color</group>
         <property name="Brightness" args="range_in=-100,100">0.5</property>
     </filter>
+
     <filter id="brightness" multipart="true" mlt_drop_version="0.9.1">
         <name>Brightness Keyframed</name>
         <group>Color</group>
         <multipartproperty multistartprop="start" multiendprop="end" args="editor=keyframe_editor range_in=0,100 exptype=multipart_keyframe displayname=Brightness">"0=1.0"</multipartproperty>
     </filter>
+    -->
     <filter id="brightness" mlt_min_version="0.9.1">
         <name>Brightness</name>
         <group>Color</group>
         <property name="level" args="exptype=keyframe_hcs editor=keyframe_editor range_in=0,200 range_out=0.0,2.0 displayname=Level">0=1.0</property>
     </filter>
-    
-    <!--
-    <filter id="frei0r.balanc0r">
-        <name>White Balance</name>
-        <group>Color</group>
-        <property name="Neutral Color" args="editor=color_select exptype=color displayname=Neutral!Color">#ffffff</property>
-        <property name="Green Tint" args="editor=no_editor exptype=singlekeyframe">0=1.2</property>
-    </filter>
-    -->
     <filter id="rgblut">
         <name>Color Grading</name>
         <group>Color</group>
@@ -993,8 +1026,8 @@
         <name>Position Scale</name>
         <group>Transform</group>
             <property name="transition.fill" args="editor=no_editor">1</property>
-            <property name="transition.distort" args="editor=no_editor">0</property>
-            <property name="transition.rect"  args="editor=filter_rect_geometry_editor range_in=0,100 range_out=0,100 exptype=geom_filt_rect_kf">0=0 0 Screensize2 1;20=100 100 Screensize2 1</property>
+            <property name="transition.distort" args="editor=no_editor">1</property>
+            <property name="transition.rect"  args="editor=filter_rect_geometry_editor range_in=0,100 range_out=0,100 exptype=geom_filt_rect_kf">0=0 0 Screensize2 1</property>
             <property name="transition.valign" args="editor=no_editor exptype=not_parsed">top</property>
             <property name="transition.halign" args="editor=no_editor exptype=not_parsed">left</property>
             <property name="transition.threads" args="editor=no_editor">0</property>
@@ -1021,7 +1054,6 @@
             <property name="transition.scale_y" args="editor=slider range_in=0,500 exptype=affine_scale displayname=Y!Scale">1</property>
           <property name="transition.threads" args="editor=no_editor">0</property>
     </filter>
-
 
     <!-- compositor filters that are not displayed to user, not used currently -->
     <filter id="frei0r.mask0mate">

@@ -32,6 +32,7 @@ import gui
 import guicomponents
 import guiutils
 import editorstate
+import mltfilters
 import mlttransitions
 import renderconsumer
 import respaths
@@ -66,8 +67,9 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hambu
     video_pixbuf = guiutils.get_cairo_image("show_video_files")
     imgseq_pixbuf = guiutils.get_cairo_image("show_imgseq_files")
     pattern_pixbuf = guiutils.get_cairo_image("show_pattern_producers")
+    unused_pixbuf = guiutils.get_cairo_image("show_unused_files")
 
-    files_filter_launcher = guicomponents.ImageMenuLaunch(filtering_cb, [all_pixbuf, video_pixbuf, audio_pixbuf, graphics_pixbuf, imgseq_pixbuf, pattern_pixbuf], 24*size_adj, 22*size_adj)
+    files_filter_launcher = guicomponents.ImageMenuLaunch(filtering_cb, [all_pixbuf, video_pixbuf, audio_pixbuf, graphics_pixbuf, imgseq_pixbuf, pattern_pixbuf, unused_pixbuf], 24*size_adj, 22*size_adj)
     files_filter_launcher.surface_x  = 3
     files_filter_launcher.surface_y  = 4
     files_filter_launcher.widget.set_tooltip_text(_("Visible Media File types."))
@@ -314,13 +316,10 @@ def get_transition_panel(trans_data):
                                        in_clip_value)
 
     # Encoding widgets
-    encodings_cb = Gtk.ComboBoxText()
-    for encoding in renderconsumer.encoding_options:
-        encodings_cb.append_text(encoding.name)
-    encodings_cb.set_active(0)
+    encodings, encodings_cb = _get_encodings_widget_and_list()
 
     quality_cb = Gtk.ComboBoxText()
-    transition_widgets = (encodings_cb, quality_cb)
+    transition_widgets = (encodings_cb, encodings, quality_cb)
     encodings_cb.connect("changed", 
                               lambda w,e: _transition_encoding_changed(transition_widgets), 
                               None)
@@ -352,7 +351,19 @@ def get_transition_panel(trans_data):
 
     alignment = guiutils.set_margins(vbox, 12, 24, 12, 12)
 
-    return (alignment, type_combo_box, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button, steal_frames)
+    return (alignment, type_combo_box, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button, steal_frames, encodings)
+
+def _get_encodings_widget_and_list():
+    # We have an unexplained issue with rendering using libx264 vcodec
+    # that needs to be papered over with this.
+    encodings_cb = Gtk.ComboBoxText()
+    encodings = []
+    for encoding in renderconsumer.encoding_options:
+        if encoding.vcodec != "libx264":
+            encodings_cb.append_text(encoding.name)
+            encodings.append(encoding)
+    encodings_cb.set_active(0)
+    return (encodings, encodings_cb)
 
 def get_transition_re_render_panel(trans_data):
     transition_length = trans_data["clip"] .clip_out - trans_data["clip"].clip_in + 1 # +1 out inclusive
@@ -361,13 +372,10 @@ def get_transition_re_render_panel(trans_data):
     transition_length_row = get_two_column_box(transition_length_label, transition_length_value)
 
     # Encoding widgets
-    encodings_cb = Gtk.ComboBoxText()
-    for encoding in renderconsumer.encoding_options:
-        encodings_cb.append_text(encoding.name)
-    encodings_cb.set_active(0)
+    encodings, encodings_cb = _get_encodings_widget_and_list()
 
     quality_cb = Gtk.ComboBoxText()
-    transition_widgets = (encodings_cb, quality_cb)
+    transition_widgets = (encodings_cb, encodings, quality_cb)
     encodings_cb.connect("changed", 
                               lambda w,e: _transition_encoding_changed(transition_widgets), 
                               None)
@@ -389,7 +397,7 @@ def get_transition_re_render_panel(trans_data):
     alignment = guiutils.set_margins(vbox, 12, 24, 12, 12)
     alignment.set_size_request(450, 200)
     
-    return (alignment, encodings_cb, quality_cb)
+    return (alignment, encodings_cb, quality_cb, encodings)
 
 def get_fade_re_render_panel(trans_data):
     fade_length = trans_data["clip"] .clip_out - trans_data["clip"].clip_in + 1 # +1 out inclusive
@@ -398,13 +406,10 @@ def get_fade_re_render_panel(trans_data):
     fade_length_row = get_two_column_box(fade_length_label, fade_length_value)
 
     # Encoding widgets
-    encodings_cb = Gtk.ComboBoxText()
-    for encoding in renderconsumer.encoding_options:
-        encodings_cb.append_text(encoding.name)
-    encodings_cb.set_active(0)
+    encodings, encodings_cb = _get_encodings_widget_and_list()
 
     quality_cb = Gtk.ComboBoxText()
-    transition_widgets = (encodings_cb, quality_cb)
+    transition_widgets = (encodings_cb, encodings, quality_cb)
     encodings_cb.connect("changed", 
                               lambda w,e: _transition_encoding_changed(transition_widgets), 
                               None)
@@ -426,7 +431,7 @@ def get_fade_re_render_panel(trans_data):
     alignment = guiutils.set_margins(vbox, 12, 24, 12, 12)
     alignment.set_size_request(450, 200)
     
-    return (alignment, encodings_cb, quality_cb)
+    return (alignment, encodings_cb, quality_cb, encodings)
 
 def get_re_render_all_panel(rerender_list, unrenderable):
     rerendercount_label = Gtk.Label(label=_("Transitions / Fades to be rerendered:"))
@@ -444,13 +449,10 @@ def get_re_render_all_panel(rerender_list, unrenderable):
         info_vbox.pack_start(unrenderable_info_label, False, False, 0)
     
     # Encoding widgets
-    encodings_cb = Gtk.ComboBoxText()
-    for encoding in renderconsumer.encoding_options:
-        encodings_cb.append_text(encoding.name)
-    encodings_cb.set_active(0)
+    encodings, encodings_cb = _get_encodings_widget_and_list()
 
     quality_cb = Gtk.ComboBoxText()
-    transition_widgets = (encodings_cb, quality_cb)
+    transition_widgets = (encodings_cb, encodings, quality_cb)
     encodings_cb.connect("changed", 
                               lambda w,e: _transition_encoding_changed(transition_widgets), 
                               None)
@@ -469,7 +471,7 @@ def get_re_render_all_panel(rerender_list, unrenderable):
     alignment = guiutils.set_margins(vbox, 12, 24, 12, 12)
     alignment.set_size_request(450, 120)
     
-    return (alignment, encodings_cb, quality_cb)
+    return (alignment, encodings_cb, quality_cb, encodings)
     
 def get_fade_panel(fade_data):
     type_combo_box = Gtk.ComboBoxText()    
@@ -494,20 +496,16 @@ def get_fade_panel(fade_data):
                                     length_entry)
 
     # Encoding widgets
-    encodings_cb = Gtk.ComboBoxText()
-    for encoding in renderconsumer.encoding_options:
-        encodings_cb.append_text(encoding.name)
-    encodings_cb.set_active(0)
+    encodings, encodings_cb = _get_encodings_widget_and_list()
 
     quality_cb = Gtk.ComboBoxText()
-    transition_widgets = (encodings_cb, quality_cb)
+    transition_widgets = (encodings_cb, encodings, quality_cb)
     encodings_cb.connect("changed", 
                               lambda w,e: _transition_encoding_changed(transition_widgets), 
                               None)
 
     _fill_transition_quality_combo_box(transition_widgets, 10)
     _set_saved_encoding(transition_widgets)
-    
     
     # Build panel
     edit_vbox = Gtk.VBox(False, 2)
@@ -525,14 +523,17 @@ def get_fade_panel(fade_data):
 
     alignment = guiutils.set_margins(vbox, 12, 24, 12, 12)
     
-    return (alignment, type_combo_box, length_entry, encodings_cb, quality_cb, color_button)
+    return (alignment, type_combo_box, length_entry, encodings_cb, quality_cb, color_button, encodings)
     
 def _transition_encoding_changed(widgets):
     _fill_transition_quality_combo_box(widgets)
  
 def _fill_transition_quality_combo_box(widgets, quality_index=-1):
-    encodings_cb, quality_cb = widgets
-    enc_index = encodings_cb.get_active()
+
+    encodings_cb, encodings, quality_cb = widgets
+    sel_enc_index = encodings_cb.get_active()
+    sel_enc = encodings[sel_enc_index]
+    enc_index = renderconsumer.encoding_options.index(sel_enc)
     encoding = renderconsumer.encoding_options[enc_index]
 
     quality_cb.get_model().clear()
@@ -550,9 +551,17 @@ def _fill_transition_quality_combo_box(widgets, quality_index=-1):
 def _set_saved_encoding(transition_widgets):
     saved_encoding = editorstate.PROJECT().get_project_property(appconsts.P_PROP_TRANSITION_ENCODING)
     if saved_encoding != None:
-        encodings_cb, quality_cb = transition_widgets
+        encodings_cb, encodings, quality_cb = transition_widgets
         enc_index, quality_index = saved_encoding
-        encodings_cb.set_active(enc_index)
+        # enc index is for all available renderencodings in renderconsumer,
+        # combobox only displays subset (because of h264 audio bug) and we need find out 
+        # index for it from encdoings list that holds the same subset.
+        encoding = renderconsumer.encoding_options[enc_index]
+        try:
+            selected_encoding_option_index = encodings.index(encoding)
+        except:
+            selected_encoding_option_index = 0
+        encodings_cb.set_active(selected_encoding_option_index)
         quality_cb.set_active(quality_index)
     
 def _transition_type_changed(transition_type_widgets):
@@ -572,6 +581,37 @@ def _transition_type_changed(transition_type_widgets):
         color_button.set_sensitive(True)
         wipe_label.set_sensitive(False)
         color_label.set_sensitive(True)
+    
+def get_effect_selection_panel(double_click_cb):
+    effects_list_view = guicomponents.FilterListView(None)
+    group_combo_box = Gtk.ComboBoxText()
+
+    for group in mltfilters.groups:
+        group_name, filters_array = group
+        group_combo_box.append_text(group_name)
+    group_combo_box.set_active(0)
+    group_combo_box.connect("changed", 
+                            lambda w,e: _group_selection_changed(w,effects_list_view), 
+                            None)
+
+    combo_row = Gtk.HBox(False, 2)
+    combo_row.pack_start(group_combo_box, True, True, 0)
+    
+    group_name, filters_array = mltfilters.groups[0]
+    effects_list_view.fill_data_model(filters_array)
+    effects_list_view.treeview.get_selection().select_path("0")
+    effects_list_view.treeview.connect("row-activated", double_click_cb, group_combo_box)
+      
+    effects_vbox = Gtk.VBox(False, 2)
+    effects_vbox.pack_start(combo_row, False, False, 0)
+    effects_vbox.pack_start(effects_list_view, True, True, 0)
+    
+    return (guiutils.set_margins(effects_vbox, 4, 4, 4, 4), effects_list_view, group_combo_box)
+
+def _group_selection_changed(group_combo, filters_list_view):
+    group_name, filters_array = mltfilters.groups[group_combo.get_active()]
+    filters_list_view.fill_data_model(filters_array)
+    filters_list_view.treeview.get_selection().select_path("0")
     
 # -------------------------------------------------- guiutils
 def get_bold_label(text):

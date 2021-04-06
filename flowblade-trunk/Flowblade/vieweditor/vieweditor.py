@@ -50,7 +50,6 @@ class ViewEditor(Gtk.Frame):
         self.write_out_layers = False
         self.write_file_path = None
 
-
         self.edit_area_update_blocked = False
     
         self.edit_area = cairoarea.CairoDrawableArea2(int(self.scaled_screen_width + MIN_PAD * 2), self.profile_h + MIN_PAD * 2, self._draw)
@@ -205,24 +204,7 @@ class ViewEditor(Gtk.Frame):
             self.edit_target_layer.handle_mouse_release(p)
             self.edit_area.queue_draw()
         self.edit_target_layer = None
-    
-    """
-    def _mouse_scroll_listener(self, event):
-        if self.scale_select != None:
-            active_index = self.scale_select.combo.get_active()
-            if event.direction == Gdk.ScrollDirection.UP:
-                active_index = active_index + 1
-                if active_index > 7:
-                    active_index = 7
-            else:
-                active_index = active_index - 1
-                if active_index < 0:
-                    active_index = 0
-            self.scale_select.combo.set_active(active_index)
 
-        return True
-    """
-    
     # -------------------------------------------- coord conversions
     def panel_coord_to_movie_coord(self, panel_point):
         panel_x, panel_y = panel_point
@@ -286,7 +268,7 @@ class ViewEditor(Gtk.Frame):
         cr.fill()
 
 
-        if self.bg_buf is not None:
+        if (self.bg_buf is not None) and self.write_out_layers == False:
 
             # Create cairo surface
             stride = cairo.ImageSurface.format_stride_for_width(cairo.FORMAT_RGB24, self.profile_w)
@@ -300,26 +282,29 @@ class ViewEditor(Gtk.Frame):
             cr.set_source_surface(surface, 0, 0)
             cr.paint()
             cr.restore()
-        
-        if self.write_out_layers == True:
-            # We need to go to 1.0 scale, 0,0 origo draw for out the file 
+            img_surface = None
+        elif self.write_out_layers == True:
+            # We need to go to 1.0 scale, 0,0 origo draw for the out file.
+            # These values are used by editor layers.
             current_scale = self.scale
             self.scale = 1.0
             self.origo = (0.0, 0.0)
+            # For writing out image we create new surface and context from it,
+            # e.g. now we need alpha channel too.
             img_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.profile_w, self.profile_h)
             cr = cairo.Context(img_surface)
 
         for editorlayer in self.edit_layers:
             if editorlayer.visible:
                 editorlayer.draw(cr, self.write_out_layers, self.draw_overlays)
-        
+
         if self.write_out_layers == True:
             img_surface.write_to_png(self.write_file_path)
             self.write_file_path = None # to make sure user components set this every time
             self.write_out_layers = False
             self.set_scale_and_update(current_scale) # return to user set scale
-        
-        self._draw_guidelines(cr)
+        else:
+            self._draw_guidelines(cr)
         
     def _draw_guidelines(self, cr):
         ox, oy = self.origo

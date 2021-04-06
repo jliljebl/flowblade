@@ -19,9 +19,10 @@
 """
 
 """
-Module provides utility methods for moduless creating headless render procesesses
-for container clips rendering.
+Module provides utility methods for moduless creating headless render procesesses.
+Used mostly for container clips rendering, hence ContainerClipsRenderingUTILS.
 """
+
 import os
 import pickle
 import sys
@@ -40,7 +41,6 @@ STATUS_MSG_FILE = "status"
 ABORT_MSG_FILE = "abort"
 RENDER_DATA_FILE = "render_data"
 
-
 _session_folder = None
 _clip_frames_folder_internal = None
 _rendered_frames_folder_internal = None
@@ -48,7 +48,7 @@ _rendered_frames_folder_internal = None
 _render_data = None
 
 
-# ----------------------------------------------------- interface with message files, used by main appp
+# ----------------------------------------------------- interface with message files, used by main app
 # We are using message files to communicate with application.
 def clear_flag_files(session_id):
     folder = _get_session_folder(session_id)
@@ -105,9 +105,14 @@ def get_session_status_message(session_id):
 def abort_render(session_id):
     folder = _get_session_folder(session_id)
     abort_msg_file = folder + "/" +  ABORT_MSG_FILE
-    with atomicfile.AtomicFileWriter(abort_msg_file, "wb") as afw:
-        outfile = afw.get_file()
-        pickle.dump("##abort", outfile)
+
+    try:
+        with atomicfile.AtomicFileWriter(abort_msg_file, "wb") as afw:
+            outfile = afw.get_file()
+            pickle.dump("##abort", outfile)
+    except atomicfile.AtomicFileWriteError:
+        # Sometimes this fails and not handling it makes things worse, see if this needs more attention.
+        print("atomicfile.AtomicFileWriteError in ccrutils.abort_render(), could not open for writing: ", folder)
         
 def _get_session_folder(session_id):
     return userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_DIR +  "/" + session_id
@@ -128,7 +133,29 @@ def init_session_folders(session_id):
     if not os.path.exists(_rendered_frames_folder_internal):
         os.mkdir(_rendered_frames_folder_internal)
 
+def delete_internal_folders(session_id):
+    # This works only if clip frames and rendered frames folder are empty already.
+    # This is used my motinheadless.py that uses container clips folders only to communicate render status
+    # back and forth.
+    _session_folder = _get_session_folder(session_id)
+    _clip_frames_folder_internal = _session_folder + CLIP_FRAMES_DIR
+    _rendered_frames_folder_internal = _session_folder + RENDERED_FRAMES_DIR
+    
+    if os.path.exists(_clip_frames_folder_internal):
+        os.rmdir(_clip_frames_folder_internal)
+    if os.path.exists(_rendered_frames_folder_internal):
+        os.rmdir(_rendered_frames_folder_internal)
+    if os.path.exists(_session_folder):
+        files = os.listdir(_session_folder)
+        for f in files:
+            file_path = _session_folder + "/" + f
+            os.remove(file_path)
+        os.rmdir(_session_folder)
+
 def maybe_init_external_session_folders():
+    if _render_data == None:
+        return
+
     if _render_data.save_internally == False:
         if not os.path.exists(clip_frames_folder()):
             os.mkdir(clip_frames_folder())
@@ -150,6 +177,12 @@ def rendered_frames_folder():
     else:
         return _render_data.render_dir + RENDERED_FRAMES_DIR
 
+def preview_frames_folder():
+    if _render_data.save_internally == True:
+        return  _session_folder + appconsts.CC_PREVIEW_RENDER_DIR
+    else:
+        return _render_data.render_dir + appconsts.CC_PREVIEW_RENDER_DIR
+        
 def write_status_message(msg):
     try:
         status_msg_file = session_folder() + "/" + STATUS_MSG_FILE
@@ -168,8 +201,11 @@ def write_completed_message():
             
 def load_render_data():
     global _render_data
-    render_data_path = _session_folder + "/" + RENDER_DATA_FILE
-    _render_data = utils.unpickle(render_data_path)  # toolsencoding.ToolsRenderData object
+    try:
+        render_data_path = _session_folder + "/" + RENDER_DATA_FILE
+        _render_data = utils.unpickle(render_data_path)  # toolsencoding.ToolsRenderData object
+    except:
+        _render_data = None
 
 def get_render_data():
     return _render_data

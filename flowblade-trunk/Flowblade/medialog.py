@@ -21,6 +21,7 @@
 import datetime
 
 from gi.repository import Gtk
+from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import GdkPixbuf
 from gi.repository import Pango
@@ -29,6 +30,7 @@ import appconsts
 import dialogs
 import dnd
 import edit
+import editorlayout
 import gui
 import guicomponents
 import guiutils
@@ -45,7 +47,7 @@ import utils
 widgets = utils.EmptyClass()
 
 do_multiple_clip_insert_func = None # this is monkeypathched here in app.py
-
+log_changed_since_last_save = False
 actions_popup_menu = Gtk.Menu()        
 
 # Sort order
@@ -54,9 +56,7 @@ NAME_SORT = appconsts.NAME_SORT
 COMMENT_SORT = appconsts.COMMENT_SORT
 
 sorting_order = TIME_SORT
-
-range_log_notebook_index = 1 # this is set 0 for 2 window mode
-
+_use_comments_for_name = False
 
 # ----------------------------------- log data object
 class MediaLogEvent:
@@ -87,11 +87,30 @@ class MediaLogEvent:
         date_str = date_str.lstrip('0')
         return date_str
 
+def _mark_log_changed():
+    global log_changed_since_last_save
+    log_changed_since_last_save = True
 
 # ----------------------------------------------------------- dnd drop
 def clips_drop(clips):
     for clip in clips:
         if clip.media_type == appconsts.VIDEO or clip.media_type == appconsts.AUDIO or clip.media_type == appconsts.IMAGE_SEQUENCE:
+            if PROJECT().proxy_data.proxy_mode == appconsts.USE_ORIGINAL_MEDIA:
+                clip_path = clip.path
+            else:
+                # We are in proxy mode, find out original media path
+                media_item = PROJECT().get_media_file_for_path(clip.path)
+                if media_item != None:
+                    # 'media_item.second_file_path' points now to original media
+                    # if proxy file exits.
+                    clip_path = media_item.second_file_path
+                    if clip_path == None:
+                        # no proxy for this clip, use media from dragged clip
+                        clip_path = clip.path
+                else:
+                    # no media item for this clip, use media from dragged clip
+                    clip_path = clip.path
+
             log_event = MediaLogEvent(  appconsts.MEDIA_LOG_MARKS_SET,
                                         clip.clip_in,
                                         clip.clip_out,
@@ -100,7 +119,7 @@ def clips_drop(clips):
             log_event.ttl = clip.ttl
             editorstate.PROJECT().media_log.append(log_event)
     _update_list_view(log_event)
-    
+    _mark_log_changed()
 
 # ----------------------------------------------------------- gui events
 def media_log_filtering_changed():
@@ -114,7 +133,8 @@ def media_log_star_button_pressed():
         log_events[index].starred = True
 
     widgets.media_log_view.fill_data_model()
-
+    _mark_log_changed()
+    
 def media_log_no_star_button_pressed():
     selected = widgets.media_log_view.get_selected_rows_list()
     log_events = get_current_filtered_events()
@@ -123,7 +143,8 @@ def media_log_no_star_button_pressed():
         log_events[index].starred = False
 
     widgets.media_log_view.fill_data_model()
-
+    _mark_log_changed()
+    
 def log_range_clicked():
     media_file = editorstate.MONITOR_MEDIA_FILE()
     if media_file == None:
@@ -133,30 +154,43 @@ def log_range_clicked():
        return 
     if media_file.mark_in == -1 or media_file.mark_out == -1:
         return
-
+    
+    file_path = media_file.path
+    if PROJECT().proxy_data.proxy_mode == appconsts.USE_PROXY_MEDIA:
+        if media_file.second_file_path != None:
+            file_path = media_file.second_file_path # proxy file exists
+        else:
+            file_path = media_file.path # no proxy file created
+            
     log_event = MediaLogEvent(  appconsts.MEDIA_LOG_MARKS_SET,
                                 media_file.mark_in,
                                 media_file.mark_out,
                                 media_file.name,
-                                media_file.path)
+                                file_path)
     log_event.ttl = media_file.ttl
 
     editorstate.PROJECT().media_log.append(log_event)
     editorstate.PROJECT().add_to_group(_get_current_group_index(), [log_event])
     _update_list_view(log_event)
-
+    _mark_log_changed()
+    
 def _update_list_view(log_event):
     widgets.media_log_view.fill_data_model()
-    max_val = widgets.media_log_view.treeview.get_vadjustment().get_upper()
-    gui.middle_notebook.set_current_page(range_log_notebook_index)
+    max_val = widgets.media_log_view.scroll.get_vadjustment().get_upper()
+    editorlayout.show_panel(appconsts.PANEL_RANGE_LOG)
     view_group = get_current_filtered_events()
     try:
         event_index = view_group.index(log_event)
         widgets.media_log_view.treeview.get_selection().select_path(str(event_index))
-        widgets.media_log_view.treeview.get_vadjustment().set_value(max_val)
     except:
         pass # if non-starred are not displayed currently. TODO: think of logic, should new items into displayed category?
-        
+
+    GLib.idle_add(_scroll_window, max_val)
+
+def _scroll_window(max_val):
+    widgets.media_log_view.scroll.get_vadjustment().set_value(max_val)
+    return False
+
 def log_item_name_edited(cell, path, new_text, user_data):
     if len(new_text) == 0:
         return
@@ -164,9 +198,11 @@ def log_item_name_edited(cell, path, new_text, user_data):
     item_index = int(path)
     current_view_events = get_current_filtered_events()
     current_view_events[item_index].comment = new_text
-
-    widgets.media_log_view.fill_data_model()
-
+    tree_path = Gtk.TreePath.new_from_indices([item_index])
+    iter = widgets.media_log_view.storemodel.get_iter(tree_path)
+    widgets.media_log_view.storemodel.set_value (iter, 1, new_text)
+    _mark_log_changed()
+        
 def delete_selected():
     selected = widgets.media_log_view.get_selected_rows_list()
     log_events = get_current_filtered_events()
@@ -174,6 +210,7 @@ def delete_selected():
     for row in selected:
         index = max(row) # these are tuple, max to extract only value
         delete_events.append(log_events[index])
+        
     current_group_index = _get_current_group_index()
     if current_group_index != -1: # When user created group is displayed item is only deleted from that group
         PROJECT().remove_from_group(current_group_index, delete_events)
@@ -183,7 +220,8 @@ def delete_selected():
         PROJECT().delete_media_log_events(delete_events)
 
     widgets.media_log_view.fill_data_model()
-
+    _mark_log_changed()
+    
 def display_item(row):
     log_events = get_current_filtered_events()
     event_item = log_events[row]
@@ -222,6 +260,10 @@ def _log_event_menu_item_selected(widget, data):
         display_item(row)
     elif item_id == "renderslowmo":
         render_slowmo_from_item(row)
+
+def _use_comments_toggled(widget):
+    global _use_comments_for_name
+    _use_comments_for_name = widget.get_active()
 
 def render_slowmo_from_item(row):
     log_events = get_current_filtered_events()
@@ -284,17 +326,26 @@ def insert_selected_log_events():
     do_multiple_clip_insert_func(track, clips, tline_pos)
 
 def get_log_event_clip(log_event):
-    # pre versions 1.16 do not have this attr in log_event objects
+    # Versions before 1.16 do not have this attr in log_event objects
     if not hasattr(log_event, "ttl"):
         log_event.ttl = None
 
     # currently quaranteed not to be a pattern producer
-    new_clip = editorstate.current_sequence().create_file_producer_clip(log_event.path, None, False, log_event.ttl)
-        
+    if PROJECT().proxy_data.proxy_mode == appconsts.USE_ORIGINAL_MEDIA:
+        new_clip = editorstate.current_sequence().create_file_producer_clip(log_event.path, None, False, log_event.ttl)
+    else:
+        # We are in proxy mode, use proxy clip if available.
+        media_item = PROJECT().get_media_file_for_second_path(log_event.path) # 'log_event.path' is always original media,
+                                                                              # if we are in proxy mode we want to use proxy media if possible
+        if media_item != None:
+            new_clip = editorstate.current_sequence().create_file_producer_clip(media_item.path, None, False, log_event.ttl)
+        else:
+            new_clip = editorstate.current_sequence().create_file_producer_clip(log_event.path, None, False, log_event.ttl)
+            
     # Set clip in and out points
     new_clip.clip_in = log_event.mark_in
     new_clip.clip_out = log_event.mark_out
-    if widgets.use_comments_check.get_active() == True:
+    if _use_comments_for_name == True:
         new_clip.name = log_event.comment
         if len(new_clip.name) == 0:
             new_clip.name = log_event.name
@@ -350,6 +401,14 @@ def _group_action_pressed(widget, event):
     _unsensitive_for_all_view(item)
     actions_menu.add(item)
 
+    guiutils.add_separetor(actions_menu)
+    
+    comments_item = Gtk.CheckMenuItem.new_with_label(label=_("Use Comments as Clip Names"))
+    comments_item.set_active(_use_comments_for_name)
+    comments_item.connect("toggled", _use_comments_toggled)
+    comments_item.show()
+    actions_menu.add(comments_item)
+    
     guiutils.add_separetor(actions_menu)
     
     sort_item = Gtk.MenuItem(_("Sort by"))
@@ -443,7 +502,8 @@ def _delete_with_items_dialog_callback(dialog, response_id):
     PROJECT().media_log_groups.pop(current_group_index)
     _create_group_select()
     widgets.group_view_select.set_active(0)
-    
+    _mark_log_changed()
+        
 def _rename_callback(dialog, response_id, entry):
     new_name = entry.get_text()
     dialog.destroy()
@@ -459,7 +519,8 @@ def _rename_callback(dialog, response_id, entry):
     PROJECT().media_log_groups.insert(current_group_index, (new_name, items))
     _create_group_select()
     widgets.group_view_select.set_active(current_group_index + 1)
-
+    _mark_log_changed()
+    
 def _viewed_group_changed(widget):
     update_media_log_view()
 
@@ -493,7 +554,8 @@ def _new_group_name_callback(dialog, response_id, data):
     _create_group_select()
     widgets.group_view_select.set_active(len(PROJECT().media_log_groups))
     update_media_log_view()
-
+    _mark_log_changed()
+    
 def _sorting_changed(msg):
     global sorting_order
     if msg == "time":
@@ -718,11 +780,6 @@ def get_media_log_events_panel(events_list_view):
     delete_button.set_size_request(80, 30)
     delete_button.connect("clicked", lambda w:delete_selected())
 
-    use_comments_label = Gtk.Label(label=_("Use Comments as Clip Names"))
-    use_comments_check =  Gtk.CheckButton()
-    use_comments_check.set_active(False)
-    widgets.use_comments_check = use_comments_check
-
     insert_displayed = Gtk.Button()
     insert_displayed.set_image(guiutils.get_image("insert_media_log"))
     insert_displayed.set_size_request(80, 22)
@@ -737,9 +794,6 @@ def get_media_log_events_panel(events_list_view):
     row2.pack_start(group_actions_menu.widget, False, True, 0)
     row2.pack_start(widgets.log_range, False, True, 0)
     row2.pack_start(delete_button, False, True, 0)
-    row2.pack_start(Gtk.Label(), True, True, 0)
-    row2.pack_start(use_comments_label, False, True, 0)
-    row2.pack_start(use_comments_check, False, True, 0)
     row2.pack_start(Gtk.Label(), True, True, 0)
     row2.pack_start(insert_displayed, False, True, 0)
     row2.pack_start(append_displayed, False, True, 0)
