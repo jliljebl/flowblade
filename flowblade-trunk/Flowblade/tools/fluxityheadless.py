@@ -90,7 +90,6 @@ def abort_render(session_id):
 
 # --------------------------------------------------- render process
 def main(root_path, session_id, script, clip_path, range_in, range_out, profile_desc, fluxity_frame_offset):
-    ccrutils.prints_to_log_file("/home/janne/fluxlog")
 
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION

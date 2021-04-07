@@ -1130,6 +1130,7 @@ class FluxityRangeRenderer(threading.Thread):
             
         # GUI quarantees valid range here.
         in_frame = _player.producer.mark_in
+        self.in_frame = in_frame
         out_frame = _player.producer.mark_out
         
         fctx = fluxity.render_frame_sequence(self.script, in_frame, out_frame, self.render_folder, self.profile_file_path, self.frame_write_update)
@@ -1151,8 +1152,7 @@ class FluxityRangeRenderer(threading.Thread):
             _window.pos_bar.widget.queue_draw()
             _window.out_view.get_buffer().set_text("success:\n" + "rendered some frames!")
             _window.media_info.set_markup("<small>" + _("Range preview for frame range ") + str(in_frame) + " - " + str(out_frame)  +"</small>")
-            
-            
+
             Gdk.threads_leave()
         else:
             Gdk.threads_enter()
@@ -1168,7 +1168,11 @@ class FluxityRangeRenderer(threading.Thread):
 
     def frame_write_update(self, frame):
         Gdk.threads_enter()
+
         _window.media_info.set_markup("<small>" + _("Rendered frame ") + str(frame) + "</small>")
+        _window.pos_bar.preview_range = (self.in_frame, frame)
+        _window.pos_bar.widget.queue_draw()
+            
         Gdk.threads_leave()
 
 
