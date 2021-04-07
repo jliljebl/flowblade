@@ -1,10 +1,10 @@
 # Installing Flowblade
 
-1. [Installing deb package](./INSTALLING.md#installing-deb-package)
-   1. [Installing Flatpak from Flathub](./INSTALLING.md#installing-flatpak-from-flathub)
-   2. [Installing from your OS repository](./INSTALLING.md#installing-from-your-os-repository)
-   3. [Installing using Development Repository Version](./INSTALLING.md#installing-using-development-repository-version)
-   4. [Installing with setup.py not supported](./INSTALLING.md#installing-with-setuppy-not-supported)   
+  * [Installing deb package](./INSTALLING.md#installing-deb-package)
+  * [Installing Flatpak from Flathub](./INSTALLING.md#installing-flatpak-from-flathub)
+  * [Installing from your OS repository](./INSTALLING.md#installing-from-your-os-repository)
+  * [Installing using Development Repository Version](./INSTALLING.md#installing-using-development-repository-version)
+  * [Installing with setup.py not supported](./INSTALLING.md#installing-with-setuppy-not-supported)   
       
       ### Installing deb package
 
