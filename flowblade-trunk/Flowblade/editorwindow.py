@@ -837,7 +837,7 @@ class EditorWindow:
             ('CompositingModeMenu', None, _('Compositing Mode')),
             ('TimelineRenderingMenu', None, _('Timeline Rendering')),
             ('PatternProducersMenu', None, _('Create Pattern Producer')),
-            ('MediaPluginsMenu', None, _('Add Media Plugin Item')),
+            ('MediaPluginsMenu', None, _('Add Media Plugin')),
             ('CreateNoiseClip', None, _('Noise'), None, None, lambda a:patternproducer.create_noise_clip()),
             ('CreateBarsClip', None, _('EBU Bars'), None, None, lambda a:patternproducer.create_bars_clip()),
             ('CreateIsingClip', None, _('Ising'), None, None, lambda a:patternproducer.create_icing_clip()),
