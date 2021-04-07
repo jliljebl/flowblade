@@ -10,7 +10,7 @@
 
 #### Step 1. Download and install .deb
 
-**NOTE: Flowblade now requires MLT 6.18 that is NOT availble on e.g. Ubuntu 18.04. The reason for this situation is the recent move to Python3.**
+**NOTE: Flowblade now requires MLT 6.18 that is NOT available on e.g. Ubuntu 18.04. The reason for this situation is the recent move to Python3.**
 
 **First download .deb file** for Flowblade 2.8.0.2 from <a href="https://github.com/jliljebl/flowblade/releases">here.</a>
 
