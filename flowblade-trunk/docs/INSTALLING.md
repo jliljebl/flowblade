@@ -6,7 +6,7 @@
   * [Installing using Development Repository Version](./INSTALLING.md#installing-using-development-repository-version)
   * [Installing with setup.py not supported](./INSTALLING.md#installing-with-setuppy-not-supported)   
       
-      ### Installing deb package
+### Installing deb package
 
 #### Step 1. Download and install .deb
 
