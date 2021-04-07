@@ -849,7 +849,6 @@ class EditorWindow:
             ('ImportProjectMedia', None, _('Import Media From Project...'), None, None, lambda a:projectaction.import_project_media()),
             ('ContainerClipsMenu', None, _('Create Container Clip')),
             ('CreateGMicContainerItem', None, _("From G'Mic Script"), None, None, lambda a:containerclip.create_gmic_media_item()),
-            ('CreateFluxityContainerItem', None, _("From Flowblade Media Plugin Script"), None, None, lambda a:containerclip.create_fluxity_media_item()),
             ('CreateBlenderContainerItem', None, _("From Blender Project"), None, None, lambda a:containerclip.create_blender_media_item()),
             ('CombineSequences', None, _('Import Another Sequence Into This Sequence...'), None, None, lambda a:projectaction.combine_sequences()),
             ('LogClipRange', None, _('Log Marked Clip Range'), '<control>L', None, lambda a:medialog.log_range_clicked()),
@@ -959,7 +958,6 @@ class EditorWindow:
                         <menuitem action='CreateSequenceCompound'/>
                         <menuitem action='AudioSyncCompoundClip'/>
                         <separator/>
-                        <menuitem action='CreateFluxityContainerItem'/>
                         <menuitem action='CreateGMicContainerItem'/>
                         <menuitem action='CreateBlenderContainerItem'/>
                     </menu>
@@ -1298,7 +1296,14 @@ class EditorWindow:
             menu.remove(item)
         
         mediaplugin.fill_media_plugin_sub_menu(menu)
-        
+        sep = Gtk.SeparatorMenuItem()
+        menu.append(sep)
+
+        # Window Mode
+        load_script_menu_item = Gtk.MenuItem(_("Load Media Plugin Script"))
+        load_script_menu_item.connect("activate", lambda w: containerclip.create_fluxity_media_item())
+        menu.append(load_script_menu_item)
+
     def hide_tline_render_strip(self):
         guiutils.remove_children(self.tline_renderer_hbox)
 
