@@ -19,7 +19,7 @@
 """
 
 """
-Module provides utility methods for moduless creating headless render procesesses.
+Module provides utility methods for modules creating headless render procesesses.
 Used mostly for container clips rendering, hence ContainerClipsRenderingUTILS.
 """
 

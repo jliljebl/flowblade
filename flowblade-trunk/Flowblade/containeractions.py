@@ -573,7 +573,7 @@ class GMicContainerActions(AbstractContainerActionObject):
                         job_msg.progress = 1.0
 
                     if job_msg.progress > 1.0:
-                        # Ffix how progress is calculated in gmicheadless because producers can render a bit longer then required.
+                        # Fix how progress is calculated in gmicheadless because producers can render a bit longer then required.
                         job_msg.progress = 1.0
 
                 job_msg.elapsed = float(elapsed)

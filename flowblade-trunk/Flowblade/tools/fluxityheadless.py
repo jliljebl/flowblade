@@ -90,6 +90,7 @@ def abort_render(session_id):
 
 # --------------------------------------------------- render process
 def main(root_path, session_id, script, clip_path, range_in, range_out, profile_desc, fluxity_frame_offset):
+    ccrutils.prints_to_log_file("/home/janne/fluxlog")
 
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION
@@ -184,7 +185,15 @@ class FluxityHeadlessRunnerThread(threading.Thread):
 
         editors_data_json = json.dumps(self.fluxity_plugin_edit_data["editors_list"]) # See fluxity.FluxityContext.get_script_data()
         
-        fluxity.render_frame_sequence(user_script, self.range_in, self.range_out, rendered_frames_folder, profile_file_path, self.frames_update, editors_data_json)
+        fluxity.render_frame_sequence(user_script, 
+                                      self.range_in, 
+                                      self.range_out, 
+                                      rendered_frames_folder, 
+                                      profile_file_path, 
+                                      self.frames_update, 
+                                      editors_data_json,
+                                      True)
+        
         render_length = self.range_out - self.range_in 
         while len(os.listdir(rendered_frames_folder)) != render_length:
             if self.abort == True:
@@ -205,7 +214,9 @@ class FluxityHeadlessRunnerThread(threading.Thread):
             consumer = renderconsumer.get_mlt_render_consumer(file_path, profile, args_vals_list)
 
             # Render producer
-            frame_file = rendered_frames_folder + "/" + frame_name + "_0000.png"
+            num_part = str(1).zfill(5)
+            
+            frame_file = rendered_frames_folder + "/" + frame_name + "_" + num_part + ".png"
             resource_name_str = utils.get_img_seq_resource_name(frame_file, True)
 
             resource_path = rendered_frames_folder + "/" + resource_name_str
@@ -218,7 +229,6 @@ class FluxityHeadlessRunnerThread(threading.Thread):
             self.render_player.start()
 
             while self.render_player.stopped == False:
-                
                 self.abort_requested()
                 
                 if self.abort == True:
@@ -229,10 +239,9 @@ class FluxityHeadlessRunnerThread(threading.Thread):
                 self.video_render_update_callback(fraction)
                 
                 time.sleep(0.3)
-            
-            #ccrutils.delete_rendered_frames()
 
-        
+            ccrutils.delete_rendered_frames()
+
         # Write out completed flag file.
         ccrutils.write_completed_message()
 
@@ -251,21 +260,11 @@ class FluxityHeadlessRunnerThread(threading.Thread):
         
         msg = "1 " + str(frame) + " " + str(self.length) + " " + str(elapsed)
         self.write_status_message(msg)
-        
-    def script_render_update_callback(self, frame_count):
-        if self.abort_requested() == True:
-             self.script_renderer.abort = True
-             return
-        
-        # step 1, frame , range
-        elapsed = time.monotonic() - self.start_time
-        msg = "2 " + str(frame_count) + " " + str(self.length) + " " + str(elapsed)
-        self.write_status_message(msg)
 
     def video_render_update_callback(self, fraction):
         # step 1, frame , range
         elapsed = time.monotonic() - self.start_time
-        msg = "3 " + str(int(fraction * self.length)) + " " + str(self.length) + " " + str(elapsed)
+        msg = "2 " + str(int(fraction * self.length)) + " " + str(self.length) + " " + str(elapsed)
         self.write_status_message(msg)
         
     def write_status_message(self, msg):

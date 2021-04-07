@@ -431,7 +431,9 @@ class FluxityContextPrivate:
         
         self.preview_render = preview_render
         self.output_folder = output_folder
-        
+        self.start_out_from_frame_one = False
+        self.in_frame = -1
+
         self.frame = -1
         
         self.frame_surface = None
@@ -478,7 +480,11 @@ class FluxityContextPrivate:
             exception_msg = "Output folder " + self.output_folder + " does not exist."
             _raise_fluxity_error(exception_msg)
         
-        filepath = self.output_folder + "/" + self.frame_name + "_" + str(self.frame).rjust(5, "0") + ".png"
+        out_frame_number = self.frame
+        if self.start_out_from_frame_one == True:
+            out_frame_number = self.frame - self.in_frame + 1 
+
+        filepath = self.output_folder + "/" + self.frame_name + "_" + str(out_frame_number).rjust(5, "0") + ".png"
         if is_preview_frame == True:
             filepath = self.output_folder + "/preview.png"
         self.frame_surface.write_to_png(filepath)
@@ -554,7 +560,7 @@ def render_preview_frame(script, frame, out_folder, profile_file_path, editors_d
         fctx.error = str(e)
         return fctx
 
-def render_frame_sequence(script, in_frame, out_frame, out_folder, profile_file_path, frame_write_callback=None, editors_data_json=None):
+def render_frame_sequence(script, in_frame, out_frame, out_folder, profile_file_path, frame_write_callback=None, editors_data_json=None, start_out_from_frame_one=False):
     try:
         # Init script and context.
         error_msg, results = _init_script_and_context(script, out_folder, profile_file_path)
@@ -577,6 +583,8 @@ def render_frame_sequence(script, in_frame, out_frame, out_folder, profile_file_
 
         fctx.priv_context.first_rendered_frame_path = None # Should be clear but let's make sure. 
         fctx.priv_context.current_method = METHOD_RENDER_FRAME
+        fctx.priv_context.start_out_from_frame_one = start_out_from_frame_one
+        fctx.priv_context.in_frame = in_frame
         
         for frame in range(in_frame, out_frame):
             fctx.priv_context.create_frame_surface(frame)
