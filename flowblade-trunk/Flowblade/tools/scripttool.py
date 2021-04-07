@@ -79,6 +79,7 @@ CAIRO_DRAW_MONITOR = "cairo_draw_monitor"  # This one used to show single frames
 TICKER_DELAY = 0.25
 
 _session_id = None
+_last_save_path = None
 
 _window = None
 
@@ -318,15 +319,21 @@ def save_script_dialog(callback):
 def _save_script_dialog_callback(dialog, response_id):
     if response_id == Gtk.ResponseType.ACCEPT:
         file_path = dialog.get_filenames()[0]
-        buf = _window.script_view.get_buffer()
-        script_text = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), include_hidden_chars=True)
-        with atomicfile.AtomicFileWriter(file_path, "w") as afw:
-            script_file = afw.get_file()
-            script_file.write(script_text)
+        _save_script(file_path)
         dialog.destroy()
     else:
         dialog.destroy()
 
+def _save_script(file_path):
+    buf = _window.script_view.get_buffer()
+    script_text = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), include_hidden_chars=True)
+    with atomicfile.AtomicFileWriter(file_path, "w") as afw:
+        script_file = afw.get_file()
+        script_file.write(script_text)
+    _window.set_title(file_path + " - " + _window.tool_name)
+    global _last_save_path
+    _last_save_path = file_path
+        
 def load_script_dialog(callback):
     dialog = Gtk.FileChooserDialog(_("Load Script"), None, 
                                    Gtk.FileChooserAction.OPEN, 
@@ -343,6 +350,9 @@ def _load_script_dialog_callback(dialog, response_id):
         script_file = open(filename)
         script_text = script_file.read()
         _window.script_view.get_buffer().set_text(script_text)
+        _window.set_title(filename + " - " + _window.tool_name)
+        global _last_save_path
+        _last_save_path = filename
         _reinit_init_playback()
         dialog.destroy()
     else:
@@ -350,10 +360,14 @@ def _load_script_dialog_callback(dialog, response_id):
 
 #-------------------------------------------------- menu
 def _hamburger_menu_callback(widget, msg):
+    global _last_save_path
     if msg == "load_script":
         load_script_dialog(_load_script_dialog_callback)
     elif msg == "save_script":
         save_script_dialog(_save_script_dialog_callback)
+    elif msg == "save":
+        if _last_save_path != None:
+            _save_script(_last_save_path)    
     elif msg == "render_preview":
         render_preview()
     elif msg == "close":
@@ -363,6 +377,8 @@ def _hamburger_menu_callback(widget, msg):
     else:
         script_text = mediaplugin.get_plugin_code(msg)
         _window.script_view.get_buffer().set_text(script_text)
+        _window.set_title(_window.tool_name)
+        _last_save_path = None
         _reinit_init_playback()
         
 def _get_menu_item(text, callback, data, sensitive=True):
@@ -578,7 +594,7 @@ class ScriptToolWindow(Gtk.Window):
         self.set_icon(app_icon)
         hamburger_launcher_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger.png")
         self.hamburger_launcher = guicomponents.PressLaunch(self.hamburger_launch_pressed, hamburger_launcher_surface)
-        
+
         # ---------------------------------------------------------------------- TOP ROW
         # ---------------------------------------------------------------------- TOP ROW
         # ---------------------------------------------------------------------- TOP ROW
@@ -874,7 +890,9 @@ class ScriptToolWindow(Gtk.Window):
 
         # Set pane and show window
         self.add(align)
-        self.set_title(_("Flowblade Media Plugin Editor"))
+        self.tool_name = _("Flowblade Media Plugin Editor")
+        #self.not_saved = _("Not Saved")
+        self.set_title(self.tool_name)
         self.set_position(Gtk.WindowPosition.CENTER)
         self.show_all()
         self.set_active_state(True)
@@ -933,8 +951,12 @@ class ScriptToolWindow(Gtk.Window):
         menu = _hamburger_menu
         guiutils.remove_children(menu)
         
-        menu.add(_get_menu_item(_("Open Script File") + "...", _hamburger_menu_callback, "load_script" ))
-        menu.add(_get_menu_item(_("Save Script File") + "...", _hamburger_menu_callback, "save_script" ))
+        menu.add(_get_menu_item(_("Open Script") + "...", _hamburger_menu_callback, "load_script" ))
+        menu.add(_get_menu_item(_("Save Script As") + "...", _hamburger_menu_callback, "save_script" ))
+        save_item = _get_menu_item(_("Save"), _hamburger_menu_callback, "save" )
+        if _last_save_path == None:
+            save_item.set_sensitive(False)
+        menu.add(save_item)
         _add_separetor(menu)
         plugin_menu_item = Gtk.MenuItem.new_with_label(_("Load Plugin Code"))
         plugin_menu = Gtk.Menu()
@@ -1028,8 +1050,15 @@ class ScriptToolWindow(Gtk.Window):
 
 #------------------------------------------------- global key listener
 def _global_key_down_listener(widget, event):
-
+    # CTRL + S saving
+    if event.keyval == Gdk.KEY_s:
+        if _last_save_path == None:
+            save_script_dialog(_save_script_dialog_callback)
+        else:
+            _save_script(_last_save_path)
+            
     # Script view and frame name entry need their own key presses
+    # and we can't e.g. use up LEFT ARROW here.
     if _window.frame_name.has_focus() or _window.script_view.has_focus():
         return False
         
