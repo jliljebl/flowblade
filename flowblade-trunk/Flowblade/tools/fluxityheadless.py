@@ -191,7 +191,6 @@ class FluxityHeadlessRunnerThread(threading.Thread):
                 return
             time.sleep(0.5)
         
-        """
         # Render video
         if self.render_data.do_video_render == True:
             # Render consumer
@@ -204,7 +203,7 @@ class FluxityHeadlessRunnerThread(threading.Thread):
                 file_path = self.render_data.render_dir +  "/" + self.render_data.file_name + self.render_data.file_extension
         
             consumer = renderconsumer.get_mlt_render_consumer(file_path, profile, args_vals_list)
-            
+
             # Render producer
             frame_file = rendered_frames_folder + "/" + frame_name + "_0000.png"
             resource_name_str = utils.get_img_seq_resource_name(frame_file, True)
@@ -231,8 +230,8 @@ class FluxityHeadlessRunnerThread(threading.Thread):
                 
                 time.sleep(0.3)
             
-            ccrutils.delete_rendered_frames()
-        """
+            #ccrutils.delete_rendered_frames()
+
         
         # Write out completed flag file.
         ccrutils.write_completed_message()

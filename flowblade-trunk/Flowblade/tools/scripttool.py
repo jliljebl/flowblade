@@ -1242,6 +1242,7 @@ class FluxityPluginRenderer(threading.Thread):
                     
         # Render video
         if _window.encode_check.get_active() == True:
+
             # Render consumer
             args_vals_list = toolsencoding.get_args_vals_list_for_render_data(_render_data)
             profile = mltprofiles.get_profile_for_index(_current_profile_index) 
@@ -1270,9 +1271,7 @@ class FluxityPluginRenderer(threading.Thread):
                 
                 fraction = self.render_player.get_render_fraction()
                 update_info = _("Rendering video, ") + str(int(fraction * 100)) + _("% done")
-                
-                print(fraction, self.render_player.producer.frame(), self.render_player.stop_frame, self.render_player.producer.get_speed(), self.render_player.consumer.is_stopped())
-                
+                    
                 Gdk.threads_enter()
                 _window.render_percentage.set_markup("<small>" + update_info + "</small>")
                 _window.render_progress_bar.set_fraction(fraction)
@@ -1321,10 +1320,7 @@ class FluxityPluginRenderer(threading.Thread):
             _window.encode_settings_button.set_sensitive(True)
             _window.encode_desc.set_sensitive(True)
 
-    def shutdown(self):
-        if self.frames_range_writer != None:
-            self.frames_range_writer.shutdown()
-        
+    def shutdown(self):        
         if self.render_player != None:
             self.render_player.shutdown()        
 
