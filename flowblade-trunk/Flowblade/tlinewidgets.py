@@ -278,6 +278,8 @@ TRACK_GRAD_STOP3 = (0, 0.5, 0.5, 0.55, 1) #0.58, 0.58, 0.58, 1) #(0, 0.84, 0.84,
 TRACK_GRAD_ORANGE_STOP1 = (1, 0.65, 0.65, 0.65, 1)
 TRACK_GRAD_ORANGE_STOP3 = (0, 0.65, 0.65, 0.65, 1)
 
+DARK_THEME_COLUMN_BG = ((62.0/255.0), (62.0/255.0), (62.0/255.0))
+
 LIGHT_MULTILPLIER = 1.14
 DARK_MULTIPLIER = 0.74
 
@@ -377,6 +379,7 @@ def load_icons_and_set_colors():
         FRAME_SCALE_LINES = (0.8, 0.8, 0.8)
         if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME \
             or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
+            or editorpersistance.prefs.theme == appconsts.DARK_THEME \
             or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
             TRACK_GRAD_STOP1 = (1,  0.12, 0.14, 0.2, 1)
             TRACK_GRAD_STOP3 = (1,  0.12, 0.14, 0.2, 1)
@@ -393,9 +396,11 @@ def load_icons_and_set_colors():
             BLANK_CLIP_COLOR_GRAD = (1, 0.12, 0.14, 0.2, 1)
             BLANK_CLIP_COLOR_GRAD_L = (0, 0.12, 0.14, 0.2, 1)
             if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
+                or editorpersistance.prefs.theme == appconsts.DARK_THEME \
                 or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
                 r, g ,b = utils.cairo_color_from_gdk_color(gui.get_light_gray_light_color())
-                if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+                if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL \
+                    or editorpersistance.prefs.theme == appconsts.DARK_THEME :
                     r, g ,b = utils.cairo_color_from_gdk_color(gui.get_light_neutral_color())
                 BLANK_CLIP_COLOR_GRAD = (1, 0.20, 0.20, 0.20, 1)
                 BLANK_CLIP_COLOR_GRAD_L = (1, 0.20, 0.20, 0.20, 1)
@@ -2470,14 +2475,19 @@ class TimeLineColumn:
     def _draw(self, event, cr, allocation):
         x, y, w, h = allocation
         # Draw bg
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY or \
-            editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL \
+            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
+            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
             r, g, b, a = gui.unpack_gdk_color(gui.get_darker_neutral_color())
             if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
                 r, g, b, a = gui.get_light_gray_bg_in_cairo_rgb()
             elif editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
                 r, g, b, a = gui.unpack_gdk_color(gui.get_bg_color())
             cr.set_source_rgb(r, g, b)
+            cr.rectangle(0, 0, w, h)
+            cr.fill()
+        elif editorpersistance.prefs.theme == appconsts.DARK_THEME:
+            cr.set_source_rgba(*DARK_THEME_COLUMN_BG)
             cr.rectangle(0, 0, w, h)
             cr.fill()
         else:
