@@ -249,7 +249,6 @@ def runtime_version_greater_then_test_version(test_version, runtime_version):
     
     return False
 
-
 def get_sdl_consumer_version():
     return consumer_sdl_version
 

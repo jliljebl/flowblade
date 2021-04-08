@@ -441,11 +441,7 @@ def monkeypatch_callbacks():
 # ---------------------------------- SDL2 consumer
 def create_sdl_2_consumer():
     GObject.source_remove(disk_cache_timeout_id)
-<<<<<<< HEAD
     print("Creating SDL2 consumer...")
-=======
-    print "Creating SDL2 consumer..."
->>>>>>> sdl2-src
     editorstate.PLAYER().create_sdl2_video_consumer()
 
 # ---------------------------------- program, sequence and project init
