@@ -112,6 +112,7 @@ class Player:
         print("before connect_and_start")
         self.connect_and_start()
         print("connect_and_start done")
+
     def set_scrubbing(self, scrubbing_active):
         if scrubbing_active == True:
             self.consumer.set("scrub_audio", 1)
