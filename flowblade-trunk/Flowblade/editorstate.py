@@ -138,6 +138,9 @@ SDL_1 = 1
 SDL_2 = 2
 consumer_sdl_version = SDL_1
 
+# Timeline rendering
+tline_render_mode = appconsts.TLINE_RENDERING_OFF
+
 # Trim clips cache for quicker inits, path -> clip
 _trim_clips_cache = {}
 
