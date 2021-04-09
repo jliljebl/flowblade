@@ -1,18 +1,18 @@
 # Installing Flowblade
 
-1. [Installing deb package](./INSTALLING.md#installing-deb-package)
-   1. [Installing Flatpak from Flathub](./INSTALLING.md#installing-flatpak-from-flathub)
-   2. [Installing from your OS repository](./INSTALLING.md#installing-from-your-os-repository)
-   3. [Installing using Development Repository Version](./INSTALLING.md#installing-using-development-repository-version)
-   4. [Installing with setup.py not supported](./INSTALLING.md#installing-with-setuppy-not-supported)   
+  * [Installing deb package](./INSTALLING.md#installing-deb-package)
+  * [Installing Flatpak from Flathub](./INSTALLING.md#installing-flatpak-from-flathub)
+  * [Installing from your OS repository](./INSTALLING.md#installing-from-your-os-repository)
+  * [Installing using Development Repository Version](./INSTALLING.md#installing-using-development-repository-version)
+  * [Installing with setup.py not supported](./INSTALLING.md#installing-with-setuppy-not-supported)   
       
-      ### Installing deb package
+### Installing deb package
 
 #### Step 1. Download and install .deb
 
-**NOTE: Flowblade now requires MLT 6.18 that is NOT availble on e.g. Ubuntu 18.04. The reason for this situation is the recent move to Python3.**
+**NOTE: Flowblade now requires MLT 6.18 that is NOT available on e.g. Ubuntu 18.04. The reason for this situation is the recent move to Python3.**
 
-**First download .deb file** for Flowblade 2.8 from <a href="https://github.com/jliljebl/flowblade/releases">here.</a>
+**First download .deb file** for Flowblade 2.8.0.2 from <a href="https://github.com/jliljebl/flowblade/releases">here.</a>
 
 Double click on <b>.deb</b> file to install it. 
 
@@ -22,7 +22,7 @@ On some systems double clicking may not work and you need to install <b>.deb</b>
     <li>    <p>Open terminal in the directory you saved the  downloaded <b>.deb</b> file. Give command:    </li>
 </ul>
 
-    sudo apt install ./flowblade-2.8.0-1_all.deb
+    sudo apt install ./flowblade-2.8.0.2-1_all.deb
 
 ### Installing Flatpak from Flathub
 
@@ -49,7 +49,7 @@ flatpak run io.github.jliljebl.Flowblade
 
 #### Flatpak missing few features
 
-Unfortanately some features are not available via Flatpak install yet.
+Unfortunately some features are not available via Flatpak install yet.
 
 * Batch Render Queue does not work
 * Blender Container Clips are not available
@@ -68,7 +68,7 @@ sudo apt-get install flowblade
 
 #### Archlinux
 
-_Latest release_. Visit the <a href="https://aur.archlinux.org/packages/flowblade/">AUR</a> page or use terminal command:
+_Latest release_. Visit the <a href="https://archlinux.org/packages/community/any/flowblade/">AUR</a> page or use terminal command:
 
 ```bash
 yaourt -S flowblade

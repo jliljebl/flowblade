@@ -54,7 +54,7 @@ shortcuts_combo = None
 scroll_hold_panel = None
 
 def new_project_dialog(callback):
-    default_profile_index = mltprofiles.get_default_profile_index()
+    default_desc = mltprofiles.get_profile_name_for_index(mltprofiles.get_default_profile_index())
     default_profile = mltprofiles.get_default_profile()
 
     dialog = Gtk.Dialog(_("New Project"), gui.editor_window.window,
@@ -62,14 +62,11 @@ def new_project_dialog(callback):
                         (_("Cancel"), Gtk.ResponseType.REJECT,
                          _("OK"), Gtk.ResponseType.ACCEPT))
 
-    out_profile_combo = Gtk.ComboBoxText()
-    profiles = mltprofiles.get_profiles()
-    for profile in profiles:
-        out_profile_combo.append_text(profile[0])
-
-    out_profile_combo.set_active(default_profile_index)
+    out_profile_combo = guicomponents.get_profiles_combo()
+    out_profile_combo.set_selected(default_desc)
+    
     profile_select = panels.get_two_column_box(Gtk.Label(label=_("Project profile:")),
-                                               out_profile_combo,
+                                               out_profile_combo.widget,
                                                250)
 
     profile_info_panel = guicomponents.get_profile_info_box(default_profile, False)
@@ -92,7 +89,7 @@ def new_project_dialog(callback):
     _default_behaviour(dialog)
     dialog.connect('response', callback, out_profile_combo, tracks_select)
                    
-    out_profile_combo.connect('changed', lambda w: _new_project_profile_changed(w, profile_info_box))
+    out_profile_combo.widget.connect('changed', lambda w: _new_project_profile_changed(out_profile_combo, profile_info_box))
     dialog.show_all()
 
 def xdg_copy_dialog():
@@ -108,8 +105,9 @@ def xdg_copy_dialog():
     dialog.show_all()
     return dialog
 
-def _new_project_profile_changed(combo_box, profile_info_box):
-    profile = mltprofiles.get_profile_for_index(combo_box.get_active())
+def _new_project_profile_changed(out_profile_combo, profile_info_box):
+    profile_name = out_profile_combo.get_selected()
+    profile = mltprofiles.get_profile(profile_name)
 
     info_box_children = profile_info_box.get_children()
     for child in info_box_children:
@@ -132,14 +130,15 @@ def change_profile_project_dialog(project, callback):
 
     info_label = guiutils.bold_label(_("Project Profile can only changed by saving a version\nwith different profile."))
 
-    out_profile_combo = Gtk.ComboBoxText()
-    profiles = mltprofiles.get_profiles()
-    for profile in profiles:
-        out_profile_combo.append_text(profile[0])
+    default_desc = mltprofiles.get_profile_name_for_index(mltprofiles.get_default_profile_index())
+    default_profile = mltprofiles.get_default_profile()
 
-    out_profile_combo.set_active(default_profile_index)
+
+    out_profile_combo = guicomponents.get_profiles_combo()
+    out_profile_combo.set_selected(default_desc)
+    
     profile_select = panels.get_two_column_box(Gtk.Label(label=_("Project profile:")),
-                                               out_profile_combo,
+                                               out_profile_combo.widget,
                                                250)
 
     profile_info_panel = guicomponents.get_profile_info_box(default_profile, False)
@@ -161,7 +160,7 @@ def change_profile_project_dialog(project, callback):
     name_box = Gtk.HBox(False, 8)
     name_box.pack_start(project_name_entry, True, True, 0)
 
-    movie_name_row =  panels.get_two_column_box(Gtk.Label(label=_("Project Name:")), name_box,  250)
+    movie_name_row = panels.get_two_column_box(Gtk.Label(label=_("Project Name:")), name_box,  250)
 
     new_file_vbox = guiutils.get_vbox([out_folder_row, movie_name_row], False)
 
@@ -173,9 +172,9 @@ def change_profile_project_dialog(project, callback):
     dialogutils.set_outer_margins(dialog.vbox)
     dialog.vbox.pack_start(alignment, True, True, 0)
     _default_behaviour(dialog)
-    dialog.connect('response', callback, out_profile_combo, out_folder, project_name_entry)#, project_type_combo,
-                   #project_folder, compact_name_entry)
-    out_profile_combo.connect('changed', lambda w: _new_project_profile_changed(w, profile_info_box))
+    dialog.connect('response', callback, out_profile_combo, out_folder, project_name_entry)
+    
+    out_profile_combo.widget.connect('changed', lambda w: _new_project_profile_changed(out_profile_combo, profile_info_box))
     dialog.show_all()
 
 def change_profile_project_to_match_media_dialog(project, media_file, callback):
@@ -809,6 +808,7 @@ def load_dialog():
     dialog.set_title(_("Loading project"))
 
     info_label = Gtk.Label(label="")
+    info_label.set_ellipsize(Pango.EllipsizeMode.END)
     status_box = Gtk.HBox(False, 2)
     status_box.pack_start(info_label, False, False, 0)
     status_box.pack_start(Gtk.Label(), True, True, 0)
@@ -829,7 +829,7 @@ def load_dialog():
     alignment = guiutils.set_margins(progress_vbox, 12, 12, 12, 12)
 
     dialog.add(alignment)
-    dialog.set_default_size(400, 70)
+    dialog.set_default_size(500, 70)
     dialog.set_position(Gtk.WindowPosition.CENTER)
     dialog.show_all()
 
@@ -1654,6 +1654,8 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "nudge_forward"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "nudge_back_10"), False, False, 0)
     tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "nudge_forward_10"), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "select_next"), False, False, 0)
+    tline_vbox.pack_start(_get_dynamic_kb_row(root_node, "select_prev"), False, False, 0)
     tline = guiutils.get_named_frame(_("Timeline"), tline_vbox)
 
     track_head_vbox = Gtk.VBox()
@@ -1665,6 +1667,7 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     play_vbox.pack_start(_get_dynamic_kb_row(root_node, "slower"), False, False, 0)
     play_vbox.pack_start(_get_dynamic_kb_row(root_node, "stop"), False, False, 0)
     play_vbox.pack_start(_get_dynamic_kb_row(root_node, "faster"), False, False, 0)
+    play_vbox.pack_start(_get_dynamic_kb_row(root_node, "play_pause_loop_marks"), False, False, 0)
     play_vbox.pack_start(_get_kb_row(_("Left Arrow "), _("Next Frame")), False, False, 0)#_get_dynamic_kb_row(root_node, "prev_frame"), False, False, 0)
     play_vbox.pack_start(_get_kb_row(_("Right Arrow "), _("Previous Frames")), False, False, 0)#_get_dynamic_kb_row(root_node, "next_frame"), False, False, 0)
     play_vbox.pack_start(_get_kb_row(_("Control + Left Arrow "), _("Move Back 10 Frames")), False, False, 0)

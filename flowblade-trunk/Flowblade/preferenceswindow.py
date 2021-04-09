@@ -445,7 +445,6 @@ def _view_prefs_panel():
     vbox.pack_start(row7, False, False, 0)
     # Feb-2017 - SvdB - For full file names
     vbox.pack_start(row6, False, False, 0)
-    vbox.pack_start(row8, False, False, 0)
     vbox.pack_start(row11, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
     

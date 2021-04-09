@@ -459,7 +459,7 @@ class GMicContainerActions(AbstractContainerActionObject):
             test_in_file = str(respaths.IMAGE_PATH + "unrendered_blender.png") # we just need some valid input
 
             # Create command list and launch process.
-            command_list = ["/usr/bin/gmic", test_in_file]
+            command_list = [editorstate.gmic_path, test_in_file]
             user_script_commands = user_script.split(" ")
             command_list.extend(user_script_commands)
             command_list.append("-output")

@@ -262,7 +262,7 @@ def show_slowmo_dialog(media_file, default_range_render, _response_callback):
     profile_selector = ProfileSelector()
     profile_selector.fill_options()
     profile_selector.widget.set_sensitive(True)
-    fb_widgets.out_profile_combo = profile_selector.widget
+    fb_widgets.categories_combo = profile_selector.categories_combo
 
     quality_selector = RenderQualitySelector()
     fb_widgets.quality_cb = quality_selector.widget
@@ -287,7 +287,7 @@ def show_slowmo_dialog(media_file, default_range_render, _response_callback):
     vbox.pack_start(guiutils.pad_label(24, 12), False, False, 0)
     vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target File:")), name_row, 120), False, False, 0)
     vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target Folder:")), fb_widgets.out_folder, 120), False, False, 0)
-    vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target Profile:")), fb_widgets.out_profile_combo, 200), False, False, 0)
+    vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target Profile:")), fb_widgets.categories_combo.widget, 200), False, False, 0)
     vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target Encoding:")), fb_widgets.encodings_cb, 200), False, False, 0)
     vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target Quality:")), fb_widgets.quality_cb, 200), False, False, 0)
     vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)
@@ -387,7 +387,7 @@ def show_reverse_dialog(media_file, default_range_render, _response_callback):
     profile_selector = ProfileSelector()
     profile_selector.fill_options()
     profile_selector.widget.set_sensitive(True)
-    fb_widgets.out_profile_combo = profile_selector.widget
+    fb_widgets.categories_combo = profile_selector.categories_combo
 
     quality_selector = RenderQualitySelector()
     fb_widgets.quality_cb = quality_selector.widget
@@ -434,7 +434,7 @@ def show_reverse_dialog(media_file, default_range_render, _response_callback):
     vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)
     vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target File:")), name_row, 120), False, False, 0)
     vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target Folder:")), fb_widgets.out_folder, 120), False, False, 0)
-    vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target Profile:")), fb_widgets.out_profile_combo, 200), False, False, 0)
+    vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target Profile:")), fb_widgets.categories_combo.widget, 200), False, False, 0)
     vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target Encoding:")), fb_widgets.encodings_cb, 200), False, False, 0)
     vbox.pack_start(guiutils.get_two_column_box(Gtk.Label(label=_("Target Quality:")), fb_widgets.quality_cb, 200), False, False, 0)
     vbox.pack_start(guiutils.pad_label(18, 12), False, False, 0)
@@ -506,11 +506,9 @@ class RenderAudioRateSelector():
 class RenderEncodingSelector():
 
     def __init__(self, quality_selector, extension_label, audio_desc_label):
-        self.widget = Gtk.ComboBoxText()
-        for encoding in renderconsumer.encoding_options:
-            self.widget.append_text(encoding.name)
-            
-        self.widget.set_active(0)
+        self.categorised_combo = guicomponents.get_encodings_combo()
+        self.widget = self.categorised_combo.widget
+        self.categorised_combo.set_selected(renderconsumer.DEFAULT_ENCODING_NAME)
         self.widget.connect("changed", 
                             lambda w,e: self.encoding_selection_changed(), 
                             None)
@@ -521,15 +519,21 @@ class RenderEncodingSelector():
         self.audio_desc_label = audio_desc_label
         
     def encoding_selection_changed(self):
-        enc_index = self.widget.get_active()
-        
-        self.quality_selector.update_quality_selection(enc_index)
-        
-        encoding = renderconsumer.encoding_options[enc_index]
-        self.extension_label.set_text("." + encoding.extension)
+        try:
+            name, encoding = self.categorised_combo.get_selected()
+            enc_index = renderconsumer.get_encoding_index(encoding)
+            self.quality_selector.update_quality_selection(enc_index)
+            
+            self.extension_label.set_text("." + encoding.extension)
 
-        if self.audio_desc_label != None:
-            self.audio_desc_label.set_markup(encoding.get_audio_description())
+            if self.audio_desc_label != None:
+                self.audio_desc_label.set_markup(encoding.get_audio_description())
+        except:
+            pass # this gets called too early on start-up
+
+    def get_selected_encoding_index(self):
+        name, encoding = self.categorised_combo.get_selected()
+        return renderconsumer.get_encoding_index(encoding)
 
 
 class PresetEncodingsSelector():
@@ -547,19 +551,15 @@ class PresetEncodingsSelector():
 
 class ProfileSelector():
     def __init__(self, out_profile_changed_callback=None):
-        self.widget = Gtk.ComboBoxText() # filled later when current sequence known
+        self.categories_combo = guicomponents.get_profiles_combo()
+        self.widget = self.categories_combo.widget
         if out_profile_changed_callback != None:
-            self.widget.connect('changed', lambda w:  out_profile_changed_callback())
+            self.widget.connect('changed', lambda w:  out_profile_changed_callback(self.categories_combo))
         self.widget.set_sensitive(False)
         self.widget.set_tooltip_text(_("Select render profile"))
         
     def fill_options(self):
-        self.widget.get_model().clear()
-        self.widget.append_text(current_sequence().profile.description())
-        profiles = mltprofiles.get_profiles()
-        for profile in profiles:
-            self.widget.append_text(profile[0])
-        self.widget.set_active(0)
+        self.categories_combo.set_selected(current_sequence().profile.description())
 
 
 class ProfileInfoBox(Gtk.VBox):
@@ -610,7 +610,6 @@ def get_render_panel_left(render_widgets):
     return render_panel
 
 def get_render_panel_right(render_widgets, render_clicked_cb, to_queue_clicked_cb):
-
 
     if editorstate.SCREEN_HEIGHT < 900:
         encoding_panel = guiutils.get_named_frame(_("Encoding Format"), render_widgets.encoding_panel.vbox, 4)
@@ -725,7 +724,8 @@ class RenderProfilePanel():
         self.use_project_profile_check.set_active(True)
         self.use_project_profile_check.connect("toggled", self.use_project_check_toggled)
 
-        self.out_profile_combo = ProfileSelector(out_profile_changed_callback)
+        self.out_profile_combo = ProfileSelector(out_profile_changed_callback) # this is actually not a combobox,
+                                                                               # but a panel containing combobox.
         
         self.out_profile_info_box = ProfileInfoBox() # filled later when current sequence known
         
@@ -752,7 +752,7 @@ class RenderProfilePanel():
     def use_project_check_toggled(self, checkbutton):
         self.out_profile_combo.widget.set_sensitive(checkbutton.get_active() == False)
         if checkbutton.get_active() == True:
-            self.out_profile_combo.widget.set_active(0)
+            self.out_profile_combo.categories_combo.set_selected(current_sequence().profile.description())
         
 
 class RenderEncodingPanel():

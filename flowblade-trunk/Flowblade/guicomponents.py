@@ -56,6 +56,7 @@ import mlttransitions
 import monitorwidget
 import projectaction
 import respaths
+import renderconsumer
 import shortcuts
 import snapping
 import toolsintegration
@@ -3570,3 +3571,78 @@ class KBShortcutEditor:
             primary_txt = _("Reserved Shortcut!")
             secondary_txt = "'" + error + "'" +  _(" is a reserved keyboard shortcut and\ncannot be set as a custom shortcut.")
             dialogutils.warning_message(primary_txt, secondary_txt, self.dialog_window )
+
+
+# ------------------------------------------------------- combo boxes with categories
+def get_profiles_combo():
+    return CategoriesModelComboBox(mltprofiles._categorized_profiles)
+
+class CategoriesModelComboBox:
+    
+    def __init__(self, categories_list):
+        self.categories_list = categories_list # categories_list is list of form [("category_name", [category_items]), ...]
+                                               # with category_items list of form ["item_name", ...]
+        self.model = Gtk.TreeStore.new([str])
+        
+        for i in range(0, len(categories_list)):
+            name, items = categories_list[i]
+            self.model.append(None, [name])
+            for item_name in items:
+                category_iter = self.model.get_iter_from_string(str(i))
+                self.model.append(category_iter, [item_name])
+
+        self.widget = Gtk.ComboBox.new_with_model(self.model)
+        renderer_text = Gtk.CellRendererText()
+        self.widget.pack_start(renderer_text, True)
+        self.widget.add_attribute(renderer_text, "text", 0)
+
+    def set_selected(self, active_item_name):
+        for i in range(0, len(self.categories_list)):
+            name, items = self.categories_list[i]
+            for j in range(0, len(items)):
+                if items[j] == active_item_name:
+                    iter = self.model.get_iter_from_string(str(i) + ":" + str(j))
+                    self.widget.set_active_iter(iter)
+                    
+    def get_selected(self):        
+        indices = self.model.get_path(self.widget.get_active_iter()).get_indices()
+        name, items = self.categories_list[indices[0]]
+        return items[indices[1]]
+
+
+def get_encodings_combo():
+    return CategoriesModelComboBoxWithData(renderconsumer.categorized_encoding_options)
+
+class CategoriesModelComboBoxWithData:
+    
+    def __init__(self, categories_list):
+        self.categories_list = categories_list # categories_list is list of form [("category_name", [category_items]), ...]
+                                               # with category_items list of form [("item_name", data_object), ...]
+        self.model = Gtk.TreeStore.new([str])
+        
+        for i in range(0, len(categories_list)):
+            name, items = categories_list[i]
+            self.model.append(None, [name])
+            for item in items:
+                item_name, item_data = item
+                category_iter = self.model.get_iter_from_string(str(i))
+                self.model.append(category_iter, [item_name])
+
+        self.widget = Gtk.ComboBox.new_with_model(self.model)
+        renderer_text = Gtk.CellRendererText()
+        self.widget.pack_start(renderer_text, True)
+        self.widget.add_attribute(renderer_text, "text", 0)
+
+    def set_selected(self, active_item_name):
+        for i in range(0, len(self.categories_list)):
+            name, items = self.categories_list[i]
+            for j in range(0, len(items)):
+                item_name, item_data = items[j]
+                if item_name == active_item_name:
+                    iter = self.model.get_iter_from_string(str(i) + ":" + str(j))
+                    self.widget.set_active_iter(iter)
+                    
+    def get_selected(self):        
+        indices = self.model.get_path(self.widget.get_active_iter()).get_indices()
+        name, items = self.categories_list[indices[0]]
+        return items[indices[1]]

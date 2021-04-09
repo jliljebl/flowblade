@@ -63,7 +63,7 @@ edit_mode = INSERT_MOVE
 # Ripple Trim tool is ONE_ROLL_TRIM mode + True on this flag
 trim_mode_ripple = False
 
-# Box tool OVERWRITE_MOVE tool mode + True on this flag
+# Box tool is OVERWRITE_MOVE tool mode + True on this flag
 overwrite_mode_box = False
 
 # Media files view filter for selecting displayed media objects in bin
@@ -141,6 +141,10 @@ tline_render_mode = appconsts.TLINE_RENDERING_OFF
 
 # Trim clips cache for quicker inits, path -> clip
 _trim_clips_cache = {}
+
+# Normal installs and Flatpaks have G'Mic bin in different locations.
+# Value set in gmic.py module. 
+gmic_path = None
 
 def current_is_move_mode():
     if ((edit_mode == INSERT_MOVE) or (edit_mode == OVERWRITE_MOVE) or (edit_mode == MULTI_MOVE)):
@@ -295,7 +299,7 @@ def clear_trim_clip_cache():
 
 
 # Called from tline "motion_notify_event" when drag is not on.
-# This is only used by multitrimmode.py to have data to enter trims with keyboard correctly
+# This is only used by multitrimmode.py to have data to enter trims with keyboard correctly.
 def set_mouse_current_non_drag_pos(x, y):
     global last_mouse_x, last_mouse_y
     last_mouse_x = x

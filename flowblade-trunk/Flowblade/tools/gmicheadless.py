@@ -103,6 +103,13 @@ def main(root_path, session_id, script, clip_path, range_in, range_out, profile_
     # Set paths.
     respaths.set_paths(root_path)
 
+    if os.path.exists("/usr/bin/gmic") == True: # distro install an dev.
+        editorstate.gmic_path = "/usr/bin/gmic"
+    elif os.path.exists("/app/bin/gmic") == True: # Flatpak
+        editorstate.gmic_path = "/app/bin/gmic"
+    else:
+        print("No G'Mic in gmicheadless main(), something is wrong.") # Should not be possible
+
     userfolders.init()
     editorpersistance.load()
 

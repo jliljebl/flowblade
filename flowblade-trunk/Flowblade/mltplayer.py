@@ -178,7 +178,7 @@ class Player:
     def start_playback(self):
         """
         Starts playback from current producer
-        """
+        """        
         self.producer.set_speed(1)
         self.ticker.stop_ticker()
         self.ticker.start_ticker()
@@ -196,6 +196,10 @@ class Player:
         """
         Stops playback from current producer
         """
+        self.loop_start = -1 # User possibly goes into marks looping but stops without Control key.
+        self.loop_end = -1
+        self.is_looping = False
+
         self.ticker.stop_ticker()
         self.producer.set_speed(0)
         updater.update_frame_displayers(self.producer.frame())
@@ -207,6 +211,22 @@ class Player:
             self.loop_start = 0
         if self.loop_end >= track_length:
             self.loop_end = track_length - 1
+        self.is_looping = True
+        self.seek_frame(self.loop_start, False)
+        self.producer.set_speed(1)
+        self.ticker.stop_ticker()
+        self.ticker.start_ticker()
+
+    def start_loop_playback_range(self, range_in, range_out):
+        seq_len = self.producer.get_length()
+        if range_in >= seq_len:
+            return
+        if range_out > seq_len:
+            range_out = seq_len
+        
+        self.loop_start = range_in
+        self.loop_end = range_out
+        
         self.is_looping = True
         self.seek_frame(self.loop_start, False)
         self.producer.set_speed(1)

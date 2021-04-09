@@ -100,13 +100,20 @@ _hamburger_menu = Gtk.Menu()
 
 #-------------------------------------------------- launch and inits
 def test_availablity():
-    if os.path.exists("/usr/bin/gmic") == True or os.path.exists("/app/bin/gmic") == True: # File system and flatpak
+    global _gmic_found
+    set_gmic_path()
+    if editorstate.gmic_path != None:
         print("G'MIC found")
-        global _gmic_found
         _gmic_found = True
     else:
         print("G'MIC NOT found")
-                
+
+def set_gmic_path():
+    if os.path.exists("/usr/bin/gmic") == True:
+        editorstate.gmic_path = "/usr/bin/gmic"
+    elif os.path.exists("/app/bin/gmic") == True: # File system and flatpak
+        editorstate.gmic_path = "/app/bin/gmic"
+
 def gmic_available():
     return _gmic_found
     
@@ -155,6 +162,7 @@ def main(root_path, force_launch=False):
 
     # Set paths.
     respaths.set_paths(root_path)
+    set_gmic_path() # Flatpak has gmic binary in different place.
 
     # Write stdout to log file
     userfolders.init()
@@ -538,6 +546,7 @@ def _encode_settings_callback(dialog, response_id):
     if response_id == Gtk.ResponseType.ACCEPT:
         global _render_data
         _render_data = toolsencoding.get_render_data_for_current_selections()
+        print(_render_data)
         _window.update_encode_desc()
     
     dialog.destroy()
@@ -1087,7 +1096,7 @@ class GmicPreviewRendererer(threading.Thread):
         Gdk.threads_leave()
     
         # Create command list and launch process.
-        command_list = ["/usr/bin/gmic", get_current_frame_file()]
+        command_list = [editorstate.gmic_path, get_current_frame_file()]
         user_script_commands = view_text.split(" ")
         command_list.extend(user_script_commands)
         command_list.append("-output")

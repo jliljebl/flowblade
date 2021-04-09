@@ -62,6 +62,18 @@ QUALITY = "quality"
 BITRATE = "bitrate"
 AUDIO_DESCRIPTION = "audiodesc"
 NON_USER = "nonuser"
+PRESET_GROUP = "presetgroup"
+PRESET_GROUP_H264 = "H.264, HEVC"
+PRESET_GROUP_MPEG = "MPEG"
+PRESET_GROUP_LOSSLESS = "Lossless"
+PRESET_GROUP_IMAGE_SEQUENCE = "Image Sequence"
+PRESET_GROUP_AUDIO = "Audio" 
+PRESET_GROUP_OGG_ETC = "oggwebmetc"
+PRESET_GROUP_ALPHA = "Alpha"
+
+
+# Default encoding name
+DEFAULT_ENCODING_NAME = "H.264 / .mp4" 
 
 # Replace strings and attribute values
 BITRATE_RPL = "%BITRATE%"
@@ -71,6 +83,7 @@ ASPECT_RPL = "%ASPECT%"
 
 render_encoding_doc = None
 encoding_options = []
+categorized_encoding_options = []
 not_supported_encoding_options = []
 quality_option_groups = {}
 quality_option_groups_default_index = {}
@@ -87,7 +100,14 @@ def _get_attribute(node, attr_name):
         return None
     
     return value
-    
+
+def get_encoding_index(encoding):
+    for i in range(0, len(encoding_options)):
+        if encoding == encoding_options[i]:
+            return i
+            
+    return -1
+
 class QualityOption:
     """
     A render quality option for an EncodingOption.
@@ -124,6 +144,7 @@ class EncodingOption:
     def __init__(self, option_node):
         self.name = _get_attribute(option_node, NAME)
         self.type = _get_attribute(option_node, TYPE)
+        self.presetgroup = _get_attribute(option_node, PRESET_GROUP)
         self.resizable = (_get_attribute(option_node, RESIZABLE) == "True")
         self.extension = _get_attribute(option_node, EXTENSION)
         self.nonuser = _get_attribute(option_node, NON_USER)
@@ -185,7 +206,6 @@ class EncodingOption:
         else:
             desc = self.audio_desc 
         return "<small>" + desc + "</small>"
-
     
 def load_render_profiles():
     """
@@ -226,6 +246,48 @@ def load_render_profiles():
             msg = "...NOT available, " + encoding_option.err_msg + " missing"
             not_supported_encoding_options.append(encoding_option)
 
+    # Create categorised structure.
+    global categorized_encoding_options
+    H264_encs = []
+    MPEG_encs = []
+    OGG_ETC_encs = []
+    LOSSLESS_encs = []
+    IMG_SEQ_encs = []
+    AUDIO_encs = []
+    ALPHA_encs = []
+    
+    for enc in encoding_options:
+        if enc.presetgroup == PRESET_GROUP_H264:
+            H264_encs.append((enc.name, enc))
+        elif enc.presetgroup == PRESET_GROUP_MPEG:
+            MPEG_encs.append((enc.name, enc))
+        elif enc.presetgroup == PRESET_GROUP_OGG_ETC:
+            OGG_ETC_encs.append((enc.name, enc))
+        elif enc.presetgroup == PRESET_GROUP_LOSSLESS:
+            LOSSLESS_encs.append((enc.name, enc))
+        elif enc.presetgroup == PRESET_GROUP_IMAGE_SEQUENCE:
+            IMG_SEQ_encs.append((enc.name, enc))
+        elif enc.presetgroup == PRESET_GROUP_AUDIO:
+            AUDIO_encs.append((enc.name, enc))
+        elif enc.presetgroup == PRESET_GROUP_ALPHA:
+            ALPHA_encs.append((enc.name, enc))
+
+    if len(H264_encs) > 0:
+        categorized_encoding_options.append((PRESET_GROUP_H264, H264_encs))
+    if len(MPEG_encs) > 0:
+        categorized_encoding_options.append((PRESET_GROUP_MPEG, MPEG_encs))
+    if len(OGG_ETC_encs) > 0:
+        categorized_encoding_options.append(("Ogg, WebM, ProRes, DNxHD", OGG_ETC_encs))
+    if len(LOSSLESS_encs) > 0:
+        categorized_encoding_options.append((PRESET_GROUP_LOSSLESS, LOSSLESS_encs))
+    if len(IMG_SEQ_encs) > 0:
+        categorized_encoding_options.append((PRESET_GROUP_IMAGE_SEQUENCE, IMG_SEQ_encs))
+    if len(ALPHA_encs) > 0:
+        categorized_encoding_options.append((PRESET_GROUP_ALPHA, ALPHA_encs))
+    if len(AUDIO_encs) > 0:
+        categorized_encoding_options.append((PRESET_GROUP_AUDIO, AUDIO_encs))
+
+        
     # Proxy encoding
     proxy_encoding_nodes = render_encoding_doc.getElementsByTagName(PROXY_ENCODING_OPTION)
     found_proxy_encodings = []

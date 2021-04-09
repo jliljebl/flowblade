@@ -63,7 +63,7 @@ MEDIA_FILE_REMOVE = ['icon']
 # Used to flag a not found relative path
 NOT_FOUND = "/not_found_not_found/not_found"
 
-# Used to send messages when loading project
+# Used to send messages when loading project, set at callsite.
 load_dialog = None
 
 # These are used to recrete parenting relationships
@@ -453,6 +453,8 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
             if os.path.isfile(media_file.second_file_path): # Original media file exists, use it
                 media_file.set_as_original_media_file()
 
+        _show_msg("Loading Media Item: " + media_file.name)
+
     # Add MLT objects to sequences.
     global all_clips, sync_clips
     seq_count = 1
@@ -576,6 +578,9 @@ def fill_track_mlt(mlt_track, py_track):
     sequence = mlt_track.sequence
     for i in range(0, len(py_track.clips)):
         clip = py_track.clips[i]
+        if clip.is_blanck_clip == False:
+            _show_msg(_("Building track ") + str(py_track.id) + " - " + clip.name)
+                
         mlt_clip = None
         append_created = True # blanks get appended at creation time, other clips don't
 

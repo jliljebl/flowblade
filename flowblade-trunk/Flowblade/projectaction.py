@@ -414,7 +414,9 @@ def _new_project_dialog_callback(dialog, response_id, profile_combo, tracks_sele
     v_tracks, a_tracks = tracks_select.get_tracks()
     
     if response_id == Gtk.ResponseType.ACCEPT:
-        app.new_project(profile_combo.get_active(), v_tracks, a_tracks)
+        profile_name = profile_combo.get_selected()
+        profile_index = mltprofiles.get_index_for_name(profile_name)
+        app.new_project(profile_index, v_tracks, a_tracks)
         dialog.destroy()
         project_event = projectdata.ProjectEvent(projectdata.EVENT_CREATED_BY_NEW_DIALOG, None)
         PROJECT().events.append(project_event)
@@ -602,7 +604,8 @@ def _change_project_profile_callback(dialog, response_id, profile_combo, out_fol
         ou = out_folder.get_filename()
         folder = ("/" + ou.lstrip("file:/"))
         name = project_name_entry.get_text()
-        profile = mltprofiles.get_profile_for_index(profile_combo.get_active())
+        profile_name = profile_combo.get_selected()
+        profile = mltprofiles.get_profile(profile_name)
         path = (folder + "/" + name)
 
         PROJECT().update_media_lengths_on_load = True # saved version needs to do this

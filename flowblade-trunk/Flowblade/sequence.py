@@ -1046,7 +1046,85 @@ class Sequence:
                 cut_frame = prev_cut_frame
             
         return cut_frame
-    
+
+    def find_next_editable_clip_and_track(self, tline_frame):
+        """
+        Returns next selectable clip and track.
+        """
+        cut_frame = -1
+        clip_track = None
+        select_clip = None
+        for i in range(1, len(self.tracks) - 1):
+            track = self.tracks[i]
+            
+            # Get index and clip
+            index = track.get_clip_index_at(tline_frame)
+            try:
+                clip = track.clips[index]
+                clip_start_in_tline = track.clip_start(index)
+                # We are looking for media clips only and after tline_frame.
+                while clip.is_blanck_clip == True or clip_start_in_tline < tline_frame:
+                    clip = track.clips[index + 1]
+                    clip_start_in_tline = track.clip_start(index + 1)
+                    index = index + 1
+            except Exception as e:
+                continue # No selectable clip on track after frame
+
+            # Get next cut frame
+            clip_start_in_tline = track.clip_start(index)
+            length = clip.clip_out - clip.clip_in 
+            next_cut_frame = clip_start_in_tline + length + 1 # +1 clip out inclusive
+                     
+            # Set cut frame
+            if cut_frame == -1 and next_cut_frame > tline_frame:
+                cut_frame = next_cut_frame
+                clip_track = track
+                select_clip = clip
+            elif next_cut_frame < cut_frame and next_cut_frame > tline_frame:
+                cut_frame = next_cut_frame
+                clip_track = track
+                select_clip = clip
+
+        return (select_clip, clip_track)
+
+    def find_prev_editable_clip_and_track(self, tline_frame):
+        """
+        Returns prev selectable clip and track.
+        """
+        cut_frame = -1
+        clip_track = None
+        select_clip = None
+        for i in range(1, len(self.tracks) - 1):
+            track = self.tracks[i]
+            
+            # Get index and clip
+            index = track.get_clip_index_at(tline_frame)
+            try:
+                clip = track.clips[index]
+                clip_start_in_tline = track.clip_start(index)
+                # We are looking for media clips only and before tline_frame.
+                while clip.is_blanck_clip == True or clip_start_in_tline > tline_frame:
+                    clip = track.clips[index - 1]
+                    clip_start_in_tline = track.clip_start(index - 1)
+                    index = index - 1
+            except Exception as e:
+                continue # No selectable clip on track before frame
+
+            # Get prev cut frame
+            prev_cut_frame = clip_start_in_tline
+                     
+            # Set cut frame
+            if cut_frame == -1 and prev_cut_frame < tline_frame:
+                cut_frame = prev_cut_frame
+                clip_track = track
+                select_clip = clip
+            elif prev_cut_frame > cut_frame and prev_cut_frame < tline_frame:
+                cut_frame = prev_cut_frame
+                clip_track = track
+                select_clip = clip
+
+        return (select_clip, clip_track)
+
     def get_closest_cut_frame(self, track_id, frame):
         track = self.tracks[track_id]
         index = track.get_clip_index_at(frame)
