@@ -103,10 +103,14 @@ class MonitorWidget:
 
         self.left_display = cairoarea.CairoDrawableArea2(1, 1, self._draw_match_frame_left, use_widget_bg=False)
 
-        black_box = Gtk.EventBox()
-        black_box.add(Gtk.Label())
-        bg_color = Gdk.Color(red=0.0, green=0.0, blue=0.0)
-        black_box.modify_bg(Gtk.StateType.NORMAL, bg_color)
+        if editorstate.get_sdl_consumer_version() == editorstate.SDL_2:
+            print("blackbox is drawing area")
+            black_box = Gtk.DrawingArea.new()
+        else:
+            black_box = Gtk.EventBox()
+            black_box.add(Gtk.Label())
+            bg_color = Gdk.Color(red=0.0, green=0.0, blue=0.0)
+            black_box.modify_bg(Gtk.StateType.NORMAL, bg_color)
         self.monitor = black_box
 
         self.right_display = cairoarea.CairoDrawableArea2(1, 1, self._draw_match_frame_right, use_widget_bg=False)
