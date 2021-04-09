@@ -133,7 +133,7 @@ fade_length = -1
 transition_length = -1
 steal_frames = True
 
-# SDL version
+# SDL version. Set once at start-up.
 SDL_1 = 1
 SDL_2 = 2
 consumer_sdl_version = SDL_1

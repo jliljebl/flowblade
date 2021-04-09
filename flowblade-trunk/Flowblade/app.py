@@ -362,9 +362,8 @@ def main(root_path):
             global assoc_timeout_id
             assoc_timeout_id = GObject.timeout_add(10, open_assoc_file)
         
-    # SDL 2 consumer needs to created after Gtk.main() has run enough for window to be visble
+    # SDL 2 consumer needs to created after Gtk.main() is called and window is fully displayed.
     if editorstate.get_sdl_consumer_version() == editorstate.SDL_2:
-        print("SDL2 timeout launch")
         global sdl2_timeout_id
         sdl2_timeout_id = GObject.timeout_add(3500, create_sdl_2_consumer)
     
@@ -435,13 +434,9 @@ def monkeypatch_callbacks():
     tlinerender._get_x_for_frame_func = tlinewidgets._get_frame_x
     tlinerender._get_last_tline_view_frame_func = tlinewidgets.get_last_tline_view_frame
 
-    #keyframeeditor.add_fade_out_func = compositeeditor._add_fade_out_pressed
-    # These provide clues for further module refactoring 
-
 # ---------------------------------- SDL2 consumer
 def create_sdl_2_consumer():
     GObject.source_remove(disk_cache_timeout_id)
-    print("Creating SDL2 consumer...")
     editorstate.PLAYER().create_sdl2_video_consumer()
 
 # ---------------------------------- program, sequence and project init
@@ -520,7 +515,8 @@ def create_player():
     editorstate.player.set_tracktor_producer(editorstate.current_sequence().tractor)
 
 def launch_player():
-    # Create SDL output consumer
+    # Create SDL output consumer. This only methjod call only creates SDL1.2 consumer, if we are 
+    # running SDL2 consumer it will be created later after application is fully displayed.
     editorstate.player.set_sdl_xwindow(gui.tline_display)
     editorstate.player.create_sdl_consumer()
 
@@ -751,6 +747,8 @@ def display_current_sequence():
 
     player.consumer.stop()
     player.init_for_profile(editorstate.project.profile)
+    # This only creates SDL1.2 consumer, SDL2 consumer is created only 
+    # once during applicaiotn life cycle at start-up.
     player.create_sdl_consumer()
     player.set_tracktor_producer(editorstate.current_sequence().tractor)
     player.connect_and_start()

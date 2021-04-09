@@ -72,7 +72,8 @@ class Player:
         """
         Creates consumer with sdl output to a gtk+ widget.
         """
-        # SDL 2 consumer is created after
+        # SDL 2 consumer is created only once at startup after
+        # GUI has been displayed.
         if editorstate.get_sdl_consumer_version() == editorstate.SDL_2:
             return
 
@@ -92,10 +93,10 @@ class Player:
         self.set_sdl_xwindow(widget)
         
         # Create consumer and set params
+        print("Create SDL2 consumer...")
         self.consumer = mlt.Consumer(self.profile, "sdl2_widget")
-        print("consumer created")
         if self.consumer != None:
-            print("consumer not none")
+            print("SDL2 consumer created.")
         self.consumer.set("real_time", 1)
         self.consumer.set("rescale", "bicubic") # MLT options "nearest", "bilinear", "bicubic", "hyper"
         self.consumer.set("resize", 1)
@@ -141,7 +142,8 @@ class Player:
 
     def refresh(self): # Window events need this to get picture back for SDL 1 video display consumer
         if self.consumer == None: # consumer gets possibly created after the first window event hits here
-            return 
+            return
+        
         if editorstate.get_sdl_consumer_version() == editorstate.SDL_1:
             self.consumer.stop()
             self.consumer.start()
@@ -153,7 +155,7 @@ class Player:
         if editorstate.get_sdl_consumer_version() == editorstate.SDL_1:
             return
         alloc = monitor_widget.get_allocation()
-            
+        print("monitor_widget_size_changed", str(alloc.width), str(alloc.height))
         self.consumer.set("window_width", str(alloc.width))
         self.consumer.set("window_height", str(alloc.height))
         
@@ -168,7 +170,7 @@ class Player:
         """
         Connects current procer and consumer and
         """
-        if self.consumer == None: # SDL 2 gets possibly created after the first window event causing a call here
+        if self.consumer == None: # ???? SDL 2 gets possibly created after the first window event causing a call here
             return 
     
         #self.consumer.purge()
@@ -453,6 +455,7 @@ class Player:
         self.ticker.stop_ticker()
         self.producer.set_speed(0)
 
+        # SDL2 consumer is instructed to destroy its self on close.
         if editorstate.get_sdl_consumer_version() == editorstate.SDL_2 and destroy_SDL == True:
             self.consumer.set("destroy_sdl_on_close", 1)
         self.consumer.stop()
