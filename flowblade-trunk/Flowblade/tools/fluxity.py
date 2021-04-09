@@ -204,8 +204,8 @@ class FluxityContext:
     PROFILE_COLORSPACE = FluxityProfile.COLORSPACE
     """Profile colorspace, value is either 709, 601 or 2020."""
 
-    def __init__(self, preview_render, output_folder):
-        self.priv_context = FluxityContextPrivate(preview_render, output_folder)
+    def __init__(self, output_folder):
+        self.priv_context = FluxityContextPrivate(output_folder)
         self.data = {}
         self.editors = {} # editors and script length
         self.editor_tooltips = {}
@@ -424,12 +424,11 @@ class FluxityContextPrivate:
     
     Internal class, do not use objects of this class directly in scripts.
     """
-    def __init__(self, preview_render, output_folder):
+    def __init__(self, output_folder):
 
         self.profile = None
         self.mlt_profile_path = None # We need a file for mlt.Profile so if one exits let's remember path, set with self.load_profile()
         
-        self.preview_render = preview_render
         self.output_folder = output_folder
         self.start_out_from_frame_one = False
         self.in_frame = -1
@@ -604,11 +603,11 @@ def _init_script_and_context(script, out_folder, profile_file_path):
         fscript = FluxityScript(script)
         fscript.compile_script()
         
-        fctx = FluxityContext(True, out_folder)
+        fctx = FluxityContext(out_folder)
         fctx.priv_context.load_profile(profile_file_path)
 
-        return (None, (fscript, fctx)) # (error_msg, frame_iamge)
+        return (None, (fscript, fctx))
     except Exception as e:
         msg = str(e)
-        return (msg, None) # (error_msg, frame_iamge)
+        return (msg, None)
         
