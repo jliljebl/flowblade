@@ -94,7 +94,8 @@ class Player:
         
         # Create consumer and set params
         print("Create SDL2 consumer...")
-        self.consumer = mlt.Consumer(self.profile, "sdl2_widget")
+        #self.consumer = mlt.Consumer(self.profile, "sdl2_widget")
+        self.consumer = mlt.Consumer(self.profile, "sdl2")
         if self.consumer != None:
             print("SDL2 consumer created.")
         self.consumer.set("real_time", 1)
