@@ -94,8 +94,8 @@ class Player:
         
         # Create consumer and set params
         print("Create SDL2 consumer...")
-        #self.consumer = mlt.Consumer(self.profile, "sdl2_widget")
-        self.consumer = mlt.Consumer(self.profile, "sdl2")
+        self.consumer = mlt.Consumer(self.profile, "sdl2_widget")
+
         if self.consumer != None:
             print("SDL2 consumer created.")
         self.consumer.set("real_time", 1)
@@ -106,8 +106,6 @@ class Player:
         alloc = gui.editor_window.tline_display.get_allocation()
         self.consumer.set("window_width", str(alloc.width))
         self.consumer.set("window_height", str(alloc.height))
-        #self.consumer.set("window_type", "widget")
-        #self.consumer.set("renderer_type", "software")
 
         # Hold ref to switch back from rendering
         self.sdl_consumer = self.consumer 
@@ -171,10 +169,11 @@ class Player:
         """
         Connects current procer and consumer and
         """
-        if self.consumer == None: # ???? SDL 2 gets possibly created after the first window event causing a call here
+        if self.consumer == None: # SDL 2 consumer is created only after inialization complete and 
+                                  # we make this noop in that case because this gets called during initialization
+                                  # SDL 1.2 consumer.
             return 
     
-        #self.consumer.purge()
         self.producer.set_speed(0)
         self.consumer.connect(self.producer)
         self.consumer.start()
