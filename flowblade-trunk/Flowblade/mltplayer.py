@@ -125,7 +125,7 @@ class Player:
         """
         os.putenv('SDL_WINDOWID', str(widget.get_window().get_xid()))
         self.xid = widget.get_window().get_xid()
-        print(self.xid)
+        print("set_sdl_xwindow(), xid:", self.xid)
         Gdk.flush()
 
     def set_tracktor_producer(self, tractor):
