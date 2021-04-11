@@ -67,7 +67,6 @@ import userfolders
 import utils
 
 
-
 MONITOR_WIDTH = 500
 MONITOR_HEIGHT = 300 # initial value, this gets changed when material is loaded
 CLIP_FRAMES_DIR = "/clip_frames"
@@ -97,6 +96,8 @@ _current_fps = None
 _render_data = None # toolsencoding.ToolsRenderData object
 
 _encoding_panel = None
+
+_delay_timeout_id = -1
 
 # GTK3 requires this to be created outside of callback
 _hamburger_menu = Gtk.Menu()
@@ -325,6 +326,9 @@ def _save_script_dialog_callback(dialog, response_id):
         dialog.destroy()
 
 def _save_script(file_path):
+    info_text = _("Saving") + " " + file_path + "..."
+    _window.set_action_info(info_text)
+
     buf = _window.script_view.get_buffer()
     script_text = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), include_hidden_chars=True)
     with atomicfile.AtomicFileWriter(file_path, "w") as afw:
@@ -333,7 +337,10 @@ def _save_script(file_path):
     _window.set_title(file_path + " - " + _window.tool_name)
     global _last_save_path
     _last_save_path = file_path
-        
+
+    global _delay_timeout_id
+    _delay_timeout_id = GObject.timeout_add(2000, _clear_info_after_delay)
+
 def load_script_dialog(callback):
     dialog = Gtk.FileChooserDialog(_("Load Script"), None, 
                                    Gtk.FileChooserAction.OPEN, 
@@ -358,6 +365,11 @@ def _load_script_dialog_callback(dialog, response_id):
     else:
         dialog.destroy()
 
+def _clear_info_after_delay():
+    GLib.source_remove(_delay_timeout_id)
+    _window.set_action_info("")
+     
+    
 #-------------------------------------------------- menu
 def _hamburger_menu_callback(widget, msg):
     global _last_save_path
@@ -590,23 +602,25 @@ class ScriptToolWindow(Gtk.Window):
         GObject.GObject.__init__(self)
         self.connect("delete-event", lambda w, e:_shutdown())
 
+        # ---------------------------------------------------------------------- TOP ROW
+        # ---------------------------------------------------------------------- TOP ROW
+        # ---------------------------------------------------------------------- TOP ROW
         app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowbladetoolicon.png")
         self.set_icon(app_icon)
         hamburger_launcher_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger.png")
         self.hamburger_launcher = guicomponents.PressLaunch(self.hamburger_launch_pressed, hamburger_launcher_surface)
+        self.hamburger_launcher.widget.set_margin_bottom(7)
 
-        # ---------------------------------------------------------------------- TOP ROW
-        # ---------------------------------------------------------------------- TOP ROW
-        # ---------------------------------------------------------------------- TOP ROW
-        self.load_button = Gtk.Button(_("Load Clip"))
-        self.load_button.connect("clicked", lambda w: open_clip_dialog())
-
+        self.action_info = Gtk.Label()
+        self.action_info.set_markup("")
+        
         self.media_info = Gtk.Label()
         self.media_info.set_markup("<small>" + _("No Preview") + "</small>")
 
         top_row = Gtk.HBox(False, 2)
         top_row.pack_start(self.hamburger_launcher.widget, False, False, 0)
-        top_row.pack_start(guiutils.get_pad_label(6, 2), False, False, 0)
+        top_row.pack_start(guiutils.get_pad_label(12, 2), False, False, 0)
+        top_row.pack_start(self.action_info, False, False, 0)
         top_row.pack_start(Gtk.Label(), True, True, 0)
         top_row.pack_start(self.media_info, False, False, 0)
         top_row.set_margin_bottom(4)
@@ -980,6 +994,9 @@ class ScriptToolWindow(Gtk.Window):
 
     def set_fps(self):
         self.tc_display.fps = _current_fps
+
+    def set_action_info(self, info):
+        self.action_info.set_markup("<small>" + info + "</small>")
         
     def position_listener(self, normalized_pos, length):
         frame = int(normalized_pos * length)
@@ -1208,7 +1225,6 @@ class FluxityPluginRenderer(threading.Thread):
         _window.encode_settings_button.set_sensitive(False)
         _window.encode_desc.set_sensitive(False)
         _window.hamburger_launcher.widget.set_sensitive(False)
-        _window.load_button.set_sensitive(False)
         Gdk.threads_leave()
         
         # Get render data.
@@ -1319,7 +1335,6 @@ class FluxityPluginRenderer(threading.Thread):
         _window.set_widgets_sensitive(True)
         _window.close_button.set_sensitive(True)
         _window.hamburger_launcher.widget.set_sensitive(True)
-        _window.load_button.set_sensitive(True)
         if _window.encode_check.get_active() == True:
             _window.encode_settings_button.set_sensitive(True)
             _window.encode_desc.set_sensitive(True)

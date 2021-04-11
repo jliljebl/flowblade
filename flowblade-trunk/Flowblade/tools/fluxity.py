@@ -279,9 +279,9 @@ class FluxityContext:
         """
         self.priv_context.frame_name = frame_name
 
-    def set_data(self, label, item):
+    def set_data_obj(self, label, item):
         """
-        **label(str):** lable used to access data later using *get_data(self, label)*.
+        **label(str):** lable used to access data later using *get_data_obj(self, label)*.
 
         **item(obj):** data item being saved.
         
@@ -289,7 +289,7 @@ class FluxityContext:
         """
         self.data[label] = item
 
-    def get_data(self, label):
+    def get_data_obj(self, label):
         """
         **label(str):** lable of saved data item.
         
