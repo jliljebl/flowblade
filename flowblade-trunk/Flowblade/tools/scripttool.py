@@ -526,11 +526,19 @@ def render_preview_frame():
         _window.monitors_switcher.queue_draw()
         _window.preview_monitor.queue_draw()
         _window.pos_bar.widget.queue_draw()
-        _window.out_view.get_buffer().set_text("Preview rendered for frame " + str(frame))
+        
+        out_text = "Preview rendered for frame " + str(frame)
+        if len(fctx.log_msg) > 0:
+            out_text = out_text + "\nLOG:\n" + fctx.log_msg
+                    
+        _window.out_view.get_buffer().set_text(out_text)
         _window.media_info.set_markup("<small>" + _("Preview for frame: ") + str(frame) + "</small>")
     else:
         _window.monitors_switcher.set_visible_child_name(CAIRO_DRAW_MONITOR)
-        _window.out_view.get_buffer().set_text(fctx.error)
+        out_text = fctx.error
+        if len(fctx.log_msg) > 0:
+            out_text = out_text + "\nLOG:\n" + fctx.log_msg
+        _window.out_view.get_buffer().set_text(out_text)
         _window.media_info.set_markup("<small>" + _("No Preview") +"</small>")
         _window.monitors_switcher.queue_draw()
         _window.preview_monitor.queue_draw()
@@ -1167,7 +1175,12 @@ class FluxityRangeRenderer(threading.Thread):
             _window.monitors_switcher.queue_draw()
             _window.preview_monitor.queue_draw()
             _window.pos_bar.widget.queue_draw()
-            _window.out_view.get_buffer().set_text("success:\n" + "rendered some frames!")
+            
+            out_text = "Range preview rendered for frame range " + str(in_frame) + " - " + str(out_frame) 
+            if len(fctx.log_msg) > 0:
+                out_text = out_text + "\nLOG:\n" + fctx.log_msg
+                        
+            _window.out_view.get_buffer().set_text(out_text)
             _window.media_info.set_markup("<small>" + _("Range preview for frame range ") + str(in_frame) + " - " + str(out_frame)  +"</small>")
 
             Gdk.threads_leave()

@@ -214,6 +214,7 @@ class FluxityContext:
         self.version = 1
         self.author = "Author Not Set"
         self.error = None
+        self.log_msg = ""
 
     def get_frame_cr(self):
         """
@@ -417,7 +418,15 @@ class FluxityContext:
             name, type, value = editor
             self.editors[name] = (type, value)
 
-        
+    def log(self, log_line):
+        """
+        **log_line:** log line string .
+                 
+        Adds line of text to log message displayed after completion or error.
+
+        """
+        self.log_msg = self.log_msg + log_line + "\n"
+                
 class FluxityContextPrivate:
     """
     This class exists to keep FluxityContext API clean for script developers.
@@ -535,6 +544,7 @@ def render_preview_frame(script, frame, out_folder, profile_file_path, editors_d
         if error_msg != None:
             fake_fctx = FluxityEmptyClass()
             fake_fctx.error = error_msg
+            fake_fctx.log_msg = ""
             return fake_fctx
 
         fscript, fctx = results
