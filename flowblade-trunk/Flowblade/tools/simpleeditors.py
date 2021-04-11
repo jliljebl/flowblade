@@ -47,6 +47,8 @@ SIMPLE_EDITOR_COLOR = 4
 SIMPLE_EDITOR_FILE_PATH = 5
 SIMPLE_EDITOR_OPTIONS = 6
 SIMPLE_EDITOR_CHECK_BOX = 7
+SIMPLE_EDITOR_FLOAT_RANGE = 8
+SIMPLE_EDITOR_INT_RANGE = 9
     
 DEFAULT_VALUES = ["Text", "a value", "0.0", "0", "(1.0, 1.0, 1.0, 1.0)"]
 
@@ -386,7 +388,12 @@ def _get_editor(editor_type, id_data, label_text, value, tooltip):
         return OptionsEditor(id_data, label_text, value, tooltip)
     elif editor_type == SIMPLE_EDITOR_CHECK_BOX:
         return CheckboxEditor(id_data, label_text, value, tooltip)
+    elif editor_type == SIMPLE_EDITOR_FLOAT_RANGE:
+        return FloatEditorRange(id_data, label_text, value, tooltip)
+    elif editor_type == SIMPLE_EDITOR_INT_RANGE:
+        return IntEditorRange(id_data, label_text, value, tooltip)
 
+        
 class AbstractSimpleEditor(Gtk.HBox):
     
     def __init__(self, id_data, tooltip):
@@ -451,7 +458,7 @@ class IntEditor(AbstractSimpleEditor):
     def __init__(self, id_data, label_text, value, tooltip):
         AbstractSimpleEditor.__init__(self, id_data, tooltip)
 
-        self.spinbutton = Gtk.SpinButton.new_with_range(MIN_VAL, MAX_VAL, 0.1)
+        self.spinbutton = Gtk.SpinButton.new_with_range(MIN_VAL, MAX_VAL, 1.0)
         self.spinbutton.set_snap_to_ticks(False)
         self.spinbutton.set_digits(0)
         self.spinbutton.set_value(int(value))
@@ -551,6 +558,37 @@ class FilePathEditor(AbstractSimpleEditor):
     def get_value(self):
         return self.file_choose.get_filename()
 
+class FloatEditorRange(AbstractSimpleEditor):
+
+    def __init__(self, id_data, label_text, value, tooltip):
+        AbstractSimpleEditor.__init__(self, id_data, tooltip)
+        default_val, min_val, max_val = value
+        self.spinbutton = Gtk.SpinButton.new_with_range(float(min_val), float(max_val), 0.1)
+        self.spinbutton.set_snap_to_ticks(False)
+        self.spinbutton.set_digits(2)
+        self.spinbutton.set_value(float(default_val))
+        
+        self.build_editor(label_text, self.spinbutton)
+        self.editor_type = SIMPLE_EDITOR_FLOAT
+
+    def get_value(self):
+        return self.spinbutton.get_value()
+
+class IntEditorRange(AbstractSimpleEditor):
+
+    def __init__(self, id_data, label_text, value, tooltip):
+        AbstractSimpleEditor.__init__(self, id_data, tooltip)
+        default_val, min_val, max_val = value
+        self.spinbutton = Gtk.SpinButton.new_with_range(min_val, max_val, 1.0)
+        self.spinbutton.set_snap_to_ticks(False)
+        self.spinbutton.set_digits(0)
+        self.spinbutton.set_value(int(default_val))
+        
+        self.build_editor(label_text, self.spinbutton)
+        self.editor_type = SIMPLE_EDITOR_INT
+        
+    def get_value(self):
+        return self.spinbutton.get_value_as_int()
 
 # ------------------------------------------------------------------- preview
 class PreviewPanel(Gtk.VBox):

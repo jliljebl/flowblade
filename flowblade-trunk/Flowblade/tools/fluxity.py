@@ -48,12 +48,12 @@ def init_script(fctx):
 
 def init_render(fctx):
     # Render init here
-    fctx.set_data("bg_color", cairo.SolidPattern(0.8, 0.2, 0.2, 1.0))
+    fctx.set_data_obj("bg_color", cairo.SolidPattern(0.8, 0.2, 0.2, 1.0))
  
 def render_frame(frame, fctx, w, h):
     # Frame Render code here
     cr = fctx.get_frame_cr()
-    color = fctx.get_data("bg_color")
+    color = fctx.get_data_obj("bg_color")
     cr.set_source(color)
     cr.rectangle(0, 0, w, h)
     cr.fill()
@@ -174,7 +174,11 @@ class FluxityContext:
     """ Editor for selecting between  2 - N  string options. Value is tuple *(selected_index,[option_str_1, option_str_2, ...])*."""
     EDITOR_CHECK_BOX = 7
     """ Editor for boolean value. Value is either *True* or *False*"""
-
+    EDITOR_FLOAT_RANGE = 8
+    """ Editor for float values with a defined range of accepted values. Value is a 3-tuple *(default_val, min_val, max_val)*."""
+    EDITOR_INT_RANGE = 9
+    """ Editor for integer valueswith a defined range of accepted values."""
+    
     PROFILE_DESCRIPTION = FluxityProfile.DESCRIPTION
     """MLT Profile descriptiption string."""
     PROFILE_FRAME_RATE_NUM = FluxityProfile.FRAME_RATE_NUM
@@ -320,9 +324,29 @@ class FluxityContext:
         """     
         **name(str):** Name for editor.
         
-        **type(int):** Value either *EDITOR_STRING, EDITOR_VALUE, EDITOR_FLOAT, EDITOR_INT, EDITOR_COLOR.*
+        **type(int):** Value either *EDITOR_STRING, EDITOR_VALUE, EDITOR_FLOAT, EDITOR_INT, EDITOR_COLOR, EDITOR_FILE_PATH, EDITOR_OPTIONS, EDITOR_CHECK_BOX, EDITOR_FLOAT_RANGE, EDITOR_INT_RANGE.*
         
-        **default_value():** Data type depends on editor type: *EDITOR_STRING(str), EDITOR_VALUE(str), EDITOR_FLOAT(float), EDITOR_INT(int), EDITOR_COLOR(tuple(R,G,B,A)).*
+        **default_value():** Data type depends on editor type:
+        
+          * EDITOR_STRING(str), 
+          
+          * EDITOR_VALUE(str), 
+          
+          * EDITOR_FLOAT(float), 
+          
+          * EDITOR_INT(int), 
+          
+          * EDITOR_COLOR(4-tuple with float values in range 0-1, (R,G,B,A)), 
+          
+          * EDITOR_FILE_PATH(str), 
+          
+          * EDITOR_OPTIONS (2-tuple (int, [str]), (selected_index,[option_str_1, option_str_2, ...]),
+          
+          * EDITOR_CHECK_BOX(bool), 
+          
+          * EDITOR_FLOAT_RANGE(3-tuple with float values, (default, min, max)), 
+          
+          * EDITOR_INT_RANGE(3-tuple with int values, (default, min, max))
         
         **tooltip(str, optional):** Tooltip for editor if presented in GUI.
         
@@ -347,9 +371,29 @@ class FluxityContext:
         
         Value of edited data at given frame. We currently have no animated values, but they will added with future API updates.
         
-        Returned data type depends on editor type: *EDITOR_STRING(str), EDITOR_VALUE(str), EDITOR_FLOAT(float), EDITOR_INT(int), EDITOR_COLOR(tuple(R,G,B,A)).*
-        
         **Returns:** (obj) Value at frame.
+        
+        Data type depends on editor type:
+        
+          * EDITOR_STRING(str), 
+          
+          * EDITOR_VALUE(str), 
+          
+          * EDITOR_FLOAT(float), 
+          
+          * EDITOR_INT(int), 
+          
+          * EDITOR_COLOR(4-tuple with float values in range 0-1, (R,G,B,A)), 
+          
+          * EDITOR_FILE_PATH(str), 
+          
+          * EDITOR_OPTIONS (2-tuple (int, [str]), (selected_index,[option_str_1, option_str_2, ...]),
+          
+          * EDITOR_CHECK_BOX(bool), 
+          
+          * EDITOR_FLOAT_RANGE(3-tuple with float values, (default, min, max)), 
+          
+          * EDITOR_INT_RANGE(3-tuple with int values, (default, min, max))
         """
         try:
             type, value = self.editors[name]
@@ -422,8 +466,7 @@ class FluxityContext:
         """
         **log_line:** log line string .
                  
-        Adds line of text to log message displayed after completion or error.
-
+        Adds a line of text to log message displayed after completion or error.
         """
         self.log_msg = self.log_msg + log_line + "\n"
                 
