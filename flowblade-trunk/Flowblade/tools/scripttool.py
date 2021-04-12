@@ -522,8 +522,8 @@ def render_preview_frame():
     _window.pos_bar.preview_range = None # frame or black for fail, no range anyway
         
     if fctx.error == None:
-        fctx.priv_context.frame_surface.write_to_png(respaths.FLUXITY_PREVIEW_IMG_PATH,)
-        new_playback_producer = _get_playback_tractor(_script_length, respaths.FLUXITY_PREVIEW_IMG_PATH, 0, _script_length)
+        fctx.priv_context.write_out_frame(True)
+        new_playback_producer = _get_playback_tractor(_script_length, fctx.priv_context.get_preview_frame_path() , 0, _script_length)
         _player.set_producer(new_playback_producer)
         _player.seek_frame(frame)
 

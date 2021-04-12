@@ -542,6 +542,9 @@ class FluxityContextPrivate:
 
         if self.first_rendered_frame_path == None:
             self.first_rendered_frame_path = filepath
+
+    def get_preview_frame_path(self):
+        return self.output_folder + "/preview.png"
     
     def error_on_wrong_method(self, method_name, required_method):
         if required_method == self.current_method:
