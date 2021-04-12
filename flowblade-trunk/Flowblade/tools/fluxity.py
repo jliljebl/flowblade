@@ -27,6 +27,7 @@ import cairo
 import json
 import mlt
 import os
+import traceback
 
 # Default length in frames for script duration
 DEFAULT_LENGTH = 200
@@ -462,7 +463,7 @@ class FluxityContext:
             name, type, value = editor
             self.editors[name] = (type, value)
 
-    def log(self, log_line):
+    def log_line(self, log_line):
         """
         **log_line:** log line string .
                  
@@ -612,7 +613,8 @@ def render_preview_frame(script, frame, out_folder, profile_file_path, editors_d
 
         return fctx
     except Exception as e:
-        fctx.error = str(e)
+        fctx.error = str(e) + traceback.format_exc(6,True)
+        trace = traceback.format_exc(6,True)
         return fctx
 
 def render_frame_sequence(script, in_frame, out_frame, out_folder, profile_file_path, frame_write_callback=None, editors_data_json=None, start_out_from_frame_one=False):
@@ -651,7 +653,7 @@ def render_frame_sequence(script, in_frame, out_frame, out_folder, profile_file_
         return fctx
         
     except Exception as e:
-        fctx.error = str(e)
+        fctx.error = str(e) + traceback.format_exc(6,True)
         return fctx
 
 def _init_script_and_context(script, out_folder, profile_file_path):
