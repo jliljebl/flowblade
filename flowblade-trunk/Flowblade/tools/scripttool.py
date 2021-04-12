@@ -354,13 +354,7 @@ def load_script_dialog(callback):
 def _load_script_dialog_callback(dialog, response_id):
     if response_id == Gtk.ResponseType.ACCEPT:
         filename = dialog.get_filenames()[0]
-        script_file = open(filename)
-        script_text = script_file.read()
-        _window.script_view.get_buffer().set_text(script_text)
-        _window.set_title(filename + " - " + _window.tool_name)
-        global _last_save_path
-        _last_save_path = filename
-        _reinit_init_playback()
+        _load_script(filename)
         dialog.destroy()
     else:
         dialog.destroy()
@@ -368,8 +362,20 @@ def _load_script_dialog_callback(dialog, response_id):
 def _clear_info_after_delay():
     GLib.source_remove(_delay_timeout_id)
     _window.set_action_info("")
-     
-    
+
+def _reload_script():
+    if _last_save_path != None:
+        _load_script(_last_save_path)
+                
+def _load_script(filename):
+    script_file = open(filename)
+    script_text = script_file.read()
+    _window.script_view.get_buffer().set_text(script_text)
+    _window.set_title(filename + " - " + _window.tool_name)
+    global _last_save_path
+    _last_save_path = filename
+    _reinit_init_playback()
+        
 #-------------------------------------------------- menu
 def _hamburger_menu_callback(widget, msg):
     global _last_save_path
@@ -619,6 +625,9 @@ class ScriptToolWindow(Gtk.Window):
         self.hamburger_launcher = guicomponents.PressLaunch(self.hamburger_launch_pressed, hamburger_launcher_surface)
         self.hamburger_launcher.widget.set_margin_bottom(7)
 
+        self.reload_button = Gtk.Button(_("Reload Script"))
+        self.reload_button.connect("clicked", lambda w: _reload_script())
+        
         self.action_info = Gtk.Label()
         self.action_info.set_markup("")
         
@@ -627,6 +636,8 @@ class ScriptToolWindow(Gtk.Window):
 
         top_row = Gtk.HBox(False, 2)
         top_row.pack_start(self.hamburger_launcher.widget, False, False, 0)
+        top_row.pack_start(guiutils.get_pad_label(12, 2), False, False, 0)
+        top_row.pack_start(self.reload_button, False, False, 0)
         top_row.pack_start(guiutils.get_pad_label(12, 2), False, False, 0)
         top_row.pack_start(self.action_info, False, False, 0)
         top_row.pack_start(Gtk.Label(), True, True, 0)
@@ -1108,7 +1119,12 @@ def _global_key_down_listener(widget, event):
     # UP ARROW, end
     if event.keyval == Gdk.KEY_Up:
         end_pressed()
-    
+
+    if event.keyval == Gdk.KEY_r:
+        if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+            if _last_save_path != None:
+                _load_script(_last_save_path)
+        
     # I
     if event.keyval == Gdk.KEY_i:
         if (event.get_state() & Gdk.ModifierType.MOD1_MASK):
