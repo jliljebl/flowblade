@@ -465,7 +465,7 @@ class FluxityContext:
 
     def log_line(self, log_line):
         """
-        **log_line:** log line string .
+        **log_line(str):** line of text.
                  
         Adds a line of text to log message displayed after completion or error.
         """

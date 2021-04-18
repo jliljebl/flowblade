@@ -1,0 +1,2379 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>fluxity API documentation</title>
+<meta name="description" content="GPL Licence text …" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>fluxity</code></h1>
+</header>
+<section id="section-intro">
+<h3 id="gpl-licence-text">GPL Licence text</h3>
+<p>Flowblade Movie Editor is a nonlinear video editor.
+Copyright 2021 Janne Liljeblad.</p>
+<p>This file is part of Flowblade Movie Editor <a href="http://code.google.com/p/flowblade">http://code.google.com/p/flowblade</a>.</p>
+<p>Flowblade Movie Editor is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.</p>
+<p>Flowblade Movie Editor is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the
+GNU General Public License for more details.</p>
+<p>You should have received a copy of the GNU General Public License
+along with Flowblade Movie Editor. If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.</p>
+<h1 id="fluxity-scripting">FLUXITY SCRIPTING</h1>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+    ### GPL Licence text
+
+    Flowblade Movie Editor is a nonlinear video editor.
+    Copyright 2021 Janne Liljeblad.
+
+    This file is part of Flowblade Movie Editor &lt;http://code.google.com/p/flowblade&gt;.
+
+    Flowblade Movie Editor is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Flowblade Movie Editor is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Flowblade Movie Editor. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+    
+    
+    # FLUXITY SCRIPTING
+&#34;&#34;&#34;
+
+import cairo
+import json
+import mlt
+import os
+import traceback
+
+# Default length in frames for script duration
+DEFAULT_LENGTH = 200
+
+METHOD_INIT_SCRIPT = 0
+METHOD_INIT_RENDER = 1
+METHOD_RENDER_FRAME = 2
+
+# Script displayed at Flowblade Script tool on init.
+DEFAULT_SCRIPT = \
+&#34;&#34;&#34;
+import cairo
+import mlt
+
+def init_script(fctx):
+    # Script init here
+    fctx.add_editor(&#34;float_editor&#34;, fctx.EDITOR_FLOAT, 1.0)
+    fctx.set_name(&#34;Default Test Plugin&#34;)
+
+def init_render(fctx):
+    # Render init here
+    fctx.set_data_obj(&#34;bg_color&#34;, cairo.SolidPattern(0.8, 0.2, 0.2, 1.0))
+ 
+def render_frame(frame, fctx, w, h):
+    # Frame Render code here
+    cr = fctx.get_frame_cr()
+    color = fctx.get_data_obj(&#34;bg_color&#34;)
+    cr.set_source(color)
+    cr.rectangle(0, 0, w, h)
+    cr.fill()
+&#34;&#34;&#34;
+
+
+# ---------------------------------------------------------- script object
+class FluxityScript:
+    &#34;&#34;&#34;
+    Compiles script to an executable object and calls methods *init_script()*, *init_render()*, *render_frame()* on it.
+    
+    Internal class, do not use objects of this class directly in scripts.
+    &#34;&#34;&#34;
+    
+    def __init__(self, script_str):
+        self.script = script_str
+        self.code = None
+        self.namespace = {}
+    
+    def compile_script(self):
+        &#34;&#34;&#34;
+        Compiles user script.
+        &#34;&#34;&#34;
+        try:
+            self.code = compile(self.script, &#34;&lt;fluxityscript&gt;&#34;, &#34;exec&#34;)
+        except Exception as e:
+            _raise_compile_error(str(e))
+        
+        code_names = sorted(self.code.co_names)
+        required_names = sorted([&#34;init_script&#34;,&#34;init_render&#34;,&#34;render_frame&#34;])
+        contains_all = all(elem in code_names for elem in required_names)
+        if contains_all == False:
+            _raise_fluxity_error(&#34;Functions names &#34; + str(required_names) + &#34; all required to be in script, you have: &#34; + str(code_names))
+  
+        try:
+            exec(self.code, self.namespace)
+        except Exception as e:
+            _raise_exec_error(str(e))
+    
+    def call_init_script(self, fctx):
+        &#34;&#34;&#34;
+        Calls method *init_script()* on script.
+        &#34;&#34;&#34;
+        try:
+          self.namespace[&#39;init_script&#39;](fctx)
+        except Exception as e:
+          _raise_fluxity_error(&#34;error calling function &#39;init_script()&#39;:&#34; + str(e))
+
+    def call_init_render(self, fctx):
+        &#34;&#34;&#34;
+        Calls method *init_render()* on script.
+        &#34;&#34;&#34;
+        try:
+          self.namespace[&#39;init_render&#39;](fctx)
+        except Exception as e:
+          _raise_fluxity_error(&#34;error calling function &#39;init_render()&#39;:\n\n&#34; + str(e))
+          
+    def call_render_frame(self, frame, fctx, w, h):
+        &#34;&#34;&#34;
+        Calls method *render_frame()* on script.
+        &#34;&#34;&#34;
+        try:
+          self.namespace[&#39;render_frame&#39;](frame, fctx, w, h)
+        except Exception as e:
+          _raise_fluxity_error(&#34;error calling function &#39;render_frame()&#39;:\n\n&#34; + str(e))
+
+
+# ---------------------------------------------------------- mlt profile
+class FluxityProfile:
+    &#34;&#34;&#34;
+    Properties of this class correspond MLT profile objects.
+    
+    Internal class, do not use objects of this class directly in scripts. 
+    &#34;&#34;&#34;
+    DESCRIPTION = &#34;description&#34;
+    FRAME_RATE_NUM = &#34;frame_rate_num&#34;
+    FRAME_RATE_DEN = &#34;frame_rate_den&#34;
+    WIDTH = &#34;width&#34;
+    HEIGHT = &#34;height&#34;
+    PROGRESSIVE = &#34;progressive&#34;
+    SAMPLE_ASPECT_NUM = &#34;sample_aspect_num&#34;
+    SAMPLE_ASPECT_DEN = &#34;sample_aspect_den&#34;
+    DISPLAY_ASPECT_NUM = &#34;display_aspect_num&#34;
+    DISPLAY_ASPECT_DEN = &#34;display_aspect_den&#34;
+    COLORSPACE = &#34;colorspace&#34;
+        
+    def __init__(self, profile_data):
+        self.profile_data = profile_data
+    
+    def get_profile_property(self, prop):
+        return self.profile_data[prop]
+
+def _read_profile_prop_from_lines(lines, prop):
+    for line in lines:
+        sides = line.split(&#34;=&#34;)
+        if sides[0] == prop:
+            return sides[1]
+
+    return None
+        
+
+# ---------------------------------------------------------- context object
+class FluxityContext:
+
+    EDITOR_STRING = 0
+    &#34;&#34;&#34; Editor for strings&#34;&#34;&#34;
+    EDITOR_VALUE = 1
+    &#34;&#34;&#34; Editor for values that are saved as strings but that be could interpreted as other data. Could be useful for inputting data programmatically.&#34;&#34;&#34;
+    EDITOR_FLOAT = 2
+    &#34;&#34;&#34; Editor for float values.&#34;&#34;&#34;
+    EDITOR_INT = 3
+    &#34;&#34;&#34; Editor for integer values.&#34;&#34;&#34;
+    EDITOR_COLOR = 4
+    &#34;&#34;&#34; Editor for colors. Value is a *(R,G,B,A)* tuple with values in range 0-1.&#34;&#34;&#34;
+    EDITOR_FILE_PATH = 5
+    &#34;&#34;&#34; Editor for selecting a file path. Value is Python pathname or *None*.&#34;&#34;&#34;
+    EDITOR_OPTIONS = 6
+    &#34;&#34;&#34; Editor for selecting between  2 - N  string options. Value is tuple *(selected_index,[option_str_1, option_str_2, ...])*.&#34;&#34;&#34;
+    EDITOR_CHECK_BOX = 7
+    &#34;&#34;&#34; Editor for boolean value. Value is either *True* or *False*&#34;&#34;&#34;
+    EDITOR_FLOAT_RANGE = 8
+    &#34;&#34;&#34; Editor for float values with a defined range of accepted values. Value is a 3-tuple *(default_val, min_val, max_val)*.&#34;&#34;&#34;
+    EDITOR_INT_RANGE = 9
+    &#34;&#34;&#34; Editor for integer valueswith a defined range of accepted values.&#34;&#34;&#34;
+    
+    PROFILE_DESCRIPTION = FluxityProfile.DESCRIPTION
+    &#34;&#34;&#34;MLT Profile descriptiption string.&#34;&#34;&#34;
+    PROFILE_FRAME_RATE_NUM = FluxityProfile.FRAME_RATE_NUM
+    &#34;&#34;&#34;Frame rate numerator.&#34;&#34;&#34;
+    PROFILE_FRAME_RATE_DEN = FluxityProfile.FRAME_RATE_DEN
+    &#34;&#34;&#34;Frame rate denominator.&#34;&#34;&#34;
+    PROFILE_WIDTH = FluxityProfile.WIDTH
+    &#34;&#34;&#34;Output image width in pixels.&#34;&#34;&#34;
+    PROFILE_HEIGHT = FluxityProfile.HEIGHT
+    &#34;&#34;&#34;Output image height in pixels.&#34;&#34;&#34;
+    PROFILE_PROGRESSIVE = FluxityProfile.PROGRESSIVE
+    &#34;&#34;&#34;
+    MLT Profile image is progressive if value is *True*, if value is *False* image is interlaced.
+    &#34;&#34;&#34;
+    PROFILE_SAMPLE_ASPECT_NUM = FluxityProfile.SAMPLE_ASPECT_NUM
+    &#34;&#34;&#34;
+    Pixel size fraction numerator.
+    &#34;&#34;&#34;
+    PROFILE_SAMPLE_ASPECT_DEN = FluxityProfile.SAMPLE_ASPECT_DEN
+    &#34;&#34;&#34;
+    Pixel size fraction denominator.
+    &#34;&#34;&#34;
+    PROFILE_DISPLAY_ASPECT_NUM = FluxityProfile.DISPLAY_ASPECT_NUM
+    &#34;&#34;&#34;Output image size fraction numerator.&#34;&#34;&#34;
+    PROFILE_DISPLAY_ASPECT_DEN = FluxityProfile.DISPLAY_ASPECT_DEN
+    &#34;&#34;&#34;Output image size fraction denominator.&#34;&#34;&#34;
+    PROFILE_COLORSPACE = FluxityProfile.COLORSPACE
+    &#34;&#34;&#34;Profile colorspace, value is either 709, 601 or 2020.&#34;&#34;&#34;
+
+    def __init__(self, output_folder):
+        self.priv_context = FluxityContextPrivate(output_folder)
+        self.data = {}
+        self.editors = {} # editors and script length
+        self.editor_tooltips = {}
+        self.length = DEFAULT_LENGTH
+        self.name = &#34;Name Not Set&#34;
+        self.version = 1
+        self.author = &#34;Author Not Set&#34;
+        self.error = None
+        self.log_msg = &#34;&#34;
+
+    def get_frame_cr(self):
+        &#34;&#34;&#34;
+        For every rendered frame method *render_frame()* is called and a new **cairo.ImageSurface** object is created.
+        
+        This method provides access to **cairo.Context** object that can be used to draw onto that image surface. This is the way that output is achieved with **Flowblade Media Plugins**. 
+        
+        After method *render_frame()* exits, contents of **cairo.ImageSurface** are saved to disk.
+        
+        Must be called in script method *render_frame()*.
+        
+        **Returns:** (**cairo.Context**) Context object that can be drawn onto.
+        &#34;&#34;&#34;
+        return self.priv_context.frame_cr
+
+    def get_dimensions(self):
+        &#34;&#34;&#34;
+        Pixel size of output image.
+        
+        **Returns:** (tuple(width, height)) Image size.
+        &#34;&#34;&#34;
+        w = self.priv_context.profile.get_profile_property(FluxityProfile.WIDTH)
+        h = self.priv_context.profile.get_profile_property(FluxityProfile.HEIGHT)
+        return (w, h)
+
+    def get_profile_property(self, p_property):
+        &#34;&#34;&#34;
+        Used to access properties of MLT profile set before running the script that defines e.g. output image size.
+        
+        **Returns:** (int, boolean, string) Value depends on which profile property is being accessed.
+        &#34;&#34;&#34;
+        return self.priv_context.profile.get_profile_property(p_property)
+ 
+    def set_name(self, name):
+        &#34;&#34;&#34;
+        **name(str):** name of script displayed to user.
+        
+        Must be called in script method *init_script()*.
+        &#34;&#34;&#34;
+        self.name = name
+        self.priv_context.error_on_wrong_method(&#34;set_name()&#34;, METHOD_INIT_SCRIPT)
+
+    def set_version(self, version):
+        &#34;&#34;&#34;
+        **version(int):** version of script, use increasing integer numbering. Default value is *1*.
+        
+        Must be called in script method *init_script()*.
+        &#34;&#34;&#34;
+        self.version = version
+        self.priv_context.error_on_wrong_method(&#34;set_version()&#34;, METHOD_INIT_SCRIPT)
+
+    def set_author(self, author):
+        &#34;&#34;&#34;
+        **author(str):** name of script creator.
+        
+        Must be called in script method *init_script()*.
+        &#34;&#34;&#34;
+        self.author = author
+
+    def set_frame_name(self, frame_name):
+        &#34;&#34;&#34;        
+        **frame_name(str):** name used before number part in rendered frame files.
+        &#34;&#34;&#34;
+        self.priv_context.frame_name = frame_name
+
+    def set_data_obj(self, label, item):
+        &#34;&#34;&#34;
+        **label(str):** lable used to access data later using *get_data_obj(self, label)*.
+
+        **item(obj):** data item being saved.
+        
+        Saves data to be used later during execution of script. Using **global** would obivously be possible to replace this, but this is made available as a more clean solution.
+        &#34;&#34;&#34;
+        self.data[label] = item
+
+    def get_data_obj(self, label):
+        &#34;&#34;&#34;
+        **label(str):** lable of saved data item.
+        
+        Gives access to previously saved data.
+        
+        **Returns:** (obj) Saved data item.
+        &#34;&#34;&#34;
+        return self.data[label]
+
+    def set_length(self, length):
+        &#34;&#34;&#34;
+        **length(int):** New length of script in frames.
+        
+        Sets length of script output in frames.
+        
+        Must *not* be called in  *render_frames()*.
+        &#34;&#34;&#34;
+        self.length = length
+
+    def get_length(self):
+        &#34;&#34;&#34;
+        **Returns:** (int) Length of script in frames.
+        &#34;&#34;&#34;
+        return self.length
+
+    def add_editor(self, name, type, default_value, tooltip=None):
+        &#34;&#34;&#34;     
+        **name(str):** Name for editor.
+        
+        **type(int):** Value either *EDITOR_STRING, EDITOR_VALUE, EDITOR_FLOAT, EDITOR_INT, EDITOR_COLOR, EDITOR_FILE_PATH, EDITOR_OPTIONS, EDITOR_CHECK_BOX, EDITOR_FLOAT_RANGE, EDITOR_INT_RANGE.*
+        
+        **default_value():** Data type depends on editor type:
+        
+          * EDITOR_STRING(str), 
+          
+          * EDITOR_VALUE(str), 
+          
+          * EDITOR_FLOAT(float), 
+          
+          * EDITOR_INT(int), 
+          
+          * EDITOR_COLOR(4-tuple with float values in range 0-1, (R,G,B,A)), 
+          
+          * EDITOR_FILE_PATH(str), 
+          
+          * EDITOR_OPTIONS (2-tuple (int, [str]), (selected_index,[option_str_1, option_str_2, ...]),
+          
+          * EDITOR_CHECK_BOX(bool), 
+          
+          * EDITOR_FLOAT_RANGE(3-tuple with float values, (default, min, max)), 
+          
+          * EDITOR_INT_RANGE(3-tuple with int values, (default, min, max))
+        
+        **tooltip(str, optional):** Tooltip for editor if presented in GUI.
+        
+        Defines possible GUI editors used to affect script rendering. Edited value is accessed with method *get_editor_value(self, name, frame=0)*.
+        
+        Data describing editors can be accessed with *get_script_data(self)*. Edited values are made available for script with *set_editors_data(self, editors_data_json)*.
+        
+        Must be called in script method *init_script()*.
+        &#34;&#34;&#34;
+        self.editors[name] = (type, default_value)
+
+        if tooltip != None:
+            self.editor_tooltips[name] = tooltip
+
+        self.priv_context.error_on_wrong_method(&#34;add_editor()&#34;, METHOD_INIT_SCRIPT)
+        
+    def get_editor_value(self, name, frame=0):
+        &#34;&#34;&#34;     
+        **name(str):** Name of editor.
+        
+        **frame(int):** Frame in range 0 - (script length - 1).
+        
+        Value of edited data at given frame. We currently have no animated values, but they will added with future API updates.
+        
+        **Returns:** (obj) Value at frame.
+        
+        Data type depends on editor type:
+        
+          * EDITOR_STRING(str), 
+          
+          * EDITOR_VALUE(str), 
+          
+          * EDITOR_FLOAT(float), 
+          
+          * EDITOR_INT(int), 
+          
+          * EDITOR_COLOR(4-tuple with float values in range 0-1, (R,G,B,A)), 
+          
+          * EDITOR_FILE_PATH(str), 
+          
+          * EDITOR_OPTIONS (2-tuple (int, [str]), (selected_index,[option_str_1, option_str_2, ...]),
+          
+          * EDITOR_CHECK_BOX(bool), 
+          
+          * EDITOR_FLOAT_RANGE(3-tuple with float values, (default, min, max)), 
+          
+          * EDITOR_INT_RANGE(3-tuple with int values, (default, min, max))
+        &#34;&#34;&#34;
+        try:
+            type, value = self.editors[name]
+            return value
+        except:
+            exception_msg = &#34;No editor for name &#39;&#34; + name + &#34;&#39; found.&#34;
+            _raise_fluxity_error(exception_msg)
+
+    def get_script_data(self):
+        &#34;&#34;&#34;             
+        Returns data of all editors and their default values, and script metadata like script author and version. 
+        
+        Output can be turned into Python object tree using *json.loads()* method.
+        
+        **Returns:** (str) string representation of JSON object.
+        &#34;&#34;&#34;
+        script_data = {}
+        script_data[&#34;length&#34;] = self.length
+        script_data[&#34;name&#34;] = self.name
+        script_data[&#34;version&#34;] = self.version
+        script_data[&#34;author&#34;] = self.author
+
+        editors_list = []
+        for name in self.editors:
+            type, value = self.editors[name]
+            json_obj = [name, type, value]
+            editors_list.append(json_obj)
+
+        script_data[&#34;editors_list&#34;] = editors_list # this is dict inside FluxityContext object, but is given out as list for convenience of Flowblade app integration.
+        script_data[&#34;tooltips_list&#34;] = self.editor_tooltips
+        
+        return json.dumps(script_data)
+
+    def set_editors_data(self, editors_data_json):
+        &#34;&#34;&#34;
+        **editors_data_json(str):** string representation of JSON object.
+                 
+        Sets edited data to be used when rendering.
+        
+        Input string must describe JSON object that can be turned into usable editor data.
+        
+        *Example with EDITOR_FLOAT and EDITOR_COLOR:*
+        
+        ```
+        [
+            [&#34;Position X&#34;, 2, 1.0], 
+            [&#34;BG Color&#34;, 4, [0.8, 0.2, 0.2, 1.0]]
+        ]
+        ```
+        
+        *General form:*
+        
+        ```
+        [
+            [&lt;name&gt;, &lt;type&gt;, &lt;value&gt;], 
+            ...
+        ]
+        ```
+        
+        Using this method is not needed when creating **Flowblade Media Plugins**, application handles setting editors data.
+        
+        Should be called in script method *init_render()*.
+        &#34;&#34;&#34;
+        new_editors_list = json.loads(editors_data_json)
+        for editor in new_editors_list:
+            name, type, value = editor
+            self.editors[name] = (type, value)
+
+    def log_line(self, log_line):
+        &#34;&#34;&#34;
+        **log_line(str):** line of text.
+                 
+        Adds a line of text to log message displayed after completion or error.
+        &#34;&#34;&#34;
+        self.log_msg = self.log_msg + log_line + &#34;\n&#34;
+                
+class FluxityContextPrivate:
+    &#34;&#34;&#34;
+    This class exists to keep FluxityContext API clean for script developers.
+    
+    Internal class, do not use objects of this class directly in scripts.
+    &#34;&#34;&#34;
+    def __init__(self, output_folder):
+
+        self.profile = None
+        self.mlt_profile_path = None # We need a file for mlt.Profile so if one exits let&#39;s remember path, set with self.load_profile()
+        
+        self.output_folder = output_folder
+        self.start_out_from_frame_one = False
+        self.in_frame = -1
+
+        self.frame = -1
+        
+        self.frame_surface = None
+        self.frame_cr = None
+
+        self.frame_name = &#34;frame&#34;
+        self.first_rendered_frame_path = None # This is cleared by rendering routines.
+
+        self.current_method = None
+        self.method_name = {METHOD_INIT_SCRIPT:&#34;init_script()&#34;, METHOD_INIT_RENDER:&#34;init_render()&#34;, METHOD_RENDER_FRAME:&#34;render_frame()&#34;}
+        
+    def load_profile(self, mlt_profile_path):
+        lines = []
+        with open(mlt_profile_path, &#34;r&#34;) as f:
+            for line in f:
+                lines.append(line.strip())
+        data = {}
+        data[FluxityProfile.DESCRIPTION] = _read_profile_prop_from_lines(lines, FluxityProfile.DESCRIPTION)
+        data[FluxityProfile.FRAME_RATE_NUM] = _read_profile_prop_from_lines(lines, FluxityProfile.FRAME_RATE_NUM)
+        data[FluxityProfile.FRAME_RATE_DEN] = _read_profile_prop_from_lines(lines, FluxityProfile.FRAME_RATE_DEN)
+        data[FluxityProfile.WIDTH] = int(_read_profile_prop_from_lines(lines, FluxityProfile.WIDTH))
+        data[FluxityProfile.HEIGHT] = int(_read_profile_prop_from_lines(lines, FluxityProfile.HEIGHT))
+        data[FluxityProfile.PROGRESSIVE] = _read_profile_prop_from_lines(lines, FluxityProfile.PROGRESSIVE)
+        data[FluxityProfile.SAMPLE_ASPECT_NUM] = _read_profile_prop_from_lines(lines, FluxityProfile.SAMPLE_ASPECT_NUM)
+        data[FluxityProfile.SAMPLE_ASPECT_DEN] = _read_profile_prop_from_lines(lines, FluxityProfile.SAMPLE_ASPECT_DEN)
+        data[FluxityProfile.DISPLAY_ASPECT_NUM] = _read_profile_prop_from_lines(lines, FluxityProfile.DISPLAY_ASPECT_NUM)
+        data[FluxityProfile.DISPLAY_ASPECT_DEN] = _read_profile_prop_from_lines(lines, FluxityProfile.DISPLAY_ASPECT_DEN)
+        data[FluxityProfile.COLORSPACE] = _read_profile_prop_from_lines(lines, FluxityProfile.COLORSPACE)
+
+        self.profile = FluxityProfile(data)
+        self.mlt_profile_path = mlt_profile_path
+        
+        return self.profile.profile_data
+        
+    def create_frame_surface(self, frame):
+        self.frame = frame
+        w = self.profile.profile_data[FluxityProfile.WIDTH]
+        h = self.profile.profile_data[FluxityProfile.HEIGHT]
+        self.frame_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+        self.frame_cr = cairo.Context(self.frame_surface)
+
+    def write_out_frame(self, is_preview_frame=False):
+        if self.output_folder == None or os.path.isdir(self.output_folder) == False:
+            exception_msg = &#34;Output folder &#34; + self.output_folder + &#34; does not exist.&#34;
+            _raise_fluxity_error(exception_msg)
+        
+        out_frame_number = self.frame
+        if self.start_out_from_frame_one == True:
+            out_frame_number = self.frame - self.in_frame + 1 
+
+        filepath = self.output_folder + &#34;/&#34; + self.frame_name + &#34;_&#34; + str(out_frame_number).rjust(5, &#34;0&#34;) + &#34;.png&#34;
+        if is_preview_frame == True:
+            filepath = self.output_folder + &#34;/preview.png&#34;
+        self.frame_surface.write_to_png(filepath)
+
+        if self.first_rendered_frame_path == None:
+            self.first_rendered_frame_path = filepath
+
+    def get_preview_frame_path(self):
+        return self.output_folder + &#34;/preview.png&#34;
+    
+    def error_on_wrong_method(self, method_name, required_method):
+        if required_method == self.current_method:
+            return
+        
+        error_str = &#34;&#39;FluxityContext.&#34; + method_name + &#34;&#39; has to called in script method &#39;&#34; + self.method_name[required_method] + &#34;&#39;.&#34;
+        _raise_contained_error(error_str)
+    
+class FluxityEmptyClass:
+    &#34;&#34;&#34;
+    Internal class, do not use objects of this class directly in scripts.
+    &#34;&#34;&#34;
+    pass
+    
+# ---------------------------------------------------------- Errors 
+class FluxityError(Exception):
+    &#34;&#34;&#34;
+    Errors specific to using Fluxity API.
+    
+    Internal class, do not use objects of this class directly in scripts. 
+    &#34;&#34;&#34;
+    def __init__(self, msg):
+        self.message = msg
+        super().__init__(self.message)
+
+def _raise_contained_error(exception_msg):
+    raise FluxityError(exception_msg)
+    
+def _raise_fluxity_error(exception_msg):
+    raise FluxityError(&#34;Fluxity Error: &#34; + exception_msg)
+    
+def _raise_compile_error(exception_msg):
+    raise FluxityError(&#34;Error compiling Fluxity script:\n&#34; + exception_msg)
+
+def _raise_exec_error(exception_msg):
+    raise FluxityError(&#34;Error on doing exec() to create script code object:\n&#34; + exception_msg)
+
+# ------------------------------------------------------ rendering
+def render_preview_frame(script, frame, out_folder, profile_file_path, editors_data_json=None):
+    try:
+        # Init script and context.
+        error_msg, results = _init_script_and_context(script, out_folder, profile_file_path)
+        if error_msg != None:
+            fake_fctx = FluxityEmptyClass()
+            fake_fctx.error = error_msg
+            fake_fctx.log_msg = &#34;&#34;
+            return fake_fctx
+
+        fscript, fctx = results
+
+        # Execute script to render a preview frame.
+        fctx.priv_context.current_method = METHOD_INIT_SCRIPT
+        fscript.call_init_script(fctx)
+
+        if editors_data_json != None:
+            fctx.set_editors_data(editors_data_json)
+
+        fctx.priv_context.current_method = METHOD_INIT_RENDER
+        fscript.call_init_render(fctx)
+
+        fctx.priv_context.current_method = METHOD_RENDER_FRAME
+        fctx.priv_context.create_frame_surface(frame)
+        w, h = fctx.get_dimensions()
+        fscript.call_render_frame(frame, fctx, w, h)
+
+        return fctx
+    except Exception as e:
+        fctx.error = str(e) + traceback.format_exc(6,True)
+        trace = traceback.format_exc(6,True)
+        return fctx
+
+def render_frame_sequence(script, in_frame, out_frame, out_folder, profile_file_path, frame_write_callback=None, editors_data_json=None, start_out_from_frame_one=False):
+    try:
+        # Init script and context.
+        error_msg, results = _init_script_and_context(script, out_folder, profile_file_path)
+        if error_msg != None:
+            fake_fctx = FluxityEmptyClass()
+            fake_fctx.error = error_msg
+            return fake_fctx
+
+        fscript, fctx = results
+        
+        # Execute script to write frame sequence.
+        fctx.priv_context.current_method = METHOD_INIT_SCRIPT
+        fscript.call_init_script(fctx)
+
+        if editors_data_json != None:
+            fctx.set_editors_data(editors_data_json)
+            
+        fctx.priv_context.current_method = METHOD_INIT_RENDER
+        fscript.call_init_render(fctx)
+
+        fctx.priv_context.first_rendered_frame_path = None # Should be clear but let&#39;s make sure. 
+        fctx.priv_context.current_method = METHOD_RENDER_FRAME
+        fctx.priv_context.start_out_from_frame_one = start_out_from_frame_one
+        fctx.priv_context.in_frame = in_frame
+        
+        for frame in range(in_frame, out_frame):
+            fctx.priv_context.create_frame_surface(frame)
+            w, h = fctx.get_dimensions()
+            fscript.call_render_frame(frame, fctx, w, h)
+            fctx.priv_context.write_out_frame()
+            if frame_write_callback != None:
+                frame_write_callback(frame) # for GUI app opdates.
+        return fctx
+        
+    except Exception as e:
+        fctx.error = str(e) + traceback.format_exc(6,True)
+        return fctx
+
+def _init_script_and_context(script, out_folder, profile_file_path):
+    try:
+        fscript = FluxityScript(script)
+        fscript.compile_script()
+        
+        fctx = FluxityContext(out_folder)
+        fctx.priv_context.load_profile(profile_file_path)
+
+        return (None, (fscript, fctx))
+    except Exception as e:
+        msg = str(e)
+        return (msg, None)
+        </code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="fluxity.render_frame_sequence"><code class="name flex">
+<span>def <span class="ident">render_frame_sequence</span></span>(<span>script, in_frame, out_frame, out_folder, profile_file_path, frame_write_callback=None, editors_data_json=None, start_out_from_frame_one=False)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def render_frame_sequence(script, in_frame, out_frame, out_folder, profile_file_path, frame_write_callback=None, editors_data_json=None, start_out_from_frame_one=False):
+    try:
+        # Init script and context.
+        error_msg, results = _init_script_and_context(script, out_folder, profile_file_path)
+        if error_msg != None:
+            fake_fctx = FluxityEmptyClass()
+            fake_fctx.error = error_msg
+            return fake_fctx
+
+        fscript, fctx = results
+        
+        # Execute script to write frame sequence.
+        fctx.priv_context.current_method = METHOD_INIT_SCRIPT
+        fscript.call_init_script(fctx)
+
+        if editors_data_json != None:
+            fctx.set_editors_data(editors_data_json)
+            
+        fctx.priv_context.current_method = METHOD_INIT_RENDER
+        fscript.call_init_render(fctx)
+
+        fctx.priv_context.first_rendered_frame_path = None # Should be clear but let&#39;s make sure. 
+        fctx.priv_context.current_method = METHOD_RENDER_FRAME
+        fctx.priv_context.start_out_from_frame_one = start_out_from_frame_one
+        fctx.priv_context.in_frame = in_frame
+        
+        for frame in range(in_frame, out_frame):
+            fctx.priv_context.create_frame_surface(frame)
+            w, h = fctx.get_dimensions()
+            fscript.call_render_frame(frame, fctx, w, h)
+            fctx.priv_context.write_out_frame()
+            if frame_write_callback != None:
+                frame_write_callback(frame) # for GUI app opdates.
+        return fctx
+        
+    except Exception as e:
+        fctx.error = str(e) + traceback.format_exc(6,True)
+        return fctx</code></pre>
+</details>
+</dd>
+<dt id="fluxity.render_preview_frame"><code class="name flex">
+<span>def <span class="ident">render_preview_frame</span></span>(<span>script, frame, out_folder, profile_file_path, editors_data_json=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def render_preview_frame(script, frame, out_folder, profile_file_path, editors_data_json=None):
+    try:
+        # Init script and context.
+        error_msg, results = _init_script_and_context(script, out_folder, profile_file_path)
+        if error_msg != None:
+            fake_fctx = FluxityEmptyClass()
+            fake_fctx.error = error_msg
+            fake_fctx.log_msg = &#34;&#34;
+            return fake_fctx
+
+        fscript, fctx = results
+
+        # Execute script to render a preview frame.
+        fctx.priv_context.current_method = METHOD_INIT_SCRIPT
+        fscript.call_init_script(fctx)
+
+        if editors_data_json != None:
+            fctx.set_editors_data(editors_data_json)
+
+        fctx.priv_context.current_method = METHOD_INIT_RENDER
+        fscript.call_init_render(fctx)
+
+        fctx.priv_context.current_method = METHOD_RENDER_FRAME
+        fctx.priv_context.create_frame_surface(frame)
+        w, h = fctx.get_dimensions()
+        fscript.call_render_frame(frame, fctx, w, h)
+
+        return fctx
+    except Exception as e:
+        fctx.error = str(e) + traceback.format_exc(6,True)
+        trace = traceback.format_exc(6,True)
+        return fctx</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="fluxity.FluxityContext"><code class="flex name class">
+<span>class <span class="ident">FluxityContext</span></span>
+<span>(</span><span>output_folder)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class FluxityContext:
+
+    EDITOR_STRING = 0
+    &#34;&#34;&#34; Editor for strings&#34;&#34;&#34;
+    EDITOR_VALUE = 1
+    &#34;&#34;&#34; Editor for values that are saved as strings but that be could interpreted as other data. Could be useful for inputting data programmatically.&#34;&#34;&#34;
+    EDITOR_FLOAT = 2
+    &#34;&#34;&#34; Editor for float values.&#34;&#34;&#34;
+    EDITOR_INT = 3
+    &#34;&#34;&#34; Editor for integer values.&#34;&#34;&#34;
+    EDITOR_COLOR = 4
+    &#34;&#34;&#34; Editor for colors. Value is a *(R,G,B,A)* tuple with values in range 0-1.&#34;&#34;&#34;
+    EDITOR_FILE_PATH = 5
+    &#34;&#34;&#34; Editor for selecting a file path. Value is Python pathname or *None*.&#34;&#34;&#34;
+    EDITOR_OPTIONS = 6
+    &#34;&#34;&#34; Editor for selecting between  2 - N  string options. Value is tuple *(selected_index,[option_str_1, option_str_2, ...])*.&#34;&#34;&#34;
+    EDITOR_CHECK_BOX = 7
+    &#34;&#34;&#34; Editor for boolean value. Value is either *True* or *False*&#34;&#34;&#34;
+    EDITOR_FLOAT_RANGE = 8
+    &#34;&#34;&#34; Editor for float values with a defined range of accepted values. Value is a 3-tuple *(default_val, min_val, max_val)*.&#34;&#34;&#34;
+    EDITOR_INT_RANGE = 9
+    &#34;&#34;&#34; Editor for integer valueswith a defined range of accepted values.&#34;&#34;&#34;
+    
+    PROFILE_DESCRIPTION = FluxityProfile.DESCRIPTION
+    &#34;&#34;&#34;MLT Profile descriptiption string.&#34;&#34;&#34;
+    PROFILE_FRAME_RATE_NUM = FluxityProfile.FRAME_RATE_NUM
+    &#34;&#34;&#34;Frame rate numerator.&#34;&#34;&#34;
+    PROFILE_FRAME_RATE_DEN = FluxityProfile.FRAME_RATE_DEN
+    &#34;&#34;&#34;Frame rate denominator.&#34;&#34;&#34;
+    PROFILE_WIDTH = FluxityProfile.WIDTH
+    &#34;&#34;&#34;Output image width in pixels.&#34;&#34;&#34;
+    PROFILE_HEIGHT = FluxityProfile.HEIGHT
+    &#34;&#34;&#34;Output image height in pixels.&#34;&#34;&#34;
+    PROFILE_PROGRESSIVE = FluxityProfile.PROGRESSIVE
+    &#34;&#34;&#34;
+    MLT Profile image is progressive if value is *True*, if value is *False* image is interlaced.
+    &#34;&#34;&#34;
+    PROFILE_SAMPLE_ASPECT_NUM = FluxityProfile.SAMPLE_ASPECT_NUM
+    &#34;&#34;&#34;
+    Pixel size fraction numerator.
+    &#34;&#34;&#34;
+    PROFILE_SAMPLE_ASPECT_DEN = FluxityProfile.SAMPLE_ASPECT_DEN
+    &#34;&#34;&#34;
+    Pixel size fraction denominator.
+    &#34;&#34;&#34;
+    PROFILE_DISPLAY_ASPECT_NUM = FluxityProfile.DISPLAY_ASPECT_NUM
+    &#34;&#34;&#34;Output image size fraction numerator.&#34;&#34;&#34;
+    PROFILE_DISPLAY_ASPECT_DEN = FluxityProfile.DISPLAY_ASPECT_DEN
+    &#34;&#34;&#34;Output image size fraction denominator.&#34;&#34;&#34;
+    PROFILE_COLORSPACE = FluxityProfile.COLORSPACE
+    &#34;&#34;&#34;Profile colorspace, value is either 709, 601 or 2020.&#34;&#34;&#34;
+
+    def __init__(self, output_folder):
+        self.priv_context = FluxityContextPrivate(output_folder)
+        self.data = {}
+        self.editors = {} # editors and script length
+        self.editor_tooltips = {}
+        self.length = DEFAULT_LENGTH
+        self.name = &#34;Name Not Set&#34;
+        self.version = 1
+        self.author = &#34;Author Not Set&#34;
+        self.error = None
+        self.log_msg = &#34;&#34;
+
+    def get_frame_cr(self):
+        &#34;&#34;&#34;
+        For every rendered frame method *render_frame()* is called and a new **cairo.ImageSurface** object is created.
+        
+        This method provides access to **cairo.Context** object that can be used to draw onto that image surface. This is the way that output is achieved with **Flowblade Media Plugins**. 
+        
+        After method *render_frame()* exits, contents of **cairo.ImageSurface** are saved to disk.
+        
+        Must be called in script method *render_frame()*.
+        
+        **Returns:** (**cairo.Context**) Context object that can be drawn onto.
+        &#34;&#34;&#34;
+        return self.priv_context.frame_cr
+
+    def get_dimensions(self):
+        &#34;&#34;&#34;
+        Pixel size of output image.
+        
+        **Returns:** (tuple(width, height)) Image size.
+        &#34;&#34;&#34;
+        w = self.priv_context.profile.get_profile_property(FluxityProfile.WIDTH)
+        h = self.priv_context.profile.get_profile_property(FluxityProfile.HEIGHT)
+        return (w, h)
+
+    def get_profile_property(self, p_property):
+        &#34;&#34;&#34;
+        Used to access properties of MLT profile set before running the script that defines e.g. output image size.
+        
+        **Returns:** (int, boolean, string) Value depends on which profile property is being accessed.
+        &#34;&#34;&#34;
+        return self.priv_context.profile.get_profile_property(p_property)
+ 
+    def set_name(self, name):
+        &#34;&#34;&#34;
+        **name(str):** name of script displayed to user.
+        
+        Must be called in script method *init_script()*.
+        &#34;&#34;&#34;
+        self.name = name
+        self.priv_context.error_on_wrong_method(&#34;set_name()&#34;, METHOD_INIT_SCRIPT)
+
+    def set_version(self, version):
+        &#34;&#34;&#34;
+        **version(int):** version of script, use increasing integer numbering. Default value is *1*.
+        
+        Must be called in script method *init_script()*.
+        &#34;&#34;&#34;
+        self.version = version
+        self.priv_context.error_on_wrong_method(&#34;set_version()&#34;, METHOD_INIT_SCRIPT)
+
+    def set_author(self, author):
+        &#34;&#34;&#34;
+        **author(str):** name of script creator.
+        
+        Must be called in script method *init_script()*.
+        &#34;&#34;&#34;
+        self.author = author
+
+    def set_frame_name(self, frame_name):
+        &#34;&#34;&#34;        
+        **frame_name(str):** name used before number part in rendered frame files.
+        &#34;&#34;&#34;
+        self.priv_context.frame_name = frame_name
+
+    def set_data_obj(self, label, item):
+        &#34;&#34;&#34;
+        **label(str):** lable used to access data later using *get_data_obj(self, label)*.
+
+        **item(obj):** data item being saved.
+        
+        Saves data to be used later during execution of script. Using **global** would obivously be possible to replace this, but this is made available as a more clean solution.
+        &#34;&#34;&#34;
+        self.data[label] = item
+
+    def get_data_obj(self, label):
+        &#34;&#34;&#34;
+        **label(str):** lable of saved data item.
+        
+        Gives access to previously saved data.
+        
+        **Returns:** (obj) Saved data item.
+        &#34;&#34;&#34;
+        return self.data[label]
+
+    def set_length(self, length):
+        &#34;&#34;&#34;
+        **length(int):** New length of script in frames.
+        
+        Sets length of script output in frames.
+        
+        Must *not* be called in  *render_frames()*.
+        &#34;&#34;&#34;
+        self.length = length
+
+    def get_length(self):
+        &#34;&#34;&#34;
+        **Returns:** (int) Length of script in frames.
+        &#34;&#34;&#34;
+        return self.length
+
+    def add_editor(self, name, type, default_value, tooltip=None):
+        &#34;&#34;&#34;     
+        **name(str):** Name for editor.
+        
+        **type(int):** Value either *EDITOR_STRING, EDITOR_VALUE, EDITOR_FLOAT, EDITOR_INT, EDITOR_COLOR, EDITOR_FILE_PATH, EDITOR_OPTIONS, EDITOR_CHECK_BOX, EDITOR_FLOAT_RANGE, EDITOR_INT_RANGE.*
+        
+        **default_value():** Data type depends on editor type:
+        
+          * EDITOR_STRING(str), 
+          
+          * EDITOR_VALUE(str), 
+          
+          * EDITOR_FLOAT(float), 
+          
+          * EDITOR_INT(int), 
+          
+          * EDITOR_COLOR(4-tuple with float values in range 0-1, (R,G,B,A)), 
+          
+          * EDITOR_FILE_PATH(str), 
+          
+          * EDITOR_OPTIONS (2-tuple (int, [str]), (selected_index,[option_str_1, option_str_2, ...]),
+          
+          * EDITOR_CHECK_BOX(bool), 
+          
+          * EDITOR_FLOAT_RANGE(3-tuple with float values, (default, min, max)), 
+          
+          * EDITOR_INT_RANGE(3-tuple with int values, (default, min, max))
+        
+        **tooltip(str, optional):** Tooltip for editor if presented in GUI.
+        
+        Defines possible GUI editors used to affect script rendering. Edited value is accessed with method *get_editor_value(self, name, frame=0)*.
+        
+        Data describing editors can be accessed with *get_script_data(self)*. Edited values are made available for script with *set_editors_data(self, editors_data_json)*.
+        
+        Must be called in script method *init_script()*.
+        &#34;&#34;&#34;
+        self.editors[name] = (type, default_value)
+
+        if tooltip != None:
+            self.editor_tooltips[name] = tooltip
+
+        self.priv_context.error_on_wrong_method(&#34;add_editor()&#34;, METHOD_INIT_SCRIPT)
+        
+    def get_editor_value(self, name, frame=0):
+        &#34;&#34;&#34;     
+        **name(str):** Name of editor.
+        
+        **frame(int):** Frame in range 0 - (script length - 1).
+        
+        Value of edited data at given frame. We currently have no animated values, but they will added with future API updates.
+        
+        **Returns:** (obj) Value at frame.
+        
+        Data type depends on editor type:
+        
+          * EDITOR_STRING(str), 
+          
+          * EDITOR_VALUE(str), 
+          
+          * EDITOR_FLOAT(float), 
+          
+          * EDITOR_INT(int), 
+          
+          * EDITOR_COLOR(4-tuple with float values in range 0-1, (R,G,B,A)), 
+          
+          * EDITOR_FILE_PATH(str), 
+          
+          * EDITOR_OPTIONS (2-tuple (int, [str]), (selected_index,[option_str_1, option_str_2, ...]),
+          
+          * EDITOR_CHECK_BOX(bool), 
+          
+          * EDITOR_FLOAT_RANGE(3-tuple with float values, (default, min, max)), 
+          
+          * EDITOR_INT_RANGE(3-tuple with int values, (default, min, max))
+        &#34;&#34;&#34;
+        try:
+            type, value = self.editors[name]
+            return value
+        except:
+            exception_msg = &#34;No editor for name &#39;&#34; + name + &#34;&#39; found.&#34;
+            _raise_fluxity_error(exception_msg)
+
+    def get_script_data(self):
+        &#34;&#34;&#34;             
+        Returns data of all editors and their default values, and script metadata like script author and version. 
+        
+        Output can be turned into Python object tree using *json.loads()* method.
+        
+        **Returns:** (str) string representation of JSON object.
+        &#34;&#34;&#34;
+        script_data = {}
+        script_data[&#34;length&#34;] = self.length
+        script_data[&#34;name&#34;] = self.name
+        script_data[&#34;version&#34;] = self.version
+        script_data[&#34;author&#34;] = self.author
+
+        editors_list = []
+        for name in self.editors:
+            type, value = self.editors[name]
+            json_obj = [name, type, value]
+            editors_list.append(json_obj)
+
+        script_data[&#34;editors_list&#34;] = editors_list # this is dict inside FluxityContext object, but is given out as list for convenience of Flowblade app integration.
+        script_data[&#34;tooltips_list&#34;] = self.editor_tooltips
+        
+        return json.dumps(script_data)
+
+    def set_editors_data(self, editors_data_json):
+        &#34;&#34;&#34;
+        **editors_data_json(str):** string representation of JSON object.
+                 
+        Sets edited data to be used when rendering.
+        
+        Input string must describe JSON object that can be turned into usable editor data.
+        
+        *Example with EDITOR_FLOAT and EDITOR_COLOR:*
+        
+        ```
+        [
+            [&#34;Position X&#34;, 2, 1.0], 
+            [&#34;BG Color&#34;, 4, [0.8, 0.2, 0.2, 1.0]]
+        ]
+        ```
+        
+        *General form:*
+        
+        ```
+        [
+            [&lt;name&gt;, &lt;type&gt;, &lt;value&gt;], 
+            ...
+        ]
+        ```
+        
+        Using this method is not needed when creating **Flowblade Media Plugins**, application handles setting editors data.
+        
+        Should be called in script method *init_render()*.
+        &#34;&#34;&#34;
+        new_editors_list = json.loads(editors_data_json)
+        for editor in new_editors_list:
+            name, type, value = editor
+            self.editors[name] = (type, value)
+
+    def log_line(self, log_line):
+        &#34;&#34;&#34;
+        **log_line(str):** line of text.
+                 
+        Adds a line of text to log message displayed after completion or error.
+        &#34;&#34;&#34;
+        self.log_msg = self.log_msg + log_line + &#34;\n&#34;</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="fluxity.FluxityContext.EDITOR_CHECK_BOX"><code class="name">var <span class="ident">EDITOR_CHECK_BOX</span></code></dt>
+<dd>
+<div class="desc"><p>Editor for boolean value. Value is either <em>True</em> or <em>False</em></p></div>
+</dd>
+<dt id="fluxity.FluxityContext.EDITOR_COLOR"><code class="name">var <span class="ident">EDITOR_COLOR</span></code></dt>
+<dd>
+<div class="desc"><p>Editor for colors. Value is a <em>(R,G,B,A)</em> tuple with values in range 0-1.</p></div>
+</dd>
+<dt id="fluxity.FluxityContext.EDITOR_FILE_PATH"><code class="name">var <span class="ident">EDITOR_FILE_PATH</span></code></dt>
+<dd>
+<div class="desc"><p>Editor for selecting a file path. Value is Python pathname or <em>None</em>.</p></div>
+</dd>
+<dt id="fluxity.FluxityContext.EDITOR_FLOAT"><code class="name">var <span class="ident">EDITOR_FLOAT</span></code></dt>
+<dd>
+<div class="desc"><p>Editor for float values.</p></div>
+</dd>
+<dt id="fluxity.FluxityContext.EDITOR_FLOAT_RANGE"><code class="name">var <span class="ident">EDITOR_FLOAT_RANGE</span></code></dt>
+<dd>
+<div class="desc"><p>Editor for float values with a defined range of accepted values. Value is a 3-tuple <em>(default_val, min_val, max_val)</em>.</p></div>
+</dd>
+<dt id="fluxity.FluxityContext.EDITOR_INT"><code class="name">var <span class="ident">EDITOR_INT</span></code></dt>
+<dd>
+<div class="desc"><p>Editor for integer values.</p></div>
+</dd>
+<dt id="fluxity.FluxityContext.EDITOR_INT_RANGE"><code class="name">var <span class="ident">EDITOR_INT_RANGE</span></code></dt>
+<dd>
+<div class="desc"><p>Editor for integer valueswith a defined range of accepted values.</p></div>
+</dd>
+<dt id="fluxity.FluxityContext.EDITOR_OPTIONS"><code class="name">var <span class="ident">EDITOR_OPTIONS</span></code></dt>
+<dd>
+<div class="desc"><p>Editor for selecting between
+2 - N
+string options. Value is tuple <em>(selected_index,[option_str_1, option_str_2, &hellip;])</em>.</p></div>
+</dd>
+<dt id="fluxity.FluxityContext.EDITOR_STRING"><code class="name">var <span class="ident">EDITOR_STRING</span></code></dt>
+<dd>
+<div class="desc"><p>Editor for strings</p></div>
+</dd>
+<dt id="fluxity.FluxityContext.EDITOR_VALUE"><code class="name">var <span class="ident">EDITOR_VALUE</span></code></dt>
+<dd>
+<div class="desc"><p>Editor for values that are saved as strings but that be could interpreted as other data. Could be useful for inputting data programmatically.</p></div>
+</dd>
+<dt id="fluxity.FluxityContext.PROFILE_COLORSPACE"><code class="name">var <span class="ident">PROFILE_COLORSPACE</span></code></dt>
+<dd>
+<div class="desc"><p>Profile colorspace, value is either 709, 601 or 2020.</p></div>
+</dd>
+<dt id="fluxity.FluxityContext.PROFILE_DESCRIPTION"><code class="name">var <span class="ident">PROFILE_DESCRIPTION</span></code></dt>
+<dd>
+<div class="desc"><p>MLT Profile descriptiption string.</p></div>
+</dd>
+<dt id="fluxity.FluxityContext.PROFILE_DISPLAY_ASPECT_DEN"><code class="name">var <span class="ident">PROFILE_DISPLAY_ASPECT_DEN</span></code></dt>
+<dd>
+<div class="desc"><p>Output image size fraction denominator.</p></div>
+</dd>
+<dt id="fluxity.FluxityContext.PROFILE_DISPLAY_ASPECT_NUM"><code class="name">var <span class="ident">PROFILE_DISPLAY_ASPECT_NUM</span></code></dt>
+<dd>
+<div class="desc"><p>Output image size fraction numerator.</p></div>
+</dd>
+<dt id="fluxity.FluxityContext.PROFILE_FRAME_RATE_DEN"><code class="name">var <span class="ident">PROFILE_FRAME_RATE_DEN</span></code></dt>
+<dd>
+<div class="desc"><p>Frame rate denominator.</p></div>
+</dd>
+<dt id="fluxity.FluxityContext.PROFILE_FRAME_RATE_NUM"><code class="name">var <span class="ident">PROFILE_FRAME_RATE_NUM</span></code></dt>
+<dd>
+<div class="desc"><p>Frame rate numerator.</p></div>
+</dd>
+<dt id="fluxity.FluxityContext.PROFILE_HEIGHT"><code class="name">var <span class="ident">PROFILE_HEIGHT</span></code></dt>
+<dd>
+<div class="desc"><p>Output image height in pixels.</p></div>
+</dd>
+<dt id="fluxity.FluxityContext.PROFILE_PROGRESSIVE"><code class="name">var <span class="ident">PROFILE_PROGRESSIVE</span></code></dt>
+<dd>
+<div class="desc"><p>MLT Profile image is progressive if value is <em>True</em>, if value is <em>False</em> image is interlaced.</p></div>
+</dd>
+<dt id="fluxity.FluxityContext.PROFILE_SAMPLE_ASPECT_DEN"><code class="name">var <span class="ident">PROFILE_SAMPLE_ASPECT_DEN</span></code></dt>
+<dd>
+<div class="desc"><p>Pixel size fraction denominator.</p></div>
+</dd>
+<dt id="fluxity.FluxityContext.PROFILE_SAMPLE_ASPECT_NUM"><code class="name">var <span class="ident">PROFILE_SAMPLE_ASPECT_NUM</span></code></dt>
+<dd>
+<div class="desc"><p>Pixel size fraction numerator.</p></div>
+</dd>
+<dt id="fluxity.FluxityContext.PROFILE_WIDTH"><code class="name">var <span class="ident">PROFILE_WIDTH</span></code></dt>
+<dd>
+<div class="desc"><p>Output image width in pixels.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="fluxity.FluxityContext.add_editor"><code class="name flex">
+<span>def <span class="ident">add_editor</span></span>(<span>self, name, type, default_value, tooltip=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><strong>name(str):</strong> Name for editor.</p>
+<p><strong>type(int):</strong> Value either <em>EDITOR_STRING, EDITOR_VALUE, EDITOR_FLOAT, EDITOR_INT, EDITOR_COLOR, EDITOR_FILE_PATH, EDITOR_OPTIONS, EDITOR_CHECK_BOX, EDITOR_FLOAT_RANGE, EDITOR_INT_RANGE.</em></p>
+<p><strong>default_value():</strong> Data type depends on editor type:</p>
+<ul>
+<li>
+<p>EDITOR_STRING(str), </p>
+</li>
+<li>
+<p>EDITOR_VALUE(str), </p>
+</li>
+<li>
+<p>EDITOR_FLOAT(float), </p>
+</li>
+<li>
+<p>EDITOR_INT(int), </p>
+</li>
+<li>
+<p>EDITOR_COLOR(4-tuple with float values in range 0-1, (R,G,B,A)), </p>
+</li>
+<li>
+<p>EDITOR_FILE_PATH(str), </p>
+</li>
+<li>
+<p>EDITOR_OPTIONS (2-tuple (int, [str]), (selected_index,[option_str_1, option_str_2, &hellip;]),</p>
+</li>
+<li>
+<p>EDITOR_CHECK_BOX(bool), </p>
+</li>
+<li>
+<p>EDITOR_FLOAT_RANGE(3-tuple with float values, (default, min, max)), </p>
+</li>
+<li>
+<p>EDITOR_INT_RANGE(3-tuple with int values, (default, min, max))</p>
+</li>
+</ul>
+<p><strong>tooltip(str, optional):</strong> Tooltip for editor if presented in GUI.</p>
+<p>Defines possible GUI editors used to affect script rendering. Edited value is accessed with method <em>get_editor_value(self, name, frame=0)</em>.</p>
+<p>Data describing editors can be accessed with <em>get_script_data(self)</em>. Edited values are made available for script with <em>set_editors_data(self, editors_data_json)</em>.</p>
+<p>Must be called in script method <em>init_script()</em>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_editor(self, name, type, default_value, tooltip=None):
+    &#34;&#34;&#34;     
+    **name(str):** Name for editor.
+    
+    **type(int):** Value either *EDITOR_STRING, EDITOR_VALUE, EDITOR_FLOAT, EDITOR_INT, EDITOR_COLOR, EDITOR_FILE_PATH, EDITOR_OPTIONS, EDITOR_CHECK_BOX, EDITOR_FLOAT_RANGE, EDITOR_INT_RANGE.*
+    
+    **default_value():** Data type depends on editor type:
+    
+      * EDITOR_STRING(str), 
+      
+      * EDITOR_VALUE(str), 
+      
+      * EDITOR_FLOAT(float), 
+      
+      * EDITOR_INT(int), 
+      
+      * EDITOR_COLOR(4-tuple with float values in range 0-1, (R,G,B,A)), 
+      
+      * EDITOR_FILE_PATH(str), 
+      
+      * EDITOR_OPTIONS (2-tuple (int, [str]), (selected_index,[option_str_1, option_str_2, ...]),
+      
+      * EDITOR_CHECK_BOX(bool), 
+      
+      * EDITOR_FLOAT_RANGE(3-tuple with float values, (default, min, max)), 
+      
+      * EDITOR_INT_RANGE(3-tuple with int values, (default, min, max))
+    
+    **tooltip(str, optional):** Tooltip for editor if presented in GUI.
+    
+    Defines possible GUI editors used to affect script rendering. Edited value is accessed with method *get_editor_value(self, name, frame=0)*.
+    
+    Data describing editors can be accessed with *get_script_data(self)*. Edited values are made available for script with *set_editors_data(self, editors_data_json)*.
+    
+    Must be called in script method *init_script()*.
+    &#34;&#34;&#34;
+    self.editors[name] = (type, default_value)
+
+    if tooltip != None:
+        self.editor_tooltips[name] = tooltip
+
+    self.priv_context.error_on_wrong_method(&#34;add_editor()&#34;, METHOD_INIT_SCRIPT)</code></pre>
+</details>
+</dd>
+<dt id="fluxity.FluxityContext.get_data_obj"><code class="name flex">
+<span>def <span class="ident">get_data_obj</span></span>(<span>self, label)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><strong>label(str):</strong> lable of saved data item.</p>
+<p>Gives access to previously saved data.</p>
+<p><strong>Returns:</strong> (obj) Saved data item.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_data_obj(self, label):
+    &#34;&#34;&#34;
+    **label(str):** lable of saved data item.
+    
+    Gives access to previously saved data.
+    
+    **Returns:** (obj) Saved data item.
+    &#34;&#34;&#34;
+    return self.data[label]</code></pre>
+</details>
+</dd>
+<dt id="fluxity.FluxityContext.get_dimensions"><code class="name flex">
+<span>def <span class="ident">get_dimensions</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Pixel size of output image.</p>
+<p><strong>Returns:</strong> (tuple(width, height)) Image size.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_dimensions(self):
+    &#34;&#34;&#34;
+    Pixel size of output image.
+    
+    **Returns:** (tuple(width, height)) Image size.
+    &#34;&#34;&#34;
+    w = self.priv_context.profile.get_profile_property(FluxityProfile.WIDTH)
+    h = self.priv_context.profile.get_profile_property(FluxityProfile.HEIGHT)
+    return (w, h)</code></pre>
+</details>
+</dd>
+<dt id="fluxity.FluxityContext.get_editor_value"><code class="name flex">
+<span>def <span class="ident">get_editor_value</span></span>(<span>self, name, frame=0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><strong>name(str):</strong> Name of editor.</p>
+<p><strong>frame(int):</strong> Frame in range 0 - (script length - 1).</p>
+<p>Value of edited data at given frame. We currently have no animated values, but they will added with future API updates.</p>
+<p><strong>Returns:</strong> (obj) Value at frame.</p>
+<p>Data type depends on editor type:</p>
+<ul>
+<li>
+<p>EDITOR_STRING(str), </p>
+</li>
+<li>
+<p>EDITOR_VALUE(str), </p>
+</li>
+<li>
+<p>EDITOR_FLOAT(float), </p>
+</li>
+<li>
+<p>EDITOR_INT(int), </p>
+</li>
+<li>
+<p>EDITOR_COLOR(4-tuple with float values in range 0-1, (R,G,B,A)), </p>
+</li>
+<li>
+<p>EDITOR_FILE_PATH(str), </p>
+</li>
+<li>
+<p>EDITOR_OPTIONS (2-tuple (int, [str]), (selected_index,[option_str_1, option_str_2, &hellip;]),</p>
+</li>
+<li>
+<p>EDITOR_CHECK_BOX(bool), </p>
+</li>
+<li>
+<p>EDITOR_FLOAT_RANGE(3-tuple with float values, (default, min, max)), </p>
+</li>
+<li>
+<p>EDITOR_INT_RANGE(3-tuple with int values, (default, min, max))</p>
+</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_editor_value(self, name, frame=0):
+    &#34;&#34;&#34;     
+    **name(str):** Name of editor.
+    
+    **frame(int):** Frame in range 0 - (script length - 1).
+    
+    Value of edited data at given frame. We currently have no animated values, but they will added with future API updates.
+    
+    **Returns:** (obj) Value at frame.
+    
+    Data type depends on editor type:
+    
+      * EDITOR_STRING(str), 
+      
+      * EDITOR_VALUE(str), 
+      
+      * EDITOR_FLOAT(float), 
+      
+      * EDITOR_INT(int), 
+      
+      * EDITOR_COLOR(4-tuple with float values in range 0-1, (R,G,B,A)), 
+      
+      * EDITOR_FILE_PATH(str), 
+      
+      * EDITOR_OPTIONS (2-tuple (int, [str]), (selected_index,[option_str_1, option_str_2, ...]),
+      
+      * EDITOR_CHECK_BOX(bool), 
+      
+      * EDITOR_FLOAT_RANGE(3-tuple with float values, (default, min, max)), 
+      
+      * EDITOR_INT_RANGE(3-tuple with int values, (default, min, max))
+    &#34;&#34;&#34;
+    try:
+        type, value = self.editors[name]
+        return value
+    except:
+        exception_msg = &#34;No editor for name &#39;&#34; + name + &#34;&#39; found.&#34;
+        _raise_fluxity_error(exception_msg)</code></pre>
+</details>
+</dd>
+<dt id="fluxity.FluxityContext.get_frame_cr"><code class="name flex">
+<span>def <span class="ident">get_frame_cr</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>For every rendered frame method <em>render_frame()</em> is called and a new <strong>cairo.ImageSurface</strong> object is created.</p>
+<p>This method provides access to <strong>cairo.Context</strong> object that can be used to draw onto that image surface. This is the way that output is achieved with <strong>Flowblade Media Plugins</strong>. </p>
+<p>After method <em>render_frame()</em> exits, contents of <strong>cairo.ImageSurface</strong> are saved to disk.</p>
+<p>Must be called in script method <em>render_frame()</em>.</p>
+<p><strong>Returns:</strong> (<strong>cairo.Context</strong>) Context object that can be drawn onto.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_frame_cr(self):
+    &#34;&#34;&#34;
+    For every rendered frame method *render_frame()* is called and a new **cairo.ImageSurface** object is created.
+    
+    This method provides access to **cairo.Context** object that can be used to draw onto that image surface. This is the way that output is achieved with **Flowblade Media Plugins**. 
+    
+    After method *render_frame()* exits, contents of **cairo.ImageSurface** are saved to disk.
+    
+    Must be called in script method *render_frame()*.
+    
+    **Returns:** (**cairo.Context**) Context object that can be drawn onto.
+    &#34;&#34;&#34;
+    return self.priv_context.frame_cr</code></pre>
+</details>
+</dd>
+<dt id="fluxity.FluxityContext.get_length"><code class="name flex">
+<span>def <span class="ident">get_length</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><strong>Returns:</strong> (int) Length of script in frames.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_length(self):
+    &#34;&#34;&#34;
+    **Returns:** (int) Length of script in frames.
+    &#34;&#34;&#34;
+    return self.length</code></pre>
+</details>
+</dd>
+<dt id="fluxity.FluxityContext.get_profile_property"><code class="name flex">
+<span>def <span class="ident">get_profile_property</span></span>(<span>self, p_property)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Used to access properties of MLT profile set before running the script that defines e.g. output image size.</p>
+<p><strong>Returns:</strong> (int, boolean, string) Value depends on which profile property is being accessed.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_profile_property(self, p_property):
+    &#34;&#34;&#34;
+    Used to access properties of MLT profile set before running the script that defines e.g. output image size.
+    
+    **Returns:** (int, boolean, string) Value depends on which profile property is being accessed.
+    &#34;&#34;&#34;
+    return self.priv_context.profile.get_profile_property(p_property)</code></pre>
+</details>
+</dd>
+<dt id="fluxity.FluxityContext.get_script_data"><code class="name flex">
+<span>def <span class="ident">get_script_data</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns data of all editors and their default values, and script metadata like script author and version. </p>
+<p>Output can be turned into Python object tree using <em>json.loads()</em> method.</p>
+<p><strong>Returns:</strong> (str) string representation of JSON object.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_script_data(self):
+    &#34;&#34;&#34;             
+    Returns data of all editors and their default values, and script metadata like script author and version. 
+    
+    Output can be turned into Python object tree using *json.loads()* method.
+    
+    **Returns:** (str) string representation of JSON object.
+    &#34;&#34;&#34;
+    script_data = {}
+    script_data[&#34;length&#34;] = self.length
+    script_data[&#34;name&#34;] = self.name
+    script_data[&#34;version&#34;] = self.version
+    script_data[&#34;author&#34;] = self.author
+
+    editors_list = []
+    for name in self.editors:
+        type, value = self.editors[name]
+        json_obj = [name, type, value]
+        editors_list.append(json_obj)
+
+    script_data[&#34;editors_list&#34;] = editors_list # this is dict inside FluxityContext object, but is given out as list for convenience of Flowblade app integration.
+    script_data[&#34;tooltips_list&#34;] = self.editor_tooltips
+    
+    return json.dumps(script_data)</code></pre>
+</details>
+</dd>
+<dt id="fluxity.FluxityContext.log_line"><code class="name flex">
+<span>def <span class="ident">log_line</span></span>(<span>self, log_line)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><strong>log_line(str):</strong> line of text.</p>
+<p>Adds a line of text to log message displayed after completion or error.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def log_line(self, log_line):
+    &#34;&#34;&#34;
+    **log_line(str):** line of text.
+             
+    Adds a line of text to log message displayed after completion or error.
+    &#34;&#34;&#34;
+    self.log_msg = self.log_msg + log_line + &#34;\n&#34;</code></pre>
+</details>
+</dd>
+<dt id="fluxity.FluxityContext.set_author"><code class="name flex">
+<span>def <span class="ident">set_author</span></span>(<span>self, author)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><strong>author(str):</strong> name of script creator.</p>
+<p>Must be called in script method <em>init_script()</em>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_author(self, author):
+    &#34;&#34;&#34;
+    **author(str):** name of script creator.
+    
+    Must be called in script method *init_script()*.
+    &#34;&#34;&#34;
+    self.author = author</code></pre>
+</details>
+</dd>
+<dt id="fluxity.FluxityContext.set_data_obj"><code class="name flex">
+<span>def <span class="ident">set_data_obj</span></span>(<span>self, label, item)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><strong>label(str):</strong> lable used to access data later using <em>get_data_obj(self, label)</em>.</p>
+<p><strong>item(obj):</strong> data item being saved.</p>
+<p>Saves data to be used later during execution of script. Using <strong>global</strong> would obivously be possible to replace this, but this is made available as a more clean solution.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_data_obj(self, label, item):
+    &#34;&#34;&#34;
+    **label(str):** lable used to access data later using *get_data_obj(self, label)*.
+
+    **item(obj):** data item being saved.
+    
+    Saves data to be used later during execution of script. Using **global** would obivously be possible to replace this, but this is made available as a more clean solution.
+    &#34;&#34;&#34;
+    self.data[label] = item</code></pre>
+</details>
+</dd>
+<dt id="fluxity.FluxityContext.set_editors_data"><code class="name flex">
+<span>def <span class="ident">set_editors_data</span></span>(<span>self, editors_data_json)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><strong>editors_data_json(str):</strong> string representation of JSON object.</p>
+<p>Sets edited data to be used when rendering.</p>
+<p>Input string must describe JSON object that can be turned into usable editor data.</p>
+<p><em>Example with EDITOR_FLOAT and EDITOR_COLOR:</em></p>
+<pre><code>[
+    [&quot;Position X&quot;, 2, 1.0], 
+    [&quot;BG Color&quot;, 4, [0.8, 0.2, 0.2, 1.0]]
+]
+</code></pre>
+<p><em>General form:</em></p>
+<pre><code>[
+    [&lt;name&gt;, &lt;type&gt;, &lt;value&gt;], 
+    ...
+]
+</code></pre>
+<p>Using this method is not needed when creating <strong>Flowblade Media Plugins</strong>, application handles setting editors data.</p>
+<p>Should be called in script method <em>init_render()</em>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_editors_data(self, editors_data_json):
+    &#34;&#34;&#34;
+    **editors_data_json(str):** string representation of JSON object.
+             
+    Sets edited data to be used when rendering.
+    
+    Input string must describe JSON object that can be turned into usable editor data.
+    
+    *Example with EDITOR_FLOAT and EDITOR_COLOR:*
+    
+    ```
+    [
+        [&#34;Position X&#34;, 2, 1.0], 
+        [&#34;BG Color&#34;, 4, [0.8, 0.2, 0.2, 1.0]]
+    ]
+    ```
+    
+    *General form:*
+    
+    ```
+    [
+        [&lt;name&gt;, &lt;type&gt;, &lt;value&gt;], 
+        ...
+    ]
+    ```
+    
+    Using this method is not needed when creating **Flowblade Media Plugins**, application handles setting editors data.
+    
+    Should be called in script method *init_render()*.
+    &#34;&#34;&#34;
+    new_editors_list = json.loads(editors_data_json)
+    for editor in new_editors_list:
+        name, type, value = editor
+        self.editors[name] = (type, value)</code></pre>
+</details>
+</dd>
+<dt id="fluxity.FluxityContext.set_frame_name"><code class="name flex">
+<span>def <span class="ident">set_frame_name</span></span>(<span>self, frame_name)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><strong>frame_name(str):</strong> name used before number part in rendered frame files.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_frame_name(self, frame_name):
+    &#34;&#34;&#34;        
+    **frame_name(str):** name used before number part in rendered frame files.
+    &#34;&#34;&#34;
+    self.priv_context.frame_name = frame_name</code></pre>
+</details>
+</dd>
+<dt id="fluxity.FluxityContext.set_length"><code class="name flex">
+<span>def <span class="ident">set_length</span></span>(<span>self, length)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><strong>length(int):</strong> New length of script in frames.</p>
+<p>Sets length of script output in frames.</p>
+<p>Must <em>not</em> be called in
+<em>render_frames()</em>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_length(self, length):
+    &#34;&#34;&#34;
+    **length(int):** New length of script in frames.
+    
+    Sets length of script output in frames.
+    
+    Must *not* be called in  *render_frames()*.
+    &#34;&#34;&#34;
+    self.length = length</code></pre>
+</details>
+</dd>
+<dt id="fluxity.FluxityContext.set_name"><code class="name flex">
+<span>def <span class="ident">set_name</span></span>(<span>self, name)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><strong>name(str):</strong> name of script displayed to user.</p>
+<p>Must be called in script method <em>init_script()</em>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_name(self, name):
+    &#34;&#34;&#34;
+    **name(str):** name of script displayed to user.
+    
+    Must be called in script method *init_script()*.
+    &#34;&#34;&#34;
+    self.name = name
+    self.priv_context.error_on_wrong_method(&#34;set_name()&#34;, METHOD_INIT_SCRIPT)</code></pre>
+</details>
+</dd>
+<dt id="fluxity.FluxityContext.set_version"><code class="name flex">
+<span>def <span class="ident">set_version</span></span>(<span>self, version)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><strong>version(int):</strong> version of script, use increasing integer numbering. Default value is <em>1</em>.</p>
+<p>Must be called in script method <em>init_script()</em>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_version(self, version):
+    &#34;&#34;&#34;
+    **version(int):** version of script, use increasing integer numbering. Default value is *1*.
+    
+    Must be called in script method *init_script()*.
+    &#34;&#34;&#34;
+    self.version = version
+    self.priv_context.error_on_wrong_method(&#34;set_version()&#34;, METHOD_INIT_SCRIPT)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="fluxity.FluxityContextPrivate"><code class="flex name class">
+<span>class <span class="ident">FluxityContextPrivate</span></span>
+<span>(</span><span>output_folder)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>This class exists to keep FluxityContext API clean for script developers.</p>
+<p>Internal class, do not use objects of this class directly in scripts.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class FluxityContextPrivate:
+    &#34;&#34;&#34;
+    This class exists to keep FluxityContext API clean for script developers.
+    
+    Internal class, do not use objects of this class directly in scripts.
+    &#34;&#34;&#34;
+    def __init__(self, output_folder):
+
+        self.profile = None
+        self.mlt_profile_path = None # We need a file for mlt.Profile so if one exits let&#39;s remember path, set with self.load_profile()
+        
+        self.output_folder = output_folder
+        self.start_out_from_frame_one = False
+        self.in_frame = -1
+
+        self.frame = -1
+        
+        self.frame_surface = None
+        self.frame_cr = None
+
+        self.frame_name = &#34;frame&#34;
+        self.first_rendered_frame_path = None # This is cleared by rendering routines.
+
+        self.current_method = None
+        self.method_name = {METHOD_INIT_SCRIPT:&#34;init_script()&#34;, METHOD_INIT_RENDER:&#34;init_render()&#34;, METHOD_RENDER_FRAME:&#34;render_frame()&#34;}
+        
+    def load_profile(self, mlt_profile_path):
+        lines = []
+        with open(mlt_profile_path, &#34;r&#34;) as f:
+            for line in f:
+                lines.append(line.strip())
+        data = {}
+        data[FluxityProfile.DESCRIPTION] = _read_profile_prop_from_lines(lines, FluxityProfile.DESCRIPTION)
+        data[FluxityProfile.FRAME_RATE_NUM] = _read_profile_prop_from_lines(lines, FluxityProfile.FRAME_RATE_NUM)
+        data[FluxityProfile.FRAME_RATE_DEN] = _read_profile_prop_from_lines(lines, FluxityProfile.FRAME_RATE_DEN)
+        data[FluxityProfile.WIDTH] = int(_read_profile_prop_from_lines(lines, FluxityProfile.WIDTH))
+        data[FluxityProfile.HEIGHT] = int(_read_profile_prop_from_lines(lines, FluxityProfile.HEIGHT))
+        data[FluxityProfile.PROGRESSIVE] = _read_profile_prop_from_lines(lines, FluxityProfile.PROGRESSIVE)
+        data[FluxityProfile.SAMPLE_ASPECT_NUM] = _read_profile_prop_from_lines(lines, FluxityProfile.SAMPLE_ASPECT_NUM)
+        data[FluxityProfile.SAMPLE_ASPECT_DEN] = _read_profile_prop_from_lines(lines, FluxityProfile.SAMPLE_ASPECT_DEN)
+        data[FluxityProfile.DISPLAY_ASPECT_NUM] = _read_profile_prop_from_lines(lines, FluxityProfile.DISPLAY_ASPECT_NUM)
+        data[FluxityProfile.DISPLAY_ASPECT_DEN] = _read_profile_prop_from_lines(lines, FluxityProfile.DISPLAY_ASPECT_DEN)
+        data[FluxityProfile.COLORSPACE] = _read_profile_prop_from_lines(lines, FluxityProfile.COLORSPACE)
+
+        self.profile = FluxityProfile(data)
+        self.mlt_profile_path = mlt_profile_path
+        
+        return self.profile.profile_data
+        
+    def create_frame_surface(self, frame):
+        self.frame = frame
+        w = self.profile.profile_data[FluxityProfile.WIDTH]
+        h = self.profile.profile_data[FluxityProfile.HEIGHT]
+        self.frame_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+        self.frame_cr = cairo.Context(self.frame_surface)
+
+    def write_out_frame(self, is_preview_frame=False):
+        if self.output_folder == None or os.path.isdir(self.output_folder) == False:
+            exception_msg = &#34;Output folder &#34; + self.output_folder + &#34; does not exist.&#34;
+            _raise_fluxity_error(exception_msg)
+        
+        out_frame_number = self.frame
+        if self.start_out_from_frame_one == True:
+            out_frame_number = self.frame - self.in_frame + 1 
+
+        filepath = self.output_folder + &#34;/&#34; + self.frame_name + &#34;_&#34; + str(out_frame_number).rjust(5, &#34;0&#34;) + &#34;.png&#34;
+        if is_preview_frame == True:
+            filepath = self.output_folder + &#34;/preview.png&#34;
+        self.frame_surface.write_to_png(filepath)
+
+        if self.first_rendered_frame_path == None:
+            self.first_rendered_frame_path = filepath
+
+    def get_preview_frame_path(self):
+        return self.output_folder + &#34;/preview.png&#34;
+    
+    def error_on_wrong_method(self, method_name, required_method):
+        if required_method == self.current_method:
+            return
+        
+        error_str = &#34;&#39;FluxityContext.&#34; + method_name + &#34;&#39; has to called in script method &#39;&#34; + self.method_name[required_method] + &#34;&#39;.&#34;
+        _raise_contained_error(error_str)</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="fluxity.FluxityContextPrivate.create_frame_surface"><code class="name flex">
+<span>def <span class="ident">create_frame_surface</span></span>(<span>self, frame)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_frame_surface(self, frame):
+    self.frame = frame
+    w = self.profile.profile_data[FluxityProfile.WIDTH]
+    h = self.profile.profile_data[FluxityProfile.HEIGHT]
+    self.frame_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+    self.frame_cr = cairo.Context(self.frame_surface)</code></pre>
+</details>
+</dd>
+<dt id="fluxity.FluxityContextPrivate.error_on_wrong_method"><code class="name flex">
+<span>def <span class="ident">error_on_wrong_method</span></span>(<span>self, method_name, required_method)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def error_on_wrong_method(self, method_name, required_method):
+    if required_method == self.current_method:
+        return
+    
+    error_str = &#34;&#39;FluxityContext.&#34; + method_name + &#34;&#39; has to called in script method &#39;&#34; + self.method_name[required_method] + &#34;&#39;.&#34;
+    _raise_contained_error(error_str)</code></pre>
+</details>
+</dd>
+<dt id="fluxity.FluxityContextPrivate.get_preview_frame_path"><code class="name flex">
+<span>def <span class="ident">get_preview_frame_path</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_preview_frame_path(self):
+    return self.output_folder + &#34;/preview.png&#34;</code></pre>
+</details>
+</dd>
+<dt id="fluxity.FluxityContextPrivate.load_profile"><code class="name flex">
+<span>def <span class="ident">load_profile</span></span>(<span>self, mlt_profile_path)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load_profile(self, mlt_profile_path):
+    lines = []
+    with open(mlt_profile_path, &#34;r&#34;) as f:
+        for line in f:
+            lines.append(line.strip())
+    data = {}
+    data[FluxityProfile.DESCRIPTION] = _read_profile_prop_from_lines(lines, FluxityProfile.DESCRIPTION)
+    data[FluxityProfile.FRAME_RATE_NUM] = _read_profile_prop_from_lines(lines, FluxityProfile.FRAME_RATE_NUM)
+    data[FluxityProfile.FRAME_RATE_DEN] = _read_profile_prop_from_lines(lines, FluxityProfile.FRAME_RATE_DEN)
+    data[FluxityProfile.WIDTH] = int(_read_profile_prop_from_lines(lines, FluxityProfile.WIDTH))
+    data[FluxityProfile.HEIGHT] = int(_read_profile_prop_from_lines(lines, FluxityProfile.HEIGHT))
+    data[FluxityProfile.PROGRESSIVE] = _read_profile_prop_from_lines(lines, FluxityProfile.PROGRESSIVE)
+    data[FluxityProfile.SAMPLE_ASPECT_NUM] = _read_profile_prop_from_lines(lines, FluxityProfile.SAMPLE_ASPECT_NUM)
+    data[FluxityProfile.SAMPLE_ASPECT_DEN] = _read_profile_prop_from_lines(lines, FluxityProfile.SAMPLE_ASPECT_DEN)
+    data[FluxityProfile.DISPLAY_ASPECT_NUM] = _read_profile_prop_from_lines(lines, FluxityProfile.DISPLAY_ASPECT_NUM)
+    data[FluxityProfile.DISPLAY_ASPECT_DEN] = _read_profile_prop_from_lines(lines, FluxityProfile.DISPLAY_ASPECT_DEN)
+    data[FluxityProfile.COLORSPACE] = _read_profile_prop_from_lines(lines, FluxityProfile.COLORSPACE)
+
+    self.profile = FluxityProfile(data)
+    self.mlt_profile_path = mlt_profile_path
+    
+    return self.profile.profile_data</code></pre>
+</details>
+</dd>
+<dt id="fluxity.FluxityContextPrivate.write_out_frame"><code class="name flex">
+<span>def <span class="ident">write_out_frame</span></span>(<span>self, is_preview_frame=False)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def write_out_frame(self, is_preview_frame=False):
+    if self.output_folder == None or os.path.isdir(self.output_folder) == False:
+        exception_msg = &#34;Output folder &#34; + self.output_folder + &#34; does not exist.&#34;
+        _raise_fluxity_error(exception_msg)
+    
+    out_frame_number = self.frame
+    if self.start_out_from_frame_one == True:
+        out_frame_number = self.frame - self.in_frame + 1 
+
+    filepath = self.output_folder + &#34;/&#34; + self.frame_name + &#34;_&#34; + str(out_frame_number).rjust(5, &#34;0&#34;) + &#34;.png&#34;
+    if is_preview_frame == True:
+        filepath = self.output_folder + &#34;/preview.png&#34;
+    self.frame_surface.write_to_png(filepath)
+
+    if self.first_rendered_frame_path == None:
+        self.first_rendered_frame_path = filepath</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="fluxity.FluxityEmptyClass"><code class="flex name class">
+<span>class <span class="ident">FluxityEmptyClass</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Internal class, do not use objects of this class directly in scripts.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class FluxityEmptyClass:
+    &#34;&#34;&#34;
+    Internal class, do not use objects of this class directly in scripts.
+    &#34;&#34;&#34;
+    pass</code></pre>
+</details>
+</dd>
+<dt id="fluxity.FluxityError"><code class="flex name class">
+<span>class <span class="ident">FluxityError</span></span>
+<span>(</span><span>msg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Errors specific to using Fluxity API.</p>
+<p>Internal class, do not use objects of this class directly in scripts.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class FluxityError(Exception):
+    &#34;&#34;&#34;
+    Errors specific to using Fluxity API.
+    
+    Internal class, do not use objects of this class directly in scripts. 
+    &#34;&#34;&#34;
+    def __init__(self, msg):
+        self.message = msg
+        super().__init__(self.message)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+<dt id="fluxity.FluxityProfile"><code class="flex name class">
+<span>class <span class="ident">FluxityProfile</span></span>
+<span>(</span><span>profile_data)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Properties of this class correspond MLT profile objects.</p>
+<p>Internal class, do not use objects of this class directly in scripts.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class FluxityProfile:
+    &#34;&#34;&#34;
+    Properties of this class correspond MLT profile objects.
+    
+    Internal class, do not use objects of this class directly in scripts. 
+    &#34;&#34;&#34;
+    DESCRIPTION = &#34;description&#34;
+    FRAME_RATE_NUM = &#34;frame_rate_num&#34;
+    FRAME_RATE_DEN = &#34;frame_rate_den&#34;
+    WIDTH = &#34;width&#34;
+    HEIGHT = &#34;height&#34;
+    PROGRESSIVE = &#34;progressive&#34;
+    SAMPLE_ASPECT_NUM = &#34;sample_aspect_num&#34;
+    SAMPLE_ASPECT_DEN = &#34;sample_aspect_den&#34;
+    DISPLAY_ASPECT_NUM = &#34;display_aspect_num&#34;
+    DISPLAY_ASPECT_DEN = &#34;display_aspect_den&#34;
+    COLORSPACE = &#34;colorspace&#34;
+        
+    def __init__(self, profile_data):
+        self.profile_data = profile_data
+    
+    def get_profile_property(self, prop):
+        return self.profile_data[prop]</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="fluxity.FluxityProfile.COLORSPACE"><code class="name">var <span class="ident">COLORSPACE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fluxity.FluxityProfile.DESCRIPTION"><code class="name">var <span class="ident">DESCRIPTION</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fluxity.FluxityProfile.DISPLAY_ASPECT_DEN"><code class="name">var <span class="ident">DISPLAY_ASPECT_DEN</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fluxity.FluxityProfile.DISPLAY_ASPECT_NUM"><code class="name">var <span class="ident">DISPLAY_ASPECT_NUM</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fluxity.FluxityProfile.FRAME_RATE_DEN"><code class="name">var <span class="ident">FRAME_RATE_DEN</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fluxity.FluxityProfile.FRAME_RATE_NUM"><code class="name">var <span class="ident">FRAME_RATE_NUM</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fluxity.FluxityProfile.HEIGHT"><code class="name">var <span class="ident">HEIGHT</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fluxity.FluxityProfile.PROGRESSIVE"><code class="name">var <span class="ident">PROGRESSIVE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fluxity.FluxityProfile.SAMPLE_ASPECT_DEN"><code class="name">var <span class="ident">SAMPLE_ASPECT_DEN</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fluxity.FluxityProfile.SAMPLE_ASPECT_NUM"><code class="name">var <span class="ident">SAMPLE_ASPECT_NUM</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fluxity.FluxityProfile.WIDTH"><code class="name">var <span class="ident">WIDTH</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="fluxity.FluxityProfile.get_profile_property"><code class="name flex">
+<span>def <span class="ident">get_profile_property</span></span>(<span>self, prop)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_profile_property(self, prop):
+    return self.profile_data[prop]</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="fluxity.FluxityScript"><code class="flex name class">
+<span>class <span class="ident">FluxityScript</span></span>
+<span>(</span><span>script_str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Compiles script to an executable object and calls methods <em>init_script()</em>, <em>init_render()</em>, <em>render_frame()</em> on it.</p>
+<p>Internal class, do not use objects of this class directly in scripts.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class FluxityScript:
+    &#34;&#34;&#34;
+    Compiles script to an executable object and calls methods *init_script()*, *init_render()*, *render_frame()* on it.
+    
+    Internal class, do not use objects of this class directly in scripts.
+    &#34;&#34;&#34;
+    
+    def __init__(self, script_str):
+        self.script = script_str
+        self.code = None
+        self.namespace = {}
+    
+    def compile_script(self):
+        &#34;&#34;&#34;
+        Compiles user script.
+        &#34;&#34;&#34;
+        try:
+            self.code = compile(self.script, &#34;&lt;fluxityscript&gt;&#34;, &#34;exec&#34;)
+        except Exception as e:
+            _raise_compile_error(str(e))
+        
+        code_names = sorted(self.code.co_names)
+        required_names = sorted([&#34;init_script&#34;,&#34;init_render&#34;,&#34;render_frame&#34;])
+        contains_all = all(elem in code_names for elem in required_names)
+        if contains_all == False:
+            _raise_fluxity_error(&#34;Functions names &#34; + str(required_names) + &#34; all required to be in script, you have: &#34; + str(code_names))
+  
+        try:
+            exec(self.code, self.namespace)
+        except Exception as e:
+            _raise_exec_error(str(e))
+    
+    def call_init_script(self, fctx):
+        &#34;&#34;&#34;
+        Calls method *init_script()* on script.
+        &#34;&#34;&#34;
+        try:
+          self.namespace[&#39;init_script&#39;](fctx)
+        except Exception as e:
+          _raise_fluxity_error(&#34;error calling function &#39;init_script()&#39;:&#34; + str(e))
+
+    def call_init_render(self, fctx):
+        &#34;&#34;&#34;
+        Calls method *init_render()* on script.
+        &#34;&#34;&#34;
+        try:
+          self.namespace[&#39;init_render&#39;](fctx)
+        except Exception as e:
+          _raise_fluxity_error(&#34;error calling function &#39;init_render()&#39;:\n\n&#34; + str(e))
+          
+    def call_render_frame(self, frame, fctx, w, h):
+        &#34;&#34;&#34;
+        Calls method *render_frame()* on script.
+        &#34;&#34;&#34;
+        try:
+          self.namespace[&#39;render_frame&#39;](frame, fctx, w, h)
+        except Exception as e:
+          _raise_fluxity_error(&#34;error calling function &#39;render_frame()&#39;:\n\n&#34; + str(e))</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="fluxity.FluxityScript.call_init_render"><code class="name flex">
+<span>def <span class="ident">call_init_render</span></span>(<span>self, fctx)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Calls method <em>init_render()</em> on script.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def call_init_render(self, fctx):
+    &#34;&#34;&#34;
+    Calls method *init_render()* on script.
+    &#34;&#34;&#34;
+    try:
+      self.namespace[&#39;init_render&#39;](fctx)
+    except Exception as e:
+      _raise_fluxity_error(&#34;error calling function &#39;init_render()&#39;:\n\n&#34; + str(e))</code></pre>
+</details>
+</dd>
+<dt id="fluxity.FluxityScript.call_init_script"><code class="name flex">
+<span>def <span class="ident">call_init_script</span></span>(<span>self, fctx)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Calls method <em>init_script()</em> on script.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def call_init_script(self, fctx):
+    &#34;&#34;&#34;
+    Calls method *init_script()* on script.
+    &#34;&#34;&#34;
+    try:
+      self.namespace[&#39;init_script&#39;](fctx)
+    except Exception as e:
+      _raise_fluxity_error(&#34;error calling function &#39;init_script()&#39;:&#34; + str(e))</code></pre>
+</details>
+</dd>
+<dt id="fluxity.FluxityScript.call_render_frame"><code class="name flex">
+<span>def <span class="ident">call_render_frame</span></span>(<span>self, frame, fctx, w, h)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Calls method <em>render_frame()</em> on script.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def call_render_frame(self, frame, fctx, w, h):
+    &#34;&#34;&#34;
+    Calls method *render_frame()* on script.
+    &#34;&#34;&#34;
+    try:
+      self.namespace[&#39;render_frame&#39;](frame, fctx, w, h)
+    except Exception as e:
+      _raise_fluxity_error(&#34;error calling function &#39;render_frame()&#39;:\n\n&#34; + str(e))</code></pre>
+</details>
+</dd>
+<dt id="fluxity.FluxityScript.compile_script"><code class="name flex">
+<span>def <span class="ident">compile_script</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Compiles user script.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compile_script(self):
+    &#34;&#34;&#34;
+    Compiles user script.
+    &#34;&#34;&#34;
+    try:
+        self.code = compile(self.script, &#34;&lt;fluxityscript&gt;&#34;, &#34;exec&#34;)
+    except Exception as e:
+        _raise_compile_error(str(e))
+    
+    code_names = sorted(self.code.co_names)
+    required_names = sorted([&#34;init_script&#34;,&#34;init_render&#34;,&#34;render_frame&#34;])
+    contains_all = all(elem in code_names for elem in required_names)
+    if contains_all == False:
+        _raise_fluxity_error(&#34;Functions names &#34; + str(required_names) + &#34; all required to be in script, you have: &#34; + str(code_names))
+
+    try:
+        exec(self.code, self.namespace)
+    except Exception as e:
+        _raise_exec_error(str(e))</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul>
+<li><a href="#gpl-licence-text">GPL Licence text</a></li>
+<li><a href="#fluxity-scripting">FLUXITY SCRIPTING</a></li>
+</ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="fluxity.render_frame_sequence" href="#fluxity.render_frame_sequence">render_frame_sequence</a></code></li>
+<li><code><a title="fluxity.render_preview_frame" href="#fluxity.render_preview_frame">render_preview_frame</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="fluxity.FluxityContext" href="#fluxity.FluxityContext">FluxityContext</a></code></h4>
+<ul class="">
+<li><code><a title="fluxity.FluxityContext.EDITOR_CHECK_BOX" href="#fluxity.FluxityContext.EDITOR_CHECK_BOX">EDITOR_CHECK_BOX</a></code></li>
+<li><code><a title="fluxity.FluxityContext.EDITOR_COLOR" href="#fluxity.FluxityContext.EDITOR_COLOR">EDITOR_COLOR</a></code></li>
+<li><code><a title="fluxity.FluxityContext.EDITOR_FILE_PATH" href="#fluxity.FluxityContext.EDITOR_FILE_PATH">EDITOR_FILE_PATH</a></code></li>
+<li><code><a title="fluxity.FluxityContext.EDITOR_FLOAT" href="#fluxity.FluxityContext.EDITOR_FLOAT">EDITOR_FLOAT</a></code></li>
+<li><code><a title="fluxity.FluxityContext.EDITOR_FLOAT_RANGE" href="#fluxity.FluxityContext.EDITOR_FLOAT_RANGE">EDITOR_FLOAT_RANGE</a></code></li>
+<li><code><a title="fluxity.FluxityContext.EDITOR_INT" href="#fluxity.FluxityContext.EDITOR_INT">EDITOR_INT</a></code></li>
+<li><code><a title="fluxity.FluxityContext.EDITOR_INT_RANGE" href="#fluxity.FluxityContext.EDITOR_INT_RANGE">EDITOR_INT_RANGE</a></code></li>
+<li><code><a title="fluxity.FluxityContext.EDITOR_OPTIONS" href="#fluxity.FluxityContext.EDITOR_OPTIONS">EDITOR_OPTIONS</a></code></li>
+<li><code><a title="fluxity.FluxityContext.EDITOR_STRING" href="#fluxity.FluxityContext.EDITOR_STRING">EDITOR_STRING</a></code></li>
+<li><code><a title="fluxity.FluxityContext.EDITOR_VALUE" href="#fluxity.FluxityContext.EDITOR_VALUE">EDITOR_VALUE</a></code></li>
+<li><code><a title="fluxity.FluxityContext.PROFILE_COLORSPACE" href="#fluxity.FluxityContext.PROFILE_COLORSPACE">PROFILE_COLORSPACE</a></code></li>
+<li><code><a title="fluxity.FluxityContext.PROFILE_DESCRIPTION" href="#fluxity.FluxityContext.PROFILE_DESCRIPTION">PROFILE_DESCRIPTION</a></code></li>
+<li><code><a title="fluxity.FluxityContext.PROFILE_DISPLAY_ASPECT_DEN" href="#fluxity.FluxityContext.PROFILE_DISPLAY_ASPECT_DEN">PROFILE_DISPLAY_ASPECT_DEN</a></code></li>
+<li><code><a title="fluxity.FluxityContext.PROFILE_DISPLAY_ASPECT_NUM" href="#fluxity.FluxityContext.PROFILE_DISPLAY_ASPECT_NUM">PROFILE_DISPLAY_ASPECT_NUM</a></code></li>
+<li><code><a title="fluxity.FluxityContext.PROFILE_FRAME_RATE_DEN" href="#fluxity.FluxityContext.PROFILE_FRAME_RATE_DEN">PROFILE_FRAME_RATE_DEN</a></code></li>
+<li><code><a title="fluxity.FluxityContext.PROFILE_FRAME_RATE_NUM" href="#fluxity.FluxityContext.PROFILE_FRAME_RATE_NUM">PROFILE_FRAME_RATE_NUM</a></code></li>
+<li><code><a title="fluxity.FluxityContext.PROFILE_HEIGHT" href="#fluxity.FluxityContext.PROFILE_HEIGHT">PROFILE_HEIGHT</a></code></li>
+<li><code><a title="fluxity.FluxityContext.PROFILE_PROGRESSIVE" href="#fluxity.FluxityContext.PROFILE_PROGRESSIVE">PROFILE_PROGRESSIVE</a></code></li>
+<li><code><a title="fluxity.FluxityContext.PROFILE_SAMPLE_ASPECT_DEN" href="#fluxity.FluxityContext.PROFILE_SAMPLE_ASPECT_DEN">PROFILE_SAMPLE_ASPECT_DEN</a></code></li>
+<li><code><a title="fluxity.FluxityContext.PROFILE_SAMPLE_ASPECT_NUM" href="#fluxity.FluxityContext.PROFILE_SAMPLE_ASPECT_NUM">PROFILE_SAMPLE_ASPECT_NUM</a></code></li>
+<li><code><a title="fluxity.FluxityContext.PROFILE_WIDTH" href="#fluxity.FluxityContext.PROFILE_WIDTH">PROFILE_WIDTH</a></code></li>
+<li><code><a title="fluxity.FluxityContext.add_editor" href="#fluxity.FluxityContext.add_editor">add_editor</a></code></li>
+<li><code><a title="fluxity.FluxityContext.get_data_obj" href="#fluxity.FluxityContext.get_data_obj">get_data_obj</a></code></li>
+<li><code><a title="fluxity.FluxityContext.get_dimensions" href="#fluxity.FluxityContext.get_dimensions">get_dimensions</a></code></li>
+<li><code><a title="fluxity.FluxityContext.get_editor_value" href="#fluxity.FluxityContext.get_editor_value">get_editor_value</a></code></li>
+<li><code><a title="fluxity.FluxityContext.get_frame_cr" href="#fluxity.FluxityContext.get_frame_cr">get_frame_cr</a></code></li>
+<li><code><a title="fluxity.FluxityContext.get_length" href="#fluxity.FluxityContext.get_length">get_length</a></code></li>
+<li><code><a title="fluxity.FluxityContext.get_profile_property" href="#fluxity.FluxityContext.get_profile_property">get_profile_property</a></code></li>
+<li><code><a title="fluxity.FluxityContext.get_script_data" href="#fluxity.FluxityContext.get_script_data">get_script_data</a></code></li>
+<li><code><a title="fluxity.FluxityContext.log_line" href="#fluxity.FluxityContext.log_line">log_line</a></code></li>
+<li><code><a title="fluxity.FluxityContext.set_author" href="#fluxity.FluxityContext.set_author">set_author</a></code></li>
+<li><code><a title="fluxity.FluxityContext.set_data_obj" href="#fluxity.FluxityContext.set_data_obj">set_data_obj</a></code></li>
+<li><code><a title="fluxity.FluxityContext.set_editors_data" href="#fluxity.FluxityContext.set_editors_data">set_editors_data</a></code></li>
+<li><code><a title="fluxity.FluxityContext.set_frame_name" href="#fluxity.FluxityContext.set_frame_name">set_frame_name</a></code></li>
+<li><code><a title="fluxity.FluxityContext.set_length" href="#fluxity.FluxityContext.set_length">set_length</a></code></li>
+<li><code><a title="fluxity.FluxityContext.set_name" href="#fluxity.FluxityContext.set_name">set_name</a></code></li>
+<li><code><a title="fluxity.FluxityContext.set_version" href="#fluxity.FluxityContext.set_version">set_version</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="fluxity.FluxityContextPrivate" href="#fluxity.FluxityContextPrivate">FluxityContextPrivate</a></code></h4>
+<ul class="">
+<li><code><a title="fluxity.FluxityContextPrivate.create_frame_surface" href="#fluxity.FluxityContextPrivate.create_frame_surface">create_frame_surface</a></code></li>
+<li><code><a title="fluxity.FluxityContextPrivate.error_on_wrong_method" href="#fluxity.FluxityContextPrivate.error_on_wrong_method">error_on_wrong_method</a></code></li>
+<li><code><a title="fluxity.FluxityContextPrivate.get_preview_frame_path" href="#fluxity.FluxityContextPrivate.get_preview_frame_path">get_preview_frame_path</a></code></li>
+<li><code><a title="fluxity.FluxityContextPrivate.load_profile" href="#fluxity.FluxityContextPrivate.load_profile">load_profile</a></code></li>
+<li><code><a title="fluxity.FluxityContextPrivate.write_out_frame" href="#fluxity.FluxityContextPrivate.write_out_frame">write_out_frame</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="fluxity.FluxityEmptyClass" href="#fluxity.FluxityEmptyClass">FluxityEmptyClass</a></code></h4>
+</li>
+<li>
+<h4><code><a title="fluxity.FluxityError" href="#fluxity.FluxityError">FluxityError</a></code></h4>
+</li>
+<li>
+<h4><code><a title="fluxity.FluxityProfile" href="#fluxity.FluxityProfile">FluxityProfile</a></code></h4>
+<ul class="">
+<li><code><a title="fluxity.FluxityProfile.COLORSPACE" href="#fluxity.FluxityProfile.COLORSPACE">COLORSPACE</a></code></li>
+<li><code><a title="fluxity.FluxityProfile.DESCRIPTION" href="#fluxity.FluxityProfile.DESCRIPTION">DESCRIPTION</a></code></li>
+<li><code><a title="fluxity.FluxityProfile.DISPLAY_ASPECT_DEN" href="#fluxity.FluxityProfile.DISPLAY_ASPECT_DEN">DISPLAY_ASPECT_DEN</a></code></li>
+<li><code><a title="fluxity.FluxityProfile.DISPLAY_ASPECT_NUM" href="#fluxity.FluxityProfile.DISPLAY_ASPECT_NUM">DISPLAY_ASPECT_NUM</a></code></li>
+<li><code><a title="fluxity.FluxityProfile.FRAME_RATE_DEN" href="#fluxity.FluxityProfile.FRAME_RATE_DEN">FRAME_RATE_DEN</a></code></li>
+<li><code><a title="fluxity.FluxityProfile.FRAME_RATE_NUM" href="#fluxity.FluxityProfile.FRAME_RATE_NUM">FRAME_RATE_NUM</a></code></li>
+<li><code><a title="fluxity.FluxityProfile.HEIGHT" href="#fluxity.FluxityProfile.HEIGHT">HEIGHT</a></code></li>
+<li><code><a title="fluxity.FluxityProfile.PROGRESSIVE" href="#fluxity.FluxityProfile.PROGRESSIVE">PROGRESSIVE</a></code></li>
+<li><code><a title="fluxity.FluxityProfile.SAMPLE_ASPECT_DEN" href="#fluxity.FluxityProfile.SAMPLE_ASPECT_DEN">SAMPLE_ASPECT_DEN</a></code></li>
+<li><code><a title="fluxity.FluxityProfile.SAMPLE_ASPECT_NUM" href="#fluxity.FluxityProfile.SAMPLE_ASPECT_NUM">SAMPLE_ASPECT_NUM</a></code></li>
+<li><code><a title="fluxity.FluxityProfile.WIDTH" href="#fluxity.FluxityProfile.WIDTH">WIDTH</a></code></li>
+<li><code><a title="fluxity.FluxityProfile.get_profile_property" href="#fluxity.FluxityProfile.get_profile_property">get_profile_property</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="fluxity.FluxityScript" href="#fluxity.FluxityScript">FluxityScript</a></code></h4>
+<ul class="">
+<li><code><a title="fluxity.FluxityScript.call_init_render" href="#fluxity.FluxityScript.call_init_render">call_init_render</a></code></li>
+<li><code><a title="fluxity.FluxityScript.call_init_script" href="#fluxity.FluxityScript.call_init_script">call_init_script</a></code></li>
+<li><code><a title="fluxity.FluxityScript.call_render_frame" href="#fluxity.FluxityScript.call_render_frame">call_render_frame</a></code></li>
+<li><code><a title="fluxity.FluxityScript.compile_script" href="#fluxity.FluxityScript.compile_script">compile_script</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>

@@ -391,7 +391,8 @@ def _hamburger_menu_callback(widget, msg):
     elif msg == "close":
         _shutdown()
     elif msg == "docs":
-        webbrowser.open(url="http://gmic.eu/", new=0, autoraise=True)
+        url = "file://" + respaths.FLUXITY_API_DOC
+        webbrowser.open(url)
     else:
         script_text = mediaplugin.get_plugin_code(msg)
         _window.script_view.get_buffer().set_text(script_text)

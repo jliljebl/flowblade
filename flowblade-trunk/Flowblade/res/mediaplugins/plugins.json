@@ -1,11 +1,11 @@
 {
 "plugins":[ 
-		{ "folder":"animations_1", "name":"Animations 1", "category":"Animations"},
-		{ "folder":"animations_2", "name":"BG anim Plugin", "category":"Animations"},	
-		{ "folder":"animations_3", "name":"Default Plugin", "category":"Animations"},
-		{ "folder":"effects_1", "name":"Not Default Plugin", "category":"Effects"},
-		{ "folder":"effects_2", "name":"Also Not Default Plugin", "category":"Effects"},
-		{ "folder":"transitions_1", "name":"Transu1", "category":"Cover Transitions"},
-		{ "folder":"transitions_2", "name":"Transu2", "category":"Cover Transitions"}
+		{ "folder":"animations_1", "name":"Floating Balls", "category":"Animations"},
+		{ "folder":"animations_2", "name":"Placeholder Plugin", "category":"Animations"},	
+		{ "folder":"animations_3", "name":"Placeholdering some Plugin", "category":"Animations"},
+		{ "folder":"effects_1", "name":"Placeholder effects", "category":"Effects"},
+		{ "folder":"effects_2", "name":"Placeholder effects 2", "category":"Effects"},
+		{ "folder":"transitions_1", "name":"Placeholder Trans", "category":"Cover Transitions"},
+		{ "folder":"transitions_2", "name":"Placeholder Trans 2", "category":"Cover Transitions"}
 	 ]
 }
