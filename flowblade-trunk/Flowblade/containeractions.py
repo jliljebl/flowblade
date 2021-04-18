@@ -737,7 +737,10 @@ class FluxityContainerActions(AbstractContainerActionObject):
         fluxityheadless.abort_render(self.get_container_program_id())
 
     def create_icon(self):
-        icon_path, length, info = _write_thumbnail_image(PROJECT().profile, self.container_data.unrendered_media, self)
+        if self.container_data.data_slots["icon_file"] == None:
+            icon_path, length, info = _write_thumbnail_image(PROJECT().profile, self.container_data.unrendered_media, self)
+        else:
+            icon_path, length, info = _write_thumbnail_image(PROJECT().profile, self.container_data.data_slots["icon_file"], self)
         cr, surface = _create_image_surface(icon_path)
         cr.rectangle(0, 0, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
         cr.set_source_rgba(*OVERLAY_COLOR)

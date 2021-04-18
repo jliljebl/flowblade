@@ -276,8 +276,9 @@ def create_fluxity_media_item():
     #media_file_select, row2 = _get_file_select_row_and_editor(_("Video Clip:"))
     _open_rows_dialog(_fluxity_clip_create_dialog_callback, _("Create Flowblade Media Plugin Script Container Clip"), [row1], [script_select])
 
-def create_fluxity_media_item_from_plugin(script_file):
+def create_fluxity_media_item_from_plugin(script_file, screenshot_file):
     container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_FLUXITY, script_file, None)
+    container_clip_data.data_slots["icon_file"] = screenshot_file
     
     # We need to exit this Gtk callback to get info text above updated.
     completion_thread = FluxityLoadCompletionThread(container_clip_data, None)
@@ -296,7 +297,8 @@ def _fluxity_clip_create_dialog_callback(dialog, response_id, data):
             return
 
         container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_FLUXITY, script_file, None)
-        
+        container_clip_data.data_slots["icon_file"] = None
+    
         dialog.info_label.set_text("Test Render to validate script...")
         
         # We need to exit this Gtk callback to get info text above updated.
