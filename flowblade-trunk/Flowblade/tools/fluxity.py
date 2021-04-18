@@ -21,6 +21,146 @@
     
     
     # FLUXITY SCRIPTING
+    
+    Fluxity scripting is a **Python scripting solution** created to provide **Flowblade Movie Editor** with a **Media Plugin API**.
+    
+    ## REQUIRED INTERFACE
+    
+    A Python script that satisfies the following interface will load and run with out crashing but will not necessarily create any output.
+    
+    ```
+    def init_script(fctx):
+    
+    def init_render(fctx):
+    
+    def render_frame(frame, fctx, w, h):
+    ```
+    
+    ## FLOWBLADE MEDIA PLUGIN API
+    
+    That Flowblade Media Plugin API is provided by *fluxity.FluxityContext* object and its methods.
+
+    This object is created by Flowblade to communicate with the script before calling any of the methods of a Media Plugin script.
+    
+    See API this document below for *fluxity.FluxityContext* object API details.
+
+    
+    ## FLOWBLADE MEDIA PLUGIN SCRIPT LIFECYCLE
+    
+    **init_script(fctx):** - This method is called when script is first loaded by Flowblade to create data structures with info on editors and script metadata. 
+    
+    **init_render(fctx):** - This method is called before a render is started to get user input on editors and possibly to create some additional data strctures.
+    
+    **render_frame(frame, fctx, w, h):** - This method is called for each frame rendered to create output image.
+    
+    
+    ## EXAMPLE SCRIPT
+    
+    Here have an example script called *'Floating Balls'* that is distributed as a Media Plugin with Flowblade.
+    
+    ### init_script()
+    
+    ```
+    import cairo
+    import mlt
+    import numpy as np
+    import random
+    import math
+
+    def init_script(fctx):
+        fctx.set_name("Floating Balls")
+        fctx.set_author("Janne Liljeblad")
+        
+        fctx.add_editor("Hue", fctx.EDITOR_COLOR, (0.8, 0.50, 0.3, 1.0))
+        fctx.add_editor("Speed", fctx.EDITOR_FLOAT_RANGE, (1.0, -5.0, 5.0))
+        fctx.add_editor("Speed Variation %", fctx.EDITOR_INT_RANGE, (40, 0, 99))
+        fctx.add_editor("Number of Balls", fctx.EDITOR_INT_RANGE, (50, 10, 500))
+    ```
+    In *init_script()* we set some metadata like the name of the script diplayed to the user and author name, and we also define the editors that will be presented to the user.
+
+    ### init_render()
+    ```
+    def init_render(fctx):
+        hue = fctx.get_editor_value("Hue")
+        hr, hg, hb, alpha = hue
+        fctx.set_data_obj("hue_tuple", hue)
+        color_array = list(hue)
+        ball_colors = []
+        color_mult = 1.05
+
+        for i in range(0, 10):
+            array = np.array(color_array) * color_mult
+            r, g, b, a = array
+            ball_colors.append(cairo.SolidPattern(_clamp(r), _clamp(g), _clamp(b), 1.0))
+            color_array = array
+        fctx.set_data_obj("ball_colors", ball_colors)
+
+        ball_data = []
+        number_of_balls, mix, max = fctx.get_editor_value("Number of Balls")
+        speed, mix, max = fctx.get_editor_value("Speed")
+        speed_var_size_precentage, min, max = fctx.get_editor_value("Speed Variation %")
+        for i in range(0, number_of_balls):
+            path_pos = random.uniform(0.0, 1.0)
+            y = random.randint(-330, 1080 + 330)
+            speed_var = random.uniform(-1.0, 1.0)
+            speed_var_size = speed * (speed_var_size_precentage  / 100.0)
+            ball_speed = speed + (speed_var * speed_var_size  )
+            # fctx.log_line("ball speed: " + str(ball_speed) + " " + str(speed_var_size))
+            color_index = random.randint(0, 9)
+            ball_data.append((path_pos, y, ball_speed, color_index))
+        fctx.set_data_obj("ball_data", ball_data)
+    ```
+    In *init_render()* we read editor values set by the user and create the data structures for moving ball animations based on that data.
+
+    There should not be need to read editor values in other methods then *init_render()* since the editors are described in method *init_script()* and used in method *render_frame()* during render when user does not have access to edit the values.
+
+    ### render_frame()
+    ```
+    def render_frame(frame, fctx, w, h):
+        # Frame Render code here
+        cr = fctx.get_frame_cr()
+
+        bg_color = cairo.SolidPattern(*fctx.get_data_obj("hue_tuple"))
+        ball_colors = fctx.get_data_obj("ball_colors")
+        ball_data = fctx.get_data_obj("ball_data")
+
+        cr.set_source(bg_color)
+        cr.rectangle(0, 0, w, h)
+        cr.fill()
+
+        size = 330.0
+        xc = size / 2.0;
+        yc = size / 2.0;
+
+        number_of_balls, min, max = fctx.get_editor_value("Number of Balls")
+        path_start_x = - size
+        path_end_x =  w + size
+        path_len = path_end_x - path_start_x
+        SPEED_NORM_PER_FRAME = 15.0 / float(w) 
+        for i in range(0, number_of_balls):
+            path_pos, y, ball_speed, color_index = ball_data[i]
+            #fctx.log_msg(str(i) + " " + str(x))
+            xpos_norm = path_pos + (float(frame) * ball_speed * SPEED_NORM_PER_FRAME)
+            while xpos_norm > 1.0:
+                xpos_norm = xpos_norm - 1.0
+            x = path_start_x + path_len * xpos_norm
+            cr.save()
+            cr.translate(x, y)
+            cr.arc(xc, yc, size / 4.0, 0.0, 2.0 * math.pi)
+            cr.set_source(ball_colors[color_index])
+            cr.fill()
+            cr.restore()
+
+    # ----------------------- helper func
+    def _clamp(v):
+        return max(min(v, 1.0), 0.0)
+    ```
+    In *render_frame()* we first get access to *Cairo.Context* object that can be drawn onto to create output for current frame.
+    
+    After that the data structures created in *init_render()* are accessed and image for frame is drawn.
+    
+    There is a helper function *_clamp(v)* used to make sure that all color values are in range 0-1. Any number of helper functions and data structures can be created to achieve the desired output.
+    
 """
 
 import cairo
