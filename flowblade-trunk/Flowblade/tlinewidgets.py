@@ -74,11 +74,11 @@ TEXT_X = 6 # pos for clip text
 TEXT_Y_HIGH = 40
 TEXT_Y = 29 
 TEXT_Y_SMALL = 17
-WAVEFORM_PAD_HIGH = 50.0
-WAVEFORM_PAD_LARGE = 27
+WAVEFORM_PAD_HIGH = 39
+WAVEFORM_PAD_LARGE = 23
 WAVEFORM_PAD_SMALL = 8
-WAVEFORM_HEIGHT_HIGH = 25.0
-WAVEFORM_HEIGHT_LARGE = 22.0
+WAVEFORM_HEIGHT_HIGH = 35.0
+WAVEFORM_HEIGHT_LARGE = 27.0
 WAVEFORM_HEIGHT_SMALL = 17.0
 MARK_PAD = 6
 MARK_LINE_WIDTH = 4
@@ -2006,56 +2006,6 @@ class TimeLineCanvas:
                             clip.sync_diff = "n/a"
                             cr.show_text(str(clip.sync_diff))
 
-            # Draw proxy indicator
-            if scale_length > FILL_MIN:
-                if (not clip.is_blanck_clip) and proxy_paths.get(clip.path) != None:
-                    if clip.selected:
-                        cr.set_source_rgb(*PROXY_STRIP_COLOR_SELECTED)
-                    else:
-                        cr.set_source_rgb(*PROXY_STRIP_COLOR)
-
-                    cr.rectangle(scale_in, y, scale_length, 8)
-                    cr.fill()
-
-            # Draw text and filter, sync icons
-            if scale_length > TEXT_MIN and clip.is_blanck_clip == False:
-                if not hasattr(clip, "rendered_type"):
-                    # Text
-                    cr.set_source_rgba(*CLIP_TEXT_COLOR_OVERLAY)
-                    #cr.set_source_rgb(0, 0, 0)
-                    cr.select_font_face ("sans-serif",
-                                         cairo.FONT_SLANT_NORMAL,
-                                         cairo.FONT_WEIGHT_BOLD)
-                    cr.set_font_size(10)
-                    cr.move_to(scale_in + TEXT_X + text_x_add, y + text_y)
-                    cr.show_text(clip.name.upper())
-                
-                icon_slot = 0
-                # Filter icon
-                if len(clip.filters) > 0:
-                    ix, iy = ICON_SLOTS[icon_slot]
-                    cr.set_source_surface(FILTER_CLIP_ICON, int(scale_in) + int(scale_length) - ix, y + iy)
-                    cr.paint()
-                    icon_slot = icon_slot + 1
-                # Mute icon
-                if clip.mute_filter != None:
-                    icon = AUDIO_MUTE_ICON
-                    ix, iy = ICON_SLOTS[icon_slot]
-                    cr.set_source_surface(icon, int(scale_in) + int(scale_length) - ix, y + iy)
-                    cr.paint()
-                    icon_slot = icon_slot + 1
-
-                if clipeffectseditor.clip_is_being_edited(clip) == True:
-                    icon = EDIT_INDICATOR
-                    ix =  int(scale_in) + int(scale_length) / 2 - 7
-                    iy = y + int(track_height) / 2 - 7
-                    cr.set_source_surface(icon, ix, iy)
-                    cr.paint()
-
-            # Save sync children data
-            if clip.sync_data != None:
-                self.sync_children.append((clip, track, scale_in))
-
             # Draw audio level data if needed.
             # Init data rendering if data needed and not available
             if clip.is_blanck_clip == False and clip.waveform_data == None and editorstate.display_all_audio_levels == True \
@@ -2118,6 +2068,55 @@ class TimeLineCanvas:
 
                 cr.fill()
                 cr.restore()
+
+            # Draw proxy indicator
+            if scale_length > FILL_MIN:
+                if (not clip.is_blanck_clip) and proxy_paths.get(clip.path) != None:
+                    if clip.selected:
+                        cr.set_source_rgb(*PROXY_STRIP_COLOR_SELECTED)
+                    else:
+                        cr.set_source_rgb(*PROXY_STRIP_COLOR)
+
+                    cr.rectangle(scale_in, y, scale_length, 8)
+                    cr.fill()
+
+            # Draw text and filter, sync icons
+            if scale_length > TEXT_MIN and clip.is_blanck_clip == False:
+                if not hasattr(clip, "rendered_type"):
+                    # Text
+                    cr.set_source_rgba(*CLIP_TEXT_COLOR_OVERLAY)
+                    cr.select_font_face ("sans-serif",
+                                         cairo.FONT_SLANT_NORMAL,
+                                         cairo.FONT_WEIGHT_BOLD)
+                    cr.set_font_size(10)
+                    cr.move_to(scale_in + TEXT_X + text_x_add, y + text_y)
+                    cr.show_text(clip.name.upper())
+                    
+                icon_slot = 0
+                # Filter icon
+                if len(clip.filters) > 0:
+                    ix, iy = ICON_SLOTS[icon_slot]
+                    cr.set_source_surface(FILTER_CLIP_ICON, int(scale_in) + int(scale_length) - ix, y + iy)
+                    cr.paint()
+                    icon_slot = icon_slot + 1
+                # Mute icon
+                if clip.mute_filter != None:
+                    icon = AUDIO_MUTE_ICON
+                    ix, iy = ICON_SLOTS[icon_slot]
+                    cr.set_source_surface(icon, int(scale_in) + int(scale_length) - ix, y + iy)
+                    cr.paint()
+                    icon_slot = icon_slot + 1
+
+                if clipeffectseditor.clip_is_being_edited(clip) == True:
+                    icon = EDIT_INDICATOR
+                    ix =  int(scale_in) + int(scale_length) / 2 - 7
+                    iy = y + int(track_height) / 2 - 7
+                    cr.set_source_surface(icon, ix, iy)
+                    cr.paint()
+
+            # Save sync children data
+            if clip.sync_data != None:
+                self.sync_children.append((clip, track, scale_in))
 
 
             # Draw clip frame 
