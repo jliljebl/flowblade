@@ -538,6 +538,12 @@ class FluxityContext:
         """
         try:
             type, value = self.editors[name]
+            if type == FluxityContext.EDITOR_INT_RANGE or type == FluxityContext.EDITOR_FLOAT_RANGE:
+                val, min, max = value
+                return val 
+            elif type == FluxityContext.EDITOR_OPTIONS:
+                selected_index, options = value
+                return options[selected_index]
             return value
         except:
             exception_msg = "No editor for name '" + name + "' found."

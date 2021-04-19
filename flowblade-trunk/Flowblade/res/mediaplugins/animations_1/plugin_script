@@ -31,9 +31,9 @@ def init_render(fctx):
     fctx.set_data_obj("ball_colors", ball_colors)
 
     ball_data = []
-    number_of_balls, mix, max = fctx.get_editor_value("Number of Balls")
-    speed, mix, max = fctx.get_editor_value("Speed")
-    speed_var_size_precentage, min, max = fctx.get_editor_value("Speed Variation %")
+    number_of_balls = fctx.get_editor_value("Number of Balls")
+    speed = fctx.get_editor_value("Speed")
+    speed_var_size_precentage = fctx.get_editor_value("Speed Variation %")
     for i in range(0, number_of_balls):
         path_pos = random.uniform(0.0, 1.0)
         y = random.randint(-330, 1080 + 330)
@@ -61,7 +61,7 @@ def render_frame(frame, fctx, w, h):
     xc = size / 2.0;
     yc = size / 2.0;
 
-    number_of_balls, min, max = fctx.get_editor_value("Number of Balls")
+    number_of_balls = fctx.get_editor_value("Number of Balls")
     path_start_x = - size
     path_end_x =  w + size
     path_len = path_end_x - path_start_x
