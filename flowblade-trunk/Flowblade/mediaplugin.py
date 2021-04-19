@@ -86,12 +86,12 @@ def fill_media_plugin_sub_menu(menu, callback=None):
     menu.show_all()
 
 def _add_media_plugin(widget, plugin_folder):
-    script_file = respaths.MEDIA_PLUGINS_PATH + plugin_folder + "/plugin_script"
+    script_file = respaths.MEDIA_PLUGINS_PATH + plugin_folder + "/plugin_script.py"
     screenshot_file =  respaths.MEDIA_PLUGINS_PATH + plugin_folder + "/screenshot.png"
     containerclip.create_fluxity_media_item_from_plugin(script_file, screenshot_file)
 
 def get_plugin_code(plugin_folder):
-    script_file = respaths.MEDIA_PLUGINS_PATH + plugin_folder + "/plugin_script"
+    script_file = respaths.MEDIA_PLUGINS_PATH + plugin_folder + "/plugin_script.py"
     args_file = open(script_file)
     return args_file.read()
         

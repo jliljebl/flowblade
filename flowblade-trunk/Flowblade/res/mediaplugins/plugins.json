@@ -1,11 +1,8 @@
 {
 "plugins":[ 
 		{ "folder":"animations_1", "name":"Floating Balls", "category":"Animations"},
-		{ "folder":"animations_2", "name":"Hex Colors", "category":"Animations"},	
-		{ "folder":"animations_3", "name":"Placeholdering some Plugin", "category":"Animations"},
+		{ "folder":"animations_2", "name":"Hex Colors", "category":"Animations"},
 		{ "folder":"effects_1", "name":"Placeholder effects", "category":"Effects"},
-		{ "folder":"effects_2", "name":"Placeholder effects 2", "category":"Effects"},
-		{ "folder":"transitions_1", "name":"Placeholder Trans", "category":"Cover Transitions"},
-		{ "folder":"transitions_2", "name":"Placeholder Trans 2", "category":"Cover Transitions"}
+		{ "folder":"effects_2", "name":"Placeholder effects 2", "category":"Effects"}
 	 ]
 }
