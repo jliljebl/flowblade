@@ -733,7 +733,6 @@ class FluxityContainerActions(AbstractContainerActionObject):
         Gdk.threads_leave()
 
     def abort_render(self):
-        #self.remove_as_status_polling_object()
         fluxityheadless.abort_render(self.get_container_program_id())
 
     def create_icon(self):
@@ -965,7 +964,6 @@ class BlenderContainerActions(AbstractContainerActionObject):
             render_data.do_video_render = False
             render_data.is_preview_render = True
 
-
         if editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
             render_data.is_flatpak_render = True
         
@@ -1163,7 +1161,7 @@ class UnrenderedCreationThread(threading.Thread):
 
         Gdk.threads_enter()
         
-        info_text = _("<b>Rendering Placeholder Media For:</b> ")  + self.data.get_program_name() + ".blend"
+        info_text = _("<b>Rendering Placeholder Media For:</b> ")  + self.data.get_program_name()
 
         progress_bar = Gtk.ProgressBar()
         dialog = rendergui.clip_render_progress_dialog(None, self.window_text, info_text, progress_bar, gui.editor_window.window, True)
