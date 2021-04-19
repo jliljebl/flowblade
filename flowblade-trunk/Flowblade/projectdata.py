@@ -181,6 +181,8 @@ class Project:
         for key, media_file in list(self.media_files.items()):
             if media_file.type == appconsts.PATTERN_PRODUCER:
                 continue
+            if media_file.container_data != None:
+                continue
             if file_path == media_file.path:
                 return True
 
