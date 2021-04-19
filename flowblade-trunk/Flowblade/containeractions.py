@@ -186,7 +186,6 @@ class AbstractContainerActionObject:
         self.render_type = FULL_RENDER
         self.clip = clip
         self.launch_render_data = (clip, 0, self.container_data.unrendered_length, 0)
-
         job_proxy = self.get_launch_job_proxy()
         jobs.add_job(job_proxy)
         
@@ -619,7 +618,6 @@ class FluxityContainerActions(AbstractContainerActionObject):
             if fctx.error == None:
                 data_json = fctx.get_script_data()
                 self.container_data.data_slots["fluxity_plugin_edit_data"] = json.loads(data_json) # script data saved as Python object, not json str.
-
                 return (True, None) # no errors
             else:
                 return (False,  fctx.error)
@@ -737,9 +735,10 @@ class FluxityContainerActions(AbstractContainerActionObject):
 
     def create_icon(self):
         if self.container_data.data_slots["icon_file"] == None:
-            icon_path, length, info = _write_thumbnail_image(PROJECT().profile, self.container_data.unrendered_media, self)
+            icon_path, not_used_length, info = _write_thumbnail_image(PROJECT().profile, self.container_data.unrendered_media, self)
         else:
-            icon_path, length, info = _write_thumbnail_image(PROJECT().profile, self.container_data.data_slots["icon_file"], self)
+            icon_path, not_used_length, info = _write_thumbnail_image(PROJECT().profile, self.container_data.data_slots["icon_file"], self)
+
         cr, surface = _create_image_surface(icon_path)
         cr.rectangle(0, 0, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
         cr.set_source_rgba(*OVERLAY_COLOR)
@@ -749,6 +748,9 @@ class FluxityContainerActions(AbstractContainerActionObject):
         cr.set_operator (cairo.OPERATOR_OVERLAY)
         cr.paint_with_alpha(0.5)
  
+        data_object = self.container_data.data_slots["fluxity_plugin_edit_data"]
+        length = data_object["length"]
+
         return (surface, length, icon_path)
 
     def edit_program(self, clip):
