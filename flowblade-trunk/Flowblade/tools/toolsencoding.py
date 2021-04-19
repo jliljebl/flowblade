@@ -118,12 +118,13 @@ def get_encoding_panel(render_data, create_container_file_panel=False):
     else:
         file_panel_title = _("Save Location")
 
-    file_opts_panel = guiutils.get_named_frame(file_panel_title, widgets.file_panel.vbox, 4)         
-    profile_panel = guiutils.get_named_frame(_("Render Profile"), widgets.profile_panel.vbox, 4)
+    file_opts_panel = guiutils.get_named_frame(file_panel_title, widgets.file_panel.vbox, 4)
+    if create_container_file_panel == False:      
+        profile_panel = guiutils.get_named_frame(_("Render Profile"), widgets.profile_panel.vbox, 4)
     encoding_panel = guiutils.get_named_frame(_("Encoding Format"), widgets.encoding_panel.vbox, 4)
 
     if create_container_file_panel == True:
-        widgets.video_clip_panel = RenderVideoClipPanel(profile_panel, encoding_panel)
+        widgets.video_clip_panel = RenderVideoClipPanel(encoding_panel)
         video_clip_panel = guiutils.get_named_frame(_("Video Clip"), widgets.video_clip_panel.vbox, 4)
     else:
         widgets.video_clip_panel = None
@@ -340,9 +341,8 @@ class RenderFilePanel():
 
 
 class RenderVideoClipPanel:
-    def __init__(self, profile_panel, encoding_panel):
+    def __init__(self, encoding_panel):
 
-        self.profile_panel = profile_panel
         self.encoding_panel = encoding_panel
 
         self.video_clip_combo = Gtk.ComboBoxText() # filled later when current sequence known
@@ -352,7 +352,6 @@ class RenderVideoClipPanel:
         self.video_clip_combo.connect('changed', lambda w: self.video_clip_combo_changed(w))
 
         encoding_vbox = Gtk.VBox(False, 2)
-        encoding_vbox.pack_start(profile_panel, False, False, 0)
         encoding_vbox.pack_start(encoding_panel, False, False, 0)
 
         encoding_hbox = Gtk.HBox(False, 2)
@@ -366,7 +365,6 @@ class RenderVideoClipPanel:
         self.vbox.pack_start(encoding_hbox, False, False, 0)
 
     def enable_video_encoding(self, enabled):
-        self.profile_panel.set_sensitive(enabled)
         self.encoding_panel.set_sensitive(enabled)
         
     def video_clip_combo_changed(self, combo):
