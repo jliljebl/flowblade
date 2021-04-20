@@ -30,13 +30,11 @@ import time
 import threading
 import xml.dom.minidom
 import os
-import sys # debugging
-# Jan-2017 - SvdB
+import subprocess
 import editorpersistance
 
 import mltenv
 import respaths
-import userfolders # debugging
 
 
 # File describing existing encoding and quality options
@@ -71,6 +69,9 @@ PRESET_GROUP_AUDIO = "Audio"
 PRESET_GROUP_OGG_ETC = "oggwebmetc"
 PRESET_GROUP_ALPHA = "Alpha"
 
+# GPU encoding availability
+H_264_NVENC_AVAILABLE = False
+H_264_VAAPI_AVAILABLE = False
 
 # Default encoding name
 DEFAULT_ENCODING_NAME = "H.264 / .mp4" 
@@ -206,7 +207,8 @@ class EncodingOption:
         else:
             desc = self.audio_desc 
         return "<small>" + desc + "</small>"
-    
+
+        
 def load_render_profiles():
     """
     Load render profiles from xml into DOM at start-up and build
@@ -216,6 +218,27 @@ def load_render_profiles():
     file_path = respaths.ROOT_PATH + RENDER_ENCODING_FILE
     global render_encoding_doc
     render_encoding_doc = xml.dom.minidom.parse(file_path)
+
+    # Test GPU rendering availability
+    global H_264_NVENC_AVAILABLE, H_264_VAAPI_AVAILABLE
+    # h264_nvenc
+    bash_command = ["ffmpeg", "-hide_banner", "-f", "lavfi", "-i", "color=s=640x360", 
+                    "-frames", "1", "-an", "-load_plugin", "hevc_hw", "-c:v", 
+                    "h264_nvenc", "-f", "rawvideo", "pipe:"]
+    process = subprocess.Popen(bash_command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    out, err = process.communicate()
+    if (process.returncode == 0):
+        print("h264_nvenc available")
+        H_264_NVENC_AVAILABLE = True
+    # vaapi
+    bash_command = ["ffmpeg", "-hide_banner", "-f", "lavfi", "-i", "color=s=640x360", 
+                    "-frames", "1", "-an", "-init_hw_device", "vaapi=vaapi0:,connection_type=x11", 
+                    "-filter_hw_device", "vaapi0", "-vf", "format=nv12,hwupload", "-c:v", "h264_vaapi", "-f", "rawvideo", "pipe:"]
+    process = subprocess.Popen(bash_command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    out, err = process.communicate()
+    if (process.returncode == 0):
+        print("h264_vaapi available")
+        H_264_VAAPI_AVAILABLE = True
 
     # Create quality option groups
     global quality_option_groups
@@ -287,7 +310,6 @@ def load_render_profiles():
     if len(AUDIO_encs) > 0:
         categorized_encoding_options.append((PRESET_GROUP_AUDIO, AUDIO_encs))
 
-        
     # Proxy encoding
     proxy_encoding_nodes = render_encoding_doc.getElementsByTagName(PROXY_ENCODING_OPTION)
     found_proxy_encodings = []

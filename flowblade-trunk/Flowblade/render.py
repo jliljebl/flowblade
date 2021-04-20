@@ -223,64 +223,10 @@ def enable_user_rendering(value):
     widgets.profile_panel.set_sensitive(value)
     widgets.info_panel.set_sensitive(value)
     widgets.args_panel.set_sensitive(value)
-"""
-def set_render_gui():
-    progress_window.status_label.set_text(_("<b>Output File: </b>") + get_file_path())
-    progress_window.status_label.set_use_markup(True)
-    progress_window.remaining_time_label.set_text(_("<b>Estimated time left: </b>"))
-    progress_window.remaining_time_label.set_use_markup(True)
-    progress_window.passed_time_label.set_text(_("<b>Render time: </b>"))
-    progress_window.passed_time_label.set_use_markup(True)
-    progress_window.progress_bar.set_text("0%")
-"""
+
 def save_render_start_time():
     global render_start_time
     render_start_time = time.time()
-
-"""
-FIXME: delete this and above
-def set_render_progress_gui(fraction):
-    progress_window.progress_bar.set_fraction(fraction)
-    pros = int(fraction * 100)
-    progress_window.progress_bar.set_text(str(pros) + "%")
-
-    try:
-        passed_time = time.time() - render_start_time
-        full_time_est = (1.0 / fraction) * passed_time
-        passed_str = utils.get_time_str_for_sec_float(passed_time)
-        progress_window.passed_time_label.set_text(_("<b>Render Time: </b>") + passed_str)
-        progress_window.passed_time_label.set_use_markup(True)
-
-        if pros > 0.99: # Only start giving estimations after rendering has gone on for a while.
-            left_est = full_time_est - passed_time
-            left_str = utils.get_time_str_for_sec_float(left_est)
-            progress_window.remaining_time_label.set_text(_("<b>Estimated Time Left: </b>") + left_str)
-            progress_window.remaining_time_label.set_use_markup(True)
-
-    except: # A fraction of 0 usually gets sent here at beginning of rendering
-        pass
-        
-def exit_render_gui():
-    if aborted == True:
-        print("render aborted")
-        return
-
-    global progress_window
-
-    set_render_progress_gui(1.0)
-    passed_time = time.time() - render_start_time
-    passed_str = utils.get_time_str_for_sec_float(passed_time)
-    print("render done, time: " + passed_str)
-    
-    progress_window.remaining_time_label.set_text(_("<b>Estimated Time Left: </b>"))
-    progress_window.remaining_time_label.set_use_markup(True)
-    progress_window.passed_time_label.set_text(_("<b>Render Time: </b>") + passed_str)
-    progress_window.passed_time_label.set_use_markup(True)
-    progress_window.progress_bar.set_text(_("Render Complete!"))
-    
-    dialogutils.delay_destroy_window(progress_window, 2.0)
-    progress_window = None
-"""
 
 def maybe_open_rendered_file_in_bin():
     if widgets.args_panel.open_in_bin.get_active() == False:
