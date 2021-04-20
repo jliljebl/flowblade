@@ -72,7 +72,17 @@ PRESET_GROUP_ALPHA = "Alpha"
 
 # GPU encoding availability
 H_264_NVENC_AVAILABLE = False
+H_264_NVENC_TEST = ["ffmpeg", "-hide_banner", "-f", "lavfi", "-i", "color=s=640x360", 
+                    "-frames", "1", "-an", "-load_plugin", "hevc_hw", "-c:v", 
+                    "h264_nvenc", "-f", "rawvideo", "pipe:"]
+HEVC_NVENC_AVAILABLE = False
+HEVC_NVENC_TEST = ["ffmpeg", "-hide_banner", "-f", "lavfi", "-i", "color=s=640x360", 
+                    "-frames", "1", "-an", "-load_plugin", "hevc_hw", "-c:v", 
+                    "hevc_nvenc", "-f", "rawvideo", "pipe:"]
 H_264_VAAPI_AVAILABLE = False
+H_264_VAAPI_TEST = ["ffmpeg", "-hide_banner", "-f", "lavfi", "-i", "color=s=640x360", 
+                    "-frames", "1", "-an", "-init_hw_device", "vaapi=vaapi0:,connection_type=x11", 
+                    "-filter_hw_device", "vaapi0", "-vf", "format=nv12,hwupload", "-c:v", "h264_vaapi", "-f", "rawvideo", "pipe:"]
 
 # Default encoding name
 DEFAULT_ENCODING_NAME = "H.264 / .mp4" 
@@ -223,21 +233,18 @@ def load_render_profiles():
     # Test GPU rendering availability
     global H_264_NVENC_AVAILABLE, H_264_VAAPI_AVAILABLE
     # h264_nvenc
-    bash_command = ["ffmpeg", "-hide_banner", "-f", "lavfi", "-i", "color=s=640x360", 
-                    "-frames", "1", "-an", "-load_plugin", "hevc_hw", "-c:v", 
-                    "h264_nvenc", "-f", "rawvideo", "pipe:"]
-    process = subprocess.Popen(bash_command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    out, err = process.communicate()
-    if (process.returncode == 0):
+    ret_code = _test_command(H_264_NVENC_TEST)
+    if (ret_code == 0):
         print("h264_nvenc available")
         H_264_NVENC_AVAILABLE = True
+    # hevc_nvenc
+    ret_code = _test_command(HEVC_NVENC_TEST)
+    if (ret_code == 0):
+        print("hevc_nvenc available")
+        HEVC_NVENC_AVAILABLE = True
     # vaapi
-    bash_command = ["ffmpeg", "-hide_banner", "-f", "lavfi", "-i", "color=s=640x360", 
-                    "-frames", "1", "-an", "-init_hw_device", "vaapi=vaapi0:,connection_type=x11", 
-                    "-filter_hw_device", "vaapi0", "-vf", "format=nv12,hwupload", "-c:v", "h264_vaapi", "-f", "rawvideo", "pipe:"]
-    process = subprocess.Popen(bash_command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    out, err = process.communicate()
-    if (process.returncode == 0):
+    ret_code = _test_command(H_264_VAAPI_TEST)
+    if (ret_code == 0):
         print("h264_vaapi available")
         H_264_VAAPI_AVAILABLE = True
 
@@ -301,7 +308,7 @@ def load_render_profiles():
 
     if len(H264_encs) > 0:
         categorized_encoding_options.append((PRESET_GROUP_H264, H264_encs))
-    if len(NVENC_encs) > 0 and H_264_NVENC_AVAILABLE == True:
+    if len(NVENC_encs) > 0 and H_264_NVENC_AVAILABLE == True: # we are assuming that hevc_nvenc is also available if this is
         categorized_encoding_options.append((PRESET_GROUP_NVENC, NVENC_encs))
     if len(MPEG_encs) > 0:
         categorized_encoding_options.append((PRESET_GROUP_MPEG, MPEG_encs))
@@ -330,6 +337,11 @@ def load_render_profiles():
     global proxy_encodings
     proxy_encodings = found_proxy_encodings
 
+def _test_command(bash_args_list):
+    process = subprocess.Popen(bash_args_list, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    out, err = process.communicate()
+    return process.returncode
+        
 def get_default_render_consumer(file_path, profile):
     return get_render_consumer_for_encoding_and_quality(file_path, profile, 0, 10) # values get their meaning from /res/renderencoding.xml
                                                                                     # first <encodingoption> with 10th quality option

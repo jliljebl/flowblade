@@ -111,10 +111,13 @@
 
     <!-- NVENC --> 
     <!-- -c:v h264_nvenc -preset medium -b:v BITRATE -bufsize BITRATE*2 -profile:v high -bf 3 -b_ref_mode 2 -temporal-aq 1 -rc-lookahead 20 -vsync 0 --> 
-    <encodingoption name="NVENC H.264 Main Profile / .mp4" extension="mp4" presetgroup="NVENC" audiodesc=" aac" type="av" resize="True" qgroup="qgroup3">
+    <encodingoption name="NVENC H.264 High Profile / .mp4" extension="mp4" presetgroup="NVENC" audiodesc=" aac" type="av" resize="True" qgroup="qgroup3">
         <profile args="f=mp4 acodec=aac ab=256k vcodec=h264_nvenc preset=medium vb=%BITRATE% bufsize=%BITRATE% vprofile=high bf=3 b_ref_mode=2 temporal-aq=1 rc_lookahead=20 vsync=0"/>
     </encodingoption>
-
+     <encodingoption name="NVENC HEVC Main10 Profile / .mp4" extension="mp4" presetgroup="NVENC" audiodesc=" aac" type="av" resize="True" qgroup="qgroup3">
+         <profile args="f=mp4 acodec=aac ab=256k vcodec=hevc_nvenc rc=vbr cq=24 qmin=24 qmax=24 vprofile=main10 pix_fmt=p010le"/>
+     </encodingoption>
+     
     <!-- MPEG --> 
     <encodingoption name="MPEG-4 / .mp4" extension="mp4" presetgroup="MPEG" type="av" audiodesc=" mp2" resize="True" qgroup="qgroup1">
         <profile args="f=mp4 hq=1 acodec=libtwolame ab=192k vcodec=mpeg4 minrate=0 vb=%BITRATE%"/>
