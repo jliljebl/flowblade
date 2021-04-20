@@ -62,6 +62,7 @@ AUDIO_DESCRIPTION = "audiodesc"
 NON_USER = "nonuser"
 PRESET_GROUP = "presetgroup"
 PRESET_GROUP_H264 = "H.264, HEVC"
+PRESET_GROUP_NVENC = "NVENC"
 PRESET_GROUP_MPEG = "MPEG"
 PRESET_GROUP_LOSSLESS = "Lossless"
 PRESET_GROUP_IMAGE_SEQUENCE = "Image Sequence"
@@ -272,6 +273,7 @@ def load_render_profiles():
     # Create categorised structure.
     global categorized_encoding_options
     H264_encs = []
+    NVENC_encs = []
     MPEG_encs = []
     OGG_ETC_encs = []
     LOSSLESS_encs = []
@@ -282,6 +284,8 @@ def load_render_profiles():
     for enc in encoding_options:
         if enc.presetgroup == PRESET_GROUP_H264:
             H264_encs.append((enc.name, enc))
+        elif enc.presetgroup == PRESET_GROUP_NVENC:
+            NVENC_encs.append((enc.name, enc))
         elif enc.presetgroup == PRESET_GROUP_MPEG:
             MPEG_encs.append((enc.name, enc))
         elif enc.presetgroup == PRESET_GROUP_OGG_ETC:
@@ -297,6 +301,8 @@ def load_render_profiles():
 
     if len(H264_encs) > 0:
         categorized_encoding_options.append((PRESET_GROUP_H264, H264_encs))
+    if len(NVENC_encs) > 0 and H_264_NVENC_AVAILABLE == True:
+        categorized_encoding_options.append((PRESET_GROUP_NVENC, NVENC_encs))
     if len(MPEG_encs) > 0:
         categorized_encoding_options.append((PRESET_GROUP_MPEG, MPEG_encs))
     if len(OGG_ETC_encs) > 0:

@@ -45,6 +45,9 @@
         <quality name="80000 kb/s" replvalues="%BITRATE% 80000k" />
     </qualityqroup>
     <qualityqroup id="qgroup3" defaultindex="2">
+        <quality name="4M b/s" replvalues="%BITRATE% 4M" />
+        <quality name="6M b/s" replvalues="%BITRATE% 6M" />
+        <quality name="8M b/s" replvalues="%BITRATE% 8M" />
         <quality name="10M b/s" replvalues="%BITRATE% 10M" />
         <quality name="20M b/s" replvalues="%BITRATE% 20M" />
         <quality name="40M b/s" replvalues="%BITRATE% 40M" />
@@ -106,6 +109,11 @@
         <profile args="f=mp4 acodec=aac ab=256k vcodec=libx265 threads=0 preset=medium movflags=+faststart"/>
     </encodingoption>
 
+    <!-- NVENC --> 
+    <!-- -c:v h264_nvenc -preset medium -b:v BITRATE -bufsize BITRATE*2 -profile:v high -bf 3 -b_ref_mode 2 -temporal-aq 1 -rc-lookahead 20 -vsync 0 --> 
+    <encodingoption name="NVENC H.264 Main Profile / .mp4" extension="mp4" presetgroup="NVENC" audiodesc=" aac" type="av" resize="True" qgroup="qgroup3">
+        <profile args="f=mp4 acodec=aac ab=256k vcodec=h264_nvenc preset=medium vb=%BITRATE% bufsize=%BITRATE% vprofile=high bf=3 b_ref_mode=2 temporal-aq=1 rc_lookahead=20 vsync=0"/>
+    </encodingoption>
 
     <!-- MPEG --> 
     <encodingoption name="MPEG-4 / .mp4" extension="mp4" presetgroup="MPEG" type="av" audiodesc=" mp2" resize="True" qgroup="qgroup1">
