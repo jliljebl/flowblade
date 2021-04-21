@@ -63,12 +63,16 @@ NON_USER = "nonuser"
 PRESET_GROUP = "presetgroup"
 PRESET_GROUP_H264 = "H.264, HEVC"
 PRESET_GROUP_NVENC = "NVENC"
+PRESET_GROUP_VAAPI = "VAAPI"
 PRESET_GROUP_MPEG = "MPEG"
 PRESET_GROUP_LOSSLESS = "Lossless"
 PRESET_GROUP_IMAGE_SEQUENCE = "Image Sequence"
 PRESET_GROUP_AUDIO = "Audio" 
 PRESET_GROUP_OGG_ETC = "oggwebmetc"
 PRESET_GROUP_ALPHA = "Alpha"
+
+# ffmpeg arg values somtimes need equals signs in them.
+EQUALS_SIGN_ENCODING = "@#@#"
 
 # GPU encoding availability
 H_264_NVENC_AVAILABLE = False
@@ -197,6 +201,8 @@ class EncodingOption:
             token_sides = token.split("=")
             arg1 = str(token_sides[0])
             arg2 = str(token_sides[1])
+            # Sometimes arg values need equals signs in them
+            arg2 = arg2.replace(EQUALS_SIGN_ENCODING, "=")
             
             # Replace keyword values
             if arg2 == SCREEN_SIZE_RPL:
@@ -210,6 +216,7 @@ class EncodingOption:
                     arg2 = str(quality_option.replace_map[arg2])
             args_tuples.append((arg1, arg2))
         
+        print("args_tuples", args_tuples)
         return args_tuples
 
     def get_audio_description(self):
@@ -281,6 +288,7 @@ def load_render_profiles():
     global categorized_encoding_options
     H264_encs = []
     NVENC_encs = []
+    VAAPI_encs = []
     MPEG_encs = []
     OGG_ETC_encs = []
     LOSSLESS_encs = []
@@ -293,6 +301,8 @@ def load_render_profiles():
             H264_encs.append((enc.name, enc))
         elif enc.presetgroup == PRESET_GROUP_NVENC:
             NVENC_encs.append((enc.name, enc))
+        elif enc.presetgroup == PRESET_GROUP_VAAPI:
+            VAAPI_encs.append((enc.name, enc))
         elif enc.presetgroup == PRESET_GROUP_MPEG:
             MPEG_encs.append((enc.name, enc))
         elif enc.presetgroup == PRESET_GROUP_OGG_ETC:
@@ -310,6 +320,8 @@ def load_render_profiles():
         categorized_encoding_options.append((PRESET_GROUP_H264, H264_encs))
     if len(NVENC_encs) > 0 and H_264_NVENC_AVAILABLE == True: # we are assuming that hevc_nvenc is also available if this is
         categorized_encoding_options.append((PRESET_GROUP_NVENC, NVENC_encs))
+    if len(VAAPI_encs) > 0 and H_264_VAAPI_AVAILABLE == True:
+        categorized_encoding_options.append((PRESET_GROUP_VAAPI, VAAPI_encs))
     if len(MPEG_encs) > 0:
         categorized_encoding_options.append((PRESET_GROUP_MPEG, MPEG_encs))
     if len(OGG_ETC_encs) > 0:
