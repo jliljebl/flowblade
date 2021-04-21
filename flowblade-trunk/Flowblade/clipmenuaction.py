@@ -76,16 +76,23 @@ def display_clip_menu(y, event, frame):
         return False
     
     # Display popup
+    not_multi_selection = (movemodes.selected_range_in == -1 or (movemodes.selected_range_out - movemodes.selected_range_in) == 0)
     gui.tline_canvas.drag_on = False
     pressed_clip = track.clips[clip_index]
     if pressed_clip.is_blanck_clip == False:
-        movemodes.select_clip(track.id, clip_index)
+        if not_multi_selection == True:
+            movemodes.select_clip(track.id, clip_index)
     else:
         movemodes.select_blank_range(track, pressed_clip)
 
     if track.type == appconsts.VIDEO:
-        guicomponents.display_clip_popup_menu(event, pressed_clip, \
+        if not_multi_selection == True:
+            guicomponents.display_clip_popup_menu(event, pressed_clip, \
                                               track, _clip_menu_item_activated)
+        else:
+            guicomponents.display_multi_clip_popup_menu(event, pressed_clip, \
+                                                track, _clip_menu_item_activated)
+                                              
     elif track.type == appconsts.AUDIO:
         guicomponents.display_audio_clip_popup_menu(event, pressed_clip, \
                                                     track, _clip_menu_item_activated)

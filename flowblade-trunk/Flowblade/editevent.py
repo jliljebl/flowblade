@@ -264,7 +264,7 @@ def tline_canvas_mouse_pressed(event, frame):
     if not timeline_visible():
         updater.display_sequence_in_monitor()
         if (event.button == 1):
-            # Now that we have correct edit mode we'll reenter
+            # Now that we have correct edit mode we'll re-enter
             # this method to get e.g. a select action
             tline_canvas_mouse_pressed(event, frame)
             return
@@ -502,7 +502,6 @@ def tline_effect_drop(x, y):
                     "filter_edit_done_func":clipeffectseditor.filter_edit_done_stack_update}
             action = edit.add_filter_action(data)
             action.do_edit()
-
 
 def tline_media_drop(media_file, x, y, use_marks=False):
     track = tlinewidgets.get_track(y)
