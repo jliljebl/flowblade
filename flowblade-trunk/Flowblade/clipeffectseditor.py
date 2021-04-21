@@ -493,6 +493,17 @@ def add_currently_selected_effect():
     group_index = gui.effect_select_combo_box.get_active()
 
     _add_filter_from_effect_select_panel(row_index, group_index)
+
+def get_currently_selected_filter_info():
+    # Currently selected in effect select panel, not here.
+    treeselection = gui.effect_select_list_view.treeview.get_selection()
+    (model, rows) = treeselection.get_selected_rows()    
+    row = rows[0]
+    row_index = max(row)
+    group_index = gui.effect_select_combo_box.get_active()
+    group_name, filters_array = mltfilters.groups[group_index]
+    filter_info = filters_array[row_index]
+    return filter_info
     
 def _add_filter_from_effect_select_panel(row_index, group_index):
     # Add filter

@@ -472,11 +472,37 @@ def tline_effect_drop(x, y):
     if dialogutils.track_lock_check_and_user_info(track):
         modesetting.set_default_edit_mode()
         return
-        
+    
+    selected_track_before = movemodes.selected_track
+    selected_in_before = movemodes.selected_range_in
+    selected_out_before = movemodes.selected_range_out
+    
     if clipeffectseditor.clip_is_being_edited(clip) == False:
         clipeffectseditor.set_clip(clip, track, index)
     
     clipeffectseditor.add_currently_selected_effect() # drag start selects the dragged effect
+    filter_info = clipeffectseditor.get_currently_selected_filter_info()
+    
+    if selected_track_before != track.id:
+        return
+    
+    if not((selected_in_before <= index) and (selected_out_before >= index)):
+        return
+    
+    if selected_in_before != -1:
+        for add_index in range(selected_in_before, selected_out_before + 1):
+            if add_index == index:
+                continue
+            add_clip = track.clips[add_index]
+            if add_clip.is_blanck_clip == True:
+                continue
+
+            data = {"clip":add_clip, 
+                    "filter_info":filter_info,
+                    "filter_edit_done_func":clipeffectseditor.filter_edit_done_stack_update}
+            action = edit.add_filter_action(data)
+            action.do_edit()
+
 
 def tline_media_drop(media_file, x, y, use_marks=False):
     track = tlinewidgets.get_track(y)
