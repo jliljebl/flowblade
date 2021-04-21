@@ -228,6 +228,29 @@ def _add_filter(data):
     clipeffectseditor.set_clip(clip, track, index)
     clipeffectseditor.set_filter_item_expanded(len(clip.filters) - 1)
 
+def _add_filter_multi(data):
+    clip, track, item_id, item_data = data
+    x, filter_info = item_data
+    
+    clipeffectseditor.set_stack_update_blocked() # We update stack on set_clip below
+    
+    range_in = movemodes.selected_range_in
+    range_out = movemodes.selected_range_out
+    clips = track.clips[range_in:range_out +1]
+    data = {"clips":clips, 
+            "filter_info":filter_info,
+            "filter_edit_done_func":clipeffectseditor.filter_edit_multi_done_stack_update}
+    action = edit.add_filter_multi_action(data)
+    action.do_edit()
+    
+    clipeffectseditor.set_stack_update_unblocked()
+
+    # (re)open clip in editor
+    frame = tlinewidgets.get_frame(x)
+    index = track.get_clip_index_at(frame)
+    clipeffectseditor.set_clip(clip, track, index)
+    clipeffectseditor.set_filter_item_expanded(len(clip.filters) - 1)
+
 def _add_compositor(data):
     clip, track, item_id, item_data = data
     x, compositor_type = item_data
@@ -692,6 +715,7 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "split_audio_synched":syncsplitevent.split_audio_synched,
                   "resync":syncsplitevent.resync_clip,
                   "add_filter":_add_filter,
+                  "add_filter_multi":_add_filter_multi,
                   "add_compositor":_add_compositor,
                   "clear_sync_rel":syncsplitevent.clear_sync_relation,
                   "mute_clip":_mute_clip,

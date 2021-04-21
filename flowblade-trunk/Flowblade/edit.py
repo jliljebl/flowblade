@@ -1801,7 +1801,50 @@ def _add_filter_redo(self):
         self.clip.filters.append(self.filter_object)
         
     self.filter_edit_done_func(self.clip, len(self.clip.filters) - 1) # updates effect stack gui
+
+#------------------- ADD FILTER MULTI
+# "clips","filter_info","filter_edit_done_func"
+# Adds filter to clip.
+def add_filter_multi_action(data):
+    action = EditAction(_add_filter_multi_undo, _add_filter_multi_redo, data)
+    return action
+
+def _add_filter_multi_undo(self):
+    blank_clips = 0
+    for i in range(0, len(self.clips)):
+        clip = self.clips[i]
+        if clip.is_blanck_clip == True:
+            blank_clips += 1
+            continue
+        filter_object = self.filter_objects[i - blank_clips] # there are less filters then clips if some of the clips are blanks
+        clip.detach(filter_object.mlt_filter)
+        index = clip.filters.index(filter_object)
+        clip.filters.pop(index)
+
+    self.filter_edit_done_func(self.clips) # updates effect stack gui
+
+def _add_filter_multi_redo(self):
+    blank_clips = 0
+    for i in range(0, len(self.clips)):
+        clip = self.clips[i]
+        if clip.is_blanck_clip == True:
+            blank_clips += 1
+            continue
+        try: # is redo, fails for first
+            filter_object = self.filter_objects[i - blank_clips] # there are less filters then clips if some of the clips are blanks
+            clip.attach(filter_object.mlt_filter)
+            clip.filters.append(filter_object)
+        except: # First do
+            if not hasattr(self, "filter_objects"):
+                self.filter_objects = []
+            filter_object = current_sequence().create_filter(self.filter_info)
+            filter_object.replace_values(clip)
+            clip.attach(filter_object.mlt_filter)
+            clip.filters.append(filter_object)
+            self.filter_objects.append(filter_object)
     
+    self.filter_edit_done_func(self.clips) # updates effect stack gui
+
 #------------------- ADD TWO FILTERS
 # NOTE: Using this requires that index_2 > index_1
 # "clip","filter_info_1",filter_info_2","index_1","index_2","filter_edit_done_func"

@@ -1728,7 +1728,7 @@ def display_multi_clip_popup_menu(event, clip, track, callback):
             
     _add_separetor(clip_menu)
 
-    clip_menu.add(_get_filters_add_menu_item(event, clip, track, callback))
+    clip_menu.add(_get_filters_add_menu_item(event, clip, track, callback, True))
 
     if current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
         _add_separetor(clip_menu)
@@ -1891,10 +1891,14 @@ def display_compositor_popup_menu(event, compositor, callback):
     compositor_menu.add(_get_menu_item(_("Delete"), callback, ("delete",compositor)))
     compositor_menu.popup(None, None, None, None, event.button, event.time)
 
-def _get_filters_add_menu_item(event, clip, track, callback):
+def _get_filters_add_menu_item(event, clip, track, callback, multi_filter=False):
     menu_item = Gtk.MenuItem(_("Add Filter"))
     sub_menu = Gtk.Menu()
     menu_item.set_submenu(sub_menu)
+
+    item_id = "add_filter"
+    if multi_filter == True:
+        item_id = "add_filter_multi"
 
     for group in mltfilters.groups:
         group_name, filters_array = group
@@ -1905,7 +1909,7 @@ def _get_filters_add_menu_item(event, clip, track, callback):
         for filter_info in filters_array:
             filter_item = Gtk.MenuItem(translations.get_filter_name(filter_info.name))
             sub_sub_menu.append(filter_item)
-            filter_item.connect("activate", callback, (clip, track, "add_filter", (event.x, filter_info)))
+            filter_item.connect("activate", callback, (clip, track, item_id, (event.x, filter_info)))
             filter_item.show()
         group_item.show()
 

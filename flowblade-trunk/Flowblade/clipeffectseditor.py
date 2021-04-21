@@ -805,6 +805,12 @@ def filter_edit_done_stack_update(edited_clip, index=-1):
     else: # no effects after edit, clear effect editor panel
         clear_effects_edit_panel()
 
+def filter_edit_multi_done_stack_update(clips):
+    #print(clips)
+    for clip in clips:
+        if clip == get_edited_clip():
+             clear_clip()
+
 def display_kfeditors_tline_frame(frame):
     for kf_widget in keyframe_editor_widgets:
         kf_widget.display_tline_frame(frame)
