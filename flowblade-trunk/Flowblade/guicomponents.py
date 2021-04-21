@@ -1698,7 +1698,6 @@ def display_clip_popup_menu(event, clip, track, callback):
             
     clip_menu.popup(None, None, None, None, event.button, event.time)
 
-
 def display_multi_clip_popup_menu(event, clip, track, callback):
     if clip.is_blanck_clip:
         display_blank_clip_popup_menu(event, clip, track, callback)
@@ -1760,18 +1759,14 @@ def display_multi_clip_popup_menu(event, clip, track, callback):
     _add_separetor(clip_menu)
 
     clip_menu.add(_get_clone_filters_menu_item(event, clip, track, callback))
-    clip_menu.add(_get_menu_item(_("Clear Filters"), callback, (clip, track, "multi_clear_filters", event.x)))
-
-    _add_separetor(clip_menu)
-    clip_menu.add(_get_select_menu_item(event, clip, track, callback))
-
+    clip_menu.add(_get_menu_item(_("Clear Filters"), callback, (clip, track, "clear_filters", event.x)))
 
     _add_separetor(clip_menu)
         
-    del_item = _get_menu_item(_("Delete"), callback, (clip, track, "multi_delete", event.x))
+    del_item = _get_menu_item(_("Delete"), callback, (clip, track, "delete", event.x))
     clip_menu.add(del_item)
 
-    lift_item = _get_menu_item(_("Lift"), callback, (clip, track, "multi_lift", event.x))
+    lift_item = _get_menu_item(_("Lift"), callback, (clip, track, "lift", event.x))
     clip_menu.add(lift_item)
             
     clip_menu.popup(None, None, None, None, event.button, event.time)

@@ -316,7 +316,7 @@ def _mute_clip(data):
 
 def _delete_clip(data):
     tlineaction.splice_out_button_pressed()
-    
+
 def _lift(data):
     tlineaction.lift_button_pressed()
     
@@ -444,7 +444,8 @@ def clear_filters():
     track = get_track(movemodes.selected_track)
     clips = []
     for i in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
-        clips.append(track.clips[i])
+        if track.clips[i].is_blanck_clip == False:
+            clips.append(track.clips[i])
 
     data = {"clips":clips}
     action = edit.remove_multiple_filters_action(data)
