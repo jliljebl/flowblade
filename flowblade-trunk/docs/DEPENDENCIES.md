@@ -4,6 +4,7 @@
 |:-------------------------------|:----------------|:--------------|
 | python-gi | GTK3 Python bindings | pygtk |
 | python-mlt | MLT python bindings, this pulls in MLT | mlt-python-bindings |
+| ffmpeg | decoder/encoder application | ffmpeg |
 | python-dbus | dbus python bindings | python2-dbus |
 | libmlt-data | Some image and text resources for MLT | mlt, sdl_image |
 | python 2.7 >=| Language and interpreter | python2 |
