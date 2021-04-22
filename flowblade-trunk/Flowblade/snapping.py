@@ -26,6 +26,7 @@ import compositormodes
 import editorstate
 from editorstate import current_sequence
 from editorstate import EDIT_MODE
+from editorstate import PLAYER
 
 # These are monkeypatched to have access to tlinewidgets.py state  
 _get_frame_for_x_func = None
@@ -38,6 +39,7 @@ _snap_threshold = 6 # in pixels
 _snap_happened = False
 _last_snap_x = -1
 
+_playhead_frame = -1
 
 #---------------------------------------------------- interface
 def get_snapped_x(x, track, edit_data):
@@ -45,6 +47,10 @@ def get_snapped_x(x, track, edit_data):
         return x
     
     frame = _get_frame_for_x_func(x)
+    
+    global _playhead_frame
+    _playhead_frame = PLAYER().current_frame() # This is a constant overhead for every mouse move, 
+                                               # if 'producer.frame()' is expensive or unstable (locking) for MLT this can be bad. 
 
     # Do snaps for relevant edit modes.
     if EDIT_MODE() == editorstate.OVERWRITE_MOVE:
@@ -133,9 +139,21 @@ def _three_track_snap(track, x, frame, frame_x):
     snapped_next_track_x = _get_track_snapped_x(track, x, frame, frame_x)
     if snapped_next_track_x != -1:
         snapped_x = snapped_next_track_x
-
+    
     return snapped_x
 
+def _playhead_snap(mouse_x, snapping_feature_x):
+    snapped_x = -1
+    
+    playhead_frame_x = _get_x_for_frame_func(_playhead_frame)
+    if abs(playhead_frame_x - snapping_feature_x) < _snap_threshold:
+        global _last_snap_x
+        _last_snap_x = playhead_frame_x
+        return mouse_x - (snapping_feature_x - playhead_frame_x)
+    else:
+        return -1 # no snapping happened
+        
+     
 def _all_tracks_snap(track, x, frame, frame_x):
     snapped_x = -1
     
@@ -169,7 +187,8 @@ def _overwrite_move_snap(x, track, frame, edit_data):
 
     snapped_x = -1 # if value stays same till end, no snapping has happened
     snapped_x = _three_track_snap(track, x, first_clip_frame, first_clip_x)
-            
+    snapped_x = _playhead_snap(x, first_clip_x)
+                    
     # Return either original x or snapped x
     return return_snapped_x_or_x(snapped_x, x)
 
@@ -181,7 +200,8 @@ def _object_end_drag_snap(x, track, frame, edit_data):
 
     snapped_x = -1  # if value stays same till end, no snapping happened.
     snapped_x = _three_track_snap(track, x, frame, frame_x)
-        
+    snapped_x = _playhead_snap(x, frame_x)
+    
     # Return either original or snapped x
     return return_snapped_x_or_x(snapped_x, x)
 
@@ -214,7 +234,7 @@ def _trimming_snap(x, track, frame, edit_data):
 
     snapped_x = -1 # if value stays same till end, no snapping has happened
     snapped_x = _three_track_snap(track, x, selected_frame, selected_frame_x)
-    
+     
     return_x = return_snapped_x_or_x(snapped_x, x)
     edit_data["selected_frame"] = _get_frame_for_x_func(return_x) # we need to put snapped frame back into edit data because that is what is used by code elsewhere
 
