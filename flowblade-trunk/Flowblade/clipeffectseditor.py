@@ -145,7 +145,7 @@ class FilterFooterRow:
 
     def load_pressed(self, w, e):
         dialogs.load_effects_compositors_values_dialog(_load_effect_values_dialog_callback, True, self.filter_object)
-        
+
     def reset_pressed(self, w, e):
         _reset_filter_values(self.filter_object)
 
@@ -647,7 +647,14 @@ def delete_effect_pressed(clip, filter_index):
     set_clip(clip, track, clip_index)
 
     updater.repaint_tline()
-    
+
+def _save_stack_pressed():
+    default_name = _("unnamed_stack_values") + ".data"
+    dialogs.save_effects_compositors_values(_save_effect_stack_values_dialog_callback, default_name, True, None, True)
+
+def _load_stack_pressed():
+    dialogs.load_effects_compositors_values_dialog(_load_effect_stack_values_dialog_callback, True, None, True)
+        
 def _toggle_all_pressed():
     if _filter_stack == None:
         return False
@@ -897,7 +904,11 @@ def _clip_hamburger_item_activated(widget, msg):
         _filter_stack.set_all_filters_expanded_state(False)
     elif  msg == "toggle":
         _toggle_all_pressed()
-
+    elif  msg == "save_stack":
+        _save_stack_pressed()
+    elif  msg == "load_stack":
+        _load_stack_pressed()
+        
 def _save_effect_values_dialog_callback(dialog, response_id, filter_object):
     if response_id == Gtk.ResponseType.ACCEPT:
         save_path = dialog.get_filenames()[0]
@@ -924,6 +935,41 @@ def _load_effect_values_dialog_callback(dialog, response_id, filter_object):
     
     dialog.destroy()
 
+def _save_effect_stack_values_dialog_callback(dialog, response_id):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        save_path = dialog.get_filenames()[0]
+        stack_data = EffectStackSaveData()
+        stack_data.save(save_path)
+    dialog.destroy()
+
+def _load_effect_stack_values_dialog_callback(dialog, response_id):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        load_path = dialog.get_filenames()[0]
+        stack_data = utils.unpickle(load_path)
+
+        for effect_data in stack_data.effects_data:
+            filter_info, properties, non_mlt_properties = effect_data
+      
+            data = {"clip":_filter_stack.clip, 
+                    "filter_info":filter_info,
+                    "filter_edit_done_func":filter_edit_done_stack_update}
+            action = edit.add_filter_action(data)
+
+            set_stack_update_blocked()
+            action.do_edit()
+            set_stack_update_unblocked()
+    
+            filters = _filter_stack.get_filters()
+            filter_object = filters[len(filters) - 1]
+    
+            filter_object.properties = copy.deepcopy(properties)
+            filter_object.non_mlt_properties = copy.deepcopy(non_mlt_properties)
+            filter_object.update_mlt_filter_properties_all()
+
+            _filter_stack.reinit_stack_item(filter_object)
+                    
+    dialog.destroy()
+
 def _reset_filter_values(filter_object):
         filter_object.properties = copy.deepcopy(filter_object.info.properties)
         filter_object.non_mlt_properties = copy.deepcopy(filter_object.info.non_mlt_properties)
@@ -943,7 +989,7 @@ class EffectValuesSaveData:
     
     def __init__(self, filter_object):
         self.info = filter_object.info
-        self.multipart_filter = self.info.multipart_filter
+        self.multipart_filter = self.info.multipart_filter # DEPRECATED
 
         # Values of these are edited by the user.
         self.properties = copy.deepcopy(filter_object.properties)
@@ -952,7 +998,7 @@ class EffectValuesSaveData:
         except:
             self.non_mlt_properties = [] # Versions prior 0.14 do not have non_mlt_properties and fail here on load
 
-        if self.multipart_filter == True:
+        if self.multipart_filter == True: # DEPRECATED
             self.value = filter_object.value
         else:
             self.value = None
@@ -968,14 +1014,31 @@ class EffectValuesSaveData:
         return False
 
     def set_effect_values(self, filter_object):
-        if self.multipart_filter == True:
+        if self.multipart_filter == True: # DEPRECATED
             filter_object.value = self.value
          
         filter_object.properties = copy.deepcopy(self.properties)
         filter_object.non_mlt_properties = copy.deepcopy(self.non_mlt_properties)
         filter_object.update_mlt_filter_properties_all()
 
+class EffectStackSaveData:
+    def __init__(self):
+        self.effects_data = []
+        self.empty = True
+        filters = _filter_stack.get_filters()
+        if len(filters) > 0:
+            self.empty = False
+            for f in filters:
+                self.effects_data.append((f.info,
+                                          copy.deepcopy(f.properties),
+                                          copy.deepcopy(f.non_mlt_properties)))
+                                      
+    def save(self, save_path):
+        with atomicfile.AtomicFileWriter(save_path, "wb") as afw:
+            write_file = afw.get_file()
+            pickle.dump(self, write_file)
 
+    
 # ------------------------------------------------------- CHANGE POLLING
 def shutdown_polling():
     global _edit_polling_thread

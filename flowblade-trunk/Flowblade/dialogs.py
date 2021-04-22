@@ -340,14 +340,17 @@ def save_project_as_dialog(callback, current_name, open_dir, parent=None):
     dialog.connect('response', callback)
     dialog.show()
 
-def save_effects_compositors_values(callback, default_name, saving_effect=True, filter_object=None):
+def save_effects_compositors_values(callback, default_name, saving_effect=True, filter_object=None, saving_stack=False):
     parent = gui.editor_window.window
 
     if saving_effect == True:
         title = _("Save Effect Values Data")
     else:
         title = _("Save Compositor Values Data")
-        
+    
+    if saving_stack == True:
+        title = _("Save Effects Stack Values Data")
+
     dialog = Gtk.FileChooserDialog(title, parent,
                                    Gtk.FileChooserAction.SAVE,
                                    (_("Cancel"), Gtk.ResponseType.CANCEL,
@@ -358,7 +361,7 @@ def save_effects_compositors_values(callback, default_name, saving_effect=True, 
 
     dialog.set_select_multiple(False)
     file_filter = Gtk.FileFilter()
-    file_filter.set_name(_("Effect/Compositor Values Data"))
+    file_filter.set_name(_("Stack/Effect/Compositor Values Data"))
     file_filter.add_pattern("*" + "data")
     dialog.add_filter(file_filter)
     if filter_object == None:
@@ -367,13 +370,16 @@ def save_effects_compositors_values(callback, default_name, saving_effect=True, 
         dialog.connect('response', callback, filter_object)
     dialog.show()
 
-def load_effects_compositors_values_dialog(callback, loading_effect=True, filter_object=None):
+def load_effects_compositors_values_dialog(callback, loading_effect=True, filter_object=None, loading_stack=False):
     parent = gui.editor_window.window
 
     if loading_effect == True:
         title_text = _("Load Effect Values Data")
     else:
         title_text = _("Load Compositor Values Data") 
+    
+    if loading_stack == True:
+        title = _("Load Effects Stack Values Data")
 
     dialog = Gtk.FileChooserDialog(title_text, parent,
                                    Gtk.FileChooserAction.OPEN,

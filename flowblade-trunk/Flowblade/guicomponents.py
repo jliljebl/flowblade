@@ -3098,6 +3098,11 @@ def get_clip_effects_editor_hamburger_menu(event, callback):
 
     _add_separetor(menu)
 
+    menu.add(_get_menu_item(_("Save Effect Stack"), callback, "save_stack"))
+    menu.add(_get_menu_item(_("Load Effect Stack"), callback, "load_stack"))
+
+    _add_separetor(menu)
+
     menu.add(_get_menu_item(_("Set Fade Buttons Default Fade Length..."), callback, "fade_length"))
 
     _add_separetor(menu)
