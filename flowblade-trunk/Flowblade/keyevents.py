@@ -63,6 +63,7 @@ def key_down(widget, event):
     """
     Global key press listener.
     """
+
     # Handle ESCAPE
     if event.keyval == Gdk.KEY_Escape:
         if audiowaveform.waveform_thread != None:
@@ -248,6 +249,12 @@ def _handle_tline_key_event(event):
         return True
     if action == 'select_prev':
         monitorevent.select_prev_clip_for_filter_edit()
+        return True
+    if action == 'trim_start':
+        tlineaction.trim_start_pressed()
+        return True
+    if action == 'trim_end':
+        tlineaction.trim_end_pressed()
         return True
         
     # Key bindings for keyboard trimming

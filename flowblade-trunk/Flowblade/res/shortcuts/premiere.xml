@@ -96,5 +96,7 @@
     <event code='select_next' name='Open Next Clip In Filter Editor' modifiers='ALT'>up</event>
     <event code='select_prev' name='Open Previous Clip In Filter Editor' modifiers='ALT'>down</event>
     <event code='play_pause_loop_marks' name='Play / Pause Mark In to Mark Out Loop' modifiers='CTRL'>space</event>
+    <event code='trim_start' name='Trim Clip Start To Playhead'>q</event>
+    <event code='trim_end' name='Trim Clip End To Playhead'>w</event>
   </shortcuts>
 </flowblade>

@@ -498,7 +498,6 @@ def _splice_out_done_update():
     movemodes.clear_selection_values()
     updater.repaint_tline()
 
-    
 def lift_button_pressed():
     """
     Removes 1 - n long continuous clip range from track and fills
@@ -763,7 +762,63 @@ def delete_range_button_pressed():
     action.do_edit()
 
     PLAYER().seek_frame(mark_in_frame)
+
+def trim_start_pressed():
+    clip, track, index = _get_kb_quick_trim_target_clip()
+    if clip == None:
+        return
+
+    current_frame = PLAYER().current_frame()
+    clip_start_in_tline = track.clip_start(index)
+    delta = current_frame - clip_start_in_tline
+
+    data = {"track":track,
+            "clip":clip,
+            "index":index,
+            "delta":delta,
+            "undo_done_callback":None, # we're not doing the callback because we are not in trim tool that needs it
+            "first_do":False}
+                            
+    action = edit.trim_start_action(data)
+    action.do_edit()
+
+def trim_end_pressed():
+    clip, track, index = _get_kb_quick_trim_target_clip()
+    if clip == None:
+        return
+
+    current_frame = PLAYER().current_frame()
+    clip_end_in_tline = track.clip_start(index) + clip.clip_out - clip.clip_in
+    delta = current_frame - clip_end_in_tline
+
+    data = {"track":track,
+            "clip":clip,
+            "index":index,
+            "delta":delta,
+            "undo_done_callback":None, # we're not doing the callback because we are not in trim tool that needs it
+            "first_do":False}
+                            
+    action = edit.trim_end_action(data)
+    action.do_edit()
     
+def _get_kb_quick_trim_target_clip():
+    current_frame = PLAYER().current_frame()
+    if movemodes.selected_track != -1:
+        track = current_sequence().tracks[movemodes.selected_track]
+        clip_index = track.get_clip_index_at(current_frame)
+        if clip_index >= movemodes.selected_range_in and clip_index >= movemodes.selected_range_out:
+            return (track.clips[clip_index], track, clip_index)
+
+    track = current_sequence().get_first_active_track()
+    if track == None:
+        return (None, None, None) # we have no way of determining which track is targeted.
+    try:
+        clip_index = track.get_clip_index_at(current_frame)
+        clip = track.clips[clip_index]
+        return (clip, track, clip_index)
+    except:
+        return (None, None, None)
+
 def resync_button_pressed():
     if movemodes.selected_track != -1:
         syncsplitevent.resync_selected()
