@@ -69,9 +69,10 @@ KF_HIT_WIDTH = 4
 KF_DRAG_THRESHOLD = 3
 
 GEOM_EDITOR_SIZE_LARGE = 0.9 # displayed screensize as fraction of available height
-GEOM_EDITOR_SIZE_SMALL = 0.3 # displayed screensize as fraction of available height
 GEOM_EDITOR_SIZE_MEDIUM = 0.6 # displayed screensize as fraction of available height
-GEOM_EDITOR_SIZES = [GEOM_EDITOR_SIZE_LARGE, GEOM_EDITOR_SIZE_MEDIUM, GEOM_EDITOR_SIZE_SMALL]
+GEOM_EDITOR_SIZE_SMALL = 0.3 # displayed screensize as fraction of available height
+GEOM_EDITOR_SIZE_SMALLER = 0.1 # displayed screensize as fraction of available height
+GEOM_EDITOR_SIZES = [GEOM_EDITOR_SIZE_LARGE, GEOM_EDITOR_SIZE_MEDIUM, GEOM_EDITOR_SIZE_SMALL, GEOM_EDITOR_SIZE_SMALLER]
 
 # Colors
 POINTER_COLOR = (1, 0.3, 0.3)
@@ -834,6 +835,7 @@ class GeometryEditorButtonsRow(Gtk.HBox):
         size_select.append_text("100%")
         size_select.append_text("66%")
         size_select.append_text("33%")
+        size_select.append_text("10%")
         size_select.set_active(1)
         size_select.connect("changed", lambda w,e: editor_parent.view_size_changed(w.get_active()), 
                             None)
