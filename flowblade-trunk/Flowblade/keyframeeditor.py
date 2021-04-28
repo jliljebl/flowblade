@@ -1977,21 +1977,33 @@ class PositionNumericalEntries(Gtk.HBox):
         self.set_spacing(2)
         self.set_margin_top (4)
 
-        if editor_buttons != None: # We smetimes put editor buttons elsewhere
-            self.pack_start(editor_buttons, False, False, 0)
-            
+        row1 = Gtk.HBox(False, 0)
+        row1.pack_start(Gtk.Label(), True, True, 0)
+        if editor_buttons != None: # We sometimes put editor buttons elsewhere
+            row1.pack_start(editor_buttons, False, False, 0)
+
+        row1.pack_start(x_label, False, False, 0)
+        row1.pack_start(self.x_entry, False, False, 0)
+        row1.pack_start(guiutils.pad_label(6, 6), False, False, 0)
+        row1.pack_start(y_label, False, False, 0)
+        row1.pack_start(self.y_entry, False, False, 0)
+        row1.pack_start(Gtk.Label(), True, True, 0)
+
+        row2 = Gtk.HBox(False, 0)
+        row2.pack_start(Gtk.Label(), True, True, 0)
+        row2.pack_start(w_label, False, False, 0)
+        row2.pack_start(self.w_entry, False, False, 0)
+        row2.pack_start(guiutils.pad_label(6, 6), False, False, 0)
+        row2.pack_start(h_label, False, False, 0)
+        row2.pack_start(self.h_entry, False, False, 0)
+        row2.pack_start(Gtk.Label(), True, True, 0)
+        
+        vbox = Gtk.VBox(False, 0)
+        vbox.pack_start(row1, False, False, 0)
+        vbox.pack_start(row2, False, False, 0)
+
         self.pack_start(Gtk.Label(), True, True, 0)
-        self.pack_start(x_label, False, False, 0)
-        self.pack_start(self.x_entry, False, False, 0)
-        self.pack_start(guiutils.pad_label(6, 6), False, False, 0)
-        self.pack_start(y_label, False, False, 0)
-        self.pack_start(self.y_entry, False, False, 0)
-        self.pack_start(guiutils.pad_label(6, 6), False, False, 0)
-        self.pack_start(w_label, False, False, 0)
-        self.pack_start(self.w_entry, False, False, 0)
-        self.pack_start(guiutils.pad_label(6, 6), False, False, 0)
-        self.pack_start(h_label, False, False, 0)
-        self.pack_start(self.h_entry, False, False, 0)
+        self.pack_start(vbox, False, False, 0)
         self.pack_start(Gtk.Label(), True, True, 0)
         
     def init_for_roto_geom(self, editor_buttons):
@@ -2053,9 +2065,8 @@ class PositionNumericalEntries(Gtk.HBox):
         self.pack_start(Gtk.Label(), True, True, 0)
         
     def prepare_entry(self, entry):
-        entry.set_width_chars (4)
-        entry.set_max_length (4)
-        entry.set_max_width_chars (4)
+        entry.set_width_chars (6)
+        entry.set_max_width_chars (6)
         entry.connect("activate", self.enter_pressed)
         
     def enter_pressed(self, entry):
