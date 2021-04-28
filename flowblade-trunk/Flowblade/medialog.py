@@ -629,6 +629,7 @@ class MediaLogListView(Gtk.VBox):
         self.text_rend_2 = Gtk.CellRendererText()
         self.text_rend_2.set_property("yalign", 0.0)
         self.text_rend_2.set_property("editable", True)
+        self.text_rend_2.set_property("ellipsize", Pango.EllipsizeMode.END)
         self.text_rend_2.connect("edited", log_item_name_edited, (self.storemodel, 2))
                                  
         self.text_rend_3 = Gtk.CellRendererText()
@@ -652,7 +653,7 @@ class MediaLogListView(Gtk.VBox):
 
         self.text_col_2.set_expand(True)
         self.text_col_2.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
-        self.text_col_2.set_min_width(150)
+        self.text_col_2.set_min_width(250)
         self.text_col_2.pack_start(self.text_rend_2, True)
         self.text_col_2.add_attribute(self.text_rend_2, "text", 1)
 
