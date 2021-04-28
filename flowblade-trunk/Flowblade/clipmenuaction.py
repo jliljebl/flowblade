@@ -127,7 +127,19 @@ def _delete_compositors(data):
         data = {"compositor":compositor}
         action = edit.delete_compositor_action(data)
         action.do_edit()
-    
+        
+def _multi_delete_compositors(data):
+    clip, track, item_id, x = data
+    for clip_index in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
+        composited_clip = track.clips[clip_index]
+        if composited_clip.is_blanck_clip == True:
+            continue
+        compositors = current_sequence().get_clip_compositors(composited_clip)
+        for compositor in compositors:
+            data = {"compositor":compositor}
+            action = edit.delete_compositor_action(data)
+            action.do_edit()
+
 def _open_clip_in_effects_editor(data):
     updater.open_clip_in_effects_editor(data)
     
@@ -253,23 +265,44 @@ def _add_filter_multi(data):
 
 def _add_compositor(data):
     clip, track, item_id, item_data = data
-    x, compositor_type = item_data
-
-    frame = tlinewidgets.get_frame(x)
-    clip_index = track.get_clip_index_at(frame)
+    x, compositor_type, add_compositors_is_multi_selection = item_data
 
     target_track_index = track.id - 1
-
     if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
         target_track_index = current_sequence().first_video_index
-
-    compositor_in = current_sequence().tracks[track.id].clip_start(clip_index)
-    clip_length = clip.clip_out - clip.clip_in
-    compositor_out = compositor_in + clip_length
 
     a_track = target_track_index
     b_track = track.id
 
+    if add_compositors_is_multi_selection == True:
+        for clip_index in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
+            composited_clip = track.clips[clip_index]
+            if composited_clip.is_blanck_clip == True:
+                continue
+            compositor_in = current_sequence().tracks[track.id].clip_start(clip_index)
+            clip_length = composited_clip.clip_out - composited_clip.clip_in
+            compositor_out = compositor_in + clip_length
+            
+            edit_data = {"origin_clip_id":composited_clip.id,
+                        "in_frame":compositor_in,
+                        "out_frame":compositor_out,
+                        "a_track":a_track,
+                        "b_track":b_track,
+                        "compositor_type":compositor_type,
+                        "clip":composited_clip}
+            action = edit.add_compositor_action(edit_data)
+            action.do_edit()
+        
+        updater.repaint_tline()
+        return
+
+    frame = tlinewidgets.get_frame(x)
+    clip_index = track.get_clip_index_at(frame)
+    
+    compositor_in = current_sequence().tracks[track.id].clip_start(clip_index)
+    clip_length = clip.clip_out - clip.clip_in
+    compositor_out = compositor_in + clip_length
+    
     edit_data = {"origin_clip_id":clip.id,
                 "in_frame":compositor_in,
                 "out_frame":compositor_out,
@@ -283,15 +316,43 @@ def _add_compositor(data):
     updater.repaint_tline()
 
 def _add_autofade(data):
-    # NOTE: These stay synced only in "Top Down Auto Follow" mode, see: edit.get_full_compositor_sync_data()
+    # NOTE: These stay synhced only in "Top Down Auto Follow" mode, see: edit.get_full_compositor_sync_data()
     
     clip, track, item_id, item_data = data
-    x, compositor_type = item_data
+    x, compositor_type, add_compositors_is_multi_selection = item_data
 
     frame = tlinewidgets.get_frame(x)
     clip_index = track.get_clip_index_at(frame)
 
     target_track_index = track.id - 1
+
+    if add_compositors_is_multi_selection == True:
+        for clip_index in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
+            composited_clip = track.clips[clip_index]
+            if composited_clip.is_blanck_clip == True:
+                continue
+                
+            clip_length = composited_clip.clip_out - composited_clip.clip_in
+            if compositor_type == "##auto_fade_in":
+                compositor_in = current_sequence().tracks[track.id].clip_start(clip_index)
+                compositor_out = compositor_in + int(utils.fps()) - 1
+            else: # fade out
+                clip_start = current_sequence().tracks[track.id].clip_start(clip_index)
+                compositor_out = clip_start + clip_length
+                compositor_in = compositor_out - int(utils.fps()) + 1
+
+            edit_data = {"origin_clip_id":composited_clip.id,
+                        "in_frame":compositor_in,
+                        "out_frame":compositor_out,
+                        "a_track":target_track_index,
+                        "b_track":track.id,
+                        "compositor_type":compositor_type,
+                        "clip":composited_clip}
+            action = edit.add_compositor_action(edit_data)
+            action.do_edit()
+        
+        updater.repaint_tline()
+        return
 
     clip_length = clip.clip_out - clip.clip_in
     if compositor_type == "##auto_fade_in":
@@ -484,7 +545,22 @@ def _clear_waveform(data):
     audiowaveform.clear_waveform(data)
 
 def  _clone_filters_from_next(data):
-    clip, track, item_id, item_data = data
+    clip, track, item_id, is_multi = data
+    if is_multi == True:
+        end_index = movemodes.selected_range_out
+        if end_index == len(track.clips) - 1:
+            return # clip is last clip
+        clone_clip = track.clips[end_index + 1]
+                    
+        for clip_index in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
+            target_clip = track.clips[clip_index]
+            if target_clip.is_blanck_clip == True:
+                continue
+
+            _do_filter_clone(target_clip, clone_clip)
+            
+        return
+        
     index = track.clips.index(clip)
     if index == len(track.clips) - 1:
         return # clip is last clip
@@ -492,7 +568,23 @@ def  _clone_filters_from_next(data):
     _do_filter_clone(clip, clone_clip)
 
 def _clone_filters_from_prev(data):
-    clip, track, item_id, item_data = data
+    clip, track, item_id, is_multi = data
+    
+    if is_multi == True:
+        start_index = movemodes.selected_range_in
+        if start_index == 0:
+            return  # clip is first clip
+        clone_clip = track.clips[start_index - 1]
+                    
+        for clip_index in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
+            target_clip = track.clips[clip_index]
+            if target_clip.is_blanck_clip == True:
+                continue
+
+            _do_filter_clone(target_clip, clone_clip)
+            
+        return
+        
     index = track.clips.index(clip)
     if index == 0:
         return # clip is first clip
@@ -749,6 +841,7 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "volumekf":_volume_keyframes,
                   "brightnesskf":_brightness_keyframes,
                   "delete_compositors":_delete_compositors,
+                  "multi_delete_compositors": _multi_delete_compositors,
                   "reload_media":_reload_clip_media,
                   "cc_render_full_media":containerclip.render_full_media,
                   "cc_render_clip":containerclip.render_clip_length,

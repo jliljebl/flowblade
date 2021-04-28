@@ -124,7 +124,6 @@ def set_range_selection(track_index, range_in, range_out, is_selected):
     for i in range(range_in, range_out + 1): #+1, range_out is inclusive
         track.clips[i].selected = is_selected
 
-
 def select_clip(track_index, clip_index):
     """
     Selects single clip.

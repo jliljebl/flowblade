@@ -120,6 +120,9 @@ bin_popup_menu = Gtk.Menu()
 filter_mask_menu = Gtk.Menu()
 kb_shortcuts_hamburger_menu = Gtk.Menu()
 multi_clip_popup_menu = Gtk.Menu()
+
+select_clip_func = None
+add_compositors_is_multi_selection = False 
  
 # ------------------------------------------------- item lists
 class ImageTextTextListView(Gtk.VBox):
@@ -1700,6 +1703,7 @@ def display_clip_popup_menu(event, clip, track, callback):
 
 def display_multi_clip_popup_menu(event, clip, track, callback):
     if clip.is_blanck_clip:
+        select_clip_func(track.id, track.clips.index(clip))
         display_blank_clip_popup_menu(event, clip, track, callback)
         return
 
@@ -1710,7 +1714,9 @@ def display_multi_clip_popup_menu(event, clip, track, callback):
     clip_menu = multi_clip_popup_menu
     guiutils.remove_children(clip_menu)
     
-    # Menu items            
+    # Menu items
+    
+    """TODO: This would be useful as multiclip action, but do it later.
     if track.type == appconsts.VIDEO:
         active = True
         if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
@@ -1727,7 +1733,11 @@ def display_multi_clip_popup_menu(event, clip, track, callback):
               (clip, track, "multi_split_audio_synched", event.x), active))
             
     _add_separetor(clip_menu)
-
+    """
+    
+    global add_compositors_is_multi_selection
+    add_compositors_is_multi_selection = True
+    
     clip_menu.add(_get_filters_add_menu_item(event, clip, track, callback, True))
 
     if current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
@@ -1758,7 +1768,7 @@ def display_multi_clip_popup_menu(event, clip, track, callback):
 
     _add_separetor(clip_menu)
 
-    clip_menu.add(_get_clone_filters_menu_item(event, clip, track, callback))
+    clip_menu.add(_get_clone_filters_menu_item(event, clip, track, callback, True))
     clip_menu.add(_get_menu_item(_("Clear Filters"), callback, (clip, track, "clear_filters", event.x)))
 
     _add_separetor(clip_menu)
@@ -1768,7 +1778,9 @@ def display_multi_clip_popup_menu(event, clip, track, callback):
 
     lift_item = _get_menu_item(_("Lift"), callback, (clip, track, "lift", event.x))
     clip_menu.add(lift_item)
-            
+
+    add_compositors_is_multi_selection = False
+    
     clip_menu.popup(None, None, None, None, event.button, event.time)
     
 def display_transition_clip_popup_menu(event, clip, track, callback):
@@ -1958,7 +1970,7 @@ def _get_compositors_add_menu_item(event, clip, track, callback, sensitive):
             continue
         compositor_item = Gtk.MenuItem(name)
         sub_menu.append(compositor_item)
-        compositor_item.connect("activate", callback, (clip, track, "add_compositor", (event.x, compositor_type)))
+        compositor_item.connect("activate", callback, (clip, track, "add_compositor", (event.x, compositor_type, add_compositors_is_multi_selection)))
         compositor_item.show()
  
     _add_separetor(sub_menu)
@@ -1988,7 +2000,7 @@ def _get_blenders_add_menu_item(event, clip, track, callback, sensitive):
             continue
         blender_item = Gtk.MenuItem(name)
         sub_menu.append(blender_item)
-        blender_item.connect("activate", callback, (clip, track, "add_compositor", (event.x, compositor_type)))
+        blender_item.connect("activate", callback, (clip, track, "add_compositor", (event.x, compositor_type, add_compositors_is_multi_selection)))
         blender_item.show()
     menu_item.set_sensitive(sensitive)
     menu_item.show()
@@ -2004,7 +2016,7 @@ def _get_alpha_combiners_add_menu_item(event, clip, track, callback, sensitive):
         name, compositor_type = alpha_combiner
         alpha_combiner_item = Gtk.MenuItem(name)
         sub_menu.append(alpha_combiner_item)
-        alpha_combiner_item.connect("activate", callback, (clip, track, "add_compositor", (event.x, compositor_type)))
+        alpha_combiner_item.connect("activate", callback, (clip, track, "add_compositor", (event.x, compositor_type, add_compositors_is_multi_selection)))
         alpha_combiner_item.show()
     menu_item.set_sensitive(sensitive)
     menu_item.show()
@@ -2020,7 +2032,7 @@ def _get_wipe_compositors_add_menu_item(event, clip, track, callback, sensitive)
         name, compositor_type = alpha_combiner
         wipe_item = Gtk.MenuItem(name)
         sub_menu.append(wipe_item)
-        wipe_item.connect("activate", callback, (clip, track, "add_compositor", (event.x, compositor_type)))
+        wipe_item.connect("activate", callback, (clip, track, "add_compositor", (event.x, compositor_type, add_compositors_is_multi_selection)))
         wipe_item.show()
     menu_item.set_sensitive(sensitive)
     menu_item.show()
@@ -2040,7 +2052,7 @@ def _get_auto_fade_compositors_add_menu_item(event, clip, track, callback, sensi
             continue
         compositor_item = Gtk.MenuItem(name)
         sub_menu.append(compositor_item)
-        compositor_item.connect("activate", callback, (clip, track, "add_autofade", (event.x, compositor_type)))
+        compositor_item.connect("activate", callback, (clip, track, "add_autofade", (event.x, compositor_type, add_compositors_is_multi_selection)))
         compositor_item.show()
     menu_item.set_sensitive(sensitive)
     menu_item.show()
@@ -2194,19 +2206,19 @@ def _get_container_clip_menu_item(event, clip, track, callback):
     menu_item.show()
     return menu_item
 
-def _get_clone_filters_menu_item(event, clip, track, callback):
+def _get_clone_filters_menu_item(event, clip, track, callback, is_multi=False):
     menu_item = Gtk.MenuItem(_("Clone Filters"))
     sub_menu = Gtk.Menu()
     menu_item.set_submenu(sub_menu)
 
     clone_item = Gtk.MenuItem(_("From Next Clip"))
     sub_menu.append(clone_item)
-    clone_item.connect("activate", callback, (clip, track, "clone_filters_from_next", None))
+    clone_item.connect("activate", callback, (clip, track, "clone_filters_from_next", is_multi))
     clone_item.show()
 
     clone_item = Gtk.MenuItem(_("From Previous Clip"))
     sub_menu.append(clone_item)
-    clone_item.connect("activate", callback, (clip, track, "clone_filters_from_prev", None))
+    clone_item.connect("activate", callback, (clip, track, "clone_filters_from_prev", is_multi))
     clone_item.show()
 
     menu_item.show()
