@@ -63,7 +63,6 @@ def key_down(widget, event):
     """
     Global key press listener.
     """
-
     # Handle ESCAPE
     if event.keyval == Gdk.KEY_Escape:
         if audiowaveform.waveform_thread != None:
@@ -108,7 +107,7 @@ def key_down(widget, event):
     was_handled = _handle_configurable_global_events(event)
     if was_handled:
         return True
-        
+
     # Pressing timeline button obivously leaves user expecting
     # to have focus in timeline
     if gui.monitor_switch.widget.has_focus() and timeline_visible():
@@ -665,7 +664,7 @@ def _handle_effects_editor_keys(event):
                 monitorevent.stop_pressed()
             else:
                 monitorevent.start_marks_looping()
-        return True
+            return True
         if action == 'prev_frame' or action == 'next_frame':
             prefs = editorpersistance.prefs
             if action == 'prev_frame':
@@ -740,7 +739,6 @@ def paste_action():
 
 def change_single_shortcut(code, event, shortcut_label):
     key_val_name = Gdk.keyval_name(event.keyval).lower()
-    print(key_val_name)
     
     mods_list = []
     state = event.get_state()

@@ -1539,7 +1539,7 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
              
         self.buttons_row = ClipEditorButtonsRow(self, True, False)
 
-        self.pos_entries_row = PositionNumericalEntries(self.geom_kf_edit, self, None)
+        self.pos_entries_row = PositionNumericalEntries(self.geom_kf_edit, self, self.geom_buttons_row)
         
         # Create clip editor keyframes from geom editor keyframes
         # that contain the property values when opening editor.
@@ -1548,7 +1548,6 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
       
         # Build gui
         self.pack_start(g_frame, False, False, 0)
-        self.pack_start(self.geom_buttons_row, False, False, 0)
         self.pack_start(self.pos_entries_row, False, False, 0)
         self.pack_start(self.clip_editor.widget, False, False, 0)
         self.pack_start(self.buttons_row, False, False, 0)
@@ -1981,7 +1980,7 @@ class PositionNumericalEntries(Gtk.HBox):
         row1.pack_start(Gtk.Label(), True, True, 0)
         if editor_buttons != None: # We sometimes put editor buttons elsewhere
             row1.pack_start(editor_buttons, False, False, 0)
-
+        row1.pack_start(guiutils.pad_label(6, 6), False, False, 0)
         row1.pack_start(x_label, False, False, 0)
         row1.pack_start(self.x_entry, False, False, 0)
         row1.pack_start(guiutils.pad_label(6, 6), False, False, 0)
@@ -2035,6 +2034,7 @@ class PositionNumericalEntries(Gtk.HBox):
         row1.pack_start(Gtk.Label(), True, True, 0)
         if editor_buttons != None: # We sometimes put editor buttons elsewhere
             row1.pack_start(editor_buttons, False, False, 0)
+        row1.pack_start(guiutils.pad_label(6, 6), False, False, 0)
         row1.pack_start(x_label, False, False, 0)
         row1.pack_start(self.x_entry, False, False, 0)
         row1.pack_start(guiutils.pad_label(6, 6), False, False, 0)
@@ -2099,17 +2099,17 @@ class PositionNumericalEntries(Gtk.HBox):
 
         if self.rotating_geom == False:
             x, y, w, h = shape
-            self.x_entry.set_text(str(x))
-            self.y_entry.set_text(str(y))
-            self.w_entry.set_text(str(w))
-            self.h_entry.set_text(str(h))
+            self.x_entry.set_text("%.1f" % x)
+            self.y_entry.set_text("%.1f" % y)
+            self.w_entry.set_text("%.1f" % w)
+            self.h_entry.set_text("%.1f" % h)
         else:
             x, y, xs, ys, rot = shape
-            self.x_entry.set_text(str(x))
-            self.y_entry.set_text(str(y))
-            self.x_scale_entry.set_text(str(xs))
-            self.y_scale_entry.set_text(str(ys))
-            self.rotation_entry.set_text(str(rot))
+            self.x_entry.set_text("%.1f" % x)
+            self.y_entry.set_text("%.1f" % y)
+            self.x_scale_entry.set_text("%.4f" % xs)
+            self.y_scale_entry.set_text("%.4f" % ys)
+            self.rotation_entry.set_text("%.1f" % rot)
 
 
 
