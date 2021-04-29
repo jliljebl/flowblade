@@ -540,40 +540,37 @@ def tline_media_drop(media_file, x, y, use_marks=False):
 
         if media_file.type == appconsts.IMAGE_SEQUENCE:
             new_clip.mark_out = media_file.length
-    else:
-        """
-        Why did we need this??
+    else:    
+        # Media types that do not have length determined by content.
         if new_clip.media_type == appconsts.IMAGE or new_clip.media_type == appconsts.PATTERN_PRODUCER:
-            # Give IMAGE and PATTERN_PRODUCER media types default mark in and mark out if not already set.
-            # This makes them reasonably short and trimmable in both directions.
-            # NOTE: WE SHOULD BE DOING THIS AT CREATION TIME, WE'RE DOING THE SAME THING IN updater.display_clip_in_monitor() ?
-            #       ...but then we would need to patch persistance.py...maybe keep this even if not too smart.
-            # TODO: Make default length user settable or use graphics value
-            if (hasattr(new_clip, 'mark_in') == False) or (new_clip.mark_in == -1 and new_clip.mark_out == -1):
-                center_frame = new_clip.get_length() // 2
-                default_length_half = 75
-                mark_in = center_frame - default_length_half
-                mark_out = center_frame + default_length_half - 1
-                new_clip.mark_in = mark_in
-                new_clip.mark_out = mark_out
+
+            # If no marks use default length.
+            # This is different from media that has length determined by content.
+            if (hasattr(media_file, 'mark_in') == False) or (media_file.mark_in == -1 and media_file.mark_out == -1):
+                in_fr, out_fr, l = editorpersistance.get_graphics_default_in_out_length()
+                new_clip.mark_in = in_fr
+                new_clip.mark_out = out_fr
+            else:
+                new_clip.mark_in = media_file.mark_in
+                new_clip.mark_out = media_file.mark_out
+                
+            # Replace single missing mark in 3-point edit style.
+            if new_clip.mark_in == -1:
+                new_clip.mark_in = 0
+            if new_clip.mark_out == -1:
+                new_clip.mark_out = 14999
         else: # All the rest
-        """
-        new_clip.mark_in = media_file.mark_in
-        new_clip.mark_out = media_file.mark_out
 
-        if new_clip.mark_in == -1:
-            new_clip.mark_in = 0
-        if new_clip.mark_out == -1:
-            new_clip.mark_out = new_clip.get_length() - 1 # - 1 because out is mark_out inclusive
-            if media_file.type == appconsts.IMAGE_SEQUENCE:
-                new_clip.mark_out = media_file.length
+            new_clip.mark_in = media_file.mark_in
+            new_clip.mark_out = media_file.mark_out
 
-    # Graphics files get added with their default lengths
-    f_name, ext = os.path.splitext(media_file.name)
-    if utils.file_extension_is_graphics_file(ext) and media_file.type != appconsts.IMAGE_SEQUENCE: # image sequences are graphics files but have own length
-        in_fr, out_fr, l = editorpersistance.get_graphics_default_in_out_length()
-        new_clip.mark_in = in_fr
-        new_clip.mark_out = out_fr
+            # Replace single missing mark in 3-point edit style.
+            if new_clip.mark_in == -1:
+                new_clip.mark_in = 0
+            if new_clip.mark_out == -1:
+                new_clip.mark_out = new_clip.get_length() - 1 # - 1 because out is mark_out inclusive
+                if media_file.type == appconsts.IMAGE_SEQUENCE:
+                    new_clip.mark_out = media_file.length
 
     # Non-insert DND actions
     if editorpersistance.prefs.dnd_action == appconsts.DND_OVERWRITE_NON_V1:
