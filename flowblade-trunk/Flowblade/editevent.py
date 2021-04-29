@@ -541,6 +541,8 @@ def tline_media_drop(media_file, x, y, use_marks=False):
         if media_file.type == appconsts.IMAGE_SEQUENCE:
             new_clip.mark_out = media_file.length
     else:
+        """
+        Why did we need this??
         if new_clip.media_type == appconsts.IMAGE or new_clip.media_type == appconsts.PATTERN_PRODUCER:
             # Give IMAGE and PATTERN_PRODUCER media types default mark in and mark out if not already set.
             # This makes them reasonably short and trimmable in both directions.
@@ -555,8 +557,9 @@ def tline_media_drop(media_file, x, y, use_marks=False):
                 new_clip.mark_in = mark_in
                 new_clip.mark_out = mark_out
         else: # All the rest
-            new_clip.mark_in = media_file.mark_in
-            new_clip.mark_out = media_file.mark_out
+        """
+        new_clip.mark_in = media_file.mark_in
+        new_clip.mark_out = media_file.mark_out
 
         if new_clip.mark_in == -1:
             new_clip.mark_in = 0

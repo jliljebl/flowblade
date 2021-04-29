@@ -129,6 +129,8 @@ def create_pattern_producer(profile, bin_clip):
     except:
         clip = _create_patten_producer_old_style(profile, bin_clip)
 
+    print("create_pattern_producer")
+
     clip.path = ""
     clip.filters = []
     clip.name = bin_clip.name
