@@ -502,7 +502,7 @@ class Thumbnailer:
         producer = mlt.Producer(self.profile, str(file_path))
         if producer.is_valid() == False:
             raise ProducerNotValidError(file_path)
-
+        
         info = utils.get_file_producer_info(producer)
 
         length = producer.get_length()
@@ -519,8 +519,9 @@ class Thumbnailer:
         # This is used for audio files which don't need a thumbnail written
         # but do need file length known
 
-        # Create one frame producer
         producer = mlt.Producer(self.profile, str(file_path))
+        if producer.get("seekable") == "0":
+            raise ProducerNotValidError("Audio file not seekable, cannot be edited.\n\n" + file_path)
         return producer.get_length()
 
 

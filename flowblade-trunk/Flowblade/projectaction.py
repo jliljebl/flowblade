@@ -277,9 +277,11 @@ class AddMediaFilesThread(threading.Thread):
                     PROJECT().add_media_file(new_file, self.compound_clip_name, target_bin)
                     succes_new_file = new_file
                 except projectdata.ProducerNotValidError as err:
-                    print(err.__str__())
+                    #print(err.__str__())
+                    Gdk.threads_enter()
                     dialogs.not_valid_producer_dialog(err.value, gui.editor_window.window)
-            
+                    Gdk.threads_leave()
+
             Gdk.threads_enter()
             gui.media_list_view.fill_data_model()
             max_val = gui.editor_window.media_scroll_window.get_vadjustment().get_upper()
