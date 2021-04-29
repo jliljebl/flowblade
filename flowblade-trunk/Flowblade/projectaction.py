@@ -247,6 +247,7 @@ class AddMediaFilesThread(threading.Thread):
         is_first_video_load = PROJECT().is_first_video_load()
         duplicates = []
         anim_gif_name = None
+        extension_refused = []
         target_bin = PROJECT().c_bin
         succes_new_file = None
         filenames = self.filenames
@@ -259,8 +260,16 @@ class AddMediaFilesThread(threading.Thread):
                  if Image.open(new_file).is_animated == True:
                      anim_gif_name = file_name
                      continue
-                     
+
+            if extension == "" or extension == None:
+                extension_refused.append(new_file)
+                continue
             
+            media_type = utils.get_media_type(new_file)
+            if media_type == appconsts.UNKNOWN:
+                extension_refused.append(new_file)
+                continue
+
             if PROJECT().media_file_exists(new_file):
                 duplicates.append(file_name)
             else:
@@ -301,6 +310,18 @@ class AddMediaFilesThread(threading.Thread):
             secondary_txt = secondary_txt + _("A possible workaround is to render GIF into a frame sequence and\nopen that as a media item.")
             dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
 
+        if len(extension_refused) > 0:
+            primary_txt = _("Opening files with unknown  extensions refused!")
+            secondary_txt = _("Flowblade does not open files that cannot be identified as media from file extensions.\nProblem files:\n\n")
+            if len(extension_refused) > 10:
+                secondary_txt = secondary_txt + _("Too many to list.\n")
+            else:
+                for bad_name in extension_refused:
+                    secondary_txt = secondary_txt + bad_name + "\n"
+                    
+            secondary_txt = secondary_txt + _("\nAdd the correct extension to load a problem file.")
+            dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+            
         Gdk.threads_leave()
 
         if len(duplicates) > 0:
