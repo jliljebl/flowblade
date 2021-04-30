@@ -107,6 +107,7 @@ def get_current_gui_selections():
     selections = {}
     selections["use_user_encodings"] = widgets.render_type_panel.type_combo.get_active()
     selections["encoding_option_index"] = widgets.encoding_panel.encoding_selector.get_selected_encoding_index()
+    selections["encoding_option_name"]  = widgets.encoding_panel.encoding_selector.categorised_combo.get_selected_name() # FIXME
     selections["quality_option_index"]= widgets.encoding_panel.quality_selector.widget.get_active()
     selections["presets_index"] = widgets.render_type_panel.presets_selector.widget.get_active()
     selections["folder"] = widgets.file_panel.out_folder.get_current_folder()
@@ -115,6 +116,8 @@ def get_current_gui_selections():
     selections["markinmarkout"] = (PROJECT().c_seq.tractor.mark_in, PROJECT().c_seq.tractor.mark_out)
     selections["use_project_profile"] = widgets.profile_panel.use_project_profile_check.get_active()
     selections["render_profile"] = widgets.profile_panel.out_profile_combo.widget.get_active()
+    selections["render_profile_name"] = widgets.profile_panel.out_profile_combo.categories_combo.get_selected()
+    selections["audio_frequency"] = widgets.encoding_panel.sample_rate_selector.widget.get_active()
     if widgets.args_panel.use_args_check.get_active() == True:
         if widgets.args_panel.text_buffer == None:
             buf = widgets.args_panel.opts_view.get_buffer()
@@ -131,7 +134,11 @@ def get_current_gui_selections():
 
 def set_saved_gui_selections(selections):
     widgets.render_type_panel.type_combo.set_active(selections["use_user_encodings"])
-    widgets.encoding_panel.encoding_selector.categorised_combo.set_active(selections["encoding_option_index"]) # FIXME
+    try:
+        enc_op_name = selections["encoding_option_name"]
+        widgets.encoding_panel.encoding_selector.categorised_combo.set_selected(enc_op_name)
+    except:
+        print("Old style encoding option value could not be loaded.")
     widgets.encoding_panel.quality_selector.widget.set_active(selections["quality_option_index"])
     widgets.render_type_panel.presets_selector.widget.set_active(selections["presets_index"])
     widgets.file_panel.out_folder.set_current_folder(selections["folder"])
@@ -144,14 +151,18 @@ def set_saved_gui_selections(selections):
             PROJECT().c_seq.tractor.mark_in = mark_in
             PROJECT().c_seq.tractor.mark_out = mark_out
         widgets.profile_panel.use_project_profile_check.set_active(selections["use_project_profile"] )
-        widgets.profile_panel.out_profile_combo.widget.set_active(selections["render_profile"] )
+        try:
+            profile_name = selections["render_profile_name"]
+            widgets.profile_panel.out_profile_combo.categories_combo.set_selected(profile_name)
+        except:
+            print("Old style profile option value could not be loaded.")
         if selections["render_args"] != None:
             widgets.args_panel.use_args_check.set_active(True)
             if widgets.args_panel.text_buffer == None:
                 buf = widgets.args_panel.opts_view.get_buffer()
             else:
                 buf = widgets.args_panel.text_buffer
-            buf.set_text(selections["render_args"])
+        widgets.encoding_panel.sample_rate_selector.widget.set_active(selections["audio_frequency"])
     except:
         pass
     
@@ -472,7 +483,7 @@ def _render_reverse_clip_dialog_callback(dialog, response_id, fb_widgets, media_
         dialog.destroy()
 
 def _REVERSE_render_stop(dialog, response_id):
-    print("reverse clip render done")
+    print("Reverse clip render done")
 
     global motion_renderer, motion_progress_update
     motion_renderer.running = False
