@@ -1,8 +1,13 @@
 <renderencoding version="0.1">
 
+
     <!-- quality qroups are groups of quality options presented with an encoding option -->
     <!-- addargs="arg1=val1 arg2=va2"(space separated list) -->
     <!-- replvalues="replexp1 replval1;replexp2 replval2" (; separated list) -->
+    <!-- @#@# is encoding = e.g. 'format@#@#nv12,hwupload' turns to 'format=nv12,hwupload' -->
+    
+    
+    
     <qualityqroup id="qgroup1" defaultindex="10">
         <quality name="200 kb/s" replvalues="%BITRATE% 200k" />
         <quality name="400 kb/s" replvalues="%BITRATE% 400k" />

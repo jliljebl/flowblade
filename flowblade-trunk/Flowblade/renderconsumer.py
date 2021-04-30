@@ -499,9 +499,16 @@ def _parse_line(line_start, line_end, buf):
         return (None, _("No \'=\' found."))
     sides = line.split("=")
     if len(sides) != 2:
-        return (None, _("Number of tokens on line is ")+ str(len(sides)) + _(", should be 2 (key, value)."))
-    k = sides[0].strip()
-    v = sides[1].strip()
+        k = sides[0].strip()
+        rest = sides[1:len(sides)]
+        v = ""
+        for token in rest:
+            v = v + token + "="
+        v = v.strip("=")
+        v = v.strip()
+    else:
+        k = sides[0].strip()
+        v = sides[1].strip()
     if len(k) == 0:
         return (None, _("Arg name token is empty."))
     if len(v) == 0:
@@ -510,7 +517,7 @@ def _parse_line(line_start, line_end, buf):
         return (None,  _("Whitespace in Arg name."))
     if v.find(" ") != -1:
         return (None,  _("Whitespace in Arg value."))
-        
+
     return ((k,v), None)
 
 
