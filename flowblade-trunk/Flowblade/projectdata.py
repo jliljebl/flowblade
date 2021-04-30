@@ -502,7 +502,9 @@ class Thumbnailer:
         producer = mlt.Producer(self.profile, str(file_path))
         if producer.is_valid() == False:
             raise ProducerNotValidError(file_path)
-        
+        if producer.get("seekable") == "0":
+            raise ProducerNotValidError("Video file not seekable, cannot be edited. Transcode to another format.\n\n" + file_path)
+            
         info = utils.get_file_producer_info(producer)
 
         length = producer.get_length()
