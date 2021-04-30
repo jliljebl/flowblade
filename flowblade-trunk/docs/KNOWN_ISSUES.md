@@ -57,3 +57,13 @@ More here: https://github.com/jliljebl/flowblade/issues/517
 **Workaround:** Re-encode 640x360 into bigger size.
 
 **Status:** No work on a fix is planned.
+
+
+#### 9. Editing .mkv files created with e.g. OBS may cause application to not function properly
+
+.mkv files may have insufficient seek data and are considered unsuitable for editing in NLEs.
+
+**Workaround:** Re-encode file into another format.
+
+**Status:** No work on a fix is planned.
+
