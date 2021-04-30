@@ -47,6 +47,7 @@ import multitrimmode
 # Apr-2017 - SvdB
 import shortcuts
 import re
+import render
 import rotomask
 import tlineaction
 import tlinerender
@@ -74,6 +75,11 @@ def key_down(widget, event):
         elif gui.big_tc.get_visible_child_name() == "BigTCEntry":
             gui.big_tc.set_visible_child_name("BigTCDisplay")
             return True
+    
+    # Make Home and End work on name entry widget.
+    # TODO: See which other components could benefit from this check.
+    if render.widgets.file_panel.movie_name.has_focus():
+        return False
 
     # Compositor editors keyevents
     was_handled = _handle_geometry_editor_keys(event)
