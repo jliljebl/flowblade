@@ -2353,6 +2353,11 @@ def display_media_file_popup_menu(media_file, callback, event):
     if media_file.type != appconsts.PATTERN_PRODUCER:
         media_file_menu.add(_get_menu_item(_("File Properties"), callback, ("File Properties", media_file, event)))
 
+    if hasattr(media_file, "container_data") == True and media_file.container_data == None:
+        if media_file.type != appconsts.PATTERN_PRODUCER and media_file.type != appconsts.AUDIO:
+            _add_separetor(media_file_menu)
+            media_file_menu.add(_get_menu_item(_("Recreate Icon"), callback,("Recreate Icon", media_file, event)))
+            
     if media_file.type != appconsts.IMAGE and media_file.type != appconsts.AUDIO and media_file.type != appconsts.PATTERN_PRODUCER:
         _add_separetor(media_file_menu)
         if media_file.type != appconsts.IMAGE_SEQUENCE:
@@ -2366,6 +2371,7 @@ def display_media_file_popup_menu(media_file, callback, event):
     if hasattr(media_file, "container_data"):
         if media_file.container_data != None:
             if media_file.container_data.editable == True:
+                _add_separetor(media_file_menu)
                 item = _get_menu_item(_("Edit Container Program Edit Data"), callback, ("Edit Container Data", media_file, event))
                 media_file_menu.add(item)
                 item = _get_menu_item(_("Load Container Program Edit Data"), callback, ("Load Container Data", media_file, event))

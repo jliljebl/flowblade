@@ -2274,6 +2274,11 @@ def media_file_menu_item_selected(widget, data):
         media_file.save_program_edit_info()
     if item_id == "Load Container Data":
         media_file.load_program_edit_info()
+    if item_id == "Recreate Icon":
+        (icon_path, length, info) = projectdata.thumbnailer.write_image(media_file.path)
+        media_file.info = info
+        media_file.icon_path = icon_path
+        media_file.create_icon()
         
 def _select_treeview_on_pos_and_return_row_and_column_title(event, treeview):
     selection = treeview.get_selection()
