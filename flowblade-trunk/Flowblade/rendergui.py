@@ -593,11 +593,11 @@ def get_render_panel_left(render_widgets):
     if small_height == False:
         encoding_panel = guiutils.get_named_frame(_("Encoding Format"), render_widgets.encoding_panel.vbox, 4)
     
-    render_type_panel = guiutils.get_named_frame(_("Render Type"), render_widgets.render_type_panel.vbox, 4)
+    #render_type_panel = guiutils.get_named_frame(_("Render Type"), render_widgets.render_type_panel.vbox, 4)
     
     render_panel = Gtk.VBox()
     render_panel.pack_start(file_opts_panel, False, False, 0)
-    render_panel.pack_start(render_type_panel, False, False, 0)
+    #render_panel.pack_start(render_type_panel, False, False, 0)
     render_panel.pack_start(profile_panel, False, False, 0)
     if small_height == False:
         render_panel.pack_start(encoding_panel, False, False, 0)
@@ -695,7 +695,7 @@ class RenderFilePanel():
         self.out_folder.set_tooltip_text(_("Select folder to place rendered file in"))
         self.movie_name.set_tooltip_text(_("Give name for rendered file"))
 
-
+"""
 class RenderTypePanel():
     
     def __init__(self, render_type_changed_callback, preset_selection_changed_callback):
@@ -714,6 +714,7 @@ class RenderTypePanel():
                                                          self.type_combo, 80), 
                                                          False, False, 0)
         self.vbox.pack_start(self.presets_selector.widget, False, False, 0)
+"""
 
 class RenderProfilePanel():
 

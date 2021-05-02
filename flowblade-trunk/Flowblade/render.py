@@ -79,11 +79,13 @@ def get_args_vals_list_for_current_selections():
     profile = get_current_profile()
     encoding_option_index = widgets.encoding_panel.encoding_selector.get_selected_encoding_index()
     quality_option_index = widgets.encoding_panel.quality_selector.widget.get_active()
-        
+    """
     if widgets.render_type_panel.type_combo.get_active() == 1: # Preset encodings                                                                             -1)
         encoding_option = renderconsumer.non_user_encodings[widgets.render_type_panel.presets_selector.widget.get_active()]
         args_vals_list = encoding_option.get_args_vals_tuples_list(profile)
-    elif widgets.args_panel.use_args_check.get_active() == False: # User encodings
+    """
+
+    if widgets.args_panel.use_args_check.get_active() == False: # User encodings
         args_vals_list = renderconsumer.get_args_vals_tuples_list_for_encoding_and_quality( profile, 
                                                                                             encoding_option_index, 
                                                                                             quality_option_index)
@@ -105,11 +107,11 @@ def get_args_vals_list_for_current_selections():
 
 def get_current_gui_selections():
     selections = {}
-    selections["use_user_encodings"] = widgets.render_type_panel.type_combo.get_active()
+    #selections["use_user_encodings"] = widgets.render_type_panel.type_combo.get_active()
     selections["encoding_option_index"] = widgets.encoding_panel.encoding_selector.get_selected_encoding_index()
     selections["encoding_option_name"]  = widgets.encoding_panel.encoding_selector.categorised_combo.get_selected_name() # FIXME
     selections["quality_option_index"]= widgets.encoding_panel.quality_selector.widget.get_active()
-    selections["presets_index"] = widgets.render_type_panel.presets_selector.widget.get_active()
+    #selections["presets_index"] = widgets.render_type_panel.presets_selector.widget.get_active()
     selections["folder"] = widgets.file_panel.out_folder.get_current_folder()
     selections["name"] = widgets.file_panel.movie_name.get_text()
     selections["range"] = widgets.range_cb.get_active()
@@ -133,14 +135,14 @@ def get_current_gui_selections():
     return selections
 
 def set_saved_gui_selections(selections):
-    widgets.render_type_panel.type_combo.set_active(selections["use_user_encodings"])
+    #widgets.render_type_panel.type_combo.set_active(selections["use_user_encodings"])
     try:
         enc_op_name = selections["encoding_option_name"]
         widgets.encoding_panel.encoding_selector.categorised_combo.set_selected(enc_op_name)
     except:
         print("Old style encoding option value could not be loaded.")
     widgets.encoding_panel.quality_selector.widget.set_active(selections["quality_option_index"])
-    widgets.render_type_panel.presets_selector.widget.set_active(selections["presets_index"])
+    #widgets.render_type_panel.presets_selector.widget.set_active(selections["presets_index"])
     widgets.file_panel.out_folder.set_current_folder(selections["folder"])
     widgets.file_panel.movie_name.set_text(selections["name"])
     widgets.range_cb.set_active(selections["range"])
@@ -192,7 +194,7 @@ def create_widgets():
     Widgets for editing render properties and viewing render progress.
     """
     widgets.file_panel = rendergui.RenderFilePanel()
-    widgets.render_type_panel = rendergui.RenderTypePanel(_render_type_changed, _preset_selection_changed)
+    #widgets.render_type_panel = rendergui.RenderTypePanel(_render_type_changed, _preset_selection_changed)
     widgets.profile_panel = rendergui.RenderProfilePanel(_out_profile_changed)
     widgets.encoding_panel = rendergui.RenderEncodingPanel(widgets.file_panel.extension_label)
     if (editorstate.SCREEN_HEIGHT > 898):
@@ -262,6 +264,7 @@ def reload_profiles():
     renderconsumer.load_render_profiles()
     fill_out_profile_widgets()
 
+"""
 def _render_type_changed():
     if widgets.render_type_panel.type_combo.get_active() == 0: # User Defined
         enable_user_rendering(True)
@@ -276,7 +279,7 @@ def _render_type_changed():
         if editorstate.screen_size_small_height() == False:
             widgets.args_panel.opts_view.set_sensitive(False)
             widgets.args_panel.opts_view.get_buffer().set_text("")
-
+"""
 def _out_profile_changed(categories_combo):
     # FIXME: 'out_profile_combo' is actually the panel containing the combobox
     profile_desc = widgets.profile_panel.out_profile_combo.categories_combo.get_selected()
@@ -287,12 +290,13 @@ def _fill_info_box(profile):
     info_panel = guicomponents.get_profile_info_small_box(profile)
     widgets.info_panel = info_panel
     widgets.profile_panel.out_profile_info_box.display_info(info_panel)
-
+"""
 def _preset_selection_changed():
     enc_index = widgets.render_type_panel.presets_selector.widget.get_active()
     ext = renderconsumer.non_user_encodings[enc_index].extension
     widgets.file_panel.extension_label.set_text("." + ext)
-   
+"""
+
 def _display_selection_in_opts_view():
     profile = get_current_profile()
     widgets.args_panel.display_encoding_args(profile,

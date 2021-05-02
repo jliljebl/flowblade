@@ -240,6 +240,7 @@ def get_encoding_desc(args_vals_list):
 
 
 # ----------------------------------------------------------------- helper functions
+"""
 def _render_type_changed(w):
     if w.get_active() == 0: # User Defined
         widgets.render_type_panel.presets_selector.widget.set_sensitive(False)
@@ -256,7 +257,8 @@ def _preset_selection_changed(w):
     enc_index = w.get_active()
     ext = encs[enc_index].extension
     widgets.file_panel.extension_label.set_text("." + ext)
-    
+"""
+
 def _out_profile_changed(categorized_combo):
     profile = mltprofiles.get_profile(categorized_combo.get_selected())
     _fill_info_box(profile)
