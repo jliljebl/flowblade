@@ -466,11 +466,11 @@ def _create_relink_media_button_pressed():
     media_asset = linker_window.get_selected_media_asset()
 
     if media_asset.media_type == appconsts.IMAGE:
-        info_text = _("Creating place holder image...")
+        info_text = _("Creating placeholder image...")
     elif media_asset.media_type == appconsts.AUDIO:
-        info_text = _("Creating place holder audio...")
+        info_text = _("Creating placeholder audio...")
     elif media_asset.media_type == appconsts.VIDEO:
-        info_text = _("Creating place holder video...")
+        info_text = _("Creating placeholder video...")
 
     linker_window.msg_label.set_text(info_text)
 

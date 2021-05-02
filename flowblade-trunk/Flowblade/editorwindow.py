@@ -69,6 +69,7 @@ import patternproducer
 from positionbar import PositionBar
 import preferenceswindow
 import projectaction
+import projectaddmediafolder
 import projectinfogui
 import proxyediting
 import scripttool
@@ -824,7 +825,7 @@ class EditorWindow:
             ('FullScreen', None, _('Fullscreen'), 'F11', None, lambda a:menuactions.toggle_fullscreen()),
             ('ProjectMenu', None, _('Project')),
             ('AddMediaClip', None, _('Add Video, Audio or Image...'), None, None, lambda a: projectaction.add_media_files()),
-            ('AddMediaFolder', None, _('Add Media Folder...'), None, None, lambda a: projectaction.add_media_folder()),
+            ('AddMediaFolder', None, _('Add Media Folder...'), None, None, lambda a: projectaddmediafolder.show_add_media_folder_dialog()),
             ('AddImageSequence', None, _('Add Image Sequence...'), None, None, lambda a:projectaction.add_image_sequence()),
             ('CreateColorClip', None, _('Create Color Clip...'), None, None, lambda a:patternproducer.create_color_clip()),
             ('BinMenu', None, _('Bin')),
@@ -940,6 +941,8 @@ class EditorWindow:
                 <menu action='ProjectMenu'>
                     <menuitem action='AddMediaClip'/>
                     <menuitem action='AddImageSequence'/>
+                    <separator/>
+                    <menuitem action='AddMediaFolder'/>
                     <separator/>
                     <menuitem action='CreateColorClip'/>
                     <menu action='MediaPluginsMenu'/>

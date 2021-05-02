@@ -25,7 +25,6 @@ Load, save, add media file, etc...
 
 import copy
 import datetime
-import fnmatch
 import glob
 import hashlib
 import mlt
@@ -1171,110 +1170,7 @@ def _add_image_sequence_callback(dialog, response_id, data):
 
     editorpersistance.prefs.last_opened_media_dir = os.path.dirname(resource_path)
     editorpersistance.save()
-
-def add_media_folder():
-    dialogs.add_media_folder_dialog(_add_media_folder_callback, gui.editor_window.window)
-
-def _add_media_folder_callback(dialog, response_id, data):
-    if response_id == Gtk.ResponseType.CANCEL:
-        dialog.destroy()
-        return
-
-    file_chooser, file_filter_select, create_bin_checkbox, recursively_checkbox, use_extension_checkbox, \
-    extension_entry, maximum_select = data
     
-    add_folder = file_chooser.get_filenames()[0]
-    file_filter = file_filter_select.get_active()
-    create_bin = create_bin_checkbox.get_active()
-    search_recursively = recursively_checkbox.get_active()
-    use_extension = use_extension_checkbox.get_active()
-    user_extensions = extension_entry.get_text()
-    maximum_file_option = maximum_select.get_active()
-    
-    dialog.destroy()
-
-    if add_folder == None:
-        return
-    
-    if search_recursively == True:
-        candidate_files = []
-        for root, dirnames, filenames in os.walk(add_folder):
-            for filename in filenames:
-                candidate_files.append(os.path.join(root, filename))
-    else:
-        candidate_files = [f for f in os.listdir(add_folder) if os.path.isfile(os.path.join(add_folder, f))]
-
-    if use_extension == False:
-        if file_filter == 0: # "All Files", see dialogs.py
-            filtered_files = candidate_files
-        else:
-            filtered_files = []
-            for cand_file in candidate_files:
-                file_type = utils.get_file_type(cand_file)
-                if file_filter == 1 and file_type == "video": # 1 = "Video Files", see dialogs.py
-                    filtered_files.append(cand_file)
-                elif file_filter == 2 and file_type == "audio": # 2 = "Audio Files", see dialogs.py
-                    filtered_files.append(cand_file)
-                elif file_filter == 3 and file_type == "image": # 3 = "Image Files", see dialogs.py
-                    filtered_files.append(cand_file)
-    else:
-        # Try to accept spaces, commas and periods between extensions.
-        stage1 = user_extensions.replace(",", " ")
-        stage2 = stage1.replace(".", " ")
-        exts = stage2.split()
-
-        filtered_files = []
-        for ext in exts:
-            for cand_file in candidate_files:
-                if fnmatch.fnmatch(cand_file, "*." + ext):
-                    filtered_files.append(cand_file)
-    
-    # This recursive, we need upper limit always
-    max_files = 29
-    if maximum_file_option == 1:
-        max_files = 49 # see dialogs.py 
-    elif maximum_file_option == 2:
-        max_files = 99 # see dialogs.py
-    elif maximum_file_option == 3:
-        max_files = 199 # see dialogs.py
-        
-    filtered_amount = len(filtered_files)
-    if filtered_amount > max_files:
-        filtered_files = filtered_files[0:max_files]
-        dialogs.add_media_folder_files_exceeded(_add_media_folder_files_exceeded_cb, filtered_amount, max_files, (filtered_files, create_bin, add_folder))
-    else:
-        _do_folder_media_import(filtered_files, create_bin, add_folder)
-
-def _add_media_folder_files_exceeded_cb(dialog, response_id, data):
-    dialog.destroy()
-    if response_id != Gtk.ResponseType.CANCEL:
-        _do_folder_media_import(*data)
-
-def _do_folder_media_import(add_files, create_bin, add_folder):
-    if create_bin == False:
-        add_media_thread = AddMediaFilesThread(add_files)
-        add_media_thread.start()
-    else:
-
-        PROJECT().add_unnamed_bin()
-        gui.bin_list_view.fill_data_model()
-        selection = gui.bin_list_view.treeview.get_selection()
-        model, iterator = selection.get_selected()
-        selection.select_path(str(len(model)-1))
-        
-        
-        folder_name = os.path.basename(add_folder)
-        model, iterator = selection.get_selected()  #if iterator is immutable?
-        model.set_value(iterator, 1, folder_name)
-        model, rows = selection.get_selected_rows()
-        row = max(rows[0])
-        PROJECT().bins[int(row)].name = folder_name
-        _enable_save()
-        gui.editor_window.bin_info.display_bin_info()
-
-        add_media_thread = AddMediaFilesThread(add_files)
-        add_media_thread.start()
-        
 def open_rendered_file(rendered_file_path):
     add_media_thread = AddMediaFilesThread([rendered_file_path])
     add_media_thread.start()
