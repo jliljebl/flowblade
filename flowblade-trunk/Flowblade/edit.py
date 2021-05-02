@@ -2077,7 +2077,13 @@ def _paste_filters_undo(self):
     
 def _paste_filters_redo(self):
     if not hasattr(self, "clone_filters"):
-        self.clone_filters = current_sequence().clone_filters(self.clone_source_clip)
+        candidate_filters = current_sequence().clone_filters(self.clone_source_clip)
+        self.clone_filters = []
+        for i in range(0, len(self.clone_source_clip.filters)):
+            old_filter = self.clone_source_clip.filters[i]
+            clone_filter = candidate_filters[i]
+            if old_filter.active == True:
+                self.clone_filters.append(clone_filter)
         self.old_filters = self.clip.filters
 
     _detach_all(self.clip)

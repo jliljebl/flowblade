@@ -1923,6 +1923,10 @@ def do_timeline_objects_copy():
         for i in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
             clone_clip = current_sequence().clone_track_clip(track, i)
             clone_clips.append(clone_clip)
+            source_clip = track.clips[i]
+            for j in range(0, len(clone_clip.filters)):
+                clone_clip.filters[j].active = source_clip.filters[j].active
+                
         editorstate.set_copy_paste_objects((COPY_PASTE_DATA_CLIPS, clone_clips))
         return
 
