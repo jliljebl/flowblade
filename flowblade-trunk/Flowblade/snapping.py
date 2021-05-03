@@ -187,7 +187,8 @@ def _overwrite_move_snap(x, track, frame, edit_data):
 
     snapped_x = -1 # if value stays same till end, no snapping has happened
     snapped_x = _three_track_snap(track, x, first_clip_frame, first_clip_x)
-    snapped_x = _playhead_snap(x, first_clip_x)
+    if snapped_x == -1:
+        snapped_x = _playhead_snap(x, first_clip_x)
                     
     # Return either original x or snapped x
     return return_snapped_x_or_x(snapped_x, x)
@@ -200,7 +201,8 @@ def _object_end_drag_snap(x, track, frame, edit_data):
 
     snapped_x = -1  # if value stays same till end, no snapping happened.
     snapped_x = _three_track_snap(track, x, frame, frame_x)
-    snapped_x = _playhead_snap(x, frame_x)
+    if snapped_x == -1:
+        snapped_x = _playhead_snap(x, frame_x)
     
     # Return either original or snapped x
     return return_snapped_x_or_x(snapped_x, x)
