@@ -17,17 +17,43 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
-from gi.repository import Gtk
+from gi.repository import Gtk, GObject
 
+import cairo
 import copy
 import json
 
+import cairoarea
 import containerclip
+import editorpersistance
+import gui
+import guicomponents
+import guiutils
 import respaths
 
 _plugins = []
 _plugins_groups = []
 
+_add_plugin_window = None
+_plugins_menu = Gtk.Menu()
+
+_selected_plugin = None
+_current_screenshot_surface = None
+
+# --------------------------------------------------------- plugin
+class MediaPlugin:
+    
+    def __init__(self, folder, name, category):
+        self.folder = folder
+        self.name = name
+        self.category = category
+    
+    def get_screenshot_surface(self):
+        icon_path = respaths.MEDIA_PLUGINS_PATH + self.folder + "/screenshot.png"
+        print(icon_path)
+        return cairo.ImageSurface.create_from_png(icon_path)
+
+# --------------------------------------------------------------- interface
 def init():
     # Load Plugins
     plugins_list_json = open(respaths.MEDIA_PLUGINS_PATH + "plugins.json")
@@ -66,6 +92,35 @@ def init():
         add_group = sorted(group, key=lambda plugin: plugin.name)
         _plugins_groups.append((gkey, add_group))
 
+
+def show_add_media_plugin_window():
+    global _add_plugin_window
+    _add_plugin_window = AddMediaPluginWindow()
+
+def _close_window():
+    global _add_plugin_window
+    _add_plugin_window.set_visible(False)
+    _add_plugin_window.destroy()
+
+def _close_clicked():
+    _close_window()
+
+# ------------------------------------------------------------ functionality
+def _get_categories_list():
+    categories_list = []
+    # categories_list is list of form [("category_name", [category_items]), ...]
+    # with category_items list of form ["item_name", ...]
+             
+    for group in _plugins_groups:
+        group_name, group_plugins = group
+        plugins_list = []
+        for plugin in group_plugins:
+            plugins_list.append((plugin.name,plugin))
+        
+        categories_list.append((group_name, plugins_list))
+    
+    return categories_list  
+        
     
 def fill_media_plugin_sub_menu(menu, callback=None):
     for group_data in _plugins_groups:
@@ -96,10 +151,69 @@ def get_plugin_code(plugin_folder):
     return args_file.read()
         
 
-class MediaPlugin:
-    
-    def __init__(self, folder, name, category):
-        self.folder = folder
-        self.name = name
-        self.category = category
+
+# --------------------------------------------------------- window
+class AddMediaPluginWindow(Gtk.Window):
+    def __init__(self):
+        GObject.GObject.__init__(self)
+        self.set_modal(True)
+        self.set_transient_for(gui.editor_window.window)
+        self.set_title(_("Add Media Plugin"))
+        self.connect("delete-event", lambda w, e:_close_window())
+
+        # categories_list is list of form [("category_name", [category_items]), ...]
+        # with category_items list of form ["item_name", ...]
+        self.plugin_select = guicomponents.CategoriesModelComboBoxWithData(_get_categories_list())
+        self.plugin_select.set_changed_callback(self._plugin_selection_changed)
+
+        plugin_label = Gtk.Label(label=_("Media Plugin:"))
+        plugin_select_row = guiutils.get_two_column_box(plugin_label, self.plugin_select.widget, 220)
+
+        self.screenshot_canvas = cairoarea.CairoDrawableArea2(240, 180, self._draw_screenshot)
+        screenshot_row = guiutils.get_centered_box([self.screenshot_canvas ])
+        guiutils.set_margins(screenshot_row, 12, 12, 0, 0)
         
+        close_button = Gtk.Button(_("Close"))
+        close_button.connect("clicked", lambda w: _close_clicked())
+        self.add_button = Gtk.Button(_("Add Media"))
+        #self.add_button.connect("clicked", lambda w: _do_folder_media_import())
+        self.add_button.set_sensitive(False)
+        self.load_info_2 = Gtk.Label() 
+        row8 = Gtk.HBox(False, 0)
+        row8.pack_start(self.load_info_2, False, False, 0)
+        row8.pack_start(Gtk.Label(), True, True, 0)
+        row8.pack_start(close_button, False, False, 0)
+        row8.pack_start(self.add_button, False, False, 0)
+
+        vbox = Gtk.VBox(False, 2)
+        vbox.pack_start(plugin_select_row, False, False, 0)
+        vbox.pack_start(screenshot_row, False, False, 0)
+        vbox.pack_start(row8, False, False, 0)
+        
+        alignment = guiutils.set_margins(vbox, 8, 8, 12, 12)
+
+        self.add(alignment)
+        self.set_position(Gtk.WindowPosition.CENTER)  
+        self.show_all()
+    
+        self.plugin_select.set_selected(_plugins[0].name)
+
+    def _draw_screenshot(self, event, cr, allocation):
+        if _selected_plugin == None:
+            return
+
+        cr.set_source_surface(_current_screenshot_surface, 0, 0)
+        cr.paint()
+                    
+    def _plugin_selection_changed(self, combo):
+        name, _new_selected_plugin = self.plugin_select.get_selected()
+        print(_new_selected_plugin.name)
+        global _selected_plugin, _current_screenshot_surface
+        _selected_plugin = _new_selected_plugin
+        _current_screenshot_surface = _selected_plugin.get_screenshot_surface()
+        
+        self.screenshot_canvas.queue_draw()
+        
+        
+
+    

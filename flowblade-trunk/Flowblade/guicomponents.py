@@ -3410,11 +3410,27 @@ class PressLaunch:
         self.surface = surface
         self.surface_x = 6
         self.surface_y = 6
+        
+        self.draw_triangle = False # set True at creation site if needed
 
     def _draw(self, event, cr, allocation):
-        cr.set_source_surface(self.surface, self.surface_x, self.surface_y)
-        cr.paint()
+        if self.draw_triangle == False:
+            cr.set_source_surface(self.surface, self.surface_x, self.surface_y)
+            cr.paint()
+        else:
+            self._draw_triangle(event, cr, allocation)  
 
+    def _draw_triangle(self, event, cr, allocation):      
+        cr.move_to(7, 13)
+        cr.line_to(12, 18)
+        cr.line_to(17, 13)
+        cr.close_path()
+        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
+            cr.set_source_rgb(0, 0, 0)
+        else:
+            cr.set_source_rgb(0.66, 0.66, 0.66)
+        cr.fill()
+        
     def _press_event(self, event):
         self.callback(self.widget, event)
 
@@ -3690,6 +3706,9 @@ class CategoriesModelComboBox:
         self.widget.pack_start(renderer_text, True)
         self.widget.add_attribute(renderer_text, "text", 0)
 
+    def set_changed_callback(self, callback):
+        self.widget.connect("changed", callback)
+
     def set_selected(self, active_item_name):
         for i in range(0, len(self.categories_list)):
             name, items = self.categories_list[i]
@@ -3705,6 +3724,7 @@ class CategoriesModelComboBox:
         
 def get_encodings_combo():
     return CategoriesModelComboBoxWithData(renderconsumer.categorized_encoding_options)
+
 
 class CategoriesModelComboBoxWithData:
     
@@ -3726,6 +3746,9 @@ class CategoriesModelComboBoxWithData:
         self.widget.pack_start(renderer_text, True)
         self.widget.add_attribute(renderer_text, "text", 0)
 
+    def set_changed_callback(self, callback):
+        self.widget.connect("changed", callback)
+        
     def set_selected(self, active_item_name):
         for i in range(0, len(self.categories_list)):
             name, items = self.categories_list[i]

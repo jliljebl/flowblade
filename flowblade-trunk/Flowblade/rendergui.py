@@ -703,8 +703,6 @@ class RenderFilePanel():
 class RenderRangePanel():
     
     def __init__(self, range_selector):
-        self.type_label = Gtk.Label(label=_("Type:"))
-
         self.vbox = Gtk.VBox(False, 2)
         self.vbox.pack_start(range_selector, False, False, 0)
 
