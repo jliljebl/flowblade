@@ -590,8 +590,8 @@ def get_render_panel_left(render_widgets):
     file_opts_panel = guiutils.get_named_frame(_("File"), render_widgets.file_panel.vbox, 4)         
     profile_panel = guiutils.get_named_frame(_("Render Profile"), render_widgets.profile_panel.vbox, 4)
 
-    if small_height == False:
-        encoding_panel = guiutils.get_named_frame(_("Encoding Format"), render_widgets.encoding_panel.vbox, 4)
+    #if small_height == False:
+    encoding_panel = guiutils.get_named_frame(_("Encoding Format"), render_widgets.encoding_panel.vbox, 4)
     
     #render_type_panel = guiutils.get_named_frame(_("Render Type"), render_widgets.render_type_panel.vbox, 4)
     
@@ -600,10 +600,12 @@ def get_render_panel_left(render_widgets):
     #render_panel.pack_start(render_type_panel, False, False, 0)
     render_panel.pack_start(profile_panel, False, False, 0)
     if small_height == False:
+        render_range_panel = guiutils.get_named_frame(_("Range"), render_widgets.render_range_panel.vbox, 4)
         render_panel.pack_start(encoding_panel, False, False, 0)
+        render_panel.pack_start(render_range_panel, False, False, 0)
         render_panel.pack_start(Gtk.Label(), True, True, 0)
-    elif editorstate.SCREEN_HEIGHT == 900: # 900px height screens need most small height fixes but not this
-        encoding_panel = guiutils.get_named_frame(_("Encoding Format"), render_widgets.encoding_panel.vbox, 4)
+    else:
+        #encoding_panel = guiutils.get_named_frame(_("Encoding Format"), render_widgets.encoding_panel.vbox, 4)
         render_panel.pack_start(encoding_panel, False, False, 0)
         render_panel.pack_start(Gtk.Label(), True, True, 0)
     
@@ -611,29 +613,25 @@ def get_render_panel_left(render_widgets):
 
 def get_render_panel_right(render_widgets, render_clicked_cb, to_queue_clicked_cb):
 
-    if editorstate.SCREEN_HEIGHT < 900:
-        encoding_panel = guiutils.get_named_frame(_("Encoding Format"), render_widgets.encoding_panel.vbox, 4)
+    #if editorstate.SCREEN_HEIGHT < 900:
+    #    encoding_panel = guiutils.get_named_frame(_("Encoding Format"), render_widgets.encoding_panel.vbox, 4)
 
-    small_height = (editorstate.SCREEN_HEIGHT < 902)
+    small_height = editorstate.screen_size_small_height() #(editorstate.SCREEN_HEIGHT < 902)
     
     opts_panel = guiutils.get_named_frame(_("Render Args"), render_widgets.args_panel.vbox, 4)
-    
+
     bin_row = Gtk.HBox()
-    bin_row.pack_start(guiutils.get_pad_label(10, 8),  False, False, 0)
+    bin_row.pack_start(guiutils.get_pad_label(5, 8),  False, False, 0)
     bin_row.pack_start(render_widgets.args_panel.open_in_bin,  False, False, 0)
     bin_row.pack_start(guiutils.get_pad_label(4, 1),  False, False, 0)
     bin_row.pack_start(Gtk.Label(label=_("Open File in Bin")),  False, False, 0)
     bin_row.pack_start(Gtk.Label(), True, True, 0)
     guiutils.set_margins(bin_row, 0,2,0,0)
-
-    range_row = Gtk.HBox()
-    range_row.pack_start(guiutils.get_pad_label(10, 8),  False, False, 0)
-    range_row.pack_start(render_widgets.range_cb,  True, True, 0)
-
+    
     buttons_panel = Gtk.HBox()
-    if not  editorstate.screen_size_small_width():
-        buttons_panel.pack_start(Gtk.Label(), True, True, 0)
-        buttons_panel.pack_start(render_widgets.queue_button, False, False, 0)
+    #if not editorstate.screen_size_small_width():
+    buttons_panel.pack_start(Gtk.Label(), True, True, 0)
+    buttons_panel.pack_start(render_widgets.queue_button, False, False, 0)
     buttons_panel.pack_start(Gtk.Label(), True, True, 0)
     buttons_panel.pack_start(render_widgets.render_button, False, False, 0)
 
@@ -647,22 +645,28 @@ def get_render_panel_right(render_widgets, render_clicked_cb, to_queue_clicked_c
 
     render_panel = Gtk.VBox()
     if small_height:
+        render_range_panel = guiutils.get_named_frame(_("Range"), render_widgets.render_range_panel.vbox, 4)
+        render_panel.pack_start(render_range_panel, False, False, 0)
         if editorstate.SCREEN_HEIGHT < 900:
-            render_panel.pack_start(encoding_panel, False, False, 0)
-        render_panel.pack_start(opts_panel, True, True, 0)
+            render_panel.pack_start(opts_panel, False, False, 0)
+        else:
+            render_panel.pack_start(opts_panel, True, True, 0)
     else:
         render_panel.pack_start(opts_panel, True, True, 0)
     if small_height == False:
-        render_panel.pack_start(guiutils.get_pad_label(10, 22), False, False, 0)
+        #render_panel.pack_start(guiutils.get_pad_label(10, 12), False, False, 0)
         render_panel.pack_start(bin_row, False, False, 0)
     else:
-        render_panel.pack_start(Gtk.Label(), True, True, 0)
+        render_panel.pack_start(guiutils.get_pad_label(10, 12), False, False, 0)
+        render_panel.pack_start(bin_row, False, False, 0)
+        if editorstate.SCREEN_HEIGHT < 900:
+            render_panel.pack_start(Gtk.Label(), True, True, 0)
     
-    render_panel.pack_start(range_row, False, False, 0)
+    #render_panel.pack_start(range_row, False, False, 0)
     if small_height == False:
         render_panel.pack_start(guiutils.get_pad_label(10, 12), False, False, 0)
-    else:
-        render_panel.pack_start(guiutils.get_pad_label(10, 4), False, False, 0)
+    #else:
+    #    render_panel.pack_start(guiutils.get_pad_label(10, 4), False, False, 0)
     render_panel.pack_start(buttons_panel, False, False, 0)
 
     return render_panel
@@ -694,6 +698,16 @@ class RenderFilePanel():
 
         self.out_folder.set_tooltip_text(_("Select folder to place rendered file in"))
         self.movie_name.set_tooltip_text(_("Give name for rendered file"))
+
+
+class RenderRangePanel():
+    
+    def __init__(self, range_selector):
+        self.type_label = Gtk.Label(label=_("Type:"))
+
+        self.vbox = Gtk.VBox(False, 2)
+        self.vbox.pack_start(range_selector, False, False, 0)
+
 
 """
 class RenderTypePanel():

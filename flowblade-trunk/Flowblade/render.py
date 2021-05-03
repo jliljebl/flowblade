@@ -210,10 +210,10 @@ def create_widgets():
     widgets.range_cb = rendergui.get_range_selection_combo()
     widgets.queue_button = Gtk.Button(_("To Queue"))
     widgets.queue_button.set_tooltip_text(_("Save Project in Render Queue"))
-    
-    # Tooltips
-    widgets.range_cb.set_tooltip_text(_("Select render range"))
+    widgets.render_range_panel = rendergui.RenderRangePanel(widgets.range_cb)
 
+    # Add some tooltips
+    widgets.range_cb.set_tooltip_text(_("Select render range"))
     widgets.render_button.set_tooltip_text(_("Begin Rendering"))
 
 def set_default_values_for_widgets(movie_name_too=False):
