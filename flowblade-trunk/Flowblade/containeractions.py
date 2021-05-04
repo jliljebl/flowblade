@@ -428,13 +428,13 @@ class AbstractContainerActionObject:
         
     def _build_icon(self, icon_path):
         cr, surface = _create_image_surface(icon_path)
-        cr.rectangle(0, 0, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
-        cr.set_source_rgba(*OVERLAY_COLOR)
-        cr.fill()
+        #cr.rectangle(0, 0, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
+        #cr.set_source_rgba(*OVERLAY_COLOR)
+        #cr.fill()
         type_icon = _get_type_icon(self.container_data.container_type)
         cr.set_source_surface(type_icon, 1, 30)
-        cr.set_operator (cairo.OPERATOR_OVERLAY)
-        cr.paint_with_alpha(0.5)
+        #cr.set_operator (cairo.OPERATOR_OVERLAY)
+        cr.paint() #_with_alpha(0.5)
         return surface
         
     def load_icon(self):
@@ -740,13 +740,13 @@ class FluxityContainerActions(AbstractContainerActionObject):
             icon_path, not_used_length, info = _write_thumbnail_image(PROJECT().profile, self.container_data.data_slots["icon_file"], self)
 
         cr, surface = _create_image_surface(icon_path)
-        cr.rectangle(0, 0, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
-        cr.set_source_rgba(*OVERLAY_COLOR)
-        cr.fill()
+        #cr.rectangle(0, 0, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
+        #cr.set_source_rgba(*OVERLAY_COLOR)
+        #cr.fill()
         type_icon = _get_type_icon(appconsts.CONTAINER_CLIP_FLUXITY)
         cr.set_source_surface(type_icon, 1, 30)
-        cr.set_operator (cairo.OPERATOR_OVERLAY)
-        cr.paint_with_alpha(0.5)
+        #cr.set_operator (cairo.OPERATOR_OVERLAY)
+        cr.paint() #_with_alpha(0.5)
  
         data_object = self.container_data.data_slots["fluxity_plugin_edit_data"]
         length = data_object["length"]

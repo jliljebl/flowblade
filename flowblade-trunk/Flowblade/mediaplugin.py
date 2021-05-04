@@ -21,8 +21,11 @@ from gi.repository import Gtk, GObject
 
 import cairo
 import copy
+import hashlib
 import json
+import os
 
+import appconsts
 import cairoarea
 import containerclip
 import editorpersistance
@@ -34,6 +37,7 @@ import guiutils
 import mltprofiles
 import respaths
 import simpleeditors
+import userfolders
 
 MONITOR_WIDTH = 400
 MONITOR_HEIGHT = -1
@@ -158,7 +162,9 @@ def fill_media_plugin_sub_menu(menu, callback=None):
 
 def _add_media_plugin():
     script_file = _selected_plugin.get_plugin_script_file()
-    screenshot_file = _selected_plugin.get_screenshot_file()
+    md_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
+    screenshot_file = userfolders.get_cache_dir() + appconsts.THUMBNAILS_DIR + "/" + md_str +  ".png"
+    _current_screenshot_surface.write_to_png(screenshot_file)
     _current_plugin_data_object["editors_list"] = simpleeditors.get_editors_data_as_editors_list(_add_plugin_window.plugin_editors.editor_widgets)
     containerclip.create_fluxity_media_item_from_plugin(script_file, screenshot_file, _current_plugin_data_object)
 
