@@ -35,8 +35,8 @@ import mltprofiles
 import respaths
 import simpleeditors
 
-MONITOR_WIDTH = 320
-MONITOR_HEIGHT = 240
+MONITOR_WIDTH = 400
+MONITOR_HEIGHT = -1
 
 SIMPLE_EDITOR_LEFT_WIDTH = 150
 
@@ -182,7 +182,9 @@ class AddMediaPluginWindow(Gtk.Window):
         plugin_label = Gtk.Label(label=_("Media Plugin:"))
         plugin_select_row = guiutils.get_two_column_box(plugin_label, self.plugin_select.widget, 220)
 
-        self.screenshot_canvas = cairoarea.CairoDrawableArea2(240, 180, self._draw_screenshot)
+        global MONITOR_HEIGHT
+        MONITOR_HEIGHT = int(MONITOR_WIDTH * float(current_sequence().profile.display_aspect_den()) / float(current_sequence().profile.display_aspect_num()))
+        self.screenshot_canvas = cairoarea.CairoDrawableArea2(MONITOR_WIDTH, MONITOR_HEIGHT, self._draw_screenshot)
         screenshot_row = guiutils.get_centered_box([self.screenshot_canvas ])
         guiutils.set_margins(screenshot_row, 12, 12, 0, 0)
 
@@ -267,7 +269,17 @@ class AddMediaPluginWindow(Gtk.Window):
 
         cr.set_source_surface(_current_screenshot_surface, 0, 0)
         cr.paint()
-                    
+        
+        w, y, w, h = allocation
+        cr.set_source_rgb(0, 0, 0)
+        cr.set_line_width(1.0)
+        cr.move_to(0.5, 0.5)
+        cr.line_to(w - 0.5, 0.5)
+        cr.line_to(w - 0.5, h - 0.5)
+        cr.line_to(0.5, h - 0.5)
+        cr.line_to(0.5, 0.5)
+        cr.stroke()
+                            
     def _plugin_selection_changed(self, combo):
         name, new_selected_plugin = self.plugin_select.get_selected()
         print(new_selected_plugin.name)
