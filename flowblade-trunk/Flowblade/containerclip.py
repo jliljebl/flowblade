@@ -276,12 +276,13 @@ def create_fluxity_media_item():
     #media_file_select, row2 = _get_file_select_row_and_editor(_("Video Clip:"))
     _open_rows_dialog(_fluxity_clip_create_dialog_callback, _("Create Flowblade Media Plugin Script Container Clip"), [row1], [script_select])
 
-def create_fluxity_media_item_from_plugin(script_file, screenshot_file):
-    container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_FLUXITY, script_file, None)
-    container_clip_data.data_slots["icon_file"] = screenshot_file
+def create_fluxity_media_item_from_plugin(script_file, screenshot_file, plugin_data):
+    container_data = ContainerClipData(appconsts.CONTAINER_CLIP_FLUXITY, script_file, None)
+    container_data.data_slots["icon_file"] = screenshot_file
+    container_data.data_slots["fluxity_plugin_edit_data"] = plugin_data
     
     # We need to exit this Gtk callback to get info text above updated.
-    completion_thread = FluxityLoadCompletionThread(container_clip_data, None)
+    completion_thread = FluxityLoadCompletionThread(container_data, None, plugin_data)
     completion_thread.start()
         
 def _fluxity_clip_create_dialog_callback(dialog, response_id, data):
@@ -307,8 +308,9 @@ def _fluxity_clip_create_dialog_callback(dialog, response_id, data):
 
 class FluxityLoadCompletionThread(threading.Thread):
     
-    def __init__(self, container_clip_data, dialog):
+    def __init__(self, container_clip_data, dialog, plugin_data=None):
         self.container_clip_data = container_clip_data
+        self.plugin_data = plugin_data
         self.dialog = dialog
 
         threading.Thread.__init__(self)
@@ -317,6 +319,12 @@ class FluxityLoadCompletionThread(threading.Thread):
         action_object = containeractions.get_action_object(self.container_clip_data)
         is_valid, err_msg = action_object.validate_program()
 
+        # Media plugins have plugin data created with user set values, scripts loaded from file system
+        # do not and just had it created in 'action_object.validate_program()'
+        if self.plugin_data != None:
+            # For media plugins use user edited creation data.
+            self.container_clip_data.data_slots["fluxity_plugin_edit_data"] = self.plugin_data
+    
         time.sleep(0.5) # To make sure text is seen.
 
         if self.dialog != None:

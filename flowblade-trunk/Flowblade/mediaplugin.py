@@ -48,6 +48,7 @@ _plugins_menu = Gtk.Menu()
 
 _selected_plugin = None
 _current_screenshot_surface = None
+_current_plugin_data_object = None
 
 # --------------------------------------------------------- plugin
 class MediaPlugin:
@@ -57,10 +58,13 @@ class MediaPlugin:
         self.name = name
         self.category = category
     
+    def get_screenshot_file(self):
+        return respaths.MEDIA_PLUGINS_PATH + self.folder + "/screenshot.png"
+    
     def get_screenshot_surface(self):
         icon_path = respaths.MEDIA_PLUGINS_PATH + self.folder + "/screenshot.png"
-        return cairo.ImageSurface.create_from_png(icon_path)
-    
+        return cairo.ImageSurface.create_from_png(self.get_screenshot_path())
+
     def get_plugin_script_file(self):
         script_file = respaths.MEDIA_PLUGINS_PATH + self.folder + "/plugin_script.py"
         return script_file
@@ -104,7 +108,6 @@ def init():
         group = load_groups[gkey]
         add_group = sorted(group, key=lambda plugin: plugin.name)
         _plugins_groups.append((gkey, add_group))
-
 
 def show_add_media_plugin_window():
     global _add_plugin_window
@@ -153,10 +156,11 @@ def fill_media_plugin_sub_menu(menu, callback=None):
         menu.append(menu_item)
     menu.show_all()
 
-def _add_media_plugin(widget, plugin_folder):
-    script_file = respaths.MEDIA_PLUGINS_PATH + plugin_folder + "/plugin_script.py"
-    screenshot_file =  respaths.MEDIA_PLUGINS_PATH + plugin_folder + "/screenshot.png"
-    containerclip.create_fluxity_media_item_from_plugin(script_file, screenshot_file)
+def _add_media_plugin():
+    script_file = _selected_plugin.get_plugin_script_file()
+    screenshot_file = _selected_plugin.get_screenshot_file()
+    _current_plugin_data_object["editors_list"] = simpleeditors.get_editors_data_as_editors_list(_add_plugin_window.plugin_editors.editor_widgets)
+    containerclip.create_fluxity_media_item_from_plugin(script_file, screenshot_file, _current_plugin_data_object)
 
 def get_plugin_code(plugin_folder):
     script_file = respaths.MEDIA_PLUGINS_PATH + plugin_folder + "/plugin_script.py"
@@ -228,8 +232,7 @@ class AddMediaPluginWindow(Gtk.Window):
         close_button = Gtk.Button(_("Close"))
         close_button.connect("clicked", lambda w: _close_clicked())
         self.add_button = Gtk.Button(_("Add Media Plugin"))
-        #self.add_button.connect("clicked", lambda w: _do_folder_media_import())
-        self.add_button.set_sensitive(False)
+        self.add_button.connect("clicked", lambda w: _add_media_plugin())
         #self.load_info_2 = Gtk.Label()
         
         buttons_row = Gtk.HBox(False, 0)
@@ -288,8 +291,9 @@ class AddMediaPluginWindow(Gtk.Window):
         script_data_object = json.loads(fctx.get_script_data())
         self._show_plugin_editors_panel(script_data_object)
 
-        global _selected_plugin, _current_screenshot_surface
+        global _selected_plugin, _current_screenshot_surface, _current_plugin_data_object
         _selected_plugin = new_selected_plugin
+        _current_plugin_data_object = script_data_object
         _current_screenshot_surface = self._create_preview_surface(fctx.priv_context.frame_surface)
         
         self.screenshot_canvas.queue_draw()

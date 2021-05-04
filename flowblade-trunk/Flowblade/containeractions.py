@@ -757,13 +757,12 @@ class FluxityContainerActions(AbstractContainerActionObject):
         simpleeditors.show_fluxity_container_clip_program_editor(self.project_edit_done, clip, self, self.container_data.data_slots["fluxity_plugin_edit_data"])
 
     def project_edit_done(self, response_is_accept, dialog, editors, orig_program_info_json):
-
         if response_is_accept == True:
             new_editors_list = self.get_editors_data_as_editors_list(editors)
             self.container_data.data_slots["fluxity_plugin_edit_data"]["editors_list"] = new_editors_list
             dialog.destroy()
         else:
-            # For fluxity edits we don't need to reset edita data like we do in Blender.
+            # For fluxity edits we don't need to reset edit data like we do in Blender.
             dialog.destroy()
 
     def render_fluxity_preview(self, program_editor_window, editors, preview_frame):
