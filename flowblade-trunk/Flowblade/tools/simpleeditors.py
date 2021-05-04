@@ -234,7 +234,7 @@ def get_simple_editor_selector(active_index, callback): # used in containerprogr
 
 
 
-# -------------------------------------------------------------------- Fluxity script editors dialog
+# -------------------------------------------------------------------- Media Plugin timeline clip editor
 def show_fluxity_container_clip_program_editor(callback, clip, container_action, script_data_object):
     editor_window = FluxityScriptEditorWindow(callback, clip, container_action, script_data_object)
 
@@ -362,6 +362,65 @@ class FluxityScriptEditorWindow(Gtk.Window):
 
     def save(self):
         self.callback(True, self, self.editor_widgets, None)
+
+# -------------------------------------------------------------------- Media Plugin add editors
+def create_add_media_plugin_editors(script_data_object):
+    editors_object = AddMediaPluginEditors(script_data_object)
+    return editors_object
+
+class AddMediaPluginEditors:
+    def __init__(self, script_data_object):
+        self.script_data_object = copy.deepcopy(script_data_object)
+         
+        self.preview_frame = -1 # -1 used as flag that no preview renders ongoing and new one can be started
+         
+        # Create panels for objects
+        self.editor_widgets = []
+        editors_list = self.script_data_object["editors_list"]
+
+        for editor_data in editors_list:
+            name, type, value = editor_data
+            editor_type = int(type)
+            self.editor_widgets.append(_get_editor(editor_type, name, name, value, ""))
+
+        editors_v_panel = Gtk.VBox(True, 2)
+        for w in self.editor_widgets:        
+            editors_v_panel.pack_start(w, False, False, 0)
+
+        pane = Gtk.VBox(False, 2)
+        if len(self.editor_widgets) != 0:
+            pane.pack_start(editors_v_panel, False, False, 0)
+        else:
+            pane.pack_start(Gtk.Label(_("No Editors for this script")), False, False, 0)
+            
+        # Put in scrollpane if too many editors for screensize.
+        n_editors = len(self.editor_widgets )
+        add_scroll = False
+        if editorstate.screen_size_small_height() == True and n_editors > 4:
+            add_scroll = True
+            h = 500
+        elif editorstate.screen_size_small_height() == True and editorstate.screen_size_large_height() == False and n_editors > 5:
+            add_scroll = True
+            h = 600
+        elif editorstate.screen_size_large_height() == True and n_editors > 6:
+            add_scroll = True
+            h = 700
+            
+        if add_scroll == True:
+            sw = Gtk.ScrolledWindow()
+            sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+            sw.add(pane)
+            sw.set_size_request(400, h)
+
+        if add_scroll == True:
+            editors_panel = sw
+        else:
+            editors_panel = pane
+
+        self.editors_panel = editors_panel
+
+        
+
 
 # ----------------------------------------------------------------------- editors
 def _get_editor(editor_type, id_data, label_text, value, tooltip):
@@ -591,7 +650,7 @@ class IntEditorRange(AbstractSimpleEditor):
 # ------------------------------------------------------------------- preview
 class PreviewPanel(Gtk.VBox):
 
-    def __init__(self, parent, clip):
+    def __init__(self, parent, clip, length=-1):
         GObject.GObject.__init__(self)
 
         self.frame = 0
@@ -614,7 +673,10 @@ class PreviewPanel(Gtk.VBox):
         self.frame_display = Gtk.Label(_("Clip Frame"))
         self.frame_display.set_margin_right(2)
         
-        self.frame_select = Gtk.SpinButton.new_with_range (0, clip.clip_out - clip.clip_in, 1)
+        if length == -1:
+            length = clip.clip_out - clip.clip_in
+        
+        self.frame_select = Gtk.SpinButton.new_with_range (0, length, 1)
         self.frame_select.set_value(0)
         
         self.preview_button = Gtk.Button(_("Preview"))

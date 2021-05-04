@@ -26,10 +26,19 @@ import json
 import cairoarea
 import containerclip
 import editorpersistance
+from editorstate import current_sequence
+import fluxity
 import gui
 import guicomponents
 import guiutils
+import mltprofiles
 import respaths
+import simpleeditors
+
+MONITOR_WIDTH = 320
+MONITOR_HEIGHT = 240
+
+SIMPLE_EDITOR_LEFT_WIDTH = 150
 
 _plugins = []
 _plugins_groups = []
@@ -50,8 +59,12 @@ class MediaPlugin:
     
     def get_screenshot_surface(self):
         icon_path = respaths.MEDIA_PLUGINS_PATH + self.folder + "/screenshot.png"
-        print(icon_path)
         return cairo.ImageSurface.create_from_png(icon_path)
+    
+    def get_plugin_script_file(self):
+        script_file = respaths.MEDIA_PLUGINS_PATH + self.folder + "/plugin_script.py"
+        return script_file
+
 
 # --------------------------------------------------------------- interface
 def init():
@@ -172,23 +185,64 @@ class AddMediaPluginWindow(Gtk.Window):
         self.screenshot_canvas = cairoarea.CairoDrawableArea2(240, 180, self._draw_screenshot)
         screenshot_row = guiutils.get_centered_box([self.screenshot_canvas ])
         guiutils.set_margins(screenshot_row, 12, 12, 0, 0)
+
+        self.frame_display = Gtk.Label(_("Clip Frame"))
+        self.frame_display.set_margin_right(2)
+        
+        
+        self.frame_select = Gtk.SpinButton.new_with_range (0, 200, 1)
+        self.frame_select.set_value(0)
+        
+        self.preview_button = Gtk.Button(_("Preview"))
+        #self.preview_button.connect("clicked", lambda w: parent.render_preview_frame())
+                            
+        control_panel = Gtk.HBox(False, 2)
+        control_panel.pack_start(self.frame_display, False, False, 0)
+        control_panel.pack_start(self.frame_select, False, False, 0)
+        control_panel.pack_start(Gtk.Label(), True, True, 0)
+        control_panel.pack_start(self.preview_button, False, False, 0)
+        guiutils.set_margins(control_panel, 0, 24, 0, 0)
+        
+        self.editors_box = Gtk.HBox(False, 0)
+
+        self.import_select = Gtk.ComboBoxText()
+        self.import_select.append_text(_("Add as Container Clip"))
+        self.import_select.append_text(_("Add as Rendered Media"))
+        self.import_select.set_active(0)
+        import_row = self._build_editor_row(_("Import type:"), self.import_select)
+
+        self.length_spin = Gtk.SpinButton.new_with_range (0, 100000, 1)
+        self.length_spin.set_value(200)
+        length_row = self._build_editor_row(_("Length frames:"), self.length_spin)
+
+        import_panel = Gtk.VBox(False, 2)
+        import_panel.pack_start(import_row, False, False, 0)
+        import_panel.pack_start(length_row, False, False, 0)
+        import_panel.pack_start(Gtk.Label(), True, True, 0)
+
+        values_row = Gtk.HBox(True, 8)
+        values_row.pack_start(self.editors_box, False, False, 0)
+        values_row.pack_start(import_panel, False, False, 0)
         
         close_button = Gtk.Button(_("Close"))
         close_button.connect("clicked", lambda w: _close_clicked())
-        self.add_button = Gtk.Button(_("Add Media"))
+        self.add_button = Gtk.Button(_("Add Media Plugin"))
         #self.add_button.connect("clicked", lambda w: _do_folder_media_import())
         self.add_button.set_sensitive(False)
-        self.load_info_2 = Gtk.Label() 
-        row8 = Gtk.HBox(False, 0)
-        row8.pack_start(self.load_info_2, False, False, 0)
-        row8.pack_start(Gtk.Label(), True, True, 0)
-        row8.pack_start(close_button, False, False, 0)
-        row8.pack_start(self.add_button, False, False, 0)
-
+        #self.load_info_2 = Gtk.Label()
+        
+        buttons_row = Gtk.HBox(False, 0)
+        #buttons_row.pack_start(self.load_info_2, False, False, 0)
+        buttons_row.pack_start(Gtk.Label(), True, True, 0)
+        buttons_row.pack_start(close_button, False, False, 0)
+        buttons_row.pack_start(self.add_button, False, False, 0)
+            
         vbox = Gtk.VBox(False, 2)
         vbox.pack_start(plugin_select_row, False, False, 0)
         vbox.pack_start(screenshot_row, False, False, 0)
-        vbox.pack_start(row8, False, False, 0)
+        vbox.pack_start(control_panel, False, False, 0)
+        vbox.pack_start(values_row, False, False, 0)
+        vbox.pack_start(buttons_row, False, False, 0)
         
         alignment = guiutils.set_margins(vbox, 8, 8, 12, 12)
 
@@ -198,6 +252,14 @@ class AddMediaPluginWindow(Gtk.Window):
     
         self.plugin_select.set_selected(_plugins[0].name)
 
+    def _build_editor_row(self, label_text, widget):
+        row = Gtk.HBox(False, 2)
+        left_box = guiutils.get_left_justified_box([Gtk.Label(label=label_text)])
+        left_box.set_size_request(SIMPLE_EDITOR_LEFT_WIDTH, guiutils.TWO_COLUMN_BOX_HEIGHT)
+        row.pack_start(left_box, False, True, 0)
+        row.pack_start(widget, True, True, 0)
+        return row
+    
     def _draw_screenshot(self, event, cr, allocation):
         if _selected_plugin == None:
             return
@@ -206,14 +268,38 @@ class AddMediaPluginWindow(Gtk.Window):
         cr.paint()
                     
     def _plugin_selection_changed(self, combo):
-        name, _new_selected_plugin = self.plugin_select.get_selected()
-        print(_new_selected_plugin.name)
+        name, new_selected_plugin = self.plugin_select.get_selected()
+        print(new_selected_plugin.name)
+        
+        success, fctx = self.get_plugin_data(new_selected_plugin.get_plugin_script_file())
+        script_data_object = json.loads(fctx.get_script_data())
+        print(success, script_data_object)
+        self.plugin_editors = simpleeditors.create_add_media_plugin_editors(script_data_object)
+        self.editors_box.pack_start(self.plugin_editors.editors_panel, False, False, 0)
+        self.show_all()
+
         global _selected_plugin, _current_screenshot_surface
-        _selected_plugin = _new_selected_plugin
-        _current_screenshot_surface = _selected_plugin.get_screenshot_surface()
+        _selected_plugin = new_selected_plugin
+        _current_screenshot_surface = fctx.priv_context.frame_surface
         
         self.screenshot_canvas.queue_draw()
         
-        
+
+    def get_plugin_data(self, plugin_script_path, frame=0):
+        try:
+            script_file = open(plugin_script_path)
+            user_script = script_file.read()
+            profile_file_path = mltprofiles.get_profile_file_path(current_sequence().profile.description())
+            fctx = fluxity.render_preview_frame(user_script, frame, None, profile_file_path)
+         
+            if fctx.error == None:
+                print("success")
+                return (True, fctx) # no errors
+            else:
+                return (False,  fctx.error)
+    
+        except Exception as e:
+            return (False, str(e))
+            
 
     
