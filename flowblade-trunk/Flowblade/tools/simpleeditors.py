@@ -52,7 +52,7 @@ SIMPLE_EDITOR_INT_RANGE = 9
 
 NO_PREVIEW_FILE = "fallback_thumb.png"
 
-# Gtk.Adjustments require some bounds, we dont want to get into having any for simple editors.
+# Gtk.Adjustments require some bounds.
 MIN_VAL = -pow(2, 63) 
 MAX_VAL = pow(2, 63)
 
@@ -419,6 +419,17 @@ class AddMediaPluginEditors:
 
         self.editors_panel = editors_panel
 
+def get_editors_data_as_editors_list(editor_widgets):
+    new_editors_list = [] # This is the editors list in format created in
+                          # fluxity.FluxityContext.get_script_data()
+    for editor in editor_widgets:
+        value = editor.get_value()
+        if editor.editor_type == SIMPLE_EDITOR_COLOR:
+            value = editor.get_value_as_color_tuple()
+        new_editor = [editor.id_data, editor.editor_type, value]
+        new_editors_list.append(new_editor)
+    
+    return new_editors_list
         
 
 
