@@ -149,6 +149,10 @@ def set_render_settings(data):
     action_object = containeractions.get_action_object(clip.container_data)
     action_object.set_video_endoding(clip)
 
+def set_render_settings_from_create_window(container_data, callback):
+    action_object = containeractions.get_action_object(container_data)
+    action_object.set_video_endoding(None, callback)
+
 def edit_program(data):
     clip, track, item_id, item_data = data
     action_object = containeractions.get_action_object(clip.container_data)
@@ -273,7 +277,6 @@ class GMicLoadCompletionThread(threading.Thread):
 # ------------------------------------------------------- Fluxity
 def create_fluxity_media_item():
     script_select, row1 = _get_file_select_row_and_editor(_("Flowblade Media Plugin Script:"), None, _("Flowblade Media Plugin Script"))
-    #media_file_select, row2 = _get_file_select_row_and_editor(_("Video Clip:"))
     _open_rows_dialog(_fluxity_clip_create_dialog_callback, _("Create Flowblade Media Plugin Script Container Clip"), [row1], [script_select])
 
 def create_fluxity_media_item_from_plugin(script_file, screenshot_file, plugin_data):

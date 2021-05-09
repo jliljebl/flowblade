@@ -354,8 +354,9 @@ class AbstractContainerActionObject:
             self.clip.container_data.last_render_type = CLIP_LENGTH_RENDER
             action = edit.container_clip_clip_render_replace(data)
             action.do_edit()
-                
-    def set_video_endoding(self, clip):
+
+    def set_video_endoding(self, clip, callback=None):
+        self.external_encoding_callback = callback
         current_profile_index = mltprofiles.get_profile_index_for_profile(current_sequence().profile)
         # These need to re-initialized always when using this module.
         toolsencoding.create_widgets(current_profile_index, True, True)
@@ -384,11 +385,12 @@ class AbstractContainerActionObject:
     def encode_settings_callback(self, dialog, response_id):
         if response_id == Gtk.ResponseType.ACCEPT:
             self.container_data.render_data = toolsencoding.get_render_data_for_current_selections()
+            if self.external_encoding_callback != None:
+                self.external_encoding_callback(self.container_data.render_data)
 
         dialog.destroy()
         
     def clone_clip(self, old_clip):
-
         new_container_data = copy.deepcopy(old_clip.container_data)
         new_container_data.generate_clip_id()
         

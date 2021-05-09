@@ -17,7 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
-from gi.repository import Gtk, GObject
+from gi.repository import Gtk, GObject, Pango
 
 import cairo
 import copy
@@ -37,6 +37,7 @@ import guiutils
 import mltprofiles
 import respaths
 import simpleeditors
+import toolsencoding
 import userfolders
 
 MONITOR_WIDTH = 400
@@ -53,7 +54,7 @@ _plugins_menu = Gtk.Menu()
 _selected_plugin = None
 _current_screenshot_surface = None
 _current_plugin_data_object = None
-
+_current_render_data = None
 # --------------------------------------------------------- plugin
 class MediaPlugin:
     
@@ -220,24 +221,38 @@ class AddMediaPluginWindow(Gtk.Window):
         self.import_select.append_text(_("Add as Container Clip"))
         self.import_select.append_text(_("Add as Rendered Media"))
         self.import_select.set_active(0)
-        import_row = self._build_editor_row(_("Import action:"), self.import_select)
-
+        self.import_select.connect("changed", lambda w: self._export_action_changed(w))
+        import_row = guiutils.get_left_justified_box([Gtk.Label(_("Import Action:")), guiutils.pad_label(12,12), self.import_select])
+        guiutils.set_margins(import_row,8,0,0,0)
         self.length_spin = Gtk.SpinButton.new_with_range (0, 100000, 1)
         self.length_spin.set_value(200)
-        length_row = self._build_editor_row(_("Length in frames:"), self.length_spin)
+        length_row = guiutils.get_left_justified_box([Gtk.Label(_("Plugin Media Length:")), guiutils.pad_label(12,12), self.length_spin])
 
+        self.encoding_button = Gtk.Button(_("Encode settings"))
+        self.encoding_button.set_sensitive(False)
+        self.encoding_button.connect("clicked", lambda w: self._set_encoding_button_pressed())
+        self.encoding_info = Gtk.Label()
+        #self.encoding_info.set_text(_("MPEG - 2"))
+        self.encoding_info.set_markup("<small>" + "Not set" + "</small>")
+        self.encoding_info.set_max_width_chars(32)
+        self.encoding_info.set_sensitive(False)
+        encoding_row = guiutils.get_left_justified_box([self.encoding_button, guiutils.pad_label(12,12), self.encoding_info])
+                
         import_panel = Gtk.VBox(False, 2)
-        import_panel.pack_start(import_row, False, False, 0)
         import_panel.pack_start(length_row, False, False, 0)
+        #import_panel.pack_start(guiutils.pad_label(12,4), False, False, 0)
+        import_panel.pack_start(import_row, False, False, 0)
+        import_panel.pack_start(encoding_row, False, False, 0)
         import_panel.pack_start(Gtk.Label(), True, True, 0)
+
 
         values_row = Gtk.HBox(True, 8)
         values_row.pack_start(self.editors_box, False, False, 0)
         values_row.pack_start(import_panel, False, False, 0)
         
-        close_button = Gtk.Button(_("Close"))
+        close_button = guiutils.get_sized_button(_("Close"), 150, 32)
         close_button.connect("clicked", lambda w: _close_clicked())
-        self.add_button = Gtk.Button(_("Add Media Plugin"))
+        self.add_button = guiutils.get_sized_button(_("Add Media Plugin"), 150, 32)
         self.add_button.connect("clicked", lambda w: _add_media_plugin())
         #self.load_info_2 = Gtk.Label()
         
@@ -253,7 +268,7 @@ class AddMediaPluginWindow(Gtk.Window):
         vbox.pack_start(screenshot_row, False, False, 0)
         vbox.pack_start(control_panel, False, False, 0)
         vbox.pack_start(values_row, False, False, 0)
-        vbox.pack_start(Gtk.Label(), True, True, 0)
+        #vbox.pack_start(Gtk.Label(), True, True, 0)
         vbox.pack_start(buttons_row, False, False, 0)
         
         alignment = guiutils.set_margins(vbox, 8, 8, 12, 12)
@@ -357,5 +372,29 @@ class AddMediaPluginWindow(Gtk.Window):
         except Exception as e:
             return (False, str(e))
             
+    def _export_action_changed(self, combo):
+        if combo.get_active() == 0:
+            self.encoding_button.set_sensitive(False)
+            self.encoding_info.set_sensitive(False)
+        else:
+            self.encoding_button.set_sensitive(True)
+            self.encoding_info.set_sensitive(True)
+            
+    def _set_encoding_button_pressed(self):
+        container_data = containerclip.ContainerClipData(appconsts.CONTAINER_CLIP_FLUXITY, _selected_plugin.get_plugin_script_file(), None)
+        container_data.data_slots["icon_file"] = None
+        container_data.data_slots["fluxity_plugin_edit_data"] = _current_plugin_data_object
+        
+        containerclip.set_render_settings_from_create_window(container_data, self._encode_settings_done)
+    
+    def _encode_settings_done(self, render_data):
+        global _current_render_data
+        _current_render_data = render_data
+        args_vals = toolsencoding.get_args_vals_list_for_render_data(render_data)
+        desc_str = toolsencoding.get_encoding_desc(args_vals) #+ ", " + _render_data.file_name + _render_data.file_extension
+
+        self.encoding_info.set_markup("<small>" + desc_str + "</small>")
+        self.encoding_info.set_ellipsize(Pango.EllipsizeMode.END)
+        
 
     
