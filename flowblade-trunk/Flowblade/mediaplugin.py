@@ -167,6 +167,7 @@ def _add_media_plugin():
     screenshot_file = userfolders.get_cache_dir() + appconsts.THUMBNAILS_DIR + "/" + md_str +  ".png"
     _current_screenshot_surface.write_to_png(screenshot_file)
     _current_plugin_data_object["editors_list"] = simpleeditors.get_editors_data_as_editors_list(_add_plugin_window.plugin_editors.editor_widgets)
+    _current_plugin_data_object["length"] = int(_add_plugin_window.length_spin.get_value())
     containerclip.create_fluxity_media_item_from_plugin(script_file, screenshot_file, _current_plugin_data_object)
 
 def get_plugin_code(plugin_folder):
@@ -224,7 +225,7 @@ class AddMediaPluginWindow(Gtk.Window):
         self.import_select.connect("changed", lambda w: self._export_action_changed(w))
         import_row = guiutils.get_left_justified_box([Gtk.Label(_("Import Action:")), guiutils.pad_label(12,12), self.import_select])
         guiutils.set_margins(import_row,8,0,0,0)
-        self.length_spin = Gtk.SpinButton.new_with_range (0, 100000, 1)
+        self.length_spin = Gtk.SpinButton.new_with_range (25, 100000, 1)
         self.length_spin.set_value(200)
         length_row = guiutils.get_left_justified_box([Gtk.Label(_("Plugin Media Length:")), guiutils.pad_label(12,12), self.length_spin])
 
@@ -268,7 +269,7 @@ class AddMediaPluginWindow(Gtk.Window):
         vbox.pack_start(screenshot_row, False, False, 0)
         vbox.pack_start(control_panel, False, False, 0)
         vbox.pack_start(values_row, False, False, 0)
-        #vbox.pack_start(Gtk.Label(), True, True, 0)
+        vbox.pack_start(Gtk.Label(), True, True, 0)
         vbox.pack_start(buttons_row, False, False, 0)
         
         alignment = guiutils.set_margins(vbox, 8, 8, 12, 12)
