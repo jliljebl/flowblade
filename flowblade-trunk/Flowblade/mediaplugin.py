@@ -55,6 +55,8 @@ _selected_plugin = None
 _current_screenshot_surface = None
 _current_plugin_data_object = None
 _current_render_data = None
+
+
 # --------------------------------------------------------- plugin
 class MediaPlugin:
     
@@ -141,8 +143,7 @@ def _get_categories_list():
         categories_list.append((group_name, plugins_list))
     
     return categories_list  
-        
-    
+
 def fill_media_plugin_sub_menu(menu, callback=None):
     for group_data in _plugins_groups:
 
@@ -168,7 +169,22 @@ def _add_media_plugin():
     _current_screenshot_surface.write_to_png(screenshot_file)
     _current_plugin_data_object["editors_list"] = simpleeditors.get_editors_data_as_editors_list(_add_plugin_window.plugin_editors.editor_widgets)
     _current_plugin_data_object["length"] = int(_add_plugin_window.length_spin.get_value())
-    containerclip.create_fluxity_media_item_from_plugin(script_file, screenshot_file, _current_plugin_data_object)
+
+    print("imprort select", _add_plugin_window.import_select.get_active())
+
+    if _add_plugin_window.import_select.get_active() == 0:
+        _close_window()
+        # Add as Container Clip
+        containerclip.create_fluxity_media_item_from_plugin(script_file, screenshot_file, _current_plugin_data_object)
+    else:
+        # Add as rendered media.
+        _close_window()
+        print("create rednered")
+        container_data = containerclip.ContainerClipData(appconsts.CONTAINER_CLIP_FLUXITY, _selected_plugin.get_plugin_script_file(), None)
+        container_data.data_slots["icon_file"] = screenshot_file
+        container_data.data_slots["fluxity_plugin_edit_data"] = _current_plugin_data_object
+        container_data.unrendered_length = _current_plugin_data_object["length"]
+        containerclip.create_renderered_fluxity_media_item(container_data, _current_plugin_data_object["length"]) 
 
 def get_plugin_code(plugin_folder):
     script_file = respaths.MEDIA_PLUGINS_PATH + plugin_folder + "/plugin_script.py"
@@ -176,8 +192,7 @@ def get_plugin_code(plugin_folder):
     return args_file.read()
         
 
-
-# --------------------------------------------------------- window
+# --------------------------------------------------------- Window
 class AddMediaPluginWindow(Gtk.Window):
     def __init__(self):
         GObject.GObject.__init__(self)

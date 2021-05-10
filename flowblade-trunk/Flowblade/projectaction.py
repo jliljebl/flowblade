@@ -1170,6 +1170,15 @@ def _add_image_sequence_callback(dialog, response_id, data):
 
     editorpersistance.prefs.last_opened_media_dir = os.path.dirname(resource_path)
     editorpersistance.save()
+
+def add_plugin_image_sequence(resource_path, file_name, length):
+    PROJECT().add_image_sequence_media_object(resource_path, file_name + "(img_seq)", length, 1)
+
+    gui.media_list_view.fill_data_model()
+    gui.bin_list_view.fill_data_model()
+
+    editorpersistance.prefs.last_opened_media_dir = os.path.dirname(resource_path)
+    editorpersistance.save()
     
 def open_rendered_file(rendered_file_path):
     add_media_thread = AddMediaFilesThread([rendered_file_path])

@@ -587,7 +587,6 @@ class GMicContainerActions(AbstractContainerActionObject):
         Gdk.threads_leave()
 
     def abort_render(self):
-        #self.remove_as_status_polling_object()
         gmicheadless.abort_render(self.get_container_program_id())
 
     def create_icon(self):
@@ -609,6 +608,7 @@ class FluxityContainerActions(AbstractContainerActionObject):
     def __init__(self, container_data):
         AbstractContainerActionObject.__init__(self, container_data)
         self.do_filters_clone = True
+        self.plugin_create_render_complete_callback = None # set at object creation site if needed
 
     def validate_program(self):
         try:
@@ -681,11 +681,14 @@ class FluxityContainerActions(AbstractContainerActionObject):
         Gdk.threads_enter()
                     
         if fluxityheadless.session_render_complete(self.get_container_program_id()) == True:
-            
             job_msg = self.get_completed_job_message()
             jobs.update_job_queue(job_msg)
             
-            GLib.idle_add(self.create_producer_and_do_update_edit, None)
+            if self.plugin_create_render_complete_callback == None:
+                GLib.idle_add(self.create_producer_and_do_update_edit, None)
+            else: 
+                resource_path = self.get_rendered_frame_sequence_resource_path()
+                GLib.idle_add(self.plugin_create_render_complete_callback, resource_path, self.container_data)
 
         else:
             status = fluxityheadless.get_session_status(self.get_container_program_id())

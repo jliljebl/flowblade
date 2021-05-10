@@ -35,9 +35,11 @@ import dialogs
 import dialogutils
 import editorstate
 from editorstate import PROJECT
+from editorstate import current_sequence
 import gui
 import guicomponents
 import guiutils
+import projectaction
 import respaths
 import userfolders
 import utils
@@ -70,7 +72,7 @@ class ContainerClipData:
             self.last_render_type = containeractions.FULL_RENDER
             
             self.unrendered_media = unrendered_media
-            self.unrendered_length = None
+            self.unrendered_length = None # This is also maximum length for media produced using this container data.
             # This gets set later for some container types
             if unrendered_media != None:
                 self.unrendered_type = utils.get_media_type(unrendered_media)
@@ -159,8 +161,6 @@ def edit_program(data):
     action_object.edit_program(clip)
 
 
-
-
 #------------------------------------------------------------- Cloning
 def clone_clip(clip):
     action_object = containeractions.get_action_object(clip.container_data)
@@ -209,7 +209,6 @@ def _open_rows_dialog(callback, title, rows, data):
 def _update_gui_for_media_object_add():
     gui.media_list_view.fill_data_model()
     gui.bin_list_view.fill_data_model()
-
 
 def _show_not_all_data_info():
     dialogutils.info_message(_("Not all required files were defined"), _("Select all files asked for in dialog for succesful Container Clip creation."), gui.editor_window.window)
@@ -325,7 +324,7 @@ class FluxityLoadCompletionThread(threading.Thread):
         # Media plugins have plugin data created with user set values, scripts loaded from file system
         # do not and just had it created in 'action_object.validate_program()'
         if self.plugin_data != None:
-            # For media plugins use user edited creation data.
+            # For media plugins use provided user edited creation data.
             self.container_clip_data.data_slots["fluxity_plugin_edit_data"] = self.plugin_data
     
         time.sleep(0.5) # To make sure text is seen.
@@ -363,11 +362,51 @@ def _fluxity_unredered_media_creation_complete(created_unrendered_clip_path, con
     container_clip_data.unrendered_media = created_unrendered_clip_path
     container_clip_data.unrendered_type = appconsts.VIDEO
 
+    # Copy created unred
+    rand_id_str = str(os.urandom(16))
+    clip_id_str = hashlib.md5(rand_id_str.encode('utf-8')).hexdigest() 
+    unrendered_clip_path = userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_UNRENDERED +"/"+ clip_id_str + ".mp4"
+    os.replace(created_unrendered_clip_path, unrendered_clip_path)
+    container_clip_data.unrendered_media = unrendered_clip_path
+    container_clip_data.unrendered_type = appconsts.VIDEO
+    
     container_clip = ContainerClipMediaItem(PROJECT().next_media_file_id, data_object["name"], container_clip_data)
     PROJECT().add_container_clip_media_object(container_clip)
     _update_gui_for_media_object_add()
 
-        
+def create_renderered_fluxity_media_item(container_data, length):
+    fluxity_unrendered_media_image = respaths.IMAGE_PATH + "unrendered_fluxity.png"
+    containeractions.create_unrendered_clip(length, fluxity_unrendered_media_image, container_data, _add_fluxity_rendered_help_media_complete, "Please wait")
+
+def _add_fluxity_rendered_help_media_complete(created_unrendered_clip_path, container_clip_data):
+
+    # Copy created unred
+    rand_id_str = str(os.urandom(16))
+    clip_id_str = hashlib.md5(rand_id_str.encode('utf-8')).hexdigest() 
+    unrendered_clip_path = userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_UNRENDERED +"/"+ clip_id_str + ".mp4"
+    os.replace(created_unrendered_clip_path, unrendered_clip_path)
+    
+    container_clip_data.unrendered_media = unrendered_clip_path
+    container_clip_data.unrendered_type = appconsts.VIDEO
+    
+    throw_away_clip = current_sequence().create_file_producer_clip(unrendered_clip_path, "dummy", False, None)
+    throw_away_clip.container_data = container_clip_data
+    throw_away_clip.container_data.generate_clip_id()
+    #throw_away_clip.range_in = 0
+    #throw_away_clip.range_out = container_clip_data.length - 1 # out is inclusive
+
+    action_object = containeractions.get_action_object(container_clip_data)
+    action_object.plugin_create_render_complete_callback = _plugin_create_render_complete_callback
+    action_object.render_full_media(throw_away_clip)
+
+def _plugin_create_render_complete_callback(resource_path, container_data):
+    #file_name = os.path.basename(rendered_media_path)
+    #media_item_path = userfolders.get_render_dir() +"/"+ file_name
+    #os.replace(rendered_media_path, media_item_path)
+    #rendered_clip = current_sequence().create_file_producer_clip(rendered_media_path, new_clip_name=None, novalidate=False, ttl=1)
+    projectaction.add_plugin_image_sequence(resource_path, "kamoon", container_data.unrendered_length)
+    
+    
 # ---------------------------------------------------------------------- MLT XML
 def create_mlt_xml_media_item(xml_file_path, media_name):
     container_clip_data = ContainerClipData(appconsts.CONTAINER_CLIP_MLT_XML, xml_file_path, xml_file_path)
