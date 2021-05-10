@@ -378,24 +378,20 @@ def create_renderered_fluxity_media_item(container_data, length):
     fluxity_unrendered_media_image = respaths.IMAGE_PATH + "unrendered_fluxity.png"
     containeractions.create_unrendered_clip(length, fluxity_unrendered_media_image, container_data, _add_fluxity_rendered_help_media_complete, "Please wait")
 
-def _add_fluxity_rendered_help_media_complete(created_unrendered_clip_path, container_clip_data):
-
-    # Copy created unred
+def _add_fluxity_rendered_help_media_complete(created_unrendered_clip_path, container_data):
     rand_id_str = str(os.urandom(16))
     clip_id_str = hashlib.md5(rand_id_str.encode('utf-8')).hexdigest() 
     unrendered_clip_path = userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_UNRENDERED +"/"+ clip_id_str + ".mp4"
     os.replace(created_unrendered_clip_path, unrendered_clip_path)
     
-    container_clip_data.unrendered_media = unrendered_clip_path
-    container_clip_data.unrendered_type = appconsts.VIDEO
+    container_data.unrendered_media = unrendered_clip_path
+    container_data.unrendered_type = appconsts.VIDEO
     
     throw_away_clip = current_sequence().create_file_producer_clip(unrendered_clip_path, "dummy", False, None)
-    throw_away_clip.container_data = container_clip_data
+    throw_away_clip.container_data = container_data
     throw_away_clip.container_data.generate_clip_id()
-    #throw_away_clip.range_in = 0
-    #throw_away_clip.range_out = container_clip_data.length - 1 # out is inclusive
 
-    action_object = containeractions.get_action_object(container_clip_data)
+    action_object = containeractions.get_action_object(container_data)
     action_object.plugin_create_render_complete_callback = _plugin_create_render_complete_callback
     action_object.render_full_media(throw_away_clip)
 
@@ -404,8 +400,11 @@ def _plugin_create_render_complete_callback(resource_path, container_data):
     #media_item_path = userfolders.get_render_dir() +"/"+ file_name
     #os.replace(rendered_media_path, media_item_path)
     #rendered_clip = current_sequence().create_file_producer_clip(rendered_media_path, new_clip_name=None, novalidate=False, ttl=1)
-    projectaction.add_plugin_image_sequence(resource_path, "kamoon", container_data.unrendered_length)
-    
+    print(container_data.render_data.__dict__)
+    if container_data.render_data.do_video_render == False:
+        projectaction.add_plugin_image_sequence(resource_path, container_data.data_slots["fluxity_plugin_edit_data"]["name"], container_data.unrendered_length)
+    else:
+        projectaction.open_file_names([resource_path])
     
 # ---------------------------------------------------------------------- MLT XML
 def create_mlt_xml_media_item(xml_file_path, media_name):

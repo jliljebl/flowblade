@@ -179,10 +179,12 @@ def _add_media_plugin():
     else:
         # Add as rendered media.
         _close_window()
-        print("create rednered")
+
+        # We need to have a containerclip.ContainerClipData object to utilize caontainer clips code to render a video clip.
         container_data = containerclip.ContainerClipData(appconsts.CONTAINER_CLIP_FLUXITY, _selected_plugin.get_plugin_script_file(), None)
         container_data.data_slots["icon_file"] = screenshot_file
         container_data.data_slots["fluxity_plugin_edit_data"] = _current_plugin_data_object
+        container_data.render_data = _current_render_data
         container_data.unrendered_length = _current_plugin_data_object["length"]
         containerclip.create_renderered_fluxity_media_item(container_data, _current_plugin_data_object["length"]) 
 

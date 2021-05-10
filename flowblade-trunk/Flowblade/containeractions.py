@@ -297,6 +297,14 @@ class AbstractContainerActionObject:
         resource_name_str = utils.get_img_seq_resource_name(frame_file, True)
         return self.get_rendered_media_dir() + "/" + resource_name_str
 
+    def get_rendered_video_clip_path(self):
+        if self.container_data.render_data.save_internally == True:
+            resource_path = self.get_session_dir() +  "/" + appconsts.CONTAINER_CLIP_VIDEO_CLIP_NAME + self.container_data.render_data.file_extension
+        else:
+            resource_path = self.container_data.render_data.render_dir +  "/" + self.container_data.render_data.file_name + self.container_data.render_data.file_extension
+    
+        return resource_path
+    
     def get_rendered_thumbnail(self):
         thumbnail_path = self.get_container_thumbnail_path()
         if os.path.isfile(thumbnail_path) == True:
@@ -323,11 +331,7 @@ class AbstractContainerActionObject:
             
         # Using video clip as clip
         else:
-            if self.container_data.render_data.save_internally == True:
-                resource_path = self.get_session_dir() +  "/" + appconsts.CONTAINER_CLIP_VIDEO_CLIP_NAME + self.container_data.render_data.file_extension
-            else:
-                resource_path = self.container_data.render_data.render_dir +  "/" + self.container_data.render_data.file_name + self.container_data.render_data.file_extension
-
+            resource_path = self.get_rendered_video_clip_path()
             rendered_clip = current_sequence().create_file_producer_clip(resource_path, new_clip_name=None, novalidate=True, ttl=1)
         
         track, clip_index = current_sequence().get_track_and_index_for_id(self.clip.id)
@@ -686,8 +690,12 @@ class FluxityContainerActions(AbstractContainerActionObject):
             
             if self.plugin_create_render_complete_callback == None:
                 GLib.idle_add(self.create_producer_and_do_update_edit, None)
-            else: 
-                resource_path = self.get_rendered_frame_sequence_resource_path()
+            else:
+                if self.container_data.render_data.do_video_render == False:
+                    resource_path = self.get_rendered_frame_sequence_resource_path()
+                else:
+                    resource_path = self.get_rendered_video_clip_path()
+
                 GLib.idle_add(self.plugin_create_render_complete_callback, resource_path, self.container_data)
 
         else:
