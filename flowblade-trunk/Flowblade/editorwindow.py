@@ -838,7 +838,6 @@ class EditorWindow:
             ('CompositingModeMenu', None, _('Compositing Mode')),
             ('TimelineRenderingMenu', None, _('Timeline Rendering')),
             ('MediaPluginsMenu', None, _('Media Plugins')),
-            ('TempMediaPluginsMenu', None, _('Temp Media Plugins')),
             ('AddMediaPlugin', None, _('Add Media Plugin...'), None, None, lambda a:mediaplugin.show_add_media_plugin_window()),
             ('LoadMediaPluginScript', None, _('Load Media Plugin Script...'), None, None,lambda w: containerclip.create_fluxity_media_item()),
             ('CreateSelectionCompound', None, _('From Selected Clips'), None, None, lambda a:projectaction.create_selection_compound_clip()),
@@ -957,7 +956,6 @@ class EditorWindow:
                         <menuitem action='CreateBlenderContainerItem'/>
                     </menu>
                     <menu action='MediaPluginsMenu'>
-                        <menu action='TempMediaPluginsMenu'/>
                         <menuitem action='AddMediaPlugin'/>
                         <menuitem action='LoadMediaPluginScript'/>
                     </menu>
@@ -1039,9 +1037,6 @@ class EditorWindow:
 
         # Add recent projects to menu
         self.fill_recents_menu_widget(self.ui.get_widget('/MenuBar/FileMenu/OpenRecent'), projectaction.open_recent_project)
-        
-        # Add media plugins
-        self.fill_media_plugins_menu_widget(self.ui.get_widget('/MenuBar/ProjectMenu/MediaPluginsMenu/TempMediaPluginsMenu'))
         
         # Disable audio mixer if not available
         if editorstate.audio_monitoring_available == False:
@@ -1286,24 +1281,6 @@ class EditorWindow:
             new_item.set_sensitive(False)
             menu.append(new_item)
             new_item.show()
-
-
-    def fill_media_plugins_menu_widget(self, menu_item):
-        menu = menu_item.get_submenu()
-
-        # Remove current items
-        items = menu.get_children()
-        for item in items:
-            menu.remove(item)
-        
-        mediaplugin.fill_media_plugin_sub_menu(menu)
-        sep = Gtk.SeparatorMenuItem()
-        menu.append(sep)
-
-        # Window Mode
-        load_script_menu_item = Gtk.MenuItem(_("Load Media Plugin Script"))
-        load_script_menu_item.connect("activate", lambda w: containerclip.create_fluxity_media_item())
-        menu.append(load_script_menu_item)
 
     def hide_tline_render_strip(self):
         guiutils.remove_children(self.tline_renderer_hbox)

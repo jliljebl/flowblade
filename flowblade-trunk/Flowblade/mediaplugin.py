@@ -250,7 +250,6 @@ class AddMediaPluginWindow(Gtk.Window):
         self.encoding_button.set_sensitive(False)
         self.encoding_button.connect("clicked", lambda w: self._set_encoding_button_pressed())
         self.encoding_info = Gtk.Label()
-        #self.encoding_info.set_text(_("MPEG - 2"))
         self.encoding_info.set_markup("<small>" + "Not set" + "</small>")
         self.encoding_info.set_max_width_chars(32)
         self.encoding_info.set_sensitive(False)
@@ -413,12 +412,12 @@ class AddMediaPluginWindow(Gtk.Window):
     def _display_current_render_data(self):
         if _current_render_data.do_video_render == True:
             args_vals = toolsencoding.get_args_vals_list_for_render_data(_current_render_data)
-            desc_str = toolsencoding.get_encoding_desc(args_vals) #+ ", " + _render_data.file_name + _render_data.file_extension
+            desc_str = toolsencoding.get_encoding_desc(args_vals)
 
             self.encoding_info.set_markup("<small>" + desc_str + "</small>")
             self.encoding_info.set_ellipsize(Pango.EllipsizeMode.END)
         else:
-            self.encoding_info.set_markup("<small>" +_("Image Sequence")+ "</small>")
+            self.encoding_info.set_markup("<small>" + _("Image Sequence") + "</small>")
             self.encoding_info.set_ellipsize(Pango.EllipsizeMode.END)
         
 
