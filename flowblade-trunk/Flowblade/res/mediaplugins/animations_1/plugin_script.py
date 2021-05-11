@@ -14,7 +14,7 @@ def init_script(fctx):
     fctx.add_editor("Speed", fctx.EDITOR_FLOAT_RANGE, (1.0, -5.0, 5.0))
     fctx.add_editor("Speed Variation %", fctx.EDITOR_INT_RANGE, (40, 0, 99))
     fctx.add_editor("Number of Balls", fctx.EDITOR_INT_RANGE, (50, 10, 500))
-    fctx.add_editor("Ball Size", fctx.EDITOR_INT_RANGE, (330, 10, 70))
+    fctx.add_editor("Ball Size", fctx.EDITOR_INT_RANGE, (330, 10, 800))
 
 def init_render(fctx):
     hue = fctx.get_editor_value("Hue")
