@@ -117,7 +117,8 @@ def init():
         _plugins_groups.append((gkey, add_group))
 
 def show_add_media_plugin_window():
-    global _add_plugin_window
+    global _add_plugin_window, _current_render_data
+    _current_render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
     _add_plugin_window = AddMediaPluginWindow()
 
 def _close_window():
@@ -232,6 +233,7 @@ class AddMediaPluginWindow(Gtk.Window):
         guiutils.set_margins(control_panel, 0, 24, 0, 0)
         
         self.editors_box = Gtk.HBox(False, 0)
+        self.editors_box.set_size_request(270, 185)
 
         self.import_select = Gtk.ComboBoxText()
         self.import_select.append_text(_("Add as Container Clip"))
@@ -256,15 +258,14 @@ class AddMediaPluginWindow(Gtk.Window):
                 
         import_panel = Gtk.VBox(False, 2)
         import_panel.pack_start(length_row, False, False, 0)
-        #import_panel.pack_start(guiutils.pad_label(12,4), False, False, 0)
         import_panel.pack_start(import_row, False, False, 0)
         import_panel.pack_start(encoding_row, False, False, 0)
         import_panel.pack_start(Gtk.Label(), True, True, 0)
 
-
         values_row = Gtk.HBox(True, 8)
         values_row.pack_start(self.editors_box, False, False, 0)
         values_row.pack_start(import_panel, False, False, 0)
+        #values_row.
         
         close_button = guiutils.get_sized_button(_("Close"), 150, 32)
         close_button.connect("clicked", lambda w: _close_clicked())
@@ -294,7 +295,8 @@ class AddMediaPluginWindow(Gtk.Window):
         self.show_all()
     
         self.plugin_select.set_selected(_plugins[0].name)
-
+        self._display_current_render_data()
+        
     def _build_editor_row(self, label_text, widget):
         row = Gtk.HBox(False, 2)
         left_box = guiutils.get_left_justified_box([Gtk.Label(label=label_text)])
@@ -406,11 +408,18 @@ class AddMediaPluginWindow(Gtk.Window):
     def _encode_settings_done(self, render_data):
         global _current_render_data
         _current_render_data = render_data
-        args_vals = toolsencoding.get_args_vals_list_for_render_data(render_data)
-        desc_str = toolsencoding.get_encoding_desc(args_vals) #+ ", " + _render_data.file_name + _render_data.file_extension
+        self._display_current_render_data()
+    
+    def _display_current_render_data(self):
+        if _current_render_data.do_video_render == True:
+            args_vals = toolsencoding.get_args_vals_list_for_render_data(_current_render_data)
+            desc_str = toolsencoding.get_encoding_desc(args_vals) #+ ", " + _render_data.file_name + _render_data.file_extension
 
-        self.encoding_info.set_markup("<small>" + desc_str + "</small>")
-        self.encoding_info.set_ellipsize(Pango.EllipsizeMode.END)
+            self.encoding_info.set_markup("<small>" + desc_str + "</small>")
+            self.encoding_info.set_ellipsize(Pango.EllipsizeMode.END)
+        else:
+            self.encoding_info.set_markup("<small>" +_("Image Sequence")+ "</small>")
+            self.encoding_info.set_ellipsize(Pango.EllipsizeMode.END)
         
 
     

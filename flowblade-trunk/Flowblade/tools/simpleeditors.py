@@ -365,6 +365,9 @@ class FluxityScriptEditorWindow(Gtk.Window):
 
 # -------------------------------------------------------------------- Media Plugin add editors
 def create_add_media_plugin_editors(script_data_object):
+    global SIMPLE_EDITOR_LEFT_WIDTH
+    SIMPLE_EDITOR_LEFT_WIDTH = 200
+    
     editors_object = AddMediaPluginEditors(script_data_object)
     return editors_object
 
@@ -398,19 +401,15 @@ class AddMediaPluginEditors:
         add_scroll = False
         if editorstate.screen_size_small_height() == True and n_editors > 4:
             add_scroll = True
-            h = 500
         elif editorstate.screen_size_small_height() == True and editorstate.screen_size_large_height() == False and n_editors > 5:
             add_scroll = True
-            h = 600
         elif editorstate.screen_size_large_height() == True and n_editors > 6:
             add_scroll = True
-            h = 700
-            
+
         if add_scroll == True:
             sw = Gtk.ScrolledWindow()
             sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
             sw.add(pane)
-            sw.set_size_request(400, h)
 
         if add_scroll == True:
             editors_panel = sw

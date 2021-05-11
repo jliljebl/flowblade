@@ -14,6 +14,7 @@ def init_script(fctx):
     fctx.add_editor("Speed", fctx.EDITOR_FLOAT_RANGE, (1.0, -5.0, 5.0))
     fctx.add_editor("Speed Variation %", fctx.EDITOR_INT_RANGE, (40, 0, 99))
     fctx.add_editor("Number of Balls", fctx.EDITOR_INT_RANGE, (50, 10, 500))
+    fctx.add_editor("Ball Size", fctx.EDITOR_INT_RANGE, (330, 10, 70))
 
 def init_render(fctx):
     hue = fctx.get_editor_value("Hue")
@@ -40,13 +41,11 @@ def init_render(fctx):
         speed_var = random.uniform(-1.0, 1.0)
         speed_var_size = speed * (speed_var_size_precentage  / 100.0)
         ball_speed = speed + (speed_var * speed_var_size  )
-        # fctx.log_line("ball speed: " + str(ball_speed) + " " + str(speed_var_size))
         color_index = random.randint(0, 9)
         ball_data.append((path_pos, y, ball_speed, color_index))
     fctx.set_data_obj("ball_data", ball_data)
 
 def render_frame(frame, fctx, w, h):
-    # Frame Render code here
     cr = fctx.get_frame_cr()
 
     bg_color = cairo.SolidPattern(*fctx.get_data_obj("hue_tuple"))
@@ -57,9 +56,10 @@ def render_frame(frame, fctx, w, h):
     cr.rectangle(0, 0, w, h)
     cr.fill()
 
-    size = 330.0
-    xc = size / 2.0;
-    yc = size / 2.0;
+    size = fctx.get_editor_value("Ball Size")
+
+    xc = size / 2.0
+    yc = size / 2.0
 
     number_of_balls = fctx.get_editor_value("Number of Balls")
     path_start_x = - size
@@ -68,7 +68,6 @@ def render_frame(frame, fctx, w, h):
     SPEED_NORM_PER_FRAME = 15.0 / float(w) 
     for i in range(0, number_of_balls):
         path_pos, y, ball_speed, color_index = ball_data[i]
-        #fctx.log_msg(str(i) + " " + str(x))
         xpos_norm = path_pos + (float(frame) * ball_speed * SPEED_NORM_PER_FRAME)
         while xpos_norm > 1.0:
             xpos_norm = xpos_norm - 1.0
