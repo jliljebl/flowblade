@@ -396,15 +396,10 @@ def _add_fluxity_rendered_help_media_complete(created_unrendered_clip_path, cont
     action_object.render_full_media(throw_away_clip)
 
 def _plugin_create_render_complete_callback(resource_path, container_data):
-    #file_name = os.path.basename(rendered_media_path)
-    #media_item_path = userfolders.get_render_dir() +"/"+ file_name
-    #os.replace(rendered_media_path, media_item_path)
-    #rendered_clip = current_sequence().create_file_producer_clip(rendered_media_path, new_clip_name=None, novalidate=False, ttl=1)
-    print(container_data.render_data.__dict__)
     if container_data.render_data.do_video_render == False:
         projectaction.add_plugin_image_sequence(resource_path, container_data.data_slots["fluxity_plugin_edit_data"]["name"], container_data.unrendered_length)
     else:
-        projectaction.open_file_names([resource_path])
+        projectaction.add_plugin_rendered_media(resource_path, container_data.data_slots["fluxity_plugin_edit_data"]["name"])
     
 # ---------------------------------------------------------------------- MLT XML
 def create_mlt_xml_media_item(xml_file_path, media_name):

@@ -1179,6 +1179,10 @@ def add_plugin_image_sequence(resource_path, file_name, length):
 
     editorpersistance.prefs.last_opened_media_dir = os.path.dirname(resource_path)
     editorpersistance.save()
+
+def add_plugin_rendered_media(path, plugin_name):
+    add_media_thread = AddMediaFilesThread([path], plugin_name)
+    add_media_thread.start()
     
 def open_rendered_file(rendered_file_path):
     add_media_thread = AddMediaFilesThread([rendered_file_path])
@@ -1436,16 +1440,10 @@ def _do_create_selection_compound_clip(dialog, response_id, name_entry):
 
 def _xml_compound_render_done_callback(filename, media_name):
     containerclip.create_mlt_xml_media_item(filename, media_name)
-    
-    #add_media_thread = AddMediaFilesThread([filename], media_name)
-    #add_media_thread.start()
 
 def _sequence_xml_compound_render_done_callback(data):
     filename, media_name = data
     containerclip.create_mlt_xml_media_item(filename, media_name)
-    
-    #add_media_thread = AddMediaFilesThread([filename], media_name)
-    #add_media_thread.start()
 
 def _xml_freeze_compound_render_done_callback(filename, media_name):
     # Remove freeze filter
@@ -1459,6 +1457,8 @@ def create_sequence_compound_clip():
     # lets's just set something unique-ish 
     default_name = _("sequence_") + _get_compound_clip_default_name_date_str()
     dialogs.compound_clip_name_dialog(_do_create_sequence_compound_clip, default_name, _("Save Sequence Container Clip"))
+
+
 
 def _do_create_sequence_compound_clip(dialog, response_id, name_entry):
     if response_id != Gtk.ResponseType.ACCEPT:
