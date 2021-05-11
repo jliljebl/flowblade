@@ -327,12 +327,12 @@ class AbstractContainerActionObject:
             if resource_path == None:
                 return # TODO: User info?
 
-            rendered_clip = current_sequence().create_file_producer_clip(resource_path, new_clip_name=None, novalidate=False, ttl=1)
+            rendered_clip = current_sequence().create_file_producer_clip(resource_path, new_clip_name=self.clip.name, novalidate=False, ttl=1)
             
         # Using video clip as clip
         else:
             resource_path = self.get_rendered_video_clip_path()
-            rendered_clip = current_sequence().create_file_producer_clip(resource_path, new_clip_name=None, novalidate=True, ttl=1)
+            rendered_clip = current_sequence().create_file_producer_clip(resource_path, new_clip_name=self.clip.name, novalidate=True, ttl=1)
         
         track, clip_index = current_sequence().get_track_and_index_for_id(self.clip.id)
         
