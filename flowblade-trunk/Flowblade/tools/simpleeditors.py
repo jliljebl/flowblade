@@ -270,29 +270,12 @@ class FluxityScriptEditorWindow(Gtk.Window):
         else:
             pane.pack_start(Gtk.Label(_("No Editors for this script")), False, False, 0)
             
-        # Put in scrollpane if too many editors for screensize.
-        n_editors = len(self.editor_widgets )
-        add_scroll = False
-        if editorstate.screen_size_small_height() == True and n_editors > 4:
-            add_scroll = True
-            h = 500
-        elif editorstate.screen_size_small_height() == True and editorstate.screen_size_large_height() == False and n_editors > 5:
-            add_scroll = True
-            h = 600
-        elif editorstate.screen_size_large_height() == True and n_editors > 6:
-            add_scroll = True
-            h = 700
-            
-        if add_scroll == True:
-            sw = Gtk.ScrolledWindow()
-            sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-            sw.add(pane)
-            sw.set_size_request(400, h)
-
-        if add_scroll == True:
-            editors_panel = sw
-        else:
-            editors_panel = pane
+        sw = Gtk.ScrolledWindow()
+        sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        sw.add(pane)
+        editors_panel = sw
+        
+        editors_panel.set_size_request(400, 400)
 
         cancel_b = guiutils.get_sized_button(_("Cancel"), 150, 32)
         cancel_b.connect("clicked", lambda w: self.cancel())
@@ -358,7 +341,7 @@ class FluxityScriptEditorWindow(Gtk.Window):
         self.preview_panel.preview_monitor.queue_draw()
         
     def cancel(self):
-        self.callback(False, self, self.editor_widgets, self.orig_program_info_json)
+        self.callback(False, self, self.editor_widgets, None)
 
     def save(self):
         self.callback(True, self, self.editor_widgets, None)
