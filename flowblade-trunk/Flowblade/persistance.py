@@ -599,6 +599,7 @@ def fill_track_mlt(mlt_track, py_track):
 
             # Try to fix possible missing proxy files for clips if we are in proxy mode.
             if not os.path.isfile(clip.path) and project_proxy_mode == appconsts.USE_PROXY_MEDIA:
+                
                 try:
                     try:
                         possible_orig_file_path = proxy_path_dict[clip.path] # This dict was filled with media file data.
@@ -616,10 +617,17 @@ def fill_track_mlt(mlt_track, py_track):
 
             # If container clip rendered media is missing try to use unrendered media.
             if not os.path.isfile(clip.path) and clip.container_data != None:
-                if clip.path != clip.container_data.unrendered_media:
-                    clip.path = clip.container_data.unrendered_media
-                    clip.container_data.clear_rendered_media()
-                    
+                if clip.media_type != appconsts.IMAGE_SEQUENCE:
+                    if clip.path != clip.container_data.unrendered_media:
+                        clip.path = clip.container_data.unrendered_media
+                        clip.container_data.clear_rendered_media()
+                else:
+                    folder = os.path.dirname(clip.path)
+                    if not(os.path.isdir(folder)) or len(os.listdir(os.path.dirname(clip.path))) == 0:
+                        if clip.path != clip.container_data.unrendered_media:
+                            clip.path = clip.container_data.unrendered_media
+                            clip.container_data.clear_rendered_media()
+
             mlt_clip = sequence.create_file_producer_clip(clip.path, None, False, clip.ttl)
             
             if mlt_clip == None:
