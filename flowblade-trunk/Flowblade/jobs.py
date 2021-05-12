@@ -103,6 +103,8 @@ class JobProxy: # This object represnts job in job queue.
             return _("Motion Clip")
         elif self.type == PROXY_RENDER:
             return _("Proxy Clip")
+        elif self.type == CONTAINER_CLIP_RENDER_FLUXITY:
+            return _("Media Plugin Clip")
             
     def get_progress_str(self):
         if self.progress < 0.0:

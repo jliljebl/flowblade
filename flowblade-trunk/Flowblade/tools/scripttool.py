@@ -849,6 +849,7 @@ class ScriptToolWindow(Gtk.Window):
         render_vbox.pack_start(render_status_row, False, False, 0)
         render_vbox.pack_start(render_row, False, False, 0)
         render_vbox.pack_start(guiutils.pad_label(24, 24), False, False, 0)
+        guiutils.set_margins(render_vbox, 0, 0, 8, 0)
 
         exit_b = guiutils.get_sized_button(_("Close"), 150, 32)
         exit_b.connect("clicked", lambda w:_shutdown())
