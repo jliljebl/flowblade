@@ -1089,10 +1089,11 @@ class ScriptToolWindow(Gtk.Window):
 def _global_key_down_listener(widget, event):
     # CTRL + S saving
     if event.keyval == Gdk.KEY_s:
-        if _last_save_path == None:
-            save_script_dialog(_save_script_dialog_callback)
-        else:
-            _save_script(_last_save_path)
+        if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+            if _last_save_path == None:
+                save_script_dialog(_save_script_dialog_callback)
+            else:
+                _save_script(_last_save_path)
             
     # Script view and frame name entry need their own key presses
     # and we can't e.g. use up LEFT ARROW here.
