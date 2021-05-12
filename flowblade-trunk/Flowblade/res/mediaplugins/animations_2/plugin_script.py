@@ -15,10 +15,9 @@ def init_script(fctx):
     fctx.set_author("Janne Liljeblad")
     
     fctx.add_editor("Hue", fctx.EDITOR_COLOR, (0.8, 0.50, 0.3, 1.0))
-    #fctx.add_editor("Speed", fctx.EDITOR_FLOAT_RANGE, (1.0, -5.0, 5.0))
-    #fctx.add_editor("Speed Variation %", fctx.EDITOR_INT_RANGE, (40, 0, 99))
+    fctx.add_editor("Hue Change Amount", fctx.EDITOR_FLOAT_RANGE, (0.5, 0.1, 5.0))
+    fctx.add_editor("Speed", fctx.EDITOR_FLOAT_RANGE, (0.5, 0.1, 5.0))
     fctx.add_editor("Size", fctx.EDITOR_FLOAT_RANGE, (50.0, 10.0, 300.0))
-    # fctx.add_editor("Number of Balls", fctx.EDITOR_INT_RANGE, (50, 10, 500))
 
     _points = []
     for i in range(0, 6):
@@ -33,8 +32,6 @@ def init_render(fctx):
     fctx.set_data_obj("hue_tuple", hue)
     size = fctx.get_editor_value("Size")
 
-
-
     global shape_width, shape_height, cols, rows
     shape_width = size * 2.0 * math.cos(math.pi / 6.0)
     shape_height = size + size * math.sin(math.pi / 6.0)
@@ -45,15 +42,16 @@ def init_render(fctx):
     middle_hues = []
     color_positions = []
     deltas = []
-    delta_size = 0.1
-    hue_change_size = 0.1
-    fctx.log_line("ffff" + str(number_hex) + "ffff" + str(cols))
+    delta_size = 0.03 * fctx.get_editor_value("Speed")
+    hue_change_size = 0.1 * fctx.get_editor_value("Hue Change Amount")
+
     for i in range(0, number_hex):
         color_positions.append(random.uniform(-1.0, 1.0))
-        color_mult = random.uniform(-1.0, 1.0) * hue_change_size
-        middle_hues.append((_clamp(hr * color_mult), _clamp(hg * color_mult), _clamp(hb* color_mult)))
+        color_add = random.uniform(-1.0, 1.0) * hue_change_size
+        middle_hues.append((_clamp(hr + color_add), _clamp(hg + color_add), _clamp(hb + color_add)))
         d = delta_size if random.uniform(-1.0, 1.0) > 0.0 else -delta_size
         deltas.append(d)
+
     fctx.set_data_obj("middle_hues", middle_hues)
     fctx.set_data_obj("color_positions", color_positions)
     fctx.set_data_obj("deltas", deltas)
@@ -72,13 +70,12 @@ def render_frame(frame, fctx, w, h):
 
     x0 = -size / 2.0
     y0 = -size / 2.0
-    hue_change_anim_range = 0.1
+    hue_change_anim_range = 0.1 * fctx.get_editor_value("Hue Change Amount")
     
     cr.set_source(bg_color)
     cr.rectangle(0, 0, w, h)
     cr.fill()
-    
-    fctx.log_line("erer" + str(len(middle_hues)) + ", " + str(rows))
+
     for row in range(0, rows):
         yt = y0 + shape_height * row
         x_row = x0 + shape_width / 2.0  * (float(row) % 2.0)
@@ -91,7 +88,7 @@ def render_frame(frame, fctx, w, h):
             delta = deltas[index]
             r = _clamp( r + color_position * hue_change_anim_range)
             g = _clamp( g + color_position * hue_change_anim_range)
-            b = _clamp( g + color_position * hue_change_anim_range)
+            b = _clamp( b + color_position * hue_change_anim_range)
             
             # animate color
             color_position = color_position + delta
