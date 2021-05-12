@@ -2168,11 +2168,15 @@ def _get_edit_menu_item(event, clip, track, callback):
     return menu_item
 
 def _get_container_clip_menu_item(event, clip, track, callback):
-    menu_item = Gtk.MenuItem(_("Container Clip Actions"))
+    if  clip.container_data.container_type == appconsts.CONTAINER_CLIP_FLUXITY:
+        menu_text = _("Media Plugin Actions")
+    else:        
+        menu_text = _("Container Clip Actions")
+    menu_item = Gtk.MenuItem(menu_text)
     sub_menu = Gtk.Menu()
     menu_item.set_submenu(sub_menu)
 
-    clip.container_data
+
 
     render_full_item = _get_menu_item(_("Render Full Media..."), callback, (clip, track, "cc_render_full_media", event.x))
     if clip.container_data.rendered_media_range_in != -1:
@@ -2193,7 +2197,12 @@ def _get_container_clip_menu_item(event, clip, track, callback):
 
     _add_separetor(sub_menu)
 
-    edit_program_item = _get_menu_item(_("Edit Container Program"), callback, (clip, track, "cc_edit_program", event.x))
+    if  clip.container_data.container_type == appconsts.CONTAINER_CLIP_FLUXITY:
+        item_text = _("Edit Media Plugin...")
+    else:        
+        item_text = _("Edit Container Program...")
+        
+    edit_program_item = _get_menu_item(item_text, callback, (clip, track, "cc_edit_program", event.x))
     if clip.container_data.editable == False:
         edit_program_item.set_sensitive(False)
     sub_menu.append(edit_program_item)
@@ -2370,7 +2379,7 @@ def display_media_file_popup_menu(media_file, callback, event):
     
     if hasattr(media_file, "container_data"):
         if media_file.container_data != None:
-            if media_file.container_data.editable == True:
+            if media_file.container_data.container_type == appconsts.CONTAINER_CLIP_BLENDER:
                 _add_separetor(media_file_menu)
                 item = _get_menu_item(_("Edit Container Program Edit Data"), callback, ("Edit Container Data", media_file, event))
                 media_file_menu.add(item)
