@@ -254,7 +254,7 @@ def _init_playback():
     _player.connect_and_start()
 
 def _reinit_init_playback():
-    tractor = _get_playback_tractor(200)
+    tractor = _get_playback_tractor(_script_length)
     tractor.mark_in  = -1
     tractor.mark_out = -1
     _player.set_producer(tractor)
@@ -280,15 +280,15 @@ def _get_playback_tractor(length, range_frame_res_str=None, in_frame=-1, out_fra
             bg_clip1 = mlt.Producer(profile, str(bg_path))
             track0.insert(bg_clip1, indx, 0, in_frame - 1)
             indx += 1
-    
+        
         range_producer = mlt.Producer(profile, range_frame_res_str)
-        track0.insert(range_producer, indx, in_frame, out_frame)
+        track0.insert(range_producer, indx, 0, out_frame - in_frame)
         indx += 1
         
         if out_frame < length - 1:
             bg_clip2 = mlt.Producer(profile, str(bg_path))
-            track0.insert(bg_clip2, indx, out_frame, length - 1)
-        
+            track0.insert(bg_clip2, indx, out_frame + 1, length - 1)
+            
     return tractor
     
 #----------------------------------------------- session folders and files
@@ -385,7 +385,9 @@ def _hamburger_menu_callback(widget, msg):
         save_script_dialog(_save_script_dialog_callback)
     elif msg == "save":
         if _last_save_path != None:
-            _save_script(_last_save_path)    
+            _save_script(_last_save_path)
+    elif msg == "change_length":
+        _show_plugin_media_length_change_dialog()
     elif msg == "render_preview":
         render_preview()
     elif msg == "close":
@@ -479,7 +481,6 @@ def update_frame_displayers():
 def update_length(new_length):
     global _script_length
     _script_length = new_length
-
     new_playback_producer = _get_playback_tractor(_script_length)
     _player.set_producer(new_playback_producer)
 
@@ -524,7 +525,7 @@ def render_preview_frame():
         
     if fctx.error == None:
         fctx.priv_context.write_out_frame(True)
-        new_playback_producer = _get_playback_tractor(_script_length, fctx.priv_context.get_preview_frame_path() , 0, _script_length)
+        new_playback_producer = _get_playback_tractor(_script_length, fctx.priv_context.get_preview_frame_path() , 0, _script_length - 1)
         _player.set_producer(new_playback_producer)
         _player.seek_frame(frame)
 
@@ -594,8 +595,45 @@ def _encode_settings_callback(dialog, response_id):
         _window.update_encode_desc()
     
     dialog.destroy()
-        
-        
+
+def _show_plugin_media_length_change_dialog():
+    dialog = Gtk.Dialog(_("Change Plugin Media Length"), _window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                        _("Ok"), Gtk.ResponseType.ACCEPT))
+    
+    row = Gtk.HBox()
+    
+    frames = 200
+    max_len = 100000
+
+    frames_label = Gtk.Label(_("Frames:"))
+    guiutils.set_margins(frames_label, 0, 0, 0, 4)
+    frames_spin = Gtk.SpinButton.new_with_range(10, max_len, 1)
+    frames_spin.set_value(frames)
+    
+    row.pack_start(guiutils.pad_label(48,2), False, False, 0)
+    row.pack_start(frames_label, False, False, 0)
+    row.pack_start(frames_spin, False, False, 0)
+    row.pack_start(guiutils.pad_label(48,2), False, False, 0)
+    guiutils.set_margins(row, 0, 12, 0, 0)
+
+    vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(row, False, False, 0)
+
+    alignment = dialogutils.get_alignment2(vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    dialog.set_default_response(Gtk.ResponseType.OK)
+    dialog.set_resizable(False)
+    dialog.connect('response', _plugin_media_length_changed, frames_spin)
+    dialog.show_all()
+    
+def _plugin_media_length_changed(dialog, response_id, frames_spin):
+    dialog.destroy()
+    
+
 #-------------------------------------------------- shutdown
 def _shutdown():
     # Stop all possibly running threads and consumers
@@ -760,7 +798,7 @@ class ScriptToolWindow(Gtk.Window):
         # Render panel
         self.mark_in_label = guiutils.bold_label(_("Mark In:"))
         self.mark_out_label = guiutils.bold_label(_("Mark Out:"))
-        self.length_label = guiutils.bold_label(_("Length:"))
+        self.length_label = guiutils.bold_label(_("Plugin Media Length:"))
 
         self.mark_in_info = Gtk.Label("")
         self.mark_out_info = Gtk.Label("")
@@ -769,6 +807,7 @@ class ScriptToolWindow(Gtk.Window):
         in_row = guiutils.get_two_column_box(self.mark_in_label, self.mark_in_info, 150)
         out_row = guiutils.get_two_column_box(self.mark_out_label, self.mark_out_info, 150)
         length_row = guiutils.get_two_column_box(self.length_label, self.length_info, 150)
+        guiutils.set_margins(length_row, 8, 0, 0, 0)
 
         marks_row = Gtk.VBox(False, 2)
         marks_row.pack_start(in_row, True, True, 0)
@@ -999,6 +1038,8 @@ class ScriptToolWindow(Gtk.Window):
         plugin_menu_item.set_submenu(plugin_menu)
         plugin_menu_item.show_all()
         menu.add(plugin_menu_item)
+        _add_separetor(menu)
+        menu.add(_get_menu_item(_("Change Plugin Media Length") + "...", _hamburger_menu_callback, "change_length" ))
         _add_separetor(menu)
         menu.add(_get_menu_item(_("Render Frame Preview") + "...", _hamburger_menu_callback, "render_preview" ))
         menu.add(_get_menu_item(_("Render Range Preview") + "...", _hamburger_menu_callback, "render_range_preview" ))
@@ -1374,6 +1415,7 @@ class FluxityPluginRenderer(threading.Thread):
     def shutdown(self):        
         if self.render_player != None:
             self.render_player.shutdown()        
+
 
 
 
