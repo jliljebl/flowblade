@@ -631,7 +631,13 @@ def _show_plugin_media_length_change_dialog():
     dialog.show_all()
     
 def _plugin_media_length_changed(dialog, response_id, frames_spin):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        new_length = int(frames_spin.get_value())
+        update_length(new_length)
+        
     dialog.destroy()
+    
+    
     
 
 #-------------------------------------------------- shutdown
