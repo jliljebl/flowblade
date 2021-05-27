@@ -5,19 +5,22 @@
 * Moving video display forward from SDL 1.2 with SDL 2 and OpenGL
 * SDL 2 and OpenGL based GPU filters and Compositors
 
-## Configurability improvements
+## GUI improvements
 
-* middlebar buttons configuration window
+* Keyframe tool look'n'feel update
 
-* window layout configuration window
+* Neutral theme tweaks, add more darker hues by manipulating individual widgets' CSS if needed
 
-* user settable keyboard shortcuts
+* make e.g. monitor player buttons panel tighter, look for smilar options to tighten up by cutting down on margins and white space
 
-## Container Clips
+* Gray theme fixes, e.g. non-default notebooks have line frames and other similar issues
 
-* Natron project container clips
+## Project vault
 
-* Cairo Script tool + container clips for created scripts
+* provide possibility to store all projects in a user defined folder
 
-* repository for sharing user created Container Clip resources
+* provide possibility to delete resources like container clips and proxies per project
 
+## Render issues
+
+* attempt moving to *melt* for export render
