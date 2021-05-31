@@ -233,9 +233,12 @@ class EditorWindow:
         # Menu box
         # menubar size 348, 28 if w want to center someting here with set_size_request
         self.menubar.set_margin_bottom(4)
+        self.menubar.set_name("lighter-bg-widget")
+
         menu_vbox = Gtk.HBox(False, 0)
         menu_vbox.pack_start(guiutils.get_right_justified_box([self.menubar]), False, False, 0)
         menu_vbox.pack_start(Gtk.Label(), True, True, 0)
+
         if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
             menu_vbox.pack_start(self.monitor_tc_info.widget, False, False, 0)
         else:
@@ -473,7 +476,6 @@ class EditorWindow:
         monitor_vbox.pack_start(sw_pos_hbox, False, True, 0)
         monitor_vbox.pack_start(player_buttons_row, False, True, 0)
         monitor_align = guiutils.set_margins(monitor_vbox, 0, 0, 0, 0)
-        #monitor_align.set_name("darkest-bg-widget")
 
         self.monitor_frame = Gtk.Frame()
         self.monitor_frame.add(monitor_align)

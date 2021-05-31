@@ -2,15 +2,16 @@
 // it gets @if ed depending on $variant
 
 
-$base_color: if($variant =='light', #ffffff, #202020);
-$text_color: if($variant == 'light', #5c616c, #cccccc);
-$bg_color: if($variant =='light', #F5F6F7, #282828);
+$base_color: if($variant =='light', #ffffff, #191919);
+$text_color: if($variant == 'light', #5c616c, #bbbbbb);
+$bg_color: if($variant =='light', #F5F6F7, #292929);
 $fg_color: if($variant =='light', #5c616c, #cccccc);
 
 $darkest_color: if($variant =='light', #ffffff, #191919);
 
 $selected_fg_color: #ffffff;
-$selected_bg_color: #115098;
+// $selected_bg_color: #115098;
+$selected_bg_color: #1057a8;
 $selected_borders_color: darken($selected_bg_color, 20%);
 $borders_color: if($variant =='light', darken($bg_color,9%), darken($bg_color,6%));
 
