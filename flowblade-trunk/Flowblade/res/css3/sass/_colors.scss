@@ -4,8 +4,10 @@
 
 $base_color: if($variant =='light', #ffffff, #202020);
 $text_color: if($variant == 'light', #5c616c, #cccccc);
-$bg_color: if($variant =='light', #F5F6F7, #303030);
+$bg_color: if($variant =='light', #F5F6F7, #282828);
 $fg_color: if($variant =='light', #5c616c, #cccccc);
+
+$darkest_color: if($variant =='light', #ffffff, #191919);
 
 $selected_fg_color: #ffffff;
 $selected_bg_color: #115098;

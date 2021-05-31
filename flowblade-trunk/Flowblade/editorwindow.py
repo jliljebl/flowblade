@@ -289,7 +289,7 @@ class EditorWindow:
                                     projectaction.columns_count_launch_pressed,
                                     projectaction.hamburger_pressed,  # lambda w,e: proxyediting.create_proxy_files_pressed(),
                                     projectaction.media_filtering_select_pressed)
-        #guiutils.set_margins(media_panel, 6, 6, 4, 6)
+
         self.media_panel = media_panel
         self.media_panel.set_name("darker-bg-widget")
         self.bin_info = bin_info
@@ -380,11 +380,7 @@ class EditorWindow:
         self.sequence_list_view = guicomponents.SequenceListView(   projectaction.sequence_name_edited,
                                                                     projectaction.sequence_panel_popup_requested,
                                                                     projectaction.sequence_list_double_click_done)
-        seq_panel = panels.get_sequences_panel(
-                             self.sequence_list_view,
-                             lambda w,e: projectaction.change_edit_sequence(),
-                             lambda w,e: projectaction.add_new_sequence(),
-                             lambda w,e: projectaction.delete_selected_sequence())
+        seq_panel = panels.get_sequences_panel(self.sequence_list_view)
 
         # Jobs panel
         jobs.create_jobs_list_view()
@@ -404,7 +400,7 @@ class EditorWindow:
             top_project_vbox.pack_start(self.bins_panel, True, True, 0)
             top_project_vbox.pack_start(seq_panel, True, True, 0)
             top_project_vbox.set_size_request(PANEL_WIDTH, PANEL_HEIGHT)
-            self.top_project_panel = guiutils.set_margins(top_project_vbox, 0, 2, 6, 2)
+            self.top_project_panel = guiutils.set_margins(top_project_vbox, 0, 0, 0, 0)
             self.project_panel = None
         else:
             # Notebook project panel for smallest screens
@@ -458,6 +454,7 @@ class EditorWindow:
         player_buttons_row.pack_start(Gtk.Label(), True, True, 0)
         player_buttons_row.pack_start(self.trim_view_select.widget, False, False, 0)
         player_buttons_row.pack_start(self.view_mode_select.widget, False, False, 0)
+        #player_buttons_row.set_name("darkest-bg-widget")
 
         # Switch / pos bar row
         sw_pos_hbox = Gtk.HBox(False, 1)
@@ -475,8 +472,8 @@ class EditorWindow:
         monitor_vbox.pack_start(monitor_widget.widget, True, True, 0)
         monitor_vbox.pack_start(sw_pos_hbox, False, True, 0)
         monitor_vbox.pack_start(player_buttons_row, False, True, 0)
-
-        monitor_align = guiutils.set_margins(monitor_vbox, 3, 0, 3, 3)
+        monitor_align = guiutils.set_margins(monitor_vbox, 0, 0, 0, 0)
+        #monitor_align.set_name("darkest-bg-widget")
 
         self.monitor_frame = Gtk.Frame()
         self.monitor_frame.add(monitor_align)

@@ -1,9 +1,8 @@
 #darker-bg-widget {
   background-color: $base_color;
-  border-color: $base_color;
-  border-top: 6;
-  border-right: 4;
-  border-bottom: 6;
-  border-left: 6;
+}
+
+#darkest-bg-widget {
+  background-color: $darkest_color;
 }
 
