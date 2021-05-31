@@ -458,13 +458,10 @@ class EditorWindow:
         player_buttons_row.pack_start(Gtk.Label(), True, True, 0)
         player_buttons_row.pack_start(self.trim_view_select.widget, False, False, 0)
         player_buttons_row.pack_start(self.view_mode_select.widget, False, False, 0)
-        player_buttons_row.set_margin_bottom(2)
 
         # Switch / pos bar row
         sw_pos_hbox = Gtk.HBox(False, 1)
         sw_pos_hbox.pack_start(pos_bar_frame, True, True, 0)
-        sw_pos_hbox.set_margin_top(4)
-        sw_pos_hbox.set_margin_left(2)
         
         # Video display
         monitor_widget = monitorwidget.MonitorWidget()
@@ -474,7 +471,7 @@ class EditorWindow:
         dnd.connect_video_monitor(self.tline_display)
 
         # Monitor
-        monitor_vbox = Gtk.VBox(False, 1)
+        monitor_vbox = Gtk.VBox(False, 0)
         monitor_vbox.pack_start(monitor_widget.widget, True, True, 0)
         monitor_vbox.pack_start(sw_pos_hbox, False, True, 0)
         monitor_vbox.pack_start(player_buttons_row, False, True, 0)
