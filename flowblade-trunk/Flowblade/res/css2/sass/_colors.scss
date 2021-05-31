@@ -7,6 +7,8 @@ $text_color: if($variant == 'light', #5c616c, #D3DAE3);
 $bg_color: if($variant =='light', #F5F6F7, #272730);
 $fg_color: if($variant =='light', #5c616c, #D3DAE3);
 
+$test_red: #FF0000;
+
 $selected_fg_color: #ffffff;
 $selected_bg_color: #115098;
 $selected_borders_color: darken($selected_bg_color, 20%);

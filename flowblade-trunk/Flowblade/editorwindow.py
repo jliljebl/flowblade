@@ -289,14 +289,16 @@ class EditorWindow:
                                     projectaction.columns_count_launch_pressed,
                                     projectaction.hamburger_pressed,  # lambda w,e: proxyediting.create_proxy_files_pressed(),
                                     projectaction.media_filtering_select_pressed)
-        guiutils.set_margins(media_panel, 6, 6, 4, 6)
+        #guiutils.set_margins(media_panel, 6, 6, 4, 6)
         self.media_panel = media_panel
+        self.media_panel.set_name("darker-bg-widget")
         self.bin_info = bin_info
 
         # Smallest screens always get bins in same panel as media, others get top level project panel if selected
         if editorlayout.top_level_project_panel() == True:
             self.mm_paned = Gtk.HBox()
             self.mm_paned.add(media_panel)
+
         else:
             self.mm_paned = Gtk.HPaned()
             guiutils.set_margins(self.bins_panel, 6, 6, 8, 0)

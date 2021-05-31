@@ -1047,6 +1047,7 @@ class MediaPanel():
     def __init__(self, media_file_popup_cb, double_click_cb, panel_menu_cb):
         # Aug-2019 - SvdB - BB
         self.widget = Gtk.VBox()
+        self.widget.set_name("darker-bg-widget")
         self.row_widgets = []
         self.selected_objects = []
         self.columns = editorpersistance.prefs.media_columns

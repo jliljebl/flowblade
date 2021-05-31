@@ -84,11 +84,16 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hambu
     buttons_box.pack_start(files_filter_launcher.widget, False, False, 0)
     buttons_box.pack_start(Gtk.Label(), True, True, 0)
     buttons_box.pack_start(bin_info, False, False, 0)
-    #buttons_box.pack_start(Gtk.Label(), True, True, 0)
-
+    buttons_box.set_name("darker-bg-widget")
+    guiutils.set_margins(buttons_box, 0, 6, 4, 6)
+    
+    buttons_box_wrapper = Gtk.HBox(False,1)
+    buttons_box_wrapper.pack_start(buttons_box, False, False, 0)
+    buttons_box_wrapper.set_name("darker-bg-widget")
+    
     panel = Gtk.VBox()
     panel.pack_start(media_list_view, True, True, 0)
-    panel.pack_start(buttons_box, False, True, 0)
+    panel.pack_start(buttons_box_wrapper, False, True, 0)
 
     return (panel, bin_info)
 
