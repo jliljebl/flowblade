@@ -908,11 +908,12 @@ def _set_screen_size_data():
 
     display = Gdk.Display.get_default()
     num_monitors = display.get_n_monitors() # Get number of monitors.
+
     if monitor_data_index == 0:
         scr_w = Gdk.Screen.width()
         scr_h = Gdk.Screen.height()
         print("Using Full Screen size for layout:", scr_w, "x", scr_h)
-    elif monitor_data_index > num_monitors:
+    elif monitor_data_index > len(monitor_data) - 1:
         print("Specified layout monitor not present.")
         scr_w = Gdk.Screen.width()
         scr_h = Gdk.Screen.height()

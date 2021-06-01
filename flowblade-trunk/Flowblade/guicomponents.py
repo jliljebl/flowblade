@@ -3701,6 +3701,7 @@ class CategoriesModelComboBox:
     def __init__(self, categories_list):
         self.categories_list = categories_list # categories_list is list of form [("category_name", [category_items]), ...]
                                                # with category_items list of form ["item_name", ...]
+        print("categories_list", categories_list)
         self.model = Gtk.TreeStore.new([str])
         
         for i in range(0, len(categories_list)):
