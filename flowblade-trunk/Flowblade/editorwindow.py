@@ -235,16 +235,31 @@ class EditorWindow:
         self.menubar.set_margin_bottom(4)
         self.menubar.set_name("lighter-bg-widget")
 
-        menu_vbox = Gtk.HBox(False, 0)
-        menu_vbox.pack_start(guiutils.get_right_justified_box([self.menubar]), False, False, 0)
-        menu_vbox.pack_start(Gtk.Label(), True, True, 0)
+        menubar_box =  Gtk.HBox(False, 0)
+        menubar_box.pack_start(guiutils.get_right_justified_box([self.menubar]), False, False, 0)
+        menubar_box.pack_start(Gtk.Label(), True, True, 0)
+
+        monitor_source_box = Gtk.HBox(False, 0)
+        monitor_source_box.pack_start(Gtk.Label(), True, True, 0)
+        monitor_source_box.pack_start(self.monitor_tc_info.monitor_source, False, False, 0)
+        monitor_source_box.pack_start(self.monitor_tc_info.monitor_tc, False, False, 0)
+        monitor_source_box.pack_start(Gtk.Label(), True, True, 0)
+
+        info_box = Gtk.HBox(False, 0)
+        info_box.pack_start(Gtk.Label(), True, True, 0)
+        info_box.pack_start(self.monitor_tc_info.widget, False, False, 0)
+        
+        menu_vbox = Gtk.HBox(True, 0)
+        menu_vbox.pack_start(menubar_box, True, True, 0)
 
         if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
-            menu_vbox.pack_start(self.monitor_tc_info.widget, False, False, 0)
+            menu_vbox.pack_start(monitor_source_box, True, True, 0)
+            menu_vbox.pack_start(info_box, True, True, 0)
         else:
             self.top_row_window_2 = Gtk.HBox(False, 0)
+            self.top_row_window_2.pack_start(monitor_source_box, False, False, 0)
             self.top_row_window_2.pack_start(Gtk.Label(), True, True, 0)
-            self.top_row_window_2.pack_start(self.monitor_tc_info.widget, False, False, 0)
+            self.top_row_window_2.pack_start(info_box, False, False, 0)
 
         # Pane
         pane = Gtk.VBox(False, 1)
@@ -403,7 +418,7 @@ class EditorWindow:
             top_project_vbox.pack_start(self.bins_panel, True, True, 0)
             top_project_vbox.pack_start(seq_panel, True, True, 0)
             top_project_vbox.set_size_request(PANEL_WIDTH, PANEL_HEIGHT)
-            self.top_project_panel = guiutils.set_margins(top_project_vbox, 0, 0, 0, 0)
+            self.top_project_panel = guiutils.set_margins(top_project_vbox, 0, 0, 0, 2)
             self.project_panel = None
         else:
             # Notebook project panel for smallest screens
