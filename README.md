@@ -1,11 +1,5 @@
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
-**NEW RELEASE 2.8 IS OUT NOW.**
-
-**INSTALLING: see[ here.](https://github.com/jliljebl/flowblade#installing-flowblade)**
-
-**RELEASE NOTES AVAILABLE[ here.](./flowblade-trunk/docs/RELEASE_NOTES.md)**
-
 1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
 2. [Features](https://github.com/jliljebl/flowblade#features)
 3. [Releases](https://github.com/jliljebl/flowblade#releases)
@@ -60,7 +54,7 @@ Flowblade offers a configurable workflow - toolset, its order, default tool and 
 
 **Latest release:** Flowblade Movie Editor 2.8 was released on February 2021.
 
-**Next release:** Flowblade Movie Editor 2.10 is targeted to be release in June 2021.
+**Next release:** Flowblade Movie Editor 2.10 is targeted to be release in August 2021.
 
 # Installing Flowblade
 
