@@ -84,11 +84,16 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hambu
     buttons_box.pack_start(files_filter_launcher.widget, False, False, 0)
     buttons_box.pack_start(Gtk.Label(), True, True, 0)
     buttons_box.pack_start(bin_info, False, False, 0)
-    #buttons_box.pack_start(Gtk.Label(), True, True, 0)
-
+    buttons_box.set_name("darker-bg-widget")
+    guiutils.set_margins(buttons_box, 0, 6, 4, 6)
+    
+    buttons_box_wrapper = Gtk.HBox(False,1)
+    buttons_box_wrapper.pack_start(buttons_box, False, False, 0)
+    buttons_box_wrapper.set_name("darker-bg-widget")
+    
     panel = Gtk.VBox()
     panel.pack_start(media_list_view, True, True, 0)
-    panel.pack_start(buttons_box, False, True, 0)
+    panel.pack_start(buttons_box_wrapper, False, True, 0)
 
     return (panel, bin_info)
 
@@ -98,28 +103,11 @@ def get_bins_tree_panel(bin_list_view):
 
     return get_named_frame(_("Bins"), panel, 0, 0, 0, "A <b>Bin</b> is a named collection of media.")
     
-def get_sequences_panel(sequence_list_view, edit_seq_cb, add_seq_cb, del_seq_cb):
-    # Create buttons and connect signals
-    add_b = Gtk.Button(_("Add"))
-    del_b = Gtk.Button(_("Delete"))
-    edit_b = Gtk.Button(_("Edit"))
-    add_b.set_tooltip_text(_("Add new Sequence to Project"))
-    del_b.set_tooltip_text(_("Delete Sequence from Project"))
-    edit_b.set_tooltip_text(_("Start editing Sequence"))
-    edit_b.connect("clicked", edit_seq_cb, None)
-    add_b.connect("clicked", add_seq_cb, None)
-    del_b.connect("clicked", del_seq_cb, None)
-
-    buttons_box = Gtk.HBox(True,1)
-    buttons_box.pack_start(edit_b, True, True, 0)
-    buttons_box.pack_start(add_b, True, True, 0)
-    buttons_box.pack_start(del_b, True, True, 0)
-    
+def get_sequences_panel(sequence_list_view):
     panel = Gtk.VBox()
-    #panel.pack_start(buttons_box, False, True, 0)
     panel.pack_start(sequence_list_view, True, True, 0)
 
-    return get_named_frame(_("Sequences"), panel, 0, 6, 4, _("A <b>Sequence</b> is the full contents of the timeline creating a program, a movie."))
+    return get_named_frame(_("Sequences"), panel, 0, 0, 0, _("A <b>Sequence</b> is the full contents of the timeline creating a program, a movie."))
 
 def _set_sensive_widgets(sensitive, list):
     for widget in list:

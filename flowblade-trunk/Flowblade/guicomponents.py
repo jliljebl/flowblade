@@ -1047,6 +1047,7 @@ class MediaPanel():
     def __init__(self, media_file_popup_cb, double_click_cb, panel_menu_cb):
         # Aug-2019 - SvdB - BB
         self.widget = Gtk.VBox()
+        self.widget.set_name("darker-bg-widget")
         self.row_widgets = []
         self.selected_objects = []
         self.columns = editorpersistance.prefs.media_columns
@@ -2820,9 +2821,12 @@ class MonitorTCInfo:
         self.marks_length_value = Gtk.Label(label="--:--:--:--")
         self.marks_length_value.modify_font(Pango.FontDescription(font_desc))
         
-        self.widget.pack_start(self.monitor_source, False, False, 0)
-        self.widget.pack_start(self.monitor_tc, False, False, 0)
-        self.widget.pack_start(guiutils.pad_label(24, 10), False, False, 0)
+        # NOTE: self.monitor_source, self.monitor_tc
+        # THESE NOW SHOWN IN DIFFERENT POSIOTON AT TOP BAR BUT 
+        # WE KEPT THEM HERE TRO AVOID REFACTORING SETTING VALUES 
+        #self.widget.pack_start(self.monitor_source, False, False, 0)
+        #self.widget.pack_start(self.monitor_tc, False, False, 0)
+        #self.widget.pack_start(guiutils.pad_label(24, 10), False, False, 0)
         if editorstate.screen_size_small_width() == False:
             self.widget.pack_start(self.in_label, False, False, 0)
             self.widget.pack_start(self.in_value, False, False, 0)

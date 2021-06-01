@@ -65,20 +65,21 @@ def get_project_info_panel():
 def get_top_level_project_info_panel():
 
     project_name_label = Gtk.Label(label=PROJECT().name)
-    name_row = guiutils.get_left_justified_box([project_name_label])
-    name_panel = guiutils.get_named_frame(_("Project"), name_row, 0, 6, 4, _("A <b>Project</b> contains one or more <b>Sequences</b> of edited media and a collection of media files stored in <b>Bins.</b>"))
+    name_row = guiutils.set_margins(guiutils.get_left_justified_box([project_name_label]), 0, 4,0,0)
+    #name_panel = guiutils.get_named_frame(_("Project"), name_row, 0, 6, 4, _("A <b>Project</b> contains one or more <b>Sequences</b> of edited media and a collection of media files stored in <b>Bins.</b>"))
 
     profile = PROJECT().profile
     desc_label = Gtk.Label(label=profile.description())
+    desc_row = guiutils.get_left_justified_box([desc_label])
     info_box = guicomponents.get_profile_info_small_box(profile)
-    vbox = Gtk.VBox()
-    vbox.pack_start(guiutils.get_left_justified_box([desc_label]), False, True, 0)
-    vbox.pack_start(info_box, False, True, 0)
-    profile_panel = guiutils.get_named_frame(_("Profile"), vbox, 0, 6, 4, _("<b>Profile</b> determines frame rate per second, image size in pixels and pixel aspect ratio for all <b>Sequences</b> in <b>Project</b> ."))
+    #vbox = Gtk.VBox()
+    #vbox.pack_start(guiutils.get_left_justified_box([desc_label]), False, True, 0)
+    #vbox.pack_start(info_box, False, True, 0)
+    #profile_panel = guiutils.get_named_frame(_("Profile"), vbox, 0, 6, 4, _("<b>Profile</b> determines frame rate per second, image size in pixels and pixel aspect ratio for all <b>Sequences</b> in <b>Project</b> ."))
 
     project_info_vbox = Gtk.VBox()
-    project_info_vbox.pack_start(name_panel, False, True, 0)
-    project_info_vbox.pack_start(profile_panel, False, True, 0)
+    project_info_vbox.pack_start(name_row, False, True, 0)
+    project_info_vbox.pack_start(desc_row, False, True, 0)
     guiutils.set_margins(project_info_vbox, 4,4,4,4)
 
     widgets.project_name_label = project_name_label

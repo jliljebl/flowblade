@@ -233,15 +233,33 @@ class EditorWindow:
         # Menu box
         # menubar size 348, 28 if w want to center someting here with set_size_request
         self.menubar.set_margin_bottom(4)
-        menu_vbox = Gtk.HBox(False, 0)
-        menu_vbox.pack_start(guiutils.get_right_justified_box([self.menubar]), False, False, 0)
-        menu_vbox.pack_start(Gtk.Label(), True, True, 0)
+        self.menubar.set_name("lighter-bg-widget")
+
+        menubar_box =  Gtk.HBox(False, 0)
+        menubar_box.pack_start(guiutils.get_right_justified_box([self.menubar]), False, False, 0)
+        menubar_box.pack_start(Gtk.Label(), True, True, 0)
+
+        monitor_source_box = Gtk.HBox(False, 0)
+        monitor_source_box.pack_start(Gtk.Label(), True, True, 0)
+        monitor_source_box.pack_start(self.monitor_tc_info.monitor_source, False, False, 0)
+        monitor_source_box.pack_start(self.monitor_tc_info.monitor_tc, False, False, 0)
+        monitor_source_box.pack_start(Gtk.Label(), True, True, 0)
+
+        info_box = Gtk.HBox(False, 0)
+        info_box.pack_start(Gtk.Label(), True, True, 0)
+        info_box.pack_start(self.monitor_tc_info.widget, False, False, 0)
+        
+        menu_vbox = Gtk.HBox(True, 0)
+        menu_vbox.pack_start(menubar_box, True, True, 0)
+
         if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
-            menu_vbox.pack_start(self.monitor_tc_info.widget, False, False, 0)
+            menu_vbox.pack_start(monitor_source_box, True, True, 0)
+            menu_vbox.pack_start(info_box, True, True, 0)
         else:
             self.top_row_window_2 = Gtk.HBox(False, 0)
+            self.top_row_window_2.pack_start(monitor_source_box, False, False, 0)
             self.top_row_window_2.pack_start(Gtk.Label(), True, True, 0)
-            self.top_row_window_2.pack_start(self.monitor_tc_info.widget, False, False, 0)
+            self.top_row_window_2.pack_start(info_box, False, False, 0)
 
         # Pane
         pane = Gtk.VBox(False, 1)
@@ -289,14 +307,16 @@ class EditorWindow:
                                     projectaction.columns_count_launch_pressed,
                                     projectaction.hamburger_pressed,  # lambda w,e: proxyediting.create_proxy_files_pressed(),
                                     projectaction.media_filtering_select_pressed)
-        guiutils.set_margins(media_panel, 6, 6, 4, 6)
+
         self.media_panel = media_panel
+        self.media_panel.set_name("darker-bg-widget")
         self.bin_info = bin_info
 
         # Smallest screens always get bins in same panel as media, others get top level project panel if selected
         if editorlayout.top_level_project_panel() == True:
             self.mm_paned = Gtk.HBox()
             self.mm_paned.add(media_panel)
+
         else:
             self.mm_paned = Gtk.HPaned()
             guiutils.set_margins(self.bins_panel, 6, 6, 8, 0)
@@ -378,11 +398,7 @@ class EditorWindow:
         self.sequence_list_view = guicomponents.SequenceListView(   projectaction.sequence_name_edited,
                                                                     projectaction.sequence_panel_popup_requested,
                                                                     projectaction.sequence_list_double_click_done)
-        seq_panel = panels.get_sequences_panel(
-                             self.sequence_list_view,
-                             lambda w,e: projectaction.change_edit_sequence(),
-                             lambda w,e: projectaction.add_new_sequence(),
-                             lambda w,e: projectaction.delete_selected_sequence())
+        seq_panel = panels.get_sequences_panel(self.sequence_list_view)
 
         # Jobs panel
         jobs.create_jobs_list_view()
@@ -402,7 +418,7 @@ class EditorWindow:
             top_project_vbox.pack_start(self.bins_panel, True, True, 0)
             top_project_vbox.pack_start(seq_panel, True, True, 0)
             top_project_vbox.set_size_request(PANEL_WIDTH, PANEL_HEIGHT)
-            self.top_project_panel = guiutils.set_margins(top_project_vbox, 0, 2, 6, 2)
+            self.top_project_panel = guiutils.set_margins(top_project_vbox, 0, 0, 0, 2)
             self.project_panel = None
         else:
             # Notebook project panel for smallest screens
@@ -456,13 +472,11 @@ class EditorWindow:
         player_buttons_row.pack_start(Gtk.Label(), True, True, 0)
         player_buttons_row.pack_start(self.trim_view_select.widget, False, False, 0)
         player_buttons_row.pack_start(self.view_mode_select.widget, False, False, 0)
-        player_buttons_row.set_margin_bottom(2)
+        #player_buttons_row.set_name("darkest-bg-widget")
 
         # Switch / pos bar row
         sw_pos_hbox = Gtk.HBox(False, 1)
         sw_pos_hbox.pack_start(pos_bar_frame, True, True, 0)
-        sw_pos_hbox.set_margin_top(4)
-        sw_pos_hbox.set_margin_left(2)
         
         # Video display
         monitor_widget = monitorwidget.MonitorWidget()
@@ -472,12 +486,11 @@ class EditorWindow:
         dnd.connect_video_monitor(self.tline_display)
 
         # Monitor
-        monitor_vbox = Gtk.VBox(False, 1)
+        monitor_vbox = Gtk.VBox(False, 0)
         monitor_vbox.pack_start(monitor_widget.widget, True, True, 0)
         monitor_vbox.pack_start(sw_pos_hbox, False, True, 0)
         monitor_vbox.pack_start(player_buttons_row, False, True, 0)
-
-        monitor_align = guiutils.set_margins(monitor_vbox, 3, 0, 3, 3)
+        monitor_align = guiutils.set_margins(monitor_vbox, 0, 0, 0, 0)
 
         self.monitor_frame = Gtk.Frame()
         self.monitor_frame.add(monitor_align)
