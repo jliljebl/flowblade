@@ -89,8 +89,9 @@ def load_profile_list():
         _categorized_profiles.append(("SD", SD_profiles))
     if len(OTHER_profiles) > 0:
         _categorized_profiles.append(("Other", OTHER_profiles))
-    #if len(_user_profiles) > 0:
-    #    _categorized_profiles.append(("User Custom", _user_profiles))
+    # CHECK!!!, this needed to be commented out to not crash on launch on laptop
+    if len(_user_profiles) > 0:
+        _categorized_profiles.append(("User Custom", _user_profiles))
 
 def _load_profiles_list(dir_path):
     load_profiles = []
