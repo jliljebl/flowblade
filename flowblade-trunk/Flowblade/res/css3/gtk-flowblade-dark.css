@@ -783,7 +783,8 @@ spinbutton.vertical > entry:drop(active) + button {
 combobox button.combo {
   min-width: 0;
   padding-left: 8px;
-  padding-right: 8px; }
+  padding-right: 8px;
+  font-weight: bold; }
 combobox arrow {
   -gtk-icon-source: -gtk-icontheme("pan-down-symbolic");
   min-height: 16px;
@@ -1410,7 +1411,8 @@ menubar,
   .menubar > menuitem {
     padding: 4px 8px;
     border: solid transparent;
-    border-width: 0; }
+    border-width: 0;
+    font-weight: bold; }
     menubar > menuitem:hover,
     .menubar > menuitem:hover {
       background-color: #1057a8;
@@ -1561,6 +1563,7 @@ notebook {
         padding: 2px 10px;
         min-width: 20px;
         min-height: 20px;
+        font-weight: bold;
         outline-offset: -4px;
         border: 0px solid transparent;
         border-bottom: none;
@@ -1573,6 +1576,7 @@ notebook {
         padding: 2px 10px;
         min-width: 20px;
         min-height: 20px;
+        font-weight: bold;
         outline-offset: -4px;
         border: 0px solid transparent;
         border-top: none;
@@ -1585,6 +1589,7 @@ notebook {
         padding: 2px 10px;
         min-width: 20px;
         min-height: 20px;
+        font-weight: bold;
         outline-offset: -4px;
         border: 0px solid transparent;
         border-left: none;
@@ -1597,6 +1602,7 @@ notebook {
         padding: 2px 10px;
         min-width: 20px;
         min-height: 20px;
+        font-weight: bold;
         outline-offset: -4px;
         border: 0px solid transparent;
         border-right: none;
