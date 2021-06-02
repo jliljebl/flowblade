@@ -138,7 +138,8 @@ class FilterFooterRow:
         self.widget.pack_start(load_button.widget, False, False, 0)
 
         self.widget.pack_start(Gtk.Label(), True, True, 0)
-        
+        self.widget.set_name("lighter-bg-widget")
+            
     def save_pressed(self, w, e):
         default_name = self.filter_object.info.name + _("_effect_values") + ".data"
         dialogs.save_effects_compositors_values(_save_effect_values_dialog_callback, default_name, True, self.filter_object)
@@ -203,7 +204,6 @@ class FilterHeaderRow:
         hbox.pack_start(self.icon, False, False, 0)
         hbox.pack_start(self.filter_name_label, False, False, 0)
         hbox.pack_start(Gtk.Label(), True, True, 0)
-
         self.widget = hbox
 
 
@@ -711,7 +711,7 @@ def _get_filter_panel(clip, filter_object, filter_index, track, clip_index):
             editor_row = propertyeditorbuilder.get_editor_row(ep)
             if editor_row == None:
                 continue
-
+            editor_row.set_name("editor-row-widget")
             # Set keyframe editor widget to be updated for frame changes if such is created 
             try:
                 editor_type = ep.args[propertyeditorbuilder.EDITOR]

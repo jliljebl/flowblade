@@ -4123,4 +4123,10 @@ filechooser placessidebar.sidebar scrollbar,
 #lighter-bg-widget {
   background-color: #292929; }
 
+#editor-row-widget {
+  background-color: #292929;
+  padding-left: 2px;
+  padding-right: 2px;
+  padding-bottom: 2px; }
+
 /*# sourceMappingURL=gtk-flowblade-dark.css.map */
