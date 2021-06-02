@@ -245,16 +245,21 @@ class EditorWindow:
         monitor_source_box.pack_start(self.monitor_tc_info.monitor_tc, False, False, 0)
         monitor_source_box.pack_start(Gtk.Label(), True, True, 0)
 
-        icon = guiutils.get_cairo_image("fullscreen")
-        fullscreen_press = guicomponents.PressLaunch(None, icon, 20, 12)
-        fullscreen_press.widget.set_margin_top(2)
-        
+        fullscreen_icon = guiutils.get_cairo_image("fullscreen")
+        fullscreen_exit_icon = guiutils.get_cairo_image("fullscreen_exit")
+        self.fullscreen_press = guicomponents.PressLaunch(menuactions.toggle_fullscreen, fullscreen_icon, 20, 12)
+        self.fullscreen_press.widget.set_margin_top(2)
+        self.fullscreen_press.widget.set_tooltip_text(_("Fullscreen"))
+        # Used in menuactions.toggle_fullscreen to switch image
+        self.fullscreen_press.fullscreen_icon = fullscreen_icon
+        self.fullscreen_press.fullscreen_exit_icon = fullscreen_exit_icon
+
         icon_2 = guiutils.get_cairo_image("layout")
         layout_press = guicomponents.PressLaunch(None, icon_2, 24, 12)
         layout_press.widget.set_margin_top(2)
 
         info_box = Gtk.HBox(False, 0)
-        info_box.pack_start(fullscreen_press.widget, False, False, 0) # maybe
+        info_box.pack_start(self.fullscreen_press.widget, False, False, 0) # maybe
         info_box.pack_start(layout_press.widget, False, False, 0) # maybe
         info_box.pack_start(Gtk.Label(), True, True, 0)
         info_box.pack_start(self.monitor_tc_info.widget, False, False, 0)

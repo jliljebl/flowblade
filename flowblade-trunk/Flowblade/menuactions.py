@@ -149,14 +149,18 @@ def _watermark_remove_callback(button, widgets):
     file_path_value_label.set_text(_("Not Set"))
     current_sequence().remove_watermark()
       
-def toggle_fullscreen():
+def toggle_fullscreen(w=None, e=None):
     if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
         if editorstate.fullscreen == False:
            gui.editor_window.window.fullscreen()
            editorstate.fullscreen = True
+           gui.editor_window.fullscreen_press.surface = gui.editor_window.fullscreen_press.fullscreen_exit_icon
+           gui.editor_window.fullscreen_press.widget.queue_draw()
         else:
            gui.editor_window.window.unfullscreen()
            editorstate.fullscreen = False
+           gui.editor_window.fullscreen_press.surface = gui.editor_window.fullscreen_press.fullscreen_icon
+           gui.editor_window.fullscreen_press.widget.queue_draw()
     else:
         if gui.editor_window.window.has_toplevel_focus() == True:
             if editorstate.fullscreen == False:
