@@ -1238,6 +1238,13 @@ class MediaPanel():
             self.row_widgets.append(filler)
             self.widget.pack_start(filler, True, True, 0)
             
+            image = guiutils.get_image("media_panel_empty")
+            image.set_sensitive(False)
+            dnd.connect_media_drop_widget(image)
+            filler = self._get_empty_filler(image)
+            self.widget.pack_start(filler, False, False, 0)
+            self.row_widgets.append(filler)
+            
             info = Gtk.Label(_("Right Click to Add Media."))
             info.set_sensitive(False)
             dnd.connect_media_drop_widget(info)
