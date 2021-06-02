@@ -4129,4 +4129,7 @@ filechooser placessidebar.sidebar scrollbar,
   padding-right: 2px;
   padding-bottom: 2px; }
 
+#no-pad {
+  padding: 0px; }
+
 /*# sourceMappingURL=gtk-flowblade-dark.css.map */

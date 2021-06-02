@@ -3406,7 +3406,7 @@ def fill_shortcuts_combo(shortcuts_combo):
         shortcuts_combo.set_active(current_pref_index)
     else:
         # Something is wrong, the pref shortcut file is not preset in the system.
-        print("Shortcut file in editprpersistance.pref.shortcuts not found!")
+        print("Shortcut file in editorpersistance.pref.shortcuts not found!")
         shortcuts_combo.set_active(0)
 
     return shortcuts_combo
@@ -3418,7 +3418,6 @@ class PressLaunch:
                                                     h,
                                                     self._draw)
         self.widget.press_func = self._press_event
-
         self.callback = callback
         self.surface = surface
         self.surface_x = 6
