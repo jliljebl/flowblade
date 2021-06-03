@@ -30,6 +30,7 @@ import appconsts
 import editorpersistance
 import editorstate
 import gui
+import guiutils
 import middlebar
 
 # Transforms when adding panels.
@@ -51,12 +52,39 @@ import middlebar
 # that is forced to always exit with at least two panels displayed.
 # This makes easier to add and remove top row panels.
 
+ # available also as layout option 'Monitor Left'
 DEFAULT_PANEL_POSITIONS = { \
     appconsts.PANEL_MEDIA: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_FILTER_SELECT: appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, # This is the only different default position.
     appconsts.PANEL_RANGE_LOG: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_FILTERS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_COMPOSITORS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
+    appconsts.PANEL_JOBS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
+    appconsts.PANEL_PROJECT_SMALL_SCREEN: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT, # default values are for large screen single window layout, these are modified on init if needed.
+    appconsts.PANEL_PROJECT: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT,
+    appconsts.PANEL_RENDERING: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
+    appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None # default values are for large screen single window layout, these are modified on startup if needed.
+}
+
+MONITOR_CENTER_PANEL_POSITIONS = { \
+    appconsts.PANEL_MEDIA: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
+    appconsts.PANEL_FILTER_SELECT: appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, # This is the only different default position.
+    appconsts.PANEL_RANGE_LOG: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
+    appconsts.PANEL_FILTERS: appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT,
+    appconsts.PANEL_COMPOSITORS: appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT,
+    appconsts.PANEL_JOBS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
+    appconsts.PANEL_PROJECT_SMALL_SCREEN: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT, # default values are for large screen single window layout, these are modified on init if needed.
+    appconsts.PANEL_PROJECT: appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT,
+    appconsts.PANEL_RENDERING: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
+    appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None # default values are for large screen single window layout, these are modified on startup if needed.
+}
+
+TOP_ROW_FOUR_POSITIONS = { \
+    appconsts.PANEL_MEDIA: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
+    appconsts.PANEL_FILTER_SELECT: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT, # This is the only different default position.
+    appconsts.PANEL_RANGE_LOG: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
+    appconsts.PANEL_FILTERS: appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT,
+    appconsts.PANEL_COMPOSITORS: appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT,
     appconsts.PANEL_JOBS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_PROJECT_SMALL_SCREEN: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT, # default values are for large screen single window layout, these are modified on init if needed.
     appconsts.PANEL_PROJECT: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT,
@@ -117,6 +145,8 @@ _position_notebooks = {}
 _positions_names = {}
 _panels_names = {}
 
+# Pop-up menu from top bar button.
+_top_bar_button_menu = Gtk.Menu()
 
 def top_level_project_panel():
     if editorpersistance.prefs.top_level_project_panel == True and editorstate.SCREEN_WIDTH > 1440 and editorstate.SCREEN_HEIGHT > 898:
@@ -356,7 +386,7 @@ def _create_notebook(position, editor_window):
         
     return notebook
     
-# ---------------------------------------------------------- APP MENU
+# ---------------------------------------------------------- APP MENU, TOP BAR BUTTON MENU
 def get_panel_positions_menu_item():
     panel_positions_menu_item = Gtk.MenuItem(_("Panel Placement"))
     panel_positions_menu = Gtk.Menu()
@@ -482,10 +512,46 @@ def get_tabs_menu_item():
         down_item.connect("activate", _change_tabs_pos, position, DOWN)
         
     return tabs_menu_item
-        
+
+def show_layout_press_menu(widget, event):
+    menu = _top_bar_button_menu
+    guiutils.remove_children(menu)
+    callback = _top_bar_menu_item_activated
+    
+    menu_item = guiutils.get_menu_item(_("Layout Monitor Left"), callback, "monitor_left")
+    menu.add(menu_item)
+
+    menu_item = guiutils.get_menu_item(_("Layout Monitor Center"), callback, "monitor_center")
+    menu.add(menu_item)
+
+    menu_item = guiutils.get_menu_item(_("Layout Top Row 4 Panels"), callback, "top_row_four")
+    menu.add(menu_item)
+
+    guiutils.add_separetor(menu)
+    
+    menu_item = guiutils.get_menu_item(_("Save Current Layout..."), callback, "save_current")
+    menu.add(menu_item)
+
+    guiutils.add_separetor(menu)
+
+    menu_item = guiutils.get_menu_item(_("No Saved User Layouts"), callback, "save_current", False)
+    menu.add(menu_item)
+
+    menu.show_all()
+    menu.popup(None, None, None, None, event.button, event.time)
+
+def _top_bar_menu_item_activated(widget, msg):
+    if msg == "monitor_center":
+        _apply_layout(MONITOR_CENTER_PANEL_POSITIONS)
+    elif msg == "monitor_left":
+         _apply_layout(DEFAULT_PANEL_POSITIONS)
+    elif msg == "top_row_four":
+         _apply_layout(TOP_ROW_FOUR_POSITIONS)
+
+
 # ----------------------------------------------- CHANGING POSITIONS
 def _change_panel_position(widget, panel_id, pos_option):
-    if widget.get_active() == False:
+    if widget != None and widget.get_active() == False:
         return
 
     # Remove panel if it currently has position in layout.
@@ -509,8 +575,10 @@ def _change_panel_position(widget, panel_id, pos_option):
         editorpersistance.save()
         middlebar.do_layout_after_dock_change(gui.editor_window)
     
-    gui.editor_window.window.show_all()
-    set_positions_frames_visibility()
+    # Show layout immediately if this called from app menu
+    if widget != None:
+        gui.editor_window.window.show_all()
+        set_positions_frames_visibility()
 
 def _remove_panel(panel_id):
     current_position = _panel_positions[panel_id]
@@ -588,5 +656,16 @@ def apply_tabs_positions():
             else:
                 notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
 
+def _apply_layout(layout_dict):
+    for panel_id, layout_position in layout_dict.items():
+        try:
+            current_position = _panel_positions[panel_id]
+            if current_position != layout_position:
+                _change_panel_position(None, panel_id, layout_position)
+        except KeyError:
+            pass # Not all panels are part of current layout
+            
+    gui.editor_window.window.show_all()
+    set_positions_frames_visibility()
 
 
