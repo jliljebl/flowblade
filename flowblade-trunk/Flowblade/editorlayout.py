@@ -81,7 +81,7 @@ MONITOR_CENTER_PANEL_POSITIONS = { \
 
 TOP_ROW_FOUR_POSITIONS = { \
     appconsts.PANEL_MEDIA: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
-    appconsts.PANEL_FILTER_SELECT: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT, # This is the only different default position.
+    appconsts.PANEL_FILTER_SELECT: appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, # This is the only different default position.
     appconsts.PANEL_RANGE_LOG: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_FILTERS: appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT,
     appconsts.PANEL_COMPOSITORS: appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT,
