@@ -1,9 +1,10 @@
 {
 "plugins":[ 
-		{ "folder":"animations_1", "name":"Floating Balls", "category":"Animations"},
-		{ "folder":"animations_2", "name":"Hex Colors", "category":"Animations"},
-		{ "folder":"effects_1", "name":"Placeholder effects", "category":"Effects"},
-		{ "folder":"effects_2", "name":"Placeholder effects 2", "category":"Effects"},
-		{ "folder":"transitions_1", "name":"Lines Sweep", "category":"Cover Transitions"}
+		{ "folder":"animations_1", "name":"Floating Balls", "category":"Animation"},
+		{ "folder":"animations_2", "name":"Hex Colors", "category":"Animation"},
+		{ "folder":"effects_1", "name":"Placeholder effects", "category":"Effect"},
+		{ "folder":"effects_2", "name":"Placeholder effects 2", "category":"Effect"},
+		{ "folder":"transitions_1", "name":"Lines Sweep", "category":"Cover Transition"},
+		{ "folder":"text_1", "name":"Text", "category":"Text"}
 	 ]
 }

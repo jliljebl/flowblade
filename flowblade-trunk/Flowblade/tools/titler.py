@@ -1114,7 +1114,7 @@ class PangoTextLayout:
         self.font_desc = Pango.FontDescription(layer.get_font_desc_str())
         self.color_rgba = layer.color_rgba
         self.alignment = self._get_pango_alignment_for_layer(layer)
-        self.pixel_size = layer.pixel_size
+        self.pixel_size = layer.pixel_size # this is some placeholder default (100, 100), has no further meaning.
         self.fill_on = layer.fill_on
         self.gradient_color_rgba = layer.gradient_color_rgba
 

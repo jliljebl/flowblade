@@ -176,6 +176,20 @@ METHOD_INIT_SCRIPT = 0
 METHOD_INIT_RENDER = 1
 METHOD_RENDER_FRAME = 2
 
+# Pango font contants.
+FACE_REGULAR = "Regular"
+FACE_BOLD = "Bold"
+FACE_ITALIC = "Italic"
+FACE_BOLD_ITALIC = "Bold Italic"
+DEFAULT_FONT_SIZE = 40
+
+ALIGN_LEFT = 0
+ALIGN_CENTER = 1
+ALIGN_RIGHT = 2
+
+VERTICAL = 0
+HORIZONTAL = 1
+
 # Script displayed at Flowblade Script tool on init.
 DEFAULT_SCRIPT = \
 """
@@ -319,7 +333,14 @@ class FluxityContext:
     """ Editor for float values with a defined range of accepted values. Value is a 3-tuple *(default_val, min_val, max_val)*."""
     EDITOR_INT_RANGE = 9
     """ Editor for integer valueswith a defined range of accepted values."""
-    
+    EDITOR_PANGO_FONT = 10
+    """ Editor for setting pango font properties."""
+
+    EDITOR_PANGO_FONT_DEFAULT_VALUES = ("Times Roman", "Regular", 40, ALIGN_LEFT, (1.0, 1.0, 1.0, 1.0), \
+                  True, (0.3, 0.3, 0.3, 1.0) , False, 2, False, (0.0, 0.0, 0.0), \
+                  100, 3, 3, 0.0, None, VERTICAL)
+    """ Pango Font Editor default values."""
+
     PROFILE_DESCRIPTION = FluxityProfile.DESCRIPTION
     """MLT Profile descriptiption string."""
     PROFILE_FRAME_RATE_NUM = FluxityProfile.FRAME_RATE_NUM
@@ -488,7 +509,12 @@ class FluxityContext:
           * EDITOR_FLOAT_RANGE(3-tuple with float values, (default, min, max)), 
           
           * EDITOR_INT_RANGE(3-tuple with int values, (default, min, max))
-        
+          
+          * EDITOR_PANGO_FONT (17-tuple (font_family, font_face, font_size, alignment, color_rgba,
+                  fill_on, outline_color_rgba, outline_on, outline_width, shadow_on, shadow_color_rgb, 
+                  shadow_opacity, shadow_xoff, shadow_yoff, shadow_blur, 
+                  gradient_color_rgba, gradient_direction))
+          
         **tooltip(str, optional):** Tooltip for editor if presented in GUI.
         
         Defines possible GUI editors used to affect script rendering. Edited value is accessed with method *get_editor_value(self, name, frame=0)*.
@@ -535,6 +561,11 @@ class FluxityContext:
           * EDITOR_FLOAT_RANGE(3-tuple with float values, (default, min, max)), 
           
           * EDITOR_INT_RANGE(3-tuple with int values, (default, min, max))
+
+          * EDITOR_PANGO_FONT (17-tuple (font_family, font_face, font_size, alignment, color_rgba,
+                  fill_on, outline_color_rgba, outline_on, outline_width, shadow_on, shadow_color_rgb, 
+                  shadow_opacity, shadow_xoff, shadow_yoff, shadow_blur,
+                  gradient_color_rgba, gradient_direction))
         """
         try:
             type, value = self.editors[name]
@@ -705,7 +736,153 @@ class FluxityEmptyClass:
     Internal class, do not use objects of this class directly in scripts.
     """
     pass
+
+class PangoTextLayout:
+    """
+    Object for drawing text with Pango.
     
+    Pixel size of layer can only be obtained when cairo context is available
+    for drawing, so pixel size of layer is saved here.
+    """
+    def __init__(self, font_data):
+        self.font_family, self.font_face, self.font_size, self.alignment, \
+        self.color_rgba, self.fill_on, self.outline_color_rgba, self.outline_on, \
+        self.outline_width, self.shadow_on, self.shadow_color_rgb, self.shadow_opacity, \
+        self.shadow_xoff, self.shadow_yoff, self.shadow_blur, self.gradient_color_rgba, \
+        self.gradient_direction = font_data
+
+        """
+        self.font_desc = Pango.FontDescription(layer.get_font_desc_str())
+        self.color_rgba = layer.color_rgba
+        self.alignment = self._get_pango_alignment_for_layer(layer)
+        #self.pixel_size = layer.pixel_size
+        self.fill_on = layer.fill_on
+        self.gradient_color_rgba = layer.gradient_color_rgba
+
+        self.outline_color_rgba = layer.outline_color_rgba
+        self.outline_on = layer.outline_on
+        self.outline_width = layer.outline_width
+
+        self.shadow_on = layer.shadow_on
+        self.shadow_color_rgb = layer.shadow_color_rgb
+        self.shadow_opacity = layer.shadow_opacity
+        self.shadow_xoff = layer.shadow_xoff
+        self.shadow_yoff = layer.shadow_yoff
+        self.shadow_blur = layer.shadow_blur
+        
+        self.gradient_color_rgba = layer.gradient_color_rgba
+        self.gradient_direction = layer.gradient_direction
+        """
+        
+    # called from vieweditor draw vieweditor-> editorlayer->here
+    def draw_layout(self, text, cr, x, y, rotation, xscale, yscale):
+        self.text = text
+        cr.save()
+        
+        layout = PangoCairo.create_layout(cr)
+        layout.set_text(self.text, -1)
+        layout.set_font_description(self.font_desc)
+        layout.set_alignment(self.alignment)
+        self.pixel_size = layout.get_pixel_size()
+
+        # Shadow
+        if self.shadow_on:
+            cr.save()
+
+            # Get colors.
+            r, g, b = self.shadow_color_rgb
+            a = self.shadow_opacity / 100.0
+
+            # Blurred shadow need its own ImageSurface
+            if self.shadow_blur != 0.0:
+                blurred_img = cairo.ImageSurface(cairo.FORMAT_ARGB32, view_editor.profile_w,  view_editor.profile_h)
+                cr_blurred = cairo.Context(blurred_img)
+                transform_cr = cr_blurred # Set draw transform_cr to context for newly created image.
+            else:
+                transform_cr = cr # Set draw transform_cr to out context.
+
+            # Transform and set color.
+            transform_cr.set_source_rgba(r, g, b, a)
+            effective_shadow_xoff = self.shadow_xoff * xscale
+            effective_shadow_yoff = self.shadow_yoff * yscale
+            transform_cr.move_to(x + effective_shadow_xoff, y + effective_shadow_yoff)
+            transform_cr.scale(xscale, yscale)
+            transform_cr.rotate(rotation)
+
+            # If no blur for shadow, just draw layout on out context.
+            if self.shadow_blur == 0.0:
+                PangoCairo.update_layout(cr, layout)
+                PangoCairo.show_layout(cr, layout)
+                cr.restore()
+            else:
+                # If we have blur - draw shadow, blur it and then draw on out context.
+                PangoCairo.update_layout(cr_blurred, layout)
+                PangoCairo.show_layout(cr_blurred, layout)
+
+                img2 = Image.frombuffer("RGBA", (blurred_img.get_width(), blurred_img.get_height()), blurred_img.get_data(), "raw", "RGBA", 0, 1)
+                effective_blur = xscale * self.shadow_blur # This is not going to be exact
+                                                           # on non-100% scales but let's try to get approximation. 
+                img2 = img2.filter(ImageFilter.GaussianBlur(radius=int(effective_blur)))
+                imgd = img2.tobytes()
+                a = array.array('B',imgd)
+
+                stride = blurred_img.get_width() * 4
+                draw_surface = cairo.ImageSurface.create_for_data (a, cairo.FORMAT_ARGB32,
+                                                              blurred_img.get_width(), blurred_img.get_height(), stride)
+                cr.restore()
+                cr.set_source_surface(draw_surface, 0, 0)
+                cr.paint()
+
+        # Text
+        if self.fill_on:
+            if self.gradient_color_rgba == None:
+                cr.set_source_rgba(*self.color_rgba)
+            else:
+                w, h = self.pixel_size
+                w = float(w) * xscale
+                h = float(h) * yscale
+                if self.gradient_direction == HORIZONTAL:
+                    grad = cairo.LinearGradient (x, 0, x + w, 0)
+                else:
+                    grad = cairo.LinearGradient (0, y, 0, y + h)
+                
+                r, g, b, a = self.color_rgba
+                rg, gg, bg, ag =  self.gradient_color_rgba 
+                    
+                CLIP_COLOR_GRAD_1 = (0,  r, g, b, 1)
+                CLIP_COLOR_GRAD_2 = (1,  rg, gg, bg, 1)
+                grad.add_color_stop_rgba(*CLIP_COLOR_GRAD_1)
+                grad.add_color_stop_rgba(*CLIP_COLOR_GRAD_2)
+                cr.set_source(grad)
+
+            cr.move_to(x, y)
+            cr.scale(xscale, yscale)
+            cr.rotate(rotation)
+            
+            PangoCairo.update_layout(cr, layout)
+            PangoCairo.show_layout(cr, layout)
+        
+        # Outline
+        if self.outline_on:
+            if self.fill_on == False: # case when user only wants outline we need to transform here
+                cr.move_to(x, y)
+                cr.scale(xscale, yscale)
+                cr.rotate(rotation)
+            PangoCairo.layout_path(cr, layout)
+            cr.set_source_rgba(*self.outline_color_rgba)
+            cr.set_line_width(self.outline_width)
+            cr.stroke()
+        
+        cr.restore()
+
+    def _get_pango_alignment(self, alignment):
+        if alignment == ALIGN_LEFT:
+            return Pango.Alignment.LEFT
+        elif alignment == ALIGN_CENTER:
+            return Pango.Alignment.CENTER
+        else:
+            return Pango.Alignment.RIGHT
+            
 # ---------------------------------------------------------- Errors 
 class FluxityError(Exception):
     """

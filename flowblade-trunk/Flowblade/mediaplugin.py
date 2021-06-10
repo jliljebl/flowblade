@@ -92,10 +92,11 @@ def init():
     # Create categories with translated names and sorted scripts.
     # Category names have to correspond with category names in fluxity.py.
     _script_groups_names = {}
-    _script_groups_names["Animations"] = _("Animations")
-    _script_groups_names["Effects"] = _("Effects")
-    _script_groups_names["Cover Transitions"] = _("Cover Transitions")
-
+    _script_groups_names["Animation"] = _("Animation")
+    _script_groups_names["Effect"] = _("Effect")
+    _script_groups_names["Cover Transition"] = _("Cover Transition")
+    _script_groups_names["Text"] = _("Text")
+    
     load_groups = {}
     for plugin in _plugins:
         try:
@@ -261,7 +262,7 @@ class AddMediaPluginWindow(Gtk.Window):
         import_panel.pack_start(encoding_row, False, False, 0)
         import_panel.pack_start(Gtk.Label(), True, True, 0)
 
-        values_row = Gtk.HBox(True, 8)
+        values_row = Gtk.HBox(False, 8)
         values_row.pack_start(self.editors_box, False, False, 0)
         values_row.pack_start(import_panel, False, False, 0)
         #values_row.
@@ -326,6 +327,8 @@ class AddMediaPluginWindow(Gtk.Window):
         print(new_selected_plugin.name)
         
         success, fctx = self.get_plugin_data(new_selected_plugin.get_plugin_script_file())
+        print(fctx)
+        print(fctx.get_script_data())
         script_data_object = json.loads(fctx.get_script_data())
         self._show_plugin_editors_panel(script_data_object)
 

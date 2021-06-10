@@ -26,6 +26,8 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk
 from gi.repository import GObject
+from gi.repository import Pango
+from gi.repository import PangoCairo
 import cairo
 import copy
 import time
@@ -37,6 +39,7 @@ import gui
 import guiutils
 import positionbar
 import respaths
+import utils
 
 # NOTE: These need to correspond exacty with fluxity.FluxityContext.<editor> values because we do not want to import anything into fluxity.py.    
 SIMPLE_EDITOR_STRING = 0
@@ -49,6 +52,20 @@ SIMPLE_EDITOR_OPTIONS = 6
 SIMPLE_EDITOR_CHECK_BOX = 7
 SIMPLE_EDITOR_FLOAT_RANGE = 8
 SIMPLE_EDITOR_INT_RANGE = 9
+SIMPLE_EDITOR_PANGO_FONT = 10
+
+FACE_REGULAR = "Regular"
+FACE_BOLD = "Bold"
+FACE_ITALIC = "Italic"
+FACE_BOLD_ITALIC = "Bold Italic"
+DEFAULT_FONT_SIZE = 40
+
+ALIGN_LEFT = 0
+ALIGN_CENTER = 1
+ALIGN_RIGHT = 2
+
+VERTICAL = 0
+HORIZONTAL = 1
 
 NO_PREVIEW_FILE = "fallback_thumb.png"
 
@@ -191,7 +208,7 @@ def _get_panel_and_create_editors(objects, pane_title, editors):
     for obj in objects:
         # object is [name, type, editors_list] see blenderprojectinit.py
         editors_data_list = obj[2]
-        editors_panel = Gtk.VBox(True, 2)
+        editors_panel = Gtk.VBox(False, 2)
         for editor_data in editors_data_list:
             prop_path, label_text, tooltip, editor_type, value = editor_data
             editor_type = int(editor_type)
@@ -260,7 +277,7 @@ class FluxityScriptEditorWindow(Gtk.Window):
             editor_type = int(type)
             self.editor_widgets.append(_get_editor(editor_type, name, name, value, ""))
 
-        editors_v_panel = Gtk.VBox(True, 2)
+        editors_v_panel = Gtk.VBox(False, 2)
         for w in self.editor_widgets:        
             editors_v_panel.pack_start(w, False, False, 0)
 
@@ -354,6 +371,7 @@ def create_add_media_plugin_editors(script_data_object):
     editors_object = AddMediaPluginEditors(script_data_object)
     return editors_object
 
+
 class AddMediaPluginEditors:
     def __init__(self, script_data_object):
         self.script_data_object = copy.deepcopy(script_data_object)
@@ -369,7 +387,7 @@ class AddMediaPluginEditors:
             editor_type = int(type)
             self.editor_widgets.append(_get_editor(editor_type, name, name, value, ""))
 
-        editors_v_panel = Gtk.VBox(True, 2)
+        editors_v_panel = Gtk.VBox(False, 2)
         for w in self.editor_widgets:        
             editors_v_panel.pack_start(w, False, False, 0)
 
@@ -442,7 +460,8 @@ def _get_editor(editor_type, id_data, label_text, value, tooltip):
         return FloatEditorRange(id_data, label_text, value, tooltip)
     elif editor_type == SIMPLE_EDITOR_INT_RANGE:
         return IntEditorRange(id_data, label_text, value, tooltip)
-
+    elif editor_type == SIMPLE_EDITOR_PANGO_FONT:
+        return PangoFontEditor(id_data, label_text, value, tooltip)
         
 class AbstractSimpleEditor(Gtk.HBox):
     
@@ -639,6 +658,374 @@ class IntEditorRange(AbstractSimpleEditor):
         
     def get_value(self):
         return self.spinbutton.get_value_as_int()
+
+class PangoFontEditor(AbstractSimpleEditor):
+    def __init__(self, id_data, label_text, value, tooltip):
+        AbstractSimpleEditor.__init__(self, id_data, tooltip)
+        
+        notebook = self._get_widget()
+
+        self.build_editor(label_text, notebook)
+        self.editor_type = SIMPLE_EDITOR_PANGO_FONT
+    
+    def _get_widget(self):
+        font_map = PangoCairo.font_map_get_default()
+        unsorted_families = font_map.list_families()
+        
+        self.widgets = utils.EmptyClass()
+        
+        self.widgets.font_families = sorted(unsorted_families, key=lambda family: family.get_name())
+        self.widgets.font_family_indexes_for_name = {}
+        combo = Gtk.ComboBoxText()
+        indx = 0
+        for family in self.widgets.font_families:
+            combo.append_text(family.get_name())
+            self.widgets.font_family_indexes_for_name[family.get_name()] = indx
+            indx += 1
+        combo.set_active(0)
+        self.widgets.font_select = combo
+        #self.font_select.connect("changed", self._edit_value_changed)
+        adj = Gtk.Adjustment(value=float(DEFAULT_FONT_SIZE), lower=float(1), upper=float(300), step_incr=float(1))
+        self.widgets.size_spin = Gtk.SpinButton()
+        self.widgets.size_spin.set_adjustment(adj)
+        #self.widgets.size_spin.connect("changed", self._edit_value_changed)
+        #self.size_spin.connect("key-press-event", self._key_pressed_on_widget)
+
+        font_main_row = Gtk.HBox()
+        font_main_row.pack_start(self.widgets.font_select, True, True, 0)
+        font_main_row.pack_start(guiutils.pad_label(5, 5), False, False, 0)
+        font_main_row.pack_start(self.widgets.size_spin, False, False, 0)
+        guiutils.set_margins(font_main_row, 0,4,0,0)
+        
+        self.widgets.bold_font = Gtk.ToggleButton()
+        self.widgets.italic_font = Gtk.ToggleButton()
+        bold_icon = Gtk.Image.new_from_stock(Gtk.STOCK_BOLD, 
+                                       Gtk.IconSize.BUTTON)
+        italic_icon = Gtk.Image.new_from_stock(Gtk.STOCK_ITALIC, 
+                                       Gtk.IconSize.BUTTON)
+        self.widgets.bold_font.set_image(bold_icon)
+        self.widgets.italic_font.set_image(italic_icon)
+        #self.bold_font.connect("clicked", self._edit_value_changed)
+        #self.italic_font.connect("clicked", self._edit_value_changed)
+        
+        self.widgets.left_align = Gtk.RadioButton(None)
+        self.widgets.center_align = Gtk.RadioButton.new_from_widget(self.widgets.left_align)
+        self.widgets.right_align = Gtk.RadioButton.new_from_widget(self.widgets.left_align)
+        left_icon = Gtk.Image.new_from_stock(Gtk.STOCK_JUSTIFY_LEFT, 
+                                       Gtk.IconSize.BUTTON)
+        center_icon = Gtk.Image.new_from_stock(Gtk.STOCK_JUSTIFY_CENTER, 
+                                       Gtk.IconSize.BUTTON)
+        right_icon = Gtk.Image.new_from_stock(Gtk.STOCK_JUSTIFY_RIGHT, 
+                                       Gtk.IconSize.BUTTON)
+        self.widgets.left_align.set_image(left_icon)
+        self.widgets.center_align.set_image(center_icon)
+        self.widgets.right_align.set_image(right_icon)
+        self.widgets.left_align.set_mode(False)
+        self.widgets.center_align.set_mode(False)
+        self.widgets.right_align.set_mode(False)
+        #self.widgets.left_align.connect("clicked", self.widgets._edit_value_changed)
+        #self.widgets.center_align.connect("clicked", self.widgets._edit_value_changed)
+        #self.widgets.right_align.connect("clicked", self.widgets._edit_value_changed)
+        
+        self.widgets.color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(red=1.0, green=1.0, blue=1.0, alpha=1.0))
+        #self.widgets.color_button.connect("color-set", self.widgets._edit_value_changed)
+        self.widgets.fill_on = Gtk.CheckButton()
+        self.widgets.fill_on.set_active(True)
+        #self.widgets.fill_on.connect("toggled", self.widgets._edit_value_changed)
+
+        buttons_box = Gtk.HBox()
+        buttons_box.pack_start(Gtk.Label(), True, True, 0)
+        buttons_box.pack_start(self.widgets.bold_font, False, False, 0)
+        buttons_box.pack_start(self.widgets.italic_font, False, False, 0)
+        buttons_box.pack_start(guiutils.pad_label(5, 5), False, False, 0)
+        buttons_box.pack_start(self.widgets.left_align, False, False, 0)
+        buttons_box.pack_start(self.widgets.center_align, False, False, 0)
+        buttons_box.pack_start(self.widgets.right_align, False, False, 0)
+        buttons_box.pack_start(guiutils.pad_label(15, 5), False, False, 0)
+        buttons_box.pack_start(self.widgets.color_button, False, False, 0)
+        buttons_box.pack_start(guiutils.pad_label(2, 1), False, False, 0)
+        buttons_box.pack_start(self.widgets.fill_on, False, False, 0)
+        buttons_box.pack_start(Gtk.Label(), True, True, 0)
+
+        # ------------------------------------------- Outline Panel
+        outline_size = Gtk.Label(_("Size:"))
+        
+        self.widgets.out_line_color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(red=0.3, green=0.3, blue=0.3, alpha=1.0))
+        #self.widgets.out_line_color_button.connect("color-set", self.widgets._edit_value_changed)
+
+        adj2 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(50), step_incr=float(1))
+        self.widgets.out_line_size_spin = Gtk.SpinButton()
+        self.widgets.out_line_size_spin.set_adjustment(adj2)
+        #self.widgets.out_line_size_spin.connect("changed", self.widgets._edit_value_changed)
+        #self.widgets.out_line_size_spin.connect("key-press-event", self.widgets._key_pressed_on_widget)
+
+        self.widgets.outline_on = Gtk.CheckButton()
+        self.widgets.outline_on.set_active(False)
+        #self.widgets.outline_on.connect("toggled", self.widgets._edit_value_changed)
+        
+        outline_box = Gtk.HBox()
+        outline_box.pack_start(outline_size, False, False, 0)
+        outline_box.pack_start(guiutils.pad_label(2, 1), False, False, 0)
+        outline_box.pack_start(self.widgets.out_line_size_spin, False, False, 0)
+        outline_box.pack_start(guiutils.pad_label(15, 1), False, False, 0)
+        outline_box.pack_start(self.widgets.out_line_color_button, False, False, 0)
+        outline_box.pack_start(guiutils.pad_label(2, 1), False, False, 0)
+        outline_box.pack_start(self.widgets.outline_on, False, False, 0)
+        outline_box.pack_start(Gtk.Label(), True, True, 0)
+
+        # -------------------------------------------- Shadow panel 
+        shadow_opacity_label = Gtk.Label(_("Opacity:"))
+        shadow_xoff = Gtk.Label(_("X Off:"))
+        shadow_yoff = Gtk.Label(_("Y Off:"))
+        shadow_blur_label = Gtk.Label(_("Blur:"))
+        
+        self.widgets.shadow_opa_spin = Gtk.SpinButton()
+
+        adj3 = Gtk.Adjustment(value=float(100), lower=float(1), upper=float(100), step_incr=float(1))
+        self.widgets.shadow_opa_spin.set_adjustment(adj3)
+        #self.widgets.shadow_opa_spin.connect("changed", self.widgets._edit_value_changed)
+        #self.widgets.shadow_opa_spin.connect("key-press-event", self.widgets._key_pressed_on_widget)
+
+        self.widgets.shadow_xoff_spin = Gtk.SpinButton()
+
+        adj4 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(100), step_incr=float(1))
+        self.widgets.shadow_xoff_spin.set_adjustment(adj4)
+        #self.widgets.shadow_xoff_spin.connect("changed", self.widgets._edit_value_changed)
+        #self.widgets.shadow_xoff_spin.connect("key-press-event", self.widgets._key_pressed_on_widget)
+
+        self.widgets.shadow_yoff_spin = Gtk.SpinButton()
+
+        adj5 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(100), step_incr=float(1))
+        self.widgets.shadow_yoff_spin.set_adjustment(adj5)
+        #self.widgets.shadow_yoff_spin.connect("changed", self.widgets._edit_value_changed)
+        #self.widgets.shadow_yoff_spin.connect("key-press-event", self.widgets._key_pressed_on_widget)
+
+        self.widgets.shadow_on = Gtk.CheckButton()
+        self.widgets.shadow_on.set_active(False)
+        #self.widgets.shadow_on.connect("toggled", self.widgets._edit_value_changed)
+        
+        self.widgets.shadow_color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(red=0.3, green=0.3, blue=0.3, alpha=1.0))
+        #self.widgets.shadow_color_button.connect("color-set", self.widgets._edit_value_changed)
+
+        self.widgets.shadow_blur_spin = Gtk.SpinButton()
+        adj6 = Gtk.Adjustment(value=float(0), lower=float(0), upper=float(20), step_incr=float(1))
+        self.widgets.shadow_blur_spin.set_adjustment(adj6)
+        #self.widgets.shadow_blur_spin.connect("changed", self.widgets._edit_value_changed)
+
+        shadow_box_1 = Gtk.HBox()
+        shadow_box_1.pack_start(shadow_opacity_label, False, False, 0)
+        shadow_box_1.pack_start(self.widgets.shadow_opa_spin, False, False, 0)
+        shadow_box_1.pack_start(guiutils.pad_label(15, 1), False, False, 0)
+        shadow_box_1.pack_start(self.widgets.shadow_color_button, False, False, 0)
+        shadow_box_1.pack_start(guiutils.pad_label(2, 1), False, False, 0)
+        shadow_box_1.pack_start(self.widgets.shadow_on, False, False, 0)
+        shadow_box_1.pack_start(Gtk.Label(), True, True, 0)
+        guiutils.set_margins(shadow_box_1, 0,4,0,0)
+
+        shadow_box_2 = Gtk.HBox()
+        shadow_box_2.pack_start(shadow_xoff, False, False, 0)
+        shadow_box_2.pack_start(self.widgets.shadow_xoff_spin, False, False, 0)
+        shadow_box_2.pack_start(guiutils.pad_label(15, 1), False, False, 0)
+        shadow_box_2.pack_start(shadow_yoff, False, False, 0)
+        shadow_box_2.pack_start(self.widgets.shadow_yoff_spin, False, False, 0)
+        shadow_box_2.pack_start(Gtk.Label(), True, True, 0)
+
+        shadow_box_3 = Gtk.HBox()
+        shadow_box_3.pack_start(shadow_blur_label, False, False, 0)
+        shadow_box_3.pack_start(self.widgets.shadow_blur_spin, False, False, 0)
+        shadow_box_3.pack_start(Gtk.Label(), True, True, 0)
+
+        # ------------------------------------ Gradient panel
+        self.widgets.gradient_color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(red=0.0, green=0.0, blue=0.8, alpha=1.0))
+        #self.widgets.gradient_color_button.connect("color-set", self.widgets._edit_value_changed)
+        self.widgets.gradient_on = Gtk.CheckButton()
+        self.widgets.gradient_on.set_active(True)
+        #self.widgets.gradient_on.connect("toggled", self.widgets._edit_value_changed)
+
+        direction_label = Gtk.Label(_("Gradient Direction:"))
+        self.widgets.direction_combo = Gtk.ComboBoxText()
+        self.widgets.direction_combo.append_text(_("Vertical"))
+        self.widgets.direction_combo.append_text(_("Horizontal"))
+        self.widgets.direction_combo.set_active(0)
+        #self.widgets.direction_combo.connect("changed", self.widgets._edit_value_changed)
+         
+        gradient_box_row1 = Gtk.HBox()
+        gradient_box_row1.pack_start(self.widgets.gradient_on, False, False, 0)
+        gradient_box_row1.pack_start(self.widgets.gradient_color_button, False, False, 0)
+        gradient_box_row1.pack_start(Gtk.Label(), True, True, 0)
+
+        gradient_box_row2 = Gtk.HBox()
+        gradient_box_row2.pack_start(direction_label, False, False, 0)
+        gradient_box_row2.pack_start(self.widgets.direction_combo, False, False, 0)
+        gradient_box_row2.pack_start(Gtk.Label(), True, True, 0)
+        
+        gradient_box = Gtk.VBox()
+        gradient_box.pack_start(gradient_box_row1, False, False, 0)
+        gradient_box.pack_start(gradient_box_row2, False, False, 0)
+        gradient_box.pack_start(Gtk.Label(), True, True, 0)
+
+        controls_panel_2 = Gtk.VBox()
+        controls_panel_2.pack_start(font_main_row, False, False, 0)
+        controls_panel_2.pack_start(buttons_box, False, False, 0)
+
+        controls_panel_3 = Gtk.VBox()
+        controls_panel_3.pack_start(outline_box, False, False, 0)
+
+        controls_panel_4 = Gtk.VBox()
+        controls_panel_4.pack_start(shadow_box_1, False, False, 0)
+        controls_panel_4.pack_start(shadow_box_2, False, False, 0)
+        controls_panel_4.pack_start(shadow_box_3, False, False, 0)
+
+        controls_panel_5 = Gtk.VBox()
+        controls_panel_5.pack_start(gradient_box, False, False, 0)
+
+        notebook = Gtk.Notebook()
+        notebook.append_page(guiutils.set_margins(controls_panel_2,8,8,8,8), Gtk.Label(label=_("Font")))
+        notebook.append_page(guiutils.set_margins(controls_panel_3,8,8,8,8), Gtk.Label(label=_("Outline")))
+        notebook.append_page(guiutils.set_margins(controls_panel_4,8,8,8,8), Gtk.Label(label=_("Shadow")))
+        notebook.append_page(guiutils.set_margins(controls_panel_5,8,8,8,8), Gtk.Label(label=_("Gradient")))
+        
+        return notebook
+
+    def set_editor_values(self, font_data):
+        font_family, font_face, font_size, alignment, color_rgba, fill_on, outline_color_rgba, outline_on, \
+        outline_width, shadow_on, shadow_color_rgb, shadow_opacity, shadow_xoff, \
+        shadow_yoff, shadow_blur, gradient_color_rgba, \
+        gradient_direction = font_data
+
+        r, g, b, a = color_rgba
+        button_color = Gdk.RGBA(r, g, b, 1.0)
+        self.widgets.color_button.set_rgba(button_color)
+
+        if FACE_REGULAR == font_face:
+            self.widgets.bold_font.set_active(False)
+            self.widgets.italic_font.set_active(False)
+        elif FACE_BOLD == font_face:
+            self.widgets.bold_font.set_active(True)
+            self.widgets.italic_font.set_active(False)
+        elif FACE_ITALIC == font_face:
+            self.widgets.bold_font.set_active(False)
+            self.widgets.italic_font.set_active(True) 
+        else:#FACE_BOLD_ITALIC
+            self.widgets.bold_font.set_active(True)
+            self.widgets.italic_font.set_active(True)
+
+        if alignment == ALIGN_LEFT:
+            self.widgets.left_align.set_active(True)
+        elif alignment == ALIGN_CENTER:
+            self.widgets.center_align.set_active(True)
+        else:#ALIGN_RIGHT
+            self.widgets.right_align.set_active(True)
+
+        self.widgets.size_spin.set_value(font_size)
+        
+        try:
+            combo_index = self.widgets.font_family_indexes_for_name[font_family]
+            self.widgets.font_select.set_active(combo_index)
+        except:# if font family not found we'll use first. This happens e.g at start-up if "Times New Roman" not in system.
+            family = self.widgets.font_families[0]
+            font_family = family.get_name()
+            self.widgets.font_select.set_active(0)
+
+        self.widgets.x_pos_spin.set_value(x)
+        self.widgets.y_pos_spin.set_value(y)
+        self.widgets.rotation_spin.set_value(angle)
+        
+        self.widgets.fill_on.set_active(fill_on)
+                
+        # OUTLINE
+        r, g, b, a = outline_color_rgba
+        button_color = Gdk.RGBA(r, g, b, 1.0)
+        self.widgets.out_line_color_button.set_rgba(button_color)
+        self.widgets.out_line_size_spin.set_value(outline_width)
+        self.widgets.outline_on.set_active(outline_on)
+        
+        # SHADOW
+        r, g, b = shadow_color_rgb
+        button_color = Gdk.RGBA(r, g, b, 1.0)
+        self.widgets.shadow_color_button.set_rgba(button_color)
+        self.widgets.shadow_opa_spin.set_value(shadow_opacity)
+        self.widgets.shadow_xoff_spin.set_value(shadow_xoff)
+        self.widgets.shadow_yoff_spin.set_value(shadow_yoff)
+        self.widgets.shadow_on.set_active(shadow_on)
+        self.widgets.shadow_blur_spin.set_value(shadow_blur)
+        
+        # GRADIENT
+        if gradient_color_rgba != None:
+            r, g, b, a = gradient_color_rgba
+            button_color = Gdk.RGBA(r, g, b, 1.0)
+            self.widgets.gradient_color_button.set_rgba(button_color)
+            self.widgets.gradient_on.set_active(True)
+        else:
+            button_color = Gdk.RGBA(0.0, 0.0, 0.6, 1.0)
+            self.widgets.gradient_color_button.set_rgba(button_color)
+            self.widgets.gradient_on.set_active(False)
+        self.widgets.direction_combo.set_active(gradient_direction)
+
+    def get_editor_values(self):
+
+        family = self.widgets.font_families[self.widgets.font_select.get_active()]
+        font_family = family.get_name()
+
+        font_size = self.widgets.size_spin.get_value_as_int()
+        
+        face = FACE_REGULAR
+        if self.widgets.bold_font.get_active() and self.widgets.italic_font.get_active():
+            face = FACE_BOLD_ITALIC
+        elif self.widgets.italic_font.get_active():
+            face = FACE_ITALIC
+        elif self.widgets.bold_font.get_active():
+            face = FACE_BOLD
+        font_face = face
+        
+        align = ALIGN_LEFT
+        if self.widgets.center_align.get_active():
+            align = ALIGN_CENTER
+        elif  self.widgets.right_align.get_active():
+             align = ALIGN_RIGHT
+        alignment = align
+
+        color = self.widgets.color_button.get_color()
+        r, g, b = utils.hex_to_rgb(color.to_string())
+        new_color = (r/65535.0, g/65535.0, b/65535.0, 1.0)        
+        color_rgba = new_color
+        fill_on = self.widgets.fill_on.get_active()
+        
+        # OUTLINE
+        color = self.widgets.out_line_color_button.get_color()
+        r, g, b = utils.hex_to_rgb(color.to_string())
+        new_color2 = (r/65535.0, g/65535.0, b/65535.0, 1.0)    
+        outline_color_rgba = new_color2
+        outline_on = self.widgets.outline_on.get_active()
+        outline_width = self.widgets.out_line_size_spin.get_value()
+
+        # SHADOW
+        color = self.widgets.shadow_color_button.get_color()
+        r, g, b = utils.hex_to_rgb(color.to_string())
+        a = self.widgets.shadow_opa_spin.get_value() / 100.0
+        new_color3 = (r/65535.0, g/65535.0, b/65535.0)  
+        shadow_color_rgb = new_color3
+        shadow_on = self.widgets.shadow_on.get_active()
+        shadow_opacity = self.widgets.shadow_opa_spin.get_value()
+        shadow_xoff = self.widgets.shadow_xoff_spin.get_value()
+        shadow_yoff = self.widgets.shadow_yoff_spin.get_value()
+        shadow_blur = self.widgets.shadow_blur_spin.get_value()
+        
+        # GRADIENT
+        if self.widgets.gradient_on.get_active() == True:
+            color = self.widgets.gradient_color_button.get_color()
+            r, g, b = utils.hex_to_rgb(color.to_string())
+            new_color = (r/65535.0, g/65535.0, b/65535.0, 1.0)  
+            gradient_color_rgba = new_color
+        else:
+            gradient_color_rgba = None
+        gradient_direction = self.widgets.direction_combo.get_active() # Combo indexes correspond with values of VERTICAL and HORIZONTAL
+
+        return (font_family, font_face, font_size, alignment, color_rgba, \
+        fill_on, outline_color_rgba, outline_on, \
+        outline_width, shadow_on, shadow_color_rgb, shadow_opacity, shadow_xoff, \
+        shadow_yoff, shadow_blur, gradient_color_rgba, \
+        gradient_direction)
 
 # ------------------------------------------------------------------- preview
 class PreviewPanel(Gtk.VBox):
