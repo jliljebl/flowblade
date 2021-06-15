@@ -162,6 +162,8 @@
     There is a helper function *_clamp(v)* used to make sure that all color values are in range 0-1. Any number of helper functions and data structures can be created to achieve the desired output.
     
 """
+from gi.repository import Pango
+from gi.repository import PangoCairo
 
 import cairo
 import json
@@ -336,7 +338,7 @@ class FluxityContext:
     EDITOR_PANGO_FONT = 10
     """ Editor for setting pango font properties."""
 
-    EDITOR_PANGO_FONT_DEFAULT_VALUES = ("Times Roman", "Regular", 40, ALIGN_LEFT, (1.0, 1.0, 1.0, 1.0), \
+    EDITOR_PANGO_FONT_DEFAULT_VALUES = ("Times Roman", "Regular", 80, ALIGN_LEFT, (1.0, 1.0, 1.0, 1.0), \
                   True, (0.3, 0.3, 0.3, 1.0) , False, 2, False, (0.0, 0.0, 0.0), \
                   100, 3, 3, 0.0, None, VERTICAL)
     """ Pango Font Editor default values."""
@@ -640,6 +642,9 @@ class FluxityContext:
             name, type, value = editor
             self.editors[name] = (type, value)
 
+    def create_text_layout(self, font_data):
+        return PangoTextLayout(font_data)
+
     def log_line(self, log_line):
         """
         **log_line(str):** line of text.
@@ -750,7 +755,7 @@ class PangoTextLayout:
         self.outline_width, self.shadow_on, self.shadow_color_rgb, self.shadow_opacity, \
         self.shadow_xoff, self.shadow_yoff, self.shadow_blur, self.gradient_color_rgba, \
         self.gradient_direction = font_data
-
+        self.font_desc = Pango.FontDescription(self.font_family + " " + self.font_face + " " + str(self.font_size))
         """
         self.font_desc = Pango.FontDescription(layer.get_font_desc_str())
         self.color_rgba = layer.color_rgba
@@ -775,7 +780,7 @@ class PangoTextLayout:
         """
         
     # called from vieweditor draw vieweditor-> editorlayer->here
-    def draw_layout(self, text, cr, x, y, rotation, xscale, yscale):
+    def draw_layout(self, text, cr, x, y, rotation=0.0, xscale=1.0, yscale=1.0):
         self.text = text
         cr.save()
         
