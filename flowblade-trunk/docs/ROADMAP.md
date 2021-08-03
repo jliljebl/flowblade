@@ -2,7 +2,7 @@
 
 ## Technology updates
 
-* Moving video display forward from SDL 1.2 with SDL 2 and OpenGL
+* Moving video display away from SDL 1.2
 * SDL 2 and OpenGL based GPU filters and Compositors
 
 ## GUI improvements
@@ -13,7 +13,9 @@
 
 * make e.g. monitor player buttons panel tighter, look for smilar options to tighten up by cutting down on margins and white space
 
-* Gray theme fixes, e.g. non-default notebooks have line frames and other similar issues
+## Editing
+
+* keyframes - make keyframe type editable ()linear, curve, hold)
 
 ## Project vault
 
@@ -23,4 +25,12 @@
 
 ## Render issues
 
-* attempt moving to *melt* for export render
+* try to reproduce and diagnose reported memory issues
+
+* attempt moving to *melt* for export render although it seems that some render issues persist with *melt* rendring too
+
+## Fluxity plugins
+
+* animated values
+
+* 
