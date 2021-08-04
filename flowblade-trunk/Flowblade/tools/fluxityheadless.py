@@ -184,7 +184,8 @@ class FluxityHeadlessRunnerThread(threading.Thread):
 
         editors_data_json = json.dumps(self.fluxity_plugin_edit_data["editors_list"]) # See fluxity.FluxityContext.get_script_data()
         
-        fluxity.render_frame_sequence(user_script, 
+        fluxity.render_frame_sequence(user_script,
+                                      script_file,
                                       self.range_in, 
                                       self.range_out, 
                                       rendered_frames_folder, 

@@ -619,7 +619,7 @@ class FluxityContainerActions(AbstractContainerActionObject):
             script_file = open(self.container_data.program)
             user_script = script_file.read()
             profile_file_path = mltprofiles.get_profile_file_path(current_sequence().profile.description())
-            fctx = fluxity.render_preview_frame(user_script, 0, None, profile_file_path)
+            fctx = fluxity.render_preview_frame(user_script, script_file, 0, None, profile_file_path)
          
             if fctx.error == None:
                 data_json = fctx.get_script_data()
@@ -796,7 +796,7 @@ class FluxityContainerActions(AbstractContainerActionObject):
         if not os.path.exists(out_folder):
             os.mkdir(out_folder)
 
-        fctx = fluxity.render_preview_frame(user_script, preview_frame, out_folder, profile_file_path, editors_data_json)
+        fctx = fluxity.render_preview_frame(user_script, script_file, preview_frame, out_folder, profile_file_path, editors_data_json)
         if fctx.error != None:
             self.program_editor_window.preview_render_complete_error(fctx.error)
             return

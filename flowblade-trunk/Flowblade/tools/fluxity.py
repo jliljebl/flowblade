@@ -372,8 +372,9 @@ class FluxityContext:
     PROFILE_COLORSPACE = FluxityProfile.COLORSPACE
     """Profile colorspace, value is either 709, 601 or 2020."""
 
-    def __init__(self, output_folder):
+    def __init__(self, script_file, output_folder):
         self.priv_context = FluxityContextPrivate(output_folder)
+        self.script_file = script_file
         self.data = {}
         self.editors = {} # editors and script length
         self.editor_tooltips = {}
@@ -607,6 +608,22 @@ class FluxityContext:
         
         return json.dumps(script_data)
 
+    def get_script_dir(self):
+        """             
+        Returns path to directory where the script being executed is located.  
+        
+        Sometimes script directory information is not available (e.g. when executing a non-saved script in Flowblade *Scrip Tool* application) and *None* is returned. It is recommeded that all Fluxity scripts handle getting *None* gracefully.
+        
+        This functionality is useful when script is being distributed with some associated media files.
+        
+        **Returns:** (str) script directory path or *None*.
+        """
+        if self.script_file == None:
+            return None
+            
+        dir_path = os.path.dirname(self.script_file) + "/"
+        return dir_path
+        
     def set_editors_data(self, editors_data_json):
         """
         **editors_data_json(str):** string representation of JSON object.
@@ -912,10 +929,10 @@ def _raise_exec_error(exception_msg):
     raise FluxityError("Error on doing exec() to create script code object:\n" + exception_msg)
 
 # ------------------------------------------------------ rendering
-def render_preview_frame(script, frame, out_folder, profile_file_path, editors_data_json=None):
+def render_preview_frame(script, script_file, frame, out_folder, profile_file_path, editors_data_json=None):
     try:
         # Init script and context.
-        error_msg, results = _init_script_and_context(script, out_folder, profile_file_path)
+        error_msg, results = _init_script_and_context(script, script_file, out_folder, profile_file_path)
         if error_msg != None:
             fake_fctx = FluxityEmptyClass()
             fake_fctx.error = error_msg
@@ -945,10 +962,10 @@ def render_preview_frame(script, frame, out_folder, profile_file_path, editors_d
         trace = traceback.format_exc(6,True)
         return fctx
 
-def render_frame_sequence(script, in_frame, out_frame, out_folder, profile_file_path, frame_write_callback=None, editors_data_json=None, start_out_from_frame_one=False):
+def render_frame_sequence(script, script_file, in_frame, out_frame, out_folder, profile_file_path, frame_write_callback=None, editors_data_json=None, start_out_from_frame_one=False):
     try:
         # Init script and context.
-        error_msg, results = _init_script_and_context(script, out_folder, profile_file_path)
+        error_msg, results = _init_script_and_context(script, script_file, out_folder, profile_file_path)
         if error_msg != None:
             fake_fctx = FluxityEmptyClass()
             fake_fctx.error = error_msg
@@ -984,14 +1001,15 @@ def render_frame_sequence(script, in_frame, out_frame, out_folder, profile_file_
         fctx.error = str(e) + traceback.format_exc(6,True)
         return fctx
 
-def _init_script_and_context(script, out_folder, profile_file_path):
+def _init_script_and_context(script, script_file, out_folder, profile_file_path):
     try:
+
         fscript = FluxityScript(script)
         fscript.compile_script()
         
-        fctx = FluxityContext(out_folder)
+        fctx = FluxityContext(script_file, out_folder)
         fctx.priv_context.load_profile(profile_file_path)
-
+        
         return (None, (fscript, fctx))
     except Exception as e:
         msg = str(e)

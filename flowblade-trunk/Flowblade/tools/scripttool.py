@@ -519,8 +519,8 @@ def render_preview_frame():
     frame = _player.current_frame()
     
     _window.out_view.get_buffer().set_text("Rendering...")
-
-    fctx = fluxity.render_preview_frame(script, frame, get_session_folder(), _profile_file_path)
+    
+    fctx = fluxity.render_preview_frame(script, _last_save_path, frame, get_session_folder(), _profile_file_path)
     _window.pos_bar.preview_range = None # frame or black for fail, no range anyway
         
     if fctx.error == None:
@@ -1224,7 +1224,7 @@ class FluxityRangeRenderer(threading.Thread):
         self.in_frame = in_frame
         out_frame = _player.producer.mark_out
         
-        fctx = fluxity.render_frame_sequence(self.script, in_frame, out_frame, self.render_folder, self.profile_file_path, self.frame_write_update)
+        fctx = fluxity.render_frame_sequence(self.script, _last_save_path, in_frame, out_frame, self.render_folder, self.profile_file_path, self.frame_write_update)
         
         if fctx.error == None:
             frame_file = fctx.priv_context.first_rendered_frame_path
@@ -1325,7 +1325,7 @@ class FluxityPluginRenderer(threading.Thread):
         profile_file_path = mltprofiles.get_profile_file_path(_current_profile_name)
     
         # Render frames
-        fctx = fluxity.render_frame_sequence(script_text, in_frame, out_frame, out_folder, profile_file_path, self.frames_update)
+        fctx = fluxity.render_frame_sequence(script_text, _last_save_path, in_frame, out_frame, out_folder, profile_file_path, self.frames_update)
 
         # Set GUI state and exit on error.
         if fctx.error != None:

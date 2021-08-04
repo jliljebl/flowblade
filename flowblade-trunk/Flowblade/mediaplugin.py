@@ -373,7 +373,7 @@ class AddMediaPluginWindow(Gtk.Window):
         
         profile_file_path = mltprofiles.get_profile_file_path(current_sequence().profile.description())
 
-        fctx = fluxity.render_preview_frame(user_script, frame, None, profile_file_path, editors_data_json)
+        fctx = fluxity.render_preview_frame(user_script, script_file, frame, None, profile_file_path, editors_data_json)
         _current_screenshot_surface = self._create_preview_surface(fctx.priv_context.frame_surface)
         self.screenshot_canvas.queue_draw()
         
@@ -382,7 +382,7 @@ class AddMediaPluginWindow(Gtk.Window):
             script_file = open(plugin_script_path)
             user_script = script_file.read()
             profile_file_path = mltprofiles.get_profile_file_path(current_sequence().profile.description())
-            fctx = fluxity.render_preview_frame(user_script, frame, None, profile_file_path)
+            fctx = fluxity.render_preview_frame(user_script, script_file, frame, None, profile_file_path)
          
             if fctx.error == None:
                 return (True, fctx) # no errors

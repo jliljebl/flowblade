@@ -318,6 +318,8 @@ def _clamp(v):
     There is a helper function *_clamp(v)* used to make sure that all color values are in range 0-1. Any number of helper functions and data structures can be created to achieve the desired output.
     
 &#34;&#34;&#34;
+from gi.repository import Pango
+from gi.repository import PangoCairo
 
 import cairo
 import json
@@ -492,7 +494,7 @@ class FluxityContext:
     EDITOR_PANGO_FONT = 10
     &#34;&#34;&#34; Editor for setting pango font properties.&#34;&#34;&#34;
 
-    EDITOR_PANGO_FONT_DEFAULT_VALUES = (&#34;Times Roman&#34;, &#34;Regular&#34;, 40, ALIGN_LEFT, (1.0, 1.0, 1.0, 1.0), \
+    EDITOR_PANGO_FONT_DEFAULT_VALUES = (&#34;Times Roman&#34;, &#34;Regular&#34;, 80, ALIGN_LEFT, (1.0, 1.0, 1.0, 1.0), \
                   True, (0.3, 0.3, 0.3, 1.0) , False, 2, False, (0.0, 0.0, 0.0), \
                   100, 3, 3, 0.0, None, VERTICAL)
     &#34;&#34;&#34; Pango Font Editor default values.&#34;&#34;&#34;
@@ -526,8 +528,9 @@ class FluxityContext:
     PROFILE_COLORSPACE = FluxityProfile.COLORSPACE
     &#34;&#34;&#34;Profile colorspace, value is either 709, 601 or 2020.&#34;&#34;&#34;
 
-    def __init__(self, output_folder):
+    def __init__(self, script_file, output_folder):
         self.priv_context = FluxityContextPrivate(output_folder)
+        self.script_file = script_file
         self.data = {}
         self.editors = {} # editors and script length
         self.editor_tooltips = {}
@@ -761,6 +764,22 @@ class FluxityContext:
         
         return json.dumps(script_data)
 
+    def get_script_dir(self):
+        &#34;&#34;&#34;             
+        Returns path to directory where the script being executed is located.  
+        
+        Sometimes script directory information is not available (e.g. when executing a non-saved script in Flowblade *Scrip Tool* application) and *None* is returned. It is recommeded that all Fluxity scripts handle getting *None* gracefully.
+        
+        This functionality is useful when script is being distributed with some associated media files.
+        
+        **Returns:** (str) script directory path or *None*.
+        &#34;&#34;&#34;
+        if self.script_file == None:
+            return None
+            
+        dir_path = os.path.dirname(self.script_file) + &#34;/&#34;
+        return dir_path
+        
     def set_editors_data(self, editors_data_json):
         &#34;&#34;&#34;
         **editors_data_json(str):** string representation of JSON object.
@@ -795,6 +814,9 @@ class FluxityContext:
         for editor in new_editors_list:
             name, type, value = editor
             self.editors[name] = (type, value)
+
+    def create_text_layout(self, font_data):
+        return PangoTextLayout(font_data)
 
     def log_line(self, log_line):
         &#34;&#34;&#34;
@@ -906,7 +928,7 @@ class PangoTextLayout:
         self.outline_width, self.shadow_on, self.shadow_color_rgb, self.shadow_opacity, \
         self.shadow_xoff, self.shadow_yoff, self.shadow_blur, self.gradient_color_rgba, \
         self.gradient_direction = font_data
-
+        self.font_desc = Pango.FontDescription(self.font_family + &#34; &#34; + self.font_face + &#34; &#34; + str(self.font_size))
         &#34;&#34;&#34;
         self.font_desc = Pango.FontDescription(layer.get_font_desc_str())
         self.color_rgba = layer.color_rgba
@@ -931,7 +953,7 @@ class PangoTextLayout:
         &#34;&#34;&#34;
         
     # called from vieweditor draw vieweditor-&gt; editorlayer-&gt;here
-    def draw_layout(self, text, cr, x, y, rotation, xscale, yscale):
+    def draw_layout(self, text, cr, x, y, rotation=0.0, xscale=1.0, yscale=1.0):
         self.text = text
         cr.save()
         
@@ -1063,10 +1085,10 @@ def _raise_exec_error(exception_msg):
     raise FluxityError(&#34;Error on doing exec() to create script code object:\n&#34; + exception_msg)
 
 # ------------------------------------------------------ rendering
-def render_preview_frame(script, frame, out_folder, profile_file_path, editors_data_json=None):
+def render_preview_frame(script, script_file, frame, out_folder, profile_file_path, editors_data_json=None):
     try:
         # Init script and context.
-        error_msg, results = _init_script_and_context(script, out_folder, profile_file_path)
+        error_msg, results = _init_script_and_context(script, script_file, out_folder, profile_file_path)
         if error_msg != None:
             fake_fctx = FluxityEmptyClass()
             fake_fctx.error = error_msg
@@ -1096,10 +1118,10 @@ def render_preview_frame(script, frame, out_folder, profile_file_path, editors_d
         trace = traceback.format_exc(6,True)
         return fctx
 
-def render_frame_sequence(script, in_frame, out_frame, out_folder, profile_file_path, frame_write_callback=None, editors_data_json=None, start_out_from_frame_one=False):
+def render_frame_sequence(script, script_file, in_frame, out_frame, out_folder, profile_file_path, frame_write_callback=None, editors_data_json=None, start_out_from_frame_one=False):
     try:
         # Init script and context.
-        error_msg, results = _init_script_and_context(script, out_folder, profile_file_path)
+        error_msg, results = _init_script_and_context(script, script_file, out_folder, profile_file_path)
         if error_msg != None:
             fake_fctx = FluxityEmptyClass()
             fake_fctx.error = error_msg
@@ -1135,14 +1157,15 @@ def render_frame_sequence(script, in_frame, out_frame, out_folder, profile_file_
         fctx.error = str(e) + traceback.format_exc(6,True)
         return fctx
 
-def _init_script_and_context(script, out_folder, profile_file_path):
+def _init_script_and_context(script, script_file, out_folder, profile_file_path):
     try:
+
         fscript = FluxityScript(script)
         fscript.compile_script()
         
-        fctx = FluxityContext(out_folder)
+        fctx = FluxityContext(script_file, out_folder)
         fctx.priv_context.load_profile(profile_file_path)
-
+        
         return (None, (fscript, fctx))
     except Exception as e:
         msg = str(e)
@@ -1158,7 +1181,7 @@ def _init_script_and_context(script, out_folder, profile_file_path):
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="fluxity.render_frame_sequence"><code class="name flex">
-<span>def <span class="ident">render_frame_sequence</span></span>(<span>script, in_frame, out_frame, out_folder, profile_file_path, frame_write_callback=None, editors_data_json=None, start_out_from_frame_one=False)</span>
+<span>def <span class="ident">render_frame_sequence</span></span>(<span>script, script_file, in_frame, out_frame, out_folder, profile_file_path, frame_write_callback=None, editors_data_json=None, start_out_from_frame_one=False)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -1166,10 +1189,10 @@ def _init_script_and_context(script, out_folder, profile_file_path):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def render_frame_sequence(script, in_frame, out_frame, out_folder, profile_file_path, frame_write_callback=None, editors_data_json=None, start_out_from_frame_one=False):
+<pre><code class="python">def render_frame_sequence(script, script_file, in_frame, out_frame, out_folder, profile_file_path, frame_write_callback=None, editors_data_json=None, start_out_from_frame_one=False):
     try:
         # Init script and context.
-        error_msg, results = _init_script_and_context(script, out_folder, profile_file_path)
+        error_msg, results = _init_script_and_context(script, script_file, out_folder, profile_file_path)
         if error_msg != None:
             fake_fctx = FluxityEmptyClass()
             fake_fctx.error = error_msg
@@ -1207,7 +1230,7 @@ def _init_script_and_context(script, out_folder, profile_file_path):
 </details>
 </dd>
 <dt id="fluxity.render_preview_frame"><code class="name flex">
-<span>def <span class="ident">render_preview_frame</span></span>(<span>script, frame, out_folder, profile_file_path, editors_data_json=None)</span>
+<span>def <span class="ident">render_preview_frame</span></span>(<span>script, script_file, frame, out_folder, profile_file_path, editors_data_json=None)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -1215,10 +1238,10 @@ def _init_script_and_context(script, out_folder, profile_file_path):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def render_preview_frame(script, frame, out_folder, profile_file_path, editors_data_json=None):
+<pre><code class="python">def render_preview_frame(script, script_file, frame, out_folder, profile_file_path, editors_data_json=None):
     try:
         # Init script and context.
-        error_msg, results = _init_script_and_context(script, out_folder, profile_file_path)
+        error_msg, results = _init_script_and_context(script, script_file, out_folder, profile_file_path)
         if error_msg != None:
             fake_fctx = FluxityEmptyClass()
             fake_fctx.error = error_msg
@@ -1256,7 +1279,7 @@ def _init_script_and_context(script, out_folder, profile_file_path):
 <dl>
 <dt id="fluxity.FluxityContext"><code class="flex name class">
 <span>class <span class="ident">FluxityContext</span></span>
-<span>(</span><span>output_folder)</span>
+<span>(</span><span>script_file, output_folder)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -1289,7 +1312,7 @@ def _init_script_and_context(script, out_folder, profile_file_path):
     EDITOR_PANGO_FONT = 10
     &#34;&#34;&#34; Editor for setting pango font properties.&#34;&#34;&#34;
 
-    EDITOR_PANGO_FONT_DEFAULT_VALUES = (&#34;Times Roman&#34;, &#34;Regular&#34;, 40, ALIGN_LEFT, (1.0, 1.0, 1.0, 1.0), \
+    EDITOR_PANGO_FONT_DEFAULT_VALUES = (&#34;Times Roman&#34;, &#34;Regular&#34;, 80, ALIGN_LEFT, (1.0, 1.0, 1.0, 1.0), \
                   True, (0.3, 0.3, 0.3, 1.0) , False, 2, False, (0.0, 0.0, 0.0), \
                   100, 3, 3, 0.0, None, VERTICAL)
     &#34;&#34;&#34; Pango Font Editor default values.&#34;&#34;&#34;
@@ -1323,8 +1346,9 @@ def _init_script_and_context(script, out_folder, profile_file_path):
     PROFILE_COLORSPACE = FluxityProfile.COLORSPACE
     &#34;&#34;&#34;Profile colorspace, value is either 709, 601 or 2020.&#34;&#34;&#34;
 
-    def __init__(self, output_folder):
+    def __init__(self, script_file, output_folder):
         self.priv_context = FluxityContextPrivate(output_folder)
+        self.script_file = script_file
         self.data = {}
         self.editors = {} # editors and script length
         self.editor_tooltips = {}
@@ -1558,6 +1582,22 @@ def _init_script_and_context(script, out_folder, profile_file_path):
         
         return json.dumps(script_data)
 
+    def get_script_dir(self):
+        &#34;&#34;&#34;             
+        Returns path to directory where the script being executed is located.  
+        
+        Sometimes script directory information is not available (e.g. when executing a non-saved script in Flowblade *Scrip Tool* application) and *None* is returned. It is recommeded that all Fluxity scripts handle getting *None* gracefully.
+        
+        This functionality is useful when script is being distributed with some associated media files.
+        
+        **Returns:** (str) script directory path or *None*.
+        &#34;&#34;&#34;
+        if self.script_file == None:
+            return None
+            
+        dir_path = os.path.dirname(self.script_file) + &#34;/&#34;
+        return dir_path
+        
     def set_editors_data(self, editors_data_json):
         &#34;&#34;&#34;
         **editors_data_json(str):** string representation of JSON object.
@@ -1592,6 +1632,9 @@ def _init_script_and_context(script, out_folder, profile_file_path):
         for editor in new_editors_list:
             name, type, value = editor
             self.editors[name] = (type, value)
+
+    def create_text_layout(self, font_data):
+        return PangoTextLayout(font_data)
 
     def log_line(self, log_line):
         &#34;&#34;&#34;
@@ -1800,6 +1843,19 @@ gradient_color_rgba, gradient_direction))</p>
         self.editor_tooltips[name] = tooltip
 
     self.priv_context.error_on_wrong_method(&#34;add_editor()&#34;, METHOD_INIT_SCRIPT)</code></pre>
+</details>
+</dd>
+<dt id="fluxity.FluxityContext.create_text_layout"><code class="name flex">
+<span>def <span class="ident">create_text_layout</span></span>(<span>self, font_data)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_text_layout(self, font_data):
+    return PangoTextLayout(font_data)</code></pre>
 </details>
 </dd>
 <dt id="fluxity.FluxityContext.get_data_obj"><code class="name flex">
@@ -2045,6 +2101,36 @@ gradient_color_rgba, gradient_direction))</p>
     script_data[&#34;tooltips_list&#34;] = self.editor_tooltips
     
     return json.dumps(script_data)</code></pre>
+</details>
+</dd>
+<dt id="fluxity.FluxityContext.get_script_dir"><code class="name flex">
+<span>def <span class="ident">get_script_dir</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns path to directory where the script being executed is located.
+</p>
+<p>Sometimes script directory information is not available (e.g. when executing a non-saved script in Flowblade <em>Scrip Tool</em> application) and <em>None</em> is returned. It is recommeded that all Fluxity scripts handle getting <em>None</em> gracefully.</p>
+<p>This functionality is useful when script is being distributed with some associated media files.</p>
+<p><strong>Returns:</strong> (str) script directory path or <em>None</em>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_script_dir(self):
+    &#34;&#34;&#34;             
+    Returns path to directory where the script being executed is located.  
+    
+    Sometimes script directory information is not available (e.g. when executing a non-saved script in Flowblade *Scrip Tool* application) and *None* is returned. It is recommeded that all Fluxity scripts handle getting *None* gracefully.
+    
+    This functionality is useful when script is being distributed with some associated media files.
+    
+    **Returns:** (str) script directory path or *None*.
+    &#34;&#34;&#34;
+    if self.script_file == None:
+        return None
+        
+    dir_path = os.path.dirname(self.script_file) + &#34;/&#34;
+    return dir_path</code></pre>
 </details>
 </dd>
 <dt id="fluxity.FluxityContext.log_line"><code class="name flex">
@@ -2782,7 +2868,7 @@ for drawing, so pixel size of layer is saved here.</p></div>
         self.outline_width, self.shadow_on, self.shadow_color_rgb, self.shadow_opacity, \
         self.shadow_xoff, self.shadow_yoff, self.shadow_blur, self.gradient_color_rgba, \
         self.gradient_direction = font_data
-
+        self.font_desc = Pango.FontDescription(self.font_family + &#34; &#34; + self.font_face + &#34; &#34; + str(self.font_size))
         &#34;&#34;&#34;
         self.font_desc = Pango.FontDescription(layer.get_font_desc_str())
         self.color_rgba = layer.color_rgba
@@ -2807,7 +2893,7 @@ for drawing, so pixel size of layer is saved here.</p></div>
         &#34;&#34;&#34;
         
     # called from vieweditor draw vieweditor-&gt; editorlayer-&gt;here
-    def draw_layout(self, text, cr, x, y, rotation, xscale, yscale):
+    def draw_layout(self, text, cr, x, y, rotation=0.0, xscale=1.0, yscale=1.0):
         self.text = text
         cr.save()
         
@@ -2915,10 +3001,33 @@ for drawing, so pixel size of layer is saved here.</p></div>
         else:
             return Pango.Alignment.RIGHT</code></pre>
 </details>
+<h3>Instance variables</h3>
+<dl>
+<dt id="fluxity.PangoTextLayout.font_desc"><code class="name">var <span class="ident">font_desc</span></code></dt>
+<dd>
+<div class="desc"><p>self.font_desc = Pango.FontDescription(layer.get_font_desc_str())
+self.color_rgba = layer.color_rgba
+self.alignment = self._get_pango_alignment_for_layer(layer)</p>
+<h1 id="selfpixel_size-layerpixel_size">self.pixel_size = layer.pixel_size</h1>
+<p>self.fill_on = layer.fill_on
+self.gradient_color_rgba = layer.gradient_color_rgba</p>
+<p>self.outline_color_rgba = layer.outline_color_rgba
+self.outline_on = layer.outline_on
+self.outline_width = layer.outline_width</p>
+<p>self.shadow_on = layer.shadow_on
+self.shadow_color_rgb = layer.shadow_color_rgb
+self.shadow_opacity = layer.shadow_opacity
+self.shadow_xoff = layer.shadow_xoff
+self.shadow_yoff = layer.shadow_yoff
+self.shadow_blur = layer.shadow_blur</p>
+<p>self.gradient_color_rgba = layer.gradient_color_rgba
+self.gradient_direction = layer.gradient_direction</p></div>
+</dd>
+</dl>
 <h3>Methods</h3>
 <dl>
 <dt id="fluxity.PangoTextLayout.draw_layout"><code class="name flex">
-<span>def <span class="ident">draw_layout</span></span>(<span>self, text, cr, x, y, rotation, xscale, yscale)</span>
+<span>def <span class="ident">draw_layout</span></span>(<span>self, text, cr, x, y, rotation=0.0, xscale=1.0, yscale=1.0)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -2926,7 +3035,7 @@ for drawing, so pixel size of layer is saved here.</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def draw_layout(self, text, cr, x, y, rotation, xscale, yscale):
+<pre><code class="python">def draw_layout(self, text, cr, x, y, rotation=0.0, xscale=1.0, yscale=1.0):
     self.text = text
     cr.save()
     
@@ -3087,6 +3196,7 @@ for drawing, so pixel size of layer is saved here.</p></div>
 <li><code><a title="fluxity.FluxityContext.PROFILE_SAMPLE_ASPECT_NUM" href="#fluxity.FluxityContext.PROFILE_SAMPLE_ASPECT_NUM">PROFILE_SAMPLE_ASPECT_NUM</a></code></li>
 <li><code><a title="fluxity.FluxityContext.PROFILE_WIDTH" href="#fluxity.FluxityContext.PROFILE_WIDTH">PROFILE_WIDTH</a></code></li>
 <li><code><a title="fluxity.FluxityContext.add_editor" href="#fluxity.FluxityContext.add_editor">add_editor</a></code></li>
+<li><code><a title="fluxity.FluxityContext.create_text_layout" href="#fluxity.FluxityContext.create_text_layout">create_text_layout</a></code></li>
 <li><code><a title="fluxity.FluxityContext.get_data_obj" href="#fluxity.FluxityContext.get_data_obj">get_data_obj</a></code></li>
 <li><code><a title="fluxity.FluxityContext.get_dimensions" href="#fluxity.FluxityContext.get_dimensions">get_dimensions</a></code></li>
 <li><code><a title="fluxity.FluxityContext.get_editor_value" href="#fluxity.FluxityContext.get_editor_value">get_editor_value</a></code></li>
@@ -3094,6 +3204,7 @@ for drawing, so pixel size of layer is saved here.</p></div>
 <li><code><a title="fluxity.FluxityContext.get_length" href="#fluxity.FluxityContext.get_length">get_length</a></code></li>
 <li><code><a title="fluxity.FluxityContext.get_profile_property" href="#fluxity.FluxityContext.get_profile_property">get_profile_property</a></code></li>
 <li><code><a title="fluxity.FluxityContext.get_script_data" href="#fluxity.FluxityContext.get_script_data">get_script_data</a></code></li>
+<li><code><a title="fluxity.FluxityContext.get_script_dir" href="#fluxity.FluxityContext.get_script_dir">get_script_dir</a></code></li>
 <li><code><a title="fluxity.FluxityContext.log_line" href="#fluxity.FluxityContext.log_line">log_line</a></code></li>
 <li><code><a title="fluxity.FluxityContext.set_author" href="#fluxity.FluxityContext.set_author">set_author</a></code></li>
 <li><code><a title="fluxity.FluxityContext.set_data_obj" href="#fluxity.FluxityContext.set_data_obj">set_data_obj</a></code></li>
@@ -3150,6 +3261,7 @@ for drawing, so pixel size of layer is saved here.</p></div>
 <h4><code><a title="fluxity.PangoTextLayout" href="#fluxity.PangoTextLayout">PangoTextLayout</a></code></h4>
 <ul class="">
 <li><code><a title="fluxity.PangoTextLayout.draw_layout" href="#fluxity.PangoTextLayout.draw_layout">draw_layout</a></code></li>
+<li><code><a title="fluxity.PangoTextLayout.font_desc" href="#fluxity.PangoTextLayout.font_desc">font_desc</a></code></li>
 </ul>
 </li>
 </ul>
