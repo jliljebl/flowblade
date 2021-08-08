@@ -284,7 +284,7 @@ class ViewEditor(Gtk.Frame):
             cr.restore()
             img_surface = None
         elif self.write_out_layers == True:
-            # We need to go to 1.0 scale, 0,0 origo draw for the out file.
+            # We need to go to 1.0 scale, 0,0 origo draw for the outfile.
             # These values are used by editor layers.
             current_scale = self.scale
             self.scale = 1.0
