@@ -1567,6 +1567,8 @@ notebook {
         border-radius: 0 0 0 0; }
         notebook > header.top > tabs > tab + tab {
           margin-left: -1px; }
+        notebook > header.top > tabs > tab:checked {
+          box-shadow: none; }
     notebook > header.bottom {
       padding-top: 0; }
       notebook > header.bottom > tabs > tab {
@@ -1579,6 +1581,8 @@ notebook {
         border-radius: 0 0 0 0; }
         notebook > header.bottom > tabs > tab + tab {
           margin-left: -1px; }
+        notebook > header.bottom > tabs > tab:checked {
+          box-shadow: none; }
     notebook > header.right {
       padding-left: 0; }
       notebook > header.right > tabs > tab {
@@ -1591,6 +1595,8 @@ notebook {
         border-radius: 0 0 0 0; }
         notebook > header.right > tabs > tab + tab {
           margin-top: -1px; }
+        notebook > header.right > tabs > tab:checked {
+          box-shadow: none; }
     notebook > header.left {
       padding-right: 0; }
       notebook > header.left > tabs > tab {
@@ -1603,6 +1609,8 @@ notebook {
         border-radius: 0 0 0 0; }
         notebook > header.left > tabs > tab + tab {
           margin-top: -1px; }
+        notebook > header.left > tabs > tab:checked {
+          box-shadow: none; }
     notebook > header.top > tabs > arrow.up, notebook > header.bottom > tabs > arrow.up {
       -gtk-icon-source: -gtk-icontheme("pan-end-symbolic"); }
       notebook > header.top > tabs > arrow.up:last-child, notebook > header.bottom > tabs > arrow.up:last-child {

@@ -1790,11 +1790,14 @@ notebook {
             @else { margin-top: -1px; }
           }
 
+          &:checked { box-shadow: none; }
+           
           // tab border radius
           @if $_pos==top { border-radius: 0 0 0 0; }
           @else if $_pos==bottom { border-radius: 0 0 0 0; }
           @else if $_pos==left { border-radius: 0 0 0 0; }
           @else if $_pos==right { border-radius: 0 0 0 0; }
+
         }
       }
     }
