@@ -682,9 +682,9 @@ class FluxityContext:
                 
         # Get mlt frame object and make sure we deinterlace if input is interlaced.
         mlt_producer.set_speed(0)
-        mlt_producer.seek(0) 
-        frame = mlt_producer.get_frame()
-        frame.set("consumer_deinterlace", 1)
+        mlt_producer.seek(self.priv_context.frame + frame_offset) 
+        frame_image = mlt_producer.get_frame()
+        frame_image.set("consumer_deinterlace", 1)
 
         w = int(self.priv_context.profile.profile_data[FluxityProfile.WIDTH])
         h = self.priv_context.profile.profile_data[FluxityProfile.HEIGHT]
@@ -692,7 +692,7 @@ class FluxityContext:
 
 
         # Now we are ready to get the image data.       
-        rgb_data = frame.get_image(int(mlt.mlt_image_rgb24a), int(w), int(h))
+        rgb_data = frame_image.get_image(int(mlt.mlt_image_rgb24a), int(w), int(h))
         print(len(rgb_data))
 
         # MLT Provides images in which R <-> B are swiched from what Cairo wants them,
@@ -716,6 +716,7 @@ class FluxityContext:
         cr.set_source_surface(surface, 0, 0)
         cr.paint()
         cr.restore()
+
     
     def log_line(self, log_line):
         """
