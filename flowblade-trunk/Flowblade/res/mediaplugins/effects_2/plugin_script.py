@@ -1,6 +1,5 @@
 
 import cairo
-import mlt
 
 def init_script(fctx):
     # Script init here

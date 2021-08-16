@@ -1,6 +1,5 @@
 
 import cairo
-import mlt
 import numpy as np
 import random
 import math

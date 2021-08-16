@@ -62,7 +62,6 @@
     
     ```
     import cairo
-    import mlt
     import numpy as np
     import random
     import math
@@ -168,7 +167,6 @@ from gi.repository import PangoCairo
 import cairo
 import json
 import locale
-import mlt
 import numpy as np
 import os
 import traceback
@@ -201,7 +199,6 @@ HORIZONTAL = 1
 DEFAULT_SCRIPT = \
 """
 import cairo
-import mlt
 
 def init_script(fctx):
     # Script init here
@@ -283,9 +280,9 @@ class FluxityScript:
           _raise_fluxity_error("error calling function 'render_frame()':\n\n" + str(e))
 
 
-# ---------------------------------------------------------- mlt profile
+# ----------------------------------------------------------  Data structure correcponding with mlt.Profile
 class FluxityProfile:
-    """
+    """    
     Properties of this class correspond MLT profile objects.
     
     Internal class, do not use objects of this class directly in scripts. 
@@ -666,57 +663,6 @@ class FluxityContext:
 
     def create_text_layout(self, font_data):
         return PangoTextLayout(font_data)
-
-    def create_mlt_profile(self):
-        self.priv_context.init_mlt()
-        return mlt.Profile(str(self.priv_context.mlt_profile_path))
-
-    def create_mlt_producer(self, media_path):
-        self.priv_context.init_mlt()
-        profile = self.create_mlt_profile()
-        producer = mlt.Producer(profile, media_path) # this runs 0.5s+ on some clips
-        return producer
-    
-    def draw_mlt_video_frame(self, mlt_producer, frame_offset, x=0, y=0, x_scale=1.0, y_scale=1.0, rotation=0.0):
-        self.priv_context.error_on_wrong_method("set_version()", METHOD_RENDER_FRAME)
-                
-        # Get mlt frame object and make sure we deinterlace if input is interlaced.
-        mlt_producer.set_speed(0)
-        mlt_producer.seek(self.priv_context.frame + frame_offset) 
-        frame_image = mlt_producer.get_frame()
-        frame_image.set("consumer_deinterlace", 1)
-
-        w = int(self.priv_context.profile.profile_data[FluxityProfile.WIDTH])
-        h = self.priv_context.profile.profile_data[FluxityProfile.HEIGHT]
-        print(w, h, type(w), type(h))
-
-
-        # Now we are ready to get the image data.       
-        rgb_data = frame_image.get_image(int(mlt.mlt_image_rgb24a), int(w), int(h))
-        print(len(rgb_data))
-
-        # MLT Provides images in which R <-> B are swiched from what Cairo wants them,
-        # so use numpy to switch them and to create a modifiable buffer for Cairo
-        buf = np.frombuffer(rgb_data, dtype=np.uint8)
-        buf.shape = (h + 1, w, 4) # +1 in h, seemeed to need it
-        out = np.copy(buf)
-        r = np.index_exp[:, :, 0]
-        b = np.index_exp[:, :, 2]
-        out[r] = buf[b]
-        out[b] = buf[r]
-
-        # Create Cairo surface
-        stride = cairo.ImageSurface.format_stride_for_width(cairo.FORMAT_RGB24, w)
-        surface = cairo.ImageSurface.create_for_data(out, cairo.FORMAT_RGB24, w, h, stride)
-                # Draw image on frame context
-        cr = self.priv_context.frame_cr
-        cr.save()
-        #cr.translate(ox, oy)
-        #cr.scale(self.scale * self.aspect_ratio, self.scale)
-        cr.set_source_surface(surface, 0, 0)
-        cr.paint()
-        cr.restore()
-
     
     def log_line(self, log_line):
         """
@@ -736,7 +682,6 @@ class FluxityContextPrivate:
     def __init__(self, output_folder):
 
         self.profile = None
-        self.mlt_profile_path = None # We need a file for mlt.Profile so if one exits let's remember path, set with self.load_profile()
         
         self.output_folder = output_folder
         self.start_out_from_frame_one = False
@@ -774,8 +719,7 @@ class FluxityContextPrivate:
         data[FluxityProfile.COLORSPACE] = _read_profile_prop_from_lines(lines, FluxityProfile.COLORSPACE)
 
         self.profile = FluxityProfile(data)
-        self.mlt_profile_path = mlt_profile_path
-        
+
         return self.profile.profile_data
         
     def create_frame_surface(self, frame):
@@ -804,17 +748,6 @@ class FluxityContextPrivate:
 
     def get_preview_frame_path(self):
         return self.output_folder + "/preview.png"
-
-    def init_mlt(self):
-        if self.repo != None:
-            return
-            
-        self.repo = mlt.Factory().init()
-        self.repo.producers().set('qimage', None, 0)
-        self.repo.producers().set('qtext', None, 0)
-        self.repo.producers().set('kdenlivetitle', None, 0)
-
-        locale.setlocale(locale.LC_NUMERIC, 'C')
     
     def error_on_wrong_method(self, method_name, required_method):
         if required_method == self.current_method:
