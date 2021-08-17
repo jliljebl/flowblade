@@ -3562,13 +3562,17 @@ class HamburgerPressLaunch:
 
 class MonitorSwitch:
     def __init__(self, callback):
-        self.WIDTH = 84
+        self.WIDTH = 76
         self.HEIGHT = 22
+        
+        self.press_fix = 6 # we don't get want to divide press exactly half, timeline gets more
+        
         # Aug-2019 - SvdB - BB - Set the appropriate values based on button size. Use guiutils functions
         prefs = editorpersistance.prefs
         if prefs.double_track_hights:
             self.WIDTH = self.WIDTH * 2
             self.HEIGHT = self.HEIGHT * 2
+            self.press_fix = 8 
 
         self.widget = cairoarea.CairoDrawableArea2( self.WIDTH ,
                                                     self.HEIGHT,
@@ -3582,10 +3586,10 @@ class MonitorSwitch:
         self.clip_active_surface = guiutils.get_cairo_image("clip_button_active")
         
         self.callback = callback
-        self.surface_x  = 6
-        self.surface_y  = 6
 
     def _draw(self, event, cr, allocation):
+        x, y, w, h = allocation
+
         if editorstate.timeline_visible():
             tline_draw_surface = self.tline_active_surface 
             clip_draw_surface = self.clip_surface
@@ -3598,22 +3602,25 @@ class MonitorSwitch:
         def_off = 10
         y_off_tline = 7
         y_off_clip = 8
+        mid_gap = 10
         if prefs.double_track_hights:
            def_off = def_off * 2
            y_off_tline = y_off_tline * 2
            y_off_clip = y_off_clip * 2
+           mid_gap = mid_gap * 2
+ 
         cr.set_source_surface(tline_draw_surface, def_off, y_off_tline)
         cr.paint()
 
         # Aug-2019 - SvdB - BB - Calculate offset for displaying the next button
         base_off = tline_draw_surface.get_width()
-        x_off = clip_draw_surface.get_width()
 
-        cr.set_source_surface(clip_draw_surface, def_off + base_off + x_off, y_off_clip)
+        cr.set_source_surface(clip_draw_surface, def_off + base_off + mid_gap, y_off_clip)
         cr.paint()
         
     def _press_event(self, event):
-        if event.x < self.WIDTH / 2 and editorstate.timeline_visible() == False:
+        if event.x < (self.WIDTH / 2 + self.press_fix) and editorstate.timeline_visible() == False:
+            print("tline button")
             self.callback(appconsts.MONITOR_TLINE_BUTTON_PRESSED)
         elif editorstate.timeline_visible() == True:
             self.callback(appconsts.MONITOR_CLIP_BUTTON_PRESSED)
