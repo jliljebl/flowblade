@@ -48,8 +48,8 @@ import middlebar
 # Pre-created Gtk.Frames exist all through app life-cycle, notebooks are dynamically created
 # as needed.
 
-# The exception for these transforms here is top row default notebook 
-# that is forced to always exit with at least two panels displayed.
+# The exception for these transforms here is the top row default notebook 
+# that is forced to always exits with at least two panels displayed.
 # This makes easier to add and remove top row panels.
 
  # available also as layout option 'Monitor Left'

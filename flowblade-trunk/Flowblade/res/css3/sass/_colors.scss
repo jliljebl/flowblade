@@ -9,7 +9,7 @@ $fg_color: if($variant =='light', #5c616c, #cccccc);
 
 $darkest_color: if($variant =='light', #ffffff, #191919);
 
-$selected_fg_color: #ffffff;
+$selected_fg_color: #dfdfdf;
 // $selected_bg_color: #115098;
 $selected_bg_color: #1057a8;
 $selected_borders_color: darken($selected_bg_color, 20%);

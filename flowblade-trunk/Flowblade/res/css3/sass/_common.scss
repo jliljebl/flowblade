@@ -1762,7 +1762,7 @@ notebook {
 
   > header {
     padding: 2px;
-    background-color: $bg_color;
+    background-color: $darkest_color;
 
     &.top {    box-shadow: inset  0  -1px $borders_color; }
     &.bottom { box-shadow: inset  0   1px $borders_color; }
@@ -1790,7 +1790,7 @@ notebook {
             @else { margin-top: -1px; }
           }
 
-          &:checked { box-shadow: none; }
+          &:checked { box-shadow: inset 0 4px $selected_bg_color; }
            
           // tab border radius
           @if $_pos==top { border-radius: 0 0 0 0; }
