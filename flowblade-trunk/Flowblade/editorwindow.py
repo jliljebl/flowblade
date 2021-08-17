@@ -299,7 +299,7 @@ class EditorWindow:
         self.bin_list_view.set_property("can-focus",  True)
 
 
-        self.bins_panel = panels.get_bins_tree_panel(self.bin_list_view)
+        self.bins_panel = panels.get_bins_tree_panel(self.bin_list_view, projectaction.bin_hambuger_pressed)
         self.bins_panel.set_size_request(MEDIA_MANAGER_WIDTH, 10) # this component is always expanded, so 10 for minimum size ok
 
         self.media_list_view = guicomponents.MediaPanel(projectaction.media_file_menu_item_selected,
@@ -413,7 +413,7 @@ class EditorWindow:
         self.sequence_list_view = guicomponents.SequenceListView(   projectaction.sequence_name_edited,
                                                                     projectaction.sequence_panel_popup_requested,
                                                                     projectaction.sequence_list_double_click_done)
-        seq_panel = panels.get_sequences_panel(self.sequence_list_view)
+        seq_panel = panels.get_sequences_panel(self.sequence_list_view, projectaction.sequences_hamburger_pressed)
 
         # Jobs panel
         jobs.create_jobs_list_view()

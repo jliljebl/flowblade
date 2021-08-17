@@ -1602,6 +1602,9 @@ def bins_panel_popup_requested(event):
     
     bin_menu.popup(None, None, None, None, event.button, event.time)    
 
+def bin_hambuger_pressed(widget, event):
+    bins_panel_popup_requested(event)
+
 def _bin_menu_item_selected(widget, data):
     msg, bin_obj = data
     if msg == "add bin":
@@ -1763,6 +1766,9 @@ def change_edit_sequence():
     movemodes.clear_selected_clips()
     
     app.change_current_sequence(row)
+
+def sequences_hamburger_pressed(widget, event):
+    sequence_panel_popup_requested(event)
 
 def sequence_panel_popup_requested(event):
     sequence_menu = sequence_popup_menu

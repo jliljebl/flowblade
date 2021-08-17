@@ -97,17 +97,21 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hambu
 
     return (panel, bin_info)
 
-def get_bins_tree_panel(bin_list_view):   
+def get_bins_tree_panel(bin_list_view, callback):   
     panel = Gtk.VBox()
     panel.pack_start(bin_list_view, True, True, 0)
 
-    return get_named_frame(_("Bins"), panel, 0, 0, 0, "A <b>Bin</b> is a named collection of media.")
+    hamburger = guicomponents.HamburgerPressLaunch(callback)
     
-def get_sequences_panel(sequence_list_view):
+    return get_named_frame_with_hamburger(_("Bins"), panel, 0, 0, 0, _("A <b>Bin</b> is a named collection of media."), hamburger.widget)
+    
+def get_sequences_panel(sequence_list_view, callback):
     panel = Gtk.VBox()
     panel.pack_start(sequence_list_view, True, True, 0)
 
-    return get_named_frame(_("Sequences"), panel, 0, 0, 0, _("A <b>Sequence</b> is the full contents of the timeline creating a program, a movie."))
+    hamburger = guicomponents.HamburgerPressLaunch(callback)
+    
+    return get_named_frame_with_hamburger(_("Sequences"), panel, 0, 0, 0, _("A <b>Sequence</b> is the full contents of the timeline creating a program, a movie."), hamburger.widget)
 
 def _set_sensive_widgets(sensitive, list):
     for widget in list:
@@ -138,6 +142,32 @@ def get_named_frame(name, widget, left_padding=12, right_padding=6, right_out_pa
     
     return frame
 
+def get_named_frame_with_hamburger(name, widget, left_padding=12, right_padding=6, right_out_padding=4, tooltip_txt=None, hamburger_widget=None):
+    """
+    Gnome style named panel
+    """
+    if name != None:
+        label = guiutils.bold_label(name)
+        label.set_justify(Gtk.Justification.LEFT)
+        
+        label_box = Gtk.HBox()
+        label_box.pack_start(label, False, False, 0)
+        label_box.pack_start(Gtk.Label(), True, True, 0)
+        label_box.pack_start(hamburger_widget, False, False, 0)
+        if tooltip_txt != None:        
+            label.set_tooltip_markup(tooltip_txt)
+
+    guiutils.set_margins(widget, right_padding, 0, left_padding, 0)
+
+    frame = Gtk.VBox()
+    if name != None:
+        frame.pack_start(label_box, False, False, 0)
+    frame.pack_start(widget, True, True, 0)
+
+    guiutils.set_margins(frame, 4, 4, 0, right_out_padding)
+    
+    return frame
+    
 def get_two_text_panel(primary_txt, secondary_txt):
     p_label = guiutils.bold_label(primary_txt)
     s_label = Gtk.Label(label=secondary_txt)

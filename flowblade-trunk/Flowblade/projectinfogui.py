@@ -71,7 +71,7 @@ def get_top_level_project_info_panel():
     profile = PROJECT().profile
     desc_label = Gtk.Label(label=profile.description())
     desc_row = guiutils.get_left_justified_box([desc_label])
-    info_box = guicomponents.get_profile_info_small_box(profile)
+    info_box = guicomponents.get_profile_info_reduced_small_box(profile)
     #vbox = Gtk.VBox()
     #vbox.pack_start(guiutils.get_left_justified_box([desc_label]), False, True, 0)
     #vbox.pack_start(info_box, False, True, 0)
@@ -80,6 +80,7 @@ def get_top_level_project_info_panel():
     project_info_vbox = Gtk.VBox()
     project_info_vbox.pack_start(name_row, False, True, 0)
     project_info_vbox.pack_start(desc_row, False, True, 0)
+    project_info_vbox.pack_start(info_box, False, True, 0)
     guiutils.set_margins(project_info_vbox, 4,4,4,4)
 
     widgets.project_name_label = project_name_label
@@ -92,9 +93,8 @@ def update_project_info():
     profile = PROJECT().profile
     widgets.project_name_label.set_markup(guiutils.bold_text(PROJECT().name))
     widgets.desc_label.set_text(profile.description())
-    profile_info_text = guicomponents.get_profile_info_text(profile)
+    profile_info_text = guicomponents.get_profile_reduced_info_text(profile)
     widgets.info_box.get_children()[0].set_text(profile_info_text)
-
 
 def show_project_events_dialog():
     events_list = ProjectEventListView()

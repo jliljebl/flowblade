@@ -2472,6 +2472,15 @@ def get_profile_info_small_box(profile):
 
     return hbox
 
+def get_profile_info_reduced_small_box(profile):
+    text = get_profile_reduced_info_text(profile)
+    label = Gtk.Label(label=text)
+
+    hbox = Gtk.HBox()
+    hbox.pack_start(label, False, False, 0)
+
+    return hbox
+
 def get_profile_info_text(profile):
     str_list = []
     str_list.append(str(profile.width()))
@@ -2493,6 +2502,20 @@ def get_profile_info_text(profile):
     pix_asp = float(profile.sample_aspect_num()) / profile.sample_aspect_den()
     pa_str =  "%.2f" % pix_asp
     str_list.append(", " + _("Pixel Aspect: ") + pa_str)
+
+    return ''.join(str_list)
+    
+def get_profile_reduced_info_text(profile):
+    str_list = []
+    fps_str = utils.get_fps_str_with_two_decimals(str(profile.fps()))
+    str_list.append(_("Fps: ") + fps_str + ", ")
+    str_list.append(str(profile.width()))
+    str_list.append(" x ")
+    str_list.append(str(profile.height()))
+    str_list.append(", " + str(profile.display_aspect_num()))
+    str_list.append(":")
+    str_list.append(str(profile.display_aspect_den()))
+    #str_list.append("\n")
 
     return ''.join(str_list)
 
@@ -3620,7 +3643,6 @@ class MonitorSwitch:
         
     def _press_event(self, event):
         if event.x < (self.WIDTH / 2 + self.press_fix) and editorstate.timeline_visible() == False:
-            print("tline button")
             self.callback(appconsts.MONITOR_TLINE_BUTTON_PRESSED)
         elif editorstate.timeline_visible() == True:
             self.callback(appconsts.MONITOR_CLIP_BUTTON_PRESSED)
