@@ -93,6 +93,7 @@ _CURRENT_THEME_COLORS_FILE = "currentcolors.data" # Used to communicate theme co
 LIGHT_GRAY_THEME_GRAY = ((50.3/255.0), (50.3/255.0), (59.9/255.0), 1.0)
 LIGHT_GRAY_THEME_BG = (0.153, 0.153, 0.188, 1.0)
 LIGHT_NEUTRAL_THEME_NEUTRAL = ((68.0/255.0), (68.0/255.0), (68.0/255.0), 1.0)
+MID_NEUTRAL_THEME_NEUTRAL= ((54.0/255.0), (54.0/255.0), (54.0/255.0), 1.0)
 DARKER_NEUTRAL_THEME_NEUTRAL = ((48.0/255.0), (48.0/255.0), (48.0/255.0), 1.0)
 
 _selected_bg_color = None
@@ -159,6 +160,9 @@ def get_light_gray_bg_in_cairo_rgb():
 def get_light_neutral_color():
     return Gdk.RGBA(*LIGHT_NEUTRAL_THEME_NEUTRAL)
 
+def get_mid_neutral_color():
+    return Gdk.RGBA(*MID_NEUTRAL_THEME_NEUTRAL)
+    
 def get_darker_neutral_color():
     return Gdk.RGBA(*DARKER_NEUTRAL_THEME_NEUTRAL)
     

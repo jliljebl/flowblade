@@ -2474,8 +2474,16 @@ def get_profile_info_small_box(profile):
 
 def get_profile_info_reduced_small_box(profile):
     text = get_profile_reduced_info_text(profile)
+    print(text)
     label = Gtk.Label(label=text)
 
+    if editorstate.screen_size_small_height() == True:
+        font_desc = "sans bold 8"
+    else:
+        font_desc = "sans bold 9"
+    label.modify_font(Pango.FontDescription(font_desc))
+    label.set_sensitive(False)
+        
     hbox = Gtk.HBox()
     hbox.pack_start(label, False, False, 0)
 

@@ -249,6 +249,8 @@ BOX_DASHES = [BOX_DASH_INK, BOX_DASH_SKIP, BOX_DASH_INK, BOX_DASH_SKIP]
 FRAME_SCALE_LINES = (0, 0, 0)
 
 BG_COLOR = (0.5, 0.5, 0.55)
+FRAME_SCALE_NEUTRAL_BG_COLOR = (48.0/255.0, 48.0/255.0, 48.0/255.0)
+THEME_NEUTRAL_COLUMN_BG_COLOR = (41.7/255.0, 41.7/255.0, 41.7/255.0)
 
 COLUMN_NOT_ACTIVE_COLOR = (0.32, 0.32, 0.34)
 
@@ -269,8 +271,7 @@ MATCH_FRAME_LINES_COLOR = (0.78, 0.31, 0.31)
 
 BLANK_SELECTED = (0.68, 0.68, 0.74)
 
-TRACK_NAME_COLOR = (0.0,0.0,0.0) # 
-#TRACK_NAME_COLOR = (0.9,0.9,0.9)
+TRACK_NAME_COLOR = (0.0,0.0,0.0)
 
 TRACK_GRAD_STOP1 = (1, 0.5, 0.5, 0.55, 1) #0.93, 0.93, 0.93, 1)
 TRACK_GRAD_STOP3 = (0, 0.5, 0.5, 0.55, 1) #0.58, 0.58, 0.58, 1) #(0, 0.84, 0.84, 0.84, 1)
@@ -414,7 +415,10 @@ def load_icons_and_set_colors():
                 COLUMN_NOT_ACTIVE_COLOR = (0.40, 0.40, 0.40)
                 if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
                     COLUMN_NOT_ACTIVE_COLOR = (0.40, 0.40, 0.44)
-                    
+        
+            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+                FRAME_SCALE_LINES = (0.5, 0.5, 0.5)
+                
     else:
         TRACK_GRAD_ORANGE_STOP1 = (1,  0.4, 0.4, 0.4, 1) # V1
         TRACK_GRAD_ORANGE_STOP3 = (0,  0.68, 0.68, 0.68, 1) # V1
@@ -2474,8 +2478,7 @@ class TimeLineColumn:
     def _draw(self, event, cr, allocation):
         x, y, w, h = allocation
         # Draw bg
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL \
-            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
             or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
             r, g, b, a = gui.unpack_gdk_color(gui.get_darker_neutral_color())
             if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
@@ -2483,6 +2486,10 @@ class TimeLineColumn:
             elif editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
                 r, g, b, a = gui.unpack_gdk_color(gui.get_bg_color())
             cr.set_source_rgb(r, g, b)
+            cr.rectangle(0, 0, w, h)
+            cr.fill()
+        elif editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+            cr.set_source_rgb(*THEME_NEUTRAL_COLUMN_BG_COLOR)
             cr.rectangle(0, 0, w, h)
             cr.fill()
         elif editorpersistance.prefs.theme == appconsts.DARK_THEME:
@@ -2895,12 +2902,18 @@ class TimeLineFrameScale:
         cr.fill()
    
     def _get_dark_theme_grad(self, h):
-        r, g, b, a  = gui.get_bg_color()
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY: 
-            r, g, b, a = gui.unpack_gdk_color(gui.get_bg_unmodified_normal_color()) 
-        grad = cairo.LinearGradient (0, 0, 0, h)
-        grad.add_color_stop_rgba(1, r, g, b, 1)
-        grad.add_color_stop_rgba(0, r + 0.05, g + 0.05, b + 0.05, 1)
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+            r, g, b = FRAME_SCALE_NEUTRAL_BG_COLOR
+            grad = cairo.LinearGradient (0, 0, 0, h)
+            grad.add_color_stop_rgba(1, r, g, b, 1)
+            grad.add_color_stop_rgba(0, r, g, b, 1)
+        else:
+            r, g, b, a  = gui.get_bg_color()
+            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY: 
+                r, g, b, a = gui.unpack_gdk_color(gui.get_bg_unmodified_normal_color()) 
+            grad = cairo.LinearGradient (0, 0, 0, h)
+            grad.add_color_stop_rgba(1, r, g, b, 1)
+            grad.add_color_stop_rgba(0, r + 0.05, g + 0.05, b + 0.05, 1)
         
         return grad
 

@@ -24,6 +24,7 @@ from gi.repository import GObject
 from gi.repository import Pango
 
 import dialogutils
+import editorstate
 from editorstate import PROJECT
 import guicomponents
 import guiutils
@@ -63,20 +64,21 @@ def get_project_info_panel():
     return project_info_hbox
 
 def get_top_level_project_info_panel():
-
     project_name_label = Gtk.Label(label=PROJECT().name)
     name_row = guiutils.set_margins(guiutils.get_left_justified_box([project_name_label]), 0, 4,0,0)
-    #name_panel = guiutils.get_named_frame(_("Project"), name_row, 0, 6, 4, _("A <b>Project</b> contains one or more <b>Sequences</b> of edited media and a collection of media files stored in <b>Bins.</b>"))
-
+    
     profile = PROJECT().profile
     desc_label = Gtk.Label(label=profile.description())
+    if editorstate.screen_size_small_height() == True:
+        font_desc = "sans bold 8"
+    else:
+        font_desc = "sans bold 9"
+    desc_label.modify_font(Pango.FontDescription(font_desc))
+    desc_label.set_sensitive(False)
     desc_row = guiutils.get_left_justified_box([desc_label])
-    info_box = guicomponents.get_profile_info_reduced_small_box(profile)
-    #vbox = Gtk.VBox()
-    #vbox.pack_start(guiutils.get_left_justified_box([desc_label]), False, True, 0)
-    #vbox.pack_start(info_box, False, True, 0)
-    #profile_panel = guiutils.get_named_frame(_("Profile"), vbox, 0, 6, 4, _("<b>Profile</b> determines frame rate per second, image size in pixels and pixel aspect ratio for all <b>Sequences</b> in <b>Project</b> ."))
 
+    info_box = guicomponents.get_profile_info_reduced_small_box(profile)
+    
     project_info_vbox = Gtk.VBox()
     project_info_vbox.pack_start(name_row, False, True, 0)
     project_info_vbox.pack_start(desc_row, False, True, 0)

@@ -1629,6 +1629,7 @@ menu,
   menuitem {
     min-height: 16px;
     min-width: 40px;
+    font-weight: bold;
     padding: 5px;
     &:hover {
       color: $selected_fg_color;
