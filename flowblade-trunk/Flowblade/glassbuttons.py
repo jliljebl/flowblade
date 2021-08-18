@@ -284,17 +284,17 @@ class PlayerButtons(AbstractGlassButtons):
         if prefs.double_track_hights:
            size_ind = 1
            size_adj = 2
-        AbstractGlassButtons.__init__(self, MB_BUTTON_WIDTH[size_ind], MB_BUTTON_HEIGHT[size_ind], MB_BUTTON_Y, MB_BUTTONS_WIDTH[size_ind], MB_BUTTONS_HEIGHT[size_ind])
+        AbstractGlassButtons.__init__(self, MB_BUTTON_WIDTH[size_ind], MB_BUTTON_HEIGHT[size_ind], MB_BUTTON_Y, MB_BUTTONS_WIDTH[size_ind], MB_BUTTONS_HEIGHT[size_ind] - 2)
 
         play_pause_icon = guiutils.get_cairo_image("play_pause_s" + icon_color)
         play_icon = guiutils.get_cairo_image("play_2_s"+ icon_color)
         stop_icon = guiutils.get_cairo_image("stop_s"+ icon_color)
         next_icon = guiutils.get_cairo_image("next_frame_s")
         prev_icon = guiutils.get_cairo_image("prev_frame_s")
-            # ------------------------------timeline_start_end_button
+        # ------------------------------timeline_start_end_button
         start_icon = guiutils.get_cairo_image("to_start") #  go to start
         end_icon = guiutils.get_cairo_image("to_end") #  go to end
-            # ------------------------------timeline_start_end_button
+        # ------------------------------timeline_start_end_button
         mark_in_icon = guiutils.get_cairo_image("mark_in_s")
         mark_out_icon = guiutils.get_cairo_image("mark_out_s")
         marks_clear_icon = guiutils.get_cairo_image("marks_clear_s")
@@ -302,7 +302,7 @@ class PlayerButtons(AbstractGlassButtons):
         to_mark_out_icon = guiutils.get_cairo_image("to_mark_out_s")
 
         timeline_start_end = editorpersistance.prefs.timeline_start_end
-        print("timeline_start_en", timeline_start_end)
+        #print("timeline_start_en", timeline_start_end)
 
         # Jul-2016 - SvdB - For play/pause button
         if (editorpersistance.prefs.play_pause == True):
@@ -330,13 +330,12 @@ class PlayerButtons(AbstractGlassButtons):
                 self.icons = [prev_icon, next_icon, play_icon, stop_icon,
                               mark_in_icon, mark_out_icon,
                               marks_clear_icon, to_mark_in_icon, to_mark_out_icon]
-                self.image_x = [5*size_adj, 7*size_adj, 20*size_adj, 10*size_adj, 3*size_adj, 11*size_adj, 2*size_adj, 7*size_adj, 6*size_adj]
+                self.image_x = [5*size_adj, 7*size_adj, 20*size_adj, 10*size_adj, 2*size_adj, 11*size_adj, 2*size_adj, 7*size_adj, 6*size_adj]
             # ------------------------------End of timeline_start_end_button
 
-
         for i in range(0, len(self.icons)):
-            self.image_y.append(MB_BUTTON_IMAGE_Y)
-
+            self.image_y.append(MB_BUTTON_IMAGE_Y - 3)
+        
         self.pressed_callback_funcs = None # set using set_callbacks()
 
         self.set_sensitive(True)
@@ -390,11 +389,11 @@ class PlayerButtons(AbstractGlassButtons):
         x, y, w, h = allocation
         self.allocation = allocation
 
-        mid_x = w / 2
+        mid_x = w // 2
         buttons_width = self.button_width * len(self.icons)
         # Jul-2016 - SvdB - No changes made here, but because of the calculation of button_x the row of buttons is slightly moved right if play/pause
         # is enabled. This could be solved by setting self.button_x = 1, if wished.
-        self.button_x = mid_x - (buttons_width / 2)
+        self.button_x = mid_x - (buttons_width // 2)
         self._draw_buttons(cr, w, h)
 
 

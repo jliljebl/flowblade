@@ -3594,7 +3594,7 @@ class HamburgerPressLaunch:
 class MonitorSwitch:
     def __init__(self, callback):
         self.WIDTH = 76
-        self.HEIGHT = 22
+        self.HEIGHT = 20
         
         self.press_fix = 6 # we don't get want to divide press exactly half, timeline gets more
         
@@ -3631,8 +3631,8 @@ class MonitorSwitch:
         # Aug-2019 - SvdB - BB - set default offset
         prefs = editorpersistance.prefs
         def_off = 10
-        y_off_tline = 7
-        y_off_clip = 8
+        y_off_tline = 3
+        y_off_clip = 4
         mid_gap = 10
         if prefs.double_track_hights:
            def_off = def_off * 2
