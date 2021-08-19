@@ -2611,6 +2611,10 @@ class BigTCDisplay:
         self.TEXT_X = 18
         self.TEXT_Y = 1
 
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+            global TC_COLOR
+            TC_COLOR = (0.5, 0.5, 0.5)
+
         self.widget.connect("button-press-event", self._button_press)
 
     def _draw(self, event, cr, allocation):

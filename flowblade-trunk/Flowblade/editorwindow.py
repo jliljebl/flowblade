@@ -479,6 +479,7 @@ class EditorWindow:
 
         self.view_mode_select = guicomponents.get_monitor_view_select_combo(lambda w, e: tlineaction.view_mode_menu_lauched(w, e))
         self.trim_view_select = guicomponents.get_trim_view_select_combo(lambda w, e: monitorevent.trim_view_menu_launched(w, e))
+        self.view_mode_select.widget.set_margin_right(10)
 
         player_buttons_row = Gtk.HBox(False, 0)
         player_buttons_row.pack_start(self.monitor_switch.widget, False, False, 0)
