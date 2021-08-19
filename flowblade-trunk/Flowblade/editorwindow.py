@@ -267,7 +267,7 @@ class EditorWindow:
         if editorstate.screen_size_small_width() == False:
             menu_vbox = Gtk.HBox(True, 0)
         else:
-            menu_vbox = Gtk.HBox(False, 0) # small screen sizes can't fit 3 equalsized panels here
+            menu_vbox = Gtk.HBox(False, 0) # small screens can't fit 3 equal sized panels here
         
         menu_vbox.pack_start(menubar_box, True, True, 0)
 
@@ -284,7 +284,6 @@ class EditorWindow:
         pane = Gtk.VBox(False, 1)
         pane.pack_start(menu_vbox, False, True, 0)
         pane.pack_start(self.app_h_box, True, True, 0)
-
         return pane
 
     def _init_gui_components(self):        

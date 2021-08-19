@@ -400,9 +400,11 @@ def load_icons_and_set_colors():
                 or editorpersistance.prefs.theme == appconsts.DARK_THEME \
                 or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
                 r, g ,b = utils.cairo_color_from_gdk_color(gui.get_light_gray_light_color())
-                if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL \
-                    or editorpersistance.prefs.theme == appconsts.DARK_THEME :
+                if editorpersistance.prefs.theme == appconsts.DARK_THEME:
                     r, g ,b = utils.cairo_color_from_gdk_color(gui.get_light_neutral_color())
+                if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+                    r = g = b = 0.215
+                    
                 BLANK_CLIP_COLOR_GRAD = (1, 0.20, 0.20, 0.20, 1)
                 BLANK_CLIP_COLOR_GRAD_L = (1, 0.20, 0.20, 0.20, 1)
                             
@@ -2903,7 +2905,7 @@ class TimeLineFrameScale:
    
     def _get_dark_theme_grad(self, h):
         if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-            r, g, b = FRAME_SCALE_NEUTRAL_BG_COLOR
+            r, g, b = BG_COLOR
             grad = cairo.LinearGradient (0, 0, 0, h)
             grad.add_color_stop_rgba(1, r, g, b, 1)
             grad.add_color_stop_rgba(0, r, g, b, 1)

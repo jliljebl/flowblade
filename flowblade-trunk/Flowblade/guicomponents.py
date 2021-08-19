@@ -2613,7 +2613,7 @@ class BigTCDisplay:
 
         if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
             global TC_COLOR
-            TC_COLOR = (0.5, 0.5, 0.5)
+            TC_COLOR = (0.55, 0.55, 0.55)
 
         self.widget.connect("button-press-event", self._button_press)
 
