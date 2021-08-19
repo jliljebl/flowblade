@@ -264,7 +264,11 @@ class EditorWindow:
         info_box.pack_start(Gtk.Label(), True, True, 0)
         info_box.pack_start(self.monitor_tc_info.widget, False, False, 0)
         
-        menu_vbox = Gtk.HBox(True, 0)
+        if editorstate.screen_size_small_width() == False:
+            menu_vbox = Gtk.HBox(True, 0)
+        else:
+            menu_vbox = Gtk.HBox(False, 0) # small screen sizes can't fit 3 equalsized panels here
+        
         menu_vbox.pack_start(menubar_box, True, True, 0)
 
         if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
