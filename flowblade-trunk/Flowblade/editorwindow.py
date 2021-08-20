@@ -360,7 +360,7 @@ class EditorWindow:
         self.effect_select_list_view = effect_select_list_view
         self.effect_select_combo_box = effect_select_combo_box
         dnd.connect_effects_select_tree_view(self.effect_select_list_view.treeview)
-        
+
         # Compositors panel
         action_row = compositeeditor.get_compositor_clip_panel()
         compositor_editor_panel = guiutils.set_margins(compositeeditor.widgets.value_edit_frame, 0, 0, 4, 0)

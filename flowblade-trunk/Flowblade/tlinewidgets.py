@@ -249,7 +249,7 @@ BOX_DASHES = [BOX_DASH_INK, BOX_DASH_SKIP, BOX_DASH_INK, BOX_DASH_SKIP]
 FRAME_SCALE_LINES = (0, 0, 0)
 
 BG_COLOR = (0.5, 0.5, 0.55)
-FRAME_SCALE_NEUTRAL_BG_COLOR = (48.0/255.0, 48.0/255.0, 48.0/255.0)
+FRAME_SCALE_NEUTRAL_BG_COLOR = ((35.0/255.0) + 0.02, (35.0/255.0) + 0.02, (35.0/255.0) + 0.02)
 THEME_NEUTRAL_COLUMN_BG_COLOR = (41.7/255.0, 41.7/255.0, 41.7/255.0)
 
 COLUMN_NOT_ACTIVE_COLOR = (0.32, 0.32, 0.34)
@@ -2905,7 +2905,10 @@ class TimeLineFrameScale:
    
     def _get_dark_theme_grad(self, h):
         if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-            r, g, b = BG_COLOR
+            r, g, b = FRAME_SCALE_NEUTRAL_BG_COLOR
+            #r += 0.02
+            #g += 0.02 
+            #b += 0.02
             grad = cairo.LinearGradient (0, 0, 0, h)
             grad.add_color_stop_rgba(1, r, g, b, 1)
             grad.add_color_stop_rgba(0, r, g, b, 1)

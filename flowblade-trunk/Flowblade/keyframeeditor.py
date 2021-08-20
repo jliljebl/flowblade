@@ -100,6 +100,8 @@ _get_current_edited_compositor = None
 actions_menu = Gtk.Menu()
 oor_before_menu = Gtk.Menu()
 oor_after_menu = Gtk.Menu()
+buttons_hamburger_menu = Gtk.Menu()
+keyframe_menu = Gtk.Menu()
 
 # ----------------------------------------------------- editor objects
 class ClipKeyFrameEditor:
@@ -114,6 +116,7 @@ class ClipKeyFrameEditor:
         def keyframe_dragged(self, active_kf, frame)
         def update_slider_value_display(self, frame)
         def update_property_value(self)
+        def show_keyframe_menu(self, event)
     """
 
     def __init__(self, editable_property, parent_editor, use_clip_in=True):
@@ -345,6 +348,13 @@ class ClipKeyFrameEditor:
             frame, value = self.keyframes[hit_kf]
             self.current_clip_frame = frame
             self.parent_editor.active_keyframe_changed()
+            
+            if event.button == 3:
+                print("show menu")
+                self.current_mouse_action = KF_DRAG_DISABLED
+                self.parent_editor.show_keyframe_menu(event)
+                return
+                
             if hit_kf == 0:
                 self.current_mouse_action = KF_DRAG_DISABLED
             else:
@@ -727,6 +737,8 @@ class ClipEditorButtonsRow(Gtk.HBox):
         self.kf_to_next_frame_button = guiutils.get_image_button("kf_edit_kf_to_next_frame", BUTTON_WIDTH, BUTTON_HEIGHT)
         self.add_fade_in_button = guiutils.get_image_button("add_fade_in", BUTTON_WIDTH, BUTTON_HEIGHT)
         self.add_fade_out_button = guiutils.get_image_button("add_fade_out", BUTTON_WIDTH, BUTTON_HEIGHT)
+        self.hamburger_menu = guicomponents.HamburgerPressLaunch(self._hamburger_press)
+        self.hamburger_menu.widget.set_margin_top(5)
         
         self.add_button.connect("clicked", lambda w,e: editor_parent.add_pressed(), None)
         self.delete_button.connect("clicked", lambda w,e: editor_parent.delete_pressed(), None)
@@ -761,16 +773,20 @@ class ClipEditorButtonsRow(Gtk.HBox):
         # Build row
         if centered_buttons:
             self.pack_start(Gtk.Label(), True, True, 0)
+
+        self.pack_start(self.hamburger_menu.widget, False, False, 0)
+        self.pack_start(guiutils.pad_label(10,4), False, False, 0)
         self.pack_start(self.add_button, False, False, 0)
         self.pack_start(self.delete_button, False, False, 0)
-        self.pack_start(guiutils.pad_label(10,4), False, False, 0)
+        self.pack_start(guiutils.pad_label(4,4), False, False, 0)
         self.pack_start(self.prev_kf_button, False, False, 0)
         self.pack_start(self.next_kf_button, False, False, 0)
         self.pack_start(self.kf_to_prev_frame_button, False, False, 0)
         self.pack_start(self.kf_to_next_frame_button, False, False, 0)
+
         self.pack_start(self.prev_frame_button, False, False, 0)
         self.pack_start(self.next_frame_button, False, False, 0)
-        self.pack_start(guiutils.pad_label(10,4), False, False, 0)
+        self.pack_start(guiutils.pad_label(4,4), False, False, 0)
         if show_fade_buttons:
             self.pack_start(self.add_fade_in_button, False, False, 0)
             self.pack_start(self.add_fade_out_button, False, False, 0)
@@ -806,8 +822,18 @@ class ClipEditorButtonsRow(Gtk.HBox):
         self.kf_to_prev_frame_button.set_sensitive(sensitive)
         self.kf_to_next_frame_button.set_sensitive(sensitive)
 
+    def _hamburger_press(self, widget, event):
+        menu = buttons_hamburger_menu
+        guiutils.remove_children(menu)
+        menu.add(_get_menu_item(_("Reset Geometry"), self._menu_item_activated, "reset" ))
+        menu.add(_get_menu_item(_("Geometry to Original Aspect Ratio"), self._menu_item_activated, "ratio" ))
+        menu.add(_get_menu_item(_("Center Horizontal"), self._menu_item_activated, "hcenter" ))
+        menu.add(_get_menu_item(_("Center Vertical"), self._menu_item_activated, "vcenter" ))
+        menu.popup(None, None, None, None, event.button, event.time)
 
-
+    def _menu_item_activated(self, widget, data):
+        pass
+    
 class GeometryEditorButtonsRow(Gtk.HBox):
     def __init__(self, editor_parent, empty_center=False):
         """
@@ -968,6 +994,7 @@ class AbstractKeyFrameEditor(Gtk.VBox):
     def get_copy_kf_value(self):
         print(type(self), "get_copy_kf_value not implemented")
 
+    
 
 class KeyFrameEditor(AbstractKeyFrameEditor):
     """
@@ -1116,6 +1143,37 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         adj.set_value(float(val))
         self.slider_value_changed(adj)
 
+    def show_keyframe_menu(self, event):
+        menu = keyframe_menu
+        guiutils.remove_children(menu)
+
+        linear_item = Gtk.RadioMenuItem()
+        linear_item.set_label(_("Linear"))
+        linear_item.set_active(True)
+        linear_item.connect("activate", self._menu_item_activated, "linear")
+        linear_item.show()
+        menu.append(linear_item)
+
+        smooth_item = Gtk.RadioMenuItem().new_with_label([linear_item], _("Smooth"))
+        #smooth_item.set_active(track_obj.height == appconsts.TRACK_HEIGHT_NORMAL)
+        smooth_item.connect("activate", self._menu_item_activated, "smooth")
+        smooth_item.show()
+        menu.append(smooth_item)
+
+        discrete_item = Gtk.RadioMenuItem.new_with_label([linear_item], _("Discrete"))
+        #discrete_item.set_active(track_obj.height == appconsts.TRACK_HEIGHT_SMALL)
+        discrete_item.connect("activate", self._menu_item_activated, "discrete")
+        discrete_item.show()
+        menu.append(discrete_item)
+    
+        menu.add(_get_menu_item(_("Reset Geometry"), self._menu_item_activated, "reset" ))
+        menu.add(_get_menu_item(_("Geometry to Original Aspect Ratio"), self._menu_item_activated, "ratio" ))
+        menu.add(_get_menu_item(_("Center Horizontal"), self._menu_item_activated, "hcenter" ))
+        menu.add(_get_menu_item(_("Center Vertical"), self._menu_item_activated, "vcenter" ))
+        menu.popup(None, None, None, None, event.button, event.time)
+
+    def _menu_item_activated(self, widget, data):
+        print("data")
 
 class KeyFrameEditorClipFade(KeyFrameEditor):
     """
@@ -2132,3 +2190,10 @@ def _get_frame_value(frame, keyframes):
         except: # past last frame, use its value
             return kf_value
    
+
+# ------------------------------------------------------------- gui uitls
+def _get_menu_item(text, callback, data):
+    item = Gtk.MenuItem(text)
+    item.connect("activate", callback, data)
+    item.show()
+    return item
