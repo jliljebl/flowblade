@@ -1507,7 +1507,11 @@ def get_monitor_view_select_combo(callback):
                    guiutils.get_cairo_image("vectorscope"),
                    guiutils.get_cairo_image("rgbparade")]
     menu_launch = ImageMenuLaunch(callback, surface_list, w=24*size_adj, h=20*size_adj)
-    menu_launch.surface_y = 8*size_adj
+    if prefs.double_track_hights:
+        menu_launch.surface_y = 8*size_adj
+    else:
+        menu_launch.surface_y = 3
+        
     return menu_launch
 
 def get_trim_view_select_combo(callback):
@@ -1518,7 +1522,11 @@ def get_trim_view_select_combo(callback):
        size_adj = 2
     surface = guiutils.get_cairo_image("trim_view")
     menu_launch = PressLaunch(callback, surface, w=24*size_adj, h=20*size_adj)
-    menu_launch.surface_y = 8*size_adj
+    if prefs.double_track_hights:
+        menu_launch.surface_y = 8*size_adj
+    else:
+        menu_launch.surface_y = 3
+        
     return menu_launch
     
 def get_compositor_track_select_combo(source_track, target_track, callback):
@@ -3598,7 +3606,7 @@ class HamburgerPressLaunch:
 class MonitorSwitch:
     def __init__(self, callback):
         self.WIDTH = 76
-        self.HEIGHT = 20
+        self.HEIGHT = 14
         
         self.press_fix = 6 # we don't get want to divide press exactly half, timeline gets more
         
@@ -3643,7 +3651,10 @@ class MonitorSwitch:
            y_off_tline = y_off_tline * 2
            y_off_clip = y_off_clip * 2
            mid_gap = mid_gap * 2
- 
+        else:
+           y_off_tline = -1
+           y_off_clip = 0
+
         cr.set_source_surface(tline_draw_surface, def_off, y_off_tline)
         cr.paint()
 
@@ -3664,7 +3675,7 @@ class KBShortcutEditor:
 
     edit_ongoing = False
     input_listener = None
-
+ 
     def __init__(self, code, key_name, dialog_window, set_shortcut_callback, editable=True):
         
         self.code = code

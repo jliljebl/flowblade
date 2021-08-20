@@ -49,7 +49,7 @@ CORNER_DIVIDER = 5
 
 # Aug-2019 - SvdB - BB
 MB_BUTTONS_WIDTH = [317,634]
-MB_BUTTONS_HEIGHT = [30,60]
+MB_BUTTONS_HEIGHT = [23,60]
 MB_BUTTON_HEIGHT = [22,44]
 MB_BUTTON_WIDTH = [30,60]
 MB_BUTTON_Y = 4
@@ -334,7 +334,7 @@ class PlayerButtons(AbstractGlassButtons):
             # ------------------------------End of timeline_start_end_button
 
         for i in range(0, len(self.icons)):
-            self.image_y.append(MB_BUTTON_IMAGE_Y - 3)
+            self.image_y.append(MB_BUTTON_IMAGE_Y - 6)
         
         self.pressed_callback_funcs = None # set using set_callbacks()
 
