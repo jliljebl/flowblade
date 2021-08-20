@@ -149,7 +149,7 @@ def get_named_frame_with_hamburger(name, widget, left_padding=12, right_padding=
     if name != None:
         label = guiutils.bold_label(name)
         label.set_justify(Gtk.Justification.LEFT)
-        
+        label.set_margin_left(4)
         label_box = Gtk.HBox()
         label_box.pack_start(label, False, False, 0)
         label_box.pack_start(Gtk.Label(), True, True, 0)
