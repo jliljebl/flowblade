@@ -185,10 +185,7 @@ def replace_values_using_clip_data(properties, info, clip):
                         replacement_happened = True
 
     return replacement_happened
-                
 
-
-            
 def get_args_num_value(val_str):
     """
     Returns numerical value for expression in property
@@ -210,13 +207,14 @@ def get_args_num_value(val_str):
 # ------------------------------------------ kf editor values strings to kf arrays funcs
 def single_value_keyframes_string_to_kf_array(keyframes_str, out_to_in_func):
     new_keyframes = []
-    keyframes_str = keyframes_str.strip('"') # expression have sometimes quotes that need to go away
+    keyframes_str = keyframes_str.strip('"') # expressions have sometimes quotes that need to go away
     kf_tokens = keyframes_str.split(";")
     for token in kf_tokens:
         sides = token.split("=")
-        add_kf = (int(sides[0]), out_to_in_func(float(sides[1]))) # kf = (frame, value)
+        add_kf = (int(sides[0]), out_to_in_func(float(sides[1])), appconsts.KEYFRAME_DISCRETE) # kf = (frame, value, type)
+        print(add_kf)
         new_keyframes.append(add_kf)
-        
+
     return new_keyframes
     
 def geom_keyframes_value_string_to_opacity_kf_array(keyframes_str, out_to_in_func):

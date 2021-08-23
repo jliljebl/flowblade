@@ -89,7 +89,11 @@ KF_DRAG_DISABLED = 2
 
 # Icons
 ACTIVE_KF_ICON = None
+ACTIVE_KF_ICON_SMOOTH = None
+ACTIVE_KF_ICON_DISCRETE = None
 NON_ACTIVE_KF_ICON = None
+NON_ACTIVE_KF_ICON_SMOOTH = None
+NON_ACTIVE_KF_ICON_DISCRETE = None
 
 # Magic value to signify disconnected signal handler 
 DISCONNECTED_SIGNAL_HANDLER = -9999999
@@ -162,11 +166,14 @@ class ClipKeyFrameEditor:
         self.mouse_listener = None #This is special service for RotoMaskKeyFrameEditor, not used by other editors
 
         # init icons if needed
-        global ACTIVE_KF_ICON, NON_ACTIVE_KF_ICON
+        global ACTIVE_KF_ICON,  ACTIVE_KF_ICON_SMOOTH, ACTIVE_KF_ICON_DISCRETE, NON_ACTIVE_KF_ICON, NON_ACTIVE_KF_ICON_SMOOTH, NON_ACTIVE_KF_ICON_DISCRETE
         if ACTIVE_KF_ICON == None:
             ACTIVE_KF_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_active.png")
-        if NON_ACTIVE_KF_ICON == None:
+            ACTIVE_KF_ICON_SMOOTH = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_active_smooth.png")
+            ACTIVE_KF_ICON_DISCRETE = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_active_discrete.png")
             NON_ACTIVE_KF_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_not_active.png")    
+            NON_ACTIVE_KF_ICON_SMOOTH = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_not_active_smooth.png") 
+            NON_ACTIVE_KF_ICON_DISCRETE = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_not_active_discrete.png")
             
     def set_keyframes(self, keyframes_str, out_to_in_func):
         self.keyframes = self.keyframe_parser(keyframes_str, out_to_in_func)
@@ -230,15 +237,26 @@ class ClipKeyFrameEditor:
 
         # Draw keyframes
         for i in range(0, len(self.keyframes)):
-            frame, value = self.keyframes[i]
+            frame, value, kf_type = self.keyframes[i]
             if frame < self.clip_in:
                 continue
             if frame > self.clip_in + self.clip_length:
                 continue  
             if i == self.active_kf_index:
-                icon = ACTIVE_KF_ICON
+                print("kf_type", kf_type)
+                if kf_type == appconsts.KEYFRAME_LINEAR:
+                    icon = ACTIVE_KF_ICON
+                elif kf_type == appconsts.KEYFRAME_SMOOTH:
+                    icon = ACTIVE_KF_ICON_SMOOTH
+                else:
+                    icon = ACTIVE_KF_ICON_DISCRETE
             else:
-                icon = NON_ACTIVE_KF_ICON
+                if kf_type == appconsts.KEYFRAME_LINEAR:
+                    icon = NON_ACTIVE_KF_ICON
+                elif kf_type == appconsts.KEYFRAME_SMOOTH:
+                    icon = NON_ACTIVE_KF_ICON_SMOOTH
+                else:
+                    icon = NON_ACTIVE_KF_ICON_DISCRETE
             try:
                 kf_pos = self._get_panel_pos_for_frame(frame)
             except ZeroDivisionError: # math fails for 1 frame clip
@@ -345,12 +363,11 @@ class ClipKeyFrameEditor:
             self.widget.queue_draw()
         else: # some keyframe was pressed         
             self.active_kf_index = hit_kf
-            frame, value = self.keyframes[hit_kf]
+            frame, value, kf_type = self.keyframes[hit_kf]
             self.current_clip_frame = frame
             self.parent_editor.active_keyframe_changed()
             
             if event.button == 3:
-                print("show menu")
                 self.current_mouse_action = KF_DRAG_DISABLED
                 self.parent_editor.show_keyframe_menu(event)
                 return
@@ -448,7 +465,7 @@ class ClipKeyFrameEditor:
         # returns Keyframes before current clip start
         kfs = []
         for i in range(0, len(self.keyframes)):
-            frame, value = self.keyframes[i]
+            frame, value, kf_type = self.keyframes[i]
             if frame < self.clip_in:
                 kfs.append(self.keyframes[i])
         return kfs
@@ -457,7 +474,7 @@ class ClipKeyFrameEditor:
         # returns Keyframes before current clip start
         kfs = []
         for i in range(0, len(self.keyframes)):
-            frame, value = self.keyframes[i]
+            frame, value, type = self.keyframes[i]
             if frame > self.clip_in + self.clip_length:
                 kfs.append(self.keyframes[i])
         return kfs
@@ -475,7 +492,7 @@ class ClipKeyFrameEditor:
     
     def _key_frame_hit(self, x, y):
         for i in range(0, len(self.keyframes)):
-            frame, val = self.keyframes[i]
+            frame, val, kf_type = self.keyframes[i]
             frame_x = self._get_panel_pos_for_frame(frame)
             frame_y = KF_Y + 6
             if((abs(x - frame_x) < KF_HIT_WIDTH)
@@ -502,6 +519,7 @@ class ClipKeyFrameEditor:
         return False
 
     def add_keyframe(self, frame):
+        print("add_keyframe")
         # NOTE: This makes added keyframe the active keyframe too.
         kf_index_on_frame = self.frame_has_keyframe(frame)
         if kf_index_on_frame != -1:
@@ -510,14 +528,16 @@ class ClipKeyFrameEditor:
             return
 
         for i in range(0, len(self.keyframes)):
-            kf_frame, kf_value = self.keyframes[i]
+            kf_frame, kf_value, kf_type = self.keyframes[i]
             if kf_frame > frame:
-                prev_frame, prev_value = self.keyframes[i - 1]
-                self.keyframes.insert(i, (frame, prev_value))
+                prev_frame, prev_value, prev_type = self.keyframes[i - 1]
+                print("add_keyframe, in loop:", prev_frame, prev_value, prev_type)
+                self.keyframes.insert(i, (frame, prev_value, prev_type))
                 self.active_kf_index = i
                 return
-        prev_frame, prev_value = self.keyframes[len(self.keyframes) - 1]
-        self.keyframes.append((frame, prev_value))
+        prev_frame, prev_value, prev_type = self.keyframes[len(self.keyframes) - 1]
+        print("add_keyframe:", prev_frame, prev_value, prev_type)
+        self.keyframes.append((frame, prev_value, prev_type))
         self.active_kf_index = len(self.keyframes) - 1
 
     def print_keyframes(self, msg="no_msg"):
@@ -574,14 +594,14 @@ class ClipKeyFrameEditor:
         Returns index of keyframe if frame has keyframe or -1 if it doesn't.
         """
         for i in range(0, len(self.keyframes)):
-            kf_frame, kf_value = self.keyframes[i]
+            kf_frame, kf_value, type = self.keyframes[i]
             if frame == kf_frame:
                 return i
 
         return -1
     
     def get_active_kf_frame(self):
-        frame, val = self.keyframes[self.active_kf_index]
+        frame, val, type = self.keyframes[self.active_kf_index]
         return frame
 
     def get_active_kf_value(self):
@@ -589,8 +609,8 @@ class ClipKeyFrameEditor:
         return val
     
     def set_active_kf_value(self, new_value):
-        frame, val = self.keyframes.pop(self.active_kf_index)
-        self.keyframes.insert(self.active_kf_index,(frame, new_value))
+        frame, val, kf_type = self.keyframes.pop(self.active_kf_index)
+        self.keyframes.insert(self.active_kf_index,(frame, new_value, kf_type))
 
     def active_kf_pos_entered(self, frame):
         if self.active_kf_index == 0:
@@ -2175,13 +2195,13 @@ class PositionNumericalEntries(Gtk.HBox):
 # ----------------------------------------------------------------- linear interpolation
 def _get_frame_value(frame, keyframes):
     for i in range(0, len(keyframes)):
-        kf_frame, kf_value = keyframes[i]
+        kf_frame, kf_value, kf_type = keyframes[i]
         if kf_frame == frame:
             return kf_value
         
         try:
             # See if frame between this and next keyframe
-            frame_n, value_n = keyframes[i + 1]
+            frame_n, value_n, kf_type = keyframes[i + 1]
             if ((kf_frame < frame)
                 and (frame < frame_n)):
                 time_fract = float((frame - kf_frame)) / float((frame_n - kf_frame))

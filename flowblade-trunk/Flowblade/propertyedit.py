@@ -724,7 +724,7 @@ class KeyFrameHCSFilterProperty(EditableProperty):
     def write_out_keyframes(self, keyframes):
         val_str = ""
         for kf in keyframes:
-            frame, val = kf
+            frame, val, type = kf
             val_str += str(frame) + "=" + str(self.get_out_value(val)) + ";"
         
         val_str = val_str.strip(";")
@@ -765,7 +765,7 @@ class KeyFrameHCSTransitionProperty(TransitionEditableProperty):
     def write_out_keyframes(self, keyframes):
         val_str = ""
         for kf in keyframes:
-            frame, val = kf
+            frame, val, type = kf
             val_str += str(frame) + "=" + str(self.get_out_value(val)) + ";"
 
         val_str = val_str.strip(";")
