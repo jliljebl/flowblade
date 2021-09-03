@@ -368,8 +368,9 @@ class ClipKeyFrameEditor:
             self.parent_editor.active_keyframe_changed()
             
             if event.button == 3:
+                self.widget.queue_draw()
                 self.current_mouse_action = KF_DRAG_DISABLED
-                self.parent_editor.show_keyframe_menu(event)
+                self.parent_editor.show_keyframe_menu(event, self.keyframes[hit_kf])
                 return
                 
             if hit_kf == 0:
@@ -612,6 +613,10 @@ class ClipKeyFrameEditor:
         frame, val, kf_type = self.keyframes.pop(self.active_kf_index)
         self.keyframes.insert(self.active_kf_index,(frame, new_value, kf_type))
 
+    def set_active_kf_type(self, new_type):
+        frame, val, kf_type = self.keyframes.pop(self.active_kf_index)
+        self.keyframes.insert(self.active_kf_index,(frame, val, new_type))
+        
     def active_kf_pos_entered(self, frame):
         if self.active_kf_index == 0:
             return
@@ -757,7 +762,7 @@ class ClipEditorButtonsRow(Gtk.HBox):
         self.kf_to_next_frame_button = guiutils.get_image_button("kf_edit_kf_to_next_frame", BUTTON_WIDTH, BUTTON_HEIGHT)
         self.add_fade_in_button = guiutils.get_image_button("add_fade_in", BUTTON_WIDTH, BUTTON_HEIGHT)
         self.add_fade_out_button = guiutils.get_image_button("add_fade_out", BUTTON_WIDTH, BUTTON_HEIGHT)
-        self.hamburger_menu = guicomponents.HamburgerPressLaunch(self._hamburger_press)
+        self.hamburger_menu = guicomponents.HamburgerPressLaunch(editor_parent._hamburger_pressed)
         self.hamburger_menu.widget.set_margin_top(5)
         
         self.add_button.connect("clicked", lambda w,e: editor_parent.add_pressed(), None)
@@ -841,15 +846,6 @@ class ClipEditorButtonsRow(Gtk.HBox):
         self.next_frame_button.set_sensitive(sensitive)
         self.kf_to_prev_frame_button.set_sensitive(sensitive)
         self.kf_to_next_frame_button.set_sensitive(sensitive)
-
-    def _hamburger_press(self, widget, event):
-        menu = buttons_hamburger_menu
-        guiutils.remove_children(menu)
-        menu.add(_get_menu_item(_("Reset Geometry"), self._menu_item_activated, "reset" ))
-        menu.add(_get_menu_item(_("Geometry to Original Aspect Ratio"), self._menu_item_activated, "ratio" ))
-        menu.add(_get_menu_item(_("Center Horizontal"), self._menu_item_activated, "hcenter" ))
-        menu.add(_get_menu_item(_("Center Vertical"), self._menu_item_activated, "vcenter" ))
-        menu.popup(None, None, None, None, event.button, event.time)
 
     def _menu_item_activated(self, widget, data):
         pass
@@ -1163,37 +1159,71 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         adj.set_value(float(val))
         self.slider_value_changed(adj)
 
-    def show_keyframe_menu(self, event):
+    def show_keyframe_menu(self, event, keyframe):
+        frame, value, kf_type = keyframe
+        
         menu = keyframe_menu
         guiutils.remove_children(menu)
 
+        self._create_keyframe_type_submenu(kf_type, menu, self._menu_item_activated)
+
+        
+        #menu.add(_get_menu_item(_("Reset Geometry"), self._menu_item_activated, "reset" ))
+        #menu.add(_get_menu_item(_("Geometry to Original Aspect Ratio"), self._menu_item_activated, "ratio" ))
+        #menu.add(_get_menu_item(_("Center Horizontal"), self._menu_item_activated, "hcenter" ))
+        #menu.add(_get_menu_item(_("Center Vertical"), self._menu_item_activated, "vcenter" ))
+        menu.popup(None, None, None, None, event.button, event.time)
+
+    def _menu_item_activated(self, widget, data):
+        if data == "linear":
+            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_LINEAR)
+        elif data == "smooth":
+            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_SMOOTH)
+        elif data == "discrete":
+            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_DISCRETE)
+
+        self.queue_draw()
+
+    def _hamburger_pressed(self, widget, event):
+        menu = buttons_hamburger_menu
+        guiutils.remove_children(menu)
+        frame, value, kf_type = self.clip_editor.keyframes[self.clip_editor.active_kf_index]
+        
+        active_type_menu_item = Gtk.MenuItem(_("Active Keyframe Tyoe"))
+        type_menu = Gtk.Menu()
+        active_type_menu_item.set_submenu(type_menu)
+        self._create_keyframe_type_submenu(kf_type, type_menu, self._menu_item_activated)
+        active_type_menu_item.show_all()
+        menu.add(active_type_menu_item)
+        #menu.add(_get_menu_item(_("Reset Geometry"), self._menu_item_activated, "reset" ))
+        #menu.add(_get_menu_item(_("Geometry to Original Aspect Ratio"), self._menu_item_activated, "ratio" ))
+        #menu.add(_get_menu_item(_("Center Horizontal"), self._menu_item_activated, "hcenter" ))
+        #menu.add(_get_menu_item(_("Center Vertical"), self._menu_item_activated, "vcenter" ))
+        menu.popup(None, None, None, None, event.button, event.time)
+            
+    def _create_keyframe_type_submenu(self, kf_type, menu, callback):
         linear_item = Gtk.RadioMenuItem()
         linear_item.set_label(_("Linear"))
-        linear_item.set_active(True)
-        linear_item.connect("activate", self._menu_item_activated, "linear")
+        if kf_type == appconsts.KEYFRAME_LINEAR:
+            linear_item.set_active(True)
+        linear_item.connect("activate", callback, "linear")
         linear_item.show()
         menu.append(linear_item)
 
         smooth_item = Gtk.RadioMenuItem().new_with_label([linear_item], _("Smooth"))
-        #smooth_item.set_active(track_obj.height == appconsts.TRACK_HEIGHT_NORMAL)
-        smooth_item.connect("activate", self._menu_item_activated, "smooth")
+        smooth_item.connect("activate", callback, "smooth")
+        if kf_type == appconsts.KEYFRAME_SMOOTH:
+            smooth_item.set_active(True)
         smooth_item.show()
         menu.append(smooth_item)
 
         discrete_item = Gtk.RadioMenuItem.new_with_label([linear_item], _("Discrete"))
-        #discrete_item.set_active(track_obj.height == appconsts.TRACK_HEIGHT_SMALL)
-        discrete_item.connect("activate", self._menu_item_activated, "discrete")
+        discrete_item.connect("activate", callback, "discrete")
+        if kf_type == appconsts.KEYFRAME_DISCRETE:
+            discrete_item.set_active(True)
         discrete_item.show()
         menu.append(discrete_item)
-    
-        menu.add(_get_menu_item(_("Reset Geometry"), self._menu_item_activated, "reset" ))
-        menu.add(_get_menu_item(_("Geometry to Original Aspect Ratio"), self._menu_item_activated, "ratio" ))
-        menu.add(_get_menu_item(_("Center Horizontal"), self._menu_item_activated, "hcenter" ))
-        menu.add(_get_menu_item(_("Center Vertical"), self._menu_item_activated, "vcenter" ))
-        menu.popup(None, None, None, None, event.button, event.time)
 
-    def _menu_item_activated(self, widget, data):
-        print("data")
 
 class KeyFrameEditorClipFade(KeyFrameEditor):
     """

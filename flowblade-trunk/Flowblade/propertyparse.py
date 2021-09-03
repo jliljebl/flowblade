@@ -211,6 +211,7 @@ def single_value_keyframes_string_to_kf_array(keyframes_str, out_to_in_func):
     kf_tokens = keyframes_str.split(";")
     for token in kf_tokens:
         sides = token.split("=")
+        # Find out saved keyframe type here.
         add_kf = (int(sides[0]), out_to_in_func(float(sides[1])), appconsts.KEYFRAME_DISCRETE) # kf = (frame, value, type)
         print(add_kf)
         new_keyframes.append(add_kf)

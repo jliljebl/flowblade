@@ -1470,6 +1470,7 @@ class MediaObjectWidget:
         cr.arc(x + radius, y + radius, radius, 180 * degrees, 270 * degrees)
         cr.close_path()
 
+
 # -------------------------------------------- context menus
 class EditorSeparator:
     """
@@ -1708,7 +1709,6 @@ def display_clip_popup_menu(event, clip, track, callback):
 
     _add_separetor(clip_menu)
 
-    
     clip_menu.add(_get_edit_menu_item(event, clip, track, callback))
     
     if clip.container_data != None:
@@ -2313,7 +2313,7 @@ def _get_track_mute_menu_item(event, track, callback):
 
 def _get_clip_properties_menu_item(event, clip, track, callback):
     properties_menu_item = Gtk.MenuItem(_("Properties"))
-    properties_menu =  Gtk.Menu()
+    properties_menu = Gtk.Menu()
     properties_menu.add(_get_menu_item(_("Rename Clip"), callback,\
                       (clip, track, "rename_clip", event.x)))
     properties_menu.add(_get_color_menu_item(clip, track, callback))
