@@ -210,10 +210,19 @@ def single_value_keyframes_string_to_kf_array(keyframes_str, out_to_in_func):
     keyframes_str = keyframes_str.strip('"') # expressions have sometimes quotes that need to go away
     kf_tokens = keyframes_str.split(";")
     for token in kf_tokens:
-        sides = token.split("=")
+        sides = token.split(appconsts.KEYFRAME_DISCRETE_EQUALS_STR)
+        if len(sides) == 2:
+            kf_type = appconsts.KEYFRAME_DISCRETE
+        else:
+            sides = token.split(appconsts.KEYFRAME_SMOOTH_EQUALS_STR)
+            if len(sides) == 2:
+                kf_type = appconsts.KEYFRAME_SMOOTH
+            else:
+                sides = token.split(appconsts.KEYFRAME_LINEAR_EQUALS_STR)
+                kf_type = appconsts.KEYFRAME_LINEAR
+        
         # Find out saved keyframe type here.
-        add_kf = (int(sides[0]), out_to_in_func(float(sides[1])), appconsts.KEYFRAME_DISCRETE) # kf = (frame, value, type)
-        print(add_kf)
+        add_kf = (int(sides[0]), out_to_in_func(float(sides[1])), kf_type) # kf = (frame, value, type)
         new_keyframes.append(add_kf)
 
     return new_keyframes

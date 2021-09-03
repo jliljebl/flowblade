@@ -724,8 +724,16 @@ class KeyFrameHCSFilterProperty(EditableProperty):
     def write_out_keyframes(self, keyframes):
         val_str = ""
         for kf in keyframes:
-            frame, val, type = kf
-            val_str += str(frame) + "=" + str(self.get_out_value(val)) + ";"
+            frame, val, kf_type = kf
+            
+            if kf_type == appconsts.KEYFRAME_LINEAR:
+                eq_str = appconsts.KEYFRAME_LINEAR_EQUALS_STR
+            elif kf_type == appconsts.KEYFRAME_SMOOTH:
+                eq_str = appconsts.KEYFRAME_SMOOTH_EQUALS_STR
+            else:
+                eq_str = appconsts.KEYFRAME_DISCRETE_EQUALS_STR
+                
+            val_str += str(frame) + eq_str + str(self.get_out_value(val)) + ";"
         
         val_str = val_str.strip(";")
         self.write_value(val_str)

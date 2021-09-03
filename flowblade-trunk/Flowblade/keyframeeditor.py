@@ -243,7 +243,6 @@ class ClipKeyFrameEditor:
             if frame > self.clip_in + self.clip_length:
                 continue  
             if i == self.active_kf_index:
-                print("kf_type", kf_type)
                 if kf_type == appconsts.KEYFRAME_LINEAR:
                     icon = ACTIVE_KF_ICON
                 elif kf_type == appconsts.KEYFRAME_SMOOTH:
@@ -520,7 +519,6 @@ class ClipKeyFrameEditor:
         return False
 
     def add_keyframe(self, frame):
-        print("add_keyframe")
         # NOTE: This makes added keyframe the active keyframe too.
         kf_index_on_frame = self.frame_has_keyframe(frame)
         if kf_index_on_frame != -1:
@@ -532,12 +530,10 @@ class ClipKeyFrameEditor:
             kf_frame, kf_value, kf_type = self.keyframes[i]
             if kf_frame > frame:
                 prev_frame, prev_value, prev_type = self.keyframes[i - 1]
-                print("add_keyframe, in loop:", prev_frame, prev_value, prev_type)
                 self.keyframes.insert(i, (frame, prev_value, prev_type))
                 self.active_kf_index = i
                 return
         prev_frame, prev_value, prev_type = self.keyframes[len(self.keyframes) - 1]
-        print("add_keyframe:", prev_frame, prev_value, prev_type)
         self.keyframes.append((frame, prev_value, prev_type))
         self.active_kf_index = len(self.keyframes) - 1
 
@@ -648,8 +644,8 @@ class ClipKeyFrameEditor:
             index += 1
     
     def set_active_kf_frame(self, new_frame):
-        frame, val = self.keyframes.pop(self.active_kf_index)
-        self.keyframes.insert(self.active_kf_index,(new_frame, val))
+        frame, val, kf_type = self.keyframes.pop(self.active_kf_index)
+        self.keyframes.insert(self.active_kf_index,(new_frame, val, kf_type))
 
     def _show_oor_before_menu(self, widget, event):
         menu = oor_before_menu
@@ -1183,6 +1179,7 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
             self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_DISCRETE)
 
         self.queue_draw()
+        self.update_property_value()
 
     def _hamburger_pressed(self, widget, event):
         menu = buttons_hamburger_menu
