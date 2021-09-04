@@ -618,10 +618,10 @@ class ClipKeyFrameEditor:
         if self.active_kf_index == 0:
             return
         
-        prev_frame, val = self.keyframes[self.active_kf_index - 1]
+        prev_frame, val, kf_type = self.keyframes[self.active_kf_index - 1]
         prev_frame += 1
         try:
-            next_frame, val = self.keyframes[self.active_kf_index + 1]
+            next_frame, val, kf_type = self.keyframes[self.active_kf_index + 1]
             next_frame -= 1
         except:
             next_frame = self.clip_in + self.clip_length
@@ -964,9 +964,11 @@ class AbstractKeyFrameEditor(Gtk.VBox):
         # This is called after timeline current frame changed. 
         # If timeline pos changed because drag is happening _here_,
         # updating once more is wrong
+        print("before display_tline_frame")
         if self.clip_editor.drag_on == True:
             return
-
+        print("after display_tline_frame")
+        
         # update clipeditor pos
         clip_frame = tline_frame - self.clip_tline_pos + self.clip_in
         self.clip_editor.set_and_display_clip_frame(clip_frame)
@@ -1686,7 +1688,8 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
     def clip_editor_frame_changed(self, clip_frame):
         self.seek_tline_frame(clip_frame)
         self.buttons_row.set_frame(clip_frame)
-
+        self.update_editor_view_with_frame(clip_frame)
+        
     def add_pressed(self):
         self.clip_editor.add_keyframe(self.clip_editor.current_clip_frame)
         self.geom_kf_edit.add_keyframe(self.clip_editor.current_clip_frame)
@@ -1715,12 +1718,14 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         
     def next_pressed(self):
         self.clip_editor.set_next_active()
-        self.update_editor_view()
+        frame = self.clip_editor.get_active_kf_frame()
+        self.update_editor_view_with_frame(frame)
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
         
     def prev_pressed(self):
         self.clip_editor.set_prev_active()
-        self.update_editor_view()
+        frame = self.clip_editor.get_active_kf_frame()
+        self.update_editor_view_with_frame(frame)
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
 
     def prev_frame_pressed(self):

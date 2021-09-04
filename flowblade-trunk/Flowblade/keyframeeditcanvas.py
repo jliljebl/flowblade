@@ -601,8 +601,9 @@ class BoxEditCanvas(AbstractEditCanvas):
                 return
             
             try:
+                print("try")
                 # See if frame between this and next keyframe
-                frame_n, rect_n, opacity_n = self.keyframes[i + 1]
+                frame_n, rect_n, opacity_n, kf_type = self.keyframes[i + 1]
                 if ((frame < self.current_clip_frame)
                     and (self.current_clip_frame < frame_n)):
                     time_fract = float((self.current_clip_frame - frame)) / \
@@ -611,6 +612,7 @@ class BoxEditCanvas(AbstractEditCanvas):
                     self.source_edit_rect.set_geom(*self._get_screen_to_panel_rect(frame_rect))
                     return
             except: # past last frame, use its value
+                print("except")
                 self.source_edit_rect.set_geom(*self._get_screen_to_panel_rect(rect))
                 return
                 
@@ -823,7 +825,7 @@ class RotatingEditCanvas(AbstractEditCanvas):
             
             try:
                 # See if frame between this and next keyframe
-                frame_n, rect_n, opacity_n = self.keyframes[i + 1]
+                frame_n, rect_n, opacity_n, kf_type = self.keyframes[i + 1]
                 if ((frame < self.current_clip_frame)
                     and (self.current_clip_frame < frame_n)):
                     time_fract = float((self.current_clip_frame - frame)) / \
