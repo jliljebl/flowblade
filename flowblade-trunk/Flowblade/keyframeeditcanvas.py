@@ -380,6 +380,11 @@ class AbstractEditCanvas:
         self.keyframes.pop(active_kf_index)
         self.keyframes.insert(active_kf_index, (frame, shape, opacity, kf_type))    
 
+    def set_active_kf_type(self, active_kf_index, kf_type):
+        old_frame, shape, opacity, old_kf_type = self.keyframes[active_kf_index]
+        self.keyframes.pop(active_kf_index)
+        self.keyframes.insert(active_kf_index, (frame, shape, opacity, kf_type))    
+        
     def get_keyframe(self, kf_index):
         return self.keyframes[kf_index]
 
@@ -697,7 +702,10 @@ class BoxEditCanvas(AbstractEditCanvas):
             self.source_edit_rect.w += delta
         
         self.source_edit_rect.h = self.source_edit_rect.h * (self.source_edit_rect.w / old_w)
-            
+
+    def set_active_kf_type(self, kf_type):
+        pass
+
     def print_keyframes(self):
         for i in range(0, len(self.keyframes)):
             print(self.keyframes[i])

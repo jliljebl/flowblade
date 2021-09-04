@@ -846,7 +846,8 @@ class ClipEditorButtonsRow(Gtk.HBox):
 
     def _menu_item_activated(self, widget, data):
         pass
-    
+
+
 class GeometryEditorButtonsRow(Gtk.HBox):
     def __init__(self, editor_parent, empty_center=False):
         """
@@ -1008,7 +1009,29 @@ class AbstractKeyFrameEditor(Gtk.VBox):
     def get_copy_kf_value(self):
         print(type(self), "get_copy_kf_value not implemented")
 
-    
+    def _create_keyframe_type_submenu(self, kf_type, menu, callback):
+        linear_item = Gtk.RadioMenuItem()
+        linear_item.set_label(_("Linear"))
+        if kf_type == appconsts.KEYFRAME_LINEAR:
+            linear_item.set_active(True)
+        linear_item.connect("activate", callback, "linear")
+        linear_item.show()
+        menu.append(linear_item)
+
+        smooth_item = Gtk.RadioMenuItem().new_with_label([linear_item], _("Smooth"))
+        smooth_item.connect("activate", callback, "smooth")
+        if kf_type == appconsts.KEYFRAME_SMOOTH:
+            smooth_item.set_active(True)
+        smooth_item.show()
+        menu.append(smooth_item)
+
+        discrete_item = Gtk.RadioMenuItem.new_with_label([linear_item], _("Discrete"))
+        discrete_item.connect("activate", callback, "discrete")
+        if kf_type == appconsts.KEYFRAME_DISCRETE:
+            discrete_item.set_active(True)
+        discrete_item.show()
+        menu.append(discrete_item)
+
 
 class KeyFrameEditor(AbstractKeyFrameEditor):
     """
@@ -1164,12 +1187,6 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         guiutils.remove_children(menu)
 
         self._create_keyframe_type_submenu(kf_type, menu, self._menu_item_activated)
-
-        
-        #menu.add(_get_menu_item(_("Reset Geometry"), self._menu_item_activated, "reset" ))
-        #menu.add(_get_menu_item(_("Geometry to Original Aspect Ratio"), self._menu_item_activated, "ratio" ))
-        #menu.add(_get_menu_item(_("Center Horizontal"), self._menu_item_activated, "hcenter" ))
-        #menu.add(_get_menu_item(_("Center Vertical"), self._menu_item_activated, "vcenter" ))
         menu.popup(None, None, None, None, event.button, event.time)
 
     def _menu_item_activated(self, widget, data):
@@ -1200,28 +1217,7 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         #menu.add(_get_menu_item(_("Center Vertical"), self._menu_item_activated, "vcenter" ))
         menu.popup(None, None, None, None, event.button, event.time)
             
-    def _create_keyframe_type_submenu(self, kf_type, menu, callback):
-        linear_item = Gtk.RadioMenuItem()
-        linear_item.set_label(_("Linear"))
-        if kf_type == appconsts.KEYFRAME_LINEAR:
-            linear_item.set_active(True)
-        linear_item.connect("activate", callback, "linear")
-        linear_item.show()
-        menu.append(linear_item)
 
-        smooth_item = Gtk.RadioMenuItem().new_with_label([linear_item], _("Smooth"))
-        smooth_item.connect("activate", callback, "smooth")
-        if kf_type == appconsts.KEYFRAME_SMOOTH:
-            smooth_item.set_active(True)
-        smooth_item.show()
-        menu.append(smooth_item)
-
-        discrete_item = Gtk.RadioMenuItem.new_with_label([linear_item], _("Discrete"))
-        discrete_item.connect("activate", callback, "discrete")
-        if kf_type == appconsts.KEYFRAME_DISCRETE:
-            discrete_item.set_active(True)
-        discrete_item.show()
-        menu.append(discrete_item)
 
 
 class KeyFrameEditorClipFade(KeyFrameEditor):
@@ -1850,8 +1846,8 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         write_keyframes = []
         for opa_kf, geom_kf in zip(self.clip_editor.keyframes, self.geom_kf_edit.keyframes):
             frame, opacity, kf_type = opa_kf
-            frame, rect, rubbish_opacity, kf_type = geom_kf
-            
+            frame, rect, rubbish_opacity, kf_type_geom = geom_kf
+            print("update_property_value", kf_type, kf_type_geom)
             write_keyframes.append((frame, rect, opacity, kf_type))
         
         self.editable_property.write_out_keyframes(write_keyframes)
@@ -1873,9 +1869,31 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
     def _hamburger_pressed(self, widget, event):
         print("hanburger pressed")
         
+    def show_keyframe_menu(self, event, keyframe):
+        frame, value, kf_type = keyframe
         
-        
-        
+        menu = keyframe_menu
+        guiutils.remove_children(menu)
+
+        self._create_keyframe_type_submenu(kf_type, menu, self._menu_item_activated)
+        menu.popup(None, None, None, None, event.button, event.time)
+
+    def _menu_item_activated(self, widget, data):
+        print("FilterRectGeom._menu_item_activated", data)
+        if data == "linear":
+            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_LINEAR)
+            self.geom_kf_edit.set_active_kf_type(appconsts.KEYFRAME_LINEAR)
+        elif data == "smooth":
+            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_SMOOTH)
+            self.geom_kf_edit.set_active_kf_type(appconsts.KEYFRAME_SMOOTH)
+        elif data == "discrete":
+            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_DISCRETE)
+            self.geom_kf_edit.set_active_kf_type(appconsts.KEYFRAME_DISCRETE)
+
+        self.queue_draw()
+        self.update_property_value()
+
+
 class RotoMaskKeyFrameEditor(Gtk.VBox):
     """
     Class combines named value slider with ClipKeyFrameEditor and 

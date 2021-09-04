@@ -688,12 +688,20 @@ class KeyFrameFilterGeometryRectProperty(EditableProperty):
   
         return Gtk.Adjustment(value=float(1.0), lower=float(0.0), upper=float(1.0), step_incr=float(0.01)) # Value set later to first kf value
         
-    def write_out_keyframes(self, keyframes):       
+    def write_out_keyframes(self, keyframes):
         # key frame array of tuples (frame, [x, y, width, height], opacity)
         val_str = ""
         for kf in keyframes:
             frame, rect, opac, kf_type = kf
-            val_str += str(int(frame)) + "=" # frame
+            print(kf_type)
+            if kf_type == appconsts.KEYFRAME_LINEAR:
+                eq_str = appconsts.KEYFRAME_LINEAR_EQUALS_STR
+            elif kf_type == appconsts.KEYFRAME_SMOOTH:
+                eq_str = appconsts.KEYFRAME_SMOOTH_EQUALS_STR
+            else:
+                eq_str = appconsts.KEYFRAME_DISCRETE_EQUALS_STR
+                        
+            val_str += str(int(frame)) + eq_str # frame
             val_str += str(int(rect[0])) + " " + str(int(rect[1])) + " " # pos
             val_str += str(int(rect[2])) + " " + str(int(rect[3])) + " " # size
             val_str += "1"
