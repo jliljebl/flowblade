@@ -236,7 +236,8 @@ def geom_keyframes_value_string_to_opacity_kf_array(keyframes_str, out_to_in_fun
     for token in kf_tokens:
         sides = token.split("=")
         values = sides[1].split(':')
-        add_kf = (int(sides[0]), out_to_in_func(float(values[2]))) # kf = (frame, opacity)
+        print("kf in: geom_keyframes_value_string_to_opacity_kf_array")
+        add_kf = (int(sides[0]), out_to_in_func(float(values[2])), appconsts.KEYFRAME_LINEAR) # kf = (frame, opacity)
         new_keyframes.append(add_kf)
  
     return new_keyframes
@@ -301,7 +302,9 @@ def rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_
         rotation = float(values[4]) * 360
         opacity = float(values[5]) * 100
         source_rect = [x,y,x_scale,y_scale,rotation]
-        add_kf = (frame, source_rect, float(opacity))
+        print("rotating_geom_keyframes_value_string_to_geom_kf_array")
+        add_kf = (frame, source_rect, float(opacity), appconsts.KEYFRAME_LINEAR)
+        print("add kf", add_kf)
         new_keyframes.append(add_kf)
 
     return new_keyframes
@@ -401,7 +404,7 @@ def rotating_ge_write_out_keyframes(ep, keyframes):
     opacity_val = ""
     
     for kf in keyframes:
-        frame, transf, opacity = kf
+        frame, transf, opacity, type = kf
         x, y, x_scale, y_scale, rotation = transf
         x_val += str(frame) + "=" + str(get_frei0r_cairo_position(x, ep.profile_width)) + ";"
         y_val += str(frame) + "=" + str(get_frei0r_cairo_position(y, ep.profile_height)) + ";"

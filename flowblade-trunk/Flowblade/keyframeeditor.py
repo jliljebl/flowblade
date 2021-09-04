@@ -177,6 +177,7 @@ class ClipKeyFrameEditor:
             
     def set_keyframes(self, keyframes_str, out_to_in_func):
         self.keyframes = self.keyframe_parser(keyframes_str, out_to_in_func)
+        print("XXXXXXXXXXXXXXXXXXXXX after set_keyframes", self.keyframes)
 
     def get_kf_info(self):
         return (self.active_kf_index, len(self.keyframes))
@@ -932,7 +933,8 @@ class AbstractKeyFrameEditor(Gtk.VBox):
         
         These may be implemented here or in extending classes KeyframeEditor and GeometryEditor
         """
-        
+        print("keyframes", self.clip_editor.keyframes)
+    
         # Some filters start keyframes from *MEDIA* frame 0
         # Some filters or compositors start keyframes from *CLIP* frame 0
         # Filters starting from *media* 0 need offset to clip start added to all values
@@ -1337,8 +1339,9 @@ class GeometryEditor(AbstractKeyFrameEditor):
     def get_clip_editor_keyframes(self):
         keyframes = []
         for kf in self.geom_kf_edit.keyframes:
-            frame, rect, opacity = kf
-            clip_kf = (frame, opacity)
+            print("get_clip_editor_keyframes", kf)
+            frame, rect, opacity, kf_type = kf
+            clip_kf = (frame, opacity, kf_type)
             keyframes.append(clip_kf)
         return keyframes
         
@@ -1559,10 +1562,10 @@ class GeometryEditor(AbstractKeyFrameEditor):
 
         write_keyframes = []
         for opa_kf, geom_kf in zip(self.clip_editor.keyframes, self.geom_kf_edit.keyframes):
-            frame, opacity = opa_kf
-            frame, rect, rubbish_opacity = geom_kf # rubbish_opacity was just doing same thing twice for nothing,
-                                                   # and can be removed to clean up code, but could not bothered right now
-            write_keyframes.append((frame, rect, opacity))
+            frame, opacity, kf_type = opa_kf
+            frame, rect, unused_opacity, kf_type = geom_kf # unused_opacity was just doing same thing twice for nothing,
+                                                            # and can be removed to clean up code, but could not bothered right now
+            write_keyframes.append((frame, rect, opacity, kf_type))
         
         self.editable_property.write_out_keyframes(write_keyframes)
         
@@ -1581,6 +1584,10 @@ class GeometryEditor(AbstractKeyFrameEditor):
         self.geom_buttons_row.size_select.set_active(view_size_index)
 
 
+    def _hamburger_pressed(self, widget, event):
+        print("hanburger pressed")
+    
+
 class RotatingGeometryEditor(GeometryEditor):
 
     def init_geom_gui(self, editable_property):
@@ -1591,7 +1598,9 @@ class RotatingGeometryEditor(GeometryEditor):
         self.geom_kf_edit.create_edit_points_and_values()
         editable_property.value.strip('"')
         self.geom_kf_edit.keyframe_parser = propertyparse.rotating_geom_keyframes_value_string_to_geom_kf_array
+        print(type(editable_property),  editable_property.__dict__)
         self.geom_kf_edit.set_keyframes(editable_property.value, editable_property.get_in_value)
+        print("init_geom_gui done")
 
     def add_fade_in(self):
         compositor = _get_current_edited_compositor()
@@ -1616,6 +1625,7 @@ class RotatingGeometryEditor(GeometryEditor):
         self.clip_editor.keyframes = self.get_clip_editor_keyframes()
         self.clip_editor.widget.queue_draw()
         self.update_editor_view()
+
 
 
 class FilterRectGeometryEditor(AbstractKeyFrameEditor):
@@ -2200,7 +2210,7 @@ class PositionNumericalEntries(Gtk.HBox):
                 print("Numerical input Exception - ", e)
 
     def update_entry_values(self, active_kf):
-        frame, shape, opacity = active_kf
+        frame, shape, opacity, type = active_kf
 
         if self.rotating_geom == False:
             x, y, w, h = shape

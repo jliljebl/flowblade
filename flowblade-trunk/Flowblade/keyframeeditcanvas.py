@@ -227,7 +227,7 @@ def _geom_kf_sort(kf):
     """
     Function is used to sort keyframes by frame number.
     """
-    frame, shape, opacity = kf
+    frame, shape, opacity, type = kf
     return frame 
         
 
@@ -321,10 +321,10 @@ class AbstractEditCanvas:
         if value_shape == None:
             value_shape = self._get_current_screen_shape()
         
-        frame, shape, opacity = self.keyframes[kf_index]
+        frame, shape, opacity, kf_type = self.keyframes[kf_index]
         self.keyframes.pop(kf_index)
         
-        new_kf = (frame, value_shape, opacity)
+        new_kf = (frame, value_shape, opacity, kf_type)
         self.keyframes.append(new_kf)
         self.keyframes.sort(key=_geom_kf_sort)
         
@@ -344,15 +344,15 @@ class AbstractEditCanvas:
         # Get previous keyframe
         prev_kf = None
         for i in range(0, len(self.keyframes)):
-            p_frame, p_shape, p_opacity = self.keyframes[i]
+            p_frame, p_shape, p_opacity, p_type = self.keyframes[i]
             if p_frame < frame:
                 prev_kf = self.keyframes[i]                
         if prev_kf == None:
             prev_kf = self.keyframes[len(self.keyframes) - 1]
         
         # Add with values of previous
-        p_frame, p_shape, p_opacity = prev_kf
-        self.keyframes.append((frame, copy.deepcopy(p_shape), copy.deepcopy(p_opacity)))
+        p_frame, p_shape, p_opacity,  p_type  = prev_kf
+        self.keyframes.append((frame, copy.deepcopy(p_shape), copy.deepcopy(p_opacity),  p_type))
         
         self.keyframes.sort(key=_geom_kf_sort)
         
@@ -365,7 +365,7 @@ class AbstractEditCanvas:
     def _frame_has_keyframe(self, frame):
         for i in range(0, len(self.keyframes)):
             kf = self.keyframes[i]
-            kf_frame, rect, opacity = kf
+            kf_frame, rect, opacity, kf_type = kf
             if frame == kf_frame:
                 return True
 
@@ -373,7 +373,8 @@ class AbstractEditCanvas:
 
     def set_keyframes(self, keyframes_str, out_to_in_func):
         self.keyframes = self.keyframe_parser(keyframes_str, out_to_in_func)
-    
+        print("YYYYYYYY", keyframes_str, self.keyframes, out_to_in_func)
+
     def set_keyframe_frame(self, active_kf_index, frame):
         old_frame, shape, opacity = self.keyframes[active_kf_index]
         self.keyframes.pop(active_kf_index)
@@ -807,7 +808,7 @@ class RotatingEditCanvas(AbstractEditCanvas):
 
     def _update_shape(self):
         for i in range(0, len(self.keyframes)):
-            frame, rect, opacity = self.keyframes[i]
+            frame, rect, opacity, type = self.keyframes[i]
             if frame == self.current_clip_frame:
                 self.set_geom(*rect)
                 return
