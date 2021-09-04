@@ -243,6 +243,7 @@ def geom_keyframes_value_string_to_opacity_kf_array(keyframes_str, out_to_in_fun
     return new_keyframes
 
 def geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
+    print("in geom_keyframes_value_string_to_geom_kf_array")
     # Parse "composite:geometry" properties value string into (frame, source_rect, opacity)
     # keyframe tuples.
     new_keyframes = []
@@ -260,6 +261,7 @@ def geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
     return new_keyframes
 
 def rect_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
+    print("in rect_keyframes_value_string_to_geom_kf_array")
     # Parse "composite:geometry" properties value string into (frame, source_rect, opacity)
     # keyframe tuples.
     new_keyframes = []
@@ -273,7 +275,7 @@ def rect_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
         w = values[2] 
         h = values[3] 
         source_rect = [int(x), int(y), int(w), int(h)] #x,y,width,height
-        add_kf = (int(sides[0]), source_rect, out_to_in_func(float(1)))
+        add_kf = (int(sides[0]), source_rect, out_to_in_func(float(1)), appconsts.KEYFRAME_LINEAR)
         new_keyframes.append(add_kf)
     
     return new_keyframes

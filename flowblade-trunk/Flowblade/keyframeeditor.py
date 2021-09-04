@@ -380,10 +380,10 @@ class ClipKeyFrameEditor:
                 
                 self.drag_start_x = event.x
                 
-                prev_frame, val = self.keyframes[hit_kf - 1]
+                prev_frame, val, kf_type = self.keyframes[hit_kf - 1]
                 self.drag_min = prev_frame  + 1
                 try:
-                    next_frame, val = self.keyframes[hit_kf + 1]
+                    next_frame, val, kf_type_next = self.keyframes[hit_kf + 1]
                     self.drag_max = next_frame - 1
                 except:
                     self.drag_max = self.clip_in + self.clip_length
@@ -1583,7 +1583,6 @@ class GeometryEditor(AbstractKeyFrameEditor):
             view_size_index = 2
         self.geom_buttons_row.size_select.set_active(view_size_index)
 
-
     def _hamburger_pressed(self, widget, event):
         print("hanburger pressed")
     
@@ -1755,8 +1754,8 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
     def get_clip_editor_keyframes(self):
         keyframes = []
         for kf in self.geom_kf_edit.keyframes:
-            frame, rect, opacity = kf
-            clip_kf = (frame, opacity)
+            frame, rect, opacity, kf_type = kf
+            clip_kf = (frame, opacity, kf_type)
             keyframes.append(clip_kf)
         return keyframes
 
@@ -1850,10 +1849,10 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
 
         write_keyframes = []
         for opa_kf, geom_kf in zip(self.clip_editor.keyframes, self.geom_kf_edit.keyframes):
-            frame, opacity = opa_kf
-            frame, rect, rubbish_opacity = geom_kf
+            frame, opacity, kf_type = opa_kf
+            frame, rect, rubbish_opacity, kf_type = geom_kf
             
-            write_keyframes.append((frame, rect, opacity))
+            write_keyframes.append((frame, rect, opacity, kf_type))
         
         self.editable_property.write_out_keyframes(write_keyframes)
         
@@ -1870,6 +1869,12 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         if view_size_index > 2:
             view_size_index = 2
         self.geom_buttons_row.size_select.set_active(view_size_index)
+
+    def _hamburger_pressed(self, widget, event):
+        print("hanburger pressed")
+        
+        
+        
         
 class RotoMaskKeyFrameEditor(Gtk.VBox):
     """

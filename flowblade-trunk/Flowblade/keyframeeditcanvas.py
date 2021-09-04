@@ -376,9 +376,9 @@ class AbstractEditCanvas:
         print("YYYYYYYY", keyframes_str, self.keyframes, out_to_in_func)
 
     def set_keyframe_frame(self, active_kf_index, frame):
-        old_frame, shape, opacity = self.keyframes[active_kf_index]
+        old_frame, shape, opacity, kf_type = self.keyframes[active_kf_index]
         self.keyframes.pop(active_kf_index)
-        self.keyframes.insert(active_kf_index, (frame, shape, opacity))    
+        self.keyframes.insert(active_kf_index, (frame, shape, opacity, kf_type))    
 
     def get_keyframe(self, kf_index):
         return self.keyframes[kf_index]
@@ -590,7 +590,7 @@ class BoxEditCanvas(AbstractEditCanvas):
     
     def _update_source_rect(self):
         for i in range(0, len(self.keyframes)):
-            frame, rect, opacity = self.keyframes[i]
+            frame, rect, opacity, kf_type = self.keyframes[i]
             if frame == self.current_clip_frame:
                 self.source_edit_rect.set_geom(*self._get_screen_to_panel_rect(rect))
                 return
