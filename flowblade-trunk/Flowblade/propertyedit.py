@@ -670,8 +670,16 @@ class KeyFrameGeometryOpacityProperty(TransitionEditableProperty):
         # key frame array of tuples (frame, [x, y, width, height], opacity)
         val_str = ""
         for kf in keyframes:
-            frame, rect, opac = kf
-            val_str += str(int(frame)) + "=" # frame
+            frame, rect, opac, kf_type = kf
+            
+            if kf_type == appconsts.KEYFRAME_LINEAR:
+                eq_str = appconsts.KEYFRAME_LINEAR_EQUALS_STR
+            elif kf_type == appconsts.KEYFRAME_SMOOTH:
+                eq_str = appconsts.KEYFRAME_SMOOTH_EQUALS_STR
+            else:
+                eq_str = appconsts.KEYFRAME_DISCRETE_EQUALS_STR
+                        
+            val_str += str(int(frame)) + eq_str # frame
             val_str += str(int(rect[0])) + "/" + str(int(rect[1])) + ":" # pos
             val_str += str(int(rect[2])) + "x" + str(int(rect[3])) + ":" # size
             val_str += str(self.get_out_value(opac)) + ";" # opac with converted range from slider
@@ -693,7 +701,7 @@ class KeyFrameFilterGeometryRectProperty(EditableProperty):
         val_str = ""
         for kf in keyframes:
             frame, rect, opac, kf_type = kf
-            print(kf_type)
+            
             if kf_type == appconsts.KEYFRAME_LINEAR:
                 eq_str = appconsts.KEYFRAME_LINEAR_EQUALS_STR
             elif kf_type == appconsts.KEYFRAME_SMOOTH:

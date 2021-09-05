@@ -237,7 +237,7 @@ def geom_keyframes_value_string_to_opacity_kf_array(keyframes_str, out_to_in_fun
         sides = token.split("=")
         values = sides[1].split(':')
         print("kf in: geom_keyframes_value_string_to_opacity_kf_array")
-        add_kf = (int(sides[0]), out_to_in_func(float(values[2])), appconsts.KEYFRAME_LINEAR) # kf = (frame, opacity)
+        add_kf = (int(sides[0]), out_to_in_func(float(values[2]))) # kf = (frame, opacity)
         new_keyframes.append(add_kf)
  
     return new_keyframes
@@ -250,12 +250,22 @@ def geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
     keyframes_str = keyframes_str.strip('"') # expression have sometimes quotes that need to go away
     kf_tokens =  keyframes_str.split(';')
     for token in kf_tokens:
-        sides = token.split('=')
+        sides = token.split(appconsts.KEYFRAME_DISCRETE_EQUALS_STR)
+        if len(sides) == 2:
+            kf_type = appconsts.KEYFRAME_DISCRETE
+        else:
+            sides = token.split(appconsts.KEYFRAME_SMOOTH_EQUALS_STR)
+            if len(sides) == 2:
+                kf_type = appconsts.KEYFRAME_SMOOTH
+            else:
+                sides = token.split(appconsts.KEYFRAME_LINEAR_EQUALS_STR)
+                kf_type = appconsts.KEYFRAME_LINEAR
+                
         values = sides[1].split(':')
         pos = values[0].split('/')
         size = values[1].split('x')
         source_rect = [int(pos[0]), int(pos[1]), int(size[0]), int(size[1])] #x,y,width,height
-        add_kf = (int(sides[0]), source_rect, out_to_in_func(float(values[2])))
+        add_kf = (int(sides[0]), source_rect, out_to_in_func(float(values[2])), kf_type)
         new_keyframes.append(add_kf)
  
     return new_keyframes

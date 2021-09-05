@@ -373,7 +373,6 @@ class AbstractEditCanvas:
 
     def set_keyframes(self, keyframes_str, out_to_in_func):
         self.keyframes = self.keyframe_parser(keyframes_str, out_to_in_func)
-        print("YYYYYYYY", keyframes_str, self.keyframes, out_to_in_func)
 
     def set_keyframe_frame(self, active_kf_index, frame):
         old_frame, shape, opacity, kf_type = self.keyframes[active_kf_index]
@@ -557,34 +556,34 @@ class BoxEditCanvas(AbstractEditCanvas):
         self.source_edit_rect = None # Created later when we have allocation available
 
     def reset_active_keyframe_shape(self, active_kf_index):
-        frame, old_rect, opacity = self.keyframes[active_kf_index]
+        frame, old_rect, opacity, kf_type = self.keyframes[active_kf_index]
         rect = [0, 0, self.source_width, self.source_height]
         self.keyframes.pop(active_kf_index)
-        self.keyframes.insert(active_kf_index, (frame, rect, opacity))     
+        self.keyframes.insert(active_kf_index, (frame, rect, opacity, kf_type))     
 
     def reset_active_keyframe_rect_shape(self, active_kf_index):
-        frame, old_rect, opacity = self.keyframes[active_kf_index]
+        frame, old_rect, opacity, kf_type = self.keyframes[active_kf_index]
         x, y, w, h = old_rect
         new_h = int(float(w) * (float(self.source_height) / float(self.source_width)))
         rect = [x, y, w, new_h]
         self.keyframes.pop(active_kf_index)
-        self.keyframes.insert(active_kf_index, (frame, rect, opacity))   
+        self.keyframes.insert(active_kf_index, (frame, rect, opacity, kf_type))   
 
     def center_h_active_keyframe_shape(self, active_kf_index):
-        frame, old_rect, opacity = self.keyframes[active_kf_index]
+        frame, old_rect, opacity, kf_type = self.keyframes[active_kf_index]
         ox, y, w, h = old_rect
         x = self.source_width / 2 - w / 2
         rect = [x, y, w, h ]
         self.keyframes.pop(active_kf_index)
-        self.keyframes.insert(active_kf_index, (frame, rect, opacity))
+        self.keyframes.insert(active_kf_index, (frame, rect, opacity, kf_type))
 
     def center_v_active_keyframe_shape(self, active_kf_index):
-        frame, old_rect, opacity = self.keyframes[active_kf_index]
+        frame, old_rect, opacity, kf_type = self.keyframes[active_kf_index]
         x, oy, w, h = old_rect
         y = self.source_height / 2 - h / 2
         rect = [x, y, w, h ]
         self.keyframes.pop(active_kf_index)
-        self.keyframes.insert(active_kf_index, (frame, rect, opacity))
+        self.keyframes.insert(active_kf_index, (frame, rect, opacity, kf_type))
 
     def _clip_frame_changed(self):
         if self.source_edit_rect != None:
@@ -779,34 +778,34 @@ class RotatingEditCanvas(AbstractEditCanvas):
 
     # ------------------------------------------------------- menu edit events
     def reset_active_keyframe_shape(self, active_kf_index):
-        frame, trans, opacity = self.keyframes[active_kf_index]
+        frame, trans, opacity, kf_type = self.keyframes[active_kf_index]
         new_trans = [self.source_width / 2, self.source_height / 2, 1.0, 1.0, 0]
         self.keyframes.pop(active_kf_index)
-        self.keyframes.insert(active_kf_index, (frame, new_trans, opacity))
+        self.keyframes.insert(active_kf_index, (frame, new_trans, opacity, kf_type))
         self._update_shape()
 
     def reset_active_keyframe_rect_shape(self, active_kf_index):
-        frame, trans, opacity = self.keyframes[active_kf_index]
+        frame, trans, opacity, kf_type = self.keyframes[active_kf_index]
         x, y, x_scale, y_scale, rotation = trans
         new_trans = [x, y, x_scale, x_scale, rotation]
         self.keyframes.pop(active_kf_index)
-        self.keyframes.insert(active_kf_index, (frame, new_trans, opacity))
+        self.keyframes.insert(active_kf_index, (frame, new_trans, opacity, kf_type))
         self._update_shape()
 
     def center_h_active_keyframe_shape(self, active_kf_index):
-        frame, trans, opacity = self.keyframes[active_kf_index]
+        frame, trans, opacity, kf_type = self.keyframes[active_kf_index]
         x, y, x_scale, y_scale, rotation = trans
         new_trans = [self.source_width / 2, y, x_scale, y_scale, rotation]
         self.keyframes.pop(active_kf_index)
-        self.keyframes.insert(active_kf_index, (frame, new_trans, opacity))
+        self.keyframes.insert(active_kf_index, (frame, new_trans, opacity, kf_type))
         self._update_shape()
 
     def center_v_active_keyframe_shape(self, active_kf_index):
-        frame, trans, opacity = self.keyframes[active_kf_index]
+        frame, trans, opacity, kf_type = self.keyframes[active_kf_index]
         x, y, x_scale, y_scale, rotation = trans
         new_trans = [x, self.source_height / 2, x_scale, y_scale, rotation]
         self.keyframes.pop(active_kf_index)
-        self.keyframes.insert(active_kf_index, (frame, new_trans, opacity))
+        self.keyframes.insert(active_kf_index, (frame, new_trans, opacity, kf_type))
         self._update_shape()
 
     # -------------------------------------------------------- updating

@@ -233,15 +233,29 @@ def _display_compositor_edit_box():
         target_row.pack_start(Gtk.Label(label=_("Destination Track:")), False, False, 0)
         target_row.pack_start(guiutils.get_pad_label(5, 3), False, False, 0)
         target_row.pack_start(target_combo, False, False, 0)
-        target_row.pack_start(Gtk.Label(), True, True, 0)
+
         vbox.pack_start(target_row, False, False, 0)
         vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
 
+    blend_added = False # for GUI prettyness.
+    
     # Transition editors
     t_editable_properties = propertyedit.get_transition_editable_properties(compositor)
     for ep in t_editable_properties:
         editor_row = propertyeditorbuilder.get_editor_row(ep)
-            
+  
+        # Add blend mode editor in top row if exists, we decided on this later to save vertical space.
+        # Using display name is bit hacky, but should work.
+        try:
+            if ep.args["displayname"] == "Blend!Mode":
+                target_row.pack_start(guiutils.get_pad_label(24, 3), False, False, 0)
+                target_row.pack_start(editor_row, True, True, 0)
+                blend_added = True
+                continue
+        except:
+            pass # Not all EditablePropty objects have "displayname" arg, move on.
+    
+        # Add editor row in panel
         if editor_row != None: # Some properties don't have editors
             vbox.pack_start(editor_row, False, False, 0)
             vbox.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
@@ -260,6 +274,10 @@ def _display_compositor_edit_box():
             or (editor_type == propertyeditorbuilder.GEOMETRY_EDITOR)):
                 keyframe_editor_widgets.append(editor_row)
     
+    # Add pad label after possibly adding blend mode editor.
+    if blend_added == False:
+        target_row.pack_start(Gtk.Label(), True, True, 0)
+            
     # Extra editors. Editable properties have already been created with "editor=no_editor"
     # and will be looked up by editors from clip
     editor_rows = propertyeditorbuilder.get_transition_extra_editor_rows(compositor, t_editable_properties)

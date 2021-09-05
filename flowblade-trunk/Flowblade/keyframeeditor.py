@@ -370,6 +370,7 @@ class ClipKeyFrameEditor:
             if event.button == 3:
                 self.widget.queue_draw()
                 self.current_mouse_action = KF_DRAG_DISABLED
+                print(type(self.parent_editor))
                 self.parent_editor.show_keyframe_menu(event, self.keyframes[hit_kf])
                 return
                 
@@ -854,7 +855,8 @@ class GeometryEditorButtonsRow(Gtk.HBox):
         editor_parent needs to implement interface:
         -------------------------------------------
         editor_parent.view_size_changed(widget_active_index)
-        editor_parent.menu_item_activated()
+
+        # This is now just holding size select widget, the class lost a lot of meaning. 
         """
         GObject.GObject.__init__(self)
         self.set_homogeneous(False)
@@ -865,12 +867,13 @@ class GeometryEditorButtonsRow(Gtk.HBox):
         name_label = Gtk.Label(label=_("View:"))
 
         # Aug-2019 - SvdB - BB
+        """
         size_adj = 1
         if editorpersistance.prefs.double_track_hights:
             size_adj = 2
         surface = guiutils.get_cairo_image("geom_action")
         action_menu_button = guicomponents.PressLaunch(self._show_actions_menu, surface, 24*size_adj, 22*size_adj)
-        
+        """
         size_select = Gtk.ComboBoxText()
         size_select.append_text("100%")
         size_select.append_text("66%")
@@ -882,13 +885,14 @@ class GeometryEditorButtonsRow(Gtk.HBox):
         self.size_select = size_select
         
         # Build row
-        self.pack_start(action_menu_button.widget, False, False, 0)
+        #self.pack_start(action_menu_button.widget, False, False, 0)
         if empty_center == True:
             self.pack_start(Gtk.Label(), True, True, 0)
         else:
             self.pack_start(guiutils.get_pad_label(12, 10), False, False, 0)
         self.pack_start(size_select, False, False, 0)
 
+    """
     def _show_actions_menu(self, widget, event):
         menu = actions_menu
         guiutils.remove_children(menu)
@@ -897,7 +901,8 @@ class GeometryEditorButtonsRow(Gtk.HBox):
         menu.add(self._get_menu_item(_("Center Horizontal"), self.editor_parent.menu_item_activated, "hcenter" ))
         menu.add(self._get_menu_item(_("Center Vertical"), self.editor_parent.menu_item_activated, "vcenter" ))
         menu.popup(None, None, None, None, event.button, event.time)
-
+    """
+    
     def _get_menu_item(self, text, callback, data):
         item = Gtk.MenuItem(text)
         item.connect("activate", callback, data)
@@ -1033,6 +1038,12 @@ class AbstractKeyFrameEditor(Gtk.VBox):
             discrete_item.set_active(True)
         discrete_item.show()
         menu.append(discrete_item)
+
+    def _add_geometry_menu_items(self, menu, callback):
+        menu.add(_get_menu_item(_("Reset Geometry"), callback, "reset" ))
+        menu.add(_get_menu_item(_("Geometry to Original Aspect Ratio"), callback, "ratio" ))
+        menu.add(_get_menu_item(_("Center Horizontal"), callback, "hcenter" ))
+        menu.add(_get_menu_item(_("Center Vertical"), callback, "vcenter" ))
 
 
 class KeyFrameEditor(AbstractKeyFrameEditor):
@@ -1198,7 +1209,9 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
             self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_SMOOTH)
         elif data == "discrete":
             self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_DISCRETE)
-
+        elif data == "hcenter":
+            self._center_horizontal()
+            
         self.queue_draw()
         self.update_property_value()
 
@@ -1207,7 +1220,7 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         guiutils.remove_children(menu)
         frame, value, kf_type = self.clip_editor.keyframes[self.clip_editor.active_kf_index]
         
-        active_type_menu_item = Gtk.MenuItem(_("Active Keyframe Tyoe"))
+        active_type_menu_item = Gtk.MenuItem(_("Active Keyframe Type"))
         type_menu = Gtk.Menu()
         active_type_menu_item.set_submenu(type_menu)
         self._create_keyframe_type_submenu(kf_type, type_menu, self._menu_item_activated)
@@ -1525,9 +1538,27 @@ class GeometryEditor(AbstractKeyFrameEditor):
         self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
         self.update_editor_view_with_frame(frame)
         self.update_property_value()
-            
-    def menu_item_activated(self, widget, data):
-        if data == "reset":
+
+    def show_keyframe_menu(self, event, keyframe):
+        frame, value, kf_type = keyframe
+        
+        menu = keyframe_menu
+        guiutils.remove_children(menu)
+
+        self._create_keyframe_type_submenu(kf_type, menu, self.menu_item_activated)
+        menu.popup(None, None, None, None, event.button, event.time)
+                    
+    def _menu_item_activated(self, widget, data):
+        if data == "linear":
+            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_LINEAR)
+            self.geom_kf_edit.set_active_kf_type(appconsts.KEYFRAME_LINEAR)
+        elif data == "smooth":
+            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_SMOOTH)
+            self.geom_kf_edit.set_active_kf_type(appconsts.KEYFRAME_SMOOTH)
+        elif data == "discrete":
+            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_DISCRETE)
+            self.geom_kf_edit.set_active_kf_type(appconsts.KEYFRAME_DISCRETE)
+        elif data == "reset":
             self._reset_rect_pressed()
         elif data == "ratio":
             self._reset_rect_ratio_pressed()
@@ -1536,6 +1567,9 @@ class GeometryEditor(AbstractKeyFrameEditor):
         elif data == "vcenter":
             self._center_vertical()
 
+        self.queue_draw()
+        self.update_property_value()
+        
     def update_editor_view(self, seek_tline_frame=False):
         # This gets called when tline frame is changed from outside
         # Call update_editor_view_with_frame that is used when udating from inside the object.
@@ -1582,7 +1616,24 @@ class GeometryEditor(AbstractKeyFrameEditor):
         self.geom_buttons_row.size_select.set_active(view_size_index)
 
     def _hamburger_pressed(self, widget, event):
-        print("hanburger pressed")
+        menu = buttons_hamburger_menu
+        guiutils.remove_children(menu)
+        frame, value, kf_type = self.clip_editor.keyframes[self.clip_editor.active_kf_index]
+        
+        active_type_menu_item = Gtk.MenuItem(_("Active Keyframe Type"))
+        type_menu = Gtk.Menu()
+        active_type_menu_item.set_submenu(type_menu)
+        self._create_keyframe_type_submenu(kf_type, type_menu, self._menu_item_activated)
+        active_type_menu_item.show_all()
+        menu.add(active_type_menu_item)
+
+        sep = Gtk.SeparatorMenuItem()
+        sep.show()
+        menu.add(sep)
+
+        self._add_geometry_menu_items(menu, self._menu_item_activated)
+        
+        menu.popup(None, None, None, None, event.button, event.time)
     
 
 class RotatingGeometryEditor(GeometryEditor):
@@ -1791,16 +1842,6 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
     def keyframe_dragged(self, active_kf, frame):
         self.geom_kf_edit.set_keyframe_frame(active_kf, frame)
 
-    def menu_item_activated(self, widget, data):
-        if data == "reset":
-            self._reset_rect_pressed()
-        elif data == "ratio":
-            self._reset_rect_ratio_pressed()
-        elif data == "hcenter":
-            self._center_horizontal()
-        elif data == "vcenter":
-            self._center_vertical()
-
     def _reset_rect_pressed(self):
         self.geom_kf_edit.reset_active_keyframe_shape(self.clip_editor.active_kf_index)
         self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
@@ -1811,7 +1852,11 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
     def _reset_rect_ratio_pressed(self):
         self.geom_kf_edit.reset_active_keyframe_rect_shape(self.clip_editor.active_kf_index)
         frame = self.clip_editor.get_active_kf_frame()
+        print("kf", self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+        print("all keyframes", self.geom_kf_edit.keyframes)
         self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+        #print("kf", self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+        #print("all keyframes", self.geom_kf_edit.keyframes)
         self.update_editor_view_with_frame(frame)
         self.update_property_value()
 
@@ -1872,7 +1917,24 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         self.geom_buttons_row.size_select.set_active(view_size_index)
 
     def _hamburger_pressed(self, widget, event):
-        print("hanburger pressed")
+        menu = buttons_hamburger_menu
+        guiutils.remove_children(menu)
+        frame, value, kf_type = self.clip_editor.keyframes[self.clip_editor.active_kf_index]
+        
+        active_type_menu_item = Gtk.MenuItem(_("Active Keyframe Type"))
+        type_menu = Gtk.Menu()
+        active_type_menu_item.set_submenu(type_menu)
+        self._create_keyframe_type_submenu(kf_type, type_menu, self._menu_item_activated)
+        active_type_menu_item.show_all()
+        menu.add(active_type_menu_item)
+
+        sep = Gtk.SeparatorMenuItem()
+        sep.show()
+        menu.add(sep)
+    
+        self._add_geometry_menu_items(menu, self._menu_item_activated)
+        
+        menu.popup(None, None, None, None, event.button, event.time)
         
     def show_keyframe_menu(self, event, keyframe):
         frame, value, kf_type = keyframe
@@ -1884,7 +1946,6 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         menu.popup(None, None, None, None, event.button, event.time)
 
     def _menu_item_activated(self, widget, data):
-        print("FilterRectGeom._menu_item_activated", data)
         if data == "linear":
             self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_LINEAR)
             self.geom_kf_edit.set_active_kf_type(appconsts.KEYFRAME_LINEAR)
@@ -1894,6 +1955,14 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         elif data == "discrete":
             self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_DISCRETE)
             self.geom_kf_edit.set_active_kf_type(appconsts.KEYFRAME_DISCRETE)
+        if data == "reset":
+            self._reset_rect_pressed()
+        elif data == "ratio":
+            self._reset_rect_ratio_pressed()
+        elif data == "hcenter":
+            self._center_horizontal()
+        elif data == "vcenter":
+            self._center_vertical()
 
         self.queue_draw()
         self.update_property_value()
@@ -2102,8 +2171,8 @@ class PositionNumericalEntries(Gtk.HBox):
     def init_for_box_geom(self, editor_buttons):
         x_label = Gtk.Label(_("X:"))
         y_label = Gtk.Label(_("Y:"))
-        w_label = Gtk.Label(_("Width:"))
-        h_label = Gtk.Label(_("Height:"))
+        w_label = Gtk.Label(_("W:"))
+        h_label = Gtk.Label(_("H:"))
         
         self.x_entry = Gtk.Entry.new()
         self.y_entry = Gtk.Entry.new()
@@ -2129,20 +2198,16 @@ class PositionNumericalEntries(Gtk.HBox):
         row1.pack_start(guiutils.pad_label(6, 6), False, False, 0)
         row1.pack_start(y_label, False, False, 0)
         row1.pack_start(self.y_entry, False, False, 0)
+        row1.pack_start(guiutils.pad_label(6, 6), False, False, 0)
+        row1.pack_start(w_label, False, False, 0)
+        row1.pack_start(self.w_entry, False, False, 0)
+        row1.pack_start(guiutils.pad_label(6, 6), False, False, 0)
+        row1.pack_start(h_label, False, False, 0)
+        row1.pack_start(self.h_entry, False, False, 0)
         row1.pack_start(Gtk.Label(), True, True, 0)
 
-        row2 = Gtk.HBox(False, 0)
-        row2.pack_start(Gtk.Label(), True, True, 0)
-        row2.pack_start(w_label, False, False, 0)
-        row2.pack_start(self.w_entry, False, False, 0)
-        row2.pack_start(guiutils.pad_label(6, 6), False, False, 0)
-        row2.pack_start(h_label, False, False, 0)
-        row2.pack_start(self.h_entry, False, False, 0)
-        row2.pack_start(Gtk.Label(), True, True, 0)
-        
         vbox = Gtk.VBox(False, 0)
         vbox.pack_start(row1, False, False, 0)
-        vbox.pack_start(row2, False, False, 0)
 
         self.pack_start(Gtk.Label(), True, True, 0)
         self.pack_start(vbox, False, False, 0)
@@ -2153,8 +2218,8 @@ class PositionNumericalEntries(Gtk.HBox):
 
         x_label = Gtk.Label(_("X:"))
         y_label = Gtk.Label(_("Y:"))
-        x_scale_label = Gtk.Label(_("X scale:"))
-        y_scale_label = Gtk.Label(_("Y scale:"))
+        x_scale_label = Gtk.Label(_("X Scale:"))
+        y_scale_label = Gtk.Label(_("Y Scale:"))
         rotation_label = Gtk.Label(_("Rotation:"))
         
         self.x_entry = Gtk.Entry.new()
@@ -2195,7 +2260,6 @@ class PositionNumericalEntries(Gtk.HBox):
         row2.pack_start(guiutils.pad_label(6, 6), False, False, 0)
         row2.pack_start(rotation_label, False, False, 0)
         row2.pack_start(self.rotation_entry, False, False, 0)
-        row2.pack_start(guiutils.pad_label(1, 6), False, False, 0)
         row2.pack_start(Gtk.Label(), True, True, 0)
         row2.set_margin_top(4)
 
@@ -2208,8 +2272,8 @@ class PositionNumericalEntries(Gtk.HBox):
         self.pack_start(Gtk.Label(), True, True, 0)
         
     def prepare_entry(self, entry):
-        entry.set_width_chars (6)
-        entry.set_max_width_chars (6)
+        entry.set_width_chars (5)
+        entry.set_max_width_chars (5)
         entry.connect("activate", self.enter_pressed)
         
     def enter_pressed(self, entry):
@@ -2238,6 +2302,7 @@ class PositionNumericalEntries(Gtk.HBox):
                 print("Numerical input Exception - ", e)
 
     def update_entry_values(self, active_kf):
+        print(active_kf)
         frame, shape, opacity, type = active_kf
 
         if self.rotating_geom == False:
