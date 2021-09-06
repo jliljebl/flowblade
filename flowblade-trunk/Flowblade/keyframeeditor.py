@@ -1209,8 +1209,6 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
             self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_SMOOTH)
         elif data == "discrete":
             self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_DISCRETE)
-        elif data == "hcenter":
-            self._center_horizontal()
             
         self.queue_draw()
         self.update_property_value()
@@ -1226,13 +1224,9 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         self._create_keyframe_type_submenu(kf_type, type_menu, self._menu_item_activated)
         active_type_menu_item.show_all()
         menu.add(active_type_menu_item)
-        #menu.add(_get_menu_item(_("Reset Geometry"), self._menu_item_activated, "reset" ))
-        #menu.add(_get_menu_item(_("Geometry to Original Aspect Ratio"), self._menu_item_activated, "ratio" ))
-        #menu.add(_get_menu_item(_("Center Horizontal"), self._menu_item_activated, "hcenter" ))
-        #menu.add(_get_menu_item(_("Center Vertical"), self._menu_item_activated, "vcenter" ))
+
         menu.popup(None, None, None, None, event.button, event.time)
             
-
 
 
 class KeyFrameEditorClipFade(KeyFrameEditor):
@@ -1262,6 +1256,7 @@ class KeyFrameEditorClipFade(KeyFrameEditor):
         self.editable_property.write_out_keyframes(keyframes)
         self.clip_editor.set_keyframes(self.editable_property.value, self.editable_property.get_in_value)
         self.update_editor_view()
+
 
 
 class KeyFrameEditorClipFadeFilter(KeyFrameEditor):
@@ -1329,10 +1324,8 @@ class GeometryEditor(AbstractKeyFrameEditor):
         self.clip_editor.keyframes = self.get_clip_editor_keyframes()
       
         # Build gui
-        #self.pack_start(self.geom_buttons_row, False, False, 0)
         self.pack_start(g_frame, False, False, 0)
         self.pack_start(self.pos_entries_row, False, False, 0)
-        self.pack_start(guiutils.pad_label(1, 1), False, False, 0)
         self.pack_start(self.value_slider_row, False, False, 0)
         self.pack_start(self.clip_editor.widget, False, False, 0)
         self.pack_start(self.buttons_row, False, False, 0)
@@ -1545,19 +1538,19 @@ class GeometryEditor(AbstractKeyFrameEditor):
         menu = keyframe_menu
         guiutils.remove_children(menu)
 
-        self._create_keyframe_type_submenu(kf_type, menu, self.menu_item_activated)
+        self._create_keyframe_type_submenu(kf_type, menu, self._menu_item_activated)
         menu.popup(None, None, None, None, event.button, event.time)
                     
     def _menu_item_activated(self, widget, data):
         if data == "linear":
             self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_LINEAR)
-            self.geom_kf_edit.set_active_kf_type(appconsts.KEYFRAME_LINEAR)
+            self.geom_kf_edit.set_active_kf_type(self.clip_editor.active_kf_index, appconsts.KEYFRAME_LINEAR)
         elif data == "smooth":
             self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_SMOOTH)
-            self.geom_kf_edit.set_active_kf_type(appconsts.KEYFRAME_SMOOTH)
+            self.geom_kf_edit.set_active_kf_type(self.clip_editor.active_kf_index, appconsts.KEYFRAME_SMOOTH)
         elif data == "discrete":
             self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_DISCRETE)
-            self.geom_kf_edit.set_active_kf_type(appconsts.KEYFRAME_DISCRETE)
+            self.geom_kf_edit.set_active_kf_type(self.clip_editor.active_kf_index, appconsts.KEYFRAME_DISCRETE)
         elif data == "reset":
             self._reset_rect_pressed()
         elif data == "ratio":
@@ -1948,13 +1941,13 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
     def _menu_item_activated(self, widget, data):
         if data == "linear":
             self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_LINEAR)
-            self.geom_kf_edit.set_active_kf_type(appconsts.KEYFRAME_LINEAR)
+            self.geom_kf_edit.set_active_kf_type(self.clip.editor.active_kf_index, appconsts.KEYFRAME_LINEAR)
         elif data == "smooth":
             self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_SMOOTH)
-            self.geom_kf_edit.set_active_kf_type(appconsts.KEYFRAME_SMOOTH)
+            self.geom_kf_edit.set_active_kf_type(self.clip.editor.active_kf_index, appconsts.KEYFRAME_SMOOTH)
         elif data == "discrete":
             self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_DISCRETE)
-            self.geom_kf_edit.set_active_kf_type(appconsts.KEYFRAME_DISCRETE)
+            self.geom_kf_edit.set_active_kf_type(self.clip.editor.active_kf_index, appconsts.KEYFRAME_DISCRETE)
         if data == "reset":
             self._reset_rect_pressed()
         elif data == "ratio":
@@ -2218,9 +2211,11 @@ class PositionNumericalEntries(Gtk.HBox):
 
         x_label = Gtk.Label(_("X:"))
         y_label = Gtk.Label(_("Y:"))
-        x_scale_label = Gtk.Label(_("X Scale:"))
-        y_scale_label = Gtk.Label(_("Y Scale:"))
-        rotation_label = Gtk.Label(_("Rotation:"))
+        x_scale_label = Gtk.Label(_("\u21D4" + ":"))
+        y_scale_label = Gtk.Label(_("\u21D5" + ":"))
+        rotation_label = Gtk.Label(_("\u2941" + ":"))
+        #"\u2022"
+        #U+21D4
         
         self.x_entry = Gtk.Entry.new()
         self.y_entry = Gtk.Entry.new()
@@ -2239,7 +2234,7 @@ class PositionNumericalEntries(Gtk.HBox):
         self.set_margin_top (4)
 
         row1 = Gtk.HBox(False, 0)
-        row1.pack_start(Gtk.Label(), True, True, 0)
+        #row1.pack_start(Gtk.Label(), True, True, 0)
         if editor_buttons != None: # We sometimes put editor buttons elsewhere
             row1.pack_start(editor_buttons, False, False, 0)
         row1.pack_start(guiutils.pad_label(6, 6), False, False, 0)
@@ -2248,8 +2243,18 @@ class PositionNumericalEntries(Gtk.HBox):
         row1.pack_start(guiutils.pad_label(6, 6), False, False, 0)
         row1.pack_start(y_label, False, False, 0)
         row1.pack_start(self.y_entry, False, False, 0)
+        row1.pack_start(guiutils.pad_label(6, 6), False, False, 0)
+        row1.pack_start(x_scale_label, False, False, 0)
+        row1.pack_start(self.x_scale_entry, False, False, 0)
+        row1.pack_start(guiutils.pad_label(6, 6), False, False, 0)
+        row1.pack_start(y_scale_label, False, False, 0)
+        row1.pack_start(self.y_scale_entry, False, False, 0)
+        row1.pack_start(guiutils.pad_label(6, 6), False, False, 0)
+        row1.pack_start(rotation_label, False, False, 0)
+        row1.pack_start(self.rotation_entry, False, False, 0)
         row1.pack_start(Gtk.Label(), True, True, 0)
 
+        """
         row2 = Gtk.HBox(False, 0)
         row2.pack_start(Gtk.Label(), True, True, 0)
         row2.pack_start(x_scale_label, False, False, 0)
@@ -2262,18 +2267,19 @@ class PositionNumericalEntries(Gtk.HBox):
         row2.pack_start(self.rotation_entry, False, False, 0)
         row2.pack_start(Gtk.Label(), True, True, 0)
         row2.set_margin_top(4)
-
+        """
+        
         vbox = Gtk.VBox(False, 0)
         vbox.pack_start(row1, False, False, 0)
-        vbox.pack_start(row2, False, False, 0)
+        #vbox.pack_start(row2, False, False, 0)
 
-        self.pack_start(Gtk.Label(), True, True, 0)
+        #self.pack_start(Gtk.Label(), True, True, 0)
         self.pack_start(vbox, False, False, 0)
         self.pack_start(Gtk.Label(), True, True, 0)
         
-    def prepare_entry(self, entry):
-        entry.set_width_chars (5)
-        entry.set_max_width_chars (5)
+    def prepare_entry(self, entry, chars=5):
+        entry.set_width_chars (chars)
+        entry.set_max_width_chars (chars)
         entry.connect("activate", self.enter_pressed)
         
     def enter_pressed(self, entry):
@@ -2315,8 +2321,8 @@ class PositionNumericalEntries(Gtk.HBox):
             x, y, xs, ys, rot = shape
             self.x_entry.set_text("%.1f" % x)
             self.y_entry.set_text("%.1f" % y)
-            self.x_scale_entry.set_text("%.4f" % xs)
-            self.y_scale_entry.set_text("%.4f" % ys)
+            self.x_scale_entry.set_text("%.3f" % xs)
+            self.y_scale_entry.set_text("%.3f" % ys)
             self.rotation_entry.set_text("%.1f" % rot)
 
 
