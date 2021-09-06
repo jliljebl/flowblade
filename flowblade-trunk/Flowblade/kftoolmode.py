@@ -987,7 +987,7 @@ class TLineKeyFrameEditor:
             if ctrl_press is True:
                 hit_kf = -1
             else:
-                self.add_keyframe(frame, value)
+                self.add_keyframe(frame, value, appconsts.KEYFRAME_LINEAR)
                 hit_kf = self.active_kf_index 
         else: # some keyframe was pressed
             self.active_kf_index = hit_kf
@@ -995,7 +995,7 @@ class TLineKeyFrameEditor:
         if hit_kf == - 1:
             self.edit_value = round(value)
         else:
-            frame, value = self.keyframes[hit_kf]
+            frame, value, kf_type = self.keyframes[hit_kf]
             self.edit_value = round(value)
             self.current_clip_frame = frame
         if hit_kf == 0:
@@ -1003,10 +1003,10 @@ class TLineKeyFrameEditor:
         elif hit_kf != -1:
             self.current_mouse_action = KF_DRAG
             
-            prev_frame, val = self.keyframes[hit_kf - 1]
+            prev_frame, val, kf_type = self.keyframes[hit_kf - 1]
             self.drag_min = prev_frame  + 1
             try:
-                next_frame, val = self.keyframes[hit_kf + 1]
+                next_frame, val, kf_type = self.keyframes[hit_kf + 1]
                 self.drag_max = next_frame - 1
             except:
                 self.drag_max = self.clip_in + self.clip_length
@@ -1110,20 +1110,20 @@ class TLineKeyFrameEditor:
         elif self.current_mouse_action == KF_DRAG_DISABLED :
             clip = edit_data["clip"]
             if self.frame_has_keyframe(clip.clip_out + 1) == -1: # Sometimes (?), there is no end keyframe : so we add it
-                self.add_keyframe(clip.clip_out + 1, self.keyframes[-1][1])
+                self.add_keyframe(clip.clip_out + 1, self.keyframes[-1][1], appconsts.KEYFRAME_LINEAR)
 
             # Search the previous keyframe of event.x, remove it and add new with the value of the previous kf
             i = self.prev_frame_line(lx) - 1
-            frame, val = self.keyframes[i]
+            frame, val, kf_type = self.keyframes[i]
             self.keyframes.pop(i)
             value = round(self._get_value_for_panel_y(ly))
-            self.add_keyframe(frame, value)
+            self.add_keyframe(frame, value, appconsts.KEYFRAME_LINEAR)
             # Search the next keyframe of event.x, remove it and add new with the value of the next kf
             i = self.next_frame_line(lx) + 1
-            frame, val = self.keyframes[i]
+            frame, val, kf_type = self.keyframes[i]
             self.keyframes.pop(i)
             value = round(self._get_value_for_panel_y(ly))
-            self.add_keyframe(frame, value)
+            self.add_keyframe(frame, value, appconsts.KEYFRAME_LINEAR)
             self.update_property_value()
         # --------------End of Modify kf curve between two kf-------------        
 
@@ -1136,7 +1136,7 @@ class TLineKeyFrameEditor:
     def get_clip_kfs_and_positions(self):
         kf_positions = []
         for i in range(0, len(self.keyframes)):
-            frame, value = self.keyframes[i]
+            frame, value, kf_type = self.keyframes[i]
 
             try:
                 kf_pos_x = self._get_panel_pos_for_frame(frame)
@@ -1153,7 +1153,7 @@ class TLineKeyFrameEditor:
         # returns Keyframes before current clip start
         kfs = []
         for i in range(0, len(self.keyframes)):
-            frame, value = self.keyframes[i]
+            frame, value, kf_type = self.keyframes[i]
             if frame < self.clip_in:
                 kfs.append(self.keyframes[i])
         return kfs
@@ -1162,12 +1162,12 @@ class TLineKeyFrameEditor:
         # returns Keyframes before current clip start
         kfs = []
         for i in range(0, len(self.keyframes)):
-            frame, value = self.keyframes[i]
+            frame, value, kf_type = self.keyframes[i]
             if frame > self.clip_in + self.clip_length:
                 kfs.append(self.keyframes[i])
         return kfs
                 
-    def add_keyframe(self, frame, value):
+    def add_keyframe(self, frame, value, kf_type):
         kf_index_on_frame = self.frame_has_keyframe(frame)
         if kf_index_on_frame != -1:
             # Trying add on top of existing keyframe makes it active
@@ -1175,14 +1175,14 @@ class TLineKeyFrameEditor:
             return
 
         for i in range(0, len(self.keyframes)):
-            kf_frame, kf_value = self.keyframes[i]
+            kf_frame, kf_value, kf_type = self.keyframes[i]
             if kf_frame > frame:
                 #prev_frame, prev_value = self.keyframes[i - 1]
-                self.keyframes.insert(i, (frame, value))
+                self.keyframes.insert(i, (frame, value, kf_type))
                 self.active_kf_index = i
                 return
 
-        self.keyframes.append((frame, value))
+        self.keyframes.append((frame, value, kf_type))
         self.active_kf_index = len(self.keyframes) - 1
 
     def delete_active_keyframe(self):
@@ -1203,7 +1203,7 @@ class TLineKeyFrameEditor:
         self._force_current_in_frame_range()
                 
     def _set_pos_to_active_kf(self):
-        frame, value = self.keyframes[self.active_kf_index]
+        frame, value, kf_type = self.keyframes[self.active_kf_index]
         self.current_clip_frame = frame
         self._force_current_in_frame_range()
             
@@ -1212,32 +1212,32 @@ class TLineKeyFrameEditor:
         Returns index of keyframe if frame has keyframe or -1 if it doesn't.
         """
         for i in range(0, len(self.keyframes)):
-            kf_frame, kf_value = self.keyframes[i]
+            kf_frame, kf_value, kf_type = self.keyframes[i]
             if frame == kf_frame:
                 return i
 
         return -1
     
     def get_active_kf_frame(self):
-        frame, val = self.keyframes[self.active_kf_index]
+        frame, val, kf_type = self.keyframes[self.active_kf_index]
         return frame
 
     def get_active_kf_value(self):
-        frame, val = self.keyframes[self.active_kf_index]
+        frame, val, kf_type = self.keyframes[self.active_kf_index]
         return val
     
     def set_active_kf_value(self, new_value):
-        frame, val = self.keyframes.pop(self.active_kf_index)
-        self.keyframes.insert(self.active_kf_index,(frame, new_value))
+        frame, val, kf_type = self.keyframes.pop(self.active_kf_index)
+        self.keyframes.insert(self.active_kf_index,(frame, new_value, kf_type))
 
     def active_kf_pos_entered(self, frame):
         if self.active_kf_index == 0:
             return
         
-        prev_frame, val = self.keyframes[self.active_kf_index - 1]
+        prev_frame, val, kf_type = self.keyframes[self.active_kf_index - 1]
         prev_frame += 1
         try:
-            next_frame, val = self.keyframes[self.active_kf_index + 1]
+            next_frame, val, kf_type = self.keyframes[self.active_kf_index + 1]
             next_frame -= 1
         except:
             next_frame = self.clip_length - 1
@@ -1249,12 +1249,12 @@ class TLineKeyFrameEditor:
         self.current_clip_frame = frame    
         
     def set_active_kf_frame(self, new_frame):
-        frame, val = self.keyframes.pop(self.active_kf_index)
-        self.keyframes.insert(self.active_kf_index,(new_frame, val))
+        frame, val, kf_type = self.keyframes.pop(self.active_kf_index)
+        self.keyframes.insert(self.active_kf_index,(new_frame, val, kf_type))
 
     def set_active_kf_frame_and_value(self, new_frame, new_value):
-        frame, val = self.keyframes.pop(self.active_kf_index)
-        self.keyframes.insert(self.active_kf_index,(new_frame, new_value))
+        frame, val, kf_type = self.keyframes.pop(self.active_kf_index)
+        self.keyframes.insert(self.active_kf_index,(new_frame, new_value, kf_type))
 
     def hack_fix_for_zero_one_keyframe_problem(self):
         # This is a quick, ugly fix for bug where having volume keyframes in frames 0 and 1 mutes the whole clip.
@@ -1360,7 +1360,7 @@ class TLineKeyFrameEditor:
     # ----------------------------------------------------- hit testing
     def _key_frame_hit(self, x, y):
         for i in range(0, len(self.keyframes)):
-            frame, val = self.keyframes[i]
+            frame, val, kf_type = self.keyframes[i]
             frame_x = self._get_panel_pos_for_frame(frame)
             value_y = self._get_panel_y_for_value(val)
             if((abs(x - frame_x) < KF_HIT_WIDTH)
@@ -1581,7 +1581,7 @@ class TLineKeyFrameEditor:
             keep_doing = True
             while keep_doing:
                 try:
-                    frame, value = self.keyframes[1]
+                    frame, value, kf_type = self.keyframes[1]
                     if frame < self.clip_in:
                         self.keyframes.pop(1)
                     else:
@@ -1595,7 +1595,7 @@ class TLineKeyFrameEditor:
             index = 1
             while keep_doing:
                 try:
-                    frame, value = self.keyframes[index]
+                    frame, value, kf_type = self.keyframes[index]
                     if frame > self.clip_in + self.clip_length and index < (len(self.keyframes) - 1):
                         self.keyframes.pop(index)
                     else:
@@ -1605,14 +1605,14 @@ class TLineKeyFrameEditor:
                     
         elif data == "zero_next":
             frame_zero, frame_zero_value = self.keyframes[0]
-            frame, value = self.keyframes[1]
+            frame, value, kf_type = self.keyframes[1]
             self.keyframes.pop(0)
-            self.keyframes.insert(0, (frame_zero, value))
+            self.keyframes.insert(0, (frame_zero, value, kf_type))
             self.update_property_value()
         elif data == "delete_all_after":
             delete_done = False
             for i in range(0, len(self.keyframes)):
-                frame, value = self.keyframes[i]
+                frame, value, kf_type = self.keyframes[i]
                 if frame > self.clip_in + self.clip_length:
                     self.keyframes.pop(i)
                     popped = True
@@ -1655,7 +1655,7 @@ class TLineKeyFrameEditor:
     def prev_frame_line(self, lx):
         """Find the index of the keyframe before the event.x."""
         for i in range(0, len(self.keyframes)):
-            frame, val = self.keyframes[i]
+            frame, val, kf_type = self.keyframes[i]
             frame_x = self._get_panel_pos_for_frame(frame)
             if frame_x < lx:
                 continue
@@ -1665,7 +1665,7 @@ class TLineKeyFrameEditor:
     def next_frame_line(self, lx):
         """Find the index of the keyframe after the event.x."""
         for i in range(len(self.keyframes) - 1, -1, -1):
-            frame, val = self.keyframes[i]
+            frame, val, kf_type = self.keyframes[i]
             frame_x = self._get_panel_pos_for_frame(frame)
             if frame_x > lx:
                 continue
