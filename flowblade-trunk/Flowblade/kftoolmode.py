@@ -99,7 +99,8 @@ oor_before_menu = Gtk.Menu()
 oor_after_menu = Gtk.Menu()
 value_snapping_menu = Gtk.Menu()
 params_menu =  Gtk.Menu()
- 
+kf_menu = Gtk.Menu()
+  
 edit_data = None
 enter_mode = None
 _kf_editor = None
@@ -955,6 +956,7 @@ class TLineKeyFrameEditor:
             ctrl_press = True
             self.current_mouse_action = KF_DRAG_DISABLED
         # ------------- End of Modify kf curve between two kf---------------------------------------
+        """
         if event.button == 3: # right mouse
             self.current_mouse_action = POSITION_DRAG
             
@@ -966,20 +968,10 @@ class TLineKeyFrameEditor:
             
             updater.repaint_tline()
             return
-            
+        """
+        
         hit_kf = self._key_frame_hit(lx, ly)
 
-        #if hit_kf == None: # nothing was hit, add new keyframe and set it active
-            #frame =  self._get_frame_for_panel_pos(lx)
-            #value = round(self._get_value_for_panel_y(ly))
-            #self.add_keyframe(frame, value)
-            #hit_kf = self.active_kf_index 
-        #else: # some keyframe was pressed
-            #self.active_kf_index = hit_kf
-            #
-        #frame, value = self.keyframes[hit_kf]
-        #self.edit_value = round(value)
-        #self.current_clip_frame = frame
         if hit_kf == None: # nothing was hit, add new keyframe and set it active
             frame =  self._get_frame_for_panel_pos(lx)
             value = round(self._get_value_for_panel_y(ly))
@@ -991,7 +983,11 @@ class TLineKeyFrameEditor:
                 hit_kf = self.active_kf_index 
         else: # some keyframe was pressed
             self.active_kf_index = hit_kf
-            
+
+        if event.button == 3:
+            self._show_kf_menu(event)
+            return
+
         if hit_kf == - 1:
             self.edit_value = round(value)
         else:
@@ -1404,6 +1400,38 @@ class TLineKeyFrameEditor:
         return False
 
     # ------------------------------------------------------------ menus
+    def _show_kf_menu(self, event):
+        menu = kf_menu
+        guiutils.remove_children(menu)
+        self._create_keyframe_type_submenu(appconsts.KEYFRAME_LINEAR, menu, self._kf_menu_callback)
+        menu.popup(None, None, None, None, event.button, event.time)
+    
+    def _kf_menu_callback(self, widget, data):
+        print(data)
+
+    def _create_keyframe_type_submenu(self, kf_type, menu, callback):
+        linear_item = Gtk.RadioMenuItem()
+        linear_item.set_label(_("Linear"))
+        if kf_type == appconsts.KEYFRAME_LINEAR:
+            linear_item.set_active(True)
+        linear_item.connect("activate", callback, "linear")
+        linear_item.show()
+        menu.append(linear_item)
+
+        smooth_item = Gtk.RadioMenuItem().new_with_label([linear_item], _("Smooth"))
+        smooth_item.connect("activate", callback, "smooth")
+        if kf_type == appconsts.KEYFRAME_SMOOTH:
+            smooth_item.set_active(True)
+        smooth_item.show()
+        menu.append(smooth_item)
+
+        discrete_item = Gtk.RadioMenuItem.new_with_label([linear_item], _("Discrete"))
+        discrete_item.connect("activate", callback, "discrete")
+        if kf_type == appconsts.KEYFRAME_DISCRETE:
+            discrete_item.set_active(True)
+        discrete_item.show()
+        menu.append(discrete_item)
+        
     def _show_oor_before_menu(self, widget, event):
         menu = oor_before_menu
         self._build_oor_before_menu(menu)
