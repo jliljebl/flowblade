@@ -1646,10 +1646,8 @@ class RotatingGeometryEditor(GeometryEditor):
         self.geom_kf_edit.create_edit_points_and_values()
         editable_property.value.strip('"')
         self.geom_kf_edit.keyframe_parser = propertyparse.rotating_geom_keyframes_value_string_to_geom_kf_array
-        print(type(editable_property),  editable_property.__dict__)
         self.geom_kf_edit.set_keyframes(editable_property.value, editable_property.get_in_value)
-        print("init_geom_gui done")
-
+        
     def add_fade_in(self):
         compositor = _get_current_edited_compositor()
         fade_default_length = PROJECT().get_project_property(appconsts.P_PROP_DEFAULT_FADE_LENGTH)
