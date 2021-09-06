@@ -1137,12 +1137,16 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         self.clip_editor.set_next_active()
         self.update_editor_view()
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
-        
+        frame = self.clip_editor.get_active_kf_frame()
+        self.seek_tline_frame(frame)
+                
     def prev_pressed(self):
         self.clip_editor.set_prev_active()
         self.update_editor_view()
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
-
+        frame = self.clip_editor.get_active_kf_frame()
+        self.seek_tline_frame(frame)
+                
     def prev_frame_pressed(self):
         self.clip_editor.move_clip_frame(-1)
         self.update_editor_view()
@@ -1378,6 +1382,7 @@ class GeometryEditor(AbstractKeyFrameEditor):
         self.update_editor_view_with_frame(frame)
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
         self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+        self.seek_tline_frame(frame)
         
     def prev_pressed(self):
         self.clip_editor.set_prev_active()
@@ -1385,7 +1390,8 @@ class GeometryEditor(AbstractKeyFrameEditor):
         self.update_editor_view_with_frame(frame)
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
         self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
-
+        self.seek_tline_frame(frame)
+        
     def move_kf_next_frame_pressed(self):
         current_frame = self.clip_editor.get_active_kf_frame()
         self.clip_editor.active_kf_pos_entered(current_frame + 1)
@@ -1627,7 +1633,8 @@ class GeometryEditor(AbstractKeyFrameEditor):
         self._add_geometry_menu_items(menu, self._menu_item_activated)
         
         menu.popup(None, None, None, None, event.button, event.time)
-    
+
+
 
 class RotatingGeometryEditor(GeometryEditor):
 
