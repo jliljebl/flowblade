@@ -155,27 +155,27 @@ def _get_compositor_clip(compositor):
 
 def _add_default_fade_in(keyframe_property, property_klass, keyframes, fade_in_length):
     if property_klass in _dissolve_property_klasses:
-        frame, opacity  = keyframes.pop(0)
-        keyframes.append((frame, 0))
-        keyframes.append((frame + fade_in_length, 100))
+        frame, opacity, kf_type = keyframes.pop(0)
+        keyframes.append((frame, 0, appconsts.KEYFRAME_LINEAR))
+        keyframes.append((frame + fade_in_length, 100, appconsts.KEYFRAME_LINEAR))
         return keyframes
     else:
         # (0, [0, 0, 1280, 720], 100.0) or (0, [640.0, 360.0, 1.0, 1.0, 0.0], 100.0) e.g.
-        frame, geom, opacity = keyframes.pop(0)
-        keyframes.append((frame, geom, 0))
-        keyframes.append((frame + fade_in_length, geom, 100))
+        frame, geom, opacity, kf_type = keyframes.pop(0)
+        keyframes.append((frame, geom, 0, appconsts.KEYFRAME_LINEAR))
+        keyframes.append((frame + fade_in_length, geom, 100, appconsts.KEYFRAME_LINEAR))
         return keyframes
 
 def _add_default_fade_out(keyframe_property, property_klass, keyframes, fade_out_length, clip, kf_before_fade_out_index=0):
     if property_klass in _dissolve_property_klasses:
-        keyframes.append((clip.clip_length() - fade_out_length - 1, 100))
-        keyframes.append((clip.clip_length() - 1, 0))
+        keyframes.append((clip.clip_length() - fade_out_length - 1, 100, appconsts.KEYFRAME_LINEAR))
+        keyframes.append((clip.clip_length() - 1, 0, appconsts.KEYFRAME_LINEAR))
         return keyframes
     else:
         # (0, [0, 0, 1280, 720], 100.0) or (0, [640.0, 360.0, 1.0, 1.0, 0.0], 100.0) e.g.
-        frame, geom, opacity = keyframes[kf_before_fade_out_index]
-        keyframes.append((clip.clip_length() - fade_out_length - 1, geom, 100))
-        keyframes.append((clip.clip_length() - 1, geom, 0))
+        frame, geom, opacity, kf_type = keyframes[kf_before_fade_out_index]
+        keyframes.append((clip.clip_length() - fade_out_length - 1, geom, 100, appconsts.KEYFRAME_LINEAR))
+        keyframes.append((clip.clip_length() - 1, geom, 0, appconsts.KEYFRAME_LINEAR))
         return keyframes
 
 def _do_user_add_fade_in(keyframe_property, property_klass, keyframes, fade_in_length):
@@ -185,9 +185,9 @@ def _do_user_add_fade_in(keyframe_property, property_klass, keyframes, fade_in_l
     for i in range (0, len(keyframes)):
         kf = keyframes[i]
         if property_klass in _dissolve_property_klasses:
-            frame, opacity  = kf
+            frame, opacity, kf_type = kf
         else:
-            frame, geom, opacity = kf
+            frame, geom, opacity, kf_type = kf
         
         if frame > fade_in_length:
             kf_after_fade_in_index = i
@@ -206,14 +206,14 @@ def _do_user_add_fade_in(keyframe_property, property_klass, keyframes, fade_in_l
         for i in range(0, kf_after_fade_in_index - 1):
             keyframes.pop(1)
         if property_klass in _dissolve_property_klasses:
-            frame, opacity  = keyframes.pop(0)
-            keyframes.insert(0, (frame, 0))
-            keyframes.insert(1,(frame + fade_in_length, 100))
+            frame, opacity, kf_type = keyframes.pop(0)
+            keyframes.insert(0, (frame, 0, appconsts.KEYFRAME_LINEAR))
+            keyframes.insert(1,(frame + fade_in_length, 100, appconsts.KEYFRAME_LINEAR))
         else:
             # (0, [0, 0, 1280, 720], 100.0) or (0, [640.0, 360.0, 1.0, 1.0, 0.0], 100.0) e.g.
-            frame, geom, opacity = keyframes.pop(0)
-            keyframes.insert(0, (frame, geom, 0))
-            keyframes.insert(1, (frame + fade_in_length, geom, 100))
+            frame, geom, opacity, kf_type = keyframes.pop(0)
+            keyframes.insert(0, (frame, geom, 0, appconsts.KEYFRAME_LINEAR))
+            keyframes.insert(1, (frame + fade_in_length, geom, 100, appconsts.KEYFRAME_LINEAR))
 
     # Because we created a SECOND SET of EditableProperties this only updates data structures (py and MLT)
     # but not EditableProperties wrappers that are edited in GUI in "Compositor" panel.
@@ -229,9 +229,9 @@ def _do_user_add_fade_out(keyframe_property, property_klass, keyframes, fade_out
     for i in range (0, len(keyframes)):
         kf = keyframes[i]
         if property_klass in _dissolve_property_klasses:
-            frame, opacity  = kf
+            frame, opacity, kf_type = kf
         else:
-            frame, geom, opacity = kf
+            frame, geom, opacity, kf_type = kf
         
         if frame >= fade_out_frame:
             kf_after_fade_out_index = i
@@ -261,7 +261,7 @@ def _do_user_add_fade_in_filter(keyframe_property, keyframes, fade_in_length, cl
     kf_after_fade_in_index = -1
     for i in range (0, len(keyframes)):
         kf = keyframes[i]
-        frame, opacity  = kf
+        frame, opacity, kf_type = kf
         
         if frame > clip_in + fade_in_length:
             kf_after_fade_in_index = i
@@ -275,8 +275,8 @@ def _do_user_add_fade_in_filter(keyframe_property, keyframes, fade_in_length, cl
 
         frame, opacity  = keyframes.pop(0)
 
-        keyframes.append((clip_in, 0))
-        keyframes.append((clip_in + fade_in_length, 100))
+        keyframes.append((clip_in, 0, appconsts.KEYFRAME_LINEAR))
+        keyframes.append((clip_in + fade_in_length, 100, appconsts.KEYFRAME_LINEAR))
     # Case keyframes exists after fade in length
     else:
         # Remove keyframes in range 0 - kf_after_fade_in_index
@@ -301,7 +301,7 @@ def _do_user_add_fade_out_filter(keyframe_property, keyframes, fade_out_length, 
     kf_after_fade_out_index = -1
     for i in range (0, len(keyframes)):
         kf = keyframes[i]
-        frame, opacity  = kf
+        frame, opacity, kf_type  = kf
 
         if frame >= fade_out_frame:
             kf_after_fade_out_index = i
@@ -309,8 +309,8 @@ def _do_user_add_fade_out_filter(keyframe_property, keyframes, fade_out_length, 
 
     # Case no keyframes after fade out start
     if kf_after_fade_out_index == -1:
-        keyframes.append((clip.clip_out - fade_out_length - 1, 100))
-        keyframes.append((clip.clip_out - 1, 0))
+        keyframes.append((clip.clip_out - fade_out_length - 1, 100, appconsts.KEYFRAME_LINEAR))
+        keyframes.append((clip.clip_out - 1, 0, appconsts.KEYFRAME_LINEAR))
 
     # Case keyframes exists after  fade out start
     else:
@@ -318,8 +318,8 @@ def _do_user_add_fade_out_filter(keyframe_property, keyframes, fade_out_length, 
         for i in range(kf_after_fade_out_index, len(keyframes)):
             keyframes.pop(-1) # pop last
             
-        keyframes.append((clip.clip_out - fade_out_length - 1, 100))
-        keyframes.append((clip.clip_out - 1, 0))
+        keyframes.append((clip.clip_out - fade_out_length - 1, 100, appconsts.KEYFRAME_LINEAR))
+        keyframes.append((clip.clip_out - 1, 0, appconsts.KEYFRAME_LINEAR))
 
     # Because we created a SECOND SET of EditableProperties this only updates data structures (py and MLT)
     # but not EditableProperties wrappers that are edited in GUI in "Compositor" panel.
