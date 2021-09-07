@@ -670,8 +670,16 @@ class KeyFrameGeometryOpacityProperty(TransitionEditableProperty):
         # key frame array of tuples (frame, [x, y, width, height], opacity)
         val_str = ""
         for kf in keyframes:
-            frame, rect, opac = kf
-            val_str += str(int(frame)) + "=" # frame
+            frame, rect, opac, kf_type = kf
+            
+            if kf_type == appconsts.KEYFRAME_LINEAR:
+                eq_str = appconsts.KEYFRAME_LINEAR_EQUALS_STR
+            elif kf_type == appconsts.KEYFRAME_SMOOTH:
+                eq_str = appconsts.KEYFRAME_SMOOTH_EQUALS_STR
+            else:
+                eq_str = appconsts.KEYFRAME_DISCRETE_EQUALS_STR
+                        
+            val_str += str(int(frame)) + eq_str # frame
             val_str += str(int(rect[0])) + "/" + str(int(rect[1])) + ":" # pos
             val_str += str(int(rect[2])) + "x" + str(int(rect[3])) + ":" # size
             val_str += str(self.get_out_value(opac)) + ";" # opac with converted range from slider
@@ -688,12 +696,20 @@ class KeyFrameFilterGeometryRectProperty(EditableProperty):
   
         return Gtk.Adjustment(value=float(1.0), lower=float(0.0), upper=float(1.0), step_incr=float(0.01)) # Value set later to first kf value
         
-    def write_out_keyframes(self, keyframes):       
+    def write_out_keyframes(self, keyframes):
         # key frame array of tuples (frame, [x, y, width, height], opacity)
         val_str = ""
         for kf in keyframes:
-            frame, rect, opac = kf
-            val_str += str(int(frame)) + "=" # frame
+            frame, rect, opac, kf_type = kf
+            
+            if kf_type == appconsts.KEYFRAME_LINEAR:
+                eq_str = appconsts.KEYFRAME_LINEAR_EQUALS_STR
+            elif kf_type == appconsts.KEYFRAME_SMOOTH:
+                eq_str = appconsts.KEYFRAME_SMOOTH_EQUALS_STR
+            else:
+                eq_str = appconsts.KEYFRAME_DISCRETE_EQUALS_STR
+                        
+            val_str += str(int(frame)) + eq_str # frame
             val_str += str(int(rect[0])) + " " + str(int(rect[1])) + " " # pos
             val_str += str(int(rect[2])) + " " + str(int(rect[3])) + " " # size
             val_str += "1"
@@ -724,8 +740,16 @@ class KeyFrameHCSFilterProperty(EditableProperty):
     def write_out_keyframes(self, keyframes):
         val_str = ""
         for kf in keyframes:
-            frame, val = kf
-            val_str += str(frame) + "=" + str(self.get_out_value(val)) + ";"
+            frame, val, kf_type = kf
+            
+            if kf_type == appconsts.KEYFRAME_LINEAR:
+                eq_str = appconsts.KEYFRAME_LINEAR_EQUALS_STR
+            elif kf_type == appconsts.KEYFRAME_SMOOTH:
+                eq_str = appconsts.KEYFRAME_SMOOTH_EQUALS_STR
+            else:
+                eq_str = appconsts.KEYFRAME_DISCRETE_EQUALS_STR
+                
+            val_str += str(frame) + eq_str + str(self.get_out_value(val)) + ";"
         
         val_str = val_str.strip(";")
         self.write_value(val_str)
@@ -765,7 +789,7 @@ class KeyFrameHCSTransitionProperty(TransitionEditableProperty):
     def write_out_keyframes(self, keyframes):
         val_str = ""
         for kf in keyframes:
-            frame, val = kf
+            frame, val, type = kf
             val_str += str(frame) + "=" + str(self.get_out_value(val)) + ";"
 
         val_str = val_str.strip(";")

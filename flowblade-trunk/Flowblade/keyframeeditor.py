@@ -89,7 +89,11 @@ KF_DRAG_DISABLED = 2
 
 # Icons
 ACTIVE_KF_ICON = None
+ACTIVE_KF_ICON_SMOOTH = None
+ACTIVE_KF_ICON_DISCRETE = None
 NON_ACTIVE_KF_ICON = None
+NON_ACTIVE_KF_ICON_SMOOTH = None
+NON_ACTIVE_KF_ICON_DISCRETE = None
 
 # Magic value to signify disconnected signal handler 
 DISCONNECTED_SIGNAL_HANDLER = -9999999
@@ -162,14 +166,18 @@ class ClipKeyFrameEditor:
         self.mouse_listener = None #This is special service for RotoMaskKeyFrameEditor, not used by other editors
 
         # init icons if needed
-        global ACTIVE_KF_ICON, NON_ACTIVE_KF_ICON
+        global ACTIVE_KF_ICON,  ACTIVE_KF_ICON_SMOOTH, ACTIVE_KF_ICON_DISCRETE, NON_ACTIVE_KF_ICON, NON_ACTIVE_KF_ICON_SMOOTH, NON_ACTIVE_KF_ICON_DISCRETE
         if ACTIVE_KF_ICON == None:
             ACTIVE_KF_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_active.png")
-        if NON_ACTIVE_KF_ICON == None:
+            ACTIVE_KF_ICON_SMOOTH = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_active_smooth.png")
+            ACTIVE_KF_ICON_DISCRETE = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_active_discrete.png")
             NON_ACTIVE_KF_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_not_active.png")    
+            NON_ACTIVE_KF_ICON_SMOOTH = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_not_active_smooth.png") 
+            NON_ACTIVE_KF_ICON_DISCRETE = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_not_active_discrete.png")
             
     def set_keyframes(self, keyframes_str, out_to_in_func):
         self.keyframes = self.keyframe_parser(keyframes_str, out_to_in_func)
+        print("XXXXXXXXXXXXXXXXXXXXX after set_keyframes", self.keyframes)
 
     def get_kf_info(self):
         return (self.active_kf_index, len(self.keyframes))
@@ -230,15 +238,25 @@ class ClipKeyFrameEditor:
 
         # Draw keyframes
         for i in range(0, len(self.keyframes)):
-            frame, value = self.keyframes[i]
+            frame, value, kf_type = self.keyframes[i]
             if frame < self.clip_in:
                 continue
             if frame > self.clip_in + self.clip_length:
                 continue  
             if i == self.active_kf_index:
-                icon = ACTIVE_KF_ICON
+                if kf_type == appconsts.KEYFRAME_LINEAR:
+                    icon = ACTIVE_KF_ICON
+                elif kf_type == appconsts.KEYFRAME_SMOOTH:
+                    icon = ACTIVE_KF_ICON_SMOOTH
+                else:
+                    icon = ACTIVE_KF_ICON_DISCRETE
             else:
-                icon = NON_ACTIVE_KF_ICON
+                if kf_type == appconsts.KEYFRAME_LINEAR:
+                    icon = NON_ACTIVE_KF_ICON
+                elif kf_type == appconsts.KEYFRAME_SMOOTH:
+                    icon = NON_ACTIVE_KF_ICON_SMOOTH
+                else:
+                    icon = NON_ACTIVE_KF_ICON_DISCRETE
             try:
                 kf_pos = self._get_panel_pos_for_frame(frame)
             except ZeroDivisionError: # math fails for 1 frame clip
@@ -345,14 +363,15 @@ class ClipKeyFrameEditor:
             self.widget.queue_draw()
         else: # some keyframe was pressed         
             self.active_kf_index = hit_kf
-            frame, value = self.keyframes[hit_kf]
+            frame, value, kf_type = self.keyframes[hit_kf]
             self.current_clip_frame = frame
             self.parent_editor.active_keyframe_changed()
             
             if event.button == 3:
-                print("show menu")
+                self.widget.queue_draw()
                 self.current_mouse_action = KF_DRAG_DISABLED
-                self.parent_editor.show_keyframe_menu(event)
+                print(type(self.parent_editor))
+                self.parent_editor.show_keyframe_menu(event, self.keyframes[hit_kf])
                 return
                 
             if hit_kf == 0:
@@ -362,10 +381,10 @@ class ClipKeyFrameEditor:
                 
                 self.drag_start_x = event.x
                 
-                prev_frame, val = self.keyframes[hit_kf - 1]
+                prev_frame, val, kf_type = self.keyframes[hit_kf - 1]
                 self.drag_min = prev_frame  + 1
                 try:
-                    next_frame, val = self.keyframes[hit_kf + 1]
+                    next_frame, val, kf_type_next = self.keyframes[hit_kf + 1]
                     self.drag_max = next_frame - 1
                 except:
                     self.drag_max = self.clip_in + self.clip_length
@@ -448,7 +467,7 @@ class ClipKeyFrameEditor:
         # returns Keyframes before current clip start
         kfs = []
         for i in range(0, len(self.keyframes)):
-            frame, value = self.keyframes[i]
+            frame, value, kf_type = self.keyframes[i]
             if frame < self.clip_in:
                 kfs.append(self.keyframes[i])
         return kfs
@@ -457,7 +476,7 @@ class ClipKeyFrameEditor:
         # returns Keyframes before current clip start
         kfs = []
         for i in range(0, len(self.keyframes)):
-            frame, value = self.keyframes[i]
+            frame, value, type = self.keyframes[i]
             if frame > self.clip_in + self.clip_length:
                 kfs.append(self.keyframes[i])
         return kfs
@@ -475,7 +494,7 @@ class ClipKeyFrameEditor:
     
     def _key_frame_hit(self, x, y):
         for i in range(0, len(self.keyframes)):
-            frame, val = self.keyframes[i]
+            frame, val, kf_type = self.keyframes[i]
             frame_x = self._get_panel_pos_for_frame(frame)
             frame_y = KF_Y + 6
             if((abs(x - frame_x) < KF_HIT_WIDTH)
@@ -510,14 +529,14 @@ class ClipKeyFrameEditor:
             return
 
         for i in range(0, len(self.keyframes)):
-            kf_frame, kf_value = self.keyframes[i]
+            kf_frame, kf_value, kf_type = self.keyframes[i]
             if kf_frame > frame:
-                prev_frame, prev_value = self.keyframes[i - 1]
-                self.keyframes.insert(i, (frame, prev_value))
+                prev_frame, prev_value, prev_type = self.keyframes[i - 1]
+                self.keyframes.insert(i, (frame, prev_value, prev_type))
                 self.active_kf_index = i
                 return
-        prev_frame, prev_value = self.keyframes[len(self.keyframes) - 1]
-        self.keyframes.append((frame, prev_value))
+        prev_frame, prev_value, prev_type = self.keyframes[len(self.keyframes) - 1]
+        self.keyframes.append((frame, prev_value, prev_type))
         self.active_kf_index = len(self.keyframes) - 1
 
     def print_keyframes(self, msg="no_msg"):
@@ -574,14 +593,14 @@ class ClipKeyFrameEditor:
         Returns index of keyframe if frame has keyframe or -1 if it doesn't.
         """
         for i in range(0, len(self.keyframes)):
-            kf_frame, kf_value = self.keyframes[i]
+            kf_frame, kf_value, type = self.keyframes[i]
             if frame == kf_frame:
                 return i
 
         return -1
     
     def get_active_kf_frame(self):
-        frame, val = self.keyframes[self.active_kf_index]
+        frame, val, type = self.keyframes[self.active_kf_index]
         return frame
 
     def get_active_kf_value(self):
@@ -589,17 +608,21 @@ class ClipKeyFrameEditor:
         return val
     
     def set_active_kf_value(self, new_value):
-        frame, val = self.keyframes.pop(self.active_kf_index)
-        self.keyframes.insert(self.active_kf_index,(frame, new_value))
+        frame, val, kf_type = self.keyframes.pop(self.active_kf_index)
+        self.keyframes.insert(self.active_kf_index,(frame, new_value, kf_type))
 
+    def set_active_kf_type(self, new_type):
+        frame, val, kf_type = self.keyframes.pop(self.active_kf_index)
+        self.keyframes.insert(self.active_kf_index,(frame, val, new_type))
+        
     def active_kf_pos_entered(self, frame):
         if self.active_kf_index == 0:
             return
         
-        prev_frame, val = self.keyframes[self.active_kf_index - 1]
+        prev_frame, val, kf_type = self.keyframes[self.active_kf_index - 1]
         prev_frame += 1
         try:
-            next_frame, val = self.keyframes[self.active_kf_index + 1]
+            next_frame, val, kf_type = self.keyframes[self.active_kf_index + 1]
             next_frame -= 1
         except:
             next_frame = self.clip_in + self.clip_length
@@ -623,8 +646,8 @@ class ClipKeyFrameEditor:
             index += 1
     
     def set_active_kf_frame(self, new_frame):
-        frame, val = self.keyframes.pop(self.active_kf_index)
-        self.keyframes.insert(self.active_kf_index,(new_frame, val))
+        frame, val, kf_type = self.keyframes.pop(self.active_kf_index)
+        self.keyframes.insert(self.active_kf_index,(new_frame, val, kf_type))
 
     def _show_oor_before_menu(self, widget, event):
         menu = oor_before_menu
@@ -737,7 +760,7 @@ class ClipEditorButtonsRow(Gtk.HBox):
         self.kf_to_next_frame_button = guiutils.get_image_button("kf_edit_kf_to_next_frame", BUTTON_WIDTH, BUTTON_HEIGHT)
         self.add_fade_in_button = guiutils.get_image_button("add_fade_in", BUTTON_WIDTH, BUTTON_HEIGHT)
         self.add_fade_out_button = guiutils.get_image_button("add_fade_out", BUTTON_WIDTH, BUTTON_HEIGHT)
-        self.hamburger_menu = guicomponents.HamburgerPressLaunch(self._hamburger_press)
+        self.hamburger_menu = guicomponents.HamburgerPressLaunch(editor_parent._hamburger_pressed)
         self.hamburger_menu.widget.set_margin_top(5)
         
         self.add_button.connect("clicked", lambda w,e: editor_parent.add_pressed(), None)
@@ -822,25 +845,18 @@ class ClipEditorButtonsRow(Gtk.HBox):
         self.kf_to_prev_frame_button.set_sensitive(sensitive)
         self.kf_to_next_frame_button.set_sensitive(sensitive)
 
-    def _hamburger_press(self, widget, event):
-        menu = buttons_hamburger_menu
-        guiutils.remove_children(menu)
-        menu.add(_get_menu_item(_("Reset Geometry"), self._menu_item_activated, "reset" ))
-        menu.add(_get_menu_item(_("Geometry to Original Aspect Ratio"), self._menu_item_activated, "ratio" ))
-        menu.add(_get_menu_item(_("Center Horizontal"), self._menu_item_activated, "hcenter" ))
-        menu.add(_get_menu_item(_("Center Vertical"), self._menu_item_activated, "vcenter" ))
-        menu.popup(None, None, None, None, event.button, event.time)
-
     def _menu_item_activated(self, widget, data):
         pass
-    
+
+
 class GeometryEditorButtonsRow(Gtk.HBox):
     def __init__(self, editor_parent, empty_center=False):
         """
         editor_parent needs to implement interface:
         -------------------------------------------
         editor_parent.view_size_changed(widget_active_index)
-        editor_parent.menu_item_activated()
+
+        # This is now just holding size select widget, the class lost a lot of meaning. 
         """
         GObject.GObject.__init__(self)
         self.set_homogeneous(False)
@@ -851,12 +867,13 @@ class GeometryEditorButtonsRow(Gtk.HBox):
         name_label = Gtk.Label(label=_("View:"))
 
         # Aug-2019 - SvdB - BB
+        """
         size_adj = 1
         if editorpersistance.prefs.double_track_hights:
             size_adj = 2
         surface = guiutils.get_cairo_image("geom_action")
         action_menu_button = guicomponents.PressLaunch(self._show_actions_menu, surface, 24*size_adj, 22*size_adj)
-        
+        """
         size_select = Gtk.ComboBoxText()
         size_select.append_text("100%")
         size_select.append_text("66%")
@@ -868,13 +885,14 @@ class GeometryEditorButtonsRow(Gtk.HBox):
         self.size_select = size_select
         
         # Build row
-        self.pack_start(action_menu_button.widget, False, False, 0)
+        #self.pack_start(action_menu_button.widget, False, False, 0)
         if empty_center == True:
             self.pack_start(Gtk.Label(), True, True, 0)
         else:
             self.pack_start(guiutils.get_pad_label(12, 10), False, False, 0)
         self.pack_start(size_select, False, False, 0)
 
+    """
     def _show_actions_menu(self, widget, event):
         menu = actions_menu
         guiutils.remove_children(menu)
@@ -883,7 +901,8 @@ class GeometryEditorButtonsRow(Gtk.HBox):
         menu.add(self._get_menu_item(_("Center Horizontal"), self.editor_parent.menu_item_activated, "hcenter" ))
         menu.add(self._get_menu_item(_("Center Vertical"), self.editor_parent.menu_item_activated, "vcenter" ))
         menu.popup(None, None, None, None, event.button, event.time)
-
+    """
+    
     def _get_menu_item(self, text, callback, data):
         item = Gtk.MenuItem(text)
         item.connect("activate", callback, data)
@@ -920,7 +939,8 @@ class AbstractKeyFrameEditor(Gtk.VBox):
         
         These may be implemented here or in extending classes KeyframeEditor and GeometryEditor
         """
-        
+        print("keyframes", self.clip_editor.keyframes)
+    
         # Some filters start keyframes from *MEDIA* frame 0
         # Some filters or compositors start keyframes from *CLIP* frame 0
         # Filters starting from *media* 0 need offset to clip start added to all values
@@ -951,7 +971,7 @@ class AbstractKeyFrameEditor(Gtk.VBox):
         # updating once more is wrong
         if self.clip_editor.drag_on == True:
             return
-
+        
         # update clipeditor pos
         clip_frame = tline_frame - self.clip_tline_pos + self.clip_in
         self.clip_editor.set_and_display_clip_frame(clip_frame)
@@ -994,7 +1014,35 @@ class AbstractKeyFrameEditor(Gtk.VBox):
     def get_copy_kf_value(self):
         print(type(self), "get_copy_kf_value not implemented")
 
-    
+    def _create_keyframe_type_submenu(self, kf_type, menu, callback):
+        linear_item = Gtk.RadioMenuItem()
+        linear_item.set_label(_("Linear"))
+        if kf_type == appconsts.KEYFRAME_LINEAR:
+            linear_item.set_active(True)
+        linear_item.connect("activate", callback, "linear")
+        linear_item.show()
+        menu.append(linear_item)
+
+        smooth_item = Gtk.RadioMenuItem().new_with_label([linear_item], _("Smooth"))
+        smooth_item.connect("activate", callback, "smooth")
+        if kf_type == appconsts.KEYFRAME_SMOOTH:
+            smooth_item.set_active(True)
+        smooth_item.show()
+        menu.append(smooth_item)
+
+        discrete_item = Gtk.RadioMenuItem.new_with_label([linear_item], _("Discrete"))
+        discrete_item.connect("activate", callback, "discrete")
+        if kf_type == appconsts.KEYFRAME_DISCRETE:
+            discrete_item.set_active(True)
+        discrete_item.show()
+        menu.append(discrete_item)
+
+    def _add_geometry_menu_items(self, menu, callback):
+        menu.add(_get_menu_item(_("Reset Geometry"), callback, "reset" ))
+        menu.add(_get_menu_item(_("Geometry to Original Aspect Ratio"), callback, "ratio" ))
+        menu.add(_get_menu_item(_("Center Horizontal"), callback, "hcenter" ))
+        menu.add(_get_menu_item(_("Center Vertical"), callback, "vcenter" ))
+
 
 class KeyFrameEditor(AbstractKeyFrameEditor):
     """
@@ -1087,12 +1135,16 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         self.clip_editor.set_next_active()
         self.update_editor_view()
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
-        
+        frame = self.clip_editor.get_active_kf_frame()
+        self.seek_tline_frame(frame)
+                
     def prev_pressed(self):
         self.clip_editor.set_prev_active()
         self.update_editor_view()
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
-
+        frame = self.clip_editor.get_active_kf_frame()
+        self.seek_tline_frame(frame)
+                
     def prev_frame_pressed(self):
         self.clip_editor.move_clip_frame(-1)
         self.update_editor_view()
@@ -1143,37 +1195,41 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
         adj.set_value(float(val))
         self.slider_value_changed(adj)
 
-    def show_keyframe_menu(self, event):
+    def show_keyframe_menu(self, event, keyframe):
+        frame, value, kf_type = keyframe
+        
         menu = keyframe_menu
         guiutils.remove_children(menu)
 
-        linear_item = Gtk.RadioMenuItem()
-        linear_item.set_label(_("Linear"))
-        linear_item.set_active(True)
-        linear_item.connect("activate", self._menu_item_activated, "linear")
-        linear_item.show()
-        menu.append(linear_item)
-
-        smooth_item = Gtk.RadioMenuItem().new_with_label([linear_item], _("Smooth"))
-        #smooth_item.set_active(track_obj.height == appconsts.TRACK_HEIGHT_NORMAL)
-        smooth_item.connect("activate", self._menu_item_activated, "smooth")
-        smooth_item.show()
-        menu.append(smooth_item)
-
-        discrete_item = Gtk.RadioMenuItem.new_with_label([linear_item], _("Discrete"))
-        #discrete_item.set_active(track_obj.height == appconsts.TRACK_HEIGHT_SMALL)
-        discrete_item.connect("activate", self._menu_item_activated, "discrete")
-        discrete_item.show()
-        menu.append(discrete_item)
-    
-        menu.add(_get_menu_item(_("Reset Geometry"), self._menu_item_activated, "reset" ))
-        menu.add(_get_menu_item(_("Geometry to Original Aspect Ratio"), self._menu_item_activated, "ratio" ))
-        menu.add(_get_menu_item(_("Center Horizontal"), self._menu_item_activated, "hcenter" ))
-        menu.add(_get_menu_item(_("Center Vertical"), self._menu_item_activated, "vcenter" ))
+        self._create_keyframe_type_submenu(kf_type, menu, self._menu_item_activated)
         menu.popup(None, None, None, None, event.button, event.time)
 
     def _menu_item_activated(self, widget, data):
-        print("data")
+        if data == "linear":
+            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_LINEAR)
+        elif data == "smooth":
+            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_SMOOTH)
+        elif data == "discrete":
+            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_DISCRETE)
+            
+        self.queue_draw()
+        self.update_property_value()
+
+    def _hamburger_pressed(self, widget, event):
+        menu = buttons_hamburger_menu
+        guiutils.remove_children(menu)
+        frame, value, kf_type = self.clip_editor.keyframes[self.clip_editor.active_kf_index]
+        
+        active_type_menu_item = Gtk.MenuItem(_("Active Keyframe Type"))
+        type_menu = Gtk.Menu()
+        active_type_menu_item.set_submenu(type_menu)
+        self._create_keyframe_type_submenu(kf_type, type_menu, self._menu_item_activated)
+        active_type_menu_item.show_all()
+        menu.add(active_type_menu_item)
+
+        menu.popup(None, None, None, None, event.button, event.time)
+            
+
 
 class KeyFrameEditorClipFade(KeyFrameEditor):
     """
@@ -1202,6 +1258,7 @@ class KeyFrameEditorClipFade(KeyFrameEditor):
         self.editable_property.write_out_keyframes(keyframes)
         self.clip_editor.set_keyframes(self.editable_property.value, self.editable_property.get_in_value)
         self.update_editor_view()
+
 
 
 class KeyFrameEditorClipFadeFilter(KeyFrameEditor):
@@ -1269,10 +1326,8 @@ class GeometryEditor(AbstractKeyFrameEditor):
         self.clip_editor.keyframes = self.get_clip_editor_keyframes()
       
         # Build gui
-        #self.pack_start(self.geom_buttons_row, False, False, 0)
         self.pack_start(g_frame, False, False, 0)
         self.pack_start(self.pos_entries_row, False, False, 0)
-        self.pack_start(guiutils.pad_label(1, 1), False, False, 0)
         self.pack_start(self.value_slider_row, False, False, 0)
         self.pack_start(self.clip_editor.widget, False, False, 0)
         self.pack_start(self.buttons_row, False, False, 0)
@@ -1290,8 +1345,9 @@ class GeometryEditor(AbstractKeyFrameEditor):
     def get_clip_editor_keyframes(self):
         keyframes = []
         for kf in self.geom_kf_edit.keyframes:
-            frame, rect, opacity = kf
-            clip_kf = (frame, opacity)
+            print("get_clip_editor_keyframes", kf)
+            frame, rect, opacity, kf_type = kf
+            clip_kf = (frame, opacity, kf_type)
             keyframes.append(clip_kf)
         return keyframes
         
@@ -1324,6 +1380,7 @@ class GeometryEditor(AbstractKeyFrameEditor):
         self.update_editor_view_with_frame(frame)
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
         self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+        self.seek_tline_frame(frame)
         
     def prev_pressed(self):
         self.clip_editor.set_prev_active()
@@ -1331,7 +1388,8 @@ class GeometryEditor(AbstractKeyFrameEditor):
         self.update_editor_view_with_frame(frame)
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
         self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
-
+        self.seek_tline_frame(frame)
+        
     def move_kf_next_frame_pressed(self):
         current_frame = self.clip_editor.get_active_kf_frame()
         self.clip_editor.active_kf_pos_entered(current_frame + 1)
@@ -1477,9 +1535,27 @@ class GeometryEditor(AbstractKeyFrameEditor):
         self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
         self.update_editor_view_with_frame(frame)
         self.update_property_value()
-            
-    def menu_item_activated(self, widget, data):
-        if data == "reset":
+
+    def show_keyframe_menu(self, event, keyframe):
+        frame, value, kf_type = keyframe
+        
+        menu = keyframe_menu
+        guiutils.remove_children(menu)
+
+        self._create_keyframe_type_submenu(kf_type, menu, self._menu_item_activated)
+        menu.popup(None, None, None, None, event.button, event.time)
+                    
+    def _menu_item_activated(self, widget, data):
+        if data == "linear":
+            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_LINEAR)
+            self.geom_kf_edit.set_active_kf_type(self.clip_editor.active_kf_index, appconsts.KEYFRAME_LINEAR)
+        elif data == "smooth":
+            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_SMOOTH)
+            self.geom_kf_edit.set_active_kf_type(self.clip_editor.active_kf_index, appconsts.KEYFRAME_SMOOTH)
+        elif data == "discrete":
+            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_DISCRETE)
+            self.geom_kf_edit.set_active_kf_type(self.clip_editor.active_kf_index, appconsts.KEYFRAME_DISCRETE)
+        elif data == "reset":
             self._reset_rect_pressed()
         elif data == "ratio":
             self._reset_rect_ratio_pressed()
@@ -1488,6 +1564,9 @@ class GeometryEditor(AbstractKeyFrameEditor):
         elif data == "vcenter":
             self._center_vertical()
 
+        self.queue_draw()
+        self.update_property_value()
+        
     def update_editor_view(self, seek_tline_frame=False):
         # This gets called when tline frame is changed from outside
         # Call update_editor_view_with_frame that is used when udating from inside the object.
@@ -1512,10 +1591,10 @@ class GeometryEditor(AbstractKeyFrameEditor):
 
         write_keyframes = []
         for opa_kf, geom_kf in zip(self.clip_editor.keyframes, self.geom_kf_edit.keyframes):
-            frame, opacity = opa_kf
-            frame, rect, rubbish_opacity = geom_kf # rubbish_opacity was just doing same thing twice for nothing,
-                                                   # and can be removed to clean up code, but could not bothered right now
-            write_keyframes.append((frame, rect, opacity))
+            frame, opacity, kf_type = opa_kf
+            frame, rect, unused_opacity, kf_type = geom_kf # unused_opacity was just doing same thing twice for nothing,
+                                                            # and can be removed to clean up code, but could not bothered right now
+            write_keyframes.append((frame, rect, opacity, kf_type))
         
         self.editable_property.write_out_keyframes(write_keyframes)
         
@@ -1533,6 +1612,27 @@ class GeometryEditor(AbstractKeyFrameEditor):
             view_size_index = 2
         self.geom_buttons_row.size_select.set_active(view_size_index)
 
+    def _hamburger_pressed(self, widget, event):
+        menu = buttons_hamburger_menu
+        guiutils.remove_children(menu)
+        frame, value, kf_type = self.clip_editor.keyframes[self.clip_editor.active_kf_index]
+        
+        active_type_menu_item = Gtk.MenuItem(_("Active Keyframe Type"))
+        type_menu = Gtk.Menu()
+        active_type_menu_item.set_submenu(type_menu)
+        self._create_keyframe_type_submenu(kf_type, type_menu, self._menu_item_activated)
+        active_type_menu_item.show_all()
+        menu.add(active_type_menu_item)
+
+        sep = Gtk.SeparatorMenuItem()
+        sep.show()
+        menu.add(sep)
+
+        self._add_geometry_menu_items(menu, self._menu_item_activated)
+        
+        menu.popup(None, None, None, None, event.button, event.time)
+
+
 
 class RotatingGeometryEditor(GeometryEditor):
 
@@ -1545,7 +1645,7 @@ class RotatingGeometryEditor(GeometryEditor):
         editable_property.value.strip('"')
         self.geom_kf_edit.keyframe_parser = propertyparse.rotating_geom_keyframes_value_string_to_geom_kf_array
         self.geom_kf_edit.set_keyframes(editable_property.value, editable_property.get_in_value)
-
+        
     def add_fade_in(self):
         compositor = _get_current_edited_compositor()
         fade_default_length = PROJECT().get_project_property(appconsts.P_PROP_DEFAULT_FADE_LENGTH)
@@ -1569,6 +1669,7 @@ class RotatingGeometryEditor(GeometryEditor):
         self.clip_editor.keyframes = self.get_clip_editor_keyframes()
         self.clip_editor.widget.queue_draw()
         self.update_editor_view()
+
 
 
 class FilterRectGeometryEditor(AbstractKeyFrameEditor):
@@ -1634,7 +1735,8 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
     def clip_editor_frame_changed(self, clip_frame):
         self.seek_tline_frame(clip_frame)
         self.buttons_row.set_frame(clip_frame)
-
+        self.update_editor_view_with_frame(clip_frame)
+        
     def add_pressed(self):
         self.clip_editor.add_keyframe(self.clip_editor.current_clip_frame)
         self.geom_kf_edit.add_keyframe(self.clip_editor.current_clip_frame)
@@ -1663,12 +1765,14 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         
     def next_pressed(self):
         self.clip_editor.set_next_active()
-        self.update_editor_view()
+        frame = self.clip_editor.get_active_kf_frame()
+        self.update_editor_view_with_frame(frame)
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
         
     def prev_pressed(self):
         self.clip_editor.set_prev_active()
-        self.update_editor_view()
+        frame = self.clip_editor.get_active_kf_frame()
+        self.update_editor_view_with_frame(frame)
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
 
     def prev_frame_pressed(self):
@@ -1698,8 +1802,8 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
     def get_clip_editor_keyframes(self):
         keyframes = []
         for kf in self.geom_kf_edit.keyframes:
-            frame, rect, opacity = kf
-            clip_kf = (frame, opacity)
+            frame, rect, opacity, kf_type = kf
+            clip_kf = (frame, opacity, kf_type)
             keyframes.append(clip_kf)
         return keyframes
 
@@ -1734,16 +1838,6 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
     def keyframe_dragged(self, active_kf, frame):
         self.geom_kf_edit.set_keyframe_frame(active_kf, frame)
 
-    def menu_item_activated(self, widget, data):
-        if data == "reset":
-            self._reset_rect_pressed()
-        elif data == "ratio":
-            self._reset_rect_ratio_pressed()
-        elif data == "hcenter":
-            self._center_horizontal()
-        elif data == "vcenter":
-            self._center_vertical()
-
     def _reset_rect_pressed(self):
         self.geom_kf_edit.reset_active_keyframe_shape(self.clip_editor.active_kf_index)
         self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
@@ -1754,7 +1848,11 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
     def _reset_rect_ratio_pressed(self):
         self.geom_kf_edit.reset_active_keyframe_rect_shape(self.clip_editor.active_kf_index)
         frame = self.clip_editor.get_active_kf_frame()
+        print("kf", self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+        print("all keyframes", self.geom_kf_edit.keyframes)
         self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+        #print("kf", self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
+        #print("all keyframes", self.geom_kf_edit.keyframes)
         self.update_editor_view_with_frame(frame)
         self.update_property_value()
 
@@ -1793,10 +1891,10 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
 
         write_keyframes = []
         for opa_kf, geom_kf in zip(self.clip_editor.keyframes, self.geom_kf_edit.keyframes):
-            frame, opacity = opa_kf
-            frame, rect, rubbish_opacity = geom_kf
-            
-            write_keyframes.append((frame, rect, opacity))
+            frame, opacity, kf_type = opa_kf
+            frame, rect, rubbish_opacity, kf_type_geom = geom_kf
+            print("update_property_value", kf_type, kf_type_geom)
+            write_keyframes.append((frame, rect, opacity, kf_type))
         
         self.editable_property.write_out_keyframes(write_keyframes)
         
@@ -1813,7 +1911,59 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         if view_size_index > 2:
             view_size_index = 2
         self.geom_buttons_row.size_select.set_active(view_size_index)
+
+    def _hamburger_pressed(self, widget, event):
+        menu = buttons_hamburger_menu
+        guiutils.remove_children(menu)
+        frame, value, kf_type = self.clip_editor.keyframes[self.clip_editor.active_kf_index]
         
+        active_type_menu_item = Gtk.MenuItem(_("Active Keyframe Type"))
+        type_menu = Gtk.Menu()
+        active_type_menu_item.set_submenu(type_menu)
+        self._create_keyframe_type_submenu(kf_type, type_menu, self._menu_item_activated)
+        active_type_menu_item.show_all()
+        menu.add(active_type_menu_item)
+
+        sep = Gtk.SeparatorMenuItem()
+        sep.show()
+        menu.add(sep)
+    
+        self._add_geometry_menu_items(menu, self._menu_item_activated)
+        
+        menu.popup(None, None, None, None, event.button, event.time)
+        
+    def show_keyframe_menu(self, event, keyframe):
+        frame, value, kf_type = keyframe
+        
+        menu = keyframe_menu
+        guiutils.remove_children(menu)
+
+        self._create_keyframe_type_submenu(kf_type, menu, self._menu_item_activated)
+        menu.popup(None, None, None, None, event.button, event.time)
+
+    def _menu_item_activated(self, widget, data):
+        if data == "linear":
+            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_LINEAR)
+            self.geom_kf_edit.set_active_kf_type(self.clip.editor.active_kf_index, appconsts.KEYFRAME_LINEAR)
+        elif data == "smooth":
+            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_SMOOTH)
+            self.geom_kf_edit.set_active_kf_type(self.clip.editor.active_kf_index, appconsts.KEYFRAME_SMOOTH)
+        elif data == "discrete":
+            self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_DISCRETE)
+            self.geom_kf_edit.set_active_kf_type(self.clip.editor.active_kf_index, appconsts.KEYFRAME_DISCRETE)
+        if data == "reset":
+            self._reset_rect_pressed()
+        elif data == "ratio":
+            self._reset_rect_ratio_pressed()
+        elif data == "hcenter":
+            self._center_horizontal()
+        elif data == "vcenter":
+            self._center_vertical()
+
+        self.queue_draw()
+        self.update_property_value()
+
+
 class RotoMaskKeyFrameEditor(Gtk.VBox):
     """
     Class combines named value slider with ClipKeyFrameEditor and 
@@ -2017,8 +2167,8 @@ class PositionNumericalEntries(Gtk.HBox):
     def init_for_box_geom(self, editor_buttons):
         x_label = Gtk.Label(_("X:"))
         y_label = Gtk.Label(_("Y:"))
-        w_label = Gtk.Label(_("Width:"))
-        h_label = Gtk.Label(_("Height:"))
+        w_label = Gtk.Label(_("W:"))
+        h_label = Gtk.Label(_("H:"))
         
         self.x_entry = Gtk.Entry.new()
         self.y_entry = Gtk.Entry.new()
@@ -2044,20 +2194,16 @@ class PositionNumericalEntries(Gtk.HBox):
         row1.pack_start(guiutils.pad_label(6, 6), False, False, 0)
         row1.pack_start(y_label, False, False, 0)
         row1.pack_start(self.y_entry, False, False, 0)
+        row1.pack_start(guiutils.pad_label(6, 6), False, False, 0)
+        row1.pack_start(w_label, False, False, 0)
+        row1.pack_start(self.w_entry, False, False, 0)
+        row1.pack_start(guiutils.pad_label(6, 6), False, False, 0)
+        row1.pack_start(h_label, False, False, 0)
+        row1.pack_start(self.h_entry, False, False, 0)
         row1.pack_start(Gtk.Label(), True, True, 0)
 
-        row2 = Gtk.HBox(False, 0)
-        row2.pack_start(Gtk.Label(), True, True, 0)
-        row2.pack_start(w_label, False, False, 0)
-        row2.pack_start(self.w_entry, False, False, 0)
-        row2.pack_start(guiutils.pad_label(6, 6), False, False, 0)
-        row2.pack_start(h_label, False, False, 0)
-        row2.pack_start(self.h_entry, False, False, 0)
-        row2.pack_start(Gtk.Label(), True, True, 0)
-        
         vbox = Gtk.VBox(False, 0)
         vbox.pack_start(row1, False, False, 0)
-        vbox.pack_start(row2, False, False, 0)
 
         self.pack_start(Gtk.Label(), True, True, 0)
         self.pack_start(vbox, False, False, 0)
@@ -2068,9 +2214,11 @@ class PositionNumericalEntries(Gtk.HBox):
 
         x_label = Gtk.Label(_("X:"))
         y_label = Gtk.Label(_("Y:"))
-        x_scale_label = Gtk.Label(_("X scale:"))
-        y_scale_label = Gtk.Label(_("Y scale:"))
-        rotation_label = Gtk.Label(_("Rotation:"))
+        x_scale_label = Gtk.Label(_("\u21D4" + ":"))
+        y_scale_label = Gtk.Label(_("\u21D5" + ":"))
+        rotation_label = Gtk.Label(_("\u2941" + ":"))
+        #"\u2022"
+        #U+21D4
         
         self.x_entry = Gtk.Entry.new()
         self.y_entry = Gtk.Entry.new()
@@ -2089,7 +2237,7 @@ class PositionNumericalEntries(Gtk.HBox):
         self.set_margin_top (4)
 
         row1 = Gtk.HBox(False, 0)
-        row1.pack_start(Gtk.Label(), True, True, 0)
+        #row1.pack_start(Gtk.Label(), True, True, 0)
         if editor_buttons != None: # We sometimes put editor buttons elsewhere
             row1.pack_start(editor_buttons, False, False, 0)
         row1.pack_start(guiutils.pad_label(6, 6), False, False, 0)
@@ -2098,8 +2246,18 @@ class PositionNumericalEntries(Gtk.HBox):
         row1.pack_start(guiutils.pad_label(6, 6), False, False, 0)
         row1.pack_start(y_label, False, False, 0)
         row1.pack_start(self.y_entry, False, False, 0)
+        row1.pack_start(guiutils.pad_label(6, 6), False, False, 0)
+        row1.pack_start(x_scale_label, False, False, 0)
+        row1.pack_start(self.x_scale_entry, False, False, 0)
+        row1.pack_start(guiutils.pad_label(6, 6), False, False, 0)
+        row1.pack_start(y_scale_label, False, False, 0)
+        row1.pack_start(self.y_scale_entry, False, False, 0)
+        row1.pack_start(guiutils.pad_label(6, 6), False, False, 0)
+        row1.pack_start(rotation_label, False, False, 0)
+        row1.pack_start(self.rotation_entry, False, False, 0)
         row1.pack_start(Gtk.Label(), True, True, 0)
 
+        """
         row2 = Gtk.HBox(False, 0)
         row2.pack_start(Gtk.Label(), True, True, 0)
         row2.pack_start(x_scale_label, False, False, 0)
@@ -2110,21 +2268,21 @@ class PositionNumericalEntries(Gtk.HBox):
         row2.pack_start(guiutils.pad_label(6, 6), False, False, 0)
         row2.pack_start(rotation_label, False, False, 0)
         row2.pack_start(self.rotation_entry, False, False, 0)
-        row2.pack_start(guiutils.pad_label(1, 6), False, False, 0)
         row2.pack_start(Gtk.Label(), True, True, 0)
         row2.set_margin_top(4)
-
+        """
+        
         vbox = Gtk.VBox(False, 0)
         vbox.pack_start(row1, False, False, 0)
-        vbox.pack_start(row2, False, False, 0)
+        #vbox.pack_start(row2, False, False, 0)
 
-        self.pack_start(Gtk.Label(), True, True, 0)
+        #self.pack_start(Gtk.Label(), True, True, 0)
         self.pack_start(vbox, False, False, 0)
         self.pack_start(Gtk.Label(), True, True, 0)
         
-    def prepare_entry(self, entry):
-        entry.set_width_chars (6)
-        entry.set_max_width_chars (6)
+    def prepare_entry(self, entry, chars=5):
+        entry.set_width_chars (chars)
+        entry.set_max_width_chars (chars)
         entry.connect("activate", self.enter_pressed)
         
     def enter_pressed(self, entry):
@@ -2153,7 +2311,8 @@ class PositionNumericalEntries(Gtk.HBox):
                 print("Numerical input Exception - ", e)
 
     def update_entry_values(self, active_kf):
-        frame, shape, opacity = active_kf
+        print(active_kf)
+        frame, shape, opacity, type = active_kf
 
         if self.rotating_geom == False:
             x, y, w, h = shape
@@ -2165,8 +2324,8 @@ class PositionNumericalEntries(Gtk.HBox):
             x, y, xs, ys, rot = shape
             self.x_entry.set_text("%.1f" % x)
             self.y_entry.set_text("%.1f" % y)
-            self.x_scale_entry.set_text("%.4f" % xs)
-            self.y_scale_entry.set_text("%.4f" % ys)
+            self.x_scale_entry.set_text("%.3f" % xs)
+            self.y_scale_entry.set_text("%.3f" % ys)
             self.rotation_entry.set_text("%.1f" % rot)
 
 
@@ -2175,13 +2334,13 @@ class PositionNumericalEntries(Gtk.HBox):
 # ----------------------------------------------------------------- linear interpolation
 def _get_frame_value(frame, keyframes):
     for i in range(0, len(keyframes)):
-        kf_frame, kf_value = keyframes[i]
+        kf_frame, kf_value, kf_type = keyframes[i]
         if kf_frame == frame:
             return kf_value
         
         try:
             # See if frame between this and next keyframe
-            frame_n, value_n = keyframes[i + 1]
+            frame_n, value_n, kf_type = keyframes[i + 1]
             if ((kf_frame < frame)
                 and (frame < frame_n)):
                 time_fract = float((frame - kf_frame)) / float((frame_n - kf_frame))
