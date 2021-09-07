@@ -394,7 +394,7 @@ def rotomask_json_value_string_to_kf_array(keyframes_str, out_to_in_func):
     
 # ----------------------------------------------------------------------------- AFFINE BLEND
 def create_editable_property_for_affine_blend(clip, editable_properties):
-    print("create_editable_property_for_affine_blend", keyframes_str)
+    print("create_editable_property_for_affine_blend")
     # Build a custom object that duck types for TransitionEditableProperty 
     # to be use in editor propertyeditor.RotatingGeometryEditor.
     ep = utils.EmptyClass()
@@ -428,20 +428,47 @@ def create_editable_property_for_affine_blend(clip, editable_properties):
     
     value = ""
     for i in range(0, len(x_tokens)): # these better match, same number of keyframes for all values, or this will not work
-        frame, x = x_tokens[i].split("=")
-        frame, y = y_tokens[i].split("=")
-        frame, x_scale = x_scale_tokens[i].split("=")
-        frame, y_scale = y_scale_tokens[i].split("=")
-        frame, rotation = rotation_tokens[i].split("=")
-        frame, opacity = opacity_tokens[i].split("=")
-        
-        frame_str = str(frame) + "=" + str(x) + ":" + str(y) + ":" + str(x_scale) + ":" + str(y_scale) + ":" + str(rotation) + ":" + str(opacity)
+        print("x_tokens[i]", x_tokens[i])
+        frame, x, kf_type = _get_roto_geom_frame_value(x_tokens[i])
+        frame, y, kf_type = _get_roto_geom_frame_value(y_tokens[i])
+        frame, x_scale, kf_type = _get_roto_geom_frame_value(x_scale_tokens[i])
+        frame, y_scale, kf_type = _get_roto_geom_frame_value(y_scale_tokens[i])
+        frame, rotation, kf_type = _get_roto_geom_frame_value(rotation_tokens[i])
+        frame, opacity, kf_type = _get_roto_geom_frame_value(opacity_tokens[i])
+
+        eq_str = _get_eq_str(kf_type)
+
+        frame_str = str(frame) + eq_str + str(x) + ":" + str(y) + ":" + str(x_scale) + ":" + str(y_scale) + ":" + str(rotation) + ":" + str(opacity)
         value += frame_str + ";"
 
     ep.value = value.strip(";")
     print("ep.value", ep.value)
     return ep
 
+def _get_roto_geom_frame_value(token):
+    sides = token.split(appconsts.KEYFRAME_DISCRETE_EQUALS_STR)
+    if len(sides) == 2:
+        kf_type = appconsts.KEYFRAME_DISCRETE
+    else:
+        sides = token.split(appconsts.KEYFRAME_SMOOTH_EQUALS_STR)
+        if len(sides) == 2:
+            kf_type = appconsts.KEYFRAME_SMOOTH
+        else:
+            sides = token.split(appconsts.KEYFRAME_LINEAR_EQUALS_STR)
+            kf_type = appconsts.KEYFRAME_LINEAR
+    
+    return(sides[0], sides[1], kf_type)
+
+def _get_eq_str(kf_type):
+    if kf_type == appconsts.KEYFRAME_DISCRETE:
+        eq_str = appconsts.KEYFRAME_DISCRETE_EQUALS_STR
+    elif kf_type == appconsts.KEYFRAME_SMOOTH:
+        eq_str = appconsts.KEYFRAME_SMOOTH_EQUALS_STR
+    else:
+        eq_str = appconsts.KEYFRAME_LINEAR_EQUALS_STR
+    
+    return eq_str
+    
 def rotating_ge_write_out_keyframes(ep, keyframes):
     print("rotating_ge_write_out_keyframes", keyframes)
     x_val = ""
@@ -452,14 +479,17 @@ def rotating_ge_write_out_keyframes(ep, keyframes):
     opacity_val = ""
     
     for kf in keyframes:
-        frame, transf, opacity, type = kf
+        frame, transf, opacity, kf_type = kf
         x, y, x_scale, y_scale, rotation = transf
-        x_val += str(frame) + "=" + str(get_frei0r_cairo_position(x, ep.profile_width)) + ";"
-        y_val += str(frame) + "=" + str(get_frei0r_cairo_position(y, ep.profile_height)) + ";"
-        x_scale_val += str(frame) + "=" + str(get_frei0r_cairo_scale(x_scale)) + ";"
-        y_scale_val += str(frame) + "=" + str(get_frei0r_cairo_scale(y_scale)) + ";"
-        rotation_val += str(frame) + "=" + str(rotation / 360.0) + ";"
-        opacity_val += str(frame) + "=" + str(opacity / 100.0) + ";"
+        
+        eq_str = _get_eq_str(kf_type)
+            
+        x_val += str(frame) + eq_str + str(get_frei0r_cairo_position(x, ep.profile_width)) + ";"
+        y_val += str(frame) + eq_str + str(get_frei0r_cairo_position(y, ep.profile_height)) + ";"
+        x_scale_val += str(frame) + eq_str + str(get_frei0r_cairo_scale(x_scale)) + ";"
+        y_scale_val += str(frame) + eq_str + str(get_frei0r_cairo_scale(y_scale)) + ";"
+        rotation_val += str(frame) + eq_str + str(rotation / 360.0) + ";"
+        opacity_val += str(frame) + eq_str + str(opacity / 100.0) + ";"
 
     x_val = x_val.strip(";")
     y_val = y_val.strip(";")
@@ -478,7 +508,7 @@ def rotating_ge_write_out_keyframes(ep, keyframes):
     ep.opacity.write_value(opacity_val)
 
 def rotating_ge_update_prop_value(ep):
-    print("rotating_ge_update_prop_value", ep)
+    print("XXXXXXXXXXXXXXXXXXXXXXXXXXXX rotating_ge_update_prop_value", ep)
     # duck type members
     x_tokens = ep.x.value.split(";")
     y_tokens = ep.y.value.split(";")
@@ -489,14 +519,16 @@ def rotating_ge_update_prop_value(ep):
     
     value = ""
     for i in range(0, len(x_tokens)): # these better match, same number of keyframes for all values, or this will not work
-        frame, x = x_tokens[i].split("=")
-        frame, y = y_tokens[i].split("=")
-        frame, x_scale = x_scale_tokens[i].split("=")
-        frame, y_scale = y_scale_tokens[i].split("=")
-        frame, rotation = rotation_tokens[i].split("=")
-        frame, opacity = opacity_tokens[i].split("=")
+        frame, x, kf_type = _get_roto_geom_frame_value(x_tokens[i])
+        frame, y, kf_type = _get_roto_geom_frame_value(y_tokens[i])
+        frame, x_scale, kf_type = _get_roto_geom_frame_value(x_scale_tokens[i])
+        frame, y_scale, kf_type = _get_roto_geom_frame_value(y_scale_tokens[i])
+        frame, rotation, kf_type = _get_roto_geom_frame_value(rotation_tokens[i])
+        frame, opacity, kf_type = _get_roto_geom_frame_value(opacity_tokens[i])
+
+        eq_str = _get_eq_str(kf_type)
         
-        frame_str = str(frame) + "=" + str(x) + ":" + str(y) + ":" + str(x_scale) + ":" + str(y_scale) + ":" + str(rotation) + ":" + str(opacity)
+        frame_str = str(frame) + eq_str + str(x) + ":" + str(y) + ":" + str(x_scale) + ":" + str(y_scale) + ":" + str(rotation) + ":" + str(opacity)
         value += frame_str + ";"
 
     ep.value = value.strip(";")
