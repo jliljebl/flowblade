@@ -228,16 +228,28 @@ def single_value_keyframes_string_to_kf_array(keyframes_str, out_to_in_func):
     return new_keyframes
     
 def geom_keyframes_value_string_to_opacity_kf_array(keyframes_str, out_to_in_func):
+    # THIS SHOULD ONLY BE IN DEPRECATED COMPOSITOIRS
+    print("NOTICE!!!!!! in: geom_keyframes_value_string_to_opacity_kf_array")
     # Parse "composite:geometry" properties value string into (frame,opacity_value)
     # keyframe tuples.
     new_keyframes = []
     keyframes_str = keyframes_str.strip('"') # expression have sometimes quotes that need to go away
     kf_tokens =  keyframes_str.split(";")
     for token in kf_tokens:
-        sides = token.split("=")
+        sides = token.split(appconsts.KEYFRAME_DISCRETE_EQUALS_STR)
+        if len(sides) == 2:
+            kf_type = appconsts.KEYFRAME_DISCRETE
+        else:
+            sides = token.split(appconsts.KEYFRAME_SMOOTH_EQUALS_STR)
+            if len(sides) == 2:
+                kf_type = appconsts.KEYFRAME_SMOOTH
+            else:
+                sides = token.split(appconsts.KEYFRAME_LINEAR_EQUALS_STR)
+                kf_type = appconsts.KEYFRAME_LINEAR
+                
         values = sides[1].split(':')
-        print("kf in: geom_keyframes_value_string_to_opacity_kf_array")
-        add_kf = (int(sides[0]), out_to_in_func(float(values[2]))) # kf = (frame, opacity)
+
+        add_kf = (int(sides[0]), out_to_in_func(float(values[2])), kf_type) # kf = (frame, opacity, type)
         new_keyframes.append(add_kf)
  
     return new_keyframes
@@ -301,18 +313,30 @@ def rect_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
     return new_keyframes
     
 def rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
+    print("keyframes_str", keyframes_str)
     # THIS WAS CREATED FOR frei0r cairoaffineblend FILTER. That filter has to use a very particular paramter values
     # scheme to satisty the frei0r requirement of all float values being in range 0.0 - 1.0.
     #
     # Parse extraeditor value properties value string into (frame, [x, y, x_scale, y_scale, rotation], opacity)
     # keyframe tuples.
+    print("rotating_geom_keyframes_value_string_to_geom_kf_array")
     new_keyframes = []
     screen_width = current_sequence().profile.width()
     screen_height = current_sequence().profile.height()
     keyframes_str = keyframes_str.strip('"') # expression have sometimes quotes that need to go away
     kf_tokens =  keyframes_str.split(';')
     for token in kf_tokens:
-        sides = token.split('=')
+        sides = token.split(appconsts.KEYFRAME_DISCRETE_EQUALS_STR)
+        if len(sides) == 2:
+            kf_type = appconsts.KEYFRAME_DISCRETE
+        else:
+            sides = token.split(appconsts.KEYFRAME_SMOOTH_EQUALS_STR)
+            if len(sides) == 2:
+                kf_type = appconsts.KEYFRAME_SMOOTH
+            else:
+                sides = token.split(appconsts.KEYFRAME_LINEAR_EQUALS_STR)
+                kf_type = appconsts.KEYFRAME_LINEAR
+                
         values = sides[1].split(':')
         frame = int(sides[0])
         # get values and convert "frei0r.cairoaffineblend" values to editor values
@@ -325,7 +349,7 @@ def rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_
         opacity = float(values[5]) * 100
         source_rect = [x,y,x_scale,y_scale,rotation]
         print("rotating_geom_keyframes_value_string_to_geom_kf_array")
-        add_kf = (frame, source_rect, float(opacity), appconsts.KEYFRAME_LINEAR)
+        add_kf = (frame, source_rect, float(opacity), kf_type)
         print("add kf", add_kf)
         new_keyframes.append(add_kf)
 
@@ -370,8 +394,9 @@ def rotomask_json_value_string_to_kf_array(keyframes_str, out_to_in_func):
     
 # ----------------------------------------------------------------------------- AFFINE BLEND
 def create_editable_property_for_affine_blend(clip, editable_properties):
-    # Build a custom object that duck types for TransitionEditableProperty to use in editor
-    # 
+    print("create_editable_property_for_affine_blend", keyframes_str)
+    # Build a custom object that duck types for TransitionEditableProperty 
+    # to be use in editor propertyeditor.RotatingGeometryEditor.
     ep = utils.EmptyClass()
     # pack real properties to go
     ep.x = [ep for ep in editable_properties if ep.name == "x"][0]
@@ -384,7 +409,7 @@ def create_editable_property_for_affine_blend(clip, editable_properties):
     ep.profile_width = current_sequence().profile.width()
     ep.profile_height = current_sequence().profile.height()
     # duck type methods, using opacity is not meaningful, any property with clip member could do
-    ep.get_clip_tline_pos = lambda : ep.opacity.clip.clip_in # clip is compositor, compositor in and out points straight in timeline frames
+    ep.get_clip_tline_pos = lambda : ep.opacity.clip.clip_in # clip is compositor, compositor in and out points are straight in timeline frames
     ep.get_clip_length = lambda : ep.opacity.clip.clip_out - ep.opacity.clip.clip_in + 1
     ep.get_input_range_adjustment = lambda : Gtk.Adjustment(value=float(100), lower=float(0), upper=float(100), step_incr=float(1))
     ep.get_display_name = lambda : "Opacity"
@@ -414,10 +439,11 @@ def create_editable_property_for_affine_blend(clip, editable_properties):
         value += frame_str + ";"
 
     ep.value = value.strip(";")
-    
+    print("ep.value", ep.value)
     return ep
 
 def rotating_ge_write_out_keyframes(ep, keyframes):
+    print("rotating_ge_write_out_keyframes", keyframes)
     x_val = ""
     y_val = ""
     x_scale_val = ""
@@ -442,6 +468,8 @@ def rotating_ge_write_out_keyframes(ep, keyframes):
     rotation_val = rotation_val.strip(";")
     opacity_val = opacity_val.strip(";")
    
+    print(x_val, x_scale_val)
+   
     ep.x.write_value(x_val)
     ep.y.write_value(y_val)
     ep.x_scale.write_value(x_scale_val)
@@ -450,7 +478,7 @@ def rotating_ge_write_out_keyframes(ep, keyframes):
     ep.opacity.write_value(opacity_val)
 
 def rotating_ge_update_prop_value(ep):
-
+    print("rotating_ge_update_prop_value", ep)
     # duck type members
     x_tokens = ep.x.value.split(";")
     y_tokens = ep.y.value.split(";")

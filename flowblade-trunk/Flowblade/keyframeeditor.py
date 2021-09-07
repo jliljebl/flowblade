@@ -969,10 +969,8 @@ class AbstractKeyFrameEditor(Gtk.VBox):
         # This is called after timeline current frame changed. 
         # If timeline pos changed because drag is happening _here_,
         # updating once more is wrong
-        print("before display_tline_frame")
         if self.clip_editor.drag_on == True:
             return
-        print("after display_tline_frame")
         
         # update clipeditor pos
         clip_frame = tline_frame - self.clip_tline_pos + self.clip_in

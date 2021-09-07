@@ -271,7 +271,8 @@ def _display_compositor_edit_box():
             or (editor_type == propertyeditorbuilder.KEYFRAME_EDITOR_CLIP)
             or (editor_type == propertyeditorbuilder.KEYFRAME_EDITOR_CLIP_FADE)
             or (editor_type == propertyeditorbuilder.FADE_LENGTH)
-            or (editor_type == propertyeditorbuilder.GEOMETRY_EDITOR)):
+            or (editor_type == propertyeditorbuilder.GEOMETRY_EDITOR)
+            or (editor_type == propertyeditorbuilder.ROTATION_GEOMETRY_EDITOR_BUILDER)):
                 keyframe_editor_widgets.append(editor_row)
     
     # Add pad label after possibly adding blend mode editor.
