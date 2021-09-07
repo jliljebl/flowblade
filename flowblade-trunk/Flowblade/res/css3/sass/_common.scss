@@ -1763,7 +1763,7 @@ notebook {
 
   > header {
     padding: 2px;
-    background-color: $darkest_color;
+    background-color: $base_color;
 
     &.top {    box-shadow: inset  0  -1px $borders_color; }
     &.bottom { box-shadow: inset  0   1px $borders_color; }
@@ -1776,7 +1776,7 @@ notebook {
         padding-#{$_bpos}: 0;
 
         > tabs > tab {
-          padding: 2px 10px;
+          padding: 5px 10px 0px 10px;
           min-width: 20px;
           min-height: 20px;
           font-weight: bold;
