@@ -27,6 +27,7 @@ import math
 
 from gi.repository import Gdk
 
+import appconsts
 import cairoarea
 import utils
 import viewgeom
@@ -814,21 +815,26 @@ class RotatingEditCanvas(AbstractEditCanvas):
 
     def _update_shape(self):
         for i in range(0, len(self.keyframes)):
-            frame, rect, opacity, type = self.keyframes[i]
+            frame, rect, opacity, kf_type = self.keyframes[i]
             if frame == self.current_clip_frame:
                 self.set_geom(*rect)
                 return
             
             try:
                 # See if frame between this and next keyframe
-                frame_n, rect_n, opacity_n, kf_type = self.keyframes[i + 1]
+                frame_n, rect_n, opacity_n, kf_type_n = self.keyframes[i + 1]
                 if ((frame < self.current_clip_frame)
                     and (self.current_clip_frame < frame_n)):
-                    time_fract = float((self.current_clip_frame - frame)) / \
-                                 float((frame_n - frame))
-                    frame_rect = self._get_interpolated_rect(rect, rect_n, time_fract)
-                    self.set_geom(*frame_rect)
-                    return
+                    # Update shape based keyframe values and types.
+                    if kf_type == appconsts.KEYFRAME_DISCRETE:
+                        self.set_geom(*rect)
+                        return
+                    else:
+                        time_fract = float((self.current_clip_frame - frame)) / \
+                                     float((frame_n - frame))
+                        frame_rect = self._get_interpolated_rect(rect, rect_n, time_fract)
+                        self.set_geom(*frame_rect)
+                        return
             except: # past last frame, use its value  ( line: frame_n, rect_n, opacity_n = self.keyframes[i + 1] failed)
                 self.set_geom(*rect)
                 return
@@ -1020,24 +1026,6 @@ class RotatingEditCanvas(AbstractEditCanvas):
             cr.line_to(x2, y2)
             cr.set_line_width(1.0)
             cr.stroke()
-            # center cross
-            #cr.save()
-            
-            """
-            x, y = self.get_panel_point(*self.edit_points[0])
-            cr.translate(x,y)
-            cr.rotate(math.radians(self.rotation))
-            CENTER_ = 3
-            cr.move_to(-0.5, -CROSS_LENGTH-0.5)
-            cr.line_to(-0.5, CROSS_LENGTH-0.5)
-            cr.set_line_width(1.0)
-            cr.stroke()
-            cr.move_to(-CROSS_LENGTH - 0.5, -0.5)
-            cr.line_to(CROSS_LENGTH - 0.5, -0.5)
-            cr.stroke()
-                
-            cr.restore()
-            """
 
         self._draw_scale_arrow(cr, self.edit_points[2], 90)
         self._draw_scale_arrow(cr, self.edit_points[1], 0)
@@ -1058,8 +1046,6 @@ class RotatingEditCanvas(AbstractEditCanvas):
         cr.stroke()
             
         cr.restore()
-
-
 
         # roto handle
         x, y = self.get_panel_point(*self.edit_points[3])
