@@ -907,7 +907,7 @@ class CurvesBoxEditor(BoxEditor):
         if self.edit_on == False:
             return
         vx, vy = BoxEditor.get_box_val_point(self, event.x, event.y)
-        p = lutfilter.CurvePoint(int(round(vx * 255)),int(round(vy * 255)))
+        p = lutfilter.CurvePoint(int(round(vx * 255)), int(round(vy * 255)))
         self.curve.remove_range(self.last_point.x, p.x)
         self.curve.set_curve_point(p)
 

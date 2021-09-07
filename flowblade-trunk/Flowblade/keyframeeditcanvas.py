@@ -829,6 +829,12 @@ class RotatingEditCanvas(AbstractEditCanvas):
                     if kf_type == appconsts.KEYFRAME_DISCRETE:
                         self.set_geom(*rect)
                         return
+                    elif kf_type == appconsts.KEYFRAME_SMOOTH:
+                        time_fract = float((self.current_clip_frame - frame)) / \
+                                     float((frame_n - frame))
+                        frame_rect = self._get_interpolated_rect_smooth(time_fract, i, self.keyframes)
+                        self.set_geom(*frame_rect)
+                        return
                     else:
                         time_fract = float((self.current_clip_frame - frame)) / \
                                      float((frame_n - frame))
@@ -838,6 +844,8 @@ class RotatingEditCanvas(AbstractEditCanvas):
             except: # past last frame, use its value  ( line: frame_n, rect_n, opacity_n = self.keyframes[i + 1] failed)
                 self.set_geom(*rect)
                 return
+    
+
     
     def set_geom(self, x, y, x_scale, y_scale, rotation):
         self.shape_x = x
@@ -856,6 +864,51 @@ class RotatingEditCanvas(AbstractEditCanvas):
         ys = ys1 + (ys2 - ys1) * fract
         r = r1 + (r2 - r1) * fract
         return (x, y, xs, ys, r)
+
+    def _get_interpolated_rect_smooth(self, fract, i, keyframes):
+        prev = i
+        if i == 0:
+            prev_prev = 0
+        else:
+            prev_prev = i - 1
+        
+        next = i + 1
+        if next >= len(keyframes):
+            next = len(keyframes) - 1
+        
+        next_next = next + 1
+        if next_next >= len(keyframes):
+            next_next = len(keyframes) - 1
+
+        frame, rect, opacity, kf_type = self.keyframes[prev_prev]
+        x0, y0, xs0, ys0, r0 = rect
+
+        frame, rect, opacity, kf_type = self.keyframes[prev]
+        x1, y1, xs1, ys1, r1 = rect
+
+        frame, rect, opacity, kf_type = self.keyframes[next]
+        x2, y2, xs2, ys2, r2 = rect
+
+        frame, rect, opacity, kf_type = self.keyframes[next_next]
+        x3, y3, xs3, ys3, r3 = rect
+
+        x = self.catmull_rom_interpolate(x0, x1, x2, x3, fract)
+        y = self.catmull_rom_interpolate(y0, y1, y2, y3, fract)
+        xs = self.catmull_rom_interpolate(xs0, xs1, xs2, xs3, fract)
+        ys = self.catmull_rom_interpolate(ys0, ys1, ys2, ys3, fract)
+        r = self.catmull_rom_interpolate(r0, r1, r2, r3, fract)
+
+        return (x, y, xs, ys, r)
+        
+    # These all need to be doubles.
+    def catmull_rom_interpolate(self, y0, y1, y2, y3, t):
+    	t2 = t * t
+    	a0 = -0.5 * y0 + 1.5 * y1 - 1.5 * y2 + 0.5 * y3
+    	a1 = y0 - 2.5 * y1 + 2 * y2 - 0.5 * y3
+    	a2 = -0.5 * y0 + 0.5 * y2
+    	a3 = y1
+    	return a0 * t * t2 + a1 * t2 + a2 * t + a3
+        
 
     def handle_arrow_edit(self, keyval, delta):
         if keyval == Gdk.KEY_Left:
