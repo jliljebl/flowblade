@@ -243,7 +243,7 @@ def main(root_path):
         if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
             Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
     except:
-        print("SETTING DARK THEME PREFERENCE FAILED, SYSTEM DARK THEM NOT AVAILABLE!")
+        print("SETTING DARK THEME PREFERENCE FAILED, SYSTEM DARK THEME NOT AVAILABLE!")
 
     # Load drag'n'drop images
     dnd.init()
