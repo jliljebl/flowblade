@@ -261,6 +261,7 @@ class EditorWindow:
         info_box = Gtk.HBox(False, 0)
         info_box.pack_start(self.fullscreen_press.widget, False, False, 0) # maybe
         info_box.pack_start(layout_press.widget, False, False, 0) # maybe
+        info_box.pack_start(self.tools_buttons.widget, False, False, 0) # maybe
         info_box.pack_start(Gtk.Label(), True, True, 0)
         info_box.pack_start(self.monitor_tc_info.widget, False, False, 0)
         
