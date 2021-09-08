@@ -259,9 +259,10 @@ class EditorWindow:
         layout_press.widget.set_margin_top(2)
 
         info_box = Gtk.HBox(False, 0)
-        info_box.pack_start(self.fullscreen_press.widget, False, False, 0) # maybe
-        info_box.pack_start(layout_press.widget, False, False, 0) # maybe
-        info_box.pack_start(self.tools_buttons.widget, False, False, 0) # maybe
+        if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
+            info_box.pack_start(self.fullscreen_press.widget, False, False, 0)
+            info_box.pack_start(layout_press.widget, False, False, 0)
+            info_box.pack_start(self.tools_buttons.widget, False, False, 0) # maybe
         info_box.pack_start(Gtk.Label(), True, True, 0)
         info_box.pack_start(self.monitor_tc_info.widget, False, False, 0)
         
@@ -276,6 +277,10 @@ class EditorWindow:
             menu_vbox.pack_start(monitor_source_box, True, True, 0)
             menu_vbox.pack_start(info_box, True, True, 0)
         else:
+            menubar_box.pack_start(self.fullscreen_press.widget, False, False, 0)
+            menubar_box.pack_start(layout_press.widget, False, False, 0)
+            menubar_box.pack_start(self.tools_buttons.widget, False, False, 0)
+                        
             self.top_row_window_2 = Gtk.HBox(False, 0)
             self.top_row_window_2.pack_start(monitor_source_box, False, False, 0)
             self.top_row_window_2.pack_start(Gtk.Label(), True, True, 0)
