@@ -110,7 +110,7 @@ AUDIO_TRACK_ICON_POS_SMALL = (5, 6)
 MUTE_ICON_POS = (5, 4)
 MUTE_ICON_POS_NORMAL = (5, 14)
 MUTE_ICON_POS_HIGH = (5, 30)
-LOCK_POS = (90, 5)
+LOCK_POS = (26, 5)
 INSRT_ICON_POS_HIGH = (108, 32)
 INSRT_ICON_POS = (108, 18)
 INSRT_ICON_POS_SMALL = (108, 6)
@@ -444,7 +444,7 @@ def set_tracks_double_height_consts():
     AUDIO_TRACK_ICON_POS_SMALL = (5, 18)
     MUTE_ICON_POS = (5, 14)
     MUTE_ICON_POS_NORMAL = (5, 39)
-    LOCK_POS = (67, 2)
+    LOCK_POS = (25, 2)
     INSRT_ICON_POS = (81, 43)
     INSRT_ICON_POS_SMALL =  (81, 18)
     WAVEFORM_PAD_LARGE = 77
@@ -2527,6 +2527,8 @@ class TimeLineColumn:
         cr.fill()
         self.draw_edge(cr, rect)
         
+
+        
         # Draw active switch bg end edge
         rect = (COLUMN_LEFT_PAD + center_width - 1, y, ACTIVE_SWITCH_WIDTH + 1, track.height)
         cr.rectangle(*rect)
@@ -2611,6 +2613,25 @@ class TimeLineColumn:
             cr.set_source_surface(INSERT_ARROW_ICON, ix, y + iy)
             cr.paint()
 
+        # Draw audio level info
+        if track.audio_gain != 1.0:
+            pcs_str = str(int(round(track.audio_gain * 100.0))) + "%"
+            # Draw track name
+            layout = PangoCairo.create_layout(cr)
+            desc = Pango.FontDescription("Sans 6")
+            layout.set_text(pcs_str, -1)
+            layout.set_font_description(desc)
+            cr.set_source_rgb(*TRACK_NAME_COLOR)
+            if track.height == sequence.TRACK_HEIGHT_HIGH:
+                text_y = ID_PAD_Y_HIGH + 4
+            elif track.height == sequence.TRACK_HEIGHT_NORMAL:
+                text_y = ID_PAD_Y + 4
+            elif track.height == sequence.TRACK_HEIGHT_SMALL:
+                text_y = ID_PAD_Y_SMALL + 4
+            cr.move_to(COLUMN_LEFT_PAD + ID_PAD_X + 31, y + text_y)
+            PangoCairo.update_layout(cr, layout)
+            PangoCairo.show_layout(cr, layout)
+                    
     def _add_gradient_color_stops(self, grad, track):
         if track.id == current_sequence().first_video_index: 
             grad.add_color_stop_rgba(*TRACK_GRAD_ORANGE_STOP1)

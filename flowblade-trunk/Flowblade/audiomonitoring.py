@@ -61,7 +61,7 @@ METER_LIGHTS = 143 #57
 METER_HEIGHT = METER_LIGHTS * DASH_INK + (METER_LIGHTS - 1) * DASH_SKIP
 METER_WIDTH = 10
 
-# These are calculated using IEC_Scale function in MLT and correspond to level values received here
+# These are calculated using IEC_Scale function in MLT and correspond to level values received here.
 DB_IEC_MINUS_2 = 0.95
 DB_IEC_MINUS_4 = 0.9
 DB_IEC_MINUS_6 = 0.85
@@ -75,7 +75,7 @@ OVER_FRAMES = 30
 
 # Colors
 METER_BG_COLOR = (0.15, 0.15, 0.15)
-OVERLAY_COLOR = (0.70, 0.70, 0.70) #utils.get_cairo_color_tuple_255_rgb(63, 145, 188)#59, 140, 174) #(0.7, 0.7, 1.0)
+OVERLAY_COLOR = (0.70, 0.70, 0.70)
 
 # Color gradient used to draw "LED" colors
 rr, rg, rb = utils.get_cairo_color_tuple_255_rgb(219, 69, 69)
