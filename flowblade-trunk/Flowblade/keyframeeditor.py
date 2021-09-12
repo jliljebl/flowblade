@@ -1848,11 +1848,7 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
     def _reset_rect_ratio_pressed(self):
         self.geom_kf_edit.reset_active_keyframe_rect_shape(self.clip_editor.active_kf_index)
         frame = self.clip_editor.get_active_kf_frame()
-        print("kf", self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
-        print("all keyframes", self.geom_kf_edit.keyframes)
         self.pos_entries_row.update_entry_values(self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
-        #print("kf", self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index))
-        #print("all keyframes", self.geom_kf_edit.keyframes)
         self.update_editor_view_with_frame(frame)
         self.update_property_value()
 
@@ -1893,7 +1889,6 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         for opa_kf, geom_kf in zip(self.clip_editor.keyframes, self.geom_kf_edit.keyframes):
             frame, opacity, kf_type = opa_kf
             frame, rect, rubbish_opacity, kf_type_geom = geom_kf
-            print("update_property_value", kf_type, kf_type_geom)
             write_keyframes.append((frame, rect, opacity, kf_type))
         
         self.editable_property.write_out_keyframes(write_keyframes)
@@ -1944,13 +1939,13 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
     def _menu_item_activated(self, widget, data):
         if data == "linear":
             self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_LINEAR)
-            self.geom_kf_edit.set_active_kf_type(self.clip.editor.active_kf_index, appconsts.KEYFRAME_LINEAR)
+            self.geom_kf_edit.set_active_kf_type(self.clip_editor.active_kf_index, appconsts.KEYFRAME_LINEAR)
         elif data == "smooth":
             self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_SMOOTH)
-            self.geom_kf_edit.set_active_kf_type(self.clip.editor.active_kf_index, appconsts.KEYFRAME_SMOOTH)
+            self.geom_kf_edit.set_active_kf_type(self.clip_editor.active_kf_index, appconsts.KEYFRAME_SMOOTH)
         elif data == "discrete":
             self.clip_editor.set_active_kf_type(appconsts.KEYFRAME_DISCRETE)
-            self.geom_kf_edit.set_active_kf_type(self.clip.editor.active_kf_index, appconsts.KEYFRAME_DISCRETE)
+            self.geom_kf_edit.set_active_kf_type(self.clip_editor.active_kf_index, appconsts.KEYFRAME_DISCRETE)
         if data == "reset":
             self._reset_rect_pressed()
         elif data == "ratio":

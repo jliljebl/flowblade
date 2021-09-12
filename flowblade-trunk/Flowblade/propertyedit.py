@@ -715,6 +715,8 @@ class KeyFrameFilterGeometryRectProperty(EditableProperty):
             val_str += "1"
             val_str += str(self.get_out_value(opac)) + ";" # opac with converted range from slider
         
+        
+        print(val_str)
         val_str = val_str.strip(";")
         self.write_value(val_str)
 

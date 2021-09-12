@@ -388,6 +388,15 @@ class AbstractEditCanvas:
     def get_keyframe(self, kf_index):
         return self.keyframes[kf_index]
 
+    # These all need to be doubles.
+    def catmull_rom_interpolate(self, y0, y1, y2, y3, t):
+    	t2 = t * t
+    	a0 = -0.5 * y0 + 1.5 * y1 - 1.5 * y2 + 0.5 * y3
+    	a1 = y0 - 2.5 * y1 + 2 * y2 - 0.5 * y3
+    	a2 = -0.5 * y0 + 0.5 * y2
+    	a3 = y1
+    	return a0 * t * t2 + a1 * t2 + a2 * t + a3
+        
     # ---------------------------------------------------- editor menu actions
     def reset_active_keyframe_shape(self, active_kf_index):
         print("reset_active_keyframe_shape not impl")
@@ -599,20 +608,28 @@ class BoxEditCanvas(AbstractEditCanvas):
             if frame == self.current_clip_frame:
                 self.source_edit_rect.set_geom(*self._get_screen_to_panel_rect(rect))
                 return
-            
+
             try:
-                print("try")
                 # See if frame between this and next keyframe
-                frame_n, rect_n, opacity_n, kf_type = self.keyframes[i + 1]
+                frame_n, rect_n, opacity_n, kf_type_n = self.keyframes[i + 1]
+                
                 if ((frame < self.current_clip_frame)
                     and (self.current_clip_frame < frame_n)):
                     time_fract = float((self.current_clip_frame - frame)) / \
                                  float((frame_n - frame))
-                    frame_rect = self._get_interpolated_rect(rect, rect_n, time_fract)
-                    self.source_edit_rect.set_geom(*self._get_screen_to_panel_rect(frame_rect))
-                    return
+                    # Update shape based keyframe values and types.
+                    if kf_type == appconsts.KEYFRAME_DISCRETE:
+                        self.set_geom(*rect)
+                        return
+                    elif kf_type == appconsts.KEYFRAME_SMOOTH:
+                        frame_rect = self._get_interpolated_rect_smooth(time_fract, i, self.keyframes)
+                        self.source_edit_rect.set_geom(*self._get_screen_to_panel_rect(frame_rect))
+                        return
+                    else: # LINEAR
+                        frame_rect = self._get_interpolated_rect(rect, rect_n, time_fract)
+                        self.source_edit_rect.set_geom(*self._get_screen_to_panel_rect(frame_rect))
+                        return
             except: # past last frame, use its value
-                print("except")
                 self.source_edit_rect.set_geom(*self._get_screen_to_panel_rect(rect))
                 return
                 
@@ -625,6 +642,40 @@ class BoxEditCanvas(AbstractEditCanvas):
         y = y1 + (y2 - y1) * fract
         w = w1 + (w2 - w1) * fract
         h = h1 + (h2 - h1) * fract
+        return (x, y, w, h)
+
+    def _get_interpolated_rect_smooth(self, fract, i, keyframes):
+        prev = i
+        if i == 0:
+            prev_prev = 0
+        else:
+            prev_prev = i - 1
+        
+        next = i + 1
+        if next >= len(keyframes):
+            next = len(keyframes) - 1
+        
+        next_next = next + 1
+        if next_next >= len(keyframes):
+            next_next = len(keyframes) - 1
+
+        frame, rect, opacity, kf_type = keyframes[prev_prev]
+        x0, y0, w0, h0 = rect
+
+        frame, rect, opacity, kf_type = keyframes[prev]
+        x1, y1, w1, h1 = rect
+
+        frame, rect, opacity, kf_type = keyframes[next]
+        x2, y2, w2, h2 = rect
+
+        frame, rect, opacity, kf_type = keyframes[next_next]
+        x3, y3, w3, h3 = rect
+
+        x = self.catmull_rom_interpolate(x0, x1, x2, x3, fract)
+        y = self.catmull_rom_interpolate(y0, y1, y2, y3, fract)
+        w = self.catmull_rom_interpolate(w0, w1, w2, w3, fract)
+        h = self.catmull_rom_interpolate(h0, h1, h2, h3, fract)
+
         return (x, y, w, h)
         
     def _get_screen_to_panel_rect(self, rect):
@@ -844,9 +895,7 @@ class RotatingEditCanvas(AbstractEditCanvas):
             except: # past last frame, use its value  ( line: frame_n, rect_n, opacity_n = self.keyframes[i + 1] failed)
                 self.set_geom(*rect)
                 return
-    
 
-    
     def set_geom(self, x, y, x_scale, y_scale, rotation):
         self.shape_x = x
         self.shape_y = y
@@ -900,16 +949,8 @@ class RotatingEditCanvas(AbstractEditCanvas):
 
         return (x, y, xs, ys, r)
         
-    # These all need to be doubles.
-    def catmull_rom_interpolate(self, y0, y1, y2, y3, t):
-    	t2 = t * t
-    	a0 = -0.5 * y0 + 1.5 * y1 - 1.5 * y2 + 0.5 * y3
-    	a1 = y0 - 2.5 * y1 + 2 * y2 - 0.5 * y3
-    	a2 = -0.5 * y0 + 0.5 * y2
-    	a3 = y1
-    	return a0 * t * t2 + a1 * t2 + a2 * t + a3
-        
 
+        
     def handle_arrow_edit(self, keyval, delta):
         if keyval == Gdk.KEY_Left:
             self.shape_x -= delta
