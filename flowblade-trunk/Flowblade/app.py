@@ -211,10 +211,6 @@ def main(root_path):
     # We need respaths and translations data available so we need to do init in a function.
     workflow.init_data()
 
-    # RHEL7/CentOS compatibility fix
-    if gtk_version == "3.8.8":
-        GObject.threads_init()
-
     # Init gtk threads
     Gdk.threads_init()
     Gdk.threads_enter()
