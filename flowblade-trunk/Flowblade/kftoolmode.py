@@ -42,6 +42,7 @@ import mltfilters
 import propertyedit
 import propertyparse
 import respaths
+import sequence
 import tlinewidgets
 import updater
 
@@ -195,7 +196,7 @@ def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT, param_data=None):
         
         edit_data["editable_property"] = ep
 
-        filter_param_name = filter_object.info.name + ":" + disp_name
+        filter_param_name = filter_object.info.name + ": " + disp_name
 
         _kf_editor = TLineKeyFrameEditor(ep, True, PARAM_KF_EDIT, filter_param_name)
     
@@ -428,8 +429,8 @@ class TLineKeyFrameEditor:
         self.mouse_y = -1
         
         self.media_frame_txt = _("Media Frame: ")
-        self.volume_kfs_text = _("Volume Keyframes")
-        self.brightness_kfs_text = _("Brightness Keyframes")
+        self.volume_kfs_text = _("Volume")
+        self.brightness_kfs_text = _("Brightness")
         self.filter_param_name_txt = filter_param_name
         
         self.current_mouse_action = None
@@ -474,11 +475,6 @@ class TLineKeyFrameEditor:
         We get cairo context and allocation.
         """
         x, y, w, h = self.allocation
-  
-        # Draw bg
-        cr.set_source_rgba(*OVERLAY_BG)
-        cr.rectangle(x, y, w, h)
-        cr.fill()
 
         self._draw_edit_area_borders(cr)
 
@@ -502,13 +498,13 @@ class TLineKeyFrameEditor:
         scale_length = clip_length * pix_per_frame
         scale_in = clip_start_frame * pix_per_frame
         
-        clip_outline_y = tlinewidgets._get_track_y(track.id)
-         
+        #clip_outline_y = tlinewidgets._get_track_y(track.id)
+        clip_height = self._get_lower_y() - self._get_upper_y()
         self.create_round_rect_path(cr, scale_in,
-                                     clip_outline_y, scale_length, 
-                                     track.height)
-        cr.set_source_rgba(*CLIP_OUTLINE_COLOR)
-        cr.set_line_width(2.0)
+                                     self._get_upper_y(), scale_length - 1, 
+                                     clip_height)
+        self.set_clip_color(clip, track, cr, self._get_upper_y(), clip_height)
+        cr.set_line_width(2.0) #?!?
         cr.fill()
             
         # Frame scale and value lines
@@ -626,7 +622,7 @@ class TLineKeyFrameEditor:
                 cr.paint()
                 self._draw_text(cr, str(after_kfs), x + w - OUT_OF_RANGE_NUMBER_X_END_PAD, kfy + KF_TEXT_PAD)
         
-        # Draw source triangle
+        # Draw source triangles.
         cr.set_line_width(2.0)
         cr.move_to(x - 8, self.source_track_center - 8)
         cr.line_to(x + 1, self.source_track_center)
@@ -661,12 +657,12 @@ class TLineKeyFrameEditor:
         # Draw title
         if w > 55: # dont draw on too small editors
             if self.edit_type == VOLUME_KF_EDIT:
-                text = edit_data["editable_property"].clip.name + " - " + self.volume_kfs_text
+                text = self.volume_kfs_text
             elif self.edit_type == BRIGHTNESS_KF_EDIT:
-                text = edit_data["editable_property"].clip.name + " - " + self.brightness_kfs_text
+                text = self.brightness_kfs_text
             else: # PARAM_KF_EDIT
-                text = edit_data["editable_property"].clip.name + " - " + self.filter_param_name_txt
-            self._draw_text(cr, text, -1, y + 4, True, x, w)
+                text = self.filter_param_name_txt
+            self._draw_text(cr, text, -1, y + 4, True, x, w, True)
             self._draw_text(cr, self.media_frame_txt + str(self.current_clip_frame), -1, kfy - 8, True, x, w)
 
         # Value texts
@@ -864,10 +860,13 @@ class TLineKeyFrameEditor:
             cr.move_to(xe + TEXT_X_OFF_END, y - TEXT_Y_OFF + 17)
             cr.show_text(text)
             
-    def _draw_text(self, cr, txt, x, y, centered=False, tline_x=-1, w=-1):
+    def _draw_text(self, cr, txt, x, y, centered=False, tline_x=-1, w=-1, bold=False):
         layout = PangoCairo.create_layout(cr)
         layout.set_text(txt, -1)
-        desc = Pango.FontDescription("Sans 8")
+        if bold:
+            desc = Pango.FontDescription("Sans 6 Bold")
+        else:
+            desc = Pango.FontDescription("Sans 8")
         layout.set_font_description(desc)
         lw, lh = layout.get_pixel_size()
             
@@ -923,7 +922,48 @@ class TLineKeyFrameEditor:
         cr.arc(x + radius, y + height - radius, radius, 90 * degrees, 180 * degrees)
         cr.arc(x + radius, y + radius, radius, 180 * degrees, 270 * degrees)
         cr.close_path()
-        
+
+    def set_clip_color(self, clip, track, cr, y, track_height):
+        # This is ALMOST same as clip colors in tlinewidgets but not quite,
+        # so we need to do any clip coloe changes here too.
+        clip_bg_col = None
+        if clip.color != None:
+            cr.set_source_rgb(*clip.color)
+            clip_bg_col = clip.color
+        elif clip.is_blanck_clip:
+                grad = cairo.LinearGradient (0, y, 0, y + track_height)
+                grad.add_color_stop_rgba(*tlinewidgets.BLANK_CLIP_COLOR_GRAD)
+                grad.add_color_stop_rgba(*tlinewidgets.BLANK_CLIP_COLOR_GRAD_L)
+                cr.set_source(grad)
+        elif track.type == sequence.VIDEO:
+            if clip.container_data != None:
+                if clip.container_data.rendered_media_range_in == -1: 
+                    clip_bg_col = (0.7, 0.3, 0.3)
+                    cr.set_source_rgb(*tlinewidgets.CONTAINER_CLIP_NOT_RENDERED_COLOR)
+                    clip_bg_col = tlinewidgets.CONTAINER_CLIP_NOT_RENDERED_COLOR
+                else:
+                    clip_bg_col = (0.7, 0.3, 0.3)
+                    cr.set_source_rgb(*tlinewidgets.CONTAINER_CLIP_RENDERED_COLOR)
+                    clip_bg_col = tlinewidgets.CONTAINER_CLIP_RENDERED_COLOR
+            elif clip.media_type == sequence.VIDEO: 
+                grad = cairo.LinearGradient (0, y, 0, y + track_height)
+                grad.add_color_stop_rgba(*tlinewidgets.CLIP_COLOR_GRAD)
+                grad.add_color_stop_rgba(*tlinewidgets.CLIP_COLOR_GRAD_L)
+                clip_bg_col = tlinewidgets.CLIP_COLOR_GRAD[1:4]
+                cr.set_source(grad)
+            else: # IMAGE type
+                grad = cairo.LinearGradient (0, y, 0, y + track_height)
+                grad.add_color_stop_rgba(*tlinewidgets.IMAGE_CLIP_COLOR_GRAD)
+                grad.add_color_stop_rgba(*tlinewidgets.IMAGE_CLIP_COLOR_GRAD_L)
+                clip_bg_col = tlinewidgets.IMAGE_CLIP_COLOR_GRAD[1:4]
+                cr.set_source(grad)
+        else:# Audio track
+            grad = cairo.LinearGradient (0, y, 0, y + track_height)
+            grad.add_color_stop_rgba(*tlinewidgets.AUDIO_CLIP_COLOR_GRAD)
+            grad.add_color_stop_rgba(*tlinewidgets.AUDIO_CLIP_COLOR_GRAD_L)
+            clip_bg_col = tlinewidgets.AUDIO_CLIP_COLOR_GRAD[1:4]
+            cr.set_source(grad)
+                
     # ----------------------------------------------------------- mouse events
     def press_event(self, event):
         """
