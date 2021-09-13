@@ -52,7 +52,7 @@ NON_ACTIVE_KF_ICON = None
 
 # Draw params
 EDIT_AREA_HEIGHT = 200
-END_PAD = 8
+END_PAD = 0
 TOP_PAD = 23
 HEIGHT_PAD_PIXELS_TOTAL = 44
 OUT_OF_RANGE_ICON_PAD = 27
@@ -1276,9 +1276,9 @@ class TLineKeyFrameEditor:
 
     def _get_panel_pos_for_frame(self, clip_frame):
         x, y, width, h = self.allocation
-        active_width = width - 2 * END_PAD
-        disp_frame = clip_frame - self.clip_in 
-        return x + END_PAD + int((float(disp_frame) / float(self.clip_length)) * 
+        active_width = width - 2 * END_PAD - tlinewidgets.pix_per_frame
+        disp_frame = clip_frame - self.clip_in
+        return x + END_PAD + int(float(disp_frame) / float(self.clip_length) * 
                              float(active_width))
 
     def _get_frame_for_panel_pos(self, panel_x):
