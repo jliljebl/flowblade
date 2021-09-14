@@ -177,7 +177,6 @@ class ClipKeyFrameEditor:
             
     def set_keyframes(self, keyframes_str, out_to_in_func):
         self.keyframes = self.keyframe_parser(keyframes_str, out_to_in_func)
-        print("XXXXXXXXXXXXXXXXXXXXX after set_keyframes", self.keyframes)
 
     def get_kf_info(self):
         return (self.active_kf_index, len(self.keyframes))

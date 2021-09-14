@@ -575,26 +575,45 @@ class TLineKeyFrameEditor:
         cr.clip()
         
         for i in range(0, len(kf_positions)):
-            kf, frame, kf_index, kf_type, kf_pos_x, kf_pos_y = kf_positions[i]
-            # This is trying to get rid of some draw artifacts by limiting x positions.
-            if kf_pos_x < -10000:
-                kf_pos_x = -10000
-            if kf_pos_x > 10000:
-                kf_pos_x = 10000
-            if i == 0:
-                cr.move_to(kf_pos_x, kf_pos_y)
-            else:
-                cr.line_to(kf_pos_x, kf_pos_y)
+
+            
+            # Draw value between between curreent and prev kf.
+            if i > 0:
+
+                kf, frame, kf_index, kf_type, kf_pos_x, kf_pos_y = kf_positions[i]
+                # This is trying to get rid of some draw artifacts by limiting x positions.
+                # kf_pos_x can get really large values with long clips and large zooms
+                # and Cairo fails and handling those values.
+                if kf_pos_x < -10000:
+                    kf_pos_x = -10000
+                if kf_pos_x > 10000:
+                    kf_pos_x = 10000
+
+                kf_prev, frame_prev, kf_index_prev, kf_type_prev, kf_pos_x_prev, kf_pos_y_prev = kf_positions[i - 1]
+                # See above.
+                if kf_pos_x_prev < -10000:
+                    kf_pos_x_prev = -10000
+                if kf_pos_x_prev > 10000:
+                    kf_pos_x_prev = 10000
+                    
+                if kf_type_prev == appconsts.KEYFRAME_DISCRETE:
+                    cr.move_to(kf_pos_x_prev, kf_pos_y_prev)
+                    cr.line_to(kf_pos_x, kf_pos_y_prev)
+                    cr.stroke()
+                elif kf_type_prev == appconsts.KEYFRAME_SMOOTH:
+                    self._draw_smooth_value_curve(cr, i - 1, self.keyframes)
+                else: # LINEAR
+                    cr.move_to(kf_pos_x_prev, kf_pos_y_prev)
+                    cr.line_to(kf_pos_x, kf_pos_y)
+                    cr.stroke()
+
         # If last kf before clip end, continue value curve to end.
         kf, frame, kf_index, kf_type, kf_pos_x, kf_pos_y = kf_positions[-1]
         if kf_pos_x < ex + ew:
             cr.move_to(kf_pos_x, kf_pos_y)
             cr.line_to(ex + ew, kf_pos_y)
-        else:
-            cr.line_to(ex + ew, kf_pos_y)
-    
-        cr.stroke()
-        
+            cr.stroke()
+
         cr.restore()
 
         # Draw keyframes.
@@ -930,6 +949,81 @@ class TLineKeyFrameEditor:
         cr.set_source_rgb(0.8, 0.8, 0.8)
         cr.show_text(text) 
 
+    def _draw_smooth_value_curve(self, cr, i, keyframes):
+        # Get indexes of the four keyframes that affect the drawn curve. 
+        prev = i
+        if i == 0:
+            prev_prev = 0
+        else:
+            prev_prev = i - 1
+        
+        next = i + 1
+        if next >= len(keyframes):
+            next = len(keyframes) - 1
+        
+        next_next = next + 1
+        if next_next >= len(keyframes):
+            next_next = len(keyframes) - 1
+
+        # Draw curve with line segments.
+        SEG_LEN_IN_PIX = 5.0
+        frame_prev, val_prev, kf_type = keyframes[prev]
+        frame_next, val_next, kf_type = keyframes[next]
+        
+        try:
+            kf_pos_prev = self._get_panel_pos_for_frame(frame_prev)
+        except ZeroDivisionError: # math fails for 1 frame clip
+            kf_pos_prev = END_PAD
+        kf_pos_y = self._get_panel_y_for_value(val_prev)
+        
+        try:
+            kf_pos_next = self._get_panel_pos_for_frame(frame_next)
+        except ZeroDivisionError: # math fails for 1 frame clip
+            kf_pos_next = END_PAD
+    
+        # If this happens, do nothing.
+        if kf_pos_prev == kf_pos_next:
+            return
+    
+        more_segments = True
+        start_x = kf_pos_prev
+        start_y = kf_pos_y
+        curve_length = kf_pos_next - kf_pos_prev
+        cr.move_to(kf_pos_prev, kf_pos_y)
+        
+        while(more_segments == True):
+            end_x = start_x + SEG_LEN_IN_PIX
+            if end_x >= kf_pos_next:
+                more_segments = False
+                end_x = kf_pos_next
+            
+            fract = (end_x - kf_pos_prev) / curve_length
+            end_y_val = self._get_smooth_fract_value(prev_prev, prev, next, next_next, fract, keyframes)
+            end_y = self._get_panel_y_for_value(end_y_val)
+            cr.line_to(end_x, end_y)
+
+            start_x = end_x
+
+        cr.stroke()
+
+    def _get_smooth_fract_value(self, prev_prev, prev, next, next_next, fract, keyframes):
+        frame, val0, kf_type = keyframes[prev_prev]
+        frame, val1, kf_type = keyframes[prev]
+        frame, val2, kf_type = keyframes[next]
+        frame, val3, kf_type = keyframes[next_next]
+
+        smooth_val = self._catmull_rom_interpolate(val0, val1, val2, val3, fract)
+        return smooth_val
+
+    # These all need to be doubles.
+    def _catmull_rom_interpolate(self, y0, y1, y2, y3, t):
+    	t2 = t * t
+    	a0 = -0.5 * y0 + 1.5 * y1 - 1.5 * y2 + 0.5 * y3
+    	a1 = y0 - 2.5 * y1 + 2 * y2 - 0.5 * y3
+    	a2 = -0.5 * y0 + 0.5 * y2
+    	a3 = y1
+    	return a0 * t * t2 + a1 * t2 + a2 * t + a3
+        
     def create_round_rect_path(self, cr, x, y, width, height, radius=4.0):
         degrees = math.pi / 180.0
 
@@ -1455,7 +1549,6 @@ class TLineKeyFrameEditor:
         rx, ry, rw, rh = self.allocation
         return self._area_hit(x, y, rx + 4.5, ry + 4, 12, 12)
         
-
     def overlay_area_hit(self, tx, ty):
         x, y, w, h = self.allocation
         if tx >= x and tx <= x + w:
