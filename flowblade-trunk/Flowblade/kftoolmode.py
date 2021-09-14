@@ -1003,7 +1003,7 @@ class TLineKeyFrameEditor:
             cr.line_to(end_x, end_y)
 
             start_x = end_x
-
+ 
         cr.stroke()
 
     def _get_smooth_fract_value(self, prev_prev, prev, next, next_next, fract, keyframes):
