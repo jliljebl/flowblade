@@ -93,7 +93,7 @@ POSITION_DRAG = 1
 KF_DRAG_DISABLED = 2 # Not used currently
 KF_DRAG_FRAME_ZERO_KF = 3
 
-DRAG_MIN_Y = 4 # to make strt value slightly macnetic, makes easier to move position without changing value
+DRAG_MIN_Y = 4 # To make start value slightly magnetic, makes easier to move position without changing value.
 
 hamburger_menu = Gtk.Menu()
 oor_before_menu = Gtk.Menu()
@@ -112,12 +112,18 @@ _snapping = 1
 
 # -------------------------------------------------- init
 def load_icons():
-    global HAMBURGER_ICON, ACTIVE_KF_ICON, NON_ACTIVE_KF_ICON
+    global HAMBURGER_ICON, ACTIVE_KF_ICON, NON_ACTIVE_KF_ICON, ACTIVE_KF_ICON_SMOOTH, \
+    ACTIVE_KF_ICON_DISCRETE, NON_ACTIVE_KF_ICON_SMOOTH, NON_ACTIVE_KF_ICON_DISCRETE
 
     # Aug-2019 - SvdB - BB
     HAMBURGER_ICON = guiutils.get_cairo_image("hamburger")
-    ACTIVE_KF_ICON = guiutils.get_cairo_image("kf_active")
-    NON_ACTIVE_KF_ICON = guiutils.get_cairo_image("kf_not_active_tool")    
+    # TODO: Fix for 2x icons
+    ACTIVE_KF_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_active.png")
+    ACTIVE_KF_ICON_SMOOTH = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_active_smooth.png")
+    ACTIVE_KF_ICON_DISCRETE = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_active_discrete.png")
+    NON_ACTIVE_KF_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_not_active.png")    
+    NON_ACTIVE_KF_ICON_SMOOTH = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_not_active_smooth.png") 
+    NON_ACTIVE_KF_ICON_DISCRETE = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "kf_not_active_discrete.png")
 
 def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT, param_data=None):
     # These can produce data for same objects and we are not (currently) updating
@@ -537,17 +543,17 @@ class TLineKeyFrameEditor:
             else:
                 step = 1
 
-            # Draw only frames in display
+            # Draw only frames in display.
             draw_first = clip_in
             draw_last = clip_out + 1
             if clip_start_frame < 0:
                 draw_first = int(draw_first - clip_start_frame)
 
-            # Get media frame 0 position in screen pixels
+            # Get media frame 0 position in screen pixels.
             media_start_pos_pix = scale_in - clip_in * pix_per_frame
             mid_y = y + y_pad + eh / 2.0
             
-            # Draw level bar for each frame in draw range
+            # Draw level bar for each frame in draw range.
             for f in range(draw_first, draw_last, step):
                 try:
                     xf = media_start_pos_pix + f * pix_per_frame
@@ -556,20 +562,21 @@ class TLineKeyFrameEditor:
                         h = 1
                     cr.rectangle(xf, mid_y - hf, draw_pix_per_frame, hf * 2.0)
                 except:
-                    # This is just dirty fix a when 23.98 fps does not work
+                    # This is just dirty fix a when 23.98 fps does not work.
                     break
 
             cr.fill()
 
-        # Draw value curve and area fill
+        # Draw value curve and area fill.
         cr.set_source_rgba(*CURVE_COLOR)
         cr.set_line_width(3.0)
 
         cr.rectangle(ex, ey, ew, eh)
-        cr.clip() 
+        cr.clip()
+        
         for i in range(0, len(kf_positions)):
-            kf, frame, kf_index, kf_pos_x, kf_pos_y = kf_positions[i]
-            # this trying to get rid of some draw artifacts by limiting x positions
+            kf, frame, kf_index, kf_type, kf_pos_x, kf_pos_y = kf_positions[i]
+            # This is trying to get rid of some draw artifacts by limiting x positions.
             if kf_pos_x < -10000:
                 kf_pos_x = -10000
             if kf_pos_x > 10000:
@@ -578,8 +585,8 @@ class TLineKeyFrameEditor:
                 cr.move_to(kf_pos_x, kf_pos_y)
             else:
                 cr.line_to(kf_pos_x, kf_pos_y)
-        # If last kf before clip end, continue value curve to end
-        kf, frame, kf_index, kf_pos_x, kf_pos_y = kf_positions[-1]
+        # If last kf before clip end, continue value curve to end.
+        kf, frame, kf_index, kf_type, kf_pos_x, kf_pos_y = kf_positions[-1]
         if kf_pos_x < ex + ew:
             cr.move_to(kf_pos_x, kf_pos_y)
             cr.line_to(ex + ew, kf_pos_y)
@@ -590,9 +597,9 @@ class TLineKeyFrameEditor:
         
         cr.restore()
 
-        # Draw keyframes
+        # Draw keyframes.
         for i in range(0, len(kf_positions)):
-            kf, frame, kf_index, kf_pos_x, kf_pos_y = kf_positions[i]
+            kf, frame, kf_index, kf_type, kf_pos_x, kf_pos_y = kf_positions[i]
 
             if frame < self.clip_in:
                 continue
@@ -600,14 +607,24 @@ class TLineKeyFrameEditor:
                 continue  
                 
             if kf_index == self.active_kf_index:
-                icon = ACTIVE_KF_ICON
+                if kf_type == appconsts.KEYFRAME_LINEAR:
+                    icon = ACTIVE_KF_ICON
+                elif kf_type == appconsts.KEYFRAME_SMOOTH:
+                    icon = ACTIVE_KF_ICON_SMOOTH
+                else:
+                    icon = ACTIVE_KF_ICON_DISCRETE
             else:
-                icon = NON_ACTIVE_KF_ICON
-
+                if kf_type == appconsts.KEYFRAME_LINEAR:
+                    icon = NON_ACTIVE_KF_ICON
+                elif kf_type == appconsts.KEYFRAME_SMOOTH:
+                    icon = NON_ACTIVE_KF_ICON_SMOOTH
+                else:
+                    icon = NON_ACTIVE_KF_ICON_DISCRETE
+                    
             cr.set_source_surface(icon, kf_pos_x - 6, kf_pos_y - 6) # -6 to get kf bitmap center on calculated pixel
             cr.paint()
 
-        # Draw out-of-range kf icons and kf counts
+        # Draw out-of-range kf icons and kf counts.
         if w > 55: # dont draw on too small editors
             before_kfs = len(self.get_out_of_range_before_kfs())
             after_kfs = len(self.get_out_of_range_after_kfs())
@@ -1181,7 +1198,7 @@ class TLineKeyFrameEditor:
                 
             kf_pos_y = self._get_panel_y_for_value(value)
             
-            kf_positions.append((self.keyframes[i], frame, i, kf_pos_x, kf_pos_y))
+            kf_positions.append((self.keyframes[i], frame, i, kf_type, kf_pos_x, kf_pos_y))
 
         return kf_positions
 
@@ -1261,11 +1278,27 @@ class TLineKeyFrameEditor:
     def get_active_kf_value(self):
         frame, val, kf_type = self.keyframes[self.active_kf_index]
         return val
-    
+
+    def get_active_kf_type(self):
+        frame, val, kf_type = self.keyframes[self.active_kf_index]
+        return kf_type
+        
     def set_active_kf_value(self, new_value):
         frame, val, kf_type = self.keyframes.pop(self.active_kf_index)
         self.keyframes.insert(self.active_kf_index,(frame, new_value, kf_type))
 
+    def set_active_kf_frame(self, new_frame):
+        frame, val, kf_type = self.keyframes.pop(self.active_kf_index)
+        self.keyframes.insert(self.active_kf_index,(new_frame, val, kf_type))
+
+    def set_active_kf_frame_and_value(self, new_frame, new_value):
+        frame, val, kf_type = self.keyframes.pop(self.active_kf_index)
+        self.keyframes.insert(self.active_kf_index,(new_frame, new_value, kf_type))
+
+    def set_active_kf_type(self, new_type):
+        frame, val, kf_type = self.keyframes.pop(self.active_kf_index)
+        self.keyframes.insert(self.active_kf_index,(frame, val, new_type))
+        
     def active_kf_pos_entered(self, frame):
         if self.active_kf_index == 0:
             return
@@ -1284,20 +1317,12 @@ class TLineKeyFrameEditor:
         self.set_active_kf_frame(frame)
         self.current_clip_frame = frame    
         
-    def set_active_kf_frame(self, new_frame):
-        frame, val, kf_type = self.keyframes.pop(self.active_kf_index)
-        self.keyframes.insert(self.active_kf_index,(new_frame, val, kf_type))
-
-    def set_active_kf_frame_and_value(self, new_frame, new_value):
-        frame, val, kf_type = self.keyframes.pop(self.active_kf_index)
-        self.keyframes.insert(self.active_kf_index,(new_frame, new_value, kf_type))
-
     def hack_fix_for_zero_one_keyframe_problem(self):
         # This is a quick, ugly fix for bug where having volume keyframes in frames 0 and 1 mutes the whole clip.
         # Look to fix underlying problem.
         try:
-            kf1, val1 = self.keyframes[0]
-            kf2, val2 = self.keyframes[1]
+            kf1, val1, kf_type_1 = self.keyframes[0]
+            kf2, val2, kf_type_2 = self.keyframes[1]
             if kf1 == 0 and kf2 == 1 and self.edit_type == VOLUME_KF_EDIT:
                 self.keyframes.pop(1)
         except:
@@ -1443,11 +1468,9 @@ class TLineKeyFrameEditor:
     def _show_kf_menu(self, event):
         menu = kf_menu
         guiutils.remove_children(menu)
-        self._create_keyframe_type_submenu(appconsts.KEYFRAME_LINEAR, menu, self._kf_menu_callback)
+        kf_type = self.get_active_kf_type()
+        self._create_keyframe_type_submenu(kf_type, menu, self._kf_menu_callback)
         menu.popup(None, None, None, None, event.button, event.time)
-    
-    def _kf_menu_callback(self, widget, data):
-        print(data)
 
     def _create_keyframe_type_submenu(self, kf_type, menu, callback):
         linear_item = Gtk.RadioMenuItem()
@@ -1471,7 +1494,18 @@ class TLineKeyFrameEditor:
             discrete_item.set_active(True)
         discrete_item.show()
         menu.append(discrete_item)
-        
+
+    def _kf_menu_callback(self, widget, data):
+        print(data)
+        if data == "linear":
+            self.set_active_kf_type(appconsts.KEYFRAME_LINEAR)
+        elif data == "smooth":
+            self.set_active_kf_type(appconsts.KEYFRAME_SMOOTH)
+        elif data == "discrete":
+            self.set_active_kf_type(appconsts.KEYFRAME_DISCRETE)
+
+        updater.repaint_tline()
+
     def _show_oor_before_menu(self, widget, event):
         menu = oor_before_menu
         self._build_oor_before_menu(menu)

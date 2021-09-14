@@ -142,7 +142,7 @@ def main(root_path):
     Called at application start.
     Initializes application with a default project.
     """
-    # DEBUG: Direct output to log file if log file set
+    # DEBUG: Direct output to log file if log file set.
     if _log_file != None:
         log_print_output_to_file()
 
@@ -150,7 +150,7 @@ def main(root_path):
 
     print("Application version: " + editorstate.appversion)
 
-    # Print OS, Python version and GTK+ version
+    # Print OS, Python version and GTK+ version.
     try:
         os_release_file = open("/etc/os-release","r")
         os_text = os_release_file.read()
@@ -182,7 +182,7 @@ def main(root_path):
     # Set paths.
     respaths.set_paths(root_path)
 
-    # Load editor prefs and list of recent projects
+    # Load editor prefs and list of recent projects.
     editorpersistance.load()
     if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
         respaths.apply_dark_theme()
@@ -191,7 +191,7 @@ def main(root_path):
 
     editorpersistance.save()
 
-    # Init translations module with translations data
+    # Init translations module with translations data.
     translations.init_languages()
     translations.load_filters_translations()
     mlttransitions.init_module()
@@ -220,7 +220,7 @@ def main(root_path):
         _xdg_error_exit(userfolders.get_init_error())
         return
 
-    # After moving to Python 3 we need at least MLT 6.18
+    # After moving to Python 3 we need at least MLT 6.18.
     if editorstate.mlt_version_is_greater_correct("6.17.99") == False:
         _too_low_mlt_version_exit()
         return
@@ -241,7 +241,7 @@ def main(root_path):
     except:
         print("SETTING DARK THEME PREFERENCE FAILED, SYSTEM DARK THEME NOT AVAILABLE!")
 
-    # Load drag'n'drop images
+    # Load drag'n'drop images.
     dnd.init()
 
     # Save screen size data and modify rendering based on screen size/s and number of monitors. 
@@ -307,7 +307,7 @@ def main(root_path):
     # Create player object.
     create_player()
 
-    # Create main window and set widget handles in gui.py for more convenient reference.
+    # Create main window and make widgeta available from gui.py.
     create_gui()
 
     # Inits widgets with project data.
@@ -316,13 +316,13 @@ def main(root_path):
     # Inits widgets with current sequence data.
     init_sequence_gui()
 
-    # Launch player now that data and gui exist
+    # Launch player now that data and gui exist.
     launch_player()
 
     # Editor and modules need some more initializing.
     init_editor_state()
 
-    # Tracks need to be recentered if window is resized.
+    # Tracks need to be re-centered if window is resized.
     # Connect listener for this now that the tline panel size allocation is sure to be available.
     global window_resize_id, window_state_id
     window_resize_id = gui.editor_window.window.connect("size-allocate", lambda w, e:updater.window_resized())
