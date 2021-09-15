@@ -2871,19 +2871,12 @@ class MonitorTCInfo:
         self.marks_length_value = Gtk.Label(label="--:--:--:--")
         self.marks_length_value.modify_font(Pango.FontDescription(font_desc))
         
-        # NOTE: self.monitor_source, self.monitor_tc
-        # THESE NOW SHOWN IN DIFFERENT POSIOTON AT TOP BAR BUT 
-        # WE KEPT THEM HERE TRO AVOID REFACTORING SETTING VALUES 
-        #self.widget.pack_start(self.monitor_source, False, False, 0)
-        #self.widget.pack_start(self.monitor_tc, False, False, 0)
-        #self.widget.pack_start(guiutils.pad_label(24, 10), False, False, 0)
-        if editorstate.screen_size_small_width() == False:
-            self.widget.pack_start(self.in_label, False, False, 0)
-            self.widget.pack_start(self.in_value, False, False, 0)
-            self.widget.pack_start(guiutils.pad_label(12, 10), False, False, 0)
-            self.widget.pack_start(self.out_label, False, False, 0)
-            self.widget.pack_start(self.out_value, False, False, 0)
-            self.widget.pack_start(guiutils.pad_label(12, 10), False, False, 0)
+        self.widget.pack_start(self.in_label, False, False, 0)
+        self.widget.pack_start(self.in_value, False, False, 0)
+        self.widget.pack_start(guiutils.pad_label(12, 10), False, False, 0)
+        self.widget.pack_start(self.out_label, False, False, 0)
+        self.widget.pack_start(self.out_value, False, False, 0)
+        self.widget.pack_start(guiutils.pad_label(12, 10), False, False, 0)
         self.widget.pack_start(self.marks_length_label, False, False, 0)
         self.widget.pack_start(self.marks_length_value, False, False, 0)
             

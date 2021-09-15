@@ -384,7 +384,7 @@ class ColorGradeBandCorrection:
 class ColorGradeFilter:
     
     def __init__(self, editable_properties):
-        # These properties hold the values that are writtenout to MLT to do the filtering
+        # These properties hold the values that are written out to MLT to do the filtering.
         self.r_table_prop = [ep for ep in editable_properties if ep.name == "R_table"][0]
         self.g_table_prop = [ep for ep in editable_properties if ep.name == "G_table"][0]
         self.b_table_prop = [ep for ep in editable_properties if ep.name == "B_table"][0]

@@ -225,7 +225,7 @@ class EditorWindow:
         self.app_v_paned.pack1(self.top_row_hbox, resize=False, shrink=False)
         self.app_v_paned.pack2(self.tline_pane, resize=True, shrink=False)
 
-        # self.app_h_box is used to implement postion PANEL_PLACEMENT_LEFT_COLUMN
+        # self.app_h_box is used to implement position PANEL_PLACEMENT_LEFT_COLUMN.
         self.app_h_box = Gtk.HBox(False, 0)
         self.app_h_box.pack_start(self.left_column_frame, False, False, 0)
         self.app_h_box.pack_start(self.app_v_paned, True, True, 0)
@@ -236,8 +236,11 @@ class EditorWindow:
         self.menubar.set_name("lighter-bg-widget")
 
         menubar_box =  Gtk.HBox(False, 0)
-        menubar_box.pack_start(guiutils.get_right_justified_box([self.menubar]), False, False, 0)
-        menubar_box.pack_start(Gtk.Label(), True, True, 0)
+        if editorstate.screen_size_small_width() == False:
+            menubar_box.pack_start(guiutils.get_right_justified_box([self.menubar]), False, False, 0)
+            menubar_box.pack_start(Gtk.Label(), True, True, 0)
+        else:
+            menubar_box.pack_start(self.menubar, False, False, 0)
 
         monitor_source_box = Gtk.HBox(False, 0)
         monitor_source_box.pack_start(Gtk.Label(), True, True, 0)
@@ -248,7 +251,7 @@ class EditorWindow:
         fullscreen_icon = guiutils.get_cairo_image("fullscreen")
         fullscreen_exit_icon = guiutils.get_cairo_image("fullscreen_exit")
         self.fullscreen_press = guicomponents.PressLaunch(menuactions.toggle_fullscreen, fullscreen_icon, 20, 12)
-        self.fullscreen_press.widget.set_margin_top(2)
+        self.fullscreen_press.widget.set_margin_top(1)
         self.fullscreen_press.widget.set_tooltip_text(_("Fullscreen"))
         # Used in menuactions.toggle_fullscreen to switch image
         self.fullscreen_press.fullscreen_icon = fullscreen_icon
@@ -256,25 +259,35 @@ class EditorWindow:
 
         icon_2 = guiutils.get_cairo_image("layout")
         layout_press = guicomponents.PressLaunch(editorlayout.show_layout_press_menu, icon_2, 24, 12)
-        layout_press.widget.set_margin_top(2)
+        layout_press.widget.set_margin_top(1)
 
         info_box = Gtk.HBox(False, 0)
         if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
+            info_box.pack_start(self.tools_buttons.widget, False, False, 0)
+            info_box.pack_start(guiutils.pad_label(8,2), False, False, 0)
             info_box.pack_start(self.fullscreen_press.widget, False, False, 0)
+            info_box.pack_start(guiutils.pad_label(6,2), False, False, 0)
             info_box.pack_start(layout_press.widget, False, False, 0)
-            info_box.pack_start(self.tools_buttons.widget, False, False, 0) # maybe
+
+
         info_box.pack_start(Gtk.Label(), True, True, 0)
         info_box.pack_start(self.monitor_tc_info.widget, False, False, 0)
         
         if editorstate.screen_size_small_width() == False:
             menu_vbox = Gtk.HBox(True, 0)
+
         else:
             menu_vbox = Gtk.HBox(False, 0) # small screens can't fit 3 equal sized panels here
-        
+
         menu_vbox.pack_start(menubar_box, True, True, 0)
 
         if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
-            menu_vbox.pack_start(monitor_source_box, True, True, 0)
+            if editorstate.screen_size_small_width() == False:
+                menu_vbox.pack_start(monitor_source_box, True, True, 0)
+            else:
+                menu_vbox.pack_start(guiutils.pad_label(24, 2), False, False, 0)
+                menu_vbox.pack_start(monitor_source_box, False, False, 0)
+                menu_vbox.pack_start(guiutils.pad_label(40, 2), False, False, 0)
             menu_vbox.pack_start(info_box, True, True, 0)
         else:
             menubar_box.pack_start(self.fullscreen_press.widget, False, False, 0)
