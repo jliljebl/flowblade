@@ -274,18 +274,6 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
         buttons_row.pack_start(w.tool_selector.widget, False, True, 0)
         if editorstate.SCREEN_WIDTH > NORMAL_WIDTH and editorpersistance.prefs.force_small_midbar == False:
             buttons_row.pack_start(guiutils.get_pad_label(60, 10), False, True, 0)
-
-    """
-    if editorstate.SCREEN_WIDTH > NORMAL_WIDTH and editorpersistance.prefs.force_small_midbar == False:
-        buttons_row.pack_start(guiutils.get_pad_label(24, 10), False, True, 0)
-        buttons_row.pack_start(_get_tools_buttons(), False, True, 0)
-        if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
-            buttons_row.pack_start(Gtk.Label(), True, True, 0)
-        else:
-            buttons_row.pack_start(Gtk.Label(), True, True, 0)
-    else:
-        buttons_row.pack_start(Gtk.Label(), True, True, 0)
-    """
     
     buttons_row.pack_start(_get_undo_buttons_panel(), False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(30, 10), False, True, 0)
@@ -316,19 +304,7 @@ def fill_with_TC_MIDDLE_pattern(buttons_row, window):
     left_panel.pack_start(_get_undo_buttons_panel(), False, True, 0)
     left_panel.pack_start(guiutils.get_pad_label(10, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
     left_panel.pack_start(_get_zoom_buttons_panel(), False, True, 0)
-    """
-    if editorpersistance.prefs.force_small_midbar == False:
-        if editorstate.SCREEN_WIDTH > NORMAL_WIDTH:
-            left_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
-            #left_panel.pack_start(_get_tools_buttons(), False, True, 0)
-            left_panel.pack_start(guiutils.get_pad_label(50, 10), False, True, 10) # to left and right panel same size for centering
-        else:
-            left_panel.pack_start(guiutils.get_pad_label(60, 10), False, True, 10) # to left and right panel same size for centering
-    else:
-        
-        left_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
-        left_panel.pack_start(_get_edit_buttons_panel(), False, True, 0)
-    """
+
     left_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
     left_panel.pack_start(_get_edit_buttons_3_panel(), False, True, 0)
     #left_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
@@ -370,17 +346,7 @@ def fill_with_COMPONENTS_CENTERED_pattern(buttons_row, window):
     if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
         buttons_row.pack_start(w.tool_selector.widget, False, True, 0)
         buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
-    """
-    if editorpersistance.prefs.force_small_midbar == False:
-        if editorstate.SCREEN_WIDTH > NORMAL_WIDTH:
-            buttons_row.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
-            buttons_row.pack_start(_get_tools_buttons(), False, True, 0)
-            #buttons_row.pack_start(guiutils.get_pad_label(120, 10), False, True, 0)
-            buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
-        else:
-            buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
-    """
-    
+
     buttons_row.pack_start(_get_undo_buttons_panel(), False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
         
