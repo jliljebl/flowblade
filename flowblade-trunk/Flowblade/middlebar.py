@@ -465,7 +465,7 @@ def _clear_container(cont):
 
 # ----------------------------------------------------------------------------- Free Bar conf GUI
 def show_freebar_conf_dialog():
-    dialog = Gtk.Dialog(_("Free Bar Configuration"), None,
+    dialog = Gtk.Dialog(_("Middlebar Configuration"), None,
                     Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                     (_("Cancel"), Gtk.ResponseType.REJECT,
                     _("OK"), Gtk.ResponseType.ACCEPT))
@@ -495,10 +495,9 @@ def _freebar_dialog_callback(dialog, response_id, data):
 def _get_freebar_conf_panel():
     prefs = editorpersistance.prefs
 
-    global toolbar_list, groups_tools, cbutton_flag, cbutton, gui_object_names
+    global toolbar_list, groups_tools, cbutton_flag, cbutton, gui_object_names, layout_select
     groups_tools = prefs.groups_tools
     cbutton_flag = prefs.cbutton
-
 
     gui_object_names = {appconsts.BUTTON_GROUP_TOOLS:_("Tools Group"),
                         appconsts.BUTTON_GROUP_UNDO:_("Undo Group"),
@@ -510,8 +509,19 @@ def _get_freebar_conf_panel():
                         appconsts.BIG_TIME_CODE:_("Timecode Display"),
                         appconsts.WORKFLOW_LAUNCH:_("Workflow Menu"),
                         appconsts.TOOL_SELECT:_("Edit Tool Menu")}
-                        
+
+
     # Widgets
+    layout_select = Gtk.ComboBoxText()
+    layout_select.set_tooltip_text(_("Select Render quality"))
+    layout_select.append_text(_("Timecode Left"))
+    layout_select.append_text(_("Timecode Center"))
+    layout_select.append_text(_("Components Centered"))
+    layout_select.set_active(0)
+    
+    layout_row = guiutils.get_left_justified_box([layout_select])
+    layout_frame = guiutils.get_named_frame(_("Layout"), layout_row)
+    
     vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
     choice = Gtk.Label(_("Set button group active state and position."))
     
@@ -525,14 +535,24 @@ def _get_freebar_conf_panel():
     button_down = Gtk.Button(label=_("Down"))
     button_down.connect("clicked", row_down, vbox)
     box_move.pack_start(button_down, False, False, 0)
+    button_reset = Gtk.Button(label=_("Reset Positions"))
+    button_reset.connect("clicked", row_down, vbox)
+    box_move.pack_start(Gtk.Label(), True, True, 0)
+    box_move.pack_start(button_reset, False, False, 0)
 
-    vbox.pack_start(choice, False, False, 0)
+    #vbox.pack_start(choice, False, False, 0)
     vbox.pack_start(toolbar_list, False, False, 0)
     vbox.pack_start(box_move, False, False, 0)
-    
     draw_listbox(vbox)
     vbox.set_size_request(400, 200)
-    return vbox
+
+    groups_frame = guiutils.get_named_frame(_("Position and Active State"), vbox)
+    
+    pane = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+    pane.pack_start(layout_frame, False, False, 0)
+    pane.pack_start(groups_frame, False, False, 0)
+
+    return pane
     
 def toggle_click(button, row_number):
     cbutton_flag[row_number] = button.get_active()

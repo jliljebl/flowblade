@@ -642,23 +642,6 @@ class TLineKeyFrameEditor:
                     
             cr.set_source_surface(icon, kf_pos_x - 6, kf_pos_y - 6) # -6 to get kf bitmap center on calculated pixel
             cr.paint()
-
-        """
-        # Draw out-of-range kf icons and kf counts.
-        if w > 55: # dont draw on too small editors
-            before_kfs = len(self.get_out_of_range_before_kfs())
-            after_kfs = len(self.get_out_of_range_after_kfs())
-            
-            kfy = self._get_lower_y() + KF_LOWER_OFF
-            if before_kfs > 0:
-                cr.set_source_surface(NON_ACTIVE_KF_ICON, x + OUT_OF_RANGE_ICON_PAD - OUT_OF_RANGE_KF_ICON_HALF * 2, kfy + KF_ICON_Y_PAD)
-                cr.paint()
-                self._draw_text(cr, str(before_kfs), x + OUT_OF_RANGE_NUMBER_X_START, kfy + KF_TEXT_PAD)
-            if after_kfs > 0:
-                cr.set_source_surface(NON_ACTIVE_KF_ICON, x + w - OUT_OF_RANGE_ICON_PAD, kfy + KF_ICON_Y_PAD)
-                cr.paint()
-                self._draw_text(cr, str(after_kfs), x + w - OUT_OF_RANGE_NUMBER_X_END_PAD, kfy + KF_TEXT_PAD)
-        """
         
         # Draw source triangles.
         cr.set_line_width(2.0)
