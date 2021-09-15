@@ -643,6 +643,7 @@ class TLineKeyFrameEditor:
             cr.set_source_surface(icon, kf_pos_x - 6, kf_pos_y - 6) # -6 to get kf bitmap center on calculated pixel
             cr.paint()
 
+        """
         # Draw out-of-range kf icons and kf counts.
         if w > 55: # dont draw on too small editors
             before_kfs = len(self.get_out_of_range_before_kfs())
@@ -657,6 +658,7 @@ class TLineKeyFrameEditor:
                 cr.set_source_surface(NON_ACTIVE_KF_ICON, x + w - OUT_OF_RANGE_ICON_PAD, kfy + KF_ICON_Y_PAD)
                 cr.paint()
                 self._draw_text(cr, str(after_kfs), x + w - OUT_OF_RANGE_NUMBER_X_END_PAD, kfy + KF_TEXT_PAD)
+        """
         
         # Draw source triangles.
         cr.set_line_width(2.0)
@@ -698,6 +700,8 @@ class TLineKeyFrameEditor:
                 text = self.brightness_kfs_text
             else: # PARAM_KF_EDIT
                 text = self.filter_param_name_txt
+                
+            kfy = self._get_lower_y() + KF_LOWER_OFF
             self._draw_text(cr, text, -1, y + 4, True, x, w, True)
             self._draw_text(cr, self.media_frame_txt + str(self.current_clip_frame), -1, kfy - 8, True, x, w)
 
@@ -1082,14 +1086,6 @@ class TLineKeyFrameEditor:
         """
         ctrl_press = False # ---Horizontal keyframes-------------------------------------
         # Check if menu icons hit
-        if self._oor_start_kf_hit(event.x, event.y) == True:
-            self._show_oor_before_menu(gui.tline_canvas.widget, event)
-            return
-
-        if self._oor_end_kf_hit(event.x, event.y) == True:
-            self._show_oor_after_menu(gui.tline_canvas.widget, event)
-            return
-
         if self._hamburger_hit(event.x, event.y) == True:
             self._show_hamburger_menu(gui.tline_canvas.widget, event)
             return
@@ -1107,19 +1103,6 @@ class TLineKeyFrameEditor:
             ctrl_press = True
             self.current_mouse_action = KF_DRAG_DISABLED
         # ------------- End of Modify kf curve between two kf---------------------------------------
-        """
-        if event.button == 3: # right mouse
-            self.current_mouse_action = POSITION_DRAG
-            
-            self.drag_min = self.clip_in
-            self.drag_max = self.clip_in + self.clip_length
-            frame = self._get_drag_frame(lx)
-            self.current_clip_frame = frame
-            self.clip_editor_frame_changed(self.current_clip_frame)
-            
-            updater.repaint_tline()
-            return
-        """
         
         hit_kf = self._key_frame_hit(lx, ly)
 
@@ -1599,11 +1582,6 @@ class TLineKeyFrameEditor:
 
         updater.repaint_tline()
 
-    def _show_oor_before_menu(self, widget, event):
-        menu = oor_before_menu
-        self._build_oor_before_menu(menu)
-        menu.popup(None, None, None, None, event.button, event.time)
-
     def _build_oor_before_menu(self, menu):
         guiutils.remove_children(menu)
         before_kfs = len(self.get_out_of_range_before_kfs())
@@ -1621,11 +1599,6 @@ class TLineKeyFrameEditor:
 
         if len(self.keyframes) > 1 and before_kfs > 0:
             menu.add(self._get_menu_item(_("Set Keyframe at Frame 0 to value of next Keyframe"), self._oor_menu_item_activated, "zero_next" ))
-
-    def _show_oor_after_menu(self, widget, event):
-        menu = oor_before_menu
-        self._build_oor_after_menu(menu)
-        menu.popup(None, None, None, None, event.button, event.time)
 
     def _build_oor_after_menu(self, menu):
         guiutils.remove_children(menu)
