@@ -81,7 +81,7 @@ gui_object_names = None
 def _init_buttons_data():
     if editorpersistance.prefs.midbar_layout_buttons == None: # No data, first launch.
         print("Creating middbar data for 2.10...")
-    
+
         editorpersistance.prefs.cbutton = [True, True, True, True, True, True]
 
         # appconsts.MIDBAR_TC_FREE is deprecated.appconsts.MIDBAR_COMPONENTS_CENTERED is  mostly same.
@@ -94,7 +94,8 @@ def _init_buttons_data():
             editorpersistance.prefs.midbar_layout_buttons = copy.deepcopy(DEFAULT_BUTTONS_TIMECODE_CENTER)
         elif editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_COMPONENTS_CENTERED:
             editorpersistance.prefs.midbar_layout_buttons = copy.deepcopy(DEFAULT_BUTTONS_COMPONENTS_CENTERED)
-                        
+        
+        editorpersistance.prefs.midbar_layout = appconsts.MIDBAR_TC_LEFT                
         editorpersistance.save()
 
 def _load_layout_data():
@@ -104,7 +105,7 @@ def _load_layout_data():
     current_active_flags = editorpersistance.prefs.cbutton
 
 def _save_layout_data():
-    global current_layout, current_buttons_list, current_active_flags, original_buttons_list, original_active_flags
+    global current_layout, current_buttons_list, current_active_flags, original_layout, original_buttons_list, original_active_flags
 
     # Used to Cancel conf edits
     original_layout = current_layout
