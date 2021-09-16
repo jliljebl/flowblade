@@ -360,11 +360,12 @@ class EditorPreferences:
         self.groups_tools =  [  appconsts.WORKFLOW_LAUNCH, appconsts.TOOL_SELECT, appconsts.BUTTON_GROUP_ZOOM, \
                                 appconsts.BUTTON_GROUP_UNDO, appconsts.BUTTON_GROUP_TOOLS, appconsts.BUTTON_GROUP_EDIT, \
                                 appconsts.BUTTON_GROUP_DELETE ,  appconsts.BUTTON_GROUP_SYNC_SPLIT, \
-                                appconsts.BUTTON_GROUP_MONITOR_ADD, appconsts.BIG_TIME_CODE]
+                                appconsts.BUTTON_GROUP_MONITOR_ADD, appconsts.BIG_TIME_CODE] # DEPRECATED, we are now using 'layout_buttons'
         self.cbutton  = [True, True, True, True, True, True, True, True, True, True] # Toolbar objects active state
         self.colorized_icons = False
         self.tools_selection = appconsts.TOOL_SELECTOR_IS_MENU
         self.panel_positions = None
         self.force_small_midbar = False
         self.positions_tabs = None
+        self.midbar_layout_buttons = None
         

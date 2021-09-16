@@ -202,7 +202,7 @@ TRIM_VIEW_OFF = 2
 MIDBAR_TC_LEFT = 0
 MIDBAR_TC_CENTER = 1
 MIDBAR_COMPONENTS_CENTERED = 2
-MIDBAR_TC_FREE = 3
+MIDBAR_TC_FREE = 3 # DEPRECATED, all layouts now have configurable buttons.
 
 # Windows mode
 SINGLE_WINDOW = 1
@@ -305,16 +305,16 @@ CONTAINER_CLIP_FLUXITY = 4
 CONTAINER_CLIP_VIDEO_CLIP_NAME = "container_clip"
 
 # Middlebar button groups.
-BUTTON_GROUP_TOOLS = "tool_buttons"
+BUTTON_GROUP_TOOLS = "tool_buttons" # DEPRECATED, not configurable.
 BUTTON_GROUP_UNDO = "undo_redo"
 BUTTON_GROUP_ZOOM = "zoom_buttons"
 BUTTON_GROUP_EDIT = "edit_buttons"
 BUTTON_GROUP_SYNC_SPLIT = "edit_buttons_2"
 BUTTON_GROUP_DELETE = "edit_buttons_3"
 BUTTON_GROUP_MONITOR_ADD = "monitor_insert_buttons"
-BIG_TIME_CODE = "big_TC"
-WORKFLOW_LAUNCH = "worflow_launch" 
-TOOL_SELECT = "tool_selector"
+BIG_TIME_CODE = "big_TC" # DEPRECATED, not configurable.
+WORKFLOW_LAUNCH = "worflow_launch" # DEPRECATED, not configurable. 
+TOOL_SELECT = "tool_selector" # DEPRECATED, not configurable.
 
 # Panel placement options
 PANEL_PLACEMENT_TOP_ROW_DEFAULT = 0

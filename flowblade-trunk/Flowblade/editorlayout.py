@@ -569,11 +569,11 @@ def _change_panel_position(widget, panel_id, pos_option):
     if bottom_row_min_width > editorstate.SCREEN_WIDTH:
         editorpersistance.prefs.force_small_midbar = True
         editorpersistance.save()
-        middlebar.do_layout_after_dock_change(gui.editor_window)
+        middlebar.redo_layout(gui.editor_window)
     else:
         editorpersistance.prefs.force_small_midbar = False
         editorpersistance.save()
-        middlebar.do_layout_after_dock_change(gui.editor_window)
+        middlebar.redo_layout(gui.editor_window)
     
     # Show layout immediately if this called from app menu
     if widget != None:

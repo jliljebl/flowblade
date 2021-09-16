@@ -19,6 +19,7 @@
 """
 
 import cairo
+import copy
 
 from gi.repository import Gtk
 
@@ -41,6 +42,11 @@ import updater
 import undo
 import workflow
 
+# Default button orders for different layouts.
+DEFAULT_BUTTONS_TIMECODE_LEFT = ['undo_redo', 'zoom_buttons', 'edit_buttons', 'edit_buttons_2', 'edit_buttons_3', 'monitor_insert_buttons']
+DEFAULT_BUTTONS_TIMECODE_CENTER = ['undo_redo', 'zoom_buttons', 'edit_buttons_3', 'edit_buttons', 'edit_buttons_2', 'monitor_insert_buttons']
+DEFAULT_BUTTONS_COMPONENTS_CENTERED = ['undo_redo', 'zoom_buttons', 'edit_buttons', 'edit_buttons_2', 'edit_buttons_3', 'monitor_insert_buttons']
+
 # editorwindow.EditorWindow object.
 # This needs to be set here because gui.py module ref is not available at init time
 w = None
@@ -54,17 +60,64 @@ BUTTON_WIDTH = 48 # middle edit buttons row
 
 NORMAL_WIDTH = 1620
 
+# Global data for buttons
+current_layout = None
+current_buttons_list = None
+current_active_flags = None
+
+# Used to Cancel conf edits
+original_layout = None
+original_buttons_list = None
+original_active_flags = None
+
+# Conf panel
+toolbar_list_box = None
+
+# Groups names for conf panel
+gui_object_names = None
 
 
-def do_layout_after_dock_change(w):
+# Version 2.10 changed middlebar layout data and we need to create it for all first launches of that app version.
+def _init_buttons_data():
+    if editorpersistance.prefs.midbar_layout_buttons == None: # No data, first launch.
+        print("Creating middbar data for 2.10...")
+    
+        editorpersistance.prefs.cbutton = [True, True, True, True, True, True]
+
+        # appconsts.MIDBAR_TC_FREE is deprecated.appconsts.MIDBAR_COMPONENTS_CENTERED is  mostly same.
+        if editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_TC_FREE:
+            editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_COMPONENTS_CENTERED
+
+        if editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_TC_LEFT:
+            editorpersistance.prefs.midbar_layout_buttons = copy.deepcopy(DEFAULT_BUTTONS_TIMECODE_LEFT)
+        elif editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_TC_CENTER: 
+            editorpersistance.prefs.midbar_layout_buttons = copy.deepcopy(DEFAULT_BUTTONS_TIMECODE_CENTER)
+        elif editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_COMPONENTS_CENTERED:
+            editorpersistance.prefs.midbar_layout_buttons = copy.deepcopy(DEFAULT_BUTTONS_COMPONENTS_CENTERED)
+                        
+        editorpersistance.save()
+
+def _load_layout_data():
+    global current_layout, current_buttons_list, current_active_flags
+    current_layout = editorpersistance.prefs.midbar_layout
+    current_buttons_list = editorpersistance.prefs.midbar_layout_buttons
+    current_active_flags = editorpersistance.prefs.cbutton
+
+def _save_layout_data():
+    global current_layout, current_buttons_list, current_active_flags, original_buttons_list, original_active_flags
+
+    # Used to Cancel conf edits
+    original_layout = current_layout
+    original_buttons_list = current_buttons_list
+    original_active_flags = current_active_flags
+
+def redo_layout(w):        
     if editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_TC_LEFT:
         _do_TC_LEFT_layout(w)
     elif editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_TC_CENTER: 
         _do_TC_MIDDLE_layout(w)
     elif editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_COMPONENTS_CENTERED:
         _do_COMPONENTS_CENTERED_layout(w)
-    elif editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_TC_FREE:
-        _do_show_buttons_TC_FREE_layout(w)
     
 def _show_buttons_TC_LEFT_layout(widget):
     global w
@@ -82,8 +135,8 @@ def _do_TC_LEFT_layout(w):
     fill_with_TC_LEFT_pattern(w.edit_buttons_row, w)
     w.window.show_all()
 
-    editorpersistance.prefs.midbar_layout = appconsts.MIDBAR_TC_LEFT
-    editorpersistance.save()
+    #editorpersistance.prefs.midbar_layout = appconsts.MIDBAR_TC_LEFT
+    #editorpersistance.save()
     
 def _show_buttons_TC_MIDDLE_layout(widget):
     global w
@@ -101,8 +154,8 @@ def _do_TC_MIDDLE_layout(w):
     fill_with_TC_MIDDLE_pattern(w.edit_buttons_row, w)
     w.window.show_all()
 
-    editorpersistance.prefs.midbar_layout = appconsts.MIDBAR_TC_CENTER
-    editorpersistance.save()
+    #editorpersistance.prefs.midbar_layout = appconsts.MIDBAR_TC_CENTER
+    #editorpersistance.save()
 
 def _show_buttons_COMPONENTS_CENTERED_layout(widget):
     global w
@@ -121,37 +174,27 @@ def _do_COMPONENTS_CENTERED_layout(w):
     fill_with_COMPONENTS_CENTERED_pattern(w.edit_buttons_row, w)
     w.window.show_all()
 
-    editorpersistance.prefs.midbar_layout = appconsts.MIDBAR_COMPONENTS_CENTERED
-    editorpersistance.save()
-
-# ----------------------------- Toolbar preferences panel for free elements and order
-def _show_buttons_TC_FREE_layout(widget):
-    global w
-    w = gui.editor_window
-    if w == None:
-        return
-    if widget.get_active() == False:
-        return
-
-    _do_show_buttons_TC_FREE_layout(w)
-
-def _do_show_buttons_TC_FREE_layout(w):
-    _clear_container(w.edit_buttons_row)
-    _create_buttons(w)
-    fill_with_TC_FREE_pattern(w.edit_buttons_row, w)
-    w.window.show_all()
-
-    editorpersistance.prefs.midbar_layout = appconsts.MIDBAR_TC_FREE
-    editorpersistance.save()
-
-# --------------------------- End of Toolbar preferences panel for free elements and order
+    #editorpersistance.prefs.midbar_layout = appconsts.MIDBAR_COMPONENTS_CENTERED
+    #editorpersistance.save()
 
 def create_edit_buttons_row_buttons(editor_window, modes_pixbufs):
-    global m_pixbufs
+    _init_buttons_data()
+    _load_layout_data()
+
+    global m_pixbufs, gui_object_names
+    
+    gui_object_names = {appconsts.BUTTON_GROUP_UNDO:_("Undo Group"),
+                        appconsts.BUTTON_GROUP_ZOOM:_("Zoom Group"),
+                        appconsts.BUTTON_GROUP_EDIT:_("Edit Group"),
+                        appconsts.BUTTON_GROUP_SYNC_SPLIT:_("Sync Split Group"),
+                        appconsts.BUTTON_GROUP_DELETE:_("Delete Group"),
+                        appconsts.BUTTON_GROUP_MONITOR_ADD:_("Monitor Add Group")}
+
     m_pixbufs = modes_pixbufs
     _create_buttons(editor_window)
 
 def _create_buttons(editor_window):
+    
     # Aug-2019 - SvdB - BB
     prefs = editorpersistance.prefs
     size_adj = 1
@@ -275,24 +318,24 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
         if editorstate.SCREEN_WIDTH > NORMAL_WIDTH and editorpersistance.prefs.force_small_midbar == False:
             buttons_row.pack_start(guiutils.get_pad_label(60, 10), False, True, 0)
     
-    buttons_row.pack_start(_get_undo_buttons_panel(), False, True, 0)
+    buttons_row.pack_start(get_buttons_group(0), False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(30, 10), False, True, 0)
         
-    buttons_row.pack_start(_get_zoom_buttons_panel(),False, True, 0)
+    buttons_row.pack_start(get_buttons_group(1),False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(30, 10), False, True, 0)
     
-    buttons_row.pack_start(_get_edit_buttons_panel(),False, True, 0)
+    buttons_row.pack_start(get_buttons_group(2),False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(30, 10), False, True, 0)
     
     if editorpersistance.prefs.force_small_midbar == False:
         if editorstate.screen_size_small_width() == False:
-            buttons_row.pack_start(_get_edit_buttons_2_panel(),False, True, 0)
+            buttons_row.pack_start(get_buttons_group(3),False, True, 0)
         buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
     
-    buttons_row.pack_start(_get_edit_buttons_3_panel(),False, True, 0)
+    buttons_row.pack_start(get_buttons_group(4),False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(30, 10), False, True, 0)
     
-    buttons_row.pack_start(_get_monitor_insert_buttons(), False, True, 0)
+    buttons_row.pack_start(get_buttons_group(5), False, True, 0)
     buttons_row.pack_start(Gtk.Label(), True, True, 0)
     
 def fill_with_TC_MIDDLE_pattern(buttons_row, window):
@@ -301,12 +344,12 @@ def fill_with_TC_MIDDLE_pattern(buttons_row, window):
     global w
     w = window
     left_panel = Gtk.HBox(False, 0)    
-    left_panel.pack_start(_get_undo_buttons_panel(), False, True, 0)
+    left_panel.pack_start(get_buttons_group(0), False, True, 0)
     left_panel.pack_start(guiutils.get_pad_label(10, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
-    left_panel.pack_start(_get_zoom_buttons_panel(), False, True, 0)
+    left_panel.pack_start(get_buttons_group(1), False, True, 0)
 
     left_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
-    left_panel.pack_start(_get_edit_buttons_3_panel(), False, True, 0)
+    left_panel.pack_start(get_buttons_group(2), False, True, 0)
     #left_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
     left_panel.pack_start(Gtk.Label(), True, True, 0)
 
@@ -321,14 +364,14 @@ def fill_with_TC_MIDDLE_pattern(buttons_row, window):
     right_panel = Gtk.HBox(False, 0) 
     right_panel.pack_start(Gtk.Label(), True, True, 0)
     if editorpersistance.prefs.force_small_midbar == False:
-        right_panel.pack_start(_get_edit_buttons_panel(), False, True, 0)
+        right_panel.pack_start(get_buttons_group(3), False, True, 0)
         right_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
         
     if editorpersistance.prefs.force_small_midbar == False:
         if editorstate.screen_size_small_width() == False:
-            right_panel.pack_start(_get_edit_buttons_2_panel(),False, True, 0)
+            right_panel.pack_start(get_buttons_group(4),False, True, 0)
         right_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
-    right_panel.pack_start(_get_monitor_insert_buttons(), False, True, 0)
+    right_panel.pack_start(get_buttons_group(5), False, True, 0)
 
     buttons_row.pack_start(left_panel, True, True, 0)
     buttons_row.pack_start(middle_panel, False, False, 0)
@@ -347,53 +390,24 @@ def fill_with_COMPONENTS_CENTERED_pattern(buttons_row, window):
         buttons_row.pack_start(w.tool_selector.widget, False, True, 0)
         buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
 
-    buttons_row.pack_start(_get_undo_buttons_panel(), False, True, 0)
+    buttons_row.pack_start(get_buttons_group(0), False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
         
-    buttons_row.pack_start(_get_zoom_buttons_panel(),False, True, 0)
+    buttons_row.pack_start(get_buttons_group(1),False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
     
-    buttons_row.pack_start(_get_edit_buttons_panel(),False, True, 0)
+    buttons_row.pack_start(get_buttons_group(2),False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
 
     if editorpersistance.prefs.force_small_midbar == False:
         if editorstate.screen_size_small_width() == False:
-            buttons_row.pack_start(_get_edit_buttons_2_panel(),False, True, 0)
+            buttons_row.pack_start(get_buttons_group(3),False, True, 0)
         buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
-    
-    buttons_row.pack_start(_get_edit_buttons_3_panel(),False, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
-    
-    buttons_row.pack_start(_get_monitor_insert_buttons(), False, True, 0)
-    buttons_row.pack_start(Gtk.Label(), True, True, 0)
 
-def fill_with_TC_FREE_pattern(buttons_row, window):
-    global w
-    w = window
-    prefs = editorpersistance.prefs
-    
-    groups_tools_current = prefs.groups_tools
-    cbutton_active_current = prefs.cbutton
-    
-    tools_dict = {appconsts.WORKFLOW_LAUNCH:w.worflow_launch.widget, appconsts.BUTTON_GROUP_ZOOM:_get_zoom_buttons_panel(), \
-                  appconsts.BUTTON_GROUP_UNDO:_get_undo_buttons_panel(), appconsts.BUTTON_GROUP_TOOLS:_get_tools_buttons(), \
-                  appconsts.BUTTON_GROUP_EDIT:_get_edit_buttons_panel(), appconsts.BUTTON_GROUP_DELETE:_get_edit_buttons_3_panel(), \
-                  appconsts.BUTTON_GROUP_SYNC_SPLIT:_get_edit_buttons_2_panel(), appconsts.BUTTON_GROUP_MONITOR_ADD:_get_monitor_insert_buttons(), \
-                  appconsts.BIG_TIME_CODE:w.big_TC}
-    if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
-        tools_dict[appconsts.TOOL_SELECT] = w.tool_selector.widget
-        
-    buttons_row.set_homogeneous(False)
-    buttons_row.pack_start(Gtk.Label(), True, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
-    for row_number in range(0, len(groups_tools_current)):
-        if cbutton_active_current[row_number] is True:
-            try:
-                tool = tools_dict[groups_tools_current[row_number]]
-                buttons_row.pack_start(tool, False, True, 0) # does not support dock yet
-                buttons_row.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
-            except:
-                pass # This will fail for appconsts.TOOL_SELECT if we are now using tool dock.
+    buttons_row.pack_start(get_buttons_group(4),False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+
+    buttons_row.pack_start(get_buttons_group(5), False, True, 0)
     buttons_row.pack_start(Gtk.Label(), True, True, 0)
 
 def _get_zoom_buttons_panel():    
@@ -428,52 +442,66 @@ def _clear_container(cont):
     for child in children:
         cont.remove(child)
 
+def get_buttons_dict():
+    buttons_dict = {  appconsts.BUTTON_GROUP_ZOOM: _get_zoom_buttons_panel(),
+                      appconsts.BUTTON_GROUP_UNDO: _get_undo_buttons_panel(),
+                      appconsts.BUTTON_GROUP_EDIT: _get_edit_buttons_panel(), 
+                      appconsts.BUTTON_GROUP_DELETE: _get_edit_buttons_3_panel(),
+                      appconsts.BUTTON_GROUP_SYNC_SPLIT: _get_edit_buttons_2_panel(), 
+                      appconsts.BUTTON_GROUP_MONITOR_ADD: _get_monitor_insert_buttons()}
+
+    return buttons_dict
+
+def get_buttons_group(index):
+    buttons_dict = get_buttons_dict()
+    if current_active_flags[index] == True:
+        return buttons_dict[current_buttons_list[index]]
+    else:
+        return Gtk.Label()
+
 # ----------------------------------------------------------------------------- Free Bar conf GUI
-def show_freebar_conf_dialog():
+def show_middlebar_conf_dialog():
+    
+    _save_layout_data()
+    
     dialog = Gtk.Dialog(_("Middlebar Configuration"), None,
                     Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                     (_("Cancel"), Gtk.ResponseType.REJECT,
                     _("OK"), Gtk.ResponseType.ACCEPT))
 
-    panel = _get_freebar_conf_panel()
+    panel = _get_conf_panel()
     
     guiutils.set_margins(panel, 4, 24, 6, 0)
-    dialog.connect('response', _freebar_dialog_callback, (None, None))
+    dialog.connect('response', _conf_dialog_callback, (None, None))
     dialog.vbox.pack_start(panel, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     dialogutils.default_behaviour(dialog)
     dialog.set_transient_for(gui.editor_window.window)
     dialog.show_all()
 
-def _freebar_dialog_callback(dialog, response_id, data):
+def _conf_dialog_callback(dialog, response_id, data):
     if response_id == Gtk.ResponseType.ACCEPT:
-        editorpersistance.prefs.groups_tools = groups_tools
-        editorpersistance.prefs.cbutton = cbutton_flag
+        editorpersistance.prefs.midbar_layout = current_layout
+        editorpersistance.prefs.midbar_layout_buttons = current_buttons_list
+        editorpersistance.prefs.cbutton = current_active_flags
         editorpersistance.save()
-
-        _do_show_buttons_TC_FREE_layout(gui.editor_window)
+        _load_layout_data()
+        redo_layout(gui.editor_window)
+        
+    else:
+        # Cancel conf edits
+        editorpersistance.prefs.midbar_layout = original_layout
+        editorpersistance.prefs.midbar_layout_buttons = original_buttons_list
+        editorpersistance.prefs.cbutton = original_active_flags
+        editorpersistance.save()
 
     dialog.destroy()
     
 # Toolbar preferences panel for free elements and order
-def _get_freebar_conf_panel():
+def _get_conf_panel():
     prefs = editorpersistance.prefs
 
-    global toolbar_list, groups_tools, cbutton_flag, cbutton, gui_object_names, layout_select
-    groups_tools = prefs.groups_tools
-    cbutton_flag = prefs.cbutton
-
-    gui_object_names = {appconsts.BUTTON_GROUP_TOOLS:_("Tools Group"),
-                        appconsts.BUTTON_GROUP_UNDO:_("Undo Group"),
-                        appconsts.BUTTON_GROUP_ZOOM:_("Zoom Group"),
-                        appconsts.BUTTON_GROUP_EDIT:_("Edit Group"),
-                        appconsts.BUTTON_GROUP_SYNC_SPLIT:_("Sync Split Group"),
-                        appconsts.BUTTON_GROUP_DELETE:_("Delete Group"),
-                        appconsts.BUTTON_GROUP_MONITOR_ADD:_("Monitor Add Group"),
-                        appconsts.BIG_TIME_CODE:_("Timecode Display"),
-                        appconsts.WORKFLOW_LAUNCH:_("Workflow Menu"),
-                        appconsts.TOOL_SELECT:_("Edit Tool Menu")}
-
+    global toolbar_list_box
 
     # Widgets
     layout_select = Gtk.ComboBoxText()
@@ -481,16 +509,18 @@ def _get_freebar_conf_panel():
     layout_select.append_text(_("Timecode Left"))
     layout_select.append_text(_("Timecode Center"))
     layout_select.append_text(_("Components Centered"))
-    layout_select.set_active(0)
+    layout_select.set_active(prefs.midbar_layout) # indexes correspond with appconsts values.
     
+    layout_select.connect("changed", lambda w,e: _layout_conf_changed(w), None)
+        
     layout_row = guiutils.get_left_justified_box([layout_select])
     layout_frame = guiutils.get_named_frame(_("Layout"), layout_row)
     
     vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
     choice = Gtk.Label(_("Set button group active state and position."))
     
-    toolbar_list = Gtk.ListBox()
-    toolbar_list.set_selection_mode(Gtk.SelectionMode.SINGLE)
+    toolbar_list_box = Gtk.ListBox()
+    toolbar_list_box.set_selection_mode(Gtk.SelectionMode.SINGLE)
 
     box_move = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
     button_up = Gtk.Button(label=_("Up"))
@@ -504,81 +534,87 @@ def _get_freebar_conf_panel():
     box_move.pack_start(Gtk.Label(), True, True, 0)
     box_move.pack_start(button_reset, False, False, 0)
 
-    #vbox.pack_start(choice, False, False, 0)
-    vbox.pack_start(toolbar_list, False, False, 0)
+    vbox.pack_start(choice, False, False, 0)
+    vbox.pack_start(toolbar_list_box, False, False, 0)
     vbox.pack_start(box_move, False, False, 0)
     draw_listbox(vbox)
     vbox.set_size_request(400, 200)
 
-    groups_frame = guiutils.get_named_frame(_("Position and Active State"), vbox)
+    groups_frame = guiutils.get_named_frame(_("Buttons Groups"), vbox)
     
     pane = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
     pane.pack_start(layout_frame, False, False, 0)
     pane.pack_start(groups_frame, False, False, 0)
 
     return pane
-    
+
+def _layout_conf_changed(layout_combo):
+    global current_layout
+    current_layout = layout_combo.get_active()
+
 def toggle_click(button, row_number):
-    cbutton_flag[row_number] = button.get_active()
+    global current_active_flags
+    current_active_flags[row_number] = button.get_active()
 
 def row_up(event, vbox):
     reselect_row = -1
-    for row_number in range(0, len(groups_tools)):
-        row = toolbar_list.get_row_at_index(row_number)
-        if row ==  toolbar_list.get_selected_row() and row_number > 0:
-            elem_plus_un = groups_tools[row_number]
-            groups_tools[row_number] =  groups_tools[row_number - 1]
-            groups_tools[row_number - 1] = elem_plus_un
-            check_plus_un = cbutton_flag[row_number]
-            cbutton_flag[row_number] =  cbutton_flag[row_number - 1]
-            cbutton_flag[row_number - 1] = check_plus_un
+    for row_number in range(0, len(current_buttons_list)):
+        row = toolbar_list_box.get_row_at_index(row_number)
+        if row ==  toolbar_list_box.get_selected_row() and row_number > 0:
+            elem_plus_un = current_buttons_list[row_number]
+            current_buttons_list[row_number] =  current_buttons_list[row_number - 1]
+            current_buttons_list[row_number - 1] = elem_plus_un
+            check_plus_un = current_active_flags[row_number]
+            current_active_flags[row_number] =  current_active_flags[row_number - 1]
+            current_active_flags[row_number - 1] = check_plus_un
             reselect_row = row_number - 1
             break
 
-    toolbar_list.unselect_all()
-    for row in toolbar_list:
-        toolbar_list.remove(row)
+    toolbar_list_box.unselect_all()
+    for row in toolbar_list_box:
+        toolbar_list_box.remove(row)
         
     draw_listbox(vbox)
 
     if reselect_row != -1:
-        row = toolbar_list.get_row_at_index(reselect_row)
-        toolbar_list.select_row(row)
+        row = toolbar_list_box.get_row_at_index(reselect_row)
+        toolbar_list_box.select_row(row)
     
 def row_down(event, vbox):
     reselect_row = -1
-    for row_number in range(0, len(groups_tools)):
-        row = toolbar_list.get_row_at_index(row_number)
-        if row ==  toolbar_list.get_selected_row() and row_number < len(groups_tools) -1:
-            elem_moins_un =  groups_tools[row_number]
-            groups_tools[row_number] =  groups_tools[row_number + 1]
-            groups_tools[row_number + 1] = elem_moins_un
-            check_moins_un = cbutton_flag[row_number]
-            cbutton_flag[row_number] =  cbutton_flag[row_number + 1]
-            cbutton_flag[row_number + 1] = check_moins_un
+    for row_number in range(0, len(current_buttons_list)):
+        row = toolbar_list_box.get_row_at_index(row_number)
+        if row ==  toolbar_list_box.get_selected_row() and row_number < len(current_buttons_list) -1:
+            elem_moins_un =  current_buttons_list[row_number]
+            current_buttons_list[row_number] =  current_buttons_list[row_number + 1]
+            current_buttons_list[row_number + 1] = elem_moins_un
+            check_moins_un = current_active_flags[row_number]
+            current_active_flags[row_number] =  current_active_flags[row_number + 1]
+            current_active_flags[row_number + 1] = check_moins_un
             reselect_row = row_number + 1
             break
-    toolbar_list.unselect_all()
-    for row in toolbar_list:
-        toolbar_list.remove(row)
+    toolbar_list_box.unselect_all()
+    for row in toolbar_list_box:
+        toolbar_list_box.remove(row)
     draw_listbox(vbox)
 
     if reselect_row != -1:
-        row = toolbar_list.get_row_at_index(reselect_row)
-        toolbar_list.select_row(row)
+        row = toolbar_list_box.get_row_at_index(reselect_row)
+        toolbar_list_box.select_row(row)
 
 def draw_listbox(vbox):
-    for row_number in range(0, len(groups_tools)):
+    for row_number in range(0, len(current_buttons_list)):
         row = Gtk.ListBoxRow.new()
         box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
-        but = Gtk.CheckButton(label=str(row_number))
+        but = Gtk.CheckButton(label=str(row_number + 1))
+        #but.connect("toggled", toggle_click, row_number)
+        but.set_active(current_active_flags[row_number])
         but.connect("toggled", toggle_click, row_number)
-        but.set_active( cbutton_flag[row_number])
         box.pack_start(but, False, False, 0)
-        lab = Gtk.Label(gui_object_names[groups_tools[row_number]])
+        lab = Gtk.Label(gui_object_names[current_buttons_list[row_number]])
         box.pack_start(lab, True, True, 0)
         row.add(box)
-        toolbar_list.add(row)
+        toolbar_list_box.add(row)
 
     vbox.show_all()
 

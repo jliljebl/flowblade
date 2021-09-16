@@ -1141,44 +1141,10 @@ class EditorWindow:
             print("Panel positioning feature not available, too small screen.")
 
         # Middlebar Layout
-        mb_menu_item = Gtk.MenuItem(_("Middlebar Layout"))
-        mb_menu = Gtk.Menu()
-        tc_left = Gtk.RadioMenuItem()
-        tc_left.set_label(_("Timecode Left"))
-        tc_left.connect("activate", lambda w: middlebar._show_buttons_TC_LEFT_layout(w))
-        mb_menu.append(tc_left)
-
-        tc_middle = Gtk.RadioMenuItem.new_with_label([tc_left], _("Timecode Center"))
-        tc_middle.connect("activate", lambda w: middlebar._show_buttons_TC_MIDDLE_layout(w))
-        mb_menu.append(tc_middle)
-
-        components_centered = Gtk.RadioMenuItem.new_with_label([tc_left], _("Components Centered"))
-        components_centered.connect("activate", lambda w: middlebar._show_buttons_COMPONENTS_CENTERED_layout(w))
-        mb_menu.append(components_centered)
-
-        tc_free = Gtk.RadioMenuItem.new_with_label([tc_left], _("Free Bar"))
-        tc_free.connect("activate", lambda w: middlebar._show_buttons_TC_FREE_layout(w))
-        mb_menu.append(tc_free)
-
-        if editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_COMPONENTS_CENTERED:
-            components_centered.set_active(True)
-        elif editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_TC_LEFT:
-            tc_left.set_active(True)
-        elif editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_TC_FREE:
-            tc_free.set_active(True)
-        else:
-            tc_middle.set_active(True)
-
-        sep = Gtk.SeparatorMenuItem()
-        menu.append(sep)
-
-        freebar_conf = Gtk.MenuItem(_("Configure Free Bar..."))
-        freebar_conf.connect("activate", lambda w: middlebar.show_freebar_conf_dialog())
-        mb_menu.append(freebar_conf)
-        
-        mb_menu_item.set_submenu(mb_menu)
+        mb_menu_item = Gtk.MenuItem(_("Middlebar Configuration..."))
+        mb_menu_item.connect("activate", lambda w: middlebar.show_middlebar_conf_dialog())
         menu.append(mb_menu_item)
-        
+
         # Tool Selection Widget
         tool_selector_menu_item = Gtk.MenuItem(_("Edit Tool Selection Widget"))
         tool_selector_menu =  Gtk.Menu()
@@ -1366,7 +1332,7 @@ class EditorWindow:
             self.tline_box.remove(self.tool_dock)
 
         middlebar.re_create_tool_selector(self)
-        middlebar.do_layout_after_dock_change(self)
+        middlebar.redo_layout(self)
         workflow.select_default_tool()
         
     def _show_tools_dock(self, widget):
@@ -1385,7 +1351,7 @@ class EditorWindow:
         if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_LEFT_DOCK:
             self.tline_box.pack_start(self.tool_dock, False, False, 0)
 
-        middlebar.do_layout_after_dock_change(self)
+        middlebar.redo_layout(self)
         self.tool_selector = None
         workflow.select_default_tool()
 
@@ -1476,12 +1442,14 @@ class EditorWindow:
             middlebar.fill_with_COMPONENTS_CENTERED_pattern(buttons_row, self)
         elif editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_TC_LEFT:
             middlebar.fill_with_TC_LEFT_pattern(buttons_row, self)
-# -----------------------Toolbar preferences panel for free elements and order
-        elif editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_TC_FREE:
-            middlebar.fill_with_TC_FREE_pattern(buttons_row, self)
-# ------------------------End of Toolbar preferences panel for free elements and order
         else:
             middlebar.fill_with_TC_MIDDLE_pattern(buttons_row, self)
+        """    
+        # -----------------------Toolbar preferences panel for free elements and order
+        elif editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_TC_FREE:
+            middlebar.fill_with_TC_FREE_pattern(buttons_row, self)
+        # ------------------------End of Toolbar preferences panel for free elements and order
+        """
 
         # Aug-2019 - SvdB - BB
         offset = 2
