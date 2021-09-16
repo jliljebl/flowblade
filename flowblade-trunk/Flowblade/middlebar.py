@@ -607,7 +607,6 @@ def draw_listbox(vbox):
         row = Gtk.ListBoxRow.new()
         box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
         but = Gtk.CheckButton(label=str(row_number + 1))
-        #but.connect("toggled", toggle_click, row_number)
         but.set_active(current_active_flags[row_number])
         but.connect("toggled", toggle_click, row_number)
         box.pack_start(but, False, False, 0)
