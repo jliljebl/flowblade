@@ -475,11 +475,15 @@ def _get_position_selection_menu(panel_id):
             positions_menu.append(menu_item)
             first_item = menu_item
             menu_items.append(menu_item)
+            if _get_position_available(panel_id, pos_option) == False:
+                menu_item.set_sensitive(False)
         else:
             menu_item = Gtk.RadioMenuItem.new_with_label([first_item], _positions_names[pos_option])
             positions_menu.append(menu_item)
             menu_items.append(menu_item)
-                
+            if _get_position_available(panel_id, pos_option) == False:
+                menu_item.set_sensitive(False)
+
     selected_index = available_positions.index(current_position)
     menu_items[selected_index].set_active(True)
     
@@ -488,6 +492,18 @@ def _get_position_selection_menu(panel_id):
         menu_item.connect("activate", _change_panel_position, panel_id, available_positions[i])
     
     return positions_menu
+
+def _get_position_available(panel_id, pos_option):
+    if editorstate.SCREEN_WIDTH > 1919:
+        return True
+    
+    if pos_option == appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT or pos_option == appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT:
+        if panel_id == appconsts.PANEL_PROJECT or panel_id == appconsts.PANEL_FILTER_SELECT:
+            return True
+        else:
+            return False
+
+    return True
 
 def get_tabs_menu_item():
     tabs_menu_item = Gtk.MenuItem(_("Tabs Positions"))
@@ -539,7 +555,9 @@ def _create_layout_presets_menu(menu):
 
     menu_item = guiutils.get_menu_item(_("Layout Top Row 4 Panels"), callback, "top_row_four")
     menu.add(menu_item)
-
+    if editorstate.SCREEN_WIDTH < 1919:
+        menu_item.set_sensitive(False)
+        
     guiutils.add_separetor(menu)
     
     menu_item = guiutils.get_menu_item(_("Save Current Layout..."), callback, "save_current")
