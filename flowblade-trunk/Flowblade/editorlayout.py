@@ -392,6 +392,15 @@ def get_panel_positions_menu_item():
     panel_positions_menu = Gtk.Menu()
     panel_positions_menu_item.set_submenu(panel_positions_menu)
 
+    # Presets
+    presets_menu_item = Gtk.MenuItem(_("Preset Layouts"))
+    presets_menu = Gtk.Menu()
+    presets_menu_item.set_submenu(presets_menu)
+    _create_layout_presets_menu(presets_menu)
+    panel_positions_menu.append(presets_menu_item)
+    sep = Gtk.SeparatorMenuItem()
+    panel_positions_menu.append(sep)
+    
     # Project Panel
     project_panel_menu_item = Gtk.MenuItem(_("Project Panel"))
     panel_positions_menu.append(project_panel_menu_item)
@@ -399,7 +408,7 @@ def get_panel_positions_menu_item():
     project_panel_menu = _get_position_selection_menu(appconsts.PANEL_PROJECT)
     project_panel_menu_item.set_submenu(project_panel_menu)
     
-    # Media Panel - we're forcing a position for this on two window mode for time being.
+    # Media Panel - we're forcing a position for this on two window mode for the time being.
     if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
         media_panel_menu_item = Gtk.MenuItem(_("Media Panel"))
         panel_positions_menu.append(media_panel_menu_item)
@@ -516,6 +525,10 @@ def get_tabs_menu_item():
 def show_layout_press_menu(widget, event):
     menu = _top_bar_button_menu
     guiutils.remove_children(menu)
+    _create_layout_presets_menu(menu)
+    menu.popup(None, None, None, None, event.button, event.time)
+
+def _create_layout_presets_menu(menu):
     callback = _top_bar_menu_item_activated
     
     menu_item = guiutils.get_menu_item(_("Layout Monitor Left"), callback, "monitor_left")
@@ -538,7 +551,6 @@ def show_layout_press_menu(widget, event):
     menu.add(menu_item)
 
     menu.show_all()
-    menu.popup(None, None, None, None, event.button, event.time)
 
 def _top_bar_menu_item_activated(widget, msg):
     if msg == "monitor_center":
