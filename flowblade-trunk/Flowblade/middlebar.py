@@ -80,7 +80,7 @@ gui_object_names = None
 # Version 2.10 changed middlebar layout data and we need to create it for all first launches of that app version.
 def _init_buttons_data():
     if editorpersistance.prefs.midbar_layout_buttons == None: # No data, first launch.
-        print("Creating middbar data for 2.10...")
+        print("Creating midbar data for 2.10...")
 
         editorpersistance.prefs.cbutton = [True, True, True, True, True, True]
 
@@ -135,9 +135,6 @@ def _do_TC_LEFT_layout(w):
     _create_buttons(w)
     fill_with_TC_LEFT_pattern(w.edit_buttons_row, w)
     w.window.show_all()
-
-    #editorpersistance.prefs.midbar_layout = appconsts.MIDBAR_TC_LEFT
-    #editorpersistance.save()
     
 def _show_buttons_TC_MIDDLE_layout(widget):
     global w
@@ -155,9 +152,6 @@ def _do_TC_MIDDLE_layout(w):
     fill_with_TC_MIDDLE_pattern(w.edit_buttons_row, w)
     w.window.show_all()
 
-    #editorpersistance.prefs.midbar_layout = appconsts.MIDBAR_TC_CENTER
-    #editorpersistance.save()
-
 def _show_buttons_COMPONENTS_CENTERED_layout(widget):
     global w
     w = gui.editor_window
@@ -174,9 +168,6 @@ def _do_COMPONENTS_CENTERED_layout(w):
     _create_buttons(w)
     fill_with_COMPONENTS_CENTERED_pattern(w.edit_buttons_row, w)
     w.window.show_all()
-
-    #editorpersistance.prefs.midbar_layout = appconsts.MIDBAR_COMPONENTS_CENTERED
-    #editorpersistance.save()
 
 def create_edit_buttons_row_buttons(editor_window, modes_pixbufs):
     _init_buttons_data()
