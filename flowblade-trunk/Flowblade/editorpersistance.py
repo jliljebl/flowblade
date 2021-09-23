@@ -347,7 +347,7 @@ class EditorPreferences:
         self.loop_clips = False
         self.audio_scrubbing = False
         self.force_language = "None"
-        self.default_compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
+        self.default_compositing_mode = appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK
         self.single_click_effects_editor_load = False
         self.layout_display_index = 0 # 0 == full area - 1,2... monitor number
         self.default_render_directory = appconsts.USER_HOME_DIR

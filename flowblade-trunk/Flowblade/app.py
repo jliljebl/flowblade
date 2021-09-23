@@ -645,6 +645,7 @@ def new_project(profile_index, v_tracks, a_tracks):
     sequence.AUDIO_TRACKS_COUNT = a_tracks
     profile = mltprofiles.get_profile_for_index(profile_index)
     new_project = projectdata.Project(profile)
+    new_project.c_seq.compositing_mode = editorpersistance.prefs.default_compositing_mode
     open_project(new_project)
 
 def open_project(new_project):

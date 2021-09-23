@@ -213,8 +213,14 @@ def workflow_menu_launched(widget, event):
     
     default_compositing_menu = Gtk.Menu()
     labels = [_("Top Down Free Move"), _("Top Down Auto Follow"), _("Standard Full Track")]
-    msgs = ["top down", "standard auto", "full_track_auto"]
-    active_index = editorpersistance.prefs.default_compositing_mode  # appconsts values correspond with order here.
+    msgs = ["top down", "standard auto", "standard full"]
+    # Indexes do NOT match appconsts values.
+    if editorpersistance.prefs.default_compositing_mode == appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE:
+        active_index = 0
+    elif editorpersistance.prefs.default_compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
+        active_index = 1
+    else:
+        active_index = 2
     _build_radio_menu_items_group(default_compositing_menu, labels, msgs, _workflow_menu_callback, active_index)
 
     default_compositing_item.set_submenu(default_compositing_menu)
