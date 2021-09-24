@@ -54,10 +54,17 @@ def set_current_profile_for_profile_name(profile_name):
     global _current_profile
     _current_profile = mltprofiles.get_profile(profile_name)
 
+def get_current_profile_fps():
+    if _current_profile == None:
+        return None
+
+    return _current_profile.fps()
+
 def get_frames_range_writer_for_current_profile(file_path, callback):
     return FramesRangeWriter(file_path, callback, _current_profile)
 
-        
+
+
 class GmicPlayer:
     
     def __init__(self, clip_path, ticker=None):

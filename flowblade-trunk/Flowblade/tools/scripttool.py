@@ -1008,8 +1008,15 @@ class ScriptToolWindow(Gtk.Window):
             self.preview_range_button.set_sensitive(False)
         else:
             self.preview_range_button.set_sensitive(True)
+
+        fps = gmicplayer.get_current_profile_fps()
+        if fps != None:
+            print("type", type(gmicplayer.get_current_profile_fps()))
+            tc_str = ", " + utils.clip_length_string(_script_length, fps)
+        else:
+            tc_str = ""
             
-        self.length_info.set_text(str(_script_length) + " " + _("frames"))
+        self.length_info.set_text(str(_script_length) + " " + _("frames") + tc_str)
 
         self.mark_in_info.queue_draw()
         self.mark_out_info.queue_draw()

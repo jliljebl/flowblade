@@ -107,13 +107,17 @@ def get_fps_str_with_two_decimals(fps_str):
     except:
         decimals = fps_sides[1]
     return fps_sides[0] + "." + decimals
-    
-def clip_length_string(length):
+
+# frames_per_second needs to be float
+def clip_length_string(length, frames_per_second=None):
     """ 
     Returns length string for length in frames.
     """
-    fr = length % fps()
-    sec = length / fps()
+    if frames_per_second == None:
+        frames_per_second = fps()
+        
+    fr = length % frames_per_second
+    sec = length / frames_per_second
     mins = sec / 60
     sec = int(math.floor(sec % 60))
     hours = int(math.floor(mins / 60))
