@@ -311,7 +311,7 @@ def save_script_dialog(callback):
                                    (_("Cancel"), Gtk.ResponseType.CANCEL,
                                    _("Save"), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.SAVE)
-    dialog.set_current_name("flowblade_script")
+    dialog.set_current_name("flowblade_plugin_script.py")
     dialog.set_do_overwrite_confirmation(True)
     dialog.set_select_multiple(False)
     dialog.connect('response', callback)
