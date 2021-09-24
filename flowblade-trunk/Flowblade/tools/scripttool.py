@@ -679,14 +679,29 @@ class ScriptToolWindow(Gtk.Window):
         self.media_info = Gtk.Label()
         self.media_info.set_markup("<small>" + _("No Preview") + "</small>")
 
-        top_row = Gtk.HBox(False, 2)
-        top_row.pack_start(self.hamburger_launcher.widget, False, False, 0)
-        top_row.pack_start(guiutils.get_pad_label(12, 2), False, False, 0)
-        top_row.pack_start(self.reload_button, False, False, 0)
-        top_row.pack_start(guiutils.get_pad_label(12, 2), False, False, 0)
-        top_row.pack_start(self.action_info, False, False, 0)
-        top_row.pack_start(Gtk.Label(), True, True, 0)
-        top_row.pack_start(self.media_info, False, False, 0)
+        self.profile_info = Gtk.Label()
+
+        left_pane = Gtk.HBox(False, 2)
+        left_pane.pack_start(self.hamburger_launcher.widget, False, False, 0)
+        left_pane.pack_start(guiutils.get_pad_label(12, 2), False, False, 0)
+        left_pane.pack_start(self.reload_button, False, False, 0)
+        left_pane.pack_start(guiutils.get_pad_label(12, 2), False, False, 0)
+        left_pane.pack_start(self.action_info, False, False, 0)
+        left_pane.pack_start(Gtk.Label(), True, True, 0)
+
+        middle_pane = Gtk.HBox(False, 2)
+        middle_pane.pack_start(Gtk.Label(), True, True, 0)
+        middle_pane.pack_start(Gtk.Label(_current_profile_name), False, False, 0)
+        middle_pane.pack_start(Gtk.Label(), True, True, 0)
+
+        right_pane = Gtk.HBox(False, 2)
+        right_pane.pack_start(Gtk.Label(), True, True, 0)
+        right_pane.pack_start(self.media_info, False, False, 0)
+
+        top_row = Gtk.HBox(True, 2)
+        top_row.pack_start(left_pane, True, True, 0)
+        top_row.pack_start(middle_pane, True, True, 0)
+        top_row.pack_start(right_pane, True, True, 0)
         top_row.set_margin_bottom(4)
 
         # -------------------------------------------------------------------- RIGHT SIDE: MONITOR, CONTROLS, ENCODING

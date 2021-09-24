@@ -439,8 +439,9 @@ def monkeypatch_callbacks():
     tlinerender._get_last_tline_view_frame_func = tlinewidgets.get_last_tline_view_frame
 
     guicomponents.select_clip_func = movemodes.select_clip
-    #keyframeeditor.add_fade_out_func = compositeeditor._add_fade_out_pressed
-    # These provide clues for further module refactoring 
+    #keyframeeditor.add_fade_out_func = compositeeditor._add_fade_out_pressed.
+    
+    # These provide clues for possible further refactoring.
 
 # ---------------------------------- SDL2 consumer
 #def create_sdl_2_consumer():
