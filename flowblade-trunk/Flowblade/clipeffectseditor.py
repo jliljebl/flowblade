@@ -384,6 +384,7 @@ def get_clip_effects_editor_info_row():
 
     info_row = Gtk.HBox(False, 2)
     info_row.pack_start(widgets.hamburger_launcher.widget, False, False, 0)
+    info_row.pack_start(widgets.filter_add_launch.widget, True, True, 0)
     info_row.pack_start(Gtk.Label(), True, True, 0)
     info_row.pack_start(widgets.clip_info, False, False, 0)
     info_row.pack_start(Gtk.Label(), True, True, 0)
@@ -404,7 +405,12 @@ def _create_widgets():
     widgets.hamburger_launcher = guicomponents.HamburgerPressLaunch(_hamburger_launch_pressed)
     guiutils.set_margins(widgets.hamburger_launcher.widget, 6, 8, 1, 0)
 
-
+    surface_active = guiutils.get_cairo_image("filter_add")
+    surface_not_active = guiutils.get_cairo_image("filter_add_not_active")
+    surfaces = [surface_active, surface_not_active]
+    widgets.filter_add_launch = guicomponents.HamburgerPressLaunch(lambda w,e:_filter_add_menu_launch_pressed(w, e), surfaces)
+    guiutils.set_margins(widgets.filter_add_launch.widget, 6, 8, 1, 0)
+    
 # ------------------------------------------------------------------- interface
 def set_clip(clip, track, clip_index, show_tab=True):
     """
@@ -546,6 +552,8 @@ def set_enabled(value):
     widgets.clip_info.set_enabled(value)
     widgets.hamburger_launcher.set_sensitive(value)
     widgets.hamburger_launcher.widget.queue_draw()
+    widgets.filter_add_launch.set_sensitive(value)
+    widgets.filter_add_launch.widget.queue_draw()
 
 def set_stack_update_blocked():
     global _block_stack_update
@@ -908,7 +916,27 @@ def _clip_hamburger_item_activated(widget, msg):
         _save_stack_pressed()
     elif  msg == "load_stack":
         _load_stack_pressed()
-        
+
+def _filter_add_menu_launch_pressed(w, event):
+    if _filter_stack != None:
+        clip = _filter_stack.clip
+        track = _filter_stack.track 
+        guicomponents.display_effect_panel_filters_menu(event, clip, track, _filter_menu_callback)
+            
+def _filter_menu_callback(w, data):
+    clip, track, item_id, item_data = data
+    x, filter_info = item_data
+
+    action = get_filter_add_action(filter_info, clip)
+    set_stack_update_blocked() # We update stack on set_clip below
+    action.do_edit()
+    set_stack_update_unblocked()
+
+    # (re)open clip in editor.
+    index = track.clips.index(clip)
+    set_clip(clip, track, index)
+    set_filter_item_expanded(len(clip.filters) - 1)
+    
 def _save_effect_values_dialog_callback(dialog, response_id, filter_object):
     if response_id == Gtk.ResponseType.ACCEPT:
         save_path = dialog.get_filenames()[0]

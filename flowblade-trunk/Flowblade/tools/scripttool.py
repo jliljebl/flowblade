@@ -1012,7 +1012,7 @@ class ScriptToolWindow(Gtk.Window):
         fps = gmicplayer.get_current_profile_fps()
         if fps != None:
             print("type", type(gmicplayer.get_current_profile_fps()))
-            tc_str = ", " + utils.clip_length_string(_script_length, fps)
+            tc_str = " / " + utils.clip_length_string(_script_length, fps)
         else:
             tc_str = ""
             

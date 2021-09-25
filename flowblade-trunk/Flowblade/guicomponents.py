@@ -120,6 +120,7 @@ bin_popup_menu = Gtk.Menu()
 filter_mask_menu = Gtk.Menu()
 kb_shortcuts_hamburger_menu = Gtk.Menu()
 multi_clip_popup_menu = Gtk.Menu()
+effect_menu = Gtk.Menu()
 
 select_clip_func = None
 add_compositors_is_multi_selection = False 
@@ -1928,6 +1929,22 @@ def _get_filters_add_menu_item(event, clip, track, callback, multi_filter=False)
     if multi_filter == True:
         item_id = "add_filter_multi"
 
+    _build_filters_menus(sub_menu, event, clip, track, callback, item_id)
+
+    menu_item.show()
+    return menu_item
+
+def display_effect_panel_filters_menu(event, clip, track, callback):
+    menu = effect_menu
+    guiutils.remove_children(menu)
+    
+    item_id = "add_filter"
+    
+    _build_filters_menus(menu, event, clip, track, callback, item_id)
+
+    menu.popup(None, None, None, None, event.button, event.time)
+
+def _build_filters_menus(sub_menu, event, clip, track, callback, item_id):
     for group in mltfilters.groups:
         group_name, filters_array = group
         group_item = Gtk.MenuItem(group_name)
@@ -1940,9 +1957,6 @@ def _get_filters_add_menu_item(event, clip, track, callback, multi_filter=False)
             filter_item.connect("activate", callback, (clip, track, item_id, (event.x, filter_info)))
             filter_item.show()
         group_item.show()
-
-    menu_item.show()
-    return menu_item
 
 def _get_audio_filters_add_menu_item(event, clip, track, callback):
     menu_item = Gtk.MenuItem(_("Add Filter"))
