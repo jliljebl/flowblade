@@ -365,7 +365,7 @@ class EditorPreferences:
         self.colorized_icons = False
         self.tools_selection = appconsts.TOOL_SELECTOR_IS_MENU
         self.panel_positions = None
-        self.force_small_midbar = False
+        self.force_small_midbar = False # DEPRECATED, after tools moved to topbar we can always support w >=1280 screens and do not care about smaller.
         self.positions_tabs = None
         self.midbar_layout_buttons = None
         

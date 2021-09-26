@@ -307,31 +307,34 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
     if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
         buttons_row.pack_start(w.tool_selector.widget, False, True, 0)
-        if editorstate.SCREEN_WIDTH > NORMAL_WIDTH and editorpersistance.prefs.force_small_midbar == False:
+        if editorstate.SCREEN_WIDTH > NORMAL_WIDTH:
             buttons_row.pack_start(guiutils.get_pad_label(60, 10), False, True, 0)
     
+    if editorstate.screen_size_small_width() == False:
+        pad_w = 30
+    else:
+        pad_w = 5
+        
     buttons_row.pack_start(get_buttons_group(0), False, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(30, 10), False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(pad_w, 10), False, True, 0)
         
     buttons_row.pack_start(get_buttons_group(1),False, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(30, 10), False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(pad_w, 10), False, True, 0)
     
     buttons_row.pack_start(get_buttons_group(2),False, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(30, 10), False, True, 0)
-    
-    if editorpersistance.prefs.force_small_midbar == False:
-        if editorstate.screen_size_small_width() == False:
-            buttons_row.pack_start(get_buttons_group(3),False, True, 0)
-        buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(pad_w, 10), False, True, 0)
+
+    buttons_row.pack_start(get_buttons_group(3),False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(pad_w, 10), False, True, 0)
     
     buttons_row.pack_start(get_buttons_group(4),False, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(30, 10), False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(pad_w, 10), False, True, 0)
     
     buttons_row.pack_start(get_buttons_group(5), False, True, 0)
     buttons_row.pack_start(Gtk.Label(), True, True, 0)
     
 def fill_with_TC_MIDDLE_pattern(buttons_row, window):
-    if editorpersistance.prefs.force_small_midbar == False:
+    if editorstate.screen_size_small_width() == False:
         buttons_row.set_homogeneous(True)
     global w
     w = window
@@ -342,7 +345,6 @@ def fill_with_TC_MIDDLE_pattern(buttons_row, window):
 
     left_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
     left_panel.pack_start(get_buttons_group(2), False, True, 0)
-    #left_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
     left_panel.pack_start(Gtk.Label(), True, True, 0)
 
     middle_panel = Gtk.HBox(False, 0)
@@ -355,14 +357,11 @@ def fill_with_TC_MIDDLE_pattern(buttons_row, window):
     
     right_panel = Gtk.HBox(False, 0) 
     right_panel.pack_start(Gtk.Label(), True, True, 0)
-    if editorpersistance.prefs.force_small_midbar == False:
-        right_panel.pack_start(get_buttons_group(3), False, True, 0)
-        right_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
-        
-    if editorpersistance.prefs.force_small_midbar == False:
-        if editorstate.screen_size_small_width() == False:
-            right_panel.pack_start(get_buttons_group(4),False, True, 0)
-        right_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
+    right_panel.pack_start(get_buttons_group(3), False, True, 0)
+    right_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
+
+    right_panel.pack_start(get_buttons_group(4),False, True, 0)
+    right_panel.pack_start(guiutils.get_pad_label(10, 10), False, True, 0)
     right_panel.pack_start(get_buttons_group(5), False, True, 0)
 
     buttons_row.pack_start(left_panel, True, True, 0)
@@ -373,6 +372,12 @@ def fill_with_COMPONENTS_CENTERED_pattern(buttons_row, window):
     buttons_row.set_homogeneous(False)
     global w
     w = window
+    
+    if editorstate.screen_size_small_width() == False:
+        pad_w = 20
+    else:
+        pad_w = 5
+            
     buttons_row.pack_start(Gtk.Label(), True, True, 0)
     buttons_row.pack_start(w.worflow_launch.widget, False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) 
@@ -380,24 +385,22 @@ def fill_with_COMPONENTS_CENTERED_pattern(buttons_row, window):
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
     if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
         buttons_row.pack_start(w.tool_selector.widget, False, True, 0)
-        buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+        buttons_row.pack_start(guiutils.get_pad_label(pad_w, 10), False, True, 0)
 
     buttons_row.pack_start(get_buttons_group(0), False, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(pad_w, 10), False, True, 0)
         
     buttons_row.pack_start(get_buttons_group(1),False, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(pad_w, 10), False, True, 0)
     
     buttons_row.pack_start(get_buttons_group(2),False, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(pad_w, 10), False, True, 0)
 
-    if editorpersistance.prefs.force_small_midbar == False:
-        if editorstate.screen_size_small_width() == False:
-            buttons_row.pack_start(get_buttons_group(3),False, True, 0)
-        buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+    buttons_row.pack_start(get_buttons_group(3),False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(pad_w, 10), False, True, 0)
 
     buttons_row.pack_start(get_buttons_group(4),False, True, 0)
-    buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
+    buttons_row.pack_start(guiutils.get_pad_label(pad_w, 10), False, True, 0)
 
     buttons_row.pack_start(get_buttons_group(5), False, True, 0)
     buttons_row.pack_start(Gtk.Label(), True, True, 0)

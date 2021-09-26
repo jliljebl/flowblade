@@ -1442,12 +1442,6 @@ class EditorWindow:
             middlebar.fill_with_TC_LEFT_pattern(buttons_row, self)
         else:
             middlebar.fill_with_TC_MIDDLE_pattern(buttons_row, self)
-        """    
-        # -----------------------Toolbar preferences panel for free elements and order
-        elif editorpersistance.prefs.midbar_layout == appconsts.MIDBAR_TC_FREE:
-            middlebar.fill_with_TC_FREE_pattern(buttons_row, self)
-        # ------------------------End of Toolbar preferences panel for free elements and order
-        """
 
         # Aug-2019 - SvdB - BB
         offset = 2

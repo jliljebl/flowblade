@@ -317,12 +317,12 @@ def panel_positioning_available():
     return False
 
 def get_bottom_row_minimum_width():
-    middle_bar_w, dummy = gui.editor_window.edit_buttons_row.get_preferred_width()
-    bottom_left_w, dummy = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT].get_preferred_width()
-    bottom_right_w, dummy = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT].get_preferred_width()
-    left_column_w, dummy = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_LEFT_COLUMN].get_preferred_width() 
+    middle_bar_w, dummy_h = gui.editor_window.edit_buttons_row.get_preferred_width()
+    bottom_left_w, dummy_h = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT].get_preferred_width()
+    bottom_right_w, dummy_h = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT].get_preferred_width()
+    left_column_w, dummy_h = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_LEFT_COLUMN].get_preferred_width() 
     combined = middle_bar_w + bottom_left_w + bottom_right_w + left_column_w
-
+    print(middle_bar_w, bottom_left_w, bottom_right_w, left_column_w)
     return combined
 
 def set_positions_frames_visibility():
@@ -581,6 +581,7 @@ def _top_bar_menu_item_activated(widget, msg):
 
 # ----------------------------------------------- CHANGING POSITIONS
 def _change_panel_position(widget, panel_id, pos_option):
+    # We're again getting one event for activated item and one for the de-activated item.
     if widget != None and widget.get_active() == False:
         return
 
@@ -595,6 +596,7 @@ def _change_panel_position(widget, panel_id, pos_option):
         _panel_positions[panel_id] = pos_option
 
     # If bottom row items do not fit, drop some buttons in middlebar.
+    """
     bottom_row_min_width = get_bottom_row_minimum_width()
     if bottom_row_min_width > editorstate.SCREEN_WIDTH:
         editorpersistance.prefs.force_small_midbar = True
@@ -604,8 +606,10 @@ def _change_panel_position(widget, panel_id, pos_option):
         editorpersistance.prefs.force_small_midbar = False
         editorpersistance.save()
         middlebar.redo_layout(gui.editor_window)
+    """
     
-    # Show layout immediately if this called from app menu
+    # Show layout immediately if this called to change single position,
+    # applying layout changes multiple positions.
     if widget != None:
         gui.editor_window.window.show_all()
         set_positions_frames_visibility()
