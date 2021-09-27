@@ -66,6 +66,8 @@ display_monitor_media_file = None
 range_log_items_tline_drop = None
 range_log_items_log_drop = None
 open_dropped_files = None
+#get_selected_media_files = None
+
 
 def init():
     global clip_icon, empty_icon
@@ -190,9 +192,15 @@ def _on_effect_stack_drop(widget, context, x, y, timestamp):
     context.finish(True, False, timestamp)
     
 def _bin_drag_data_received(treeview, context, x, y, selection, info, etime, move_files_to_bin_func):
-    bin_path, drop_pos = treeview.get_dest_row_at_pos(x, y)
+    try:
+        bin_path, drop_pos = treeview.get_dest_row_at_pos(x, y)
+    except:
+        return # drop on empty
+
     media_files = []
-    for media_object in drag_data:
+
+    selected_media_objects = gui.media_list_view.selected_objects
+    for media_object in selected_media_objects:
         media_files.append(media_object.media_file)
     move_files_to_bin_func(max(bin_path), media_files)
 

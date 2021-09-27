@@ -1335,7 +1335,6 @@ class MediaObjectWidget:
         self.media_file = media_file
         self.selected_callback = selected_callback
         self.indicator_icon = indicator_icon
-        self.selected_callback = selected_callback
         self.matches_project_profile = media_file.matches_project_profile()
 
         self.widget = Gtk.EventBox()
@@ -2592,7 +2591,7 @@ def get_full_profile_info_text(profile):
         prog = _("No")
     str_list.append(_("Progressive: ") + prog)
     str_list.append("\n")
-    str_list.append(_("Color space: ") + "ITU-R" + str(profile.colorspace()))
+    str_list.append(_("Color space: ") + "ITU-R " + str(profile.colorspace()))
     return ''.join(str_list)
 
 def set_profile_info_values_text(profile, label, show_description):
