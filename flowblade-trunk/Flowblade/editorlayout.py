@@ -22,13 +22,14 @@
 This modules handles displaying and moving panels into different positions 
 in application window.
 """
-from gi.repository import Gtk
+from gi.repository import Gtk, GObject
 
 import copy
 
 import appconsts
 import editorpersistance
 import editorstate
+import dialogutils
 import gui
 import guiutils
 import middlebar
@@ -316,15 +317,6 @@ def panel_positioning_available():
     
     return False
 
-def get_bottom_row_minimum_width():
-    middle_bar_w, dummy_h = gui.editor_window.edit_buttons_row.get_preferred_width()
-    bottom_left_w, dummy_h = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT].get_preferred_width()
-    bottom_right_w, dummy_h = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT].get_preferred_width()
-    left_column_w, dummy_h = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_LEFT_COLUMN].get_preferred_width() 
-    combined = middle_bar_w + bottom_left_w + bottom_right_w + left_column_w
-    print(middle_bar_w, bottom_left_w, bottom_right_w, left_column_w)
-    return combined
-
 def set_positions_frames_visibility():
     # if frame has 0 panels in it, hide
     for position in _positions_names:
@@ -475,14 +467,10 @@ def _get_position_selection_menu(panel_id):
             positions_menu.append(menu_item)
             first_item = menu_item
             menu_items.append(menu_item)
-            if _get_position_available(panel_id, pos_option) == False:
-                menu_item.set_sensitive(False)
         else:
             menu_item = Gtk.RadioMenuItem.new_with_label([first_item], _positions_names[pos_option])
             positions_menu.append(menu_item)
             menu_items.append(menu_item)
-            if _get_position_available(panel_id, pos_option) == False:
-                menu_item.set_sensitive(False)
 
     selected_index = available_positions.index(current_position)
     menu_items[selected_index].set_active(True)
@@ -492,18 +480,6 @@ def _get_position_selection_menu(panel_id):
         menu_item.connect("activate", _change_panel_position, panel_id, available_positions[i])
     
     return positions_menu
-
-def _get_position_available(panel_id, pos_option):
-    if editorstate.SCREEN_WIDTH > 1919:
-        return True
-    
-    if pos_option == appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT or pos_option == appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT:
-        if panel_id == appconsts.PANEL_PROJECT or panel_id == appconsts.PANEL_FILTER_SELECT:
-            return True
-        else:
-            return False
-
-    return True
 
 def get_tabs_menu_item():
     tabs_menu_item = Gtk.MenuItem(_("Tabs Positions"))
@@ -595,25 +571,49 @@ def _change_panel_position(widget, panel_id, pos_option):
     else:
         _panel_positions[panel_id] = pos_option
 
-    # If bottom row items do not fit, drop some buttons in middlebar.
-    """
-    bottom_row_min_width = get_bottom_row_minimum_width()
-    if bottom_row_min_width > editorstate.SCREEN_WIDTH:
-        editorpersistance.prefs.force_small_midbar = True
-        editorpersistance.save()
-        middlebar.redo_layout(gui.editor_window)
-    else:
-        editorpersistance.prefs.force_small_midbar = False
-        editorpersistance.save()
-        middlebar.redo_layout(gui.editor_window)
-    """
-    
     # Show layout immediately if this called to change single position,
     # applying layout changes multiple positions.
     if widget != None:
         gui.editor_window.window.show_all()
         set_positions_frames_visibility()
+        GObject.timeout_add(100, _check_dimensions)
+        
+def _check_dimensions():
+    top_row_min_width = get_top_row_minimum_width()
+    bottom_row_min_width = get_bottom_row_minimum_width()
 
+    if top_row_min_width > editorstate.SCREEN_WIDTH or bottom_row_min_width > editorstate.SCREEN_WIDTH:
+        primary_txt = _("Custom layout does not fit on screen!") 
+        
+        info_text = _("Available screen dimensions: ") + str(editorstate.SCREEN_WIDTH) + " x " +  str(editorstate.SCREEN_HEIGHT) + "\n\n"
+        if top_row_min_width > editorstate.SCREEN_WIDTH:
+            info_text = info_text + _("Top row width:        ") + str(top_row_min_width) + "\n"
+        if bottom_row_min_width > editorstate.SCREEN_WIDTH:
+            info_text = info_text + _("Bottom row width:     ") + str(bottom_row_min_width) + "\n\n"
+        
+        info_text = info_text + _("Change panels positions or remove buttons from midbar\nto make layout fit on screen.")
+
+        dialogutils.info_message(primary_txt, info_text, gui.editor_window.window)
+
+    return  False
+
+def get_top_row_minimum_width():
+    player_buttons_w, h = gui.editor_window.player_buttons_row.get_preferred_width()
+    top_default_w, h = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT].get_preferred_width()
+    top_right_w, h = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT].get_preferred_width()
+    left_column_w, h = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_LEFT_COLUMN].get_preferred_width() 
+    top_left_w, h = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT].get_preferred_width() 
+    combined = top_default_w + top_right_w + left_column_w + top_left_w + player_buttons_w
+    return combined
+
+def get_bottom_row_minimum_width():
+    middle_bar_w, h = gui.editor_window.edit_buttons_row.get_preferred_width()
+    bottom_left_w, h = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT].get_preferred_width()
+    bottom_right_w, h = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT].get_preferred_width()
+    left_column_w, h = _get_position_frames_dict()[appconsts.PANEL_PLACEMENT_LEFT_COLUMN].get_preferred_width() 
+    combined = middle_bar_w + bottom_left_w + bottom_right_w + left_column_w
+    return combined
+    
 def _remove_panel(panel_id):
     current_position = _panel_positions[panel_id]
     panel_widgets = _get_panels_widgets_dict(gui.editor_window)

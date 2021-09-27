@@ -508,8 +508,8 @@ class EditorWindow:
         player_buttons_row.pack_start(Gtk.Label(), True, True, 0)
         player_buttons_row.pack_start(self.trim_view_select.widget, False, False, 0)
         player_buttons_row.pack_start(self.view_mode_select.widget, False, False, 0)
-        #player_buttons_row.set_name("darkest-bg-widget")
-
+        self.player_buttons_row = player_buttons_row
+        
         # Switch / pos bar row
         sw_pos_hbox = Gtk.HBox(False, 1)
         sw_pos_hbox.pack_start(pos_bar_frame, True, True, 0)
