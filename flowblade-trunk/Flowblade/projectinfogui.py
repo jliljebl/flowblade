@@ -64,7 +64,6 @@ def get_project_info_panel():
     return project_info_hbox
 
 def get_top_level_project_info_panel():
-    #project_name_label = Gtk.Label(label=_("Project Profile"))
     project_name_label = guiutils.bold_label(_("Project Profile"))
     project_name_label.set_justify(Gtk.Justification.LEFT)
     name_row = guiutils.set_margins(guiutils.get_left_justified_box([project_name_label]), 0, 4,0,0)
@@ -87,6 +86,8 @@ def get_top_level_project_info_panel():
     project_info_vbox.pack_start(desc_row, False, True, 0)
     project_info_vbox.pack_start(info_box, False, True, 0)
     guiutils.set_margins(project_info_vbox, 4,0,4,4)
+
+    project_info_vbox.set_tooltip_text(guicomponents.get_full_profile_info_text(profile))
 
     widgets.project_name_label = project_name_label
     widgets.desc_label = desc_label

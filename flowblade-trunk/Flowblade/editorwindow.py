@@ -428,7 +428,6 @@ class EditorWindow:
         self.media_log_panel = guiutils.set_margins(media_log_vbox, 6, 6, 6, 6)
         self.media_log_events_list_view = media_log_events_list_view
 
-        # Project Panel
         # Sequence list
         self.sequence_list_view = guicomponents.SequenceListView(   projectaction.sequence_name_edited,
                                                                     projectaction.sequence_panel_popup_requested,
@@ -441,7 +440,7 @@ class EditorWindow:
         jobs_hbox = Gtk.HBox()
         jobs_hbox.pack_start(jobs_panel, True, True, 0)
         self.jobs_pane = guiutils.set_margins(jobs_hbox, 6, 6, 6, 6)
-        
+
         # Project panel
         if editorlayout.top_level_project_panel() == True:
             # Project info

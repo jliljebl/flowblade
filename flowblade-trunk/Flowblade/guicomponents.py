@@ -2496,7 +2496,6 @@ def get_profile_info_small_box(profile):
 
 def get_profile_info_reduced_small_box(profile):
     text = get_profile_reduced_info_text(profile)
-    print(text)
     label = Gtk.Label(label=text)
 
     if editorstate.screen_size_small_height() == True:
@@ -2567,6 +2566,34 @@ def set_profile_info_labels_text(label, show_description):
     label_label_text = ''.join(str_list)
     label.set_text(label_label_text)
     label.set_justify(Gtk.Justification.LEFT)
+
+def get_full_profile_info_text(profile):
+    str_list = []
+    str_list.append(_("Description: ") + profile.description())
+    str_list.append("\n")
+    str_list.append(_("Dimensions: ") + str(profile.display_aspect_num()) + ":" + str(profile.display_aspect_den()))
+    str_list.append("\n")
+    # round fractional frame rates to something easier to read
+    fps = profile.fps()
+    display_fps = str(round(fps))
+    if 0 != (fps % 1):
+        display_fps = str(round((float(fps)), 2))
+    str_list.append(_("Frames per second: ") + display_fps)
+    str_list.append("\n")
+    str_list.append(_("Size: ") + str(profile.width()) + " x " + str(profile.height()))
+    str_list.append("\n")
+    pix_asp = float(profile.sample_aspect_num()) / profile.sample_aspect_den()
+    pa_str =  "%.2f" % pix_asp
+    str_list.append(_("Pixel aspect ratio: ") + pa_str)
+    str_list.append("\n")
+    if profile.progressive() == True:
+        prog = _("Yes")
+    else:
+        prog = _("No")
+    str_list.append(_("Progressive: ") + prog)
+    str_list.append("\n")
+    str_list.append(_("Color space: ") + "ITU-R" + str(profile.colorspace()))
+    return ''.join(str_list)
 
 def set_profile_info_values_text(profile, label, show_description):
     str_list = []
