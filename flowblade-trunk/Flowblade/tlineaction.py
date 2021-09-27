@@ -2053,7 +2053,7 @@ def _marker_add_dialog_callback(dialog, response_id, name_entry):
     name = name_entry.get_text()
     dialog.destroy()
     if response_id != Gtk.ResponseType.ACCEPT:
-            return
+        return
     current_frame = PLAYER().current_frame()
     _do_add_marker(name, current_frame)
 
