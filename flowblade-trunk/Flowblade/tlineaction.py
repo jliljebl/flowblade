@@ -2019,32 +2019,45 @@ def marker_menu_lauch_pressed(widget, event):
 
 def _marker_menu_item_activated(widget, msg):
     current_frame = PLAYER().current_frame()
+    mrk_index = -1
+    for i in range(0, len(current_sequence().markers)):
+        name, frame = current_sequence().markers[i]
+        if frame == current_frame:
+            mrk_index = i
+            
     if msg == "add":
         dialogs.marker_name_dialog(utils.get_tc_string(current_frame), _marker_add_dialog_callback)
     elif msg == "delete":
-        mrk_index = -1
-        for i in range(0, len(current_sequence().markers)):
-            name, frame = current_sequence().markers[i]
-            if frame == current_frame:
-                mrk_index = i
         if mrk_index != -1:
             current_sequence().markers.pop(mrk_index)
             updater.repaint_tline()
     elif msg == "deleteall":
         current_sequence().markers = []
         updater.repaint_tline()
+    elif msg == "rename":
+        if mrk_index != -1:
+            current_sequence().markers.pop(mrk_index)
+            dialogs.marker_name_dialog(utils.get_tc_string(current_frame), _marker_add_dialog_callback, True)
     else: # seek to marker
         name, frame = current_sequence().markers[int(msg)]
         PLAYER().seek_frame(frame)
 
 def add_marker():
     current_frame = PLAYER().current_frame()
-    dialogs.marker_name_dialog(utils.get_tc_string(current_frame), _marker_add_dialog_callback)
+    if PLAYER().is_stopped() == False:
+        _do_add_marker(_("Playback Marker"), current_frame)
+    else:
+        dialogs.marker_name_dialog(utils.get_tc_string(current_frame), _marker_add_dialog_callback)
 
 def _marker_add_dialog_callback(dialog, response_id, name_entry):
     name = name_entry.get_text()
     dialog.destroy()
+    if response_id != Gtk.ResponseType.ACCEPT:
+            return
     current_frame = PLAYER().current_frame()
+    _do_add_marker(name, current_frame)
+
+def _do_add_marker(name, current_frame):
     dupl_index = -1
     for i in range(0, len(current_sequence().markers)):
         marker_name, frame = current_sequence().markers[i]

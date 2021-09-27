@@ -1187,10 +1187,17 @@ def not_valid_producer_dialog(file_path, parent_window):
     secondary_txt = _("File: ") + file_path + _("\nis not a valid media file.")
     dialogutils.warning_message(primary_txt, secondary_txt, parent_window, is_info=True)
 
-def marker_name_dialog(frame_str, callback):
-    dialog = Gtk.Dialog(_("New Marker"),  gui.editor_window.window,
+def marker_name_dialog(frame_str, callback, rename=False):
+    if rename == False:
+        title = _("New Marker")
+        btn_text = _("Add Marker")
+    else:
+        title = _("Rename Marker")
+        btn_text = _("Do Rename")
+        
+    dialog = Gtk.Dialog(title, gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Add Marker"), Gtk.ResponseType.ACCEPT))
+                        (btn_text, Gtk.ResponseType.ACCEPT))
 
     name_entry = Gtk.Entry()
     name_entry.set_width_chars(30)

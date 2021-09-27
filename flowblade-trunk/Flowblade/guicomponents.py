@@ -3123,6 +3123,8 @@ def get_markers_popup_menu(event, callback):
     menu.add(del_item)
     del_all_item = _get_menu_item(_("Delete All Markers"), callback, "deleteall", markers_exist==True)
     menu.add(del_all_item)
+    rename_item = _get_menu_item(_("Rename Marker"), callback, "rename", markers_exist==True)
+    menu.add(rename_item)
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
 
