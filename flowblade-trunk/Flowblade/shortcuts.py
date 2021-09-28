@@ -352,7 +352,6 @@ def get_diff_to_defaults(xml_file):
         key_name_test, action_name = get_shortcut_info(test_root, code)
         key_name_def, action_name = get_shortcut_info(def_root, code)
         if key_name_def != key_name_test:
-            print(diff_str, action_name, key_name_def, key_name_test)
             diff_str = diff_str + action_name + " (" + key_name_test + ")    "
     
     return diff_str

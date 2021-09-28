@@ -995,7 +995,7 @@ class AbstractKeyFrameEditor(Gtk.VBox):
         # slider value without causing 'changed' signal to update keyframes.
         if self.editable_property.value_changed_ID != DISCONNECTED_SIGNAL_HANDLER:
             self.slider.get_adjustment().handler_block(self.editable_property.value_changed_ID)
-
+            
         new_value = _get_frame_value(frame, self.clip_editor.keyframes)
         self.editable_property.adjustment.set_value(new_value)
         if self.editable_property.value_changed_ID != DISCONNECTED_SIGNAL_HANDLER:

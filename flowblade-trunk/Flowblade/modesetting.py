@@ -23,6 +23,7 @@ Handles edit mode setting.
 """
 
 import boxmove
+import clipeffectseditor
 import editorstate
 from editorstate import current_sequence
 from editorstate import PLAYER
@@ -319,6 +320,8 @@ def kftool_mode_pressed():
     tlinewidgets.set_edit_mode(None, tlinewidgets.draw_kftool_overlay)
     movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
 
+    clipeffectseditor.keyframe_editor_widgets = []
+
 def kftool_mode_from_popup_menu(clip, track, edit_type):
     stop_looping()
     current_sequence().clear_hidden_track()
@@ -334,3 +337,5 @@ def kftool_mode_from_popup_menu(clip, track, edit_type):
     kftoolmode.init_tool_for_clip(clip, track, edit_type)
     kftoolmode.edit_data["initializing"] = False
     gui.editor_window.set_cursor_to_mode()
+
+    clipeffectseditor.keyframe_editor_widgets = []
