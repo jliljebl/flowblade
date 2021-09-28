@@ -1762,7 +1762,10 @@ def display_multi_clip_popup_menu(event, clip, track, callback):
     
     global add_compositors_is_multi_selection
     add_compositors_is_multi_selection = True
-    
+
+    clip_menu.add(_get_menu_item(_("Create Container Clip From Selected Clips"), callback, (clip, track, "create_multi_compound", event.x)))
+    _add_separetor(clip_menu)
+        
     clip_menu.add(_get_filters_add_menu_item(event, clip, track, callback, True))
 
     if current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
@@ -1804,6 +1807,8 @@ def display_multi_clip_popup_menu(event, clip, track, callback):
     lift_item = _get_menu_item(_("Lift"), callback, (clip, track, "lift", event.x))
     clip_menu.add(lift_item)
 
+
+    
     add_compositors_is_multi_selection = False
     
     clip_menu.popup(None, None, None, None, event.button, event.time)

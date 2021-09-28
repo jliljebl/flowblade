@@ -53,6 +53,7 @@ import kftoolmode
 import mlttransitions
 import modesetting
 import movemodes
+import projectaction
 import syncsplitevent
 import tlinewidgets
 import tlineaction
@@ -792,8 +793,10 @@ def _reload_clip_media(data):
     action.do_edit()
     
     
-    
-    
+def _create_container_clip_from_selection(data):
+    GLib.idle_add(projectaction.create_selection_compound_clip)
+
+
 # Functions to handle popup menu selections for strings 
 # set as activation messages in guicomponents.py
 # activation_message -> _handler_func
@@ -843,6 +846,7 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "delete_compositors":_delete_compositors,
                   "multi_delete_compositors": _multi_delete_compositors,
                   "reload_media":_reload_clip_media,
+                  "create_multi_compound":_create_container_clip_from_selection,
                   "cc_render_full_media":containerclip.render_full_media,
                   "cc_render_clip":containerclip.render_clip_length,
                   "cc_go_to_underdered":containerclip.switch_to_unrendered_media,
