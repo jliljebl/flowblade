@@ -332,7 +332,7 @@ class EditorWindow:
         self.media_scroll_window = Gtk.ScrolledWindow()
         self.media_scroll_window.add(view)
         self.media_scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-        self.media_scroll_window.set_size_request(guicomponents.MEDIA_OBJECT_WIDGET_WIDTH * 2 + 70, guicomponents.MEDIA_OBJECT_WIDGET_HEIGHT)
+        self.media_scroll_window.set_size_request(guicomponents.MEDIA_OBJECT_WIDGET_WIDTH * 2 + 15, guicomponents.MEDIA_OBJECT_WIDGET_HEIGHT)
         self.media_scroll_window.show_all()
 
         media_panel, bin_info = panels.get_media_files_panel(
