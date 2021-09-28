@@ -101,26 +101,6 @@ def load_shortcuts():
     _set_key_names()
     set_keyboard_shortcuts()
 
-def update_custom_shortcuts(xml_file):
-    # If new shortcuts have been added and user is using custom shortcuts when updating, we need to update customn shortcuts.
-    custom_files = os.listdir(userfolders.get_data_dir() + "/" + appconsts.USER_SHORTCUTS_DIR)
-    if not(xml_file in custom_files):
-        return
-
-    test_root = get_shortcuts_xml_root_node(xml_file)
-    def_root = get_shortcuts_xml_root_node(DEFAULT_SHORTCUTS_FILE)
-    
-    for code, action_name in _keyboard_action_names.items():
-        key_name_test, action_name = get_shortcut_info(test_root, code)
-        key_name_def, action_name = get_shortcut_info(def_root , code)
-        if key_name_test != key_name_def:
-            events = def_root.iter('event')
-            for event in events:
-                if event.get('code') == code:
-                    key_val_name = event.text
-                    mods_list = event.get('modifiers')                                
-                    change_custom_shortcut(code, key_val_name, [mods_list], True)
-    
 def set_keyboard_shortcuts():
     global _keyboard_actions, _editable
     prefs = editorpersistance.prefs
@@ -172,6 +152,46 @@ def set_keyboard_shortcuts():
         print("Error opening shortcuts file:" + prefs.shortcuts)
 
     #_print_shortcuts()
+
+
+def update_custom_shortcuts():
+    # If new shortcuts have been added and user is using custom shortcuts when updating, we need to update customn shortcuts.
+    custom_files = os.listdir(userfolders.get_data_dir() + "/" + appconsts.USER_SHORTCUTS_DIR)
+    for custom_prefs_file in custom_files:
+        _update_custom_xml_file_nodes_to_default(_get_shortcut_file_fullpath(custom_prefs_file))
+
+def _update_custom_xml_file_nodes_to_default(custom_xml_file_path):
+    pref_shortcuts = etree.parse(custom_xml_file_path)
+    default_shortcuts = etree.parse(_get_shortcut_file_fullpath(DEFAULT_SHORTCUTS_FILE))
+    pref_root = pref_shortcuts.getroot()
+    default_root = default_shortcuts.getroot()
+    pref_dict = _get_events_dict(pref_root)
+    default_dict = _get_events_dict(default_root)
+
+    changed = False
+    for code in default_dict:
+        try:
+            pref_event = pref_dict[code]
+        except:
+            print( "Adding missing keyevent ", code, " to custom shortcuts file ", custom_xml_file_path)
+            default_event = default_dict[code]
+            new_pref_event = etree.fromstring(etree.tostring(default_event))
+            pref_shortcuts_node = pref_root.find("shortcuts")
+            pref_shortcuts_node.append(new_pref_event)
+            changed = True
+    
+    if changed == True:
+        print("Writing ", custom_xml_file_path)
+        pref_shortcuts.write(custom_xml_file_path)
+
+# code -> xml.etree.ElementTree.Element
+def _get_events_dict(xml_root):
+    events_dict = {}
+    events = xml_root.iter('event')
+    for event in events:
+        events_dict[event.get('code')] = event
+
+    return events_dict
 
 def get_root():
     shortcuts = etree.parse(_get_shortcut_file_fullpath(editorpersistance.prefs.shortcuts))
@@ -312,7 +332,6 @@ def get_shortcut_gtk_code(root, code):
                 gtk_code += _gtk_mod_names[mod]
                 
             gtk_code += event.text.upper()
-            #gtk_code = "'" + gtk_code + "'"
             return gtk_code
 
     return None
@@ -331,8 +350,9 @@ def get_diff_to_defaults(xml_file):
     
     for code, action_name in _keyboard_action_names.items():
         key_name_test, action_name = get_shortcut_info(test_root, code)
-        key_name_def, action_name = get_shortcut_info(def_root , code)
+        key_name_def, action_name = get_shortcut_info(def_root, code)
         if key_name_def != key_name_test:
+            print(diff_str, action_name, key_name_def, key_name_test)
             diff_str = diff_str + action_name + " (" + key_name_test + ")    "
     
     return diff_str

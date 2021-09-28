@@ -1479,6 +1479,7 @@ def _shorcuts_selection_changed(combo, scroll_hold_panel, diff_data, dialog):
     shortcuts.set_keyboard_shortcuts()
     
     display_keyboard_shortcuts(selected_xml, workflow.get_tline_tool_working_set(), scroll_hold_panel)
+    #shortcuts.compare_xml_file_nodes_to_default(selected_xml)
     diff_data.set_text(shortcuts.get_diff_to_defaults(selected_xml))
     dialog.show_all()
 
