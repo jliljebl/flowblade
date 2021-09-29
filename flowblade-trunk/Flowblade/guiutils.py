@@ -187,21 +187,20 @@ def get_cairo_image(img_name, suffix = ".png", force = None):
     if force == None:
         force = editorpersistance.prefs.double_track_hights
     if force:
-#        new_name = img_name + "@2"
         if img_name[-6:] == "_color":  #editorpersistance.prefs.colorized_icons is True:
              new_name = img_name[:-6] + "@2_color"
         else:
             new_name = img_name + "@2"
     else:
         new_name = img_name
+
     try:
         img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + new_name + suffix)
     except:
         # Colorized icons
-#        img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + img_name + suffix)
         if img_name[-6:] == "_color":  #editorpersistance.prefs.colorized_icons is True:
             try:
-                img =  cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + img_name + "_color" + suffix)
+                img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + img_name + "_color" + suffix)
             except:
                 img = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + img_name[:-6] + suffix)
         else:
