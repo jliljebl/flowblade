@@ -396,7 +396,42 @@ def load_effects_compositors_values_dialog(callback, loading_effect=True, filter
     else:
         dialog.connect('response', callback, filter_object)
     dialog.show()
+
+def save_layout_data(callback, data):
+    parent = gui.editor_window.window
+
+    dialog = Gtk.FileChooserDialog( _("Save Layout"), parent,
+                                   Gtk.FileChooserAction.SAVE,
+                                   (_("Cancel"), Gtk.ResponseType.CANCEL,
+                                    _("Save"), Gtk.ResponseType.ACCEPT))
+    dialog.set_action(Gtk.FileChooserAction.SAVE)
+    dialog.set_current_name(_("flowblade_custom_layout.layout_data"))
+    dialog.set_do_overwrite_confirmation(True)
+
+    dialog.set_select_multiple(False)
+    file_filter = Gtk.FileFilter()
+    file_filter.set_name(_("Flowblade Layout Data"))
+    file_filter.add_pattern("*" + "layout_data")
+    dialog.add_filter(file_filter)
     
+    dialog.connect('response', callback, data)
+    dialog.show()
+
+def load_effects_compositors_values_dialog(callback):
+    parent = gui.editor_window.window
+    dialog = Gtk.FileChooserDialog(_("Load Layout"), parent,
+                                   Gtk.FileChooserAction.OPEN,
+                                   (_("Cancel"), Gtk.ResponseType.CANCEL,
+                                    _("OK"), Gtk.ResponseType.ACCEPT))
+    dialog.set_action(Gtk.FileChooserAction.OPEN)
+    dialog.set_select_multiple(False)
+    file_filter = Gtk.FileFilter()
+    file_filter.set_name(_("Flowblade Layout Data"))
+    file_filter.add_pattern("*" + "layout_data")
+    dialog.add_filter(file_filter)
+    dialog.connect('response', callback)
+    dialog.show()
+
 def export_xml_dialog(callback, project_name):
     _export_file_name_dialog(callback, project_name, _("Export Project as XML to"))
 

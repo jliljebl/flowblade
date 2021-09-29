@@ -25,14 +25,18 @@ in application window.
 from gi.repository import Gtk, GObject
 
 import copy
+import pickle
 
 import appconsts
+import atomicfile
 import editorpersistance
 import editorstate
+import dialogs
 import dialogutils
 import gui
 import guiutils
 import middlebar
+import utils
 
 # Transforms when adding panels.
 # 0 -> 1    The pre-created Gtk.Frame is filled with added panel.
@@ -536,12 +540,10 @@ def _create_layout_presets_menu(menu):
         
     guiutils.add_separetor(menu)
     
-    menu_item = guiutils.get_menu_item(_("Save Current Layout..."), callback, "save_current")
+    menu_item = guiutils.get_menu_item(_("Save Current Layout..."), callback, "save_layout")
     menu.add(menu_item)
 
-    guiutils.add_separetor(menu)
-
-    menu_item = guiutils.get_menu_item(_("No Saved User Layouts"), callback, "save_current", False)
+    menu_item = guiutils.get_menu_item(_("Load Layout..."), callback, "load_layout")
     menu.add(menu_item)
 
     menu.show_all()
@@ -553,8 +555,39 @@ def _top_bar_menu_item_activated(widget, msg):
          _apply_layout(DEFAULT_PANEL_POSITIONS)
     elif msg == "top_row_four":
          _apply_layout(TOP_ROW_FOUR_POSITIONS)
+    elif msg == "save_layout":
+        data = (editorpersistance.prefs.panel_positions, editorpersistance.prefs.positions_tabs)
+        dialogs.save_layout_data(_save_layout_callback, data)
+    elif msg == "load_layout":
+        dialogs.load_effects_compositors_values_dialog(_load_layout_callback)
 
+def _save_layout_callback(dialog, response_id, data):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        save_path = dialog.get_filenames()[0]
+        with atomicfile.AtomicFileWriter(save_path, "wb") as afw:
+            write_file = afw.get_file()
+            pickle.dump(data, write_file)
+            
+    dialog.destroy()
 
+def _load_layout_callback(dialog, response_id):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        try:
+            load_path = dialog.get_filenames()[0]
+            layout_data = utils.unpickle(load_path)
+            panel_positions, positions_tabs = layout_data
+            _apply_layout(panel_positions)
+            editorpersistance.prefs.panel_positions = panel_positions
+            editorpersistance.prefs.positions_tabs = positions_tabs
+            editorpersistance.save()
+            apply_tabs_positions()
+        except Exception as e:
+            _apply_layout(DEFAULT_PANEL_POSITIONS)
+            editorpersistance.save()
+            dialogutils.info_message(_("Loading Layout Filed!"), "Exception message: " + str(e), gui.editor_window.window)
+                    
+    dialog.destroy()
+    
 # ----------------------------------------------- CHANGING POSITIONS
 def _change_panel_position(widget, panel_id, pos_option):
     # We're again getting one event for activated item and one for the de-activated item.
