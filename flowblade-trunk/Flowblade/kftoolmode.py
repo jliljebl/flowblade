@@ -1596,20 +1596,16 @@ class TLineKeyFrameEditor:
 
         if edit_data["track"].type == appconsts.VIDEO:
             if edit_data["clip"].media_type == appconsts.VIDEO:
-                edit_volume = self._get_menu_item(_("Edit Volume Keyframes"), self._oor_menu_item_activated, "edit_volume" )
+                edit_volume = self._get_menu_item(_("Volume"), self._oor_menu_item_activated, "edit_volume" )
                 if self.edit_type == VOLUME_KF_EDIT:
                     edit_volume.set_sensitive(False)
                 menu.add(edit_volume)
 
-                edit_brightness = self._get_menu_item(_("Edit Brightness Keyframes"), self._oor_menu_item_activated, "edit_brightness" )
+                edit_brightness = self._get_menu_item(_("Brightness"), self._oor_menu_item_activated, "edit_brightness" )
                 if self.edit_type == BRIGHTNESS_KF_EDIT:
                     edit_brightness.set_sensitive(False)
                 menu.add(edit_brightness)
 
-            editable_params_exist = False
-            params_menu_item = Gtk.MenuItem(_("Edit Other Filter Parameters"))
-            params_menu = Gtk.Menu()
-            guiutils.remove_children(params_menu)
             for i in range(0, len(edit_data["clip"].filters)):
                 filt = edit_data["clip"].filters[i]
                 for prop in filt.properties:
@@ -1637,17 +1633,12 @@ class TLineKeyFrameEditor:
                         editable_params_exist = True
                         item_text = filt.info.name  + ": " +  disp_name
                         param_item = self._get_menu_item(item_text, self._param_edit_item_activated, param_data)
-                        params_menu.add(param_item)
-                        
+                        menu.add(param_item)
+
             if editable_params_exist == False:
-                params_menu_item.set_sensitive(False)
-            params_menu_item.set_submenu(params_menu)
-            params_menu_item.show_all()
-            menu.add(params_menu_item)
-        
-            sep = Gtk.SeparatorMenuItem()
-            sep.show()
-            menu.add(sep)
+                sep = Gtk.SeparatorMenuItem()
+                sep.show()
+                menu.add(sep)
 
         leading_menu_item = Gtk.MenuItem(_("Leading Keyframes"))
         leading_menu = Gtk.Menu()
