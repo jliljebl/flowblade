@@ -266,8 +266,9 @@ class EditorWindow:
             info_box.pack_start(self.tools_buttons.widget, False, False, 0)
             info_box.pack_start(guiutils.pad_label(8,2), False, False, 0)
             info_box.pack_start(self.fullscreen_press.widget, False, False, 0)
-            info_box.pack_start(guiutils.pad_label(6,2), False, False, 0)
-            info_box.pack_start(layout_press.widget, False, False, 0)
+            if editorstate.SCREEN_WIDTH > 1678:
+                info_box.pack_start(guiutils.pad_label(6,2), False, False, 0)
+                info_box.pack_start(layout_press.widget, False, False, 0)
 
         info_box.pack_start(Gtk.Label(), True, True, 0)
         info_box.pack_start(self.monitor_tc_info.widget, False, False, 0)
