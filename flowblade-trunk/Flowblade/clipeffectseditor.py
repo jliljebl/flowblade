@@ -91,20 +91,29 @@ class FilterFooterRow:
         self.filter_object = filter_object
         self.filter_stack = filter_stack
         
-        surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "filter_save.png")
-        save_button = guicomponents.PressLaunch(self.save_pressed, surface, w=22, h=22)
+        surface = guiutils.get_cairo_image("filter_save")
+        if editorpersistance.prefs.double_track_hights  == False:
+            save_button = guicomponents.PressLaunch(self.save_pressed, surface, w=22, h=22)
+        else:
+            save_button = guicomponents.PressLaunch(self.save_pressed, surface, w=44, h=44)
         save_button.widget.set_tooltip_markup(_("Save effect values"))
         
         surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "filter_load.png")
         load_button = guicomponents.PressLaunch(self.load_pressed, surface, w=22, h=22)
         load_button.widget.set_tooltip_markup(_("Load effect values"))
 
-        surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "filter_reset.png")
-        reset_button = guicomponents.PressLaunch(self.reset_pressed, surface, w=22, h=22)
+        surface = guiutils.get_cairo_image("filter_reset")
+        if editorpersistance.prefs.double_track_hights  == False:
+            reset_button = guicomponents.PressLaunch(self.reset_pressed, surface, w=22, h=22)
+        else:
+            reset_button = guicomponents.PressLaunch(self.reset_pressed, surface, w=44, h=44)
         reset_button.widget.set_tooltip_markup(_("Reset effect values"))
         
         surface = guiutils.get_cairo_image("filters_mask_add")
-        mask_button = guicomponents.PressLaunch(self.add_mask_pressed, surface, w=22, h=22)
+        if editorpersistance.prefs.double_track_hights  == False:
+            mask_button = guicomponents.PressLaunch(self.add_mask_pressed, surface, w=22, h=22)
+        else:
+            mask_button = guicomponents.PressLaunch(self.add_mask_pressed, surface, w=44, h=44)
         mask_button.widget.set_tooltip_markup(_("Add Filter Mask"))
 
         surface = guiutils.get_cairo_image("filters_move_up")
