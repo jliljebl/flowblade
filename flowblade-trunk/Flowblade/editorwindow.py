@@ -250,7 +250,13 @@ class EditorWindow:
 
         fullscreen_icon = guiutils.get_cairo_image("fullscreen")
         fullscreen_exit_icon = guiutils.get_cairo_image("fullscreen_exit")
-        self.fullscreen_press = guicomponents.PressLaunch(menuactions.toggle_fullscreen, fullscreen_icon, 20, 12)
+        if editorpersistance.prefs.double_track_hights == False:
+            self.fullscreen_press = guicomponents.PressLaunch(menuactions.toggle_fullscreen, fullscreen_icon, 20, 12)
+        else:
+            self.fullscreen_press = guicomponents.PressLaunch(menuactions.toggle_fullscreen, fullscreen_icon, 40, 24)
+            self.fullscreen_press.surface_x = 12
+            self.fullscreen_press.surface_y = 13
+
         self.fullscreen_press.widget.set_margin_top(1)
         self.fullscreen_press.widget.set_tooltip_text(_("Fullscreen"))
         # Used in menuactions.toggle_fullscreen to switch image
@@ -258,7 +264,12 @@ class EditorWindow:
         self.fullscreen_press.fullscreen_exit_icon = fullscreen_exit_icon
 
         icon_2 = guiutils.get_cairo_image("layout")
-        layout_press = guicomponents.PressLaunch(editorlayout.show_layout_press_menu, icon_2, 24, 12)
+        if editorpersistance.prefs.double_track_hights == False:
+            layout_press = guicomponents.PressLaunch(editorlayout.show_layout_press_menu, icon_2, 24, 12)
+        else:
+            layout_press = guicomponents.PressLaunch(editorlayout.show_layout_press_menu, icon_2, 48, 24)
+            layout_press.surface_y = 13
+            
         layout_press.widget.set_margin_top(1)
 
         info_box = Gtk.HBox(False, 0)
