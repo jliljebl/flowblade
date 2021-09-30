@@ -307,9 +307,11 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
     if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
         buttons_row.pack_start(w.tool_selector.widget, False, True, 0)
-        if editorstate.SCREEN_WIDTH > NORMAL_WIDTH:
+        if editorstate.SCREEN_WIDTH > 1919:
             buttons_row.pack_start(guiutils.get_pad_label(60, 10), False, True, 0)
-    
+        else:
+            buttons_row.pack_start(Gtk.Label(), True, True, 0) # For some layout we cant afford additional 60px if w < 1920
+            
     if editorstate.screen_size_small_width() == False:
         pad_w = 30
     else:

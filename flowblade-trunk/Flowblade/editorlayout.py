@@ -60,41 +60,54 @@ import utils
  # available also as layout option 'Monitor Left'
 DEFAULT_PANEL_POSITIONS = { \
     appconsts.PANEL_MEDIA: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
-    appconsts.PANEL_FILTER_SELECT: appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, # This is the only different default position.
+    appconsts.PANEL_FILTER_SELECT: appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT,
     appconsts.PANEL_RANGE_LOG: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_FILTERS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_COMPOSITORS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_JOBS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
-    appconsts.PANEL_PROJECT_SMALL_SCREEN: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT, # default values are for large screen single window layout, these are modified on init if needed.
+    appconsts.PANEL_PROJECT_SMALL_SCREEN: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT,
     appconsts.PANEL_PROJECT: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT,
     appconsts.PANEL_RENDERING: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
-    appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None # default values are for large screen single window layout, these are modified on startup if needed.
+    appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None
 }
 
 MONITOR_CENTER_PANEL_POSITIONS = { \
     appconsts.PANEL_MEDIA: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
-    appconsts.PANEL_FILTER_SELECT: appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, # This is the only different default position.
+    appconsts.PANEL_FILTER_SELECT: appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT,
     appconsts.PANEL_RANGE_LOG: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_FILTERS: appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT,
     appconsts.PANEL_COMPOSITORS: appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT,
     appconsts.PANEL_JOBS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
-    appconsts.PANEL_PROJECT_SMALL_SCREEN: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT, # default values are for large screen single window layout, these are modified on init if needed.
+    appconsts.PANEL_PROJECT_SMALL_SCREEN: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT,
     appconsts.PANEL_PROJECT: appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT,
     appconsts.PANEL_RENDERING: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
-    appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None # default values are for large screen single window layout, these are modified on startup if needed.
+    appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None
 }
 
 TOP_ROW_FOUR_POSITIONS = { \
     appconsts.PANEL_MEDIA: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
-    appconsts.PANEL_FILTER_SELECT: appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT, # This is the only different default position.
+    appconsts.PANEL_FILTER_SELECT: appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT,
     appconsts.PANEL_RANGE_LOG: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_FILTERS: appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT,
     appconsts.PANEL_COMPOSITORS: appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT,
     appconsts.PANEL_JOBS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
-    appconsts.PANEL_PROJECT_SMALL_SCREEN: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT, # default values are for large screen single window layout, these are modified on init if needed.
+    appconsts.PANEL_PROJECT_SMALL_SCREEN: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT,
     appconsts.PANEL_PROJECT: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT,
     appconsts.PANEL_RENDERING: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
-    appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None # default values are for large screen single window layout, these are modified on startup if needed.
+    appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None
+}
+
+MEDIA_PANEL_LEFT_POSITIONS = { \
+    appconsts.PANEL_MEDIA: appconsts.PANEL_PLACEMENT_LEFT_COLUMN,
+    appconsts.PANEL_FILTER_SELECT: appconsts.PANEL_PLACEMENT_NOT_VISIBLE,
+    appconsts.PANEL_RANGE_LOG: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
+    appconsts.PANEL_FILTERS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
+    appconsts.PANEL_COMPOSITORS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
+    appconsts.PANEL_JOBS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
+    appconsts.PANEL_PROJECT_SMALL_SCREEN: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT,
+    appconsts.PANEL_PROJECT: appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT,
+    appconsts.PANEL_RENDERING: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
+    appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN: None
 }
 
 AVAILABLE_PANEL_POSITIONS_OPTIONS = { \
@@ -537,7 +550,10 @@ def _create_layout_presets_menu(menu):
     menu.add(menu_item)
     if editorstate.SCREEN_WIDTH < 1919:
         menu_item.set_sensitive(False)
-        
+
+    menu_item = guiutils.get_menu_item(_("Media Panel Left Column"), callback, "media_panel_left")
+    menu.add(menu_item)
+    
     guiutils.add_separetor(menu)
     
     menu_item = guiutils.get_menu_item(_("Save Current Layout..."), callback, "save_layout")
@@ -555,6 +571,8 @@ def _top_bar_menu_item_activated(widget, msg):
          _apply_layout(DEFAULT_PANEL_POSITIONS)
     elif msg == "top_row_four":
          _apply_layout(TOP_ROW_FOUR_POSITIONS)
+    elif msg == "media_panel_left":
+         _apply_layout(MEDIA_PANEL_LEFT_POSITIONS)
     elif msg == "save_layout":
         data = (editorpersistance.prefs.panel_positions, editorpersistance.prefs.positions_tabs)
         dialogs.save_layout_data(_save_layout_callback, data)
