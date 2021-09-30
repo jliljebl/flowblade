@@ -603,7 +603,7 @@ class ClipKeyFrameEditor:
         return frame
 
     def get_active_kf_value(self):
-        frame, val = self.keyframes[self.active_kf_index]
+        frame, val, kf_type = self.keyframes[self.active_kf_index]
         return val
     
     def set_active_kf_value(self, new_value):
@@ -1414,7 +1414,8 @@ class GeometryEditor(AbstractKeyFrameEditor):
          return self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index)
          
     def paste_kf_value(self, value_data):
-        frame, rect, opacity = value_data
+        #frame, rect, opacity = value_data
+        frame, rect, opacity, kf_type = value_data 
         self.clip_editor.set_active_kf_value(opacity)
         self.geom_kf_edit.set_keyframe_to_edit_shape(self.clip_editor.active_kf_index, rect)
         self.update_property_value()
@@ -1756,7 +1757,7 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
         return self.geom_kf_edit.get_keyframe(self.clip_editor.active_kf_index)
          
     def paste_kf_value(self, value_data):
-        frame, rect, opacity = value_data
+        frame, rect, opacity, kf_type = value_data
         self.clip_editor.set_active_kf_value(opacity)
         self.geom_kf_edit.set_keyframe_to_edit_shape(self.clip_editor.active_kf_index, rect)
         self.update_property_value()
