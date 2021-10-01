@@ -229,6 +229,7 @@ PROXY_STRIP_COLOR = (0.40, 0.60, 0.82)
 PROXY_STRIP_COLOR_SELECTED = (0.52, 0.72, 0.96)
 
 MARK_COLOR = (0.1, 0.1, 0.1)
+MARK_OUTLINE = (0.8, 0.8, 0.8)
 
 FRAME_SCALE_COLOR_GRAD = (1, 0.8, 0.8, 0.8, 1)
 FRAME_SCALE_COLOR_GRAD_L = get_multiplied_grad(0, 1, FRAME_SCALE_COLOR_GRAD, GRAD_MULTIPLIER)
@@ -2899,8 +2900,11 @@ class TimeLineFrameScale:
         cr.line_to (x - 1 * MARK_LINE_WIDTH, MARK_LINE_WIDTH + MARK_PAD )
         cr.line_to (x - 2 * MARK_LINE_WIDTH, MARK_PAD)
         cr.close_path();
-        cr.fill()
-
+        cr.fill_preserve()
+        cr.set_source_rgb(*MARK_OUTLINE)
+        cr.set_line_width(1.0)
+        cr.stroke()
+        
     def draw_mark_out(self, cr, h):
         """
         Draws mark out graphic if set.
@@ -2921,8 +2925,10 @@ class TimeLineFrameScale:
         cr.line_to (x + 1 * MARK_LINE_WIDTH, MARK_LINE_WIDTH + MARK_PAD )
         cr.line_to (x + 2 * MARK_LINE_WIDTH, MARK_PAD)
         cr.close_path();
-
-        cr.fill()
+        cr.fill_preserve()
+        cr.set_source_rgb(*MARK_OUTLINE)
+        cr.set_line_width(1.0)
+        cr.stroke()
    
     def _get_dark_theme_grad(self, h):
         if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
