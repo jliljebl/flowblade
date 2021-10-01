@@ -217,7 +217,6 @@ class PositionBar:
                 pass
 
         # Draw preview frame if set, scripttool.py only uses this.
-        
         if self.preview_range != None:
             in_f, out_f = self.preview_range
             in_f_norm = float(in_f) / self.length

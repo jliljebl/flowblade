@@ -237,6 +237,8 @@ FRAME_SCALE_COLOR_GRAD_L = get_multiplied_grad(0, 1, FRAME_SCALE_COLOR_GRAD, GRA
 FRAME_SCALE_SELECTED_COLOR_GRAD = get_multiplied_grad(0, 1, FRAME_SCALE_COLOR_GRAD, 0.92)
 FRAME_SCALE_SELECTED_COLOR_GRAD_L = get_multiplied_grad(1, 1, FRAME_SCALE_SELECTED_COLOR_GRAD, GRAD_MULTIPLIER) 
 
+SELECTED_RANGE_COLOR = (0.7, 0.7, 0.7, 0.35)
+            
 DARK_FRAME_SCALE_SELECTED_COLOR_GRAD = get_multiplied_grad(0, 1, FRAME_SCALE_COLOR_GRAD, 0.6)
 DARK_FRAME_SCALE_SELECTED_COLOR_GRAD_L = get_multiplied_grad(1, 1, FRAME_SCALE_SELECTED_COLOR_GRAD, GRAD_MULTIPLIER * 0.75) 
 
@@ -2727,9 +2729,13 @@ class TimeLineFrameScale:
         if seq.tractor.mark_in != -1 and seq.tractor.mark_out != -1:
             in_x = (seq.tractor.mark_in - pos) * pix_per_frame
             out_x = (seq.tractor.mark_out + 1 - pos) * pix_per_frame
-            grad = cairo.LinearGradient (0, 0, 0, h)
-            grad.add_color_stop_rgba(*FRAME_SCALE_SELECTED_COLOR_GRAD)
-            cr.set_source(grad)
+            if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
+                cr.set_source_rgba(*SELECTED_RANGE_COLOR)
+            else:
+                grad = cairo.LinearGradient (0, 0, 0, h)
+                grad.add_color_stop_rgba(*FRAME_SCALE_SELECTED_COLOR_GRAD)
+                cr.set_source(grad)
+
             cr.rectangle(in_x,0,out_x-in_x,h)
             cr.fill()
 
