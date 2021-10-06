@@ -189,11 +189,12 @@ def init_layout_data():
 
     # Force media panel positioning to work with both one and two window modes 
     if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
+        # When two windows -> single window put media panel in dewfault pos
         if _panel_positions[appconsts.PANEL_MEDIA] == appconsts.PANEL_PLACEMENT_TWO_WINDOWS_MEDIA_PANEL_POS:
             _panel_positions[appconsts.PANEL_MEDIA] = appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT
     else:
-        if _panel_positions[appconsts.PANEL_MEDIA] == appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT:
-            _panel_positions[appconsts.PANEL_MEDIA] = appconsts.PANEL_PLACEMENT_TWO_WINDOWS_MEDIA_PANEL_POS
+        # When two windows always force pos  PANEL_PLACEMENT_TWO_WINDOWS_MEDIA_PANEL_POS for media.
+        _panel_positions[appconsts.PANEL_MEDIA] = appconsts.PANEL_PLACEMENT_TWO_WINDOWS_MEDIA_PANEL_POS
 
     # We are using different media panels for differnt screen sizes,
     # make sure that are using and displaying the right one here even screen size has changed.
@@ -402,13 +403,14 @@ def get_panel_positions_menu_item():
     panel_positions_menu_item.set_submenu(panel_positions_menu)
 
     # Presets
-    presets_menu_item = Gtk.MenuItem(_("Preset Layouts"))
-    presets_menu = Gtk.Menu()
-    presets_menu_item.set_submenu(presets_menu)
-    _create_layout_presets_menu(presets_menu)
-    panel_positions_menu.append(presets_menu_item)
-    sep = Gtk.SeparatorMenuItem()
-    panel_positions_menu.append(sep)
+    if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
+        presets_menu_item = Gtk.MenuItem(_("Preset Layouts"))
+        presets_menu = Gtk.Menu()
+        presets_menu_item.set_submenu(presets_menu)
+        _create_layout_presets_menu(presets_menu)
+        panel_positions_menu.append(presets_menu_item)
+        sep = Gtk.SeparatorMenuItem()
+        panel_positions_menu.append(sep)
     
     # Project Panel
     project_panel_menu_item = Gtk.MenuItem(_("Project Panel"))

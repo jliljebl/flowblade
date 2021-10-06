@@ -491,6 +491,7 @@ class NonMltEditableProperty(AbstractProperty):
     def get_float_value(self):
         return float(self.value)
 
+
 # ----------------------------------------- PROP_EXPRESSION types extending classes
 class SingleKeyFrameProperty(EditableProperty):
     """

@@ -1141,15 +1141,14 @@ class EditorWindow:
         windows_menu_item.set_submenu(windows_menu)
         menu.append(windows_menu_item)
 
-        # Panel positions
-        if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
-            if editorlayout.panel_positioning_available() == True:
-                panel_positions_menu_item = editorlayout.get_panel_positions_menu_item()
-                menu.append(panel_positions_menu_item)
-                tabs_menu_item = editorlayout.get_tabs_menu_item()
-                menu.append(tabs_menu_item)
-            else:
-                print("Panel positioning feature not available, too small screen.")
+        # Panel positions.
+        if editorlayout.panel_positioning_available() == True:
+            panel_positions_menu_item = editorlayout.get_panel_positions_menu_item()
+            menu.append(panel_positions_menu_item)
+            tabs_menu_item = editorlayout.get_tabs_menu_item()
+            menu.append(tabs_menu_item)
+        else:
+            print("Panel positioning feature not available, too small screen.")
 
         # Middlebar Layout
         mb_menu_item = Gtk.MenuItem(_("Middlebar Configuration..."))
