@@ -271,7 +271,8 @@ class EditorWindow:
             layout_press.surface_y = 13
             
         layout_press.widget.set_margin_top(1)
-
+        layout_press.widget.set_tooltip_text(_("Layouts"))
+        
         info_box = Gtk.HBox(False, 0)
         if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
             info_box.pack_start(self.tools_buttons.widget, False, False, 0)
@@ -300,10 +301,10 @@ class EditorWindow:
                 menu_vbox.pack_start(guiutils.pad_label(40, 2), False, False, 0)
             menu_vbox.pack_start(info_box, True, True, 0)
         else:
-            menubar_box.pack_start(self.fullscreen_press.widget, False, False, 0)
-            menubar_box.pack_start(layout_press.widget, False, False, 0)
             menubar_box.pack_start(self.tools_buttons.widget, False, False, 0)
-                        
+            menubar_box.pack_start(guiutils.pad_label(8, 2), False, False, 0)
+            menubar_box.pack_start(self.fullscreen_press.widget, False, False, 0)
+            
             self.top_row_window_2 = Gtk.HBox(False, 0)
             self.top_row_window_2.pack_start(monitor_source_box, False, False, 0)
             self.top_row_window_2.pack_start(Gtk.Label(), True, True, 0)
@@ -1141,13 +1142,14 @@ class EditorWindow:
         menu.append(windows_menu_item)
 
         # Panel positions
-        if editorlayout.panel_positioning_available() == True:
-            panel_positions_menu_item = editorlayout.get_panel_positions_menu_item()
-            menu.append(panel_positions_menu_item)
-            tabs_menu_item = editorlayout.get_tabs_menu_item()
-            menu.append(tabs_menu_item)
-        else:
-            print("Panel positioning feature not available, too small screen.")
+        if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
+            if editorlayout.panel_positioning_available() == True:
+                panel_positions_menu_item = editorlayout.get_panel_positions_menu_item()
+                menu.append(panel_positions_menu_item)
+                tabs_menu_item = editorlayout.get_tabs_menu_item()
+                menu.append(tabs_menu_item)
+            else:
+                print("Panel positioning feature not available, too small screen.")
 
         # Middlebar Layout
         mb_menu_item = Gtk.MenuItem(_("Middlebar Configuration..."))
