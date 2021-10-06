@@ -1185,6 +1185,8 @@ class MediaPanel():
                     media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_bg_color())
                 except:
                     pass
+            elif (event.get_state() & Gdk.ModifierType.SHIFT_MASK):
+                pass
             else:
                 self.clear_selection()
                 media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
