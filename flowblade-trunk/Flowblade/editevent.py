@@ -503,7 +503,8 @@ def tline_effect_drop(x, y):
             action = edit.add_filter_action(data)
             action.do_edit()
 
-def tline_media_drop(media_file, x, y, use_marks=False):
+def tline_media_drop(drag_data, x, y, use_marks=False):
+    # drag_data not used unless we wich later to enable dropping multiple media items.
     track = tlinewidgets.get_track(y)
     if track == None:
         return
@@ -519,6 +520,7 @@ def tline_media_drop(media_file, x, y, use_marks=False):
         kftoolmode.exit_tool()
 
     frame = tlinewidgets.get_frame(x)
+    media_file = gui.media_list_view.last_pressed.media_file
     
     # Create new clip.
     if media_file.type != appconsts.PATTERN_PRODUCER:

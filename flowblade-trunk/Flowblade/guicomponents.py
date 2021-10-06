@@ -1058,7 +1058,7 @@ class MediaPanel():
         self.monitor_indicator = guiutils.get_cairo_image("monitor_indicator", force=False) # Aug-2019 - SvdB - BB - We want to keep the small icon for this
         self.last_event_time = 0.0
         self.last_ctrl_selected_media_object = None
-        
+        self.last_pressed = None
         self.double_click_release = False # needed to get focus over to pos bar after double click, usually media object grabs focus
         
         global has_proxy_icon, is_proxy_icon, graphics_icon, imgseq_icon, audio_icon, pattern_icon, profile_warning_icon, unused_icon
@@ -1097,6 +1097,10 @@ class MediaPanel():
         self.last_event_time = now
 
         widget.grab_focus()
+
+        self.last_pressed = media_object # We need this data because self.selected_objects holds 
+                                         # no information on which media object was pressed last 
+                                         # when dragging onto timeline.
 
         if event.button == 1:
             if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
