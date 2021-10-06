@@ -228,7 +228,7 @@ def single_value_keyframes_string_to_kf_array(keyframes_str, out_to_in_func):
     return new_keyframes
     
 def geom_keyframes_value_string_to_opacity_kf_array(keyframes_str, out_to_in_func):
-    # THIS SHOULD ONLY BE IN DEPRECATED COMPOSITOIRS
+    # THIS SHOULD ONLY BE IN DEPRECATED COMPOSITORS
     print("NOTICE!!!!!! in: geom_keyframes_value_string_to_opacity_kf_array")
     # Parse "composite:geometry" properties value string into (frame,opacity_value)
     # keyframe tuples.
@@ -252,6 +252,8 @@ def geom_keyframes_value_string_to_opacity_kf_array(keyframes_str, out_to_in_fun
         add_kf = (int(sides[0]), out_to_in_func(float(values[2])), kf_type) # kf = (frame, opacity, type)
         new_keyframes.append(add_kf)
  
+    print(keyframes_str)
+    print(new_keyframes)
     return new_keyframes
 
 def geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):

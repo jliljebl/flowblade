@@ -620,7 +620,7 @@ class OpacityInGeomKeyframeProperty(TransitionEditableProperty):
         
         val_str = val_str.strip(";")
         self.write_value(val_str)
-
+        #print("write_out_keyframes", val_str)
 
 class LUTTableProperty(EditableProperty):
     def reset_to_linear(self):

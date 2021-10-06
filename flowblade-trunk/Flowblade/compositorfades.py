@@ -103,8 +103,10 @@ def set_auto_fade_out_keyframes(compositor):
     keyframes.append((0, 100))
     keyframes.append((compositor.get_length() - 1, 0))
 
+    print("before write out keyframes")
     keyframe_property.write_out_keyframes(keyframes)
-    
+    print("after write out keyframes")
+        
 # ---------------------------------------------------------------------- module functions
 def _get_kfproperty_klass_and_keyframes(compositor, clip):
     # We create a SECOND SET of EditableProperties from compositor properties.
@@ -127,6 +129,7 @@ def _get_kfproperty_klass_and_keyframes(compositor, clip):
             property_klass = ep.__class__.__name__
             if property_klass == "OpacityInGeomKeyframeProperty": # Dissolve
                 keyframe_property = ep
+                print("HERE  OpacityInGeomKeyframeProperty")
                 keyframes = propertyparse.geom_keyframes_value_string_to_opacity_kf_array(keyframe_property.value, keyframe_property.get_in_value)
                 break
             if property_klass == "KeyFrameHCSTransitionProperty" and compositor.transition.info.mlt_service_id != "affine": # Blend, and we exclude Transform

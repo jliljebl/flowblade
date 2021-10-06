@@ -371,6 +371,7 @@ def _add_autofade(data):
                 "b_track":track.id,
                 "compositor_type":compositor_type,
                 "clip":clip}
+    #print("edit_data", edit_data)
     action = edit.add_compositor_action(edit_data)
     action.do_edit()
     
