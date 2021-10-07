@@ -692,10 +692,10 @@ def about_dialog(parent_window):
 
 def environment_dialog(parent_window):
     dialog = Gtk.Dialog(_("Runtime Environment"),  gui.editor_window.window,
-                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("OK"), Gtk.ResponseType.ACCEPT))
 
-    COLUMN_WIDTH = 450
+    COLUMN_WIDTH = 650
 
     r1 = guiutils.get_left_justified_box([Gtk.Label(label=_("MLT version: ")), Gtk.Label(label=str(editorstate.mlt_version))])
     try:
@@ -757,21 +757,21 @@ def environment_dialog(parent_window):
     missing_services_sw = _get_items_in_scroll_window(missing_mlt_services, 5, COLUMN_WIDTH, 60)
 
     l_pane = Gtk.VBox(False, 4)
-    l_pane.pack_start(guiutils.get_named_frame(_("General"), vbox), False, False, 0)
-    l_pane.pack_start(guiutils.get_named_frame(_("MLT Filters"), filters_sw), False, False, 0)
-    l_pane.pack_start(guiutils.get_named_frame(_("MLT Transitions"), transitions_sw), False, False, 0)
+    l_pane.pack_start(guiutils.get_named_frame(_("General"), vbox), True, True, 0)
+    l_pane.pack_start(guiutils.get_named_frame(_("MLT Filters"), filters_sw), True, True, 0)
+    l_pane.pack_start(guiutils.get_named_frame(_("MLT Transitions"), transitions_sw), True, True, 0)
     l_pane.pack_start(guiutils.get_named_frame(_("Missing MLT Services"), missing_services_sw), True, True, 0)
 
     r_pane = Gtk.VBox(False, 4)
-    r_pane.pack_start(guiutils.get_named_frame(_("Video Codecs"), v_codecs_sw), False, False, 0)
-    r_pane.pack_start(guiutils.get_named_frame(_("Audio Codecs"), a_codecs_sw), False, False, 0)
-    r_pane.pack_start(guiutils.get_named_frame(_("Formats"), formats_sw), False, False, 0)
-    r_pane.pack_start(guiutils.get_named_frame(_("Render Options"), enc_opt_sw), False, False, 0)
+    r_pane.pack_start(guiutils.get_named_frame(_("Video Codecs"), v_codecs_sw), True, True, 0)
+    r_pane.pack_start(guiutils.get_named_frame(_("Audio Codecs"), a_codecs_sw), True, True, 0)
+    r_pane.pack_start(guiutils.get_named_frame(_("Formats"), formats_sw), True, True, 0)
+    r_pane.pack_start(guiutils.get_named_frame(_("Render Options"), enc_opt_sw), True, True, 0)
 
     pane = Gtk.HBox(False, 4)
-    pane.pack_start(l_pane, False, False, 0)
+    pane.pack_start(l_pane, True, True, 0)
     pane.pack_start(guiutils.pad_label(5, 5), False, False, 0)
-    pane.pack_start(r_pane, False, False, 0)
+    pane.pack_start(r_pane, True, True, 0)
 
     a = dialogutils.get_default_alignment(pane)
 
@@ -779,7 +779,7 @@ def environment_dialog(parent_window):
     dialogutils.set_outer_margins(dialog.vbox)
     dialog.connect('response', _dialog_destroy)
     dialog.show_all()
-    dialog.set_resizable(False)
+    dialog.set_resizable(True)
 
 def _get_items_in_scroll_window(items, rows_count, w, h):
     row_widgets = []
