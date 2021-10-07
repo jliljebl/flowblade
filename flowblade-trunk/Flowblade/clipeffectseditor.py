@@ -569,6 +569,9 @@ def clear_clip():
     set_enabled(False)
     shutdown_polling()
 
+    global keyframe_editor_widgets
+    keyframe_editor_widgets = []
+
 def _set_no_clip_info():
     widgets.clip_info.set_no_clip_info()
 
