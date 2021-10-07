@@ -1825,7 +1825,7 @@ def _add_new_sequence_dialog_callback(dialog, response_id, widgets):
     sequence.AUDIO_TRACKS_COUNT = a_tracks
     sequence.VIDEO_TRACKS_COUNT = v_tracks
 
-    # Add new sequence
+    # Add new sequence.
     PROJECT().add_named_sequence(name)
 
     gui.sequence_list_view.fill_data_model()
@@ -1834,7 +1834,6 @@ def _add_new_sequence_dialog_callback(dialog, response_id, widgets):
         selection.select_path(str(row)) # Keep previous selection
     else:
         app.change_current_sequence(len(PROJECT().sequences) - 1)
-        PROJECT().c_seq.compositing_mode = editorpersistance.prefs.default_compositing_mode
         gui.editor_window.init_compositing_mode_menu()
     
     dialog.destroy()

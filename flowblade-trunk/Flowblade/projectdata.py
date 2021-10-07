@@ -241,7 +241,7 @@ class Project:
         self.add_named_sequence(name)
         
     def add_named_sequence(self, name):
-        seq = sequence.Sequence(self.profile, name)
+        seq = sequence.Sequence(self.profile, editorpersistance.prefs.default_compositing_mode)
         seq.create_default_tracks()
         self.sequences.append(seq)
         self.next_seq_number += 1
@@ -569,7 +569,6 @@ def get_default_project():
     """
     profile = mltprofiles.get_default_profile()
     project = Project(profile)
-    project.c_seq.compositing_mode = editorpersistance.prefs.default_compositing_mode
     return project
 
 

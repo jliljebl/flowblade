@@ -97,10 +97,10 @@ class Sequence:
     """
     Multitrack MLT object
     """
-    def __init__(self, profile, name="sequence"):
+    def __init__(self, profile, initial_comp_mode):
 
         # Data members
-        self.name = name # name of sequence
+        self.name = "sequence" # initial name of sequence
         self.next_id = 0 # id for next created clip
         self.profile = profile
         self.master_audio_gain = 1.0
@@ -113,11 +113,11 @@ class Sequence:
         self.watermark_filter = None
         self.watermark_file_path = None
         self.seq_len = 0 # used in trim crash hack, remove when fixed
-        self.compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
+        self.compositing_mode = initial_comp_mode
 
         # MLT objects for a multitrack sequence
         self.init_mlt_objects()
-
+        
     # ----------------------------------- mlt init
     def init_mlt_objects(self):
         # MLT objects for multitrack sequence
@@ -204,6 +204,10 @@ class Sequence:
         self.tracks[0].clips.append(black_track_clip) # py
         self.tracks[0].append(black_track_clip, 0, 0) # mlt
 
+        # Create fulltrack compositors if needed.
+        if self.compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+            self.add_full_track_compositors()
+            
     def _create_black_track_clip(self):
         # Create 1 fr long black bg clip and set in and out
         global black_track_clip
@@ -1305,7 +1309,7 @@ def get_media_type(file_path):
     
     return UNKNOWN
     """
-    
+
 def _clip_length(clip):
     return clip.clip_out - clip.clip_in + 1
 
@@ -1314,27 +1318,25 @@ def _sort_compositors_comparator(a_comp):
 
 # ----------------------------- sequence cloning for tracks count change
 def create_sequence_clone_with_different_track_count(old_seq, v_tracks, a_tracks):
-    # Create new sequence with different number of tracks
+    # Create new sequence with different number of tracks.
     global AUDIO_TRACKS_COUNT, VIDEO_TRACKS_COUNT
     AUDIO_TRACKS_COUNT = a_tracks
     VIDEO_TRACKS_COUNT = v_tracks
-    new_seq = Sequence(old_seq.profile, old_seq.name)
+    new_seq = Sequence(old_seq.profile, old_seq.compositing_mode)
     new_seq.create_default_tracks()
-
-    # Clone track clips from old sequence to clone sequence
+    new_seq.name = old_seq.name
+ 
+    # Clone track clips from old sequence to clone sequence.
     if old_seq.first_video_index - 1 > a_tracks:
         _clone_for_fewer_tracks(old_seq, new_seq)
     else:
         _clone_for_more_tracks(old_seq, new_seq)
 
-    # Clone compositors from old seq to new to correct tracks on new seq
+    # Clone compositors from old seq to new to correct tracks on new seq.
     track_delta = new_seq.first_video_index - old_seq.first_video_index
     new_seq.clone_compositors_from_sequence(old_seq, track_delta)
-
-    # Copy modes values
-    new_seq.compositing_mode = old_seq.compositing_mode
         
-    # copy next clip id data
+    # Copy next clip id data.
     new_seq.next_id = old_seq.next_id
     return new_seq
         
