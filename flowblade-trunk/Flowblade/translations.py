@@ -282,7 +282,8 @@ def load_filters_translations():
     filter_names["Dust"] = _("Dust")
     filter_names["Pan Left Channel"] = _("Pan Left Channel")
     filter_names["Pan Right Channel"] = _("Pan Right Channel")
-    
+    filter_names["RGB Shift"] = _("RGB Shift")
+
     # param names
     global param_names
 

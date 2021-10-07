@@ -518,6 +518,12 @@
         <property name="Type" args="editor=combobox cbopts=Cross5:Cross5, Square3x3:Square3x3">Cross5</property>
     </filter>
     -->
+    <filter id="frei0r.rgbsplit0r">
+        <name>RGB Shift</name>
+        <group>Artistic</group>
+      <property name="0" args="range_in=-100,100 displayname=Horizontal">0.4</property>
+      <property name="1" args="range_in=-100,100 displayname=Verical">0.4</property>
+    </filter>
     <filter id="frei0r.cartoon">
         <name>Cartoon</name>
         <group>Artistic</group>
