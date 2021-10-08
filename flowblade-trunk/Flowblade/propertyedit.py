@@ -39,7 +39,6 @@ import mltfilters
 import propertyparse
 import utils
 
-import traceback
 
 # keys                                                      meaning of values for this key
 RANGE_IN = "range_in"                                       # values define user input range

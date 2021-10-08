@@ -1008,24 +1008,29 @@
         <name>Baltan</name>
         <group>Movement</group>
     </filter>
-   <filter id="frei0r.vertigo">
+    <filter id="frei0r.vertigo">
         <name>Vertigo</name>
         <group>Movement</group>
         <property name="PhaseIncrement" args="range_in=0,500 editor=keyframe_editor exptype=keyframe_hcs displayname=Phase!Incr.">0=0.02</property>
         <property name="Zoomrate" args="range_in=80,300 editor=keyframe_editor exptype=keyframe_hcs range_out=0.16,0.6 displayname=Zoom">0=0.202</property>
-   </filter>
-   <filter id="frei0r.nervous">
+    </filter>
+    <filter id="frei0r.nervous">
         <name>Nervous</name>
         <group>Movement</group>
-   </filter>
-   <filter id="freeze">
+    </filter>
+    <filter id="freeze">
         <name>Freeze</name>
         <group>Movement</group>
         <property name="frame" args="editor=clip_frame_slider displayname=Freeze!Frame">0</property>
         <property name="freeze_after" args="editor=booleancheckbox displayname=Freeze!After">0</property>
         <property name="freeze_before" args="editor=booleancheckbox displayname=Freeze!Before">0</property>
-   </filter>
-
+    </filter>
+    <filter id="choppy">
+        <name>Choppy</name>
+        <group>Movement</group>
+        <property name="amount" args="range_in=2,30 range_out=2,30 step=1.0 displayname=Frames">5</property>
+    </filter>
+   
 
     <!-- TRANSFORM -->
     <filter id="affine">
