@@ -284,6 +284,7 @@ def load_filters_translations():
     filter_names["Pan Right Channel"] = _("Pan Right Channel")
     filter_names["RGB Shift"] = _("RGB Shift")
     filter_names["Choppy"] = _("Choppy")
+    filter_names["Glitch"] = _("Glitch")
 
     # param names
     global param_names
@@ -598,7 +599,10 @@ def load_filters_translations():
     param_names["Darker"] = _("Darker")
     param_names["Lighter"] = _("Lighter")
     param_names["Frames"] = _("Frames")
-    
+    param_names["Height"] = _("Height")
+    param_names["Shift"] = _("Shift")
+
+
     # Combo options
     global combo_options
     combo_options["Shave"] = _("Shave")
