@@ -285,7 +285,9 @@ def load_filters_translations():
     filter_names["RGB Shift"] = _("RGB Shift")
     filter_names["Choppy"] = _("Choppy")
     filter_names["Glitch"] = _("Glitch")
-
+    filter_names["Trails"] = _("Trails")
+    
+    
     # param names
     global param_names
 

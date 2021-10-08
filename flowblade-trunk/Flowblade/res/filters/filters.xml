@@ -1038,7 +1038,13 @@
         <group>Movement</group>
         <property name="amount" args="range_in=2,30 range_out=2,30 step=1.0 displayname=Frames">5</property>
     </filter>
-
+    <filter id="avfilter.tmix">
+        <name>Trails</name>
+        <group>Movement</group>
+        <property name="av.frames" args="range_in=0,30 range_out=0,30 step=1.0 displayname=Frames">15</property>
+        <property name="av.weights" args="editor=no_editor exptype=not_parsed">1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19</property>
+    </filter>
+    
 
     <!-- TRANSFORM -->
     <filter id="affine">
