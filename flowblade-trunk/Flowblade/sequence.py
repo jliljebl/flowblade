@@ -704,7 +704,7 @@ class Sequence:
         for i in range(self.first_video_index, len(self.tracks) - 1):
             track = self.tracks[i]
         
-            compositor = self.create_compositor("##affineblend")
+            compositor = self.create_compositor("##blend")
 
             a_track = self.first_video_index
             b_track = track.id 

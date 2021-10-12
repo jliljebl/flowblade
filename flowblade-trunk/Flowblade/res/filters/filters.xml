@@ -621,6 +621,11 @@
 
 
     <!-- COLOR -->
+    <filter id="cairoblend_mode">
+        <name>Blend</name>
+        <group>Color</group>
+        <property name="mode" args="editor=no_editor exptype=not_parsed">screen</property>
+    </filter>
     <filter id="greyscale">
         <name>Grayscale</name>
         <group>Color</group>
