@@ -336,7 +336,7 @@ class EditorPreferences:
         self.playback_follow_move_tline_range = True
         self.active_tools = [1, 2, 3, 4, 5, 6, 7]
         self.top_level_project_panel = True # DEPRECATED, NOT USER SETTABLE ANYMORE
-        self.theme = appconsts.FLOWBLADE_THEME
+        self.theme = appconsts.FLOWBLADE_THEME_NEUTRAL
         self.dnd_action = appconsts.DND_OVERWRITE_NON_V1
         self.top_row_layout = appconsts.THREE_PANELS_IF_POSSIBLE
         self.box_for_empty_press_in_overwrite_tool = False
