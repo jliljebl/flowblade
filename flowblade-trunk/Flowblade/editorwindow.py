@@ -258,7 +258,7 @@ class EditorWindow:
             self.fullscreen_press.surface_y = 13
 
         self.fullscreen_press.widget.set_margin_top(1)
-        self.fullscreen_press.widget.set_tooltip_text(_("Fullscreen"))
+        self.fullscreen_press.widget.set_tooltip_text(_("Fullscreen - F11"))
         # Used in menuactions.toggle_fullscreen to switch image
         self.fullscreen_press.fullscreen_icon = fullscreen_icon
         self.fullscreen_press.fullscreen_exit_icon = fullscreen_exit_icon

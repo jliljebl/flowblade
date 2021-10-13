@@ -445,7 +445,6 @@ class ToolDockItem:
             self.widget.set_tooltip_markup("<b>" + tool_name + " - " + _("Keyboard shortcut: ") + str(kb_shortcut_number) + "</b>" "\n\n" + _get_tooltip_text(tool_id))
         
         self.widget.add(tool_img)
-        #self.set_item_color(True)
 
     def set_item_color(self, selected):
         if selected == True:
@@ -493,7 +492,8 @@ class WorkflowDialog(Gtk.Dialog):
                                 Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                                 (_("Select Preset Workflow and Continue"), Gtk.ResponseType.ACCEPT))
 
-        self.selection = STANDARD_PRESET 
+        self.selection = STANDARD_PRESET
+        self.comp_selection = 0 # These indexes do not match with const values and are mapped on exit. 
         
         info_label_text_1 = _("<b>Welcome to Flowblade</b>")
         info_label_1 = Gtk.Label(info_label_text_1)
@@ -529,34 +529,76 @@ class WorkflowDialog(Gtk.Dialog):
         info_label_text_5 = _(" icon.")
         info_label_5 = Gtk.Label(info_label_text_5)
         
+        # Workflow selection 
         workflow_name = _("<b>Standard</b>")
         stadard_preset_workflow_text_1 = _("Standard workflow has the <b>Move</b> tool as default tool\nand presents a workflow\nsimilar to most video editors.")
-        workflow_select_item_1 = self.get_workflow_select_item(STANDARD_PRESET, workflow_name, stadard_preset_workflow_text_1)
+        workflow_select_item_1 = self.get_select_item(STANDARD_PRESET, workflow_name, stadard_preset_workflow_text_1, self.selected_callback, 0)
 
         workflow_name = _("<b>Film Style</b>")
         filmstyle_preset_workflow_text_2 = _("Film Style workflow has the <b>Insert</b> tool as default tool\nand employs insert style editing.\nThis was the workflow in previous versions of the application.")
-        workflow_select_item_2 = self.get_workflow_select_item(FILM_STYLE_PRESET, workflow_name, filmstyle_preset_workflow_text_2)
+        workflow_select_item_2 = self.get_select_item(FILM_STYLE_PRESET, workflow_name, filmstyle_preset_workflow_text_2, self.selected_callback, 0)
 
         workflow_name = _("<b>Keep Existing Workflow</b>")
         keep_workflow_text_2 = _("Select this if you have installed new version and wish to keep your existing workflow.")
-        workflow_select_item_3 = self.get_workflow_select_item(KEEP_EXISTING, workflow_name, keep_workflow_text_2)
+        workflow_select_item_3 = self.get_select_item(KEEP_EXISTING, workflow_name, keep_workflow_text_2, self.selected_callback, 0)
         
         self.workflow_items = [workflow_select_item_1, workflow_select_item_2, workflow_select_item_3]
+        framed_items_box = self.get_selection_box(self.workflow_items)
 
+        workflow_vbox = Gtk.VBox(False, 2)
+        workflow_vbox.pack_start(guiutils.get_left_justified_box([info_label_2]), False, False, 0)
+        workflow_vbox.pack_start(guiutils.get_left_justified_box([info_label_6]), False, False, 0)
+        workflow_vbox.pack_start(guiutils.get_pad_label(24, 24), False, False, 0)
+        workflow_vbox.pack_start(guiutils.get_centered_box([info_label_3]), False, False, 0)
+        workflow_vbox.pack_start(framed_items_box, False, False, 0)
+        workflow_vbox.pack_start(guiutils.get_pad_label(24, 48), False, False, 0)
+        workflow_vbox.pack_start(guiutils.get_centered_box([info_label_7]), False, False, 0)
+        workflow_vbox.pack_start(guiutils.get_centered_box([info_label_4, icon, info_label_5]), False, False, 0)
+
+        # Compositing default selection 
+        comp_name = _("<b>Standard Full Track</b>")
+        comp_text = _("Standard Compositing mode\nsimilar to most video editors.")
+        comp_select_item_1 = self.get_select_item(0, comp_name, comp_text, self.comp_selection_callback, 0)
+
+        comp_name = _("<b>Top Down Free Move</b>")
+        comp_text = _("Film Style workflow has the <b>Insert</b> tool as default tool\nand employs insert style editing.\nThis was the workflow in previous versions of the application.")
+        comp_select_item_2 = self.get_select_item(1, comp_name, comp_text, self.comp_selection_callback, 0)
+
+        comp_name = _("<b>Top Down</b>")
+        comp_text = _("Select this if you have installed new version and wish to keep your existing workflow.")
+        comp_select_item_3 = self.get_select_item(2, comp_name, comp_text, self.comp_selection_callback, 0)
+        
+        self.comp_items = [comp_select_item_1, comp_select_item_2, comp_select_item_3]
+        comp_items_box = self.get_selection_box(self.comp_items)
+
+        comp_vbox = Gtk.VBox(False, 2)
+        comp_vbox.pack_start(comp_items_box, False, False, 0)
+
+        # Initial layout
+        layout_combo_box = Gtk.ComboBoxText()
+        layout_combo_box.append_text(_("Layout Monitor Left"))
+        layout_combo_box.append_text(_("Layout Monitor Center"))
+        layout_combo_box.append_text(_("Layout Top Row 4 Panels"))
+        layout_combo_box.append_text(_("Layout Media Panel Left Column"))
+        layout_combo_box.set_active(3)
+
+        layout_vbox = Gtk.VBox(False, 2)
+        layout_vbox.pack_start(layout_combo_box, False, False, 0)
+    
+        presets_vbox = Gtk.VBox(False, 2)
+        presets_vbox.pack_start(comp_vbox, False, False, 0)
+        presets_vbox.pack_start(layout_vbox, False, False, 0)
+
+        selections_hbox = Gtk.HBox(True, 8)
+        selections_hbox.pack_start(workflow_vbox, True, True, 0)
+        selections_hbox.pack_start(presets_vbox, True, True, 0)
+        
         panel_vbox = Gtk.VBox(False, 2)
         panel_vbox.pack_start(guiutils.get_pad_label(24, 12), False, False, 0)
         panel_vbox.pack_start(guiutils.get_centered_box([info_label_1]), False, False, 0)
         panel_vbox.pack_start(guiutils.get_pad_label(24, 12), False, False, 0)
-        panel_vbox.pack_start(guiutils.get_left_justified_box([info_label_2]), False, False, 0)
-        panel_vbox.pack_start(guiutils.get_left_justified_box([info_label_6]), False, False, 0)
-        panel_vbox.pack_start(guiutils.get_pad_label(24, 24), False, False, 0)
-        panel_vbox.pack_start(guiutils.get_centered_box([info_label_3]), False, False, 0)
-        panel_vbox.pack_start(workflow_select_item_1, False, False, 0)
-        panel_vbox.pack_start(workflow_select_item_2, False, False, 0)
-        panel_vbox.pack_start(workflow_select_item_3, False, False, 0)
-        panel_vbox.pack_start(guiutils.get_pad_label(24, 48), False, False, 0)
-        panel_vbox.pack_start(guiutils.get_centered_box([info_label_7]), False, False, 0)
-        panel_vbox.pack_start(guiutils.get_centered_box([info_label_4, icon, info_label_5]), False, False, 0)
+        panel_vbox.pack_start(selections_hbox, False, False, 0)
+
         panel_vbox.pack_start(guiutils.get_pad_label(24, 24), False, False, 0)
 
         alignment = dialogutils.get_alignment2(panel_vbox)
@@ -567,8 +609,8 @@ class WorkflowDialog(Gtk.Dialog):
         self.connect('response', self.done)
         self.show_all()
 
-    def get_workflow_select_item(self, item_number, workflow_name, item_text):
-        name = Gtk.Label(workflow_name)
+    def get_select_item(self, item_number, item_name, item_text, callback, initial_selection):
+        name = Gtk.Label(item_name)
         name.set_use_markup(True)
         guiutils.set_margins(name, 0, 8, 0, 0)
         label = Gtk.Label(item_text)
@@ -581,7 +623,7 @@ class WorkflowDialog(Gtk.Dialog):
         guiutils.set_margins(item_vbox, 12, 18, 12, 12)
      
         widget = Gtk.EventBox()
-        widget.connect("button-press-event", lambda w,e: self.selected_callback(w, item_number))
+        widget.connect("button-press-event", lambda w,e: callback(w, item_number)) #self.selected_callback(w, item_number))
         widget.set_can_focus(True)
         widget.add_events(Gdk.EventMask.KEY_PRESS_MASK)
 
@@ -589,12 +631,12 @@ class WorkflowDialog(Gtk.Dialog):
         
         widget.item_number = item_number
                 
-        self.set_item_color(widget)
+        self.set_item_color(widget, initial_selection)
 
         return widget
 
-    def set_item_color(self, widget):
-        if widget.item_number == self.selection:
+    def set_item_color(self, widget, selection_index):
+        if widget.item_number == selection_index:
             widget.override_background_color(Gtk.StateType.NORMAL, SELECTED_BG)
             if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
                 widget.override_color(Gtk.StateType.NORMAL, WHITE_TEXT)
@@ -609,13 +651,28 @@ class WorkflowDialog(Gtk.Dialog):
         elif self.selection == FILM_STYLE_PRESET:
             _set_workflow_FILM_STYLE()
 
-        # selection 3, Keep Existing Worflow is just noop
-
         dialog.destroy()
 
     def selected_callback(self, w, item_number):
         self.selection = item_number
 
         for widget in self.workflow_items:
-            self.set_item_color(widget)
+            self.set_item_color(widget, self.selection)
 
+    def comp_selection_callback(self, w, item_number):
+        self.comp_selection = item_number
+
+        for widget in self.comp_items:
+            self.set_item_color(widget, self.comp_selection)
+            
+    def get_selection_box(self, selection_items):
+        items_vbox = Gtk.VBox(False, 0)
+        for item in selection_items:
+            box_item =  guiutils.get_panel_etched_frame(item)
+            guiutils.set_margins(box_item, 0, 0, 0, 0)
+            items_vbox.pack_start(box_item, False, False, 0)
+
+        framed_items_box = guiutils.get_panel_etched_frame(items_vbox)
+        guiutils.set_margins(framed_items_box, 0, 0, 0, 0)
+        
+        return framed_items_box

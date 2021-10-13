@@ -553,7 +553,7 @@ def _create_layout_presets_menu(menu):
     if editorstate.SCREEN_WIDTH < 1919:
         menu_item.set_sensitive(False)
 
-    menu_item = guiutils.get_menu_item(_("Media Panel Left Column"), callback, "media_panel_left")
+    menu_item = guiutils.get_menu_item(_("Layout Media Panel Left Column"), callback, "media_panel_left")
     menu.add(menu_item)
     
     guiutils.add_separetor(menu)
