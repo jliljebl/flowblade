@@ -120,23 +120,14 @@ def _get_group_icon(group_name):
         group_icons["Fade In / Out"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "fade_filter.png")
         group_icons["Artistic"] = FILTER_DEFAULT_ICON
         group_icons["FILTER_MASK"] =  GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "filter_mask.png")
+        group_icons["Blend"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "blend_filter.png")
     try:
         return group_icons[group_name]
     except:
         return FILTER_DEFAULT_ICON
     
 def _translate_group_name(group_name):
-    """
-    Not implemented.
-    """
     return translations.filter_groups[group_name]
-
-    
-def get_translated_audio_group_name():
-    """
-    Not implemented.
-    """
-    translations.get_filter_group_name("Audio")
 
 
 class FilterInfo:

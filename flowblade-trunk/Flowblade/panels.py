@@ -28,6 +28,7 @@ from gi.repository import Gtk, Gdk
 
 import appconsts
 import editorpersistance # Aug-2019 - SvdB - BB
+from editorstate import current_sequence
 import gui
 import guicomponents
 import guiutils
@@ -603,13 +604,14 @@ def _transition_type_changed(transition_type_widgets):
 def get_effect_selection_panel(double_click_cb):
     effects_list_view = guicomponents.FilterListView(None)
     group_combo_box = Gtk.ComboBoxText()
-
     for group in mltfilters.groups:
         group_name, filters_array = group
+
         group_combo_box.append_text(group_name)
+        
     group_combo_box.set_active(0)
     group_combo_box.connect("changed", 
-                            lambda w,e: _group_selection_changed(w,effects_list_view), 
+                            lambda w,e: _group_selection_changed(w, effects_list_view), 
                             None)
 
     combo_row = Gtk.HBox(False, 2)
@@ -628,9 +630,16 @@ def get_effect_selection_panel(double_click_cb):
 
 def _group_selection_changed(group_combo, filters_list_view):
     group_name, filters_array = mltfilters.groups[group_combo.get_active()]
+
     filters_list_view.fill_data_model(filters_array)
     filters_list_view.treeview.get_selection().select_path("0")
     
+    # "Blend" group available only when in compositing_mode COMPOSITING_MODE_STANDARD_FULL_TRACK.
+    if filters_array[0].mlt_service_id == "cairoblend_mode" and current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+        filters_list_view.set_sensitive(False)
+    else:
+        filters_list_view.set_sensitive(True)
+
 # -------------------------------------------------- guiutils
 def get_bold_label(text):
     return guiutils.bold_label(text)

@@ -1966,6 +1966,11 @@ def display_effect_panel_filters_menu(event, clip, track, callback):
 def _build_filters_menus(sub_menu, event, clip, track, callback, item_id):
     for group in mltfilters.groups:
         group_name, filters_array = group
+
+        # "Blend" group only when in compositing_mode COMPOSITING_MODE_STANDARD_FULL_TRACK.
+        if filters_array[0].mlt_service_id == "cairoblend_mode" and current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+            continue
+        
         group_item = Gtk.MenuItem(group_name)
         sub_menu.append(group_item)
         sub_sub_menu = Gtk.Menu()

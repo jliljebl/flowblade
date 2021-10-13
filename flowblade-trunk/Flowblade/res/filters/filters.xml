@@ -585,6 +585,12 @@
         <property name="3" args="range_in=0,100 range_out=0,1.0 displayname=Color">0.5</property>
     </filter>
 
+    <!-- BLEND -->
+    <filter id="cairoblend_mode">
+        <name>Blend Mode</name>
+        <group>Blend</group>
+        <property name="mode" args="editor=combobox displayname=Blend!Mode exptype=default cbopts=Normal:normal,Add:add,Saturate:saturate,Multiply:multiply,Screen:screen,Overlay:overlay,Darken:darken,Lighten:lighten,ColorDodge:colordodge,Colorburn:colorburn,Hardlight:hardlight,Softlight:softlight,Difference:difference,Exclusion:exclusion,HSLHue:hslhue,HSLSaturation:hslsaturation,HSLColor:hslcolor,HSLLuminosity:hslluminosity">normal</property>
+    </filter>
 
     <!-- BLUR -->
     <filter id="frei0r.pixeliz0r">
@@ -621,11 +627,6 @@
 
 
     <!-- COLOR -->
-    <filter id="cairoblend_mode">
-        <name>Blend</name>
-        <group>Color</group>
-        <property name="mode" args="editor=no_editor exptype=not_parsed">screen</property>
-    </filter>
     <filter id="greyscale">
         <name>Grayscale</name>
         <group>Color</group>
@@ -756,17 +757,6 @@
         <property name="Luma formula" args="editor=no_editor">0.0</property>
         <extraeditor name="colorbox"></extraeditor> 
    </filter>
-   <!--
-   <filter id="frei0r.three_point_balance">
-        <name>3 Point Balance</name>
-        <group>Color</group>
-        <property name="Black color" args="editor=color_select exptype=color displayname=Black">#000000</property>
-        <property name="Gray color" args="editor=color_select exptype=color displayname=Gray">#808080</property>
-        <property name="White color" args="editor=color_select exptype=color displayname=White">#ffffff</property>
-        <property name="Split preview" args="editor=booleancheckbox displayname=Split!Preview">0</property>
-        <property name="Source image on left side" args="editor=booleancheckbox displayname=Source!on!Left">1</property>
-   </filter>
-    -->
     <filter id="gamma">
         <name>Gamma</name>
         <group>Color</group>

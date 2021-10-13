@@ -139,6 +139,7 @@ def load_filters_translations():
     filter_groups["Fix"] = _("Fix")
     filter_groups["Artistic"] = _("Artistic")
     filter_groups["Fade In / Out"] = _("Fade In / Out")
+    filter_groups["Blend"] = _("Blend")
 
     # filter names
     global filter_names
@@ -286,7 +287,7 @@ def load_filters_translations():
     filter_names["Choppy"] = _("Choppy")
     filter_names["Glitch"] = _("Glitch")
     filter_names["Trails"] = _("Trails")
-    
+    filter_names["Blend Mode"] = _("Blend Mode")
     
     # param names
     global param_names
@@ -561,7 +562,7 @@ def load_filters_translations():
     param_names["Fade In Length"] = _("Fade In Length")
     param_names["Wipe Direction"] = _("Wipe Direction")
     param_names["Blend Mode"] = _("Blend Mode")
-    param_names["Target Loudness"] = _("Blend Mode")
+    param_names["Target Loudness"] = _("Target Loudness")
     param_names["Analysis Length"] = _("Analysis Length")
     param_names["Max Gain"] = _("Max Gain")
     param_names["Min Gain"] = _("Min Gain")
