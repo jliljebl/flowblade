@@ -490,7 +490,7 @@ class WorkflowDialog(Gtk.Dialog):
     def __init__(self):
         Gtk.Dialog.__init__(self, _("Workflow First Run Wizard"),  gui.editor_window.window,
                                 Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                (_("Select Preset Workflow and Continue"), Gtk.ResponseType.ACCEPT))
+                                (_("Select Presets and Continue"), Gtk.ResponseType.ACCEPT))
 
         self.selection = STANDARD_PRESET
         self.comp_selection = 0 # These indexes do not match with const values and are mapped on exit. 
@@ -546,35 +546,68 @@ class WorkflowDialog(Gtk.Dialog):
         framed_items_box = self.get_selection_box(self.workflow_items)
 
         workflow_vbox = Gtk.VBox(False, 2)
-        workflow_vbox.pack_start(guiutils.get_left_justified_box([info_label_2]), False, False, 0)
-        workflow_vbox.pack_start(guiutils.get_left_justified_box([info_label_6]), False, False, 0)
-        workflow_vbox.pack_start(guiutils.get_pad_label(24, 24), False, False, 0)
         workflow_vbox.pack_start(guiutils.get_centered_box([info_label_3]), False, False, 0)
         workflow_vbox.pack_start(framed_items_box, False, False, 0)
-        workflow_vbox.pack_start(guiutils.get_pad_label(24, 48), False, False, 0)
-        workflow_vbox.pack_start(guiutils.get_centered_box([info_label_7]), False, False, 0)
-        workflow_vbox.pack_start(guiutils.get_centered_box([info_label_4, icon, info_label_5]), False, False, 0)
-
+        workflow_vbox.pack_start(guiutils.get_pad_label(24, 12), False, False, 0)
+        workflow_vbox.pack_start(guiutils.get_left_justified_box([info_label_2]), False, False, 0)
+        workflow_vbox.pack_start(guiutils.get_left_justified_box([info_label_6]), False, False, 0)
+        workflow_vbox.pack_start(guiutils.get_left_justified_box([info_label_7]), False, False, 0)
+        workflow_vbox.pack_start(guiutils.get_left_justified_box([info_label_4, icon, info_label_5]), False, False, 0)
+        workflow_vbox.pack_start(Gtk.Label(), True, True, 0)
+    
         # Compositing default selection 
         comp_name = _("<b>Standard Full Track</b>")
-        comp_text = _("Standard Compositing mode\nsimilar to most video editors.")
+        comp_text = _("The most simple and easiest to use Compositing Mode. No Compositors are used.\nFades, wipes and transforms are created with Filters.")
         comp_select_item_1 = self.get_select_item(0, comp_name, comp_text, self.comp_selection_callback, 0)
 
         comp_name = _("<b>Top Down Free Move</b>")
-        comp_text = _("Film Style workflow has the <b>Insert</b> tool as default tool\nand employs insert style editing.\nThis was the workflow in previous versions of the application.")
+        comp_text = _("The most powerful and complex Compositing Mode. Any number of Compositors\ncan be added and their destination tracks and positions can set freely.")
         comp_select_item_2 = self.get_select_item(1, comp_name, comp_text, self.comp_selection_callback, 0)
 
-        comp_name = _("<b>Top Down</b>")
-        comp_text = _("Select this if you have installed new version and wish to keep your existing workflow.")
+        comp_name = _("<b>Standard Auto Follow</b>")
+        comp_text = _("Compositors follow their origin clips automatically and users can only\nadd one compositor per clip. All Compositors have track V1 as their destination track.")
         comp_select_item_3 = self.get_select_item(2, comp_name, comp_text, self.comp_selection_callback, 0)
         
         self.comp_items = [comp_select_item_1, comp_select_item_2, comp_select_item_3]
         comp_items_box = self.get_selection_box(self.comp_items)
 
-        comp_vbox = Gtk.VBox(False, 2)
-        comp_vbox.pack_start(comp_items_box, False, False, 0)
+        text = _("<b>Select Default Compositing Mode</b>")
+        comp_info_label_1 = Gtk.Label(text)
+        comp_info_label_1.set_use_markup(True)
+        guiutils.set_margins(comp_info_label_1, 0, 4, 0, 0)
 
+        text = _("You can change default <b>Compositing Mode</b> later by pressing ")
+        comp_info_label_2 = Gtk.Label(text)
+        comp_info_label_2.set_use_markup(True)
+
+        text = _(" by pressing ")
+        comp_info_label_3 = Gtk.Label(text)
+        comp_info_label_3.set_use_markup(True)
+        
+        icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "workflow.png")
+    
+        text = _(" icon.")
+        comp_info_label_4 = Gtk.Label(text)
+
+        text = _("You can change <b>Compositing Mode</b> for current <b>Sequence</b> using\nmenu <b>Sequence -> Compositing Mode</b>.")
+        comp_info_label_5 = Gtk.Label(text)
+        comp_info_label_5.set_use_markup(True)
+        guiutils.set_margins(comp_info_label_5, 4, 0, 0, 0)
+        
+        comp_vbox = Gtk.VBox(False, 2)
+        comp_vbox.pack_start(guiutils.get_centered_box([comp_info_label_1]), False, False, 0)
+        comp_vbox.pack_start(comp_items_box, False, False, 0)
+        comp_vbox.pack_start(guiutils.get_pad_label(24, 12), False, False, 0)
+        comp_vbox.pack_start(guiutils.get_left_justified_box([comp_info_label_2, icon, comp_info_label_4]), False, False, 0)
+        comp_vbox.pack_start(guiutils.get_left_justified_box([comp_info_label_5]), False, False, 0)
+        
         # Initial layout
+
+        text = _("<b>Select Initial Layout</b>")
+        layout_info_label_1 = Gtk.Label(text)
+        layout_info_label_1.set_use_markup(True)
+        guiutils.set_margins(layout_info_label_1, 48, 4, 0, 0)
+        
         layout_combo_box = Gtk.ComboBoxText()
         layout_combo_box.append_text(_("Layout Monitor Left"))
         layout_combo_box.append_text(_("Layout Monitor Center"))
@@ -582,12 +615,20 @@ class WorkflowDialog(Gtk.Dialog):
         layout_combo_box.append_text(_("Layout Media Panel Left Column"))
         layout_combo_box.set_active(3)
 
+        text = _("You can change layout using menu <b>View -> Panel Placement</b>.")
+        layout_info_label_2 = Gtk.Label(text)
+        layout_info_label_2.set_use_markup(True)
+        guiutils.set_margins(layout_info_label_2, 24, 0, 0, 0)
+        
         layout_vbox = Gtk.VBox(False, 2)
+        layout_vbox.pack_start(layout_info_label_1, False, False, 0)
         layout_vbox.pack_start(layout_combo_box, False, False, 0)
-    
+        layout_vbox.pack_start(guiutils.get_left_justified_box([layout_info_label_2]), False, False, 0)
+        
         presets_vbox = Gtk.VBox(False, 2)
         presets_vbox.pack_start(comp_vbox, False, False, 0)
-        presets_vbox.pack_start(layout_vbox, False, False, 0)
+        if editorstate.SCREEN_WIDTH > 1619:
+            presets_vbox.pack_start(layout_vbox, False, False, 0)
 
         selections_hbox = Gtk.HBox(True, 8)
         selections_hbox.pack_start(workflow_vbox, True, True, 0)
