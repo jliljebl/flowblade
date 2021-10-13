@@ -531,11 +531,11 @@ class WorkflowDialog(Gtk.Dialog):
         
         # Workflow selection 
         workflow_name = _("<b>Standard</b>")
-        stadard_preset_workflow_text_1 = _("Standard workflow has the <b>Move</b> tool as default tool\nand presents a workflow\nsimilar to most video editors.")
+        stadard_preset_workflow_text_1 = _("Standard workflow has the <b>Move</b> tool as default tool\nand presents a workflow similar to most video editors.")
         workflow_select_item_1 = self.get_select_item(STANDARD_PRESET, workflow_name, stadard_preset_workflow_text_1, self.selected_callback, 0)
 
         workflow_name = _("<b>Film Style</b>")
-        filmstyle_preset_workflow_text_2 = _("Film Style workflow has the <b>Insert</b> tool as default tool\nand employs insert style editing.\nThis was the workflow in previous versions of the application.")
+        filmstyle_preset_workflow_text_2 = _("Film Style workflow has the <b>Insert</b> tool as default tool.\nThis was the workflow in earlier versions of the application.")
         workflow_select_item_2 = self.get_select_item(FILM_STYLE_PRESET, workflow_name, filmstyle_preset_workflow_text_2, self.selected_callback, 0)
 
         workflow_name = _("<b>Keep Existing Workflow</b>")
@@ -557,15 +557,15 @@ class WorkflowDialog(Gtk.Dialog):
     
         # Compositing default selection 
         comp_name = _("<b>Standard Full Track</b>")
-        comp_text = _("The most simple and easiest to use Compositing Mode. No Compositors are used.\nFades, wipes and transforms are created with Filters.")
+        comp_text = _("The most simple and easiest to use <b>Compositing Mode</b>. No <b>Compositors</b> are used.\nFades, wipes and transforms are created with <b>Filters</b>.")
         comp_select_item_1 = self.get_select_item(0, comp_name, comp_text, self.comp_selection_callback, 0)
 
         comp_name = _("<b>Top Down Free Move</b>")
-        comp_text = _("The most powerful and complex Compositing Mode. Any number of Compositors\ncan be added and their destination tracks and positions can set freely.")
+        comp_text = _("The most powerful and complex <b>Compositing Mode</b>. Any number of <b>Compositors</b>\ncan be added and their destination <b>Tracks</b> and positions can be set freely.")
         comp_select_item_2 = self.get_select_item(1, comp_name, comp_text, self.comp_selection_callback, 0)
 
         comp_name = _("<b>Standard Auto Follow</b>")
-        comp_text = _("Compositors follow their origin clips automatically and users can only\nadd one compositor per clip. All Compositors have track V1 as their destination track.")
+        comp_text = _("<b>Compositors</b> follow their origin clips automatically and users can only\nadd one compositor per clip. All <b>Compositors</b> have <b>Track V1</b> as their destination track.")
         comp_select_item_3 = self.get_select_item(2, comp_name, comp_text, self.comp_selection_callback, 0)
         
         self.comp_items = [comp_select_item_1, comp_select_item_2, comp_select_item_3]
