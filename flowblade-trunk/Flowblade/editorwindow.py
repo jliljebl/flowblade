@@ -284,6 +284,7 @@ class EditorWindow:
 
         info_box.pack_start(Gtk.Label(), True, True, 0)
         info_box.pack_start(self.monitor_tc_info.widget, False, False, 0)
+        guiutils.set_margins(info_box, 0, 0, 0, 10)
         
         if editorstate.screen_size_small_width() == False:
             menu_vbox = Gtk.HBox(True, 0)
