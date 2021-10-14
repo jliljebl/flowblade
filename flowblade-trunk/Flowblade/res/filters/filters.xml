@@ -793,8 +793,8 @@
     <filter id="frei0r.cairogradient">
         <name>Gradient Tint</name>
         <group>Color Effect</group>
-        <property name="1" args="editor=color_select exptype=cairo_color displayname=Start!Color">#ffffff</property>
-        <property name="3" args="editor=color_select exptype=cairo_color displayname=End!Color">#000000</property>
+        <property name="1" args="editor=color_select exptype=cairo_color displayname=Start!Color">#ff0000</property>
+        <property name="3" args="editor=color_select exptype=cairo_color displayname=End!Color">#0000ff</property>
         <property name="10" args="editor=combobox displayname=Blend!Mode exptype=default cbopts=Normal:normal,Add:add,Saturate:saturate,Multiply:multiply,Screen:screen,Overlay:overlay,Darken:darken,Lighten:lighten,ColorDodge:colordodge,Colorburn:colorburn,Hardlight:hardlight,Softlight:softlight,Difference:difference,Exclusion:exclusion,HSLHue:hslhue,HSLSaturation:hslsaturation,HSLColor:hslcolor,HSLLuminosity:hslluminosity">normal</property>
         <property name="2" args="editor=slider range_in=0,100 displayname=Start!Opacity">0.5</property>
         <property name="4" args="editor=slider range_in=0,100 displayname=End!Opacity">0.5</property>
