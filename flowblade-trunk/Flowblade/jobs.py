@@ -527,7 +527,7 @@ class MotionRenderJobQueueObject(AbstractJobQueueObject):
                     self.progress = 1.0
 
                 self.elapsed = float(elapsed)
-                self.text = _("Rendering Motion Clip ") + self.get_job_name()
+                self.text = self.get_job_name()
                 
                 job_msg = self.get_job_queue_message()
                 
@@ -599,7 +599,7 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
                     self.progress = 1.0
 
                 self.elapsed = float(elapsed)
-                self.text = _("Rendering Proxy Clip for ") + self.get_job_name()
+                self.text = self.get_job_name()
 
                 job_msg = self.get_job_queue_message()
                 
