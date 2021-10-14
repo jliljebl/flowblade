@@ -57,7 +57,7 @@ import utils
 # that is forced to always exits with at least two panels displayed.
 # This makes easier to add and remove top row panels.
 
- # available also as layout option 'Monitor Left'
+ # This is no longer default. Available as layout option 'Monitor Left'
 DEFAULT_PANEL_POSITIONS = { \
     appconsts.PANEL_MEDIA: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_FILTER_SELECT: appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT,
@@ -196,7 +196,7 @@ def init_layout_data():
         # When two windows always force pos  PANEL_PLACEMENT_TWO_WINDOWS_MEDIA_PANEL_POS for media.
         _panel_positions[appconsts.PANEL_MEDIA] = appconsts.PANEL_PLACEMENT_TWO_WINDOWS_MEDIA_PANEL_POS
 
-    # We are using different media panels for differnt screen sizes,
+    # We are using different media panels for different screen sizes,
     # make sure that are using and displaying the right one here even screen size has changed.
     if top_level_project_panel() == True:
         if appconsts.PANEL_PROJECT_SMALL_SCREEN in _panel_positions:
@@ -568,13 +568,13 @@ def _create_layout_presets_menu(menu):
 
 def _top_bar_menu_item_activated(widget, msg):
     if msg == "monitor_center":
-        _apply_layout(MONITOR_CENTER_PANEL_POSITIONS)
+        apply_layout(MONITOR_CENTER_PANEL_POSITIONS)
     elif msg == "monitor_left":
-         _apply_layout(DEFAULT_PANEL_POSITIONS)
+         apply_layout(DEFAULT_PANEL_POSITIONS)
     elif msg == "top_row_four":
-         _apply_layout(TOP_ROW_FOUR_POSITIONS)
+         apply_layout(TOP_ROW_FOUR_POSITIONS)
     elif msg == "media_panel_left":
-         _apply_layout(MEDIA_PANEL_LEFT_POSITIONS)
+         apply_layout(MEDIA_PANEL_LEFT_POSITIONS)
     elif msg == "save_layout":
         data = (editorpersistance.prefs.panel_positions, editorpersistance.prefs.positions_tabs)
         dialogs.save_layout_data(_save_layout_callback, data)
@@ -596,13 +596,13 @@ def _load_layout_callback(dialog, response_id):
             load_path = dialog.get_filenames()[0]
             layout_data = utils.unpickle(load_path)
             panel_positions, positions_tabs = layout_data
-            _apply_layout(panel_positions)
+            apply_layout(panel_positions)
             editorpersistance.prefs.panel_positions = panel_positions
             editorpersistance.prefs.positions_tabs = positions_tabs
             editorpersistance.save()
             apply_tabs_positions()
         except Exception as e:
-            _apply_layout(DEFAULT_PANEL_POSITIONS)
+            apply_layout(DEFAULT_PANEL_POSITIONS)
             editorpersistance.save()
             dialogutils.info_message(_("Loading Layout Filed!"), "Exception message: " + str(e), gui.editor_window.window)
                     
@@ -743,7 +743,7 @@ def apply_tabs_positions():
             else:
                 notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
 
-def _apply_layout(layout_dict):
+def apply_layout(layout_dict):
     for panel_id, layout_position in layout_dict.items():
         try:
             current_position = _panel_positions[panel_id]

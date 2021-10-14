@@ -377,8 +377,6 @@ def main(root_path):
     # Show first run worflow info dialog if not shown for this version of application.
     if editorstate.runtime_version_greater_then_test_version(editorpersistance.prefs.workflow_dialog_last_version_shown, editorstate.appversion):
         GObject.timeout_add(500, show_worflow_info_dialog)
-    
-    #GObject.timeout_add(500, show_worflow_info_dialog)  
 
     # Copy to XDG.
     if userfolders.data_copy_needed():
@@ -877,7 +875,7 @@ def show_worflow_info_dialog():
     editorpersistance.prefs.workflow_dialog_last_version_shown = editorstate.appversion
     editorpersistance.save()
     
-    worflow_info_dialog = workflow.WorkflowDialog()
+    worflow_info_dialog = workflow.WorkflowDialog(open_project)
     return False
 
 # ------------------------------------------------------- disk cahce size check

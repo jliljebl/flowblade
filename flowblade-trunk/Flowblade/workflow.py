@@ -29,17 +29,20 @@ gi.require_version('Gtk', '3.0')
 
 from gi.repository import Gtk
 from gi.repository import Gdk
+from gi.repository import GObject
 
 import appconsts
 import dialogs
 import dialogutils
 import edit
+import editorlayout
 import editorpersistance
 import editorstate
 from editorstate import PROJECT
 import gui
 import guiutils
 import modesetting
+import projectdata
 import respaths
 import updater
 
@@ -48,6 +51,18 @@ STANDARD_PRESET = 0
 FILM_STYLE_PRESET = 1
 KEEP_EXISTING = 2
 
+# Initial layouts.
+LAYOUT_MONITOR_CENTER = 0
+LAYOUT_MEDIA_PANEL_LEFT = 1
+LAYOUT_MONITOR_LEFT = 2
+LAYOUT_TOP_ROW_FOUR = 3
+
+# Default compositing modes. We have different enums here because of different presentation order.
+COMPOSITING_MODE_STANDARD_FULL_TRACK = 0
+COMPOSITING_MODE_TOP_DOWN_FREE_MOVE = 1
+COMPOSITING_MODE_STANDARD_AUTO_FOLLOW = 2
+
+# Colors
 SELECTED_BG = Gdk.RGBA(0.1, 0.31, 0.58,1.0)
 WHITE_TEXT = Gdk.RGBA(0.9, 0.9, 0.9,1.0)
 DARK_TEXT = Gdk.RGBA(0.1, 0.1, 0.1,1.0)
@@ -93,7 +108,13 @@ def init_data():
 
     _PREFS_TOOL_TIPS = {"editorpersistance.prefs.box_for_empty_press_in_overwrite_tool":       _("<b>\n\nLeft Mouse Drag</b> to draw a box to select a group of clips and move\nthe selected clips forward or backward.")}
     
-    
+
+
+#----------------------------------------------------- WorkflowDialog calls this to get default comp mode shown.
+def _load_default_project(open_project_callback):
+     project = projectdata.get_default_project()
+     open_project_callback(project)
+
 #----------------------------------------------------- workflow presets
 def _set_workflow_STANDARD():
     editorpersistance.prefs.active_tools = [2, 11, 6, 1, 9, 10] # appconsts.TLINE_TOOL_ID_<X> values
@@ -487,13 +508,16 @@ def _TLINE_TOOL_OVERWRITE_box_selection_pref(check_menu_item):
 
 class WorkflowDialog(Gtk.Dialog):
 
-    def __init__(self):
+    def __init__(self, project_open_callback):
         Gtk.Dialog.__init__(self, _("Workflow First Run Wizard"),  gui.editor_window.window,
                                 Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                                 (_("Select Presets and Continue"), Gtk.ResponseType.ACCEPT))
 
+
+        self.project_open_callback = project_open_callback
+
         self.selection = STANDARD_PRESET
-        self.comp_selection = 0 # These indexes do not match with const values and are mapped on exit. 
+        self.comp_selection = COMPOSITING_MODE_STANDARD_FULL_TRACK 
         
         info_label_text_1 = _("<b>Welcome to Flowblade</b>")
         info_label_1 = Gtk.Label(info_label_text_1)
@@ -532,15 +556,15 @@ class WorkflowDialog(Gtk.Dialog):
         # Workflow selection 
         workflow_name = _("<b>Standard</b>")
         stadard_preset_workflow_text_1 = _("Standard workflow has the <b>Move</b> tool as default tool\nand presents a workflow similar to most video editors.")
-        workflow_select_item_1 = self.get_select_item(STANDARD_PRESET, workflow_name, stadard_preset_workflow_text_1, self.selected_callback, 0)
+        workflow_select_item_1 = self.get_select_item(STANDARD_PRESET, workflow_name, stadard_preset_workflow_text_1, self.selected_callback, self.selection )
 
         workflow_name = _("<b>Film Style</b>")
         filmstyle_preset_workflow_text_2 = _("Film Style workflow has the <b>Insert</b> tool as default tool.\nThis was the workflow in earlier versions of the application.")
-        workflow_select_item_2 = self.get_select_item(FILM_STYLE_PRESET, workflow_name, filmstyle_preset_workflow_text_2, self.selected_callback, 0)
+        workflow_select_item_2 = self.get_select_item(FILM_STYLE_PRESET, workflow_name, filmstyle_preset_workflow_text_2, self.selected_callback, self.selection)
 
         workflow_name = _("<b>Keep Existing Workflow</b>")
         keep_workflow_text_2 = _("Select this if you have installed new version and wish to keep your existing workflow.")
-        workflow_select_item_3 = self.get_select_item(KEEP_EXISTING, workflow_name, keep_workflow_text_2, self.selected_callback, 0)
+        workflow_select_item_3 = self.get_select_item(KEEP_EXISTING, workflow_name, keep_workflow_text_2, self.selected_callback, self.selection)
         
         self.workflow_items = [workflow_select_item_1, workflow_select_item_2, workflow_select_item_3]
         framed_items_box = self.get_selection_box(self.workflow_items)
@@ -558,15 +582,15 @@ class WorkflowDialog(Gtk.Dialog):
         # Compositing default selection 
         comp_name = _("<b>Standard Full Track</b>")
         comp_text = _("The most simple and easiest to use <b>Compositing Mode</b>. No <b>Compositors</b> are used.\nFades, wipes and transforms are created with <b>Filters</b>.")
-        comp_select_item_1 = self.get_select_item(0, comp_name, comp_text, self.comp_selection_callback, 0)
+        comp_select_item_1 = self.get_select_item(0, comp_name, comp_text, self.comp_selection_callback, self.comp_selection)
 
         comp_name = _("<b>Top Down Free Move</b>")
         comp_text = _("The most powerful and complex <b>Compositing Mode</b>. Any number of <b>Compositors</b>\ncan be added and their destination <b>Tracks</b> and positions can be set freely.")
-        comp_select_item_2 = self.get_select_item(1, comp_name, comp_text, self.comp_selection_callback, 0)
+        comp_select_item_2 = self.get_select_item(1, comp_name, comp_text, self.comp_selection_callback, self.comp_selection)
 
         comp_name = _("<b>Standard Auto Follow</b>")
         comp_text = _("<b>Compositors</b> follow their origin clips automatically and users can only\nadd one compositor per clip. All <b>Compositors</b> have <b>Track V1</b> as their destination track.")
-        comp_select_item_3 = self.get_select_item(2, comp_name, comp_text, self.comp_selection_callback, 0)
+        comp_select_item_3 = self.get_select_item(2, comp_name, comp_text, self.comp_selection_callback, self.comp_selection)
         
         self.comp_items = [comp_select_item_1, comp_select_item_2, comp_select_item_3]
         comp_items_box = self.get_selection_box(self.comp_items)
@@ -602,18 +626,19 @@ class WorkflowDialog(Gtk.Dialog):
         comp_vbox.pack_start(guiutils.get_left_justified_box([comp_info_label_5]), False, False, 0)
         
         # Initial layout
-
         text = _("<b>Select Initial Layout</b>")
         layout_info_label_1 = Gtk.Label(text)
         layout_info_label_1.set_use_markup(True)
         guiutils.set_margins(layout_info_label_1, 48, 4, 0, 0)
         
-        layout_combo_box = Gtk.ComboBoxText()
-        layout_combo_box.append_text(_("Layout Monitor Left"))
-        layout_combo_box.append_text(_("Layout Monitor Center"))
-        layout_combo_box.append_text(_("Layout Top Row 4 Panels"))
-        layout_combo_box.append_text(_("Layout Media Panel Left Column"))
-        layout_combo_box.set_active(3)
+        # indexes correspond with enums LAYOUT_MONITOR_CENTER etc.
+        self.layout_combo_box = Gtk.ComboBoxText()
+        self.layout_combo_box.append_text(_("Layout Monitor Center"))
+        self.layout_combo_box.append_text(_("Layout Media Panel Left Column"))
+        self.layout_combo_box.append_text(_("Layout Monitor Left"))
+        if editorstate.SCREEN_WIDTH > 1900:
+            self.layout_combo_box.append_text(_("Layout Top Row 4 Panels"))
+        self.layout_combo_box.set_active(LAYOUT_MONITOR_CENTER)
 
         text = _("You can change layout using menu <b>View -> Panel Placement</b>.")
         layout_info_label_2 = Gtk.Label(text)
@@ -622,9 +647,10 @@ class WorkflowDialog(Gtk.Dialog):
         
         layout_vbox = Gtk.VBox(False, 2)
         layout_vbox.pack_start(layout_info_label_1, False, False, 0)
-        layout_vbox.pack_start(layout_combo_box, False, False, 0)
+        layout_vbox.pack_start(self.layout_combo_box, False, False, 0)
         layout_vbox.pack_start(guiutils.get_left_justified_box([layout_info_label_2]), False, False, 0)
         
+        # Build dialog
         presets_vbox = Gtk.VBox(False, 2)
         presets_vbox.pack_start(comp_vbox, False, False, 0)
         if editorstate.SCREEN_WIDTH > 1619:
@@ -687,13 +713,40 @@ class WorkflowDialog(Gtk.Dialog):
                 widget.override_color(Gtk.StateType.NORMAL, DARK_TEXT)
 
     def done(self, dialog, response_id):
+        # Workflow
         if self.selection == STANDARD_PRESET:
             _set_workflow_STANDARD()
         elif self.selection == FILM_STYLE_PRESET:
             _set_workflow_FILM_STYLE()
 
+        # Layout
+        if editorstate.SCREEN_WIDTH > 1619:
+            layout_selection = self.layout_combo_box.get_active()
+            if layout_selection == LAYOUT_MONITOR_CENTER:
+                editorlayout.apply_layout(editorlayout.MONITOR_CENTER_PANEL_POSITIONS)
+            elif layout_selection == LAYOUT_MEDIA_PANEL_LEFT:
+                editorlayout.apply_layout(editorlayout.MEDIA_PANEL_LEFT_POSITIONS)
+            elif layout_selection == LAYOUT_MONITOR_LEFT:
+                editorlayout.apply_layout(editorlayout.DEFAULT_PANEL_POSITIONS)
+            else:
+                # LAYOUT_TOP_ROW_FOUR
+                editorlayout.apply_layout(editorlayout.TOP_ROW_FOUR_POSITIONS)
+
+        # Default comp mode
+        if self.comp_selection == COMPOSITING_MODE_STANDARD_FULL_TRACK:
+            editorpersistance.prefs.default_compositing_mode = appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK
+        elif self.comp_selection == COMPOSITING_MODE_TOP_DOWN_FREE_MOVE:
+            editorpersistance.prefs.default_compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
+        else:
+            editorpersistance.prefs.default_compositing_mode = appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW
+
         dialog.destroy()
 
+        editorpersistance.save()
+        
+        GObject.timeout_add(500, _load_default_project, self.project_open_callback)  
+        
+    
     def selected_callback(self, w, item_number):
         self.selection = item_number
 
