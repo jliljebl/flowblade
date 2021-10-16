@@ -273,7 +273,7 @@ class EditorPreferences:
         self.undos_max = UNDO_STACK_DEFAULT
         self.default_profile_name = 10 # index of default profile
         self.auto_play_in_clip_monitor = False  # DEPRECATED, NOT USER SETTABLE ANYMORE
-        self.auto_center_on_play_stop = False
+        self.auto_center_on_play_stop = True
         self.thumbnail_folder = None # DEPRECATED, this is set by XDG variables now.
         self.hidden_profile_names = []
         self.display_splash_screen = True
@@ -324,7 +324,7 @@ class EditorPreferences:
         self.perf_drop_frames = False
         # Feb-2017 - SvdB - for full file names
         self.show_full_file_names = False
-        self.center_on_arrow_move = False
+        self.center_on_arrow_move = True
         # Apr-2017 - SvdB - Using these values we maintain the original hardcoded speed
         self.ffwd_rev_shift = 1
         self.ffwd_rev_ctrl = 10
