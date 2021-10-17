@@ -76,6 +76,7 @@ OVER_FRAMES = 30
 # Colors
 METER_BG_COLOR = (0.15, 0.15, 0.15)
 OVERLAY_COLOR = (0.70, 0.70, 0.70)
+CHANNEL_ID_COLOR = (0.06, 0.34, 0.66)
 
 # Color gradient used to draw "LED" colors
 rr, rg, rb = utils.get_cairo_color_tuple_255_rgb(219, 69, 69)
@@ -540,7 +541,7 @@ class ChannelMeter:
         self.draw_text(val_text, "Sans 8", cr, x + self.dB_x_pad + x_fine_tune, y - 8 + self.y_top_pad, OVERLAY_COLOR)
         
     def draw_channel_identifier(self, cr, x):
-        self.draw_text(self.channel_text, "Sans Bold 8", cr, x - 4, self.height + 2 +  self.y_top_pad, OVERLAY_COLOR)
+        self.draw_text(self.channel_text, "Sans Bold 8", cr, x - 4, self.height + 2 +  self.y_top_pad, CHANNEL_ID_COLOR)
 
     def draw_text(self, text, font_desc, cr, x, y, color):
         layout = PangoCairo.create_layout(cr)

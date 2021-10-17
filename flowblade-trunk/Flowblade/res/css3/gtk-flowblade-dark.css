@@ -4132,6 +4132,9 @@ filechooser placessidebar.sidebar scrollbar,
 #lighter-bg-widget {
   background-color: #292929; }
 
+#accent-fg-widget {
+  color: #597fcc; }
+
 #editor-row-widget {
   background-color: #292929;
   padding-left: 2px;

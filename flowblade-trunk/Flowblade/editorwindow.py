@@ -231,7 +231,6 @@ class EditorWindow:
         self.app_h_box.pack_start(self.app_v_paned, True, True, 0)
 
         # Menu box
-        # menubar size 348, 28 if w want to center someting here with set_size_request
         self.menubar.set_margin_bottom(4)
         self.menubar.set_name("lighter-bg-widget")
 
