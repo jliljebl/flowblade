@@ -2918,16 +2918,12 @@ class MonitorTCInfo:
         
         self.in_label = Gtk.Label(label="] ")
         self.in_label.modify_font(Pango.FontDescription(font_desc))
-        #self.in_label.set_name("accent-fg-widget")
-        self.in_label.set_sensitive(False)
 
         self.out_label = Gtk.Label(label="[ ")
         self.out_label.modify_font(Pango.FontDescription(font_desc))
-        self.out_label.set_sensitive(False)
 
         self.marks_length_label = Gtk.Label(label="][ ")
         self.marks_length_label.modify_font(Pango.FontDescription(font_desc))
-        self.marks_length_label.set_sensitive(False)
 
         self.in_value = Gtk.Label(label="--:--:--:--")
         self.in_value.modify_font(Pango.FontDescription(font_desc))

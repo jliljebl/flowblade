@@ -34,7 +34,7 @@ $suggested_fg_color: white;
 
 $drop_target_color: #F08437;
 
-$accent_fg_color: #597fcc;
+$accent_fg_color: #557fc9;
 
 //insensitive state derived colors
 $insensitive_fg_color: if($variant == 'light', transparentize($fg_color, 0.45), transparentize($fg_color, 0.55));
