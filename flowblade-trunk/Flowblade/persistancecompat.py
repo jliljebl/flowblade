@@ -83,9 +83,7 @@ def FIX_FULLTRACK_COMPOSITING_MODE_COMPOSITORS(seq):
     if seq.compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK \
         and seq.compositors[0].type_id == "##affineblend":
         # We went from using cairoaffineblend Compositors to using cairoblend Compositors in 2.10.
-        for compositor in seq.compositors:
-            seq.remove_compositor(compositor)
-
+        seq.destroy_compositors()
         seq.add_full_track_compositors()
     
 def FIX_MISSING_PROJECT_ATTRS(project):
