@@ -525,7 +525,7 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
             persistancecompat.FIX_MISSING_COMPOSITOR_ATTRS(py_compositor)
                 
             # Create new compositor object
-            compositor = mlttransitions.create_compositor(py_compositor.type_id)                                        
+            compositor = mlttransitions.create_compositor(py_compositor.type_id)
             compositor.create_mlt_objects(seq.profile)
 
             # Copy and set param values
@@ -546,6 +546,9 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
     seq.compositors = mlt_compositors
     seq.restack_compositors()
 
+    # Apply the STANDARD FULL TRACK COMPOSITORR change done for 2.10. 
+    persistancecompat.FIX_FULLTRACK_COMPOSITING_MODE_COMPOSITORS(seq)
+    
     # Connect sync relations
     for clip_n_track in sync_clips:
         clip, track = clip_n_track

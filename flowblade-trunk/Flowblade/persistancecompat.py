@@ -78,7 +78,16 @@ def FIX_DEPRECATED_SEQUENCE_COMPOSITING_MODE(seq):
     # to COMPOSITING_MODE_TOP_DOWN_FREE_MOVE.
     if seq.compositing_mode == appconsts.COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW:
         seq.compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
-                
+
+def FIX_FULLTRACK_COMPOSITING_MODE_COMPOSITORS(seq):
+    if seq.compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK \
+        and seq.compositors[0].type_id == "##affineblend":
+        # We went from using cairoaffineblend Compositors to using cairoblend Compositors in 2.10.
+        for compositor in seq.compositors:
+            seq.remove_compositor(compositor)
+
+        seq.add_full_track_compositors()
+    
 def FIX_MISSING_PROJECT_ATTRS(project):
     if (not(hasattr(project, "project_properties"))):
         project.project_properties = {}
