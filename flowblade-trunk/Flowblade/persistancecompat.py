@@ -72,7 +72,13 @@ def FIX_MISSING_COMPOSITOR_ATTRS(compositor):
 def FIX_MISSING_SEQUENCE_ATTRS(seq):
     if not hasattr(seq, "compositing_mode"):
         seq.compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
-            
+
+def FIX_DEPRECATED_SEQUENCE_COMPOSITING_MODE(seq):
+    # Compositing mode COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW was removed 2.6->, we just convert it 
+    # to COMPOSITING_MODE_TOP_DOWN_FREE_MOVE.
+    if seq.compositing_mode == appconsts.COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW:
+        seq.compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
+                
 def FIX_MISSING_PROJECT_ATTRS(project):
     if (not(hasattr(project, "project_properties"))):
         project.project_properties = {}

@@ -497,10 +497,8 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
     # Create tractor, field, multitrack
     seq.init_mlt_objects()
 
-    # Compositing mode COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW was removed 2.6->,  we just convert it 
-    # to COMPOSITING_MODE_TOP_DOWN_FREE_MOVE and compositors now work
-    if seq.compositing_mode == appconsts.COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW:
-        seq.compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
+    # Compositing mode COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW was removed 2.6->
+    persistancecompat.FIX_DEPRECATED_SEQUENCE_COMPOSITING_MODE(seq)
     
     # Grap and replace py tracks. Do this way to use same create
     # method as when originally created.
