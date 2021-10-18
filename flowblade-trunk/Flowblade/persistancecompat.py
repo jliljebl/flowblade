@@ -85,7 +85,7 @@ def FIX_FULLTRACK_COMPOSITING_MODE_COMPOSITORS(seq):
         # We went from using cairoaffineblend Compositors to using cairoblend Compositors in 2.10.
         seq.destroy_compositors()
         seq.add_full_track_compositors()
-    
+
 def FIX_MISSING_PROJECT_ATTRS(project):
     if (not(hasattr(project, "project_properties"))):
         project.project_properties = {}
