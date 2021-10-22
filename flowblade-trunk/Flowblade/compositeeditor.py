@@ -50,8 +50,6 @@ import propertyparse
 import tlinerender
 import utils
 
-COMPOSITOR_PANEL_LEFT_WIDTH = 160
-
 widgets = utils.EmptyClass()
 
 compositor = None # Compositor being edited.

@@ -2017,7 +2017,7 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
             keyevents.copy_action()
         elif data == "paste_kf":
             keyevents.paste_action()
-            
+
         self.queue_draw()
         self.update_property_value()
 
