@@ -1096,7 +1096,6 @@ class EditorWindow:
         self.menubar = self.ui.get_widget('/MenuBar')
         if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
             self.menubar .override_background_color(Gtk.StateFlags.NORMAL, gui.get_mid_neutral_color())
-            
         # Set reference to UI manager and acclegroup
         self.uimanager = ui
         self.accel_group = accel_group
@@ -1484,6 +1483,9 @@ class EditorWindow:
     def set_default_edit_tool(self):
         # First active tool is the default tool. So we need to always have atleast one tool available.
         self.change_tool(editorpersistance.prefs.active_tools[0])
+        # Update paths for tool selector and tool dock are unfortunately a bit different.
+        if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_LEFT_DOCK:
+            workflow.set_default_tool_dock_item_selected()
 
     def kf_tool_exit_to_mode(self, mode): # Kf tool can be entered from popup menu and it exists to mode it was started in.
         tool_id = None

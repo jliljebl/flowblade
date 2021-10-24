@@ -451,7 +451,13 @@ def _tool_dock_item_press(tool_id, tool_dock_item):
         item.set_item_color(False)
     tool_dock_item.set_item_color(True)
     gui.editor_window.tool_selector_item_activated(None, tool_id)
-    
+
+def set_default_tool_dock_item_selected():
+    for item in dock_items:
+        item.set_item_color(False)
+    dock_items[0].set_item_color(True)
+
+        
 
 class ToolDockItem:
     def __init__(self, kb_shortcut_number, tool_icon_file, tool_name, tool_id):
