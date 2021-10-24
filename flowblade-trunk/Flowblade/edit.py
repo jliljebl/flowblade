@@ -42,6 +42,7 @@ import movemodes
 import resync
 import tlinewidgets
 import tlinerender
+import trackaction
 import trimmodes
 import undo
 import updater
@@ -340,6 +341,9 @@ class EditAction:
         if self.exit_active_trimmode_on_edit:
             trimmodes.set_no_edit_trim_mode()
 
+        # Tracks autoexpand-on-drop feature needs to here to avoid caching data.
+        tracks_clips_count_before = current_sequence().get_tracks_clips_counts()
+
         self.redo()
         undo.register_edit(self)
         if self.turn_on_stop_for_edit:
@@ -347,6 +351,8 @@ class EditAction:
 
         global edit_done_since_last_save
         edit_done_since_last_save = True
+
+        trackaction.maybe_do_auto_expand(tracks_clips_count_before)
 
         # Create autofollow data if needed and update GUI.
         # If autofollow and no data, then GUI update happens in do_edit()

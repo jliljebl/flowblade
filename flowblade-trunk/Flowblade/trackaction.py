@@ -30,7 +30,7 @@ import dialogutils
 import gui
 import guicomponents
 import editorstate
-import edit
+#import edit
 import editorpersistance
 from editorstate import get_track
 from editorstate import current_sequence
@@ -92,7 +92,7 @@ def set_track_high_height(track_index, is_retry=False):
 
     return False
 
-def set_track_normal_height(track_index, is_retry=False):
+def set_track_normal_height(track_index, is_retry=False, is_auto_expand=False):
     track = get_track(track_index)
     track.height = appconsts.TRACK_HEIGHT_NORMAL
 
@@ -105,13 +105,16 @@ def set_track_normal_height(track_index, is_retry=False):
         current_paned_pos = gui.editor_window.app_v_paned.get_position()
         new_paned_pos = current_paned_pos - (new_h - h) - 5
         gui.editor_window.app_v_paned.set_position(new_paned_pos)
-        GObject.timeout_add(200, lambda: set_track_normal_height(track_index, True))
+        GObject.timeout_add(200, lambda: set_track_normal_height(track_index, True, is_auto_expand))
         return False
     
     allocation = gui.tline_canvas.widget.get_allocation()
     x, y, w, h = allocation.x, allocation.y, allocation.width, allocation.height
     
     if new_h > h:
+        if is_auto_expand == True:
+            return False
+        
         track.height = appconsts.TRACK_HEIGHT_SMALL
         dialogutils.warning_message(_("Not enough vertical space on Timeline to expand track"), 
                                 _("Maximize or resize application window to get more\nspace for tracks if possible."),
@@ -134,6 +137,17 @@ def set_track_small_height(track_index):
     tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
     gui.tline_column.init_listeners()
     updater.repaint_tline()
+
+def maybe_do_auto_expand(tracks_clips_count_before_exit):
+    initial_drop_track_index = current_sequence().get_inital_drop_target_track(tracks_clips_count_before_exit)
+    if initial_drop_track_index == None or editorpersistance.prefs.auto_expand_tracks == False:
+        return
+
+    if current_sequence().tracks[initial_drop_track_index].height == appconsts.TRACK_HEIGHT_SMALL:
+        GObject.timeout_add(50, lambda: _do_auto_expand(initial_drop_track_index))
+
+def _do_auto_expand(initial_drop_track_index):
+    set_track_normal_height(initial_drop_track_index, is_retry=False, is_auto_expand=True)
     
 def mute_track(track, new_mute_state):
     # NOTE: THIS IS A SAVED EDIT OF SEQUENCE, BUT IT IS NOT AN UNDOABLE EDIT.
@@ -168,6 +182,10 @@ def _all_tracks_item_activated(widget, msg):
     
     if msg == "shrink":
          _tline_vertical_shrink_changed(widget)
+    
+    if msg == "autoexpand_on_drop":
+        editorpersistance.prefs.auto_expand_tracks = widget.get_active()
+        editorpersistance.save()
         
 def _tracks_resize_update():
     tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())

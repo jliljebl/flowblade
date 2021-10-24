@@ -1243,6 +1243,24 @@ class Sequence:
                 if clip.is_blanck_clip == False:
                     clip.waveform_data = None
 
+    # ----------------------------------- tracks auto expand feature
+    def get_tracks_clips_counts(self):
+        clips_counts = []
+        for i in range(1, len(self.tracks) - 1): # hidden tracks
+            clips_counts.append(len(self.tracks[i].clips))
+ 
+        return clips_counts
+    
+    def get_inital_drop_target_track(self, tracks_clips_count_before):
+        current_tracks_clips_count = self.get_tracks_clips_counts()
+        for i in range(0, len(current_tracks_clips_count)):
+            if tracks_clips_count_before[i] == 0:
+                if current_tracks_clips_count[i] > 0:
+                    return i + 1 # lists don't include bottom bg track.
+
+        return None
+
+    # ----------------------------------- info pronts
     def print_all(self):
         print("------------------------######")
         for i in range(0, len(self.tracks)):
