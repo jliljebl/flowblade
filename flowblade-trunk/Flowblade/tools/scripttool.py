@@ -801,6 +801,7 @@ class ScriptToolWindow(Gtk.Window):
         control_top.pack_start(guiutils.pad_label(2, 2), False, False, 0)
         control_top.pack_start(self.preview_button, False, False, 0)
         control_top.pack_start(self.preview_range_button, False, False, 0)
+        control_top.set_margin_top(8)
 
         control_bottom = Gtk.HBox(False, 2)
         control_bottom.pack_start(Gtk.Label(), True, True, 0)

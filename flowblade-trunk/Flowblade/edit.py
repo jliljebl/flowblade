@@ -341,7 +341,7 @@ class EditAction:
         if self.exit_active_trimmode_on_edit:
             trimmodes.set_no_edit_trim_mode()
 
-        # Tracks autoexpand-on-drop feature needs to here to avoid caching data.
+        # Tracks autoexpand-on-drop feature needs to be here to avoid caching data.
         tracks_clips_count_before = current_sequence().get_tracks_clips_counts()
 
         self.redo()
