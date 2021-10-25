@@ -93,7 +93,7 @@ def init():
     # Category names have to correspond with category names in fluxity.py.
     _script_groups_names = {}
     _script_groups_names["Animation"] = _("Animation")
-    _script_groups_names["Effect"] = _("Effect")
+    #_script_groups_names["Effect"] = _("Effect") # not used currently
     _script_groups_names["Cover Transition"] = _("Cover Transition")
     _script_groups_names["Text"] = _("Text")
     
