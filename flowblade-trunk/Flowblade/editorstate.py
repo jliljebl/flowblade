@@ -209,17 +209,6 @@ def get_track(index):
 def timeline_visible():
     return _timeline_displayed
 
-def mlt_version_is_equal_or_greater(test_version):
-    runtime_ver = mlt_version.split(".")
-    test_ver = test_version.split(".")
-    
-    if runtime_ver[0] >= test_ver[0]:
-        if  runtime_ver[1] >= test_ver[1]:
-            if  runtime_ver[2] >= test_ver[2]:
-                return True
-    
-    return False
-
 def mlt_version_is_greater_correct(test_version):
     runtime_ver = mlt_version.split(".")
     test_ver = test_version.split(".")

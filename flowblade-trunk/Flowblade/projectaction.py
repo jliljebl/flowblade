@@ -1135,13 +1135,8 @@ def _add_image_sequence_callback(dialog, response_id, data):
         dialogutils.info_message(_("Not a sequence file!"), _("Selected file does not have a number part in it,\nso it can't be an image sequence file."), gui.editor_window.window)
         return
 
-    # Create resource name with MLT syntax for MLT producer
-    # The better version with "?begin=xxx" only available after 0.8.7
-    if editorstate.mlt_version_is_equal_or_greater("0.8.5"):
-        resource_name_str = utils.get_img_seq_resource_name(frame_file, True)
-    else:
-        resource_name_str = utils.get_img_seq_resource_name(frame_file, False)
-
+    resource_name_str = utils.get_img_seq_resource_name(frame_file)
+        
     # Detect highest file so that we know the length of the producer.
     # FIX: this fails if two similarily numbered sequences in same dir and both have same substring in frame name
     number_index = file_name.find(number_part)

@@ -236,7 +236,7 @@ class GMicHeadlessRunnerThread(threading.Thread):
             
             # Render producer
             frame_file = rendered_frames_folder + "/" + frame_name + "_0000.png"
-            resource_name_str = utils.get_img_seq_resource_name(frame_file, True)
+            resource_name_str = utils.get_img_seq_resource_name(frame_file)
 
             resource_path = rendered_frames_folder + "/" + resource_name_str
             producer = mlt.Producer(profile, str(resource_path))

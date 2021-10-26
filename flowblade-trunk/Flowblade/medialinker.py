@@ -553,11 +553,7 @@ def _select_relink_path_dialog_callback(file_select, response_id, media_asset):
         link_path = os.path.join(folder, med_link_name)
         if os.path.isfile(link_path):
             if med_asset.media_type == appconsts.IMAGE_SEQUENCE: # img seqs need formatted path
-                if editorstate.mlt_version_is_equal_or_greater("0.8.5"):
-                    new_style = True
-                else:
-                    new_style = False
-                resource_name_str = utils.get_img_seq_resource_name(link_path, new_style)
+                resource_name_str = utils.get_img_seq_resource_name(link_path)
                 med_asset.relink_path = folder + "/" + resource_name_str
             else:
                 med_asset.relink_path = link_path

@@ -294,7 +294,7 @@ class AbstractContainerActionObject:
             print("No frame file found for container clip at:", self.get_rendered_media_dir())
             return None
 
-        resource_name_str = utils.get_img_seq_resource_name(frame_file, True)
+        resource_name_str = utils.get_img_seq_resource_name(frame_file)
         return self.get_rendered_media_dir() + "/" + resource_name_str
 
     def get_rendered_video_clip_path(self):

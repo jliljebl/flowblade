@@ -135,6 +135,8 @@ def main(root_path, force_launch=False):
     except:
         editorstate.mlt_version = "0.0.99" # magic string for "not found"
 
+    print("mlt.LIBMLT_VERSION", mlt.LIBMLT_VERSION)
+ 
     global _session_id
     _session_id = int(time.time() * 1000) # good enough
 
@@ -1012,7 +1014,6 @@ class ScriptToolWindow(Gtk.Window):
 
         fps = gmicplayer.get_current_profile_fps()
         if fps != None:
-            print("type", type(gmicplayer.get_current_profile_fps()))
             tc_str = " / " + utils.clip_length_string(_script_length, fps)
         else:
             tc_str = ""
@@ -1237,7 +1238,11 @@ class FluxityRangeRenderer(threading.Thread):
 
     def run(self):
         #start_time = time.time()
-    
+        
+        so = se = open(userfolders.get_cache_dir() + "log_scripttool_preview_range_render", 'w', buffering=1)
+        sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', buffering=1)
+        os.dup2(so.fileno(), sys.stdout.fileno())
+        
         Gdk.threads_enter()
         _window.out_view.get_buffer().set_text("Rendering...")
         Gdk.threads_leave()
@@ -1251,7 +1256,7 @@ class FluxityRangeRenderer(threading.Thread):
         
         if fctx.error == None:
             frame_file = fctx.priv_context.first_rendered_frame_path
-            resource_name_str = utils.get_img_seq_resource_name(frame_file, True)
+            resource_name_str = utils.get_img_seq_resource_name(frame_file)
             range_resourse_mlt_path = get_render_frames_dir() + "/" + resource_name_str
             new_playback_producer = _get_playback_tractor(_script_length, range_resourse_mlt_path, in_frame, out_frame)
             _player.set_producer(new_playback_producer)
@@ -1301,9 +1306,9 @@ class FluxityPluginRenderer(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        #so = se = open(userfolders.get_cache_dir() + "log_scripttool_render", 'w', buffering=1)
-        #sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', buffering=1)
-        #os.dup2(so.fileno(), sys.stdout.fileno())
+        so = se = open(userfolders.get_cache_dir() + "log_scripttool_render", 'w', buffering=1)
+        sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', buffering=1)
+        os.dup2(so.fileno(), sys.stdout.fileno())
     
         self.render_player = None        
         self.abort = False
@@ -1373,7 +1378,7 @@ class FluxityPluginRenderer(threading.Thread):
 
             # Render producer
             frame_file = fctx.priv_context.first_rendered_frame_path
-            resource_name_str = utils.get_img_seq_resource_name(frame_file, True)
+            resource_name_str = utils.get_img_seq_resource_name(frame_file)
             range_resourse_mlt_path = out_folder + resource_name_str
             producer = mlt.Producer(profile, str(range_resourse_mlt_path))
 
