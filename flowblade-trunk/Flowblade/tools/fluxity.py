@@ -188,9 +188,6 @@ FACE_ITALIC = "Italic"
 FACE_BOLD_ITALIC = "Bold Italic"
 DEFAULT_FONT_SIZE = 40
 
-ALIGN_LEFT = 0
-ALIGN_CENTER = 1
-ALIGN_RIGHT = 2
 
 VERTICAL = 0
 HORIZONTAL = 1
@@ -342,7 +339,7 @@ class FluxityContext:
     EDITOR_TEXT_AREA = 11
     """ Editor for creating multiline text."""
     
-    EDITOR_PANGO_FONT_DEFAULT_VALUES = ("Times Roman", "Regular", 80, ALIGN_LEFT, (1.0, 1.0, 1.0, 1.0), \
+    EDITOR_PANGO_FONT_DEFAULT_VALUES = ("Times Roman", "Regular", 80, Pango.Alignment.LEFT, (1.0, 1.0, 1.0, 1.0), \
                   True, (0.3, 0.3, 0.3, 1.0) , False, 2, False, (0.0, 0.0, 0.0), \
                   100, 3, 3, 0.0, None, VERTICAL)
     """ Pango Font Editor default values."""
@@ -764,6 +761,7 @@ class FluxityEmptyClass:
     pass
 
 class PangoTextLayout:
+
     """
     Object for drawing text with Pango.
     
@@ -777,40 +775,24 @@ class PangoTextLayout:
         self.shadow_xoff, self.shadow_yoff, self.shadow_blur, self.gradient_color_rgba, \
         self.gradient_direction = font_data
         self.font_desc = Pango.FontDescription(self.font_family + " " + self.font_face + " " + str(self.font_size))
-        """
-        self.font_desc = Pango.FontDescription(layer.get_font_desc_str())
-        self.color_rgba = layer.color_rgba
-        self.alignment = self._get_pango_alignment_for_layer(layer)
-        #self.pixel_size = layer.pixel_size
-        self.fill_on = layer.fill_on
-        self.gradient_color_rgba = layer.gradient_color_rgba
+        self.pango_layout = None
 
-        self.outline_color_rgba = layer.outline_color_rgba
-        self.outline_on = layer.outline_on
-        self.outline_width = layer.outline_width
-
-        self.shadow_on = layer.shadow_on
-        self.shadow_color_rgb = layer.shadow_color_rgb
-        self.shadow_opacity = layer.shadow_opacity
-        self.shadow_xoff = layer.shadow_xoff
-        self.shadow_yoff = layer.shadow_yoff
-        self.shadow_blur = layer.shadow_blur
-        
-        self.gradient_color_rgba = layer.gradient_color_rgba
-        self.gradient_direction = layer.gradient_direction
-        """
+    def create_pango_layout(self, cr, text):
+        self.text = text
+        self.pango_layout = PangoCairo.create_layout(cr)
+        self.pango_layout.set_text(self.text, -1)
+        self.pango_layout.set_font_description(self.font_desc)
+        self.pango_layout.set_alignment(self.alignment)
+        self.pixel_size = self.pango_layout.get_pixel_size()
         
     # called from vieweditor draw vieweditor-> editorlayer->here
     def draw_layout(self, text, cr, x, y, rotation=0.0, xscale=1.0, yscale=1.0):
         self.text = text
-        cr.save()
+        cr.save() # Created each frame
         
-        layout = PangoCairo.create_layout(cr)
-        layout.set_text(self.text, -1)
-        layout.set_font_description(self.font_desc)
-        layout.set_alignment(self.alignment)
-        self.pixel_size = layout.get_pixel_size()
-
+        self.create_pango_layout(cr, text)
+        layout = self.pango_layout # this just artifact of dev. history, create_pango_layout() was added later then draw_layout()
+                                   # to be used in typewriter plugin.
         # Shadow
         if self.shadow_on:
             cr.save()
@@ -901,13 +883,11 @@ class PangoTextLayout:
         
         cr.restore()
 
-    def _get_pango_alignment(self, alignment):
-        if alignment == ALIGN_LEFT:
-            return Pango.Alignment.LEFT
-        elif alignment == ALIGN_CENTER:
-            return Pango.Alignment.CENTER
-        else:
-            return Pango.Alignment.RIGHT
+    def get_pixel_size(self):
+        return self.pixel_size 
+
+    def get_pango_alignment(self):
+        return self.alignment
             
 # ---------------------------------------------------------- Errors 
 class FluxityError(Exception):
