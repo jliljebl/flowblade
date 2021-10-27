@@ -130,7 +130,7 @@ def main(root_path, session_id, script, clip_path, range_in, range_out, profile_
     render_data = ccrutils.get_render_data()
 
     fluxity_plugin_edit_data = ccrutils.read_misc_session_data(session_id, "fluxity_plugin_edit_data")
-    print(json.dumps(fluxity_plugin_edit_data["editors_list"])) # See fluxity.FluxityContext.get_script_data()
+    print("main():", json.dumps(fluxity_plugin_edit_data["editors_list"])) # See fluxity.FluxityContext.get_script_data()
     
     # This needs to have render data loaded to know if we are using external folders.
     ccrutils.maybe_init_external_session_folders()

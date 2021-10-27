@@ -1,9 +1,6 @@
 
 import cairo
 
-MONDRIAN = [(0.18, 0.274, 0.477), (1.0, 1.0, 1.0), (0.968, 0.793, 0.0), (0.051, 0.505, 0.725), 
-            (0.913, 0.0, 0.0), (0.0, 0.0, 0.0)]
-
 
 # ----------------------- fluxity funcs
 def init_script(fctx):
@@ -11,7 +8,7 @@ def init_script(fctx):
     fctx.set_author("Janne Liljeblad")
  
     fctx.add_editor("Font", fctx.EDITOR_PANGO_FONT, fctx.EDITOR_PANGO_FONT_DEFAULT_VALUES)
-    fctx.add_editor("Text", fctx.EDITOR_STRING, "Text")
+    fctx.add_editor("Text", fctx.EDITOR_TEXT_AREA, "Text")
     
 def init_render(fctx):
     # Get editor values

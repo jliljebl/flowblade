@@ -53,6 +53,7 @@ SIMPLE_EDITOR_CHECK_BOX = 7
 SIMPLE_EDITOR_FLOAT_RANGE = 8
 SIMPLE_EDITOR_INT_RANGE = 9
 SIMPLE_EDITOR_PANGO_FONT = 10
+SIMPLE_EDITOR_TEXT_AREA = 11
 
 FACE_REGULAR = "Regular"
 FACE_BOLD = "Bold"
@@ -462,7 +463,9 @@ def _get_editor(editor_type, id_data, label_text, value, tooltip):
         return IntEditorRange(id_data, label_text, value, tooltip)
     elif editor_type == SIMPLE_EDITOR_PANGO_FONT:
         return PangoFontEditor(id_data, label_text, value, tooltip)
-        
+    elif editor_type == SIMPLE_EDITOR_TEXT_AREA:
+        return TextAreaEditor(id_data, label_text, value, tooltip)
+    
 class AbstractSimpleEditor(Gtk.HBox):
     
     def __init__(self, id_data, tooltip):
@@ -495,7 +498,6 @@ class TextEditor(AbstractSimpleEditor):
         self.entry.set_text(value)
         
         self.build_editor(label_text, self.entry)
-        #self.editor_type is set in _get_editor() above.
 
     def get_value(self):
         value = self.entry.get_text()
@@ -537,7 +539,6 @@ class IntEditor(AbstractSimpleEditor):
         
     def get_value(self):
         return self.spinbutton.get_value_as_int()
-
 
 class ColorEditor(AbstractSimpleEditor):
 
@@ -586,7 +587,8 @@ class ColorEditor(AbstractSimpleEditor):
     def get_value_as_color_tuple(self):
         color = self.colorbutton.get_rgba()
         return (color.red, color.green, color.blue, 1.0)
-        
+
+
 class CheckboxEditor(AbstractSimpleEditor):
 
     def __init__(self, id_data, label_text, value, tooltip):
@@ -662,7 +664,6 @@ class IntEditorRange(AbstractSimpleEditor):
 class PangoFontEditor(AbstractSimpleEditor):
     def __init__(self, id_data, label_text, value, tooltip):
         AbstractSimpleEditor.__init__(self, id_data, tooltip)
-        
         notebook = self._get_widget()
 
         self.build_editor(label_text, notebook)
@@ -688,8 +689,6 @@ class PangoFontEditor(AbstractSimpleEditor):
         adj = Gtk.Adjustment(value=float(DEFAULT_FONT_SIZE), lower=float(1), upper=float(300), step_incr=float(1))
         self.widgets.size_spin = Gtk.SpinButton()
         self.widgets.size_spin.set_adjustment(adj)
-        #self.widgets.size_spin.connect("changed", self._edit_value_changed)
-        #self.size_spin.connect("key-press-event", self._key_pressed_on_widget)
 
         font_main_row = Gtk.HBox()
         font_main_row.pack_start(self.widgets.font_select, True, True, 0)
@@ -705,8 +704,6 @@ class PangoFontEditor(AbstractSimpleEditor):
                                        Gtk.IconSize.BUTTON)
         self.widgets.bold_font.set_image(bold_icon)
         self.widgets.italic_font.set_image(italic_icon)
-        #self.bold_font.connect("clicked", self._edit_value_changed)
-        #self.italic_font.connect("clicked", self._edit_value_changed)
         
         self.widgets.left_align = Gtk.RadioButton(None)
         self.widgets.center_align = Gtk.RadioButton.new_from_widget(self.widgets.left_align)
@@ -723,15 +720,10 @@ class PangoFontEditor(AbstractSimpleEditor):
         self.widgets.left_align.set_mode(False)
         self.widgets.center_align.set_mode(False)
         self.widgets.right_align.set_mode(False)
-        #self.widgets.left_align.connect("clicked", self.widgets._edit_value_changed)
-        #self.widgets.center_align.connect("clicked", self.widgets._edit_value_changed)
-        #self.widgets.right_align.connect("clicked", self.widgets._edit_value_changed)
         
         self.widgets.color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(red=1.0, green=1.0, blue=1.0, alpha=1.0))
-        #self.widgets.color_button.connect("color-set", self.widgets._edit_value_changed)
         self.widgets.fill_on = Gtk.CheckButton()
         self.widgets.fill_on.set_active(True)
-        #self.widgets.fill_on.connect("toggled", self.widgets._edit_value_changed)
 
         buttons_box = Gtk.HBox()
         buttons_box.pack_start(Gtk.Label(), True, True, 0)
@@ -751,17 +743,13 @@ class PangoFontEditor(AbstractSimpleEditor):
         outline_size = Gtk.Label(_("Size:"))
         
         self.widgets.out_line_color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(red=0.3, green=0.3, blue=0.3, alpha=1.0))
-        #self.widgets.out_line_color_button.connect("color-set", self.widgets._edit_value_changed)
 
         adj2 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(50), step_incr=float(1))
         self.widgets.out_line_size_spin = Gtk.SpinButton()
         self.widgets.out_line_size_spin.set_adjustment(adj2)
-        #self.widgets.out_line_size_spin.connect("changed", self.widgets._edit_value_changed)
-        #self.widgets.out_line_size_spin.connect("key-press-event", self.widgets._key_pressed_on_widget)
 
         self.widgets.outline_on = Gtk.CheckButton()
         self.widgets.outline_on.set_active(False)
-        #self.widgets.outline_on.connect("toggled", self.widgets._edit_value_changed)
         
         outline_box = Gtk.HBox()
         outline_box.pack_start(outline_size, False, False, 0)
@@ -783,34 +771,25 @@ class PangoFontEditor(AbstractSimpleEditor):
 
         adj3 = Gtk.Adjustment(value=float(100), lower=float(1), upper=float(100), step_incr=float(1))
         self.widgets.shadow_opa_spin.set_adjustment(adj3)
-        #self.widgets.shadow_opa_spin.connect("changed", self.widgets._edit_value_changed)
-        #self.widgets.shadow_opa_spin.connect("key-press-event", self.widgets._key_pressed_on_widget)
 
         self.widgets.shadow_xoff_spin = Gtk.SpinButton()
 
         adj4 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(100), step_incr=float(1))
         self.widgets.shadow_xoff_spin.set_adjustment(adj4)
-        #self.widgets.shadow_xoff_spin.connect("changed", self.widgets._edit_value_changed)
-        #self.widgets.shadow_xoff_spin.connect("key-press-event", self.widgets._key_pressed_on_widget)
 
         self.widgets.shadow_yoff_spin = Gtk.SpinButton()
 
         adj5 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(100), step_incr=float(1))
         self.widgets.shadow_yoff_spin.set_adjustment(adj5)
-        #self.widgets.shadow_yoff_spin.connect("changed", self.widgets._edit_value_changed)
-        #self.widgets.shadow_yoff_spin.connect("key-press-event", self.widgets._key_pressed_on_widget)
 
         self.widgets.shadow_on = Gtk.CheckButton()
         self.widgets.shadow_on.set_active(False)
-        #self.widgets.shadow_on.connect("toggled", self.widgets._edit_value_changed)
         
         self.widgets.shadow_color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(red=0.3, green=0.3, blue=0.3, alpha=1.0))
-        #self.widgets.shadow_color_button.connect("color-set", self.widgets._edit_value_changed)
 
         self.widgets.shadow_blur_spin = Gtk.SpinButton()
         adj6 = Gtk.Adjustment(value=float(0), lower=float(0), upper=float(20), step_incr=float(1))
         self.widgets.shadow_blur_spin.set_adjustment(adj6)
-        #self.widgets.shadow_blur_spin.connect("changed", self.widgets._edit_value_changed)
 
         shadow_box_1 = Gtk.HBox()
         shadow_box_1.pack_start(shadow_opacity_label, False, False, 0)
@@ -837,17 +816,14 @@ class PangoFontEditor(AbstractSimpleEditor):
 
         # ------------------------------------ Gradient panel
         self.widgets.gradient_color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(red=0.0, green=0.0, blue=0.8, alpha=1.0))
-        #self.widgets.gradient_color_button.connect("color-set", self.widgets._edit_value_changed)
         self.widgets.gradient_on = Gtk.CheckButton()
         self.widgets.gradient_on.set_active(True)
-        #self.widgets.gradient_on.connect("toggled", self.widgets._edit_value_changed)
 
         direction_label = Gtk.Label(_("Gradient Direction:"))
         self.widgets.direction_combo = Gtk.ComboBoxText()
         self.widgets.direction_combo.append_text(_("Vertical"))
         self.widgets.direction_combo.append_text(_("Horizontal"))
         self.widgets.direction_combo.set_active(0)
-        #self.widgets.direction_combo.connect("changed", self.widgets._edit_value_changed)
          
         gradient_box_row1 = Gtk.HBox()
         gradient_box_row1.pack_start(self.widgets.gradient_on, False, False, 0)
@@ -1026,6 +1002,37 @@ class PangoFontEditor(AbstractSimpleEditor):
         outline_width, shadow_on, shadow_color_rgb, shadow_opacity, shadow_xoff, \
         shadow_yoff, shadow_blur, gradient_color_rgba, \
         gradient_direction)
+
+    def get_value(self):
+        return self.get_editor_values()
+
+
+class TextAreaEditor(AbstractSimpleEditor):
+
+    def __init__(self, id_data, label_text, value, tooltip):
+        AbstractSimpleEditor.__init__(self, id_data, tooltip)
+        
+        self.text_view = Gtk.TextView()
+        self.text_view.set_pixels_above_lines(2)
+        self.text_view.set_left_margin(2)
+        self.text_view.get_buffer().set_text(value)
+
+        self.sw = Gtk.ScrolledWindow()
+        self.sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.ALWAYS)
+        self.sw.add(self.text_view)
+        self.sw.set_size_request(300, 200)
+
+        self.scroll_frame = Gtk.Frame()
+        self.scroll_frame.add(self.sw)
+        
+        self.build_editor(label_text, self.scroll_frame)
+        self.editor_type = SIMPLE_EDITOR_TEXT_AREA
+
+    def get_value(self):
+        buf = self.text_view.get_buffer()
+        text = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), include_hidden_chars=True)
+        return text
+
 
 # ------------------------------------------------------------------- preview
 class PreviewPanel(Gtk.VBox):

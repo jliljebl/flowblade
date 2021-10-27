@@ -1252,7 +1252,10 @@ class FluxityRangeRenderer(threading.Thread):
         self.in_frame = in_frame
         out_frame = _player.producer.mark_out
         
+        start_time = time.time()
         fctx = fluxity.render_frame_sequence(self.script, _last_save_path, in_frame, out_frame, self.render_folder, self.profile_file_path, self.frame_write_update)
+        end_time = time.time()
+        print(end_time - start_time)
         
         if fctx.error == None:
             frame_file = fctx.priv_context.first_rendered_frame_path
@@ -1290,7 +1293,7 @@ class FluxityRangeRenderer(threading.Thread):
 
             Gdk.threads_leave()
 
-    def frame_write_update(self, frame):
+    def frame_write_update(self, frame):    
         Gdk.threads_enter()
 
         _window.media_info.set_markup("<small>" + _("Rendered frame ") + str(frame) + "</small>")
@@ -1313,7 +1316,7 @@ class FluxityPluginRenderer(threading.Thread):
         self.render_player = None        
         self.abort = False
 
-        # Refuse to render into user home folder
+        # Get out folder and refuse to render into user home folder.
         out_folder = _window.out_folder.get_filenames()[0] + "/"
         if out_folder == (os.path.expanduser("~") + "/"):
             return

@@ -318,9 +318,9 @@ def _read_profile_prop_from_lines(lines, prop):
 class FluxityContext:
 
     EDITOR_STRING = 0
-    """ Editor for strings"""
-    EDITOR_VALUE = 1
-    """ Editor for values that are saved as strings but that be could interpreted as other data. Could be useful for inputting data programmatically."""
+    """ Editor for strings that return string values as *quoted* strings. Generally *EDITOR_TEXT* should be used instead."""
+    EDITOR_TEXT = 1
+    """ Editor for strings that return string values as unquoted strings."""
     EDITOR_FLOAT = 2
     """ Editor for float values."""
     EDITOR_INT = 3
@@ -339,7 +339,9 @@ class FluxityContext:
     """ Editor for integer valueswith a defined range of accepted values."""
     EDITOR_PANGO_FONT = 10
     """ Editor for setting pango font properties."""
-
+    EDITOR_TEXT_AREA = 11
+    """ Editor for creating multiline text."""
+    
     EDITOR_PANGO_FONT_DEFAULT_VALUES = ("Times Roman", "Regular", 80, ALIGN_LEFT, (1.0, 1.0, 1.0, 1.0), \
                   True, (0.3, 0.3, 0.3, 1.0) , False, 2, False, (0.0, 0.0, 0.0), \
                   100, 3, 3, 0.0, None, VERTICAL)
@@ -529,7 +531,6 @@ class FluxityContext:
         Must be called in script method *init_script()*.
         """
         self.editors[name] = (type, default_value)
-
         if tooltip != None:
             self.editor_tooltips[name] = tooltip
 
