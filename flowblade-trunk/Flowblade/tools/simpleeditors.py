@@ -274,8 +274,8 @@ class FluxityScriptEditorWindow(Gtk.Window):
         editors_list = self.script_data_object["editors_list"]
 
         for editor_data in editors_list:
-            name, type, value = editor_data
-            editor_type = int(type)
+            name, etype, value = editor_data
+            editor_type = int(etype)
             self.editor_widgets.append(_get_editor(editor_type, name, name, value, ""))
 
         editors_v_panel = Gtk.VBox(False, 2)
@@ -326,7 +326,7 @@ class FluxityScriptEditorWindow(Gtk.Window):
 
         self.add(alignment)
         self.show_all()
-
+        
     def render_preview_frame(self):
         if self.preview_frame != -1:
             return # There already is preview render ongoing.
@@ -419,17 +419,22 @@ class AddMediaPluginEditors:
             editors_panel = pane
 
         self.editors_panel = editors_panel
-
+        
 def get_editors_data_as_editors_list(editor_widgets):
     new_editors_list = [] # This is the editors list in format created in
                           # fluxity.FluxityContext.get_script_data()
     for editor in editor_widgets:
         value = editor.get_value()
+        # Special casing required for editors that have different internal representation of data
+        # compared to what they give to out scripts.
+        # BE VERY CAREFUL IF ADDING ANY NEW SUCH EDITORS.
         if editor.editor_type == SIMPLE_EDITOR_COLOR:
             value = editor.get_value_as_color_tuple()
+        elif editor.editor_type == SIMPLE_EDITOR_FLOAT_RANGE or editor.editor_type == SIMPLE_EDITOR_INT_RANGE:
+            value = editor.get_value_as_range_tuple()
         new_editor = [editor.id_data, editor.editor_type, value]
         new_editors_list.append(new_editor)
-    
+
     return new_editors_list
         
 
@@ -472,7 +477,7 @@ class AbstractSimpleEditor(Gtk.HBox):
         GObject.GObject.__init__(self)
         self.id_data = id_data # the data needed to target edited values on correct object.
         self.tooltip = tooltip
-        self.editor_type = -1
+        self.editor_type = -1 # dis not through constructor, because _get_editor () elif, is wrong.
         
     def build_editor(self, label_text, widget):
         widget.set_tooltip_text (self.tooltip)
@@ -498,7 +503,8 @@ class TextEditor(AbstractSimpleEditor):
         self.entry.set_text(value)
         
         self.build_editor(label_text, self.entry)
-
+        # editor type set at _get_editor()
+        
     def get_value(self):
         value = self.entry.get_text()
         if self.return_quoted_string == True:
@@ -597,7 +603,8 @@ class CheckboxEditor(AbstractSimpleEditor):
         self.checkbox.set_active(bool(value))
         
         self.build_editor(label_text, self.checkbox)
-
+        self.editor_type = SIMPLE_EDITOR_CHECK_BOX
+        
     def get_value(self):
         return self.checkbox.get_active()
 
@@ -613,7 +620,8 @@ class OptionsEditor(AbstractSimpleEditor):
         self.combo.set_active(active_index)
         
         self.build_editor(label_text, self.combo)
-
+        self.editor_type = SIMPLE_EDITOR_OPTIONS
+        
     def get_value(self):
         return self.combo.get_active()
 
@@ -625,7 +633,8 @@ class FilePathEditor(AbstractSimpleEditor):
         self.file_choose = Gtk.FileChooserButton.new("", Gtk.FileChooserAction.OPEN)
         
         self.build_editor(label_text, self.file_choose)
-
+        self.editor_type = SIMPLE_EDITOR_FILE_PATH
+        
     def get_value(self):
         return self.file_choose.get_filename()
 
@@ -640,8 +649,14 @@ class FloatEditorRange(AbstractSimpleEditor):
         self.spinbutton.set_value(float(default_val))
         
         self.build_editor(label_text, self.spinbutton)
-        self.editor_type = SIMPLE_EDITOR_FLOAT
+        self.editor_type = SIMPLE_EDITOR_FLOAT_RANGE
 
+    def get_value_as_range_tuple(self):
+        # We need this because externally we are giving value but internally we are 
+        # saving value inside tuple with range.
+        min, max = self.spinbutton.get_range()
+        return (self.spinbutton.get_value(), min, max)
+        
     def get_value(self):
         return self.spinbutton.get_value()
 
@@ -656,7 +671,13 @@ class IntEditorRange(AbstractSimpleEditor):
         self.spinbutton.set_value(int(default_val))
         
         self.build_editor(label_text, self.spinbutton)
-        self.editor_type = SIMPLE_EDITOR_INT
+        self.editor_type = SIMPLE_EDITOR_INT_RANGE
+
+    def get_value_as_range_tuple(self):
+        # We need this because externally we are giving value but internally we are 
+        # saving value inside tuple with range.
+        min, max = self.spinbutton.get_range()
+        return (self.spinbutton.get_value_as_int(), int(min), int(max))
         
     def get_value(self):
         return self.spinbutton.get_value_as_int()

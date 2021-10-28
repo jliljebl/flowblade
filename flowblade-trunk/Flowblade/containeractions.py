@@ -810,8 +810,14 @@ class FluxityContainerActions(AbstractContainerActionObject):
                               # fluxity.FluxityContext.get_script_data()
         for editor in editor_widgets:
             value = editor.get_value()
+            # Special casing required for editors that have different internal representation of data
+            # compared to what they give to out scripts.
+            # BE VERY CAREFUL IF ADDING ANY NEW SUCH EDITORS.
             if editor.editor_type == simpleeditors.SIMPLE_EDITOR_COLOR:
                 value = editor.get_value_as_color_tuple()
+            elif editor.editor_type == simpleeditors.SIMPLE_EDITOR_FLOAT_RANGE or editor.editor_type == simpleeditors.SIMPLE_EDITOR_INT_RANGE:
+                value = editor.get_value_as_range_tuple()
+                        
             new_editor = [editor.id_data, editor.editor_type, value]
             new_editors_list.append(new_editor)
         

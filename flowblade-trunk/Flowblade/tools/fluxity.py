@@ -535,7 +535,6 @@ class FluxityContext:
         self.editors[name] = (type, default_value)
         if tooltip != None:
             self.editor_tooltips[name] = tooltip
-
         self.priv_context.error_on_wrong_method("add_editor()", METHOD_INIT_SCRIPT)
         
     def get_editor_value(self, name, frame=0):
@@ -562,7 +561,7 @@ class FluxityContext:
           
           * EDITOR_FILE_PATH(str), 
           
-          * EDITOR_OPTIONS (2-tuple (int, [str]), (selected_index,[option_str_1, option_str_2, ...]),
+          * EDITOR_OPTIONS(selection index int),
           
           * EDITOR_CHECK_BOX(bool), 
           
@@ -584,7 +583,8 @@ class FluxityContext:
                 selected_index, options = value
                 return selected_index
             return value
-        except:
+        except Exception as e:
+            print("get_editor_value() " + str(e) + traceback.format_exc(6,True))
             exception_msg = "No editor for name '" + name + "' found."
             _raise_fluxity_error(exception_msg)
 
@@ -996,6 +996,7 @@ def render_preview_frame(script, script_file, frame, out_folder, profile_file_pa
         return fctx
     except Exception as e:
         fctx.error = str(e) + traceback.format_exc(6,True)
+        print(fctx.error)
         trace = traceback.format_exc(6,True)
         return fctx
 
