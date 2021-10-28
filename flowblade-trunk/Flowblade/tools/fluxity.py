@@ -577,7 +577,7 @@ class FluxityContext:
                 return val 
             elif type == FluxityContext.EDITOR_OPTIONS:
                 selected_index, options = value
-                return options[selected_index]
+                return selected_index
             return value
         except:
             exception_msg = "No editor for name '" + name + "' found."
