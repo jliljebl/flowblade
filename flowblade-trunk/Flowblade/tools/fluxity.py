@@ -161,6 +161,9 @@
     There is a helper function *_clamp(v)* used to make sure that all color values are in range 0-1. Any number of helper functions and data structures can be created to achieve the desired output.
     
 """
+import gi
+gi.require_version('Pango', '1.0')
+gi.require_version('PangoCairo', '1.0')
 from gi.repository import Pango
 from gi.repository import PangoCairo
 
@@ -412,6 +415,8 @@ class FluxityContext:
 
     def get_profile_property(self, p_property):
         """
+        **p_property(str):** propertyr identyfier, e.g. FluxityContext.PROFILE_PROGRESSIVE.
+        
         Used to access properties of MLT profile set before running the script that defines e.g. output image size.
         
         **Returns:** (int, boolean, string) Value depends on which profile property is being accessed.
@@ -660,6 +665,13 @@ class FluxityContext:
             self.editors[name] = (type, value)
 
     def create_text_layout(self, font_data):
+        """
+        **font_data(tuple)** this tuple can be aquired by calling *FluxityContext.get_editor_value()* on editors of type *FluxityContext.EDITOR_PANGO_FONT*.
+                
+        Creates obejcts used to draw text.
+
+        **Returns:** (fluxity.PangoTextLayout) object for drawing text.
+        """
         return PangoTextLayout(font_data)
     
     def log_line(self, log_line):
@@ -763,10 +775,11 @@ class FluxityEmptyClass:
 class PangoTextLayout:
 
     """
-    Object for drawing text with Pango.
+    **font_data(tuple)** this tuple can be aquired by calling *FluxityContext.get_editor_value()* on editors of type *FluxityContext.EDITOR_PANGO_FONT*.
+            
+    Object for drawing text. Uses internally Pango.
     
-    Pixel size of layer can only be obtained when cairo context is available
-    for drawing, so pixel size of layer is saved here.
+    Instances of this object can be created using *FluxityContext.create_text_layout(font_data)*.
     """
     def __init__(self, font_data):
         self.font_family, self.font_face, self.font_size, self.alignment, \
@@ -778,6 +791,13 @@ class PangoTextLayout:
         self.pango_layout = None
 
     def create_pango_layout(self, cr, text):
+        """
+        **cr(cairo.Context)** frame cairo context aquired with FluxityContext.get_frame_cr().
+        
+        **text(str)** displayed text.
+        
+        Creates internally PangoCairo layout object. Calling this is required before calling *get_pixel_size()*.
+        """
         self.text = text
         self.pango_layout = PangoCairo.create_layout(cr)
         self.pango_layout.set_text(self.text, -1)
@@ -787,6 +807,25 @@ class PangoTextLayout:
         
     # called from vieweditor draw vieweditor-> editorlayer->here
     def draw_layout(self, text, cr, x, y, rotation=0.0, xscale=1.0, yscale=1.0):
+        """
+        **text(str)** displayed text.
+        
+        **cr(cairo.Context)** frame cairo context aquired with *FluxityContext.get_frame_cr()*.
+        
+        **x(float)** Text X position.
+
+        **y(float)** Text Y position.
+
+        **rotation(float)** Text rotation.
+
+        **xscale(float)** Text X scaling.
+
+        **yscale(float)** Text Y scaling.
+
+        Draws text on provided *cairo.Context*.
+        
+        Calls internally *create_pango_layout()* so *get_pixel_size()* can be called after this.
+        """
         self.text = text
         cr.save() # Created each frame
         
@@ -884,9 +923,23 @@ class PangoTextLayout:
         cr.restore()
 
     def get_pixel_size(self):
+        """             
+        Returns size of layout.
+
+        Before calling this PangoCairo layout object needs to creted *create_pango_layout()* or *draw_layout().*
+        
+        **Returns:** (width, height) pixel size of layout.
+        """
         return self.pixel_size 
 
     def get_pango_alignment(self):
+        """             
+        Returns alignment for his layout.
+
+        To interpret enums script must do import *from gi.repository import Pango*
+        
+        **Returns:** (int) alignment enum, either *Pango.Alignment.CENTER*, *Pango.Alignment.LEFT* or *Pango.Alignment.RIGHT*.
+        """
         return self.alignment
             
 # ---------------------------------------------------------- Errors 

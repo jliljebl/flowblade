@@ -24,7 +24,9 @@ def init_render(fctx):
     text = fctx.get_editor_value("Text")
     step_speed = fctx.get_editor_value("Steps Per Frame")
     animation_type = fctx.get_editor_value("Animation Type")
-    line_gap = fctx.get_editor_value("Line Gap") 
+    line_gap = fctx.get_editor_value("Line Gap")
+    
+    # Create typewriter object
     typewriter = TypeWriter(text, font_data, animation_type, step_speed, line_gap)
     fctx.set_data_obj("typewriter", typewriter)
     
@@ -52,8 +54,11 @@ class TypeWriter:
         self.line_layouts = []
         for line_text in self.lines:
             line_layout = fctx.create_text_layout(self.font_data)
-            line_layout.create_pango_layout(cr, line_text) # add text now that we cairo context
+            line_layout.create_pango_layout(cr, line_text) # add text now that we have cairo context
             self.line_layouts.append(line_layout)
+        
+        if len(self.line_layouts) == 0:
+            return
         
         # Compute line positions.
         pango_alignment = self.line_layouts[0].get_pango_alignment() # all lines have the same alignment
@@ -69,7 +74,7 @@ class TypeWriter:
                 w, h = line_layout.get_pixel_size()
                 line_positions.append((x + max_width/2 - w/2, y))
                 y = y + h + self.line_gap
-        else:
+        else: # Pango.Alignment.RIGHT
             max_width = self.get_line_max_width()
             for line_layout in self.line_layouts:
                 w, h = line_layout.get_pixel_size()

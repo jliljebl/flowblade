@@ -59,7 +59,6 @@ def render_frame(frame, fctx, w, h):
 <p>Here have an example script called <em>'Floating Balls'</em> that is distributed as a Media Plugin with Flowblade.</p>
 <h3 id="init_script">init_script()</h3>
 <pre><code>import cairo
-import mlt
 import numpy as np
 import random
 import math
@@ -218,7 +217,6 @@ def _clamp(v):
     
     ```
     import cairo
-    import mlt
     import numpy as np
     import random
     import math
@@ -318,14 +316,21 @@ def _clamp(v):
     There is a helper function *_clamp(v)* used to make sure that all color values are in range 0-1. Any number of helper functions and data structures can be created to achieve the desired output.
     
 &#34;&#34;&#34;
+import gi
+gi.require_version(&#39;Pango&#39;, &#39;1.0&#39;)
+gi.require_version(&#39;PangoCairo&#39;, &#39;1.0&#39;)
 from gi.repository import Pango
 from gi.repository import PangoCairo
 
 import cairo
 import json
-import mlt
+import locale
+import numpy as np
 import os
 import traceback
+
+# MLR repo object
+repo = None
 
 # Default length in frames for script duration
 DEFAULT_LENGTH = 200
@@ -341,9 +346,6 @@ FACE_ITALIC = &#34;Italic&#34;
 FACE_BOLD_ITALIC = &#34;Bold Italic&#34;
 DEFAULT_FONT_SIZE = 40
 
-ALIGN_LEFT = 0
-ALIGN_CENTER = 1
-ALIGN_RIGHT = 2
 
 VERTICAL = 0
 HORIZONTAL = 1
@@ -352,7 +354,6 @@ HORIZONTAL = 1
 DEFAULT_SCRIPT = \
 &#34;&#34;&#34;
 import cairo
-import mlt
 
 def init_script(fctx):
     # Script init here
@@ -434,9 +435,9 @@ class FluxityScript:
           _raise_fluxity_error(&#34;error calling function &#39;render_frame()&#39;:\n\n&#34; + str(e))
 
 
-# ---------------------------------------------------------- mlt profile
+# ----------------------------------------------------------  Data structure correcponding with mlt.Profile
 class FluxityProfile:
-    &#34;&#34;&#34;
+    &#34;&#34;&#34;    
     Properties of this class correspond MLT profile objects.
     
     Internal class, do not use objects of this class directly in scripts. 
@@ -472,9 +473,9 @@ def _read_profile_prop_from_lines(lines, prop):
 class FluxityContext:
 
     EDITOR_STRING = 0
-    &#34;&#34;&#34; Editor for strings&#34;&#34;&#34;
-    EDITOR_VALUE = 1
-    &#34;&#34;&#34; Editor for values that are saved as strings but that be could interpreted as other data. Could be useful for inputting data programmatically.&#34;&#34;&#34;
+    &#34;&#34;&#34; Editor for strings that return string values as *quoted* strings. Generally *EDITOR_TEXT* should be used instead.&#34;&#34;&#34;
+    EDITOR_TEXT = 1
+    &#34;&#34;&#34; Editor for strings that return string values as unquoted strings.&#34;&#34;&#34;
     EDITOR_FLOAT = 2
     &#34;&#34;&#34; Editor for float values.&#34;&#34;&#34;
     EDITOR_INT = 3
@@ -493,8 +494,10 @@ class FluxityContext:
     &#34;&#34;&#34; Editor for integer valueswith a defined range of accepted values.&#34;&#34;&#34;
     EDITOR_PANGO_FONT = 10
     &#34;&#34;&#34; Editor for setting pango font properties.&#34;&#34;&#34;
-
-    EDITOR_PANGO_FONT_DEFAULT_VALUES = (&#34;Times Roman&#34;, &#34;Regular&#34;, 80, ALIGN_LEFT, (1.0, 1.0, 1.0, 1.0), \
+    EDITOR_TEXT_AREA = 11
+    &#34;&#34;&#34; Editor for creating multiline text.&#34;&#34;&#34;
+    
+    EDITOR_PANGO_FONT_DEFAULT_VALUES = (&#34;Times Roman&#34;, &#34;Regular&#34;, 80, Pango.Alignment.LEFT, (1.0, 1.0, 1.0, 1.0), \
                   True, (0.3, 0.3, 0.3, 1.0) , False, 2, False, (0.0, 0.0, 0.0), \
                   100, 3, 3, 0.0, None, VERTICAL)
     &#34;&#34;&#34; Pango Font Editor default values.&#34;&#34;&#34;
@@ -567,6 +570,8 @@ class FluxityContext:
 
     def get_profile_property(self, p_property):
         &#34;&#34;&#34;
+        **p_property(str):** propertyr identyfier, e.g. FluxityContext.PROFILE_PROGRESSIVE.
+        
         Used to access properties of MLT profile set before running the script that defines e.g. output image size.
         
         **Returns:** (int, boolean, string) Value depends on which profile property is being accessed.
@@ -683,7 +688,6 @@ class FluxityContext:
         Must be called in script method *init_script()*.
         &#34;&#34;&#34;
         self.editors[name] = (type, default_value)
-
         if tooltip != None:
             self.editor_tooltips[name] = tooltip
 
@@ -733,7 +737,7 @@ class FluxityContext:
                 return val 
             elif type == FluxityContext.EDITOR_OPTIONS:
                 selected_index, options = value
-                return options[selected_index]
+                return selected_index
             return value
         except:
             exception_msg = &#34;No editor for name &#39;&#34; + name + &#34;&#39; found.&#34;
@@ -816,8 +820,15 @@ class FluxityContext:
             self.editors[name] = (type, value)
 
     def create_text_layout(self, font_data):
-        return PangoTextLayout(font_data)
+        &#34;&#34;&#34;
+        **font_data(tuple)** this tuple can be aquired by calling *FluxityContext.get_editor_value()* on editors of type *FluxityContext.EDITOR_PANGO_FONT*.
+                
+        Creates obejcts used to draw text.
 
+        **Returns:** (fluxity.PangoTextLayout) object for drawing text.
+        &#34;&#34;&#34;
+        return PangoTextLayout(font_data)
+    
     def log_line(self, log_line):
         &#34;&#34;&#34;
         **log_line(str):** line of text.
@@ -825,17 +836,17 @@ class FluxityContext:
         Adds a line of text to log message displayed after completion or error.
         &#34;&#34;&#34;
         self.log_msg = self.log_msg + log_line + &#34;\n&#34;
-                
+
+
 class FluxityContextPrivate:
     &#34;&#34;&#34;
     This class exists to keep FluxityContext API clean for script developers.
     
-    Internal class, do not use objects of this class directly in scripts.
+    Internal class, do not use objects of this class directly in scripts. 
     &#34;&#34;&#34;
     def __init__(self, output_folder):
 
         self.profile = None
-        self.mlt_profile_path = None # We need a file for mlt.Profile so if one exits let&#39;s remember path, set with self.load_profile()
         
         self.output_folder = output_folder
         self.start_out_from_frame_one = False
@@ -851,6 +862,8 @@ class FluxityContextPrivate:
 
         self.current_method = None
         self.method_name = {METHOD_INIT_SCRIPT:&#34;init_script()&#34;, METHOD_INIT_RENDER:&#34;init_render()&#34;, METHOD_RENDER_FRAME:&#34;render_frame()&#34;}
+        
+        self.repo = None
         
     def load_profile(self, mlt_profile_path):
         lines = []
@@ -871,8 +884,7 @@ class FluxityContextPrivate:
         data[FluxityProfile.COLORSPACE] = _read_profile_prop_from_lines(lines, FluxityProfile.COLORSPACE)
 
         self.profile = FluxityProfile(data)
-        self.mlt_profile_path = mlt_profile_path
-        
+
         return self.profile.profile_data
         
     def create_frame_surface(self, frame):
@@ -916,11 +928,13 @@ class FluxityEmptyClass:
     pass
 
 class PangoTextLayout:
+
     &#34;&#34;&#34;
-    Object for drawing text with Pango.
+    **font_data(tuple)** this tuple can be aquired by calling *FluxityContext.get_editor_value()* on editors of type *FluxityContext.EDITOR_PANGO_FONT*.
+            
+    Object for drawing text. Uses internally Pango.
     
-    Pixel size of layer can only be obtained when cairo context is available
-    for drawing, so pixel size of layer is saved here.
+    Instances of this object can be created using *FluxityContext.create_text_layout(font_data)*.
     &#34;&#34;&#34;
     def __init__(self, font_data):
         self.font_family, self.font_face, self.font_size, self.alignment, \
@@ -929,40 +943,50 @@ class PangoTextLayout:
         self.shadow_xoff, self.shadow_yoff, self.shadow_blur, self.gradient_color_rgba, \
         self.gradient_direction = font_data
         self.font_desc = Pango.FontDescription(self.font_family + &#34; &#34; + self.font_face + &#34; &#34; + str(self.font_size))
+        self.pango_layout = None
+
+    def create_pango_layout(self, cr, text):
         &#34;&#34;&#34;
-        self.font_desc = Pango.FontDescription(layer.get_font_desc_str())
-        self.color_rgba = layer.color_rgba
-        self.alignment = self._get_pango_alignment_for_layer(layer)
-        #self.pixel_size = layer.pixel_size
-        self.fill_on = layer.fill_on
-        self.gradient_color_rgba = layer.gradient_color_rgba
-
-        self.outline_color_rgba = layer.outline_color_rgba
-        self.outline_on = layer.outline_on
-        self.outline_width = layer.outline_width
-
-        self.shadow_on = layer.shadow_on
-        self.shadow_color_rgb = layer.shadow_color_rgb
-        self.shadow_opacity = layer.shadow_opacity
-        self.shadow_xoff = layer.shadow_xoff
-        self.shadow_yoff = layer.shadow_yoff
-        self.shadow_blur = layer.shadow_blur
+        **cr(cairo.Context)** frame cairo context aquired with FluxityContext.get_frame_cr().
         
-        self.gradient_color_rgba = layer.gradient_color_rgba
-        self.gradient_direction = layer.gradient_direction
+        **text(str)** displayed text.
+        
+        Creates internally PangoCairo layout object. Calling this is required before calling *get_pixel_size()*.
         &#34;&#34;&#34;
+        self.text = text
+        self.pango_layout = PangoCairo.create_layout(cr)
+        self.pango_layout.set_text(self.text, -1)
+        self.pango_layout.set_font_description(self.font_desc)
+        self.pango_layout.set_alignment(self.alignment)
+        self.pixel_size = self.pango_layout.get_pixel_size()
         
     # called from vieweditor draw vieweditor-&gt; editorlayer-&gt;here
     def draw_layout(self, text, cr, x, y, rotation=0.0, xscale=1.0, yscale=1.0):
-        self.text = text
-        cr.save()
+        &#34;&#34;&#34;
+        **text(str)** displayed text.
         
-        layout = PangoCairo.create_layout(cr)
-        layout.set_text(self.text, -1)
-        layout.set_font_description(self.font_desc)
-        layout.set_alignment(self.alignment)
-        self.pixel_size = layout.get_pixel_size()
+        **cr(cairo.Context)** frame cairo context aquired with *FluxityContext.get_frame_cr()*.
+        
+        **x(float)** Text X position.
 
+        **y(float)** Text Y position.
+
+        **rotation(float)** Text rotation.
+
+        **xscale(float)** Text X scaling.
+
+        **yscale(float)** Text Y scaling.
+
+        Draws text on provided *cairo.Context*.
+        
+        Calls internally *create_pango_layout()* so *get_pixel_size()* can be called after this.
+        &#34;&#34;&#34;
+        self.text = text
+        cr.save() # Created each frame
+        
+        self.create_pango_layout(cr, text)
+        layout = self.pango_layout # this just artifact of dev. history, create_pango_layout() was added later then draw_layout()
+                                   # to be used in typewriter plugin.
         # Shadow
         if self.shadow_on:
             cr.save()
@@ -1053,13 +1077,25 @@ class PangoTextLayout:
         
         cr.restore()
 
-    def _get_pango_alignment(self, alignment):
-        if alignment == ALIGN_LEFT:
-            return Pango.Alignment.LEFT
-        elif alignment == ALIGN_CENTER:
-            return Pango.Alignment.CENTER
-        else:
-            return Pango.Alignment.RIGHT
+    def get_pixel_size(self):
+        &#34;&#34;&#34;             
+        Returns size of layout.
+
+        Before calling this PangoCairo layout object needs to creted *create_pango_layout()* or *draw_layout().*
+        
+        **Returns:** (width, height) pixel size of layout.
+        &#34;&#34;&#34;
+        return self.pixel_size 
+
+    def get_pango_alignment(self):
+        &#34;&#34;&#34;             
+        Returns alignment for his layout.
+
+        To interpret enums script must do import *from gi.repository import Pango*
+        
+        **Returns:** (int) alignment enum, either *Pango.Alignment.CENTER*, *Pango.Alignment.LEFT* or *Pango.Alignment.RIGHT*.
+        &#34;&#34;&#34;
+        return self.alignment
             
 # ---------------------------------------------------------- Errors 
 class FluxityError(Exception):
@@ -1170,6 +1206,9 @@ def _init_script_and_context(script, script_file, out_folder, profile_file_path)
     except Exception as e:
         msg = str(e)
         return (msg, None)
+
+
+    
         </code></pre>
 </details>
 </section>
@@ -1290,9 +1329,9 @@ def _init_script_and_context(script, script_file, out_folder, profile_file_path)
 <pre><code class="python">class FluxityContext:
 
     EDITOR_STRING = 0
-    &#34;&#34;&#34; Editor for strings&#34;&#34;&#34;
-    EDITOR_VALUE = 1
-    &#34;&#34;&#34; Editor for values that are saved as strings but that be could interpreted as other data. Could be useful for inputting data programmatically.&#34;&#34;&#34;
+    &#34;&#34;&#34; Editor for strings that return string values as *quoted* strings. Generally *EDITOR_TEXT* should be used instead.&#34;&#34;&#34;
+    EDITOR_TEXT = 1
+    &#34;&#34;&#34; Editor for strings that return string values as unquoted strings.&#34;&#34;&#34;
     EDITOR_FLOAT = 2
     &#34;&#34;&#34; Editor for float values.&#34;&#34;&#34;
     EDITOR_INT = 3
@@ -1311,8 +1350,10 @@ def _init_script_and_context(script, script_file, out_folder, profile_file_path)
     &#34;&#34;&#34; Editor for integer valueswith a defined range of accepted values.&#34;&#34;&#34;
     EDITOR_PANGO_FONT = 10
     &#34;&#34;&#34; Editor for setting pango font properties.&#34;&#34;&#34;
-
-    EDITOR_PANGO_FONT_DEFAULT_VALUES = (&#34;Times Roman&#34;, &#34;Regular&#34;, 80, ALIGN_LEFT, (1.0, 1.0, 1.0, 1.0), \
+    EDITOR_TEXT_AREA = 11
+    &#34;&#34;&#34; Editor for creating multiline text.&#34;&#34;&#34;
+    
+    EDITOR_PANGO_FONT_DEFAULT_VALUES = (&#34;Times Roman&#34;, &#34;Regular&#34;, 80, Pango.Alignment.LEFT, (1.0, 1.0, 1.0, 1.0), \
                   True, (0.3, 0.3, 0.3, 1.0) , False, 2, False, (0.0, 0.0, 0.0), \
                   100, 3, 3, 0.0, None, VERTICAL)
     &#34;&#34;&#34; Pango Font Editor default values.&#34;&#34;&#34;
@@ -1385,6 +1426,8 @@ def _init_script_and_context(script, script_file, out_folder, profile_file_path)
 
     def get_profile_property(self, p_property):
         &#34;&#34;&#34;
+        **p_property(str):** propertyr identyfier, e.g. FluxityContext.PROFILE_PROGRESSIVE.
+        
         Used to access properties of MLT profile set before running the script that defines e.g. output image size.
         
         **Returns:** (int, boolean, string) Value depends on which profile property is being accessed.
@@ -1501,7 +1544,6 @@ def _init_script_and_context(script, script_file, out_folder, profile_file_path)
         Must be called in script method *init_script()*.
         &#34;&#34;&#34;
         self.editors[name] = (type, default_value)
-
         if tooltip != None:
             self.editor_tooltips[name] = tooltip
 
@@ -1551,7 +1593,7 @@ def _init_script_and_context(script, script_file, out_folder, profile_file_path)
                 return val 
             elif type == FluxityContext.EDITOR_OPTIONS:
                 selected_index, options = value
-                return options[selected_index]
+                return selected_index
             return value
         except:
             exception_msg = &#34;No editor for name &#39;&#34; + name + &#34;&#39; found.&#34;
@@ -1634,8 +1676,15 @@ def _init_script_and_context(script, script_file, out_folder, profile_file_path)
             self.editors[name] = (type, value)
 
     def create_text_layout(self, font_data):
-        return PangoTextLayout(font_data)
+        &#34;&#34;&#34;
+        **font_data(tuple)** this tuple can be aquired by calling *FluxityContext.get_editor_value()* on editors of type *FluxityContext.EDITOR_PANGO_FONT*.
+                
+        Creates obejcts used to draw text.
 
+        **Returns:** (fluxity.PangoTextLayout) object for drawing text.
+        &#34;&#34;&#34;
+        return PangoTextLayout(font_data)
+    
     def log_line(self, log_line):
         &#34;&#34;&#34;
         **log_line(str):** line of text.
@@ -1690,11 +1739,15 @@ string options. Value is tuple <em>(selected_index,[option_str_1, option_str_2, 
 </dd>
 <dt id="fluxity.FluxityContext.EDITOR_STRING"><code class="name">var <span class="ident">EDITOR_STRING</span></code></dt>
 <dd>
-<div class="desc"><p>Editor for strings</p></div>
+<div class="desc"><p>Editor for strings that return string values as <em>quoted</em> strings. Generally <em>EDITOR_TEXT</em> should be used instead.</p></div>
 </dd>
-<dt id="fluxity.FluxityContext.EDITOR_VALUE"><code class="name">var <span class="ident">EDITOR_VALUE</span></code></dt>
+<dt id="fluxity.FluxityContext.EDITOR_TEXT"><code class="name">var <span class="ident">EDITOR_TEXT</span></code></dt>
 <dd>
-<div class="desc"><p>Editor for values that are saved as strings but that be could interpreted as other data. Could be useful for inputting data programmatically.</p></div>
+<div class="desc"><p>Editor for strings that return string values as unquoted strings.</p></div>
+</dd>
+<dt id="fluxity.FluxityContext.EDITOR_TEXT_AREA"><code class="name">var <span class="ident">EDITOR_TEXT_AREA</span></code></dt>
+<dd>
+<div class="desc"><p>Editor for creating multiline text.</p></div>
 </dd>
 <dt id="fluxity.FluxityContext.PROFILE_COLORSPACE"><code class="name">var <span class="ident">PROFILE_COLORSPACE</span></code></dt>
 <dd>
@@ -1838,7 +1891,6 @@ gradient_color_rgba, gradient_direction))</p>
     Must be called in script method *init_script()*.
     &#34;&#34;&#34;
     self.editors[name] = (type, default_value)
-
     if tooltip != None:
         self.editor_tooltips[name] = tooltip
 
@@ -1849,12 +1901,21 @@ gradient_color_rgba, gradient_direction))</p>
 <span>def <span class="ident">create_text_layout</span></span>(<span>self, font_data)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p><strong>font_data(tuple)</strong> this tuple can be aquired by calling <em>FluxityContext.get_editor_value()</em> on editors of type <em>FluxityContext.EDITOR_PANGO_FONT</em>.</p>
+<p>Creates obejcts used to draw text.</p>
+<p><strong>Returns:</strong> (fluxity.PangoTextLayout) object for drawing text.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def create_text_layout(self, font_data):
+    &#34;&#34;&#34;
+    **font_data(tuple)** this tuple can be aquired by calling *FluxityContext.get_editor_value()* on editors of type *FluxityContext.EDITOR_PANGO_FONT*.
+            
+    Creates obejcts used to draw text.
+
+    **Returns:** (fluxity.PangoTextLayout) object for drawing text.
+    &#34;&#34;&#34;
     return PangoTextLayout(font_data)</code></pre>
 </details>
 </dd>
@@ -1996,7 +2057,7 @@ gradient_color_rgba, gradient_direction))</p>
             return val 
         elif type == FluxityContext.EDITOR_OPTIONS:
             selected_index, options = value
-            return options[selected_index]
+            return selected_index
         return value
     except:
         exception_msg = &#34;No editor for name &#39;&#34; + name + &#34;&#39; found.&#34;
@@ -2051,7 +2112,8 @@ gradient_color_rgba, gradient_direction))</p>
 <span>def <span class="ident">get_profile_property</span></span>(<span>self, p_property)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Used to access properties of MLT profile set before running the script that defines e.g. output image size.</p>
+<div class="desc"><p><strong>p_property(str):</strong> propertyr identyfier, e.g. FluxityContext.PROFILE_PROGRESSIVE.</p>
+<p>Used to access properties of MLT profile set before running the script that defines e.g. output image size.</p>
 <p><strong>Returns:</strong> (int, boolean, string) Value depends on which profile property is being accessed.</p></div>
 <details class="source">
 <summary>
@@ -2059,6 +2121,8 @@ gradient_color_rgba, gradient_direction))</p>
 </summary>
 <pre><code class="python">def get_profile_property(self, p_property):
     &#34;&#34;&#34;
+    **p_property(str):** propertyr identyfier, e.g. FluxityContext.PROFILE_PROGRESSIVE.
+    
     Used to access properties of MLT profile set before running the script that defines e.g. output image size.
     
     **Returns:** (int, boolean, string) Value depends on which profile property is being accessed.
@@ -2350,12 +2414,11 @@ gradient_color_rgba, gradient_direction))</p>
     &#34;&#34;&#34;
     This class exists to keep FluxityContext API clean for script developers.
     
-    Internal class, do not use objects of this class directly in scripts.
+    Internal class, do not use objects of this class directly in scripts. 
     &#34;&#34;&#34;
     def __init__(self, output_folder):
 
         self.profile = None
-        self.mlt_profile_path = None # We need a file for mlt.Profile so if one exits let&#39;s remember path, set with self.load_profile()
         
         self.output_folder = output_folder
         self.start_out_from_frame_one = False
@@ -2371,6 +2434,8 @@ gradient_color_rgba, gradient_direction))</p>
 
         self.current_method = None
         self.method_name = {METHOD_INIT_SCRIPT:&#34;init_script()&#34;, METHOD_INIT_RENDER:&#34;init_render()&#34;, METHOD_RENDER_FRAME:&#34;render_frame()&#34;}
+        
+        self.repo = None
         
     def load_profile(self, mlt_profile_path):
         lines = []
@@ -2391,8 +2456,7 @@ gradient_color_rgba, gradient_direction))</p>
         data[FluxityProfile.COLORSPACE] = _read_profile_prop_from_lines(lines, FluxityProfile.COLORSPACE)
 
         self.profile = FluxityProfile(data)
-        self.mlt_profile_path = mlt_profile_path
-        
+
         return self.profile.profile_data
         
     def create_frame_surface(self, frame):
@@ -2506,8 +2570,7 @@ gradient_color_rgba, gradient_direction))</p>
     data[FluxityProfile.COLORSPACE] = _read_profile_prop_from_lines(lines, FluxityProfile.COLORSPACE)
 
     self.profile = FluxityProfile(data)
-    self.mlt_profile_path = mlt_profile_path
-    
+
     return self.profile.profile_data</code></pre>
 </details>
 </dd>
@@ -2595,7 +2658,7 @@ gradient_color_rgba, gradient_direction))</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class FluxityProfile:
-    &#34;&#34;&#34;
+    &#34;&#34;&#34;    
     Properties of this class correspond MLT profile objects.
     
     Internal class, do not use objects of this class directly in scripts. 
@@ -2848,19 +2911,21 @@ gradient_color_rgba, gradient_direction))</p>
 <span>(</span><span>font_data)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Object for drawing text with Pango.</p>
-<p>Pixel size of layer can only be obtained when cairo context is available
-for drawing, so pixel size of layer is saved here.</p></div>
+<div class="desc"><p><strong>font_data(tuple)</strong> this tuple can be aquired by calling <em>FluxityContext.get_editor_value()</em> on editors of type <em>FluxityContext.EDITOR_PANGO_FONT</em>.</p>
+<p>Object for drawing text. Uses internally Pango.</p>
+<p>Instances of this object can be created using <em>FluxityContext.create_text_layout(font_data)</em>.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class PangoTextLayout:
+
     &#34;&#34;&#34;
-    Object for drawing text with Pango.
+    **font_data(tuple)** this tuple can be aquired by calling *FluxityContext.get_editor_value()* on editors of type *FluxityContext.EDITOR_PANGO_FONT*.
+            
+    Object for drawing text. Uses internally Pango.
     
-    Pixel size of layer can only be obtained when cairo context is available
-    for drawing, so pixel size of layer is saved here.
+    Instances of this object can be created using *FluxityContext.create_text_layout(font_data)*.
     &#34;&#34;&#34;
     def __init__(self, font_data):
         self.font_family, self.font_face, self.font_size, self.alignment, \
@@ -2869,40 +2934,50 @@ for drawing, so pixel size of layer is saved here.</p></div>
         self.shadow_xoff, self.shadow_yoff, self.shadow_blur, self.gradient_color_rgba, \
         self.gradient_direction = font_data
         self.font_desc = Pango.FontDescription(self.font_family + &#34; &#34; + self.font_face + &#34; &#34; + str(self.font_size))
+        self.pango_layout = None
+
+    def create_pango_layout(self, cr, text):
         &#34;&#34;&#34;
-        self.font_desc = Pango.FontDescription(layer.get_font_desc_str())
-        self.color_rgba = layer.color_rgba
-        self.alignment = self._get_pango_alignment_for_layer(layer)
-        #self.pixel_size = layer.pixel_size
-        self.fill_on = layer.fill_on
-        self.gradient_color_rgba = layer.gradient_color_rgba
-
-        self.outline_color_rgba = layer.outline_color_rgba
-        self.outline_on = layer.outline_on
-        self.outline_width = layer.outline_width
-
-        self.shadow_on = layer.shadow_on
-        self.shadow_color_rgb = layer.shadow_color_rgb
-        self.shadow_opacity = layer.shadow_opacity
-        self.shadow_xoff = layer.shadow_xoff
-        self.shadow_yoff = layer.shadow_yoff
-        self.shadow_blur = layer.shadow_blur
+        **cr(cairo.Context)** frame cairo context aquired with FluxityContext.get_frame_cr().
         
-        self.gradient_color_rgba = layer.gradient_color_rgba
-        self.gradient_direction = layer.gradient_direction
+        **text(str)** displayed text.
+        
+        Creates internally PangoCairo layout object. Calling this is required before calling *get_pixel_size()*.
         &#34;&#34;&#34;
+        self.text = text
+        self.pango_layout = PangoCairo.create_layout(cr)
+        self.pango_layout.set_text(self.text, -1)
+        self.pango_layout.set_font_description(self.font_desc)
+        self.pango_layout.set_alignment(self.alignment)
+        self.pixel_size = self.pango_layout.get_pixel_size()
         
     # called from vieweditor draw vieweditor-&gt; editorlayer-&gt;here
     def draw_layout(self, text, cr, x, y, rotation=0.0, xscale=1.0, yscale=1.0):
-        self.text = text
-        cr.save()
+        &#34;&#34;&#34;
+        **text(str)** displayed text.
         
-        layout = PangoCairo.create_layout(cr)
-        layout.set_text(self.text, -1)
-        layout.set_font_description(self.font_desc)
-        layout.set_alignment(self.alignment)
-        self.pixel_size = layout.get_pixel_size()
+        **cr(cairo.Context)** frame cairo context aquired with *FluxityContext.get_frame_cr()*.
+        
+        **x(float)** Text X position.
 
+        **y(float)** Text Y position.
+
+        **rotation(float)** Text rotation.
+
+        **xscale(float)** Text X scaling.
+
+        **yscale(float)** Text Y scaling.
+
+        Draws text on provided *cairo.Context*.
+        
+        Calls internally *create_pango_layout()* so *get_pixel_size()* can be called after this.
+        &#34;&#34;&#34;
+        self.text = text
+        cr.save() # Created each frame
+        
+        self.create_pango_layout(cr, text)
+        layout = self.pango_layout # this just artifact of dev. history, create_pango_layout() was added later then draw_layout()
+                                   # to be used in typewriter plugin.
         # Shadow
         if self.shadow_on:
             cr.save()
@@ -2993,58 +3068,98 @@ for drawing, so pixel size of layer is saved here.</p></div>
         
         cr.restore()
 
-    def _get_pango_alignment(self, alignment):
-        if alignment == ALIGN_LEFT:
-            return Pango.Alignment.LEFT
-        elif alignment == ALIGN_CENTER:
-            return Pango.Alignment.CENTER
-        else:
-            return Pango.Alignment.RIGHT</code></pre>
+    def get_pixel_size(self):
+        &#34;&#34;&#34;             
+        Returns size of layout.
+
+        Before calling this PangoCairo layout object needs to creted *create_pango_layout()* or *draw_layout().*
+        
+        **Returns:** (width, height) pixel size of layout.
+        &#34;&#34;&#34;
+        return self.pixel_size 
+
+    def get_pango_alignment(self):
+        &#34;&#34;&#34;             
+        Returns alignment for his layout.
+
+        To interpret enums script must do import *from gi.repository import Pango*
+        
+        **Returns:** (int) alignment enum, either *Pango.Alignment.CENTER*, *Pango.Alignment.LEFT* or *Pango.Alignment.RIGHT*.
+        &#34;&#34;&#34;
+        return self.alignment</code></pre>
 </details>
-<h3>Instance variables</h3>
-<dl>
-<dt id="fluxity.PangoTextLayout.font_desc"><code class="name">var <span class="ident">font_desc</span></code></dt>
-<dd>
-<div class="desc"><p>self.font_desc = Pango.FontDescription(layer.get_font_desc_str())
-self.color_rgba = layer.color_rgba
-self.alignment = self._get_pango_alignment_for_layer(layer)</p>
-<h1 id="selfpixel_size-layerpixel_size">self.pixel_size = layer.pixel_size</h1>
-<p>self.fill_on = layer.fill_on
-self.gradient_color_rgba = layer.gradient_color_rgba</p>
-<p>self.outline_color_rgba = layer.outline_color_rgba
-self.outline_on = layer.outline_on
-self.outline_width = layer.outline_width</p>
-<p>self.shadow_on = layer.shadow_on
-self.shadow_color_rgb = layer.shadow_color_rgb
-self.shadow_opacity = layer.shadow_opacity
-self.shadow_xoff = layer.shadow_xoff
-self.shadow_yoff = layer.shadow_yoff
-self.shadow_blur = layer.shadow_blur</p>
-<p>self.gradient_color_rgba = layer.gradient_color_rgba
-self.gradient_direction = layer.gradient_direction</p></div>
-</dd>
-</dl>
 <h3>Methods</h3>
 <dl>
+<dt id="fluxity.PangoTextLayout.create_pango_layout"><code class="name flex">
+<span>def <span class="ident">create_pango_layout</span></span>(<span>self, cr, text)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><strong>cr(cairo.Context)</strong> frame cairo context aquired with FluxityContext.get_frame_cr().</p>
+<p><strong>text(str)</strong> displayed text.</p>
+<p>Creates internally PangoCairo layout object. Calling this is required before calling <em>get_pixel_size()</em>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_pango_layout(self, cr, text):
+    &#34;&#34;&#34;
+    **cr(cairo.Context)** frame cairo context aquired with FluxityContext.get_frame_cr().
+    
+    **text(str)** displayed text.
+    
+    Creates internally PangoCairo layout object. Calling this is required before calling *get_pixel_size()*.
+    &#34;&#34;&#34;
+    self.text = text
+    self.pango_layout = PangoCairo.create_layout(cr)
+    self.pango_layout.set_text(self.text, -1)
+    self.pango_layout.set_font_description(self.font_desc)
+    self.pango_layout.set_alignment(self.alignment)
+    self.pixel_size = self.pango_layout.get_pixel_size()</code></pre>
+</details>
+</dd>
 <dt id="fluxity.PangoTextLayout.draw_layout"><code class="name flex">
 <span>def <span class="ident">draw_layout</span></span>(<span>self, text, cr, x, y, rotation=0.0, xscale=1.0, yscale=1.0)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p><strong>text(str)</strong> displayed text.</p>
+<p><strong>cr(cairo.Context)</strong> frame cairo context aquired with <em>FluxityContext.get_frame_cr()</em>.</p>
+<p><strong>x(float)</strong> Text X position.</p>
+<p><strong>y(float)</strong> Text Y position.</p>
+<p><strong>rotation(float)</strong> Text rotation.</p>
+<p><strong>xscale(float)</strong> Text X scaling.</p>
+<p><strong>yscale(float)</strong> Text Y scaling.</p>
+<p>Draws text on provided <em>cairo.Context</em>.</p>
+<p>Calls internally <em>create_pango_layout()</em> so <em>get_pixel_size()</em> can be called after this.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def draw_layout(self, text, cr, x, y, rotation=0.0, xscale=1.0, yscale=1.0):
-    self.text = text
-    cr.save()
+    &#34;&#34;&#34;
+    **text(str)** displayed text.
     
-    layout = PangoCairo.create_layout(cr)
-    layout.set_text(self.text, -1)
-    layout.set_font_description(self.font_desc)
-    layout.set_alignment(self.alignment)
-    self.pixel_size = layout.get_pixel_size()
+    **cr(cairo.Context)** frame cairo context aquired with *FluxityContext.get_frame_cr()*.
+    
+    **x(float)** Text X position.
 
+    **y(float)** Text Y position.
+
+    **rotation(float)** Text rotation.
+
+    **xscale(float)** Text X scaling.
+
+    **yscale(float)** Text Y scaling.
+
+    Draws text on provided *cairo.Context*.
+    
+    Calls internally *create_pango_layout()* so *get_pixel_size()* can be called after this.
+    &#34;&#34;&#34;
+    self.text = text
+    cr.save() # Created each frame
+    
+    self.create_pango_layout(cr, text)
+    layout = self.pango_layout # this just artifact of dev. history, create_pango_layout() was added later then draw_layout()
+                               # to be used in typewriter plugin.
     # Shadow
     if self.shadow_on:
         cr.save()
@@ -3136,6 +3251,50 @@ self.gradient_direction = layer.gradient_direction</p></div>
     cr.restore()</code></pre>
 </details>
 </dd>
+<dt id="fluxity.PangoTextLayout.get_pango_alignment"><code class="name flex">
+<span>def <span class="ident">get_pango_alignment</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns alignment for his layout.</p>
+<p>To interpret enums script must do import <em>from gi.repository import Pango</em></p>
+<p><strong>Returns:</strong> (int) alignment enum, either <em>Pango.Alignment.CENTER</em>, <em>Pango.Alignment.LEFT</em> or <em>Pango.Alignment.RIGHT</em>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_pango_alignment(self):
+    &#34;&#34;&#34;             
+    Returns alignment for his layout.
+
+    To interpret enums script must do import *from gi.repository import Pango*
+    
+    **Returns:** (int) alignment enum, either *Pango.Alignment.CENTER*, *Pango.Alignment.LEFT* or *Pango.Alignment.RIGHT*.
+    &#34;&#34;&#34;
+    return self.alignment</code></pre>
+</details>
+</dd>
+<dt id="fluxity.PangoTextLayout.get_pixel_size"><code class="name flex">
+<span>def <span class="ident">get_pixel_size</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns size of layout.</p>
+<p>Before calling this PangoCairo layout object needs to creted <em>create_pango_layout()</em> or <em>draw_layout().</em></p>
+<p><strong>Returns:</strong> (width, height) pixel size of layout.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_pixel_size(self):
+    &#34;&#34;&#34;             
+    Returns size of layout.
+
+    Before calling this PangoCairo layout object needs to creted *create_pango_layout()* or *draw_layout().*
+    
+    **Returns:** (width, height) pixel size of layout.
+    &#34;&#34;&#34;
+    return self.pixel_size </code></pre>
+</details>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -3183,7 +3342,8 @@ self.gradient_direction = layer.gradient_direction</p></div>
 <li><code><a title="fluxity.FluxityContext.EDITOR_PANGO_FONT" href="#fluxity.FluxityContext.EDITOR_PANGO_FONT">EDITOR_PANGO_FONT</a></code></li>
 <li><code><a title="fluxity.FluxityContext.EDITOR_PANGO_FONT_DEFAULT_VALUES" href="#fluxity.FluxityContext.EDITOR_PANGO_FONT_DEFAULT_VALUES">EDITOR_PANGO_FONT_DEFAULT_VALUES</a></code></li>
 <li><code><a title="fluxity.FluxityContext.EDITOR_STRING" href="#fluxity.FluxityContext.EDITOR_STRING">EDITOR_STRING</a></code></li>
-<li><code><a title="fluxity.FluxityContext.EDITOR_VALUE" href="#fluxity.FluxityContext.EDITOR_VALUE">EDITOR_VALUE</a></code></li>
+<li><code><a title="fluxity.FluxityContext.EDITOR_TEXT" href="#fluxity.FluxityContext.EDITOR_TEXT">EDITOR_TEXT</a></code></li>
+<li><code><a title="fluxity.FluxityContext.EDITOR_TEXT_AREA" href="#fluxity.FluxityContext.EDITOR_TEXT_AREA">EDITOR_TEXT_AREA</a></code></li>
 <li><code><a title="fluxity.FluxityContext.PROFILE_COLORSPACE" href="#fluxity.FluxityContext.PROFILE_COLORSPACE">PROFILE_COLORSPACE</a></code></li>
 <li><code><a title="fluxity.FluxityContext.PROFILE_DESCRIPTION" href="#fluxity.FluxityContext.PROFILE_DESCRIPTION">PROFILE_DESCRIPTION</a></code></li>
 <li><code><a title="fluxity.FluxityContext.PROFILE_DISPLAY_ASPECT_DEN" href="#fluxity.FluxityContext.PROFILE_DISPLAY_ASPECT_DEN">PROFILE_DISPLAY_ASPECT_DEN</a></code></li>
@@ -3260,8 +3420,10 @@ self.gradient_direction = layer.gradient_direction</p></div>
 <li>
 <h4><code><a title="fluxity.PangoTextLayout" href="#fluxity.PangoTextLayout">PangoTextLayout</a></code></h4>
 <ul class="">
+<li><code><a title="fluxity.PangoTextLayout.create_pango_layout" href="#fluxity.PangoTextLayout.create_pango_layout">create_pango_layout</a></code></li>
 <li><code><a title="fluxity.PangoTextLayout.draw_layout" href="#fluxity.PangoTextLayout.draw_layout">draw_layout</a></code></li>
-<li><code><a title="fluxity.PangoTextLayout.font_desc" href="#fluxity.PangoTextLayout.font_desc">font_desc</a></code></li>
+<li><code><a title="fluxity.PangoTextLayout.get_pango_alignment" href="#fluxity.PangoTextLayout.get_pango_alignment">get_pango_alignment</a></code></li>
+<li><code><a title="fluxity.PangoTextLayout.get_pixel_size" href="#fluxity.PangoTextLayout.get_pixel_size">get_pixel_size</a></code></li>
 </ul>
 </li>
 </ul>
