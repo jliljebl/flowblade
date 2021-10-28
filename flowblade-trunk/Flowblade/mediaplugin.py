@@ -210,12 +210,13 @@ class AddMediaPluginWindow(Gtk.Window):
 
         plugin_label = Gtk.Label(label=_("Media Plugin:"))
         plugin_select_row = guiutils.get_two_column_box(plugin_label, self.plugin_select.widget, 220)
+        plugin_select_row.set_margin_bottom(24)
 
         global MONITOR_HEIGHT
         MONITOR_HEIGHT = int(MONITOR_WIDTH * float(current_sequence().profile.display_aspect_den()) / float(current_sequence().profile.display_aspect_num()))
         self.screenshot_canvas = cairoarea.CairoDrawableArea2(MONITOR_WIDTH, MONITOR_HEIGHT, self._draw_screenshot)
         screenshot_row = guiutils.get_centered_box([self.screenshot_canvas ])
-        guiutils.set_margins(screenshot_row, 12, 12, 0, 0)
+        guiutils.set_margins(screenshot_row, 0, 8, 0, 0)
 
         self.frame_display = Gtk.Label(_("Clip Frame"))
         self.frame_display.set_margin_right(2)
@@ -234,7 +235,7 @@ class AddMediaPluginWindow(Gtk.Window):
         guiutils.set_margins(control_panel, 0, 24, 0, 0)
         
         self.editors_box = Gtk.HBox(False, 0)
-        self.editors_box.set_size_request(270, 185)
+        self.editors_box.set_size_request(550, 185)
 
         self.import_select = Gtk.ComboBoxText()
         self.import_select.append_text(_("Add as Container Clip"))
@@ -256,25 +257,24 @@ class AddMediaPluginWindow(Gtk.Window):
         self.encoding_info.set_sensitive(False)
         encoding_row = guiutils.get_left_justified_box([self.encoding_button, guiutils.pad_label(12,12), self.encoding_info])
                 
-        import_panel = Gtk.VBox(False, 2)
-        import_panel.pack_start(length_row, False, False, 0)
-        import_panel.pack_start(import_row, False, False, 0)
-        import_panel.pack_start(encoding_row, False, False, 0)
-        import_panel.pack_start(Gtk.Label(), True, True, 0)
+        right_column_panel = Gtk.VBox(False, 2)
+        right_column_panel.pack_start(screenshot_row, False, False, 0)
+        right_column_panel.pack_start(control_panel, False, False, 0)
+        right_column_panel.pack_start(length_row, False, False, 0)
+        right_column_panel.pack_start(import_row, False, False, 0)
+        right_column_panel.pack_start(encoding_row, False, False, 0)
+        right_column_panel.pack_start(Gtk.Label(), True, True, 0)
 
         values_row = Gtk.HBox(False, 8)
         values_row.pack_start(self.editors_box, False, False, 0)
-        values_row.pack_start(import_panel, False, False, 0)
-        #values_row.
+        values_row.pack_start(right_column_panel, False, False, 0)
         
         close_button = guiutils.get_sized_button(_("Close"), 150, 32)
         close_button.connect("clicked", lambda w: _close_clicked())
         self.add_button = guiutils.get_sized_button(_("Add Media Plugin"), 150, 32)
         self.add_button.connect("clicked", lambda w: _add_media_plugin())
-        #self.load_info_2 = Gtk.Label()
         
         buttons_row = Gtk.HBox(False, 0)
-        #buttons_row.pack_start(self.load_info_2, False, False, 0)
         buttons_row.pack_start(Gtk.Label(), True, True, 0)
         buttons_row.pack_start(close_button, False, False, 0)
         buttons_row.pack_start(self.add_button, False, False, 0)
@@ -282,10 +282,7 @@ class AddMediaPluginWindow(Gtk.Window):
 
         vbox = Gtk.VBox(False, 2)
         vbox.pack_start(plugin_select_row, False, False, 0)
-        vbox.pack_start(screenshot_row, False, False, 0)
-        vbox.pack_start(control_panel, False, False, 0)
         vbox.pack_start(values_row, False, False, 0)
-        vbox.pack_start(Gtk.Label(), True, True, 0)
         vbox.pack_start(buttons_row, False, False, 0)
         
         alignment = guiutils.set_margins(vbox, 8, 8, 12, 12)
@@ -324,11 +321,8 @@ class AddMediaPluginWindow(Gtk.Window):
                             
     def _plugin_selection_changed(self, combo):
         name, new_selected_plugin = self.plugin_select.get_selected()
-        print(new_selected_plugin.name)
         
         success, fctx = self.get_plugin_data(new_selected_plugin.get_plugin_script_file())
-        print(fctx)
-        print(fctx.get_script_data())
         script_data_object = json.loads(fctx.get_script_data())
         self._show_plugin_editors_panel(script_data_object)
 
