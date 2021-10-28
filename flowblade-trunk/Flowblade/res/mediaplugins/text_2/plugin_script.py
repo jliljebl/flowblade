@@ -15,6 +15,7 @@ def init_script(fctx):
     fctx.add_editor("Animation Type", fctx. EDITOR_OPTIONS, (0,["Letters", "Words", "Lines"]))
     fctx.add_editor("Steps Per Frame", fctx.EDITOR_FLOAT, 0.5)
     fctx.add_editor("Font", fctx.EDITOR_PANGO_FONT, fctx.EDITOR_PANGO_FONT_DEFAULT_VALUES)
+    fctx.add_editor("Line Gap", fctx.EDITOR_INT, 5)
     fctx.add_editor("Text", fctx.EDITOR_TEXT_AREA, "Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit.\nAliquam non condimentum magna.")
     
 def init_render(fctx):
@@ -23,7 +24,8 @@ def init_render(fctx):
     text = fctx.get_editor_value("Text")
     step_speed = fctx.get_editor_value("Steps Per Frame")
     animation_type = fctx.get_editor_value("Animation Type")
-    typewriter = TypeWriter(text, font_data, animation_type, step_speed)
+    line_gap = fctx.get_editor_value("Line Gap") 
+    typewriter = TypeWriter(text, font_data, animation_type, step_speed, line_gap)
     fctx.set_data_obj("typewriter", typewriter)
     
 def render_frame(frame, fctx, w, h):
@@ -36,13 +38,13 @@ def render_frame(frame, fctx, w, h):
 
 class TypeWriter:
     
-    def __init__(self, text, font_data, animation_type, step_speed):
+    def __init__(self, text, font_data, animation_type, step_speed, line_gap):
         self.text = text
         self.lines = text.splitlines()
         self.font_data = font_data
         self.animation_type = animation_type
 
-        self.line_gap = 5
+        self.line_gap = line_gap
         self.step_speed = step_speed
         
     def draw_text(self, fctx, frame, cr, x, y):
