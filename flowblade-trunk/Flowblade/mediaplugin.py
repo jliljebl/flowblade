@@ -69,8 +69,7 @@ class MediaPlugin:
         return respaths.MEDIA_PLUGINS_PATH + self.folder + "/screenshot.png"
     
     def get_screenshot_surface(self):
-        icon_path = respaths.MEDIA_PLUGINS_PATH + self.folder + "/screenshot.png"
-        return cairo.ImageSurface.create_from_png(self.get_screenshot_path())
+        return cairo.ImageSurface.create_from_png(self.get_screenshot_file())
 
     def get_plugin_script_file(self):
         script_file = respaths.MEDIA_PLUGINS_PATH + self.folder + "/plugin_script.py"
@@ -329,7 +328,7 @@ class AddMediaPluginWindow(Gtk.Window):
         global _selected_plugin, _current_screenshot_surface, _current_plugin_data_object
         _selected_plugin = new_selected_plugin
         _current_plugin_data_object = script_data_object
-        _current_screenshot_surface = self._create_preview_surface(fctx.priv_context.frame_surface)
+        _current_screenshot_surface = self._create_preview_surface(new_selected_plugin.get_screenshot_surface())
         
         self.screenshot_canvas.queue_draw()
     

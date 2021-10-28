@@ -510,9 +510,9 @@ class TextEditor(AbstractSimpleEditor):
     def get_value(self):
         value = self.entry.get_text()
         if self.return_quoted_string == True:
-            return '"' + self.entry.get_text()  + '"'
+            return '"' + value  + '"'
         else:
-            return self.value
+            return value
 
 
 class FloatEditor(AbstractSimpleEditor):
@@ -693,6 +693,7 @@ class PangoFontEditor(AbstractSimpleEditor):
     def __init__(self, id_data, label_text, value, tooltip):
         AbstractSimpleEditor.__init__(self, id_data, tooltip)
         notebook = self._get_widget()
+        self.set_editor_values(value)
 
         self.build_editor(label_text, notebook)
         self.editor_type = SIMPLE_EDITOR_PANGO_FONT
@@ -930,10 +931,6 @@ class PangoFontEditor(AbstractSimpleEditor):
             family = self.widgets.font_families[0]
             font_family = family.get_name()
             self.widgets.font_select.set_active(0)
-
-        self.widgets.x_pos_spin.set_value(x)
-        self.widgets.y_pos_spin.set_value(y)
-        self.widgets.rotation_spin.set_value(angle)
         
         self.widgets.fill_on.set_active(fill_on)
                 
