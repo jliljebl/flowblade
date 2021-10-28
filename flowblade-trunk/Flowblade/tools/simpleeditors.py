@@ -432,6 +432,8 @@ def get_editors_data_as_editors_list(editor_widgets):
             value = editor.get_value_as_color_tuple()
         elif editor.editor_type == SIMPLE_EDITOR_FLOAT_RANGE or editor.editor_type == SIMPLE_EDITOR_INT_RANGE:
             value = editor.get_value_as_range_tuple()
+        elif editor.editor_type == SIMPLE_EDITOR_OPTIONS:
+            value = editor.get_value_as_tuple()
         new_editor = [editor.id_data, editor.editor_type, value]
         new_editors_list.append(new_editor)
 
@@ -613,15 +615,20 @@ class OptionsEditor(AbstractSimpleEditor):
     def __init__(self, id_data, label_text, value, tooltip):
         AbstractSimpleEditor.__init__(self, id_data, tooltip)
         
-        active_index, options = value
+        active_index, self.options = value
         self.combo = Gtk.ComboBoxText.new()
-        for opt in options:
+        for opt in self.options:
             self.combo.append_text(opt)
         self.combo.set_active(active_index)
         
         self.build_editor(label_text, self.combo)
         self.editor_type = SIMPLE_EDITOR_OPTIONS
-        
+
+    def get_value_as_tuple(self):
+        # e.g. data ["Animation Type", 6, [0, ["Letters", "Words", "Lines"]]]
+        # we need to do [0, ["Letters", "Words", "Lines"]] here.
+        return (self.get_value(), self.options)
+            
     def get_value(self):
         return self.combo.get_active()
 

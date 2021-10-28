@@ -536,7 +536,7 @@ class FluxityContext:
         if tooltip != None:
             self.editor_tooltips[name] = tooltip
         self.priv_context.error_on_wrong_method("add_editor()", METHOD_INIT_SCRIPT)
-        
+
     def get_editor_value(self, name, frame=0):
         """     
         **name(str):** Name of editor.

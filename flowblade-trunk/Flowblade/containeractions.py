@@ -817,7 +817,9 @@ class FluxityContainerActions(AbstractContainerActionObject):
                 value = editor.get_value_as_color_tuple()
             elif editor.editor_type == simpleeditors.SIMPLE_EDITOR_FLOAT_RANGE or editor.editor_type == simpleeditors.SIMPLE_EDITOR_INT_RANGE:
                 value = editor.get_value_as_range_tuple()
-                        
+            elif editor.editor_type == simpleeditors.SIMPLE_EDITOR_OPTIONS:
+                value = editor.get_value_as_tuple()
+
             new_editor = [editor.id_data, editor.editor_type, value]
             new_editors_list.append(new_editor)
         
