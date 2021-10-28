@@ -13,7 +13,7 @@ def init_script(fctx):
     fctx.set_name("Hex Colors")
     fctx.set_author("Janne Liljeblad")
     
-    fctx.add_editor("Hue", fctx.EDITOR_COLOR, (0.8, 0.50, 0.3, 1.0))
+    fctx.add_editor("Hue", fctx.EDITOR_COLOR, (0.131, 0.0147, 0.163, 1.0))
     fctx.add_editor("Hue Change Amount", fctx.EDITOR_FLOAT_RANGE, (0.5, 0.1, 5.0))
     fctx.add_editor("Speed", fctx.EDITOR_FLOAT_RANGE, (0.5, 0.1, 5.0))
     fctx.add_editor("Size", fctx.EDITOR_FLOAT_RANGE, (50.0, 10.0, 300.0))
