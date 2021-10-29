@@ -1005,7 +1005,7 @@ def render_preview_frame(script, script_file, frame, out_folder, profile_file_pa
         return fctx
 
 def render_frame_sequence(script, script_file, in_frame, out_frame, out_folder, profile_file_path, frame_write_callback=None, editors_data_json=None, start_out_from_frame_one=False):
-    threads = 4
+    threads = 6 # add some heuristics here.
     if out_frame - in_frame < threads * 2:
         threads = 1
 

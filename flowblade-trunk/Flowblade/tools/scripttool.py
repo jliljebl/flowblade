@@ -1282,11 +1282,11 @@ class FluxityRangeRenderer(threading.Thread):
         if error_msg == None:
             print("1")
             frame_file = proc_fctx_dict["0"] # First writtend file saved here.
-            print(frame_file)
+            print("frame_file", frame_file)
             resource_name_str = utils.get_img_seq_resource_name(frame_file)
-            print(resource_name_str)
+            print("resource_name_str", resource_name_str)
             range_resourse_mlt_path = get_render_frames_dir() + "/" + resource_name_str
-            print(range_resourse_mlt_pat)
+            print("range_resourse_mlt_path", range_resourse_mlt_path)
             new_playback_producer = _get_playback_tractor(_script_length, range_resourse_mlt_path, in_frame, out_frame)
             _player.set_producer(new_playback_producer)
             _player.seek_frame(in_frame)
