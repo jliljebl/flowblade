@@ -1253,18 +1253,44 @@ class FluxityRangeRenderer(threading.Thread):
         out_frame = _player.producer.mark_out
         
         start_time = time.time()
-        fctx = fluxity.render_frame_sequence(self.script, _last_save_path, in_frame, out_frame, self.render_folder, self.profile_file_path, self.frame_write_update)
-        end_time = time.time()
-        print(end_time - start_time)
+        proc_fctx_dict = fluxity.render_frame_sequence(self.script, _last_save_path, in_frame, out_frame, self.render_folder, self.profile_file_path, self.frame_write_update)
         
-        if fctx.error == None:
-            frame_file = fctx.priv_context.first_rendered_frame_path
+        end_time = time.time()
+        print("Render time:", end_time - start_time)
+        
+        print("We have after render:", proc_fctx_dict)
+        
+        # Get error and log messages.
+        if fluxity.FLUXITY_ERROR_MSG in proc_fctx_dict.keys():
+            error_msg = proc_fctx_dict[fluxity.FLUXITY_ERROR_MSG ]
+        else:
+            error_msg = None
+        
+        if fluxity.FLUXITY_ERROR_MSG in proc_fctx_dict.keys():
+            error_msg = proc_fctx_dict[fluxity.FLUXITY_ERROR_MSG ]
+        else:
+            error_msg = None
+
+        if fluxity.FLUXITY_LOG_MSG in proc_fctx_dict.keys():
+            log_msg = proc_fctx_dict[fluxity.FLUXITY_ERROR_MSG ]
+        else:
+            log_msg = None
+
+        # show final update for completion.
+        self.frame_write_update(out_frame) 
+        
+        if error_msg == None:
+            print("1")
+            frame_file = proc_fctx_dict["0"] # First writtend file saved here.
+            print(frame_file)
             resource_name_str = utils.get_img_seq_resource_name(frame_file)
+            print(resource_name_str)
             range_resourse_mlt_path = get_render_frames_dir() + "/" + resource_name_str
+            print(range_resourse_mlt_pat)
             new_playback_producer = _get_playback_tractor(_script_length, range_resourse_mlt_path, in_frame, out_frame)
             _player.set_producer(new_playback_producer)
             _player.seek_frame(in_frame)
-            
+            print("3")
             Gdk.threads_enter()
             _window.pos_bar.preview_range = (in_frame, out_frame)
 
@@ -1272,10 +1298,10 @@ class FluxityRangeRenderer(threading.Thread):
             _window.monitors_switcher.queue_draw()
             _window.preview_monitor.queue_draw()
             _window.pos_bar.widget.queue_draw()
-            
+            print("4")
             out_text = "Range preview rendered for frame range " + str(in_frame) + " - " + str(out_frame) 
-            if len(fctx.log_msg) > 0:
-                out_text = out_text + "\nLOG:\n" + fctx.log_msg
+            if log_msg != None:
+                out_text = out_text + "\nLOG:\n" + log_msg
                         
             _window.out_view.get_buffer().set_text(out_text)
             _window.media_info.set_markup("<small>" + _("Range preview for frame range ") + str(in_frame) + " - " + str(out_frame)  +"</small>")
@@ -1284,7 +1310,7 @@ class FluxityRangeRenderer(threading.Thread):
         else:
             Gdk.threads_enter()
                     
-            _window.out_view.get_buffer().set_text(fctx.error)
+            _window.out_view.get_buffer().set_text(error_msg)
             _window.media_info.set_markup("<small>" + _("No Preview") +"</small>")
             _window.pos_bar.preview_range = None
             _window.monitors_switcher.set_visible_child_name(CAIRO_DRAW_MONITOR)
