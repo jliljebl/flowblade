@@ -170,6 +170,7 @@ from gi.repository import PangoCairo
 import cairo
 import json
 import locale
+import multiprocessing
 import numpy as np
 import os
 import traceback
@@ -191,6 +192,8 @@ FACE_ITALIC = "Italic"
 FACE_BOLD_ITALIC = "Bold Italic"
 DEFAULT_FONT_SIZE = 40
 
+FLUXITY_ERROR_MSG = "ERROR"
+FLUXITY_LOG_MSG = "LOG"
 
 VERTICAL = 0
 HORIZONTAL = 1
@@ -754,6 +757,7 @@ class FluxityContextPrivate:
         self.frame_surface.write_to_png(filepath)
 
         if self.first_rendered_frame_path == None:
+            print(self, filepath)
             self.first_rendered_frame_path = filepath
 
     def get_preview_frame_path(self):
@@ -1001,16 +1005,61 @@ def render_preview_frame(script, script_file, frame, out_folder, profile_file_pa
         return fctx
 
 def render_frame_sequence(script, script_file, in_frame, out_frame, out_folder, profile_file_path, frame_write_callback=None, editors_data_json=None, start_out_from_frame_one=False):
+    threads = 6 # add some heuristics here.
+    if out_frame - in_frame < threads * 2:
+        threads = 1
+
+    manager = multiprocessing.Manager()
+    proc_fctx_dict = manager.dict()
+    jobs = []
+    for i in range(threads):
+        if i == 0:
+            update_callback = None
+        else:
+            update_callback = None
+        
+        render_data = ( script, script_file, in_frame, out_frame, out_folder, \
+                        profile_file_path, update_callback, \
+                        editors_data_json, start_out_from_frame_one)
+        
+        proc_info = (i, threads, proc_fctx_dict)
+        print("launching",  i)
+        p = multiprocessing.Process(target=_render_process_launch, args=(render_data, proc_info))
+        jobs.append(p)
+        p.start()
+
+    for proc in jobs:
+        print("join")
+        proc.join()
+    print("kjkljkljklj")
+    print(proc_fctx_dict.values())
+    print(proc_fctx_dict.keys())
+    #for fctx in proc_fctx_dict.values():
+    #    print(fctx.priv_context.first_rendered_frame_path)
+    #    print(fctx.priv_context)
+        
+    print("ghghghghgh")
+    return proc_fctx_dict
+        
+def _render_process_launch(render_data, proc_info):
+    script, script_file, in_frame, out_frame, out_folder, \
+    profile_file_path, frame_write_callback, \
+    editors_data_json, start_out_from_frame_one = render_data
+    
+    procnum, threads_count, proc_fctx_dict = proc_info
+    
     try:
         # Init script and context.
         error_msg, results = _init_script_and_context(script, script_file, out_folder, profile_file_path)
         if error_msg != None:
             fake_fctx = FluxityEmptyClass()
             fake_fctx.error = error_msg
-            return fake_fctx
+            proc_fctx_dict[procnum] = fake_fctx
+            return 
 
         fscript, fctx = results
-        
+
+                    
         # Execute script to write frame sequence.
         fctx.priv_context.current_method = METHOD_INIT_SCRIPT
         fscript.call_init_script(fctx)
@@ -1026,19 +1075,24 @@ def render_frame_sequence(script, script_file, in_frame, out_frame, out_folder, 
         fctx.priv_context.start_out_from_frame_one = start_out_from_frame_one
         fctx.priv_context.in_frame = in_frame
         
-        for frame in range(in_frame, out_frame):
+        for frame in range(in_frame + procnum, out_frame, threads_count):
             fctx.priv_context.create_frame_surface(frame)
             w, h = fctx.get_dimensions()
             fscript.call_render_frame(frame, fctx, w, h)
             fctx.priv_context.write_out_frame()
             if frame_write_callback != None:
                 frame_write_callback(frame) # for GUI app opdates.
-        return fctx
+        print("We have:", fctx)
+        print(fctx.priv_context.first_rendered_frame_path)
+        proc_fctx_dict[str(procnum)] = str(fctx.priv_context.first_rendered_frame_path)
+        if len(fctx.log_msg) > 0:
+            proc_fctx_dict[str(FLUXITY_LOG_MSG)] = str(fctx.log_msg)
         
     except Exception as e:
         fctx.error = str(e) + traceback.format_exc(6,True)
-        return fctx
-
+        proc_fctx_dict[str(FLUXITY_ERROR_MSG)] = str(fctx.error)
+        print("Render error: ", fctx.error )
+        
 def _init_script_and_context(script, script_file, out_folder, profile_file_path):
     try:
 
