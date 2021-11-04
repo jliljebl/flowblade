@@ -27,7 +27,6 @@ except ImportError:
 import gi
 
 gi.require_version('Gtk', '3.0')
-from gi.repository import GLib
 
 import json
 import locale
@@ -64,7 +63,7 @@ ABORT_MSG_FILE = ccrutils.ABORT_MSG_FILE
 RENDER_DATA_FILE = ccrutils.RENDER_DATA_FILE
 
 _render_thread = None
-
+_frame_range_update_thread = None
 
 # ----------------------------------------------------- module interface to render process with message files, used by main app
 # We are using message files to communicate with application.
@@ -183,23 +182,29 @@ class FluxityHeadlessRunnerThread(threading.Thread):
         profile_file_path = mltprofiles.get_profile_file_path(self.profile_desc)
 
         editors_data_json = json.dumps(self.fluxity_plugin_edit_data["editors_list"]) # See fluxity.FluxityContext.get_script_data()
-        
-        fluxity.render_frame_sequence(user_script,
-                                      script_file,
-                                      self.range_in, 
-                                      self.range_out, 
-                                      rendered_frames_folder, 
-                                      profile_file_path, 
-                                      self.frames_update, 
-                                      editors_data_json,
-                                      True)
-        
         render_length = self.range_out - self.range_in 
+
+        global _frame_range_update_thread
+        _frame_range_update_thread = FrameRangeUpdateThread(rendered_frames_folder, render_length)
+        _frame_range_update_thread.start()
+        
+        proc_fctx_dict = fluxity.render_frame_sequence(   user_script,
+                                                          script_file,
+                                                          self.range_in, 
+                                                          self.range_out, 
+                                                          rendered_frames_folder, 
+                                                          profile_file_path, 
+                                                          editors_data_json,
+                                                          True)
+
         while len(os.listdir(rendered_frames_folder)) != render_length:
             if self.abort == True:
+                _frame_range_update_thread.abort = True
                 return
             time.sleep(0.5)
         
+        _frame_range_update_thread.abort = True
+                
         # Render video
         if self.render_data.do_video_render == True:
             # Render consumer
@@ -244,33 +249,38 @@ class FluxityHeadlessRunnerThread(threading.Thread):
 
         # Write out completed flag file.
         ccrutils.write_completed_message()
-
+        
     def abort_requested(self):
         self.abort = ccrutils.abort_requested()
         return self.abort
-
-    def frames_update(self, frame):
-        now = time.monotonic() 
-        since_last = now - self.last_frame_write_time
-        if since_last < 0.5:
-            return 
-        self.last_frame_write_time = now
-        # step 1, frame , range
-        elapsed = now - self.start_time
-        
-        msg = "1 " + str(frame) + " " + str(self.length) + " " + str(elapsed)
-        self.write_status_message(msg)
-
+    
     def video_render_update_callback(self, fraction):
         # step 1, frame , range
         elapsed = time.monotonic() - self.start_time
         msg = "2 " + str(int(fraction * self.length)) + " " + str(self.length) + " " + str(elapsed)
-        self.write_status_message(msg)
-        
-    def write_status_message(self, msg):
         ccrutils.write_status_message(msg)
-            
-    def script_render_output_callback(self, p, out):
-        if p.returncode != 0:
-            # TODO: handling errors.
-            pass
+
+
+class FrameRangeUpdateThread(threading.Thread):
+
+    def __init__(self, rendered_frames_folder, render_length):
+        threading.Thread.__init__(self)
+        self.rendered_frames_folder = rendered_frames_folder
+        self.render_length = render_length
+        self.abort = False
+     
+    def run(self):
+        start_time = time.monotonic() 
+        frame = len(os.listdir(self.rendered_frames_folder))
+        
+        while frame < self.render_length:
+            if self.abort == True:
+                return
+            now = time.monotonic() 
+            elapsed = now - start_time
+            frame = len(os.listdir(self.rendered_frames_folder))
+        
+            msg = "1 " + str(frame) + " " + str(self.render_length + 1) + " " + str(elapsed)
+            ccrutils.write_status_message(msg)
+        
+            time.sleep(0.5)

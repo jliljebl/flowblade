@@ -28,6 +28,8 @@ from gi.repository import GdkX11
 from gi.repository import Pango
 
 import cairo
+import datetime
+import glob
 import locale
 import mlt
 import os
@@ -1228,6 +1230,21 @@ def _global_key_down_listener(widget, event):
     return True
 
 #------------------------------------------------- render threads
+def _get_range_render_messages(proc_fctx_dict):
+    # Get error and log messages.
+    if fluxity.FLUXITY_ERROR_MSG in proc_fctx_dict.keys():
+        error_msg = proc_fctx_dict[fluxity.FLUXITY_ERROR_MSG]
+    else:
+        error_msg = None
+
+    if fluxity.FLUXITY_LOG_MSG in proc_fctx_dict.keys():
+        log_msg = proc_fctx_dict[fluxity.FLUXITY_LOG_MSG]
+    else:
+        log_msg = None
+
+    return (error_msg, log_msg)
+
+
 class FluxityRangeRenderer(threading.Thread):
 
     def __init__(self, script, render_folder, profile_file_path):
@@ -1237,11 +1254,6 @@ class FluxityRangeRenderer(threading.Thread):
         self.profile_file_path = profile_file_path
 
     def run(self):
-        #start_time = time.time()
-        
-        so = se = open(userfolders.get_cache_dir() + "log_scripttool_preview_range_render", 'w', buffering=1)
-        sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', buffering=1)
-        os.dup2(so.fileno(), sys.stdout.fileno())
         
         Gdk.threads_enter()
         _window.out_view.get_buffer().set_text("Rendering...")
@@ -1251,46 +1263,35 @@ class FluxityRangeRenderer(threading.Thread):
         in_frame = _player.producer.mark_in
         self.in_frame = in_frame
         out_frame = _player.producer.mark_out
-        
-        start_time = time.time()
-        proc_fctx_dict = fluxity.render_frame_sequence(self.script, _last_save_path, in_frame, out_frame, self.render_folder, self.profile_file_path, self.frame_write_update)
-        
-        end_time = time.time()
-        print("Render time:", end_time - start_time)
-        
-        print("We have after render:", proc_fctx_dict)
-        
+        self.out_frame = out_frame
+
+        # Delete old preview frames.
+        old_files = glob.glob(self.render_folder + "/*")
+        for f in old_files:
+            os.remove(f)
+    
+        # Poll rendering from GDK with timeout events to get access to GDK lock on updates 
+        # to be able to draw immediately.
+        self.frame_render_in_progress = True
+        Gdk.threads_add_timeout(GLib.PRIORITY_HIGH_IDLE, 150, _preview_render_update, self)
+    
+        #start_time = time.time()
+        proc_fctx_dict = fluxity.render_frame_sequence(self.script, _last_save_path, in_frame, out_frame, self.render_folder, self.profile_file_path)        
+        #end_time = time.time()
+
+        self.frame_render_in_progress = False
+
         # Get error and log messages.
-        if fluxity.FLUXITY_ERROR_MSG in proc_fctx_dict.keys():
-            error_msg = proc_fctx_dict[fluxity.FLUXITY_ERROR_MSG ]
-        else:
-            error_msg = None
-        
-        if fluxity.FLUXITY_ERROR_MSG in proc_fctx_dict.keys():
-            error_msg = proc_fctx_dict[fluxity.FLUXITY_ERROR_MSG ]
-        else:
-            error_msg = None
-
-        if fluxity.FLUXITY_LOG_MSG in proc_fctx_dict.keys():
-            log_msg = proc_fctx_dict[fluxity.FLUXITY_ERROR_MSG ]
-        else:
-            log_msg = None
-
-        # show final update for completion.
-        self.frame_write_update(out_frame) 
+        error_msg, log_msg = _get_range_render_messages(proc_fctx_dict)
         
         if error_msg == None:
-            print("1")
-            frame_file = proc_fctx_dict["0"] # First writtend file saved here.
-            print("frame_file", frame_file)
+            frame_file = proc_fctx_dict["0"] # First written file saved here.
             resource_name_str = utils.get_img_seq_resource_name(frame_file)
-            print("resource_name_str", resource_name_str)
             range_resourse_mlt_path = get_render_frames_dir() + "/" + resource_name_str
-            print("range_resourse_mlt_path", range_resourse_mlt_path)
             new_playback_producer = _get_playback_tractor(_script_length, range_resourse_mlt_path, in_frame, out_frame)
             _player.set_producer(new_playback_producer)
             _player.seek_frame(in_frame)
-            print("3")
+
             Gdk.threads_enter()
             _window.pos_bar.preview_range = (in_frame, out_frame)
 
@@ -1298,7 +1299,7 @@ class FluxityRangeRenderer(threading.Thread):
             _window.monitors_switcher.queue_draw()
             _window.preview_monitor.queue_draw()
             _window.pos_bar.widget.queue_draw()
-            print("4")
+
             out_text = "Range preview rendered for frame range " + str(in_frame) + " - " + str(out_frame) 
             if log_msg != None:
                 out_text = out_text + "\nLOG:\n" + log_msg
@@ -1319,16 +1320,23 @@ class FluxityRangeRenderer(threading.Thread):
 
             Gdk.threads_leave()
 
-    def frame_write_update(self, frame):    
-        Gdk.threads_enter()
+def _preview_render_update(render_thread):
+    frame = render_thread.in_frame + len(os.listdir(render_thread.render_folder))
 
+    _window.media_info.set_markup("<small>" + _("Rendered frame ") + str(frame) + "</small>")
+    _window.pos_bar.preview_range = (render_thread.in_frame, frame)
+    _window.pos_bar.widget.queue_draw()
+
+    if render_thread.frame_render_in_progress == False:
+        frame = render_thread.out_frame
         _window.media_info.set_markup("<small>" + _("Rendered frame ") + str(frame) + "</small>")
-        _window.pos_bar.preview_range = (self.in_frame, frame)
+        _window.pos_bar.preview_range = (render_thread.in_frame, frame)
         _window.pos_bar.widget.queue_draw()
-            
-        Gdk.threads_leave()
-
-
+        return False # This stops repeated calls to this function.
+    else:
+        return True # Function will be called again.
+                
+        
 class FluxityPluginRenderer(threading.Thread):
 
     def __init__(self):
@@ -1346,7 +1354,8 @@ class FluxityPluginRenderer(threading.Thread):
         out_folder = _window.out_folder.get_filenames()[0] + "/"
         if out_folder == (os.path.expanduser("~") + "/"):
             return
-            
+        self.render_folder = out_folder
+        
         start_time = time.time()
         
         Gdk.threads_enter()
@@ -1380,14 +1389,23 @@ class FluxityPluginRenderer(threading.Thread):
         buf = _window.script_view.get_buffer()
         script_text = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), include_hidden_chars=True)
         profile_file_path = mltprofiles.get_profile_file_path(_current_profile_name)
-    
+
+        self.frame_render_in_progress = True
+        self.render_start_time = datetime.datetime.now()
+        Gdk.threads_add_timeout(GLib.PRIORITY_HIGH_IDLE, 150, _output_render_update, self)
+        
         # Render frames
-        fctx = fluxity.render_frame_sequence(script_text, _last_save_path, in_frame, out_frame, out_folder, profile_file_path, self.frames_update)
+        proc_fctx_dict = fluxity.render_frame_sequence(script_text, _last_save_path, in_frame, out_frame, out_folder, profile_file_path)
+
+        self.frame_render_in_progress = False # Stops GUI updates.
+
+        # Get error and log messages.
+        error_msg, log_msg = _get_range_render_messages(proc_fctx_dict)
 
         # Set GUI state and exit on error.
-        if fctx.error != None:
+        if error_msg != None:
             Gdk.threads_enter()
-            _window.out_view.get_buffer().set_text(fctx.error)
+            _window.out_view.get_buffer().set_text(error_msg)
             _window.media_info.set_markup("<small>" + _("No Preview") +"</small>")
             _window.monitors_switcher.queue_draw()
             _window.preview_monitor.queue_draw()
@@ -1439,19 +1457,6 @@ class FluxityPluginRenderer(threading.Thread):
         _window.render_percentage.set_markup("<small>" + _("Render complete!") + "</small>")
         self.set_render_stopped_gui_state()
         Gdk.threads_leave()
-        
-    def frames_update(self, frame):
-        if frame - self.mark_in < 0:
-            frame = self.length # hack fix, producer suddenly changes the frame it thinks it is in
-        else:
-            frame = frame - self.mark_in # producer returns original clip frames
-        
-        update_info = _("Writing clip frame: ") + str(frame) + "/" +  str(self.length)
-
-        Gdk.threads_enter()
-        _window.render_percentage.set_markup("<small>" + update_info + "</small>")
-        _window.render_progress_bar.set_fraction(float(frame + 1)/float(self.length))
-        Gdk.threads_leave()
 
     def abort_render(self):
         self.abort = True
@@ -1480,7 +1485,35 @@ class FluxityPluginRenderer(threading.Thread):
             self.render_player.shutdown()        
 
 
+def _output_render_update(render_thread):
+    folder_files = os.listdir(render_thread.render_folder)
 
+    added_files = []
+    for f in folder_files:
+        st = os.stat(render_thread.render_folder + "/" + f)
+        mtime = datetime.datetime.fromtimestamp(st.st_mtime)
+        
+        if mtime > render_thread.render_start_time:
+            added_files.append(f)
 
+    frame = render_thread.mark_in + len(added_files)
+    if frame - render_thread.mark_in < 0:
+        frame = render_thread.length # hack fix, producer suddenly changes the frame it thinks it is in
+    else:
+        frame = frame - render_thread.mark_in # producer returns original clip frames
 
+    update_info = _("Writing clip frame: ") + str(frame) + "/" +  str(render_thread.length)
+
+    _window.render_percentage.set_markup("<small>" + update_info + "</small>")
+    _window.render_progress_bar.set_fraction(float(frame + 1)/float(render_thread.length))
+
+    if render_thread.abort == True:
+        return False # This stops repeated calls to this function.
+
+    if render_thread.frame_render_in_progress == False:
+        _window.render_percentage.set_markup("<small>" + _("Render complete!") + "</small>")
+        _window.render_progress_bar.set_fraction(0.0)
+        return False # This stops repeated calls to this function.
+    else:
+        return True # Function will be called again.
 

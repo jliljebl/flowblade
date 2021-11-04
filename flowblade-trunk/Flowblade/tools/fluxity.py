@@ -757,7 +757,6 @@ class FluxityContextPrivate:
         self.frame_surface.write_to_png(filepath)
 
         if self.first_rendered_frame_path == None:
-            print(self, filepath)
             self.first_rendered_frame_path = filepath
 
     def get_preview_frame_path(self):
@@ -1004,7 +1003,7 @@ def render_preview_frame(script, script_file, frame, out_folder, profile_file_pa
         trace = traceback.format_exc(6,True)
         return fctx
 
-def render_frame_sequence(script, script_file, in_frame, out_frame, out_folder, profile_file_path, frame_write_callback=None, editors_data_json=None, start_out_from_frame_one=False):
+def render_frame_sequence(script, script_file, in_frame, out_frame, out_folder, profile_file_path, editors_data_json=None, start_out_from_frame_one=False):
     threads = 6 # add some heuristics here.
     if out_frame - in_frame < threads * 2:
         threads = 1
@@ -1023,22 +1022,13 @@ def render_frame_sequence(script, script_file, in_frame, out_frame, out_folder, 
                         editors_data_json, start_out_from_frame_one)
         
         proc_info = (i, threads, proc_fctx_dict)
-        print("launching",  i)
         p = multiprocessing.Process(target=_render_process_launch, args=(render_data, proc_info))
         jobs.append(p)
         p.start()
 
     for proc in jobs:
-        print("join")
         proc.join()
-    print("kjkljkljklj")
-    print(proc_fctx_dict.values())
-    print(proc_fctx_dict.keys())
-    #for fctx in proc_fctx_dict.values():
-    #    print(fctx.priv_context.first_rendered_frame_path)
-    #    print(fctx.priv_context)
-        
-    print("ghghghghgh")
+
     return proc_fctx_dict
         
 def _render_process_launch(render_data, proc_info):
@@ -1082,8 +1072,7 @@ def _render_process_launch(render_data, proc_info):
             fctx.priv_context.write_out_frame()
             if frame_write_callback != None:
                 frame_write_callback(frame) # for GUI app opdates.
-        print("We have:", fctx)
-        print(fctx.priv_context.first_rendered_frame_path)
+
         proc_fctx_dict[str(procnum)] = str(fctx.priv_context.first_rendered_frame_path)
         if len(fctx.log_msg) > 0:
             proc_fctx_dict[str(FLUXITY_LOG_MSG)] = str(fctx.log_msg)
@@ -1091,7 +1080,7 @@ def _render_process_launch(render_data, proc_info):
     except Exception as e:
         fctx.error = str(e) + traceback.format_exc(6,True)
         proc_fctx_dict[str(FLUXITY_ERROR_MSG)] = str(fctx.error)
-        print("Render error: ", fctx.error )
+
         
 def _init_script_and_context(script, script_file, out_folder, profile_file_path):
     try:
