@@ -3562,7 +3562,7 @@ class PressLaunch:
         cr.fill()
         
         cr.set_operator(cairo.Operator.ATOP)
-        cr.set_source_rgba(0.063, 0.34, 0.66, 0.6)
+        cr.set_source_rgba(1.0, 1.0, 1.0, 0.5)
         cr.rectangle(0,0,self.surface.get_width(), self.surface.get_height())
         cr.fill()
         
