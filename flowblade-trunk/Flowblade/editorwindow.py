@@ -271,6 +271,7 @@ class EditorWindow:
             
         layout_press.widget.set_margin_top(1)
         layout_press.widget.set_tooltip_text(_("Layouts"))
+        layout_press.connect_launched_menu(editorlayout._top_bar_button_menu)
         
         info_box = Gtk.HBox(False, 0)
         if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:

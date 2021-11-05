@@ -537,7 +537,12 @@ def show_layout_press_menu(widget, event):
     menu = _top_bar_button_menu
     guiutils.remove_children(menu)
     _create_layout_presets_menu(menu)
+    #menu.connect("hide", _testing_hide)
+    
     menu.popup(None, None, None, None, event.button, event.time)
+
+#def _testing_hide(widget):
+    #print("hide layout")
 
 def _create_layout_presets_menu(menu):
     callback = _top_bar_menu_item_activated
