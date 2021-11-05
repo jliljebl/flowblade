@@ -230,6 +230,7 @@ def _create_buttons(editor_window):
     tooltips = [_("Zoom In - Mouse Middle Scroll"), _("Zoom Out - Mouse Middle Scroll"), _("Zoom Length - Mouse Middle Click")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.zoom_buttons, tooltips)
     editor_window.zoom_buttons.no_decorations = no_decorations
+    editor_window.zoom_buttons.show_prelight_icons()
     
     # Cut and dissolve
     editor_window.edit_buttons = glassbuttons.GlassButtonsGroup(32*size_adj, 23*size_adj, 2*size_adj, 5*size_adj, 5*size_adj)
@@ -238,6 +239,7 @@ def _create_buttons(editor_window):
     tooltips = [_("Add Rendered Transition - 2 clips selected\nAdd Rendered Fade - 1 clip selected"), _("Cut Active Tracks - X\nCut All Tracks - Shift + X")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons, tooltips)
     editor_window.edit_buttons.no_decorations = no_decorations
+    editor_window.edit_buttons.show_prelight_icons()
     
     # Delete buttons
     editor_window.edit_buttons_3 = glassbuttons.GlassButtonsGroup(46*size_adj, 23*size_adj, 2*size_adj, 3*size_adj, 5*size_adj)
@@ -248,7 +250,8 @@ def _create_buttons(editor_window):
     tooltips = [_("Splice Out - Delete"), _("Lift - Control + Delete"), _("Ripple Delete"), _("Range Delete")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons_3, tooltips)
     editor_window.edit_buttons_3.no_decorations = no_decorations
-
+    editor_window.edit_buttons_3.show_prelight_icons()
+    
     # Resync and split audio
     editor_window.edit_buttons_2 = glassbuttons.GlassButtonsGroup(44*size_adj, 23*size_adj, 2*size_adj, 3*size_adj, 5*size_adj)
     editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("resync" + icon_color), tlineaction.resync_button_pressed)
@@ -256,6 +259,7 @@ def _create_buttons(editor_window):
     tooltips = [_("Resync Selected"), _("Split Audio")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons_2, tooltips)
     editor_window.edit_buttons_2.no_decorations = no_decorations
+    editor_window.edit_buttons_2.show_prelight_icons()
     
     editor_window.monitor_insert_buttons = glassbuttons.GlassButtonsGroup(44*size_adj, 23*size_adj, 2*size_adj, 3*size_adj, 5*size_adj)
     editor_window.monitor_insert_buttons.add_button(guiutils.get_cairo_image("overwrite_range" + icon_color), tlineaction.range_overwrite_pressed)
@@ -265,6 +269,7 @@ def _create_buttons(editor_window):
     tooltips = [_("Overwrite Range"), _("Overwrite Clip - T"), _("Insert Clip - Y"), _("Append Clip - U")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.monitor_insert_buttons, tooltips)
     editor_window.monitor_insert_buttons.no_decorations = no_decorations
+    editor_window.monitor_insert_buttons.show_prelight_icons()
     
     editor_window.undo_redo = glassbuttons.GlassButtonsGroup(28*size_adj, 23*size_adj, 2*size_adj, 2*size_adj, 7*size_adj)
     editor_window.undo_redo.add_button(guiutils.get_cairo_image("undo" + icon_color), undo.do_undo_and_repaint)
@@ -272,6 +277,7 @@ def _create_buttons(editor_window):
     tooltips = [_("Undo - Ctrl + Z"), _("Redo - Ctrl + Y")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.undo_redo, tooltips)
     editor_window.undo_redo.no_decorations = no_decorations
+    editor_window.undo_redo.show_prelight_icons()
     
     editor_window.tools_buttons = glassbuttons.GlassButtonsGroup(30*size_adj, 23*size_adj, 2*size_adj, 14*size_adj, 7*size_adj)
     editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_mixer" + icon_color), audiomonitoring.show_audio_monitor)
@@ -282,6 +288,7 @@ def _create_buttons(editor_window):
     tooltips = [_("Audio Mixer"), _("Titler"), _("G'Mic Effects"),_("Media Plugin Editor"), _("Batch Render Queue")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.tools_buttons, tooltips)
     editor_window.tools_buttons.no_decorations = True
+    editor_window.tools_buttons.show_prelight_icons()
     
     if editorstate.audio_monitoring_available == False:
         editor_window.tools_buttons.sensitive[0] = False

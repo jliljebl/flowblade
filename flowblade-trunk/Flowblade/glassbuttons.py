@@ -93,8 +93,11 @@ class AbstractGlassButtons:
         self.icons = []
         self.image_x = []
         self.image_y = []
-        self.sensitive = []
-
+        self.sensitive = [] # not used currently
+        
+        self.prelight_icons = []
+        self.prelight_index = -1
+        
         if editorpersistance.prefs.buttons_style == editorpersistance.GLASS_STYLE:
             self.glass_style = True
         else:
@@ -142,6 +145,12 @@ class AbstractGlassButtons:
     def _release_event(self, event):
         print("_release_event not impl")
 
+    def _leave_notify_event(self, event):
+        print("_leave_notify_event not impl")
+        
+    def _enter_notify_event(self, event):
+        print("_enter_notify_event not impl")
+        
     def _draw(self, event, cr, allocation):
         print("_draw not impl")
 
@@ -164,6 +173,8 @@ class AbstractGlassButtons:
             x = self.button_x
             for i in range(0, len(self.icons)):
                 icon = self.icons[i]
+                if self.prelight_index == i:
+                    icon = self.prelight_icons[i]
                 cr.set_source_surface(icon, x + self.image_x[i], self.image_y[i])
                 cr.paint()
                 x += self.button_width
@@ -267,6 +278,24 @@ class AbstractGlassButtons:
                 cr.stroke()
             x += self.button_width
 
+    def show_prelight_icons(self):
+        for icon in self.icons:
+            surface_prelight = cairo.ImageSurface(cairo.FORMAT_ARGB32, icon.get_width(), icon.get_height())
+            cr = cairo.Context(surface_prelight)
+            cr.set_source_surface(icon, 0, 0)
+            cr.rectangle(0, 0, icon.get_width(), icon.get_height())
+            cr.fill()
+            
+            cr.set_operator(cairo.Operator.ATOP)
+            cr.set_source_rgba(1.0, 1.0, 1.0, 0.5)
+            cr.rectangle(0, 0, icon.get_width(), icon.get_height())
+            cr.fill()
+            
+            self.prelight_icons.append(surface_prelight)
+
+        self.widget.leave_notify_func = self._leave_notify_event
+        self.widget.enter_notify_func = self._enter_notify_event
+
 
 class PlayerButtons(AbstractGlassButtons):
 
@@ -341,14 +370,6 @@ class PlayerButtons(AbstractGlassButtons):
         self.set_sensitive(True)
 
         focus_groups[DEFAULT_FOCUS_GROUP].append(self.widget)
-
-    def set_trim_sensitive_pattern(self):
-        # Jul-2016 - SvdB - For play/pause button
-        if (editorpersistance.prefs.play_pause == True):
-            self.sensitive = [True, True, True, False, False, False, False, False]
-        else:
-            self.sensitive = [True, True, True, True, False, False, False, False, False]
-        self.widget.queue_draw()
 
     def set_normal_sensitive_pattern(self):
         self.set_sensitive(True)
@@ -506,6 +527,10 @@ class GlassButtonsGroup(AbstractGlassButtons):
                 release_func = self.released_callback_funcs[self.pressed_button]
                 release_func()
             self.pressed_button = NO_HIT
+
+        if len(self.prelight_icons) > 0:
+            self.prelight_index = button_under
+                
         self.widget.queue_draw()
 
     def _release_event(self, event):
@@ -515,8 +540,14 @@ class GlassButtonsGroup(AbstractGlassButtons):
         self.pressed_button = -1
         self.widget.queue_draw()
 
+    def _leave_notify_event(self, event):
+        self.prelight_index = -1
+        self.widget.queue_draw()
 
+    def _enter_notify_event(self, event):
+        self.prelight_index = -1
 
+        
 class GlassButtonsToggleGroup(GlassButtonsGroup):
     def set_pressed_button(self, pressed_button_index, fire_clicked_cb=False):
         self.pressed_button = pressed_button_index

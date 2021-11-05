@@ -3544,7 +3544,7 @@ class PressLaunch:
         self.prelight_on = False 
         self.ignore_next_leave = False
         
-        show_mouse_prelight = False # Works but turned off for now. Delete to get prefilgth icons.
+        #show_mouse_prelight = False # Works but turned off for now. Delete to get prefilgth icons.
         if show_mouse_prelight:
             self._prepare_mouse_mouse_prelight()
         else:
