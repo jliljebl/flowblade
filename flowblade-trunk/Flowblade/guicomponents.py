@@ -3692,7 +3692,30 @@ class HamburgerPressLaunch:
 
         self.surface_x  = 0
         self.surface_y  = y_adj
+
+        self.prelight_on = False 
+        self.ignore_next_leave = False
+        self._prepare_mouse_prelight()
+
+    def connect_launched_menu(self, launch_menu):
+        # We need to leave prelight icon when menu closed
+        launch_menu.connect("hide", lambda w : self.leave_notify_listener(None))
     
+    def _prepare_mouse_prelight(self):
+        self.surface_prelight = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.surface_active.get_width(), self.surface_active.get_height())
+        cr = cairo.Context(self.surface_prelight)
+        cr.set_source_surface(self.surface_active, 0, 0)
+        cr.rectangle(0, 0, self.surface_active.get_width(), self.surface_active.get_height())
+        cr.fill()
+        
+        cr.set_operator(cairo.Operator.ATOP)
+        cr.set_source_rgba(1.0, 1.0, 1.0, 0.5)
+        cr.rectangle(0,0,self.surface_active.get_width(), self.surface_active.get_height())
+        cr.fill()
+        
+        self.widget.leave_notify_func = self.leave_notify_listener
+        self.widget.enter_notify_func = self.enter_notify_listener
+        
     def set_sensitive(self, sensitive):
         self.sensitive = sensitive
         self.widget.queue_draw()
@@ -3700,6 +3723,8 @@ class HamburgerPressLaunch:
     def _draw(self, event, cr, allocation):
         if self.sensitive == True:
             surface = self.surface_active
+            if self.prelight_on == True:
+                surface = self.surface_prelight
         else:
             surface = self.surface_not_active
             
@@ -3708,11 +3733,25 @@ class HamburgerPressLaunch:
 
     def _press_event(self, event):
         if self.sensitive == True:
+            self.ignore_next_leave = True
+            self.prelight_on = True 
             if self.data == None:
                 self.callback(self.widget, event)
             else:
                 self.callback(self.widget, event, self.data)
 
+    def leave_notify_listener(self, event):
+        if self.ignore_next_leave == True:
+            self.ignore_next_leave = False
+            return
+            
+        self.prelight_on = False
+        self.widget.queue_draw()
+    
+    def enter_notify_listener(self, event):
+        self.prelight_on = True 
+        self.widget.queue_draw()
+        
 
 class MonitorSwitch:
     def __init__(self, callback):

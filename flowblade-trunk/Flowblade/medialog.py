@@ -717,6 +717,7 @@ def get_media_log_events_panel(events_list_view):
     global widgets
 
     group_actions_menu = guicomponents.HamburgerPressLaunch(_group_action_pressed)
+    group_actions_menu.connect_launched_menu(actions_popup_menu)
     guiutils.set_margins(group_actions_menu.widget, 10, 0, 2, 18)
 
     star_check = Gtk.CheckButton()

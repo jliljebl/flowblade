@@ -234,6 +234,7 @@ def get_jobs_panel():
     global _jobs_list_view
 
     actions_menu = guicomponents.HamburgerPressLaunch(_menu_action_pressed)
+    actions_menu.connect_launched_menu(_hamburger_menu)
     guiutils.set_margins(actions_menu.widget, 8, 2, 2, 18)
 
     row2 =  Gtk.HBox()

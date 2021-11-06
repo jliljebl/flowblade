@@ -77,6 +77,7 @@ def create_widgets():
     """
     widgets.compositor_info = guicomponents.CompositorInfoPanel()
     widgets.hamburger_launcher = guicomponents.HamburgerPressLaunch(_hamburger_launch_pressed)
+    widgets.hamburger_launcher.connect_launched_menu(guicomponents.clip_effects_hamburger_menu)
     guiutils.set_margins(widgets.hamburger_launcher.widget, 4, 6, 6, 0)
 
     widgets.empty_label = Gtk.Label(label=_("No Compositor"))

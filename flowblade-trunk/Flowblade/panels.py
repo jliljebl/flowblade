@@ -48,13 +48,14 @@ MEDIA_PANEL_MAX_ROWS = 8
 MEDIA_PANEL_DEFAULT_ROWS = 2
 
 
-def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hamburger_launch_pressed, filtering_cb):   
+def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hamburger_launch_pressed, filtering_cb, media_pop_up_menu):   
     # Aug-2019 - SvdB - BB
     size_adj = 1
     prefs = editorpersistance.prefs
     if prefs.double_track_hights:
         size_adj = 2
     hamburger_launcher = guicomponents.HamburgerPressLaunch(hamburger_launch_pressed)
+    hamburger_launcher.connect_launched_menu(media_pop_up_menu)
     guiutils.set_margins(hamburger_launcher.widget, 2, 0, 4, 12)
 
     columns_img = guiutils.get_cairo_image("columns")
@@ -100,19 +101,21 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hambu
 
     return (panel, bin_info)
 
-def get_bins_tree_panel(bin_list_view, callback):   
+def get_bins_tree_panel(bin_list_view, callback, bins_popup_menu):   
     panel = Gtk.VBox()
     panel.pack_start(bin_list_view, True, True, 0)
 
     hamburger = guicomponents.HamburgerPressLaunch(callback)
+    hamburger.connect_launched_menu(bins_popup_menu)
     
     return get_named_frame_with_hamburger(_("Bins"), panel, 0, 0, 0, _("A <b>Bin</b> is a named collection of media."), hamburger.widget)
     
-def get_sequences_panel(sequence_list_view, callback):
+def get_sequences_panel(sequence_list_view, callback, sequence_popup_menu):
     panel = Gtk.VBox()
     panel.pack_start(sequence_list_view, True, True, 0)
 
     hamburger = guicomponents.HamburgerPressLaunch(callback)
+    hamburger.connect_launched_menu(sequence_popup_menu)
     
     return get_named_frame_with_hamburger(_("Sequences"), panel, 0, 0, 0, _("A <b>Sequence</b> is the full contents of the timeline creating a program, a movie."), hamburger.widget)
 

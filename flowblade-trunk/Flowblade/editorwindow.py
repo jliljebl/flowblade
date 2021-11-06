@@ -336,7 +336,7 @@ class EditorWindow:
         self.bin_list_view.set_property("can-focus",  True)
 
 
-        self.bins_panel = panels.get_bins_tree_panel(self.bin_list_view, projectaction.bin_hambuger_pressed)
+        self.bins_panel = panels.get_bins_tree_panel(self.bin_list_view, projectaction.bin_hambuger_pressed, projectaction.bin_popup_menu)
         self.bins_panel.set_size_request(MEDIA_MANAGER_WIDTH, 10) # this component is always expanded, so 10 for minimum size ok
 
         self.media_list_view = guicomponents.MediaPanel(projectaction.media_file_menu_item_selected,
@@ -358,7 +358,8 @@ class EditorWindow:
                                     lambda w,e: projectaction.delete_media_files(),
                                     projectaction.columns_count_launch_pressed,
                                     projectaction.hamburger_pressed,  # lambda w,e: proxyediting.create_proxy_files_pressed(),
-                                    projectaction.media_filtering_select_pressed)
+                                    projectaction.media_filtering_select_pressed,
+                                    projectaction.hamburger_popup_menu)
 
         self.media_panel = media_panel
         self.media_panel.set_name("darker-bg-widget")
@@ -449,7 +450,7 @@ class EditorWindow:
         self.sequence_list_view = guicomponents.SequenceListView(   projectaction.sequence_name_edited,
                                                                     projectaction.sequence_panel_popup_requested,
                                                                     projectaction.sequence_list_double_click_done)
-        seq_panel = panels.get_sequences_panel(self.sequence_list_view, projectaction.sequences_hamburger_pressed)
+        seq_panel = panels.get_sequences_panel(self.sequence_list_view, projectaction.sequences_hamburger_pressed, projectaction.sequence_popup_menu)
 
         # Jobs panel
         jobs.create_jobs_list_view()
