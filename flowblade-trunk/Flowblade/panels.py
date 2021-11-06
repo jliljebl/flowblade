@@ -61,6 +61,7 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hambu
     columns_launcher = guicomponents.PressLaunch(col_changed_cb, columns_img, w=22*size_adj, h=22*size_adj)
     columns_launcher.surface_y = 6
     columns_launcher.widget.set_tooltip_text(_("Number of Media File columns."))
+    columns_launcher.connect_launched_menu(guicomponents.column_count_menu)
     
     all_pixbuf = guiutils.get_cairo_image("show_all_files")
     audio_pixbuf = guiutils.get_cairo_image("show_audio_files")
@@ -75,7 +76,8 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hambu
     files_filter_launcher.surface_y  = 4
     files_filter_launcher.widget.set_tooltip_text(_("Visible Media File types."))
     gui.media_view_filter_selector = files_filter_launcher
-
+    # files_filter_launcher is guicomponents.file_filter_menu
+    
     bin_info = guicomponents.BinInfoPanel()
     
     buttons_box = Gtk.HBox(False,1)

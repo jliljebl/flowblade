@@ -205,6 +205,7 @@ def _create_buttons(editor_window):
 
     surface = guiutils.get_cairo_image("workflow")
     editor_window.worflow_launch = guicomponents.PressLaunch(workflow.workflow_menu_launched, surface, w=22*size_adj, h=22*size_adj)
+    editor_window.worflow_launch.connect_launched_menu(workflow._workflow_menu)
 
     if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
         editor_window.tool_selector = create_tool_selector(editor_window) #guicomponents.ToolSelector(editor_window.mode_selector_pressed, m_pixbufs, 40*size_adj, 22*size_adj)

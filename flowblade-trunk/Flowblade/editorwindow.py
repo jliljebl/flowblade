@@ -514,8 +514,10 @@ class EditorWindow:
             self.player_buttons.no_decorations = True
 
         self.view_mode_select = guicomponents.get_monitor_view_select_combo(lambda w, e: tlineaction.view_mode_menu_lauched(w, e))
-        self.trim_view_select = guicomponents.get_trim_view_select_combo(lambda w, e: monitorevent.trim_view_menu_launched(w, e))
+        self.view_mode_select.connect_launched_menu(guicomponents.monitor_menu)
         self.view_mode_select.widget.set_margin_right(10)
+        self.trim_view_select = guicomponents.get_trim_view_select_combo(lambda w, e: monitorevent.trim_view_menu_launched(w, e))
+        self.trim_view_select.connect_launched_menu(guicomponents.trim_view_menu)
 
         player_buttons_row = Gtk.HBox(False, 0)
         player_buttons_row.pack_start(self.monitor_switch.widget, False, False, 0)
@@ -587,15 +589,15 @@ class EditorWindow:
         # Aug-2019 - SvdB - BB - add size_adj and width/height as parameter to be able to adjust it for double height
         marker_surface =  guiutils.get_cairo_image("marker")
         markers_launcher = guicomponents.get_markers_menu_launcher(tlineaction.marker_menu_lauch_pressed, marker_surface, 22*size_adj, 22*size_adj)
-
+        markers_launcher.connect_launched_menu(guicomponents.markers_menu)
+        
         tracks_launcher_surface = guiutils.get_cairo_image("track_menu_launch")
         tracks_launcher = guicomponents.PressLaunch(trackaction.all_tracks_menu_launch_pressed, tracks_launcher_surface, 22*size_adj, 22*size_adj)
+        tracks_launcher.connect_launched_menu(guicomponents.tracks_menu)
 
         levels_launcher_surface = guiutils.get_cairo_image("audio_levels_menu_launch")
         levels_launcher = guicomponents.PressLaunch(trackaction.audio_levels_menu_launch_pressed, levels_launcher_surface, 22*size_adj, 22*size_adj)
-
-        levels_launcher_surface = guiutils.get_cairo_image("audio_levels_menu_launch")
-        levels_launcher = guicomponents.PressLaunch(trackaction.audio_levels_menu_launch_pressed, levels_launcher_surface, 22*size_adj, 22*size_adj)
+        levels_launcher.connect_launched_menu(guicomponents.levels_menu)
 
         # Timeline top row
         tline_hbox_1 = Gtk.HBox()

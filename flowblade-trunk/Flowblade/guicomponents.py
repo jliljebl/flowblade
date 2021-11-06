@@ -1522,6 +1522,7 @@ def get_monitor_view_select_combo(callback):
     return menu_launch
 
 def get_trim_view_select_combo(callback):
+    # not a combo
     # Aug-2019 - SvdB - BB
     prefs = editorpersistance.prefs
     size_adj = 1
@@ -3544,7 +3545,6 @@ class PressLaunch:
         self.prelight_on = False 
         self.ignore_next_leave = False
         
-        #show_mouse_prelight = False # Works but turned off for now. Delete to get prefilgth icons.
         if show_mouse_prelight:
             self._prepare_mouse_mouse_prelight()
         else:
@@ -3603,7 +3603,6 @@ class PressLaunch:
         cr.fill()
         
     def _press_event(self, event):
-        print("press")
         self.ignore_next_leave = True
         self.prelight_on = True 
         self.callback(self.widget, event)
