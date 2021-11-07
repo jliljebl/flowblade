@@ -76,8 +76,9 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hambu
     files_filter_launcher.surface_x  = 3
     files_filter_launcher.surface_y  = 4
     files_filter_launcher.widget.set_tooltip_text(_("Visible Media File types."))
+    files_filter_launcher.connect_launched_menu(guicomponents.file_filter_menu)
     gui.media_view_filter_selector = files_filter_launcher
-    # files_filter_launcher is guicomponents.file_filter_menu
+
     
     bin_info = guicomponents.BinInfoPanel()
     

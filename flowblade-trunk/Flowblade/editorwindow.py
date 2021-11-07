@@ -515,6 +515,7 @@ class EditorWindow:
             self.player_buttons.no_decorations = True
 
         self.view_mode_select = guicomponents.get_monitor_view_select_combo(lambda w, e: tlineaction.view_mode_menu_lauched(w, e))
+        self.view_mode_select.set_pixbuf(0)
         self.view_mode_select.connect_launched_menu(guicomponents.monitor_menu)
         self.view_mode_select.widget.set_margin_right(10)
         self.trim_view_select = guicomponents.get_trim_view_select_combo(lambda w, e: monitorevent.trim_view_menu_launched(w, e))
@@ -658,6 +659,7 @@ class EditorWindow:
         fta = guiutils.get_cairo_image("full_track_auto")
         surfaces = [tds, tdds, sas, fta]
         comp_mode_launcher = guicomponents.ImageMenuLaunch(projectaction.compositing_mode_menu_launched, surfaces, 22*size_adj, 20)
+        comp_mode_launcher.connect_launched_menu(projectaction.compositing_mode_menu)
         comp_mode_launcher.surface_x = 0
         comp_mode_launcher.surface_y = 4
         comp_mode_launcher.widget.set_tooltip_markup(_("Current Sequence Compositing Mode"))
@@ -669,6 +671,7 @@ class EditorWindow:
         trr = guiutils.get_cairo_image("tline_render_request")
         surfaces = [tro, tra, trr]
         tline_render_mode_launcher = guicomponents.ImageMenuLaunch(tlinerender.corner_mode_menu_launched, surfaces, 22*size_adj, 20)
+        tline_render_mode_launcher.connect_launched_menu(tlinerender.tlinerender_mode_menu)
         tline_render_mode_launcher.surface_x = 0
         tline_render_mode_launcher.surface_y = 4
         tline_render_mode_launcher.widget.set_tooltip_markup(_("Timeline Rendering"))
