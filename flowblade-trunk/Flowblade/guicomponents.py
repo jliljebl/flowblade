@@ -3610,11 +3610,32 @@ class PressLaunch:
 
 class ImageMenuLaunch(PressLaunch):
     def __init__(self, callback, surface_list, w=22, h=22):
-        PressLaunch.__init__(self, callback, surface_list[0], w, h)
         self.surface_list = surface_list
+        PressLaunch.__init__(self, callback, surface_list[0], w, h)
 
+    def _prepare_mouse_mouse_prelight(self):
+        self.surface_prelight_list = []
+        for icon in self.surface_list:
+            surface_prelight = cairo.ImageSurface(cairo.FORMAT_ARGB32, icon.get_width(), icon.get_height())
+            cr = cairo.Context(surface_prelight)
+            cr.set_source_surface(icon, 0, 0)
+            cr.rectangle(0, 0, icon.get_width(), icon.get_height())
+            cr.fill()
+            
+            cr.set_operator(cairo.Operator.ATOP)
+            cr.set_source_rgba(1.0, 1.0, 1.0, 0.5)
+            cr.rectangle(0, 0, icon.get_width(), icon.get_height())
+            cr.fill()
+            
+            self.surface_prelight_list.append(surface_prelight)
+
+        self.widget.leave_notify_func = self.leave_notify_listener
+        self.widget.enter_notify_func = self.enter_notify_listener
+        
     def set_pixbuf(self, surface_index):
         self.surface = self.surface_list[surface_index]
+        self.surface_prelight = self.surface_prelight_list[surface_index]
+            
         self.widget.queue_draw()
 
 
