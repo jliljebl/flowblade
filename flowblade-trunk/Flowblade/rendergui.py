@@ -849,6 +849,7 @@ class RenderArgsPanel():
         scroll_frame.add(sw)
 
         self.hamburger_launch = guicomponents.HamburgerPressLaunch(self.hamburger_launch_pressed)
+        self.hamburger_launch.connect_launched_menu(_hamburger_menu)
         guiutils.set_margins(self.hamburger_launch.widget,5,0,0,0)
 
         opts_buttons_row = Gtk.HBox(False)

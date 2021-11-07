@@ -672,6 +672,7 @@ class ScriptToolWindow(Gtk.Window):
         self.set_icon(app_icon)
         hamburger_launcher_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger.png")
         self.hamburger_launcher = guicomponents.PressLaunch(self.hamburger_launch_pressed, hamburger_launcher_surface)
+        self.hamburger_launcher.connect_launched_menu(_hamburger_menu)
         self.hamburger_launcher.widget.set_margin_bottom(7)
 
         self.reload_button = Gtk.Button(_("Reload Script"))

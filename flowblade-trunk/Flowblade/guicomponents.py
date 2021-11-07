@@ -3675,8 +3675,10 @@ class HamburgerPressLaunch:
         else:
             x_size = width
 
-        self.widget = cairoarea.CairoDrawableArea2( x_size * size_adj,
-                                                    18 * size_adj,
+        self.x_size_pref = x_size * size_adj
+        self.y_size_pref = 18 * size_adj
+        self.widget = cairoarea.CairoDrawableArea2( self.x_size_pref,
+                                                    self.y_size_pref,
                                                     self._draw)
         self.widget.press_func = self._press_event
         self.sensitive = True

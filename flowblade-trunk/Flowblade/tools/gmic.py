@@ -577,6 +577,7 @@ class GmicWindow(Gtk.Window):
         self.set_icon(app_icon)
         hamburger_launcher_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger.png")
         self.hamburger_launcher = guicomponents.PressLaunch(self.hamburger_launch_pressed, hamburger_launcher_surface)
+        self.hamburger_launcher.connect_launched_menu(_hamburger_menu)
         
         # Load media row
         self.load_button = Gtk.Button(_("Load Clip"))

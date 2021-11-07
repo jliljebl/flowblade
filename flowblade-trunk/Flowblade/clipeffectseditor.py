@@ -427,12 +427,14 @@ def _create_widgets():
     widgets.value_edit_frame.add(widgets.value_edit_box)
     
     widgets.hamburger_launcher = guicomponents.HamburgerPressLaunch(_hamburger_launch_pressed)
+    widgets.hamburger_launcher.connect_launched_menu(guicomponents.clip_effects_hamburger_menu)
     guiutils.set_margins(widgets.hamburger_launcher.widget, 6, 8, 1, 0)
 
     surface_active = guiutils.get_cairo_image("filter_add")
     surface_not_active = guiutils.get_cairo_image("filter_add_not_active")
     surfaces = [surface_active, surface_not_active]
     widgets.filter_add_launch = guicomponents.HamburgerPressLaunch(lambda w,e:_filter_add_menu_launch_pressed(w, e), surfaces)
+    widgets.filter_add_launch.connect_launched_menu(guicomponents.effect_menu)
     guiutils.set_margins(widgets.filter_add_launch.widget, 6, 8, 1, 0)
     
 # ------------------------------------------------------------------- interface

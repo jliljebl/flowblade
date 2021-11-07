@@ -1459,6 +1459,7 @@ def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, change_presets_
     shortcuts_combo = guicomponents.get_shorcuts_selector()
 
     hamburger_menu = guicomponents.HamburgerPressLaunch(_kb_menu_callback, None,  -1, (shortcuts_combo, dialog))
+    hamburger_menu.connect_launched_menu(guicomponents.kb_shortcuts_hamburger_menu)
     guiutils.set_margins(hamburger_menu.widget, 5, 0, 0, 32)
     hbox = Gtk.HBox()
     hbox.pack_start(hamburger_menu.widget, False, True, 0)
