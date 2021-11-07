@@ -3546,7 +3546,7 @@ class PressLaunch:
         self.ignore_next_leave = False
         
         if show_mouse_prelight:
-            self._prepare_mouse_mouse_prelight()
+            self._prepare_mouse_prelight()
         else:
             self.surface_prelight = None
 
@@ -3554,7 +3554,7 @@ class PressLaunch:
         # We need to leave prelight icon when menu closed
         launch_menu.connect("hide", lambda w : self.leave_notify_listener(None))
     
-    def _prepare_mouse_mouse_prelight(self):
+    def _prepare_mouse_prelight(self):
         self.surface_prelight = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.surface.get_width(), self.surface.get_height())
         cr = cairo.Context(self.surface_prelight)
         cr.set_source_surface(self.surface, 0, 0)
@@ -3613,7 +3613,7 @@ class ImageMenuLaunch(PressLaunch):
         self.surface_list = surface_list
         PressLaunch.__init__(self, callback, surface_list[0], w, h)
 
-    def _prepare_mouse_mouse_prelight(self):
+    def _prepare_mouse_prelight(self):
         self.surface_prelight_list = []
         for icon in self.surface_list:
             surface_prelight = cairo.ImageSurface(cairo.FORMAT_ARGB32, icon.get_width(), icon.get_height())
