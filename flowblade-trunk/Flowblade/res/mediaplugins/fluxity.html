@@ -40,7 +40,7 @@ along with Flowblade Movie Editor. If not, see <a href="http://www.gnu.org/licen
 <h1 id="fluxity-scripting">FLUXITY SCRIPTING</h1>
 <p>Fluxity scripting is a <strong>Python scripting solution</strong> created to provide <strong>Flowblade Movie Editor</strong> with a <strong>Media Plugin API</strong>.</p>
 <h2 id="required-interface">REQUIRED INTERFACE</h2>
-<p>A Python script that satisfies the following interface will load and run with out crashing but will not necessarily create any output.</p>
+<p>A Python script that satisfies the following interface will load and run without crashing, but will not necessarily create any output.</p>
 <pre><code>def init_script(fctx):
 
 def init_render(fctx):
@@ -49,7 +49,7 @@ def render_frame(frame, fctx, w, h):
 </code></pre>
 <h2 id="flowblade-media-plugin-api">FLOWBLADE MEDIA PLUGIN API</h2>
 <p>That Flowblade Media Plugin API is provided by <em>fluxity.FluxityContext</em> object and its methods.</p>
-<p>This object is created by Flowblade to communicate with the script before calling any of the methods of a Media Plugin script.</p>
+<p>This object is created to communicate with the script before calling any of the methods of a Media Plugin script.</p>
 <p>See API this document below for <em>fluxity.FluxityContext</em> object API details.</p>
 <h2 id="flowblade-media-plugin-script-lifecycle">FLOWBLADE MEDIA PLUGIN SCRIPT LIFECYCLE</h2>
 <p><strong>init_script(fctx):</strong> - This method is called when script is first loaded by Flowblade to create data structures with info on editors and script metadata. </p>
@@ -181,7 +181,7 @@ def _clamp(v):
     
     ## REQUIRED INTERFACE
     
-    A Python script that satisfies the following interface will load and run with out crashing but will not necessarily create any output.
+    A Python script that satisfies the following interface will load and run without crashing, but will not necessarily create any output.
     
     ```
     def init_script(fctx):
@@ -195,7 +195,7 @@ def _clamp(v):
     
     That Flowblade Media Plugin API is provided by *fluxity.FluxityContext* object and its methods.
 
-    This object is created by Flowblade to communicate with the script before calling any of the methods of a Media Plugin script.
+    This object is created to communicate with the script before calling any of the methods of a Media Plugin script.
     
     See API this document below for *fluxity.FluxityContext* object API details.
 
@@ -325,6 +325,7 @@ from gi.repository import PangoCairo
 import cairo
 import json
 import locale
+import multiprocessing
 import numpy as np
 import os
 import traceback
@@ -346,6 +347,8 @@ FACE_ITALIC = &#34;Italic&#34;
 FACE_BOLD_ITALIC = &#34;Bold Italic&#34;
 DEFAULT_FONT_SIZE = 40
 
+FLUXITY_ERROR_MSG = &#34;ERROR&#34;
+FLUXITY_LOG_MSG = &#34;LOG&#34;
 
 VERTICAL = 0
 HORIZONTAL = 1
@@ -574,7 +577,7 @@ class FluxityContext:
         
         Used to access properties of MLT profile set before running the script that defines e.g. output image size.
         
-        **Returns:** (int, boolean, string) Value depends on which profile property is being accessed.
+        **Returns:** (int || boolean || string) Value depends on which profile property is being accessed.
         &#34;&#34;&#34;
         return self.priv_context.profile.get_profile_property(p_property)
  
@@ -690,9 +693,8 @@ class FluxityContext:
         self.editors[name] = (type, default_value)
         if tooltip != None:
             self.editor_tooltips[name] = tooltip
-
         self.priv_context.error_on_wrong_method(&#34;add_editor()&#34;, METHOD_INIT_SCRIPT)
-        
+
     def get_editor_value(self, name, frame=0):
         &#34;&#34;&#34;     
         **name(str):** Name of editor.
@@ -717,7 +719,7 @@ class FluxityContext:
           
           * EDITOR_FILE_PATH(str), 
           
-          * EDITOR_OPTIONS (2-tuple (int, [str]), (selected_index,[option_str_1, option_str_2, ...]),
+          * EDITOR_OPTIONS(selection index int),
           
           * EDITOR_CHECK_BOX(bool), 
           
@@ -739,7 +741,8 @@ class FluxityContext:
                 selected_index, options = value
                 return selected_index
             return value
-        except:
+        except Exception as e:
+            print(&#34;get_editor_value() &#34; + str(e) + traceback.format_exc(6,True))
             exception_msg = &#34;No editor for name &#39;&#34; + name + &#34;&#39; found.&#34;
             _raise_fluxity_error(exception_msg)
 
@@ -1122,6 +1125,24 @@ def _raise_exec_error(exception_msg):
 
 # ------------------------------------------------------ rendering
 def render_preview_frame(script, script_file, frame, out_folder, profile_file_path, editors_data_json=None):
+    &#34;&#34;&#34;
+    **script(str)** Script to be rendered as a string.
+    
+    **script_file(str)** Absolut path to file containing script. If this is not provided methods some like *FluxityContext.get_script_dir()* will not function as intended.
+    
+    **frame(int)** Frame to be rendered in range 0 - *(script_length - 1)*.
+    
+    **out_folder(str)** Path to folder where rendered frame will be saved.
+    
+    **profile_file_path(str)** Path to a file containing a file describing MLT profile used to when rendering the script.
+    
+    **editors_data_json(str)** String representation of JSON object containing editors described in the script and their values. This is optional, not providing this will use default values given in script when rendering.
+    
+    Renders a single frame from provided script.
+    
+    **Returns:** (FluxityContext) Object created during rendering. This object has attributes *error* and *log_msg* providing error and logging information.
+    &#34;&#34;&#34;
+
     try:
         # Init script and context.
         error_msg, results = _init_script_and_context(script, script_file, out_folder, profile_file_path)
@@ -1151,20 +1172,83 @@ def render_preview_frame(script, script_file, frame, out_folder, profile_file_pa
         return fctx
     except Exception as e:
         fctx.error = str(e) + traceback.format_exc(6,True)
+        print(fctx.error)
         trace = traceback.format_exc(6,True)
         return fctx
 
-def render_frame_sequence(script, script_file, in_frame, out_frame, out_folder, profile_file_path, frame_write_callback=None, editors_data_json=None, start_out_from_frame_one=False):
+def render_frame_sequence(script, script_file, in_frame, out_frame, out_folder, profile_file_path, editors_data_json=None, start_out_from_frame_one=False):
+    &#34;&#34;&#34;
+    **script(str)** Script to be rendered as a string.
+    
+    **script_file(str)** Absolut path to file containing script. If this is not provided methods some like *FluxityContext.get_script_dir()* will not function as intended.
+    
+    **in_frame(int)** First frame of rendered range.
+
+    **out_frame(int)** Last frame of rendered range, exclusive.
+    
+    **out_folder(str)** Path to folder where rendered frame will be saved.
+    
+    **profile_file_path(str)** Path to a file containing a file describing MLT profile used to when rendering the script.
+    
+    **editors_data_json(str)** String representation of JSON object containing editors described in the script and their values. This is optional, not providing this will use default values given in script when rendering.
+    
+    **start_out_from_frame_one(boolean)** Setting this *True* will cause numbering of rendered frame sequence to start from *1*, otherwise it will start from *in_frame*. 
+    
+    Renders a range of frames from provided script.
+    
+    **Returns:** (dict) Dictionary object created during rendering with the following information:
+    
+    * for each process it has *key -&gt; value* pair *process number(str) -&gt; path to first frame redered by process(str)*.
+    * if errors occurred during rendering it has *key -&gt; value* pair *fluxity.FLUXITY_ERROR_MSG -&gt; error message(str)*.
+    * if script created log messages it has *key -&gt; value* pair *fluxity.FLUXITY_LOG_MSG -&gt; log message(str)*.
+    &#34;&#34;&#34;
+    
+    threads = 6 # add some heuristics here.
+    if out_frame - in_frame &lt; threads * 2:
+        threads = 1
+
+    manager = multiprocessing.Manager()
+    proc_fctx_dict = manager.dict()
+    jobs = []
+    for i in range(threads):
+        if i == 0:
+            update_callback = None
+        else:
+            update_callback = None
+        
+        render_data = ( script, script_file, in_frame, out_frame, out_folder, \
+                        profile_file_path, update_callback, \
+                        editors_data_json, start_out_from_frame_one)
+        
+        proc_info = (i, threads, proc_fctx_dict)
+        p = multiprocessing.Process(target=_render_process_launch, args=(render_data, proc_info))
+        jobs.append(p)
+        p.start()
+
+    for proc in jobs:
+        proc.join()
+
+    return proc_fctx_dict
+        
+def _render_process_launch(render_data, proc_info):
+    script, script_file, in_frame, out_frame, out_folder, \
+    profile_file_path, frame_write_callback, \
+    editors_data_json, start_out_from_frame_one = render_data
+    
+    procnum, threads_count, proc_fctx_dict = proc_info
+    
     try:
         # Init script and context.
         error_msg, results = _init_script_and_context(script, script_file, out_folder, profile_file_path)
         if error_msg != None:
             fake_fctx = FluxityEmptyClass()
             fake_fctx.error = error_msg
-            return fake_fctx
+            proc_fctx_dict[procnum] = fake_fctx
+            return 
 
         fscript, fctx = results
-        
+
+                    
         # Execute script to write frame sequence.
         fctx.priv_context.current_method = METHOD_INIT_SCRIPT
         fscript.call_init_script(fctx)
@@ -1180,19 +1264,23 @@ def render_frame_sequence(script, script_file, in_frame, out_frame, out_folder, 
         fctx.priv_context.start_out_from_frame_one = start_out_from_frame_one
         fctx.priv_context.in_frame = in_frame
         
-        for frame in range(in_frame, out_frame):
+        for frame in range(in_frame + procnum, out_frame, threads_count):
             fctx.priv_context.create_frame_surface(frame)
             w, h = fctx.get_dimensions()
             fscript.call_render_frame(frame, fctx, w, h)
             fctx.priv_context.write_out_frame()
             if frame_write_callback != None:
                 frame_write_callback(frame) # for GUI app opdates.
-        return fctx
+
+        proc_fctx_dict[str(procnum)] = str(fctx.priv_context.first_rendered_frame_path)
+        if len(fctx.log_msg) &gt; 0:
+            proc_fctx_dict[str(FLUXITY_LOG_MSG)] = str(fctx.log_msg)
         
     except Exception as e:
         fctx.error = str(e) + traceback.format_exc(6,True)
-        return fctx
+        proc_fctx_dict[str(FLUXITY_ERROR_MSG)] = str(fctx.error)
 
+        
 def _init_script_and_context(script, script_file, out_folder, profile_file_path):
     try:
 
@@ -1220,64 +1308,118 @@ def _init_script_and_context(script, script_file, out_folder, profile_file_path)
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="fluxity.render_frame_sequence"><code class="name flex">
-<span>def <span class="ident">render_frame_sequence</span></span>(<span>script, script_file, in_frame, out_frame, out_folder, profile_file_path, frame_write_callback=None, editors_data_json=None, start_out_from_frame_one=False)</span>
+<span>def <span class="ident">render_frame_sequence</span></span>(<span>script, script_file, in_frame, out_frame, out_folder, profile_file_path, editors_data_json=None, start_out_from_frame_one=False)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p><strong>script(str)</strong> Script to be rendered as a string.</p>
+<p><strong>script_file(str)</strong> Absolut path to file containing script. If this is not provided methods some like <em>FluxityContext.get_script_dir()</em> will not function as intended.</p>
+<p><strong>in_frame(int)</strong> First frame of rendered range.</p>
+<p><strong>out_frame(int)</strong> Last frame of rendered range, exclusive.</p>
+<p><strong>out_folder(str)</strong> Path to folder where rendered frame will be saved.</p>
+<p><strong>profile_file_path(str)</strong> Path to a file containing a file describing MLT profile used to when rendering the script.</p>
+<p><strong>editors_data_json(str)</strong> String representation of JSON object containing editors described in the script and their values. This is optional, not providing this will use default values given in script when rendering.</p>
+<p><strong>start_out_from_frame_one(boolean)</strong> Setting this <em>True</em> will cause numbering of rendered frame sequence to start from <em>1</em>, otherwise it will start from <em>in_frame</em>. </p>
+<p>Renders a range of frames from provided script.</p>
+<p><strong>Returns:</strong> (dict) Dictionary object created during rendering with the following information:</p>
+<ul>
+<li>for each process it has <em>key -&gt; value</em> pair <em>process number(str) -&gt; path to first frame redered by process(str)</em>.</li>
+<li>if errors occurred during rendering it has <em>key -&gt; value</em> pair <em>fluxity.FLUXITY_ERROR_MSG -&gt; error message(str)</em>.</li>
+<li>if script created log messages it has <em>key -&gt; value</em> pair <em>fluxity.FLUXITY_LOG_MSG -&gt; log message(str)</em>.</li>
+</ul></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def render_frame_sequence(script, script_file, in_frame, out_frame, out_folder, profile_file_path, frame_write_callback=None, editors_data_json=None, start_out_from_frame_one=False):
-    try:
-        # Init script and context.
-        error_msg, results = _init_script_and_context(script, script_file, out_folder, profile_file_path)
-        if error_msg != None:
-            fake_fctx = FluxityEmptyClass()
-            fake_fctx.error = error_msg
-            return fake_fctx
+<pre><code class="python">def render_frame_sequence(script, script_file, in_frame, out_frame, out_folder, profile_file_path, editors_data_json=None, start_out_from_frame_one=False):
+    &#34;&#34;&#34;
+    **script(str)** Script to be rendered as a string.
+    
+    **script_file(str)** Absolut path to file containing script. If this is not provided methods some like *FluxityContext.get_script_dir()* will not function as intended.
+    
+    **in_frame(int)** First frame of rendered range.
 
-        fscript, fctx = results
-        
-        # Execute script to write frame sequence.
-        fctx.priv_context.current_method = METHOD_INIT_SCRIPT
-        fscript.call_init_script(fctx)
+    **out_frame(int)** Last frame of rendered range, exclusive.
+    
+    **out_folder(str)** Path to folder where rendered frame will be saved.
+    
+    **profile_file_path(str)** Path to a file containing a file describing MLT profile used to when rendering the script.
+    
+    **editors_data_json(str)** String representation of JSON object containing editors described in the script and their values. This is optional, not providing this will use default values given in script when rendering.
+    
+    **start_out_from_frame_one(boolean)** Setting this *True* will cause numbering of rendered frame sequence to start from *1*, otherwise it will start from *in_frame*. 
+    
+    Renders a range of frames from provided script.
+    
+    **Returns:** (dict) Dictionary object created during rendering with the following information:
+    
+    * for each process it has *key -&gt; value* pair *process number(str) -&gt; path to first frame redered by process(str)*.
+    * if errors occurred during rendering it has *key -&gt; value* pair *fluxity.FLUXITY_ERROR_MSG -&gt; error message(str)*.
+    * if script created log messages it has *key -&gt; value* pair *fluxity.FLUXITY_LOG_MSG -&gt; log message(str)*.
+    &#34;&#34;&#34;
+    
+    threads = 6 # add some heuristics here.
+    if out_frame - in_frame &lt; threads * 2:
+        threads = 1
 
-        if editors_data_json != None:
-            fctx.set_editors_data(editors_data_json)
-            
-        fctx.priv_context.current_method = METHOD_INIT_RENDER
-        fscript.call_init_render(fctx)
+    manager = multiprocessing.Manager()
+    proc_fctx_dict = manager.dict()
+    jobs = []
+    for i in range(threads):
+        if i == 0:
+            update_callback = None
+        else:
+            update_callback = None
+        
+        render_data = ( script, script_file, in_frame, out_frame, out_folder, \
+                        profile_file_path, update_callback, \
+                        editors_data_json, start_out_from_frame_one)
+        
+        proc_info = (i, threads, proc_fctx_dict)
+        p = multiprocessing.Process(target=_render_process_launch, args=(render_data, proc_info))
+        jobs.append(p)
+        p.start()
 
-        fctx.priv_context.first_rendered_frame_path = None # Should be clear but let&#39;s make sure. 
-        fctx.priv_context.current_method = METHOD_RENDER_FRAME
-        fctx.priv_context.start_out_from_frame_one = start_out_from_frame_one
-        fctx.priv_context.in_frame = in_frame
-        
-        for frame in range(in_frame, out_frame):
-            fctx.priv_context.create_frame_surface(frame)
-            w, h = fctx.get_dimensions()
-            fscript.call_render_frame(frame, fctx, w, h)
-            fctx.priv_context.write_out_frame()
-            if frame_write_callback != None:
-                frame_write_callback(frame) # for GUI app opdates.
-        return fctx
-        
-    except Exception as e:
-        fctx.error = str(e) + traceback.format_exc(6,True)
-        return fctx</code></pre>
+    for proc in jobs:
+        proc.join()
+
+    return proc_fctx_dict</code></pre>
 </details>
 </dd>
 <dt id="fluxity.render_preview_frame"><code class="name flex">
 <span>def <span class="ident">render_preview_frame</span></span>(<span>script, script_file, frame, out_folder, profile_file_path, editors_data_json=None)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p><strong>script(str)</strong> Script to be rendered as a string.</p>
+<p><strong>script_file(str)</strong> Absolut path to file containing script. If this is not provided methods some like <em>FluxityContext.get_script_dir()</em> will not function as intended.</p>
+<p><strong>frame(int)</strong> Frame to be rendered in range 0 - <em>(script_length - 1)</em>.</p>
+<p><strong>out_folder(str)</strong> Path to folder where rendered frame will be saved.</p>
+<p><strong>profile_file_path(str)</strong> Path to a file containing a file describing MLT profile used to when rendering the script.</p>
+<p><strong>editors_data_json(str)</strong> String representation of JSON object containing editors described in the script and their values. This is optional, not providing this will use default values given in script when rendering.</p>
+<p>Renders a single frame from provided script.</p>
+<p><strong>Returns:</strong> (FluxityContext) Object created during rendering. This object has attributes <em>error</em> and <em>log_msg</em> providing error and logging information.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def render_preview_frame(script, script_file, frame, out_folder, profile_file_path, editors_data_json=None):
+    &#34;&#34;&#34;
+    **script(str)** Script to be rendered as a string.
+    
+    **script_file(str)** Absolut path to file containing script. If this is not provided methods some like *FluxityContext.get_script_dir()* will not function as intended.
+    
+    **frame(int)** Frame to be rendered in range 0 - *(script_length - 1)*.
+    
+    **out_folder(str)** Path to folder where rendered frame will be saved.
+    
+    **profile_file_path(str)** Path to a file containing a file describing MLT profile used to when rendering the script.
+    
+    **editors_data_json(str)** String representation of JSON object containing editors described in the script and their values. This is optional, not providing this will use default values given in script when rendering.
+    
+    Renders a single frame from provided script.
+    
+    **Returns:** (FluxityContext) Object created during rendering. This object has attributes *error* and *log_msg* providing error and logging information.
+    &#34;&#34;&#34;
+
     try:
         # Init script and context.
         error_msg, results = _init_script_and_context(script, script_file, out_folder, profile_file_path)
@@ -1307,6 +1449,7 @@ def _init_script_and_context(script, script_file, out_folder, profile_file_path)
         return fctx
     except Exception as e:
         fctx.error = str(e) + traceback.format_exc(6,True)
+        print(fctx.error)
         trace = traceback.format_exc(6,True)
         return fctx</code></pre>
 </details>
@@ -1430,7 +1573,7 @@ def _init_script_and_context(script, script_file, out_folder, profile_file_path)
         
         Used to access properties of MLT profile set before running the script that defines e.g. output image size.
         
-        **Returns:** (int, boolean, string) Value depends on which profile property is being accessed.
+        **Returns:** (int || boolean || string) Value depends on which profile property is being accessed.
         &#34;&#34;&#34;
         return self.priv_context.profile.get_profile_property(p_property)
  
@@ -1546,9 +1689,8 @@ def _init_script_and_context(script, script_file, out_folder, profile_file_path)
         self.editors[name] = (type, default_value)
         if tooltip != None:
             self.editor_tooltips[name] = tooltip
-
         self.priv_context.error_on_wrong_method(&#34;add_editor()&#34;, METHOD_INIT_SCRIPT)
-        
+
     def get_editor_value(self, name, frame=0):
         &#34;&#34;&#34;     
         **name(str):** Name of editor.
@@ -1573,7 +1715,7 @@ def _init_script_and_context(script, script_file, out_folder, profile_file_path)
           
           * EDITOR_FILE_PATH(str), 
           
-          * EDITOR_OPTIONS (2-tuple (int, [str]), (selected_index,[option_str_1, option_str_2, ...]),
+          * EDITOR_OPTIONS(selection index int),
           
           * EDITOR_CHECK_BOX(bool), 
           
@@ -1595,7 +1737,8 @@ def _init_script_and_context(script, script_file, out_folder, profile_file_path)
                 selected_index, options = value
                 return selected_index
             return value
-        except:
+        except Exception as e:
+            print(&#34;get_editor_value() &#34; + str(e) + traceback.format_exc(6,True))
             exception_msg = &#34;No editor for name &#39;&#34; + name + &#34;&#39; found.&#34;
             _raise_fluxity_error(exception_msg)
 
@@ -1893,7 +2036,6 @@ gradient_color_rgba, gradient_direction))</p>
     self.editors[name] = (type, default_value)
     if tooltip != None:
         self.editor_tooltips[name] = tooltip
-
     self.priv_context.error_on_wrong_method(&#34;add_editor()&#34;, METHOD_INIT_SCRIPT)</code></pre>
 </details>
 </dd>
@@ -1991,7 +2133,7 @@ gradient_color_rgba, gradient_direction))</p>
 <p>EDITOR_FILE_PATH(str), </p>
 </li>
 <li>
-<p>EDITOR_OPTIONS (2-tuple (int, [str]), (selected_index,[option_str_1, option_str_2, &hellip;]),</p>
+<p>EDITOR_OPTIONS(selection index int),</p>
 </li>
 <li>
 <p>EDITOR_CHECK_BOX(bool), </p>
@@ -2037,7 +2179,7 @@ gradient_color_rgba, gradient_direction))</p>
       
       * EDITOR_FILE_PATH(str), 
       
-      * EDITOR_OPTIONS (2-tuple (int, [str]), (selected_index,[option_str_1, option_str_2, ...]),
+      * EDITOR_OPTIONS(selection index int),
       
       * EDITOR_CHECK_BOX(bool), 
       
@@ -2059,7 +2201,8 @@ gradient_color_rgba, gradient_direction))</p>
             selected_index, options = value
             return selected_index
         return value
-    except:
+    except Exception as e:
+        print(&#34;get_editor_value() &#34; + str(e) + traceback.format_exc(6,True))
         exception_msg = &#34;No editor for name &#39;&#34; + name + &#34;&#39; found.&#34;
         _raise_fluxity_error(exception_msg)</code></pre>
 </details>
@@ -2114,7 +2257,7 @@ gradient_color_rgba, gradient_direction))</p>
 <dd>
 <div class="desc"><p><strong>p_property(str):</strong> propertyr identyfier, e.g. FluxityContext.PROFILE_PROGRESSIVE.</p>
 <p>Used to access properties of MLT profile set before running the script that defines e.g. output image size.</p>
-<p><strong>Returns:</strong> (int, boolean, string) Value depends on which profile property is being accessed.</p></div>
+<p><strong>Returns:</strong> (int || boolean || string) Value depends on which profile property is being accessed.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2125,7 +2268,7 @@ gradient_color_rgba, gradient_direction))</p>
     
     Used to access properties of MLT profile set before running the script that defines e.g. output image size.
     
-    **Returns:** (int, boolean, string) Value depends on which profile property is being accessed.
+    **Returns:** (int || boolean || string) Value depends on which profile property is being accessed.
     &#34;&#34;&#34;
     return self.priv_context.profile.get_profile_property(p_property)</code></pre>
 </details>

@@ -26,7 +26,7 @@
     
     ## REQUIRED INTERFACE
     
-    A Python script that satisfies the following interface will load and run with out crashing but will not necessarily create any output.
+    A Python script that satisfies the following interface will load and run without crashing, but will not necessarily create any output.
     
     ```
     def init_script(fctx):
@@ -40,7 +40,7 @@
     
     That Flowblade Media Plugin API is provided by *fluxity.FluxityContext* object and its methods.
 
-    This object is created by Flowblade to communicate with the script before calling any of the methods of a Media Plugin script.
+    This object is created to communicate with the script before calling any of the methods of a Media Plugin script.
     
     See API this document below for *fluxity.FluxityContext* object API details.
 
@@ -422,7 +422,7 @@ class FluxityContext:
         
         Used to access properties of MLT profile set before running the script that defines e.g. output image size.
         
-        **Returns:** (int, boolean, string) Value depends on which profile property is being accessed.
+        **Returns:** (int || boolean || string) Value depends on which profile property is being accessed.
         """
         return self.priv_context.profile.get_profile_property(p_property)
  
@@ -970,6 +970,24 @@ def _raise_exec_error(exception_msg):
 
 # ------------------------------------------------------ rendering
 def render_preview_frame(script, script_file, frame, out_folder, profile_file_path, editors_data_json=None):
+    """
+    **script(str)** Script to be rendered as a string.
+    
+    **script_file(str)** Absolut path to file containing script. If this is not provided methods some like *FluxityContext.get_script_dir()* will not function as intended.
+    
+    **frame(int)** Frame to be rendered in range 0 - *(script_length - 1)*.
+    
+    **out_folder(str)** Path to folder where rendered frame will be saved.
+    
+    **profile_file_path(str)** Path to a file containing a file describing MLT profile used to when rendering the script.
+    
+    **editors_data_json(str)** String representation of JSON object containing editors described in the script and their values. This is optional, not providing this will use default values given in script when rendering.
+    
+    Renders a single frame from provided script.
+    
+    **Returns:** (FluxityContext) Object created during rendering. This object has attributes *error* and *log_msg* providing error and logging information.
+    """
+
     try:
         # Init script and context.
         error_msg, results = _init_script_and_context(script, script_file, out_folder, profile_file_path)
@@ -1004,6 +1022,32 @@ def render_preview_frame(script, script_file, frame, out_folder, profile_file_pa
         return fctx
 
 def render_frame_sequence(script, script_file, in_frame, out_frame, out_folder, profile_file_path, editors_data_json=None, start_out_from_frame_one=False):
+    """
+    **script(str)** Script to be rendered as a string.
+    
+    **script_file(str)** Absolut path to file containing script. If this is not provided methods some like *FluxityContext.get_script_dir()* will not function as intended.
+    
+    **in_frame(int)** First frame of rendered range.
+
+    **out_frame(int)** Last frame of rendered range, exclusive.
+    
+    **out_folder(str)** Path to folder where rendered frame will be saved.
+    
+    **profile_file_path(str)** Path to a file containing a file describing MLT profile used to when rendering the script.
+    
+    **editors_data_json(str)** String representation of JSON object containing editors described in the script and their values. This is optional, not providing this will use default values given in script when rendering.
+    
+    **start_out_from_frame_one(boolean)** Setting this *True* will cause numbering of rendered frame sequence to start from *1*, otherwise it will start from *in_frame*. 
+    
+    Renders a range of frames from provided script.
+    
+    **Returns:** (dict) Dictionary object created during rendering with the following information:
+    
+    * for each process it has *key -> value* pair *process number(str) -> path to first frame redered by process(str)*.
+    * if errors occurred during rendering it has *key -> value* pair *fluxity.FLUXITY_ERROR_MSG -> error message(str)*.
+    * if script created log messages it has *key -> value* pair *fluxity.FLUXITY_LOG_MSG -> log message(str)*.
+    """
+    
     threads = 6 # add some heuristics here.
     if out_frame - in_frame < threads * 2:
         threads = 1
@@ -1012,14 +1056,9 @@ def render_frame_sequence(script, script_file, in_frame, out_frame, out_folder, 
     proc_fctx_dict = manager.dict()
     jobs = []
     for i in range(threads):
-        if i == 0:
-            update_callback = None
-        else:
-            update_callback = None
         
         render_data = ( script, script_file, in_frame, out_frame, out_folder, \
-                        profile_file_path, update_callback, \
-                        editors_data_json, start_out_from_frame_one)
+                        profile_file_path, editors_data_json, start_out_from_frame_one)
         
         proc_info = (i, threads, proc_fctx_dict)
         p = multiprocessing.Process(target=_render_process_launch, args=(render_data, proc_info))
@@ -1033,8 +1072,7 @@ def render_frame_sequence(script, script_file, in_frame, out_frame, out_folder, 
         
 def _render_process_launch(render_data, proc_info):
     script, script_file, in_frame, out_frame, out_folder, \
-    profile_file_path, frame_write_callback, \
-    editors_data_json, start_out_from_frame_one = render_data
+    profile_file_path, editors_data_json, start_out_from_frame_one = render_data
     
     procnum, threads_count, proc_fctx_dict = proc_info
     
@@ -1070,8 +1108,6 @@ def _render_process_launch(render_data, proc_info):
             w, h = fctx.get_dimensions()
             fscript.call_render_frame(frame, fctx, w, h)
             fctx.priv_context.write_out_frame()
-            if frame_write_callback != None:
-                frame_write_callback(frame) # for GUI app opdates.
 
         proc_fctx_dict[str(procnum)] = str(fctx.priv_context.first_rendered_frame_path)
         if len(fctx.log_msg) > 0:
