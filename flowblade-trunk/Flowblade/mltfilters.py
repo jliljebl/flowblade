@@ -487,6 +487,14 @@ def replace_services(services):
             except:
                 print("Dropping a mlt service for " + use_service_name + " failed, maybe not present.")
 
+def get_filter_for_name(filter_name):
+    all_filters = get_all_found_filters()
+    filters_dict = {}
+    for finfo in all_filters:
+        filters_dict[finfo.name] = finfo
+
+    return filters_dict[filter_name]
+            
 def get_compositor_filter(filter_id):
     return compositor_filters[filter_id]
 

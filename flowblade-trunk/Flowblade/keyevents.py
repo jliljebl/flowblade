@@ -46,6 +46,7 @@ import movemodes
 import multitrimmode
 # Apr-2017 - SvdB
 import shortcuts
+import shortcutsquickeffects
 import re
 import render
 import rotomask
@@ -290,6 +291,11 @@ def _handle_tline_key_event(event):
     
     if editorstate.EDIT_MODE() == editorstate.MULTI_TRIM:
         multitrimmode.enter_pressed()
+        return True
+
+    was_handled = shortcutsquickeffects.maybe_do_quick_shortcut_filter_add(event)
+    if was_handled == True:
+        return True
 
     # Key bindings for MOVE MODES and _NO_EDIT modes
     if editorstate.current_is_move_mode() or editorstate.current_is_active_trim_mode() == False:
