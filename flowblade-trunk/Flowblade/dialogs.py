@@ -44,6 +44,7 @@ import panels
 import renderconsumer
 import respaths
 import shortcuts
+import shortcutsquickeffects
 import utils
 import workflow
 
@@ -1647,7 +1648,9 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     roto_vbox.pack_start(_get_kb_row(_("Left Arrow "), _("Previous Frame")), False, False, 0)
     roto_vbox.pack_start(_get_kb_row(_("Right Arrow"), _("Next Frame")), False, False, 0)
     roto = guiutils.get_named_frame(_("RotoMask Editor"), roto_vbox)
-    
+
+    quick_effects_panel = shortcutsquickeffects.get_shortcuts_panel()
+ 
     panel = Gtk.VBox()
     panel.pack_start(tools, False, False, 0)
     panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
@@ -1664,6 +1667,8 @@ def _get_dynamic_kb_shortcuts_panel(xml_file, tool_set):
     panel.pack_start(geom, False, False, 0)
     panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
     panel.pack_start(roto, False, False, 0)
+    panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
+    panel.pack_start(quick_effects_panel, False, False, 0)
     
     return panel
 

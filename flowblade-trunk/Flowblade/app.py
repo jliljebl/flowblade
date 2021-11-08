@@ -99,6 +99,7 @@ import resync
 import rotomask
 import sequence
 import shortcuts
+import shortcutsquickeffects
 import snapping
 import threading
 import titler
@@ -200,7 +201,8 @@ def main(root_path):
     shortcuts.update_custom_shortcuts()
     shortcuts.load_shortcut_files()
     shortcuts.load_shortcuts()
-
+    shortcutsquickeffects.load_shortcuts()
+    
     # The test for len != 4 is to make sure that if we change the number of values below the prefs are reset to the correct list
     # So when we add or remove a value, make sure we also change the len test
     # Only use positive numbers.

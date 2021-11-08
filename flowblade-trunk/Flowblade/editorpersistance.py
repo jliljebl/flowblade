@@ -369,4 +369,5 @@ class EditorPreferences:
         self.positions_tabs = None
         self.midbar_layout_buttons = None
         self.auto_expand_tracks = True
+        self.quick_effects = None
         
