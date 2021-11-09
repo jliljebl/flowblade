@@ -3,7 +3,6 @@
 		{ "folder":"animations_1", "name":"Floating Balls", "category":"Animation"},
 		{ "folder":"animations_2", "name":"Hex Colors", "category":"Animation"},
 		{ "folder":"transitions_1", "name":"Lines Sweep", "category":"Cover Transition"},
-		{ "folder":"text_1", "name":"Text", "category":"Text"},
 		{ "folder":"text_2", "name":"Typewriter", "category":"Text"}
 	 ]
 }
