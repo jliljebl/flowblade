@@ -737,9 +737,9 @@ def load_filters_translations():
     
     
     # Added for 2.10
-    plugin_groups["Animation"] = _("Animations")
-    plugin_groups["Cover Transition"] = _("Cover Transition")
-    plugin_groups["Text"] = _("Text")
+    plugin_groups["Animation Plugins"] = _("Animations Plugins")
+    plugin_groups["Cover Transition Plugins"] = _("Cover Transition Plugins")
+    plugin_groups["Text Plugins"] = _("Text Plugins")
     
     plugin_names["Lines Sweep"] = _("Lines Sweep")
     plugin_names["Hex Colors"] = _("Hex Colors")

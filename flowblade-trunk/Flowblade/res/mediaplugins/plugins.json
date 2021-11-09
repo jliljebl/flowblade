@@ -1,8 +1,8 @@
 {
 "plugins":[ 
-		{ "folder":"animations_1", "name":"Floating Balls", "category":"Animation"},
-		{ "folder":"animations_2", "name":"Hex Colors", "category":"Animation"},
-		{ "folder":"transitions_1", "name":"Lines Sweep", "category":"Cover Transition"},
-		{ "folder":"text_2", "name":"Typewriter", "category":"Text"}
+		{ "folder":"animations_1", "name":"Floating Balls", "category":"Animation Plugins"},
+		{ "folder":"animations_2", "name":"Hex Colors", "category":"Animation Plugins"},
+		{ "folder":"transitions_1", "name":"Lines Sweep", "category":"Cover Transition Plugins"},
+		{ "folder":"text_2", "name":"Typewriter", "category":"Text Plugins"}
 	 ]
 }
