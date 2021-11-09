@@ -33,6 +33,8 @@ filter_groups = {}
 filter_names = {}
 param_names = {}
 combo_options = {}
+plugin_groups = {}
+plugin_names = {}
 
 def init_languages():
     langs = []
@@ -121,6 +123,20 @@ def get_combo_option(c_opt):
         return combo_options[c_opt]
     except KeyError:
         return c_opt
+
+def get_plugin_name(p_name):
+    try:
+        return plugin_names[p_name]
+    except KeyError:
+        return p_name
+
+def get_plugin_group_name(group_name):
+    try:
+        return plugin_groups[group_name]
+    except KeyError:
+        return group_name
+        
+plugin_groups
 
 def load_filters_translations():
 
@@ -699,3 +715,14 @@ def load_filters_translations():
     combo_options["Bicubic Smooth"] = _("Bicubic Smooth")
     combo_options["Bicubic Sharp"] = _("Bicubic Sharp")
     combo_options["Spline"] = _("Spline")
+
+    # Added for 2.10
+    plugin_groups["Animation"] = _("Animations")
+    plugin_groups["Cover Transition"] = _("Cover Transition")
+    plugin_groups["Text"] = _("Text")
+    
+    plugin_names["Lines Sweep"] = _("Lines Sweep")
+    plugin_names["Hex Colors"] = _("Hex Colors")
+    plugin_names["Floating Balls"] = _("Floating Balls")
+    plugin_names["Text"] = _("Text")
+    plugin_names["Typewriter"] = _("Typewriter")

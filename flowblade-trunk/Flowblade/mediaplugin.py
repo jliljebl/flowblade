@@ -38,6 +38,7 @@ import mltprofiles
 import respaths
 import simpleeditors
 import toolsencoding
+import translations
 import userfolders
 
 MONITOR_WIDTH = 400
@@ -139,9 +140,9 @@ def _get_categories_list():
         group_name, group_plugins = group
         plugins_list = []
         for plugin in group_plugins:
-            plugins_list.append((plugin.name,plugin))
+            plugins_list.append((translations.get_plugin_name(plugin.name), plugin))
         
-        categories_list.append((group_name, plugins_list))
+        categories_list.append((translations.get_plugin_group_name(group_name), plugins_list))
     
     return categories_list  
 
@@ -153,7 +154,7 @@ def fill_media_plugin_sub_menu(menu, callback=None):
         sub_menu = Gtk.Menu.new()
         menu_item.set_submenu(sub_menu)
         for plugin in group:
-            plugin_menu_item = Gtk.MenuItem.new_with_label(plugin.name)
+            plugin_menu_item = Gtk.MenuItem.new_with_label(translations.get_plugin_name(plugin.name))
             if callback == None:
                 plugin_menu_item.connect("activate", _add_media_plugin, plugin.folder)
             else:

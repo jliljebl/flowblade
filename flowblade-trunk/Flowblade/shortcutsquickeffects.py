@@ -63,6 +63,8 @@ def maybe_do_quick_shortcut_filter_add(event):
         if key_name in _quick_effects_dict:
             quick_add_filter = _quick_effects_dict[key_name]
             if quick_add_filter != NO_SHORTCUT_SET:
+                if movemodes.selected_track == -1:
+                    return False
                 filter_info = mltfilters.get_filter_for_name(quick_add_filter)
                 range_in = movemodes.selected_range_in
                 range_out = movemodes.selected_range_out
@@ -106,7 +108,7 @@ def _get_row(shotcut_name, shortcut_key):
     edit_box = Gtk.HBox()
     edit_box.pack_start(edit_menu_press.widget, False, False, 0)
 
-    KB_SHORTCUT_ROW_WIDTH = 500
+    KB_SHORTCUT_ROW_WIDTH = 500 # These are duplicated from dialogs.py
     KB_SHORTCUT_ROW_HEIGHT = 22
     
     row = guiutils.get_three_column_box(shotcut_name_label, shortcut_value_label, edit_box, 170, 48)
@@ -164,7 +166,7 @@ def _set_shortcut(w, data):
     editorpersistance.prefs.quick_effects = _quick_effects_dict
     editorpersistance.save()
     
-    shortcut_value_label.set_text( _get_short_cut_value_text(shortcut_key))
+    shortcut_value_label.set_text(_get_short_cut_value_text(shortcut_key))
 
 def _delete_shortcut(w, data):
     shortcut_key, shortcut_value_label = data
@@ -174,4 +176,4 @@ def _delete_shortcut(w, data):
     editorpersistance.prefs.quick_effects = _quick_effects_dict
     editorpersistance.save()
  
-    shortcut_value_label.set_text( _get_short_cut_value_text(shortcut_key))
+    shortcut_value_label.set_text(_get_short_cut_value_text(shortcut_key))
