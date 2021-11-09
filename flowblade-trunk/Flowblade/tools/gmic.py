@@ -546,7 +546,6 @@ def _encode_settings_callback(dialog, response_id):
     if response_id == Gtk.ResponseType.ACCEPT:
         global _render_data
         _render_data = toolsencoding.get_render_data_for_current_selections()
-        print(_render_data)
         _window.update_encode_desc()
     
     dialog.destroy()
@@ -570,10 +569,7 @@ def _shutdown():
 #------------------------------------------------- window
 class GmicWindow(Gtk.Window):
     def __init__(self):
-        GObject.GObject.__init__(self)
-
-        self.connect("delete-event", lambda w, e:_shutdown())
-        self.add_events(Gdk.EventMask.POINTER_MOTION_HINT_MASK)
+        Gtk.Window.__init__(self, Gtk.WindowType.TOPLEVEL)
         
         app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowbladetoolicon.png")
         self.set_icon(app_icon)
@@ -866,7 +862,7 @@ class GmicWindow(Gtk.Window):
         self.show_all()
         self.set_resizable(False)
         self.set_active_state(False)
-
+            
     def init_for_new_clip(self, clip_path, profile_name):
         self.clip_path = clip_path
         self.set_active_state(True)
@@ -981,8 +977,8 @@ class GmicWindow(Gtk.Window):
         self.preview_monitor.set_sensitive(value)
         self.tc_display.widget.set_sensitive(value)
         self.pos_bar.widget.set_sensitive(value)      
-        self.control_buttons.set_sensitive(value)
-        self.control_buttons.widget.set_sensitive(value)
+        #self.control_buttons.set_sensitive(value)
+        #self.control_buttons.widget.set_sensitive(value)
         self.preset_label.set_sensitive(value)
         self.action_select.set_sensitive(value)
         self.action_label.set_sensitive(value)
@@ -1027,51 +1023,63 @@ def _global_key_down_listener(widget, event):
     if event.keyval == Gdk.KEY_Left:
         if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
             prev_pressed(-10)
+            return True
         else:
             prev_pressed()
-
+            return True
     # RIGHT ARROW, next frame
     if event.keyval == Gdk.KEY_Right:
         if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
             next_pressed(10)
+            return True
         else:
             next_pressed()
+            return True
 
     # DOWN ARROW, start
     if event.keyval == Gdk.KEY_Down:
         start_pressed()
+        return True
         
     # UP ARROW, end
     if event.keyval == Gdk.KEY_Up:
         end_pressed()
-    
+        return True
+                
     # I
     if event.keyval == Gdk.KEY_i:
         if (event.get_state() & Gdk.ModifierType.MOD1_MASK):
             to_mark_in_pressed()
+            return True
         else:
             mark_in_pressed()
-
+            return True
+            
     if event.keyval == Gdk.KEY_I:
         if (event.get_state() & Gdk.ModifierType.MOD1_MASK):
             to_mark_in_pressed()
+            return True
         else:
             mark_in_pressed()
-
+            return True
     # O
     if event.keyval == Gdk.KEY_o:
         if (event.get_state() & Gdk.ModifierType.MOD1_MASK):
             to_mark_out_pressed()
+            return True
         else:
             mark_out_pressed()
-
+            return True
+            
     if event.keyval == Gdk.KEY_O:
         if (event.get_state() & Gdk.ModifierType.MOD1_MASK):
             to_mark_out_pressed()
+            return True
         else:
             mark_out_pressed()
+            return True
         
-    return True
+    return False
 
 #------------------------------------------------- render threads
 class GmicPreviewRendererer(threading.Thread):

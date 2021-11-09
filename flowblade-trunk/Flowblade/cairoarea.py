@@ -41,7 +41,7 @@ class CairoDrawableArea2(Gtk.DrawingArea):
         self.add_events(Gdk.EventMask.ENTER_NOTIFY_MASK)
         self.add_events(Gdk.EventMask.LEAVE_NOTIFY_MASK)
         self.add_events(Gdk.EventMask.KEY_PRESS_MASK)
-        self.add_events(Gdk.EventMask.POINTER_MOTION_HINT_MASK)
+        self.add_events(Gdk.EventMask.POINTER_MOTION_MASK)
     
         self.set_size_request(pref_width, pref_height)
         self._use_widget_bg = use_widget_bg
@@ -84,7 +84,7 @@ class CairoDrawableArea2(Gtk.DrawingArea):
 
     # ------------------------------------------------------------ Signal listeners 
     # These pass on events to handler functions that 
-    # are by default the noop functions here, but are monkeypathed 
+    # are by default the noop functions here, but are monkeypatched 
     # at creation sites as needed. 
     def _button_press_event(self, widget, event):
         if self.grab_focus_on_press:
@@ -100,7 +100,7 @@ class CairoDrawableArea2(Gtk.DrawingArea):
 
     def _motion_notify_event(self, widget, event):
         if event.is_hint:
-            winbdow, x, y, state = event.window.get_pointer()
+            window, x, y, state = event.window.get_pointer()
         else:
             x = event.x
             y = event.y
