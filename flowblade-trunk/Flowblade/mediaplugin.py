@@ -88,19 +88,11 @@ def init():
     for plugin_data in plugins_list:
         plugin = MediaPlugin(plugin_data["folder"], plugin_data["name"], plugin_data["category"])
         _plugins.append(plugin)
-
-    # Create categories with translated names and sorted scripts.
-    # Category names have to correspond with category names in fluxity.py.
-    _script_groups_names = {}
-    _script_groups_names["Animation"] = _("Animation")
-    #_script_groups_names["Effect"] = _("Effect") # not used currently
-    _script_groups_names["Cover Transition"] = _("Cover Transition")
-    _script_groups_names["Text"] = _("Text")
     
     load_groups = {}
     for plugin in _plugins:
         try:
-            translated_group_name = _script_groups_names[plugin.category]
+            translated_group_name = translations.get_plugin_group_name(plugin.category)
         except:
             translated_group_name = "Misc"
 

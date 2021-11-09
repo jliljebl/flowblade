@@ -744,5 +744,4 @@ def load_filters_translations():
     plugin_names["Lines Sweep"] = _("Lines Sweep")
     plugin_names["Hex Colors"] = _("Hex Colors")
     plugin_names["Floating Balls"] = _("Floating Balls")
-    plugin_names["Text"] = _("Text")
     plugin_names["Typewriter"] = _("Typewriter")
