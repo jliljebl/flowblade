@@ -166,6 +166,7 @@ class AbstractGlassButtons:
         return NO_HIT
 
     def _draw_buttons(self, cr, w, h):
+        print("self.prelight_index",self.prelight_index)
         # Width of buttons group
         buttons_width = self.button_width * len(self.icons)
 
@@ -371,6 +372,8 @@ class PlayerButtons(AbstractGlassButtons):
 
         focus_groups[DEFAULT_FOCUS_GROUP].append(self.widget)
 
+        self.show_prelight_icons()
+
     def set_normal_sensitive_pattern(self):
         self.set_sensitive(True)
         self.widget.queue_draw()
@@ -387,12 +390,17 @@ class PlayerButtons(AbstractGlassButtons):
         self.widget.queue_draw()
 
     def _motion_notify_event(self, x, y, state):
+        print("mouson")
         """
         Mouse move callback
         """
         button_under = self._get_hit_code(x, y)
         if self.pressed_button != button_under: # pressed button is released
             self.pressed_button = NO_HIT
+
+        if len(self.prelight_icons) > 0:
+            self.prelight_index = button_under
+            
         self.widget.queue_draw()
 
     def _release_event(self, event):
@@ -402,6 +410,13 @@ class PlayerButtons(AbstractGlassButtons):
         self.pressed_button = -1
         self.widget.queue_draw()
 
+    def _leave_notify_event(self, event):
+        self.prelight_index = -1
+        self.widget.queue_draw()
+
+    def _enter_notify_event(self, event):
+        self.prelight_index = -1
+        
     def set_callbacks(self, pressed_callback_funcs):
         self.pressed_callback_funcs = pressed_callback_funcs
 
@@ -422,7 +437,8 @@ class GmicButtons(AbstractGlassButtons):
 
     def __init__(self):
 
-        AbstractGlassButtons.__init__(self, MB_BUTTON_WIDTH[0], MB_BUTTON_HEIGHT[0], MB_BUTTON_Y, GMIC_BUTTONS_WIDTH, MB_BUTTONS_HEIGHT[0])
+        AbstractGlassButtons.__init__(self, MB_BUTTON_WIDTH[0], MB_BUTTON_HEIGHT[0], MB_BUTTON_Y, GMIC_BUTTONS_WIDTH, 32)
+        print(MB_BUTTON_WIDTH[0], MB_BUTTON_HEIGHT[0], MB_BUTTON_Y, GMIC_BUTTONS_WIDTH, MB_BUTTONS_HEIGHT[0])
 
         IMG_PATH = respaths.IMAGE_PATH
         next_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "next_frame_s.png")
@@ -446,6 +462,9 @@ class GmicButtons(AbstractGlassButtons):
 
         focus_groups[DEFAULT_FOCUS_GROUP].append(self.widget)
 
+        print("rgfeswdgfssdgfsdrgfsrfaeswraew")
+        self.show_prelight_icons()
+        print(len(self.prelight_icons))
 
     def set_normal_sensitive_pattern(self):
         self.set_sensitive(True)
@@ -456,19 +475,28 @@ class GmicButtons(AbstractGlassButtons):
         """
         Mouse button callback
         """
+        print("pressss")
         self.pressed_button = self._get_hit_code(event.x, event.y)
         if self.pressed_button >= 0 and self.pressed_button < len(self.icons):
             callback_func = self.pressed_callback_funcs[self.pressed_button] # index is set to match at editorwindow.py where callback func list is created
             callback_func()
+
+            
         self.widget.queue_draw()
 
     def _motion_notify_event(self, x, y, state):
         """
         Mouse move callback
         """
+        print("_motion_notify_event")
         button_under = self._get_hit_code(x, y)
         if self.pressed_button != button_under: # pressed button is released
             self.pressed_button = NO_HIT
+
+        if len(self.prelight_icons) > 0:
+            print(button_under)
+            self.prelight_index = button_under
+            
         self.widget.queue_draw()
 
     def _release_event(self, event):
@@ -478,6 +506,13 @@ class GmicButtons(AbstractGlassButtons):
         self.pressed_button = -1
         self.widget.queue_draw()
 
+    def _leave_notify_event(self, event):
+        self.prelight_index = -1
+        self.widget.queue_draw()
+
+    def _enter_notify_event(self, event):
+        self.prelight_index = -1
+        
     def set_callbacks(self, pressed_callback_funcs):
         self.pressed_callback_funcs = pressed_callback_funcs
 

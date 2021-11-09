@@ -571,8 +571,10 @@ def _shutdown():
 class GmicWindow(Gtk.Window):
     def __init__(self):
         GObject.GObject.__init__(self)
-        self.connect("delete-event", lambda w, e:_shutdown())
 
+        self.connect("delete-event", lambda w, e:_shutdown())
+        self.add_events(Gdk.EventMask.POINTER_MOTION_HINT_MASK)
+        
         app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowbladetoolicon.png")
         self.set_icon(app_icon)
         hamburger_launcher_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger.png")
@@ -593,7 +595,7 @@ class GmicWindow(Gtk.Window):
         load_row.pack_start(guiutils.get_pad_label(6, 2), False, False, 0)
         load_row.pack_start(self.media_info, False, False, 0)
         load_row.pack_start(Gtk.Label(), True, True, 0)
-        load_row.set_margin_bottom(4)
+        load_row.set_margin_bottom(8)
 
         # Clip monitor
         black_box = Gtk.EventBox()
@@ -667,6 +669,7 @@ class GmicWindow(Gtk.Window):
         control_panel.pack_start(self.control_buttons.widget, False, False, 0)
         control_panel.pack_start(guiutils.pad_label(2, 2), False, False, 0)
         control_panel.pack_start(self.preview_button, False, False, 0)
+        control_panel.set_margin_top(4)
 
         preview_panel = Gtk.VBox(False, 2)
         preview_panel.pack_start(monitors_panel, False, False, 0)
@@ -979,6 +982,7 @@ class GmicWindow(Gtk.Window):
         self.tc_display.widget.set_sensitive(value)
         self.pos_bar.widget.set_sensitive(value)      
         self.control_buttons.set_sensitive(value)
+        self.control_buttons.widget.set_sensitive(value)
         self.preset_label.set_sensitive(value)
         self.action_select.set_sensitive(value)
         self.action_label.set_sensitive(value)
@@ -1011,7 +1015,6 @@ class GmicWindow(Gtk.Window):
         self.script_menu.set_sensitive(value)
  
         self.update_encode_sensitive()
-
 
 #------------------------------------------------- global key listener
 def _global_key_down_listener(widget, event):
