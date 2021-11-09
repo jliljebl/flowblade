@@ -4,6 +4,8 @@ import cairo
 MONDRIAN = [(0.18, 0.274, 0.477), (1.0, 1.0, 1.0), (0.968, 0.793, 0.0), (0.051, 0.505, 0.725), 
             (0.913, 0.0, 0.0), (0.0, 0.0, 0.0)]
 
+PASTELS = [(0.38, 0.59, 0.83), (0.82, 0.48, 0.53), (0.48, 0.82, 0.60), (0.82, 0.65, 0.48), 
+            (0.82, 0.82, 0.48), (0.80, 0.48, 0.82)]
 
 # ----------------------- fluxity funcs
 def init_script(fctx):
@@ -53,7 +55,7 @@ def render_frame(frame, fctx, w, h):
         path_pos = float(frame) / float(anim_length)
         pos = start_pos + float(end_pos - start_pos) * path_pos
 
-        color_tuple = MONDRIAN[color_index] # TODO: other color options
+        color_tuple = PASTELS[color_index] # TODO: other color options
         color = cairo.SolidPattern(*color_tuple)
         
         cr.set_source(color)
