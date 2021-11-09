@@ -39,6 +39,7 @@ import gui
 import guiutils
 import positionbar
 import respaths
+import translations
 import utils
 
 # NOTE: These need to correspond exacty with fluxity.FluxityContext.<editor> values because we do not want to import anything into fluxity.py.    
@@ -483,7 +484,7 @@ class AbstractSimpleEditor(Gtk.HBox):
         
     def build_editor(self, label_text, widget):
         widget.set_tooltip_text (self.tooltip)
-        left_box = guiutils.get_left_justified_box([Gtk.Label(label=label_text)])
+        left_box = guiutils.get_left_justified_box([Gtk.Label(label=translations.get_param_name(label_text))])
         left_box.set_size_request(SIMPLE_EDITOR_LEFT_WIDTH, guiutils.TWO_COLUMN_BOX_HEIGHT)
         self.pack_start(left_box, False, True, 0)
         self.pack_start(widget, True, True, 0)
@@ -618,7 +619,7 @@ class OptionsEditor(AbstractSimpleEditor):
         active_index, self.options = value
         self.combo = Gtk.ComboBoxText.new()
         for opt in self.options:
-            self.combo.append_text(opt)
+            self.combo.append_text(translations.get_combo_option(opt))
         self.combo.set_active(active_index)
         
         self.build_editor(label_text, self.combo)

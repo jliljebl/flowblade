@@ -620,8 +620,21 @@ def load_filters_translations():
     param_names["Frames"] = _("Frames")
     param_names["Height"] = _("Height")
     param_names["Shift"] = _("Shift")
+    # From version 2.10 onwards Media Plugins editable parameters names go here too.
+    param_names["Speed"] = _("Speed")
+    param_names["Speed Variation %"] = _("Speed Variation %")
+    param_names["Number of Items"] = _("Number of Items")
+    param_names["Size Variation %"] = _("Size Variation %")
+    param_names["Hue Change"] = _("Hue Change")
+    param_names["Font"] = _("Font")
+    param_names["Text"] = _("Text")
+    param_names["Animation Type"] = _("Animation Type")
+    param_names["Steps Per Frame"] = _("Steps Per Frame")
+    param_names["Line Gap"] = _("Line Gap")
+    param_names["Colors"] = _("Colors")
+    param_names["User Hue"] = _("User Hue")
 
-
+    
     # Combo options
     global combo_options
     combo_options["Shave"] = _("Shave")
@@ -715,7 +728,14 @@ def load_filters_translations():
     combo_options["Bicubic Smooth"] = _("Bicubic Smooth")
     combo_options["Bicubic Sharp"] = _("Bicubic Sharp")
     combo_options["Spline"] = _("Spline")
-
+    # From version 2.10 onwards Media Plugins combo options go here too.
+    combo_options["Mondrian"] = _("Mondrian")
+    combo_options["Pastels"] = _("Pastels")
+    combo_options["User Hue"] = _("User Hue")
+    combo_options["Left To Right"] = _("Left To Right")
+    combo_options["Right To Left"] = _("Right To Left")
+    
+    
     # Added for 2.10
     plugin_groups["Animation"] = _("Animations")
     plugin_groups["Cover Transition"] = _("Cover Transition")

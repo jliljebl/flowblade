@@ -14,7 +14,7 @@ def init_script(fctx):
     fctx.set_author("Janne Liljeblad")
     
     fctx.add_editor("Hue", fctx.EDITOR_COLOR, (0.131, 0.0147, 0.163, 1.0))
-    fctx.add_editor("Hue Change Amount", fctx.EDITOR_FLOAT_RANGE, (0.5, 0.1, 5.0))
+    fctx.add_editor("Hue Change", fctx.EDITOR_FLOAT_RANGE, (0.5, 0.1, 5.0))
     fctx.add_editor("Speed", fctx.EDITOR_FLOAT_RANGE, (0.5, 0.1, 5.0))
     fctx.add_editor("Size", fctx.EDITOR_FLOAT_RANGE, (50.0, 10.0, 300.0))
 
@@ -42,7 +42,7 @@ def init_render(fctx):
     color_positions = []
     deltas = []
     delta_size = 0.03 * fctx.get_editor_value("Speed")
-    hue_change_size = 0.1 * fctx.get_editor_value("Hue Change Amount")
+    hue_change_size = 0.1 * fctx.get_editor_value("Hue Change")
 
     for i in range(0, number_hex):
         color_positions.append(random.uniform(-1.0, 1.0))

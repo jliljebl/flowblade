@@ -12,9 +12,9 @@ def init_script(fctx):
     fctx.add_editor("Hue", fctx.EDITOR_COLOR, (0.8, 0.50, 0.3, 1.0))
     fctx.add_editor("Speed", fctx.EDITOR_FLOAT_RANGE, (1.0, -5.0, 5.0))
     fctx.add_editor("Speed Variation %", fctx.EDITOR_INT_RANGE, (40, 0, 99))
-    fctx.add_editor("Number of Balls", fctx.EDITOR_INT_RANGE, (50, 10, 500))
-    fctx.add_editor("Ball Size", fctx.EDITOR_INT_RANGE, (330, 10, 800))
-    fctx.add_editor("Ball Size Variation %", fctx.EDITOR_INT_RANGE, (0, 0, 80))
+    fctx.add_editor("Number of Items", fctx.EDITOR_INT_RANGE, (50, 10, 500))
+    fctx.add_editor("Size", fctx.EDITOR_INT_RANGE, (330, 10, 800))
+    fctx.add_editor("Size Variation %", fctx.EDITOR_INT_RANGE, (0, 0, 80))
     fctx.add_editor("Opacity", fctx.EDITOR_INT_RANGE, (100, 5, 100))
 
 def init_render(fctx):
@@ -34,12 +34,12 @@ def init_render(fctx):
     fctx.set_data_obj("ball_colors", ball_colors)
 
     ball_data = []
-    number_of_balls = fctx.get_editor_value("Number of Balls")
+    number_of_balls = fctx.get_editor_value("Number of Items")
     speed = fctx.get_editor_value("Speed")
     speed_var_size_precentage = fctx.get_editor_value("Speed Variation %")
     speed_var_max = speed * (speed_var_size_precentage  / 100.0)
-    size = fctx.get_editor_value("Ball Size")
-    size_var_size_precentage = fctx.get_editor_value("Ball Size Variation %")
+    size = fctx.get_editor_value("Size")
+    size_var_size_precentage = fctx.get_editor_value("Size Variation %")
     size_var_max = size * (size_var_size_precentage / 100.0)
     size_max = size + size_var_max
     fctx.set_data_obj("size_max", size_max)
@@ -68,7 +68,7 @@ def render_frame(frame, fctx, w, h):
     cr.rectangle(0, 0, w, h)
     cr.fill()
 
-    number_of_balls = fctx.get_editor_value("Number of Balls")
+    number_of_balls = fctx.get_editor_value("Number of Items")
     size_max = fctx.get_data_obj("size_max")
     path_start_x = - size_max
     path_end_x =  w + size_max

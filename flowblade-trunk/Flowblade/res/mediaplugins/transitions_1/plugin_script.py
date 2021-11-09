@@ -10,7 +10,7 @@ def init_script(fctx):
     fctx.set_name("Lines Sweep")
     fctx.set_author("Janne Liljeblad")
  
-    fctx.add_editor("Line Colors", fctx. EDITOR_OPTIONS, (0,["Mondrian", "Pastels", "User Hue"]))
+    fctx.add_editor("Line Colors", fctx.EDITOR_OPTIONS, (0,["Mondrian", "Pastels", "User Hue"]))
     fctx.add_editor("User Hue", fctx.EDITOR_COLOR, (0.8, 0.50, 0.3, 1.0))
     fctx.add_editor("Speed", fctx.EDITOR_FLOAT_RANGE, (1.0, -5.0, 5.0))
     fctx.add_editor("Direction", fctx. EDITOR_OPTIONS, (0,["Left To Right", "Right To Left"]))
@@ -39,10 +39,6 @@ def render_frame(frame, fctx, w, h):
     user_hue = fctx.get_editor_value("User Hue")
     speed = fctx.get_editor_value("Speed")
     direction = fctx.get_editor_value("Direction")
- 
-    #cr.set_source_rgb(0.0, 1.0, 0.0)
-    #cr.rectangle(0, 0, w, h)
-    #cr.fill()
         
     anim_length = 31 # make user settable
     for i in range(0, len(lines_data)):
@@ -57,7 +53,7 @@ def render_frame(frame, fctx, w, h):
         path_pos = float(frame) / float(anim_length)
         pos = start_pos + float(end_pos - start_pos) * path_pos
 
-        color_tuple = MONDRIAN[color_index]
+        color_tuple = MONDRIAN[color_index] # TODO: other color options
         color = cairo.SolidPattern(*color_tuple)
         
         cr.set_source(color)
