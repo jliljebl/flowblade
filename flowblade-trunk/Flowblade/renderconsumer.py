@@ -538,24 +538,30 @@ class FileRenderPlayer(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        # Uncomment in to get debug printing.
-        #so = se = open(userfolders.get_cache_dir() + "log_renderplayer", 'w', buffering=1)
+        # Uncomment to get debug printing.
+        #import sys
+        #so = se = open("/home/janne/log_renderplayer", 'w', buffering=1)
         #sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', buffering=1)
         #os.dup2(so.fileno(), sys.stdout.fileno())
+        
+        self.consumer.set("plays", 1) # maybe not strictly necessery but default value here seems to  be 'None' which is wrong.
         
         self.running = True
         self.has_started_running = True
         self.connect_and_start()
 
         while self.running: # set false at shutdown() for abort
+
             if self.producer.frame() >= self.stop_frame:
                 # This method of stopping makes sure that whole producer is rendered and written to disk
                 # Used when producer out frame is last frame.
                 if self.wait_for_producer_end_stop:
+
                     while self.producer.get_speed() > 0:
                         time.sleep(0.2)
                     while not self.consumer.is_stopped():
                         time.sleep(0.2)
+                    
                 # This method of stopping stops producer
                 # and waits for consumer to reach that frame.
                 # Used when producer out frame is NOT last frame.

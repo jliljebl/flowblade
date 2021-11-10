@@ -1147,7 +1147,6 @@ def create_unrendered_clip(length, image_file, data, callback, window_text):
 
 
 # Creates a set length video clip from image to act as container clip unrendered media.
-# NOTE: Currently harcoded to to work on just Blender container clips, expand usage with parameter as needed.
 class UnrenderedCreationThread(threading.Thread):
     
     def __init__(self, length, image_file, data, callback, window_text):

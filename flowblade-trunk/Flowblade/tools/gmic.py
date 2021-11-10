@@ -1234,10 +1234,16 @@ class GmicEffectRendererer(threading.Thread):
             resource_name_str = utils.get_img_seq_resource_name(frame_file)
             resource_path = out_folder + "/" + resource_name_str
             producer = mlt.Producer(profile, str(resource_path))
-
             clip_frames = os.listdir(get_render_frames_dir())
+            
+            # Create tractor and tracks
+            tractor = mlt.Tractor()
+            multitrack = tractor.multitrack()
+            track0 = mlt.Playlist()
+            multitrack.connect(track0, 0)
+            track0.insert(producer, 0, 0, len(clip_frames) - 1)
 
-            self.render_player = renderconsumer.FileRenderPlayer("", producer, consumer, 0, len(clip_frames) - 1)
+            self.render_player = renderconsumer.FileRenderPlayer("", tractor, consumer, 0, len(clip_frames) - 1)
             self.render_player.start()
 
             while self.render_player.stopped == False:
