@@ -520,6 +520,17 @@ def _parse_line(line_start, line_end, buf):
 
     return ((k,v), None)
 
+# Convenience function needed beacause FileRenderPlayer no longer stops on last
+# frame with 'wait_for_producer_end_stop' set True and naked producer as producer.
+# With tractor we get full length rendered and player stops correctly.
+def get_producer_as_tractor(producer, last_frame):
+    tractor = mlt.Tractor()
+    multitrack = tractor.multitrack()
+    track0 = mlt.Playlist()
+    multitrack.connect(track0, 0)
+    track0.insert(producer, 0, 0, last_frame)
+    return tractor
+            
 
 class FileRenderPlayer(threading.Thread):
     def __init__(self, file_name, producer, consumer, start_frame, stop_frame):

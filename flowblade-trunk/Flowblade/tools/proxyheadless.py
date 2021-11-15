@@ -116,8 +116,10 @@ class ProxyClipRenderThread(threading.Thread):
             start_frame = 0
             end_frame = file_producer.get_length() - 1
             
-            self.render_player = renderconsumer.FileRenderPlayer(None, file_producer, consumer, 0, end_frame)
-            self.render_player.wait_for_producer_end_stop = False
+            tractor = renderconsumer.get_producer_as_tractor(file_producer, end_frame)
+            
+            self.render_player = renderconsumer.FileRenderPlayer(None, tractor, consumer, 0, end_frame)
+            self.render_player.wait_for_producer_end_stop = True
             self.render_player.start()
 
             while self.render_player.stopped == False:
