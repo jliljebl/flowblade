@@ -263,8 +263,10 @@ class AbstractEditCanvas:
         self.keyframes = None # Set using function AbstractScreenEditor.set_keyframes(). Keyframes are in form [frame, shape, opacity]
         self.keyframe_parser = None # Function used to parse keyframes to tuples is different for different expressions
                                     # Parent editor sets this.
-            
-        self.current_mouse_hit = None
+
+        # After switching to use POINTER_MOTION_MASK in cairoarea.py we get all mouse pointer motion events 
+        # when pointer is over widget. We need discard all unless mouse move initiated with mouse press.
+        self.current_mouse_hit = NO_HIT
         self.start_x = None
         self.start_Y = None
 
@@ -482,11 +484,10 @@ class AbstractEditCanvas:
                 
         self._shape_release_event(delta_x, delta_y, (event.get_state() & Gdk.ModifierType.CONTROL_MASK))
 
-        # After switching to use POINTER_MOTION_MASK in cairoarea.py after first press we get pointer events send even if no press event precedes
-        # mouse movement and it is required to discard them all.
-        # Widget having focus now gets you all the motion events.
+        # After switching to use POINTER_MOTION_MASK in cairoarea.py we get all mouse pointer motion events 
+        # when pointer is over widget. We need discard all unless mouse move initiated with mouse press.
         self.current_mouse_hit = NO_HIT
-        
+
         self.parent_editor.geometry_edit_finished()
 
     def _shape_release_event(self, delta_x, delta_y, CTRL_DOWN):
