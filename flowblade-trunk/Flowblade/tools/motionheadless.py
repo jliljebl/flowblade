@@ -91,11 +91,7 @@ class MotionClipHeadlessRunnerThread(threading.Thread):
         motion_producer = mlt.Producer(profile, None, str("timewarp:" + str(self.speed) + ":" + str(self.source_path)))
 
         # Create tractor and track to get right length
-        tractor = mlt.Tractor()
-        multitrack = tractor.multitrack()
-        track0 = mlt.Playlist()
-        multitrack.connect(track0, 0)
-        track0.insert(motion_producer, 0, 0, motion_producer.get_length() - 1)
+        tractor = renderconsumer.get_producer_as_tractor(motion_producer, motion_producer.get_length() - 1)
 
         consumer = renderconsumer.get_render_consumer_for_encoding_and_quality(self.write_file, profile, self.encoding_option_index, self.quality_option_index)
         
