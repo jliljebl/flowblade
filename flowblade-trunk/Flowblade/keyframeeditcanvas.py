@@ -481,7 +481,12 @@ class AbstractEditCanvas:
                 delta_y = 0
                 
         self._shape_release_event(delta_x, delta_y, (event.get_state() & Gdk.ModifierType.CONTROL_MASK))
-            
+
+        # After switching to use POINTER_MOTION_MASK in cairoarea.py after first press we get pointer events send even if no press event precedes
+        # mouse movement and it is required to discard them all.
+        # Widget having focus now gets you all the motion events.
+        self.current_mouse_hit = NO_HIT
+        
         self.parent_editor.geometry_edit_finished()
 
     def _shape_release_event(self, delta_x, delta_y, CTRL_DOWN):
