@@ -1162,12 +1162,8 @@ class UnrenderedCreationThread(threading.Thread):
         # Image produceer
         img_producer = current_sequence().create_file_producer_clip(str(self.image_file)) # , new_clip_name=None, novalidate=False, ttl=None):
 
-        # Create tractor and track to get right length
-        tractor = mlt.Tractor()
-        multitrack = tractor.multitrack()
-        track0 = mlt.Playlist()
-        multitrack.connect(track0, 0)
-        track0.insert(img_producer, 0, 0, self.length)
+        # Create tractor to get right length.
+        tractor = renderconsumer.get_producer_as_tractor(img_producer, self.length)
     
         # Consumer
         write_file = userfolders.get_cache_dir() + "/unrendered_clip.mp4"

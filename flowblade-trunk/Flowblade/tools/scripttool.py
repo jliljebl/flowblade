@@ -1347,7 +1347,8 @@ class FluxityPluginRenderer(threading.Thread):
         so = se = open(userfolders.get_cache_dir() + "log_scripttool_render", 'w', buffering=1)
         sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', buffering=1)
         os.dup2(so.fileno(), sys.stdout.fileno())
-    
+        os.dup2(se.fileno(), sys.stderr.fileno())
+        
         self.render_player = None        
         self.abort = False
 
@@ -1391,6 +1392,11 @@ class FluxityPluginRenderer(threading.Thread):
         script_text = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), include_hidden_chars=True)
         profile_file_path = mltprofiles.get_profile_file_path(_current_profile_name)
 
+        # Delete old frames.
+        for frame_file in os.listdir(out_folder):
+            file_path = os.path.join(out_folder, frame_file)
+            os.remove(file_path)
+            
         self.frame_render_in_progress = True
         self.render_start_time = datetime.datetime.now()
         Gdk.threads_add_timeout(GLib.PRIORITY_HIGH_IDLE, 150, _output_render_update, self)
@@ -1425,15 +1431,17 @@ class FluxityPluginRenderer(threading.Thread):
             consumer = renderconsumer.get_mlt_render_consumer(file_path, profile, args_vals_list)
 
             # Render producer
-            frame_file = fctx.priv_context.first_rendered_frame_path
+            frame_file = proc_fctx_dict["0"]
             resource_name_str = utils.get_img_seq_resource_name(frame_file)
             range_resourse_mlt_path = out_folder + resource_name_str
             producer = mlt.Producer(profile, str(range_resourse_mlt_path))
 
-            self.render_player = renderconsumer.FileRenderPlayer("", producer, consumer, in_frame, out_frame - 1)
-            self.render_player.wait_for_producer_end_stop = False
-            self.render_player.consumer_pos_stop_add = 1
-            self.do_consumer_position_wait = False
+            clip_frames = os.listdir(out_folder)
+            
+            tractor = renderconsumer.get_producer_as_tractor(producer, len(clip_frames) - 1)
+            
+            self.render_player = renderconsumer.FileRenderPlayer("", tractor, consumer, 0, len(clip_frames) - 1)
+            self.render_player.wait_for_producer_end_stop = True
             self.render_player.start()
 
             while self.render_player.stopped == False:
@@ -1443,7 +1451,7 @@ class FluxityPluginRenderer(threading.Thread):
                     _window.render_progress_bar.set_fraction(0.0)
                     Gdk.threads_leave()
                     return
-                
+                  
                 fraction = self.render_player.get_render_fraction()
                 update_info = _("Rendering video, ") + str(int(fraction * 100)) + _("% done")
                     

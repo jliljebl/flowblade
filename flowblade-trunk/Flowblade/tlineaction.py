@@ -1672,7 +1672,6 @@ class ReRenderderAllWindow:
         self.dialog.connect('response', self._cancel_pressed)
         self.dialog.show()
 
-
     def start_render(self):
         self.runner_thread = ReRenderRunnerThread(self)
         self.runner_thread.start()
@@ -1731,7 +1730,6 @@ class ReRenderderAllWindow:
         # Launch render
         self.renderer = renderconsumer.FileRenderPlayer(write_file, producer_tractor, consumer, start_frame, end_frame)
         self.renderer.start()
-
 
     def _render_transition(self, clip, track, consumer, write_file):
         from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_selection_index, \

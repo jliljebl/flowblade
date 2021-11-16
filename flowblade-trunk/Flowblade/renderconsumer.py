@@ -74,7 +74,7 @@ PRESET_GROUP_ALPHA = "Alpha"
 # ffmpeg arg values somtimes need equals signs in them.
 EQUALS_SIGN_ENCODING = "@#@#"
 
-# GPU encoding availability
+# GPU encoding availability.
 H_264_NVENC_AVAILABLE = False
 H_264_NVENC_TEST = ["ffmpeg", "-hide_banner", "-f", "lavfi", "-i", "color=s=640x360", 
                     "-frames", "1", "-an", "-load_plugin", "hevc_hw", "-c:v", 
@@ -88,10 +88,10 @@ H_264_VAAPI_TEST = ["ffmpeg", "-hide_banner", "-f", "lavfi", "-i", "color=s=640x
                     "-frames", "1", "-an", "-init_hw_device", "vaapi=vaapi0:,connection_type=x11", 
                     "-filter_hw_device", "vaapi0", "-vf", "format=nv12,hwupload", "-c:v", "h264_vaapi", "-f", "rawvideo", "pipe:"]
 
-# Default encoding name
+# Default encoding name.
 DEFAULT_ENCODING_NAME = "H.264 / .mp4" 
 
-# Replace strings and attribute values
+# Replace strings and attribute values.
 BITRATE_RPL = "%BITRATE%"
 VARIABLE_VAL = "%VARIABLE%"
 SCREEN_SIZE_RPL = "%SCREENSIZE%"
@@ -106,7 +106,7 @@ quality_option_groups_default_index = {}
 non_user_encodings = []
 proxy_encodings = None
 
-# This is used to turn performance settings off for proxy rendering
+# This is used to turn performance settings off for proxy rendering.
 performance_settings_enabled = True
 
 # replace empty strings with None values
@@ -520,7 +520,7 @@ def _parse_line(line_start, line_end, buf):
 
     return ((k,v), None)
 
-# Convenience function needed beacause FileRenderPlayer no longer stops on last
+# Convenience function needed because FileRenderPlayer no longer stops on last
 # frame with 'wait_for_producer_end_stop' set True and naked producer as producer.
 # With tractor we get full length rendered and player stops correctly.
 def get_producer_as_tractor(producer, last_frame):

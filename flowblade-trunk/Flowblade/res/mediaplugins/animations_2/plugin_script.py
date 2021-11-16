@@ -69,7 +69,7 @@ def render_frame(frame, fctx, w, h):
 
     x0 = -size / 2.0
     y0 = -size / 2.0
-    hue_change_anim_range = 0.1 * fctx.get_editor_value("Hue Change Amount")
+    hue_change_anim_range = 0.1 * fctx.get_editor_value("Hue Change")
     
     cr.set_source(bg_color)
     cr.rectangle(0, 0, w, h)
