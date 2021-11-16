@@ -427,7 +427,7 @@ def render_screen_shot(frame, render_path, vcodec):
     
     renderer = renderconsumer.FileRenderPlayer(None, producer, consumer, frame, frame + 1)
     renderer.wait_for_producer_end_stop = False
-    renderer.consumer_pos_stop_add = 2 # Hack, see FileRenderPlayer
+    renderer.consumer_pos_stop_add = 2
     renderer.start()
 
     while renderer.has_started_running == False:

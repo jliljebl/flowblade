@@ -228,9 +228,10 @@ class FluxityHeadlessRunnerThread(threading.Thread):
             producer = mlt.Producer(profile, str(resource_path))
 
             frames_length = len(os.listdir(rendered_frames_folder))
-
-            self.render_player = renderconsumer.FileRenderPlayer("", producer, consumer, 0, frames_length - 1)
-            self.render_player.wait_for_producer_end_stop = False
+            tractor = renderconsumer.get_producer_as_tractor(producer, frames_length - 1)
+            
+            self.render_player = renderconsumer.FileRenderPlayer("", tractor, consumer, 0, frames_length - 1)
+            self.render_player.wait_for_producer_end_stop = True
             self.render_player.start()
 
             while self.render_player.stopped == False:
