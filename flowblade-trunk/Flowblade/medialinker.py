@@ -26,10 +26,8 @@ import os
 import subprocess
 import sys
 import threading
-# Default file for missing files to relink
-from PIL import Image,  ImageFont, ImageDraw
+from PIL import Image, ImageFont, ImageDraw
 import time
-# End of Default file for missing files to relink
 
 import gi
 gi.require_version('Gtk', '3.0')
@@ -169,11 +167,9 @@ class MediaLinkerWindow(Gtk.Window):
         dialog_buttons_box.pack_start(cancel_button, True, True, 0)
         dialog_buttons_box.pack_start(self.save_button, False, False, 0)
         
-        # Default file for missing files to relink
         self.msg_label = Gtk.Label("")
         dialog_buttons_row = Gtk.HBox(False, 2)
         dialog_buttons_row.pack_start(self.msg_label, True, True, 0)
-        # End of Default file for missing files to relink
         dialog_buttons_row.pack_start(dialog_buttons_box, False, False, 0)
 
         pane = Gtk.VBox(False, 2)

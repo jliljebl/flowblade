@@ -962,12 +962,13 @@ def _set_draw_params():
         positionbar.BAR_WIDTH = 100
 
     if editorpersistance.prefs.double_track_hights == True:
+        appconsts.TRACK_HEIGHT_HIGH = 150
         appconsts.TRACK_HEIGHT_NORMAL = 100 # track height in canvas and column
         appconsts.TRACK_HEIGHT_SMALL = 50 # track height in canvas and column
-        appconsts.TRACK_HEIGHT_SMALLEST = 50 # maybe remove as it is no longer meaningful
         appconsts.TLINE_HEIGHT = 520
         sequence.TRACK_HEIGHT_NORMAL = appconsts.TRACK_HEIGHT_NORMAL # track height in canvas and column
         sequence.TRACK_HEIGHT_SMALL = appconsts.TRACK_HEIGHT_SMALL # track height in canvas and column
+        sequence.TRACK_HEIGHT_HIGH = appconsts.TRACK_HEIGHT_HIGH
         tlinewidgets.set_tracks_double_height_consts()
 
 def _too_small_screen_exit():

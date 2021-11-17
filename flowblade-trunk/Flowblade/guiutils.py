@@ -208,15 +208,20 @@ def get_cairo_image(img_name, suffix = ".png", force = None):
         # End of Colorized icons
     return img
 
-def get_scaled_cairo_image(img_name):
-    icon = cairo.ImageSurface.create_from_png(img_name)
-    if editorpersistance.prefs.double_track_hights  == False:
+def get_double_scaled_cairo_image(icon_name):
+    img_path = respaths.IMAGE_PATH + icon_name
+    
+    icon = cairo.ImageSurface.create_from_png(img_path)
+    if editorpersistance.prefs.double_track_hights == False:
         return icon
+    
+    surface_pattern = cairo.SurfacePattern(icon)
+    surface_pattern.set_filter(cairo.Filter.NEAREST)
     
     scaled_icon = cairo.ImageSurface(cairo.FORMAT_ARGB32, icon.get_width() * 2, icon.get_height() * 2)
     cr = cairo.Context(scaled_icon)
     cr.scale(2.0, 2.0)
-    cr.set_source_surface(icon, 0, 0)
+    cr.set_source(surface_pattern)
     cr.paint()
 
     return scaled_icon

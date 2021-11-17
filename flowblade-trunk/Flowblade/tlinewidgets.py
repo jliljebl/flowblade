@@ -101,12 +101,6 @@ ID_PAD_X = 48 # track id text pos
 ID_PAD_Y_HIGH = 30 # track id text pos for high track
 ID_PAD_Y = 16 # track id text pos
 ID_PAD_Y_SMALL = 4 # track id text pos for small track
-VIDEO_TRACK_V_ICON_POS = (5, 16)
-VIDEO_TRACK_A_ICON_POS = (5, 25)
-VIDEO_TRACK_V_ICON_POS_SMALL = (5, 3)
-VIDEO_TRACK_A_ICON_POS_SMALL = (5, 12)
-AUDIO_TRACK_ICON_POS = (5, 18)
-AUDIO_TRACK_ICON_POS_SMALL = (5, 6)
 MUTE_ICON_POS = (5, 4)
 MUTE_ICON_POS_NORMAL = (5, 14)
 MUTE_ICON_POS_HIGH = (5, 30)
@@ -301,7 +295,7 @@ pos = 0 # Current left most frame in timeline display
 # ------------------------------------------------------------------ MODULE POSITION STATE
 
 
-# debug purposes
+# For debug purposes.
 draw_blank_borders = True
 
 # A context defining action taken when mouse press happens based on edit mode and mouse position.
@@ -390,12 +384,12 @@ def load_icons_and_set_colors():
             TRACK_GRAD_ORANGE_STOP1 = (1,  0.20, 0.22, 0.28, 1) # V1
             TRACK_GRAD_ORANGE_STOP3 = (1,  0.20, 0.22, 0.28, 1) # V1
             TRACK_NAME_COLOR = (0.68, 0.68, 0.68)
-            TRACK_ALL_ON_V_ICON = _load_pixbuf("track_all_on_V_fb.png")
-            TRACK_ALL_ON_A_ICON = _load_pixbuf("track_all_on_A_fb.png")
-            MUTE_AUDIO_ICON = _load_pixbuf("track_audio_mute_fb.png")
-            MUTE_VIDEO_ICON = _load_pixbuf("track_video_mute_fb.png")
-            MUTE_ALL_ICON = _load_pixbuf("track_all_mute_fb.png")
-            MUTE_AUDIO_A_ICON = _load_pixbuf("track_audio_mute_A_fb.png")
+            TRACK_ALL_ON_V_ICON = _load_pixbuf("track_all_on_V_fb.png", True)
+            TRACK_ALL_ON_A_ICON = _load_pixbuf("track_all_on_A_fb.png", True)
+            MUTE_AUDIO_ICON = _load_pixbuf("track_audio_mute_fb.png", True)
+            MUTE_VIDEO_ICON = _load_pixbuf("track_video_mute_fb.png", True)
+            MUTE_ALL_ICON = _load_pixbuf("track_all_mute_fb.png", True)
+            MUTE_AUDIO_A_ICON = _load_pixbuf("track_audio_mute_A_fb.png", True)
             INSERT_ARROW_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insert_arrow_fb.png")
             BLANK_CLIP_COLOR_GRAD = (1, 0.12, 0.14, 0.2, 1)
             BLANK_CLIP_COLOR_GRAD_L = (0, 0.12, 0.14, 0.2, 1)
@@ -432,24 +426,21 @@ def load_icons_and_set_colors():
         TRACK_GRAD_STOP3 = (0, 0.93, 0.93, 0.93, 1) #0.58, 0.58, 0.58, 1) 
 
 def set_tracks_double_height_consts():
-    global ID_PAD_Y, ID_PAD_Y_SMALL, VIDEO_TRACK_V_ICON_POS, VIDEO_TRACK_A_ICON_POS, VIDEO_TRACK_V_ICON_POS_SMALL, VIDEO_TRACK_A_ICON_POS_SMALL, \
-    AUDIO_TRACK_ICON_POS, AUDIO_TRACK_ICON_POS_SMALL, MUTE_ICON_POS, MUTE_ICON_POS_NORMAL, LOCK_POS, INSRT_ICON_POS, INSRT_ICON_POS_SMALL, \
+    global ID_PAD_Y_HIGH, ID_PAD_Y, ID_PAD_Y_SMALL, MUTE_ICON_POS, MUTE_ICON_POS_NORMAL, \
+    MUTE_ICON_POS_HIGH, LOCK_POS, INSRT_ICON_POS, INSRT_ICON_POS_SMALL, INSRT_ICON_POS_HIGH, \
     WAVEFORM_PAD_LARGE, WAVEFORM_PAD_SMALL, HEIGHT
     
     HEIGHT = appconsts.TLINE_HEIGHT
+    ID_PAD_Y_HIGH = 66
     ID_PAD_Y = 41
     ID_PAD_Y_SMALL = 16
-    VIDEO_TRACK_V_ICON_POS = (5, 41)
-    VIDEO_TRACK_A_ICON_POS = (5, 50)
-    VIDEO_TRACK_V_ICON_POS_SMALL = (5, 16)
-    VIDEO_TRACK_A_ICON_POS_SMALL = (5, 25) 
-    AUDIO_TRACK_ICON_POS = (5, 43)
-    AUDIO_TRACK_ICON_POS_SMALL = (5, 18)
-    MUTE_ICON_POS = (5, 14)
-    MUTE_ICON_POS_NORMAL = (5, 39)
+    MUTE_ICON_POS = (5, 7)
+    MUTE_ICON_POS_NORMAL = (5, 31)
+    MUTE_ICON_POS_HIGH = (5, 55)
     LOCK_POS = (25, 2)
-    INSRT_ICON_POS = (81, 43)
-    INSRT_ICON_POS_SMALL =  (81, 18)
+    INSRT_ICON_POS_HIGH = (108, 66) 
+    INSRT_ICON_POS = (108, 43)
+    INSRT_ICON_POS_SMALL =  (108, 18)
     WAVEFORM_PAD_LARGE = 77
     WAVEFORM_PAD_SMALL = 33
 
@@ -496,8 +487,11 @@ def match_frame_close_hit(x, y):
     
     return False
 
-def _load_pixbuf(icon_file):
-    return cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + icon_file)
+def _load_pixbuf(icon_name, double_for_double_track_heights=False):
+    if double_for_double_track_heights == True:
+        return guiutils.get_double_scaled_cairo_image(icon_name)
+    else:
+        return cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + icon_name)
 
 def set_ref_line_y(allocation):
     """
