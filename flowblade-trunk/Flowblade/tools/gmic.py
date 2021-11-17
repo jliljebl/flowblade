@@ -573,8 +573,8 @@ class GmicWindow(Gtk.Window):
         
         app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowbladetoolicon.png")
         self.set_icon(app_icon)
-        hamburger_launcher_surface = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "hamburger.png")
-        self.hamburger_launcher = guicomponents.PressLaunch(self.hamburger_launch_pressed, hamburger_launcher_surface)
+        hamburger_launcher_surface = guiutils.get_double_scaled_cairo_image("hamburger.png")
+        self.hamburger_launcher = guicomponents.PressLaunch(self.hamburger_launch_pressed, hamburger_launcher_surface, 44, 44)
         self.hamburger_launcher.connect_launched_menu(_hamburger_menu)
         
         # Load media row
