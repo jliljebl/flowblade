@@ -643,7 +643,14 @@ class GmicWindow(Gtk.Window):
         pos_bar_frame.set_margin_bottom(9)
         pos_bar_frame.set_margin_left(6)
         pos_bar_frame.set_margin_right(2)
-        
+    
+        if editorpersistance.prefs.double_track_hights == True:
+            pos_bar_frame_temp = Gtk.VBox(False, 0)
+            pos_bar_frame_temp.pack_start(Gtk.Label(), True, True, 0)
+            pos_bar_frame_temp.pack_start(pos_bar_frame, False, False, 0)
+            pos_bar_frame_temp.pack_start(Gtk.Label(), True, True, 0)
+            pos_bar_frame = pos_bar_frame_temp
+            
         self.control_buttons = glassbuttons.GmicButtons()
         pressed_callback_funcs = [prev_pressed,
                                   next_pressed,
