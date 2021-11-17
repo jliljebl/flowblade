@@ -992,7 +992,6 @@ class ScriptToolWindow(Gtk.Window):
         # Set pane and show window
         self.add(align)
         self.tool_name = _("Flowblade Media Plugin Editor")
-        #self.not_saved = _("Not Saved")
         self.set_title(self.tool_name)
         self.set_position(Gtk.WindowPosition.CENTER)
         self.show_all()

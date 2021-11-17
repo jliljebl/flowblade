@@ -448,13 +448,13 @@ class GmicButtons(AbstractGlassButtons):
         AbstractGlassButtons.__init__(self, MB_BUTTON_WIDTH[size_ind], MB_BUTTON_HEIGHT[size_ind], MB_BUTTON_Y, MB_BUTTONS_WIDTH[size_ind], MB_BUTTONS_HEIGHT[size_ind] - 2)
 
         IMG_PATH = respaths.IMAGE_PATH
-        next_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "next_frame_s.png")
-        prev_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "prev_frame_s.png")
-        mark_in_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "mark_in_s.png")
-        mark_out_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "mark_out_s.png")
-        marks_clear_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "marks_clear_s.png")
-        to_mark_in_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "to_mark_in_s.png")
-        to_mark_out_icon = cairo.ImageSurface.create_from_png(IMG_PATH + "to_mark_out_s.png")
+        next_icon = guiutils.get_cairo_image("next_frame_s")
+        prev_icon = guiutils.get_cairo_image("prev_frame_s")
+        mark_in_icon = guiutils.get_cairo_image("mark_in_s")
+        mark_out_icon = guiutils.get_cairo_image("mark_out_s")
+        marks_clear_icon = guiutils.get_cairo_image("marks_clear_s")
+        to_mark_in_icon = guiutils.get_cairo_image("to_mark_in_s")
+        to_mark_out_icon = guiutils.get_cairo_image("to_mark_out_s")
 
         self.icons = [prev_icon, next_icon, mark_in_icon, mark_out_icon,
                       marks_clear_icon, to_mark_in_icon, to_mark_out_icon]
