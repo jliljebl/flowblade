@@ -2442,6 +2442,9 @@ class TimeLineColumn:
         self.switch_testers.append(tester)
 
         # Center area tester
+        # NOTE: There was a left column of active areas similar to active switch
+        # so this is still called 'center' even whe it is the left side of two active 
+        # areas.
         tester = ValueTester(COLUMN_LEFT_PAD, COLUMN_WIDTH - ACTIVE_SWITCH_WIDTH, 
                              self.center_listener)
         self.switch_testers.append(tester)

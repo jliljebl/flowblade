@@ -268,6 +268,10 @@ def track_center_pressed(data):
             return
         y_off = press_y - tlinewidgets._get_track_y(track.id)
         ICON_WIDTH = 14
+        ICON_HEIGHT = 10
+        if editorpersistance.prefs.double_track_hights == True:
+            ICON_WIDTH = 28
+            ICON_HEIGHT = 20
         X_CORR_OFF = 4 # icon edge not on image left edge
         if press_x > tlinewidgets.COLUMN_LEFT_PAD + X_CORR_OFF and press_x < tlinewidgets.COLUMN_LEFT_PAD + ICON_WIDTH + X_CORR_OFF:
             # Mute icon x area hit
@@ -276,7 +280,7 @@ def track_center_pressed(data):
                 ix, iy = tlinewidgets.MUTE_ICON_POS_HIGH
             elif track.height == appconsts.TRACK_HEIGHT_NORMAL: 
                 ix, iy = tlinewidgets.MUTE_ICON_POS_NORMAL
-            ICON_HEIGHT = 10
+
             if track.id >= current_sequence().first_video_index:
                 # Video tracks
                 # Test mute switches
