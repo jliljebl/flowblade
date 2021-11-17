@@ -16,8 +16,14 @@ def init_script(fctx):
     fctx.add_editor("Size", fctx.EDITOR_INT_RANGE, (330, 10, 800))
     fctx.add_editor("Size Variation %", fctx.EDITOR_INT_RANGE, (0, 0, 80))
     fctx.add_editor("Opacity", fctx.EDITOR_INT_RANGE, (100, 5, 100))
-
+    fctx.add_editor("Random Seed", fctx.EDITOR_INT, 42)
+    
 def init_render(fctx):
+    # The script is possibly rendered using multiple prosesses and we need to have the
+    # same random numbers in all processes. If we don't set seed we'll get completely different
+    # ball positions color speeds in different rendering processes.
+    random.seed(fctx.get_editor_value("Random Seed"))
+
     hue = fctx.get_editor_value("Hue")
     hr, hg, hb, alpha = hue
     fctx.set_data_obj("hue_tuple", hue)

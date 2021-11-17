@@ -562,7 +562,7 @@ class FluxityContext:
           
           * EDITOR_COLOR(4-tuple with float values in range 0-1, (R,G,B,A)), 
           
-          * EDITOR_FILE_PATH(str), 
+          * EDITOR_FILE_PATH(str),
           
           * EDITOR_OPTIONS(selection index int),
           
