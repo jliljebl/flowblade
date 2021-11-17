@@ -170,7 +170,7 @@ class MediaLinkerWindow(Gtk.Window):
         dialog_buttons_box.pack_start(self.save_button, False, False, 0)
         
         # Default file for missing files to relink
-        self.msg_label = Gtk.Label("Coucou")
+        self.msg_label = Gtk.Label("")
         dialog_buttons_row = Gtk.HBox(False, 2)
         dialog_buttons_row.pack_start(self.msg_label, True, True, 0)
         # End of Default file for missing files to relink
