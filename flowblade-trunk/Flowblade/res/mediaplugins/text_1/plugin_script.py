@@ -2,6 +2,8 @@
 import cairo
 from gi.repository import Pango
 
+import fluxity
+
 
 ANIMATION_BY_LETTER = 0
 ANIMATION_BY_WORD = 1
@@ -11,13 +13,13 @@ ANIMATION_BY_LINE = 2
 def init_script(fctx):
     fctx.set_name("Text")
     fctx.set_author("Janne Liljeblad")
-    fctx.add_editor("Pos X", fctx.EDITOR_INT, 100)
-    fctx.add_editor("Pos Y", fctx.EDITOR_INT, 100)
-    fctx.add_editor("Animation Type", fctx. EDITOR_OPTIONS, (0,["From Left Clipped", "From Right Clipped"]))
-    fctx.add_editor("Frames In", fctx.EDITOR_INT, 10)
-    fctx.add_editor("Frames Out", fctx.EDITOR_INT, 10)
-    fctx.add_editor("Font", fctx.EDITOR_PANGO_FONT, fctx.EDITOR_PANGO_FONT_DEFAULT_VALUES)
-    fctx.add_editor("Text", fctx.EDITOR_TEXT, "Line of text.")
+    fctx.add_editor("Pos X", fluxity.EDITOR_INT, 100)
+    fctx.add_editor("Pos Y", fluxity.EDITOR_INT, 100)
+    fctx.add_editor("Animation Type", fluxity. EDITOR_OPTIONS, (0,["From Left Clipped", "From Right Clipped"]))
+    fctx.add_editor("Frames In", fluxity.EDITOR_INT, 10)
+    fctx.add_editor("Frames Out", fluxity.EDITOR_INT, 10)
+    fctx.add_editor("Font", fluxity.EDITOR_PANGO_FONT, fluxity.EDITOR_PANGO_FONT_DEFAULT_VALUES)
+    fctx.add_editor("Text", fluxity.EDITOR_TEXT, "Line of text.")
     
 def init_render(fctx):
     # Get editor values
@@ -30,7 +32,7 @@ def init_render(fctx):
     # Create linetext object
     linetext = LineText(text, font_data,  (x, y), animation_type, frames_in)
     fctx.set_data_obj("linetext", linetext)
-    
+
 def render_frame(frame, fctx, w, h):
     cr = fctx.get_frame_cr()
 

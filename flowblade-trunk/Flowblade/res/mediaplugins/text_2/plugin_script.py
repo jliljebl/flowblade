@@ -2,6 +2,9 @@
 import cairo
 from gi.repository import Pango
 
+import fluxity
+
+
 ANIMATION_BY_LETTER = 0
 ANIMATION_BY_WORD = 1
 ANIMATION_BY_LINE = 2
@@ -10,13 +13,13 @@ ANIMATION_BY_LINE = 2
 def init_script(fctx):
     fctx.set_name("Text")
     fctx.set_author("Janne Liljeblad")
-    fctx.add_editor("Pos X", fctx.EDITOR_INT, 100)
-    fctx.add_editor("Pos Y", fctx.EDITOR_INT, 100)
-    fctx.add_editor("Animation Type", fctx. EDITOR_OPTIONS, (0,["Letters", "Words", "Lines"]))
-    fctx.add_editor("Steps Per Frame", fctx.EDITOR_FLOAT, 0.5)
-    fctx.add_editor("Font", fctx.EDITOR_PANGO_FONT, fctx.EDITOR_PANGO_FONT_DEFAULT_VALUES)
-    fctx.add_editor("Line Gap", fctx.EDITOR_INT, 5)
-    fctx.add_editor("Text", fctx.EDITOR_TEXT_AREA, "Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit.\nAliquam non condimentum magna.")
+    fctx.add_editor("Pos X", fluxity.EDITOR_INT, 100)
+    fctx.add_editor("Pos Y", fluxity.EDITOR_INT, 100)
+    fctx.add_editor("Animation Type", fluxity. EDITOR_OPTIONS, (0,["Letters", "Words", "Lines"]))
+    fctx.add_editor("Steps Per Frame", fluxity.EDITOR_FLOAT, 0.5)
+    fctx.add_editor("Font", fluxity.EDITOR_PANGO_FONT, fluxity.EDITOR_PANGO_FONT_DEFAULT_VALUES)
+    fctx.add_editor("Line Gap", fluxity.EDITOR_INT, 5)
+    fctx.add_editor("Text", fluxity.EDITOR_TEXT_AREA, "Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit.\nAliquam non condimentum magna.")
     
 def init_render(fctx):
     # Get editor values

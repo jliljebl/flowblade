@@ -4,19 +4,21 @@ import numpy as np
 import random
 import math
 
+import fluxity
+
 # ----------------------- fluxity funcs
 def init_script(fctx):
     fctx.set_name("Floating Balls")
     fctx.set_author("Janne Liljeblad")
     
-    fctx.add_editor("Hue", fctx.EDITOR_COLOR, (0.8, 0.50, 0.3, 1.0))
-    fctx.add_editor("Speed", fctx.EDITOR_FLOAT_RANGE, (1.0, -5.0, 5.0))
-    fctx.add_editor("Speed Variation %", fctx.EDITOR_INT_RANGE, (40, 0, 99))
-    fctx.add_editor("Number of Items", fctx.EDITOR_INT_RANGE, (50, 10, 500))
-    fctx.add_editor("Size", fctx.EDITOR_INT_RANGE, (330, 10, 800))
-    fctx.add_editor("Size Variation %", fctx.EDITOR_INT_RANGE, (0, 0, 80))
-    fctx.add_editor("Opacity", fctx.EDITOR_INT_RANGE, (100, 5, 100))
-    fctx.add_editor("Random Seed", fctx.EDITOR_INT, 42)
+    fctx.add_editor("Hue", fluxity.EDITOR_COLOR, (0.8, 0.50, 0.3, 1.0))
+    fctx.add_editor("Speed", fluxity.EDITOR_FLOAT_RANGE, (1.0, -5.0, 5.0))
+    fctx.add_editor("Speed Variation %", fluxity.EDITOR_INT_RANGE, (40, 0, 99))
+    fctx.add_editor("Number of Items", fluxity.EDITOR_INT_RANGE, (50, 10, 500))
+    fctx.add_editor("Size", fluxity.EDITOR_INT_RANGE, (330, 10, 800))
+    fctx.add_editor("Size Variation %", fluxity.EDITOR_INT_RANGE, (0, 0, 80))
+    fctx.add_editor("Opacity", fluxity.EDITOR_INT_RANGE, (100, 5, 100))
+    fctx.add_editor("Random Seed", fluxity.EDITOR_INT, 42)
     
 def init_render(fctx):
     # The script is possibly rendered using multiple prosesses and we need to have the

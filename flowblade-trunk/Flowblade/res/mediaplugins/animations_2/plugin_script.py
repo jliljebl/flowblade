@@ -4,6 +4,8 @@ import numpy as np
 import random
 import math
 
+import fluxity
+
 cols = -1
 rows = -1
 shape_width = -1
@@ -13,10 +15,10 @@ def init_script(fctx):
     fctx.set_name("Hex Colors")
     fctx.set_author("Janne Liljeblad")
     
-    fctx.add_editor("Hue", fctx.EDITOR_COLOR, (0.131, 0.0147, 0.163, 1.0))
-    fctx.add_editor("Hue Change", fctx.EDITOR_FLOAT_RANGE, (0.5, 0.1, 5.0))
-    fctx.add_editor("Speed", fctx.EDITOR_FLOAT_RANGE, (0.5, 0.1, 5.0))
-    fctx.add_editor("Size", fctx.EDITOR_FLOAT_RANGE, (50.0, 10.0, 300.0))
+    fctx.add_editor("Hue", fluxity.EDITOR_COLOR, (0.131, 0.0147, 0.163, 1.0))
+    fctx.add_editor("Hue Change", fluxity.EDITOR_FLOAT_RANGE, (0.5, 0.1, 5.0))
+    fctx.add_editor("Speed", fluxity.EDITOR_FLOAT_RANGE, (0.5, 0.1, 5.0))
+    fctx.add_editor("Size", fluxity.EDITOR_FLOAT_RANGE, (50.0, 10.0, 300.0))
 
     _points = []
     for i in range(0, 6):
@@ -34,8 +36,8 @@ def init_render(fctx):
     global shape_width, shape_height, cols, rows
     shape_width = size * 2.0 * math.cos(math.pi / 6.0)
     shape_height = size + size * math.sin(math.pi / 6.0)
-    cols = int(fctx.get_profile_property(fctx.PROFILE_WIDTH) / size + 2)
-    rows = int(fctx.get_profile_property(fctx.PROFILE_HEIGHT) / size + 2)
+    cols = int(fctx.get_profile_property(fluxity.PROFILE_WIDTH) / size + 2)
+    rows = int(fctx.get_profile_property(fluxity.PROFILE_HEIGHT) / size + 2)
     number_hex = cols * rows
 
     middle_hues = []

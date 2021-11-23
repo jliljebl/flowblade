@@ -1,6 +1,8 @@
 
 import cairo
 
+import fluxity
+
 MONDRIAN = [(0.18, 0.274, 0.477), (1.0, 1.0, 1.0), (0.968, 0.793, 0.0), (0.051, 0.505, 0.725), 
             (0.913, 0.0, 0.0), (0.0, 0.0, 0.0)]
 
@@ -12,10 +14,10 @@ def init_script(fctx):
     fctx.set_name("Lines Sweep")
     fctx.set_author("Janne Liljeblad")
  
-    fctx.add_editor("Line Colors", fctx.EDITOR_OPTIONS, (0,["Mondrian", "Pastels", "User Hue"]))
-    fctx.add_editor("User Hue", fctx.EDITOR_COLOR, (0.8, 0.50, 0.3, 1.0))
-    fctx.add_editor("Speed", fctx.EDITOR_FLOAT_RANGE, (1.0, -5.0, 5.0))
-    fctx.add_editor("Direction", fctx. EDITOR_OPTIONS, (0,["Left To Right", "Right To Left"]))
+    fctx.add_editor("Line Colors", fluxity.EDITOR_OPTIONS, (0,["Mondrian", "Pastels", "User Hue"]))
+    fctx.add_editor("User Hue", fluxity.EDITOR_COLOR, (0.8, 0.50, 0.3, 1.0))
+    fctx.add_editor("Speed", fluxity.EDITOR_FLOAT_RANGE, (1.0, -5.0, 5.0))
+    fctx.add_editor("Direction", fluxity. EDITOR_OPTIONS, (0,["Left To Right", "Right To Left"]))
     
     # This is hand tuned to get quaranteed 1 frame full coverage.
     # (width, path_len_mult, start_pos_off, end_pos_off, color_index)

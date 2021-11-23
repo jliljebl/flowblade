@@ -185,7 +185,7 @@ METHOD_INIT_SCRIPT = 0
 METHOD_INIT_RENDER = 1
 METHOD_RENDER_FRAME = 2
 
-# Pango font contants.
+# Pango font constants.
 FACE_REGULAR = "Regular"
 FACE_BOLD = "Bold"
 FACE_ITALIC = "Italic"
@@ -202,10 +202,11 @@ HORIZONTAL = 1
 DEFAULT_SCRIPT = \
 """
 import cairo
+import fluxity
 
 def init_script(fctx):
     # Script init here
-    fctx.add_editor("float_editor", fctx.EDITOR_FLOAT, 1.0)
+    fctx.add_editor("float_editor", fluxity.EDITOR_FLOAT, 1.0)
     fctx.set_name("Default Test Plugin")
 
 def init_render(fctx):
@@ -221,7 +222,65 @@ def render_frame(frame, fctx, w, h):
     cr.fill()
 """
 
+EDITOR_STRING = 0
+""" Editor for strings that return string values as *quoted* strings. Generally *EDITOR_TEXT* should be used instead."""
+EDITOR_TEXT = 1
+""" Editor for strings that return string values as unquoted strings."""
+EDITOR_FLOAT = 2
+""" Editor for float values."""
+EDITOR_INT = 3
+""" Editor for integer values."""
+EDITOR_COLOR = 4
+""" Editor for colors. Value is a *(R,G,B,A)* tuple with values in range 0-1."""
+EDITOR_FILE_PATH = 5
+""" Editor for selecting a file path. Value is Python pathname or *None*."""
+EDITOR_OPTIONS = 6
+""" Editor for selecting between  2 - N  string options. Value is tuple *(selected_index,[option_str_1, option_str_2, ...])*."""
+EDITOR_CHECK_BOX = 7
+""" Editor for boolean value. Value is either *True* or *False*"""
+EDITOR_FLOAT_RANGE = 8
+""" Editor for float values with a defined range of accepted values. Value is a 3-tuple *(default_val, min_val, max_val)*."""
+EDITOR_INT_RANGE = 9
+""" Editor for integer valueswith a defined range of accepted values."""
+EDITOR_PANGO_FONT = 10
+""" Editor for setting pango font properties."""
+EDITOR_TEXT_AREA = 11
+""" Editor for creating multiline text."""
 
+EDITOR_PANGO_FONT_DEFAULT_VALUES = ("Times Roman", "Regular", 80, Pango.Alignment.LEFT, (1.0, 1.0, 1.0, 1.0), \
+              True, (0.3, 0.3, 0.3, 1.0) , False, 2, False, (0.0, 0.0, 0.0), \
+              100, 3, 3, 0.0, None, VERTICAL)
+""" Pango Font Editor default values."""
+    
+PROFILE_DESCRIPTION = "description"
+"""MLT Profile descriptiption string."""
+PROFILE_FRAME_RATE_NUM = "frame_rate_num"
+"""Frame rate numerator."""
+PROFILE_FRAME_RATE_DEN = "frame_rate_den"
+"""Frame rate denominator."""
+PROFILE_WIDTH = "width"
+"""Output image width in pixels."""
+PROFILE_HEIGHT = "height"
+"""Output image height in pixels."""
+PROFILE_PROGRESSIVE = "progressive"
+"""
+MLT Profile image is progressive if value is *True*, if value is *False* image is interlaced.
+"""
+PROFILE_SAMPLE_ASPECT_NUM = "sample_aspect_num"
+"""
+Pixel size fraction numerator.
+"""
+PROFILE_SAMPLE_ASPECT_DEN = "sample_aspect_den"
+"""
+Pixel size fraction denominator.
+"""
+PROFILE_DISPLAY_ASPECT_NUM = "display_aspect_num"
+"""Output image size fraction numerator."""
+PROFILE_DISPLAY_ASPECT_DEN = "display_aspect_den"
+"""Output image size fraction denominator."""
+PROFILE_COLORSPACE = "colorspace"
+"""Profile colorspace, value is either 709, 601 or 2020."""
+    
 # ---------------------------------------------------------- script object
 class FluxityScript:
     """
@@ -290,17 +349,6 @@ class FluxityProfile:
     
     Internal class, do not use objects of this class directly in scripts. 
     """
-    DESCRIPTION = "description"
-    FRAME_RATE_NUM = "frame_rate_num"
-    FRAME_RATE_DEN = "frame_rate_den"
-    WIDTH = "width"
-    HEIGHT = "height"
-    PROGRESSIVE = "progressive"
-    SAMPLE_ASPECT_NUM = "sample_aspect_num"
-    SAMPLE_ASPECT_DEN = "sample_aspect_den"
-    DISPLAY_ASPECT_NUM = "display_aspect_num"
-    DISPLAY_ASPECT_DEN = "display_aspect_den"
-    COLORSPACE = "colorspace"
         
     def __init__(self, profile_data):
         self.profile_data = profile_data
@@ -319,65 +367,6 @@ def _read_profile_prop_from_lines(lines, prop):
 
 # ---------------------------------------------------------- context object
 class FluxityContext:
-
-    EDITOR_STRING = 0
-    """ Editor for strings that return string values as *quoted* strings. Generally *EDITOR_TEXT* should be used instead."""
-    EDITOR_TEXT = 1
-    """ Editor for strings that return string values as unquoted strings."""
-    EDITOR_FLOAT = 2
-    """ Editor for float values."""
-    EDITOR_INT = 3
-    """ Editor for integer values."""
-    EDITOR_COLOR = 4
-    """ Editor for colors. Value is a *(R,G,B,A)* tuple with values in range 0-1."""
-    EDITOR_FILE_PATH = 5
-    """ Editor for selecting a file path. Value is Python pathname or *None*."""
-    EDITOR_OPTIONS = 6
-    """ Editor for selecting between  2 - N  string options. Value is tuple *(selected_index,[option_str_1, option_str_2, ...])*."""
-    EDITOR_CHECK_BOX = 7
-    """ Editor for boolean value. Value is either *True* or *False*"""
-    EDITOR_FLOAT_RANGE = 8
-    """ Editor for float values with a defined range of accepted values. Value is a 3-tuple *(default_val, min_val, max_val)*."""
-    EDITOR_INT_RANGE = 9
-    """ Editor for integer valueswith a defined range of accepted values."""
-    EDITOR_PANGO_FONT = 10
-    """ Editor for setting pango font properties."""
-    EDITOR_TEXT_AREA = 11
-    """ Editor for creating multiline text."""
-    
-    EDITOR_PANGO_FONT_DEFAULT_VALUES = ("Times Roman", "Regular", 80, Pango.Alignment.LEFT, (1.0, 1.0, 1.0, 1.0), \
-                  True, (0.3, 0.3, 0.3, 1.0) , False, 2, False, (0.0, 0.0, 0.0), \
-                  100, 3, 3, 0.0, None, VERTICAL)
-    """ Pango Font Editor default values."""
-
-    PROFILE_DESCRIPTION = FluxityProfile.DESCRIPTION
-    """MLT Profile descriptiption string."""
-    PROFILE_FRAME_RATE_NUM = FluxityProfile.FRAME_RATE_NUM
-    """Frame rate numerator."""
-    PROFILE_FRAME_RATE_DEN = FluxityProfile.FRAME_RATE_DEN
-    """Frame rate denominator."""
-    PROFILE_WIDTH = FluxityProfile.WIDTH
-    """Output image width in pixels."""
-    PROFILE_HEIGHT = FluxityProfile.HEIGHT
-    """Output image height in pixels."""
-    PROFILE_PROGRESSIVE = FluxityProfile.PROGRESSIVE
-    """
-    MLT Profile image is progressive if value is *True*, if value is *False* image is interlaced.
-    """
-    PROFILE_SAMPLE_ASPECT_NUM = FluxityProfile.SAMPLE_ASPECT_NUM
-    """
-    Pixel size fraction numerator.
-    """
-    PROFILE_SAMPLE_ASPECT_DEN = FluxityProfile.SAMPLE_ASPECT_DEN
-    """
-    Pixel size fraction denominator.
-    """
-    PROFILE_DISPLAY_ASPECT_NUM = FluxityProfile.DISPLAY_ASPECT_NUM
-    """Output image size fraction numerator."""
-    PROFILE_DISPLAY_ASPECT_DEN = FluxityProfile.DISPLAY_ASPECT_DEN
-    """Output image size fraction denominator."""
-    PROFILE_COLORSPACE = FluxityProfile.COLORSPACE
-    """Profile colorspace, value is either 709, 601 or 2020."""
 
     def __init__(self, script_file, output_folder):
         self.priv_context = FluxityContextPrivate(output_folder)
@@ -412,8 +401,8 @@ class FluxityContext:
         
         **Returns:** (tuple(width, height)) Image size.
         """
-        w = self.priv_context.profile.get_profile_property(FluxityProfile.WIDTH)
-        h = self.priv_context.profile.get_profile_property(FluxityProfile.HEIGHT)
+        w = self.priv_context.profile.get_profile_property(PROFILE_WIDTH)
+        h = self.priv_context.profile.get_profile_property(PROFILE_HEIGHT)
         return (w, h)
 
     def get_profile_property(self, p_property):
@@ -579,10 +568,10 @@ class FluxityContext:
         """
         try:
             type, value = self.editors[name]
-            if type == FluxityContext.EDITOR_INT_RANGE or type == FluxityContext.EDITOR_FLOAT_RANGE:
+            if type == EDITOR_INT_RANGE or type == EDITOR_FLOAT_RANGE:
                 val, min, max = value
                 return val 
-            elif type == FluxityContext.EDITOR_OPTIONS:
+            elif type == EDITOR_OPTIONS:
                 selected_index, options = value
                 return selected_index
             return value
@@ -719,17 +708,17 @@ class FluxityContextPrivate:
             for line in f:
                 lines.append(line.strip())
         data = {}
-        data[FluxityProfile.DESCRIPTION] = _read_profile_prop_from_lines(lines, FluxityProfile.DESCRIPTION)
-        data[FluxityProfile.FRAME_RATE_NUM] = _read_profile_prop_from_lines(lines, FluxityProfile.FRAME_RATE_NUM)
-        data[FluxityProfile.FRAME_RATE_DEN] = _read_profile_prop_from_lines(lines, FluxityProfile.FRAME_RATE_DEN)
-        data[FluxityProfile.WIDTH] = int(_read_profile_prop_from_lines(lines, FluxityProfile.WIDTH))
-        data[FluxityProfile.HEIGHT] = int(_read_profile_prop_from_lines(lines, FluxityProfile.HEIGHT))
-        data[FluxityProfile.PROGRESSIVE] = _read_profile_prop_from_lines(lines, FluxityProfile.PROGRESSIVE)
-        data[FluxityProfile.SAMPLE_ASPECT_NUM] = _read_profile_prop_from_lines(lines, FluxityProfile.SAMPLE_ASPECT_NUM)
-        data[FluxityProfile.SAMPLE_ASPECT_DEN] = _read_profile_prop_from_lines(lines, FluxityProfile.SAMPLE_ASPECT_DEN)
-        data[FluxityProfile.DISPLAY_ASPECT_NUM] = _read_profile_prop_from_lines(lines, FluxityProfile.DISPLAY_ASPECT_NUM)
-        data[FluxityProfile.DISPLAY_ASPECT_DEN] = _read_profile_prop_from_lines(lines, FluxityProfile.DISPLAY_ASPECT_DEN)
-        data[FluxityProfile.COLORSPACE] = _read_profile_prop_from_lines(lines, FluxityProfile.COLORSPACE)
+        data[PROFILE_DESCRIPTION] = _read_profile_prop_from_lines(lines, PROFILE_DESCRIPTION)
+        data[PROFILE_FRAME_RATE_NUM] = _read_profile_prop_from_lines(lines, PROFILE_FRAME_RATE_NUM)
+        data[PROFILE_FRAME_RATE_DEN] = _read_profile_prop_from_lines(lines, PROFILE_FRAME_RATE_DEN)
+        data[PROFILE_WIDTH] = int(_read_profile_prop_from_lines(lines, PROFILE_WIDTH))
+        data[PROFILE_HEIGHT] = int(_read_profile_prop_from_lines(lines, PROFILE_HEIGHT))
+        data[PROFILE_PROGRESSIVE] = _read_profile_prop_from_lines(lines, PROFILE_PROGRESSIVE)
+        data[PROFILE_SAMPLE_ASPECT_NUM] = _read_profile_prop_from_lines(lines, PROFILE_SAMPLE_ASPECT_NUM)
+        data[PROFILE_SAMPLE_ASPECT_DEN] = _read_profile_prop_from_lines(lines, PROFILE_SAMPLE_ASPECT_DEN)
+        data[PROFILE_DISPLAY_ASPECT_NUM] = _read_profile_prop_from_lines(lines, PROFILE_DISPLAY_ASPECT_NUM)
+        data[PROFILE_DISPLAY_ASPECT_DEN] = _read_profile_prop_from_lines(lines, PROFILE_DISPLAY_ASPECT_DEN)
+        data[PROFILE_COLORSPACE] = _read_profile_prop_from_lines(lines, PROFILE_COLORSPACE)
 
         self.profile = FluxityProfile(data)
 
@@ -737,8 +726,8 @@ class FluxityContextPrivate:
         
     def create_frame_surface(self, frame):
         self.frame = frame
-        w = self.profile.profile_data[FluxityProfile.WIDTH]
-        h = self.profile.profile_data[FluxityProfile.HEIGHT]
+        w = self.profile.profile_data[PROFILE_WIDTH]
+        h = self.profile.profile_data[PROFILE_HEIGHT]
         self.frame_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
         self.frame_cr = cairo.Context(self.frame_surface)
 
@@ -944,7 +933,18 @@ class PangoTextLayout:
         **Returns:** (int) alignment enum, either *Pango.Alignment.CENTER*, *Pango.Alignment.LEFT* or *Pango.Alignment.RIGHT*.
         """
         return self.alignment
-            
+
+
+class AnimatedValue:
+
+    """
+    Object for animating value.
+    
+    Instances of this object can be created using *FluxityContext.create_animated_value()*.
+    """
+    def __init__(self):
+        pass
+        
 # ---------------------------------------------------------- Errors 
 class FluxityError(Exception):
     """
