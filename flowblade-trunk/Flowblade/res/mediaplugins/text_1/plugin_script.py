@@ -41,6 +41,8 @@ def render_frame(frame, fctx, w, h):
 class LineText:
     FROM_LEFT_CLIPPED = 0
     FROM_RIGHT_CLIPPED = 1
+    FROM_UP_CLIPPED = 2
+    FROM_DOWN_CLIPPED = 3
     
     def __init__(self, text, font_data, pos, animation_type, in_frames):
         self.text = text
@@ -56,15 +58,18 @@ class LineText:
         lw, lh = line_layout.get_pixel_size() # Get line size
     
         static_x, static_y = self.pos
-        start_x = static_x
-        start_y = static_y - 20
         
+        start_x = static_x
+        start_y = static_y - lh
+        if frame < self.in_frames:
+            fract = 1.0 - frame / self.in_frames
+            pos_x = static_x
+            pos_y = static_y - fract * (static_y - start_y)
+        else:
+            pos_x = static_x
+            pos_y = static_y
+
         # Do clip
         cr.rectangle(static_x, static_y, lw, lh)
         cr.clip()
-        line_layout.draw_layout(self.text, cr, start_x, start_y)
-
-
-    
-
-     
+        line_layout.draw_layout(self.text, cr, pos_x, pos_y)
