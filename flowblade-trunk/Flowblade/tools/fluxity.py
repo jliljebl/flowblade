@@ -161,6 +161,15 @@
     There is a helper function *_clamp(v)* used to make sure that all color values are in range 0-1. Any number of helper functions and data structures can be created to achieve the desired output.
     
 """
+__pdoc__ = {}
+__pdoc__['FluxityError'] = False
+__pdoc__['FluxityContextPrivate'] = False
+__pdoc__['FluxityScript'] = False
+__pdoc__['FluxityProfile'] = False
+__pdoc__['FluxityEmptyClass'] = False
+__pdoc__['render_frame_sequence'] = False
+__pdoc__['render_preview_frame'] = False
+
 import gi
 gi.require_version('Pango', '1.0')
 gi.require_version('PangoCairo', '1.0')
@@ -676,11 +685,9 @@ class FluxityContext:
 
 
 class FluxityContextPrivate:
-    """
-    This class exists to keep FluxityContext API clean for script developers.
-    
-    Internal class, do not use objects of this class directly in scripts. 
-    """
+    # This class exists to keep FluxityContext API clean for script developers.
+    #
+    # Internal class, do not use objects of this class directly in scripts. 
     def __init__(self, output_folder):
 
         self.profile = None
