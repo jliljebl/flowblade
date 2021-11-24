@@ -15,7 +15,7 @@ def init_script(fctx):
     fctx.set_author("Janne Liljeblad")
     fctx.add_editor("Pos X", fluxity.EDITOR_INT, 100)
     fctx.add_editor("Pos Y", fluxity.EDITOR_INT, 100)
-    fctx.add_editor("Animation Type", fluxity. EDITOR_OPTIONS, (0,["From Left Clipped", "From Right Clipped"]))
+    fctx.add_editor("Animation Type", fluxity. EDITOR_OPTIONS, (0,["From Left Clipped", "From Right Clipped",  "From Up Clipped", "From Down Clipped"]))
     fctx.add_editor("Frames In", fluxity.EDITOR_INT, 10)
     fctx.add_editor("Frames Out", fluxity.EDITOR_INT, 10)
     fctx.add_editor("Font", fluxity.EDITOR_PANGO_FONT, fluxity.EDITOR_PANGO_FONT_DEFAULT_VALUES)
@@ -41,10 +41,10 @@ def render_frame(frame, fctx, w, h):
 
 
 class LineText:
-    FROM_LEFT_CLIPPED = 0
-    FROM_RIGHT_CLIPPED = 1
-    FROM_UP_CLIPPED = 2
-    FROM_DOWN_CLIPPED = 3
+    FROM_LEFT_CLIPPED = "From Left Clipped"
+    FROM_RIGHT_CLIPPED = "From Right Clipped"
+    FROM_UP_CLIPPED = "From Up Clipped"
+    FROM_DOWN_CLIPPED = "From Down Clipped"
     
     def __init__(self, text, font_data, pos, animation_type, in_frames):
         self.text = text
@@ -52,26 +52,35 @@ class LineText:
         self.pos = pos
         self.animation_type = animation_type
         self.in_frames = in_frames
+        self.animated_x = None
+        self.animated_y = None
+
+    def _create_animations(self):
+        static_x, static_y = self.pos
+        lw, lh = self.line_layout.get_pixel_size() # Get line size
         
+        self.animated_x = fluxity.AnimatedValue()
+        self.animated_y = fluxity.AnimatedValue()
+            
+        #if self.animation_type == LineText.FROM_LEFT_CLIPPED:
+        self.animated_x.add_keyframe_at_frame(0, static_x - lw, fluxity.KEYFRAME_LINEAR)
+        self.animated_x.add_keyframe_at_frame(self.in_frames, static_x, fluxity.KEYFRAME_LINEAR)
+        self.animated_y.add_keyframe_at_frame(0, static_y, fluxity.KEYFRAME_LINEAR)
+
     def draw_text(self, fctx, frame, cr):
         # Create line layouts.
-        line_layout = fctx.create_text_layout(self.font_data)
-        line_layout.create_pango_layout(cr, self.text)
-        lw, lh = line_layout.get_pixel_size() # Get line size
-    
+        self.line_layout = fctx.create_text_layout(self.font_data)
+        self.line_layout.create_pango_layout(cr, self.text)
+
+        if self.animated_x == None:
+            self._create_animations() # We need cairo context to do calculations and have do this on first frame.
+
         static_x, static_y = self.pos
-        
-        start_x = static_x
-        start_y = static_y - lh
-        if frame < self.in_frames:
-            fract = 1.0 - frame / self.in_frames
-            pos_x = static_x
-            pos_y = static_y - fract * (static_y - start_y)
-        else:
-            pos_x = static_x
-            pos_y = static_y
+        lw, lh = self.line_layout.get_pixel_size() # Get line size
+        x = self.animated_x.get_value(frame)
+        y = self.animated_y.get_value(frame)
 
         # Do clip
         cr.rectangle(static_x, static_y, lw, lh)
         cr.clip()
-        line_layout.draw_layout(self.text, cr, pos_x, pos_y)
+        self.line_layout.draw_layout(self.text, cr, x, y)

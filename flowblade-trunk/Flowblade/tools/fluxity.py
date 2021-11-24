@@ -289,11 +289,11 @@ PROFILE_COLORSPACE = "colorspace"
 """Profile colorspace, value is either 709, 601 or 2020."""
 
 KEYFRAME_LINEAR = 0
-"""Profile colorspace, value is either 709, 601 or 2020."""
+"""Value after keyframe of this type is linearly interpolated using two surrounding keyframe values."""
 KEYFRAME_SMOOTH = 1
-"""Profile colorspace, value is either 709, 601 or 2020."""
+"""Value after keyframe of this type is calculated using a Catmull-Rom curve created from four surrounding keyframe values."""
 KEYFRAME_DISCRETE = 2
-"""Profile colorspace, value is either 709, 601 or 2020."""
+"""Value after keyframe of this type is value at keyframe."""
 
 # ---------------------------------------------------------- script object
 class FluxityScript:
@@ -961,9 +961,7 @@ class AnimatedValue:
       * **KEYFRAME_SMOOTH** Value after keyframe is calculated using a Catmull-Rom curve created from four surrounding keyframe values.
       
       * **KEYFRAME_DISCRETE** Value after keyframe is value at keyframe.
-      
-    The intended pattern of usage is to create these in method *init_render()* based on user input, and then read value for each frame in method *render_frame()*.
-    
+
     Implementation assumes there always being a keyframe at frame 0, and removing that will result in undefined behaviour. It is of course possible to overwrite existing keyframe at frame 0 using method *add_keyframe_at_frame().*
     """
     def __init__(self):
@@ -987,7 +985,7 @@ class AnimatedValue:
         
         # Replace if kf in frame exists.
         new_kf = (frame, value, kf_type)
-        kf_index_on_frame = self.frame_has_keyframe(frame)
+        kf_index_on_frame = self._frame_has_keyframe(frame)
         if kf_index_on_frame != -1:
             self.keyframes.pop(kf_index_on_frame)
             self.keyframes.insert(kf_index_on_frame, new_kf)
