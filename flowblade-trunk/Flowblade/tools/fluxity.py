@@ -184,10 +184,8 @@ import numpy as np
 import os
 import traceback
 
-# MLR repo object
-repo = None
 
-# Default length in frames for script duration
+# Default length in frames for script duration.
 DEFAULT_LENGTH = 200
 
 METHOD_INIT_SCRIPT = 0
@@ -289,7 +287,14 @@ PROFILE_DISPLAY_ASPECT_DEN = "display_aspect_den"
 """Output image size fraction denominator."""
 PROFILE_COLORSPACE = "colorspace"
 """Profile colorspace, value is either 709, 601 or 2020."""
-    
+
+KEYFRAME_LINEAR = 0
+"""Profile colorspace, value is either 709, 601 or 2020."""
+KEYFRAME_SMOOTH = 1
+"""Profile colorspace, value is either 709, 601 or 2020."""
+KEYFRAME_DISCRETE = 2
+"""Profile colorspace, value is either 709, 601 or 2020."""
+
 # ---------------------------------------------------------- script object
 class FluxityScript:
     """
@@ -945,12 +950,135 @@ class PangoTextLayout:
 class AnimatedValue:
 
     """
-    Object for animating value.
+    Object for animating a float value.
     
-    Instances of this object can be created using *FluxityContext.create_animated_value()*.
+    Changing value is controlled by adding keyframes.
+    
+    A keyframe has *frame position, value* and *type*. There are three types of keyframes: KEYFRAME_LINEAR, KEYFRAME_SMOOTH and KEYFRAME_DISCRETE.
+    
+      * **KEYFRAME_LINEAR** Value after keyframe is linearly interpolated using two surrounding keyframe values.
+      
+      * **KEYFRAME_SMOOTH** Value after keyframe is calculated using a Catmull-Rom curve created from four surrounding keyframe values.
+      
+      * **KEYFRAME_DISCRETE** Value after keyframe is value at keyframe.
+      
+    The intended pattern of usage is to create these in method *init_render()* based on user input, and then read value for each frame in method *render_frame()*.
+    
+    Implementation assumes there always being a keyframe at frame 0, and removing that will result in undefined behaviour. It is of course possible to overwrite existing keyframe at frame 0 using method *add_keyframe_at_frame().*
     """
     def __init__(self):
-        pass
+        # We enforce a keyframe always existing in frame 0
+        self.keyframes = [(0, 0, KEYFRAME_LINEAR)]
+
+    def add_keyframe_at_frame(self, frame, value, kf_type):
+        """
+        **frame(int)** Frame number in range 0 - (plugin lenght).
+        
+        **value(float)** A float value.
+        
+        **kf_type(KEYFRAME_LINEAR|KEYFRAME_SMOOTH|KEYFRAME_DISCRETE)** Type of added keyframe.
+                    
+        If frame is on existing keyframe that keyframe is replaced.
+        
+        If frame is between two keyframes a new keyframe is added between keyframes.
+
+        If frame is after last keyframe a new keyframe is appended.
+        """
+        
+        # Replace if kf in frame exists.
+        new_kf = (frame, value, kf_type)
+        kf_index_on_frame = self.frame_has_keyframe(frame)
+        if kf_index_on_frame != -1:
+            self.keyframes.pop(kf_index_on_frame)
+            self.keyframes.insert(kf_index_on_frame, new_kf)
+            return
+
+        # Insert between if frame between two kfs.
+        for i in range(0, len(self.keyframes)):
+            kf_frame, kf_value, kf_type = self.keyframes[i]
+            if kf_frame > frame:
+                prev_frame, prev_value, prev_type = self.keyframes[i - 1]
+                self.keyframes.insert(i, new_kf)
+                self.active_kf_index = i
+                return
+
+        # Append last if after last kf.
+        self.keyframes.append(new_kf)
+
+    def _frame_has_keyframe(self, frame):
+        for i in range(0, len(self.keyframes)):
+            kf_frame, kf_value, type = self.keyframes[i]
+            if frame == kf_frame:
+                return i
+
+        return -1
+        
+    def get_value(self, frame):
+        """
+        **frame(int)** Frame number in range 0 - (plugin lenght).
+                
+        Computes and returns value at frame using keyframe values, positions and types.
+
+        **Returns:** (float) value at frame.
+        """
+        last_frame, last_value, last_type  = self.keyframes[-1]
+        if frame >= last_frame: # This also handles case len(self.keyframes) == 1 because first keyframe always at frame 0.
+            return last_value
+
+        for i in range(0, len(self.keyframes) - 1):
+            kf_frame, kf_value, kf_type = self.keyframes[i]
+            if frame == kf_frame:
+                return kf_value
+            next_frame, next_value, next_type = self.keyframes[i + 1]
+            if frame == next_frame:
+                return next_value
+            if frame > kf_frame and frame < next_frame:
+                if kf_type == KEYFRAME_LINEAR:
+                    fract = (frame - kf_frame) / (next_frame - kf_frame)
+                    return kf_value + fract * (next_value - kf_value)
+                elif kf_type == KEYFRAME_SMOOTH:
+                    return self._get_smooth_value(i, frame)
+                else: # KEYFRAME_DISCRETE
+                    return kf_value
+                    
+        print("AnimatedValue get_value() failed to find a value!")
+        return None # We absolutely want to crash if somehow we hit this.
+ 
+    def _get_smooth_value(self, i, frame):
+        # Get indexes of the four keyframes that affect the drawn curve. 
+        prev = i
+        if i == 0:
+            prev_prev = 0
+        else:
+            prev_prev = i - 1
+        
+        next = i + 1
+        if next >= len(keyframes):
+            next = len(keyframes) - 1
+        
+        next_next = next + 1
+        if next_next >= len(keyframes):
+            next_next = len(keyframes) - 1
+
+        # Get keyframes.
+        frame_pp, val0, kf_type = self.keyframes[prev_prev]
+        frame_p, val1, kf_type = self.keyframes[prev]
+        frame_n, val2, kf_type = self.keyframes[next]
+        frame_nn, val3, kf_type = self.keyframes[next_next]
+
+        # Get value
+        fract = (frame - frame_p) / (frame_n - frame_p)
+        smooth_val = self._catmull_rom_interpolate(val0, val1, val2, val3, fract)
+        return smooth_val
+
+    # These all need to be doubles.
+    def _catmull_rom_interpolate(self, y0, y1, y2, y3, t):
+    	t2 = t * t
+    	a0 = -0.5 * y0 + 1.5 * y1 - 1.5 * y2 + 0.5 * y3
+    	a1 = y0 - 2.5 * y1 + 2 * y2 - 0.5 * y3
+    	a2 = -0.5 * y0 + 0.5 * y2
+    	a3 = y1
+    	return a0 * t * t2 + a1 * t2 + a2 * t + a3
         
 # ---------------------------------------------------------- Errors 
 class FluxityError(Exception):

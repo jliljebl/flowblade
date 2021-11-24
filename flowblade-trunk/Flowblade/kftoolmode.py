@@ -505,8 +505,7 @@ class TLineKeyFrameEditor:
         clip_length = clip_out - clip_in + 1 # +1 because in and out both inclusive
         scale_length = clip_length * pix_per_frame
         scale_in = clip_start_frame * pix_per_frame
-        
-        #clip_outline_y = tlinewidgets._get_track_y(track.id)
+
         clip_height = self._get_lower_y() - self._get_upper_y()
         self.create_round_rect_path(cr, scale_in,
                                      self._get_upper_y(), scale_length - 1, 
@@ -578,7 +577,6 @@ class TLineKeyFrameEditor:
         
         for i in range(0, len(kf_positions)):
 
-            
             # Draw value between between curreent and prev kf.
             if i > 0:
 
@@ -974,12 +972,17 @@ class TLineKeyFrameEditor:
         if kf_pos_prev == kf_pos_next:
             return
     
+        # We are doing calculations mixing panel pixel positions 
+        # and keyframe frames and keyframe values. 
         more_segments = True
-        start_x = kf_pos_prev
+        start_x = kf_pos_prev 
         start_y = kf_pos_y
         curve_length = kf_pos_next - kf_pos_prev
         cr.move_to(kf_pos_prev, kf_pos_y)
         
+        # Draw curve using 5 pixel line segments from
+        # prev keyframe x position to next keyframe
+        # x position.
         while(more_segments == True):
             end_x = start_x + SEG_LEN_IN_PIX
             if end_x >= kf_pos_next:
