@@ -1051,12 +1051,12 @@ class AnimatedValue:
             prev_prev = i - 1
         
         next = i + 1
-        if next >= len(keyframes):
-            next = len(keyframes) - 1
+        if next >= len(self.keyframes):
+            next = len(self.keyframes) - 1
         
         next_next = next + 1
-        if next_next >= len(keyframes):
-            next_next = len(keyframes) - 1
+        if next_next >= len(self.keyframes):
+            next_next = len(self.keyframes) - 1
 
         # Get keyframes.
         frame_pp, val0, kf_type = self.keyframes[prev_prev]
