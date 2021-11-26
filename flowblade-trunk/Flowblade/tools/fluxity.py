@@ -47,11 +47,11 @@
     
     ## FLOWBLADE MEDIA PLUGIN SCRIPT LIFECYCLE
     
-    **init_script(fctx):** - This method is called when script is first loaded by Flowblade to create data structures with info on editors and script metadata. 
+    **`init_script(fctx):`** - This method is called when script is first loaded by Flowblade to create data structures with info on editors and script metadata. 
     
-    **init_render(fctx):** - This method is called before a render is started to get user input on editors and possibly to create some additional data strctures.
+    **`init_render(fctx):`** - This method is called before a render is started to get user input on editors and possibly to create some additional data strctures.
     
-    **render_frame(frame, fctx, w, h):** - This method is called for each frame rendered to create output image.
+    **`render_frame(frame, fctx, w, h):`** - This method is called for each frame rendered to create output image.
     
     
     ## EXAMPLE SCRIPT
@@ -179,6 +179,7 @@ from gi.repository import PangoCairo
 import cairo
 import json
 import locale
+import math
 import multiprocessing
 import numpy as np
 import os
@@ -909,7 +910,7 @@ class PangoTextLayout:
             cr.move_to(x, y)
             cr.scale(xscale, yscale)
             cr.rotate(rotation)
-            
+
             PangoCairo.update_layout(cr, layout)
             PangoCairo.show_layout(cr, layout)
         
@@ -964,9 +965,9 @@ class AnimatedValue:
 
     Implementation assumes there always being a keyframe at frame 0, and removing that will result in undefined behaviour. It is of course possible to overwrite existing keyframe at frame 0 using method *add_keyframe_at_frame().*
     """
-    def __init__(self):
+    def __init__(self, value=0.0):
         # We enforce a keyframe always existing in frame 0
-        self.keyframes = [(0, 0, KEYFRAME_LINEAR)]
+        self.keyframes = [(0, value, KEYFRAME_LINEAR)]
 
     def add_keyframe_at_frame(self, frame, value, kf_type):
         """
@@ -1077,7 +1078,74 @@ class AnimatedValue:
     	a2 = -0.5 * y0 + 0.5 * y2
     	a3 = y1
     	return a0 * t * t2 + a1 * t2 + a2 * t + a3
+
+
+class AffineTransform:
+
+    """
+    Object for describing animated affine transforms and applying them on *`Cairo Contexts`*.
+
+    On creation object creates followig instance *`fluxity.AnimatedValue`* attributes:
+     
+    **`x`** X position in pixels.
+    
+    **`y`** Y position in pixels.
+    
+    **`anchor_x`** Rotation and scaling offset from *`source`* top left corner in x axis pixels.
+    
+    **`anchor_y`** Rotation and scaling offset from *`source`* top left corner in y axis pixels.
+    
+    **`scale_x`** Scaling in x-axis as float value.
+    
+    **`scale_y`** Scaling in x-axis as float value.
+    
+    **`rotation`** Rotation in degrees.
+    
+    The intended usage pattern:
+    
+      * create *`fluxity.AffineTransform`* object and set values to needed attributes to create aniomations.
+      
+      * for each frame first call method  *`fluxity.AffineTransform.apply_transform()`* to apply the affine transform.
+      
+      * draw *`source`* in `origo(0,0)` position.
+    """
+
+    def __init__(self):
+        self.x = AnimatedValue()
+        self.y = AnimatedValue()
+        self.anchor_x = AnimatedValue()
+        self.anchor_y = AnimatedValue()
+        self.scale_x = AnimatedValue(1.0)
+        self.scale_y = AnimatedValue(1.0)
+        self.rotation = AnimatedValue()
+
+    def apply_transform(self, cr, frame):
+        scale_x = self.scale_x.get_value(frame)
+        scale_y = self.scale_y.get_value(frame)
+        rotation_angle = self.rotation.get_value(frame)
+
+        anchor_x = scale_x * self.anchor_x.get_value(frame)
+        anchor_y = scale_y * self.anchor_y.get_value(frame) 
         
+        axr, ayr = self._rotate_point_around_origo(rotation_angle, (anchor_x, anchor_y))
+        
+        tx = self.x.get_value(frame) - axr
+        ty = self.y.get_value(frame) - ayr
+        
+        cr.translate(tx, ty)
+        cr.rotate(math.radians(rotation_angle))
+        cr.scale(scale_x, scale_y)
+
+    def _rotate_point_around_origo(self, rotation_angle, p):
+        px, py = p
+        angle_rad = math.radians(rotation_angle)
+        sin_val = math.sin(angle_rad)
+        cos_val = math.cos(angle_rad)
+        new_x = px * cos_val - py * sin_val
+        new_y = px * sin_val + py * cos_val
+        return (new_x, new_y)
+    
+
 # ---------------------------------------------------------- Errors 
 class FluxityError(Exception):
     """
