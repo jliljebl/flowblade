@@ -192,6 +192,7 @@ class ColorBox:
         self.saturation = 0.0
         self.draw_saturation_gradient = True
         self.selection_cursor = SELECT_CIRCLE
+        self.motion_on = False
 
     def get_hue_saturation(self):
         return (self.hue, self.saturation)
@@ -216,8 +217,11 @@ class ColorBox:
         self._save_values()
         self.edit_listener()
         self.widget.queue_draw()
+        self.motion_on = True
 
     def _motion_notify_event(self, x, y, state):
+        if self.motion_on == False:
+            return
         self.cursor_x, self.cursor_y = self._get_legal_point(x, y)
         self._save_values()
         self.edit_listener()
@@ -228,7 +232,8 @@ class ColorBox:
         self._save_values()
         self.edit_listener()
         self.widget.queue_draw()
-
+        self.motion_on = False
+        
     def _get_legal_point(self, x, y):
         if x < self.X_PAD:
             x = self.X_PAD
@@ -297,6 +302,7 @@ class ThreeBandColorBox(ColorBox):
         self.hi_x = self.cursor_x
         self.hi_y = self.cursor_y
         self.band_change_listerner = band_change_listerner
+        self.motion_on = False
 
     def set_cursors(self, s_h, s_s, m_h, m_s, h_h, h_s):
         self.shadow_x = self._x_for_hue(s_h)
@@ -315,19 +321,25 @@ class ThreeBandColorBox(ColorBox):
         self._save_values()
         self.edit_listener()
         self.widget.queue_draw()
-
+        self.motion_on = True
+        
     def _motion_notify_event(self, x, y, state):
+        if self.motion_on == False:
+            return
         self.cursor_x, self.cursor_y = self._get_legal_point(x, y)
         self._save_values()
         self.edit_listener()
         self.widget.queue_draw()
 
     def _release_event(self, event):
+        if self.motion_on == False:
+            return
         self.cursor_x, self.cursor_y = self._get_legal_point(event.x, event.y)
         self._save_values()
         self.edit_listener()
         self.widget.queue_draw()
-
+        self.motion_on = False
+        
     def _check_band_hit(self, x, y):
         if self._control_point_hit(x, y, self.shadow_x, self.shadow_y):
             return SHADOW

@@ -113,11 +113,9 @@ class LineText:
         # Animation In
         start_x, start_y, end_x, end_y, start_scale, end_scale, \
         anchor_x, anchor_y = self._get_in_animation_affine_data(fctx)
-        fctx.log_line(str(start_x) + " " + str(end_x))
         
         frame_start = 0
         length = self.in_frames
-        #fctx.log_line(str(frame_end - frame_start))
         movement_type = self.movement_type_in
         animation_type = self.animation_type_in
         self._apply_affine_data_with_movement(movement_type, animation_type, start_x, \
@@ -130,11 +128,9 @@ class LineText:
         # Animation Out
         start_x, start_y, end_x, end_y, start_scale, end_scale, \
         anchor_x, anchor_y = self._get_out_animation_affine_data(fctx)
-        fctx.log_line(str(start_x) + " " + str(end_x))
         
         frame_start = fctx.get_length() - self.out_frames
         length = self.out_frames
-        #fctx.log_line(str(frame_end - frame_start))
         
         movement_type = self.movement_type_out
         animation_type = self.animation_type_out
