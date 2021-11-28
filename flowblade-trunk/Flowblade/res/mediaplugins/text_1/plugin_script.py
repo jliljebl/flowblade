@@ -22,6 +22,7 @@ def init_script(fctx):
     fctx.add_editor("Movement", fluxity. EDITOR_OPTIONS, (0,["Linear", "Smooth",  "Fast Start", "Slow Start", "Stepped"]))
     fctx.add_editor("Frames In", fluxity.EDITOR_INT, 10)
     fctx.add_editor("Frames Out", fluxity.EDITOR_INT, 10)
+    fctx.add_editor("Steps", fluxity.EDITOR_INT_RANGE, (3, 2, 10))
     fctx.add_editor("Font", fluxity.EDITOR_PANGO_FONT, fluxity.EDITOR_PANGO_FONT_DEFAULT_VALUES)
     fctx.add_editor("Text", fluxity.EDITOR_TEXT, "Line of text.")
 
@@ -62,6 +63,7 @@ class LineText:
     SMOOTH = 1
     FAST_START = 2
     SLOW_START = 3
+    STEPPED = 4
     
     HORIZONTAL_ANIMATIONS = [FROM_LEFT_CLIPPED, FROM_RIGHT_CLIPPED, FROM_LEFT, FROM_RIGHT]
     VERTICAL_ANIMATIONS = [FROM_UP_CLIPPED, FROM_DOWN_CLIPPED, FROM_UP, FROM_DOWN]
@@ -172,8 +174,35 @@ class LineText:
                 self._apply_fast_start_movement(self.affine.scale_y, start_scale, end_scale, 0, self.in_frames)
                 self._apply_no_movement(self.affine.anchor_x, anchor_x)
                 self._apply_no_movement(self.affine.anchor_y, anchor_y)
+        elif self.movement_type == LineText.SLOW_START:
+            if self.animation_type in LineText.HORIZONTAL_ANIMATIONS:
+                self._apply_slow_start_movement(self.affine.x, start_x, end_x, 0, self.in_frames)
+                self._apply_no_movement(self.affine.y, start_y)
+            elif self.animation_type in LineText.VERTICAL_ANIMATIONS:
+                self._apply_no_movement(self.affine.x, start_x)
+                self._apply_slow_start_movement(self.affine.y, start_y, end_y, 0, self.in_frames)
+            else: # Zooms
+                self._apply_no_movement(self.affine.y, start_y)
+                self._apply_no_movement(self.affine.x, start_x)
+                self._apply_slow_start_movement(self.affine.scale_x, start_scale, end_scale, 0, self.in_frames)
+                self._apply_slow_start_movement(self.affine.scale_y, start_scale, end_scale, 0, self.in_frames)
+                self._apply_no_movement(self.affine.anchor_x, anchor_x)
+                self._apply_no_movement(self.affine.anchor_y, anchor_y)
+        elif self.movement_type == LineText.STEPPED:
+            if self.animation_type in LineText.HORIZONTAL_ANIMATIONS:
+                self._apply_stepped_movement(self.affine.x, start_x, end_x, 0, self.in_frames, fctx)
+                self._apply_no_movement(self.affine.y, start_y)
+            elif self.animation_type in LineText.VERTICAL_ANIMATIONS:
+                self._apply_no_movement(self.affine.x, start_x)
+                self._apply_stepped_movement(self.affine.y, start_y, end_y, 0, self.in_frames, fctx)
+            else: # Zooms
+                self._apply_no_movement(self.affine.y, start_y)
+                self._apply_no_movement(self.affine.x, start_x)
+                self._apply_stepped_movement(self.affine.scale_x, start_scale, end_scale, 0, self.in_frames, fctx)
+                self._apply_stepped_movement(self.affine.scale_y, start_scale, end_scale, 0, self.in_frames, fctx)
+                self._apply_no_movement(self.affine.anchor_x, anchor_x)
+                self._apply_no_movement(self.affine.anchor_y, anchor_y)
 
-                
     def _apply_no_movement(self, animated_value, value):
         animated_value.add_keyframe_at_frame(0, value, fluxity.KEYFRAME_LINEAR)
            
@@ -191,7 +220,24 @@ class LineText:
         animated_value.add_keyframe_at_frame(start_frame, start_val, fluxity.KEYFRAME_SMOOTH)
         animated_value.add_keyframe_at_frame(mid_kf_frame, mid_kf_value, fluxity.KEYFRAME_SMOOTH)
         animated_value.add_keyframe_at_frame(start_frame + length, end_val, fluxity.KEYFRAME_SMOOTH)
-        
+
+    def _apply_slow_start_movement(self, animated_value, start_val, end_val, start_frame, length):
+        mid_kf_frame = int(length * 0.8)
+        mid_kf_value = start_val + (end_val - start_val) * 0.2
+        animated_value.add_keyframe_at_frame(start_frame, start_val, fluxity.KEYFRAME_SMOOTH)
+        animated_value.add_keyframe_at_frame(mid_kf_frame, mid_kf_value, fluxity.KEYFRAME_SMOOTH)
+        animated_value.add_keyframe_at_frame(start_frame + length, end_val, fluxity.KEYFRAME_SMOOTH)
+
+    def _apply_stepped_movement(self, animated_value, start_val, end_val, start_frame, length, fctx):
+        steps = fctx.get_editor_value("Steps")
+        step_frames = int(round(length/steps))
+        step_value = (end_val - start_val)/(steps) 
+        for i in range(0, steps):
+            frame = int(start_frame + i * step_frames)
+            value = start_val + step_value * i
+            animated_value.add_keyframe_at_frame(frame, value, fluxity.KEYFRAME_DISCRETE)
+        animated_value.add_keyframe_at_frame(start_frame + length, end_val, fluxity.KEYFRAME_DISCRETE) # maybe KEYFRAME_LINEAR but should not make difference.
+         
     def draw_text(self, fctx, frame, cr):
         # Create line layouts.
         self.line_layout = fctx.create_text_layout(self.font_data)

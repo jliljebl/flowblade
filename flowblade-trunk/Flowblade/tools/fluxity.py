@@ -249,7 +249,7 @@ EDITOR_CHECK_BOX = 7
 EDITOR_FLOAT_RANGE = 8
 """ Editor for float values with a defined range of accepted values. Value is a 3-tuple *(default_val, min_val, max_val)*."""
 EDITOR_INT_RANGE = 9
-""" Editor for integer valueswith a defined range of accepted values."""
+""" Editor for integer values with a defined range of accepted values."""
 EDITOR_PANGO_FONT = 10
 """ Editor for setting pango font properties."""
 EDITOR_TEXT_AREA = 11
@@ -398,15 +398,15 @@ class FluxityContext:
 
     def get_frame_cr(self):
         """
-        For every rendered frame method *render_frame()* is called and a new **cairo.ImageSurface** object is created.
+        For every rendered frame method *`render_frame()`* is called and a new **`cairo.ImageSurface`** object is created.
         
-        This method provides access to **cairo.Context** object that can be used to draw onto that image surface. This is the way that output is achieved with **Flowblade Media Plugins**. 
+        This method provides access to **`cairo.Context`** object that can be used to draw onto that image surface. This is the way that output is achieved with **Flowblade Media Plugins**. 
         
-        After method *render_frame()* exits, contents of **cairo.ImageSurface** are saved to disk.
+        After method *`render_frame()`* exits, contents of **`cairo.ImageSurface`** are saved to disk.
         
-        Must be called in script method *render_frame()*.
+        Must be called in script method *`render_frame()`*.
         
-        **Returns:** (**cairo.Context**) Context object that can be drawn onto.
+        **Returns:** (**`cairo.Context`**) Context object that can be drawn onto.
         """
         return self.priv_context.frame_cr
 
@@ -422,7 +422,7 @@ class FluxityContext:
 
     def get_profile_property(self, p_property):
         """
-        **p_property(str):** propertyr identyfier, e.g. FluxityContext.PROFILE_PROGRESSIVE.
+        **`p_property(str):`** propertyr identyfier, e.g. FluxityContext.PROFILE_PROGRESSIVE.
         
         Used to access properties of MLT profile set before running the script that defines e.g. output image size.
         
@@ -432,25 +432,25 @@ class FluxityContext:
  
     def set_name(self, name):
         """
-        **name(str):** name of script displayed to user.
+        **`name(str):`** name of script displayed to user.
         
-        Must be called in script method *init_script()*.
+        Must be called in script method *`init_script()`*.
         """
         self.name = name
         self.priv_context.error_on_wrong_method("set_name()", METHOD_INIT_SCRIPT)
 
     def set_version(self, version):
         """
-        **version(int):** version of script, use increasing integer numbering. Default value is *1*.
+        **`version(int):`** version of script, use increasing integer numbering. Default value is *1*.
         
-        Must be called in script method *init_script()*.
+        Must be called in script method *`init_script()`*.
         """
         self.version = version
         self.priv_context.error_on_wrong_method("set_version()", METHOD_INIT_SCRIPT)
 
     def set_author(self, author):
         """
-        **author(str):** name of script creator.
+        **`author(str):`** name of script creator.
         
         Must be called in script method *init_script()*.
         """
@@ -458,15 +458,15 @@ class FluxityContext:
 
     def set_frame_name(self, frame_name):
         """        
-        **frame_name(str):** name used before number part in rendered frame files.
+        **`frame_name(str):`** name used before number part in rendered frame files.
         """
         self.priv_context.frame_name = frame_name
 
     def set_data_obj(self, label, item):
         """
-        **label(str):** lable used to access data later using *get_data_obj(self, label)*.
+        **`label(str):`** lable used to access data later using *`get_data_obj(self, label)`*.
 
-        **item(obj):** data item being saved.
+        **`item(obj):`** data item being saved.
         
         Saves data to be used later during execution of script. Using **global** would obivously be possible to replace this, but this is made available as a more clean solution.
         """
@@ -474,7 +474,7 @@ class FluxityContext:
 
     def get_data_obj(self, label):
         """
-        **label(str):** lable of saved data item.
+        **`label(str):`** lable of saved data item.
         
         Gives access to previously saved data.
         
@@ -484,11 +484,11 @@ class FluxityContext:
 
     def set_length(self, length):
         """
-        **length(int):** New length of script in frames.
+        **`length(int):`** New length of script in frames.
         
         Sets length of script output in frames.
         
-        Must *not* be called in  *render_frames()*.
+        Must *not* be called in  *`render_frames()`*.
         """
         self.length = length
 
@@ -500,38 +500,36 @@ class FluxityContext:
 
     def add_editor(self, name, type, default_value, tooltip=None):
         """     
-        **name(str):** Name for editor.
+        **`name(str):`** Name for editor.
         
-        **type(int):** Value either *EDITOR_STRING, EDITOR_VALUE, EDITOR_FLOAT, EDITOR_INT, EDITOR_COLOR, EDITOR_FILE_PATH, EDITOR_OPTIONS, EDITOR_CHECK_BOX, EDITOR_FLOAT_RANGE, EDITOR_INT_RANGE.*
+        **`type(int):`** Value either **`EDITOR_STRING`, `EDITOR_FLOAT`, `EDITOR_INT`, `EDITOR_COLOR`, `EDITOR_FILE_PATH`, `EDITOR_OPTIONS`, `EDITOR_CHECK_BOX`, `EDITOR_FLOAT_RANGE`, `EDITOR_INT_RANGE`.*
         
-        **default_value():** Data type depends on editor type:
+        **`default_value():`** Data type depends on editor type:
         
-          * EDITOR_STRING(str), 
+          * `EDITOR_STRING`(str), 
+                    
+          * `EDITOR_FLOAT`(float), 
           
-          * EDITOR_VALUE(str), 
+          * `EDITOR_INT`(int), 
           
-          * EDITOR_FLOAT(float), 
+          * `EDITOR_COLOR`(4-tuple with float values in range 0-1, (R,G,B,A)), 
           
-          * EDITOR_INT(int), 
+          * `EDITOR_FILE_PATH`(str), 
           
-          * EDITOR_COLOR(4-tuple with float values in range 0-1, (R,G,B,A)), 
+          * `EDITOR_OPTIONS`(2-tuple (int, [str]), (selected_index,[option_str_1, option_str_2, ...]),
           
-          * EDITOR_FILE_PATH(str), 
+          * `EDITOR_CHECK_BOX`(bool), 
           
-          * EDITOR_OPTIONS (2-tuple (int, [str]), (selected_index,[option_str_1, option_str_2, ...]),
+          * `EDITOR_FLOAT_RANGE`(3-tuple with float values, (default, min, max)), 
           
-          * EDITOR_CHECK_BOX(bool), 
+          * `EDITOR_INT_RANGE`(3-tuple with int values, (default, min, max))
           
-          * EDITOR_FLOAT_RANGE(3-tuple with float values, (default, min, max)), 
-          
-          * EDITOR_INT_RANGE(3-tuple with int values, (default, min, max))
-          
-          * EDITOR_PANGO_FONT (17-tuple (font_family, font_face, font_size, alignment, color_rgba,
+          * `EDITOR_PANGO_FONT` (17-tuple (font_family, font_face, font_size, alignment, color_rgba,
                   fill_on, outline_color_rgba, outline_on, outline_width, shadow_on, shadow_color_rgb, 
                   shadow_opacity, shadow_xoff, shadow_yoff, shadow_blur, 
                   gradient_color_rgba, gradient_direction))
           
-        **tooltip(str, optional):** Tooltip for editor if presented in GUI.
+        **`tooltip(str, optional):`** Tooltip for editor if presented in GUI.
         
         Defines possible GUI editors used to affect script rendering. Edited value is accessed with method *get_editor_value(self, name, frame=0)*.
         
@@ -546,9 +544,9 @@ class FluxityContext:
 
     def get_editor_value(self, name, frame=0):
         """     
-        **name(str):** Name of editor.
+        **`name(str):`** Name of editor.
         
-        **frame(int):** Frame in range 0 - (script length - 1).
+        **`frame(int):`** Frame in range 0 - (script length - 1).
         
         Value of edited data at given frame. We currently have no animated values, but they will added with future API updates.
         
@@ -556,27 +554,27 @@ class FluxityContext:
         
         Data type depends on editor type:
         
-          * EDITOR_STRING(str), 
+          * `EDITOR_STRING`(str), 
           
-          * EDITOR_VALUE(str), 
+          * `EDITOR_VALUE`(str), 
           
-          * EDITOR_FLOAT(float), 
+          * `EDITOR_FLOAT`(float), 
           
-          * EDITOR_INT(int), 
+          * `EDITOR_INT`(int), 
           
-          * EDITOR_COLOR(4-tuple with float values in range 0-1, (R,G,B,A)), 
+          * `EDITOR_COLOR`(4-tuple with float values in range 0-1, (R,G,B,A)), 
           
-          * EDITOR_FILE_PATH(str),
+          * `EDITOR_FILE_PATH`(str),
           
-          * EDITOR_OPTIONS(selection index int),
+          * `EDITOR_OPTIONS`(selection index int),
           
-          * EDITOR_CHECK_BOX(bool), 
+          * `EDITOR_CHECK_BOX`(bool), 
           
-          * EDITOR_FLOAT_RANGE(3-tuple with float values, (default, min, max)), 
+          * `EDITOR_FLOAT_RANGE`(3-tuple with float values, (default, min, max)), 
           
-          * EDITOR_INT_RANGE(3-tuple with int values, (default, min, max))
+          * `EDITOR_INT_RANGE`(3-tuple with int values, (default, min, max))
 
-          * EDITOR_PANGO_FONT (17-tuple (font_family, font_face, font_size, alignment, color_rgba,
+          * `EDITOR_PANGO_FONT`(17-tuple (font_family, font_face, font_size, alignment, color_rgba,
                   fill_on, outline_color_rgba, outline_on, outline_width, shadow_on, shadow_color_rgb, 
                   shadow_opacity, shadow_xoff, shadow_yoff, shadow_blur,
                   gradient_color_rgba, gradient_direction))
@@ -638,13 +636,13 @@ class FluxityContext:
         
     def set_editors_data(self, editors_data_json):
         """
-        **editors_data_json(str):** string representation of JSON object.
+        **`editors_data_json(str):`** string representation of JSON object.
                  
         Sets edited data to be used when rendering.
         
         Input string must describe JSON object that can be turned into usable editor data.
         
-        *Example with EDITOR_FLOAT and EDITOR_COLOR:*
+        Example with `EDITOR_FLOAT` and `EDITOR_COLOR`:
         
         ```
         [
@@ -653,7 +651,7 @@ class FluxityContext:
         ]
         ```
         
-        *General form:*
+        General form:
         
         ```
         [
@@ -673,7 +671,7 @@ class FluxityContext:
 
     def create_text_layout(self, font_data):
         """
-        **font_data(tuple)** this tuple can be aquired by calling *FluxityContext.get_editor_value()* on editors of type *FluxityContext.EDITOR_PANGO_FONT*.
+        **`font_data(tuple)`** this tuple can be aquired by calling *FluxityContext.get_editor_value()* on editors of type *EDITOR_PANGO_FONT*.
                 
         Creates obejcts used to draw text.
 
@@ -683,7 +681,7 @@ class FluxityContext:
     
     def log_line(self, log_line):
         """
-        **log_line(str):** line of text.
+        **`log_line(str):`** line of text.
                  
         Adds a line of text to log message displayed after completion or error.
         """
@@ -780,11 +778,11 @@ class FluxityEmptyClass:
 class PangoTextLayout:
 
     """
-    **font_data(tuple)** this tuple can be aquired by calling *FluxityContext.get_editor_value()* on editors of type *FluxityContext.EDITOR_PANGO_FONT*.
+    **`font_data(tuple)`** this tuple can be aquired by calling *`FluxityContext.get_editor_value()`* on editors of type *`EDITOR_PANGO_FONT`*.
             
     Object for drawing text. Uses internally Pango.
     
-    Instances of this object can be created using *FluxityContext.create_text_layout(font_data)*.
+    Instances of this object can be created using *`FluxityContext.create_text_layout()`*.
     """
     def __init__(self, font_data):
         self.font_family, self.font_face, self.font_size, self.alignment, \
@@ -797,11 +795,11 @@ class PangoTextLayout:
 
     def create_pango_layout(self, cr, text):
         """
-        **cr(cairo.Context)** frame cairo context aquired with FluxityContext.get_frame_cr().
+        **`cr(cairo.Context)`** frame cairo context aquired with *`FluxityContext.get_frame_cr()`*.
         
-        **text(str)** displayed text.
+        **`text(str)`** displayed text.
         
-        Creates internally PangoCairo layout object. Calling this is required before calling *get_pixel_size()*.
+        Creates internally *`PangoCairo`* layout object. Calling this is required before calling *`PangoTextLayout.get_pixel_size()`*.
         """
         self.text = text
         self.pango_layout = PangoCairo.create_layout(cr)
@@ -813,23 +811,23 @@ class PangoTextLayout:
     # called from vieweditor draw vieweditor-> editorlayer->here
     def draw_layout(self, text, cr, x, y, rotation=0.0, xscale=1.0, yscale=1.0):
         """
-        **text(str)** displayed text.
+        **`text(str)`** displayed text.
         
-        **cr(cairo.Context)** frame cairo context aquired with *FluxityContext.get_frame_cr()*.
+        **`cr(cairo.Context)`** frame cairo context aquired with *`FluxityContext.get_frame_cr()`*.
         
-        **x(float)** Text X position.
+        **`x(float)`** Text X position.
 
-        **y(float)** Text Y position.
+        **`y(float)`** Text Y position.
 
-        **rotation(float)** Text rotation.
+        **`rotation(float)`** Text rotation.
 
-        **xscale(float)** Text X scaling.
+        **`xscale(float)`** Text X scaling.
 
-        **yscale(float)** Text Y scaling.
+        **`yscale(float)`** Text Y scaling.
 
-        Draws text on provided *cairo.Context*.
+        Draws text on provided *`cairo.Context`*.
         
-        Calls internally *create_pango_layout()* so *get_pixel_size()* can be called after this.
+        Calls internally *`PangoTextLayout.create_pango_layout()`* so *`PangoTextLayout.get_pixel_size()`* can be called after this.
         """
         self.text = text
         cr.save() # Created each frame
@@ -931,7 +929,7 @@ class PangoTextLayout:
         """             
         Returns size of layout.
 
-        Before calling this PangoCairo layout object needs to creted *create_pango_layout()* or *draw_layout().*
+        Before calling this PangoCairo layout object needs to creted *`PangoTextLayout.create_pango_layout()`* or *`PangoTextLayout.draw_layout()`.*
         
         **Returns:** (width, height) pixel size of layout.
         """
@@ -941,9 +939,9 @@ class PangoTextLayout:
         """             
         Returns alignment for his layout.
 
-        To interpret enums script must do import *from gi.repository import Pango*
+        To interpret enums script must do import *`from gi.repository import Pango`*
         
-        **Returns:** (int) alignment enum, either *Pango.Alignment.CENTER*, *Pango.Alignment.LEFT* or *Pango.Alignment.RIGHT*.
+        **Returns:** (int) alignment enum, either *`Pango.Alignment.CENTER`*, *`Pango.Alignment.LEFT`* or *`Pango.Alignment.RIGHT`*.
         """
         return self.alignment
 
@@ -955,13 +953,13 @@ class AnimatedValue:
     
     Changing value is controlled by adding keyframes.
     
-    A keyframe has *frame position, value* and *type*. There are three types of keyframes: KEYFRAME_LINEAR, KEYFRAME_SMOOTH and KEYFRAME_DISCRETE.
+    A keyframe has *frame position, value* and *type*. There are three types of keyframes: `KEYFRAME_LINEAR`, `KEYFRAME_SMOOTH` and `KEYFRAME_DISCRETE`.
     
-      * **KEYFRAME_LINEAR** Value after keyframe is linearly interpolated using two surrounding keyframe values.
+      * **`KEYFRAME_LINEAR`** Value after keyframe is linearly interpolated using two surrounding keyframe values.
       
-      * **KEYFRAME_SMOOTH** Value after keyframe is calculated using a Catmull-Rom curve created from four surrounding keyframe values.
+      * **`KEYFRAME_SMOOTH`** Value after keyframe is calculated using a Catmull-Rom curve created from four surrounding keyframe values.
       
-      * **KEYFRAME_DISCRETE** Value after keyframe is value at keyframe.
+      * **`KEYFRAME_DISCRETE`** Value after keyframe is value at keyframe.
 
     Implementation assumes there always being a keyframe at frame 0, and removing that will result in undefined behaviour. It is of course possible to overwrite existing keyframe at frame 0 using method *add_keyframe_at_frame().*
     """
@@ -971,11 +969,11 @@ class AnimatedValue:
 
     def add_keyframe_at_frame(self, frame, value, kf_type):
         """
-        **frame(int)** Frame number in range 0 - (plugin lenght).
+        **`frame(int)`** Frame number in range 0 - (plugin lenght).
         
-        **value(float)** A float value.
+        **`value(float)`** A float value.
         
-        **kf_type(KEYFRAME_LINEAR|KEYFRAME_SMOOTH|KEYFRAME_DISCRETE)** Type of added keyframe.
+        **`kf_type(KEYFRAME_LINEAR|KEYFRAME_SMOOTH|KEYFRAME_DISCRETE)`** Type of added keyframe.
                     
         If frame is on existing keyframe that keyframe is replaced.
         
@@ -1014,7 +1012,7 @@ class AnimatedValue:
         
     def get_value(self, frame):
         """
-        **frame(int)** Frame number in range 0 - (plugin lenght).
+        **`frame(int)`** Frame number in range 0 - (plugin lenght).
                 
         Computes and returns value at frame using keyframe values, positions and types.
 
@@ -1083,7 +1081,7 @@ class AnimatedValue:
 class AffineTransform:
 
     """
-    Object for describing animated affine transforms and applying them on *`Cairo Contexts`*.
+    Object for describing animated affine transforms and applying them on *`cairo.Context`*.
 
     On creation object creates followig instance *`fluxity.AnimatedValue`* attributes:
      
@@ -1103,9 +1101,9 @@ class AffineTransform:
     
     The intended usage pattern:
     
-      * create *`fluxity.AffineTransform`* object and set values to needed attributes to create aniomations.
+      * create *`fluxity.AffineTransform`* object and set values to needed attributes to create animations.
       
-      * for each frame first call method  *`fluxity.AffineTransform.apply_transform()`* to apply the affine transform.
+      * for each frame first call method *`fluxity.AffineTransform.apply_transform()`* to apply the affine transform.
       
       * draw *`source`* in `origo(0,0)` position.
     """
@@ -1120,6 +1118,13 @@ class AffineTransform:
         self.rotation = AnimatedValue()
 
     def apply_transform(self, cr, frame):
+        """
+        **`cr(cairo.Context)`** a `cairo.Context` object.
+        
+        **`frame(int)`** Frame number in range 0 - (plugin lenght).
+                
+        Applies affine transform at frame on `cairo.Context`.
+        """
         scale_x = self.scale_x.get_value(frame)
         scale_y = self.scale_y.get_value(frame)
         rotation_angle = self.rotation.get_value(frame)
