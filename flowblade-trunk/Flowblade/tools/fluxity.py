@@ -792,7 +792,8 @@ class PangoTextLayout:
         self.gradient_direction = font_data
         self.font_desc = Pango.FontDescription(self.font_family + " " + self.font_face + " " + str(self.font_size))
         self.pango_layout = None
-
+        self.opacity = 1.0 
+        
     def create_pango_layout(self, cr, text):
         """
         **`cr(cairo.Context)`** frame cairo context aquired with *`FluxityContext.get_frame_cr()`*.
@@ -807,7 +808,20 @@ class PangoTextLayout:
         self.pango_layout.set_font_description(self.font_desc)
         self.pango_layout.set_alignment(self.alignment)
         self.pixel_size = self.pango_layout.get_pixel_size()
+
+    def set_opacity(self, opacity):
+        """
+        **`opacity(float)`** Opacity in range 0.0 - 1.0.
         
+        Sets opacity for the text to be drawn. Default value is 1.0
+        """
+        if opacity < 0.0:
+            opacity = 0.0
+        if opacity > 1.0:
+            opacity = 1.0
+            
+        self.opacity = opacity
+
     # called from vieweditor draw vieweditor-> editorlayer->here
     def draw_layout(self, text, cr, x, y, rotation=0.0, xscale=1.0, yscale=1.0):
         """
@@ -841,7 +855,7 @@ class PangoTextLayout:
 
             # Get colors.
             r, g, b = self.shadow_color_rgb
-            a = self.shadow_opacity / 100.0
+            a = (self.shadow_opacity / 100.0) * self.opacity 
 
             # Blurred shadow need its own ImageSurface
             if self.shadow_blur != 0.0:
@@ -886,7 +900,7 @@ class PangoTextLayout:
         # Text
         if self.fill_on:
             if self.gradient_color_rgba == None:
-                cr.set_source_rgba(*self.color_rgba)
+                cr.set_source_rgba(*self._get_opacity_rgba(self.color_rgba))
             else:
                 w, h = self.pixel_size
                 w = float(w) * xscale
@@ -901,8 +915,8 @@ class PangoTextLayout:
                     
                 CLIP_COLOR_GRAD_1 = (0,  r, g, b, 1)
                 CLIP_COLOR_GRAD_2 = (1,  rg, gg, bg, 1)
-                grad.add_color_stop_rgba(*CLIP_COLOR_GRAD_1)
-                grad.add_color_stop_rgba(*CLIP_COLOR_GRAD_2)
+                grad.add_color_stop_rgba(*self._get_opacity_rgba(CLIP_COLOR_GRAD_1))
+                grad.add_color_stop_rgba(*self._get_opacity_rgba(CLIP_COLOR_GRAD_2))
                 cr.set_source(grad)
 
             cr.move_to(x, y)
@@ -919,7 +933,7 @@ class PangoTextLayout:
                 cr.scale(xscale, yscale)
                 cr.rotate(rotation)
             PangoCairo.layout_path(cr, layout)
-            cr.set_source_rgba(*self.outline_color_rgba)
+            cr.set_source_rgba(*self._get_opacity_rgba(self.outline_color_rgba))
             cr.set_line_width(self.outline_width)
             cr.stroke()
         
@@ -945,6 +959,9 @@ class PangoTextLayout:
         """
         return self.alignment
 
+    def _get_opacity_rgba(self, rbga):
+        r, g, b, a = rbga
+        return (r, g, b, a * self.opacity)
 
 class AnimatedValue:
 

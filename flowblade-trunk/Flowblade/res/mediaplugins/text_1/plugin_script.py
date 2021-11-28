@@ -23,6 +23,7 @@ def init_script(fctx):
     fctx.add_editor("Frames In", fluxity.EDITOR_INT, 10)
     fctx.add_editor("Frames Out", fluxity.EDITOR_INT, 10)
     fctx.add_editor("Steps", fluxity.EDITOR_INT_RANGE, (3, 2, 10))
+    fctx.add_editor("Fade In", fluxity. EDITOR_OPTIONS, (0,["Off", "Linear", "Smooth",  "Fast Start", "Slow Start", "Stepped"]))
     fctx.add_editor("Font", fluxity.EDITOR_PANGO_FONT, fluxity.EDITOR_PANGO_FONT_DEFAULT_VALUES)
     fctx.add_editor("Text", fluxity.EDITOR_TEXT, "Line of text.")
 
@@ -78,13 +79,15 @@ class LineText:
         self.movement_type = movement_type
         self.in_frames = in_frames
         self.affine = None
+        self.opacity = None
 
     def _create_animations(self, fctx):
         static_x, static_y = self.pos
         lw, lh = self.line_layout.get_pixel_size() # Get line size
         
         self.affine = fluxity.AffineTransform()
-        
+        self.opacity = fluxity.AnimatedValue()
+    
         screen_w = fctx.get_profile_property(fluxity.PROFILE_WIDTH)
         screen_h = fctx.get_profile_property(fluxity.PROFILE_HEIGHT)
         start_scale = 1.0
@@ -203,6 +206,24 @@ class LineText:
                 self._apply_no_movement(self.affine.anchor_x, anchor_x)
                 self._apply_no_movement(self.affine.anchor_y, anchor_y)
 
+        fade_type = fctx.get_editor_value("Fade In")
+        if fade_type == 0:
+            self._apply_no_movement(self.opacity, 1.0)
+            return
+        else:
+            fade_type = fade_type - 1
+        if fade_type == LineText.LINEAR:
+            self._apply_linear_movement(self.opacity, 0.0, 1.0, 0, self.in_frames)
+        elif fade_type == LineText.SMOOTH:
+            self._apply_smooth_movement(self.opacity, 0.0, 1.0, 0, self.in_frames)
+        elif fade_type == LineText.FAST_START:
+            self._apply_fast_start_movement(self.opacity, 0.0, 1.0, 0, self.in_frames)
+        elif fade_type == LineText.SLOW_START:
+            self._apply_slow_start_movement(self.opacity, 0.0, 1.0, 0, self.in_frames)
+        elif fade_type == LineText.STEPPED:
+            self._apply_stepped_movement(self.opacity, 0.0, 1.0, 0, self.in_frames)
+
+
     def _apply_no_movement(self, animated_value, value):
         animated_value.add_keyframe_at_frame(0, value, fluxity.KEYFRAME_LINEAR)
            
@@ -255,4 +276,5 @@ class LineText:
             cr.clip()
 
         self.affine.apply_transform(cr, frame)
+        self.line_layout.set_opacity(self.opacity.get_value(frame))
         self.line_layout.draw_layout(self.text, cr, 0, 0)
