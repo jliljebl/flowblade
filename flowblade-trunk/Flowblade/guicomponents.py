@@ -384,6 +384,7 @@ class BinTreeView(Gtk.VBox):
         
         # Cell renderers
         self.icon_rend = Gtk.CellRendererPixbuf()
+        self.icon_rend.set_padding(3, 0)
         self.text_rend_1 = Gtk.CellRendererText()
         self.text_rend_1.set_property("editable", True)
         self.text_rend_1.connect("edited",
@@ -513,13 +514,13 @@ class ImageTextImageListView(Gtk.VBox):
         return rows
 
 
-class SequenceListView(ImageTextTextListView):
+class SequenceListView(ImageTextImageListView):
     """
     GUI component displaying list of sequences in project
     """
 
     def __init__(self, seq_name_edited_cb, sequence_popup_cb, double_click_cb):
-        ImageTextTextListView.__init__(self)
+        ImageTextImageListView.__init__(self)
         self.sequence_popup_cb = sequence_popup_cb
         self.treeview.connect('button-press-event', self._button_press_event)
         self.scroll.set_shadow_type(Gtk.ShadowType.NONE)
@@ -529,7 +530,8 @@ class SequenceListView(ImageTextTextListView):
         
         # Icon path
         self.icon_path = respaths.IMAGE_PATH + "sequence.png"
-
+        self.arrow_path = respaths.IMAGE_PATH + "filter_save.png"
+        
         # Set sequence name editable and connect 'edited' signal
         self.text_rend_1.set_property("editable", True)
         self.text_rend_1.connect("edited",
@@ -546,12 +548,12 @@ class SequenceListView(ImageTextTextListView):
         self.storemodel.clear()
         for seq in PROJECT().sequences:
             icon = GdkPixbuf.Pixbuf.new_from_file(self.icon_path)
-            active = ""
-            if seq == current_sequence():
-                active = _("active") + " "
+            arrow = GdkPixbuf.Pixbuf.new_from_file(self.arrow_path )
+            if seq != current_sequence():
+                arrow = None
             row_data = [icon,
                         seq.name,
-                        active]
+                        arrow]
             self.storemodel.append(row_data)
             self.scroll.queue_draw()
 
