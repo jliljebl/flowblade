@@ -443,6 +443,8 @@ def monkeypatch_callbacks():
     guicomponents.select_clip_func = movemodes.select_clip
     #keyframeeditor.add_fade_out_func = compositeeditor._add_fade_out_pressed.
     
+    containeractions.set_plugin_to_be_edited_func = mediaplugin.set_plugin_to_be_edited
+    
     # These provide clues for possible further refactoring.
 
 # ---------------------------------- SDL2 consumer

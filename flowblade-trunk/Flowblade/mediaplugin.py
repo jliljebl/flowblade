@@ -28,6 +28,7 @@ import os
 import appconsts
 import cairoarea
 import containerclip
+import editorlayout
 import editorpersistance
 from editorstate import current_sequence
 import fluxity
@@ -40,6 +41,7 @@ import simpleeditors
 import toolsencoding
 import translations
 import userfolders
+import utils
 
 MONITOR_WIDTH = 400
 MONITOR_HEIGHT = -1
@@ -57,6 +59,7 @@ _current_screenshot_surface = None
 _current_plugin_data_object = None
 _current_render_data = None
 
+widgets = utils.EmptyClass()
 
 # --------------------------------------------------------- plugin
 class MediaPlugin:
@@ -410,4 +413,55 @@ class AddMediaPluginWindow(Gtk.Window):
             self.encoding_info.set_ellipsize(Pango.EllipsizeMode.END)
         
 
+# ---------------------------------------------------------------------edit panel 
+def create_widgets():
+    """
+    Widgets for editing compositing properties.
+    """
+    widgets.plugin_info = Gtk.Label()
+    widgets.hamburger_launcher = guicomponents.HamburgerPressLaunch(_hamburger_launch_pressed)
+    widgets.hamburger_launcher.connect_launched_menu(guicomponents.clip_effects_hamburger_menu)
+    guiutils.set_margins(widgets.hamburger_launcher.widget, 4, 6, 6, 0)
+
+    widgets.empty_label = Gtk.Label(label=_("No Media Plugin"))
+
+    # Edit area.
+    widgets.value_edit_box = Gtk.VBox()
+    widgets.value_edit_box.pack_start(widgets.empty_label, True, True, 0)
+    widgets.value_edit_frame = Gtk.Frame()
+    widgets.value_edit_frame.add(widgets.value_edit_box)
+    widgets.value_edit_frame.set_shadow_type(Gtk.ShadowType.NONE)
+
+def get_plugin_hamburger_row():
+    create_widgets()
+    
+    # Action row.
+    action_row = Gtk.HBox(False, 2)
+    action_row.pack_start(widgets.hamburger_launcher.widget, False, False, 0)
+    action_row.pack_start(Gtk.Label(), True, True, 0)
+    action_row.pack_start(widgets.plugin_info, False, False, 0)
+    action_row.pack_start(Gtk.Label(), True, True, 0)
+    
+    return action_row
+    
+def _hamburger_launch_pressed(widget, event):
+    pass
+    #guicomponents.get_compositor_editor_hamburger_menu(event, _compositor_hamburger_item_activated)
+
+
+def set_plugin_to_be_edited(clip, action_object):
+    print("dfsdfshaloo")
+    edit_panel = simpleeditors.show_fluxity_container_clip_program_editor(  action_object.project_edit_done, \
+                                                                            clip, action_object, action_object.container_data.data_slots["fluxity_plugin_edit_data"])
+
+    try:
+        widgets.value_edit_frame.remove(widgets.value_edit_box)
+    except:
+        pass
+        
+    widgets.value_edit_box = edit_panel
+    widgets.value_edit_frame.add(widgets.value_edit_box)
+
+    editorlayout.show_panel(appconsts.PANEL_MULTI_EDIT)
+    gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_PLUGINS)
     

@@ -83,6 +83,8 @@ FLUXITY_TYPE_ICON = None
 
 NEWLINE = '\n'
 
+set_plugin_to_be_edited_func = None
+
 # ----------------------------------------------------- interface
 def get_action_object(container_data):
     if container_data.container_type == appconsts.CONTAINER_CLIP_GMIC:
@@ -753,12 +755,8 @@ class FluxityContainerActions(AbstractContainerActionObject):
             icon_path, not_used_length, info = _write_thumbnail_image(PROJECT().profile, self.container_data.data_slots["icon_file"], self)
 
         cr, surface = _create_image_surface(icon_path)
-        #cr.rectangle(0, 0, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
-        #cr.set_source_rgba(*OVERLAY_COLOR)
-        #cr.fill()
         type_icon = _get_type_icon(appconsts.CONTAINER_CLIP_FLUXITY)
         cr.set_source_surface(type_icon, 1, 30)
-        #cr.set_operator (cairo.OPERATOR_OVERLAY)
         cr.paint() #_with_alpha(0.5)
  
         data_object = self.container_data.data_slots["fluxity_plugin_edit_data"]
@@ -767,7 +765,9 @@ class FluxityContainerActions(AbstractContainerActionObject):
         return (surface, length, icon_path)
 
     def edit_program(self, clip):
-        simpleeditors.show_fluxity_container_clip_program_editor(self.project_edit_done, clip, self, self.container_data.data_slots["fluxity_plugin_edit_data"])
+        set_plugin_to_be_edited_func(clip, self)
+        gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_PLUGINS)
+        #edit_panel = simpleeditors.show_fluxity_container_clip_program_editor(self.project_edit_done, clip, self, self.container_data.data_slots["fluxity_plugin_edit_data"])
 
     def project_edit_done(self, response_is_accept, dialog, editors, orig_program_info_json):
         if response_is_accept == True:

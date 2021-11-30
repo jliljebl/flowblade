@@ -409,6 +409,19 @@ class EditorWindow:
 
         compositors_panel = guiutils.set_margins(compositors_vbox, 2, 2, 2, 2)
 
+        # Media Plugins
+        action_row = mediaplugin.get_plugin_hamburger_row()
+        mediaplugins_editor_panel = guiutils.set_margins(mediaplugin.widgets.value_edit_frame, 0, 0, 4, 0)
+        
+        mediaplugins_hbox = Gtk.HBox()
+        mediaplugins_hbox.pack_start(mediaplugins_editor_panel, True, True, 0)
+
+        mediaplugins_vbox = Gtk.VBox()
+        mediaplugins_vbox.pack_start(mediaplugins_hbox, True, True, 0)
+        mediaplugins_vbox.pack_start(action_row, False, False, 0)
+
+        mediaplugins_panel = guiutils.set_margins(mediaplugins_vbox, 2, 2, 2, 2)
+
         # Multi empty panel
         multi_empty_vbox = Gtk.VBox(False, 0)
         multi_empty_vbox.pack_start(Gtk.Label(), True, True, 0)
@@ -420,6 +433,7 @@ class EditorWindow:
         self.edit_multi.add_named(multi_empty_vbox, appconsts.EDIT_MULTI_EMPTY)
         self.edit_multi.add_named(self.effects_panel, appconsts.EDIT_MULTI_FILTERS)
         self.edit_multi.add_named(compositors_panel, appconsts.EDIT_MULTI_COMPOSITORS)
+        self.edit_multi.add_named(mediaplugins_panel, appconsts.EDIT_MULTI_PLUGINS)
         self.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_EMPTY)
         #self.edit_multi.set_size_request(730, 600)
         

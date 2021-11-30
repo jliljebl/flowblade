@@ -255,13 +255,14 @@ def get_simple_editor_selector(active_index, callback): # used in containerprogr
 
 # -------------------------------------------------------------------- Media Plugin timeline clip editor
 def show_fluxity_container_clip_program_editor(callback, clip, container_action, script_data_object):
-    editor_window = FluxityScriptEditorWindow(callback, clip, container_action, script_data_object)
+    editor_panel = FluxityScriptEditorWindow(callback, clip, container_action, script_data_object)
+    return editor_panel
 
-class FluxityScriptEditorWindow(Gtk.Window):
+class FluxityScriptEditorWindow(Gtk.Bin):
     def __init__(self, callback, clip, container_action, script_data_object):
         
         GObject.GObject.__init__(self)
-        self.connect("delete-event", lambda w, e: self.cancel())
+        #self.connect("delete-event", lambda w, e: self.cancel())
         
         self.callback = callback
         self.clip = clip
@@ -315,15 +316,15 @@ class FluxityScriptEditorWindow(Gtk.Window):
 
         main_box = Gtk.HBox(False, 2)
         main_box.pack_start(guiutils.get_named_frame(_("Editors"), editors_panel), False, False, 0)
-        main_box.pack_start(guiutils.get_named_frame(_("Preview"), preview_box), False, False, 0)
+        #main_box.pack_start(guiutils.get_named_frame(_("Preview"), preview_box), False, False, 0)
 
         alignment = guiutils.set_margins(main_box, 8,8,8,8) #dialogutils.get_default_alignment(main_box)
 
-        self.set_modal(True)
-        self.set_transient_for(gui.editor_window.window)
-        self.set_position(Gtk.WindowPosition.CENTER)
-        self.set_title(_("Media Plugin Values Edit - ") + self.container_action.container_data.get_program_name())
-        self.set_resizable(False)
+        #self.set_modal(True)
+        #self.set_transient_for(gui.editor_window.window)
+        #self.set_position(Gtk.WindowPosition.CENTER)
+        #self.set_title(_("Media Plugin Values Edit - ") + self.container_action.container_data.get_program_name())
+        #self.set_resizable(False)
 
         self.add(alignment)
         self.show_all()
