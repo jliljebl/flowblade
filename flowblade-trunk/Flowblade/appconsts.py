@@ -328,7 +328,7 @@ PANEL_PLACEMENT_TWO_WINDOWS_MEDIA_PANEL_POS = 7
 
 # Panels
 PANEL_MEDIA = 0
-PANEL_MULTI_EDIT = 1 # This const value was named PANEL_FILTERS before but now we use that panl as the multi edit panel.
+PANEL_MULTI_EDIT = 1 # This const value was named PANEL_FILTERS before but now we use that panel as the multi edit panel.
 PANEL_COMPOSITORS = 2 # Deprecated, panel is now shown in multi edit panel.
 PANEL_RANGE_LOG = 3
 PANEL_RENDERING = 4
