@@ -988,7 +988,78 @@ class CompositorInfoPanel(Gtk.HBox):
     def set_enabled(self, value):
         pass # Seek and destroy callsites
 
+# -------------------------------------------- compositor info
+class PluginInfoPanel(Gtk.HBox):
+    def __init__(self):
+        GObject.GObject.__init__(self)
+        self.set_homogeneous(False)
 
+        if editorstate.screen_size_small_height() == True:
+            font_desc = "sans bold 8"
+        else:
+            font_desc = "sans bold 9"
+            
+        self.source_track = Gtk.Label()
+        self.source_track_value = Gtk.Label()
+
+        self.source_track.modify_font(Pango.FontDescription(font_desc))
+        self.source_track_value.modify_font(Pango.FontDescription(font_desc))
+        self.source_track.set_sensitive(False)
+        self.source_track_value.set_sensitive(False)
+        
+        self.length = Gtk.Label()
+        self.length_value = Gtk.Label()
+
+        self.length.modify_font(Pango.FontDescription(font_desc))
+        self.length_value.modify_font(Pango.FontDescription(font_desc))
+        self.length.set_sensitive(False)
+        self.length_value.set_sensitive(False)
+        
+        info_row_2 = Gtk.HBox()
+        info_row_2.pack_start(self.source_track, False, True, 0)
+        info_row_2.pack_start(self.source_track_value, False, False, 0)
+        info_row_2.pack_start(Gtk.Label(), True, True, 0)
+
+        info_row_5 = Gtk.HBox()
+        info_row_5.pack_start(self.length, False, False, 0)
+        info_row_5.pack_start(self.length_value, False, False, 0)
+        info_row_5.pack_start(Gtk.Label(), True, True, 0)
+
+        PAD_HEIGHT = 2
+        self.pack_start(info_row_2, False, False, 0)
+        self.pack_start(info_row_5, False, False, 0)
+
+        self.set_spacing(4)
+        self._set_use_mark_up()
+
+    def display_plugin_info(self, clip, track_name):
+        self.source_track.set_text(_("<b>Media Plugin on Track:</b>") + " ")
+        self.length.set_text(_("<b>Length:</b>") + " ")
+
+        self.source_track_value.set_text("<b>" + track_name + "</b>")
+
+        length = utils.get_tc_string(clip.get_length())
+        self.length_value.set_text("<b>" + length + "</b>")
+
+        self._set_use_mark_up()
+    """    
+    def set_no_compositor_info(self):
+        self.source_track.set_text("")
+        self.source_track_value.set_text("")
+
+        self.length.set_text("")
+        self.length_value.set_text("")
+
+        self._set_use_mark_up()
+    """
+    
+    def _set_use_mark_up(self):
+        self.source_track.set_use_markup(True)
+        self.length.set_use_markup(True)
+        self.length_value.set_use_markup(True)
+        self.source_track_value.set_use_markup(True)
+
+        
 # -------------------------------------------- compositor info
 class BinInfoPanel(Gtk.HBox):
     def __init__(self):

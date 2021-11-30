@@ -418,7 +418,7 @@ def create_widgets():
     """
     Widgets for editing compositing properties.
     """
-    widgets.plugin_info = Gtk.Label()
+    widgets.plugin_info = guicomponents.PluginInfoPanel()
     widgets.hamburger_launcher = guicomponents.HamburgerPressLaunch(_hamburger_launch_pressed)
     widgets.hamburger_launcher.connect_launched_menu(guicomponents.clip_effects_hamburger_menu)
     guiutils.set_margins(widgets.hamburger_launcher.widget, 4, 6, 6, 0)
@@ -451,16 +451,26 @@ def _hamburger_launch_pressed(widget, event):
 
 def set_plugin_to_be_edited(clip, action_object):
     print("dfsdfshaloo")
-    edit_panel = simpleeditors.show_fluxity_container_clip_program_editor(  action_object.project_edit_done, \
-                                                                            clip, action_object, action_object.container_data.data_slots["fluxity_plugin_edit_data"])
 
+    plugin_name_label = Gtk.Label(label= "<b>" + clip.name + "</b>")
+    plugin_name_label.set_use_markup(True)
+    name_box = Gtk.VBox()
+    name_box.pack_start(plugin_name_label, False, False, 0)
+    name_box.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
+    
+    edit_panel = simpleeditors.show_fluxity_container_clip_program_editor(  action_object.project_edit_done, \
+                                                                            clip, action_object, action_object.container_data.data_slots["fluxity_plugin_edit_data"], name_box)
+    
     try:
         widgets.value_edit_frame.remove(widgets.value_edit_box)
     except:
         pass
-        
-    widgets.value_edit_box = edit_panel
+    widgets.value_edit_box = edit_panel.scrolled_window 
     widgets.value_edit_frame.add(widgets.value_edit_box)
+    
+    track, index = current_sequence().get_track_and_index_for_id(clip.id)
+    track_name = utils.get_track_name(track, current_sequence())
+    widgets.plugin_info.display_plugin_info(clip, track_name)
 
     editorlayout.show_panel(appconsts.PANEL_MULTI_EDIT)
     gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_PLUGINS)

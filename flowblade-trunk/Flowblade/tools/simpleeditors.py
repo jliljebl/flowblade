@@ -76,6 +76,7 @@ MIN_VAL = -pow(2, 63)
 MAX_VAL = pow(2, 63)
 
 SIMPLE_EDITOR_LEFT_WIDTH = 150
+SIMPLE_EDITOR_RIGHT_WIDTH = 200
 MONITOR_WIDTH = 600
 MONITOR_HEIGHT = 360
 
@@ -254,14 +255,14 @@ def get_simple_editor_selector(active_index, callback): # used in containerprogr
 
 
 # -------------------------------------------------------------------- Media Plugin timeline clip editor
-def show_fluxity_container_clip_program_editor(callback, clip, container_action, script_data_object):
-    editor_panel = FluxityScriptEditorWindow(callback, clip, container_action, script_data_object)
+def show_fluxity_container_clip_program_editor(callback, clip, container_action, script_data_object, name_box):
+    editor_panel = FluxityScriptEditorPanel(callback, clip, container_action, script_data_object, name_box)
     return editor_panel
 
-class FluxityScriptEditorWindow(Gtk.Bin):
-    def __init__(self, callback, clip, container_action, script_data_object):
+class FluxityScriptEditorPanel:
+    def __init__(self, callback, clip, container_action, script_data_object, name_box):
         
-        GObject.GObject.__init__(self)
+        #GObject.GObject.__init__(self)
         #self.connect("delete-event", lambda w, e: self.cancel())
         
         self.callback = callback
@@ -285,6 +286,7 @@ class FluxityScriptEditorWindow(Gtk.Bin):
             editors_v_panel.pack_start(w, False, False, 0)
 
         pane = Gtk.VBox(False, 2)
+        pane.pack_start(name_box, False, False, 0)
         if len(self.editor_widgets) != 0:
             pane.pack_start(editors_v_panel, False, False, 0)
         else:
@@ -293,41 +295,34 @@ class FluxityScriptEditorWindow(Gtk.Bin):
         sw = Gtk.ScrolledWindow()
         sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         sw.add(pane)
-        editors_panel = sw
+        self.scrolled_window = sw
         
-        editors_panel.set_size_request(400, 400)
+        #editors_panel.set_size_request(510, 100)
 
-        cancel_b = guiutils.get_sized_button(_("Cancel"), 150, 32)
-        cancel_b.connect("clicked", lambda w: self.cancel())
-        save_b = guiutils.get_sized_button(_("Save Changes"), 150, 32)
-        save_b.connect("clicked", lambda w: self.save())
+        #cancel_b = guiutils.get_sized_button(_("Cancel"), 150, 32)
+        #cancel_b.connect("clicked", lambda w: self.cancel())
+        #save_b = guiutils.get_sized_button(_("Save Changes"), 150, 32)
+        #save_b.connect("clicked", lambda w: self.save())
         
-        buttons_box = Gtk.HBox(False, 2)
-        buttons_box.pack_start(Gtk.Label(), True, True, 0)
-        buttons_box.pack_start(cancel_b, False, False, 0)
-        buttons_box.pack_start(save_b, False, False, 0)
+        #buttons_box = Gtk.HBox(False, 2)
+        #buttons_box.pack_start(Gtk.Label(), True, True, 0)
+        #buttons_box.pack_start(cancel_b, False, False, 0)
+        #buttons_box.pack_start(save_b, False, False, 0)
 
-        self.preview_panel = PreviewPanel(self, clip)
+        #self.preview_panel = PreviewPanel(self, clip)
         
-        preview_box = Gtk.VBox(False, 2)
-        preview_box.pack_start(self.preview_panel, True, True, 0)
-        preview_box.pack_start(guiutils.pad_label(2, 24), False, False, 0)
-        preview_box.pack_start(buttons_box, False, False, 0)
+        #preview_box = Gtk.VBox(False, 2)
+        #preview_box.pack_start(self.preview_panel, True, True, 0)
+        #preview_box.pack_start(guiutils.pad_label(2, 24), False, False, 0)
+        #preview_box.pack_start(buttons_box, False, False, 0)
 
-        main_box = Gtk.HBox(False, 2)
-        main_box.pack_start(guiutils.get_named_frame(_("Editors"), editors_panel), False, False, 0)
-        #main_box.pack_start(guiutils.get_named_frame(_("Preview"), preview_box), False, False, 0)
+        #main_box = Gtk.HBox(False, 2)
+        #main_box.pack_start(editors_panel, True, True, 0)
 
-        alignment = guiutils.set_margins(main_box, 8,8,8,8) #dialogutils.get_default_alignment(main_box)
+        #alignment = guiutils.set_margins(main_box, 8,8,8,8) #dialogutils.get_default_alignment(main_box)
 
-        #self.set_modal(True)
-        #self.set_transient_for(gui.editor_window.window)
-        #self.set_position(Gtk.WindowPosition.CENTER)
-        #self.set_title(_("Media Plugin Values Edit - ") + self.container_action.container_data.get_program_name())
-        #self.set_resizable(False)
-
-        self.add(alignment)
-        self.show_all()
+        #self.add(alignment)
+        #self.show_all()
         
     def render_preview_frame(self):
         if self.preview_frame != -1:
@@ -487,9 +482,14 @@ class AbstractSimpleEditor(Gtk.HBox):
         widget.set_tooltip_text (self.tooltip)
         left_box = guiutils.get_left_justified_box([Gtk.Label(label=translations.get_param_name(label_text))])
         left_box.set_size_request(SIMPLE_EDITOR_LEFT_WIDTH, guiutils.TWO_COLUMN_BOX_HEIGHT)
-        self.pack_start(left_box, False, True, 0)
-        self.pack_start(widget, True, True, 0)
+        widget.set_size_request(SIMPLE_EDITOR_RIGHT_WIDTH, guiutils.TWO_COLUMN_BOX_HEIGHT)
 
+        internal_box = Gtk.HBox(0, False)
+        internal_box.pack_start(left_box, False, False, 0)
+        internal_box.pack_start(Gtk.Label(), True, True, 0)
+        internal_box.pack_start(widget, False, False, 0)
+
+        self.pack_start(internal_box, True, True, 0)
 
 class TextEditor(AbstractSimpleEditor):
 
