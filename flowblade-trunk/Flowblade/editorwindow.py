@@ -416,12 +416,12 @@ class EditorWindow:
         multi_empty_vbox.pack_start(Gtk.Label(), True, True, 0)
     
         # Multi edit panel
-        self.edit_multi = Gtk.Stack()
+        self.edit_multi = guicomponents.EditMultiStack()
         self.edit_multi.add_named(multi_empty_vbox, appconsts.EDIT_MULTI_EMPTY)
         self.edit_multi.add_named(self.effects_panel, appconsts.EDIT_MULTI_FILTERS)
         self.edit_multi.add_named(compositors_panel, appconsts.EDIT_MULTI_COMPOSITORS)
         self.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_EMPTY)
-        self.edit_multi.set_size_request(730, 600)
+        #self.edit_multi.set_size_request(730, 600)
         
         # Render panel
         try:

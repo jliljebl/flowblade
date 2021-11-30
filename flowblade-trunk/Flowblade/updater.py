@@ -125,8 +125,6 @@ def refresh_player(e):
 
 # --------------------------------- window 
 def window_resized():
-    print("window_resized")
-
     try:
         # Resize track heights so that all tracks are displayed
         current_sequence().resize_tracks_to_fit(gui.tline_canvas.widget.get_allocation())

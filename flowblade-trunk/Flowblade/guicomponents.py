@@ -4016,3 +4016,21 @@ class CategoriesModelComboBoxWithData:
         name, items = self.categories_list[indices[0]]
         name, item = items[indices[1]]
         return name
+
+
+class EditMultiStack:
+    def __init__(self):
+        self.widget = Gtk.Frame()
+        self.widget.set_shadow_type(Gtk.ShadowType.NONE)
+        self.panels = {}
+
+    def add_named(self, panel, name):
+        self.panels[name] = panel
+
+    def set_visible_child_name(self, name):
+        try:
+            self.widget.remove(self.widget.get_child())
+        except:
+            pass
+        self.widget.add(self.panels[name])
+        self.panels[name].show_all()

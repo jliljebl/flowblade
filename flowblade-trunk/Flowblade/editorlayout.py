@@ -268,7 +268,7 @@ def _get_position_panels(position):
 def _get_panels_widgets_dict(editor_window):
     _panels_widgets = { \
         appconsts.PANEL_MEDIA: editor_window.mm_paned,
-        appconsts.PANEL_FILTERS: editor_window.edit_multi,
+        appconsts.PANEL_FILTERS: editor_window.edit_multi.widget,
         appconsts.PANEL_RANGE_LOG: editor_window.media_log_panel,
         appconsts.PANEL_RENDERING: editor_window.render_panel,
         appconsts.PANEL_JOBS: editor_window.jobs_pane,

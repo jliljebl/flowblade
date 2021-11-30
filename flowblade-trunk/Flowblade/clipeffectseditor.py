@@ -50,7 +50,6 @@ import tlinerender
 import translations
 import updater
 import utils
-import traceback
 
 _filter_stack = None
 
@@ -563,8 +562,6 @@ def clear_clip():
     """
     Removes clip from effects editing gui.
     """
-    print("clear_clip")
-    #traceback.print_stack()
     global _filter_stack
     _filter_stack = None
     _set_no_clip_info()
@@ -852,7 +849,6 @@ def filter_edit_done_stack_update(edited_clip, index=-1):
         clear_effects_edit_panel()
 
 def filter_edit_multi_done_stack_update(clips):
-    #print(clips)
     for clip in clips:
         if clip == get_edited_clip():
              clear_clip()
