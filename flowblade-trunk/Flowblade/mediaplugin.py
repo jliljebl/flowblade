@@ -450,8 +450,6 @@ def _hamburger_launch_pressed(widget, event):
 
 
 def set_plugin_to_be_edited(clip, action_object):
-    print("dfsdfshaloo")
-
     plugin_name_label = Gtk.Label(label= "<b>" + clip.name + "</b>")
     plugin_name_label.set_use_markup(True)
     name_box = Gtk.VBox()
@@ -460,7 +458,7 @@ def set_plugin_to_be_edited(clip, action_object):
     
     edit_panel = simpleeditors.show_fluxity_container_clip_program_editor(  action_object.project_edit_done, \
                                                                             clip, action_object, action_object.container_data.data_slots["fluxity_plugin_edit_data"], name_box)
-    
+
     try:
         widgets.value_edit_frame.remove(widgets.value_edit_box)
     except:
