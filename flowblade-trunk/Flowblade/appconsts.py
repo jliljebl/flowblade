@@ -329,7 +329,7 @@ PANEL_PLACEMENT_TWO_WINDOWS_MEDIA_PANEL_POS = 7
 # Panels
 PANEL_MEDIA = 0
 PANEL_FILTERS = 1
-PANEL_COMPOSITORS = 2
+PANEL_COMPOSITORS = 2 # Deprecated, panel is now shown in multi edit panel.
 PANEL_RANGE_LOG = 3
 PANEL_RENDERING = 4
 PANEL_JOBS = 5
@@ -347,3 +347,7 @@ KEYFRAME_LINEAR_EQUALS_STR = "="
 KEYFRAME_SMOOTH_EQUALS_STR = "~="
 KEYFRAME_DISCRETE_EQUALS_STR = "|="
 
+# Multi edit panel
+EDIT_MULTI_EMPTY = "edit_multi_empty"
+EDIT_MULTI_FILTERS = "edit_multi_filters"
+EDIT_MULTI_COMPOSITORS = "edit_multi_compositors"

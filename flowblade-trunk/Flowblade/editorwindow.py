@@ -407,8 +407,22 @@ class EditorWindow:
         compositors_vbox.pack_start(compositors_hbox, True, True, 0)
         compositors_vbox.pack_start(action_row, False, False, 0)
 
-        self.compositors_panel = guiutils.set_margins(compositors_vbox, 2, 2, 2, 2)
+        compositors_panel = guiutils.set_margins(compositors_vbox, 2, 2, 2, 2)
 
+        # Multi empty panel
+        multi_empty_vbox = Gtk.VBox(False, 0)
+        multi_empty_vbox.pack_start(Gtk.Label(), True, True, 0)
+        multi_empty_vbox.pack_start(Gtk.Label(label=_("No Edit Target")), False, False, 0)
+        multi_empty_vbox.pack_start(Gtk.Label(), True, True, 0)
+    
+        # Multi edit panel
+        self.edit_multi = Gtk.Stack()
+        self.edit_multi.add_named(multi_empty_vbox, appconsts.EDIT_MULTI_EMPTY)
+        self.edit_multi.add_named(self.effects_panel, appconsts.EDIT_MULTI_FILTERS)
+        self.edit_multi.add_named(compositors_panel, appconsts.EDIT_MULTI_COMPOSITORS)
+        self.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_EMPTY)
+        self.edit_multi.set_size_request(730, 600)
+        
         # Render panel
         try:
             render.create_widgets()

@@ -130,7 +130,7 @@ def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT, param_data=None):
     # These can produce data for same objects and we are not (currently) updating
     # clipeffectseditor/kftool with events from each other.
     clipeffectseditor.clear_clip()
-
+        
     clip_index = track.clips.index(clip)
 
     # Save data needed to do the keyframe edits.

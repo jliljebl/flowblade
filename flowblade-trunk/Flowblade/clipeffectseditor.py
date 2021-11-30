@@ -50,6 +50,7 @@ import tlinerender
 import translations
 import updater
 import utils
+import traceback
 
 _filter_stack = None
 
@@ -461,6 +462,8 @@ def set_clip(clip, track, clip_index, show_tab=True):
     if show_tab:
         editorlayout.show_panel(appconsts.PANEL_FILTERS)
 
+    gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_FILTERS)
+
     global _edit_polling_thread
     # Close old polling
     if _edit_polling_thread != None:
@@ -556,13 +559,12 @@ def _add_filter_from_effect_select_panel(row_index, group_index):
 
     updater.repaint_tline()
 
-def _quit_editing_clip_clicked(): # this is a button callback
-    clear_clip()
-
 def clear_clip():
     """
     Removes clip from effects editing gui.
     """
+    print("clear_clip")
+    #traceback.print_stack()
     global _filter_stack
     _filter_stack = None
     _set_no_clip_info()
@@ -935,6 +937,7 @@ def _clip_hamburger_item_activated(widget, msg):
     
     if msg == "close":
         clear_clip()
+        gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_EMPTY)
     elif  msg == "expanded":
         _filter_stack.set_all_filters_expanded_state(True)
     elif  msg == "unexpanded":

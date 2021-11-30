@@ -125,7 +125,10 @@ def set_compositor(new_compositor):
     set_enabled(True)
     _display_compositor_edit_box()
 
-    editorlayout.show_panel(appconsts.PANEL_COMPOSITORS)
+    editorlayout.show_panel(appconsts.PANEL_FILTERS)
+
+    print("haloooooooooooo")
+    gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_COMPOSITORS)
 
     global _edit_polling_thread
     # Close old polling
