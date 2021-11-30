@@ -1956,7 +1956,7 @@ def _get_filters_add_menu_item(event, clip, track, callback, multi_filter=False)
     menu_item.show()
     return menu_item
 
-def display_effect_panel_filters_menu(event, clip, track, callback):
+def display_effect_PANEL_MULTI_EDIT_menu(event, clip, track, callback):
     menu = effect_menu
     guiutils.remove_children(menu)
     

@@ -459,7 +459,7 @@ def set_clip(clip, track, clip_index, show_tab=True):
         show_text_in_edit_area(_("Clip Has No Filters"))
 
     if show_tab:
-        editorlayout.show_panel(appconsts.PANEL_FILTERS)
+        editorlayout.show_panel(appconsts.PANEL_MULTI_EDIT)
 
     gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_FILTERS)
 
@@ -949,7 +949,7 @@ def _filter_add_menu_launch_pressed(w, event):
     if _filter_stack != None:
         clip = _filter_stack.clip
         track = _filter_stack.track 
-        guicomponents.display_effect_panel_filters_menu(event, clip, track, _filter_menu_callback)
+        guicomponents.display_effect_PANEL_MULTI_EDIT_menu(event, clip, track, _filter_menu_callback)
             
 def _filter_menu_callback(w, data):
     clip, track, item_id, item_data = data

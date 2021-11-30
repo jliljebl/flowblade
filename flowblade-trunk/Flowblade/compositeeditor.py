@@ -125,7 +125,7 @@ def set_compositor(new_compositor):
     set_enabled(True)
     _display_compositor_edit_box()
 
-    editorlayout.show_panel(appconsts.PANEL_FILTERS)
+    editorlayout.show_panel(appconsts.PANEL_MULTI_EDIT)
 
     gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_COMPOSITORS)
 

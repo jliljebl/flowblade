@@ -62,7 +62,7 @@ DEFAULT_PANEL_POSITIONS = { \
     appconsts.PANEL_MEDIA: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_FILTER_SELECT: appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT,
     appconsts.PANEL_RANGE_LOG: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
-    appconsts.PANEL_FILTERS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
+    appconsts.PANEL_MULTI_EDIT: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_JOBS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_PROJECT_SMALL_SCREEN: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT,
     appconsts.PANEL_PROJECT: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT,
@@ -74,7 +74,7 @@ MONITOR_CENTER_PANEL_POSITIONS = { \
     appconsts.PANEL_MEDIA: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_FILTER_SELECT: appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT,
     appconsts.PANEL_RANGE_LOG: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
-    appconsts.PANEL_FILTERS: appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT,
+    appconsts.PANEL_MULTI_EDIT: appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT,
     appconsts.PANEL_JOBS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_PROJECT_SMALL_SCREEN: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT,
     appconsts.PANEL_PROJECT: appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT,
@@ -86,7 +86,7 @@ TOP_ROW_FOUR_POSITIONS = { \
     appconsts.PANEL_MEDIA: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_FILTER_SELECT: appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT,
     appconsts.PANEL_RANGE_LOG: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
-    appconsts.PANEL_FILTERS: appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT,
+    appconsts.PANEL_MULTI_EDIT: appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT,
     appconsts.PANEL_JOBS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_PROJECT_SMALL_SCREEN: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT,
     appconsts.PANEL_PROJECT: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT,
@@ -98,7 +98,7 @@ MEDIA_PANEL_LEFT_POSITIONS = { \
     appconsts.PANEL_MEDIA: appconsts.PANEL_PLACEMENT_LEFT_COLUMN,
     appconsts.PANEL_FILTER_SELECT: appconsts.PANEL_PLACEMENT_NOT_VISIBLE,
     appconsts.PANEL_RANGE_LOG: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
-    appconsts.PANEL_FILTERS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
+    appconsts.PANEL_MULTI_EDIT: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_JOBS: appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,
     appconsts.PANEL_PROJECT_SMALL_SCREEN: appconsts.PANEL_PLACEMENT_TOP_ROW_PROJECT_DEFAULT,
     appconsts.PANEL_PROJECT: appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT,
@@ -108,7 +108,7 @@ MEDIA_PANEL_LEFT_POSITIONS = { \
 
 AVAILABLE_PANEL_POSITIONS_OPTIONS = { \
     appconsts.PANEL_MEDIA: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT, appconsts.PANEL_PLACEMENT_LEFT_COLUMN, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT],
-    appconsts.PANEL_FILTERS: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,  appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT, appconsts.PANEL_PLACEMENT_LEFT_COLUMN, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT],
+    appconsts.PANEL_MULTI_EDIT: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT,  appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT, appconsts.PANEL_PLACEMENT_LEFT_COLUMN, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT],
     appconsts.PANEL_RANGE_LOG: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT],
     appconsts.PANEL_RENDERING: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT],
     appconsts.PANEL_JOBS: [appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT, appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_LEFT, appconsts.PANEL_PLACEMENT_BOTTOM_ROW_RIGHT],
@@ -119,7 +119,7 @@ AVAILABLE_PANEL_POSITIONS_OPTIONS = { \
 }
 
 PANEL_ORDER_IN_NOTEBOOKS = [appconsts.PANEL_MEDIA, appconsts.PANEL_FILTER_SELECT, appconsts.PANEL_RANGE_LOG, 
-                            appconsts.PANEL_FILTERS, appconsts.PANEL_JOBS, appconsts.PANEL_PROJECT_SMALL_SCREEN, 
+                            appconsts.PANEL_MULTI_EDIT, appconsts.PANEL_JOBS, appconsts.PANEL_PROJECT_SMALL_SCREEN, 
                             appconsts.PANEL_PROJECT, appconsts.PANEL_RENDERING,
                             appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN]
 
@@ -127,7 +127,7 @@ PANEL_MINIMUM_SIZES = { \
     appconsts.PANEL_MEDIA: None, 
     appconsts.PANEL_FILTER_SELECT: None,
     appconsts.PANEL_RANGE_LOG: None,
-    appconsts.PANEL_FILTERS: (510, 500), # This has very small default size when empty and needs preferred size set to show properly when moved.
+    appconsts.PANEL_MULTI_EDIT: (510, 500), # This has very small default size when empty and needs preferred size set to show properly when moved.
     appconsts.PANEL_JOBS: None,
     appconsts.PANEL_RENDERING: None,
     appconsts.PANEL_PROJECT: None,
@@ -217,7 +217,7 @@ def init_layout_data():
     
     _panels_names = { \
         appconsts.PANEL_MEDIA: _("Media"),
-        appconsts.PANEL_FILTERS: _("Edit"),
+        appconsts.PANEL_MULTI_EDIT: _("Edit"),
         appconsts.PANEL_RANGE_LOG: _("Range Log"),
         appconsts.PANEL_RENDERING: _("Render"),
         appconsts.PANEL_JOBS: _("Jobs"),
@@ -268,7 +268,7 @@ def _get_position_panels(position):
 def _get_panels_widgets_dict(editor_window):
     _panels_widgets = { \
         appconsts.PANEL_MEDIA: editor_window.mm_paned,
-        appconsts.PANEL_FILTERS: editor_window.edit_multi.widget,
+        appconsts.PANEL_MULTI_EDIT: editor_window.edit_multi.widget,
         appconsts.PANEL_RANGE_LOG: editor_window.media_log_panel,
         appconsts.PANEL_RENDERING: editor_window.render_panel,
         appconsts.PANEL_JOBS: editor_window.jobs_pane,
@@ -433,7 +433,7 @@ def get_panel_positions_menu_item():
     filter_panel_menu_item = Gtk.MenuItem(_("Edit Panel"))
     panel_positions_menu.append(filter_panel_menu_item)
 
-    filter_panel_menu =  _get_position_selection_menu(appconsts.PANEL_FILTERS)
+    filter_panel_menu =  _get_position_selection_menu(appconsts.PANEL_MULTI_EDIT)
     filter_panel_menu_item.set_submenu(filter_panel_menu)
 
     # Jobs
