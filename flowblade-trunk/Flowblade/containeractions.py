@@ -767,22 +767,17 @@ class FluxityContainerActions(AbstractContainerActionObject):
     def edit_program(self, clip):
         set_plugin_to_be_edited_func(clip, self)
         gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_PLUGINS)
-        #edit_panel = simpleeditors.show_fluxity_container_clip_program_editor(self.project_edit_done, clip, self, self.container_data.data_slots["fluxity_plugin_edit_data"])
 
-    def project_edit_done(self, response_is_accept, dialog, editors, orig_program_info_json):
-        if response_is_accept == True:
-            new_editors_list = self.get_editors_data_as_editors_list(editors)
-            self.container_data.data_slots["fluxity_plugin_edit_data"]["editors_list"] = new_editors_list
-            dialog.destroy()
-        else:
-            # For fluxity edits we don't need to reset edit data like we do in Blender.
-            dialog.destroy()
+    def apply_editors(self, editors):
+        new_editors_list = self.get_editors_data_as_editors_list(editors)
+        self.container_data.data_slots["fluxity_plugin_edit_data"]["editors_list"] = new_editors_list
 
-    def render_fluxity_preview(self, program_editor_window, editors, preview_frame):
+
+    def render_fluxity_preview(self, callbacks, editors, preview_frame):
         self.create_data_dirs_if_needed() # This could be first time we are writing
                                           # data related to this container clip to disk.
         
-        self.program_editor_window = program_editor_window
+        completed_callback, error_callback = callbacks
         new_editors_list = self.get_editors_data_as_editors_list(editors)
         editors_data_json = json.dumps(new_editors_list)
         script_file = open(self.container_data.program)
@@ -798,12 +793,12 @@ class FluxityContainerActions(AbstractContainerActionObject):
 
         fctx = fluxity.render_preview_frame(user_script, script_file, preview_frame, out_folder, profile_file_path, editors_data_json)
         if fctx.error != None:
-            self.program_editor_window.preview_render_complete_error(fctx.error)
+            error_callback(fctx.error)
             return
                     
         fctx.priv_context.write_out_frame(True)
         
-        self.program_editor_window.preview_render_complete()
+        completed_callback()
 
     def get_editors_data_as_editors_list(self, editor_widgets):
         new_editors_list = [] # This is the editors list in format created in

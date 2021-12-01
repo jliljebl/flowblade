@@ -60,6 +60,9 @@ _current_plugin_data_object = None
 _current_render_data = None
 
 widgets = utils.EmptyClass()
+_edit_panel = None
+_action_object = None
+_clip = None 
 
 # --------------------------------------------------------- plugin
 class MediaPlugin:
@@ -443,27 +446,47 @@ def get_plugin_hamburger_row():
     action_row.pack_start(Gtk.Label(), True, True, 0)
     
     return action_row
+
+def get_plugin_buttons_row():
+    cancel_b = guiutils.get_sized_button(_("Cancel"), 150, 32)
+    cancel_b.connect("clicked", lambda w: _cancel())
+    preview_b = guiutils.get_sized_button(_("Preview"), 150, 32)
+    preview_b.connect("clicked", lambda w: _preview())
+    render_b = guiutils.get_sized_button(_("Apply"), 150, 32)
+    render_b.connect("clicked", lambda w: _apply())
     
+    buttons_box = Gtk.HBox(False, 2)
+    buttons_box.pack_start(Gtk.Label(), True, True, 0)
+    buttons_box.pack_start(cancel_b, False, False, 0)
+    buttons_box.pack_start(preview_b, False, False, 0)
+    buttons_box.pack_start(render_b, False, False, 0)
+    
+    return buttons_box    
+
 def _hamburger_launch_pressed(widget, event):
     pass
     #guicomponents.get_compositor_editor_hamburger_menu(event, _compositor_hamburger_item_activated)
 
 
 def set_plugin_to_be_edited(clip, action_object):
+    global _action_object, _clip
+    _clip = clip
+    _action_object = action_object
+
     plugin_name_label = Gtk.Label(label= "<b>" + clip.name + "</b>")
     plugin_name_label.set_use_markup(True)
     name_box = Gtk.VBox()
     name_box.pack_start(plugin_name_label, False, False, 0)
     name_box.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
     
-    edit_panel = simpleeditors.show_fluxity_container_clip_program_editor(  action_object.project_edit_done, \
-                                                                            clip, action_object, action_object.container_data.data_slots["fluxity_plugin_edit_data"], name_box)
+    global _edit_panel
+    _edit_panel = simpleeditors.show_fluxity_container_clip_program_editor(clip, action_object, action_object.container_data.data_slots["fluxity_plugin_edit_data"], name_box)
 
     try:
         widgets.value_edit_frame.remove(widgets.value_edit_box)
     except:
         pass
-    widgets.value_edit_box = edit_panel.scrolled_window 
+    widgets.value_edit_box = _edit_panel.scrolled_window 
     widgets.value_edit_frame.add(widgets.value_edit_box)
     
     track, index = current_sequence().get_track_and_index_for_id(clip.id)
@@ -472,4 +495,38 @@ def set_plugin_to_be_edited(clip, action_object):
 
     editorlayout.show_panel(appconsts.PANEL_MULTI_EDIT)
     gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_PLUGINS)
+
+def _cancel():
+    global _edit_panel, _action_object, _clip
+    _edit_panel = None
+    _action_object = None
+    _clip = None
+
+    gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_EMPTY)
+ 
+def _preview():
+    preview_frame = 1  #int(self.preview_panel.frame_select.get_value() + self.clip.clip_in)
+    callbacks = (_preview_render_complete, _preview_render_complete_error)
+    _action_object.render_fluxity_preview(callbacks, _edit_panel.editor_widgets, preview_frame)
+
+def _get_preview_file():
+    return _action_object.get_preview_media_dir() + "/preview.png"
+
+def _preview_render_complete():
+    preview_surface = cairo.ImageSurface.create_from_png(_get_preview_file())
+    preview_frame = -1
+    print("preview done")
+    #self.preview_panel.preview_monitor.queue_draw()
+
+def _preview_render_complete_error(self, error_msg):
+    preview_frame = -1
+
+    txt = _("Error in Preview for frame: ") +  error_msg
+    #self.preview_panel.preview_monitor.queue_draw()
+
+    print("preview error" + error_msg)
     
+def _apply():
+    _action_object.apply_editors(_edit_panel.editor_widgets)
+    _action_object.render_full_media(_clip)
+

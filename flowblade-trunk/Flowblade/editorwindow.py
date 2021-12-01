@@ -410,15 +410,17 @@ class EditorWindow:
         compositors_panel = guiutils.set_margins(compositors_vbox, 2, 2, 2, 2)
 
         # Media Plugins
-        action_row = mediaplugin.get_plugin_hamburger_row()
-        mediaplugins_editor_panel = guiutils.set_margins(mediaplugin.widgets.value_edit_frame, 0, 0, 4, 0)
+        hamburger_row = mediaplugin.get_plugin_hamburger_row()
+        buttons_row = guiutils.set_margins(mediaplugin.get_plugin_buttons_row(),4, 4, 4, 4)
+        mediaplugins_editor_panel = guiutils.set_margins(mediaplugin.widgets.value_edit_frame, 0, 0, 8, 4)
         
         mediaplugins_hbox = Gtk.HBox()
         mediaplugins_hbox.pack_start(mediaplugins_editor_panel, True, True, 0)
 
         mediaplugins_vbox = Gtk.VBox()
         mediaplugins_vbox.pack_start(mediaplugins_hbox, True, True, 0)
-        mediaplugins_vbox.pack_start(action_row, False, False, 0)
+        mediaplugins_vbox.pack_start(buttons_row, False, False, 0)
+        mediaplugins_vbox.pack_start(hamburger_row, False, False, 0)
 
         mediaplugins_panel = guiutils.set_margins(mediaplugins_vbox, 2, 2, 2, 2)
 

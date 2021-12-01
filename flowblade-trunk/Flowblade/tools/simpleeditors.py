@@ -255,17 +255,13 @@ def get_simple_editor_selector(active_index, callback): # used in containerprogr
 
 
 # -------------------------------------------------------------------- Media Plugin timeline clip editor
-def show_fluxity_container_clip_program_editor(callback, clip, container_action, script_data_object, name_box):
-    editor_panel = FluxityScriptEditorPanel(callback, clip, container_action, script_data_object, name_box)
+def show_fluxity_container_clip_program_editor(clip, container_action, script_data_object, name_box):
+    editor_panel = FluxityScriptEditorPanel(clip, container_action, script_data_object, name_box)
     return editor_panel
 
 class FluxityScriptEditorPanel:
-    def __init__(self, callback, clip, container_action, script_data_object, name_box):
+    def __init__(self, clip, container_action, script_data_object, name_box):
         
-        #GObject.GObject.__init__(self)
-        #self.connect("delete-event", lambda w, e: self.cancel())
-        
-        self.callback = callback
         self.clip = clip
         self.container_action = container_action
         self.script_data_object = copy.deepcopy(script_data_object)
@@ -296,71 +292,9 @@ class FluxityScriptEditorPanel:
         sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         sw.add(pane)
         self.scrolled_window = sw
-        
-        #editors_panel.set_size_request(510, 100)
 
-        #cancel_b = guiutils.get_sized_button(_("Cancel"), 150, 32)
-        #cancel_b.connect("clicked", lambda w: self.cancel())
-        #save_b = guiutils.get_sized_button(_("Save Changes"), 150, 32)
-        #save_b.connect("clicked", lambda w: self.save())
-        
-        #buttons_box = Gtk.HBox(False, 2)
-        #buttons_box.pack_start(Gtk.Label(), True, True, 0)
-        #buttons_box.pack_start(cancel_b, False, False, 0)
-        #buttons_box.pack_start(save_b, False, False, 0)
 
-        #self.preview_panel = PreviewPanel(self, clip)
-        
-        #preview_box = Gtk.VBox(False, 2)
-        #preview_box.pack_start(self.preview_panel, True, True, 0)
-        #preview_box.pack_start(guiutils.pad_label(2, 24), False, False, 0)
-        #preview_box.pack_start(buttons_box, False, False, 0)
-
-        #main_box = Gtk.HBox(False, 2)
-        #main_box.pack_start(editors_panel, True, True, 0)
-
-        #alignment = guiutils.set_margins(main_box, 8,8,8,8) #dialogutils.get_default_alignment(main_box)
-
-        #self.add(alignment)
-        #self.show_all()
-        
-    def render_preview_frame(self):
-        if self.preview_frame != -1:
-            return # There already is preview render ongoing.
-        self.start_time = time.monotonic()
-
-        self.preview_panel.preview_info.set_markup("<small>Rendering preview...</small>")
-        self.preview_frame = int(self.preview_panel.frame_select.get_value() + self.clip.clip_in)
-        self.container_action.render_fluxity_preview(self, self.editor_widgets, self.preview_frame)
-
-    def get_preview_file(self):
-        preview_file = self.container_action.get_preview_media_dir() + "/preview.png"
-
-        return preview_file
-
-    def preview_render_complete(self):
-        self.preview_panel.preview_surface = cairo.ImageSurface.create_from_png(self.get_preview_file())
-        self.preview_frame = -1
-        
-        render_time = time.monotonic() - self.start_time
-        time_str = "{0:.2f}".format(round(render_time,2))
-        frame_str = str(int(self.preview_panel.frame_select.get_value()))
-        self.preview_panel.preview_info.set_markup("<small>" + _("Preview for frame: ") +  frame_str + _(", render time: ") + time_str +  "</small>")
-        self.preview_panel.preview_monitor.queue_draw()
-
-    def preview_render_complete_error(self, error_msg):
-        self.preview_panel.preview_surface = None
-        self.preview_frame = -1
-        
-        self.preview_panel.preview_info.set_markup("<small>" + _("Error in Preview for frame: ") +  error_msg +  "</small>")
-        self.preview_panel.preview_monitor.queue_draw()
-        
-    def cancel(self):
-        self.callback(False, self, self.editor_widgets, None)
-
-    def save(self):
-        self.callback(True, self, self.editor_widgets, None)
-
+    
 # -------------------------------------------------------------------- Media Plugin add editors
 def create_add_media_plugin_editors(script_data_object):
     global SIMPLE_EDITOR_LEFT_WIDTH
