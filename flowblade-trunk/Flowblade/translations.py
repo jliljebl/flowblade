@@ -633,7 +633,7 @@ def load_filters_translations():
     param_names["Line Gap"] = _("Line Gap")
     param_names["Colors"] = _("Colors")
     param_names["User Hue"] = _("User Hue")
-
+    param_names["Length"] = _("Length")
     
     # Combo options
     global combo_options

@@ -63,6 +63,8 @@ widgets = utils.EmptyClass()
 _edit_panel = None
 _action_object = None
 _clip = None 
+_preview_popover = None
+_preview_canvas = None
 
 # --------------------------------------------------------- plugin
 class MediaPlugin:
@@ -450,15 +452,15 @@ def get_plugin_hamburger_row():
 def get_plugin_buttons_row():
     cancel_b = guiutils.get_sized_button(_("Cancel"), 150, 32)
     cancel_b.connect("clicked", lambda w: _cancel())
-    preview_b = guiutils.get_sized_button(_("Preview"), 150, 32)
-    preview_b.connect("clicked", lambda w: _preview())
+    widgets.preview_b = guiutils.get_sized_button(_("Preview"), 150, 32)
+    widgets.preview_b.connect("clicked", lambda w: _preview())
     render_b = guiutils.get_sized_button(_("Apply"), 150, 32)
     render_b.connect("clicked", lambda w: _apply())
     
     buttons_box = Gtk.HBox(False, 2)
     buttons_box.pack_start(Gtk.Label(), True, True, 0)
     buttons_box.pack_start(cancel_b, False, False, 0)
-    buttons_box.pack_start(preview_b, False, False, 0)
+    buttons_box.pack_start(widgets.preview_b, False, False, 0)
     buttons_box.pack_start(render_b, False, False, 0)
     
     return buttons_box    
@@ -513,10 +515,16 @@ def _get_preview_file():
     return _action_object.get_preview_media_dir() + "/preview.png"
 
 def _preview_render_complete():
-    preview_surface = cairo.ImageSurface.create_from_png(_get_preview_file())
+    global _preview_surface
+    _preview_surface = cairo.ImageSurface.create_from_png(_get_preview_file())
     preview_frame = -1
-    print("preview done")
-    #self.preview_panel.preview_monitor.queue_draw()
+    global _preview_popover, _preview_canvas
+    if _preview_popover == None:
+        _preview_popover = Gtk.Popover.new(widgets.preview_b)
+        _preview_canvas = PreviewCanvas()
+        _preview_canvas.widget.show()
+        _preview_popover.add(_preview_canvas.widget)
+    _preview_popover.popup()
 
 def _preview_render_complete_error(self, error_msg):
     preview_frame = -1
@@ -530,3 +538,13 @@ def _apply():
     _action_object.apply_editors(_edit_panel.editor_widgets)
     _action_object.render_full_media(_clip)
 
+
+class PreviewCanvas:
+    def __init__(self):
+        self.widget = cairoarea.CairoDrawableArea2( 300, 
+                                                100, 
+                                                self._draw)
+
+    def _draw(self, event, cr, allocation):
+        cr.set_source_surface(_preview_surface, 0, 0)
+        cr.paint()
