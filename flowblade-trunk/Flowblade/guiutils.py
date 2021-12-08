@@ -403,8 +403,8 @@ def pad_label(w, h):
     pad_label.set_size_request(w, h)
     return pad_label
 
-def get_sized_button(lable, w, h, clicked_listener=None):
-    b = Gtk.Button(lable)
+def get_sized_button(button_label, w, h, clicked_listener=None):
+    b = Gtk.Button(label=button_label)
     if clicked_listener != None:
         b.connect("clicked", lambda w,e: clicked_listener())
     b.set_size_request(w, h)

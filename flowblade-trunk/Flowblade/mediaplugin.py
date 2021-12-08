@@ -45,6 +45,7 @@ import utils
 
 MONITOR_WIDTH = 400
 MONITOR_HEIGHT = -1
+PREVIEW_WIDTH = 320
 
 SIMPLE_EDITOR_LEFT_WIDTH = 150
 
@@ -58,6 +59,7 @@ _selected_plugin = None
 _current_screenshot_surface = None
 _current_plugin_data_object = None
 _current_render_data = None
+_preview_surface = None
 
 widgets = utils.EmptyClass()
 _edit_panel = None
@@ -427,8 +429,10 @@ def create_widgets():
     widgets.hamburger_launcher = guicomponents.HamburgerPressLaunch(_hamburger_launch_pressed)
     widgets.hamburger_launcher.connect_launched_menu(guicomponents.clip_effects_hamburger_menu)
     guiutils.set_margins(widgets.hamburger_launcher.widget, 4, 6, 6, 0)
-
-    widgets.empty_label = Gtk.Label(label=_("No Media Plugin"))
+    widgets.frame_select_box = Gtk.VBox()
+    widgets.frame_select_button = None
+    widgets.empty_label = Gtk.Label(label=_("No Media Plugin."))
+    widgets.empty_label.set_sensitive(False)
 
     # Edit area.
     widgets.value_edit_box = Gtk.VBox()
@@ -450,17 +454,19 @@ def get_plugin_hamburger_row():
     return action_row
 
 def get_plugin_buttons_row():
-    cancel_b = guiutils.get_sized_button(_("Cancel"), 150, 32)
+    cancel_b = guiutils.get_sized_button(_("Cancel"), 110, 28)
     cancel_b.connect("clicked", lambda w: _cancel())
-    widgets.preview_b = guiutils.get_sized_button(_("Preview"), 150, 32)
+    widgets.preview_b = Gtk.Button(label=_("Preview"))
     widgets.preview_b.connect("clicked", lambda w: _preview())
-    render_b = guiutils.get_sized_button(_("Apply"), 150, 32)
+    render_b = guiutils.get_sized_button(_("Apply"), 110, 28)
     render_b.connect("clicked", lambda w: _apply())
     
     buttons_box = Gtk.HBox(False, 2)
+    buttons_box.pack_start(widgets.preview_b, False, False, 0)
+    buttons_box.pack_start(widgets.frame_select_box, False, False, 0)
     buttons_box.pack_start(Gtk.Label(), True, True, 0)
     buttons_box.pack_start(cancel_b, False, False, 0)
-    buttons_box.pack_start(widgets.preview_b, False, False, 0)
+
     buttons_box.pack_start(render_b, False, False, 0)
     
     return buttons_box    
@@ -495,6 +501,14 @@ def set_plugin_to_be_edited(clip, action_object):
     track_name = utils.get_track_name(track, current_sequence())
     widgets.plugin_info.display_plugin_info(clip, track_name)
 
+    try:
+        widgets.frame_select_box.remove(widgets.frame_select_button)
+    except:
+        pass
+
+    widgets.frame_select_button = Gtk.SpinButton.new_with_range(0, _action_object.container_data.unrendered_length, 1)
+    widgets.frame_select_box.add(widgets.frame_select_button)
+    
     editorlayout.show_panel(appconsts.PANEL_MULTI_EDIT)
     gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_PLUGINS)
 
@@ -507,7 +521,7 @@ def _cancel():
     gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_EMPTY)
  
 def _preview():
-    preview_frame = 1  #int(self.preview_panel.frame_select.get_value() + self.clip.clip_in)
+    preview_frame = widgets.frame_select_button.get_value_as_int()
     callbacks = (_preview_render_complete, _preview_render_complete_error)
     _action_object.render_fluxity_preview(callbacks, _edit_panel.editor_widgets, preview_frame)
 
@@ -516,7 +530,15 @@ def _get_preview_file():
 
 def _preview_render_complete():
     global _preview_surface
-    _preview_surface = cairo.ImageSurface.create_from_png(_get_preview_file())
+    _preview_surface_rendered = cairo.ImageSurface.create_from_png(_get_preview_file())
+    preview_height = int(PREVIEW_WIDTH * _preview_surface_rendered.get_height() / _preview_surface_rendered.get_width())
+    _preview_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, PREVIEW_WIDTH, preview_height)
+    scale = PREVIEW_WIDTH / _preview_surface_rendered.get_width()
+    cr = cairo.Context(_preview_surface)
+    cr.scale(scale, scale)
+    cr.set_source_surface(_preview_surface_rendered, 0, 0)
+    cr.paint()
+    
     preview_frame = -1
     global _preview_popover, _preview_canvas
     if _preview_popover == None:
@@ -541,9 +563,10 @@ def _apply():
 
 class PreviewCanvas:
     def __init__(self):
-        self.widget = cairoarea.CairoDrawableArea2( 300, 
-                                                100, 
-                                                self._draw)
+        # This now hard coded to 16:9 screen ratio, others get clipped or we get some empty space.
+        self.widget = cairoarea.CairoDrawableArea2( 320, 
+                                                    180, 
+                                                    self._draw)
 
     def _draw(self, event, cr, allocation):
         cr.set_source_surface(_preview_surface, 0, 0)
