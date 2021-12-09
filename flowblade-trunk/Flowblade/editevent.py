@@ -36,6 +36,7 @@ import clipeffectseditor
 import clipenddragmode
 import compositeeditor
 import compositormodes
+import containeractions
 import cutmode
 import dialogs
 import dialogutils
@@ -579,13 +580,17 @@ def tline_media_drop(drag_data, x, y, use_marks=False):
         if track.id != current_sequence().first_video_track().id:
             drop_done = _attempt_dnd_overwrite(track, new_clip, frame)
             if drop_done == True:
+                maybe_autorender_plugin(new_clip)
                 return
     elif editorpersistance.prefs.dnd_action == appconsts.DND_ALWAYS_OVERWRITE:
         drop_done = _attempt_dnd_overwrite(track, new_clip, frame)
         if drop_done == True:
+            maybe_autorender_plugin(new_clip)
             return
             
     do_clip_insert(track, new_clip, frame)
+    
+    maybe_autorender_plugin(new_clip)
 
 def tline_range_item_drop(rows, x, y):
     track = tlinewidgets.get_track(y)
@@ -602,7 +607,13 @@ def tline_range_item_drop(rows, x, y):
     modesetting.set_default_edit_mode()
     do_multiple_clip_insert(track, clips, frame)
 
+def maybe_autorender_plugin(clip):
+    if clip.container_data == None:
+        return
 
+    if editorpersistance.prefs.auto_render_media_plugins == True:
+        action_object = containeractions.get_action_object(clip.container_data)
+        action_object.render_full_media(clip)
 
 
 # ------------------------------------ function tables

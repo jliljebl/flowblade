@@ -582,6 +582,8 @@ def insert_button_pressed():
 
     updater.save_monitor_frame = False # hack to not get wrong value saved in MediaFile.current_frame
     editevent.do_clip_insert(track, new_clip, tline_pos)
+
+    editevent.maybe_autorender_plugin(new_clip)
     
 def append_button_pressed():
     track = current_sequence().get_first_active_track()
@@ -599,6 +601,8 @@ def append_button_pressed():
     updater.save_monitor_frame = False # hack to not get wrong value saved in MediaFile.current_frame
     editevent.do_clip_insert(track, new_clip, tline_pos)
 
+    editevent.maybe_autorender_plugin(new_clip)
+    
 def three_point_overwrite_pressed():
     # Check that state is good for edit
     if movemodes.selected_track == -1:
@@ -651,6 +655,8 @@ def three_point_overwrite_pressed():
     
     updater.display_tline_cut_frame(track, range_in)
 
+    editevent.maybe_autorender_plugin(over_clip)
+    
 def range_overwrite_pressed():
     # Get data
     track = current_sequence().get_first_active_track()
@@ -718,6 +724,8 @@ def range_overwrite_pressed():
     action.do_edit()
 
     updater.display_tline_cut_frame(track, track.get_clip_index_at(mark_in_frame))
+
+    editevent.maybe_autorender_plugin(over_clip)
 
 def _show_three_poimt_edit_not_defined():
     primary_txt = _("3 point edit not defined!")

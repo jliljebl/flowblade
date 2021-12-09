@@ -181,7 +181,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     # Jul-2016 - SvdB - Added play_pause_button
     # Apr-2017 - SvdB - Added ffwd / rev values
     gfx_length_spin, cover_delete, mouse_scroll_action, hide_file_ext_button, \
-    hor_scroll_dir, effects_editor_clip_load = edit_prefs_widgets
+    hor_scroll_dir, effects_editor_clip_load, auto_render_plugins = edit_prefs_widgets
 
     auto_center_check, play_pause_button, timeline_start_end_button, auto_center_on_updown, \
     ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips = playback_prefs_widgets
@@ -250,6 +250,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
 
     # --------------------------------- Colorized icons
     prefs.colorized_icons = colorized_icons.get_active()
+    prefs.auto_render_media_plugins = auto_render_plugins.get_active()
 
 def get_graphics_default_in_out_length():
     in_fr = int(15000/2) - int(prefs.default_grfx_length/2)
@@ -370,4 +371,5 @@ class EditorPreferences:
         self.midbar_layout_buttons = None
         self.auto_expand_tracks = True
         self.quick_effects = None
+        self.auto_render_media_plugins = True
         

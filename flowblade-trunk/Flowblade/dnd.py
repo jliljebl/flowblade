@@ -66,7 +66,6 @@ display_monitor_media_file = None
 range_log_items_tline_drop = None
 range_log_items_log_drop = None
 open_dropped_files = None
-#get_selected_media_files = None
 
 
 def init():
