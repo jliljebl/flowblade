@@ -1794,7 +1794,6 @@ def display_clip_popup_menu(event, clip, track, callback):
         reload_item = _get_menu_item(_("Reload Media From Disk"), callback, (clip, track, "reload_media", event.x))
         clip_menu.append(reload_item)
 
-
     _add_separetor(clip_menu)
     clip_menu.add(_get_select_menu_item(event, clip, track, callback))
     
@@ -1803,8 +1802,9 @@ def display_clip_popup_menu(event, clip, track, callback):
     
     if clip.container_data != None:
         _add_separetor(clip_menu)
-        clip_menu.add(_get_container_clip_menu_item(event, clip, track, callback))
-            
+        #clip_menu.add(_get_container_clip_menu_items(clip_menu, event, clip, track, callback))
+        _get_container_clip_menu_items(clip_menu, event, clip, track, callback)
+        
     clip_menu.popup(None, None, None, None, event.button, event.time)
 
 def display_multi_clip_popup_menu(event, clip, track, callback):
@@ -2296,16 +2296,26 @@ def _get_edit_menu_item(event, clip, track, callback):
     menu_item.show()
     return menu_item
 
-def _get_container_clip_menu_item(event, clip, track, callback):
+def _get_container_clip_menu_items(clip_menu, event, clip, track, callback):
+
     if  clip.container_data.container_type == appconsts.CONTAINER_CLIP_FLUXITY:
-        menu_text = _("Media Plugin Actions")
+        item_text = _("Edit Media Plugin...")
     else:        
-        menu_text = _("Container Clip Actions")
+        item_text = _("Edit Container Program...")
+
+    if clip.container_data.editable != False:
+        edit_program_item = _get_menu_item(item_text, callback, (clip, track, "cc_edit_program", event.x))
+        edit_program_item.show()
+        clip_menu.append(edit_program_item)
+    
+    
+    if  clip.container_data.container_type == appconsts.CONTAINER_CLIP_FLUXITY:
+        menu_text = _("Media Plugin Render Actions")
+    else:        
+        menu_text = _("Container Clip Render Actions")
     menu_item = Gtk.MenuItem(menu_text)
     sub_menu = Gtk.Menu()
     menu_item.set_submenu(sub_menu)
-
-
 
     render_full_item = _get_menu_item(_("Render Full Media..."), callback, (clip, track, "cc_render_full_media", event.x))
     if clip.container_data.rendered_media_range_in != -1:
@@ -2326,23 +2336,13 @@ def _get_container_clip_menu_item(event, clip, track, callback):
 
     _add_separetor(sub_menu)
 
-    if  clip.container_data.container_type == appconsts.CONTAINER_CLIP_FLUXITY:
-        item_text = _("Edit Media Plugin...")
-    else:        
-        item_text = _("Edit Container Program...")
-        
-    edit_program_item = _get_menu_item(item_text, callback, (clip, track, "cc_edit_program", event.x))
-    if clip.container_data.editable == False:
-        edit_program_item.set_sensitive(False)
-    sub_menu.append(edit_program_item)
- 
-    _add_separetor(sub_menu)
-
     settings_item = _get_menu_item(_("Render Settings..."), callback, (clip, track, "cc_render_settings", event.x))
     sub_menu.append(settings_item)
     
     menu_item.show()
-    return menu_item
+
+    clip_menu.add(menu_item)
+
 
 def _get_clone_filters_menu_item(event, clip, track, callback, is_multi=False):
     menu_item = Gtk.MenuItem(_("Clone Filters"))
