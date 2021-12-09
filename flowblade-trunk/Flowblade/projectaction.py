@@ -2112,7 +2112,7 @@ def compositing_mode_menu_launched(widget, event):
     guiutils.remove_children(compositing_mode_menu)
 
     comp_top_free = guiutils.get_image_menu_item(_("Top Down Free Move"), "top_down", change_current_sequence_compositing_mode_from_corner_menu)
-    comp_standard_auto = guiutils.get_image_menu_item(_("Standard Auto Follow"), "standard_auto", change_current_sequence_compositing_mode_from_corner_menu)
+    comp_standard_auto = guiutils.get_image_menu_item(_("Auto Follow"), "standard_auto", change_current_sequence_compositing_mode_from_corner_menu)
     comp_full_track = guiutils.get_image_menu_item(_("Standard Full Track"), "full_track_auto", change_current_sequence_compositing_mode_from_corner_menu)
     
     comp_top_free.connect("activate", lambda w: change_current_sequence_compositing_mode_from_corner_menu(appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE))

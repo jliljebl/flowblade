@@ -1272,7 +1272,7 @@ class EditorWindow:
         comp_top_free.show()
         menu.append(comp_top_free)
 
-        comp_standard_auto = Gtk.RadioMenuItem.new_with_label([comp_top_free],_("Standard Auto Follow"))
+        comp_standard_auto = Gtk.RadioMenuItem.new_with_label([comp_top_free],_("Auto Follow"))
         comp_standard_auto.show()
         menu.append(comp_standard_auto)
 

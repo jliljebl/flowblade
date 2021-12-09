@@ -1681,12 +1681,8 @@ def display_clip_popup_menu(event, clip, track, callback):
     guiutils.remove_children(clip_menu)
     
     # Menu items    
-    clip_menu.add(_get_menu_item(_("Open in Filters Editor"), callback, (clip, track, "open_in_editor", event.x)))
-    # Only make opening in compositor editor for video tracks V2 and higher
-    if track.id <= current_sequence().first_video_index:
-        active = False
-    else:
-        active = True
+
+
     if clip.media_type != appconsts.PATTERN_PRODUCER:
         clip_menu.add(_get_menu_item(_("Open in Clip Monitor"), callback,\
                       (clip, track, "open_in_clip_monitor", event.x)))
@@ -1749,6 +1745,7 @@ def display_clip_popup_menu(event, clip, track, callback):
 
     _add_separetor(clip_menu)
 
+    clip_menu.add(_get_menu_item(_("Edit Filters"), callback, (clip, track, "open_in_editor", event.x)))
     clip_menu.add(_get_filters_add_menu_item(event, clip, track, callback))
 
     if current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
@@ -1900,7 +1897,7 @@ def display_transition_clip_popup_menu(event, clip, track, callback):
 
     clip_menu.add(_get_menu_item(_("Rerender"), callback, (clip, track, "re_render", event.x)))
     
-    clip_menu.add(_get_menu_item(_("Open in Filters Editor"), callback, (clip, track, "open_in_editor", event.x)))
+    clip_menu.add(_get_menu_item(_("Edit Filters"), callback, (clip, track, "open_in_editor", event.x)))
 
     _add_separetor(clip_menu)
 
@@ -1946,7 +1943,7 @@ def display_audio_clip_popup_menu(event, clip, track, callback):
     clip_menu = audio_clip_menu
     guiutils.remove_children(clip_menu)
 
-    clip_menu.add(_get_menu_item(_("Open in Filters Editor"), callback, (clip, track, "open_in_editor", event.x)))
+    clip_menu.add(_get_menu_item(_("Edit Filters"), callback, (clip, track, "open_in_editor", event.x)))
     if clip.media_type != appconsts.PATTERN_PRODUCER:
         clip_menu.add(_get_menu_item(_("Open in Clip Monitor"), callback,\
                       (clip, track, "open_in_clip_monitor", event.x)))

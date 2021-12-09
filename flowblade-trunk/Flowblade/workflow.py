@@ -594,7 +594,7 @@ class WorkflowDialog(Gtk.Dialog):
         comp_text = _("The most powerful and complex <b>Compositing Mode</b>. Any number of <b>Compositors</b>\ncan be added and their destination <b>Tracks</b> and positions can be set freely.")
         comp_select_item_2 = self.get_select_item(1, comp_name, comp_text, self.comp_selection_callback, self.comp_selection)
 
-        comp_name = _("<b>Standard Auto Follow</b>")
+        comp_name = _("<b>Auto Follow</b>")
         comp_text = _("<b>Compositors</b> follow their origin clips automatically and users can only\nadd one compositor per clip. All <b>Compositors</b> have <b>Track V1</b> as their destination track.")
         comp_select_item_3 = self.get_select_item(2, comp_name, comp_text, self.comp_selection_callback, self.comp_selection)
         
