@@ -1680,13 +1680,13 @@ def display_clip_popup_menu(event, clip, track, callback):
     clip_menu = clip_popup_menu
     guiutils.remove_children(clip_menu)
     
-    # Menu items    
-
-
+    # Menu items
     if clip.media_type != appconsts.PATTERN_PRODUCER:
         clip_menu.add(_get_menu_item(_("Open in Clip Monitor"), callback,\
                       (clip, track, "open_in_clip_monitor", event.x)))
 
+    _add_separetor(clip_menu)
+    
     if track.type == appconsts.VIDEO:
         active = True
         if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
@@ -3001,15 +3001,12 @@ class MonitorTCInfo:
 
         self.in_value = Gtk.Label(label="--:--:--:--")
         self.in_value.modify_font(Pango.FontDescription(font_desc))
-        self.in_value.set_name("accent-fg-widget")
 
         self.out_value = Gtk.Label(label="--:--:--:--")
         self.out_value.modify_font(Pango.FontDescription(font_desc))
-        self.out_value.set_name("accent-fg-widget")
         
         self.marks_length_value = Gtk.Label(label="--:--:--:--")
         self.marks_length_value.modify_font(Pango.FontDescription(font_desc))
-        self.marks_length_value.set_name("accent-fg-widget")
         
         self.widget.pack_start(self.in_label, False, False, 0)
         self.widget.pack_start(self.in_value, False, False, 0)
