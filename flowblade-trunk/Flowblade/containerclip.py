@@ -506,6 +506,8 @@ class ContainerClipMediaItem:
 
         self.ttl = None
 
+        self.current_frame = 0
+
         self.create_icon()
 
     def matches_project_profile(self):

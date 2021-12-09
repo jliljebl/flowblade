@@ -42,7 +42,16 @@ def FIX_MISSING_MEDIA_FILE_ATTRS(media_file):
     # Add container data if not found.
     if not hasattr(media_file, "container_data"):
         media_file.container_data = None
-            
+
+    
+    print(type(media_file).__name__ )
+    if type(media_file).__name__ == "ContainerClipMediaItem":
+        print("dasdasdsa")
+        print(media_file.__dict__)
+        if not hasattr(media_file, "current_frame"):
+            print("adding currfent frame")
+            media_file.current_frame = 0
+        
 def FIX_MISSING_CLIP_ATTRS(clip):
     # Add color attribute if not found
     if not hasattr(clip, "color"):

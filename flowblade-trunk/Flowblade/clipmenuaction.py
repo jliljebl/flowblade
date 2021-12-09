@@ -148,6 +148,9 @@ def _open_clip_in_clip_monitor(data):
     clip, track, item_id, x = data
     
     media_file = PROJECT().get_media_file_for_path(clip.path)
+    if media_file == None and clip.container_data != None:
+        media_file = PROJECT().get_media_file_for_container_data(clip.container_data)
+
     media_file.mark_in = clip.clip_in
     media_file.mark_out = clip.clip_out
     updater.set_and_display_monitor_media_file(media_file)

@@ -612,8 +612,9 @@ def maybe_autorender_plugin(clip):
         return
 
     if editorpersistance.prefs.auto_render_media_plugins == True:
-        action_object = containeractions.get_action_object(clip.container_data)
-        action_object.render_full_media(clip)
+        if clip.container_data.container_type == appconsts.CONTAINER_CLIP_FLUXITY:
+            action_object = containeractions.get_action_object(clip.container_data)
+            action_object.render_full_media(clip)
 
 
 # ------------------------------------ function tables

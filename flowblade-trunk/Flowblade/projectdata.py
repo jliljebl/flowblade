@@ -199,10 +199,19 @@ class Project:
     def get_media_file_for_second_path(self, file_path):
         for key, media_file in list(self.media_files.items()):
             if media_file.type == appconsts.PATTERN_PRODUCER:
-                continue
-            print(file_path, media_file.path, media_file.second_file_path)
-            
+                continue            
             if file_path == media_file.second_file_path:
+                return media_file
+        return None
+
+    def get_media_file_for_container_data(self, container_data):
+        for key, media_file in list(self.media_files.items()):
+            if media_file.type == appconsts.PATTERN_PRODUCER:
+                continue
+            if media_file.container_data == None:
+                continue
+            if media_file.container_data.program == container_data.program and \
+                media_file.container_data.unrendered_media == container_data.unrendered_media:
                 return media_file
         return None
         

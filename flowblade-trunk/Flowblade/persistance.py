@@ -414,7 +414,7 @@ def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
         raise ProjectProfileNotFoundError(project.profile_desc)
 
     for k, media_file in project.media_files.items():
-        media_file.current_frame = 0 # this is always reset on load, value is not considered persistent
+        media_file.current_frame = 0 # this is always reset on load, value is not considered persistent.
 
         # Avoid crash in case path attribute is missing (color clips).
         # All code in loop below handles issues not related to color clips.
