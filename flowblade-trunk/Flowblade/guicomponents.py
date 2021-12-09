@@ -1687,16 +1687,6 @@ def display_clip_popup_menu(event, clip, track, callback):
         clip_menu.add(_get_menu_item(_("Open in Clip Monitor"), callback,\
                       (clip, track, "open_in_clip_monitor", event.x)))
 
-    if track.type == appconsts.VIDEO and clip.media_type != appconsts.PATTERN_PRODUCER:
-        _add_separetor(clip_menu)
-        clip_menu.add(_get_match_frame_menu_item(event, clip, track, callback))
-
-    _add_separetor(clip_menu)
-
-    if track.type == appconsts.VIDEO:
-        clip_menu.add(_get_tool_integration_menu_item(event, clip, track, callback))
-        _add_separetor(clip_menu)
-        
     if track.type == appconsts.VIDEO:
         active = True
         if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
@@ -1746,6 +1736,9 @@ def display_clip_popup_menu(event, clip, track, callback):
     _add_separetor(clip_menu)
 
     clip_menu.add(_get_menu_item(_("Edit Filters"), callback, (clip, track, "open_in_editor", event.x)))
+    
+    _add_separetor(clip_menu)
+    
     clip_menu.add(_get_filters_add_menu_item(event, clip, track, callback))
 
     if current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
@@ -2289,7 +2282,16 @@ def _get_edit_menu_item(event, clip, track, callback):
 
     stretch_prev_item = _get_menu_item(_("Stretch Over Prev Blank"), callback, (clip, track, "stretch_prev", event.x))
     sub_menu.append(stretch_prev_item)
-    
+
+    if track.type == appconsts.VIDEO and clip.media_type != appconsts.PATTERN_PRODUCER:
+        _add_separetor(sub_menu)
+        sub_menu.add(_get_match_frame_menu_item(event, clip, track, callback))
+
+
+    if track.type == appconsts.VIDEO:
+        _add_separetor(sub_menu)
+        sub_menu.add(_get_tool_integration_menu_item(event, clip, track, callback))
+
     menu_item.show()
     return menu_item
 
