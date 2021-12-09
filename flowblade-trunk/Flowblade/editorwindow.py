@@ -427,7 +427,9 @@ class EditorWindow:
         # Multi empty panel
         multi_empty_vbox = Gtk.VBox(False, 0)
         multi_empty_vbox.pack_start(Gtk.Label(), True, True, 0)
-        multi_empty_vbox.pack_start(Gtk.Label(label=_("No Edit Target")), False, False, 0)
+        no_target = Gtk.Label(label=_("No Edit Target."))
+        no_target.set_sensitive(False)
+        multi_empty_vbox.pack_start(no_target, False, False, 0)
         multi_empty_vbox.pack_start(Gtk.Label(), True, True, 0)
     
         # Multi edit panel

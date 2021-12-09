@@ -83,7 +83,7 @@ class ContainerClipData:
 
             self.render_data = None # initialized to a toolsencoding.ToolsRenderData object later.
             
-            # Some container clips need to save additional information gathered on init.
+            # Some container clips need to save additional information.
             self.data_slots = {}
             
             self.editable = False

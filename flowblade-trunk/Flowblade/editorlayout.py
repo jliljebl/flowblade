@@ -572,7 +572,7 @@ def _top_bar_menu_item_activated(widget, msg):
         data = (editorpersistance.prefs.panel_positions, editorpersistance.prefs.positions_tabs)
         dialogs.save_layout_data(_save_layout_callback, data)
     elif msg == "load_layout":
-        dialogs.load_effects_compositors_values_dialog(_load_layout_callback)
+        dialogs.load_layout_data(_load_layout_callback)
 
 def _save_layout_callback(dialog, response_id, data):
     if response_id == Gtk.ResponseType.ACCEPT:

@@ -24,10 +24,14 @@ import copy
 import hashlib
 import json
 import os
+import pickle
 
 import appconsts
+import atomicfile
 import cairoarea
 import containerclip
+import dialogs
+import dialogutils
 import editorlayout
 import editorpersistance
 from editorstate import current_sequence
@@ -471,11 +475,6 @@ def get_plugin_buttons_row():
     
     return buttons_box    
 
-def _hamburger_launch_pressed(widget, event):
-    pass
-    #guicomponents.get_compositor_editor_hamburger_menu(event, _compositor_hamburger_item_activated)
-
-
 def set_plugin_to_be_edited(clip, action_object):
     global _action_object, _clip
     _clip = clip
@@ -559,6 +558,48 @@ def _preview_render_complete_error(self, error_msg):
 def _apply():
     _action_object.apply_editors(_edit_panel.editor_widgets)
     _action_object.render_full_media(_clip)
+
+def _hamburger_launch_pressed(widget, event):
+    track, index = current_sequence().get_track_and_index_for_id(_clip.id)
+    guicomponents.get_media_plugin_editor_hamburger_menu(event, _hamburger_item_activated)
+
+def _hamburger_item_activated(widget, msg):
+    if msg == "close":
+        gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_EMPTY)
+    elif msg == "save_properties":
+        plugin_name = _clip.name
+        default_name = plugin_name.replace(" ", "_") + _("_media_plugin_properties") + ".mediaplugindata"
+        dialogs.save_media_plugin_plugin_properties(_save_properties_callback, default_name, _action_object.container_data.data_slots["fluxity_plugin_edit_data"])
+    elif msg == "load_properties":
+        dialogs.load_media_plugin_plugin_properties(_load_properties_callback)
+
+def _save_properties_callback(dialog, response_id, data):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        save_path = dialog.get_filenames()[0]
+        _action_object.apply_editors(_edit_panel.editor_widgets)
+        with atomicfile.AtomicFileWriter(save_path, "wb") as afw:
+            write_file = afw.get_file()
+            pickle.dump(data, write_file)
+            _action_object.render_full_media(_clip)
+    
+    dialog.destroy()
+
+def _load_properties_callback(dialog, response_id):
+    if response_id == Gtk.ResponseType.ACCEPT:
+        load_path = dialog.get_filenames()[0]
+        try:
+            plugin_editors_data = utils.unpickle(load_path)
+            _action_object.container_data.data_slots["fluxity_plugin_edit_data"] = plugin_editors_data
+            _clip.container_data.data_slots["fluxity_plugin_edit_data"] = plugin_editors_data
+            set_plugin_to_be_edited(_clip, _action_object)
+            _action_object.render_full_media(_clip)
+        except Exception as e:
+            primary_txt = _("Media Plugin properties load failed!")
+            secondary_txt = _("Error message: ") + str(e)
+            dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
+            gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_EMPTY)
+    
+    dialog.destroy()
 
 
 class PreviewCanvas:

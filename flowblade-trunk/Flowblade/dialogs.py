@@ -417,8 +417,8 @@ def save_layout_data(callback, data):
     
     dialog.connect('response', callback, data)
     dialog.show()
-
-def load_effects_compositors_values_dialog(callback):
+    
+def load_layout_data(callback):
     parent = gui.editor_window.window
     dialog = Gtk.FileChooserDialog(_("Load Layout"), parent,
                                    Gtk.FileChooserAction.OPEN,
@@ -433,6 +433,42 @@ def load_effects_compositors_values_dialog(callback):
     dialog.connect('response', callback)
     dialog.show()
 
+
+def save_media_plugin_plugin_properties(callback, default_name, data):
+    parent = gui.editor_window.window
+
+    dialog = Gtk.FileChooserDialog( _("Save Media Plugin Properties"), parent,
+                                   Gtk.FileChooserAction.SAVE,
+                                   (_("Cancel"), Gtk.ResponseType.CANCEL,
+                                    _("Save"), Gtk.ResponseType.ACCEPT))
+    dialog.set_action(Gtk.FileChooserAction.SAVE)
+    dialog.set_current_name(default_name)
+    dialog.set_do_overwrite_confirmation(True)
+
+    dialog.set_select_multiple(False)
+    file_filter = Gtk.FileFilter()
+    file_filter.set_name(_("Flowblade Media Plugin Properties"))
+    file_filter.add_pattern("*" + "mediaplugindata")
+    dialog.add_filter(file_filter)
+    
+    dialog.connect('response', callback, data)
+    dialog.show()
+
+def load_media_plugin_plugin_properties(callback):
+    parent = gui.editor_window.window
+    dialog = Gtk.FileChooserDialog(_("Load Media Plugin Properties"), parent,
+                                   Gtk.FileChooserAction.OPEN,
+                                   (_("Cancel"), Gtk.ResponseType.CANCEL,
+                                    _("OK"), Gtk.ResponseType.ACCEPT))
+    dialog.set_action(Gtk.FileChooserAction.OPEN)
+    dialog.set_select_multiple(False)
+    file_filter = Gtk.FileFilter()
+    file_filter.set_name(_("Flowblade Media Plugin Properties"))
+    file_filter.add_pattern("*" + "mediaplugindata")
+    dialog.add_filter(file_filter)
+    dialog.connect('response', callback)
+    dialog.show()
+    
 def export_xml_dialog(callback, project_name):
     _export_file_name_dialog(callback, project_name, _("Export Project as XML to"))
 

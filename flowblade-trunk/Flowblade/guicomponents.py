@@ -121,6 +121,7 @@ filter_mask_menu = Gtk.Menu()
 kb_shortcuts_hamburger_menu = Gtk.Menu()
 multi_clip_popup_menu = Gtk.Menu()
 effect_menu = Gtk.Menu()
+media_plugin_panel_hamburger_menu = Gtk.Menu()
 
 select_clip_func = None
 add_compositors_is_multi_selection = False 
@@ -3335,6 +3336,23 @@ def get_clip_effects_editor_hamburger_menu(event, callback):
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
 
+def get_media_plugin_editor_hamburger_menu(event, callback):
+    menu = media_plugin_panel_hamburger_menu
+    guiutils.remove_children(menu)
+
+    save_item = _get_menu_item(_("Save and Apply Plugin Properties"), callback, "save_properties")
+    menu.append(save_item)
+
+    load_item = _get_menu_item(_("Load and Apply Plugin Properties"), callback, "load_properties")
+    menu.append(load_item)
+
+    _add_separetor(menu)
+
+    menu.add(_get_menu_item(_("Close Editor"), callback, "close"))
+
+    menu.show_all()
+    menu.popup(None, None, None, None, event.button, event.time)
+    
 def get_kb_shortcuts_hamburger_menu(event, callback, data):
     shortcuts_combo, dialog = data
     
