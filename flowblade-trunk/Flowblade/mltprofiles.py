@@ -47,7 +47,13 @@ def load_profile_list():
     Called at app start.
     """
     global _profile_list,_factory_profiles, _hidden_factory_profiles, \
-    _user_profiles, _proxy_profiles, _categorized_profiles
+    _user_profiles, _categorized_profiles
+
+    _profile_list = []
+    _factory_profiles = []
+    _hidden_factory_profiles = []
+    _user_profiles = []
+    _categorized_profiles = []
 
     user_profiles_dir = userfolders.get_data_dir() + USER_PROFILES_DIR
     _user_profiles = _load_profiles_list(user_profiles_dir)
@@ -95,7 +101,7 @@ def load_profile_list():
     if len(OTHER_profiles) > 0:
         _categorized_profiles.append(("Other", OTHER_profiles))
     # CHECK!!!, this needed to be commented out to not crash on launch on laptop
-    if len(_user_profiles) > 0:
+    if len(USER_profiles) > 0:
         _categorized_profiles.append(("User Custom", USER_profiles))
 
 def _load_profiles_list(dir_path):

@@ -4049,12 +4049,23 @@ class CategoriesModelComboBox:
                 if items[j] == active_item_name:
                     iter = self.model.get_iter_from_string(str(i) + ":" + str(j))
                     self.widget.set_active_iter(iter)
-                    
+
     def get_selected(self):        
         indices = self.model.get_path(self.widget.get_active_iter()).get_indices()
         name, items = self.categories_list[indices[0]]
         return items[indices[1]]
-        
+
+    def refill(self, categories_list):
+        self.categories_list = categories_list
+        self.model.clear()
+    
+        for i in range(0, len(categories_list)):
+            name, items = categories_list[i]
+            self.model.append(None, [name])
+            for item_name in items:
+                category_iter = self.model.get_iter_from_string(str(i))
+                self.model.append(category_iter, [item_name])
+                
 def get_encodings_combo():
     return CategoriesModelComboBoxWithData(renderconsumer.categorized_encoding_options)
 
@@ -4101,6 +4112,18 @@ class CategoriesModelComboBoxWithData:
         name, items = self.categories_list[indices[0]]
         name, item = items[indices[1]]
         return name
+
+    def refill(self, categories_list):
+        self.categories_list = categories_list
+        self.model.clear()
+
+        for i in range(0, len(categories_list)):
+            name, items = categories_list[i]
+            self.model.append(None, [name])
+            for item in items:
+                item_name, item_data = item
+                category_iter = self.model.get_iter_from_string(str(i))
+                self.model.append(category_iter, [item_name])
 
 
 class EditMultiStack:

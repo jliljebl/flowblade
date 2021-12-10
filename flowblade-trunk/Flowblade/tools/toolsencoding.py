@@ -105,7 +105,7 @@ def create_widgets(def_profile_index, disable_audio=True, create_container_file_
     widgets.profile_panel = RenderProfilePanel(_out_profile_changed)
     widgets.encoding_panel = RenderEncodingPanel(widgets.file_panel.extension_label)
 
-    widgets.profile_panel.out_profile_combo.fill_options()
+    widgets.profile_panel.out_profile_combo.set_initial_selection()
     _display_default_profile()
     
 def get_encoding_panel(render_data, create_container_file_panel=False):
@@ -470,7 +470,7 @@ class ProfileSelector():
         self.widget.set_sensitive(False)
         self.widget.set_tooltip_text(_("Select render profile"))
         
-    def fill_options(self):
+    def set_initial_selection(self):
         default_profile = mltprofiles.get_profile_for_index(default_profile_index)
         self.categories_combo.set_selected(default_profile.description())
 

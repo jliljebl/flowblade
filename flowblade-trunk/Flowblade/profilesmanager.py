@@ -302,6 +302,7 @@ def _profiles_delete_confirm_callback(dialog, response_id, data):
             print("removed user profile already gone ???")
 
     mltprofiles.load_profile_list()
+    render.reload_profiles()
     user_profiles_view.fill_data_model(mltprofiles.get_user_profiles())
     dialog.destroy()
 
@@ -322,6 +323,7 @@ def _hide_selected_clicked(visible_view, hidden_view):
     editorpersistance.save()
 
     mltprofiles.load_profile_list()
+    render.reload_profiles()
     visible_view.fill_data_model(mltprofiles.get_factory_profiles())
     hidden_view.fill_data_model(mltprofiles.get_hidden_profiles())
 
@@ -336,5 +338,6 @@ def _unhide_selected_clicked(visible_view, hidden_view):
     editorpersistance.save()
     
     mltprofiles.load_profile_list()
+    render.reload_profiles()
     visible_view.fill_data_model(mltprofiles.get_factory_profiles())
     hidden_view.fill_data_model(mltprofiles.get_hidden_profiles())

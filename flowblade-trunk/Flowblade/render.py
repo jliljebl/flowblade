@@ -219,6 +219,7 @@ def create_widgets():
 def set_default_values_for_widgets(movie_name_too=False):
     if len(renderconsumer.encoding_options) == 0:# this won't work if no encoding options available
         return                   # but we don't want crash, so that we can inform user
+    widgets.encoding_panel.encoding_selector.categorised_combo.refill(renderconsumer.categorized_encoding_options)
     widgets.encoding_panel.encoding_selector.categorised_combo.set_selected(renderconsumer.DEFAULT_ENCODING_NAME)
     if movie_name_too == True:
         widgets.file_panel.movie_name.set_text("movie")
@@ -257,32 +258,24 @@ def fill_out_profile_widgets():
     """
     Called some time after widget creation when current_sequence is known and these can be filled.
     """
-    widgets.profile_panel.out_profile_combo.fill_options()
+    
+    widgets.profile_panel.out_profile_combo.set_initial_selection()
     _fill_info_box(current_sequence().profile)
 
 def reload_profiles():
     renderconsumer.load_render_profiles()
-    fill_out_profile_widgets()
+    
+    widgets.profile_panel.out_profile_combo.categories_combo.refill(mltprofiles._categorized_profiles)
+    widgets.profile_panel.out_profile_combo.set_initial_selection()
 
-"""
-def _render_type_changed():
-    if widgets.render_type_panel.type_combo.get_active() == 0: # User Defined
-        enable_user_rendering(True)
-        set_default_values_for_widgets()
-        widgets.render_type_panel.presets_selector.widget.set_sensitive(False)
-        _preset_selection_changed()
-        widgets.encoding_panel.encoding_selector.categorised_combo.encoding_selection_changed()
-    else: # Preset Encodings
-        enable_user_rendering(False)
-        widgets.render_type_panel.presets_selector.widget.set_sensitive(True)
-        _preset_selection_changed()
-        if editorstate.screen_size_small_height() == False:
-            widgets.args_panel.opts_view.set_sensitive(False)
-            widgets.args_panel.opts_view.get_buffer().set_text("")
-"""
 def _out_profile_changed(categories_combo):
     # FIXME: 'out_profile_combo' is actually the panel containing the combobox
-    profile_desc = widgets.profile_panel.out_profile_combo.categories_combo.get_selected()
+    try:
+        profile_desc = widgets.profile_panel.out_profile_combo.categories_combo.get_selected()
+    except TypeError:
+        # We are getting events here when refilling the profile widget after user has updated profiles
+        # and it is easier to ignore the events then to disconnect the listener.
+        return 
     profile = mltprofiles.get_profile(profile_desc)
     _fill_info_box(profile)
 
@@ -290,12 +283,6 @@ def _fill_info_box(profile):
     info_panel = guicomponents.get_profile_info_small_box(profile)
     widgets.info_panel = info_panel
     widgets.profile_panel.out_profile_info_box.display_info(info_panel)
-"""
-def _preset_selection_changed():
-    enc_index = widgets.render_type_panel.presets_selector.widget.get_active()
-    ext = renderconsumer.non_user_encodings[enc_index].extension
-    widgets.file_panel.extension_label.set_text("." + ext)
-"""
 
 def _display_selection_in_opts_view():
     profile = get_current_profile()

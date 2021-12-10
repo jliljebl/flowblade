@@ -260,7 +260,7 @@ def show_slowmo_dialog(media_file, default_range_render, _response_callback):
     hbox.pack_start(slider_hbox, False, False, 0)
 
     profile_selector = ProfileSelector()
-    profile_selector.fill_options()
+    profile_selector.set_initial_selection()
     profile_selector.widget.set_sensitive(True)
     fb_widgets.categories_combo = profile_selector.categories_combo
 
@@ -385,7 +385,7 @@ def show_reverse_dialog(media_file, default_range_render, _response_callback):
     hbox.pack_start(slider_hbox, False, False, 0)
 
     profile_selector = ProfileSelector()
-    profile_selector.fill_options()
+    profile_selector.set_initial_selection()
     profile_selector.widget.set_sensitive(True)
     fb_widgets.categories_combo = profile_selector.categories_combo
 
@@ -558,7 +558,7 @@ class ProfileSelector():
         self.widget.set_sensitive(False)
         self.widget.set_tooltip_text(_("Select render profile"))
         
-    def fill_options(self):
+    def set_initial_selection(self):
         self.categories_combo.set_selected(current_sequence().profile.description())
 
 
@@ -737,8 +737,7 @@ class RenderProfilePanel():
         self.use_project_profile_check.set_active(True)
         self.use_project_profile_check.connect("toggled", self.use_project_check_toggled)
 
-        self.out_profile_combo = ProfileSelector(out_profile_changed_callback) # this is actually not a combobox,
-                                                                               # but a panel containing combobox.
+        self.out_profile_combo = ProfileSelector(out_profile_changed_callback)
         
         self.out_profile_info_box = ProfileInfoBox() # filled later when current sequence known
         
