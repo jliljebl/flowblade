@@ -66,7 +66,7 @@ def load_profile_list():
     UHD_profiles = []
     SD_profiles = []
     OTHER_profiles = []
-    for prof in _profile_list:
+    for prof in _factory_profiles:
         desc, mlt_profile = prof
         if desc.startswith("HD") and not desc.startswith("HDV") and not desc.startswith("HD 720p"):
             HD_profiles.append(desc)
@@ -78,7 +78,12 @@ def load_profile_list():
             SD_profiles.append(desc)            
         else:
             OTHER_profiles.append(desc)
-    
+
+    USER_profiles = []
+    for prof in _user_profiles:
+        desc, mlt_profile = prof
+        USER_profiles.append(desc)
+
     if len(HD_profiles) > 0:
         _categorized_profiles.append(("HD", HD_profiles))
     if len(HD720_profiles) > 0:
@@ -91,7 +96,7 @@ def load_profile_list():
         _categorized_profiles.append(("Other", OTHER_profiles))
     # CHECK!!!, this needed to be commented out to not crash on launch on laptop
     if len(_user_profiles) > 0:
-        _categorized_profiles.append(("User Custom", _user_profiles))
+        _categorized_profiles.append(("User Custom", USER_profiles))
 
 def _load_profiles_list(dir_path):
     load_profiles = []
