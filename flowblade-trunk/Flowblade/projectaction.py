@@ -1821,6 +1821,7 @@ def _add_new_sequence_dialog_callback(dialog, response_id, widgets):
     sequence.VIDEO_TRACKS_COUNT = v_tracks
 
     # Add new sequence.
+    print("new seq", name)
     PROJECT().add_named_sequence(name)
 
     gui.sequence_list_view.fill_data_model()
