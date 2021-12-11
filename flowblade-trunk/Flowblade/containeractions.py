@@ -422,6 +422,7 @@ class AbstractContainerActionObject:
             # we have rendered a frame sequence clip for media last.
             old_frames_dir = container_clip_action_object.get_session_dir() + appconsts.CC_RENDERED_FRAMES_DIR
             new_frames_dir = self.get_session_dir() + appconsts.CC_RENDERED_FRAMES_DIR
+            os.rmdir(new_frames_dir)
             shutil.copytree(old_frames_dir, new_frames_dir)
         
             resource_path = self.get_rendered_frame_sequence_resource_path()
@@ -436,13 +437,9 @@ class AbstractContainerActionObject:
         
     def _build_icon(self, icon_path):
         cr, surface = _create_image_surface(icon_path)
-        #cr.rectangle(0, 0, appconsts.THUMB_WIDTH, appconsts.THUMB_HEIGHT)
-        #cr.set_source_rgba(*OVERLAY_COLOR)
-        #cr.fill()
         type_icon = _get_type_icon(self.container_data.container_type)
         cr.set_source_surface(type_icon, 1, 30)
-        #cr.set_operator (cairo.OPERATOR_OVERLAY)
-        cr.paint() #_with_alpha(0.5)
+        cr.paint()
         return surface
         
     def load_icon(self):
