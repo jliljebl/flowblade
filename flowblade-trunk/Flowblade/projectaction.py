@@ -1901,7 +1901,8 @@ def sequence_name_edited(cell, path, new_text, user_data):
     liststore, column = user_data
     liststore[path][column] = new_text
     PROJECT().sequences[int(path)].name = new_text
-
+    gui.editor_window.monitor_tc_info.monitor_source.set_text(new_text + " - ")
+    
     _enable_save()
 
 def change_sequence_track_count():
