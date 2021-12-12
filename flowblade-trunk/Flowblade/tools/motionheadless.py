@@ -95,9 +95,6 @@ class MotionClipHeadlessRunnerThread(threading.Thread):
         # start and end frames, renderer stop behaviour
         start_frame = self.start_frame 
         end_frame = self.end_frame
-        wait_for_producer_stop = True
-        if self.render_full_range == False:
-            wait_for_producer_stop = False # consumer wont stop automatically and needs to stopped explicitly
 
         # Launch render
         self.render_player = renderconsumer.FileRenderPlayer(self.write_file, tractor, consumer, start_frame, end_frame)

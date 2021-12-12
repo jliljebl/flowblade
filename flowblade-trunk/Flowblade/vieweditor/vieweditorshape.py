@@ -715,7 +715,6 @@ class RotoMaskEditShape(EditPointShape):
 
     # ------------------------------------------------------------- saving edits
     def convert_shape_coords_and_update_clip_editor_keyframes(self):
-        clip_editor_keyframes = []
         frame_shape = self._get_converted_frame_shape()
         self.clip_editor.set_active_kf_value(frame_shape)
      

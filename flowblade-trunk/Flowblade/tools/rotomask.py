@@ -268,7 +268,6 @@ class RotoMaskEditor(Gtk.Window):
 
     def show_current_frame(self):
         tline_frame = PLAYER().current_frame()
-        length = PLAYER().producer.get_length()
         rgbdata = PLAYER().seek_and_get_rgb_frame(tline_frame)
         self.view_editor.set_screen_rgb_data(rgbdata)
         self.view_editor.update_layers_for_frame(tline_frame)

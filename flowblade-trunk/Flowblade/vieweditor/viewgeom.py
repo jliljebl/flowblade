@@ -43,7 +43,7 @@ def point_in_convex_polygon(test_point, points, first_point_index):
     if get_points_direction(points[-1], points[0], test_point) != direction:
         return False
 
-    return True;
+    return True
 
 def get_points_direction(p1, p2, p3):
     if points_clockwise(p1, p2, p3): 

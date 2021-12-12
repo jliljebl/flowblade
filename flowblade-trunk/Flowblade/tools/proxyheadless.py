@@ -110,7 +110,6 @@ class ProxyClipRenderThread(threading.Thread):
             
             file_producer = mlt.Producer(proxy_profile, str(self.media_file_path))
 
-            start_frame = 0
             end_frame = file_producer.get_length() - 1
             
             tractor = renderconsumer.get_producer_as_tractor(file_producer, end_frame)
