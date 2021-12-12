@@ -389,7 +389,7 @@ def _hamburger_menu_callback(widget, msg):
     elif msg == "change_length":
         _show_plugin_media_length_change_dialog()
     elif msg == "render_preview":
-        render_preview()
+        render_preview_range()
     elif msg == "close":
         _shutdown()
     elif msg == "docs":

@@ -130,8 +130,8 @@ def _write_thumbnail_image(profile, file_path, action_object):
 
     # Create one frame producer
     producer = mlt.Producer(profile, str(file_path))
-    if producer.is_valid() == False:
-        raise ProducerNotValidError(file_path)
+    #if producer.is_valid() == False:
+    #    raise ProducerNotValidError(file_path)
 
     info = utils.get_file_producer_info(producer)
 
@@ -888,8 +888,8 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
 
                 if self.container_data.render_data.do_video_render == True:
                     msg = _("Video for: ") + self.clip.name 
-                elif step == "2":
-                    msg = _("Image Sequence for: ") + self.clip.name 
+                #elif step == "2":
+                #    msg = _("Image Sequence for: ") + self.clip.name 
 
                 job_msg = self.get_job_queue_message()
                 job_msg.progress = float(fraction)

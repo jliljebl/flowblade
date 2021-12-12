@@ -1990,7 +1990,7 @@ def _move_filter_undo(self):
 
     _attach_all(self.clip)
 
-    self.filter_edit_done_func(self.clip, active_index)
+    self.filter_edit_done_func(self.clip)
 
 def _move_filter_redo(self):
     _detach_all(self.clip)

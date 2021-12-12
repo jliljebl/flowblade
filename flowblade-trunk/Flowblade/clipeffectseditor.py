@@ -909,15 +909,6 @@ def _filter_mask_item_activated(widget, data):
     set_clip(clip, track, clip_index)
     _filter_stack.set_filter_item_expanded(current_filter_index + 1)
 
-def _clip_has_filter_mask_filter():
-    if clip == None:
-        return False
-    
-    for f in clip.filters:
-        if f.info.filter_mask_filter != "":
-            return True
-          
-    return False
 
 # ------------------------------------------------ SAVE, LOAD etc. from hamburger menu
 def _hamburger_launch_pressed(widget, event):
