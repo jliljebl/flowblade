@@ -19,15 +19,12 @@
 """
 
 import mlt
-import os
 import threading
 import time
 
-import appconsts
 import ccrutils
 import mltheadlessutils
 import mltprofiles
-import processutils
 import renderconsumer
 
 _render_thread = None

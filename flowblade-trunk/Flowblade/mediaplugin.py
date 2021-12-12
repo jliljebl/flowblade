@@ -20,7 +20,6 @@
 from gi.repository import Gtk, GObject, Pango
 
 import cairo
-import copy
 import hashlib
 import json
 import os
@@ -33,7 +32,6 @@ import containerclip
 import dialogs
 import dialogutils
 import editorlayout
-import editorpersistance
 from editorstate import current_sequence
 import fluxity
 import gui

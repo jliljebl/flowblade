@@ -31,7 +31,6 @@ import dialogs
 import dnd
 import edit
 import editorlayout
-import gui
 import guicomponents
 import guiutils
 import editorpersistance # Aug-2019 - SvdB - BB

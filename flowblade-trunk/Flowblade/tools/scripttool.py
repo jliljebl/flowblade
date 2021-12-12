@@ -24,16 +24,13 @@ gi.require_version('PangoCairo', '1.0')
 
 from gi.repository import GObject, GLib
 from gi.repository import Gtk, Gdk, GdkPixbuf
-from gi.repository import GdkX11
 from gi.repository import Pango
 
-import cairo
 import datetime
 import glob
 import locale
 import mlt
 import os
-import re
 import shutil
 import subprocess
 import sys
@@ -61,7 +58,6 @@ import positionbar
 import processutils
 import respaths
 import renderconsumer
-import toolguicomponents
 import toolsencoding
 import translations
 import threading

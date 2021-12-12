@@ -30,7 +30,6 @@ import time
 
 import appconsts
 import atomicfile
-import compositorfades
 import dialogs
 import dialogutils
 import gui
@@ -41,7 +40,6 @@ import editorlayout
 import editorstate
 from editorstate import current_sequence
 from editorstate import PROJECT
-import editorpersistance
 import keyframeeditor
 import mlttransitions
 import propertyeditorbuilder

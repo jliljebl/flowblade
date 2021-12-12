@@ -43,7 +43,6 @@ import editorpersistance
 import mltprofiles
 import mltfilters
 import mlttransitions
-import miscdataobjects
 import persistancecompat
 import propertyparse
 import resync

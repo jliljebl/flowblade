@@ -32,7 +32,6 @@ import json
 import locale
 import mlt
 import os
-import sys
 import threading
 import time
 

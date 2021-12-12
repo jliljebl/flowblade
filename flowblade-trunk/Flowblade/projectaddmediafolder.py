@@ -3,7 +3,6 @@ from gi.repository import Gtk, GObject, GLib, Gdk
 import fnmatch
 import os
 
-import dialogutils
 import gui
 import guiutils
 import editorpersistance

@@ -23,7 +23,6 @@ from gi.repository import Gtk, GLib, Gdk, GdkPixbuf
 from gi.repository import GObject
 from gi.repository import Pango
 
-import copy
 import os
 import subprocess
 import sys

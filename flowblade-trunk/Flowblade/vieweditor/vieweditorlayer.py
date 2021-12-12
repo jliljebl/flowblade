@@ -17,8 +17,6 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
-import cairo
-import numpy as np
 import sys
 
 import vieweditorshape

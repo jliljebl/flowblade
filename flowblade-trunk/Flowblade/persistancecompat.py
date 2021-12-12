@@ -24,10 +24,7 @@ created by different versions of application.
 
 Refactoring to move code here is an ongoing effort.
 """
-import math
-
 import appconsts
-import miscdataobjects
 
 # ------------------------------------------------------- FIXING MISSING ATTRS
 def FIX_MISSING_MEDIA_FILE_ATTRS(media_file):

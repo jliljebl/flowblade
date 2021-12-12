@@ -1,7 +1,6 @@
 # Blender Python interface
 import bpy
 
-import gi
 from gi.repository import GLib
 
 import os

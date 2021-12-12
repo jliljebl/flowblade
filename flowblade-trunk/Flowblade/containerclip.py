@@ -24,12 +24,10 @@ import copy
 import hashlib
 import json
 import os
-import subprocess
 import threading
 import time
 
 import appconsts
-import containerprogramedit
 import containeractions
 import dialogs
 import dialogutils

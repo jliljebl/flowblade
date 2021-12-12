@@ -20,7 +20,6 @@
 import appconsts
 import dialogutils
 import gui
-import editorstate
 from editorstate import current_sequence
 import propertyedit
 import propertyparse

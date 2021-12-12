@@ -66,7 +66,6 @@ import renderconsumer
 import respaths
 import sequence
 import syncsplitevent
-import tlinerender
 import updater
 import userfolders
 import utils

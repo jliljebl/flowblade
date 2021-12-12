@@ -30,7 +30,6 @@ import copy
 import appconsts
 import clipeffectseditor
 import compositeeditor
-import compositorfades
 import containeractions
 import containerclip
 from editorstate import current_sequence

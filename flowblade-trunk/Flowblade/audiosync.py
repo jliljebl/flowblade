@@ -41,7 +41,6 @@ import clapperless
 import dialogs
 import dialogutils
 import edit
-import editorpersistance
 import editorstate
 from editorstate import PROJECT
 from editorstate import current_sequence

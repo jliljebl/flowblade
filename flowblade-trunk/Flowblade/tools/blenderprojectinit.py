@@ -21,9 +21,6 @@ import bpy
 
 import json
 import os
-import sys
-
-import gi
 
 from gi.repository import GLib
 

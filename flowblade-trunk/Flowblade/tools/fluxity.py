@@ -178,10 +178,8 @@ from gi.repository import PangoCairo
 
 import cairo
 import json
-import locale
 import math
 import multiprocessing
-import numpy as np
 import os
 import traceback
 

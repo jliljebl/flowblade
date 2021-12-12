@@ -35,7 +35,6 @@ import dialogs
 import dialogutils
 import gui
 import guiutils
-import middlebar
 import utils
 
 # Transforms when adding panels.

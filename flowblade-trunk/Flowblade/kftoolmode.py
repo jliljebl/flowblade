@@ -22,15 +22,12 @@
 Module handles Keyframe tool functionality
 """
 from gi.repository import Pango, PangoCairo, Gtk
-# ------------------------ Modify kf curve between two kf---------------------------------------
 from gi.repository import  Gdk
-# ------------- End of Modify kf curve between two kf---------------------------------------
 
 import cairo
 import math
 
 import appconsts
-import cairoarea
 import clipeffectseditor
 import dialogutils
 import edit

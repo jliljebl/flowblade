@@ -27,12 +27,8 @@ import hashlib
 import json
 import mlt
 import os
-from os import listdir
-from os.path import isfile, join
-import pickle
 import subprocess
 import shutil
-import re
 import sys
 import threading
 import time

@@ -23,9 +23,6 @@ Handles or passes on mouse edit events from timeline.
 
 Handles edit mode setting.
 """
-
-import os
-
 from gi.repository import Gdk
 
 import copy
@@ -59,7 +56,6 @@ import syncsplitevent
 import tlinewidgets
 import trimmodes
 import updater
-import utils
 
 
 # functions are monkeypatched in at app.py 

@@ -21,9 +21,6 @@
 """
 Module contains GUI update routines.
 """
-
-import time
-
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk

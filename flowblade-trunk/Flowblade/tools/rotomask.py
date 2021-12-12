@@ -29,7 +29,6 @@ import guiutils
 import keyframeeditor
 import propertyparse
 import respaths
-import utils
 import vieweditor
 import vieweditorlayer
 import vieweditorshape

@@ -23,7 +23,6 @@ import os
 from gi.repository import Gtk
 
 import appconsts
-import dialogs
 import dialogutils
 import editorpersistance
 import gui

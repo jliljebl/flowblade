@@ -25,7 +25,6 @@ Module handles user edit events for trim, roll and slip trim modes.
 import appconsts
 import dialogutils
 import edit
-import editorpersistance
 import editorstate
 from editorstate import current_sequence
 from editorstate import PLAYER

@@ -17,17 +17,12 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
-import gi
-
 from gi.repository import GLib
-import distutils
 from distutils import dir_util, file_util
 import os
 import threading
 
 import appconsts
-import mltprofiles
-import utils
 
 USING_DOT_DIRS = 0 # This is only used during testing and if user forces .dot dirs.
 USING_XDG_DIRS = 1

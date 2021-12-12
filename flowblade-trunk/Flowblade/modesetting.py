@@ -28,7 +28,6 @@ import editorstate
 from editorstate import current_sequence
 from editorstate import PLAYER
 from editorstate import EDIT_MODE
-import editorpersistance
 import gui
 import kftoolmode
 import movemodes

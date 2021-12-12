@@ -26,7 +26,6 @@ import time
 import threading
 
 import appconsts
-import cairoarea
 import dialogutils
 import edit
 import editorpersistance

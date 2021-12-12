@@ -32,9 +32,7 @@ import gui
 import guicomponents
 import guiutils
 from editorstate import current_sequence
-import mltprofiles
 import renderconsumer
-import respaths
 import utils
 
 destroy_window_event_id = -1

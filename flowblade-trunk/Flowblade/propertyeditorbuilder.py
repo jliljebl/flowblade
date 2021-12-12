@@ -25,7 +25,6 @@ Module creates GUI editors for editable mlt properties.
 from gi.repository import Gtk, Gdk, GObject, GLib
 
 import cairo
-import json
 
 import appconsts
 import cairoarea

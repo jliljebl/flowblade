@@ -34,17 +34,14 @@ import mlt
 import os
 from os import listdir
 from os.path import isfile, join
-import pickle
 from pathlib import Path
 import re
 import signal
 import subprocess
-import sys
 import threading
 import time
 
 import appconsts
-import atomicfile
 import ccrutils
 import editorpersistance
 import editorstate

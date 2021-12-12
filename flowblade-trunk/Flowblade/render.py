@@ -31,9 +31,7 @@ from gi.repository import Gtk
 import mlt
 import hashlib
 import os
-import subprocess
 import time
-import threading
 
 import appconsts
 import atomicfile
@@ -41,18 +39,14 @@ import dialogutils
 import editorstate
 from editorstate import current_sequence
 from editorstate import PROJECT
-from editorstate import PLAYER
 import editorpersistance
 import gui
 import guicomponents
 import guiutils
 import jobs
 import mltprofiles
-import mltrefhold
 import renderconsumer
 import rendergui
-import respaths
-import sequence
 import userfolders
 import utils
 

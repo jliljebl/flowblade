@@ -23,7 +23,6 @@ Module handles user actions that are not edits on the current sequence.
 Load, save, add media file, etc...
 """
 
-import copy
 import datetime
 import glob
 import hashlib

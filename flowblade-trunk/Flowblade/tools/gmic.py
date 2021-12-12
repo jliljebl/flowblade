@@ -22,16 +22,14 @@ import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('PangoCairo', '1.0')
 
-from gi.repository import GObject, GLib
+from gi.repository import GLib
 from gi.repository import Gtk, Gdk, GdkPixbuf
-from gi.repository import GdkX11
 from gi.repository import Pango
 
 import cairo
 import locale
 import mlt
 import os
-import re
 import shutil
 import subprocess
 import sys

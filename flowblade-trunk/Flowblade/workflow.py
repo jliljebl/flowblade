@@ -34,17 +34,14 @@ from gi.repository import GObject
 import appconsts
 import dialogs
 import dialogutils
-import edit
 import editorlayout
 import editorpersistance
 import editorstate
-from editorstate import PROJECT
 import gui
 import guiutils
 import modesetting
 import projectdata
 import respaths
-import updater
 
 # New version start-up toolset selections.
 STANDARD_PRESET = 0

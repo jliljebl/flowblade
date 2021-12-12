@@ -18,7 +18,6 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
-import cairo
 import copy
 
 from gi.repository import Gtk
@@ -34,7 +33,6 @@ import gmic
 import gui
 import guicomponents
 import guiutils
-import respaths
 import scripttool
 import titler
 import tlineaction

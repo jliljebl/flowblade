@@ -17,12 +17,9 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
-
-import glob
 import hashlib
 import mlt
 import os
-import shutil
 import threading
 import time
 
@@ -31,14 +28,11 @@ from gi.repository import Gtk, Gdk
 import app
 import appconsts
 import atomicfile
-#import dialogs
 import dialogutils
-import editorpersistance
 import editorstate
 import gui
 import guiutils
 import jobs
-import mltrefhold
 import persistance
 import render
 import renderconsumer

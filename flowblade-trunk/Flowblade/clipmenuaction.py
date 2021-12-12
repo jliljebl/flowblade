@@ -44,7 +44,6 @@ import dialogutils
 import gui
 import guicomponents
 import edit
-import editevent
 from editorstate import current_sequence
 from editorstate import get_track
 from editorstate import PROJECT

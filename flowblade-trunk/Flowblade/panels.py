@@ -22,8 +22,6 @@
 Module has methods that build panels from widgets. Created panels
 are used to build gui at callsites.
 """
-import cairo
-
 from gi.repository import Gtk, Gdk
 
 import appconsts
@@ -36,7 +34,6 @@ import editorstate
 import mltfilters
 import mlttransitions
 import renderconsumer
-import respaths
 import utils
 
 HALF_ROW_WIDTH = 160 # Size of half row when using two column row components created here

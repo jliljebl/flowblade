@@ -29,7 +29,7 @@ and python side values (that are persistant).
 """
 import json
 
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk
 
 import appconsts
 from editorstate import current_sequence

@@ -1,7 +1,4 @@
 
-import cairo
-from gi.repository import Pango
-
 import fluxity
 
 

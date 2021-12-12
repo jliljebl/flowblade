@@ -26,7 +26,6 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk
 from gi.repository import GObject
-from gi.repository import Pango
 from gi.repository import PangoCairo
 import cairo
 import copy
@@ -34,10 +33,8 @@ import time
 
 import cairoarea
 import editorstate
-import dialogutils
 import gui
 import guiutils
-import positionbar
 import respaths
 import translations
 import utils

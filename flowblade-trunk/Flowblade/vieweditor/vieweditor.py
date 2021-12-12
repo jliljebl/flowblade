@@ -21,7 +21,7 @@
 import numpy as np
 print("numpy version:", np.version.version)
 
-from gi.repository import Gtk, GObject, Gdk
+from gi.repository import Gtk, GObject
 
 import cairoarea
 import cairo

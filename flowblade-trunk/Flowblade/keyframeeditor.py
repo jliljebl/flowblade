@@ -35,7 +35,6 @@ from gi.repository import Pango, PangoCairo
 import appconsts
 import cairoarea
 import compositorfades
-import editorpersistance
 from editorstate import PLAYER
 from editorstate import current_sequence
 from editorstate import PROJECT
