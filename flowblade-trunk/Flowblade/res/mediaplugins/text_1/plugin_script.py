@@ -417,4 +417,4 @@ class LineText:
 
         self.affine.apply_transform(cr, frame)
         self.line_layout.set_opacity(self.opacity.get_value(frame))
-        self.line_layout.draw_layout(self.text, cr, 0, 0)
+        self.line_layout.draw_layout(fctx, self.text, cr, 0, 0)

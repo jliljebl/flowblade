@@ -392,12 +392,12 @@ class AbstractEditCanvas:
 
     # These all need to be doubles.
     def catmull_rom_interpolate(self, y0, y1, y2, y3, t):
-    	t2 = t * t
-    	a0 = -0.5 * y0 + 1.5 * y1 - 1.5 * y2 + 0.5 * y3
-    	a1 = y0 - 2.5 * y1 + 2 * y2 - 0.5 * y3
-    	a2 = -0.5 * y0 + 0.5 * y2
-    	a3 = y1
-    	return a0 * t * t2 + a1 * t2 + a2 * t + a3
+        t2 = t * t
+        a0 = -0.5 * y0 + 1.5 * y1 - 1.5 * y2 + 0.5 * y3
+        a1 = y0 - 2.5 * y1 + 2 * y2 - 0.5 * y3
+        a2 = -0.5 * y0 + 0.5 * y2
+        a3 = y1
+        return a0 * t * t2 + a1 * t2 + a2 * t + a3
         
     # ---------------------------------------------------- editor menu actions
     def reset_active_keyframe_shape(self, active_kf_index):

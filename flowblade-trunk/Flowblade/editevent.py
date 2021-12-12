@@ -352,7 +352,7 @@ def tline_canvas_mouse_pressed(event, frame):
         if not success:
             modesetting.set_default_edit_mode(True)	
             return	
-            	
+
         if trimmodes.edit_data["to_side_being_edited"] == True:	
             pointer_context = appconsts.POINTER_CONTEXT_TRIM_LEFT	
         else:	

@@ -823,7 +823,7 @@ def start_autosave():
     try:
         time_min, desc = editorpersistance.prefs.AUTO_SAVE_OPTS[editorpersistance.prefs.auto_save_delay_value_index]
     except:
-    	  time_min = 1
+        time_min = 1
 
     autosave_delay_millis = time_min * 60 * 1000
 

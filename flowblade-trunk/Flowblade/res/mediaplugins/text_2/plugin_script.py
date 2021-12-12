@@ -126,7 +126,7 @@ class TypeWriter:
             line_layout = self.line_layouts[i]
             x, y = line_positions[i]
             txt = line_texts[i]
-            line_layout.draw_layout(txt, cr, x, y)
+            line_layout.draw_layout(fctx, txt, cr, x, y)
     
     def get_line_max_width(self):
         max_width = 0

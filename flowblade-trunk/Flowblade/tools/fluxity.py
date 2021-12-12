@@ -176,11 +176,13 @@ gi.require_version('PangoCairo', '1.0')
 from gi.repository import Pango
 from gi.repository import PangoCairo
 
+import array
 import cairo
 import json
 import math
 import multiprocessing
 import os
+from PIL import Image, ImageFilter
 import traceback
 
 
@@ -821,8 +823,10 @@ class PangoTextLayout:
         self.opacity = opacity
 
     # called from vieweditor draw vieweditor-> editorlayer->here
-    def draw_layout(self, text, cr, x, y, rotation=0.0, xscale=1.0, yscale=1.0):
+    def draw_layout(self, fctx, text, cr, x, y, rotation=0.0, xscale=1.0, yscale=1.0):
         """
+        ** fctx(fluxity.FluxityContext ** context object.
+        
         **`text(str)`** displayed text.
         
         **`cr(cairo.Context)`** frame cairo context aquired with *`FluxityContext.get_frame_cr()`*.
@@ -857,7 +861,8 @@ class PangoTextLayout:
 
             # Blurred shadow need its own ImageSurface
             if self.shadow_blur != 0.0:
-                blurred_img = cairo.ImageSurface(cairo.FORMAT_ARGB32, view_editor.profile_w,  view_editor.profile_h)
+                w, h = fctx.get_dimensions()
+                blurred_img = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
                 cr_blurred = cairo.Context(blurred_img)
                 transform_cr = cr_blurred # Set draw transform_cr to context for newly created image.
             else:
@@ -1085,12 +1090,12 @@ class AnimatedValue:
 
     # These all need to be doubles.
     def _catmull_rom_interpolate(self, y0, y1, y2, y3, t):
-    	t2 = t * t
-    	a0 = -0.5 * y0 + 1.5 * y1 - 1.5 * y2 + 0.5 * y3
-    	a1 = y0 - 2.5 * y1 + 2 * y2 - 0.5 * y3
-    	a2 = -0.5 * y0 + 0.5 * y2
-    	a3 = y1
-    	return a0 * t * t2 + a1 * t2 + a2 * t + a3
+        t2 = t * t
+        a0 = -0.5 * y0 + 1.5 * y1 - 1.5 * y2 + 0.5 * y3
+        a1 = y0 - 2.5 * y1 + 2 * y2 - 0.5 * y3
+        a2 = -0.5 * y0 + 0.5 * y2
+        a3 = y1
+        return a0 * t * t2 + a1 * t2 + a2 * t + a3
 
 
 class AffineTransform:
