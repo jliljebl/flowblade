@@ -2024,3 +2024,7 @@ def set_fade_length_default_dialog(callback, current_value):
     dialog.connect('response', callback, length_spin)
     dialog.show_all()
         
+def show_no_plugins_in_monitor_dialog():
+    primary_txt = _("No Monitor display available for Media Plugins")
+    secondary_txt = _("Media Plugins with user mutable media are best handled on Timeline.")
+    dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)

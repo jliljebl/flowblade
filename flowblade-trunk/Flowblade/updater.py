@@ -31,6 +31,7 @@ from gi.repository import Gdk
 import appconsts
 import clipeffectseditor
 import compositeeditor
+import dialogs
 import gui
 import editorstate
 from editorstate import current_sequence
@@ -82,9 +83,8 @@ last_clicked_media_row = -1
 # This needs to blocked for first and last window state events
 player_refresh_enabled = False
 
-
 #  This needs to be blocked when timeline is displayed as result 
-# of Append/Inset... from monitor to get correct results
+# of Append/Inset... from monitor to get correct results.
 save_monitor_frame = False
 
 # ---------------------------------- init
@@ -345,6 +345,11 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
     if MONITOR_MEDIA_FILE() == None:
         return
 
+    if MONITOR_MEDIA_FILE().container_data != None:
+        dialogs.show_no_plugins_in_monitor_dialog()
+        display_sequence_in_monitor()
+        return
+        
     global save_monitor_frame
     save_monitor_frame = True
 
@@ -422,12 +427,7 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
     display_marks_tc()
     
     gui.pos_bar.widget.grab_focus()
-    gui.media_list_view.widget.queue_draw()
-    
-    # feature removed currently
-    #if editorpersistance.prefs.auto_play_in_clip_monitor == True:
-    #    PLAYER().start_playback()
-    
+    gui.media_list_view.widget.queue_draw()    
     gui.monitor_switch.widget.queue_draw()
     repaint_tline()
 

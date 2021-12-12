@@ -35,7 +35,7 @@ def FIX_MISSING_MEDIA_FILE_ATTRS(media_file):
     if (not hasattr(media_file, "info")):
         media_file.info = None
         
-    # We need this in all media files, used only by img seq media
+    # We need this in all media files, used only by img seq media.
     if not hasattr(media_file, "ttl"):
         media_file.ttl = None
 
@@ -43,7 +43,7 @@ def FIX_MISSING_MEDIA_FILE_ATTRS(media_file):
     if not hasattr(media_file, "container_data"):
         media_file.container_data = None
     
-    # ContainerClipMediaItem objects were missing this but it mostly didn't cause problems.  
+    # ContainerClipMediaItem objects were missing this but it mostly didn't cause problems.
     if type(media_file).__name__ == "ContainerClipMediaItem":
         if not hasattr(media_file, "current_frame"):
             media_file.current_frame = 0

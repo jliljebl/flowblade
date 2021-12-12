@@ -1682,8 +1682,10 @@ def display_clip_popup_menu(event, clip, track, callback):
     
     # Menu items
     if clip.media_type != appconsts.PATTERN_PRODUCER:
-        clip_menu.add(_get_menu_item(_("Open in Clip Monitor"), callback,\
-                      (clip, track, "open_in_clip_monitor", event.x)))
+        clip_monitor_item = _get_menu_item(_("Open in Clip Monitor"), callback, (clip, track, "open_in_clip_monitor", event.x))
+        if clip.container_data != None:
+            clip_monitor_item.set_sensitive(False)
+        clip_menu.add(clip_monitor_item)
 
     _add_separetor(clip_menu)
     
@@ -2486,7 +2488,18 @@ def display_media_file_popup_menu(media_file, callback, event):
     media_file_menu.add(_get_menu_item(_("Rename"), callback,("Rename", media_file, event)))
     media_file_menu.add(_get_menu_item(_("Delete"), callback,("Delete", media_file, event)))
     _add_separetor(media_file_menu)
-    media_file_menu.add(_get_menu_item(_("Open in Clip Monitor"), callback,("Open in Clip Monitor", media_file, event)))
+    
+    if hasattr(media_file, "container_data"): # Why are we guarding against non-existing "container_data" in this method, should be fixed in persistancecompat.py?
+        if media_file.container_data == None:
+            monitor_item_active = True
+        else:
+            monitor_item_active = False
+    else:
+            monitor_item_active = True
+    open_in_monitor_item = _get_menu_item(_("Open in Clip Monitor"), callback,("Open in Clip Monitor", media_file, event))
+    open_in_monitor_item.set_sensitive(monitor_item_active)
+    media_file_menu.add(open_in_monitor_item)
+            
     if media_file.type != appconsts.PATTERN_PRODUCER:
         media_file_menu.add(_get_menu_item(_("File Properties"), callback, ("File Properties", media_file, event)))
 
