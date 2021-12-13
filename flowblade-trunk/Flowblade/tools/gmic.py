@@ -291,7 +291,6 @@ def open_clip_dialog():
     file_select.set_select_multiple(False)
 
     media_filter = utils.get_video_source_file_filter()
-    all_filter = Gtk.FileFilter()
     file_select.add_filter(media_filter)
 
     if _last_load_file != None:
@@ -1170,8 +1169,6 @@ class GmicEffectRendererer(threading.Thread):
         out_folder = _window.out_folder.get_filenames()[0] + "/"
         if out_folder == (os.path.expanduser("~") + "/"):
             return
-            
-        start_time = time.time()
         
         Gdk.threads_enter()
         _window.render_status_info.set_markup("")

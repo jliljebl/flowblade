@@ -233,7 +233,6 @@ def _on_tline_drop(widget, context, x, y, timestamp, do_effect_drop_func, do_med
         do_effect_drop_func(x, y)
         gui.tline_canvas.widget.grab_focus()
     elif drag_source == SOURCE_MEDIA_FILE:
-        media_file = drag_data[0].media_file
         do_media_drop_func(drag_data, x, y, True)
         gui.tline_canvas.widget.grab_focus()
     elif drag_source == SOURCE_MONITOR_WIDGET:

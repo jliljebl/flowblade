@@ -743,9 +743,6 @@ class TimeLineSegment:
         return (start_clip_index, clips)
         
     def _get_clip_content_strings(self, track, clip, clip_index, content_strings):
-
-        length = clip.clip_out - clip.clip_in 
-    
         # Position and range data
         # offset from segment start + in, out
         clip_start_in_tline = track.clip_start(clip_index)

@@ -582,7 +582,6 @@ class MonitorWidget:
         surface = cairo.ImageSurface.create_from_png(matchframe_path)
 
         # Create and return scaled surface
-        profile_screen_ratio = float(PROJECT().profile.width()) / float(PROJECT().profile.height())
         match_frame_width, match_frame_height = self.get_match_frame_panel_size()
         
         scaled_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(match_frame_width), int(match_frame_height))
@@ -708,8 +707,6 @@ class MonitorWidget:
         # Draw active screen indicator and compute tc and frame delta positions
         cr.set_source_rgb(*MONITOR_INDICATOR_COLOR)
 
-        match_tc_x = 0
-        edit_tc_x = 0
         delta_frames_x = 0
         if self.view == START_TRIM_VIEW:
             cr.rectangle(w/2, 0, w/2, 4)
@@ -740,9 +737,7 @@ class MonitorWidget:
 
         # Draw active screen indicator and compute tc and frame delta positions
         cr.set_source_rgb(*MONITOR_INDICATOR_COLOR)
-       
-        match_tc_x = 0
-        edit_tc_x = 0
+
         delta_frames_x = 0
         if self.view == ROLL_TRIM_RIGHT_ACTIVE_VIEW:
             cr.rectangle(w/2, 0, w/2, 4)
@@ -781,8 +776,6 @@ class MonitorWidget:
         # Draw active screen indicator and compute tc and frame delta positions
         cr.set_source_rgb(*MONITOR_INDICATOR_COLOR)
        
-        match_tc_x = 0
-        edit_tc_x = 0
         delta_frames_x = 0
         if self.view == SLIP_TRIM_RIGHT_ACTIVE_VIEW:
             cr.rectangle(w/2, 0, w/2, 4)

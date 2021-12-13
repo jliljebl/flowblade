@@ -990,7 +990,6 @@ class Titler(Gtk.Window):
         # SHADOW
         color = self.shadow_color_button.get_color()
         r, g, b = utils.hex_to_rgb(color.to_string())
-        a = self.shadow_opa_spin.get_value() / 100.0
         new_color3 = (r/65535.0, g/65535.0, b/65535.0)  
         _titler_data.active_layer.shadow_color_rgb = new_color3
         _titler_data.active_layer.shadow_on = self.shadow_on.get_active()

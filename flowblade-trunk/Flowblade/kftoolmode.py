@@ -973,7 +973,6 @@ class TLineKeyFrameEditor:
         # and keyframe frames and keyframe values. 
         more_segments = True
         start_x = kf_pos_prev 
-        start_y = kf_pos_y
         curve_length = kf_pos_next - kf_pos_prev
         cr.move_to(kf_pos_prev, kf_pos_y)
         
@@ -1055,13 +1054,11 @@ class TLineKeyFrameEditor:
                 grad = cairo.LinearGradient (0, y, 0, y + track_height)
                 grad.add_color_stop_rgba(*tlinewidgets.IMAGE_CLIP_COLOR_GRAD)
                 grad.add_color_stop_rgba(*tlinewidgets.IMAGE_CLIP_COLOR_GRAD_L)
-                clip_bg_col = tlinewidgets.IMAGE_CLIP_COLOR_GRAD[1:4]
                 cr.set_source(grad)
         else:# Audio track
             grad = cairo.LinearGradient (0, y, 0, y + track_height)
             grad.add_color_stop_rgba(*tlinewidgets.AUDIO_CLIP_COLOR_GRAD)
             grad.add_color_stop_rgba(*tlinewidgets.AUDIO_CLIP_COLOR_GRAD_L)
-            clip_bg_col = tlinewidgets.AUDIO_CLIP_COLOR_GRAD[1:4]
             cr.set_source(grad)
                 
     # ----------------------------------------------------------- mouse events
@@ -1175,6 +1172,7 @@ class TLineKeyFrameEditor:
         lx = self._legalize_x(x)
         ly = self._legalize_y(y)
 
+        # FIX ME
         if abs(self.mouse_start_y - ly) < DRAG_MIN_Y:
             value_drag_on = True
             
@@ -1222,7 +1220,6 @@ class TLineKeyFrameEditor:
 
     def update_between_drag_keyframes_values(self, value):
         # Replace prev and next keyframes with new keyframes with updated values.
-        clip = edit_data["clip"]
         i = self.prev_frame_line(self.between_drag_start_x) - 1
         frame, val, kf_type = self.keyframes[i]
         self.keyframes.pop(i)

@@ -749,7 +749,7 @@ def delete_range_button_pressed():
     # tractor is has mark in and mark
     mark_in_frame = current_sequence().tractor.mark_in
     mark_out_frame = current_sequence().tractor.mark_out
-    range_length = mark_out_frame - mark_in_frame + 1 # end is incl.
+
     if mark_in_frame == -1 or mark_out_frame == -1:
         primary_txt = _("Timeline Range not set!")
         secondary_txt = _("You need to set Timeline Range using Mark In and Mark Out buttons\nto perform this edit.")
@@ -1262,8 +1262,6 @@ def _show_no_handles_dialog(from_req, from_handle, to_req, to_handle, length):
     label2 = Gtk.Label(_("You need more media overlap:"))
     label2.set_margin_bottom(12)
     label2.set_margin_top(24)
-    label3 = Gtk.Label(info_text)
-    label3.set_use_markup(True)
     if first_clip_info != None:
         label4 = Gtk.Label(first_clip_info)
         label4.set_use_markup(True)
@@ -1275,7 +1273,6 @@ def _show_no_handles_dialog(from_req, from_handle, to_req, to_handle, length):
     row2 = guiutils.get_centered_box([img])
     row3 = guiutils.get_centered_box([label2])
     row4 = guiutils.get_centered_box([img2])
-    row5 = guiutils.get_centered_box([label3])
 
     rows = [row1, row2, row3, row4]
 
@@ -1297,7 +1294,6 @@ def _show_no_handles_dialog(from_req, from_handle, to_req, to_handle, length):
             
 def _show_failure_to_steal_frames_dialog(from_needed, from_length, to_needed, to_length):
     SPACE_TAB = "    "
-    info_text = _("To create a rendered Transition you need enough media overlap from both Clips!\n\n")
     first_clip_info = None
     if from_needed > 0:
 

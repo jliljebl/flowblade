@@ -69,8 +69,6 @@ def load_shortcut_files():
             if root.tag == appconsts.SHORTCUTS_ROOT_TAG:
                 # Check if this is a shortcuts file
                 if root.get('file') == appconsts.SHORTCUTS_TAG:
-                    # Get name and comments
-                    file_len = len(f) - 4
                     # Default file is added last to always be at index 0
                     if f != DEFAULT_SHORTCUTS_FILE:
                         shortcut_files.append(f)

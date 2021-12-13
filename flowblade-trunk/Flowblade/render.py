@@ -154,10 +154,7 @@ def set_saved_gui_selections(selections):
             print("Old style profile option value could not be loaded.")
         if selections["render_args"] != None:
             widgets.args_panel.use_args_check.set_active(True)
-            if widgets.args_panel.text_buffer == None:
-                buf = widgets.args_panel.opts_view.get_buffer()
-            else:
-                buf = widgets.args_panel.text_buffer
+
         widgets.encoding_panel.sample_rate_selector.widget.set_active(selections["audio_frequency"])
     except:
         pass

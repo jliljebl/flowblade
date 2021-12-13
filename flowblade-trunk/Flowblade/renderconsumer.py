@@ -248,7 +248,7 @@ def load_render_profiles():
     ret_code = _test_command(HEVC_NVENC_TEST)
     if (ret_code == 0):
         print("hevc_nvenc available")
-        HEVC_NVENC_AVAILABLE = True
+        HEVC_NVENC_AVAILABLE = True # NOT USED !
     # vaapi
     ret_code = _test_command(H_264_VAAPI_TEST)
     if (ret_code == 0):
@@ -341,10 +341,9 @@ def load_render_profiles():
     for proxy_node in proxy_encoding_nodes:
         proxy_encoding_option = EncodingOption(proxy_node)
         if proxy_encoding_option.supported:
-            msg = " ...available"
             found_proxy_encodings.append(proxy_encoding_option)
         else:
-            msg = " ...NOT available, " + encoding_option.err_msg + " missing"
+            print("proxy encoding " + proxy_encoding_option.name + " NOT AVAILABLE.")
 
     global proxy_encodings
     proxy_encodings = found_proxy_encodings

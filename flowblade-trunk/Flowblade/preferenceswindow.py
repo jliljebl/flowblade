@@ -403,6 +403,7 @@ def _view_prefs_panel():
     # Aug-2019 - SvdB - BB
     tracks_combo.set_active(prefs.double_track_hights)
 
+    # DEPRECATED, remove.
     top_row_layout = Gtk.ComboBoxText()
     top_row_layout.append_text(_("3 panels if width (1450px+) available"))
     top_row_layout.append_text(_("2 panels always"))
@@ -428,7 +429,6 @@ def _view_prefs_panel():
     row7 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Tracks Heights:")), tracks_combo, PREFERENCES_LEFT))
     # Feb-2017 - SvdB - For full file names
     row6 =  _row(guiutils.get_checkbox_row_box(show_full_file_names, Gtk.Label(label=_("Show Full File names"))))
-    row8 =  _row(guiutils.get_two_column_box(Gtk.Label(label=_("Top row layout:")), top_row_layout, PREFERENCES_LEFT))
     row10 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Do GUI layout based on:")), layout_monitor, PREFERENCES_LEFT))
     row11 =  _row(guiutils.get_checkbox_row_box(colorized_icons, Gtk.Label(label=_("Toolbar color icons"))))
     

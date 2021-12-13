@@ -1357,8 +1357,6 @@ class FluxityPluginRenderer(threading.Thread):
             return
         self.render_folder = out_folder
         
-        start_time = time.time()
-        
         Gdk.threads_enter()
         _window.render_status_info.set_markup("")
         _window.set_widgets_sensitive(False)
@@ -1380,11 +1378,12 @@ class FluxityPluginRenderer(threading.Thread):
             in_frame = 0
         if out_frame == -1:
             out_frame = _player.get_active_length()
-        length = out_frame - in_frame
+
         self.length = out_frame - in_frame
         self.mark_in = in_frame
         self.mark_out = out_frame
         
+        # not used !!!
         frame_name = _window.frame_name.get_text()
 
         buf = _window.script_view.get_buffer()

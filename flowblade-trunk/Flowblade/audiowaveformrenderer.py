@@ -190,7 +190,7 @@ def main():
     mltprofiles.load_profile_list()
 
     profile_desc = sys.argv[2]
-    profile = mltprofiles.get_profile(profile_desc)
+    profile = mltprofiles.get_profile(profile_desc) # not used, but will provide useful info if crashes.
         
     files_paths = sys.argv[1]
     files_paths = files_paths.lstrip(FILE_SEPARATOR)

@@ -330,8 +330,6 @@ class PlayerButtons(AbstractGlassButtons):
         to_mark_in_icon = guiutils.get_cairo_image("to_mark_in_s")
         to_mark_out_icon = guiutils.get_cairo_image("to_mark_out_s")
 
-        timeline_start_end = editorpersistance.prefs.timeline_start_end
-
         # Jul-2016 - SvdB - For play/pause button
         if (editorpersistance.prefs.play_pause == True):
             # ------------------------------timeline_start_end_button
@@ -436,18 +434,18 @@ class GmicButtons(AbstractGlassButtons):
         size_ind = 0
         size_adj = 1
         prefs = editorpersistance.prefs
-        # Colorized icons
+        # Colorized icons NOT IMPLEMENTED
         if prefs.colorized_icons is True:
             icon_color = "_color"
         else:
             icon_color = ""
         # End of Colorized icons
+        # NOT IMPLEMENTED
         if prefs.double_track_hights:
            size_ind = 1
            size_adj = 2
         AbstractGlassButtons.__init__(self, MB_BUTTON_WIDTH[size_ind], MB_BUTTON_HEIGHT[size_ind], MB_BUTTON_Y, MB_BUTTONS_WIDTH[size_ind], MB_BUTTONS_HEIGHT[size_ind] - 2)
 
-        IMG_PATH = respaths.IMAGE_PATH
         next_icon = guiutils.get_cairo_image("next_frame_s")
         prev_icon = guiutils.get_cairo_image("prev_frame_s")
         mark_in_icon = guiutils.get_cairo_image("mark_in_s")

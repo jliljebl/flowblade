@@ -936,7 +936,6 @@ class PangoFontEditor(AbstractSimpleEditor):
         # SHADOW
         color = self.widgets.shadow_color_button.get_color()
         r, g, b = utils.hex_to_rgb(color.to_string())
-        a = self.widgets.shadow_opa_spin.get_value() / 100.0
         new_color3 = (r/65535.0, g/65535.0, b/65535.0)  
         shadow_color_rgb = new_color3
         shadow_on = self.widgets.shadow_on.get_active()
@@ -1043,8 +1042,7 @@ class PreviewPanel(Gtk.VBox):
         x, y, w, h = allocation
 
         if self.preview_surface != None:
-            sw = self.preview_surface.get_width ()
-            sh = self.preview_surface.get_height ()
+            sw = self.preview_surface.get_width()
             scale = float(w) / float(sw)
             cr.scale(scale, scale) # pixel aspect ratio not used in computation, correct image only for square pixel formats.
             cr.set_source_surface(self.preview_surface, 0, 0)

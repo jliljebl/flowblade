@@ -361,8 +361,6 @@ def non_freior_rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_s
     # Parse extraeditor value properties value string into (frame, [x, y, x_scale, y_scale, rotation], opacity)
     # keyframe tuples.
     new_keyframes = []
-    screen_width = current_sequence().profile.width()
-    screen_height = current_sequence().profile.height()
     keyframes_str = keyframes_str.strip('"') # expression have sometimes quotes that need to go away
     kf_tokens =  keyframes_str.split(';')
     for token in kf_tokens:

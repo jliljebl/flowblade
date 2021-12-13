@@ -280,8 +280,6 @@ def workflow_menu_launched(widget, event):
 
 def _get_workflow_tool_menu_item(callback, tool_id, tool_name, tool_icon_file, position):
 
-    tool_active = (tool_id in editorpersistance.prefs.active_tools)
-
     tool_img = Gtk.Image.new_from_file(respaths.IMAGE_PATH + tool_icon_file)
     tool_name_label = Gtk.Label(tool_name)
     

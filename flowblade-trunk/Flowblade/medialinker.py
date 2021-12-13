@@ -275,7 +275,6 @@ class MediaRelinkListView(Gtk.VBox):
         self.treeview.set_property("rules_hint", True)
         self.treeview.set_headers_visible(True)
         self.treeview.connect("button-press-event", self.row_pressed)
-        tree_sel = self.treeview.get_selection()
 
         # Column views
         self.missing_text = _("Missing Media File Path")
@@ -690,7 +689,7 @@ def sine_wav(link_path, duration):
     duration = int(duration/25) + 1
     dur = '\"sine=frequency=1000:duration="' + str(duration) + '"\" '
     command = 'ffmpeg -f lavfi -i ' +  dur + ' ' + link_path
-    print("ml 683",  command)
+
     os.system(command)
     
     if os.path.isfile(link_path):

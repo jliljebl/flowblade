@@ -59,7 +59,6 @@ class RecreateIconsThread(threading.Thread):
         time.sleep(0.1)
         Gdk.threads_leave()
 
-        no_icon_path = respaths.IMAGE_PATH + projectdata.FALLBACK_THUMB
         loaded = 0
         for key in PROJECT().media_files.keys():
             media_file = PROJECT().media_files[key]

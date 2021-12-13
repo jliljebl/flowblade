@@ -1243,8 +1243,6 @@ def render_preview_frame(script, script_file, frame, out_folder, profile_file_pa
         return fctx
     except Exception as e:
         fctx.error = str(e) + traceback.format_exc(6,True)
-        print(fctx.error)
-        trace = traceback.format_exc(6,True)
         return fctx
 
 def render_frame_sequence(script, script_file, in_frame, out_frame, out_folder, profile_file_path, editors_data_json=None, start_out_from_frame_one=False):

@@ -152,7 +152,6 @@ def add_job(job_proxy):
 def update_job_queue(job_msg): # We're using JobProxy objects as messages to update values on jobs in _jobs list.
     global _jobs_list_view, _remove_list
     row = -1
-    job_proxy = None  
     for i in range (0, len(_jobs)):
 
         if _jobs[i].proxy_uid == job_msg.proxy_uid:
