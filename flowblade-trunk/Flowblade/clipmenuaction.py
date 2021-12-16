@@ -704,7 +704,6 @@ def _add_clip_marker(data):
     clip, track, item_id, item_data = data
     current_frame = PLAYER().current_frame()
 
-    playhead_on_popup_clip = True
     try:
         current_frame_clip_index = track.get_clip_index_at(current_frame)
         current_frame_clip = track.clips[current_frame_clip_index]
@@ -713,7 +712,6 @@ def _add_clip_marker(data):
     
     if current_frame_clip != clip:
         # Playhead is not on popup clip
-        
         return
 
     clip_start_in_tline = track.clip_start(current_frame_clip_index)

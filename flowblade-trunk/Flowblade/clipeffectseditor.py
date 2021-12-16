@@ -731,10 +731,6 @@ def _get_filter_panel(clip, filter_object, filter_index, track, clip_index):
 
     # Get editors and set them displayed
     vbox = Gtk.VBox(False, 0)
-    try:
-        filter_name = translations.filter_names[filter_object.info.name]
-    except KeyError:
-        filter_name = filter_object.info.name
 
     filter_keyframe_editor_widgets = []
 

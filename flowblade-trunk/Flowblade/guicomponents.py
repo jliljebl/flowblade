@@ -941,7 +941,6 @@ class CompositorInfoPanel(Gtk.HBox):
         info_row_5.pack_start(self.length_value, False, False, 0)
         info_row_5.pack_start(Gtk.Label(), True, True, 0)
 
-        PAD_HEIGHT = 2
         self.pack_start(info_row_2, False, False, 0)
         self.pack_start(info_row_3, False, False, 0)
         self.pack_start(info_row_5, False, False, 0)
@@ -1026,7 +1025,6 @@ class PluginInfoPanel(Gtk.HBox):
         info_row_5.pack_start(self.length_value, False, False, 0)
         info_row_5.pack_start(Gtk.Label(), True, True, 0)
 
-        PAD_HEIGHT = 2
         self.pack_start(info_row_2, False, False, 0)
         self.pack_start(info_row_5, False, False, 0)
 
@@ -1094,7 +1092,6 @@ class BinInfoPanel(Gtk.HBox):
         info_col_3.pack_start(self.items_value, False, False, 0)
         info_col_3.pack_start(Gtk.Label(), True, True, 0)
 
-        PAD_HEIGHT = 2
         self.pack_start(guiutils.pad_label(24, 4), False, False, 0)
         self.pack_start(info_col_2, False, False, 0)
         self.pack_start(guiutils.pad_label(12, 4), False, False, 0)

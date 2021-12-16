@@ -1008,7 +1008,6 @@ def hamburger_pressed(widget, event):
             if media_bin == PROJECT().c_bin:
                 index = index + 1
                 continue
-            name = media_bin
             item = guiutils.get_menu_item(media_bin.name, _hamburger_menu_item_selected, str(index))
             move_menu.add(item)
             item.show()
@@ -1349,7 +1348,7 @@ def unused_media():
         for track in seq.tracks:
             for clip in track.clips:
                 try:
-                    removed = path_to_media_object.pop(clip.path)
+                    path_to_media_object.pop(clip.path)
                 except:
                     pass
     

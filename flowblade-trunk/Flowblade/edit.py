@@ -473,7 +473,6 @@ def get_full_compositor_sync_data():
     # Returns list of tuples in form (compositor, orig_in, orig_out, clip_start, clip_end)
     # Pair all compositors with their origin clips ids
     comp_clip_pairings = {}
-    orphan_compositors = []
     for compositor in current_sequence().compositors:
         if compositor.origin_clip_id in comp_clip_pairings:
             comp_clip_pairings[compositor.origin_clip_id].append(compositor)
@@ -545,7 +544,7 @@ def do_autofollow_redo(action_object):
                 action_object.do_restack_compositors = True
             elif sync_compositor.obey_autofollow == True:
                 sync_compositor.set_in_and_out(clip_start, clip_end)
-        except Exception as ex:
+        except:
             pass
 
 def do_autofollow_undo(action_object):
@@ -2005,7 +2004,6 @@ def _move_filter_redo(self):
         moved_filter = self.clip.filters[self.delete_index]
         _filter_move_insert(self.clip.filters, moved_filter, self.insert_index + 1)
         self.clip.filters.pop(self.delete_index)
-        active_index = self.insert_index - 1
     else:
         # Moving down
         moved_filter = self.clip.filters[self.delete_index]
@@ -2977,7 +2975,6 @@ def _container_clip_switch_to_unrendered_replace_undo(self):
 
 def _container_clip_switch_to_unrendered_replace_redo(self):
     _remove_clip(self.track, self.index)
-    new_out = self.old_clip.clip_out - self.old_clip.clip_in
     
     if self.old_clip.container_data.last_render_type == containeractions.CLIP_LENGTH_RENDER:
         old_clip_edited_length = self.old_clip.clip_out - self.old_clip.clip_in

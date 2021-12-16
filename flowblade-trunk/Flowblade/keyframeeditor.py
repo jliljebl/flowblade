@@ -862,17 +862,7 @@ class GeometryEditorButtonsRow(Gtk.HBox):
         self.set_spacing(2)
         
         self.editor_parent = editor_parent
-        
-        name_label = Gtk.Label(label=_("View:"))
 
-        # Aug-2019 - SvdB - BB
-        """
-        size_adj = 1
-        if editorpersistance.prefs.double_track_hights:
-            size_adj = 2
-        surface = guiutils.get_cairo_image("geom_action")
-        action_menu_button = guicomponents.PressLaunch(self._show_actions_menu, surface, 24*size_adj, 22*size_adj)
-        """
         size_select = Gtk.ComboBoxText()
         size_select.append_text("100%")
         size_select.append_text("66%")
@@ -1170,8 +1160,6 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
 
     def update_editor_view(self, seek_tline=True):
         frame = self.clip_editor.current_clip_frame
-        keyframes = self.clip_editor.keyframes
-        value = _get_frame_value(frame, keyframes)
         self.buttons_row.set_frame(frame)
         if seek_tline == True:
             self.seek_tline_frame(frame)
@@ -2086,8 +2074,6 @@ class RotoMaskKeyFrameEditor(Gtk.VBox):
 
     def active_keyframe_changed(self):
         frame = self.clip_editor.current_clip_frame
-        keyframes = self.clip_editor.keyframes
-        value = _get_frame_value(frame, keyframes)
         self.buttons_row.set_frame(frame)
         self.seek_tline_frame(frame)
         self.buttons_row.set_kf_info(self.clip_editor.get_kf_info())
@@ -2163,8 +2149,6 @@ class RotoMaskKeyFrameEditor(Gtk.VBox):
 
     def update_editor_view(self, seek_tline=True):
         frame = self.clip_editor.current_clip_frame
-        keyframes = self.clip_editor.keyframes
-        value = _get_frame_value(frame, keyframes)
         self.buttons_row.set_frame(frame)
         if seek_tline == True:
             self.seek_tline_frame(frame)

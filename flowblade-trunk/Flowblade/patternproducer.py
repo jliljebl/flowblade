@@ -377,7 +377,7 @@ def _color_clip_dialog(callback):
     vbox.pack_start(row2, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
     
-    align = guiutils.set_margins(vbox, 12, 0, 12, 12)
+    guiutils.set_margins(vbox, 12, 0, 12, 12)
 
     selection_widgets = (name_entry, color_button)
 

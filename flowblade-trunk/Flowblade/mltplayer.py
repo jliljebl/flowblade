@@ -335,15 +335,10 @@ class Player:
 
         # If we're currently rendering, set progress bar and exit event handler.
         if self.is_rendering:
-            if (self.producer.get_length() - 1) < 1:
-                render_fraction = 1.0
-            else:
-                render_fraction = ((float(current_frame - self.render_start_frame)) / 
-                  (float(self.render_stop_frame - self.render_start_frame)))
             self.render_gui_update_count = self.render_gui_update_count + 1
             if self.render_gui_update_count % 8 == 0: # we need quick updates for stop accuracy, but slower gui updating
                 self.render_gui_update_count = 1
-            return 
+            return
 
         # If we're out of active range seek end.
         if current_frame >= self.get_active_length():

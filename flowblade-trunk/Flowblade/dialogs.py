@@ -121,7 +121,6 @@ def _new_project_profile_changed(out_profile_combo, profile_info_box):
 
 def change_profile_project_dialog(project, callback):
     project_name = project.name.rstrip(".flb")
-    default_profile_index = mltprofiles.get_index_for_name(project.profile.description())
     default_profile = mltprofiles.get_default_profile()
 
     dialog = Gtk.Dialog(_("Change Project Profile"), gui.editor_window.window,
@@ -156,7 +155,6 @@ def change_profile_project_dialog(project, callback):
 
     project_name_entry = Gtk.Entry()
     project_name_entry.set_text(project_name + "_NEW_PROFILE.flb")
-    extension_label = Gtk.Label()
 
     name_box = Gtk.HBox(False, 8)
     name_box.pack_start(project_name_entry, True, True, 0)
@@ -180,8 +178,6 @@ def change_profile_project_dialog(project, callback):
 
 def change_profile_project_to_match_media_dialog(project, media_file, callback):
     project_name = project.name.rstrip(".flb")
-    default_profile_index = mltprofiles.get_index_for_name(project.profile.description())
-    default_profile = mltprofiles.get_default_profile()
 
     dialog = Gtk.Dialog(_("Change Project Profile"), gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
@@ -211,7 +207,6 @@ def change_profile_project_to_match_media_dialog(project, media_file, callback):
 
     project_name_entry = Gtk.Entry()
     project_name_entry.set_text(project_name + "_NEW_PROFILE.flb")
-    extension_label = Gtk.Label()
 
     name_box = Gtk.HBox(False, 8)
     name_box.pack_start(project_name_entry, True, True, 0)
@@ -380,7 +375,7 @@ def load_effects_compositors_values_dialog(callback, loading_effect=True, filter
         title_text = _("Load Compositor Values Data") 
     
     if loading_stack == True:
-        title = _("Load Effects Stack Values Data")
+        title_text = _("Load Effects Stack Values Data")
 
     dialog = Gtk.FileChooserDialog(title_text, parent,
                                    Gtk.FileChooserAction.OPEN,
@@ -1552,7 +1547,7 @@ def _shorcuts_selection_changed(combo, scroll_hold_panel, diff_data, dialog):
     shortcuts.set_keyboard_shortcuts()
     
     display_keyboard_shortcuts(selected_xml, workflow.get_tline_tool_working_set(), scroll_hold_panel)
-    #shortcuts.compare_xml_file_nodes_to_default(selected_xml)
+
     diff_data.set_text(shortcuts.get_diff_to_defaults(selected_xml))
     dialog.show_all()
 
