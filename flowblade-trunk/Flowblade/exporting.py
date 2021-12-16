@@ -316,7 +316,7 @@ class MLTXMLToEDLParse:
                 if self.from_clip_comment == True and resource != None:
                     str_list.append("* FROM CLIP NAME: " + resource.split("/")[-1] + "\n")
                     
-                edl_event_count += 1;
+                edl_event_count += 1
    
                 prog_in += src_len
 
@@ -363,13 +363,13 @@ class MLTXMLToEDLParse:
         if (m > 1):
             framenumber=framenumber + (dropFrames * 9 * d) + dropFrames * floor((m-dropFrames) / framesPerMinute)
         else:
-            framenumber = framenumber + dropFrames * 9 * d;
+            framenumber = framenumber + dropFrames * 9 * d
 
-        frRound = round(framerate);
-        frames = framenumber % frRound;
-        seconds = floor(framenumber / frRound) % 60;
-        minutes = floor(floor(framenumber / frRound) / 60) % 60;
-        hours = floor(floor(floor(framenumber / frRound) / 60) / 60);    
+        frRound = round(framerate)
+        frames = framenumber % frRound
+        seconds = floor(framenumber / frRound) % 60
+        minutes = floor(floor(framenumber / frRound) / 60) % 60
+        hours = floor(floor(floor(framenumber / frRound) / 60) / 60)
 
         tc = "%d:%02d:%02d;%02d" % (hours, minutes, seconds, frames)
         return tc

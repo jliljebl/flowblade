@@ -117,8 +117,8 @@ def _get_line_params_for_points(p1, p2):
     x2, y2 = p2
 
     if (x1 == x2):
-        is_vertical = True;
-        x_icept = x1;
+        is_vertical = True
+        x_icept = x1
         m = None
         b = None
     else:
@@ -214,10 +214,10 @@ class Vec(Line):
         # Returns length as positive if direction same as original and as negative if reversed
         # and as zero is length is 0
         if self.is_zero_length():
-            return 0;
+            return 0
 
         current_direction = self.get_direction() / self.orig_direction
-        d = distance( self.start_point, self.end_point );
+        d = distance( self.start_point, self.end_point )
         return current_direction * d
 
     def get_multiplied_vec(self, multiplier):

@@ -545,7 +545,7 @@ def get_track(panel_y):
     if panel_y > bottom_line:
         return None
         
-    tracks_height = bottom_line;
+    tracks_height = bottom_line
     for i in range(1, len(current_sequence().tracks)):
         tracks_height = tracks_height - current_sequence().tracks[i].height
         if tracks_height < panel_y:
@@ -576,7 +576,7 @@ def _get_track_y(track_index):
         audio_add = audio_add + current_sequence().tracks[i].height
 
     bottom_line = REF_LINE_Y + audio_add
-    tracks_height = 0;
+    tracks_height = 0
     for i in range(1, track_index + 1):
         tracks_height = tracks_height + current_sequence().tracks[i].height
     
@@ -2755,7 +2755,7 @@ class TimeLineFrameScale:
                 cr.move_to (0, start_y + i * tri_h)
                 cr.line_to (tri_w, start_y + i * tri_h + tri_h_half)
                 cr.line_to (0, start_y + i * tri_h + tri_h)
-                cr.close_path();
+                cr.close_path()
                 cr.fill()
 
         # Set line attr for frames lines
@@ -2814,7 +2814,7 @@ class TimeLineFrameScale:
             if tc_draw_step == small_tick_step:
                 cr.move_to(x, TC_Y)
                 text = utils.get_tc_string(int(round(float(i) * float(tc_draw_step))))
-                cr.show_text(text);
+                cr.show_text(text)
         cr.stroke()
         
         # 23.98 and 29.97 need this to get drawn on even seconds with big ticks and tcs
@@ -2902,7 +2902,7 @@ class TimeLineFrameScale:
         cr.line_to (x - MARK_LINE_WIDTH, MARK_LINE_WIDTH + MARK_PAD)
         cr.line_to (x - 1 * MARK_LINE_WIDTH, MARK_LINE_WIDTH + MARK_PAD )
         cr.line_to (x - 2 * MARK_LINE_WIDTH, MARK_PAD)
-        cr.close_path();
+        cr.close_path()
         cr.fill_preserve()
         cr.set_source_rgb(*MARK_OUTLINE)
         cr.set_line_width(1.0)
@@ -2927,7 +2927,7 @@ class TimeLineFrameScale:
         cr.line_to (x + MARK_LINE_WIDTH, MARK_LINE_WIDTH + MARK_PAD)
         cr.line_to (x + 1 * MARK_LINE_WIDTH, MARK_LINE_WIDTH + MARK_PAD )
         cr.line_to (x + 2 * MARK_LINE_WIDTH, MARK_PAD)
-        cr.close_path();
+        cr.close_path()
         cr.fill_preserve()
         cr.set_source_rgb(*MARK_OUTLINE)
         cr.set_line_width(1.0)

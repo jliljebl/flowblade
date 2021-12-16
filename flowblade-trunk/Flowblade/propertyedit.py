@@ -68,7 +68,7 @@ KEYFRAME_HCS = "keyframe_hcs"                               # frame=value(;frame
 KEYFRAME_HCS_TRANSITION = "keyframe_hcs_transition"         # frame=value(;frame=value) HCS = half comma separeted, used to edit transitions
 MULTIPART_KEYFRAME_HCS = "multipart_keyframe"               # frame=value(;frame=value) series of mlt.Filter objects that get their properties set, HCS = half comma separeted
 FREI_POSITION_HCS = "frei_pos_hcs"                          # frame=x:y
-FREI_GEOM_HCS_TRANSITION = "frei_geom_hcs";                 # time=x:y:x_scale:y_scale:rotation:mix
+FREI_GEOM_HCS_TRANSITION = "frei_geom_hcs"                  # time=x:y:x_scale:y_scale:rotation:mix
 COLOR = "color"                                             # #rrggbb
 CAIRO_COLOR = "cairo_color"                                             # #rrggbb but displayed as r and b switched
 LUT_TABLE = "lut_table"                                     # val;val;val;val;...;val

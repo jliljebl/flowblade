@@ -50,7 +50,7 @@ class CurvePoint:
 class CRCurve:
 
     def __init__(self):
-        self.CURVES_NUM_POINTS = 17;#this should be enough.
+        self.CURVES_NUM_POINTS = 17
         self.X = 0
         self.Y = 1
         self.points = []
@@ -252,8 +252,8 @@ class CRCurve:
             if (( lastx != newx ) or ( lasty != newy)):
                 self.curve[ newx ] = newy
 
-            lastx = newx;
-            lasty = newy;
+            lastx = newx
+            lasty = newy
 
     # Fills ab using a and b 
     def curves_CR_compose(self, a, b, ab):

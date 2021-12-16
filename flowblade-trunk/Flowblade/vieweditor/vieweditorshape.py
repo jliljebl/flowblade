@@ -91,9 +91,9 @@ class EditPoint:
             and (test_x <= self.x + EDIT_POINT_SIDE_HALF  * side_mult) 
             and (test_y >= self.y - EDIT_POINT_SIDE_HALF * side_mult)
             and (test_y <= self.y + EDIT_POINT_SIDE_HALF * side_mult)):
-            return True;
+            return True
 
-        return False;
+        return False
 
     def draw(self, cr, view_editor):
         if self.display_type == INVISIBLE_POINT:
@@ -213,11 +213,11 @@ class EditPointShape:
             if px < x_low:
                 x_low = p.x
             if px > x_high:
-                x_high = p.x;
+                x_high = p.x
             if py < y_low:
-                y_low = p.y;
+                y_low = p.y
             if py > y_high:
-                y_high = p.y;
+                y_high = p.y
 
         return (x_low, y_low, x_high - x_low, y_high - y_low)
 
@@ -320,7 +320,7 @@ class SimpleRectEditShape(EditPointShape):
 
     def get_handle_guides(self, hit_point):
         index = self.edit_points.index(hit_point)
-        opp_handle_index = (index + 2) % 4;
+        opp_handle_index = (index + 2) % 4
         opp_handle = self.edit_points[opp_handle_index]
 
         guide_1_handle = self.edit_points[(opp_handle_index - 1) % 4]
@@ -668,8 +668,8 @@ class RotoMaskEditShape(EditPointShape):
     def lerp(self, pa, pb, t):
         pax, pay = pa
         pbx, pby = pb
-        x = pax + ( pbx - pax ) * t;
-        y = pay + ( pby - pay ) * t;
+        x = pax + ( pbx - pax ) * t
+        y = pay + ( pby - pay ) * t
         return (x, y)
     
     def draw_line_shape(self, cr, view_editor):

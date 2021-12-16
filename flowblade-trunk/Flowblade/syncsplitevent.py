@@ -108,7 +108,7 @@ def init_select_master_clip(popup_data):
         print("big fu at _init_select_master_clip(...)")
         return
 
-    gdk_window = gui.tline_display.get_parent_window();
+    gdk_window = gui.tline_display.get_parent_window()
     gdk_window.set_cursor(Gdk.Cursor.new(Gdk.CursorType.TCROSS))
     editorstate.edit_mode = editorstate.SELECT_PARENT_CLIP
     global parent_selection_data
@@ -117,7 +117,7 @@ def init_select_master_clip(popup_data):
 def select_sync_parent_mouse_pressed(event, frame):
     _set_sync_parent_clip(event, frame)
     
-    gdk_window = gui.tline_display.get_parent_window();
+    gdk_window = gui.tline_display.get_parent_window()
     gdk_window.set_cursor(Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR))
    
     global parent_selection_data

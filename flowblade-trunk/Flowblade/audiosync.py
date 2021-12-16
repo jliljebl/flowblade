@@ -116,7 +116,7 @@ def init_select_tline_sync_clip(popup_data):
         print("big fu at init_select_tline_sync_clip(...)")
         return
 
-    gdk_window = gui.tline_display.get_parent_window();
+    gdk_window = gui.tline_display.get_parent_window()
     gdk_window.set_cursor(Gdk.Cursor.new(Gdk.CursorType.TCROSS))
     editorstate.edit_mode = editorstate.SELECT_TLINE_SYNC_CLIP
 
@@ -154,7 +154,7 @@ def select_sync_clip_mouse_pressed(event, frame):
     
     _tline_sync_data.clip_tline_media_offset = (sync_clip_start_in_tline - sync_clip.clip_in) - (_tline_sync_data.origin_clip_start_in_tline - _tline_sync_data.origin_clip.clip_in)
     
-    gdk_window = gui.tline_display.get_parent_window();
+    gdk_window = gui.tline_display.get_parent_window()
     gdk_window.set_cursor(Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR))
     
     global _compare_dialog_thread

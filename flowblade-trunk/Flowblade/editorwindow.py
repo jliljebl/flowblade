@@ -1675,7 +1675,7 @@ class EditorWindow:
         if editorstate.cursor_on_tline == True:
             self.set_tline_cursor(editorstate.EDIT_MODE())
         else:
-            gdk_window = gui.tline_display.get_parent_window();
+            gdk_window = gui.tline_display.get_parent_window()
             gdk_window.set_cursor(Gdk.Cursor.new(Gdk.CursorType.LEFT_PTR))
 
     def get_own_cursor(self, display, surface, hotx, hoty):

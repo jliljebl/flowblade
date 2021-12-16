@@ -886,7 +886,7 @@ def _sync_over_undo(self):
     
     # Put back old clips
     for i in range(0, len(self.removed_clips)):
-        clip = self.removed_clips[i];
+        clip = self.removed_clips[i]
         _insert_clip(self.track, clip, self.in_index + i, clip.clip_in,
                      clip.clip_out)
 
@@ -1151,7 +1151,7 @@ def _overwrite_move_undo(self):
 
     # Put back lifted clips
     for i in range(0, len(self.moved_clips)):
-        clip = self.moved_clips[i];
+        clip = self.moved_clips[i]
         _insert_clip(track, clip, self.selected_range_in + i, clip.clip_in,
                      clip.clip_out)
 
@@ -1285,7 +1285,7 @@ def _multitrack_overwrite_move_undo(self):
 
     # Put back old clips
     for i in range(0, len(self.removed_clips)):
-        clip = self.removed_clips[i];
+        clip = self.removed_clips[i]
         _insert_clip(to_track, clip, moved_index + i, clip.clip_in,
                      clip.clip_out)
 
@@ -1299,7 +1299,7 @@ def _multitrack_overwrite_move_undo(self):
 
     # Put back lifted clips
     for i in range(0, len(self.moved_clips)):
-        clip = self.moved_clips[i];
+        clip = self.moved_clips[i]
         _insert_clip(track, clip, self.selected_range_in + i, clip.clip_in,
                      clip.clip_out)
 
@@ -2229,7 +2229,7 @@ def _audio_splice_undo(self):
     
     # Put back old clips
     for i in range(0, len(self.removed_clips)):
-        clip = self.removed_clips[i];
+        clip = self.removed_clips[i]
         _insert_clip(to_track, clip, in_index + i, clip.clip_in,
                      clip.clip_out)
 

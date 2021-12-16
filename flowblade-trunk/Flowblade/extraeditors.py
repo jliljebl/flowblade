@@ -699,7 +699,7 @@ class BoxEditor:
     def __init__(self, pix_size):
         self.value_size = 1.0 # Box editor works in 0-1 normalized space
 
-        self.pix_size = pix_size;
+        self.pix_size = pix_size
         self.pix_per_val = self.value_size / pix_size
         self.off_x = 0.5
         self.off_y = 0.5

@@ -266,7 +266,7 @@ class PositionBar:
         cr.line_to (x - MARK_LINE_WIDTH, MARK_LINE_WIDTH + MARK_PAD)
         cr.line_to (x - 1 * MARK_LINE_WIDTH, MARK_LINE_WIDTH + MARK_PAD )
         cr.line_to (x - 2 * MARK_LINE_WIDTH, MARK_PAD)
-        cr.close_path();
+        cr.close_path()
 
         cr.set_source_rgb(*MARK_COLOR)
         cr.fill_preserve()
@@ -291,7 +291,7 @@ class PositionBar:
         cr.line_to (x + MARK_LINE_WIDTH, MARK_LINE_WIDTH + MARK_PAD)
         cr.line_to (x + 1 * MARK_LINE_WIDTH, MARK_LINE_WIDTH + MARK_PAD )
         cr.line_to (x + 2 * MARK_LINE_WIDTH, MARK_PAD)
-        cr.close_path();
+        cr.close_path()
 
         cr.set_source_rgb(*MARK_COLOR)
         cr.fill_preserve()

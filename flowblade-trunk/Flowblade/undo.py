@@ -77,7 +77,7 @@ def register_edit(undo_edit):
         index = index - 1
         
     # Add to stack and grow index
-    undo_stack.append(undo_edit);
+    undo_stack.append(undo_edit)
     index = index + 1
     
     save_item.set_sensitive(True) # Disabled at load and save, first edit enables
