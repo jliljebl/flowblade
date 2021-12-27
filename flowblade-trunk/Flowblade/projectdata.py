@@ -23,7 +23,10 @@ Module contains objects used to capture project data.
 """
 import cairo
 import datetime
-import mlt
+try:
+    import mlt
+except:
+    import mlt7 as mlt
 import hashlib
 import os
 

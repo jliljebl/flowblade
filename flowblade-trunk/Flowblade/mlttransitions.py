@@ -23,7 +23,10 @@ Module contains objects that wrap mlt.Transition objects used to mix video betwe
 two tracks.
 """
 import copy
-import mlt
+try:
+    import mlt
+except:
+    import mlt7 as mlt
 import os
 import xml.dom.minidom
 

@@ -25,7 +25,10 @@ Module contains objects and methods needed to create render consumers.
 
 from gi.repository import Gdk
 
-import mlt
+try:
+    import mlt
+except:
+    import mlt7 as mlt
 import time
 import threading
 import xml.dom.minidom

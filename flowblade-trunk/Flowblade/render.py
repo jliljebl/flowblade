@@ -28,7 +28,10 @@ Rendering is done in app.player object of class mltplayer.Player
 
 from gi.repository import Gtk
 
-import mlt
+try:
+    import mlt
+except:
+    import mlt7 as mlt
 import hashlib
 import os
 import time

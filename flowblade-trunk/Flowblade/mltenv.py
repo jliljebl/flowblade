@@ -22,7 +22,10 @@
 Module checks environment for available codecs and formats.
 """
 from gi.repository import GObject
-import mlt
+try:
+    import mlt
+except:
+    import mlt7 as mlt
 
 import dialogutils
 import editorstate

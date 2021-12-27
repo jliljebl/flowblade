@@ -27,7 +27,10 @@ from PIL import Image
 from gi.repository import GLib
 from gi.repository import Gtk
 
-import mlt
+try:
+    import mlt
+except:
+    import mlt7 as mlt
 from operator import itemgetter
 import os
 import shutil

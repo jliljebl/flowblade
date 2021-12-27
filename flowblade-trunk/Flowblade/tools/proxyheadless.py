@@ -19,7 +19,10 @@
 """
 
 import glob
-import mlt
+try:
+    import mlt
+except:
+    import mlt7 as mlt
 import os
 from PIL import Image
 import threading

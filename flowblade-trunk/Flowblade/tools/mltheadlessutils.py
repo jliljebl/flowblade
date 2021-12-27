@@ -24,7 +24,10 @@ in initialized Flowblade/MLT enviroment.
 """
 
 import locale
-import mlt
+try:
+    import mlt
+except:
+    import mlt7 as mlt
 import os
 
 import ccrutils

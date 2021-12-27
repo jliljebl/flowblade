@@ -18,7 +18,10 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 import hashlib
-import mlt
+try:
+    import mlt
+except:
+    import mlt7 as mlt
 import os
 import threading
 import time

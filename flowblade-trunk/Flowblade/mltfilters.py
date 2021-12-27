@@ -27,7 +27,10 @@ import copy
 
 from gi.repository import GdkPixbuf
 
-import mlt
+try:
+    import mlt
+except:
+    import mlt7 as mlt
 import xml.dom.minidom
 
 import appconsts

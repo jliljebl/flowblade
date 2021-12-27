@@ -30,7 +30,10 @@ gi.require_version('Gtk', '3.0')
 
 import json
 import locale
-import mlt
+try:
+    import mlt
+except:
+    import mlt7 as mlt
 import os
 import threading
 import time

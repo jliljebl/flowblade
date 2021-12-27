@@ -23,7 +23,10 @@ Clip player used to select frames for preview and range selection.
 """
 
 
-import mlt
+try:
+    import mlt
+except:
+    import mlt7 as mlt
 import os
 from os import listdir
 from os.path import isfile, join

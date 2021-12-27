@@ -29,7 +29,10 @@ from gi.repository import Gtk, Gdk, GdkPixbuf
 import dbus
 import dbus.service
 from dbus.mainloop.glib import DBusGMainLoop
-import mlt
+try:
+    import mlt
+except:
+    import mlt7 as mlt
 import hashlib
 import locale
 import os

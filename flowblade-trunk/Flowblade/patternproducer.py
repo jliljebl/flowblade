@@ -27,7 +27,10 @@ import hashlib
 
 from gi.repository import Gtk, Gdk
 
-import mlt
+try:
+    import mlt
+except:
+    import mlt7 as mlt
 
 import appconsts
 import dialogutils

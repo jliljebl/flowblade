@@ -23,7 +23,10 @@ Handles syncing clips based on their audio data.
 """
 import datetime
 import hashlib
-import mlt
+try:
+    import mlt
+except:
+    import mlt7 as mlt
 import os
 import subprocess
 import sys

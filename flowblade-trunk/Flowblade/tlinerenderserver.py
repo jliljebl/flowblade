@@ -32,7 +32,10 @@ import dbus
 import dbus.service
 from dbus.mainloop.glib import DBusGMainLoop
 import locale
-import mlt
+try:
+    import mlt
+except:
+    import mlt7 as mlt
 import os
 import subprocess
 import sys

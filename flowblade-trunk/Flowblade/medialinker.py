@@ -20,7 +20,10 @@
 
 import glob
 import hashlib
-import mlt
+try:
+    import mlt
+except:
+    import mlt7 as mlt
 import locale
 import os
 import subprocess

@@ -29,7 +29,10 @@ except ImportError:
 import gi
 
 import cairo
-import mlt
+try:
+    import mlt
+except:
+    import mlt7 as mlt
 
 from gi.repository import Gtk, GObject
 from gi.repository import GLib

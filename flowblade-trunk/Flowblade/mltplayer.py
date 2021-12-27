@@ -24,7 +24,10 @@ a Xwindow of a GTK+ widget and os audiosystem using a SDL consumer.
 """
 from gi.repository import Gdk
 
-import mlt
+try:
+    import mlt
+except:
+    import mlt7 as mlt
 import os
 import time
 

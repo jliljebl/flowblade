@@ -22,7 +22,10 @@ from gi.repository import Gtk
 import os
 from xml.dom import minidom
 from math import floor
-import mlt
+try:
+    import mlt
+except:
+    import mlt7 as mlt
 import time
 import hashlib
 import re

@@ -25,7 +25,10 @@ import cairo
 import copy
 import hashlib
 import json
-import mlt
+try:
+    import mlt
+except:
+    import mlt7 as mlt
 import os
 import subprocess
 import shutil

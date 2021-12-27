@@ -21,7 +21,10 @@ from gi.repository import Gdk
 from gi.repository import Gtk, GLib
 
 import cairo
-import mlt
+try:
+    import mlt
+except:
+    import mlt7 as mlt
 import numpy as np
 import os
 import threading

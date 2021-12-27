@@ -23,7 +23,10 @@ Modules handles creating and caching audio waveform images for clips.
 """
 
 import locale
-import mlt
+try:
+    import mlt
+except:
+    import mlt7 as mlt
 import os
 import pickle
 import subprocess

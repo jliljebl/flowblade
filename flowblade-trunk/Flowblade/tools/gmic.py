@@ -28,7 +28,10 @@ from gi.repository import Pango
 
 import cairo
 import locale
-import mlt
+try:
+    import mlt
+except:
+    import mlt7 as mlt
 import os
 import shutil
 import subprocess

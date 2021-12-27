@@ -40,7 +40,10 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 
 import locale
-import mlt
+try:
+    import mlt
+except:
+    import mlt7 as mlt
 import hashlib
 import os
 import sys
