@@ -247,7 +247,8 @@ def _display_compositor_edit_box():
         # Using display name is bit hacky, but should work.
         try:
             if ep.args["displayname"] == "Blend!Mode":
-                target_row.pack_start(guiutils.get_pad_label(24, 3), False, False, 0)
+                target_row.pack_start(guiutils.get_pad_label(8, 3), False, False, 0)
+                editor_row.remove(editor_row.get_children()[0])
                 target_row.pack_start(editor_row, True, True, 0)
                 blend_added = True
                 continue

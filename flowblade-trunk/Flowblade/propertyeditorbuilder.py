@@ -1160,16 +1160,3 @@ EDITOR_ROW_CREATORS = { \
     FILTER_RECT_GEOM_EDITOR: lambda ep : _get_filter_rect_geom_editor(ep)
     }
 
-"""
-    # example code for using slider editor with NON-MLT property
-    #hue = filter(lambda ep: ep.name == "hue", editable_properties)[0]
-    #hue_row = _get_slider_row(hue, None, True)
-    #saturation = filter(lambda ep: ep.name == "saturation", editable_properties)[0]
-    #saturation_row = _get_slider_row(saturation, None, True)
-    #value = filter(lambda ep: ep.name == "value", editable_properties)[0]
-    #value_row = _get_slider_row(value, None, True)
-    #colorbox_editor = extraeditors.ColorBoxFilterEditor(editable_properties, [hue_row, saturation_row, value_row])
-    #hue.adjustment_listener = colorbox_editor.hue_changed
-    #saturation.adjustment_listener = colorbox_editor.saturation_changed
-    #value.adjustment_listener = colorbox_editor.value_changed
-"""

@@ -797,10 +797,8 @@ class ClipEditorButtonsRow(Gtk.HBox):
             self.pack_start(Gtk.Label(), True, True, 0)
 
         self.pack_start(self.hamburger_menu.widget, False, False, 0)
-        self.pack_start(guiutils.pad_label(10,4), False, False, 0)
         self.pack_start(self.add_button, False, False, 0)
         self.pack_start(self.delete_button, False, False, 0)
-        self.pack_start(guiutils.pad_label(4,4), False, False, 0)
         self.pack_start(self.prev_kf_button, False, False, 0)
         self.pack_start(self.next_kf_button, False, False, 0)
         self.pack_start(self.kf_to_prev_frame_button, False, False, 0)
@@ -808,18 +806,15 @@ class ClipEditorButtonsRow(Gtk.HBox):
 
         self.pack_start(self.prev_frame_button, False, False, 0)
         self.pack_start(self.next_frame_button, False, False, 0)
-        self.pack_start(guiutils.pad_label(4,4), False, False, 0)
         if show_fade_buttons:
             self.pack_start(self.add_fade_in_button, False, False, 0)
             self.pack_start(self.add_fade_out_button, False, False, 0)
         if not centered_buttons:
             self.pack_start(Gtk.Label(), True, True, 0)
         else:
-            self.pack_start(guiutils.pad_label(4,4), False, False, 0)
+            pass
             
         self.pack_start(self.kf_info_label, False, False, 0)
-        self.pack_start(guiutils.pad_label(10,4), False, False, 0) 
-        self.pack_start(self.kf_pos_label, False, False, 0)
         
         if centered_buttons:
             self.pack_start(Gtk.Label(), True, True, 0)
@@ -874,23 +869,11 @@ class GeometryEditorButtonsRow(Gtk.HBox):
         self.size_select = size_select
         
         # Build row
-        #self.pack_start(action_menu_button.widget, False, False, 0)
         if empty_center == True:
             self.pack_start(Gtk.Label(), True, True, 0)
         else:
             self.pack_start(guiutils.get_pad_label(12, 10), False, False, 0)
         self.pack_start(size_select, False, False, 0)
-
-    """
-    def _show_actions_menu(self, widget, event):
-        menu = actions_menu
-        guiutils.remove_children(menu)
-        menu.add(self._get_menu_item(_("Reset Geometry"), self.editor_parent.menu_item_activated, "reset" ))
-        menu.add(self._get_menu_item(_("Geometry to Original Aspect Ratio"), self.editor_parent.menu_item_activated, "ratio" ))
-        menu.add(self._get_menu_item(_("Center Horizontal"), self.editor_parent.menu_item_activated, "hcenter" ))
-        menu.add(self._get_menu_item(_("Center Vertical"), self.editor_parent.menu_item_activated, "vcenter" ))
-        menu.popup(None, None, None, None, event.button, event.time)
-    """
     
     def _get_menu_item(self, text, callback, data):
         item = Gtk.MenuItem(text)
@@ -2241,7 +2224,6 @@ class PositionNumericalEntries(Gtk.HBox):
         row1.pack_start(guiutils.pad_label(6, 6), False, False, 0)
         row1.pack_start(h_label, False, False, 0)
         row1.pack_start(self.h_entry, False, False, 0)
-        row1.pack_start(Gtk.Label(), True, True, 0)
 
         vbox = Gtk.VBox(False, 0)
         vbox.pack_start(row1, False, False, 0)
@@ -2251,15 +2233,12 @@ class PositionNumericalEntries(Gtk.HBox):
         self.pack_start(Gtk.Label(), True, True, 0)
         
     def init_for_roto_geom(self, editor_buttons):
-        # [960.0, 540.0, 1.0, 1.0, 0.0]
 
         x_label = Gtk.Label(_("X:"))
         y_label = Gtk.Label(_("Y:"))
         x_scale_label = Gtk.Label(_("\u21D4" + ":"))
         y_scale_label = Gtk.Label(_("\u21D5" + ":"))
         rotation_label = Gtk.Label(_("\u2941" + ":"))
-        #"\u2022"
-        #U+21D4
         
         self.x_entry = Gtk.Entry.new()
         self.y_entry = Gtk.Entry.new()
@@ -2278,46 +2257,24 @@ class PositionNumericalEntries(Gtk.HBox):
         self.set_margin_top (4)
 
         row1 = Gtk.HBox(False, 0)
-        #row1.pack_start(Gtk.Label(), True, True, 0)
         if editor_buttons != None: # We sometimes put editor buttons elsewhere
             row1.pack_start(editor_buttons, False, False, 0)
         row1.pack_start(guiutils.pad_label(6, 6), False, False, 0)
         row1.pack_start(x_label, False, False, 0)
         row1.pack_start(self.x_entry, False, False, 0)
-        row1.pack_start(guiutils.pad_label(6, 6), False, False, 0)
         row1.pack_start(y_label, False, False, 0)
         row1.pack_start(self.y_entry, False, False, 0)
-        row1.pack_start(guiutils.pad_label(6, 6), False, False, 0)
         row1.pack_start(x_scale_label, False, False, 0)
         row1.pack_start(self.x_scale_entry, False, False, 0)
-        row1.pack_start(guiutils.pad_label(6, 6), False, False, 0)
         row1.pack_start(y_scale_label, False, False, 0)
         row1.pack_start(self.y_scale_entry, False, False, 0)
-        row1.pack_start(guiutils.pad_label(6, 6), False, False, 0)
         row1.pack_start(rotation_label, False, False, 0)
         row1.pack_start(self.rotation_entry, False, False, 0)
         row1.pack_start(Gtk.Label(), True, True, 0)
-
-        """
-        row2 = Gtk.HBox(False, 0)
-        row2.pack_start(Gtk.Label(), True, True, 0)
-        row2.pack_start(x_scale_label, False, False, 0)
-        row2.pack_start(self.x_scale_entry, False, False, 0)
-        row2.pack_start(guiutils.pad_label(6, 6), False, False, 0)
-        row2.pack_start(y_scale_label, False, False, 0)
-        row2.pack_start(self.y_scale_entry, False, False, 0)
-        row2.pack_start(guiutils.pad_label(6, 6), False, False, 0)
-        row2.pack_start(rotation_label, False, False, 0)
-        row2.pack_start(self.rotation_entry, False, False, 0)
-        row2.pack_start(Gtk.Label(), True, True, 0)
-        row2.set_margin_top(4)
-        """
         
         vbox = Gtk.VBox(False, 0)
         vbox.pack_start(row1, False, False, 0)
-        #vbox.pack_start(row2, False, False, 0)
-
-        #self.pack_start(Gtk.Label(), True, True, 0)
+        
         self.pack_start(vbox, False, False, 0)
         self.pack_start(Gtk.Label(), True, True, 0)
         

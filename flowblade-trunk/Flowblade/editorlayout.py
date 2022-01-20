@@ -126,7 +126,7 @@ PANEL_MINIMUM_SIZES = { \
     appconsts.PANEL_MEDIA: None, 
     appconsts.PANEL_FILTER_SELECT: None,
     appconsts.PANEL_RANGE_LOG: None,
-    appconsts.PANEL_MULTI_EDIT: (510, 500), # This has very small default size when empty and needs preferred size set to show properly when moved.
+    appconsts.PANEL_MULTI_EDIT: (470, 500), # This has very small default size when empty and needs preferred size set to show properly when moved.
     appconsts.PANEL_JOBS: None,
     appconsts.PANEL_RENDERING: None,
     appconsts.PANEL_PROJECT: None,
