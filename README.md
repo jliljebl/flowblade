@@ -1,7 +1,7 @@
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
 **PROJECT ON BREAK**
-**I'm looking forward to continue dwvwlopmwnt some time in the future but there will not be updates for next few months.**
+**I'm looking forward to continue development some time in the future, but there will not be updates for the next few months.**
 
 1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
 2. [Features](https://github.com/jliljebl/flowblade#features)
