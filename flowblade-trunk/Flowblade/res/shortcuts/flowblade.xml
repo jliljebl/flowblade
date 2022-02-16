@@ -83,7 +83,8 @@
     <event code='cut' name='Cut Active Tracks'>x</event>
     <event code='cut_all' name='Cut All Tracks' modifiers='SHIFT'>x</event>
     <event code='zoom_out' name='Zoom Out'>minus</event>
-    <event code='zoom_in' name='Zoom In'>plus</event>
+    <event code='zoom_in' name='Zoom In'>equal</event>
+    <event code='zoom_in' name='Zoom In' modifiers='SHIFT'>plus</event>
     <event code='switch_monitor' name='Switch Monitor Display'>tab</event>
     <event code='add_marker' name='Add Marker'>m</event>
     <event code='enter_edit' name='Enter Editing Mode'>return</event>
