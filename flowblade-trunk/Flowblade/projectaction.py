@@ -1696,16 +1696,24 @@ def update_current_bin_files_count():
     # Get index for selected bin
     selection = gui.editor_window.bin_list_view.treeview.get_selection()
     (model, rows) = selection.get_selected_rows()
-    if len(rows) == 0:
-        return
-    row = max(rows[0])
-    
-    value = str(len(PROJECT().bins[row].file_ids))
 
-    tree_path = Gtk.TreePath.new_from_string(str(row))
-    store_iter = gui.editor_window.bin_list_view.storemodel.get_iter(tree_path)
-    
-    gui.editor_window.bin_list_view.storemodel.set_value(store_iter, 2, value)
+    # It is possible for no bin to be selected
+    # If this happens, update all of the bins so the counts remain up to date
+    if len(rows) == 0:
+        bin_index = 0
+        for bin in PROJECT().bins:
+            value = str(len(bin.file_ids))
+            tree_path = Gtk.TreePath.new_from_string(str(bin_index))
+            store_iter = gui.editor_window.bin_list_view.storemodel.get_iter(tree_path)
+            gui.editor_window.bin_list_view.storemodel.set_value(store_iter, 2, value)
+            bin_index += 1
+
+    else:
+        row = max(rows[0])
+        value = str(len(PROJECT().bins[row].file_ids))
+        tree_path = Gtk.TreePath.new_from_string(str(row))
+        store_iter = gui.editor_window.bin_list_view.storemodel.get_iter(tree_path)
+        gui.editor_window.bin_list_view.storemodel.set_value(store_iter, 2, value)
     
 def bin_selection_changed(selection):
     """
