@@ -113,6 +113,7 @@ import trimmodes
 import translations
 import undo
 import updater
+import usbhid
 import userfolders
 import utils
 import workflow
@@ -391,6 +392,9 @@ def main(root_path):
 
     global disk_cache_timeout_id
     disk_cache_timeout_id = GObject.timeout_add(2500, check_disk_cache_size)
+
+    # Connect to USB HID device (if enabled)
+    start_usb_hid_input()
 
     # Launch gtk+ main loop
     Gtk.main()
@@ -1019,6 +1023,23 @@ def _early_exit(dialog, response):
     # Exit gtk main loop.
     Gtk.main_quit() 
 
+# ------------------------------------------------------- usbhid
+def start_usb_hid_input():
+    # If USB HID input is enabled, and we have a device config,
+    # try to connect to the device now
+    if editorpersistance.prefs.usbhid_enabled:
+        usbhid_config = editorpersistance.prefs.usbhid_config
+        if usbhid_config:
+            try:
+                usbhid.start_usb_hid_input(usbhid_config)
+            except usbhid.UsbHidError as e:
+                # Best effort, don't interfere with program startup
+                print("Could not find USB HID driver config '%s': %s" % (usbhid_config, str(e)))
+
+def stop_usb_hid_input():
+    # Disconnect from the USB HID device, if necessary
+    usbhid.stop_usb_hid_input()
+
 # ------------------------------------------------------- logging
 def log_print_output_to_file():
     so = se = open(_log_file, 'w', buffering=1)
@@ -1120,6 +1141,9 @@ def _app_destroy():
         os.remove(userfolders.get_cache_dir() + get_instance_autosave_file())
     except:
         print("Delete autosave file FAILED!")
+
+    # Disconnect from USB HID device (if necessary)
+    stop_usb_hid_input()
 
     do_gtk_main_quit = jobs.handle_shutdown(get_instance_autosave_file())
     

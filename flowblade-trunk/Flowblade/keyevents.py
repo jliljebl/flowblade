@@ -50,6 +50,7 @@ import shortcutsquickeffects
 import re
 import render
 import rotomask
+import targetactions
 import tlineaction
 import tlinerender
 import tlinewidgets
@@ -58,7 +59,42 @@ import updater
 import projectaction
 import workflow
 
-
+# TODO: We should consider integrating some parts of this with targetactions.py
+# TODO:
+# TODO: As of this writing, targetactions.py has a superset of targetable
+# TODO: actions, as compared to keyevents.py, totally separate from any keyboard
+# TODO: event handling. There are a few new named target actions in there that
+# TODO: aren't available in here. There is also currently a lot code duplication
+# TODO: between the two modules. See targetactions.py for more details.
+# TODO:
+# TODO: At a minimum, if you add or modify any of the key actions in here,
+# TODO: please consider updating targetactions.py as well. Right now there
+# TODO: is a lot of duplication between these modules, and often a change
+# TODO: in one would warrant a change in the other.
+# TODO:
+# TODO: keyevents.py is all about handling key presses from the keyboard, and
+# TODO: routing those events to trigger actions in various parts of the program.
+# TODO:
+# TODO: targetactions.py is basically a bunch of zero-argument functions with
+# TODO: names based on the shortcut key names found here. It was created as part
+# TODO: of the USB HID work, so that USB jog/shuttle devices could have their
+# TODO: buttons target various actions within the program, without requiring
+# TODO: each USB driver to directly make connections to a dozen different parts
+# TODO: of the program to control it.
+# TODO:
+# TODO: So now we have two collections of shortcut key names which map to
+# TODO: basically the same actions, but in a different way. I originally wanted
+# TODO: to just use keyevents.py as the target for the USB driver actions, but
+# TODO: couldn't use it directly since this module is intertwined with the
+# TODO: main computer keyboard and its events.
+# TODO:
+# TODO: For now, I have integrated the new command targets from
+# TODO: targetactions.py into keyevents.py, both for completeness, and also as
+# TODO: a proof of concept as to how we might migrate some of the other code
+# TODO: in here over to call targetactions.py
+# TODO:
+# TODO:   -- Nathan Rosenquist (@ratherlargerobot)
+# TODO:      Feb 2022
 
 # ------------------------------------- keyboard events
 def key_down(widget, event):
@@ -214,8 +250,20 @@ def _handle_tline_key_event(event):
     if action == 'to_mark_out':
         monitorevent.to_mark_out_pressed()
         return True
+    if action == 'clear_mark_in':
+        targetactions.clear_mark_in()
+        return True
+    if action == 'clear_mark_out':
+        targetactions.clear_mark_out()
+        return True
     if action == 'clear_io_marks':
         monitorevent.marks_clear_pressed()
+        return True
+    if action == 'play':
+        targetactions.play()
+        return True
+    if action == 'stop':
+        targetactions.stop()
         return True
     if action == 'play_pause':
         if PLAYER().is_playing():
@@ -228,6 +276,12 @@ def _handle_tline_key_event(event):
             monitorevent.stop_pressed()
         else:
             monitorevent.start_marks_looping()
+        return True
+    if action == 'display_clip_in_monitor':
+        targetactions.display_clip_in_monitor()
+        return True
+    if action == 'display_sequence_in_monitor':
+        targetactions.display_sequence_in_monitor()
         return True
     if action == 'switch_monitor':
         updater.switch_monitor_display()
@@ -262,7 +316,7 @@ def _handle_tline_key_event(event):
     if action == 'trim_end':
         tlineaction.trim_end_pressed()
         return True
-        
+
     # Key bindings for keyboard trimming
     if editorstate.current_is_active_trim_mode() == True:
         if action == 'prev_frame':
@@ -447,6 +501,12 @@ def _handle_extended_monitor_focus_events(event):
     if action == 'log_range':
         medialog.log_range_clicked()
         return True
+    if action == 'display_clip_in_monitor':
+        targetactions.display_clip_in_monitor()
+        return True
+    if action == 'display_sequence_in_monitor':
+        targetactions.display_sequence_in_monitor()
+        return True
     if action == 'switch_monitor':
         updater.switch_monitor_display()
         return True
@@ -509,6 +569,9 @@ def _handle_configurable_global_events(event):
     if action == 'open_next':
         projectaction.open_next_media_item_in_monitor()
         return True
+    if action == 'open_prev':
+        projectaction.open_prev_media_item_in_monitor()
+        return True
 
     return False
     
@@ -560,6 +623,12 @@ def _handle_clip_key_event(event):
             else:
                  monitorevent.down_arrow_seek_on_monitor_clip()
                  return True
+        if action == 'play':
+            targetactions.play()
+            return True
+        if action == 'stop':
+            targetactions.stop()
+            return True
         if action == 'play_pause':
             if PLAYER().is_playing():
                 monitorevent.stop_pressed()
@@ -583,6 +652,12 @@ def _handle_clip_key_event(event):
             return True
         if action == 'to_mark_out':
             monitorevent.to_mark_out_pressed()
+            return True
+        if action == 'clear_mark_in':
+            targetactions.clear_mark_in()
+            return True
+        if action == 'clear_mark_out':
+            targetactions.clear_mark_out()
             return True
         if action == 'clear_io_marks':
             monitorevent.marks_clear_pressed()
@@ -647,6 +722,12 @@ def _handle_geometry_editor_keys(event):
                         return True
                     if event.keyval == Gdk.KEY_plus:
                         pass # not impl
+                    if action == 'play':
+                        targetactions.play()
+                        return True
+                    if action == 'stop':
+                        targetactions.stop()
+                        return True
                     if action == 'play_pause':
                         if PLAYER().is_playing():
                             monitorevent.stop_pressed()
@@ -665,6 +746,12 @@ def _handle_effects_editor_keys(event):
     action = _get_shortcut_action(event)
     focus_editor = _get_focus_keyframe_editor(clipeffectseditor.keyframe_editor_widgets)
     if focus_editor != None:
+        if action == 'play':
+            targetactions.play()
+            return True
+        if action == 'stop':
+            targetactions.stop()
+            return True
         if action == 'play_pause':
             if PLAYER().is_playing():
                 monitorevent.stop_pressed()

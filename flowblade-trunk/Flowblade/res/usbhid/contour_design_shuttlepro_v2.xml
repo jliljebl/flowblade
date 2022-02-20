@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!--
+  USB HID driver configuration file for Flowblade.
+
+  Contour Design ShuttlePRO v2 device driver configuration.
+
+  https://www.contourdesign.com/product/shuttle/
+
+  The Contour Design ShuttlePRO v2 is a USB jog/shuttle device with 15
+  buttons. It is the larger version of the Contour Design ShuttleXpress.
+  which is similar, but has five buttons. The two devices share the same
+  driver, but use different key maps.
+
+  There are also various rebranded versions of the Contour Design
+  ShuttleXpress. It is likely that they should also be able to use this
+  driver config if the USB vendor and product IDs match.
+
+  The keys on the ShuttlePRO v2 are laid out like this:
+
+
+                  [1] [2] [3] [4]
+
+                [5] [6] [7] [8] [9]
+
+              [14] (Jog/Shuttle) [15]
+
+                 [10]         [11]
+                [12]           [13]
+
+
+-->
+<flowblade file='usbhid_config'>
+  <name>Contour Design ShuttlePRO v2</name>
+  <driver>contour_design_shuttle</driver>
+  <usb>
+    <vendor_id>0b33</vendor_id>
+    <product_id>0020</product_id>
+    <configuration>0</configuration>
+    <interface>0</interface>
+    <alternate>0</alternate>
+    <endpoint_in>0</endpoint_in>
+  </usb>
+  <keymap>
+    <event code='clear_mark_in' name='Clear Mark In'>1</event>
+    <event code='mark_in' name='Mark In'>2</event>
+    <event code='mark_out' name='Mark Out'>3</event>
+    <event code='clear_mark_out' name='Clear Mark Out'>4</event>
+    <event code='prev_cut' name='Go To Previous Cut'>5</event>
+    <event code='to_mark_in' name='Go To Mark In'>6</event>
+    <event code='play_pause' name='Play / Pause'>7</event>
+    <event code='to_mark_out' name='Go To Mark Out'>8</event>
+    <event code='next_cut' name='Go To Next Cut'>9</event>
+    <event code='display_clip_in_monitor' name='Display Media Clip In Monitor'>10</event>
+    <event code='open_prev' name='Open Previous Media Item In Monitor'>11</event>
+    <event code='display_sequence_in_monitor' name='Display Current Sequence In Monitor'>12</event>
+    <event code='open_next' name='Open Next Media Item In Monitor'>13</event>
+    <event code='to_start' name='Go To Start'>14</event>
+    <event code='to_end' name='Go To End'>15</event>
+  </keymap>
+</flowblade>

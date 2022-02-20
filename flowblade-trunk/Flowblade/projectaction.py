@@ -1260,7 +1260,31 @@ def open_next_media_item_in_monitor():
     gui.media_list_view.update_selected_bg_colors()
     updater.set_and_display_monitor_media_file(media_file)
     gui.pos_bar.widget.grab_focus()
-            
+
+def open_prev_media_item_in_monitor():
+    # Get id for prev media file
+    selection = gui.media_list_view.get_selected_media_objects()
+    if len(selection) < 1:
+        try: # Nothing selected, get first media item
+            next_media_file_id = current_bin().file_ids[0]
+        except:
+            return # bin is empty
+    else: # Get prev media item from selection
+        current_media_file_id = selection[0].media_file.id
+        prev_media_index = current_bin().file_ids.index(current_media_file_id) - 1
+        if prev_media_index == -1:
+            prev_media_index = 0
+
+        prev_media_file_id = current_bin().file_ids[prev_media_index]
+
+    # Get media file, select it and show in monitor
+    media_file = PROJECT().media_files[prev_media_file_id]
+
+    gui.media_list_view.select_media_file(media_file)
+    gui.media_list_view.update_selected_bg_colors()
+    updater.set_and_display_monitor_media_file(media_file)
+    gui.pos_bar.widget.grab_focus()
+
 def display_media_file_rename_dialog(media_file):
     dialogs.new_media_name_dialog(media_file_name_edited, media_file)
 

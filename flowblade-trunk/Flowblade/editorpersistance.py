@@ -30,6 +30,7 @@ import atomicfile
 import mltprofiles
 import userfolders
 import utils # this needs to also go to not load Gtk for background rendering process
+import usbhid
 
 PREFS_DOC = "prefs"
 RECENT_DOC = "recent"
@@ -171,7 +172,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     # Aug-2019 - SvdB - BB - Replace double_track_hights by double_track_hights
     # Unpack widgets
     # Toolbar preferences panel for free elements and order
-    gen_opts_widgets, edit_prefs_widgets, playback_prefs_widgets, view_prefs_widgets, performance_widgets = widgets_tuples_tuple
+    gen_opts_widgets, edit_prefs_widgets, playback_prefs_widgets, view_prefs_widgets, performance_widgets, jog_shuttle_widgets = widgets_tuples_tuple
     # End of Toolbar preferences panel for free elements and order
 
     # Aug-2019 - SvdB - AS - added autosave_combo
@@ -191,6 +192,8 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
 
     # Jan-2017 - SvdB
     perf_render_threads, perf_drop_frames = performance_widgets
+
+    usbhid_enabled_check, usbhid_config_combo = jog_shuttle_widgets
 
     global prefs
     prefs.open_in_last_opended_media_dir = open_in_last_opened_check.get_active()
@@ -251,6 +254,20 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     # --------------------------------- Colorized icons
     prefs.colorized_icons = colorized_icons.get_active()
     prefs.auto_render_media_plugins = auto_render_plugins.get_active()
+
+    # --------------------------------- USB HID
+    prefs.usbhid_enabled = usbhid_enabled_check.get_active()
+    usbhid_config_index = usbhid_config_combo.get_active()
+    if usbhid_config_index == 0:
+        prefs.usbhid_config = None
+    else:
+        usbhid_config_metadata_list = usbhid.get_usb_hid_device_config_metadata_list()
+        if len(usbhid_config_metadata_list) >= (usbhid_config_index - 1):
+            # index 0 in the combo box is "None", the -1 offsets the zero-based index from the list
+            # with the 1-based index from the combo box in the preferences GUI
+            prefs.usbhid_config = usbhid_config_metadata_list[usbhid_config_index - 1].device_config_name
+        else:
+            prefs.usbhid_config = None
 
 def get_graphics_default_in_out_length():
     in_fr = int(15000/2) - int(prefs.default_grfx_length/2)
@@ -372,4 +389,6 @@ class EditorPreferences:
         self.auto_expand_tracks = True
         self.quick_effects = None
         self.auto_render_media_plugins = True
-        
+        self.usbhid_enabled = False
+        self.usbhid_config = None
+

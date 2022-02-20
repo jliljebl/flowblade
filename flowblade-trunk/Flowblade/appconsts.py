@@ -169,6 +169,7 @@ CC_CLIP_FRAMES_DIR = "/clip_frames"
 CC_RENDERED_FRAMES_DIR = "/rendered_frames"
 CC_PREVIEW_RENDER_DIR = "/preview_frames"
 USER_SHORTCUTS_DIR =  "user_shortcuts/"
+USER_USBHID_DIR =  "user_usbhid/"
 SCRIP_TOOL_DIR = "scripttool"
 
 # Luma bands

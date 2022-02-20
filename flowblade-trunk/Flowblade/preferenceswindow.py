@@ -30,6 +30,7 @@ import guiutils
 import mltprofiles
 import multiprocessing
 import utils
+import usbhid
 
 PREFERENCES_WIDTH = 730
 PREFERENCES_HEIGHT = 440
@@ -47,6 +48,7 @@ def preferences_dialog():
     playback_prefs_panel, playback_prefs_widgets  = _playback_prefs_panel()
     view_pres_panel, view_pref_widgets = _view_prefs_panel()
     performance_panel, performance_widgets = _performance_panel()
+    jog_shuttle_panel, jog_shuttle_widgets = _jog_shuttle_panel()
 
     notebook = Gtk.Notebook()
     notebook.set_size_request(PREFERENCES_WIDTH, PREFERENCES_HEIGHT)
@@ -55,10 +57,11 @@ def preferences_dialog():
     notebook.append_page(playback_prefs_panel, Gtk.Label(label=_("Playback")))
     notebook.append_page(view_pres_panel, Gtk.Label(label=_("View")))
     notebook.append_page(performance_panel, Gtk.Label(label=_("Performance")))
+    notebook.append_page(jog_shuttle_panel, Gtk.Label(label=_("Jog/Shuttle")))
     guiutils.set_margins(notebook, 4, 24, 6, 0)
 
     dialog.connect('response', _preferences_dialog_callback, (gen_opts_widgets, edit_prefs_widgets, playback_prefs_widgets, view_pref_widgets, \
-        performance_widgets))
+        performance_widgets, jog_shuttle_widgets))
     dialog.vbox.pack_start(notebook, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     dialogutils.default_behaviour(dialog)
@@ -494,6 +497,49 @@ def _performance_panel():
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
     return vbox, (perf_render_threads, perf_drop_frames)
+
+def _jog_shuttle_panel():
+    prefs = editorpersistance.prefs
+
+    # Widgets
+
+    # usbhid_enabled
+    usbhid_enabled_check = Gtk.CheckButton()
+    usbhid_enabled_check.set_active(prefs.usbhid_enabled)
+
+    # usbhid_config
+    # stored as a base name equal to what is in usbhid_config_metadata.device_config_name
+    # we generate a combo select box with "None" as index 0, and everything else starting
+    # from index 1.
+    usbhid_config = prefs.usbhid_config
+    usbhid_config_combo_index = 0
+    usbhid_config_combo_selected_index = 0
+
+    usbhid_config_combo = Gtk.ComboBoxText()
+    usbhid_config_combo.append_text("None")
+    for usbhid_config_metadata in usbhid.get_usb_hid_device_config_metadata_list():
+        usbhid_config_combo_index += 1
+        usbhid_config_combo.append_text(usbhid_config_metadata.name)
+
+        # if this is the config that was already selected in the prefs,
+        # highlight it as the selected option in the combo box
+        if usbhid_config is not None:
+            if usbhid_config == usbhid_config_metadata.device_config_name:
+                usbhid_config_combo_selected_index = usbhid_config_combo_index
+
+    usbhid_config_combo.set_active(usbhid_config_combo_selected_index)
+
+    # Layout
+    row1 = _row(guiutils.get_checkbox_row_box(usbhid_enabled_check, Gtk.Label(label=_("USB Jog/Shuttle Enabled"))))
+    row2 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Device")), usbhid_config_combo, PREFERENCES_LEFT))
+
+    vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(row1, False, False, 0)
+    vbox.pack_start(row2, False, False, 0)
+
+    guiutils.set_margins(vbox, 12, 0, 12, 12)
+
+    return vbox, (usbhid_enabled_check, usbhid_config_combo)
 
 def _row(row_cont):
     row_cont.set_size_request(10, 26)

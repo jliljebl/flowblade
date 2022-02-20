@@ -144,6 +144,8 @@ def _maybe_create_xdg_dirs():
         os.mkdir(get_render_dir() +  "/" + appconsts.PROXIES_DIR)
     if not os.path.exists(get_data_dir()  +  "/" + appconsts.USER_SHORTCUTS_DIR):
         os.mkdir(get_data_dir()  +  "/" + appconsts.USER_SHORTCUTS_DIR)
+    if not os.path.exists(get_data_dir()  +  "/" + appconsts.USER_USBHID_DIR):
+        os.mkdir(get_data_dir()  +  "/" + appconsts.USER_USBHID_DIR)
 
 
 

@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!--
+  USB HID driver configuration file for Flowblade.
+
+  Contour Design ShuttleXpress device driver configuration.
+
+  https://www.contourdesign.com/product/shuttle/
+
+  The Contour Design ShuttleXpress is a USB jog/shuttle device with five
+  buttons. It is the smaller version of the Contour Design ShuttlePRO v2,
+  which is similar, but has 15 buttons. The two devices share the same
+  driver, but use different key maps.
+
+  There are also various rebranded versions of the Contour Design
+  ShuttleXpress. It is likely that they should also be able to use this
+  driver config if the USB vendor and product IDs match.
+
+  Since the ShuttleXpress is basically a subset of the ShuttlePRO v2, it
+  has fewer keys than the larger version. As a result, this means the
+  five addressable keys on this device range from 5 through 9.
+
+  The keys on the ShuttleXpress are laid out like this:
+
+
+                        [7]
+                 [6]           [8]
+
+              [5]  (Jog/Shuttle)  [9]
+
+
+-->
+<flowblade file='usbhid_config'>
+  <name>Contour Design ShuttleXpress</name>
+  <driver>contour_design_shuttle</driver>
+  <usb>
+    <vendor_id>0b33</vendor_id>
+    <product_id>0020</product_id>
+    <configuration>0</configuration>
+    <interface>0</interface>
+    <alternate>0</alternate>
+    <endpoint_in>0</endpoint_in>
+  </usb>
+  <keymap>
+    <event code='to_start' name='Go To Start'>5</event>
+    <event code='prev_cut' name='Go To Previous Cut'>6</event>
+    <event code='play_pause' name='Play / Pause'>7</event>
+    <event code='next_cut' name='Go To Next Cut'>8</event>
+    <event code='to_end' name='Go To End'>9</event>
+  </keymap>
+</flowblade>

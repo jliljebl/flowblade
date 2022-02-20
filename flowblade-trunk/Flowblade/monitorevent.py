@@ -206,6 +206,26 @@ def mark_out_pressed():
     _do_marks_update()
     updater.display_marks_tc()
 
+def mark_in_clear_pressed():
+    if timeline_visible():
+        trimmodes.set_no_edit_trim_mode()
+        PLAYER().producer.mark_in = -1
+    else:
+        current_sequence().monitor_clip.mark_in = -1
+
+    _do_marks_update()
+    updater.display_marks_tc()
+
+def mark_out_clear_pressed():
+    if timeline_visible():
+        trimmodes.set_no_edit_trim_mode()
+        PLAYER().producer.mark_out = -1
+    else:
+        current_sequence().monitor_clip.mark_out = -1
+
+    _do_marks_update()
+    updater.display_marks_tc()
+
 def marks_clear_pressed():
     if timeline_visible():
         trimmodes.set_no_edit_trim_mode()
