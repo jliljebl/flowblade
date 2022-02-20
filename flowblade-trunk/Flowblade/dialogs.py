@@ -273,6 +273,7 @@ def export_ardour_session_folder_select(callback):
                         (_("Cancel"), Gtk.ResponseType.REJECT,
                          _("Export"), Gtk.ResponseType.ACCEPT))
 
+    # project folder
     project_folder = Gtk.FileChooserButton(_("Select Ardour Session Folder"))
     project_folder.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
     project_folder.set_current_folder(os.path.expanduser("~") + "/")
@@ -280,9 +281,17 @@ def export_ardour_session_folder_select(callback):
     project_folder_label = Gtk.Label(label=_("Select Ardour Session Folder:"))
 
     project_folder_row = guiutils.get_two_column_box(project_folder_label, project_folder, 250)
-    
+
+    # sample rate
+    sample_rate_combo = guicomponents.get_ardour_sample_rate_selector()
+
+    sample_rate_label = Gtk.Label(label=_("Sample Rate:"))
+    sample_rate_row = panels.get_two_column_box(sample_rate_label, sample_rate_combo, 250)
+
+
     type_vbox = Gtk.VBox(False, 2)
     type_vbox.pack_start(project_folder_row, False, False, 0)
+    type_vbox.pack_start(sample_rate_row, False, False, 0)
 
     vbox = Gtk.VBox(False, 2)
     vbox.add(type_vbox)
@@ -292,7 +301,7 @@ def export_ardour_session_folder_select(callback):
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)
-    dialog.connect('response', callback, project_folder)
+    dialog.connect('response', callback, project_folder, sample_rate_combo)
     dialog.show_all()
     
 def load_project_dialog(callback, parent=None, title_text=None):

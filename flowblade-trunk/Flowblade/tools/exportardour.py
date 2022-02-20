@@ -58,6 +58,14 @@ DEFAULT_SAMPLE_RATE = 48000
 # calculate some additional region position information in the Ardour project
 BPM = 120
 
+# available sample rates for export from the GUI
+SAMPLE_RATES = [
+    ("44.1 kHz", 44100),
+    ("48 kHz", 48000),
+    ("88.2 kHz", 88200),
+    ("96 kHz", 96000)
+]
+
 ##############################################################################
 # MODEL                                                                      #
 ##############################################################################
