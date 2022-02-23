@@ -70,23 +70,30 @@ import updater
 # handler functions in this module, and have no unified contract between them.
 # As such, they are not good candidates for mapping directly to key events.
 
-def move_timeline(delta):
+def move_player_position(delta):
     """
     Move the current monitor timeline by the specified number of frames.
 
     Accepts delta, a signed integeger, which represents the number of frames
     to move the timeline.
 
-    Returns True.
+    Returns True if the player position was moved in some way,
+    or False otherwise.
 
     Positive numbers move the timeline forward by the specified number of
     frames. Negative numbers move it backwards. Zero is a no-op.
 
     """
 
-    PLAYER().seek_delta(delta)
+    # handle trim mode differently
+    if editorstate.current_is_active_trim_mode() == True:
+        trimmodes.move_delta(delta)
+        return True
+    else:
+        PLAYER().seek_delta(delta)
+        return True
 
-    return True
+    return False
 
 def variable_speed_playback(speed):
     """
@@ -264,13 +271,7 @@ def next_cut():
     return False
 
 def next_frame():
-    # Key bindings for keyboard trimming
-    if editorstate.current_is_active_trim_mode() == True:
-        trimmodes.right_arrow_pressed(False)
-    else:
-        move_timeline(1)
-
-    return True
+    return move_player_position(1)
 
 def nudge_back():
     movemodes.nudge_selection(-1)
@@ -342,15 +343,7 @@ def prev_cut():
     return False
 
 def prev_frame():
-    # Key bindings for keyboard trimming
-    if editorstate.current_is_active_trim_mode() == True:
-        trimmodes.left_arrow_pressed(False)
-        return True
-    else:
-        move_timeline(-1)
-        return True
-
-    return False
+    return move_player_position(-1)
 
 def resync():
     if editorstate.timeline_visible():

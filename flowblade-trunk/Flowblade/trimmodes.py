@@ -241,6 +241,40 @@ def set_no_edit_trim_mode():
 
 
 #----------------------------------------------------- keyboard events
+def move_delta(delta):
+    # N.B. not a keyboard event per se, but allows a jog wheel
+    # to move multiple frames during one trim action
+
+    global submode
+
+    if delta == 0:
+        return
+
+    if submode == MOUSE_EDIT_ON:
+        return
+
+    submode = KEYB_EDIT_ON
+
+    if delta < 0:
+        # we received a negative delta value implying direction and amount
+        # but we have to turn it into a positive number to call the functions
+        # that assume movement left with a positive amount
+        delta = abs(delta)
+
+        if EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
+            _one_roll_trim_left(delta)
+        elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
+            _tworoll_trim_left(delta)
+        elif EDIT_MODE() == editorstate.SLIDE_TRIM:
+            _slide_trim_left(delta)
+    elif delta > 0:
+        if EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
+            _one_roll_trim_right(delta)
+        elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM:
+            _tworoll_trim_right(delta)
+        elif EDIT_MODE() == editorstate.SLIDE_TRIM:
+            _slide_trim_right(delta)
+
 def left_arrow_pressed(ctrl_pressed):
     global submode
     if submode == MOUSE_EDIT_ON:

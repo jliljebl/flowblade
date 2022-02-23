@@ -89,16 +89,24 @@ class Jog:
             # if the jog wheel has moved, figure out which direction,
             # and trigger the appropriate action
             if value != self.prev_value:
-                if value > self.prev_value:
-                    if (value > 200) and (self.prev_value < 50):
-                        targetactions.prev_frame()
-                    else:
-                        targetactions.next_frame()
-                elif value < self.prev_value:
-                    if (value < 50) and (self.prev_value > 200):
-                        targetactions.next_frame()
-                    else:
-                        targetactions.prev_frame()
+                # common case: figure out how far the jog encoder wheel moved,
+                # and in which direction
+                delta = value - self.prev_value
+
+                # the jog encoder wheel is a uint8, and it can wrap around
+                # detect the wrap around and set the delta accordingly
+
+                # we're moving left, and wrapped around
+                if (value > 200) and (self.prev_value < 50):
+                    delta = value - 256 - self.prev_value
+
+                # we're moving right, and wrapped around
+                elif (value < 50) and (self.prev_value > 200):
+                    delta = value + 256 - self.prev_value
+
+                # move the player position by the requested number of frames,
+                # and in the appropriate direction
+                targetactions.move_player_position(delta)
 
         # remember the previous value to detect state transitions next time
         self.prev_value = value
