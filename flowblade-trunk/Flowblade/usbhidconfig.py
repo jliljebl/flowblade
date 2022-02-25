@@ -139,7 +139,6 @@ def load_config(config_file):
     product_id_str = usb.getElementsByTagName("product_id")[0].childNodes[0].data
     configuration_str = usb.getElementsByTagName("configuration")[0].childNodes[0].data
     interface_str = usb.getElementsByTagName("interface")[0].childNodes[0].data
-    alternate_str = usb.getElementsByTagName("alternate")[0].childNodes[0].data
     endpoint_in_str = usb.getElementsByTagName("endpoint_in")[0].childNodes[0].data
 
     # optional fields
@@ -153,11 +152,10 @@ def load_config(config_file):
     usb_product_id = int("0x" + product_id_str, 16)
     usb_configuration = int(configuration_str)
     usb_interface = int(interface_str)
-    usb_alternate = int(alternate_str)
-    usb_endpoint_in = int(endpoint_in_str)
+    usb_endpoint_in = int("0x" + endpoint_in_str, 16)
     usb_endpoint_out = None
     if endpoint_out_str is not None:
-        usb_endpoint_out = int(endpoint_out_str)
+        usb_endpoint_out = int("0x" + endpoint_out_str, 16)
 
     # create config object
     config = UsbHidConfig(driver=driver,
@@ -166,7 +164,6 @@ def load_config(config_file):
                           usb_product_id=usb_product_id,
                           usb_configuration=usb_configuration,
                           usb_interface=usb_interface,
-                          usb_alternate=usb_alternate,
                           usb_endpoint_in=usb_endpoint_in,
                           usb_endpoint_out=usb_endpoint_out)
 
@@ -225,7 +222,6 @@ class UsbHidConfig:
                  usb_product_id,
                  usb_configuration,
                  usb_interface,
-                 usb_alternate,
                  usb_endpoint_in,
                  usb_endpoint_out):
 
@@ -235,7 +231,6 @@ class UsbHidConfig:
         self.usb_product_id = usb_product_id
         self.usb_configuration = usb_configuration
         self.usb_interface = usb_interface
-        self.usb_alternate = usb_alternate
         self.usb_endpoint_in = usb_endpoint_in
         self.usb_endpoint_out = usb_endpoint_out
 

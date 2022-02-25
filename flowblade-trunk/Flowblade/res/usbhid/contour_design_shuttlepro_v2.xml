@@ -37,8 +37,7 @@
     <product_id>0020</product_id>
     <configuration>0</configuration>
     <interface>0</interface>
-    <alternate>0</alternate>
-    <endpoint_in>0</endpoint_in>
+    <endpoint_in>81</endpoint_in>
   </usb>
   <keymap>
     <event code='clear_mark_in' name='Clear Mark In'>1</event>

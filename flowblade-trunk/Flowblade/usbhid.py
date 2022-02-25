@@ -32,8 +32,9 @@ drivers in the usbhiddrivers module.
 
 from gi.repository import GObject
 
-import usb.core
-import usb.util
+import usb1
+
+import time
 
 import usbhidconfig
 import usbhiddrivers
@@ -41,24 +42,16 @@ import usbhiddrivers
 # how often should the USB input handler function be called?
 # set this too high, and there will be noticable latency in processing input
 # set this too low, and performance of everything else will suffer
-HANDLER_FREQUENCY_MSEC = 5
+HANDLER_FREQUENCY_MSEC = 10
 
-# selected usb.core.USBError.errno values we care about
-USB_CODE_NO_SUCH_DEVICE = 19
-USB_CODE_TIMEOUT = 110
+# number of USB transfers in flight
+USB_TRANSFERS_IN_FLIGHT = 10
 
-# this is our reference to the GTK timeout handler
+# USB HID driver context reference
+usb_driver_ctx = None
+
+# This is our reference to the GTK timeout handler
 usb_hid_input_id = -1
-
-# USB device and driver references
-usb_device = None
-usb_read_endpoint = None
-usb_write_endpoint = None
-usb_driver = None
-
-# should we try to re-attach a kernel driver for the interface(s) on the
-# selected USB device when we detach our userspace driver from it?
-__reattach_kernel_driver_interfaces = []
 
 def get_usb_hid_device_config_metadata_list():
     """
@@ -79,7 +72,6 @@ def get_usb_hid_device_config_metadata_list():
 
     return usbhidconfig.get_usb_hid_device_config_metadata_list()
 
-
 def start_usb_hid_input(device_config_name):
     """
     Connect to the specified USB HID device by name, and start allowing it
@@ -92,19 +84,27 @@ def start_usb_hid_input(device_config_name):
 
     """
 
+    global usb_driver_ctx
     global usb_hid_input_id
 
-    # if a device is already up and running with a timeout handler function,
-    # don't add another one
+    if usb_driver_ctx is not None:
+        raise UsbHidError("USB HID device already in use")
+
     if usb_hid_input_id != -1:
         raise UsbHidError("USB HID device already in use")
 
-    # connect to the USB device
-    _attach_device(device_config_name)
+    # create the USB HID driver context
+    try:
+        usb_driver_ctx = UsbHidDriverContext(device_config_name)
+    except UsbHidError as e:
+        raise e
+    except Exception as e:
+        raise UsbHidError("Error connecting to USB HID device: %s" % \
+                          (str(e),)) from e
 
     # set a recurring timeout to call our input handler function
     usb_hid_input_id = GObject.timeout_add(HANDLER_FREQUENCY_MSEC,
-                                           __handle_usb_input)
+                                           __gtk_usb_driver_handler)
 
 def stop_usb_hid_input():
     """
@@ -115,261 +115,152 @@ def stop_usb_hid_input():
 
     """
 
+    global usb_driver_ctx
     global usb_hid_input_id
 
     # if no device is in use, just return
+    if usb_driver_ctx is None:
+        return
     if usb_hid_input_id == -1:
         return
 
-    # stop the input handler timeout function calls
     GObject.source_remove(usb_hid_input_id)
     usb_hid_input_id = -1
 
     # disconnect from the USB device
-    _detach_current_device()
+    try:
+        usb_driver_ctx.disconnect()
+    except Exception as e:
+        # best effort
+        print("Error disconnecting from USB HID device: %s" % (str(e),))
 
-# these are internal private helper functions that other modules in the
-# program should not connect to.
+    usb_driver_ctx = None
 
-def _attach_device(config_name):
+def _handle_usb_transfer(usb_transfer):
     """
-    Initialize the USB HID device by config name.
+    USB transfer handler.
 
-    Accepts a Flowblade USB HID device config name.
+    This is the handler function that is repeatedly called once we're up and
+    running, to read input from the USB device, and dispatch it to the driver.
 
-    Finds and connects to the specified device.
+    It's a free function outside of the UsbHidDriverContext class, because
+    the usb1 module API requires a callback function that accepts one
+    argument to be passed into it.
 
-    Sets usb_* global variables that allow other functions to communicate
-    with the device in the future.
+    Accepts a usb1.USBTransfer instance as an argument (which is required
+    by the callback API).
 
-    Raises a UsbHidError if there is a problem connecting to the device.
+    Does not return a value.
+
+    Examines the USB transfer status, and takes appropriate action, which
+    can include handing off data to the device driver, or handling errors.
+
+    Resubmits the transfer again (to continue the request/response cycle) in
+    most cases, unless there is some sort of error that we can't recover from.
 
     """
 
-    global usb_device
-    global usb_read_endpoint
-    global usb_write_endpoint
-    global usb_driver
-    global __reattach_kernel_driver_interfaces
+    global usb_driver_ctx
 
-    # get the Flowblade USB HID device driver by name
-    usb_driver = usbhiddrivers.get_usb_driver(config_name)
-
-    # get the USB configuration/interface/alternate/endpoint from the driver
-    # these numbers define which part of the USB device tree we'll read from
-    usb_vendor_id = usb_driver.get_usb_vendor_id()
-    usb_product_id = usb_driver.get_usb_product_id()
-    usb_configuration = usb_driver.get_usb_configuration()
-    usb_interface = usb_driver.get_usb_interface()
-    usb_alternate = usb_driver.get_usb_alternate()
-    usb_endpoint_in = usb_driver.get_usb_endpoint_in()
-    usb_endpoint_out = usb_driver.get_usb_endpoint_out()
-
-    # find the USB device
-    usb_device = usb.core.find(idVendor=usb_vendor_id,
-                               idProduct=usb_product_id)
-
-    if usb_device is None:
-        err = "USB HID device config '%s' not found" % (config_name)
-        print(err)
-        raise UsbHidError(err)
-
-    # detach the kernel driver for each interface, if necessary,
-    # so we can control the device. to be nice, we will also remember if
-    # we detached a kernel driver for each interface, so we can try to
-    # set things back the way they were when the program closes
-    try:
-        for usb_config in usb_device:
-            for interface_index in range(usb_config.bNumInterfaces):
-                if usb_device.is_kernel_driver_active(interface_index):
-                    usb_device.detach_kernel_driver(interface_index)
-                    __reattach_kernel_driver_interfaces.append(interface_index)
-    except usb.core.USBError as e:
-        raise UsbHidError(
-            "Kernel won't allow USB HID driver to be detached for %s: %s" % \
-            (usb_driver.get_name(), str(e)))
-
-    # initialize the configuration of the USB device
-    try:
-        usb_device.set_configuration()
-    except usb.core.USBError as e:
-        raise UsbHidError("Can not configure USB device: '%s'" % (str(e),))
-
-    # reset the USB device (just in case)
-    try:
-        usb_device.reset()
-    except usb.core.USBError as e:
-        raise UsbHidError("Can not reset USB device: '%s'" % (str(e),))
-
-    # lsusb -v
-    # https://beyondlogic.org/usbnutshell/usb5.shtml
+    # transfer status
     #
-    #usb_device               <class 'usb.core.Device'>
-    #usb_device[0]            <class 'usb.core.Configuration'>
-    #usb_device[0][(0,0)]     <class 'usb.core.Interface'>
-    #usb_device[0][(0,0)][0]  <class 'usb.core.Endpoint'>
+    # corresponds to the libusb_transfer_status enum in libusb.h,
+    # and top-level constants in the usb1 module.
+    #
+    # this handler function uses the numbers directly, rather than the
+    # symbols, because in practice it seems to be possible for the
+    # usb1.TRANSFER_* symbols to be undefined in this function when
+    # the program is on its way down.
+    #
+    # possible values:
+    #
+    # TRANSFER_COMPLETED = 0
+    # TRANSFER_ERROR = 1
+    # TRANSFER_TIMED_OUT = 2
+    # TRANSFER_CANCELLED = 3
+    # TRANSFER_STALL = 4
+    # TRANSFER_NO_DEVICE = 5
+    # TRANSFER_OVERFLOW = 6
+    #
+    status = usb_transfer.getStatus()
 
-    # get the endpoint within the device that we want to read from
-    usb_read_endpoint = usb_device[usb_configuration][(usb_interface,usb_alternate)][usb_endpoint_in]
-
-    # make a ByteReader with the IN endpoint available to the driver
-    # (ByteReader references global usb_read_endpoint so it can be invalidated in one place)
-    usb_driver.set_byte_reader(ByteReader())
-
-    # if we have an out endpoint, connect to it as well
-    if usb_endpoint_out is not None:
-        usb_write_endpoint = usb_device[usb_configuration][(usb_interface,usb_alternate)][usb_endpoint_out]
-
-        # make a ByteWriter with the OUT endpoint available to the driver
-        # (ByteWriter references global usb_write_endpoint so it can be invalidated in one place)
-        usb_driver.set_byte_writer(ByteWriter())
-
-    print("Found USB HID device: %s" % (usb_driver.get_name()))
-
-    # run the handle connect phase of driver initialization
-    try:
-        usb_driver.handle_connect()
-    except Exception as e:
-        raise UsbHidError("Error during USB HID driver initialization: %s" % (str(e),))
-
-def _detach_current_device():
-    """
-    Detach from the currently attached USB HID device (if one is attached).
-
-    Sets the same usb_* global variables that _attach_current_device()
-    originally set back to None.
-
-    Raises a UsbHidError if there is a problem disconnecting from the device.
-
-    """
-
-    global usb_device
-    global usb_read_endpoint
-    global usb_driver
-    global __reattach_kernel_driver_interfaces
-
-    if not usb_driver:
+    if usb_driver_ctx is None:
         return
 
-    if not usb_device:
+    # we read some data
+    if status == 0:
+        # get a reference to the contents of the buffer
+        buffer = usb_transfer.getBuffer()
+
+        # get the number of bytes that we actually received
+        length = usb_transfer.getActualLength()
+
+        # the data we actually got might be a subset of what's in the buffer
+        data = buffer[:length]
+
+        # pass the data that we read off to the driver
+        try:
+            usb_driver_ctx.driver.handle_input(data)
+        except Exception as e:
+            print("USB HID driver input handler error: %s" % (str(e),))
+
+        # resubmit transfer
+        usb_transfer.submit()
         return
 
-    # run the handle disconnect phase of driver initialization
-    try:
-        usb_driver.handle_disconnect()
-    except Exception as e:
-        # best effort
-        print("Error during USB HID driver disconnection: %s" % (str(e),))
-        pass
+    # timeout
+    elif status == 2:
+        # resubmit transfer
+        usb_transfer.submit()
+        return
 
-    # defensive copy global reattach kernel driver interfaces list,
-    # and consume it. if we fail this time, it's not likely to work next
-    # time either.
-    interface_indexes = []
-    for interface_index in __reattach_kernel_driver_interfaces:
-        interface_indexes.append(interface_index)
-    __reattach_kernel_driver_interfaces = []
+    # transfer cancelled
+    elif status == 3:
+        # this is the normal clean shutdown condition
+        # don't retry or log errors
+        return
 
-    try:
-        for interface_index in interface_indexes:
-            usb_device.attach_kernel_driver(interface_index)
-    except usb.core.USBError as e:
-        # best effort
-        print("Error detaching USB device: %s" % (str(e),))
-        pass
+    # all other unexpected errors
+    else:
+        # transfer error
+        if status == 1:
+            print("USB transfer error")
 
-    usb_device = None
-    usb_read_endpoint = None
-    usb_write_endpoint = None
-    usb_driver = None
+        # transfer stall
+        elif status == 4:
+            print("USB transfer stall")
 
-def _handle_usb_read_error(e):
-    """
-    Handles usb.core.USBError exceptions within other exception handling
-    blocks.
+        # no device
+        elif status == 5:
+            print("USB HID device not found")
 
-    Ignores timeout errors.
+        # overflow
+        elif status == 6:
+            print("USB transfer overflow")
 
-    If the device has gone missing, it tries to shut down the connection
-    cleanly.
-
-    All other errors are raised as usbhid.UsbHidError exceptions.
-
-    """
-
-    # ignore USB timeouts
-    if USB_CODE_TIMEOUT == e.errno:
-        pass
-
-    # the USB device has probably been disconnected, try to clean up
-    elif USB_CODE_NO_SUCH_DEVICE == e.errno:
-        if usb_driver:
-            print("USB HID device disconnected: %s" % (usb_driver.get_name()))
-        else:
-            print("USB HID device disconnected")
-
-        # tear down any remaining references to the disconnected device
+        # try to shut down the USB HID subsystem cleanly
         stop_usb_hid_input()
 
-    # unknown error
-    else:
-        raise UsbHidError("Error reading from USB device: '%s'" % (str(e),))
+        return
 
-def _handle_usb_write_error(e):
+def __gtk_usb_driver_handler():
     """
-    Handles usb.core.USBError exceptions within other exception handling
-    blocks.
+    GTK handler function to read new USB HID input and map it to actions.
 
-    If the device has gone missing, it tries to shut down the connection
-    cleanly.
+    Accepts no arguments.
 
-    All other errors are raised as usbhid.UsbHidError exceptions.
+    Called by GTK periodically once the driver is set up and running.
 
-    """
-
-    # the USB device has probably been disconnected, try to clean up
-    if USB_CODE_NO_SUCH_DEVICE == e.errno:
-        if usb_driver:
-            print("USB HID device disconnected: %s" % (usb_driver.get_name()))
-        else:
-            print("USB HID device disconnected")
-
-        # tear down any remaining references to the disconnected device
-        stop_usb_hid_input()
-
-    # unknown error
-    else:
-        raise UsbHidError("Error writing to USB device: '%s'" % (str(e),))
-
-def __handle_usb_input():
-    """
-    USB handler function. This gets called multiple times per second directly
-    from a GObject timeout handler, once we attach to a USB HID device.
-
-    This is the place where we read USB HID input data, and pass it off to the
-    device drivers.
+    Returns True to let GTK know that it should reschedule this same
+    handler function to run again at the next interval.
 
     """
 
-    global usb_device
-    global usb_read_endpoint
-    global usb_driver
+    global usb_driver_ctx
 
-    try:
-        # read raw data from the USB device
-        # this will either return an array of byte values, or None
-        data = usb_read_endpoint.read(usb_read_endpoint.wMaxPacketSize,
-                                      timeout=1)
-
-        # send raw input data into the driver
-        if data is not None:
-            usb_driver.handle_input(data)
-
-    except usb.core.USBError as e:
-        _handle_usb_read_error(e)
+    usb_driver_ctx.handle_input()
 
     return True
-
 
 class UsbHidError(Exception):
     """
@@ -383,72 +274,240 @@ class UsbHidError(Exception):
         return repr(self.value)
 
 
-class ByteReader:
+class UsbHidDriverContext:
     """
-    Wrapper around low-level USB in endpoint.
+    USB HID Driver Context
 
-    This class handles the direct connection with the USB libraries, and
-    allows the individual drivers to just think in terms of reading bytes.
-
-    Note that most reads of bytes are passed into the drivers using their
-    handle_input() methods. This is for other reads, such as during
-    the initial connection to the device.
+    This class represents the context of a connection to a USB HID device.
 
     """
 
-    def read(self):
+    def __init__(self, device_config_name):
         """
-        Read bytes from the USB device.
+        Constructor.
 
-        Returns the bytes read, or None if no bytes were available.
+        Accepts a device config name (e.g. contour_design_shuttlexpress).
 
-        """
+        Finds and loads the driver configuration, and connects to the specified
+        device.
 
-        global usb_read_endpoint
-        global _handle_usb_read_error
-
-        if usb_read_endpoint is None:
-            return None
-
-        try:
-            data = usb_read_endpoint.read(usb_read_endpoint.wMaxPacketSize,
-                                          timeout=1)
-
-            return data
-
-        except usb.core.USBError as e:
-            _handle_usb_read_error(e)
-
-        return None
-
-
-class ByteWriter:
-    """
-    Wrapper around low-level USB out endpoint.
-
-    This class handles the direct connection with the USB libraries, and
-    allows the individual drivers to just think in terms of writing bytes.
-
-    """
-
-    def write(self, byte_array):
-        """
-        Write bytes to the USB device.
-
-        Accepts an array of bytes.
-
-        Raises a usbhid.UsbHidError if the write can not be completed.
+        Raises a UsbHidError exception if an error occurs.
 
         """
 
-        global usb_write_endpoint
-        global _handle_usb_write_error
+        # device config name and associated driver
+        self.device_config_name = device_config_name
+        self.driver = None
 
-        if usb_write_endpoint is None:
-            raise UsbHidError("USB write endpoint is not connected")
+        # device metadata extracted from the device config
+        self.vendor_id = None
+        self.product_id = None
+        self.configuration = None
+        self.interface = None
+        self.endpoint_in = None
+        self.endpoint_out = None
 
-        try:
-            usb_write_endpoint.write(byte_array)
-        except usb.core.USBError as e:
-            _handle_usb_write_error(e)
+        # usb1.USBContext (top-level entry point into libusb)
+        self.usb_ctx = usb1.USBContext()
+        # usb1.USBDeviceHandle (reference to the device we want to read from)
+        self.usb_device_handle = None
+        # list of integers representing USB interfaces to reattach on shutdown
+        self.reattach_kernel_interfaces = []
+        # list of USBTransfer instances in flight
+        self.transfers = []
+
+        # load the driver based on the config name
+        self.__load_driver()
+
+        # connect to the USB device
+        self.__connect()
+
+    def __load_driver(self):
+        # find the driver based on the device config name
+        self.driver = usbhiddrivers.get_usb_driver(self.device_config_name)
+
+        # get the USB configuration/interface/endpoints from the driver
+        # these numbers define which part of the USB device tree we'll read from
+        self.vendor_id = self.driver.get_usb_vendor_id()
+        self.product_id = self.driver.get_usb_product_id()
+        self.configuration = self.driver.get_usb_configuration()
+        self.interface = self.driver.get_usb_interface()
+        self.endpoint_in = self.driver.get_usb_endpoint_in()
+        self.endpoint_out = self.driver.get_usb_endpoint_out()
+
+        print("Found USB HID device: %s" % (self.driver.get_name()))
+
+    def __get_endpoint_max_packet_size(self, endpoint_address):
+        # traverse through the USB device hierarchy to find the max packet size
+        # for the given endpoint address on our device
+
+        max_packet_size = None
+
+        # go through every USB device on the system that we can see
+        for usb_device in self.usb_ctx.getDeviceIterator(skip_on_error=True):
+            # if we find the device that we're trying to talk to,
+            # by vendor_id / product_id...
+            if (self.vendor_id == usb_device.getVendorID()):
+                if (self.product_id == usb_device.getProductID()):
+
+                    # go through each configuration on the device
+                    configuration_number = 0
+                    for usb_configuration in usb_device:
+                        # if this is the configuration we are interested in
+                        if self.configuration == configuration_number:
+                            # go through each interface on the configuration
+                            interface_number = 0
+                            for usb_interface in usb_configuration:
+                                # if this is the interface we are interested in
+                                if self.interface == interface_number:
+                                    # go through each setting on the interface
+                                    for usb_interface_setting in usb_interface:
+                                        # go through each endpoint on the setting
+                                        for usb_endpoint in usb_interface_setting:
+                                            # if this is the endpoint address we are searching for
+                                            if endpoint_address == usb_endpoint.getAddress():
+                                                max_packet_size = usb_endpoint.getMaxPacketSize()
+
+                            interface_number += 1
+
+                        configuration_number += 1
+
+        return max_packet_size
+
+    def __detach_kernel_drivers(self):
+        # go through every USB device on the system that we can see
+        for usb_device in self.usb_ctx.getDeviceIterator(skip_on_error=True):
+            # if we find the device that we're trying to talk to,
+            # by vendor_id / product_id...
+            if (self.vendor_id == usb_device.getVendorID()):
+                if (self.product_id == usb_device.getProductID()):
+
+                    # go through each configuration on the device
+                    configuration_number = 0
+                    for usb_configuration in usb_device:
+                        # if this is the configuration we are interested in
+                        if self.configuration == configuration_number:
+                            # go through each interface on the configuration
+                            interface_number = 0
+                            for usb_interface in usb_configuration:
+                                # detach kernel driver, if necessary, and remember it for later
+                                if self.usb_device_handle.kernelDriverActive(interface_number):
+                                    self.usb_device_handle.detachKernelDriver(interface_number)
+                                    self.reattach_kernel_interfaces.append(interface_number)
+
+                                interface_number += 1
+
+                        configuration_number += 1
+
+    def __reattach_kernel_drivers(self):
+        # go through every interface that we detached from its pre-existing
+        # kernel driver and reattach them
+        for interface_number in self.reattach_kernel_interfaces:
+            self.usb_device_handle.attachKernelDriver(interface_number)
+
+    def __connect(self):
+        global USB_TRANSFERS_IN_FLIGHT
+        global _handle_usb_tranfer
+
+        # get endpoint in max packet size
+        endpoint_in_max_packet_size = \
+            self.__get_endpoint_max_packet_size(self.endpoint_in)
+
+        # USBDeviceHandle
+        self.usb_device_handle = \
+            self.usb_ctx.openByVendorIDAndProductID(self.vendor_id,
+                                                    self.product_id,
+                                                    skip_on_error=True)
+
+        if self.usb_device_handle is None:
+            err = "USB HID device not available (not found or permission denied): '%s'" % \
+                  (self.device_config_name)
+            print(err)
+            raise UsbHidError(err)
+
+        # detach kernel driver for each interface, etc.
+        self.__detach_kernel_drivers()
+
+        # claim exclusive access to the configured interface number
+        self.usb_device_handle.claimInterface(self.interface)
+
+        # set up a number of USB transfers to keep in-flight
+        for _ in range(USB_TRANSFERS_IN_FLIGHT):
+            # USBTransfer
+            transfer = self.usb_device_handle.getTransfer()
+
+            # set up transfer for interrupt use
+            transfer.setInterrupt(self.endpoint_in,
+                                  endpoint_in_max_packet_size,
+                                  _handle_usb_transfer)
+
+            # submit the transfer
+            transfer.submit()
+
+            # keep a reference to the transfer so we can refer to it later
+            self.transfers.append(transfer)
+
+    def disconnect(self):
+        """
+        Disconnect from the USB HID device.
+
+        """
+
+        # cancel all transfers
+        for transfer in self.transfers:
+            transfer.cancel()
+
+        # wait for a while for the transfers to be fully cancelled,
+        # but don't block indefinitely. this is expected to break early
+        # most of the time, but we don't want to hang the program on the
+        # way down if there is some sort of unexpected issue.
+        for _ in range(100):
+            all_cancelled = True
+            for transfer in self.transfers:
+                if transfer.isSubmitted():
+                    self.usb_ctx.handleEventsTimeout(0)
+                    if transfer.getStatus() != usb1.TRANSFER_CANCELLED:
+                        all_cancelled = False
+
+            if all_cancelled == True:
+                break
+
+            time.sleep(0.05)
+
+        # reset the device
+        self.usb_device_handle.resetDevice()
+
+        # relinquish access to the configured interface number
+        self.usb_device_handle.releaseInterface(self.interface)
+
+        # reattach any kernel drivers that were detached when we connected
+        self.__reattach_kernel_drivers()
+
+        # close the device handle
+        self.usb_device_handle.close()
+
+        # Close the USB context
+        self.usb_ctx.close()
+
+    def handle_input(self):
+        """
+        Handle any pending input that might be waiting for us to read.
+
+        Examines all of the USB transfers, and checks to see if any of
+        them are ready to read. If so, it triggers the event handler
+        function for any of the transfers that are ready.
+
+        This function is non-blocking.
+
+        """
+
+        for transfer in self.transfers:
+            try:
+                if transfer.isSubmitted():
+                    # handle any pending transfer events
+                    # (non-blocking, no timeout, returns instantly)
+                    self.usb_ctx.handleEventsTimeout(0)
+
+            except usb1.USBErrorInterrupted as e:
+                pass
 

@@ -37,8 +37,7 @@
     <product_id>0020</product_id>
     <configuration>0</configuration>
     <interface>0</interface>
-    <alternate>0</alternate>
-    <endpoint_in>0</endpoint_in>
+    <endpoint_in>81</endpoint_in>
   </usb>
   <keymap>
     <event code='to_start' name='Go To Start'>5</event>

@@ -213,11 +213,6 @@ class UsbHidDriver:
         # human-readable name of the device (e.g. Contour Design ShuttleXpress)
         self.name = config.name
 
-        # optional ByteReader and ByteWriter instances
-        # they start out uninitialized, because we don't have connections yet
-        self.byte_reader = None
-        self.byte_writer = None
-
         # USB vendor ID / product ID
         self.usb_vendor_id = config.usb_vendor_id
         self.usb_product_id = config.usb_product_id
@@ -227,7 +222,6 @@ class UsbHidDriver:
         # usb_endpoint_out is optional, and can be None
         self.usb_configuration = config.usb_configuration
         self.usb_interface = config.usb_interface
-        self.usb_alternate = config.usb_alternate
         self.usb_endpoint_in = config.usb_endpoint_in
         self.usb_endpoint_out = config.usb_endpoint_out
 
@@ -271,14 +265,6 @@ class UsbHidDriver:
 
         return self.usb_interface
 
-    def get_usb_alternate(self):
-        """
-        Get the USB alternate interface index (zero-based) under the configuration.
-
-        """
-
-        return self.usb_alternate
-
     def get_usb_endpoint_in(self):
         """
         Get the USB in endpoint index (zero-based) under the interface.
@@ -294,26 +280,6 @@ class UsbHidDriver:
         """
 
         return self.usb_endpoint_out
-
-    def set_byte_reader(self, byte_reader):
-        """
-        Associate a usbhid.ByteReader with this driver instance.
-
-        This can be used during the handle_connect() and handle_disconnect()
-        stages. It should NOT be used for normal event input reading.
-        The handle_input() method will be called periodically for that.
-
-        """
-
-        self.byte_reader = byte_reader
-
-    def set_byte_writer(self, byte_writer):
-        """
-        Associate a usbhid.ByteWriter with this driver instance.
-
-        """
-
-        self.byte_writer = byte_writer
 
     def handle_connect(self):
         """
@@ -365,21 +331,6 @@ class UsbHidDriver:
 
         raise usbhid.UsbHidError(
             "not implemented, method must be implemented in subclass")
-
-    def _consume_input_data(self):
-        """
-        Consume input data without doing anything.
-
-        This can be useful during startup, when a device might have buffered
-        data from before the program was started, and we don't want to send
-        it all to actions that might control the program in surprising ways.
-
-        """
-
-        for i in range(100):
-            data = self.byte_reader.read()
-            if data is None:
-                break
 
     def _get_key_handler(self, key):
         """
@@ -457,10 +408,6 @@ class ContourDesignShuttle(UsbHidDriver):
         self.k13 = Key(self._get_key_handler(13))
         self.k14 = Key(self._get_key_handler(14))
         self.k15 = Key(self._get_key_handler(15))
-
-    def handle_connect(self):
-        # flush the input buffer at startup
-        self._consume_input_data()
 
     def handle_input(self, usb_data):
         if len(usb_data) != 5:

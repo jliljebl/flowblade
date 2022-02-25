@@ -19,7 +19,7 @@
 | gir1.2-gtk-3.0 | Gtk toolkit | gtk3 |
 | gir1.2-pango-1.0 | Pango text lib | pango |
 | gir1.2-gdkpixbuf-2.0 | Image support | gdk-pixbuf2 |
-| python3-usb | USB support | python-pyusb-git |
+| python3-libusb1 | USB support | python-libusb1 |
 
 # Dropped  Dependencies #
 
