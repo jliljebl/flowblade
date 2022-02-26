@@ -65,10 +65,10 @@ Become the root user, and create a new text file at
 
 # Contour ShuttleXpress
 # Contour A/V Solutions SpaceShuttle
-ATTRS{idVendor}=="0b33", ATTRS{idProduct}=="0020", MODE="0644"
+ATTRS{idVendor}=="0b33", ATTRS{idProduct}=="0020", MODE="0666"
 
 # Contour ShuttlePRO v2
-ATTRS{idVendor}=="0b33", ATTRS{idProduct}=="0030", MODE="0644"
+ATTRS{idVendor}=="0b33", ATTRS{idProduct}=="0030", MODE="0666"
 ```
 
 It may be necessary to reboot your computer after this step. This only
