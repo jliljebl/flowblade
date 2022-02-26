@@ -56,7 +56,7 @@ On Linux, this is done by adding a udev rules configuration file that
 instructs the udev subsystem to enable additional access to your device.
 
 Become the root user, and create a new text file at
-`/etc/udev/rules.d/90-flowblade` with the following contents:
+`/etc/udev/rules.d/90-flowblade.rules` with the following contents:
 
 ```
 #
