@@ -115,8 +115,8 @@ the local copy.
 The precise location of these config files can vary depending on how you
 have installed Flowblade. You want to find the `res/usbhid` directory
 under the Flowblade installation. From there, you will want to copy the config
-file for your particular USB jog/shuttle device, and copy it to a location in
-your local user preferences directory.
+file for your particular USB jog/shuttle device to a location in your local
+user preferences directory.
 
 For example, if you installed Flowblade on Ubuntu using the OS packaging
 system, and you have a Contour Design ShuttleXpress, then you would want to
