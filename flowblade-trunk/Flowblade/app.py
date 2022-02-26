@@ -1034,7 +1034,7 @@ def start_usb_hid_input():
                 usbhid.start_usb_hid_input(usbhid_config)
             except usbhid.UsbHidError as e:
                 # Best effort, don't interfere with program startup
-                print("Could not find USB HID driver config '%s': %s" % (usbhid_config, str(e)))
+                print("Can not connect to USB HID device using driver config '%s': %s" % (usbhid_config, str(e),))
 
 def stop_usb_hid_input():
     # Disconnect from the USB HID device, if necessary

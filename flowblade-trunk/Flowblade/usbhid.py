@@ -335,7 +335,7 @@ class UsbHidDriverContext:
         self.endpoint_in = self.driver.get_usb_endpoint_in()
         self.endpoint_out = self.driver.get_usb_endpoint_out()
 
-        print("Found USB HID device: %s" % (self.driver.get_name()))
+        print("Initializing USB HID driver: %s" % (self.driver.get_name()))
 
     def __get_endpoint_max_packet_size(self, endpoint_address):
         # traverse through the USB device hierarchy to find the max packet size
@@ -413,6 +413,11 @@ class UsbHidDriverContext:
         endpoint_in_max_packet_size = \
             self.__get_endpoint_max_packet_size(self.endpoint_in)
 
+        # the endpoint in max packet size is determined by reading metadata
+        # from the device, so if it's not available, the device isn't here
+        if endpoint_in_max_packet_size is None:
+            raise UsbHidError("USB HID device not found")
+
         # USBDeviceHandle
         self.usb_device_handle = \
             self.usb_ctx.openByVendorIDAndProductID(self.vendor_id,
@@ -420,10 +425,7 @@ class UsbHidDriverContext:
                                                     skip_on_error=True)
 
         if self.usb_device_handle is None:
-            err = "USB HID device not available (not found or permission denied): '%s'" % \
-                  (self.device_config_name)
-            print(err)
-            raise UsbHidError(err)
+            raise UsbHidError("Can not open USB HID device")
 
         # detach kernel driver for each interface, etc.
         self.__detach_kernel_drivers()
