@@ -17,7 +17,7 @@ using a dedicated hardware control interface, in addition to the keyboard and
 mouse.
 
 Turning the jog wheel moves the playback location forward and backward, one
-frame a time.
+frame at a time.
 
 Turning the shuttle left or right engages variable speed playback, in forward
 or reverse. The farther you turn the ring, the faster it goes.
@@ -59,11 +59,11 @@ Become the root user, and create a new text file at
 # Grant unprivileged users access to USB HID jog/shuttle devices
 #
 
-# Contour ShuttleXpress
+# Contour Design ShuttleXpress
 # Contour A/V Solutions SpaceShuttle
 ATTRS{idVendor}=="0b33", ATTRS{idProduct}=="0020", MODE="0666"
 
-# Contour ShuttlePRO v2
+# Contour Design ShuttlePRO v2
 ATTRS{idVendor}=="0b33", ATTRS{idProduct}=="0030", MODE="0666"
 ```
 
@@ -153,7 +153,7 @@ clear_mark_out              | Clear Mark Out
 cut                         | Cut Active Tracks
 cut_all                     | Cut All Tracks
 delete                      | Delete
-display_clip_in_monitor     | Display Media Item In Monitor
+display_clip_in_monitor     | Display Clip In Monitor
 display_sequence_in_monitor | Display Current Sequence In Monitor
 enter_edit                  | Enter Editing Mode
 faster                      | Faster
