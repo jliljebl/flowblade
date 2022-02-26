@@ -92,13 +92,17 @@ In the <b>Device</b> pull down menu, select the device driver that you wish to
 use. The entries in this menu correspond to the <b>Flowblade Device Name</b> in
 the <b>Supported Devices</b> section above.
 
-Close the <b>Preferences</b> window.
+Press <b>OK</b> to close the <b>Preferences</b> window.
 
 After this, it will be necessary to exit Flowblade and restart it.
 
 At this point, the USB jog/shuttle configuration is part of your saved
 Flowblade preferences. You will now be able to use the program with or
 without the jog/shuttle, without any further configuration necessary.
+
+Please note that Flowblade will only check for the presence of the USB device
+at startup, so make sure to have the device plugged in before you start
+Flowblade if you want to use it.
 
 ### Custom Key Mappings
 
@@ -109,7 +113,7 @@ appropriate file into the correct user preferences directory, and modifying
 the local copy.
 
 The precise location of these config files can vary depending on how you
-have installed Flowblade. You want to find the <b>res/usbhid</b> directory
+have installed Flowblade. You want to find the `res/usbhid` directory
 under the Flowblade installation. From there, you will want to copy the config
 file for your particular USB jog/shuttle device, and copy it to a location in
 your local user preferences directory.
