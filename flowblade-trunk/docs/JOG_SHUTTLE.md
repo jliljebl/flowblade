@@ -2,7 +2,7 @@
 
   * [Overview](./JOG_SHUTTLE.md#overview)
   * [Supported Devices](./JOG_SHUTTLE.md#supported-devices)
-  * [Enabling Jog/Shuttle Support](./JOG_SHUTTLE.md#enabling-jog-shuttle-support)
+  * [Enabling Jog/Shuttle Support](./JOG_SHUTTLE.md#enabling-jog--shuttle-support)
   * [Enable Device Permissions](./JOG_SHUTTLE.md#enable-device-permissions)
   * [Custom Key Mappings](./JOG_SHUTTLE.md#custom-key-mappings)
   * [Available Target Actions](./JOG_SHUTTLE.md#available-target-actions)
