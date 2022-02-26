@@ -14,17 +14,13 @@ supporting selected USB jog/shuttle devices.
 
 A jog/shuttle gives you an additional way to navigate through your timeline
 using a dedicated hardware control interface, in addition to the keyboard and
-mouse. Playback at various speeds, in both forward and reverse, and navigating
-frame by frame are right at your fingertips.
+mouse.
 
-Turning the jog wheel to the right and left moves the playback location forward
-and backward, one frame at a time, respectively.
+Turning the jog wheel moves the playback location forward and backward, one
+frame a time.
 
-Turning the shuttle ring to the right starts out with playback in the forward
-direction, with increasingly faster speeds the farther you turn the shuttle.
-
-Turning the shuttle ring to the left starts out with playback in the reverse
-direction, with increasingly faster speeds the farther you turn the shuttle.
+Turning the shuttle left or right engages variable speed playback, in forward
+or reverse. The farther you turn the ring, the faster it goes.
 
 Additionally, most jog/shuttle devices have keys which can be mapped to
 various actions within the program. Each supported device has default key
