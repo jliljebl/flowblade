@@ -1,5 +1,12 @@
 # Jog / Shuttle Support
 
+  * [Overview](./JOG_SHUTTLE.md#overview)
+  * [Supported Devices](./JOG_SHUTTLE.md#supported-devices)
+  * [Enabling Jog/Shuttle Support](./JOG_SHUTTLE.md#enabling-jog-shuttle-support)
+  * [Enable Device Permissions](./JOG_SHUTTLE.md#enable-device-permissions)
+  * [Custom Key Mappings](./JOG_SHUTTLE.md#custom-key-mappings)
+  * [Available Target Actions](./JOG_SHUTTLE.md#available-target-actions)
+
 ### Overview
 
 Flowblade has a USB Human Input Device subsystem, which is capable of
@@ -30,7 +37,6 @@ Manufacturer Device Name           | Flowblade Device Name        | Config File
 Contour Design ShuttlePRO v2       | Contour Design ShuttlePRO v2 | contour_design_shuttlepro_v2.xml
 Contour Design ShuttleXpress       | Contour Design ShuttleXpress | contour_design_shuttlexpress.xml
 Contour A/V Solutions SpaceShuttle | Contour Design ShuttleXpress | contour_design_shuttlexpress.xml
-----------------------------------------------------------------------------------------------------
 
 ### Enabling Jog / Shuttle Support
 
@@ -186,5 +192,4 @@ trim_end                    | Trim Clip End To Playhead
 trim_start                  | Trim Clip Start To Playhead
 zoom_in                     | Zoom In
 zoom_out                    | Zoom Out
---------------------------------------------------------------------
 
