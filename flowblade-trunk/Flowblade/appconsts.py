@@ -75,7 +75,7 @@ TLINE_HEIGHT = 260
 
 # Notebook widths
 NOTEBOOK_WIDTH = 400 # currently has no effect, panels widgets size requests combined width > 400 (about 488), make bigger if needed.
-TOP_ROW_HEIGHT = 500
+TOP_ROW_HEIGHT = 300
 
 # Property editing gui consts
 PROPERTY_ROW_HEIGHT = 22

@@ -105,7 +105,7 @@ def update_project_info():
 def show_project_events_dialog():
     events_list = ProjectEventListView()
     events_list.fill_data_model()
-    events_list.set_size_request(620, 500)
+    events_list.set_size_request(620, 200)
     dialogutils.panel_ok_dialog(_("Project Events"), events_list)
 
 class ProjectEventListView(Gtk.VBox):
