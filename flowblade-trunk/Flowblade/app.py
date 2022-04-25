@@ -947,24 +947,11 @@ def _set_screen_size_data():
 
     return (scr_w, scr_h)
 
-# Adjust gui parameters for smaller screens
-def _set_draw_params():
-    if editorstate.screen_size_small_width() == True:
-        appconsts.NOTEBOOK_WIDTH = 400
-        editorwindow.MONITOR_AREA_WIDTH = 400
-        editorwindow.MEDIA_MANAGER_WIDTH = 100
-        
-    if editorstate.screen_size_small_height() == True:
-        appconsts.TOP_ROW_HEIGHT = 10
-        projectinfogui.PROJECT_INFO_PANEL_HEIGHT = 140
-        tlinewidgets.HEIGHT = 252
-        
+# Adjust gui parameters for smaller screens.
+def _set_draw_params():    
+
     if editorstate.screen_size_large_height() == True:
         keyframeeditcanvas.GEOMETRY_EDITOR_HEIGHT = 300
-
-    if editorstate.SCREEN_WIDTH < 1153 or editorstate.SCREEN_HEIGHT < 865:
-        editorwindow.MONITOR_AREA_WIDTH = 400
-        positionbar.BAR_WIDTH = 100
 
     if editorpersistance.prefs.double_track_hights == True:
         appconsts.TRACK_HEIGHT_HIGH = 150

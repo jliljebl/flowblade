@@ -60,7 +60,7 @@ M_PI = math.pi
 
 REF_LINE_Y = 250 # Y pos of tracks are relative to this. This is recalculated on initilization, so value here is irrelevent.
 
-WIDTH = 430 # this has no effect if smaller then editorwindow.NOTEBOOK_WIDTH + editorwindow.MONITOR_AREA_WIDTH -- so this never has effect, but we need to set heights and this can remain as dummy value.
+MINIMUM_WIDTH = 430 # No effect on window layout we just want to put something > 0 on start.
 HEIGHT = appconsts.TLINE_HEIGHT # defines window min height together with editorwindow.TOP_ROW_HEIGHT
 STRIP_HEIGHT = tlinerender.STRIP_HEIGHT # timeline rendering control strip height
 
@@ -1472,7 +1472,7 @@ class TimeLineCanvas:
     def __init__(self, press_listener, move_listener, release_listener, double_click_listener,
                     mouse_scroll_listener, leave_notify_listener, enter_notify_listener):
         # Create widget and connect listeners
-        self.widget = cairoarea.CairoDrawableArea2( WIDTH, 
+        self.widget = cairoarea.CairoDrawableArea2( MINIMUM_WIDTH, 
                                                     HEIGHT, 
                                                     self._draw)
         self.widget.add_pointer_motion_mask()
@@ -2652,7 +2652,7 @@ class TimeLineFrameScale:
     """
 
     def __init__(self, set_default_callback, mouse_scroll_listener):
-        self.widget = cairoarea.CairoDrawableArea2( WIDTH, 
+        self.widget = cairoarea.CairoDrawableArea2( MINIMUM_WIDTH,
                                                     SCALE_HEIGHT, 
                                                     self._draw)
         self.widget.press_func = self._press_event
@@ -2959,7 +2959,7 @@ class TimeLineRenderingControlStrip:
     """
 
     def __init__(self):
-        self.widget = cairoarea.CairoDrawableArea2( WIDTH, 
+        self.widget = cairoarea.CairoDrawableArea2( MINIMUM_WIDTH, 
                                                     STRIP_HEIGHT, 
                                                     self._draw)
         self.widget.press_func = self._press_event

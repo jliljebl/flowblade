@@ -40,7 +40,7 @@ trimmodes_set_no_edit_trim_mode = None # This monkey patched in app.py to avoid 
 
 
 # Draw params
-BAR_WIDTH = 200 # NOTE: DOES NOT HAVE ANY EFFECT IF OTHER WIDTHS MAKE MONITOR AREA MIN WIDTH BIGGER, THIS EXPANDS TO FILL
+BAR_WIDTH = 200 # Just used as an initial value > 0, no effect on window layout.
 BAR_HEIGHT = 10 # component height
 LINE_WIDTH = 3
 LINE_HEIGHT = 6

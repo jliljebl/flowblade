@@ -66,16 +66,20 @@ PROP_INT = 0
 PROP_FLOAT = 1
 PROP_EXPRESSION = 2
 
-# Display heights for tracks and timeline.
+# Display heights for tracks and timeline. 
 TRACK_HEIGHT_HIGH = 75 # track height in canvas and column
 TRACK_HEIGHT_NORMAL = 50 # track height in canvas and column
 TRACK_HEIGHT_SMALL = 25  # track height in canvas and column
 TRACK_HEIGHT_SMALLEST = 25 # maybe remove this as it is no longer used
+
+# Main layout minimum heights. Changing these will have effect on layout.
+TOP_ROW_HEIGHT = 300
 TLINE_HEIGHT = 260
 
-# Notebook widths
-NOTEBOOK_WIDTH = 400 # currently has no effect, panels widgets size requests combined width > 400 (about 488), make bigger if needed.
-TOP_ROW_HEIGHT = 300
+# Main layout minimum widths. Changing these will have effect on layout.
+MONITOR_AREA_WIDTH = 400
+PANEL_MEDIA_MINIMUM_SIZE = 400 #  Most panels have larger minimum widths then this and will expand Media panel if in same notebook.
+PANEL_MULTI_EDIT_MINIMUM_SIZE = 470 # Render, and Jobs panels have larger have larger minimum widths then this and will expand Edit panel if in same notebook.
 
 # Property editing gui consts
 PROPERTY_ROW_HEIGHT = 22

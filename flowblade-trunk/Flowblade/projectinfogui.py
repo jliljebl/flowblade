@@ -32,8 +32,6 @@ import utils
 
 widgets = utils.EmptyClass()
 
-PROJECT_INFO_PANEL_HEIGHT = 200
-PROJECT_TOP_LEVEL_PANE_HEIGHT = 150
 
 def get_project_info_panel():
     project_name_label = Gtk.Label(label=PROJECT().name)
@@ -92,12 +90,11 @@ def get_top_level_project_info_panel():
     widgets.project_name_label = project_name_label
     widgets.desc_label = desc_label
     widgets.info_box = info_box
-
+ 
     return project_info_vbox
     
 def update_project_info():
     profile = PROJECT().profile
-    #widgets.project_name_label.set_markup(guiutils.bold_text(PROJECT().name))
     widgets.desc_label.set_text(profile.description())
     profile_info_text = guicomponents.get_profile_reduced_info_text(profile)
     widgets.info_box.get_children()[0].set_text(profile_info_text)

@@ -242,7 +242,6 @@ def get_jobs_panel():
     panel = Gtk.VBox()
     panel.pack_start(_jobs_list_view, True, True, 0)
     panel.pack_start(row2, False, True, 0)
-    panel.set_size_request(400, 10)
 
     if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
         panel.override_background_color(Gtk.StateFlags.NORMAL, gui.get_light_gray_light_color())

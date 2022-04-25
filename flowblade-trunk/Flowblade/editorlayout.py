@@ -123,10 +123,10 @@ PANEL_ORDER_IN_NOTEBOOKS = [appconsts.PANEL_MEDIA, appconsts.PANEL_FILTER_SELECT
                             appconsts.PANEL_MEDIA_AND_BINS_SMALL_SCREEN]
 
 PANEL_MINIMUM_SIZES = { \
-    appconsts.PANEL_MEDIA: None, 
+    appconsts.PANEL_MEDIA: (appconsts.PANEL_MEDIA_MINIMUM_SIZE, appconsts.TOP_ROW_HEIGHT), 
     appconsts.PANEL_FILTER_SELECT: None,
     appconsts.PANEL_RANGE_LOG: None,
-    appconsts.PANEL_MULTI_EDIT: (470, 300), # This has very small default size when empty and needs preferred size set to show properly when moved.
+    appconsts.PANEL_MULTI_EDIT: (appconsts.PANEL_MULTI_EDIT_MINIMUM_SIZE, appconsts.TOP_ROW_HEIGHT),
     appconsts.PANEL_JOBS: None,
     appconsts.PANEL_RENDERING: None,
     appconsts.PANEL_PROJECT: None,

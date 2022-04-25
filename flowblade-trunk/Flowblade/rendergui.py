@@ -829,7 +829,6 @@ class RenderArgsPanel():
         sw = Gtk.ScrolledWindow()
         sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         sw.add(self.opts_view)
-        #sw.set_size_request(*FFMPEG_VIEW_SIZE)
 
         scroll_frame = Gtk.Frame()
         scroll_frame.add(sw)
@@ -1046,11 +1045,9 @@ class RenderArgsEditWindow(Gtk.Window):
         sw = Gtk.ScrolledWindow()
         sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         sw.add(self.opts_view)
-        #sw.set_size_request(*FFMPEG_VIEW_SIZE)
 
         scroll_frame = Gtk.Frame()
         scroll_frame.add(sw)
-        #scroll_frame.set_size_request(200, 300)
 
         self.load_selection_button = Gtk.Button(_("Load Selection"))
         self.load_selection_button.connect("clicked", lambda w: self.args_panel.display_selection_callback())

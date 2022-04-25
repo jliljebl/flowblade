@@ -801,11 +801,11 @@ def get_media_log_events_panel(events_list_view):
     row2.pack_start(insert_displayed, False, True, 0)
     row2.pack_start(append_displayed, False, True, 0)
 
+    # NOTE: Panel width determined by row1 widgets sizes.
     panel = Gtk.VBox()
     panel.pack_start(row1, False, True, 0)
     panel.pack_start(events_list_view, True, True, 0)
     panel.pack_start(row2, False, True, 0)
-    panel.set_size_request(400, 10)
 
     star_check.set_tooltip_text(_("Display starred ranges"))    
     star_not_active_check.set_tooltip_text(_("Display non-starred ranges"))

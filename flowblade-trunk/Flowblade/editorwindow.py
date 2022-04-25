@@ -83,8 +83,8 @@ import undo
 import workflow
 
 # GUI min size params, these have probably no effect on layout.
-MEDIA_MANAGER_WIDTH = 110
-MONITOR_AREA_WIDTH = 400
+MEDIA_MANAGER_WIDTH = 110 # This in paned container on small screens, has no effect on whole window layout. 
+MONITOR_AREA_WIDTH = appconsts.MONITOR_AREA_WIDTH
 
 DARK_BG_COLOR = (0.223, 0.247, 0.247, 1.0)
 
@@ -438,7 +438,6 @@ class EditorWindow:
         self.edit_multi.add_named(compositors_panel, appconsts.EDIT_MULTI_COMPOSITORS)
         self.edit_multi.add_named(mediaplugins_panel, appconsts.EDIT_MULTI_PLUGINS)
         self.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_EMPTY)
-        #self.edit_multi.set_size_request(730, 600)
         
         # Render panel
         try:
@@ -494,13 +493,10 @@ class EditorWindow:
         if editorlayout.top_level_project_panel() == True:
             # Project info
             project_info_panel = projectinfogui.get_top_level_project_info_panel()
-            PANEL_WIDTH = 10
-            PANEL_HEIGHT = 150
             top_project_vbox = Gtk.VBox()
             top_project_vbox.pack_start(project_info_panel, False, False, 0)
             top_project_vbox.pack_start(self.bins_panel, True, True, 0)
             top_project_vbox.pack_start(seq_panel, True, True, 0)
-            top_project_vbox.set_size_request(PANEL_WIDTH, PANEL_HEIGHT)
             self.top_project_panel = guiutils.set_margins(top_project_vbox, 0, 0, 0, 4)
             self.project_panel = None
         else:
@@ -758,7 +754,6 @@ class EditorWindow:
         # -------------- appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT a.k.a Notebook 
         # --------------'this is always noteboof never Gtk.Frame or empty '
         self.notebook, widget_is_notebook = editorlayout.create_position_widget(self, appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT)
-        self.notebook.set_size_request(appconsts.NOTEBOOK_WIDTH, appconsts.TOP_ROW_HEIGHT)
         self.notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
         self.notebook_frame = guiutils.get_panel_etched_frame(self.notebook)
         guiutils.set_margins(self.notebook_frame, 0, 0, 0, 1)

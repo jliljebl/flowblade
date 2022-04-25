@@ -76,7 +76,6 @@ def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hambu
     files_filter_launcher.connect_launched_menu(guicomponents.file_filter_menu)
     gui.media_view_filter_selector = files_filter_launcher
 
-    
     bin_info = guicomponents.BinInfoPanel()
     
     buttons_box = Gtk.HBox(False,1)
