@@ -322,7 +322,7 @@ def set_timeline_height():
         tlinewidgets.HEIGHT = current_sequence().get_shrunk_tline_height_min()
         set_v_paned = True
 
-    gui.tline_canvas.widget.set_size_request(tlinewidgets.WIDTH, tlinewidgets.HEIGHT)
+    gui.tline_canvas.widget.set_size_request(tlinewidgets.MINIMUM_WIDTH, tlinewidgets.HEIGHT)
     gui.tline_column.widget.set_size_request(tlinewidgets.COLUMN_WIDTH, tlinewidgets.HEIGHT)
     
     if set_v_paned == True:
