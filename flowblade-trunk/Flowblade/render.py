@@ -29,7 +29,7 @@ Rendering is done in app.player object of class mltplayer.Player
 from gi.repository import Gtk
 
 try:
-    import mlt
+    import mlt7 as mlt
 except:
     import mlt7 as mlt
 import hashlib

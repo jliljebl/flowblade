@@ -57,7 +57,7 @@ sys.path.insert(0, modules_path)
 
 # Check that we have MLT, missing is fatal.
 try:
-    import mlt
+    import mlt7 as mlt
     try:
         mlt_version = mlt.LIBMLT_VERSION
         print ("MLT found, version:", mlt_version)

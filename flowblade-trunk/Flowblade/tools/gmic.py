@@ -29,7 +29,7 @@ from gi.repository import Pango
 import cairo
 import locale
 try:
-    import mlt
+    import mlt7 as mlt
 except:
     import mlt7 as mlt
 import os

@@ -30,7 +30,7 @@ import dbus
 import dbus.service
 from dbus.mainloop.glib import DBusGMainLoop
 try:
-    import mlt
+    import mlt7 as mlt
 except:
     import mlt7 as mlt
 import hashlib

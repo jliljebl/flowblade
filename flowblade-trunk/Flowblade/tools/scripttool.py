@@ -30,7 +30,7 @@ import datetime
 import glob
 import locale
 try:
-    import mlt
+    import mlt7 as mlt
 except:
     import mlt7 as mlt
 import os

@@ -23,7 +23,7 @@ import os
 from xml.dom import minidom
 from math import floor
 try:
-    import mlt
+    import mlt7 as mlt
 except:
     import mlt7 as mlt
 import time

@@ -23,7 +23,7 @@ Module contains class Sequence that is the multitrack media object being edited
 by the application. A project has 1-n of these.
 """
 try:
-    import mlt
+    import mlt7 as mlt
 except:
     import mlt7 as mlt
 import os

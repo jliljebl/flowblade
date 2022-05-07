@@ -41,7 +41,7 @@ from gi.repository import Gdk
 
 import locale
 try:
-    import mlt
+    import mlt7 as mlt
 except:
     import mlt7 as mlt
 import hashlib

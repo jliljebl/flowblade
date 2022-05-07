@@ -22,7 +22,7 @@ from gi.repository import Gtk, GLib
 
 import cairo
 try:
-    import mlt
+    import mlt7 as mlt
 except:
     import mlt7 as mlt
 import numpy as np

@@ -23,7 +23,7 @@ Modules handles creating and caching audio waveform images for clips.
 """
 
 try:
-    import mlt
+    import mlt7 as mlt
 except:
     import mlt7 as mlt
 import os

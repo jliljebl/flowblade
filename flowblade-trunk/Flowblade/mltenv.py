@@ -23,7 +23,7 @@ Module checks environment for available codecs and formats.
 """
 from gi.repository import GObject
 try:
-    import mlt
+    import mlt7 as mlt
 except:
     import mlt7 as mlt
 

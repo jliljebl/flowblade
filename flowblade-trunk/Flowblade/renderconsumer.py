@@ -26,7 +26,7 @@ Module contains objects and methods needed to create render consumers.
 from gi.repository import Gdk
 
 try:
-    import mlt
+    import mlt7 as mlt
 except:
     import mlt7 as mlt
 import time

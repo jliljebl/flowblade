@@ -24,7 +24,7 @@ Module contains objects used to capture project data.
 import cairo
 import datetime
 try:
-    import mlt
+    import mlt7 as mlt
 except:
     import mlt7 as mlt
 import hashlib

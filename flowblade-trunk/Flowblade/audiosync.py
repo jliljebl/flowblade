@@ -24,7 +24,7 @@ Handles syncing clips based on their audio data.
 import datetime
 import hashlib
 try:
-    import mlt
+    import mlt7 as mlt
 except:
     import mlt7 as mlt
 import os

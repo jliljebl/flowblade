@@ -28,7 +28,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 try:
-    import mlt
+    import mlt7 as mlt
 except:
     import mlt7 as mlt
 from operator import itemgetter
