@@ -152,6 +152,7 @@ class QueueRunnerThread(threading.Thread):
             Gdk.threads_enter()
             batch_window.update_queue_view()
             batch_window.current_render.set_text("  " + render_item.get_display_name())
+            batch_window.current_file.set_text("  " +  os.path.basename(render_item.render_path))
             Gdk.threads_leave()
 
             # Make sure that render thread is actually running before
@@ -661,15 +662,19 @@ class BatchRenderWindow:
         self.est_time_left = Gtk.Label()
         self.current_render = Gtk.Label()
         self.current_render_time = Gtk.Label()
+        self.current_file = Gtk.Label()
         est_r = guiutils.get_right_justified_box([guiutils.bold_label(_("Estimated Left:"))])
         current_r = guiutils.get_right_justified_box([guiutils.bold_label(_("Current Render:"))])
         current_r_t = guiutils.get_right_justified_box([guiutils.bold_label(_("Elapsed:"))])
+        current_file = guiutils.get_right_justified_box([guiutils.bold_label(_("File:"))])
         est_r.set_size_request(250, 20)
         current_r.set_size_request(250, 20)
         current_r_t.set_size_request(250, 20)
+        current_file.set_size_request(250, 20)
         
         info_vbox = Gtk.VBox(False, 0)
         info_vbox.pack_start(guiutils.get_left_justified_box([current_r, self.current_render]), False, False, 0)
+        info_vbox.pack_start(guiutils.get_left_justified_box([current_file, self.current_file]), False, False, 0)
         info_vbox.pack_start(guiutils.get_left_justified_box([current_r_t, self.current_render_time]), False, False, 0)
         info_vbox.pack_start(guiutils.get_left_justified_box([est_r, self.est_time_left]), False, False, 0)
         
@@ -859,6 +864,7 @@ class BatchRenderWindow:
         self.stop_render_button.set_sensitive(False)
         self.render_progress_bar.set_text(self.not_rendering_txt)
         self.current_render.set_text("")
+        self.current_file.set_text("")
         self.remove_selected.set_sensitive(True)
         self.remove_finished.set_sensitive(True)
 
