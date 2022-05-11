@@ -60,8 +60,7 @@ drag_source = None
 clip_icon = None
 empty_icon = None
 
-# Callback functions
-add_current_effect = None
+# Callback functions. These are set at app.monkeypatch_callbacks().
 display_monitor_media_file = None
 range_log_items_tline_drop = None
 range_log_items_log_drop = None

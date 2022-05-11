@@ -409,8 +409,7 @@ def monkeypatch_callbacks():
     undo.set_post_undo_redo_callback(modesetting.set_post_undo_redo_edit_mode)
     undo.repaint_tline = updater.repaint_tline
 
-    # # Drag'n'drop callbacks
-    dnd.add_current_effect = clipeffectseditor.add_currently_selected_effect
+    # Drag'n'drop callbacks
     dnd.display_monitor_media_file = updater.set_and_display_monitor_media_file
     dnd.range_log_items_tline_drop = editevent.tline_range_item_drop
     dnd.range_log_items_log_drop = medialog.clips_drop

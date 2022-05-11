@@ -479,7 +479,8 @@ def tline_effect_drop(x, y):
     
     clipeffectseditor.add_currently_selected_effect() # drag start selects the dragged effect
     filter_info = clipeffectseditor.get_currently_selected_filter_info()
-    
+    clipeffectseditor.set_filter_item_expanded(len(clip.filters) - 1)
+        
     if selected_track_before != track.id:
         return
     
@@ -488,7 +489,7 @@ def tline_effect_drop(x, y):
     
     if selected_in_before != -1:
         for add_index in range(selected_in_before, selected_out_before + 1):
-            if add_index == index:
+            if add_index == index: # We already did this.
                 continue
             add_clip = track.clips[add_index]
             if add_clip.is_blanck_clip == True:
@@ -499,7 +500,9 @@ def tline_effect_drop(x, y):
                     "filter_edit_done_func":clipeffectseditor.filter_edit_done_stack_update}
             action = edit.add_filter_action(data)
             action.do_edit()
-
+    
+        clipeffectseditor.set_filter_item_expanded(len(clip.filters) - 1)
+            
 def tline_media_drop(drag_data, x, y, use_marks=False):
     # drag_data not used unless we wich later to enable dropping multiple media items.
     track = tlinewidgets.get_track(y)
