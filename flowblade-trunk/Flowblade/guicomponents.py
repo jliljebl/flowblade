@@ -1685,61 +1685,18 @@ def display_clip_popup_menu(event, clip, track, callback):
         clip_menu.add(clip_monitor_item)
 
     _add_separetor(clip_menu)
+
+    clip_menu.add(_get_audio_menu_item(event, clip, track, callback))
+  
+    _add_separetor(clip_menu)
     
-    if track.type == appconsts.VIDEO:
-        active = True
-        if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
-            active = False
-        clip_menu.add(_get_menu_item(_("Split Audio"), callback,\
-                      (clip, track, "split_audio", event.x), active))
-        if track.id == current_sequence().first_video_index:
-            active = True
-        else:
-            active = False
-        if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
-            active = False
-        clip_menu.add(_get_menu_item(_("Split Audio Synched"), callback,\
-              (clip, track, "split_audio_synched", event.x), active))
-
-    if editorstate.display_all_audio_levels == False:
-        _add_separetor(clip_menu)
-
-        if clip.waveform_data == None:
-           clip_menu.add(_get_menu_item(_("Display Audio Level"), callback,\
-                      (clip, track, "display_waveform", event.x), True))
-        else:
-           clip_menu.add(_get_menu_item(_("Clear Waveform"), callback,\
-              (clip, track, "clear_waveform", event.x), True))
-
-    audio_sync_item = _get_menu_item(_("Select Clip to Audio Sync With..."), callback, (clip, track, "set_audio_sync_clip", event.x))
-    if utils.is_mlt_xml_file(clip.path) == True:
-        audio_sync_item.set_sensitive(False)
-    if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
-        audio_sync_item.set_sensitive(False)
- 
-    clip_menu.add(audio_sync_item)
-            
-    _add_separetor(clip_menu)
-
-    if track.id != current_sequence().first_video_index:
-        if clip.sync_data != None:
-            clip_menu.add(_get_menu_item(_("Resync"), callback, (clip, track, "resync", event.x)))
-            clip_menu.add(_get_menu_item(_("Clear Sync Relation"), callback, (clip, track, "clear_sync_rel", event.x)))
-        else:
-            clip_menu.add(_get_menu_item(_("Select Sync Parent Clip..."), callback, (clip, track, "set_master", event.x)))
-
-        _add_separetor(clip_menu)
-
-    clip_menu.add(_get_mute_menu_item(event, clip, track, callback))
-
-    _add_separetor(clip_menu)
-
     clip_menu.add(_get_menu_item(_("Edit Filters"), callback, (clip, track, "open_in_editor", event.x)))
-    
+    clip_menu.add(_get_filters_add_menu_item(event, clip, track, callback))
+    clip_menu.add(_get_clone_filters_menu_item(event, clip, track, callback))
+    clip_menu.add(_get_menu_item(_("Clear Filters"), callback, (clip, track, "clear_filters", event.x)))
+
     _add_separetor(clip_menu)
     
-    clip_menu.add(_get_filters_add_menu_item(event, clip, track, callback))
-
     if current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
         _add_separetor(clip_menu)
         
@@ -1766,12 +1723,7 @@ def display_clip_popup_menu(event, clip, track, callback):
             comp_delete_item.set_sensitive(False)
         clip_menu.add(comp_delete_item)
 
-    _add_separetor(clip_menu)
-
-    clip_menu.add(_get_clone_filters_menu_item(event, clip, track, callback))
-    clip_menu.add(_get_menu_item(_("Clear Filters"), callback, (clip, track, "clear_filters", event.x)))
-
-    _add_separetor(clip_menu)
+        _add_separetor(clip_menu)
     
     clip_menu.add(_get_clip_properties_menu_item(event, clip, track, callback))
     clip_menu.add(_get_clip_markers_menu_item(event, clip, track, callback))
@@ -2270,7 +2222,15 @@ def _get_edit_menu_item(event, clip, track, callback):
 
     lift_item = _get_menu_item(_("Lift"), callback, (clip, track, "lift", event.x))
     sub_menu.append(lift_item)
-    
+
+    if track.id != current_sequence().first_video_index:
+        _add_separetor(sub_menu)
+        if clip.sync_data != None:
+            sub_menu.add(_get_menu_item(_("Resync"), callback, (clip, track, "resync", event.x)))
+            sub_menu.add(_get_menu_item(_("Clear Sync Relation"), callback, (clip, track, "clear_sync_rel", event.x)))
+        else:
+            sub_menu.add(_get_menu_item(_("Select Sync Parent Clip..."), callback, (clip, track, "set_master", event.x)))
+
     _add_separetor(sub_menu)
     
     length_item = _get_menu_item(_("Set Clip Length..."), callback, (clip, track, "length", event.x))
@@ -2380,6 +2340,60 @@ def _get_mute_menu_item(event, clip, track, callback):
     menu_item.show()
     return menu_item
 
+def _get_audio_menu_item(event, clip, track, callback):
+    menu_item = Gtk.MenuItem(_("Audio"))
+    sub_menu = Gtk.Menu()
+    menu_item.set_submenu(sub_menu)
+
+    if track.type == appconsts.VIDEO:
+        active = True
+        if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
+            active = False
+        sub_menu.add(_get_menu_item(_("Split Audio"), callback,\
+                      (clip, track, "split_audio", event.x), active))
+        if track.id == current_sequence().first_video_index:
+            active = True
+        else:
+            active = False
+        if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
+            active = False
+        sub_menu.add(_get_menu_item(_("Split Audio Synched"), callback,\
+              (clip, track, "split_audio_synched", event.x), active))
+
+    if editorstate.display_all_audio_levels == False:
+        _add_separetor(clip_menu)
+
+        if clip.waveform_data == None:
+           sub_menu.add(_get_menu_item(_("Display Audio Level"), callback,\
+                      (clip, track, "display_waveform", event.x), True))
+        else:
+           sub_menu.add(_get_menu_item(_("Clear Waveform"), callback,\
+              (clip, track, "clear_waveform", event.x), True))
+
+    audio_sync_item = _get_menu_item(_("Select Clip to Audio Sync With..."), callback, (clip, track, "set_audio_sync_clip", event.x))
+    if utils.is_mlt_xml_file(clip.path) == True:
+        audio_sync_item.set_sensitive(False)
+    if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
+        audio_sync_item.set_sensitive(False)
+ 
+    sub_menu.add(audio_sync_item)
+
+
+    item = Gtk.MenuItem(_("Unmute"))
+    sub_menu.append(item)
+    item.connect("activate", callback, (clip, track, "mute_clip", (False)))
+    item.show()
+    item.set_sensitive(not(clip.mute_filter==None))
+
+    item = Gtk.MenuItem(_("Mute Audio"))
+    sub_menu.append(item)
+    item.connect("activate", callback, (clip, track, "mute_clip", (True)))
+    item.show()
+    item.set_sensitive(clip.mute_filter==None)
+
+    menu_item.show()
+    return menu_item
+    
 def _get_track_mute_menu_item(event, track, callback):
     menu_item = Gtk.MenuItem(_("Mute"))
     sub_menu = Gtk.Menu()
