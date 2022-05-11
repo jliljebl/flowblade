@@ -246,7 +246,7 @@ class ViewEditor(Gtk.Frame):
         # MLT Provides images in which R <-> B are swiched from what Cairo wants them,
         # so use numpy to switch them and to create a modifiable buffer for Cairo
         buf = np.frombuffer(screen_rgb_data, dtype=np.uint8)
-        buf.shape = (self.profile_h + 1, self.profile_w, 4) # +1 in h, seemeed to need it
+        buf.shape = (self.profile_h, self.profile_w, 4)
         out = np.copy(buf)
         r = np.index_exp[:, :, 0]
         b = np.index_exp[:, :, 2]

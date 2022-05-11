@@ -27,7 +27,8 @@ from gi.repository import Gdk
 try:
     import mlt7 as mlt
 except:
-    import mlt7 as mlt
+    import mlt
+    
 import os
 import time
 
@@ -304,7 +305,7 @@ class Player:
         frame.set("consumer_deinterlace", 1)
 
         # Now we are ready to get the image and save it.        
-        rgb = frame.get_image(int(mlt.mlt_image_rgb24a), int(self.profile.width()), int(self.profile.height()))
+        rgb = frame.get_image(int(mlt.mlt_image_rgba), int(self.profile.width()), int(self.profile.height()))
         return rgb
 
     def display_inside_sequence_length(self, new_seq_len):
