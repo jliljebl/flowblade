@@ -135,7 +135,8 @@ def k_pressed():
     if timeline_visible():
         trimmodes.set_no_edit_trim_mode()
     PLAYER().stop_playback()
-
+    updater.maybe_autocenter()
+    
 def l_pressed():
     if timeline_visible():
         trimmodes.set_no_edit_trim_mode()
