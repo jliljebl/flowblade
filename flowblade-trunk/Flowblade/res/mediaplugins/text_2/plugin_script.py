@@ -1,3 +1,8 @@
+"""
+    Copyright 2022 Janne Liljeblad, licenced under GPL3. 
+    See  <http://www.gnu.org/licenses/> for licence text.
+"""
+
 from gi.repository import Pango
 
 import fluxity

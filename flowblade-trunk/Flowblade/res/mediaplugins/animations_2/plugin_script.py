@@ -1,3 +1,7 @@
+"""
+    Copyright 2022 Janne Liljeblad, licenced under GPL3. 
+    See  <http://www.gnu.org/licenses/> for licence text.
+"""
 
 import cairo
 import random
@@ -5,6 +9,7 @@ import math
 
 import fluxity
 
+# We're using globals instead of fctx.set_data_obj() here for some data.
 cols = -1
 rows = -1
 shape_width = -1
@@ -19,6 +24,7 @@ def init_script(fctx):
     fctx.add_editor("Speed", fluxity.EDITOR_FLOAT_RANGE, (0.5, 0.1, 5.0))
     fctx.add_editor("Size", fluxity.EDITOR_FLOAT_RANGE, (50.0, 10.0, 300.0))
 
+    # Points used to draw hexagons.
     _points = []
     for i in range(0, 6):
         ang = 2 * math.pi * float(i)/ 6.0 + math.pi / 6.0

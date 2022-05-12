@@ -1,3 +1,7 @@
+"""
+    Copyright 2022 Janne Liljeblad, licenced under GPL3. 
+    See  <http://www.gnu.org/licenses/> for licence text.
+"""
 
 import cairo
 import numpy as np
@@ -6,7 +10,6 @@ import math
 
 import fluxity
 
-# ----------------------- fluxity funcs
 def init_script(fctx):
     fctx.set_name("Floating Balls")
     fctx.set_author("Janne Liljeblad")
@@ -26,6 +29,7 @@ def init_render(fctx):
     # ball positions color speeds in different rendering processes.
     random.seed(fctx.get_editor_value("Random Seed"))
 
+    # Ball colors data structure
     hue = fctx.get_editor_value("Hue")
     hr, hg, hb, alpha = hue
     fctx.set_data_obj("hue_tuple", hue)
@@ -41,6 +45,7 @@ def init_render(fctx):
         color_array = array
     fctx.set_data_obj("ball_colors", ball_colors)
 
+    # Ball animations data structure
     ball_data = []
     number_of_balls = fctx.get_editor_value("Number of Items")
     speed = fctx.get_editor_value("Speed")
@@ -68,6 +73,7 @@ def init_render(fctx):
 def render_frame(frame, fctx, w, h):
     cr = fctx.get_frame_cr()
 
+    # Draw bg
     bg_color = cairo.SolidPattern(*fctx.get_data_obj("hue_tuple"))
     ball_colors = fctx.get_data_obj("ball_colors")
     ball_data = fctx.get_data_obj("ball_data")
@@ -76,12 +82,13 @@ def render_frame(frame, fctx, w, h):
     cr.rectangle(0, 0, w, h)
     cr.fill()
 
+    # Draw balls
     number_of_balls = fctx.get_editor_value("Number of Items")
     size_max = fctx.get_data_obj("size_max")
     path_start_x = - size_max
     path_end_x =  w + size_max
     path_len = path_end_x - path_start_x
-    SPEED_NORM_PER_FRAME = 15.0 / float(w) 
+    SPEED_NORM_PER_FRAME = 15.0 / float(w) # Speed value 1.0 gets 15 pixels of movement per frame.
     for i in range(0, number_of_balls):
         path_pos, y, ball_speed, ball_size, color_index = ball_data[i]
         xc = ball_size / 2.0
