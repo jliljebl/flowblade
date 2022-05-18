@@ -1284,7 +1284,8 @@ class FluxityRangeRenderer(threading.Thread):
         self.frame_render_in_progress = True
         Gdk.threads_add_timeout(GLib.PRIORITY_HIGH_IDLE, 150, _preview_render_update, self)
 
-        proc_fctx_dict = fluxity.render_frame_sequence(self.script, _last_save_path, in_frame, out_frame, self.render_folder, self.profile_file_path, None, True)
+        # +1 for out_frame here because renderer thinks we are doing out exclusive but here code thinks we are doing out inclusive.
+        proc_fctx_dict = fluxity.render_frame_sequence(self.script, _last_save_path, in_frame, out_frame + 1, self.render_folder, self.profile_file_path, None, True)
 
         self.frame_render_in_progress = False
 
