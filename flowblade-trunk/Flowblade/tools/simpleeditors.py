@@ -39,7 +39,7 @@ import respaths
 import translations
 import utils
 
-# NOTE: These need to correspond exacty with fluxity.FluxityContext.<editor> values because we do not want to import anything into fluxity.py.    
+# NOTE: These need to correspond exacty with fluxity.FluxityContext.<editor> enum values because we do not want to import anything into fluxity.py.    
 SIMPLE_EDITOR_STRING = 0
 SIMPLE_EDITOR_VALUE = 1
 SIMPLE_EDITOR_FLOAT = 2

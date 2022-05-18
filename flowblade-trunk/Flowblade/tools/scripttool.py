@@ -88,6 +88,9 @@ _plugin_renderer = None
 
 _script_length = fluxity.DEFAULT_LENGTH
 
+_mark_in = -1
+_mark_out = -1
+
 _current_profile_name = None
 _current_profile_index = None # We necesserily would not need this too.
 
@@ -250,7 +253,7 @@ def _init_player_and_profile_data(profile_name):
 
 def _init_playback():
     _window.set_fps()
-    _window.pos_bar.update_display_from_producer(_player.producer)
+    _window.pos_bar.update_display_with_data(_player.producer, _mark_in, _mark_out)
     _window.set_monitor_sizes()
 
     _player.create_sdl_consumer()
@@ -258,14 +261,15 @@ def _init_playback():
 
 def _reinit_init_playback():
     tractor = _get_playback_tractor(_script_length)
-    tractor.mark_in  = -1
-    tractor.mark_out = -1
+    global _mark_in, _mark_out
+    _mark_in  = -1
+    _mark_out = -1
     _player.set_producer(tractor)
     _window.pos_bar.clear()
     _player.seek_frame(0)
 
 def _get_playback_tractor(length, range_frame_res_str=None, in_frame=-1, out_frame=-1):
-    # Create tractor and tracks
+    # Create tractor and tracks, in_frame
     tractor = mlt.Tractor()
     multitrack = tractor.multitrack()
     track0 = mlt.Playlist()
@@ -291,7 +295,7 @@ def _get_playback_tractor(length, range_frame_res_str=None, in_frame=-1, out_fra
         if out_frame < length - 1:
             bg_clip2 = mlt.Producer(profile, str(bg_path))
             track0.insert(bg_clip2, indx, out_frame + 1, length - 1)
-            
+                    
     return tractor
     
 #----------------------------------------------- session folders and files
@@ -441,46 +445,49 @@ def end_pressed():
     update_frame_displayers()
     
 def mark_in_pressed():
-    _player.producer.mark_in = _player.current_frame()
-    if _player.producer.mark_in > _player.producer.mark_out:
-        _player.producer.mark_out = -1
+    global _mark_in, _mark_out 
+    _mark_in = _player.current_frame()
+    if _mark_in > _mark_out:
+        _mark_out = -1
 
     _window.update_marks_display()
-    _window.pos_bar.update_display_from_producer(_player.producer)
+    _window.pos_bar.update_display_with_data(_player.producer, _mark_in, _mark_out)
     _window.update_render_status_info()
 
 def mark_out_pressed():
-    _player.producer.mark_out = _player.current_frame()
-    if _player.producer.mark_out < _player.producer.mark_in:
-        _player.producer.mark_in = -1
+    global _mark_in, _mark_out 
+    _mark_out = _player.current_frame()
+    if _mark_out < _mark_in:
+        _mark_in = -1
 
     _window.update_marks_display()
-    _window.pos_bar.update_display_from_producer(_player.producer)
+    _window.pos_bar.update_display_with_data(_player.producer, _mark_in, _mark_out)
     _window.update_render_status_info()
     
 def marks_clear_pressed():
-    _player.producer.mark_in = -1
-    _player.producer.mark_out = -1
+    global _mark_in, _mark_out 
+    _mark_in = -1
+    _mark_out = -1
 
     _window.update_marks_display()
-    _window.pos_bar.update_display_from_producer(_player.producer)
+    _window.pos_bar.update_display_with_data(_player.producer, _mark_in, _mark_out)
     _window.update_render_status_info()
 
 def to_mark_in_pressed():
-    if _player.producer.mark_in != -1:
-        _player.seek_frame(_player.producer.mark_in)
+    if _mark_in != -1:
+        _player.seek_frame(_mark_in)
     update_frame_displayers()
     
 def to_mark_out_pressed():
-    if _player.producer.mark_out != -1:
-        _player.seek_frame(_player.producer.mark_out)
+    if _mark_out != -1:
+        _player.seek_frame(_mark_out)
     update_frame_displayers()
 
 def update_frame_displayers():
     frame = _player.current_frame()
     _window.tc_display.set_frame(frame)
-    _window.pos_bar.update_display_from_producer(_player.producer)
-
+    _window.pos_bar.update_display_with_data(_player.producer, _mark_in, _mark_out)
+    
 def update_length(new_length):
     global _script_length
     _script_length = new_length
@@ -488,8 +495,8 @@ def update_length(new_length):
     _player.set_producer(new_playback_producer)
 
     _window.update_marks_display()
-    _window.pos_bar.update_display_from_producer(_player.producer)
-
+    _window.pos_bar.update_display_with_data(_player.producer, _mark_in, _mark_out)
+    
 def _ticker_event():
     frame = _player.current_frame()
     norm_pos = frame / float(_player.get_active_length()) 
@@ -1002,17 +1009,17 @@ class ScriptToolWindow(Gtk.Window):
 
     def update_marks_display(self):
 
-        if _player.producer.mark_in  == -1:
+        if _mark_in  == -1:
             self.mark_in_info.set_text("-")
         else:
-            self.mark_in_info.set_text(str(_player.producer.mark_in))
+            self.mark_in_info.set_text(str(_mark_in))
         
-        if _player.producer.mark_out == -1:
+        if _mark_out == -1:
             self.mark_out_info.set_text("-")
         else:
-            self.mark_out_info.set_text(str(_player.producer.mark_out))
+            self.mark_out_info.set_text(str(_mark_out))
 
-        if _player.producer.mark_in  == -1 or _player.producer.mark_out == -1:
+        if _mark_in  == -1 or _mark_out == -1:
             self.preview_range_button.set_sensitive(False)
         else:
             self.preview_range_button.set_sensitive(True)
@@ -1039,8 +1046,8 @@ class ScriptToolWindow(Gtk.Window):
             self.render_status_info.set_markup("<small>" + self.status_no_render  + "</small>")
             self.render_button.set_sensitive(False)
         else:
-            start =  _player.producer.mark_in
-            end = _player.producer.mark_out
+            start = _mark_in
+            end = _mark_out
             if start == -1:
                 start = 0
             if end == -1:
@@ -1257,36 +1264,33 @@ class FluxityRangeRenderer(threading.Thread):
         self.profile_file_path = profile_file_path
 
     def run(self):
-        
         Gdk.threads_enter()
         _window.out_view.get_buffer().set_text("Rendering...")
         Gdk.threads_leave()
-            
+        
         # GUI quarantees valid range here.
-        in_frame = _player.producer.mark_in
+        in_frame = _mark_in
         self.in_frame = in_frame
-        out_frame = _player.producer.mark_out
-        self.out_frame = out_frame
+        out_frame = _mark_out
+        self.out_frame = out_frame  
 
         # Delete old preview frames.
         old_files = glob.glob(self.render_folder + "/*")
         for f in old_files:
             os.remove(f)
-    
+
         # Poll rendering from GDK with timeout events to get access to GDK lock on updates 
         # to be able to draw immediately.
         self.frame_render_in_progress = True
         Gdk.threads_add_timeout(GLib.PRIORITY_HIGH_IDLE, 150, _preview_render_update, self)
-    
-        #start_time = time.time()
-        proc_fctx_dict = fluxity.render_frame_sequence(self.script, _last_save_path, in_frame, out_frame, self.render_folder, self.profile_file_path)        
-        #end_time = time.time()
+
+        proc_fctx_dict = fluxity.render_frame_sequence(self.script, _last_save_path, in_frame, out_frame, self.render_folder, self.profile_file_path, None, True)
 
         self.frame_render_in_progress = False
 
         # Get error and log messages.
         error_msg, log_msg = _get_range_render_messages(proc_fctx_dict)
-        
+
         if error_msg == None:
             frame_file = proc_fctx_dict["0"] # First written file saved here.
             resource_name_str = utils.get_img_seq_resource_name(frame_file)
@@ -1375,8 +1379,8 @@ class FluxityPluginRenderer(threading.Thread):
         Gdk.threads_leave()
         
         # Get render data.
-        in_frame =  _player.producer.mark_in
-        out_frame = _player.producer.mark_out
+        in_frame = _mark_in
+        out_frame = _mark_out
         if in_frame == -1:
             in_frame = 0
         if out_frame == -1:

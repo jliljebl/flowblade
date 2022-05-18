@@ -131,6 +131,23 @@ class PositionBar:
 
         self.widget.queue_draw()
 
+    def update_display_with_data(self, producer, mark_in, mark_out):
+        self.producer = producer
+        length = producer.get_length() # Get from MLT
+        self.length = length 
+        try:
+            self.mark_in_norm = float(mark_in) / length
+            self.mark_out_norm = float(mark_out) / length
+            frame_pos = producer.frame()
+            norm_pos = float(frame_pos) / length
+            self._pos = self._get_panel_pos(norm_pos)
+        except ZeroDivisionError:
+            self.mark_in_norm = 0
+            self.mark_out_norm = 0
+            self._pos = self._get_panel_pos(0)
+
+        self.widget.queue_draw()
+        
     def clear(self):
         self.mark_in_norm = -1.0 # program length normalized
         self.mark_out_norm = -1.0

@@ -14,8 +14,12 @@ ANIMATION_BY_LINE = 2
 def init_script(fctx):
     fctx.set_name("Text")
     fctx.set_author("Janne Liljeblad")
+    fctx.add_editor("Text", fluxity.EDITOR_TEXT_AREA, "Lorem ipsum dolor sit amet")
     fctx.add_editor("Pos X", fluxity.EDITOR_INT, 500)
     fctx.add_editor("Pos Y", fluxity.EDITOR_INT, 500)
+    fctx.add_editor("Font", fluxity.EDITOR_PANGO_FONT, fluxity.EDITOR_PANGO_FONT_DEFAULT_VALUES)
+    fctx.add_editor("Line Gap", fluxity.EDITOR_INT, 5)
+    fctx.add_editor("Lines Delay Frames", fluxity.EDITOR_INT_RANGE, (0, 1, 50))
     fctx.add_editor("Animation Type In", fluxity. EDITOR_OPTIONS, \
                     (0,["From Left Clipped", "From Right Clipped", "From Up Clipped", \
                         "From Down Clipped", "From Left", "From Right", "From Up", \
@@ -32,9 +36,7 @@ def init_script(fctx):
     fctx.add_editor("Frames Out", fluxity.EDITOR_INT, 10)
     fctx.add_editor("Steps Out", fluxity.EDITOR_INT_RANGE, (3, 2, 10))
     fctx.add_editor("Fade Out", fluxity. EDITOR_OPTIONS, (0,["Off", "Linear", "Smooth",  "Fast Start", "Slow Start", "Stepped"]))
-    fctx.add_editor("Font", fluxity.EDITOR_PANGO_FONT, fluxity.EDITOR_PANGO_FONT_DEFAULT_VALUES)
-    fctx.add_editor("Text", fluxity.EDITOR_TEXT, "Line of text.")
-
+    
 def init_render(fctx):
     # Get editor values
     font_data = fctx.get_editor_value("Font")
@@ -42,7 +44,10 @@ def init_render(fctx):
 
     x = fctx.get_editor_value("Pos X")
     y = fctx.get_editor_value("Pos Y") 
-    
+
+    line_gap = fctx.get_editor_value("Line Gap") 
+    line_delay = fctx.get_editor_value("Lines Delay Frames")
+
     frames_in = fctx.get_editor_value("Frames In")
     frames_out = fctx.get_editor_value("Frames Out")
     
@@ -58,15 +63,24 @@ def init_render(fctx):
     fade_out_type = fctx.get_editor_value("Fade Out")
     out_anim_data = (animation_out_type, movement_out_type, steps_out, fade_out_type)
     
-    # Create linetext object
-    linetext = LineText(text, font_data, (x, y), in_anim_data, frames_in, out_anim_data, frames_out)
-    fctx.set_data_obj("linetext", linetext)
+    # Create linetexts objects
+    lines = text.splitlines()
+    linetexts = []
+    for i, text in enumerate(lines):
+        line_info = (i, line_gap, line_delay) 
+        linetext = LineText(text, font_data, (x, y), line_info, in_anim_data, frames_in, out_anim_data, frames_out)
+        linetexts.append(linetext)
+    fctx.set_data_obj("linetexts", linetexts)
 
 def render_frame(frame, fctx, w, h):
     cr = fctx.get_frame_cr()
 
-    linetext = fctx.get_data_obj("linetext")
-    linetext.draw_text(fctx, frame, cr)
+    linetexts = fctx.get_data_obj("linetexts")
+    for linetext in linetexts:
+        linetext.create_data(fctx, cr)
+        
+    for linetext in linetexts:
+        linetext.draw_text(fctx, frame, cr)
 
 
 class LineText:
@@ -96,10 +110,11 @@ class LineText:
     ZOOM_ANIMATIONS = [ZOOM_IN, ZOOM_OUT]
     CLIPPED_ANIMATIONS = [FROM_LEFT_CLIPPED, FROM_RIGHT_CLIPPED, FROM_UP_CLIPPED, FROM_DOWN_CLIPPED]
         
-    def __init__(self, text, font_data, pos, animation_in_data, in_frames, animation_out_data, out_frames):
+    def __init__(self, text, font_data, pos, line_info, animation_in_data, in_frames, animation_out_data, out_frames):
         self.text = text
         self.font_data = font_data
         self.pos = pos
+        self.line_index, self.line_gap, self.line_delay = line_info
         self.animation_type_in, self.movement_type_in, self.steps_in, self.fadein_type = animation_in_data
         self.animation_type_out, self.movement_type_out, self.steps_out, self.fadeout_type = animation_out_data
         self.in_frames = in_frames
@@ -205,8 +220,12 @@ class LineText:
 
     def _get_in_animation_affine_data(self, fctx):
         static_x, static_y = self.pos
-        lw, lh = self.line_layout.get_pixel_size() # Get line size
-    
+        lw, lh = self.pixel_size # Get line size
+
+        # Get line y position
+        for line_index in range(self.line_index):
+            static_y = static_y + lh + self.line_gap
+            
         screen_w = fctx.get_profile_property(fluxity.PROFILE_WIDTH)
         screen_h = fctx.get_profile_property(fluxity.PROFILE_HEIGHT)
         
@@ -276,7 +295,11 @@ class LineText:
     def _get_out_animation_affine_data(self, fctx):
         static_x, static_y = self.pos
         lw, lh = self.line_layout.get_pixel_size() # Get line size
-    
+
+        # Get line y position
+        for line_index in range(self.line_index):
+            static_y = static_y + lh + self.line_gap
+                
         screen_w = fctx.get_profile_property(fluxity.PROFILE_WIDTH)
         screen_h = fctx.get_profile_property(fluxity.PROFILE_HEIGHT)
         
@@ -401,18 +424,25 @@ class LineText:
             value = start_val + step_value * i
             animated_value.add_keyframe_at_frame(frame, value, fluxity.KEYFRAME_DISCRETE)
         animated_value.add_keyframe_at_frame(start_frame + length, end_val, fluxity.KEYFRAME_DISCRETE) # maybe KEYFRAME_LINEAR but should not make difference.
-         
-    def draw_text(self, fctx, frame, cr):
+
+    def create_data(self, fctx, cr):
+        # We need cairo.Context available to create layout and do calculations.
+        # So we have do this on first frame when calling render_frame(frame, fctx, w, h),
+        # we can't do it in fluxity method init_render(fctx).
+        if self.affine != None:
+            return
+        
         # Create line layouts.
         self.line_layout = fctx.create_text_layout(self.font_data)
         self.line_layout.create_pango_layout(cr, self.text)
 
-        if self.affine == None:
-            self._create_animations(fctx) # We need cairo context and layout available 
-                                          # to do calculations and have do this on first frame.
+        self._create_animations(fctx)
 
+        self.pixel_size = self.line_layout.get_pixel_size() 
+        
+    def draw_text(self, fctx, frame, cr):
         static_x, static_y = self.pos
-        lw, lh = self.line_layout.get_pixel_size() # Get line size
+        lw, lh = self.pixel_size # Get line size
 
         # NEED TO USE FRAME DATA HERE
         if self.animation_type_in in LineText.CLIPPED_ANIMATIONS:

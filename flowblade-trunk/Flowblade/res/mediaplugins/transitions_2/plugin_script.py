@@ -14,16 +14,16 @@ rows = -1
 shape_width = -1
 shape_height = -1
 
-SPEED = 0.5
+SPEED = 0.3
 
 def init_script(fctx):
     fctx.set_name("Hex Overlay")
     fctx.set_author("Janne Liljeblad")
     
-    fctx.add_editor("Length", fluxity.EDITOR_FLOAT_RANGE, (15, 4, 100))
-    fctx.add_editor("Hue", fluxity.EDITOR_COLOR, (0.131, 0.0147, 0.163, 1.0))
-    fctx.add_editor("Hue Change", fluxity.EDITOR_FLOAT_RANGE, (0.5, 0.1, 5.0))
-    fctx.add_editor("Size", fluxity.EDITOR_FLOAT_RANGE, (50.0, 10.0, 300.0))
+    fctx.add_editor("Length", fluxity.EDITOR_FLOAT_RANGE, (40, 4, 100))
+    fctx.add_editor("Hue", fluxity.EDITOR_COLOR, (0.25, 0.66, 0.64, 1.0))
+    fctx.add_editor("Hue Variablity", fluxity.EDITOR_FLOAT_RANGE, (0.4, 0.1, 5.0))
+    fctx.add_editor("Size", fluxity.EDITOR_FLOAT_RANGE, (150.0, 80.0, 300.0))
     fctx.add_editor("Random Seed", fluxity.EDITOR_INT, 42)
  
     _points = []
@@ -56,7 +56,7 @@ def init_render(fctx):
     deltas = []
     appearance_positions = []
     delta_size = 0.03 * SPEED
-    hue_change_size = 0.1 * fctx.get_editor_value("Hue Change")
+    hue_change_size = 0.1 * fctx.get_editor_value("Hue Variablity")
 
     for i in range(0, number_hex):
         color_positions.append(random.uniform(-1.0, 1.0))
@@ -86,7 +86,7 @@ def render_frame(frame, fctx, w, h):
 
     x0 = -size / 2.0
     y0 = -size / 2.0
-    hue_change_anim_range = 0.1 * fctx.get_editor_value("Hue Change")
+    hue_change_anim_range = 0.1 * fctx.get_editor_value("Hue Variablity")
 
     half_len = fctx.get_data_obj("length") / 2
     if frame <= half_len:
