@@ -1371,20 +1371,21 @@ def get_script_default_edit_data(script, script_file, out_folder, profile_file_p
     """
     
     # Init script and context.
-    error_msg, results = _init_script_and_context(script, script_file, out_folder, profile_file_path)
-    if error_msg != None:
-        results_dict[str(FLUXITY_ERROR_MSG) ] = str(error_msg)
-        result_queue.put(results_dict)
-        return (error_msg, None)
+    try:
+        error_msg, results = _init_script_and_context(script, script_file, out_folder, profile_file_path)
+        if error_msg != None:
+            return (error_msg, None)
 
-    fscript, fctx = results
+        fscript, fctx = results
 
-    # Execute script to write frame sequence.
-    fctx.priv_context.current_method = METHOD_INIT_SCRIPT
-    fscript.call_init_script(fctx)
-    
-    data_json = fctx.get_script_data()
-    edit_data = json.loads(data_json) # we want this as Python dict
+        # Execute script to write frame sequence.
+        fctx.priv_context.current_method = METHOD_INIT_SCRIPT
+        fscript.call_init_script(fctx)
+        
+        data_json = fctx.get_script_data()
+        edit_data = json.loads(data_json) # we want this as Python dict
+    except Exception as e:
+        return (str(e) + traceback.format_exc(6,True), None)
                     
     return (None, edit_data)
             

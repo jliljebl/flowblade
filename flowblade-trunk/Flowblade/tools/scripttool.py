@@ -1310,10 +1310,11 @@ class FluxityRangeRenderer(threading.Thread):
         frames_folder = ccrutils.get_render_folder_for_session_id(SCRIPT_TOOL_SESSION_ID)
         
         err_msg, edit_data = fluxity.get_script_default_edit_data(self.script, tmp_script_file, frames_folder, self.profile_file_path)
-        #print(err_msg, edit_data, type(edit_data))
-        Gdk.threads_enter()
-        _window.out_view.get_buffer().set_text(str(edit_data))
-        Gdk.threads_leave()
+        if err_msg != None:
+            Gdk.threads_enter()
+            _show_error(err_msg)
+            Gdk.threads_leave()
+            return
 
         _launch_headless_render(SCRIPT_TOOL_SESSION_ID, tmp_script_file, edit_data, frames_folder, in_frame, out_frame + 1)
 
@@ -1360,6 +1361,14 @@ class FluxityRangeRenderer(threading.Thread):
             Gdk.threads_leave()
         """
 
+def _show_error(error_msg):
+    _window.out_view.get_buffer().set_text(error_msg)
+    _window.media_info.set_markup("<small>" + _("No Preview") +"</small>")
+    _window.pos_bar.preview_range = None
+    _window.monitors_switcher.set_visible_child_name(CAIRO_DRAW_MONITOR)
+    _window.monitors_switcher.queue_draw()
+    _window.preview_monitor.queue_draw()
+    
     
 def _preview_render_update(render_thread):
     print("_preview_render_update")

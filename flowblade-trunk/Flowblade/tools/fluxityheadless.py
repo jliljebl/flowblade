@@ -199,7 +199,15 @@ class FluxityHeadlessRunnerThread(threading.Thread):
                                                           editors_data_json,
                                                           True)
         ccrutils.write_range_render_data(proc_fctx_dict)
-
+        
+        # Exit on error without waiting frame render to complete.
+        error_msg, log_msg = self.get_range_render_messages(proc_fctx_dict)
+        if error_msg != None:
+            ccrutils.write_completed_message()
+            _frame_range_update_thread.abort = True
+            return
+            
+        # Wait all frames to be rendered
         while len(os.listdir(rendered_frames_folder)) != render_length:
             if self.abort == True:
                 _frame_range_update_thread.abort = True
@@ -264,7 +272,20 @@ class FluxityHeadlessRunnerThread(threading.Thread):
         msg = "2 " + str(int(fraction * self.length)) + " " + str(self.length) + " " + str(elapsed)
         ccrutils.write_status_message(msg)
 
+    def get_range_render_messages(self, proc_fctx_dict):
+        # Get error and log messages.
+        if fluxity.FLUXITY_ERROR_MSG in proc_fctx_dict.keys():
+            error_msg = proc_fctx_dict[fluxity.FLUXITY_ERROR_MSG]
+        else:
+            error_msg = None
 
+        if fluxity.FLUXITY_LOG_MSG in proc_fctx_dict.keys():
+            log_msg = proc_fctx_dict[fluxity.FLUXITY_LOG_MSG]
+        else:
+            log_msg = None
+
+        return (error_msg, log_msg)
+    
 class FrameRangeUpdateThread(threading.Thread):
 
     def __init__(self, rendered_frames_folder, render_length):
