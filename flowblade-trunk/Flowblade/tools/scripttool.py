@@ -34,6 +34,7 @@ try:
 except:
     import mlt7 as mlt
 import os
+import pickle
 import shutil
 import subprocess
 import sys
@@ -43,10 +44,12 @@ import webbrowser
 import appconsts
 import atomicfile
 import cairoarea
+import ccrutils
 import dialogutils
 import editorstate
 import editorpersistance
 import fluxity
+import fluxityheadless
 import gui
 import guicomponents
 import guiutils
@@ -67,6 +70,7 @@ import threading
 import userfolders
 import utils
 
+SCRIPT_TOOL_SESSION_ID = "scripttool"
 
 MONITOR_WIDTH = 500
 MONITOR_HEIGHT = 300 # initial value, this gets changed when material is loaded
@@ -386,7 +390,7 @@ def _load_script(filename):
         
 #-------------------------------------------------- menu
 def _hamburger_menu_callback(widget, msg):
-    global _last_save_path
+    global _last_save_path, _plugin_script_path
     if msg == "load_script":
         load_script_dialog(_load_script_dialog_callback)
     elif msg == "save_script":
@@ -404,10 +408,12 @@ def _hamburger_menu_callback(widget, msg):
         url = "file://" + respaths.FLUXITY_API_DOC
         webbrowser.open(url)
     else:
+        # msg is folder for plugin data
         script_text = mediaplugin.get_plugin_code(msg)
         _window.script_view.get_buffer().set_text(script_text)
         _window.set_title(_window.tool_name)
         _last_save_path = None
+        _plugin_script_path = mediaplugin.get_plugin_script_path(msg)
         _reinit_init_playback()
         
 def _get_menu_item(text, callback, data, sensitive=True):
@@ -1291,16 +1297,29 @@ class FluxityRangeRenderer(threading.Thread):
         for f in old_files:
             os.remove(f)
 
-        # Poll rendering from GDK with timeout events to get access to GDK lock on updates 
-        # to be able to draw immediately.
-        self.frame_render_in_progress = True
-        Gdk.threads_add_timeout(GLib.PRIORITY_HIGH_IDLE, 150, _preview_render_update, self)
-    
-        # +1 for out_frame here because renderer thinks we are doing out exclusive but here code thinks we are doing out inclusive.
-        proc_fctx_dict = fluxity.render_frame_sequence(self.script, _last_save_path, in_frame, out_frame + 1, self.render_folder, self.profile_file_path, None, True)
+        ccrutils.init_session_folders(SCRIPT_TOOL_SESSION_ID)
         
-        self.frame_render_in_progress = False
+        tmp_script_file = ccrutils.get_session_folder(SCRIPT_TOOL_SESSION_ID) + "/temp_script"
+        with atomicfile.AtomicFileWriter(tmp_script_file, "w") as afw:
+            write_file = afw.get_file()
+            f = afw.get_file()
+            f.write(self.script)
+        
+            print(self.script, type(self.script))
+            
+        frames_folder = ccrutils.get_render_folder_for_session_id(SCRIPT_TOOL_SESSION_ID)
+        
+        err_msg, edit_data = fluxity.get_script_default_edit_data(self.script, tmp_script_file, frames_folder, self.profile_file_path)
+        #print(err_msg, edit_data, type(edit_data))
+        Gdk.threads_enter()
+        _window.out_view.get_buffer().set_text(str(edit_data))
+        Gdk.threads_leave()
 
+        _launch_headless_render(SCRIPT_TOOL_SESSION_ID, tmp_script_file, edit_data, frames_folder, in_frame, out_frame + 1)
+
+        Gdk.threads_add_timeout(GLib.PRIORITY_HIGH_IDLE, 150, _preview_render_update, self)
+
+        """
         # Get error and log messages.
         error_msg, log_msg = _get_range_render_messages(proc_fctx_dict)
 
@@ -1339,23 +1358,72 @@ class FluxityRangeRenderer(threading.Thread):
             _window.preview_monitor.queue_draw()
 
             Gdk.threads_leave()
+        """
 
+    
 def _preview_render_update(render_thread):
-    frame = render_thread.in_frame + len(os.listdir(render_thread.render_folder))
+    print("_preview_render_update")
+    completed, step, frame_count, progress = _get_render_status(    SCRIPT_TOOL_SESSION_ID, 
+                                                                    render_thread.in_frame,
+                                                                    render_thread.out_frame)
+    print(completed, step, frame_count, progress)
+    if step == -1:
+        # no info available yet.
+        return True
 
-    _window.media_info.set_markup("<small>" + _("Rendered frame ") + str(frame) + "</small>")
-    _window.pos_bar.preview_range = (render_thread.in_frame, frame)
-    _window.pos_bar.widget.queue_draw()
+    if completed == True:
+        _render_complete(render_thread)
+        return False # This stops repeated calls to this function.
+    else:
+        frame = render_thread.in_frame + frame_count
 
-    if render_thread.frame_render_in_progress == False:
-        frame = render_thread.out_frame
         _window.media_info.set_markup("<small>" + _("Rendered frame ") + str(frame) + "</small>")
         _window.pos_bar.preview_range = (render_thread.in_frame, frame)
         _window.pos_bar.widget.queue_draw()
-        return False # This stops repeated calls to this function.
-    else:
         return True # Function will be called again.
-                
+
+def _render_complete(render_thread):
+        # Get error and log messages.
+        proc_fctx_dict = ccrutils.read_range_render_data(SCRIPT_TOOL_SESSION_ID)
+        error_msg, log_msg = _get_range_render_messages(proc_fctx_dict)
+
+        if error_msg == None:
+            print("_render_complete, error_msg == None")
+            frame_file = proc_fctx_dict["0"] # First written file saved here.
+            in_frame, out_frame = render_thread.in_frame, render_thread.out_frame
+            resource_name_str = utils.get_img_seq_resource_name(frame_file)
+            frames_folder = ccrutils.get_render_folder_for_session_id(SCRIPT_TOOL_SESSION_ID)
+            range_resourse_mlt_path = frames_folder + "/" + resource_name_str
+            
+            new_playback_producer = _get_playback_tractor(_script_length, range_resourse_mlt_path, in_frame, out_frame)
+            _player.set_producer(new_playback_producer)
+            _player.seek_frame(in_frame)
+
+            _window.pos_bar.preview_range = (in_frame, out_frame)
+            _window.pos_bar.update_display_with_data(new_playback_producer, in_frame, out_frame)
+
+            _window.monitors_switcher.set_visible_child_name(MLT_PLAYER_MONITOR)
+            _window.monitors_switcher.queue_draw()
+            _window.preview_monitor.queue_draw()
+            _window.pos_bar.widget.queue_draw()
+
+            out_text = "Range preview rendered for frame range " + str(in_frame) + " - " + str(out_frame) 
+            if log_msg != None:
+                out_text = out_text + "\nLOG:\n" + log_msg
+                        
+            _window.out_view.get_buffer().set_text(out_text)
+            _window.media_info.set_markup("<small>" + _("Range preview for frame range ") + str(in_frame) + " - " + str(out_frame)  +"</small>")
+            print("END of _render_complete, error_msg == None")
+        else:
+
+                    
+            _window.out_view.get_buffer().set_text(error_msg)
+            _window.media_info.set_markup("<small>" + _("No Preview") +"</small>")
+            _window.pos_bar.preview_range = None
+            _window.monitors_switcher.set_visible_child_name(CAIRO_DRAW_MONITOR)
+            _window.monitors_switcher.queue_draw()
+            _window.preview_monitor.queue_draw()
+            
         
 class FluxityPluginRenderer(threading.Thread):
 
@@ -1544,3 +1612,61 @@ def _output_render_update(render_thread):
     else:
         return True # Function will be called again.
 
+def _launch_headless_render(session_id, script_path, edit_data, frames_folder, range_in, range_out):
+
+    ccrutils.init_session_folders(session_id)
+    fluxityheadless.clear_flag_files(session_id)
+
+    # Delete old rendered frames.
+    old_files = glob.glob(frames_folder + "/*")
+    for f in old_files:
+        os.remove(f)
+            
+    # We need data to be available for render process, 
+    # create video_render_data object with default values if not available.
+    profile = mltprofiles.get_profile(_current_profile_name)
+    render_data = toolsencoding.create_container_clip_default_render_data_object(profile)
+    render_data.do_video_render = False 
+
+    fluxityheadless.set_render_data(session_id, render_data)
+
+    ccrutils.write_misc_session_data(session_id, "fluxity_plugin_edit_data", edit_data)
+    
+    args = ("session_id:" + session_id, 
+            "script:" + script_path,
+            "clip_path:" + "whatever", # "clip_path:" seems to be dead code, look to remove.
+            "range_in:" + str(range_in),
+            "range_out:"+ str(range_out),
+            "profile_desc:" + _current_profile_name.replace(" ", "_"),  # Here we have our own string space handling, maybe change later..
+            "fluxity_frame_offset:" + str(0)) # "fluxity_frame_offset:" seems to be dead code, look to remove
+
+    # Create command list and launch process.
+    command_list = [sys.executable]
+    command_list.append(respaths.LAUNCH_DIR + "flowbladefluxityheadless")
+    for arg in args:
+        command_list.append(arg)
+
+    subprocess.Popen(command_list)
+
+def _get_render_status(session_id, render_range_in, render_range_out):
+    # Returns tuple (completed, step, progress)
+    if fluxityheadless.session_render_complete(session_id) == True:
+        return (True, None, None, None)
+    else:
+        status = fluxityheadless.get_session_status(session_id)
+        if status != None:
+            step, frame, length, elapsed = status
+            frame = int(frame)
+            render_length = render_range_out - render_range_in
+            progress = float(frame)/float(render_length)
+
+            # Hacks to fix how gmiplayer.FramesRangeWriter works.
+            # We would need to patch to G'mic Tool to not need this but this is easier.
+            if progress < 0.0:
+                progress = 1.0
+            elif progress > 1.0:
+                progress = 1.0
+                    
+            return (False, step, frame, progress)
+        else:
+            return (False, -1, -1, -1)

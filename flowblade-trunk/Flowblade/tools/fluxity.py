@@ -1354,7 +1354,40 @@ def _render_process_launch(render_data, proc_info):
         fctx.error = str(e) + traceback.format_exc(6,True) 
         results_dict[str(FLUXITY_ERROR_MSG)] = str(fctx.error)
         result_queue.put(results_dict)
-        
+
+def get_script_default_edit_data(script, script_file, out_folder, profile_file_path):
+    """
+    **script(str)** Script to be rendered as a string.
+    
+    **script_file(str)** Absolut path to file containing script. If this is not provided methods some like *FluxityContext.get_script_dir()* will not function as intended.
+    
+    **out_folder(str)** Path to folder where rendered frame will be saved.
+    
+    **profile_file_path(str)** Path to a file containing a file describing MLT profile used to when rendering the script.
+
+    Renders a single frame from provided script.
+    
+    **Returns:** (tuple) Tuple of error message and Python dict representation of Json object created with *FluxityContext.get_script_data()* 
+    """
+    
+    # Init script and context.
+    error_msg, results = _init_script_and_context(script, script_file, out_folder, profile_file_path)
+    if error_msg != None:
+        results_dict[str(FLUXITY_ERROR_MSG) ] = str(error_msg)
+        result_queue.put(results_dict)
+        return (error_msg, None)
+
+    fscript, fctx = results
+
+    # Execute script to write frame sequence.
+    fctx.priv_context.current_method = METHOD_INIT_SCRIPT
+    fscript.call_init_script(fctx)
+    
+    data_json = fctx.get_script_data()
+    edit_data = json.loads(data_json) # we want this as Python dict
+                    
+    return (None, edit_data)
+            
 def _init_script_and_context(script, script_file, out_folder, profile_file_path):
     try:
 
@@ -1368,8 +1401,6 @@ def _init_script_and_context(script, script_file, out_folder, profile_file_path)
     except Exception as e:
         msg = str(e)
         return (msg, None)
-
-
 
 # ---- Debug helper
 def _prints_to_log_file(log_file):

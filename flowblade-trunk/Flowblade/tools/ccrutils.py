@@ -40,7 +40,7 @@ COMPLETED_MSG_FILE = "completed"
 STATUS_MSG_FILE = "status"
 ABORT_MSG_FILE = "abort"
 RENDER_DATA_FILE = "render_data"
-
+RANGE_RENDER_DATA_DICT = "proc_fctx_dict"
 
 _session_folder = None
 _clip_frames_folder_internal = None
@@ -121,6 +121,16 @@ def get_session_status_message(session_id):
         return msg
     except:
         return None
+
+def read_range_render_data(session_id):
+    try:
+        folder = _get_session_folder(session_id)
+        data_path = folder + "/" + RANGE_RENDER_DATA_DICT
+
+        proc_fctx_dict = utils.unpickle(data_path)
+        return proc_fctx_dict
+    except:
+        return None
         
 def abort_render(session_id):
     folder = _get_session_folder(session_id)
@@ -136,7 +146,13 @@ def abort_render(session_id):
         
 def _get_session_folder(session_id):
     return userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_DIR +  "/" + session_id
+
+def get_session_folder(session_id):
+    # scriptool.py atleast needs this, so we are giving it outside when needed, but mostly trying to keep use internal.
+    return userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_DIR +  "/" + session_id
     
+def get_render_folder_for_session_id(session_id):
+    return _get_session_folder(session_id) + RENDERED_FRAMES_DIR 
 
 # ------------------------------------------------------ headless session folders and files, used by render processes
 def init_session_folders(session_id):
@@ -218,7 +234,13 @@ def write_completed_message():
     with atomicfile.AtomicFileWriter(completed_msg_file, "w") as afw:
         script_file = afw.get_file()
         script_file.write(script_text)
-            
+
+def write_range_render_data(proc_fctx_dict):
+    out_file_path = session_folder() + "/" + RANGE_RENDER_DATA_DICT
+    with atomicfile.AtomicFileWriter(out_file_path, "wb") as afw:
+        outfile = afw.get_file()
+        pickle.dump(proc_fctx_dict, outfile)
+
 def load_render_data():
     global _render_data
     try:

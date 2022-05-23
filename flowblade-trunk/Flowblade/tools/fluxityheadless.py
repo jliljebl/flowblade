@@ -198,6 +198,7 @@ class FluxityHeadlessRunnerThread(threading.Thread):
                                                           profile_file_path, 
                                                           editors_data_json,
                                                           True)
+        ccrutils.write_range_render_data(proc_fctx_dict)
 
         while len(os.listdir(rendered_frames_folder)) != render_length:
             if self.abort == True:

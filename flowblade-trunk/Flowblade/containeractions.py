@@ -245,7 +245,7 @@ class AbstractContainerActionObject:
             return self.container_data.render_data.render_dir + appconsts.CC_PREVIEW_RENDER_DIR
 
     def get_container_program_id(self):
-        id_md_str = str(self.container_data.container_clip_uid) + str(self.container_data.container_type) + self.container_data.program + self.container_data.unrendered_media #
+        id_md_str = str(self.container_data.container_clip_uid) + str(self.container_data.container_type) + self.container_data.program + self.container_data.unrendered_media
         return hashlib.md5(id_md_str.encode('utf-8')).hexdigest() 
 
     def get_container_thumbnail_path(self):

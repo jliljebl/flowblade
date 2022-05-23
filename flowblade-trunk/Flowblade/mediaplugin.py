@@ -193,10 +193,12 @@ def _add_media_plugin():
         containerclip.create_renderered_fluxity_media_item(container_data, _current_plugin_data_object["length"]) 
 
 def get_plugin_code(plugin_folder):
-    script_file = respaths.MEDIA_PLUGINS_PATH + plugin_folder + "/plugin_script.py"
+    script_file = get_plugin_script_path(plugin_folder)
     args_file = open(script_file)
     return args_file.read()
         
+def get_plugin_script_path(plugin_folder):
+    return respaths.MEDIA_PLUGINS_PATH + plugin_folder + "/plugin_script.py"
 
 # --------------------------------------------------------- Window
 class AddMediaPluginWindow(Gtk.Window):
