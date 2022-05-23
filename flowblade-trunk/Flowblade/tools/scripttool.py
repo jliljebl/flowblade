@@ -140,7 +140,7 @@ def main(root_path, force_launch=False):
         editorstate.mlt_version = "0.0.99" # magic string for "not found"
 
     print("mlt.LIBMLT_VERSION", mlt.LIBMLT_VERSION)
- 
+  
     global _session_id
     _session_id = int(time.time() * 1000) # good enough
 
@@ -277,11 +277,12 @@ def _get_playback_tractor(length, range_frame_res_str=None, in_frame=-1, out_fra
 
     bg_path = respaths.FLUXITY_EMPTY_BG_RES_PATH
     profile = mltprofiles.get_profile(_current_profile_name)
-        
-    if range_frame_res_str == None:  # producer displaying 'not rendered' bg image
+    
+    # If no producer provided, create producer displaying bg image with plugin icon.
+    if range_frame_res_str == None:
         bg_clip = mlt.Producer(profile, str(bg_path))
         track0.insert(bg_clip, 0, 0, length - 1)
-    else:  # producer displaying frame sequence
+    else:  # Create producer displaying rendered frame sequence.
         indx = 0
         if in_frame > 0:
             bg_clip1 = mlt.Producer(profile, str(bg_path))
@@ -449,7 +450,7 @@ def mark_in_pressed():
     _mark_in = _player.current_frame()
     if _mark_in > _mark_out:
         _mark_out = -1
-
+    
     _window.update_marks_display()
     _window.pos_bar.update_display_with_data(_player.producer, _mark_in, _mark_out)
     _window.update_render_status_info()
@@ -529,7 +530,11 @@ def render_preview_frame():
     frame = _player.current_frame()
     
     _window.out_view.get_buffer().set_text("Rendering...")
-    
+
+    global _mark_in, _mark_out
+    _mark_in = -1
+    _mark_out = -1
+
     fctx = fluxity.render_preview_frame(script, _last_save_path, frame, get_session_folder(), _profile_file_path)
     _window.pos_bar.preview_range = None # frame or black for fail, no range anyway
         
@@ -538,6 +543,7 @@ def render_preview_frame():
         new_playback_producer = _get_playback_tractor(_script_length, fctx.priv_context.get_preview_frame_path() , 0, _script_length - 1)
         _player.set_producer(new_playback_producer)
         _player.seek_frame(frame)
+        _window.pos_bar.update_display_with_data(_player.producer, -1, -1)
 
         _window.monitors_switcher.set_visible_child_name(MLT_PLAYER_MONITOR)
 
@@ -552,6 +558,12 @@ def render_preview_frame():
         _window.out_view.get_buffer().set_text(out_text)
         _window.media_info.set_markup("<small>" + _("Preview for frame: ") + str(frame) + "</small>")
     else:
+        # Display not rendered 
+        #new_playback_producer = _get_playback_tractor(_script_length)
+        #_player.set_producer(new_playback_producer)
+        #_player.seek_frame(frame)
+        #_window.pos_bar.update_display_with_data(_player.producer, -1, -1)
+        
         _window.monitors_switcher.set_visible_child_name(CAIRO_DRAW_MONITOR)
         out_text = fctx.error
         if len(fctx.log_msg) > 0:
@@ -1283,10 +1295,10 @@ class FluxityRangeRenderer(threading.Thread):
         # to be able to draw immediately.
         self.frame_render_in_progress = True
         Gdk.threads_add_timeout(GLib.PRIORITY_HIGH_IDLE, 150, _preview_render_update, self)
-
+    
         # +1 for out_frame here because renderer thinks we are doing out exclusive but here code thinks we are doing out inclusive.
         proc_fctx_dict = fluxity.render_frame_sequence(self.script, _last_save_path, in_frame, out_frame + 1, self.render_folder, self.profile_file_path, None, True)
-
+        
         self.frame_render_in_progress = False
 
         # Get error and log messages.

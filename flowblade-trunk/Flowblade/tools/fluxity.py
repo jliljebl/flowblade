@@ -183,6 +183,7 @@ import math
 import multiprocessing
 import os
 from PIL import Image, ImageFilter
+import sys
 import traceback
 
 
@@ -334,27 +335,27 @@ class FluxityScript:
         Calls method *init_script()* on script.
         """
         try:
-          self.namespace['init_script'](fctx)
+            self.namespace['init_script'](fctx)
         except Exception as e:
-          _raise_fluxity_error("error calling function 'init_script()':" + str(e))
+            _raise_fluxity_error("error calling function 'init_script()':" + str(e))
 
     def call_init_render(self, fctx):
         """
         Calls method *init_render()* on script.
         """
         try:
-          self.namespace['init_render'](fctx)
+            self.namespace['init_render'](fctx)
         except Exception as e:
-          _raise_fluxity_error("error calling function 'init_render()':\n\n" + str(e))
+            _raise_fluxity_error("error calling function 'init_render()':\n\n" + str(e))
           
     def call_render_frame(self, frame, fctx, w, h):
         """
         Calls method *render_frame()* on script.
         """
         try:
-          self.namespace['render_frame'](frame, fctx, w, h)
+            self.namespace['render_frame'](frame, fctx, w, h)
         except Exception as e:
-          _raise_fluxity_error("error calling function 'render_frame()':\n\n" + str(e))
+            _raise_fluxity_error("error calling function 'render_frame()':\n\n" + str(e))
 
 
 # ----------------------------------------------------------  Data structure correcponding with mlt.Profile
@@ -589,7 +590,6 @@ class FluxityContext:
                 return selected_index
             return value
         except Exception as e:
-            print("get_editor_value() " + str(e) + traceback.format_exc(6,True))
             exception_msg = "No editor for name '" + name + "' found."
             _raise_fluxity_error(exception_msg)
 
@@ -712,7 +712,9 @@ class FluxityContextPrivate:
         self.method_name = {METHOD_INIT_SCRIPT:"init_script()", METHOD_INIT_RENDER:"init_render()", METHOD_RENDER_FRAME:"render_frame()"}
         
         self.repo = None
-        
+
+        self.process_id = None # Used for de-bugging, scripts normally would not access this.
+
     def load_profile(self, mlt_profile_path):
         lines = []
         with open(mlt_profile_path, "r") as f:
@@ -790,9 +792,10 @@ class PangoTextLayout:
         self.outline_width, self.shadow_on, self.shadow_color_rgb, self.shadow_opacity, \
         self.shadow_xoff, self.shadow_yoff, self.shadow_blur, self.gradient_color_rgba, \
         self.gradient_direction = font_data
-        self.font_desc = Pango.FontDescription(self.font_family + " " + self.font_face + " " + str(self.font_size))
+        self.font_desc = None # Pango.FontDescription(self.font_family + " " + self.font_face + " " + str(self.font_size))
         self.pango_layout = None
         self.opacity = 1.0 
+        self.pixel_size = None
         
     def create_pango_layout(self, cr, text):
         """
@@ -805,10 +808,23 @@ class PangoTextLayout:
         self.text = text
         self.pango_layout = PangoCairo.create_layout(cr)
         self.pango_layout.set_text(self.text, -1)
-        self.pango_layout.set_font_description(self.font_desc)
+        font_desc = Pango.FontDescription(self.font_family + " " + self.font_face + " " + str(self.font_size))
+        self.pango_layout.set_font_description(font_desc)
         self.pango_layout.set_alignment(self.alignment)
-        self.pixel_size = self.pango_layout.get_pixel_size()
+        if self.pixel_size == None:
+            logical_w, logical_h = self.pango_layout.get_size()
+            self.pixel_size = (logical_w / Pango.SCALE, logical_h / Pango.SCALE)
 
+    def get_pixel_size(self):
+        """             
+        Returns size of layout.
+
+        Before calling this PangoCairo layout object needs to creted *`PangoTextLayout.create_pango_layout()`* or *`PangoTextLayout.draw_layout()`.*
+        
+        **Returns:** (width, height) pixel size of layout.
+        """
+        return self.pixel_size 
+        
     def set_opacity(self, opacity):
         """
         **`opacity(float)`** Opacity in range 0.0 - 1.0.
@@ -942,16 +958,6 @@ class PangoTextLayout:
         
         cr.restore()
 
-    def get_pixel_size(self):
-        """             
-        Returns size of layout.
-
-        Before calling this PangoCairo layout object needs to creted *`PangoTextLayout.create_pango_layout()`* or *`PangoTextLayout.draw_layout()`.*
-        
-        **Returns:** (width, height) pixel size of layout.
-        """
-        return self.pixel_size 
-
     def get_pango_alignment(self):
         """             
         Returns alignment for his layout.
@@ -1058,7 +1064,6 @@ class AnimatedValue:
                 else: # KEYFRAME_DISCRETE
                     return kf_value
                     
-        print("AnimatedValue get_value() failed to find a value!")
         return None # We absolutely want to crash if somehow we hit this.
  
     def _get_smooth_value(self, i, frame):
@@ -1276,42 +1281,47 @@ def render_frame_sequence(script, script_file, in_frame, out_frame, out_folder, 
     if out_frame - in_frame < threads * 2:
         threads = 1
 
-    manager = multiprocessing.Manager()
-    proc_fctx_dict = manager.dict()
+    result_queue = multiprocessing.Queue()
+    
     jobs = []
     for i in range(threads):
         
         render_data = ( script, script_file, in_frame, out_frame, out_folder, \
                         profile_file_path, editors_data_json, start_out_from_frame_one)
         
-        proc_info = (i, threads, proc_fctx_dict)
+        proc_info = (i, threads, result_queue)
         p = multiprocessing.Process(target=_render_process_launch, args=(render_data, proc_info))
         jobs.append(p)
         p.start()
 
+    proc_fctx_dict = {}
     for proc in jobs:
+        results_dict = result_queue.get()
         proc.join()
+        proc_fctx_dict.update(results_dict)
 
     return proc_fctx_dict
         
 def _render_process_launch(render_data, proc_info):
-    script, script_file, in_frame, out_frame, out_folder, \
-    profile_file_path, editors_data_json, start_out_from_frame_one = render_data
-    
-    procnum, threads_count, proc_fctx_dict = proc_info
-    
+
     try:
+        script, script_file, in_frame, out_frame, out_folder, \
+        profile_file_path, editors_data_json, start_out_from_frame_one = render_data
+        
+        procnum, threads_count, result_queue = proc_info
+     
+        # Used to communicate to app what happened.
+        results_dict = {}
+        
         # Init script and context.
         error_msg, results = _init_script_and_context(script, script_file, out_folder, profile_file_path)
         if error_msg != None:
-            fake_fctx = FluxityEmptyClass()
-            fake_fctx.error = error_msg
-            proc_fctx_dict[procnum] = fake_fctx
+            results_dict[str(FLUXITY_ERROR_MSG) ] = str(error_msg)
+            result_queue.put(results_dict)
             return 
 
         fscript, fctx = results
 
-                    
         # Execute script to write frame sequence.
         fctx.priv_context.current_method = METHOD_INIT_SCRIPT
         fscript.call_init_script(fctx)
@@ -1321,11 +1331,12 @@ def _render_process_launch(render_data, proc_info):
             
         fctx.priv_context.current_method = METHOD_INIT_RENDER
         fscript.call_init_render(fctx)
-
+        
         fctx.priv_context.first_rendered_frame_path = None # Should be clear but let's make sure. 
         fctx.priv_context.current_method = METHOD_RENDER_FRAME
         fctx.priv_context.start_out_from_frame_one = start_out_from_frame_one
         fctx.priv_context.in_frame = in_frame
+        fctx.priv_context.process_id = procnum
         
         for frame in range(in_frame + procnum, out_frame, threads_count):
             fctx.priv_context.create_frame_surface(frame)
@@ -1333,14 +1344,16 @@ def _render_process_launch(render_data, proc_info):
             fscript.call_render_frame(frame, fctx, w, h)
             fctx.priv_context.write_out_frame()
 
-        proc_fctx_dict[str(procnum)] = str(fctx.priv_context.first_rendered_frame_path)
+        results_dict[str(procnum)] = str(fctx.priv_context.first_rendered_frame_path)
         if len(fctx.log_msg) > 0:
-            proc_fctx_dict[str(FLUXITY_LOG_MSG)] = str(fctx.log_msg)
+            results_dict[str(FLUXITY_LOG_MSG)] = str(fctx.log_msg)
         
+        result_queue.put(results_dict)
+                    
     except Exception as e:
-        fctx.error = str(e) + traceback.format_exc(6,True)
-        proc_fctx_dict[str(FLUXITY_ERROR_MSG)] = str(fctx.error)
-
+        fctx.error = str(e) + traceback.format_exc(6,True) 
+        results_dict[str(FLUXITY_ERROR_MSG)] = str(fctx.error)
+        result_queue.put(results_dict)
         
 def _init_script_and_context(script, script_file, out_folder, profile_file_path):
     try:
@@ -1357,5 +1370,15 @@ def _init_script_and_context(script, script_file, out_folder, profile_file_path)
         return (msg, None)
 
 
+
+# ---- Debug helper
+def _prints_to_log_file(log_file):
+    so = se = open(log_file, 'w', buffering=1)
+
+    sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', buffering=1)
+
+    os.dup2(so.fileno(), sys.stdout.fileno())
+    os.dup2(se.fileno(), sys.stderr.fileno())
+    
     
         

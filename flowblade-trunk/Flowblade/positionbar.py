@@ -125,7 +125,7 @@ class PositionBar:
             norm_pos = float(frame_pos) / length
             self._pos = self._get_panel_pos(norm_pos)
         except ZeroDivisionError:
-            self.mark_in_norm = 0
+            self.mark_in_norm = 0 # TODO: Both should be -1? Check.
             self.mark_out_norm = 0
             self._pos = self._get_panel_pos(0)
 
@@ -136,15 +136,18 @@ class PositionBar:
         length = producer.get_length() # Get from MLT
         self.length = length 
         try:
-            self.mark_in_norm = float(mark_in) / length
+            self.mark_in_norm = float(mark_in) / length # Diasables range if mark_in == -1 because self.mark_in_norm < 0
             self.mark_out_norm = float(mark_out) / length
             frame_pos = producer.frame()
             norm_pos = float(frame_pos) / length
             self._pos = self._get_panel_pos(norm_pos)
         except ZeroDivisionError:
-            self.mark_in_norm = 0
-            self.mark_out_norm = 0
+            self.mark_in_norm = -1
+            self.mark_out_norm = -1
             self._pos = self._get_panel_pos(0)
+
+        if self.mark_in_norm < 0 or self.mark_out_norm < 0:
+            self.preview_range = None
 
         self.widget.queue_draw()
         
