@@ -1299,13 +1299,12 @@ class FluxityRangeRenderer(threading.Thread):
 
         ccrutils.init_session_folders(SCRIPT_TOOL_SESSION_ID)
         
+        # Cteate temp script file from text area contents.
         tmp_script_file = ccrutils.get_session_folder(SCRIPT_TOOL_SESSION_ID) + "/temp_script"
         with atomicfile.AtomicFileWriter(tmp_script_file, "w") as afw:
             write_file = afw.get_file()
             f = afw.get_file()
             f.write(self.script)
-        
-            print(self.script, type(self.script))
             
         frames_folder = ccrutils.get_render_folder_for_session_id(SCRIPT_TOOL_SESSION_ID)
         
@@ -1318,48 +1317,7 @@ class FluxityRangeRenderer(threading.Thread):
 
         _launch_headless_render(SCRIPT_TOOL_SESSION_ID, tmp_script_file, edit_data, frames_folder, in_frame, out_frame + 1)
 
-        Gdk.threads_add_timeout(GLib.PRIORITY_HIGH_IDLE, 150, _preview_render_update, self)
-
-        """
-        # Get error and log messages.
-        error_msg, log_msg = _get_range_render_messages(proc_fctx_dict)
-
-        if error_msg == None:
-            frame_file = proc_fctx_dict["0"] # First written file saved here.
-            resource_name_str = utils.get_img_seq_resource_name(frame_file)
-            range_resourse_mlt_path = get_render_frames_dir() + "/" + resource_name_str
-            new_playback_producer = _get_playback_tractor(_script_length, range_resourse_mlt_path, in_frame, out_frame)
-            _player.set_producer(new_playback_producer)
-            _player.seek_frame(in_frame)
-
-            Gdk.threads_enter()
-            _window.pos_bar.preview_range = (in_frame, out_frame)
-
-            _window.monitors_switcher.set_visible_child_name(MLT_PLAYER_MONITOR)
-            _window.monitors_switcher.queue_draw()
-            _window.preview_monitor.queue_draw()
-            _window.pos_bar.widget.queue_draw()
-
-            out_text = "Range preview rendered for frame range " + str(in_frame) + " - " + str(out_frame) 
-            if log_msg != None:
-                out_text = out_text + "\nLOG:\n" + log_msg
-                        
-            _window.out_view.get_buffer().set_text(out_text)
-            _window.media_info.set_markup("<small>" + _("Range preview for frame range ") + str(in_frame) + " - " + str(out_frame)  +"</small>")
-
-            Gdk.threads_leave()
-        else:
-            Gdk.threads_enter()
-                    
-            _window.out_view.get_buffer().set_text(error_msg)
-            _window.media_info.set_markup("<small>" + _("No Preview") +"</small>")
-            _window.pos_bar.preview_range = None
-            _window.monitors_switcher.set_visible_child_name(CAIRO_DRAW_MONITOR)
-            _window.monitors_switcher.queue_draw()
-            _window.preview_monitor.queue_draw()
-
-            Gdk.threads_leave()
-        """
+        Gdk.threads_add_timeout(GLib.PRIORITY_HIGH_IDLE, 200, _preview_render_update, self)
 
 def _show_error(error_msg):
     _window.out_view.get_buffer().set_text(error_msg)
@@ -1371,11 +1329,9 @@ def _show_error(error_msg):
     
     
 def _preview_render_update(render_thread):
-    print("_preview_render_update")
     completed, step, frame_count, progress = _get_render_status(    SCRIPT_TOOL_SESSION_ID, 
                                                                     render_thread.in_frame,
                                                                     render_thread.out_frame)
-    print(completed, step, frame_count, progress)
     if step == -1:
         # no info available yet.
         return True
@@ -1397,7 +1353,6 @@ def _render_complete(render_thread):
         error_msg, log_msg = _get_range_render_messages(proc_fctx_dict)
 
         if error_msg == None:
-            print("_render_complete, error_msg == None")
             frame_file = proc_fctx_dict["0"] # First written file saved here.
             in_frame, out_frame = render_thread.in_frame, render_thread.out_frame
             resource_name_str = utils.get_img_seq_resource_name(frame_file)
@@ -1422,10 +1377,7 @@ def _render_complete(render_thread):
                         
             _window.out_view.get_buffer().set_text(out_text)
             _window.media_info.set_markup("<small>" + _("Range preview for frame range ") + str(in_frame) + " - " + str(out_frame)  +"</small>")
-            print("END of _render_complete, error_msg == None")
         else:
-
-                    
             _window.out_view.get_buffer().set_text(error_msg)
             _window.media_info.set_markup("<small>" + _("No Preview") +"</small>")
             _window.pos_bar.preview_range = None

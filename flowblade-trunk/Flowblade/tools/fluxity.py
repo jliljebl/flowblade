@@ -435,25 +435,26 @@ class FluxityContext:
         """
         **`name(str):`** name of script displayed to user.
         
-        Must be called in script method *`init_script()`*.
+        Sets name of the script displayed to the user. Must be called in script method *`init_script()`*.
         """
-        self.name = name
         self.priv_context.error_on_wrong_method("set_name()", METHOD_INIT_SCRIPT)
+        self.name = name
+
 
     def set_version(self, version):
         """
         **`version(int):`** version of script, use increasing integer numbering. Default value is *1*.
         
-        Must be called in script method *`init_script()`*.
+        Sets version of script. Must be called in script method *`init_script()`*.
         """
-        self.version = version
         self.priv_context.error_on_wrong_method("set_version()", METHOD_INIT_SCRIPT)
+        self.version = version
 
     def set_author(self, author):
         """
         **`author(str):`** name of script creator.
         
-        Must be called in script method *init_script()*.
+        Sets author of the script. Must be called in script method *init_script()*.
         """
         self.author = author
 
@@ -538,10 +539,10 @@ class FluxityContext:
         
         Must be called in script method *init_script()*.
         """
+        self.priv_context.error_on_wrong_method("add_editor()", METHOD_INIT_SCRIPT)
         self.editors[name] = (type, default_value)
         if tooltip != None:
             self.editor_tooltips[name] = tooltip
-        self.priv_context.error_on_wrong_method("add_editor()", METHOD_INIT_SCRIPT)
 
     def get_editor_value(self, name, frame=0):
         """     
@@ -683,11 +684,19 @@ class FluxityContext:
         """
         **`log_line(str):`** line of text.
                  
-        Adds a line of text to log message displayed after completion or error.
+        Adds a line of text to log message displayed after rednder completion or error.
         """
         self.log_msg = self.log_msg + log_line + "\n"
 
-
+    def set_prints_to_log_file(self, log_file):
+        """
+        **`log_file(str):`** File path.
+                 
+        Save output from 'print()' to file at given path. Must be called in script method *init_script()*.
+        """
+        self.priv_context.error_on_wrong_method("add_editor()", METHOD_INIT_SCRIPT)
+        _prints_to_log_file(log_file)
+    
 class FluxityContextPrivate:
     # This class exists to keep FluxityContext API clean for script developers.
     #
@@ -792,7 +801,7 @@ class PangoTextLayout:
         self.outline_width, self.shadow_on, self.shadow_color_rgb, self.shadow_opacity, \
         self.shadow_xoff, self.shadow_yoff, self.shadow_blur, self.gradient_color_rgba, \
         self.gradient_direction = font_data
-        self.font_desc = None # Pango.FontDescription(self.font_family + " " + self.font_face + " " + str(self.font_size))
+        self.font_desc = None
         self.pango_layout = None
         self.opacity = 1.0 
         self.pixel_size = None
@@ -812,16 +821,29 @@ class PangoTextLayout:
         self.pango_layout.set_font_description(font_desc)
         self.pango_layout.set_alignment(self.alignment)
         if self.pixel_size == None:
-            logical_w, logical_h = self.pango_layout.get_size()
-            self.pixel_size = (logical_w / Pango.SCALE, logical_h / Pango.SCALE)
+            metrics = self.pango_layout.get_context().get_metrics(font_desc, None)
+            self.ascent = metrics.get_ascent() / Pango.SCALE
+            self.descent = metrics.get_descent() / Pango.SCALE
+            self.height = metrics.get_height() / Pango.SCALE
+            w, h = self.pango_layout.get_size()
+            self.pixel_size = (w / Pango.SCALE, self.height)
 
+    def get_top_pad(self):
+        """             
+        Returns pixel distance from layout top to highest possible pixel drawn for any font. 
+        
+        **Returns:** (int)(pad) Top pad size in pixels.
+        """
+        return self.height - self.descent - self.ascent
+        
+        
     def get_pixel_size(self):
         """             
         Returns size of layout.
 
         Before calling this PangoCairo layout object needs to creted *`PangoTextLayout.create_pango_layout()`* or *`PangoTextLayout.draw_layout()`.*
         
-        **Returns:** (width, height) pixel size of layout.
+        **Returns:** (int)(width, height) pixel size of layout.
         """
         return self.pixel_size 
         

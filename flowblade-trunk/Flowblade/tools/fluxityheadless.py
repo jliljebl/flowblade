@@ -308,4 +308,4 @@ class FrameRangeUpdateThread(threading.Thread):
             msg = "1 " + str(frame) + " " + str(self.render_length + 1) + " " + str(elapsed)
             ccrutils.write_status_message(msg)
         
-            time.sleep(0.5)
+            time.sleep(0.2)
