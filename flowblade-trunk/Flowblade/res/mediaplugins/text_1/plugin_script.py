@@ -21,10 +21,10 @@ def init_script(fctx):
     fctx.add_editor("Pos X", fluxity.EDITOR_INT, 500)
     fctx.add_editor("Pos Y", fluxity.EDITOR_INT, 500)
     fctx.add_editor("Font", fluxity.EDITOR_PANGO_FONT, fluxity.EDITOR_PANGO_FONT_DEFAULT_VALUES)
-    fctx.add_editor("Line Gap", fluxity.EDITOR_INT, 0)
+    fctx.add_editor("Line Gap", fluxity.EDITOR_INT, 30)
     fctx.add_editor("Lines Delay Frames", fluxity.EDITOR_INT_RANGE, (0, 0, 50))
     fctx.add_editor("Animation Type In", fluxity. EDITOR_OPTIONS, \
-                    (1, ["From Left Clipped", "From Right Clipped", "From Up Clipped", \
+                    (0, ["From Left Clipped", "From Right Clipped", "From Up Clipped", \
                         "From Down Clipped", "From Left", "From Right", "From Up", \
                         "From Down"]))
     fctx.add_editor("Movement In", fluxity. EDITOR_OPTIONS, (1,["Linear", "Ease In", "Ease Out", "Stepped"]))
@@ -39,8 +39,8 @@ def init_script(fctx):
     fctx.add_editor("Frames Out", fluxity.EDITOR_INT, 10)
     fctx.add_editor("Steps Out", fluxity.EDITOR_INT_RANGE, (3, 2, 10))
     fctx.add_editor("Fade Out Frames", fluxity.EDITOR_INT_RANGE, (0, 0, 200))
-    fctx.add_editor("Background", fluxity. EDITOR_OPTIONS, (1, ["No Backround", "Color Background"]))
-    fctx.add_editor("Background Pad", fluxity.EDITOR_INT, 40)
+    fctx.add_editor("Background", fluxity. EDITOR_OPTIONS, (2, ["No Backround", "Solid Background", "Lines Background"]))
+    fctx.add_editor("Background Pad", fluxity.EDITOR_INT, 10)
     fctx.add_editor("Background Color", fluxity.EDITOR_COLOR, (0.8, 0.5, 0.2, 1.0))
     fctx.add_editor("Background Opacity", fluxity.EDITOR_INT_RANGE, (100, 0, 100))
 
@@ -463,7 +463,26 @@ class BackGround:
         return (rx, ry, rw, rh)
         
     def draw_bg(self, cr, fctx):
-	    return
+        if self.bg_type == LineText.COLOR_BACKGROUND:
+            rx, ry, rw, rh = self.area_data
+            p = self.pad
+            rx = rx - p
+            ry = ry - p
+            rw = rw + 2 * p
+            rh = rh + 2 * p
+
+            cr.rectangle(rx, ry, rw, rh)
+            cr.set_source(self.bg_color)
+            cr.fill()
+        elif self.bg_type == LineText.LINES_BACKGROUND:
+            ax, ay, aw, ah = self.area_data
+            for linetext in self.linetexts:
+                rx, ry, rw, rh = self.get_bounding_rect_for_line(fctx, linetext)
+                p = self.pad
+                      
+                cr.rectangle(rx - p, ry - p, aw + 2 * p, rh + 2 * p)
+                cr.set_source(self.bg_color)
+                cr.fill()
 
 """
 cr.set_source_rgb(0.4, 0.4, 1.0)
