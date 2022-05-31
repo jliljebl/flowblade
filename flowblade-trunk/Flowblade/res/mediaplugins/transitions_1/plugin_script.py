@@ -17,9 +17,9 @@ PASTELS = [(0.38, 0.59, 0.83), (0.82, 0.48, 0.53), (0.48, 0.82, 0.60), (0.82, 0.
 USER_HUE_MULTIPLIERS = [0.8, 0.9, 1.0, 1.1, 1.2, 1.3]
 
 
-# ----------------------- fluxity funcs
 def init_script(fctx):
     fctx.set_name("Lines Sweep")
+    fctx.set_version(1)
     fctx.set_author("Janne Liljeblad")
  
     fctx.add_editor("Line Colors", fluxity.EDITOR_OPTIONS, (0,["User Hue", "Mondrian", "Pastels"]))

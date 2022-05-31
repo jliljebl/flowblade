@@ -17,6 +17,7 @@ shape_height = -1
 
 def init_script(fctx):
     fctx.set_name("Hex Colors")
+    fctx.set_version(1)
     fctx.set_author("Janne Liljeblad")
     
     fctx.add_editor("Hue", fluxity.EDITOR_COLOR, (0.131, 0.0147, 0.163, 1.0))
@@ -120,7 +121,7 @@ def render_frame(frame, fctx, w, h):
             cr.restore()
     
 
-# ----------------------- helper func
+# ----------------------- helper funcs
 def _clamp(v):
     return max(min(v, 1.0), 0.0)
     

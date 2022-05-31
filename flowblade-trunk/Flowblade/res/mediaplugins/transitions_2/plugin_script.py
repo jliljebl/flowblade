@@ -18,6 +18,7 @@ SPEED = 0.3
 
 def init_script(fctx):
     fctx.set_name("Hex Overlay")
+    fctx.set_version(1)
     fctx.set_author("Janne Liljeblad")
     
     fctx.add_editor("Length", fluxity.EDITOR_FLOAT_RANGE, (40, 4, 100))

@@ -14,8 +14,10 @@ ANIMATION_BY_LINE = 2
 
 
 def init_script(fctx):
-    fctx.set_name("Text")
+    fctx.set_name("TypeWriter")
+    fctx.set_version(1)
     fctx.set_author("Janne Liljeblad")
+
     fctx.add_editor("Pos X", fluxity.EDITOR_INT, 100)
     fctx.add_editor("Pos Y", fluxity.EDITOR_INT, 100)
     fctx.add_editor("Animation Type", fluxity. EDITOR_OPTIONS, (0,["Letters", "Words", "Lines"]))

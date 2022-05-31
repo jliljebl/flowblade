@@ -7,17 +7,12 @@ import cairo
 import fluxity
 
 
-ANIMATION_BY_LETTER = 0
-ANIMATION_BY_WORD = 1
-ANIMATION_BY_LINE = 2
-
-
 def init_script(fctx):
-    fctx.set_prints_to_log_file("/home/janne/txt_log")
-    print("haloo")
-    fctx.set_name("Text")
+    fctx.set_name("Multiline Text")
+    fctx.set_version(1)
     fctx.set_author("Janne Liljeblad")
-    fctx.add_editor("Text", fluxity.EDITOR_TEXT_AREA, "Lorejjjm ipsum dolor sit amet\nasdasdasdasd\nqweqweqweqwe")
+
+    fctx.add_editor("Text", fluxity.EDITOR_TEXT_AREA, "Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit.\nInteger nec odio.")
     fctx.add_editor("Pos X", fluxity.EDITOR_INT, 500)
     fctx.add_editor("Pos Y", fluxity.EDITOR_INT, 500)
     fctx.add_editor("Font", fluxity.EDITOR_PANGO_FONT, fluxity.EDITOR_PANGO_FONT_DEFAULT_VALUES)
@@ -36,13 +31,14 @@ def init_script(fctx):
                         "To Down Clipped", "To Left", "To Right", "To Up", \
                         "To Down"]))
     fctx.add_editor("Movement Out", fluxity. EDITOR_OPTIONS, (2, ["Linear", "Ease In", "Ease Out", "Stepped"]))
-    fctx.add_editor("Frames Out", fluxity.EDITOR_INT, 10)
+    fctx.add_editor("Frames Out", fluxity.EDITOR_INT, 20)
     fctx.add_editor("Steps Out", fluxity.EDITOR_INT_RANGE, (3, 2, 10))
     fctx.add_editor("Fade Out Frames", fluxity.EDITOR_INT_RANGE, (0, 0, 200))
     fctx.add_editor("Background", fluxity. EDITOR_OPTIONS, (2, ["No Backround", "Solid Background", "Lines Background"]))
     fctx.add_editor("Background Pad", fluxity.EDITOR_INT, 10)
     fctx.add_editor("Background Color", fluxity.EDITOR_COLOR, (0.8, 0.5, 0.2, 1.0))
     fctx.add_editor("Background Opacity", fluxity.EDITOR_INT_RANGE, (100, 0, 100))
+    fctx.add_editor("Line Y Offset", fluxity.EDITOR_INT, 10)
 
 def init_render(fctx):
     # Get editor values
@@ -54,6 +50,7 @@ def init_render(fctx):
 
     line_gap = fctx.get_editor_value("Line Gap") 
     line_delay = fctx.get_editor_value("Lines Delay Frames")
+    line_y_offset = fctx.get_editor_value("Line Y Offset")
 
     frames_in = fctx.get_editor_value("Frames In")
     frames_out = fctx.get_editor_value("Frames Out")
@@ -79,7 +76,7 @@ def init_render(fctx):
     lines = text.splitlines()
     linetexts = []
     for i, text in enumerate(lines):
-        line_info = (i, line_gap, line_delay) 
+        line_info = (i, line_gap, line_delay, line_y_offset) 
         linetext = LineText(text, font_data, (x, y), line_info, in_anim_data, frames_in, out_anim_data, frames_out)
         linetexts.append(linetext)
 
@@ -139,7 +136,7 @@ class LineText:
         self.text = text
         self.font_data = font_data
         self.layout_pos = layout_pos
-        self.line_index, self.line_gap, self.line_delay = line_info
+        self.line_index, self.line_gap, self.line_delay, self.line_y_off = line_info
         self.animation_type_in, self.movement_type_in, self.steps_in, self.fade_in_frames = animation_in_data
         self.animation_type_out, self.movement_type_out, self.steps_out, self.fade_out_frames = animation_out_data
         self.in_frames = in_frames
@@ -189,12 +186,11 @@ class LineText:
 
         movement_type = self.movement_type_out
         animation_type = self.animation_type_out
-        print("after IN: ",self.affine.x.keyframes)
-        print(frame_start, length, movement_type, animation_type)
+
         self._apply_affine_data_with_movement(movement_type, animation_type, start_x, \
                                               start_y, end_x, end_y, start_scale, \
                                               end_scale, frame_start, length, self.steps_out)
-        print("after OUT:", self.affine.x.keyframes)
+
         self._apply_fade(fctx)
 
     def _get_in_animation_affine_data(self, fctx, bg):
@@ -243,8 +239,7 @@ class LineText:
             start_x = static_x
             start_y = screen_h + line_y - layout_y
 
-        print(start_x, start_y, end_x, end_y)
-        return (start_x, start_y, end_x, end_y)
+        return (start_x, start_y + self.line_y_off, end_x, end_y + self.line_y_off)
 
     def _get_out_animation_affine_data(self, fctx, bg):
         layout_x, layout_y = self.layout_pos
@@ -292,7 +287,7 @@ class LineText:
             end_x = static_x + pad
             end_y = screen_h + line_y - layout_y
 
-        return (start_x, start_y, end_x, end_y)
+        return (start_x, start_y + self.line_y_off, end_x, end_y + self.line_y_off)
 
     def _apply_affine_data_with_movement(self, movement_type, animation_type, start_x, start_y, end_x, end_y, \
                                          start_scale, end_scale, frame_start, frame_end, steps):
@@ -308,7 +303,6 @@ class LineText:
                 self._apply_no_movement(self.affine.y, start_y, frame_start)
             elif animation_type in LineText.VERTICAL_ANIMATIONS:
                 self._apply_no_movement(self.affine.x, start_x, frame_start)
-                print("LineText.EASE_IN - LineText.VERTICAL_ANIMATIONS",  start_y, end_y, frame_start, frame_end)
                 self._apply_fast_start_movement(self.affine.y, start_y, end_y, frame_start, frame_end)
         elif movement_type == LineText.EASE_OUT:
             if animation_type in LineText.HORIZONTAL_ANIMATIONS:
@@ -353,7 +347,6 @@ class LineText:
     def _apply_slow_start_movement(self, animated_value, start_val, end_val, start_frame, length):
         mid_kf_frame = int(length * 0.8)
         mid_kf_value = start_val + (end_val - start_val) * 0.2
-        print("EASE OUT:", start_frame, start_frame + mid_kf_frame, start_frame + length)
         animated_value.add_keyframe_at_frame(start_frame, start_val, fluxity.KEYFRAME_SMOOTH)
         animated_value.add_keyframe_at_frame(start_frame + mid_kf_frame, mid_kf_value, fluxity.KEYFRAME_SMOOTH)
         animated_value.add_keyframe_at_frame(start_frame + length, end_val, fluxity.KEYFRAME_LINEAR)
@@ -483,26 +476,4 @@ class BackGround:
                 cr.rectangle(rx - p, ry - p, aw + 2 * p, rh + 2 * p)
                 cr.set_source(self.bg_color)
                 cr.fill()
-
-"""
-cr.set_source_rgb(0.4, 0.4, 1.0)
-cr.set_line_width(3.0)
-#cr.move_to(bg_x, layout_y)
-#cr.line_to(bg_x + clip_w, layout_y)
-#cr.stroke()
-
-#cr.move_to(bg_x, layout_y + lh)
-#cr.line_to(bg_x + clip_w, layout_y + lh)
-#cr.stroke()
-
-cr.set_source_rgb(0.8, 0.2, 0.2)
-cr.move_to(rx, ry)
-cr.line_to(rx + rw, ry)
-cr.stroke()
-
-cr.set_source_rgb(0.4, 0.4, 1.0)
-cr.move_to(rx, ry + rh)
-cr.line_to(rx + rw, ry + rh)
-cr.stroke()
-"""
         
