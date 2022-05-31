@@ -12,8 +12,9 @@ import fluxity
 
 def init_script(fctx):
     fctx.set_name("Floating Balls")
+    fctx.set_version(1)
     fctx.set_author("Janne Liljeblad")
-    
+
     fctx.add_editor("Hue", fluxity.EDITOR_COLOR, (0.8, 0.50, 0.3, 1.0))
     fctx.add_editor("Speed", fluxity.EDITOR_FLOAT_RANGE, (1.0, -5.0, 5.0))
     fctx.add_editor("Speed Variation %", fluxity.EDITOR_INT_RANGE, (40, 0, 99))
@@ -25,8 +26,8 @@ def init_script(fctx):
     
 def init_render(fctx):
     # The script is possibly rendered using multiple prosesses and we need to have the
-    # same random numbers in all processes. If we don't set seed we'll get completely different
-    # ball positions color speeds in different rendering processes.
+    # same sequence of random numbers in all processes. If we don't set seed we'll get completely different
+    # ball positions, colors and speeds in different rendering processes.
     random.seed(fctx.get_editor_value("Random Seed"))
 
     # Ball colors data structure
