@@ -215,9 +215,16 @@ class AddMediaPluginWindow(Gtk.Window):
         self.plugin_select.set_changed_callback(self._plugin_selection_changed)
 
         plugin_label = Gtk.Label(label=_("Media Plugin:"))
-        plugin_select_row = guiutils.get_two_column_box(plugin_label, self.plugin_select.widget, 220)
-        plugin_select_row.set_margin_bottom(24)
+        plugin_select_row_left = guiutils.get_two_column_box(plugin_label, self.plugin_select.widget, 220)
 
+        surface = guiutils.get_cairo_image("info_launch")
+        self.info_launch = guicomponents.PressLaunch(self._show_info, surface, w=22, h=22)
+
+        plugin_select_row = Gtk.HBox(False, 2)
+        plugin_select_row.pack_start(plugin_select_row_left, True, True, 0)
+        plugin_select_row.pack_start(self.info_launch.widget, False, False, 0)
+        plugin_select_row.set_margin_bottom(24)
+                    
         global MONITOR_HEIGHT
         MONITOR_HEIGHT = int(MONITOR_WIDTH * float(current_sequence().profile.display_aspect_den()) / float(current_sequence().profile.display_aspect_num()))
         self.screenshot_canvas = cairoarea.CairoDrawableArea2(MONITOR_WIDTH, MONITOR_HEIGHT, self._draw_screenshot)
@@ -299,7 +306,24 @@ class AddMediaPluginWindow(Gtk.Window):
     
         self.plugin_select.set_selected(_plugins[0].name)
         self._display_current_render_data()
+
+    def _show_info(self, w, e):
+        info_popover = Gtk.Popover.new(self.info_launch.widget)
         
+        author = Gtk.Label(label=_("<b>Author: </b> ") + _current_plugin_data_object["author"])
+        author.set_use_markup(True)
+        version = Gtk.Label(label=_("<b>Version: </b> ") + str(_current_plugin_data_object["version"]))
+        version.set_use_markup(True)
+        author_row = guiutils.get_left_justified_box([author])
+        version_row = guiutils.get_left_justified_box([version])
+        info_box = Gtk.VBox(False, 2)
+        info_box.pack_start(author_row, False, True, 0)
+        info_box.pack_start(version_row, True, True, 0)
+        guiutils.set_margins(info_box, 12, 12, 12, 12)
+        info_box.show_all()
+        info_popover.add(info_box)
+        info_popover.popup()
+    
     def _build_editor_row(self, label_text, widget):
         row = Gtk.HBox(False, 2)
         left_box = guiutils.get_left_justified_box([Gtk.Label(label=label_text)])
