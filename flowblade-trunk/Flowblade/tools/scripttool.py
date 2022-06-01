@@ -1596,7 +1596,6 @@ def _launch_headless_render(session_id, script_path, edit_data, frames_folder, r
     
     args = ("session_id:" + session_id, 
             "script:" + script_path,
-            "clip_path:" + "whatever", # "clip_path:" seems to be dead code, look to remove.
             "range_in:" + str(range_in),
             "range_out:"+ str(range_out),
             "profile_desc:" + _current_profile_name.replace(" ", "_"))  # Here we have our own string space handling, maybe change later..

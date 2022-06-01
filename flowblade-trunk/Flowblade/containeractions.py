@@ -663,7 +663,6 @@ class FluxityContainerActions(AbstractContainerActionObject):
         
         args = ("session_id:" + self.get_container_program_id(), 
                 "script:" + str(self.container_data.program),
-                "clip_path:" + str(self.container_data.unrendered_media),
                 "range_in:" + str(range_in),
                 "range_out:"+ str(range_out),
                 "profile_desc:" + PROJECT().profile.description().replace(" ", "_"))  # Here we have our own string space handling, maybe change later..

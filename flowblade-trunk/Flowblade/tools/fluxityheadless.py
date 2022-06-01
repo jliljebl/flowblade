@@ -90,7 +90,7 @@ def abort_render(session_id):
 
 
 # --------------------------------------------------- render process
-def main(root_path, session_id, script, clip_path, range_in, range_out, profile_desc):
+def main(root_path, session_id, script, range_in, range_out, profile_desc):
 
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION
@@ -137,19 +137,18 @@ def main(root_path, session_id, script, clip_path, range_in, range_out, profile_
     ccrutils.maybe_init_external_session_folders()
 
     global _render_thread
-    _render_thread = FluxityHeadlessRunnerThread(script, fluxity_plugin_edit_data, render_data, clip_path, range_in, range_out, profile_desc)
+    _render_thread = FluxityHeadlessRunnerThread(script, fluxity_plugin_edit_data, render_data, range_in, range_out, profile_desc)
     _render_thread.start()
 
 
 class FluxityHeadlessRunnerThread(threading.Thread):
 
-    def __init__(self, script, fluxity_plugin_edit_data, render_data, clip_path, range_in, range_out, profile_desc):
+    def __init__(self, script, fluxity_plugin_edit_data, render_data, range_in, range_out, profile_desc):
         threading.Thread.__init__(self)
 
         self.script_path = script
         self.fluxity_plugin_edit_data = fluxity_plugin_edit_data
         self.render_data = render_data # toolsencoding.ToolsRenderData object
-        self.clip_path = clip_path
         self.range_in = int(range_in)
         self.range_out = int(range_out)
         self.length = self.range_out - self.range_in + 1
