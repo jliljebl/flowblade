@@ -591,7 +591,7 @@ def render_preview_range():
 
     _window.out_view.get_buffer().set_text("Rendering...")
 
-    range_renderer = FluxityRangeRenderer(script, get_render_frames_dir(), profile_file_path)
+    range_renderer = FluxityRangeRenderer(script, profile_file_path)
     range_renderer.start()
 
 def _encode_settings_clicked():
@@ -1276,10 +1276,9 @@ def _get_range_render_messages(proc_fctx_dict):
 
 class FluxityRangeRenderer(threading.Thread):
 
-    def __init__(self, script, render_folder, profile_file_path):
+    def __init__(self, script, profile_file_path):
         threading.Thread.__init__(self)
         self.script = script
-        self.render_folder = render_folder
         self.profile_file_path = profile_file_path
 
     def run(self):
@@ -1292,11 +1291,6 @@ class FluxityRangeRenderer(threading.Thread):
         self.in_frame = in_frame
         out_frame = _mark_out
         self.out_frame = out_frame  
-
-        # Delete old preview frames.
-        old_files = glob.glob(self.render_folder + "/*")
-        for f in old_files:
-            os.remove(f)
 
         ccrutils.init_session_folders(SCRIPT_TOOL_SESSION_ID)
         
@@ -1338,7 +1332,7 @@ def _preview_render_update(render_thread):
         return True
 
     if completed == True:
-        _render_complete(render_thread)
+        _preview_range_render_complete(render_thread)
         return False # This stops repeated calls to this function.
     else:
         frame = render_thread.in_frame + frame_count
@@ -1348,7 +1342,7 @@ def _preview_render_update(render_thread):
         _window.pos_bar.widget.queue_draw()
         return True # Function will be called again.
 
-def _render_complete(render_thread):
+def _preview_range_render_complete(render_thread):
         # Get error and log messages.
         proc_fctx_dict = ccrutils.read_range_render_data(SCRIPT_TOOL_SESSION_ID)
         error_msg, log_msg = _get_range_render_messages(proc_fctx_dict)
@@ -1430,8 +1424,8 @@ class FluxityPluginRenderer(threading.Thread):
             out_frame = _player.get_active_length()
 
         self.length = out_frame - in_frame
-        self.mark_in = in_frame
-        self.mark_out = out_frame
+        self.in_frame = in_frame
+        self.out_frame = out_frame
         
         # not used !!!
         frame_name = _window.frame_name.get_text()
@@ -1444,17 +1438,42 @@ class FluxityPluginRenderer(threading.Thread):
         for frame_file in os.listdir(out_folder):
             file_path = os.path.join(out_folder, frame_file)
             os.remove(file_path)
+
+        ccrutils.init_session_folders(SCRIPT_TOOL_SESSION_ID)
+        
+        # Create temp script file from text area contents.
+        tmp_script_file = ccrutils.get_session_folder(SCRIPT_TOOL_SESSION_ID) + "/temp_script"
+        with atomicfile.AtomicFileWriter(tmp_script_file, "w") as afw:
+            write_file = afw.get_file()
+            f = afw.get_file()
+            f.write(script_text)
             
-        self.frame_render_in_progress = True
+        frames_folder = ccrutils.get_render_folder_for_session_id(SCRIPT_TOOL_SESSION_ID)
+        
+        err_msg, edit_data = fluxity.get_script_default_edit_data(script_text, tmp_script_file, frames_folder, profile_file_path)
+        if err_msg != None:
+            Gdk.threads_enter()
+            _show_error(err_msg)
+            Gdk.threads_leave()
+            return
+
+        self.frames_render_in_prgress = True
+        _launch_headless_render(SCRIPT_TOOL_SESSION_ID, tmp_script_file, edit_data, frames_folder, in_frame, out_frame + 1)
+        
         self.render_start_time = datetime.datetime.now()
         Gdk.threads_add_timeout(GLib.PRIORITY_HIGH_IDLE, 150, _output_render_update, self)
+        print("past add timeout")
+
+        # Block until we have frames
+        while self.frames_render_in_prgress == True:
+            time.sleep(0.3)
         
-        # Render frames
-        proc_fctx_dict = fluxity.render_frame_sequence(script_text, _last_save_path, in_frame, out_frame, out_folder, profile_file_path)
+        if self.abort == True:
+            return
 
-        self.frame_render_in_progress = False # Stops GUI updates.
-
-        # Get error and log messages.
+        print("past abort")
+        
+        proc_fctx_dict = ccrutils.read_range_render_data(SCRIPT_TOOL_SESSION_ID)
         error_msg, log_msg = _get_range_render_messages(proc_fctx_dict)
 
         # Set GUI state and exit on error.
@@ -1466,12 +1485,14 @@ class FluxityPluginRenderer(threading.Thread):
             _window.preview_monitor.queue_draw()
             self.set_render_stopped_gui_state()
             Gdk.threads_leave()
-            
             return
-                    
+
+        # Frames are in container clips SCRIPT_TOOL_SESSION_ID folder,
+        # need to copy them where out was wanted
+        self.copy_frames(frames_folder, out_folder)
+
         # Render video
         if _window.encode_check.get_active() == True:
-
             # Render consumer
             args_vals_list = toolsencoding.get_args_vals_list_for_render_data(_render_data)
             profile = mltprofiles.get_profile_for_index(_current_profile_index) 
@@ -1510,16 +1531,22 @@ class FluxityPluginRenderer(threading.Thread):
                 
                 time.sleep(0.3)
 
-        Gdk.threads_enter()
-        _window.render_percentage.set_markup("<small>" + _("Render complete!") + "</small>")
-        self.set_render_stopped_gui_state()
-        Gdk.threads_leave()
+            Gdk.threads_enter()
+            _window.render_percentage.set_markup("<small>" + _("Render complete!") + "</small>")
+            self.set_render_stopped_gui_state()
+            Gdk.threads_leave()
+
+    def copy_frames(self, frames_folder, out_folder):
+        # Copy frames
+        rendered_frames = os.listdir(frames_folder)
+        for frame in rendered_frames:
+            frame_file_name = os.path.join(frames_folder, frame)
+            shutil.copy(frame_file_name, out_folder)
 
     def abort_render(self):
         self.abort = True
-
-        if self.script_renderer != None:
-             self.script_renderer.abort_rendering()
+        self.frames_render_in_prgress = False
+        ccrutils.abort_render(SCRIPT_TOOL_SESSION_ID)
 
         self.shutdown()
                          
@@ -1543,35 +1570,27 @@ class FluxityPluginRenderer(threading.Thread):
 
 
 def _output_render_update(render_thread):
-    folder_files = os.listdir(render_thread.render_folder)
-
-    added_files = []
-    for f in folder_files:
-        st = os.stat(render_thread.render_folder + "/" + f)
-        mtime = datetime.datetime.fromtimestamp(st.st_mtime)
-        
-        if mtime > render_thread.render_start_time:
-            added_files.append(f)
-
-    frame = render_thread.mark_in + len(added_files)
-    if frame - render_thread.mark_in < 0:
-        frame = render_thread.length # hack fix, producer suddenly changes the frame it thinks it is in
-    else:
-        frame = frame - render_thread.mark_in # producer returns original clip frames
-
-    update_info = _("Writing clip frame: ") + str(frame) + "/" +  str(render_thread.length)
-
-    _window.render_percentage.set_markup("<small>" + update_info + "</small>")
-    _window.render_progress_bar.set_fraction(float(frame + 1)/float(render_thread.length))
+    completed, step, frame_count, progress = _get_render_status(    SCRIPT_TOOL_SESSION_ID, 
+                                                                    render_thread.in_frame,
+                                                                    render_thread.out_frame)
+    if step == -1:
+        # no info available yet.
+        return True
 
     if render_thread.abort == True:
         return False # This stops repeated calls to this function.
 
-    if render_thread.frame_render_in_progress == False:
+    if completed == True:
+        render_thread.frames_render_in_prgress = False
         _window.render_percentage.set_markup("<small>" + _("Render complete!") + "</small>")
         _window.render_progress_bar.set_fraction(0.0)
+        if _window.encode_check.get_active() != True:
+            render_thread.set_render_stopped_gui_state()
         return False # This stops repeated calls to this function.
     else:
+        update_info = _("Writing clip frame: ") + str(frame_count) + "/" +  str(render_thread.length)
+        _window.render_percentage.set_markup("<small>" + update_info + "</small>")
+        _window.render_progress_bar.set_fraction(progress)
         return True # Function will be called again.
 
 def _launch_headless_render(session_id, script_path, edit_data, frames_folder, range_in, range_out):
