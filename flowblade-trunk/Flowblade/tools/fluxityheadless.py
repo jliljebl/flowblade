@@ -90,7 +90,7 @@ def abort_render(session_id):
 
 
 # --------------------------------------------------- render process
-def main(root_path, session_id, script, clip_path, range_in, range_out, profile_desc, fluxity_frame_offset):
+def main(root_path, session_id, script, clip_path, range_in, range_out, profile_desc):
 
     try:
         editorstate.mlt_version = mlt.LIBMLT_VERSION
@@ -137,13 +137,13 @@ def main(root_path, session_id, script, clip_path, range_in, range_out, profile_
     ccrutils.maybe_init_external_session_folders()
 
     global _render_thread
-    _render_thread = FluxityHeadlessRunnerThread(script, fluxity_plugin_edit_data, render_data, clip_path, range_in, range_out, profile_desc, fluxity_frame_offset)
+    _render_thread = FluxityHeadlessRunnerThread(script, fluxity_plugin_edit_data, render_data, clip_path, range_in, range_out, profile_desc)
     _render_thread.start()
 
 
 class FluxityHeadlessRunnerThread(threading.Thread):
 
-    def __init__(self, script, fluxity_plugin_edit_data, render_data, clip_path, range_in, range_out, profile_desc, fluxity_frame_offset):
+    def __init__(self, script, fluxity_plugin_edit_data, render_data, clip_path, range_in, range_out, profile_desc):
         threading.Thread.__init__(self)
 
         self.script_path = script
@@ -154,7 +154,6 @@ class FluxityHeadlessRunnerThread(threading.Thread):
         self.range_out = int(range_out)
         self.length = self.range_out - self.range_in + 1
         self.profile_desc = profile_desc
-        self.fluxity_frame_offset = int(fluxity_frame_offset) # Note this not used currently can't get MLT to find frame seq if not starting from 0001
         self.last_frame_write_time = 0.0
     
         self.abort = False

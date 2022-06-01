@@ -638,11 +638,10 @@ class FluxityContainerActions(AbstractContainerActionObject):
         data_object = self.container_data.data_slots["fluxity_plugin_edit_data"] 
         return data_object["name"]
 
-    def _launch_render(self, clip, range_in, range_out, fluxity_frame_offset):
+    def _launch_render(self, clip, range_in, range_out, unused_frame_ofset):
         self.create_data_dirs_if_needed()
         self.render_range_in = range_in
         self.render_range_out = range_out
-        self.fluxity_frame_offset = fluxity_frame_offset
  
         fluxityheadless.clear_flag_files(self.get_container_program_id())
     
@@ -667,8 +666,7 @@ class FluxityContainerActions(AbstractContainerActionObject):
                 "clip_path:" + str(self.container_data.unrendered_media),
                 "range_in:" + str(range_in),
                 "range_out:"+ str(range_out),
-                "profile_desc:" + PROJECT().profile.description().replace(" ", "_"),  # Here we have our own string space handling, maybe change later..
-                "fluxity_frame_offset:" + str(fluxity_frame_offset))
+                "profile_desc:" + PROJECT().profile.description().replace(" ", "_"))  # Here we have our own string space handling, maybe change later..
 
         # Create command list and launch process.
         command_list = [sys.executable]
@@ -717,9 +715,6 @@ class FluxityContainerActions(AbstractContainerActionObject):
                     job_msg.progress = float(frame)/float(length)
                 else:
                     if step == "1":
-                        render_length = self.render_range_out - self.render_range_in 
-                        frame = int(frame) - self.fluxity_frame_offset
-                    else:
                         render_length = self.render_range_out - self.render_range_in
                     job_msg.progress = float(frame)/float(render_length)
                     

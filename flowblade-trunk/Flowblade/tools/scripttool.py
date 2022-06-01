@@ -1300,7 +1300,7 @@ class FluxityRangeRenderer(threading.Thread):
 
         ccrutils.init_session_folders(SCRIPT_TOOL_SESSION_ID)
         
-        # Cteate temp script file from text area contents.
+        # Create temp script file from text area contents.
         tmp_script_file = ccrutils.get_session_folder(SCRIPT_TOOL_SESSION_ID) + "/temp_script"
         with atomicfile.AtomicFileWriter(tmp_script_file, "w") as afw:
             write_file = afw.get_file()
@@ -1599,8 +1599,7 @@ def _launch_headless_render(session_id, script_path, edit_data, frames_folder, r
             "clip_path:" + "whatever", # "clip_path:" seems to be dead code, look to remove.
             "range_in:" + str(range_in),
             "range_out:"+ str(range_out),
-            "profile_desc:" + _current_profile_name.replace(" ", "_"),  # Here we have our own string space handling, maybe change later..
-            "fluxity_frame_offset:" + str(0)) # "fluxity_frame_offset:" seems to be dead code, look to remove
+            "profile_desc:" + _current_profile_name.replace(" ", "_"))  # Here we have our own string space handling, maybe change later..
 
     # Create command list and launch process.
     command_list = [sys.executable]
