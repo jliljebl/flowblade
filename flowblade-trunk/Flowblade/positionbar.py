@@ -84,6 +84,7 @@ class PositionBar:
         self.mark_out_norm = -1.0
         self.disabled = False
         self.mouse_release_listener = None # when used in tools (Titler ate.) this used to update bg image
+        self.mouse_press_listener = None # when used by scripttool.py this is used to stop playback
 
         self.handle_trimmodes = handle_trimmodes
 
@@ -331,6 +332,8 @@ class PositionBar:
 
         if((event.button == 1)
             or(event.button == 3)):
+            if self.mouse_press_listener != None:
+                self.mouse_press_listener()
             # Set pos to in active range to get normalized pos
             self._pos = self._legalize_x(event.x)
             # Listener calls self.set_normalized_pos()

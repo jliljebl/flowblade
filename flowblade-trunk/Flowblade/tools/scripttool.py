@@ -765,6 +765,8 @@ class ScriptToolWindow(Gtk.Window):
         
         self.pos_bar = positionbar.PositionBar(False)
         self.pos_bar.set_listener(self.position_listener)
+        self.pos_bar.mouse_press_listener = self.pos_bar_press_listener
+        
         pos_bar_frame = Gtk.Frame()
         pos_bar_frame.add(self.pos_bar.widget)
         pos_bar_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
@@ -1127,6 +1129,9 @@ class ScriptToolWindow(Gtk.Window):
         _player.seek_frame(frame)
         self.pos_bar.widget.queue_draw()
 
+    def pos_bar_press_listener(self):
+        _player.stop_playback()
+
     def _draw_preview(self, event, cr, allocation):
         x, y, w, h = allocation
         cr.set_source_rgb(0.0, 0.0, 0.0)
@@ -1462,7 +1467,6 @@ class FluxityPluginRenderer(threading.Thread):
         
         self.render_start_time = datetime.datetime.now()
         Gdk.threads_add_timeout(GLib.PRIORITY_HIGH_IDLE, 150, _output_render_update, self)
-        print("past add timeout")
 
         # Block until we have frames
         while self.frames_render_in_prgress == True:
@@ -1470,8 +1474,6 @@ class FluxityPluginRenderer(threading.Thread):
         
         if self.abort == True:
             return
-
-        print("past abort")
         
         proc_fctx_dict = ccrutils.read_range_render_data(SCRIPT_TOOL_SESSION_ID)
         error_msg, log_msg = _get_range_render_messages(proc_fctx_dict)
