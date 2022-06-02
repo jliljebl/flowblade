@@ -242,32 +242,62 @@ FLUXITY_LOG_MSG = "LOG"
 VERTICAL = 0
 HORIZONTAL = 1
 
-# Script displayed at Flowblade Script tool on init.
+# The script displayed by Flowblade Script tool on open.
 DEFAULT_SCRIPT = \
 """
 import cairo
+import math
+
 import fluxity
 
+
+SIDE_LENGTH = 200
+SPEED_CONSTANT = 30.0 / 360.0
+
+
 def init_script(fctx):
-    # Script init here
-    fctx.add_editor("float_editor", fluxity.EDITOR_FLOAT, 1.0)
-    fctx.set_name("Default Test Plugin")
+    fctx.set_name("Editor Default Plugin")
+    
+    fctx.add_editor("BG Color", fluxity.EDITOR_COLOR, (0.8, 0.2, 0.2, 1.0))
+    fctx.add_editor("FG Color", fluxity.EDITOR_COLOR, (1.0, 1.0, 1.0, 1.0))
+    fctx.add_editor("Rotation Speed", fluxity.EDITOR_FLOAT_RANGE, (3.0, 0.0, 10.0))
 
 def init_render(fctx):
-    # Render init here
-    fctx.set_data_obj("bg_color", cairo.SolidPattern(0.8, 0.2, 0.2, 1.0))
- 
+    hue_bg = fctx.get_editor_value("BG Color")
+    hue_fg = fctx.get_editor_value("FG Color")
+    
+    fctx.set_data_obj("bg_color", cairo.SolidPattern(*hue_bg))
+    fctx.set_data_obj("fg_color", cairo.SolidPattern(*hue_fg))
+     
 def render_frame(frame, fctx, w, h):
-    # Frame Render code here
     cr = fctx.get_frame_cr()
-    color = fctx.get_data_obj("bg_color")
-    cr.set_source(color)
+ 
+    bg_color = fctx.get_data_obj("bg_color")
+    cr.set_source(bg_color)
     cr.rectangle(0, 0, w, h)
+    cr.fill()
+    
+    affine = fluxity.AffineTransform()
+
+    affine.x.add_keyframe_at_frame(0, w / 2, fluxity.KEYFRAME_LINEAR)
+    affine.y.add_keyframe_at_frame(0, h / 2, fluxity.KEYFRAME_LINEAR)
+
+    side_half = SIDE_LENGTH / 2
+    affine.anchor_x.add_keyframe_at_frame(0, side_half, fluxity.KEYFRAME_LINEAR)
+    affine.anchor_y.add_keyframe_at_frame(0, side_half, fluxity.KEYFRAME_LINEAR)
+
+    rotation_speed = fctx.get_editor_value("Rotation Speed", frame) # Value is constant, so frame is optional here
+    rotation = frame * 2 * math.pi * rotation_speed * SPEED_CONSTANT
+    affine.rotation.add_keyframe_at_frame(0, rotation, fluxity.KEYFRAME_LINEAR)
+    
+    affine.apply_transform(cr, frame)
+ 
+    fg_color = fctx.get_data_obj("fg_color")
+    cr.set_source(fg_color)
+    cr.rectangle(0, 0, SIDE_LENGTH, SIDE_LENGTH)
     cr.fill()
 """
 
-EDITOR_STRING = 0
-""" Editor for strings that return string values as *quoted* strings. Generally *EDITOR_TEXT* should be used instead."""
 EDITOR_TEXT = 1
 """ Editor for strings."""
 EDITOR_FLOAT = 2
@@ -458,7 +488,7 @@ class FluxityContext:
 
     def get_profile_property(self, p_property):
         """
-        **`p_property(str):`** propertyr identyfier, e.g. `Fluxity.PROFILE_PROGRESSIVE`.
+        **`p_property(str):`** propertyr identyfier, e.g. `fluxity.PROFILE_PROGRESSIVE`.
         
         Used to access properties of MLT profile set before running the script that defines e.g. output image size.
         
@@ -539,12 +569,10 @@ class FluxityContext:
         """     
         **`name(str):`** Name for editor.
         
-        **`type(int):`** Value either *`EDITOR_STRING`, `EDITOR_FLOAT`, `EDITOR_INT`, `EDITOR_COLOR`, `EDITOR_FILE_PATH`, `EDITOR_OPTIONS`, `EDITOR_CHECK_BOX`, `EDITOR_FLOAT_RANGE`, `EDITOR_INT_RANGE`.*
+        **`type(int):`** Value either *`EDITOR_FLOAT`, `EDITOR_INT`, `EDITOR_COLOR`, `EDITOR_FILE_PATH`, `EDITOR_OPTIONS`, `EDITOR_CHECK_BOX`, `EDITOR_FLOAT_RANGE`, `EDITOR_INT_RANGE`.*
         
-        **`default_value():`** Data type depends on editor type:
+        **`default_value(str||int||float||tuple):`** Data type depends on editor type:
         
-          * `EDITOR_STRING`(str),
-
           * `EDITOR_TEXT`(str),
 
           * `EDITOR_TEXT_AREA`(str),
@@ -595,8 +623,6 @@ class FluxityContext:
         
         Data type depends on editor type:
         
-          * `EDITOR_STRING`(str),
-
           * `EDITOR_TEXT`(str),
 
           * `EDITOR_TEXT_AREA`(str),
