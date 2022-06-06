@@ -206,7 +206,7 @@ class AddMediaPluginWindow(Gtk.Window):
         GObject.GObject.__init__(self)
         self.set_modal(True)
         self.set_transient_for(gui.editor_window.window)
-        self.set_title(_("Add Media Plugin"))
+        self.set_title(_("Add Genarator"))
         self.connect("delete-event", lambda w, e:_close_window())
 
         # categories_list is list of form [("category_name", [category_items]), ...]
@@ -214,7 +214,7 @@ class AddMediaPluginWindow(Gtk.Window):
         self.plugin_select = guicomponents.CategoriesModelComboBoxWithData(_get_categories_list())
         self.plugin_select.set_changed_callback(self._plugin_selection_changed)
 
-        plugin_label = Gtk.Label(label=_("Media Plugin:"))
+        plugin_label = Gtk.Label(label=_("Generator:"))
         plugin_select_row_left = guiutils.get_two_column_box(plugin_label, self.plugin_select.widget, 220)
 
         surface = guiutils.get_cairo_image("info_launch")
@@ -259,7 +259,7 @@ class AddMediaPluginWindow(Gtk.Window):
         guiutils.set_margins(import_row,8,0,0,0)
         self.length_spin = Gtk.SpinButton.new_with_range (25, 100000, 1)
         self.length_spin.set_value(200)
-        length_row = guiutils.get_left_justified_box([Gtk.Label(_("Plugin Media Length:")), guiutils.pad_label(12,12), self.length_spin])
+        length_row = guiutils.get_left_justified_box([Gtk.Label(_("Generator Length:")), guiutils.pad_label(12,12), self.length_spin])
 
         self.encoding_button = Gtk.Button(_("Encode settings"))
         self.encoding_button.set_sensitive(False)
@@ -284,7 +284,7 @@ class AddMediaPluginWindow(Gtk.Window):
         
         close_button = guiutils.get_sized_button(_("Close"), 150, 32)
         close_button.connect("clicked", lambda w: _close_clicked())
-        self.add_button = guiutils.get_sized_button(_("Add Media Plugin"), 150, 32)
+        self.add_button = guiutils.get_sized_button(_("Add Genarator"), 150, 32)
         self.add_button.connect("clicked", lambda w: _add_media_plugin())
         
         buttons_row = Gtk.HBox(False, 0)

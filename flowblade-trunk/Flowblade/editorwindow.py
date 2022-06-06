@@ -934,8 +934,7 @@ class EditorWindow:
             ('DeleteSequence', None, _('Delete Selected Sequence'), None, None, lambda a:projectaction.delete_selected_sequence()),
             ('CompositingModeMenu', None, _('Compositing Mode')),
             ('TimelineRenderingMenu', None, _('Timeline Rendering')),
-            ('MediaPluginsMenu', None, _('Media Plugins')),
-            ('AddMediaPlugin', None, _('Add Media Plugin...'), None, None, lambda a:mediaplugin.show_add_media_plugin_window()),
+            ('AddMediaPlugin', None, _('Add Generator...'), None, None, lambda a:mediaplugin.show_add_media_plugin_window()),
             ('LoadMediaPluginScript', None, _('Load Media Plugin Script...'), None, None,lambda w: containerclip.create_fluxity_media_item()),
             ('CreateSelectionCompound', None, _('From Selected Clips'), None, None, lambda a:projectaction.create_selection_compound_clip()),
             ('CreateSequenceCompound', None, _('From Current Sequence'), None, None, lambda a:projectaction.create_sequence_compound_clip()),
@@ -1040,6 +1039,7 @@ class EditorWindow:
                 <menu action='ProjectMenu'>
                     <menuitem action='AddMediaClip'/>
                     <menuitem action='AddImageSequence'/>
+                    <menuitem action='AddMediaPlugin'/>
                     <separator/>
                     <menuitem action='AddMediaFolder'/>
                     <separator/>
@@ -1052,10 +1052,7 @@ class EditorWindow:
                         <menuitem action='CreateGMicContainerItem'/>
                         <menuitem action='CreateBlenderContainerItem'/>
                     </menu>
-                    <menu action='MediaPluginsMenu'>
-                        <menuitem action='AddMediaPlugin'/>
-                        <menuitem action='LoadMediaPluginScript'/>
-                    </menu>
+                    <menuitem action='LoadMediaPluginScript'/>
                     <separator/>
                     <menu action='BinMenu'>
                         <menuitem action='AddBin'/>
