@@ -1369,8 +1369,16 @@ def render_frame_sequence(script, script_file, in_frame, out_frame, out_folder, 
     * if errors occurred during rendering it has *key -> value* pair *fluxity.FLUXITY_ERROR_MSG -> error message(str)*.
     * if script created log messages it has *key -> value* pair *fluxity.FLUXITY_LOG_MSG -> log message(str)*.
     """
-    
-    threads = 6 # add some heuristics here.
+    # Some simple heuristics to decide how many processes will be used for rendering
+    cpu_count = multiprocessing.cpu_count()
+    threads = cpu_count - 2
+    # Computer does not that many cores, let's only use one.
+    if threads < 2:
+        threads = 1
+    # This gets diminshing returns so let's cap it at 8.
+    if threads > 8:
+        threads = 8
+    # If we are rendering a very small amount of frames, there isn't much benefit to use multiple threads.
     if out_frame - in_frame < threads * 2:
         threads = 1
 
