@@ -22,7 +22,7 @@ def init_script(fctx):
     fctx.set_version(1)
     fctx.set_author("Janne Liljeblad")
  
-    fctx.add_editor("Line Colors", fluxity.EDITOR_OPTIONS, (0,["User Hue", "Mondrian", "Pastels"]))
+    fctx.add_editor("Colors", fluxity.EDITOR_OPTIONS, (0,["User Hue", "Mondrian", "Pastels"]))
     fctx.add_editor("User Hue", fluxity.EDITOR_COLOR, (0.8, 0.50, 0.3, 1.0))
     fctx.add_editor("Speed", fluxity.EDITOR_FLOAT_RANGE, (1.0, -5.0, 5.0))
     fctx.add_editor("Direction", fluxity. EDITOR_OPTIONS, (0,["Left To Right", "Right To Left"]))

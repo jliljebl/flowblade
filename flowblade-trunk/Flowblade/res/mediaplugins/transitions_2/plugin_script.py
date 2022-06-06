@@ -23,7 +23,7 @@ def init_script(fctx):
     
     fctx.add_editor("Length", fluxity.EDITOR_FLOAT_RANGE, (40, 4, 100))
     fctx.add_editor("Hue", fluxity.EDITOR_COLOR, (0.25, 0.66, 0.64, 1.0))
-    fctx.add_editor("Hue Variablity", fluxity.EDITOR_FLOAT_RANGE, (0.4, 0.1, 5.0))
+    fctx.add_editor("Hue Change", fluxity.EDITOR_FLOAT_RANGE, (0.4, 0.1, 5.0))
     fctx.add_editor("Size", fluxity.EDITOR_FLOAT_RANGE, (150.0, 80.0, 300.0))
     fctx.add_editor("Random Seed", fluxity.EDITOR_INT, 42)
  

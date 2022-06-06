@@ -1378,7 +1378,7 @@ def render_frame_sequence(script, script_file, in_frame, out_frame, out_folder, 
     # This gets diminshing returns so let's cap it at 8.
     if threads > 8:
         threads = 8
-    # If we are rendering a very small amount of frames, there isn't much benefit to use multiple threads.
+    # If we are rendering a very small amount of frames, there isn't much benefit to use multiple processes.
     if out_frame - in_frame < threads * 2:
         threads = 1
 
