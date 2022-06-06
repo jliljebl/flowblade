@@ -645,7 +645,7 @@ def load_filters_translations():
     param_names["Fade In Frames"] = _("Fade In Frames")
     param_names["Fade Out Frames"] = _("Fade Out Frames")
     param_names["Background"] = _("Background")
-    param_names["Background Pad"] = _("Background Pad")s
+    param_names["Background Pad"] = _("Background Pad")
     param_names["Background Color"] = _("Background Color")
     param_names["Background Opacity"] = _("Background Opacity")
     param_names["Line Y Offset"] = _("Line Y Offset")
