@@ -321,10 +321,15 @@ class LineText:
                 
     def _apply_fade(self, fctx):
         self.opacity.add_keyframe_at_frame(0, 0.0, fluxity.KEYFRAME_LINEAR)
-        self.opacity.add_keyframe_at_frame(self.fade_in_frames, 1.0, fluxity.KEYFRAME_LINEAR) # With self.fade_in_frames == 0 this replaces kf from line above.
+        frame_delay = self.line_index * self.line_delay
+                
+        if frame_delay > 0:
+            self.opacity.add_keyframe_at_frame(frame_delay, 0.0, fluxity.KEYFRAME_LINEAR)
+         
+        self.opacity.add_keyframe_at_frame(frame_delay + self.fade_in_frames, 1.0, fluxity.KEYFRAME_LINEAR) # With self.fade_in_frames == 0 this replaces kf from line above.
         if self.fade_out_frames > 0:
-            self.opacity.add_keyframe_at_frame(fctx.get_length() - self.fade_out_frames - 1, 1.0, fluxity.KEYFRAME_LINEAR)
-            self.opacity.add_keyframe_at_frame(fctx.get_length() - 1, 0.0, fluxity.KEYFRAME_LINEAR)
+            self.opacity.add_keyframe_at_frame(fctx.get_length() - self.fade_out_frames - 1 + frame_delay, 1.0, fluxity.KEYFRAME_LINEAR)
+            self.opacity.add_keyframe_at_frame(fctx.get_length() - 1  + frame_delay, 0.0, fluxity.KEYFRAME_LINEAR)
 
     def _apply_no_movement(self, animated_value, value, frame):
         animated_value.add_keyframe_at_frame(frame, value, fluxity.KEYFRAME_LINEAR)
