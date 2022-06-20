@@ -39,6 +39,7 @@ from editorstate import timeline_visible
 import editorpersistance
 import kftoolmode
 import monitorevent
+import mediaplugin
 import utils
 import respaths
 import tlinewidgets
@@ -575,6 +576,7 @@ def update_kf_editors_positions():
 
 def clear_effects_editor_clip():
     clipeffectseditor.clear_clip()
+    mediaplugin.clear_clip()
 
 # ----------------------------------------- marks
 def display_marks_tc():
@@ -587,7 +589,9 @@ def display_marks_tc():
 def clear_clip_from_editors(clip):
     if clipeffectseditor.clip_is_being_edited(clip):
         clipeffectseditor.clear_clip()
-
+    if mediaplugin.clip_is_being_edited(clip):
+        mediaplugin.clear_clip()
+    
 def open_clip_in_effects_editor(data):
     clip, track, item_id, x = data
     frame = tlinewidgets.get_frame(x)

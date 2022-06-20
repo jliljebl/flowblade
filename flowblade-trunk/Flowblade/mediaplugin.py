@@ -520,7 +520,7 @@ def set_plugin_to_be_edited(clip, action_object):
     widgets.value_edit_box = _edit_panel.scrolled_window 
     widgets.value_edit_frame.add(widgets.value_edit_box)
     
-    track, index = current_sequence().get_track_and_index_for_id(clip.id)
+    track, index = current_sequence().get_track_and_index_for_id(clip.id)            
     track_name = utils.get_track_name(track, current_sequence())
     widgets.plugin_info.display_plugin_info(clip, track_name)
 
@@ -542,7 +542,16 @@ def _cancel():
     _clip = None
 
     gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_EMPTY)
- 
+
+def clip_is_being_edited(clip):
+    if clip ==_clip:
+        return True
+    else:
+        return False
+
+def clear_clip():
+    _cancel()
+
 def _preview():
     preview_frame = widgets.frame_select_button.get_value_as_int()
     callbacks = (_preview_render_complete, _preview_render_complete_error)
@@ -575,7 +584,6 @@ def _preview_render_complete_error(self, error_msg):
     preview_frame = -1
 
     txt = _("Error in Preview for frame: ") +  error_msg
-    #self.preview_panel.preview_monitor.queue_draw()
 
     print("preview error" + error_msg)
     
