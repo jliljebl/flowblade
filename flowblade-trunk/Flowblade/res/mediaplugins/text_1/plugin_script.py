@@ -3,6 +3,7 @@
     See  <http://www.gnu.org/licenses/> for licence text.
 """
 import cairo
+from gi.repository import Pango
 
 import fluxity
 
@@ -152,7 +153,7 @@ class LineText:
         self.line_layout = fctx.create_text_layout(self.font_data)
         self.line_layout.create_pango_layout(cr, self.text)
         self.pixel_size = self.line_layout.pixel_size
-        
+
     def create_animation_data(self, fctx, bg):
         # We need cairo.Context to be available to create layouts and do position calculations,
         # so we have do this on first frame when calling render_frame(frame, fctx, w, h).
@@ -165,6 +166,8 @@ class LineText:
         
         start_scale = 1.0
         end_scale = 1.0
+        
+        self._apply_justified_position(bg)
         
         # Animation In
         start_x, start_y, end_x, end_y = self._get_in_animation_affine_data(fctx, bg)
@@ -193,6 +196,19 @@ class LineText:
 
         self._apply_fade(fctx)
 
+    def _apply_justified_position(self, bg):
+        # Compute line position.
+        area_x, area_y, max_width, area_height = bg.area_data
+        line_w, line_h = self.pixel_size
+        x, y = self.layout_pos
+        pango_alignment = self.line_layout.get_pango_alignment() 
+        if pango_alignment == Pango.Alignment.LEFT:
+            return
+        elif pango_alignment == Pango.Alignment.CENTER:
+            self.layout_pos = (x + max_width/2 - line_w/2, y)
+        else: # Pango.Alignment.RIGHT
+            self.layout_pos = (x + max_width - line_w, y)
+            
     def _get_in_animation_affine_data(self, fctx, bg):
         layout_x, layout_y = self.layout_pos
        	line_y = self.get_line_y_pos(fctx)
@@ -481,4 +497,3 @@ class BackGround:
                 cr.rectangle(rx - p, ry - p, aw + 2 * p, rh + 2 * p)
                 cr.set_source(self.bg_color)
                 cr.fill()
-        
