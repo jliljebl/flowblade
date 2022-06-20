@@ -35,7 +35,7 @@ def init_script(fctx):
     fctx.add_editor("Frames Out", fluxity.EDITOR_INT, 20)
     fctx.add_editor("Steps Out", fluxity.EDITOR_INT_RANGE, (3, 2, 10))
     fctx.add_editor("Fade Out Frames", fluxity.EDITOR_INT_RANGE, (0, 0, 200))
-    fctx.add_editor("Background", fluxity. EDITOR_OPTIONS, (2, ["No Background", "Solid Background", "Lines Background"]))
+    fctx.add_editor("Background", fluxity. EDITOR_OPTIONS, (2, ["No Background", "Solid", "Lines", "Lines Word Length"]))
     fctx.add_editor("Background Pad", fluxity.EDITOR_INT, 10)
     fctx.add_editor("Background Color", fluxity.EDITOR_COLOR, (0.8, 0.5, 0.2, 1.0))
     fctx.add_editor("Background Opacity", fluxity.EDITOR_INT_RANGE, (100, 0, 100))
@@ -127,7 +127,8 @@ class LineText:
     NO_BACKGROUND = 0
     COLOR_BACKGROUND = 1
     LINES_BACKGROUND = 2
-
+    LINES_WORD_LENGTH_BACKGROUND = 3
+    
     HORIZONTAL_ANIMATIONS = [FROM_LEFT_CLIPPED, FROM_RIGHT_CLIPPED, FROM_LEFT, FROM_RIGHT]
     VERTICAL_ANIMATIONS = [FROM_UP_CLIPPED, FROM_DOWN_CLIPPED, FROM_UP, FROM_DOWN]
     ZOOM_ANIMATIONS = [ZOOM_IN, ZOOM_OUT]
@@ -451,7 +452,11 @@ class BackGround:
         rx, ry, rw, rh = self.get_bounding_rect_for_line(fctx, line_text)
         ax, ay, aw, ah = self.area_data
         p = self.pad
-        
+        line_x, line_y = line_text.layout_pos
+        w, h = line_text.pixel_size
+
+
+                
         # If and out may gave different animations and need different clipping.
         do_clip = False
         if (line_text.animation_type_in in LineText.CLIPPED_ANIMATIONS) and (frame <= line_text.in_frames):
@@ -460,9 +465,13 @@ class BackGround:
             do_clip = True
         
         if do_clip == True:
-            cr.rectangle(rx - p, ry - p, aw + 2 * p, rh + 2 * p)
-            cr.clip()
-    
+            if self.bg_type == LineText.LINES_WORD_LENGTH_BACKGROUND:
+                cr.rectangle(line_x - p, ry - p, w + 2 * p, rh + 2 * p)
+                cr.clip()
+            else:
+                cr.rectangle(rx - p, ry - p, aw + 2 * p, rh + 2 * p)
+                cr.clip()
+                
     def get_bounding_rect_for_line(self, fctx, line_text):
         line_x = fctx.get_editor_value("Pos X")
         lw, lh = line_text.pixel_size
@@ -493,7 +502,16 @@ class BackGround:
             for linetext in self.linetexts:
                 rx, ry, rw, rh = self.get_bounding_rect_for_line(fctx, linetext)
                 p = self.pad
-                      
                 cr.rectangle(rx - p, ry - p, aw + 2 * p, rh + 2 * p)
                 cr.set_source(self.bg_color)
                 cr.fill()
+        elif self.bg_type == LineText.LINES_WORD_LENGTH_BACKGROUND:
+            for linetext in self.linetexts:
+                rx, ry, rw, rh = self.get_bounding_rect_for_line(fctx, linetext)
+                line_x, line_y = linetext.layout_pos
+                w, h = linetext.pixel_size
+                p = self.pad
+                cr.rectangle(line_x - p, ry - p, w + 2 * p, rh + 2 * p)
+                cr.set_source(self.bg_color)
+                cr.fill()
+                
