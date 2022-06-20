@@ -361,7 +361,7 @@ class LineText:
         animated_value.add_keyframe_at_frame(start_frame + length, end_val, fluxity.KEYFRAME_DISCRETE) # maybe KEYFRAME_LINEAR but should not make difference.
 
     def get_line_y_pos(self, fctx):
-        y = fctx.get_editor_value("Pos X")
+        y = fctx.get_editor_value("Pos Y")
         lw, lh = self.pixel_size # lh is same for all line because we always have the same font.
         for line_index in range(self.line_index):
            y = y + lh + self.line_gap
