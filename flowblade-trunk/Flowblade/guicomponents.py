@@ -1730,7 +1730,7 @@ def display_clip_popup_menu(event, clip, track, callback):
     clip_menu.add(_get_menu_item(_("Clip Info"), callback,\
                   (clip, track, "clip_info", event.x)))
 
-    if clip.media_type != appconsts.PATTERN_PRODUCER:
+    if clip.media_type != appconsts.PATTERN_PRODUCER and clip.container_data == None:
         _add_separetor(clip_menu)
         reload_item = _get_menu_item(_("Reload Media From Disk"), callback, (clip, track, "reload_media", event.x))
         clip_menu.append(reload_item)
