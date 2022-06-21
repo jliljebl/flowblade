@@ -459,7 +459,9 @@ class BackGround:
                 
         # If and out may gave different animations and need different clipping.
         do_clip = False
-        if (line_text.animation_type_in in LineText.CLIPPED_ANIMATIONS) and (frame <= line_text.in_frames):
+        line_delay_addition = line_text.line_index * line_text.line_delay  # clipping application time needs to include line delays.
+        # In and out animations have different clliping applied and need to be applied temporally on their own areas.
+        if (line_text.animation_type_in in LineText.CLIPPED_ANIMATIONS) and (frame <= line_text.in_frames + line_delay_addition):
             do_clip = True
         elif (line_text.animation_type_out in LineText.CLIPPED_ANIMATIONS) and (frame >= fctx.get_length() - line_text.out_frames):
             do_clip = True
