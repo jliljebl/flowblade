@@ -360,15 +360,15 @@ class LineText:
         animated_value.add_keyframe_at_frame(start_frame + length, end_val, fluxity.KEYFRAME_LINEAR)
 
     def _apply_fast_start_movement(self, animated_value, start_val, end_val, start_frame, length):
-        mid_kf_frame = int(length * 0.2)
-        mid_kf_value = start_val + (end_val - start_val) * 0.8
+        mid_kf_frame = int(length * 0.25)
+        mid_kf_value = start_val + (end_val - start_val) * 0.75
         animated_value.add_keyframe_at_frame(start_frame, start_val, fluxity.KEYFRAME_SMOOTH)
         animated_value.add_keyframe_at_frame(start_frame + mid_kf_frame, mid_kf_value, fluxity.KEYFRAME_SMOOTH)
         animated_value.add_keyframe_at_frame(start_frame + length, end_val, fluxity.KEYFRAME_LINEAR)
 
     def _apply_slow_start_movement(self, animated_value, start_val, end_val, start_frame, length):
-        mid_kf_frame = int(length * 0.8)
-        mid_kf_value = start_val + (end_val - start_val) * 0.2
+        mid_kf_frame = int(length * 0.70)
+        mid_kf_value = start_val + (end_val - start_val) * 0.25
         animated_value.add_keyframe_at_frame(start_frame, start_val, fluxity.KEYFRAME_SMOOTH)
         animated_value.add_keyframe_at_frame(start_frame + mid_kf_frame, mid_kf_value, fluxity.KEYFRAME_SMOOTH)
         animated_value.add_keyframe_at_frame(start_frame + length, end_val, fluxity.KEYFRAME_LINEAR)

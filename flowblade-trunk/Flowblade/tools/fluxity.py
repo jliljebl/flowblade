@@ -1021,10 +1021,10 @@ class PangoTextLayout:
                 r, g, b, a = self.color_rgba
                 rg, gg, bg, ag =  self.gradient_color_rgba 
                     
-                CLIP_COLOR_GRAD_1 = (0,  r, g, b, 1)
-                CLIP_COLOR_GRAD_2 = (1,  rg, gg, bg, 1)
-                grad.add_color_stop_rgba(*self._get_opacity_rgba(CLIP_COLOR_GRAD_1))
-                grad.add_color_stop_rgba(*self._get_opacity_rgba(CLIP_COLOR_GRAD_2))
+                CLIP_COLOR_GRAD_1 = (0,  r, g, b, 1.0)
+                CLIP_COLOR_GRAD_2 = (1,  rg, gg, bg, 1.0)
+                grad.add_color_stop_rgba(*CLIP_COLOR_GRAD_1)
+                grad.add_color_stop_rgba(*CLIP_COLOR_GRAD_2)
                 cr.set_source(grad)
 
             cr.move_to(x, y)

@@ -580,7 +580,7 @@ def _preview_render_complete():
         _preview_popover.add(_preview_canvas.widget)
     _preview_popover.popup()
 
-def _preview_render_complete_error(self, error_msg):
+def _preview_render_complete_error(error_msg):
     preview_frame = -1
 
     txt = _("Error in Preview for frame: ") +  error_msg
