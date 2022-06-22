@@ -58,6 +58,7 @@ import rendergui
 import respaths
 import simpleeditors
 import toolsencoding
+import updater
 import userfolders
 import utils
 
@@ -678,7 +679,7 @@ class FluxityContainerActions(AbstractContainerActionObject):
     def update_render_status(self):
         
         Gdk.threads_enter()
-                    
+        self.container_data.progress = None
         if fluxityheadless.session_render_complete(self.get_container_program_id()) == True:
             job_msg = self.get_completed_job_message()
             jobs.update_job_queue(job_msg)
@@ -730,6 +731,10 @@ class FluxityContainerActions(AbstractContainerActionObject):
                 job_msg.text = msg
                 
                 jobs.update_job_queue(job_msg)
+                
+                self.container_data.progress = job_msg.progress
+                updater.repaint_tline()
+                
             else:
                 pass # This can happen sometimes before gmicheadless.py has written a status message, we just do nothing here.
 

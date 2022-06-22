@@ -1797,7 +1797,8 @@ class TimeLineCanvas:
                         cr.set_source(grad)
                 elif track.type == sequence.VIDEO:
                     if clip.container_data != None:
-                        if clip.container_data.rendered_media_range_in == -1: 
+                        if clip.container_data.rendered_media_range_in == -1 \
+                            or (hasattr(clip.container_data, "progress") and clip.container_data.progress != None):
                             if not clip.selected:
                                 clip_bg_col = (0.7, 0.3, 0.3)
                                 cr.set_source_rgb(*CONTAINER_CLIP_NOT_RENDERED_COLOR)
@@ -2139,7 +2140,6 @@ class TimeLineCanvas:
                 clip_start_frame += clip_length
                 continue
 
-
             # Draw sync offset value
             if scale_length > FILL_MIN: 
                 if clip.sync_data != None:
@@ -2166,6 +2166,21 @@ class TimeLineCanvas:
                         cr.set_source_surface(CLIP_MARKER_ICON, int(marker_x) - 4, y)
                         cr.paint()
 
+            # Container clip render status
+            if clip.container_data != None:
+                if hasattr(clip.container_data, "progress") and clip.container_data.progress != None:
+                    cr.set_source_rgba(0, 0, 0, 0.6)
+                    cr.rectangle(int(scale_in + scale_length / 2.0 - 14),  int(y + track_height / 2.0 - 8), 39, 16)
+                    cr.fill()
+            
+                    cr.set_source_rgb(1, 1, 1)
+                    cr.select_font_face ("sans-serif",
+                                         cairo.FONT_SLANT_NORMAL,
+                                         cairo.FONT_WEIGHT_BOLD)
+                    cr.set_font_size(14)
+                    cr.move_to(int(scale_in + scale_length / 2.0 - 12), int(y + track_height / 2.0 + 5))
+                    cr.show_text(str(int(clip.container_data.progress * 100)) + "%")
+                        
             # Get next draw position
             clip_start_frame += clip_length
 
