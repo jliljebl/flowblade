@@ -1,8 +1,12 @@
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
-**INFO: FLOWBLADE DEVELOPMENT WILL RESTART IN THE BEGINNING OF AUGUST, WITH NEW RELEASE TO FOLLOW SHORTLY.**
+------
 
+**INFO: FLOWBLADE DEVELOPMENT WILL CONTINUE IN THE BEGINNING OF AUGUST,**
 
+**WITH NEW RELEASE TO FOLLOW SHORTLY AFTER THAT.**
+
+------
 
 1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
 2. [Features](https://github.com/jliljebl/flowblade#features)
