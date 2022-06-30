@@ -1,10 +1,7 @@
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
-**PROJECT ON BREAK UNTIL FEBRUARY.**
-
-**With resurgent covid and new round of lockdowns I've decided that it's best to take a small break.**
-
-**Everybody stay well and we'll be back and continue once things start clearing up a bit.**
+**PROJECT ON BREAK**
+**I'm looking forward to continue development some time in the future, but there will not be updates for the next few months.**
 
 1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
 2. [Features](https://github.com/jliljebl/flowblade#features)
