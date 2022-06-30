@@ -1,7 +1,8 @@
 ![Flowblade](flowblade-trunk/Flowblade/res/img/header_text.png "Flowblade")
 
-**PROJECT ON BREAK**
-**I'm looking forward to continue development some time in the future, but there will not be updates for the next few months.**
+**INFO: FLOWBLADE DEVELOPMENT WILL RESTART IN THE BEGINNING OF AUGUST, WITH NEW RELEASE TO FOLLOW SHORTLY.**
+
+
 
 1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
 2. [Features](https://github.com/jliljebl/flowblade#features)
