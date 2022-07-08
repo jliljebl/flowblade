@@ -1674,6 +1674,9 @@ class TimeLineCanvas:
         self.parent_positions = {}
         self.sync_children = []
 
+
+
+
         # Draw tracks
         for i in range(1, len(current_sequence().tracks) - 1): # black and hidden tracks are ignored
             self.draw_track(cr
@@ -1683,6 +1686,16 @@ class TimeLineCanvas:
 
         self.draw_compositors(cr)
         self.draw_sync_relations(cr)
+
+        # Draw track lines.
+        cr.set_source_rgb(0.165, 0.165, 0.165)
+        for i in range(0, len(current_sequence().tracks) - 1):
+            y = _get_track_y(i)
+            track_height = current_sequence().tracks[i].height
+            cr.set_line_width(1.0)
+            cr.move_to(0, y + 0.5)
+            cr.line_to(w, y + 0.5)
+            cr.stroke()
 
         # Exit displaying from fake_current_pointer for SLIDE_TRIM mode if last displayed 
         # was from fake_pointer but this is not anymore
@@ -2541,8 +2554,6 @@ class TimeLineColumn:
         cr.set_source(grad)
         cr.fill()
         self.draw_edge(cr, rect)
-        
-
         
         # Draw active switch bg end edge
         rect = (COLUMN_LEFT_PAD + center_width - 1, y, ACTIVE_SWITCH_WIDTH + 1, track.height)
