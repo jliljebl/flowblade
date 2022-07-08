@@ -38,12 +38,10 @@ GNU General Public License for more details.</p>
 <p>You should have received a copy of the GNU General Public License
 along with Flowblade Movie Editor. If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.</p>
 <h1 id="fluxity-scripting">FLUXITY SCRIPTING</h1>
-<p>Fluxity scripting is a <strong>Python scripting solution</strong> initially created to provide <strong>Flowblade Movie Editor</strong> with a <em>Plugin API</em>.</p>
-<p>Currently <em>Fluxity API</em> is used in Flowblade <em>Generators</em> feature.</p>
+<p>Fluxity scripting is a <strong>Python scripting solution</strong> initially created to provide <strong>Flowblade Movie Editor</strong> with a <em>Plugin API</em> used to create <em>Genarators</em> providing means to create e.g. animated text and animated background clips.</p>
 <h2 id="fluxity-api">FLUXITY API</h2>
-<p><em>Fluxity API</em> is made available to scripts mainly by <em>fluxity.FluxityContext</em> object and its methods.</p>
+<p>That <em>Fluxity API</em> is provided by <em>fluxity.FluxityContext</em> object and its methods.</p>
 <p>This object is created to communicate with the script before calling any of the methods of a Media Plugin script.</p>
-<p>Some constants mentioned in this source file - such as <code><a title="fluxity.EDITOR_FLOAT" href="#fluxity.EDITOR_FLOAT">EDITOR_FLOAT</a></code> or <code><a title="fluxity.PROFILE_WIDTH" href="#fluxity.PROFILE_WIDTH">PROFILE_WIDTH</a></code> - can also used by scripts. </p>
 <p>See this document below for <em>fluxity.FluxityContext</em> object API details.</p>
 <h2 id="required-interface">REQUIRED INTERFACE</h2>
 <p>A Python script that satisfies the following interface will load and run without crashing, but will not necessarily create any output.</p>
@@ -209,17 +207,13 @@ def _clamp(v):
     
     # FLUXITY SCRIPTING
     
-    Fluxity scripting is a **Python scripting solution** initially created to provide **Flowblade Movie Editor** with a *Plugin API*.
-    
-    Currently *Fluxity API* is used in Flowblade *Generators* feature.
+    Fluxity scripting is a **Python scripting solution** initially created to provide **Flowblade Movie Editor** with a *Plugin API* used to create *Genarators* providing means to create e.g. animated text and animated background clips.
     
     ## FLUXITY API
     
-    *Fluxity API* is made available to scripts mainly by *fluxity.FluxityContext* object and its methods.
+    That *Fluxity API* is provided by *fluxity.FluxityContext* object and its methods.
 
     This object is created to communicate with the script before calling any of the methods of a Media Plugin script.
-    
-    Some constants mentioned in this source file - such as `EDITOR_FLOAT` or `PROFILE_WIDTH` - can also used by scripts. 
     
     See this document below for *fluxity.FluxityContext* object API details.
 
@@ -1212,10 +1206,10 @@ class PangoTextLayout:
                 r, g, b, a = self.color_rgba
                 rg, gg, bg, ag =  self.gradient_color_rgba 
                     
-                CLIP_COLOR_GRAD_1 = (0,  r, g, b, 1.0)
-                CLIP_COLOR_GRAD_2 = (1,  rg, gg, bg, 1.0)
-                grad.add_color_stop_rgba(*CLIP_COLOR_GRAD_1)
-                grad.add_color_stop_rgba(*CLIP_COLOR_GRAD_2)
+                CLIP_COLOR_GRAD_1 = (0,  r, g, b, 1)
+                CLIP_COLOR_GRAD_2 = (1,  rg, gg, bg, 1)
+                grad.add_color_stop_rgba(*self._get_opacity_rgba(CLIP_COLOR_GRAD_1))
+                grad.add_color_stop_rgba(*self._get_opacity_rgba(CLIP_COLOR_GRAD_2))
                 cr.set_source(grad)
 
             cr.move_to(x, y)
@@ -1560,16 +1554,8 @@ def render_frame_sequence(script, script_file, in_frame, out_frame, out_folder, 
     * if errors occurred during rendering it has *key -&gt; value* pair *fluxity.FLUXITY_ERROR_MSG -&gt; error message(str)*.
     * if script created log messages it has *key -&gt; value* pair *fluxity.FLUXITY_LOG_MSG -&gt; log message(str)*.
     &#34;&#34;&#34;
-    # Some simple heuristics to decide how many processes will be used for rendering
-    cpu_count = multiprocessing.cpu_count()
-    threads = cpu_count - 2
-    # Computer does not that many cores, let&#39;s only use one.
-    if threads &lt; 2:
-        threads = 1
-    # This gets diminshing returns so let&#39;s cap it at 8.
-    if threads &gt; 8:
-        threads = 8
-    # If we are rendering a very small amount of frames, there isn&#39;t much benefit to use multiple processes.
+    
+    threads = 6 # add some heuristics here.
     if out_frame - in_frame &lt; threads * 2:
         threads = 1
 
@@ -3408,10 +3394,10 @@ gradient_color_rgba, gradient_direction))</p>
                 r, g, b, a = self.color_rgba
                 rg, gg, bg, ag =  self.gradient_color_rgba 
                     
-                CLIP_COLOR_GRAD_1 = (0,  r, g, b, 1.0)
-                CLIP_COLOR_GRAD_2 = (1,  rg, gg, bg, 1.0)
-                grad.add_color_stop_rgba(*CLIP_COLOR_GRAD_1)
-                grad.add_color_stop_rgba(*CLIP_COLOR_GRAD_2)
+                CLIP_COLOR_GRAD_1 = (0,  r, g, b, 1)
+                CLIP_COLOR_GRAD_2 = (1,  rg, gg, bg, 1)
+                grad.add_color_stop_rgba(*self._get_opacity_rgba(CLIP_COLOR_GRAD_1))
+                grad.add_color_stop_rgba(*self._get_opacity_rgba(CLIP_COLOR_GRAD_2))
                 cr.set_source(grad)
 
             cr.move_to(x, y)
@@ -3595,10 +3581,10 @@ gradient_color_rgba, gradient_direction))</p>
             r, g, b, a = self.color_rgba
             rg, gg, bg, ag =  self.gradient_color_rgba 
                 
-            CLIP_COLOR_GRAD_1 = (0,  r, g, b, 1.0)
-            CLIP_COLOR_GRAD_2 = (1,  rg, gg, bg, 1.0)
-            grad.add_color_stop_rgba(*CLIP_COLOR_GRAD_1)
-            grad.add_color_stop_rgba(*CLIP_COLOR_GRAD_2)
+            CLIP_COLOR_GRAD_1 = (0,  r, g, b, 1)
+            CLIP_COLOR_GRAD_2 = (1,  rg, gg, bg, 1)
+            grad.add_color_stop_rgba(*self._get_opacity_rgba(CLIP_COLOR_GRAD_1))
+            grad.add_color_stop_rgba(*self._get_opacity_rgba(CLIP_COLOR_GRAD_2))
             cr.set_source(grad)
 
         cr.move_to(x, y)
