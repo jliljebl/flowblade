@@ -511,7 +511,7 @@ class EditorWindow:
             self.project_panel = guiutils.set_margins(project_vbox, 0, 2, 6, 2)
             self.top_project_panel = None 
         
-        # Position bar and decorative frame  for it
+        # Position bar and etched frame for it.
         self.pos_bar = PositionBar()
         pos_bar_frame = Gtk.Frame()
         pos_bar_frame.add(self.pos_bar.widget)

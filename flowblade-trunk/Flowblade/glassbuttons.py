@@ -313,6 +313,7 @@ class PlayerButtons(AbstractGlassButtons):
         if prefs.double_track_hights:
            size_ind = 1
            size_adj = 2
+          
         AbstractGlassButtons.__init__(self, MB_BUTTON_WIDTH[size_ind], MB_BUTTON_HEIGHT[size_ind], MB_BUTTON_Y, MB_BUTTONS_WIDTH[size_ind], MB_BUTTONS_HEIGHT[size_ind] - 2)
 
         play_pause_icon = guiutils.get_cairo_image("play_pause_s" + icon_color)
@@ -338,7 +339,7 @@ class PlayerButtons(AbstractGlassButtons):
                           mark_in_icon, mark_out_icon,
                           marks_clear_icon, to_mark_in_icon, to_mark_out_icon]
                 #  go to start end add 5*size_adj, 5*size_adj,
-                self.image_x = [5*size_adj, 5*size_adj, 5*size_adj, 7*size_adj, 5*size_adj, 3*size_adj, 11*size_adj, 2*size_adj, 7*size_adj, 6*size_adj]
+                self.image_x = [5*size_adj, 5*size_adj, 5*size_adj, 7*size_adj, 5*size_adj, 3*size_adj, 6*size_adj, 2*size_adj, 7*size_adj, 6*size_adj]
             else:
                 self.icons = [prev_icon, next_icon, play_pause_icon,
                           mark_in_icon, mark_out_icon,
@@ -351,12 +352,12 @@ class PlayerButtons(AbstractGlassButtons):
                               mark_in_icon, mark_out_icon,
                               marks_clear_icon, to_mark_in_icon, to_mark_out_icon]
                 #  go to start end add 5*size_adj, 5*size_adj,
-                self.image_x = [5*size_adj, 5*size_adj, 5*size_adj, 7*size_adj, 5*size_adj, 10*size_adj, 3*size_adj, 11*size_adj, 2*size_adj, 7*size_adj, 6*size_adj]
+                self.image_x = [11*size_adj, 11*size_adj, 11*size_adj, 13*size_adj, 15*size_adj, 12*size_adj, 13*size_adj, 6*size_adj, 0*size_adj, 5*size_adj, 4*size_adj]
             else:
                 self.icons = [prev_icon, next_icon, play_icon, stop_icon,
                               mark_in_icon, mark_out_icon,
                               marks_clear_icon, to_mark_in_icon, to_mark_out_icon]
-                self.image_x = [5*size_adj, 7*size_adj, 20*size_adj, 10*size_adj, 2*size_adj, 11*size_adj, 2*size_adj, 7*size_adj, 6*size_adj]
+                self.image_x = [7*size_adj, 13*size_adj, 17*size_adj, 15*size_adj, 16*size_adj, 9*size_adj, 0*size_adj, 7*size_adj, 5*size_adj]
             # ------------------------------End of timeline_start_end_button
 
         for i in range(0, len(self.icons)):
