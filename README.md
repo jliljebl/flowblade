@@ -85,13 +85,17 @@ Installing instructions are available [here](./flowblade-trunk/docs/INSTALLING.m
 [System Requirements](./flowblade-trunk/docs/SYSTEM_REQUIREMENTS.md)
 
 # Screenshots
-[Screenshot 2.8 neutral theme](./flowblade-trunk/docs/Screenshot_THEME_FLOWBLADE_NEUTRAL.png)
 
-[Screenshot 2.8 grey theme](./flowblade-trunk/docs/Screenshot_THEME_FLOWBLADE_GRAY.png)
+### Screenshot 2.8 neutral theme
+![Screenshot 2.8 neutral theme](./flowblade-trunk/docs/Screenshot_THEME_FLOWBLADE_NEUTRAL.png)
 
-[Screenshot 2.0 blue theme](./flowblade-trunk/docs/Screenshot-2-0.png)
+### Screenshot 2.8 grey theme
+![Screenshot 2.8 grey theme](./flowblade-trunk/docs/Screenshot_THEME_FLOWBLADE_GRAY.png)
 
-These are in the repository */docs* folder.
+### Screenshot 2.0 blue theme
+![Screenshot 2.0 blue theme](./flowblade-trunk/docs/Screenshot-2-0.png)
+
+
 
 # Forum, Webpage
 
