@@ -10,12 +10,11 @@
 
 1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
 2. [Features](https://github.com/jliljebl/flowblade#features)
-3. [Releases](https://github.com/jliljebl/flowblade#releases)
-4. [Installing Flowblade](https://github.com/jliljebl/flowblade#installing-flowblade)
-5. [Docs](https://github.com/jliljebl/flowblade#docs)
-6. [Screenshot](https://github.com/jliljebl/flowblade#screenshot)
-7. [Forum, Webpage](https://github.com/jliljebl/flowblade#forum-webpage)
-8. [Contact](https://github.com/jliljebl/flowblade#contact)
+3. [Screenshots](https://github.com/jliljebl/flowblade#screenshots)
+4. [Releases](https://github.com/jliljebl/flowblade#releases)
+5. [Setup and Installation](https://github.com/jliljebl/flowblade#setup-and-installation)
+6. [FAQ, Discussion](https://github.com/jliljebl/flowblade#faq-discussion)
+7. [Contact, Contributing](https://github.com/jliljebl/flowblade#contact-contributing)
 
 # Introduction
 
@@ -58,32 +57,6 @@ Flowblade offers a configurable workflow - toolset, its order, default tool and 
 * Most common video and audio formats, depends on installed MLT/FFMPEG codecs
 * User can define rendering by setting FFMpeg args individually
 
-# Releases
-
-**Latest release:** Flowblade Movie Editor 2.8 was released on February 2021.
-
-**Next release:** February 15th 2022.
-
-# Installing Flowblade
-
-Installing instructions are available [here](./flowblade-trunk/docs/INSTALLING.md).
-
-# Docs
-
-[FAQ](./flowblade-trunk/docs/FAQ.md)
-
-[Known Issues](./flowblade-trunk/docs/KNOWN_ISSUES.md)
-
-[Roadmap](./flowblade-trunk/docs/ROADMAP.md)
-
-[Release notes](./flowblade-trunk/docs/RELEASE_NOTES.md)
-
-[Creating a translation](./flowblade-trunk/docs/CREATING_TRANSLATION.md)
-
-[Dependencies](./flowblade-trunk/docs/DEPENDENCIES.md)
-
-[System Requirements](./flowblade-trunk/docs/SYSTEM_REQUIREMENTS.md)
-
 # Screenshots
 
 ### Screenshot 2.8 neutral theme
@@ -95,16 +68,40 @@ Installing instructions are available [here](./flowblade-trunk/docs/INSTALLING.m
 ### Screenshot 2.0 blue theme
 ![Screenshot 2.0 blue theme](./flowblade-trunk/docs/Screenshot-2-0.png)
 
+# Releases
+
+**Latest release:** Flowblade Movie Editor 2.8 was released on February 2021.
+
+**Next release:** February 15th 2022.
+
+[Release notes](./flowblade-trunk/docs/RELEASE_NOTES.md)
+
+[Roadmap for Future Releases](./flowblade-trunk/docs/ROADMAP.md)
+
+[Known Issues](./flowblade-trunk/docs/KNOWN_ISSUES.md)
 
 
-# Forum, Webpage
+# Setup and Installation 
 
-For questions and discussion on Flowblade we have a [User Forum](https://github.com/jliljebl/flowblade-forum).
+[System Requirements](./flowblade-trunk/docs/SYSTEM_REQUIREMENTS.md)
+
+Installing instructions are available [here](./flowblade-trunk/docs/INSTALLING.md).
+
+[Package Dependencies](./flowblade-trunk/docs/DEPENDENCIES.md)
+
+
+# FAQ, Discussion
+
+[FAQ](./flowblade-trunk/docs/FAQ.md)
+
+For other questions and discussion on Flowblade we have a [User Forum](https://github.com/jliljebl/flowblade-forum).
 
 [The project webpage is here](http://jliljebl.github.io/flowblade/). 
 
-# Contact
+# Contact, Contributing
 
 Use the **Issues** tab to give bug reports or to make feature requests.
 
 If needed, contact the project lead for additional information: janne.liljeblad@gmail.com
+
+If you would like to contribute to a translation of Flowblade in your language the process for this can be found [here](./flowblade-trunk/docs/CREATING_TRANSLATION.md).
