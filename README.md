@@ -8,13 +8,13 @@
 
 ------
 
-1. [Introduction](https://github.com/alxwen711/flowblade#introduction)
-2. [Features](https://github.com/alxwen711/flowblade#features)
-3. [Screenshots](https://github.com/alxwen711/flowblade#screenshots)
-4. [Releases](https://github.com/alxwen711/flowblade#releases)
-5. [Installation and Usage](https://github.com/alxwen711/flowblade#installation-and-usage)
-6. [FAQ, Discussion](https://github.com/alxwen711/flowblade#faq-discussion)
-7. [Contact, Contributing](https://github.com/alxwen711/flowblade#contact-contributing)
+1. [Introduction](https://github.com/jliljebl/flowblade#introduction)
+2. [Features](https://github.com/jliljebl/flowblade#features)
+3. [Screenshots](https://github.com/jliljebl/flowblade#screenshots)
+4. [Releases](https://github.com/jliljebl/flowblade#releases)
+5. [Installation and Usage](https://github.com/jliljebl/flowblade#installation-and-usage)
+6. [FAQ, Discussion](https://github.com/jliljebl/flowblade#faq-discussion)
+7. [Contact, Contributing](https://github.com/jliljebl/flowblade#contact-contributing)
 
 # Introduction
 
@@ -85,7 +85,7 @@ Flowblade offers a configurable workflow - toolset, its order, default tool and 
 
 For best performance, the following system specs are recommended:
 
-## RECOMMENDED SYSTEM SPECS
+### RECOMMENDED SYSTEM SPECS
 
 #### CPU
 
