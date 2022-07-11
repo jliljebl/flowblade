@@ -12,7 +12,7 @@
 2. [Features](https://github.com/jliljebl/flowblade#features)
 3. [Screenshots](https://github.com/jliljebl/flowblade#screenshots)
 4. [Releases](https://github.com/jliljebl/flowblade#releases)
-5. [Installation and Usage](https://github.com/jliljebl/flowblade#installation-and-usage)
+5. [Installation, Usage](https://github.com/jliljebl/flowblade#installation-usage)
 6. [FAQ, Discussion](https://github.com/jliljebl/flowblade#faq-discussion)
 7. [Contact, Contributing](https://github.com/jliljebl/flowblade#contact-contributing)
 
@@ -86,7 +86,7 @@ Flowblade offers a configurable workflow - toolset, its order, default tool and 
 ### [Known Issues](./flowblade-trunk/docs/KNOWN_ISSUES.md)
 
 
-# Installation and Usage
+# Installation, Usage
 
 For best performance, the following system specs are recommended:
 
