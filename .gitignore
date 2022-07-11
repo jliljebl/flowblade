@@ -33,3 +33,7 @@ mlt.py
 /flowblade-trunk/Flowblade/res/css3/sass/.sass-cache
 /flowblade-trunk/Flowblade/res/css2/sass/gtk-flowblade-dark.css
 /flowblade-trunk/Flowblade/res/css3/sass/gtk-flowblade-dark.css
+
+
+# MacOS files
+*.DS_Store
