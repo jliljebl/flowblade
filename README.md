@@ -16,6 +16,7 @@
 6. [FAQ, Discussion](https://github.com/jliljebl/flowblade#faq-discussion)
 7. [Contact, Contributing](https://github.com/jliljebl/flowblade#contact-contributing)
 
+
 # Introduction
 
 Flowblade is a **multitrack non-linear video editor** for Linux released under **GPL 3 license**.
@@ -23,6 +24,7 @@ Flowblade is a **multitrack non-linear video editor** for Linux released under *
 With Flowblade Movie Editor you can compose movies from video clips, audio clips and graphics files. Clips can be cut at the desired frames, filters can be added to clips, and you can create multilayer composite images using compositor objects.
 
 Flowblade offers a configurable workflow - toolset, its order, default tool and certain timeline behaviours are user settable.
+
 
 # Features
 
@@ -57,6 +59,7 @@ Flowblade offers a configurable workflow - toolset, its order, default tool and 
 * Most common video and audio formats, depends on installed MLT/FFMPEG codecs
 * User can define rendering by setting FFMpeg args individually
 
+
 # Screenshots
 
 ### Screenshot 2.8 neutral theme
@@ -68,17 +71,19 @@ Flowblade offers a configurable workflow - toolset, its order, default tool and 
 ### Screenshot 2.0 blue theme
 ![Screenshot 2.0 blue theme](./flowblade-trunk/docs/Screenshot-2-0.png)
 
+
 # Releases
 
 **Latest release:** Flowblade Movie Editor 2.8 was released on February 2021.
 
 **Next release:** February 15th 2022.
 
-[Release notes](./flowblade-trunk/docs/RELEASE_NOTES.md)
 
-[Roadmap for Future Releases](./flowblade-trunk/docs/ROADMAP.md)
+### [Release notes](./flowblade-trunk/docs/RELEASE_NOTES.md)
 
-[Known Issues](./flowblade-trunk/docs/KNOWN_ISSUES.md)
+### [Roadmap for Future Releases](./flowblade-trunk/docs/ROADMAP.md)
+
+### [Known Issues](./flowblade-trunk/docs/KNOWN_ISSUES.md)
 
 
 # Installation and Usage
@@ -104,18 +109,22 @@ For best performance, the following system specs are recommended:
 
 * MLT 6.18
 
-[Installation Instrutions](./flowblade-trunk/docs/INSTALLING.md).
 
-[Package Dependencies](./flowblade-trunk/docs/DEPENDENCIES.md)
+### [Installation Instrutions](./flowblade-trunk/docs/INSTALLING.md)
+
+### [Package Dependencies](./flowblade-trunk/docs/DEPENDENCIES.md)
+
+### [User Manual](http://jliljebl.github.io/flowblade/webhelp.html)
 
 
 # FAQ, Discussion
 
-[FAQ](./flowblade-trunk/docs/FAQ.md)
+### [FAQ](./flowblade-trunk/docs/FAQ.md)
 
 For other questions and discussion on Flowblade we have a [User Forum](https://github.com/jliljebl/flowblade-forum).
 
-[The project webpage is here](http://jliljebl.github.io/flowblade/). 
+### [Project Webpage](http://jliljebl.github.io/flowblade/)
+
 
 # Contact, Contributing
 
