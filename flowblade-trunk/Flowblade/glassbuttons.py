@@ -536,10 +536,13 @@ class GlassButtonsGroup(AbstractGlassButtons):
         self.image_y_default = image_y_default
         focus_groups[focus_group].append(self.widget)
 
-    def add_button(self, pix_buf, release_callback):
+    def add_button(self, pix_buf, release_callback, image_x=None):
+        if image_x == None:
+            image_x = self.image_x_default
+            
         self.icons.append(pix_buf)
         self.released_callback_funcs.append(release_callback)
-        self.image_x.append(self.image_x_default)
+        self.image_x.append(image_x)
         self.image_y.append(self.image_y_default)
         self.sensitive.append(True)
         self.widget.set_pref_size(len(self.icons) * self.button_width + 2, self.button_height + 2)
