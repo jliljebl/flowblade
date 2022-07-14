@@ -250,6 +250,7 @@ FRAME_SCALE_NEUTRAL_BG_COLOR = ((35.0/255.0) + 0.02, (35.0/255.0) + 0.02, (35.0/
 THEME_NEUTRAL_COLUMN_BG_COLOR = (41.7/255.0, 41.7/255.0, 41.7/255.0)
 
 COLUMN_NOT_ACTIVE_COLOR = (0.32, 0.32, 0.34)
+COLUMN_ACTIVE_COLOR  = (0.063, 0.341, 0.659)
 
 OVERLAY_COLOR = (0.9,0.9,0.9)
 OVERLAY_SELECTION_COLOR = (0.9,0.9,0.0)
@@ -2559,10 +2560,13 @@ class TimeLineColumn:
         rect = (COLUMN_LEFT_PAD + center_width - 1, y, ACTIVE_SWITCH_WIDTH + 1, track.height)
         cr.rectangle(*rect)
         if track.active:
-            grad = cairo.LinearGradient(COLUMN_LEFT_PAD + center_width, y,
-                                        COLUMN_LEFT_PAD + center_width, y + track.height)
-            self._add_gradient_color_stops(grad, track)
-            cr.set_source(grad)
+            if track == current_sequence().get_first_active_track():
+                cr.set_source_rgb(*COLUMN_ACTIVE_COLOR)
+            else:
+                grad = cairo.LinearGradient(COLUMN_LEFT_PAD + center_width, y,
+                                            COLUMN_LEFT_PAD + center_width, y + track.height)
+                self._add_gradient_color_stops(grad, track)
+                cr.set_source(grad)
         else:
             cr.set_source_rgb(*COLUMN_NOT_ACTIVE_COLOR)
         cr.fill()
