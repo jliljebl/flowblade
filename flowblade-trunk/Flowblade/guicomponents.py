@@ -2995,6 +2995,164 @@ class MonitorTCDisplay:
         cr.close_path ()
 
 
+class MonitorMarksTCInfo:
+    def __init__(self):
+        if editorstate.screen_size_small_height() == True:
+            font_desc = "sans bold 8"
+        else:
+            font_desc = "sans bold 9"
+
+        self.monitor_source = Gtk.Label()
+        self.monitor_source.modify_font(Pango.FontDescription(font_desc))
+        self.monitor_source.set_ellipsize(Pango.EllipsizeMode.END)
+        self.monitor_source.set_sensitive(False)
+        
+        self.monitor_tc = Gtk.Label()
+        self.monitor_tc.modify_font(Pango.FontDescription(font_desc))
+
+        self.marks_tc_display = MonitorInfoDisplay()
+
+        self.widget = Gtk.HBox()
+        self.widget.pack_start(self.marks_tc_display.widget, False, False, 0)
+
+            
+    def set_source_name(self, source_name):
+        self.monitor_source.set_text(source_name)
+        
+    def set_source_tc(self, tc_str):
+        self.monitor_tc.set_text(tc_str)
+    
+    def set_range_info(self, in_str, out_str, len_str):
+        self.marks_tc_display.in_str = in_str
+        self.marks_tc_display.out_str = out_str
+        self.marks_tc_display.len_str = len_str
+        
+        self.marks_tc_display.widget.queue_draw()
+        #if editorstate.screen_size_small_width() == False:
+        #    self.in_value.set_text(in_str)
+        #    self.out_value.set_text(out_str)
+        #self.marks_length_value.set_text(len_str)
+    
+    
+
+class MonitorInfoDisplay:
+
+    def __init__(self, widget_width=297):
+        self.widget = cairoarea.CairoDrawableArea2( widget_width,
+                                                    18,
+                                                    self._draw)
+        self.font_desc = Pango.FontDescription("Bitstream Vera Sans Mono Condensed 8")
+        self.mark_in_img = guiutils.get_cairo_image("mark_in_tc", force=False) 
+        self.mark_out_img = guiutils.get_cairo_image("mark_out_tc", force=False)
+        self.marks_length_img = guiutils.get_cairo_image("marks_length_tc", force=False)
+
+        self.in_str = "--:--:--:--"
+        self.out_str = "--:--:--:--"
+        self.len_str = "--:--:--:--"
+        
+        # Draw consts
+        x = 2
+        y = 2
+        width = widget_width - 4
+        height = 16
+        aspect = 1.0
+        corner_radius = height / 3.5
+        radius = corner_radius / aspect
+        degrees = M_PI / 180.0
+
+        self._draw_consts = (x, y, width, height, aspect, corner_radius, radius, degrees)
+
+        self.FPS_NOT_SET = -99.0
+
+        self._frame = 0
+        self.use_internal_frame = False
+
+        self.use_internal_fps = False # if False, fps value for calulating tc comes from utils.fps(),
+                                       # if True, fps value from self.fps that will have to be set from user site
+        self.display_tc = True # if this is False the frame number is displayed instead of timecode
+        self.fps = self.FPS_NOT_SET # this will have to be set from user site
+
+    def set_frame(self, frame):
+        self._frame = frame # this is used in tools, editor window uses PLAYER frame
+        self.widget.queue_draw()
+
+    def _draw(self, event, cr, allocation):
+        """
+        Callback for repaint from CairoDrawableArea.
+        We get cairo contect and allocation.
+        """
+        x, y, w, h = allocation
+
+        # Draw round rect with gradient and stroke around for thin bezel
+        self._round_rect_path(cr)
+        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
+            cr.set_source_rgb(0.2, 0.2, 0.2)
+        else:
+            cr.set_source_rgb(0.1, 0.1, 0.1)
+        cr.fill_preserve()
+        
+        if editorpersistance.prefs.theme == appconsts.LIGHT_THEME:
+            grad = cairo.LinearGradient (0, 0, 0, h)
+            for stop in BIG_TC_GRAD_STOPS:
+                grad.add_color_stop_rgba(*stop)
+            cr.set_source(grad)
+            cr.fill_preserve()
+
+        grad = cairo.LinearGradient (0, 0, 0, h)
+        for stop in BIG_TC_FRAME_GRAD_STOPS:
+            grad.add_color_stop_rgba(*stop)
+        cr.set_source(grad)
+        cr.set_line_width(1)
+        cr.stroke()
+
+        # Get current TIMELINE frame str
+        if self.use_internal_frame:
+            frame = self._frame
+        else:
+            frame = PLAYER().tracktor_producer.frame() # is this used actually?
+
+        if self.display_tc == True:
+            if self.use_internal_fps == False:
+                frame_str = utils.get_tc_string(frame)
+            else:
+                if  self.fps != self.FPS_NOT_SET:
+                    frame_str = utils.get_tc_string_with_fps(frame, self.fps)
+                else:
+                    frame_str = ""
+        else:
+            frame_str = str(self._frame).rjust(6)
+    
+            self.mark_in_img
+
+        cr.set_source_surface(self.mark_in_img, 10, 5)
+        cr.paint()
+        cr.set_source_surface(self.mark_out_img, 108, 5)
+        cr.paint()
+        cr.set_source_surface(self.marks_length_img, 203, 5)
+        cr.paint()
+        
+        # Tc Texts
+        layout = PangoCairo.create_layout(cr)
+        # Some spaces to get the desired text printed with one layout, about like this: "] --:--:--:-- [ 00:00:00:00 ][ --:--:--:--"
+        layout.set_text("  " + self.in_str + "     " + self.out_str + "      " + self.len_str, -1)
+        layout.set_font_description(self.font_desc)
+
+        cr.set_source_rgb(0.7, 0.7, 0.7)
+        cr.move_to(8, 4)
+        PangoCairo.update_layout(cr, layout)
+        PangoCairo.show_layout(cr, layout)
+        
+    def _round_rect_path(self, cr):
+        x, y, width, height, aspect, corner_radius, radius, degrees = self._draw_consts
+
+        cr.new_sub_path()
+        cr.arc (x + width - radius, y + radius, radius, -90 * degrees, 0 * degrees)
+        cr.arc (x + width - radius, y + height - radius, radius, 0 * degrees, 90 * degrees)
+        cr.arc (x + radius, y + height - radius, radius, 90 * degrees, 180 * degrees)
+        cr.arc (x + radius, y + radius, radius, 180 * degrees, 270 * degrees)
+        cr.close_path ()
+        
+""" delete when you see this again.
 class MonitorTCInfo:
     def __init__(self):
         if editorstate.screen_size_small_height() == True:
@@ -3052,7 +3210,7 @@ class MonitorTCInfo:
             self.in_value.set_text(in_str)
             self.out_value.set_text(out_str)
         self.marks_length_value.set_text(len_str)
-    
+"""
 
 class TimeLineLeftBottom:
     def __init__(self, comp_mode_launch, tline_render_mode_launcher):
