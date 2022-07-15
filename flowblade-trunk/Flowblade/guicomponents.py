@@ -3037,7 +3037,7 @@ class MonitorMarksTCInfo:
 
 class MonitorInfoDisplay:
 
-    def __init__(self, widget_width=297):
+    def __init__(self, widget_width=299):
         self.widget = cairoarea.CairoDrawableArea2( widget_width,
                                                     18,
                                                     self._draw)
@@ -3124,11 +3124,11 @@ class MonitorInfoDisplay:
     
             self.mark_in_img
 
-        cr.set_source_surface(self.mark_in_img, 10, 5)
+        cr.set_source_surface(self.mark_in_img, 12, 5)
         cr.paint()
-        cr.set_source_surface(self.mark_out_img, 108, 5)
+        cr.set_source_surface(self.mark_out_img, 110, 5)
         cr.paint()
-        cr.set_source_surface(self.marks_length_img, 203, 5)
+        cr.set_source_surface(self.marks_length_img, 205, 5)
         cr.paint()
         
         # Tc Texts
@@ -3138,7 +3138,7 @@ class MonitorInfoDisplay:
         layout.set_font_description(self.font_desc)
 
         cr.set_source_rgb(0.7, 0.7, 0.7)
-        cr.move_to(8, 4)
+        cr.move_to(10, 4)
         PangoCairo.update_layout(cr, layout)
         PangoCairo.show_layout(cr, layout)
         
