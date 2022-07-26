@@ -90,25 +90,22 @@ Flowblade offers a configurable workflow - toolset, its order, default tool and 
 
 For best performance, the following system specs are recommended:
 
-### RECOMMENDED SYSTEM SPECS
-
-#### CPU
+### CPU
 
 * x86-64 Intel or AMD
 * 2 GHz core for SD
 * 2 cores for HD
 * 4 cores for 4K
 
-#### RAM
+### RAM
 
 * 4 GB for SD
 * 8 GB for HD
 * 16 GB for 4K
 
-#### SOFTWARE LIBRARIES
+### SOFTWARE LIBRARIES
 
 * MLT 6.18
-
 
 ### [Installation Instrutions](./flowblade-trunk/docs/INSTALLING.md)
 
