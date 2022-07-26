@@ -103,7 +103,7 @@ For best performance, the following system specs are recommended:
 * 8 GB for HD
 * 16 GB for 4K
 
-### SOFTWARE LIBRARIES
+### Software Libraries
 
 * MLT 6.18
 
