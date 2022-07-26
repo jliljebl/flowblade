@@ -125,8 +125,8 @@ For other questions and discussion on Flowblade we have a [User Forum](https://g
 
 # Contact, Contributing
 
-Use the **Issues** tab to give bug reports or to make feature requests.
+Use the **[Issues](https://github.com/jliljebl/flowblade/issues)** tab to give bug reports or to make feature requests.
 
 If needed, contact the project lead for additional information: janne.liljeblad@gmail.com
 
-If you would like to contribute to a translation of Flowblade in your language the process for this can be found [here](./flowblade-trunk/docs/CREATING_TRANSLATION.md).
+If you would like to contribute to a translation of Flowblade's documentation in your language the process for this can be found [here](./flowblade-trunk/docs/CREATING_TRANSLATION.md).
