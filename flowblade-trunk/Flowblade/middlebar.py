@@ -222,10 +222,11 @@ def _create_buttons(editor_window):
         icon_color = ""
     # End of Colorized icons
 
+    # Zoom buttons
     editor_window.zoom_buttons = glassbuttons.GlassButtonsGroup(38*size_adj, 23*size_adj, 2*size_adj, 8*size_adj, 5*size_adj)
     editor_window.zoom_buttons.add_button(guiutils.get_cairo_image("zoom_in" + icon_color), updater.zoom_in)
-    editor_window.zoom_buttons.add_button(guiutils.get_cairo_image("zoom_out" + icon_color), updater.zoom_out)
-    editor_window.zoom_buttons.add_button(guiutils.get_cairo_image("zoom_length" + icon_color), updater.zoom_project_length)
+    editor_window.zoom_buttons.add_button(guiutils.get_cairo_image("zoom_out" + icon_color), updater.zoom_out, 8*size_adj)
+    editor_window.zoom_buttons.add_button(guiutils.get_cairo_image("zoom_length" + icon_color), updater.zoom_project_length, 6*size_adj - 1)
     tooltips = [_("Zoom In - Mouse Middle Scroll"), _("Zoom Out - Mouse Middle Scroll"), _("Zoom Length - Mouse Middle Click")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.zoom_buttons, tooltips)
     editor_window.zoom_buttons.no_decorations = no_decorations
@@ -242,10 +243,10 @@ def _create_buttons(editor_window):
     
     # Delete buttons
     editor_window.edit_buttons_3 = glassbuttons.GlassButtonsGroup(46*size_adj, 23*size_adj, 2*size_adj, 3*size_adj, 5*size_adj)
-    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("splice_out" + icon_color), tlineaction.splice_out_button_pressed)
-    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("lift" + icon_color), tlineaction.lift_button_pressed)
-    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("ripple_delete" + icon_color), tlineaction.ripple_delete_button_pressed)
-    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("delete_range" + icon_color), tlineaction.delete_range_button_pressed)
+    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("splice_out" + icon_color), tlineaction.splice_out_button_pressed, 10*size_adj)
+    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("lift" + icon_color), tlineaction.lift_button_pressed, 9*size_adj)
+    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("ripple_delete" + icon_color), tlineaction.ripple_delete_button_pressed, 4*size_adj)
+    editor_window.edit_buttons_3.add_button(guiutils.get_cairo_image("delete_range" + icon_color), tlineaction.delete_range_button_pressed, 4*size_adj)
     tooltips = [_("Splice Out - Delete"), _("Lift - Control + Delete"), _("Ripple Delete"), _("Range Delete")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons_3, tooltips)
     editor_window.edit_buttons_3.no_decorations = no_decorations
@@ -316,10 +317,10 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
     if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
         buttons_row.pack_start(w.tool_selector.widget, False, True, 0)
-        if editorstate.SCREEN_WIDTH > 1919:
-            buttons_row.pack_start(guiutils.get_pad_label(60, 10), False, True, 0)
+        if editorstate.SCREEN_WIDTH > 1600:
+            buttons_row.pack_start(guiutils.get_pad_label(80, 10), False, True, 0)
         else:
-            buttons_row.pack_start(Gtk.Label(), True, True, 0) # For some layout we cant afford additional 60px if w < 1920
+            buttons_row.pack_start(Gtk.Label(), True, True, 0) # For some layout we cant afford additional 60px if w < 1600
             
     if editorstate.screen_size_small_width() == False:
         pad_w = 30
@@ -396,7 +397,10 @@ def fill_with_COMPONENTS_CENTERED_pattern(buttons_row, window):
     buttons_row.pack_start(guiutils.get_pad_label(7, MIDDLE_ROW_HEIGHT), False, True, 0) #### NOTE!!!!!! THIS DETERMINES THE HEIGHT OF MIDDLE ROW
     if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
         buttons_row.pack_start(w.tool_selector.widget, False, True, 0)
-        buttons_row.pack_start(guiutils.get_pad_label(pad_w, 10), False, True, 0)
+        if editorstate.SCREEN_WIDTH > 1600:
+            buttons_row.pack_start(guiutils.get_pad_label(80, 10), False, True, 0)
+        else:
+            buttons_row.pack_start(guiutils.get_pad_label(20, 10), False, True, 0)
 
     buttons_row.pack_start(get_buttons_group(0), False, True, 0)
     buttons_row.pack_start(guiutils.get_pad_label(pad_w, 10), False, True, 0)

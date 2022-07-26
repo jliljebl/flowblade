@@ -272,18 +272,18 @@ class EditorWindow:
         layout_press.widget.set_tooltip_text(_("Layouts"))
         layout_press.connect_launched_menu(editorlayout._top_bar_button_menu)
         
-        info_box = Gtk.HBox(False, 0)
+        tline_info_box = Gtk.HBox(False, 0)
         if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
-            info_box.pack_start(self.tools_buttons.widget, False, False, 0)
-            info_box.pack_start(guiutils.pad_label(8,2), False, False, 0)
-            info_box.pack_start(self.fullscreen_press.widget, False, False, 0)
+            tline_info_box.pack_start(self.tools_buttons.widget, False, False, 0)
+            tline_info_box.pack_start(guiutils.pad_label(8,2), False, False, 0)
+            tline_info_box.pack_start(self.fullscreen_press.widget, False, False, 0)
             if editorstate.SCREEN_WIDTH > 1678:
-                info_box.pack_start(guiutils.pad_label(6,2), False, False, 0)
-                info_box.pack_start(layout_press.widget, False, False, 0)
+                tline_info_box.pack_start(guiutils.pad_label(6,2), False, False, 0)
+                tline_info_box.pack_start(layout_press.widget, False, False, 0)
 
-        info_box.pack_start(Gtk.Label(), True, True, 0)
-        info_box.pack_start(self.monitor_tc_info.widget, False, False, 0)
-        guiutils.set_margins(info_box, 0, 0, 0, 10)
+        tline_info_box.pack_start(Gtk.Label(), True, True, 0)
+        tline_info_box.pack_start(self.monitor_tc_info.widget, False, False, 0)
+        guiutils.set_margins(tline_info_box, 0, 0, 0, 10)
         
         if editorstate.screen_size_small_width() == False:
             menu_vbox = Gtk.HBox(True, 0)
@@ -299,7 +299,7 @@ class EditorWindow:
                 menu_vbox.pack_start(guiutils.pad_label(24, 2), False, False, 0)
                 menu_vbox.pack_start(monitor_source_box, False, False, 0)
                 menu_vbox.pack_start(guiutils.pad_label(40, 2), False, False, 0)
-            menu_vbox.pack_start(info_box, True, True, 0)
+            menu_vbox.pack_start(tline_info_box, True, True, 0)
             
             if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
                 menu_vbox.override_background_color(Gtk.StateFlags.NORMAL, gui.get_mid_neutral_color())
@@ -311,7 +311,7 @@ class EditorWindow:
             self.top_row_window_2 = Gtk.HBox(False, 0)
             self.top_row_window_2.pack_start(monitor_source_box, False, False, 0)
             self.top_row_window_2.pack_start(Gtk.Label(), True, True, 0)
-            self.top_row_window_2.pack_start(info_box, False, False, 0)
+            self.top_row_window_2.pack_start(tline_info_box, False, False, 0)
 
         # Pane
         pane = Gtk.VBox(False, 1)
@@ -1412,7 +1412,8 @@ class EditorWindow:
         self.monitor_switch = guicomponents.MonitorSwitch(self._monitor_switch_handler)
 
     def _create_monitor_row_widgets(self):
-        self.monitor_tc_info = guicomponents.MonitorTCInfo()
+        self.monitor_tc_info = guicomponents.MonitorMarksTCInfo()
+        guiutils.set_margins(self.monitor_tc_info.widget,5,0,0,0)
 
     def _monitor_switch_handler(self, action):
         if action == appconsts.MONITOR_TLINE_BUTTON_PRESSED:

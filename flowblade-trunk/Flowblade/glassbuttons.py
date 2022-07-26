@@ -356,7 +356,7 @@ class PlayerButtons(AbstractGlassButtons):
                 self.icons = [prev_icon, next_icon, play_icon, stop_icon,
                               mark_in_icon, mark_out_icon,
                               marks_clear_icon, to_mark_in_icon, to_mark_out_icon]
-                self.image_x = [5*size_adj, 7*size_adj, 20*size_adj, 10*size_adj, 2*size_adj, 11*size_adj, 2*size_adj, 7*size_adj, 6*size_adj]
+                self.image_x = [5*size_adj, 7*size_adj, 20*size_adj, 10*size_adj, 0*size_adj, 8*size_adj, 2*size_adj, 8*size_adj, 6*size_adj]
             # ------------------------------End of timeline_start_end_button
 
         for i in range(0, len(self.icons)):
@@ -536,10 +536,13 @@ class GlassButtonsGroup(AbstractGlassButtons):
         self.image_y_default = image_y_default
         focus_groups[focus_group].append(self.widget)
 
-    def add_button(self, pix_buf, release_callback):
+    def add_button(self, pix_buf, release_callback, image_x=None):
+        if image_x == None:
+            image_x = self.image_x_default
+            
         self.icons.append(pix_buf)
         self.released_callback_funcs.append(release_callback)
-        self.image_x.append(self.image_x_default)
+        self.image_x.append(image_x)
         self.image_y.append(self.image_y_default)
         self.sensitive.append(True)
         self.widget.set_pref_size(len(self.icons) * self.button_width + 2, self.button_height + 2)
