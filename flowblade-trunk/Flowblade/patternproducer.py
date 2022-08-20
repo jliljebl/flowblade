@@ -210,7 +210,7 @@ class AbstractBinClip: # not extends projectdata.MediaFile? too late, too late. 
         print("create_mlt_producer not implemented")
 
     def create_icon(self):
-        print("patter producer create_icon() not implemented")
+        print("pattern producer create_icon() not implemented")
 
 
 class BinColorClip(AbstractBinClip):

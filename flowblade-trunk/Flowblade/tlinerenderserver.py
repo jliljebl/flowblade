@@ -136,7 +136,7 @@ def main(root_path, force_launch=False):
     repo = mlt.Factory().init()
     processutils.prepare_mlt_repo(repo)
     
-    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
+    # Set numeric locale to use "." as radix, MLT initializes this to OS locale and this causes bugs 
     locale.setlocale(locale.LC_NUMERIC, 'C')
 
     # Check for codecs and formats on the system
@@ -238,7 +238,7 @@ class TLineRenderRunnerThread(threading.Thread):
         self.aborted = False
 
     def run(self):
-        editorpersistance.load() # to apply possible chnages on timeline rendering
+        editorpersistance.load() # to apply possible changes on timeline rendering
         
         start_time = time.monotonic()
  

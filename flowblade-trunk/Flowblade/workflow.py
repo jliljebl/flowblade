@@ -19,7 +19,7 @@
 """
 
 """
-Modeule handles displaying tool meni, tool keyboard shortuts and workflow configuration activating and moving tools,
+Module handles displaying tool menu, tool keyboard shortuts and workflow configuration activating and moving tools,
 and setting relevant timeline behaviours.
 
 """

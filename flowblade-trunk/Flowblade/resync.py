@@ -30,7 +30,7 @@ from editorstate import current_sequence
 # would be on the timeline.
 #
 # After every edit sync states of all child clips is calculated, and it 
-# gets displayd to the user in the next timeline redraw using red, green and gray colors
+# gets displayed to the user in the next timeline redraw using red, green and gray colors
 
 # Maps clip -> track
 sync_children = {}

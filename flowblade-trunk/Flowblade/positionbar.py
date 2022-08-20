@@ -36,7 +36,7 @@ import gui
 import guiutils
 import respaths
 
-trimmodes_set_no_edit_trim_mode = None # This monkey patched in app.py to avoid unncessary dependencies in gmic.py
+trimmodes_set_no_edit_trim_mode = None # This monkey patched in app.py to avoid unnecessary dependencies in gmic.py
 
 
 # Draw params

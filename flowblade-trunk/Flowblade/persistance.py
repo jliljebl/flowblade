@@ -520,7 +520,7 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
     # Create and connect compositors.
     mlt_compositors = []
     for py_compositor in seq.compositors:
-            # Keeping backwards compability
+            # Keeping backwards compatibility
             persistancecompat.FIX_MISSING_COMPOSITOR_ATTRS(py_compositor)
                 
             # Create new compositor object
@@ -661,7 +661,7 @@ def fill_track_mlt(mlt_track, py_track):
         if append_created == True:
             append_clip(mlt_track, mlt_clip, clip.clip_in, clip.clip_out)
 
-        # Save refences to recreate sync relations after all clips loaded
+        # Save references to recreate sync relations after all clips loaded
         global all_clips, sync_clips
         all_clips[mlt_clip.id] = mlt_clip
         if mlt_clip.sync_data != None:
@@ -790,7 +790,7 @@ def get_img_seq_relative_path(project_file_path, asset_path):
     return NOT_FOUND # no relative path found
         
     
-# ------------------------------------------------------- backwards compability
+# ------------------------------------------------------- backwards compatibility
 def _fix_wipe_relative_path(compositor):
     if compositor.type_id == "##wipe": # Wipe may have user luma and needs to be looked up relatively
         _set_wipe_res_path(compositor, "resource")

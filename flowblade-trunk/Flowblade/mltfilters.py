@@ -167,8 +167,8 @@ class FilterInfo:
         # Property args saved in propertyname -> propertyargs_string dict
         self.property_args = propertyparse.node_list_to_args_dict(p_node_list)
     
-        # Multipart property describes how filters are created and edited when filter 
-        # constists of multiple filters.
+        # Multipart property describes how filters are created and edited when filter
+        # consists of multiple filters.
         # There 0 or 1 of these in the info object.
         node_list = filter_node.getElementsByTagName(MULTIPART_PROPERTY)
         if len(node_list) == 1:
@@ -196,7 +196,7 @@ class FilterInfo:
 
 class FilterObject:
     """
-    These objects are saved with projects. Thay are used to generate, 
+    These objects are saved with projects. They are used to generate, 
     update and hold a reference to an mlt.Filter object attached to a mlt.Producer object
     representing a clip on the timeline.
     
@@ -241,7 +241,7 @@ class FilterObject:
              self.mlt_filter.set("disable", str(1))
 
     def replace_values(self, clip):
-        # We need to initilize some calues based clip langth and need wait until clip for
+        # We need to initialize some calues based clip length and need wait until clip for
         # filter is known, replace at object creation is done before clip is available
         replacement_happened = propertyparse.replace_values_using_clip_data(self.properties, self.info, clip)
         if replacement_happened == True:
@@ -253,7 +253,7 @@ class FilterObject:
 # DEPRECATED FILTER TYPE. NO NEW MultipartFilterObject FILTERS TO BE CREATED.
 class MultipartFilterObject:
     """
-    These objects are saved with projects. Thay are used to generate, 
+    These objects are saved with projects. They are used to generate, 
     update and hold references to a GROUP of mlt.Filter objects attached to a mlt.Producer object.
     """
     def __init__(self, filter_info):
@@ -298,7 +298,7 @@ class MultipartFilterObject:
         self.value = kf_str
 
     def create_filters_for_keyframes(self, keyframes, mlt_profile):
-        for i in range(0, len(keyframes) - 1): # Theres one less filter parts than keyframes
+        for i in range(0, len(keyframes) - 1): # There's one less filter parts than keyframes
             mlt_filter = mlt.Filter(mlt_profile, str(self.info.mlt_service_id))
             mltrefhold.hold_ref(mlt_filter)
             self.mlt_filters.append(mlt_filter)
@@ -333,7 +333,7 @@ class MultipartFilterObject:
         return self._parse_string_to_keyframes(self.value)
         
     def _parse_string_to_keyframes(self, kf_string):
-        # returs list of (frame, value) tuples
+        # returns list of (frame, value) tuples
         value = kf_string.strip('"') # for some reason we have to use " around values or something broke
         parts = value.split(";")
         kfs = []
@@ -363,7 +363,7 @@ def load_filters_xml(services):
     """
     Load filters document and save filters nodes as FilterInfo objects in array.
     Save them also as array of tuples of names and arrays of FilterInfo objects
-    that represent named groups of filters as displayd to user.
+    that represent named groups of filters as displayed to user.
     """
     _load_icons()
     

@@ -109,7 +109,7 @@ class ContainerClipData:
             self.rendered_media_range_out = -1
         
 
-# ------------------------------------------------------- testing availebility on statrt up
+# ------------------------------------------------------- testing availability on start up
 def test_blender_availebility():
     global _blender_available
     if os.path.exists("/usr/bin/blender") == True:
@@ -209,7 +209,7 @@ def _update_gui_for_media_object_add():
     gui.bin_list_view.fill_data_model()
 
 def _show_not_all_data_info():
-    dialogutils.info_message(_("Not all required files were defined"), _("Select all files asked for in dialog for succesful Container Clip creation."), gui.editor_window.window)
+    dialogutils.info_message(_("Not all required files were defined"), _("Select all files asked for in dialog for successful Container Clip creation."), gui.editor_window.window)
         
         
 
@@ -574,7 +574,7 @@ class ContainerClipMediaItem:
             loaded_project_edit_info = json.load(load_file)
             
             primary_txt = _("Container Program Edit Data is Executable!")
-            secondary_txt = _("Only accept Container Program Edit Data from similar trustwothy sources\nyou would accept applications!\n\nContainer Program Edit Data will be used to call Python <b>exec()</b> function and\ncan maybe used as an attack vector against your system.")
+            secondary_txt = _("Only accept Container Program Edit Data from similar trustworthy sources\nyou would accept applications!\n\nContainer Program Edit Data will be used to call Python <b>exec()</b> function and\ncan maybe used as an attack vector against your system.")
             warning_panel = dialogutils.get_warning_message_dialog_panel(primary_txt, secondary_txt)
             
             sw = guicomponents.get_scroll_widget((300, 200), str(loaded_project_edit_info))

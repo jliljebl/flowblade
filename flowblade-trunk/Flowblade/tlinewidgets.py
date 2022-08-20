@@ -58,7 +58,7 @@ import updater
 
 M_PI = math.pi
 
-REF_LINE_Y = 250 # Y pos of tracks are relative to this. This is recalculated on initilization, so value here is irrelevent.
+REF_LINE_Y = 250 # Y pos of tracks are relative to this. This is recalculated on initialization, so value here is irrelevant.
 
 MINIMUM_WIDTH = 430 # No effect on window layout we just want to put something > 0 on start.
 HEIGHT = appconsts.TLINE_HEIGHT # defines window min height together with editorwindow.TOP_ROW_HEIGHT
@@ -2017,7 +2017,7 @@ class TimeLineCanvas:
                                              cairo.FONT_WEIGHT_NORMAL)
                         cr.set_font_size(9)
                         cr.move_to(scale_in + TEXT_X, y + track_height - 2)
-                        try: # This is needed for backwards compability
+                        try: # This is needed for backwards compatibility
                              # Projects saved before adding this feature do not have sync_diff attribute
                             cr.show_text(str(clip.sync_diff))
                         except:
@@ -2472,7 +2472,7 @@ class TimeLineColumn:
 
         # Center area tester
         # NOTE: There was a left column of active areas similar to active switch
-        # so this is still called 'center' even whe it is the left side of two active 
+        # so this is still called 'center' even when it is the left side of two active 
         # areas.
         tester = ValueTester(COLUMN_LEFT_PAD, COLUMN_WIDTH - ACTIVE_SWITCH_WIDTH, 
                              self.center_listener)

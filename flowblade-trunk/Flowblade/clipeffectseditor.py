@@ -326,7 +326,7 @@ class ClipFilterStack:
             for child in children:
                 self.widget.remove(child)
                 
-            # Remove old stack item for reseted filter.
+            # Remove old stack item for reset filter.
             self.filter_stack.pop(stack_index)
             self.clear_kf_editors_from_update_list(filter_object)
 
@@ -971,7 +971,7 @@ def _load_effect_values_dialog_callback(dialog, response_id, filter_object):
             # Info window
             saved_effect_name = effect_data.info.name
             current_effect_name = filter_object.info.name
-            primary_txt = _("Saved Filter data not applicaple for this Filter!")
+            primary_txt = _("Saved Filter data not applicable for this Filter!")
             secondary_txt = _("Saved data is for ") + saved_effect_name + " Filter,\n" + _("current edited Filter is ") + current_effect_name + "."
             dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
     

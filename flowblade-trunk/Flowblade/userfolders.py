@@ -62,7 +62,7 @@ def init():
         _init_error += "XDG Cache dir: " + _xdg_cache_dir + "\n"
         return
     
-    # Determine if this a clean install or do we need to copy files fron dot dir to XDG dirs
+    # Determine if this a clean install or do we need to copy files from dot dir to XDG dirs
     # We think existance of prefs files will tell us what the state of the system is.
     _dot_prefs_file_exists = os.path.exists(_dot_dir + "prefs" )
     _xdg_prefs_file_exists = os.path.exists(_xdg_config_dir + "/prefs")

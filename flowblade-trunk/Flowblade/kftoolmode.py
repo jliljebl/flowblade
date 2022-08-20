@@ -574,7 +574,7 @@ class TLineKeyFrameEditor:
         
         for i in range(0, len(kf_positions)):
 
-            # Draw value between between curreent and prev kf.
+            # Draw value between between current and prev kf.
             if i > 0:
 
                 kf, frame, kf_index, kf_type, kf_pos_x, kf_pos_y = kf_positions[i]

@@ -119,7 +119,7 @@ def main(root_path, session_id, script, clip_path, range_in, range_out, profile_
     repo = mlt.Factory().init()
     processutils.prepare_mlt_repo(repo)
     
-    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
+    # Set numeric locale to use "." as radix, MLT initializes this to OS locale and this causes bugs 
     locale.setlocale(locale.LC_NUMERIC, 'C')
 
     # Check for codecs and formats on the system
@@ -210,7 +210,7 @@ class GMicHeadlessRunnerThread(threading.Thread):
                                                                         self.script_render_update_callback, 
                                                                         self.script_render_output_callback,
                                                                         10,
-                                                                        False,  # this is not useful until we get MLT to find frames sequences not startin from 0001
+                                                                        False,  # this is not useful until we get MLT to find frames sequences not starting from 0001
                                                                         0)
         self.script_renderer.write_frames()
 

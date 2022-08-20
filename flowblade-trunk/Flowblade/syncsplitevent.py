@@ -66,7 +66,7 @@ def split_audio(popup_data):
 def split_audio_from_clips_list(clips, track):
     item_id = "not actually used"
     for clip in clips:
-        # We're using the existing function to do thid need x for clip frame to use it
+        # We're using the existing function to do this needs x for clip frame to use it
         index = track.clips.index(clip)
         frame = track.clip_start(index)
         x = tlinewidgets._get_frame_x(frame)
@@ -150,7 +150,7 @@ def _set_sync_parent_clip(event, frame):
         return
 
     # Parent and child can't be on the same track.
-    # Now that all parent clips must be on track V1 this is no longer shoild be possible.
+    # Now that all parent clips must be on track V1 this is no longer should be possible.
     if parent_track == child_clip_track:
         print("parent_track == child_clip_track")
         return
@@ -158,7 +158,7 @@ def _set_sync_parent_clip(event, frame):
     parent_clip = parent_track.clips[parent_clip_index]
     
     # These cannot be chained.
-    # Now that all parent clips must be on track V1 this is no longer shoild be possible.
+    # Now that all parent clips must be on track V1 this is no longer should be possible.
     if parent_clip.sync_data != None:
         print("parent_clip.sync_data != None")
         return
@@ -202,7 +202,7 @@ def resync_selected():
     # Selection not valid after resync action
     movemodes.clear_selected_clips()
 
-    # Chack if synced clips have same or consecutive parent clips
+    # Check if synced clips have same or consecutive parent clips
     all_same_or_consecutive = True
     master_id = -1
     current_master_clip = -1

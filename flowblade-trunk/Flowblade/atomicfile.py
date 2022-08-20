@@ -143,7 +143,7 @@ class AtomicFileWriter(object):
         # if we were unable to create a temp file, raise an error
         #
         # the destination file path is reported in this error instead of the temp file path,
-        # and although this is slightly innacurate from this low-level context, it will be
+        # and although this is slightly inaccurate from this low-level context, it will be
         # a less surprising error message for a user of the program who really intends to
         # write the destination file eventually, and not some temp file
         if not self.tmp_file_path:

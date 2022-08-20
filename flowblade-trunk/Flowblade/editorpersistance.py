@@ -234,9 +234,9 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.center_on_arrow_move = auto_center_on_updown.get_active()
     prefs.double_track_hights = (double_track_hights.get_active() == 1)
     prefs.playback_follow_move_tline_range = follow_move_range.get_active()
-    if theme.get_active() == 1: # The displayed options indeces do not correspond with theme const values.
+    if theme.get_active() == 1: # The displayed options indices do not correspond with theme const values.
         prefs.theme = appconsts.FLOWBLADE_THEME_GRAY
-    elif theme.get_active() == 0: # The displayed options indeces do not correspond with theme const values.
+    elif theme.get_active() == 0: # The displayed options indices do not correspond with theme const values.
         prefs.theme = appconsts.FLOWBLADE_THEME_NEUTRAL
     else:    
         prefs.theme = theme.get_active() - 2
@@ -281,7 +281,7 @@ class EditorPreferences:
         self.auto_move_after_edit = False
         self.default_grfx_length = 250 # value is in frames
         self.track_configuration = 0 # DEPRECATED
-        self.AUTO_SAVE_OPTS = None # not used, these are cerated and translated else where
+        self.AUTO_SAVE_OPTS = None # not used, these are created and translated else where
         self.tabs_on_top = False # DEPRECATED, we have positions_tabs now that we possibly have possibly multiple notebooks 
         self.midbar_tc_left = True
         self.default_layout = True # DEPRECATED, NOT USED ANYMORE

@@ -95,7 +95,7 @@ RIGHT_CHANNEL = "_audio_level.1"
 
 MONITORING_AVAILABLE = False
 
-# GUI compoents displaying levels
+# GUI components displaying levels
 _monitor_window = None
 _master_volume_meter = None
 
@@ -237,7 +237,7 @@ def _init_level_filters(create_track_filters):
     # so when Sequence is saved these filters will automatically be removed.
     # Filters are not part of sequence.Sequence object because they just used for monitoring,
     #
-    # Track/master gain values are persistant, they're also editing desitions 
+    # Track/master gain values are persistant, they're also editing decisions
     # and are therefore part of sequence.Sequence objects.
     
     # Create levels filters array if it deosn't exist

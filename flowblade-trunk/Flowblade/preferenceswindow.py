@@ -366,7 +366,7 @@ def _view_prefs_panel():
     dark_combo.append_text(_("Flowblade Theme Blue"))
     dark_combo.append_text(_("Dark Theme"))
     dark_combo.append_text(_("Light Theme"))
-    # The displayed options indeces do not correspond with theme const values.
+    # The displayed options indices do not correspond with theme const values.
     if prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
         index = 1
     elif prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:

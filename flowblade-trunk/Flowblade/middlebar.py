@@ -320,7 +320,7 @@ def fill_with_TC_LEFT_pattern(buttons_row, window):
         if editorstate.SCREEN_WIDTH > 1600:
             buttons_row.pack_start(guiutils.get_pad_label(80, 10), False, True, 0)
         else:
-            buttons_row.pack_start(Gtk.Label(), True, True, 0) # For some layout we cant afford additional 60px if w < 1600
+            buttons_row.pack_start(Gtk.Label(), True, True, 0) # For some layout we can't afford additional 60px if w < 1600
             
     if editorstate.screen_size_small_width() == False:
         pad_w = 30

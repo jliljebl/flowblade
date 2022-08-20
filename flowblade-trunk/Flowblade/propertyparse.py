@@ -316,7 +316,7 @@ def rect_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
     
 def rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
     print("keyframes_str", keyframes_str)
-    # THIS WAS CREATED FOR frei0r cairoaffineblend FILTER. That filter has to use a very particular paramter values
+    # THIS WAS CREATED FOR frei0r cairoaffineblend FILTER. That filter has to use a very particular parameter values
     # scheme to satisty the frei0r requirement of all float values being in range 0.0 - 1.0.
     #
     # Parse extraeditor value properties value string into (frame, [x, y, x_scale, y_scale, rotation], opacity)
@@ -405,7 +405,7 @@ def create_editable_property_for_affine_blend(clip, editable_properties):
     ep.y_scale = [ep for ep in editable_properties if ep.name == "y scale"][0]
     ep.rotation = [ep for ep in editable_properties if ep.name == "rotation"][0]
     ep.opacity = [ep for ep in editable_properties if ep.name == "opacity"][0]
-    # Screen width and height are needeed for frei0r conversions
+    # Screen width and height are needed for frei0r conversions
     ep.profile_width = current_sequence().profile.width()
     ep.profile_height = current_sequence().profile.height()
     # duck type methods, using opacity is not meaningful, any property with clip member could do

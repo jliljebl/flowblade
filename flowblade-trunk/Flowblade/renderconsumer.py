@@ -74,7 +74,7 @@ PRESET_GROUP_AUDIO = "Audio"
 PRESET_GROUP_OGG_ETC = "oggwebmetc"
 PRESET_GROUP_ALPHA = "Alpha"
 
-# ffmpeg arg values somtimes need equals signs in them.
+# ffmpeg arg values sometimes need equals signs in them.
 EQUALS_SIGN_ENCODING = "@#@#"
 
 # GPU encoding availability.
@@ -557,7 +557,7 @@ class FileRenderPlayer(threading.Thread):
         #sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', buffering=1)
         #os.dup2(so.fileno(), sys.stdout.fileno())
         
-        self.consumer.set("plays", 1) # maybe not strictly necessery but default value here seems to  be 'None' which is wrong.
+        self.consumer.set("plays", 1) # maybe not strictly necessary but default value here seems to  be 'None' which is wrong.
         
         self.running = True
         self.has_started_running = True

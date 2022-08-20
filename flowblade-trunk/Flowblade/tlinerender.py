@@ -694,7 +694,7 @@ class TimeLineSegment:
             # With mode TLINE_RENDERING_REQUEST:
             # - segment updates set segment state to SEGMENT_UNRENDERED
             # - user double clicks set segment state to SEGMENT_DIRTY and _that has already happened before we get here._
-            # So if user has double clicked to make segment to beSEGMENT_DIRTY we will ignore chnaged hash but if user edit has changed timeline we will 
+            # So if user has double clicked to make segment to beSEGMENT_DIRTY we will ignore changed hash but if user edit has changed timeline we will 
             # update segment state to be SEGMENT_UNRENDERED.
             elif get_tline_rendering_mode() == appconsts.TLINE_RENDERING_REQUEST and self.segment_state != SEGMENT_DIRTY: 
 
@@ -797,7 +797,7 @@ class TimeLineUpdateThread(threading.Thread):
             return
         
         try:
-            # Blocks untils renders are stopped and cleaned
+            # Blocks until renders are stopped and cleaned
             tlinerenderserver.abort_current_renders()
 
         except:
@@ -851,7 +851,7 @@ class TimeLineUpdateThread(threading.Thread):
                 if segment.end_frame >= current_sequence().seq_len:
                     segment.end_frame = current_sequence().seq_len
                     if  segment.end_frame - segment.start_frame < 4:
-                        # Min length for segments is four, if something gets cut shorter it gets destroyd.
+                        # Min length for segments is four, if something gets cut shorter it gets destroyed.
                         destroy_segments.append(segment)
                         continue
                         

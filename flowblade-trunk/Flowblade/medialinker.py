@@ -263,7 +263,7 @@ class MediaRelinkListView(Gtk.VBox):
     def __init__(self):
         GObject.GObject.__init__(self)
 
-        self.assets = [] # Used to store list displayd data items
+        self.assets = [] # Used to store list displayed data items
 
         # Datamodel: text, text
         self.storemodel = Gtk.ListStore(str, str)
@@ -763,7 +763,7 @@ def main(root_path, filename):
     repo = mlt.Factory().init()
     processutils.prepare_mlt_repo(repo)
     
-    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
+    # Set numeric locale to use "." as radix, MLT initializes this to OS locale and this causes bugs 
     locale.setlocale(locale.LC_NUMERIC, 'C')
 
     # Check for codecs and formats on the system

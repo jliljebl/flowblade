@@ -69,7 +69,7 @@ _remove_list = [] # objects are removed from GUI with delay to give user time to
 _jobs_render_progress_window = None
 
 
-class JobProxy: # This object represnts job in job queue. 
+class JobProxy: # This object represents job in job queue.
 
 
     def __init__(self, uid, callback_object):
@@ -117,7 +117,7 @@ class JobProxy: # This object represnts job in job queue.
         self.callback_object.abort_render()
 
 
-class JobQueueMessage:  # Jobs communicate with job queue by sending these objecs.
+class JobQueueMessage:  # Jobs communicate with job queue by sending these objects.
     
     def __init__(self, uid, job_type, status, progress, text, elapsed):
         self.proxy_uid = uid       

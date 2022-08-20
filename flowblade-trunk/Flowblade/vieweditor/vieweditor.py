@@ -243,7 +243,7 @@ class ViewEditor(Gtk.Frame):
     
     # --------------------------------------------------- drawing
     def set_screen_rgb_data(self, screen_rgb_data):
-        # MLT Provides images in which R <-> B are swiched from what Cairo wants them,
+        # MLT Provides images in which R <-> B are switched from what Cairo wants them,
         # so use numpy to switch them and to create a modifiable buffer for Cairo
         buf = np.frombuffer(screen_rgb_data, dtype=np.uint8)
         buf.shape = (self.profile_h, self.profile_w, 4)

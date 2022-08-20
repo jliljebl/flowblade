@@ -864,7 +864,7 @@ class Titler(Gtk.Window):
     def _layer_selection_changed(self, treeview, path, column):
         selected_row = path.get_indices()[0]
 
-        # we're listeneing to "changed" on treeview and get some events (text updated)
+        # we're listening to "changed" on treeview and get some events (text updated)
         # when layer selection was not changed.
         if selected_row == -1:
             return
@@ -916,7 +916,7 @@ class Titler(Gtk.Window):
 
     def _position_value_changed(self, widget):
         # mouse release when layer is moved causes this method to be called,
-        # but we don't want to do any additinal updates here for that event
+        # but we don't want to do any additional updates here for that event
         # This is only used when user presses arrows in position spins.
         if self.block_updates:
             return
@@ -945,7 +945,7 @@ class Titler(Gtk.Window):
 
         self._update_active_layout_font_properties()
 
-        # We only wnat to update layer list data model when this called after user typing 
+        # We only want to update layer list data model when this called after user typing 
         if update_layers_list:
             self.layer_list.fill_data_model()
 

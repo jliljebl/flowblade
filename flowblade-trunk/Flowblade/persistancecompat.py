@@ -19,7 +19,7 @@
 """
 
 """
-This module holds funtions that maintain campatibility between project savefiles
+This module holds functions that maintain campatibility between project savefiles
 created by different versions of application.
 
 Refactoring to move code here is an ongoing effort.
@@ -67,7 +67,7 @@ def FIX_MISSING_FILTER_ATTRS(filter):
         filter.info.filter_mask_filter = None
             
 def FIX_MISSING_COMPOSITOR_ATTRS(compositor):
-    # Keeping backwards compability
+    # Keeping backwards compatibility
     if not hasattr(compositor, "obey_autofollow"): # "obey_autofollow" attr was added for 1.16
         compositor.obey_autofollow = True
 

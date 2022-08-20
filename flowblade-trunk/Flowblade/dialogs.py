@@ -49,8 +49,8 @@ import utils
 import workflow
 
 
-kb_shortcut_changed_callback = None # Set when dialog lauched, using gloal saves modifying 50+ lines.
-kb_shortcut_dialog = None # Set when dialog lauched, using gloal saves modifying 50+ lines
+kb_shortcut_changed_callback = None # Set when dialog launched, using gloal saves modifying 50+ lines.
+kb_shortcut_dialog = None # Set when dialog launched, using gloal saves modifying 50+ lines
 shortcuts_combo = None
 scroll_hold_panel = None
 
@@ -1502,7 +1502,7 @@ def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, change_presets_
     global scroll_hold_panel
     scroll_hold_panel = Gtk.HBox()
 
-    diff_label = guiutils.bold_label(_("Diffence to 'Flowblade Default' Presets:"))
+    diff_label = guiutils.bold_label(_("Difference to 'Flowblade Default' Presets:"))
 
     diff_data = Gtk.Label()
     diff_data.set_line_wrap(True)

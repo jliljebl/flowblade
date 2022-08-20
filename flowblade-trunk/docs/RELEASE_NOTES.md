@@ -280,7 +280,7 @@ Functionality is provided in a new **Jobs** panel.
 
 ## FOCUS AREAS FOR NEXT DEVELOPMENT CYCLE
 
-* We are moving to feature branch development model so master can have quite long pauses before new work appers there.
+* We are moving to feature branch development model so master can have quite long pauses before new work appears there.
 
 * Work on SDL 1.2 replacement. We got SDL 2 software rendering video display working but the performance was much worse then what we have now. Next we will look to develop  SDL2/OpenGL based solution 
 
@@ -702,7 +702,7 @@ For systems with larger screen dimension the **default top row layout has been c
 
 **Tooltips coverage was extended** and almost all top level items now have individual tooltips..
 
-Insert and Move (earlier Ovewrite) tools have new cursors.
+Insert and Move (earlier Overwrite) tools have new cursors.
 
 ### Keyframe editing updates
 
@@ -1103,7 +1103,7 @@ MLT 6.2.0 added AVFilters support. Flowblade now offers additional filters if yo
 - *Lut3D* This makes possible to add similar film emulation filters that are available in G'Mic by using **.cube** files. 
 - *Zoom/Pan* Similar functionality current "Affine" filter but the performance is much better
 - *Color Channels Mixer* This makes possible to use color data of one chanel to determine color output of another channel. Basic exmple would be making green shirt blue by using green color data to display blue color.
-- *Perspective* Strech image in way that can enable changing perspective.
+- *Perspective* Stretch image in way that can enable changing perspective.
 - *Lens correction AV* Filter that corrects typical lens errors.
 
 ### Translations
@@ -1224,7 +1224,7 @@ Trim view layout also addresses a fundamental restriction of a single monitor la
 
 **Flowblade 1.8** is the twelth release of Flowblade. 
 
-During this cycle a lot of time was spend on creating a website for the project and on bringing a node compositor tool to Flowblade. Website was succesfully deployed, but the node compositor tool was dropped in final stages of development.
+During this cycle a lot of time was spend on creating a website for the project and on bringing a node compositor tool to Flowblade. Website was successfully deployed, but the node compositor tool was dropped in final stages of development.
 
 The node compositor was dropped when I realized that it does not serve any user group particularly well.
 

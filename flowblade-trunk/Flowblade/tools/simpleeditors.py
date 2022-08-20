@@ -39,7 +39,7 @@ import respaths
 import translations
 import utils
 
-# NOTE: These need to correspond exacty with fluxity.FluxityContext.<editor> enum values because we do not want to import anything into fluxity.py.    
+# NOTE: These need to correspond exactly with fluxity.FluxityContext.<editor> enum values because we do not want to import anything into fluxity.py.
 SIMPLE_EDITOR_STRING = 0
 SIMPLE_EDITOR_VALUE = 1
 SIMPLE_EDITOR_FLOAT = 2
@@ -238,7 +238,7 @@ def _get_panel_and_create_editors(objects, pane_title, editors):
 def get_simple_editor_selector(active_index, callback): # used in containerprogramedit.py to create editor for blender programs
 
     editor_select = Gtk.ComboBoxText()
-    editor_select.append_text(_("String")) # these corespond values above
+    editor_select.append_text(_("String")) # these correspond to values above
     editor_select.append_text(_("Value"))
     editor_select.append_text(_("Float"))
     editor_select.append_text(_("Int"))

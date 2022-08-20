@@ -116,7 +116,7 @@ class RotoMaskEditor(Gtk.Window):
         # mask type param was added later, we need handle it not existing.
         if self.get_mask_type() == -1:
             self.set_mask_type(vieweditorshape.LINE_MASK)
-            self.set_mask_type_on_init = False # but we don't want to destroy user's curve masks. THis is not complety back wards compatible stuff can get destroyed on second load.
+            self.set_mask_type_on_init = False # but we don't want to destroy user's curve masks. This is not complete, backwards compatible stuff can get destroyed on second load.
         else:
             self.set_mask_type_on_init = True
             

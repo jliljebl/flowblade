@@ -63,7 +63,7 @@ MONITOR_INDICATOR_COLOR_MATCH = utils.get_cairo_color_tuple_255_rgb(21, 71, 105)
 
 FRAME_MATCH_VIEW_COLOR = (0.3, 0.3, 0.3)
 
-# Continuos match frame update
+# Continuous match frame update
 CONTINUOS_UPDATE_PAUSE = 0.2
 _last_render_time = 0.0
 _producer = None
@@ -851,10 +851,10 @@ class MonitorWidget:
         
 
 
-    
-# ---------------------------------------------------------------------------------- match frame cration
+
+# ---------------------------------------------------------------------------------- match frame creation
 def _launch_match_frame_writer(data):
-    match_clip_path, clip_frame, frame_name, callback = data        
+    match_clip_path, clip_frame, frame_name, callback = data
 
     match_frame_write_thread = MonitorMatchFrameWriter(match_clip_path, clip_frame, frame_name, callback)
     match_frame_write_thread.start()

@@ -319,7 +319,7 @@ def _collect_compositors_for_split(playhead):
     # first: the compositor lies completely before the playhead position
     # we do not have to deal with those and leave them untouched
     # compositor.clip_out < playhead position
-    # second: the compositor lies completly behind the playhead position
+    # second: the compositor lies completely behind the playhead position
     # the compositor needs to be removed from the split sequence and needs to
     # be moved to the newly created one. we need to create a duplicate and modify
     # its clip_in and clip_out properties. basically this formula should apply:
@@ -357,7 +357,7 @@ def _collect_compositors_for_split(playhead):
         new_compositors.append(new_compositor)
     
     # done with collecting all new necessary compositors
-    # now we remove the compositors that are completly after playhead positions
+    # now we remove the compositors that are completely after playhead positions
     # cut compositors have already been reduces in length
     for index in range(0, len(compositors_to_remove)):
         old_compositor = compositors_to_remove[index]
@@ -399,7 +399,7 @@ def splice_out_button_pressed():
 
     # A single clip delete can trigger a special clip cover delete
     # See if such delete should be attempted.
-    # Exit if done succesfully, do normal splice out and report if failed
+    # Exit if done successfully, do normal splice out and report if failed
     cover_delete_failed = False
     if editorpersistance.prefs.trans_cover_delete == True:
         if movemodes.selected_range_out == movemodes.selected_range_in:
@@ -505,7 +505,7 @@ def lift_button_pressed():
     if movemodes.selected_track == -1:
         return
 
-    # Edit consumes selection, set clips seletion attr to False
+    # Edit consumes selection, set clips selection attr to False
     movemodes.set_range_selection(movemodes.selected_track, 
                                   movemodes.selected_range_in,
                                   movemodes.selected_range_out, 
@@ -550,7 +550,7 @@ def ripple_delete_button_pressed():
     if available_from_range_in < delete_range_length or available_from_range_out < delete_range_length:
         overwrite_track = ripple_data.get_overwrite_data(delete_range_length)
         primary_txt = _("Can't do Ripple Delete!")
-        secondary_txt = _("Seleted Ripple Delete would cause an overwrite and that is not permitted for this edit action.\n\nOverwrite would happen on at track <b>") + utils.get_track_name(overwrite_track, current_sequence()) + "</b>."
+        secondary_txt = _("Selected Ripple Delete would cause an overwrite and that is not permitted for this edit action.\n\nOverwrite would happen on at track <b>") + utils.get_track_name(overwrite_track, current_sequence()) + "</b>."
         parent_window = gui.editor_window.window
         dialogutils.info_message(primary_txt, secondary_txt, parent_window)
         return 
@@ -1007,7 +1007,7 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
     to_clip = transition_data["to_clip"]
 
     # Get values to build transition render sequence
-    # Divide transition lenght between clips, odd frame goes to from_clip 
+    # Divide transition length between clips, odd frame goes to from_clip 
     real_length = length + 1 # first frame is 100% a from_clip frame so we are going to have to drop that
     to_part = real_length // 2
     from_part = real_length - to_part
@@ -1257,7 +1257,7 @@ def _show_no_handles_dialog(from_req, from_handle, to_req, to_handle, length):
     img2 = Gtk.Image.new_from_file ((respaths.IMAGE_PATH + "transition_right.png"))
     img2.set_margin_bottom(24)
 
-    label1 = Gtk.Label(_("Current situation, not enought media overlap:"))
+    label1 = Gtk.Label(_("Current situation, not enough media overlap:"))
     label1.set_margin_bottom(12)
     label2 = Gtk.Label(_("You need more media overlap:"))
     label2.set_margin_bottom(12)

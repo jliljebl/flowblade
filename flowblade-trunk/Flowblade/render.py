@@ -481,7 +481,7 @@ def _REVERSE_render_stop(dialog, response_id):
     
 # ----------------------------------------------------------------------- single track transition render 
 def render_single_track_transition_clip(transition_producer, encoding_option_index, quality_option_index, file_ext, transition_render_complete_cb, window_text):
-    # Set render complete callback to availble render stop callback using global variable
+    # Set render complete callback to available render stop callback using global variable
     global transition_render_done_callback
     transition_render_done_callback = transition_render_complete_cb
 

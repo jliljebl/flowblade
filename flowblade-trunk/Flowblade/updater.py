@@ -364,7 +364,7 @@ def display_clip_in_monitor(clip_monitor_currently_active=False):
         editorstate.tline_shadow_frame = saved_timeline_pos
 
     # If we're already displaying monitor clip we stop consumer 
-    # to supress timeline flashing between monitor clips
+    # to suppress timeline flashing between monitor clips
     if clip_monitor_currently_active == False:
         editorstate.PLAYER().consumer.stop()
 
@@ -541,7 +541,7 @@ def set_and_display_monitor_media_file(media_file):
         display_clip_in_monitor(clip_monitor_currently_active = True)
 
 
-# --------------------------------------- frame displayes
+# --------------------------------------- frame displays
 def update_frame_displayers(frame):
     """
     Display frame position in position bar and time code display.
@@ -603,7 +603,7 @@ def open_clip_in_effects_editor(data):
 def set_trim_mode_gui():
     """
     Called when user selects trim mode.
-    This does not actually set GUI, just makes sure we are displaying timeline since we are ready to strart trimmng sometring in it.
+    This does not actually set GUI, just makes sure we are displaying timeline since we are ready to start trimming something in it.
     """
     display_sequence_in_monitor()
 

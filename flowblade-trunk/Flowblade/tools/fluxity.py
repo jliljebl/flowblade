@@ -52,7 +52,7 @@
     
     **`init_script(fctx):`** This method is called when script is first loaded by Flowblade to create data structures with info on editors and script metadata. 
     
-    **`init_render(fctx):`** This method is called before a render is started to get user input on editors and possibly to create some additional data strctures.
+    **`init_render(fctx):`** This method is called before a render is started to get user input on editors and possibly to create some additional data structures.
     
     **`render_frame(frame, fctx, w, h):`** This method is called for each frame rendered to create output image.
     
@@ -85,7 +85,7 @@
         fctx.add_editor("Opacity", fluxity.EDITOR_INT_RANGE, (100, 5, 100))
         fctx.add_editor("Random Seed", fluxity.EDITOR_INT, 42)
     ```
-    In *init_script()* we set some metadata like the name of the script diplayed to the user and author name, and we also define the editors that will be presented to the user.
+    In *init_script()* we set some metadata like the name of the script displayed to the user and author name, and we also define the editors that will be presented to the user.
 
     ### init_render()
     ```
@@ -194,7 +194,7 @@
     
     **Flowblade** comes with a simple development GUI tool for developing Fluxity scripts. It can be accessed from menu **Tools->Flowblade Media Plugin Editor**.
     
-    You can edit scripts, render output from them, and recieve error messages using the development tool. From hamburger menu you can open and save your own scripts, access this document, and open and inspect example code of the *Generators* distributed with Flowblade. 
+    You can edit scripts, render output from them, and receive error messages using the development tool. From hamburger menu you can open and save your own scripts, access this document, and open and inspect example code of the *Generators* distributed with Flowblade. 
     
     Since the text editor in the development tool is quite rudimentary *(with a future GTK4 port we can get improvement here)*, it can be a useful workflow to use an external text editor to edit the scripts, and press *Reload Script* button to update text area contents before attempting render.
     
@@ -427,7 +427,7 @@ class FluxityScript:
             _raise_fluxity_error("error calling function 'render_frame()':\n\n" + str(e))
 
 
-# ----------------------------------------------------------  Data structure correcponding with mlt.Profile
+# ----------------------------------------------------------  Data structure corresponding with mlt.Profile
 class FluxityProfile:
     """    
     Properties of this class correspond MLT profile objects.
@@ -535,17 +535,17 @@ class FluxityContext:
 
     def set_data_obj(self, label, item):
         """
-        **`label(str):`** lable used to access data later using *`get_data_obj(self, label)`*.
+        **`label(str):`** label used to access data later using *`get_data_obj(self, label)`*.
 
         **`item(obj):`** data item being saved.
         
-        Saves data to be used later during execution of script. Using **global** would obivously be possible to replace this, but this is made available as a more clean solution.
+        Saves data to be used later during execution of script. Using **global** would obviously be possible to replace this, but this is made available as a more clean solution.
         """
         self.data[label] = item
 
     def get_data_obj(self, label):
         """
-        **`label(str):`** lable of saved data item.
+        **`label(str):`** label of saved data item.
         
         Gives access to previously saved data.
         
@@ -694,7 +694,7 @@ class FluxityContext:
         """             
         Returns path to directory where the script being executed is located.  
         
-        Sometimes script directory information is not available (e.g. when executing a non-saved script in Flowblade *Scrip Tool* application) and *None* is returned. It is recommeded that all Fluxity scripts handle getting *None* gracefully.
+        Sometimes script directory information is not available (e.g. when executing a non-saved script in Flowblade *Script Tool* application) and *None* is returned. It is recommended that all Fluxity scripts handle getting *None* gracefully.
         
         This functionality is useful when script is being distributed with some associated media files.
         
@@ -743,9 +743,9 @@ class FluxityContext:
 
     def create_text_layout(self, font_data):
         """
-        **`font_data(tuple)`** this tuple can be aquired by calling *FluxityContext.get_editor_value()* on editors of type *EDITOR_PANGO_FONT*.
+        **`font_data(tuple)`** this tuple can be acquired by calling *FluxityContext.get_editor_value()* on editors of type *EDITOR_PANGO_FONT*.
                 
-        Creates obejcts used to draw text.
+        Creates objects used to draw text.
 
         **Returns:** (fluxity.PangoTextLayout) object for drawing text.
         """
@@ -860,7 +860,7 @@ class FluxityEmptyClass:
 class PangoTextLayout:
 
     """
-    **`font_data(tuple)`** this tuple can be aquired by calling *`FluxityContext.get_editor_value()`* on editors of type *`EDITOR_PANGO_FONT`*.
+    **`font_data(tuple)`** this tuple can be acquired by calling *`FluxityContext.get_editor_value()`* on editors of type *`EDITOR_PANGO_FONT`*.
             
     Object for drawing text. Uses internally Pango.
     
@@ -879,7 +879,7 @@ class PangoTextLayout:
         
     def create_pango_layout(self, cr, text):
         """
-        **`cr(cairo.Context)`** frame cairo context aquired with *`FluxityContext.get_frame_cr()`*.
+        **`cr(cairo.Context)`** frame cairo context acquired with *`FluxityContext.get_frame_cr()`*.
         
         **`text(str)`** displayed text.
         
@@ -912,7 +912,7 @@ class PangoTextLayout:
         """             
         Returns size of layout.
 
-        Before calling this PangoCairo layout object needs to creted *`PangoTextLayout.create_pango_layout()`* or *`PangoTextLayout.draw_layout()`.*
+        Before calling this PangoCairo layout object needs to created *`PangoTextLayout.create_pango_layout()`* or *`PangoTextLayout.draw_layout()`.*
         
         **Returns:** (int, int)(width, height) pixel size of layout.
         """
@@ -938,7 +938,7 @@ class PangoTextLayout:
         
         **`text(str)`** displayed text.
         
-        **`cr(cairo.Context)`** frame cairo context aquired with *`FluxityContext.get_frame_cr()`*.
+        **`cr(cairo.Context)`** frame cairo context acquired with *`FluxityContext.get_frame_cr()`*.
         
         **`x(float)`** Text X position.
 
@@ -1088,13 +1088,13 @@ class AnimatedValue:
 
     def add_keyframe_at_frame(self, frame, value, kf_type):
         """
-        **`frame(int)`** Frame number in range 0 - (plugin lenght).
+        **`frame(int)`** Frame number in range 0 - (plugin length).
         
         **`value(float)`** A float value.
         
         **`kf_type(KEYFRAME_LINEAR|KEYFRAME_SMOOTH|KEYFRAME_DISCRETE)`** Type of added keyframe.
         
-        Adds or overwites a keyframe.
+        Adds or overwrites a keyframe.
                     
         If frame is on existing keyframe that keyframe is replaced.
         
@@ -1133,7 +1133,7 @@ class AnimatedValue:
         
     def get_value(self, frame):
         """
-        **`frame(int)`** Frame number in range 0 - (plugin lenght).
+        **`frame(int)`** Frame number in range 0 - (plugin length).
                 
         Computes and returns value at frame using current keyframe values, positions and types.
 
@@ -1203,7 +1203,7 @@ class AffineTransform:
     """
     Object for describing animated affine transforms and applying them on *`cairo.Context`*.
 
-    On creation object creates followig instance *`fluxity.AnimatedValue`* attributes:
+    On creation object creates following instance *`fluxity.AnimatedValue`* attributes:
      
     **`x`** X position in pixels.
     
@@ -1243,7 +1243,7 @@ class AffineTransform:
         """
         **`cr(cairo.Context)`** a `cairo.Context` object.
         
-        **`frame(int)`** Frame number in range 0 - (plugin lenght).
+        **`frame(int)`** Frame number in range 0 - (plugin length).
                 
         Applies affine transform defined by object instance at given frame on `cairo.Context` object.
         """
@@ -1301,7 +1301,7 @@ def render_preview_frame(script, script_file, frame, out_folder, profile_file_pa
     """
     **script(str)** Script to be rendered as a string.
     
-    **script_file(str)** Absolut path to file containing script. If this is not provided methods some like *FluxityContext.get_script_dir()* will not function as intended.
+    **script_file(str)** Absolute path to file containing script. If this is not provided methods some like *FluxityContext.get_script_dir()* will not function as intended.
     
     **frame(int)** Frame to be rendered in range 0 - *(script_length - 1)*.
     
@@ -1351,7 +1351,7 @@ def render_frame_sequence(script, script_file, in_frame, out_frame, out_folder, 
     """
     **script(str)** Script to be rendered as a string.
     
-    **script_file(str)** Absolut path to file containing script. If this is not provided methods some like *FluxityContext.get_script_dir()* will not function as intended.
+    **script_file(str)** Absolute path to file containing script. If this is not provided methods some like *FluxityContext.get_script_dir()* will not function as intended.
     
     **in_frame(int)** First frame of rendered range.
 
@@ -1369,7 +1369,7 @@ def render_frame_sequence(script, script_file, in_frame, out_frame, out_folder, 
     
     **Returns:** (dict) Dictionary object created during rendering with the following information:
     
-    * for each process it has *key -> value* pair *process number(str) -> path to first frame redered by process(str)*.
+    * for each process it has *key -> value* pair *process number(str) -> path to first frame rendered by process(str)*.
     * if errors occurred during rendering it has *key -> value* pair *fluxity.FLUXITY_ERROR_MSG -> error message(str)*.
     * if script created log messages it has *key -> value* pair *fluxity.FLUXITY_LOG_MSG -> log message(str)*.
     """
@@ -1464,7 +1464,7 @@ def get_script_default_edit_data(script, script_file, out_folder, profile_file_p
     """
     **script(str)** Script to be rendered as a string.
     
-    **script_file(str)** Absolut path to a file containing script. If this is not provided, some methods like *FluxityContext.get_script_dir()* will not function as intended.
+    **script_file(str)** Absolute path to a file containing script. If this is not provided, some methods like *FluxityContext.get_script_dir()* will not function as intended.
     
     **out_folder(str)** Path to the folder where rendered frame will be saved.
     

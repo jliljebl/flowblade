@@ -324,7 +324,7 @@ def update_kfeditors_positions():
 
 
 def _compositor_uses_fade_buttons(compositor):
-    # we hard coded compositors using fade buttons here because adding data in compostors.xml may have had some backwards compatiblity issues.
+    # we hard coded compositors using fade buttons here because adding data in compostors.xml may have had some backwards compatibility issues.
     if compositor.transition.info.name  == "##opacity":
         return True
     elif compositor.transition.info.name  == "##pict_in_pict":
@@ -381,7 +381,7 @@ def _load_compositor_values_dialog_callback(dialog, response_id):
         else:
             saved_name_comp_name = mlttransitions.name_for_type[compositor_data.info.name]
             current_comp_name = mlttransitions.name_for_type[compositor.transition.info.name]
-            primary_txt = _("Saved Compositor data not applicaple for this compositor!")
+            primary_txt = _("Saved Compositor data not applicable for this compositor!")
             secondary_txt = _("Saved data is for ") + saved_name_comp_name + " compositor,\n" + _(", current compositor is ") + current_comp_name + "."
             dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
 
