@@ -508,7 +508,7 @@ def set_ref_line_y(allocation):
     x, y, w, panel_height = allocation.x, allocation.y, allocation.width, allocation.height
     centerered_tracks_bottom_y = (panel_height / 2.0) + (total_h / 2.0)
     global REF_LINE_Y
-    REF_LINE_Y = centerered_tracks_bottom_y - below_ref_h
+    REF_LINE_Y = int(centerered_tracks_bottom_y - below_ref_h)
 
 def get_pos_for_tline_centered_to_current_frame():
     current_frame = PLAYER().current_frame()
@@ -1675,28 +1675,24 @@ class TimeLineCanvas:
         self.parent_positions = {}
         self.sync_children = []
 
-
-
-
-        # Draw tracks
-        for i in range(1, len(current_sequence().tracks) - 1): # black and hidden tracks are ignored
-            self.draw_track(cr
-                            ,current_sequence().tracks[i]
-                            ,_get_track_y(i)
-                            ,w)
-
-        self.draw_compositors(cr)
-        self.draw_sync_relations(cr)
-
-        # Draw track lines.
-        cr.set_source_rgb(0.165, 0.165, 0.165)
+        # Draw track lines, light.
         for i in range(0, len(current_sequence().tracks) - 1):
-            y = _get_track_y(i)
-            track_height = current_sequence().tracks[i].height
+            y = int(_get_track_y(i))
+            cr.set_source_rgb(0.165, 0.165, 0.165)
             cr.set_line_width(1.0)
             cr.move_to(0, y + 0.5)
             cr.line_to(w, y + 0.5)
             cr.stroke()
+        
+        # Draw tracks
+        for i in range(1, len(current_sequence().tracks) - 1): # black and hidden tracks are ignored
+            self.draw_track(cr,
+                            current_sequence().tracks[i],
+                            _get_track_y(i),
+                            w)
+
+        self.draw_compositors(cr)
+        self.draw_sync_relations(cr)
 
         # Exit displaying from fake_current_pointer for SLIDE_TRIM mode if last displayed 
         # was from fake_pointer but this is not anymore
@@ -2024,7 +2020,7 @@ class TimeLineCanvas:
                             clip.sync_diff = "n/a"
                             cr.show_text(str(clip.sync_diff))
 
-            # Draw audio level data if needed.
+            # Draw audio levels data if needed.
             # Init data rendering if data needed and not available
             if clip.is_blanck_clip == False and clip.waveform_data == None and editorstate.display_all_audio_levels == True \
                 and clip.media_type != appconsts.IMAGE_SEQUENCE and clip.media_type != appconsts.PATTERN_PRODUCER:
@@ -2145,7 +2141,7 @@ class TimeLineCanvas:
                 cr.set_source_rgb(0.3, 0.3, 0.3)
                 
             self.create_round_rect_path(cr, scale_in,
-                                         y, scale_length, 
+                                         y + 0.5, scale_length, 
                                          track_height)
             cr.stroke()
         
@@ -2201,7 +2197,7 @@ class TimeLineCanvas:
         # Fill rest of track with bg color if needed
         scale_in = clip_start_frame  * pix_per_frame
         if scale_in < width:
-            cr.rectangle(scale_in + 0.5, y, width - scale_in, track_height)
+            cr.rectangle(scale_in + 0.5, y + 1, width - scale_in, track_height - 1)
             cr.set_source_rgb(*BG_COLOR)  
             cr.fill()
 
@@ -2397,7 +2393,6 @@ class TimeLineCanvas:
 
     def create_round_rect_path(self, cr, x, y, width, height, radius=4.0):
         degrees = M_PI / 180.0
-
         cr.new_sub_path()
         cr.arc(x + width - radius, y + radius, radius, -90 * degrees, 0 * degrees)
         cr.arc(x + width - radius, y + height - radius, radius, 0 * degrees, 90 * degrees)
@@ -2541,12 +2536,12 @@ class TimeLineColumn:
         
         # Draw tracks
         for i in range(1, len(current_sequence().tracks) - 1):
-            y = _get_track_y(i)
+            y = int(_get_track_y(i))
             is_insert_track = (insert_track_index==i)
             self.draw_track(cr, current_sequence().tracks[i], y, is_insert_track)
  
     def draw_track(self, cr, track, y, is_insert_track):
-        # Draw center area
+        # Draw track info area.
         center_width = COLUMN_WIDTH - COLUMN_LEFT_PAD - ACTIVE_SWITCH_WIDTH
         rect = (COLUMN_LEFT_PAD - 1, y, center_width + 1, track.height)
         grad = cairo.LinearGradient (COLUMN_LEFT_PAD, y, COLUMN_LEFT_PAD, y + track.height)
@@ -2556,7 +2551,7 @@ class TimeLineColumn:
         cr.fill()
         self.draw_edge(cr, rect)
         
-        # Draw active switch bg end edge
+        # Draw active switch bg end edge.
         rect = (COLUMN_LEFT_PAD + center_width - 1, y, ACTIVE_SWITCH_WIDTH + 1, track.height)
         cr.rectangle(*rect)
         if track.active:
@@ -2572,7 +2567,7 @@ class TimeLineColumn:
         cr.fill()
         self.draw_edge(cr, rect)
 
-        # Draw track name
+        # Draw track name.
         layout = PangoCairo.create_layout(cr)
         text = utils.get_track_name(track, current_sequence())
         desc = Pango.FontDescription("Sans Bold 10")
@@ -2590,7 +2585,7 @@ class TimeLineColumn:
         PangoCairo.update_layout(cr, layout)
         PangoCairo.show_layout(cr, layout)
         
-        # Draw mute icon
+        # Draw mute icon.
         mute_icon = None
         if track.mute_state == appconsts.TRACK_MUTE_VIDEO and track.type == appconsts.VIDEO:
             mute_icon = MUTE_VIDEO_ICON
@@ -2616,7 +2611,7 @@ class TimeLineColumn:
             cr.set_source_surface(mute_icon, int(ix), int(y + iy))
             cr.paint()
 
-        # Draw locked icon
+        # Draw locked icon.
         if track.edit_freedom == sequence.LOCKED:
             ix, iy = LOCK_POS
             if track.height == sequence.TRACK_HEIGHT_HIGH: 
@@ -2628,7 +2623,7 @@ class TimeLineColumn:
             cr.set_source_surface(FULL_LOCK_ICON, ix, int(y + iy))
             cr.paint()
         
-        # Draw insert arrow
+        # Draw insert arrow.
         if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME or \
            editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
             stop, r,g,b, a = TRACK_GRAD_STOP1
@@ -2643,7 +2638,7 @@ class TimeLineColumn:
             cr.set_source_surface(INSERT_ARROW_ICON, ix, y + iy)
             cr.paint()
 
-        # Draw audio level info
+        # Draw audio level info.
         if track.audio_gain != 1.0:
             pcs_str = str(int(round(track.audio_gain * 100.0))) + "%"
             # Draw track name
