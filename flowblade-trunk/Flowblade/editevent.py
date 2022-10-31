@@ -580,15 +580,18 @@ def tline_media_drop(drag_data, x, y, use_marks=False):
             drop_done = _attempt_dnd_overwrite(track, new_clip, frame)
             if drop_done == True:
                 maybe_autorender_plugin(new_clip)
+                gui.media_list_view.clear_selection()
                 return
     elif editorpersistance.prefs.dnd_action == appconsts.DND_ALWAYS_OVERWRITE:
         drop_done = _attempt_dnd_overwrite(track, new_clip, frame)
         if drop_done == True:
             maybe_autorender_plugin(new_clip)
+            gui.media_list_view.clear_selection()
             return
             
     do_clip_insert(track, new_clip, frame)
-    
+    gui.media_list_view.clear_selection()
+                
     maybe_autorender_plugin(new_clip)
 
 def tline_range_item_drop(rows, x, y):
