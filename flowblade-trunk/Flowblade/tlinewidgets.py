@@ -1925,7 +1925,7 @@ class TimeLineCanvas:
                     cr.close_path()
                     cr.fill()
 
-            # Draw video clip icon
+            # Draw video clip icon.
             text_x_add = 0
             if scale_length > TEXT_MIN and editorstate.display_clip_media_thumbnails:
                 if clip.is_blanck_clip == False and track.type == sequence.VIDEO and \
@@ -1940,7 +1940,7 @@ class TimeLineCanvas:
                         cr.clip()
                         cr.set_source_surface(thumb_img,scale_in, y - 20)
                         cr.paint()
-                    except: # thumbnail not found  in dict, get it and  paint it
+                    except: # thumbnail not found  in dict, get it and  paint it.
                         try:
                             if clip.container_data == None:
                                 media_file = PROJECT().get_media_file_for_path(clip.path)
@@ -1958,7 +1958,7 @@ class TimeLineCanvas:
                             cr.paint()
                             clip_thumbnails[clip.path] = thumb_img
                         except:
-                            pass # This fails for rendered fades and transitions
+                            pass # This fails for rendered fades and transitions.
                     
                     if clip.selected:
                         if scale_length - 8 < appconsts.THUMB_WIDTH:
@@ -1971,7 +1971,7 @@ class TimeLineCanvas:
                                                     
                     cr.restore()
                 
-            # Draw sync stripe
+            # Draw sync stripe.
             if scale_length > FILL_MIN: 
                 if clip.sync_data != None:
                     stripe_color = SYNC_OK_COLOR
@@ -2013,18 +2013,18 @@ class TimeLineCanvas:
                                              cairo.FONT_WEIGHT_NORMAL)
                         cr.set_font_size(9)
                         cr.move_to(scale_in + TEXT_X, y + track_height - 2)
-                        try: # This is needed for backwards compability
-                             # Projects saved before adding this feature do not have sync_diff attribute
+                        try: # This is needed for backwards compability.
+                             # Projects saved before adding this feature do not have sync_diff attribute.
                             cr.show_text(str(clip.sync_diff))
                         except:
                             clip.sync_diff = "n/a"
                             cr.show_text(str(clip.sync_diff))
 
             # Draw audio levels data if needed.
-            # Init data rendering if data needed and not available
+            # Init data rendering if data needed and not available.
             if clip.is_blanck_clip == False and clip.waveform_data == None and editorstate.display_all_audio_levels == True \
-                and clip.media_type != appconsts.IMAGE_SEQUENCE and clip.media_type != appconsts.PATTERN_PRODUCER:
-                 clip.waveform_data = audiowaveformrenderer.get_waveform_data(clip)
+                and clip.media_type != appconsts.IMAGE and clip.media_type != appconsts.IMAGE_SEQUENCE and clip.media_type != appconsts.PATTERN_PRODUCER:
+                clip.waveform_data = audiowaveformrenderer.get_waveform_data(clip)
             # Draw data if available large enough scale
             if clip.is_blanck_clip == False and clip.waveform_data != None and scale_length > FILL_MIN:
                 r, g, b = clip_bg_col
@@ -2046,8 +2046,8 @@ class TimeLineCanvas:
                     y_pad = WAVEFORM_PAD_SMALL
                     bar_height = WAVEFORM_HEIGHT_SMALL
                 
-                # Draw all frames only if pixels per frame > 2, otherwise
-                # draw only every other or fewer frames
+                # Draw all frames only if pixels per frame > 2, otherwise.
+                # draw only every other or fewer frames.
                 draw_pix_per_frame = pix_per_frame
                 if draw_pix_per_frame < 2:
                     draw_pix_per_frame = 2
@@ -2057,7 +2057,7 @@ class TimeLineCanvas:
                 else:
                     step = 1
 
-                # Draw only frames in display
+                # Draw only frames in display.
                 draw_first = clip_in
                 draw_last = clip_out + 1
                 if clip_start_frame < 0:
@@ -2065,10 +2065,10 @@ class TimeLineCanvas:
                 if draw_first + width_frames < draw_last:
                     draw_last = int(draw_first + width_frames) + 1
 
-                # Get media frame 0 position in screen pixels
+                # Get media frame 0 position in screen pixels.
                 media_start_pos_pix = scale_in - clip_in * pix_per_frame
                 
-                # Draw level bar for each frame in draw range
+                # Draw level bar for each frame in draw range.
                 for f in range(draw_first, draw_last, step):
                     try:
                         x = media_start_pos_pix + f * pix_per_frame
@@ -2077,13 +2077,13 @@ class TimeLineCanvas:
                             h = 1
                         cr.rectangle(x, y + y_pad + (bar_height - h), draw_pix_per_frame, h)
                     except:
-                        # This is just dirty fix a when 23.98 fps does not work
+                        # This is just dirty fix a when 23.98 fps does not work.
                         break
 
                 cr.fill()
                 cr.restore()
 
-            # Draw proxy indicator
+            # Draw proxy indicator.
             if scale_length > FILL_MIN:
                 if (not clip.is_blanck_clip) and proxy_paths.get(clip.path) != None:
                     if clip.selected:
@@ -2094,10 +2094,15 @@ class TimeLineCanvas:
                     cr.rectangle(scale_in, y, scale_length, 8)
                     cr.fill()
 
-            # Draw text and filter, sync icons
+            # Draw text and filter, sync icons.
             if scale_length > TEXT_MIN and clip.is_blanck_clip == False:
                 if not hasattr(clip, "rendered_type"):
                     # Text
+                    cr.save()
+
+                    cr.rectangle(scale_in, y, scale_length - 3, track_height)
+                    cr.clip()
+
                     cr.set_source_rgba(*CLIP_TEXT_COLOR_OVERLAY)
                     cr.select_font_face ("sans-serif",
                                          cairo.FONT_SLANT_NORMAL,
@@ -2106,14 +2111,16 @@ class TimeLineCanvas:
                     cr.move_to(scale_in + TEXT_X + text_x_add, y + text_y)
                     cr.show_text(clip.name.upper())
                     
+                    cr.restore()
+                    
                 icon_slot = 0
-                # Filter icon
+                # Filter icon.
                 if len(clip.filters) > 0:
                     ix, iy = ICON_SLOTS[icon_slot]
                     cr.set_source_surface(FILTER_CLIP_ICON, int(scale_in) + int(scale_length) - ix, y + iy)
                     cr.paint()
                     icon_slot = icon_slot + 1
-                # Mute icon
+                # Mute icon.
                 if clip.mute_filter != None:
                     icon = AUDIO_MUTE_ICON
                     ix, iy = ICON_SLOTS[icon_slot]
@@ -2128,7 +2135,7 @@ class TimeLineCanvas:
                     cr.set_source_surface(icon, ix, iy)
                     cr.paint()
 
-            # Save sync children data
+            # Save sync children data.
             if clip.sync_data != None:
                 self.sync_children.append((clip, track, scale_in))
 
@@ -2145,7 +2152,7 @@ class TimeLineCanvas:
                                          track_height)
             cr.stroke()
         
-            # No further drawing for blank clips
+            # No further drawing for blank clips.
             if clip.is_blanck_clip:
                 clip_start_frame += clip_length
                 continue
@@ -2163,11 +2170,11 @@ class TimeLineCanvas:
                         cr.show_text(str(clip.sync_diff))
 
             if clip.waveform_data == None and editorstate.display_all_audio_levels == True and scale_length > FILL_MIN:
-                if clip.media_type != appconsts.IMAGE_SEQUENCE and clip.media_type != appconsts.PATTERN_PRODUCER:
+                if clip.media_type != appconsts.IMAGE and clip.media_type != appconsts.IMAGE_SEQUENCE and clip.media_type != appconsts.PATTERN_PRODUCER:
                     cr.set_source_surface(LEVELS_RENDER_ICON, int(scale_in) + 4, y + 8)
                     cr.paint()
 
-            # Clip markers
+            # Clip markers.
             if len(clip.markers) > 0 and scale_length > TEXT_MIN:
                 for marker in clip.markers:
                     name, clip_marker_frame = marker
@@ -2176,7 +2183,7 @@ class TimeLineCanvas:
                         cr.set_source_surface(CLIP_MARKER_ICON, int(marker_x) - 4, y)
                         cr.paint()
 
-            # Container clip render status
+            # Container clip render status.
             if clip.container_data != None:
                 if hasattr(clip.container_data, "progress") and clip.container_data.progress != None:
                     cr.set_source_rgba(0, 0, 0, 0.6)
@@ -2191,10 +2198,10 @@ class TimeLineCanvas:
                     cr.move_to(int(scale_in + scale_length / 2.0 - 12), int(y + track_height / 2.0 + 5))
                     cr.show_text(str(int(clip.container_data.progress * 100)) + "%")
                         
-            # Get next draw position
+            # Get next draw position.
             clip_start_frame += clip_length
 
-        # Fill rest of track with bg color if needed
+        # Fill rest of track with bg color if needed.
         scale_in = clip_start_frame  * pix_per_frame
         if scale_in < width:
             cr.rectangle(scale_in + 0.5, y + 1, width - scale_in, track_height - 1)
