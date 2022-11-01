@@ -203,7 +203,7 @@ class AddMediaPluginWindow(Gtk.Window):
         GObject.GObject.__init__(self)
         self.set_modal(True)
         self.set_transient_for(gui.editor_window.window)
-        self.set_title(_("Add Genarator"))
+        self.set_title(_("Add Generator"))
         self.connect("delete-event", lambda w, e:_close_window())
 
         # categories_list is list of form [("category_name", [category_items]), ...]
