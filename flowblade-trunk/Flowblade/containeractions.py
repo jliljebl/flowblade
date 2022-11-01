@@ -681,7 +681,12 @@ class FluxityContainerActions(AbstractContainerActionObject):
     def update_render_status(self):
         
         Gdk.threads_enter()
+        
+        # We need to set these None so that when render is complete tlinewidgets.py drawing code no longer thinks
+        # that render is in progress
         self.container_data.progress = None
+        self.clip.container_data.progress = None
+        
         if fluxityheadless.session_render_complete(self.get_container_program_id()) == True:
             job_msg = self.get_completed_job_message()
             jobs.update_job_queue(job_msg)
@@ -736,8 +741,11 @@ class FluxityContainerActions(AbstractContainerActionObject):
                 job_msg.text = msg
                 
                 jobs.update_job_queue(job_msg)
-                
+
+                # Update tline render % display, we need to set different attrs for 
+                # first and succeeding renders.
                 self.container_data.progress = job_msg.progress
+                self.clip.container_data.progress = job_msg.progress
                 updater.repaint_tline()
                 
             else:

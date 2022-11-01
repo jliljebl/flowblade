@@ -1807,6 +1807,7 @@ class TimeLineCanvas:
                         cr.set_source(grad)
                 elif track.type == sequence.VIDEO:
                     if clip.container_data != None:
+                        # Container clip
                         if clip.container_data.rendered_media_range_in == -1 \
                             or (hasattr(clip.container_data, "progress") and clip.container_data.progress != None):
                             if not clip.selected:
@@ -1825,6 +1826,7 @@ class TimeLineCanvas:
                                 cr.set_source_rgb(*CONTAINER_CLIP_RENDERED_SELECTED_COLOR)
                                 clip_bg_col = CONTAINER_CLIP_RENDERED_SELECTED_COLOR
                     elif clip.media_type == sequence.VIDEO:
+                        # Video clip
                         if not clip.selected:
                             grad = cairo.LinearGradient (0, y, 0, y + track_height)
                             grad.add_color_stop_rgba(*CLIP_COLOR_GRAD)
@@ -1834,7 +1836,7 @@ class TimeLineCanvas:
                         else:
                             cr.set_source_rgb(*CLIP_SELECTED_COLOR)
                             clip_bg_col = CLIP_SELECTED_COLOR
-                    else: # IMAGE type
+                    else: # Image type
                         if not clip.selected:
                             grad = cairo.LinearGradient (0, y, 0, y + track_height)
                             grad.add_color_stop_rgba(*IMAGE_CLIP_COLOR_GRAD)
