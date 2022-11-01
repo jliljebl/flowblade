@@ -165,9 +165,6 @@ class LineText:
         self.affine = fluxity.AffineTransform()
         self.opacity = fluxity.AnimatedValue()
         
-        start_scale = 1.0
-        end_scale = 1.0
-        
         self._apply_justified_position(bg)
         
         # Animation In
@@ -178,8 +175,8 @@ class LineText:
         movement_type = self.movement_type_in
         animation_type = self.animation_type_in
         self._apply_affine_data_with_movement(movement_type, animation_type, start_x, \
-                                              start_y, end_x, end_y, start_scale, \
-                                              end_scale, frame_start, length, self.steps_in)
+                                              start_y, end_x, end_y, \
+                                              frame_start, length, self.steps_in)
 
         
         # Animation Out
@@ -192,8 +189,8 @@ class LineText:
         animation_type = self.animation_type_out
 
         self._apply_affine_data_with_movement(movement_type, animation_type, start_x, \
-                                              start_y, end_x, end_y, start_scale, \
-                                              end_scale, frame_start, length, self.steps_out)
+                                              start_y, end_x, end_y, \
+                                              frame_start, length, self.steps_out)
 
         self._apply_fade(fctx)
 
@@ -307,13 +304,11 @@ class LineText:
         return (start_x, start_y + self.line_y_off, end_x, end_y + self.line_y_off)
 
     def _apply_affine_data_with_movement(self, movement_type, animation_type, start_x, start_y, end_x, end_y, \
-                                         start_scale, end_scale, frame_start, frame_end, steps):
+                                         frame_start, frame_end, steps):
                                          
         if movement_type == LineText.LINEAR:
             self._apply_linear_movement(self.affine.x, start_x, end_x, frame_start, frame_end)
             self._apply_linear_movement(self.affine.y, start_y, end_y, frame_start, frame_end)
-            self._apply_linear_movement(self.affine.scale_x, start_scale, end_scale, frame_start, frame_end)
-            self._apply_linear_movement(self.affine.scale_y, start_scale, end_scale, frame_start, frame_end) 
         elif movement_type == LineText.EASE_IN:
             if animation_type in LineText.HORIZONTAL_ANIMATIONS:
                 self._apply_fast_start_movement(self.affine.x, start_x, end_x, frame_start, frame_end)
@@ -354,21 +349,30 @@ class LineText:
     def _apply_linear_movement(self, animated_value, start_val, end_val, start_frame, length):
         animated_value.add_keyframe_at_frame(start_frame, start_val, fluxity.KEYFRAME_LINEAR)   
         animated_value.add_keyframe_at_frame(start_frame + length, end_val, fluxity.KEYFRAME_LINEAR)
-
-    def _apply_smooth_movement(self, animated_value, start_val, end_val, start_frame, length):
-        animated_value.add_keyframe_at_frame(start_frame, start_val, fluxity.KEYFRAME_SMOOTH)   
-        animated_value.add_keyframe_at_frame(start_frame + length, end_val, fluxity.KEYFRAME_LINEAR)
-
+    
     def _apply_fast_start_movement(self, animated_value, start_val, end_val, start_frame, length):
-        mid_kf_frame = int(length * 0.25)
-        mid_kf_value = start_val + (end_val - start_val) * 0.75
+        start_hold_kf_frame = int(length * 0.125)
+        start_hold_kf_frame = start_val + (end_val - start_val) * 0.125
+        mid_kf_frame = int(length * 0.375)
+        mid_kf_value = start_val + (end_val - start_val) * 0.70
         animated_value.add_keyframe_at_frame(start_frame, start_val, fluxity.KEYFRAME_SMOOTH)
         animated_value.add_keyframe_at_frame(start_frame + mid_kf_frame, mid_kf_value, fluxity.KEYFRAME_SMOOTH)
         animated_value.add_keyframe_at_frame(start_frame + length, end_val, fluxity.KEYFRAME_LINEAR)
 
+    def _apply_faster_start_movement(self, animated_value, start_val, end_val, start_frame, length):
+        start_hold_kf_frame = int(length * 0.125)
+        start_hold_kf_frame = start_val + (end_val - start_val) * 0.125
+        mid_kf_frame = int(length * 0.235)
+        mid_kf_value = start_val + (end_val - start_val) * 0.70
+        animated_value.add_keyframe_at_frame(start_frame, start_val, fluxity.KEYFRAME_SMOOTH)
+        animated_value.add_keyframe_at_frame(start_frame + mid_kf_frame, mid_kf_value, fluxity.KEYFRAME_SMOOTH)
+        animated_value.add_keyframe_at_frame(start_frame + length, end_val, fluxity.KEYFRAME_LINEAR)
+        
     def _apply_slow_start_movement(self, animated_value, start_val, end_val, start_frame, length):
-        mid_kf_frame = int(length * 0.70)
-        mid_kf_value = start_val + (end_val - start_val) * 0.25
+        mid_kf_frame = int(length * 0.625)
+        mid_kf_value = start_val + (end_val - start_val) * 0.3
+        end_hold_kf_frame = int(length * 0.875)
+        end_hold_kf_frame = start_val + (end_val - start_val) * 0.875
         animated_value.add_keyframe_at_frame(start_frame, start_val, fluxity.KEYFRAME_SMOOTH)
         animated_value.add_keyframe_at_frame(start_frame + mid_kf_frame, mid_kf_value, fluxity.KEYFRAME_SMOOTH)
         animated_value.add_keyframe_at_frame(start_frame + length, end_val, fluxity.KEYFRAME_LINEAR)
@@ -454,13 +458,11 @@ class BackGround:
         p = self.pad
         line_x, line_y = line_text.layout_pos
         w, h = line_text.pixel_size
-
-
-                
-        # If and out may gave different animations and need different clipping.
+    
+        # In and out may have different animations and need different clipping.
         do_clip = False
         line_delay_addition = line_text.line_index * line_text.line_delay  # clipping application time needs to include line delays.
-        # In and out animations have different clliping applied and need to be applied temporally on their own areas.
+        # In and out animations have different clipping applied and need to be only applied temporally on their own frame ranges.
         if (line_text.animation_type_in in LineText.CLIPPED_ANIMATIONS) and (frame <= line_text.in_frames + line_delay_addition):
             do_clip = True
         elif (line_text.animation_type_out in LineText.CLIPPED_ANIMATIONS) and (frame >= fctx.get_length() - line_text.out_frames):
