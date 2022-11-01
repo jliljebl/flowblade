@@ -150,19 +150,17 @@ def _get_categories_list():
     
     return categories_list  
 
-def fill_media_plugin_sub_menu(menu, callback=None):
+# This method is used by scriptool.py create sub menu to load generator code into 
+# editor window as an exemple etc.
+def fill_media_plugin_sub_menu(menu, callback):
     for group_data in _plugins_groups:
-
         group_name, group = group_data
         menu_item = Gtk.MenuItem.new_with_label(group_name)
         sub_menu = Gtk.Menu.new()
         menu_item.set_submenu(sub_menu)
         for plugin in group:
             plugin_menu_item = Gtk.MenuItem.new_with_label(translations.get_plugin_name(plugin.name))
-            if callback == None:
-                plugin_menu_item.connect("activate", _add_media_plugin, plugin.folder)
-            else:
-                plugin_menu_item.connect("activate", callback, plugin.folder)
+            plugin_menu_item.connect("activate", callback, plugin.folder)
             sub_menu.append(plugin_menu_item)
 
         menu.append(menu_item)
@@ -181,9 +179,8 @@ def _add_media_plugin():
         # Add as Container Clip
         containerclip.create_fluxity_media_item_from_plugin(script_file, screenshot_file, _current_plugin_data_object)
     else:
-        # Add as rendered media.
+        # Add as Rendered Clip.
         _close_window()
-
         # We need to have a containerclip.ContainerClipData object to utilize caontainer clips code to render a video clip.
         container_data = containerclip.ContainerClipData(appconsts.CONTAINER_CLIP_FLUXITY, _selected_plugin.get_plugin_script_file(), None)
         container_data.data_slots["icon_file"] = screenshot_file
@@ -252,7 +249,7 @@ class AddMediaPluginWindow(Gtk.Window):
 
         self.import_select = Gtk.ComboBoxText()
         self.import_select.append_text(_("Add as Container Clip"))
-        self.import_select.append_text(_("Add as Rendered Media"))
+        self.import_select.append_text(_("Add as Rendered Clip"))
         self.import_select.set_active(0)
         self.import_select.connect("changed", lambda w: self._export_action_changed(w))
         import_row = guiutils.get_left_justified_box([Gtk.Label(_("Import Action:")), guiutils.pad_label(12,12), self.import_select])

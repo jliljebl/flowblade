@@ -272,19 +272,12 @@ class GMicLoadCompletionThread(threading.Thread):
         Gdk.threads_leave()
         
 # ------------------------------------------------------- Fluxity
+# ------------------------------------------------------- ADDING GENERATOR AS MEDIA ITEM
+# Adding Generator from loaded script file.
 def create_fluxity_media_item():
     script_select, row1 = _get_file_select_row_and_editor(_("Generator Plugin Script:"), None, _("Generator Plugin Script"))
     _open_rows_dialog(_fluxity_clip_create_dialog_callback, _("Create Generator Plugin Script Media Item"), [row1], [script_select])
 
-def create_fluxity_media_item_from_plugin(script_file, screenshot_file, plugin_data):
-    container_data = ContainerClipData(appconsts.CONTAINER_CLIP_FLUXITY, script_file, None)
-    container_data.data_slots["icon_file"] = screenshot_file
-    container_data.data_slots["fluxity_plugin_edit_data"] = plugin_data
-    
-    # We need to exit this Gtk callback to get info text above updated.
-    completion_thread = FluxityLoadCompletionThread(container_data, None, plugin_data)
-    completion_thread.start()
-        
 def _fluxity_clip_create_dialog_callback(dialog, response_id, data):
     if response_id != Gtk.ResponseType.ACCEPT:
         dialog.destroy()
@@ -306,6 +299,16 @@ def _fluxity_clip_create_dialog_callback(dialog, response_id, data):
         completion_thread = FluxityLoadCompletionThread(container_clip_data, dialog)
         completion_thread.start()
 
+# Called when user selects 'Add Generator' in with option 'Add as Container Clip'.
+def create_fluxity_media_item_from_plugin(script_file, screenshot_file, plugin_data):
+    container_data = ContainerClipData(appconsts.CONTAINER_CLIP_FLUXITY, script_file, None)
+    container_data.data_slots["icon_file"] = screenshot_file
+    container_data.data_slots["fluxity_plugin_edit_data"] = plugin_data
+    
+    # We need to exit this Gtk callback to get info text above updated.
+    completion_thread = FluxityLoadCompletionThread(container_data, None, plugin_data)
+    completion_thread.start()
+    
 class FluxityLoadCompletionThread(threading.Thread):
     
     def __init__(self, container_clip_data, dialog, plugin_data=None):
@@ -348,11 +351,10 @@ class FluxityLoadCompletionThread(threading.Thread):
         length = data_object["length"]
         fluxity_unrendered_media_image = respaths.IMAGE_PATH + "unrendered_fluxity.png"
         window_text = _("Creating Container for Generator...")
-        containeractions.create_unrendered_clip(length, fluxity_unrendered_media_image, self.container_clip_data, _fluxity_unredered_media_creation_complete, window_text)
+        containeractions.create_unrendered_clip(length, fluxity_unrendered_media_image, self.container_clip_data, _fluxity_unrendered_media_creation_complete, window_text)
 
-def _fluxity_unredered_media_creation_complete(created_unrendered_clip_path, container_clip_data):
-
-    # This called from inside Gdk.threads_enter(), entering second time here crashes.
+def _fluxity_unrendered_media_creation_complete(created_unrendered_clip_path, container_clip_data):
+    # This is called from inside Gdk.threads_enter(), entering second time here crashes.
     # Now that unrendered media has been created we have full container data info.
     data_object = container_clip_data.data_slots["fluxity_plugin_edit_data"]
     container_clip_data.editable = True
@@ -360,7 +362,7 @@ def _fluxity_unredered_media_creation_complete(created_unrendered_clip_path, con
     container_clip_data.unrendered_media = created_unrendered_clip_path
     container_clip_data.unrendered_type = appconsts.VIDEO
 
-    # Copy created unred
+    # Copy created unrendered media clip.
     rand_id_str = str(os.urandom(16))
     clip_id_str = hashlib.md5(rand_id_str.encode('utf-8')).hexdigest() 
     unrendered_clip_path = userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_UNRENDERED +"/"+ clip_id_str + ".mp4"
@@ -372,11 +374,15 @@ def _fluxity_unredered_media_creation_complete(created_unrendered_clip_path, con
     PROJECT().add_container_clip_media_object(container_clip)
     _update_gui_for_media_object_add()
 
+# ------------------------------------------------------------- ADDING GENERATOR AS PRE-RENDERED CLIP
+# Called when user selects 'Add Generator' in with option 'Add as Rendered Clip'.
 def create_renderered_fluxity_media_item(container_data, length):
     fluxity_unrendered_media_image = respaths.IMAGE_PATH + "unrendered_fluxity.png"
     containeractions.create_unrendered_clip(length, fluxity_unrendered_media_image, container_data, _add_fluxity_rendered_help_media_complete, "Please wait")
 
 def _add_fluxity_rendered_help_media_complete(created_unrendered_clip_path, container_data):
+    # We need to jump through some hoops here because we are using media plugin rendering functionality to 
+    # add a rendered cidoa as new media item.
     rand_id_str = str(os.urandom(16))
     clip_id_str = hashlib.md5(rand_id_str.encode('utf-8')).hexdigest() 
     unrendered_clip_path = userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_UNRENDERED +"/"+ clip_id_str + ".mp4"
