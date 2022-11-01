@@ -273,7 +273,7 @@ class GMicLoadCompletionThread(threading.Thread):
         
 # ------------------------------------------------------- Fluxity
 # ------------------------------------------------------- ADDING GENERATOR AS MEDIA ITEM
-# Adding Generator from loaded script file.
+# Adding Generator item from loaded script file.
 def create_fluxity_media_item():
     script_select, row1 = _get_file_select_row_and_editor(_("Generator Plugin Script:"), None, _("Generator Plugin Script"))
     _open_rows_dialog(_fluxity_clip_create_dialog_callback, _("Create Generator Plugin Script Media Item"), [row1], [script_select])

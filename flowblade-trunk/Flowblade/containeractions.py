@@ -361,6 +361,8 @@ class AbstractContainerActionObject:
             action = edit.container_clip_clip_render_replace(data)
             action.do_edit()
 
+        return rendered_clip
+
     def set_video_endoding(self, clip, callback=None):
         self.external_encoding_callback = callback
         current_profile_index = mltprofiles.get_profile_index_for_profile(current_sequence().profile)
@@ -685,8 +687,11 @@ class FluxityContainerActions(AbstractContainerActionObject):
             jobs.update_job_queue(job_msg)
             
             if self.plugin_create_render_complete_callback == None:
+                # Completed render for timeline container clip update is handeled here.
+                GLib.idle_add(self.plugin_tline_render_comlete)
                 GLib.idle_add(self.create_producer_and_do_update_edit, None)
             else:
+                # Completed render for adding Generator plugin as rendered video clip is handeled here. 
                 if self.container_data.render_data.do_video_render == False:
                     resource_path = self.get_rendered_frame_sequence_resource_path()
                 else:
@@ -739,6 +744,11 @@ class FluxityContainerActions(AbstractContainerActionObject):
                 pass # This can happen sometimes before gmicheadless.py has written a status message, we just do nothing here.
 
         Gdk.threads_leave()
+
+    def plugin_tline_render_comlete(self):
+        clip = self.create_producer_and_do_update_edit(None)
+        # Reopen in edit panel, doing callback to avoid circular imports
+        set_plugin_to_be_edited_func(clip, self)
 
     def abort_render(self):
         fluxityheadless.abort_render(self.get_container_program_id())
