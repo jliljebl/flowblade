@@ -432,7 +432,7 @@ def load_layout_data(callback):
 def save_media_plugin_plugin_properties(callback, default_name, data):
     parent = gui.editor_window.window
 
-    dialog = Gtk.FileChooserDialog( _("Save Media Plugin Properties"), parent,
+    dialog = Gtk.FileChooserDialog( _("Save Generator Properties"), parent,
                                    Gtk.FileChooserAction.SAVE,
                                    (_("Cancel"), Gtk.ResponseType.CANCEL,
                                     _("Save"), Gtk.ResponseType.ACCEPT))
@@ -442,7 +442,7 @@ def save_media_plugin_plugin_properties(callback, default_name, data):
 
     dialog.set_select_multiple(False)
     file_filter = Gtk.FileFilter()
-    file_filter.set_name(_("Flowblade Media Plugin Properties"))
+    file_filter.set_name(_("Flowblade Generator Properties"))
     file_filter.add_pattern("*" + "mediaplugindata")
     dialog.add_filter(file_filter)
     
@@ -451,14 +451,14 @@ def save_media_plugin_plugin_properties(callback, default_name, data):
 
 def load_media_plugin_plugin_properties(callback):
     parent = gui.editor_window.window
-    dialog = Gtk.FileChooserDialog(_("Load Media Plugin Properties"), parent,
+    dialog = Gtk.FileChooserDialog(_("Load Generator Properties"), parent,
                                    Gtk.FileChooserAction.OPEN,
                                    (_("Cancel"), Gtk.ResponseType.CANCEL,
                                     _("OK"), Gtk.ResponseType.ACCEPT))
     dialog.set_action(Gtk.FileChooserAction.OPEN)
     dialog.set_select_multiple(False)
     file_filter = Gtk.FileFilter()
-    file_filter.set_name(_("Flowblade Media Plugin Properties"))
+    file_filter.set_name(_("Flowblade Generator Properties"))
     file_filter.add_pattern("*" + "mediaplugindata")
     dialog.add_filter(file_filter)
     dialog.connect('response', callback)
@@ -2020,6 +2020,6 @@ def set_fade_length_default_dialog(callback, current_value):
     dialog.show_all()
         
 def show_no_plugins_in_monitor_dialog():
-    primary_txt = _("No Monitor display available for Media Plugins")
-    secondary_txt = _("Media Plugins with user mutable media are best handled on Timeline.")
+    primary_txt = _("No Monitor display available for Generators")
+    secondary_txt = _("Generators with user mutable media are best handled on Timeline.")
     dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)

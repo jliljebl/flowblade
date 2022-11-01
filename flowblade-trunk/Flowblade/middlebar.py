@@ -285,7 +285,7 @@ def _create_buttons(editor_window):
     editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_gmic" + icon_color), gmic.launch_gmic)
     editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_fluxity" + icon_color), scripttool.launch_scripttool)
     editor_window.tools_buttons.add_button(guiutils.get_cairo_image("open_renderqueue" + icon_color), lambda :batchrendering.launch_batch_rendering())
-    tooltips = [_("Audio Mixer"), _("Titler"), _("G'Mic Effects"),_("Media Plugin Editor"), _("Batch Render Queue")]
+    tooltips = [_("Audio Mixer"), _("Titler"), _("G'Mic Effects"),_("Generator Plugin Script Editor"), _("Batch Render Queue")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.tools_buttons, tooltips)
     editor_window.tools_buttons.no_decorations = True
     editor_window.tools_buttons.show_prelight_icons()

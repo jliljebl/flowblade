@@ -306,7 +306,7 @@ def main(root_path):
     containerclip.test_blender_availebility()
     toolsintegration.init()
 
-    # Media Plugins
+    # Media Plugins a.k.a Generators
     mediaplugin.init()
 
     # Create player object.

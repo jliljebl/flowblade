@@ -1032,7 +1032,7 @@ class PluginInfoPanel(Gtk.HBox):
         self._set_use_mark_up()
 
     def display_plugin_info(self, clip, track_name):
-        self.source_track.set_text(_("<b>Media Plugin on Track:</b>") + " ")
+        self.source_track.set_text(_("<b>Generator Clip on Track:</b>") + " ")
         self.length.set_text(_("<b>Length:</b>") + " ")
 
         self.source_track_value.set_text("<b>" + track_name + "</b>")
@@ -2257,7 +2257,7 @@ def _get_edit_menu_item(event, clip, track, callback):
 def _get_container_clip_menu_items(clip_menu, event, clip, track, callback):
 
     if  clip.container_data.container_type == appconsts.CONTAINER_CLIP_FLUXITY:
-        item_text = _("Edit Media Plugin...")
+        item_text = _("Edit Generator Properties...")
     else:        
         item_text = _("Edit Container Program...")
 
@@ -2268,7 +2268,7 @@ def _get_container_clip_menu_items(clip_menu, event, clip, track, callback):
     
     
     if  clip.container_data.container_type == appconsts.CONTAINER_CLIP_FLUXITY:
-        menu_text = _("Media Plugin Render Actions")
+        menu_text = _("Generator Render Actions")
     else:        
         menu_text = _("Container Clip Render Actions")
     menu_item = Gtk.MenuItem(menu_text)

@@ -47,7 +47,7 @@ This module handles creating ContainerClipData objects that are the persistent
 data representations of container clips, and ContainerClipMediaItem objects that represent
 data in Media Bins that can be used to create container clips.
 
-Wrapper objects of type extending containeactions.AbstractContainerActionObject are created and discarded
+Wrapper objects of a type extending containeactions.AbstractContainerActionObject are created and discarded
 as needed to execute all actions on container clips.
 """
 
@@ -273,8 +273,8 @@ class GMicLoadCompletionThread(threading.Thread):
         
 # ------------------------------------------------------- Fluxity
 def create_fluxity_media_item():
-    script_select, row1 = _get_file_select_row_and_editor(_("Flowblade Media Plugin Script:"), None, _("Flowblade Media Plugin Script"))
-    _open_rows_dialog(_fluxity_clip_create_dialog_callback, _("Create Flowblade Media Plugin Script Container Clip"), [row1], [script_select])
+    script_select, row1 = _get_file_select_row_and_editor(_("Generator Plugin Script:"), None, _("Generator Plugin Script"))
+    _open_rows_dialog(_fluxity_clip_create_dialog_callback, _("Create Generator Plugin Script Media Item"), [row1], [script_select])
 
 def create_fluxity_media_item_from_plugin(script_file, screenshot_file, plugin_data):
     container_data = ContainerClipData(appconsts.CONTAINER_CLIP_FLUXITY, script_file, None)
@@ -332,14 +332,14 @@ class FluxityLoadCompletionThread(threading.Thread):
             self.dialog.destroy()
 
             if is_valid == False:
-                primary_txt = _("Flowblade Media Plugin Container Clip Validation Error")
+                primary_txt = _("Generator Container Clip Validation Error")
                 dialogutils.warning_message(primary_txt, err_msg, gui.editor_window.window)
                     
             Gdk.threads_leave()
 
         if is_valid == False:
             Gdk.threads_enter()
-            primary_txt = _("Flowblade Media Plugin Container Clip Validation Error")
+            primary_txt = _("Generator Container Clip Validation Error")
             dialogutils.warning_message(primary_txt, err_msg, gui.editor_window.window)
             Gdk.threads_leave()
             return 
@@ -347,7 +347,7 @@ class FluxityLoadCompletionThread(threading.Thread):
         data_object = self.container_clip_data.data_slots["fluxity_plugin_edit_data"]
         length = data_object["length"]
         fluxity_unrendered_media_image = respaths.IMAGE_PATH + "unrendered_fluxity.png"
-        window_text = _("Creating Container for Flowblade Media Plugin...")
+        window_text = _("Creating Container for Generator...")
         containeractions.create_unrendered_clip(length, fluxity_unrendered_media_image, self.container_clip_data, _fluxity_unredered_media_creation_complete, window_text)
 
 def _fluxity_unredered_media_creation_complete(created_unrendered_clip_path, container_clip_data):

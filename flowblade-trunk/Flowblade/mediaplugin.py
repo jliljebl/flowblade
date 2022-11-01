@@ -459,7 +459,7 @@ def create_widgets():
     guiutils.set_margins(widgets.hamburger_launcher.widget, 4, 6, 6, 0)
     widgets.frame_select_box = Gtk.VBox()
     widgets.frame_select_button = None
-    widgets.empty_label = Gtk.Label(label=_("No Media Plugin."))
+    widgets.empty_label = Gtk.Label(label=_("No Generator"))
     widgets.empty_label.set_sensitive(False)
 
     # Edit area.
@@ -626,7 +626,7 @@ def _load_properties_callback(dialog, response_id):
             set_plugin_to_be_edited(_clip, _action_object)
             _action_object.render_full_media(_clip)
         except Exception as e:
-            primary_txt = _("Media Plugin properties load failed!")
+            primary_txt = _("Generator properties load failed!")
             secondary_txt = _("Error message: ") + str(e)
             dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window)
             gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_EMPTY)

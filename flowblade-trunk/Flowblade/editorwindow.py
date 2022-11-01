@@ -935,7 +935,7 @@ class EditorWindow:
             ('CompositingModeMenu', None, _('Compositing Mode')),
             ('TimelineRenderingMenu', None, _('Timeline Rendering')),
             ('AddMediaPlugin', None, _('Add Generator...'), None, None, lambda a:mediaplugin.show_add_media_plugin_window()),
-            ('LoadMediaPluginScript', None, _('Load Media Plugin Script...'), None, None,lambda w: containerclip.create_fluxity_media_item()),
+            ('LoadMediaPluginScript', None, _('Load Generator Plugin Script...'), None, None,lambda w: containerclip.create_fluxity_media_item()),
             ('CreateSelectionCompound', None, _('From Selected Clips'), None, None, lambda a:projectaction.create_selection_compound_clip()),
             ('CreateSequenceCompound', None, _('From Current Sequence'), None, None, lambda a:projectaction.create_sequence_compound_clip()),
             ('CreateSequenceFreezeCompound', None, _('From Current Sequence With Freeze Frame at Playhead Position'), None, None, lambda a:projectaction.create_sequence_freeze_frame_compound_clip()),
@@ -961,7 +961,7 @@ class EditorWindow:
             ('Titler', None, _('Titler'), None, None, lambda a:titler.show_titler()),
             ('AudioMix', None, _('Audio Mixer'), None, None, lambda a:audiomonitoring.show_audio_monitor()),
             ('GMIC', None, _("G'MIC Effects"), None, None, lambda a:gmic.launch_gmic()),
-            ('Scripttool', None, _("Flowblade Media Plugin Editor"), None, None, lambda a:scripttool.launch_scripttool()),
+            ('Scripttool', None, _("Generator Plugin Script Editor"), None, None, lambda a:scripttool.launch_scripttool()),
             ('MediaLink', None, _('Media Relinker'), None, None, lambda a:medialinker.display_linker()),
             ('HelpMenu', None, _('_Help')),
             ('QuickReference', None, _('Contents'), None, None, lambda a:menuactions.quick_reference()),
@@ -1041,6 +1041,8 @@ class EditorWindow:
                     <menuitem action='AddImageSequence'/>
                     <menuitem action='AddMediaPlugin'/>
                     <separator/>
+                    <menuitem action='LoadMediaPluginScript'/>
+                    <separator/>
                     <menuitem action='AddMediaFolder'/>
                     <separator/>
                     <menuitem action='CreateColorClip'/>
@@ -1052,7 +1054,6 @@ class EditorWindow:
                         <menuitem action='CreateGMicContainerItem'/>
                         <menuitem action='CreateBlenderContainerItem'/>
                     </menu>
-                    <menuitem action='LoadMediaPluginScript'/>
                     <separator/>
                     <menu action='BinMenu'>
                         <menuitem action='AddBin'/>
