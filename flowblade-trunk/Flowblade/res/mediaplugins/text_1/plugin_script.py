@@ -86,21 +86,129 @@ def init_render(fctx):
 def render_frame(frame, fctx, w, h):
     cr = fctx.get_frame_cr()
 
-    linetexts = fctx.get_data_obj("linetexts")
-    for linetext in linetexts:
-        linetext.create_layout_data(fctx, cr)
+    mla = MultiLineAnimation(fctx)
+    mla.draw(cr, fctx, frame)
 
-    bg = BackGround(fctx)
 
-    for linetext in linetexts:
-        linetext.create_animation_data(fctx, bg)
+
+class MultiLineAnimation:
+
+    def __init__(self, fctx):
+        self.linetexts = fctx.get_data_obj("linetexts")
+        self.line_gap = fctx.get_editor_value("Line Gap")
+        self.pad = fctx.get_editor_value("Background Pad") 
+        self.bg_type = fctx.get_editor_value("Background")
+        self.bg_color = fctx.get_data_obj("bg_color")
  
-    bg.draw_bg(cr, fctx)
+    # -------------------------------------------------- Background dwaring data
+    def get_pad(self):
+        # There is no bg padding for animations if bg bg drawn.
+        if self.bg_type == LineText.NO_BACKGROUND:
+            return 0
+        else:
+            return self.pad
+
+    def get_bounding_rect_for_area(self, fctx):
+        x, y, w, h = self.get_bounding_rect_for_line(fctx,  self.linetexts[0])
+        x1, y1, w1, h1 = self.get_bounding_rect_for_line(fctx,  self.linetexts[-1])
+        
+        height = y1 + h1 - y
+        
+        max_width = w
+
+        for linetext in self.linetexts:
+            rx, ry, rw, rh = self.get_bounding_rect_for_line(fctx, linetext)
+            if rw > max_width:
+                max_width = rw
+
+        return (x, y, max_width, height)
+  
+    def clip_for_line(self, fctx, cr, line_text, frame):
+        rx, ry, rw, rh = self.get_bounding_rect_for_line(fctx, line_text)
+        ax, ay, aw, ah = self.area_data
+        p = self.pad
+        line_x, line_y = line_text.layout_pos
+        w, h = line_text.pixel_size
+    
+        # In and out may have different animations and need different clipping.
+        do_clip = False
+        line_delay_addition = line_text.line_index * line_text.line_delay  # clipping application time needs to include line delays.
+        # In and out animations have different clipping applied and need to be only applied temporally on their own frame ranges.
+        if (line_text.animation_type_in in LineText.CLIPPED_ANIMATIONS) and (frame <= line_text.in_frames + line_delay_addition):
+            do_clip = True
+        elif (line_text.animation_type_out in LineText.CLIPPED_ANIMATIONS) and (frame >= fctx.get_length() - line_text.out_frames):
+            do_clip = True
+        
+        if do_clip == True:
+            if self.bg_type == LineText.LINES_WORD_LENGTH_BACKGROUND:
+                cr.rectangle(line_x - p, ry - p, w + 2 * p, rh + 2 * p)
+                cr.clip()
+            else:
+                cr.rectangle(rx - p, ry - p, aw + 2 * p, rh + 2 * p)
+                cr.clip()
+                
+    def get_bounding_rect_for_line(self, fctx, line_text):
+        line_x = fctx.get_editor_value("Pos X")
+        lw, lh = line_text.pixel_size
+        line_y = line_text.get_line_y_pos(fctx)
+        top_pad = line_text.line_layout.get_top_pad()
+ 
+        rx = line_x
+        ry = line_y
+        rw = lw
+        rh = lh - top_pad
+        
+        return (rx, ry, rw, rh)
+
+    # ------------------------------------------------------------- DRAWING
+    def draw(self, cr, fctx, frame):
+        # Create layouts now that we have cairo.Context
+        for linetext in self.linetexts:
+            linetext.create_layout_data(fctx, cr)
+
+        # We can only compute bg dimensions now that we have linetext layouts.
+        self.area_data = self.get_bounding_rect_for_area(fctx)
+        
+        # Create animation data for textlines. We need bg dimensions data for that.
+        for linetext in self.linetexts:
+            linetext.create_animation_data(fctx, self)
      
-    for linetext in linetexts:
-        linetext.draw_text(fctx, frame, cr, bg)
+        # Draw background
+        self.draw_bg(cr, fctx)
+        
+        # Draw texts
+        for linetext in self.linetexts:
+            linetext.draw_text(fctx, frame, cr, self)
+        
+    def draw_bg(self, cr, fctx):
+        if self.bg_type == LineText.COLOR_BACKGROUND:
+            rx, ry, rw, rh = self.area_data
+            p = self.pad
+            rx = rx - p
+            ry = ry - p
+            rw = rw + 2 * p
+            rh = rh + 2 * p
 
-
+            cr.rectangle(rx, ry, rw, rh)
+            cr.set_source(self.bg_color)
+            cr.fill()
+        elif self.bg_type == LineText.LINES_BACKGROUND:
+            ax, ay, aw, ah = self.area_data
+            for linetext in self.linetexts:
+                rx, ry, rw, rh = self.get_bounding_rect_for_line(fctx, linetext)
+                p = self.pad
+                cr.rectangle(rx - p, ry - p, aw + 2 * p, rh + 2 * p)
+                cr.set_source(self.bg_color)
+                cr.fill()
+        elif self.bg_type == LineText.LINES_WORD_LENGTH_BACKGROUND:
+            for linetext in self.linetexts:
+                rx, ry, rw, rh = self.get_bounding_rect_for_line(fctx, linetext)
+                line_x, line_y = linetext.layout_pos
+                w, h = linetext.pixel_size
+                p = self.pad
+                cr.rectangle(line_x - p, ry - p, w + 2 * p, rh + 2 * p)
+                cr.set_source(self.bg_color)
+                cr.fill()
     
 
 class LineText:
@@ -115,11 +223,6 @@ class LineText:
     FROM_DOWN = 7
     ZOOM_IN = 8
     ZOOM_OUT = 9
-    
-    LINEAR = 0
-    EASE_IN = 1
-    EASE_OUT = 2
-    STEPPED = 3
 
     ANIMATION_IN = 0
     ANIMATION_OUT = 1
@@ -305,32 +408,34 @@ class LineText:
 
     def _apply_affine_data_with_movement(self, movement_type, animation_type, start_x, start_y, end_x, end_y, \
                                          frame_start, frame_end, steps):
-                                         
-        if movement_type == LineText.LINEAR:
-            self._apply_linear_movement(self.affine.x, start_x, end_x, frame_start, frame_end)
-            self._apply_linear_movement(self.affine.y, start_y, end_y, frame_start, frame_end)
-        elif movement_type == LineText.EASE_IN:
+
+        builder = AnimationBuilder()
+        
+        if movement_type == AnimationBuilder.LINEAR:
+            builder.apply_linear_movement(self.affine.x, start_x, end_x, frame_start, frame_end)
+            builder.apply_linear_movement(self.affine.y, start_y, end_y, frame_start, frame_end)
+        elif movement_type == AnimationBuilder.EASE_IN:
             if animation_type in LineText.HORIZONTAL_ANIMATIONS:
-                self._apply_fast_start_movement(self.affine.x, start_x, end_x, frame_start, frame_end)
-                self._apply_no_movement(self.affine.y, start_y, frame_start)
-            elif animation_type in LineText.VERTICAL_ANIMATIONS:
-                self._apply_no_movement(self.affine.x, start_x, frame_start)
-                self._apply_fast_start_movement(self.affine.y, start_y, end_y, frame_start, frame_end)
-        elif movement_type == LineText.EASE_OUT:
+                builder.apply_ease_in_movement(self.affine.x, start_x, end_x, frame_start, frame_end)
+                builder.apply_no_movement(self.affine.y, start_y, frame_start)
+            elif animation_type in AnimationBuilder.VERTICAL_ANIMATIONS:
+                builder.apply_no_movement(self.affine.x, start_x, frame_start)
+                builder.apply_ease_in_movement(self.affine.y, start_y, end_y, frame_start, frame_end)
+        elif movement_type == AnimationBuilder.EASE_OUT:
             if animation_type in LineText.HORIZONTAL_ANIMATIONS:
-                self._apply_slow_start_movement(self.affine.x, start_x, end_x, frame_start, frame_end)
-                self._apply_no_movement(self.affine.y, start_y, frame_start)
+                builder.apply_ease_out_movement(self.affine.x, start_x, end_x, frame_start, frame_end)
+                builder.apply_no_movement(self.affine.y, start_y, frame_start)
             elif animation_type in LineText.VERTICAL_ANIMATIONS:
-                self._apply_no_movement(self.affine.x, start_x, frame_start)
-                self._apply_slow_start_movement(self.affine.y, start_y, end_y, frame_start, frame_end)
-        elif movement_type == LineText.STEPPED:
+                builder.apply_no_movement(self.affine.x, start_x, frame_start)
+                builder.apply_ease_out_movement(self.affine.y, start_y, end_y, frame_start, frame_end)
+        elif movement_type == AnimationBuilder.STEPPED:
             if animation_type in LineText.HORIZONTAL_ANIMATIONS:
-                self._apply_stepped_movement(self.affine.x, start_x, end_x, frame_start, frame_end, steps)
-                self._apply_no_movement(self.affine.y, start_y, frame_start)
+                builder.apply_stepped_movement(self.affine.x, start_x, end_x, frame_start, frame_end, steps)
+                builder.apply_no_movement(self.affine.y, start_y, frame_start)
             elif animation_type in LineText.VERTICAL_ANIMATIONS:
-                self._apply_no_movement(self.affine.x, start_x, frame_start)
-                self._apply_stepped_movement(self.affine.y, start_y, end_y, frame_start, frame_end, steps)
-                
+                builder.apply_no_movement(self.affine.x, start_x, frame_start)
+                builder.apply_stepped_movement(self.affine.y, start_y, end_y, frame_start, frame_end, steps)
+
     def _apply_fade(self, fctx):
         self.opacity.add_keyframe_at_frame(0, 0.0, fluxity.KEYFRAME_LINEAR)
         frame_delay = self.line_index * self.line_delay
@@ -342,50 +447,7 @@ class LineText:
         if self.fade_out_frames > 0:
             self.opacity.add_keyframe_at_frame(fctx.get_length() - self.fade_out_frames - 1 + frame_delay, 1.0, fluxity.KEYFRAME_LINEAR)
             self.opacity.add_keyframe_at_frame(fctx.get_length() - 1  + frame_delay, 0.0, fluxity.KEYFRAME_LINEAR)
-
-    def _apply_no_movement(self, animated_value, value, frame):
-        animated_value.add_keyframe_at_frame(frame, value, fluxity.KEYFRAME_LINEAR)
-           
-    def _apply_linear_movement(self, animated_value, start_val, end_val, start_frame, length):
-        animated_value.add_keyframe_at_frame(start_frame, start_val, fluxity.KEYFRAME_LINEAR)   
-        animated_value.add_keyframe_at_frame(start_frame + length, end_val, fluxity.KEYFRAME_LINEAR)
     
-    def _apply_fast_start_movement(self, animated_value, start_val, end_val, start_frame, length):
-        start_hold_kf_frame = int(length * 0.125)
-        start_hold_kf_frame = start_val + (end_val - start_val) * 0.125
-        mid_kf_frame = int(length * 0.375)
-        mid_kf_value = start_val + (end_val - start_val) * 0.70
-        animated_value.add_keyframe_at_frame(start_frame, start_val, fluxity.KEYFRAME_SMOOTH)
-        animated_value.add_keyframe_at_frame(start_frame + mid_kf_frame, mid_kf_value, fluxity.KEYFRAME_SMOOTH)
-        animated_value.add_keyframe_at_frame(start_frame + length, end_val, fluxity.KEYFRAME_LINEAR)
-
-    def _apply_faster_start_movement(self, animated_value, start_val, end_val, start_frame, length):
-        start_hold_kf_frame = int(length * 0.125)
-        start_hold_kf_frame = start_val + (end_val - start_val) * 0.125
-        mid_kf_frame = int(length * 0.235)
-        mid_kf_value = start_val + (end_val - start_val) * 0.70
-        animated_value.add_keyframe_at_frame(start_frame, start_val, fluxity.KEYFRAME_SMOOTH)
-        animated_value.add_keyframe_at_frame(start_frame + mid_kf_frame, mid_kf_value, fluxity.KEYFRAME_SMOOTH)
-        animated_value.add_keyframe_at_frame(start_frame + length, end_val, fluxity.KEYFRAME_LINEAR)
-        
-    def _apply_slow_start_movement(self, animated_value, start_val, end_val, start_frame, length):
-        mid_kf_frame = int(length * 0.625)
-        mid_kf_value = start_val + (end_val - start_val) * 0.3
-        end_hold_kf_frame = int(length * 0.875)
-        end_hold_kf_frame = start_val + (end_val - start_val) * 0.875
-        animated_value.add_keyframe_at_frame(start_frame, start_val, fluxity.KEYFRAME_SMOOTH)
-        animated_value.add_keyframe_at_frame(start_frame + mid_kf_frame, mid_kf_value, fluxity.KEYFRAME_SMOOTH)
-        animated_value.add_keyframe_at_frame(start_frame + length, end_val, fluxity.KEYFRAME_LINEAR)
-
-    def _apply_stepped_movement(self, animated_value, start_val, end_val, start_frame, length, steps):
-        step_frames = int(round(length/steps))
-        step_value = (end_val - start_val)/(steps) 
-        for i in range(0, steps):
-            frame = int(start_frame + i * step_frames)
-            value = start_val + step_value * i
-            animated_value.add_keyframe_at_frame(frame, value, fluxity.KEYFRAME_DISCRETE)
-        animated_value.add_keyframe_at_frame(start_frame + length, end_val, fluxity.KEYFRAME_DISCRETE) # maybe KEYFRAME_LINEAR but should not make difference.
-
     def get_line_y_pos(self, fctx):
         y = fctx.get_editor_value("Pos Y")
         lw, lh = self.pixel_size # lh is same for all line because we always have the same font.
@@ -420,102 +482,47 @@ class LineText:
 
 
 
-class BackGround:
+class AnimationBuilder:
 
-    def __init__(self, fctx):
-        self.linetexts = fctx.get_data_obj("linetexts")
-        self.line_gap = fctx.get_editor_value("Line Gap")
-        self.pad = fctx.get_editor_value("Background Pad") 
-        self.bg_type = fctx.get_editor_value("Background")
-        self.bg_color = fctx.get_data_obj("bg_color")
-        self.area_data = self.get_bounding_rect_for_area(fctx)
- 
-    def get_pad(self):
-        # There is no bg padding for animations if bg bg drawn.
-        if self.bg_type == LineText.NO_BACKGROUND:
-            return 0
-        else:
-            return self.pad
-
-    def get_bounding_rect_for_area(self, fctx):
-        x, y, w, h = self.get_bounding_rect_for_line(fctx,  self.linetexts[0])
-        x1, y1, w1, h1 = self.get_bounding_rect_for_line(fctx,  self.linetexts[-1])
-        
-        height = y1 + h1 - y
-        
-        max_width = w
-
-        for linetext in self.linetexts:
-            rx, ry, rw, rh = self.get_bounding_rect_for_line(fctx, linetext)
-            if rw > max_width:
-                max_width = rw
-
-        return (x, y, max_width, height)
-  
-    def clip_for_line(self, fctx, cr, line_text, frame):
-        rx, ry, rw, rh = self.get_bounding_rect_for_line(fctx, line_text)
-        ax, ay, aw, ah = self.area_data
-        p = self.pad
-        line_x, line_y = line_text.layout_pos
-        w, h = line_text.pixel_size
+    LINEAR = 0
+    EASE_IN = 1
+    EASE_OUT = 2
+    STEPPED = 3
     
-        # In and out may have different animations and need different clipping.
-        do_clip = False
-        line_delay_addition = line_text.line_index * line_text.line_delay  # clipping application time needs to include line delays.
-        # In and out animations have different clipping applied and need to be only applied temporally on their own frame ranges.
-        if (line_text.animation_type_in in LineText.CLIPPED_ANIMATIONS) and (frame <= line_text.in_frames + line_delay_addition):
-            do_clip = True
-        elif (line_text.animation_type_out in LineText.CLIPPED_ANIMATIONS) and (frame >= fctx.get_length() - line_text.out_frames):
-            do_clip = True
+    def __init__(self):
+        pass
         
-        if do_clip == True:
-            if self.bg_type == LineText.LINES_WORD_LENGTH_BACKGROUND:
-                cr.rectangle(line_x - p, ry - p, w + 2 * p, rh + 2 * p)
-                cr.clip()
-            else:
-                cr.rectangle(rx - p, ry - p, aw + 2 * p, rh + 2 * p)
-                cr.clip()
-                
-    def get_bounding_rect_for_line(self, fctx, line_text):
-        line_x = fctx.get_editor_value("Pos X")
-        lw, lh = line_text.pixel_size
-        line_y = line_text.get_line_y_pos(fctx)
-        top_pad = line_text.line_layout.get_top_pad()
- 
-        rx = line_x
-        ry = line_y
-        rw = lw
-        rh = lh - top_pad
-        
-        return (rx, ry, rw, rh)
-        
-    def draw_bg(self, cr, fctx):
-        if self.bg_type == LineText.COLOR_BACKGROUND:
-            rx, ry, rw, rh = self.area_data
-            p = self.pad
-            rx = rx - p
-            ry = ry - p
-            rw = rw + 2 * p
-            rh = rh + 2 * p
+    def apply_no_movement(self, animated_value, value, frame):
+        animated_value.add_keyframe_at_frame(frame, value, fluxity.KEYFRAME_LINEAR)
+           
+    def apply_linear_movement(self, animated_value, start_val, end_val, start_frame, length):
+        animated_value.add_keyframe_at_frame(start_frame, start_val, fluxity.KEYFRAME_LINEAR)   
+        animated_value.add_keyframe_at_frame(start_frame + length, end_val, fluxity.KEYFRAME_LINEAR)
+    
+    def apply_ease_in_movement(self, animated_value, start_val, end_val, start_frame, length):
+        start_hold_kf_frame = int(length * 0.125)
+        start_hold_kf_frame = start_val + (end_val - start_val) * 0.125
+        mid_kf_frame = int(length * 0.375)
+        mid_kf_value = start_val + (end_val - start_val) * 0.70
+        animated_value.add_keyframe_at_frame(start_frame, start_val, fluxity.KEYFRAME_SMOOTH)
+        animated_value.add_keyframe_at_frame(start_frame + mid_kf_frame, mid_kf_value, fluxity.KEYFRAME_SMOOTH)
+        animated_value.add_keyframe_at_frame(start_frame + length, end_val, fluxity.KEYFRAME_LINEAR)
 
-            cr.rectangle(rx, ry, rw, rh)
-            cr.set_source(self.bg_color)
-            cr.fill()
-        elif self.bg_type == LineText.LINES_BACKGROUND:
-            ax, ay, aw, ah = self.area_data
-            for linetext in self.linetexts:
-                rx, ry, rw, rh = self.get_bounding_rect_for_line(fctx, linetext)
-                p = self.pad
-                cr.rectangle(rx - p, ry - p, aw + 2 * p, rh + 2 * p)
-                cr.set_source(self.bg_color)
-                cr.fill()
-        elif self.bg_type == LineText.LINES_WORD_LENGTH_BACKGROUND:
-            for linetext in self.linetexts:
-                rx, ry, rw, rh = self.get_bounding_rect_for_line(fctx, linetext)
-                line_x, line_y = linetext.layout_pos
-                w, h = linetext.pixel_size
-                p = self.pad
-                cr.rectangle(line_x - p, ry - p, w + 2 * p, rh + 2 * p)
-                cr.set_source(self.bg_color)
-                cr.fill()
-                
+    def apply_ease_out_movement(self, animated_value, start_val, end_val, start_frame, length):
+        mid_kf_frame = int(length * 0.625)
+        mid_kf_value = start_val + (end_val - start_val) * 0.3
+        end_hold_kf_frame = int(length * 0.875)
+        end_hold_kf_frame = start_val + (end_val - start_val) * 0.875
+        animated_value.add_keyframe_at_frame(start_frame, start_val, fluxity.KEYFRAME_SMOOTH)
+        animated_value.add_keyframe_at_frame(start_frame + mid_kf_frame, mid_kf_value, fluxity.KEYFRAME_SMOOTH)
+        animated_value.add_keyframe_at_frame(start_frame + length, end_val, fluxity.KEYFRAME_LINEAR)
+
+    def apply_stepped_movement(self, animated_value, start_val, end_val, start_frame, length, steps):
+        step_frames = int(round(length/steps))
+        step_value = (end_val - start_val)/(steps) 
+        for i in range(0, steps):
+            frame = int(start_frame + i * step_frames)
+            value = start_val + step_value * i
+            animated_value.add_keyframe_at_frame(frame, value, fluxity.KEYFRAME_DISCRETE)
+        animated_value.add_keyframe_at_frame(start_frame + length, end_val, fluxity.KEYFRAME_DISCRETE) # maybe KEYFRAME_LINEAR but should not make difference.
+        
