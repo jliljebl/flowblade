@@ -325,7 +325,7 @@ EDITOR_PANGO_FONT = 10
 EDITOR_TEXT_AREA = 11
 """ Editor for creating multiline text."""
 
-EDITOR_PANGO_FONT_DEFAULT_VALUES = ("Times Roman", "Regular", 80, Pango.Alignment.LEFT, (1.0, 1.0, 1.0, 1.0), \
+EDITOR_PANGO_FONT_DEFAULT_VALUES = ("Times Roman", "Regular", 80, Pango.Alignment.RIGHT, (1.0, 1.0, 1.0, 1.0), \
               True, (0.3, 0.3, 0.3, 1.0) , False, 2, False, (0.0, 0.0, 0.0), \
               100, 3, 3, 0.0, None, VERTICAL)
 """ Pango Font Editor default values."""
