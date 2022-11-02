@@ -260,7 +260,7 @@ class LineText:
 
     def create_animation_data(self, fctx, bg):
         # We need cairo.Context to be available to create layouts and do position calculations,
-        # so we have do this on first frame when calling render_frame(frame, fctx, w, h).
+        # so we have do this on first frame when render_frame(frame, fctx, w, h) called.
         if self.affine != None:
             # We've done this already.
             return
@@ -310,22 +310,15 @@ class LineText:
         else: # Pango.Alignment.RIGHT
             self.layout_pos = (x + max_width - line_w, y)
             
-    def _get_in_animation_affine_data(self, fctx, bg):
-        layout_x, layout_y = self.layout_pos
-       	line_y = self.get_line_y_pos(fctx)
-        lx, ly, lw, lh = bg.get_bounding_rect_for_line(fctx,  self)
+    def _get_in_animation_affine_data(self, fctx, multiline_animation):
+        layout_x, layout_y, line_y,\
+        lw, lh,\
+        screen_w, screen_h,\
+        pad, bg_padded_w, bg_padded_h = self._get_basic_animation_data(fctx, multiline_animation)
 
-        screen_w = fctx.get_profile_property(fluxity.PROFILE_WIDTH)
-        screen_h = fctx.get_profile_property(fluxity.PROFILE_HEIGHT)
-
+        # static_x, static_y is the position line is stopped between in and out animations.
         static_x = layout_x
         static_y = line_y
-
-        bx, by, bw, bh = bg.area_data
-        pad = bg.get_pad() # this will be 0 if no bg drawn, pad affects animation distance.
-
-        bg_padded_w = bw + 2 * pad
-        bg_padded_h = bh + 2 * pad
 
         # All animations stop at the same position. 
        	end_x = static_x
@@ -358,22 +351,15 @@ class LineText:
 
         return (start_x, start_y + self.line_y_off, end_x, end_y + self.line_y_off)
 
-    def _get_out_animation_affine_data(self, fctx, bg):
-        layout_x, layout_y = self.layout_pos
-       	line_y = self.get_line_y_pos(fctx)
-        lx, ly, lw, lh = bg.get_bounding_rect_for_line(fctx,  self)
+    def _get_out_animation_affine_data(self, fctx, multiline_animation):
+        layout_x, layout_y, line_y,\
+        lw, lh,\
+        screen_w, screen_h,\
+        pad, bg_padded_w, bg_padded_h = self._get_basic_animation_data(fctx, multiline_animation)
 
-        screen_w = fctx.get_profile_property(fluxity.PROFILE_WIDTH)
-        screen_h = fctx.get_profile_property(fluxity.PROFILE_HEIGHT)
-
+        # static_x, static_y is the position line is stopped between in and out animations.
         static_x = layout_x
         static_y = line_y
-
-        bx, by, bw, bh = bg.area_data
-        pad = bg.get_pad() # this will be 0 if no bg drawn, pad affects animation distance.
-
-        bg_padded_w = bw + 2 * pad
-        bg_padded_h = bh + 2 * pad
 
         # All animations start at the same position.
        	start_x = static_x
@@ -406,9 +392,25 @@ class LineText:
 
         return (start_x, start_y + self.line_y_off, end_x, end_y + self.line_y_off)
 
+    def _get_basic_animation_data(self, fctx, multiline_animation):
+        layout_x, layout_y = self.layout_pos
+       	line_y = self.get_line_y_pos(fctx)
+        lx, ly, lw, lh = multiline_animation.get_bounding_rect_for_line(fctx, self)
+
+        screen_w = fctx.get_profile_property(fluxity.PROFILE_WIDTH)
+        screen_h = fctx.get_profile_property(fluxity.PROFILE_HEIGHT)
+
+        bx, by, bw, bh = multiline_animation.area_data
+        pad = multiline_animation.get_pad() # this will be 0 if no bg drawn, pad affects animation distance.
+
+        bg_padded_w = bw + 2 * pad
+        bg_padded_h = bh + 2 * pad
+
+        #fctx.log_line(str((layout_x, layout_y, line_y, lw, lh, screen_w, screen_h, pad, bg_padded_w, bg_padded_h)))
+        return (layout_x, layout_y, line_y, lw, lh, screen_w, screen_h, pad, bg_padded_w, bg_padded_h)
+        
     def _apply_affine_data_with_movement(self, movement_type, animation_type, start_x, start_y, end_x, end_y, \
                                          frame_start, frame_end, steps):
-
         builder = AnimationBuilder()
         
         if movement_type == AnimationBuilder.LINEAR:
