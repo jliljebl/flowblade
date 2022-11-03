@@ -28,6 +28,7 @@ def init_script(fctx):
     fctx.add_editor("Frames In", fluxity.EDITOR_INT, 20)
     fctx.add_editor("Steps In", fluxity.EDITOR_INT_RANGE, (3, 2, 10))
     fctx.add_editor("Fade In Frames", fluxity.EDITOR_INT_RANGE, (0, 0, 200))
+    fctx.add_editor("Fade In Type", fluxity. EDITOR_OPTIONS, (0,["Linear", "Compact Linear"]))
     fctx.add_editor("Animation Type Out", fluxity. EDITOR_OPTIONS, \
                     (7, ["To Left Clipped", "To Right Clipped", "To Up Clipped", \
                         "To Down Clipped", "To Left", "To Right", "To Up", \
@@ -36,6 +37,7 @@ def init_script(fctx):
     fctx.add_editor("Frames Out", fluxity.EDITOR_INT, 20)
     fctx.add_editor("Steps Out", fluxity.EDITOR_INT_RANGE, (3, 2, 10))
     fctx.add_editor("Fade Out Frames", fluxity.EDITOR_INT_RANGE, (0, 0, 200))
+    fctx.add_editor("Fade Out Type", fluxity. EDITOR_OPTIONS, (0,["Linear", "Compact Linear"]))
     fctx.add_editor("Background", fluxity.EDITOR_OPTIONS, (2, ["No Background", "Solid", "Lines Solid", "Lines Word Length Solid", "Lines Solid Screen Width", "Box", "Horizontal Lines", "Underline", "Strikethrought"]))
     fctx.add_editor("Background Movement In", fluxity. EDITOR_OPTIONS, (1,["Linear", "Ease In", "Ease Out", "Stepped"]))
     fctx.add_editor("Background Color", fluxity.EDITOR_COLOR, (0.8, 0.5, 0.2, 1.0))
@@ -290,6 +292,9 @@ class LineText:
     ANIMATION_IN = 0
     ANIMATION_OUT = 1
     
+    FADE_LINEAR = 0
+    FADE_COMPACT = 1
+    
     HORIZONTAL_ANIMATIONS = [FROM_LEFT_CLIPPED, FROM_RIGHT_CLIPPED, FROM_LEFT, FROM_RIGHT]
     VERTICAL_ANIMATIONS = [FROM_UP_CLIPPED, FROM_DOWN_CLIPPED, FROM_UP, FROM_DOWN]
     CLIPPED_ANIMATIONS = [FROM_LEFT_CLIPPED, FROM_RIGHT_CLIPPED, FROM_UP_CLIPPED, FROM_DOWN_CLIPPED, REVEAL_HORIZONTAL, REVEAL_VERTICAL, REVEAL_LEFT, REVEAL_RIGHT]
@@ -515,13 +520,28 @@ class LineText:
     def _apply_fade(self, fctx):
         self.opacity.add_keyframe_at_frame(0, 0.0, fluxity.KEYFRAME_LINEAR)
         frame_delay = self.line_index * self.line_delay
-                
+        fade_in_type = fctx.get_editor_value("Fade In Type")
+        fade_out_type = fctx.get_editor_value("Fade Out Type")
+        
         if frame_delay > 0:
             self.opacity.add_keyframe_at_frame(frame_delay, 0.0, fluxity.KEYFRAME_LINEAR)
          
+        if fade_in_type == LineText.FADE_COMPACT:
+            # Fade value curve for compact in:
+            #    /
+            #   /
+            #--
+            self.opacity.add_keyframe_at_frame(frame_delay + int(round(self.fade_in_frames / 2.0)), 0.0, fluxity.KEYFRAME_LINEAR) # With self.fade_in_frames == 0 this replaces kf from line above.
+            
         self.opacity.add_keyframe_at_frame(frame_delay + self.fade_in_frames, 1.0, fluxity.KEYFRAME_LINEAR) # With self.fade_in_frames == 0 this replaces kf from line above.
         if self.fade_out_frames > 0:
             self.opacity.add_keyframe_at_frame(fctx.get_length() - self.fade_out_frames - 1 + frame_delay, 1.0, fluxity.KEYFRAME_LINEAR)
+            if fade_out_type == LineText.FADE_COMPACT:
+                # Fade value curve for compact out:
+                #\
+                # \
+                #  --
+                self.opacity.add_keyframe_at_frame(fctx.get_length() - int(round(self.fade_out_frames / 2.0)) - 1 + frame_delay, 0.0, fluxity.KEYFRAME_LINEAR) # With self.fade_in_frames == 0 this replaces kf
             self.opacity.add_keyframe_at_frame(fctx.get_length() - 1  + frame_delay, 0.0, fluxity.KEYFRAME_LINEAR)
 
     def get_bounding_rect_for_line(self, fctx):
@@ -574,8 +594,6 @@ class AnimationBuilder:
         animated_value.add_keyframe_at_frame(start_frame + length, end_val, fluxity.KEYFRAME_LINEAR)
     
     def apply_ease_in_movement(self, animated_value, start_val, end_val, start_frame, length):
-        start_hold_kf_frame = int(length * 0.125)
-        start_hold_kf_frame = start_val + (end_val - start_val) * 0.125
         mid_kf_frame = int(length * 0.375)
         mid_kf_value = start_val + (end_val - start_val) * 0.70
         animated_value.add_keyframe_at_frame(start_frame, start_val, fluxity.KEYFRAME_SMOOTH)
@@ -585,8 +603,6 @@ class AnimationBuilder:
     def apply_ease_out_movement(self, animated_value, start_val, end_val, start_frame, length):
         mid_kf_frame = int(length * 0.625)
         mid_kf_value = start_val + (end_val - start_val) * 0.3
-        end_hold_kf_frame = int(length * 0.875)
-        end_hold_kf_frame = start_val + (end_val - start_val) * 0.875
         animated_value.add_keyframe_at_frame(start_frame, start_val, fluxity.KEYFRAME_SMOOTH)
         animated_value.add_keyframe_at_frame(start_frame + mid_kf_frame, mid_kf_value, fluxity.KEYFRAME_SMOOTH)
         animated_value.add_keyframe_at_frame(start_frame + length, end_val, fluxity.KEYFRAME_LINEAR)
