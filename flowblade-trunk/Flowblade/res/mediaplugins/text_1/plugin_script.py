@@ -19,6 +19,7 @@ def init_script(fctx):
     fctx.add_editor("Font", fluxity.EDITOR_PANGO_FONT, fluxity.EDITOR_PANGO_FONT_DEFAULT_VALUES)
     fctx.add_editor("Line Gap", fluxity.EDITOR_INT, 30)
     fctx.add_editor("Lines Delay Frames", fluxity.EDITOR_INT_RANGE, (0, 0, 50))
+    fctx.add_editor("Line Y Offset", fluxity.EDITOR_INT, 10)
     fctx.add_editor("Animation Type In", fluxity. EDITOR_OPTIONS, \
                     (0, ["From Left Clipped", "From Right Clipped", "From Up Clipped", \
                         "From Down Clipped", "From Left", "From Right", "From Up", \
@@ -35,11 +36,13 @@ def init_script(fctx):
     fctx.add_editor("Frames Out", fluxity.EDITOR_INT, 20)
     fctx.add_editor("Steps Out", fluxity.EDITOR_INT_RANGE, (3, 2, 10))
     fctx.add_editor("Fade Out Frames", fluxity.EDITOR_INT_RANGE, (0, 0, 200))
-    fctx.add_editor("Background", fluxity. EDITOR_OPTIONS, (2, ["No Background", "Solid", "Lines", "Lines Word Length"]))
-    fctx.add_editor("Background Pad", fluxity.EDITOR_INT, 10)
+    fctx.add_editor("Background", fluxity.EDITOR_OPTIONS, (2, ["No Background", "Solid", "Lines", "Lines Word Length", "Box", "Horizontal Lines", "Underline", "Strikethrought"]))
+    fctx.add_editor("Background Animation", fluxity.EDITOR_OPTIONS, (0, ["No Animation", "Fade In",  "From Left", "From Right"]))
+    fctx.add_editor("Background Movement In", fluxity. EDITOR_OPTIONS, (1,["Linear", "Ease In", "Ease Out", "Stepped"]))
     fctx.add_editor("Background Color", fluxity.EDITOR_COLOR, (0.8, 0.5, 0.2, 1.0))
     fctx.add_editor("Background Opacity", fluxity.EDITOR_INT_RANGE, (100, 0, 100))
-    fctx.add_editor("Line Y Offset", fluxity.EDITOR_INT, 10)
+    fctx.add_editor("Background Pad", fluxity.EDITOR_INT, 10)
+
 
 def init_render(fctx):
     # Get editor values
@@ -97,6 +100,10 @@ class MultiLineAnimation:
     COLOR_BACKGROUND = 1
     LINES_BACKGROUND = 2
     LINES_WORD_LENGTH_BACKGROUND = 3
+    BOX = 4
+    HORIZONTAL_LINES = 5
+    UNDERLINE = 6
+    STRIKETHROUGHT = 7
     
     def __init__(self, fctx):
         self.linetexts = fctx.get_data_obj("linetexts")
@@ -114,22 +121,31 @@ class MultiLineAnimation:
             return self.pad
 
     def get_bounding_rect_for_area(self, fctx):
-        x, y, w, h = self.linetexts[0].get_bounding_rect_for_line(fctx)
-        x1, y1, w1, h1 = self.linetexts[-1].get_bounding_rect_for_line(fctx)
-        
-        height = y1 + h1 - y
-        
-        max_width = w
+        # This return text lines bounding rect WITHOUT padding.
+        # Get X and Y pos
+        x = fctx.get_editor_value("Pos X")
+        y = fctx.get_editor_value("Pos Y")
 
+        # Compute height without linetext y data, we don't have it yet. 
+        y_bottom = y
+        line_w, line_h = self.linetexts[0].pixel_size 
+        for line_index in range(0, len(self.linetexts)):
+           y_bottom = y_bottom + line_h + self.line_gap  # line_h is same for all line because we always have the same font.
+           
+        height = y_bottom - fctx.get_editor_value("Pos Y")
+
+        # Compute width.
+        max_width = line_w
         for linetext in self.linetexts:
-            rx, ry, rw, rh = linetext.get_bounding_rect_for_line(fctx)
+            rw, rh = linetext.pixel_size 
             if rw > max_width:
                 max_width = rw
-
+                
+        #fctx.log_line("get_bounding_rect_for_area" + str((x, y, max_width, height)))
         return (x, y, max_width, height)
   
     def clip_for_line(self, fctx, cr, line_text, frame):
-        # Clip area depends on background type, so we do it here instead on LineText.
+        # Clipping area depends on background type, so we do it here instead on LineText.
         rx, ry, rw, rh = line_text.get_bounding_rect_for_line(fctx)
         ax, ay, aw, ah = self.area_data # Bounding rect for bg including pads
         p = self.pad
@@ -166,22 +182,24 @@ class MultiLineAnimation:
             linetext.create_animation_data(fctx, self)
      
         # Draw background
-        self.draw_bg(cr, fctx)
+        self.draw_bg(cr, fctx, frame)
         
         # Draw texts
         for linetext in self.linetexts:
             linetext.draw_text(fctx, frame, cr, self)
         
-    def draw_bg(self, cr, fctx):
+    def draw_bg(self, cr, fctx, frame):
         if self.bg_type == MultiLineAnimation.COLOR_BACKGROUND:
-            rx, ry, rw, rh = self.area_data
+            ax, ay, aw, ah = self.area_data
             p = self.pad
-            rx = rx - p
-            ry = ry - p
-            rw = rw + 2 * p
-            rh = rh + 2 * p
+            ax = ax - p
+            ay = ay - p
+            aw = aw + 2 * p
+            ah = ah + 2 * p
+            
+            #fctx.log_line(str((frame, ax, ay, aw, ah)))
 
-            cr.rectangle(rx, ry, rw, rh)
+            cr.rectangle(ax, ay, aw, ah)
             cr.set_source(self.bg_color)
             cr.fill()
         elif self.bg_type == MultiLineAnimation.LINES_BACKGROUND:
@@ -200,7 +218,16 @@ class MultiLineAnimation:
                 cr.rectangle(linetext.text_x - p, ry - p, w + 2 * p, rh + 2 * p)
                 cr.set_source(self.bg_color)
                 cr.fill()
+        elif self.bg_type == MultiLineAnimation.BOX:
+            pass
+        elif self.bg_type == MultiLineAnimation.HORIZONTAL_LINES:
+            pass
+        elif self.bg_type == MultiLineAnimation.UNDERLINE:
+            pass
+        elif self.bg_type == MultiLineAnimation.STRIKETHROUGHT:
+            pass
 
+    
 
 
 class LineText:
