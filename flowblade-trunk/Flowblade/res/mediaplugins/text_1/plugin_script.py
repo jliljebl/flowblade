@@ -36,7 +36,7 @@ def init_script(fctx):
     fctx.add_editor("Frames Out", fluxity.EDITOR_INT, 20)
     fctx.add_editor("Steps Out", fluxity.EDITOR_INT_RANGE, (3, 2, 10))
     fctx.add_editor("Fade Out Frames", fluxity.EDITOR_INT_RANGE, (0, 0, 200))
-    fctx.add_editor("Background", fluxity.EDITOR_OPTIONS, (2, ["No Background", "Solid", "Lines", "Lines Word Length", "Box", "Horizontal Lines", "Underline", "Strikethrought"]))
+    fctx.add_editor("Background", fluxity.EDITOR_OPTIONS, (2, ["No Background", "Solid", "Lines Solid", "Lines Word Length Solid", "Box", "Horizontal Lines", "Underline", "Strikethrought"]))
     fctx.add_editor("Background Animation", fluxity.EDITOR_OPTIONS, (0, ["No Animation", "Fade In",  "From Left", "From Right"]))
     fctx.add_editor("Background Movement In", fluxity. EDITOR_OPTIONS, (1,["Linear", "Ease In", "Ease Out", "Stepped"]))
     fctx.add_editor("Background Color", fluxity.EDITOR_COLOR, (0.8, 0.5, 0.2, 1.0))
@@ -99,8 +99,8 @@ class MultiLineAnimation:
 
     NO_BACKGROUND = 0
     COLOR_BACKGROUND = 1
-    LINES_BACKGROUND = 2
-    LINES_WORD_LENGTH_BACKGROUND = 3
+    LINE_SOLID_BACKGROUND = 2
+    LINE_SOLID_WORD_LENGTH_BACKGROUND = 3
     BOX = 4
     HORIZONTAL_LINES = 5
     UNDERLINE = 6
@@ -204,13 +204,13 @@ class MultiLineAnimation:
         if self.bg_type == MultiLineAnimation.COLOR_BACKGROUND:
             cr.rectangle(ax, ay, aw, ah)
             cr.fill()
-        elif self.bg_type == MultiLineAnimation.LINES_BACKGROUND:
+        elif self.bg_type == MultiLineAnimation.LINE_SOLID_BACKGROUND:
             ax, ay, aw, ah = self.area_data
             for linetext in self.linetexts:
                 rx, ry, rw, rh = linetext.get_bounding_rect_for_line(fctx)
                 cr.rectangle(rx - p, ry - p, aw + 2 * p, rh + 2 * p)
                 cr.fill()
-        elif self.bg_type == MultiLineAnimation.LINES_WORD_LENGTH_BACKGROUND:
+        elif self.bg_type == MultiLineAnimation.LINE_SOLID_WORD_LENGTH_BACKGROUND:
             for linetext in self.linetexts:
                 w, h = linetext.pixel_size
                 rx, ry, rw, rh = linetext.get_bounding_rect_for_line(fctx)
