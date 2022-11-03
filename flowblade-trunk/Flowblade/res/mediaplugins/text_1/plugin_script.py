@@ -23,7 +23,7 @@ def init_script(fctx):
     fctx.add_editor("Animation Type In", fluxity. EDITOR_OPTIONS, \
                     (0, ["From Left Clipped", "From Right Clipped", "From Up Clipped", \
                         "From Down Clipped", "From Left", "From Right", "From Up", \
-                        "From Down", "Reveal Horizontal", "Reveal Vertical"]))
+                        "From Down", "Reveal Horizontal", "Reveal Vertical", "Reveal Left", "Reveal Right"]))
     fctx.add_editor("Movement In", fluxity. EDITOR_OPTIONS, (1,["Linear", "Ease In", "Ease Out", "Stepped"]))
     fctx.add_editor("Frames In", fluxity.EDITOR_INT, 20)
     fctx.add_editor("Steps In", fluxity.EDITOR_INT_RANGE, (3, 2, 10))
@@ -36,7 +36,7 @@ def init_script(fctx):
     fctx.add_editor("Frames Out", fluxity.EDITOR_INT, 20)
     fctx.add_editor("Steps Out", fluxity.EDITOR_INT_RANGE, (3, 2, 10))
     fctx.add_editor("Fade Out Frames", fluxity.EDITOR_INT_RANGE, (0, 0, 200))
-    fctx.add_editor("Background", fluxity.EDITOR_OPTIONS, (2, ["No Background", "Solid", "Lines Solid", "Lines Word Length Solid", "Box", "Horizontal Lines", "Underline", "Strikethrought"]))
+    fctx.add_editor("Background", fluxity.EDITOR_OPTIONS, (2, ["No Background", "Solid", "Lines Solid", "Lines Word Length Solid", "Lines Solid Screen Width", "Box", "Horizontal Lines", "Underline", "Strikethrought"]))
     fctx.add_editor("Background Animation", fluxity.EDITOR_OPTIONS, (0, ["No Animation", "Fade In",  "From Left", "From Right"]))
     fctx.add_editor("Background Movement In", fluxity. EDITOR_OPTIONS, (1,["Linear", "Ease In", "Ease Out", "Stepped"]))
     fctx.add_editor("Background Color", fluxity.EDITOR_COLOR, (0.8, 0.5, 0.2, 1.0))
@@ -100,10 +100,11 @@ class MultiLineAnimation:
     COLOR_BACKGROUND = 1
     LINE_SOLID_BACKGROUND = 2
     LINE_SOLID_WORD_LENGTH_BACKGROUND = 3
-    BOX = 4
-    HORIZONTAL_LINES = 5
-    UNDERLINE = 6
-    STRIKETHROUGHT = 7
+    LINE_SOLID_SCREENWIDTH_BACKGROUND = 4
+    BOX = 5
+    HORIZONTAL_LINES = 6
+    UNDERLINE = 7
+    STRIKETHROUGHT = 8
     
     def __init__(self, fctx):
         self.linetexts = fctx.get_data_obj("linetexts")
@@ -173,6 +174,16 @@ class MultiLineAnimation:
                 h_reveal_size = h / 2 * anim_pos
                 cr.rectangle(rx, y_center - h_reveal_size, rw, h_reveal_size * 2)
                 cr.clip()
+            elif line_text.animation_type_in == LineText.REVEAL_LEFT:
+                x = line_text.text_x
+                w_reveal_size = w * anim_pos
+                cr.rectangle(x, ry, w_reveal_size, rh)
+                cr.clip()
+            elif line_text.animation_type_in == LineText.REVEAL_RIGHT:
+                w_reveal_size = w * anim_pos
+                x = line_text.text_x + w - w_reveal_size
+                cr.rectangle(x, ry, w_reveal_size, rh)
+                cr.clip()
             elif self.bg_type == MultiLineAnimation.LINE_SOLID_WORD_LENGTH_BACKGROUND:
                 cr.rectangle(line_text.text_x - p, ry - p, w + 2 * p, rh + 2 * p)
                 cr.clip()
@@ -207,7 +218,7 @@ class MultiLineAnimation:
         ay = ay - p
         aw = aw + 2 * p
         ah = ah + 2 * p
-
+        
         line_width = fctx.get_editor_value("Background Line Width")
         cr.set_line_width(line_width)
         cr.set_source(self.bg_color)
@@ -226,6 +237,13 @@ class MultiLineAnimation:
                 w, h = linetext.pixel_size
                 rx, ry, rw, rh = linetext.get_bounding_rect_for_line(fctx)
                 cr.rectangle(linetext.text_x - p, ry - p, w + 2 * p, rh + 2 * p)
+                cr.fill()
+        elif self.bg_type == MultiLineAnimation.LINE_SOLID_SCREENWIDTH_BACKGROUND:
+            screen_w = fctx.get_profile_property(fluxity.PROFILE_WIDTH)
+            for linetext in self.linetexts:
+                w, h = linetext.pixel_size
+                rx, ry, rw, rh = linetext.get_bounding_rect_for_line(fctx)
+                cr.rectangle(0, ry - p, screen_w + 1, rh + 2 * p)
                 cr.fill()
         elif self.bg_type == MultiLineAnimation.BOX:
             cr.rectangle(ax, ay, aw, ah)
@@ -267,14 +285,16 @@ class LineText:
     FROM_DOWN = 7
     REVEAL_HORIZONTAL = 8
     REVEAL_VERTICAL = 9
+    REVEAL_LEFT = 10
+    REVEAL_RIGHT = 11
     
     ANIMATION_IN = 0
     ANIMATION_OUT = 1
     
     HORIZONTAL_ANIMATIONS = [FROM_LEFT_CLIPPED, FROM_RIGHT_CLIPPED, FROM_LEFT, FROM_RIGHT]
     VERTICAL_ANIMATIONS = [FROM_UP_CLIPPED, FROM_DOWN_CLIPPED, FROM_UP, FROM_DOWN]
-    CLIPPED_ANIMATIONS = [FROM_LEFT_CLIPPED, FROM_RIGHT_CLIPPED, FROM_UP_CLIPPED, FROM_DOWN_CLIPPED, REVEAL_HORIZONTAL, REVEAL_VERTICAL]
-    ALWAYS_LINEAR_ANIMATIONS = [REVEAL_HORIZONTAL, REVEAL_VERTICAL]
+    CLIPPED_ANIMATIONS = [FROM_LEFT_CLIPPED, FROM_RIGHT_CLIPPED, FROM_UP_CLIPPED, FROM_DOWN_CLIPPED, REVEAL_HORIZONTAL, REVEAL_VERTICAL, REVEAL_LEFT, REVEAL_RIGHT]
+    ALWAYS_LINEAR_ANIMATIONS = [REVEAL_HORIZONTAL, REVEAL_VERTICAL, REVEAL_LEFT, REVEAL_RIGHT]
     
     def __init__(self, text, font_data, user_pos, line_info, animation_in_data, in_frames, animation_out_data, out_frames):
         self.text = text
@@ -369,7 +389,7 @@ class LineText:
         # Additional paramaters needed to compute animations.
         line_w, line_h,\
         screen_w, screen_h,\
-        pad, bg_padded_w, bg_padded_h = self._get_basic_animation_data(fctx, multiline_animation)
+        pad, bw, bg_padded_w, bg_padded_h = self._get_basic_animation_data(fctx, multiline_animation)
         
         # All animations stop at the same position. 
        	end_x = static_x
@@ -399,10 +419,11 @@ class LineText:
         elif self.animation_type_in == LineText.FROM_DOWN:
             start_x = static_x
             start_y = screen_h + static_y - multitext_y
-        elif self.animation_type_in == LineText.REVEAL_HORIZONTAL or self.animation_type_in ==  LineText.REVEAL_VERTICAL:
+        elif self.animation_type_in == LineText.REVEAL_HORIZONTAL or self.animation_type_in == LineText.REVEAL_VERTICAL \
+            or self.animation_type_in == LineText.REVEAL_LEFT or self.animation_type_in == LineText.REVEAL_RIGHT:
             start_x = static_x
             start_y = static_y
-            
+
         return (start_x, start_y + self.line_y_off, end_x, end_y + self.line_y_off)
 
     def _get_out_animation_affine_data(self, fctx, multiline_animation):
@@ -414,7 +435,7 @@ class LineText:
         # Additional paramaters needed to compute animations.
         line_w, line_h,\
         screen_w, screen_h,\
-        pad, bg_padded_w, bg_padded_h = self._get_basic_animation_data(fctx, multiline_animation)
+        pad, bw, bg_padded_w, bg_padded_h = self._get_basic_animation_data(fctx, multiline_animation)
 
         # All animations start at the same position.
        	start_x = static_x
@@ -461,7 +482,7 @@ class LineText:
 
         #fctx.log_line(str((line_w, line_h, screen_w, screen_h, pad, bg_padded_w, bg_padded_h)))
 
-        return (line_w, line_h, screen_w, screen_h, pad, bg_padded_w, bg_padded_h)
+        return (line_w, line_h, screen_w, screen_h, pad, bw, bg_padded_w, bg_padded_h)
         
     def _apply_affine_data_with_movement(self, movement_type, animation_type, start_x, start_y, end_x, end_y, \
                                          frame_start, frame_end, steps):
