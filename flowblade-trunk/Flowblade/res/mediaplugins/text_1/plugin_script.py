@@ -133,7 +133,6 @@ class MultiLineAnimation:
         rx, ry, rw, rh = line_text.get_bounding_rect_for_line(fctx)
         ax, ay, aw, ah = self.area_data # Bounding rect for bg including pads
         p = self.pad
-        line_x, line_y = line_text.layout_pos
         w, h = line_text.pixel_size
     
         # In and out may have different animations and need different clipping.
@@ -147,7 +146,7 @@ class MultiLineAnimation:
         
         if do_clip == True:
             if self.bg_type == MultiLineAnimation.LINES_WORD_LENGTH_BACKGROUND:
-                cr.rectangle(line_x - p, ry - p, w + 2 * p, rh + 2 * p)
+                cr.rectangle(line_text.text_x - p, ry - p, w + 2 * p, rh + 2 * p)
                 cr.clip()
             else:
                 cr.rectangle(rx - p, ry - p, aw + 2 * p, rh + 2 * p)
@@ -155,7 +154,7 @@ class MultiLineAnimation:
     
     # ------------------------------------------------------------- DRAWING
     def draw(self, cr, fctx, frame):
-        # Create layouts now that we have cairo.Context
+        # Create layouts now that we have cairo.Context.
         for linetext in self.linetexts:
             linetext.create_layout_data(fctx, cr)
 
@@ -196,10 +195,9 @@ class MultiLineAnimation:
         elif self.bg_type == MultiLineAnimation.LINES_WORD_LENGTH_BACKGROUND:
             for linetext in self.linetexts:
                 rx, ry, rw, rh = linetext.get_bounding_rect_for_line(fctx)
-                line_x, line_y = linetext.layout_pos
                 w, h = linetext.pixel_size
                 p = self.pad
-                cr.rectangle(line_x - p, ry - p, w + 2 * p, rh + 2 * p)
+                cr.rectangle(linetext.text_x - p, ry - p, w + 2 * p, rh + 2 * p)
                 cr.set_source(self.bg_color)
                 cr.fill()
 
@@ -223,10 +221,13 @@ class LineText:
     VERTICAL_ANIMATIONS = [FROM_UP_CLIPPED, FROM_DOWN_CLIPPED, FROM_UP, FROM_DOWN]
     CLIPPED_ANIMATIONS = [FROM_LEFT_CLIPPED, FROM_RIGHT_CLIPPED, FROM_UP_CLIPPED, FROM_DOWN_CLIPPED]
         
-    def __init__(self, text, font_data, layout_pos, line_info, animation_in_data, in_frames, animation_out_data, out_frames):
+    def __init__(self, text, font_data, user_pos, line_info, animation_in_data, in_frames, animation_out_data, out_frames):
         self.text = text
         self.font_data = font_data
-        self.layout_pos = layout_pos # Top-left x,y pango text layout.
+        user_x, user_y = user_pos
+        self.multiline_pos = user_pos # Top-left x,y of multiline text object position. These coordinates have beenn given by user.
+        self.text_x = user_x # This needs layout data and will be computed later. Center and right justified lines will get changed x pos when line lengths are known.
+        self.text_y = -1 # This needs layout data and will be computed later.
         self.line_index, self.line_gap, self.line_delay, self.line_y_off = line_info
         self.animation_type_in, self.movement_type_in, self.steps_in, self.fade_in_frames = animation_in_data
         self.animation_type_out, self.movement_type_out, self.steps_out, self.fade_out_frames = animation_out_data
@@ -239,12 +240,12 @@ class LineText:
     def create_layout_data(self, fctx, cr):
         # fluxity.PangoTextLayout objects probably SHOULD NOT be cached because all actual work
         # is done by PangoCairo.PangoLayout objects that hold reference to cairo.Context objects 
-        # that are re-created for every frame. Caching them somehow worked, but changed it to be sure.
+        # that are re-created for every new frame. Caching them somehow worked, but changed it to be sure.
         self.line_layout = fctx.create_text_layout(self.font_data)
         self.line_layout.create_pango_layout(cr, self.text)
         self.pixel_size = self.line_layout.pixel_size
 
-    def create_animation_data(self, fctx, bg):
+    def create_animation_data(self, fctx, multiline_animation):
         # We need cairo.Context to be available to create layouts and do position calculations,
         # so we have do this on first frame when render_frame(frame, fctx, w, h) called.
         if self.affine != None:
@@ -254,10 +255,10 @@ class LineText:
         self.affine = fluxity.AffineTransform()
         self.opacity = fluxity.AnimatedValue()
         
-        self._apply_justified_position(bg)
+        self._compute_line_position(fctx, multiline_animation)
         
         # Animation In
-        start_x, start_y, end_x, end_y = self._get_in_animation_affine_data(fctx, bg)
+        start_x, start_y, end_x, end_y = self._get_in_animation_affine_data(fctx, multiline_animation)
  
         frame_start = 0
         length = self.in_frames
@@ -269,7 +270,7 @@ class LineText:
 
         
         # Animation Out
-        start_x, start_y, end_x, end_y = self._get_out_animation_affine_data(fctx, bg)
+        start_x, start_y, end_x, end_y = self._get_out_animation_affine_data(fctx, multiline_animation)
         
         frame_start = fctx.get_length() - self.out_frames - 1
         length = self.out_frames
@@ -283,29 +284,38 @@ class LineText:
 
         self._apply_fade(fctx)
 
-    def _apply_justified_position(self, bg):
-        # Compute line position.
-        area_x, area_y, max_width, area_height = bg.area_data
+    def _compute_line_position(self, fctx, multiline_animation):
+        # Compute line x position for user selected alignment.
+        area_x, area_y, max_width, area_height = multiline_animation.area_data
         line_w, line_h = self.pixel_size
-        x, y = self.layout_pos
-        pango_alignment = self.line_layout.get_pango_alignment() 
+        x = self.text_x 
+        pango_alignment = self.line_layout.get_pango_alignment()
+
         if pango_alignment == Pango.Alignment.LEFT:
-            return
+            pass
         elif pango_alignment == Pango.Alignment.CENTER:
-            self.layout_pos = (x + max_width/2 - line_w/2, y)
+            self.text_x = x + max_width/2 - line_w/2
         else: # Pango.Alignment.RIGHT
-            self.layout_pos = (x + max_width - line_w, y)
-            
+            self.text_x = x + max_width - line_w
+        
+        # Compute line y position for line_index.
+        y = fctx.get_editor_value("Pos Y")
+        for line_index in range(self.line_index):
+           y = y + line_h + self.line_gap  # line_h is same for all line because we always have the same font.
+
+        self.text_y = y
+
     def _get_in_animation_affine_data(self, fctx, multiline_animation):
-        layout_x, layout_y, line_y,\
-        lw, lh,\
+        # static_x, static_y is the position line is stopped between in and out animations.
+        static_x = self.text_x
+        static_y = self.text_y
+        multiline_x, multiline_y = self.multiline_pos
+
+        # Additional paramaters needed to compute animations.
+        line_w, line_h,\
         screen_w, screen_h,\
         pad, bg_padded_w, bg_padded_h = self._get_basic_animation_data(fctx, multiline_animation)
-
-        # static_x, static_y is the position line is stopped between in and out animations.
-        static_x = layout_x
-        static_y = line_y
-
+        
         # All animations stop at the same position. 
        	end_x = static_x
         end_y = static_y 
@@ -318,10 +328,10 @@ class LineText:
             start_y = static_y
         elif self.animation_type_in == LineText.FROM_UP_CLIPPED:
             start_x = static_x
-            start_y = static_y - lh - pad
+            start_y = static_y - line_h - pad
         elif self.animation_type_in == LineText.FROM_DOWN_CLIPPED:
             start_x = static_x
-            start_y = static_y + lh + pad * 2
+            start_y = static_y + line_h + pad * 2
         elif self.animation_type_in == LineText.FROM_LEFT:
             start_x = -bw
             start_y = static_y
@@ -330,22 +340,23 @@ class LineText:
             start_y = static_y
         elif self.animation_type_in == LineText.FROM_UP:
             start_x = static_x
-            start_y = -bg_padded_h + line_y - layout_y
+            start_y = -bg_padded_h + static_y - multiline_y
         elif self.animation_type_in == LineText.FROM_DOWN:
             start_x = static_x
-            start_y = screen_h + line_y - layout_y
+            start_y = screen_h + static_y - multitext_y
 
         return (start_x, start_y + self.line_y_off, end_x, end_y + self.line_y_off)
 
     def _get_out_animation_affine_data(self, fctx, multiline_animation):
-        layout_x, layout_y, line_y,\
-        lw, lh,\
+        # static_x, static_y is the position line is stopped between in and out animations.
+        static_x = self.text_x
+        static_y = self.text_y
+        multiline_x, multiline_y = self.multiline_pos
+        
+        # Additional paramaters needed to compute animations.
+        line_w, line_h,\
         screen_w, screen_h,\
         pad, bg_padded_w, bg_padded_h = self._get_basic_animation_data(fctx, multiline_animation)
-
-        # static_x, static_y is the position line is stopped between in and out animations.
-        static_x = layout_x
-        static_y = line_y
 
         # All animations start at the same position.
        	start_x = static_x
@@ -359,10 +370,10 @@ class LineText:
             end_y = static_y
         elif self.animation_type_out == LineText.FROM_UP_CLIPPED:
             end_x = static_x + pad
-            end_y = static_y - lh - pad
+            end_y = static_y - line_h - pad
         elif self.animation_type_out == LineText.FROM_DOWN_CLIPPED:
             end_x = static_x + pad 
-            end_y = static_y + lh + pad * 2
+            end_y = static_y + line_h + pad * 2
         elif self.animation_type_out == LineText.FROM_LEFT:
             end_x = -bw
             end_y = static_y
@@ -371,17 +382,15 @@ class LineText:
             end_y = static_y
         elif self.animation_type_out == LineText.FROM_UP:
             end_x = static_x + pad
-            end_y = -bg_padded_h + line_y - layout_y
+            end_y = -bg_padded_h + static_y - multiline_y
         elif self.animation_type_out == LineText.FROM_DOWN:
             end_x = static_x + pad
-            end_y = screen_h + line_y - layout_y
+            end_y = screen_h + static_y - multiline_y
 
         return (start_x, start_y + self.line_y_off, end_x, end_y + self.line_y_off)
 
     def _get_basic_animation_data(self, fctx, multiline_animation):
-        layout_x, layout_y = self.layout_pos
-       	line_y = self.get_line_y_pos(fctx)
-        lx, ly, lw, lh = self.get_bounding_rect_for_line(fctx)
+        lx, ly, line_w, line_h = self.get_bounding_rect_for_line(fctx)
 
         screen_w = fctx.get_profile_property(fluxity.PROFILE_WIDTH)
         screen_h = fctx.get_profile_property(fluxity.PROFILE_HEIGHT)
@@ -392,8 +401,9 @@ class LineText:
         bg_padded_w = bw + 2 * pad
         bg_padded_h = bh + 2 * pad
 
-        fctx.log_line(str((layout_x, layout_y, line_y, lw, lh, screen_w, screen_h, pad, bg_padded_w, bg_padded_h)))
-        return (layout_x, layout_y, line_y, lw, lh, screen_w, screen_h, pad, bg_padded_w, bg_padded_h)
+        #fctx.log_line(str((line_w, line_h, screen_w, screen_h, pad, bg_padded_w, bg_padded_h)))
+
+        return (line_w, line_h, screen_w, screen_h, pad, bg_padded_w, bg_padded_h)
         
     def _apply_affine_data_with_movement(self, movement_type, animation_type, start_x, start_y, end_x, end_y, \
                                          frame_start, frame_end, steps):
@@ -437,36 +447,21 @@ class LineText:
             self.opacity.add_keyframe_at_frame(fctx.get_length() - 1  + frame_delay, 0.0, fluxity.KEYFRAME_LINEAR)
 
     def get_bounding_rect_for_line(self, fctx):
-        line_x = fctx.get_editor_value("Pos X")
         lw, lh = self.pixel_size
-        line_y = self.get_line_y_pos(fctx)
         top_pad = self.line_layout.get_top_pad()
  
-        rx = line_x
-        ry = line_y
+        rx = fctx.get_editor_value("Pos X") # Bounding rect is for LINE, not text so justifucation has no effect.
+        ry = self.text_y
         rw = lw
         rh = lh - top_pad
         
         return (rx, ry, rw, rh)
-                
-    def get_line_y_pos(self, fctx):
-        y = fctx.get_editor_value("Pos Y")
-        lw, lh = self.pixel_size # lh is same for all line because we always have the same font.
-        for line_index in range(self.line_index):
-           y = y + lh + self.line_gap
-        return y
- 
-    def draw_text(self, fctx, frame, cr, bg):
-        static_x, static_y = self.layout_pos
-        lw, lh = self.pixel_size
-        
-        # Get line y position for clipping
-        for line_index in range(self.line_index):
-            static_y = static_y + lh + self.line_gap
+    
+    def draw_text(self, fctx, frame, cr, multiline_animation):
 
         cr.save() # Same cairo.Context object used for all lines, so we need to restore() after clip and transform.
 
-        bg.clip_for_line(fctx, cr, self, frame)
+        multiline_animation.clip_for_line(fctx, cr, self, frame)
 
         # Don't draw if line delay causes line to not start animating yet.
         frame_delay = self.line_index * self.line_delay
