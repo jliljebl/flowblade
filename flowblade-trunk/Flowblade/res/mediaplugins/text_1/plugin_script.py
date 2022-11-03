@@ -37,7 +37,6 @@ def init_script(fctx):
     fctx.add_editor("Steps Out", fluxity.EDITOR_INT_RANGE, (3, 2, 10))
     fctx.add_editor("Fade Out Frames", fluxity.EDITOR_INT_RANGE, (0, 0, 200))
     fctx.add_editor("Background", fluxity.EDITOR_OPTIONS, (2, ["No Background", "Solid", "Lines Solid", "Lines Word Length Solid", "Lines Solid Screen Width", "Box", "Horizontal Lines", "Underline", "Strikethrought"]))
-    fctx.add_editor("Background Animation", fluxity.EDITOR_OPTIONS, (0, ["No Animation", "Fade In",  "From Left", "From Right"]))
     fctx.add_editor("Background Movement In", fluxity. EDITOR_OPTIONS, (1,["Linear", "Ease In", "Ease Out", "Stepped"]))
     fctx.add_editor("Background Color", fluxity.EDITOR_COLOR, (0.8, 0.5, 0.2, 1.0))
     fctx.add_editor("Background Line Width", fluxity.EDITOR_INT, 3)
