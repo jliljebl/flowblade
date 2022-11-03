@@ -23,7 +23,7 @@ def init_script(fctx):
     fctx.add_editor("Animation Type In", fluxity. EDITOR_OPTIONS, \
                     (0, ["From Left Clipped", "From Right Clipped", "From Up Clipped", \
                         "From Down Clipped", "From Left", "From Right", "From Up", \
-                        "From Down"]))
+                        "From Down", "Reveal Horizontal", "Reveal Vertical"]))
     fctx.add_editor("Movement In", fluxity. EDITOR_OPTIONS, (1,["Linear", "Ease In", "Ease Out", "Stepped"]))
     fctx.add_editor("Frames In", fluxity.EDITOR_INT, 20)
     fctx.add_editor("Steps In", fluxity.EDITOR_INT_RANGE, (3, 2, 10))
@@ -43,7 +43,6 @@ def init_script(fctx):
     fctx.add_editor("Background Line Width", fluxity.EDITOR_INT, 3)
     fctx.add_editor("Background Opacity", fluxity.EDITOR_INT_RANGE, (100, 0, 100))
     fctx.add_editor("Background Pad", fluxity.EDITOR_INT, 10)
-
 
 def init_render(fctx):
     # Get editor values
@@ -146,7 +145,7 @@ class MultiLineAnimation:
         return (x, y, max_width, height)
   
     def clip_for_line(self, fctx, cr, line_text, frame):
-        # Clipping area depends on background type, so we do it here instead on LineText.
+        # Clipping area depends also on background type, so we do it here instead on LineText.
         rx, ry, rw, rh = line_text.get_bounding_rect_for_line(fctx)
         ax, ay, aw, ah = self.area_data # Bounding rect for bg including pads
         p = self.pad
@@ -157,18 +156,30 @@ class MultiLineAnimation:
         line_delay_addition = line_text.line_index * line_text.line_delay  # clipping application time needs to include line delays.
         # In and out animations have different clipping applied and need to be only applied temporally on their own frame ranges.
         if (line_text.animation_type_in in LineText.CLIPPED_ANIMATIONS) and (frame <= line_text.in_frames + line_delay_addition):
+            anim_pos = float(frame - line_delay_addition) / float(line_text.in_frames)
             do_clip = True
         elif (line_text.animation_type_out in LineText.CLIPPED_ANIMATIONS) and (frame >= fctx.get_length() - line_text.out_frames):
+            anim_pos = float(frame - fctx.get_length() + line_text.out_frames) / float(line_text.out_frames)
             do_clip = True
         
         if do_clip == True:
-            if self.bg_type == MultiLineAnimation.LINES_WORD_LENGTH_BACKGROUND:
+            if line_text.animation_type_in == LineText.REVEAL_HORIZONTAL:
+                x_center = line_text.text_x + w / 2
+                w_reveal_size = w / 2 * anim_pos
+                cr.rectangle(x_center - w_reveal_size, ry, w_reveal_size * 2, rh)
+                cr.clip()
+            elif line_text.animation_type_in == LineText.REVEAL_VERTICAL:
+                y_center = ry + line_text.line_y_off + h / 2 
+                h_reveal_size = h / 2 * anim_pos
+                cr.rectangle(rx, y_center - h_reveal_size, rw, h_reveal_size * 2)
+                cr.clip()
+            elif self.bg_type == MultiLineAnimation.LINE_SOLID_WORD_LENGTH_BACKGROUND:
                 cr.rectangle(line_text.text_x - p, ry - p, w + 2 * p, rh + 2 * p)
                 cr.clip()
             else:
                 cr.rectangle(rx - p, ry - p, aw + 2 * p, rh + 2 * p)
                 cr.clip()
-    
+                
     # ------------------------------------------------------------- DRAWING
     def draw(self, cr, fctx, frame):
         # Create layouts now that we have cairo.Context.
@@ -244,7 +255,6 @@ class MultiLineAnimation:
 
     
 
-
 class LineText:
 
     FROM_LEFT_CLIPPED = 0
@@ -255,14 +265,17 @@ class LineText:
     FROM_RIGHT = 5
     FROM_UP = 6
     FROM_DOWN = 7
-
+    REVEAL_HORIZONTAL = 8
+    REVEAL_VERTICAL = 9
+    
     ANIMATION_IN = 0
     ANIMATION_OUT = 1
     
     HORIZONTAL_ANIMATIONS = [FROM_LEFT_CLIPPED, FROM_RIGHT_CLIPPED, FROM_LEFT, FROM_RIGHT]
     VERTICAL_ANIMATIONS = [FROM_UP_CLIPPED, FROM_DOWN_CLIPPED, FROM_UP, FROM_DOWN]
-    CLIPPED_ANIMATIONS = [FROM_LEFT_CLIPPED, FROM_RIGHT_CLIPPED, FROM_UP_CLIPPED, FROM_DOWN_CLIPPED]
-        
+    CLIPPED_ANIMATIONS = [FROM_LEFT_CLIPPED, FROM_RIGHT_CLIPPED, FROM_UP_CLIPPED, FROM_DOWN_CLIPPED, REVEAL_HORIZONTAL, REVEAL_VERTICAL]
+    ALWAYS_LINEAR_ANIMATIONS = [REVEAL_HORIZONTAL, REVEAL_VERTICAL]
+    
     def __init__(self, text, font_data, user_pos, line_info, animation_in_data, in_frames, animation_out_data, out_frames):
         self.text = text
         self.font_data = font_data
@@ -386,7 +399,10 @@ class LineText:
         elif self.animation_type_in == LineText.FROM_DOWN:
             start_x = static_x
             start_y = screen_h + static_y - multitext_y
-
+        elif self.animation_type_in == LineText.REVEAL_HORIZONTAL or self.animation_type_in ==  LineText.REVEAL_VERTICAL:
+            start_x = static_x
+            start_y = static_y
+            
         return (start_x, start_y + self.line_y_off, end_x, end_y + self.line_y_off)
 
     def _get_out_animation_affine_data(self, fctx, multiline_animation):
@@ -451,14 +467,14 @@ class LineText:
                                          frame_start, frame_end, steps):
         builder = AnimationBuilder()
         
-        if movement_type == AnimationBuilder.LINEAR:
+        if movement_type == AnimationBuilder.LINEAR or animation_type in LineText.ALWAYS_LINEAR_ANIMATIONS:
             builder.apply_linear_movement(self.affine.x, start_x, end_x, frame_start, frame_end)
             builder.apply_linear_movement(self.affine.y, start_y, end_y, frame_start, frame_end)
         elif movement_type == AnimationBuilder.EASE_IN:
             if animation_type in LineText.HORIZONTAL_ANIMATIONS:
                 builder.apply_ease_in_movement(self.affine.x, start_x, end_x, frame_start, frame_end)
                 builder.apply_no_movement(self.affine.y, start_y, frame_start)
-            elif animation_type in AnimationBuilder.VERTICAL_ANIMATIONS:
+            elif animation_type in LineText.VERTICAL_ANIMATIONS:
                 builder.apply_no_movement(self.affine.x, start_x, frame_start)
                 builder.apply_ease_in_movement(self.affine.y, start_y, end_y, frame_start, frame_end)
         elif movement_type == AnimationBuilder.EASE_OUT:
