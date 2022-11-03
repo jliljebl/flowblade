@@ -40,6 +40,7 @@ def init_script(fctx):
     fctx.add_editor("Background Animation", fluxity.EDITOR_OPTIONS, (0, ["No Animation", "Fade In",  "From Left", "From Right"]))
     fctx.add_editor("Background Movement In", fluxity. EDITOR_OPTIONS, (1,["Linear", "Ease In", "Ease Out", "Stepped"]))
     fctx.add_editor("Background Color", fluxity.EDITOR_COLOR, (0.8, 0.5, 0.2, 1.0))
+    fctx.add_editor("Background Line Width", fluxity.EDITOR_INT, 3)
     fctx.add_editor("Background Opacity", fluxity.EDITOR_INT_RANGE, (100, 0, 100))
     fctx.add_editor("Background Pad", fluxity.EDITOR_INT, 10)
 
@@ -189,43 +190,57 @@ class MultiLineAnimation:
             linetext.draw_text(fctx, frame, cr, self)
         
     def draw_bg(self, cr, fctx, frame):
-        if self.bg_type == MultiLineAnimation.COLOR_BACKGROUND:
-            ax, ay, aw, ah = self.area_data
-            p = self.pad
-            ax = ax - p
-            ay = ay - p
-            aw = aw + 2 * p
-            ah = ah + 2 * p
-            
-            #fctx.log_line(str((frame, ax, ay, aw, ah)))
+        ax, ay, aw, ah = self.area_data
+        p = self.pad
+        ax = ax - p
+        ay = ay - p
+        aw = aw + 2 * p
+        ah = ah + 2 * p
 
+        line_width = fctx.get_editor_value("Background Line Width")
+        cr.set_line_width(line_width)
+        cr.set_source(self.bg_color)
+
+        if self.bg_type == MultiLineAnimation.COLOR_BACKGROUND:
             cr.rectangle(ax, ay, aw, ah)
-            cr.set_source(self.bg_color)
             cr.fill()
         elif self.bg_type == MultiLineAnimation.LINES_BACKGROUND:
             ax, ay, aw, ah = self.area_data
             for linetext in self.linetexts:
                 rx, ry, rw, rh = linetext.get_bounding_rect_for_line(fctx)
-                p = self.pad
                 cr.rectangle(rx - p, ry - p, aw + 2 * p, rh + 2 * p)
-                cr.set_source(self.bg_color)
                 cr.fill()
         elif self.bg_type == MultiLineAnimation.LINES_WORD_LENGTH_BACKGROUND:
             for linetext in self.linetexts:
-                rx, ry, rw, rh = linetext.get_bounding_rect_for_line(fctx)
                 w, h = linetext.pixel_size
-                p = self.pad
+                rx, ry, rw, rh = linetext.get_bounding_rect_for_line(fctx)
                 cr.rectangle(linetext.text_x - p, ry - p, w + 2 * p, rh + 2 * p)
-                cr.set_source(self.bg_color)
                 cr.fill()
         elif self.bg_type == MultiLineAnimation.BOX:
-            pass
+            cr.rectangle(ax, ay, aw, ah)
+            cr.stroke()
         elif self.bg_type == MultiLineAnimation.HORIZONTAL_LINES:
-            pass
+            cr.move_to(ax, ay)
+            cr.line_to(ax + aw, ay)
+            cr.move_to(ax, ay + ah)
+            cr.line_to(ax + aw, ay + ah)
+            cr.stroke()
         elif self.bg_type == MultiLineAnimation.UNDERLINE:
-            pass
+            for linetext in self.linetexts:
+                w, h = linetext.pixel_size
+                rx, ry, rw, rh = linetext.get_bounding_rect_for_line(fctx)
+                y = ry - p + rh + 2 * p            
+                cr.move_to(linetext.text_x - p, y)
+                cr.line_to(linetext.text_x - p + w + 2 * p, y)
+                cr.stroke()
         elif self.bg_type == MultiLineAnimation.STRIKETHROUGHT:
-            pass
+            for linetext in self.linetexts:
+                w, h = linetext.pixel_size
+                rx, ry, rw, rh = linetext.get_bounding_rect_for_line(fctx)
+                y = ry + rh / 2            
+                cr.move_to(linetext.text_x - p, y)
+                cr.line_to(linetext.text_x - p + w + 2 * p, y)
+                cr.stroke()
 
     
 
