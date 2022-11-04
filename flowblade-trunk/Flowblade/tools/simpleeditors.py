@@ -252,15 +252,15 @@ def get_simple_editor_selector(active_index, callback): # used in containerprogr
 
 
 # -------------------------------------------------------------------- Media Plugin timeline clip editor
-def show_fluxity_container_clip_program_editor(clip, container_action, script_data_object, name_box):
-    editor_panel = FluxityScriptEditorPanel(clip, container_action, script_data_object, name_box)
+def show_fluxity_container_clip_program_editor(clip, action_object, script_data_object, name_box):
+    editor_panel = FluxityScriptEditorPanel(clip, action_object, script_data_object, name_box)
     return editor_panel
 
 class FluxityScriptEditorPanel:
-    def __init__(self, clip, container_action, script_data_object, name_box):
+    def __init__(self, clip, action_object, script_data_object, name_box):
         
         self.clip = clip
-        self.container_action = container_action
+        self.action_object = action_object
         self.script_data_object = copy.deepcopy(script_data_object)
          
         self.preview_frame = -1 # -1 used as flag that no preview renders ongoing and new one can be started
