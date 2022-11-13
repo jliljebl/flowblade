@@ -40,11 +40,14 @@ def init_script(fctx):
     fctx.add_editor("Fade Out Frames", fluxity.EDITOR_INT_RANGE, (0, 0, 200))
     fctx.add_editor("Fade Out Type", fluxity. EDITOR_OPTIONS, (0,["Linear", "Compact Linear"]))
     fctx.add_editor("Background", fluxity.EDITOR_OPTIONS, (2, ["No Background", "Solid", "Lines Solid", "Lines Word Length Solid", "Lines Solid Screen Width", "Box", "Horizontal Lines", "Underline", "Strikethrought"]))
-    fctx.add_editor("Background Movement In", fluxity. EDITOR_OPTIONS, (1,["Linear", "Ease In", "Ease Out", "Stepped"]))
     fctx.add_editor("Background Color", fluxity.EDITOR_COLOR, (0.8, 0.5, 0.2, 1.0))
     fctx.add_editor("Background Line Width", fluxity.EDITOR_INT, 3)
     fctx.add_editor("Background Opacity", fluxity.EDITOR_INT_RANGE, (100, 0, 100))
     fctx.add_editor("Background Pad", fluxity.EDITOR_INT, 10)
+    fctx.add_editor("Background Anim In", fluxity. EDITOR_OPTIONS, (0,["Off", "Fade", "Reveal Up", "Reveal Down", "Reveal Left", "Reveal Right", "Reveal Horizontal", "Reveal Vertical"]))
+    fctx.add_editor("Background Frames In", fluxity.EDITOR_INT, 8)
+    fctx.add_editor("Background Anim Out", fluxity. EDITOR_OPTIONS, (0,["Off", "Fade", "Reveal Up", "Reveal Down", "Reveal Left", "Reveal Right", "Reveal Horizontal", "Reveal Vertical"]))
+    fctx.add_editor("Background Frames Out", fluxity.EDITOR_INT, 8)
 
 def init_render(fctx):
     # Get editor values
@@ -112,6 +115,15 @@ class MultiLineAnimation:
     CONSTRAINT_CENTER = 1
     CONSTRAINT_HORIZONTAL = 2
     CONSTRAINT_VERTICAL = 3
+
+    NO_ANIM = 0
+    FADE = 1
+    REVEAL_UP = 2
+    REVEAL_DOWN = 3
+    REVEAL_LEFT = 4
+    REVEAL_RIGHT = 5
+    REVEAL_HORIZONTAL = 6
+    REVEAL_VERTICAL = 7
     
     def __init__(self, fctx):
         self.linetexts = fctx.get_data_obj("linetexts")
@@ -119,7 +131,11 @@ class MultiLineAnimation:
         self.pad = fctx.get_editor_value("Background Pad") 
         self.bg_type = fctx.get_editor_value("Background")
         self.bg_color = fctx.get_data_obj("bg_color")
- 
+        self.bg_anim_type_in = fctx.get_editor_value("Background Anim In")
+        self.bg_frames_in = fctx.get_editor_value("Background Frames In")
+        self.bg_anim_type_out = fctx.get_editor_value("Background Anim Out")
+        self.bg_frames_out = fctx.get_editor_value("Background Frames Out")
+
     # -------------------------------------------------- Background dwaring data
     def get_pad(self):
         # There is no bg padding for animations if bg bg drawn.
@@ -158,7 +174,7 @@ class MultiLineAnimation:
     def clip_for_line(self, fctx, cr, line_text, frame):
         # Clipping area depends also on background type, so we do it here instead on LineText.
         rx, ry, rw, rh = line_text.get_bounding_rect_for_line(fctx, self)
-        ax, ay, aw, ah = self.area_data # Bounding rect for bg including pads
+        ax, ay, aw, ah = self.area_data # Bounding rect for bg NOT including pads
         p = self.pad
         w, h = line_text.pixel_size
     
@@ -202,17 +218,67 @@ class MultiLineAnimation:
                 cr.clip()
 
     def get_constrained_pos(self, fctx, x, y, w, h):
+        # Returns area position with centering applied.
         screen_w = fctx.get_profile_property(fluxity.PROFILE_WIDTH)
         screen_h = fctx.get_profile_property(fluxity.PROFILE_HEIGHT)
         constraints = fctx.get_editor_value("Pos Constraints")        
         if constraints == MultiLineAnimation.CONSTRAINT_CENTER or constraints == MultiLineAnimation.CONSTRAINT_HORIZONTAL:
             x = round(screen_w / 2 - w / 2)
-            fctx.log_line("x: " + str(x))
         if constraints == MultiLineAnimation.CONSTRAINT_CENTER or constraints == MultiLineAnimation.CONSTRAINT_VERTICAL:
             y = round(screen_h / 2 - h / 2)
         
         return (x, y)
-        
+
+    def clip_bg_for_anim(self, fctx, cr, frame):
+        ax, ay, aw, ah = self.area_data
+        p = self.pad
+        ax = ax - p
+        ay = ay - p
+        aw = aw + 2 * p
+        ah = ah + 2 * p        
+    
+        # In and out may have different animations and need different clipping.
+        do_clip = False
+        anim_type = MultiLineAnimation.NO_ANIM
+
+        if frame <= self.bg_frames_in:
+            anim_pos = float(frame) / float(self.bg_frames_in)
+            anim_type = self.bg_anim_type_in 
+            do_clip = True
+        elif frame >= fctx.get_length() - self.bg_frames_out:
+            anim_pos = 1.0 - float(frame - fctx.get_length() + self.bg_frames_out) / float(self.bg_frames_out)
+            anim_type = self.bg_anim_type_out 
+            do_clip = True
+ 
+        if do_clip == True and anim_type != MultiLineAnimation.NO_ANIM:
+            if anim_type == MultiLineAnimation.REVEAL_HORIZONTAL:
+                x_center = ax + aw / 2
+                w_reveal_size = aw / 2 * anim_pos
+                cr.rectangle(x_center - w_reveal_size, ay, w_reveal_size * 2, ah)
+                cr.clip()
+            elif anim_type == MultiLineAnimation.REVEAL_VERTICAL:
+                y_center = ay + ah / 2 
+                h_reveal_size = ah / 2 * anim_pos
+                cr.rectangle(ax, y_center - h_reveal_size, aw, h_reveal_size * 2)
+                cr.clip()
+            elif anim_type == MultiLineAnimation.REVEAL_LEFT:
+                w_reveal_size = aw * anim_pos
+                cr.rectangle(ax, ay, w_reveal_size, ah)
+                cr.clip()
+            elif anim_type == MultiLineAnimation.REVEAL_RIGHT:
+                w_reveal_size = aw * anim_pos
+                x = ax + aw - w_reveal_size
+                cr.rectangle(x, ay, w_reveal_size, ah)
+                cr.clip()
+            elif anim_type == MultiLineAnimation.REVEAL_UP:
+                h_reveal_size = ah * anim_pos
+                cr.rectangle(ax, ay + ah - h_reveal_size, aw, h_reveal_size)
+                cr.clip()
+            elif anim_type == MultiLineAnimation.REVEAL_DOWN:
+                h_reveal_size = ah * anim_pos
+                cr.rectangle(ax, ay, aw, h_reveal_size)
+                cr.clip()
+
     # ------------------------------------------------------------- DRAWING
     def draw(self, cr, fctx, frame):
         # Create layouts now that we have cairo.Context.
@@ -227,8 +293,11 @@ class MultiLineAnimation:
             linetext.create_animation_data(fctx, self)
      
         # Draw background
+        cr.save()
+        self.clip_bg_for_anim(fctx, cr, frame)
         self.draw_bg(cr, fctx, frame)
-        
+        cr.restore()
+
         # Draw texts
         for linetext in self.linetexts:
             linetext.draw_text(fctx, frame, cr, self)
@@ -411,7 +480,7 @@ class LineText:
         
         # Apply Pos constraints
         constrained_x, constrained_y = multiline_animation.get_constrained_pos(fctx, self.text_x, self.text_y, max_width, area_height)
-        # Reapply lalignment if horizontal constraint applied.
+        # Reapply alignment if horizontal constraint applied.
         if constrained_x != self.text_x:
             self.text_x = constrained_x + line_x_off
         # Reapply line y off if vertical constraint applied.
