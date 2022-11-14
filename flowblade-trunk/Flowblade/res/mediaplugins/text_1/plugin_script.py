@@ -177,16 +177,20 @@ class MultiLineAnimation:
         ax, ay, aw, ah = self.area_data # Bounding rect for bg NOT including pads
         p = self.pad
         w, h = line_text.pixel_size
-    
+     
         # In and out may have different animations and need different clipping.
         do_clip = False
         line_delay_addition = line_text.line_index * line_text.line_delay  # clipping application time needs to include line delays.
+        out_frame_start = fctx.get_length() - line_text.out_frames - 1 - (len(self.linetexts) - 1) * line_text.line_delay
+
         # In and out animations have different clipping applied and need to be only applied temporally on their own frame ranges.
         if (line_text.animation_type_in in LineText.CLIPPED_ANIMATIONS) and (frame <= line_text.in_frames + line_delay_addition):
             anim_pos = float(frame - line_delay_addition) / float(line_text.in_frames)
             do_clip = True
-        elif (line_text.animation_type_out in LineText.CLIPPED_ANIMATIONS) and (frame >= fctx.get_length() - line_text.out_frames):
-            anim_pos = float(frame - fctx.get_length() + line_text.out_frames) / float(line_text.out_frames)
+        elif (line_text.animation_type_out in LineText.CLIPPED_ANIMATIONS) and (frame >= out_frame_start):
+            anim_pos = float(frame - out_frame_start) / float(line_text.out_frames)
+            if anim_pos > 1.0:
+                anim_pos = 1.0
             do_clip = True
         
         if do_clip == True:
@@ -250,7 +254,7 @@ class MultiLineAnimation:
             anim_type = self.bg_anim_type_out 
             do_clip = True
  
-        if do_clip == True and anim_type != MultiLineAnimation.NO_ANIM:
+        if do_clip == True and anim_type != MultiLineAnimation.NO_ANIM and anim_type != MultiLineAnimation.FADE:
             if anim_type == MultiLineAnimation.REVEAL_HORIZONTAL:
                 x_center = ax + aw / 2
                 w_reveal_size = aw / 2 * anim_pos
@@ -440,8 +444,9 @@ class LineText:
         
         # Animation Out
         start_x, start_y, end_x, end_y = self._get_out_animation_affine_data(fctx, multiline_animation)
-        
-        frame_start = fctx.get_length() - self.out_frames - 1
+        # We need to shorten static lengths depending on line delay here to get all animations to complete.
+        fctx.log_line(str(len(multiline_animation.linetexts)))
+        frame_start = fctx.get_length() - self.out_frames - 1 - (len(multiline_animation.linetexts) - 1) * self.line_delay
         length = self.out_frames
 
         movement_type = self.movement_type_out
@@ -587,8 +592,6 @@ class LineText:
         bg_padded_w = bw + 2 * pad
         bg_padded_h = bh + 2 * pad
 
-        #fctx.log_line(str((line_w, line_h, screen_w, screen_h, pad, bg_padded_w, bg_padded_h)))
-
         return (line_w, line_h, screen_w, screen_h, pad, bw, bg_padded_w, bg_padded_h)
         
     def _apply_affine_data_with_movement(self, movement_type, animation_type, start_x, start_y, end_x, end_y, \
@@ -666,6 +669,10 @@ class LineText:
         multiline_animation.clip_for_line(fctx, cr, self, frame)
 
         # Don't draw if line delay causes line to not start animating yet.
+        # NOTE: We are are implementing line delay here, combined with shortening static position 
+        # time in LineText.create_animation_data() and setting clippuing times in 
+        # Multiline.clip_for_line() so that all out animations have time
+        # to complete and are clipped at correct times.
         frame_delay = self.line_index * self.line_delay
         line_frame = frame - frame_delay
         if line_frame < 0:
