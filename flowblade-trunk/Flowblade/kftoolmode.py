@@ -273,13 +273,19 @@ def _get_multipart_keyframe_ep_from_service(clip, track, clip_index, mlt_service
     return None
 
 def _has_deprecated_volume_filter(clip):
-    for i in range(0, len(clip.filters)):
-        filter_object = clip.filters[i]
-        if filter_object.info.multipart_filter == True and filter_object.info.mlt_service_id == "volume":
-            return True 
+    try:
+        for i in range(0, len(clip.filters)):
+            filter_object = clip.filters[i]
+            if filter_object.info.multipart_filter == True and filter_object.info.mlt_service_id == "volume":
+                return True 
 
-    return False
-            
+        return False
+    except:
+        # We had a single crash, here leaving print to get data if we hit this again.
+        print("Exception at kftoolmode._has_deprecated_volume_filter")
+        print(clip.__dict__)
+        return False
+
 def exit_tool():
     set_no_clip_edit_data()
     global enter_mode
@@ -326,7 +332,6 @@ def mouse_press(event, frame):
         return
 
     clip = track.clips[clip_index]
-
 
     if _has_deprecated_volume_filter(clip) == True:
         set_no_clip_edit_data()
@@ -1603,6 +1608,7 @@ class TLineKeyFrameEditor:
                     edit_brightness.set_sensitive(False)
                 menu.add(edit_brightness)
 
+            editable_params_exist = False
             for i in range(0, len(edit_data["clip"].filters)):
                 filt = edit_data["clip"].filters[i]
                 for prop in filt.properties:
