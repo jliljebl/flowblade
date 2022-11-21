@@ -168,7 +168,6 @@ class MultiLineAnimation:
         # Apply Pos constraints
         x, y = self.get_constrained_pos(fctx, x, y, max_width, height)
 
-        #fctx.log_line("get_bounding_rect_for_area" + str((x, y, max_width, height)))
         return (x, y, max_width, height)
   
     def clip_for_line(self, fctx, cr, line_text, frame):
@@ -206,8 +205,6 @@ class MultiLineAnimation:
                 cr.rectangle(x_center - w_reveal_size, ry, w_reveal_size * 2, rh)
                 cr.clip()
             elif anim_type == LineText.REVEAL_VERTICAL:
-                #fctx.log_line(str(line_text.line_layout.ascent) + " " + str(line_text.line_layout.descent))
-                #y_center = ry + h / 2 - 15 # -15 is a hack because the 
                 y_center = ry + h / 2 - line_text.line_layout.get_top_pad() // 2 + 4 # -15 is a hack because the 
                 h_reveal_size = h / 2 * anim_pos
                 cr.rectangle(rx, y_center - h_reveal_size, rw, h_reveal_size * 2)
@@ -254,6 +251,7 @@ class MultiLineAnimation:
         # In and out may have different animations and need different clipping.
         do_clip = False
         anim_type = MultiLineAnimation.NO_ANIM
+        anim_pos = -10.0
 
         if frame <= self.bg_frames_in:
             anim_pos = float(frame) / float(self.bg_frames_in)
@@ -293,6 +291,9 @@ class MultiLineAnimation:
                 cr.rectangle(ax, ay, aw, h_reveal_size)
                 cr.clip()
 
+        # We need this data to do fades next if needed.
+        return (anim_type, anim_pos)
+
     # ------------------------------------------------------------- DRAWING
     def draw(self, cr, fctx, frame):
         # Create layouts now that we have cairo.Context.
@@ -308,15 +309,15 @@ class MultiLineAnimation:
      
         # Draw background
         cr.save()
-        self.clip_bg_for_anim(fctx, cr, frame)
-        self.draw_bg(cr, fctx, frame)
+        anim_data = self.clip_bg_for_anim(fctx, cr, frame)
+        self.draw_bg(cr, fctx, frame, anim_data)
         cr.restore()
 
         # Draw texts
         for linetext in self.linetexts:
             linetext.draw_text(fctx, frame, cr, self)
         
-    def draw_bg(self, cr, fctx, frame):
+    def draw_bg(self, cr, fctx, frame, anim_data):
         ax, ay, aw, ah = self.area_data
         p = self.pad
         ax = ax - p
@@ -326,7 +327,14 @@ class MultiLineAnimation:
         
         line_width = fctx.get_editor_value("Background Line Width")
         cr.set_line_width(line_width)
-        cr.set_source(self.bg_color)
+        anim_type, anim_pos = anim_data
+        if anim_type == MultiLineAnimation.FADE and anim_pos >= 0.0:
+            r, g, b, a = self.bg_color.get_rgba()
+            a = a * anim_pos
+            fade_bg = cairo.SolidPattern(r, g, b, a)
+            cr.set_source(fade_bg)
+        else:
+            cr.set_source(self.bg_color)
 
         if self.bg_type == MultiLineAnimation.COLOR_BACKGROUND:
             cr.rectangle(ax, ay, aw, ah)
@@ -455,7 +463,6 @@ class LineText:
         # Animation Out
         start_x, start_y, end_x, end_y = self._get_out_animation_affine_data(fctx, multiline_animation)
         # We need to shorten static lengths depending on line delay here to get all animations to complete.
-        #fctx.log_line(str(len(multiline_animation.linetexts)))
         frame_start = fctx.get_length() - self.out_frames - 1 - (len(multiline_animation.linetexts) - 1) * self.line_delay
         length = self.out_frames
 
