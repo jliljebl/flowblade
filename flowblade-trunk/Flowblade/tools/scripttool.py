@@ -438,7 +438,13 @@ def next_pressed(delta=1):
     update_frame_displayers()
 
 def play_pressed():
-    _player.start_playback()
+    if editorpersistance.prefs.play_pause == True:
+        if _player.is_playing():
+            _player.stop_playback()
+        else:
+            _player.start_playback()
+    else:
+        _player.start_playback()
 
 def stop_pressed():
     _player.stop_playback()

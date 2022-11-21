@@ -219,7 +219,7 @@ class MultiLineAnimation:
                 x = line_text.text_x + w - w_reveal_size
                 cr.rectangle(x, ry, w_reveal_size, rh)
                 cr.clip()
-            # Bg type LINE_SOLID_WORD_LENGTH_BACKGROUND requires clipping during animation to word length.
+            # Bg type LINE_SOLID_WORD_LENGTH_BACKGROUND requires clipping to word length during animation.
             elif self.bg_type == MultiLineAnimation.LINE_SOLID_WORD_LENGTH_BACKGROUND:
                 cr.rectangle(line_text.text_x - p, ry - p, w + 2 * p, rh + 2 * p)
                 cr.clip()

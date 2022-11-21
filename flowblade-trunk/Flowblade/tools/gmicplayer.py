@@ -145,6 +145,9 @@ class GmicPlayer:
         if self.ticker != None:
             self.ticker.stop_ticker()
         self.producer.set_speed(0)
+
+    def is_playing(self):
+        return (self.producer.get_speed() != 0)
         
     def seek_position_normalized(self, pos, length):
         frame_number = pos * length
