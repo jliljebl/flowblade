@@ -911,7 +911,6 @@ class AbstractKeyFrameEditor(Gtk.VBox):
         
         These may be implemented here or in extending classes KeyframeEditor and GeometryEditor
         """
-        print("keyframes", self.clip_editor.keyframes)
     
         # Some filters start keyframes from *MEDIA* frame 0
         # Some filters or compositors start keyframes from *CLIP* frame 0
