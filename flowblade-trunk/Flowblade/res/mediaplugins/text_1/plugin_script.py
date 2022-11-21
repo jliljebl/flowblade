@@ -33,7 +33,7 @@ def init_script(fctx):
     fctx.add_editor("Animation Type Out", fluxity. EDITOR_OPTIONS, \
                     (7, ["To Left Clipped", "To Right Clipped", "To Up Clipped", \
                         "To Down Clipped", "To Left", "To Right", "To Up", \
-                        "To Down"]))
+                        "To Down", "Reveal Horizontal", "Reveal Vertical", "Reveal Left", "Reveal Right"]))
     fctx.add_editor("Movement Out", fluxity. EDITOR_OPTIONS, (2, ["Linear", "Ease In", "Ease Out", "Stepped"]))
     fctx.add_editor("Frames Out", fluxity.EDITOR_INT, 20)
     fctx.add_editor("Steps Out", fluxity.EDITOR_INT_RANGE, (3, 2, 10))
@@ -186,37 +186,47 @@ class MultiLineAnimation:
         # In and out animations have different clipping applied and need to be only applied temporally on their own frame ranges.
         if (line_text.animation_type_in in LineText.CLIPPED_ANIMATIONS) and (frame <= line_text.in_frames + line_delay_addition):
             anim_pos = float(frame - line_delay_addition) / float(line_text.in_frames)
+            anim_type = line_text.animation_type_in
             do_clip = True
         elif (line_text.animation_type_out in LineText.CLIPPED_ANIMATIONS) and (frame >= out_frame_start):
             anim_pos = float(frame - out_frame_start) / float(line_text.out_frames)
             if anim_pos > 1.0:
                 anim_pos = 1.0
+            anim_type = line_text.animation_type_out
+            if anim_type in LineText.REVEAL_ANIMATIONS:
+                # These are in animations reversed.
+                anim_pos = 1.0 - anim_pos
             do_clip = True
         
         if do_clip == True:
-            if line_text.animation_type_in == LineText.REVEAL_HORIZONTAL:
+            # If we are doing reveal animations, use clipping to achieve those.
+            if anim_type == LineText.REVEAL_HORIZONTAL:
                 x_center = line_text.text_x + w / 2
                 w_reveal_size = w / 2 * anim_pos
                 cr.rectangle(x_center - w_reveal_size, ry, w_reveal_size * 2, rh)
                 cr.clip()
-            elif line_text.animation_type_in == LineText.REVEAL_VERTICAL:
-                y_center = ry + line_text.line_y_off + h / 2 
+            elif anim_type == LineText.REVEAL_VERTICAL:
+                #fctx.log_line(str(line_text.line_layout.ascent) + " " + str(line_text.line_layout.descent))
+                #y_center = ry + h / 2 - 15 # -15 is a hack because the 
+                y_center = ry + h / 2 - line_text.line_layout.get_top_pad() // 2 + 4 # -15 is a hack because the 
                 h_reveal_size = h / 2 * anim_pos
                 cr.rectangle(rx, y_center - h_reveal_size, rw, h_reveal_size * 2)
                 cr.clip()
-            elif line_text.animation_type_in == LineText.REVEAL_LEFT:
+            elif anim_type == LineText.REVEAL_LEFT:
                 x = line_text.text_x
                 w_reveal_size = w * anim_pos
                 cr.rectangle(x, ry, w_reveal_size, rh)
                 cr.clip()
-            elif line_text.animation_type_in == LineText.REVEAL_RIGHT:
+            elif anim_type == LineText.REVEAL_RIGHT:
                 w_reveal_size = w * anim_pos
                 x = line_text.text_x + w - w_reveal_size
                 cr.rectangle(x, ry, w_reveal_size, rh)
                 cr.clip()
+            # Bg type LINE_SOLID_WORD_LENGTH_BACKGROUND requires clipping during animation to word length.
             elif self.bg_type == MultiLineAnimation.LINE_SOLID_WORD_LENGTH_BACKGROUND:
                 cr.rectangle(line_text.text_x - p, ry - p, w + 2 * p, rh + 2 * p)
                 cr.clip()
+            # Everything else clipped clips lines to full bg size during animation.
             else:
                 cr.rectangle(rx - p, ry - p, aw + 2 * p, rh + 2 * p)
                 cr.clip()
@@ -251,7 +261,7 @@ class MultiLineAnimation:
             do_clip = True
         elif frame >= fctx.get_length() - self.bg_frames_out:
             anim_pos = 1.0 - float(frame - fctx.get_length() + self.bg_frames_out) / float(self.bg_frames_out)
-            anim_type = self.bg_anim_type_out 
+            anim_type = self.bg_anim_type_out
             do_clip = True
  
         if do_clip == True and anim_type != MultiLineAnimation.NO_ANIM and anim_type != MultiLineAnimation.FADE:
@@ -392,7 +402,7 @@ class LineText:
     HORIZONTAL_ANIMATIONS = [FROM_LEFT_CLIPPED, FROM_RIGHT_CLIPPED, FROM_LEFT, FROM_RIGHT]
     VERTICAL_ANIMATIONS = [FROM_UP_CLIPPED, FROM_DOWN_CLIPPED, FROM_UP, FROM_DOWN]
     CLIPPED_ANIMATIONS = [FROM_LEFT_CLIPPED, FROM_RIGHT_CLIPPED, FROM_UP_CLIPPED, FROM_DOWN_CLIPPED, REVEAL_HORIZONTAL, REVEAL_VERTICAL, REVEAL_LEFT, REVEAL_RIGHT]
-    ALWAYS_LINEAR_ANIMATIONS = [REVEAL_HORIZONTAL, REVEAL_VERTICAL, REVEAL_LEFT, REVEAL_RIGHT]
+    REVEAL_ANIMATIONS = [REVEAL_HORIZONTAL, REVEAL_VERTICAL, REVEAL_LEFT, REVEAL_RIGHT]
     
     def __init__(self, text, font_data, user_pos, line_info, animation_in_data, in_frames, animation_out_data, out_frames):
         self.text = text
@@ -445,7 +455,7 @@ class LineText:
         # Animation Out
         start_x, start_y, end_x, end_y = self._get_out_animation_affine_data(fctx, multiline_animation)
         # We need to shorten static lengths depending on line delay here to get all animations to complete.
-        fctx.log_line(str(len(multiline_animation.linetexts)))
+        #fctx.log_line(str(len(multiline_animation.linetexts)))
         frame_start = fctx.get_length() - self.out_frames - 1 - (len(multiline_animation.linetexts) - 1) * self.line_delay
         length = self.out_frames
 
@@ -577,7 +587,11 @@ class LineText:
         elif self.animation_type_out == LineText.FROM_DOWN:
             end_x = static_x + pad
             end_y = screen_h + static_y - multiline_y
-
+        elif self.animation_type_out == LineText.REVEAL_HORIZONTAL or self.animation_type_out == LineText.REVEAL_VERTICAL \
+            or self.animation_type_out == LineText.REVEAL_LEFT or self.animation_type_out == LineText.REVEAL_RIGHT:
+            end_x = static_x
+            end_y = static_y
+            
         return (start_x, start_y + self.line_y_off, end_x, end_y + self.line_y_off)
 
     def _get_basic_animation_data(self, fctx, multiline_animation):
@@ -598,7 +612,7 @@ class LineText:
                                          frame_start, frame_end, steps):
         builder = AnimationBuilder()
         
-        if movement_type == AnimationBuilder.LINEAR or animation_type in LineText.ALWAYS_LINEAR_ANIMATIONS:
+        if movement_type == AnimationBuilder.LINEAR or animation_type in LineText.REVEAL_ANIMATIONS:
             builder.apply_linear_movement(self.affine.x, start_x, end_x, frame_start, frame_end)
             builder.apply_linear_movement(self.affine.y, start_y, end_y, frame_start, frame_end)
         elif movement_type == AnimationBuilder.EASE_IN:
