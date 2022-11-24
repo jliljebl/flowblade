@@ -522,7 +522,7 @@
         <name>RGB Shift</name>
         <group>Artistic</group>
       <property name="0" args="range_in=-100,100 displayname=Horizontal">0.4</property>
-      <property name="1" args="range_in=-100,100 displayname=Verical">0.4</property>
+      <property name="1" args="range_in=-100,100 displayname=Vertical">0.4</property>
     </filter>
     <filter id="frei0r.cartoon">
         <name>Cartoon</name>
@@ -579,10 +579,10 @@
     <filter id="frei0r.glitch0r">
         <name>Glitch</name>
         <group>Artistic</group>
-        <property name="0" args="range_in=0,100 range_out=0,1.0 displayname=Frequency">0.5</property>
-        <property name="1" args="range_in=0,100 range_out=0,1.0 displayname=Height">0.5</property>
-        <property name="2" args="range_in=0,100 range_out=0,1.0 displayname=Shift">0.5</property>
-        <property name="3" args="range_in=0,100 range_out=0,1.0 displayname=Color">0.5</property>
+        <property name="0" args="range_in=0,100 range_out=0,1.0 displayname=Glitch frequency">0.5</property>
+        <property name="1" args="range_in=0,100 range_out=0,1.0 displayname=Block Height">0.5</property>
+        <property name="2" args="range_in=0,100 range_out=0,1.0 displayname=Shift intensity">0.5</property>
+        <property name="3" args="range_in=0,100 range_out=0,1.0 displayname=Color glitching intensity">0.5</property>
     </filter>
 
     <!-- BLEND -->
