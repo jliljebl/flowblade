@@ -616,8 +616,9 @@ def load_filters_translations():
     param_names["Darker"] = _("Darker")
     param_names["Lighter"] = _("Lighter")
     param_names["Frames"] = _("Frames")
-    param_names["Height"] = _("Height")
-    param_names["Shift"] = _("Shift")
+    param_names["Glitch frequency"] = _("Glitch frequency")
+    param_names["Shift intensity"] = _("Shift intensity")
+    param_names["Color glitching intensity"] = _("Color glitching intensity")
     # From version 2.10 onwards Media Plugins editable parameters names go here too.
     param_names["Speed"] = _("Speed")
     param_names["Speed Variation %"] = _("Speed Variation %")
