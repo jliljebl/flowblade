@@ -263,18 +263,6 @@ class ClipKeyFrameEditor:
             cr.set_source_surface(icon, kf_pos - 6, KF_Y)
             cr.paint()
 
-        # Draw out-of-range kf icons kf counts
-        before_kfs = len(self.get_out_of_range_before_kfs())
-        after_kfs = len(self.get_out_of_range_after_kfs())
-        if before_kfs > 0:
-            cr.set_source_surface(NON_ACTIVE_KF_ICON, OUT_OF_RANGE_ICON_PAD - OUT_OF_RANGE_KF_ICON_HALF * 2, KF_Y)
-            cr.paint()
-            self.draw_kf_count_number(cr, before_kfs, OUT_OF_RANGE_NUMBER_X_START, OUT_OF_RANGE_NUMBER_Y)
-        if after_kfs > 0:
-            cr.set_source_surface(NON_ACTIVE_KF_ICON, w - OUT_OF_RANGE_ICON_PAD, KF_Y)
-            cr.paint()
-            self.draw_kf_count_number(cr, after_kfs, w - OUT_OF_RANGE_NUMBER_X_END_PAD, OUT_OF_RANGE_NUMBER_Y)
-        
         # Draw frame pointer
         try:
             panel_pos = self._get_panel_pos()
@@ -335,17 +323,8 @@ class ClipKeyFrameEditor:
         
     def _press_event(self, event):
         """
-        Mouse button callback
-        """
-        # Check if kf icon before or after clip range have been pressed
-        if self.oor_start_kf_hit(event.x, event.y):
-            self._show_oor_before_menu(self.widget, event)
-            return
-
-        if self.oor_end_kf_hit(event.x, event.y):
-            self._show_oor_after_menu(self.widget, event)
-            return
-        
+        Mouse button callback.
+        """    
         if self.sensitive == False:
             return
         
@@ -501,24 +480,7 @@ class ClipKeyFrameEditor:
                 return i
             
         return None
-
-    def oor_start_kf_hit(self, x, y):
-        test_x = OUT_OF_RANGE_ICON_PAD - OUT_OF_RANGE_KF_ICON_HALF * 2
-        if y >= KF_Y and y <= KF_Y + 12: # 12 icon size
-            if x >= test_x and x <= test_x + 12:
-                return True
-        
-        return False
-
-    def oor_end_kf_hit(self, x, y):
-        w = self.widget.get_allocation().width
-        test_x = w - OUT_OF_RANGE_ICON_PAD
-        if y >= KF_Y and y <= KF_Y + 12: # 12 icon size
-            if x >= test_x and x <= test_x + 12:
-                return True
-        
-        return False
-
+    
     def add_keyframe(self, frame):
         # NOTE: This makes added keyframe the active keyframe too.
         kf_index_on_frame = self.frame_has_keyframe(frame)
@@ -647,43 +609,9 @@ class ClipKeyFrameEditor:
     def set_active_kf_frame(self, new_frame):
         frame, val, kf_type = self.keyframes.pop(self.active_kf_index)
         self.keyframes.insert(self.active_kf_index,(new_frame, val, kf_type))
-
-    def _show_oor_before_menu(self, widget, event):
-        menu = oor_before_menu
-        guiutils.remove_children(menu)
-        before_kfs = len(self.get_out_of_range_before_kfs())
-
-        if before_kfs == 0:
-            # hit detection is active even if the kf icon is not displayed
-            return
-
-        if before_kfs > 1:
-            menu.add(self._get_menu_item(_("Delete all but first Keyframe before Clip Range"), self._oor_menu_item_activated, "delete_all_before" ))
-            sep = Gtk.SeparatorMenuItem()
-            sep.show()
-            menu.add(sep)
-
-        if len(self.keyframes) > 1:
-            menu.add(self._get_menu_item(_("Set Keyframe at Frame 0 to value of next Keyframe"), self._oor_menu_item_activated, "zero_next" ))
-        elif before_kfs == 1:
-            item = self._get_menu_item(_("No Edit Actions currently available"), self._oor_menu_item_activated, "noop" )
-            item.set_sensitive(False)
-            menu.add(item)
-
-        menu.popup(None, None, None, None, event.button, event.time)
-
-    def _show_oor_after_menu(self, widget, event):
-        menu = oor_before_menu
-        guiutils.remove_children(menu)
-        after_kfs = self.get_out_of_range_after_kfs()
         
-        if after_kfs == 0:
-            # hit detection is active even if the kf icon is not displayed
-            return
-
-        menu.add(self._get_menu_item(_("Delete all Keyframes after Clip Range"), self._oor_menu_item_activated, "delete_all_after" ))
-        menu.popup(None, None, None, None, event.button, event.time)
-        
+    # 'oor' means out-of-range, these are for handling keyframes that are not in
+    # current clip range.
     def _oor_menu_item_activated(self, widget, data):
         if data == "delete_all_before":
             keep_doing = True
@@ -1219,16 +1147,28 @@ class KeyFrameEditor(AbstractKeyFrameEditor):
              _add_separator(menu)
 
         if len(self.clip_editor.keyframes) > 1:
-            menu.add(_get_menu_item(_("Set Keyframe at Frame 0 to value of next Keyframe"), self.clip_editor._oor_menu_item_activated, "zero_next" ))
+            active = True
+        else:
+            active = False
+        item = _get_menu_item(_("Set Keyframe at Frame 0 to value of next Keyframe"), self.clip_editor._oor_menu_item_activated, "zero_next")
+        menu.add(item)
+        item.set_sensitive(active)
             
         if before_kfs > 1:
-            menu.add(_get_menu_item(_("Delete all but first Keyframe before Clip Range"), self.clip_editor._oor_menu_item_activated, "delete_all_before" ))
-                
+            active = True
+        else:
+            active = False
+        item = _get_menu_item(_("Delete all but first Keyframe before Clip Range") + " (" + str(before_kfs - 1) + ")", self.clip_editor._oor_menu_item_activated, "delete_all_before")
+        menu.add(item)
+        item.set_sensitive(active)
+        
         if after_kfs > 0:
-            menu.add(_get_menu_item(_("Delete all Keyframes after Clip Range"), self.clip_editor._oor_menu_item_activated, "delete_all_after" ))
-
-        if before_kfs > 0 or after_kfs > 0:
-             _add_separator(menu)
+            active = True
+        else:
+            active = False
+        item = _get_menu_item(_("Delete all Keyframes after Clip Range") + " (" + str(after_kfs) + ")", self.clip_editor._oor_menu_item_activated, "delete_all_after")
+        menu.add(item)
+        item.set_sensitive(active)
             
         menu.popup(None, None, None, None, event.button, event.time)
             
