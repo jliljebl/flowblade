@@ -491,7 +491,7 @@ def _move_mode_pressed(event, frame):
     track = tlinewidgets.get_track(y)
 
     # Selecting empty clears selection and prevents from setting edit data since we cannot have it.
-    # Exitance of edit_data is also used to determine if we should enter box mode so we need to not have it if we're not hitting clip
+    # Existance of edit_data is also used to determine if we should enter box mode so we need to not have it if we're not hitting clip
     if track == None or track.id < 1 or track.id > len(current_sequence().tracks) - 2: # -2 because topmost hidden track
         clear_selected_clips()
         pressed_on_selected = False

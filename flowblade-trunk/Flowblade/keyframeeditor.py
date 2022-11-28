@@ -135,8 +135,8 @@ class ClipKeyFrameEditor:
 
         self.sensitive = True
     
-        # Some filters start keyframes from *MEDIA* frame 0
-        # Some filters or compositors start keyframes from *CLIP* frame 0
+        # Some MLT filters start keyframes from *MEDIA* frame 0
+        # Some MLT filters or compositors start keyframes from *CLIP* frame 0
         # Filters starting from *MEDIA* 0 need offset 
         # to clip start added to all values.
         #
@@ -887,6 +887,7 @@ class AbstractKeyFrameEditor(Gtk.VBox):
         else:
             self.clip_in = 0
         self.clip_editor.clip_in = self.editable_property.clip.clip_in
+        self.clip_editor.clip_length = self.editable_property.get_clip_length() - 1
 
         self.clip_editor.widget.queue_draw()
         
