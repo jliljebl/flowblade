@@ -142,13 +142,19 @@ def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT, param_data=None):
     if edit_type == PARAM_KF_EDIT:
         pass # We are not trying to decide based on track what to edit
     else:
-        # Always brightness keyframes for media types that contain no audio.
-        if edit_data["clip"].media_type != appconsts.VIDEO and edit_data["clip"].media_type != appconsts.AUDIO:
-            edit_type = BRIGHTNESS_KF_EDIT
-        
-        # Volume keyframes on audio track for video and audio
+        # Volume keyframes on audio track for video and audio.
         if track.type == appconsts.AUDIO and not(edit_data["clip"].media_type != appconsts.VIDEO and edit_data["clip"].media_type != appconsts.AUDIO):
             edit_type = VOLUME_KF_EDIT
+            
+        # For non-video media types that contain no audio edit first kftool-editable param if available, 
+        # otherwise do brightness edit.
+        if edit_data["clip"].media_type != appconsts.VIDEO and edit_data["clip"].media_type != appconsts.AUDIO:
+            kftool_params_data = get_clip_kftool_editable_params_data(edit_data["clip"])
+            if len(kftool_params_data) == 0:
+                edit_type = BRIGHTNESS_KF_EDIT
+            else:
+                edit_type = PARAM_KF_EDIT
+                param_data = kftool_params_data[0]
 
     global _kf_editor
         
@@ -207,6 +213,45 @@ def init_tool_for_clip(clip, track, edit_type=VOLUME_KF_EDIT, param_data=None):
     tlinewidgets.set_edit_mode_data(edit_data)
     updater.repaint_tline()
 
+def get_clip_kftool_editable_params_data(clip):
+    kftool_editable_params = []
+    for i in range(0, len(clip.filters)):
+        filt = clip.filters[i]
+        for prop in filt.properties:
+            p_name, p_val, p_type = prop
+            args_str = filt.info.property_args[p_name]
+
+            args_dict = propertyparse.args_string_to_args_dict(args_str)
+            try:
+                editor = args_dict["editor"]
+            except:
+                editor = "slider"
+                
+            try:
+                disp_name = args_dict["displayname"]
+            except:
+                disp_name = p_name
+
+            try:
+                range_in = args_dict["range_in"]
+            except:
+                range_in = None
+
+            if (editor == "slider" or editor == "keyframe_editor" \
+                or editor == "keyframe_editor_release" \
+                or editor == "keyframe_editor_clip_fade_filter") and range_in != None:
+                param_data = (p_name, filt, i, disp_name.replace("!", " "))
+            
+                kftool_editable_params.append(param_data)
+    
+    return kftool_editable_params
+    """
+                editable_params_exist = True
+                item_text = filt.info.name  + ": " +  disp_name.replace("!", " ")
+                param_item = self._get_menu_item(item_text, self._param_edit_item_activated, param_data)
+                menu.add(param_item)
+    """
+                
 def update_clip_frame(tline_frame):
     if _kf_editor != None and edit_data != None and edit_data["initializing"] != True:
         clip_frame = tline_frame - edit_data["clip_start_in_timeline"] + edit_data["clip"].clip_in
@@ -1598,39 +1643,17 @@ class TLineKeyFrameEditor:
 
         if edit_data["track"].type == appconsts.VIDEO:
             
-            # Heuristic for desiding which params can be edited in kfeditor.
             editable_params_exist = False
-            for i in range(0, len(edit_data["clip"].filters)):
-                filt = edit_data["clip"].filters[i]
-                for prop in filt.properties:
-                    p_name, p_val, p_type = prop
-                    args_str = filt.info.property_args[p_name]
-
-                    args_dict = propertyparse.args_string_to_args_dict(args_str)
-                    try:
-                        editor = args_dict["editor"]
-                    except:
-                        editor = "slider"
-                        
-                    try:
-                        disp_name = args_dict["displayname"]
-                    except:
-                        disp_name = p_name
-
-                    try:
-                        range_in = args_dict["range_in"]
-                    except:
-                        range_in = None
-
-                    if (editor == "slider" or editor == "keyframe_editor" \
-                        or editor == "keyframe_editor_release" \
-                        or editor == "keyframe_editor_clip_fade_filter") and range_in != None:
-                        param_data = (p_name, filt, i, disp_name)
-                    
-                        editable_params_exist = True
-                        item_text = filt.info.name  + ": " +  disp_name.replace("!", " ")
-                        param_item = self._get_menu_item(item_text, self._param_edit_item_activated, param_data)
-                        menu.add(param_item)
+            kftool_params = get_clip_kftool_editable_params_data(edit_data["clip"])
+            
+            if len(kftool_params) > 0:
+                editable_params_exist = True
+                for param_data in kftool_params:
+                    p_name, filt, i, disp_name = param_data 
+                                    
+                    item_text = filt.info.name  + ": " +  disp_name
+                    param_item = self._get_menu_item(item_text, self._param_edit_item_activated, param_data)
+                    menu.add(param_item)
 
             if editable_params_exist == False:
                 sep = Gtk.SeparatorMenuItem()
