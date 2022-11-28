@@ -1597,17 +1597,7 @@ class TLineKeyFrameEditor:
         guiutils.remove_children(menu)
 
         if edit_data["track"].type == appconsts.VIDEO:
-            if edit_data["clip"].media_type == appconsts.VIDEO:
-                edit_volume = self._get_menu_item(_("Volume"), self._oor_menu_item_activated, "edit_volume" )
-                if self.edit_type == VOLUME_KF_EDIT:
-                    edit_volume.set_sensitive(False)
-                menu.add(edit_volume)
-
-                edit_brightness = self._get_menu_item(_("Brightness"), self._oor_menu_item_activated, "edit_brightness" )
-                if self.edit_type == BRIGHTNESS_KF_EDIT:
-                    edit_brightness.set_sensitive(False)
-                menu.add(edit_brightness)
-
+            
             # Heuristic for desiding which params can be edited in kfeditor.
             editable_params_exist = False
             for i in range(0, len(edit_data["clip"].filters)):
@@ -1632,14 +1622,13 @@ class TLineKeyFrameEditor:
                     except:
                         range_in = None
 
-                    if (editor == "slider" or editor == "keyframe_editor" or editor == "keyframe_editor_clip_fade_filter") and range_in != None:
+                    if (editor == "slider" or editor == "keyframe_editor" \
+                        or editor == "keyframe_editor_release" \
+                        or editor == "keyframe_editor_clip_fade_filter") and range_in != None:
                         param_data = (p_name, filt, i, disp_name)
-                        # For fades only alpha param is editable.
-                        #if editor == "keyframe_editor_clip_fade_filter" and p_name != "alpha":
-                        #     continue
                     
                         editable_params_exist = True
-                        item_text = filt.info.name  + ": " +  disp_name
+                        item_text = filt.info.name  + ": " +  disp_name.replace("!", " ")
                         param_item = self._get_menu_item(item_text, self._param_edit_item_activated, param_data)
                         menu.add(param_item)
 
