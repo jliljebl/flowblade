@@ -309,10 +309,10 @@ def mouse_press(event, frame):
         _handle_edit_mouse_press(event)
         return
 
-    # Get pressed track
+    # Get pressed track.
     track = tlinewidgets.get_track(y)  
 
-    # Selecting empty clears selection
+    # Selecting empty clears selection.
     if track == None or track.id == 0 or track.id == len(current_sequence().tracks) - 1:
         exit_tool()
         return    
@@ -322,11 +322,11 @@ def mouse_press(event, frame):
         set_no_clip_edit_data()
         return
         
-    # Attempt to init kf tool editing on some clip
+    # Attempt to init kf tool editing on some clip.
     # Get pressed clip index
     clip_index = current_sequence().get_clip_index(track, frame)
 
-    # Selecting empty clears selection
+    # Selecting empty clears selection.
     if clip_index == -1:
         exit_tool()
         return
@@ -1608,6 +1608,7 @@ class TLineKeyFrameEditor:
                     edit_brightness.set_sensitive(False)
                 menu.add(edit_brightness)
 
+            # Heuristic for desiding which params can be edited in kfeditor.
             editable_params_exist = False
             for i in range(0, len(edit_data["clip"].filters)):
                 filt = edit_data["clip"].filters[i]
@@ -1631,8 +1632,12 @@ class TLineKeyFrameEditor:
                     except:
                         range_in = None
 
-                    if (editor == "slider" or editor == "keyframe_editor") and range_in != None:
+                    if (editor == "slider" or editor == "keyframe_editor" or editor == "keyframe_editor_clip_fade_filter") and range_in != None:
                         param_data = (p_name, filt, i, disp_name)
+                        # For fades only alpha param is editable.
+                        #if editor == "keyframe_editor_clip_fade_filter" and p_name != "alpha":
+                        #     continue
+                    
                         editable_params_exist = True
                         item_text = filt.info.name  + ": " +  disp_name
                         param_item = self._get_menu_item(item_text, self._param_edit_item_activated, param_data)
