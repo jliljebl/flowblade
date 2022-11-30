@@ -34,6 +34,7 @@ import gui
 import guicomponents
 import guiutils
 import scripttool
+import singletracktransition
 import titler
 import tlineaction
 import updater
@@ -234,7 +235,7 @@ def _create_buttons(editor_window):
     
     # Cut and dissolve
     editor_window.edit_buttons = glassbuttons.GlassButtonsGroup(32*size_adj, 23*size_adj, 2*size_adj, 5*size_adj, 5*size_adj)
-    editor_window.edit_buttons.add_button(guiutils.get_cairo_image("dissolve" + icon_color), tlineaction.add_transition_pressed)
+    editor_window.edit_buttons.add_button(guiutils.get_cairo_image("dissolve" + icon_color), singletracktransition.add_transition_pressed)
     editor_window.edit_buttons.add_button(guiutils.get_cairo_image("cut" + icon_color), tlineaction.cut_pressed)
     tooltips = [_("Add Rendered Transition - 2 clips selected\nAdd Rendered Fade - 1 clip selected"), _("Cut Active Tracks - X\nCut All Tracks - Shift + X")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons, tooltips)
