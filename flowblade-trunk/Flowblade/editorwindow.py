@@ -922,7 +922,7 @@ class EditorWindow:
             ('FullScreen', None, _('Fullscreen'), 'F11', None, lambda a:menuactions.toggle_fullscreen()),
             ('ProjectMenu', None, _('Project')),
             ('AddMediaClip', None, _('Add Video, Audio or Image...'), None, None, lambda a: projectaction.add_media_files()),
-            ('AddMediaFolder', None, _('Add Media Folder...'), None, None, lambda a: projectaddmediafolder.show_add_media_folder_dialog()),
+            ('AddMediaFolder', None, _('Add Media From Folder...'), None, None, lambda a: projectaddmediafolder.show_add_media_folder_dialog()),
             ('AddImageSequence', None, _('Add Image Sequence...'), None, None, lambda a:projectaction.add_image_sequence()),
             ('CreateColorClip', None, _('Create Color Clip...'), None, None, lambda a:patternproducer.create_color_clip()),
             ('BinMenu', None, _('Bin')),
