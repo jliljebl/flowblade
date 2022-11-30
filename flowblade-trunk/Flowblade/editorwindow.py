@@ -907,7 +907,6 @@ class EditorWindow:
             ('ResyncSelected', None, _('Resync'),  resync_shortcut, None, lambda a:tlineaction.resync_button_pressed()),
             ('SetSyncParent', None, _('Set Sync Parent'), None, None, lambda a:_this_is_not_used()),
             ('AddTransition', None, _('Add Single Track Transition'), None, None, lambda a:tlineaction.add_transition_menu_item_selected()),
-            ('AddFade', None, _('Add Single Track Fade'), None, None, lambda a:tlineaction.add_fade_menu_item_selected()),
             ('ClearFilters', None, _('Clear Filters'), clear_filters_shortcut, None, lambda a:clipmenuaction.clear_filters()),
             ('Timeline', None, _('Timeline')),
             ('FiltersOff', None, _('All Filters Off'), None, None, lambda a:tlineaction.all_filters_off()),
@@ -1026,7 +1025,6 @@ class EditorWindow:
                     <menuitem action='FiltersOn'/>
                     <separator/>
                     <menuitem action='AddTransition'/>
-                    <menuitem action='AddFade'/>
                     <separator/>
                     <menuitem action='ProfilesManager'/>
                     <menuitem action='DiskCacheManager'/>

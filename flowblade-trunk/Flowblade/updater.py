@@ -623,14 +623,9 @@ def set_transition_render_edit_menu_items_sensitive(range_start, range_end):
     render_fade = ui.get_widget('/MenuBar/EditMenu/AddFade')
     if range_start == -1:
         render_transition.set_sensitive(False)
-        render_fade.set_sensitive(False)
     elif range_start == range_end:
         render_transition.set_sensitive(False)
-        render_fade.set_sensitive(True)
     elif range_start == range_end - 1:
         render_transition.set_sensitive(True)
-        render_fade.set_sensitive(False)
     else:
         render_transition.set_sensitive(False)
-        render_fade.set_sensitive(False)
-

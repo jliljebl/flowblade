@@ -1434,20 +1434,6 @@ def transition_re_render_dialog(callback, transition_data):
     _default_behaviour(dialog)
     dialog.show_all()
 
-def fade_re_render_dialog(callback, fade_data):
-    dialog = Gtk.Dialog(_("Rerender Fade"),  gui.editor_window.window,
-                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel"), Gtk.ResponseType.REJECT,
-                        _("Rerender"), Gtk.ResponseType.ACCEPT))
-
-    alignment, encodings_cb, quality_cb, encodings = panels.get_fade_re_render_panel(fade_data)
-    widgets = (encodings_cb, quality_cb, encodings)
-    dialog.connect('response', callback, widgets, fade_data)
-    dialog.vbox.pack_start(alignment, True, True, 0)
-    dialogutils.set_outer_margins(dialog.vbox)
-    _default_behaviour(dialog)
-    dialog.show_all()
-
 def re_render_all_dialog(callback, rerender_list, unrenderable):
     dialog = Gtk.Dialog(_("Rerender All Transitions and Fades"),  gui.editor_window.window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
@@ -1457,20 +1443,6 @@ def re_render_all_dialog(callback, rerender_list, unrenderable):
     alignment, encodings_cb, quality_cb, encodings = panels.get_re_render_all_panel(rerender_list, unrenderable)
     widgets = (encodings_cb, quality_cb, encodings)
     dialog.connect('response', callback, widgets, rerender_list)
-    dialog.vbox.pack_start(alignment, True, True, 0)
-    dialogutils.set_outer_margins(dialog.vbox)
-    _default_behaviour(dialog)
-    dialog.show_all()
-
-def fade_edit_dialog(callback, transition_data):
-    dialog = Gtk.Dialog(_("Add Fade"),  gui.editor_window.window,
-                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel"), Gtk.ResponseType.REJECT,
-                        _("Apply"), Gtk.ResponseType.ACCEPT))
-
-    alignment, type_combo, length_entry, encodings_cb, quality_cb, color_button, encodings = panels.get_fade_panel(transition_data)
-    widgets = (type_combo, length_entry, encodings_cb, quality_cb, color_button, encodings)
-    dialog.connect('response', callback, widgets, transition_data)
     dialog.vbox.pack_start(alignment, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     _default_behaviour(dialog)

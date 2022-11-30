@@ -420,40 +420,6 @@ def get_transition_re_render_panel(trans_data):
     
     return (alignment, encodings_cb, quality_cb, encodings)
 
-def get_fade_re_render_panel(trans_data):
-    fade_length = trans_data["clip"] .clip_out - trans_data["clip"].clip_in + 1 # +1 out inclusive
-    fade_length_label = Gtk.Label(label=_("Length:"))
-    fade_length_value = Gtk.Label(label=str(fade_length))
-    fade_length_row = get_two_column_box(fade_length_label, fade_length_value)
-
-    # Encoding widgets
-    encodings, encodings_cb = _get_encodings_widget_and_list()
-
-    quality_cb = Gtk.ComboBoxText()
-    transition_widgets = (encodings_cb, encodings, quality_cb)
-    encodings_cb.connect("changed", 
-                              lambda w,e: _transition_encoding_changed(transition_widgets), 
-                              None)
-    _fill_transition_quality_combo_box(transition_widgets, 10)
-    
-    _set_saved_encoding(transition_widgets)
-
-    fade_vbox = Gtk.VBox(False, 2)
-    fade_vbox.pack_start(fade_length_row, False, False, 0)
-   
-    enconding_vbox = Gtk.VBox(False, 2)
-    enconding_vbox.pack_start(encodings_cb, False, False, 0)
-    enconding_vbox.pack_start(quality_cb, False, False, 0)
-    
-    vbox = Gtk.VBox(False, 2)
-    vbox.pack_start(get_named_frame(_("Fade"),  fade_vbox), True, True, 0)
-    vbox.pack_start(get_named_frame(_("Encoding"),  enconding_vbox), True, True, 0)
-
-    alignment = guiutils.set_margins(vbox, 12, 24, 12, 12)
-    alignment.set_size_request(450, 200)
-    
-    return (alignment, encodings_cb, quality_cb, encodings)
-
 def get_re_render_all_panel(rerender_list, unrenderable):
     rerendercount_label = Gtk.Label(label=_("Transitions / Fades to be rerendered:"))
     rerendercount_value = Gtk.Label(label=str(len(rerender_list)))
@@ -493,58 +459,6 @@ def get_re_render_all_panel(rerender_list, unrenderable):
     alignment.set_size_request(450, 120)
     
     return (alignment, encodings_cb, quality_cb, encodings)
-    
-def get_fade_panel(fade_data):
-    type_combo_box = Gtk.ComboBoxText()    
-    type_combo_box.append_text(_("Fade In"))
-    type_combo_box.append_text(_("Fade Out"))
-    type_combo_box.set_active(0)
-
-    type_row = get_two_column_box(Gtk.Label(label=_("Type:")), 
-                                 type_combo_box)
-        
-    color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(0,0,0,1))
-    color_button_box = guiutils.get_left_justified_box([color_button])
-    color_label = Gtk.Label(label=_("Color:"))
-    color_row = get_two_column_box(color_label, color_button_box)
-                              
-    length_entry = Gtk.Entry()
-    fade_length = 30
-    if editorstate.fade_length > 0: # use last invocation length if available
-        fade_length = editorstate.fade_length
-    length_entry.set_text(str(fade_length))    
-    length_row = get_two_column_box(Gtk.Label(label=_("Length:")), 
-                                    length_entry)
-
-    # Encoding widgets
-    encodings, encodings_cb = _get_encodings_widget_and_list()
-
-    quality_cb = Gtk.ComboBoxText()
-    transition_widgets = (encodings_cb, encodings, quality_cb)
-    encodings_cb.connect("changed", 
-                              lambda w,e: _transition_encoding_changed(transition_widgets), 
-                              None)
-
-    _fill_transition_quality_combo_box(transition_widgets, 10)
-    _set_saved_encoding(transition_widgets)
-    
-    # Build panel
-    edit_vbox = Gtk.VBox(False, 2)
-    edit_vbox.pack_start(type_row, False, False, 0)
-    edit_vbox.pack_start(length_row, False, False, 0)
-    edit_vbox.pack_start(color_row, False, False, 0)
-
-    enconding_vbox = Gtk.VBox(False, 2)
-    enconding_vbox.pack_start(encodings_cb, False, False, 0)
-    enconding_vbox.pack_start(quality_cb, False, False, 0)
-
-    vbox = Gtk.VBox(False, 2)
-    vbox.pack_start(get_named_frame(_("Transition Options"),  edit_vbox), True, True, 0)
-    vbox.pack_start(get_named_frame(_("Encoding"),  enconding_vbox), True, True, 0)
-
-    alignment = guiutils.set_margins(vbox, 12, 24, 12, 12)
-    
-    return (alignment, type_combo_box, length_entry, encodings_cb, quality_cb, color_button, encodings)
     
 def _transition_encoding_changed(widgets):
     _fill_transition_quality_combo_box(widgets)
