@@ -302,29 +302,29 @@ draw_blank_borders = True
 # A context defining action taken when mouse press happens based on edit mode and mouse position.
 # Cursor communicates current pointer contest to user.
 pointer_context = appconsts.POINTER_CONTEXT_NONE
-DRAG_SENSITIVITY_AREA_WIDTH_PIX = 10
-MULTI_TRIM_ROLL_SENSITIVITY_AREA_WIDTH_PIX = 8
+DRAG_SENSITIVITY_AREA_WIDTH_PIX = 6
+MULTI_TRIM_ROLL_SENSITIVITY_AREA_WIDTH_PIX = 2
 MULTI_TRIM_SLIP_SENSITIVITY_AREA_WIDTH_PIX = 14
 
 # ref to singleton TimeLineCanvas instance for mode setting and some position
 # calculations.
 canvas_widget = None
 
-# Used to draw trim modes differently when moving from <X>_NO_EDIT mode to active edit
+# Used to draw trim modes differently when moving from <X>_NO_EDIT mode to active edit.
 trim_mode_in_non_active_state = False
 
 # Used ahen editing with SLIDE_TRIM mode to make user believe that the frame being displayed 
 # is the view frame user selected while in reality user is displayed images from hidden track and the
-# current frame is moving in opposite direction to users mouse movement
+# current frame is moving in opposite direction to users mouse movement.
 fake_current_frame = None
 
-# Used to draw indicators that tell if more frames are available while trimming
+# Used to draw indicators that tell if more frames are available while trimming.
 trim_status = appconsts.ON_BETWEEN_FRAME
 
-# Dict for clip thumbnails path -> image
+# Dict for clip thumbnails path -> image.
 clip_thumbnails = {}
 
-# Timeline match image
+# Timeline match image data.
 match_frame = -1
 match_frame_track_index = -1
 image_on_right = True 
@@ -1523,7 +1523,8 @@ class TimeLineCanvas:
         """
         Mouse move callback
         """
-        
+        # No edit is going on and cursor is on timeline, we need to do context
+        # sensitive cursor updates.
         if (not self.drag_on) and editorstate.cursor_is_tline_sensitive == True:
             self.set_pointer_context(x, y)
             return
@@ -1591,11 +1592,14 @@ class TimeLineCanvas:
 
         clip_start_frame = track.clip_start(clip_index)
         clip_end_frame = track.clip_start(clip_index + 1)
+        
         # INSERT, OVEWRITE
         if (EDIT_MODE() == editorstate.INSERT_MOVE or EDIT_MODE() == editorstate.OVERWRITE_MOVE) and editorstate.overwrite_mode_box == False:
-            if abs(x - _get_frame_x(clip_start_frame)) < DRAG_SENSITIVITY_AREA_WIDTH_PIX:
+            # the + 4 is attempt to center sensitivity area at cut. Because we are doing sensitivity testing on opposite sides of a single clip, not on
+            # both sides of a cut we are having trouble centering the sensitivity area. 
+            if abs(x - _get_frame_x(clip_start_frame)) < DRAG_SENSITIVITY_AREA_WIDTH_PIX + 4:
                 return appconsts.POINTER_CONTEXT_END_DRAG_LEFT
-            if abs(x - _get_frame_x(clip_end_frame)) < DRAG_SENSITIVITY_AREA_WIDTH_PIX:
+            if abs(x + 4 - _get_frame_x(clip_end_frame)) < DRAG_SENSITIVITY_AREA_WIDTH_PIX:
                 return appconsts.POINTER_CONTEXT_END_DRAG_RIGHT
             
             return appconsts.POINTER_CONTEXT_NONE
