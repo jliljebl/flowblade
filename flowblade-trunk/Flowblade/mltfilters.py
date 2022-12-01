@@ -79,7 +79,7 @@ group_icons = None
 # Filters that are used as parts of mlttransitions.CompositorObject
 # and are not displayed to user
 # dict name:FilterInfo
-# THIS IS NOT USED ANYMORE! DOUBLE CHECK THAT THIS REALLY IS THE CASE AND KILL!
+# THIS IS NOT USED ANYMORE! DOUBLE CHECK THAT THIS REALLY IS THE CASE AND REMOVE!
 compositor_filters = {}
 
 # Special filters used to achieve partial applicatiopn of other filters
@@ -96,10 +96,11 @@ PROP_EXPRESSION = appconsts.PROP_EXPRESSION
 # HACK! references to old filters are kept because freeing them causes crashes
 old_filters = []
 
-# We need this to mute clips
-_volume_filter_info = None
+# Other filter are always use selected, these are needed by other functionality.
+_volume_filter_info = None # for muting clips
 _brightness_filter_info = None # for kf tool
 _colorize_filter_info = None # for tline render tests
+_shape_filter_info = None # for rendered wipes
 
 def _load_icons():
     global FILTER_DEFAULT_ICON
@@ -396,6 +397,10 @@ def load_filters_xml(services):
         if filter_info.mlt_service_id == "volume": # we need this filter to do mutes so save reference to it
             global _volume_filter_info
             _volume_filter_info = filter_info
+
+        if filter_info.mlt_service_id == "shape": # we need this filter to do mutes so save reference to it
+            global _shape_filter_info
+            _shape_filter_info = filter_info
 
         # These are special cased as filters added from mask add menu
         if filter_info.mlt_service_id == "mask_start" or filter_info.mlt_service_id == "mask_apply":

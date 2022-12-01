@@ -75,9 +75,6 @@ import utils
 COPY_PASTE_DATA_CLIPS = appconsts.COPY_PASTE_DATA_CLIPS
 COPY_PASTE_DATA_COMPOSITOR_PROPERTIES = appconsts.COPY_PASTE_DATA_COMPOSITOR_PROPERTIES
 
-# Used to store transition render data to be used at render complete callback
-transition_render_data = None
-
 
 # --------------------------- module funcs
 def _get_new_clip_from_clip_monitor():

@@ -25,6 +25,7 @@ import threading
 import appconsts
 import dialogs
 import dialogutils
+import edit
 import editorstate
 from editorstate import current_sequence
 from editorstate import get_track
@@ -35,7 +36,10 @@ import mlttransitions
 import movemodes
 import panels
 import renderconsumer
+import render
 
+# Used to store transition render data used at render complete callback.
+transition_render_data = None
 
 def add_transition_menu_item_selected():
     if movemodes.selected_track == -1:

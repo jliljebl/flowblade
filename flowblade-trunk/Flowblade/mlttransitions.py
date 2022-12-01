@@ -33,6 +33,7 @@ import xml.dom.minidom
 import appconsts
 import compositorfades
 import mltrefhold
+import mltfilters
 import patternproducer
 import propertyparse
 import respaths
@@ -527,31 +528,37 @@ def get_rendered_transition_tractor(current_sequence,
         track1.insert(to_clip, 0, action_to_in, action_to_out)
     else:
         track1.insert(to_clip, 0, 0,  action_to_out - action_to_in)
-    kf_str = "0=0/0:100%x100%:0.0;"+ str(tractor.get_length() - 1) + "=0/0:100%x100%:100.0"
+
 
     # Create transition
-    transition = mlt.Transition(current_sequence.profile, "region")
-    mltrefhold.hold_ref(transition)
-    transition.set("composite.geometry", str(kf_str)) # controls mix over time
-    transition.set("composite.automatic",1)
-    transition.set("composite.aligned", 0)
-    transition.set("composite.deinterlace",0)
-    transition.set("composite.distort",0)
-    transition.set("composite.fill",1)
-    transition.set("composite.operator","over")
-    transition.set("composite.luma_invert",0)
-    transition.set("composite.progressive",1)
-    transition.set("composite.softness",0)
+    kf_str = "0=0.0;"+ str(tractor.get_length() - 1) + "=1.0"
+    transition = mlt.Transition(current_sequence.profile, "frei0r.cairoblend")
+    if transition_type == RENDERED_WIPE:
+        transition.set("0", "1.0") # opacity
+    else:
+        transition.set("0", str(kf_str)) # opacity
+    transition.set("1", "normal") # blend mode
     transition.set("in", 0)
-    transition.set("out", tractor.get_length() - 1)
+    transition.set("out", int(tractor.get_length() - 1))
     transition.set("a_track", 0)
     transition.set("b_track", 1)
-
-    # Setting luma resource file turns dissolve into wipe.
+    
+    # Do wipe with "shape" filter.
     if transition_type == RENDERED_WIPE:
+        print("hashdashdashdhas")
+        kf_str = "0=0.0;"+ str(tractor.get_length() - 1) + "=100.0"
         wipe_resource_path = get_wipe_resource_path_for_sorted_keys_index(wipe_luma_sorted_keys_index)
-        transition.set("composite.luma", str(wipe_resource_path))
-
+        print(wipe_resource_path)
+        filter_object = mltfilters.FilterObject(mltfilters._shape_filter_info)
+        filter_object.create_mlt_filter(current_sequence.profile)
+        filter_object.mlt_filter.set(str("resource"), str(wipe_resource_path))
+        filter_object.mlt_filter.set(str("mix"), str(kf_str))
+        filter_object.mlt_filter.set(str("softness"), str(0))
+        filter_object.mlt_filter.set(str("invert"), str(0))
+        filter_object.mlt_filter.set(str("use_mix"), str(1))
+        filter_object.mlt_filter.set(str("audio_match"), str(0))
+        to_clip.attach(filter_object.mlt_filter)
+        
     # Add transition
     field = tractor.field()
     field.plant_transition(transition, 0,1)

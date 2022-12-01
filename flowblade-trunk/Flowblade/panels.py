@@ -493,11 +493,9 @@ def _transition_type_changed(transition_type_widgets):
     if type_combo_box.get_active() == 0:
         wipe_luma_combo_box.set_sensitive(False)
         wipe_label.set_sensitive(False)
-        color_label.set_sensitive(False)
     elif type_combo_box.get_active() == 1:
         wipe_luma_combo_box.set_sensitive(True)
         wipe_label.set_sensitive(True)
-        color_label.set_sensitive(False)
     
 def get_effect_selection_panel(double_click_cb):
     effects_list_view = guicomponents.FilterListView(None)
