@@ -1,3 +1,22 @@
+"""
+    Flowblade Movie Editor is a nonlinear video editor.
+    Copyright 2022 Janne Liljeblad.
+
+    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+
+    Flowblade Movie Editor is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Flowblade Movie Editor is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
+"""
 
 from gi.repository import Gtk
 
@@ -5,13 +24,16 @@ import threading
 
 import appconsts
 import dialogs
+import dialogutils
 import editorstate
 from editorstate import current_sequence
 from editorstate import get_track
 from editorstate import PROJECT
 from editorstate import PLAYER
+import gui
 import mlttransitions
 import movemodes
+import panels
 import renderconsumer
 
 
@@ -38,20 +60,13 @@ def add_transition_pressed(retry_from_render_folder_select=False):
     if not (clip_count == 2):
         return
 
-    if track.id < current_sequence().first_video_index and clip_count == 1:
-        _no_audio_tracks_mixing_info()
-        return
-
-    _do_rendered_transition(track)
-
-def _do_rendered_transition(track):
     from_clip = track.clips[movemodes.selected_range_in]
     to_clip = track.clips[movemodes.selected_range_out]
     
     transition_data = get_transition_data_for_clips(track, from_clip, to_clip)
     
     if track.id >= current_sequence().first_video_index:
-        dialogs.transition_edit_dialog(_add_transition_dialog_callback, 
+        transition_edit_dialog(_add_transition_dialog_callback, 
                                        transition_data)
     else:
         _no_audio_tracks_mixing_info()
@@ -92,7 +107,7 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
         return
 
     # Get input data
-    type_combo, length_entry, enc_combo, quality_combo, wipe_luma_combo_box, color_button, steal_frames, encodings = selection_widgets
+    type_combo, length_entry, enc_combo, quality_combo, wipe_luma_combo_box, steal_frames, encodings = selection_widgets
     transition_type_selection_index = type_combo.get_active()
 
     quality_option_index = quality_combo.get_active()
@@ -105,7 +120,6 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
     
     extension_text = "." + renderconsumer.encoding_options[encoding_option_index].extension
     sorted_wipe_luma_index = wipe_luma_combo_box.get_active()
-    color_str = color_button.get_color().to_string()
     force_steal_frames = steal_frames.get_active()
     editorstate.steal_frames = force_steal_frames # making this selection as default for next invocation
 
@@ -212,8 +226,7 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
                                                                         to_out,
                                                                         to_in,
                                                                         transition_type_selection_index,
-                                                                        sorted_wipe_luma_index,
-                                                                        color_str)
+                                                                        sorted_wipe_luma_index)
 
     creation_data = (   from_clip.id,
                         to_clip.id,
@@ -222,8 +235,7 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
                         to_out,
                         to_in,
                         transition_type_selection_index,
-                        sorted_wipe_luma_index,
-                        color_str)
+                        sorted_wipe_luma_index)
                                                 
     # Save transition data into global variable to be available at render complete callback
     global transition_render_data
@@ -721,6 +733,21 @@ class ReRenderRunnerThread(threading.Thread):
         self.rerender_window.exit_shutdown()
 
 
+# ------------------------------------------------------------------ dialogs
+def transition_edit_dialog(callback, transition_data):
+    dialog = Gtk.Dialog(_("Add Transition"),  gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                        _("Apply"), Gtk.ResponseType.ACCEPT))
+
+    alignment, type_combo, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, steal_check, encodings = panels.get_transition_panel(transition_data)
+    widgets = (type_combo, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, steal_check, encodings)
+    dialog.connect('response', callback, widgets, transition_data)
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    dialogutils.set_default_behaviour(dialog)
+    dialog.show_all()
+    
 def _no_creation_data_dialog():
     primary_txt = _("Can't rerender this fade / transition.")
     secondary_txt = _("This fade / transition was created with Flowblade <= 1.14 and does not have the necessary data embedded.\nRerendering works with fades/transitions created with Flowblade >= 1.16.")

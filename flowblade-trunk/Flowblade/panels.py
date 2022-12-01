@@ -274,8 +274,6 @@ def get_transition_panel(trans_data):
     type_combo_box.append_text(name)
     name, t_service_id = mlttransitions.rendered_transitions[1]
     type_combo_box.append_text(name)
-    name, t_service_id = mlttransitions.rendered_transitions[2]
-    type_combo_box.append_text(name)
     type_combo_box.set_active(0)
 
     type_row = get_two_column_box(Gtk.Label(label=_("Type:")), 
@@ -291,17 +289,10 @@ def get_transition_panel(trans_data):
     wipe_row = get_two_column_box(wipe_label, 
                                  wipe_luma_combo_box)
 
-    color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(0,0,0,1))
-    color_button_box = guiutils.get_left_justified_box([color_button])
-    color_label = Gtk.Label(label=_("Dip Color:"))
-    color_row = get_two_column_box(color_label, color_button_box)
-
     wipe_luma_combo_box.set_sensitive(False)
-    color_button.set_sensitive(False)
     wipe_label.set_sensitive(False)
-    color_label.set_sensitive(False)
-
-    transition_type_widgets = (type_combo_box, wipe_luma_combo_box, color_button, wipe_label, color_label)
+    
+    transition_type_widgets = (type_combo_box, wipe_luma_combo_box, wipe_label)
     type_combo_box.connect("changed", 
                               lambda w,e: _transition_type_changed(transition_type_widgets), 
                               None)
@@ -353,7 +344,6 @@ def get_transition_panel(trans_data):
     edit_vbox.pack_start(type_row, False, False, 0)
     edit_vbox.pack_start(length_row, False, False, 0)
     edit_vbox.pack_start(wipe_row, False, False, 0)
-    edit_vbox.pack_start(color_row, False, False, 0)
 
     data_vbox = Gtk.VBox(False, 2)
     data_vbox.pack_start(out_handle_row, False, False, 0)
@@ -372,7 +362,7 @@ def get_transition_panel(trans_data):
 
     alignment = guiutils.set_margins(vbox, 12, 24, 12, 12)
 
-    return (alignment, type_combo_box, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button, steal_frames, encodings)
+    return (alignment, type_combo_box, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, steal_frames, encodings)
 
 def _get_encodings_widget_and_list():
     # We have an unexplained issue with rendering using libx264 vcodec
@@ -464,7 +454,6 @@ def _transition_encoding_changed(widgets):
     _fill_transition_quality_combo_box(widgets)
  
 def _fill_transition_quality_combo_box(widgets, quality_index=-1):
-
     encodings_cb, encodings, quality_cb = widgets
     sel_enc_index = encodings_cb.get_active()
     sel_enc = encodings[sel_enc_index]
@@ -500,22 +489,15 @@ def _set_saved_encoding(transition_widgets):
         quality_cb.set_active(quality_index)
     
 def _transition_type_changed(transition_type_widgets):
-    type_combo_box, wipe_luma_combo_box, color_button, wipe_label, color_label = transition_type_widgets
+    type_combo_box, wipe_luma_combo_box, wipe_label = transition_type_widgets
     if type_combo_box.get_active() == 0:
         wipe_luma_combo_box.set_sensitive(False)
-        color_button.set_sensitive(False)
         wipe_label.set_sensitive(False)
         color_label.set_sensitive(False)
     elif type_combo_box.get_active() == 1:
         wipe_luma_combo_box.set_sensitive(True)
-        color_button.set_sensitive(False)
         wipe_label.set_sensitive(True)
         color_label.set_sensitive(False)
-    else:
-        wipe_luma_combo_box.set_sensitive(False)
-        color_button.set_sensitive(True)
-        wipe_label.set_sensitive(False)
-        color_label.set_sensitive(True)
     
 def get_effect_selection_panel(double_click_cb):
     effects_list_view = guicomponents.FilterListView(None)

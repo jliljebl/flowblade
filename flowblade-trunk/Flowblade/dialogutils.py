@@ -209,6 +209,10 @@ def get_alignment2(panel):
 def set_outer_margins(cont):
     guiutils.set_margins(cont, 0, 6, 0, 6)
 
+def set_default_behaviour(dialog):
+    dialog.set_default_response(Gtk.ResponseType.OK)
+    dialog.set_resizable(False)
+    
 # ------------------------------------------------------------------ delayed window destroying 
 def delay_destroy_window(window, delay):
     GObject.timeout_add(int(delay * 1000), _window_destroy_event, window)

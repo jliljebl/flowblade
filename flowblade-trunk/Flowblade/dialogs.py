@@ -1406,19 +1406,7 @@ def export_edl_dialog(callback, parent_window, project_name):
     dialog.connect('response', callback)
     dialog.show()
 
-def transition_edit_dialog(callback, transition_data):
-    dialog = Gtk.Dialog(_("Add Transition"),  gui.editor_window.window,
-                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                        (_("Cancel"), Gtk.ResponseType.REJECT,
-                        _("Apply"), Gtk.ResponseType.ACCEPT))
 
-    alignment, type_combo, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button, steal_check, encodings = panels.get_transition_panel(transition_data)
-    widgets = (type_combo, length_entry, encodings_cb, quality_cb, wipe_luma_combo_box, color_button, steal_check, encodings)
-    dialog.connect('response', callback, widgets, transition_data)
-    dialog.vbox.pack_start(alignment, True, True, 0)
-    dialogutils.set_outer_margins(dialog.vbox)
-    _default_behaviour(dialog)
-    dialog.show_all()
 
 def transition_re_render_dialog(callback, transition_data):
     dialog = Gtk.Dialog(_("Rerender Transition"),  gui.editor_window.window,

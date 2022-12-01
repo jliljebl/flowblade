@@ -199,10 +199,7 @@ def init_module():
         
     # Rendered transition names and types
     rendered_transitions = [  (_("Dissolve"), RENDERED_DISSOLVE), 
-                              (_("Wipe"), RENDERED_WIPE),
-                              (_("Color Dip"), RENDERED_COLOR_DIP),
-                              (_("Fade In"), RENDERED_FADE_IN),
-                              (_("Fade Out"), RENDERED_FADE_OUT)]
+                              (_("Wipe"), RENDERED_WIPE)]
 
 # ------------------------------------------ compositors
 class CompositorTransitionInfo:
@@ -472,7 +469,6 @@ def is_alpha_combiner(compositor_type_test):
     
     return False
 
-
 # ------------------------------------------------------ rendered transitions
 # These are tractor objects used to create rendered transitions.
 def get_rendered_transition_tractor(current_sequence, 
@@ -483,8 +479,7 @@ def get_rendered_transition_tractor(current_sequence,
                                     action_to_out,
                                     action_to_in,
                                     transition_type_selection_index,
-                                    wipe_luma_sorted_keys_index,
-                                    gdk_color_str):
+                                    wipe_luma_sorted_keys_index):
 
     name, transition_type = rendered_transitions[transition_type_selection_index]
     
@@ -553,7 +548,7 @@ def get_rendered_transition_tractor(current_sequence,
     elif (transition_type == RENDERED_FADE_IN or transition_type == RENDERED_FADE_OUT):
         color_clip = patternproducer.create_color_producer(current_sequence.profile, gdk_color_str)
         track0.insert(color_clip, 0, 0, length)
-        if transition_type ==  RENDERED_FADE_IN:
+        if transition_type == RENDERED_FADE_IN:
             track1.insert(from_clip, 0, orig_from.clip_in, orig_from.clip_in + length)
             kf_str = "0=0/0:100%x100%:0.0;"+ str(length) + "=0/0:100%x100%:100.0"
         else: # transition_type ==  RENDERED_FADE_OUT
@@ -578,7 +573,7 @@ def get_rendered_transition_tractor(current_sequence,
     transition.set("a_track", 0)
     transition.set("b_track", 1)
 
-    # Setting luma resource file turns dissolve into wipe
+    # Setting luma resource file turns dissolve into wipe.
     if transition_type == RENDERED_WIPE:
         wipe_resource_path = get_wipe_resource_path_for_sorted_keys_index(wipe_luma_sorted_keys_index)
         transition.set("composite.luma", str(wipe_resource_path))
@@ -587,4 +582,5 @@ def get_rendered_transition_tractor(current_sequence,
     field = tractor.field()
     field.plant_transition(transition, 0,1)
 
+    print("kkkk")
     return tractor
