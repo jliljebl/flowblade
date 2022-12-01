@@ -491,12 +491,11 @@ def get_rendered_transition_tractor(current_sequence,
     current_sequence.clone_clip_and_filters(orig_from, from_clip)
 
     # New to clip
-    if not(transition_type == RENDERED_FADE_IN or transition_type == RENDERED_FADE_OUT): # fades to not use to_clip
-        if orig_to.media_type != appconsts.PATTERN_PRODUCER:
-            to_clip = current_sequence.create_file_producer_clip(orig_to.path, None, False, orig_to.ttl)# File producer
-        else:
-            to_clip = current_sequence.create_pattern_producer(orig_to.create_data) # pattern producer
-        current_sequence.clone_clip_and_filters(orig_to, to_clip)
+    if orig_to.media_type != appconsts.PATTERN_PRODUCER:
+        to_clip = current_sequence.create_file_producer_clip(orig_to.path, None, False, orig_to.ttl)# File producer
+    else:
+        to_clip = current_sequence.create_pattern_producer(orig_to.create_data) # pattern producer
+    current_sequence.clone_clip_and_filters(orig_to, to_clip)
 
     # Create tractor and tracks
     tractor = mlt.Tractor()
@@ -506,54 +505,29 @@ def get_rendered_transition_tractor(current_sequence,
     multitrack.connect(track0, 0)
     multitrack.connect(track1, 1)
 
-    # we'll set in and out points for images and pattern producers.
-    if not(transition_type == RENDERED_FADE_IN or transition_type == RENDERED_FADE_OUT): # fades to not use to_clip or some other data used here
-        if from_clip.media_type == appconsts.IMAGE or from_clip.media_type == appconsts.PATTERN_PRODUCER:
-            length = action_from_out - action_from_in
-            from_clip.clip_in = 0
-            from_clip.clip_out = length
+    # Set in and out points for images and pattern producers.
+    if from_clip.media_type == appconsts.IMAGE or from_clip.media_type == appconsts.PATTERN_PRODUCER:
+        length = action_from_out - action_from_in
+        from_clip.clip_in = 0
+        from_clip.clip_out = length
 
-        if to_clip.media_type == appconsts.IMAGE or to_clip.media_type == appconsts.PATTERN_PRODUCER:
-            length = action_to_out - action_to_in
-            to_clip.clip_in = 0
-            to_clip.clip_out = length
-    else:
-        length = action_from_out
-        if from_clip.media_type == appconsts.IMAGE or from_clip.media_type == appconsts.PATTERN_PRODUCER:
-            from_clip.clip_in = 0
-            from_clip.clip_out = length
+    if to_clip.media_type == appconsts.IMAGE or to_clip.media_type == appconsts.PATTERN_PRODUCER:
+        length = action_to_out - action_to_in
+        to_clip.clip_in = 0
+        to_clip.clip_out = length
             
     # Add clips to tracks and create keyframe string for mixing
-    if transition_type == RENDERED_DISSOLVE or transition_type == RENDERED_WIPE:
-        # Add clips. Images and pattern producers always fill full track.
-        if from_clip.media_type != appconsts.IMAGE and from_clip.media_type != appconsts.PATTERN_PRODUCER:
-            track0.insert(from_clip, 0, action_from_in, action_from_out)
-        else:
-            track0.insert(from_clip, 0, 0, action_from_out - action_from_in)
-            
-        if to_clip.media_type != appconsts.IMAGE and to_clip.media_type != appconsts.PATTERN_PRODUCER: 
-            track1.insert(to_clip, 0, action_to_in, action_to_out)
-        else:
-            track1.insert(to_clip, 0, 0,  action_to_out - action_to_in)
-        kf_str = "0=0/0:100%x100%:0.0;"+ str(tractor.get_length() - 1) + "=0/0:100%x100%:100.0"
-    elif transition_type == RENDERED_COLOR_DIP:
-        length = action_from_out - action_from_in
-        first_clip_length = length // 2
-        second_clip_length = length - first_clip_length
-        color_clip = patternproducer.create_color_producer(current_sequence.profile, gdk_color_str)
-        track0.insert(color_clip, 0, 0, length)
-        track1.insert(from_clip, 0, action_from_in, action_from_in + first_clip_length)
-        track1.insert(to_clip, 1, action_to_out - second_clip_length, action_to_out)
-        kf_str = "0=0/0:100%x100%:100.0;"+ str(first_clip_length) + "=0/0:100%x100%:0.0;" + str(tractor.get_length() - 1) + "=0/0:100%x100%:100.0"
-    elif (transition_type == RENDERED_FADE_IN or transition_type == RENDERED_FADE_OUT):
-        color_clip = patternproducer.create_color_producer(current_sequence.profile, gdk_color_str)
-        track0.insert(color_clip, 0, 0, length)
-        if transition_type == RENDERED_FADE_IN:
-            track1.insert(from_clip, 0, orig_from.clip_in, orig_from.clip_in + length)
-            kf_str = "0=0/0:100%x100%:0.0;"+ str(length) + "=0/0:100%x100%:100.0"
-        else: # transition_type ==  RENDERED_FADE_OUT
-            track1.insert(from_clip, 0, orig_from.clip_out - length + 1, orig_from.clip_out + 1)
-            kf_str = "0=0/0:100%x100%:100.0;"+ str(length) + "=0/0:100%x100%:0.0"
+    # Images and pattern producers always fill full track.
+    if from_clip.media_type != appconsts.IMAGE and from_clip.media_type != appconsts.PATTERN_PRODUCER:
+        track0.insert(from_clip, 0, action_from_in, action_from_out)
+    else:
+        track0.insert(from_clip, 0, 0, action_from_out - action_from_in)
+        
+    if to_clip.media_type != appconsts.IMAGE and to_clip.media_type != appconsts.PATTERN_PRODUCER: 
+        track1.insert(to_clip, 0, action_to_in, action_to_out)
+    else:
+        track1.insert(to_clip, 0, 0,  action_to_out - action_to_in)
+    kf_str = "0=0/0:100%x100%:0.0;"+ str(tractor.get_length() - 1) + "=0/0:100%x100%:100.0"
 
     # Create transition
     transition = mlt.Transition(current_sequence.profile, "region")
@@ -582,5 +556,4 @@ def get_rendered_transition_tractor(current_sequence,
     field = tractor.field()
     field.plant_transition(transition, 0,1)
 
-    print("kkkk")
     return tractor
