@@ -1432,7 +1432,7 @@ menu, .menu {
     border-radius: 2px;
     border: none; }
   menu separator, .csd menu separator, .menu separator, .csd .menu separator {
-    margin: 2px 0;
+    margin: 10px 0;
     background-color: #272730; }
   menu .separator:not(label), .csd menu .separator:not(label), .menu .separator:not(label), .csd .menu .separator:not(label) {
     color: #272730; }
