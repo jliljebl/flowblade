@@ -18,9 +18,12 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 
+import hashlib
+import os
 import threading
+import time
 
 import appconsts
 import dialogs
@@ -32,11 +35,13 @@ from editorstate import get_track
 from editorstate import PROJECT
 from editorstate import PLAYER
 import gui
+import guiutils
 import mlttransitions
 import movemodes
 import panels
 import renderconsumer
 import render
+import userfolders
 
 # Used to store transition render data used at render complete callback.
 transition_render_data = None
@@ -482,7 +487,7 @@ def _show_failure_to_steal_frames_dialog(from_needed, from_length, to_needed, to
 
 
 
-def rerender_all_rendered_transitions_and_fades():
+def rerender_all_rendered_transitions():
     seq = editorstate.current_sequence()
     
     # Get list of rerendered transitions and unrenderable count
@@ -494,8 +499,8 @@ def rerender_all_rendered_transitions_and_fades():
             clip = track.clips[j]
             if hasattr(clip, "rendered_type"):
                 if hasattr(clip, "creation_data"):
-                    from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_selection_index, \
-                        sorted_wipe_luma_index, color_str = clip.creation_data
+                    from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, \
+                    transition_type_selection_index, sorted_wipe_luma_index = clip.creation_data
                     from_clip = editorstate.current_sequence().get_clip_for_id(from_clip_id)
                     to_clip = editorstate.current_sequence().get_clip_for_id(to_clip_id)
                     # transition
@@ -607,7 +612,7 @@ class ReRenderderAllWindow:
 
     def _render_transition(self, clip, track, consumer, write_file):
         from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_selection_index, \
-        sorted_wipe_luma_index, color_str = clip.creation_data
+        sorted_wipe_luma_index = clip.creation_data
 
         from_clip = editorstate.current_sequence().get_clip_for_id(from_clip_id)
         to_clip = editorstate.current_sequence().get_clip_for_id(to_clip_id)
@@ -620,8 +625,7 @@ class ReRenderderAllWindow:
                                                                             to_out,
                                                                             to_in,
                                                                             transition_type_selection_index,
-                                                                            sorted_wipe_luma_index,
-                                                                            color_str)
+                                                                            sorted_wipe_luma_index)
         
         # start and end frames
         start_frame = 0
@@ -666,39 +670,24 @@ class ReRenderderAllWindow:
             orig_clip, track, new_clip_path = render_item
             
             from_clip_id, to_clip_id, from_out, from_in, to_out, to_in, transition_type_index, \
-            sorted_wipe_luma_index, color_str = orig_clip.creation_data
+            sorted_wipe_luma_index = orig_clip.creation_data
         
             clip_index = track.clips.index(orig_clip)
                         
-            if orig_clip.rendered_type > appconsts.RENDERED_COLOR_DIP:
-                new_fade_clip = current_sequence().create_rendered_transition_clip(new_clip_path, transition_type_index)
-                new_fade_clip.creation_data = orig_clip.creation_data
+    
+            transition_clip = current_sequence().create_rendered_transition_clip(new_clip_path, transition_type_index)
+            transition_clip.creation_data = orig_clip.creation_data
+            transition_clip.clip_in = orig_clip.clip_in
+            transition_clip.clip_out = orig_clip.clip_out
 
-                length = orig_clip.clip_out - orig_clip.clip_in + 1
-        
-                data = {"fade_clip":new_fade_clip,
-                        "index":clip_index,
-                        "track":track,
-                        "length":length}
-                
-                Gdk.threads_enter()
-                action = edit.replace_rendered_fade_action(data)
-                action.do_edit()
-                Gdk.threads_leave()
-            else:
-                transition_clip = current_sequence().create_rendered_transition_clip(new_clip_path, transition_type_index)
-                transition_clip.creation_data = orig_clip.creation_data
-                transition_clip.clip_in = orig_clip.clip_in
-                transition_clip.clip_out = orig_clip.clip_out
-
-                data = {"track":track,
-                        "transition_clip":transition_clip,
-                        "transition_index":clip_index}
-                        
-                Gdk.threads_enter()
-                action = edit.replace_centered_transition_action(data)
-                action.do_edit()
-                Gdk.threads_leave()
+            data = {"track":track,
+                    "transition_clip":transition_clip,
+                    "transition_index":clip_index}
+                    
+            Gdk.threads_enter()
+            action = edit.replace_centered_transition_action(data)
+            action.do_edit()
+            Gdk.threads_leave()
 
         Gdk.threads_enter()
         self.dialog.destroy()

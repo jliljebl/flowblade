@@ -529,7 +529,6 @@ def get_rendered_transition_tractor(current_sequence,
     else:
         track1.insert(to_clip, 0, 0,  action_to_out - action_to_in)
 
-
     # Create transition
     kf_str = "0=0.0;"+ str(tractor.get_length() - 1) + "=1.0"
     transition = mlt.Transition(current_sequence.profile, "frei0r.cairoblend")
@@ -545,10 +544,8 @@ def get_rendered_transition_tractor(current_sequence,
     
     # Do wipe with "shape" filter.
     if transition_type == RENDERED_WIPE:
-        print("hashdashdashdhas")
         kf_str = "0=0.0;"+ str(tractor.get_length() - 1) + "=100.0"
         wipe_resource_path = get_wipe_resource_path_for_sorted_keys_index(wipe_luma_sorted_keys_index)
-        print(wipe_resource_path)
         filter_object = mltfilters.FilterObject(mltfilters._shape_filter_info)
         filter_object.create_mlt_filter(current_sequence.profile)
         filter_object.mlt_filter.set(str("resource"), str(wipe_resource_path))
