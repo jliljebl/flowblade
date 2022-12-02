@@ -901,7 +901,7 @@ class EditorWindow:
             ('InsertClip', None, _('Insert'), None, None, lambda a:tlineaction.insert_button_pressed()),
             ('ThreepointOverWriteClip', None, _('Three Point Overwrite'), None, None, lambda a:tlineaction.three_point_overwrite_pressed()),
             ('RangeOverWriteClip', None, _('Range Overwrite'), None, None, lambda a:tlineaction.range_overwrite_pressed()),
-            ('CutClip', None, _('Cut Clip'), None, None, lambda a:tlineaction.cut_pressed()),
+            ('CutClip', None, _('Cut Clip At Playhead'), None, None, lambda a:tlineaction.cut_pressed()),
             ('SequenceSplit', None, _('Split to new Sequence at Playhead Position'), None, None, lambda a:tlineaction.sequence_split_pressed()),
             ('DeleteClip', None, _('Lift'), None, None, lambda a:tlineaction.lift_button_pressed()),
             ('SpliceOutClip', None, _('Splice Out'), None, None, lambda a:tlineaction.splice_out_button_pressed()),
@@ -985,6 +985,7 @@ class EditorWindow:
                     <menuitem action='New'/>
                     <menuitem action='Open'/>
                     <menu action='OpenRecent'/>
+                    <separator/>
                     <menuitem action='Save'/>
                     <menuitem action='Save As'/>
                     <menuitem action='SaveSnapshot'/>
@@ -1015,15 +1016,15 @@ class EditorWindow:
                     </menu>
                     <separator/>
                     <menuitem action='CutClip'/>
-                    <separator/>
                     <menuitem action='SpliceOutClip'/>
                     <menuitem action='DeleteClip'/>
-                    <menuitem action='ResyncSelected'/>
-                    <menuitem action='ClearFilters'/>
                     <separator/>
                     <menuitem action='SyncCompositors'/>
+                    <menuitem action='ResyncSelected'/>
+                    <separator/>
                     <menuitem action='FiltersOff'/>
                     <menuitem action='FiltersOn'/>
+                    <menuitem action='ClearFilters'/>
                     <separator/>
                     <menuitem action='AddTransition'/>
                     <separator/>
@@ -1040,9 +1041,8 @@ class EditorWindow:
                     <menuitem action='AddImageSequence'/>
                     <menuitem action='AddMediaPlugin'/>
                     <separator/>
-                    <menuitem action='LoadMediaPluginScript'/>
-                    <separator/>
                     <menuitem action='AddMediaFolder'/>
+                    <menuitem action='LoadMediaPluginScript'/>
                     <separator/>
                     <menuitem action='CreateColorClip'/>
                     <menu action='ContainerClipsMenu'>
@@ -1051,7 +1051,6 @@ class EditorWindow:
                         <menuitem action='AudioSyncCompoundClip'/>
                         <separator/>
                         <menuitem action='CreateGMicContainerItem'/>
-                        <menuitem action='CreateBlenderContainerItem'/>
                     </menu>
                     <separator/>
                     <menu action='BinMenu'>
