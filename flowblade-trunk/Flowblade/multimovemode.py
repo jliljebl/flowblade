@@ -22,16 +22,31 @@ from gi.repository import Gdk
 
 import appconsts
 import dialogutils
+import gui
 import edit
 from editorstate import current_sequence
+import editorstate
 import tlinewidgets
 import updater
 
 MAX_DELTA = 100000000
-        
+
+
+
 edit_data = None
 mouse_disabled = True
 
+# ------------------------------------- edit mode setting
+def set_default_edit_mode(disable_mouse=False):
+    """
+    This is used as global 'go to start position' exit door from
+    situations where for example user is in trim and exits it
+    without specifying which edit mode to go to.
+    """
+    gui.editor_window.set_default_edit_tool()
+    if disable_mouse:
+        editorstate.timeline_mouse_disabled = True
+        
 class MultimoveData:
     """
     This class collects and saves data that enables a "Multi" tool edit to be performed.
@@ -237,10 +252,12 @@ def mouse_press(event, frame):
     track = tlinewidgets.get_track(y)  
     if track == None:
         mouse_disabled = True
+        set_default_edit_mode(True)
         return
 
     if dialogutils.track_lock_check_and_user_info(track):
         mouse_disabled = True
+        set_default_edit_mode(True)
         return
 
     # Get pressed clip index
@@ -249,7 +266,9 @@ def mouse_press(event, frame):
     # Selecting empty or blank clip does not define edit
     if clip_index == -1:
         mouse_disabled = True
+        set_default_edit_mode(True)
         return
+
     pressed_clip = track.clips[clip_index]
     if pressed_clip.is_blanck_clip:
         mouse_disabled = True
