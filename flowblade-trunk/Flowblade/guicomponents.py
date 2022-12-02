@@ -1888,12 +1888,11 @@ def display_audio_clip_popup_menu(event, clip, track, callback):
     clip_menu = audio_clip_menu
     guiutils.remove_children(clip_menu)
 
-    clip_menu.add(_get_menu_item(_("Edit Filters"), callback, (clip, track, "open_in_editor", event.x)))
+
     if clip.media_type != appconsts.PATTERN_PRODUCER:
         clip_menu.add(_get_menu_item(_("Open in Clip Monitor"), callback,\
                       (clip, track, "open_in_clip_monitor", event.x)))
-
-    _add_separetor(clip_menu)
+        _add_separetor(clip_menu)
 
     if clip.sync_data != None:
         clip_menu.add(_get_menu_item(_("Resync"), callback, (clip, track, "resync", event.x)))
@@ -1916,10 +1915,6 @@ def display_audio_clip_popup_menu(event, clip, track, callback):
 
     _add_separetor(clip_menu)
 
-    clip_menu.add(_get_audio_filters_add_menu_item(event, clip, track, callback))
-
-    _add_separetor(clip_menu)
-
     clip_menu.add(_get_menu_item(_("Rename Clip"), callback,\
                       (clip, track, "rename_clip", event.x)))
     clip_menu.add(_get_color_menu_item(clip, track, callback))
@@ -1927,12 +1922,19 @@ def display_audio_clip_popup_menu(event, clip, track, callback):
                   (clip, track, "clip_info", event.x)))
 
     _add_separetor(clip_menu)
-    clip_menu.add(_get_select_menu_item(event, clip, track, callback))
-
-    _add_separetor(clip_menu)
     
+    clip_menu.add(_get_select_menu_item(event, clip, track, callback))
     clip_menu.add(_get_edit_menu_item(event, clip, track, callback))
 
+    _add_separetor(clip_menu)
+
+    clip_menu.add(_get_audio_filters_add_menu_item(event, clip, track, callback))
+    clip_menu.add(_get_menu_item(_("Clear Filters"), callback, (clip, track, "clear_filters", event.x)))
+    
+    _add_separetor(clip_menu)
+    
+    clip_menu.add(_get_menu_item(_("Edit Filters"), callback, (clip, track, "open_in_editor", event.x)))
+    
     clip_menu.popup(None, None, None, None, event.button, event.time)
 
 def display_compositor_popup_menu(event, compositor, callback):
