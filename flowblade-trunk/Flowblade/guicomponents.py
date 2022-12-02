@@ -1687,13 +1687,6 @@ def display_clip_popup_menu(event, clip, track, callback):
     _add_separetor(clip_menu)
 
     clip_menu.add(_get_audio_menu_item(event, clip, track, callback))
-  
-    _add_separetor(clip_menu)
-    
-    clip_menu.add(_get_menu_item(_("Edit Filters"), callback, (clip, track, "open_in_editor", event.x)))
-    clip_menu.add(_get_filters_add_menu_item(event, clip, track, callback))
-    clip_menu.add(_get_clone_filters_menu_item(event, clip, track, callback))
-    clip_menu.add(_get_menu_item(_("Clear Filters"), callback, (clip, track, "clear_filters", event.x)))
 
     _add_separetor(clip_menu)
     
@@ -1737,15 +1730,23 @@ def display_clip_popup_menu(event, clip, track, callback):
 
     _add_separetor(clip_menu)
     clip_menu.add(_get_select_menu_item(event, clip, track, callback))
-    
-    _add_separetor(clip_menu)
     clip_menu.add(_get_edit_menu_item(event, clip, track, callback))
     
     if clip.container_data != None:
         _add_separetor(clip_menu)
         #clip_menu.add(_get_container_clip_menu_items(clip_menu, event, clip, track, callback))
         _get_container_clip_menu_items(clip_menu, event, clip, track, callback)
-        
+
+    _add_separetor(clip_menu)
+
+    clip_menu.add(_get_filters_add_menu_item(event, clip, track, callback))
+    clip_menu.add(_get_clone_filters_menu_item(event, clip, track, callback))
+    clip_menu.add(_get_menu_item(_("Clear Filters"), callback, (clip, track, "clear_filters", event.x)))
+    
+    _add_separetor(clip_menu)
+    
+    clip_menu.add(_get_menu_item(_("Edit Filters"), callback, (clip, track, "open_in_editor", event.x)))
+
     clip_menu.popup(None, None, None, None, event.button, event.time)
 
 def display_multi_clip_popup_menu(event, clip, track, callback):
