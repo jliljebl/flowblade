@@ -31,17 +31,13 @@ import updater
 
 MAX_DELTA = 100000000
 
-
-
 edit_data = None
 mouse_disabled = True
 
 # ------------------------------------- edit mode setting
 def set_default_edit_mode(disable_mouse=False):
     """
-    This is used as global 'go to start position' exit door from
-    situations where for example user is in trim and exits it
-    without specifying which edit mode to go to.
+    We interpret clicks on empty in this tool as request to exit to default edit tool.
     """
     gui.editor_window.set_default_edit_tool()
     if disable_mouse:
