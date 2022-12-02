@@ -1929,6 +1929,7 @@ def display_audio_clip_popup_menu(event, clip, track, callback):
     _add_separetor(clip_menu)
 
     clip_menu.add(_get_audio_filters_add_menu_item(event, clip, track, callback))
+    clip_menu.add(_get_clone_filters_menu_item(event, clip, track, callback))
     clip_menu.add(_get_menu_item(_("Clear Filters"), callback, (clip, track, "clear_filters", event.x)))
     
     _add_separetor(clip_menu)
