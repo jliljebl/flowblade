@@ -332,11 +332,23 @@ def _has_deprecated_volume_filter(clip):
         return False
 
 def exit_tool():
+    if _kf_editor == None:
+        editor_was_open = False
+    else:
+        editor_was_open = True
+                
     set_no_clip_edit_data()
+    
     global enter_mode
     if enter_mode != None:
+        # Exit to enter mode if we had one.
         gui.editor_window.kf_tool_exit_to_mode(enter_mode)
         enter_mode = None
+    else:
+        # Exit to default mode if no editor was open.
+        if editor_was_open == False:
+            gui.editor_window.set_default_edit_tool()
+
     updater.repaint_tline()
         
 def _filter_create_dummy_func(obj1, obj2):
