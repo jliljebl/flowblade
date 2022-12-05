@@ -451,6 +451,8 @@ def set_clip(clip, track, clip_index, show_tab=True):
     widgets.clip_info.display_clip_info(clip, track, clip_index)
     set_enabled(True)
     update_stack(clip, track, clip_index)
+    if len(clip.filters) > 0:
+        set_filter_item_expanded(len(clip.filters) - 1)
 
     if len(clip.filters) > 0:
         pass # remove if nothing needed here.
