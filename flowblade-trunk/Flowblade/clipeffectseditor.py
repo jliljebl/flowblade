@@ -38,6 +38,7 @@ import editorlayout
 import editorpersistance
 import editorstate
 from editorstate import PROJECT
+from editorstate import PLAYER
 import gui
 import guicomponents
 import guiutils
@@ -448,6 +449,10 @@ def set_clip(clip, track, clip_index, show_tab=True):
     global keyframe_editor_widgets
     keyframe_editor_widgets = []
 
+    if _filter_stack != None and clip != _filter_stack.clip:
+        clip_start_frame = track.clip_start(clip_index)
+        PLAYER().seek_frame(clip_start_frame)
+    
     widgets.clip_info.display_clip_info(clip, track, clip_index)
     set_enabled(True)
     update_stack(clip, track, clip_index)

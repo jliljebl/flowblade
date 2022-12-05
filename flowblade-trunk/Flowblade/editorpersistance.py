@@ -278,7 +278,7 @@ class EditorPreferences:
         self.thumbnail_folder = None # DEPRECATED, this is set by XDG variables now.
         self.hidden_profile_names = []
         self.display_splash_screen = True
-        self.auto_move_after_edit = False
+        self.auto_move_after_edit = False # DEPRECATED
         self.default_grfx_length = 250 # value is in frames
         self.track_configuration = 0 # DEPRECATED
         self.AUTO_SAVE_OPTS = None # not used.
