@@ -283,7 +283,7 @@ COPY_PASTE_GEOMETRY_EDITOR_KF_DATA = 4
 # Timeline Compositong modes
 COMPOSITING_MODE_TOP_DOWN_FREE_MOVE = 0
 COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW = 1 # Deprecated, mode removed 2.6 ->
-COMPOSITING_MODE_STANDARD_AUTO_FOLLOW = 2
+COMPOSITING_MODE_STANDARD_AUTO_FOLLOW = 2  # Deprecated, mode removed 2.10 ->
 COMPOSITING_MODE_STANDARD_FULL_TRACK = 3
 
 # Magic string for selection path being user home directory root

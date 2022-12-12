@@ -1258,29 +1258,24 @@ class EditorWindow:
         guiutils.remove_children(menu)
 
         comp_top_free = Gtk.RadioMenuItem()
-        comp_top_free.set_label(_("Top Down Free Move"))
+        comp_top_free.set_label(_("Compositors Free Move"))
         comp_top_free.show()
         menu.append(comp_top_free)
-
-        comp_standard_auto = Gtk.RadioMenuItem.new_with_label([comp_top_free],_("Auto Follow"))
-        comp_standard_auto.show()
-        menu.append(comp_standard_auto)
 
         comp_standard_full = Gtk.RadioMenuItem.new_with_label([comp_top_free],_("Standard Full Track"))
         comp_standard_full.show()
         menu.append(comp_standard_full)
 
-        menu_items = [comp_top_free, comp_standard_auto, comp_standard_full]
+        menu_items = [comp_top_free, comp_standard_full]
         comp_mode = editorstate.get_compositing_mode()
         
         # We dropped compositing mode COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW so compositing mode values no longer
-        # correspond to menu indexes.
-        comp_mode_to_menu_index = {0:0, 1:0, 2:1, 3:2}
+        # correspond to menu indexes.    
+        comp_mode_to_menu_index = {appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE:0, appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:1}
         menu_index = comp_mode_to_menu_index[editorstate.get_compositing_mode()]
         menu_items[menu_index].set_active(True)
 
         comp_top_free.connect("toggled", lambda w: projectaction.change_current_sequence_compositing_mode(w, appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE))
-        comp_standard_auto.connect("toggled", lambda w: projectaction.change_current_sequence_compositing_mode(w, appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW))
         comp_standard_full.connect("toggled", lambda w: projectaction.change_current_sequence_compositing_mode(w, appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK))
 
     def init_timeline_rendering_menu(self):
