@@ -78,7 +78,7 @@ def FIX_MISSING_SEQUENCE_ATTRS(seq):
 def FIX_DEPRECATED_SEQUENCE_COMPOSITING_MODE(seq):
     # Compositing mode COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW was removed 2.6->, we just convert it 
     # to COMPOSITING_MODE_TOP_DOWN_FREE_MOVE.
-    if seq.compositing_mode == appconsts.COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW:
+    if seq.compositing_mode == appconsts.COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW or seq.compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
         seq.compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
 
 def FIX_FULLTRACK_COMPOSITING_MODE_COMPOSITORS(seq):
