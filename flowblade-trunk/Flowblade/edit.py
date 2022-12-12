@@ -358,7 +358,7 @@ class EditAction:
         trackaction.maybe_do_auto_expand(tracks_clips_count_before)
 
 
-        #AUTOFOLLOW IS BEING KILLED
+        # AUTOFOLLOW IS BEING KILLED
         # Create autofollow data if needed and update GUI.
         # If autofollow and no data, then GUI update happens in do_edit()
         # Added complexity here is to avoid two GUI updates
