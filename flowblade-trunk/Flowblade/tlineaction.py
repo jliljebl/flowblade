@@ -995,11 +995,16 @@ def do_timeline_filters_paste():
     track = current_sequence().tracks[movemodes.selected_track]
     for i in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
         target_clips.append(track.clips[i])
-        
+    
+    actions = []    
     for target_clip in target_clips:
         data = {"clip":target_clip,"clone_source_clip":source_clip}
         action = edit.paste_filters_action(data)
-        action.do_edit()
+        actions.append(action)
+        #action.do_edit()
+
+    c_action = edit.ConsolidatedEditAction(actions)
+    c_action.do_consolidated_edit()
 
 def do_compositor_data_paste(paste_objs):
     data_type, paste_data = paste_objs

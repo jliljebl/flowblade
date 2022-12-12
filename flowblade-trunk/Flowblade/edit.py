@@ -315,7 +315,11 @@ class EditAction:
         
         # Other then actual trim edits, attempting all edits exits active trimodes and enters <X>_NO_EDIT trim mode.
         self.exit_active_trimmode_on_edit = True
-        
+
+        # If edit is part of group some updates are only done once for the whole 
+        # group.
+        self.is_part_of_consolidated_group = False
+
         # HACK!!!! Overwrite edits crash at redo(sometimes undo) when current frame inside 
         # affected area if consumer running.
         # Remove when fixed in MLT.
@@ -353,6 +357,8 @@ class EditAction:
 
         trackaction.maybe_do_auto_expand(tracks_clips_count_before)
 
+
+        #AUTOFOLLOW IS BEING KILLED
         # Create autofollow data if needed and update GUI.
         # If autofollow and no data, then GUI update happens in do_edit()
         # Added complexity here is to avoid two GUI updates
@@ -370,7 +376,7 @@ class EditAction:
             # This wasn't done in redo() because no auto follow data was available
             if do_gui_update:
                 self._update_gui()
-
+        
     def undo(self):
         PLAYER().stop_playback()
 
@@ -410,7 +416,7 @@ class EditAction:
         PLAYER().stop_playback()
 
         # HACK, see above in __init()__
-        if self.stop_for_edit:
+        if self.stop_for_edit and self.is_part_of_consolidated_group == False:
             PLAYER().consumer.stop()
 
         movemodes.clear_selected_clips() # selection is not valid after a change in sequence
@@ -434,7 +440,7 @@ class EditAction:
         tlinewidgets.set_match_frame(-1, -1, True)
 
         # HACK, see above.
-        if self.stop_for_edit:
+        if self.stop_for_edit and self.is_part_of_consolidated_group == False:
             PLAYER().consumer.start()
 
         self.do_restack_compositors = False # We wish to do this only once
@@ -468,6 +474,62 @@ class EditAction:
         updater.update_seqence_info_text()
 
 
+
+
+class ConsolidatedEditAction:
+    """
+    Combines 1 - n of EditAction objects in a group so that they are represented 
+    in undo stack as a single undoable action.
+    """
+
+    def __init__(self, edit_actions):
+        self.edit_actions = edit_actions
+
+    def do_consolidated_edit(self):
+        # There is 1 - n edits in these,
+        # and they are assumed to be all of the same type.
+        if self.edit_actions[0].exit_active_trimmode_on_edit:
+            trimmodes.set_no_edit_trim_mode()
+
+        # We only want to do one consumer stop per group.
+        if self.edit_actions[0].stop_for_edit or self.edit_actions[0].turn_on_stop_for_edit:
+            PLAYER().consumer.stop()
+            
+        for edit_action in self.edit_actions:
+            edit_action.is_part_of_consolidated_group = True
+            
+            #f edit_action.turn_on_stop_for_edit:
+            #    edit_action.stop_for_edit = True
+            
+            # Tracks autoexpand-on-drop feature needs to be here to avoid caching data.
+            tracks_clips_count_before = current_sequence().get_tracks_clips_counts()
+
+            edit_action.redo()
+            #undo.register_edit(self)
+            if edit_action.turn_on_stop_for_edit:
+                edit_action = True
+
+            global edit_done_since_last_save
+            edit_done_since_last_save = True
+
+            trackaction.maybe_do_auto_expand(tracks_clips_count_before)
+            edit_action._update_gui()
+        
+        undo.register_edit(self)
+
+        # We only want to do one consumer start per group.
+        if self.edit_actions[0].stop_for_edit or self.edit_actions[0].turn_on_stop_for_edit:
+            PLAYER().consumer.start()
+            
+    def redo(self):
+        for edit_action in self.edit_actions:
+            edit_action.redo()
+            
+    def undo(self):
+        for edit_action in reversed(self.edit_actions):
+            #edit_action = self.edit_actions[i]
+            edit_action.undo()
+        
 # ---------------------------------------------------- compositor sync methods
 def get_full_compositor_sync_data():
     # Returns list of tuples in form (compositor, orig_in, orig_out, clip_start, clip_end)
