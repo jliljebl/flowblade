@@ -469,28 +469,25 @@ def tline_effect_drop(x, y):
     if dialogutils.track_lock_check_and_user_info(track):
         modesetting.set_default_edit_mode()
         return
-    
+
+        
+    filter_info = clipeffectseditor.get_currently_selected_filter_info()
+                
     selected_track_before = movemodes.selected_track
     selected_in_before = movemodes.selected_range_in
     selected_out_before = movemodes.selected_range_out
-    
-    if clipeffectseditor.clip_is_being_edited(clip) == False:
-        clipeffectseditor.set_clip(clip, track, index)
-    
-    clipeffectseditor.add_currently_selected_effect() # drag start selects the dragged effect
-    filter_info = clipeffectseditor.get_currently_selected_filter_info()
-    clipeffectseditor.set_filter_item_expanded(len(clip.filters) - 1)
         
-    if selected_track_before != track.id:
-        return
+    #if selected_track_before != track.id:
+    #    return
     
-    if not((selected_in_before <= index) and (selected_out_before >= index)):
-        return
+    #if not((selected_in_before <= index) and (selected_out_before >= index)):
+    #    return
     
-    if selected_in_before != -1:
+    # Effect dropped on selected range, add to all in range.
+    print((selected_in_before != -1), (selected_track_before == track.id), ((selected_in_before <= index) and (selected_out_before >= index)))
+    if selected_in_before != -1 and selected_track_before == track.id and ((selected_in_before <= index) and (selected_out_before >= index)):
+        actions = []
         for add_index in range(selected_in_before, selected_out_before + 1):
-            if add_index == index: # We already did this.
-                continue
             add_clip = track.clips[add_index]
             if add_clip.is_blanck_clip == True:
                 continue
@@ -499,10 +496,28 @@ def tline_effect_drop(x, y):
                     "filter_info":filter_info,
                     "filter_edit_done_func":clipeffectseditor.filter_edit_done_stack_update}
             action = edit.add_filter_action(data)
-            action.do_edit()
+            actions.append(action)
     
-        clipeffectseditor.set_filter_item_expanded(len(clip.filters) - 1)
+        if len(actions) > 0:
+            c_action = edit.ConsolidatedEditAction(actions)
+            c_action.do_consolidated_edit()
             
+            clipeffectseditor.set_filter_item_expanded(len(clip.filters) - 1)
+    else:
+        # Effect dropped on selected range update all in range.
+        #if clipeffectseditor.clip_is_being_edited(clip) == False:
+        #    clipeffectseditor.set_clip(clip, track, index)
+
+        data = {"clip":clip, 
+                "filter_info":filter_info,
+                "filter_edit_done_func":clipeffectseditor.filter_edit_done_stack_update}
+        action = edit.add_filter_action(data)
+        action.do_edit()
+        
+        #clipeffectseditor.add_currently_selected_effect() # drag start selects the dragged effect
+        #clipeffectseditor.set_clip(clip, track, index)
+        #clipeffectseditor.set_filter_item_expanded(len(clip.filters) - 1)
+    
 def tline_media_drop(drag_data, x, y, use_marks=False):
     # drag_data not used unless we wich later to enable dropping multiple media items.
     track = tlinewidgets.get_track(y)

@@ -436,6 +436,7 @@ class ConsolidatedEditAction:
     """
     Combines 1 - n EditAction objects in a group so that they are represented 
     in the undo stack as a single un-doable action.
+    Edits are assumed to be all of the same type.
     """
 
     def __init__(self, edit_actions):

@@ -1800,18 +1800,9 @@ def display_multi_clip_popup_menu(event, clip, track, callback):
         else:
             active = True
         compositors_add_item = _get_compositors_add_menu_item(event, clip, track, callback, active)
-        if (current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW 
-            and len(current_sequence().get_clip_compositors(clip)) != 0):
-            compositors_add_item.set_sensitive(False)
         clip_menu.add(compositors_add_item)
 
-        if current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
-            clip_menu.add(_get_auto_fade_compositors_add_menu_item(event, clip, track, callback, active))
-
-        if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
-            item_text = _("Delete Compositor")
-        else:
-            item_text = _("Delete Compositor/s")
+        item_text = _("Delete Compositor/s")
         comp_delete_item = _get_menu_item(item_text, callback, (clip, track, "multi_delete_compositors", event.x))
         if len(current_sequence().get_clip_compositors(clip)) == 0:
             comp_delete_item.set_sensitive(False)

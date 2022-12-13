@@ -1001,7 +1001,6 @@ def do_timeline_filters_paste():
         data = {"clip":target_clip,"clone_source_clip":source_clip}
         action = edit.paste_filters_action(data)
         actions.append(action)
-        #action.do_edit()
 
     c_action = edit.ConsolidatedEditAction(actions)
     c_action.do_consolidated_edit()
