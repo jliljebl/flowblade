@@ -612,12 +612,14 @@ def update_stack(clip, track, clip_index):
     widgets.value_edit_frame.add(scroll_window)
 
     widgets.value_edit_box = scroll_window
-    
+
+"""
 def update_stack_changed_blocked():
     global _block_changed_update
     _block_changed_update = True
     update_stack()
     _block_changed_update = False
+"""
 
 def _alpha_filter_add_maybe_info(filter_info):
     if editorpersistance.prefs.show_alpha_info_message == True and \
@@ -823,10 +825,7 @@ def show_text_in_edit_area(text):
     widgets.value_edit_box = scroll_window
 
 def clear_effects_edit_panel():
-    widgets.value_edit_frame.remove(widgets.value_edit_box)
-    label = Gtk.Label()
-    widgets.value_edit_frame.add(label)
-    widgets.value_edit_box = label
+    show_text_in_edit_area(_("Clip Has No Filters"))
 
 def filter_edit_done_stack_update(edited_clip, index=-1):
     """
@@ -839,17 +838,17 @@ def filter_edit_done_stack_update(edited_clip, index=-1):
     if edited_clip != get_edited_clip(): # This gets called by all undos/redos, we only want to update if clip being edited here is affected
         return
 
+    track = _filter_stack.track
+    clip_index = _filter_stack.clip_index
+        
     global _block_changed_update
     _block_changed_update = True
-    update_stack()
+    update_stack(edited_clip, track, clip_index)
     _block_changed_update = False
 
-    # Select row in effect stack view and to display corresponding effect editor panel.
-    if not(index < 0):
-        widgets.effect_stack_view.treeview.get_selection().select_path(str(index))
-    else: # no effects after edit, clear effect editor panel
+    if len(_filter_stack.clip.filters) == 0:
         clear_effects_edit_panel()
-
+    
 def filter_edit_multi_done_stack_update(clips):
     for clip in clips:
         if clip == get_edited_clip():

@@ -1876,7 +1876,7 @@ def _remove_filter_undo(self):
 
     _attach_all(self.clip)
         
-    self.filter_edit_done_func(self.clip,self.index) # updates effect stack gui if needed
+    self.filter_edit_done_func(self.clip, self.index) # updates effect stack gui if needed
 
 def _remove_filter_redo(self):
     _detach_all(self.clip)
