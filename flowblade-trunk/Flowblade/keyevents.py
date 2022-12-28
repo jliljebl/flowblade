@@ -290,7 +290,7 @@ def _handle_tline_key_event(event):
             return True
     
     if editorstate.EDIT_MODE() == editorstate.MULTI_TRIM:
-        multitrimmode.enter_pressed()
+        modesetting.multitrim_mode_pressed()
         return True
 
     was_handled = shortcutsquickeffects.maybe_do_quick_shortcut_filter_add(event)

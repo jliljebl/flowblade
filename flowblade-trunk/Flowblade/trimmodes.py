@@ -34,6 +34,8 @@ import tlinewidgets
 import updater
 
 
+import traceback
+
 # Default value for pre- and post roll in loop playback
 DEFAULT_LOOP_HALF_LENGTH = 25
 
@@ -73,7 +75,14 @@ submode = NOTHING_ON
 
 MAX_DELTA = 100000000
 
-# ------------------------------------ module functions       
+# ------------------------------------ module functions
+def clear_edit_data():
+    global submode, edit_data, ripple_data, mouse_disabled
+    submode = NOTHING_ON
+    edit_data = None
+    ripple_data = None
+    mouse_disabled = False
+
 def _get_trim_edit(track, frame):
     """
     Return a trim edit for a frame on a track.

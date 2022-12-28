@@ -229,18 +229,18 @@ def tline_canvas_mouse_pressed(event, frame):
     """
     Mouse event callback from timeline canvas widget
     """
-    editorstate.timeline_mouse_disabled = False # This is used to disable "move and "release" events when they would get bad data.
+    editorstate.timeline_mouse_disabled = False # This is used to disable "move" and "release" events when they would get bad data.
     
     if PLAYER().looping():
         return
     elif PLAYER().is_playing():
         PLAYER().stop_playback()
     
-    # Double click handled separately
+    # Double click handled separately.
     if event.type == Gdk.EventType._2BUTTON_PRESS:
         return
 
-    # Handle and exit parent clip selecting
+    # Handle and exit parent clip selecting.
     if EDIT_MODE() == editorstate.SELECT_PARENT_CLIP:
         syncsplitevent.select_sync_parent_mouse_pressed(event, frame)
         editorstate.timeline_mouse_disabled = True
@@ -248,7 +248,7 @@ def tline_canvas_mouse_pressed(event, frame):
         modesetting.set_default_edit_mode()  
         return
 
-    # Handle and exit tline sync clip selecting
+    # Handle and exit tline sync clip selecting.
     if EDIT_MODE() == editorstate.SELECT_TLINE_SYNC_CLIP:
         audiosync.select_sync_clip_mouse_pressed(event, frame)
         editorstate.timeline_mouse_disabled = True
@@ -262,11 +262,11 @@ def tline_canvas_mouse_pressed(event, frame):
         updater.display_sequence_in_monitor()
         if (event.button == 1):
             # Now that we have correct edit mode we'll re-enter
-            # this method to get e.g. a select action
+            # this method to get e.g. a select action.
             tline_canvas_mouse_pressed(event, frame)
             return
         if (event.button == 3):
-            # Right mouse + CTRL displays clip menu if we hit clip
+            # Right mouse + CTRL displays clip menu if we hit clip.
             if (event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                 PLAYER().seek_frame(frame)
             # Right mouse on timeline seeks frame
@@ -276,7 +276,7 @@ def tline_canvas_mouse_pressed(event, frame):
                     PLAYER().seek_frame(frame)
         return
 
-    # If clip end drag mode is for some reason still active, exit to default edit mode
+    # If clip end drag mode is for some reason still active, exit to default edit mode.
     if EDIT_MODE() == editorstate.CLIP_END_DRAG:
         modesetting.set_default_edit_mode()
         # This shouldn't happen unless for some reason mouse release didn't hit clipenddragmode listener.
@@ -289,7 +289,7 @@ def tline_canvas_mouse_pressed(event, frame):
             updater.repaint_tline()
             return
 
-    #  Check if compositor is hit and if so, handle compositor editing
+    #  Check if compositor is hit and if so, handle compositor editing.
     if editorstate.current_is_move_mode() and timeline_visible():
         hit_compositor = tlinewidgets.compositor_hit(frame, event.x, event.y, current_sequence().compositors)
         if hit_compositor != None:
@@ -318,7 +318,7 @@ def tline_canvas_mouse_pressed(event, frame):
 
     compositormodes.clear_compositor_selection()
 
-    # Check if we should enter clip end drag mode
+    # Check if we should enter clip end drag mode.
     if (event.button == 3 and editorstate.current_is_move_mode()
         and timeline_visible() and (event.get_state() & Gdk.ModifierType.CONTROL_MASK)):
         # with CTRL right mouse
@@ -330,7 +330,7 @@ def tline_canvas_mouse_pressed(event, frame):
 
     # Handle mouse button presses depending which button was pressed and
     # editor state.
-    # RIGHT BUTTON: seek frame or display clip menu if not dragging clip end
+    # RIGHT BUTTON: seek frame or display clip menu if not dragging clip end.
     if (event.button == 3 and EDIT_MODE() != editorstate.CLIP_END_DRAG and EDIT_MODE() != editorstate.KF_TOOL):
         if ((not editorstate.current_is_active_trim_mode()) and timeline_visible()):
             if not(event.get_state() & Gdk.ModifierType.CONTROL_MASK):
@@ -338,7 +338,7 @@ def tline_canvas_mouse_pressed(event, frame):
                 if not success:
                     PLAYER().seek_frame(frame)
         else:
-            # For trim modes set <X>_NO_EDIT edit mode and seek frame. and seek frame
+            # For trim modes set <X>_NO_EDIT edit mode and seek frame. and seek frame.
             trimmodes.set_no_edit_trim_mode()
             PLAYER().seek_frame(frame)
         return
