@@ -208,6 +208,7 @@ def _create_buttons(editor_window):
 
     if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
         editor_window.tool_selector = create_tool_selector(editor_window)
+        editor_window.set_tool_selector_to_mode()
     else:
         editor_window.tool_selector = None
 
