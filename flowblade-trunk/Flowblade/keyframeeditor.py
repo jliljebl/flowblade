@@ -348,7 +348,6 @@ class ClipKeyFrameEditor:
             if event.button == 3:
                 self.widget.queue_draw()
                 self.current_mouse_action = KF_DRAG_DISABLED
-                print(type(self.parent_editor))
                 self.parent_editor.show_keyframe_menu(event, self.keyframes[hit_kf])
                 return
                 
@@ -941,6 +940,7 @@ class AbstractKeyFrameEditor(Gtk.VBox):
     def _add_geometry_menu_items(self, menu, callback):
         menu.add(_get_menu_item(_("Reset Geometry"), callback, "reset" ))
         menu.add(_get_menu_item(_("Geometry to Original Aspect Ratio"), callback, "ratio" ))
+        menu.add(_get_menu_item(_("Center"), callback, "hvcenter" ))
         menu.add(_get_menu_item(_("Center Horizontal"), callback, "hcenter" ))
         menu.add(_get_menu_item(_("Center Vertical"), callback, "vcenter" ))
 
@@ -1290,7 +1290,6 @@ class GeometryEditor(AbstractKeyFrameEditor):
     def get_clip_editor_keyframes(self):
         keyframes = []
         for kf in self.geom_kf_edit.keyframes:
-            print("get_clip_editor_keyframes", kf)
             frame, rect, opacity, kf_type = kf
             clip_kf = (frame, opacity, kf_type)
             keyframes.append(clip_kf)
@@ -1509,7 +1508,10 @@ class GeometryEditor(AbstractKeyFrameEditor):
             self._center_horizontal()
         elif data == "vcenter":
             self._center_vertical()
-
+        elif data == "hvcenter":
+            self._center_horizontal()
+            self._center_vertical()
+            
         if data == "copy_kf":
             keyevents.copy_action()
         elif data == "paste_kf":
@@ -1923,7 +1925,10 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
             self._center_horizontal()
         elif data == "vcenter":
             self._center_vertical()
-
+        elif data == "hvcenter":
+            self._center_horizontal()
+            self._center_vertical()
+            
         if data == "copy_kf":
             keyevents.copy_action()
         elif data == "paste_kf":
@@ -2250,7 +2255,6 @@ class PositionNumericalEntries(Gtk.HBox):
                 print("Numerical input Exception - ", e)
 
     def update_entry_values(self, active_kf):
-        print(active_kf)
         frame, shape, opacity, type = active_kf
 
         if self.rotating_geom == False:
