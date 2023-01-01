@@ -457,13 +457,15 @@ class EditorWindow:
             render_hbox.pack_start(Gtk.Label(label="See Help->Environment->Render Options for details."), False, False, 0)
             render_hbox.pack_start(Gtk.Label(label="Install codecs to make rendering available."), False, False, 0)
             render_hbox.pack_start(Gtk.Label(label=" "), True, True, 0)
-        else: # all is good
-            render_panel_right = rendergui.get_render_panel_right(render.widgets,
-                                                                  lambda w,e: projectaction.do_rendering(),
-                                                                  lambda w,e: projectaction.add_to_render_queue())
+        else: # all is good, create render panel.
             render_hbox = Gtk.HBox(False, 5)
             render_hbox.pack_start(render_panel_left, True, True, 0)
-            render_hbox.pack_start(render_panel_right, True, True, 0)
+            # Large scr
+            if editorstate.screen_size_large_width() == False:
+                render_panel_right = rendergui.get_render_panel_right(render.widgets,
+                                                                      lambda w,e: projectaction.do_rendering(),
+                                                                      lambda w,e: projectaction.add_to_render_queue())
+                render_hbox.pack_start(render_panel_right, True, True, 0)
 
         self.render_panel = guiutils.set_margins(render_hbox, 2, 6, 8, 6)
 

@@ -583,7 +583,7 @@ def get_range_selection_combo():
 
 # ------------------------------------------------------------ panels
 def get_render_panel_left(render_widgets):
-    small_height = editorstate.screen_size_small_height()
+    #small_height = editorstate.screen_size_small_height()
     
     file_opts_panel = guiutils.get_named_frame(_("File"), render_widgets.file_panel.vbox, 4)         
     profile_panel = guiutils.get_named_frame(_("Render Profile"), render_widgets.profile_panel.vbox, 4)
@@ -592,11 +592,19 @@ def get_render_panel_left(render_widgets):
     render_panel = Gtk.VBox()
     render_panel.pack_start(file_opts_panel, False, False, 0)
     render_panel.pack_start(profile_panel, False, False, 0)
-    if small_height == False:
+    if editorstate.screen_size_small_height() == False:
         render_range_panel = guiutils.get_named_frame(_("Range"), render_widgets.render_range_panel.vbox, 4)
         render_panel.pack_start(encoding_panel, False, False, 0)
         render_panel.pack_start(render_range_panel, False, False, 0)
         render_panel.pack_start(Gtk.Label(), True, True, 0)
+        if editorstate.screen_size_large_width() == True:
+            buttons_panel = Gtk.HBox()
+            buttons_panel.pack_start(Gtk.Label(), True, True, 0)
+            buttons_panel.pack_start(render_widgets.queue_button, False, False, 0)
+            #buttons_panel.pack_start(Gtk.Label(), False, False, 0)
+            buttons_panel.pack_start(render_widgets.render_button, False, False, 0)
+            
+            render_panel.pack_start(buttons_panel, False, False, 0)
     else:
         #encoding_panel = guiutils.get_named_frame(_("Encoding Format"), render_widgets.encoding_panel.vbox, 4)
         render_panel.pack_start(encoding_panel, False, False, 0)
