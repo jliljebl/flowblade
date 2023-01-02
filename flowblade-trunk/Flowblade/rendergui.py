@@ -582,7 +582,7 @@ def get_range_selection_combo():
     return range_cb
 
 # ------------------------------------------------------------ panels
-def get_render_panel_left(render_widgets):
+def get_render_panel_left(render_widgets, render_clicked_cb, to_queue_clicked_cb):
     file_opts_panel = guiutils.get_named_frame(_("File"), render_widgets.file_panel.vbox, 4)         
     profile_panel = guiutils.get_named_frame(_("Render Profile"), render_widgets.profile_panel.vbox, 4)
     encoding_panel = guiutils.get_named_frame(_("Encoding Format"), render_widgets.encoding_panel.vbox, 4)
@@ -596,11 +596,17 @@ def get_render_panel_left(render_widgets):
         render_panel.pack_start(render_range_panel, False, False, 0)
 
         if editorstate.screen_size_large_width() == True:
+            render_widgets.queue_button.connect("clicked", 
+                                                 to_queue_clicked_cb, 
+                                                 None)
+
+            render_widgets.render_button.connect("clicked", 
+                                                 render_clicked_cb, 
+                                                 None)
             buttons_panel = Gtk.HBox()
             buttons_panel.pack_start(Gtk.Label(), True, True, 0)
             buttons_panel.pack_start(render_widgets.queue_button, False, False, 0)
-            buttons_panel.pack_start(render_widgets.render_button, False, False, 0)
-
+            buttons_panel.pack_start(render_widgets.render_button, False, False, 0)                                         
             render_panel.pack_start(guiutils.pad_label(8,8), False, False, 0)  
             render_panel.pack_start(render_widgets.args_panel.box, False, False, 0)  
             render_panel.pack_start(Gtk.Label(), True, True, 0)
@@ -1066,12 +1072,6 @@ class RenderArgsRow():
         self.cancel_text = text
         self.cancel_extension = self.ext_entry.get_text()
 
-    """
-    def set_sensitive(self, value):
-        self.use_args_check.set_sensitive(value)
-        self.use_args_label.set_sensitive(value)
-    """
-    
     def display_encoding_args(self, profile, enc_index, qual_index):
         encoding_option = renderconsumer.encoding_options[enc_index]
         quality_option = encoding_option.quality_options[qual_index]
