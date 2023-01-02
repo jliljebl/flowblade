@@ -104,11 +104,9 @@ def get_args_vals_list_for_current_selections():
 
 def get_current_gui_selections():
     selections = {}
-    #selections["use_user_encodings"] = widgets.render_type_panel.type_combo.get_active()
     selections["encoding_option_index"] = widgets.encoding_panel.encoding_selector.get_selected_encoding_index()
     selections["encoding_option_name"]  = widgets.encoding_panel.encoding_selector.categorised_combo.get_selected_name() # FIXME
     selections["quality_option_index"]= widgets.encoding_panel.quality_selector.widget.get_active()
-    #selections["presets_index"] = widgets.render_type_panel.presets_selector.widget.get_active()
     selections["folder"] = widgets.file_panel.out_folder.get_current_folder()
     selections["name"] = widgets.file_panel.movie_name.get_text()
     selections["range"] = widgets.range_cb.get_active()
@@ -132,14 +130,12 @@ def get_current_gui_selections():
     return selections
 
 def set_saved_gui_selections(selections):
-    #widgets.render_type_panel.type_combo.set_active(selections["use_user_encodings"])
     try:
         enc_op_name = selections["encoding_option_name"]
         widgets.encoding_panel.encoding_selector.categorised_combo.set_selected(enc_op_name)
     except:
         print("Old style encoding option value could not be loaded.")
     widgets.encoding_panel.quality_selector.widget.set_active(selections["quality_option_index"])
-    #widgets.render_type_panel.presets_selector.widget.set_active(selections["presets_index"])
     widgets.file_panel.out_folder.set_current_folder(selections["folder"])
     widgets.file_panel.movie_name.set_text(selections["name"])
     widgets.range_cb.set_active(selections["range"])
@@ -192,9 +188,17 @@ def create_widgets():
     widgets.profile_panel = rendergui.RenderProfilePanel(_out_profile_changed)
     widgets.encoding_panel = rendergui.RenderEncodingPanel(widgets.file_panel.extension_label)
     if (editorstate.SCREEN_HEIGHT > 898):
-        widgets.args_panel = rendergui.RenderArgsPanel(_save_opts_pressed, _load_opts_pressed,
-                                                       _display_selection_in_opts_view,
-                                                       set_default_values_for_widgets)
+        if editorstate.screen_size_large_width() == False:
+            widgets.args_panel = rendergui.RenderArgsPanel(_save_opts_pressed, _load_opts_pressed,
+                                                           _display_selection_in_opts_view,
+                                                           set_default_values_for_widgets)
+        else:
+            widgets.args_panel = rendergui.RenderArgsRow(_save_opts_pressed, _load_opts_pressed,
+                                                           _display_selection_in_opts_view,
+                                                           set_default_values_for_widgets)
+
+
+                 
     else:
         widgets.args_panel = rendergui.RenderArgsPanelSmall(_save_opts_pressed, _load_opts_pressed,
                                                             _display_selection_in_opts_view)
