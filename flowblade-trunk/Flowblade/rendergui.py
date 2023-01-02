@@ -933,7 +933,11 @@ class RenderArgsRow():
         self.display_selection_callback = display_selection_callback
         self.set_default_values_callback = set_default_values_callback
 
+        self.args_text = ""
         self.ext = ""
+        
+        self.cancel_text  = ""
+        self.cancel_extension = ""
         
         # ----------------------------------------- Render panel row
         self.use_args_label = Gtk.Label(label=_("Render using args"))
@@ -965,7 +969,7 @@ class RenderArgsRow():
 
         # ----------------------------------------- Popover pane
         self.load_selection_button = Gtk.Button(label=_("Load Args From Current Encoding"))
-        #self.opts_save_button.connect("clicked", lambda w: save_args_callback())
+        self.load_selection_button.connect("clicked", lambda w: self.display_selection_callback())
         self.load_selection_row = guiutils.get_left_justified_box([self.load_selection_button])
         guiutils.set_margins(self.load_selection_row, 0,4,0,0)
         
@@ -983,11 +987,11 @@ class RenderArgsRow():
         scroll_frame = Gtk.Frame()
         scroll_frame.add(sw)
 
-        self.opts_save_button = Gtk.Button(label=_("Load Args"))
-        self.opts_save_button.connect("clicked", lambda w: save_args_callback())
-    
-        self.opts_load_button = Gtk.Button(label=_("Save Args"))
+        self.opts_load_button = Gtk.Button(label=_("Load Args"))
         self.opts_load_button.connect("clicked", lambda w: load_args_callback())
+    
+        self.opts_save_button = Gtk.Button(label=_("Save Args"))
+        self.opts_save_button.connect("clicked", lambda w: save_args_callback())
 
         self.ext_label = Gtk.Label(label=_("Ext.:"))
         self.ext_label.set_sensitive(True)
@@ -1005,10 +1009,10 @@ class RenderArgsRow():
         guiutils.set_margins(self.save_load_row, 4,0,0,0)
 
         self.cancel_button = Gtk.Button(label=_("Cancel"))
-        self.opts_save_button.connect("clicked", lambda w: save_args_callback())
+        self.cancel_button.connect("clicked", lambda w: self.cancel())
     
         self.set_args_button = Gtk.Button(label=_("Set Args"))
-        self.set_args_button.connect("clicked", lambda w: load_args_callback())
+        self.set_args_button.connect("clicked", lambda w: self.set_args())
 
         self.set_args_row = Gtk.HBox(False, 2)
         self.set_args_row.pack_start(Gtk.Label(), True, True, 0)
@@ -1032,41 +1036,41 @@ class RenderArgsRow():
         self.args_popover.add(self.pop_over_pane)
 
     def args_edit(self):
+        self.init_popover_with_render_data()
+        self.save_cancel_data()
         self.args_popover.show()
 
+    def set_args(self):
+        self.args_info.set_text(self.info_text)
+        self.save_render_data()
+        self.args_popover.popdown()
+        
+    def cancel(self):
+        self.opts_view.get_buffer().set_text(self.cancel_text)
+        self.ext_entry.set_text(self.cancel_extension)
+        self.args_popover.popdown()
+
+    def save_render_data(self):
+        buf = self.opts_view.get_buffer()
+        text = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), include_hidden_chars=True)
+        self.args_text = text
+        self.ext = self.ext_entry.get_text()
+        
+    def clear_cancel_data(self):
+        self.cancel_text = ""
+        self.cancel_extension = ""
+
+    def save_cancel_data(self):
+        buf = self.opts_view.get_buffer()
+        text = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), include_hidden_chars=True)
+        self.cancel_text = text
+        self.cancel_extension = self.ext_entry.get_text()
+
     """
-    def hamburger_launch_pressed(self, widget, event):
-        menu = _hamburger_menu
-        guiutils.remove_children(menu)
-
-        menu.add(guiutils.get_menu_item(_("Load Render Args from a text file"), self.hamburger_item_activated, "load_from_file"))
-        menu.add(guiutils.get_menu_item(_("Save Render Args into a text file"), self.hamburger_item_activated, "save_to_from_file"))
-        
-        guiutils.add_separetor(menu)
-        
-        menu.add(guiutils.get_menu_item(_("Load Render Args from Current Encoding"), self.hamburger_item_activated, "load_from_selection"))
-
-        guiutils.add_separetor(menu)
-        
-        menu.add(guiutils.get_menu_item(_("Reset all Render Options to Defaults"), self.hamburger_item_activated, "reset_all"))
-
-        menu.show_all()
-        menu.popup(None, None, None, None, event.button, event.time)
-    
-    def hamburger_item_activated(self, widget, msg):
-        if msg ==  "load_from_file":
-            self.load_args_callback()
-        elif msg == "save_to_from_file":
-            self.save_args_callback()
-        elif msg =="load_from_selection":
-            self.display_selection_callback()
-        elif msg =="reset_all":
-            self.set_default_values_callback()
-    """
-    
     def set_sensitive(self, value):
         self.use_args_check.set_sensitive(value)
         self.use_args_label.set_sensitive(value)
+    """
     
     def display_encoding_args(self, profile, enc_index, qual_index):
         encoding_option = renderconsumer.encoding_options[enc_index]
@@ -1080,32 +1084,44 @@ class RenderArgsRow():
             text = text + line  + "\n"
             if info_text == "":
                 info_text = info_text + line + ",..."
-            
+        
+        self.info_text = info_text # This is used to update self.args_info text when exiting with 'Set Args'.
+        
         text_buffer = Gtk.TextBuffer()
         text_buffer.set_text(text)
-        self.opts_view.set_buffer(text_buffer)
-        self.args_info.set_text(info_text)
-            
+        self.opts_view.set_buffer(text_buffer)            
         self.ext_entry.set_text(encoding_option.extension)
 
+        # Save cancel data on first show.
+        if self.cancel_text == "":
+            self.cancel_text = text
+            self.cancel_extension = encoding_option.extension
+
+    def init_popover_with_render_data(self):
+        self.opts_view.get_buffer().set_text(self.args_text)
+        self.ext_entry.set_text(self.ext)
+        self.args_info.set_text(self.info_text)
+                
     def use_args_toggled(self, checkbutton):
         active = checkbutton.get_active()
-        self.opts_view.set_sensitive(active)
-
-        self.ext_label.set_sensitive(active)
-        self.ext_entry.set_sensitive(active)
-        
         if active == True:
+            if self.args_text == "":
+                self.display_selection_callback()
+                self.save_render_data()
+                self.init_popover_with_render_data()
+            else:
+                self.init_popover_with_render_data()
+            
+            self.save_cancel_data()
             self.args_popover.show()
-            self.display_selection_callback()
-            #self.args_info.set_text("f=mp4")
             self.args_edit_launch.set_sensitive(True)
         else:
             self.opts_view.set_buffer(Gtk.TextBuffer())
             self.ext_entry.set_text("")
             self.args_info.set_text("")
             self.args_edit_launch.set_sensitive(False)
-            
+
+
 class RenderArgsPanelSmall():
 
     def __init__(self, save_args_callback, 
