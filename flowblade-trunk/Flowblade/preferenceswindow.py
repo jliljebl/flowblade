@@ -30,6 +30,7 @@ import guiutils
 import mltprofiles
 import multiprocessing
 import utils
+import utilsgtk
 
 PREFERENCES_WIDTH = 730
 PREFERENCES_HEIGHT = 440
@@ -409,7 +410,7 @@ def _view_prefs_panel():
     top_row_layout.append_text(_("2 panels always"))
     top_row_layout.set_active(prefs.top_row_layout)
 
-    monitors_data = utils.get_display_monitors_size_data()
+    monitors_data = utilsgtk.get_display_monitors_size_data()
     layout_monitor = Gtk.ComboBoxText()
     combined_w, combined_h = monitors_data[0]
     layout_monitor.append_text(_("Full Display area: ") + str(combined_w) + " x " + str(combined_h))

@@ -115,6 +115,7 @@ import undo
 import updater
 import userfolders
 import utils
+import utilsgtk
 import workflow
 
 
@@ -909,7 +910,7 @@ def _xdg_copy_completed_callback(dialog):
 # ------------------------------------------------------- small and multiple screens
 # We need a bit more stuff because having multiple monitors can mix up setting draw parameters.
 def _set_screen_size_data():
-    monitor_data = utils.get_display_monitors_size_data()
+    monitor_data = utilsgtk.get_display_monitors_size_data()
     monitor_data_index = editorpersistance.prefs.layout_display_index
 
     display = Gdk.Display.get_default()

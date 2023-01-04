@@ -56,3 +56,23 @@ class GtkTicker:
             return False
         else:
             return True
+
+
+def get_display_monitors_size_data():
+    monitors_size_data = []
+    
+    display = Gdk.Display.get_default()
+    scr_w = Gdk.Screen.width()
+    scr_h = Gdk.Screen.height()
+    monitors_size_data.append((scr_w, scr_h))
+        
+    num_monitors = display.get_n_monitors() # Get number of monitors.
+    if num_monitors == 1:
+        return monitors_size_data
+    else:
+        for monitor_index in range(0, num_monitors):
+            monitor = display.get_monitor(monitor_index)
+            geom = monitor.get_geometry()
+            monitors_size_data.append((geom.width, geom.height))
+        
+        return monitors_size_data
