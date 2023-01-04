@@ -48,6 +48,7 @@ import editorstate
 import mltrefhold
 import guiutils
 import utils
+import utilsgtk
 
 SLOT_W = 60
 METER_SLOT_H = 458
@@ -127,22 +128,26 @@ def init(profile):
             METER_LIGHTS = 82
             METER_HEIGHT = METER_LIGHTS * DASH_INK + (METER_LIGHTS - 1) * DASH_SKIP
 
+    # We want a global ticker object to always exist, so we can use it to know if it is running.
+    launch_update_ticker()
+    _update_ticker.destroy_ticker()
+            
+def launch_update_ticker():
     # We want this to be always present when closing app or we'll need to handle it being missing.
     global _update_ticker
-    _update_ticker = utils.Ticker(_audio_monitor_update, 0.04)
+    _update_ticker = utilsgtk.GtkTicker(_audio_monitor_update, 40)
     _update_ticker.start_ticker()
-    _update_ticker.stop_ticker()    
-
+  
 def init_for_project_load():
     # Monitor window is quaranteed to be closed
     if _update_ticker.running:
-        _update_ticker.stop_ticker()    
+        _update_ticker.destroy_ticker()    
         
     global _level_filters
     _level_filters = None
     _init_level_filters(False)
 
-    _update_ticker.start_ticker()
+    launch_update_ticker()
 
 def update_mute_states():
     if _monitor_window != None:
@@ -151,7 +156,7 @@ def update_mute_states():
 def close():
     close_audio_monitor()
     close_master_meter()
-    _update_ticker.stop_ticker()
+    _update_ticker.destroy_ticker()
 
 def show_audio_monitor():
     global _monitor_window
@@ -164,7 +169,7 @@ def show_audio_monitor():
         
     global _update_ticker
     if _update_ticker.running == False:
-        _update_ticker.start_ticker()
+        launch_update_ticker()
 
 def close_audio_monitor():
     
@@ -198,7 +203,7 @@ def get_master_meter():
     _master_volume_meter = MasterVolumeMeter()
 
     if _update_ticker.running == False:
-        _update_ticker.start_ticker()
+        launch_update_ticker()
 
     align = guiutils.set_margins(_master_volume_meter.widget, 3, 3, 3, 3)
     
@@ -261,7 +266,7 @@ def _destroy_level_filters(destroy_track_filters=False):
 
     # We need to be sure that audio level updates are stopped before
     # detaching and destroying them
-    _update_ticker.stop_ticker()
+    _update_ticker.destroy_ticker()
 
     # Detach filters
     if len(_level_filters) != 0:
@@ -284,14 +289,14 @@ def _destroy_level_filters(destroy_track_filters=False):
         _audio_levels[0] = 0.0
 
     if _master_volume_meter != None or _monitor_window != None:
-        _update_ticker.start_ticker()
+        launch_update_ticker()
 
 def recreate_master_meter_filter_for_new_sequence():
     global _level_filters, _audio_levels
 
     # We need to be sure that audio level updates are stopped before
     # detaching and destroying them
-    _update_ticker.stop_ticker()
+    _update_ticker.destroy_ticker()
 
     if len(_level_filters) != 0:
         seq = editorstate.current_sequence()
@@ -304,7 +309,7 @@ def recreate_master_meter_filter_for_new_sequence():
             _level_filters.insert(0, master_level_filter)
 
     if _master_volume_meter != None or _monitor_window != None:
-        _update_ticker.start_ticker()
+        launch_update_ticker()
 
 def _add_audio_level_filter(producer, profile):
     audio_level_filter = mlt.Filter(profile, "audiolevel")
@@ -312,13 +317,11 @@ def _add_audio_level_filter(producer, profile):
     producer.attach(audio_level_filter)
     return audio_level_filter
 
-def _audio_monitor_update():
-    # This is not called from gtk thread
-
+def _audio_monitor_update(data):
+    # 'data' is not used here. 
+    # This is called holding Gdk lock so we can do Gtk updates.
     if _monitor_window == None and _master_volume_meter == None:
         return
-
-    Gdk.threads_enter()
 
     global _audio_levels
     _audio_levels = []
@@ -332,8 +335,6 @@ def _audio_monitor_update():
         _monitor_window.meters_area.widget.queue_draw()
     if _master_volume_meter != None:
         _master_volume_meter.canvas.queue_draw()
-
-    Gdk.threads_leave()
 
 def _get_channel_value(audio_level_filter, channel_property):
     level_value = audio_level_filter.get(channel_property)
