@@ -46,6 +46,7 @@ import respaths
 import shortcuts
 import shortcutsquickeffects
 import utils
+import utilsgtk
 import workflow
 
 
@@ -1371,7 +1372,7 @@ def open_image_sequence_dialog(callback, parent_window):
     else:
         file_chooser.set_current_folder(os.path.expanduser("~") + "/")
 
-    filt = utils.get_image_sequence_file_filter()
+    filt = utilsgtk.get_image_sequence_file_filter()
     file_chooser.add_filter(filt)
     row1 = guiutils.get_two_column_box(Gtk.Label(label=_("First frame:")), file_chooser, 220)
 
@@ -1764,7 +1765,7 @@ def media_file_dialog(text, callback, multiple_select, data=None, parent=None, o
     file_select.set_default_response(Gtk.ResponseType.CANCEL)
     file_select.set_select_multiple(multiple_select)
 
-    media_filter = utils.get_media_source_file_filter()
+    media_filter = utilsgtk.get_media_source_file_filter()
     all_filter = Gtk.FileFilter()
     all_filter.set_name(_("All files"))
     all_filter.add_pattern("*.*")

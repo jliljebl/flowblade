@@ -36,6 +36,7 @@ import os
 import shutil
 import subprocess
 import sys
+import threading
 import time
 import webbrowser
 
@@ -60,9 +61,9 @@ import renderconsumer
 import toolguicomponents
 import toolsencoding
 import translations
-import threading
 import userfolders
 import utils
+import utilsgtk
 
 import gmicplayer
 import gmicscript
@@ -293,7 +294,7 @@ def open_clip_dialog():
     file_select.set_default_response(Gtk.ResponseType.CANCEL)
     file_select.set_select_multiple(False)
 
-    media_filter = utils.get_video_source_file_filter()
+    media_filter = utilsgtk.get_video_source_file_filter()
     file_select.add_filter(media_filter)
 
     if _last_load_file != None:

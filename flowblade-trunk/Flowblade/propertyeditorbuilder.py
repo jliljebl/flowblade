@@ -42,6 +42,7 @@ import respaths
 import translations
 import updater
 import utils
+import utilsgtk
 
 EDITOR = "editor"
 
@@ -808,7 +809,7 @@ def _get_image_file_select_editor(editable_property):
     dialog.set_action(Gtk.FileChooserAction.OPEN)
     dialog.set_select_multiple(False)
 
-    file_filter = utils.get_media_source_file_filter(False)    
+    file_filter = utilsgtk.get_media_source_file_filter(False)    
     dialog.add_filter(file_filter)
         
     file_select_button = Gtk.FileChooserButton.new_with_dialog(dialog)
