@@ -1046,7 +1046,6 @@ def _shutdown_dialog_callback(dialog, response_id, no_dialog_shutdown=False):
     # --- APP SHUT DOWN --- #
     print("Exiting app...")
     # Sep-2018 - SvdB - Stop wave form threads
-    print("1")
     for thread_termination in threading.enumerate():
         # We only terminate threads with a 'process', as these are launched
         # by the audiowaveformrenderer
@@ -1054,7 +1053,6 @@ def _shutdown_dialog_callback(dialog, response_id, no_dialog_shutdown=False):
             thread_termination.process.terminate()
         except:
             None
-    print("2")
     
     # No more auto saving
     stop_autosave()
@@ -1097,13 +1095,7 @@ def _app_destroy():
     # Close threads and stop mlt consumers
     editorstate.player.shutdown() # has ticker thread and player threads running
     audiomonitoring.close()
-    # Wait threads to stop
-    print("3")
-    while((editorstate.player.ticker.exited == False) and
-         (audiomonitoring._update_ticker.exited == False)):
-        print(editorstate.player.ticker.exited, audiomonitoring._update_ticker.exited)
-        pass
-    print("4")
+
     # Delete autosave file
     try:
         os.remove(userfolders.get_cache_dir() + get_instance_autosave_file())
