@@ -215,6 +215,8 @@ def _check_cache_size():
     elif check_level == 3 and used_disk_cache_size > 1000000 * 2000:
         _show_warning(size_str)
 
+    return False
+
 def _show_warning(size_str):
     primary_txt = _("Disk Cache Size Exceeds Current Warning Level!")
     secondary_txt = _("Flowblade currently uses ") + size_str + _(" of disk space.") + "\n\n" + \

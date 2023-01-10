@@ -160,10 +160,10 @@ class AudioRenderLaunchThread(threading.Thread):
 
         Gdk.threads_add_timeout(GLib.PRIORITY_HIGH_IDLE, 10, _repaint)
 
-
 def _repaint():
-            updater.repaint_tline()
-
+    updater.repaint_tline()
+    return False
+    
 # --------------------------------------------------------- rendering
 def main():
     # Set paths.

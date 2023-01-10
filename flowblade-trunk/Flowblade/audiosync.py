@@ -162,7 +162,6 @@ def select_sync_clip_mouse_pressed(event, frame):
     
     global _compare_dialog_thread
     _compare_dialog_thread = AudioCompareActiveThread()
-    _compare_dialog_thread.start()
     
     # This or GUI freezes, we really can't do Popen.wait() in a Gtk thread
     clapperless_thread = ClapperlesLaunchThread(_tline_sync_data.origin_clip.path, sync_clip.path, _tline_sync_offsets_computed_callback)
@@ -291,7 +290,6 @@ def create_audio_sync_compound_clip():
 
     global _compare_dialog_thread
     _compare_dialog_thread = AudioCompareActiveThread()
-    _compare_dialog_thread.start()
     
     # This or GUI freezes, we really can't do Popen.wait() in a Gtk thread
     clapperless_thread = ClapperlesLaunchThread(video_file.path, audio_file.path, _compound_offsets_complete)
@@ -365,31 +363,34 @@ def _do_create_sync_compound_clip(dialog, response_id, data):
     render_player.start()
 
 
+# This is not a thread anymore but successive calls to Gdk.threads_add_timeout() 
+# to achieve the same functionality.
+class AudioCompareActiveThread:
 
-class AudioCompareActiveThread(threading.Thread):
-    
     def __init__(self):
-        threading.Thread.__init__(self)
         self.running = True
+        self.dialog = None
         
-    def run(self):
-
-        Gdk.threads_enter()
-        dialog = dialogs.audio_sync_active_dialog()
-        dialog.progress_bar.set_pulse_step(0.2)
-        time.sleep(0.1)
-        Gdk.threads_leave()
-
-        while self.running:
-            dialog.progress_bar.pulse()
-            time.sleep(0.2)
+        Gdk.threads_add_timeout(GLib.PRIORITY_HIGH_IDLE, 10, self.start_dialog)
                 
-        PROJECT().update_media_lengths_on_load = False
+    def start_dialog(self):
+        self.dialog = dialogs.audio_sync_active_dialog()
+        self.dialog.progress_bar.set_pulse_step(0.2)
+        time.sleep(0.1)
+
+        Gdk.threads_add_timeout(GLib.PRIORITY_HIGH_IDLE, 200, self.run_dialog)
         
-        Gdk.threads_enter()
-        dialog.destroy()
-        Gdk.threads_leave()
+        return False
     
+    def run_dialog(self):
+        if self.running:
+            self.dialog.progress_bar.pulse()
+            return True
+        else:
+            PROJECT().update_media_lengths_on_load = False
+            self.dialog.destroy()
+            return False
+
     def compare_done(self):
         self.running = False
 
