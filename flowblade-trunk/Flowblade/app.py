@@ -51,7 +51,6 @@ import time
 
 import appconsts
 import audiomonitoring
-import audiowaveform
 import audiowaveformrenderer
 import clipeffectseditor
 import clipmenuaction
@@ -662,7 +661,6 @@ def open_project(new_project):
 
     audiomonitoring.close_audio_monitor()
     audiowaveformrenderer.clear_cache()
-    audiowaveform.frames_cache = {}
 
     editorstate.project = new_project
     editorstate.media_view_filter = appconsts.SHOW_ALL_FILES
@@ -1099,8 +1097,7 @@ def _app_destroy():
     audiomonitoring.close()
     # Wait threads to stop
     while((editorstate.player.ticker.exited == False) and
-         (audiomonitoring._update_ticker.exited == False) and
-         (audiowaveform.waveform_thread != None)):
+         (audiomonitoring._update_ticker.exited == False)):
         pass
     # Delete autosave file
     try:

@@ -36,7 +36,6 @@ import os
 import shutil
 import time
 
-import audiowaveform
 import audiosync
 import appconsts
 import clipeffectseditor
@@ -545,12 +544,6 @@ def clear_filters():
     movemodes.clear_selected_clips()
     updater.repaint_tline()
 
-def _display_wavefrom(data):
-    audiowaveform.set_waveform_displayer_clip_from_popup(data)
-
-def _clear_waveform(data):
-    audiowaveform.clear_waveform(data)
-
 def  _clone_filters_from_next(data):
     clip, track, item_id, is_multi = data
     if is_multi == True:
@@ -818,8 +811,6 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "add_compositor":_add_compositor,
                   "clear_sync_rel":syncsplitevent.clear_sync_relation,
                   "mute_clip":_mute_clip,
-                  "display_waveform":_display_wavefrom,
-                  "clear_waveform":_clear_waveform,
                   "delete_blank":_delete_blank,
                   "cover_with_prev": _cover_blank_from_prev,
                   "cover_with_next": _cover_blank_from_next,

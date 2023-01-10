@@ -25,7 +25,6 @@ Module handles keyevents.
 from gi.repository import Gdk
 
 import appconsts
-import audiowaveform
 import clipeffectseditor
 import compositeeditor
 import compositormodes
@@ -67,10 +66,7 @@ def key_down(widget, event):
     """
     # Handle ESCAPE
     if event.keyval == Gdk.KEY_Escape:
-        if audiowaveform.waveform_thread != None:
-            audiowaveform.waveform_thread.abort_rendering()
-            return True
-        elif editorstate.current_is_move_mode() == False:
+        if editorstate.current_is_move_mode() == False:
             modesetting.set_default_edit_mode()
             return True
         elif gui.big_tc.get_visible_child_name() == "BigTCEntry":
