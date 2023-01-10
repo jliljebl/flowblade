@@ -18,6 +18,9 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+"""
+Helper functions that require Gtk dependency.
+"""
 
 import gi
 gi.require_version('Gtk', '3.0')
@@ -27,8 +30,9 @@ from gi.repository import Gtk, Gdk, GLib
 class GtkTicker:
     """
     Calls function repeatedly with given delay between calls.
-    This cannot be restarted, that would cause unknow behaviour,
-    instead create a new when needed
+    This cannot be restarted after calling destroy_ticker(),
+    that would cause undefined behaviour,
+    instead create a new one when needed.
     """
     def __init__(self, action, delay, data=None):
         self.action = action # callback function
@@ -140,7 +144,7 @@ def get_media_source_file_filter(include_audio=True):
         f.add_mime_type("audio/x-voc")
         f.add_mime_type("audio/x-vorbis+ogg")
         f.add_mime_type("audio/x-wav")
-    f.add_mime_type("audio/annodex")
+        f.add_mime_type("audio/annodex")
 
     f.add_mime_type("image/bmp")
     f.add_mime_type("image/tiff")

@@ -19,7 +19,7 @@
 """
 
 """
-Modules handles creating and caching audio waveform images for clips.
+Modules handles caching audio waveform images for clips.
 """
 
 import locale
