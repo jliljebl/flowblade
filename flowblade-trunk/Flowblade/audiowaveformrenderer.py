@@ -22,6 +22,15 @@
 Modules handles caching audio waveform images for clips.
 """
 
+import gi
+
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk # We need to import Gtk first because this module is
+                              # loaded in a new process for rendering and Gtk import seemimgly 
+                              # defines _Gdk_ version.
+from gi.repository import GLib
+from gi.repository import Gdk
+
 import locale
 try:
     import mlt7 as mlt
@@ -32,10 +41,6 @@ import pickle
 import subprocess
 import sys
 import threading
-
-import gi
-gi.require_version('Gdk', '3.0') 
-from gi.repository import Gdk
 
 import appconsts
 import atomicfile
@@ -89,8 +94,12 @@ def get_waveform_data(clip):
         _waveforms[clip.path] = waveform
         return waveform
     else:
+        # We keep queing everything that does not have waveform data.
+        # If something gets queued twice, we will not attempt to render it twice
+        # because we find it in _render_already_requested list.
         global _queued_waveform_renders
         _queued_waveform_renders.append(clip.path)
+
         return None
     
 # ------------------------------------------------- launching render
@@ -118,6 +127,7 @@ def launch_audio_levels_rendering(file_names):
                 _render_already_requested.append(media_file)
                 rendered_media = rendered_media + FILE_SEPARATOR + media_file
 
+    # Renders have already been requested for all missing waveform data.
     if rendered_media == "":
         return
     
@@ -147,11 +157,12 @@ class AudioRenderLaunchThread(threading.Thread):
                   self.rendered_media, self.profile_desc, respaths.ROOT_PATH], \
                   stdin=FLOG, stdout=FLOG, stderr=FLOG)
         self.process.wait()
-        
-        Gdk.threads_enter()
-        updater.repaint_tline()
-        Gdk.threads_leave()
 
+        Gdk.threads_add_timeout(GLib.PRIORITY_HIGH_IDLE, 10, _repaint)
+
+
+def _repaint():
+            updater.repaint_tline()
 
 # --------------------------------------------------------- rendering
 def main():
