@@ -45,7 +45,7 @@ class GtkTicker:
         self.running = True
         # Poll rendering from GDK with timeout events to get access to GDK lock on updates 
         # to be able to draw immediately.
-        Gdk.threads_add_timeout(GLib.PRIORITY_HIGH_IDLE, self.delay, self._update)
+        GLib.timeout_add(self.delay, self._update)
     
     def destroy_ticker(self):
         self.running = False
