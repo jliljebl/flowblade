@@ -306,7 +306,7 @@ def main(root_path):
     containerclip.test_blender_availebility()
     toolsintegration.init()
 
-    # Media Plugins a.k.a Generators
+    # Media Plugins a.k.a Generators.
     mediaplugin.init()
 
     # Create player object.
@@ -401,11 +401,11 @@ def main(root_path):
 def monkeypatch_callbacks():
 
     # We need to do this on app start-up or
-    # we'll get circular imports with projectaction->mltplayer->render->projectaction
+    # we'll get circular imports with projectaction->mltplayer->render->projectaction.
     render.open_media_file_callback = projectaction.open_rendered_file
     jobs.open_media_file_callback = projectaction.open_rendered_file
 
-    # Set callback for undo/redo ops, batcherrender app does not need this 
+    # Set callback for undo/redo ops, batcherrender app does not need this.
     undo.set_post_undo_redo_callback(modesetting.set_post_undo_redo_edit_mode)
     undo.repaint_tline = updater.repaint_tline
 
@@ -421,14 +421,14 @@ def monkeypatch_callbacks():
     editevent.display_clip_menu_pop_up = clipmenuaction.display_clip_menu
     editevent.compositor_menu_item_activated = clipmenuaction._compositor_menu_item_activated
     
-    # Posionbar in gmic.py doesnot need trimmodes.py dependency and is avoided 
+    # Posionbar in gmic.py doesnot need trimmodes.py dependency and is avoided.
     positionbar.trimmodes_set_no_edit_trim_mode = trimmodes.set_no_edit_trim_mode
 
     # Snapping is done in a separate module but needs some tlinewidgets state info
     snapping._get_frame_for_x_func = tlinewidgets.get_frame
     snapping._get_x_for_frame_func = tlinewidgets._get_frame_x
 
-    # Callback to reinit to change slider <-> kf editor
+    # Callback to reinit to change slider <-> kf editor.
     propertyeditorbuilder.re_init_editors_for_slider_type_change_func = clipeffectseditor.refresh_clip
 
     propertyeditorbuilder.show_rotomask_func = rotomask.show_rotomask
@@ -492,29 +492,29 @@ def create_gui():
     updater.set_clip_edit_mode_callback = modesetting.set_clip_monitor_edit_mode
     updater.load_icons()
 
-    # Make layout data available
+    # Make layout data available.
     editorlayout.init_layout_data()
 
-    # Create window and all child components
+    # Create window and all child components.
     editor_window = editorwindow.EditorWindow()
     
-    # Make references to various gui components available via gui module
+    # Make references to various gui components available via gui module.
     gui.capture_references(editor_window)
 
     # Unused frames take 3 pixels so hide those.
     editorlayout.set_positions_frames_visibility()
         
-    # All widgets are now realized and references captured so can find out theme colors
+    # All widgets are now realized and references captured so can find out theme colors.
     gui.set_theme_colors()
     tlinewidgets.set_dark_bg_color()
     gui.pos_bar.set_dark_bg_color()
     
-    # Connect window global key listener
+    # Connect window global key listener.
     gui.editor_window.window.connect("key-press-event", keyevents.key_down)
     if editorpersistance.prefs.global_layout != appconsts.SINGLE_WINDOW:
         gui.editor_window.window2.connect("key-press-event", keyevents.key_down)
 
-    # Give undo a reference to uimanager for menuitem state changes
+    # Give undo a reference to uimanager for menuitem state changes.
     undo.set_menu_items(gui.editor_window.uimanager)
     
     updater.display_sequence_in_monitor()
@@ -528,14 +528,14 @@ def create_player():
     editorstate.player.set_tracktor_producer(editorstate.current_sequence().tractor)
 
 def launch_player():
-    # Create SDL output consumer
+    # Create SDL output consumer.
     editorstate.player.set_sdl_xwindow(gui.tline_display)
     editorstate.player.create_sdl_consumer()
 
-    # Display current sequence tractor
+    # Display current sequence tractor.
     updater.display_sequence_in_monitor()
     
-    # Connect buttons to player methods
+    # Connect buttons to player methods.
     gui.editor_window.connect_player(editorstate.player)
     
     # Start player.
@@ -545,7 +545,7 @@ def init_project_gui():
     """
     Called after project load to initialize interface
     """
-    # Display media files in "Media" tab 
+    # Display media files in "Media" tab .
     gui.media_list_view.fill_data_model()
     try: # Fails if current bin is empty
         selection = gui.media_list_view.treeview.get_selection()
@@ -553,19 +553,19 @@ def init_project_gui():
     except Exception:
         pass
 
-    # Display bins in "Media" tab 
+    # Display bins in "Media" tab.
     gui.bin_list_view.fill_data_model()
     selection = gui.bin_list_view.treeview.get_selection()
     selection.select_path("0")
     gui.editor_window.bin_info.display_bin_info()
 
-    # Display sequences in "Project" tab
+    # Display sequences in "Project" tab.
     gui.sequence_list_view.fill_data_model()
     selection = gui.sequence_list_view.treeview.get_selection()
     selected_index = editorstate.project.sequences.index(editorstate.current_sequence())
     selection.select_path(str(selected_index))
   
-    # Display logged ranges in "Range Log" tab
+    # Display logged ranges in "Range Log" tab.
     medialog.update_group_select_for_load()
     medialog.update_media_log_view()
 
@@ -575,7 +575,7 @@ def init_project_gui():
 
     titler.reset_titler()
     
-    # Set render folder selector to last render if prefs require 
+    # Set render folder selector to last render if prefs require.
     folder_path = editorstate.PROJECT().get_last_render_folder()
     if folder_path != None and editorpersistance.prefs.remember_last_render_dir == True:
         gui.render_out_folder.set_current_folder(folder_path)
@@ -585,16 +585,16 @@ def init_sequence_gui():
     Called after project load or changing current sequence 
     to initialize interface.
     """
-    # Set correct compositing mode menu item selected
+    # Set correct compositing mode menu item selected.
     gui.editor_window.init_compositing_mode_menu()
     gui.editor_window.init_timeline_rendering_menu()
     gui.editor_window.tline_render_mode_launcher.set_pixbuf(editorstate.tline_render_mode) 
     gui.comp_mode_launcher.set_pixbuf(editorstate.get_compositing_mode())
 
-    # Set initial timeline scale draw params
+    # Set initial timeline scale draw params.
     editorstate.current_sequence().update_length()
     
-    # Handle timeline rendering GUI and data
+    # Handle timeline rendering GUI and data.
     tlinerender.init_for_sequence()
     gui.editor_window.hide_tline_render_strip()
     if editorstate.get_tline_rendering_mode() != appconsts.TLINE_RENDERING_OFF: 
@@ -624,27 +624,27 @@ def init_editor_state():
     gui.tline_column.init_listeners()
     gui.tline_column.widget.queue_draw()
 
-    # Clear editors 
+    # Clear editors.
     clipeffectseditor.clear_clip()
     compositeeditor.clear_compositor()
 
-    # Show first pages on notebooks
+    # Show first pages on notebooks.
     gui.editor_window.notebook.set_current_page(0)
 
     # Clear clip selection.
     movemodes.clear_selection_values()
 
-    # Set initial edit mode
+    # Set initial edit mode.
     modesetting.set_default_edit_mode()
     
-    # Create array needed to update compositors after all edits
+    # Create array needed to update compositors after all edits.
     editorstate.current_sequence().restack_compositors()
 
     proxyediting.set_menu_to_proxy_state()
 
     undo.clear_undos()
 
-    # Enable edit action GUI updates
+    # Enable edit action GUI updates.
     edit.do_gui_update = True
 
 def new_project(profile_index, v_tracks, a_tracks):
@@ -666,22 +666,22 @@ def open_project(new_project):
     editorstate.media_view_filter = appconsts.SHOW_ALL_FILES
     editorstate.tline_render_mode = appconsts.TLINE_RENDERING_OFF
     
-    # Inits widgets with project data
+    # Inits widgets with project data.
     init_project_gui()
     
-    # Inits widgets with current sequence data
+    # Inits widgets with current sequence data.
     init_sequence_gui()
 
-    # Set and display current sequence tractor
+    # Set and display current sequence tractor.
     display_current_sequence()
     
-    # Editor and modules need some more initializing
+    # Editor and modules need some more initializing.
     init_editor_state()
     
-    # For save time message on close
+    # For save time message on close.
     projectaction.save_time = None
     
-    # Delete autosave file after it has been loaded
+    # Delete autosave file after it has been loaded.
     global loaded_autosave_file
     if loaded_autosave_file != None:
         print("Deleting", loaded_autosave_file)
@@ -1108,6 +1108,6 @@ def _app_destroy():
     if do_gtk_main_quit == True:
         Gtk.main_quit()
     else:
-        # Jobs lauches its own top level window to show progress on unfinished jobs renders
+        # Jobs launches its own top level window to show progress of unfinished jobs renders
         # and does Gtk.main_quit() later when done.
         pass

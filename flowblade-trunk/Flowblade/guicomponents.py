@@ -3441,6 +3441,13 @@ def get_audio_levels_popup_menu(event, callback):
     thumbs_item.connect("activate", callback, "thumbs")
 
     menu.append(thumbs_item)
+
+    allways_item = Gtk.CheckMenuItem()
+    allways_item.set_label(_("Display Audio Levels"))
+    allways_item.set_active(editorstate.display_all_audio_levels)
+    allways_item.connect("activate", callback, "all")
+        
+    menu.append(allways_item)
     
     _add_separetor(menu)
 
@@ -3461,23 +3468,6 @@ def get_audio_levels_popup_menu(event, callback):
     menu.append(scrub_item)
     
     _add_separetor(menu)
-    
-    allways_item = Gtk.RadioMenuItem()
-    allways_item.set_label(_("Display All Audio Levels"))
-    menu.append(allways_item)
-
-    on_request_item = Gtk.RadioMenuItem.new_with_label([allways_item], _("Display Audio Levels On Request"))
-
-    menu.append(on_request_item)
-
-    if editorstate.display_all_audio_levels == True:
-        on_request_item.connect("activate", callback, "on request")
-        allways_item.set_active(True)
-        on_request_item.set_active(False)
-    else:
-        allways_item.connect("activate", callback, "all")
-        allways_item.set_active(False)
-        on_request_item.set_active(True)
 
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)

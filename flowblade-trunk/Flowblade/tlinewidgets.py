@@ -2032,7 +2032,7 @@ class TimeLineCanvas:
                 and clip.media_type != appconsts.IMAGE and clip.media_type != appconsts.IMAGE_SEQUENCE and clip.media_type != appconsts.PATTERN_PRODUCER:
                 clip.waveform_data = audiowaveformrenderer.get_waveform_data(clip)
             # Draw data if available large enough scale
-            if clip.is_blanck_clip == False and clip.waveform_data != None and scale_length > FILL_MIN:
+            if clip.is_blanck_clip == False and clip.waveform_data != None and scale_length > FILL_MIN and editorstate.display_all_audio_levels == True:
                 r, g, b = clip_bg_col
                 cr.set_source_rgb(r * 1.9, g * 1.9, b * 1.9)
                 

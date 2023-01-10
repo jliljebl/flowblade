@@ -215,14 +215,10 @@ def _activate_only_current_top_active():
 def audio_levels_menu_launch_pressed(widget, event):
     guicomponents.get_audio_levels_popup_menu(event, _audio_levels_item_activated)
 
-# THIS HANDLES MUCH MORE NOW, NAME _audio_levels_item_activated name needs changing
+# THIS HANDLES MORE NOW, NAME _audio_levels_item_activated name needs changing
 def _audio_levels_item_activated(widget, msg):
     if msg == "all":
-        editorstate.display_all_audio_levels = True
-        updater.repaint_tline()
-    elif msg == "on request":
-        editorstate.display_all_audio_levels = False
-        current_sequence().drop_audio_levels()
+        editorstate.display_all_audio_levels = widget.get_active()
         updater.repaint_tline()
     elif msg == "snapping":
         snapping.snapping_on = widget.get_active()
@@ -230,7 +226,6 @@ def _audio_levels_item_activated(widget, msg):
         editorpersistance.prefs.audio_scrubbing = widget.get_active()
         editorpersistance.save()
         PLAYER().set_scrubbing(widget.get_active())
-        
     else: # media thumbnails
         editorstate.display_clip_media_thumbnails = widget.get_active()
         updater.repaint_tline()
