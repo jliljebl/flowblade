@@ -18,7 +18,7 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk, Gdk, GLib
 
 from os import listdir
 from os.path import isfile, join
@@ -193,44 +193,34 @@ def check_disk_cache_size():
     if check_level == 0:
         return
 
-    check_thread = DiskCacheWarningThread()
-    check_thread.start()
+    Gdk.threads_add_timeout(GLib.PRIORITY_HIGH_IDLE, 10, _check_cache_size)
 
-
-class DiskCacheWarningThread(threading.Thread):
+def _check_cache_size():
+    # We are running this check in GUI thread, but this should be fast enough to not block app GUI noticeably.
+    check_level = editorpersistance.prefs.disk_space_warning
     
-    def __init__(self):
-        threading.Thread.__init__(self)
+    # Get disk cache size
+    panels = _get_disk_dir_panels()
+    used_disk_cache_size = 0
+    for panel in panels:
+        used_disk_cache_size += panel.used_disk
+    
+    size_str = panels[0].get_size_str(used_disk_cache_size)
 
-    def run(self):
-        check_level = editorpersistance.prefs.disk_space_warning
-        
-        Gdk.threads_enter()
-        
-        # Get disk cache size
-        panels = _get_disk_dir_panels()
-        used_disk_cache_size = 0
-        for panel in panels:
-            used_disk_cache_size += panel.used_disk
-        
-        size_str = panels[0].get_size_str(used_disk_cache_size)
+    # check levels [off, 500 MB,1 GB, 2 GB], see preferenceswindow.py
+    if check_level == 1 and used_disk_cache_size > 1000000 * 500:
+        _show_warning(size_str)
+    elif check_level == 2 and used_disk_cache_size > 1000000 * 1000:
+        _show_warning(size_str)
+    elif check_level == 3 and used_disk_cache_size > 1000000 * 2000:
+        _show_warning(size_str)
 
-        # check levels [off, 500 MB,1 GB, 2 GB], see preferenceswindow.py
-        if check_level == 1 and used_disk_cache_size > 1000000 * 500:
-            self.show_warning(size_str)
-        elif check_level == 2 and used_disk_cache_size > 1000000 * 1000:
-            self.show_warning(size_str)
-        elif check_level == 3 and used_disk_cache_size > 1000000 * 2000:
-            self.show_warning(size_str)
-
-        Gdk.threads_leave()
-
-    def show_warning(self, size_str):
-        primary_txt = _("Disk Cache Size Exceeds Current Warning Level!")
-        secondary_txt = _("Flowblade currently uses ") + size_str + _(" of disk space.") + "\n\n" + \
-                        _("You can either delete saved data using dialog opened with <b>Edit->Disk Cache</b> or") + "\n" + \
-                        _("change warning level in <b>Edit->Preferences 'General Options'</b> panel.") 
-        dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window, is_info=False)
+def _show_warning(size_str):
+    primary_txt = _("Disk Cache Size Exceeds Current Warning Level!")
+    secondary_txt = _("Flowblade currently uses ") + size_str + _(" of disk space.") + "\n\n" + \
+                    _("You can either delete saved data using dialog opened with <b>Edit->Disk Cache</b> or") + "\n" + \
+                    _("change warning level in <b>Edit->Preferences 'General Options'</b> panel.") 
+    dialogutils.warning_message(primary_txt, secondary_txt, gui.editor_window.window, is_info=False)
 
 
 def _get_disk_dir_panels():
