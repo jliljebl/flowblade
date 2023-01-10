@@ -970,7 +970,6 @@ class TLineSettingsRenderDialog:
         
         panel_encoding = guiutils.get_named_frame(_("Render Encoding"), vbox_enc)
 
-
         # Pane
         vbox = Gtk.VBox(False, 2)
         vbox.pack_start(panel_encoding, False, False, 0)

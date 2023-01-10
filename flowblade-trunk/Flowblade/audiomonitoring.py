@@ -286,7 +286,7 @@ def _destroy_level_filters(destroy_track_filters=False):
         _audio_levels = []
     elif _monitor_window == None:
         _level_filters = [_level_filters[0]]
-        _audio_levels[0] = 0.0
+        _audio_levels[0] = (0.0, 0.0)
 
     if _master_volume_meter != None or _monitor_window != None:
         launch_update_ticker()
@@ -304,7 +304,7 @@ def recreate_master_meter_filter_for_new_sequence():
         if _master_volume_meter != None:
             seq.tractor.detach(_level_filters[0])
             _level_filters.pop(0)
-            _audio_levels[0] = 0.0
+            _audio_levels[0] = (0.0, 0.0)
             master_level_filter = _add_audio_level_filter(seq.tractor, seq.profile)
             _level_filters.insert(0, master_level_filter)
 
@@ -709,5 +709,6 @@ class MasterVolumeMeter:
         grad.add_color_stop_rgba(*GREEN_2)
 
         l_value, r_value = _audio_levels[0]
+
         x = 0
         self.meter.display_value(cr, x, l_value, r_value, grad)
