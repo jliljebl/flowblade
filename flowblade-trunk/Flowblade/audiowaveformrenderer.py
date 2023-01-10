@@ -160,6 +160,7 @@ class AudioRenderLaunchThread(threading.Thread):
 
         Gdk.threads_add_timeout(GLib.PRIORITY_HIGH_IDLE, 10, _repaint)
 
+        print("return  AudioRenderLaunchThread(")
 
 def _repaint():
             updater.repaint_tline()
@@ -216,6 +217,7 @@ def main():
        t.start()
        t.join()
 
+    print("rendered all audiowaveforms")
 
 class WaveformCreator(threading.Thread):    
     def __init__(self, clip_path, profile_desc):
