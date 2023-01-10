@@ -25,7 +25,7 @@ Module contains utility methods for creating GUI objects.
 import time
 import threading
 
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk, Gdk, GLib
 from gi.repository import GdkPixbuf
 
 import appconsts
@@ -494,17 +494,18 @@ def remove_children(container):
     for child in children:
         container.remove(child)
 
-class PulseThread(threading.Thread):
+class PulseEvent:
     def __init__(self, proress_bar):
-        threading.Thread.__init__(self)
         self.proress_bar = proress_bar
-
-    def run(self):
         self.exited = False
         self.running = True
-        while self.running:
-            Gdk.threads_enter()
+        
+        Gdk.threads_add_timeout(GLib.PRIORITY_HIGH_IDLE, 100, self._do_pulse)
+                
+    def _do_pulse(self):
+        if self.running:
             self.proress_bar.pulse()
-            Gdk.threads_leave()
-            time.sleep(0.1)
-        self.exited = True
+            return True
+        else:
+            self.exited = True
+            return False

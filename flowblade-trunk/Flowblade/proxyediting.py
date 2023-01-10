@@ -636,8 +636,7 @@ class ProxyProjectLoadThread(threading.Thread):
         self.mark_out = mark_out
     
     def run(self):
-        pulse_runner = guiutils.PulseThread(self.progressbar)
-        pulse_runner.start()
+        pulse_runner = guiutils.PulseEvent(self.progressbar)
         time.sleep(2.0)
         persistance.show_messages = False
         try:
