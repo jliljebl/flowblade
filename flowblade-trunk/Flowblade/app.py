@@ -909,33 +909,32 @@ def _xdg_copy_completed_callback(dialog):
 # We need a bit more stuff because having multiple monitors can mix up setting draw parameters.
 def _set_screen_size_data():
     monitor_data = utilsgtk.get_display_monitors_size_data()
-    monitor_data_index = editorpersistance.prefs.layout_display_index
+    combined_w, combined_h = utilsgtk.get_combined_monitors_size()
+    layout_display_index = editorpersistance.prefs.layout_display_index
 
     display = Gdk.Display.get_default()
     num_monitors = display.get_n_monitors() # Get number of monitors.
 
-    if monitor_data_index == 0:
-        scr_w = Gdk.Screen.width()
-        scr_h = Gdk.Screen.height()
+    scr_w = combined_w
+    scr_h = combined_h
+        
+    if layout_display_index == 0:
         print("Using Full Screen size for layout:", scr_w, "x", scr_h)
-    elif monitor_data_index > len(monitor_data) - 1:
+    elif layout_display_index > len(monitor_data) - 1:
         print("Specified layout monitor not present.")
-        scr_w = Gdk.Screen.width()
-        scr_h = Gdk.Screen.height()
         print("Using Full Screen size for layout:", scr_w, "x", scr_h)
         editorpersistance.prefs.layout_display_index = 0
     else:
-
-        scr_w, scr_h = monitor_data[monitor_data_index]
+        scr_w, scr_h = monitor_data[layout_display_index]
         if scr_w < 1151 or scr_h < 767:
             print("Selected layout monitor too small.")
-            scr_w = Gdk.Screen.width()
-            scr_h = Gdk.Screen.height()
+            scr_w = combined_w
+            scr_h = combined_h
             print("Using Full Screen size for layout:", scr_w, "x", scr_h)
             editorpersistance.prefs.layout_display_index = 0
         else:
             # Selected monitor data is available and monitor is usable as layout monitor.
-            print("Using monitor " + str(monitor_data_index) + " for layout: " + str(scr_w) + " x " + str(scr_h))
+            print("Using monitor " + str(layout_display_index) + " for layout: " + str(scr_w) + " x " + str(scr_h))
     
     editorstate.SCREEN_WIDTH = scr_w
     editorstate.SCREEN_HEIGHT = scr_h
@@ -970,8 +969,7 @@ def _too_small_screen_exit():
 def _show_too_small_info():
     GLib.source_remove(exit_timeout_id)
     primary_txt = _("Too small screen for this application.")
-    scr_w = Gdk.Screen.width()
-    scr_h = Gdk.Screen.height()
+    scr_w, scr_h = utilsgtk.get_combined_monitors_size()
     secondary_txt = _("Minimum screen dimensions for this application are 1152 x 768.\n") + \
                     _("Your screen dimensions are ") + str(scr_w) + " x " + str(scr_h) + "."
     dialogutils.warning_message_with_callback(primary_txt, secondary_txt, None, False, _early_exit)

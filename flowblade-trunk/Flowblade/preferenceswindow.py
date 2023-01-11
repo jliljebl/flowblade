@@ -412,10 +412,12 @@ def _view_prefs_panel():
 
     monitors_data = utilsgtk.get_display_monitors_size_data()
     layout_monitor = Gtk.ComboBoxText()
-    combined_w, combined_h = monitors_data[0]
+
+    combined_w, combined_h = utilsgtk.get_combined_monitors_size()
+            
     layout_monitor.append_text(_("Full Display area: ") + str(combined_w) + " x " + str(combined_h))
-    if len(monitors_data) >= 3:
-        for monitor_index in range(1, len(monitors_data)):
+    if len(monitors_data) >= 2:
+        for monitor_index in range(0, len(monitors_data)):
             monitor_w, monitor_h = monitors_data[monitor_index]
             layout_monitor.append_text(_("Monitor ") + str(monitor_index) + ": " + str(monitor_w) + " x " + str(monitor_h))
     layout_monitor.set_active(prefs.layout_display_index)

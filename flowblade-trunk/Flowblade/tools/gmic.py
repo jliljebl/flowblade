@@ -194,8 +194,7 @@ def main(root_path, force_launch=False):
     Gdk.threads_enter()
 
     # Set monitor sizes
-    scr_w = Gdk.Screen.width()
-    scr_h = Gdk.Screen.height()
+    scr_w, scr_h = utilsgtk.get_combined_monitors_size()
     editorstate.SCREEN_WIDTH = scr_w
     editorstate.SCREEN_HEIGHT = scr_h
     if editorstate.screen_size_large_height() == True and editorstate.screen_size_small_width() == False:
