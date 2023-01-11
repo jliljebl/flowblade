@@ -599,7 +599,7 @@ class MonitorWidget:
     
     def _get_cairo_buf_from_mlt_rgb(self, screen_rgb_data, img_w, img_h ):
         buf = np.frombuffer(screen_rgb_data, dtype=np.uint8)
-        buf.shape = (img_h + 1, img_w, 4) # +1 in h, seemeed to need it
+        buf.shape = (img_h, img_w, 4)
         out = np.copy(buf)
         r = np.index_exp[:, :, 0]
         b = np.index_exp[:, :, 2]
@@ -915,6 +915,7 @@ class MatchSurfaceCreator(threading.Thread):
         threading.Thread.__init__(self)
         
     def run(self):
+        print("MatchSurfaceCreator.run")
         # Create new producer to get mlt frame data
         while _producer == None:
             print("MatchSurfaceCreator: waiting for _producer")
@@ -940,10 +941,7 @@ class MatchSurfaceCreator(threading.Thread):
         _widget.match_frame_surface = surface
         
         # Repaint
-        Gdk.threads_enter()
-        _widget.left_display.queue_draw()
-        _widget.right_display.queue_draw()
-        Gdk.threads_leave()
-        
+        GLib.timeout_add(0, _widget._draw_displays)
+
         
         
