@@ -544,11 +544,12 @@ class MonitorWidget:
     # ------------------------------------------------------------------ MATCH FRAME
     def match_frame_write_complete(self, frame_name):
         self.match_frame_surface = self.create_match_frame_image_surface(frame_name)
-        
-        Gdk.threads_enter()
+        GLib.timeout_add(0, self._draw_displays)
+            
+    def _draw_displays(self):
+        # This is called from GUI prosess, we can do Gtk calls.
         self.left_display.queue_draw()
         self.right_display.queue_draw()
-        Gdk.threads_leave()
 
     def create_pattern_producer_match_frame(self):        
         w, h = self.get_match_frame_panel_size()
@@ -928,7 +929,7 @@ class MatchSurfaceCreator(threading.Thread):
         # And make sureto deinterlace if input is interlaced
         frame.set("consumer_deinterlace", 1)
         size = _widget.get_match_frame_panel_size()
-        mlt_rgb = frame.get_image(mlt.mlt_image_rgb24a, *size) 
+        mlt_rgb = frame.get_image(mlt.mlt_image_rgba, *size) 
    
         # Create cairo surface
         cairo_buf = _widget._get_cairo_buf_from_mlt_rgb(mlt_rgb, *size)
