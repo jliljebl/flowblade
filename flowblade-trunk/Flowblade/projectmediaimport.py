@@ -70,10 +70,8 @@ class ProjectLoadThread(threading.Thread):
         self.filename = filename
 
     def run(self):
-        Gdk.threads_enter()
-        _info_window.info.set_text("Loading project " + self.filename + "...")
-        Gdk.threads_leave()
-
+        GLib.timeout_add(0, self._update_info_window)
+        
         persistance.show_messages = False
         target_project = persistance.load_project(self.filename, False, True)
         
@@ -93,7 +91,9 @@ class ProjectLoadThread(threading.Thread):
 
         _shutdown()
 
-
+    def _update_info_window(self):
+        _info_window.info.set_text("Loading project " + self.filename + "...")
+        
 class ProcesslauchThread(threading.Thread):
     def __init__(self, filename):
         threading.Thread.__init__(self)
@@ -136,6 +136,7 @@ def assets_write_complete():
 def _do_assets_write(filename):
     _create_info_dialog()
     
+    print("_do_assets_write")
     global load_thread
     load_thread = ProjectLoadThread(filename)
     load_thread.start()
