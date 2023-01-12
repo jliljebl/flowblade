@@ -1151,7 +1151,7 @@ class RenderArgsPanelSmall():
 
         self.open_in_bin = Gtk.CheckButton()
 
-        self.open_args_editor_button = Gtk.Button(_("Edit Args:"))
+        self.open_args_editor_button = Gtk.Button(label=_("Edit Args:"))
         self.open_args_editor_button.connect("clicked", lambda w: self.open_edit_window())
         self.open_args_editor_button.set_sensitive(False)
 
@@ -1258,7 +1258,7 @@ class RenderArgsEditWindow(Gtk.Window):
         scroll_frame = Gtk.Frame()
         scroll_frame.add(sw)
 
-        self.load_selection_button = Gtk.Button(_("Load Selection"))
+        self.load_selection_button = Gtk.Button(label=_("Load Selection"))
         self.load_selection_button.connect("clicked", lambda w: self.args_panel.display_selection_callback())
 
         self.ext_label = Gtk.Label(label=_("Ext.:"))

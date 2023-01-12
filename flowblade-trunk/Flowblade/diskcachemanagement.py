@@ -47,7 +47,7 @@ class DiskFolderManagementPanel:
         self.warning_level = warning_level
         self.recursive = recursive
         
-        self.destroy_button = Gtk.Button(_("Destroy data"))
+        self.destroy_button = Gtk.Button(label=_("Destroy data"))
         self.destroy_button.connect("clicked", self.destroy_pressed)
         self.destroy_guard_check = Gtk.CheckButton()
         self.destroy_guard_check.set_active(False)

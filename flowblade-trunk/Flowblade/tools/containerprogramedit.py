@@ -82,11 +82,11 @@ class BlenderProjectEditorManagerWindow(Gtk.Window):
         edit_pane.pack_start(panel_objects, False, False, 0)
         edit_pane.pack_start(panel_editors, True, True, 0)
         
-        self.save_button = Gtk.Button(_("Save Changes"))
+        self.save_button = Gtk.Button(label=_("Save Changes"))
         self.save_button.connect("clicked",lambda w: _shutdown_save())
         self.save_button.set_sensitive(False)
         self.save_button.set_tooltip_markup(_("Add or delete editors to enable <b>Save Changes</b> button"))
-        cancel_button = Gtk.Button(_("Cancel"))
+        cancel_button = Gtk.Button(label=_("Cancel"))
         cancel_button.connect("clicked",lambda w: _shutdown_cancel())
         buttons_box = Gtk.HBox(True, 2)
         buttons_box.pack_start(cancel_button, True, True, 0)

@@ -1015,9 +1015,9 @@ def autosaves_many_recovery_dialog(response_callback, autosaves, parent_window):
     autosaves_view.set_size_request(300, 300)
     autosaves_view.fill_data_model(autosaves)
 
-    delete_all = Gtk.Button(_("Delete all autosaves"))
+    delete_all = Gtk.Button(label=_("Delete all autosaves"))
     delete_all.connect("clicked", lambda w : _autosaves_delete_all_clicked(autosaves, autosaves_view, dialog))
-    delete_all_but_selected = Gtk.Button(_("Delete all but selected autosave"))
+    delete_all_but_selected = Gtk.Button(label=_("Delete all but selected autosave"))
     delete_all_but_selected.connect("clicked", lambda w : _autosaves_delete_unselected(autosaves, autosaves_view))
 
     delete_buttons_vbox = Gtk.HBox()
@@ -1703,8 +1703,8 @@ def watermark_dialog(add_callback, remove_callback):
 
     file_path_label = guiutils.bold_label(_("Watermark:") + " ")
 
-    add_button = Gtk.Button(_("Set Watermark File"))
-    remove_button = Gtk.Button(_("Remove Watermark"))
+    add_button = Gtk.Button(label=_("Set Watermark File"))
+    remove_button = Gtk.Button(label=_("Remove Watermark"))
     if editorstate.current_sequence().watermark_file_path == None:
         file_path_value_label = Gtk.Label(label=_("Not Set"))
         add_button.set_sensitive(True)
@@ -1912,7 +1912,7 @@ def tline_audio_sync_dialog(callback, data):
     label_text = _("<b>Audio Sync Offset</b> between clips media is ") + str(data.media_offset_frames) + _(" frames.")
     media_offsets_label = Gtk.Label(label=label_text)
     media_offsets_label.set_use_markup(True)
-    label_text = _("<b>Timeline Media Offset</b> between clips is ") + str(data.clip_tline_media_offset) + _(" frames."
+    label_text = _("<b>Timeline Media Offset</b> between clips is ") + str(data.clip_tline_media_offset) + _(" frames.")
     tline_offsets_label = Gtk.Label(label=label_text)
     tline_offsets_label.set_use_markup(True)
     

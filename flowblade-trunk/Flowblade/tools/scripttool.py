@@ -709,7 +709,7 @@ class ScriptToolWindow(Gtk.Window):
         self.hamburger_launcher.connect_launched_menu(_hamburger_menu)
         self.hamburger_launcher.widget.set_margin_bottom(7)
 
-        self.reload_button = Gtk.Button(_("Reload Script"))
+        self.reload_button = Gtk.Button(label=_("Reload Script"))
         self.reload_button.connect("clicked", lambda w: _reload_script())
         
         self.action_info = Gtk.Label()
@@ -830,9 +830,9 @@ class ScriptToolWindow(Gtk.Window):
         if editorpersistance.prefs.buttons_style == 2: # NO_DECORATIONS
             self.control_buttons.no_decorations = True 
 
-        self.preview_button = Gtk.Button(_("Preview"))
+        self.preview_button = Gtk.Button(label=_("Preview"))
         self.preview_button.connect("clicked", lambda w: render_preview_frame())
-        self.preview_range_button = Gtk.Button(_("Preview Range"))
+        self.preview_range_button = Gtk.Button(label=_("Preview Range"))
         self.preview_range_button.connect("clicked", lambda w: render_preview_range())
         self.preview_range_button.set_sensitive(False)
             
@@ -896,7 +896,7 @@ class ScriptToolWindow(Gtk.Window):
         self.encode_check.set_active(False)
         self.encode_check.connect("toggled", lambda w:self.update_encode_sensitive())
 
-        self.encode_settings_button = Gtk.Button(_("Encoding settings"))
+        self.encode_settings_button = Gtk.Button(label=_("Encoding settings"))
         self.encode_settings_button.connect("clicked", lambda w:_encode_settings_clicked())
         self.encode_desc = Gtk.Label()
         self.encode_desc.set_markup("<small>" + _("not set")  + "</small>")

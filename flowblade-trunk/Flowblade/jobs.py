@@ -724,7 +724,7 @@ class JobsRenderProgressWindow:
 
         self.status_label = Gtk.Label()
         self.status_label.set_text(_("Rendering"))
-        cancel_button = Gtk.Button(_("Cancel All Jobs"))
+        cancel_button = Gtk.Button(label=_("Cancel All Jobs"))
         cancel_button.connect("clicked", lambda w: self.cancel_all())
         
         control_row = Gtk.HBox(False, 0)

@@ -110,7 +110,7 @@ class MediaLinkerWindow(Gtk.Window):
         app_icon = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "flowblademedialinker.png")
         self.set_icon(app_icon)
 
-        load_button = Gtk.Button(_("Load Project For Relinking"))
+        load_button = Gtk.Button(label=_("Load Project For Relinking"))
         load_button.connect("clicked",
                             lambda w: self.load_button_clicked())
         self.load_button = load_button
@@ -140,11 +140,11 @@ class MediaLinkerWindow(Gtk.Window):
         
         self.relink_list = MediaRelinkListView()
 
-        self.find_button = Gtk.Button(_("Set File Relink Path"))
+        self.find_button = Gtk.Button(label=_("Set File Relink Path"))
         self.find_button.connect("clicked", lambda w: _set_button_pressed())
-        self.create_button = Gtk.Button(_("Create Placeholder File"))
+        self.create_button = Gtk.Button(label=_("Create Placeholder File"))
         self.create_button.connect("clicked", lambda w: _create_relink_media_button_pressed())
-        self.delete_button = Gtk.Button(_("Delete File Relink Path"))
+        self.delete_button = Gtk.Button(label=_("Delete File Relink Path"))
         self.delete_button.connect("clicked", lambda w: _delete_button_pressed())
 
         self.display_combo = Gtk.ComboBoxText()
@@ -162,9 +162,9 @@ class MediaLinkerWindow(Gtk.Window):
         buttons_row.pack_start(guiutils.pad_label(24, 4), False, False, 0)
         buttons_row.pack_start(self.find_button, False, False, 0)
 
-        self.save_button = Gtk.Button(_("Save Relinked Project As..."))
+        self.save_button = Gtk.Button(label=_("Save Relinked Project As..."))
         self.save_button.connect("clicked", lambda w:_save_project_pressed())
-        cancel_button = Gtk.Button(_("Close"))
+        cancel_button = Gtk.Button(label=_("Close"))
         cancel_button.connect("clicked", lambda w:_shutdown())
         dialog_buttons_box = Gtk.HBox(True, 2)
         dialog_buttons_box.pack_start(cancel_button, True, True, 0)

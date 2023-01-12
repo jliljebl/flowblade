@@ -582,7 +582,7 @@ class GmicWindow(Gtk.Window):
         self.hamburger_launcher.connect_launched_menu(_hamburger_menu)
         
         # Load media row
-        self.load_button = Gtk.Button(_("Load Clip"))
+        self.load_button = Gtk.Button(label=_("Load Clip"))
         self.load_button.connect("clicked", lambda w: open_clip_dialog())
 
         self.media_info = Gtk.Label()
@@ -667,7 +667,7 @@ class GmicWindow(Gtk.Window):
         if editorpersistance.prefs.buttons_style == 2: # NO_DECORATIONS
             self.control_buttons.no_decorations = True 
         
-        self.preview_button = Gtk.Button(_("Preview"))
+        self.preview_button = Gtk.Button(label=_("Preview"))
         self.preview_button.connect("clicked", lambda w: render_preview_frame())
                             
         control_panel = Gtk.HBox(False, 2)
@@ -771,7 +771,7 @@ class GmicWindow(Gtk.Window):
         self.encode_check.set_active(False)
         self.encode_check.connect("toggled", lambda w:self.update_encode_sensitive())
         
-        self.encode_settings_button = Gtk.Button(_("Encoding settings"))
+        self.encode_settings_button = Gtk.Button(label=_("Encoding settings"))
         self.encode_settings_button.connect("clicked", lambda w:_encode_settings_clicked())
         self.encode_desc = Gtk.Label()
         self.encode_desc.set_markup("<small>" + _("not set")  + "</small>")
@@ -833,9 +833,9 @@ class GmicWindow(Gtk.Window):
         script_work_panel.pack_start(guiutils.pad_label(12, 2), False, False, 0)
         script_work_panel.pack_start(render_vbox, True, True, 0)
 
-        self.load_script = Gtk.Button(_("Load Script"))
+        self.load_script = Gtk.Button(label=_("Load Script"))
         self.load_script.connect("clicked", lambda w:load_script_dialog(_load_script_dialog_callback))
-        self.save_script = Gtk.Button(_("Save Script"))
+        self.save_script = Gtk.Button(label=_("Save Script"))
         self.save_script.connect("clicked", lambda w:save_script_dialog(_save_script_dialog_callback))
 
         exit_b = guiutils.get_sized_button(_("Close"), 150, 32)

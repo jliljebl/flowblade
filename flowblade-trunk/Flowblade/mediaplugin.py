@@ -234,7 +234,7 @@ class AddMediaPluginWindow(Gtk.Window):
         self.frame_select = Gtk.SpinButton.new_with_range (0, 200, 1)
         self.frame_select.set_value(0)
         
-        self.preview_button = Gtk.Button(_("Preview"))
+        self.preview_button = Gtk.Button(label=_("Preview"))
         self.preview_button.connect("clicked", lambda w: self._show_preview())
                             
         control_panel = Gtk.HBox(False, 2)
@@ -258,7 +258,7 @@ class AddMediaPluginWindow(Gtk.Window):
         self.length_spin.set_value(200)
         length_row = guiutils.get_left_justified_box([Gtk.Label(label=_("Generator Length:")), guiutils.pad_label(12,12), self.length_spin])
 
-        self.encoding_button = Gtk.Button(text=_("Encode settings"))
+        self.encoding_button = Gtk.Button(label=_("Encode settings"))
         self.encoding_button.set_sensitive(False)
         self.encoding_button.connect("clicked", lambda w: self._set_encoding_button_pressed())
         self.encoding_info = Gtk.Label()

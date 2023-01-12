@@ -206,7 +206,7 @@ def create_widgets():
     # Range, Render, Reset, Render Queue
     widgets.render_button = guiutils.get_render_button()
     widgets.range_cb = rendergui.get_range_selection_combo()
-    widgets.queue_button = Gtk.Button(_("To Queue"))
+    widgets.queue_button = Gtk.Button(label=_("To Queue"))
     widgets.queue_button.set_tooltip_text(_("Save Project in Render Queue"))
     widgets.render_range_panel = rendergui.RenderRangePanel(widgets.range_cb)
 

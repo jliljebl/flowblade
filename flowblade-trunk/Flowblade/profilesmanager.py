@@ -70,7 +70,7 @@ def _get_user_profiles_panel():
     # User profiles view
     user_profiles_list = guicomponents.ProfileListView()
     user_profiles_list.fill_data_model(mltprofiles.get_user_profiles())    
-    delete_selected_button = Gtk.Button(_("Delete Selected"))
+    delete_selected_button = Gtk.Button(label=_("Delete Selected"))
     
     user_vbox = Gtk.VBox(False, 2)
     user_vbox.pack_start(user_profiles_list, True, True, 0)
@@ -80,7 +80,7 @@ def _get_user_profiles_panel():
     default_profile_index = mltprofiles.get_default_profile_index()
     default_profile = mltprofiles.get_default_profile()
 
-    load_profile_button = Gtk.Button(_("Load Profile Values"))
+    load_profile_button = Gtk.Button(label=_("Load Profile Values"))
 
     load_profile_combo = Gtk.ComboBoxText()
     profiles = mltprofiles.get_profiles()
@@ -115,7 +115,7 @@ def _get_user_profiles_panel():
     progressive = Gtk.CheckButton()
     progressive.set_active(False)
 
-    save_button = Gtk.Button(_("Save New Profile"))
+    save_button = Gtk.Button(label=_("Save New Profile"))
 
     widgets = (load_profile_combo, description, f_rate_num, f_rate_dem, width, height, s_rate_num,
                 s_rate_dem, d_rate_num, d_rate_dem, progressive)
@@ -175,11 +175,11 @@ def _get_factory_profiles_panel(user_profiles_list):
     # Factory
     all_profiles_list = guicomponents.ProfileListView(_("Visible"))
     all_profiles_list.fill_data_model(mltprofiles.get_factory_profiles())    
-    hide_selected_button = Gtk.Button(_("Hide Selected"))
+    hide_selected_button = Gtk.Button(label=_("Hide Selected"))
     
     hidden_profiles_list = guicomponents.ProfileListView(_("Hidden"))
     hidden_profiles_list.fill_data_model(mltprofiles.get_hidden_profiles())   
-    unhide_selected_button = Gtk.Button(_("Unhide Selected"))
+    unhide_selected_button = Gtk.Button(label=_("Unhide Selected"))
     
     stop_icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "bothways.png")
     

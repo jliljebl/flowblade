@@ -225,8 +225,8 @@ class ProxyManagerDialog:
         self.convert_progress_bar = Gtk.ProgressBar()
         self.convert_progress_bar.set_text(_("Press Button to Change Mode"))
             
-        self.use_button = Gtk.Button(_("Use Proxy Media"))
-        self.dont_use_button = Gtk.Button(_("Use Original Media"))
+        self.use_button = Gtk.Button(label=_("Use Proxy Media"))
+        self.dont_use_button = Gtk.Button(label=_("Use Original Media"))
         self.set_convert_buttons_state()
         self.use_button.connect("clicked", lambda w: _convert_to_proxy_project())
         self.dont_use_button.connect("clicked", lambda w: _convert_to_original_media_project())

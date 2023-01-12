@@ -691,16 +691,16 @@ class BatchRenderWindow:
         self.render_progress_bar = Gtk.ProgressBar()
         self.render_progress_bar.set_text(self.not_rendering_txt)
 
-        self.remove_selected = Gtk.Button(_("Delete Selected"))
+        self.remove_selected = Gtk.Button(label=_("Delete Selected"))
         self.remove_selected.connect("clicked", 
                                      lambda w, e: self.remove_selected_clicked(), 
                                      None)
-        self.remove_finished = Gtk.Button(_("Delete Finished"))
+        self.remove_finished = Gtk.Button(label=_("Delete Finished"))
         self.remove_finished.connect("clicked", 
                                      lambda w, e: self.remove_finished_clicked(), 
                                      None)
 
-        self.reload_button = Gtk.Button(_("Reload Queue"))
+        self.reload_button = Gtk.Button(label=_("Reload Queue"))
         self.reload_button.connect("clicked", 
                                      lambda w, e: self.reload_queue(), 
                                      None)
@@ -711,7 +711,7 @@ class BatchRenderWindow:
                                    lambda w, e: self.launch_render(), 
                                    None)
                                          
-        self.stop_render_button = Gtk.Button(_("Stop Render"))
+        self.stop_render_button = Gtk.Button(label=_("Stop Render"))
         self.stop_render_button.set_sensitive(False)
         self.stop_render_button.connect("clicked", 
                                    lambda w, e: self.abort_render(), 
@@ -1415,7 +1415,7 @@ class SingleRenderWindow:
         info_vbox.pack_start(guiutils.get_left_justified_box([current_r_t, self.current_render_time]), False, False, 0)
         info_vbox.pack_start(guiutils.get_left_justified_box([est_r, self.est_time_left]), False, False, 0)
 
-        self.stop_render_button = Gtk.Button(_("Stop Render"))
+        self.stop_render_button = Gtk.Button(label=_("Stop Render"))
         self.stop_render_button.connect("clicked", 
                                    lambda w, e: _start_single_render_shutdown(), 
                                    None)

@@ -1023,7 +1023,7 @@ class PreviewPanel(Gtk.VBox):
         self.frame_select = Gtk.SpinButton.new_with_range (0, length, 1)
         self.frame_select.set_value(0)
         
-        self.preview_button = Gtk.Button(_("Preview"))
+        self.preview_button = Gtk.Button(label=_("Preview"))
         self.preview_button.connect("clicked", lambda w: parent.render_preview_frame())
                             
         control_panel = Gtk.HBox(False, 2)

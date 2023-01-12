@@ -969,7 +969,7 @@ def _create_rotomask_editor(filt, editable_properties):
 
     value_labels = [kfs_value_label, curve_points_value_label]
 
-    lauch_button = Gtk.Button(_("Lauch RotoMask editor"))
+    lauch_button = Gtk.Button(label=_("Lauch RotoMask editor"))
     lauch_button.connect("clicked", lambda b:_roto_lauch_pressed(filt, editable_properties, property_editor_widgets_create_func, value_labels))
     
     vbox = Gtk.VBox(False, 4)

@@ -231,8 +231,8 @@ class Titler(Gtk.Window):
         
         self.guides_toggle = vieweditor.GuidesViewToggle(self.view_editor)
         
-        add_b = Gtk.Button(_("Add"))
-        del_b = Gtk.Button(_("Delete"))
+        add_b = Gtk.Button(label=_("Add"))
+        del_b = Gtk.Button(label=_("Delete"))
         add_b.connect("clicked", lambda w:self._add_layer_pressed())
         del_b.connect("clicked", lambda w:self._del_layer_pressed())
         add_del_box = Gtk.HBox()
@@ -474,11 +474,11 @@ class Titler(Gtk.Window):
         gradient_box.pack_start(Gtk.Label(), True, True, 0)
                 
         # ---------------------------------------------------- Save and Load buttons        
-        load_layers = Gtk.Button(_("Load Layers"))
+        load_layers = Gtk.Button(label=_("Load Layers"))
         load_layers.connect("clicked", lambda w:self._load_layers_pressed())
-        save_layers = Gtk.Button(_("Save Layers"))
+        save_layers = Gtk.Button(label=_("Save Layers"))
         save_layers.connect("clicked", lambda w:self._save_layers_pressed())
-        clear_layers = Gtk.Button(_("Clear All"))
+        clear_layers = Gtk.Button(label=_("Clear All"))
         clear_layers.connect("clicked", lambda w:self._clear_layers_pressed())
 
         layers_save_buttons_row = Gtk.HBox()
