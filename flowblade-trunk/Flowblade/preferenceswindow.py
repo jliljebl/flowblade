@@ -96,7 +96,7 @@ def _general_options_panel():
     for profile in profiles:
         default_profile_combo.append_text(profile[0])
     default_profile_combo.set_active(mltprofiles.get_default_profile_index())
-    spin_adj = Gtk.Adjustment(value=prefs.undos_max, lower=editorpersistance.UNDO_STACK_MIN, upper=editorpersistance.UNDO_STACK_MAX, step_incr=1)
+    spin_adj = Gtk.Adjustment(value=prefs.undos_max, lower=editorpersistance.UNDO_STACK_MIN, upper=editorpersistance.UNDO_STACK_MAX, step_increment=1)
     undo_max_spin = Gtk.SpinButton.new_with_range(editorpersistance.UNDO_STACK_MIN, editorpersistance.UNDO_STACK_MAX, 1)
     undo_max_spin.set_adjustment(spin_adj)
     undo_max_spin.set_numeric(True)
@@ -163,7 +163,7 @@ def _edit_prefs_panel():
     prefs = editorpersistance.prefs
 
     # Widgets
-    spin_adj = Gtk.Adjustment(value=prefs.default_grfx_length, lower=1, upper=15000, step_incr=1)
+    spin_adj = Gtk.Adjustment(value=prefs.default_grfx_length, lower=1, upper=15000, step_increment=1)
     gfx_length_spin = Gtk.SpinButton()
     gfx_length_spin.set_adjustment(spin_adj)
     gfx_length_spin.set_numeric(True)
@@ -254,25 +254,25 @@ def _playback_prefs_panel():
 
     # Apr-2017 - SvdB - For FF/Rev speed options
     if hasattr(prefs, 'ffwd_rev_shift'):
-        spin_adj = Gtk.Adjustment(value=prefs.ffwd_rev_shift, lower=1, upper=10, step_incr=1)
+        spin_adj = Gtk.Adjustment(value=prefs.ffwd_rev_shift, lower=1, upper=10, step_increment=1)
     else:
-        spin_adj = Gtk.Adjustment(value=1, lower=1, upper=10, step_incr=1)
+        spin_adj = Gtk.Adjustment(value=1, lower=1, upper=10, step_increment=1)
     ffwd_rev_shift_spin = Gtk.SpinButton()
     ffwd_rev_shift_spin.set_adjustment(spin_adj)
     ffwd_rev_shift_spin.set_numeric(True)
 
     if hasattr(prefs, 'ffwd_rev_ctrl'):
-        spin_adj = Gtk.Adjustment(value=prefs.ffwd_rev_ctrl, lower=1, upper=10, step_incr=1)
+        spin_adj = Gtk.Adjustment(value=prefs.ffwd_rev_ctrl, lower=1, upper=10, step_increment=1)
     else:
-        spin_adj = Gtk.Adjustment(value=10, lower=1, upper=10, step_incr=1)
+        spin_adj = Gtk.Adjustment(value=10, lower=1, upper=10, step_increment=1)
     ffwd_rev_ctrl_spin = Gtk.SpinButton()
     ffwd_rev_ctrl_spin.set_adjustment(spin_adj)
     ffwd_rev_ctrl_spin.set_numeric(True)
 
     if hasattr(prefs, 'ffwd_rev_caps'):
-        spin_adj = Gtk.Adjustment(value=prefs.ffwd_rev_caps, lower=1, upper=10, step_incr=1)
+        spin_adj = Gtk.Adjustment(value=prefs.ffwd_rev_caps, lower=1, upper=10, step_increment=1)
     else:
-        spin_adj = Gtk.Adjustment(value=1, lower=1, upper=10, step_incr=1)
+        spin_adj = Gtk.Adjustment(value=1, lower=1, upper=10, step_increment=1)
     ffwd_rev_caps_spin = Gtk.SpinButton()
     ffwd_rev_caps_spin.set_adjustment(spin_adj)
     ffwd_rev_caps_spin.set_numeric(True)
@@ -470,7 +470,7 @@ def _performance_panel():
     warning_icon = Gtk.Image.new_from_stock(Gtk.STOCK_DIALOG_WARNING, Gtk.IconSize.DIALOG)
     warning_label = Gtk.Label(label=_("Changing these values may cause problems with playback and rendering.\nThe safe values are Render Threads:1, Allow Frame Dropping: No."))
 
-    spin_adj = Gtk.Adjustment(value=prefs.perf_render_threads, lower=1, upper=multiprocessing.cpu_count(), step_incr=1)
+    spin_adj = Gtk.Adjustment(value=prefs.perf_render_threads, lower=1, upper=multiprocessing.cpu_count(), step_increment=1)
     perf_render_threads = Gtk.SpinButton(adjustment=spin_adj)
     #perf_render_threads.set_adjustment(spin_adj)
     perf_render_threads.set_numeric(True)

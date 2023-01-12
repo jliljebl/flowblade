@@ -145,8 +145,7 @@ class ImageTextTextListView(Gtk.VBox):
         self.scroll.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
 
         # View
-        self.treeview = Gtk.TreeView(self.storemodel)
-        self.treeview.set_property("rules_hint", True)
+        self.treeview = Gtk.TreeView(model=self.storemodel)
         self.treeview.set_headers_visible(False)
         tree_sel = self.treeview.get_selection()
         tree_sel.set_mode(Gtk.SelectionMode.SINGLE)
@@ -217,7 +216,7 @@ class TextTextListView(Gtk.VBox):
         self.scroll.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
 
         # View
-        self.treeview = Gtk.TreeView(self.storemodel)
+        self.treeview = Gtk.TreeView(model=self.storemodel)
         self.treeview.set_property("rules_hint", True)
         self.treeview.set_headers_visible(False)
         tree_sel = self.treeview.get_selection()
@@ -293,7 +292,7 @@ class MultiTextColumnListView(Gtk.VBox):
         self.scroll.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
 
         # View
-        self.treeview = Gtk.TreeView(self.storemodel)
+        self.treeview = Gtk.TreeView(model=self.storemodel)
         self.treeview.set_property("rules_hint", True)
         self.treeview.set_headers_visible(True)
         tree_sel = self.treeview.get_selection()
@@ -375,7 +374,7 @@ class BinTreeView(Gtk.VBox):
         self.scroll.set_shadow_type(Gtk.ShadowType.NONE)
 
         # TreeView
-        self.treeview = Gtk.TreeView(self.storemodel)
+        self.treeview = Gtk.TreeView(model=self.storemodel)
         self.treeview.connect('button-press-event', self._button_press_event)
         self.treeview.set_headers_visible(False)
         tree_sel = self.treeview.get_selection()
@@ -461,7 +460,7 @@ class ImageTextImageListView(Gtk.VBox):
         self.scroll.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
 
         # View
-        self.treeview = Gtk.TreeView(self.storemodel)
+        self.treeview = Gtk.TreeView(model=self.storemodel)
         self.treeview.set_property("rules_hint", True)
         self.treeview.set_headers_visible(False)
         tree_sel = self.treeview.get_selection()
@@ -647,7 +646,7 @@ class FilterSwitchListView(Gtk.VBox):
         self.scroll.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
 
         # View
-        self.treeview = Gtk.TreeView(self.storemodel)
+        self.treeview = Gtk.TreeView(model=self.storemodel)
         self.treeview.set_property("rules_hint", True)
         self.treeview.set_headers_visible(False)
         self.treeview.set_reorderable(True)
@@ -747,7 +746,7 @@ class TextListView(Gtk.VBox):
         self.scroll.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
 
         # View
-        self.treeview = Gtk.TreeView(self.storemodel)
+        self.treeview = Gtk.TreeView(model=self.storemodel)
         self.treeview.set_property("rules_hint", True)
         if column_name == None:
             self.treeview.set_headers_visible(False)
@@ -1322,7 +1321,7 @@ class MediaPanel():
             self.widget.pack_start(filler, False, False, 0)
             self.row_widgets.append(filler)
             
-            info = Gtk.Label(_("Right Click to Add Media."))
+            info = Gtk.Label(label=_("Right Click to Add Media."))
             info.set_sensitive(False)
             dnd.connect_media_drop_widget(info)
             filler = self._get_empty_filler(info)

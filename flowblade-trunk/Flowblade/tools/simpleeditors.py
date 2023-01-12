@@ -648,7 +648,7 @@ class PangoFontEditor(AbstractSimpleEditor):
         combo.set_active(0)
         self.widgets.font_select = combo
         #self.font_select.connect("changed", self._edit_value_changed)
-        adj = Gtk.Adjustment(value=float(DEFAULT_FONT_SIZE), lower=float(1), upper=float(300), step_incr=float(1))
+        adj = Gtk.Adjustment(value=float(DEFAULT_FONT_SIZE), lower=float(1), upper=float(300), step_increment=float(1))
         self.widgets.size_spin = Gtk.SpinButton()
         self.widgets.size_spin.set_adjustment(adj)
 
@@ -706,7 +706,7 @@ class PangoFontEditor(AbstractSimpleEditor):
         
         self.widgets.out_line_color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(red=0.3, green=0.3, blue=0.3, alpha=1.0))
 
-        adj2 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(50), step_incr=float(1))
+        adj2 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(50), step_increment=float(1))
         self.widgets.out_line_size_spin = Gtk.SpinButton()
         self.widgets.out_line_size_spin.set_adjustment(adj2)
 
@@ -731,17 +731,17 @@ class PangoFontEditor(AbstractSimpleEditor):
         
         self.widgets.shadow_opa_spin = Gtk.SpinButton()
 
-        adj3 = Gtk.Adjustment(value=float(100), lower=float(1), upper=float(100), step_incr=float(1))
+        adj3 = Gtk.Adjustment(value=float(100), lower=float(1), upper=float(100), step_increment=float(1))
         self.widgets.shadow_opa_spin.set_adjustment(adj3)
 
         self.widgets.shadow_xoff_spin = Gtk.SpinButton()
 
-        adj4 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(100), step_incr=float(1))
+        adj4 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(100), step_increment=float(1))
         self.widgets.shadow_xoff_spin.set_adjustment(adj4)
 
         self.widgets.shadow_yoff_spin = Gtk.SpinButton()
 
-        adj5 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(100), step_incr=float(1))
+        adj5 = Gtk.Adjustment(value=float(3), lower=float(1), upper=float(100), step_increment=float(1))
         self.widgets.shadow_yoff_spin.set_adjustment(adj5)
 
         self.widgets.shadow_on = Gtk.CheckButton()
@@ -750,7 +750,7 @@ class PangoFontEditor(AbstractSimpleEditor):
         self.widgets.shadow_color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(red=0.3, green=0.3, blue=0.3, alpha=1.0))
 
         self.widgets.shadow_blur_spin = Gtk.SpinButton()
-        adj6 = Gtk.Adjustment(value=float(0), lower=float(0), upper=float(20), step_incr=float(1))
+        adj6 = Gtk.Adjustment(value=float(0), lower=float(0), upper=float(20), step_increment=float(1))
         self.widgets.shadow_blur_spin.set_adjustment(adj6)
 
         shadow_box_1 = Gtk.HBox()

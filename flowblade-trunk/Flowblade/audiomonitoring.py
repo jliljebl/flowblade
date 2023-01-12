@@ -574,7 +574,7 @@ class GainControl(Gtk.Frame):
             gain_value = producer.audio_gain # track
         gain_value = gain_value * 100
         
-        self.adjustment = Gtk.Adjustment(value=gain_value, lower=0, upper=100, step_incr=1)
+        self.adjustment = Gtk.Adjustment(value=gain_value, lower=0, upper=100, step_increment=1)
         self.slider = Gtk.VScale()
         self.slider.set_adjustment(self.adjustment)
         self.slider.set_size_request(SLOT_W - 10, CONTROL_SLOT_H - 105)
@@ -589,7 +589,7 @@ class GainControl(Gtk.Frame):
             pan_value = 0.5 # center
         pan_value = (pan_value - 0.5) * 200 # from range 0 - 1 to range -100 - 100
 
-        self.pan_adjustment = Gtk.Adjustment(value=pan_value, lower=-100, upper=100, step_incr=1)
+        self.pan_adjustment = Gtk.Adjustment(value=pan_value, lower=-100, upper=100, step_increment=1)
         self.pan_slider = Gtk.HScale()
         self.pan_slider.set_adjustment(self.pan_adjustment)
         self.pan_slider.connect("value-changed", self.pan_changed)

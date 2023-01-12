@@ -1378,7 +1378,7 @@ def open_image_sequence_dialog(callback, parent_window):
     file_chooser.add_filter(filt)
     row1 = guiutils.get_two_column_box(Gtk.Label(label=_("First frame:")), file_chooser, 220)
 
-    adj = Gtk.Adjustment(value=1, lower=1, upper=250, step_incr=1)
+    adj = Gtk.Adjustment(value=1, lower=1, upper=250, step_increment=1)
     frames_per_image = Gtk.SpinButton(adjustment=adj, climb_rate=1.0, digits=0)
     row2 = guiutils.get_two_column_box(Gtk.Label(label=_("Frames per Source Image:")), frames_per_image, 220)
 
