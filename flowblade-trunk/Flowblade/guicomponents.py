@@ -377,7 +377,6 @@ class BinTreeView(Gtk.VBox):
         # TreeView
         self.treeview = Gtk.TreeView(self.storemodel)
         self.treeview.connect('button-press-event', self._button_press_event)
-        self.treeview.set_property("rules_hint", True)
         self.treeview.set_headers_visible(False)
         tree_sel = self.treeview.get_selection()
         tree_sel.set_mode(Gtk.SelectionMode.SINGLE)
