@@ -529,7 +529,7 @@ def _get_conf_panel():
     layout_frame = guiutils.get_named_frame(_("Layout"), layout_row)
     
     vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-    choice = Gtk.Label(_("Set button group active state and position."))
+    choice = Gtk.Label(label=_("Set button group active state and position."))
     
     toolbar_list_box = Gtk.ListBox()
     toolbar_list_box.set_selection_mode(Gtk.SelectionMode.SINGLE)
@@ -622,7 +622,7 @@ def draw_listbox(vbox):
         but.set_active(current_active_flags[row_number])
         but.connect("toggled", toggle_click, row_number)
         box.pack_start(but, False, False, 0)
-        lab = Gtk.Label(gui_object_names[current_buttons_list[row_number]])
+        lab = Gtk.Label(label=gui_object_names[current_buttons_list[row_number]])
         box.pack_start(lab, True, True, 0)
         row.add(box)
         toolbar_list_box.add(row)

@@ -641,7 +641,7 @@ def _show_plugin_media_length_change_dialog():
     frames = 200
     max_len = 100000
 
-    frames_label = Gtk.Label(_("Frames:"))
+    frames_label = Gtk.Label(label=_("Frames:"))
     guiutils.set_margins(frames_label, 0, 0, 0, 4)
     frames_spin = Gtk.SpinButton.new_with_range(10, max_len, 1)
     frames_spin.set_value(frames)
@@ -863,9 +863,9 @@ class ScriptToolWindow(Gtk.Window):
         self.mark_out_label = guiutils.bold_label(_("Mark Out:"))
         self.length_label = guiutils.bold_label(_("Plugin Media Length:"))
 
-        self.mark_in_info = Gtk.Label("")
-        self.mark_out_info = Gtk.Label("")
-        self.length_info = Gtk.Label("")
+        self.mark_in_info = Gtk.Label(label="")
+        self.mark_out_info = Gtk.Label(label="")
+        self.length_info = Gtk.Label(label="")
 
         in_row = guiutils.get_two_column_box(self.mark_in_label, self.mark_in_info, 150)
         out_row = guiutils.get_two_column_box(self.mark_out_label, self.mark_out_info, 150)
@@ -913,7 +913,7 @@ class ScriptToolWindow(Gtk.Window):
         encode_row.pack_start(Gtk.Label(), True, True, 0)
         encode_row.set_margin_bottom(6)
 
-        self.render_percentage = Gtk.Label("")
+        self.render_percentage = Gtk.Label(label="")
 
         self.status_no_render = _("Set Frames Folder for valid render")
          

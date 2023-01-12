@@ -170,7 +170,7 @@ class MediaLinkerWindow(Gtk.Window):
         dialog_buttons_box.pack_start(cancel_button, True, True, 0)
         dialog_buttons_box.pack_start(self.save_button, False, False, 0)
         
-        self.msg_label = Gtk.Label("")
+        self.msg_label = Gtk.Label(label="")
         dialog_buttons_row = Gtk.HBox(False, 2)
         dialog_buttons_row.pack_start(self.msg_label, True, True, 0)
         dialog_buttons_row.pack_start(dialog_buttons_box, False, False, 0)

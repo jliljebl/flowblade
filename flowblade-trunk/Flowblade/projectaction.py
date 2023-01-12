@@ -146,7 +146,7 @@ class LoadThread(threading.Thread):
                             _("To load the project you will need to either:") + "\n" + \
                             "\u2022" + " " + _("Open project in 'Media Relinker' tool to relink media assets to new files, or") + "\n" + \
                             "\u2022" + " " + _("Place a file with the same exact name and path on the hard drive")
-            open_label = Gtk.Label(_("Open project in Media Relinker tool"))
+            open_label = Gtk.Label(label=_("Open project in Media Relinker tool"))
             self.open_check = Gtk.CheckButton()
             self.open_check.set_active(True)
             check_row = Gtk.HBox(False, 1)

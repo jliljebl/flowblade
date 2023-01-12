@@ -228,7 +228,7 @@ class AddMediaPluginWindow(Gtk.Window):
         screenshot_row = guiutils.get_centered_box([self.screenshot_canvas ])
         guiutils.set_margins(screenshot_row, 0, 8, 0, 0)
 
-        self.frame_display = Gtk.Label(_("Clip Frame"))
+        self.frame_display = Gtk.Label(label=_("Clip Frame"))
         self.frame_display.set_margin_right(2)
         
         self.frame_select = Gtk.SpinButton.new_with_range (0, 200, 1)
@@ -252,13 +252,13 @@ class AddMediaPluginWindow(Gtk.Window):
         self.import_select.append_text(_("Add as Rendered Clip"))
         self.import_select.set_active(0)
         self.import_select.connect("changed", lambda w: self._export_action_changed(w))
-        import_row = guiutils.get_left_justified_box([Gtk.Label(_("Import Action:")), guiutils.pad_label(12,12), self.import_select])
+        import_row = guiutils.get_left_justified_box([Gtk.Label(label=_("Import Action:")), guiutils.pad_label(12,12), self.import_select])
         guiutils.set_margins(import_row,8,0,0,0)
         self.length_spin = Gtk.SpinButton.new_with_range (25, 100000, 1)
         self.length_spin.set_value(200)
-        length_row = guiutils.get_left_justified_box([Gtk.Label(_("Generator Length:")), guiutils.pad_label(12,12), self.length_spin])
+        length_row = guiutils.get_left_justified_box([Gtk.Label(label=_("Generator Length:")), guiutils.pad_label(12,12), self.length_spin])
 
-        self.encoding_button = Gtk.Button(_("Encode settings"))
+        self.encoding_button = Gtk.Button(text=_("Encode settings"))
         self.encoding_button.set_sensitive(False)
         self.encoding_button.connect("clicked", lambda w: self._set_encoding_button_pressed())
         self.encoding_info = Gtk.Label()

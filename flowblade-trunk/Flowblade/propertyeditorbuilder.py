@@ -453,7 +453,7 @@ def _get_boolean_check_box_row(editable_property, compact=False):
     check_button.connect("toggled", editable_property.boolean_button_toggled)
     
     if compact:
-        return guiutils.get_right_expand_box(Gtk.Label(editable_property.get_display_name() + ":"), check_button, True)
+        return guiutils.get_right_expand_box(Gtk.Label(label=editable_property.get_display_name() + ":"), check_button, True)
     else:
         hbox = Gtk.HBox(False, 4)
 
@@ -484,7 +484,7 @@ def _get_combo_box_row(editable_property, compact=False):
     combo_box.connect("changed", editable_property.combo_selection_changed, values)  
 
     if compact:
-        return guiutils.get_right_expand_box(Gtk.Label(editable_property.get_display_name() + ":"), combo_box, True)
+        return guiutils.get_right_expand_box(Gtk.Label(label=editable_property.get_display_name() + ":"), combo_box, True)
     else:
         return _get_two_column_editor_row(editable_property.get_display_name(), combo_box)
 
@@ -787,7 +787,7 @@ def _get_file_select_editor(editable_property):
     if hasattr(editable_property, "value") and editable_property.value != '' and editable_property.value != '""':
         file_select_button.set_uri(GLib.filename_to_uri(editable_property.value))
 
-    file_select_label = Gtk.Label(editable_property.get_display_name())
+    file_select_label = Gtk.Label(label=editable_property.get_display_name())
 
     editor_row = Gtk.HBox(False, 2)
     editor_row.pack_start(file_select_label, False, False, 2)
@@ -815,7 +815,7 @@ def _get_image_file_select_editor(editable_property):
     file_select_button = Gtk.FileChooserButton.new_with_dialog(dialog)
     file_select_button.set_size_request(210, 28)
     
-    file_select_label = Gtk.Label(editable_property.get_display_name())
+    file_select_label = Gtk.Label(label=editable_property.get_display_name())
 
     editor_row = Gtk.HBox(False, 2)
     editor_row.pack_start(file_select_label, False, False, 2)
@@ -959,12 +959,12 @@ def _create_rotomask_editor(filt, editable_properties):
     kf_json_prop = [ep for ep in editable_properties if ep.name == "spline"][0]
     kf_editor = keyframeeditor.RotoMaskKeyFrameEditor(kf_json_prop, propertyparse.rotomask_json_value_string_to_kf_array)
 
-    kfs_value_label = Gtk.Label(str(len(kf_editor.clip_editor.keyframes)))
+    kfs_value_label = Gtk.Label(label=str(len(kf_editor.clip_editor.keyframes)))
 
     kf_row = guiutils.get_left_justified_box([guiutils.pad_label(12, 12), guiutils.bold_label(_("Keyframes") + ": "), kfs_value_label])
     
     kf, curve_points = kf_editor.clip_editor.keyframes[0]
-    curve_points_value_label = Gtk.Label(str(len(curve_points)))
+    curve_points_value_label = Gtk.Label(label=str(len(curve_points)))
     cps_row = guiutils.get_left_justified_box([guiutils.pad_label(12, 12), guiutils.bold_label(_("Curve Points") + ": "), curve_points_value_label])
 
     value_labels = [kfs_value_label, curve_points_value_label]

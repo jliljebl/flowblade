@@ -392,16 +392,16 @@ def _show_no_handles_dialog(from_req, from_handle, to_req, to_handle, length):
     img2 = Gtk.Image.new_from_file ((respaths.IMAGE_PATH + "transition_right.png"))
     img2.set_margin_bottom(24)
 
-    label1 = Gtk.Label(_("Current situation, not enought media overlap:"))
+    label1 = Gtk.Label(label=_("Current situation, not enought media overlap:"))
     label1.set_margin_bottom(12)
-    label2 = Gtk.Label(_("You need more media overlap:"))
+    label2 = Gtk.Label(label=_("You need more media overlap:"))
     label2.set_margin_bottom(12)
     label2.set_margin_top(24)
     if first_clip_info != None:
-        label4 = Gtk.Label(first_clip_info)
+        label4 = Gtk.Label(label=first_clip_info)
         label4.set_use_markup(True)
     if second_clip_info != None:
-        label5 = Gtk.Label(second_clip_info)
+        label5 = Gtk.Label(label=second_clip_info)
         label5.set_use_markup(True)
 
     row1 = guiutils.get_centered_box([label1])
@@ -419,7 +419,7 @@ def _show_no_handles_dialog(from_req, from_handle, to_req, to_handle, length):
         row7 = guiutils.get_left_justified_box([label5])
         rows.append(row7)
     
-    label = Gtk.Label(_("Activating 'Steal frames from clips if needed' checkbox can help too."))
+    label = Gtk.Label(label=_("Activating 'Steal frames from clips if needed' checkbox can help too."))
     row = guiutils.get_left_justified_box([label])
     row.set_margin_top(24)
     rows.append(row)
@@ -447,11 +447,11 @@ def _show_failure_to_steal_frames_dialog(from_needed, from_length, to_needed, to
 
     rows = []
     if first_clip_info != None:
-        first_clip_info_label = Gtk.Label(first_clip_info)
+        first_clip_info_label = Gtk.Label(label=first_clip_info)
         first_clip_info_label.set_use_markup(True)
         row = guiutils.get_left_justified_box([first_clip_info_label])
         rows.append(row)
-        label1 = Gtk.Label("\u2022" + " " + _("Lengthen first Clip from beginning:"))
+        label1 = Gtk.Label(label="\u2022" + " " + _("Lengthen first Clip from beginning:"))
         label1.set_margin_bottom(12)
         label1.set_margin_top(24)
         img = Gtk.Image.new_from_file ((respaths.IMAGE_PATH + "transition_fix_first_clip.png"))
@@ -459,16 +459,16 @@ def _show_failure_to_steal_frames_dialog(from_needed, from_length, to_needed, to
         row2 = guiutils.get_centered_box([img])
         rows.append(row1)
         rows.append(row2)
-        label2 = Gtk.Label("\u2022" + " " + _("or make Transition shorter."))
+        label2 = Gtk.Label(label="\u2022" + " " + _("or make Transition shorter."))
         row1 = guiutils.get_left_justified_box([guiutils.pad_label(40,12), label2])
         rows.append(row1)
 
     if second_clip_info != None:
-        last_clip_info_label = Gtk.Label(second_clip_info)
+        last_clip_info_label = Gtk.Label(label=second_clip_info)
         last_clip_info_label.set_use_markup(True)
         row = guiutils.get_left_justified_box([last_clip_info_label])
         rows.append(row)
-        label1 = Gtk.Label("\u2022" + " " + _("Lengthen second Clip from end:"))
+        label1 = Gtk.Label(label="\u2022" + " " + _("Lengthen second Clip from end:"))
         label1.set_margin_bottom(12)
         label1.set_margin_top(24)
         img = Gtk.Image.new_from_file ((respaths.IMAGE_PATH + "transition_fix_last_clip.png"))
@@ -476,7 +476,7 @@ def _show_failure_to_steal_frames_dialog(from_needed, from_length, to_needed, to
         row2 = guiutils.get_centered_box([img])
         rows.append(row1)
         rows.append(row2)
-        label2 = Gtk.Label("\u2022" + " " + _("or make Transition shorter."))
+        label2 = Gtk.Label(label="\u2022" + " " + _("or make Transition shorter."))
         row1 = guiutils.get_left_justified_box([guiutils.pad_label(40,12), label2])
         rows.append(row1)
 

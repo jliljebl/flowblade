@@ -283,7 +283,7 @@ class FluxityScriptEditorPanel:
         if len(self.editor_widgets) != 0:
             pane.pack_start(editors_v_panel, False, False, 0)
         else:
-            pane.pack_start(Gtk.Label(_("No Editors for this script")), False, False, 0)
+            pane.pack_start(Gtk.Label(label=_("No Editors for this script")), False, False, 0)
             
         sw = Gtk.ScrolledWindow()
         sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
@@ -324,7 +324,7 @@ class AddMediaPluginEditors:
         if len(self.editor_widgets) != 0:
             pane.pack_start(editors_v_panel, False, False, 0)
         else:
-            pane.pack_start(Gtk.Label(_("No Editors for this script")), False, False, 0)
+            pane.pack_start(Gtk.Label(label=_("No Editors for this script")), False, False, 0)
             
         # Put in scrollpane if too many editors for screensize.
         n_editors = len(self.editor_widgets )
@@ -702,7 +702,7 @@ class PangoFontEditor(AbstractSimpleEditor):
         buttons_box.pack_start(Gtk.Label(), True, True, 0)
 
         # ------------------------------------------- Outline Panel
-        outline_size = Gtk.Label(_("Size:"))
+        outline_size = Gtk.Label(label=_("Size:"))
         
         self.widgets.out_line_color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(red=0.3, green=0.3, blue=0.3, alpha=1.0))
 
@@ -724,10 +724,10 @@ class PangoFontEditor(AbstractSimpleEditor):
         outline_box.pack_start(Gtk.Label(), True, True, 0)
 
         # -------------------------------------------- Shadow panel 
-        shadow_opacity_label = Gtk.Label(_("Opacity:"))
-        shadow_xoff = Gtk.Label(_("X Off:"))
-        shadow_yoff = Gtk.Label(_("Y Off:"))
-        shadow_blur_label = Gtk.Label(_("Blur:"))
+        shadow_opacity_label = Gtk.Label(label=_("Opacity:"))
+        shadow_xoff = Gtk.Label(label=_("X Off:"))
+        shadow_yoff = Gtk.Label(label=_("Y Off:"))
+        shadow_blur_label = Gtk.Label(label=_("Blur:"))
         
         self.widgets.shadow_opa_spin = Gtk.SpinButton()
 
@@ -781,7 +781,7 @@ class PangoFontEditor(AbstractSimpleEditor):
         self.widgets.gradient_on = Gtk.CheckButton()
         self.widgets.gradient_on.set_active(True)
 
-        direction_label = Gtk.Label(_("Gradient Direction:"))
+        direction_label = Gtk.Label(label=_("Gradient Direction:"))
         self.widgets.direction_combo = Gtk.ComboBoxText()
         self.widgets.direction_combo.append_text(_("Vertical"))
         self.widgets.direction_combo.append_text(_("Horizontal"))
@@ -1014,7 +1014,7 @@ class PreviewPanel(Gtk.VBox):
         self.no_preview_icon = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + NO_PREVIEW_FILE)
 
         # Control row
-        self.frame_display = Gtk.Label(_("Clip Frame"))
+        self.frame_display = Gtk.Label(label=_("Clip Frame"))
         self.frame_display.set_margin_right(2)
         
         if length == -1:

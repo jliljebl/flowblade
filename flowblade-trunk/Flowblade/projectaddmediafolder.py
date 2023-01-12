@@ -100,7 +100,7 @@ class AddMediaWindow(Gtk.Window):
 
         load_button = Gtk.Button(_("Load Add Files Set"))
         load_button.connect("clicked", lambda w: _load_add_files_clicked())
-        self.load_info = Gtk.Label(_("Files to load: ") + _("Not Set"))
+        self.load_info = Gtk.Label(label=_("Files to load: ") + _("Not Set"))
         row9 = Gtk.HBox(False, 0)
         row9.pack_start(self.load_info, False, False, 0)
         row9.pack_start(Gtk.Label(), True, True, 0)

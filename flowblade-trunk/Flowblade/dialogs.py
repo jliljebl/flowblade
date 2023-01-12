@@ -630,9 +630,9 @@ def about_dialog(parent_window):
     # Thanks tab
     up_label = Gtk.Label(label=_("Upstream:"))
     up_projs = Gtk.Label(label="MLT")
-    up_projs2 = Gtk.Label("FFMpeg, Frei0r, LADSPA, Cairo, Gnome, Linux")
+    up_projs2 = Gtk.Label(label="FFMpeg, Frei0r, LADSPA, Cairo, Gnome, Linux")
     tools_label = Gtk.Label(label=_("Tools:"))
-    tools_list = Gtk.Label("Geany, Inkscape, Gimp, ack-grep")
+    tools_list = Gtk.Label(label="Geany, Inkscape, Gimp, ack-grep")
 
     up_label.modify_font(Pango.FontDescription("sans bold 12"))
     tools_label.modify_font(Pango.FontDescription("sans bold 12"))
@@ -1289,7 +1289,7 @@ def clip_marker_name_dialog(clip_frame_str, tline_frame_str, callback, data):
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("Add Marker"), Gtk.ResponseType.ACCEPT))
 
-    tline_frame_info = guiutils.get_left_justified_box([Gtk.Label(_("Timeline position: ") + tline_frame_str),Gtk.Label()])
+    tline_frame_info = guiutils.get_left_justified_box([Gtk.Label(label=_("Timeline position: ") + tline_frame_str),Gtk.Label()])
 
     name_entry = Gtk.Entry()
     name_entry.set_width_chars(30)
@@ -1319,11 +1319,13 @@ def alpha_info_msg(callback, filter_name):
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("Ok"), Gtk.ResponseType.ACCEPT))
 
-    line_label = Gtk.Label(_("You are adding <b>Alpha Filter '") + filter_name + _("'</b> into a clip. Here is some info on how <b>Alpha Filters</b> work on Flowblade:"))
+    label_text = _("You are adding <b>Alpha Filter '") + filter_name + _("'</b> into a clip. Here is some info on how <b>Alpha Filters</b> work on Flowblade:")
+    line_label = Gtk.Label(label=label_text)
     line_label.set_use_markup(True)
     row1 = guiutils.get_left_justified_box([line_label])
 
-    line_label = Gtk.Label(_("This applies to all <b>Compositing Modes</b> other then <b>Standard Full Track</b>."))
+    label_text = _("This applies to all <b>Compositing Modes</b> other then <b>Standard Full Track</b>.")
+    line_label = Gtk.Label(label=label_text)
     line_label.set_use_markup(True)
     row11 = guiutils.get_left_justified_box([line_label])
     guiutils.set_margins(row11, 12, 0, 0, 0)
@@ -1826,13 +1828,13 @@ def not_matching_media_info_dialog(project, media_file, callback):
     row1 = guiutils.get_two_column_box(guiutils.bold_label(_("File:")), Gtk.Label(label=media_file.name), 120)
     row2 = guiutils.get_two_column_box(guiutils.bold_label(_("File Profile:")), Gtk.Label(label=match_profile_name), 120)
     row3 = guiutils.get_two_column_box(guiutils.bold_label(_("Project Profile:")), Gtk.Label(label=project_profile_name), 120)
-    row4 = guiutils.get_left_justified_box([Gtk.Label(_("Using a matching profile is recommended.\n\nThis message is only displayed on first media load for Project."))])
+    row4 = guiutils.get_left_justified_box([Gtk.Label(label=_("Using a matching profile is recommended.\n\nThis message is only displayed on first media load for Project."))])
 
     text_panel = Gtk.VBox(False, 2)
     text_panel.pack_start(row1, False, False, 0)
     text_panel.pack_start(row2, False, False, 0)
     text_panel.pack_start(row3, False, False, 0)
-    text_panel.pack_start(Gtk.Label(" "), False, False, 0)
+    text_panel.pack_start(Gtk.Label(label=" "), False, False, 0)
     text_panel.pack_start(row4, False, False, 0)
 
     vbox = dialogutils.get_warning_message_dialog_panel(primary_txt, secondary_txt,
@@ -1883,10 +1885,10 @@ def combine_sequences_dialog(callback):
     seq_select.set_active(0)
 
     row1 = Gtk.HBox(False, 2)
-    row1.pack_start(Gtk.Label(_("Action:")), False, False, 0)
+    row1.pack_start(Gtk.Label(label=_("Action:")), False, False, 0)
     row1.pack_start(action_select, False, False, 0)
     row1.pack_start(guiutils.pad_label(12,2), False, False, 0)
-    row1.pack_start(Gtk.Label(_("Import:")), False, False, 0)
+    row1.pack_start(Gtk.Label(label=_("Import:")), False, False, 0)
     row1.pack_start(seq_select, False, False, 0)
 
     panel = Gtk.VBox(False, 2)
@@ -1906,14 +1908,16 @@ def tline_audio_sync_dialog(callback, data):
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("Cancel"), Gtk.ResponseType.REJECT,
                         _("Do Audio Sync Move Edit"), Gtk.ResponseType.ACCEPT))
-        
-    media_offsets_label = Gtk.Label(_("<b>Audio Sync Offset</b> between clips media is ") + str(data.media_offset_frames) + _(" frames."))
+    
+    label_text = _("<b>Audio Sync Offset</b> between clips media is ") + str(data.media_offset_frames) + _(" frames.")
+    media_offsets_label = Gtk.Label(label=label_text)
     media_offsets_label.set_use_markup(True)
-    tline_offsets_label = Gtk.Label(_("<b>Timeline Media Offset</b> between clips is ") + str(data.clip_tline_media_offset) + _(" frames."))
+    label_text = _("<b>Timeline Media Offset</b> between clips is ") + str(data.clip_tline_media_offset) + _(" frames."
+    tline_offsets_label = Gtk.Label(label=label_text)
     tline_offsets_label.set_use_markup(True)
     
     action_label_text = _("To audio sync clips you need move action origin clip by ") + str(data.clip_tline_media_offset - data.media_offset_frames) + _(" frames.")
-    action_label = Gtk.Label(action_label_text)
+    action_label = Gtk.Label(label=action_label_text)
     
     panel_vbox = Gtk.VBox(False, 2)
     panel_vbox.pack_start(guiutils.get_left_justified_box([media_offsets_label]), False, False, 0)
@@ -1965,7 +1969,7 @@ def set_fade_length_default_dialog(callback, current_value):
     length_spin.set_value(current_value)
     
     hbox = Gtk.HBox(False, 2)
-    hbox.pack_start(Gtk.Label(_("Fade Buttons Fades Default Length:")), False, False, 0)
+    hbox.pack_start(Gtk.Label(label=_("Fade Buttons Fades Default Length:")), False, False, 0)
     hbox.pack_start(length_spin, False, False, 0)
 
     vbox = Gtk.VBox(False, 2)

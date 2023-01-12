@@ -521,38 +521,38 @@ class WorkflowDialog(Gtk.Dialog):
         self.comp_selection = COMPOSITING_MODE_STANDARD_FULL_TRACK 
         
         info_label_text_1 = _("<b>Welcome to Flowblade</b>")
-        info_label_1 = Gtk.Label(info_label_text_1)
+        info_label_1 = Gtk.Label(label=info_label_text_1)
         info_label_1.set_use_markup(True)
 
 
         info_label_text_2 = _("<b>Flowblade</b> comes with a configurable workflow.")
-        info_label_2 = Gtk.Label(info_label_text_2)
+        info_label_2 = Gtk.Label(label=info_label_text_2)
         info_label_2.set_use_markup(True)
 
         INDENT = "    "
         info_label_text_6 = INDENT + "\u2022" + _(" You can select which <b>Edit Tools</b> you want to use.\n") + \
                             INDENT + "\u2022" + _(" Many timeline edit <b>behaviours</b> are configurable.\n")
 
-        info_label_6 = Gtk.Label(info_label_text_6)
+        info_label_6 = Gtk.Label(label=info_label_text_6)
         info_label_6.set_use_markup(True)
 
         info_label_text_3 = _("<b>Select Workflow Preset</b>")
-        info_label_3 = Gtk.Label(info_label_text_3)
+        info_label_3 = Gtk.Label(label=info_label_text_3)
         info_label_3.set_use_markup(True)
         guiutils.set_margins(info_label_3, 0, 4, 0, 0)
             
         info_label_text_7 = _("You can change and configure individual tools and behaviours <b>anytime</b>")
-        info_label_7 = Gtk.Label(info_label_text_7)
+        info_label_7 = Gtk.Label(label=info_label_text_7)
         info_label_7.set_use_markup(True)
         
         info_label_text_4 = _(" by pressing ")
-        info_label_4 = Gtk.Label(info_label_text_4)
+        info_label_4 = Gtk.Label(label=info_label_text_4)
         info_label_4.set_use_markup(True)
         
         icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "workflow.png")
     
         info_label_text_5 = _(" icon.")
-        info_label_5 = Gtk.Label(info_label_text_5)
+        info_label_5 = Gtk.Label(label=info_label_text_5)
         
         # Workflow selection 
         workflow_name = _("<b>Standard</b>")
@@ -597,25 +597,25 @@ class WorkflowDialog(Gtk.Dialog):
         comp_items_box = self.get_selection_box(self.comp_items)
 
         text = _("<b>Select Default Compositing Mode</b>")
-        comp_info_label_1 = Gtk.Label(text)
+        comp_info_label_1 = Gtk.Label(label=text)
         comp_info_label_1.set_use_markup(True)
         guiutils.set_margins(comp_info_label_1, 0, 4, 0, 0)
 
         text = _("You can change default <b>Compositing Mode</b> later by pressing ")
-        comp_info_label_2 = Gtk.Label(text)
+        comp_info_label_2 = Gtk.Label(label=text)
         comp_info_label_2.set_use_markup(True)
 
         text = _(" by pressing ")
-        comp_info_label_3 = Gtk.Label(text)
+        comp_info_label_3 = Gtk.Label(label=text)
         comp_info_label_3.set_use_markup(True)
         
         icon = Gtk.Image.new_from_file(respaths.IMAGE_PATH + "workflow.png")
     
         text = _(" icon.")
-        comp_info_label_4 = Gtk.Label(text)
+        comp_info_label_4 = Gtk.Label(label=text)
 
         text = _("You can change <b>Compositing Mode</b> for current <b>Sequence</b> using\nmenu <b>Sequence -> Compositing Mode</b>.")
-        comp_info_label_5 = Gtk.Label(text)
+        comp_info_label_5 = Gtk.Label(label=text)
         comp_info_label_5.set_use_markup(True)
         guiutils.set_margins(comp_info_label_5, 4, 0, 0, 0)
         
@@ -628,7 +628,7 @@ class WorkflowDialog(Gtk.Dialog):
         
         # Initial layout
         text = _("<b>Select Initial Layout</b>")
-        layout_info_label_1 = Gtk.Label(text)
+        layout_info_label_1 = Gtk.Label(label=text)
         layout_info_label_1.set_use_markup(True)
         guiutils.set_margins(layout_info_label_1, 48, 4, 0, 0)
         
@@ -642,7 +642,7 @@ class WorkflowDialog(Gtk.Dialog):
         self.layout_combo_box.set_active(LAYOUT_MONITOR_CENTER)
 
         text = _("You can change layout using menu <b>View -> Panel Placement</b>.")
-        layout_info_label_2 = Gtk.Label(text)
+        layout_info_label_2 = Gtk.Label(label=text)
         layout_info_label_2.set_use_markup(True)
         guiutils.set_margins(layout_info_label_2, 24, 0, 0, 0)
         
@@ -678,10 +678,10 @@ class WorkflowDialog(Gtk.Dialog):
         self.show_all()
 
     def get_select_item(self, item_number, item_name, item_text, callback, initial_selection):
-        name = Gtk.Label(item_name)
+        name = Gtk.Label(label=item_name)
         name.set_use_markup(True)
         guiutils.set_margins(name, 0, 8, 0, 0)
-        label = Gtk.Label(item_text)
+        label = Gtk.Label(label=item_text)
         label.set_use_markup(True)
         label.set_justify(Gtk.Justification.CENTER)
 

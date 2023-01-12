@@ -129,7 +129,7 @@ class BlenderProjectEditorManagerWindow(Gtk.Window):
         project_box.pack_start(project_name_label, False, False, 0)
         project_box.pack_start(Gtk.Label(), True, True, 0)
         
-        self.editors_count_label = Gtk.Label("0")
+        self.editors_count_label = Gtk.Label(label="0")
         editors_box = Gtk.HBox(False, 2)
         editors_box.pack_start(guiutils.set_margins(guiutils.bold_label("Blender Project:"), 0, 0, 0, 4), False, False, 0)
         editors_box.pack_start(self.editors_count_label, False, False, 0)

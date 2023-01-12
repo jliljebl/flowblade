@@ -357,7 +357,7 @@ class Titler(Gtk.Window):
         buttons_box.pack_start(Gtk.Label(), True, True, 0)
 
         # ------------------------------------------- Outline Panel
-        outline_size = Gtk.Label(_("Size:"))
+        outline_size = Gtk.Label(label=_("Size:"))
         
         self.out_line_color_button = Gtk.ColorButton.new_with_rgba(Gdk.RGBA(red=0.3, green=0.3, blue=0.3, alpha=1.0))
         self.out_line_color_button.connect("color-set", self._edit_value_changed)
@@ -383,10 +383,10 @@ class Titler(Gtk.Window):
         outline_box.pack_start(Gtk.Label(), True, True, 0)
 
         # -------------------------------------------- Shadow panel 
-        shadow_opacity_label = Gtk.Label(_("Opacity:"))
-        shadow_xoff = Gtk.Label(_("X Off:"))
-        shadow_yoff = Gtk.Label(_("Y Off:"))
-        shadow_blur_label = Gtk.Label(_("Blur:"))
+        shadow_opacity_label = Gtk.Label(label=_("Opacity:"))
+        shadow_xoff = Gtk.Label(label=_("X Off:"))
+        shadow_yoff = Gtk.Label(label=_("Y Off:"))
+        shadow_blur_label = Gtk.Label(label=_("Blur:"))
         
         self.shadow_opa_spin = Gtk.SpinButton()
  
@@ -451,7 +451,7 @@ class Titler(Gtk.Window):
         self.gradient_on.set_active(True)
         self.gradient_on.connect("toggled", self._edit_value_changed)
 
-        direction_label = Gtk.Label(_("Gradient Direction:"))
+        direction_label = Gtk.Label(label=_("Gradient Direction:"))
         self.direction_combo = Gtk.ComboBoxText()
         self.direction_combo.append_text(_("Vertical"))
         self.direction_combo.append_text(_("Horizontal"))

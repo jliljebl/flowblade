@@ -347,7 +347,7 @@ class ProxyRenderIssuesWindow:
   
             proxy_mode = editorstate.PROJECT().proxy_data.proxy_mode
             if proxy_mode == appconsts.USE_PROXY_MEDIA:
-                info_label = Gtk.Label(_("<b>Rerendering proxies currently not possible!</b>\nChange to 'Use Original Media' mode to rerender proxies."))
+                info_label = Gtk.Label(label=_("<b>Rerendering proxies currently not possible!</b>\nChange to 'Use Original Media' mode to rerender proxies."))
                 info_label.set_use_markup(True)
                 info_row = guiutils.get_left_justified_box([guiutils.get_pad_label(24, 10), info_label])
 

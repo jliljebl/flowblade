@@ -695,7 +695,7 @@ class GmicWindow(Gtk.Window):
         self.action_select = Gtk.CheckButton()
         self.action_select.set_active(False)
                 
-        self.action_label = Gtk.Label(_("Add to Script"))
+        self.action_label = Gtk.Label(label=_("Add to Script"))
 
         preset_row = Gtk.HBox(False, 2)
         preset_row.pack_start(self.present_event_box, False, False, 0)
@@ -739,9 +739,9 @@ class GmicWindow(Gtk.Window):
         self.mark_out_label = guiutils.bold_label(_("Mark Out:"))
         self.length_label = guiutils.bold_label(_("Length:"))
         
-        self.mark_in_info = Gtk.Label("-")
-        self.mark_out_info = Gtk.Label("-")
-        self.length_info = Gtk.Label("-")
+        self.mark_in_info = Gtk.Label(label="-")
+        self.mark_out_info = Gtk.Label(label="-")
+        self.length_info = Gtk.Label(label="-")
 
         in_row = guiutils.get_two_column_box(self.mark_in_label, self.mark_in_info, 150)
         out_row = guiutils.get_two_column_box(self.mark_out_label, self.mark_out_info, 150)
@@ -766,7 +766,7 @@ class GmicWindow(Gtk.Window):
                             self.out_folder, guiutils.pad_label(24, 2), self.frame_name, \
                             guiutils.pad_label(2, 2), self.extension_label])
 
-        self.encode_check_label = Gtk.Label(_("Encode Video"))
+        self.encode_check_label = Gtk.Label(label=_("Encode Video"))
         self.encode_check = Gtk.CheckButton()
         self.encode_check.set_active(False)
         self.encode_check.connect("toggled", lambda w:self.update_encode_sensitive())
@@ -788,7 +788,7 @@ class GmicWindow(Gtk.Window):
         encode_row.pack_start(Gtk.Label(), True, True, 0)
         encode_row.set_margin_bottom(6)
 
-        self.render_percentage = Gtk.Label("")
+        self.render_percentage = Gtk.Label(label="")
         
         self.status_no_render = _("Set Mark In, Mark Out and Frames Folder for valid render")
          

@@ -2135,10 +2135,10 @@ class PositionNumericalEntries(Gtk.HBox):
             self.init_for_box_geom(editor_buttons)     
 
     def init_for_box_geom(self, editor_buttons):
-        x_label = Gtk.Label(_("X:"))
-        y_label = Gtk.Label(_("Y:"))
-        w_label = Gtk.Label(_("W:"))
-        h_label = Gtk.Label(_("H:"))
+        x_label = Gtk.Label(label=_("X:"))
+        y_label = Gtk.Label(label=_("Y:"))
+        w_label = Gtk.Label(label=_("W:"))
+        h_label = Gtk.Label(label=_("H:"))
         
         self.x_entry = Gtk.Entry.new()
         self.y_entry = Gtk.Entry.new()
@@ -2180,11 +2180,11 @@ class PositionNumericalEntries(Gtk.HBox):
         
     def init_for_roto_geom(self, editor_buttons):
 
-        x_label = Gtk.Label(_("X:"))
-        y_label = Gtk.Label(_("Y:"))
-        x_scale_label = Gtk.Label(_("\u21D4" + ":"))
-        y_scale_label = Gtk.Label(_("\u21D5" + ":"))
-        rotation_label = Gtk.Label(_("\u2941" + ":"))
+        x_label = Gtk.Label(label=_("X:"))
+        y_label = Gtk.Label(label=_("Y:"))
+        x_scale_label = Gtk.Label(label=_("\u21D4" + ":"))
+        y_scale_label = Gtk.Label(label=_("\u21D5" + ":"))
+        rotation_label = Gtk.Label(label=_("\u2941" + ":"))
         
         self.x_entry = Gtk.Entry.new()
         self.y_entry = Gtk.Entry.new()

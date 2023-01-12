@@ -433,7 +433,7 @@ def get_menu_item(text, callback, data, sensitive=True):
 
 def get_image_menu_item(text, image_name, callback, tooltip_markup=None):
     img = get_image(image_name)
-    text_label = Gtk.Label(text)
+    text_label = Gtk.Label(label=text)
     
     hbox = Gtk.HBox()
     hbox.pack_start(pad_label(4, 4), False, False, 0)

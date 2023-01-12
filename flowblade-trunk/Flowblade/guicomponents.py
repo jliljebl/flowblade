@@ -3242,17 +3242,17 @@ class TracksNumbersSelect:
         
         self.widget = Gtk.HBox()
         
-        self.video_label = Gtk.Label(_("Video:"))
+        self.video_label = Gtk.Label(label=_("Video:"))
         self.video_tracks = Gtk.SpinButton.new_with_range(1, self.MAX_TRACKS, 1)
         self.video_tracks.set_value(v_tracks)
         self.video_tracks.connect("value-changed", self.video_tracks_changed)
         
-        self.audio_label = Gtk.Label(_("Audio:"))
+        self.audio_label = Gtk.Label(label=_("Audio:"))
         self.audio_tracks = Gtk.SpinButton.new_with_range(0, self.MAX_TRACKS-1, 1)
         self.audio_tracks.set_value(a_tracks)
         self.audio_tracks.connect("value-changed", self.audio_tracks_changed)
         
-        self.label = Gtk.Label(_("Number of Tracks:"))
+        self.label = Gtk.Label(label=_("Number of Tracks:"))
         self.tracks_amount_info = Gtk.Label()
         self.set_total_tracks_info()
 
@@ -3295,7 +3295,7 @@ class ClipLengthChanger:
         frames = clip.clip_length()
         self.max_len = clip.get_length()
 
-        self.frames_label = Gtk.Label(_("Frames:"))
+        self.frames_label = Gtk.Label(label=_("Frames:"))
         self.frames_spin = Gtk.SpinButton.new_with_range(1, self.max_len, 1)
         self.frames_spin.set_value(frames)
         self.frames_spin.connect("value-changed", self._length_changed)
@@ -4121,7 +4121,7 @@ class KBShortcutEditor:
             edit_launch.widget = Gtk.Label()
             
         item_vbox = Gtk.HBox(False, 2)
-        input_label = Gtk.Label(_("Input Shortcut"))
+        input_label = Gtk.Label(label=_("Input Shortcut"))
         SELECTED_BG = Gdk.RGBA(0.1, 0.31, 0.58,1.0)
         input_label.override_color(Gtk.StateType.NORMAL, SELECTED_BG)
         item_vbox.pack_start(input_label, True, True, 0)

@@ -417,7 +417,7 @@ def get_re_render_all_panel(rerender_list, unrenderable):
     
     if unrenderable > 0:
         unrenderable_info = _("There are ") + str(unrenderable) + _(" Transitions / Fades that cannot be rerendered, either because they are\ncreated with Flowblade version <=1.14 or the source clips are no longer on timeline.")
-        unrenderable_info_label = Gtk.Label(unrenderable_info)
+        unrenderable_info_label = Gtk.Label(label=unrenderable_info)
         
     info_vbox = Gtk.VBox(False, 2)
     info_vbox.pack_start(rerendercount_row, False, False, 0)
