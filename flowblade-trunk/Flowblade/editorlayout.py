@@ -22,7 +22,7 @@
 This modules handles displaying and moving panels into different positions 
 in application window.
 """
-from gi.repository import Gtk, GObject
+from gi.repository import Gtk
 
 import copy
 import pickle
@@ -621,7 +621,7 @@ def _change_panel_position(widget, panel_id, pos_option):
     if widget != None:
         gui.editor_window.window.show_all()
         set_positions_frames_visibility()
-        GObject.timeout_add(100, _check_dimensions)
+        GLib.timeout_add(100, _check_dimensions)
         
 def _check_dimensions():
     top_row_min_width = get_top_row_minimum_width()

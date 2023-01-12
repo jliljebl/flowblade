@@ -176,7 +176,7 @@ def update_job_queue(job_msg): # We're using JobProxy objects as messages to upd
         _jobs[row].text = _("Completed")
         _jobs[row].progress = 1.0
         _remove_list.append(_jobs[row])
-        GObject.timeout_add(4000, _remove_jobs)
+        GLib.timeout_add(4000, _remove_jobs)
         waiting_jobs = _get_jobs_with_status(QUEUED)
         if len(waiting_jobs) > 0:
             waiting_jobs[0].start_render()
@@ -206,7 +206,7 @@ def _cancel_all_jobs():
 
     _jobs_list_view.fill_data_model()
     _jobs_list_view.scroll.queue_draw()
-    GObject.timeout_add(4000, _remove_jobs)
+    GLib.timeout_add(4000, _remove_jobs)
         
 def get_jobs_of_type(job_type):
     jobs_of_type = []
@@ -297,7 +297,7 @@ def _hamburger_item_activated(widget, msg):
 
         _jobs_list_view.fill_data_model()
         _jobs_list_view.scroll.queue_draw()
-        GObject.timeout_add(4000, _remove_jobs)
+        GLib.timeout_add(4000, _remove_jobs)
         
     elif msg == "open_on_add":
         editorpersistance.prefs.open_jobs_panel_on_add = widget.get_active()

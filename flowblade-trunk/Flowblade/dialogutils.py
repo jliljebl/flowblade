@@ -20,7 +20,6 @@
 """
 Module contains functions to build generic dialogs.
 """
-from gi.repository import GObject
 from gi.repository import Gtk
 
 import appconsts
@@ -215,7 +214,7 @@ def set_default_behaviour(dialog):
     
 # ------------------------------------------------------------------ delayed window destroying 
 def delay_destroy_window(window, delay):
-    GObject.timeout_add(int(delay * 1000), _window_destroy_event, window)
+    GLib.timeout_add(int(delay * 1000), _window_destroy_event, window)
 
 def _window_destroy_event(window):
     window.destroy()

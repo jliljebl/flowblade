@@ -21,9 +21,9 @@
 """
 Module contains GUI update routines.
 """
-from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
+from gi.repository import GLib
 
 import appconsts
 import clipeffectseditor
@@ -135,7 +135,7 @@ def window_resized():
 
         return False
     except:
-        GObject.timeout_add(200, window_resized)
+        GLib.timeout_add(200, window_resized)
         print("window resized FAILED")
         return False
 

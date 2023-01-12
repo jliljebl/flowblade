@@ -29,7 +29,7 @@ gi.require_version('Gtk', '3.0')
 
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import GObject
+from gi.repository import GLib
 
 import appconsts
 import dialogs
@@ -745,7 +745,7 @@ class WorkflowDialog(Gtk.Dialog):
 
         editorpersistance.save()
         
-        GObject.timeout_add(500, _load_default_project, self.project_open_callback)  
+        GLib.timeout_add(500, _load_default_project, self.project_open_callback)  
         
     
     def selected_callback(self, w, item_number):

@@ -401,7 +401,7 @@ def main(root_path, force_launch=False):
 
 def _show_single_instance_info():
     global timeout_id
-    timeout_id = GObject.timeout_add(200, _display_single_instance_window)
+    timeout_id = GLib.timeout_add(200, _display_single_instance_window)
     # Launch gtk+ main loop
     Gtk.main()
     

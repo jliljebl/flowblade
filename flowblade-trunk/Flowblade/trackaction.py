@@ -22,7 +22,7 @@
 This module handles track actions; mute, change active state, size change.
 """
 
-from gi.repository import GObject
+from gi.repository import GLib
 
 import appconsts
 import audiomonitoring
@@ -72,7 +72,7 @@ def set_track_high_height(track_index, is_retry=False):
         current_paned_pos = gui.editor_window.app_v_paned.get_position()
         new_paned_pos = current_paned_pos - (new_h - h) - 5
         gui.editor_window.app_v_paned.set_position(new_paned_pos)
-        GObject.timeout_add(200, lambda: set_track_high_height(track_index, True))
+        GLib.timeout_add(200, lambda: set_track_high_height(track_index, True))
         return False
     
     allocation = gui.tline_canvas.widget.get_allocation()
@@ -105,7 +105,7 @@ def set_track_normal_height(track_index, is_retry=False, is_auto_expand=False):
         current_paned_pos = gui.editor_window.app_v_paned.get_position()
         new_paned_pos = current_paned_pos - (new_h - h) - 5
         gui.editor_window.app_v_paned.set_position(new_paned_pos)
-        GObject.timeout_add(200, lambda: set_track_normal_height(track_index, True, is_auto_expand))
+        GLib.timeout_add(200, lambda: set_track_normal_height(track_index, True, is_auto_expand))
         return False
     
     allocation = gui.tline_canvas.widget.get_allocation()
@@ -144,7 +144,7 @@ def maybe_do_auto_expand(tracks_clips_count_before_exit):
         return
 
     if current_sequence().tracks[initial_drop_track_index].height == appconsts.TRACK_HEIGHT_SMALL:
-        GObject.timeout_add(50, lambda: _do_auto_expand(initial_drop_track_index))
+        GLib.timeout_add(50, lambda: _do_auto_expand(initial_drop_track_index))
 
 def _do_auto_expand(initial_drop_track_index):
     set_track_normal_height(initial_drop_track_index, is_retry=False, is_auto_expand=True)

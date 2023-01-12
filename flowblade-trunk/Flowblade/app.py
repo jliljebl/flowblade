@@ -350,9 +350,9 @@ def main(root_path):
     # Existance of autosave file hints that program was exited abnormally.
     if check_crash == True and len(autosave_files) > 0:
         if len(autosave_files) == 1:
-            GObject.timeout_add(10, autosave_recovery_dialog)
+            GLib.timeout_add(10, autosave_recovery_dialog)
         else:
-            GObject.timeout_add(10, autosaves_many_recovery_dialog)
+            GLib.timeout_add(10, autosaves_many_recovery_dialog)
     else:
         tlinerender.init_session()
         start_autosave()
@@ -368,29 +368,29 @@ def main(root_path):
         if assoc_file_path != None:
             print("Launch assoc file:", assoc_file_path)
             global assoc_timeout_id
-            assoc_timeout_id = GObject.timeout_add(10, open_assoc_file)
+            assoc_timeout_id = GLib.timeout_add(10, open_assoc_file)
         
     # SDL 2 consumer needs to created after Gtk.main() has run enough for window to be visble
     #if editorstate.get_sdl_version() == editorstate.SDL_2: # needs more state considerion still
     #    print "SDL2 timeout launch"
     #    global sdl2_timeout_id
-    #    sdl2_timeout_id = GObject.timeout_add(1500, create_sdl_2_consumer)
+    #    sdl2_timeout_id = GLib.timeout_add(1500, create_sdl_2_consumer)
     
     # In PositionNumericalEntries we are using Gtk.Entry objects in a way that works for us nicely, but is somehow "error" for Gtk, so we just kill this.
     Gtk.Settings.get_default().set_property("gtk-error-bell", False)
     
     # Show first run worflow info dialog if not shown for this version of application.
     if editorstate.runtime_version_greater_then_test_version(editorpersistance.prefs.workflow_dialog_last_version_shown, editorstate.appversion):
-        GObject.timeout_add(500, show_worflow_info_dialog)
+        GLib.timeout_add(500, show_worflow_info_dialog)
 
     # Copy to XDG.
     if userfolders.data_copy_needed():
-        GObject.timeout_add(500, show_user_folders_copy_dialog)
+        GLib.timeout_add(500, show_user_folders_copy_dialog)
     else:
         print("No user folders actions needed.")
 
     global disk_cache_timeout_id
-    disk_cache_timeout_id = GObject.timeout_add(2500, check_disk_cache_size)
+    disk_cache_timeout_id = GLib.timeout_add(2500, check_disk_cache_size)
 
     # Launch gtk+ main loop
     Gtk.main()
@@ -831,7 +831,7 @@ def start_autosave():
     # Aug-2019 - SvdB - AS - put in code to stop or not start autosave depending on user selection
     if autosave_delay_millis > 0:
         print("Autosave started...")
-        autosave_timeout_id = GObject.timeout_add(autosave_delay_millis, do_autosave)
+        autosave_timeout_id = GLib.timeout_add(autosave_delay_millis, do_autosave)
         autosave_file = userfolders.get_cache_dir() + get_instance_autosave_file()
         persistance.save_project(editorstate.PROJECT(), autosave_file)
     else:
@@ -962,7 +962,7 @@ def _set_draw_params():
 
 def _too_small_screen_exit():
     global exit_timeout_id
-    exit_timeout_id = GObject.timeout_add(200, _show_too_small_info)
+    exit_timeout_id = GLib.timeout_add(200, _show_too_small_info)
     # Launch gtk+ main loop
     Gtk.main()
 
@@ -976,7 +976,7 @@ def _show_too_small_info():
 
 def _xdg_error_exit(error_str):
     global exit_timeout_id
-    exit_timeout_id = GObject.timeout_add(200, _show_xdg_error_info, error_str)
+    exit_timeout_id = GLib.timeout_add(200, _show_xdg_error_info, error_str)
     # Launch gtk+ main loop
     Gtk.main()
 
@@ -988,7 +988,7 @@ def _show_xdg_error_info(error_str):
 
 def _too_low_mlt_version_exit():
     global exit_timeout_id
-    exit_timeout_id = GObject.timeout_add(200, _show_mlt_version_exit_info)
+    exit_timeout_id = GLib.timeout_add(200, _show_mlt_version_exit_info)
     # Launch gtk+ main loop
     Gtk.main()
 

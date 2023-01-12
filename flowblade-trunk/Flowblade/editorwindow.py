@@ -129,7 +129,7 @@ class EditorWindow:
         self._init_cursors()
 
         # Create window(s)
-        self.window = Gtk.Window(Gtk.WindowType.TOPLEVEL)
+        self.window = Gtk.Window(type=Gtk.WindowType.TOPLEVEL)
         self.window.set_icon_from_file(respaths.IMAGE_PATH + "flowbladeappicon.png")
         self.window.set_border_width(5)
 
@@ -1116,7 +1116,7 @@ class EditorWindow:
         </ui>"""
         
         # Create global action group
-        action_group = Gtk.ActionGroup('WindowActions')
+        action_group = Gtk.ActionGroup(name='WindowActions')
         action_group.add_actions(menu_actions, user_data=None)
 
         # Use UIManager and add accelators to window.

@@ -327,10 +327,10 @@ class AddMediaFilesThread(threading.Thread):
         Gdk.threads_leave()
 
         if len(duplicates) > 0:
-            GObject.timeout_add(10, _duplicates_info, duplicates)
+            GLib.timeout_add(10, _duplicates_info, duplicates)
 
         if is_first_video_load:
-            GObject.timeout_add(10, _first_load_profile_check)
+            GLib.timeout_add(10, _first_load_profile_check)
             
         audiowaveformrenderer.launch_audio_levels_rendering(filenames)
 
@@ -516,7 +516,7 @@ def _save_project_in_last_saved_path():
     PROJECT().events.append(projectdata.ProjectEvent(projectdata.EVENT_SAVED, PROJECT().last_save_path))
     
     global save_icon_remove_event_id
-    save_icon_remove_event_id = GObject.timeout_add(500, remove_save_icon)
+    save_icon_remove_event_id = GLib.timeout_add(500, remove_save_icon)
 
     global save_time
     save_time = time.monotonic()
@@ -566,7 +566,7 @@ def _save_as_dialog_callback(dialog, response_id):
         app.start_autosave()
         
         global save_icon_remove_event_id
-        save_icon_remove_event_id = GObject.timeout_add(500, remove_save_icon)
+        save_icon_remove_event_id = GLib.timeout_add(500, remove_save_icon)
 
         global save_time
         save_time = time.monotonic()

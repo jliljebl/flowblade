@@ -350,7 +350,7 @@ def _save_script(file_path):
     _last_save_path = file_path
 
     global _delay_timeout_id
-    _delay_timeout_id = GObject.timeout_add(2000, _clear_info_after_delay)
+    _delay_timeout_id = GLib.timeout_add(2000, _clear_info_after_delay)
 
 def load_script_dialog(callback):
     dialog = Gtk.FileChooserDialog(_("Load Script"), None, 
