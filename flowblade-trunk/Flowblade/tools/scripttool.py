@@ -69,7 +69,8 @@ import translations
 import threading
 import userfolders
 import utils
-
+import utilsgtk
+ 
 SCRIPT_TOOL_SESSION_ID = "scripttool"
 
 MONITOR_WIDTH = 500
@@ -88,6 +89,7 @@ _last_save_path = None
 _window = None
 
 _player = None
+_ticker = None
 _plugin_renderer = None
 
 _script_length = fluxity.DEFAULT_LENGTH
@@ -510,15 +512,13 @@ def update_length(new_length):
     _window.pos_bar.update_display_with_data(_player.producer, _mark_in, _mark_out)
     
 def _ticker_event():
+    GLib.idle_add(_ticker_gui_update)
+
+def _ticker_gui_update():
     frame = _player.current_frame()
     norm_pos = frame / float(_player.get_active_length()) 
-    
-    Gdk.threads_enter()
-                
     _window.tc_display.set_frame(frame)
     _window.pos_bar.set_normalized_pos(norm_pos)
-
-    Gdk.threads_leave()
                 
 
 #-------------------------------------------------- render and preview
@@ -1290,12 +1290,11 @@ class FluxityRangeRenderer(threading.Thread):
         threading.Thread.__init__(self)
         self.script = script
         self.profile_file_path = profile_file_path
+        self.rendering_txt = _("Rendering...")
 
     def run(self):
-        Gdk.threads_enter()
-        _window.out_view.get_buffer().set_text("Rendering...")
-        Gdk.threads_leave()
-        
+        GLib.idle_add(_update_buffer_text, self.rendering_txt)
+
         # GUI quarantees valid range here.
         in_frame = _mark_in
         self.in_frame = in_frame
@@ -1315,15 +1314,17 @@ class FluxityRangeRenderer(threading.Thread):
         
         err_msg, edit_data = fluxity.get_script_default_edit_data(self.script, tmp_script_file, frames_folder, self.profile_file_path)
         if err_msg != None:
-            Gdk.threads_enter()
-            _show_error(err_msg)
-            Gdk.threads_leave()
+            GLib.idle_add(_show_error, err_msg)
             return
 
         _launch_headless_render(SCRIPT_TOOL_SESSION_ID, tmp_script_file, edit_data, frames_folder, in_frame, out_frame + 1)
 
-        Gdk.threads_add_timeout(GLib.PRIORITY_HIGH_IDLE, 200, _preview_render_update, self)
+        GLib.timeout_add(200, _preview_render_update, self)
 
+
+def _update_buffer_text(txt):
+    _window.out_view.get_buffer().set_text(txt)
+        
 def _show_error(error_msg):
     _window.out_view.get_buffer().set_text(error_msg)
     _window.media_info.set_markup("<small>" + _("No Preview") +"</small>")
@@ -1411,19 +1412,7 @@ class FluxityPluginRenderer(threading.Thread):
             return
         self.render_folder = out_folder
         
-        Gdk.threads_enter()
-        _window.render_status_info.set_markup("")
-        _window.set_widgets_sensitive(False)
-        _window.render_percentage.set_sensitive(True)
-        _window.render_status_info.set_sensitive(True)
-        _window.render_progress_bar.set_sensitive(True)
-        _window.stop_button.set_sensitive(True)
-        _window.render_button.set_sensitive(False)
-        _window.close_button.set_sensitive(False)
-        _window.encode_settings_button.set_sensitive(False)
-        _window.encode_desc.set_sensitive(False)
-        _window.hamburger_launcher.widget.set_sensitive(False)
-        Gdk.threads_leave()
+        GLib.idle_add(self.update_sensitive_state)
         
         # Get render data.
         in_frame = _mark_in
@@ -1462,16 +1451,14 @@ class FluxityPluginRenderer(threading.Thread):
         
         err_msg, edit_data = fluxity.get_script_default_edit_data(script_text, tmp_script_file, frames_folder, profile_file_path)
         if err_msg != None:
-            Gdk.threads_enter()
-            _show_error(err_msg)
-            Gdk.threads_leave()
+            GLib.idle_add(_show_error, err_msg)
             return
 
         self.frames_render_in_prgress = True
         _launch_headless_render(SCRIPT_TOOL_SESSION_ID, tmp_script_file, edit_data, frames_folder, in_frame, out_frame + 1)
         
         self.render_start_time = datetime.datetime.now()
-        Gdk.threads_add_timeout(GLib.PRIORITY_HIGH_IDLE, 150, _output_render_update, self)
+        GLib.timeout_add(150, _output_render_update, self)
 
         # Block until we have frames
         while self.frames_render_in_prgress == True:
@@ -1485,13 +1472,7 @@ class FluxityPluginRenderer(threading.Thread):
 
         # Set GUI state and exit on error.
         if error_msg != None:
-            Gdk.threads_enter()
-            _window.out_view.get_buffer().set_text(error_msg)
-            _window.media_info.set_markup("<small>" + _("No Preview") +"</small>")
-            _window.monitors_switcher.queue_draw()
-            _window.preview_monitor.queue_draw()
-            self.set_render_stopped_gui_state()
-            Gdk.threads_leave()
+            GLib.idle_add(self.set_gui_for_exit_error, error_msg)
             return
 
         # Frames are in container clips SCRIPT_TOOL_SESSION_ID folder,
@@ -1522,26 +1503,17 @@ class FluxityPluginRenderer(threading.Thread):
 
             while self.render_player.stopped == False:
                 if self.abort == True:
-                    Gdk.threads_enter()
-                    _window.render_percentage.set_markup("<small>" + _("Render stopped!") + "</small>")
-                    _window.render_progress_bar.set_fraction(0.0)
-                    Gdk.threads_leave()
+                    GLib.idle_add(self.show_progress, "<small>" + _("Render stopped!") + "</small>", 0.0, False)
                     return
                   
                 fraction = self.render_player.get_render_fraction()
                 update_info = _("Rendering video, ") + str(int(fraction * 100)) + _("% done")
-                    
-                Gdk.threads_enter()
-                _window.render_percentage.set_markup("<small>" + update_info + "</small>")
-                _window.render_progress_bar.set_fraction(fraction)
-                Gdk.threads_leave()
+
+                GLib.idle_add(self.show_progress, "<small>" + update_info + "</small>", fraction, False)
                 
                 time.sleep(0.3)
 
-            Gdk.threads_enter()
-            _window.render_percentage.set_markup("<small>" + _("Render complete!") + "</small>")
-            self.set_render_stopped_gui_state()
-            Gdk.threads_leave()
+            GLib.idle_add(self.show_progress, "<small>" + _("Render complete!") + "</small>", 1.0, True)
 
     def copy_frames(self, frames_folder, out_folder):
         # Copy frames
@@ -1560,6 +1532,12 @@ class FluxityPluginRenderer(threading.Thread):
         _window.render_percentage.set_markup("<small>" + _("Render stopped!") + "</small>")
         self.set_render_stopped_gui_state()
 
+    def show_progress(self, persentage, fraction, set_stopped):
+        _window.render_percentage.set_markup(persentage)
+        _window.render_progress_bar.set_fraction(fraction)
+        if set_stopped:
+            self.set_render_stopped_gui_state()
+
     def set_render_stopped_gui_state(self):
         _window.render_progress_bar.set_fraction(0.0)
         _window.update_render_status_info()
@@ -1571,6 +1549,26 @@ class FluxityPluginRenderer(threading.Thread):
             _window.encode_settings_button.set_sensitive(True)
             _window.encode_desc.set_sensitive(True)
 
+    def update_sensitive_state(self):
+        _window.render_status_info.set_markup("")
+        _window.set_widgets_sensitive(False)
+        _window.render_percentage.set_sensitive(True)
+        _window.render_status_info.set_sensitive(True)
+        _window.render_progress_bar.set_sensitive(True)
+        _window.stop_button.set_sensitive(True)
+        _window.render_button.set_sensitive(False)
+        _window.close_button.set_sensitive(False)
+        _window.encode_settings_button.set_sensitive(False)
+        _window.encode_desc.set_sensitive(False)
+        _window.hamburger_launcher.widget.set_sensitive(False)
+    
+    def set_gui_for_exit_error(self, error_msg):
+        _window.out_view.get_buffer().set_text(error_msg)
+        _window.media_info.set_markup("<small>" + _("No Preview") +"</small>")
+        _window.monitors_switcher.queue_draw()
+        _window.preview_monitor.queue_draw()
+        self.set_render_stopped_gui_state()
+            
     def shutdown(self):        
         if self.render_player != None:
             self.render_player.shutdown()        

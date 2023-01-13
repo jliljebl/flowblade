@@ -22,7 +22,7 @@
 This modules handles displaying and moving panels into different positions 
 in application window.
 """
-from gi.repository import Gtk
+from gi.repository import Gtk, GLib
 
 import copy
 import pickle
