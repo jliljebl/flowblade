@@ -501,9 +501,10 @@ class MotionRenderJobQueueObject(AbstractJobQueueObject):
         subprocess.Popen(command_list)
         
     def update_render_status(self):
+        GLib.idle_add(self._update_from_gui_thread)
+            
+    def _update_from_gui_thread(self):
 
-        Gdk.threads_enter()
-                    
         if motionheadless.session_render_complete(self.get_session_id()) == True:
             #remove_as_status_polling_object(self)
             
@@ -533,8 +534,6 @@ class MotionRenderJobQueueObject(AbstractJobQueueObject):
             else:
                 # Process start/stop on their own and we hit trying to get non-existing status for e.g completed renders.
                 pass
-
-        Gdk.threads_leave()
     
     def abort_render(self):
         #remove_as_status_polling_object(self)
@@ -576,8 +575,10 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
     
     def update_render_status(self):
 
-        Gdk.threads_enter()
-                    
+        GLib.idle_add(self._update_from_gui_thread)
+            
+    def _update_from_gui_thread(self):
+        
         if proxyheadless.session_render_complete(self.get_session_id()) == True:
             
             job_msg = self.get_completed_job_message()
@@ -605,8 +606,6 @@ class ProxyRenderJobQueueObject(AbstractJobQueueObject):
             else:
                 # Process start/stop on their own and we hit trying to get non-existing status for e.g completed renders.
                 pass
-
-        Gdk.threads_leave()
     
     def abort_render(self):
         # remove_as_status_polling_object(self)
@@ -694,7 +693,9 @@ class JobsRenderProgressWindow:
     def __init__(self, autosave_file):
         self.is_shutting_down = False
         
-        
+        self.save_str = _("Saving...")
+        self.rendering_str = _("Rendering")
+
         # Window
         self.window = Gtk.Window(Gtk.WindowType.TOPLEVEL)
         self.window.connect("delete-event", lambda w, e:self.close_window())
@@ -755,31 +756,27 @@ class JobsRenderProgressWindow:
     def jobs_completed(self):
         self.is_shutting_down = True
         
-        Gdk.threads_enter()
-
+        GLib.idle_add(self._jobs_completed_from_gui_thread)
+            
+    def _jobs_completed_from_gui_thread(self):
         self.status_label.set_text(_("Renders Complete."))
-
         self.close_window()
-
-        Gdk.threads_leave()
 
     def update_render_progress(self):
         job = _jobs[0]
         
         if job.status == COMPLETED and self.last_saved_job != id(job) and self.is_shutting_down == False:
-            
-            Gdk.threads_enter()
-            self.status_label.set_text(_("Saving..."))
-            Gdk.threads_leave()
-            
+            GLib.idle_add(self._progress_update_from_gui_thread, self.save_str, job)
+        else:
+            GLib.idle_add(self._progress_update_from_gui_thread, self.rendering_str, job)
+
+    def _progress_update_from_gui_thread(self, status_msg, job):
+        if self.last_saved_job == None:
+            self.status_label.set_text(status_msg)
+        
+        if status_msg == self.save_str:
             self.last_saved_job = id(job)
             self.save_project()
-        else:
-            Gdk.threads_enter()
-            self.status_label.set_text(_("Rendering"))
-            Gdk.threads_leave()
-            
-        Gdk.threads_enter()
 
         elapsed = time.monotonic() - self.start_time
         elapsed_str= "  " + utils.get_time_str_for_sec_float(elapsed)
@@ -789,8 +786,6 @@ class JobsRenderProgressWindow:
         self.render_progress_bar.set_fraction(job.progress)
         self.render_progress_bar.set_text(str(int(job.progress * 100)) + " %")
 
-        Gdk.threads_leave()
-    
     def save_project(self):
         persistance.show_messages = False
         if PROJECT().last_save_path != None:
