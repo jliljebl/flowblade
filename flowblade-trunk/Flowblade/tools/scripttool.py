@@ -208,7 +208,6 @@ class ScriptToolApplication(Gtk.Application):
                                  flags=Gio.ApplicationFlags.FLAGS_NONE)
         self.connect("activate", self.on_activate)
 
-
     def on_activate(self, data=None):
         # Set monitor sizes
         scr_w, scr_h = utilsgtk.get_combined_monitors_size()
@@ -242,15 +241,12 @@ class ScriptToolApplication(Gtk.Application):
         _window.update_marks_display()
 
         os.putenv('SDL_WINDOWID', str(_window.monitor.get_window().get_xid()))
-        #Gdk.flush()
 
         _init_playback()
         update_length(_script_length)
         
         self.add_window(_window)
 
-    #Gtk.main()
-    #Gdk.threads_leave()
 
 # ------------------------------------------------- folders init
 def _init_frames_dirs():
