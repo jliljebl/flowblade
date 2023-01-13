@@ -22,7 +22,7 @@ import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('PangoCairo', '1.0')
 
-from gi.repository import GObject, GLib
+from gi.repository import GObject, GLib, Gio
 from gi.repository import Gtk, Gdk, GdkPixbuf
 from gi.repository import Pango
 
@@ -86,6 +86,7 @@ TICKER_DELAY = 0.25
 _session_id = None
 _last_save_path = None
 
+_app = None
 _window = None
 
 _player = None
@@ -177,65 +178,78 @@ def main(root_path, force_launch=False):
     mediaplugin.init()
 
     # Init gtk threads
-    Gdk.threads_init()
-    Gdk.threads_enter()
-
-    # Set monitor sizes
-    scr_w, scr_h = utilsgtk.get_combined_monitors_size()
-    editorstate.SCREEN_WIDTH = scr_w
-    editorstate.SCREEN_HEIGHT = scr_h
-    if editorstate.screen_size_large_height() == True and editorstate.screen_size_small_width() == False:
-        global MONITOR_WIDTH, MONITOR_HEIGHT
-        MONITOR_WIDTH = 650
-        MONITOR_HEIGHT = 400 # initial value, this gets changed when material is loaded
-
-    # Themes
-    if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
-        respaths.apply_dark_theme()
-        Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME \
-            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
-            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-            gui.apply_gtk_css(editorpersistance.prefs.theme)
-
-    repo = mlt.Factory().init()
-    processutils.prepare_mlt_repo(repo)
+    app = ScriptToolApplication()
+    global _app
+    _app = app
+    app.run(None)
     
-    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
-    locale.setlocale(locale.LC_NUMERIC, 'C')
 
-    # Check for codecs and formats on the system
-    mltenv.check_available_features(repo)
-    renderconsumer.load_render_profiles()
+class ScriptToolApplication(Gtk.Application):
+    def __init__(self, *args, **kwargs):
+        Gtk.Application.__init__(self, application_id="com.github.jliljebl.Flowblade.Scriptttool",
+                                 flags=Gio.ApplicationFlags.FLAGS_NONE)
+        self.connect("activate", self.on_activate)
 
-    # Load filter and compositor descriptions from xml files.
-    mltfilters.load_filters_xml(mltenv.services)
-    mlttransitions.load_compositors_xml(mltenv.transitions)
 
-    # Create list of available mlt profiles
-    mltprofiles.load_profile_list()
+    def on_activate(self, data=None):
+        # Set monitor sizes
+        scr_w, scr_h = utilsgtk.get_combined_monitors_size()
+        editorstate.SCREEN_WIDTH = scr_w
+        editorstate.SCREEN_HEIGHT = scr_h
+        if editorstate.screen_size_large_height() == True and editorstate.screen_size_small_width() == False:
+            global MONITOR_WIDTH, MONITOR_HEIGHT
+            MONITOR_WIDTH = 650
+            MONITOR_HEIGHT = 400 # initial value, this gets changed when material is loaded
 
-    gui.load_current_colors()
+        # Themes
+        if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
+            respaths.apply_dark_theme()
+            Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
+            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME \
+                or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
+                or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+                gui.apply_gtk_css(editorpersistance.prefs.theme)
 
-    # Get launch profile and init player and display GUI params for it. 
-    global _current_profile_name
-    _current_profile_name = _get_arg_value(sys.argv, "profile_name")
-    _init_player_and_profile_data(_current_profile_name)
+        repo = mlt.Factory().init()
+        processutils.prepare_mlt_repo(repo)
+        
+        # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
+        locale.setlocale(locale.LC_NUMERIC, 'C')
 
-    # Show window.
-    global _window
-    _window = ScriptToolWindow()
-    _window.pos_bar.set_dark_bg_color()
-    _window.update_marks_display()
+        # Check for codecs and formats on the system
+        mltenv.check_available_features(repo)
+        renderconsumer.load_render_profiles()
 
-    os.putenv('SDL_WINDOWID', str(_window.monitor.get_window().get_xid()))
-    Gdk.flush()
+        # Load filter and compositor descriptions from xml files.
+        mltfilters.load_filters_xml(mltenv.services)
+        mlttransitions.load_compositors_xml(mltenv.transitions)
 
-    _init_playback()
-    update_length(_script_length)
+        # Create list of available mlt profiles
+        mltprofiles.load_profile_list()
 
-    Gtk.main()
-    Gdk.threads_leave()
+        gui.load_current_colors()
+
+        # Get launch profile and init player and display GUI params for it. 
+        global _current_profile_name
+        _current_profile_name = _get_arg_value(sys.argv, "profile_name")
+        _init_player_and_profile_data(_current_profile_name)
+
+        # Show window.
+        global _window
+        _window = ScriptToolWindow()
+        _window.pos_bar.set_dark_bg_color()
+        _window.update_marks_display()
+
+        os.putenv('SDL_WINDOWID', str(_window.monitor.get_window().get_xid()))
+        #Gdk.flush()
+
+        _init_playback()
+        update_length(_script_length)
+        
+        self.add_window(_window)
+
+    #Gtk.main()
+    #Gdk.threads_leave()
 
 # ------------------------------------------------- folders init
 def _init_frames_dirs():
@@ -685,8 +699,8 @@ def _shutdown():
     # Delete session folder
     shutil.rmtree(get_session_folder())
     
-    # Exit gtk main loop.
-    Gtk.main_quit()
+    # Close app.
+    _app.quit()
 
 
 #------------------------------------------------- window
