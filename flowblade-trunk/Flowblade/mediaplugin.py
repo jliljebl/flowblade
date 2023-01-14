@@ -173,7 +173,6 @@ def fill_media_plugin_sub_menu_gio(app, menu, callback):
         for plugin in group:
             label = translations.get_plugin_name(plugin.name)
             item_id = plugin.name.lower().replace(" ", "_")
-            print(item_id)
             sub_menu.append(label, "app." + item_id) 
             
             action = Gio.SimpleAction(name=item_id)
