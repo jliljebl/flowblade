@@ -195,7 +195,7 @@ def main(root_path, force_launch=False):
     # Create list of available mlt profiles
     mltprofiles.load_profile_list()
         
-    # Init gtk threads
+    # Create app.
     app = ScriptToolApplication()
     global _app
     _app = app
