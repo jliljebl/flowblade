@@ -17,7 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
-from gi.repository import Gtk, GObject, Pango
+from gi.repository import Gtk, GObject, Pango, Gio
 
 import cairo
 import hashlib
@@ -155,9 +155,8 @@ def _get_categories_list():
 def fill_media_plugin_sub_menu(menu, callback):
     for group_data in _plugins_groups:
         group_name, group = group_data
-        menu_item = Gtk.MenuItem.new_with_label(group_name)
         sub_menu = Gtk.Menu.new()
-        menu_item.set_submenu(sub_menu)
+        menu.append_submenu(group_name, sub_menu)
         for plugin in group:
             plugin_menu_item = Gtk.MenuItem.new_with_label(translations.get_plugin_name(plugin.name))
             plugin_menu_item.connect("activate", callback, plugin.folder)
@@ -166,6 +165,21 @@ def fill_media_plugin_sub_menu(menu, callback):
         menu.append(menu_item)
     menu.show_all()
 
+def fill_media_plugin_sub_menu_gio(app, menu, callback):
+    for group_data in _plugins_groups:
+        group_name, group = group_data
+        sub_menu = Gio.Menu.new()
+        menu.append_submenu(group_name, sub_menu)
+        for plugin in group:
+            label = translations.get_plugin_name(plugin.name)
+            item_id = plugin.name.lower().replace(" ", "_")
+            print(item_id)
+            sub_menu.append(label, "app." + item_id) 
+            
+            action = Gio.SimpleAction(name=item_id)
+            action.connect("activate", lambda w, e, msg:callback(msg), plugin.folder)
+            app.add_action(action)
+    
 def _add_media_plugin():
     script_file = _selected_plugin.get_plugin_script_file()
     md_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()

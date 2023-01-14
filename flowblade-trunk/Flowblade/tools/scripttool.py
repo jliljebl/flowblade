@@ -110,9 +110,9 @@ _encoding_panel = None
 
 _delay_timeout_id = -1
 
-# GTK3 requires this to be created outside of callback
-_hamburger_menu = Gtk.Menu()
+builder = Gtk.Builder()
 
+_hamburger_popover = None
 
 #-------------------------------------------------- launch and inits
 def launch_scripttool(launch_data=None):
@@ -401,7 +401,7 @@ def _load_script(filename):
     _reinit_init_playback()
         
 #-------------------------------------------------- menu
-def _hamburger_menu_callback(widget, msg):
+def _hamburger_menu_callback(msg):
     global _last_save_path, _plugin_script_path
     if msg == "load_script":
         load_script_dialog(_load_script_dialog_callback)
@@ -420,14 +420,14 @@ def _hamburger_menu_callback(widget, msg):
         url = "file://" + respaths.FLUXITY_API_DOC
         webbrowser.open(url)
     else:
-        # msg is folder for plugin data
+        # msg is folder name for plugin data
         script_text = mediaplugin.get_plugin_code(msg)
         _window.script_view.get_buffer().set_text(script_text)
         _window.set_title(_window.tool_name)
         _last_save_path = None
         _plugin_script_path = mediaplugin.get_plugin_script_path(msg)
         _reinit_init_playback()
-        
+    
 def _get_menu_item(text, callback, data, sensitive=True):
     item = Gtk.MenuItem.new_with_label(text)
     item.connect("activate", callback, data)
@@ -716,8 +716,7 @@ class ScriptToolWindow(Gtk.Window):
             psize = 22
         else:
             psize = 44
-        self.hamburger_launcher = guicomponents.PressLaunch(self.hamburger_launch_pressed, hamburger_launcher_surface, psize, psize)
-        self.hamburger_launcher.connect_launched_menu(_hamburger_menu)
+        self.hamburger_launcher = guicomponents.PressLaunch(self.hamburger_launch_pressed_popover, hamburger_launcher_surface, psize, psize)
         self.hamburger_launcher.widget.set_margin_bottom(7)
 
         self.reload_button = Gtk.Button(label=_("Reload Script"))
@@ -1100,35 +1099,49 @@ class ScriptToolWindow(Gtk.Window):
     def folder_selection_changed(self, chooser):
         self.update_render_status_info()
 
-    def hamburger_launch_pressed(self, widget, event):
-        menu = _hamburger_menu
-        guiutils.remove_children(menu)
-        
-        menu.add(_get_menu_item(_("Open Script") + "...", _hamburger_menu_callback, "load_script" ))
-        menu.add(_get_menu_item(_("Save Script As") + "...", _hamburger_menu_callback, "save_script" ))
-        save_item = _get_menu_item(_("Save"), _hamburger_menu_callback, "save" )
-        if _last_save_path == None:
-            save_item.set_sensitive(False)
-        menu.add(save_item)
-        _add_separetor(menu)
-        plugin_menu_item = Gtk.MenuItem.new_with_label(_("Load Plugin Code"))
-        plugin_menu = Gtk.Menu()
-        mediaplugin.fill_media_plugin_sub_menu(plugin_menu, _hamburger_menu_callback)
-        plugin_menu_item.set_submenu(plugin_menu)
-        plugin_menu_item.show_all()
-        menu.add(plugin_menu_item)
-        _add_separetor(menu)
-        menu.add(_get_menu_item(_("Change Plugin Media Length") + "...", _hamburger_menu_callback, "change_length" ))
-        _add_separetor(menu)
-        menu.add(_get_menu_item(_("Render Frame Preview") + "...", _hamburger_menu_callback, "render_preview" ))
-        menu.add(_get_menu_item(_("Render Range Preview") + "...", _hamburger_menu_callback, "render_range_preview" ))
-        _add_separetor(menu)
-        menu.add(_get_menu_item(_("API Docs"), _hamburger_menu_callback, "docs" ))
-        _add_separetor(menu)
-        menu.add(_get_menu_item(_("Close"), _hamburger_menu_callback, "close" ))
-        
-        menu.popup(None, None, None, None, event.button, event.time)
+    def hamburger_launch_pressed_popover(self, widget, event):
 
+        global _hamburger_popover
+        if _hamburger_popover == None:
+            menu = Gio.Menu.new()
+            
+            app_section = Gio.Menu.new()
+            self.add_menu_action(app_section, _("Open Script") + "...", "open", "load_script")
+            self.add_menu_action(app_section, _("Save Script As"), "save-as", "save_script")
+            self.add_menu_action(app_section, _("Save"), "save", "save")
+            menu.append_section(None, app_section)
+
+            plugin_section = Gio.Menu.new()
+            plugin_submenu = Gio.Menu.new()
+            mediaplugin.fill_media_plugin_sub_menu_gio(_app, plugin_submenu, _hamburger_menu_callback)
+            plugin_section.append_submenu(_("Load Plugin Code"), plugin_submenu)
+            menu.append_section(None, plugin_section)
+            
+            length_section = Gio.Menu.new()
+            self.add_menu_action(length_section, _("Change Plugin Media Length") + "...", "change-length", "change_length")
+            menu.append_section(None, length_section)
+            
+            api_section = Gio.Menu.new()
+            self.add_menu_action(api_section, _("API Docs") + "...", "apidocs", "docs")
+            menu.append_section(None, api_section)
+            
+            close_section = Gio.Menu.new()
+            self.add_menu_action(close_section, _("Close") + "..." , "close", "close")
+            menu.append_section(None, close_section)
+            
+            _hamburger_popover = Gtk.Popover.new_from_model(widget, menu)
+            self.hamburger_launcher.connect_launched_menu(_hamburger_popover)
+        
+        _hamburger_popover.show()
+
+    def add_menu_action(self, menu, label, item_id, msg_str):
+            
+        menu.append(label, "app." + item_id) 
+        
+        action = Gio.SimpleAction(name=item_id)
+        action.connect("activate", lambda w, e, msg:_hamburger_menu_callback(msg), msg_str)
+        _app.add_action(action)
+            
     def set_active_state(self, active):
         self.monitor.set_sensitive(active)
         self.pos_bar.widget.set_sensitive(active)
