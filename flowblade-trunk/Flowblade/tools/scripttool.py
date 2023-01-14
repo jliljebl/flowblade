@@ -1108,7 +1108,7 @@ class ScriptToolWindow(Gtk.Window):
             app_section = Gio.Menu.new()
             self.add_menu_action(app_section, _("Open Script") + "...", "open", "load_script")
             self.add_menu_action(app_section, _("Save Script As"), "save-as", "save_script")
-            self.add_menu_action(app_section, _("Save"), "save", "save")
+            self.add_menu_action_check(app_section, _("Save"), "save", "save")
             menu.append_section(None, app_section)
 
             plugin_section = Gio.Menu.new()
@@ -1135,13 +1135,22 @@ class ScriptToolWindow(Gtk.Window):
         _hamburger_popover.show()
 
     def add_menu_action(self, menu, label, item_id, msg_str):
-            
         menu.append(label, "app." + item_id) 
         
         action = Gio.SimpleAction(name=item_id)
         action.connect("activate", lambda w, e, msg:_hamburger_menu_callback(msg), msg_str)
         _app.add_action(action)
-            
+
+    # This is for testing purposes only.
+    def add_menu_action_check(self, menu, label, item_id, msg_str):        
+        action = Gio.SimpleAction.new_stateful(name=item_id, parameter_type=GLib.VariantType.new("b"), state=GLib.Variant.new_boolean(True))
+        action.connect("activate", lambda w, e, msg:_hamburger_menu_callback(msg), msg_str)
+        _app.add_action(action)
+
+        menu_item = Gio.MenuItem.new(label, "app." + item_id)
+        menu_item.set_action_and_target_value( "app." + item_id, GLib.Variant.new_boolean(True))
+        menu.append_item(menu_item)
+    
     def set_active_state(self, active):
         self.monitor.set_sensitive(active)
         self.pos_bar.widget.set_sensitive(active)
