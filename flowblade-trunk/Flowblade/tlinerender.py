@@ -18,7 +18,7 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 import hashlib
-from gi.repository import Gdk, Gtk
+from gi.repository import Gdk, Gtk, GLib
 import os
 from os import listdir
 from os.path import isfile, join
@@ -868,9 +868,7 @@ class TimeLineUpdateThread(threading.Thread):
         
         if len(segments_paths) == 0:
             # clips for all new dirty segments existed or all segments after sequence end (or both in some combination)
-            Gdk.threads_enter()
-            gui.tline_render_strip.widget.queue_draw()
-            Gdk.threads_leave()
+            GLib.idle_add(_update_tline)
             _update_thread = None
             return
 
@@ -879,6 +877,9 @@ class TimeLineUpdateThread(threading.Thread):
         global _status_polling_thread
         _status_polling_thread = TimeLineStatusPollingThread()
         _status_polling_thread.start()
+
+def _update_tline():
+    gui.tline_render_strip.widget.queue_draw()
 
 
 class TimeLineStatusPollingThread(threading.Thread):
@@ -897,9 +898,7 @@ class TimeLineStatusPollingThread(threading.Thread):
 
             get_renderer().update_timeline_rendering_status(rendering_file, fract, render_completed, completed_segments)
 
-            Gdk.threads_enter()
-            gui.tline_render_strip.widget.queue_draw()
-            Gdk.threads_leave()
+            GLib.idle_add(_update_tline)
 
             time.sleep(0.5)
             
