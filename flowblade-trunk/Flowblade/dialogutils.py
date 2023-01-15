@@ -20,7 +20,7 @@
 """
 Module contains functions to build generic dialogs.
 """
-from gi.repository import Gtk
+from gi.repository import Gtk, GLib
 
 import appconsts
 from editorstate import current_sequence
