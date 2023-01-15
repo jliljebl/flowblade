@@ -18,6 +18,10 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+"""
+This module handles creating single track rendered transitions.
+"""
+
 from gi.repository import Gtk, GLib
 
 import hashlib

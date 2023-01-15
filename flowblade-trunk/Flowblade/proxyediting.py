@@ -26,7 +26,7 @@ import os
 import threading
 import time
 
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk, GLib
 
 import app
 import appconsts
@@ -140,14 +140,14 @@ class ProxyRenderRunnerThread(threading.Thread):
                 
             proxy_render_items.append(item_data)
         
-        Gdk.threads_enter()
+        GLib.idle_add(self._create_job_queue_objects, proxy_render_items)
         
+    def _create_job_queue_objects(self, proxy_render_items):
         for proxy_render_data_item in proxy_render_items:
             session_id = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
             job_queue_object = jobs.ProxyRenderJobQueueObject(session_id, proxy_render_data_item)
             job_queue_object.add_to_queue()
-            
-        Gdk.threads_leave()
+
 
     def abort(self):
         render_thread.shutdown()
@@ -604,14 +604,12 @@ def _auto_re_convert_after_proxy_render_in_proxy_mode():
     # Open saved temp project
     app.stop_autosave()
 
-    Gdk.threads_enter()
-    app.open_project(project)
-    Gdk.threads_leave()
+    GLib.idle_add(_open_project, project)
 
+def _open_project(project):
+    app.open_project(project)
     app.start_autosave()
-    
     editorstate.update_current_proxy_paths()
-    
     persistance.show_messages = True
 
 def _converting_proxy_mode_done():
@@ -636,14 +634,17 @@ class ProxyProjectLoadThread(threading.Thread):
         self.mark_out = mark_out
     
     def run(self):
+        GLib.idle_add(self._do_proxy_project_load)
+    
+    def _do_proxy_project_load(self):
         pulse_runner = guiutils.PulseEvent(self.progressbar)
         time.sleep(2.0)
         persistance.show_messages = False
         try:
-            Gdk.threads_enter()
+
             project = persistance.load_project(self.proxy_project_path)
             sequence.set_track_counts(project)
-            Gdk.threads_leave()
+
         except persistance.FileProducerNotFoundError as e:
             print("did not find file:", e)
 
@@ -655,9 +656,7 @@ class ProxyProjectLoadThread(threading.Thread):
     
         app.stop_autosave()
 
-        Gdk.threads_enter()
         app.open_project(project)
-        Gdk.threads_leave()
 
         # Loaded project has been converted, set proxy mode to correct mode 
         if project.proxy_data.proxy_mode == appconsts.CONVERTING_TO_USE_PROXY_MEDIA:
@@ -671,10 +670,8 @@ class ProxyProjectLoadThread(threading.Thread):
         load_thread = None
         persistance.show_messages = True
 
-        Gdk.threads_enter()
         selections = project.get_project_property(appconsts.P_PROP_LAST_RENDER_SELECTIONS)
         if selections != None:
             render.set_saved_gui_selections(selections)
         _converting_proxy_mode_done()
-        Gdk.threads_leave()
 
