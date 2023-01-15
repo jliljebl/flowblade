@@ -23,7 +23,7 @@ This module handles the less central actions inited by user from menu.
 """
 
 
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk, GLib
 
 import threading
 import webbrowser
@@ -50,21 +50,15 @@ profile_manager_dialog = None
 # ---------------------------------------------- recreate icons
 class RecreateIconsThread(threading.Thread):
     
-    def __init__(self):
+    def __init__(self, recreate_progress_window):
         threading.Thread.__init__(self)
+        self.recreate_progress_window = recreate_progress_window
 
     def run(self):
-        Gdk.threads_enter()
-        recreate_progress_window = dialogs.recreate_icons_progress_dialog()
-        time.sleep(0.1)
-        Gdk.threads_leave()
-
         loaded = 0
         for key in PROJECT().media_files.keys():
             media_file = PROJECT().media_files[key]
-            Gdk.threads_enter()
-            recreate_progress_window.info.set_text(media_file.name)
-            Gdk.threads_leave()
+            GLib.idle_add(self._progress_window_set_text, media_file)
 
             if ((not isinstance(media_file, patternproducer.AbstractBinClip))
                 and (not isinstance(media_file, projectdata.BinColorClip))):
@@ -78,27 +72,36 @@ class RecreateIconsThread(threading.Thread):
                 media_file.create_icon()
 
             loaded = loaded + 1
-            
-            Gdk.threads_enter()
-            loaded_frac = float(loaded) / float(len(PROJECT().media_files))
-            recreate_progress_window.progress_bar.set_fraction(loaded_frac)
-            time.sleep(0.01)
-            Gdk.threads_leave()
 
-        # Update editor gui
-        Gdk.threads_enter()
-        recreate_progress_window.destroy()
+            GLib.idle_add(self._progress_window_update_fraction, loaded)
+
+        GLib.idle_add(self._progress_window_destroy)
+
+        GLib.idle_add(self._exit_update)
+
+    def _progress_window_set_text(self, media_file):
+        if self.recreate_progress_window != None:
+            self.recreate_progress_window.info.set_text(media_file.name)
+
+    def _progress_window_update_fraction(self, loaded):
+        if self.recreate_progress_window != None:
+            loaded_frac = float(loaded) / float(len(PROJECT().media_files))
+            self.recreate_progress_window.progress_bar.set_fraction(loaded_frac)
+            time.sleep(0.01)
+
+    def _progress_window_destroy(self):
+        self.recreate_progress_window.destroy()
+        self.recreate_progress_window = None
         time.sleep(0.3)
-        Gdk.threads_leave()
         
-        Gdk.threads_enter()
+    def _exit_update(self):
         gui.media_list_view.fill_data_model()
         gui.bin_list_view.fill_data_model()
         gui.enable_save()
-        Gdk.threads_leave()
-
+        
 def recreate_media_file_icons():
-    recreate_thread = RecreateIconsThread()
+    recreate_progress_window = dialogs.recreate_icons_progress_dialog()
+    recreate_thread = RecreateIconsThread(recreate_progress_window)
     recreate_thread.start()
 
 def show_project_info():

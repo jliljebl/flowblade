@@ -745,4 +745,3 @@ class ProgressWindowThread(threading.Thread):
         self.progress_bar.set_fraction(1.0)
         self.progress_bar.set_text("Render Complete!")
         self.callback(self.dialog, 0)
-        #self.running = False
