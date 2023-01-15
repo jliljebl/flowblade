@@ -34,7 +34,7 @@ import os
 import pickle
 import time
 
-from gi.repository import Gdk
+from gi.repository import GLib
 
 import appconsts
 import atomicfile
@@ -104,13 +104,13 @@ class ProjectProfileNotFoundError(Exception):
         return repr(self.value)
 
 # -------------------------------------------------- LOAD MESSAGES
-def _show_msg(msg, delay=0.0):
+def _show_msg(msg):
     if show_messages == True:
-        Gdk.threads_enter()
-        load_dialog.info.set_text(msg)
-        time.sleep(delay)
-        Gdk.threads_leave()
+        GLib.idle_add(_do_show_msg, msg)
 
+def _do_show_msg(msg):
+    load_dialog.info.set_text(msg)
+        
 # -------------------------------------------------- SAVE
 def save_project(project, file_path, changed_profile_desc=None):
     """
@@ -758,7 +758,7 @@ def get_img_seq_media_path(path, load_file_path):
 
 def get_relative_path(project_file_path, asset_path):
     name = os.path.basename(asset_path)
-    _show_msg(_("Relative file search for ")  + name + "...", delay=0.0)
+    _show_msg(_("Relative file search for ")  + name + "...")
     matches = []
     asset_folder, asset_file_name = os.path.split(asset_path)
     project_folder, project_file_name =  os.path.split(project_file_path)
@@ -775,7 +775,7 @@ def get_relative_path(project_file_path, asset_path):
 
 def get_img_seq_relative_path(project_file_path, asset_path):
     name = os.path.basename(asset_path)
-    _show_msg(_("Relative file search for ")  + name + "...", delay=0.0)
+    _show_msg(_("Relative file search for ")  + name + "...")
     asset_folder, asset_file_name = os.path.split(asset_path)
     look_up_file_name = utils.get_img_seq_glob_lookup_name(asset_file_name)
     
