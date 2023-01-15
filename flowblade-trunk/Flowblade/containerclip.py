@@ -18,7 +18,7 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk, Gdk, GLib
 
 import copy
 import hashlib
@@ -257,19 +257,19 @@ class GMicLoadCompletionThread(threading.Thread):
 
         time.sleep(0.5) # To make sure text is seen.
 
-        Gdk.threads_enter()
+        GLib.idle_add(_gmic_load_complete, self.container_clip_data, self.dialog, is_valid)
 
-        self.dialog.destroy()
+def _gmic_load_complete(container_clip_data, dialog, is_valid):
+        dialog.destroy()
         
         if is_valid == True:
-            container_clip = ContainerClipMediaItem(PROJECT().next_media_file_id, self.container_clip_data.get_unrendered_media_name(), self.container_clip_data)
+            container_clip = ContainerClipMediaItem(PROJECT().next_media_file_id, container_clip_data.get_unrendered_media_name(), container_clip_data)
             PROJECT().add_container_clip_media_object(container_clip)
             _update_gui_for_media_object_add()
         else:
             primary_txt = _("G'Mic Container Clip Validation Error")
             dialogutils.warning_message(primary_txt, err_msg, gui.editor_window.window)
-            
-        Gdk.threads_leave()
+
         
 # ------------------------------------------------------- Fluxity
 # ------------------------------------------------------- ADDING GENERATOR AS MEDIA ITEM
@@ -331,20 +331,10 @@ class FluxityLoadCompletionThread(threading.Thread):
         time.sleep(0.5) # To make sure text is seen.
 
         if self.dialog != None:
-            Gdk.threads_enter()
-            self.dialog.destroy()
-
-            if is_valid == False:
-                primary_txt = _("Generator Container Clip Validation Error")
-                dialogutils.warning_message(primary_txt, err_msg, gui.editor_window.window)
-                    
-            Gdk.threads_leave()
-
+            GLib.idle_add(dialogutils.dialog_destroy, self.dialog, None)
+    
         if is_valid == False:
-            Gdk.threads_enter()
-            primary_txt = _("Generator Container Clip Validation Error")
-            dialogutils.warning_message(primary_txt, err_msg, gui.editor_window.window)
-            Gdk.threads_leave()
+            GLib.idle_add(_show_fluxity_validation_error, err_msg)
             return 
     
         data_object = self.container_clip_data.data_slots["fluxity_plugin_edit_data"]
@@ -352,6 +342,11 @@ class FluxityLoadCompletionThread(threading.Thread):
         fluxity_unrendered_media_image = respaths.IMAGE_PATH + "unrendered_fluxity.png"
         window_text = _("Creating Container for Generator...")
         containeractions.create_unrendered_clip(length, fluxity_unrendered_media_image, self.container_clip_data, _fluxity_unrendered_media_creation_complete, window_text)
+
+def _show_fluxity_validation_error(err_msg):
+    primary_txt = _("Generator Container Clip Validation Error")
+    dialogutils.warning_message(primary_txt, err_msg, gui.editor_window.window)
+
 
 def _fluxity_unrendered_media_creation_complete(created_unrendered_clip_path, container_clip_data):
     # This is called from inside Gdk.threads_enter(), entering second time here crashes.

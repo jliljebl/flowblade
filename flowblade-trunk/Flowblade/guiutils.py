@@ -21,7 +21,7 @@
 """
 Module contains utility methods for creating GUI objects.
 """
-
+import cairo
 import time
 import threading
 
@@ -29,8 +29,7 @@ from gi.repository import Gtk, Gdk, GLib
 from gi.repository import GdkPixbuf
 
 import appconsts
-import cairo # Aug-2019 - SvdB - BB
-import editorpersistance # Aug-2019 - SvdB - BB
+import editorpersistance
 import respaths
 import translations
 
