@@ -18,7 +18,7 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk, GLib
 
 import hashlib
 import os
@@ -590,9 +590,7 @@ class ReRenderderAllWindow:
     def render_next(self):
         # Update item text          
         info_text = _("Rendering item ") + str(self.current_item + 1) + "/" + str(len(self.rerender_list))
-        Gdk.threads_enter()
-        self.text_label.set_text(info_text)
-        Gdk.threads_leave()
+        GLib.idle_add(self._update_text_label, info_text)
         
         # Get render data
         clip, track = self.rerender_list[self.current_item]
@@ -638,21 +636,11 @@ class ReRenderderAllWindow:
     def update_fraction(self):
         if self.renderer == None:
             return
-        
         render_fraction = self.renderer.get_render_fraction()
-        
-        Gdk.threads_enter()
-        self.progress_bar.set_fraction(render_fraction)
-        pros = int(render_fraction * 100)
-        self.progress_bar.set_text(str(pros) + "%")
-        Gdk.threads_leave()
+        GLib.idle_add(self._update_progressbar, render_fraction)
 
     def show_full_fraction(self):
-        Gdk.threads_enter()
-        self.progress_bar.set_fraction(1.0)
-        pros = int(1.0 * 100)
-        self.progress_bar.set_text(str(pros) + "%")
-        Gdk.threads_leave()
+        GLib.idle_add(self._update_progressbar, 1.0)
         
     def item_render_complete(self):
         clip, track = self.rerender_list[self.current_item]
@@ -683,16 +671,26 @@ class ReRenderderAllWindow:
             data = {"track":track,
                     "transition_clip":transition_clip,
                     "transition_index":clip_index}
-                    
-            Gdk.threads_enter()
-            action = edit.replace_centered_transition_action(data)
-            action.do_edit()
-            Gdk.threads_leave()
 
-        Gdk.threads_enter()
-        self.dialog.destroy()
-        Gdk.threads_leave()
+            GLib.idle_add(self._do_edit, data)
+        
+        GLib.idle_add(dialogutils.dialog_destroy, self.dialog, None)
+        self.dialog = None
 
+    def _update_text_label(self, info_text):
+        if self.dialog != None:    
+            self.text_label.set_text(info_text)
+
+    def _update_progressbar(self, render_fraction):
+        if self.dialog != None:  
+            self.progress_bar.set_fraction(render_fraction)
+            pros = int(render_fraction * 100)
+            self.progress_bar.set_text(str(pros) + "%")
+
+    def _do_edit(self, data):
+        action = edit.replace_centered_transition_action(data)
+        action.do_edit()
+            
 
 class ReRenderRunnerThread(threading.Thread):
     
