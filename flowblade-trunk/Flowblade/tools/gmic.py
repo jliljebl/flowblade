@@ -229,7 +229,7 @@ class GMicApplication(Gtk.Application):
 
         # Check for codecs and formats on the system
         mltenv.check_available_features(repo)
-        renderconsumer.load_render_profiles()
+
 
         # Load filter and compositor descriptions from xml files.
         mltfilters.load_filters_xml(mltenv.services)
@@ -238,6 +238,8 @@ class GMicApplication(Gtk.Application):
         # Create list of available mlt profiles
         mltprofiles.load_profile_list()
 
+        renderconsumer.load_render_profiles()
+        
         gui.load_current_colors()
         
         global _window

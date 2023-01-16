@@ -29,7 +29,7 @@ import appconsts
 import atomicfile
 import mltprofiles
 import userfolders
-import utils # this needs to also go to not load Gtk for background rendering process
+import utils
 
 PREFS_DOC = "prefs"
 RECENT_DOC = "recent"

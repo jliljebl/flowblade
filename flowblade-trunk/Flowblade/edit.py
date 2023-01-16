@@ -522,13 +522,6 @@ def get_full_compositor_sync_data():
             clip_start = track.clip_start(clip_index)
             clip_end = clip_start + clip.clip_out - clip.clip_in
             
-            # Auto fades need to go to start or end of clips and maintain their lengths
-            if compositor.transition.info.auto_fade_compositor == True:
-                if compositor.transition.info.name == "##auto_fade_in":
-                    clip_end = clip_start + compositor.get_length() - 1
-                else:
-                    clip_start = clip_end - compositor.get_length() + 1
-            
             orig_in = compositor.clip_in
             orig_out = compositor.clip_out
             

@@ -847,13 +847,6 @@ def sync_compositor(compositor):
     clip_index = track.clips.index(origin_clip)
     clip_start = track.clip_start(clip_index)
     clip_end = clip_start + origin_clip.clip_out - origin_clip.clip_in
-    
-    # Auto fades need to go to start or end of clips and maintain their lengths
-    if compositor.transition.info.auto_fade_compositor == True:
-        if compositor.transition.info.name == "##auto_fade_in":
-            clip_end = clip_start + compositor.get_length() - 1
-        else:
-            clip_start = clip_end - compositor.get_length() + 1
             
     data = {"compositor":compositor,"clip_in":clip_start,"clip_out":clip_end}
     action = edit.move_compositor_action(data)

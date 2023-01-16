@@ -31,10 +31,8 @@ import os
 import xml.dom.minidom
 
 import appconsts
-import compositorfades
 import mltrefhold
 import mltfilters
-import patternproducer
 import propertyparse
 import respaths
 
@@ -45,7 +43,6 @@ PROPERTY = appconsts.PROPERTY
 EXTRA_EDITOR = appconsts.EXTRA_EDITOR
 MLT_SERVICE = appconsts.MLT_SERVICE
 COMPOSITOR = "compositortransition"
-AUTO_FADE_COMPOSITOR = "autofadecompositor"
 
 # Property types.
 PROP_INT = appconsts.PROP_INT
@@ -210,10 +207,8 @@ class CompositorTransitionInfo:
     """
     def __init__(self, compositor_node):
         self.mlt_service_id = compositor_node.getAttribute(MLT_SERVICE)
-        if compositor_node.hasAttribute(AUTO_FADE_COMPOSITOR):
-            self.auto_fade_compositor = bool(compositor_node.getAttribute(AUTO_FADE_COMPOSITOR))
-        else:
-            self.auto_fade_compositor = False
+
+        self.auto_fade_compositor = False # DEPRECATED, remove later.
 
         self.xml = compositor_node.toxml()
         self.name = compositor_node.getElementsByTagName(NAME).item(0).firstChild.nodeValue
@@ -372,17 +367,14 @@ class CompositorObject:
         self.clip_out = out_frame
         self.transition.mlt_transition.set("in", str(in_frame))
         self.transition.mlt_transition.set("out", str(out_frame))
-        self.update_autofade_keyframes()
 
     def set_length_from_in(self, length):
         self.clip_out = self.clip_in + length - 1
         self.transition.mlt_transition.set("out", str(self.clip_out))
-        self.update_autofade_keyframes()
 
     def set_length_from_out(self, length):
         self.clip_in = self.clip_out - length + 1
         self.transition.mlt_transition.set("in", str(self.clip_in))
-        self.update_autofade_keyframes()
         
     def create_mlt_objects(self, mlt_profile):
         self.transition.create_mlt_transition(mlt_profile)
@@ -406,15 +398,6 @@ class CompositorObject:
         if mlt_service_id == self.transition.info.mlt_service_id:
             self.transition.properties = copy.deepcopy(properties)
             self.transition.update_editable_mlt_properties()
-        
-    def update_autofade_keyframes(self):
-        if self.transition.info.auto_fade_compositor == False:
-            return
-        
-        if self.transition.info.name == "##auto_fade_in":
-            compositorfades.set_auto_fade_in_keyframes(self)
-        else:
-            compositorfades.set_auto_fade_out_keyframes(self)
             
 # -------------------------------------------------- compositor interface methods
 def load_compositors_xml(transitions):
