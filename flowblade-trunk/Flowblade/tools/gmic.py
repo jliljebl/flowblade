@@ -22,7 +22,7 @@ import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('PangoCairo', '1.0')
 
-from gi.repository import GLib
+from gi.repository import GLib, Gio
 from gi.repository import Gtk, Gdk, GdkPixbuf
 from gi.repository import Pango
 
@@ -78,6 +78,7 @@ NO_PREVIEW_FILE = "fallback_thumb.png"
 _gmic_found = False
 _session_id = None
 
+_app = None
 _window = None
 
 _player = None
@@ -189,65 +190,73 @@ def main(root_path, force_launch=False):
     # Load preset gmic scripts
     gmicscript.load_preset_scripts_xml()
 
-    # Init gtk threads
-    Gdk.threads_init()
-    Gdk.threads_enter()
+    app = GMicApplication()
+    global _app
+    _app = app
+    app.run(None)
 
-    # Set monitor sizes
-    scr_w, scr_h = utilsgtk.get_combined_monitors_size()
-    editorstate.SCREEN_WIDTH = scr_w
-    editorstate.SCREEN_HEIGHT = scr_h
-    if editorstate.screen_size_large_height() == True and editorstate.screen_size_small_width() == False:
-        global MONITOR_WIDTH, MONITOR_HEIGHT
-        MONITOR_WIDTH = 650
-        MONITOR_HEIGHT = 400 # initial value, this gets changed when material is loaded
-
-    # Themes
-    if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
-        respaths.apply_dark_theme()
-        Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME \
-            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
-            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-            gui.apply_gtk_css(editorpersistance.prefs.theme)
-
-    repo = mlt.Factory().init()
-    processutils.prepare_mlt_repo(repo)
     
-    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
-    locale.setlocale(locale.LC_NUMERIC, 'C')
+class GMicApplication(Gtk.Application):
+    def __init__(self, *args, **kwargs):
+        Gtk.Application.__init__(self, application_id="com.github.jliljebl.Flowblade.Scriptttool",
+                                 flags=Gio.ApplicationFlags.FLAGS_NONE)
+        self.connect("activate", self.on_activate)
 
-    # Check for codecs and formats on the system
-    mltenv.check_available_features(repo)
-    renderconsumer.load_render_profiles()
+    def on_activate(self, data=None):
+        # Set monitor sizes
+        scr_w, scr_h = utilsgtk.get_combined_monitors_size()
+        editorstate.SCREEN_WIDTH = scr_w
+        editorstate.SCREEN_HEIGHT = scr_h
+        if editorstate.screen_size_large_height() == True and editorstate.screen_size_small_width() == False:
+            global MONITOR_WIDTH, MONITOR_HEIGHT
+            MONITOR_WIDTH = 650
+            MONITOR_HEIGHT = 400 # initial value, this gets changed when material is loaded
 
-    # Load filter and compositor descriptions from xml files.
-    mltfilters.load_filters_xml(mltenv.services)
-    mlttransitions.load_compositors_xml(mltenv.transitions)
+        # Themes
+        if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
+            respaths.apply_dark_theme()
+            Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
+            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME \
+                or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
+                or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+                gui.apply_gtk_css(editorpersistance.prefs.theme)
 
-    # Create list of available mlt profiles
-    mltprofiles.load_profile_list()
-
-    gui.load_current_colors()
-    
-    global _window
-    _window = GmicWindow()
-    _window.pos_bar.set_dark_bg_color()
-
-    os.putenv('SDL_WINDOWID', str(_window.monitor.get_window().get_xid()))
-    Gdk.flush()
-
-    # Start with a clip loaded if data provided
-    if len(sys.argv) > 1:
-        path = _get_arg_value(sys.argv, "path")
-        mark_in = int(_get_arg_value(sys.argv, "clip_in"))
-        mark_out = int(_get_arg_value(sys.argv, "clip_out"))
-        global _startup_data
-        _startup_data = (path, mark_in, mark_out)
-        GLib.idle_add(_load_startup_data)
+        repo = mlt.Factory().init()
+        processutils.prepare_mlt_repo(repo)
         
-    Gtk.main()
-    Gdk.threads_leave()
+        # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
+        locale.setlocale(locale.LC_NUMERIC, 'C')
+
+        # Check for codecs and formats on the system
+        mltenv.check_available_features(repo)
+        renderconsumer.load_render_profiles()
+
+        # Load filter and compositor descriptions from xml files.
+        mltfilters.load_filters_xml(mltenv.services)
+        mlttransitions.load_compositors_xml(mltenv.transitions)
+
+        # Create list of available mlt profiles
+        mltprofiles.load_profile_list()
+
+        gui.load_current_colors()
+        
+        global _window
+        _window = GmicWindow()
+        _window.pos_bar.set_dark_bg_color()
+
+        os.putenv('SDL_WINDOWID', str(_window.monitor.get_window().get_xid()))
+
+        # Start with a clip loaded if data provided
+        if len(sys.argv) > 1:
+            path = _get_arg_value(sys.argv, "path")
+            mark_in = int(_get_arg_value(sys.argv, "clip_in"))
+            mark_out = int(_get_arg_value(sys.argv, "clip_out"))
+            global _startup_data
+            _startup_data = (path, mark_in, mark_out)
+            GLib.idle_add(_load_startup_data)
+        
+        self.add_window(_window)
+
 
 def _load_startup_data():
     path, mark_in, mark_out = _startup_data
@@ -586,9 +595,9 @@ def _shutdown():
 
     # Delete session folder
     shutil.rmtree(get_session_folder())
-    
-    # Exit gtk main loop.
-    Gtk.main_quit()
+
+    # Close app.
+    _app.quit()
 
 
 #------------------------------------------------- window
