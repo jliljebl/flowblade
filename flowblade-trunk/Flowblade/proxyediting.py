@@ -125,7 +125,6 @@ class ProxyRenderRunnerThread(threading.Thread):
                                                 None)
             else:
 
-
                 asset_folder, asset_file_name = os.path.split(media_file.path)
                 lookup_filename = utils.get_img_seq_glob_lookup_name(asset_file_name)
                 lookup_path = asset_folder + "/" + lookup_filename
@@ -147,7 +146,6 @@ class ProxyRenderRunnerThread(threading.Thread):
             session_id = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
             job_queue_object = jobs.ProxyRenderJobQueueObject(session_id, proxy_render_data_item)
             job_queue_object.add_to_queue()
-
 
     def abort(self):
         render_thread.shutdown()

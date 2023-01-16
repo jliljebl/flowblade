@@ -502,8 +502,28 @@ def update_frame_displayers():
 
 #-------------------------------------------------- render and preview
 def render_output():
+    buf = _window.script_view.get_buffer()
+    user_script = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), False)
+
+    out_folder = _window.out_folder.get_filenames()[0] + "/"
+    if out_folder == (os.path.expanduser("~") + "/"):
+        return
+
+    _window.render_status_info.set_markup("")
+    _window.set_widgets_sensitive(False)
+    _window.render_percentage.set_sensitive(True)
+    _window.render_status_info.set_sensitive(True)
+    _window.render_progress_bar.set_sensitive(True)
+    _window.stop_button.set_sensitive(True)
+    _window.render_button.set_sensitive(False)
+    _window.close_button.set_sensitive(False)
+    _window.encode_settings_button.set_sensitive(False)
+    _window.encode_desc.set_sensitive(False)
+    _window.hamburger_launcher.widget.set_sensitive(False)
+    _window.load_button.set_sensitive(False)
+        
     global _effect_renderer
-    _effect_renderer = GmicEffectRendererer()
+    _effect_renderer = GmicEffectRendererer(user_script, out_folder)
     _effect_renderer.start()
 
 def abort_render():
@@ -515,8 +535,13 @@ def render_preview_frame():
     _window.preview_monitor.queue_draw()
     
 def render_current_frame_preview():
+    _window.preview_info.set_markup("<small>" + _("Rendering preview...") + "</small>" )
+    
+    buf = _window.script_view.get_buffer()
+    view_text = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), False)
+    
     global _preview_render
-    _preview_render = GmicPreviewRendererer()
+    _preview_render = GmicPreviewRendererer(view_text)
     _preview_render.start()
 
 def _encode_settings_clicked():
@@ -1095,8 +1120,9 @@ def _global_key_down_listener(widget, event):
 #------------------------------------------------- render threads
 class GmicPreviewRendererer(threading.Thread):
 
-    def __init__(self):
+    def __init__(self, view_text):
         threading.Thread.__init__(self)
+        self.view_text = view_text
 
     def run(self):
         start_time = time.time()
@@ -1106,21 +1132,12 @@ class GmicPreviewRendererer(threading.Thread):
             shutil.copyfile(get_current_frame_file(), get_preview_file())
         except IOError:
             # We have failed to extract a png file from source file
-            Gdk.threads_enter()
-            _window.out_view.override_color((Gtk.StateFlags.NORMAL and Gtk.StateFlags.ACTIVE), Gdk.RGBA(red=1.0, green=0.0, blue=0.0))
-            _window.out_view.get_buffer().set_text("Extracting PNG frames from this file failed!")
-            Gdk.threads_leave()
+            GLib.idle_add(self._update_buffer)
             return
-            
-        Gdk.threads_enter()
-        _window.preview_info.set_markup("<small>" + _("Rendering preview...") + "</small>" )
-        buf = _window.script_view.get_buffer()
-        view_text = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), False)
-        Gdk.threads_leave()
     
         # Create command list and launch process.
         command_list = [editorstate.gmic_path, get_current_frame_file()]
-        user_script_commands = view_text.split(" ")
+        user_script_commands = self.view_text.split(" ")
         command_list.extend(user_script_commands)
         command_list.append("-output")
         command_list.append(get_preview_file())
@@ -1138,13 +1155,10 @@ class GmicPreviewRendererer(threading.Thread):
 
         global _current_preview_surface
         _current_preview_surface = cairo.ImageSurface.create_from_png(get_preview_file())
+    
+        GLib.idle_add(self._preview_render_done_update, p, out, start_time)
 
-        Gdk.threads_enter()
-        if p.returncode != 0:
-           _window.out_view.override_color((Gtk.StateFlags.NORMAL and Gtk.StateFlags.ACTIVE), Gdk.RGBA(red=1.0, green=0.0, blue=0.0))
-        else:
-            _window.out_view.override_color((Gtk.StateFlags.NORMAL and Gtk.StateFlags.ACTIVE), None)
-            
+    def _preview_render_done_update(self, p, out, start_time):
         _window.out_view.get_buffer().set_text(out + "Return code:" + str(p.returncode))
 
         render_time = time.time() - start_time
@@ -1153,13 +1167,18 @@ class GmicPreviewRendererer(threading.Thread):
             utils.get_tc_string_with_fps(_player.current_frame(), _current_fps) + _(", render time: ") + time_str +  "</small>" )
             
         _window.preview_monitor.queue_draw()
-        Gdk.threads_leave()
 
+    def _update_buffer():
+        _window.out_view.get_buffer().set_text(_("Extracting PNG frames from this file failed!"))
+
+            
 
 class GmicEffectRendererer(threading.Thread):
 
-    def __init__(self):
+    def __init__(self, user_script, out_folder):
         threading.Thread.__init__(self)
+        self.user_script = user_script
+        self.out_folder = out_folder
 
     def run(self):
         self.render_player = None
@@ -1168,26 +1187,6 @@ class GmicEffectRendererer(threading.Thread):
         self.abort = False
         self.script_renderer = None
         
-        # Refuse to render into user home folder
-        out_folder = _window.out_folder.get_filenames()[0] + "/"
-        if out_folder == (os.path.expanduser("~") + "/"):
-            return
-        
-        Gdk.threads_enter()
-        _window.render_status_info.set_markup("")
-        _window.set_widgets_sensitive(False)
-        _window.render_percentage.set_sensitive(True)
-        _window.render_status_info.set_sensitive(True)
-        _window.render_progress_bar.set_sensitive(True)
-        _window.stop_button.set_sensitive(True)
-        _window.render_button.set_sensitive(False)
-        _window.close_button.set_sensitive(False)
-        _window.encode_settings_button.set_sensitive(False)
-        _window.encode_desc.set_sensitive(False)
-        _window.hamburger_launcher.widget.set_sensitive(False)
-        _window.load_button.set_sensitive(False)
-        Gdk.threads_leave()
-            
         # Delete old preview frames
         folder = get_render_frames_dir()
         for frame_file in os.listdir(folder):
@@ -1210,20 +1209,15 @@ class GmicEffectRendererer(threading.Thread):
             return
         
         # Render effect for frames
-        # Get user script 
-        Gdk.threads_enter()
-        buf = _window.script_view.get_buffer()
-        user_script = buf.get_text(buf.get_start_iter(), buf.get_end_iter(), False)
-        _window.render_percentage.set_markup("<small>" + _("Waiting for frames write to complete...") + "</small>")
-        Gdk.threads_leave()
-
+        GLib.idle_add(self._show_percentage_and_fraction, "<small>" + _("Waiting for frames write to complete...") + "</small>", None)
+         
         while len(os.listdir(folder)) != self.length:
             time.sleep(0.5)
         
         # Render frames with gmic script
-        self.script_renderer = gmicplayer.FolderFramesScriptRenderer(   user_script, 
+        self.script_renderer = gmicplayer.FolderFramesScriptRenderer(   self.user_script, 
                                                                         folder,
-                                                                        out_folder,
+                                                                        self.out_folder,
                                                                         frame_name,
                                                                         self.script_render_update_callback, 
                                                                         self.script_render_output_callback)
@@ -1239,9 +1233,9 @@ class GmicEffectRendererer(threading.Thread):
             consumer = renderconsumer.get_mlt_render_consumer(file_path, profile, args_vals_list)
             
             # Render producer
-            frame_file = out_folder + frame_name + "_0000.png"
+            frame_file = self.out_folder + frame_name + "_0000.png"
             resource_name_str = utils.get_img_seq_resource_name(frame_file)
-            resource_path = out_folder + "/" + resource_name_str
+            resource_path = self.out_folder + "/" + resource_name_str
             producer = mlt.Producer(profile, str(resource_path))
             clip_frames = os.listdir(get_render_frames_dir())
 
@@ -1252,28 +1246,23 @@ class GmicEffectRendererer(threading.Thread):
 
             while self.render_player.stopped == False:
                 if self.abort == True:
-                    Gdk.threads_enter()
-                    _window.render_percentage.set_markup("<small>" + _("Render stopped!") + "</small>")
-                    _window.render_progress_bar.set_fraction(0.0)
-                    Gdk.threads_leave()
+                    GLib.idle_add(self._show_percentage_and_fraction, "<small>" + _("Render stopped!") + "</small>", 0.0)
                     return
                 
                 fraction = self.render_player.get_render_fraction()
                 update_info = _("Rendering video, ") + str(int(fraction * 100)) + _("% done")
                 
-                Gdk.threads_enter()
-                _window.render_percentage.set_markup("<small>" + update_info + "</small>")
-                _window.render_progress_bar.set_fraction(fraction)
-                Gdk.threads_leave()
+                GLib.idle_add(self._show_percentage_and_fraction, update_info, fraction)
                 
                 time.sleep(0.3)
 
-        Gdk.threads_enter()
-        _window.render_percentage.set_markup("<small>" + _("Render complete!") + "</small>")
+        GLib.idle_add(self._show_percentage_and_fraction, "<small>" + _("Render complete!") + "</small>", None)
         self.set_render_stopped_gui_state()
-        Gdk.threads_leave()
         
     def frames_update(self, frame):
+        GLib.idle_add(self._do_frames_update, frame)
+
+    def _do_frames_update(self, frame):
         if frame - self.mark_in < 0:
             frame = self.length # hack fix, producer suddenly changes the frame it thinks it is in
         else:
@@ -1281,43 +1270,36 @@ class GmicEffectRendererer(threading.Thread):
         
         update_info = _("Writing clip frame: ") + str(frame) + "/" +  str(self.length)
 
-        Gdk.threads_enter()
         _window.render_percentage.set_markup("<small>" + update_info + "</small>")
         _window.render_progress_bar.set_fraction(float(frame + 1)/float(self.length))
-        Gdk.threads_leave()
 
     def script_render_update_callback(self, frame_count):
-        update_info = _("Rendering frame: ") + str(frame_count) + "/" +  str(self.length)
+        GLib.idle_add(self._do_script_render_update_callback_gui, frame_count)
 
-        Gdk.threads_enter()
+    def _do_script_render_update_callback_gui(self, frame_count):
+        update_info = _("Rendering frame: ") + str(frame_count) + "/" +  str(self.length)
         _window.render_percentage.set_markup("<small>" + update_info + "</small>")
         _window.render_progress_bar.set_fraction(float(frame_count)/float(self.length))
-        Gdk.threads_leave()
 
     def script_render_output_callback(self, p, out):
-        Gdk.threads_enter()
+        GLib.idle_add(self._do_script_render_output_callback_gui, p, out)
+        
+    def _do_script_render_output_callback_gui(self, p, out):
         _window.out_view.get_buffer().set_text(out + "Return code:" + str(p.returncode))
         if p.returncode != 0:
-            _window.out_view.override_color((Gtk.StateFlags.NORMAL and Gtk.StateFlags.ACTIVE), Gdk.RGBA(red=1.0, green=0.0, blue=0.0))
             _window.render_percentage.set_text(_("Render error!"))
-            Gdk.threads_leave()
-            return
         else:
             _window.out_view.override_color((Gtk.StateFlags.NORMAL and Gtk.StateFlags.ACTIVE), None)
-            Gdk.threads_leave()
 
-    def abort_render(self):
-        self.abort = True
-
-        if self.script_renderer != None:
-             self.script_renderer.abort_rendering()
-
-        self.shutdown()
-                         
-        _window.render_percentage.set_markup("<small>" + _("Render stopped!") + "</small>")
-        self.set_render_stopped_gui_state()
+    def _show_percentage_and_fraction(self, percentage, fraction):
+        _window.render_percentage.set_markup(percentage) #"<small>" + update_info + "</small>")
+        if fraction != None:
+            _window.render_progress_bar.set_fraction(fraction)
 
     def set_render_stopped_gui_state(self):
+        GLib.idle_add(self._do_set_render_stopped_gui_state)
+        
+    def _do_set_render_stopped_gui_state(self):
         _window.render_progress_bar.set_fraction(0.0)
         _window.update_render_status_info()
         _window.stop_button.set_sensitive(False)
@@ -1329,10 +1311,20 @@ class GmicEffectRendererer(threading.Thread):
             _window.encode_settings_button.set_sensitive(True)
             _window.encode_desc.set_sensitive(True)
 
+    def abort_render(self):
+        self.abort = True
+
+        if self.script_renderer != None:
+             self.script_renderer.abort_rendering()
+
+        self.shutdown()
+                         
+        _window.render_percentage.set_markup("<small>" + _("Render stopped!") + "</small>")
+        self.set_render_stopped_gui_state()
+        
     def shutdown(self):
         if self.frames_range_writer != None:
             self.frames_range_writer.shutdown()
         
         if self.render_player != None:
             self.render_player.shutdown()        
-
