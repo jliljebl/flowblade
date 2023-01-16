@@ -640,8 +640,6 @@ def init_editor_state():
     # Create array needed to update compositors after all edits.
     editorstate.current_sequence().restack_compositors()
 
-    proxyediting.set_menu_to_proxy_state()
-
     undo.clear_undos()
 
     # Enable edit action GUI updates.
