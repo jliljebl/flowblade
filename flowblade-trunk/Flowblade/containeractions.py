@@ -534,8 +534,9 @@ class GMicContainerActions(AbstractContainerActionObject):
         subprocess.Popen(command_list)
         
     def update_render_status(self):
-        
-        Gdk.threads_enter()
+        GLib.idle_add(self._do_update_render_status)
+            
+    def _do_update_render_status(self):
                     
         if gmicheadless.session_render_complete(self.get_container_program_id()) == True:
             
@@ -588,8 +589,6 @@ class GMicContainerActions(AbstractContainerActionObject):
                 jobs.update_job_queue(job_msg)
             else:
                 pass # This can happen sometimes before gmicheadless.py has written a status message, we just do nothing here.
-
-        Gdk.threads_leave()
 
     def abort_render(self):
         gmicheadless.abort_render(self.get_container_program_id())
@@ -679,8 +678,9 @@ class FluxityContainerActions(AbstractContainerActionObject):
         subprocess.Popen(command_list)
         
     def update_render_status(self):
-        
-        Gdk.threads_enter()
+        GLib.idle_add(self._do_update_render_status)
+            
+    def _do_update_render_status(self):
         
         # We need to set these None so that when render is complete tlinewidgets.py drawing code no longer thinks
         # that render is in progress
@@ -751,7 +751,6 @@ class FluxityContainerActions(AbstractContainerActionObject):
             else:
                 pass # This can happen sometimes before gmicheadless.py has written a status message, we just do nothing here.
 
-        Gdk.threads_leave()
 
     def plugin_tline_render_comlete(self):
         clip = self.create_producer_and_do_update_edit(None)
@@ -889,8 +888,9 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
         subprocess.Popen(command_list)
 
     def update_render_status(self):
-
-        Gdk.threads_enter()
+        GLib.idle_add(self._do_update_render_status)
+            
+    def _do_update_render_status(self):
                     
         if mltxmlheadless.session_render_complete(self.get_container_program_id()) == True:
             #self.remove_as_status_polling_object()
@@ -919,9 +919,7 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
                 jobs.update_job_queue(job_msg)
             else:
                 pass # This can happen sometimes before gmicheadless.py has written a status message, we just do nothing here.
-                
-        Gdk.threads_leave()
-                
+
     def create_icon(self):
         return self._create_icon_default_action()
 
@@ -1064,8 +1062,9 @@ class BlenderContainerActions(AbstractContainerActionObject):
         return render_exec_lines
 
     def update_render_status(self):
-
-        Gdk.threads_enter()
+        GLib.idle_add(self._do_update_render_status)
+            
+    def _do_update_render_status(self):
                     
         if blenderheadless.session_render_complete(self.get_container_program_id()) == True:
 
@@ -1096,8 +1095,6 @@ class BlenderContainerActions(AbstractContainerActionObject):
                 jobs.update_job_queue(job_msg)
             else:
                 pass # This can happen sometimes before gmicheadless.py has written a status message, we just do nothing here.
-                
-        Gdk.threads_leave()
 
     def abort_render(self):
         #self.remove_as_status_polling_object()
@@ -1184,27 +1181,25 @@ class UnrenderedCreationThread(threading.Thread):
         clip_renderer.wait_for_producer_end_stop = True
         clip_renderer.start()
 
-        Gdk.threads_enter()
+        GLib.idle_add(self._show_progress_window,  clip_renderer)
+    
+        while clip_renderer.stopped == False:       
+            time.sleep(0.5)
+
+        GLib.idle_add(self._do_write_callback, write_file)
+
+    def _show_progress_window(self, clip_renderer):
         
         info_text = _("<b>Rendering Placeholder Media For:</b> ")  + self.data.get_program_name()
 
         progress_bar = Gtk.ProgressBar()
-        dialog = rendergui.clip_render_progress_dialog(None, self.window_text, info_text, progress_bar, gui.editor_window.window, True)
+        self.dialog = rendergui.clip_render_progress_dialog(None, self.window_text, info_text, progress_bar, gui.editor_window.window, True)
 
-        motion_progress_update = renderconsumer.ProgressWindowThread(dialog, progress_bar, clip_renderer, self.progress_thread_complete)
+        motion_progress_update = renderconsumer.ProgressWindowThread(self.dialog, progress_bar, clip_renderer, self.progress_thread_complete)
         motion_progress_update.start()
-
-        Gdk.threads_leave()
         
-        while clip_renderer.stopped == False:       
-            time.sleep(0.5)
-
-        Gdk.threads_enter()
-        
+    def _do_write_callback(self, write_file):
         self.callback(write_file, self.data)
 
-        Gdk.threads_leave()
-
     def progress_thread_complete(self, dialog, some_number):
-        #  Gdk.threads_enter() is done before this is called from "motion_progress_update" thread.
-        dialog.destroy()
+        GLib.idle_add(dialogutils.dialog_destroy, self.dialog, None)
