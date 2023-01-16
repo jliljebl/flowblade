@@ -81,10 +81,6 @@ class ProjectLoadThread(threading.Thread):
         self.filename = filename
 
     def run(self):
-        Gdk.threads_enter()
-        linker_window.project_label.set_text("Loading...")
-        Gdk.threads_leave()
-
         persistance.show_messages = False
         project = persistance.load_project(self.filename, False, True)
         
@@ -93,14 +89,14 @@ class ProjectLoadThread(threading.Thread):
         target_project.c_seq = project.sequences[target_project.c_seq_index]
         _update_media_assets()
 
-        Gdk.threads_enter()
+        GLib.idle_add(self._load_done_update)
+
+    def _load_done_update(self):
         linker_window.relink_list.fill_data_model()
         linker_window.project_label.set_text(self.filename)
         linker_window.set_active_state()
         linker_window.update_files_info()
         linker_window.load_button.set_sensitive(False)
-        Gdk.threads_leave()
-
 
 class MediaLinkerWindow(Gtk.Window):
     def __init__(self):
@@ -209,6 +205,8 @@ class MediaLinkerWindow(Gtk.Window):
             dialog.destroy()
 
     def load_project(self, filename):
+        linker_window.project_label.set_text(_("Loading..."))
+        
         global load_thread
         load_thread = ProjectLoadThread(filename)
         load_thread.start()
