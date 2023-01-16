@@ -149,11 +149,7 @@ class QueueRunnerThread(threading.Thread):
             # Set render start time and item state
             render_item.render_started()
 
-            Gdk.threads_enter()
-            batch_window.update_queue_view()
-            batch_window.current_render.set_text("  " + render_item.get_display_name())
-            batch_window.current_file.set_text("  " +  os.path.basename(render_item.render_path))
-            Gdk.threads_leave()
+            GLib.idle_add(self._render_start_update, render_item)
 
             # Make sure that render thread is actually running before
             # testing render_thread.running value later
@@ -169,17 +165,13 @@ class QueueRunnerThread(threading.Thread):
                 render_fraction = render_thread.get_render_fraction()
                 now = time.time()
                 current_render_time = now - render_item.start_time
-                
-                Gdk.threads_enter()
-                batch_window.update_render_progress(render_fraction, items, render_item.get_display_name(), current_render_time)
-                Gdk.threads_leave()
+    
+                GLib.idle_add(self._render_progress_update, render_fraction, items, render_item.get_display_name(), current_render_time)
                 
                 if render_thread.running == False: # Rendering has reached end
                     self.thread_running = False
                     
-                    Gdk.threads_enter()
-                    batch_window.render_progress_bar.set_fraction(1.0)
-                    Gdk.threads_leave()
+                    GLib.idle_add(self._progress_bar_update, 1.0)
                                     
                     render_item.render_completed()
                 else:
@@ -187,9 +179,7 @@ class QueueRunnerThread(threading.Thread):
                     
             if not self.aborted:
                 items = items + 1
-                Gdk.threads_enter()
-                batch_window.update_render_progress(0, items, render_item.get_display_name(), 0)
-                Gdk.threads_leave()
+                GLib.idle_add(self._render_progress_update, 0, items, render_item.get_display_name(), 0)
             else:
                 if render_item != None:
                     render_item.render_aborted()
@@ -197,11 +187,24 @@ class QueueRunnerThread(threading.Thread):
             render_thread.shutdown()
         
         # Update view for render end
-        Gdk.threads_enter()
+        GLib.idle_add(self._queue_done_update)
+
+    def _render_start_update(self, render_item):
+        batch_window.update_queue_view()
+        batch_window.current_render.set_text("  " + render_item.get_display_name())
+        batch_window.current_file.set_text("  " +  os.path.basename(render_item.render_path))
+
+    def _render_progress_update(self, render_fraction, items, display_time, current_render_time):
+        batch_window.update_render_progress(render_fraction, items, display_time, current_render_time)
+
+    def _progress_bar_update(self, fraction):
+        batch_window.render_progress_bar.set_fraction(fraction)
+
+    def _queue_done_update(self):
+        # Update view for render end
         batch_window.reload_queue() # item may havee added to queue while rendering
         batch_window.render_queue_stopped()
-        Gdk.threads_leave()
-                    
+        
     def abort(self):
         render_thread.shutdown()
         # It may be that 'aborted' and 'running' could combined into single flag, but whatevaar
@@ -1327,10 +1330,7 @@ class SingleRenderThread(threading.Thread):
         # Set render start time and item state
         render_item.render_started()
 
-        Gdk.threads_enter()
-        #single_render_window.update_queue_view()
-        single_render_window.current_render.set_text("  " + os.path.basename(render_item.render_path))
-        Gdk.threads_leave()
+        GLib.idle_add(self._show_current_render, render_item)
 
         # Make sure that render thread is actually running before
         # testing render_thread.running value later
@@ -1345,25 +1345,31 @@ class SingleRenderThread(threading.Thread):
             now = time.time()
             current_render_time = now - render_item.start_time
             
-            Gdk.threads_enter()
-            single_render_window.update_render_progress(render_fraction, render_item.get_display_name(), current_render_time)
-            Gdk.threads_leave()
+            GLib.idle_add(self._update_render_progress, render_fraction, render_item.get_display_name(), current_render_time)
             
             if render_thread.running == False: # Rendering has reached end
                 self.running = False
-                
-                Gdk.threads_enter()
-                single_render_window.render_progress_bar.set_fraction(1.0)
-                Gdk.threads_leave()
+
+                GLib.idle_add(self._update_progress_bar, 1.0)
 
             time.sleep(0.33)
                 
         render_thread.shutdown()
         global single_render_thread
         single_render_thread = None
+
         # Update view for render end
         GLib.idle_add(_single_render_shutdown)
 
+    def _show_current_render(self, render_item):
+        single_render_window.current_render.set_text("  " + os.path.basename(render_item.render_path))
+
+    def _update_render_progress(self, fraction, display_name, current_render_time):
+        single_render_window.update_render_progress(fraction, display_name, current_render_time)
+
+    def _update_progress_bar(self, fraction):
+        single_render_window.render_progress_bar.set_fraction(fraction)
+                
     def is_frame_sequence_render(self, vcodec):
         if vcodec in ["png","bmp","dpx","ppm","targa","tiff"]:
             return True
