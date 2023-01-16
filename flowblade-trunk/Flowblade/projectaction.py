@@ -108,7 +108,8 @@ _media_panel_double_click_counter = 0
 #--------------------------------------- worker threads
 class LoadThread(threading.Thread):
     
-    def __init__(self, filename, block_recent_files=False, is_first_video_load=False, is_autosave_load=False):
+    def __init__(self, dialog, filename, block_recent_files=False, is_first_video_load=False, is_autosave_load=False):
+        self.dialog = dialog
         self.filename = filename
         self.block_recent_files = block_recent_files
         self.is_first_video_load = is_first_video_load
@@ -116,13 +117,6 @@ class LoadThread(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        Gdk.threads_enter()
-        updater.set_info_icon(Gtk.STOCK_OPEN)
-
-        dialog = dialogs.load_dialog()
-        persistance.load_dialog = dialog
-        Gdk.threads_leave()
-
         ticker = utils.Ticker(_load_pulse_bar, 0.15)
         ticker.start_ticker()
 
@@ -137,58 +131,50 @@ class LoadThread(threading.Thread):
             editorstate.project_is_loading = False
 
         except persistance.FileProducerNotFoundError as e:
-            print("LoadThread.run() - FileProducerNotFoundError")
-            self._error_stop(dialog, ticker)
-            Gdk.threads_enter()
-            primary_txt = _("Media asset was missing!")
-            secondary_txt = _("Path of missing asset:") + "\n   <b>" + e.value + "</b>\n\n" + \
-                            _("Relative search for replacement file in sub folders of project file failed.") + "\n\n" + \
-                            _("To load the project you will need to either:") + "\n" + \
-                            "\u2022" + " " + _("Open project in 'Media Relinker' tool to relink media assets to new files, or") + "\n" + \
-                            "\u2022" + " " + _("Place a file with the same exact name and path on the hard drive")
-            open_label = Gtk.Label(label=_("Open project in Media Relinker tool"))
-            self.open_check = Gtk.CheckButton()
-            self.open_check.set_active(True)
-            check_row = Gtk.HBox(False, 1)
-            check_row.pack_start(Gtk.Label(), True, True, 0)
-            check_row.pack_start(self.open_check, False, False, 0)
-            check_row.pack_start(open_label, False, False, 0)
-            guiutils.set_margins(check_row,24,0,0,0)
-            panels = [check_row]
-            dialogutils.warning_message_with_panels(primary_txt, secondary_txt, 
-                                                    gui.editor_window.window, 
-                                                    False, self._missing_file_dialog_callback,
-                                                    panels)
-            editorstate.project = old_project # persistance.load_project() changes this,
-                                              # we simply change it back as no GUI or other state is yet changed
-            Gdk.threads_leave()
+            GLib.idle_add(self._exit_on_file_not_found_error, e, ticker)
             return
         except persistance.ProjectProfileNotFoundError as e:
-            self._error_stop(dialog, ticker)
-            primary_txt = _("Profile with Description: '") + e.value  + _("' was not found on load!")
-            secondary_txt = _("It is possible to load the project by creating a User Profile with exactly the same Description\nas the missing profile. ") + "\n\n" + \
-                            _("User Profiles can be created by selecting 'Edit->Profiles Manager'.")
-            dialogutils.warning_message(primary_txt, secondary_txt, None, is_info=False)
-            editorstate.project = old_project # persistance.load_project() changes this,
-                                              # we simply change it back as no GUI or other state is yet changed
+            GLib.idle_add(self._exit_on_profile_file_not_found_error, e, ticker)
             return
 
-        Gdk.threads_enter()
-        dialog.info.set_text(_("Opening"))
-        Gdk.threads_leave()
+        guiutils.update_text_idle(self.dialog.info, _("Opening"))
 
         time.sleep(0.3)
 
-        Gdk.threads_enter()
+        # Open project
+        self.project_load_done = False
+        GLib.idle_add(self._do_project_open, project)
+
+        while self.project_load_done == False:
+            time.sleep(0.1)
+
+        # Do some additional work after opening project.
+        self.post_open_work_done = False
+
+        GLib.idle_add(self._do_post_open_update, project)
+
+        while self.post_open_work_done == False:
+            time.sleep(0.1)
+        
+        # First video load is a media file change and needs to set flag for it
+        # whereas other loads clear the flag above.
+        if self.is_first_video_load == True:
+            projectdata.media_files_changed_since_last_save = True
+            project.last_save_path = None # This gets set to the temp file saved to change profile which is not correct.
+
+        ticker.stop_ticker()
+
+    def _do_project_open(self, project):
         
         app.open_project(project) # <-- HERE
 
         if self.block_recent_files: # naming flipped ????
             editorpersistance.add_recent_project_path(self.filename)
             gui.editor_window.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)
-        Gdk.threads_leave()
-        
-        Gdk.threads_enter()
+            
+        self.project_load_done = True
+
+    def _do_post_open_update(self, project):
         selections = project.get_project_property(appconsts.P_PROP_LAST_RENDER_SELECTIONS)
         if selections != None:
             render.set_saved_gui_selections(selections)
@@ -204,24 +190,49 @@ class LoadThread(threading.Thread):
         else:
             print("autosave load")
 
-        dialog.destroy()
+        self.dialog.destroy()
         gui.tline_canvas.connect_mouse_events() # mouse events during load cause crashes because there is no data to handle
-        Gdk.threads_leave()
 
-        # First video load is a media file change and needs to set flag for it
-        # whereas other loads clear the flag above.
-        if self.is_first_video_load == True:
-            projectdata.media_files_changed_since_last_save = True
-            project.last_save_path = None # This gets set to the temp file saved to change profile which is not correct.
+        self.post_open_work_done = True
+        
+    def _exit_on_file_not_found_error(self, e, ticker):
+        print("LoadThread.run() - FileProducerNotFoundError")
+        self._error_stop(self.dialog, ticker)
+        primary_txt = _("Media asset was missing!")
+        secondary_txt = _("Path of missing asset:") + "\n   <b>" + e.value + "</b>\n\n" + \
+                        _("Relative search for replacement file in sub folders of project file failed.") + "\n\n" + \
+                        _("To load the project you will need to either:") + "\n" + \
+                        "\u2022" + " " + _("Open project in 'Media Relinker' tool to relink media assets to new files, or") + "\n" + \
+                        "\u2022" + " " + _("Place a file with the same exact name and path on the hard drive")
+        open_label = Gtk.Label(label=_("Open project in Media Relinker tool"))
+        self.open_check = Gtk.CheckButton()
+        self.open_check.set_active(True)
+        check_row = Gtk.HBox(False, 1)
+        check_row.pack_start(Gtk.Label(), True, True, 0)
+        check_row.pack_start(self.open_check, False, False, 0)
+        check_row.pack_start(open_label, False, False, 0)
+        guiutils.set_margins(check_row,24,0,0,0)
+        panels = [check_row]
+        dialogutils.warning_message_with_panels(primary_txt, secondary_txt, 
+                                                gui.editor_window.window, 
+                                                False, self._missing_file_dialog_callback,
+                                                panels)
+        editorstate.project = old_project # persistance.load_project() changes this,
+                                          # we simply change it back as no GUI or other state is yet changed
 
-        ticker.stop_ticker()
-
+    def _exit_on_profile_file_not_found_error(self, e, ticker):
+        self._error_stop(self.dialog, ticker)
+        primary_txt = _("Profile with Description: '") + e.value  + _("' was not found on load!")
+        secondary_txt = _("It is possible to load the project by creating a User Profile with exactly the same Description\nas the missing profile. ") + "\n\n" + \
+                        _("User Profiles can be created by selecting 'Edit->Profiles Manager'.")
+        dialogutils.warning_message(primary_txt, secondary_txt, None, is_info=False)
+        editorstate.project = old_project # persistance.load_project() changes this,
+                                          # we simply change it back as no GUI or other state is yet changed
+                                              
     def _error_stop(self, dialog, ticker):
         editorstate.project_is_loading = False
-        Gdk.threads_enter()
         updater.set_info_icon(None)
         dialog.destroy()
-        Gdk.threads_leave()
         ticker.stop_ticker()
 
     def _missing_file_dialog_callback(self, dialog, response_id):
@@ -240,10 +251,7 @@ class AddMediaFilesThread(threading.Thread):
         self.compound_clip_name = compound_clip_name # Compound clips saved in hidden folder need this name displayed to user, not the md5 hash.
                                                      # Underlying reason, XML clip creation overwrites existing profile objects property values, https://github.com/mltframework/mlt/issues/212
     def run(self): 
-        Gdk.threads_enter()
-        watch = Gdk.Cursor.new(Gdk.CursorType.WATCH)
-        gui.editor_window.window.get_window().set_cursor(watch)
-        Gdk.threads_leave()
+        GLib.idle_add(self._change_cursor_watch)
 
         is_first_video_load = PROJECT().is_first_video_load()
         duplicates = []
@@ -278,15 +286,12 @@ class AddMediaFilesThread(threading.Thread):
                     PROJECT().add_media_file(new_file, self.compound_clip_name, target_bin)
                     succes_new_file = new_file
                 except projectdata.ProducerNotValidError as err:
-                    Gdk.threads_enter()
-                    dialogs.not_valid_producer_dialog(err.value, gui.editor_window.window)
-                    Gdk.threads_leave()
+                    GLib.idle_add(self._not_valid_producer, err.value)
 
-            Gdk.threads_enter()
-            gui.media_list_view.fill_data_model()
-            max_val = gui.editor_window.media_scroll_window.get_vadjustment().get_upper()
-            gui.editor_window.media_scroll_window.get_vadjustment().set_value(max_val)
-            Gdk.threads_leave()
+            self.list_view_update_done = False
+            GLib.idle_add(self._list_view_update)
+            while self.list_view_update_done == False:
+                time.sleep(0.05)
 
         add_count = len(filenames) - len(duplicates)
         project_event = projectdata.ProjectEvent(projectdata.EVENT_MEDIA_ADDED, str(add_count))
@@ -296,8 +301,27 @@ class AddMediaFilesThread(threading.Thread):
             editorpersistance.prefs.last_opened_media_dir = os.path.dirname(succes_new_file)
             editorpersistance.save()
 
+        self.post_load_update_done = False
+        GLib.idle_add(self._post_load_update, anim_gif_name, extension_refused)
+        while self.post_load_update_done == False:
+            time.sleep(0.1)
+
+        if len(duplicates) > 0:
+            GLib.timeout_add(10, _duplicates_info, duplicates)
+
+        if is_first_video_load:
+            GLib.timeout_add(10, _first_load_profile_check)
+            
+        audiowaveformrenderer.launch_audio_levels_rendering(filenames)
+
+    def _list_view_update(self):
+        gui.media_list_view.fill_data_model()
+        max_val = gui.editor_window.media_scroll_window.get_vadjustment().get_upper()
+        gui.editor_window.media_scroll_window.get_vadjustment().set_value(max_val)
+        self.list_view_update_done = True
+
+    def _post_load_update(self, anim_gif_name, extension_refused):
         # Update editor gui
-        Gdk.threads_enter()
         gui.media_list_view.fill_data_model()
         update_current_bin_files_count()
         _enable_save()
@@ -323,36 +347,27 @@ class AddMediaFilesThread(threading.Thread):
                     
             secondary_txt = secondary_txt + _("\nAdd the correct extension to load a problem file.")
             dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
-            
-        Gdk.threads_leave()
 
-        if len(duplicates) > 0:
-            GLib.timeout_add(10, _duplicates_info, duplicates)
+        self.post_load_update_done = True
+        
+    def _change_cursor_watch(self):
+        watch = Gdk.Cursor.new(Gdk.CursorType.WATCH)
+        gui.editor_window.window.get_window().set_cursor(watch)
 
-        if is_first_video_load:
-            GLib.timeout_add(10, _first_load_profile_check)
-            
-        audiowaveformrenderer.launch_audio_levels_rendering(filenames)
+    def _not_valid_producer(self, err_value):
+        dialogs.not_valid_producer_dialog(err_value, gui.editor_window.window)
 
-
+                    
 class UpdateMediaLengthsThread(threading.Thread):
     
-    def __init__(self):
+    def __init__(self, dialog):
         threading.Thread.__init__(self)
+        self.dialog = dialog
 
     def run(self):
-        print("Updating media lengths:")
-
-        Gdk.threads_enter()
-        dialog = dialogs.update_media_lengths_progress_dialog()
-        time.sleep(0.1)
-        Gdk.threads_leave()
-
         for key, media_file in PROJECT().media_files.items():
             if media_file.type == appconsts.VIDEO or media_file.type == appconsts.IMAGE_SEQUENCE:
-                Gdk.threads_enter()
-                dialog.info.set_text(media_file.name)
-                Gdk.threads_leave()
+                guiutils.update_text_idle(self.dialog.info, media_file.name)
         
                 producer = mlt.Producer(PROJECT().profile, str(media_file.path))
                 if producer.is_valid() == False:
@@ -364,9 +379,7 @@ class UpdateMediaLengthsThread(threading.Thread):
                 
         PROJECT().update_media_lengths_on_load = False
         
-        Gdk.threads_enter()
-        dialog.destroy()
-        Gdk.threads_leave()
+        GLib.idle_add(dialogutils.dialog_destroy, self.dialog, None)
         
         print("Updating media lengths done.")
         
@@ -417,13 +430,8 @@ def _not_matching_media_info_callback(dialog, response_id, media_file):
 
 
 def _load_pulse_bar():
-    Gdk.threads_enter()
-    try: 
-        persistance.load_dialog.progress_bar.pulse()
-    except:
-        pass
-    Gdk.threads_leave()
-
+    GLib.idle_add(persistance.load_dialog.progress_bar.pulse)
+    
 def _enable_save():
     gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(True)
 
@@ -488,7 +496,12 @@ def _close_dialog_callback(dialog, response_id, no_dialog_project_close=False):
     
 def actually_load_project(filename, block_recent_files=False, is_first_video_load=False, is_autosave_load=False):
     gui.tline_canvas.disconnect_mouse_events() # mouse events dutring load cause crashes because there is no data to handle
-    load_launch = LoadThread(filename, block_recent_files, is_first_video_load, is_autosave_load)
+    updater.set_info_icon(Gtk.STOCK_OPEN)
+
+    dialog = dialogs.load_dialog()
+    persistance.load_dialog = dialog
+
+    load_launch = LoadThread(dialog, filename, block_recent_files, is_first_video_load, is_autosave_load)
     load_launch.start()
 
 def save_project():
@@ -587,7 +600,9 @@ def _save_as_dialog_callback(dialog, response_id):
         dialog.destroy()
 
 def update_media_lengths():
-    update_thread = UpdateMediaLengthsThread()
+    dialog = dialogs.update_media_lengths_progress_dialog()
+    time.sleep(0.1)
+    update_thread = UpdateMediaLengthsThread(dialog)
     update_thread.start()
     
 def change_project_profile():

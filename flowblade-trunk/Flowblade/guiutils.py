@@ -508,3 +508,11 @@ class PulseEvent:
         else:
             self.exited = True
             return False
+
+
+def update_text_idle(text_widget, msg):
+    GLib.idle_add(_do_update_text, text_widget, msg)
+
+def _do_update_text(text_widget, msg):
+    text_widget.set_text(msg)
+    
