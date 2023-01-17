@@ -26,10 +26,6 @@ try:
 except:
     import mlt7 as mlt
 
-import dialogutils
-import editorstate
-import gui
-
 acodecs = None
 vcodecs = None
 formats = None
@@ -94,10 +90,10 @@ def check_available_features(repo):
         environment_detection_success = True
 
     except:
-        print("Environment detection failed, environment unknown.")
-        GLib.timeout_add(2000, _show_failed_environment_info)
+        return
 
 def render_profile_supported(frmt, vcodec, acodec):
+    # ??!!??
     if environment_detection_success == False:
         return (True, "")
         
@@ -118,15 +114,7 @@ def render_profile_supported(frmt, vcodec, acodec):
 
     return (False, err_msg)
 
-def _show_failed_environment_info():
-    primary_txt = "Environment detection failed!"
-    secondary_txt = "You will probably be presented with filters, transitions\nand rendering options that are not available on your system." + \
-    "\n---\nYou may experience sudden crashes when adding filters or\nattempting rendering." + \
-    "\n---\nYour MLT Version is: "+ editorstate.mlt_version + "\n" + \
-    "Only report this as a bug if the MLT version above is >= 0.7.6."
-    
-    dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
-    return False
+
 
     
     

@@ -32,7 +32,7 @@ import threading
 import xml.dom.minidom
 
 import appconsts
-import editorstate # This needs to go.
+import editorstate
 
 _start_time = 0.0
 

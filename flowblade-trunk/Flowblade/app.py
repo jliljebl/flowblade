@@ -258,10 +258,6 @@ def main(root_path):
         _too_small_screen_exit()
         return
 
-    # Splash screen
-    if editorpersistance.prefs.display_splash_screen == True: 
-        show_splash_screen()
-
     # Init MLT framework
     repo = mlt.Factory().init()
     processutils.prepare_mlt_repo(repo)
@@ -269,8 +265,12 @@ def main(root_path):
     # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs.
     locale.setlocale(locale.LC_NUMERIC, 'C')
 
-    # Check for codecs and formats on the system.
+    # Check for codecs and formats on the system exit if detection failed.
     mltenv.check_available_features(repo)
+    if mltenv.environment_detection_success == False:
+        _failed_environment_exit()
+        return
+        
     renderconsumer.load_render_profiles()
 
     # Load filter and compositor descriptions from xml files.
@@ -286,6 +286,10 @@ def main(root_path):
     # If we have crashed we could have large amount of disk space wasted unless we delete all files here.
     tlinerender.app_launch_clean_up()
 
+    # Splash screen
+    if editorpersistance.prefs.display_splash_screen == True: 
+        show_splash_screen()
+        
     # Save assoc file path if found in arguments.
     global assoc_file_path
     assoc_file_path = get_assoc_file_path()
@@ -995,6 +999,20 @@ def _show_mlt_version_exit_info():
     secondary_txt = _("Your MLT version is: ") + editorstate.mlt_version + ".\n\n" + _("Install MLT 6.18 or higher to run Flowblade.")
     dialogutils.warning_message_with_callback(primary_txt, secondary_txt, None, False, _early_exit)
 
+def _failed_environment_exit():
+    global exit_timeout_id
+    exit_timeout_id = GLib.timeout_add(200, _show_failed_environment_info)
+    # Launch gtk+ main loop
+    Gtk.main()
+    
+def _show_failed_environment_info():
+    GLib.source_remove(exit_timeout_id)
+    primary_txt = "Environment detection failed!"
+    secondary_txt = "Detecting MLT environment failed and it is not possible to run Flowblade.\nMLT library in your system has not been successfully installed." + \
+    "\n\nYour MLT Version is: "+ editorstate.mlt_version + "."
+
+    dialogutils.warning_message_with_callback(primary_txt, secondary_txt, None, False, _early_exit)
+    
 def _early_exit(dialog, response):
     dialog.destroy()
     # Exit gtk main loop.
