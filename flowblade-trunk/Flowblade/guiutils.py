@@ -515,4 +515,37 @@ def update_text_idle(text_widget, msg):
 
 def _do_update_text(text_widget, msg):
     text_widget.set_text(msg)
+
+
+class ProgressWindowThread(threading.Thread):
+    def __init__(self, dialog, progress_bar, clip_renderer, callback):
+        self.dialog = dialog
+        self.progress_bar = progress_bar
+        self.clip_renderer = clip_renderer
+        self.callback = callback
+        threading.Thread.__init__(self)
+    
+    def run(self):        
+        self.running = True
+        
+        while self.running:         
+
+            GLib.idle_add(self._update_progress_bar)
+
+            if self.clip_renderer.stopped == True:
+                self.running = False
+                GLib.idle_add(self._render_complete)
+
+            time.sleep(0.33)
+    
+    def _update_progress_bar(self):
+        render_fraction = self.clip_renderer.get_render_fraction()
+        self.progress_bar.set_fraction(render_fraction)
+        pros = int(render_fraction * 100)
+        self.progress_bar.set_text(str(pros) + "%")
+    
+    def _render_complete(self):
+        self.progress_bar.set_fraction(1.0)
+        self.progress_bar.set_text("Render Complete!")
+        self.callback(self.dialog, 0)
     

@@ -515,7 +515,7 @@ def render_single_track_transition_clip(transition_producer, encoding_option_ind
     progress_bar = Gtk.ProgressBar()
     dialog = rendergui.clip_render_progress_dialog(_transition_render_stop, title, window_text, progress_bar, gui.editor_window.window)
     
-    motion_progress_update = renderconsumer.ProgressWindowThread(dialog, progress_bar, motion_renderer, _transition_render_stop)
+    motion_progress_update = guiutils.ProgressWindowThread(dialog, progress_bar, motion_renderer, _transition_render_stop)
     motion_progress_update.start()
 
 def _transition_render_stop(dialog, response_id):

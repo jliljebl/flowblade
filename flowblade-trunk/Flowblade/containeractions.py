@@ -48,6 +48,7 @@ from editorstate import PROJECT
 import fluxity
 import fluxityheadless
 import gui
+import guiutils
 import gmicheadless
 import gmicplayer
 import jobs
@@ -1195,7 +1196,7 @@ class UnrenderedCreationThread(threading.Thread):
         progress_bar = Gtk.ProgressBar()
         self.dialog = rendergui.clip_render_progress_dialog(None, self.window_text, info_text, progress_bar, gui.editor_window.window, True)
 
-        motion_progress_update = renderconsumer.ProgressWindowThread(self.dialog, progress_bar, clip_renderer, self.progress_thread_complete)
+        motion_progress_update = guiutils.ProgressWindowThread(self.dialog, progress_bar, clip_renderer, self.progress_thread_complete)
         motion_progress_update.start()
         
     def _do_write_callback(self, write_file):
