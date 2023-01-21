@@ -171,34 +171,8 @@ def main(root_path, force_launch=False):
     # Init plugins module
     mediaplugin.init()
     
-    
+    # init mlt
     repo = mltinit.init_with_translations()
-    """
-    # Init translations module with translations data
-    translations.init_languages()
-    translations.load_filters_translations()
-    mlttransitions.init_module()
-
-
-
-    # Create MLT repo
-    repo = mlt.Factory().init()
-    processutils.prepare_mlt_repo(repo)
-    
-    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
-    locale.setlocale(locale.LC_NUMERIC, 'C')
-
-    # Check for codecs and formats on the system
-    mltenv.check_available_features(repo)
-    renderconsumer.load_render_profiles()
-
-    # Load filter and compositor descriptions from xml files.
-    mltfilters.load_filters_xml(mltenv.services)
-    mlttransitions.load_compositors_xml(mltenv.transitions)
-
-    # Create list of available mlt profiles
-    mltprofiles.load_profile_list()
-    """
     
     # Create app.
     app = ScriptToolApplication()

@@ -50,17 +50,14 @@ import gui
 import guicomponents
 import guiutils
 import glassbuttons
-import mltenv
+import mltinit
 import mltprofiles
-import mlttransitions
-import mltfilters
 import positionbar
 import processutils
 import respaths
 import renderconsumer
 import toolguicomponents
 import toolsencoding
-import translations
 import userfolders
 import utils
 import utilsgtk
@@ -181,14 +178,7 @@ def main(root_path, force_launch=False):
 
     # Load editor prefs and apply themes
     editorpersistance.load()
-            
-    # Init translations module with translations data
-    translations.init_languages()
-    translations.load_filters_translations()
-    mlttransitions.init_module()
 
-    # Load preset gmic scripts
-    gmicscript.load_preset_scripts_xml()
 
     app = GMicApplication()
     global _app
@@ -221,24 +211,11 @@ class GMicApplication(Gtk.Application):
                 or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
                 gui.apply_gtk_css(editorpersistance.prefs.theme)
 
-        repo = mlt.Factory().init()
-        processutils.prepare_mlt_repo(repo)
-        
-        # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
-        locale.setlocale(locale.LC_NUMERIC, 'C')
+        # Init mlt.
+        repo = mltinit.init_with_translations()
 
-        # Check for codecs and formats on the system
-        mltenv.check_available_features(repo)
-
-
-        # Load filter and compositor descriptions from xml files.
-        mltfilters.load_filters_xml(mltenv.services)
-        mlttransitions.load_compositors_xml(mltenv.transitions)
-
-        # Create list of available mlt profiles
-        mltprofiles.load_profile_list()
-
-        renderconsumer.load_render_profiles()
+        # Load preset gmic scripts
+        gmicscript.load_preset_scripts_xml()
         
         gui.load_current_colors()
         
