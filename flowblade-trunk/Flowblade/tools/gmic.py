@@ -179,7 +179,7 @@ def main(root_path, force_launch=False):
     # Load editor prefs and apply themes
     editorpersistance.load()
 
-
+    # Create app.
     app = GMicApplication()
     global _app
     _app = app
