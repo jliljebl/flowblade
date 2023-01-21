@@ -46,10 +46,8 @@ import appconsts
 import atomicfile
 import editorpersistance
 import editorstate
-import mltenv
+import mltinit
 import mltprofiles
-import mlttransitions
-import mltfilters
 import processutils
 import renderconsumer
 import respaths
@@ -181,28 +179,8 @@ def main():
     # Load editor prefs and list of recent projects
     editorpersistance.load()
     
-    # Init translations module with translations data
-    translations.init_languages()
-    translations.load_filters_translations()
-    mlttransitions.init_module()
-
-    repo = mlt.Factory().init()
-    processutils.prepare_mlt_repo(repo)
+    mltinit.init_with_translations()
     
-    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
-    locale.setlocale(locale.LC_NUMERIC, 'C')
-
-    # Check for codecs and formats on the system
-    mltenv.check_available_features(repo)
-    renderconsumer.load_render_profiles()
-
-    # Load filter and compositor descriptions from xml files.
-    mltfilters.load_filters_xml(mltenv.services)
-    mlttransitions.load_compositors_xml(mltenv.transitions)
-
-    # Create list of available mlt profiles
-    mltprofiles.load_profile_list()
-
     profile_desc = sys.argv[2]
     profile = mltprofiles.get_profile(profile_desc) # not used, but will provide useful info if crashes.
         

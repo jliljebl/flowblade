@@ -23,7 +23,6 @@ Modules provides functions that:
 - parse strings to property tuples or argument dicts
 - build value strings from property tuples.
 """
-from gi.repository import Gtk
 import json
 
 import appconsts
@@ -393,58 +392,6 @@ def rotomask_json_value_string_to_kf_array(keyframes_str, out_to_in_func):
     
     
 # ----------------------------------------------------------------------------- AFFINE BLEND
-def create_editable_property_for_affine_blend(clip, editable_properties):
-    print("create_editable_property_for_affine_blend")
-    # Build a custom object that duck types for TransitionEditableProperty 
-    # to be use in editor propertyeditor.RotatingGeometryEditor.
-    ep = utils.EmptyClass()
-    # pack real properties to go
-    ep.x = [ep for ep in editable_properties if ep.name == "x"][0]
-    ep.y = [ep for ep in editable_properties if ep.name == "y"][0]
-    ep.x_scale = [ep for ep in editable_properties if ep.name == "x scale"][0]
-    ep.y_scale = [ep for ep in editable_properties if ep.name == "y scale"][0]
-    ep.rotation = [ep for ep in editable_properties if ep.name == "rotation"][0]
-    ep.opacity = [ep for ep in editable_properties if ep.name == "opacity"][0]
-    # Screen width and height are needeed for frei0r conversions
-    ep.profile_width = current_sequence().profile.width()
-    ep.profile_height = current_sequence().profile.height()
-    # duck type methods, using opacity is not meaningful, any property with clip member could do
-    ep.get_clip_tline_pos = lambda : ep.opacity.clip.clip_in # clip is compositor, compositor in and out points are straight in timeline frames
-    ep.get_clip_length = lambda : ep.opacity.clip.clip_out - ep.opacity.clip.clip_in + 1
-    ep.get_input_range_adjustment = lambda : Gtk.Adjustment(value=float(100), lower=float(0), upper=float(100), step_increment=float(1))
-    ep.get_display_name = lambda : "Opacity"
-    ep.get_pixel_aspect_ratio = lambda : (float(current_sequence().profile.sample_aspect_num()) / current_sequence().profile.sample_aspect_den())
-    ep.get_in_value = lambda out_value : out_value # hard coded for opacity 100 -> 100 range
-    ep.write_out_keyframes = lambda w_kf : rotating_ge_write_out_keyframes(ep, w_kf)
-    ep.update_prop_value = lambda : rotating_ge_update_prop_value(ep) # This is needed to get good update after adding kfs with fade buttons, iz all kinda fugly
-                                                                            # We need this to reinit GUI components after programmatically added kfs.
-    # duck type members
-    x_tokens = ep.x.value.split(";")
-    y_tokens = ep.y.value.split(";")
-    x_scale_tokens = ep.x_scale.value.split(";")
-    y_scale_tokens = ep.y_scale.value.split(";")
-    rotation_tokens = ep.rotation.value.split(";")
-    opacity_tokens = ep.opacity.value.split(";")
-    
-    value = ""
-    for i in range(0, len(x_tokens)): # these better match, same number of keyframes for all values, or this will not work
-        print("x_tokens[i]", x_tokens[i])
-        frame, x, kf_type = _get_roto_geom_frame_value(x_tokens[i])
-        frame, y, kf_type = _get_roto_geom_frame_value(y_tokens[i])
-        frame, x_scale, kf_type = _get_roto_geom_frame_value(x_scale_tokens[i])
-        frame, y_scale, kf_type = _get_roto_geom_frame_value(y_scale_tokens[i])
-        frame, rotation, kf_type = _get_roto_geom_frame_value(rotation_tokens[i])
-        frame, opacity, kf_type = _get_roto_geom_frame_value(opacity_tokens[i])
-
-        eq_str = _get_eq_str(kf_type)
-
-        frame_str = str(frame) + eq_str + str(x) + ":" + str(y) + ":" + str(x_scale) + ":" + str(y_scale) + ":" + str(rotation) + ":" + str(opacity)
-        value += frame_str + ";"
-
-    ep.value = value.strip(";")
-    print("ep.value", ep.value)
-    return ep
-
 def _get_roto_geom_frame_value(token):
     sides = token.split(appconsts.KEYFRAME_DISCRETE_EQUALS_STR)
     if len(sides) == 2:
@@ -470,7 +417,6 @@ def _get_eq_str(kf_type):
     return eq_str
     
 def rotating_ge_write_out_keyframes(ep, keyframes):
-    print("rotating_ge_write_out_keyframes", keyframes)
     x_val = ""
     y_val = ""
     x_scale_val = ""
@@ -498,8 +444,6 @@ def rotating_ge_write_out_keyframes(ep, keyframes):
     rotation_val = rotation_val.strip(";")
     opacity_val = opacity_val.strip(";")
    
-    print(x_val, x_scale_val)
-   
     ep.x.write_value(x_val)
     ep.y.write_value(y_val)
     ep.x_scale.write_value(x_scale_val)
@@ -508,7 +452,6 @@ def rotating_ge_write_out_keyframes(ep, keyframes):
     ep.opacity.write_value(opacity_val)
 
 def rotating_ge_update_prop_value(ep):
-    print("XXXXXXXXXXXXXXXXXXXXXXXXXXXX rotating_ge_update_prop_value", ep)
     # duck type members
     x_tokens = ep.x.value.split(";")
     y_tokens = ep.y.value.split(";")

@@ -30,6 +30,7 @@ import appconsts
 import cairoarea
 from editorstate import PROJECT
 from editorstate import PLAYER
+from editorstate import current_sequence
 import extraeditors
 import gui
 import guiutils
@@ -140,6 +141,56 @@ def get_filter_extra_editor_rows(filt, editable_properties):
 
     return rows
 
+def create_editable_property_for_affine_blend(clip, editable_properties):
+    # Build a custom object that duck types for TransitionEditableProperty 
+    # to be use in editor propertyeditor.RotatingGeometryEditor.
+    ep = utils.EmptyClass()
+    # pack real properties to go
+    ep.x = [ep for ep in editable_properties if ep.name == "x"][0]
+    ep.y = [ep for ep in editable_properties if ep.name == "y"][0]
+    ep.x_scale = [ep for ep in editable_properties if ep.name == "x scale"][0]
+    ep.y_scale = [ep for ep in editable_properties if ep.name == "y scale"][0]
+    ep.rotation = [ep for ep in editable_properties if ep.name == "rotation"][0]
+    ep.opacity = [ep for ep in editable_properties if ep.name == "opacity"][0]
+    # Screen width and height are needeed for frei0r conversions
+    ep.profile_width = current_sequence().profile.width()
+    ep.profile_height = current_sequence().profile.height()
+    # duck type methods, using opacity is not meaningful, any property with clip member could do
+    ep.get_clip_tline_pos = lambda : ep.opacity.clip.clip_in # clip is compositor, compositor in and out points are straight in timeline frames
+    ep.get_clip_length = lambda : ep.opacity.clip.clip_out - ep.opacity.clip.clip_in + 1
+    ep.get_input_range_adjustment = lambda : Gtk.Adjustment(value=float(100), lower=float(0), upper=float(100), step_increment=float(1))
+    ep.get_display_name = lambda : "Opacity"
+    ep.get_pixel_aspect_ratio = lambda : (float(current_sequence().profile.sample_aspect_num()) / current_sequence().profile.sample_aspect_den())
+    ep.get_in_value = lambda out_value : out_value # hard coded for opacity 100 -> 100 range
+    ep.write_out_keyframes = lambda w_kf : propertyparse.rotating_ge_write_out_keyframes(ep, w_kf)
+    ep.update_prop_value = lambda : propertyparse.rotating_ge_update_prop_value(ep) # This is needed to get good update after adding kfs with fade buttons, iz all kinda fugly
+                                                                            # We need this to reinit GUI components after programmatically added kfs.
+    # duck type members
+    x_tokens = ep.x.value.split(";")
+    y_tokens = ep.y.value.split(";")
+    x_scale_tokens = ep.x_scale.value.split(";")
+    y_scale_tokens = ep.y_scale.value.split(";")
+    rotation_tokens = ep.rotation.value.split(";")
+    opacity_tokens = ep.opacity.value.split(";")
+    
+    value = ""
+    for i in range(0, len(x_tokens)): # these better match, same number of keyframes for all values, or this will not work
+        print("x_tokens[i]", x_tokens[i])
+        frame, x, kf_type =  propertyparse._get_roto_geom_frame_value(x_tokens[i])
+        frame, y, kf_type =  propertyparse._get_roto_geom_frame_value(y_tokens[i])
+        frame, x_scale, kf_type =  propertyparse._get_roto_geom_frame_value(x_scale_tokens[i])
+        frame, y_scale, kf_type =  propertyparse._get_roto_geom_frame_value(y_scale_tokens[i])
+        frame, rotation, kf_type =  propertyparse._get_roto_geom_frame_value(rotation_tokens[i])
+        frame, opacity, kf_type =  propertyparse._get_roto_geom_frame_value(opacity_tokens[i])
+
+        eq_str = propertyparse._get_eq_str(kf_type)
+
+        frame_str = str(frame) + eq_str + str(x) + ":" + str(y) + ":" + str(x_scale) + ":" + str(y_scale) + ":" + str(rotation) + ":" + str(opacity)
+        value += frame_str + ";"
+
+    ep.value = value.strip(";")
+
+    return ep
 
 
     
@@ -876,8 +927,8 @@ def _compositor_editor_force_combo_box_callback(combo_box, data):
         progressive.write_value("1")
 
 def _create_rotion_geometry_editor(clip, editable_properties):   
-    ep = propertyparse.create_editable_property_for_affine_blend(clip, editable_properties)
-    
+    ep = create_editable_property_for_affine_blend(clip, editable_properties)
+    print("HALOOOOO")
     kf_edit = keyframeeditor.RotatingGeometryEditor(ep, False)
     return kf_edit
 

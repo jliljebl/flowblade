@@ -109,7 +109,7 @@ def main(root_path, session_id, script, clip_path, range_in, range_out, profile_
     userfolders.init()
     editorpersistance.load()
 
-    mltinit.init_with_translations()
+    repo = mltinit.init_with_translations()
     
     ccrutils.init_session_folders(session_id)
     

@@ -17,7 +17,6 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
-
 try:
     import pgi
     pgi.install_as_gi()
@@ -25,8 +24,8 @@ except ImportError:
     pass
     
 import gi
-
 gi.require_version('Gtk', '3.0')
+
 
 import json
 import locale
@@ -43,10 +42,8 @@ import ccrutils
 import editorstate
 import editorpersistance
 import fluxity
-import mltfilters
-import mltenv
+import mltinit
 import mltprofiles
-import mlttransitions
 import processutils
 import renderconsumer
 import respaths
@@ -66,6 +63,7 @@ RENDER_DATA_FILE = ccrutils.RENDER_DATA_FILE
 
 _render_thread = None
 _frame_range_update_thread = None
+
 
 # ----------------------------------------------------- module interface to render process with message files, used by main app
 # We are using message files to communicate with application.
@@ -103,27 +101,7 @@ def main(root_path, session_id, script, range_in, range_out, profile_desc):
     userfolders.init()
     editorpersistance.load()
 
-    # Init translations module with translations data
-    translations.init_languages()
-    translations.load_filters_translations()
-    mlttransitions.init_module()
-
-    repo = mlt.Factory().init()
-    processutils.prepare_mlt_repo(repo)
-    
-    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
-    locale.setlocale(locale.LC_NUMERIC, 'C')
-
-    # Check for codecs and formats on the system
-    mltenv.check_available_features(repo)
-    renderconsumer.load_render_profiles()
-
-    # Load filter and compositor descriptions from xml files.
-    mltfilters.load_filters_xml(mltenv.services)
-    mlttransitions.load_compositors_xml(mltenv.transitions)
-
-    # Create list of available mlt profiles
-    mltprofiles.load_profile_list()
+    repo = mltinit.init_with_translations()
     
     ccrutils.init_session_folders(session_id)
     
@@ -131,7 +109,6 @@ def main(root_path, session_id, script, range_in, range_out, profile_desc):
     render_data = ccrutils.get_render_data()
 
     fluxity_plugin_edit_data = ccrutils.read_misc_session_data(session_id, "fluxity_plugin_edit_data")
-    #print("main():", json.dumps(fluxity_plugin_edit_data["editors_list"])) # See fluxity.FluxityContext.get_script_data()
     
     # This needs to have render data loaded to know if we are using external folders.
     ccrutils.maybe_init_external_session_folders()

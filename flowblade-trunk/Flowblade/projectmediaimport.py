@@ -198,7 +198,6 @@ def main(root_path, filename):
     # Load editor prefs and list of recent projects
     editorpersistance.load()
 
-
     # Init gtk threads
     Gdk.threads_init()
     Gdk.threads_enter()
@@ -211,7 +210,7 @@ def main(root_path, filename):
             or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
             gui.apply_gtk_css(editorpersistance.prefs.theme)
 
-    mltinit.init_with_translations()
+    repo = mltinit.init_with_translations()
     
     GLib.idle_add(_do_assets_write, filename)
     

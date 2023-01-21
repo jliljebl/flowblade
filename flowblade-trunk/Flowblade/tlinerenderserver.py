@@ -45,9 +45,7 @@ import time
 import appconsts
 import atomicfile
 import editorstate
-import mltenv
-import mlttransitions
-import mltfilters
+import mltinit
 import mltprofiles
 import editorpersistance
 import processutils
@@ -126,37 +124,15 @@ def main(root_path, force_launch=False):
     # Load editor prefs and list of recent projects
     editorpersistance.load()
     
-    # Init translations module with translations data
-    translations.init_languages()
-    translations.load_filters_translations()
-    mlttransitions.init_module()
-       
-    editorpersistance.load()
-
-    repo = mlt.Factory().init()
-    processutils.prepare_mlt_repo(repo)
+    # Init MLT
+    repo = mltinit.init_with_translations()
     
-    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
-    locale.setlocale(locale.LC_NUMERIC, 'C')
-
-    # Check for codecs and formats on the system
-    mltenv.check_available_features(repo)
-    renderconsumer.load_render_profiles()
-
-    # Load filter and compositor descriptions from xml files.
-    mltfilters.load_filters_xml(mltenv.services)
-    mlttransitions.load_compositors_xml(mltenv.transitions)
-
-    # Create list of available mlt profiles
-    mltprofiles.load_profile_list()
-
     # Launch server
     DBusGMainLoop(set_as_default=True)
     loop = GLib.MainLoop()
     global _dbus_service
     _dbus_service = TLineRenderDBUSService(loop)
     loop.run()
-
 
 
 class TLineRenderDBUSService(dbus.service.Object):
@@ -191,9 +167,6 @@ class TLineRenderDBUSService(dbus.service.Object):
         
         if self.render_runner_thread.current_render_file_path == None:
             return ("none", 0.0,  False, dummy_list)
-        
-        #print(self.render_runner_thread.current_render_file_path, self.render_runner_thread.get_fraction(), 
-        #          self.render_runner_thread.render_complete, self.render_runner_thread.completed_segments)
                   
         return ( self.render_runner_thread.current_render_file_path, self.render_runner_thread.get_fraction(), 
                   self.render_runner_thread.render_complete, self.render_runner_thread.completed_segments)
@@ -359,7 +332,6 @@ def _get_render_profile(project_profile, render_size, render_folder):
     file_contents += "sample_aspect_den=" + str(project_profile.sample_aspect_den()) + "\n"
     file_contents += "display_aspect_num=" + str(project_profile.display_aspect_num()) + "\n"
     file_contents += "display_aspect_den=" + str(project_profile.display_aspect_den()) + "\n"
-
 
     render_profile_path = render_folder + "/temp_render_profile"
         
