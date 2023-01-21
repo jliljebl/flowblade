@@ -25,8 +25,6 @@ are attached to mlt.Producer objects.
 
 import copy
 
-from gi.repository import GdkPixbuf
-
 try:
     import mlt7 as mlt
 except:
@@ -102,34 +100,13 @@ _brightness_filter_info = None # for kf tool
 _colorize_filter_info = None # for tline render tests
 _shape_filter_info = None # for rendered wipes
 
-def _load_icons():
-    global FILTER_DEFAULT_ICON
-    FILTER_DEFAULT_ICON = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "filter.png")
-    
+
 def _get_group_icon(group_name):
-    global group_icons
-    if group_icons == None:
-        group_icons = {}
-        group_icons["Color"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "color.png")
-        group_icons["Color Effect"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "color_filter.png")
-        group_icons["Audio"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "audio_filter.png")
-        group_icons["Audio Filter"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "audio_filter_sin.png")
-        group_icons["Blur"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "blur_filter.png")
-        group_icons["Distort"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "distort_filter.png")
-        group_icons["Alpha"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "alpha_filter.png")
-        group_icons["Movement"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "movement_filter.png")
-        group_icons["Transform"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "transform.png")
-        group_icons["Edge"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "edge.png")
-        group_icons["Fix"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "fix.png")
-        group_icons["Fade In / Out"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "fade_filter.png")
-        group_icons["Artistic"] = FILTER_DEFAULT_ICON
-        group_icons["FILTER_MASK"] =  GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "filter_mask.png")
-        group_icons["Blend"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "blend_filter.png")
     try:
         return group_icons[group_name]
     except:
         return FILTER_DEFAULT_ICON
-    
+
 def _translate_group_name(group_name):
     return translations.filter_groups[group_name]
 
@@ -359,14 +336,13 @@ class MultipartFilterObject:
             for f in self.mlt_filters:
                 f.set("disable", str(1))
 
-
+# -------------------------------------------------------------------- init
 def load_filters_xml(services):
     """
     Load filters document and save filters nodes as FilterInfo objects in array.
     Save them also as array of tuples of names and arrays of FilterInfo objects
     that represent named groups of filters as displayd to user.
     """
-    _load_icons()
     
     print("Loading filters...")
     
@@ -439,6 +415,12 @@ def load_filters_xml(services):
         add_group = sorted(group, key=lambda finfo: translations.get_filter_name(finfo.name) )
         groups.append((gkey, add_group))
 
+def set_icons(default_icon, loaded_group_icons):
+    global FILTER_DEFAULT_ICON, group_icons
+    FILTER_DEFAULT_ICON = default_icon
+    group_icons = loaded_group_icons
+
+# -------------------------------------------------------------------- module funcs
 def clone_filter_object(filter_object, mlt_profile):
     """
     Creates new filter object with with copied properties values.

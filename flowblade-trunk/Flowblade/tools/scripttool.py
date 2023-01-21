@@ -56,9 +56,8 @@ import guiutils
 import glassbuttons
 import gmicplayer
 import mediaplugin
-import mltenv
+import mltinit
 import mltprofiles
-import mlttransitions
 import mltfilters
 import positionbar
 import processutils
@@ -168,14 +167,19 @@ def main(root_path, force_launch=False):
 
     # Load editor prefs and apply themes
     editorpersistance.load()
-            
+
+    # Init plugins module
+    mediaplugin.init()
+    
+    
+    repo = mltinit.init_with_translations()
+    """
     # Init translations module with translations data
     translations.init_languages()
     translations.load_filters_translations()
     mlttransitions.init_module()
 
-    # Init plugins module
-    mediaplugin.init()
+
 
     # Create MLT repo
     repo = mlt.Factory().init()
@@ -194,7 +198,8 @@ def main(root_path, force_launch=False):
 
     # Create list of available mlt profiles
     mltprofiles.load_profile_list()
-        
+    """
+    
     # Create app.
     app = ScriptToolApplication()
     global _app

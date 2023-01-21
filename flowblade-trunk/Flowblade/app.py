@@ -275,6 +275,8 @@ def main(root_path):
 
     # Load filter and compositor descriptions from xml files.
     mltfilters.load_filters_xml(mltenv.services)
+    mltfilters.set_icons(gui.get_default_filter_icon(), \
+                         gui.get_filter_group_icons(gui.get_default_filter_icon()))
     mlttransitions.load_compositors_xml(mltenv.transitions)
     
     # Replace some services if better replacements available.
