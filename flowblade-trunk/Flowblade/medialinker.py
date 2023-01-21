@@ -46,11 +46,7 @@ import editorpersistance
 import gui
 import guiutils
 import guicomponents
-import mltenv
 import mltinit
-import mltprofiles
-import mlttransitions
-import mltfilters
 import patternproducer
 import persistance
 import processutils
