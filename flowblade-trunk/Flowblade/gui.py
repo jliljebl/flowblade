@@ -264,6 +264,14 @@ def _print_widget(widget): # debug
     path_str = path_str.replace("GtkVBox:. GtkVPaned:[2/2]. GtkHBox:. GtkHPaned:. GtkVBox:. GtkNotebook:[1/1]","notebook:")
     print(path_str)
 
+def apply_theme(theme):
+    if theme != appconsts.LIGHT_THEME:
+        Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
+        if theme == appconsts.FLOWBLADE_THEME \
+            or theme == appconsts.FLOWBLADE_THEME_GRAY \
+            or theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+            apply_gtk_css(theme)
+            
 def apply_gtk_css(theme):
     gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
     if Gtk.get_major_version() == 3 and Gtk.get_minor_version() >= 22:

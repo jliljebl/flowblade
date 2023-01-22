@@ -198,14 +198,7 @@ class ScriptToolApplication(Gtk.Application):
             MONITOR_HEIGHT = 400 # initial value, this gets changed when material is loaded
 
         # Themes
-        if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
-            respaths.apply_dark_theme()
-            Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
-            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME \
-                or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
-                or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-                gui.apply_gtk_css(editorpersistance.prefs.theme)
-
+        gui.apply_theme(editorpersistance.prefs.theme)
         gui.load_current_colors()
 
         # Get launch profile and init player and display GUI params for it. 

@@ -203,14 +203,8 @@ class GMicApplication(Gtk.Application):
             MONITOR_HEIGHT = 400 # initial value, this gets changed when material is loaded
 
         # Themes
-        if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
-            respaths.apply_dark_theme()
-            Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
-            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME \
-                or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
-                or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-                gui.apply_gtk_css(editorpersistance.prefs.theme)
-
+        gui.apply_theme(editorpersistance.prefs.theme)
+        
         # Init mlt.
         repo = mltinit.init_with_translations()
 

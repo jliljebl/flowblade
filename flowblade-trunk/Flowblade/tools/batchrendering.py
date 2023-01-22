@@ -56,10 +56,7 @@ import editorpersistance
 import gui
 import guiutils
 import mltinit
-import mltenv
 import mltprofiles
-import mlttransitions
-import mltfilters
 import processutils
 import persistance
 import respaths
@@ -355,12 +352,7 @@ def main(root_path, force_launch=False):
     Gdk.threads_enter()
        
     editorpersistance.load()
-    if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
-        Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME \
-            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
-            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-            gui.apply_gtk_css(editorpersistance.prefs.theme)
+    gui.apply_theme(editorpersistance.prefs.theme)
 
     mltinit.init_with_translations()
     
@@ -1213,12 +1205,7 @@ def single_render_main(root_path):
 
     # Request dark them if so desired
     editorpersistance.load()
-    if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
-        Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME \
-            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
-            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-            gui.apply_gtk_css(editorpersistance.prefs.theme)
+    gui.apply_theme(editorpersistance.prefs.theme)
 
     mltinit.init_with_translations()
     
