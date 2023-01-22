@@ -47,7 +47,7 @@ import utilsgtk
 
 EDITOR = "editor"
 
-# editor types and agrs                                     editor component or arg description
+# editor types and args                                     editor component or arg description
 SLIDER = "slider"                                           # Gtk.HScale                              
 BOOLEAN_CHECK_BOX = "booleancheckbox"                       # Gtk.CheckButton
 COMBO_BOX = "combobox"                                      # Gtk.Combobox
@@ -143,7 +143,7 @@ def get_filter_extra_editor_rows(filt, editable_properties):
 
 def create_editable_property_for_affine_blend(clip, editable_properties):
     # Build a custom object that duck types for TransitionEditableProperty 
-    # to be use in editor propertyeditor.RotatingGeometryEditor.
+    # to be used in editor propertyeditor.RotatingGeometryEditor.
     ep = utils.EmptyClass()
     # pack real properties to go
     ep.x = [ep for ep in editable_properties if ep.name == "x"][0]

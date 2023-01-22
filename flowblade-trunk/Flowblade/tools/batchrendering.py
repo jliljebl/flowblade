@@ -55,6 +55,7 @@ import editorstate
 import editorpersistance
 import gui
 import guiutils
+import mltinit
 import mltenv
 import mltprofiles
 import mlttransitions
@@ -348,11 +349,6 @@ def main(root_path, force_launch=False):
 
     # Load editor prefs and list of recent projects
     editorpersistance.load()
-    
-    # Init translations module with translations data
-    translations.init_languages()
-    translations.load_filters_translations()
-    mlttransitions.init_module()
 
     # Init gtk threads
     Gdk.threads_init()
@@ -365,24 +361,9 @@ def main(root_path, force_launch=False):
             or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
             or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
             gui.apply_gtk_css(editorpersistance.prefs.theme)
-        
-    repo = mlt.Factory().init()
-    processutils.prepare_mlt_repo(repo)
+
+    mltinit.init_with_translations()
     
-    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
-    locale.setlocale(locale.LC_NUMERIC, 'C')
-
-    # Check for codecs and formats on the system
-    mltenv.check_available_features(repo)
-    renderconsumer.load_render_profiles()
-
-    # Load filter and compositor descriptions from xml files.
-    mltfilters.load_filters_xml(mltenv.services)
-    mlttransitions.load_compositors_xml(mltenv.transitions)
-
-    # Create list of available mlt profiles
-    mltprofiles.load_profile_list()
-
     global render_queue
     render_queue = RenderQueue()
     render_queue.load_render_items()
@@ -1225,10 +1206,6 @@ def single_render_main(root_path):
     # Load editor prefs and list of recent projects
     editorpersistance.load()
     
-    # Init translations module with translations data
-    translations.init_languages()
-    translations.load_filters_translations()
-    mlttransitions.init_module()
 
     # Init gtk threads
     Gdk.threads_init()
@@ -1243,23 +1220,8 @@ def single_render_main(root_path):
             or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
             gui.apply_gtk_css(editorpersistance.prefs.theme)
 
-    repo = mlt.Factory().init()
-    processutils.prepare_mlt_repo(repo)
-
-    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
-    locale.setlocale(locale.LC_NUMERIC, 'C')
-
-    # Check for codecs and formats on the system
-    mltenv.check_available_features(repo)
-    renderconsumer.load_render_profiles()
-
-    # Load filter and compositor descriptions from xml files.
-    mltfilters.load_filters_xml(mltenv.services)
-    mlttransitions.load_compositors_xml(mltenv.transitions)
-
-    # Create list of available mlt profiles
-    mltprofiles.load_profile_list()
-
+    mltinit.init_with_translations()
+    
     global single_render_window
     single_render_window = SingleRenderWindow()
 
