@@ -23,7 +23,7 @@ import datetime
 import gi
 gi.require_version('Gtk', '3.0')
 
-from gi.repository import GObject, GLib
+from gi.repository import GObject, GLib, Gio
 from gi.repository import Gtk, Gdk, GdkPixbuf
 
 import dbus
@@ -87,6 +87,7 @@ UNQUEUED = 3
 ABORTED = 4
 
 render_queue = []
+_batch_render_app = None
 batch_window = None
 render_thread = None
 queue_runner_thread = None
@@ -97,6 +98,7 @@ _dbus_service = None
 
 render_item_menu = Gtk.Menu()
 
+_single_render_app = None
 single_render_window = None
 single_render_launch_thread = None
 single_render_thread = None
@@ -347,39 +349,44 @@ def main(root_path, force_launch=False):
     # Load editor prefs and list of recent projects
     editorpersistance.load()
 
-    # Init gtk threads
-    Gdk.threads_init()
-    Gdk.threads_enter()
-       
-    editorpersistance.load()
-    gui.apply_theme(editorpersistance.prefs.theme)
+    # Create app.
+    global _batch_render_app
+    _batch_render_app = BatchRenderApp()
+    _batch_render_app.run(None)
 
-    mltinit.init_with_translations()
     
-    global render_queue
-    render_queue = RenderQueue()
-    render_queue.load_render_items()
+class BatchRenderApp(Gtk.Application):
+    def __init__(self, *args, **kwargs):
+        Gtk.Application.__init__(self, application_id="com.github.jliljebl.Flowblade.BatchRenderApp",
+                                 flags=Gio.ApplicationFlags.FLAGS_NONE)
+        self.connect("activate", self.on_activate)
 
-    global batch_window
-    batch_window = BatchRenderWindow()
+    def on_activate(self, data=None):
+        gui.apply_theme(editorpersistance.prefs.theme)
 
-    if render_queue.error_status != None:
-        primary_txt = _("Error loading render queue items!")
-        secondary_txt = _("Message:\n") + render_queue.get_error_status_message()
-        dialogutils.warning_message(primary_txt, secondary_txt, batch_window.window)
+        mltinit.init_with_translations()
+        
+        global render_queue
+        render_queue = RenderQueue()
+        render_queue.load_render_items()
 
-    DBusGMainLoop(set_as_default=True)
-    global _dbus_service
-    _dbus_service = BatchRenderDBUSService()
+        global batch_window
+        batch_window = BatchRenderWindow()
 
-    Gtk.main()
-    Gdk.threads_leave()
+        if render_queue.error_status != None:
+            primary_txt = _("Error loading render queue items!")
+            secondary_txt = _("Message:\n") + render_queue.get_error_status_message()
+            dialogutils.warning_message(primary_txt, secondary_txt, batch_window.window)
 
+        DBusGMainLoop(set_as_default=True)
+        global _dbus_service
+        _dbus_service = BatchRenderDBUSService()
+
+        self.add_window(batch_window.window)
+        
 def _show_single_instance_info():
     global timeout_id
     timeout_id = GLib.timeout_add(200, _display_single_instance_window)
-    # Launch gtk+ main loop
-    Gtk.main()
     
 def _display_single_instance_window():
     GObject.source_remove(timeout_id)
@@ -403,7 +410,6 @@ def _display_single_instance_window():
 
 def _early_exit(dialog, response):
     dialog.destroy()
-    Gtk.main_quit() 
     
 def shutdown():
     if queue_runner_thread != None:
@@ -412,12 +418,14 @@ def shutdown():
         dialogutils.info_message(primary_txt, secondary_txt, batch_window.window)
         return True # Tell callsite (inside GTK toolkit) that event is handled, otherwise it'll destroy window anyway.
 
+    # GTK4 
     while(Gtk.events_pending()):
         Gtk.main_iteration()
 
     if _dbus_service != None:
         _dbus_service.remove_from_dbus()
-    Gtk.main_quit()
+
+    _batch_render_app.quit()
 
 
 class RenderQueue:
@@ -1198,27 +1206,32 @@ def single_render_main(root_path):
     # Load editor prefs and list of recent projects
     editorpersistance.load()
     
+    # Create app.
+    global _single_render_app
+    _single_render_app = SingleRenderApp()
+    _single_render_app.run(None)
 
-    # Init gtk threads
-    Gdk.threads_init()
-    Gdk.threads_enter()
 
-    # Request dark them if so desired
-    editorpersistance.load()
-    gui.apply_theme(editorpersistance.prefs.theme)
+class SingleRenderApp(Gtk.Application):
+    def __init__(self, *args, **kwargs):
+        Gtk.Application.__init__(self, application_id="com.github.jliljebl.Flowblade.SingleRenderApp",
+                                 flags=Gio.ApplicationFlags.FLAGS_NONE)
+        self.connect("activate", self.on_activate)
 
-    mltinit.init_with_translations()
+    def on_activate(self, data=None):
+        gui.apply_theme(editorpersistance.prefs.theme)
+
+        mltinit.init_with_translations()
     
-    global single_render_window
-    single_render_window = SingleRenderWindow()
+        global single_render_window
+        single_render_window = SingleRenderWindow()
 
-    global single_render_thread
-    single_render_thread = SingleRenderThread()
-    single_render_thread.start()
+        global single_render_thread
+        single_render_thread = SingleRenderThread()
+        single_render_thread.start()
 
-    Gtk.main()
-    Gdk.threads_leave()
-
+        self.add_window(single_render_window.window)
+        
 
 class SingleRenderThread(threading.Thread):
     def __init__(self):
@@ -1423,5 +1436,5 @@ def _start_single_render_shutdown():
     single_render_thread.abort()
 
 def _single_render_shutdown():
-    Gtk.main_quit()
+    _single_render_app.quit()
     

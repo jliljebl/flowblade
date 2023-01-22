@@ -31,7 +31,7 @@ import threading
 import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('PangoCairo', '1.0')
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk, Gdk, Gio
 from gi.repository import GLib
 
 import appconsts
@@ -89,7 +89,7 @@ class ProjectLoadThread(threading.Thread):
         _shutdown()
 
     def _update_info_window(self):
-        _info_window.info.set_text("Loading project " + self.filename + "...")
+        _info_window.info.set_text("Loading project  " + self.filename + "...\nPlease wait...")
         
 class ProcesslauchThread(threading.Thread):
     def __init__(self, filename):
@@ -131,9 +131,8 @@ def assets_write_complete():
 
 # ------------------------------------------------------------ module internal
 def _do_assets_write(filename):
-    _create_info_dialog()
+    #_create_info_dialog()
     
-    print("_do_assets_write")
     global load_thread
     load_thread = ProjectLoadThread(filename)
     load_thread.start()
@@ -150,17 +149,12 @@ def _create_info_dialog():
     status_box.pack_start(info_label, False, False, 0)
     status_box.pack_start(Gtk.Label(), True, True, 0)
 
-    progress_bar = Gtk.ProgressBar()
-    progress_bar.set_fraction(0.2)
-    progress_bar.set_pulse_step(0.1)
-
     est_box = Gtk.HBox(False, 2)
     est_box.pack_start(Gtk.Label(label=""),False, False, 0)
     est_box.pack_start(Gtk.Label(), True, True, 0)
 
     progress_vbox = Gtk.VBox(False, 2)
     progress_vbox.pack_start(status_box, False, False, 0)
-    progress_vbox.pack_start(progress_bar, True, True, 0)
     progress_vbox.pack_start(est_box, False, False, 0)
 
     alignment = guiutils.set_margins(progress_vbox, 12, 12, 12, 12)
@@ -170,8 +164,6 @@ def _create_info_dialog():
     dialog.set_position(Gtk.WindowPosition.CENTER)
     dialog.show_all()
 
-    # Make refs available for updates
-    dialog.progress_bar = progress_bar
     dialog.info = info_label
 
     global _info_window
@@ -195,22 +187,34 @@ def main(root_path, filename):
     # Set paths.
     respaths.set_paths(root_path)
 
-    # Load editor prefs and list of recent projects
+    # Load editor prefs.
     editorpersistance.load()
 
-    # Init gtk threads
-    Gdk.threads_init()
-    Gdk.threads_enter()
+    # Create app.
+    global _app
+    _app = ProjectImportApp()
+    _app.filename = filename
+    _app.run(None)
 
-    # Themes
-    gui.apply_theme(editorpersistance.prefs.theme)
 
-    repo = mltinit.init_with_translations()
-    
-    GLib.idle_add(_do_assets_write, filename)
-    
-    Gtk.main()
-    Gdk.threads_leave()
-    
+class ProjectImportApp(Gtk.Application):
+    def __init__(self, *args, **kwargs):
+        Gtk.Application.__init__(self, application_id="com.github.jliljebl.Flowblade.ProjectImportApp",
+                                 flags=Gio.ApplicationFlags.FLAGS_NONE)
+        self.connect("activate", self.on_activate)
+
+    def on_activate(self, data=None):
+        # Themes
+        gui.apply_theme(editorpersistance.prefs.theme)
+
+        # Init mlt.
+        repo = mltinit.init_with_translations()
+        
+        _create_info_dialog()
+        
+        GLib.idle_add(_do_assets_write, self.filename)
+
+        self.add_window(_info_window)
+        
 def _shutdown():
-    Gtk.main_quit()
+    _app.quit()

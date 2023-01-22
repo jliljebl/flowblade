@@ -188,7 +188,7 @@ def main(root_path, force_launch=False):
     
 class GMicApplication(Gtk.Application):
     def __init__(self, *args, **kwargs):
-        Gtk.Application.__init__(self, application_id="com.github.jliljebl.Flowblade.Scriptttool",
+        Gtk.Application.__init__(self, application_id="com.github.jliljebl.Flowblade.GMicApplication",
                                  flags=Gio.ApplicationFlags.FLAGS_NONE)
         self.connect("activate", self.on_activate)
 

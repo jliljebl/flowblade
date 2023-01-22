@@ -35,7 +35,7 @@ import time
 import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('PangoCairo', '1.0')
-from gi.repository import Gtk, Gdk, GdkPixbuf, GLib
+from gi.repository import Gtk, Gdk, GdkPixbuf, GLib, Gio
 from gi.repository import Pango, GObject
 
 import appconsts
@@ -58,6 +58,7 @@ import translations
 import userfolders
 import utils
 
+_app = None
 linker_window = None
 target_project = None
 last_media_dir = None
@@ -738,26 +739,35 @@ def main(root_path, filename):
     # Load editor prefs and list of recent projects
     editorpersistance.load()
 
-    # Init gtk threads
-    Gdk.threads_init()
-    Gdk.threads_enter()
+    # Create app.
+    global _app
+    _app = MediaLinkerApp()
+    _app.filename = filename
+    _app.run(None)
 
-    # Themes
-    gui.apply_theme(editorpersistance.prefs.theme)
 
-    # Init mlt.
-    repo = mltinit.init_with_translations()
-    
-    appconsts.SAVEFILE_VERSION = projectdata.SAVEFILE_VERSION
+class MediaLinkerApp(Gtk.Application):
+    def __init__(self, *args, **kwargs):
+        Gtk.Application.__init__(self, application_id="com.github.jliljebl.Flowblade.Scriptttool",
+                                 flags=Gio.ApplicationFlags.FLAGS_NONE)
+        self.connect("activate", self.on_activate)
 
-    global linker_window
-    linker_window = MediaLinkerWindow()
+    def on_activate(self, data=None):
+        # Themes
+        gui.apply_theme(editorpersistance.prefs.theme)
 
-    if filename != NO_PROJECT_AT_LAUNCH:
-        linker_window.load_project(filename)
+        # Init mlt.
+        repo = mltinit.init_with_translations()
+        
+        appconsts.SAVEFILE_VERSION = projectdata.SAVEFILE_VERSION
 
-    Gtk.main()
-    Gdk.threads_leave()
-    
+        global linker_window
+        linker_window = MediaLinkerWindow()
+
+        if self.filename != NO_PROJECT_AT_LAUNCH:
+            linker_window.load_project(self.filename)
+
+        self.add_window(linker_window)
+        
 def _shutdown():
-    Gtk.main_quit()
+    _app.quit()
