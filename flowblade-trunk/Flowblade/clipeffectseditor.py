@@ -568,7 +568,6 @@ def clear_clip():
     """
     Removes clip from effects editing gui.
     """
-    print("CLEAR CLIPPPPPP")
     global _filter_stack
     _filter_stack = None
     _set_no_clip_info()

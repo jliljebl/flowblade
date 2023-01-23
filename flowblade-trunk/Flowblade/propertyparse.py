@@ -228,7 +228,6 @@ def single_value_keyframes_string_to_kf_array(keyframes_str, out_to_in_func):
     
 def geom_keyframes_value_string_to_opacity_kf_array(keyframes_str, out_to_in_func):
     # THIS SHOULD ONLY BE IN DEPRECATED COMPOSITORS
-    print("NOTICE!!!!!! in: geom_keyframes_value_string_to_opacity_kf_array")
     # Parse "composite:geometry" properties value string into (frame,opacity_value)
     # keyframe tuples.
     new_keyframes = []
@@ -250,13 +249,8 @@ def geom_keyframes_value_string_to_opacity_kf_array(keyframes_str, out_to_in_fun
 
         add_kf = (int(sides[0]), out_to_in_func(float(values[2])), kf_type) # kf = (frame, opacity, type)
         new_keyframes.append(add_kf)
- 
-    print(keyframes_str)
-    print(new_keyframes)
-    return new_keyframes
 
 def geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
-    print("in geom_keyframes_value_string_to_geom_kf_array")
     # Parse "composite:geometry" properties value string into (frame, source_rect, opacity)
     # keyframe tuples.
     new_keyframes = []
@@ -284,7 +278,6 @@ def geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
     return new_keyframes
 
 def rect_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
-    print("in rect_keyframes_value_string_to_geom_kf_array")
     # Parse "composite:geometry" properties value string into (frame, source_rect, opacity)
     # keyframe tuples.
     new_keyframes = []
@@ -314,13 +307,11 @@ def rect_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
     return new_keyframes
     
 def rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
-    print("keyframes_str", keyframes_str)
     # THIS WAS CREATED FOR frei0r cairoaffineblend FILTER. That filter has to use a very particular paramter values
     # scheme to satisty the frei0r requirement of all float values being in range 0.0 - 1.0.
     #
     # Parse extraeditor value properties value string into (frame, [x, y, x_scale, y_scale, rotation], opacity)
     # keyframe tuples.
-    print("rotating_geom_keyframes_value_string_to_geom_kf_array")
     new_keyframes = []
     screen_width = current_sequence().profile.width()
     screen_height = current_sequence().profile.height()
@@ -349,9 +340,7 @@ def rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_
         rotation = float(values[4]) * 360
         opacity = float(values[5]) * 100
         source_rect = [x,y,x_scale,y_scale,rotation]
-        print("rotating_geom_keyframes_value_string_to_geom_kf_array")
         add_kf = (frame, source_rect, float(opacity), kf_type)
-        print("add kf", add_kf)
         new_keyframes.append(add_kf)
 
     return new_keyframes
