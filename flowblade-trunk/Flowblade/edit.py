@@ -38,6 +38,7 @@ from editorstate import PLAYER
 from editorstate import auto_follow_active
 import mltfilters
 import movemodes
+import mediaplugin
 import resync
 import tlinewidgets
 import tlinerender
@@ -418,9 +419,10 @@ class EditAction:
                 updater.update_kf_editors_positions()
                 clipeffectseditor.reinit_stack_if_needed(self.force_effects_editor_update)
             else:
-                updater.clear_effects_editor_clip()
+                if compositeeditor.compositor == None and mediaplugin.panel_is_open() == False:
+                    updater.clear_editor_panel()
         else:
-            updater.clear_effects_editor_clip()
+            updater.clear_editor_panel()
 
         current_sequence().update_edit_tracks_length() # Needed for timeline render updates
         if self.update_hidden_track_blank:

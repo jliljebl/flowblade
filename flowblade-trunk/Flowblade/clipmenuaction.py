@@ -273,8 +273,6 @@ def _add_compositor(data):
     x, compositor_type, add_compositors_is_multi_selection = item_data
 
     target_track_index = track.id - 1
-    if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
-        target_track_index = current_sequence().first_video_index
 
     a_track = target_track_index
     b_track = track.id
@@ -317,7 +315,7 @@ def _add_compositor(data):
                 "clip":clip}
     action = edit.add_compositor_action(edit_data)
     action.do_edit()
-    
+        
     updater.repaint_tline()
 
 def _add_autofade(data):

@@ -553,6 +553,12 @@ def _cancel():
 
     gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_EMPTY)
 
+def panel_is_open():
+    if _edit_panel != None and gui.editor_window.edit_multi.get_visible_child_name() == appconsts.EDIT_MULTI_PLUGINS:
+        return True
+    else:
+        return False
+
 def clip_is_being_edited(clip):
     if clip ==_clip:
         return True

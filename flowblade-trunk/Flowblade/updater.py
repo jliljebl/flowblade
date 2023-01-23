@@ -574,7 +574,7 @@ def update_position_bar():
 def update_kf_editors_positions():
     clipeffectseditor.update_kfeditors_positions()
 
-def clear_effects_editor_clip():
+def clear_editor_panel():
     clipeffectseditor.clear_clip()
     mediaplugin.clear_clip()
 

@@ -4273,6 +4273,7 @@ class EditMultiStack:
         self.widget = Gtk.Frame()
         self.widget.set_shadow_type(Gtk.ShadowType.NONE)
         self.panels = {}
+        self.visible_name = None
 
     def add_named(self, panel, name):
         self.panels[name] = panel
@@ -4282,5 +4283,9 @@ class EditMultiStack:
             self.widget.remove(self.widget.get_child())
         except:
             pass
+        self.visible_name = name
         self.widget.add(self.panels[name])
         self.panels[name].show_all()
+
+    def get_visible_child_name(self):
+        return self.visible_name
