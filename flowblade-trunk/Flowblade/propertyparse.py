@@ -331,8 +331,8 @@ def rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_
                 
         values = sides[1].split(':')
         frame = int(sides[0])
-        # get values and convert "frei0r.cairoaffineblend" values to editor values
-        # this because all frei0r plugins require values in range 0 - 1
+        # Get values and convert "frei0r.cairoaffineblend" values to editor values
+        # This is done because all frei0r plugins require values in range 0 - 1
         x = _get_pixel_pos_from_frei0r_cairo_pos(float(values[0]), screen_width)
         y = _get_pixel_pos_from_frei0r_cairo_pos(float(values[1]), screen_height)
         x_scale = _get_scale_from_frei0r_cairo_scale(float(values[2]))

@@ -565,6 +565,9 @@ def clip_is_being_edited(clip):
     else:
         return False
 
+def get_clip():
+    return _clip
+
 def clear_clip():
     _cancel()
 

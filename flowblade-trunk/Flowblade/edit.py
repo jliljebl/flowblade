@@ -418,8 +418,15 @@ class EditAction:
             if current_sequence().clip_is_in_sequence(clipeffectseditor.get_edited_clip()) == True:
                 updater.update_kf_editors_positions()
                 clipeffectseditor.reinit_stack_if_needed(self.force_effects_editor_update)
+            elif mediaplugin.panel_is_open() == True:
+                if current_sequence().clip_is_in_sequence(mediaplugin.get_clip()) == True:
+                    # Keep displaying open Generator properties edit panel 
+                    # if the clip is still in sequence. 
+                    pass
+                else:
+                    updater.clear_editor_panel()
             else:
-                if compositeeditor.compositor == None and mediaplugin.panel_is_open() == False:
+                if compositeeditor.compositor == None:
                     updater.clear_editor_panel()
         else:
             updater.clear_editor_panel()
