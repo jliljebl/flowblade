@@ -341,19 +341,6 @@ def _get_mod_string(event):
     
     return _mod_names[mod]
 
-def get_diff_to_defaults(xml_file):
-    diff_str = ""
-    test_root = get_shortcuts_xml_root_node(xml_file)
-    def_root = get_shortcuts_xml_root_node(DEFAULT_SHORTCUTS_FILE)
-    
-    for code, action_name in _keyboard_action_names.items():
-        key_name_test, action_name = get_shortcut_info(test_root, code)
-        key_name_def, action_name = get_shortcut_info(def_root, code)
-        if key_name_def != key_name_test:
-            diff_str = diff_str + action_name + " (" + key_name_test + ")    "
-    
-    return diff_str
-
 def _get_shortcut_file_fullpath(f):
     full_path = respaths.SHORTCUTS_PATH + f
     if os.path.isfile(full_path) == False:

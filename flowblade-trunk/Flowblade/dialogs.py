@@ -1464,34 +1464,18 @@ def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, change_presets_
     
     global scroll_hold_panel
     scroll_hold_panel = Gtk.HBox()
-
-    diff_label = guiutils.bold_label(_("Diffence to 'Flowblade Default' Presets:"))
-
-    diff_data = Gtk.Label()
-    diff_data.set_line_wrap(True)
-    diff_data.set_size_request(418, 58)
-    diff_data.set_text(shortcuts.get_diff_to_defaults(editorpersistance.prefs.shortcuts))
-    diff_panel =  Gtk.VBox()
-    diff_panel.pack_start(diff_data, False, False, 0)
-
-    diff_sw = Gtk.ScrolledWindow()
-    diff_sw.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-    diff_sw.add_with_viewport(diff_panel)
-    diff_sw.set_size_request(420, 60)
     
     content_panel = Gtk.VBox(False, 2)
     content_panel.pack_start(hbox, False, False, 0)
     content_panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
     content_panel.pack_start(scroll_hold_panel, True, True, 0)
     content_panel.pack_start(guiutils.pad_label(12,12), False, False, 0)
-    content_panel.pack_start(guiutils.get_left_justified_box([diff_label]), False, False, 0)
-    content_panel.pack_start(diff_sw, False, False, 0)
 
     scroll_window = display_keyboard_shortcuts(editorpersistance.prefs.shortcuts, get_tool_list_func(), scroll_hold_panel)
 
     guicomponents.KBShortcutEditor.edit_ongoing = False
         
-    changed_id = shortcuts_combo.connect('changed', lambda w:_shorcuts_selection_changed(w, scroll_hold_panel, diff_data, dialog))
+    changed_id = shortcuts_combo.connect('changed', lambda w:_shorcuts_selection_changed(w, scroll_hold_panel, dialog))
     shortcuts_combo.changed_id = changed_id
     
     guiutils.set_margins(content_panel, 12, 12, 12, 12)
@@ -1502,7 +1486,7 @@ def keyboard_shortcuts_dialog(parent_window, get_tool_list_func, change_presets_
     dialog.connect('response', change_presets_callback, shortcuts_combo)
     dialog.show_all()
  
-def _shorcuts_selection_changed(combo, scroll_hold_panel, diff_data, dialog):
+def _shorcuts_selection_changed(combo, scroll_hold_panel, dialog):
     selected_xml = shortcuts.shortcut_files[combo.get_active()]
     
     editorpersistance.prefs.shortcuts = selected_xml
@@ -1511,7 +1495,6 @@ def _shorcuts_selection_changed(combo, scroll_hold_panel, diff_data, dialog):
     
     display_keyboard_shortcuts(selected_xml, workflow.get_tline_tool_working_set(), scroll_hold_panel)
 
-    diff_data.set_text(shortcuts.get_diff_to_defaults(selected_xml))
     dialog.show_all()
 
 def display_keyboard_shortcuts(xml_file, tool_set, scroll_hold_panel):
