@@ -116,7 +116,7 @@ def save_project(project, file_path, changed_profile_desc=None):
     """
     Creates pickleable project object
     """
-    print("Saving project...")  # + os.path.basename(file_path)
+    print("Saving project...")# + os.path.basename(file_path))
     
     # Get shallow copy
     s_proj = copy.copy(project)

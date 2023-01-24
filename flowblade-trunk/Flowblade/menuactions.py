@@ -97,7 +97,7 @@ class RecreateIconsThread(threading.Thread):
     def _exit_update(self):
         gui.media_list_view.fill_data_model()
         gui.bin_list_view.fill_data_model()
-        gui.enable_save()
+        gui.enable_save(PROJECT())
         
 def recreate_media_file_icons():
     recreate_progress_window = dialogs.recreate_icons_progress_dialog()

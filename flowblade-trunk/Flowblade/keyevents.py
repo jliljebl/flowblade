@@ -43,7 +43,6 @@ import modesetting
 import monitorevent
 import movemodes
 import multitrimmode
-# Apr-2017 - SvdB
 import shortcuts
 import shortcutsquickeffects
 import re
@@ -201,7 +200,6 @@ def _handle_tline_key_event(event):
         monitorevent.to_mark_in_pressed()
         return True
     if action == 'tline_render_request':
-        print("tline asdasd")
         tlinerender.render_all_segments()
         return True
     if action == 'zoom_out':
@@ -505,13 +503,11 @@ def _get_shortcut_action(event):
     return 'None'
 
 def _handle_configurable_global_events(event):
-    print("lll")
     action = _get_shortcut_action(event)
     if action == 'open_next':
         projectaction.open_next_media_item_in_monitor()
         return True
     if action == 'tline_render_request':
-        print("asdasd")
         tlinerender.render_all_segments()
         return True
         

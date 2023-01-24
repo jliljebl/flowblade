@@ -433,7 +433,8 @@ def _load_pulse_bar():
     GLib.idle_add(persistance.load_dialog.progress_bar.pulse)
     
 def _enable_save():
-    gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(True)
+    if PROJECT().last_save_path != None:
+        gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(True)
 
 
 # ---------------------------------- project: new, load, save
@@ -586,9 +587,7 @@ def _save_as_dialog_callback(dialog, response_id):
         clear_changed_since_last_save_flags()
 
         gui.editor_window.window.set_title(PROJECT().name + " - Flowblade")        
-        gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(False)
-        gui.editor_window.uimanager.get_widget("/MenuBar/EditMenu/Undo").set_sensitive(False)
-        gui.editor_window.uimanager.get_widget("/MenuBar/EditMenu/Redo").set_sensitive(False)
+        gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(True)
 
         editorpersistance.add_recent_project_path(PROJECT().last_save_path)
         gui.editor_window.fill_recents_menu_widget(gui.editor_window.uimanager.get_widget('/MenuBar/FileMenu/OpenRecent'), open_recent_project)

@@ -140,8 +140,9 @@ def capture_references(new_editor_window):
 
     editmenu = editor_window.uimanager.get_widget('/MenuBar/EditMenu')
 
-def enable_save():
-    editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(True)
+def enable_save(project):
+    if project.last_save_path != None:
+        editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(True)
 
 # returns Gdk.RGBA color
 def get_bg_color():
