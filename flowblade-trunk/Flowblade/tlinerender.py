@@ -118,15 +118,15 @@ def corner_mode_menu_launched(widget, event):
     guiutils.remove_children(tlinerender_mode_menu)
         
     render_off = guiutils.get_image_menu_item(_("Timeline Render Off"), "tline_render_off", _set_new_render_mode)
-    render_auto = guiutils.get_image_menu_item(_("Timeline Render Auto"), "tline_render_auto", _set_new_render_mode)
+    #render_auto = guiutils.get_image_menu_item(_("Timeline Render Auto"), "tline_render_auto", _set_new_render_mode)
     render_request = guiutils.get_image_menu_item(_("Timeline Render On Request"), "tline_render_request", _set_new_render_mode)
 
     render_off.connect("activate", lambda w: _set_new_render_mode(appconsts.TLINE_RENDERING_OFF))
-    render_auto.connect("activate", lambda w: _set_new_render_mode(appconsts.TLINE_RENDERING_AUTO))
+    #render_auto.connect("activate", lambda w: _set_new_render_mode(appconsts.TLINE_RENDERING_AUTO))
     render_request.connect("activate", lambda w: _set_new_render_mode(appconsts.TLINE_RENDERING_REQUEST))
 
     tlinerender_mode_menu.add(render_off)
-    tlinerender_mode_menu.add(render_auto)
+    #tlinerender_mode_menu.add(render_auto)
     tlinerender_mode_menu.add(render_request)
 
     tlinerender_mode_menu.popup(None, None, None, None, event.button, event.time)
@@ -655,14 +655,17 @@ class TimeLineSegment:
             self.update_segment_as_rendered()
             
     def update_segment_as_rendered(self):
+        print("update_segment_as_rendered()")
+        print(self.producer)
+        self.create_clip()
+        
         self.segment_state = SEGMENT_RENDERED
         self.rendered_fract = 0.0
-        
-        self.create_clip()
+        print(self.producer)
+
     
     def create_clip(self):
         self.producer = current_sequence().create_file_producer_clip(str(self.get_clip_path()))
-        
 
         # THIS IS USEFUL WHEN TESTING
         #filter_info = mltfilters.get_colorize_filter_info()
@@ -689,6 +692,7 @@ class TimeLineSegment:
         
         if new_hash != self.content_hash:
             if get_tline_rendering_mode() == appconsts.TLINE_RENDERING_AUTO:
+                print("SEGMENT DIRTY")
                 self.segment_state = SEGMENT_DIRTY
                 self.producer = None
             # With mode TLINE_RENDERING_REQUEST:
@@ -832,14 +836,17 @@ class TimeLineUpdateThread(threading.Thread):
         segments_ins = []
         segments_outs = []
         
+        current_sequence().update_edit_tracks_length()
+        
         destroy_segments = []
         for segment in self.dirty_segments:
+            print("xml_render_done()", segment.start_frame, current_sequence().seq_len)
             if segment.start_frame >= current_sequence().seq_len:
                 segment.segment_state = SEGMENT_RENDERED
                 segment.rendered_fract = 0.0
                 segment.content_hash = "-1"
                 segment.producer = None # any attempt to display segments after sequence end should crash immediately, this will not be displayed.
-                continue # there can be myltple of these
+                continue # there can be multiple of these
                 
             clip_path = segment.get_clip_path()
             if os.path.isfile(clip_path) == True:
@@ -872,6 +879,7 @@ class TimeLineUpdateThread(threading.Thread):
             _update_thread = None
             return
 
+        print("tlinerenderserver.render_update_clips")
         tlinerenderserver.render_update_clips(self.save_path, segments_paths, segments_ins, segments_outs, current_sequence().profile.description())
 
         global _status_polling_thread

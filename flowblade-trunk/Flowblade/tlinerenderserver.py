@@ -238,7 +238,7 @@ class TLineRenderRunnerThread(threading.Thread):
                                                                         encoding)
             renderconsumer.performance_settings_enabled = True
             
-            # We are using proxy file rendering code here mostly, didn't vhange all names.
+            # We are using proxy file rendering code here mostly, didn't change all names.
             # Bit rates for proxy files are counted using 2500kbs for 
             # PAL size image as starting point.
             pal_pix_count = 720.0 * 576.0

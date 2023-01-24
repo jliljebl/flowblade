@@ -414,6 +414,8 @@ class EditAction:
     def _update_gui(self): # This is copied with small modifications into projectaction.py for sequence imports, update there too if needed.
         updater.update_tline_scrollbar() # Slider needs to adjust to possibly new program length.
                                          # This REPAINTS TIMELINE as a side effect.
+                                         
+        # Clear or update edit panels that do not target an existing and up-to-date object.
         if self.clear_effects_editor_for_multitrack_edit == False:
             if current_sequence().clip_is_in_sequence(clipeffectseditor.get_edited_clip()) == True:
                 updater.update_kf_editors_positions()

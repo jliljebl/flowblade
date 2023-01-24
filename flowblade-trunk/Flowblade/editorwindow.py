@@ -1290,19 +1290,24 @@ class EditorWindow:
         rendering_off.show()
         menu.append(rendering_off)
 
-        rendering_auto = Gtk.RadioMenuItem.new_with_label([rendering_off],_("Render Auto"))
-        rendering_auto.show()
-        menu.append(rendering_auto)
+        #rendering_auto = Gtk.RadioMenuItem.new_with_label([rendering_off],_("Render Auto"))
+        #rendering_auto.show()
+        #menu.append(rendering_auto)
 
         rendering_request = Gtk.RadioMenuItem.new_with_label([rendering_off],_("Render On Request"))
         rendering_request.show()
         menu.append(rendering_request)
 
-        menu_items = [rendering_off, rendering_auto, rendering_request]
-        menu_items[editorstate.get_tline_rendering_mode()].set_active(True)
+        #menu_items = [rendering_off, rendering_auto, rendering_request]
+        #menu_items[editorstate.get_tline_rendering_mode()].set_active(True)
+
+        if editorstate.get_tline_rendering_mode() == appconsts.TLINE_RENDERING_OFF:
+            rendering_off.set_active(True)
+        else:
+            rendering_request.set_active(True)
 
         rendering_off.connect("toggled", lambda w: tlinerender.change_current_tline_rendering_mode(w, appconsts.TLINE_RENDERING_OFF))
-        rendering_auto.connect("toggled", lambda w: tlinerender.change_current_tline_rendering_mode(w, appconsts.TLINE_RENDERING_AUTO))
+        #rendering_auto.connect("toggled", lambda w: tlinerender.change_current_tline_rendering_mode(w, appconsts.TLINE_RENDERING_AUTO))
         rendering_request.connect("toggled", lambda w: tlinerender.change_current_tline_rendering_mode(w, appconsts.TLINE_RENDERING_REQUEST))
 
         sep = Gtk.SeparatorMenuItem()
