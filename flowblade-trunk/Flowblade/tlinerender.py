@@ -154,6 +154,14 @@ def display_strip_context_menu(event, hit_segment):
     
     strip_popup_menu.popup(None, None, None, None, event.button, event.time)
 
+def render_all_segments():
+    for segment in get_renderer().get_segments():
+        if segment.segment_state != SEGMENT_RENDERED:
+            segment.segment_state = SEGMENT_DIRTY
+    
+    get_renderer().clear_selection()
+    get_renderer().launch_update_thread()
+        
 def _strip_menu_item_callback(widget, data):
     global _update_thread, _status_polling_thread
     
@@ -400,6 +408,10 @@ class TimeLineRenderer:
                 self.set_all_partially_rendered_segments_not_rendered()
                 gui.tline_render_strip.widget.queue_draw()
 
+    # ----------------------------------------------------------- interface
+    def get_segments(self):
+        return self.segments
+    
     def get_drag_range(self):
         range_start = self.press_frame 
         range_end = self.release_frame
@@ -458,7 +470,7 @@ class TimeLineRenderer:
             if os.path.isfile(clip_path) == True:
                 os.remove(clip_path)
 
-# --------------------------------------------- CONTENT UPDATES
+    # --------------------------------------------- CONTENT UPDATES
     def timeline_changed(self):
         if self.drag_on == True:
             return # Happens if user does keyboard edit while also doing mouse edit on timeline render strip, we will do the update on mouse release.
@@ -596,6 +608,15 @@ class NoOpRenderer():
     def focus_out(self):
         pass
 
+    def get_segments(self):
+        return []
+
+    def clear_selection(self):
+        pass
+        
+    def launch_update_thread(self):
+        pass
+    
     def update_hidden_track(self, hidden_track, seq_len):
         # Having this blank was required for some real random crashes long time ago, may not be needed anymore but we're keeping this.
         edit._insert_blank(hidden_track, 0, seq_len)
@@ -655,14 +676,10 @@ class TimeLineSegment:
             self.update_segment_as_rendered()
             
     def update_segment_as_rendered(self):
-        print("update_segment_as_rendered()")
-        print(self.producer)
         self.create_clip()
         
         self.segment_state = SEGMENT_RENDERED
         self.rendered_fract = 0.0
-        print(self.producer)
-
     
     def create_clip(self):
         self.producer = current_sequence().create_file_producer_clip(str(self.get_clip_path()))
@@ -692,7 +709,6 @@ class TimeLineSegment:
         
         if new_hash != self.content_hash:
             if get_tline_rendering_mode() == appconsts.TLINE_RENDERING_AUTO:
-                print("SEGMENT DIRTY")
                 self.segment_state = SEGMENT_DIRTY
                 self.producer = None
             # With mode TLINE_RENDERING_REQUEST:
@@ -840,7 +856,6 @@ class TimeLineUpdateThread(threading.Thread):
         
         destroy_segments = []
         for segment in self.dirty_segments:
-            print("xml_render_done()", segment.start_frame, current_sequence().seq_len)
             if segment.start_frame >= current_sequence().seq_len:
                 segment.segment_state = SEGMENT_RENDERED
                 segment.rendered_fract = 0.0
@@ -874,12 +889,11 @@ class TimeLineUpdateThread(threading.Thread):
             _timeline_renderer.segments.remove(seg)
         
         if len(segments_paths) == 0:
-            # clips for all new dirty segments existed or all segments after sequence end (or both in some combination)
+            # Clips for all new dirty segments existed or all segments after sequence end (or both in some combination).
             GLib.idle_add(_update_tline)
             _update_thread = None
             return
 
-        print("tlinerenderserver.render_update_clips")
         tlinerenderserver.render_update_clips(self.save_path, segments_paths, segments_ins, segments_outs, current_sequence().profile.description())
 
         global _status_polling_thread
