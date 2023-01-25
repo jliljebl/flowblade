@@ -731,10 +731,10 @@ modelbutton.flat {
   min-height: 24px;
   padding-left: 8px;
   padding-right: 8px;
-  outline-offset: -3px;
-  border-radius: 2px;
+  outline-offset: -12px;
+  border-radius: 0px;
 
-  @extend %undecorated_button;
+  //@extend %undecorated_button;
 
   &:hover { background-color: if($variant=='light', mix($fg_color,$bg_color,5%), mix($fg_color,$bg_color,10%)); }
   &:active, &:selected { &, arrow { @extend %selected_items; } }
@@ -2046,14 +2046,14 @@ switch {
     // the borders of checks and radios are
     // too similar in luminosity to the selected background color, hence
     // we need special casing.
-    menuitem #{$w}#{$s}:hover,
-    .view #{$w}#{$s}:selected,
-    treeview.#{$w}#{$s}:selected,
-    row:selected #{$w}#{$s},
-    infobar #{$w}#{$s} {
-      -gtk-icon-source: -gtk-scaled(url("assets/#{$a}#{$as}-selected.png"),
-                                    url("assets/#{$a}#{$as}-selected@2.png"));
-    }
+    //(menuitem #{$w}#{$s}:hover,
+    //.view #{$w}#{$s}:selected,
+    //treeview.#{$w}#{$s}:selected,
+    //row:selected #{$w}#{$s},
+    //infobar #{$w}#{$s} {
+    //  -gtk-icon-source: -gtk-scaled(url("assets/#{$a}#{$as}-selected.png"),
+    //                                url("assets/#{$a}#{$as}-selected@2.png"));
+    //}
   }
 }
 
