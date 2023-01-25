@@ -30,7 +30,7 @@ from gi.repository import Gtk, Gdk
 try:
     import mlt7 as mlt
 except:
-    import mlt7 as mlt
+    import mlt
 
 import appconsts
 import dialogutils

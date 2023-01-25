@@ -24,7 +24,7 @@ Module provides a single, unified MLT and renderconsuner.py init procedure for a
 try:
     import mlt7 as mlt
 except:
-    import mlt7 as mlt
+    import mlt
 
 import locale
 

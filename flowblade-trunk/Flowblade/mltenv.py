@@ -24,7 +24,7 @@ Module checks environment for available codecs and formats.
 try:
     import mlt7 as mlt
 except:
-    import mlt7 as mlt
+    import mlt
 
 acodecs = None
 vcodecs = None

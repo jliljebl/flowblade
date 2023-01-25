@@ -27,7 +27,7 @@ import locale
 try:
     import mlt7 as mlt
 except:
-    import mlt7 as mlt
+    import mlt
 import os
 
 import ccrutils

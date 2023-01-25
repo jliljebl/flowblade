@@ -25,7 +25,7 @@ Module contains objects and methods needed to create render consumers.
 try:
     import mlt7 as mlt
 except:
-    import mlt7 as mlt
+    import mlt
 import time
 import threading
 import xml.dom.minidom

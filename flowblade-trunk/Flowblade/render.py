@@ -31,7 +31,7 @@ from gi.repository import Gtk
 try:
     import mlt7 as mlt
 except:
-    import mlt7 as mlt
+    import mlt
 import hashlib
 import os
 import time

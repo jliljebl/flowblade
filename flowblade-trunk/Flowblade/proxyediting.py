@@ -21,7 +21,7 @@ import hashlib
 try:
     import mlt7 as mlt
 except:
-    import mlt7 as mlt
+    import mlt
 import os
 import threading
 import time

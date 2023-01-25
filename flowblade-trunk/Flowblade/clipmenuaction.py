@@ -30,7 +30,7 @@ from gi.repository import Gtk
 try:
     import mlt7 as mlt
 except:
-    import mlt7 as mlt
+    import mlt
 from operator import itemgetter
 import os
 import shutil

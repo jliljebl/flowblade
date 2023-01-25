@@ -33,7 +33,7 @@ import locale
 try:
     import mlt7 as mlt
 except:
-    import mlt7 as mlt
+    import mlt
 import os
 from os import listdir
 from os.path import isfile, join

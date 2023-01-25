@@ -564,8 +564,8 @@ _video_file_extensions = [  "avi",
                             "y4m",
                             "yuv",
                             "xml"]
-                            
-                            
+
+
 def start_timing(msg="start timing"):
     global _start_time
     _start_time = time.time()

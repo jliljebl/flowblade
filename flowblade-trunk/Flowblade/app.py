@@ -43,7 +43,8 @@ import locale
 try:
     import mlt7 as mlt
 except:
-    import mlt7 as mlt
+    import mlt
+    
 import hashlib
 import os
 import sys

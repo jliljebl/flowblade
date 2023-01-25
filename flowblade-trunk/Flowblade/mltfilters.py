@@ -28,7 +28,8 @@ import copy
 try:
     import mlt7 as mlt
 except:
-    import mlt7 as mlt
+    import mlt
+    
 import xml.dom.minidom
 
 import appconsts

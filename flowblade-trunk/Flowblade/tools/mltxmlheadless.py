@@ -31,7 +31,7 @@ gi.require_version('Gtk', '3.0')
 try:
     import mlt7 as mlt
 except:
-    import mlt7 as mlt
+    import mlt
 import threading
 import time
 

@@ -32,7 +32,7 @@ import cairo
 try:
     import mlt7 as mlt
 except:
-    import mlt7 as mlt
+    import mlt
 
 from gi.repository import Gtk, GObject
 from gi.repository import GLib

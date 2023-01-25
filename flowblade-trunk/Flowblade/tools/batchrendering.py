@@ -32,7 +32,7 @@ from dbus.mainloop.glib import DBusGMainLoop
 try:
     import mlt7 as mlt
 except:
-    import mlt7 as mlt
+    import mlt
 import hashlib
 import locale
 import os
