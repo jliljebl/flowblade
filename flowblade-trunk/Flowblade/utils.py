@@ -584,7 +584,7 @@ def unpickle(path):
         f = open(path, "rb")
         return pickle.load(f)
     except:
-        f = open(path, 'rb')
+        f = open(path, "rb")
         return pickle.load(f, encoding='latin1') 
 
 def get_flatpak_real_path_for_app_files(app_file):

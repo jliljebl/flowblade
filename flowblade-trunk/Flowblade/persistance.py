@@ -62,6 +62,36 @@ MEDIA_FILE_REMOVE = ['icon']
 # Used to flag a not found relative path
 NOT_FOUND = "/not_found_not_found/not_found"
 
+# Fix data for opening projects when mlt available as 'mlt7' but saved with 
+# mlt available as 'mlt'.
+#
+# Because sequence.py does 'import mlt' (and now 'import mlt7') we still 
+# import it on pickle.load() even if no MLT objects are pickled.
+# Once mlt Python bindigs name changed from 'mlt to 'mlt7' the unpickle failed.
+# We need to fix the bytes in save data so that unpickle does 
+# 'import mlt7' instead of 'import mlt'.
+#
+# Hex editor showed corrsponding sequences as:
+#(..mlt...Playlist...)
+#(..mlt7...Playlist...)
+#
+# pickletools disassembly was:
+# 1688: (            MARK
+# 1689: \x8c             SHORT_BINUNICODE 'mlt'
+# 1694: \x94             MEMOIZE    (as 100)
+# 1695: \x8c             SHORT_BINUNICODE 'Playlist'
+# 1705: \x94             MEMOIZE    (as 101)
+# 1706: \x93             STACK_GLOBAL
+# 1707: \x94             MEMOIZE    (as 102)
+# 1708: )                EMPTY_TUPLE
+#
+# NOTE: It may not be possible to remove mlt import from pickle data, but we need to 
+# make an effort.
+#
+MLT_IMPORT_BYTES = b'\x28\x8C\x03\x6D\x6C\x74\x94\x8C\x08\x50\x6C\x61\x79\x6C\x69\x73\x74\x94\x93\x94\x29'
+MLT_7_IMPORT_BYTES = b'\x28\x8C\x04\x6D\x6C\x74\x37\x94\x8C\x08\x50\x6C\x61\x79\x6C\x69\x73\x74\x94\x93\x94\x29' 
+LOAD_TEMP_PROJECT_FILE = "load_temp_project"
+        
 # Used to send messages when loading project, set at callsite.
 load_dialog = None
 
@@ -384,7 +414,7 @@ def _save_changed_xml_file(s_media_file, new_profile):
 def load_project(file_path, icons_and_thumnails=True, relinker_load=False):
     _show_msg("Unpickling")
 
-    project = utils.unpickle(file_path)
+    project = unpickle(file_path)
 
     # Relinker only operates on pickleable python data 
     if relinker_load:
@@ -808,3 +838,56 @@ compositors_index_to_type_id = ["##affine","##opacity_kf","##pict_in_pict", "##r
                                 "##grain_extract", "##grain_merge", "##hardlight", "##hue", "##lighten",
                                 "##multiply", "##overlay", "##saturation", "##screen", "##softlight",
                                 "##subtract", "##value"]
+
+# ------------------------------------------------------- unpickling with mlt module fixes
+def unpickle(path):
+    try:
+        f = open(path, "rb")
+        return pickle.load(f)
+    except:
+        print("Fixing for 'import mlt'...")
+        
+        f = open(path, 'rb')
+        data = f.read()
+        bdata = bytearray(data)
+        f.close()
+        
+        if bdata.find(MLT_IMPORT_BYTES) != -1:
+
+            fixed_bdata = bdata.replace(MLT_IMPORT_BYTES, MLT_7_IMPORT_BYTES)
+
+            path = userfolders.get_cache_dir() + LOAD_TEMP_PROJECT_FILE
+            ff = open(path, 'wb')
+            ff.write(fixed_bdata)
+            ff.close()
+
+            f = open(path, 'rb')
+            return pickle.load(f)
+        else:
+            # We have 'latin-1' encoded project file.
+            # This fix is currently just best effort and not tested.
+            
+            # Convert project to unicode and save to temp file.
+            project = pickle.load(f, encoding='latin1')
+            latin_file_path = userfolders.get_cache_dir() + LOAD_TEMP_PROJECT_FILE + "latin1"
+            with atomicfile.AtomicFileWriter(latin_file_path, "wb") as afw:
+                outfile = afw.get_file()
+                pickle.dump(project, outfile)
+            
+            # Load newly unicode encoded project and fix byte data.
+            f = open(latin_file_path, 'rb')
+            data = f.read()
+            bdata = bytearray(data)
+            f.close()
+        
+            fixed_bdata = bdata.replace(MLT_IMPORT_BYTES, MLT_7_IMPORT_BYTES)
+
+            # Save fixed byte data.
+            path = userfolders.get_cache_dir() + LOAD_TEMP_PROJECT_FILE
+            ff = open(path, 'wb')
+            ff.write(fixed_bdata)
+            ff.close()
+
+            # Unpickle from fixed byte data.
+            f = open(path, 'rb')
+            return pickle.load(f)
