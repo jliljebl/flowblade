@@ -31,13 +31,11 @@ test_timeout_id = None
            
 # --------------------------------------------------- interface
 def init():
-    
+    _tools.append(SlowMoIntegrator())
+    _tools.append(ReverseIntegrator())
     if gmic.gmic_available():
         _tools.append(GMICIntegrator())
         
-    _tools.append(SlowMoIntegrator())
-    _tools.append(ReverseIntegrator())
-    
 def get_export_integrators():
     export_integrators = []
     for tool_integrator in _tools:
