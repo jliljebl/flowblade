@@ -827,7 +827,7 @@ def unpickle(path):
         #
         # NOTE: It may not be possible to remove mlt import from pickle data, but we need to 
         # make an effort.
-        
+
         print("Fixing for unpickling doing 'import mlt'...")
         
         import mlt7 as mlt

@@ -379,7 +379,8 @@ def _group_action_pressed(widget, event):
     actions_menu.add(item)
 
     guiutils.add_separetor(actions_menu)
-    
+    item = guiutils.get_menu_item(_("Open Selected In Monitor With Range"), _actions_callback, "open_monitor")
+    actions_menu.add(item)
     move_menu_item = Gtk.MenuItem(_("Move Selected Items To Group"))
     move_menu = Gtk.Menu()
     if len(PROJECT().media_log_groups) == 0:
@@ -465,6 +466,21 @@ def _actions_callback(widget, data):
         current_group_index = _get_current_group_index()
         name, items = PROJECT().media_log_groups[current_group_index]
         dialogs.group_rename_dialog(_rename_callback, name)
+    elif data == "open_monitor":
+        # Monitor only takes one, so we open the first.
+        selected = widgets.media_log_view.get_selected_rows_list()
+        log_events = get_current_filtered_events()
+        if len(selected) > 0 and len(log_events) > 0:
+            # Get first selected media item
+            index = max(selected[0])
+            log_event = log_events[index]
+            media_file = PROJECT().get_media_file_for_path(log_event.path)
+            
+            # Mark item with log event range  
+            media_file.mark_in = log_event.mark_in
+            media_file.mark_out = log_event.mark_out
+    
+            updater.set_and_display_monitor_media_file(media_file)
     else: # Move to group
         try:
             to_group_index = int(data)
