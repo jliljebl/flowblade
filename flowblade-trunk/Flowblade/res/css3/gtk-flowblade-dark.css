@@ -1365,7 +1365,7 @@ treeview.view {
     min-width: 0;
     padding: 3px 6px;
     font-weight: bold;
-    color: #a1a1a1;
+    color: rgba(193, 193, 193, 0.45);
     background-color: #212121;
     background-image: none;
     border-style: none solid none none;

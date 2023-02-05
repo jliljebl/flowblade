@@ -1527,7 +1527,7 @@ treeview.view {
       padding: 3px 6px;
       font-weight: bold;
 
-      color: $_column_header_color;
+      color: $insensitive_fg_color;
       background-color: $base_color;
       background-image: none;
       border-style: none solid none none;
