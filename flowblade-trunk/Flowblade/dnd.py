@@ -128,9 +128,12 @@ def connect_tline(widget, do_effect_drop_func, do_media_drop_func):
                          Gdk.DragAction.COPY)
     widget.connect("drag_drop", _on_tline_drop, do_effect_drop_func, do_media_drop_func)
     
-def connect_range_log(treeview):
+def connect_range_log(treeview, range_log_drop_on_monitor_callback):
+    global range_log_drop_on_monitor
+    range_log_drop_on_monitor = range_log_drop_on_monitor_callback
+    
     treeview.drag_source_set(Gdk.ModifierType.BUTTON1_MASK,
-                           [CLIPS_DND_TARGET], 
+                           [CLIPS_DND_TARGET, MEDIA_FILES_DND_TARGET], 
                            Gdk.DragAction.COPY)
     treeview.connect("drag_data_get", _range_log_drag_data_get)
     treeview.drag_dest_set(Gtk.DestDefaults.MOTION | Gtk.DestDefaults.DROP,
@@ -182,9 +185,14 @@ def _on_monitor_drop(widget, context, x, y, timestamp):
     context.finish(True, False, timestamp)
     if drag_data == None: # A user error drag from monitor to monitor
         return
-    media_file = drag_data[0].media_file
-    display_monitor_media_file(media_file)
-    gui.pos_bar.widget.grab_focus()
+
+    try:
+        # Drag from media panel
+        media_file = drag_data[0].media_file
+        display_monitor_media_file(media_file)
+        gui.pos_bar.widget.grab_focus()
+    except:
+        range_log_drop_on_monitor(max(drag_data[0].get_indices())) # drag_data is Gtk.TreePath
 
 def _on_effect_stack_drop(widget, context, x, y, timestamp):
     context.finish(True, False, timestamp)
