@@ -282,6 +282,12 @@ def zoom_project_length():
     repaint_tline()
     update_tline_scrollbar()
 
+def init_tline_view():
+    zoom_project_length()
+    tlinewidgets.pos = 0
+    repaint_tline()
+    update_tline_scrollbar()
+    
 def mouse_scroll_zoom(event):
     do_zoom = True
     if editorpersistance.prefs.mouse_scroll_action_is_zoom == False:

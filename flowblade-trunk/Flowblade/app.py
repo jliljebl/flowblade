@@ -749,6 +749,7 @@ def change_current_sequence(index):
     start_autosave()
 
     updater.set_timeline_height()
+    updater.init_tline_view()
 
 def display_current_sequence():
     # Get shorter alias.
