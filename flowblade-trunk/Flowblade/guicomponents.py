@@ -1906,7 +1906,8 @@ def display_audio_clip_popup_menu(event, clip, track, callback):
     clip_menu.add(_get_color_menu_item(clip, track, callback))
     clip_menu.add(_get_menu_item(_("Clip Info"), callback,\
                   (clip, track, "clip_info", event.x)))
-
+    clip_menu.add(_get_clip_markers_menu_item(event, clip, track, callback))
+    
     _add_separetor(clip_menu)
     
     clip_menu.add(_get_select_menu_item(event, clip, track, callback))
