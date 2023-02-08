@@ -805,7 +805,9 @@ def draw_overwrite_box_overlay(cr, data):
             tc_str = _get_signed_tc_str(tc_str, delta)
                 
             _draw_text_info_box(cr, x, y - 12, tc_str)
-        
+
+        _draw_snap(cr, y)
+    
 def _draw_move_overlay(cr, data, y):
     # Get data
     press_frame = data["press_frame"]
@@ -1538,7 +1540,7 @@ class TimeLineCanvas:
         track = get_track(y)
         x = snapping.get_snapped_x(x, track, self.edit_mode_data)
             
-        self.move_listener(x, y, get_frame(x), button, state) # -> editevent.tline_canvas_mouse_pressed(...)
+        self.move_listener(x, y, get_frame(x), button, state) # -> editevent.tline_canvas_mouse_moved(...)
         
     def _release_event(self, event):
         """

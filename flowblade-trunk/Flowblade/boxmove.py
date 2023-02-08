@@ -69,11 +69,11 @@ def mouse_move(x, y, frame):
     global edit_data
     if edit_data == None:
         return
+
     if box_selection_data == None: # mouse action is to select
         edit_data["mouse_point"] = (x, y)
-       
     else: # mouse action is to move
-        delta = frame - edit_data["press_frame"]
+        delta = edit_data["snapped_frame"] - edit_data["press_frame"]
         edit_data["delta"] = delta
 
     tlinewidgets.set_edit_mode_data(edit_data)
