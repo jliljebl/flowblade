@@ -1759,7 +1759,7 @@ def display_multi_clip_popup_menu(event, clip, track, callback):
     
     # Menu items
     
-    """TODO: This would be useful as multiclip action, but do it later.
+    """TODO: This might be useful as multiclip action, maybe do it later.
     if track.type == appconsts.VIDEO:
         active = True
         if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
@@ -1816,8 +1816,6 @@ def display_multi_clip_popup_menu(event, clip, track, callback):
     lift_item = _get_menu_item(_("Lift"), callback, (clip, track, "lift", event.x))
     clip_menu.add(lift_item)
 
-
-    
     add_compositors_is_multi_selection = False
     
     clip_menu.popup(None, None, None, None, event.button, event.time)

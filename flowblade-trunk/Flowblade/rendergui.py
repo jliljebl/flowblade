@@ -980,7 +980,7 @@ class RenderArgsRow():
         guiutils.set_margins(self.load_selection_row, 0,4,0,0)
         
         self.opts_view = Gtk.TextView()
-        self.opts_view.set_sensitive(False)
+        self.opts_view.set_sensitive(True)
         self.opts_view.set_pixels_above_lines(2)
         self.opts_view.set_left_margin(2)
         self.opts_view.set_tooltip_text(_("Edit render options"))
