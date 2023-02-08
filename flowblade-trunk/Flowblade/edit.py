@@ -408,7 +408,6 @@ class EditAction:
                 
         # Update GUI.
         if do_gui_update:
-            #print("redo() _update_gui")
             self._update_gui()
         
     def _update_gui(self): # This is copied with small modifications into projectaction.py for sequence imports, update there too if needed.

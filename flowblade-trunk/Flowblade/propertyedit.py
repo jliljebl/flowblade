@@ -343,7 +343,8 @@ class AbstractProperty:
                     current_sequence().profile.sample_aspect_den())
        
     def enable_save_menu_item(self):
-        gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(True)
+        if project.last_save_path != None:
+            gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(True)
 
     
 class EditableProperty(AbstractProperty):

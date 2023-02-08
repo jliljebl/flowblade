@@ -80,7 +80,8 @@ def register_edit(undo_edit):
     undo_stack.append(undo_edit)
     index = index + 1
     
-    save_item.set_sensitive(True) # Disabled at load and save, first edit enables
+    if editorstate.PROJECT().last_save_path != None:
+        save_item.set_sensitive(True) # Disabled at load and save, first edit enables
     undo_item.set_sensitive(True)
     redo_item.set_sensitive(False)
 
