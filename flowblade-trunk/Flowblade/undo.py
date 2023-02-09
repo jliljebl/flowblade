@@ -81,7 +81,7 @@ def register_edit(undo_edit):
     index = index + 1
     
     if editorstate.PROJECT().last_save_path != None:
-        save_item.set_sensitive(True) # Disabled at load and save, first edit enables
+        save_item.set_sensitive(True) # Disabled at load and save, first edit enables if project has been saved.
     undo_item.set_sensitive(True)
     redo_item.set_sensitive(False)
 

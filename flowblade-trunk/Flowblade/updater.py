@@ -299,7 +299,7 @@ def mouse_scroll_zoom(event):
 
     if do_zoom == True: # Uh, were doing scroll here.
         adj = gui.tline_scroll.get_adjustment()
-        incr = adj.get_step_increment()
+        incr = adj.get_step_increment() / 2.0 * (0.72 / tlinewidgets.pix_per_frame)
         if editorpersistance.prefs.scroll_horizontal_dir_up_forward == False:
             incr = -incr
         if event.direction == Gdk.ScrollDirection.UP:
