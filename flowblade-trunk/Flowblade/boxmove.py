@@ -42,17 +42,20 @@ def clear_data():
     edit_data = None
      
 def mouse_press(event, frame):
+    mouse_press_with_coords(event.x, event.y, frame)
+
+def mouse_press_with_coords(ex, ey, frame):
     global edit_data, box_selection_data
 
     if box_selection_data == None: # mouse action is to select
-        press_point = (event.x, event.y)
+        press_point = (ex, ey)
         
         edit_data = {"action_on":True,
                      "press_point":press_point,
                      "mouse_point":press_point,
                      "box_selection_data":None}
     else: # mouse action is to move
-        if box_selection_data.is_hit(event.x, event.y) == False:
+        if box_selection_data.is_hit(ex, ey) == False:
             # Back to start state if selection box missed
             edit_data = None
             box_selection_data = None

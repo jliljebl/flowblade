@@ -62,6 +62,9 @@ pressed_on_selected = True
 # Blanck clips can be selected but not moved
 drag_disabled = False
 
+# We need to save data to turn blank clip selection mid-drag into bex selection,
+blank_press_data = None
+
 # Data/state for ongoing edit.
 edit_data = None
 
@@ -286,7 +289,7 @@ def overwrite_move_press(event, frame):
         boxmove.mouse_press(event, frame)
         return
 
-    tlinewidgets.set_edit_mode(None, tlinewidgets.draw_overwrite_overlay) # if we were in box mode draw func needs to be reset here
+    tlinewidgets.set_edit_mode(None, tlinewidgets.draw_overwrite_overlay) # if we were in box mode draw func needs to be reset here.
 
     _move_mode_pressed(event, frame)
 
@@ -303,7 +306,7 @@ def overwrite_move_press(event, frame):
         edit_data["moving_length"] = moving_length
     else:
         if editorpersistance.prefs.box_for_empty_press_in_overwrite_tool == True:
-            # We now enter box mode with special flag set that we will return to overwrite after edit complete
+            # We now enter box mode with special flag set that we will return to overwrite mode after edit is complete.
             editorstate.overwrite_mode_box = True
             boxmove.entered_from_overwrite = True
             boxmove.clear_data()
@@ -320,6 +323,23 @@ def overwrite_move_move(x, y, frame, state):
 
     global edit_data, drag_disabled
     if drag_disabled:
+        try:
+            # Try switch to box selection if blnk clip was pressed.            
+            px, py, pframe, track_index, range_in, range_out  = blank_press_data
+
+            if abs(x - px) > MOVE_START_LIMIT or abs(y - py) > MOVE_START_LIMIT:
+                # Ok, blank pressed and mouse dragged a bit, switch to box creation drag.
+                set_range_selection(track_index, range_in, range_out, False)
+                
+                editorstate.overwrite_mode_box = True
+                boxmove.entered_from_overwrite = True
+                boxmove.clear_data()
+
+                boxmove.mouse_press_with_coords(px, py, pframe)
+                return
+        except:
+            pass
+            
         return
     if edit_data == None:
         return
@@ -480,11 +500,12 @@ def _move_mode_pressed(event, frame):
     x = event.x
     y = event.y
 
-    global edit_data, pressed_on_selected, drag_disabled
+    global edit_data, pressed_on_selected, drag_disabled, blank_press_data
 
     # Clear edit data in gui module
     edit_data = None
     drag_disabled = False
+    blank_press_data = None
     tlinewidgets.set_edit_mode_data(edit_data)
 
     # Get pressed track
@@ -518,7 +539,7 @@ def _move_mode_pressed(event, frame):
     pressed_clip = track.clips[clip_index]
 
     # Handle pressed clip according to current selection state
-    # Case: no selected clips, select single clip
+    # Case: no selected clips, select a single clip.
     if selected_track == -1:
         if not pressed_clip.is_blanck_clip:
             select_clip(track.id, clip_index)
@@ -526,15 +547,16 @@ def _move_mode_pressed(event, frame):
                 clipeffectseditor.set_clip(pressed_clip, track, clip_index, False)
             pressed_on_selected = False
         else:
-            # There may be multiple blank clips in area that for user
-            # seems to a single blank area. All of these must be
-            # selected together automatically or user will be exposed to
-            # this impl. detail unnecesserarely.
-            # THIS HAS BEEN CHANGED BECAUSE BLANKS ARE NOW AUTO CONSOLIDATED AFTER ALL EDITS.
+            # There used to be possibly multiple blank clips in area that for user
+            # seems to a single blank area. All of these needed be
+            # selected together automatically.
+            # THIS WAS CHANGED AND BLANKS ARE NOW AUTO-CONSOLIDATED AFTER ALL EDITS,
+            # SO BLANK 'RANGE' IS NOW ALWAYS A SINGLE CLIP.
             range_in, range_out = _get_blanck_range(track, clip_index)
             _select_multiple_clips(track.id, range_in, range_out)
             pressed_on_selected = False
             drag_disabled = True
+            _save_blank_press_data(x, y, frame, track.id, range_in, range_out)
     # case: CTRL or SHIFT down, combine selection with earlier selected clips
     elif ((event.get_state() & Gdk.ModifierType.CONTROL_MASK) or (event.get_state() & Gdk.ModifierType.SHIFT_MASK)):
         # CTRL pressing blank clears selection
@@ -581,7 +603,8 @@ def _move_mode_pressed(event, frame):
                 _select_multiple_clips(track.id, range_in, range_out)
                 pressed_on_selected = False
                 drag_disabled = True
-
+                _save_blank_press_data(x, y, frame, track.id, range_in, range_out)
+            
     # Get length info on selected clips
     clip_lengths = []
     for i in range(selected_range_in, selected_range_out + 1):
@@ -663,6 +686,11 @@ def _clear_after_illegal_edit():
     clear_selected_clips()
     updater.repaint_tline()
 
+def _save_blank_press_data(x, y, frame, track_id, range_in, range_out):
+    # We may want to switch to to box selection drag from blank with move tool.
+    global blank_press_data
+    blank_press_data = (x, y, frame, track_id, range_in, range_out)
+        
 def _move_mode_released():
     # Pressing on selection clears it on release
     if pressed_on_selected:
