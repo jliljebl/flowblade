@@ -453,23 +453,25 @@ class EditorWindow:
         # 'None' here means that no possible rendering options were available
         # and creating panel failed. Inform user of this and hide render GUI
         if render_panel_left == None:
-            render_hbox = Gtk.VBox(False, 5)
-            render_hbox.pack_start(Gtk.Label(label="Rendering disabled."), False, False, 0)
-            render_hbox.pack_start(Gtk.Label(label="No available rendering options found."), False, False, 0)
-            render_hbox.pack_start(Gtk.Label(label="See Help->Environment->Render Options for details."), False, False, 0)
-            render_hbox.pack_start(Gtk.Label(label="Install codecs to make rendering available."), False, False, 0)
-            render_hbox.pack_start(Gtk.Label(label=" "), True, True, 0)
+            render_panel_info = Gtk.VBox(False, 5)
+            render_panel_info.pack_start(Gtk.Label(label="Rendering disabled."), False, False, 0)
+            render_panel_info.pack_start(Gtk.Label(label="No available rendering options found."), False, False, 0)
+            render_panel_info.pack_start(Gtk.Label(label="See Help->Environment->Render Options for details."), False, False, 0)
+            render_panel_info.pack_start(Gtk.Label(label="Install codecs to make rendering available."), False, False, 0)
+            render_panel_info.pack_start(Gtk.Label(label=" "), True, True, 0)
+            self.render_panel = render_panel_info
         else: # all is good, create render panel.
-            render_hbox = Gtk.HBox(False, 5)
-            render_hbox.pack_start(render_panel_left, True, True, 0)
-            # Large scr
             if editorstate.screen_size_large_width() == False:
+                render_hbox = Gtk.HBox(False, 5)
+                render_hbox.pack_start(render_panel_left, True, True, 0)
                 render_panel_right = rendergui.get_render_panel_right(render.widgets,
                                                                       lambda w,e: projectaction.do_rendering(),
                                                                       lambda w,e: projectaction.add_to_render_queue())
                 render_hbox.pack_start(render_panel_right, True, True, 0)
-
-        self.render_panel = guiutils.set_margins(render_hbox, 2, 6, 8, 6)
+                
+                self.render_panel = guiutils.set_margins(render_hbox, 2, 6, 8, 6)
+            else:
+                self.render_panel = guiutils.set_margins(render_panel_left, 2, 6, 8, 6)
 
         # Range Log panel
         media_log_events_list_view = medialog.get_media_log_list_view()
