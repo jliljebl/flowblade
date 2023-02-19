@@ -267,7 +267,7 @@ def zoom_out():
         tlinewidgets.pix_per_frame = PIX_PER_FRAME_MIN
     repaint_tline()
     update_tline_scrollbar()
-    tline_scrolled(gui.tline_scroll.get_adjustment())
+    center_tline_to_current_frame()
     
 def zoom_max():
     tlinewidgets.pix_per_frame = PIX_PER_FRAME_MAX
