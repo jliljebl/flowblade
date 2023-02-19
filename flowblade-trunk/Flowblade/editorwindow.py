@@ -234,7 +234,7 @@ class EditorWindow:
         self.menubar.set_margin_bottom(4)
         self.menubar.set_name("lighter-bg-widget")
 
-        menubar_box =  Gtk.HBox(False, 0)
+        menubar_box = Gtk.HBox(False, 0)
         if editorstate.screen_size_small_width() == False:
             menubar_box.pack_start(guiutils.get_right_justified_box([self.menubar]), False, False, 0)
             menubar_box.pack_start(Gtk.Label(), True, True, 0)
@@ -276,12 +276,13 @@ class EditorWindow:
         tline_info_box = Gtk.HBox(False, 0)
         if editorpersistance.prefs.global_layout == appconsts.SINGLE_WINDOW:
             tline_info_box.pack_start(self.tools_buttons.widget, False, False, 0)
-            tline_info_box.pack_start(guiutils.pad_label(8,2), False, False, 0)
+            tline_info_box.pack_start(guiutils.pad_label(24,2), False, False, 0)
             tline_info_box.pack_start(self.fullscreen_press.widget, False, False, 0)
             if editorstate.SCREEN_WIDTH > 1678:
                 tline_info_box.pack_start(guiutils.pad_label(6,2), False, False, 0)
                 tline_info_box.pack_start(layout_press.widget, False, False, 0)
-
+                tline_info_box.pack_start(guiutils.pad_label(6,2), False, False, 0)
+            
         tline_info_box.pack_start(Gtk.Label(), True, True, 0)
         tline_info_box.pack_start(self.monitor_tc_info.widget, False, False, 0)
         guiutils.set_margins(tline_info_box, 0, 0, 0, 10)
