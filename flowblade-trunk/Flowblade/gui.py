@@ -297,7 +297,6 @@ def apply_gtk_css(theme):
 
     return True
 
-
 def get_default_filter_icon():
     return GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "filter.png")
     

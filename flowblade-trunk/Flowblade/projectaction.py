@@ -512,7 +512,8 @@ def save_project():
         _save_project_in_last_saved_path()
 
 def _save_project_in_last_saved_path():
-    updater.set_info_icon(Gtk.STOCK_SAVE)
+    icon = guiutils.get_image("filter_save")
+    updater.set_info_icon(None, icon)
 
     try:
         
@@ -555,7 +556,8 @@ def _save_as_dialog_callback(dialog, response_id):
         filenames = dialog.get_filenames()
         PROJECT().last_save_path = filenames[0]
         PROJECT().name = os.path.basename(filenames[0])
-        updater.set_info_icon(Gtk.STOCK_SAVE)
+        icon = guiutils.get_image("filter_save")
+        updater.set_info_icon(None, icon)
 
         try:
             
