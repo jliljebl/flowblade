@@ -40,12 +40,14 @@ def maybe_init_for_mouse_press(event, frame):
     # See if we actually hit a clip
     track = tlinewidgets.get_track(event.y)
     if track == None:
-        return
+        return False
     if track.id < 1 or (track.id >= len(current_sequence().tracks) - 1):
+        return False
+    if track.edit_freedom == appconsts.LOCKED:
         return False
     clip_index = current_sequence().get_clip_index(track, frame)
     if clip_index == -1:
-        return
+        return False
 
     clip = track.clips[clip_index]
     

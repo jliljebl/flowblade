@@ -222,6 +222,7 @@ def _window_destroy_event(window):
 
 # ------------------------------------ track locks handling
 # returns True if track locked and displays info
+# This sort of makes no sense to be in this module, but we'll let it slide for now.
 def track_lock_check_and_user_info(track):
     if track.edit_freedom == appconsts.LOCKED:
         track_name = utils.get_track_name(track, current_sequence())

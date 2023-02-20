@@ -227,7 +227,7 @@ class SliderEditor:
     def __init__(self, editable_property, slider_name=None, compact=False):
         self.vbox = Gtk.VBox(False)
         # We are using value here as flag if this is beinfg edited by slider as a single value or by keyframe editor as changing value
-        # If we find "=" this means that value is keyframe expression
+        # If we find "=" this means that value is keyframe expression.
         is_multi_kf = (editable_property.value.find("=") != -1)
 
         global changing_slider_to_kf_property_name
@@ -296,6 +296,7 @@ class SliderEditor:
             vboxl.pack_start(hslider, False, False, 0)
                         
             hboxr = Gtk.HBox()
+            spin.set_margin_left(4)
             hboxr.pack_start(spin, False, False, 0)
             kfs_switcher.widget.set_margin_top(6)
             hboxr.pack_start(kfs_switcher.widget, False, False, 4)
@@ -332,7 +333,7 @@ class SliderEditor:
             eq_index = self.editable_property.value.find("=")  + 1
             first_kf_val = val[eq_index:len(val)]
 
-            #  We need to turn editable property value and type  back to what it was before user selected to go kf editing
+            # We need to turn editable property value and type back to what it was before user selected to go kf editing
             # so that it gets edited with slider on next init.
             info = self.editable_property._get_filter_object().info #.__dict__
             p_name, p_value, p_original_type = info.properties[self.editable_property.property_index]
@@ -794,7 +795,7 @@ class FadeLengthEditor(Gtk.HBox):
         updater.repaint_tline()
     
     def display_tline_frame(self, frame):
-        pass # we don't seem to need this after all, panel gets recreated after compositor length change
+        pass # We don't seem to need this after all, panel gets recreated after compositor length change.
         
 def _get_fade_length_editor(editable_property):
     return FadeLengthEditor(editable_property)
@@ -844,7 +845,7 @@ def _get_file_select_editor(editable_property):
         
         dialog.add_filter(file_filter)
     except:
-        # we will interpret missing as decision to add no file filter
+        # We will interpret missing as decision to add no file filter.
         pass
         
     file_select_button = Gtk.FileChooserButton.new_with_dialog(dialog)
