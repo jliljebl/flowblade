@@ -56,6 +56,9 @@ URI_DND_TARGET = Gtk.TargetEntry.new('text/uri-list', 0, 0)
 drag_data = None 
 drag_source = None
 
+# We start drag from out of timeline manually and need to finish it ourselves too.
+tline_out_drag_context = None
+
 # Drag icons
 clip_icon = None
 empty_icon = None
@@ -143,11 +146,19 @@ def connect_range_log(treeview, range_log_drop_on_monitor_callback):
     treeview.drag_source_set_icon_pixbuf(clip_icon)
     
 def start_tline_clips_out_drag(event, clips, widget):
+
+    global tline_out_drag_context
+    if tline_out_drag_context != None:
+        return
+    
     global drag_data
     drag_data = clips
     target_list = Gtk.TargetList.new([RANGE_DND_TARGET])
-    context = widget.drag_begin(target_list, Gdk.DragAction.COPY, 1, event)
+    tline_out_drag_context = widget.drag_begin_with_coordinates(target_list, Gdk.DragAction.COPY, 1, event, -1, -1)
 
+def clear_tline_out_drag_context():
+    global tline_out_drag_context
+    tline_out_drag_context = None
 
 # ------------------------------------------------- handlers for drag events
 def _media_files_drag_data_get(widget, context, selection, target_id, timestamp):
@@ -180,7 +191,8 @@ def _effects_drag_data_get(treeview, context, selection, target_id, timestamp):
     _save_treeview_selection(treeview)
     global drag_source
     drag_source = SOURCE_EFFECTS_TREE
-
+    context.finish(True, False, timestamp)
+    
 def _on_monitor_drop(widget, context, x, y, timestamp):
     context.finish(True, False, timestamp)
     if drag_data == None: # A user error drag from monitor to monitor
@@ -259,3 +271,5 @@ def _on_range_drop(widget, context, x, y, timestamp):
     range_log_items_log_drop(drag_data)
 
     context.finish(True, False, timestamp)
+
+    

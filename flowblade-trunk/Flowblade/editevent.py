@@ -37,6 +37,7 @@ import containeractions
 import cutmode
 import dialogs
 import dialogutils
+import dnd
 import edit
 import editorstate
 from editorstate import current_sequence
@@ -230,6 +231,8 @@ def tline_canvas_mouse_pressed(event, frame):
     Mouse event callback from timeline canvas widget
     """
     editorstate.timeline_mouse_disabled = False # This is used to disable "move" and "release" events when they would get bad data.
+    
+    dnd.clear_tline_out_drag_context() # This exits if tline out drag failed.
     
     if PLAYER().looping():
         return
