@@ -180,16 +180,23 @@ def _overwrite_move_snap(x, track, frame, edit_data):
     if edit_data == None:
         return x
 
+    #print(edit_data)
     press_frame = edit_data["press_frame"]
     first_clip_start = edit_data["first_clip_start"]
     first_clip_frame = first_clip_start + (frame - press_frame)
     first_clip_x = _get_x_for_frame_func(first_clip_frame)
-
+    last_clip_frame = first_clip_frame + edit_data["moving_length"]
+    last_clip_x = _get_x_for_frame_func(last_clip_frame)
+    
     snapped_x = -1 # if value stays same till end, no snapping has happened
     snapped_x = _three_track_snap(track, x, first_clip_frame, first_clip_x)
     if snapped_x == -1:
         snapped_x = _playhead_snap(x, first_clip_x)
-                    
+    if snapped_x == -1:
+        snapped_x = _three_track_snap(track, x, last_clip_frame, last_clip_x)
+    if snapped_x == -1:
+        snapped_x = _playhead_snap(x, last_clip_x)
+        
     # Return either original x or snapped x
     return return_snapped_x_or_x(snapped_x, x)
 
