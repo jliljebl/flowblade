@@ -279,18 +279,32 @@ class SliderEditor:
         if compact:
             name_label = Gtk.Label(label=name + ":")
             hbox.pack_start(name_label, False, False, 4)
-        hbox.pack_start(hslider, True, True, 0)
-        hbox.pack_start(spin, False, False, 4)
-        hbox.pack_start(kfs_switcher.widget, False, False, 4)
-
-        if compact:
+            hbox.pack_start(hslider, True, True, 0)
+            hbox.pack_start(spin, False, False, 4)
+            hbox.pack_start(kfs_switcher.widget, False, False, 4)
             self.vbox.pack_start(hbox, False, False, 0)
         else:
-            top_right_h = Gtk.HBox()
-            top_right_h.pack_start(Gtk.Label(), True, True, 0)            
-            top_row = _get_two_column_editor_row(name, top_right_h)
-            
-            self.vbox.pack_start(top_row, True, True, 0)
+            label = Gtk.Label(label=name + ":")
+            label.set_margin_left(4)
+                
+            label_panel = Gtk.HBox(False, 4)
+            label_panel.pack_start(label, False, False, 0)            
+            label_panel.pack_start(Gtk.Label(), True, True, 0)            
+
+            vboxl = Gtk.VBox()
+            vboxl.pack_start(label_panel, False, False, 0)
+            vboxl.pack_start(hslider, False, False, 0)
+                        
+            hboxr = Gtk.HBox()
+            hboxr.pack_start(spin, False, False, 0)
+            kfs_switcher.widget.set_margin_top(6)
+            hboxr.pack_start(kfs_switcher.widget, False, False, 4)
+
+            hbox = Gtk.HBox()
+            hbox.pack_start(vboxl, True, True, 0)  
+            hbox.pack_start(hboxr, False, False, 0)
+            hbox.set_margin_top(2)
+
             self.vbox.pack_start(hbox, False, False, 0)
 
     def init_for_kf_editor(self, editable_property):
