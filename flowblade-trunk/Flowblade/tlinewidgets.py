@@ -187,21 +187,21 @@ CLIP_TEXT_COLOR_OVERLAY = (0.78, 0.78, 0.78, 0.6)
 
 CLIP_COLOR_GRAD = (1,  0.18, 0.11, 0.21, 1)  #(1, 0.62, 0.38, 0.7, 1) 
 CLIP_COLOR_GRAD_L = get_multiplied_grad(0, 1, CLIP_COLOR_GRAD, GRAD_MULTIPLIER) 
-CLIP_SELECTED_COLOR = get_multiplied_color_from_grad(CLIP_COLOR_GRAD, SELECTED_MULTIPLIER)
+CLIP_SELECTED_COLOR = get_multiplied_color_from_grad(CLIP_COLOR_GRAD, SELECTED_MULTIPLIER + 0.12)
 CLIP_END_DRAG_OVERLAY_COLOR = (1,1,1,0.3)
 
 AUDIO_CLIP_COLOR_GRAD = (1, 0.09, 0.21, 0.09, 1)#(1, 0.23, 0.52, 0.23, 1)#(1, 0.79, 0.80, 0.18, 1)
 AUDIO_CLIP_COLOR_GRAD_L = get_multiplied_grad(0, 1, AUDIO_CLIP_COLOR_GRAD, GRAD_MULTIPLIER)
-AUDIO_CLIP_SELECTED_COLOR = (0.53, 0.85, 0.53)
+AUDIO_CLIP_SELECTED_COLOR = ( 0.18, 0.42, 0.18)
 
-IMAGE_CLIP_COLOR_GRAD = (1, 0.16, 0.26, 0.32, 1) #(1, 0.33, 0.65, 0.69, 1)
+IMAGE_CLIP_COLOR_GRAD = (1, 0.20, 0.29, 0.67, 1) # (1, 0.16, 0.26, 0.32, 1) #(1, 0.33, 0.65, 0.69, 1)
 IMAGE_CLIP_COLOR_GRAD_L = get_multiplied_grad(0, 1, IMAGE_CLIP_COLOR_GRAD, GRAD_MULTIPLIER) 
 IMAGE_CLIP_SELECTED_COLOR = get_multiplied_color_from_grad(IMAGE_CLIP_COLOR_GRAD, SELECTED_MULTIPLIER + 0.1)
 
 CONTAINER_CLIP_NOT_RENDERED_COLOR = (0.7, 0.3, 0.3)
 CONTAINER_CLIP_NOT_RENDERED_SELECTED_COLOR = (0.8, 0.4, 0.4)
-CONTAINER_CLIP_RENDERED_COLOR = (0.25, 0.33, 0.78)
-CONTAINER_CLIP_RENDERED_SELECTED_COLOR = (0.35, 0.43, 0.84)
+CONTAINER_CLIP_RENDERED_COLOR = (0.41, 0.11, 0.31) #0.16, 0.26, 0.32)
+CONTAINER_CLIP_RENDERED_SELECTED_COLOR = (0.55, 0.23, 0.43) #(0.35, 0.43, 0.84)
  
 COMPOSITOR_CLIP = (0.12, 0.12, 0.22, 0.7)
 COMPOSITOR_CLIP_AUTO_FOLLOW = (0.33, 0.05, 0.52, 0.65)
@@ -294,6 +294,7 @@ pos = 0 # Current left most frame in timeline display
 # ------------------------------------------------------------------ MODULE POSITION STATE
 # ------------------------------------------------------------------ MODULE POSITION STATE
 # ------------------------------------------------------------------ MODULE POSITION STATE
+
 
 
 # For debug purposes.
