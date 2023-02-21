@@ -103,7 +103,7 @@ def init_data():
                     appconsts.TLINE_TOOL_MULTI_TRIM:    _("Position cursor near or on clip edges for <b>Trim</b> and <b>Roll</b> edits.\nPosition cursor on clip center for <b>Slip</b> edit.\nDrag with <b>Left Mouse</b> to do edits.\n\n<b>Enter Key</b> to start keyboard edit, <b>Left or Right Arrow Key</b> to move edit point.\n<b>Enter Key</b> to complete keyboard edit.")
                   }
 
-    _PREFS_TOOL_TIPS = {"editorpersistance.prefs.box_for_empty_press_in_overwrite_tool":       _("<b>\n\nLeft Mouse Drag</b> to draw a box to select a group of clips and move\nthe selected clips forward or backward.")}
+    _PREFS_TOOL_TIPS = {"editorpersistance.prefs.box_for_empty_press_in_overwrite_tool":       _("<b>\n\nLeft Mouse Drag</b> to draw a box to select a group of clips. Multitrack selection disallows moving clips to another track.")}
     
 
 
