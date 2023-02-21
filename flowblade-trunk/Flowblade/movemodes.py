@@ -311,13 +311,12 @@ def overwrite_move_press(event, frame):
             moving_length += length
         edit_data["moving_length"] = moving_length
     else:
-        if editorpersistance.prefs.box_for_empty_press_in_overwrite_tool == True:
-            # We now enter box mode with special flag set that we will return to overwrite mode after edit is complete.
-            editorstate.overwrite_mode_box = True
-            boxmove.entered_from_overwrite = True
-            boxmove.clear_data()
-            # This happens when we start drawing a box
-            boxmove.mouse_press(event, frame)
+        # We now enter box mode with special flag set that we will return to overwrite mode after edit is complete.
+        editorstate.overwrite_mode_box = True
+        boxmove.entered_from_overwrite = True
+        boxmove.clear_data()
+        # This happens when we start drawing a box
+        boxmove.mouse_press(event, frame)
 
 def overwrite_move_move(x, y, frame, state):
     """

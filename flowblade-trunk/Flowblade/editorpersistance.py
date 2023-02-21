@@ -340,7 +340,7 @@ class EditorPreferences:
         self.theme = appconsts.FLOWBLADE_THEME_NEUTRAL
         self.dnd_action = appconsts.DND_OVERWRITE_NON_V1
         self.top_row_layout = appconsts.THREE_PANELS_IF_POSSIBLE # DEPRECATED, we have new window layout data.
-        self.box_for_empty_press_in_overwrite_tool = False
+        self.box_for_empty_press_in_overwrite_tool = True # DEPRECATED, NOT USER SETTABLE ANYMORE, behaviour is now always set to this preference.
         self.scroll_horizontal_dir_up_forward = True
         self.kf_edit_init_affects_playhead = False # DEPRECATED, this feature is now removed, kf editor inits no longer have effect on playhead
         self.show_tool_tooltips = True

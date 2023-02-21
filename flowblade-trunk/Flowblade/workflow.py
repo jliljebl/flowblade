@@ -91,7 +91,7 @@ def init_data():
                   }
                   
     _TOOL_TIPS =  { appconsts.TLINE_TOOL_INSERT:        _("<b>Left Mouse</b> to move and insert single clip between clips.\n<b>CTRL + Left Mouse</b> to select and move clip range.\n\n<b>Left Mouse</b> on clip ends to trim clip length."),
-                    appconsts.TLINE_TOOL_OVERWRITE:     _("<b>Left Mouse</b> to move clip into new position.\n<b>CTRL + Left Mouse</b> to select and move clip range into new position.\n\n<b>Left Mouse</b> on clip ends to trim clip length."),
+                    appconsts.TLINE_TOOL_OVERWRITE:     _("<b>Left Mouse</b> to select a clip, or to move clip or clip range into new position.\n<b>CTRL + Left Mouse</b> to select a clip range.\n\n<b>Left Mouse</b> near clip's end to trim clip length.<b>\n\nLeft Mouse Drag</b> to draw a box to select a group of clips. Multitrack selection disallows moving clips to another track."),
                     appconsts.TLINE_TOOL_TRIM:          _("<b>Left Mouse</b> to trim closest clip end.\n<b>Left or Right Arrow Key</b> + <b>Enter Key</b> to do the edit using keyboard."), 
                     appconsts.TLINE_TOOL_ROLL:          _("<b>Left Mouse</b> to move closest edit point between 2 clips.\n<b>Left or Right Arrow Key</b> + <b>Enter Key</b> to do the edit using keyboard."), 
                     appconsts.TLINE_TOOL_SLIP:          _("<b>Left Mouse</b> to move clip contents within clip.\n<b>Left or Right Arrow Key</b> + <b>Enter Key</b> to do the edit using keyboard."), 
@@ -103,9 +103,6 @@ def init_data():
                     appconsts.TLINE_TOOL_MULTI_TRIM:    _("Position cursor near or on clip edges for <b>Trim</b> and <b>Roll</b> edits.\nPosition cursor on clip center for <b>Slip</b> edit.\nDrag with <b>Left Mouse</b> to do edits.\n\n<b>Enter Key</b> to start keyboard edit, <b>Left or Right Arrow Key</b> to move edit point.\n<b>Enter Key</b> to complete keyboard edit.")
                   }
 
-    _PREFS_TOOL_TIPS = {"editorpersistance.prefs.box_for_empty_press_in_overwrite_tool":       _("<b>\n\nLeft Mouse Drag</b> to draw a box to select a group of clips. Multitrack selection disallows moving clips to another track.")}
-    
-
 
 #----------------------------------------------------- WorkflowDialog calls this to get default comp mode shown.
 def _load_default_project(open_project_callback):
@@ -116,7 +113,6 @@ def _load_default_project(open_project_callback):
 def _set_workflow_STANDARD():
     editorpersistance.prefs.active_tools = [2, 11, 6, 1, 9, 10] # appconsts.TLINE_TOOL_ID_<X> values
     editorpersistance.prefs.dnd_action = appconsts.DND_ALWAYS_OVERWRITE
-    editorpersistance.prefs.box_for_empty_press_in_overwrite_tool = True
     editorpersistance.save()
 
     modesetting.set_default_edit_mode()
@@ -124,7 +120,6 @@ def _set_workflow_STANDARD():
 def _set_workflow_FILM_STYLE():
     editorpersistance.prefs.active_tools = [1, 2, 3, 4, 5, 6, 7]  # appconsts.TLINE_TOOL_ID_<X> values
     editorpersistance.prefs.dnd_action = appconsts.DND_OVERWRITE_NON_V1
-    editorpersistance.prefs.box_for_empty_press_in_overwrite_tool = False
     editorpersistance.save()
 
     modesetting.set_default_edit_mode()
@@ -319,11 +314,6 @@ def _build_radio_menu_items_group(menu, labels, msgs, callback, active_index):
 
 def _get_tooltip_text(tool_id):
     text = _TOOL_TIPS[tool_id]
-    
-    # Add individual extensions based on current prefs
-    if tool_id == appconsts.TLINE_TOOL_OVERWRITE:
-        if editorpersistance.prefs.box_for_empty_press_in_overwrite_tool == True:
-            text += _PREFS_TOOL_TIPS["editorpersistance.prefs.box_for_empty_press_in_overwrite_tool"]
 
     return text
 
@@ -357,15 +347,6 @@ def _get_workflow_tool_submenu(callback, tool_id, position):
 
     sub_menu.add(position_item)
     
-    # Individual prefs for tools
-    if tool_id == appconsts.TLINE_TOOL_OVERWRITE:
-        pref_item = Gtk.CheckMenuItem(_("Do Box Selection and Box Move from empty press"))
-        pref_item.set_active(editorpersistance.prefs.box_for_empty_press_in_overwrite_tool)
-        pref_item.connect("toggled", _TLINE_TOOL_OVERWRITE_box_selection_pref)
-        pref_item.show()
-        sub_menu.add(pref_item)
-        guiutils.add_separetor(sub_menu)
-
     return sub_menu
     
 def _workflow_menu_callback(widget, data):
@@ -500,11 +481,6 @@ def select_default_tool():
     tool_id = editorpersistance.prefs.active_tools[0]
     gui.editor_window.change_tool(tool_id)
         
-# -------------------------------------------------------------- tool prefs
-def _TLINE_TOOL_OVERWRITE_box_selection_pref(check_menu_item):
-    editorpersistance.prefs.box_for_empty_press_in_overwrite_tool = check_menu_item.get_active()
-    editorpersistance.save()
-
 
 
 class WorkflowDialog(Gtk.Dialog):
