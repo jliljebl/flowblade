@@ -35,6 +35,9 @@ box_selection_data = None
 edit_data = None
 entered_from_overwrite = False
 
+# Set at app.py to be movemodes.select_from_box_selection
+set_move_selection_from_box_selection_func = None
+
 def clear_data():
     # These need to cleared when box tool is activated
     global box_selection_data, edit_data
@@ -105,10 +108,17 @@ def mouse_release(x, y, frame):
             return 
               
         if box_selection_data.is_empty() == False:
-            edit_data = {"action_on":True,
-                         "press_frame":frame,
-                         "delta":0,
-                         "box_selection_data":box_selection_data}
+            if len(box_selection_data.track_selections) == 1 and entered_from_overwrite == True:
+                # If selection only contains a single track we treat it as a movemode selection range
+                # because that provides the added functionality of moving clips to another track.
+                _exit_to_overwrite()
+                set_move_selection_from_box_selection_func(box_selection_data.track_selections[0])
+                return
+            else:
+                edit_data = {"action_on":True,
+                             "press_frame":frame,
+                             "delta":0,
+                             "box_selection_data":box_selection_data}
         else:
             box_selection_data = None
             edit_data = {"action_on":False,
@@ -155,7 +165,7 @@ def mouse_release(x, y, frame):
     
     tlinewidgets.set_edit_mode_data(edit_data)
     updater.repaint_tline()
-
+                
 def _exit_to_overwrite():
     # If we entered box mode from overwite mode empty click, this is used to enter back into overwrite mode.
     global entered_from_overwrite

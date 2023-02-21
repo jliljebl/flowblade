@@ -177,6 +177,12 @@ def select_blank_range(track, clip):
     range_in, range_out = _get_blanck_range(track, clip_index)
     _select_multiple_clips(track.id, range_in, range_out)
 
+def select_from_box_selection(box_selection):
+    # 'box_selection' is a boxmove.BoxTrackSelection object.
+    clear_selected_clips()
+    _select_multiple_clips(box_selection.track_id, box_selection.selected_range_in, 
+                           box_selection.selected_range_out)
+
 # --------------------------------- INSERT MOVE EVENTS
 def insert_move_press(event, frame):
     """
@@ -324,7 +330,7 @@ def overwrite_move_move(x, y, frame, state):
     global edit_data, drag_disabled
     if drag_disabled:
         try:
-            # Try switch to box selection if blnk clip was pressed.            
+            # Try to switch to box selection if blank clip was pressed.
             px, py, pframe, track_index, range_in, range_out  = blank_press_data
 
             if abs(x - px) > MOVE_START_LIMIT or abs(y - py) > MOVE_START_LIMIT:
