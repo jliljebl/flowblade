@@ -41,7 +41,7 @@ trimmodes_set_no_edit_trim_mode = None # This monkey patched in app.py to avoid 
 
 # Draw params
 BAR_WIDTH = 200 # Just used as an initial value > 0, no effect on window layout.
-BAR_HEIGHT = 10 # component height
+BAR_HEIGHT = 12 # component height
 LINE_WIDTH = 3
 LINE_HEIGHT = 6
 LINE_COLOR = (0.3, 0.3, 0.3)
@@ -49,8 +49,8 @@ LINE_COUNT = 11 # Number of range lines
 BG_COLOR = (1, 1, 1)
 DISABLED_BG_COLOR = (0.7, 0.7, 0.7)
 SELECTED_RANGE_COLOR = (0.85, 0.85, 0.85, 0.75)
-DARK_LINE_COLOR = (0.9, 0.9, 0.9)
-DARK_BG_COLOR = (0.3, 0.3, 0.3)
+DARK_LINE_COLOR = (0.5, 0.5, 0.5)
+DARK_BG_COLOR = (0.18, 0.18, 0.18)
 DARK_DISABLED_BG_COLOR = (0.1, 0.1, 0.1)
 DARK_SELECTED_RANGE_COLOR = (0.4, 0.4, 0.4)
 SPEED_TEST_COLOR = (0.5, 0.5, 0.5)
@@ -165,15 +165,13 @@ class PositionBar:
             return
 
         global BG_COLOR
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
             r, g, b, a = gui.unpack_gdk_color(gui.get_light_gray_light_color())
-            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-                r, g ,b, a = gui.unpack_gdk_color(gui.get_light_neutral_color())
             BG_COLOR = (r, g ,b)
+        elif editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+            BG_COLOR = DARK_BG_COLOR
         else:
             r, g, b, a = gui.unpack_gdk_color(gui.get_bg_color())
-
-
             BG_COLOR = guiutils.get_multiplied_color((r, g, b), 1.25)
     
     def _get_panel_pos(self, norm_pos):
