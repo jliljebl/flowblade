@@ -123,6 +123,7 @@ def connect_video_monitor(widget):
     widget.drag_source_set(Gdk.ModifierType.BUTTON1_MASK,
                            [MEDIA_FILES_DND_TARGET], 
                            Gdk.DragAction.COPY)
+    
     widget.drag_source_set_icon_pixbuf(clip_icon)
 
 def connect_tline(widget, do_effect_drop_func, do_media_drop_func):
@@ -242,7 +243,7 @@ def _save_monitor_media(widget, context, selection, target_id, timestamp):
         return False
 
     return True
-    
+
 def _on_tline_drop(widget, context, x, y, timestamp, do_effect_drop_func, do_media_drop_func):
     if drag_data == None:
         context.finish(True, False, timestamp)

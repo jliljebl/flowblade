@@ -524,7 +524,11 @@ def tline_media_drop(drag_data, x, y, use_marks=False):
         kftoolmode.exit_tool()
 
     frame = tlinewidgets.get_frame(x)
-    media_file = gui.media_list_view.last_pressed.media_file
+
+    if dnd.drag_source == dnd.SOURCE_MONITOR_WIDGET:
+        media_file = dnd.drag_data
+    else:
+        media_file = gui.media_list_view.last_pressed.media_file
     
     # Create new clip.
     if media_file.type != appconsts.PATTERN_PRODUCER:
