@@ -41,6 +41,7 @@ import mltrefhold
 import respaths
 import userfolders
 import utils
+import updater
 
 # Pattern producer types
 UNDEFINED = 0
@@ -92,27 +93,7 @@ def _create_ising_clip_callback(dialog, response_id, widgets):
         _update_gui_for_pattern_producer_media_object_add()
         
     dialog.destroy()
-"""
-def create_color_pulse_clip():
-    _color_pulse_clip_dialog(_create_color_pulse_clip_callback)
 
-def _create_color_pulse_clip_callback(dialog, response_id, widgets):
-    if response_id == Gtk.ResponseType.ACCEPT:
-        media_object = BinColorPulseClip(PROJECT().next_media_file_id, _("Color Pulse"))
-
-        s1_slider, s2_slider, s3_slider, s4_slider, m1_slider, m2_slider = widgets
-        media_object.set_property_values(s1_slider.get_adjustment().get_value() / 100.0,
-                                         s2_slider.get_adjustment().get_value() / 100.0, 
-                                         s3_slider.get_adjustment().get_value() / 100.0,
-                                         s4_slider.get_adjustment().get_value() / 100.0,
-                                         m1_slider.get_adjustment().get_value() / 100.0,
-                                         m2_slider.get_adjustment().get_value() / 100.0)
-
-        PROJECT().add_pattern_producer_media_object(media_object)
-        _update_gui_for_pattern_producer_media_object_add()
-
-    dialog.destroy()
-"""
 def create_count_clip():
     media_object = BinCountClip(PROJECT().next_media_file_id, _("Count"))
     PROJECT().add_pattern_producer_media_object(media_object)
@@ -120,7 +101,7 @@ def create_count_clip():
 
 def _update_gui_for_pattern_producer_media_object_add():
     gui.media_list_view.fill_data_model()
-    gui.bin_list_view.fill_data_model()
+    updater.update_current_bin_files_count()
 
 # ---------------------------------------------------- 
 def create_pattern_producer(profile, bin_clip):
@@ -460,4 +441,3 @@ def _color_pulse_clip_dialog(callback):
     dialogutils.default_behaviour(dialog)
     dialogutils.set_outer_margins(dialog.vbox)
     dialog.show_all()
-    

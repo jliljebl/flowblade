@@ -1563,19 +1563,7 @@ def bin_name_edited(cell, path, new_text, user_data):
     gui.editor_window.bin_info.display_bin_info()
 
 def update_current_bin_files_count():
-    # Get index for selected bin
-    selection = gui.editor_window.bin_list_view.treeview.get_selection()
-    (model, rows) = selection.get_selected_rows()
-    if len(rows) == 0:
-        return
-    row = max(rows[0])
-    
-    value = str(len(PROJECT().bins[row].file_ids))
-
-    tree_path = Gtk.TreePath.new_from_string(str(row))
-    store_iter = gui.editor_window.bin_list_view.storemodel.get_iter(tree_path)
-    
-    gui.editor_window.bin_list_view.storemodel.set_value(store_iter, 2, value)
+    updater.update_current_bin_files_count()
     
 def bin_selection_changed(selection):
     """
