@@ -608,7 +608,10 @@ def open_clip_in_effects_editor(data):
     index = current_sequence().get_clip_index(track, frame)
 
     clipeffectseditor.set_clip(clip, track, index)
-
+    
+    clip_start_frame = track.clip_start(index)
+    PLAYER().seek_frame(clip_start_frame)
+        
 # ----------------------------------------- edit modes
 def set_trim_mode_gui():
     """
