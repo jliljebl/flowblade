@@ -524,9 +524,10 @@ class EditorWindow:
         pos_bar_frame = Gtk.Frame()
         pos_bar_frame.add(self.pos_bar.widget)
         pos_bar_frame.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
-        pos_bar_frame.set_margin_top(4)
+        pos_bar_frame.set_margin_top(2)
         pos_bar_frame.set_margin_bottom(4)
-        pos_bar_frame.set_margin_left(6)
+        pos_bar_frame.set_margin_left(4)
+        pos_bar_frame.set_margin_right(4)
 
         # Play buttons row
         self._create_monitor_buttons()
@@ -563,8 +564,9 @@ class EditorWindow:
         player_buttons_row.pack_start(Gtk.Label(), True, True, 0)
         player_buttons_row.pack_start(self.trim_view_select.widget, False, False, 0)
         player_buttons_row.pack_start(self.view_mode_select.widget, False, False, 0)
+        player_buttons_row.set_margin_top(4)
         self.player_buttons_row = player_buttons_row
-        
+
         # Switch / pos bar row
         sw_pos_hbox = Gtk.HBox(False, 1)
         sw_pos_hbox.pack_start(pos_bar_frame, True, True, 0)
@@ -579,8 +581,8 @@ class EditorWindow:
         # Monitor
         monitor_vbox = Gtk.VBox(False, 0)
         monitor_vbox.pack_start(monitor_widget.widget, True, True, 0)
-        monitor_vbox.pack_start(sw_pos_hbox, False, True, 0)
         monitor_vbox.pack_start(player_buttons_row, False, True, 0)
+        monitor_vbox.pack_start(sw_pos_hbox, False, True, 0)
         monitor_align = guiutils.set_margins(monitor_vbox, 0, 0, 0, 0)
 
         self.monitor_frame = Gtk.Frame()
