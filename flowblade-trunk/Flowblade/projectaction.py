@@ -1305,10 +1305,15 @@ def _do_create_selection_compound_clip(dialog, response_id, name_entry):
     render_player.start()
 
 def _xml_compound_render_done_callback(filename, media_name):
-    containerclip.create_mlt_xml_media_item(filename, media_name)
-
+    # We do GUI updates so we need GLib thread.
+    GLib.idle_add(_do_xml_media_item_add, filename, media_name)
+            
 def _sequence_xml_compound_render_done_callback(data):
     filename, media_name = data
+    # We do GUI updates so we need GLib thread.
+    GLib.idle_add(_do_xml_media_item_add, filename, media_name)
+
+def _do_xml_media_item_add(filename, media_name):
     containerclip.create_mlt_xml_media_item(filename, media_name)
 
 def _xml_freeze_compound_render_done_callback(filename, media_name):
