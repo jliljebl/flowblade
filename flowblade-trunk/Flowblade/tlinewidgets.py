@@ -377,9 +377,7 @@ def load_icons_and_set_colors():
         BG_COLOR = (0.44, 0.44, 0.46)
 
         FRAME_SCALE_LINES = (0.8, 0.8, 0.8)
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME \
-            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
-            or editorpersistance.prefs.theme == appconsts.DARK_THEME \
+        if editorpersistance.prefs.theme == appconsts.DARK_THEME \
             or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
             TRACK_GRAD_STOP1 = (1,  0.12, 0.14, 0.2, 1)
             TRACK_GRAD_STOP3 = (1,  0.12, 0.14, 0.2, 1)
@@ -395,13 +393,12 @@ def load_icons_and_set_colors():
             INSERT_ARROW_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "insert_arrow_fb.png")
             BLANK_CLIP_COLOR_GRAD = (1, 0.12, 0.14, 0.2, 1)
             BLANK_CLIP_COLOR_GRAD_L = (0, 0.12, 0.14, 0.2, 1)
-            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
-                or editorpersistance.prefs.theme == appconsts.DARK_THEME \
+            if editorpersistance.prefs.theme == appconsts.DARK_THEME \
                 or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-                r, g ,b = utils.cairo_color_from_gdk_color(gui.get_light_gray_light_color())
+
                 if editorpersistance.prefs.theme == appconsts.DARK_THEME:
                     r, g ,b = utils.cairo_color_from_gdk_color(gui.get_light_neutral_color())
-                if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+                else: # editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL
                     r = g = b = 0.215
                     
                 BLANK_CLIP_COLOR_GRAD = (1, 0.20, 0.20, 0.20, 1)
@@ -414,8 +411,6 @@ def load_icons_and_set_colors():
                 TRACK_GRAD_ORANGE_STOP3 = (1, rl, gl, bl, 1) # V1
             
                 COLUMN_NOT_ACTIVE_COLOR = (0.40, 0.40, 0.40)
-                if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
-                    COLUMN_NOT_ACTIVE_COLOR = (0.40, 0.40, 0.44)
         
             if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
                 FRAME_SCALE_LINES = (0.5, 0.5, 0.5)
@@ -453,9 +448,6 @@ def set_dark_bg_color():
     global BG_COLOR
     
     r, g, b, a = gui.unpack_gdk_color(gui.get_bg_color())
-
-    if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY: 
-        r, g, b, a = gui.unpack_gdk_color(gui.get_bg_unmodified_normal_color())
 
     BG_COLOR = get_multiplied_color((r, g, b), 1.25)
     
@@ -2520,17 +2512,7 @@ class TimeLineColumn:
     def _draw(self, event, cr, allocation):
         x, y, w, h = allocation
         # Draw bg
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY \
-            or editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
-            r, g, b, a = gui.unpack_gdk_color(gui.get_darker_neutral_color())
-            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
-                r, g, b, a = gui.get_light_gray_bg_in_cairo_rgb()
-            elif editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
-                r, g, b, a = gui.unpack_gdk_color(gui.get_bg_color())
-            cr.set_source_rgb(r, g, b)
-            cr.rectangle(0, 0, w, h)
-            cr.fill()
-        elif editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
             cr.set_source_rgb(*THEME_NEUTRAL_COLUMN_BG_COLOR)
             cr.rectangle(0, 0, w, h)
             cr.fill()
@@ -2640,10 +2622,6 @@ class TimeLineColumn:
             cr.paint()
         
         # Draw insert arrow.
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME or \
-           editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
-            stop, r,g,b, a = TRACK_GRAD_STOP1
-            cr.set_source_rgb(r,g,b)
         if is_insert_track == True:
             if track.height == sequence.TRACK_HEIGHT_HIGH:
                 ix, iy = INSRT_ICON_POS_HIGH
@@ -2707,10 +2685,7 @@ class TimeLineFrameScale:
             global FRAME_SCALE_SELECTED_COLOR_GRAD, FRAME_SCALE_SELECTED_COLOR_GRAD_L, MARK_COLOR 
             FRAME_SCALE_SELECTED_COLOR_GRAD = DARK_FRAME_SCALE_SELECTED_COLOR_GRAD
             FRAME_SCALE_SELECTED_COLOR_GRAD_L = DARK_FRAME_SCALE_SELECTED_COLOR_GRAD_L
-            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME or \
-               editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
-                MARK_COLOR = (0.9, 0.9, 0.9) # This needs to be light for contrast
-                
+
     def _press_event(self, event):
         if event.button == 1 or event.button == 3:
             if not timeline_visible():
@@ -2977,16 +2952,12 @@ class TimeLineFrameScale:
     def _get_dark_theme_grad(self, h):
         if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
             r, g, b = FRAME_SCALE_NEUTRAL_BG_COLOR
-            #r += 0.02
-            #g += 0.02 
-            #b += 0.02
             grad = cairo.LinearGradient (0, 0, 0, h)
             grad.add_color_stop_rgba(1, r, g, b, 1)
             grad.add_color_stop_rgba(0, r, g, b, 1)
         else:
             r, g, b, a  = gui.get_bg_color()
-            if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY: 
-                r, g, b, a = gui.unpack_gdk_color(gui.get_bg_unmodified_normal_color()) 
+
             grad = cairo.LinearGradient (0, 0, 0, h)
             grad.add_color_stop_rgba(1, r, g, b, 1)
             grad.add_color_stop_rgba(0, r + 0.05, g + 0.05, b + 0.05, 1)

@@ -598,9 +598,6 @@ class EditorWindow:
         self.edit_buttons_frame.set_shadow_type(Gtk.ShadowType.ETCHED_OUT)
         guiutils.set_margins(self.edit_buttons_frame, 1, 0, 0, 0)
 
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
-            self.edit_buttons_frame.override_background_color(Gtk.StateFlags.NORMAL, gui.get_light_gray_light_color())
-
         if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
             self.edit_buttons_frame.override_background_color(Gtk.StateFlags.NORMAL, gui.get_mid_neutral_color())
             
@@ -767,8 +764,6 @@ class EditorWindow:
         self.notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
         self.notebook_frame = guiutils.get_panel_etched_frame(self.notebook)
         guiutils.set_margins(self.notebook_frame, 0, 0, 0, 1)
-        if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
-            self.notebook.override_background_color(Gtk.StateFlags.NORMAL, gui.get_light_gray_light_color())
             
         # -------------- appconsts.PANEL_PLACEMENT_TOP_ROW_RIGHT
         # -------------- By default this is empty.

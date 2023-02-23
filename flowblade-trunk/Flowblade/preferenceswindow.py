@@ -362,18 +362,16 @@ def _view_prefs_panel():
     buttons_combo.set_active( prefs.buttons_style )
 
     dark_combo = Gtk.ComboBoxText()
-    dark_combo.append_text(_("Flowblade Theme Neutral"))
-    dark_combo.append_text(_("Flowblade Theme Gray"))
-    dark_combo.append_text(_("Flowblade Theme Blue"))
-    dark_combo.append_text(_("Dark Theme"))
-    dark_combo.append_text(_("Light Theme"))
+    dark_combo.append_text(_("Flowblade Dark Theme"))
+    dark_combo.append_text(_("System Dark Theme"))
+    dark_combo.append_text(_("System Light Theme"))
     # The displayed options indeces do not correspond with theme const values.
-    if prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
-        index = 1
-    elif prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+    if prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
         index = 0
-    else:
-        index = int(prefs.theme) + 2
+    elif prefs.theme == appconsts.DARK_THEME: # The displayed options indeces do not correspond with theme const values.
+        index = 1
+    else:    
+        index = 2
     
     dark_combo.set_active(index)
 

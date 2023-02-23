@@ -197,8 +197,6 @@ def set_theme_colors():
     # Try to detect bg color and set frow fallback if fails
     style = editor_window.window.get_style_context()
     bg_color = style.get_background_color(Gtk.StateFlags.NORMAL)
-    if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
-        bg_color = Gdk.RGBA(red=(30.0/255.0), green=(35.0/255.0), blue=(51.0/255.0), alpha=1.0)
 
     _bg_unmodified_normal = bg_color # this was used to work on grey, theme probably not necessary anymore
 
@@ -217,19 +215,10 @@ def set_theme_colors():
         _bg_color = bg_color
         _button_colors = bg_color
 
-    if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME:
-        theme_colors = _THEME_COLORS[4]
-        c = theme_colors[3]
-        _selected_bg_color = Gdk.RGBA(*c) 
-
     # Adwaita and some others show big area of black without this, does not bother Ambient on Ubuntu
     editor_window.tline_pane.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
     editor_window.media_panel.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
     editor_window.mm_paned.override_background_color(Gtk.StateFlags.NORMAL, get_bg_color())
-
-    if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_GRAY:
-        editor_window.mm_paned.override_background_color(Gtk.StateFlags.NORMAL, get_light_gray_light_color())
-        editor_window.media_panel.override_background_color(Gtk.StateFlags.NORMAL, get_light_gray_light_color())
     
 def unpack_gdk_color(gdk_color):
     return (gdk_color.red, gdk_color.green, gdk_color.blue, gdk_color.alpha)
@@ -268,12 +257,17 @@ def _print_widget(widget): # debug
 def apply_theme(theme):
     if theme != appconsts.LIGHT_THEME:
         Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
-        if theme == appconsts.FLOWBLADE_THEME \
-            or theme == appconsts.FLOWBLADE_THEME_GRAY \
-            or theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-            apply_gtk_css(theme)
+        
+        # We dropped these themes and need to force change the pref for them.
+        if theme == appconsts.FLOWBLADE_THEME or theme == appconsts.FLOWBLADE_THEME_GRAY:
+            editorpersistance.prefs.theme = appconsts.FLOWBLADE_THEME_NEUTRAL
+            theme = appconsts.FLOWBLADE_THEME_NEUTRAL
+            editorpersistance.save()
             
-def apply_gtk_css(theme):
+        if theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
+            apply_gtk_css()
+            
+def apply_gtk_css():
     gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
     if Gtk.get_major_version() == 3 and Gtk.get_minor_version() >= 22:
         print("Gtk version is " + gtk_version + ", Flowblade theme is available.")
@@ -287,12 +281,8 @@ def apply_gtk_css(theme):
     display = Gdk.Display.get_default()
     screen = display.get_default_screen()
     Gtk.StyleContext.add_provider_for_screen (screen, provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
-    if theme == appconsts.FLOWBLADE_THEME:
-        css_path = "/res/css/gtk-flowblade-dark.css"
-    elif theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-        css_path = "/res/css3/gtk-flowblade-dark.css"
-    else: # appconsts.FLOWBLADE_THEME_GRAY
-        css_path = "/res/css2/gtk-flowblade-dark.css"
+    css_path = "/res/css3/gtk-flowblade-dark.css"
+
     provider.load_from_path(respaths.ROOT_PATH + css_path)
 
     return True
