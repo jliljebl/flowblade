@@ -3454,8 +3454,8 @@ def get_clip_effects_editor_hamburger_menu(event, callback):
 
     _add_separetor(menu)
 
-    menu.add(_get_menu_item(_("Set All Expanded"), callback, "expanded"))
-    menu.add(_get_menu_item(_("Set All Unexpanded"), callback, "unexpanded"))
+    menu.add(_get_menu_item(_("Expand All"), callback, "expanded"))
+    menu.add(_get_menu_item(_("Unexpand All"), callback, "unexpanded"))
 
     _add_separetor(menu)
 
