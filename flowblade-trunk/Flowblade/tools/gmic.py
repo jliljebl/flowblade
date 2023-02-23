@@ -703,6 +703,7 @@ class GmicWindow(Gtk.Window):
         
         self.action_select = Gtk.CheckButton()
         self.action_select.set_active(False)
+        self.action_select.set_margin_right(4)
                 
         self.action_label = Gtk.Label(label=_("Add to Script"))
 
@@ -778,6 +779,7 @@ class GmicWindow(Gtk.Window):
         self.encode_check_label = Gtk.Label(label=_("Encode Video"))
         self.encode_check = Gtk.CheckButton()
         self.encode_check.set_active(False)
+        self.encode_check.set_margin_right(4)
         self.encode_check.connect("toggled", lambda w:self.update_encode_sensitive())
         
         self.encode_settings_button = Gtk.Button(label=_("Encoding settings"))

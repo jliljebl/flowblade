@@ -97,6 +97,8 @@ compositing_mode_menu = Gtk.Menu()
 save_time = None
 save_icon_remove_event_id = None
 
+first_video_load_project_save_path = None
+
 # Used to get some render confirmations
 force_overwrite = False
 force_proxy = False
@@ -160,7 +162,8 @@ class LoadThread(threading.Thread):
         # whereas other loads clear the flag above.
         if self.is_first_video_load == True:
             projectdata.media_files_changed_since_last_save = True
-            project.last_save_path = None # This gets set to the temp file saved to change profile which is not correct.
+            project.last_save_path = first_video_load_project_save_path # This gets set to the temp file saved to change profile which is not correct.
+            GLib.idle_add(_enable_save) # Enable save if project saved before video project load.
 
         ticker.stop_ticker()
 
@@ -424,10 +427,13 @@ def _not_matching_media_info_callback(dialog, response_id, media_file):
         path = userfolders.get_cache_dir() + "/" + PROJECT().name
         PROJECT().update_media_lengths_on_load = True
         
+        # Save this in case project was saved before firts video loaded
+        global first_video_load_project_save_path
+        first_video_load_project_save_path = PROJECT().last_save_path
+        
         persistance.save_project(PROJECT(), path, profile.description()) #<----- HERE
         
         actually_load_project(path, False, True)
-
 
 def _load_pulse_bar():
     GLib.idle_add(persistance.load_dialog.progress_bar.pulse)

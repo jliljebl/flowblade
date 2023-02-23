@@ -878,6 +878,7 @@ class ScriptToolWindow(Gtk.Window):
         self.encode_check_label = Gtk.Label(_("Encode Video"))
         self.encode_check = Gtk.CheckButton()
         self.encode_check.set_active(False)
+        self.encode_check.set_margin_right(4)
         self.encode_check.connect("toggled", lambda w:self.update_encode_sensitive())
 
         self.encode_settings_button = Gtk.Button(label=_("Encoding settings"))
