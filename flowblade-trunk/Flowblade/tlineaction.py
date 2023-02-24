@@ -382,7 +382,7 @@ def splice_out_button_pressed():
     if movemodes.selected_track == -1:
         return
 
-    # Edit consumes selection, so clear selected from clips
+    # Edit consumes selection, so clear selected state from clips
     movemodes.set_range_selection(movemodes.selected_track,
                                   movemodes.selected_range_in,
                                   movemodes.selected_range_out,
@@ -406,7 +406,7 @@ def splice_out_button_pressed():
                 if cover_delete_success:
                     return # A successful cover delete happened
                 else:
-                    cover_delete_failed = True # A successful cover delete failed, do normal delete and gove info
+                    cover_delete_failed = True # A cover delete failed, do normal delete and gove info
 
     # Do delete
     data = {"track":track,

@@ -183,6 +183,7 @@ def select_from_box_selection(box_selection):
     _select_multiple_clips(box_selection.track_id, box_selection.selected_range_in, 
                            box_selection.selected_range_out)
 
+
 # --------------------------------- INSERT MOVE EVENTS
 def insert_move_press(event, frame):
     """

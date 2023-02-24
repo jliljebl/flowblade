@@ -600,6 +600,25 @@ def _clear_filters(data):
     clip, track, item_id, item_data = data
     clear_filters()
 
+def _multi_split_audio(data):
+    clip, track, item_id, item_data = data
+    clips = _get_non_blank_selected_clips(track)
+    
+    syncsplitevent.split_audio_from_clips_list(clips, track)
+
+def _multi_split_audio_synched(data):
+    clip, track, item_id, item_data = data
+    clips = _get_non_blank_selected_clips(track)
+    
+    syncsplitevent.split_audio_synched_from_clips_list(clips, track)
+
+def _get_non_blank_selected_clips(track):
+    clips = []
+    for i in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
+        if track.clips[i].is_blanck_clip == False:
+            clips.append(track.clips[i])
+    return clips
+
 def _select_all_after(data):
     clip, track, item_id, item_data = data
     movemodes._select_multiple_clips(track.id, track.clips.index(clip), len(track.clips) - 1)
@@ -840,6 +859,8 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "multi_delete_compositors": _multi_delete_compositors,
                   "reload_media":_reload_clip_media,
                   "create_multi_compound":_create_container_clip_from_selection,
+                  "multi_split_audio":_multi_split_audio,
+                  "multi_split_audio_synched":_multi_split_audio_synched,
                   "cc_render_full_media":containerclip.render_full_media,
                   "cc_render_clip":containerclip.render_clip_length,
                   "cc_go_to_underdered":containerclip.switch_to_unrendered_media,

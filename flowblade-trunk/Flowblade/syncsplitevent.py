@@ -43,11 +43,57 @@ parent_selection_data = None
 # ----------------------------------- split audio
 def split_audio_synched(popup_data):
     """
-    We do two separate edits to do this, so if user undoes this he'll need
-    to two undos, which may not be to user expectation as doing this is only one edit 
+    We have do two separate edits to do this, because we need to have a clip on timeline 
+    to be able to sync it. So if user undoes this he'll need
+    to two undos, which may not be to user expectation as doing this is only one edit. 
     """
-    (parent_clip, child_clip, child_clip_track) = _do_split_audio_edit(popup_data)
+    clip, track, item_id, x = popup_data
+    
+    # We can only split audio from unmuted clips because splitting mutes audio
+    # and we want to avoid splitting audio twice.
+    if clip.mute_filter != None:
+        return
+        
+    split_action, parent_clip, child_clip, child_clip_track = _get_split_audio_edit_action(popup_data)
+    split_action.do_edit()
+    sync_action = _get_set_sync_action(child_clip_track, child_clip, parent_clip)
+    sync_action.do_edit()
 
+def split_audio_synched_from_clips_list(clips, track):
+    item_id = "not actually used"
+    split_actions_data = []
+    split_actions = []
+    for clip in clips:
+        # We're using the existing function to do thid need x for clip frame to use it
+        index = track.clips.index(clip)
+        frame = track.clip_start(index)
+        x = tlinewidgets._get_frame_x(frame)
+
+        popup_data = (clip, track, item_id, x)
+
+        # We can only split audio from unmuted clips because splitting mutes audio
+        # and we want to avoid splitting audio twice.
+        if clip.mute_filter == None:
+            split_action, parent_clip, child_clip, child_clip_track = _get_split_audio_edit_action(popup_data)
+            split_actions.append(split_action)
+            split_actions_data.append((parent_clip, child_clip, child_clip_track))
+    
+    # We need to do split action before creating set sync actio0ns because we need a clip on timeline 
+    # to actually sync with.
+    split_consolidated_action = edit.ConsolidatedEditAction(split_actions)
+    split_consolidated_action.do_consolidated_edit()
+    
+    set_sync_actions = []
+    for split_data in split_actions_data:
+        parent_clip, child_clip, child_clip_track = split_data
+        
+        sync_action = _get_set_sync_action(child_clip_track, child_clip, parent_clip)
+        set_sync_actions.append(sync_action)
+
+    sync_consolidated_action = edit.ConsolidatedEditAction(set_sync_actions)
+    sync_consolidated_action.do_consolidated_edit()
+
+def _get_set_sync_action(child_clip_track, child_clip, parent_clip):
     # This is quarenteed because GUI option to do this is only available on this track
     parent_track = current_sequence().tracks[current_sequence().first_video_index]
     child_index = child_clip_track.clips.index(child_clip)
@@ -58,13 +104,24 @@ def split_audio_synched(popup_data):
             "parent_index":parent_clip_index,
             "parent_track":parent_track}
     action = edit.set_sync_action(data)
-    action.do_edit()
-
+    return action
+    #action.do_edit()
+    
 def split_audio(popup_data):
-    _do_split_audio_edit(popup_data)
+    clip, track, item_id, x = popup_data
+    
+    # We can only split audio from unmuted clips because splitting mutes audio
+    # and we want to avoid splitting audio twice.
+    if clip.mute_filter != None:
+        return
+        
+    action, clip, audio_clip, to_track = _get_split_audio_edit_action(popup_data)
+
+    action.do_edit()
 
 def split_audio_from_clips_list(clips, track):
     item_id = "not actually used"
+    actions_list = []
     for clip in clips:
         # We're using the existing function to do thid need x for clip frame to use it
         index = track.clips.index(clip)
@@ -72,9 +129,20 @@ def split_audio_from_clips_list(clips, track):
         x = tlinewidgets._get_frame_x(frame)
 
         popup_data = (clip, track, item_id, x)
-        _do_split_audio_edit(popup_data)
+
+        # We can only split audio from unmuted clips because splitting mutes audio
+        # and we want to avoid splitting audio twice.
+        if clip.mute_filter == None:
+            action, clip, audio_clip, to_track = _get_split_audio_edit_action(popup_data)
+            actions_list.append(action)
     
+    consolidated_action = edit.ConsolidatedEditAction(actions_list)
+    consolidated_action.do_consolidated_edit()
+
 def _do_split_audio_edit(popup_data):
+    return _get_split_audio_edit_action(popup_data)
+
+def _get_split_audio_edit_action(popup_data):
     # NOTE: THIS HARD CODES ALL SPLITS TO HAPPEN ON TRACK A1, THIS MAY CHANGE
     to_track = current_sequence().tracks[current_sequence().first_video_index - 1]
 
@@ -93,9 +161,8 @@ def _do_split_audio_edit(popup_data):
              "to_track":to_track}
 
     action = edit.audio_splice_action(data)
-    action.do_edit()
     
-    return (clip, audio_clip, to_track)
+    return (action, clip, audio_clip, to_track)
 
 # ---------------------------------------------- sync parent clips
 def init_select_master_clip(popup_data):

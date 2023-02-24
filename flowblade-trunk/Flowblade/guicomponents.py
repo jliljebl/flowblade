@@ -1758,8 +1758,6 @@ def display_multi_clip_popup_menu(event, clip, track, callback):
     guiutils.remove_children(clip_menu)
     
     # Menu items
-    
-    """TODO: This might be useful as multiclip action, maybe do it later.
     if track.type == appconsts.VIDEO:
         active = True
         if clip.media_type == appconsts.IMAGE_SEQUENCE or clip.media_type == appconsts.IMAGE or clip.media_type == appconsts.PATTERN_PRODUCER:
@@ -1776,7 +1774,7 @@ def display_multi_clip_popup_menu(event, clip, track, callback):
               (clip, track, "multi_split_audio_synched", event.x), active))
             
     _add_separetor(clip_menu)
-    """
+
     
     global add_compositors_is_multi_selection
     add_compositors_is_multi_selection = True
