@@ -1971,55 +1971,6 @@ class TimeLineCanvas:
                         cr.fill()
                                                     
                     cr.restore()
-                
-            # Draw sync stripe.
-            if scale_length > FILL_MIN: 
-                if clip.sync_data != None:
-                    stripe_color = SYNC_OK_COLOR
-                    if clip.sync_data.sync_state == appconsts.SYNC_CORRECT:
-                        stripe_color = SYNC_OK_COLOR
-                    elif clip.sync_data.sync_state == appconsts.SYNC_OFF:
-                        stripe_color = SYNC_OFF_COLOR
-                    else:
-                        stripe_color = SYNC_GONE_COLOR
-
-                    dx = scale_in + 1
-                    dy = y + track_height - SYNC_STRIPE_HEIGHT
-                    saw_points = []
-                    saw_points.append((dx, dy))
-                    saw_delta = SYNC_SAW_HEIGHT
-                    for i in range(0, int((scale_length - 2) / SYNC_SAW_WIDTH) + 1):
-                        dx += SYNC_SAW_WIDTH
-                        dy += saw_delta
-                        saw_points.append((dx, dy))
-                        saw_delta = -(saw_delta)
-
-                    px = scale_in + 1 + scale_length - 2
-                    py = y + track_height
-                    cr.move_to(px, py)
-                    for p in reversed(saw_points):
-                        cr.line_to(*p)
-                    cr.line_to(scale_in + 1, y + track_height)
-                    cr.close_path()
-
-                    cr.set_source_rgb(*stripe_color)
-                    cr.fill_preserve()
-                    cr.set_source_rgb(0.3, 0.3, 0.3)
-                    cr.stroke()
-                    
-                    if clip.sync_data.sync_state != appconsts.SYNC_CORRECT:
-                        cr.set_source_rgb(1, 1, 1)
-                        cr.select_font_face ("sans-serif",
-                                             cairo.FONT_SLANT_NORMAL,
-                                             cairo.FONT_WEIGHT_NORMAL)
-                        cr.set_font_size(9)
-                        cr.move_to(scale_in + TEXT_X, y + track_height - 2)
-                        try: # This is needed for backwards compability.
-                             # Projects saved before adding this feature do not have sync_diff attribute.
-                            cr.show_text(str(clip.sync_diff))
-                        except:
-                            clip.sync_diff = "n/a"
-                            cr.show_text(str(clip.sync_diff))
 
             # Draw audio levels data if needed.
             # Init data rendering if data needed and not available.
@@ -2162,12 +2113,25 @@ class TimeLineCanvas:
             if scale_length > FILL_MIN: 
                 if clip.sync_data != None:
                     if clip.sync_data.sync_state != appconsts.SYNC_CORRECT:
+                        cr.set_source_rgb(*SYNC_OFF_COLOR)
+                        cr.rectangle(scale_in + 2, y + track_height - 13, 26, 13)
+                        cr.fill()
+
+                        if abs(clip.sync_diff) > 999:
+                            centering = -3
+                        elif abs(clip.sync_diff) > 99:
+                            centering = 0
+                        elif abs(clip.sync_diff) > 9:
+                            centering = 3
+                        else:
+                            centering = 6
+                                                    
                         cr.set_source_rgb(1, 1, 1)
                         cr.select_font_face ("sans-serif",
                                              cairo.FONT_SLANT_NORMAL,
                                              cairo.FONT_WEIGHT_NORMAL)
                         cr.set_font_size(9)
-                        cr.move_to(scale_in + TEXT_X, y + track_height - 2)
+                        cr.move_to(scale_in + TEXT_X + centering, y + track_height - 3)
                         cr.show_text(str(clip.sync_diff))
 
             if clip.waveform_data == None and editorstate.display_all_audio_levels == True and scale_length > FILL_MIN:
