@@ -68,7 +68,6 @@ def calculate_and_set_child_clip_sync_states():
         child_index = track.clips.index(child_clip)
         child_clip_start = track.clip_start(child_index) - child_clip.clip_in
 
-        #print child_clip.id
         parent_clip = child_clip.sync_data.master_clip
         try:
             parent_index = parent_track.clips.index(parent_clip)

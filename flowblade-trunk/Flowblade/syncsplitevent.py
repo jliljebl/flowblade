@@ -82,7 +82,7 @@ def split_audio_synched_from_clips_list(clips, track):
     # to actually sync with.
     split_consolidated_action = edit.ConsolidatedEditAction(split_actions)
     split_consolidated_action.do_consolidated_edit()
-    
+
     set_sync_actions = []
     for split_data in split_actions_data:
         parent_clip, child_clip, child_clip_track = split_data
@@ -92,7 +92,7 @@ def split_audio_synched_from_clips_list(clips, track):
 
     sync_consolidated_action = edit.ConsolidatedEditAction(set_sync_actions)
     sync_consolidated_action.do_consolidated_edit()
-
+    
 def _get_set_sync_action(child_clip_track, child_clip, parent_clip):
     # This is quarenteed because GUI option to do this is only available on this track
     parent_track = current_sequence().tracks[current_sequence().first_video_index]
@@ -143,7 +143,7 @@ def _do_split_audio_edit(popup_data):
     return _get_split_audio_edit_action(popup_data)
 
 def _get_split_audio_edit_action(popup_data):
-    # NOTE: THIS HARD CODES ALL SPLITS TO HAPPEN ON TRACK A1, THIS MAY CHANGE
+    # NOTE: THIS HARD CODES ALL SPLITS TO HAPPEN TO TRACK A1, THIS MAY CHANGE
     to_track = current_sequence().tracks[current_sequence().first_video_index - 1]
 
     clip, track, item_id, x = popup_data

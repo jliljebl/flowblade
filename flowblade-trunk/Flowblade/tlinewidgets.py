@@ -81,7 +81,7 @@ WAVEFORM_HEIGHT_HIGH = 35.0
 WAVEFORM_HEIGHT_LARGE = 27.0
 WAVEFORM_HEIGHT_SMALL = 17.0
 MARK_PAD = 6
-MARK_LINE_WIDTH = 4
+MARK_LINE_WIDTH = 5
 
 # tracks column consts
 COLUMN_WIDTH = 124 # column area width
@@ -223,6 +223,7 @@ PROXY_STRIP_COLOR = (0.40, 0.60, 0.82)
 PROXY_STRIP_COLOR_SELECTED = (0.52, 0.72, 0.96)
 
 MARK_COLOR = (0.1, 0.1, 0.1)
+DARK_MARK_COLOR = (0.75, 0.75, 0.75)
 MARK_OUTLINE = (0.8, 0.8, 0.8)
 
 FRAME_SCALE_COLOR_GRAD = (1, 0.8, 0.8, 0.8, 1)
@@ -2091,7 +2092,6 @@ class TimeLineCanvas:
             if clip.sync_data != None:
                 self.sync_children.append((clip, track, scale_in))
 
-
             # Draw clip frame 
             cr.set_line_width(1.0)
             if scale_length > FILL_MIN:
@@ -2649,6 +2649,7 @@ class TimeLineFrameScale:
             global FRAME_SCALE_SELECTED_COLOR_GRAD, FRAME_SCALE_SELECTED_COLOR_GRAD_L, MARK_COLOR 
             FRAME_SCALE_SELECTED_COLOR_GRAD = DARK_FRAME_SCALE_SELECTED_COLOR_GRAD
             FRAME_SCALE_SELECTED_COLOR_GRAD_L = DARK_FRAME_SCALE_SELECTED_COLOR_GRAD_L
+            MARK_COLOR = DARK_MARK_COLOR
 
     def _press_event(self, event):
         if event.button == 1 or event.button == 3:
@@ -2872,7 +2873,7 @@ class TimeLineFrameScale:
             return
              
         x = _get_frame_x(mark_frame)
-        cr.set_source_rgb(*MARK_COLOR)
+
         cr.move_to (x, MARK_PAD)
         cr.line_to (x, h - MARK_PAD)
         cr.line_to (x - 2 * MARK_LINE_WIDTH, h - MARK_PAD)
@@ -2883,9 +2884,10 @@ class TimeLineFrameScale:
         cr.line_to (x - 1 * MARK_LINE_WIDTH, MARK_LINE_WIDTH + MARK_PAD )
         cr.line_to (x - 2 * MARK_LINE_WIDTH, MARK_PAD)
         cr.close_path()
+
+        cr.set_source_rgb(*MARK_COLOR)
         cr.fill_preserve()
-        cr.set_source_rgb(*MARK_OUTLINE)
-        cr.set_line_width(1.0)
+        cr.set_source_rgb(0,0,0)
         cr.stroke()
         
     def draw_mark_out(self, cr, h):
@@ -2897,7 +2899,7 @@ class TimeLineFrameScale:
             return
              
         x = _get_frame_x(mark_frame + 1)
-        cr.set_source_rgb(*MARK_COLOR)
+
         cr.move_to (x, MARK_PAD)
         cr.line_to (x, h - MARK_PAD)
         cr.line_to (x + 2 * MARK_LINE_WIDTH, h - MARK_PAD)
@@ -2908,11 +2910,12 @@ class TimeLineFrameScale:
         cr.line_to (x + 1 * MARK_LINE_WIDTH, MARK_LINE_WIDTH + MARK_PAD )
         cr.line_to (x + 2 * MARK_LINE_WIDTH, MARK_PAD)
         cr.close_path()
+
+        cr.set_source_rgb(*MARK_COLOR)
         cr.fill_preserve()
-        cr.set_source_rgb(*MARK_OUTLINE)
-        cr.set_line_width(1.0)
+        cr.set_source_rgb(0,0,0)
         cr.stroke()
-   
+        
     def _get_dark_theme_grad(self, h):
         if editorpersistance.prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
             r, g, b = FRAME_SCALE_NEUTRAL_BG_COLOR

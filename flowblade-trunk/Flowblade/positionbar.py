@@ -57,12 +57,11 @@ SPEED_TEST_COLOR = (0.5, 0.5, 0.5)
 DARK_SPEED_TEST_COLOR = (0.9, 0.9, 0.9)
 END_PAD = 6 # empty area at both ends in pixels
 MARK_CURVE = 5
-MARK_LINE_WIDTH = 4
+MARK_LINE_WIDTH = 5
 MARK_PAD = -1
 
 MARK_COLOR = (0.3, 0.3, 0.3)
-DARK_MARK_COLOR = (0.0, 0.0, 0.0)
-FLOWBLADE_THEME_MARK_COLOR = (1, 1, 1)
+DARK_MARK_COLOR = (0.75, 0.75, 0.75)
 
 PREVIEW_FRAME_COLOR = (0.8, 0.8, 0.9)
 PREVIEW_RANGE_COLOR = (0.4, 0.8, 0.4)
@@ -101,8 +100,6 @@ class PositionBar:
             SELECTED_RANGE_COLOR = DARK_SELECTED_RANGE_COLOR
             MARK_COLOR = DARK_MARK_COLOR
             SPEED_TEST_COLOR = DARK_SPEED_TEST_COLOR
-
-            # MARK_COLOR = FLOWBLADE_THEME_MARK_COLOR
     
     def set_listener(self, listener):
         self.position_listener = listener
@@ -219,7 +216,7 @@ class PositionBar:
         self.draw_mark_in(cr, h)
         self.draw_mark_out(cr, h)
 
-        # Draw timeline markers, monitor media items don't have markers only timeline clips made from them do.markers
+        # Draw timeline markers, monitor media items don't have markers only timeline clips made from them do.
         if editorstate.timeline_visible():
             try: # this gets attempted on load sotimes before current sequence is available.
                 markers = editorstate.current_sequence().markers
