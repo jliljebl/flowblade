@@ -2226,119 +2226,127 @@ def _audio_splice_redo(self):
     filter = _create_mute_volume_filter(current_sequence())
     _do_clip_mute(self.parent_clip, filter)
 
-# ------------------------------------------------- RESYNC ALL
-# No input data
-def resync_all_action(data):
-    action = EditAction(_resync_all_undo, _resync_all_redo, data)
-    return action
-
-def _resync_all_undo(self):
-    self.actions.reverse()
-    
-    for action in self.actions:
-        action.undo_func(action)
-    
-    self.actions.reverse()
-        
-def _resync_all_redo(self):
-    if hasattr(self, "actions"):
-        # Actions have already been created, this is redo
-        for action in self.actions:
-            action.redo_func(action)
-        return
-
-    resync_data = resync.get_resync_data_list()
-    self.actions = _create_and_do_sync_actions_list(resync_data)
-
-# ------------------------------------------------- RESYNC SOME CLIPS
+# ------------------------------------------------- RESYNC CLIP
 # "clips"
-def resync_some_clips_action(data):
-    action = EditAction(_resync_some_clips_undo, _resync_some_clips_redo, data)
+def resync_clip_action(data):
+    action = EditAction(_resync_clip_undo, _resync_clip_redo, data)
     return action
 
-
-def _resync_some_clips_undo(self):
-    self.actions.reverse()
-    
-    for action in self.actions:
-        action.undo_func(action)
-    
-    self.actions.reverse()
+def _resync_clip_undo(self):
+    self.action.undo_func(self.action)
         
-def _resync_some_clips_redo(self):
-    if hasattr(self, "actions"):
-        # Actions have already been created, this is redo
-        for action in self.actions:
-            action.redo_func(action)
+def _resync_clip_redo(self):
+    if hasattr(self, "action"):
+        # Action has already been created, this a is redo.
+        self.action.redo_func(self.action)
         return
 
     resync_data = resync.get_resync_data_list_for_clip_list(self.clips)
-    self.actions = _create_and_do_sync_actions_list(resync_data)
+    # Here we always only have one item in the list.
+    self.action = _create_and_do_sync_action(resync_data[0])
 
-def _create_and_do_sync_actions_list(resync_data_list):
-    # input is list tuples list (clip, track, index, pos_off)
-    actions = []
-    for clip_data in resync_data_list:
-        clip, track, index, pos_offset = clip_data
+def _create_and_do_sync_action(resync_data_list_item):
+    clip, track, index, child_clip_start, pos_offset = resync_data_list_item
 
-        # If we're in sync, do nothing
-        if pos_offset == clip.sync_data.pos_offset:
-            continue
-
-        # Get new in and out frames for clip
-        diff = pos_offset - clip.sync_data.pos_offset
-        over_in = track.clip_start(index) - diff
-        over_out = over_in + (clip.clip_out - clip.clip_in + 1)
-        data = {"track":track,
-                "over_in":over_in,
-                "over_out":over_out,
-                "selected_range_in":index,
-                "selected_range_out":index,
-                "move_edit_done_func":None}
-        
-        action = overwrite_move_action(data)
-        actions.append(action)
-        action.redo_func(action)
-
-    return actions
-
-# ------------------------------------------------- RESYNC CLIP SEQUENCE
-# "clips"
-def resync_clips_sequence_action(data):
-    action = EditAction(_resync_clips_sequence_undo, _resync_clips_sequence_redo, data)
-    return action
-
-def _resync_clips_sequence_undo(self):
-     if self.sync_action != None:
-        self.sync_action.undo_func(self.sync_action)
-        
-def _resync_clips_sequence_redo(self):
-    resync_data = resync.get_resync_data_list_for_clip_list(self.clips)
-    clip, track, index, pos_offset = resync_data[0]
-
-    # If we're in sync, do nothing
+    # If we're in sync, do nothing.
+    # Note that we get no-op undo redo if user tries to sync clip that is 
+    # already in sync, maybe fix later.
     if pos_offset == clip.sync_data.pos_offset:
-        self.sync_action = None
+        return None
+
+    # Get new in and out frames for clip
+    diff = pos_offset - clip.sync_data.pos_offset
+    over_in = track.clip_start(index) - diff
+    over_out = over_in + (clip.clip_out - clip.clip_in + 1)
+    data = {"track":track,
+            "over_in":over_in,
+            "over_out":over_out,
+            "selected_range_in":index,
+            "selected_range_out":index,
+            "move_edit_done_func":None}
+    
+    action = overwrite_move_action(data)
+    action.redo_func(action)
+
+    return action
+
+
+#----------------- RESYNC TRACK
+# "track", "resync_clips_data_list"
+def resync_track_action(data):
+    action = EditAction(_resync_track_undo, _resync_track_redo, data)
+    return action
+
+def _resync_track_undo(self):        
+    clip, track = self.resync_clips_data_list[0]
+    for synched_clip in self.synched_track:
+        _remove_clip(track, 0)
+
+    for orig_clip in self.orig_track:
+         append_clip(track, orig_clip, orig_clip.clip_in, orig_clip.clip_out)
+
+def _resync_track_redo(self):
+    if not hasattr(self, "orig_track"):
+        
+        # List of tuples (clip, track, index, child_clip_start, pos_off)
+        resync_data = resync.get_resync_data_list_for_clip_list(self.resync_clips_data_list)
+
+        # Lift resync clips and insert blank in their place
+        for data_item in resync_data: # + 1 == out inclusive
+            clip, track, index, child_clip_start, pos_off = data_item
+            
+            # Do copy of original track on first iteration.
+            if not hasattr(self, "orig_track"):
+                self.orig_track = copy.copy(track.clips)
+        
+            _remove_clip(track, index)
+            removed_length = clip.clip_out - clip.clip_in
+            _insert_blank(track, index, removed_length)
+
+        # Put resync clips in synched positions.
+        for data_item in resync_data:
+            clip, track, index, child_clip_start, pos_offset = data_item
+            
+            diff = pos_offset - clip.sync_data.pos_offset
+            over_in = child_clip_start - diff
+            over_out = over_in + (clip.clip_out - clip.clip_in + 1)
+        
+            # Find out if overwrite starts after or on track end and pad track with blanck if so.
+            if over_in >= track.get_length():
+                gap = over_out - track.get_length()
+                _insert_blank(track, len(track.clips), gap)
+            
+            # Cut at in point if not already on cut
+            clip_in, clip_out = _overwrite_cut_track(track, over_in)
+            in_clip_out = clip_out
+                
+            # Cut at out point if not already on cut and out point inside track length.
+            self.over_out = over_out # _overwrite_cut_range_out() gets this data from 'self' 
+            _overwrite_cut_range_out(track, self)
+            
+            # Splice out clips in overwrite range
+            in_index = track.get_clip_index_at(over_in)
+            out_index = track.get_clip_index_at(over_out)
+
+            for i in range(in_index, out_index):
+                _remove_clip(track, in_index)
+
+            _insert_clip(track, clip, in_index, clip.clip_in, clip.clip_out)
+
+        # Do copy of original track on first iteration.
+        self.synched_track = copy.copy(track.clips)
+                
+        # HACK, see EditAction for details
+        self.turn_on_stop_for_edit = True
     else:
-        # Get new in and out frames for clips 
-        diff = pos_offset - clip.sync_data.pos_offset
-        over_in = track.clip_start(index) - diff
+        # This is a redo. We have data to do just simple track contents replacement.
+        clip, track = self.resync_clips_data_list[0]
+        for orig_clip in self.orig_track:
+            _remove_clip(track, 0)
 
-        clip_last, track, index_last, pos_offset = resync_data[-1]
-        last_over_in = track.clip_start(index_last) - diff
-        over_out = last_over_in + (clip_last.clip_out - clip_last.clip_in + 1)
+        for synched_clip in self.synched_track:
+             append_clip(track, synched_clip, synched_clip.clip_in, synched_clip.clip_out)
 
-        # Create, do and sacve edit action.
-        data = {"track":track,
-                "over_in":over_in,
-                "over_out":over_out,
-                "selected_range_in":index,
-                "selected_range_out":index_last,
-                "move_edit_done_func":None}
-
-        action = overwrite_move_action(data)
-        action.redo_func(action)
-        self.sync_action = action
 
 # ------------------------------------------------- SET SYNC
 # "child_index","child_track","parent_index","parent_track"

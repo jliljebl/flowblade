@@ -84,39 +84,17 @@ def calculate_and_set_child_clip_sync_states():
         
         child_clip.sync_diff = pos_offset - child_clip.sync_data.pos_offset
 
-def get_resync_data_list():
-    # Returns list of tuples with data needed to do resync
-    # Return tuples (clip, track, index, pos_off)
-    resync_data = []
-    parent_track = current_sequence().first_video_track()
-    for child_clip, track in sync_children.items():
-        child_index = track.clips.index(child_clip)
-        child_clip_start = track.clip_start(child_index) - child_clip.clip_in
-
-        parent_clip = child_clip.sync_data.master_clip
-        try:
-            parent_index = parent_track.clips.index(parent_clip)
-        except:
-            # Parent clip no longer awailable
-            continue
-        parent_clip_start = parent_track.clip_start(parent_index) - parent_clip.clip_in
-
-        pos_offset = child_clip_start - parent_clip_start
-
-        resync_data.append((child_clip, track, child_index, pos_offset))
-    
-    return resync_data
-
 def get_resync_data_list_for_clip_list(clips_list):
     # Input is list of (clip, track) tuples
-    # Returns list of tuples with data needed to do resync
-    # Return tuples (clip, track, index, pos_off)
+    # Returns list of tuples with data needed to do resync.
+    # Return tuples are of type (clip, track, index, child_clip_start_on_timeline, pos_off)
     resync_data = []
     parent_track = current_sequence().first_video_track()
     for clip_track_tuple in clips_list:
         child_clip, track = clip_track_tuple
         child_index = track.clips.index(child_clip)
-        child_clip_start = track.clip_start(child_index) - child_clip.clip_in
+        child_clip_pos_on_tline = track.clip_start(child_index)
+        child_clip_start = child_clip_pos_on_tline - child_clip.clip_in
 
         parent_clip = child_clip.sync_data.master_clip
         try:
@@ -128,10 +106,19 @@ def get_resync_data_list_for_clip_list(clips_list):
 
         pos_offset = child_clip_start - parent_clip_start
 
-        resync_data.append((child_clip, track, child_index, pos_offset))
+        resync_data.append((child_clip, track, child_index, child_clip_pos_on_tline, pos_offset))
     
     return resync_data
+
+def get_track_resync_clips_data_list(track):
+    # Return value is list of (clip, track) tuples
+    clips_data = []
+    for clip in track.clips:
+        if clip.sync_data != None:
+            clips_data.append((clip, track))
     
+    return clips_data
+
 def print_sync_children():
     for child_clip, track in sync_children.items():
         print(child_clip.id)

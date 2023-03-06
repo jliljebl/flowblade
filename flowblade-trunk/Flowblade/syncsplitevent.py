@@ -32,13 +32,14 @@ from editorstate import current_sequence
 from editorstate import get_track
 import gui
 import movemodes
+import resync
 import tlinewidgets
 import updater
 import utils
 
-# NOTE: THIS AND resync.py SHOULD PROBABLY BE THE SAME MODULE
 
 parent_selection_data = None
+
 
 # ----------------------------------- split audio
 def split_audio_synched(popup_data):
@@ -237,74 +238,46 @@ def _set_sync_parent_clip(event, frame):
     action = edit.set_sync_action(data)
     action.do_edit()
 
+def resync_clip_from_button():
+    track = get_track(movemodes.selected_track)
+    clip = track.clips[movemodes.selected_range_in]
+    _do_single_clip_resync(clip, track)
+
 def resync_clip(popup_data):
     clip, track, item_id, x = popup_data
-    clip_list=[(clip, track)]
+    _do_single_clip_resync(clip, track)
+
+def _do_single_clip_resync(clip, track):
+    clip_list = [(clip, track)]
     
+    resync_data_list = resync.get_resync_data_list_for_clip_list(clip_list)
+    if len(resync_data_list) == 0:
+        return # Parent clip is gone.
+
+    # Get sync data. If we're in sync, do nothing.
+    clip, track, index, child_clip_start, pos_offset = resync_data_list[0]
+    if pos_offset == clip.sync_data.pos_offset:
+        return None
+    
+    # Do resync.
     data = {"clips":clip_list}
-    action = edit.resync_some_clips_action(data)
+    action = edit.resync_clip_action(data)
     action.do_edit()
     
     updater.repaint_tline()
 
-def resync_everything():
-    # Selection not valid after resync action
-    if movemodes.selected_track == -1:
-        movemodes.clear_selected_clips()
-    
-    action = edit.resync_all_action({})
-    action.do_edit()
-    
-    updater.repaint_tline()
-
-def resync_selected():
+def resync_track():
     if movemodes.selected_track == -1:
         return
+    
+    resync_clips_data_list = resync.get_track_resync_clips_data_list(get_track(movemodes.selected_track))
+    
+    if len(resync_clips_data_list) == 0:
+        return
 
-    track = get_track(movemodes.selected_track)
-    clip_list = []
-    for index in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
-        clip_list.append((track.clips[index], track))
-
-    # Selection not valid after resync action
-    movemodes.clear_selected_clips()
-
-    # Chack if synced clips have same or consecutive parent clips
-    all_same_or_consecutive = True
-    master_id = -1
-    current_master_clip = -1
-    current_master_index = -1
-    master_track = current_sequence().first_video_track()
-    for t in clip_list:
-        clip, track = t
-        try:
-            if master_id == -1:
-                master_id = clip.sync_data.master_clip.id
-                current_master_clip = clip.sync_data.master_clip
-                current_master_index = master_track.clips.index(current_master_clip)
-            else:
-                if clip.sync_data.master_clip.id != master_id:
-                    next_master_index = master_track.clips.index(clip.sync_data.master_clip)
-                    if current_master_index + 1 == next_master_index:
-                        # Masters are consecutive, save data to test next
-                        master_id = clip.sync_data.master_clip.id
-                        current_master_index = master_track.clips.index(current_master_clip)
-                    else:
-                        all_same_or_consecutive = False
-        except:
-            all_same_or_consecutive = False
-
-    # If clips are all for same or consecutive sync parent clips, sync them as a unit.
-    if len(clip_list) > 1 and all_same_or_consecutive == True:
-        data = {"clips":clip_list}
-        action = edit.resync_clips_sequence_action(data)
-        action.do_edit()
-    else: # Single or non-consecutive clips are synched separately
-        data = {"clips":clip_list}
-        action = edit.resync_some_clips_action(data)
-        action.do_edit()
-
-    updater.repaint_tline()
+    data = {"resync_clips_data_list":resync_clips_data_list}
+    action = edit.resync_track_action(data)
+    action.do_edit()
 
 def clear_sync_relation(popup_data):
     clip, track, item_id, x = popup_data
