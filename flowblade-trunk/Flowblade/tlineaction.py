@@ -830,6 +830,9 @@ def resync_button_pressed():
         if compositormodes.compositor != None:
             sync_compositor(compositormodes.compositor)
 
+def resync_track_button_pressed():
+    syncsplitevent.resync_track()
+
 def sync_compositor(compositor):
     track = current_sequence().tracks[compositor.transition.b_track] # b_track is source track where origin clip is
     origin_clip = None
@@ -866,6 +869,20 @@ def split_audio_button_pressed():
 
     syncsplitevent.split_audio_from_clips_list(clips, track)
 
+def split_audio_synched_button_pressed():
+    if movemodes.selected_track == -1:
+        return
+    
+    track = current_sequence().tracks[movemodes.selected_track]
+    clips = []
+    for i in range(movemodes.selected_range_in, movemodes.selected_range_out + 1):
+        
+        clip = track.clips[i]
+        if clip.is_blanck_clip == False:
+            clips.append(clip)
+
+    syncsplitevent.split_audio_synched_from_clips_list(clips, track)
+    
 def sync_all_compositors():
     full_sync_data, orphaned_compositors = edit.get_full_compositor_sync_data()
     

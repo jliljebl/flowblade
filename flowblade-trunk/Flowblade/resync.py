@@ -122,7 +122,3 @@ def get_track_resync_clips_data_list(track):
 def print_sync_children():
     for child_clip, track in sync_children.items():
         print(child_clip.id)
-        
-        
-        
-        
