@@ -1086,7 +1086,8 @@ class TLineKeyFrameEditor:
 
     def set_clip_color(self, clip, track, cr, y, track_height):
         # This is ALMOST same as clip colors in tlinewidgets but not quite,
-        # so we need to do any clip coloe changes here too.
+        # so we need to do any clip color changes here too.
+        a = 0.92
         clip_bg_col = None
         if clip.color != None:
             cr.set_source_rgb(*clip.color)
@@ -1108,19 +1109,25 @@ class TLineKeyFrameEditor:
                     clip_bg_col = tlinewidgets.CONTAINER_CLIP_RENDERED_COLOR
             elif clip.media_type == sequence.VIDEO: 
                 grad = cairo.LinearGradient (0, y, 0, y + track_height)
-                grad.add_color_stop_rgba(*tlinewidgets.CLIP_COLOR_GRAD)
-                grad.add_color_stop_rgba(*tlinewidgets.CLIP_COLOR_GRAD_L)
+                pos,r,g,b,ad = tlinewidgets.CLIP_COLOR_GRAD
+                grad.add_color_stop_rgba(pos,r,g,b,a)
+                pos,r,g,b,ad = tlinewidgets.CLIP_COLOR_GRAD_L
+                grad.add_color_stop_rgba(pos,r,g,b,a)
                 clip_bg_col = tlinewidgets.CLIP_COLOR_GRAD[1:4]
                 cr.set_source(grad)
             else: # IMAGE type
                 grad = cairo.LinearGradient (0, y, 0, y + track_height)
-                grad.add_color_stop_rgba(*tlinewidgets.IMAGE_CLIP_COLOR_GRAD)
-                grad.add_color_stop_rgba(*tlinewidgets.IMAGE_CLIP_COLOR_GRAD_L)
+                pos,r,g,b,ad = tlinewidgets.IMAGE_CLIP_COLOR_GRAD
+                grad.add_color_stop_rgba(pos,r,g,b,a)
+                pos,r,g,b,ad = tlinewidgets.IMAGE_CLIP_COLOR_GRAD_L
+                grad.add_color_stop_rgba(pos,r,g,b,a)
                 cr.set_source(grad)
         else:# Audio track
             grad = cairo.LinearGradient (0, y, 0, y + track_height)
-            grad.add_color_stop_rgba(*tlinewidgets.AUDIO_CLIP_COLOR_GRAD)
-            grad.add_color_stop_rgba(*tlinewidgets.AUDIO_CLIP_COLOR_GRAD_L)
+            pos,r,g,b,ad = tlinewidgets.AUDIO_CLIP_COLOR_GRAD
+            grad.add_color_stop_rgba(pos,r,g,b,a)
+            pos,r,g,b,ad = tlinewidgets.AUDIO_CLIP_COLOR_GRAD_L
+            grad.add_color_stop_rgba(pos,r,g,b,a)
             cr.set_source(grad)
                 
     # ----------------------------------------------------------- mouse events
