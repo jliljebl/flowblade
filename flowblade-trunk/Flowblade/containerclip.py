@@ -39,6 +39,7 @@ import guicomponents
 import guiutils
 import projectaction
 import respaths
+import updater
 import userfolders
 import utils
 
@@ -206,7 +207,7 @@ def _open_rows_dialog(callback, title, rows, data):
 
 def _update_gui_for_media_object_add():
     gui.media_list_view.fill_data_model()
-    gui.bin_list_view.fill_data_model()
+    updater.update_current_bin_files_count()
 
 def _show_not_all_data_info():
     dialogutils.info_message(_("Not all required files were defined"), _("Select all files asked for in dialog for succesful Container Clip creation."), gui.editor_window.window)
