@@ -22,7 +22,7 @@ def init_script(fctx):
     fctx.add_editor("Lines Delay Frames", fluxity.EDITOR_INT_RANGE, (0, 0, 50))
     fctx.add_editor("Line Y Offset", fluxity.EDITOR_INT, 10)
     fctx.add_editor("Animation Type In", fluxity. EDITOR_OPTIONS, \
-                    (0, ["From Left Clipped", "From Right Clipped", "From Up Clipped", \
+                    (1, ["None", "From Left Clipped", "From Right Clipped", "From Up Clipped", \
                         "From Down Clipped", "From Left", "From Right", "From Up", \
                         "From Down", "Reveal Horizontal", "Reveal Vertical", "Reveal Left", "Reveal Right"]))
     fctx.add_editor("Movement In", fluxity. EDITOR_OPTIONS, (1,["Linear", "Ease In", "Ease Out", "Stepped"]))
@@ -31,7 +31,7 @@ def init_script(fctx):
     fctx.add_editor("Fade In Frames", fluxity.EDITOR_INT_RANGE, (0, 0, 200))
     fctx.add_editor("Fade In Type", fluxity. EDITOR_OPTIONS, (0,["Linear", "Compact Linear"]))
     fctx.add_editor("Animation Type Out", fluxity. EDITOR_OPTIONS, \
-                    (7, ["To Left Clipped", "To Right Clipped", "To Up Clipped", \
+                    (1, ["None", "To Left Clipped", "To Right Clipped", "To Up Clipped", \
                         "To Down Clipped", "To Left", "To Right", "To Up", \
                         "To Down", "Reveal Horizontal", "Reveal Vertical", "Reveal Left", "Reveal Right"]))
     fctx.add_editor("Movement Out", fluxity. EDITOR_OPTIONS, (2, ["Linear", "Ease In", "Ease Out", "Stepped"]))
@@ -388,18 +388,19 @@ class MultiLineAnimation:
 
 class LineText:
 
-    FROM_LEFT_CLIPPED = 0
-    FROM_RIGHT_CLIPPED = 1
-    FROM_UP_CLIPPED = 2
-    FROM_DOWN_CLIPPED = 3
-    FROM_LEFT = 4
-    FROM_RIGHT = 5
-    FROM_UP = 6
-    FROM_DOWN = 7
-    REVEAL_HORIZONTAL = 8
-    REVEAL_VERTICAL = 9
-    REVEAL_LEFT = 10
-    REVEAL_RIGHT = 11
+    ANIMATION_NONE = 0
+    FROM_LEFT_CLIPPED = 1
+    FROM_RIGHT_CLIPPED = 2
+    FROM_UP_CLIPPED = 3
+    FROM_DOWN_CLIPPED = 4
+    FROM_LEFT = 5
+    FROM_RIGHT = 6
+    FROM_UP = 7
+    FROM_DOWN = 8
+    REVEAL_HORIZONTAL = 9
+    REVEAL_VERTICAL = 10
+    REVEAL_LEFT = 11
+    REVEAL_RIGHT = 12
     
     ANIMATION_IN = 0
     ANIMATION_OUT = 1
@@ -552,7 +553,10 @@ class LineText:
             or self.animation_type_in == LineText.REVEAL_LEFT or self.animation_type_in == LineText.REVEAL_RIGHT:
             start_x = static_x
             start_y = static_y
-
+        elif self.animation_type_in == LineText.ANIMATION_NONE:
+            end_x = static_x
+            end_y = static_y
+            
         return (start_x, start_y + self.line_y_off, end_x, end_y + self.line_y_off)
 
     def _get_out_animation_affine_data(self, fctx, multiline_animation):
@@ -596,6 +600,9 @@ class LineText:
             end_y = screen_h + static_y - multiline_y
         elif self.animation_type_out == LineText.REVEAL_HORIZONTAL or self.animation_type_out == LineText.REVEAL_VERTICAL \
             or self.animation_type_out == LineText.REVEAL_LEFT or self.animation_type_out == LineText.REVEAL_RIGHT:
+            end_x = static_x
+            end_y = static_y
+        elif self.animation_type_out == LineText.ANIMATION_NONE:
             end_x = static_x
             end_y = static_y
             
