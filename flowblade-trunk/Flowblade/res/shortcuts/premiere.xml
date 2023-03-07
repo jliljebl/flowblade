@@ -73,7 +73,8 @@
     <event code='log_range' name='Log Range' modifiers='CTRL'>l</event>
     <event code='resync' name='Resynchronization' modifiers='ALT'>r</event>
     <event code='clear_filters' name='Clear Filters' modifiers='ALT'>c</event>
-    <event code="sync_all" name="Sync All Compositors" modifiers="ALT">s</event>
+    <event code='split_selected' name='Split Audio Synched' modifiers='ALT'>s</event>
+    <event code="sync_all" name="Sync All Compositors" modifiers="CTRL+ALT">s</event>
     <event code='delete' name='Delete'>delete</event>
     <event code='lift' name='Lift' modifiers='CTRL'>delete</event>
     <event code='to_start' name='Go To Start'>home</event>

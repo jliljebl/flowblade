@@ -367,7 +367,10 @@ def _handle_tline_key_event(event):
             medialog.log_range_clicked()
             return True
         if action == 'resync':
-            tlineaction.resync_button_pressed()
+            tlineaction.resync_track_button_pressed()
+            return True
+        if action == 'split_selected':
+            tlineaction.split_audio_synched_button_pressed()
             return True
         if action == 'delete':
             if editorstate.EDIT_MODE() == editorstate.KF_TOOL:
