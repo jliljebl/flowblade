@@ -256,10 +256,10 @@ def _create_buttons(editor_window):
     
     # Resync and split audio
     editor_window.edit_buttons_2 = glassbuttons.GlassButtonsGroup(44*size_adj, 23*size_adj, 2*size_adj, 3*size_adj, 5*size_adj)
-    editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("resync" + icon_color), tlineaction.resync_button_pressed)
-    editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("resync_track"), tlineaction.resync_track_button_pressed)
     editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("split_audio" + icon_color), tlineaction.split_audio_synched_button_pressed)
-    tooltips = [_("Resync Selected Clip"), _("Resync Track Containing Selected Clip/s"), _("Split Audio Synched")]
+    editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("resync_track"), tlineaction.resync_track_button_pressed)
+    editor_window.edit_buttons_2.add_button(guiutils.get_cairo_image("resync" + icon_color), tlineaction.resync_button_pressed)
+    tooltips = [_("Split Audio Synched"),  _("Resync Track Containing Selected Clip/s"), _("Resync Selected Clip")]
     tooltip_runner = glassbuttons.TooltipRunner(editor_window.edit_buttons_2, tooltips)
     editor_window.edit_buttons_2.no_decorations = no_decorations
     editor_window.edit_buttons_2.show_prelight_icons()
