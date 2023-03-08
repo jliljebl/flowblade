@@ -16,12 +16,12 @@ def init_script(fctx):
     fctx.add_editor("Text", fluxity.EDITOR_TEXT_AREA, "Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit.\nInteger nec odio.")
     fctx.add_editor("Pos X", fluxity.EDITOR_INT, 500)
     fctx.add_editor("Pos Y", fluxity.EDITOR_INT, 500)
-    fctx.add_editor("Pos Constraints", fluxity. EDITOR_OPTIONS, (0, ["Off", "Center", "Center Horizontal", "Center Vertical"]))
+    fctx.add_editor("Pos Constraints", fluxity.EDITOR_OPTIONS, (0, ["Off", "Center", "Center Horizontal", "Center Vertical"]))
     fctx.add_editor("Font", fluxity.EDITOR_PANGO_FONT, fluxity.EDITOR_PANGO_FONT_DEFAULT_VALUES)
     fctx.add_editor("Line Gap", fluxity.EDITOR_INT, 30)
     fctx.add_editor("Lines Delay Frames", fluxity.EDITOR_INT_RANGE, (0, 0, 50))
     fctx.add_editor("Line Y Offset", fluxity.EDITOR_INT, 10)
-    fctx.add_editor("Animation Type In", fluxity. EDITOR_OPTIONS, \
+    fctx.add_editor("Animation Type In", fluxity.EDITOR_OPTIONS, \
                     (1, ["None", "From Left Clipped", "From Right Clipped", "From Up Clipped", \
                         "From Down Clipped", "From Left", "From Right", "From Up", \
                         "From Down", "Reveal Horizontal", "Reveal Vertical", "Reveal Left", "Reveal Right"]))
@@ -29,7 +29,7 @@ def init_script(fctx):
     fctx.add_editor("Frames In", fluxity.EDITOR_INT, 20)
     fctx.add_editor("Steps In", fluxity.EDITOR_INT_RANGE, (3, 2, 10))
     fctx.add_editor("Fade In Frames", fluxity.EDITOR_INT_RANGE, (0, 0, 200))
-    fctx.add_editor("Fade In Type", fluxity. EDITOR_OPTIONS, (0,["Linear", "Compact Linear"]))
+    fctx.add_editor("Fade In Type", fluxity.EDITOR_OPTIONS, (0,["Linear", "Compact Linear"]))
     fctx.add_editor("Animation Type Out", fluxity. EDITOR_OPTIONS, \
                     (1, ["None", "To Left Clipped", "To Right Clipped", "To Up Clipped", \
                         "To Down Clipped", "To Left", "To Right", "To Up", \
@@ -38,15 +38,15 @@ def init_script(fctx):
     fctx.add_editor("Frames Out", fluxity.EDITOR_INT, 20)
     fctx.add_editor("Steps Out", fluxity.EDITOR_INT_RANGE, (3, 2, 10))
     fctx.add_editor("Fade Out Frames", fluxity.EDITOR_INT_RANGE, (0, 0, 200))
-    fctx.add_editor("Fade Out Type", fluxity. EDITOR_OPTIONS, (0,["Linear", "Compact Linear"]))
+    fctx.add_editor("Fade Out Type", fluxity.EDITOR_OPTIONS, (0,["Linear", "Compact Linear"]))
     fctx.add_editor("Background", fluxity.EDITOR_OPTIONS, (2, ["No Background", "Solid", "Lines Solid", "Lines Word Length Solid", "Lines Solid Screen Width", "Box", "Horizontal Lines", "Underline", "Strikethrought"]))
     fctx.add_editor("Background Color", fluxity.EDITOR_COLOR, (0.8, 0.5, 0.2, 1.0))
     fctx.add_editor("Background Line Width", fluxity.EDITOR_INT, 3)
     fctx.add_editor("Background Opacity", fluxity.EDITOR_INT_RANGE, (100, 0, 100))
     fctx.add_editor("Background Pad", fluxity.EDITOR_INT, 10)
-    fctx.add_editor("Background Anim In", fluxity. EDITOR_OPTIONS, (0,["Off", "Fade", "Reveal Up", "Reveal Down", "Reveal Left", "Reveal Right", "Reveal Horizontal", "Reveal Vertical"]))
+    fctx.add_editor("Background Anim In", fluxity.EDITOR_OPTIONS, (0,["Off", "Fade", "Reveal Up", "Reveal Down", "Reveal Left", "Reveal Right", "Reveal Horizontal", "Reveal Vertical"]))
     fctx.add_editor("Background Frames In", fluxity.EDITOR_INT, 8)
-    fctx.add_editor("Background Anim Out", fluxity. EDITOR_OPTIONS, (0,["Off", "Fade", "Reveal Up", "Reveal Down", "Reveal Left", "Reveal Right", "Reveal Horizontal", "Reveal Vertical"]))
+    fctx.add_editor("Background Anim Out", fluxity.EDITOR_OPTIONS, (0,["Off", "Fade", "Reveal Up", "Reveal Down", "Reveal Left", "Reveal Right", "Reveal Horizontal", "Reveal Vertical"]))
     fctx.add_editor("Background Frames Out", fluxity.EDITOR_INT, 8)
 
 def init_render(fctx):

@@ -22,13 +22,13 @@
     
     # FLUXITY SCRIPTING
     
-    Fluxity scripting is a **Python scripting solution** initially created to provide **Flowblade Movie Editor** with a *Plugin API*.
+    Fluxity scripting is a **Python scripting solution** created to provide **Flowblade Movie Editor** with a *Plugin API*.
     
-    Currently *Fluxity API* is used in Flowblade *Generators* feature.
+    Currently *Fluxity API*  is used in Flowblade *Generators* feature.
     
     ## FLUXITY API
     
-    *Fluxity API* is made available to scripts mainly by *fluxity.FluxityContext* object and its methods.
+    *Fluxity API*  is made available to scripts mainly by *fluxity.FluxityContext* object and its methods.
 
     This object is created to communicate with the script before calling any of the methods of a Media Plugin script.
     
