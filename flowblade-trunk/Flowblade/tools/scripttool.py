@@ -20,7 +20,7 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
-gi.require_version('PangoCairo', '1.0')
+#gi.require_version('PangoCairo', '1.0')
 
 from gi.repository import GObject, GLib, Gio
 from gi.repository import Gtk, Gdk, GdkPixbuf
@@ -64,6 +64,7 @@ import processutils
 import respaths
 import renderconsumer
 import toolsencoding
+import toolsencodingdata
 import translations
 import threading
 import userfolders
@@ -175,7 +176,7 @@ def main(root_path, force_launch=False):
     
     # init mlt
     repo = mltinit.init_with_translations()
-    
+
     # Create app.
     app = ScriptToolApplication()
     global _app
@@ -1179,7 +1180,7 @@ class ScriptToolWindow(Gtk.Window):
         if _render_data == None:
             desc_str = "not set" 
         else:
-            args_vals = toolsencoding.get_args_vals_list_for_render_data(_render_data)
+            args_vals = toolsencodingdata.get_args_vals_list_for_render_data(_render_data)
             desc_str = toolsencoding.get_encoding_desc(args_vals) + ", " + _render_data.file_name + _render_data.file_extension
 
         self.encode_desc.set_markup("<small>" + desc_str + "</small>")
@@ -1502,7 +1503,7 @@ class FluxityPluginRenderer(threading.Thread):
         # Render video
         if _window.encode_check.get_active() == True:
             # Render consumer
-            args_vals_list = toolsencoding.get_args_vals_list_for_render_data(_render_data)
+            args_vals_list = toolsencodingdata.get_args_vals_list_for_render_data(_render_data)
             profile = mltprofiles.get_profile_for_index(_current_profile_index) 
             file_path = _render_data.render_dir + "/" +  _render_data.file_name  + _render_data.file_extension
             consumer = renderconsumer.get_mlt_render_consumer(file_path, profile, args_vals_list)
@@ -1632,6 +1633,7 @@ def _launch_headless_render(session_id, script_path, edit_data, frames_folder, r
     # create video_render_data object with default values if not available.
     profile = mltprofiles.get_profile(_current_profile_name)
     render_data = toolsencoding.create_container_clip_default_render_data_object(profile)
+    print(render_data.__dict__, _current_profile_name.replace(" ", "_"))
     render_data.do_video_render = False 
 
     fluxityheadless.set_render_data(session_id, render_data)

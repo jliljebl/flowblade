@@ -27,6 +27,7 @@ import appconsts
 import guiutils
 import mltprofiles
 import renderconsumer
+import toolsencodingdata
 import utils
 
 
@@ -45,29 +46,6 @@ default_profile_index = None
 
 
 
-class ToolsRenderData():
-    """
-    This is used to save and communicate render selections defined by user
-    for renders other the main application timeline render such as G'Mic tool and Container 
-    clips renders.
-    """
-    def __init__(self):
-        self.profile_index = None
-        self.use_default_profile = None # NOT USED, 'profile_index' is the meaningful data here, this one should not have been included in this data struct.
-        self.use_preset_encodings = None
-        self.presets_index = None
-        self.encoding_option_index = None
-        self.quality_option_index = None
-        self.render_dir = None
-        self.file_name = None
-        self.file_extension = None
-        
-        # Used by container clips only.
-        self.do_video_render = True
-        self.save_internally = True
-        self.frame_name = "frame"
-        self.is_preview_render = False
-        self.is_flatpak_render = False
 
 
 def create_container_clip_default_render_data_object(profile):
@@ -76,7 +54,7 @@ def create_container_clip_default_render_data_object(profile):
     # 
     # When first render is attempted this created to have data availeble for render process
     # even if user has not set any values.
-    render_data = ToolsRenderData()
+    render_data = toolsencodingdata.ToolsRenderData()
     render_data.profile_index = mltprofiles.get_profile_index_for_profile(profile)
     render_data.use_default_profile = True
     render_data.use_preset_encodings = False
@@ -192,7 +170,7 @@ def get_profile_info_text(profile):
     return ''.join(str_list)
 
 def get_render_data_for_current_selections():
-    render_data = ToolsRenderData()
+    render_data = toolsencodingdata.ToolsRenderData()
     profile_desc = widgets.profile_panel.out_profile_combo.categories_combo.get_selected()
     render_data.profile_index = mltprofiles.get_profile_index_for_profile(mltprofiles.get_profile(profile_desc))
     render_data.use_default_profile = widgets.profile_panel.use_project_profile_check.get_active()
@@ -211,16 +189,6 @@ def get_render_data_for_current_selections():
 
     return render_data
 
-def get_args_vals_list_for_render_data(render_data):
-    profile = mltprofiles.get_profile_for_index(render_data.profile_index)
-
-    args_vals_list = renderconsumer.get_args_vals_tuples_list_for_encoding_and_quality( profile, 
-                                                                                        render_data.encoding_option_index, 
-                                                                                        render_data.quality_option_index)
-    # sample rate not supported
-    # args rendering not supported
-
-    return args_vals_list
 
 def get_encoding_desc(args_vals_list):
     print(args_vals_list)

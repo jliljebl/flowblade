@@ -548,11 +548,6 @@ class FileRenderPlayer(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        # Uncomment to get debug printing.
-        #import sys
-        #so = se = open("/home/janne/log_renderplayer", 'w', buffering=1)
-        #sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', buffering=1)
-        #os.dup2(so.fileno(), sys.stdout.fileno())
         
         self.consumer.set("plays", 1) # maybe not strictly necessery but default value here seems to  be 'None' which is wrong.
         

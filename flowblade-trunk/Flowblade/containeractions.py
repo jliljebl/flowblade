@@ -658,7 +658,7 @@ class FluxityContainerActions(AbstractContainerActionObject):
         if self.container_data.render_data == None:
             self.container_data.render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
             self.container_data.render_data.do_video_render = False 
-    
+
         fluxityheadless.set_render_data(self.get_container_program_id(), self.container_data.render_data)
         
         job_msg = self.get_job_queue_message()

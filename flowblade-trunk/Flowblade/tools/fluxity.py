@@ -210,7 +210,6 @@ __pdoc__['render_frame_sequence'] = False
 __pdoc__['render_preview_frame'] = False
 
 import gi
-gi.require_version('Pango', '1.0')
 gi.require_version('PangoCairo', '1.0')
 from gi.repository import Pango
 from gi.repository import PangoCairo

@@ -40,7 +40,7 @@ import ccrutils
 import mltheadlessutils
 import mltprofiles
 import renderconsumer
-import toolsencoding
+import toolsencodingdata
 
 
 _render_thread = None
@@ -85,7 +85,7 @@ class MLTXMLHeadlessRunnerThread(threading.Thread):
     def __init__(self, render_data, xml_file_path, range_in, range_out, profile_desc):
         threading.Thread.__init__(self)
 
-        self.render_data = render_data # toolsencoding.ToolsRenderData object
+        self.render_data = render_data # toolsencodingdata.ToolsRenderData object
         self.xml_file_path = xml_file_path
         self.range_in = int(range_in)
         self.range_out = int(range_out)
@@ -98,7 +98,7 @@ class MLTXMLHeadlessRunnerThread(threading.Thread):
     def run(self):
         self.start_time = time.monotonic()
 
-        args_vals_list = toolsencoding.get_args_vals_list_for_render_data(self.render_data)
+        args_vals_list = toolsencodingdata.get_args_vals_list_for_render_data(self.render_data)
         profile = mltprofiles.get_profile_for_index(self.render_data.profile_index)
         
         producer = mlt.Producer(profile, str(self.xml_file_path))
