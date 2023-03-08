@@ -340,6 +340,8 @@ class FluxityLoadCompletionThread(threading.Thread):
     
         data_object = self.container_clip_data.data_slots["fluxity_plugin_edit_data"]
         length = data_object["length"]
+        length = length - 1 # MLT handles out frames exclusive and we are using length as out frame value.
+
         fluxity_unrendered_media_image = respaths.IMAGE_PATH + "unrendered_fluxity.png"
         window_text = _("Creating Container for Generator...")
         containeractions.create_unrendered_clip(length, fluxity_unrendered_media_image, self.container_clip_data, _fluxity_unrendered_media_creation_complete, window_text)
