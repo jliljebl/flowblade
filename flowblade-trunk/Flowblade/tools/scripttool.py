@@ -1633,7 +1633,7 @@ def _launch_headless_render(session_id, script_path, edit_data, frames_folder, r
     # create video_render_data object with default values if not available.
     profile = mltprofiles.get_profile(_current_profile_name)
     render_data = toolsencoding.create_container_clip_default_render_data_object(profile)
-    print(render_data.__dict__, _current_profile_name.replace(" ", "_"))
+
     render_data.do_video_render = False 
 
     fluxityheadless.set_render_data(session_id, render_data)

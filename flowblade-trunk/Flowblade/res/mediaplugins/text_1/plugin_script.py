@@ -20,7 +20,7 @@ def init_script(fctx):
     fctx.add_editor("Font", fluxity.EDITOR_PANGO_FONT, fluxity.EDITOR_PANGO_FONT_DEFAULT_VALUES)
     fctx.add_editor("Line Gap", fluxity.EDITOR_INT, 30)
     fctx.add_editor("Lines Delay Frames", fluxity.EDITOR_INT_RANGE, (0, 0, 50))
-    fctx.add_editor("Line Y Offset", fluxity.EDITOR_INT, 10)
+    fctx.add_editor("Line Y Offset", fluxity.EDITOR_INT, -5)
     fctx.add_editor("Animation Type In", fluxity.EDITOR_OPTIONS, \
                     (1, ["None", "From Left Clipped", "From Right Clipped", "From Up Clipped", \
                         "From Down Clipped", "From Left", "From Right", "From Up", \
