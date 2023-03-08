@@ -644,6 +644,10 @@ class FluxityContainerActions(AbstractContainerActionObject):
 
     def _launch_render(self, clip, range_in, range_out, unused_frame_ofset):
         self.create_data_dirs_if_needed()
+        
+        range_out = range_out + 1 # MLT handles out frames inclusive but fluxity exlusive.
+                                  # We just need to manually make sure we get always correct lengths.
+        
         self.render_range_in = range_in
         self.render_range_out = range_out
  

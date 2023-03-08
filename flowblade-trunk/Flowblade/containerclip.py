@@ -326,7 +326,7 @@ class FluxityLoadCompletionThread(threading.Thread):
         # Media plugins have plugin data created with user set values, scripts loaded from file system
         # do not and just had it created in 'action_object.validate_program()'
         if self.plugin_data != None:
-            # For media plugins use provided user edited creation data.
+            # For media plugins use the provided user edited creation data.
             self.container_clip_data.data_slots["fluxity_plugin_edit_data"] = self.plugin_data
     
         time.sleep(0.5) # To make sure text is seen.
@@ -360,7 +360,8 @@ def _fluxity_unrendered_media_creation_complete(created_unrendered_clip_path, co
 
     # Copy created unrendered media clip.
     rand_id_str = str(os.urandom(16))
-    clip_id_str = hashlib.md5(rand_id_str.encode('utf-8')).hexdigest() 
+    clip_id_str = hashlib.md5(rand_id_str.encode('utf-8')).hexdigest()
+    # VAULT - to help future search
     unrendered_clip_path = userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_UNRENDERED +"/"+ clip_id_str + ".mp4"
     os.replace(created_unrendered_clip_path, unrendered_clip_path)
     container_clip_data.unrendered_media = unrendered_clip_path
