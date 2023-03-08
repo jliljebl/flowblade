@@ -447,6 +447,7 @@ def monkeypatch_callbacks():
     #keyframeeditor.add_fade_out_func = compositeeditor._add_fade_out_pressed.
     
     containeractions.set_plugin_to_be_edited_func = mediaplugin.set_plugin_to_be_edited
+    containeractions.get_edited_plugin_clip = mediaplugin.get_clip
     
     boxmove.set_move_selection_from_box_selection_func = movemodes.select_from_box_selection
     

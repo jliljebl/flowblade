@@ -85,6 +85,7 @@ FLUXITY_TYPE_ICON = None
 NEWLINE = '\n'
 
 set_plugin_to_be_edited_func = None
+get_edited_plugin_clip = None
 
 # ----------------------------------------------------- interface
 def get_action_object(container_data):
@@ -784,7 +785,7 @@ class FluxityContainerActions(AbstractContainerActionObject):
     def apply_editors(self, editors):
         new_editors_list = self.get_editors_data_as_editors_list(editors)
         self.container_data.data_slots["fluxity_plugin_edit_data"]["editors_list"] = new_editors_list
-
+        get_edited_plugin_clip().container_data.data_slots["fluxity_plugin_edit_data"]["editors_list"] = new_editors_list
 
     def render_fluxity_preview(self, callbacks, editors, preview_frame):
         self.create_data_dirs_if_needed() # This could be first time we are writing
