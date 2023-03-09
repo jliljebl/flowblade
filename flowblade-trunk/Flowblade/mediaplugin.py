@@ -294,7 +294,7 @@ class AddMediaPluginWindow(Gtk.Window):
         
         close_button = guiutils.get_sized_button(_("Close"), 150, 32)
         close_button.connect("clicked", lambda w: _close_clicked())
-        self.add_button = guiutils.get_sized_button(_("Add Genarator"), 150, 32)
+        self.add_button = guiutils.get_sized_button(_("Add Generator"), 150, 32)
         self.add_button.connect("clicked", lambda w: _add_media_plugin())
         
         buttons_row = Gtk.HBox(False, 0)
