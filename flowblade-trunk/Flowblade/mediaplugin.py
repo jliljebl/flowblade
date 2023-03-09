@@ -183,7 +183,8 @@ def _add_media_plugin():
     script_file = _selected_plugin.get_plugin_script_file()
     md_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
     screenshot_file = userfolders.get_cache_dir() + appconsts.THUMBNAILS_DIR + "/" + md_str +  ".png"
-    _current_screenshot_surface.write_to_png(screenshot_file)
+    fctx = _add_plugin_window._render_preview(int(_add_plugin_window.length_spin.get_value()/2))
+    fctx.priv_context.frame_surface.write_to_png(screenshot_file)
     _current_plugin_data_object["editors_list"] = simpleeditors.get_editors_data_as_editors_list(_add_plugin_window.plugin_editors.editor_widgets)
     _current_plugin_data_object["length"] = int(_add_plugin_window.length_spin.get_value())
 
@@ -396,8 +397,13 @@ class AddMediaPluginWindow(Gtk.Window):
     
     def _show_preview(self):
         global _selected_plugin, _current_screenshot_surface
-                
-        frame = int(self.frame_select.get_value())
+
+        fctx = self._render_preview(int(self.frame_select.get_value()))
+        _current_screenshot_surface = self._create_preview_surface(fctx.priv_context.frame_surface)
+
+        self.screenshot_canvas.queue_draw()
+
+    def _render_preview(self, frame):
         editor_widgets = self.plugin_editors.editor_widgets
         new_editors_list = simpleeditors.get_editors_data_as_editors_list(self.plugin_editors.editor_widgets)
         editors_data_json = json.dumps(new_editors_list)
@@ -408,8 +414,7 @@ class AddMediaPluginWindow(Gtk.Window):
         profile_file_path = mltprofiles.get_profile_file_path(current_sequence().profile.description())
 
         fctx = fluxity.render_preview_frame(user_script, script_file, frame, None, profile_file_path, editors_data_json)
-        _current_screenshot_surface = self._create_preview_surface(fctx.priv_context.frame_surface)
-        self.screenshot_canvas.queue_draw()
+        return fctx
         
     def get_plugin_data(self, plugin_script_path, frame=0):
         try:
