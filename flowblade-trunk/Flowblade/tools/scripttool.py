@@ -64,7 +64,6 @@ import processutils
 import respaths
 import renderconsumer
 import toolsencoding
-import toolsencodingdata
 import translations
 import threading
 import userfolders
@@ -1180,7 +1179,7 @@ class ScriptToolWindow(Gtk.Window):
         if _render_data == None:
             desc_str = "not set" 
         else:
-            args_vals = toolsencodingdata.get_args_vals_list_for_render_data(_render_data)
+            args_vals = toolsencoding.get_args_vals_list_for_render_data(_render_data)
             desc_str = toolsencoding.get_encoding_desc(args_vals) + ", " + _render_data.file_name + _render_data.file_extension
 
         self.encode_desc.set_markup("<small>" + desc_str + "</small>")
@@ -1503,7 +1502,7 @@ class FluxityPluginRenderer(threading.Thread):
         # Render video
         if _window.encode_check.get_active() == True:
             # Render consumer
-            args_vals_list = toolsencodingdata.get_args_vals_list_for_render_data(_render_data)
+            args_vals_list = toolsencoding.get_args_vals_list_for_render_data(_render_data)
             profile = mltprofiles.get_profile_for_index(_current_profile_index) 
             file_path = _render_data.render_dir + "/" +  _render_data.file_name  + _render_data.file_extension
             consumer = renderconsumer.get_mlt_render_consumer(file_path, profile, args_vals_list)

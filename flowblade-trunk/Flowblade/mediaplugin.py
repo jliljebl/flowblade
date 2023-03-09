@@ -41,7 +41,6 @@ import mltprofiles
 import respaths
 import simpleeditors
 import toolsencoding
-import toolsencodingdata
 import translations
 import userfolders
 import utils
@@ -449,7 +448,7 @@ class AddMediaPluginWindow(Gtk.Window):
     
     def _display_current_render_data(self):
         if _current_render_data.do_video_render == True:
-            args_vals = toolsencodingdata.get_args_vals_list_for_render_data(_current_render_data)
+            args_vals = toolsencoding.get_args_vals_list_for_render_data(_current_render_data)
             desc_str = toolsencoding.get_encoding_desc(args_vals)
 
             self.encoding_info.set_markup("<small>" + desc_str + "</small>")
