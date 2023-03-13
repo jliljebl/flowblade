@@ -17,14 +17,14 @@ def init_script(fctx):
     fctx.set_name("TypeWriter")
     fctx.set_version(1)
     fctx.set_author("Janne Liljeblad")
-
+    fctx.add_editor("Text", fluxity.EDITOR_TEXT_AREA, "Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit.\nAliquam non condimentum magna.")
     fctx.add_editor("Pos X", fluxity.EDITOR_INT, 100)
     fctx.add_editor("Pos Y", fluxity.EDITOR_INT, 100)
+    fctx.add_editor("Pos Constraints", fluxity.EDITOR_OPTIONS, (0, ["Off", "Center", "Center Horizontal", "Center Vertical"]))
     fctx.add_editor("Animation Type", fluxity. EDITOR_OPTIONS, (0,["Letters", "Words", "Lines"]))
     fctx.add_editor("Steps Per Frame", fluxity.EDITOR_FLOAT, 0.5)
     fctx.add_editor("Font", fluxity.EDITOR_PANGO_FONT, fluxity.EDITOR_PANGO_FONT_DEFAULT_VALUES)
     fctx.add_editor("Line Gap", fluxity.EDITOR_INT, 5)
-    fctx.add_editor("Text", fluxity.EDITOR_TEXT_AREA, "Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit.\nAliquam non condimentum magna.")
     
 def init_render(fctx):
     # Get editor values
@@ -47,6 +47,11 @@ def render_frame(frame, fctx, w, h):
 
 
 class TypeWriter:
+
+    CONSTRAINT_OFF = 0   
+    CONSTRAINT_CENTER = 1
+    CONSTRAINT_HORIZONTAL = 2
+    CONSTRAINT_VERTICAL = 3
     
     def __init__(self, text, font_data, animation_type, step_speed, line_gap):
         self.text = text
@@ -67,7 +72,11 @@ class TypeWriter:
         
         if len(self.line_layouts) == 0:
             return
-        
+
+        max_width, height = self.get_text_area_size()
+        # Moves text area top left to constrained position
+        x, y = self.get_constrained_pos(fctx, x, y, max_width, height)
+
         # Compute line positions.
         pango_alignment = self.line_layouts[0].get_pango_alignment() # all lines have the same alignment
         line_positions = []
@@ -77,13 +86,13 @@ class TypeWriter:
                 line_positions.append((x, y))
                 y = y + h + self.line_gap
         elif pango_alignment == Pango.Alignment.CENTER:
-            max_width = self.get_line_max_width()
+            max_width, height = self.get_text_area_size()
             for line_layout in self.line_layouts:
                 w, h = line_layout.get_pixel_size()
                 line_positions.append((x + max_width/2 - w/2, y))
                 y = y + h + self.line_gap
         else: # Pango.Alignment.RIGHT
-            max_width = self.get_line_max_width()
+            max_width, height = self.get_text_area_size()
             for line_layout in self.line_layouts:
                 w, h = line_layout.get_pixel_size()
                 line_positions.append((x + max_width - w, y))
@@ -135,11 +144,24 @@ class TypeWriter:
             txt = line_texts[i]
             line_layout.draw_layout(fctx, txt, cr, x, y)
     
-    def get_line_max_width(self):
+    def get_text_area_size(self):
         max_width = 0
+        height = 0
         for line_layout in self.line_layouts:
             w, h = line_layout.get_pixel_size()
             if w > max_width:
                 max_width = w
-        return max_width
-     
+            height = height + h + self.line_gap
+        return (max_width, height)
+
+    def get_constrained_pos(self, fctx, x, y, w, h):
+         # Returns area position with centering applied.
+         screen_w = fctx.get_profile_property(fluxity.PROFILE_WIDTH)
+         screen_h = fctx.get_profile_property(fluxity.PROFILE_HEIGHT)
+         constraints = fctx.get_editor_value("Pos Constraints")
+         if constraints == TypeWriter.CONSTRAINT_CENTER or constraints == TypeWriter.CONSTRAINT_HORIZONTAL:
+             x = round(screen_w / 2 - w / 2)
+         if constraints == TypeWriter.CONSTRAINT_CENTER or constraints == TypeWriter.CONSTRAINT_VERTICAL:
+             y = round(screen_h / 2 - h / 2)
+
+         return (x, y)
