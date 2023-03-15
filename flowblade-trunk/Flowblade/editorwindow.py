@@ -896,6 +896,7 @@ class EditorWindow:
             ('EditMenu', None, _('_Edit')),
             ('Undo', None, _('_Undo'), '<control>Z', None, undo.do_undo_and_repaint),
             ('Redo', None, _('_Redo'), '<control>Y', None, undo.do_redo_and_repaint),
+            ('Cut', None, _('Cut'), '<control>X', None, lambda a:keyevents.cut_action()),
             ('Copy', None, _('Copy'), '<control>C', None, lambda a:keyevents.copy_action()),
             ('Paste', None, _('Paste'), '<control>V', None, lambda a:keyevents.paste_action()),
             ('PasteFilters', None, _('Paste Filters / Properties'), '<control><alt>V', None, lambda a:tlineaction.do_timeline_filters_paste()),
@@ -1006,6 +1007,7 @@ class EditorWindow:
                     <menuitem action='Undo'/>
                     <menuitem action='Redo'/>
                     <separator/>
+                    <menuitem action='Cut'/>
                     <menuitem action='Copy'/>
                     <menuitem action='Paste'/>
                     <menuitem action='PasteFilters'/>

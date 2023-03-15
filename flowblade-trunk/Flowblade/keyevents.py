@@ -716,6 +716,19 @@ def _move_to_end():
     updater.update_tline_scrollbar()
 
 # ----------------------------------------------------------------------- COPY PASTE ACTION FORWARDING
+def cut_action():
+    if _timeline_has_focus() == False:
+        # Try to cut text to clipboard because user pressed CTRL + X.
+        if gui.media_list_view.widget.get_focus_child() != None:
+            projectaction.cut_media_files()
+                    
+        cut_source = gui.editor_window.window.get_focus()
+        try:
+            cut_source.copy_clipboard()
+        except:# selected widget was not a Gtk.Editable that can provide text to clipboard.
+            pass
+                
+        
 def copy_action():
     if _timeline_has_focus() == False:
         filter_kf_editor = _get_focus_keyframe_editor(clipeffectseditor.keyframe_editor_widgets)
@@ -750,6 +763,8 @@ def paste_action():
         elif data_type == appconsts.COPY_PASTE_GEOMETRY_EDITOR_KF_DATA:
             value, geom_editor = paste_data
             geom_editor.paste_kf_value(value)
+        elif data_type == appconsts.COPY_PASTE_MEDIA_ITEMS:
+            projectaction.paste_media_files() 
     else:
         tlineaction.do_timeline_objects_paste()
 

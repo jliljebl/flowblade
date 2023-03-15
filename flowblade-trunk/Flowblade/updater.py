@@ -658,3 +658,16 @@ def update_current_bin_files_count():
     store_iter = gui.editor_window.bin_list_view.storemodel.get_iter(tree_path)
     
     gui.editor_window.bin_list_view.storemodel.set_value(store_iter, 2, value)
+
+def update_bin_files_count(bin):
+    # Get index for selected bin
+    bin_index = PROJECT().bins.index(bin)
+
+    
+    value = str(len(PROJECT().bins[bin_index].file_ids))
+
+    tree_path = Gtk.TreePath.new_from_string(str(bin_index))
+    store_iter = gui.editor_window.bin_list_view.storemodel.get_iter(tree_path)
+    
+    gui.editor_window.bin_list_view.storemodel.set_value(store_iter, 2, value)
+    

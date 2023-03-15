@@ -1060,6 +1060,55 @@ def open_rendered_file(rendered_file_path):
     add_media_thread = AddMediaFilesThread([rendered_file_path])
     add_media_thread.start()
 
+def cut_media_files():
+    selection = gui.media_list_view.get_selected_media_objects()
+    if len(selection) < 1:
+        return
+    
+    file_ids = []
+    # Get:
+    # - list of integer keys to delete from Project.media_files
+    # - list of indexes to delete from Bin.file_ids
+    for media_obj in selection:
+        file_id = media_obj.media_file.id
+        file_ids.append(file_id)
+
+        # If clip is displayed in monitor clear it and disable clip button.
+        if media_obj.media_file == MONITOR_MEDIA_FILE:
+            editorstate._monitor_media_file = None
+            gui.clip_editor_b.set_sensitive(False)
+
+    editorstate.set_copy_paste_objects((appconsts.COPY_PASTE_MEDIA_ITEMS, file_ids))
+
+def paste_media_files():
+    paste_items_type, paste_items_list = editorstate.get_copy_paste_objects()
+    editorstate.clear_copy_paste_objects()
+    
+    if paste_items_type != appconsts.COPY_PASTE_MEDIA_ITEMS:
+        return
+
+    if len(paste_items_list) == 0:
+        return
+    
+    source_bin_success = None
+    for media_item_id in paste_items_list:
+        # Move
+        source_bin = PROJECT().get_bin_for_media_file_id(media_item_id)
+        if source_bin == None:
+            continue # clip was deleted in between CTRL+X, CTRL+V
+        else:
+            source_bin_success = source_bin
+        source_bin.file_ids.remove(media_item_id)
+        current_bin().file_ids.append(media_item_id)
+
+    if source_bin_success == None:
+        return # Nothing was moved.
+        
+    gui.media_list_view.fill_data_model()
+    gui.editor_window.bin_info.display_bin_info()
+    updater.update_current_bin_files_count()
+    updater.update_bin_files_count(source_bin_success)
+
 def delete_media_files(force_delete=False):
     """
     Deletes media file. Does not take into account if clips made from 

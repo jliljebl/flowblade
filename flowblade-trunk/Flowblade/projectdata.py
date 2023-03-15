@@ -191,6 +191,13 @@ class Project:
 
         return False
 
+    def get_bin_for_media_file_id(self, media_file_id):
+        for bin in self.bins:
+            for file_id in bin.file_ids:
+                if file_id == media_file_id:
+                    return bin
+        return None
+        
     def get_media_file_for_path(self, file_path):
         for key, media_file in list(self.media_files.items()):
             if media_file.type == appconsts.PATTERN_PRODUCER:
