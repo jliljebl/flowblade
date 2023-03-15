@@ -429,7 +429,6 @@ def load_layout_data(callback):
     dialog.connect('response', callback)
     dialog.show()
 
-
 def save_media_plugin_plugin_properties(callback, default_name, data):
     parent = gui.editor_window.window
 
@@ -464,7 +463,43 @@ def load_media_plugin_plugin_properties(callback):
     dialog.add_filter(file_filter)
     dialog.connect('response', callback)
     dialog.show()
+
+def get_media_plugin_length(callback, data):
+    dialog = Gtk.Dialog(_("Create Cloned Media Item"), gui.editor_window.window,
+                        Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                        (_("Cancel"), Gtk.ResponseType.REJECT,
+                        _("Create"), Gtk.ResponseType.ACCEPT))
+
+    clip, track, item_id, item_data = data
+    LABEL_WIDTH = 200
     
+    name_label = Gtk.Label(label=_("Name:"))
+    name_entry = Gtk.Entry()
+    name_entry.set_text(clip.name)
+
+    length_label = Gtk.Label(label=_("Length in Frames:"))
+    length_spin = Gtk.SpinButton.new_with_range(15, 10000, 1)
+    length_spin.set_value(200)
+
+    name_row = guiutils.get_two_column_box(name_label, name_entry, LABEL_WIDTH)
+    
+    frames_row  = guiutils.get_two_column_box(length_label, length_spin, LABEL_WIDTH)
+
+    vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(name_row, False, False, 0)
+    vbox.pack_start(frames_row, False, False, 0)
+    vbox.pack_start(guiutils.get_pad_label(24, 24), False, False, 0)
+
+    alignment = dialogutils.get_alignment2(vbox)
+
+    dialog.vbox.pack_start(alignment, True, True, 0)
+    dialogutils.set_outer_margins(dialog.vbox)
+    _default_behaviour(dialog)
+    dialog.connect('response', callback, data, length_spin, name_entry)
+    dialog.show_all()
+
+
+
 def export_xml_dialog(callback, project_name):
     _export_file_name_dialog(callback, project_name, _("Export Project as XML to"))
 
@@ -1408,8 +1443,6 @@ def export_edl_dialog(callback, parent_window, project_name):
     dialog.set_select_multiple(False)
     dialog.connect('response', callback)
     dialog.show()
-
-
 
 def transition_re_render_dialog(callback, transition_data):
     dialog = Gtk.Dialog(_("Rerender Transition"),  gui.editor_window.window,

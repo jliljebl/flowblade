@@ -20,6 +20,7 @@
 from gi.repository import Gtk, GObject, Pango, Gio
 
 import cairo
+import copy
 import hashlib
 import json
 import os
@@ -202,6 +203,39 @@ def _add_media_plugin():
         container_data.render_data = _current_render_data
         container_data.unrendered_length = _current_plugin_data_object["length"]
         containerclip.create_renderered_fluxity_media_item(container_data, _current_plugin_data_object["length"]) 
+
+def add_media_plugin_clone(data):
+    dialogs.get_media_plugin_length(_clone_properties_callback, data)
+
+def _clone_properties_callback(dialog, response_id, data, length_spin, name_entry):
+    clip, track, item_id, item_data = data
+    new_length = length_spin.get_value()
+    name = name_entry.get_text()
+    dialog.destroy()
+
+    if response_id != Gtk.ResponseType.ACCEPT:
+        return
+
+    old_cd = clip.container_data
+    
+    if name == "":
+        name = clip.name
+
+    md_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
+    screenshot_file = userfolders.get_cache_dir() + appconsts.THUMBNAILS_DIR + "/" + md_str +  ".png"
+
+    script_file = open(old_cd.program)
+    user_script = script_file.read()
+        
+    profile_file_path = mltprofiles.get_profile_file_path(current_sequence().profile.description())
+
+    fctx = fluxity.render_preview_frame(user_script, script_file, int(new_length / 2), None, profile_file_path, json.dumps(old_cd.data_slots["fluxity_plugin_edit_data"]["editors_list"]))
+    fctx.priv_context.frame_surface.write_to_png(screenshot_file)
+
+    new_plugin_edit_data = copy.deepcopy(old_cd.data_slots["fluxity_plugin_edit_data"])
+    new_plugin_edit_data["name"] = name
+
+    containerclip.create_fluxity_media_item_from_plugin(old_cd.program, screenshot_file, new_plugin_edit_data)
 
 def get_plugin_code(plugin_folder):
     script_file = get_plugin_script_path(plugin_folder)

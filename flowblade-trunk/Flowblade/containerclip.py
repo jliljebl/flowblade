@@ -374,6 +374,10 @@ def _fluxity_unrendered_media_creation_complete(created_unrendered_clip_path, co
     _update_gui_for_media_object_add()
 
 # ------------------------------------------------------------- ADDING GENERATOR AS PRE-RENDERED CLIP
+# Called when user selects 'Add Generator' in with option 'Add as Container Clip'.
+#def create_fluxity_media_item_from_plugin(script_file, screenshot_file, plugin_data):
+    
+# ------------------------------------------------------------- ADDING GENERATOR AS PRE-RENDERED CLIP
 # Called when user selects 'Add Generator' in with option 'Add as Rendered Clip'.
 def create_renderered_fluxity_media_item(container_data, length):
     fluxity_unrendered_media_image = respaths.IMAGE_PATH + "unrendered_fluxity.png"

@@ -417,7 +417,7 @@ class LineText:
         self.text = text
         self.font_data = font_data
         user_x, user_y = user_pos
-        self.multiline_pos = user_pos # Top-left x,y of multiline text object position. These coordinates have beenn given by user.
+        self.multiline_pos = user_pos # Top-left x,y of multiline text object position. These coordinates have been given by user.
         self.text_x = user_x # This needs layout data and will be computed later. Center and right justified lines will get changed x pos when line lengths are known.
         self.text_y = -1 # This needs layout data and will be computed later.
         self.line_index, self.line_gap, self.line_delay, self.line_y_off = line_info
@@ -698,7 +698,7 @@ class LineText:
 
         # Don't draw if line delay causes line to not start animating yet.
         # NOTE: We are are implementing line delay here, combined with shortening static position 
-        # time in LineText.create_animation_data() and setting clippuing times in 
+        # time in LineText.create_animation_data() and setting clipping times in 
         # Multiline.clip_for_line() so that all out animations have time
         # to complete and are clipped at correct times.
         frame_delay = self.line_index * self.line_delay

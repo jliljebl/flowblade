@@ -51,6 +51,7 @@ from editorstate import get_track
 from editorstate import PROJECT
 from editorstate import PLAYER
 import kftoolmode
+import mediaplugin
 import mlttransitions
 import modesetting
 import movemodes
@@ -865,4 +866,5 @@ POPUP_HANDLERS = {"set_master":syncsplitevent.init_select_master_clip,
                   "cc_render_clip":containerclip.render_clip_length,
                   "cc_go_to_underdered":containerclip.switch_to_unrendered_media,
                   "cc_render_settings":containerclip.set_render_settings,
-                  "cc_edit_program":containerclip.edit_program}
+                  "cc_edit_program":containerclip.edit_program,
+                  "cc_clone_generator":mediaplugin.add_media_plugin_clone}

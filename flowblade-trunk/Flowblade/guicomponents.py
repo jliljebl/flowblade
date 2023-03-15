@@ -2233,7 +2233,12 @@ def _get_container_clip_menu_items(clip_menu, event, clip, track, callback):
         edit_program_item.show()
         clip_menu.append(edit_program_item)
     
-    
+    if  clip.container_data.container_type == appconsts.CONTAINER_CLIP_FLUXITY:
+        menu_text = _("Create Cloned Generator...")
+        clone_item = _get_menu_item(menu_text, callback, (clip, track, "cc_clone_generator", event.x))
+        clone_item.show()
+        clip_menu.append(clone_item)
+            
     if  clip.container_data.container_type == appconsts.CONTAINER_CLIP_FLUXITY:
         menu_text = _("Generator Render Actions")
     else:        
