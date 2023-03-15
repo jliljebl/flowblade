@@ -74,8 +74,9 @@ _preview_canvas = None
 # --------------------------------------------------------- plugin
 class MediaPlugin:
     
-    def __init__(self, folder, name, category):
+    def __init__(self, folder, script_file, name, category):
         self.folder = folder
+        self.script_file = script_file
         self.name = name
         self.category = category
     
@@ -86,7 +87,7 @@ class MediaPlugin:
         return cairo.ImageSurface.create_from_png(self.get_screenshot_file())
 
     def get_plugin_script_file(self):
-        script_file = respaths.MEDIA_PLUGINS_PATH + self.folder + "/plugin_script.py"
+        script_file = respaths.MEDIA_PLUGINS_PATH + self.folder + "/" + self.script_file
         return script_file
 
 
@@ -99,7 +100,7 @@ def init():
     global _plugins
     plugins_list = plugins_obj["plugins"]
     for plugin_data in plugins_list:
-        plugin = MediaPlugin(plugin_data["folder"], plugin_data["name"], plugin_data["category"])
+        plugin = MediaPlugin(plugin_data["folder"], plugin_data["scriptfile"], plugin_data["name"], plugin_data["category"])
         _plugins.append(plugin)
     
     load_groups = {}
@@ -241,7 +242,7 @@ def get_plugin_code(plugin_folder):
     script_file = get_plugin_script_path(plugin_folder)
     args_file = open(script_file)
     return args_file.read()
-        
+
 def get_plugin_script_path(plugin_folder):
     return respaths.MEDIA_PLUGINS_PATH + plugin_folder + "/plugin_script.py"
 

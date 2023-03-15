@@ -1,10 +1,10 @@
 {
 "plugins":[ 
-		{ "folder":"animations_1", "name":"Floating Balls", "category":"Animation Plugins"},
-		{ "folder":"animations_2", "name":"Hex Colors", "category":"Animation Plugins"},
-		{ "folder":"transitions_1", "name":"Lines Sweep", "category":"Cover Transition Plugins"},
-		{ "folder":"transitions_2", "name":"Hex Overlay", "category":"Cover Transition Plugins"},
-		{ "folder":"text_1", "name":"Multiline Animation", "category":"Text Plugins"},
-		{ "folder":"text_2", "name":"Typewriter", "category":"Text Plugins"}
+		{ "folder":"animations_1", "scriptfile":"floating_balls.py", "name":"Floating Balls", "category":"Animation Plugins"},
+		{ "folder":"animations_2", "scriptfile":"hex_colors.py", "name":"Hex Colors", "category":"Animation Plugins"},
+		{ "folder":"transitions_1", "scriptfile":"lines_sweep.py", "name":"Lines Sweep", "category":"Cover Transition Plugins"},
+		{ "folder":"transitions_2", "scriptfile":"hex_overlay.py", "name":"Hex Overlay", "category":"Cover Transition Plugins"},
+		{ "folder":"text_1", "scriptfile":"multiline_animation.py", "name":"Multiline Animation", "category":"Text Plugins"},
+		{ "folder":"text_2", "scriptfile":"typewriter.py", "name":"Typewriter", "category":"Text Plugins"}
 	 ]
 }
