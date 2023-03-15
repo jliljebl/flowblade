@@ -178,7 +178,8 @@ def fill_media_plugin_sub_menu_gio(app, menu, callback):
             sub_menu.append(label, "app." + item_id) 
             
             action = Gio.SimpleAction(name=item_id)
-            action.connect("activate", lambda w, e, msg:callback(msg), plugin.folder)
+            msg_string = plugin.folder + "/" + plugin.script_file
+            action.connect("activate", lambda w, e, msg:callback(msg), msg_string)
             app.add_action(action)
     
 def _add_media_plugin():
@@ -238,13 +239,13 @@ def _clone_properties_callback(dialog, response_id, data, length_spin, name_entr
 
     containerclip.create_fluxity_media_item_from_plugin(old_cd.program, screenshot_file, new_plugin_edit_data)
 
-def get_plugin_code(plugin_folder):
-    script_file = get_plugin_script_path(plugin_folder)
+def get_plugin_code(plugin_folder_and_script):
+    script_file = get_plugin_script_path(plugin_folder_and_script)
     args_file = open(script_file)
     return args_file.read()
 
-def get_plugin_script_path(plugin_folder):
-    return respaths.MEDIA_PLUGINS_PATH + plugin_folder + "/plugin_script.py"
+def get_plugin_script_path(plugin_folder_and_script):
+    return respaths.MEDIA_PLUGINS_PATH + plugin_folder_and_script
 
 # --------------------------------------------------------- Window
 class AddMediaPluginWindow(Gtk.Window):
