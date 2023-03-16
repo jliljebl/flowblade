@@ -1078,8 +1078,8 @@ def cut_media_files():
             editorstate._monitor_media_file = None
             gui.clip_editor_b.set_sensitive(False)
 
-    editorstate.set_copy_paste_objects((appconsts.CUT_PASTE_MEDIA_ITEMS, file_ids))
     gui.media_list_view.clear_selection()
+    editorstate.set_copy_paste_objects((appconsts.CUT_PASTE_MEDIA_ITEMS, file_ids))
 
 def paste_media_files():
     paste_items_type, paste_items_list = editorstate.get_copy_paste_objects()

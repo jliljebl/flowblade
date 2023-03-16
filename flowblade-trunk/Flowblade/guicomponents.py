@@ -1293,6 +1293,13 @@ class MediaPanel():
     def clear_selection(self):
         self.selected_objects = []
 
+        # Clear CTRL+X selection too.
+        paste_data = editorstate.get_copy_paste_objects()
+        if paste_data != None:
+            data_type, objs = paste_data
+            if data_type == appconsts.CUT_PASTE_MEDIA_ITEMS:
+                editorstate.clear_copy_paste_objects()
+
         self.widget.queue_draw()
 
     def columns_changed(self, columns):
