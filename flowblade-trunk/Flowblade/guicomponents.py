@@ -1476,6 +1476,14 @@ class MediaObjectWidget:
 
         cr.reset_clip()
         cr.set_source_rgba(0,0,0,0.3)
+        # Indicate CTRL+X cut items that have not been pasted yet
+        # with different color outline.
+        copy_paste_data = editorstate.get_copy_paste_objects()
+        if copy_paste_data != None:
+            object_type, file_ids = copy_paste_data
+            if object_type == appconsts.CUT_PASTE_MEDIA_ITEMS:
+                if self.media_file.id in file_ids:
+                    cr.set_source_rgba(1,0,0,0.3)
         cr.set_line_width(2.0)
         self.create_round_rect_path(cr, 0, 0, w - 5, h - 5, 6.0)
         cr.stroke()
