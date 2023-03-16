@@ -1078,13 +1078,13 @@ def cut_media_files():
             editorstate._monitor_media_file = None
             gui.clip_editor_b.set_sensitive(False)
 
-    editorstate.set_copy_paste_objects((appconsts.COPY_PASTE_MEDIA_ITEMS, file_ids))
+    editorstate.set_copy_paste_objects((appconsts.CUT_PASTE_MEDIA_ITEMS, file_ids))
 
 def paste_media_files():
     paste_items_type, paste_items_list = editorstate.get_copy_paste_objects()
     editorstate.clear_copy_paste_objects()
     
-    if paste_items_type != appconsts.COPY_PASTE_MEDIA_ITEMS:
+    if paste_items_type != appconsts.CUT_PASTE_MEDIA_ITEMS:
         return
 
     if len(paste_items_list) == 0:
@@ -1103,11 +1103,12 @@ def paste_media_files():
 
     if source_bin_success == None:
         return # Nothing was moved.
-        
+
     gui.media_list_view.fill_data_model()
     gui.editor_window.bin_info.display_bin_info()
     updater.update_current_bin_files_count()
     updater.update_bin_files_count(source_bin_success)
+    editorstate.clear_copy_paste_objects() # if trying to do CTRL+X, CTRL+V data may no longer be valid.
 
 def delete_media_files(force_delete=False):
     """

@@ -727,7 +727,8 @@ def cut_action():
             cut_source.copy_clipboard()
         except:# selected widget was not a Gtk.Editable that can provide text to clipboard.
             pass
-                
+    else:
+        tlineaction.do_timeline_objects_copy(False)
         
 def copy_action():
     if _timeline_has_focus() == False:
@@ -763,7 +764,7 @@ def paste_action():
         elif data_type == appconsts.COPY_PASTE_GEOMETRY_EDITOR_KF_DATA:
             value, geom_editor = paste_data
             geom_editor.paste_kf_value(value)
-        elif data_type == appconsts.COPY_PASTE_MEDIA_ITEMS:
+        elif data_type == appconsts.CUT_PASTE_MEDIA_ITEMS:
             projectaction.paste_media_files() 
     else:
         tlineaction.do_timeline_objects_paste()

@@ -73,6 +73,7 @@ import utils
 
 # values for differentiating copy paste data
 COPY_PASTE_DATA_CLIPS = appconsts.COPY_PASTE_DATA_CLIPS
+CUT_PASTE_DATA_CLIPS = appconsts.CUT_PASTE_DATA_CLIPS
 COPY_PASTE_DATA_COMPOSITOR_PROPERTIES = appconsts.COPY_PASTE_DATA_COMPOSITOR_PROPERTIES
 
 
@@ -931,7 +932,7 @@ def mouse_dragged_out(event):
         movemodes.clips_drag_out_started(event)
 
 # --------------------------------------------------- copy/paste
-def do_timeline_objects_copy():
+def do_timeline_objects_copy(is_copy=True):
     if compositormodes.compositor != None and compositormodes.compositor.selected == True:
         editorstate.set_copy_paste_objects((COPY_PASTE_DATA_COMPOSITOR_PROPERTIES, compositormodes.compositor.get_copy_paste_data()))
         return
@@ -946,9 +947,16 @@ def do_timeline_objects_copy():
             source_clip = track.clips[i]
             for j in range(0, len(clone_clip.filters)):
                 clone_clip.filters[j].active = source_clip.filters[j].active
-                
-        editorstate.set_copy_paste_objects((COPY_PASTE_DATA_CLIPS, clone_clips))
-        return
+        if is_copy:
+            editorstate.set_copy_paste_objects((COPY_PASTE_DATA_CLIPS, clone_clips))
+        else:
+            data = {"track":track,
+                    "from_index":movemodes.selected_range_in,
+                    "to_index":movemodes.selected_range_out}
+            edit_action = edit.lift_multiple_action(data)
+            edit_action.do_edit()
+
+            editorstate.set_copy_paste_objects((CUT_PASTE_DATA_CLIPS, clone_clips))
 
 def do_timeline_objects_paste():
     track = current_sequence().get_first_active_track()
@@ -959,23 +967,29 @@ def do_timeline_objects_paste():
         return 
     
     data_type, paste_clips = paste_objs
-    if data_type != COPY_PASTE_DATA_CLIPS:
+    if data_type != COPY_PASTE_DATA_CLIPS and data_type != CUT_PASTE_DATA_CLIPS:
         do_compositor_data_paste(paste_objs)
         return
 
     tline_pos = editorstate.current_tline_frame()
 
-    new_clips = []
-    for clip in paste_clips:
-        if isinstance(clip, int): # blanks, these represented as int's.
-            new_clip = clip 
-        else: # media clips
-            new_clip = current_sequence().create_clone_clip(clip)
-        new_clips.append(new_clip)
-    editorstate.set_copy_paste_objects((COPY_PASTE_DATA_CLIPS, new_clips))
+    if data_type == COPY_PASTE_DATA_CLIPS:
+        # So that multiple copies with CTRL+V can be made
+        new_clips = []
+        for clip in paste_clips:
+            if isinstance(clip, int): # blanks, these represented as int's.
+                new_clip = clip 
+            else: # media clips
+                new_clip = current_sequence().create_clone_clip(clip)
+            new_clips.append(new_clip)
+        editorstate.set_copy_paste_objects((COPY_PASTE_DATA_CLIPS, new_clips))
 
-    # Paste clips
-    editevent.do_multiple_clip_insert(track, paste_clips, tline_pos)
+        # Paste clips
+        editevent.do_multiple_clip_insert(track, paste_clips, tline_pos)
+    else:
+        # Paste clips
+        editevent.do_multiple_clip_insert(track, paste_clips, tline_pos)
+        editorstate.clear_copy_paste_objects() # Cut/paste only happens once
 
 def do_timeline_filters_paste():
     if _timeline_has_focus() == False:

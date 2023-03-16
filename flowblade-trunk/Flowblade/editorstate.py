@@ -246,7 +246,6 @@ def set_copy_paste_objects(objs):
 def get_copy_paste_objects():
     return _copy_paste_objects
 
-
 def clear_copy_paste_objects():
     global _copy_paste_objects
     _copy_paste_objects = None
