@@ -1147,11 +1147,16 @@ class MediaPanel():
         last_pressed = self.selected_objects[-1]
         return [last_pressed]
  
+    def media_object_selected_test(self, media_object):
+        if media_object in self.selected_objects:
+            return True
+        else:
+            return False
+ 
     def media_object_selected(self, media_object, widget, event):
         if event.type == Gdk.EventType._2BUTTON_PRESS:
             self.double_click_release = True
             self.clear_selection()
-            media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
             self.selected_objects.append(media_object)
             self.widget.queue_draw()
             gui.pos_bar.widget.grab_focus()
@@ -1179,7 +1184,7 @@ class MediaPanel():
                     index = self.selected_objects.index(media_object)
                 except:
                     self.selected_objects.append(media_object)
-                    media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
+                    self.widget.queue_draw()
                     self.last_ctrl_selected_media_object = media_object
                     return
             elif (event.get_state() & Gdk.ModifierType.SHIFT_MASK) and len(self.selected_objects) > 0:
@@ -1221,10 +1226,8 @@ class MediaPanel():
                     m_obj = self.widget_for_mediafile[m_file]
                     
                     self.selected_objects.append(m_obj)
-                    m_obj.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
             else:
                 if not(media_object in self.selected_objects):
-                    media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
                     self.selected_objects.append(media_object)
 
         elif event.button == 3:
@@ -1251,16 +1254,16 @@ class MediaPanel():
                 try:
                     index = self.selected_objects.index(media_object)
                     self.selected_objects.remove(media_object)
-                    media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_bg_color())
                 except:
                     pass
             elif (event.get_state() & Gdk.ModifierType.SHIFT_MASK):
                 pass
             else:
                 self.clear_selection()
-                media_object.widget.override_background_color(Gtk.StateType.NORMAL, gui.get_selected_bg_color())
                 self.selected_objects.append(media_object)
-                          
+
+            self.widget.queue_draw()
+
     def select_media_file(self, media_file):
         self.clear_selection()
         self.selected_objects.append(self.widget_for_mediafile[media_file])
@@ -1271,9 +1274,7 @@ class MediaPanel():
             self.selected_objects.append(self.widget_for_mediafile[media_file])
 
     def update_selected_bg_colors(self):
-        bg_color = gui.get_selected_bg_color()
-        for media_object in self.selected_objects:
-            media_object.widget.override_background_color(Gtk.StateType.NORMAL, bg_color)
+        self.widget.queue_draw()
 
     def empty_pressed(self, widget, event):
         self.clear_selection()
@@ -1285,14 +1286,14 @@ class MediaPanel():
         bg_color = gui.get_selected_bg_color()
 
         for media_file, media_object in self.widget_for_mediafile.items():
-            media_object.widget.override_background_color(Gtk.StateType.NORMAL, bg_color)
             self.selected_objects.append(media_object)
 
+        self.widget.queue_draw()
+
     def clear_selection(self):
-        bg_color = gui.get_bg_color()
-        for m_obj in self.selected_objects:
-            m_obj.widget.override_background_color(Gtk.StateType.NORMAL, bg_color)
         self.selected_objects = []
+
+        self.widget.queue_draw()
 
     def columns_changed(self, columns):
         self.columns = columns
@@ -1366,7 +1367,12 @@ class MediaPanel():
                 and (media_file not in unused_list)):
                 continue
 
-            media_object = MediaObjectWidget(media_file, self.media_object_selected, self.release_on_media_object, self.monitor_indicator)
+            media_object = MediaObjectWidget(media_file, 
+                                            self.media_object_selected, 
+                                            self.release_on_media_object, 
+                                            self.monitor_indicator,
+                                            self.media_object_selected_test)
+                                            
             dnd.connect_media_files_object_widget(media_object.widget)
             dnd.connect_media_files_object_cairo_widget(media_object.img)
             self.widget_for_mediafile[media_file] = media_object
@@ -1406,11 +1412,15 @@ class MediaPanel():
 
 class MediaObjectWidget:
 
-    def __init__(self, media_file, selected_callback, release_callback, indicator_icon):
+    def __init__(self, media_file, selected_callback, release_callback, indicator_icon, is_selected_test):
         self.media_file = media_file
         self.selected_callback = selected_callback
+        self.is_selected_test = is_selected_test
         self.indicator_icon = indicator_icon
         self.matches_project_profile = media_file.matches_project_profile()
+
+        r, g, b = utils.cairo_color_from_gdk_color(gui.get_selected_bg_color())
+        self.selected_color = (r, g, b, 1.0)
 
         self.widget = Gtk.EventBox()
         self.widget.connect("button-press-event", lambda w,e: selected_callback(self, w, e))
@@ -1429,7 +1439,7 @@ class MediaObjectWidget:
         txt = Gtk.Label(label=media_file.name)
         txt.modify_font(Pango.FontDescription("sans 9"))
         txt.set_max_width_chars(13)
-        # Feb-2017 - SvdB - For full file names. First part shows the original code for short file names        
+        # Feb-2017 - SvdB - For full file names. First part shows the original code for short file names
         if editorpersistance.prefs.show_full_file_names == False:
             txt.set_ellipsize(Pango.EllipsizeMode.END)
         else:
@@ -1476,8 +1486,13 @@ class MediaObjectWidget:
 
         cr.reset_clip()
         cr.set_source_rgba(0,0,0,0.3)
+        
+        # Draw blue outline if selected.
+        if self.is_selected_test(self):
+            cr.set_source_rgba(*self.selected_color)
+
         # Indicate CTRL+X cut items that have not been pasted yet
-        # with different color outline.
+        # with red outline.
         copy_paste_data = editorstate.get_copy_paste_objects()
         if copy_paste_data != None:
             object_type, file_ids = copy_paste_data
