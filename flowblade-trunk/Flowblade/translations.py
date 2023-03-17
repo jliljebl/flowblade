@@ -156,7 +156,8 @@ def load_filters_translations():
     filter_groups["Artistic"] = _("Artistic")
     filter_groups["Fade In / Out"] = _("Fade In / Out")
     filter_groups["Blend"] = _("Blend")
-
+    filter_groups["Wipe"] = _("Wipe")
+    
     # filter names
     global filter_names
     filter_names["Alpha Gradient"] = _("Alpha Gradient")

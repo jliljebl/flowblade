@@ -307,5 +307,6 @@ def get_filter_group_icons(default_icon):
     group_icons["Artistic"] = default_icon
     group_icons["FILTER_MASK"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "filter_mask.png")
     group_icons["Blend"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "blend_filter.png")
+    group_icons["Wipe"] = GdkPixbuf.Pixbuf.new_from_file(respaths.IMAGE_PATH + "wipe_filter.png")
 
     return group_icons
