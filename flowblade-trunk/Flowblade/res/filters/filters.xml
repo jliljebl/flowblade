@@ -53,7 +53,7 @@
     </filter>
     <filter id="shape">
         <name>Wipe</name>
-        <group>Wipe</group>
+        <group>Fade</group>
         <property name="resource" args="editor=filter_wipe_select exptype=filter_wipe_resource displayname=Wipe!Type">WIPE_PATHbi-linear_y.pgm</property>
         <property name="mix" args="range_in=0.0,100.0 range_out=0,100 editor=slider displayname=Threshold">50.0</property>
         <property name="softness" args="range_in=0.0,100.0 editor=slider displayname=Softness">0</property>
@@ -126,21 +126,21 @@
     <!-- FADES -->
     <filter id="brightness">
         <name>Fade In</name>
-        <group>Fade In / Out</group>   
+        <group>Fade</group>   
         <property name="start" args="editor=no_editor">1</property>
         <property name="level" args="editor=no_editor">1</property>
         <property name="alpha" args="range_in=0,100 range_out=0,1 value_replacement=fade_in_replament editor=keyframe_editor_clip_fade_filter exptype=keyframe_hcs displayname=Opacity">0=1</property>
     </filter>
     <filter id="brightness">
         <name>Fade Out</name>
-        <group>Fade In / Out</group>   
+        <group>Fade</group>   
         <property name="start" args="editor=no_editor">1</property>
         <property name="level" args="editor=no_editor">1</property>
         <property name="alpha" args="range_in=0,100 range_out=0,1 value_replacement=fade_out_replament editor=keyframe_editor_clip_fade_filter exptype=keyframe_hcs displayname=Opacity">0=1</property>
     </filter>
     <filter id="brightness">
         <name>Fade In / Fade Out</name>
-        <group>Fade In / Out</group>   
+        <group>Fade</group>   
         <property name="start" args="editor=no_editor">1</property>
         <property name="level" args="editor=no_editor">1</property>
         <property name="alpha" args="range_in=0,100 range_out=0,1 value_replacement=fade_in_out_replament editor=keyframe_editor_clip_fade_filter exptype=keyframe_hcs displayname=Opacity">0=1</property>

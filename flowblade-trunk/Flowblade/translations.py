@@ -154,9 +154,8 @@ def load_filters_translations():
     filter_groups["Edge"] = _("Edge")
     filter_groups["Fix"] = _("Fix")
     filter_groups["Artistic"] = _("Artistic")
-    filter_groups["Fade In / Out"] = _("Fade In / Out")
+    filter_groups["Fade"] = _("Fade")
     filter_groups["Blend"] = _("Blend")
-    filter_groups["Wipe"] = _("Wipe")
     
     # filter names
     global filter_names
