@@ -46,6 +46,7 @@ VALUE_REPLACEMENT = "value_replacement"                     # attr name for repl
 FADE_IN_REPLAMENT = "fade_in_replament"                     # replace with fade in keyframes
 FADE_OUT_REPLAMENT = "fade_out_replament"                   # replace with fade out keyframes
 FADE_IN_OUT_REPLAMENT = "fade_in_out_replament"             # replace with fade in and out keyframes
+WIPE_IN_REPLAMENT = "wipe_in_replament"
 
 # ------------------------------------------- parse funcs
 def node_list_to_properties_array(node_list):
@@ -182,7 +183,18 @@ def replace_values_using_clip_data(properties, info, clip):
 
                         properties[i] = (prop_name, value, prop_type)
                         replacement_happened = True
+                    elif arg_val == WIPE_IN_REPLAMENT:
+                        frame_1 = clip.clip_in
+                        frame_2 = clip.clip_in + int(round(utils.fps())) # Make 1 second the default.
+                        value = ""
+                        if frame_1 != 0:
+                            value += "0=0;"
+                        
+                        value += str(frame_1) + "=0;" + str(frame_2) + "=100"
 
+                        properties[i] = (prop_name, value, prop_type)
+                        replacement_happened = True
+    
     return replacement_happened
 
 def get_args_num_value(val_str):
