@@ -22,7 +22,7 @@
 Module handles keyevents.
 """
 
-from gi.repository import Gdk
+from gi.repository import Gdk, Gtk
 
 import appconsts
 import clipeffectseditor
@@ -721,14 +721,20 @@ def cut_action():
         # Try to cut text to clipboard because user pressed CTRL + X.
         if gui.media_list_view.widget.get_focus_child() != None:
             projectaction.cut_media_files()
+            return True
                     
-        cut_source = gui.editor_window.window.get_focus()
+        # Try to extract text to clipboard because user pressed CTRL + C.
+        copy_source = gui.editor_window.window.get_focus()
         try:
-            cut_source.copy_clipboard()
+            display = Gdk.Display.get_default()
+            cb = Gtk.Clipboard.get_default(display)
+            copy_source.get_buffer().cut_clipboard(cb, True)
+            return True
         except:# selected widget was not a Gtk.Editable that can provide text to clipboard.
-            pass
+            return False
     else:
         tlineaction.do_timeline_objects_copy(False)
+        return True
         
 def copy_action():
     if _timeline_has_focus() == False:
@@ -738,36 +744,62 @@ def copy_action():
             value = filter_kf_editor.get_copy_kf_value()
             save_data = (appconsts.COPY_PASTE_KEYFRAME_EDITOR_KF_DATA, (value, filter_kf_editor))
             editorstate.set_copy_paste_objects(save_data) 
+            return True
         elif geom_kf_editor != None:
             value = geom_kf_editor.get_copy_kf_value() 
             save_data = (appconsts.COPY_PASTE_GEOMETRY_EDITOR_KF_DATA, (value, geom_kf_editor))
-            editorstate.set_copy_paste_objects(save_data) 
+            editorstate.set_copy_paste_objects(save_data)
+            return True
         else:
             # Try to extract text to clipboard because user pressed CTRL + C.
             copy_source = gui.editor_window.window.get_focus()
             try:
-                copy_source.copy_clipboard()
+                display = Gdk.Display.get_default()
+                cb = Gtk.Clipboard.get_default (display)
+                copy_source.get_buffer().copy_clipboard(cb)
+                return True
             except:# selected widget was not a Gtk.Editable that can provide text to clipboard.
-                pass
+                return False
     else:
         tlineaction.do_timeline_objects_copy()
+        return True
 
 def paste_action():
     if _timeline_has_focus() == False:
         copy_paste_object = editorstate.get_copy_paste_objects()
         if copy_paste_object == None:
-            return
+            _attempt_default_paste()
+            return False
         data_type, paste_data = editorstate.get_copy_paste_objects()
         if data_type == appconsts.COPY_PASTE_KEYFRAME_EDITOR_KF_DATA:
             value, kf_editor = paste_data
             kf_editor.paste_kf_value(value)
+            return True
         elif data_type == appconsts.COPY_PASTE_GEOMETRY_EDITOR_KF_DATA:
             value, geom_editor = paste_data
             geom_editor.paste_kf_value(value)
+            return True
         elif data_type == appconsts.CUT_PASTE_MEDIA_ITEMS:
-            projectaction.paste_media_files() 
+            projectaction.paste_media_files()
+            return True
+        
+        return False
     else:
         tlineaction.do_timeline_objects_paste()
+        _attempt_default_paste()
+        return True
+
+def _attempt_default_paste():
+    # Try to extract text to clipboard because user pressed CTRL + C.
+    paste_target = gui.editor_window.window.get_focus()
+    try:
+        display = Gdk.Display.get_default()
+        clipboard = Gtk.Clipboard.get_default(display)
+        paste_target.get_buffer().paste_clipboard(clipboard, None, True)
+        return True
+    except:# selected widget cannot be pasted into
+        return False
+                
 
 def change_single_shortcut(code, event, shortcut_label):
     key_val_name = Gdk.keyval_name(event.keyval).lower()
