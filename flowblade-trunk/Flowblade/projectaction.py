@@ -69,6 +69,7 @@ import editorpersistance
 import kftoolmode
 import medialinker
 import medialog
+import mediaplugin
 import modesetting
 import movemodes
 import mltprofiles
@@ -1317,8 +1318,34 @@ def _media_import_project_select_dialog_callback(dialog, response_id):
 
 def _media_import_data_ready():
     files_list = projectmediaimport.get_imported_media()
-    open_file_names(files_list)
+    generators_list = projectmediaimport.get_imported_generators()
+    
+    if len(generators_list) > 0:
+        global media_import_data
+        media_import_data = (files_list, generators_list, 0)
+        _media_import_with_generators()
+    else:
+        # No need to do complex callbacks to get generators imported.
+        open_file_names(files_list)
 
+def _media_import_with_generators():
+    # import generators from list recursively using existing code in containerclip.py
+    global media_import_data
+    files_list, generators_list, index = media_import_data
+    if index == len(generators_list):
+        open_file_names(files_list)
+    else:
+        container_data = generators_list[index]
+        index += 1
+        media_import_data = (files_list, generators_list, index)
+    
+        script_file, screenshot_file, plugin_data = mediaplugin.create_plugin_assests_for_media_import(container_data)
+    
+        containerclip.create_fluxity_media_item_from_plugin(    script_file, 
+                                                                screenshot_file, 
+                                                                plugin_data, 
+                                                                _media_import_with_generators)
+        
 def create_selection_compound_clip():
     if movemodes.selected_track == -1:
         # info window no clips selected?

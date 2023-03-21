@@ -18,6 +18,7 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+import copy
 try:
     import mlt7 as mlt
 except:
@@ -43,11 +44,13 @@ import guiutils
 import mltinit
 import patternproducer
 import persistance
+import pickle
 import processutils
 import respaths
 import renderconsumer
 import translations
 import userfolders
+import utils
 
 """
 This module implements media import from another project feature.
@@ -57,6 +60,7 @@ There is so much bolierplate needed for this feature that it was best to create 
 """
 
 MEDIA_ASSETS_IMPORT_FILE = "media_assets_import_file"
+GENERATORS_IMPORT_FILE = "generators_import_file"
 
 _info_window = None
 _media_paths_written_to_disk_complete_callback = None
@@ -74,17 +78,27 @@ class ProjectLoadThread(threading.Thread):
         
         target_project.c_seq = target_project.sequences[target_project.c_seq_index]
 
-        # Media file media assets
+        # Media file media assets and generator assets are handled a differently.
         media_assets = ""
+        generator_assets = []
+
         for media_file_id, media_file in target_project.media_files.items():
             if isinstance(media_file, patternproducer.AbstractBinClip):
                 continue
-            if os.path.isfile(media_file.path):                
+            if  media_file.container_data != None:
+                # Generator clone
+                generator_assets.append(copy.deepcopy(media_file.container_data))
+            elif os.path.isfile(media_file.path):
+                # File clone
                 media_assets = media_assets + str(media_file.path) + "\n"
 
         with atomicfile.AtomicFileWriter(_get_assets_file(), "w") as afw:
             f = afw.get_file()
             f.write(media_assets)
+
+        with atomicfile.AtomicFileWriter(_get_generators_file(), "wb") as afw:
+            write_file = afw.get_file()
+            pickle.dump(generator_assets, write_file)
 
         _shutdown()
 
@@ -97,7 +111,7 @@ class ProcesslauchThread(threading.Thread):
         self.filename = filename
 
     def run(self):
-        write_files(self.filename)
+        _write_files(self.filename)
 
 
 # ----------------------------------------------------------- interface
@@ -117,17 +131,20 @@ def get_imported_media():
     files_list = [x.rstrip("\n") for x in files_list] 
     return files_list
     
-def write_files(filename):
+def get_imported_generators():
+    return utils.unpickle(_get_generators_file())
+
+# ----------------------------------------------------------- data gathering process launch and callback to import files
+def _write_files(filename):
     print("Starting media import...")
     FLOG = open(userfolders.get_cache_dir() + "log_media_import", 'w')
     p = subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowblademediaimport", filename], stdin=FLOG, stdout=FLOG, stderr=FLOG)
     p.wait()
     
-    GLib.idle_add(assets_write_complete)
+    GLib.idle_add(_assets_write_complete)
 
-def assets_write_complete():
+def _assets_write_complete():
     _media_paths_written_to_disk_complete_callback()
-
 
 # ------------------------------------------------------------ module internal
 def _do_assets_write(filename):
@@ -140,6 +157,9 @@ def _do_assets_write(filename):
 def _get_assets_file():
     return userfolders.get_cache_dir() + MEDIA_ASSETS_IMPORT_FILE
 
+def _get_generators_file():
+    return userfolders.get_cache_dir() + GENERATORS_IMPORT_FILE
+    
 def _create_info_dialog():
     dialog = Gtk.Window(Gtk.WindowType.TOPLEVEL)
     dialog.set_title(_("Loading Media Import Project"))

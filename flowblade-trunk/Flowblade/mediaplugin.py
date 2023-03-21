@@ -239,6 +239,24 @@ def _clone_properties_callback(dialog, response_id, data, length_spin, name_entr
 
     containerclip.create_fluxity_media_item_from_plugin(old_cd.program, screenshot_file, new_plugin_edit_data)
 
+def create_plugin_assests_for_media_import(old_cd):
+    md_str = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
+    screenshot_file = userfolders.get_cache_dir() + appconsts.THUMBNAILS_DIR + "/" + md_str +  ".png"
+
+    new_length = old_cd.unrendered_length
+    
+    script_file = open(old_cd.program)
+    user_script = script_file.read()
+        
+    profile_file_path = mltprofiles.get_profile_file_path(current_sequence().profile.description())
+
+    fctx = fluxity.render_preview_frame(user_script, script_file, int(new_length / 2), None, profile_file_path, json.dumps(old_cd.data_slots["fluxity_plugin_edit_data"]["editors_list"]))
+    fctx.priv_context.frame_surface.write_to_png(screenshot_file)
+
+    new_plugin_edit_data = copy.deepcopy(old_cd.data_slots["fluxity_plugin_edit_data"])
+
+    return (old_cd.program, screenshot_file, new_plugin_edit_data)
+    
 def get_plugin_code(plugin_folder_and_script):
     script_file = get_plugin_script_path(plugin_folder_and_script)
     args_file = open(script_file)

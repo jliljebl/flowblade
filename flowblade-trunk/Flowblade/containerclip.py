@@ -54,6 +54,8 @@ as needed to execute all actions on container clips.
 
 _blender_available = False
 
+_media_import_callback = None # Used to import generators sequentially from another project.
+
 ROW_WIDTH = 300
 FALLBACK_THUMB = "fallback_thumb.png"
 
@@ -273,7 +275,7 @@ def _gmic_load_complete(container_clip_data, dialog, is_valid):
 
         
 # ------------------------------------------------------- Fluxity
-# ------------------------------------------------------- ADDING GENERATOR AS MEDIA ITEM
+# ------------------------------------------------------- ADDING GENERATOR FROM SCRIPT AS MEDIA ITEM
 # Adding Generator item from loaded script file.
 def create_fluxity_media_item():
     script_select, row1 = _get_file_select_row_and_editor(_("Generator Plugin Script:"), None, _("Generator Plugin Script"))
@@ -300,12 +302,17 @@ def _fluxity_clip_create_dialog_callback(dialog, response_id, data):
         completion_thread = FluxityLoadCompletionThread(container_clip_data, dialog)
         completion_thread.start()
 
+# ------------------------------------------------------- ADDING GENERATOR FROM DIALOG AS MEDIA ITEM
 # Called when user selects 'Add Generator' in with option 'Add as Container Clip'.
-def create_fluxity_media_item_from_plugin(script_file, screenshot_file, plugin_data):
+def create_fluxity_media_item_from_plugin(script_file, screenshot_file, plugin_data, import_callback=None):
     container_data = ContainerClipData(appconsts.CONTAINER_CLIP_FLUXITY, script_file, None)
     container_data.data_slots["icon_file"] = screenshot_file
     container_data.data_slots["fluxity_plugin_edit_data"] = plugin_data
     
+    # Set callback
+    global _media_import_callback
+    _media_import_callback = import_callback
+
     # We need to exit this Gtk callback to get info text above updated.
     completion_thread = FluxityLoadCompletionThread(container_data, None, plugin_data)
     completion_thread.start()
@@ -352,7 +359,6 @@ def _show_fluxity_validation_error(err_msg):
 
 
 def _fluxity_unrendered_media_creation_complete(created_unrendered_clip_path, container_clip_data):
-    # This is called from inside Gdk.threads_enter(), entering second time here crashes.
     # Now that unrendered media has been created we have full container data info.
     data_object = container_clip_data.data_slots["fluxity_plugin_edit_data"]
     container_clip_data.editable = True
@@ -363,7 +369,7 @@ def _fluxity_unrendered_media_creation_complete(created_unrendered_clip_path, co
     # Copy created unrendered media clip.
     rand_id_str = str(os.urandom(16))
     clip_id_str = hashlib.md5(rand_id_str.encode('utf-8')).hexdigest()
-    # VAULT - to help future search
+    # CACHE
     unrendered_clip_path = userfolders.get_data_dir() + appconsts.CONTAINER_CLIPS_UNRENDERED +"/"+ clip_id_str + ".mp4"
     os.replace(created_unrendered_clip_path, unrendered_clip_path)
     container_clip_data.unrendered_media = unrendered_clip_path
@@ -372,10 +378,11 @@ def _fluxity_unrendered_media_creation_complete(created_unrendered_clip_path, co
     container_clip = ContainerClipMediaItem(PROJECT().next_media_file_id, data_object["name"], container_clip_data)
     PROJECT().add_container_clip_media_object(container_clip)
     _update_gui_for_media_object_add()
-
-# ------------------------------------------------------------- ADDING GENERATOR AS PRE-RENDERED CLIP
-# Called when user selects 'Add Generator' in with option 'Add as Container Clip'.
-#def create_fluxity_media_item_from_plugin(script_file, screenshot_file, plugin_data):
+    
+    # If we're doing media import we need to go back to do next.
+    if _media_import_callback != None:
+        _media_import_callback()
+        
     
 # ------------------------------------------------------------- ADDING GENERATOR AS PRE-RENDERED CLIP
 # Called when user selects 'Add Generator' in with option 'Add as Rendered Clip'.
