@@ -196,28 +196,30 @@ class MultiLineAnimation:
                 # These are in animations reversed.
                 anim_pos = 1.0 - anim_pos
             do_clip = True
-        
+
+        screen_w = fctx.get_profile_property(fluxity.PROFILE_WIDTH)
+        screen_h = fctx.get_profile_property(fluxity.PROFILE_HEIGHT)
         if do_clip == True:
             # If we are doing reveal animations, use clipping to achieve those.
             if anim_type == LineText.REVEAL_HORIZONTAL:
                 x_center = line_text.text_x + w / 2
                 w_reveal_size = w / 2 * anim_pos
-                cr.rectangle(x_center - w_reveal_size, ry, w_reveal_size * 2, rh)
+                cr.rectangle(x_center - w_reveal_size, 0, w_reveal_size * 2, screen_h)
                 cr.clip()
             elif anim_type == LineText.REVEAL_VERTICAL:
                 y_center = ry + h / 2 - line_text.line_layout.get_top_pad() // 2 + 4 # -15 is a hack because the 
                 h_reveal_size = h / 2 * anim_pos
-                cr.rectangle(rx, y_center - h_reveal_size, rw, h_reveal_size * 2)
+                cr.rectangle(0, y_center - h_reveal_size, screen_w, h_reveal_size * 2)
                 cr.clip()
             elif anim_type == LineText.REVEAL_LEFT:
                 x = line_text.text_x
                 w_reveal_size = w * anim_pos
-                cr.rectangle(x, ry, w_reveal_size, rh)
+                cr.rectangle(x, 0, w_reveal_size, screen_h)
                 cr.clip()
             elif anim_type == LineText.REVEAL_RIGHT:
                 w_reveal_size = w * anim_pos
                 x = line_text.text_x + w - w_reveal_size
-                cr.rectangle(x, ry, w_reveal_size, rh)
+                cr.rectangle(x, 0, w_reveal_size, screen_h)
                 cr.clip()
             # Bg type LINE_SOLID_WORD_LENGTH_BACKGROUND requires clipping to word length during animation.
             elif self.bg_type == MultiLineAnimation.LINE_SOLID_WORD_LENGTH_BACKGROUND:
