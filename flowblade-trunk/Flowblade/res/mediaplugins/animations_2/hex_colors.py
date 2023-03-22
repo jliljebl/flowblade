@@ -20,11 +20,12 @@ def init_script(fctx):
     fctx.set_version(1)
     fctx.set_author("Janne Liljeblad")
     
-    fctx.add_editor("Hue", fluxity.EDITOR_COLOR, (0.131, 0.0147, 0.163, 1.0))
-    fctx.add_editor("Hue Change", fluxity.EDITOR_FLOAT_RANGE, (0.5, 0.1, 5.0))
-    fctx.add_editor("Speed", fluxity.EDITOR_FLOAT_RANGE, (0.5, 0.1, 5.0))
+    fctx.add_editor("Hue", fluxity.EDITOR_COLOR, (0.3, 0.3, 0.3, 1.0))
+    fctx.add_editor("Hue Change", fluxity.EDITOR_FLOAT_RANGE, (0.2, 0.1, 5.0))
+    fctx.add_editor("Speed", fluxity.EDITOR_FLOAT_RANGE, (0.8, 0.1, 5.0))
     fctx.add_editor("Size", fluxity.EDITOR_FLOAT_RANGE, (50.0, 10.0, 300.0))
-
+    fctx.add_editor("Random Seed", fluxity.EDITOR_INT, 42)
+    
     # Points used to draw hexagons.
     _points = []
     for i in range(0, 6):
@@ -34,6 +35,11 @@ def init_script(fctx):
     fctx.set_data_obj("points", _points)
     
 def init_render(fctx):
+    # The script is possibly rendered using multiple prosesses and we need to have the
+    # same sequence of random numbers in all processes. If we don't set seed we'll get completely different
+    # ball positions, colors and speeds in different rendering processes.
+    random.seed(fctx.get_editor_value("Random Seed"))
+        
     hue = fctx.get_editor_value("Hue")
     hr, hg, hb, alpha = hue
     fctx.set_data_obj("hue_tuple", hue)
@@ -54,12 +60,10 @@ def init_render(fctx):
 
     for i in range(0, number_hex):
         color_positions.append(random.uniform(-1.0, 1.0))
-        color_add = random.uniform(-1.0, 1.0) * hue_change_size
-        middle_hues.append((_clamp(hr + color_add), _clamp(hg + color_add), _clamp(hb + color_add)))
         d = delta_size if random.uniform(-1.0, 1.0) > 0.0 else -delta_size
         deltas.append(d)
 
-    fctx.set_data_obj("middle_hues", middle_hues)
+    fctx.set_data_obj("middle_hue", (hr,hg,hb))
     fctx.set_data_obj("color_positions", color_positions)
     fctx.set_data_obj("deltas", deltas)
 
@@ -71,7 +75,7 @@ def render_frame(frame, fctx, w, h):
 
     size = fctx.get_editor_value("Size")
     points = fctx.get_data_obj("points")
-    middle_hues = fctx.get_data_obj("middle_hues")
+    hr, hg, hb = fctx.get_data_obj("middle_hue")
     color_positions = fctx.get_data_obj("color_positions")
     deltas = fctx.get_data_obj("deltas")
 
@@ -90,17 +94,21 @@ def render_frame(frame, fctx, w, h):
             index = row * cols + col
             
             # get color for hex
-            r, g, b = middle_hues[index]
             color_position = color_positions[index]
             delta = deltas[index]
-            r = _clamp( r + color_position * hue_change_anim_range)
-            g = _clamp( g + color_position * hue_change_anim_range)
-            b = _clamp( b + color_position * hue_change_anim_range)
+            r = _clamp( hr + color_position * hue_change_anim_range)
+            g = _clamp( hg + color_position * hue_change_anim_range)
+            b = _clamp( hb + color_position * hue_change_anim_range)
             
             # animate color
             color_position = color_position + delta
             color_positions[index] = color_position
             if abs(color_position) > 1.0:
+                if color_position > 1.0:
+                    color_position = 1.0 - (color_position - 1.0)
+                else:
+                    color_position = -1.0 + (color_position + 1.0)
+                color_positions[index] = color_position
                 delta = -delta
                 deltas[index] = delta
                 

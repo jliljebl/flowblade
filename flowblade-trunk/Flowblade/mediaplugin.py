@@ -236,6 +236,7 @@ def _clone_properties_callback(dialog, response_id, data, length_spin, name_entr
 
     new_plugin_edit_data = copy.deepcopy(old_cd.data_slots["fluxity_plugin_edit_data"])
     new_plugin_edit_data["name"] = name
+    new_plugin_edit_data["length"] = int(new_length)
 
     containerclip.create_fluxity_media_item_from_plugin(old_cd.program, screenshot_file, new_plugin_edit_data)
 
