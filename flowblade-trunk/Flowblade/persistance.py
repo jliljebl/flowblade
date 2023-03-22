@@ -256,7 +256,7 @@ def get_p_clip(clip):
             pass 
 
     # Set 'type' attribute for MLT object type
-    # This IS NOT USED anywhere anymore and should be removed.
+    # This is NOT USED anywhere anymore and should be removed.
     s_clip.type = 'Mlt__Producer'
 
     # Get replace filters
@@ -511,6 +511,8 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
     # Create and fill MLT tracks.
     for py_track in py_tracks:
         mlt_track = seq.add_track(py_track.type)
+        if py_track.id == len(py_tracks) - 1:
+            continue # Do not try to fill hidden track even if somehow a clip was saved there.
         fill_track_mlt(mlt_track, py_track)
         # Set audio gain and pan filter values
         if hasattr(mlt_track, "gain_filter"): # Hidden track and black track do not have these

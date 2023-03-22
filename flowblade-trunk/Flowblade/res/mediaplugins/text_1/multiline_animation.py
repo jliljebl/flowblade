@@ -227,9 +227,13 @@ class MultiLineAnimation:
                 cr.clip()
             # Everything else clipped clips lines to full bg size during animation.
             else:
-                cr.rectangle(rx - p, ry - p, aw + 2 * p, rh + 2 * p)
+                cr.rectangle(ax, ay, aw + 2 * p, ah + 2 * p)
                 cr.clip()
-
+        else:
+            # Make sure earlier clipping does not affect us.
+            cr.rectangle(0, 0, screen_w, screen_h)
+            cr.clip()
+            
     def get_constrained_pos(self, fctx, x, y, w, h):
         # Returns area position with centering applied.
         screen_w = fctx.get_profile_property(fluxity.PROFILE_WIDTH)
