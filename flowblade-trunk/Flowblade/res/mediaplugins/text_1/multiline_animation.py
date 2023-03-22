@@ -225,10 +225,19 @@ class MultiLineAnimation:
             elif self.bg_type == MultiLineAnimation.LINE_SOLID_WORD_LENGTH_BACKGROUND:
                 cr.rectangle(line_text.text_x - p, ry - p, w + 2 * p, rh + 2 * p)
                 cr.clip()
-            # Everything else clipped clips lines to full bg size during animation.
             else:
-                cr.rectangle(ax, ay, aw + 2 * p, ah + 2 * p)
-                cr.clip()
+                # We give full non-affected dimension to allow for big y-Off values
+                # in some animation types
+                if anim_type in LineText.HORIZONTAL_ANIMATIONS:
+                    cr.rectangle(rx - p, 0, aw + 2 * p, screen_h)
+                    cr.clip()
+                elif anim_type in LineText.VERTICAL_ANIMATIONS:
+                    cr.rectangle(0, ry - p, screen_w, rh + 2 * p)
+                    cr.clip()
+                else:
+                    # We should not hit this, but let's clip full text area if we're wrong.
+                    cr.rectangle(ax - p, ay - p, aw + 2 * p, ah + 2 * p)
+                    cr.clip()
         else:
             # Make sure earlier clipping does not affect us.
             cr.rectangle(0, 0, screen_w, screen_h)
