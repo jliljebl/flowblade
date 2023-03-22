@@ -616,7 +616,7 @@ def _encode_settings_callback(dialog, response_id):
     dialog.destroy()
 
 def _show_plugin_media_length_change_dialog():
-    dialog = Gtk.Dialog(_("Change Plugin Media Length"), _window,
+    dialog = Gtk.Dialog(_("Change Generator Length"), _window,
                         Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                         (_("Cancel"), Gtk.ResponseType.REJECT,
                         _("Ok"), Gtk.ResponseType.ACCEPT))
@@ -845,7 +845,7 @@ class ScriptToolWindow(Gtk.Window):
         # Render panel
         self.mark_in_label = guiutils.bold_label(_("Mark In:"))
         self.mark_out_label = guiutils.bold_label(_("Mark Out:"))
-        self.length_label = guiutils.bold_label(_("Plugin Media Length:"))
+        self.length_label = guiutils.bold_label(_("Generator Media Length:"))
 
         self.mark_in_info = Gtk.Label(label="")
         self.mark_out_info = Gtk.Label(label="")
@@ -1012,7 +1012,7 @@ class ScriptToolWindow(Gtk.Window):
 
         # Set pane and show window
         self.add(align)
-        self.tool_name = _("Generator Plugin Script Editor")
+        self.tool_name = _("Generator Script Editor")
         self.set_title(self.tool_name)
         self.set_position(Gtk.WindowPosition.CENTER)
         self.show_all()
@@ -1089,11 +1089,11 @@ class ScriptToolWindow(Gtk.Window):
             plugin_section = Gio.Menu.new()
             plugin_submenu = Gio.Menu.new()
             mediaplugin.fill_media_plugin_sub_menu_gio(_app, plugin_submenu, _hamburger_menu_callback)
-            plugin_section.append_submenu(_("Load Plugin Code"), plugin_submenu)
+            plugin_section.append_submenu(_("Load Generator Code"), plugin_submenu)
             menu.append_section(None, plugin_section)
             
             length_section = Gio.Menu.new()
-            self.add_menu_action(length_section, _("Change Plugin Media Length") + "...", "change-length", "change_length")
+            self.add_menu_action(length_section, _("Change Generator Media Length") + "...", "change-length", "change_length")
             menu.append_section(None, length_section)
             
             api_section = Gio.Menu.new()
