@@ -57,7 +57,7 @@ def init_render(fctx):
     deltas = []
     appearance_positions = []
     delta_size = 0.03 * SPEED
-    hue_change_size = 0.1 * fctx.get_editor_value("Hue Variablity")
+    hue_change_size = 0.1 * fctx.get_editor_value("Hue Change")
 
     for i in range(0, number_hex):
         color_positions.append(random.uniform(-1.0, 1.0))
@@ -87,7 +87,7 @@ def render_frame(frame, fctx, w, h):
 
     x0 = -size / 2.0
     y0 = -size / 2.0
-    hue_change_anim_range = 0.1 * fctx.get_editor_value("Hue Variablity")
+    hue_change_anim_range = 0.1 * fctx.get_editor_value("Hue Change")
 
     half_len = fctx.get_data_obj("length") / 2
     if frame <= half_len:
