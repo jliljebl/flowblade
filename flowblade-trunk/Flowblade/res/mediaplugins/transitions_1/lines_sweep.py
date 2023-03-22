@@ -54,7 +54,7 @@ def init_render(fctx):
 def render_frame(frame, fctx, w, h):
     cr = fctx.get_frame_cr()
 
-    line_colors = fctx.get_editor_value("Line Colors")
+    line_colors = fctx.get_editor_value("Colors")
     selected_colors = fctx.get_data_obj("colors_lists")[line_colors]
     user_hue = fctx.get_editor_value("User Hue")
     speed = fctx.get_editor_value("Speed")
