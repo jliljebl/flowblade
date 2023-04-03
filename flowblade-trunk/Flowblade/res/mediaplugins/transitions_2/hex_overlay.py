@@ -35,9 +35,8 @@ def init_script(fctx):
     fctx.set_data_obj("points", _points)
     
 def init_render(fctx):
-    # The script is possibly rendered using multiple prosesses and we need to have the
-    # same random numbers in all processes. If we don't set seed we'll get completely different
-    # ball positions color speeds in different rendering processes.
+    # The script is usually rendered using multiple prosesses and we need to have the exact
+    # same random number sequence in all processes.
     random.seed(fctx.get_editor_value("Random Seed"))
     
     hue = fctx.get_editor_value("Hue")
@@ -121,12 +120,12 @@ def render_frame(frame, fctx, w, h):
             if abs(color_position) > 1.0:
                 delta = -delta
                 deltas[index] = delta
-                
+
             # draw hex
             xt = x_row + shape_width * col
             cr.save()
             cr.translate(xt, yt)
-            
+
             x, y = _point_mult(size, *points[0])
             cr.move_to(x, y)
             for i in range(1, 6):

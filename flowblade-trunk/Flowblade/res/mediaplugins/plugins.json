@@ -1,6 +1,6 @@
 {
 "plugins":[ 
-		{ "folder":"animations_1", "scriptfile":"floating_balls.py", "name":"Floating Balls", "category":"Backgrounds"},
+		{ "folder":"animations_1", "scriptfile":"floating_boxes.py", "name":"Floating Boxes", "category":"Backgrounds"},
 		{ "folder":"animations_2", "scriptfile":"hex_colors.py", "name":"Hex Colors", "category":"Backgrounds"},
 		{ "folder":"transitions_1", "scriptfile":"lines_sweep.py", "name":"Lines Sweep", "category":"Cover Transitions"},
 		{ "folder":"transitions_2", "scriptfile":"hex_overlay.py", "name":"Hex Overlay", "category":"Cover Transitions"},
