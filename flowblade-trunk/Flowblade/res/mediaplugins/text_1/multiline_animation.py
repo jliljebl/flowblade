@@ -16,7 +16,7 @@ def init_script(fctx):
     fctx.add_editor("Text", fluxity.EDITOR_TEXT_AREA, "Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit.\nInteger nec odio.")
     fctx.add_editor("Pos X", fluxity.EDITOR_INT, 500)
     fctx.add_editor("Pos Y", fluxity.EDITOR_INT, 500)
-    fctx.add_editor("Pos Constraints", fluxity.EDITOR_OPTIONS, (0, ["Off", "Center", "Center Horizontal", "Center Vertical"]))
+    fctx.add_editor("Centering", fluxity.EDITOR_OPTIONS, (0, ["Off", "Center", "Center Horizontal", "Center Vertical"]))
     fctx.add_editor("Font", fluxity.EDITOR_PANGO_FONT, fluxity.EDITOR_PANGO_FONT_DEFAULT_VALUES)
     fctx.add_editor("Line Gap", fluxity.EDITOR_INT, 30)
     fctx.add_editor("Lines Delay Frames", fluxity.EDITOR_INT_RANGE, (0, 0, 50))
@@ -247,7 +247,7 @@ class MultiLineAnimation:
         # Returns area position with centering applied.
         screen_w = fctx.get_profile_property(fluxity.PROFILE_WIDTH)
         screen_h = fctx.get_profile_property(fluxity.PROFILE_HEIGHT)
-        constraints = fctx.get_editor_value("Pos Constraints")        
+        constraints = fctx.get_editor_value("Centering")
         if constraints == MultiLineAnimation.CONSTRAINT_CENTER or constraints == MultiLineAnimation.CONSTRAINT_HORIZONTAL:
             x = round(screen_w / 2 - w / 2)
         if constraints == MultiLineAnimation.CONSTRAINT_CENTER or constraints == MultiLineAnimation.CONSTRAINT_VERTICAL:

@@ -20,7 +20,7 @@ def init_script(fctx):
     fctx.add_editor("Text", fluxity.EDITOR_TEXT_AREA, "Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit.\nAliquam non condimentum magna.")
     fctx.add_editor("Pos X", fluxity.EDITOR_INT, 100)
     fctx.add_editor("Pos Y", fluxity.EDITOR_INT, 100)
-    fctx.add_editor("Pos Constraints", fluxity.EDITOR_OPTIONS, (0, ["Off", "Center", "Center Horizontal", "Center Vertical"]))
+    fctx.add_editor("Centering", fluxity.EDITOR_OPTIONS, (0, ["Off", "Center", "Center Horizontal", "Center Vertical"]))
     fctx.add_editor("Animation Type", fluxity. EDITOR_OPTIONS, (0,["Letters", "Words", "Lines"]))
     fctx.add_editor("Steps Per Frame", fluxity.EDITOR_FLOAT, 0.5)
     fctx.add_editor("Font", fluxity.EDITOR_PANGO_FONT, fluxity.EDITOR_PANGO_FONT_DEFAULT_VALUES)
@@ -158,7 +158,7 @@ class TypeWriter:
          # Returns area position with centering applied.
          screen_w = fctx.get_profile_property(fluxity.PROFILE_WIDTH)
          screen_h = fctx.get_profile_property(fluxity.PROFILE_HEIGHT)
-         constraints = fctx.get_editor_value("Pos Constraints")
+         constraints = fctx.get_editor_value("Centering")
          if constraints == TypeWriter.CONSTRAINT_CENTER or constraints == TypeWriter.CONSTRAINT_HORIZONTAL:
              x = round(screen_w / 2 - w / 2)
          if constraints == TypeWriter.CONSTRAINT_CENTER or constraints == TypeWriter.CONSTRAINT_VERTICAL:
