@@ -55,6 +55,7 @@ def init_render(fctx):
     color_positions = []
     deltas = []
     appearance_positions = []
+    appearance_positions_out = []
     delta_size = 0.03 * SPEED
     hue_change_size = 0.1 * fctx.get_editor_value("Hue Change")
 
@@ -66,10 +67,14 @@ def init_render(fctx):
         deltas.append(d)
         appearance_positions.append(random.uniform(0.0, 1.0))
 
+    for i in range(0, number_hex):
+        appearance_positions_out.append(random.uniform(0.0, 1.0))
+        
     fctx.set_data_obj("middle_hues", middle_hues)
     fctx.set_data_obj("color_positions", color_positions)
     fctx.set_data_obj("deltas", deltas)
     fctx.set_data_obj("appearance_positions", appearance_positions)
+    fctx.set_data_obj("appearance_positions_out", appearance_positions_out)
     fctx.set_data_obj("length", fctx.get_editor_value("Length"))
 
 def render_frame(frame, fctx, w, h):
@@ -92,10 +97,11 @@ def render_frame(frame, fctx, w, h):
     if frame <= half_len:
         # First half
         frame_appearance_position = frame / half_len
+        appearance_positions = fctx.get_data_obj("appearance_positions")
     else:
         # Second half
         frame_appearance_position = (half_len - (frame - half_len)) / half_len
-    appearance_positions = fctx.get_data_obj("appearance_positions")
+        appearance_positions = fctx.get_data_obj("appearance_positions_out")
 
     for row in range(0, rows):
         yt = y0 + shape_height * row
@@ -135,6 +141,7 @@ def render_frame(frame, fctx, w, h):
             
             cr.set_source_rgb(r,g,b)
             cr.fill()
+            cr.stroke()
             cr.restore()
     
 
