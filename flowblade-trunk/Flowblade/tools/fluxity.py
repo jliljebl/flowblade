@@ -24,42 +24,45 @@
     
     Fluxity scripting is a **Python scripting solution** created to provide **Flowblade Movie Editor** with a *Plugin API*.
     
-    Currently *Fluxity API*  is used in Flowblade *Generators* feature.
+    Currently *Fluxity API*  is used by Flowblade *Generators* feature.
     
     ## FLUXITY API
     
     *Fluxity API*  is made available to scripts mainly by *fluxity.FluxityContext* object and its methods.
 
-    This object is created to communicate with the script before calling any of the methods of a Media Plugin script.
+    This object is created to communicate with the script before calling any of the methods of the script.
     
     Some constants mentioned in this source file - such as `EDITOR_FLOAT` or `PROFILE_WIDTH` - can also used by scripts. 
     
     See this document below for *fluxity.FluxityContext* object API details.
 
-    ## REQUIRED INTERFACE
+    ## SCRIPT INTERFACE
     
-    A Python script that satisfies the following interface will load and run without crashing, but will not necessarily create any output.
+    A Python script needs to have the following functions to load and run without crashing as a Fluxity API conforming script.
     
     ```
     def init_script(fctx):
+        pass
     
     def init_render(fctx):
+        pass
     
     def render_frame(frame, fctx, w, h):
+        pass
     ```
-        
+
     ## SCRIPT LIFECYCLE
     
     **`init_script(fctx):`** This method is called when script is first loaded by Flowblade to create data structures with info on editors and script metadata. 
     
-    **`init_render(fctx):`** This method is called before a render is started to get user input on editors and possibly to create some additional data strctures.
+    **`init_render(fctx):`** This method is called before a render is started to get user input from editors and possibly to create some additional data strctures.
     
-    **`render_frame(frame, fctx, w, h):`** This method is called for each frame rendered to create output image.
+    **`render_frame(frame, fctx, w, h):`** This method is called for each frame rendered to create an output image for that frame.
     
     
     ## EXAMPLE SCRIPT
     
-    Here we have an example script called *'Floating Balls'* that is distributed as a *Generator* with Flowblade.
+    Here we have an example script called *'Floating Balls'*.
     
     ### init_script()
     
@@ -85,7 +88,7 @@
         fctx.add_editor("Opacity", fluxity.EDITOR_INT_RANGE, (100, 5, 100))
         fctx.add_editor("Random Seed", fluxity.EDITOR_INT, 42)
     ```
-    In *init_script()* we set some metadata like the name of the script diplayed to the user and author name, and we also define the editors that will be presented to the user.
+    In *init_script()* we define the editors that will be presented to the user and set some metadata like the name of the script diplayed to the user and the script author.
 
     ### init_render()
     ```
@@ -138,9 +141,7 @@
     ```
     In *init_render()* we read editor values set by the user and create the data structures for moving ball animations based on that data.
 
-    There should not be need to read editor values in other methods then *init_render()* since the editors are described in method *init_script()* and used in method *render_frame()* during render when user does not have access to edit the values.
-
-    Also note that **we need to set seed for Pythom module 'random'** because when a frame sequence is rendered using multiple processes we need the exact same sequence of random numbers produced in every rendering process. 
+    Also note that **we need to set seed for Pythom module 'random'** because when a frame sequence is rendered using multiple processes we need the exact same sequence of random numbers produced in every process. 
     
     ### render_frame()
     ```
@@ -183,16 +184,16 @@
         return max(min(v, 1.0), 0.0)
 
     ```
-    In *render_frame()* we first get access to *Cairo.Context* object that can be drawn onto to create output for current frame.
+    In *render_frame()* we first get access to *Cairo.Context* object that can be drawn onto to create output for the frame.
     
-    After that the data structures created in *init_render()* are accessed and image for frame is drawn.
+    After that the data structures created in *init_render()* are accessed and image is drawn.
     
-    There is a helper function *_clamp(v)* used to make sure that all color values are in range 0-1. Any number of helper functions and data structures can be created to achieve the desired output.
+    There is a helper function *_clamp(v)* used to make sure that all color values are in range 0-1. Any number of helper functions, objects and data structures can be created.
 
 
     ## DEVELOPING FLUXITY SCRIPTS
     
-    **Flowblade** comes with a simple development GUI tool for developing Fluxity scripts. It can be accessed from menu **Tools->Flowblade Media Plugin Editor**.
+    **Flowblade** comes with a simple development GUI tool for developing Fluxity scripts. It can be accessed from menu **Tools->Generator Script Editor**.
     
     You can edit scripts, render output from them, and recieve error messages using the development tool. From hamburger menu you can open and save your own scripts, access this document, and open and inspect example code of the *Generators* distributed with Flowblade. 
     
@@ -1375,7 +1376,7 @@ def render_frame_sequence(script, script_file, in_frame, out_frame, out_folder, 
     # Some simple heuristics to decide how many processes will be used for rendering
     cpu_count = multiprocessing.cpu_count()
     threads = cpu_count - 2
-    # Computer does not that many cores, let's only use one.
+    # Computer does not have that many cores, let's only use one.
     if threads < 2:
         threads = 1
     # This gets diminshing returns so let's cap it at 8.
