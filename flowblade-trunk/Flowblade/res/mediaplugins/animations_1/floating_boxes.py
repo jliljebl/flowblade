@@ -37,7 +37,7 @@ def init_script(fctx):
     fctx.add_editor("Colors", fluxity.EDITOR_OPTIONS, (0,["User Hue", "Pastels", "Light", "Earthy", "Neon", "Mondrian"]))
     fctx.add_editor("Hue", fluxity.EDITOR_COLOR, (0.8, 0.50, 0.3, 1.0))
     fctx.add_editor("Color Variation", fluxity.EDITOR_INT_RANGE, (4, 0, 20))
-    fctx.add_editor("Speed", fluxity.EDITOR_FLOAT_RANGE, (0.15, -5.0, 5.0))
+    fctx.add_editor("Speed", fluxity.EDITOR_FLOAT_RANGE, (0.09, -5.0, 5.0))
     fctx.add_editor("Number of Items", fluxity.EDITOR_INT_RANGE, (120, 10, 500))
     fctx.add_editor("Size", fluxity.EDITOR_INT_RANGE, (600, 10, 800))
     fctx.add_editor("Size Variation %", fluxity.EDITOR_INT_RANGE, (70, 0, 80))
@@ -166,7 +166,6 @@ def render_frame(frame, fctx, w, h):
         else:
             palette_color_index = color_index // NUMBER_OF_HUES
             hue_index = color_index % NUMBER_OF_HUES
-            fctx.log_line(str(color_index)  + " " +str(palette_color_index) + " " + str(len(item_colors)))
             palette_color_hues = item_colors[palette_color_index]
             draw_color = palette_color_hues[hue_index]
 
