@@ -13,7 +13,16 @@ MONDRIAN = [(0.18, 0.274, 0.477), (1.0, 1.0, 1.0), (0.968, 0.793, 0.0), (0.051, 
 
 PASTELS = [(0.38, 0.59, 0.83), (0.82, 0.48, 0.53), (0.48, 0.82, 0.60), (0.82, 0.65, 0.48), 
             (0.82, 0.82, 0.48), (0.80, 0.48, 0.82)]
-            
+
+NEON = [(0.816, 0.169, 0.576), (0.929, 0.290, 0.953), (0.976, 0.976, 0.224), 
+        (0.141, 0.157, 0.51), (0.345, 0.847, 0.937), (0.745, 0.898, 0.961)]
+
+EARTHY = [(0.38, 0.463, 0.294), (0.812, 0.725, 0.592), (0.608, 0.631, 0.482), 
+          (0.224, 0.318, 0.267), (0.306, 0.424, 0.314), (0.667, 0.545, 0.337)]
+
+LIGHT = [(0.894, 0.576, 0.576), (0.941, 0.922, 0.553), (0.976, 0.961, 0.922),
+         (0.894, 0.863, 0.812), (0.918, 0.329, 0.333), (0.02, 0.169, 0.357)]
+
 USER_HUE_MULTIPLIERS = [0.8, 0.9, 1.0, 1.1, 1.2, 1.3]
 
 
@@ -22,7 +31,7 @@ def init_script(fctx):
     fctx.set_version(1)
     fctx.set_author("Janne Liljeblad")
  
-    fctx.add_editor("Colors", fluxity.EDITOR_OPTIONS, (0,["User Hue", "Mondrian", "Pastels"]))
+    fctx.add_editor("Colors", fluxity.EDITOR_OPTIONS, (0,["User Hue", "Pastels", "Light", "Earthy", "Neon", "Mondrian"]))
     fctx.add_editor("User Hue", fluxity.EDITOR_COLOR, (0.8, 0.50, 0.3, 1.0))
     fctx.add_editor("Speed", fluxity.EDITOR_FLOAT_RANGE, (1.0, -5.0, 5.0))
     fctx.add_editor("Direction", fluxity. EDITOR_OPTIONS, (0,["Left To Right", "Right To Left"]))
@@ -46,10 +55,10 @@ def init_render(fctx):
     for i in range(0, 6):
         color_mult = USER_HUE_MULTIPLIERS[i]
         array = np.array(color_array) * color_mult
-        r, g, b , a= array
+        r, g, b , a = array
         user_colors.append((_clamp(r), _clamp(g), _clamp(b)))
 
-    fctx.set_data_obj("colors_lists",  [user_colors, MONDRIAN, PASTELS])
+    fctx.set_data_obj("colors_lists",  [user_colors, PASTELS, LIGHT, EARTHY, NEON, MONDRIAN])
     
 def render_frame(frame, fctx, w, h):
     cr = fctx.get_frame_cr()
@@ -60,7 +69,7 @@ def render_frame(frame, fctx, w, h):
     speed = fctx.get_editor_value("Speed")
     direction = fctx.get_editor_value("Direction")
 
-    anim_length = 31 # make user settable
+    anim_length = 31 # next ver make user settable?
     for i in range(0, len(lines_data)):
         line_data = lines_data[i]
         width, path_len_mult,  start_pos_off, end_pos_off, color_index = line_data
