@@ -323,8 +323,6 @@ class EditorWindow:
 
     def _init_gui_components(self):        
         # Disable Blender and G'Mic container clip menu items if not available.
-        if containerclip.blender_available() == False:
-            self.ui.get_widget('/MenuBar/ProjectMenu/ContainerClipsMenu/CreateBlenderContainerItem').set_sensitive(False)
         if gmic.gmic_available() == False:
             self.ui.get_widget('/MenuBar/ProjectMenu/ContainerClipsMenu/CreateGMicContainerItem').set_sensitive(False)
             
