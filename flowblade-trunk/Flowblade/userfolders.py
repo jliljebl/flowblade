@@ -145,9 +145,6 @@ def _maybe_create_xdg_dirs():
     if not os.path.exists(get_data_dir()  +  "/" + appconsts.USER_SHORTCUTS_DIR):
         os.mkdir(get_data_dir()  +  "/" + appconsts.USER_SHORTCUTS_DIR)
 
-
-
-
     #----------------- CACHE
     # Data that can be regerated by app or is transient
     # Cache root folder

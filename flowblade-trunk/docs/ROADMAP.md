@@ -1,15 +1,16 @@
 # FLOWBLADE ROADMAP
 
-## Technology updates
+Last updated April 4th 2023.
 
-* Moving video display away from SDL 1.2
+### Media cache and project data folder
 
-## Project data folder
+* Make possible to select folder where project media data is saved. Keep current XDG Data Directory as the default place.
+* Make projects save rendered clips, proxies and containe clips data individual in data folder to enable moving and destroying data per project.
 
-* make projects save rendered clips, proxies and containe clips data individual data folder to enable moving and destroying data per project.
+### GTK 4 port
 
-## Render issues
+* We will start gradually working towards doing GTK 4 through multiple releases. Adwaita dark theme looks promising and we will drop custom theming if possible.
 
-* try to reproduce and diagnose reported memory issues
+### Video display
 
-* attempt moving to *melt* for export render although it seems that some render issues persist with *melt* rendring too
+- Moving video display away from SDL 1.2 is still a long term goal, but there hasn't been a viable technology path to do that yet. Unfortunately SDL 2 no longer looks promising as the needed API for creating video displays for Wayland will likely never be available there.
