@@ -748,7 +748,7 @@ def main(root_path, filename):
 
 class MediaLinkerApp(Gtk.Application):
     def __init__(self, *args, **kwargs):
-        Gtk.Application.__init__(self, application_id="com.github.jliljebl.Flowblade.Scriptttool",
+        Gtk.Application.__init__(self, application_id=None,
                                  flags=Gio.ApplicationFlags.FLAGS_NONE)
         self.connect("activate", self.on_activate)
 

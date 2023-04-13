@@ -357,7 +357,7 @@ def main(root_path, force_launch=False):
     
 class BatchRenderApp(Gtk.Application):
     def __init__(self, *args, **kwargs):
-        Gtk.Application.__init__(self, application_id="com.github.jliljebl.Flowblade.BatchRenderApp",
+        Gtk.Application.__init__(self, application_id=None
                                  flags=Gio.ApplicationFlags.FLAGS_NONE)
         self.connect("activate", self.on_activate)
 
@@ -1214,7 +1214,7 @@ def single_render_main(root_path):
 
 class SingleRenderApp(Gtk.Application):
     def __init__(self, *args, **kwargs):
-        Gtk.Application.__init__(self, application_id="com.github.jliljebl.Flowblade.SingleRenderApp",
+        Gtk.Application.__init__(self, application_id=None,
                                  flags=Gio.ApplicationFlags.FLAGS_NONE)
         self.connect("activate", self.on_activate)
 
