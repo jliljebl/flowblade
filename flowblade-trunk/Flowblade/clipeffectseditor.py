@@ -46,7 +46,7 @@ import mltfilters
 import propertyedit
 import propertyeditorbuilder
 import respaths
-import tlinerender
+# import tlinerender
 import translations
 import updater
 import utils
@@ -63,8 +63,8 @@ _block_stack_update = False # Used to block full stack update when adding new fi
 # Property change polling.
 # We didn't put a layer of indirection to look for and launch events on filter property edits
 # so now we detect filter edits by polling. This has no performance impect, n is so small.
-_edit_polling_thread = None
-filter_changed_since_last_save = False
+#_edit_polling_thread = None
+# filter_changed_since_last_save = False
 
 # This is updated when filter panel is displayed and cleared when removed.
 # Used to update kfeditors with external tline frame position changes
@@ -469,13 +469,13 @@ def set_clip(clip, track, clip_index, show_tab=True):
 
     gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_FILTERS)
 
-    global _edit_polling_thread
+    #global _edit_polling_thread
     # Close old polling
-    if _edit_polling_thread != None:
-        _edit_polling_thread.shutdown()
+    #if _edit_polling_thread != None:
+    #    _edit_polling_thread.shutdown()
     # Start new polling
-    _edit_polling_thread = PropertyChangePollingThread()
-    _edit_polling_thread.start()
+    #_edit_polling_thread = PropertyChangePollingThread()
+    #_edit_polling_thread.start()
 
 def refresh_clip():
     if _filter_stack == None:
@@ -574,7 +574,7 @@ def clear_clip():
     show_text_in_edit_area(_("No Clip"))
 
     set_enabled(False)
-    shutdown_polling()
+    # shutdown_polling()
 
     global keyframe_editor_widgets
     keyframe_editor_widgets = []
@@ -1088,6 +1088,8 @@ class EffectStackSaveData:
 
     
 # ------------------------------------------------------- CHANGE POLLING
+"""
+tlinerendering disabled temporiraly
 def shutdown_polling():
     global _edit_polling_thread
     if _edit_polling_thread != None:
@@ -1123,7 +1125,7 @@ class PropertyChangePollingThread(threading.Thread):
                 if changed:
                     global filter_changed_since_last_save
                     filter_changed_since_last_save = True
-                    tlinerender.get_renderer().timeline_changed()
+                    # tlinerender.get_renderer().timeline_changed()
 
                 self.last_properties = new_properties
                 
@@ -1142,3 +1144,4 @@ class PropertyChangePollingThread(threading.Thread):
         
     def shutdown(self):
         self.running = False
+"""

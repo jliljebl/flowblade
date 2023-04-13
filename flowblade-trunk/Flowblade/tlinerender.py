@@ -17,6 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
+
 import hashlib
 from gi.repository import Gdk, Gtk, GLib
 import os

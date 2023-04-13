@@ -41,7 +41,7 @@ import movemodes
 import mediaplugin
 import resync
 import tlinewidgets
-import tlinerender
+# import tlinerender
 import trackaction
 import trimmodes
 import undo
@@ -373,7 +373,7 @@ class EditAction:
 
         resync.calculate_and_set_child_clip_sync_states()
 
-        tlinerender.get_renderer().timeline_changed()
+        # tlinerender.get_renderer().timeline_changed()
     
         # HACK, see above.
         if self.stop_for_edit:
@@ -399,7 +399,7 @@ class EditAction:
 
         resync.calculate_and_set_child_clip_sync_states()
 
-        tlinerender.get_renderer().timeline_changed()
+        # tlinerender.get_renderer().timeline_changed()
         tlinewidgets.set_match_frame(-1, -1, True)
 
         # HACK, see above.

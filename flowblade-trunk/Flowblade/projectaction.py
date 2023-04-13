@@ -83,7 +83,7 @@ import render
 import renderconsumer
 import rendergui
 import sequence
-import tlinerender
+# import tlinerender
 import undo
 import updater
 import userfolders
@@ -1885,7 +1885,7 @@ def _change_track_count_dialog_callback(dialog, response_id, tracks_select):
         # Put track compositors back
         current_sequence().add_full_track_compositors()
 
-    tlinerender.get_renderer().timeline_changed()
+    # tlinerender.get_renderer().timeline_changed()
 
 def combine_sequences():
     dialogs.combine_sequences_dialog(_combine_sequences_dialog_callback)

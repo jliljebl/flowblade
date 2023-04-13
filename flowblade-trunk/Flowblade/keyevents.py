@@ -49,7 +49,7 @@ import re
 import render
 import rotomask
 import tlineaction
-import tlinerender
+# import tlinerender
 import tlinewidgets
 import trimmodes
 import updater
@@ -199,9 +199,9 @@ def _handle_tline_key_event(event):
     if action == 'to_mark_in':
         monitorevent.to_mark_in_pressed()
         return True
-    if action == 'tline_render_request':
-        tlinerender.render_all_segments()
-        return True
+    #if action == 'tline_render_request':
+    #    tlinerender.render_all_segments()
+    #    return True
     if action == 'zoom_out':
         updater.zoom_out()
     if action == 'zoom_in':
@@ -510,9 +510,9 @@ def _handle_configurable_global_events(event):
     if action == 'open_next':
         projectaction.open_next_media_item_in_monitor()
         return True
-    if action == 'tline_render_request':
-        tlinerender.render_all_segments()
-        return True
+    # if action == 'tline_render_request':
+    #    tlinerender.render_all_segments()
+    #    return True
         
     return False
     
@@ -618,9 +618,9 @@ def _handle_delete():
         return True
 
     # Delete tline render segment
-    if gui.tline_render_strip.widget.has_focus() == True:
-        tlinerender.get_renderer().delete_selected_segment()
-        return True
+    #if gui.tline_render_strip.widget.has_focus() == True:
+    #    tlinerender.get_renderer().delete_selected_segment()
+    #    return True
     
     focus_editor = _get_focus_keyframe_editor(compositeeditor.keyframe_editor_widgets)
     if focus_editor != None:

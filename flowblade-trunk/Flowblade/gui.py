@@ -129,7 +129,7 @@ def capture_references(new_editor_window):
     tline_display = editor_window.tline_display
     tline_scale = editor_window.tline_scale
     tline_canvas = editor_window.tline_canvas
-    tline_render_strip = editor_window.tline_render_strip
+    # tline_render_strip = editor_window.tline_render_strip
     tline_scroll = editor_window.tline_scroller
     tline_info = editor_window.tline_info
     tline_column = editor_window.tline_column

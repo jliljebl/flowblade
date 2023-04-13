@@ -3233,8 +3233,8 @@ class TimeLineLeftBottom:
             self.widget.pack_start(proxy_img, False, False, 0)
             self.widget.pack_start(guiutils.pad_label(16,4), False, False, 0)
         
-        self.widget.pack_start(self.tline_render_mode_launcher.widget, False, False, 0)
-        self.widget.pack_start(guiutils.pad_label(8,4), False, False, 0)
+        #self.widget.pack_start(self.tline_render_mode_launcher.widget, False, False, 0)
+        #self.widget.pack_start(guiutils.pad_label(8,4), False, False, 0)
         
         self.widget.pack_start(self.comp_mode_launch.widget, False, False, 0)
         self.widget.pack_start(guiutils.pad_label(4,4), False, False, 0)

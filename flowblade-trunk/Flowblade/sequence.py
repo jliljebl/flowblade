@@ -35,7 +35,7 @@ import mltfilters
 import mlttransitions
 import mltrefhold
 import patternproducer
-import tlinerender
+# import tlinerender
 import utils
 
 # Media types for tracks or clips
@@ -859,7 +859,7 @@ class Sequence:
         if seq_len < 1:
             seq_len = 1
         
-        tlinerender.get_renderer().update_hidden_track(self.tracks[-1], seq_len)
+        # tlinerender.get_renderer().update_hidden_track(self.tracks[-1], seq_len)
 
     def fix_v1_for_render(self): 
         # This is a workaround to fix Issue #941 with H248 encoder not being able handle 

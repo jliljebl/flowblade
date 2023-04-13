@@ -50,7 +50,7 @@ import guiutils
 import respaths
 import sequence
 import snapping
-import tlinerender
+# import tlinerender
 import trimmodes
 import userfolders
 import utils
@@ -62,7 +62,7 @@ REF_LINE_Y = 250 # Y pos of tracks are relative to this. This is recalculated on
 
 MINIMUM_WIDTH = 430 # No effect on window layout we just want to put something > 0 on start.
 HEIGHT = appconsts.TLINE_HEIGHT # defines window min height together with editorwindow.TOP_ROW_HEIGHT
-STRIP_HEIGHT = tlinerender.STRIP_HEIGHT # timeline rendering control strip height
+# STRIP_HEIGHT = tlinerender.STRIP_HEIGHT # timeline rendering control strip height
 
 # Timeline draw constants
 # Other elements than black outline are not drawn if clip screen size
@@ -2931,11 +2931,10 @@ class TimeLineFrameScale:
         
         return grad
 
-
+"""
 class TimeLineRenderingControlStrip:
-    """
-    GUI component that passes draw and mouse events to tlinerender module with some added data.
-    """
+
+    # GUI component that passes draw and mouse events to tlinerender module with some added data.
 
     def __init__(self):
         self.widget = cairoarea.CairoDrawableArea2( MINIMUM_WIDTH, 
@@ -2948,10 +2947,8 @@ class TimeLineRenderingControlStrip:
         self.widget.connect("focus-out-event", self._focus_out_event)
     # --------------------------------------------- DRAW
     def _draw(self, event, cr, allocation):
-        """
-        Callback for repaint from CairoDrawableArea.
-        We get cairo contect and allocation.
-        """
+        # Callback for repaint from CairoDrawableArea.
+        # We get cairo contect and allocation.
         tlinerender.get_renderer().draw(event, cr, allocation, pos, pix_per_frame)
 
         
@@ -2967,7 +2964,8 @@ class TimeLineRenderingControlStrip:
         
     def _focus_out_event(self, widget, event):
         tlinerender.get_renderer().focus_out()
-    
+"""
+
 class KFToolFrameScale:
     
     def __init__(self, line_color):

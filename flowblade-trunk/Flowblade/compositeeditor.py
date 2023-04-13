@@ -45,7 +45,7 @@ import mlttransitions
 import propertyeditorbuilder
 import propertyedit
 import propertyparse
-import tlinerender
+# import tlinerender
 import utils
 
 widgets = utils.EmptyClass()
@@ -62,12 +62,13 @@ compositor_changed_since_last_save = False
 # Used to update kfeditors with external tline frame position changes.
 keyframe_editor_widgets = []
 
-
+"""
 def shutdown_polling():
     global _edit_polling_thread
     if _edit_polling_thread != None:
         _edit_polling_thread.shutdown()
         _edit_polling_thread = None
+"""
 
 def create_widgets():
     """
@@ -127,13 +128,13 @@ def set_compositor(new_compositor):
 
     gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_COMPOSITORS)
 
-    global _edit_polling_thread
+    #global _edit_polling_thread
     # Close old polling
-    if _edit_polling_thread != None:
-        _edit_polling_thread.shutdown()
+    #if _edit_polling_thread != None:
+    #    _edit_polling_thread.shutdown()
     # Start new polling
-    _edit_polling_thread = PropertyChangePollingThread()
-    _edit_polling_thread.start()
+    #_edit_polling_thread = PropertyChangePollingThread()
+    #_edit_polling_thread.start()
 
 def clear_compositor():
     global compositor
@@ -141,7 +142,7 @@ def clear_compositor():
     widgets.compositor_info.set_no_compositor_info()
     _display_compositor_edit_box()
     set_enabled(False)
-    shutdown_polling()
+    # shutdown_polling()
 
 def set_enabled(value):
     widgets.empty_label.set_sensitive(value)
@@ -394,6 +395,7 @@ def _set_fade_length_dialog_callback(dialog, response_id, spin):
         
     dialog.destroy()
 
+"""
 class PropertyChangePollingThread(threading.Thread):
     
     def __init__(self):
@@ -438,7 +440,7 @@ class PropertyChangePollingThread(threading.Thread):
         
     def shutdown(self):
         self.running = False
-        
+"""
 
 class CompositorValuesSaveData:
     

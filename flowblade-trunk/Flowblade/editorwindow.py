@@ -76,7 +76,7 @@ import shortcuts
 import singletracktransition
 import titler
 import tlineaction
-import tlinerender
+# import tlinerender
 import tlinewidgets
 import trackaction
 import updater
@@ -676,12 +676,12 @@ class EditorWindow:
         self.tline_hbox_2 = tline_hbox_2
         
         # Timeline renderer row
-        self.pad_box = Gtk.HBox()
-        self.pad_box.set_size_request(tlinewidgets.COLUMN_WIDTH, tlinewidgets.STRIP_HEIGHT)
-        self.tline_render_strip = tlinewidgets.TimeLineRenderingControlStrip()
-        self.tline_renderer_hbox = Gtk.HBox()
-        self.pad_box.show()
-        self.tline_render_strip.widget.show()
+        # self.pad_box = Gtk.HBox()
+        # self.pad_box.set_size_request(tlinewidgets.COLUMN_WIDTH, tlinewidgets.STRIP_HEIGHT)
+        # self.tline_render_strip = tlinewidgets.TimeLineRenderingControlStrip()
+        # self.tline_renderer_hbox = Gtk.HBox()
+        # self.pad_box.show()
+        # self.tline_render_strip.widget.show()
 
         # Comp mode selector
         size_adj = 1
@@ -698,19 +698,19 @@ class EditorWindow:
         self.comp_mode_launcher = comp_mode_launcher
 
         # Tlinerender mode selector
-        tro = guiutils.get_cairo_image("tline_render_off")
-        tra = guiutils.get_cairo_image("tline_render_auto")
-        trr = guiutils.get_cairo_image("tline_render_request")
-        surfaces = [tro, tra, trr]
-        tline_render_mode_launcher = guicomponents.ImageMenuLaunch(tlinerender.corner_mode_menu_launched, surfaces, 22*size_adj, 20)
-        tline_render_mode_launcher.connect_launched_menu(tlinerender.tlinerender_mode_menu)
-        tline_render_mode_launcher.surface_x = 0
-        tline_render_mode_launcher.surface_y = 4
-        tline_render_mode_launcher.widget.set_tooltip_markup(_("Timeline Rendering"))
-        self.tline_render_mode_launcher = tline_render_mode_launcher
+        #tro = guiutils.get_cairo_image("tline_render_off")
+        #tra = guiutils.get_cairo_image("tline_render_auto")
+        #trr = guiutils.get_cairo_image("tline_render_request")
+        #surfaces = [tro, tra, trr]
+        #tline_render_mode_launcher = guicomponents.ImageMenuLaunch(tlinerender.corner_mode_menu_launched, surfaces, 22*size_adj, 20)
+        #tline_render_mode_launcher.connect_launched_menu(tlinerender.tlinerender_mode_menu)
+        #tline_render_mode_launcher.surface_x = 0
+        #tline_render_mode_launcher.surface_y = 4
+        #tline_render_mode_launcher.widget.set_tooltip_markup(_("Timeline Rendering"))
+        #self.tline_render_mode_launcher = tline_render_mode_launcher
 
         # Bottom row filler
-        self.left_corner = guicomponents.TimeLineLeftBottom(comp_mode_launcher, tline_render_mode_launcher)
+        self.left_corner = guicomponents.TimeLineLeftBottom(comp_mode_launcher, None)
         self.left_corner.widget.set_size_request(tlinewidgets.COLUMN_WIDTH, 20)
 
         # Timeline scroller
@@ -724,7 +724,7 @@ class EditorWindow:
         tline_vbox = Gtk.VBox()
         tline_vbox.pack_start(self.tline_hbox_1, False, False, 0)
         tline_vbox.pack_start(self.tline_hbox_2, True, True, 0)
-        tline_vbox.pack_start(self.tline_renderer_hbox, False, False, 0)
+        #tline_vbox.pack_start(self.tline_renderer_hbox, False, False, 0)
         tline_vbox.pack_start(tline_hbox_3, False, False, 0)
 
         tline_vbox_frame = guiutils.get_panel_etched_frame(tline_vbox)
@@ -1275,6 +1275,7 @@ class EditorWindow:
         comp_top_free.connect("toggled", lambda w: projectaction.change_current_sequence_compositing_mode(w, appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE))
         comp_standard_full.connect("toggled", lambda w: projectaction.change_current_sequence_compositing_mode(w, appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK))
 
+    """
     def init_timeline_rendering_menu(self):
         menu_item = self.uimanager.get_widget('/MenuBar/SequenceMenu/TimelineRenderingMenu')
         menu = menu_item.get_submenu()
@@ -1289,21 +1290,21 @@ class EditorWindow:
         #rendering_auto.show()
         #menu.append(rendering_auto)
 
-        rendering_request = Gtk.RadioMenuItem.new_with_label([rendering_off],_("Render On Request"))
-        rendering_request.show()
-        menu.append(rendering_request)
+        #rendering_request = Gtk.RadioMenuItem.new_with_label([rendering_off],_("Render On Request"))
+        #rendering_request.show()
+        #menu.append(rendering_request)
 
         #menu_items = [rendering_off, rendering_auto, rendering_request]
         #menu_items[editorstate.get_tline_rendering_mode()].set_active(True)
 
-        if editorstate.get_tline_rendering_mode() == appconsts.TLINE_RENDERING_OFF:
-            rendering_off.set_active(True)
-        else:
-            rendering_request.set_active(True)
+        #if editorstate.get_tline_rendering_mode() == appconsts.TLINE_RENDERING_OFF:
+        #    rendering_off.set_active(True)
+        #else:
+        #    rendering_request.set_active(True)
 
-        rendering_off.connect("toggled", lambda w: tlinerender.change_current_tline_rendering_mode(w, appconsts.TLINE_RENDERING_OFF))
+        #rendering_off.connect("toggled", lambda w: tlinerender.change_current_tline_rendering_mode(w, appconsts.TLINE_RENDERING_OFF))
         #rendering_auto.connect("toggled", lambda w: tlinerender.change_current_tline_rendering_mode(w, appconsts.TLINE_RENDERING_AUTO))
-        rendering_request.connect("toggled", lambda w: tlinerender.change_current_tline_rendering_mode(w, appconsts.TLINE_RENDERING_REQUEST))
+        #rendering_request.connect("toggled", lambda w: tlinerender.change_current_tline_rendering_mode(w, appconsts.TLINE_RENDERING_REQUEST))
 
         sep = Gtk.SeparatorMenuItem()
         sep.show()
@@ -1311,7 +1312,8 @@ class EditorWindow:
 
         item = guiutils.get_menu_item(_("Settings..."), tlinerender.settings_dialog_launch, None)
         menu.append(item)
-
+    """
+    
     def fill_recents_menu_widget(self, menu_item, callback):
         """
         Fills menu item with menuitems to open recent projects.
@@ -1339,13 +1341,15 @@ class EditorWindow:
             menu.append(new_item)
             new_item.show()
 
+    """
     def hide_tline_render_strip(self):
         guiutils.remove_children(self.tline_renderer_hbox)
 
     def show_tline_render_strip(self):
         self.tline_renderer_hbox.pack_start(self.pad_box, False, False, 0)
         self.tline_renderer_hbox.pack_start(self.tline_render_strip.widget, True, True, 0)
-
+    """
+    
     def _change_windows_preference(self, widget, new_window_layout):
         if widget.get_active() == False:
             return
