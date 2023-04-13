@@ -1,4 +1,5 @@
 * {
+  all: unset;
   background-clip: padding-box;
   -GtkToolButton-icon-spacing: 4;
   -GtkTextView-error-underline-color: #FC4138;
