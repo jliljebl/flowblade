@@ -1200,13 +1200,6 @@ headerbar {
       background-color: transparentize($selection_mode_fg, 1);
     }
     &:hover { @extend %normal_selected_button; }
-    &:active, &:checked { @extend %selected-button:active; }
-
-    &:disabled {
-      @extend %selected-button.flat:disabled;
-
-      &:checked, &:active { @extend %selected-button:disabled:checked; }
-    }
   }
 
   // Linking stuff
@@ -1708,7 +1701,7 @@ popover.background {
   .csd &, & { border: 1px solid darken($borders_color, 5%); }
 
   & separator { background-color: $_popover_bg; }
-  label.separator { @extend label.separator; } // Noice
+  label.separator { @extend label, .separator; } // Noice
 
   > list,
   > .view,
@@ -2706,7 +2699,7 @@ placessidebar {
       margin-top: 2px;
       margin-bottom: 2px;
       padding: 0;
-      @extend button.flat;
+      @extend button, .flat;
       border-radius: 100%;
       -gtk-outline-radius: 100%;
 

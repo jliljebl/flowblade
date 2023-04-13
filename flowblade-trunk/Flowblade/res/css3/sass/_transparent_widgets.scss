@@ -117,7 +117,7 @@ filechooser,
 
   > box button {
     &:not(:active):not(:checked) { color: $dark_sidebar_fg; }
-    &:hover:not(:active) { @extend %dark_sidebar_button:hover; }
+    &:hover:not(:active) { @extend %dark_sidebar_button, :hover; }
   }
 
   .frame { border-color: darken(opacify($dark_sidebar_bg, 1), 5%); }

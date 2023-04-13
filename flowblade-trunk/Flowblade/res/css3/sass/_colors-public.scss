@@ -43,7 +43,7 @@ $wm_bg_unfocused: opacify($header_bg_backdrop, 1);
 @define-color wm_bg_unfocused #{"" + $wm_bg_unfocused};
 
 @define-color wm_highlight #{"" + $wm_highlight};
-@define-color wm_shadow alpha(#{black}, 0.35);
+@define-color wm_shadow alpha(#{"black"}, 0.35);
 
 //WM Buttons
 
