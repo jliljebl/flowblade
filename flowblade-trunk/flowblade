@@ -24,7 +24,7 @@ import os
 import sys
 
 print ("FLOWBLADE MOVIE EDITOR 2.10 alpha")
-print ("--------------------------")
+print ("---------------------------------")
 
 
 # Get launch script dir

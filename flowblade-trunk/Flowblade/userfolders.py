@@ -18,22 +18,12 @@
     along with Flowblade Movie Editor. If not, see <http://www.gnu.org/licenses/>.
 """
 from gi.repository import GLib
-from distutils import dir_util, file_util
 import os
 import threading
 
 import appconsts
 
-USING_DOT_DIRS = 0 # This is only used during testing and if user forces .dot dirs.
-USING_XDG_DIRS = 1
-
-_user_dirs = USING_XDG_DIRS # Which dirs we are using
-
-_copy_needed = False # If this true we need to copy data from dot dir to XDG dirs
-
 _init_error = None
-    
-_dot_dir = None
 
 _xdg_config_dir = None
 _xdg_data_dir = None
@@ -44,9 +34,8 @@ def init():
     global _init_error
     
     # Get user folder locations
-    global _dot_dir, _xdg_config_dir, _xdg_data_dir, _xdg_cache_dir
-    # Dot folder
-    _dot_dir = os.getenv("HOME") + "/.flowblade/"
+    global _xdg_config_dir, _xdg_data_dir, _xdg_cache_dir
+
     # XDG folders
     _xdg_config_dir = os.path.join(GLib.get_user_config_dir(), "flowblade")
     _xdg_data_dir = os.path.join(GLib.get_user_data_dir(), "flowblade")
@@ -65,36 +54,7 @@ def init():
         _init_error += "XDG Data dir: " + _xdg_data_dir + "\n"
         _init_error += "XDG Cache dir: " + _xdg_cache_dir + "\n"
         return
-    
-    # Determine if this a clean install or do we need to copy files fron dot dir to XDG dirs
-    # We think existance of prefs files will tell us what the state of the system is.
-    _dot_prefs_file_exists = os.path.exists(_dot_dir + "prefs" )
-    _xdg_prefs_file_exists = os.path.exists(_xdg_config_dir + "/prefs")
 
-    # If previous install exits and no data in XDG dirs, we need to copy existing data.
-    if _dot_prefs_file_exists == True and _xdg_prefs_file_exists == False:
-        print("userfolders.init(): .flowblade/ data exists, we need to copy to XDG folders.")
-        global _copy_needed
-        _copy_needed = True
-    else:
-        print("XDG user data exists.")
-
-    # Set folders and maybe create them
-    global _user_dirs
-    
-    _user_dirs = USING_XDG_DIRS
-
-def init_user_cache_for_flatpak():
-    try:
-        os.makedirs(get_user_home_cache_for_flatpak())
-    except:
-        pass # After first time exists.
-    
-def get_user_home_cache_for_flatpak(): # this user when communicating with Blender
-    user_home = os.getenv("HOME")
-    cache_folder = user_home + "/.cache/flowblade/"
-    return cache_folder
-    
 # --------------------------------------------------------- dirs paths
 def get_config_dir():
     return _xdg_config_dir + "/"
@@ -112,9 +72,6 @@ def get_hidden_screenshot_dir_path():
     return get_cache_dir() + "screenshot/"
 
 #------------------------------------------------------ state functions
-def data_copy_needed():
-    return _copy_needed
-
 def get_init_error():
     return _init_error
 
@@ -174,34 +131,3 @@ def _maybe_create_xdg_dirs():
         os.mkdir(get_hidden_screenshot_dir_path())
     if not os.path.exists(get_cache_dir() + appconsts.SCRIP_TOOL_DIR):
         os.mkdir(get_cache_dir() + appconsts.SCRIP_TOOL_DIR)
-
-# --------------------------------------------------------------- copying existing data to XDG folders
-class XDGCopyThread(threading.Thread):
-    
-    def __init__(self, dialog, completed_callback):
-        self.dialog = dialog
-        self.completed_callback = completed_callback
-        threading.Thread.__init__(self)
-
-    def run(self):
-        _copy_data_from_dot_folders_xdg_folders()
-        self.completed_callback(self.dialog)
-    
-def _copy_data_from_dot_folders_xdg_folders():
-    # THIS DOES NOT WORK NOW, dir_util was not available in Ubuntu 20.10
-    
-    
-    # ---------------------- CONFIG
-    print("Copying CONFIG...")
-    file_util.copy_file(_dot_dir + "prefs", get_config_dir() + "prefs", verbose=1)
-    file_util.copy_file(_dot_dir + "recent", get_config_dir() + "recent", verbose=1)
-    
-    # --------------------- DATA
-    print("Copying DATA...")
-    dir_util.copy_tree(_dot_dir + appconsts.USER_PROFILES_DIR, get_data_dir() + appconsts.USER_PROFILES_DIR, verbose=0)
-    dir_util.copy_tree(_dot_dir + appconsts.RENDERED_CLIPS_DIR, get_render_dir(), verbose=1)
-    
-    # --------------------- CACHE
-    print("CACHE DATA WILL BE LOST...")
-
-    print("XDG Copy done.")

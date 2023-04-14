@@ -178,12 +178,6 @@ def main(root_path):
 
     # Create user folders if needed and determine if we're using xdg or dotfile user folders.
     userfolders.init()
-    
-    # Flatpak still needs to use standard home XDG cache folder for Blender.
-    # Flatpak only uses XDG cache folder for Blender and we are keeping this around if we ever
-    # succeed in getting Blender going for Flatpak.
-    if editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
-        userfolders.init_user_cache_for_flatpak()
 
     # Set paths.
     respaths.set_paths(root_path)
@@ -383,12 +377,6 @@ def main(root_path):
     # Show first run worflow info dialog if not shown for this version of application.
     if editorstate.runtime_version_greater_then_test_version(editorpersistance.prefs.workflow_dialog_last_version_shown, editorstate.appversion):
         GLib.timeout_add(500, show_worflow_info_dialog)
-
-    # Copy to XDG.
-    if userfolders.data_copy_needed():
-        GLib.timeout_add(500, show_user_folders_copy_dialog)
-    else:
-        print("No user folders actions needed.")
 
     global disk_cache_timeout_id
     disk_cache_timeout_id = GLib.timeout_add(2500, check_disk_cache_size)
@@ -896,17 +884,6 @@ def show_user_folders_init_error_dialog(error_msg):
     # not done
     print(error_msg, " user folder XDG init error")
     return False
-
-def show_user_folders_copy_dialog():
-    dialog = dialogs.xdg_copy_dialog()
-    copy_thread = userfolders.XDGCopyThread(dialog, _xdg_copy_completed_callback)
-    copy_thread.start()
-    return False
-
-def _xdg_copy_completed_callback(dialog):
-    Gdk.threads_enter()
-    dialog.destroy()
-    Gdk.threads_leave()
 
 # ------------------------------------------------------- small and multiple screens
 # We need a bit more stuff because having multiple monitors can mix up setting draw parameters.
