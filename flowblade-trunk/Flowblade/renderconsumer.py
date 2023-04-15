@@ -245,6 +245,7 @@ def load_render_profiles():
     else:
         print("ffmpeg NOT available")
 
+    """
     # Test GPU rendering availability
     global H_264_NVENC_AVAILABLE, H_264_VAAPI_AVAILABLE
     # h264_nvenc
@@ -262,6 +263,10 @@ def load_render_profiles():
     if (ret_code == 0):
         print("h264_vaapi available")
         H_264_VAAPI_AVAILABLE = True
+    """
+    
+    H_264_NVENC_AVAILABLE = True
+    H_264_VAAPI_AVAILABLE = True
 
     # Create quality option groups
     global quality_option_groups
