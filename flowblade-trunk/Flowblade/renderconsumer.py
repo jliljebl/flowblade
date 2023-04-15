@@ -245,7 +245,6 @@ def load_render_profiles():
     else:
         print("ffmpeg NOT available")
 
-    """
     # Test GPU rendering availability
     global H_264_NVENC_AVAILABLE, H_264_VAAPI_AVAILABLE
     # h264_nvenc
@@ -263,7 +262,6 @@ def load_render_profiles():
     if (ret_code == 0):
         print("h264_vaapi available")
         H_264_VAAPI_AVAILABLE = True
-    """
     
     H_264_NVENC_AVAILABLE = True
     H_264_VAAPI_AVAILABLE = True
@@ -365,6 +363,7 @@ def _test_command(bash_args_list, print_output=True):
     process = subprocess.Popen(bash_args_list, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     out, err = process.communicate()
     if print_output == True:
+        print(bash_args_list)
         print(out)
         print(err)
         print(process.returncode)
