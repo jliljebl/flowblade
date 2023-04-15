@@ -93,7 +93,6 @@ def check_available_features(repo):
         return
 
 def render_profile_supported(frmt, vcodec, acodec):
-    # ??!!??
     if environment_detection_success == False:
         return (True, "")
         

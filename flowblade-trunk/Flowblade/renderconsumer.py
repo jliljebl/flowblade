@@ -237,6 +237,12 @@ def load_render_profiles():
     global render_encoding_doc
     render_encoding_doc = xml.dom.minidom.parse(file_path)
 
+    ret_code = _test_command("ffmpeg --version")
+    if (ret_code == 0):
+        print("ffmpeg available")
+    else:
+        print("ffmpeg NOT available")
+
     # Test GPU rendering availability
     global H_264_NVENC_AVAILABLE, H_264_VAAPI_AVAILABLE
     # h264_nvenc
@@ -348,9 +354,13 @@ def load_render_profiles():
     global proxy_encodings
     proxy_encodings = found_proxy_encodings
 
-def _test_command(bash_args_list):
+def _test_command(bash_args_list, print_output=True):
     process = subprocess.Popen(bash_args_list, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     out, err = process.communicate()
+    if print_output == True:
+        print(out)
+        print(err)
+        print(process.returncode)
     return process.returncode
         
 def get_default_render_consumer(file_path, profile):
