@@ -131,10 +131,10 @@
 
     <!-- MPEG --> 
     <encodingoption name="MPEG-4 / .mp4" extension="mp4" presetgroup="MPEG" type="av" audiodesc=" mp2" resize="True" qgroup="qgroup1">
-        <profile args="f=mp4 hq=1 acodec=libtwolame ab=192k vcodec=mpeg4 minrate=0 vb=%BITRATE%"/>
+        <profile args="f=mp4 hq=1 acodec=mp2 ab=256k vcodec=mpeg4 minrate=0 vb=%BITRATE%"/>
     </encodingoption>
     <encodingoption name="MPEG-2 / .mpg" extension="mpg" presetgroup="MPEG" audiodesc=" mp2" type="av" resize="True" qgroup="qgroup1">
-        <profile args="f=mpeg acodec=libtwolame ab=384k vcodec=mpeg2video minrate=0 vb=%BITRATE% bf=2 b_strategy=1 trellis=1" />
+        <profile args="f=mpeg acodec=mp2 ab=256k vcodec=mpeg2video minrate=0 vb=%BITRATE% bf=2 b_strategy=1 trellis=1" />
     </encodingoption>
     
     
@@ -231,7 +231,7 @@
         <profile args="f=mp4 acodec=libmp3lame ac=2 ab=192k ar=48000 vcodec=mpeg4 preset=ultrafast"/>
     </proxyencodingoption>
     <proxyencodingoption name="MPEG-2 Transport Stream" extension="m2t" type="av" audiodesc="mp2, 256kb/s, 48000Hz" resize="True" qgroup="qgroup1">
-       <profile args="f=mpegts acodec=libtwolame ab=256k ar=48000 vcodec=mpeg2video g=5" />
+       <profile args="f=mpegts acodec=mp2 ab=256k ar=48000 vcodec=mpeg2video g=5" />
     </proxyencodingoption>
     <proxyencodingoption name="Apple ProRes 422 Proxy / .mov" extension="mov" type="av" audiodesc="pcm" resize="True" qgroup="not_settable">
         <profile args="f=mov acodec=pcm_s24le ac=2 vcodec=prores vprofile=0 vendor=ap10 pix_fmt=yuv422p10le" />
