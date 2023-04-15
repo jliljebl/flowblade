@@ -75,6 +75,8 @@ PRESET_GROUP_ALPHA = "Alpha"
 EQUALS_SIGN_ENCODING = "@#@#"
 
 # GPU encoding availability.
+FFMPEG_TEST = ["ffmpeg", "-version"]
+
 H_264_NVENC_AVAILABLE = False
 H_264_NVENC_TEST = ["ffmpeg", "-hide_banner", "-f", "lavfi", "-i", "color=s=640x360", 
                     "-frames", "1", "-an", "-load_plugin", "hevc_hw", "-c:v", 
@@ -237,7 +239,7 @@ def load_render_profiles():
     global render_encoding_doc
     render_encoding_doc = xml.dom.minidom.parse(file_path)
 
-    ret_code = _test_command("ffmpeg -version")
+    ret_code = _test_command(FFMPEG_TEST)
     if (ret_code == 0):
         print("ffmpeg available")
     else:
