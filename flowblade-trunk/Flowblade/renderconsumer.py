@@ -237,7 +237,7 @@ def load_render_profiles():
     global render_encoding_doc
     render_encoding_doc = xml.dom.minidom.parse(file_path)
 
-    ret_code = _test_command("ffmpeg --version")
+    ret_code = _test_command("ffmpeg -version")
     if (ret_code == 0):
         print("ffmpeg available")
     else:
