@@ -32,10 +32,11 @@ import xml.dom.minidom
 import os
 import subprocess
 
+import appconsts
 import editorpersistance
 import mltenv
 import respaths
-
+import translations
 
 # File describing existing encoding and quality options
 RENDER_ENCODING_FILE = "/res/render/renderencoding.xml"
@@ -60,16 +61,16 @@ QUALITY = "quality"
 BITRATE = "bitrate"
 AUDIO_DESCRIPTION = "audiodesc"
 NON_USER = "nonuser"
-PRESET_GROUP = "presetgroup"
-PRESET_GROUP_H264 = "H.264, HEVC"
-PRESET_GROUP_NVENC = "NVENC"
-PRESET_GROUP_VAAPI = "VAAPI"
-PRESET_GROUP_MPEG = "MPEG"
-PRESET_GROUP_LOSSLESS = "Lossless"
-PRESET_GROUP_IMAGE_SEQUENCE = "Image Sequence"
-PRESET_GROUP_AUDIO = "Audio" 
-PRESET_GROUP_MISC = "webmetc"
-PRESET_GROUP_ALPHA = "Alpha"
+PRESET_GROUP = appconsts.PRESET_GROUP
+PRESET_GROUP_H264 = appconsts.PRESET_GROUP_H264
+PRESET_GROUP_NVENC = appconsts.PRESET_GROUP_NVENC 
+PRESET_GROUP_VAAPI = appconsts.PRESET_GROUP_VAAPI 
+PRESET_GROUP_MPEG = appconsts.PRESET_GROUP_MPEG 
+PRESET_GROUP_LOSSLESS = appconsts.PRESET_GROUP_LOSSLESS
+PRESET_GROUP_IMAGE_SEQUENCE = appconsts.PRESET_GROUP_IMAGE_SEQUENCE
+PRESET_GROUP_AUDIO = appconsts.PRESET_GROUP_AUDIO
+PRESET_GROUP_MISC = appconsts.PRESET_GROUP_MISC 
+PRESET_GROUP_ALPHA = appconsts.PRESET_GROUP_ALPHA 
 
 # ffmpeg arg values somtimes need equals signs in them.
 EQUALS_SIGN_ENCODING = "@#@#"
@@ -328,23 +329,23 @@ def load_render_profiles():
             ALPHA_encs.append((enc.name, enc))
 
     if len(H264_encs) > 0:
-        categorized_encoding_options.append((PRESET_GROUP_H264, H264_encs))
+        categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_H264), H264_encs))
     if len(NVENC_encs) > 0 and H_264_NVENC_AVAILABLE == True: # we are assuming that hevc_nvenc is also available if this is
-        categorized_encoding_options.append((PRESET_GROUP_NVENC, NVENC_encs))
+        categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_NVENC), NVENC_encs))
     if len(VAAPI_encs) > 0 and H_264_VAAPI_AVAILABLE == True:
-        categorized_encoding_options.append((PRESET_GROUP_VAAPI, VAAPI_encs))
+        categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_VAAPI), VAAPI_encs))
     if len(MPEG_encs) > 0:
-        categorized_encoding_options.append((PRESET_GROUP_MPEG, MPEG_encs))
+        categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_MPEG), MPEG_encs))
     if len(OGG_ETC_encs) > 0:
-        categorized_encoding_options.append(("WebM, ProRes, DNxHD", OGG_ETC_encs))
+        categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_MISC), OGG_ETC_encs))
     if len(LOSSLESS_encs) > 0:
-        categorized_encoding_options.append((PRESET_GROUP_LOSSLESS, LOSSLESS_encs))
+        categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_LOSSLESS), LOSSLESS_encs))
     if len(IMG_SEQ_encs) > 0:
-        categorized_encoding_options.append((PRESET_GROUP_IMAGE_SEQUENCE, IMG_SEQ_encs))
+        categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_IMAGE_SEQUENCE), IMG_SEQ_encs))
     if len(ALPHA_encs) > 0:
-        categorized_encoding_options.append((PRESET_GROUP_ALPHA, ALPHA_encs))
+        categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_ALPHA), ALPHA_encs))
     if len(AUDIO_encs) > 0:
-        categorized_encoding_options.append((PRESET_GROUP_AUDIO, AUDIO_encs))
+        categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_AUDIO), AUDIO_encs))
 
     # Proxy encoding
     proxy_encoding_nodes = render_encoding_doc.getElementsByTagName(PROXY_ENCODING_OPTION)

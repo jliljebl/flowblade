@@ -22,6 +22,7 @@ import gettext
 import locale
 import os
 
+import appconsts
 import respaths
 import editorpersistance
 import editorstate
@@ -35,6 +36,7 @@ param_names = {}
 combo_options = {}
 plugin_groups = {}
 plugin_names = {}
+encoder_groups = {}
 
 def init_languages():
     langs = []
@@ -135,8 +137,12 @@ def get_plugin_group_name(group_name):
         return plugin_groups[group_name]
     except KeyError:
         return group_name
-        
-plugin_groups
+
+def get_encoder_group_name(group_name):
+    try:
+        return encoder_groups[group_name]
+    except KeyError:
+        return group_name
 
 def load_filters_translations():
 
@@ -156,7 +162,19 @@ def load_filters_translations():
     filter_groups["Artistic"] = _("Artistic")
     filter_groups["Fade"] = _("Fade")
     filter_groups["Blend"] = _("Blend")
-    
+
+    global encoder_groups
+    encoder_groups[appconsts.PRESET_GROUP] = "presetgroup"
+    encoder_groups[appconsts.PRESET_GROUP_H264] = _("H.264, HEVC")
+    encoder_groups[appconsts.PRESET_GROUP_NVENC] = _("NVENC")
+    encoder_groups[appconsts.PRESET_GROUP_VAAPI] = _("VAAPI")
+    encoder_groups[appconsts.PRESET_GROUP_MPEG] = _("MPEG")
+    encoder_groups[appconsts.PRESET_GROUP_LOSSLESS] = _("Lossless")
+    encoder_groups[appconsts.PRESET_GROUP_IMAGE_SEQUENCE] = _("Image Sequence")
+    encoder_groups[appconsts.PRESET_GROUP_AUDIO] = _("Audio") 
+    encoder_groups[appconsts.PRESET_GROUP_MISC] = _("WebM, ProRes, DNxHD")
+    encoder_groups[appconsts.PRESET_GROUP_ALPHA] = _("Alpha")
+
     # filter names
     global filter_names
     filter_names["Alpha Gradient"] = _("Alpha Gradient")
