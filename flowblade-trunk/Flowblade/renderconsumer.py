@@ -68,7 +68,7 @@ PRESET_GROUP_MPEG = "MPEG"
 PRESET_GROUP_LOSSLESS = "Lossless"
 PRESET_GROUP_IMAGE_SEQUENCE = "Image Sequence"
 PRESET_GROUP_AUDIO = "Audio" 
-PRESET_GROUP_OGG_ETC = "oggwebmetc"
+PRESET_GROUP_MISC = "webmetc"
 PRESET_GROUP_ALPHA = "Alpha"
 
 # ffmpeg arg values somtimes need equals signs in them.
@@ -316,7 +316,7 @@ def load_render_profiles():
             VAAPI_encs.append((enc.name, enc))
         elif enc.presetgroup == PRESET_GROUP_MPEG:
             MPEG_encs.append((enc.name, enc))
-        elif enc.presetgroup == PRESET_GROUP_OGG_ETC:
+        elif enc.presetgroup == PRESET_GROUP_MISC:
             OGG_ETC_encs.append((enc.name, enc))
         elif enc.presetgroup == PRESET_GROUP_LOSSLESS:
             LOSSLESS_encs.append((enc.name, enc))
@@ -336,7 +336,7 @@ def load_render_profiles():
     if len(MPEG_encs) > 0:
         categorized_encoding_options.append((PRESET_GROUP_MPEG, MPEG_encs))
     if len(OGG_ETC_encs) > 0:
-        categorized_encoding_options.append(("Ogg, WebM, ProRes, DNxHD", OGG_ETC_encs))
+        categorized_encoding_options.append(("WebM, ProRes, DNxHD", OGG_ETC_encs))
     if len(LOSSLESS_encs) > 0:
         categorized_encoding_options.append((PRESET_GROUP_LOSSLESS, LOSSLESS_encs))
     if len(IMG_SEQ_encs) > 0:
