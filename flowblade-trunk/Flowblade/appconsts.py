@@ -136,8 +136,8 @@ COMMENT_SORT = 2
 
 # Rendered clip types
 RENDERED_DISSOLVE = 0
-RENDERED_WIPE = 1
-RENDERED_COLOR_DIP = 2
+RENDERED_WIPE = 1 # DEPRECATED
+RENDERED_COLOR_DIP = 2 # DEPRECATED
 RENDERED_FADE_IN = 3
 RENDERED_FADE_OUT = 4
 
@@ -151,7 +151,7 @@ CONVERTING_TO_USE_ORIGINAL_MEDIA = 3
 AUTOSAVE_DIR = "autosave/"
 
 # Hidden media folders
-# NOTE: We have not been fully consistant with the ending forward slashes.
+# NOTE: We have not been consistant with the starting/ending forward slashes.
 AUDIO_LEVELS_DIR = "audiolevels/"
 PROXIES_DIR = "proxies/"
 THUMBNAILS_DIR = "thumbnails"
@@ -224,7 +224,7 @@ P_PROP_LAST_RENDER_SELECTIONS = "P_PROP_LAST_RENDER_SELECTIONS"
 P_PROP_TRANSITION_ENCODING = "P_PROP_TRANSITION_ENCODING"
 P_PROP_DEFAULT_FADE_LENGTH = "P_PROP_DEFAULT_FADE_LENGTH"
 
-# A context defining action taken when mouse press happens based on edit mode ands mouse position
+# A context defining action taken when mouse press happens based on edit mode and mouse position
 POINTER_CONTEXT_NONE = 0
 POINTER_CONTEXT_END_DRAG_LEFT = 1
 POINTER_CONTEXT_END_DRAG_RIGHT = 2
@@ -237,7 +237,8 @@ POINTER_CONTEXT_BOX_SIDEWAYS = 8
 POINTER_CONTEXT_MULTI_ROLL = 9
 POINTER_CONTEXT_MULTI_SLIP = 10
 
-# Timeline tool ids. NOTE: a tool can map to 1 or more editmodes and even module specified submodes, depending on complexity of edit actions.
+# Timeline tool ids. 
+# NOTE: a tool can map to 1 or more editmodes and even module specified submodes, depending on complexity of edit actions.
 TLINE_TOOL_INSERT = 1
 TLINE_TOOL_OVERWRITE = 2
 TLINE_TOOL_TRIM = 3
@@ -254,7 +255,7 @@ TLINE_TOOL_MULTI_TRIM = 11
 MONITOR_TLINE_BUTTON_PRESSED = 1
 MONITOR_CLIP_BUTTON_PRESSED = 2
 
-# Appliation thmes and colors preference
+# Appliation themes and colors preference
 FLOWBLADE_THEME = 0 # Deprecated
 DARK_THEME = 1
 LIGHT_THEME = 2
@@ -353,7 +354,7 @@ KEYFRAME_LINEAR_EQUALS_STR = "="
 KEYFRAME_SMOOTH_EQUALS_STR = "~="
 KEYFRAME_DISCRETE_EQUALS_STR = "|="
 
-# Multi edit panel
+# Multi edit panel display options
 EDIT_MULTI_EMPTY = "edit_multi_empty"
 EDIT_MULTI_FILTERS = "edit_multi_filters"
 EDIT_MULTI_COMPOSITORS = "edit_multi_compositors"
