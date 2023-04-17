@@ -222,7 +222,6 @@ class EncodingOption:
                     arg2 = str(quality_option.replace_map[arg2])
             args_tuples.append((arg1, arg2))
         
-        print("args_tuples", args_tuples)
         return args_tuples
 
     def get_audio_description(self):

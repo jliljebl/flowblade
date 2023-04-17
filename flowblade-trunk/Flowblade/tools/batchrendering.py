@@ -1160,6 +1160,7 @@ def add_single_render_item(flowblade_project, render_path, args_vals_list, mark_
                                       sequence_index, args_vals_list, timestamp, length, \
                                       mark_in, mark_out, render_data)
 
+    print("Single render with argsvals:", render_item.args_vals_list)
 
     # Write project 
     project_path = hidden_dir + CURRENT_RENDER_PROJECT_FILE

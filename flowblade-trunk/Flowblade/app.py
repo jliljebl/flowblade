@@ -277,7 +277,7 @@ def main(root_path):
 
     # We need to test which GPU render options work after profiles are inited because
     # we do the test by doing test renders.
-    rendergputest.test_gpu_rendering_options()
+    rendergputest.test_gpu_rendering_options(render.update_encoding_selector)
     
     # If we have crashed we could have large amount of disk space wasted unless we delete all files here.
     # tlinerender.app_launch_clean_up() feature teporarily disabled.

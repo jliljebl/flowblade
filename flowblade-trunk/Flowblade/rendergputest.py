@@ -9,6 +9,7 @@ import gi
 
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
+from gi.repository import GLib
 
 try:
     import mlt7 as mlt
@@ -21,6 +22,7 @@ import sys
 import time
 import threading
 
+import appconsts
 import atomicfile
 import editorpersistance
 import editorstate
@@ -28,60 +30,94 @@ import renderconsumer
 import respaths
 import mltinit
 import mltprofiles
+import translations
 import userfolders
 import utils
+
 
 CURRENT_TEST_RENDER_ARGS_VALS_LIST = "gpu_test_render.argsvalslist"
 CURRENT_TEST_RENDER_OUT_FILE = "outfile"
 
 test_thread = None
 
-def test_gpu_rendering_options():
-    test_runner_thread = GPUTestRunnerThread()
+test_results = {}
+
+
+def test_gpu_rendering_options(selector_update_func):
+    test_runner_thread = GPUTestRunnerThread(selector_update_func)
     test_runner_thread.start()
 
-
-
-    #if len(NVENC_encs) > 0 and H_264_NVENC_AVAILABLE == True: # we are assuming that hevc_nvenc is also available if this is
-    #    categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_NVENC), NVENC_encs))
-    #if len(VAAPI_encs) > 0 and H_264_VAAPI_AVAILABLE == True:
-    #    categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_VAAPI), VAAPI_encs))
-    
+def _update_encode_selector(selector_update_func):
+    selector_update_func()
 
 
 class GPUTestRunnerThread(threading.Thread):
-    def __init__(self):
+    def __init__(self, selector_update_func):
         threading.Thread.__init__(self)
+        self.selector_update_func = selector_update_func
 
     def run(self):
         profile = mltprofiles.get_default_profile()
-        
-        print("NVENC_encs")
+
+        # NVENC_encs
+        working_NVENC_encs = []
         for item in renderconsumer.NVENC_encs:
             name, enc_opt = item
-            #print(name)
+            returncode = self._test_encoder_option(name, enc_opt)
+            test_results[name] = returncode
+            if returncode == 0:
+                working_NVENC_encs.append((enc_opt.name, enc_opt))
 
-            args_vals_path = _get_test_render_args_vals_path()
-            
-            #print(enc_opt.quality_options, enc_opt.quality_default_index)
-            if enc_opt.quality_default_index != None:
-                quality_option = enc_opt.quality_options[enc_opt.quality_default_index]
-            else:
-                quality_option = enc_opt.quality_options[0]
-            args_vals_list = enc_opt.get_args_vals_tuples_list(profile, quality_option)
+        if len(working_NVENC_encs) > 0:
+            renderconsumer.categorized_encoding_options.insert(1, (translations.get_encoder_group_name(appconsts.PRESET_GROUP_NVENC), working_NVENC_encs))
 
-            with atomicfile.AtomicFileWriter(args_vals_path, "wb") as afw:
-                item_write_file = afw.get_file()
-                pickle.dump(args_vals_list, item_write_file)
+        # VAAPI_encs
+        working_VAAPI_encs = []
+        for item in renderconsumer.VAAPI_encs:
+            name, enc_opt = item
+            returncode = self._test_encoder_option(name, enc_opt)
+            test_results[name] = returncode
+            if returncode == 0:
+                working_VAAPI_encs.append((enc_opt.name, enc_opt))
 
-            FLOG = open(userfolders.get_cache_dir() + "log_gputest_render", 'w')
-            
-            process = subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladegputestrender"], stdin=FLOG, stdout=FLOG, stderr=FLOG)
-            out, err = process.communicate()
+        if len(working_VAAPI_encs) > 0:
+            renderconsumer.categorized_encoding_options.insert(1, (translations.get_encoder_group_name(appconsts.PRESET_GROUP_VAAPI), working_VAAPI_encs))
 
-            print(name, process.returncode)
+        print("GPU test results", test_results)
+        
+        if len(working_VAAPI_encs) > 0 or len(working_NVENC_encs) > 0:
+            GLib.idle_add(_update_encode_selector, self.selector_update_func)
+
+    def _test_encoder_option(self, name, enc_opt):
+
+        # Create and write to disk argsvals list for test render
+        profile = mltprofiles.get_default_profile()
+        args_vals_path = _get_test_render_args_vals_path()
+
+        if enc_opt.quality_default_index != None:
+            quality_option = enc_opt.quality_options[enc_opt.quality_default_index]
+        else:
+            quality_option = enc_opt.quality_options[0]
+
+        args_vals_list = enc_opt.get_args_vals_tuples_list(profile, quality_option)
+
+        with atomicfile.AtomicFileWriter(args_vals_path, "wb") as afw:
+            item_write_file = afw.get_file()
+            pickle.dump(args_vals_list, item_write_file)
+
+        # Launch test render
+        FLOG = open(userfolders.get_cache_dir() + "log_gputest_render", 'w')
+
+        process = subprocess.Popen([sys.executable, respaths.LAUNCH_DIR + "flowbladegputestrender"], stdin=FLOG, stdout=FLOG, stderr=FLOG)
+        try:
+            out, err = process.communicate(timeout=5)
+        except subprocess.TimeoutExpired:
+            return -1
+ 
+        return process.returncode
 
 
+# ------------------------------------------------ TEST SUBPROCESS
 def main(root_path):
     
     # called from .../launch/flowbladesinglerender script
@@ -107,20 +143,17 @@ def main(root_path):
     test_thread = GPUTestRenderThread()
     test_thread.start()
 
-
-
-
-
 class GPUTestRenderThread(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
     
     def run(self):
+        start = time.time()
         self.running = False
         hidden_dir = userfolders.get_cache_dir()
 
         args_vals_list = utils.unpickle(_get_test_render_args_vals_path())
-        print(args_vals_list)
+
         profile = mltprofiles.get_default_profile()
         producer = _create_test_render_tractor(profile)
 
@@ -132,7 +165,7 @@ class GPUTestRenderThread(threading.Thread):
 
         # Get render range
         start_frame = 0
-        end_frame = producer.get_length()
+        end_frame = producer.get_length() - 1
         wait_for_stop_render = True
         
         # Create and launch render thread
@@ -151,28 +184,30 @@ class GPUTestRenderThread(threading.Thread):
         while self.running:
             if render_thread.running == False: # Rendering has reached end
                 self.running = False
-
             time.sleep(0.1)
-                
+
+        end = time.time()
+        print("render time:", str(end - start))
+
         render_thread.shutdown()
 
-def _get_test_render_args_vals_path():
-    return userfolders.get_cache_dir() + CURRENT_TEST_RENDER_ARGS_VALS_LIST
-
-def _get_test_render_out_file_path_start():
-    return userfolders.get_cache_dir() + CURRENT_TEST_RENDER_OUT_FILE
-    
 def _create_test_render_tractor(profile):
     # Create tractor and tracks
     tractor = mlt.Tractor()
     multitrack = tractor.multitrack()
     track0 = mlt.Playlist()
     multitrack.connect(track0, 0)
-    producer = mlt.Producer(profile, "colour", "#000000")
+    media_path = respaths.ROOT_PATH + "/res/gpu-test/gpu_test_clip.mp4"
+    producer = mlt.Producer(profile, str(media_path)) 
     track0.insert(producer, 0, 0, 50)
 
     return tractor
-    
-#def _kill_
-    
+
+
+# ------------------------------------------------ DISK DATA PATHS
+def _get_test_render_args_vals_path():
+    return userfolders.get_cache_dir() + CURRENT_TEST_RENDER_ARGS_VALS_LIST
+
+def _get_test_render_out_file_path_start():
+    return userfolders.get_cache_dir() + CURRENT_TEST_RENDER_OUT_FILE
 

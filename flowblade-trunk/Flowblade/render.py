@@ -230,6 +230,15 @@ def set_default_values_for_widgets(movie_name_too=False):
     widgets.args_panel.use_args_check.set_active(False)
     widgets.profile_panel.use_project_profile_check.set_active(True)
 
+def update_encoding_selector():
+    # Lets make doubly sure we're not updating somthing that soes npt exist.
+    while hasattr(widgets, "encoding_panel") == False:
+        print("no encoding_panel")
+        time.sleep(0.5)
+        
+    widgets.encoding_panel.encoding_selector.categorised_combo.refill(renderconsumer.categorized_encoding_options)
+    widgets.encoding_panel.encoding_selector.categorised_combo.set_selected(renderconsumer.DEFAULT_ENCODING_NAME)
+    
 def enable_user_rendering(value):
     widgets.encoding_panel.set_sensitive(value)
     widgets.profile_panel.set_sensitive(value)
