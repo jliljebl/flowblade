@@ -98,6 +98,7 @@ import propertyeditorbuilder
 import proxyediting
 import render
 import renderconsumer
+import rendergputest
 import respaths
 import resync
 import rotomask
@@ -274,6 +275,10 @@ def main(root_path):
     # Create list of available mlt profiles.
     mltprofiles.load_profile_list()
 
+    # We need to test which GPU render options work after profiles are inited because
+    # we do the test by doing test renders.
+    rendergputest.test_gpu_rendering_options()
+    
     # If we have crashed we could have large amount of disk space wasted unless we delete all files here.
     # tlinerender.app_launch_clean_up() feature teporarily disabled.
 

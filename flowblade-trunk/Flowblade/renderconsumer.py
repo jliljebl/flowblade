@@ -78,6 +78,9 @@ EQUALS_SIGN_ENCODING = "@#@#"
 # GPU encoding availability.
 FFMPEG_TEST = ["ffmpeg", "-version"]
 
+NVENC_encs = []
+VAAPI_encs = []
+ 
 H_264_NVENC_AVAILABLE = False
 H_264_NVENC_TEST = ["ffmpeg", "-hide_banner", "-f", "lavfi", "-i", "color=s=640x360", 
                     "-frames", "1", "-an", "-load_plugin", "hevc_hw", "-c:v", 
@@ -246,6 +249,7 @@ def load_render_profiles():
     else:
         print("ffmpeg NOT available")
 
+    """
     # Test GPU rendering availability
     global H_264_NVENC_AVAILABLE, H_264_VAAPI_AVAILABLE
     # h264_nvenc
@@ -263,6 +267,7 @@ def load_render_profiles():
     if (ret_code == 0):
         print("h264_vaapi available")
         H_264_VAAPI_AVAILABLE = True
+    """
     
     H_264_NVENC_AVAILABLE = True
     H_264_VAAPI_AVAILABLE = True
@@ -297,7 +302,7 @@ def load_render_profiles():
             not_supported_encoding_options.append(encoding_option)
 
     # Create categorised structure.
-    global categorized_encoding_options
+    global categorized_encoding_options, NVENC_encs, VAAPI_encs
     H264_encs = []
     NVENC_encs = []
     VAAPI_encs = []
@@ -330,10 +335,10 @@ def load_render_profiles():
 
     if len(H264_encs) > 0:
         categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_H264), H264_encs))
-    if len(NVENC_encs) > 0 and H_264_NVENC_AVAILABLE == True: # we are assuming that hevc_nvenc is also available if this is
-        categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_NVENC), NVENC_encs))
-    if len(VAAPI_encs) > 0 and H_264_VAAPI_AVAILABLE == True:
-        categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_VAAPI), VAAPI_encs))
+    #if len(NVENC_encs) > 0 and H_264_NVENC_AVAILABLE == True: # we are assuming that hevc_nvenc is also available if this is
+    #    categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_NVENC), NVENC_encs))
+    #if len(VAAPI_encs) > 0 and H_264_VAAPI_AVAILABLE == True:
+    #    categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_VAAPI), VAAPI_encs))
     if len(MPEG_encs) > 0:
         categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_MPEG), MPEG_encs))
     if len(OGG_ETC_encs) > 0:

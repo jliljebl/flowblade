@@ -1437,4 +1437,3 @@ def _start_single_render_shutdown():
 
 def _single_render_shutdown():
     _single_render_app.quit()
-    
