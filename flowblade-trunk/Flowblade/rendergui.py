@@ -617,6 +617,9 @@ def get_render_panel_left(render_widgets, render_clicked_cb, to_queue_clicked_cb
         render_panel.pack_start(encoding_panel, False, False, 0)
         render_panel.pack_start(Gtk.Label(), True, True, 0)
     
+    # Stop panel width popping when/if GPU renders added.
+    render_panel.set_size_request(300, 30)
+    
     return render_panel
 
 def get_render_panel_right(render_widgets, render_clicked_cb, to_queue_clicked_cb):
