@@ -113,8 +113,6 @@ def create_pattern_producer(profile, bin_clip):
     except:
         clip = _create_patten_producer_old_style(profile, bin_clip)
 
-    print("create_pattern_producer")
-
     clip.path = ""
     clip.filters = []
     clip.name = bin_clip.name
@@ -126,7 +124,7 @@ def create_pattern_producer(profile, bin_clip):
     return clip
 
 # --------------------------------------------------- DECPRECATED producer create methods
-# --------------------------------------------------- REMOVE 2017
+# --------------------------------------------------- LOOK TO REMOVE.
 """
 We originally did producer creation using elifs and now using pickle() for save/load 
 requires keeping this around until atleast 2017 for backwards compatibility.
