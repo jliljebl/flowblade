@@ -312,14 +312,6 @@ class BinCountClip(AbstractBinClip):
 
     def set_property_values(self):
         pass
-        """
-        self.s1 = s1
-        self.s2 = s2
-        self.s3 = s3
-        self.s4 = s4
-        self.m1 = m1
-        self.m2 = m2
-        """
         
     def create_mlt_producer(self, profile):
         producer = mlt.Producer(profile, "count")    

@@ -136,8 +136,6 @@ def _write_thumbnail_image(profile, file_path, action_object):
 
     # Create one frame producer
     producer = mlt.Producer(profile, str(file_path))
-    #if producer.is_valid() == False:
-    #    raise ProducerNotValidError(file_path)
 
     info = utils.get_file_producer_info(producer)
 
