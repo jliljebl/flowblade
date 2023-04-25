@@ -19,7 +19,7 @@
 """
 
 """
-This module does render tests to find out which GPU encodings work.
+This module does render tests to find out which GPU encodings work on user system.
 """
 
 try:
@@ -113,7 +113,7 @@ class GPUTestRunnerThread(threading.Thread):
 
     def _test_encoder_option(self, name, enc_opt):
 
-        # Create and write to disk argsvals list for test render
+        # Create and write to disk argsvals list for test render.
         profile = mltprofiles.get_default_profile()
         args_vals_path = _get_test_render_args_vals_path()
 
@@ -172,7 +172,7 @@ class GPUTestRenderThread(threading.Thread):
     
     def run(self):
         start = time.time()
-        self.running = False
+
         hidden_dir = userfolders.get_cache_dir()
 
         args_vals_list = utils.unpickle(_get_test_render_args_vals_path())
@@ -201,12 +201,7 @@ class GPUTestRenderThread(threading.Thread):
         while render_thread.has_started_running == False:
             time.sleep(0.05)
 
-        # View update loop
-        self.running = True
-
-        while self.running:
-            if render_thread.running == False: # Rendering has reached end
-                self.running = False
+        while render_thread.running != False:
             time.sleep(0.1)
 
         end = time.time()

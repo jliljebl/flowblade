@@ -78,21 +78,10 @@ EQUALS_SIGN_ENCODING = "@#@#"
 # GPU encoding availability.
 FFMPEG_TEST = ["ffmpeg", "-version"]
 
+# These are filled here with all possible GPU encodings, and then rendergputest.py 
+# uses these to test and make available GPU encodings.
 NVENC_encs = []
 VAAPI_encs = []
- 
-H_264_NVENC_AVAILABLE = False
-H_264_NVENC_TEST = ["ffmpeg", "-hide_banner", "-f", "lavfi", "-i", "color=s=640x360", 
-                    "-frames", "1", "-an", "-load_plugin", "hevc_hw", "-c:v", 
-                    "h264_nvenc", "-f", "rawvideo", "pipe:"]
-HEVC_NVENC_AVAILABLE = False
-HEVC_NVENC_TEST = ["ffmpeg", "-hide_banner", "-f", "lavfi", "-i", "color=s=640x360", 
-                    "-frames", "1", "-an", "-load_plugin", "hevc_hw", "-c:v", 
-                    "hevc_nvenc", "-f", "rawvideo", "pipe:"]
-H_264_VAAPI_AVAILABLE = False
-H_264_VAAPI_TEST = ["ffmpeg", "-hide_banner", "-f", "lavfi", "-i", "color=s=640x360", 
-                    "-frames", "1", "-an", "-init_hw_device", "vaapi=vaapi0:,connection_type=x11", 
-                    "-filter_hw_device", "vaapi0", "-vf", "format=nv12,hwupload", "-c:v", "h264_vaapi", "-f", "rawvideo", "pipe:"]
 
 # Default encoding name.
 DEFAULT_ENCODING_NAME = "H.264 / .mp4" 
@@ -248,29 +237,6 @@ def load_render_profiles():
     else:
         print("ffmpeg NOT available")
 
-    """
-    # Test GPU rendering availability
-    global H_264_NVENC_AVAILABLE, H_264_VAAPI_AVAILABLE
-    # h264_nvenc
-    ret_code = _test_command(H_264_NVENC_TEST)
-    if (ret_code == 0):
-        print("h264_nvenc available")
-        H_264_NVENC_AVAILABLE = True
-    # hevc_nvenc
-    ret_code = _test_command(HEVC_NVENC_TEST)
-    if (ret_code == 0):
-        print("hevc_nvenc available")
-        HEVC_NVENC_AVAILABLE = True # NOT USED !
-    # vaapi
-    ret_code = _test_command(H_264_VAAPI_TEST)
-    if (ret_code == 0):
-        print("h264_vaapi available")
-        H_264_VAAPI_AVAILABLE = True
-    """
-    
-    H_264_NVENC_AVAILABLE = True
-    H_264_VAAPI_AVAILABLE = True
-
     # Create quality option groups
     global quality_option_groups
     qgroup_nodes = render_encoding_doc.getElementsByTagName(QUALITY_GROUP)
@@ -334,10 +300,6 @@ def load_render_profiles():
 
     if len(H264_encs) > 0:
         categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_H264), H264_encs))
-    #if len(NVENC_encs) > 0 and H_264_NVENC_AVAILABLE == True: # we are assuming that hevc_nvenc is also available if this is
-    #    categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_NVENC), NVENC_encs))
-    #if len(VAAPI_encs) > 0 and H_264_VAAPI_AVAILABLE == True:
-    #    categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_VAAPI), VAAPI_encs))
     if len(MPEG_encs) > 0:
         categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_MPEG), MPEG_encs))
     if len(OGG_ETC_encs) > 0:
@@ -350,6 +312,8 @@ def load_render_profiles():
         categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_ALPHA), ALPHA_encs))
     if len(AUDIO_encs) > 0:
         categorized_encoding_options.append((translations.get_encoder_group_name(PRESET_GROUP_AUDIO), AUDIO_encs))
+
+    # If GPU rendering available it is added from rendergputest.py
 
     # Proxy encoding
     proxy_encoding_nodes = render_encoding_doc.getElementsByTagName(PROXY_ENCODING_OPTION)
@@ -364,7 +328,7 @@ def load_render_profiles():
     global proxy_encodings
     proxy_encodings = found_proxy_encodings
 
-def _test_command(bash_args_list, print_output=True):
+def _test_command(bash_args_list, print_output=False):
     process = subprocess.Popen(bash_args_list, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     out, err = process.communicate()
     if print_output == True:
@@ -725,5 +689,3 @@ class XMLCompoundRenderPlayer(threading.Thread):
         print("XML compound clip render done")
 
         self.render_done_callback(self.file_name, self.media_name)
-
-
