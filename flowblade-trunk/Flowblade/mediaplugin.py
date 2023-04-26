@@ -154,24 +154,13 @@ def _get_categories_list():
 
 # This method is used by scriptool.py create sub menu to load generator code into 
 # editor window as an exemple.
-def fill_media_plugin_sub_menu(menu, callback):
-    for group_data in _plugins_groups:
-        group_name, group = group_data
-        sub_menu = Gtk.Menu.new()
-        menu.append_submenu(group_name, sub_menu)
-        for plugin in group:
-            plugin_menu_item = Gtk.MenuItem.new_with_label(translations.get_plugin_name(plugin.name))
-            plugin_menu_item.connect("activate", callback, plugin.folder)
-            sub_menu.append(plugin_menu_item)
-
-        menu.append(menu_item)
-    menu.show_all()
-
 def fill_media_plugin_sub_menu_gio(app, menu, callback):
     for group_data in _plugins_groups:
         group_name, group = group_data
+        print("group_name", group_name)
+        group_name_translated = translations.get_plugin_group_name(group_name)
         sub_menu = Gio.Menu.new()
-        menu.append_submenu(group_name, sub_menu)
+        menu.append_submenu(group_name_translated, sub_menu)
         for plugin in group:
             label = translations.get_plugin_name(plugin.name)
             item_id = plugin.name.lower().replace(" ", "_")

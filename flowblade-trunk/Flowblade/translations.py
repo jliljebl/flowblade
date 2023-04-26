@@ -667,7 +667,23 @@ def load_filters_translations():
     param_names["Background Color"] = _("Background Color")
     param_names["Background Opacity"] = _("Background Opacity")
     param_names["Line Y Offset"] = _("Line Y Offset")
-    
+    param_names["Color Variation"] = _("Color Variation")
+    param_names["Shadow Opacity"] = _("Shadow Opacity")
+    param_names["Shadow Offset") = _("Shadow Offset")
+    param_names["Background Frames Out") = _("Background Frames Out")
+    param_names["Background Anim Out") = _("Background Anim Out")
+    param_names["Background Frames In") = _("Background Frames In")
+    param_names["Background Anim In") = _("Background Anim In")
+    param_names["Background Line Width"] = _("Background Line Width")
+    param_names["Fade Out Type"] = _("Fade Out Type")
+    param_names["Centering"] = _("Centering")
+    param_names["Reveal Horizontal"] = _("Reveal Horizontal")
+    param_names["Reveal Vertical"] = _("Reveal Vertical")
+    param_names["Reveal Left"] = _("Reveal Left")
+    param_names["Reveal Right"] = _("Reveal Right")
+    param_names["Fade In Type"] = _("Fade In Type")
+
+
     # Combo options
     global combo_options
     combo_options["Shave"] = _("Shave")
@@ -765,6 +781,9 @@ def load_filters_translations():
     combo_options["Mondrian"] = _("Mondrian")
     combo_options["Pastels"] = _("Pastels")
     combo_options["User Hue"] = _("User Hue")
+    combo_options["Light"] = _("Light")
+    combo_options["Earthy"] = _("Earthy")
+    combo_options["Neon"] = _("Neon")
     combo_options["Left To Right"] = _("Left To Right")
     combo_options["Right To Left"] = _("Right To Left")
     combo_options["Ease In"] = _("Ease In")
@@ -792,16 +811,26 @@ def load_filters_translations():
     combo_options["Letters"] = _("Letters")
     combo_options["Words"] = _("Words")
     combo_options["Lines"] = _("Lines")
-    
-    
+    combo_options["Off"] = _("Off")
+    combo_options["Center"] = _("Center")
+    combo_options["Center Horizontal"] = _("Center Horizontal")
+    combo_options["Center Vertical"] = _("Center Vertical")
+    combo_options["Compact Linear"] = _("Compact Linear")
+    combo_options["Lines Word Length Solid"] = _("Lines Word Length Solid")
+    combo_options["Lines Solid Screen Width"] = _("Lines Solid Screen Width")
+    combo_options["Horizontal Lines"] = _("Horizontal Lines")
+    combo_options["Underline"] = _("Underline")
+    combo_options["Strikethrought"] = _("Strikethrought")
+    combo_options["Lines Solid"] = _("Lines Solid")
+
     # Added for 2.10
-    plugin_groups["Animation Plugins"] = _("Animations Plugins")
-    plugin_groups["Cover Transition Plugins"] = _("Cover Transition Plugins")
-    plugin_groups["Text Plugins"] = _("Text Plugins")
+    plugin_groups["Backgrounds"] = _("Backgrounds")
+    plugin_groups["Cover Transitions"] = _("Cover Transitions")
+    plugin_groups["Animated Texts"] = _("Animated Texts")
     
     plugin_names["Lines Sweep"] = _("Lines Sweep")
     plugin_names["Hex Colors"] = _("Hex Colors")
-    plugin_names["Floating Balls"] = _("Floating Balls")
-    plugin_names["TypeWriter"] = _("TypeWriter")
+    plugin_names["Floating Boxes"] = _("Floating Boxes")
+    plugin_names["Typewriter"] = _("Typewriter")
     plugin_names["Multiline Text"] = _("Multiline Text")
     plugin_names["Hex Overlay"] = _("Hex Overlay")
