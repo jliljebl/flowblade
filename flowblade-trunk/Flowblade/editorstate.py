@@ -225,10 +225,9 @@ def mlt_version_is_greater_correct(test_version):
     return False
 
 def runtime_version_greater_then_test_version(test_version, runtime_version):
-    runtime_ver = runtime_version.split(".")
-    test_ver = test_version.split(".")
-    
-    if runtime_ver[0] > test_ver[0]:
+    runtime_ver = list(map(int, runtime_version.split(".")))
+    test_ver = list(map(int, test_version.split(".")))
+    if int(runtime_ver[0]) > int(test_ver[0]):
         return True
     elif runtime_ver[0] == test_ver[0]:
         if runtime_ver[1] > test_ver[1]:

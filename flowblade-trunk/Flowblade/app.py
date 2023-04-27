@@ -380,6 +380,7 @@ def main(root_path):
     Gtk.Settings.get_default().set_property("gtk-error-bell", False)
     
     # Show first run worflow info dialog if not shown for this version of application.
+    print(editorpersistance.prefs.workflow_dialog_last_version_shown, editorstate.appversion)
     if editorstate.runtime_version_greater_then_test_version(editorpersistance.prefs.workflow_dialog_last_version_shown, editorstate.appversion):
         GLib.timeout_add(500, show_worflow_info_dialog)
 
