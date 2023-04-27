@@ -335,7 +335,7 @@ class EditorPreferences:
         self.delta_overlay = True # DEPRECATED, NOT USER SETTABLE ANYMORE
         self.show_alpha_info_message = True
         self.playback_follow_move_tline_range = True
-        self.active_tools = [1, 2, 3, 4, 5, 6, 7]
+        self.active_tools = [2, 11, 6, 1, 9, 10]
         self.top_level_project_panel = True # DEPRECATED, NOT USER SETTABLE ANYMORE
         self.theme = appconsts.FLOWBLADE_THEME_NEUTRAL
         self.dnd_action = appconsts.DND_OVERWRITE_NON_V1

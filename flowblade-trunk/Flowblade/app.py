@@ -337,7 +337,7 @@ def main(root_path):
     autosave_files = get_autosave_files()
 
     # Show splash
-    if ((editorpersistance.prefs.display_splash_screen == True) and len(autosave_files) == 0) and not editorstate.runtime_version_greater_then_test_version(editorpersistance.prefs.workflow_dialog_last_version_shown, editorstate.appversion):
+    if ((editorpersistance.prefs.display_splash_screen == True) and len(autosave_files) == 0):
         global splash_timeout_id
         splash_timeout_id = GLib.timeout_add(2600, destroy_splash_screen)
         splash_screen.show_all()
@@ -379,11 +379,6 @@ def main(root_path):
     # In PositionNumericalEntries we are using Gtk.Entry objects in a way that works for us nicely, but is somehow "error" for Gtk, so we just kill this.
     Gtk.Settings.get_default().set_property("gtk-error-bell", False)
     
-    # Show first run worflow info dialog if not shown for this version of application.
-    print(editorpersistance.prefs.workflow_dialog_last_version_shown, editorstate.appversion)
-    if editorstate.runtime_version_greater_then_test_version(editorpersistance.prefs.workflow_dialog_last_version_shown, editorstate.appversion):
-        GLib.timeout_add(500, show_worflow_info_dialog)
-
     global disk_cache_timeout_id
     disk_cache_timeout_id = GLib.timeout_add(2500, check_disk_cache_size)
 
@@ -872,13 +867,6 @@ def show_splash_screen():
 def destroy_splash_screen():
     splash_screen.destroy()
     GLib.source_remove(splash_timeout_id)
-
-def show_worflow_info_dialog():
-    editorpersistance.prefs.workflow_dialog_last_version_shown = editorstate.appversion
-    editorpersistance.save()
-    
-    worflow_info_dialog = workflow.WorkflowDialog(open_project)
-    return False
 
 # ------------------------------------------------------- disk cahce size check
 def check_disk_cache_size():
