@@ -202,7 +202,10 @@ class BoxMoveData:
         
         start_frame = tlinewidgets.get_frame(x1)
         end_frame = tlinewidgets.get_frame(x2) 
-        
+
+        if start_frame < 0:
+            start_frame = 0
+
         track_top_index = self.get_bounding_track_index(y1, tlinewidgets.get_track(y1))
         track_bottom_index = self.get_bounding_track_index(y2, tlinewidgets.get_track(y2))
 
