@@ -58,8 +58,9 @@ def preferences_dialog():
     notebook.append_page(performance_panel, Gtk.Label(label=_("Performance")))
     guiutils.set_margins(notebook, 4, 24, 6, 0)
 
-    dialog.connect('response', _preferences_dialog_callback, (gen_opts_widgets, edit_prefs_widgets, playback_prefs_widgets, view_pref_widgets, \
-        performance_widgets))
+    dialog.connect('response', _preferences_dialog_callback, 
+                    (gen_opts_widgets, edit_prefs_widgets, playback_prefs_widgets, 
+                    view_pref_widgets, performance_widgets))
     dialog.vbox.pack_start(notebook, True, True, 0)
     dialogutils.set_outer_margins(dialog.vbox)
     dialogutils.default_behaviour(dialog)
@@ -202,6 +203,22 @@ def _edit_prefs_panel():
     auto_render_plugins = Gtk.CheckButton()
     auto_render_plugins.set_active(prefs.auto_render_media_plugins)
 
+    dnd_action = Gtk.ComboBoxText()
+    dnd_action.append_text(_("Always Overwrite Blanks"))
+    dnd_action.append_text(_("Overwrite Blanks on non-V1 Tracks"))
+    dnd_action.append_text(_("Always Insert"))
+    dnd_action.set_active(editorpersistance.prefs.dnd_action) # appconsts values correspond with order here.
+
+    if prefs.default_compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+        active = 0
+    else:
+        active = 1
+    default_comp_mode = Gtk.ComboBoxText()
+    default_comp_mode.append_text(_("Standard Full Track"))
+    default_comp_mode.append_text(_("Top Down Free Move"))
+    default_comp_mode.set_active(active)
+    
+    row17 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Drag-and-Drop Action:")), dnd_action, PREFERENCES_LEFT))
     row4 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Graphics default length:")), gfx_length_spin, PREFERENCES_LEFT))
     row9 = _row(guiutils.get_checkbox_row_box(cover_delete, Gtk.Label(label=_("Cover Transition/Fade clips on delete if possible"))))
     # Jul-2016 - SvdB - For play_pause button
@@ -210,8 +227,10 @@ def _edit_prefs_panel():
     row12 = _row(guiutils.get_checkbox_row_box(hide_file_ext_button, Gtk.Label(label=_("Hide file extensions when importing Clips"))))
     row15 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Open Clip in Effects Editor")), effects_editor_clip_load, PREFERENCES_LEFT))
     row16 = _row(guiutils.get_checkbox_row_box(auto_render_plugins, Gtk.Label(label=_("Autorender Generators"))))
-
+    row18 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Default Compositing Mode:")), default_comp_mode, PREFERENCES_LEFT))
+    
     vbox = Gtk.VBox(False, 2)
+    vbox.pack_start(row17, False, False, 0)
     vbox.pack_start(row4, False, False, 0)
     vbox.pack_start(row9, False, False, 0)
     vbox.pack_start(row11, False, False, 0)
@@ -219,6 +238,7 @@ def _edit_prefs_panel():
     vbox.pack_start(row12, False, False, 0)
     vbox.pack_start(row15, False, False, 0)
     vbox.pack_start(row16, False, False, 0)
+    vbox.pack_start(row18, False, False, 0)
     vbox.pack_start(Gtk.Label(), True, True, 0)
 
     guiutils.set_margins(vbox, 12, 0, 12, 12)
@@ -227,7 +247,7 @@ def _edit_prefs_panel():
     # Apr-2017 - SvdB - Added ffwd / rev values
     return vbox, (gfx_length_spin, cover_delete,
                   mouse_scroll_action, hide_file_ext_button, hor_scroll_dir,
-                  effects_editor_clip_load, auto_render_plugins)
+                  effects_editor_clip_load, auto_render_plugins, dnd_action, default_comp_mode)
 
 def _playback_prefs_panel():
     prefs = editorpersistance.prefs

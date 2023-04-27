@@ -171,52 +171,13 @@ def workflow_menu_launched(widget, event):
     standard = guiutils.get_menu_item(_("Reset Tools"), _workflow_menu_callback, (None, "preset standard"))
     standard.show()
     _workflow_menu.add(standard)
-    
-    behaviours_item = Gtk.MenuItem.new_with_label(_("Behaviours"))
-    behaviours_item.show()
 
-    behaviours_menu = Gtk.Menu()
-
-    dnd_item = Gtk.MenuItem.new_with_label(_("Drag'n'Drop Action"))
-    dnd_item.show()
-
-    dnd_menu = Gtk.Menu()
-    labels = [_("Always Overwrite Blanks"), _("Overwrite Blanks on non-V1 Tracks"), _("Always Insert")]
-    msgs = ["always overwrite", "overwrite nonV1", "always insert"]
-    active_index = editorpersistance.prefs.dnd_action  # appconsts values correspond with order here.
-    _build_radio_menu_items_group(dnd_menu, labels, msgs, _workflow_menu_callback, active_index)
-
-    dnd_item.set_submenu(dnd_menu)
-    behaviours_menu.add(dnd_item)
-
-    default_compositing_item = Gtk.MenuItem.new_with_label(_("New Sequence Default Compositing Mode"))
-    default_compositing_item.show()
-    
-    default_compositing_menu = Gtk.Menu()
-    labels = [_("Top Down Free Move"), _("Top Down Auto Follow"), _("Standard Full Track")]
-    msgs = ["top down", "standard auto", "standard full"]
-    # Indexes do NOT match appconsts values.
-    if editorpersistance.prefs.default_compositing_mode == appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE:
-        active_index = 0
-    elif editorpersistance.prefs.default_compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
-        active_index = 1
-    else:
-        active_index = 2
-    _build_radio_menu_items_group(default_compositing_menu, labels, msgs, _workflow_menu_callback, active_index)
-
-    default_compositing_item.set_submenu(default_compositing_menu)
-    behaviours_menu.add(default_compositing_item)
-    
     show_tooltips_item = Gtk.CheckMenuItem()
     show_tooltips_item.set_label(_("Show Tooltips for Edit Tools"))
     show_tooltips_item.set_active(editorpersistance.prefs.show_tool_tooltips)
     show_tooltips_item.connect("activate", _workflow_menu_callback, (None, "tooltips"))
     show_tooltips_item.show()
-
-    behaviours_menu.append(show_tooltips_item)
-    
-    behaviours_item.set_submenu(behaviours_menu)
-    _workflow_menu.add(behaviours_item)
+    _workflow_menu.append(show_tooltips_item)
 
     # --- tools
     guiutils.add_separetor(_workflow_menu)
