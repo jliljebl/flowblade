@@ -1167,15 +1167,22 @@ def _box_overwrite_move_undo(self):
     
     # Do track move edits
     for move_data in self.track_moves:
-        action_object = utils.EmptyClass
-        action_object.__dict__.update(move_data)
+        action_object = DummyOverWriteMove(move_data)
 
         _overwrite_move_undo(action_object)
 
     # Move compositors
     for comp in self.box_selection_data.selected_compositors:
         comp.move(-self.delta)
-        
+
+
+# This exists to avoid hitting object being mappingproxy when doing __dict__.update
+class DummyOverWriteMove:
+    def __init__(self, move_data):
+        # Grabs data as object members.
+        self.__dict__.update(move_data)
+
+
 def _box_overwrite_move_redo(self):
     # Create data for track overwite moves
     if not hasattr(self, "track_moves"):
