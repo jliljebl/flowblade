@@ -231,7 +231,7 @@ def load_render_profiles():
     global render_encoding_doc
     render_encoding_doc = xml.dom.minidom.parse(file_path)
 
-    ret_code = _test_command(FFMPEG_TEST)
+    ret_code = _test_command(FFMPEG_TEST, True)
     if (ret_code == 0):
         print("ffmpeg available")
     else:
@@ -329,13 +329,17 @@ def load_render_profiles():
     proxy_encodings = found_proxy_encodings
 
 def _test_command(bash_args_list, print_output=False):
-    process = subprocess.Popen(bash_args_list, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    if print_output == False:
+        process = subprocess.Popen(bash_args_list, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    else:
+        process = subprocess.Popen(bash_args_list)
+    
     out, err = process.communicate()
+    
     if print_output == True:
         print(bash_args_list)
-        print(out)
-        print(err)
-        print(process.returncode)
+        print("return code:", process.returncode)
+        
     return process.returncode
         
 def get_default_render_consumer(file_path, profile):
