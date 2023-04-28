@@ -221,8 +221,9 @@ class LoadThread(threading.Thread):
                                                 gui.editor_window.window, 
                                                 False, self._missing_file_dialog_callback,
                                                 panels)
-        editorstate.project = old_project # persistance.load_project() changes this,
-                                          # we simply change it back as no GUI or other state is yet changed
+
+        # We exit to same state as when app is first opened.
+        app.open_project(projectdata.get_default_project())
 
     def _exit_on_profile_file_not_found_error(self, e, ticker):
         self._error_stop(self.dialog, ticker)

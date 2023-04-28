@@ -339,14 +339,14 @@ def _test_command(bash_args_list, print_output=False):
     if print_output == True:
         print(bash_args_list)
         print("return code:", process.returncode)
-        
+
     return process.returncode
-        
+
 def get_default_render_consumer(file_path, profile):
     return get_render_consumer_for_encoding_and_quality(file_path, profile, 0, 10) # values get their meaning from /res/renderencoding.xml
                                                                                     # first <encodingoption> with 10th quality option
                                                                                     # should be H.264 with 10000 kb/s
-    
+
 def get_render_consumer_for_encoding_and_quality(file_path, profile, enc_opt_index, quality_opt_index):
     args_vals_list = get_args_vals_tuples_list_for_encoding_and_quality(profile,
                                                                        enc_opt_index,
