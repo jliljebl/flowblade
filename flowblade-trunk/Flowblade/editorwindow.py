@@ -1078,8 +1078,6 @@ class EditorWindow:
                     <separator/>
                     <menu action='CompositingModeMenu'/>
                     <separator/>
-                    <menu action='TimelineRenderingMenu'/>
-                    <separator/>
                     <menuitem action='CombineSequences'/>
                     <menuitem action='SequenceSplit'/>
                     <separator/>
