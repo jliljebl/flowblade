@@ -1044,9 +1044,6 @@ class EditorWindow:
                     <menuitem action='AddMediaPlugin'/>
                     <menuitem action='CreateColorClip'/>
                     <separator/>
-                    <menuitem action='AddMediaFolder'/>
-                    <menuitem action='LoadMediaPluginScript'/>
-                    <separator/>
                     <menu action='ContainerClipsMenu'>
                         <menuitem action='CreateSelectionCompound'/>
                         <menuitem action='CreateSequenceCompound'/>
@@ -1055,12 +1052,14 @@ class EditorWindow:
                         <menuitem action='CreateGMicContainerItem'/>
                     </menu>
                     <separator/>
+                    <menuitem action='AddMediaFolder'/>
+                    <menuitem action='ImportProjectMedia'/>
+                    <menuitem action='LoadMediaPluginScript'/>
+                    <separator/>
                     <menu action='BinMenu'>
                         <menuitem action='AddBin'/>
                         <menuitem action='DeleteBin'/>
                     </menu>
-                    <separator/>
-                    <menuitem action='ImportProjectMedia'/>
                     <separator/>
                     <menuitem action='LogClipRange'/>
                     <separator/>
