@@ -377,10 +377,14 @@ class Sequence:
         pan_filter.set("start", value)
         track.attach(pan_filter)
         track.pan_filter = pan_filter 
-
+            
     def set_track_pan_value(self, track, value):
-        track.pan_filter.set("start", str(value))
-        track.audio_pan = value
+        if hasattr(track, "pan_filter") == False or track.pan_filter == None:
+            self.add_track_pan_filter(track, value)
+            track.audio_pan = value
+        else:
+            track.pan_filter.set("start", str(value))
+            track.audio_pan = value
     
     def remove_track_pan_filter(self, track):
         # This method is used for master too, and called with tractor then

@@ -598,12 +598,6 @@ class GainControl(Gtk.Frame):
         surface = guiutils.get_cairo_image("pan_track")
         self.pan_button.set_image(Gtk.Image.new_from_surface (surface))
         self.pan_button.connect("toggled", self.pan_active_toggled)
-        
-        if pan_value == 0.0:
-            self.pan_slider.set_sensitive(False)
-        else:
-            self.pan_button.set_active(True)
-            self.pan_adjustment.set_value(pan_value) # setting button active sets value = 0, set correct value again
 
         label = guiutils.bold_label(name)
 
@@ -621,6 +615,12 @@ class GainControl(Gtk.Frame):
 
         self.mute_changed()
 
+        if pan_value == 0.0:
+            self.pan_slider.set_sensitive(False)
+        else:
+            self.pan_button.set_active(True)
+            self.pan_adjustment.set_value(pan_value) # setting button active sets value = 0, set correct value again
+            
     def gain_changed(self, slider):
         gain = slider.get_value() / 100.0
         if self.is_master == True:
