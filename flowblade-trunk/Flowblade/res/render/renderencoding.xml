@@ -209,6 +209,7 @@
     
     
     <!-- Alpha -->
+    <!--
     <encodingoption name="WebM VP9 Alpha" extension="webm" presetgroup="Alpha" audiodesc="opus" type="av" resize="True" qgroup="not_settable">
         <profile args="f=webm acodec=libopus ar=48000 ab=128k vcodec=libvpx-vp9 vb=2M g=120 bf=2 threads=0 rc_lookahead=16 quality=good speed=3 vprofile=0 qmax=51 qmin=4 slices=4 tile-columns=6 frame-parallel=1 lag-in-frames=25 row-mt=1 auto-alt-ref=0 mlt_image_format=rgb24a pix_fmt=yuva420p" />
     </encodingoption>
@@ -218,7 +219,7 @@
     <encodingoption name="UT Video Alpha" extension="avi" presetgroup="Alpha" audiodesc="pcm" type="av" resize="True" qgroup="not_settable">
         <profile args="f=avi vcodec=utvideo mlt_image_format=rgb24a pix_fmt=gbrap g=1 bf=0 acodec=pcm_s24le" />
     </encodingoption>
-
+    -->
 
     <!-- Proxy encoding -->
     <proxyencodingoption name="H.264 Preset Ultrafast" extension="mp4" type="av" audiodesc="mp3, 192kb/s, 48000Hz" resize="True" qgroup="qgroup2">
