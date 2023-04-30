@@ -95,6 +95,7 @@ imgseq_icon = None
 audio_icon = None
 pattern_icon = None
 profile_warning_icon = None
+generator_icon = None
 
 # GTK3 requires these to be created outside of callback
 markers_menu = Gtk.Menu.new()
@@ -1130,7 +1131,9 @@ class MediaPanel():
         self.last_pressed = None
         self.double_click_release = False # needed to get focus over to pos bar after double click, usually media object grabs focus
         
-        global has_proxy_icon, is_proxy_icon, graphics_icon, imgseq_icon, audio_icon, pattern_icon, profile_warning_icon, unused_icon
+        global has_proxy_icon, is_proxy_icon, graphics_icon, imgseq_icon, audio_icon, \
+        pattern_icon, profile_warning_icon, unused_icon, generator_icon
+        
         has_proxy_icon = guiutils.get_cairo_image("has_proxy_indicator")
         is_proxy_icon = guiutils.get_cairo_image("is_proxy_indicator")
         graphics_icon = guiutils.get_cairo_image("graphics_indicator")
@@ -1139,6 +1142,7 @@ class MediaPanel():
         pattern_icon = guiutils.get_cairo_image("pattern_producer_indicator")
         profile_warning_icon = guiutils.get_cairo_image("profile_warning")
         unused_icon = guiutils.get_cairo_image("unused_indicator")
+        generator_icon = guiutils.get_cairo_image("generator_indicator")
 
     def get_selected_media_objects(self):
         return self.selected_objects
@@ -1549,21 +1553,25 @@ class MediaObjectWidget:
             cr.set_source_surface(profile_warning_icon, 4, 70)
             cr.paint()
 
-        if self.media_file.type == appconsts.IMAGE:
-            cr.set_source_surface(graphics_icon, 6, 6)
+        if hasattr(self.media_file, "container_data") and self.media_file.container_data != None:
+            cr.set_source_surface(generator_icon, 6, 6)
             cr.paint()
+        else:
+            if self.media_file.type == appconsts.IMAGE:
+                cr.set_source_surface(graphics_icon, 6, 6)
+                cr.paint()
 
-        if self.media_file.type == appconsts.IMAGE_SEQUENCE:
-            cr.set_source_surface(imgseq_icon, 6, 6)
-            cr.paint()
+            if self.media_file.type == appconsts.IMAGE_SEQUENCE:
+                cr.set_source_surface(imgseq_icon, 6, 6)
+                cr.paint()
 
-        if self.media_file.type == appconsts.AUDIO:
-            cr.set_source_surface(audio_icon, 6, 6)
-            cr.paint()
+            if self.media_file.type == appconsts.AUDIO:
+                cr.set_source_surface(audio_icon, 6, 6)
+                cr.paint()
 
-        if self.media_file.type == appconsts.PATTERN_PRODUCER:
-            cr.set_source_surface(pattern_icon, 6, 6)
-            cr.paint()
+            if self.media_file.type == appconsts.PATTERN_PRODUCER:
+                cr.set_source_surface(pattern_icon, 6, 6)
+                cr.paint()
 
     def create_round_rect_path(self, cr, x, y, width, height, radius=4.0):
         degrees = math.pi / 180.0
