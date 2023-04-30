@@ -96,6 +96,8 @@ audio_icon = None
 pattern_icon = None
 profile_warning_icon = None
 generator_icon = None
+gmic_icon = None
+selection_icon = None
 
 # GTK3 requires these to be created outside of callback
 markers_menu = Gtk.Menu.new()
@@ -1132,8 +1134,7 @@ class MediaPanel():
         self.double_click_release = False # needed to get focus over to pos bar after double click, usually media object grabs focus
         
         global has_proxy_icon, is_proxy_icon, graphics_icon, imgseq_icon, audio_icon, \
-        pattern_icon, profile_warning_icon, unused_icon, generator_icon
-        
+        pattern_icon, profile_warning_icon, unused_icon, generator_icon, gmic_icon, selection_icon
         has_proxy_icon = guiutils.get_cairo_image("has_proxy_indicator")
         is_proxy_icon = guiutils.get_cairo_image("is_proxy_indicator")
         graphics_icon = guiutils.get_cairo_image("graphics_indicator")
@@ -1143,6 +1144,8 @@ class MediaPanel():
         profile_warning_icon = guiutils.get_cairo_image("profile_warning")
         unused_icon = guiutils.get_cairo_image("unused_indicator")
         generator_icon = guiutils.get_cairo_image("generator_indicator")
+        gmic_icon = guiutils.get_cairo_image("gmic_indicator")
+        selection_icon = guiutils.get_cairo_image("selection_indicator")
 
     def get_selected_media_objects(self):
         return self.selected_objects
@@ -1554,8 +1557,15 @@ class MediaObjectWidget:
             cr.paint()
 
         if hasattr(self.media_file, "container_data") and self.media_file.container_data != None:
-            cr.set_source_surface(generator_icon, 6, 6)
-            cr.paint()
+            if self.media_file.container_data.container_type == appconsts.CONTAINER_CLIP_FLUXITY:
+                cr.set_source_surface(generator_icon, 6, 6)
+                cr.paint()
+            elif self.media_file.container_data.container_type == appconsts.CONTAINER_CLIP_GMIC:
+                cr.set_source_surface(gmic_icon, 6, 6)
+                cr.paint()
+            elif self.media_file.container_data.container_type == appconsts.CONTAINER_CLIP_MLT_XML:
+                cr.set_source_surface(selection_icon, 6, 6)
+                cr.paint()
         else:
             if self.media_file.type == appconsts.IMAGE:
                 cr.set_source_surface(graphics_icon, 6, 6)
