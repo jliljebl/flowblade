@@ -30,6 +30,7 @@ import webbrowser
 import time
 
 import appconsts
+import containeractions
 import dialogs
 import dialogutils
 import editorpersistance
@@ -59,17 +60,38 @@ class RecreateIconsThread(threading.Thread):
         for key in PROJECT().media_files.keys():
             media_file = PROJECT().media_files[key]
             GLib.idle_add(self._progress_window_set_text, media_file)
-
+            print(media_file.name, media_file.path)
             if ((not isinstance(media_file, patternproducer.AbstractBinClip))
                 and (not isinstance(media_file, projectdata.BinColorClip))):
-                if media_file.type == appconsts.AUDIO:
-                    icon_path = respaths.IMAGE_PATH + "audio_file.png"
-                    media_file.info = None
+
+                if hasattr(media_file, "container_data") and media_file.container_data != None:
+                    print("IN", media_file.name, media_file.path, media_file.container_data.container_type)
+                    # Generators
+                    if media_file.container_data.container_type == appconsts.CONTAINER_CLIP_FLUXITY:
+                        print("FLUXITY", media_file.name, media_file.path)
+                        action_object = containeractions.get_action_object(media_file.container_data)
+                        media_file.icon_path, media_file.icon = action_object.re_render_screenshot()
+                        media_file.container_data.data_slots["icon_file"] = media_file.icon_path
+                    else:
+                        print("NOT FLUXITY CONTAINER", media_file.name, media_file.path)
+                        media_file.icon_path = None
+                        media_file.icon = None
+                        
+                        media_file.create_icon()
+                        
+                        action_object = containeractions.get_action_object(media_file.container_data)
+                        media_file.icon_path = action_object.get_container_thumbnail_path()
+                        cr, media_file.icon = action_object.create_image_surface(media_file.icon_path)
                 else:
-                    (icon_path, length, info) = projectdata.thumbnailer.write_image(media_file.path)
-                    media_file.info = info
-                media_file.icon_path = icon_path
-                media_file.create_icon()
+                    # Media files
+                    if media_file.type == appconsts.AUDIO:
+                        icon_path = respaths.IMAGE_PATH + "audio_file.png"
+                        media_file.info = None
+                    else:
+                        (icon_path, length, info) = projectdata.thumbnailer.write_image(media_file.path)
+                        media_file.info = info
+                    media_file.icon_path = icon_path
+                    media_file.create_icon()
 
             loaded = loaded + 1
 

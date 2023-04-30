@@ -447,6 +447,8 @@ class AbstractContainerActionObject:
     def edit_program(sef, clip):
         print("AbstractContainerActionObject.edit_program not impl")
 
+    def create_image_surface(self, icon_path):
+        return _create_image_surface(icon_path)
 
 class GMicContainerActions(AbstractContainerActionObject):
 
@@ -600,7 +602,6 @@ class GMicContainerActions(AbstractContainerActionObject):
         cr.set_source_surface(type_icon, 1, 30)
         cr.set_operator (cairo.OPERATOR_OVERLAY)
         cr.paint_with_alpha(0.5)
- 
         return (surface, length, icon_path)
 
 
@@ -627,7 +628,19 @@ class FluxityContainerActions(AbstractContainerActionObject):
     
         except Exception as e:
             return (False, str(e))
+    
+    def re_render_screenshot(self):
+        script_file = open(self.container_data.program)
+        user_script = script_file.read()
+        profile_file_path = mltprofiles.get_profile_file_path(current_sequence().profile.description())
+        frame = self.container_data.unrendered_length // 2
+        screenshot_file = self.get_container_thumbnail_path()
         
+        fctx = fluxity.render_preview_frame(user_script, script_file, frame, None, profile_file_path)
+        fctx.priv_context.frame_surface.write_to_png(screenshot_file)
+        cr, surface = _create_image_surface(screenshot_file)
+        return (screenshot_file, surface)
+
     def get_job_proxy(self):
         job_proxy = jobs.JobProxy(self.get_container_program_id(), self)
         job_proxy.type = jobs.CONTAINER_CLIP_RENDER_FLUXITY
@@ -735,7 +748,7 @@ class FluxityContainerActions(AbstractContainerActionObject):
                         job_msg.progress = 1.0
 
                     if job_msg.progress > 1.0:
-                        # Ffix how progress is calculated in gmicheadless because producers can render a bit longer then required.
+                        # Fix how progress is calculated in rendering process because producers can render a bit longer then required.
                         job_msg.progress = 1.0
 
                 job_msg.elapsed = float(elapsed)

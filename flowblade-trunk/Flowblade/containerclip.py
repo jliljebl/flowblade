@@ -499,7 +499,7 @@ class ContainerClipMediaItem:
         self.container_data = container_data
         self.length = None
         self.type = container_data.unrendered_type
-        self.icon = None
+        self.icon = None # cairo.ImageSurface
         self.icon_path = None
         
         self.mark_in = -1
@@ -525,8 +525,7 @@ class ContainerClipMediaItem:
         try:
             action_object = containeractions.get_action_object(self.container_data)
             if self.icon_path == None:
-
-                surface, length, icon_path = action_object.create_icon()      
+                surface, length, icon_path = action_object.create_icon()
                 self.icon = surface
                 self.icon_path = icon_path
                 self.length = length
@@ -534,6 +533,7 @@ class ContainerClipMediaItem:
             else:
                 self.icon = action_object.load_icon()
         except:
+            print("ContainerClipMediaItem.create_icon() except")
             self.icon_path = respaths.IMAGE_PATH + FALLBACK_THUMB
             cr, scaled_icon = containeractions._create_image_surface(self.icon_path)
             self.icon = scaled_icon
