@@ -61,6 +61,7 @@ from editorstate import EDIT_MODE
 import movemodes
 import multimovemode
 import mlttransitions
+import projectaction
 import render
 import renderconsumer
 import respaths
@@ -196,7 +197,7 @@ def sequence_split_pressed():
     # just asked for. The intention of this is to provide some more background
     # information
     heading = _("Confirm split to new Sequence at Playhead position")
-    info = _("This will create a new sequence from the part after playhead. That part will be removed from\nyour current active sequence.\n\nThe newly created sequence will be opened as current sequence.")
+    info = _("This will create a new sequence from the part after playhead. That part will be removed from\nyour current active sequence.\n\nThe newly created sequence will be opened as current sequence.\n\nUndo stack will also be cleared and this operation cannot be undone.")
     dialogutils.warning_confirmation(split_confirmed, heading, info, gui.editor_window.window)
 
 def split_confirmed(dialog, response_id):
@@ -223,7 +224,8 @@ def split_confirmed(dialog, response_id):
     clips_to_move = []
 
     # we collect the compositors that need to be moved
-    compositors_to_move = _collect_compositors_for_split(tline_frame)
+    if current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+        compositors_to_move = _collect_compositors_for_split(tline_frame)
 
     # now we iterate over all tracks and collect the ones that provide content
     # after the cut position
@@ -278,10 +280,12 @@ def split_confirmed(dialog, response_id):
     sequence.VIDEO_TRACKS_COUNT, sequence.AUDIO_TRACKS_COUNT = current_sequence().get_track_counts()
     PROJECT().add_named_sequence(name)
     app.change_current_sequence(len(PROJECT().sequences) - 1)
+    # New sequence needs to have same compositing mode as current.
+    projectaction.do_compositing_mode_change(current_sequence().compositing_mode)
 
     # and now, we nee to iterate over the collected clips and add them to
     # our newly created sequence
-    for i in range(0, len(clips_to_move) - 1):
+    for i in range(0, len(clips_to_move)):
         collected = clips_to_move[i]
         track_index = collected["track_index"]
 
@@ -305,9 +309,10 @@ def split_confirmed(dialog, response_id):
         action = edit.append_action(data)
         action.do_edit()
     
-    # also, we need to add the compositors from our collection
-    _add_compositors_to_split(compositors_to_move)
-    
+    # also, we need to add the compositors from our collection.
+    if current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+        _add_compositors_to_split(compositors_to_move)
+
     # update time line to show whole range of new sequence
     updater.zoom_project_length()
 

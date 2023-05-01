@@ -60,20 +60,17 @@ class RecreateIconsThread(threading.Thread):
         for key in PROJECT().media_files.keys():
             media_file = PROJECT().media_files[key]
             GLib.idle_add(self._progress_window_set_text, media_file)
-            print(media_file.name, media_file.path)
+
             if ((not isinstance(media_file, patternproducer.AbstractBinClip))
                 and (not isinstance(media_file, projectdata.BinColorClip))):
 
                 if hasattr(media_file, "container_data") and media_file.container_data != None:
-                    print("IN", media_file.name, media_file.path, media_file.container_data.container_type)
                     # Generators
                     if media_file.container_data.container_type == appconsts.CONTAINER_CLIP_FLUXITY:
-                        print("FLUXITY", media_file.name, media_file.path)
                         action_object = containeractions.get_action_object(media_file.container_data)
                         media_file.icon_path, media_file.icon = action_object.re_render_screenshot()
                         media_file.container_data.data_slots["icon_file"] = media_file.icon_path
                     else:
-                        print("NOT FLUXITY CONTAINER", media_file.name, media_file.path)
                         media_file.icon_path = None
                         media_file.icon = None
                         

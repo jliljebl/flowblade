@@ -1935,12 +1935,13 @@ def _append_sequence(import_seq):
                 edit._insert_blank(track, insert_start_index + j, import_clip.clip_out - import_clip.clip_in + 1)
 
     # Import compositors
-    for import_compositor in import_seq.compositors:
-        if import_compositor.transition.b_track + tracks_off < len(current_sequence().tracks) - 1:
-            clone_compositor = current_sequence()._create_and_plant_clone_compositor_for_sequnce_clone(import_compositor, tracks_off)
-            clone_compositor.move(orig_length)
-            current_sequence().compositors.append(clone_compositor)
-    current_sequence().restack_compositors()
+    if current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+        for import_compositor in import_seq.compositors:
+            if import_compositor.transition.b_track + tracks_off < len(current_sequence().tracks) - 1:
+                clone_compositor = current_sequence()._create_and_plant_clone_compositor_for_sequnce_clone(import_compositor, tracks_off)
+                clone_compositor.move(orig_length)
+                current_sequence().compositors.append(clone_compositor)
+        current_sequence().restack_compositors()
 
     # Remove unneeded blanks
     for i in range(start_track_range, end_track_range):
@@ -2003,13 +2004,14 @@ def _insert_sequence(import_seq):
             compositor.move(import_seq.get_length())
 
     # Import compositors
-    for import_compositor in import_seq.compositors:
-        if import_compositor.transition.b_track + tracks_off < len(current_sequence().tracks) - 1:
-            clone_compositor = current_sequence()._create_and_plant_clone_compositor_for_sequnce_clone(import_compositor, tracks_off)
-            clone_compositor.move(insert_frame)
-            current_sequence().compositors.append(clone_compositor)
-    current_sequence().restack_compositors()
-    
+    if current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+        for import_compositor in import_seq.compositors:
+            if import_compositor.transition.b_track + tracks_off < len(current_sequence().tracks) - 1:
+                clone_compositor = current_sequence()._create_and_plant_clone_compositor_for_sequnce_clone(import_compositor, tracks_off)
+                clone_compositor.move(insert_frame)
+                current_sequence().compositors.append(clone_compositor)
+        current_sequence().restack_compositors()
+
     # Remove unneeded blanks
     for i in range(start_track_range, end_track_range):
         track = current_sequence().tracks[i]
@@ -2090,7 +2092,8 @@ def _compositing_mode_dialog_callback(dialog, response_id, new_compositing_mode)
     if response_id != Gtk.ResponseType.ACCEPT:
         gui.editor_window.init_compositing_mode_menu()
         return
-    
+
+def do_compositing_mode_change(new_compositing_mode):
     # Destroy stuff
     compositeeditor.clear_compositor()
     current_sequence().destroy_compositors()
