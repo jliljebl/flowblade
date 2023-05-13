@@ -229,7 +229,7 @@ def split_confirmed(dialog, response_id):
 
     # now we iterate over all tracks and collect the ones that provide content
     # after the cut position
-    for i in range(1, len(current_sequence().tracks)):
+    for i in range(1, len(current_sequence().tracks) - 1):
         track = get_track(i)
 
         # Get index and clip - so basically this means, all clips in this

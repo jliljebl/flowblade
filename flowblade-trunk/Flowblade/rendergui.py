@@ -593,9 +593,13 @@ def get_render_panel_left(render_widgets, render_clicked_cb, to_queue_clicked_cb
     if editorstate.screen_size_small_height() == False:
         render_range_panel = guiutils.get_named_frame(_("Range"), render_widgets.render_range_panel.vbox, 4)
         render_panel.pack_start(encoding_panel, False, False, 0)
+        if editorstate.screen_size_large_width() == True:
+            render_panel.pack_start(render_widgets.args_panel.box, False, False, 0)  
+            
         render_panel.pack_start(render_range_panel, False, False, 0)
 
         if editorstate.screen_size_large_width() == True:
+
             render_widgets.queue_button.connect("clicked", 
                                                  to_queue_clicked_cb, 
                                                  None)
@@ -607,8 +611,7 @@ def get_render_panel_left(render_widgets, render_clicked_cb, to_queue_clicked_cb
             buttons_panel.pack_start(Gtk.Label(), True, True, 0)
             buttons_panel.pack_start(render_widgets.queue_button, False, False, 0)
             buttons_panel.pack_start(render_widgets.render_button, False, False, 0)                                         
-            render_panel.pack_start(guiutils.pad_label(8,8), False, False, 0)  
-            render_panel.pack_start(render_widgets.args_panel.box, False, False, 0)  
+
             render_panel.pack_start(Gtk.Label(), True, True, 0)
             render_panel.pack_start(buttons_panel, False, False, 0)
         else:
@@ -617,7 +620,7 @@ def get_render_panel_left(render_widgets, render_clicked_cb, to_queue_clicked_cb
         render_panel.pack_start(encoding_panel, False, False, 0)
         render_panel.pack_start(Gtk.Label(), True, True, 0)
     
-    # Stop panel width popping when/if GPU renders added.
+    # Stop panel **width** popping when/if GPU renders added.
     render_panel.set_size_request(300, 30)
     
     return render_panel
@@ -955,6 +958,7 @@ class RenderArgsRow():
         self.use_args_check = Gtk.CheckButton()
         self.use_args_check.connect("toggled", self.use_args_toggled)
         self.use_args_check.set_tooltip_text(_("Render using key=value rendering options"))
+        self.use_args_check.set_margin_leftw(2)
         
         self.args_info = Gtk.Label()
         self.args_info.set_sensitive(False)
@@ -975,7 +979,8 @@ class RenderArgsRow():
         use_opts_row.pack_start(guiutils.get_pad_label(4, 1), False, False, 0)
         use_opts_row.pack_start(self.args_info, True, True, 0)
         use_opts_row.pack_start(self.args_edit_launch.widget, False, False, 0)
-
+        guiutils.set_margins(use_opts_row, 2,2,0,0)
+        
         # ----------------------------------------- Popover pane
         self.load_selection_button = Gtk.Button(label=_("Load Args From Current Encoding"))
         self.load_selection_button.connect("clicked", lambda w: self.display_selection_callback())

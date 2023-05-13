@@ -19,8 +19,9 @@
 """
 
 """
-Module contains main editor window object.
+Module contains the main editor window object and timeline cursor handling.
 """
+
 import cairo
 
 from gi.repository import Gtk
