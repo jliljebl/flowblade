@@ -302,7 +302,3 @@ def set_mouse_current_non_drag_pos(x, y):
     global last_mouse_x, last_mouse_y
     last_mouse_x = x
     last_mouse_y = y
-    
-
-        
-         

@@ -172,6 +172,9 @@ def init_layout_data():
     # Use default panels positons if nothing available yet or too small screen
     if panel_positioning_available() == False or _panel_positions == None:
         _panel_positions = copy.deepcopy(DEFAULT_PANEL_POSITIONS)
+        if editorstate.SCREEN_WIDTH < 1439:
+            # App window may become invsible if all buttons shown in midbar and window too wide for screen.
+            _panel_positions[appconsts.PANEL_FILTER_SELECT] = appconsts.PANEL_PLACEMENT_NOT_VISIBLE
         editorpersistance.prefs.panel_positions = _panel_positions
         editorpersistance.save()
 
@@ -324,7 +327,7 @@ def _set_min_size(panel_id, widget):
 def panel_positioning_available():
     # This feature now available only for 1680x1050 and larger screens.
     # Maybe some reduced version later for smaller screens.
-    if editorstate.SCREEN_WIDTH > 1678 and  editorstate.SCREEN_HEIGHT > 1048:
+    if editorstate.SCREEN_WIDTH > 1678 and editorstate.SCREEN_HEIGHT > 1048:
         return True
     
     return False

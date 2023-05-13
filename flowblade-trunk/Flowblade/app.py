@@ -108,7 +108,7 @@ import shortcutsquickeffects
 import snapping
 import threading
 import titler
-# import tlinerender feature teporarily disabled.
+# import tlinerender - feature teporarily disabled.
 import tlinewidgets
 import toolsintegration
 import trimmodes

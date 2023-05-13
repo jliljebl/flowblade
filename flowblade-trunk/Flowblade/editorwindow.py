@@ -288,7 +288,7 @@ class EditorWindow:
         tline_info_box.pack_start(self.monitor_tc_info.widget, False, False, 0)
         guiutils.set_margins(tline_info_box, 0, 0, 0, 10)
         
-        if editorstate.screen_size_small_width() == False:
+        if editorstate.SCREEN_WIDTH > 1550:
             menu_vbox = Gtk.HBox(True, 0)
         else:
             menu_vbox = Gtk.HBox(False, 0) # small screens can't fit 3 equal sized panels here
