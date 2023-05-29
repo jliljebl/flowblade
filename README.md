@@ -2,9 +2,11 @@
 
 ------
 
-**INFO: FLOWBLADE DEVELOPMENT WILL CONTINUE IN THE BEGINNING OF AUGUST,**
+**INFO: FLOWBLADE DEVELOPMENT RESUMES.**
 
-**WITH NEW RELEASE TO FOLLOW SHORTLY AFTER THAT.**
+**AFTER UNFORTUNATELY A SOMEWHAT LONGER BREAK WHEN WE WOULD HAVE LIKED, THE PROJECT IS NOW FULLY BACK AND MOVING FORWARD.**
+
+**NEXT RELEASE 2.10 IS COMING IN JUNE 2023.**
 
 ------
 
@@ -62,7 +64,7 @@ Flowblade offers a configurable workflow - toolset, its order, default tool and 
 
 **Latest release:** Flowblade Movie Editor 2.8 was released on February 2021.
 
-**Next release:** February 15th 2022.
+**Next release:** 2.10 is coming in June 2023.
 
 # Installing Flowblade
 
