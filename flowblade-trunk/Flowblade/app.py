@@ -223,7 +223,7 @@ def main(root_path):
         return
 
     # MLT 7.0 or higher required.
-    if editorstate.mlt_version_is_greater_correct("7.0.0") == False:
+    if editorstate.mlt_version_is_greater_correct("6.99.99") == False:
         _too_low_mlt_version_exit()
         return
 
