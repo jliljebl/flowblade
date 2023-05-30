@@ -3,7 +3,7 @@
 | **Debian/Ubuntu package name** | **Description** | **Archlinux packages** |
 |:-------------------------------|:----------------|:--------------|
 | python-gi | GTK3 Python bindings | pygtk |
-| python-mlt 7.0 >=, 7.14 >= recommended | MLT python bindings, this pulls in MLT | mlt-python-bindings |
+| python3-mlt | MLT python bindings, this pulls in MLT. MLT version 7.0 required, >= 7.12 recommended  | mlt-python-bindings |
 | ffmpeg | decoder/encoder application | ffmpeg |
 | python-dbus | dbus python bindings | python2-dbus |
 | libmlt-data | Some image and text resources for MLT | mlt, sdl_image |
