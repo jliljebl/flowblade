@@ -222,8 +222,8 @@ def main(root_path):
         _xdg_error_exit(userfolders.get_init_error())
         return
 
-    # After moving to Python 3 we need at least MLT 6.18.
-    if editorstate.mlt_version_is_greater_correct("6.17.99") == False:
+    # MLT 7.0 or higher required.
+    if editorstate.mlt_version_is_greater_correct("7.0.0") == False:
         _too_low_mlt_version_exit()
         return
 
