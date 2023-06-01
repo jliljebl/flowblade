@@ -315,6 +315,9 @@ class PlayerButtons(AbstractGlassButtons):
            size_adj = 2
         AbstractGlassButtons.__init__(self, MB_BUTTON_WIDTH[size_ind], MB_BUTTON_HEIGHT[size_ind], MB_BUTTON_Y, MB_BUTTONS_WIDTH[size_ind], MB_BUTTONS_HEIGHT[size_ind] - 2)
 
+        # Force no decorations for player butons, this cannot be made to work.
+        self.no_decorations = True 
+
         play_pause_icon = guiutils.get_cairo_image("play_pause_s" + icon_color)
         play_icon = guiutils.get_cairo_image("play_2_s"+ icon_color)
         stop_icon = guiutils.get_cairo_image("stop_s"+ icon_color)
