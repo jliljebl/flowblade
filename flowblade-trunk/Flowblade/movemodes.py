@@ -514,11 +514,11 @@ def _move_mode_pressed(event, frame):
     blank_press_data = None
     tlinewidgets.set_edit_mode_data(edit_data)
 
-    # Get pressed track
+    # Get pressed track.
     track = tlinewidgets.get_track(y)
 
     # Selecting empty clears selection and prevents from setting edit data since we cannot have it.
-    # Existance of edit_data is also used to determine if we should enter box mode so we need to not have it if we're not hitting clip
+    # Existance of edit_data is also used to determine if we should enter box mode so we need to not have it if we're not hitting clip.
     if track == None or track.id < 1 or track.id > len(current_sequence().tracks) - 2: # -2 because topmost hidden track
         clear_selected_clips()
         pressed_on_selected = False
@@ -528,7 +528,7 @@ def _move_mode_pressed(event, frame):
     # Get pressed clip index
     clip_index = current_sequence().get_clip_index(track, frame)
 
-    # Selecting empty clears selection
+    # Selecting empty clears selection.
     if clip_index == -1:
         clear_selected_clips()
         pressed_on_selected = False
@@ -571,6 +571,17 @@ def _move_mode_pressed(event, frame):
             pressed_on_selected = False
             updater.repaint_tline()
             return
+        
+        # If selection on is different track clear current selection, and set pressed
+        # clip selected.
+        if selected_track != track.id:
+            clear_selected_clips()
+            select_clip(track.id, clip_index)
+            if editorpersistance.prefs.single_click_effects_editor_load == True:
+                clipeffectseditor.set_clip(pressed_clip, track, clip_index, False)
+            pressed_on_selected = False
+            return
+        
         # clip before range, make it start
         if clip_index < selected_range_in:
             _select_multiple_clips(track.id, clip_index,
