@@ -4141,6 +4141,22 @@ class MonitorSwitch:
         elif editorstate.timeline_visible() == True:
             self.callback(appconsts.MONITOR_CLIP_BUTTON_PRESSED)
 
+    def toggle(self):
+        """
+        Toggle the monitor between the media clip and the timeline.
+
+        """
+
+        # if there is no media clip, there is nothing to toggle
+        if editorstate.MONITOR_MEDIA_FILE() == None:
+            return
+
+        # if a media clip is displayed, toggle to the timeline, or vice versa
+        if editorstate.timeline_visible() == False:
+            self.callback(appconsts.MONITOR_TLINE_BUTTON_PRESSED)
+        else:
+            self.callback(appconsts.MONITOR_CLIP_BUTTON_PRESSED)
+
 
 class KBShortcutEditor:
 

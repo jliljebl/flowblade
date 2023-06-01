@@ -511,10 +511,7 @@ def _get_marks_range_info(mark_in, mark_out):
 
 def switch_monitor_display():
     monitorevent.stop_pressed()
-    if editorstate.MONITOR_MEDIA_FILE() == None:
-        return
-    if editorstate._timeline_displayed == True:
-        gui.monitor_switch.widget.queue_draw()
+    gui.monitor_switch.toggle()
 
 def display_tline_cut_frame(track, index):
     """
