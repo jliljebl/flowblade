@@ -39,6 +39,7 @@ from gi.repository import PangoCairo
 from gi.repository import GLib
 
 import appconsts
+import exportardour
 import cairoarea
 import dialogutils
 import dnd
@@ -3776,6 +3777,23 @@ def get_columns_count_popup_menu(event, callback):
 
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
+
+def get_ardour_sample_rate_selector():
+    sample_rate_combo = Gtk.ComboBoxText()
+
+    selected_index = 0
+    i = 0
+    for (sample_rate_name, sample_rate) in exportardour.SAMPLE_RATES:
+        sample_rate_combo.append_text(sample_rate_name)
+
+        if sample_rate == exportardour.DEFAULT_SAMPLE_RATE:
+            selected_index = i
+
+        i += 1
+
+    sample_rate_combo.set_active(selected_index)
+
+    return sample_rate_combo
 
 def get_shorcuts_selector():
     shortcuts_combo = Gtk.ComboBoxText()

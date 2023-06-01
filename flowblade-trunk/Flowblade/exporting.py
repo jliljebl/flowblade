@@ -55,6 +55,7 @@ _screenshot_img = None
 _img_types = ["png", "bmp", "targa","tiff"]
 _img_extensions = ["png", "bmp", "tga","tif"]
 
+_ardour_export_sample_rate = exportardour.DEFAULT_SAMPLE_RATE
 
 ####---------------MLT--------------####    
 def MELT_XML_export():
@@ -512,11 +513,16 @@ def ardour_export():
     dialogs.export_ardour_session_folder_select(_ardour_export_dialog_callback)
     
     
-def _ardour_export_dialog_callback(dialog, response_id, session_folder):
+def _ardour_export_dialog_callback(dialog, response_id, session_folder, sample_rate_combo):
     if response_id != Gtk.ResponseType.ACCEPT:
         dialog.destroy()
         return
-        
+
+    # set ardour export sample rate
+    global _ardour_export_sample_rate
+    sample_rate_index = sample_rate_combo.get_active()
+    _ardour_export_sample_rate = exportardour.SAMPLE_RATES[sample_rate_index][1]
+
     folder_path = session_folder.get_filenames()[0]
     if not (os.listdir(folder_path) == []):
         dialog.destroy()
@@ -543,13 +549,16 @@ def _ardour_export_dialog_callback(dialog, response_id, session_folder):
 
 def _ardour_xml_render_done(data):
     global _xml_render_player
-    
+    global _ardour_export_sample_rate
+
     adour_session_folder = _xml_render_player.ardour_session_folder
     temp_xml = _xml_render_player.file_name
     
     _xml_render_player = None
     
     exportardour.use_existing_basedir = True
-    exportardour.launch_export_ardour_session_from_flowblade(temp_xml, adour_session_folder)
+    exportardour.launch_export_ardour_session_from_flowblade(temp_xml,
+                                                             adour_session_folder,
+                                                             sample_rate=_ardour_export_sample_rate)
 
     print ("Ardour export done.")
