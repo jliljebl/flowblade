@@ -53,6 +53,19 @@ make
 make install
 ```  
 
+#### new mlt with cmake
+
+In 2023, mlt builds with cmake; in that case, to build mlt:
+
+```bash
+cd mlt
+mkdir build
+cd build
+cmake .. -DSWIG_PYTHON=ON -DGPL=ON -DGPL3=ON
+make
+```
+(unsure how to set install path for `make install` here; so this type of build will probably not work with the launch script as given below, without modifications).
+
 ### Set up bindings
 
 1. Copy *mlt.py* and *_mlt.so* from  *\<ROOT_DIR\>/mlt/src/swig/python* into  *../flowblade-trunk* where your repository version Flowblade is installed.
