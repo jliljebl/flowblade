@@ -1,35 +1,10 @@
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-u, i, center,
-dl, dt, dd,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	font-size: 100%;
-	font: inherit;
-	vertical-align: baseline;
-}
-
-
 html {
 	font-size: 100%;
+	-webkit-text-size-adjust: 100%;
+	-ms-text-size-adjust: 100%;
 }
 
 body {
-	width: 100%;
-	height: 100%;
-	margin 0px;
-	padding 0px;
-	overflow-x hidden;
  	font-family: Georgia, "Times New Roman", Times, serif;
 	color:#222222;
 	background-color: #ffffff; 
@@ -40,56 +15,10 @@ body {
 	vertical-align: baseline;
 }
 
-p {
-	padding-top: 8px;
-}
-
-.responsive {
-	max-width: 100%;
-	height: auto;
-	margin-left: auto;
-	margin-right: auto;
-}
-
-.header-bg {
-	color:#000000;
-	background-color: #ffffff;
-	height: 46px;
-	padding-bottom: 0px;
-	padding-top: 0px;
-}
-
-.header-box {
-	display: flex;
-	justify-content: left;
-	flex-direction: row;
-	text-align: center;
-	margin-left: auto;
-	margin-right: auto;
-}
-
-.header-img {
-	padding-top: 2px;
-	padding-left: 10px;
-}
-
-.header-item {
-	padding-left: 10px;
-	padding-right: 30px;
-	padding-bottom: 2px;
-	font-size: 22px;
-}
-
-.header-item a{
-	color:#333333;
-	text-transform: uppercase;
-	text-decoration: none;
-}
-
 #content {
-	width: 900px ;
-	margin-left: auto ;
-	margin-right: auto ;
+  width: 700px ;
+  margin-left: auto ;
+  margin-right: auto ;
 }
 
 #help-index{
@@ -102,6 +31,28 @@ p {
 	text-align: center;
 }
 
+.appendix-index{
+	margin-top: 10px;
+	width: 900px;
+	margin-bottom: 10px;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	text-align: left;
+	color: #666666;
+	font-size:18px;
+}
+
+.french-link{
+	margin-top: 40px;
+	width: 900px;
+	margin-bottom: 0px;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	text-align: left;
+	font-size:18px;
+}
 
 .subject-cell {
 	padding-right: 20px;
@@ -116,9 +67,36 @@ p {
 	margin-bottom: 35px;
 }
 
-.subject-cell a{
+.grid-container {
+	margin-top: 80px;
+        width: 700px;
+	margin-bottom: 80px;
+}
+
+.row:before, 
+.row:after {
+	content:"";
+	display: table ;
+	clear:both;
+}
+
+.column4 {
+	float: left; 
+	width: 33.3%;
+	margin-bottom: 50px;
+}
+
+.subject-cell {
+	padding-right: 20px;
+	color:#222222;
+	/*font:normal 400 14px/1 'robotoregular', Arial, sans-serif;*/
+	font-family: sans-serif;
+	word-wrap: break-word;
+	line-height: 1.4;
+	vertical-align: baseline;
+	font-weight:400;
+	font-size:22px;
 	text-transform: uppercase;
-	text-decoration: none;
 }
 
 .appendix-pad {
@@ -127,6 +105,7 @@ p {
 }
 .appendix-title {
 	color: #666666;
+	font-size:20px;
 }
 
 .note {
@@ -215,16 +194,11 @@ p {
 	margin-bottom:10px;
 }
 
-.french-link{
-	margin-top: 40px;
-	width: 900px;
-	margin-bottom: 0px;
-	display: flex;
-	justify-content: center;
-	flex-direction: column;
-	text-align: left;
-	font-size:18px;
+#advtoc {
+	margin-top:50px;
+	margin-bottom:30px;
 }
+
 
 /* Otsikot 1 */
 h1, h2, h3, h4, h5, h6{
@@ -240,7 +214,7 @@ h1{
 	color: #000000;
 }
 h2{
-	margin-top: 100px;
+	margin-top: 80px;
 	font-size:26px;
 }
 h3{
@@ -261,6 +235,38 @@ h5{
 }
  h6{
 	font-size:14px;
+}
+
+table {
+  border-collapse: collapse;
+  border: 2px solid rgb(200,200,200);
+  letter-spacing: 1px;
+  font-size: 0.8rem;
+}
+
+td, th {
+  border: 1px solid rgb(190,190,190);
+  padding: 10px 20px;
+}
+
+th {
+  background-color: rgb(235,235,235);
+}
+
+td {
+  text-align: center;
+}
+
+tr:nth-child(even) td {
+  background-color: rgb(250,250,250);
+}
+
+tr:nth-child(odd) td {
+  background-color: rgb(245,245,245);
+}
+
+caption {
+  padding: 10px;
 }
 
 /**  fonts  **/

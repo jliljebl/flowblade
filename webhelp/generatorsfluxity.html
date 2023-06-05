@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+  <title>Container Clips</title>
+  <link rel="stylesheet" href="style.css">
+<script src="toc.js" type="text/javascript"></script>
+</head>
+
+<body>
+
+<div id="content">
+
+<img src="header_text_5.png">
+
+<script src="tocgen.js"></script>
+
+<div id="toccontent">
+
+<div class="subject-header">Container Clips</div>
+
+<div id="toc"></div>
+
+<h2>Generators</h2>
+<p>
+<b>Generators</b> are <b>Media Items</b> that render into animated media clips when placed on timeline.
+</p>
+
+<p>
+Currently there are three differant types of <b>Generators</b> available:
+<ul style="list-style-type:none">
+<li><b>Backgrouds</b> Animated backgrounds.</li>
+<li><b>Texts</b> Animated texts.</li>
+<li><b>Cover Transitions</b> Incoming shapes cover frame fully and then disapper creating a transition.</li>
+</ul>
+
+</p>
+
+<p>
+Flowblade <b>Generators</b> are implemented as Python scripts using <i>Fluxity API</i> <i>(see below)</i> packed inside <a href="container_clips.html">Container Clips.</a>
+</p>
+
+
+<h3>Using Generators</h3>
+
+<h4>Adding Generators</h4>
+<ol>
+<li>Select menu item <b>Project -> Add Generator</b>.</li>
+<li>Select <b>Generator</b> using <b>Generator</b> drop down menu.</li>
+<li>Set properties using left side panel, select frame using <b>Clip Frame</b> spin button and press <b>Preview</b> button to view results.</li>
+<li>Use <b>Generator Length</b> spin button to set generator maximum length. Use <b>Import Action</b> drop down menu to either add as <b>Media Item</b> or render a video clip.</b></li>
+<li>Use <b>Add Generator</b> button to complete <b>Generator</b> creation.</li>
+</ol>
+
+<h4>Editing Generator Clips</h4>
+<ol>
+<li>Open timeline clip <b>Right Mouse</b> pop-up menu and select item <b>Edit Generator...</b>.</li>
+<li>Set <b>Generator</b> properties using editors opened in <b>Edit</b> panel.</li>
+<li>Select frame using spin button and press <b>Preview</b> button to view results.</li>
+<li>Use <b>Apply</b> button to re-render timeline clip using edited properties.</li>
+</ol>
+
+<h3>Generators List</h3>
+ <table>
+  <tr>
+    <th>Category</th>
+    <th>Name</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><i>Backgrouds</i></td>
+    <td><b>Floating Balls</b></td>
+    <td>Colored balls moving horizontally with differing sizes and speeds.</td>
+  </tr>
+  <tr>
+    <td><i>Backgrouds</i></td>
+    <td><b>Hex Colors</b></td>
+    <td>Colored hexagonals of selected size changing color at selected speed.</td>
+  </tr>
+  <tr>
+    <td><i>Texts</i></td>
+    <td><b>Multiline text</b></td>
+    <td>Animated lines of text with multiple in and out animation types, with optional lines or rectangle background.</td>
+  </tr>
+  <tr>
+    <td><i>Texts</i></td>
+    <td><b>TypeWriter</b></td>
+    <td>Text typewriter effect with steps of adding a letter, word or line.</td>
+  </tr>
+  <tr>
+    <td><i>Cover Transitions</i></td>
+    <td><b>Lines Sweep</b></td>
+    <td>Cover transition with horizontally moving colored lines.</td>
+  </tr>
+   <tr>
+    <td><i>Cover Transitions</i></td>
+    <td><b>Hex Overlay</b></td>
+    <td>Cover transition with apperaing and disappearing hexagonals.</td>
+  </tr>
+</table> 
+
+<h2>Fluxity Scripting</h2>
+<p>Fluxity scripting is a <strong>Python scripting solution</strong> created to provide <strong>Flowblade Movie Editor</strong> with a <em>Plugin API</em> used to create <em>Generators</em> providing means to create e.g. animated text and animated background clips.</p>
+
+
+<h3>Fluxity API</h3>
+<p>Instructions on how to create <strong>Generators</strong> using <strong>Fluxity API</strong> <a href="fluxity.html">here.</a></p>
+
+</div>
+</div>
+
+</body>
+
+</html> 
