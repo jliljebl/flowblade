@@ -968,6 +968,7 @@ class EditorWindow:
             ('MediaLink', None, _('Media Relinker'), None, None, lambda a:medialinker.display_linker()),
             ('HelpMenu', None, _('_Help')),
             ('QuickReference', None, _('Contents'), None, None, lambda a:menuactions.quick_reference()),
+            ('QuickReferenceWeb', None, _('Contents Web'), None, None, lambda a:menuactions.quick_reference_web()),
             ('Environment', None, _('Runtime Environment'), None, None, lambda a:menuactions.environment()),
             ('KeyboardShortcuts', None, _('Keyboard Shortcuts'), None, None, lambda a:dialogs.keyboard_shortcuts_dialog(self.window, workflow.get_tline_tool_working_set, menuactions.keyboard_shortcuts_callback, keyevents.change_single_shortcut, menuactions.keyboard_shortcuts_menu_item_selected_callback)),
             ('About', None, _('About'), None, None, lambda a:menuactions.about()),
@@ -1104,6 +1105,7 @@ class EditorWindow:
                 </menu>
                 <menu action='HelpMenu'>
                     <menuitem action='QuickReference'/>
+                    <menuitem action='QuickReferenceWeb'/>
                     <menuitem action='Environment'/>
                     <separator/>
                     <menuitem action='About'/>

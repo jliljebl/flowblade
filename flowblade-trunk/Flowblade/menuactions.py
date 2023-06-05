@@ -142,6 +142,13 @@ def quick_reference():
     except:
         dialogutils.info_message(_("Help page not found!"), _("Unfortunately the webresource containing help information\nfor this application was not found."), None)
 
+def quick_reference_web():
+    try:
+        url = "http://jliljebl.github.io/flowblade/webhelp/help.html"
+        webbrowser.open(url)
+    except:
+        dialogutils.info_message(_("Help page not found!"), _("Unfortunately the webresource containing help information\nfor this application was not found."), None)
+
 def profiles_manager():
     global profile_manager_dialog
     profile_manager_dialog = profilesmanager.profiles_manager_dialog()
