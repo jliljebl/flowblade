@@ -1029,7 +1029,7 @@ def _create_rotomask_editor(filt, editable_properties):
 
     kf_row = guiutils.get_left_justified_box([guiutils.pad_label(12, 12), guiutils.bold_label(_("Keyframes") + ": "), kfs_value_label])
     
-    kf, curve_points = kf_editor.clip_editor.keyframes[0]
+    kf, curve_points, kf_type = kf_editor.clip_editor.keyframes[0]
     curve_points_value_label = Gtk.Label(label=str(len(curve_points)))
     cps_row = guiutils.get_left_justified_box([guiutils.pad_label(12, 12), guiutils.bold_label(_("Curve Points") + ": "), curve_points_value_label])
 

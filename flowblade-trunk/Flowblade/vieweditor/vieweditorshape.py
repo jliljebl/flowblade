@@ -357,7 +357,7 @@ class RotoMaskEditShape(EditPointShape):
         self.view_editor = view_editor # This is viewEditor.ViewEditor
         self.rotomask_editor = rotomask_editor
         
-        keyframe, bz_points = clip_editor.keyframes[0]
+        keyframe, bz_points, kf_type = clip_editor.keyframes[0]
         if len(bz_points) > 2:
             self.closed = True
         else:
@@ -391,7 +391,7 @@ class RotoMaskEditShape(EditPointShape):
                 self.view_editor.panel_coord_to_normalized_movie_coord(hp2)]
 
         for kf_tuple in self.clip_editor.keyframes:
-            keyframe, bz_points = kf_tuple
+            keyframe, bz_points, kf_type = kf_tuple
             bz_points.insert(index, hch) 
 
     def delete_selected_point(self):
@@ -399,7 +399,7 @@ class RotoMaskEditShape(EditPointShape):
             return
 
         for kf_tuple in self.clip_editor.keyframes:
-            keyframe, bz_points = kf_tuple
+            keyframe, bz_points, kf_type = kf_tuple
             bz_points.pop(self.selected_point_index) 
         
         self.selected_point_array = None
@@ -623,25 +623,25 @@ class RotoMaskEditShape(EditPointShape):
         
         # If single keyframe, just return values of that 
         if len(keyframes) < 2:
-            keyframe, bz_points = keyframes[0]
+            keyframe, bz_points, kf_type = keyframes[0]
             return bz_points
 
         # if current_frame after last keyframe, use last kayframe for values, no continued interpolation
         last_keyframe = 0
         for kf_tuple in self.clip_editor.keyframes:
-            keyframe, bz_points = kf_tuple
+            keyframe, bz_points, kf_type = kf_tuple
             if keyframe > last_keyframe:
                 last_keyframe = keyframe
         
         # More of the last keyframe value fix, code below this block isn't getting the value for last kf and frames after that right
-        l_keyframe, l_bz_points = self.clip_editor.keyframes[-1]       
+        l_keyframe, l_bz_points, kf_type = self.clip_editor.keyframes[-1]       
         if current_frame >= last_keyframe:
             return l_bz_points
         
         # Get keyframe range containing current_frame
         for i in range(0, len(keyframes) - 1):
-            keyframe, bz_points = keyframes[i]
-            keyframe_next, bz_points2 = keyframes[i + 1] # were quaranteed to have at least 2 keyframes when getting here
+            keyframe, bz_points, kf_type = keyframes[i]
+            keyframe_next, bz_points2, kf_type = keyframes[i + 1] # were quaranteed to have at least 2 keyframes when getting here
             if current_frame >= keyframe and current_frame < keyframe_next:
                 break
         
@@ -739,6 +739,3 @@ class RotoMaskEditShape(EditPointShape):
         nx, ny = np
         return [nx, ny]
 
-        
-        
-        

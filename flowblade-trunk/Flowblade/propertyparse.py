@@ -386,12 +386,12 @@ def rotomask_json_value_string_to_kf_array(keyframes_str, out_to_in_func):
     json_obj = json.loads(keyframes_str)
     for kf in json_obj:
         kf_obj = json_obj[kf]
-        add_kf = (int(kf), kf_obj)
+        add_kf = (int(kf), kf_obj, appconsts.KEYFRAME_LINEAR) # Rotomask has own kf system and type KEYFRAME_LINEAR is here just to work with other components.
         new_keyframes.append(add_kf)
 
     return sorted(new_keyframes, key=lambda kf_tuple: kf_tuple[0]) 
-    
-    
+
+
 # ----------------------------------------------------------------------------- AFFINE BLEND
 def _get_roto_geom_frame_value(token):
     sides = token.split(appconsts.KEYFRAME_DISCRETE_EQUALS_STR)

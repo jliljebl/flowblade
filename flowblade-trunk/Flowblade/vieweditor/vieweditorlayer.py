@@ -324,7 +324,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
             self.clip_editor.add_keyframe(self.clip_editor.current_clip_frame)
             self.edit_point_shape.convert_shape_coords_and_update_clip_editor_keyframes()
             self.editable_property.write_out_keyframes(self.clip_editor.keyframes)
-
+            self.rotomask_editor.enable_save()
 
         if self.edit_mode == ROTO_MOVE_MODE:
             pass
@@ -378,6 +378,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
                         self.edit_point_shape.maybe_force_line_mask(True)
                         self.edit_point_shape.convert_shape_coords_and_update_clip_editor_keyframes()
                         self.editable_property.write_out_keyframes(self.clip_editor.keyframes)
+                        self.rotomask_editor.enable_save()
                         self.rotomask_editor.show_current_frame()
                     else:
                         self.add_edit_point(len(self.edit_point_shape.curve_points), self.mouse_press_panel_point)
@@ -436,7 +437,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
 
         self.edit_point_shape.convert_shape_coords_and_update_clip_editor_keyframes()
         self.editable_property.write_out_keyframes(self.clip_editor.keyframes)
-
+        self.rotomask_editor.enable_save()
         self.rotomask_editor.show_current_frame()
         self.rotomask_editor.update_effects_editor_value_labels()
         self.clip_editor.widget.queue_draw()
@@ -449,6 +450,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
         self.edit_point_shape.maybe_force_line_mask()
 
         self.editable_property.write_out_keyframes(self.clip_editor.keyframes)
+        self.rotomask_editor.enable_save()
         if show_current_frame:
             self.rotomask_editor.show_current_frame() #  callback for full update
         self.rotomask_editor.update_effects_editor_value_labels()
@@ -459,6 +461,7 @@ class RotoMaskEditLayer(AbstactEditorLayer):
         self.edit_point_shape.maybe_force_line_mask()
 
         self.editable_property.write_out_keyframes(self.clip_editor.keyframes)
+        self.rotomask_editor.enable_save()
         self.rotomask_editor.show_current_frame() #  callback for full update
         self.rotomask_editor.update_effects_editor_value_labels()
 

@@ -21,8 +21,9 @@
 from gi.repository import Gtk, Gdk
 from gi.repository import GLib, GObject
 
-from editorstate import PLAYER
 import editorstate
+from editorstate import PLAYER
+from editorstate import PROJECT
 import gui
 import guicomponents
 import guiutils
@@ -288,7 +289,7 @@ class RotoMaskEditor(Gtk.Window):
 
     def update_effects_editor_value_labels(self):
         self.value_labels[0].set_text(str(len(self.kf_editor.clip_editor.keyframes)))
-        kf, curve_points = self.kf_editor.clip_editor.keyframes[0] # We always have one
+        kf, curve_points, kf_type = self.kf_editor.clip_editor.keyframes[0] # We always have one
         self.value_labels[1].set_text(str(len(curve_points)))
     
     def _kf_mode_clicked(self, kf_button):
@@ -357,4 +358,7 @@ class RotoMaskEditor(Gtk.Window):
             self.mask_create_freeze = True
 
         self.kf_editor.set_editor_sensitive(not self.mask_create_freeze)
-                
+
+    def enable_save(self):
+        if PROJECT().last_save_path != None:
+            gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(True)

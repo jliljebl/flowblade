@@ -596,7 +596,7 @@ class ClipKeyFrameEditor:
     def maybe_set_first_kf_in_clip_area_active(self):
         index = 0
         for kf in self.keyframes:
-            kf_frame, val = kf
+            kf_frame, val, kf_type = kf
         
             if kf_frame >= self.clip_in:
                  self.active_kf_index = index
@@ -669,8 +669,9 @@ class ClipEditorButtonsRow(Gtk.HBox):
         editor_parent.next_pressed()
         editor_parent.prev_frame_pressed()
         editor_parent.next_frame_pressed()
+        editor_parent._hamburger_pressed()
     """
-    def __init__(self, editor_parent, centered_buttons=False, show_fade_buttons=True):
+    def __init__(self, editor_parent, centered_buttons=False, show_fade_buttons=True, show_hamburger=True):
         GObject.GObject.__init__(self)
         self.set_homogeneous(False)
         self.set_spacing(2)
@@ -686,8 +687,9 @@ class ClipEditorButtonsRow(Gtk.HBox):
         self.kf_to_next_frame_button = guiutils.get_image_button("kf_edit_kf_to_next_frame", BUTTON_WIDTH, BUTTON_HEIGHT)
         self.add_fade_in_button = guiutils.get_image_button("add_fade_in", BUTTON_WIDTH, BUTTON_HEIGHT)
         self.add_fade_out_button = guiutils.get_image_button("add_fade_out", BUTTON_WIDTH, BUTTON_HEIGHT)
-        self.hamburger_menu = guicomponents.HamburgerPressLaunch(editor_parent._hamburger_pressed)
-        self.hamburger_menu.widget.set_margin_top(5)
+        if show_hamburger:
+            self.hamburger_menu = guicomponents.HamburgerPressLaunch(editor_parent._hamburger_pressed)
+            self.hamburger_menu.widget.set_margin_top(5)
         
         self.add_button.connect("clicked", lambda w,e: editor_parent.add_pressed(), None)
         self.delete_button.connect("clicked", lambda w,e: editor_parent.delete_pressed(), None)
@@ -723,7 +725,8 @@ class ClipEditorButtonsRow(Gtk.HBox):
         if centered_buttons:
             self.pack_start(Gtk.Label(), True, True, 0)
 
-        self.pack_start(self.hamburger_menu.widget, False, False, 0)
+        if show_hamburger:
+            self.pack_start(self.hamburger_menu.widget, False, False, 0)
         self.pack_start(guiutils.pad_label(8,4), False, False, 0)
         self.pack_start(self.add_button, False, False, 0)
         self.pack_start(self.delete_button, False, False, 0)
@@ -1958,16 +1961,7 @@ class RotoMaskKeyFrameEditor(Gtk.VBox):
 
         self.clip_editor = ClipKeyFrameEditor(editable_property, self, use_clip_in)
         self.clip_editor.mouse_listener = self
-        """
-        Callbacks from ClipKeyFrameEditor:
-            def clip_editor_frame_changed(self, frame)
-            def active_keyframe_changed(self)
-            def keyframe_dragged(self, active_kf, frame)
-            def update_slider_value_display(self, frame)
-        
-        Via clip_editor.mouse_listener
-            def mouse_pos_change_done(self)
-        """
+
         
         # Some filters start keyframes from *MEDIA* frame 0
         # Some filters or compositors start keyframes from *CLIP* frame 0
@@ -1989,12 +1983,30 @@ class RotoMaskKeyFrameEditor(Gtk.VBox):
         clip_editor_row.pack_start(self.clip_editor.widget, True, True, 0)
         clip_editor_row.pack_start(guiutils.pad_label(4, 4), False, False, 0)
         
-        self.buttons_row = ClipEditorButtonsRow(self, True, False)
+        self.buttons_row = ClipEditorButtonsRow(self, True, False, False)
         
         self.pack_start(clip_editor_row, False, False, 0)
         self.pack_start(self.buttons_row, False, False, 0)
 
         self.set_editor_sensitive(False)
+
+        """
+        Callbacks from ClipKeyFrameEditor:
+            def clip_editor_frame_changed(self, frame)
+            def active_keyframe_changed(self)
+            def keyframe_dragged(self, active_kf, frame)
+            def update_slider_value_display(self, frame)
+
+        Via clip_editor.mouse_listener
+            def mouse_pos_change_done(self)
+            
+        Callbacks from ClipEditorButtonsRow:
+            _hamburger_pressed(widget, event)
+
+        """
+        
+    def _hamburger_pressed(self, widget, event):
+        pass
 
     def set_parent_editor(self, parent):
         # parent implements callback:

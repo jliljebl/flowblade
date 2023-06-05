@@ -342,11 +342,7 @@ class AbstractProperty:
         return (float(current_sequence().profile.sample_aspect_num()) / 
                     current_sequence().profile.sample_aspect_den())
        
-    def enable_save_menu_item(self):
-        if project.last_save_path != None:
-            gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(True)
 
-    
 class EditableProperty(AbstractProperty):
     """
     A wrapper for a mltfilter.FilterObject.properties array property tuple 
@@ -760,11 +756,10 @@ class KeyFrameHCSFilterProperty(EditableProperty):
 
 class RotoJSONProperty(EditableProperty):
 
-    def write_out_keyframes(self, keyframes):
-        self.enable_save_menu_item()
+    def write_out_keyframes(self, keyframes):                    
         val_str = "{"
         for kf_obj in keyframes:
-            kf, points = kf_obj
+            kf, points, kf_type = kf_obj
             val_str += '"' + str(kf) + '"' + ':'
             val_str += json.dumps(points) + ","
         
