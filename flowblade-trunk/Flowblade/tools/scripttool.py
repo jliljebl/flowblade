@@ -393,6 +393,9 @@ def _hamburger_menu_callback(msg):
     elif msg == "docs":
         url = "file://" + respaths.FLUXITY_API_DOC
         webbrowser.open(url)
+    elif msg == "webdocs":
+        url = "http://jliljebl.github.io/flowblade/webhelp/fluxity.html"
+        webbrowser.open(url)
     else:
         # msg is folder name for plugin data
         script_text = mediaplugin.get_plugin_code(msg)
@@ -1098,6 +1101,7 @@ class ScriptToolWindow(Gtk.Window):
             
             api_section = Gio.Menu.new()
             self.add_menu_action(api_section, _("API Docs") + "...", "apidocs", "docs")
+            self.add_menu_action(api_section, _("API Docs Web") + "...", "apidocsweb", "webdocs")
             menu.append_section(None, api_section)
             
             close_section = Gio.Menu.new()
