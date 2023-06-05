@@ -37,16 +37,14 @@ See the
 GNU General Public License for more details.</p>
 <p>You should have received a copy of the GNU General Public License
 along with Flowblade Movie Editor. If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.</p>
-<h1 id="fluxity-scripting">FLUXITY SCRIPTING</h1>
-<p>Fluxity scripting is a <strong>Python scripting solution</strong> created to provide <strong>Flowblade Movie Editor</strong> with a <em>Plugin API</em>.</p>
-<p>Currently <em>Fluxity API</em>
+<h1 id="fluxity-scripting">FLUXITY SCRIPTING AND API</h1>
+<p>Fluxity scripting is a <strong>Python scripting solution</strong> created to provide <strong>Flowblade Movie Editor</strong> with a <em>Plugin API</em>.
+Currently <em>Fluxity API</em>
 is used by Flowblade <em>Generators</em> feature.</p>
-<h2 id="fluxity-api">FLUXITY API</h2>
-<p><em>Fluxity API</em>
-is made available to scripts mainly by <em>fluxity.FluxityContext</em> object and its methods.</p>
-<p>This object is created to communicate with the script before calling any of the methods of the script.</p>
-<p>Some constants mentioned in this source file - such as <code><a title="fluxity.EDITOR_FLOAT" href="#fluxity.EDITOR_FLOAT">EDITOR_FLOAT</a></code> or <code><a title="fluxity.PROFILE_WIDTH" href="#fluxity.PROFILE_WIDTH">PROFILE_WIDTH</a></code> - can also used by scripts. </p>
-<p>See this document below for <em>fluxity.FluxityContext</em> object API details.</p>
+<p><em>Fluxity API</em> is made available to scripts mainly by <em>fluxity.FluxityContext</em> object and its methods.
+This object is created to communicate with the script before calling any of the methods of the script.</p>
+<p>Some constants mentioned in this source file - such as <code><a title="fluxity.EDITOR_FLOAT" href="#fluxity.EDITOR_FLOAT">EDITOR_FLOAT</a></code> or <code><a title="fluxity.PROFILE_WIDTH" href="#fluxity.PROFILE_WIDTH">PROFILE_WIDTH</a></code> - can also be used by scripts. </p>
+<p>See below for <em>fluxity.FluxityContext</em> object API details.</p>
 <h2 id="script-interface">SCRIPT INTERFACE</h2>
 <p>A Python script needs to have the following functions to load and run without crashing as a Fluxity API conforming script.</p>
 <pre><code>def init_script(fctx):
@@ -63,7 +61,6 @@ def render_frame(frame, fctx, w, h):
 <p><strong><code>init_render(fctx):</code></strong> This method is called before a render is started to get user input from editors and possibly to create some additional data strctures.</p>
 <p><strong><code>render_frame(frame, fctx, w, h):</code></strong> This method is called for each frame rendered to create an output image for that frame.</p>
 <h2 id="example-script">EXAMPLE SCRIPT</h2>
-<p>Here we have an example script called <em>'Floating Balls'</em>.</p>
 <h3 id="init_script">init_script()</h3>
 <pre><code>import cairo
 import numpy as np
@@ -135,7 +132,7 @@ def init_script(fctx):
 
     fctx.set_data_obj(&quot;ball_data&quot;, ball_data)
 </code></pre>
-<p>In <em>init_render()</em> we read editor values set by the user and create the data structures for moving ball animations based on that data.</p>
+<p>In <em>init_render() </em> we read editor values set by the user and create some data structures for moving ball animations based on that data.</p>
 <p>Also note that <strong>we need to set seed for Pythom module 'random'</strong> because when a frame sequence is rendered using multiple processes we need the exact same sequence of random numbers produced in every process. </p>
 <h3 id="render_frame">render_frame()</h3>
 <pre><code>def render_frame(frame, fctx, w, h):
@@ -177,13 +174,13 @@ def _clamp(v):
     return max(min(v, 1.0), 0.0)
 
 </code></pre>
-<p>In <em>render_frame()</em> we first get access to <em>Cairo.Context</em> object that can be drawn onto to create output for the frame.</p>
+<p>In <em>render_frame()</em> we first acquire <em>Cairo.Context</em> object that can be drawn onto to create output for the frame.</p>
 <p>After that the data structures created in <em>init_render()</em> are accessed and image is drawn.</p>
 <p>There is a helper function <em>_clamp(v)</em> used to make sure that all color values are in range 0-1. Any number of helper functions, objects and data structures can be created.</p>
 <h2 id="developing-fluxity-scripts">DEVELOPING FLUXITY SCRIPTS</h2>
-<p><strong>Flowblade</strong> comes with a simple development GUI tool for developing Fluxity scripts. It can be accessed from menu <strong>Tools-&gt;Generator Script Editor</strong>.</p>
-<p>You can edit scripts, render output from them, and recieve error messages using the development tool. From hamburger menu you can open and save your own scripts, access this document, and open and inspect example code of the <em>Generators</em> distributed with Flowblade. </p>
-<p>Since the text editor in the development tool is quite rudimentary <em>(with a future GTK4 port we can get improvement here)</em>, it can be a useful workflow to use an external text editor to edit the scripts, and press <em>Reload Script</em> button to update text area contents before attempting render.</p>
+<p><strong>Flowblade</strong> comes with a simple GUI tool for developing Fluxity scripts. It can be accessed from menu <strong>Tools-&gt;Generator Script Editor</strong>.</p>
+<p>Using the development tool you can edit scripts, render output from them, and get recieve error messages when something goes wrong. From hamburger menu you can open and save your own scripts, access this document, and open and inspect example code of the <em>Generators</em> distributed with Flowblade. </p>
+<p>Since the text editor in the development tool is quite rudimentary <em>(with a future GTK4 port we may get improvement here)</em>, it can be a useful workflow to use an external text editor to edit the scripts, and press <em>Reload Script</em> button to update text area contents before attempting render.</p>
 <h1 id="fluxity-api_1">FLUXITY API</h1>
 <details class="source">
 <summary>
@@ -3724,7 +3721,6 @@ gradient_color_rgba, gradient_direction))</p>
 <ul>
 <li><a href="#gpl-licence-text">GPL Licence text</a></li>
 <li><a href="#fluxity-scripting">FLUXITY SCRIPTING</a><ul>
-<li><a href="#fluxity-api">FLUXITY API</a></li>
 <li><a href="#script-interface">SCRIPT INTERFACE</a></li>
 <li><a href="#script-lifecycle">SCRIPT LIFECYCLE</a></li>
 <li><a href="#example-script">EXAMPLE SCRIPT</a><ul>
