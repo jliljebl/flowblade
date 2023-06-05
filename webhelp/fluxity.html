@@ -37,26 +37,31 @@ See the
 GNU General Public License for more details.</p>
 <p>You should have received a copy of the GNU General Public License
 along with Flowblade Movie Editor. If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.</p>
-<h1 id="fluxity-scripting">FLUXITY SCRIPTING</h1>
-<p>Fluxity scripting is a <strong>Python scripting solution</strong> initially created to provide <strong>Flowblade Movie Editor</strong> with a <em>Plugin API</em> used to create <em>Generators</em> providing means to create e.g. animated text and animated background clips.</p>
-<h2 id="fluxity-api">FLUXITY API</h2>
-<p>That <em>Fluxity API</em> is provided by <em>fluxity.FluxityContext</em> object and its methods.</p>
-<p>This object is created to communicate with the script before calling any of the methods of a Media Plugin script.</p>
-<p>See this document below for <em>fluxity.FluxityContext</em> object API details.</p>
-<h2 id="required-interface">REQUIRED INTERFACE</h2>
-<p>A Python script that satisfies the following interface will load and run without crashing, but will not necessarily create any output.</p>
+<h1 id="fluxity-scripting">FLUXITY SCRIPTING AND API</h1>
+<p>Fluxity scripting is a <strong>Python scripting solution</strong> created to provide <strong>Flowblade Movie Editor</strong> with a <em>Plugin API</em>.
+Currently <em>Fluxity API</em>
+is used by Flowblade <em>Generators</em> feature.</p>
+<p><em>Fluxity API</em> is made available to scripts mainly by <em>fluxity.FluxityContext</em> object and its methods.
+This object is created to communicate with the script before calling any of the methods of the script.</p>
+<p>Some constants mentioned in this source file - such as <code><a title="fluxity.EDITOR_FLOAT" href="#fluxity.EDITOR_FLOAT">EDITOR_FLOAT</a></code> or <code><a title="fluxity.PROFILE_WIDTH" href="#fluxity.PROFILE_WIDTH">PROFILE_WIDTH</a></code> - can also be used by scripts. </p>
+<p>See below for <em>fluxity.FluxityContext</em> object API details.</p>
+<h2 id="script-interface">SCRIPT INTERFACE</h2>
+<p>A Python script needs to have the following functions to load and run without crashing as a Fluxity API conforming script.</p>
 <pre><code>def init_script(fctx):
+    pass
 
 def init_render(fctx):
+    pass
 
 def render_frame(frame, fctx, w, h):
+    pass
 </code></pre>
 <h2 id="script-lifecycle">SCRIPT LIFECYCLE</h2>
 <p><strong><code>init_script(fctx):</code></strong> This method is called when script is first loaded by Flowblade to create data structures with info on editors and script metadata. </p>
-<p><strong><code>init_render(fctx):</code></strong> This method is called before a render is started to get user input on editors and possibly to create some additional data strctures.</p>
-<p><strong><code>render_frame(frame, fctx, w, h):</code></strong> This method is called for each frame rendered to create output image.</p>
+<p><strong><code>init_render(fctx):</code></strong> This method is called before a render is started to get user input from editors and possibly to create some additional data strctures.</p>
+<p><strong><code>render_frame(frame, fctx, w, h):</code></strong> This method is called for each frame rendered to create an output image for that frame.</p>
+<p>Object <strong><code>fctx</code></strong> is object of class <strong><code>fluxity.FluxityContext</code></strong>.</p>
 <h2 id="example-script">EXAMPLE SCRIPT</h2>
-<p>Here we have an example script called <em>'Floating Balls'</em> that is distributed as a <em>Generator</em> with Flowblade.</p>
 <h3 id="init_script">init_script()</h3>
 <pre><code>import cairo
 import numpy as np
@@ -79,7 +84,8 @@ def init_script(fctx):
     fctx.add_editor(&quot;Opacity&quot;, fluxity.EDITOR_INT_RANGE, (100, 5, 100))
     fctx.add_editor(&quot;Random Seed&quot;, fluxity.EDITOR_INT, 42)
 </code></pre>
-<p>In <em>init_script()</em> we set some metadata like the name of the script diplayed to the user and author name, and we also define the editors that will be presented to the user.</p>
+<p>In <em>init_script()</em> we define the editors that will be presented to the user and set some metadata like the name of the script diplayed to the user and the script author.</p>
+<p>Object <strong><code>fctx</code></strong> is object of class <strong><code>fluxity.FluxityContext</code></strong>.</p>
 <h3 id="init_render">init_render()</h3>
 <pre><code>def init_render(fctx):
     # The script is possibly rendered using multiple prosesses and we need to have the
@@ -128,9 +134,9 @@ def init_script(fctx):
 
     fctx.set_data_obj(&quot;ball_data&quot;, ball_data)
 </code></pre>
-<p>In <em>init_render()</em> we read editor values set by the user and create the data structures for moving ball animations based on that data.</p>
-<p>There should not be need to read editor values in other methods then <em>init_render()</em> since the editors are described in method <em>init_script()</em> and used in method <em>render_frame()</em> during render when user does not have access to edit the values.</p>
-<p>Also note that <strong>we need to set seed for Pythom module 'random'</strong> because when a frame sequence is rendered using multiple processes we need the exact same sequence of random numbers produced in every rendering process. </p>
+<p>In <em>init_render() </em> we read editor values set by the user and create some data structures for moving ball animations based on that data.</p>
+<p>Also note that <strong>we need to set seed for Pythom module 'random'</strong> because when a frame sequence is rendered using multiple processes we need the exact same sequence of random numbers produced in every process. </p>
+<p>Object <strong><code>fctx</code></strong> is object of class <strong><code>fluxity.FluxityContext</code></strong>.</p>
 <h3 id="render_frame">render_frame()</h3>
 <pre><code>def render_frame(frame, fctx, w, h):
     cr = fctx.get_frame_cr()
@@ -171,13 +177,13 @@ def _clamp(v):
     return max(min(v, 1.0), 0.0)
 
 </code></pre>
-<p>In <em>render_frame()</em> we first get access to <em>Cairo.Context</em> object that can be drawn onto to create output for current frame.</p>
-<p>After that the data structures created in <em>init_render()</em> are accessed and image for frame is drawn.</p>
-<p>There is a helper function <em>_clamp(v)</em> used to make sure that all color values are in range 0-1. Any number of helper functions and data structures can be created to achieve the desired output.</p>
+<p>In <em>render_frame()</em> we first acquire <em>Cairo.Context</em> object that can be drawn onto to create output for the frame.</p>
+<p>After that the data structures created in <em>init_render()</em> are accessed and image is drawn.</p>
+<p>There is a helper function <em>_clamp(v)</em> used to make sure that all color values are in range 0-1. Any number of helper functions, objects and data structures can be created.</p>
 <h2 id="developing-fluxity-scripts">DEVELOPING FLUXITY SCRIPTS</h2>
-<p><strong>Flowblade</strong> comes with a simple development GUI tool for developing Fluxity scripts. It can be accessed from menu <strong>Tools-&gt;Flowblade Media Plugin Editor</strong>.</p>
-<p>You can edit scripts, render output from them, and recieve error messages using the development tool. From hamburger menu you can open and save your own scripts, access this document, and open and inspect example code of the <em>Generators</em> distributed with Flowblade. </p>
-<p>Since the text editor in the development tool is quite rudimentary <em>(with a future GTK4 port we can get improvement here)</em>, it can be a useful workflow to use an external text editor to edit the scripts, and press <em>Reload Script</em> button to update text area contents before attempting render.</p>
+<p><strong>Flowblade</strong> comes with a simple GUI tool for developing Fluxity scripts. It can be accessed from menu <strong>Tools-&gt;Generator Script Editor</strong>.</p>
+<p>Using the development tool you can edit scripts, render output from them, and get recieve error messages when something goes wrong. From hamburger menu you can open and save your own scripts, access this document, and open and inspect example code of the <em>Generators</em> distributed with Flowblade. </p>
+<p>Since the text editor in the development tool is quite rudimentary <em>(with a future GTK4 port we may get improvement here)</em>, it can be a useful workflow to use an external text editor to edit the scripts, and press <em>Reload Script</em> button to update text area contents before attempting render.</p>
 <h1 id="fluxity-api_1">FLUXITY API</h1>
 <details class="source">
 <summary>
@@ -207,40 +213,47 @@ def _clamp(v):
     
     # FLUXITY SCRIPTING
     
-    Fluxity scripting is a **Python scripting solution** initially created to provide **Flowblade Movie Editor** with a *Plugin API* used to create *Generators* providing means to create e.g. animated text and animated background clips.
+    Fluxity scripting is a **Python scripting solution** created to provide **Flowblade Movie Editor** with a *Plugin API*.
+    
+    Currently *Fluxity API*  is used by Flowblade *Generators* feature.
     
     ## FLUXITY API
     
-    That *Fluxity API* is provided by *fluxity.FluxityContext* object and its methods.
+    *Fluxity API*  is made available to scripts mainly by *fluxity.FluxityContext* object and its methods.
 
-    This object is created to communicate with the script before calling any of the methods of a Media Plugin script.
+    This object is created to communicate with the script before calling any of the methods of the script.
+    
+    Some constants mentioned in this source file - such as `EDITOR_FLOAT` or `PROFILE_WIDTH` - can also used by scripts. 
     
     See this document below for *fluxity.FluxityContext* object API details.
 
-    ## REQUIRED INTERFACE
+    ## SCRIPT INTERFACE
     
-    A Python script that satisfies the following interface will load and run without crashing, but will not necessarily create any output.
+    A Python script needs to have the following functions to load and run without crashing as a Fluxity API conforming script.
     
     ```
     def init_script(fctx):
+        pass
     
     def init_render(fctx):
+        pass
     
     def render_frame(frame, fctx, w, h):
+        pass
     ```
-        
+
     ## SCRIPT LIFECYCLE
     
     **`init_script(fctx):`** This method is called when script is first loaded by Flowblade to create data structures with info on editors and script metadata. 
     
-    **`init_render(fctx):`** This method is called before a render is started to get user input on editors and possibly to create some additional data strctures.
+    **`init_render(fctx):`** This method is called before a render is started to get user input from editors and possibly to create some additional data strctures.
     
-    **`render_frame(frame, fctx, w, h):`** This method is called for each frame rendered to create output image.
+    **`render_frame(frame, fctx, w, h):`** This method is called for each frame rendered to create an output image for that frame.
     
     
     ## EXAMPLE SCRIPT
     
-    Here we have an example script called *&#39;Floating Balls&#39;* that is distributed as a *Generator* with Flowblade.
+    Here we have an example script called *&#39;Floating Balls&#39;*.
     
     ### init_script()
     
@@ -266,7 +279,7 @@ def _clamp(v):
         fctx.add_editor(&#34;Opacity&#34;, fluxity.EDITOR_INT_RANGE, (100, 5, 100))
         fctx.add_editor(&#34;Random Seed&#34;, fluxity.EDITOR_INT, 42)
     ```
-    In *init_script()* we set some metadata like the name of the script diplayed to the user and author name, and we also define the editors that will be presented to the user.
+    In *init_script()* we define the editors that will be presented to the user and set some metadata like the name of the script diplayed to the user and the script author.
 
     ### init_render()
     ```
@@ -319,9 +332,7 @@ def _clamp(v):
     ```
     In *init_render()* we read editor values set by the user and create the data structures for moving ball animations based on that data.
 
-    There should not be need to read editor values in other methods then *init_render()* since the editors are described in method *init_script()* and used in method *render_frame()* during render when user does not have access to edit the values.
-
-    Also note that **we need to set seed for Pythom module &#39;random&#39;** because when a frame sequence is rendered using multiple processes we need the exact same sequence of random numbers produced in every rendering process. 
+    Also note that **we need to set seed for Pythom module &#39;random&#39;** because when a frame sequence is rendered using multiple processes we need the exact same sequence of random numbers produced in every process. 
     
     ### render_frame()
     ```
@@ -364,16 +375,16 @@ def _clamp(v):
         return max(min(v, 1.0), 0.0)
 
     ```
-    In *render_frame()* we first get access to *Cairo.Context* object that can be drawn onto to create output for current frame.
+    In *render_frame()* we first get access to *Cairo.Context* object that can be drawn onto to create output for the frame.
     
-    After that the data structures created in *init_render()* are accessed and image for frame is drawn.
+    After that the data structures created in *init_render()* are accessed and image is drawn.
     
-    There is a helper function *_clamp(v)* used to make sure that all color values are in range 0-1. Any number of helper functions and data structures can be created to achieve the desired output.
+    There is a helper function *_clamp(v)* used to make sure that all color values are in range 0-1. Any number of helper functions, objects and data structures can be created.
 
 
     ## DEVELOPING FLUXITY SCRIPTS
     
-    **Flowblade** comes with a simple development GUI tool for developing Fluxity scripts. It can be accessed from menu **Tools-&gt;Flowblade Media Plugin Editor**.
+    **Flowblade** comes with a simple development GUI tool for developing Fluxity scripts. It can be accessed from menu **Tools-&gt;Generator Script Editor**.
     
     You can edit scripts, render output from them, and recieve error messages using the development tool. From hamburger menu you can open and save your own scripts, access this document, and open and inspect example code of the *Generators* distributed with Flowblade. 
     
@@ -391,7 +402,6 @@ __pdoc__[&#39;render_frame_sequence&#39;] = False
 __pdoc__[&#39;render_preview_frame&#39;] = False
 
 import gi
-gi.require_version(&#39;Pango&#39;, &#39;1.0&#39;)
 gi.require_version(&#39;PangoCairo&#39;, &#39;1.0&#39;)
 from gi.repository import Pango
 from gi.repository import PangoCairo
@@ -506,7 +516,7 @@ EDITOR_PANGO_FONT = 10
 EDITOR_TEXT_AREA = 11
 &#34;&#34;&#34; Editor for creating multiline text.&#34;&#34;&#34;
 
-EDITOR_PANGO_FONT_DEFAULT_VALUES = (&#34;Times Roman&#34;, &#34;Regular&#34;, 80, Pango.Alignment.LEFT, (1.0, 1.0, 1.0, 1.0), \
+EDITOR_PANGO_FONT_DEFAULT_VALUES = (&#34;Liberation Serif&#34;, &#34;Regular&#34;, 80, Pango.Alignment.LEFT, (1.0, 1.0, 1.0, 1.0), \
               True, (0.3, 0.3, 0.3, 1.0) , False, 2, False, (0.0, 0.0, 0.0), \
               100, 3, 3, 0.0, None, VERTICAL)
 &#34;&#34;&#34; Pango Font Editor default values.&#34;&#34;&#34;
@@ -1206,10 +1216,10 @@ class PangoTextLayout:
                 r, g, b, a = self.color_rgba
                 rg, gg, bg, ag =  self.gradient_color_rgba 
                     
-                CLIP_COLOR_GRAD_1 = (0,  r, g, b, 1)
-                CLIP_COLOR_GRAD_2 = (1,  rg, gg, bg, 1)
-                grad.add_color_stop_rgba(*self._get_opacity_rgba(CLIP_COLOR_GRAD_1))
-                grad.add_color_stop_rgba(*self._get_opacity_rgba(CLIP_COLOR_GRAD_2))
+                CLIP_COLOR_GRAD_1 = (0,  r, g, b, 1.0)
+                CLIP_COLOR_GRAD_2 = (1,  rg, gg, bg, 1.0)
+                grad.add_color_stop_rgba(*CLIP_COLOR_GRAD_1)
+                grad.add_color_stop_rgba(*CLIP_COLOR_GRAD_2)
                 cr.set_source(grad)
 
             cr.move_to(x, y)
@@ -1364,7 +1374,7 @@ class AnimatedValue:
         frame_n, val2, kf_type = self.keyframes[next]
         frame_nn, val3, kf_type = self.keyframes[next_next]
 
-        # Get value
+        # Get value`
         fract = (frame - frame_p) / (frame_n - frame_p)
         smooth_val = self._catmull_rom_interpolate(val0, val1, val2, val3, fract)
         return smooth_val
@@ -1554,8 +1564,16 @@ def render_frame_sequence(script, script_file, in_frame, out_frame, out_folder, 
     * if errors occurred during rendering it has *key -&gt; value* pair *fluxity.FLUXITY_ERROR_MSG -&gt; error message(str)*.
     * if script created log messages it has *key -&gt; value* pair *fluxity.FLUXITY_LOG_MSG -&gt; log message(str)*.
     &#34;&#34;&#34;
-    
-    threads = 6 # add some heuristics here.
+    # Some simple heuristics to decide how many processes will be used for rendering
+    cpu_count = multiprocessing.cpu_count()
+    threads = cpu_count - 2
+    # Computer does not have that many cores, let&#39;s only use one.
+    if threads &lt; 2:
+        threads = 1
+    # This gets diminshing returns so let&#39;s cap it at 8.
+    if threads &gt; 8:
+        threads = 8
+    # If we are rendering a very small amount of frames, there isn&#39;t much benefit to use multiple processes.
     if out_frame - in_frame &lt; threads * 2:
         threads = 1
 
@@ -3394,10 +3412,10 @@ gradient_color_rgba, gradient_direction))</p>
                 r, g, b, a = self.color_rgba
                 rg, gg, bg, ag =  self.gradient_color_rgba 
                     
-                CLIP_COLOR_GRAD_1 = (0,  r, g, b, 1)
-                CLIP_COLOR_GRAD_2 = (1,  rg, gg, bg, 1)
-                grad.add_color_stop_rgba(*self._get_opacity_rgba(CLIP_COLOR_GRAD_1))
-                grad.add_color_stop_rgba(*self._get_opacity_rgba(CLIP_COLOR_GRAD_2))
+                CLIP_COLOR_GRAD_1 = (0,  r, g, b, 1.0)
+                CLIP_COLOR_GRAD_2 = (1,  rg, gg, bg, 1.0)
+                grad.add_color_stop_rgba(*CLIP_COLOR_GRAD_1)
+                grad.add_color_stop_rgba(*CLIP_COLOR_GRAD_2)
                 cr.set_source(grad)
 
             cr.move_to(x, y)
@@ -3581,10 +3599,10 @@ gradient_color_rgba, gradient_direction))</p>
             r, g, b, a = self.color_rgba
             rg, gg, bg, ag =  self.gradient_color_rgba 
                 
-            CLIP_COLOR_GRAD_1 = (0,  r, g, b, 1)
-            CLIP_COLOR_GRAD_2 = (1,  rg, gg, bg, 1)
-            grad.add_color_stop_rgba(*self._get_opacity_rgba(CLIP_COLOR_GRAD_1))
-            grad.add_color_stop_rgba(*self._get_opacity_rgba(CLIP_COLOR_GRAD_2))
+            CLIP_COLOR_GRAD_1 = (0,  r, g, b, 1.0)
+            CLIP_COLOR_GRAD_2 = (1,  rg, gg, bg, 1.0)
+            grad.add_color_stop_rgba(*CLIP_COLOR_GRAD_1)
+            grad.add_color_stop_rgba(*CLIP_COLOR_GRAD_2)
             cr.set_source(grad)
 
         cr.move_to(x, y)
@@ -3706,8 +3724,7 @@ gradient_color_rgba, gradient_direction))</p>
 <ul>
 <li><a href="#gpl-licence-text">GPL Licence text</a></li>
 <li><a href="#fluxity-scripting">FLUXITY SCRIPTING</a><ul>
-<li><a href="#fluxity-api">FLUXITY API</a></li>
-<li><a href="#required-interface">REQUIRED INTERFACE</a></li>
+<li><a href="#script-interface">SCRIPT INTERFACE</a></li>
 <li><a href="#script-lifecycle">SCRIPT LIFECYCLE</a></li>
 <li><a href="#example-script">EXAMPLE SCRIPT</a><ul>
 <li><a href="#init_script">init_script()</a></li>
