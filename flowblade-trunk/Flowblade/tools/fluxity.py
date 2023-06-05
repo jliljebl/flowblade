@@ -26,15 +26,12 @@
     
     Currently *Fluxity API*  is used by Flowblade *Generators* feature.
     
-    ## FLUXITY API
     
-    *Fluxity API*  is made available to scripts mainly by *fluxity.FluxityContext* object and its methods.
-
-    This object is created to communicate with the script before calling any of the methods of the script.
+    *Fluxity API*  is made available to scripts mainly by *fluxity.FluxityContext* object and its methods. This object is created to communicate with the script before calling any of the methods of the script.
     
-    Some constants mentioned in this source file - such as `EDITOR_FLOAT` or `PROFILE_WIDTH` - can also used by scripts. 
+    Some constants mentioned in this source file - such as `EDITOR_FLOAT` or `PROFILE_WIDTH` - can also be used by scripts. 
     
-    See this document below for *fluxity.FluxityContext* object API details.
+    See this below for *fluxity.FluxityContext* object API details.
 
     ## SCRIPT INTERFACE
     
@@ -55,14 +52,12 @@
     
     **`init_script(fctx):`** This method is called when script is first loaded by Flowblade to create data structures with info on editors and script metadata. 
     
-    **`init_render(fctx):`** This method is called before a render is started to get user input from editors and possibly to create some additional data strctures.
+    **`init_render(fctx):`** This method is called before a render is started to get user input from editors, and possibly to create some additional data strctures.
     
-    **`render_frame(frame, fctx, w, h):`** This method is called for each frame rendered to create an output image for that frame.
+    **`render_frame(frame, fctx, w, h):`** This method is called for each rendered frame to create an output image.
     
     
     ## EXAMPLE SCRIPT
-    
-    Here we have an example script called *'Floating Balls'*.
     
     ### init_script()
     
@@ -139,7 +134,7 @@
 
         fctx.set_data_obj("ball_data", ball_data)
     ```
-    In *init_render()* we read editor values set by the user and create the data structures for moving ball animations based on that data.
+    In *init_render()* we read editor values set by the user and create data structures for moving ball animations.
 
     Also note that **we need to set seed for Pythom module 'random'** because when a frame sequence is rendered using multiple processes we need the exact same sequence of random numbers produced in every process. 
     
@@ -184,7 +179,7 @@
         return max(min(v, 1.0), 0.0)
 
     ```
-    In *render_frame()* we first get access to *Cairo.Context* object that can be drawn onto to create output for the frame.
+    In *render_frame()* we first acquire *Cairo.Context* object that can be drawn onto to create output for the frame.
     
     After that the data structures created in *init_render()* are accessed and image is drawn.
     
@@ -193,11 +188,11 @@
 
     ## DEVELOPING FLUXITY SCRIPTS
     
-    **Flowblade** comes with a simple development GUI tool for developing Fluxity scripts. It can be accessed from menu **Tools->Generator Script Editor**.
+    **Flowblade** comes with a simple GUI tool for developing Fluxity scripts. It can be accessed from menu **Tools->Generator Script Editor**.
     
-    You can edit scripts, render output from them, and recieve error messages using the development tool. From hamburger menu you can open and save your own scripts, access this document, and open and inspect example code of the *Generators* distributed with Flowblade. 
+    Using the development tool you can edit scripts, render output from them, and recieve error messages whenthings go wrong. From hamburger menu you can open and save your own scripts, access this document, and open and inspect example code from *Generators* distributed with Flowblade. 
     
-    Since the text editor in the development tool is quite rudimentary *(with a future GTK4 port we can get improvement here)*, it can be a useful workflow to use an external text editor to edit the scripts, and press *Reload Script* button to update text area contents before attempting render.
+    Since the text editor in the development tool is quite rudimentary, it can be a useful workflow to use an external text editor to edit the scripts, and press *Reload Script* button to update text area contents before attempting render.
     
     # FLUXITY API
 """

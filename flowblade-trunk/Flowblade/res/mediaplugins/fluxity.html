@@ -60,6 +60,7 @@ def render_frame(frame, fctx, w, h):
 <p><strong><code>init_script(fctx):</code></strong> This method is called when script is first loaded by Flowblade to create data structures with info on editors and script metadata. </p>
 <p><strong><code>init_render(fctx):</code></strong> This method is called before a render is started to get user input from editors and possibly to create some additional data strctures.</p>
 <p><strong><code>render_frame(frame, fctx, w, h):</code></strong> This method is called for each frame rendered to create an output image for that frame.</p>
+<p>Object <strong><code>fctx</code></strong> is object of class <strong><code>fluxity.FluxityContext</code></strong>.</p>
 <h2 id="example-script">EXAMPLE SCRIPT</h2>
 <h3 id="init_script">init_script()</h3>
 <pre><code>import cairo
@@ -84,6 +85,7 @@ def init_script(fctx):
     fctx.add_editor(&quot;Random Seed&quot;, fluxity.EDITOR_INT, 42)
 </code></pre>
 <p>In <em>init_script()</em> we define the editors that will be presented to the user and set some metadata like the name of the script diplayed to the user and the script author.</p>
+<p>Object <strong><code>fctx</code></strong> is object of class <strong><code>fluxity.FluxityContext</code></strong>.</p>
 <h3 id="init_render">init_render()</h3>
 <pre><code>def init_render(fctx):
     # The script is possibly rendered using multiple prosesses and we need to have the
@@ -134,6 +136,7 @@ def init_script(fctx):
 </code></pre>
 <p>In <em>init_render() </em> we read editor values set by the user and create some data structures for moving ball animations based on that data.</p>
 <p>Also note that <strong>we need to set seed for Pythom module 'random'</strong> because when a frame sequence is rendered using multiple processes we need the exact same sequence of random numbers produced in every process. </p>
+<p>Object <strong><code>fctx</code></strong> is object of class <strong><code>fluxity.FluxityContext</code></strong>.</p>
 <h3 id="render_frame">render_frame()</h3>
 <pre><code>def render_frame(frame, fctx, w, h):
     cr = fctx.get_frame_cr()
@@ -1371,7 +1374,7 @@ class AnimatedValue:
         frame_n, val2, kf_type = self.keyframes[next]
         frame_nn, val3, kf_type = self.keyframes[next_next]
 
-        # Get value
+        # Get value`
         fract = (frame - frame_p) / (frame_n - frame_p)
         smooth_val = self._catmull_rom_interpolate(val0, val1, val2, val3, fract)
         return smooth_val
