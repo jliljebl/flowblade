@@ -1,0 +1,35 @@
+# Flowblade .gitignore
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+mlt.py
+
+# C extensions
+*.so
+
+*.po~
+*.py~
+*.pot~
+
+# All java related
+*.java
+*.class
+*.jar
+
+# Phantom 2D contents
+/flowblade-trunk/Flowblade/phantom2d
+/flowblade-trunk/Flowblade/phantom2d/res
+/flowblade-trunk/Flowblade/phantom2d/phantom_build
+/flowblade-trunk/Flowblade/phantom2d/src
+
+# Flatpak when building from local
+/flowblade-trunk/.flatpak-builder/
+
+# Theme build data
+/flowblade-trunk/Flowblade/res/css2/sass/gtk-flowblade-dark.css.map
+/flowblade-trunk/Flowblade/res/css3/sass/gtk-flowblade-dark.css.map
+/flowblade-trunk/Flowblade/res/css2/sass/.sass-cache
+/flowblade-trunk/Flowblade/res/css3/sass/.sass-cache
+/flowblade-trunk/Flowblade/res/css2/sass/gtk-flowblade-dark.css
+/flowblade-trunk/Flowblade/res/css3/sass/gtk-flowblade-dark.css
