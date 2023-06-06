@@ -2092,7 +2092,9 @@ def _compositing_mode_dialog_callback(dialog, response_id, new_compositing_mode)
     if response_id != Gtk.ResponseType.ACCEPT:
         gui.editor_window.init_compositing_mode_menu()
         return
-
+        
+    do_compositing_mode_change(new_compositing_mode)
+    
 def do_compositing_mode_change(new_compositing_mode):
     # Destroy stuff
     compositeeditor.clear_compositor()
