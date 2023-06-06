@@ -1165,6 +1165,7 @@ class PangoTextLayout:
             if self.shadow_blur != 0.0:
                 blurred_img = cairo.ImageSurface(cairo.FORMAT_ARGB32, view_editor.profile_w,  view_editor.profile_h)
                 cr_blurred = cairo.Context(blurred_img)
+                cr_blurred.set_antialias(cairo.Antialias.GOOD)
                 transform_cr = cr_blurred # Set draw transform_cr to cotext for newly created image.
             else:
                 transform_cr = cr # Set draw transform_cr to out context.

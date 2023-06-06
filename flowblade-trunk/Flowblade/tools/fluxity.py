@@ -818,6 +818,7 @@ class FluxityContextPrivate:
         h = self.profile.profile_data[PROFILE_HEIGHT]
         self.frame_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
         self.frame_cr = cairo.Context(self.frame_surface)
+        self.frame_cr.set_antialias(cairo.Antialias.GOOD)
 
     def write_out_frame(self, is_preview_frame=False):
         if self.output_folder == None or os.path.isdir(self.output_folder) == False:
@@ -881,7 +882,16 @@ class PangoTextLayout:
         Creates internally *`PangoCairo`* layout object. Calling this is required before calling *`PangoTextLayout.get_pixel_size()`*.
         """
         self.text = text
-        self.pango_layout = PangoCairo.create_layout(cr)
+        
+        fontmap = PangoCairo.font_map_new()
+        context = fontmap.create_context()
+        font_options = cairo.FontOptions()
+        font_options.set_antialias(cairo.Antialias.GOOD)
+        PangoCairo.context_set_font_options(context, font_options)
+        context.changed()
+        
+        self.pango_layout = Pango.Layout.new(context)
+        
         self.pango_layout.set_text(self.text, -1)
         font_desc = Pango.FontDescription(self.font_family + " " + self.font_face + " " + str(self.font_size))
         self.pango_layout.set_font_description(font_desc)
@@ -968,6 +978,7 @@ class PangoTextLayout:
                 w, h = fctx.get_dimensions()
                 blurred_img = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
                 cr_blurred = cairo.Context(blurred_img)
+                cr_blurred.set_antialias(cairo.Antialias.GOOD)
                 transform_cr = cr_blurred # Set draw transform_cr to context for newly created image.
             else:
                 transform_cr = cr # Set draw transform_cr to out context.
