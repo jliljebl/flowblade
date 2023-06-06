@@ -294,6 +294,8 @@ class ViewEditor(Gtk.Frame):
             img_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.profile_w, self.profile_h)
             cr = cairo.Context(img_surface)
 
+        cr.set_antialias(cairo.Antialias.GOOD)
+
         for editorlayer in self.edit_layers:
             if editorlayer.visible:
                 editorlayer.draw(cr, self.write_out_layers, self.draw_overlays)

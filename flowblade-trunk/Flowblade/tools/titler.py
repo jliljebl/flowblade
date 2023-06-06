@@ -1138,8 +1138,16 @@ class PangoTextLayout:
     # called from vieweditor draw vieweditor-> editorlayer->here
     def draw_layout(self, cr, x, y, rotation, xscale, yscale, view_editor):
         cr.save()
+
+        fontmap = PangoCairo.font_map_new()
+        context = fontmap.create_context()
+        font_options = cairo.FontOptions()
+        font_options.set_antialias(cairo.Antialias.GOOD)
+        PangoCairo.context_set_font_options(context, font_options)
+        context.changed()
+
+        layout = Pango.Layout.new(context)
         
-        layout = PangoCairo.create_layout(cr)
         layout.set_text(self.text, -1)
         layout.set_font_description(self.font_desc)
         layout.set_alignment(self.alignment)
