@@ -260,7 +260,7 @@ class Project:
         self.add_named_sequence(name)
         
     def add_named_sequence(self, name):
-        seq = sequence.Sequence(self.profile, editorpersistance.prefs.default_compositing_mode)
+        seq = sequence.Sequence(self.profile, appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK)
         seq.create_default_tracks()
         seq.name = name
         self.sequences.append(seq)

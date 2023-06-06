@@ -181,7 +181,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     # Jul-2016 - SvdB - Added play_pause_button
     # Apr-2017 - SvdB - Added ffwd / rev values
     gfx_length_spin, cover_delete, mouse_scroll_action, hide_file_ext_button, \
-    hor_scroll_dir, effects_editor_clip_load, auto_render_plugins, dnd_action, default_comp_mode = edit_prefs_widgets
+    hor_scroll_dir, effects_editor_clip_load, auto_render_plugins, dnd_action = edit_prefs_widgets
 
     auto_center_check, play_pause_button, timeline_start_end_button, auto_center_on_updown, \
     ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips = playback_prefs_widgets
@@ -250,11 +250,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.colorized_icons = colorized_icons.get_active()
     prefs.auto_render_media_plugins = auto_render_plugins.get_active()
     prefs.dnd_action = dnd_action.get_active()
-    if default_comp_mode.get_active() == 0:
-        prefs.default_compositing_mode = appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK
-    else:
-        prefs.default_compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
-
+    
 def get_graphics_default_in_out_length():
     in_fr = int(15000/2) - int(prefs.default_grfx_length/2)
     out_fr = in_fr + int(prefs.default_grfx_length) - 1 # -1, out inclusive
@@ -285,7 +281,7 @@ class EditorPreferences:
         self.default_grfx_length = 250 # value is in frames
         self.track_configuration = 0 # DEPRECATED
         self.AUTO_SAVE_OPTS = None # not used.
-        self.tabs_on_top = False # DEPRECATED, we have positions_tabs now that we possibly have possibly multiple notebooks 
+        self.tabs_on_top = False # DEPRECATED, we have positions_tabs now that we possibly have possibly multiple notebooks.
         self.midbar_tc_left = True
         self.default_layout = True # DEPRECATED, NOT USED ANYMORE
         self.exit_allocation = (0, 0)
@@ -298,24 +294,24 @@ class EditorPreferences:
         self.buttons_style = NO_DECORATIONS
         self.dark_theme = False # DEPRECATED, "theme" used instead
         self.remember_last_render_dir = True
-        self.empty_click_exits_trims = True # DEPRECATED, NOT USER SETTABLE ANYMORE
-        self.quick_enter_trims = True # DEPRECATED, NOT USER SETTABLE ANYMORE
-        self.show_vu_meter = True  # DEPRECATED, NOT USER SETTABLE ANYMORE
-        self.remember_monitor_clip_frame = True # DEPRECATED, NOT USER SETTABLE ANYMORE
+        self.empty_click_exits_trims = True # DEPRECATED, NOT USER SETTABLE ANYMORE.
+        self.quick_enter_trims = True # DEPRECATED, NOT USER SETTABLE ANYMORE.
+        self.show_vu_meter = True  # DEPRECATED, NOT USER SETTABLE ANYMORE.
+        self.remember_monitor_clip_frame = True # DEPRECATED, NOT USER SETTABLE ANYMORE.
         self.jack_start_up_op = appconsts.JACK_ON_START_UP_NO # not used
         self.jack_frequency = 48000 # not used
         self.jack_output_type = appconsts.JACK_OUT_AUDIO # not used
         self.media_load_order = appconsts.LOAD_ABSOLUTE_FIRST
-        self.use_english_always = False # DEPRECATED, "force_language" used instead
-        self.theme_fallback_colors = 4 # index of gui._THEME_COLORS
+        self.use_english_always = False # DEPRECATED, "force_language" used instead.
+        self.theme_fallback_colors = 4 # index of gui._THEME_COLORS.
         self.display_all_audio_levels = True
-        self.overwrite_clip_drop = True # DEPRECATED, "dnd_action" used instead
+        self.overwrite_clip_drop = True # DEPRECATED, "dnd_action" used instead.
         self.trans_cover_delete = True
         # Jul-2016 - SvdB - For play/pause button
         self.play_pause = False
         # ------------------------------ timeline_start_end_button
         self.timeline_start_end = False
-        # ------------------------------End of timeline_start_end_button
+        # ------------------------------End of timeline_start_end_button.
         self.midbar_layout = appconsts.MIDBAR_TC_LEFT
         self.global_layout = appconsts.SINGLE_WINDOW
         self.trim_view_default = appconsts.TRIM_VIEW_OFF
@@ -326,32 +322,32 @@ class EditorPreferences:
         # Jan-2017 - SvdB
         self.perf_render_threads = 1
         self.perf_drop_frames = False
-        # Feb-2017 - SvdB - for full file names
+        # Feb-2017 - SvdB - for full file names.
         self.show_full_file_names = False
         self.center_on_arrow_move = True
-        # Apr-2017 - SvdB - Using these values we maintain the original hardcoded speed
+        # Apr-2017 - SvdB - Using these values we maintain the original hardcoded speed.
         self.ffwd_rev_shift = 1
         self.ffwd_rev_ctrl = 10
         self.ffwd_rev_caps = 1
         self.shortcuts = "flowblade.xml"
         self.double_track_hights = False
-        self.delta_overlay = True # DEPRECATED, NOT USER SETTABLE ANYMORE
+        self.delta_overlay = True # DEPRECATED, NOT USER SETTABLE ANYMORE.
         self.show_alpha_info_message = True
         self.playback_follow_move_tline_range = True
         self.active_tools = [2, 11, 6, 1, 9, 10]
-        self.top_level_project_panel = True # DEPRECATED, NOT USER SETTABLE ANYMORE
+        self.top_level_project_panel = True # DEPRECATED, NOT USER SETTABLE ANYMORE.
         self.theme = appconsts.FLOWBLADE_THEME_NEUTRAL
         self.dnd_action = appconsts.DND_OVERWRITE_NON_V1
         self.top_row_layout = appconsts.THREE_PANELS_IF_POSSIBLE # DEPRECATED, we have new window layout data.
         self.box_for_empty_press_in_overwrite_tool = True # DEPRECATED, NOT USER SETTABLE ANYMORE, behaviour is now always set to this preference.
         self.scroll_horizontal_dir_up_forward = True
-        self.kf_edit_init_affects_playhead = False # DEPRECATED, this feature is now removed, kf editor inits no longer have effect on playhead
+        self.kf_edit_init_affects_playhead = False # DEPRECATED, this feature is now removed, kf editor inits no longer have effect on playhead.
         self.show_tool_tooltips = True
         self.workflow_dialog_last_version_shown = "0.0.1"
         self.loop_clips = False
         self.audio_scrubbing = False
         self.force_language = "None"
-        self.default_compositing_mode = appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK
+        self.default_compositing_mode = appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK # DEPRECATED,  NOT USER SETTABLE ANYMORE.
         self.single_click_effects_editor_load = False
         self.layout_display_index = 0 # 0 == full area - 1,2... monitor number
         self.default_render_directory = appconsts.USER_HOME_DIR
@@ -364,8 +360,8 @@ class EditorPreferences:
         self.groups_tools =  [  appconsts.WORKFLOW_LAUNCH, appconsts.TOOL_SELECT, appconsts.BUTTON_GROUP_ZOOM, \
                                 appconsts.BUTTON_GROUP_UNDO, appconsts.BUTTON_GROUP_TOOLS, appconsts.BUTTON_GROUP_EDIT, \
                                 appconsts.BUTTON_GROUP_DELETE ,  appconsts.BUTTON_GROUP_SYNC_SPLIT, \
-                                appconsts.BUTTON_GROUP_MONITOR_ADD, appconsts.BIG_TIME_CODE] # DEPRECATED, we are now using 'layout_buttons'
-        self.cbutton  = [True, True, True, True, True, True, True, True, True, True] # Toolbar objects active state
+                                appconsts.BUTTON_GROUP_MONITOR_ADD, appconsts.BIG_TIME_CODE] # DEPRECATED, we are now using 'layout_buttons'.
+        self.cbutton  = [True, True, True, True, True, True, True, True, True, True] # Toolbar objects active state.
         self.colorized_icons = False
         self.tools_selection = appconsts.TOOL_SELECTOR_IS_MENU
         self.panel_positions = None

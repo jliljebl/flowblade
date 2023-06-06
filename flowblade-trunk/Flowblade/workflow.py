@@ -297,12 +297,6 @@ def _workflow_menu_callback(widget, data):
         editorpersistance.prefs.dnd_action = appconsts.DND_ALWAYS_INSERT
     elif  msg == "tooltips":
         editorpersistance.prefs.show_tool_tooltips = widget.get_active()
-    elif  msg == "top down":
-        editorpersistance.prefs.default_compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
-    elif  msg == "standard auto":
-        editorpersistance.prefs.default_compositing_mode = appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW
-    elif  msg == "standard full":
-        editorpersistance.prefs.default_compositing_mode = appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK
     else:
         try: # Set tool position
             pos = int(msg)
