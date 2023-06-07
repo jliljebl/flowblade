@@ -370,6 +370,7 @@ def _view_prefs_panel():
     buttons_combo.append_text(_("No Decorations"))
     buttons_combo.set_active( prefs.buttons_style )
 
+    """ Disabled for 2.10
     dark_combo = Gtk.ComboBoxText()
     dark_combo.append_text(_("Flowblade Dark Theme"))
     dark_combo.append_text(_("System Dark Theme"))
@@ -384,10 +385,12 @@ def _view_prefs_panel():
     
     dark_combo.set_active(index)
 
+    
     theme_combo = Gtk.ComboBoxText()
     for theme in gui._THEME_COLORS:
         theme_combo.append_text(theme[4])
     theme_combo.set_active(prefs.theme_fallback_colors)
+    """
 
     audio_levels_combo = Gtk.ComboBoxText()
     audio_levels_combo.append_text(_("Display All Levels"))
@@ -433,8 +436,8 @@ def _view_prefs_panel():
     row9 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Force Language:")), force_language_combo, PREFERENCES_LEFT))
     row1 = _row(guiutils.get_checkbox_row_box(display_splash_check, Gtk.Label(label=_("Display splash screen"))))
     row2 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Buttons style:")), buttons_combo, PREFERENCES_LEFT))
-    row3 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Theme request, icons and colors:")), dark_combo, PREFERENCES_LEFT))
-    row4 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Theme detection fail fallback colors:")), theme_combo, PREFERENCES_LEFT))
+    #row3 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Theme request, icons and colors:")), dark_combo, PREFERENCES_LEFT))
+    #row4 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Theme detection fail fallback colors:")), theme_combo, PREFERENCES_LEFT))
     row5 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Default audio levels display:")), audio_levels_combo, PREFERENCES_LEFT))
     row7 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Tracks Heights:")), tracks_combo, PREFERENCES_LEFT))
     # Feb-2017 - SvdB - For full file names
@@ -448,8 +451,8 @@ def _view_prefs_panel():
     vbox.pack_start(row9, False, False, 0)
     vbox.pack_start(row1, False, False, 0)
     vbox.pack_start(row2, False, False, 0)
-    vbox.pack_start(row3, False, False, 0)
-    vbox.pack_start(row4, False, False, 0)
+    #vbox.pack_start(row3, False, False, 0)
+    #vbox.pack_start(row4, False, False, 0)
     vbox.pack_start(row5, False, False, 0)
     vbox.pack_start(row7, False, False, 0)
     # Feb-2017 - SvdB - For full file names
@@ -459,7 +462,7 @@ def _view_prefs_panel():
     
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
-    return vbox, (force_language_combo, display_splash_check, buttons_combo, dark_combo, theme_combo, audio_levels_combo,
+    return vbox, (force_language_combo, display_splash_check, buttons_combo, audio_levels_combo,
                   window_mode_combo, show_full_file_names, tracks_combo, top_row_layout, layout_monitor, colorized_icons)
 
 
