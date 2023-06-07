@@ -188,9 +188,6 @@ def main(root_path):
     # Force custom theme. NOTE: See if possible to use Adwaita Dark after GTK 4 port.
     editorpersistance.prefs.theme = appconsts.FLOWBLADE_THEME_NEUTRAL
     respaths.apply_dark_theme()
-    
-    if editorpersistance.prefs.display_all_audio_levels == False:
-        editorstate.display_all_audio_levels = False
 
     editorpersistance.save()
 

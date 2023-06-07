@@ -392,14 +392,6 @@ def _view_prefs_panel():
     theme_combo.set_active(prefs.theme_fallback_colors)
     """
 
-    audio_levels_combo = Gtk.ComboBoxText()
-    audio_levels_combo.append_text(_("Display All Levels"))
-    audio_levels_combo.append_text(_("Display Levels On Request"))
-    if prefs.display_all_audio_levels == True:
-        audio_levels_combo.set_active(0)
-    else:
-        audio_levels_combo.set_active(1)
-
     window_mode_combo = Gtk.ComboBoxText()
     window_mode_combo.append_text(_("Single Window"))
     window_mode_combo.append_text(_("Two Windows"))
@@ -462,8 +454,8 @@ def _view_prefs_panel():
     
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
-    return vbox, (force_language_combo, display_splash_check, buttons_combo, audio_levels_combo,
-                  window_mode_combo, show_full_file_names, tracks_combo, top_row_layout, layout_monitor, colorized_icons)
+    return vbox, (force_language_combo, display_splash_check, buttons_combo, window_mode_combo, show_full_file_names,
+                  tracks_combo, top_row_layout, layout_monitor, colorized_icons)
 
 
 

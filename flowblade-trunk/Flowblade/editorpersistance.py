@@ -186,8 +186,8 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     auto_center_check, play_pause_button, timeline_start_end_button, auto_center_on_updown, \
     ffwd_rev_shift_spin, ffwd_rev_ctrl_spin, ffwd_rev_caps_spin, follow_move_range, loop_clips = playback_prefs_widgets
     
-    force_language_combo, disp_splash, buttons_style, audio_levels_combo, \
-    window_mode_combo, full_names, double_track_hights, top_row_layout, layout_monitor, colorized_icons = view_prefs_widgets
+    force_language_combo, disp_splash, buttons_style, window_mode_combo, full_names, double_track_hights, \
+    top_row_layout, layout_monitor, colorized_icons = view_prefs_widgets
 
     # Jan-2017 - SvdB
     perf_render_threads, perf_drop_frames = performance_widgets
@@ -224,7 +224,6 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     prefs.buttons_style = buttons_style.get_active() # styles enum values and widget indexes correspond
 
     #prefs.theme_fallback_colors = theme_fallback_combo.get_active()
-    prefs.display_all_audio_levels = (audio_levels_combo.get_active() == 0)
     prefs.global_layout = window_mode_combo.get_active() + 1 # +1 'cause values are 1 and 2
     # Jan-2017 - SvdB
     prefs.perf_render_threads = int(perf_render_threads.get_adjustment().get_value())
