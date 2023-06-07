@@ -364,12 +364,6 @@ def _view_prefs_panel():
     colorized_icons.set_active(prefs.colorized_icons)
     # ------------------------------------ End of Colorized icons
 
-    buttons_combo = Gtk.ComboBoxText()
-    buttons_combo.append_text(_("Glass"))
-    buttons_combo.append_text(_("Simple"))
-    buttons_combo.append_text(_("No Decorations"))
-    buttons_combo.set_active( prefs.buttons_style )
-
     """ Disabled for 2.10
     dark_combo = Gtk.ComboBoxText()
     dark_combo.append_text(_("Flowblade Dark Theme"))
@@ -427,7 +421,6 @@ def _view_prefs_panel():
     row00 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Application window mode:")), window_mode_combo, PREFERENCES_LEFT))
     row9 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Force Language:")), force_language_combo, PREFERENCES_LEFT))
     row1 = _row(guiutils.get_checkbox_row_box(display_splash_check, Gtk.Label(label=_("Display splash screen"))))
-    row2 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Buttons style:")), buttons_combo, PREFERENCES_LEFT))
     #row3 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Theme request, icons and colors:")), dark_combo, PREFERENCES_LEFT))
     #row4 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Theme detection fail fallback colors:")), theme_combo, PREFERENCES_LEFT))
     row7 = _row(guiutils.get_two_column_box(Gtk.Label(label=_("Tracks Heights:")), tracks_combo, PREFERENCES_LEFT))
@@ -441,7 +434,6 @@ def _view_prefs_panel():
     vbox.pack_start(row10, False, False, 0)
     vbox.pack_start(row9, False, False, 0)
     vbox.pack_start(row1, False, False, 0)
-    vbox.pack_start(row2, False, False, 0)
     #vbox.pack_start(row3, False, False, 0)
     #vbox.pack_start(row4, False, False, 0)
     vbox.pack_start(row7, False, False, 0)
@@ -452,7 +444,7 @@ def _view_prefs_panel():
     
     guiutils.set_margins(vbox, 12, 0, 12, 12)
 
-    return vbox, (force_language_combo, display_splash_check, buttons_combo, window_mode_combo, show_full_file_names,
+    return vbox, (force_language_combo, display_splash_check, window_mode_combo, show_full_file_names,
                   tracks_combo, top_row_layout, layout_monitor, colorized_icons)
 
 

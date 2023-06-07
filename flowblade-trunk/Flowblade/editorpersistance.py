@@ -69,6 +69,7 @@ def load():
     prefs.empty_click_exits_trims = True
     prefs.quick_enter_trims = True
     prefs.remember_monitor_clip_frame = True
+    prefs.buttons_style = NO_DECORATIONS 
 
     try:
         recent_projects = utils.unpickle(recents_file_path)
@@ -292,7 +293,7 @@ class EditorPreferences:
         self.mm_paned_position = 260 # Paned get/set position value
         self.render_folder = None  # DEPRECATED, this set by XDG variables now
         self.show_sequence_profile = True
-        self.buttons_style = NO_DECORATIONS
+        self.buttons_style = NO_DECORATIONS # DEPRECATED, NO_DECORATIONS forced.
         self.dark_theme = False # DEPRECATED, "theme" used instead
         self.remember_last_render_dir = True
         self.empty_click_exits_trims = True # DEPRECATED, NOT USER SETTABLE ANYMORE.
