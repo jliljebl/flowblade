@@ -2,11 +2,11 @@
 
 ------
 
-**INFO: FLOWBLADE DEVELOPMENT RESUMES.**
+**Release 2.10 is available now.**
 
-**AFTER UNFORTUNATELY A SOMEWHAT LONGER BREAK WHEN WE WOULD HAVE LIKED, THE PROJECT IS NOW FULLY BACK AND MOVING FORWARD.**
+**[Release notes](./flowblade-trunk/docs/RELEASE_NOTES.md).**
 
-**NEXT RELEASE 2.10 IS COMING IN JUNE 2023.**
+**Update succesfully pushed to Flathub and release should available 20:00 UTC Thursday, 22 June 2023.**
 
 ------
 
