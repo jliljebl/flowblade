@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Flowblade\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-20 11:23+0300\n"
+"POT-Creation-Date: 2023-06-22 10:02+0300\n"
 "PO-Revision-Date: 2023-06-20 15:06+0300\n"
 "Last-Translator: Смольянинов Николай <smolianinow.colya2016@yandex.ru>\n"
 "Language-Team: ru\n"
@@ -5149,27 +5149,22 @@ msgid "Shadow Offset"
 msgstr "Смещение тени"
 
 #: translations.py:674
-#| msgid "Background Pad"
 msgid "Background Frames Out"
 msgstr ""
 
 #: translations.py:675
-#| msgid "Background Opacity"
 msgid "Background Anim Out"
 msgstr ""
 
 #: translations.py:676
-#| msgid "Background Pad"
 msgid "Background Frames In"
 msgstr ""
 
 #: translations.py:677
-#| msgid "Background"
 msgid "Background Anim In"
 msgstr ""
 
 #: translations.py:678
-#| msgid "Background Pad"
 msgid "Background Line Width"
 msgstr ""
 
@@ -5182,12 +5177,10 @@ msgid "Centering"
 msgstr "Центрирование"
 
 #: translations.py:681
-#| msgid "Center Horizontal"
 msgid "Reveal Horizontal"
 msgstr ""
 
 #: translations.py:682
-#| msgid "Center Vertical"
 msgid "Reveal Vertical"
 msgstr ""
 
@@ -5196,7 +5189,6 @@ msgid "Reveal Left"
 msgstr ""
 
 #: translations.py:684
-#| msgid "To Right"
 msgid "Reveal Right"
 msgstr ""
 
@@ -8285,7 +8277,6 @@ msgid "Forward Faster"
 msgstr "Ускоренная перемотка вперёд"
 
 #: shortcuts.py:372
-#| msgid "Resync"
 msgid "Resync Track"
 msgstr ""
 
@@ -8649,12 +8640,6 @@ msgstr ""
 "<b>Левая кнопка мыши</b> на срезе клипа, для изменения длительности клипа."
 
 #: workflow.py:90
-#| msgid ""
-#| "<b>Left Mouse</b> to move clip into new position.\n"
-#| "<b>CTRL + Left Mouse</b> to select and move clip range into new "
-#| "position.\n"
-#| "\n"
-#| "<b>Left Mouse</b> on clip ends to trim clip length."
 msgid ""
 "<b>Left Mouse</b> to select a clip, or to move clip or clip range into new "
 "position.\n"
@@ -9396,7 +9381,6 @@ msgid "No Preview"
 msgstr "Без предпросмотра"
 
 #: tools/scripttool.py:622
-#| msgid "Change Clip Length"
 msgid "Change Generator Length"
 msgstr ""
 
@@ -9413,7 +9397,6 @@ msgid "Generator Media Length:"
 msgstr "Длительность генератора:"
 
 #: tools/scripttool.py:906
-#| msgid "Set Mark In, Mark Out and Frames Folder for valid render"
 msgid "Set Frames Folder for valid render"
 msgstr ""
 
@@ -9442,12 +9425,10 @@ msgid "Rendering..."
 msgstr "Сборка..."
 
 #: tools/scripttool.py:1375
-#| msgid "Rendering frame: "
 msgid "Rendered frame "
 msgstr ""
 
 #: tools/scripttool.py:1409
-#| msgid "Rendering preview for frame "
 msgid "Range preview for frame range "
 msgstr ""
 
