@@ -16,6 +16,8 @@
 
 There is an official guide here: https://flatpak.org/setup/
 
+After setup go to https://flatpak.org and install Flowblade from there.
+
 #### 2a. Install using Gnome SOFTWARE
 
 If your distribution has Gnome SOFTWARE application available you can install Flowblade with it.
