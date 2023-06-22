@@ -6,7 +6,7 @@
 
 **[Release notes](./flowblade-trunk/docs/RELEASE_NOTES.md).**
 
-**Update succesfully pushed to Flathub and release should available 20:00 UTC Thursday, 22 June 2023.**
+**Installing instructions are available [here](./flowblade-trunk/docs/INSTALLING.md).**
 
 ------
 
@@ -64,8 +64,6 @@ Flowblade offers a configurable workflow - toolset, its order, default tool and 
 
 **Latest release:** Flowblade Movie Editor 2.8 was released on February 2021.
 
-**Next release:** 2.10 is coming in June 2023.
-
 # Installing Flowblade
 
 Installing instructions are available [here](./flowblade-trunk/docs/INSTALLING.md).
@@ -87,13 +85,7 @@ Installing instructions are available [here](./flowblade-trunk/docs/INSTALLING.m
 [System Requirements](./flowblade-trunk/docs/SYSTEM_REQUIREMENTS.md)
 
 # Screenshots
-[Screenshot 2.8 neutral theme](./flowblade-trunk/docs/Screenshot_THEME_FLOWBLADE_NEUTRAL.png)
-
-[Screenshot 2.8 grey theme](./flowblade-trunk/docs/Screenshot_THEME_FLOWBLADE_GRAY.png)
-
-[Screenshot 2.0 blue theme](./flowblade-trunk/docs/Screenshot-2-0.png)
-
-These are in the repository */docs* folder.
+[Screenshot 2.10](./flowblade-trunk/docs/Screenshot-2-10.png)
 
 # Forum, Webpage
 
