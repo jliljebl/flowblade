@@ -1,5 +1,297 @@
 # Release Notes
 
+## FLOWBLADE 2.10
+
+This release took a long time to get done, but it is finally here. On the other hand, this release has the most ever new and interesting features for a single release, so it was worth taking the time to get everything in.
+
+Going forward the project is in a quite good place now, and we have a clear path of incremental improvents ahead. We will return to 2-3 releases per year schedule.
+
+*NOTE:  We already put out a fix release 2.10.0.1 to fix some omissions in install data.*
+
+### FULL TRACK COMPOSITING IS THE NEW DEFAULT
+
+Compositing mode **Standart Full Track** is the now default compositing mode. Previous default compositing mode **Top Down Free Move** remains available via application menu and bottom left corner selector.
+
+Compositing now works by default similarly to all other video editors on the market. This change should make the application more apprachable for new users.
+
+### GENERATORS
+
+Version 2.10 replaces *Pattern Producers* with a new *Generators* feature created using *Fluxity Plugin API* (see below).
+
+*Generators* are media items with editable parameters that create rendered media when placed on timeline.
+
+In this first release we provide 6 *Generators* that provide functionality in the following categories:
+
+- Animated texts
+- Animated backgrounds
+- Overlay transitions
+
+A demo video showing new plugins in action here: [Generators Demo on Vimeo](https://vimeo.com/838654406)
+
+### FLUXITY PLUGIN API
+
+*Fluxity Plugin API* is Python scripting solution targeted at providing means to create media generators with editable parameters.
+
+API documentation is available here: [fluxity API documentation](http://jliljebl.github.io/flowblade/webhelp/fluxity.html)
+
+We had several compelling reasons for creating a plugins framework to add to the functionality provided by MLT.
+
+- Functionality such as animated texts can be created much more easily using Python and rendered media.
+- Some MLT functionality is unavailable for Flowblade because QT based MLT services crash the application.
+- Contributing threshold for creating new *Generators* should be very low for since only a single self contained file is needed to do a meaningful contribution.
+
+### NEW KEYFRAME INTERPOLATION MODES
+
+Previously we only provided ***Linear*** value interpolations between keyframes, but with this release we make ***Smooth*** and ***Discrete*** keyframe interpolations available too.
+
+### GPU RENDERING
+
+We now have GPU encoding available for some formats:
+
+- AMD/Intel cards - VAAPI h264 encoding
+- NVidia cards - NVENC HEVC encoding, NVENC h264 encoding
+
+Options will be available in **Render** panel if test renders on start-up complete successfully.
+
+### NEW DEFAULT THEME
+
+We have a new dark default theme. The previous default theme and the other available themes were removed. System dark and light themes were also removed because the new Gnome global dark prefence setting caused application window to become invsible in some cases.
+
+  
+### CONTRIBUTIONS
+
+- **jep-fa: Keyframe Tool keyframe level editing feature.** *Control +Left Mouse* press and drag between two keyframes sets same value to both. This likely going to be very handy when e-g- working with audio levels.
+- **Ümit Solmaz** provided new turkish language support.
+- **jep-fa: Creating missing files in Media Relinker feature.** When using Media Relinker to fix projects with missing media user can now create place holder files directly with Media Relinker dialog.
+- **Albano Battistella** updated italian translation.
+- **Pavel Fric** updated czech translation.
+- **Martin A. Wielebinski** updated german translation.
+- **Николай Смольянинов** updated the Russian translation
+- **jep-fa** Titler : remove spaces and new line characters at start of the name of the layer
+
+  
+### GUI UPDATES
+
+- New **Edit** panel. Dedicated edit panels for *Filters* and *Compositors* have been combined into single *'Edit'* panel. *Generator* properties are also edited in this panel.
+  
+- **New Encoding Options selector** Encoding options are now presented using a categorised combo box allowing e.g. more clearly differentiating the new GPU rendering options.
+  
+- **New Profile selector** Project Profile options are now presented using a categorised combo box.
+  
+- **Move Tools buttons to top bar** Buttons for launching *G'Mic editor*, *Audio Monitor* etc. have been moved from Middlebar to top menu bar.
+  
+- **Mouse prelight** Pressable icons now prelight under mouse improving UI interactivity.
+  
+- **Preset Layouts** There are now preset layouts avaialeble from a button in top menu bar.
+  
+- **Combine freebar and layouts functionality** Middlebar buttons editing and layout selections functionality have been combined.
+  
+- **Multiclip selection pop-up menu** A new menu with actions that can be applied to multiple clips is presented when multiple clips are selected on timeline and a context menu is opened with mouse right click.
+  
+- **Keyframe editor hamburger menus** Keyframe editors now have a hamburger menus adding new functionality and replacing old menus accessed via keyframe icons on sides.
+  
+- **Keyframe Interpolation right click menu** Keyframes now have right click context menus with options to set keyframe interpolation.
+
+  
+
+### Other new features
+
+- **Quick Filter Keyboard Shortcuts** Keyboard Shortcuts dialog now provides possibility to set up to 12 Quick Filters available using **Control + F(1-12)** key combo.
+  
+- **Add Media Folder** feature allows user to import multiple media items from a folder in a single action. User can control file type and maximum numbers of files to be added.
+  
+- **Blend Mode filters** When using the new default compositing mode *'Standard Full Track'* compositing mode is now controlled by adding a new Blend Mode filter.
+  
+- **New Filters:** Trails, Glitch, Choppy, RGB Shift.
+  
+- **Add markers during playback using** feature.
+  
+- **Q and W keyboard shortcuts** for quick trimming clip ends.
+  
+- **Save/Load Effect Stack** functionality has been added.
+  
+- **Looping playback** Looping range is set by setting Mark In and Mark Out on timeline.
+  
+
+### UX Papercuts
+
+- Support CTRL+X for media files and timeline clips.
+  
+- Autoexpand track on first added clip.
+  
+- Keep timeline centered on zoom if possible.
+  
+- Allow box selection from blank clip with Move tool.
+  
+- Make mouse wheel sideways scroll step zoom level dependent.
+  
+- Make Move tool box selection snap too.
+  
+- Add Resync Track -edit action and keyboard shortcut for it.
+  
+- Make split and sync split edits for clip ranges consolidated and available from multiselection pop-up.
+  
+- Auto seek to clip first frame on clip opened in filter editor.
+  
+- Auto expand latest added filter when clip opened in filter editor.
+  
+- Exit other then default tools on empty click.
+  
+- Make clip ends snap correctly.
+  
+- Multiple menu updates including main menu and clip context menu.
+  
+- Move playhead to clip start when clip opened in editor.
+  
+- Make Move tool box selection on empty press behaviour always on, update tooltip.
+  
+- Turn single track box selection into range selection.
+  
+- Add drag'n'drop filter on all selected clips if dropped on selected range.
+  
+- Make Media Panel Shift + Mouse selection work in standard way.
+  
+### Removed features
+
+Quite a few features were removed to tighten up the design and codebase. Some may be later re-introduced if there is singficant demand.
+
+- Drop Blue and Grey themes.
+  
+- Remove rendered fade and color dip functionalities.
+  
+- Drop Blender containers.
+  
+- Removed Autofollow composition mode.
+  
+- Removed feature to display audio levels only on single clips.
+  
+- Removed fade compositors.
+  
+- Dropped film emulation LUTs from G'Mic tool
+  
+- Drop Pattern Producers, replaced by Generators.
+  
+
+These two we hope to bring back later:
+
+- Dropped timeline rendering feature.
+  
+- Dropped Save Snapshot... feature.
+  
+
+#### Small features, changes and updates
+
+- Use outline to indicate media item selection
+- Add copy/paste items to keyframe editor menus
+- Marks GUI update
+- Improve sync info GUI on clips
+- Monitor area layout change
+- Pos bar look update
+- Clips colors update
+- Tighten up slider editor GUI
+- Enable markers for audio clips
+- Zoom to project length and pos 0 on sequence open
+- Enable drag'n'drop for range log items into monitor
+- Add feature to show Range Log items in monitor with range marked
+- Add keyboard shortcut for rendering timeline ranges
+- Make many processes use mltinit.py
+- Clear GLib dependency from renderconsumer
+- Delete unncessery imports from mltenv.py
+- Port everything except main app to Gtk.Application
+- Remove Gdk.Screen usage
+- Use GLib.timeout_add instead of Gdk.threads_add_timeout
+- Remove audiowaveform.py module
+- Audio mime type fixes
+- Remove Gtk, Gdk dependency from utils.py
+- Remove threads enter/leave from everything except main app
+- Add 'Center' action for geometry editors
+- Add clone filters feature for audio clips
+- Remove imgseq ?begin version
+
+- Change defaults to favor showing playhead on stop
+- Change Image Clip Color on default theme.
+- Jobs info texts update
+- Make Runtime dialog bigger and resizable
+- More HiDPI work, @2 buttons work, add some @2 icons for buttons
+- Keyframe Tool GUI and menu updates
+- Show info dialog when creating too large custom layouts
+- Drop force_small_midbar pref and fix midbar to always work with w >= 1280 screens
+- Add filter add menu to Effects editor panel
+- Don't display project name in top level project panel
+- Fix themes having tabs properties bleeding from system theme
+- Fullscreen button functionality
+- Display info on modified audio levels in Tracks column
+- Tighten multiple GUI elements
+- Clone only active filter with copy/paste
+- Add Recreate Icon feature for Media Items
+- Do not accept non-seekable video files
+- Make render with args work with values containing equals sign
+- Do not open non-seekable audio files
+- Refuse to load files with non-media extensions.
+- Drop Pattern Producers
+- Add 10% view size into geometry editors
+- Make Range Log text column wider and ellipsized
+- Add drag'n'drop filter on all selected clips if dropped on selected range
+- Optimize Dark Theme colors for Yaru and Adwaita instead of Arc-Dark
+- Make Ubuntu theme selected color work with Yaru
+- select-next - prev clip, select-next - forward
+- Make load dialog more interactive
+- Thin edit panels 40px
+- Import mlt7 as mlt if the available mlt is presented as mlt7
+- flake8 fixes
+- Use Icon to mark active Sequence
+- cairoarea: replace deprecated Gdk.EventMask.POINTER_MOTION_HINT_MASK with Gdk.EventMask.POINTER_MOTION_MASK, fixes GMicButtons issue
+- Timeline waveform display touch-ups
+- Add snapping to playhead
+
+#### BUG FIXES
+
+- Clear keyframe editors on clear_clip() to avoid failing callbacks on discarded editors
+- Fix CairoColorProperty
+- Don't crash if setting dark theme perference fails.
+- Fix media timline drag'n'drop when starting from multiple selection
+- Panel positioning fixes for two windows mode
+- Clear keyframes editors update list when initing Keyframe Tool
+- Fix updating custom shortcuts files
+- Fix media bin multi dnd (?) onko uusi regressio tässä cyclessä
+- Fix Keyframe Tool draw off-by-one bug
+- Fix removed monitor start-up crash
+- Fix image sequence Container Clip loading
+- Keep names same for rendered Container Clips
+- Fix Issue #870 with Home and End keys
+- Make images and color clips respect Mark In and Mark Out when dropping on timeline
+- Fix numerical entry issues with geometry editors
+- Fix issue in forum question 110
+- Fix updating tooldock when tool selection changes
+- Stop container clips from being able to prevent loading media files because of duplicate check
+- Remove profile selection from container clips rendering, always use project profile.
+- Fix issue #990 by adding missing tabs positon default value
+- Fix adding named Sequence
+- Fix G'Mic video render stopping bug
+- Fix loading User profiles
+- Update edited sequence name in top row
+- Fixes on profiles widgets after profile changes by user
+- Fix ESC updating for tool dock
+- Fix selection clip creation GUI update bug
+
+- Fix monitor media drag
+- Fix bins update after adding pattern producer
+- Make clip end drags respect track locking
+- Fix clip drag out of tline bug when range panel missed
+- Fix project load in systems with 'import mlt7' if project data saved in system with
+- import mlt' Janne Liljeblad
+- Remove mlt.mlt_image_rgb24a definition from monitorwidget.py
+- Fix setting audio levels to 0 in audiomonitoring.py
+- Fix ToolSelector re-init after middlebar configuration
+- Fix multitrim overlay bug when entered with key press
+- Fix re-render rendered transitions
+- Fix rendered transitions
+- Fix kfeditors for clip end drags
+- Fix filter undo/redo edit panel updates
+- Fix effect drop on range
+- Fix compositor and generator edit panels visibility through edits
+- Set Save menu item sensitivity always correctly after first video load
+
 ## FLOWBLADE 2.8
 
 Date: February 9, 2021
