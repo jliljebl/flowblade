@@ -70,6 +70,7 @@ def load():
     prefs.quick_enter_trims = True
     prefs.remember_monitor_clip_frame = True
     prefs.buttons_style = NO_DECORATIONS 
+    prefs.buttons_style = NO_DECORATIONS 
 
     try:
         recent_projects = utils.unpickle(recents_file_path)
@@ -303,7 +304,7 @@ class EditorPreferences:
         self.jack_output_type = appconsts.JACK_OUT_AUDIO # not used
         self.media_load_order = appconsts.LOAD_ABSOLUTE_FIRST
         self.use_english_always = False # DEPRECATED, "force_language" used instead.
-        self.theme_fallback_colors = 4 # index of gui._THEME_COLORS.
+        self.theme_fallback_colors = 4 # DEPRECATED
         self.display_all_audio_levels = True
         self.overwrite_clip_drop = True # DEPRECATED, "dnd_action" used instead.
         self.trans_cover_delete = True

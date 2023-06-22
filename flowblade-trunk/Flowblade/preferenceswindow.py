@@ -364,28 +364,6 @@ def _view_prefs_panel():
     colorized_icons.set_active(prefs.colorized_icons)
     # ------------------------------------ End of Colorized icons
 
-    """ Disabled for 2.10
-    dark_combo = Gtk.ComboBoxText()
-    dark_combo.append_text(_("Flowblade Dark Theme"))
-    dark_combo.append_text(_("System Dark Theme"))
-    dark_combo.append_text(_("System Light Theme"))
-    # The displayed options indeces do not correspond with theme const values.
-    if prefs.theme == appconsts.FLOWBLADE_THEME_NEUTRAL:
-        index = 0
-    elif prefs.theme == appconsts.DARK_THEME: # The displayed options indeces do not correspond with theme const values.
-        index = 1
-    else:    
-        index = 2
-    
-    dark_combo.set_active(index)
-
-    
-    theme_combo = Gtk.ComboBoxText()
-    for theme in gui._THEME_COLORS:
-        theme_combo.append_text(theme[4])
-    theme_combo.set_active(prefs.theme_fallback_colors)
-    """
-
     window_mode_combo = Gtk.ComboBoxText()
     window_mode_combo.append_text(_("Single Window"))
     window_mode_combo.append_text(_("Two Windows"))

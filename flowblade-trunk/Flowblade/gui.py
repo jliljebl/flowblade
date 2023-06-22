@@ -80,15 +80,9 @@ sequence_editor_b = None
 
 # Theme colors
 # Theme colors are given as 4 RGB tuples and string, ((LIGHT_BG), (DARK_BG), (SELECTED_BG), (DARK_SELECTED_BG), name)
-_UBUNTU_COLORS = ((0.949020, 0.945098, 0.941176), (0.172, 0.172, 0.172), (0.941, 0.466, 0.274, 0.9), (0.951, 0.30, 0.0, 0.9), "Ubuntu")
-_GNOME_COLORS = ((0.929412, 0.929412, 0.929412), (0.172, 0.172, 0.172), (0.28627451, 0.560784314, 0.843137255), (0.192, 0.361, 0.608), "Gnome")
-_MINT_COLORS = ((0.839215686, 0.839215686, 0.839215686), (0.172, 0.172, 0.172), (0.556862745, 0.678431373, 0.439215686), (0.556862745, 0.678431373, 0.439215686), "Linux Mint")
-_ARC_COLORS = ((0.960784, 0.964706, 0.968627), (0.266667, 0.282353, 0.321569), (0.321568627, 0.580392157, 0.88627451), (0.321568627, 0.580392157, 0.88627451), "Arc (theme)")
 _FLOWBLADE_COLORS = ((0.960784, 0.964706, 0.968627), (0.266667, 0.282353, 0.321569), (0.065, 0.342, 0.66), (0.065, 0.342, 0.66), "Flowblade Theme")
 
-_THEME_COLORS = (_UBUNTU_COLORS, _GNOME_COLORS, _MINT_COLORS, _ARC_COLORS, _FLOWBLADE_COLORS)
-
-_CURRENT_THEME_COLORS_FILE = "currentcolors.data" # Used to communicate theme colors to tools like gmic.py running on separate process
+_CURRENT_THEME_COLORS_FILE = "currentcolors.data" # NOTE: WE CAN REMOVE THIS Used to communicate theme colors to tools like gmic.py running on separate process
 
 LIGHT_GRAY_THEME_GRAY = ((50.3/255.0), (50.3/255.0), (59.9/255.0), 1.0)
 LIGHT_GRAY_THEME_BG = (0.153, 0.153, 0.188, 1.0)
@@ -175,8 +169,7 @@ def set_theme_colors():
     # this is first called.
     global _selected_bg_color, _bg_color, _button_colors, _bg_unmodified_normal
 
-    fallback_theme_colors = editorpersistance.prefs.theme_fallback_colors
-    theme_colors = _THEME_COLORS[fallback_theme_colors]
+    theme_colors = _FLOWBLADE_COLORS
 
     # Try to detect selected color and set from fallback if fails
     style = editor_window.bin_list_view.get_style_context()
