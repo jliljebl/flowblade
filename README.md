@@ -44,7 +44,7 @@ Flowblade offers a configurable workflow - toolset, its order, default tool and 
 * Compositor based workflow
     * Multiple compositors available. Mix, zoom, move and rotate source video with keyframed animation tools
     * 19 blends. Stardand image blend modes like Add, Hardlight and Overlay are available
-* 40+ pattern wipes, user creted patterns can be used also
+* 40+ pattern wipes, user created patterns can be used also
 
 **Image and audio filters:**
 * 50+ image filters: color correction, image effects, distorts, alpha manipulation, blur, edge detection, motion effects, freeze frame, etc.
