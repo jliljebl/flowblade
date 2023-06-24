@@ -347,7 +347,7 @@ def _tool_dock_item_press(tool_id, tool_dock_item):
     for item in dock_items:
         item.set_item_color(False)
     tool_dock_item.set_item_color(True)
-    gui.editor_window.tool_selector_item_activated(None, tool_id)
+    gui.editor_window.tline_cursor_manager.tool_selector_item_activated(None, tool_id)
 
 def set_default_tool_dock_item_selected():
     for item in dock_items:
@@ -387,7 +387,7 @@ def tline_tool_keyboard_selected(event):
     try:
         keyboard_number = int(Gdk.keyval_name(event.keyval).lower())
         tool_id = editorpersistance.prefs.active_tools[keyboard_number - 1]
-        gui.editor_window.change_tool(tool_id)
+        gui.editor_window.tline_cursor_manager.change_tool(tool_id)
         for item in dock_items:
             item.set_item_color(False)
         dock_items[keyboard_number - 1].set_item_color(True)
@@ -400,4 +400,4 @@ def tline_tool_keyboard_selected(event):
 
 def select_default_tool():
     tool_id = editorpersistance.prefs.active_tools[0]
-    gui.editor_window.change_tool(tool_id)
+    gui.editor_window.tline_cursor_manager.change_tool(tool_id)

@@ -144,7 +144,7 @@ def mouse_release(x, y, frame, state):
     else:
         print("COMPOSITOR MODE EXIT PROBLEM at compositormodes.mouse_release")
 
-    gui.editor_window.set_cursor_to_mode()
+    gui.editor_window.tline_cursor_manager.set_cursor_to_mode()
 
     if sub_mode == TRIM_EDIT:
         _bounds_check_trim(frame, edit_data)

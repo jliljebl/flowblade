@@ -342,12 +342,12 @@ def exit_tool():
     global enter_mode
     if enter_mode != None:
         # Exit to enter mode if we had one.
-        gui.editor_window.kf_tool_exit_to_mode(enter_mode)
+        gui.editor_window.tline_cursor_manager.tline_cursor_manager.kf_tool_exit_to_mode(enter_mode)
         enter_mode = None
     else:
         # Exit to default mode if no editor was open.
         if editor_was_open == False:
-            gui.editor_window.set_default_edit_tool()
+            gui.editor_window.tline_cursor_manager.set_default_edit_tool()
 
     updater.repaint_tline()
         

@@ -172,7 +172,7 @@ def _exit_to_overwrite():
     entered_from_overwrite = False
     editorstate.overwrite_mode_box = False
     tlinewidgets.set_edit_mode_data(None)
-    gui.editor_window.set_cursor_to_mode() # This gets set wrong in editevent.tline_canvas_mouse_released() and were putting it back here, 
+    gui.editor_window.tline_cursor_manager.set_cursor_to_mode() # This gets set wrong in editevent.tline_canvas_mouse_released() and were putting it back here, 
                                            # this could be investigated for better solution, this could cause a cursor flash, but on dev system we're not getting it.
     updater.repaint_tline()
 

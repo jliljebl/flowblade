@@ -360,8 +360,8 @@ def tline_canvas_mouse_pressed(event, frame):
             pointer_context = appconsts.POINTER_CONTEXT_TRIM_LEFT	
         else:	
             pointer_context = appconsts.POINTER_CONTEXT_TRIM_RIGHT	
-        gui.editor_window.set_tline_cursor_to_context(pointer_context)	
-        gui.editor_window.set_tool_selector_to_mode()	
+        gui.editor_window.tline_cursor_manager.set_tline_cursor_to_context(pointer_context)	
+        gui.editor_window.tline_cursor_manager.set_tool_selector_to_mode()	
         if not editorpersistance.prefs.quick_enter_trims:	
             editorstate.timeline_mouse_disabled = True	
         else:	
@@ -402,10 +402,10 @@ def tline_canvas_mouse_released(x, y, frame, button, state):
     """
     Mouse event callback from timeline canvas widget
     """
-    gui.editor_window.set_cursor_to_mode() # we need this for box move at least, probably trims too
+    gui.editor_window.tline_cursor_manager.set_cursor_to_mode() # we need this for box move at least, probably trims too
      
     if editorstate.timeline_mouse_disabled == True:
-        gui.editor_window.set_cursor_to_mode() # we only need this update when mode change (to active trim mode) disables mouse, so we'll only do this then
+        gui.editor_window.tline_cursor_manager.set_cursor_to_mode() # we only need this update when mode change (to active trim mode) disables mouse, so we'll only do this then
         tlinewidgets.trim_mode_in_non_active_state = False # we only need this update when mode change (to active trim mode) disables mouse, so we'll only do this then
         gui.tline_canvas.widget.queue_draw()
         editorstate.timeline_mouse_disabled = False

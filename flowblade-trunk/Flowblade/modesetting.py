@@ -43,7 +43,7 @@ def set_default_edit_mode(disable_mouse=False):
     situations where for example user is in trim and exits it
     without specifying which edit mode to go to.
     """
-    gui.editor_window.set_default_edit_tool()
+    gui.editor_window.tline_cursor_manager.set_default_edit_tool()
     if disable_mouse:
         editorstate.timeline_mouse_disabled = True
 
@@ -60,9 +60,9 @@ def set_clip_monitor_edit_mode():
     elif EDIT_MODE() == editorstate.TWO_ROLL_TRIM_NO_EDIT:
         pass
     else:
-        gui.editor_window.set_default_edit_tool()
+        gui.editor_window.tline_cursor_manager.set_default_edit_tool()
         
-    gui.editor_window.set_tool_selector_to_mode()
+    gui.editor_window.tline_cursor_manager.set_tool_selector_to_mode()
 
 def set_post_undo_redo_edit_mode():
     if EDIT_MODE() == editorstate.ONE_ROLL_TRIM:
@@ -151,7 +151,7 @@ def oneroll_trim_no_edit_init():
     """
     stop_looping()
     editorstate.edit_mode = editorstate.ONE_ROLL_TRIM_NO_EDIT
-    gui.editor_window.set_cursor_to_mode()
+    gui.editor_window.tline_cursor_manager.set_cursor_to_mode()
     tlinewidgets.set_edit_mode(None, None) # No overlays are drawn in this edit mode
     movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
     updater.set_trim_mode_gui()
@@ -202,7 +202,7 @@ def oneroll_trim_mode_init(x, y):
 def tworoll_trim_no_edit_init():
     stop_looping()
     editorstate.edit_mode = editorstate.TWO_ROLL_TRIM_NO_EDIT
-    gui.editor_window.set_cursor_to_mode()
+    gui.editor_window.tline_cursor_manager.set_cursor_to_mode()
     tlinewidgets.set_edit_mode(None, None) # No overlays are drawn in this edit mode
     movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
     updater.set_trim_mode_gui()
@@ -246,7 +246,7 @@ def tworoll_trim_mode_init(x, y):
 def slide_trim_no_edit_init():
     stop_looping()
     editorstate.edit_mode = editorstate.SLIDE_TRIM_NO_EDIT
-    gui.editor_window.set_cursor_to_mode()
+    gui.editor_window.tline_cursor_manager.set_cursor_to_mode()
     tlinewidgets.set_edit_mode(None, None) # No overlays are drawn in this edit mode
     movemodes.clear_selected_clips() # Entering trim edit mode clears selection 
     updater.set_trim_mode_gui()
@@ -336,6 +336,6 @@ def kftool_mode_from_popup_menu(clip, track, edit_type):
 
     kftoolmode.init_tool_for_clip(clip, track, edit_type)
     kftoolmode.edit_data["initializing"] = False
-    gui.editor_window.set_cursor_to_mode()
+    gui.editor_window.tline_cursor_manager.set_cursor_to_mode()
 
     clipeffectseditor.keyframe_editor_widgets = []

@@ -72,9 +72,11 @@ _frame_write_on = False
             
 _widget = None
 
+
 def _get_match_frame_path():
     return userfolders.get_cache_dir() + appconsts.TRIM_VIEW_DIR + "/" + MATCH_FRAME
-        
+
+
 class MonitorWidget:
     
     def __init__(self):
@@ -91,16 +93,16 @@ class MonitorWidget:
         self.slip_clip_length = -1
 
         self.clip_name = "clip name"
-    
+
         self.match_not_updateble = False # Roll and Slip need this flag to know if surface updates needed
-        
+
         # top row
         self.top_row = Gtk.HBox()
         
         self.top_edge_panel = cairoarea.CairoDrawableArea2(1, 1, self._draw_top_panel, use_widget_bg=False)
         self.top_edge_panel.press_func = self._press_event
         self.top_row.pack_start(self.top_edge_panel, True, True,0)
-        
+
         # mid row
         self.mid_row = Gtk.HBox()
 

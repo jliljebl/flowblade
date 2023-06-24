@@ -100,7 +100,7 @@ def maybe_init_for_mouse_press(event, frame):
         else:
             tlinewidgets.pointer_context = appconsts.POINTER_CONTEXT_END_DRAG_LEFT
 
-    gui.editor_window.set_cursor_to_mode()
+    gui.editor_window.tline_cursor_manager.set_cursor_to_mode()
 
 def mouse_press(event, frame):
     frame = _legalize_frame(frame)
@@ -187,7 +187,7 @@ def _exit_clip_end_drag():
     tlinewidgets.set_edit_mode(None, _enter_draw_func)
     tlinewidgets.pointer_context = appconsts.POINTER_CONTEXT_NONE
     
-    gui.editor_window.set_cursor_to_mode()
+    gui.editor_window.tline_cursor_manager.set_cursor_to_mode()
     updater.repaint_tline()
 
 def _legalize_frame(frame):

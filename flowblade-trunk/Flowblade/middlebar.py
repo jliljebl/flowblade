@@ -208,7 +208,7 @@ def _create_buttons(editor_window):
 
     if editorpersistance.prefs.tools_selection == appconsts.TOOL_SELECTOR_IS_MENU:
         editor_window.tool_selector = create_tool_selector(editor_window)
-        editor_window.set_tool_selector_to_mode()
+        editor_window.tline_cursor_manager.set_tool_selector_to_mode(editor_window.tool_selector)
     else:
         editor_window.tool_selector = None
 
@@ -302,7 +302,7 @@ def create_tool_selector(editor_window):
     if editorpersistance.prefs.double_track_hights:
        size_adj = 2
       
-    tool_selector = guicomponents.ToolSelector(editor_window.mode_selector_pressed, m_pixbufs, 40*size_adj, 22*size_adj)
+    tool_selector = guicomponents.ToolSelector(editor_window.tline_cursor_manager.mode_selector_pressed, m_pixbufs, 40*size_adj, 22*size_adj)
     tool_selector.connect_launched_menu(workflow._tools_menu)
     return tool_selector
 

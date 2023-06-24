@@ -399,14 +399,14 @@ def _handle_tline_key_event(event):
         if action == 'to_start':
             if PLAYER().is_playing():
                 monitorevent.stop_pressed()
-            gui.editor_window.set_default_edit_tool()
+            gui.editor_window.tline_cursor_manager.set_default_edit_tool()
             PLAYER().seek_frame(0)
             _move_to_beginning()
             return True
         if action == 'to_end':
             if PLAYER().is_playing():
                 monitorevent.stop_pressed()
-            gui.editor_window.set_default_edit_tool()
+            gui.editor_window.tline_cursor_manager.set_default_edit_tool()
             PLAYER().seek_end()
             _move_to_end()
             return True

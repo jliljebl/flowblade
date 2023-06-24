@@ -38,7 +38,7 @@ def set_default_edit_mode(disable_mouse=False):
     """
     We interpret clicks on empty in this tool as request to exit to default edit tool.
     """
-    gui.editor_window.set_default_edit_tool()
+    gui.editor_window.tline_cursor_manager.set_default_edit_tool()
     if disable_mouse:
         editorstate.timeline_mouse_disabled = True
  

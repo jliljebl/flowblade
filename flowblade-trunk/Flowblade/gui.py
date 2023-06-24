@@ -77,6 +77,8 @@ notebook_buttons = None
 
 sequence_editor_b = None
 
+tline_cursor_manager = None
+
 
 # Theme colors
 # Theme colors are given as 4 RGB tuples and string, ((LIGHT_BG), (DARK_BG), (SELECTED_BG), (DARK_SELECTED_BG), name)
@@ -103,7 +105,8 @@ def capture_references(new_editor_window):
     tline_display, tline_scale, tline_canvas, tline_scroll, tline_v_scroll, tline_info, \
     tline_column, play_b, effect_select_list_view, effect_select_combo_box, \
     project_info_vbox, big_tc, editmenu, notebook_buttons, tline_left_corner, \
-    monitor_widget, bin_panel, monitor_switch, comp_mode_launcher, tline_render_strip
+    monitor_widget, bin_panel, monitor_switch, comp_mode_launcher, tline_render_strip, \
+    tline_cursor_manager
 
     editor_window = new_editor_window
 
@@ -133,6 +136,8 @@ def capture_references(new_editor_window):
     big_tc = editor_window.big_TC
 
     editmenu = editor_window.uimanager.get_widget('/MenuBar/EditMenu')
+
+    tline_cursor_manager = editor_window.tline_cursor_manager
 
 def enable_save(project):
     if project.last_save_path != None:

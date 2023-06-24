@@ -1557,9 +1557,9 @@ class TimeLineCanvas:
         if pointer_context != current_pointer_context:
             pointer_context = current_pointer_context
             if pointer_context == appconsts.POINTER_CONTEXT_NONE:
-                gui.editor_window.set_tline_cursor(EDIT_MODE())
+                gui.editor_window.tline_cursor_manager.set_tline_cursor(EDIT_MODE())
             else:
-                gui.editor_window.set_tline_cursor_to_context(pointer_context)
+                gui.editor_window.tline_cursor_manager.set_tline_cursor_to_context(pointer_context)
         
     def get_pointer_context(self, x, y):
         frame = get_frame(x)

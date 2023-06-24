@@ -692,7 +692,7 @@ def open_project(new_project):
     if new_project.update_media_lengths_on_load == True:
         projectaction.update_media_lengths()
 
-    gui.editor_window.set_default_edit_tool()
+    gui.editor_window.tline_cursor_manager.set_default_edit_tool()
     editorstate.trim_mode_ripple = False
 
     updater.set_timeline_height()

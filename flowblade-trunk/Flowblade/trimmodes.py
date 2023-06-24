@@ -240,7 +240,7 @@ def trim_looping_stopped():
                          edit_data["reinit_frame"])
 
 def update_cursor_to_mode():
-    gui.editor_window.set_cursor_to_mode()
+    gui.editor_window.tline_cursor_manager.set_cursor_to_mode()
 
 def set_no_edit_trim_mode():
     if editorstate.edit_mode == editorstate.ONE_ROLL_TRIM or \
@@ -587,7 +587,7 @@ def oneroll_trim_release(x, y, frame, state):
     if mouse_disabled:
         mouse_disabled = False
         # we may have been in non active state because the clip being edited was changed
-        gui.editor_window.set_cursor_to_mode()
+        gui.editor_window.tline_cursor_manager.set_cursor_to_mode()
         tlinewidgets.trim_mode_in_non_active_state = False 
         gui.tline_canvas.widget.queue_draw()
         return
@@ -1088,7 +1088,7 @@ def tworoll_trim_release(x, y, frame, state):
     global mouse_disabled
     if mouse_disabled == True:
         # we may have been in non active state because the clip being edited was changed
-        gui.editor_window.set_cursor_to_mode()
+        gui.editor_window.tline_cursor_manager.set_cursor_to_mode()
         tlinewidgets.trim_mode_in_non_active_state = False 
         gui.tline_canvas.widget.queue_draw()
         mouse_disabled = False
@@ -1390,7 +1390,7 @@ def slide_trim_release(x, y, frame, state):
     global mouse_disabled
     if mouse_disabled == True:
         # we may have been in non active state because the clip being edited was changed
-        gui.editor_window.set_cursor_to_mode()
+        gui.editor_window.tline_cursor_manager.set_cursor_to_mode()
         tlinewidgets.trim_mode_in_non_active_state = False 
         gui.tline_canvas.widget.queue_draw()
         mouse_disabled = False
