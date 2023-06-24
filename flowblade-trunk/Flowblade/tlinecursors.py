@@ -18,6 +18,12 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+"""
+Module handles creating and changing tool cursors.
+It is also part of edit mode changing callstack.
+"""
+
+
 from gi.repository import Gdk
 
 import cairo
@@ -161,7 +167,7 @@ class TLineCursorManager:
         elif tool_id == appconsts.TLINE_TOOL_MULTI_TRIM:
             self.handle_multitrim_mode_button_press()
         else:
-            # We should not hit this
+            # We should not hit this.
             print("editorwindow.change_tool() else: hit!")
             return
             
