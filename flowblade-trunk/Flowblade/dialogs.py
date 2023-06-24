@@ -2002,3 +2002,9 @@ def show_no_plugins_in_monitor_dialog():
     primary_txt = _("No Monitor display available for Generators")
     secondary_txt = _("Generators with user mutable media are best handled on Timeline.")
     dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+
+
+def refuse_to_empty_default_notebook_dialog():
+    primary_txt = _("Cannot do the panel move!")
+    secondary_txt = _("It is not possible to move the panel and make the top left notebook empty.")
+    dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)

@@ -621,7 +621,10 @@ def init_editor_state():
     compositeeditor.clear_compositor()
 
     # Show first pages on notebooks.
-    gui.editor_window.notebook.set_current_page(0)
+    try:
+        gui.editor_window.notebook.set_current_page(0)
+    except:
+        pass
 
     # Clear clip selection.
     movemodes.clear_selection_values()

@@ -169,8 +169,10 @@ def init_layout_data():
     global _panel_positions, _positions_names, _panels_names, _position_notebooks
     _panel_positions = editorpersistance.prefs.panel_positions
 
-    # Use default panels positons if nothing available yet or too small screen
-    if panel_positioning_available() == False or _panel_positions == None:
+    # Use default panels positons if nothing available yet or too small screen, 
+    # or default panel position is empty, layout code makes too many assumptions to make that work.
+    if panel_positioning_available() == False or _panel_positions == None \
+       or not (appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT in _panel_positions.values()):
         _panel_positions = copy.deepcopy(DEFAULT_PANEL_POSITIONS)
         if editorstate.SCREEN_WIDTH < 1439:
             # App window may become invsible if all buttons shown in midbar and window too wide for screen.
@@ -608,6 +610,16 @@ def _change_panel_position(widget, panel_id, pos_option):
     # We're again getting one event for activated item and one for the de-activated item.
     if widget != None and widget.get_active() == False:
         return
+    
+    # Refuse to make default notebook empty.
+    panels_in_default_notebook = 0
+    for pos in _panel_positions.values():
+        if pos == appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT:
+            panels_in_default_notebook += 1
+    if panels_in_default_notebook == 1 and \
+       _panel_positions[panel_id] == appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT:
+       dialogs.refuse_to_empty_default_notebook_dialog()
+       return
 
     # Remove panel if it currently has position in layout.
     if _panel_positions[panel_id] != appconsts.PANEL_PLACEMENT_NOT_VISIBLE:

@@ -760,7 +760,6 @@ class EditorWindow:
         # -------------- appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT a.k.a Notebook 
         # --------------'this is always noteboof never Gtk.Frame or empty '
         self.notebook, widget_is_notebook = editorlayout.create_position_widget(self, appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT)
-        self.notebook.set_tab_pos(Gtk.PositionType.BOTTOM)
         self.notebook_frame = guiutils.get_panel_etched_frame(self.notebook)
         guiutils.set_margins(self.notebook_frame, 0, 0, 0, 1)
             
