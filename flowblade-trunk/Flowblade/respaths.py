@@ -59,7 +59,7 @@ def set_paths(root_path):
     FLUXITY_API_DOC
     
     ROOT_PATH = root_path
-    IMAGE_PATH = root_path + "/res/img/"
+    IMAGE_PATH = ROOT_PATH + "/res/darktheme/"
     WIPE_RESOURCES_PATH = root_path + "/res/filters/wipes/"
     PROFILE_PATH = root_path + "/res/profiles/"
     BLACK_IMAGE_PATH = root_path + "/res/img/black.jpg"
@@ -83,8 +83,3 @@ def set_paths(root_path):
     FLUXITY_EMPTY_BG_RES_PATH = root_path + "/res/scripttool/not_rendered.png"
     MEDIA_PLUGINS_PATH = root_path + "/res/mediaplugins/"
     FLUXITY_API_DOC = root_path + "/res/mediaplugins/fluxity.html"
-    
-def apply_dark_theme():
-    global IMAGE_PATH
-    IMAGE_PATH = ROOT_PATH + "/res/darktheme/"
-    

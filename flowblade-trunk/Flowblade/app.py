@@ -187,7 +187,6 @@ def main(root_path):
     editorpersistance.load()
     # Force custom theme. NOTE: See if possible to use Adwaita Dark after GTK 4 port.
     editorpersistance.prefs.theme = appconsts.FLOWBLADE_THEME_NEUTRAL
-    respaths.apply_dark_theme()
 
     editorpersistance.save()
 

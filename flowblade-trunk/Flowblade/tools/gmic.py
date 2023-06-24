@@ -178,9 +178,7 @@ def main(root_path, force_launch=False):
 
     # Load editor prefs and apply themes images paths.
     editorpersistance.load()
-    if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
-        respaths.apply_dark_theme()
-        
+
     # Create app.
     app = GMicApplication()
     global _app
