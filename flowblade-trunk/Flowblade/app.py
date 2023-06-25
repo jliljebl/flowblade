@@ -301,7 +301,6 @@ def main(root_path):
 
     # Check for tools and init tools integration.
     gmic.test_availablity()
-    containerclip.test_blender_availebility()
     toolsintegration.init()
 
     # Media Plugins a.k.a Generators.

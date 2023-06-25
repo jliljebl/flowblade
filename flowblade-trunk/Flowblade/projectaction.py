@@ -48,7 +48,6 @@ import app
 import audiowaveformrenderer
 import appconsts
 import batchrendering
-import containerprogramedit
 import clipeffectseditor
 import compositeeditor
 import containerclip
@@ -2126,12 +2125,6 @@ def media_file_menu_item_selected(widget, data):
         delete_media_files()
     if item_id == "Render Proxy File":
         proxyediting.create_proxy_menu_item_selected(media_file)
-    if item_id == "Edit Container Data":
-        containerprogramedit.show_container_data_program_editor_dialog(media_file.container_data)
-    if item_id == "Save Container Data":
-        media_file.save_program_edit_info()
-    if item_id == "Load Container Data":
-        media_file.load_program_edit_info()
     if item_id == "Recreate Icon":
         (icon_path, length, info) = projectdata.thumbnailer.write_image(media_file.path)
         media_file.info = info

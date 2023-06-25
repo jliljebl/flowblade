@@ -38,7 +38,6 @@ import time
 
 import appconsts
 import atomicfile
-import blenderheadless
 import ccrutils
 import dialogutils
 import edit
@@ -79,7 +78,7 @@ OVERLAY_COLOR = (0.17, 0.23, 0.63, 0.5)
 
 GMIC_TYPE_ICON = None
 MLT_XML_TYPE_ICON = None
-BLENDER_TYPE_ICON = None
+BLENDER_TYPE_ICON = None # Deprecated
 FLUXITY_TYPE_ICON = None
 
 NEWLINE = '\n'
@@ -93,22 +92,18 @@ def get_action_object(container_data):
         return GMicContainerActions(container_data)
     elif container_data.container_type == appconsts.CONTAINER_CLIP_MLT_XML:
          return MLTXMLContainerActions(container_data)
-    elif container_data.container_type == appconsts.CONTAINER_CLIP_BLENDER:
-         return BlenderContainerActions(container_data)
     elif container_data.container_type == appconsts.CONTAINER_CLIP_FLUXITY:
          return FluxityContainerActions(container_data)
          
 # ------------------------------------------------------------ thumbnail creation helpers
 def _get_type_icon(container_type):
     # TODO: When we get third move this into action objects.
-    global GMIC_TYPE_ICON, MLT_XML_TYPE_ICON, BLENDER_TYPE_ICON, FLUXITY_TYPE_ICON
+    global GMIC_TYPE_ICON, MLT_XML_TYPE_ICON, FLUXITY_TYPE_ICON
     
     if GMIC_TYPE_ICON == None:
         GMIC_TYPE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "container_clip_gmic.png")
     if MLT_XML_TYPE_ICON == None:
         MLT_XML_TYPE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "container_clip_mlt_xml.png")
-    if BLENDER_TYPE_ICON == None:
-        BLENDER_TYPE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "container_clip_blender.png")
     if FLUXITY_TYPE_ICON == None:
         FLUXITY_TYPE_ICON = cairo.ImageSurface.create_from_png(respaths.IMAGE_PATH + "container_clip_fluxity.png")
         
@@ -116,8 +111,6 @@ def _get_type_icon(container_type):
         return GMIC_TYPE_ICON
     elif container_type == appconsts.CONTAINER_CLIP_MLT_XML: 
         return MLT_XML_TYPE_ICON
-    elif container_type == appconsts.CONTAINER_CLIP_BLENDER:  
-        return BLENDER_TYPE_ICON
     elif container_type == appconsts.CONTAINER_CLIP_FLUXITY:  
         return FLUXITY_TYPE_ICON
         
@@ -936,224 +929,6 @@ class MLTXMLContainerActions(AbstractContainerActionObject):
 
     def abort_render(self):
         mltxmlheadless.abort_render(self.get_container_program_id())
-
-
-class BlenderContainerActions(AbstractContainerActionObject):
-
-    def __init__(self, container_data):
-        AbstractContainerActionObject.__init__(self, container_data)
-
-    def validate_program(self):
-        try:
-
-            handle = open(self.container_data.program, 'rb')
-            magic = handle.read(7).decode()
-            handle.close()
-            if magic == "BLENDER":
-                return (True, None)
-            else:
-                msg = _("Wrong magic: ") + magic
-                return (False, msg)
-                
-        except Exception as e:
-            return (False, str(e))
-
-    def initialize_project(self, project_path):
-        info_script = str(respaths.ROOT_PATH + "/tools/blenderprojectinit.py")
-        command_list = ["/usr/bin/blender", "-b", project_path, "-P", info_script]
-
-        if editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
-            info_script = utils.get_flatpak_real_path_for_app_files(info_script)
-            command_list = ["flatpak-spawn", "--host", "/usr/bin/blender", "-b", project_path, "-P", info_script]
-            
-        FLOG = open(userfolders.get_cache_dir() + "/log_blender_project_init", 'w')
-
-        p = subprocess.Popen(command_list, stdin=FLOG, stdout=FLOG, stderr=FLOG)
-        p.wait()
-
-    def get_job_proxy(self):
-        job_proxy = jobs.JobProxy(self.get_container_program_id(), self)
-        job_proxy.type = jobs.CONTAINER_CLIP_RENDER_BLENDER
-        return job_proxy
-
-    def get_job_name(self):
-        return self.container_data.get_program_name()
-        
-    def _launch_render(self, clip, range_in, range_out, clip_start_offset):
-        self.create_data_dirs_if_needed()
-
-        job_msg = self.get_job_queue_message()
-        job_msg.text = _("Render Starting...")
-        job_msg.status = jobs.RENDERING
-        jobs.update_job_queue(job_msg)
-        
-        self.render_range_in = range_in
-        self.render_range_out = range_out
-        self.clip_start_offset = clip_start_offset
-
-        blenderheadless.clear_flag_files(self.get_container_program_id())
-        # We need data to be available for render process, 
-        # create video_render_data object with default values if not available.
-        if self.container_data.render_data == None:
-            self.container_data.render_data = toolsencoding.create_container_clip_default_render_data_object(current_sequence().profile)
-        
-        # Make sure preview render does not try to create video clip.
-        render_data = copy.deepcopy(self.container_data.render_data)
-        if self.render_type == PREVIEW_RENDER:
-            render_data.do_video_render = False
-            render_data.is_preview_render = True
-
-        if editorstate.app_running_from == editorstate.RUNNING_FROM_FLATPAK:
-            render_data.is_flatpak_render = True
-        
-        blenderheadless.set_render_data(self.get_container_program_id(), render_data)
-        
-        # Write current render target container clip for blenderrendersetup.py
-        cont_info_id_path = userfolders.get_cache_dir() + "blender_render_container_id"
-        with atomicfile.AtomicFileWriter(cont_info_id_path, "w") as afw:
-            outfile = afw.get_file()
-            outfile.write(str(self.get_container_program_id()))
-
-        # Write current render set up exec lines for blenderrendersetup.py
-        if self.render_type != PREVIEW_RENDER:
-            file_path_str = 'bpy.context.scene.render.filepath = "' + self.get_rendered_media_dir() + '/frame"' + NEWLINE
-        else:
-            file_path_str = 'bpy.context.scene.render.filepath = "' + self.get_preview_media_dir() + '/frame"' + NEWLINE
-            if not os.path.exists(self.get_preview_media_dir()):
-                os.mkdir(self.get_preview_media_dir())
-            
-        render_exec_lines = file_path_str \
-        + 'bpy.context.scene.render.fps = 24' + NEWLINE \
-        + 'bpy.context.scene.render.image_settings.file_format = "PNG"' + NEWLINE \
-        + 'bpy.context.scene.render.image_settings.color_mode = "RGBA"' + NEWLINE \
-        + 'bpy.context.scene.render.film_transparent = 1' + NEWLINE \
-        + 'bpy.context.scene.render.resolution_x = '+ str(current_sequence().profile.width()) + NEWLINE \
-        + 'bpy.context.scene.render.resolution_y = ' + str(current_sequence().profile.height()) + NEWLINE \
-        + 'bpy.context.scene.render.resolution_percentage = 100' + NEWLINE \
-        + 'bpy.context.scene.frame_start = ' + str(range_in) + NEWLINE \
-        + 'bpy.context.scene.frame_end = ' + str(range_out)  + NEWLINE
-
-        render_exec_lines = self._write_exec_lines_for_obj_type(render_exec_lines, "objects")
-        render_exec_lines = self._write_exec_lines_for_obj_type(render_exec_lines, "materials")
-        render_exec_lines = self._write_exec_lines_for_obj_type(render_exec_lines, "curves")
-
-        exec_lines_file_path = self.get_session_dir() + "/blender_render_exec_lines"
-        with atomicfile.AtomicFileWriter(exec_lines_file_path, "w") as afw:
-            outfile = afw.get_file()
-            outfile.write(render_exec_lines)
-
-        args = ("session_id:" + self.get_container_program_id(),
-                "project_path:" + str(self.container_data.program),
-                "range_in:" + str(range_in),
-                "range_out:"+ str(range_out),
-                "profile_desc:" + PROJECT().profile.description().replace(" ", "_"))
-        
-        # Create command list and launch process.
-        command_list = [sys.executable]
-        command_list.append(respaths.LAUNCH_DIR + "flowbladeblenderheadless")
-        for arg in args:
-            command_list.append(arg)
-
-        subprocess.Popen(command_list)
-        
-    def _write_exec_lines_for_obj_type(self, render_exec_lines, obj_type):
-        objects = self.blender_project_objects(obj_type)
-        for obj in objects:
-            # objects are lists [name, type, editorlist], see  blenderprojectinit.py
-            obj_name = obj[0]
-            editor_lines = []
-            for editor_data in obj[2]:
-                # editor_data is list [prop_path, label, tooltip, editor_type, value], see containerprogramedit.EditorManagerWindow.get_current_editor_data()
-                prop_path = editor_data[0]
-                value = editor_data[4]
-                
-                render_exec_lines += 'obj = bpy.data.' + obj_type + '["' + obj_name + '"]' + NEWLINE
-                render_exec_lines += 'obj.' + prop_path + " = " + value  + NEWLINE
-    
-        return render_exec_lines
-
-    def update_render_status(self):
-        GLib.idle_add(self._do_update_render_status)
-            
-    def _do_update_render_status(self):
-                    
-        if blenderheadless.session_render_complete(self.get_container_program_id()) == True:
-
-            job_msg = self.get_completed_job_message()
-            jobs.update_job_queue(job_msg)
-            
-            if self.render_type != PREVIEW_RENDER:
-                GLib.idle_add(self.create_producer_and_do_update_edit, None)
-            else:
-                self.program_editor_window.preview_render_complete()
-                
-        else:
-            status = blenderheadless.get_session_status(self.get_container_program_id())
-            
-            if status != None:
-                step, fraction, elapsed = status
-                msg = _("Rendering Image Sequence")
-                if self.render_type == PREVIEW_RENDER:
-                    msg = _("Rendering Preview")
-                if  step == "2":
-                     msg = _("Rendering Video")
-                     
-                job_msg = self.get_job_queue_message()
-                job_msg.progress = float(fraction)
-                job_msg.elapsed = float(elapsed)
-                job_msg.text = msg
-                
-                jobs.update_job_queue(job_msg)
-            else:
-                pass # This can happen sometimes before gmicheadless.py has written a status message, we just do nothing here.
-
-    def abort_render(self):
-        #self.remove_as_status_polling_object()
-        blenderheadless.abort_render(self.get_container_program_id())
-
-    def create_icon(self):
-        return self._create_icon_default_action()
-
-    def edit_program(self, clip):
-        simpleeditors.show_blender_container_clip_program_editor(self.project_edit_done, clip, self, self.container_data.data_slots["project_edit_info"])
-
-    def render_blender_preview(self, program_editor_window, editors, preview_frame):
-        self.program_editor_window = program_editor_window
-        self.update_program_values_from_editors(editors)
-        self.render_preview(None, preview_frame, 0)
-
-    def project_edit_done(self, response_is_accept, dialog, editors, orig_program_info_json):
-        if response_is_accept == True:
-            self.update_program_values_from_editors(editors)
-            dialog.destroy()
-        else:
-            self.container_data.data_slots["project_edit_info"] = orig_program_info_json
-            dialog.destroy()
-
-    def update_program_values_from_editors(self, editors):
-        objects = self.blender_project_objects("objects")
-        materials = self.blender_project_objects("materials")
-        curves = self.blender_project_objects("curves")
-        
-        for guieditor in editors:
-            value = guieditor.get_value()
-            obj_name, prop_path = guieditor.id_data
-
-            self.set_edited_object_value(objects, obj_name, prop_path, value)
-            self.set_edited_object_value(materials, obj_name, prop_path, value)
-            self.set_edited_object_value(curves, obj_name, prop_path, value)
-                
-    def set_edited_object_value(self, objects, obj_name, prop_path, value):
-        for obj in objects:
-            if obj[0] == obj_name:
-                # editor_data is [prop_path, label, tooltip, editor_type, value], see blenderprojectinit.py, containerprogramedit.EditorManagerWindow.get_current_editor_data()
-                 for json_editor_data in obj[2]:
-                     if json_editor_data[0] == prop_path:
-                         json_editor_data[4] = value
-
-    def blender_project_objects(self, editable_object_type):
-        program_info_json = self.container_data.data_slots["project_edit_info"]
-        return program_info_json[editable_object_type]
 
 
 # -------------------------------------------------------------- creating unrendered clip

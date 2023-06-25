@@ -306,7 +306,7 @@ class EditorWindow:
         return pane
 
     def _init_gui_components(self):        
-        # Disable Blender and G'Mic container clip menu items if not available.
+        # Disable G'Mic container clip menu items if not available.
         if gmic.gmic_available() == False:
             self.ui.get_widget('/MenuBar/ProjectMenu/ContainerClipsMenu/CreateGMicContainerItem').set_sensitive(False)
             
@@ -890,7 +890,6 @@ class EditorWindow:
             ('ImportProjectMedia', None, _('Import Media From Project...'), None, None, lambda a:projectaction.import_project_media()),
             ('ContainerClipsMenu', None, _('Create Container Clip')),
             ('CreateGMicContainerItem', None, _("From G'Mic Script"), None, None, lambda a:containerclip.create_gmic_media_item()),
-            ('CreateBlenderContainerItem', None, _("From Blender Project"), None, None, lambda a:containerclip.create_blender_media_item()),
             ('CombineSequences', None, _('Import Another Sequence Into This Sequence...'), None, None, lambda a:projectaction.combine_sequences()),
             ('LogClipRange', None, _('Log Marked Clip Range'), '<control>L', None, lambda a:medialog.log_range_clicked()),
             ('ViewProjectEvents', None, _('View Project Events...'), None, None, lambda a:projectaction.view_project_events()),

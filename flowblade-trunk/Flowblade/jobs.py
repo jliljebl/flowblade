@@ -51,7 +51,7 @@ CANCELLED = 3
 NOT_SET_YET = 0
 CONTAINER_CLIP_RENDER_GMIC = 1
 CONTAINER_CLIP_RENDER_MLT_XML = 2
-CONTAINER_CLIP_RENDER_BLENDER = 3
+CONTAINER_CLIP_RENDER_BLENDER = 3 # Deprecated
 MOTION_MEDIA_ITEM_RENDER = 4
 PROXY_RENDER = 5
 CONTAINER_CLIP_RENDER_FLUXITY = 6
@@ -96,8 +96,6 @@ class JobProxy: # This object represnts job in job queue.
             return _("G'Mic Clip")
         elif self.type == CONTAINER_CLIP_RENDER_MLT_XML:
             return _("Selection Clip")
-        elif self.type == CONTAINER_CLIP_RENDER_BLENDER:
-            return _("Blender Clip")
         elif self.type == MOTION_MEDIA_ITEM_RENDER:
             return _("Motion Clip")
         elif self.type == PROXY_RENDER:
