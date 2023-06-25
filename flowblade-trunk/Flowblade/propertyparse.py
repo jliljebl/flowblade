@@ -319,7 +319,7 @@ def rect_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
     return new_keyframes
     
 def rotating_geom_keyframes_value_string_to_geom_kf_array(keyframes_str, out_to_in_func):
-    # THIS WAS CREATED FOR frei0r cairoaffineblend FILTER. That filter has to use a very particular paramter values
+    # THIS WAS CREATED FOR frei0r cairoaffineblend FILTER. That filter has to use a very particular parameter values
     # scheme to satisty the frei0r requirement of all float values being in range 0.0 - 1.0.
     #
     # Parse extraeditor value properties value string into (frame, [x, y, x_scale, y_scale, rotation], opacity)

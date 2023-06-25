@@ -50,8 +50,8 @@ import utilsgtk
 import workflow
 
 
-kb_shortcut_changed_callback = None # Set when dialog lauched, using gloal saves modifying 50+ lines.
-kb_shortcut_dialog = None # Set when dialog lauched, using gloal saves modifying 50+ lines
+kb_shortcut_changed_callback = None # Set when dialog launched, using gloal saves modifying 50+ lines.
+kb_shortcut_dialog = None # Set when dialog launched, using gloal saves modifying 50+ lines
 shortcuts_combo = None
 scroll_hold_panel = None
 

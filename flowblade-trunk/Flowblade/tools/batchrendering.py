@@ -202,7 +202,7 @@ class QueueRunnerThread(threading.Thread):
 
     def _queue_done_update(self):
         # Update view for render end
-        batch_window.reload_queue() # item may havee added to queue while rendering
+        batch_window.reload_queue() # item may have added to queue while rendering
         batch_window.render_queue_stopped()
         
     def abort(self):
@@ -212,7 +212,7 @@ class QueueRunnerThread(threading.Thread):
         self.running = False
         self.thread_running = False
         
-        batch_window.reload_queue() # item may havee added to queue while rendering
+        batch_window.reload_queue() # item may have added to queue while rendering
 
 
 class BatchRenderDBUSService(dbus.service.Object):

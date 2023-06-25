@@ -1610,7 +1610,7 @@ class EditorSeparator:
     def _draw(self, event, cr, allocation):
         """
         Callback for repaint from CairoDrawableArea.
-        We get cairo contect and allocation.
+        We get cairo context and allocation.
         """
         x, y, w, h = allocation
 
@@ -1905,8 +1905,8 @@ def display_blank_clip_popup_menu(event, clip, track, callback):
     clip_menu = blank_clip_menu
     guiutils.remove_children(clip_menu)
 
-    clip_menu.add(_get_menu_item(_("Strech Prev Clip to Cover"), callback, (clip, track, "cover_with_prev", event.x)))
-    clip_menu.add(_get_menu_item(_("Strech Next Clip to Cover"), callback, (clip, track, "cover_with_next", event.x)))
+    clip_menu.add(_get_menu_item(_("Stretch Prev Clip to Cover"), callback, (clip, track, "cover_with_prev", event.x)))
+    clip_menu.add(_get_menu_item(_("Stretch Next Clip to Cover"), callback, (clip, track, "cover_with_next", event.x)))
     _add_separetor(clip_menu)
     clip_menu.add(_get_menu_item(_("Delete"), callback, (clip, track, "delete_blank", event.x)))
     clip_menu.popup(None, None, None, None, event.button, event.time)
@@ -2812,7 +2812,7 @@ class BigTCDisplay:
     def _draw(self, event, cr, allocation):
         """
         Callback for repaint from CairoDrawableArea.
-        We get cairo contect and allocation.
+        We get cairo context and allocation.
         """
         x, y, w, h = allocation
 
@@ -2940,7 +2940,7 @@ class MonitorTCDisplay:
         self._frame = 0
         self.use_internal_frame = False
 
-        self.use_internal_fps = False # if False, fps value for calulating tc comes from utils.fps(),
+        self.use_internal_fps = False # if False, fps value for calculating tc comes from utils.fps(),
                                        # if True, fps value from self.fps that will have to be set from user site
         self.display_tc = True # if this is False the frame number is displayed instead of timecode
         self.fps = self.FPS_NOT_SET # this will have to be set from user site
@@ -2952,7 +2952,7 @@ class MonitorTCDisplay:
     def _draw(self, event, cr, allocation):
         """
         Callback for repaint from CairoDrawableArea.
-        We get cairo contect and allocation.
+        We get cairo context and allocation.
         """
         x, y, w, h = allocation
 
@@ -3088,7 +3088,7 @@ class MonitorInfoDisplay:
         self._frame = 0
         self.use_internal_frame = False
 
-        self.use_internal_fps = False # if False, fps value for calulating tc comes from utils.fps(),
+        self.use_internal_fps = False # if False, fps value for calculating tc comes from utils.fps(),
                                        # if True, fps value from self.fps that will have to be set from user site
         self.display_tc = True # if this is False the frame number is displayed instead of timecode
         self.fps = self.FPS_NOT_SET # this will have to be set from user site
@@ -3100,7 +3100,7 @@ class MonitorInfoDisplay:
     def _draw(self, event, cr, allocation):
         """
         Callback for repaint from CairoDrawableArea.
-        We get cairo contect and allocation.
+        We get cairo context and allocation.
         """
         x, y, w, h = allocation
 

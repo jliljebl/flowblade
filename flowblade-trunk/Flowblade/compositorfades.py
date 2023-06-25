@@ -111,7 +111,7 @@ def set_auto_fade_out_keyframes(compositor):
 def _get_kfproperty_klass_and_keyframes(compositor, clip):
     # We create a SECOND SET of EditableProperties from compositor properties.
     # These are not the same EditableProperties that are edited in GUI in "Compositor" panel.
-    # This approach seems necessery because Affine Blend requires creating a new property.
+    # This approach seems necessary because Affine Blend requires creating a new property.
     t_editable_properties = propertyedit.get_transition_editable_properties(compositor)
 
     # Find keyframe property, its class and create keyframes list

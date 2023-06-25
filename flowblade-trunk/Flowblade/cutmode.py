@@ -96,7 +96,7 @@ def get_cut_data(track, frame):
     index = track.get_clip_index_at(int(frame))
     try:
         clip = track.clips[index]            
-        # don't cut blanck clip
+        # don't cut blank clip
         if clip.is_blanck_clip:
             return None
     except Exception:

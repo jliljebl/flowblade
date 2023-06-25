@@ -128,7 +128,7 @@ _**Track switches**_
 
 **Effects of Track Active State**;
   * Cuts are only performed on active Tracks.
-  * Inserting Media File that is currently displayed in Monitor using **Insert From Monitor, Append From Monitor** or **3-Point Ovewrite** buttons places clip on the top most active Track indicated by arrow icon.
+  * Inserting Media File that is currently displayed in Monitor using **Insert From Monitor, Append From Monitor** or **3-Point Overwrite** buttons places clip on the top most active Track indicated by arrow icon.
 
 **Selecting single clip**:
   * Click on a clip with **Left Mouse** button.
@@ -214,7 +214,7 @@ Flowblade Movie Editor has **five edit tools**, **two move tools** and **three t
   1. Select other end of clip range if moving multiple clips
     * Click **CTRL+Left Mouse** on the clip you wish to be the other end of move clip range.
   1. Drag Clip(s) to new position
-    * Press **Left Mouse** on a selecetd clip and drag clip/s to a new position.
+    * Press **Left Mouse** on a selected clip and drag clip/s to a new position.
     * Yellow arrow displays insert point.
     * You can also move clips to a different track.
 
@@ -228,7 +228,7 @@ Flowblade Movie Editor has **five edit tools**, **two move tools** and **three t
     * Click **Left Mouse** on a clip.
     * Select other end of clip range if moving multiple clips. Click **CTRL+Left Mouse** on the clip you wish to be the other end of move clip range.
   1. Drag Clip(s) to new position
-    * Press **Left Mouse** on a selecetd clip and drag clip/s to a new position.
+    * Press **Left Mouse** on a selected clip and drag clip/s to a new position.
     * Red shadow clips show overwrite area.
     * You can also move clips to a different track.
 
@@ -334,7 +334,7 @@ unless the user is aware of rendering order of Compositors.
 
 ## EXAMPLE: Creating a 3-layer composite ##
 In this example we demonstrate how top-to-bottom Compositor
-order affects compositing. We are trying to make word 'GO' apperar on top of 2-color
+order affects compositing. We are trying to make word 'GO' appear on top of 2-color
 background made by combining red and blue Color Clips using 'Free Stripes' wipe.
 
 To make alpha transparency work the GO.PNG graphic has to composited using 'Dissolve'.
@@ -496,7 +496,7 @@ clip on track V1 as its Sync Parent Clip.
   1. Click **Right Mouse** on clip and select Select Sync Parent Clip... on any clip NOT on track V1.
   1. Cursor turns into a Target Cross. Click on clip on track V1 to select it as Sync Parent Clip.
   1. Sync Relation is established between the two clips. Cursor turns back into a default pointer.
-  1. Sync State Stripe appers on the Sync Child Clip. Sync State Indicator Stripes on Clips:
+  1. Sync State Stripe appears on the Sync Child Clip. Sync State Indicator Stripes on Clips:
     * Green means that clip is in sync with parent.
     * Red means that clip is NOT in sync with parent.
     * Gray means that Sync Parent Clip is no longer on track V1.
@@ -504,7 +504,7 @@ clip on track V1 as its Sync Parent Clip.
 ## Resyncing Sync Child Clips ##
   * Select **Edit -> Resync All to resync** from application menu all Sync Child Clips.
   * Select **Edit - >Resync Selected to resync** from application menu selected Sync Child Clips.
-  * Click **Right Mouse** on Sync Child Clip and select **Resync** from popoup menu to resync single clip.
+  * Click **Right Mouse** on Sync Child Clip and select **Resync** from popup menu to resync single clip.
   * Press **Resync Selected** Bbtton to resync selected Sync Child Clips.
 
 ## Clearing Sync Parent Relations ##
@@ -524,7 +524,7 @@ clip on track V1 as its Sync Parent Clip.
 
 # Slow / Fast Motion #
 
-In Flowblade motion effects are achived by **rendering slow / fast motion versions of video clips** and placing those on the timeline.
+In Flowblade motion effects are achieved by **rendering slow / fast motion versions of video clips** and placing those on the timeline.
 
 ## Creating Motion Clips ##
   1. Right click on a Media File and select **Render Slow / Fast Motion File** from menu
@@ -579,7 +579,7 @@ All proxy editing workflows have the same phases:
 
 ## Important notes about Flowblade proxy editing ##
 
-Flowblade uses a programming techique that changes the paths used by media and clips to point either to proxy media or original media. Changing from one to another is implemented by writing a project file to disk and replacing paths when project is read back. This has important implications on how proxy editing works in Flowblade:
+Flowblade uses a programming technique that changes the paths used by media and clips to point either to proxy media or original media. Changing from one to another is implemented by writing a project file to disk and replacing paths when project is read back. This has important implications on how proxy editing works in Flowblade:
 
 **IMPORTANT**
   * **It is only possible to use all proxy media and clips or all original media**

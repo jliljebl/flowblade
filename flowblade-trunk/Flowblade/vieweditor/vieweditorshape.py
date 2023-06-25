@@ -583,7 +583,7 @@ class RotoMaskEditShape(EditPointShape):
         return (back.end_point, forward.end_point)
 
     def save_selected_point_data(self, selected_point):
-        # These points get re-created all the time and we need to save data on which point was selectes
+        # These points get re-created all the time and we need to save data on which point was selects
         if selected_point in self.curve_points:
             self.selected_point_array = self.curve_points
             self.selected_point_index = self.curve_points.index(selected_point)

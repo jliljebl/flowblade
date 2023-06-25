@@ -66,7 +66,7 @@ thumbnailer = None
 # Default values for project properties.
 _project_properties_default_values = {appconsts.P_PROP_TLINE_SHRINK_VERTICAL:False, # Shink timeline max height if < 9 tracks
                                       appconsts.P_PROP_LAST_RENDER_SELECTIONS: None, # tuple for last render selections data
-                                      appconsts.P_PROP_TRANSITION_ENCODING: None, # tuple for last renderered transition render selections data
+                                      appconsts.P_PROP_TRANSITION_ENCODING: None, # tuple for last rendered transition render selections data
                                       appconsts.P_PROP_DEFAULT_FADE_LENGTH: 10}  
 
 # Flag used to decide if user should be prompt to save project on project exit.
@@ -136,7 +136,7 @@ class Project:
             icon_path = respaths.IMAGE_PATH + "audio_file.png"
             length = thumbnailer.get_file_length(file_path)
             info = None
-        else: # For non-audio we need write a thumbbnail file and get file lengh while we're at it
+        else: # For non-audio we need write a thumbnail file and get file length while we're at it
              (icon_path, length, info) = thumbnailer.write_image(file_path)
 
         # Hide file extension if enabled in user preferences
@@ -456,7 +456,7 @@ class MediaFile:
 
 class BinColorClip:
     # DECPRECATED, this is replaced by patternproducer.BinColorClip.
-    # This is kept for project file backwards compatiblity,
+    # This is kept for project file backwards compatibility,
     # unpickle fails for color clips if this isn't here.
     # kill 2016-ish
     def __init__(self, id, name, gdk_color_str):

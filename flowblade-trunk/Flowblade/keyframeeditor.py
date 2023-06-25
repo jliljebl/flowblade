@@ -23,7 +23,7 @@ Module contains GUI widgets used to edit keyframed properties in filters and
 compositors.
 
 NOTE: All the editors are composites of smaller objects (so that similar 
-but slighly different editors can be made in the future). There are a lots 
+but slightly different editors can be made in the future). There are a lots 
 of callbacks to parent objects, this makes the design difficult to follow.
 """
 
@@ -661,7 +661,7 @@ class ClipKeyFrameEditor:
 class ClipEditorButtonsRow(Gtk.HBox):
     """
     Row of buttons used to navigate and add keyframes and frame 
-    entry box for active keyframe. Parent editor must implemnt interface
+    entry box for active keyframe. Parent editor must implement interface
     defined by methods:
         editor_parent.add_pressed()
         editor_parent.delete_pressed()
@@ -825,7 +825,7 @@ class AbstractKeyFrameEditor(Gtk.VBox):
     def __init__(self, editable_property, use_clip_in=True, slider_switcher=None):
         # editable_property is KeyFrameProperty
         GObject.GObject.__init__(self)
-        self.initializing = True # Hack against too early for on slider listner
+        self.initializing = True # Hack against too early for on slider listener
         
         self.set_homogeneous(False)
         self.set_spacing(2)
@@ -865,7 +865,7 @@ class AbstractKeyFrameEditor(Gtk.VBox):
         self.slider = slider
         self.spin = spin
 
-        self.initializing = False # Hack against too early for on slider listner
+        self.initializing = False # Hack against too early for on slider listener
 
     def display_tline_frame(self, tline_frame):
         # This is called after timeline current frame changed. 
@@ -1525,7 +1525,7 @@ class GeometryEditor(AbstractKeyFrameEditor):
         
     def update_editor_view(self, seek_tline_frame=False):
         # This gets called when tline frame is changed from outside
-        # Call update_editor_view_with_frame that is used when udating from inside the object.
+        # Call update_editor_view_with_frame that is used when updating from inside the object.
         # seek_tline_frame will be False to stop endless loop of updates
         frame = self.clip_editor.current_clip_frame
         self.update_editor_view_with_frame(frame, seek_tline_frame)
@@ -1833,7 +1833,7 @@ class FilterRectGeometryEditor(AbstractKeyFrameEditor):
 
     def update_editor_view(self, seek_tline_frame=True):
         # This gets called when tline frame is changed from outside
-        # Call update_editor_view_with_frame that is used when udating from inside the object.
+        # Call update_editor_view_with_frame that is used when updating from inside the object.
         # seek_tline_frame will be False to stop endless loop of updates
         frame = self.clip_editor.current_clip_frame
         self.update_editor_view_with_frame(frame, seek_tline_frame)
@@ -1972,7 +1972,7 @@ class RotoMaskKeyFrameEditor(Gtk.VBox):
         else:
             self.clip_in = 0
     
-        self.initializing = False # Hack against too early for on slider listner
+        self.initializing = False # Hack against too early for on slider listener
         
         self.clip_editor.keyframe_parser = keyframe_parser
             

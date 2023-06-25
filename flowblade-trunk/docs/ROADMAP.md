@@ -5,7 +5,7 @@ Last updated April 4th 2023.
 ### Media cache and project data folder
 
 * Make possible to select folder where project media data is saved. Keep current XDG Data Directory as the default place.
-* Make projects save rendered clips, proxies and containe clips data individual in data folder to enable moving and destroying data per project.
+* Make projects save rendered clips, proxies and contain clips data individual in data folder to enable moving and destroying data per project.
 
 ### GTK 4 port
 

@@ -191,7 +191,7 @@ def _update_gui_for_media_object_add():
     updater.update_current_bin_files_count()
 
 def _show_not_all_data_info():
-    dialogutils.info_message(_("Not all required files were defined"), _("Select all files asked for in dialog for succesful Container Clip creation."), gui.editor_window.window)
+    dialogutils.info_message(_("Not all required files were defined"), _("Select all files asked for in dialog for successful Container Clip creation."), gui.editor_window.window)
         
         
 

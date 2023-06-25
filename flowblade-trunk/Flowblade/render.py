@@ -231,7 +231,7 @@ def set_default_values_for_widgets(movie_name_too=False):
     widgets.profile_panel.use_project_profile_check.set_active(True)
 
 def update_encoding_selector():
-    # Lets make doubly sure we're not updating somthing that soes npt exist.
+    # Lets make doubly sure we're not updating something that soes npt exist.
     while hasattr(widgets, "encoding_panel") == False:
         print("no encoding_panel")
         time.sleep(0.5)
@@ -373,7 +373,7 @@ def _render_frame_buffer_clip_dialog_callback(dialog, response_id, fb_widgets, m
             if end_frame > motion_producer.get_length() - 1:
                 end_frame = motion_producer.get_length() - 1
             
-            render_full_range = False # consumer wont stop automatically and needs to stopped explicitly
+            render_full_range = False # consumer won't stop automatically and needs to stopped explicitly
         
         session_id = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
         
@@ -460,7 +460,7 @@ def _render_reverse_clip_dialog_callback(dialog, response_id, fb_widgets, media_
             if start_frame < 0:
                 start_frame = 0
             
-            render_full_range = False # consumer wont stop automatically and needs to stopped explicitly
+            render_full_range = False # consumer won't stop automatically and needs to stopped explicitly
             
         session_id = hashlib.md5(str(os.urandom(32)).encode('utf-8')).hexdigest()
         
@@ -494,7 +494,7 @@ def _REVERSE_render_stop(dialog, response_id):
     
 # ----------------------------------------------------------------------- single track transition render 
 def render_single_track_transition_clip(transition_producer, encoding_option_index, quality_option_index, file_ext, transition_render_complete_cb, window_text):
-    # Set render complete callback to availble render stop callback using global variable
+    # Set render complete callback to available render stop callback using global variable
     global transition_render_done_callback
     transition_render_done_callback = transition_render_complete_cb
 

@@ -250,7 +250,7 @@ def main(root_path):
     repo = mlt.Factory().init()
     processutils.prepare_mlt_repo(repo)
 
-    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs.
+    # Set numeric locale to use "." as radix, MLT initializes this to OS locale and this causes bugs.
     locale.setlocale(locale.LC_NUMERIC, 'C')
 
     # Check for codecs and formats on the system exit if detection failed.
@@ -344,7 +344,7 @@ def main(root_path):
     # Every running instance has unique autosave file which is deleted at exit
     set_instance_autosave_id()
 
-    # Existance of autosave file hints that program was exited abnormally.
+    # Existence of autosave file hints that program was exited abnormally.
     if check_crash == True and len(autosave_files) > 0:
         if len(autosave_files) == 1:
             GLib.timeout_add(10, autosave_recovery_dialog)
@@ -367,8 +367,8 @@ def main(root_path):
             global assoc_timeout_id
             assoc_timeout_id = GLib.timeout_add(10, open_assoc_file)
         
-    # SDL 2 consumer needs to created after Gtk.main() has run enough for window to be visble
-    #if editorstate.get_sdl_version() == editorstate.SDL_2: # needs more state considerion still
+    # SDL 2 consumer needs to created after Gtk.main() has run enough for window to be visible
+    #if editorstate.get_sdl_version() == editorstate.SDL_2: # needs more state consideration still
     #    print "SDL2 timeout launch"
     #    global sdl2_timeout_id
     #    sdl2_timeout_id = GLib.timeout_add(1500, create_sdl_2_consumer)
@@ -408,7 +408,7 @@ def monkeypatch_callbacks():
     editevent.display_clip_menu_pop_up = clipmenuaction.display_clip_menu
     editevent.compositor_menu_item_activated = clipmenuaction._compositor_menu_item_activated
     
-    # Posionbar in gmic.py doesnot need trimmodes.py dependency and is avoided.
+    # Posionbar in gmic.py does not need trimmodes.py dependency and is avoided.
     positionbar.trimmodes_set_no_edit_trim_mode = trimmodes.set_no_edit_trim_mode
 
     # Snapping is done in a separate module but needs some tlinewidgets state info
@@ -597,7 +597,7 @@ def init_sequence_gui():
 def init_editor_state():
     """
     Called after project load or changing current sequence 
-    to initalize editor state.
+    to initialize editor state.
     """
     render.fill_out_profile_widgets()
 
@@ -712,7 +712,7 @@ def _do_window_resized_update():
     updater.window_resized()
     
 def change_current_sequence(index):
-    edit.do_gui_update = False  # This should not be necessery but we are doing this signal intention that GUI updates are disabled
+    edit.do_gui_update = False  # This should not be necessary but we are doing this signal intention that GUI updates are disabled
     
     stop_autosave()
     editorstate.project.c_seq = editorstate.project.sequences[index]
@@ -868,7 +868,7 @@ def destroy_splash_screen():
     splash_screen.destroy()
     GLib.source_remove(splash_timeout_id)
 
-# ------------------------------------------------------- disk cahce size check
+# ------------------------------------------------------- disk cache size check
 def check_disk_cache_size():
     GLib.source_remove(disk_cache_timeout_id)
     diskcachemanagement.check_disk_cache_size()

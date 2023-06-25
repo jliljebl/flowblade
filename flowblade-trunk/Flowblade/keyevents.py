@@ -110,7 +110,7 @@ def key_down(widget, event):
     if was_handled:
         return True
 
-    # Pressing timeline button obivously leaves user expecting
+    # Pressing timeline button obviously leaves user expecting
     # to have focus in timeline.
     if gui.monitor_switch.widget.has_focus() and timeline_visible():
         _handle_tline_key_event(event)

@@ -508,7 +508,7 @@ def tline_effect_drop(x, y):
     clipeffectseditor.set_filter_item_expanded(len(clip.filters) - 1)
     
 def tline_media_drop(drag_data, x, y, use_marks=False):
-    # drag_data not used unless we wich later to enable dropping multiple media items.
+    # drag_data not used unless we which later to enable dropping multiple media items.
     track = tlinewidgets.get_track(y)
     if track == None:
         return

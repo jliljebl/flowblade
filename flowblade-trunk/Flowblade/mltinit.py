@@ -48,7 +48,7 @@ def init_with_translations():
     repo = mlt.Factory().init()
     processutils.prepare_mlt_repo(repo)
     
-    # Set numeric locale to use "." as radix, MLT initilizes this to OS locale and this causes bugs 
+    # Set numeric locale to use "." as radix, MLT initializes this to OS locale and this causes bugs 
     locale.setlocale(locale.LC_NUMERIC, 'C')
 
     # Check for codecs and formats on the system

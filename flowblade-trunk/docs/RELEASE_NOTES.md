@@ -10,7 +10,7 @@ Going forward the project is in a quite good place now, and we have a clear path
 
 ### FULL TRACK COMPOSITING IS THE NEW DEFAULT
 
-Compositing mode **Standart Full Track** is the now default compositing mode. Previous default compositing mode **Top Down Free Move** remains available via application menu and bottom left corner selector.
+Compositing mode **Standard Full Track** is the now default compositing mode. Previous default compositing mode **Top Down Free Move** remains available via application menu and bottom left corner selector.
 
 Compositing now works by default similarly to all other video editors on the market. This change should make the application more apprachable for new users.
 
@@ -55,7 +55,7 @@ Options will be available in **Render** panel if test renders on start-up comple
 
 ### NEW DEFAULT THEME
 
-We have a new dark default theme. The previous default theme and the other available themes were removed. System dark and light themes were also removed because the new Gnome global dark prefence setting caused application window to become invsible in some cases.
+We have a new dark default theme. The previous default theme and the other available themes were removed. System dark and light themes were also removed because the new Gnome global dark preference setting caused application window to become invsible in some cases.
 
   
 ### CONTRIBUTIONS
@@ -248,7 +248,7 @@ These two we hope to bring back later:
 
 - Clear keyframe editors on clear_clip() to avoid failing callbacks on discarded editors
 - Fix CairoColorProperty
-- Don't crash if setting dark theme perference fails.
+- Don't crash if setting dark theme preference fails.
 - Fix media timline drag'n'drop when starting from multiple selection
 - Panel positioning fixes for two windows mode
 - Clear keyframes editors update list when initing Keyframe Tool
@@ -265,7 +265,7 @@ These two we hope to bring back later:
 - Fix updating tooldock when tool selection changes
 - Stop container clips from being able to prevent loading media files because of duplicate check
 - Remove profile selection from container clips rendering, always use project profile.
-- Fix issue #990 by adding missing tabs positon default value
+- Fix issue #990 by adding missing tabs position default value
 - Fix adding named Sequence
 - Fix G'Mic video render stopping bug
 - Fix loading User profiles
@@ -306,7 +306,7 @@ For the first time it is now possible to change the layout of the application by
 
 Application look'n'feel was updated by adding two new custom themes. 
 
-* **Flowblade Neutral** is a dark theme with equal RGB values for all hues providing a neutral backgroud. [Screenshot](https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/Screenshot_THEME_FLOWBLADE_NEUTRAL.png)  
+* **Flowblade Neutral** is a dark theme with equal RGB values for all hues providing a neutral background. [Screenshot](https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/Screenshot_THEME_FLOWBLADE_NEUTRAL.png)  
 
 * **Flowblade Gray** is a dark theme with very light blue tint. [Screenshot](https://github.com/jliljebl/flowblade/blob/master/flowblade-trunk/docs/Screenshot_THEME_FLOWBLADE_GRAY.png)  
 
@@ -469,7 +469,7 @@ We are considering making the new Compositing Mode Standard Full Track the defau
 
 We introduced a new Media and Timeline object called a Container Clip.
 
-There is a lengthy explenation on the rationale and usage of Container Clips in user documentation [here.](http://jliljebl.github.io/flowblade/webhelp/container_clips.html)
+There is a lengthy explanation on the rationale and usage of Container Clips in user documentation [here.](http://jliljebl.github.io/flowblade/webhelp/container_clips.html)
 
 This is only the first iteration on the idea to get things going. Later we will be adding at least a Python based scripting tool and Natron project file Container Clips.
 
@@ -481,11 +481,11 @@ Clips made from selections were previously called Compound Clips. Now they are o
 
 ## TIMELINE RENDERING
 
-We now offer a functionality to render one or more parts of timeline in case there are performance problems in some areas. Releated user documentation is [here.](http://jliljebl.github.io/flowblade/webhelp/advanced.html#5._Timeline_Rendering)
+We now offer a functionality to render one or more parts of timeline in case there are performance problems in some areas. Related user documentation is [here.](http://jliljebl.github.io/flowblade/webhelp/advanced.html#5._Timeline_Rendering)
 
 ## JOBS PANEL
 
-Adding Container Clips necessitated proving a way to launch, observe and abort asynchronous renders other then the existing Batch Rendring functionality.
+Adding Container Clips necessitated proving a way to launch, observe and abort asynchronous renders other then the existing Batch Rendering functionality.
 
 Proxy Clip rendering and rendering of Motion/Reverse clips are now asynchronous jobs instead of the previous approach where they were modal renders.
 
@@ -503,7 +503,7 @@ Functionality is provided in a new **Jobs** panel.
 
 **micitabesh**
 
-* updated Ukranian translations
+* updated Ukrainian translations
 
 **Николай Смольянинов**
 
@@ -572,7 +572,7 @@ Functionality is provided in a new **Jobs** panel.
 
 ## FOCUS AREAS FOR NEXT DEVELOPMENT CYCLE
 
-* We are moving to feature branch development model so master can have quite long pauses before new work appers there.
+* We are moving to feature branch development model so master can have quite long pauses before new work appears there.
 
 * Work on SDL 1.2 replacement. We got SDL 2 software rendering video display working but the performance was much worse then what we have now. Next we will look to develop  SDL2/OpenGL based solution 
 
@@ -710,7 +710,7 @@ We made some changes here to improve image quality and approachability when work
 
 ## TRANSFORM FILTERS UPDATES
 
-* **Filter selection was udated** New available filters transform are **Position Scale, Rotate and Shear**.
+* **Filter selection was updated** New available filters transform are **Position Scale, Rotate and Shear**.
 
 * **Position Scale** filter now has GUI editor.
 
@@ -720,7 +720,7 @@ We made some changes here to improve image quality and approachability when work
 
 #### Pascal de Bruijn
 
-New defishor type filter and improved defaults - Changed Default new Project Profile to: HD 1080p 30 fps -  Change mp2 audio encoder to libtwolame - Change H.264 video to use with AAC audio - drop mp3 codec audio bitrate to real avaialble maximum - Change WebM to use xiph's libvorbis - make Ogg Theora video have Ogg Vorbis audio - Mention VP8 video for WebM container - Mention Ogg container for Theora video - Make h.264 as first option Encoding selection. - Proxy Editing:fix h.264 proxy format audio description (ref: dc13921e), reduce alignment to 2, this gets rid of the black bars , sensibly match audio codec to their (proxy) video codec - Flowblade CSS Theme: unset all properties so the system theme doesn't bleed through - keep assets sources local - GUI Keyframededitor colors update to better match Flowblade theme colors - Remove duplicates of profiles atsc_720p_25, atsc_720p_2997, atsc_720p_50, atsc_720p_5994
+New defishor type filter and improved defaults - Changed Default new Project Profile to: HD 1080p 30 fps -  Change mp2 audio encoder to libtwolame - Change H.264 video to use with AAC audio - drop mp3 codec audio bitrate to real available maximum - Change WebM to use xiph's libvorbis - make Ogg Theora video have Ogg Vorbis audio - Mention VP8 video for WebM container - Mention Ogg container for Theora video - Make h.264 as first option Encoding selection. - Proxy Editing:fix h.264 proxy format audio description (ref: dc13921e), reduce alignment to 2, this gets rid of the black bars , sensibly match audio codec to their (proxy) video codec - Flowblade CSS Theme: unset all properties so the system theme doesn't bleed through - keep assets sources local - GUI Keyframededitor colors update to better match Flowblade theme colors - Remove duplicates of profiles atsc_720p_25, atsc_720p_2997, atsc_720p_50, atsc_720p_5994
 
 #### Steven van de Beek
 
@@ -926,7 +926,7 @@ Things are looking good on this front and hopefully there will be no major setba
 * Fix args rendering on small screens when args window never opened
 * Fix missing c_seq on load error
 * Fix colors for visibility in workflow dialog, Issue #622
-* Don't match profiles with more then 2x size diffence to media even if fps matches, Issue #517
+* Don't match profiles with more then 2x size difference to media even if fps matches, Issue #517
 * Fix keyframe delete not registering when done as last edit
 
 ## Flowblade 2.0
@@ -945,13 +945,13 @@ Flowblade 2.0 solves this issue by presenting a configurable workflow that enabl
 
 #### Toolset Configuration
 
-* User can select between 1 - 9 tools to be availabe via tool menu and shortcut keys 1-9
+* User can select between 1 - 9 tools to be available via tool menu and shortcut keys 1-9
 * User can set the order in which the tools presented and which shortcut keys they get.
 * The *default tool* is the first tool in the tool menu with shortcut key **1**. This is the tool that is activated when for example exiting trims, this is settable by selecting the tool order
 
 #### Configurable Timeline Behaviours
 
-* Drag'n'Drop behaviour, user can select wheather insert or blank overwrites are done on track V1 and others
+* Drag'n'Drop behaviour, user can select whether insert or blank overwrites are done on track V1 and others
 * Composiors autofollow, users can make compositors follow their origin clips automatically
 
 #### Workflow presets
@@ -994,7 +994,7 @@ For systems with larger screen dimension the **default top row layout has been c
 
 **Tooltips coverage was extended** and almost all top level items now have individual tooltips..
 
-Insert and Move (earlier Ovewrite) tools have new cursors.
+Insert and Move (earlier Overwrite) tools have new cursors.
 
 ### Keyframe editing updates
 
@@ -1039,7 +1039,7 @@ Make Flowblade exit cleanly if audio waveform rendering is still on, by **Steven
 
 Add appdata file used by e.g. GNOME Software or KDE Discover  by **Peter Eszlari**.
 
-Change icon path in setup.py to comply freedesktop with spec, fix mimetype data to be consistant, by **Peter Eszlari**.
+Change icon path in setup.py to comply freedesktop with spec, fix mimetype data to be consistent, by **Peter Eszlari**.
 
 Archlinux docs fix, depends sdl_image by **Bernhard Landauer.**
 
@@ -1135,9 +1135,9 @@ Date: March 31, 2018
 
 ### Tool cursor timeline sensitivity
 
-This is the biggest user visible change. Previously tool cursors didn't react in any way to the timeline contents, now they change appearence on appropriate positions to signal that some different edit actions are available.
+This is the biggest user visible change. Previously tool cursors didn't react in any way to the timeline contents, now they change appearance on appropriate positions to signal that some different edit actions are available.
 
-* With **Insert tool** and **Overwite tool** the cursor now changes on clip and Compositor ends to indicate that the user can drag the ends to lengthen or shorten the clips or Compositors. On top of Compositors cursor changes to indicate that Compositor can be dragged to a new position.
+* With **Insert tool** and **Overwrite tool** the cursor now changes on clip and Compositor ends to indicate that the user can drag the ends to lengthen or shorten the clips or Compositors. On top of Compositors cursor changes to indicate that Compositor can be dragged to a new position.
 * **Trim tool** now changes appearance to indicate which end of clip will be trimmed if Mouse Left is pressed and held.
 * **Box tool** now changes when entering selected box to indicate that box contents can be dragged sideways.
 
@@ -1193,7 +1193,7 @@ Github user *eszlari* created a Flowblade 1.14 Flatpak which is already availabl
 
 The focus areas of next release will be animations, masks and compositing. So far the focus has squarly been on Flowblade as an editing tool, but now we will look for ways to expand application's feature set in this direction.
 
-There are a number of approaches that can be tried here, and it is difficult beforehand to predict which will work out, so we will basically try everything and see how things turn out. The translations workflow update will definately come too.
+There are a number of approaches that can be tried here, and it is difficult beforehand to predict which will work out, so we will basically try everything and see how things turn out. The translations workflow update will definitely come too.
 
 We will keep the 6 month release cycle, so next release will be sometime in the autumn.
 
@@ -1277,7 +1277,7 @@ Titler got two new features:
 
 #### Disk cache management
 
-Disk cache management window provides GUI tool for deleting saved hidden files that could eventually consume noticable amounts of disk space.
+Disk cache management window provides GUI tool for deleting saved hidden files that could eventually consume noticeable amounts of disk space.
 
 ### Translations
 
@@ -1289,9 +1289,9 @@ We got fully up to date translations for 1.14 in Russian, Polish and Czezh by Н
 
 During next cycle work continues roughly as outlined in road map and Issues list at Github. 
 
-Translations workflow update is definately in the plans. The current workflow is difficult and outdated when there are several web solutions that are likely preferable to all translations contributors.
+Translations workflow update is definitely in the plans. The current workflow is difficult and outdated when there are several web solutions that are likely preferable to all translations contributors.
 
-Next cycle will also see move to spending more development time on some upstream issues that can take a bit of time to come through as available features in the application, expecially on installationss from distro repositories.
+Next cycle will also see move to spending more development time on some upstream issues that can take a bit of time to come through as available features in the application, especially on installationss from distro repositories.
 
 We will probably continue with the 6 month release cycle, but a shorter one is possible if certain planned improvements come together quickly enough.
 
@@ -1394,8 +1394,8 @@ MLT 6.2.0 added AVFilters support. Flowblade now offers additional filters if yo
 
 - *Lut3D* This makes possible to add similar film emulation filters that are available in G'Mic by using **.cube** files. 
 - *Zoom/Pan* Similar functionality current "Affine" filter but the performance is much better
-- *Color Channels Mixer* This makes possible to use color data of one chanel to determine color output of another channel. Basic exmple would be making green shirt blue by using green color data to display blue color.
-- *Perspective* Strech image in way that can enable changing perspective.
+- *Color Channels Mixer* This makes possible to use color data of one channel to determine color output of another channel. Basic example would be making green shirt blue by using green color data to display blue color.
+- *Perspective* Stretch image in way that can enable changing perspective.
 - *Lens correction AV* Filter that corrects typical lens errors.
 
 ### Translations
@@ -1406,7 +1406,7 @@ Hungarian and German translations got updates by Péter Gábor and Mario Dejanov
 
 ### Future directions
 
-*Move to 2 releases per year instead of 3.* The release overhead and assosiated project slowdown has been getting bigger lately and with container formats possibly added to release requirements it is better to make the development cycles a bit longer to get overall better development throughput. 
+*Move to 2 releases per year instead of 3.* The release overhead and associated project slowdown has been getting bigger lately and with container formats possibly added to release requirements it is better to make the development cycles a bit longer to get overall better development throughput. 
 
 *Container formats and Wayland support* These technologies are still being developed and adopted. Solutions here are worked on will be made available when ready.
 
@@ -1484,7 +1484,7 @@ Trim view layout also addresses a fundamental restriction of a single monitor la
 
 ### GUI updates
 
-- Monitor area layout was updated with the main goal of providing clearer visual cues wheather Timeline or Clip is displayed in the monitor by making the selection buttons much bigger.
+- Monitor area layout was updated with the main goal of providing clearer visual cues whether Timeline or Clip is displayed in the monitor by making the selection buttons much bigger.
 - Middlebar got some minor visual updates
 
 ### German translation update
@@ -1514,9 +1514,9 @@ Trim view layout also addresses a fundamental restriction of a single monitor la
 
 **Date: September 19, 2016**
 
-**Flowblade 1.8** is the twelth release of Flowblade. 
+**Flowblade 1.8** is the twelfth release of Flowblade. 
 
-During this cycle a lot of time was spend on creating a website for the project and on bringing a node compositor tool to Flowblade. Website was succesfully deployed, but the node compositor tool was dropped in final stages of development.
+During this cycle a lot of time was spend on creating a website for the project and on bringing a node compositor tool to Flowblade. Website was successfully deployed, but the node compositor tool was dropped in final stages of development.
 
 The node compositor was dropped when I realized that it does not serve any user group particularly well.
 
@@ -1530,7 +1530,7 @@ Particular attention will given to the current *Issues* list, with some of the o
 
 ### Flowblade Main Features
 
-* **Keybord trimming with arrow keys** Trim positions can now be moved using arrow keys and trim edit confirmed with pressing Enter key. This is often more convenient and precise then always working with a mouse
+* **Keyboard trimming with arrow keys** Trim positions can now be moved using arrow keys and trim edit confirmed with pressing Enter key. This is often more convenient and precise then always working with a mouse
 * **Clip Snapping** Clips and compositors will now snap to clip ends on adjacent tracks when clips or compositors are moved or their ends dragged. 
 * **Clips display media thumbnails** This helps differentiating clips from each other on timeline.
 * **EDL export** is now available. Thanks to Github user *tin2tin* for extensive testing on software not available on my system. Unfortunately it became clear that Blender EDL import is buggy.
@@ -1541,7 +1541,7 @@ G'MIC Effects tool got an important capability update with the addition of film 
 
 G'MIC Film Emulation Filters change the tones and gamma of the image to resemble different film stocks. Where as other color correction filters available in Flowblade work with luma or R,G,B LUTs, film emulation filters employ much bigger LUTs which are applied to the 3D color space of the image, and can achieve more detailed changes. 
 
-The results have been quite nice during testing; it is often possible to achive subtle effects that greatly improve the look of the material.
+The results have been quite nice during testing; it is often possible to achieve subtle effects that greatly improve the look of the material.
 
 ### Contributions
 
@@ -1563,7 +1563,7 @@ In this cycle we got the largest amount of contributions per cycle so far.
 * Make MLT version detection work for two digit version number parts
 * Fix adding media while in proxy mode
 * Check and give info on IO errors when saving in main app and relinker
-* Add keyboard shorcut 'R' for resyncing selected clip or compositor
+* Add keyboard shortcut 'R' for resyncing selected clip or compositor
 * Display image sizes for graphics files in info dialogs
 * Make CTRL + Mouse toggle media items selection state, not just add to selection
 * Make KeyFrameEditor prev button update keuframes info
@@ -1602,7 +1602,7 @@ A [demo video](https://vimeo.com/157364651) of some features available in the fi
 
 * **'Sync All Compositors' functionality was added** This can be very useful in situations where a track as a whole is moved in relation to other media.
 
-For the next release cycle the focus will be on integrating existing technologies to improve Flowblade's capabilites in doing motion graphics. The Natron compositor project offers a lot of promise here, and the exisiting node compositor by myself will be made available in some form.
+For the next release cycle the focus will be on integrating existing technologies to improve Flowblade's capabilities in doing motion graphics. The Natron compositor project offers a lot of promise here, and the existing node compositor by myself will be made available in some form.
 
 Also a project website will be developed during this cycle. The first version is to be made available in a week or two.
 
@@ -1623,7 +1623,7 @@ The next cycle will be the longest since 0.16 because of the amount of coding an
 * Remove write env data functionality
 * Fix dark theme mute video icon
 * Add transition button to TC Middle layout and combine it with edit buttons group
-* Fix filter cloning for filters witn non-mlt properties
+* Fix filter cloning for filters with non-mlt properties
 * Make Titler work better with non-square pixel formats
 * Add HD 1080p 60fps profile
 * Range Log sorting upgrade and gmic encode view update
@@ -1661,7 +1661,7 @@ In 2016 there will probably be 3-4 releases, and the next release 1.6 is targete
   
   This makes creating multitrack compositions faster. Previous drag'n'drop behaviour can be restored using a preference option.
 
-* **Always on audio levels display** functionality was added. Before the audio levels could only be displayd on request, but now it possible to have audio levels rendered on background and displayed as soon as they are available 
+* **Always on audio levels display** functionality was added. Before the audio levels could only be displayed on request, but now it possible to have audio levels rendered on background and displayed as soon as they are available 
 
 * **Filters can now be copy/pasted from one clip to another**. It has been possible to copy paste clips on timeline for quite a while, but now this feature was made more discovarable by adding menu items for the functionality.  
 
@@ -1813,7 +1813,7 @@ The code base refactoring has come to a conclusion with this release, and the fo
 * Make Clip Monitor remember displayed frame
 * Fix flashing black around monitor bug
 * Add keyboard shortcuts ALT + I and ALT + O to move to in and out points
-* View selector for media panel to display all or anly certain types of files
+* View selector for media panel to display all or only certain types of files
 * Add info on duplicate media items on load
 * Refactor and fix audio monitoring display update and exit
 
@@ -1908,7 +1908,7 @@ The continued refactoring and improving of the code base has made it more clear 
 * Simplify Tool names
 * Fix .mp4 files rendering bug
 * Fix wrong FPS value in File properties window
-* Change Theora rende file extension to .ogv
+* Change Theora render file extension to .ogv
 * Fix Image Sequence import bug on some numbering styles
 * Remove gnomevfs dependency
 * Add indicator to timeline clip being edited in effects editor

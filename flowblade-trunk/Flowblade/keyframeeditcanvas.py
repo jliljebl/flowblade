@@ -505,7 +505,7 @@ class AbstractEditCanvas:
     def _draw(self, event, cr, allocation):
         """
         Callback for repaint from CairoDrawableArea.
-        We get cairo contect and allocation.
+        We get cairo context and allocation.
         """
         if self.coords == None:
             self._create_coords()

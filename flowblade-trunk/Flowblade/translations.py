@@ -100,7 +100,7 @@ def init_languages():
     # Un-comment for translations tests
     #lang = gettext.translation(APP_NAME, locale_path, languages=["ru"], fallback=True)
 
-    lang.install(APP_NAME) # makes _() a build-in available in all modules without imports
+    lang.install(APP_NAME) # makes _() a built-in available in all modules without imports
 
 def get_filter_name(f_name):
     try:
@@ -267,7 +267,7 @@ def load_filters_translations():
     # 0.8 added
     filter_names["Color Select"]= _("Color Select")
     filter_names["Alpha Modify"]= _("Alpha Modify")
-    filter_names["Spill Supress"]= _("Spill Supress")
+    filter_names["Spill Suppress"]= _("Spill Suppress")
     filter_names["RGB Noise"]= _("RGB Noise")
     filter_names["Box Blur"]= _("Box Blur")
     filter_names["IRR Blur"]= _("IRR Blur")
@@ -379,7 +379,7 @@ def load_filters_translations():
     param_names["Roomsize"] = _("Roomsize")
     param_names["Reverb time(s)"] = _("Reverb time(s)")
     param_names["Damping"] = _("Damping")
-    param_names["Input bandwith"] = _("Input bandwith")
+    param_names["Input bandwidth"] = _("Input bandwidth")
     param_names["Dry signal level(dB)"] = _("Dry signal level(dB)")
     param_names["Early reflection level(dB)"] = _("Early reflection level(dB)")
     param_names["Tail level(dB)"] = _("Tail level(dB)")
@@ -515,7 +515,7 @@ def load_filters_translations():
     param_names["R/A/Hue"] = _("R/A/Hue")
     param_names["G/B/Chroma"] = _("G/B/Chroma")
     param_names["B/I/I"] = _("B/I/I")
-    param_names["Supress"] = _("Supress")
+    param_names["Suppress"] = _("Suppress")
     param_names["Horizontal"] = _("Horizontal")
     param_names["Vertical"] = _("Vertical")
     param_names["Type"] = _("Type")

@@ -87,7 +87,7 @@ def load_shortcut_files():
             print("Shortcuts file " + f + " found, but has incorrect format.")
     
     # Default shortcuts file always goes to index 0
-    if default_shortcuts_file_found == True:# this is a bit unnecessery, it is there unless someone destroys it manually
+    if default_shortcuts_file_found == True:# this is a bit unnecessary, it is there unless someone destroys it manually
         shortcut_files.insert(0, DEFAULT_SHORTCUTS_FILE)
         shortcut_files_display_names.insert(0, "Flowblade Default")
 
@@ -153,7 +153,7 @@ def set_keyboard_shortcuts():
 
 
 def update_custom_shortcuts():
-    # If new shortcuts have been added and user is using custom shortcuts when updating, we need to update customn shortcuts.
+    # If new shortcuts have been added and user is using custom shortcuts when updating, we need to update custom shortcuts.
     custom_files = os.listdir(userfolders.get_data_dir() + "/" + appconsts.USER_SHORTCUTS_DIR)
     for custom_prefs_file in custom_files:
         _update_custom_xml_file_nodes_to_default(_get_shortcut_file_fullpath(custom_prefs_file))

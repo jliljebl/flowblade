@@ -58,7 +58,7 @@ import updater
 
 M_PI = math.pi
 
-REF_LINE_Y = 250 # Y pos of tracks are relative to this. This is recalculated on initilization, so value here is irrelevent.
+REF_LINE_Y = 250 # Y pos of tracks are relative to this. This is recalculated on initialization, so value here is irrelevant.
 
 MINIMUM_WIDTH = 430 # No effect on window layout we just want to put something > 0 on start.
 HEIGHT = appconsts.TLINE_HEIGHT # defines window min height together with editorwindow.TOP_ROW_HEIGHT
@@ -1589,7 +1589,7 @@ class TimeLineCanvas:
         clip_start_frame = track.clip_start(clip_index)
         clip_end_frame = track.clip_start(clip_index + 1)
         
-        # INSERT, OVEWRITE
+        # INSERT, OVERWRITE
         if (EDIT_MODE() == editorstate.INSERT_MOVE or EDIT_MODE() == editorstate.OVERWRITE_MOVE) and editorstate.overwrite_mode_box == False:
             # the + 4 is attempt to center sensitivity area at cut. Because we are doing sensitivity testing on opposite sides of a single clip, not on
             # both sides of a cut we are having trouble centering the sensitivity area. 
@@ -2439,7 +2439,7 @@ class TimeLineColumn:
 
         # Center area tester
         # NOTE: There was a left column of active areas similar to active switch
-        # so this is still called 'center' even whe it is the left side of two active 
+        # so this is still called 'center' even when it is the left side of two active 
         # areas.
         tester = ValueTester(COLUMN_LEFT_PAD, COLUMN_WIDTH - ACTIVE_SWITCH_WIDTH, 
                              self.center_listener)
@@ -2679,7 +2679,7 @@ class TimeLineFrameScale:
     def _draw(self, event, cr, allocation):
         """
         Callback for repaint from CairoDrawableArea.
-        We get cairo contect and allocation.
+        We get cairo context and allocation.
         """
         x, y, w, h = allocation
 
@@ -2948,7 +2948,7 @@ class TimeLineRenderingControlStrip:
     # --------------------------------------------- DRAW
     def _draw(self, event, cr, allocation):
         # Callback for repaint from CairoDrawableArea.
-        # We get cairo contect and allocation.
+        # We get cairo context and allocation.
         tlinerender.get_renderer().draw(event, cr, allocation, pos, pix_per_frame)
 
         

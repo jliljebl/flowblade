@@ -70,10 +70,10 @@ COLOR_BOX = "colorbox"                                      # One band color edi
 COLOR_LGG = "colorlgg"                                      # Editor for ColorLGG filter
 FILE_SELECTOR = "file_select"                               # File selector button for selecting single files from
 IMAGE_MEDIA_FILE_SELECTOR = "image_media_file_select"       # File selector button for selecting single files from
-FILE_TYPES = "file_types"                                   # list of files types with "." chracters, like ".png.tga.bmp"
+FILE_TYPES = "file_types"                                   # list of files types with "." characters, like ".png.tga.bmp"
 FADE_LENGTH = "fade_length"                                 # Autofade compositors fade length
 TEXT_ENTRY = "text_entry"                                   # Text editor
-ROTOMASK = "rotomask"                                       # Displays info and lauches rotomask window
+ROTOMASK = "rotomask"                                       # Displays info and launches rotomask window
 NO_EDITOR = "no_editor"                                     # No editor displayed for property
 
 COMPOSITE_EDITOR_BUILDER = "composite_properties"           # Creates a single row editor for multiple properties of composite transition
@@ -88,7 +88,7 @@ SCALE_DIGITS = "scale_digits"                               # Number of decimal 
 # This data needs to be erased always after use.
 changing_slider_to_kf_property_name = None
 re_init_editors_for_slider_type_change_func = None # monkeypatched in at app.py
-show_rotomask_func =  None # monkeypatched in, it is rotomask.py, gmic won't lauch if we import
+show_rotomask_func =  None # monkeypatched in, it is rotomask.py, gmic won't launch if we import
 
 def _p(name):
     try:
@@ -152,7 +152,7 @@ def create_editable_property_for_affine_blend(clip, editable_properties):
     ep.y_scale = [ep for ep in editable_properties if ep.name == "y scale"][0]
     ep.rotation = [ep for ep in editable_properties if ep.name == "rotation"][0]
     ep.opacity = [ep for ep in editable_properties if ep.name == "opacity"][0]
-    # Screen width and height are needeed for frei0r conversions
+    # Screen width and height are needed for frei0r conversions
     ep.profile_width = current_sequence().profile.width()
     ep.profile_height = current_sequence().profile.height()
     # duck type methods, using opacity is not meaningful, any property with clip member could do
@@ -455,7 +455,7 @@ def _get_no_kf_slider_row(editable_property, slider_name=None, compact=False):
 def _get_clip_frame_slider(editable_property):
     # Exceptionally we set the edit range here,
     # as the edit range is the clip length and 
-    # is obivously not known at program start.
+    # is obviously not known at program start.
     length = editable_property.get_clip_length() - 1
     editable_property.input_range = (0, length)
     editable_property.output_range = (0.0, length)
@@ -539,7 +539,7 @@ def _get_combo_box_row(editable_property, compact=False):
         sides = option.split(":")   
         values.append(sides[1])
         opt = sides[0].replace("!"," ")# Spaces are separators in args
-                                       # and are replaced with "!" charactes for names
+                                       # and are replaced with "!" characters for names
         opt = translations.get_combo_option(opt)
         combo_box.append_text(opt) 
 
@@ -916,7 +916,7 @@ def _create_composite_editor(clip, editable_properties):
     hbox.pack_start(_get_boolean_check_box_button_column(_("Align"), aligned), False, False, 0)
     hbox.pack_start(_get_boolean_check_box_button_column(_("Distort"), distort), False, False, 0)
     hbox.pack_start(Gtk.Label(), True, True, 0)
-    # THESE ARE DISABLED BECAUSE CHANGING APLHA MODE CAN MAKE PROJECTS UNOPENABLE IF AFFECTED 
+    # THESE ARE DISABLED BECAUSE CHANGING ALPHA MODE CAN MAKE PROJECTS UNOPENABLE IF AFFECTED 
     # COMPOSITOR IS ON THE FIRST FRAME
     #hbox.pack_start(_get_combo_box_column(_("Alpha"), values, operator), False, False, 0)
     #hbox.pack_start(Gtk.Label(), True, True, 0)
@@ -970,7 +970,7 @@ def _create_region_editor(clip, editable_properties):
     hbox.pack_start(guiutils.get_pad_label(3, 5), False, False, 0)
     hbox.pack_start(_get_boolean_check_box_button_column(_("Align"), aligned), False, False, 0)
     hbox.pack_start(_get_boolean_check_box_button_column(_("Distort"), distort), False, False, 0)
-    # THESE ARE DISABLED BECAUSE CHANGING APLHA MODE CAN MAKE PROJECTS UNOPENABLE IF THE AFFECTED 
+    # THESE ARE DISABLED BECAUSE CHANGING ALPHA MODE CAN MAKE PROJECTS UNOPENABLE IF THE AFFECTED 
     # COMPOSITOR IS ON THE FIRST FRAME
     #hbox.pack_start(Gtk.Label(), True, True, 0)
     #hbox.pack_start(_get_combo_box_column(_("Alpha"), values, operator), False, False, 0)
@@ -1035,7 +1035,7 @@ def _create_rotomask_editor(filt, editable_properties):
 
     value_labels = [kfs_value_label, curve_points_value_label]
 
-    lauch_button = Gtk.Button(label=_("Lauch RotoMask editor"))
+    lauch_button = Gtk.Button(label=_("Launch RotoMask editor"))
     lauch_button.connect("clicked", lambda b:_roto_lauch_pressed(filt, editable_properties, property_editor_widgets_create_func, value_labels))
     
     vbox = Gtk.VBox(False, 4)

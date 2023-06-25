@@ -19,7 +19,7 @@
 """
 
 """
-Module holds references to GUI widgets and offers some helper fuctions used in GUI creation.
+Module holds references to GUI widgets and offers some helper functions used in GUI creation.
 """
 
 from gi.repository import Gtk, Gdk, GdkPixbuf

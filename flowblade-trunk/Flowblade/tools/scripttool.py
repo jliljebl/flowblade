@@ -98,7 +98,7 @@ _mark_in = -1
 _mark_out = -1
 
 _current_profile_name = None
-_current_profile_index = None # We necesserily would not need this too.
+_current_profile_index = None # We necessarily would not need this too.
 
 _current_dimensions = None
 _current_fps = None

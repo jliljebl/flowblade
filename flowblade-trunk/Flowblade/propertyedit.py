@@ -25,7 +25,7 @@ the sequence.
 Properties are (name, value, type) tuples that are wrapped in objects 
 extending AbstractProperty class for editing. These wrappers convert
 edit inputs into mlt property values (that effect how sequence is displayed)
-and python side values (that are persistant).
+and python side values (that are persistent).
 """
 import json
 
@@ -56,7 +56,7 @@ NORMALIZED_FLOAT = "NORMALIZED_FLOAT"                       # range 0.0 - 1.0
 #  PROP_EXPRESSION values, e.g. "exptype=keyframe_hcs"      parsed output
 DEFAULT = "default"                                         # value     (str(int), str(float) or str(str))
 DEFAULT_TRANSITION = "default_transition"                   # value     (str(int), str(float) or str(str))
-SINGLE_KEYFRAME = "singlekeyframe"                          # DEPRECATED, were juat presenting standart slider for these now. This kept for back wards compatibility.
+SINGLE_KEYFRAME = "singlekeyframe"                          # DEPRECATED, were juat presenting standard slider for these now. This kept for back wards compatibility.
 OPACITY_IN_GEOM_SINGLE_KF = "opacity_in_geom_kf_single"     # 0=0/0:SCREEN_WIDTHxSCREEN_HEIGHT:opacity
 OPACITY_IN_GEOM_KF = "opacity_in_geom_kf"                   # frame=0/0:SCREEN_WIDTHxSCREEN_HEIGHT:opacity (kf_str;kf_str;kf_str;...;kf_str)
 GEOMETRY_OPACITY_KF ="geom_opac_kf"                         # frame=x/y:widthxheight:opacity
@@ -64,9 +64,9 @@ GEOMETRY_RECT_FILTER_KF = "geom_filt_rect_kf"               # frame=x y w h 1  w
 GEOM_IN_AFFINE_FILTER = "geom_in_affine_filt"               # x/y:widthxheight:opacity
 GEOM_IN_AFFINE_FILTER_V2 =  "geom_in_affine_filt_v2"        # x/y:widthxheight:opacity
 AFFINE_SCALE = "affine_scale"                               # special property to get the 1/ x that the filter wants
-KEYFRAME_HCS = "keyframe_hcs"                               # frame=value(;frame=value) HCS = half comma separeted
-KEYFRAME_HCS_TRANSITION = "keyframe_hcs_transition"         # frame=value(;frame=value) HCS = half comma separeted, used to edit transitions
-MULTIPART_KEYFRAME_HCS = "multipart_keyframe"               # frame=value(;frame=value) series of mlt.Filter objects that get their properties set, HCS = half comma separeted
+KEYFRAME_HCS = "keyframe_hcs"                               # frame=value(;frame=value) HCS = half comma separated
+KEYFRAME_HCS_TRANSITION = "keyframe_hcs_transition"         # frame=value(;frame=value) HCS = half comma separated, used to edit transitions
+MULTIPART_KEYFRAME_HCS = "multipart_keyframe"               # frame=value(;frame=value) series of mlt.Filter objects that get their properties set, HCS = half comma separated
 FREI_POSITION_HCS = "frei_pos_hcs"                          # frame=x:y
 FREI_GEOM_HCS_TRANSITION = "frei_geom_hcs"                  # time=x:y:x_scale:y_scale:rotation:mix
 COLOR = "color"                                             # #rrggbb
@@ -365,7 +365,7 @@ class EditableProperty(AbstractProperty):
         self.name, self.value, self.type = prop
         self.clip = clip
         self.filter_index = filter_index #index of param in clip.filters, clip created in sequence.py 
-        self.property_index = property_index # index of property in FilterObject.properties. This is the persistant object
+        self.property_index = property_index # index of property in FilterObject.properties. This is the persistent object
         self.is_compositor_filter = False # This is after changed after creation if needed
 
         self.used_create_params = create_params # for get_as_KeyFrameHCSFilterProperty functionality
@@ -405,7 +405,7 @@ class EditableProperty(AbstractProperty):
         filter_object.mlt_filter.set(str(self.name), str(str_value))
         
     def write_filter_object_property(self, str_value):
-        # Persistant python object
+        # Persistent python object
         filter_object = self._get_filter_object()
         prop = (str(self.name), str(str_value), self.type)
         filter_object.properties[self.property_index] = prop
@@ -430,11 +430,11 @@ class TransitionEditableProperty(AbstractProperty):
         self.clip = clip # this is actually compositor ducktyping for clip
         self.transition = clip.transition # ... is compositor.transition
         self.property_index = property_index # index of property in mlttransitions.CompositorObject.transition.properties.
-                                             # This is the persistant object
+                                             # This is the persistent object
 
     def get_clip_tline_pos(self):
         # self.clip is actually compositor ducktyping for clip
-        return self.clip.clip_in # compositor in and out points staright in timeline frames
+        return self.clip.clip_in # compositor in and out points straight in timeline frames
         
     def write_value(self, str_value):
         self.write_mlt_property_str_value(str_value)
@@ -445,7 +445,7 @@ class TransitionEditableProperty(AbstractProperty):
         self.transition.mlt_transition.set(str(self.name), str(str_value))
         
     def write_transition_object_property(self, str_value):
-        # Persistant python object
+        # Persistent python object
         prop = (str(self.name), str(str_value), self.type)
         self.transition.properties[self.property_index] = prop
 
@@ -453,7 +453,7 @@ class TransitionEditableProperty(AbstractProperty):
 class NonMltEditableProperty(AbstractProperty):
     """
     A wrapper for editable persistent properties that do not write out values to MLT objects.
-    Values of these are used to compute valuse that _are_ written to MLT.
+    Values of these are used to compute values that _are_ written to MLT.
     """
     def __init__(self, prop, args_str, clip, filter_index, non_mlt_property_index):
         AbstractProperty.__init__(self, args_str)
@@ -688,7 +688,7 @@ class KeyFrameGeometryOpacityProperty(TransitionEditableProperty):
 class KeyFrameFilterGeometryRectProperty(EditableProperty):
 
     def get_input_range_adjustment(self):
-        # Returns DUMMY noop Adjustment tht needs to exist because AbstrackKeyframeEditor assumes a slider always exists,
+        # Returns DUMMY noop Adjustment that needs to exist because AbstrackKeyframeEditor assumes a slider always exists,
         # but this not the case for this editor/property pair.
   
         return Gtk.Adjustment(value=float(1.0), lower=float(0.0), upper=float(1.0), step_increment=float(0.01)) # Value set later to first kf value
@@ -880,7 +880,7 @@ class MultipartKeyFrameProperty(AbstractProperty):
         self.name, self.value, self.type = property
         self.clip = clip
         self.filter_index = filter_index #index of param in clip.filters, clip created in sequence.py
-        self.property_index = property_index # index of property in FilterObject.properties. This is the persistant object
+        self.property_index = property_index # index of property in FilterObject.properties. This is the persistent object
         self.is_compositor_filter = False # This is after changed after creation if needed
 
     def get_input_range_adjustment(self):
@@ -942,7 +942,7 @@ class FilterAffineTransformEditableProperty:
         self.y_scale = [ep for ep in editable_properties if ep.name == "transition.scale_y"][0]
         self.rotation = [ep for ep in editable_properties if ep.name == "transition.fix_rotate_x"][0]
         self.opacity = [ep for ep in editable_properties if ep.name == "opacity"][0]
-        # Screen width and height are needeed for anchor point related conversions
+        # Screen width and height are needed for anchor point related conversions
         self.profile_width = current_sequence().profile.width()
         self.profile_height = current_sequence().profile.height()
         #self.aspect_ratio = float(self.profile_width) / self.profile_height

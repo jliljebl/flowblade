@@ -428,7 +428,7 @@ def _not_matching_media_info_callback(dialog, response_id, media_file):
         path = userfolders.get_cache_dir() + "/" + PROJECT().name
         PROJECT().update_media_lengths_on_load = True
         
-        # Save this in case project was saved before firts video loaded
+        # Save this in case project was saved before first video loaded
         global first_video_load_project_save_path
         first_video_load_project_save_path = PROJECT().last_save_path
         
@@ -963,8 +963,8 @@ def _open_files_dialog_cb(file_select, response_id):
     if len(filenames) == 0:
         return
     
-    # We're disallowing opening .mlt or .xml files as media beause MLTs behaviour of overwriting project profile properties
-    # when opening MLT XML files as nedia
+    # We're disallowing opening .mlt or .xml files as media because MLTs behaviour of overwriting project profile properties
+    # when opening MLT XML files as media
     # Underlying reason: https://github.com/mltframework/mlt/issues/212
     mlt_files_deleted = False
     last_non_matching_profile = None
@@ -1016,7 +1016,7 @@ def _add_image_sequence_callback(dialog, response_id, data):
     resource_name_str = utils.get_img_seq_resource_name(frame_file)
         
     # Detect highest file so that we know the length of the producer.
-    # FIX: this fails if two similarily numbered sequences in same dir and both have same substring in frame name
+    # FIX: this fails if two similarly numbered sequences in same dir and both have same substring in frame name
     number_index = file_name.find(number_part)
     path_name_part = file_name[0:number_index]
     onlyfiles = [ f for f in listdir(folder) if isfile(join(folder,f)) ]
@@ -1872,7 +1872,7 @@ def _change_track_count_dialog_callback(dialog, response_id, tracks_select):
         edit._remove_clip(PROJECT().c_seq.tracks[-1], 0)
 
     if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
-        # These sequnces have one compositor for every non-V1 video track that will be recreated after track count changed.
+        # These sequences have one compositor for every non-V1 video track that will be recreated after track count changed.
         current_sequence().destroy_compositors()
 
     new_seq = sequence.create_sequence_clone_with_different_track_count(PROJECT().c_seq, v_tracks, a_tracks)
@@ -2050,12 +2050,12 @@ def _get_sequence_import_range(import_seq):
     return (start_track_range, end_track_range)
 
 def _update_gui_after_sequence_import(): # This copied  with small modifications into projectaction.py for sequence imports, update there too if needed...yeah.
-    updater.update_tline_scrollbar() # Slider needs to adjust to possily new program length.
+    updater.update_tline_scrollbar() # Slider needs to adjust to possibly new program length.
                                      # This REPAINTS TIMELINE as a side effect.
     updater.clear_editor_panel()
 
-    current_sequence().update_edit_tracks_length() # Needed for timeline renderering updates
-    current_sequence().update_hidden_track_for_timeline_rendering() # Needed for timeline renderering updates
+    current_sequence().update_edit_tracks_length() # Needed for timeline rendering updates
+    current_sequence().update_hidden_track_for_timeline_rendering() # Needed for timeline rendering updates
     editorstate.PLAYER().display_inside_sequence_length(current_sequence().seq_len)
 
     updater. update_seqence_info_text()

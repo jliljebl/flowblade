@@ -153,7 +153,7 @@ def _get_categories_list():
     return categories_list  
 
 # This method is used by scriptool.py create sub menu to load generator code into 
-# editor window as an exemple.
+# editor window as an example.
 def fill_media_plugin_sub_menu_gio(app, menu, callback):
     for group_data in _plugins_groups:
         group_name, group = group_data

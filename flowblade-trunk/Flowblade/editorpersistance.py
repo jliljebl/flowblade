@@ -236,7 +236,7 @@ def update_prefs_from_widgets(widgets_tuples_tuple):
     """
     if theme.get_active() == 0: 
         prefs.theme = appconsts.FLOWBLADE_THEME_NEUTRAL
-    elif theme.get_active() == 1: # The displayed options indeces do not correspond with theme const values.
+    elif theme.get_active() == 1: # The displayed options indices do not correspond with theme const values.
         prefs.theme = appconsts.DARK_THEME
     else:    
         prefs.theme = appconsts.LIGHT_THEME
@@ -260,7 +260,7 @@ def get_graphics_default_in_out_length():
 
 class EditorPreferences:
     """
-    Class holds data of persistant user preferences for editor.
+    Class holds data of persistent user preferences for editor.
     """
 
     def __init__(self):

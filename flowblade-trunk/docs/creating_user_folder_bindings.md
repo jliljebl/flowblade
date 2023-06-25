@@ -9,7 +9,7 @@ Please create pull request against this document if you have corrections or addi
 See [here](./INSTALLING.md).
 
 ### Install MLT build dependencies
-Here is list of Ubuntu depencies. There could be some omissions, please file pull request to update the list if something is found to be missing.
+Here is list of Ubuntu dependencies. There could be some omissions, please file pull request to update the list if something is found to be missing.
 
 ```bash
 sudo apt-get install git swig python3-dev python3-numpy libxml2-dev libsdl-dev 
@@ -87,7 +87,7 @@ export MLT_DATA=$INSTALL_DIR/share/mlt
 export MLT_PROFILES_PATH=$INSTALL_DIR/share/mlt/profiles
 export LD_LIBRARY_PATH=$INSTALL_DIR/lib:$LD_LIBRARY_PATH
 
-# Lauch repository Flowblade
+# Launch repository Flowblade
 /home/path/to/your/repository/install/flowblade-trunk/flowblade
 ``` 
 

@@ -36,7 +36,7 @@ import gui
 import guiutils
 import respaths
 
-trimmodes_set_no_edit_trim_mode = None # This monkey patched in app.py to avoid unncessary dependencies in gmic.py
+trimmodes_set_no_edit_trim_mode = None # This monkey patched in app.py to avoid unnecessary dependencies in gmic.py
 
 
 # Draw params
@@ -175,7 +175,7 @@ class PositionBar:
     def _draw(self, event, cr, allocation):
         """
         Callback for repaint from CairoDrawableArea.
-        We get cairo contect and allocation.
+        We get cairo context and allocation.
         """
         x, y, w, h = allocation
         

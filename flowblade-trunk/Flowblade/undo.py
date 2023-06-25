@@ -41,7 +41,7 @@ undo_stack = []
 # no redos.
 index = 0
 
-# Some menu items are set active/deactive based on undo stack state.
+# Some menu items are set active/deactivate based on undo stack state.
 save_item = None
 undo_item = None 
 redo_item = None

@@ -345,7 +345,7 @@ def _view_prefs_panel():
     force_language_combo.append_text(_("Polish"))
     force_language_combo.append_text(_("Russian"))
     force_language_combo.append_text(_("Spanish"))
-    force_language_combo.append_text(_("Ukranian"))
+    force_language_combo.append_text(_("Ukrainian"))
     # THIS NEEDS TO BE UPDATED WHEN LANGUAGES ARE ADDED!!!
     lang_list = ["None","English","zh_CN","zh_TW","cs","fr","de","hu","it","pl","ru","es","uk"]
     active_index = lang_list.index(prefs.force_language)

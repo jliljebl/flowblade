@@ -113,7 +113,7 @@ def _get_trim_limits(cut_frame, from_clip, to_clip):
     """
     # This is too complex now that roll is handled separately, could be reworked.
     # "both_start", and "both_end" are no longer correct names for range variables since only one clip is
-    # needed taken into account when calculating legel trim range.
+    # needed taken into account when calculating legal trim range.
     trim_limits = {}
 
     if from_clip == None:
@@ -461,7 +461,7 @@ def set_oneroll_mode(track, current_frame=-1, editing_to_clip=None):
         edit_data["trim_limits"]["ripple_display_end"] = -1
         edit_data["trim_limits"]["ripple_display_start"] = -1
 
-    # Cant't trim a blank clip. Blank clips are special in MLT and can't be
+    # Can't trim a blank clip. Blank clips are special in MLT and can't be
     # made to do things that are needed in trim.
     if _trimmed_clip_is_blank():
         ripple_data = None
@@ -764,14 +764,14 @@ class RippleData:
         self.track_edit_ops = []
         self.track_affected = []
         self.track_blank_end_offset = []
-        self.moved_compositors_destroy_ids = [] # we cannot rely on object identies with compositors because they get destroyd and recreated in undo/redo actions
+        self.moved_compositors_destroy_ids = [] # we cannot rely on object identities with compositors because they get destroyed and recreated in undo/redo actions
         self.legal_edit = True
         self._build_ripple_data()
 
     def _build_ripple_data(self):
         tracks = current_sequence().tracks
 
-        # Look at all tracks exept hidden and black
+        # Look at all tracks except hidden and black
         # Get per track:
         # * maximum length trim can be done backwards or forwards before an overwrite happens
         # * indexes of blanks that are trimmed and/or added/removed,

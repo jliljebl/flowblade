@@ -504,7 +504,7 @@ class Sequence:
     def clone_track_clip(self, track, index):
         orig_clip = track.clips[index]
         if orig_clip.is_blanck_clip == True:
-            # Blank clips are created by adding a blank clip into MLT track and that is not approprite here,
+            # Blank clips are created by adding a blank clip into MLT track and that is not appropriate here,
             # so blank clips are represent by their length as int.
             return orig_clip.clip_length()
         return self.create_clone_clip(orig_clip)
@@ -699,7 +699,7 @@ class Sequence:
         self.field.disconnect_service(old_compositor.transition.mlt_transition)
 
     def destroy_compositors(self):
-        # This can be called when undo stack destroyd too.
+        # This can be called when undo stack destroyed too.
         for compositor in self.compositors:
             self.field.disconnect_service(compositor.transition.mlt_transition)
         self.compositors = []
@@ -804,7 +804,7 @@ class Sequence:
 
     def hide_hidden_clips(self):
         """
-        Called to temporarely remove hidden clips for trim mode loop playback
+        Called to temporarily remove hidden clips for trim mode loop playback
         """
         self.tracks[-1].clear()
         self._unmute_editable()
@@ -847,7 +847,7 @@ class Sequence:
         self._unmute_editable()
 
     def update_edit_tracks_length(self):
-        # Needed for timeline renderering updates
+        # Needed for timeline rendering updates
         self.seq_len = 0 
         for i in range(1, len(self.tracks) - 1):
             track_len = self.tracks[i].get_length()
@@ -886,7 +886,7 @@ class Sequence:
             edit.append_clip(track_v1, white_clip, white_clip.clip_in, white_clip.clip_out)
 
     def get_seq_range_frame(self, frame):
-        # Needed for timeline renderering updates
+        # Needed for timeline rendering updates
         if frame >= (self.seq_len - 1):
             return self.seq_len - 1
         else:
@@ -983,7 +983,7 @@ class Sequence:
                 track_id += 1
                 continue
             elif track_id == len(self.tracks) - 2:
-                # This shold not happen because track heights should be set up so that minimized app 
+                # This should not happen because track heights should be set up so that minimized app 
                 fix_next = False
                 print("sequence.resize_tracks_to_fit (): could not make tracks fit in timeline vertical space")
             else:

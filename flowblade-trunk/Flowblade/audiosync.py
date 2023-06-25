@@ -179,7 +179,7 @@ def _get_sync_tline_clip(event, frame):
         return None
         
     if sync_track == _tline_sync_data.origin_track:
-        dialogutils.warning_message(_("Audio Sync parent clips must be on differnt tracks "), 
+        dialogutils.warning_message(_("Audio Sync parent clips must be on different tracks "), 
                                 _("Selected audio sync clip is on the sametrack as the sync action origin clip."),
                                 gui.editor_window.window,
                                 True)
@@ -263,7 +263,7 @@ def create_audio_sync_compound_clip():
     video_file = selection[0].media_file
     audio_file = selection[1].media_file
     
-    # Can't sync coumpound clips
+    # Can't sync compound clips
     if utils.is_mlt_xml_file(video_file.path) == True or utils.is_mlt_xml_file(audio_file.path) == True:
 
         dialogutils.warning_message(_("Cannot Create Audio Sync Clip from  MLT XML Container Clips!"), 

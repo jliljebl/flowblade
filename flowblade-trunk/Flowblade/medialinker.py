@@ -259,7 +259,7 @@ class MediaRelinkListView(Gtk.VBox):
     def __init__(self):
         GObject.GObject.__init__(self)
 
-        self.assets = [] # Used to store list displayd data items
+        self.assets = [] # Used to store list displayed data items
 
         # Datamodel: text, text
         self.storemodel = Gtk.ListStore(str, str)

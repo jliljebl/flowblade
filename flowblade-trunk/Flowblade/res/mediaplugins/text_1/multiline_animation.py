@@ -494,7 +494,7 @@ class LineText:
         self._apply_fade(fctx)
 
     def _compute_line_position(self, fctx, multiline_animation):
-        # Apply line y-offset, aligment and centering.
+        # Apply line y-offset, alignment and centering.
         # Compute line x position for user selected alignment.
         area_x, area_y, max_width, area_height = multiline_animation.area_data
         line_w, line_h = self.pixel_size
@@ -533,7 +533,7 @@ class LineText:
         static_y = self.text_y
         multiline_x, multiline_y = self.multiline_pos
 
-        # Additional paramaters needed to compute animations.
+        # Additional parameters needed to compute animations.
         line_w, line_h,\
         screen_w, screen_h,\
         pad, bw, bg_padded_w, bg_padded_h = self._get_basic_animation_data(fctx, multiline_animation)
@@ -582,7 +582,7 @@ class LineText:
         static_y = self.text_y
         multiline_x, multiline_y = self.multiline_pos
         
-        # Additional paramaters needed to compute animations.
+        # Additional parameters needed to compute animations.
         line_w, line_h,\
         screen_w, screen_h,\
         pad, bw, bg_padded_w, bg_padded_h = self._get_basic_animation_data(fctx, multiline_animation)

@@ -646,7 +646,7 @@ class FluxityContainerActions(AbstractContainerActionObject):
     def _launch_render(self, clip, range_in, range_out, unused_frame_ofset):
         self.create_data_dirs_if_needed()
         
-        range_out = range_out + 1 # MLT handles out frames inclusive but fluxity exlusive.
+        range_out = range_out + 1 # MLT handles out frames inclusive but fluxity exclusive.
                                   # We just need to manually make sure we get always correct lengths.
         
         self.render_range_in = range_in
@@ -699,11 +699,11 @@ class FluxityContainerActions(AbstractContainerActionObject):
             jobs.update_job_queue(job_msg)
             
             if self.plugin_create_render_complete_callback == None:
-                # Completed render for timeline container clip update is handeled here.
+                # Completed render for timeline container clip update is handled here.
                 GLib.idle_add(self.plugin_tline_render_comlete)
                 GLib.idle_add(self.create_producer_and_do_update_edit, None)
             else:
-                # Completed render for adding Generator plugin as rendered video clip is handeled here. 
+                # Completed render for adding Generator plugin as rendered video clip is handled here. 
                 if self.container_data.render_data.do_video_render == False:
                     resource_path = self.get_rendered_frame_sequence_resource_path()
                 else:

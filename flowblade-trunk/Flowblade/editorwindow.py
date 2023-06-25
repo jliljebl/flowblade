@@ -769,7 +769,7 @@ class EditorWindow:
             guiutils.set_margins(self.bottom_left_frame, 0, 0, 0, 1)
         else:
             self.bottom_left_frame = guiutils.get_empty_panel_etched_frame() # to be filled later if panels are added into this position
-        self.tline_pane.pack_start(self.bottom_left_frame, False, False, 0) # self.tline_pane was already creted in self._init_tline()
+        self.tline_pane.pack_start(self.bottom_left_frame, False, False, 0) # self.tline_pane was already created in self._init_tline()
             
         # Put timeline between left and right bottom row panels.
         self.tline_pane.pack_start(self.tline_vpane, True, True, 0)
@@ -782,7 +782,7 @@ class EditorWindow:
 
         else:
             self.bottom_right_frame = guiutils.get_empty_panel_etched_frame() # to be filled later if panels are added into this position.
-        self.tline_pane.pack_start(self.bottom_right_frame, False, False, 0) # self.tline_pane was already creted in self._init_tline().
+        self.tline_pane.pack_start(self.bottom_right_frame, False, False, 0) # self.tline_pane was already created in self._init_tline().
 
 
         # ---------------------------------------------------------------- LEFT  COLUMN

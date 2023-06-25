@@ -44,7 +44,7 @@ import utils
 # Mouse delta in pix needed before selection is interpreted as move.
 MOVE_START_LIMIT = 5
 
-# Width of area in pixels that is iterpreted as an attemp to place overwrite
+# Width of area in pixels that is iterpreted as an attempt to place overwrite
 # clips, starting from edit
 MAGNETIC_AREA_IN_PIX = 5
 
@@ -59,7 +59,7 @@ selected_range_out = -1 # clip index, inclusive
 # Flag for clearing selection when releasing after pressing on selected.
 pressed_on_selected = True
 
-# Blanck clips can be selected but not moved
+# Blank clips can be selected but not moved
 drag_disabled = False
 
 # We need to save data to turn blank clip selection mid-drag into bex selection,
@@ -217,7 +217,7 @@ def insert_move_release(x, y, frame, state):
         drag_disabled = False
         return
 
-    # If mouse was not pressed on clip we cant move anyhing
+    # If mouse was not pressed on clip we can't move anything
     if edit_data == None:
         return
 
@@ -253,14 +253,14 @@ def insert_move_release(x, y, frame, state):
             "move_edit_done_func":move_edit_done}
 
     # Do edit. Use different actions depending on if
-    # clip is moved to a differrent track
+    # clip is moved to a different track
     if track == to_track:
         # Do edit if were moving and insert is not into same index
         # Update selection after edit
         if (edit_data["move_on"] == True
             and (insert_index < selected_range_in
             or insert_index > selected_range_out)):
-            # Remeber selected range to later find index of dropped range
+            # Remember selected range to later find index of dropped range
             # after edit
             old_range_length = selected_range_out - selected_range_in
             clear_selected_clips()
@@ -518,7 +518,7 @@ def _move_mode_pressed(event, frame):
     track = tlinewidgets.get_track(y)
 
     # Selecting empty clears selection and prevents from setting edit data since we cannot have it.
-    # Existance of edit_data is also used to determine if we should enter box mode so we need to not have it if we're not hitting clip.
+    # Existence of edit_data is also used to determine if we should enter box mode so we need to not have it if we're not hitting clip.
     if track == None or track.id < 1 or track.id > len(current_sequence().tracks) - 2: # -2 because topmost hidden track
         clear_selected_clips()
         pressed_on_selected = False

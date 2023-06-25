@@ -148,7 +148,7 @@ def _add_transition_dialog_callback(dialog, response_id, selection_widgets, tran
     to_clip = transition_data["to_clip"]
 
     # Get values to build transition render sequence
-    # Divide transition lenght between clips, odd frame goes to from_clip 
+    # Divide transition length between clips, odd frame goes to from_clip 
     real_length = length + 1 # first frame is 100% a from_clip frame so we are going to have to drop that
     to_part = real_length // 2
     from_part = real_length - to_part
@@ -396,7 +396,7 @@ def _show_no_handles_dialog(from_req, from_handle, to_req, to_handle, length):
     img2 = Gtk.Image.new_from_file ((respaths.IMAGE_PATH + "transition_right.png"))
     img2.set_margin_bottom(24)
 
-    label1 = Gtk.Label(label=_("Current situation, not enought media overlap:"))
+    label1 = Gtk.Label(label=_("Current situation, not enough media overlap:"))
     label1.set_margin_bottom(12)
     label2 = Gtk.Label(label=_("You need more media overlap:"))
     label2.set_margin_bottom(12)

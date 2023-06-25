@@ -701,7 +701,7 @@ def _get_ardour_audiofiles_dir(basedir):
 def _get_audio_channel_name(media, channel, num_channels):
     """
     Add a suffix to each exported mono channel if the input media has
-    multiple channels. This is done in a determinstic way, so that
+    multiple channels. This is done in a deterministic way, so that
     this method can be called from various parts of the export
     process and get the same results.
 

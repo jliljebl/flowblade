@@ -19,7 +19,7 @@
 """
 
 """
-Module contains objects that wrap mlt.Transition objects used to mix video betweeen
+Module contains objects that wrap mlt.Transition objects used to mix video between
 two tracks.
 """
 import copy
@@ -49,7 +49,7 @@ PROP_INT = appconsts.PROP_INT
 PROP_FLOAT = appconsts.PROP_FLOAT
 PROP_EXPRESSION = appconsts.PROP_EXPRESSION
 
-# Renderered transitions
+# Rendered transitions
 RENDERED_DISSOLVE = appconsts.RENDERED_DISSOLVE
 RENDERED_WIPE = appconsts.RENDERED_WIPE
 RENDERED_COLOR_DIP = appconsts.RENDERED_COLOR_DIP
@@ -202,7 +202,7 @@ def init_module():
 # ------------------------------------------ compositors
 class CompositorTransitionInfo:
     """
-    Constructor input is a XML dom node object. Convers XML data to another form
+    Constructor input is a XML dom node object. Converts XML data to another form
     used to create CompositorTransition objects.
     """
     def __init__(self, compositor_node):
@@ -328,7 +328,7 @@ class CompositorTransition:
 
 class CompositorObject:
     """
-    These objects are saved with projects. Thay are used to create, 
+    These objects are saved with projects. They are used to create, 
     update and hold references to mlt.Transition
     objects that define a composite between two tracks.
 
@@ -349,7 +349,7 @@ class CompositorObject:
     
         self.destroy_id = os.urandom(16) # HACK, HACK, HACK - find a way to remove this stuff  
                                          # Compositors are recreated often in Sequence.restack_compositors()
-                                         # and cannot be destroyd in undo/redo with object identidy.
+                                         # and cannot be destroyed in undo/redo with object identidy.
                                          # This is cloned in clone_properties
 
     def get_length(self):

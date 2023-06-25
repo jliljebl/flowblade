@@ -19,8 +19,8 @@
 """
 
 """
-Module provides utility methods for moduless creating headless render procesesses
-in initialized Flowblade/MLT enviroment.
+Module provides utility methods for modules creating headless render procesesses
+in initialized Flowblade/MLT environment.
 """
 
 import locale

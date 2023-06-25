@@ -72,7 +72,7 @@ PRESET_GROUP_AUDIO = appconsts.PRESET_GROUP_AUDIO
 PRESET_GROUP_MISC = appconsts.PRESET_GROUP_MISC 
 PRESET_GROUP_ALPHA = appconsts.PRESET_GROUP_ALPHA 
 
-# ffmpeg arg values somtimes need equals signs in them.
+# ffmpeg arg values sometimes need equals signs in them.
 EQUALS_SIGN_ENCODING = "@#@#"
 
 # GPU encoding availability.
@@ -538,7 +538,7 @@ class FileRenderPlayer(threading.Thread):
 
     def run(self):
         
-        self.consumer.set("plays", 1) # maybe not strictly necessery but default value here seems to  be 'None' which is wrong.
+        self.consumer.set("plays", 1) # maybe not strictly necessary but default value here seems to  be 'None' which is wrong.
         
         self.running = True
         self.has_started_running = True

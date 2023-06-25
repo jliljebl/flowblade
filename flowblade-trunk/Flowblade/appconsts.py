@@ -151,7 +151,7 @@ CONVERTING_TO_USE_ORIGINAL_MEDIA = 3
 AUTOSAVE_DIR = "autosave/"
 
 # Hidden media folders
-# NOTE: We have not been consistant with the starting/ending forward slashes.
+# NOTE: We have not been consistent with the starting/ending forward slashes.
 AUDIO_LEVELS_DIR = "audiolevels/"
 PROXIES_DIR = "proxies/"
 THUMBNAILS_DIR = "thumbnails"
@@ -255,9 +255,9 @@ TLINE_TOOL_MULTI_TRIM = 11
 MONITOR_TLINE_BUTTON_PRESSED = 1
 MONITOR_CLIP_BUTTON_PRESSED = 2
 
-# Appliation themes and colors preference.
+# Application themes and colors preference.
 # NOTE: Deactivated 2.10 and higher because Gnome global theme light/dark preferences
-# caused Flatpak to present invisble window for certain combinations of glovbal prefenrence and 
+# caused Flatpak to present invisible window for certain combinations of glovbal prefenrence and 
 # Flowblade preference. See after Gtk 4 port if fixable.
 FLOWBLADE_THEME = 0 # Deprecated
 DARK_THEME = 1
@@ -286,7 +286,7 @@ COPY_PASTE_GEOMETRY_EDITOR_KF_DATA = 4
 CUT_PASTE_MEDIA_ITEMS = 5
 CUT_PASTE_DATA_CLIPS = 6
 
-# Timeline Compositong modes.
+# Timeline Compositing modes.
 COMPOSITING_MODE_TOP_DOWN_FREE_MOVE = 0
 COMPOSITING_MODE_TOP_DOWN_AUTO_FOLLOW = 1 # DEPRECATED, mode removed 2.6 ->
 COMPOSITING_MODE_STANDARD_AUTO_FOLLOW = 2  # DEPRECATED, mode removed 2.10 ->

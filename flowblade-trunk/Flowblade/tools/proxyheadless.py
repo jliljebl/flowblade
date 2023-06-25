@@ -101,7 +101,7 @@ class ProxyClipRenderThread(threading.Thread):
             proxy_profile_path = userfolders.get_cache_dir() + "temp_proxy_profile"
             proxy_profile = mlt.Profile(proxy_profile_path)
         
-            renderconsumer.performance_settings_enabled = False # uuh...we're obivously disabling something momentarily.
+            renderconsumer.performance_settings_enabled = False # uuh...we're obviously disabling something momentarily.
             consumer = renderconsumer.get_render_consumer_for_encoding(
                                                         self.proxy_file_path,
                                                         proxy_profile, 

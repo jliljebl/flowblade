@@ -211,7 +211,7 @@ class TLineRenderRunnerThread(threading.Thread):
         self.aborted = False
 
     def run(self):
-        editorpersistance.load() # to apply possible chnages on timeline rendering
+        editorpersistance.load() # to apply possible changes on timeline rendering
         
         start_time = time.monotonic()
  

@@ -45,7 +45,7 @@ import utils
 
 # Transforms when removing panels.
 # N -> 2    Panel is removed from notebook.
-# 2 -> 1    Notebook is removed from pre-created Gtk.Frame, panel is removed from noteboook
+# 2 -> 1    Notebook is removed from pre-created Gtk.Frame, panel is removed from notebook
 #           and added to pre-created Gtk.Frame.
 # 1 -> 0    Panel is removed from the pre-created Gtk.Frame.
 
@@ -148,7 +148,7 @@ DEFAULT_TABS_POSITIONS = { \
 # Saved data struct holding panel positions information.
 _panel_positions = None
 
-# Gtk.Notebooks that may or may not exist to containe 2-N panel is layou position
+# Gtk.Notebooks that may or may not exist to contain 2-N panel is layout position
 _position_notebooks = {}
 
 # Dicts for translations.
@@ -169,7 +169,7 @@ def init_layout_data():
     global _panel_positions, _positions_names, _panels_names, _position_notebooks
     _panel_positions = editorpersistance.prefs.panel_positions
 
-    # Use default panels positons if nothing available yet or too small screen, 
+    # Use default panels positions if nothing available yet or too small screen, 
     # or default panel position is empty, layout code makes too many assumptions to make that work.
     if panel_positioning_available() == False or _panel_positions == None \
        or not (appconsts.PANEL_PLACEMENT_TOP_ROW_DEFAULT in _panel_positions.values()):
@@ -338,7 +338,7 @@ def set_positions_frames_visibility():
     # if frame has 0 panels in it, hide
     for position in _positions_names:
         if position == appconsts.PANEL_PLACEMENT_NOT_VISIBLE:
-            continue # this not applicaple here
+            continue # this not applicable here
         frame = _get_position_frames_dict()[position]
         panels = _get_position_panels(position)
         if len(panels) > 0:

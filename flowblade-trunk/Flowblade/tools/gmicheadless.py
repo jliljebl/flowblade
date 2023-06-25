@@ -188,7 +188,7 @@ class GMicHeadlessRunnerThread(threading.Thread):
                                                                         self.script_render_update_callback, 
                                                                         self.script_render_output_callback,
                                                                         10,
-                                                                        False,  # this is not useful until we get MLT to find frames sequences not startin from 0001
+                                                                        False,  # this is not useful until we get MLT to find frames sequences not starting from 0001
                                                                         0)
         self.script_renderer.write_frames()
 

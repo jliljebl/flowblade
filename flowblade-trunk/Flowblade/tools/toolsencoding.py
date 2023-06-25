@@ -86,7 +86,7 @@ def create_container_clip_default_render_data_object(profile):
     # When ToolsRenderData is used by G'Mic tool we need to have default values be 'None', for container clis we need different
     # default values.
     # 
-    # When first render is attempted this created to have data availeble for render process
+    # When first render is attempted this created to have data available for render process
     # even if user has not set any values.
     render_data = ToolsRenderData()
     render_data.profile_index = mltprofiles.get_profile_index_for_profile(profile)
@@ -480,7 +480,7 @@ class ProfileSelector():
 
 class RenderQualitySelector():
     """
-    Component displays quality option relevant for encoding slection.
+    Component displays quality option relevant for encoding selection.
     """
     def __init__(self):
         self.widget = Gtk.ComboBoxText()

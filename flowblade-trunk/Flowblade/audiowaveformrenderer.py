@@ -92,7 +92,7 @@ def get_waveform_data(clip):
         _waveforms[clip.path] = waveform
         return waveform
     else:
-        # We keep queing everything that does not have waveform data.
+        # We keep queueing everything that does not have waveform data.
         # If something gets queued twice, we will not attempt to render it twice
         # because we find it in _render_already_requested list.
         global _queued_waveform_renders
