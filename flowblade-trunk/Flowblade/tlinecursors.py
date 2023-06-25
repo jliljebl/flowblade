@@ -39,6 +39,7 @@ import respaths
 import tlineaction
 import tlinewidgets
 import workflow
+import updater
 
 # Cursors
 OVERWRITE_CURSOR = None

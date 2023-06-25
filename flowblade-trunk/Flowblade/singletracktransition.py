@@ -45,6 +45,7 @@ import movemodes
 import panels
 import renderconsumer
 import render
+import respaths
 import userfolders
 
 # Used to store transition render data used at render complete callback.
@@ -415,7 +416,6 @@ def _show_no_handles_dialog(from_req, from_handle, to_req, to_handle, length):
 
     rows = [row1, row2, row3, row4]
 
-
     if first_clip_info != None:
         row6 = guiutils.get_left_justified_box([label4])
         rows.append(row6)
@@ -752,3 +752,9 @@ def _source_clips_not_found_dialog():
     primary_txt = _("Can't rerender this fade / transition.")
     secondary_txt = _("The clip/s used to create this fade / transition are no longer available on the timeline.")
     dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+    
+def _no_audio_tracks_mixing_info():
+    primary_txt = _("Rendered transitions cannot be used on audio tracks.")
+    secondary_txt = _("This feature only works on video tracks.")
+    dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+        

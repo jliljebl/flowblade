@@ -565,7 +565,7 @@ class LineText:
             start_y = -bg_padded_h + static_y - multiline_y
         elif self.animation_type_in == LineText.FROM_DOWN:
             start_x = static_x
-            start_y = screen_h + static_y - multitext_y
+            start_y = screen_h + static_y - multiline_y
         elif self.animation_type_in == LineText.REVEAL_HORIZONTAL or self.animation_type_in == LineText.REVEAL_VERTICAL \
             or self.animation_type_in == LineText.REVEAL_LEFT or self.animation_type_in == LineText.REVEAL_RIGHT:
             start_x = static_x

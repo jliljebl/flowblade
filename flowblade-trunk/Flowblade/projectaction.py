@@ -136,7 +136,7 @@ class LoadThread(threading.Thread):
             GLib.idle_add(self._exit_on_file_not_found_error, e, ticker)
             return
         except persistance.ProjectProfileNotFoundError as e:
-            GLib.idle_add(self._exit_on_profile_file_not_found_error, e, ticker)
+            GLib.idle_add(self._exit_on_profile_file_not_found_error, e, ticker, old_project)
             return
 
         guiutils.update_text_idle(self.dialog.info, _("Opening"))
@@ -224,7 +224,7 @@ class LoadThread(threading.Thread):
         # We exit to same state as when app is first opened.
         app.open_project(projectdata.get_default_project())
 
-    def _exit_on_profile_file_not_found_error(self, e, ticker):
+    def _exit_on_profile_file_not_found_error(self, e, ticker, old_project):
         self._error_stop(self.dialog, ticker)
         primary_txt = _("Profile with Description: '") + e.value  + _("' was not found on load!")
         secondary_txt = _("It is possible to load the project by creating a User Profile with exactly the same Description\nas the missing profile. ") + "\n\n" + \

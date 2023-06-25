@@ -263,7 +263,6 @@ def load_render_profiles():
             else:
                 non_user_encodings.append(encoding_option) 
         else:
-            msg = "...NOT available, " + encoding_option.err_msg + " missing"
             not_supported_encoding_options.append(encoding_option)
 
     # Create categorised structure.

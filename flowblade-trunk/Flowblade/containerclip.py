@@ -239,9 +239,9 @@ class GMicLoadCompletionThread(threading.Thread):
 
         time.sleep(0.5) # To make sure text is seen.
 
-        GLib.idle_add(_gmic_load_complete, self.container_clip_data, self.dialog, is_valid)
+        GLib.idle_add(_gmic_load_complete, self.container_clip_data, self.dialog, is_valid, err_msg)
 
-def _gmic_load_complete(container_clip_data, dialog, is_valid):
+def _gmic_load_complete(container_clip_data, dialog, is_valid, err_msg):
         dialog.destroy()
         
         if is_valid == True:
@@ -252,7 +252,7 @@ def _gmic_load_complete(container_clip_data, dialog, is_valid):
             primary_txt = _("G'Mic Container Clip Validation Error")
             dialogutils.warning_message(primary_txt, err_msg, gui.editor_window.window)
 
-        
+    
 # ------------------------------------------------------- Fluxity
 # ------------------------------------------------------- ADDING GENERATOR FROM SCRIPT AS MEDIA ITEM
 # Adding Generator item from loaded script file.
