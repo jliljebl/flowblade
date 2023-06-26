@@ -1,6 +1,6 @@
 Format: http://dep.debian.net/deps/dep5
 Upstream-Name: flowblade
-Source: http://code.google.com/p/flowblade/
+Source: https://github.com/jliljebl/flowblade/
 
 Files: all, except ones separately listed below
 Copyright: 2012 Janne Liljeblad <janne.liljeblad@gmail.com>
