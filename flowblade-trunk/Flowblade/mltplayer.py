@@ -323,9 +323,9 @@ class Player:
         if loop_clips and current_frame >= self.get_active_length() and timeline_visible() == False: # Looping for clips
             self.seek_frame(0, False) #NOTE: False==GUI not updated
             self.producer.set_speed(1)
-            Gdk.threads_enter()
-            updater.update_frame_displayers(current_frame)
-            Gdk.threads_leave()
+            #Gdk.threads_enter()
+            #updater.update_frame_displayers(current_frame)
+            #Gdk.threads_leave()
             return
 
         # Stop ticker if playback has stopped.
@@ -346,9 +346,9 @@ class Player:
 
         # If we're out of active range seek end.
         if current_frame >= self.get_active_length():
-            Gdk.threads_enter()
-            self.seek_frame(current_frame)
-            Gdk.threads_leave()
+            #Gdk.threads_enter()
+            #self.seek_frame(current_frame)
+            #Gdk.threads_leave()
             return
 
         # If trim looping and past loop end, start from loop start

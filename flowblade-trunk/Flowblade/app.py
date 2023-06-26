@@ -24,6 +24,7 @@ Application module.
 Handles application initialization, shutdown, opening projects, autosave and changing
 sequences.
 """
+import faulthandler
 
 try:
     import pgi
@@ -38,6 +39,7 @@ from gi.repository import GLib
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from gi.repository import Gdk
+from gi.repository import Gio
 
 import locale
 try:
@@ -120,6 +122,8 @@ import utils
 import utilsgtk
 import workflow
 
+_app = None
+_window = None
 
 AUTOSAVE_DIR = appconsts.AUTOSAVE_DIR
 AUTOSAVE_FILE = "autosave/autosave"
@@ -190,199 +194,214 @@ def main(root_path):
 
     editorpersistance.save()
 
-    # Init translations module with translations data.
-    translations.init_languages()
-    translations.load_filters_translations()
-    mlttransitions.init_module()
+    # Create app.
+    app = FlowbladeApplication()
+    global _app
+    _app = app
+    app.run(None)
 
-    # Keyboard shortcuts
-    shortcuts.update_custom_shortcuts()
-    shortcuts.load_shortcut_files()
-    shortcuts.load_shortcuts()
-    shortcutsquickeffects.load_shortcuts()
-    
-    # The test for len != 4 is to make sure that if we change the number of values below the prefs are reset to the correct list
-    # So when we add or remove a value, make sure we also change the len test
-    # Only use positive numbers.
-    if( not editorpersistance.prefs.AUTO_SAVE_OPTS or len(editorpersistance.prefs.AUTO_SAVE_OPTS) != 4):
-        print("Initializing Auto Save Options")
-        editorpersistance.prefs.AUTO_SAVE_OPTS = ((0, _("No Autosave")),(1, _("1 min")),(2, _("2 min")),(5, _("5 min")))
 
-    # We need respaths and translations data available so we need to do init in a function.
-    workflow.init_data()
+class FlowbladeApplication(Gtk.Application):
 
-    # Init gtk threads
-    Gdk.threads_init()
-    Gdk.threads_enter()
+    def __init__(self, *args, **kwargs):
+        Gtk.Application.__init__(self, application_id=None,
+                                 flags=Gio.ApplicationFlags.FLAGS_NONE)
+        self.connect("activate", self.on_activate)
 
-    # Handle userfolders init error and quit.
-    if userfolders.get_init_error() != None:
-        _xdg_error_exit(userfolders.get_init_error())
-        return
-
-    # MLT 7.0 or higher required.
-    if editorstate.mlt_version_is_greater_correct("6.99.99") == False:
-        _too_low_mlt_version_exit()
-        return
-
-    # Apply custom themes.
-    gui.apply_theme(editorpersistance.prefs.theme)
-
-    try:
-        if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
-            Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
-    except:
-        print("SETTING DARK THEME PREFERENCE FAILED, SYSTEM DARK THEME NOT AVAILABLE!")
-
-    # Load drag'n'drop images.
-    dnd.init()
-
-    # Save screen size data and modify rendering based on screen size/s and number of monitors. 
-    scr_w, scr_h = _set_screen_size_data()
-    _set_draw_params()
-
-    # Refuse to run on too small screen.
-    if scr_w < 1151 or scr_h < 767:
-        _too_small_screen_exit()
-        return
-
-    # Init MLT framework
-    repo = mlt.Factory().init()
-    processutils.prepare_mlt_repo(repo)
-
-    # Set numeric locale to use "." as radix, MLT initializes this to OS locale and this causes bugs.
-    locale.setlocale(locale.LC_NUMERIC, 'C')
-
-    # Check for codecs and formats on the system exit if detection failed.
-    mltenv.check_available_features(repo)
-    if mltenv.environment_detection_success == False:
-        _failed_environment_exit()
-        return
+    def on_activate(self, data=None):
+        faulthandler.enable()
         
-    renderconsumer.load_render_profiles()
+        # Init translations module with translations data.
+        translations.init_languages()
+        translations.load_filters_translations()
+        mlttransitions.init_module()
 
-    # Load filter and compositor descriptions from xml files.
-    mltfilters.load_filters_xml(mltenv.services)
-    mltfilters.set_icons(gui.get_default_filter_icon(), \
-                         gui.get_filter_group_icons(gui.get_default_filter_icon()))
-    mlttransitions.load_compositors_xml(mltenv.transitions)
-    
-    # Replace some services if better replacements available.
-    mltfilters.replace_services(mltenv.services)
-
-    # Create list of available mlt profiles.
-    mltprofiles.load_profile_list()
-
-    # We need to test which GPU render options work after profiles are inited because
-    # we do the test by doing test renders.
-    rendergputest.test_gpu_rendering_options(render.update_encoding_selector)
-    
-    # If we have crashed we could have large amount of disk space wasted unless we delete all files here.
-    # tlinerender.app_launch_clean_up() feature teporarily disabled.
-
-    # Splash screen
-    if editorpersistance.prefs.display_splash_screen == True: 
-        show_splash_screen()
+        # Keyboard shortcuts
+        shortcuts.update_custom_shortcuts()
+        shortcuts.load_shortcut_files()
+        shortcuts.load_shortcuts()
+        shortcutsquickeffects.load_shortcuts()
         
-    # Save assoc file path if found in arguments.
-    global assoc_file_path
-    assoc_file_path = get_assoc_file_path()
+        # The test for len != 4 is to make sure that if we change the number of values below the prefs are reset to the correct list
+        # So when we add or remove a value, make sure we also change the len test
+        # Only use positive numbers.
+        if( not editorpersistance.prefs.AUTO_SAVE_OPTS or len(editorpersistance.prefs.AUTO_SAVE_OPTS) != 4):
+            print("Initializing Auto Save Options")
+            editorpersistance.prefs.AUTO_SAVE_OPTS = ((0, _("No Autosave")),(1, _("1 min")),(2, _("2 min")),(5, _("5 min")))
+
+        # We need respaths and translations data available so we need to do init in a function.
+        workflow.init_data()
+
+        # Handle userfolders init error and quit.
+        if userfolders.get_init_error() != None:
+            _xdg_error_exit(userfolders.get_init_error())
+            return
+
+        # MLT 7.0 or higher required.
+        if editorstate.mlt_version_is_greater_correct("6.99.99") == False:
+            _too_low_mlt_version_exit()
+            return
+
+        # Apply custom themes.
+        gui.apply_theme(editorpersistance.prefs.theme)
+
+        try:
+            if editorpersistance.prefs.theme != appconsts.LIGHT_THEME:
+                Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", True)
+        except:
+            print("SETTING DARK THEME PREFERENCE FAILED, SYSTEM DARK THEME NOT AVAILABLE!")
+
+        # Load drag'n'drop images.
+        dnd.init()
+
+        # Save screen size data and modify rendering based on screen size/s and number of monitors. 
+        scr_w, scr_h = _set_screen_size_data()
+        _set_draw_params()
+
+        # Refuse to run on too small screen.
+        if scr_w < 1151 or scr_h < 767:
+            _too_small_screen_exit()
+            return
+
+        # Init MLT framework
+        repo = mlt.Factory().init()
+        processutils.prepare_mlt_repo(repo)
+
+        # Set numeric locale to use "." as radix, MLT initializes this to OS locale and this causes bugs.
+        locale.setlocale(locale.LC_NUMERIC, 'C')
+
+        # Check for codecs and formats on the system exit if detection failed.
+        mltenv.check_available_features(repo)
+        if mltenv.environment_detection_success == False:
+            _failed_environment_exit()
+            return
+            
+        renderconsumer.load_render_profiles()
+
+        # Load filter and compositor descriptions from xml files.
+        mltfilters.load_filters_xml(mltenv.services)
+        mltfilters.set_icons(gui.get_default_filter_icon(), \
+                             gui.get_filter_group_icons(gui.get_default_filter_icon()))
+        mlttransitions.load_compositors_xml(mltenv.transitions)
         
-    # There is always a project open, so at startup we create a default project.
-    # Set default project as the project being edited.
-    editorstate.project = projectdata.get_default_project()
-    check_crash = True
+        # Replace some services if better replacements available.
+        mltfilters.replace_services(mltenv.services)
 
-    # Audiomonitoring being available needs to be known before GUI creation.
-    audiomonitoring.init(editorstate.project.profile)
+        # Create list of available mlt profiles.
+        mltprofiles.load_profile_list()
 
-    # Set trim view mode to current default value.
-    editorstate.show_trim_view = editorpersistance.prefs.trim_view_default
+        # We need to test which GPU render options work after profiles are inited because
+        # we do the test by doing test renders.
+        #rendergputest.test_gpu_rendering_options(render.update_encoding_selector)
+        
+        # If we have crashed we could have large amount of disk space wasted unless we delete all files here.
+        # tlinerender.app_launch_clean_up() feature teporarily disabled.
 
-    # Check for tools and init tools integration.
-    gmic.test_availablity()
-    toolsintegration.init()
+        # Splash screen
+        if editorpersistance.prefs.display_splash_screen == True: 
+            show_splash_screen()
+            
+        # Save assoc file path if found in arguments.
+        global assoc_file_path
+        assoc_file_path = get_assoc_file_path()
+            
+        # There is always a project open, so at startup we create a default project.
+        # Set default project as the project being edited.
+        editorstate.project = projectdata.get_default_project()
+        check_crash = True
 
-    # Media Plugins a.k.a Generators.
-    mediaplugin.init()
+        # Audiomonitoring being available needs to be known before GUI creation.
+        audiomonitoring.init(editorstate.project.profile)
 
-    # Create player object.
-    create_player()
+        # Set trim view mode to current default value.
+        editorstate.show_trim_view = editorpersistance.prefs.trim_view_default
 
-    # Create main window and make widgeta available from gui.py.
-    create_gui()
+        # Check for tools and init tools integration.
+        gmic.test_availablity()
+        toolsintegration.init()
 
-    # Inits widgets with project data.
-    init_project_gui()
+        # Media Plugins a.k.a Generators.
+        mediaplugin.init()
 
-    # Inits widgets with current sequence data.
-    init_sequence_gui()
+        # Create player object.
+        create_player()
 
-    # Launch player now that data and gui exist.
-    launch_player()
+        # Create main window and make widgeta available from gui.py.
+        create_gui()
 
-    # Editor and modules need some more initializing.
-    init_editor_state()
+        # Inits widgets with project data.
+        init_project_gui()
 
-    # Tracks need to be re-centered if window is resized.
-    # Connect listener for this now that the tline panel size allocation is sure to be available.
-    global window_resize_id, window_state_id
-    window_resize_id = gui.editor_window.window.connect("size-allocate", lambda w, e:updater.window_resized())
-    window_state_id = gui.editor_window.window.connect("window-state-event", lambda w, e:updater.window_resized())
+        # Inits widgets with current sequence data.
+        init_sequence_gui()
 
-    # Get existing autosave files
-    autosave_files = get_autosave_files()
+        # Launch player now that data and gui exist.
+        launch_player()
 
-    # Show splash
-    if ((editorpersistance.prefs.display_splash_screen == True) and len(autosave_files) == 0):
-        global splash_timeout_id
-        splash_timeout_id = GLib.timeout_add(2600, destroy_splash_screen)
-        splash_screen.show_all()
+        # Editor and modules need some more initializing.
+        init_editor_state()
 
-    appconsts.SAVEFILE_VERSION = projectdata.SAVEFILE_VERSION # THIS IS A QUESTIONABLE IDEA TO SIMPLIFY IMPORTS, NOT DRY. WHEN DOING TOOLS THAT RUN IN ANOTHER PROCESSES AND SAVE PROJECTS, THIS LINE NEEDS TO BE THERE ALSO.
+        # Save Gtk.Window reference.
+        global _window
+        _window = gui.editor_window.window
+        
+        # Tracks need to be re-centered if window is resized.
+        # Connect listener for this now that the tline panel size allocation is sure to be available.
+        global window_resize_id, window_state_id
+        window_resize_id = gui.editor_window.window.connect("size-allocate", lambda w, e:updater.window_resized())
+        window_state_id = gui.editor_window.window.connect("window-state-event", lambda w, e:updater.window_resized())
 
-    # Every running instance has unique autosave file which is deleted at exit
-    set_instance_autosave_id()
+        # Get existing autosave files
+        autosave_files = get_autosave_files()
 
-    # Existence of autosave file hints that program was exited abnormally.
-    if check_crash == True and len(autosave_files) > 0:
-        if len(autosave_files) == 1:
-            GLib.timeout_add(10, autosave_recovery_dialog)
+        # Show splash
+        if ((editorpersistance.prefs.display_splash_screen == True) and len(autosave_files) == 0):
+            global splash_timeout_id
+            splash_timeout_id = GLib.timeout_add(2600, destroy_splash_screen)
+            splash_screen.show_all()
+
+        appconsts.SAVEFILE_VERSION = projectdata.SAVEFILE_VERSION # THIS IS A QUESTIONABLE IDEA TO SIMPLIFY IMPORTS, NOT DRY. WHEN DOING TOOLS THAT RUN IN ANOTHER PROCESSES AND SAVE PROJECTS, THIS LINE NEEDS TO BE THERE ALSO.
+
+        # Every running instance has unique autosave file which is deleted at exit
+        set_instance_autosave_id()
+
+        # Existence of autosave file hints that program was exited abnormally.
+        if check_crash == True and len(autosave_files) > 0:
+            if len(autosave_files) == 1:
+                GLib.timeout_add(10, autosave_recovery_dialog)
+            else:
+                GLib.timeout_add(10, autosaves_many_recovery_dialog)
         else:
-            GLib.timeout_add(10, autosaves_many_recovery_dialog)
-    else:
-        # tlinerender.init_session() feature teporarily disabled.
-        start_autosave()
+            # tlinerender.init_session() feature teporarily disabled.
+            start_autosave()
 
-    projectaction.clear_changed_since_last_save_flags()
-    
-    # We prefer to monkeypatch some callbacks into some modules, usually to
-    # maintain a simpler and/or non-circular import structure.
-    monkeypatch_callbacks()
-
-    # File in assoc_file_path is opened after very short delay.
-    if not(check_crash == True and len(autosave_files) > 0):
-        if assoc_file_path != None:
-            print("Launch assoc file:", assoc_file_path)
-            global assoc_timeout_id
-            assoc_timeout_id = GLib.timeout_add(10, open_assoc_file)
+        projectaction.clear_changed_since_last_save_flags()
         
-    # SDL 2 consumer needs to created after Gtk.main() has run enough for window to be visible
-    #if editorstate.get_sdl_version() == editorstate.SDL_2: # needs more state consideration still
-    #    print "SDL2 timeout launch"
-    #    global sdl2_timeout_id
-    #    sdl2_timeout_id = GLib.timeout_add(1500, create_sdl_2_consumer)
-    
-    # In PositionNumericalEntries we are using Gtk.Entry objects in a way that works for us nicely, but is somehow "error" for Gtk, so we just kill this.
-    Gtk.Settings.get_default().set_property("gtk-error-bell", False)
-    
-    global disk_cache_timeout_id
-    disk_cache_timeout_id = GLib.timeout_add(2500, check_disk_cache_size)
+        # We prefer to monkeypatch some callbacks into some modules, usually to
+        # maintain a simpler and/or non-circular import structure.
+        monkeypatch_callbacks()
 
-    # Launch gtk+ main loop
-    Gtk.main()
+        # File in assoc_file_path is opened after very short delay.
+        if not(check_crash == True and len(autosave_files) > 0):
+            if assoc_file_path != None:
+                print("Launch assoc file:", assoc_file_path)
+                global assoc_timeout_id
+                assoc_timeout_id = GLib.timeout_add(10, open_assoc_file)
+            
+        # SDL 2 consumer needs to created after Gtk.main() has run enough for window to be visible
+        #if editorstate.get_sdl_version() == editorstate.SDL_2: # needs more state consideration still
+        #    print "SDL2 timeout launch"
+        #    global sdl2_timeout_id
+        #    sdl2_timeout_id = GLib.timeout_add(1500, create_sdl_2_consumer)
+        
+        # In PositionNumericalEntries we are using Gtk.Entry objects in a way that works for us nicely, but is somehow "error" for Gtk, so we just kill this.
+        Gtk.Settings.get_default().set_property("gtk-error-bell", False)
+        
+        global disk_cache_timeout_id
+        disk_cache_timeout_id = GLib.timeout_add(2500, check_disk_cache_size)
 
-    Gdk.threads_leave()
+        self.add_window(_window)
+
 
 # ----------------------------------- callback setting
 def monkeypatch_callbacks():
@@ -1091,7 +1110,8 @@ def _app_destroy():
     
     # Exit gtk main loop if no jobs unfinished.
     if do_gtk_main_quit == True:
-        Gtk.main_quit()
+        # Close app.
+        _app.quit()
     else:
         # Jobs launches its own top level window to show progress of unfinished jobs renders
         # and does Gtk.main_quit() later when done.
