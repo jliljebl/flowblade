@@ -2080,13 +2080,10 @@ def _get_compositors_add_menu_item(event, clip, track, callback, sensitive):
         compositor_item.show()
  
     _add_separetor(sub_menu)
-    
-    if current_sequence().compositing_mode != appconsts.COMPOSITING_MODE_STANDARD_AUTO_FOLLOW:
-        alpha_combiners_menu_item = _get_alpha_combiners_add_menu_item(event, clip, track, callback, sensitive)
-        sub_menu.append(alpha_combiners_menu_item)
 
     blenders_menu_item  = _get_blenders_add_menu_item(event, clip, track, callback, sensitive)
     sub_menu.append(blenders_menu_item)
+    
     wipe_compositors_menu_item = _get_wipe_compositors_add_menu_item(event, clip, track, callback, sensitive)
     sub_menu.append(wipe_compositors_menu_item)
     
@@ -2108,22 +2105,6 @@ def _get_blenders_add_menu_item(event, clip, track, callback, sensitive):
         sub_menu.append(blender_item)
         blender_item.connect("activate", callback, (clip, track, "add_compositor", (event.x, compositor_type, add_compositors_is_multi_selection)))
         blender_item.show()
-    menu_item.set_sensitive(sensitive)
-    menu_item.show()
-    return menu_item
-
-def _get_alpha_combiners_add_menu_item(event, clip, track, callback, sensitive):
-    menu_item = Gtk.MenuItem(_("Alpha"))
-    sub_menu = Gtk.Menu()
-    menu_item.set_submenu(sub_menu)
-
-    for i in range(0, len(mlttransitions.alpha_combiners)):
-        alpha_combiner = mlttransitions.alpha_combiners[i]
-        name, compositor_type = alpha_combiner
-        alpha_combiner_item = Gtk.MenuItem(name)
-        sub_menu.append(alpha_combiner_item)
-        alpha_combiner_item.connect("activate", callback, (clip, track, "add_compositor", (event.x, compositor_type, add_compositors_is_multi_selection)))
-        alpha_combiner_item.show()
     menu_item.set_sensitive(sensitive)
     menu_item.show()
     return menu_item

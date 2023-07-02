@@ -2003,8 +2003,14 @@ def show_no_plugins_in_monitor_dialog():
     secondary_txt = _("Generators with user mutable media are best handled on Timeline.")
     dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
 
-
 def refuse_to_empty_default_notebook_dialog():
     primary_txt = _("Cannot do the panel move!")
     secondary_txt = _("It is not possible to move the panel and make the top left notebook empty.")
+    dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+
+
+def show_dead_compositors(number_of_dead_compositors):
+    primary_txt = _("Unable to load some Compositors!")
+    secondary_txt = _("MLT version 7 removed several services that were used to implement Compositors in Flowblade.\n\nYour Project had ") \
+                    + str(number_of_dead_compositors) + _(" Compositor/s in it that cannot be loaded.")
     dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)

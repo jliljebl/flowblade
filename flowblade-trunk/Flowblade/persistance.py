@@ -90,6 +90,10 @@ _fps_conv_mult = 1.0
 # A dict is put here when saving for profile change to contain paths to changed MLT XML files
 _xml_new_paths_for_profile_change = None
 
+# MLT removed quite few services for 7.0 and we need to inform users if any of those cannot be loaded.
+dead_compositors = 0
+
+
 class FileProducerNotFoundError(Exception):
 
     def __init__(self, value):
@@ -522,12 +526,21 @@ def fill_sequence_mlt(seq, SAVEFILE_VERSION):
     
     # Create and connect compositors.
     mlt_compositors = []
+    global dead_compositors
+    dead_compositors = 0
+                
     for py_compositor in seq.compositors:
             # Keeping backwards compability
             persistancecompat.FIX_MISSING_COMPOSITOR_ATTRS(py_compositor)
-                
+
             # Create new compositor object
             compositor = mlttransitions.create_compositor(py_compositor.type_id)
+
+            # Some Compositors have been removed from MLT, and cannot be created on load.
+            if compositor == None:
+                dead_compositors += 1
+                continue
+
             compositor.create_mlt_objects(seq.profile)
 
             # Copy and set param values
