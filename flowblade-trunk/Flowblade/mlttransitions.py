@@ -164,16 +164,9 @@ def init_module():
                 (_("Subtract"),"##subtract"),
                 (_("Value"),"##value")]
 
-    autofades = [(_("Fade In"),"##auto_fade_in"),
-                (_("Fade Out"),"##auto_fade_out")]
     
-    alpha_combiners = [ (_("LumaToAlpha"),"##matte"), 
-                        (_("Alpha XOR"),"##alphaxor"),
-                        (_("Alpha Out"),"##alphaout"),
-                        (_("Alpha In"),"##alphain")]
 
-    wipe_compositors = [(_("Wipe/Translate"), "##region"), 
-                        (_("Wipe Clip Length"),"##wipe")]
+    wipe_compositors = [(_("Wipe Clip Length"),"##wipe")]
 
     for comp in compositors:
         name, comp_type = comp
@@ -183,14 +176,6 @@ def init_module():
         name, comp_type = blend
         name_for_type[comp_type] = name
 
-    for fade in autofades:
-        name, comp_type = fade
-        name_for_type[comp_type] = name
-
-    for acomb in alpha_combiners:
-        name, comp_type = acomb
-        name_for_type[comp_type] = name
-    
     for wc in wipe_compositors:
         name, comp_type = wc
         name_for_type[comp_type] = name
@@ -430,7 +415,11 @@ def get_wipe_resource_path(key):
     return respaths.WIPE_RESOURCES_PATH + img_file
 
 def create_compositor(compositor_type):
-    transition_info = mlt_compositor_transition_infos[compositor_type]
+    try:
+        transition_info = mlt_compositor_transition_infos[compositor_type]
+    except KeyError:
+        return None # Compositor was removed from MLT and cannot made available anymore.
+        
     compositor = CompositorObject(transition_info)
     compositor.compositor_index = -1 # not used since SAVEFILE = 3
     compositor.name = name_for_type[compositor_type]

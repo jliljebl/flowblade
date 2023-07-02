@@ -198,6 +198,10 @@ class LoadThread(threading.Thread):
 
         self.post_open_work_done = True
         
+        # Show info on killed compositors.
+        if persistance.dead_compositors > 0:
+            dialogs.show_dead_compositors(persistance.dead_compositors)
+
     def _exit_on_file_not_found_error(self, e, ticker):
         print("LoadThread.run() - FileProducerNotFoundError")
         self._error_stop(self.dialog, ticker)
