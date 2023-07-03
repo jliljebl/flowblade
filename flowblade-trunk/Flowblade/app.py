@@ -880,8 +880,8 @@ def show_splash_screen():
 
     splash_screen.set_resizable(False)
 
-    while(Gtk.events_pending()):
-        Gtk.main_iteration() # GLib.MainContext to replace this
+    while(GLib.MainContext.default ().pending()):
+        GLib.MainContext.default().iteration(False) # GLib.MainContext to replace this
 
 def destroy_splash_screen():
     splash_screen.destroy()

@@ -418,9 +418,8 @@ def shutdown():
         dialogutils.info_message(primary_txt, secondary_txt, batch_window.window)
         return True # Tell callsite (inside GTK toolkit) that event is handled, otherwise it'll destroy window anyway.
 
-    # GTK4 
-    while(Gtk.events_pending()):
-        Gtk.main_iteration() # GLib.MainContext to replace this
+    while(GLib.MainContext.default ().pending()):
+        GLib.MainContext.default().iteration(False) # GLib.MainContext to replace this
 
     if _dbus_service != None:
         _dbus_service.remove_from_dbus()
