@@ -114,10 +114,6 @@ def refresh_player(e):
     if not player_refresh_enabled:
         player_refresh_enabled = True
         return
-    # Refreshing while rendering overwrites file on disk and loses 
-    # previous rendered data. 
-    if PLAYER().is_rendering:
-        return
 
     PLAYER().refresh()
 

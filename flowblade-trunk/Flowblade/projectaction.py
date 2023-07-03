@@ -443,6 +443,7 @@ def _enable_save():
     if PROJECT().last_save_path != None:
         gui.editor_window.uimanager.get_widget("/MenuBar/FileMenu/Save").set_sensitive(True)
 
+    return False # Can be called with GLib.idle_add, docs said "If the function returns GLib.SOURCE_REMOVE or False it is automatically removed from the list of event sources and will not be called again."
 
 # ---------------------------------- project: new, load, save
 def new_project():

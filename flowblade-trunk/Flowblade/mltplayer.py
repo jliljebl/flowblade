@@ -35,20 +35,19 @@ import time
 import gui
 from editorstate import timeline_visible
 import editorpersistance
-import utils
+import utilsgtk
 import updater
 
-TICKER_DELAY = 0.25
+TICKER_DELAY = 250 # in millis
 RENDER_TICKER_DELAY = 0.05
 
 class Player:
     
     def __init__(self, profile):
-        #self.consumer = None
 
         self.init_for_profile(profile)
         
-        self.ticker = utils.Ticker(self._ticker_event, TICKER_DELAY)
+        self.start_ticker()
             
     def init_for_profile(self, profile):
         # Get profile and create ticker for playback GUI updates
@@ -59,14 +58,6 @@ class Player:
         self.loop_start = -1
         self.loop_end = -1
         self.is_looping = False
-        
-        # Rendering
-        self.is_rendering = False
-        self.render_stop_frame = -1
-        self.render_start_frame = -1
-        #self.render_callbacks = None
-        self.wait_for_producer_end_stop = True
-        self.render_gui_update_count = 0
 
         # JACK audio
         self.jack_output_filter = None
@@ -87,7 +78,6 @@ class Player:
         self.consumer.set("rescale", "bicubic") # MLT options "nearest", "bilinear", "bicubic", "hyper"
         self.consumer.set("resize", 1)
         self.consumer.set("progressive", 1)
-
 
         # Hold ref to switch back from rendering
         self.sdl_consumer = self.consumer 
@@ -184,17 +174,16 @@ class Player:
         Starts playback from current producer
         """        
         self.producer.set_speed(1)
-        self.ticker.stop_ticker()
-        self.ticker.start_ticker()
+        self.stop_ticker()
+        self.start_ticker()
         
     def start_variable_speed_playback(self, speed):
         """
         Starts playback from current producer
         """
-        #print speed
         self.producer.set_speed(speed)
-        self.ticker.stop_ticker()
-        self.ticker.start_ticker()
+        self.stop_ticker()
+        self.start_ticker()
 
     def stop_playback(self):
         """
@@ -204,7 +193,7 @@ class Player:
         self.loop_end = -1
         self.is_looping = False
 
-        self.ticker.stop_ticker()
+        self.stop_ticker()
         self.producer.set_speed(0)
         updater.update_frame_displayers(self.producer.frame())
 
@@ -218,8 +207,8 @@ class Player:
         self.is_looping = True
         self.seek_frame(self.loop_start, False)
         self.producer.set_speed(1)
-        self.ticker.stop_ticker()
-        self.ticker.start_ticker()
+        self.stop_ticker()
+        self.start_ticker()
 
     def start_loop_playback_range(self, range_in, range_out):
         seq_len = self.producer.get_length()
@@ -234,8 +223,8 @@ class Player:
         self.is_looping = True
         self.seek_frame(self.loop_start, False)
         self.producer.set_speed(1)
-        self.ticker.stop_ticker()
-        self.ticker.start_ticker()
+        self.stop_ticker()
+        self.start_ticker()
 
     def stop_loop_playback(self, looping_stopped_callback):
         """
@@ -245,7 +234,7 @@ class Player:
         self.loop_end = -1
         self.is_looping = False
         self.producer.set_speed(0)
-        self.ticker.stop_ticker()
+        self.stop_ticker()
         looping_stopped_callback() # Re-creates hidden track that was cleared for looping playback
 
     def looping(self):
@@ -315,40 +304,23 @@ class Player:
     def is_playing(self):
         return (self.producer.get_speed() != 0)
 
-    def _ticker_event(self):
-        
+    def _ticker_event(self, unused_data):
         current_frame = self.producer.frame()
         
         loop_clips = editorpersistance.prefs.loop_clips
         if loop_clips and current_frame >= self.get_active_length() and timeline_visible() == False: # Looping for clips
             self.seek_frame(0, False) #NOTE: False==GUI not updated
             self.producer.set_speed(1)
-            #Gdk.threads_enter()
-            #updater.update_frame_displayers(current_frame)
-            #Gdk.threads_leave()
+            updater.update_frame_displayers(current_frame)
             return
 
         # Stop ticker if playback has stopped.
         if (self.consumer.is_stopped() or self.producer.get_speed() == 0):
-            self.ticker.stop_ticker()
-        
-        # Stop rendering if last frame reached.
-        if self.is_rendering == True and current_frame >= self.render_stop_frame:
-            self.stop_rendering()
-            return
-
-        # If we're currently rendering, set progress bar and exit event handler.
-        if self.is_rendering:
-            self.render_gui_update_count = self.render_gui_update_count + 1
-            if self.render_gui_update_count % 8 == 0: # we need quick updates for stop accuracy, but slower gui updating
-                self.render_gui_update_count = 1
-            return
+            self.stop_ticker()
 
         # If we're out of active range seek end.
         if current_frame >= self.get_active_length():
-            #Gdk.threads_enter()
-            #self.seek_frame(current_frame)
-            #Gdk.threads_leave()
+            self.seek_frame(current_frame)
             return
 
         # If trim looping and past loop end, start from loop start
@@ -359,7 +331,6 @@ class Player:
             self.producer.set_speed(1)
 
         # Frame displayers update
-        Gdk.threads_enter()
         if timeline_visible() == False:
             updater.update_frame_displayers(current_frame)
         else:
@@ -368,7 +339,6 @@ class Player:
             if range_moved == False:
                 # Just display tline
                 updater.update_frame_displayers(current_frame)
-        Gdk.threads_leave()
         
     def get_active_length(self):
         # Displayed range is different
@@ -378,70 +348,14 @@ class Player:
         else:
             return gui.pos_bar.producer.get_length()
 
-    def get_render_fraction(self):
-        if self.render_stop_frame == -1:
-            return float(self.producer.frame()) / float(self.producer.get_length() - 1)
-        else:
-            return float(self.producer.frame() - self.render_start_frame) / float(self.render_stop_frame - self.render_start_frame)
-   
-    def start_rendering(self, render_consumer, start_frame=0, stop_frame=-1):
-        if stop_frame == -1:
-            stop_frame = self.producer.get_length() - 1
-        
-        if stop_frame >= self.producer.get_length() - 1:
-            self.wait_for_producer_end_stop = True
-        else:
-            self.wait_for_producer_end_stop = False
-                
-        print("start_rendering(), start frame :" + str(start_frame) + ", stop_frame: " + str(stop_frame))
-        self.ticker.stop_ticker()
-        self.consumer.stop()
-        self.producer.set_speed(0)
-        self.producer.seek(start_frame)
-        time.sleep(0.5) # We need to be at correct frame before starting rendering or first frame may get dropped
-        self.render_start_frame = start_frame
-        self.render_stop_frame = stop_frame
-        self.consumer = render_consumer
-        self.consumer.connect(self.producer)
-        self.consumer.start()
-        self.producer.set_speed(1)
-        self.is_rendering = True
-        #self.render_callbacks.save_render_start_time()
-        self.ticker.start_ticker(RENDER_TICKER_DELAY)
-
-    def stop_rendering(self):
-        print("stop_rendering, producer frame: " + str(self.producer.frame()))
-        # Stop render
-        # This method of stopping makes sure that whole producer is rendered and written to disk
-        if self.wait_for_producer_end_stop:
-            while self.producer.get_speed() > 0:
-                time.sleep(0.2)
-            while not self.consumer.is_stopped():
-                time.sleep(0.2)
-        # This method of stopping stops producer
-        # and waits for consumer to reach that frame.
-        else:
-            self.producer.set_speed(0)
-            last_frame = self.producer.frame()
-            # Make sure consumer renders all frames before exiting
-            while self.consumer.position() + 1 < last_frame:
-                time.sleep(0.2)
-            self.consumer.stop()
-        
-        # Exit render state
-        self.is_rendering = False
-        self.ticker.stop_ticker()
-        self.producer.set_speed(0)
-
-        # Enter monitor playback state
-        self.consumer = self.sdl_consumer
-        Gdk.threads_enter()
-        self.connect_and_start()
-        Gdk.threads_leave()
-        self.seek_frame(0)
-
     def shutdown(self):
-        self.ticker.stop_ticker()
+        self.stop_ticker()
         self.producer.set_speed(0)
         self.consumer.stop()
 
+    def start_ticker(self):
+        self.ticker = utilsgtk.GtkTicker(self._ticker_event, TICKER_DELAY)
+        self.ticker.start_ticker()
+    
+    def stop_ticker(self):
+        self.ticker.destroy_ticker()
