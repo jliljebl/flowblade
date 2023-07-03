@@ -881,7 +881,7 @@ def show_splash_screen():
     splash_screen.set_resizable(False)
 
     while(Gtk.events_pending()):
-        Gtk.main_iteration()
+        Gtk.main_iteration() # GLib.MainContext to replace this
 
 def destroy_splash_screen():
     splash_screen.destroy()
@@ -1006,8 +1006,8 @@ def _show_failed_environment_info():
     
 def _early_exit(dialog, response):
     dialog.destroy()
-    # Exit gtk main loop.
-    Gtk.main_quit() 
+
+    _app.quit()
 
 # ------------------------------------------------------- logging
 def log_print_output_to_file():
@@ -1020,6 +1020,10 @@ def log_print_output_to_file():
 
 # ------------------------------------------------------ shutdown
 def shutdown():
+    if jobs.get_active_jobs_count() != 0:
+        dialogs.active_jobs_info(jobs.get_active_jobs_count())
+        return True
+
     if projectaction.was_edited_since_last_save() == False:
         _shutdown_dialog_callback(None, None, True)
         return True
@@ -1106,13 +1110,5 @@ def _app_destroy():
     except:
         print("Delete autosave file FAILED!")
 
-    do_gtk_main_quit = jobs.handle_shutdown(get_instance_autosave_file())
-    
-    # Exit gtk main loop if no jobs unfinished.
-    if do_gtk_main_quit == True:
-        # Close app.
-        _app.quit()
-    else:
-        # Jobs launches its own top level window to show progress of unfinished jobs renders
-        # and does Gtk.main_quit() later when done.
-        pass
+    _app.quit()
+
