@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -198,6 +198,10 @@ class LoadThread(threading.Thread):
 
         self.post_open_work_done = True
         
+        # Show info on killed compositors.
+        if persistance.dead_compositors > 0:
+            dialogs.show_dead_compositors(persistance.dead_compositors)
+
     def _exit_on_file_not_found_error(self, e, ticker):
         print("LoadThread.run() - FileProducerNotFoundError")
         self._error_stop(self.dialog, ticker)

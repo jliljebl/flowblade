@@ -2,7 +2,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2012 Janne Liljeblad.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -2011,4 +2011,10 @@ def refuse_to_empty_default_notebook_dialog():
 def active_jobs_info(active_jobs_count):
     primary_txt =  _("There are currenly ") + str(active_jobs_count) + _(" active job/s!")
     secondary_txt = _("Let active jobs complete or cancel them before closing the application.")
+    dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)
+
+def show_dead_compositors(number_of_dead_compositors):
+    primary_txt = _("Unable to load some Compositors!")
+    secondary_txt = _("MLT version 7 removed several services that were used to implement Compositors in Flowblade.\n\nYour Project had ") \
+                    + str(number_of_dead_compositors) + _(" Compositor/s in it that cannot be loaded.")
     dialogutils.info_message(primary_txt, secondary_txt, gui.editor_window.window)

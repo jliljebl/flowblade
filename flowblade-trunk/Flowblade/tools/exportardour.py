@@ -4,7 +4,7 @@
     Flowblade Movie Editor is a nonlinear video editor.
     Copyright 2019 Janne Liljeblad and contributors.
 
-    This file is part of Flowblade Movie Editor <http://code.google.com/p/flowblade>.
+    This file is part of Flowblade Movie Editor <https://github.com/jliljebl/flowblade/>.
 
     Flowblade Movie Editor is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
