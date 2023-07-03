@@ -3406,48 +3406,6 @@ def get_all_tracks_popup_menu(event, callback):
         
     menu.popup(None, None, None, None, event.button, event.time)
 
-def get_audio_levels_popup_menu(event, callback):
-    # needs renaming, we have more stuff here now
-    menu = levels_menu
-    guiutils.remove_children(menu)
-
-    thumbs_item = Gtk.CheckMenuItem()
-    thumbs_item.set_label(_("Display Clip Media Thumbnails"))
-    thumbs_item.set_active(editorstate.display_clip_media_thumbnails)
-    thumbs_item.connect("activate", callback, "thumbs")
-
-    menu.append(thumbs_item)
-
-    allways_item = Gtk.CheckMenuItem()
-    allways_item.set_label(_("Display Audio Levels"))
-    allways_item.set_active(editorstate.display_all_audio_levels)
-    allways_item.connect("activate", callback, "all")
-        
-    menu.append(allways_item)
-    
-    _add_separetor(menu)
-
-    snapping_item = Gtk.CheckMenuItem()
-    snapping_item.set_label(_("Snapping On"))
-    snapping_item.set_active(snapping.snapping_on)
-    snapping_item.connect("activate", callback, "snapping")
-
-    menu.append(snapping_item)
-    
-    _add_separetor(menu)
-
-    scrub_item = Gtk.CheckMenuItem()
-    scrub_item.set_label(_("Audio scrubbing"))
-    scrub_item.set_active(editorpersistance.prefs.audio_scrubbing)
-    scrub_item.connect("activate", callback, "scrubbing")
-
-    menu.append(scrub_item)
-    
-    _add_separetor(menu)
-
-    menu.show_all()
-    menu.popup(None, None, None, None, event.button, event.time)
-
 def get_clip_effects_editor_hamburger_menu(event, callback):
     menu = clip_effects_hamburger_menu
     guiutils.remove_children(menu)
