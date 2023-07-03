@@ -400,6 +400,8 @@ class FlowbladeApplication(Gtk.Application):
         global disk_cache_timeout_id
         disk_cache_timeout_id = GLib.timeout_add(2500, check_disk_cache_size)
 
+        editorstate.app = self
+        
         self.add_window(_window)
 
 

@@ -3379,37 +3379,6 @@ def get_text_scroll_widget(text, size):
 
     return sw
 
-# Aug-2019 - SvdB - BB - Need to add w/h
-def get_markers_menu_launcher(callback, pixbuf, w=22, h=22):
-    m_launch = PressLaunch(callback, pixbuf, w, h)
-    return m_launch
-
-def get_markers_popup_menu(event, callback):
-    seq = current_sequence()
-    markers_exist = len(seq.markers) != 0
-    menu = markers_menu
-    guiutils.remove_children(menu)
-    if markers_exist:
-        for i in range(0, len(seq.markers)):
-            marker = seq.markers[i]
-            name, frame = marker
-            item_str  = utils.get_tc_string(frame) + " " + name
-            menu.add(_get_menu_item(item_str, callback, str(i) ))
-        _add_separetor(menu)
-    else:
-        no_markers_item = _get_menu_item(_("No Markers"), callback, "dummy", False)
-        menu.add(no_markers_item)
-        _add_separetor(menu)
-    menu.add(_get_menu_item(_("Add Marker"), callback, "add" ))
-    del_item = _get_menu_item(_("Delete Marker"), callback, "delete", markers_exist==True)
-    menu.add(del_item)
-    del_all_item = _get_menu_item(_("Delete All Markers"), callback, "deleteall", markers_exist==True)
-    menu.add(del_all_item)
-    rename_item = _get_menu_item(_("Rename Marker"), callback, "rename", markers_exist==True)
-    menu.add(rename_item)
-    menu.show_all()
-    menu.popup(None, None, None, None, event.button, event.time)
-
 def get_all_tracks_popup_menu(event, callback):
     menu = tracks_menu
     guiutils.remove_children(menu)
@@ -3886,6 +3855,18 @@ class PressLaunch:
         self.prelight_on = True 
         self.callback(self.widget, event)
 
+class PressLaunchPopover(PressLaunch):
+    def __init__(self, callback, surface, w=22, h=22):
+
+        # Popovers need access to launcher object.
+
+        PressLaunch.__init__(self, callback, surface, w, h)
+
+    def _press_event(self, event):
+        self.ignore_next_leave = True
+        self.prelight_on = True 
+        self.callback(self, self.widget, event)
+        
 
 class ImageMenuLaunch(PressLaunch):
     def __init__(self, callback, surface_list, w=22, h=22):

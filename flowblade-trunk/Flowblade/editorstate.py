@@ -51,6 +51,9 @@ MULTI_TRIM = 15
 SDL_1 = 1
 SDL_2 = 2
 
+# Gtk.Application object for main app. 
+app = None
+
 # Project being edited
 project = None
 
@@ -174,6 +177,10 @@ def current_tline_frame():
         return PLAYER().current_frame()
     else:
         return tline_shadow_frame
+
+
+def APP():
+    return app
 
 def PROJECT():
     return project

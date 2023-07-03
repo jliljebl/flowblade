@@ -46,6 +46,7 @@ import dialogutils
 import glassbuttons
 import gui
 import guicomponents
+import guipopover
 import guiutils
 import edit
 import editevent
@@ -1057,10 +1058,11 @@ def _timeline_has_focus(): # copied from keyevents.by. maybe put in utils?
     return False
 
 #------------------------------------------- markers
-def marker_menu_lauch_pressed(widget, event):
-    guicomponents.get_markers_popup_menu(event, _marker_menu_item_activated)
+def marker_menu_lauch_pressed(launcher, widget, event):
+    guipopover.markers_menu_show(launcher, widget, _marker_menu_item_activated)
 
-def _marker_menu_item_activated(widget, msg):
+def _marker_menu_item_activated(action, event, msg):
+
     current_frame = PLAYER().current_frame()
     mrk_index = -1
     for i in range(0, len(current_sequence().markers)):

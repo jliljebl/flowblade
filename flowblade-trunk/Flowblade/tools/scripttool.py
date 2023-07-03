@@ -20,7 +20,6 @@
 
 import gi
 gi.require_version('Gtk', '3.0')
-#gi.require_version('PangoCairo', '1.0')
 
 from gi.repository import GObject, GLib, Gio
 from gi.repository import Gtk, Gdk, GdkPixbuf
@@ -108,8 +107,6 @@ _render_data = None # toolsencoding.ToolsRenderData object
 _encoding_panel = None
 
 _delay_timeout_id = -1
-
-builder = Gtk.Builder()
 
 _hamburger_popover = None
 
