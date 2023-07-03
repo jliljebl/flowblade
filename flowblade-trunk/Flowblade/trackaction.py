@@ -29,6 +29,7 @@ import audiomonitoring
 import dialogutils
 import gui
 import guicomponents
+import guipopover
 import editorstate
 #import edit
 import editorpersistance
@@ -212,23 +213,26 @@ def _activate_only_current_top_active():
 
     gui.tline_column.widget.queue_draw()
     
-def audio_levels_menu_launch_pressed(widget, event):
-    guicomponents.get_audio_levels_popup_menu(event, _audio_levels_item_activated)
+def tline_properties_menu_launch_pressed(launcher, widget, event):
+    guipopover.tline_properties_menu_show(launcher, widget, _tline_properties_item_activated)
 
-# THIS HANDLES MORE NOW, NAME _audio_levels_item_activated name needs changing
-def _audio_levels_item_activated(widget, msg):
+def _tline_properties_item_activated(action, event, msg):
+    new_state = not(action.get_state().get_boolean())
+    
     if msg == "all":
-        editorstate.display_all_audio_levels = widget.get_active()
+        editorstate.display_all_audio_levels = new_state
         updater.repaint_tline()
     elif msg == "snapping":
-        snapping.snapping_on = widget.get_active()
+        snapping.snapping_on = new_state
     elif msg == "scrubbing":
-        editorpersistance.prefs.audio_scrubbing = widget.get_active()
+        editorpersistance.prefs.audio_scrubbing = new_state
         editorpersistance.save()
-        PLAYER().set_scrubbing(widget.get_active())
+        PLAYER().set_scrubbing(new_state)
     else: # media thumbnails
-        editorstate.display_clip_media_thumbnails = widget.get_active()
+        editorstate.display_clip_media_thumbnails = new_state
         updater.repaint_tline()
+
+    action.set_state(GLib.Variant.new_boolean(new_state))
 
 # ------------------------------------------------------------- mouse events
 def track_active_switch_pressed(data):

@@ -614,8 +614,7 @@ class EditorWindow:
         tracks_launcher.connect_launched_menu(guicomponents.tracks_menu)
 
         levels_launcher_surface = guiutils.get_cairo_image("audio_levels_menu_launch")
-        levels_launcher = guicomponents.PressLaunch(trackaction.audio_levels_menu_launch_pressed, levels_launcher_surface, 22*size_adj, 22*size_adj)
-        levels_launcher.connect_launched_menu(guicomponents.levels_menu)
+        levels_launcher = guicomponents.PressLaunchPopover(trackaction.tline_properties_menu_launch_pressed, levels_launcher_surface, 22*size_adj, 22*size_adj)
 
         # Timeline top row
         tline_hbox_1 = Gtk.HBox()
