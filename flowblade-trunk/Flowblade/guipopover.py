@@ -20,8 +20,10 @@
 
 from gi.repository import Gio, Gtk, GLib
 
+import appconsts
 from editorstate import APP
 from editorstate import current_sequence
+from editorstate import PROJECT
 import editorpersistance
 import editorstate
 import guicomponents
@@ -33,6 +35,8 @@ _markers_popover = None
 _markers_menu = None
 _tline_properties_popover = None
 _tline_properties_menu = None
+_all_tracks_popover = None
+_all_tracks_menu = None
 
 
 # -------------------------------------------------- menuitems builder fuctions
@@ -126,3 +130,34 @@ def tline_properties_menu_show(launcher, widget, callback):
     launcher.connect_launched_menu(_tline_properties_popover)
     _tline_properties_popover.show()
 
+def all_tracks_menu_show(launcher, widget, callback):
+    global _all_tracks_popover, _all_tracks_menu
+
+    if _all_tracks_menu != None:
+        _all_tracks_menu.remove_all()
+    else:
+        _all_tracks_menu = Gio.Menu.new()
+
+    maximize_section = Gio.Menu.new()
+    add_menu_action(maximize_section, _("Maximize Tracks"), "midbar.all.alltracks", "max" , callback)
+    add_menu_action(maximize_section, _("Maximize Video Tracks"), "midbar.all.videotracks", "maxvideo" , callback)
+    add_menu_action(maximize_section, _("Maximize Audio Tracks"), "midbar.all.audiotracks", "maxaudio" , callback)
+    _all_tracks_menu.append_section(None, maximize_section)
+
+    minimize_section = Gio.Menu.new()
+    add_menu_action(minimize_section, _("Minimize Tracks"), "midbar.all.minimize", "min" , callback)
+    _all_tracks_menu.append_section(None, minimize_section)
+    
+    activate_section = Gio.Menu.new()
+    add_menu_action(activate_section, _("Activate All Tracks"), "midbar.all.allactive", "allactive" , callback)
+    add_menu_action(activate_section, _("Activate Only Current Top Active Track"), "midbar.all.topactiveonly", "topactiveonly" , callback)
+    _all_tracks_menu.append_section(None, activate_section)
+
+    expand_section = Gio.Menu.new()
+    add_menu_action_check(expand_section, _("Expand Track on First Item Drop"), "midbar.tlineproperties.expand", editorpersistance.prefs.auto_expand_tracks, "autoexpand_on_drop", callback)
+    add_menu_action_check(expand_section, _("Vertical Shrink Timeline"), "midbar.tlineproperties.shrink", PROJECT().get_project_property(appconsts.P_PROP_TLINE_SHRINK_VERTICAL), "shrink", callback)
+    _all_tracks_menu.append_section(None, expand_section)
+
+    _all_tracks_popover = Gtk.Popover.new_from_model(widget, _all_tracks_menu)
+    launcher.connect_launched_menu(_all_tracks_popover)
+    _all_tracks_popover.show()

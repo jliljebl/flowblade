@@ -155,10 +155,10 @@ def mute_track(track, new_mute_state):
     current_sequence().set_track_mute_state(track.id, new_mute_state)
     gui.tline_column.widget.queue_draw()
     
-def all_tracks_menu_launch_pressed(widget, event):
-    guicomponents.get_all_tracks_popup_menu(event, _all_tracks_item_activated)
+def all_tracks_menu_launch_pressed(launcher, widget, event):
+    guipopover.all_tracks_menu_show(launcher, widget, _all_tracks_item_activated)
 
-def _all_tracks_item_activated(widget, msg):
+def _all_tracks_item_activated(action, event, msg):
     if msg == "min":
         current_sequence().minimize_tracks_height()
         _tracks_resize_update()
@@ -182,11 +182,15 @@ def _all_tracks_item_activated(widget, msg):
         _activate_only_current_top_active()
     
     if msg == "shrink":
-         _tline_vertical_shrink_changed(widget)
-    
+        new_state = not(action.get_state().get_boolean())
+        _tline_vertical_shrink_changed(new_state)
+        action.set_state(GLib.Variant.new_boolean(new_state))
+            
     if msg == "autoexpand_on_drop":
-        editorpersistance.prefs.auto_expand_tracks = widget.get_active()
+        new_state = not(action.get_state().get_boolean())
+        editorpersistance.prefs.auto_expand_tracks = new_state
         editorpersistance.save()
+        action.set_state(GLib.Variant.new_boolean(new_state))
         
 def _tracks_resize_update():
     tlinewidgets.set_ref_line_y(gui.tline_canvas.widget.get_allocation())
@@ -194,8 +198,8 @@ def _tracks_resize_update():
     updater.repaint_tline()
     gui.tline_column.widget.queue_draw()
 
-def _tline_vertical_shrink_changed(widget):
-    PROJECT().project_properties[appconsts.P_PROP_TLINE_SHRINK_VERTICAL] = widget.get_active()
+def _tline_vertical_shrink_changed(do_shrink):
+    PROJECT().project_properties[appconsts.P_PROP_TLINE_SHRINK_VERTICAL] = do_shrink
     updater.set_timeline_height()
 
 def _activate_all_tracks():

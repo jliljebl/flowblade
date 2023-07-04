@@ -610,8 +610,8 @@ class EditorWindow:
         markers_launcher = guipopover.markers_menu_launcher(tlineaction.marker_menu_lauch_pressed, marker_surface, 22*size_adj, 22*size_adj)
         
         tracks_launcher_surface = guiutils.get_cairo_image("track_menu_launch")
-        tracks_launcher = guicomponents.PressLaunch(trackaction.all_tracks_menu_launch_pressed, tracks_launcher_surface, 22*size_adj, 22*size_adj)
-        tracks_launcher.connect_launched_menu(guicomponents.tracks_menu)
+        tracks_launcher = guicomponents.PressLaunchPopover(trackaction.all_tracks_menu_launch_pressed, tracks_launcher_surface, 22*size_adj, 22*size_adj)
+        #tracks_launcher.connect_launched_menu(guicomponents.tracks_menu)
 
         levels_launcher_surface = guiutils.get_cairo_image("audio_levels_menu_launch")
         levels_launcher = guicomponents.PressLaunchPopover(trackaction.tline_properties_menu_launch_pressed, levels_launcher_surface, 22*size_adj, 22*size_adj)

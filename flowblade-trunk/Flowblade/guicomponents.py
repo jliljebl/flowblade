@@ -3379,33 +3379,6 @@ def get_text_scroll_widget(text, size):
 
     return sw
 
-def get_all_tracks_popup_menu(event, callback):
-    menu = tracks_menu
-    guiutils.remove_children(menu)
-    menu.add(_get_menu_item(_("Maximize Tracks"), callback, "max" ))
-    menu.add(_get_menu_item(_("Maximize Video Tracks"), callback, "maxvideo" ))
-    menu.add(_get_menu_item(_("Maximize Audio Tracks"), callback, "maxaudio" ))
-    _add_separetor(menu)
-    menu.add(_get_menu_item(_("Minimize Tracks"), callback, "min" ))
-    _add_separetor(menu)
-    menu.add(_get_menu_item(_("Activate All Tracks"), callback, "allactive" ))
-    menu.add(_get_menu_item(_("Activate Only Current Top Active Track"), callback, "topactiveonly" ))
-    _add_separetor(menu)
-    expand_tline_item = Gtk.CheckMenuItem(_("Expand Track on First Item Drop"))
-    expand_tline_item.set_active(editorpersistance.prefs.auto_expand_tracks)
-    expand_tline_item.show()
-    expand_tline_item.connect("toggled", callback, "autoexpand_on_drop")
-    menu.append(expand_tline_item)
-    shrink_tline_item = Gtk.CheckMenuItem(_("Vertical Shrink Timeline"))
-    shrink_tline_item.set_active(PROJECT().get_project_property(appconsts.P_PROP_TLINE_SHRINK_VERTICAL))
-    shrink_tline_item.show()
-    shrink_tline_item.connect("toggled", callback, "shrink" )
-    if len(current_sequence().tracks) == 11:
-        shrink_tline_item.set_sensitive(False) # This can't do anything if 9 editable tracks in sequence
-    menu.append(shrink_tline_item)
-        
-    menu.popup(None, None, None, None, event.button, event.time)
-
 def get_clip_effects_editor_hamburger_menu(event, callback):
     menu = clip_effects_hamburger_menu
     guiutils.remove_children(menu)
