@@ -584,13 +584,26 @@
         <property name="2" args="range_in=0,100 range_out=0,1.0 displayname=Shift!Intensity">0.5</property>
         <property name="3" args="range_in=0,100 range_out=0,1.0 displayname=Color!Intensity">0.5</property>
     </filter>
-
+    <filter id="frei0r.edgeglow">
+        <name>Edge Glow</name>
+        <group>Artistic</group>
+        <property name="lthresh" args="range_in=0,100 range_out=0,1 displayname=Edge!Lightning">0.5</property>
+        <property name="lupscale" args="range_in=0,100 range_out=0,1 displayname=Edge!Brightness">0.5</property>
+        <property name="lredscale" args="range_in=0,100 range_out=0,1 displayname=Non-Edge!Brightness">0.0</property>
+    </filter>
+    <filter id="frei0r.sobel">
+        <name>Sobel</name>
+        <group>Artistic</group>
+    </filter>
+    
+    
     <!-- BLEND -->
     <filter id="cairoblend_mode">
         <name>Blend Mode</name>
         <group>Blend</group>
         <property name="mode" args="editor=combobox displayname=Blend!Mode exptype=default cbopts=Normal:normal,Add:add,Saturate:saturate,Multiply:multiply,Screen:screen,Overlay:overlay,Darken:darken,Lighten:lighten,ColorDodge:colordodge,Colorburn:colorburn,Hardlight:hardlight,Softlight:softlight,Difference:difference,Exclusion:exclusion,HSLHue:hslhue,HSLSaturation:hslsaturation,HSLColor:hslcolor,HSLLuminosity:hslluminosity">normal</property>
     </filter>
+
 
     <!-- BLUR -->
     <filter id="frei0r.pixeliz0r">
@@ -623,7 +636,6 @@
         <group>Blur</group>
         <property name="noise" args="range_in=0,100 range_out=0,1.0 displayname=Amount">0.2</property>
     </filter>
-
 
 
     <!-- COLOR -->
@@ -958,21 +970,6 @@
     </filter>
     
     
-    
-    <!-- EDGE -->
-    <filter id="frei0r.edgeglow">
-        <name>Edge Glow</name>
-        <group>Edge</group>
-        <property name="lthresh" args="range_in=0,100 range_out=0,1 displayname=Edge!Lightning">0.5</property>
-        <property name="lupscale" args="range_in=0,100 range_out=0,1 displayname=Edge!Brightness">0.5</property>
-        <property name="lredscale" args="range_in=0,100 range_out=0,1 displayname=Non-Edge!Brightness">0.0</property>
-    </filter>
-    <filter id="frei0r.sobel">
-        <name>Sobel</name>
-        <group>Edge</group>
-    </filter>
-
-
 
     <!-- FIX -->
     <filter id="frei0r.hqdn3d">
