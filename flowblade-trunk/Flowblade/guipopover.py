@@ -208,8 +208,9 @@ def media_panel_popover_show(widget, x, y, callback):
     rect.y = y
     rect.width = 2
     rect.height = 2
-    
+
     _media_panel_popover = Gtk.Popover.new_from_model(widget, _media_panel_menu)
+    _media_panel_popover.set_position(Gtk.PositionType(Gtk.PositionType.BOTTOM))
     _media_panel_popover.set_pointing_to(rect) 
     _media_panel_popover.show()
 
