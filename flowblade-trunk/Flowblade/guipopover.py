@@ -69,7 +69,15 @@ def add_menu_action_radio(menu, label, item_id, target_variant):
     menu_item.set_action_and_target_value("app." + item_id, target_variant)
     menu.append_item(menu_item)
 
-
+# --------------------------------------------------- helper functions
+def menu_clear_or_create(menu):
+    if menu != None:
+        menu.remove_all()
+    else:
+        menu = Gio.Menu.new()
+    
+    return menu
+        
 # --------------------------------------------------- popover builder functions
 def markers_menu_launcher(callback, pixbuf, w=22, h=22):
     launch = guicomponents.PressLaunchPopover(callback, pixbuf, w, h)
@@ -78,10 +86,7 @@ def markers_menu_launcher(callback, pixbuf, w=22, h=22):
 def markers_menu_show(launcher, widget, callback):
     global _markers_popover, _markers_menu
 
-    if _markers_menu != None:
-        _markers_menu.remove_all()
-    else:
-        _markers_menu = Gio.Menu.new()
+    _markers_menu = menu_clear_or_create(_markers_menu)
     
     seq = current_sequence()
     markers_exist = len(seq.markers) != 0
@@ -111,10 +116,7 @@ def markers_menu_show(launcher, widget, callback):
 def tline_properties_menu_show(launcher, widget, callback):
     global _tline_properties_popover, _tline_properties_menu
 
-    if _tline_properties_menu != None:
-        _tline_properties_menu.remove_all()
-    else:
-        _tline_properties_menu = Gio.Menu.new()
+    _tline_properties_menu = menu_clear_or_create(_tline_properties_menu)
 
     display_section = Gio.Menu.new()
     add_menu_action_check(display_section, _("Display Clip Media Thumbnails"), "midbar.tlineproperties.thumb", editorstate.display_clip_media_thumbnails, "thumbs", callback)
@@ -136,10 +138,7 @@ def tline_properties_menu_show(launcher, widget, callback):
 def all_tracks_menu_show(launcher, widget, callback):
     global _all_tracks_popover, _all_tracks_menu
 
-    if _all_tracks_menu != None:
-        _all_tracks_menu.remove_all()
-    else:
-        _all_tracks_menu = Gio.Menu.new()
+    _all_tracks_menu = menu_clear_or_create(_all_tracks_menu)
 
     maximize_section = Gio.Menu.new()
     add_menu_action(maximize_section, _("Maximize Tracks"), "midbar.all.alltracks", "max" , callback)
@@ -168,10 +167,7 @@ def all_tracks_menu_show(launcher, widget, callback):
 def compositing_mode_menu_show(launcher, widget, callback):
     global _compositing_mode_popover, _compositing_mode_menu
 
-    if _compositing_mode_menu != None:
-        _compositing_mode_menu.remove_all()
-    else:
-        _compositing_mode_menu = Gio.Menu.new()
+    _compositing_mode_menu = menu_clear_or_create(_compositing_mode_menu)
 
     # Create menu, menuitems and variants 
     mode_section = Gio.Menu.new()
@@ -200,10 +196,7 @@ def compositing_mode_menu_show(launcher, widget, callback):
 def media_panel_popover_show(widget, x, y, callback):
     global _media_panel_popover, _media_panel_menu
 
-    if _media_panel_menu != None:
-        _media_panel_menu.remove_all()
-    else:
-        _media_panel_menu = Gio.Menu.new()
+    _media_panel_menu = menu_clear_or_create(_media_panel_menu)
 
     section = Gio.Menu.new()
     add_menu_action(section, _("Add Video, Audio or Image..."), "mediapanel.addvideo",  "add media", callback)
