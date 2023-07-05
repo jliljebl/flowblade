@@ -223,6 +223,7 @@ def load_filters_translations():
     filter_names["Grain"]= _("Grain")
 
     filter_names["Grayscale"]= _("Grayscale")
+    filter_names["Grayscale Luminance"]= _("Grayscale Luminance")
     filter_names["Contrast"]= _("Contrast")
     filter_names["Saturation"]= _("Saturation")
     filter_names["Invert"]= _("Invert")

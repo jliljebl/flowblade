@@ -643,6 +643,10 @@
         <name>Grayscale</name>
         <group>Color</group>
     </filter>
+    <filter id="frei0r.bw0r">
+        <name>Grayscale Luminance</name>
+        <group>Color</group>
+    </filter>
     <filter id="frei0r.contrast0r">
         <name>Contrast</name>
         <group>Color</group>
