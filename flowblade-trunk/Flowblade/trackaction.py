@@ -158,7 +158,7 @@ def mute_track(track, new_mute_state):
 def all_tracks_menu_launch_pressed(launcher, widget, event):
     guipopover.all_tracks_menu_show(launcher, widget, _all_tracks_item_activated)
 
-def _all_tracks_item_activated(action, event, msg):
+def _all_tracks_item_activated(action, variant, msg):
     if msg == "min":
         current_sequence().minimize_tracks_height()
         _tracks_resize_update()

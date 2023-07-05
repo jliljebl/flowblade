@@ -931,17 +931,10 @@ def _hamburger_menu_item_selected(widget, msg):
         
         move_files_to_bin(target_bin_index, moved_files)
 
-def media_panel_popup_requested(event):
-    panel_menu = media_panel_popup_menu
-    
-    guiutils.remove_children(panel_menu)
+def media_panel_popup_requested(widget, event):
+    guipopover. media_panel_popover_show(widget, event.x, event.y, _media_panel_menu_item_selected)
 
-    panel_menu.add(guiutils.get_menu_item(_("Add Video, Audio or Image..."), _media_panel_menu_item_selected, "add media", ))
-    panel_menu.add(guiutils.get_menu_item(_("Add Image Sequence..."), _media_panel_menu_item_selected, "add image sequence"))
-    
-    panel_menu.popup(None, None, None, None, event.button, event.time)
-
-def _media_panel_menu_item_selected(widget, msg):
+def _media_panel_menu_item_selected(action, variant, msg):
     if msg == "add media":
         add_media_files()
     elif msg == "add image sequence":

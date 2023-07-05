@@ -1287,7 +1287,7 @@ class MediaPanel():
     def empty_pressed(self, widget, event):
         self.clear_selection()
         if event.button == 3:
-            self.panel_menu_cb(event)
+            self.panel_menu_cb(widget, event)
 
     def select_all(self):
         self.clear_selection()

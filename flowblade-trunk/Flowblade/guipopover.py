@@ -18,7 +18,7 @@
     along with Flowblade Movie Editor.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from gi.repository import Gio, Gtk, GLib
+from gi.repository import Gio, Gtk, GLib, Gdk
 
 import appconsts
 from editorstate import APP
@@ -39,7 +39,8 @@ _all_tracks_popover = None
 _all_tracks_menu = None
 _compositing_mode_popover = None
 _compositing_mode_menu = None
-
+_media_panel_popover = None
+_media_panel_menu = None
 
 # -------------------------------------------------- menuitems builder fuctions
 def add_menu_action(menu, label, item_id, msg_str, callback):
@@ -110,7 +111,7 @@ def markers_menu_show(launcher, widget, callback):
 def tline_properties_menu_show(launcher, widget, callback):
     global _tline_properties_popover, _tline_properties_menu
 
-    if _markers_menu != None:
+    if _tline_properties_menu != None:
         _tline_properties_menu.remove_all()
     else:
         _tline_properties_menu = Gio.Menu.new()
@@ -196,4 +197,26 @@ def compositing_mode_menu_show(launcher, widget, callback):
     launcher.connect_launched_menu(_compositing_mode_popover)
     _compositing_mode_popover.show()
 
+def media_panel_popover_show(widget, x, y, callback):
+    global _media_panel_popover, _media_panel_menu
+
+    if _media_panel_menu != None:
+        _media_panel_menu.remove_all()
+    else:
+        _media_panel_menu = Gio.Menu.new()
+
+    section = Gio.Menu.new()
+    add_menu_action(section, _("Add Video, Audio or Image..."), "mediapanel.addvideo",  "add media", callback)
+    add_menu_action(section, _("Add Image Sequence..."), "mediapanel.addsequence", "add image sequence", callback)
+    _media_panel_menu.append_section(None, section)
+    
+    rect = Gdk.Rectangle()
+    rect.x = x
+    rect.y = y
+    rect.width = 2
+    rect.height = 2
+    
+    _media_panel_popover = Gtk.Popover.new_from_model(widget, _media_panel_menu)
+    _media_panel_popover.set_pointing_to(rect) 
+    _media_panel_popover.show()
 

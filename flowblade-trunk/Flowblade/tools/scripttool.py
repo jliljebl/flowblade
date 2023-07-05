@@ -1115,28 +1115,6 @@ class ScriptToolWindow(Gtk.Window):
         action.connect("activate", lambda w, e, msg:_hamburger_menu_callback(msg), msg_str)
         _app.add_action(action)
 
-    # This stuff is some testing.
-    """
-    def add_menu_action_check(self, menu, label, item_id, msg_str):
-        action = Gio.SimpleAction.new_stateful(name=item_id, parameter_type=None, state=GLib.Variant.new_boolean(True))
-        action.connect("activate", lambda w, e, msg:_hamburger_menu_callback(msg), msg_str)
-        _app.add_action(action)
-
-        menu_item = Gio.MenuItem.new(label, "app." + item_id)
-        menu_item.set_action_and_target_value( "app." + item_id, None)
-        menu.append_item(menu_item)
-
-    def add_menu_action_radio(self, menu, label, item_id, msg_str):
-        target_variat = GLib.Variant.new_string("stringiii")
-        action = Gio.SimpleAction.new_stateful(name=item_id, parameter_type= GLib.VariantType.new("s"), state=target_variat)
-        action.connect("activate", lambda w, e, msg:_hamburger_menu_callback(msg), msg_str)
-        _app.add_action(action)
-
-        menu_item = Gio.MenuItem.new(label, "app." + item_id)
-        menu_item.set_action_and_target_value( "app." + item_id, target_variat)
-        menu.append_item(menu_item)
-    """
-    
     def set_active_state(self, active):
         self.monitor.set_sensitive(active)
         self.pos_bar.widget.set_sensitive(active)
