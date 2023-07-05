@@ -611,7 +611,6 @@ class EditorWindow:
         
         tracks_launcher_surface = guiutils.get_cairo_image("track_menu_launch")
         tracks_launcher = guicomponents.PressLaunchPopover(trackaction.all_tracks_menu_launch_pressed, tracks_launcher_surface, 22*size_adj, 22*size_adj)
-        #tracks_launcher.connect_launched_menu(guicomponents.tracks_menu)
 
         levels_launcher_surface = guiutils.get_cairo_image("audio_levels_menu_launch")
         levels_launcher = guicomponents.PressLaunchPopover(trackaction.tline_properties_menu_launch_pressed, levels_launcher_surface, 22*size_adj, 22*size_adj)
@@ -673,8 +672,9 @@ class EditorWindow:
         sas = guiutils.get_cairo_image("standard_auto")
         fta = guiutils.get_cairo_image("full_track_auto")
         surfaces = [tds, tdds, sas, fta]
-        comp_mode_launcher = guicomponents.ImageMenuLaunch(projectaction.compositing_mode_menu_launched, surfaces, 22*size_adj, 20)
-        comp_mode_launcher.connect_launched_menu(projectaction.compositing_mode_menu)
+        comp_mode_launcher = guicomponents.ImageMenuLaunchPopover(projectaction.compositing_mode_menu_launched, surfaces, 22*size_adj, 20)
+        #comp_mode_launcher.connect_launched_menu(projectaction.compositing_mode_menu)
+
         comp_mode_launcher.surface_x = 0
         comp_mode_launcher.surface_y = 4
         comp_mode_launcher.widget.set_tooltip_markup(_("Current Sequence Compositing Mode"))

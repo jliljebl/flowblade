@@ -55,6 +55,7 @@ import dialogs
 import dialogutils
 import gui
 import guicomponents
+import guipopover
 import guiutils
 import edit
 import editorstate
@@ -2065,24 +2066,22 @@ def _update_gui_after_sequence_import(): # This copied  with small modifications
 
     updater. update_seqence_info_text()
 
-def compositing_mode_menu_launched(widget, event):
-    guiutils.remove_children(compositing_mode_menu)
-
-    comp_top_free = guiutils.get_image_menu_item(_("Compositors Free Move"), "top_down", change_current_sequence_compositing_mode_from_corner_menu)
-    comp_full_track = guiutils.get_image_menu_item(_("Standard Full Track"), "full_track_auto", change_current_sequence_compositing_mode_from_corner_menu)
+def compositing_mode_menu_launched(launcher, widget, event):
+    guipopover.compositing_mode_menu_show(launcher, widget,  change_current_sequence_compositing_mode_from_corner_menu)
     
-    comp_top_free.connect("activate", lambda w: change_current_sequence_compositing_mode_from_corner_menu(appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE))
-    comp_full_track.connect("activate", lambda w: change_current_sequence_compositing_mode_from_corner_menu(appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK))
+def change_current_sequence_compositing_mode_from_corner_menu(action, new_value_variant):
+    if new_value_variant.get_string() == "topdown":
+        new_compositing_mode = appconsts.COMPOSITING_MODE_TOP_DOWN_FREE_MOVE
+    else:
+        new_compositing_mode = appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK
 
-    compositing_mode_menu.add(comp_top_free)
-    compositing_mode_menu.add(comp_full_track)
-
-    compositing_mode_menu.popup(None, None, None, None, event.button, event.time)
-    
-def change_current_sequence_compositing_mode_from_corner_menu(new_compositing_mode):
+    # If new is same as old, do nothing
     if current_sequence().compositing_mode == new_compositing_mode:
         return 
-        
+    
+    action.set_state(new_value_variant)
+    guipopover._compositing_mode_popover.hide()
+    
     dialogs.confirm_compositing_mode_change(_compositing_mode_dialog_callback, new_compositing_mode)
 
 def change_current_sequence_compositing_mode(menu_widget, new_compositing_mode):

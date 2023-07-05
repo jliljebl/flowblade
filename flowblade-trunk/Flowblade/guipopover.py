@@ -37,6 +37,8 @@ _tline_properties_popover = None
 _tline_properties_menu = None
 _all_tracks_popover = None
 _all_tracks_menu = None
+_compositing_mode_popover = None
+_compositing_mode_menu = None
 
 
 # -------------------------------------------------- menuitems builder fuctions
@@ -56,14 +58,14 @@ def add_menu_action_check(menu, label, item_id, checked_state, msg_str, callback
     menu_item.set_action_and_target_value("app." + item_id, None)
     menu.append_item(menu_item)
 
-def add_menu_action_radio(menu, label, item_id, msg_str):
-    target_variat = GLib.Variant.new_string("stringiii")
-    action = Gio.SimpleAction.new_stateful(name=item_id, parameter_type= GLib.VariantType.new("s"), state=target_variat)
-    action.connect("activate", lambda w, e, msg:callback(msg), msg_str)
-    APP().add_action(action)
+def add_menu_action_radio(menu, label, item_id, target_variant):
+    #target_variant = GLib.Variant.new_string(value_str)
+    #action = Gio.SimpleAction.new_stateful(name=item_id, parameter_type=GLib.VariantType.new("s"), state=target_variant)
+    #action.connect("activate", callback, msg_str)
+    #APP().add_action(action)
 
-    menu_item = Gio.MenuItem.new(label, item_id)
-    menu_item.set_action_and_target_value(item_id, target_variat)
+    menu_item = Gio.MenuItem.new(label, "app." + item_id)
+    menu_item.set_action_and_target_value("app." + item_id, target_variant)
     menu.append_item(menu_item)
 
 
@@ -161,3 +163,37 @@ def all_tracks_menu_show(launcher, widget, callback):
     _all_tracks_popover = Gtk.Popover.new_from_model(widget, _all_tracks_menu)
     launcher.connect_launched_menu(_all_tracks_popover)
     _all_tracks_popover.show()
+
+def compositing_mode_menu_show(launcher, widget, callback):
+    global _compositing_mode_popover, _compositing_mode_menu
+
+    if _compositing_mode_menu != None:
+        _compositing_mode_menu.remove_all()
+    else:
+        _compositing_mode_menu = Gio.Menu.new()
+
+    # Create menu, menuitems and variants 
+    mode_section = Gio.Menu.new()
+    item_id = "compositing.compmode"
+    
+    target_variant_topdown = GLib.Variant.new_string("topdown")
+    add_menu_action_radio(mode_section, _("Compositors Free Move"), item_id, target_variant_topdown)
+    target_variant_fulltrack = GLib.Variant.new_string("fulltrackauto")
+    add_menu_action_radio(mode_section, _("Standard Full Track"), item_id, target_variant_fulltrack)
+
+    # Create action and set state variant
+    if current_sequence().compositing_mode == appconsts.COMPOSITING_MODE_STANDARD_FULL_TRACK:
+        target_variant = target_variant_fulltrack
+    else:
+        target_variant = target_variant_topdown
+    action = Gio.SimpleAction.new_stateful(name=item_id, parameter_type=GLib.VariantType.new("s"), state=target_variant)
+    action.connect("activate", callback)
+    APP().add_action(action)
+
+    _compositing_mode_menu.append_section(None, mode_section)
+
+    _compositing_mode_popover = Gtk.Popover.new_from_model(widget, _compositing_mode_menu)
+    launcher.connect_launched_menu(_compositing_mode_popover)
+    _compositing_mode_popover.show()
+
+
