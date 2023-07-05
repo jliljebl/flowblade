@@ -41,7 +41,9 @@ _compositing_mode_popover = None
 _compositing_mode_menu = None
 _media_panel_popover = None
 _media_panel_menu = None
-
+_sequecne_panel_popover = None
+_sequence_panel_menu = None
+ 
 # -------------------------------------------------- menuitems builder fuctions
 def add_menu_action(menu, label, item_id, msg_str, callback):
     menu.append(label, "app." + item_id) 
@@ -77,7 +79,16 @@ def menu_clear_or_create(menu):
         menu = Gio.Menu.new()
     
     return menu
-        
+
+def create_rect(x, y):
+    rect = Gdk.Rectangle()
+    rect.x = x
+    rect.y = y
+    rect.width = 2
+    rect.height = 2
+    
+    return rect
+
 # --------------------------------------------------- popover builder functions
 def markers_menu_launcher(callback, pixbuf, w=22, h=22):
     launch = guicomponents.PressLaunchPopover(callback, pixbuf, w, h)
@@ -203,14 +214,32 @@ def media_panel_popover_show(widget, x, y, callback):
     add_menu_action(section, _("Add Image Sequence..."), "mediapanel.addsequence", "add image sequence", callback)
     _media_panel_menu.append_section(None, section)
     
-    rect = Gdk.Rectangle()
-    rect.x = x
-    rect.y = y
-    rect.width = 2
-    rect.height = 2
+    rect = create_rect(x, y)
 
     _media_panel_popover = Gtk.Popover.new_from_model(widget, _media_panel_menu)
     _media_panel_popover.set_position(Gtk.PositionType(Gtk.PositionType.BOTTOM))
     _media_panel_popover.set_pointing_to(rect) 
     _media_panel_popover.show()
+
+def sequence_panel_popover_show(widget, x, y, callback):
+    global _sequecne_panel_popover, _sequence_panel_menu
+
+    _sequence_panel_menu = menu_clear_or_create(_sequence_panel_menu)
+
+    main_section = Gio.Menu.new()
+    add_menu_action(main_section, _("Add New Sequence"), "sequencepanel.add", "add sequence", callback)
+    add_menu_action(main_section, _("Edit Selected Sequence"), "sequencepanel.edit", "edit sequence", callback)
+    add_menu_action(main_section, _("Delete Selected Sequence"), "sequencepanel.delete", "delete sequence", callback)
+    _sequence_panel_menu.append_section(None, main_section)
+
+    container_section = Gio.Menu.new()
+    add_menu_action(container_section, _("Create Container Clip from Selected Sequence"), "sequencepanel.create", "compound clip", callback)
+    _sequence_panel_menu.append_section(None, container_section)
+
+    rect = create_rect(x, y)
+
+    _sequecne_panel_popover = Gtk.Popover.new_from_model(widget, _sequence_panel_menu)
+    _sequecne_panel_popover.set_position(Gtk.PositionType(Gtk.PositionType.BOTTOM))
+    _sequecne_panel_popover.set_pointing_to(rect) 
+    _sequecne_panel_popover.show()
 

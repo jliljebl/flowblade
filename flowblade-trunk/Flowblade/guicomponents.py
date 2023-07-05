@@ -562,7 +562,7 @@ class SequenceListView(ImageTextImageListView):
 
     def _button_press_event(self, widget, event):
         if event.button == 3:
-            self.sequence_popup_cb(event)
+            self.sequence_popup_cb(widget, event)
         # Double click handled separately
         if event.button == 1 and event.type == Gdk.EventType._2BUTTON_PRESS:
             self.double_click_counter += 1

@@ -89,9 +89,8 @@ import updater
 import userfolders
 import utils
 
-media_panel_popup_menu = Gtk.Menu()
+
 bin_popup_menu = Gtk.Menu()
-sequence_popup_menu = Gtk.Menu()
 hamburger_popup_menu = Gtk.Menu()
 compositing_mode_menu = Gtk.Menu()
 
@@ -1710,23 +1709,12 @@ def change_edit_sequence():
     app.change_current_sequence(row)
 
 def sequences_hamburger_pressed(widget, event):
-    sequence_panel_popup_requested(event)
+    sequence_panel_popup_requested(widget, event)
 
-def sequence_panel_popup_requested(event):
-    sequence_menu = sequence_popup_menu
-    
-    guiutils.remove_children(sequence_menu)
+def sequence_panel_popup_requested(widget, event):
+    guipopover.sequence_panel_popover_show(widget, event.x, event.y, _sequence_menu_item_selected)
 
-    sequence_menu.add(guiutils.get_menu_item(_("Add New Sequence"), _sequece_menu_item_selected, ("add sequence", None)))
-    sequence_menu.add(guiutils.get_menu_item(_("Edit Selected Sequence"), _sequece_menu_item_selected, ("edit sequence", None)))
-    sequence_menu.add(guiutils.get_menu_item(_("Delete Selected Sequence"), _sequece_menu_item_selected, ("delete sequence", None)))
-    guiutils.add_separetor(sequence_menu)
-    sequence_menu.add(guiutils.get_menu_item(_("Create Container Clip from Selected Sequence"), _sequece_menu_item_selected, ("compound clip", None)))
-    
-    sequence_menu.popup(None, None, None, None, event.button, event.time)    
-
-def _sequece_menu_item_selected(widget, data):
-    msg, bin_obj = data
+def _sequence_menu_item_selected(action, variable, msg):
     if msg == "add sequence":
         add_new_sequence()
     elif msg == "delete sequence":
