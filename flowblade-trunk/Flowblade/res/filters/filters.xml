@@ -123,6 +123,15 @@
         <property name="level" args="editor=no_editor">1</property>
         <property name="alpha" args="range_in=0,100 range_out=0,1 editor=keyframe_editor_clip_fade_filter exptype=keyframe_hcs displayname=Opacity">0=1</property>
     </filter>
+    <filter id="frei0r.premultiply">
+        <name>Unpremultiply</name>
+        <group>Alpha</group>   
+        <property name="threads" args="editor=no_editor">0</property>
+        <property name="0" args="editor=no_editor">1</property>
+    </filter>
+
+
+
     <!-- FADES -->
     <filter id="brightness">
         <name>Fade In</name>
@@ -145,6 +154,9 @@
         <property name="level" args="editor=no_editor">1</property>
         <property name="alpha" args="range_in=0,100 range_out=0,1 value_replacement=fade_in_out_replament editor=keyframe_editor_clip_fade_filter exptype=keyframe_hcs displayname=Opacity">0=1</property>
     </filter>
+
+
+
     <!-- FILTER MASK FILTERS -->
     <filter id="mask_start"  filtermaskfilter="Alpha Shape">
         <name>Mask - Begin</name>
@@ -176,20 +188,10 @@
         <property name="transition" args="editor=no_editor exptype=not_parsed">frei0r.composition</property>
         <property name="mlt_image_format" args="editor=no_editor exptype=not_parsed">rgb24a</property>
     </filter>
-    
-    
+
+
+
     <!-- AUDIO -->
-    <!-- DEPRECATED, replaced by non-multipart filter below 31.10.2020.  
-    <filter id="volume" multipart="true">
-        <name>Volume</name>
-        <group>Audio</group>
-        <multipartproperty multistartprop="gain" multiendprop="end" args="editor=keyframe_editor_release range_in=0,200 range_out=0.0,2.0 exptype=multipart_keyframe displayname=Volume">"0=1.0"</multipartproperty>
-        <property name="max_gain" args="editor=no_editor exptype=not_parsed">20dB</property>
-        <property name="track" args="editor=no_editor">0</property>
-        <property name="gain" args="editor=no_editor">1</property> 
-        <property name="end" args="editor=no_editor">1</property> 
-    </filter> 
-    -->
     <filter id="volume">
       <name>Volume</name>
       <group>Audio</group>
@@ -197,15 +199,6 @@
       <property name="max_gain" args="editor=no_editor">20dB</property>
       <property name="level" args="editor=keyframe_editor_release range_in=-70,20 range_out=-70,20 exptype=keyframe_hcs displayname=Volume!dB">0=0.0</property>
     </filter>
-    <!-- DEPRECATED, replaced by non-multipart filters below 31.10.2020.  
-    <filter id="panner" multipart="true">
-        <name>Pan Keyframed</name>
-        <group>Audio</group>
-        <multipartproperty multistartprop="start" multiendprop="end" args="editor=keyframe_editor_release range_in=-100,100 exptype=multipart_keyframe displayname=Left/Right">"0=0.5"</multipartproperty>
-        <property name="start" args="editor=no_editor">0.5</property>
-        <property name="end" args="editor=no_editor">0.5</property>   
-    </filter>
-    -->
     <filter id="panner">
         <name>Pan</name>
         <group>Audio</group>
@@ -243,6 +236,7 @@
         <property name="min_gain" args="range_in=-30,0 range_out=-30,0 editor=ladspa_slider displayname=Min!Gain">-15.0</property>
         <property name="max_rate" args="editor=no_editor">3.0</property>
     </filter>
+
 
 
     <!-- AUDIO FILTER -->
@@ -507,17 +501,6 @@
         <name>Scanlines</name>
         <group>Artistic</group>
     </filter>
-    <!--
-    <filter id="frei0r.keyspillm0pup">
-        <name>KeySpill</name>
-        <group>Artistic</group>
-    </filter>
-    <filter id="frei0r.medians">
-        <name>medians</name>
-        <group>Artistic</group>
-        <property name="Type" args="editor=combobox cbopts=Cross5:Cross5, Square3x3:Square3x3">Cross5</property>
-    </filter>
-    -->
     <filter id="frei0r.rgbsplit0r">
         <name>RGB Shift</name>
         <group>Artistic</group>
@@ -595,14 +578,16 @@
         <name>Sobel</name>
         <group>Artistic</group>
     </filter>
-    
-    
+
+
+
     <!-- BLEND -->
     <filter id="cairoblend_mode">
         <name>Blend Mode</name>
         <group>Blend</group>
         <property name="mode" args="editor=combobox displayname=Blend!Mode exptype=default cbopts=Normal:normal,Add:add,Saturate:saturate,Multiply:multiply,Screen:screen,Overlay:overlay,Darken:darken,Lighten:lighten,ColorDodge:colordodge,Colorburn:colorburn,Hardlight:hardlight,Softlight:softlight,Difference:difference,Exclusion:exclusion,HSLHue:hslhue,HSLSaturation:hslsaturation,HSLColor:hslcolor,HSLLuminosity:hslluminosity">normal</property>
     </filter>
+
 
 
     <!-- BLUR -->

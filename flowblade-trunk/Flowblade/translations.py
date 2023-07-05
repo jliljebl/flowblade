@@ -265,7 +265,6 @@ def load_filters_translations():
     filter_names["Shear"]= _("Shear")
     filter_names["Translate"]= _("Translate")
 
-    # 0.8 added
     filter_names["Color Select"]= _("Color Select")
     filter_names["Alpha Modify"]= _("Alpha Modify")
     filter_names["Spill Suppress"]= _("Spill Suppress")
@@ -323,6 +322,8 @@ def load_filters_translations():
     filter_names["Glitch"] = _("Glitch")
     filter_names["Trails"] = _("Trails")
     filter_names["Blend Mode"] = _("Blend Mode")
+    filter_names["Unpremultiply"] = _("Unpremultiply")
+    
     
     # param names
     global param_names
