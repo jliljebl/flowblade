@@ -249,9 +249,9 @@ class EditorWindow:
 
         icon_2 = guiutils.get_cairo_image("layout")
         if editorpersistance.prefs.double_track_hights == False:
-            layout_press = guicomponents.PressLaunch(editorlayout.show_layout_press_menu, icon_2, 24, 12)
+            layout_press = guicomponents.PressLaunchPopover(editorlayout.show_layout_press_menu, icon_2, 24, 12)
         else:
-            layout_press = guicomponents.PressLaunch(editorlayout.show_layout_press_menu, icon_2, 48, 24)
+            layout_press = guicomponents.PressLaunchPopover(editorlayout.show_layout_press_menu, icon_2, 48, 24)
             layout_press.surface_y = 13
             
         layout_press.widget.set_margin_top(1)

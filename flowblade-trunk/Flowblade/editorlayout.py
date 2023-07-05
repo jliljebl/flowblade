@@ -35,6 +35,7 @@ import dialogs
 import dialogutils
 import gui
 import guiutils
+import guipopover
 import utils
 
 # Transforms when adding panels.
@@ -525,20 +526,13 @@ def get_tabs_menu_item():
         
     return tabs_menu_item
 
-def show_layout_press_menu(widget, event):
-    menu = _top_bar_button_menu
-    guiutils.remove_children(menu)
-    _create_layout_presets_menu(menu)
-    #menu.connect("hide", _testing_hide)
-    
-    menu.popup(None, None, None, None, event.button, event.time)
+def show_layout_press_menu(launcher, widget, event):
+    guipopover.layout_menu_show(launcher, widget, _top_bar_menu_item_activated_popover)
 
-#def _testing_hide(widget):
-    #print("hide layout")
 
 def _create_layout_presets_menu(menu):
     callback = _top_bar_menu_item_activated
-    
+
     menu_item = guiutils.get_menu_item(_("Layout Monitor Left"), callback, "monitor_left")
     menu.add(menu_item)
 
@@ -562,6 +556,9 @@ def _create_layout_presets_menu(menu):
     menu.add(menu_item)
 
     menu.show_all()
+
+def _top_bar_menu_item_activated_popover(action, variant, msg):
+    _top_bar_menu_item_activated(None, msg)
 
 def _top_bar_menu_item_activated(widget, msg):
     if msg == "monitor_center":

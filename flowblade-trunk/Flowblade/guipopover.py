@@ -43,7 +43,9 @@ _media_panel_popover = None
 _media_panel_menu = None
 _sequecne_panel_popover = None
 _sequence_panel_menu = None
- 
+_layout_popover = None
+_layout_menu = None
+  
 # -------------------------------------------------- menuitems builder fuctions
 def add_menu_action(menu, label, item_id, msg_str, callback):
     menu.append(label, "app." + item_id) 
@@ -242,4 +244,26 @@ def sequence_panel_popover_show(widget, x, y, callback):
     _sequecne_panel_popover.set_position(Gtk.PositionType(Gtk.PositionType.BOTTOM))
     _sequecne_panel_popover.set_pointing_to(rect) 
     _sequecne_panel_popover.show()
+
+def layout_menu_show(launcher, widget, callback):
+    global _layout_popover, _layout_menu
+
+    _layout_menu = menu_clear_or_create(_markers_menu)
+
+    main_section = Gio.Menu.new()
+    add_menu_action(main_section, _("Layout Monitor Left"), "layout.monitorleft",  "monitor_left", callback)
+    add_menu_action(main_section, _("Layout Monitor Center"), "layout.monitorcenter",  "monitor_center", callback)
+    if not(editorstate.SCREEN_WIDTH < 1919):
+        add_menu_action(main_section, _("Layout Top Row 4 Panels"), "layout.fourpanels",  "top_row_four", callback)
+    add_menu_action(main_section, _("Layout Media Panel Left Column"), "layout.medialeft",  "media_panel_left", callback)
+    _layout_menu.append_section(None, main_section)
+
+    save_section = Gio.Menu.new()
+    add_menu_action(save_section, _("Save Current Layout..."), "layout.save",  "save_layout", callback)
+    add_menu_action(save_section, _("Load Layout..."), "layout.load",  "load_layout", callback)
+    _layout_menu.append_section(None, save_section)
+
+    _layout_popover = Gtk.Popover.new_from_model(widget, _layout_menu)
+    launcher.connect_launched_menu(_layout_popover)
+    _layout_popover.show()
 
