@@ -194,6 +194,12 @@
     
     Since the text editor in the development tool is quite rudimentary, it can be a useful workflow to use an external text editor to edit the scripts, and press *Reload Script* button to update text area contents before attempting render.
     
+    ## FLUXITY API VERSIONS
+    | VERSION | CHANGES |
+    | ------- | ------- |
+    | 1 | Initial release. |
+    | 2 | Added methods FluxityContext.required_api_version(), FluxityContext.add_editor_group()|
+    
     # FLUXITY API
 """
 __pdoc__ = {}
