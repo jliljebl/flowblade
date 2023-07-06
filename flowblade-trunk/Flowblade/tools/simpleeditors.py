@@ -131,21 +131,35 @@ def create_add_media_plugin_editors(script_data_object):
 class AddMediaPluginEditors:
     def __init__(self, script_data_object):
         self.script_data_object = copy.deepcopy(script_data_object)
-         
+        #print(self.script_data_object)
+        
         self.preview_frame = -1 # -1 used as flag that no preview renders ongoing and new one can be started
          
         # Create panels for objects
         self.editor_widgets = []
         editors_list = self.script_data_object["editors_list"]
-
+        groups = self.script_data_object["groups_list"]
+        print("groups", groups)
+        
         for editor_data in editors_list:
             name, type, value = editor_data
             editor_type = int(type)
             self.editor_widgets.append(_get_editor(editor_type, name, name, value, ""))
 
         editors_v_panel = Gtk.VBox(False, 2)
-        for w in self.editor_widgets:        
+        count = 0
+        for w in self.editor_widgets:
+            try:
+                group_name = groups[str(count)]
+                group_label = guiutils.bold_label(group_name)
+                #box = guiutils.get_left_justified_box([group_label])
+                guiutils.set_margins(group_label, 16, 8, 0, 0)
+                editors_v_panel.pack_start(group_label, False, False, 0)
+            except:
+                pass # no group in this index
             editors_v_panel.pack_start(w, False, False, 0)
+
+            count += 1
 
         pane = Gtk.VBox(False, 2)
         if len(self.editor_widgets) != 0:
@@ -227,7 +241,9 @@ def _get_editor(editor_type, id_data, label_text, value, tooltip):
         return PangoFontEditor(id_data, label_text, value, tooltip)
     elif editor_type == SIMPLE_EDITOR_TEXT_AREA:
         return TextAreaEditor(id_data, label_text, value, tooltip)
-    
+    elif editor_type == EDITOR_GROUP_LABEL:
+        return GroupLabel(text)
+        
 class AbstractSimpleEditor(Gtk.HBox):
     
     def __init__(self, id_data, tooltip):
@@ -878,3 +894,7 @@ class PreviewPanel(Gtk.VBox):
             cr.set_source_rgb(0.0, 0.0, 0.0)
             cr.rectangle(0, 0, w, h)
             cr.fill()
+
+
+# ---------------------------------------------------------- Group label editor
+        return GroupLabel(text)

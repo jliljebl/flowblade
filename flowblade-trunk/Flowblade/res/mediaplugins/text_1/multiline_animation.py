@@ -10,9 +10,11 @@ import fluxity
 
 def init_script(fctx):
     fctx.set_name("Multiline Text")
-    fctx.set_version(1)
+    fctx.set_version(2)
     fctx.set_author("Janne Liljeblad")
 
+    fctx.add_editor_group("Text")
+    
     fctx.add_editor("Text", fluxity.EDITOR_TEXT_AREA, "Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit.\nInteger nec odio.")
     fctx.add_editor("Pos X", fluxity.EDITOR_INT, 200)
     fctx.add_editor("Pos Y", fluxity.EDITOR_INT, 200)
@@ -22,12 +24,16 @@ def init_script(fctx):
                        100, 3, 3, 0.0, None, fluxity.VERTICAL)
     fctx.add_editor("Font", fluxity.EDITOR_PANGO_FONT, font_default_values)
     fctx.add_editor("Line Gap", fluxity.EDITOR_INT, 30)
-    fctx.add_editor("Lines Delay Frames", fluxity.EDITOR_INT_RANGE, (0, 0, 50))
+
     fctx.add_editor("Line Y Offset", fluxity.EDITOR_INT, -5)
+
+    fctx.add_editor_group("Animation")
+    
     fctx.add_editor("Animation Type In", fluxity.EDITOR_OPTIONS, \
                     (1, ["None", "From Left Clipped", "From Right Clipped", "From Up Clipped", \
                         "From Down Clipped", "From Left", "From Right", "From Up", \
                         "From Down", "Reveal Horizontal", "Reveal Vertical", "Reveal Left", "Reveal Right"]))
+    fctx.add_editor("Lines Delay Frames", fluxity.EDITOR_INT_RANGE, (0, 0, 50))
     fctx.add_editor("Movement In", fluxity. EDITOR_OPTIONS, (1,["Linear", "Ease In", "Ease Out", "Stepped"]))
     fctx.add_editor("Frames In", fluxity.EDITOR_INT, 12)
     fctx.add_editor("Steps In", fluxity.EDITOR_INT_RANGE, (3, 2, 10))
@@ -42,6 +48,9 @@ def init_script(fctx):
     fctx.add_editor("Steps Out", fluxity.EDITOR_INT_RANGE, (3, 2, 10))
     fctx.add_editor("Fade Out Frames", fluxity.EDITOR_INT_RANGE, (0, 0, 200))
     fctx.add_editor("Fade Out Type", fluxity.EDITOR_OPTIONS, (1,["Linear", "Compact Linear"]))
+
+    fctx.add_editor_group("Background")
+
     fctx.add_editor("Background", fluxity.EDITOR_OPTIONS, (2, ["No Background", "Solid", "Lines Solid", "Lines Word Length Solid", "Lines Solid Screen Width", "Box", "Horizontal Lines", "Underline", "Strikethrought"]))
     fctx.add_editor("Background Color", fluxity.EDITOR_COLOR, (1.0, 1.0, 1.0, 1.0))
     fctx.add_editor("Background Line Width", fluxity.EDITOR_INT, 3)

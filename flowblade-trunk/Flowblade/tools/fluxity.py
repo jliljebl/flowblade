@@ -204,6 +204,7 @@ __pdoc__['FluxityProfile'] = False
 __pdoc__['FluxityEmptyClass'] = False
 __pdoc__['render_frame_sequence'] = False
 __pdoc__['render_preview_frame'] = False
+__pdoc__['EDITOR_GROUP_LABEL'] = False
 
 import gi
 gi.require_version('PangoCairo', '1.0')
@@ -456,6 +457,7 @@ class FluxityContext:
         self.script_file = script_file
         self.data = {}
         self.editors = {} # editors and script length
+        self.groups = {}
         self.editor_tooltips = {}
         self.length = DEFAULT_LENGTH
         self.name = "Name Not Set"
@@ -684,6 +686,7 @@ class FluxityContext:
 
         script_data["editors_list"] = editors_list # this is dict inside FluxityContext object, but is given out as list for convenience of Flowblade app integration.
         script_data["tooltips_list"] = self.editor_tooltips
+        script_data["groups_list"] = self.groups
         
         return json.dumps(script_data)
 
@@ -774,6 +777,20 @@ class FluxityContext:
         self.priv_context.error_on_wrong_method("required_api_version()", METHOD_INIT_SCRIPT)
         if required_version > API_VERSION:
             _raise_fluxity_error("Fluxity API version too low for this script. Version " + str(required_version) + " required for this script, this system has Fluxity API version " + str(API_VERSION) + ".")
+
+    def add_editor_group(self, group_label):
+        """
+        **`group_label(str):`** Label for added group.
+                 
+        Adds editors group. All editors added after adding a group belong in that group until a new group ius added.
+        
+        If editor groups are used first one needs to be added before any editor. Must be called in script method *`init_script()`*.
+        """
+        self.priv_context.error_on_wrong_method("add_editor_group()", METHOD_INIT_SCRIPT)
+        if len(self.editors.keys()) > 0 and len(self.groups) == 0:
+            _raise_fluxity_error("If editor groups are used first one needs to be added before any editor.")
+
+        self.groups[len(self.editors.keys())] = group_label
 
 
 

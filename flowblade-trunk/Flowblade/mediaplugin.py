@@ -179,7 +179,8 @@ def _add_media_plugin():
     fctx.priv_context.frame_surface.write_to_png(screenshot_file)
     _current_plugin_data_object["editors_list"] = simpleeditors.get_editors_data_as_editors_list(_add_plugin_window.plugin_editors.editor_widgets)
     _current_plugin_data_object["length"] = int(_add_plugin_window.length_spin.get_value())
-
+    _current_plugin_data_object["groups_list"] = fctx.groups
+    
     if _add_plugin_window.import_select.get_active() == 0:
         _close_window()
         # Add as Container Clip
