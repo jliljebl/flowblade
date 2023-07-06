@@ -45,6 +45,8 @@ _sequecne_panel_popover = None
 _sequence_panel_menu = None
 _layout_popover = None
 _layout_menu = None
+_trimview_popover = None
+_trimview_menu = None
   
 # -------------------------------------------------- menuitems builder fuctions
 def add_menu_action(menu, label, item_id, msg_str, callback):
@@ -64,15 +66,28 @@ def add_menu_action_check(menu, label, item_id, checked_state, msg_str, callback
     menu.append_item(menu_item)
 
 def add_menu_action_radio(menu, label, item_id, target_variant):
-    #target_variant = GLib.Variant.new_string(value_str)
-    #action = Gio.SimpleAction.new_stateful(name=item_id, parameter_type=GLib.VariantType.new("s"), state=target_variant)
-    #action.connect("activate", callback, msg_str)
-    #APP().add_action(action)
-
     menu_item = Gio.MenuItem.new(label, "app." + item_id)
     menu_item.set_action_and_target_value("app." + item_id, target_variant)
     menu.append_item(menu_item)
 
+def add_menu_action_all_items_radio(menu, items_data, item_id, selected_index, callback):
+
+    variants = []
+    for item_data in items_data: 
+        label, variant_id = item_data
+        target_variant = GLib.Variant.new_string(variant_id)
+        menu_item = Gio.MenuItem.new(label, "app." + item_id)
+        menu_item.set_action_and_target_value("app." + item_id, target_variant)
+        menu.append_item(menu_item)
+        variants.append(target_variant)
+
+    # Create action and set state variant
+    selected_variant = variants[selected_index]
+    action = Gio.SimpleAction.new_stateful(name=item_id, parameter_type=GLib.VariantType.new("s"), state=selected_variant)
+    action.connect("activate", callback)
+    APP().add_action(action)
+
+    
 # --------------------------------------------------- helper functions
 def menu_clear_or_create(menu):
     if menu != None:
@@ -82,6 +97,13 @@ def menu_clear_or_create(menu):
     
     return menu
 
+def new_popover(widget, menu, launcher):
+    popover = Gtk.Popover.new_from_model(widget, menu)
+    launcher.connect_launched_menu(popover)
+    popover.show()
+
+    return popover
+    
 def create_rect(x, y):
     rect = Gdk.Rectangle()
     rect.x = x
@@ -248,7 +270,7 @@ def sequence_panel_popover_show(widget, x, y, callback):
 def layout_menu_show(launcher, widget, callback):
     global _layout_popover, _layout_menu
 
-    _layout_menu = menu_clear_or_create(_markers_menu)
+    _layout_menu = menu_clear_or_create(_layout_menu)
 
     main_section = Gio.Menu.new()
     add_menu_action(main_section, _("Layout Monitor Left"), "layout.monitorleft",  "monitor_left", callback)
@@ -267,3 +289,17 @@ def layout_menu_show(launcher, widget, callback):
     launcher.connect_launched_menu(_layout_popover)
     _layout_popover.show()
 
+def trim_view_popover_show(launcher, widget, callback):
+    global _trimview_popover, _trimview_menu
+
+    _trimview_menu = menu_clear_or_create(_trimview_menu)
+    
+    items_data =[(_("Trim View On"), "trimon"), (_("Trim View Single Side Edits Only"), "trimsingle"), \
+                (_("Trim View Off"), "trimoff")]
+    active_index = editorpersistance.prefs.trim_view_default
+    
+    radio_section = Gio.Menu.new()
+    add_menu_action_all_items_radio(radio_section, items_data, "monitor.trimview", active_index, callback)
+    _trimview_menu.append_section(None, radio_section)
+
+    _trimview_popover = new_popover(widget, _trimview_menu, launcher)

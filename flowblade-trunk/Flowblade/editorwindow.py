@@ -537,7 +537,7 @@ class EditorWindow:
         self.view_mode_select.set_pixbuf(0)
         self.view_mode_select.connect_launched_menu(guicomponents.monitor_menu)
         self.view_mode_select.widget.set_margin_right(10)
-        self.trim_view_select = guicomponents.get_trim_view_select_combo(lambda w, e: monitorevent.trim_view_menu_launched(w, e))
+        self.trim_view_select = guicomponents.get_trim_view_select_launcher(monitorevent.trim_view_menu_launched)
         self.trim_view_select.connect_launched_menu(guicomponents.trim_view_menu)
 
         player_buttons_row = Gtk.HBox(False, 0)

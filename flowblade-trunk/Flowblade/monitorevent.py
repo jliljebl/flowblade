@@ -35,6 +35,7 @@ from editorstate import current_is_move_mode
 from editorstate import MONITOR_MEDIA_FILE
 import gui
 import guicomponents
+import guipopover
 import movemodes
 import trimmodes
 import updater
@@ -321,10 +322,11 @@ def select_prev_clip_for_filter_edit():
     clipeffectseditor.set_clip(clip, track, range_in)
 
 # --------------------------------------------------------- trim view
-def trim_view_menu_launched(launcher, event):
-    guicomponents.get_trim_view_popupmenu(launcher, event, _trim_view_menu_item_activated)
+def trim_view_menu_launched(launcher, widget, event):
+    guipopover.trim_view_popover_show(launcher, widget, _trim_view_menu_item_activated)
 
-def _trim_view_menu_item_activated(widget, msg):
+def _trim_view_menu_item_activated(action, new_value_variant):
+    """
     if msg == "matchclear":
         gui.monitor_widget.set_default_view_force()
         return
@@ -339,7 +341,9 @@ def _trim_view_menu_item_activated(widget, msg):
 
     if widget.get_active() == False:
         return
-
+    """
+    msg = new_value_variant.get_string()
+        
     if msg == "trimon":
         editorstate.show_trim_view = appconsts.TRIM_VIEW_ON
         editorpersistance.prefs.trim_view_default = appconsts.TRIM_VIEW_ON
@@ -357,6 +361,9 @@ def _trim_view_menu_item_activated(widget, msg):
         editorpersistance.prefs.trim_view_default = appconsts.TRIM_VIEW_OFF
         editorpersistance.save()
 
+    action.set_state(new_value_variant)
+    guipopover._trimview_popover.hide()
+        
 def _show_trimview_info():
     editorpersistance.prefs.trim_view_message_shown = True
     editorpersistance.save()

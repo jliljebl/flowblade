@@ -1639,7 +1639,7 @@ def get_monitor_view_select_combo(callback):
         
     return menu_launch
 
-def get_trim_view_select_combo(callback):
+def get_trim_view_select_launcher(callback):
     # not a combo
     # Aug-2019 - SvdB - BB
     prefs = editorpersistance.prefs
@@ -1647,7 +1647,7 @@ def get_trim_view_select_combo(callback):
     if prefs.double_track_hights:
        size_adj = 2
     surface = guiutils.get_cairo_image("trim_view")
-    menu_launch = PressLaunch(callback, surface, w=24*size_adj, h=20*size_adj)
+    menu_launch = PressLaunchPopover(callback, surface, w=24*size_adj, h=20*size_adj)
     if prefs.double_track_hights:
         menu_launch.surface_y = 8*size_adj
     else:
