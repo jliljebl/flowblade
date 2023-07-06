@@ -95,15 +95,26 @@ class FluxityScriptEditorPanel:
         # Create panels for objects
         self.editor_widgets = []
         editors_list = self.script_data_object["editors_list"]
-
+        groups = self.script_data_object["groups_list"]
+        
         for editor_data in editors_list:
             name, etype, value = editor_data
             editor_type = int(etype)
             self.editor_widgets.append(_get_editor(editor_type, name, name, value, ""))
 
         editors_v_panel = Gtk.VBox(False, 2)
-        for w in self.editor_widgets:        
+        count = 0
+        for w in self.editor_widgets:
+            try:
+                group_name = groups[count]
+                group_label = guiutils.bold_label(group_name)
+                guiutils.set_margins(group_label, 16, 8, 0, 0)
+                editors_v_panel.pack_start(group_label, False, False, 0)
+            except:
+                pass # no group in this index
+                
             editors_v_panel.pack_start(w, False, False, 0)
+            count += 1
 
         pane = Gtk.VBox(False, 2)
         pane.pack_start(name_box, False, False, 0)
@@ -139,7 +150,6 @@ class AddMediaPluginEditors:
         self.editor_widgets = []
         editors_list = self.script_data_object["editors_list"]
         groups = self.script_data_object["groups_list"]
-        print("groups", groups)
         
         for editor_data in editors_list:
             name, type, value = editor_data
@@ -152,11 +162,11 @@ class AddMediaPluginEditors:
             try:
                 group_name = groups[str(count)]
                 group_label = guiutils.bold_label(group_name)
-                #box = guiutils.get_left_justified_box([group_label])
                 guiutils.set_margins(group_label, 16, 8, 0, 0)
                 editors_v_panel.pack_start(group_label, False, False, 0)
             except:
                 pass # no group in this index
+                
             editors_v_panel.pack_start(w, False, False, 0)
 
             count += 1

@@ -570,6 +570,8 @@ def set_plugin_to_be_edited(clip, action_object):
     name_box.pack_start(plugin_name_label, False, False, 0)
     name_box.pack_start(guicomponents.EditorSeparator().widget, False, False, 0)
     
+    print("set_plugin_to_be_edited", action_object.container_data.data_slots["fluxity_plugin_edit_data"])
+    
     global _edit_panel
     _edit_panel = simpleeditors.show_fluxity_container_clip_program_editor(clip, action_object, action_object.container_data.data_slots["fluxity_plugin_edit_data"], name_box)
 
