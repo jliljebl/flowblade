@@ -361,6 +361,9 @@ KEYFRAME_SMOOTH = 1
 KEYFRAME_DISCRETE = 2
 """Value after keyframe of this type is value at keyframe."""
 
+API_VERSION = 2
+"""API version number, increasing integer for each Flowblade release with changes."""
+
 # ---------------------------------------------------------- script object
 class FluxityScript:
     """
@@ -503,7 +506,6 @@ class FluxityContext:
         """
         self.priv_context.error_on_wrong_method("set_name()", METHOD_INIT_SCRIPT)
         self.name = name
-
 
     def set_version(self, version):
         """
@@ -760,9 +762,21 @@ class FluxityContext:
                  
         Save output from 'print()' to file at given path. Must be called in script method *init_script()*.
         """
-        self.priv_context.error_on_wrong_method("add_editor()", METHOD_INIT_SCRIPT)
+        self.priv_context.error_on_wrong_method("set_prints_to_log_file()", METHOD_INIT_SCRIPT)
         _prints_to_log_file(log_file)
-    
+
+    def required_api_version(self, required_version):
+        """
+        **`required_version(int):`** Required API version for this script.
+                 
+        Raises error if API version too low. Must be called in script method *`init_script()`*.
+        """
+        self.priv_context.error_on_wrong_method("required_api_version()", METHOD_INIT_SCRIPT)
+        if required_version > API_VERSION:
+            _raise_fluxity_error("Fluxity API version too low for this script. Version " + str(required_version) + " required for this script, this system has Fluxity API version " + str(API_VERSION) + ".")
+
+
+
 class FluxityContextPrivate:
     # This class exists to keep FluxityContext API clean for script developers.
     #
