@@ -199,7 +199,7 @@
     | ------- | ------- |
     | 1 | Initial release. |
     | 2 | Added methods FluxityContext.required_api_version(), FluxityContext.add_editor_group()|
-    
+
     # FLUXITY API
 """
 __pdoc__ = {}
