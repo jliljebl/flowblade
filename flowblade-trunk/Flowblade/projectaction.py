@@ -1533,33 +1533,13 @@ def _append_media_files(media_files):
     action.do_edit()
 
 # ------------------------------------ bins
-def bins_panel_popup_requested(event):
-    bin_menu = bin_popup_menu
-    
-    guiutils.remove_children(bin_menu)
+def bins_panel_popup_requested(widget, event):
+    guipopover.bins_panel_mouse_popover_show(widget, event.x, event.y, _bin_menu_item_selected)
 
-    bin_menu.add(guiutils.get_menu_item(_("Add Bin"), _bin_menu_item_selected, ("add bin", None)))
-    bin_menu.add(guiutils.get_menu_item(_("Delete Selected Bin"), _bin_menu_item_selected, ("delete bin", None)))
+def bin_hambuger_pressed(launcher, widget, event, data):
+    guipopover.bins_panel_widget_popover_show(launcher, widget, _bin_menu_item_selected)
 
-    guiutils.add_separetor(bin_menu)
-    
-    move_menu_item = Gtk.MenuItem(_("Move Bin"))
-    move_menu = Gtk.Menu()
-    move_menu.add(guiutils.get_menu_item(_("Up"), _bin_menu_item_selected, ("up bin", None)))
-    move_menu.add(guiutils.get_menu_item(_("Down"), _bin_menu_item_selected, ("down bin", None)))
-    move_menu.add(guiutils.get_menu_item(_("First"), _bin_menu_item_selected, ("first bin", None)))
-    move_menu.add(guiutils.get_menu_item(_("Last"), _bin_menu_item_selected, ("last bin", None)))
-    move_menu_item.set_submenu(move_menu)
-    bin_menu.add(move_menu_item)
-    move_menu_item.show()
-    
-    bin_menu.popup(None, None, None, None, event.button, event.time)    
-
-def bin_hambuger_pressed(widget, event):
-    bins_panel_popup_requested(event)
-
-def _bin_menu_item_selected(widget, data):
-    msg, bin_obj = data
+def _bin_menu_item_selected(action, variant, msg):
     if msg == "add bin":
         add_new_bin()
     elif msg == "delete bin":

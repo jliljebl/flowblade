@@ -142,6 +142,9 @@ steal_frames = True
 # Timeline rendering
 tline_render_mode = appconsts.TLINE_RENDERING_OFF
 
+# Timeline view mode
+tline_view_mode = 0 # sequence.PROGRAM_OUT_MODE
+
 # Trim clips cache for quicker inits, path -> clip
 _trim_clips_cache = {}
 

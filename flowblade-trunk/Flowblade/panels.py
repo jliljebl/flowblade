@@ -103,7 +103,8 @@ def get_bins_tree_panel(bin_list_view, callback, bins_popup_menu):
     panel.pack_start(bin_list_view, True, True, 0)
 
     hamburger = guicomponents.HamburgerPressLaunch(callback)
-    hamburger.connect_launched_menu(bins_popup_menu)
+    hamburger.do_popover_callback = True
+    #hamburger.connect_launched_menu(bins_popup_menu)
     
     return get_named_frame_with_hamburger(_("Bins"), panel, 0, 0, 0, _("A <b>Bin</b> is a named collection of media."), hamburger.widget)
     

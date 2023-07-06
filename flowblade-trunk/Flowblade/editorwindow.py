@@ -533,12 +533,9 @@ class EditorWindow:
         if editorpersistance.prefs.buttons_style == 2: # NO_DECORATIONS
             self.player_buttons.no_decorations = True
 
-        self.view_mode_select = guicomponents.get_monitor_view_select_combo(lambda w, e: tlineaction.view_mode_menu_lauched(w, e))
-        self.view_mode_select.set_pixbuf(0)
-        self.view_mode_select.connect_launched_menu(guicomponents.monitor_menu)
+        self.view_mode_select = guicomponents.get_monitor_view_select_launcher(tlineaction.view_mode_menu_lauched)
         self.view_mode_select.widget.set_margin_right(10)
         self.trim_view_select = guicomponents.get_trim_view_select_launcher(monitorevent.trim_view_menu_launched)
-        self.trim_view_select.connect_launched_menu(guicomponents.trim_view_menu)
 
         player_buttons_row = Gtk.HBox(False, 0)
         player_buttons_row.pack_start(self.monitor_switch.widget, False, False, 0)

@@ -47,7 +47,15 @@ _layout_popover = None
 _layout_menu = None
 _trimview_popover = None
 _trimview_menu = None
-  
+_monitorview_popover = None 
+_monitorview_menu = None
+_opacity_section = None
+_opacity_submenu = None
+_bins_panel_widget_popover = None
+_bins_panel_widget_menu = None
+_bins_panel_mouse_popover = None
+_bins_panel_mouse_menu = None
+    
 # -------------------------------------------------- menuitems builder fuctions
 def add_menu_action(menu, label, item_id, msg_str, callback):
     menu.append(label, "app." + item_id) 
@@ -102,6 +110,14 @@ def new_popover(widget, menu, launcher):
     launcher.connect_launched_menu(popover)
     popover.show()
 
+    return popover
+
+def new_mouse_popover(widget, menu, rect):
+    popover = Gtk.Popover.new_from_model(widget, menu)
+    popover.set_position(Gtk.PositionType(Gtk.PositionType.BOTTOM))
+    popover.set_pointing_to(rect) 
+    popover.show()
+    
     return popover
     
 def create_rect(x, y):
@@ -285,9 +301,7 @@ def layout_menu_show(launcher, widget, callback):
     add_menu_action(save_section, _("Load Layout..."), "layout.load",  "load_layout", callback)
     _layout_menu.append_section(None, save_section)
 
-    _layout_popover = Gtk.Popover.new_from_model(widget, _layout_menu)
-    launcher.connect_launched_menu(_layout_popover)
-    _layout_popover.show()
+    _layout_popover = new_popover(widget, _layout_menu, launcher)
 
 def trim_view_popover_show(launcher, widget, callback):
     global _trimview_popover, _trimview_menu
@@ -303,3 +317,68 @@ def trim_view_popover_show(launcher, widget, callback):
     _trimview_menu.append_section(None, radio_section)
 
     _trimview_popover = new_popover(widget, _trimview_menu, launcher)
+
+def monitor_view_popupmenu_show(launcher, widget, callback, callback_opacity):
+    global _monitorview_popover, _monitorview_menu, _opacity_section, _opacity_submenu
+
+    _monitorview_menu = menu_clear_or_create(_monitorview_menu)
+    
+    items_data =[( _("Image"), "0"), (_("Vectorscope"), "1"), \
+                ( _("RGB Parade"), "2")]
+    active_index = editorstate.tline_view_mode
+    
+    view_section = Gio.Menu.new()
+    add_menu_action_all_items_radio(view_section, items_data, "monitor.viewimage", active_index, callback)
+    _monitorview_menu.append_section(None, view_section)
+
+    # WE are getting gtk warning here, look to fix
+    _opacity_section = menu_clear_or_create(_opacity_section)
+    _opacity_submenu = menu_clear_or_create(_opacity_submenu)
+    items_data = [( _("100%"), "3"), ( _("80%"), "4"), ( _("50%"), "5"), (_("20%"), "6")]
+    active_index = current_sequence().get_mix_index()
+    add_menu_action_all_items_radio(_opacity_submenu, items_data, "monitor.viewimageopcity", active_index, callback_opacity)
+    _opacity_section.append_submenu(_("Overlay Opacity"), _opacity_submenu)
+    _monitorview_menu.append_section(None, _opacity_section)
+    
+    _monitorview_popover = new_popover(widget, _monitorview_menu, launcher)
+
+def bins_panel_widget_popover_show(launcher, widget, callback):
+    global _bins_panel_widget_popover, _bins_panel_widget_menu
+
+    if _bins_panel_widget_popover == None:
+        _bins_panel_widget_menu = Gio.Menu.new()
+        _build_bins_panel_menu(_bins_panel_widget_menu, callback)
+        _bins_panel_widget_popover = new_popover(widget, _bins_panel_widget_menu, launcher)
+
+    _bins_panel_widget_popover.show()
+
+def bins_panel_mouse_popover_show(widget, x, y, callback):
+    global _bins_panel_mouse_popover, _bins_panel_mouse_menu
+    if _bins_panel_mouse_popover == None:
+        _bins_panel_mouse_menu = Gio.Menu.new()
+        _build_bins_panel_menu(_bins_panel_mouse_menu, callback)
+        rect = create_rect(x, y)
+        _bins_panel_mouse_popover = new_mouse_popover(widget, _bins_panel_mouse_menu, rect)
+    else:
+        _bins_panel_mouse_popover.show()
+        
+def _build_bins_panel_menu(menu, callback):
+    
+    add_section = Gio.Menu.new()
+    add_menu_action(add_section, _("Add Bin"), "binspanel.add", "add bin", callback)
+    add_menu_action(add_section, _("Delete Selected Bin"), "binspanel.edit", "delete bin", callback)
+    menu.append_section(None, add_section)
+    
+    move_section = Gio.Menu.new()
+    move_submenu = Gio.Menu.new()
+    add_menu_action(move_submenu,_("Up"), "binspanel.up", "up bin", callback)
+    add_menu_action(move_submenu,_("Down"), "binspanel.down", "down bin", callback)
+    add_menu_action(move_submenu,_("First"), "binspanel.first", "first bin", callback)
+    add_menu_action(move_submenu,_("Last"), "binspanel.last", "last bin", callback)
+
+    move_section.append_submenu(_("Move Bin"), move_submenu)
+    menu.append_section(None, move_section)
+    
+    return menu
+
+

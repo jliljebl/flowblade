@@ -326,22 +326,6 @@ def trim_view_menu_launched(launcher, widget, event):
     guipopover.trim_view_popover_show(launcher, widget, _trim_view_menu_item_activated)
 
 def _trim_view_menu_item_activated(action, new_value_variant):
-    """
-    if msg == "matchclear":
-        gui.monitor_widget.set_default_view_force()
-        return
-    if msg == "clipframematch":
-        import tlineaction  # if this is on top level gmic tool get circular import
-        clip = tlineaction._get_new_clip_from_clip_monitor()
-        if clip == None:
-            return
-        frame = PLAYER().current_frame()
-        gui.monitor_widget.set_frame_match_view(clip, frame)
-        return
-
-    if widget.get_active() == False:
-        return
-    """
     msg = new_value_variant.get_string()
         
     if msg == "trimon":

@@ -441,7 +441,7 @@ class BinTreeView(Gtk.VBox):
         
     def _button_press_event(self, widget, event):
         if event.button == 3:
-            self.bins_popup_cb(event)
+            self.bins_popup_cb(widget, event)
 
 
 
@@ -1622,16 +1622,13 @@ class EditorSeparator:
         cr.stroke()
 
 # ---------------------------------------------- MISC WIDGETS
-def get_monitor_view_select_combo(callback):
-    # Aug-2019 - SvdB - BB
+def get_monitor_view_select_launcher(callback):
     prefs = editorpersistance.prefs
     size_adj = 1
     if prefs.double_track_hights:
        size_adj = 2
-    surface_list = [guiutils.get_cairo_image("program_view_2"),
-                   guiutils.get_cairo_image("vectorscope"),
-                   guiutils.get_cairo_image("rgbparade")]
-    menu_launch = ImageMenuLaunch(callback, surface_list, w=24*size_adj, h=20*size_adj)
+    surface = guiutils.get_cairo_image("program_view_2")
+    menu_launch = PressLaunchPopover(callback, surface, w=24*size_adj, h=20*size_adj)
     if prefs.double_track_hights:
         menu_launch.surface_y = 8*size_adj
     else:
@@ -3486,7 +3483,8 @@ def get_compositor_editor_hamburger_menu(event, callback):
     
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
-    
+
+"""
 def get_monitor_view_popupmenu(launcher, event, callback):
     menu = monitor_menu
     guiutils.remove_children(menu)
@@ -3538,6 +3536,7 @@ def get_monitor_view_popupmenu(launcher, event, callback):
     menu.append(overlay_menu_item)
 
     menu.popup(None, None, None, None, event.button, event.time)
+"""
 
 def get_file_filter_popup_menu(launcher, event, callback):
     menu = file_filter_menu
@@ -3884,7 +3883,8 @@ class HamburgerPressLaunch:
         self.sensitive = True
         self.callback = callback
         self.data = data
-        
+        self.do_popover_callback = False # These need more data.
+
         if surfaces == None:
             self.surface_active = guiutils.get_cairo_image("hamburger")
             self.surface_not_active = guiutils.get_cairo_image("hamburger_not_active")
@@ -3936,11 +3936,14 @@ class HamburgerPressLaunch:
     def _press_event(self, event):
         if self.sensitive == True:
             self.ignore_next_leave = True
-            self.prelight_on = True 
-            if self.data == None:
-                self.callback(self.widget, event)
+            self.prelight_on = True
+            if self.do_popover_callback == True:
+                self.callback(self, self.widget, event, self.data)
             else:
-                self.callback(self.widget, event, self.data)
+                if self.data == None:
+                    self.callback(self.widget, event)
+                else:
+                    self.callback(self.widget, event, self.data)
 
     def leave_notify_listener(self, event):
         if self.ignore_next_leave == True:
