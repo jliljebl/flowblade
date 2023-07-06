@@ -3539,49 +3539,6 @@ def get_monitor_view_popupmenu(launcher, event, callback):
 
     menu.popup(None, None, None, None, event.button, event.time)
 
-def get_trim_view_popupmenu(launcher, event, callback):
-    menu = trim_view_menu
-    guiutils.remove_children(menu)
-
-    trim_view_all = Gtk.RadioMenuItem()
-    trim_view_all.set_label(_("Trim View On"))
-
-    trim_view_all.show()
-    menu.append(trim_view_all)
-    
-    trim_view_single = Gtk.RadioMenuItem.new_with_label([trim_view_all], _("Trim View Single Side Edits Only"))
-
-    trim_view_single.show()
-    menu.append(trim_view_single)
-
-    no_trim_view = Gtk.RadioMenuItem.new_with_label([trim_view_all], _("Trim View Off"))
-
-    no_trim_view.show()
-    menu.append(no_trim_view)
-
-    active_index = editorstate.show_trim_view # The values for this as defines in appconsts.py correspond to indexes here
-    items = [trim_view_all, trim_view_single, no_trim_view]
-    active_item = items[active_index]
-    active_item.set_active(True)
-
-    trim_view_all.connect("activate", callback, "trimon")
-    trim_view_single.connect("activate", callback, "trimsingle")
-    no_trim_view.connect("activate", callback, "trimoff")
-    
-    _add_separetor(menu)
-
-    menu_item = _get_menu_item(_("Set Current Clip Frame Match Frame"), callback, "clipframematch" )
-    if editorstate.timeline_visible() == True:
-        menu_item.set_sensitive(False)
-    menu.add(menu_item)
-    
-    menu_item = _get_menu_item(_("Clear Match Frame"), callback, "matchclear" )
-    if gui.monitor_widget.view != monitorwidget.FRAME_MATCH_VIEW:
-        menu_item.set_sensitive(False)
-    menu.add(menu_item)
-
-    menu.popup(None, None, None, None, event.button, event.time)
-
 def get_file_filter_popup_menu(launcher, event, callback):
     menu = file_filter_menu
     guiutils.remove_children(menu)

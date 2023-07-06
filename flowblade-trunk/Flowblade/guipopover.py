@@ -296,7 +296,7 @@ def trim_view_popover_show(launcher, widget, callback):
     
     items_data =[(_("Trim View On"), "trimon"), (_("Trim View Single Side Edits Only"), "trimsingle"), \
                 (_("Trim View Off"), "trimoff")]
-    active_index = editorpersistance.prefs.trim_view_default
+    active_index = editorstate.show_trim_view
     
     radio_section = Gio.Menu.new()
     add_menu_action_all_items_radio(radio_section, items_data, "monitor.trimview", active_index, callback)

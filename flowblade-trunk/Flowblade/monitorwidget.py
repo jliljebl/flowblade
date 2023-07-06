@@ -167,11 +167,6 @@ class MonitorWidget:
 
         if self.view == FRAME_MATCH_VIEW and force_default_mode==False:
             return
-            
-        # Refreshing player while rendering overwrites file on disk and loses 
-        # previous rendered data. 
-        if PLAYER().is_rendering:
-            return
 
         # Delete match frame
         try:
@@ -194,10 +189,6 @@ class MonitorWidget:
         PLAYER().refresh()
 
     def set_frame_match_view(self, match_clip, frame):        
-        # Refreshing while rendering overwrites file on disk and loses 
-        # previous rendered data. 
-        if PLAYER().is_rendering:
-            return
 
         # Delete match frame
         try:
@@ -224,11 +215,6 @@ class MonitorWidget:
         
     def set_start_trim_view(self, match_clip, edit_clip_start):
         if self.is_active(True) == False:
-            return
-
-        # Refreshing while rendering overwrites file on disk and loses 
-        # previous rendered data. 
-        if PLAYER().is_rendering:
             return
            
         self.view = START_TRIM_VIEW
@@ -262,11 +248,6 @@ class MonitorWidget:
     def set_end_trim_view(self, match_clip, edit_clip_start):
         if self.is_active(True) == False:
             return
-
-        # Refreshing while rendering overwrites file on disk and loses 
-        # previous rendered data. 
-        if PLAYER().is_rendering:
-            return
         
         self.view = END_TRIM_VIEW
         self.match_frame_surface = None
@@ -298,11 +279,6 @@ class MonitorWidget:
         
     def set_roll_trim_right_active_view(self, match_clip, edit_clip_start):
         if self.is_active() == False:
-            return
-
-        # Refreshing while rendering overwrites file on disk and loses 
-        # previous rendered data. 
-        if PLAYER().is_rendering:
             return
         
         self.view = ROLL_TRIM_RIGHT_ACTIVE_VIEW
@@ -336,11 +312,6 @@ class MonitorWidget:
     def set_roll_trim_left_active_view(self, match_clip, edit_clip_start):
         if self.is_active() == False:
             return
-            
-        # Refreshing while rendering overwrites file on disk and loses 
-        # previous rendered data. 
-        if PLAYER().is_rendering:
-            return
         
         self.view = ROLL_TRIM_LEFT_ACTIVE_VIEW
         self.match_frame_surface = None
@@ -372,11 +343,6 @@ class MonitorWidget:
         
     def set_slip_trim_right_active_view(self, match_clip):
         if self.is_active() == False:
-            return
-
-        # Refreshing while rendering overwrites file on disk and loses 
-        # previous rendered data. 
-        if PLAYER().is_rendering:
             return
 
         self.view = SLIP_TRIM_RIGHT_ACTIVE_VIEW
@@ -412,11 +378,6 @@ class MonitorWidget:
         if self.is_active() == False:
             return
 
-        # Refreshing while rendering overwrites file on disk and loses 
-        # previous rendered data. 
-        if PLAYER().is_rendering:
-            return
-    
         self.view = SLIP_TRIM_LEFT_ACTIVE_VIEW
         self.match_frame_surface = None
         self.edit_clip_start_on_tline = 0 # We're using tiline frames just as units to get edit deltas and displayed clip tc
@@ -917,7 +878,6 @@ class MatchSurfaceCreator(threading.Thread):
         threading.Thread.__init__(self)
         
     def run(self):
-        print("MatchSurfaceCreator.run")
         # Create new producer to get mlt frame data
         while _producer == None:
             print("MatchSurfaceCreator: waiting for _producer")
