@@ -1123,7 +1123,7 @@ def _app_destroy():
     # I have found no other way to exit then calling os._exit(0)
     # and leave cleaning up that may be done in app.quit() not taken care of.
     # I'm calling destroy() on window to get some cleanp-up done there.
-    gui.editor_window.destroy()
+    gui.editor_window.window.destroy()
     os._exit(0)
     #_app.quit()
 
