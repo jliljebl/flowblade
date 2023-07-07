@@ -314,7 +314,7 @@ class FluxityLoadCompletionThread(threading.Thread):
         if self.plugin_data != None:
             # For media plugins use the provided user edited creation data.
             self.container_clip_data.data_slots["fluxity_plugin_edit_data"] = self.plugin_data
-    
+        
         time.sleep(0.5) # To make sure text is seen.
 
         if self.dialog != None:

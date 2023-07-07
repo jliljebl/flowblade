@@ -615,6 +615,8 @@ class FluxityContainerActions(AbstractContainerActionObject):
             if fctx.error == None:
                 data_json = fctx.get_script_data()
                 self.container_data.data_slots["fluxity_plugin_edit_data"] = json.loads(data_json) # script data saved as Python object, not json str.
+                self.container_data.data_slots["fluxity_plugin_edit_data"] ["groups_list"] = fctx.groups
+
                 return (True, None) # no errors
             else:
                 return (False,  fctx.error)
