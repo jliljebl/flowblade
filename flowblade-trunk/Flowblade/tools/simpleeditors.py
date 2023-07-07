@@ -95,8 +95,11 @@ class FluxityScriptEditorPanel:
         # Create panels for objects
         self.editor_widgets = []
         editors_list = self.script_data_object["editors_list"]
-        groups = self.script_data_object["groups_list"]
-        
+        try:
+            groups = self.script_data_object["groups_list"]
+        except:
+            groups = {}
+
         for editor_data in editors_list:
             name, etype, value = editor_data
             editor_type = int(etype)
@@ -149,7 +152,10 @@ class AddMediaPluginEditors:
         # Create panels for objects
         self.editor_widgets = []
         editors_list = self.script_data_object["editors_list"]
-        groups = self.script_data_object["groups_list"]
+        try:
+            groups = self.script_data_object["groups_list"]
+        except:
+            groups = {}
         
         for editor_data in editors_list:
             name, type, value = editor_data
