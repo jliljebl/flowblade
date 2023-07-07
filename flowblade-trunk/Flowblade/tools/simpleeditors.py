@@ -107,7 +107,7 @@ class FluxityScriptEditorPanel:
         for w in self.editor_widgets:
             try:
                 group_name = groups[count]
-                group_label = guiutils.bold_label(group_name)
+                group_label = guiutils.bold_label(translations.plugin_editor_groups[group_name])
                 guiutils.set_margins(group_label, 16, 8, 0, 0)
                 editors_v_panel.pack_start(group_label, False, False, 0)
             except:
@@ -161,7 +161,7 @@ class AddMediaPluginEditors:
         for w in self.editor_widgets:
             try:
                 group_name = groups[str(count)]
-                group_label = guiutils.bold_label(group_name)
+                group_label = guiutils.bold_label(translations.plugin_editor_groups[group_name])
                 guiutils.set_margins(group_label, 16, 8, 0, 0)
                 editors_v_panel.pack_start(group_label, False, False, 0)
             except:

@@ -37,6 +37,7 @@ combo_options = {}
 plugin_groups = {}
 plugin_names = {}
 encoder_groups = {}
+plugin_editor_groups = {}
 
 def init_languages():
     langs = []
@@ -827,13 +828,21 @@ def load_filters_translations():
     combo_options["Lines Solid"] = _("Lines Solid")
 
     # Added for 2.10
+    global plugin_groups
     plugin_groups["Backgrounds"] = _("Backgrounds")
     plugin_groups["Cover Transitions"] = _("Cover Transitions")
     plugin_groups["Animated Texts"] = _("Animated Texts")
     
+    global plugin_names
     plugin_names["Lines Sweep"] = _("Lines Sweep")
     plugin_names["Hex Colors"] = _("Hex Colors")
     plugin_names["Floating Boxes"] = _("Floating Boxes")
     plugin_names["Typewriter"] = _("Typewriter")
     plugin_names["Multiline Text"] = _("Multiline Text")
     plugin_names["Hex Overlay"] = _("Hex Overlay")
+
+    global plugin_editor_groups
+    plugin_editor_groups["Text"] = _("Text")
+    plugin_editor_groups["Animation"] = _("Animation")
+    plugin_editor_groups["Background"] = _("Background")
+
