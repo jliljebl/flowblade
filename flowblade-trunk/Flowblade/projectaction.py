@@ -1263,12 +1263,16 @@ def _media_filtering_selector_item_activated(selector, index):
     editorstate.media_view_filter = index
     gui.media_list_view.fill_data_model()
 
-def columns_count_launch_pressed(widget, event):
-    guicomponents.get_columns_count_popup_menu(event, _columns_count_item_selected)
+def columns_count_launch_pressed(launcher, widget, event):
+    guipopover.columns_count_popupover_show(launcher, widget, _columns_count_item_selected)
     
-def _columns_count_item_selected(w, data):
-    gui.editor_window.media_list_view.columns_changed(data)
+def _columns_count_item_selected(action, new_value_variant):
+    columns = int(new_value_variant.get_string())
+    gui.editor_window.media_list_view.columns_changed(columns)
  
+    action.set_state(new_value_variant)
+    guipopover._columns_popover.hide()
+     
 def import_project_media():
     dialogs.load_project_dialog(_media_import_project_select_dialog_callback, None, _("Select Project for Media Import"))
     

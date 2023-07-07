@@ -26,6 +26,7 @@ from editorstate import current_sequence
 from editorstate import PROJECT
 import editorpersistance
 import editorstate
+import gui
 import guicomponents
 import snapping
 import utils
@@ -57,7 +58,9 @@ _bins_panel_mouse_popover = None
 _bins_panel_mouse_menu = None
 _media_panel_hamburger_popover = None
 _media_panel_hamburger_menu = None
-
+_columns_popover = None
+_columns_menu = None
+ 
 # -------------------------------------------------- menuitems builder fuctions
 def add_menu_action(menu, label, item_id, msg_str, callback):
     menu.append(label, "app." + item_id) 
@@ -422,3 +425,17 @@ def media_hamburger_popover_show(launcher, widget, callback):
 
     _media_panel_hamburger_popover = new_popover(widget, _media_panel_hamburger_menu, launcher)
 
+def columns_count_popupover_show(launcher, widget, callback):
+    global _columns_popover, _columns_menu
+
+    _columns_menu = menu_clear_or_create(_markers_menu)
+
+    items_data =[(_("2 Columns"), "2"), (_("3 Columns"), "3"), \
+                (_("4 Columns"), "4"), (_("5 Columns"), "5"), (_("6 Columns"), "6"), \
+                (_("7 Columns"), "7")]
+    active_index = gui.editor_window.media_list_view.columns - 2
+    radio_section = Gio.Menu.new()
+    add_menu_action_all_items_radio(radio_section, items_data, "monitor.trimview", active_index, callback)
+    _columns_menu.append_section(None, radio_section)
+
+    _columns_popover = new_popover(widget, _columns_menu, launcher)

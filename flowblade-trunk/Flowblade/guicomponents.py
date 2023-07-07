@@ -3574,47 +3574,6 @@ def get_file_filter_popup_menu(launcher, event, callback):
     menu.show_all()
     menu.popup(None, None, None, None, event.button, event.time)
 
-def get_columns_count_popup_menu(event, callback):
-    menu = column_count_menu
-    guiutils.remove_children(menu)
-    menu.set_accel_group(gui.editor_window.accel_group)
-
-    columns = gui.editor_window.media_list_view.columns
-
-    menu_item_2 = Gtk.RadioMenuItem()
-    menu_item_2.set_label(_("2 Columns"))
-    menu_item_2.set_active(columns==2)
-    menu_item_2.connect("activate", callback, 2)
-    menu.append(menu_item_2)
-
-    menu_item_3 = Gtk.RadioMenuItem.new_with_label([menu_item_2], _("3 Columns"))
-    menu_item_3.connect("activate", callback, 3)
-    menu_item_3.set_active(columns==3)
-    menu.append(menu_item_3)
-
-    menu_item_4 = Gtk.RadioMenuItem.new_with_label([menu_item_2], _("4 Columns"))
-    menu_item_4.connect("activate", callback, 4)
-    menu_item_4.set_active(columns==4)
-    menu.append(menu_item_4)
-
-    menu_item_5 = Gtk.RadioMenuItem.new_with_label([menu_item_2], _("5 Columns"))
-    menu_item_5.connect("activate", callback, 5)
-    menu_item_5.set_active(columns==5)
-    menu.append(menu_item_5)
-
-    menu_item_6 = Gtk.RadioMenuItem.new_with_label([menu_item_2], _("6 Columns"))
-    menu_item_6.connect("activate", callback, 6)
-    menu_item_6.set_active(columns==6)
-    menu.append(menu_item_6)
-
-    menu_item_7 = Gtk.RadioMenuItem.new_with_label([menu_item_2], _("7 Columns"))
-    menu_item_7.connect("activate", callback, 7)
-    menu_item_7.set_active(columns==7)
-    menu.append(menu_item_7)
-
-    menu.show_all()
-    menu.popup(None, None, None, None, event.button, event.time)
-
 def get_ardour_sample_rate_selector():
     sample_rate_combo = Gtk.ComboBoxText()
 
