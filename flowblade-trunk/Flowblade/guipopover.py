@@ -435,7 +435,7 @@ def columns_count_popupover_show(launcher, widget, callback):
                 (_("7 Columns"), "7")]
     active_index = gui.editor_window.media_list_view.columns - 2
     radio_section = Gio.Menu.new()
-    add_menu_action_all_items_radio(radio_section, items_data, "monitor.trimview", active_index, callback)
+    add_menu_action_all_items_radio(radio_section, items_data, "mediapanel.columnview", active_index, callback)
     _columns_menu.append_section(None, radio_section)
 
     _columns_popover = new_popover(widget, _columns_menu, launcher)
