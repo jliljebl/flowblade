@@ -1112,5 +1112,18 @@ def _app_destroy():
     except:
         print("Delete autosave file FAILED!")
 
-    _app.quit()
+    # Calling _app.quit() will block if Gio.Application.hold() has been called,
+    # and the documentation helpfully says "(Note that you may have called 
+    # Gio.Application.hold() indirectly, for example through gtk_application_add_window().)"
+    # I'm not calling add_window() on render processess but somehow those call Gio.Application.hold()
+    # but I don't know where. 
+    #
+    # However, those processes complete and exit cleanly and the only problem 
+    # is the increased ref count on my _app Gtk.Application object.
+    # I have found no other way to exit then calling os._exit(0)
+    # and leave cleaning up that may be done in app.quit() not taken care of.
+    # I'm calling destroy() on window to get some cleanp-up done there.
+    gui.editor_window.destroy()
+    os._exit(0)
+    #_app.quit()
 

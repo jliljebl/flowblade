@@ -678,13 +678,8 @@ class FluxityContainerActions(AbstractContainerActionObject):
                 "range_out:"+ str(range_out),
                 "profile_desc:" + PROJECT().profile.description().replace(" ", "_"))  # Here we have our own string space handling, maybe change later..
 
-        # Create command list and launch process.
-        command_list = [sys.executable]
-        command_list.append(respaths.LAUNCH_DIR + "flowbladefluxityheadless")
-        for arg in args:
-            command_list.append(arg)
-
-        subprocess.Popen(command_list)
+        t = CommandLauncherThread(respaths.LAUNCH_DIR + "flowbladefluxityheadless", args)
+        t.start()
         
     def update_render_status(self):
         GLib.idle_add(self._do_update_render_status)
@@ -991,3 +986,21 @@ class UnrenderedCreationThread(threading.Thread):
 
     def progress_thread_complete(self, dialog, some_number):
         GLib.idle_add(dialogutils.dialog_destroy, self.dialog, None)
+
+
+class CommandLauncherThread(threading.Thread):
+    def __init__(self, path, args):
+        self.path = path
+        self.args = args
+
+        threading.Thread.__init__(self)
+
+    def run(self):    
+        # Create command list and launch process.
+        command_list = [sys.executable]
+        command_list.append(self.path)
+        for arg in self.args:
+            command_list.append(arg)
+
+        subprocess.Popen(command_list)
+        
