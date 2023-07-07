@@ -45,14 +45,14 @@ MEDIA_PANEL_MAX_ROWS = 8
 MEDIA_PANEL_DEFAULT_ROWS = 2
 
 
-def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hamburger_launch_pressed, filtering_cb, media_pop_up_menu):   
+def get_media_files_panel(media_list_view, add_cb, del_cb, col_changed_cb, hamburger_launch_pressed, filtering_cb):   
     # Aug-2019 - SvdB - BB
     size_adj = 1
     prefs = editorpersistance.prefs
     if prefs.double_track_hights:
         size_adj = 2
     hamburger_launcher = guicomponents.HamburgerPressLaunch(hamburger_launch_pressed)
-    hamburger_launcher.connect_launched_menu(media_pop_up_menu)
+    hamburger_launcher.do_popover_callback = True
     guiutils.set_margins(hamburger_launcher.widget, 2, 0, 4, 12)
 
     columns_img = guiutils.get_cairo_image("columns")

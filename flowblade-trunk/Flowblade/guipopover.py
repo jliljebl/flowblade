@@ -55,7 +55,9 @@ _bins_panel_widget_popover = None
 _bins_panel_widget_menu = None
 _bins_panel_mouse_popover = None
 _bins_panel_mouse_menu = None
-    
+_media_panel_hamburger_popover = None
+_media_panel_hamburger_menu = None
+
 # -------------------------------------------------- menuitems builder fuctions
 def add_menu_action(menu, label, item_id, msg_str, callback):
     menu.append(label, "app." + item_id) 
@@ -381,4 +383,42 @@ def _build_bins_panel_menu(menu, callback):
     
     return menu
 
+# ----------------------------------- media files
+def media_hamburger_popover_show(launcher, widget, callback):
+    global _media_panel_hamburger_popover, _media_panel_hamburger_menu
+
+    _media_panel_hamburger_menu = menu_clear_or_create(_markers_menu)
+    
+    proxy_section = Gio.Menu.new()
+    add_menu_action(proxy_section, _("Render Proxy Files For Selected Media"), "mediapanel.proxyrender", "render proxies", callback)
+    add_menu_action(proxy_section, _("Render Proxy Files For All Media"), "mediapanel.proxyall", "render all proxies", callback)
+    _media_panel_hamburger_menu.append_section(None, proxy_section)
+
+    select_section = Gio.Menu.new()
+    add_menu_action(select_section, _("Select All"), "mediapanel.selectall", "select all", callback)
+    add_menu_action(select_section, _("Select None"), "mediapanel.selectnone",  "select none", callback)
+    _media_panel_hamburger_menu.append_section(None, select_section)
+
+    if len(PROJECT().bins) > 1:
+        move_section = Gio.Menu.new()
+        move_submenu = Gio.Menu.new()
+
+        index = 0
+        for media_bin in PROJECT().bins:
+            if media_bin == PROJECT().c_bin:
+                index = index + 1
+                continue
+            
+            add_menu_action(move_submenu, str(media_bin.name), "mediapanel." + str(index), str(index), callback) 
+            index = index + 1
+
+        move_section.append_submenu(_("Move Selected Media To Bin"), move_submenu)
+        _media_panel_hamburger_menu.append_section(None, move_section)
+
+    append_section = Gio.Menu.new()
+    add_menu_action(append_section, _("Append All Media to Timeline"), "mediapanel.appendall", "append all", callback)
+    add_menu_action(append_section, _("Append Selected Media to Timeline"), "mediapanel.appendselected", "append selected", callback)
+    _media_panel_hamburger_menu.append_section(None, append_section)
+
+    _media_panel_hamburger_popover = new_popover(widget, _media_panel_hamburger_menu, launcher)
 

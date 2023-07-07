@@ -342,8 +342,7 @@ class EditorWindow:
                                     lambda w,e: projectaction.delete_media_files(),
                                     projectaction.columns_count_launch_pressed,
                                     projectaction.hamburger_pressed,  # lambda w,e: proxyediting.create_proxy_files_pressed(),
-                                    projectaction.media_filtering_select_pressed,
-                                    projectaction.hamburger_popup_menu)
+                                    projectaction.media_filtering_select_pressed)
 
         self.media_panel = media_panel
         self.media_panel.set_name("darker-bg-widget")

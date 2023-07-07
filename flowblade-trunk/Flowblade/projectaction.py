@@ -870,44 +870,10 @@ def _write_out_render_item(single_render_item_item):
     return True
 
 # ----------------------------------- media files
-def hamburger_pressed(widget, event):
-    hamburger_menu = hamburger_popup_menu
+def hamburger_pressed(launcher, widget, event, data):
+    guipopover.media_hamburger_popover_show(launcher, widget, _hamburger_menu_item_selected)
     
-    guiutils.remove_children(hamburger_menu)
-
-    hamburger_menu.add(guiutils.get_menu_item(_("Render Proxy Files For Selected Media"), _hamburger_menu_item_selected, "render proxies", ))
-    hamburger_menu.add(guiutils.get_menu_item(_("Render Proxy Files For All Media"), _hamburger_menu_item_selected, "render all proxies", ))
-    guiutils.add_separetor(hamburger_menu)
-    hamburger_menu.add(guiutils.get_menu_item(_("Select All"), _hamburger_menu_item_selected, "select all"))
-    hamburger_menu.add(guiutils.get_menu_item(_("Select None"), _hamburger_menu_item_selected, "select none"))
-
-    move_menu_item = Gtk.MenuItem(_("Move Selected Media To Bin"))
-    move_menu = Gtk.Menu()
-    if len(PROJECT().bins) == 1:
-        item = guiutils.get_menu_item(_("No Target Bins"), _hamburger_menu_item_selected, "dummy")
-        item.set_sensitive(False)
-        move_menu.add(item)
-    else:
-        index = 0
-        for media_bin in PROJECT().bins:
-            if media_bin == PROJECT().c_bin:
-                index = index + 1
-                continue
-            item = guiutils.get_menu_item(media_bin.name, _hamburger_menu_item_selected, str(index))
-            move_menu.add(item)
-            item.show()
-            index = index + 1
-    move_menu_item.set_submenu(move_menu)
-    hamburger_menu.add(move_menu_item)
-    move_menu_item.show()
-    
-    guiutils.add_separetor(hamburger_menu)
-    hamburger_menu.add(guiutils.get_menu_item(_("Append All Media to Timeline"), _hamburger_menu_item_selected, "append all"))
-    hamburger_menu.add(guiutils.get_menu_item(_("Append Selected Media to Timeline"), _hamburger_menu_item_selected, "append selected"))
-    
-    hamburger_menu.popup(None, None, None, None, event.button, event.time)
-
-def _hamburger_menu_item_selected(widget, msg):
+def _hamburger_menu_item_selected(action, variant, msg):
     if msg == "render proxies":
         proxyediting.create_proxy_files_pressed()
     elif msg == "render all proxies":
