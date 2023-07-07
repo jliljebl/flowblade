@@ -614,12 +614,6 @@ class XMLRenderPlayer(threading.Thread):
     def run(self):
         print("Starting XML render")
         player = self.player
-        
-        # Don't try anything if somehow this was started 
-        # while timeline rendering is running
-        if player.is_rendering:
-            print("Can't render XML when another render is already running!")
-            return
 
         # Stop all playback before producer is disconnected
         self.current_playback_frame = player.producer.frame()
