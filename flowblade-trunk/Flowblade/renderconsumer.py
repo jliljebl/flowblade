@@ -617,7 +617,7 @@ class XMLRenderPlayer(threading.Thread):
 
         # Stop all playback before producer is disconnected
         self.current_playback_frame = player.producer.frame()
-        player.ticker.stop_ticker()
+        player.stop_ticker()
         player.consumer.stop()
         player.producer.set_speed(0)
         player.producer.seek(0)
