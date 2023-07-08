@@ -283,8 +283,7 @@ class AddMediaPluginWindow(Gtk.Window):
         global MONITOR_HEIGHT
         MONITOR_HEIGHT = int(MONITOR_WIDTH * float(current_sequence().profile.display_aspect_den()) / float(current_sequence().profile.display_aspect_num()))
         self.screenshot_canvas = cairoarea.CairoDrawableArea2(MONITOR_WIDTH, MONITOR_HEIGHT, self._draw_screenshot)
-        screenshot_row = guiutils.get_centered_box([self.screenshot_canvas ])
-        guiutils.set_margins(screenshot_row, 0, 8, 0, 0)
+        guiutils.set_margins(self.screenshot_canvas, 0, 8, 0, 0)
 
         self.frame_display = Gtk.Label(label=_("Clip Frame"))
         self.frame_display.set_margin_right(2)
@@ -303,14 +302,13 @@ class AddMediaPluginWindow(Gtk.Window):
         guiutils.set_margins(control_panel, 0, 24, 0, 0)
         
         self.editors_box = Gtk.HBox(False, 0)
-        self.editors_box.set_size_request(550, 185)
 
         self.import_select = Gtk.ComboBoxText()
         self.import_select.append_text(_("Add as Container Clip"))
         self.import_select.append_text(_("Add as Rendered Clip"))
         self.import_select.set_active(0)
         self.import_select.connect("changed", lambda w: self._export_action_changed(w))
-        import_row = guiutils.get_left_justified_box([Gtk.Label(label=_("Import Action:")), guiutils.pad_label(12,12), self.import_select])
+        import_row = guiutils.get_sides_justified_box([Gtk.Label(label=_("Import Action:")), guiutils.pad_label(12,12), self.import_select])
         guiutils.set_margins(import_row,8,0,0,0)
         self.length_spin = Gtk.SpinButton.new_with_range (25, 100000, 1)
         self.length_spin.set_value(200)
@@ -326,16 +324,15 @@ class AddMediaPluginWindow(Gtk.Window):
         encoding_row = guiutils.get_left_justified_box([self.encoding_button, guiutils.pad_label(12,12), self.encoding_info])
                 
         right_column_panel = Gtk.VBox(False, 2)
-        right_column_panel.pack_start(screenshot_row, False, False, 0)
+        right_column_panel.pack_start(self.screenshot_canvas, True, True, 0)
         right_column_panel.pack_start(control_panel, False, False, 0)
         right_column_panel.pack_start(length_row, False, False, 0)
         right_column_panel.pack_start(import_row, False, False, 0)
         right_column_panel.pack_start(encoding_row, False, False, 0)
-        right_column_panel.pack_start(Gtk.Label(), True, True, 0)
 
         values_row = Gtk.HBox(False, 8)
-        values_row.pack_start(self.editors_box, False, False, 0)
-        values_row.pack_start(right_column_panel, False, False, 0)
+        values_row.pack_start(self.editors_box, True, True, 0)
+        values_row.pack_start(right_column_panel, True, True, 0)
         
         close_button = guiutils.get_sized_button(_("Close"), 150, 32)
         close_button.connect("clicked", lambda w: _close_clicked())
@@ -350,7 +347,7 @@ class AddMediaPluginWindow(Gtk.Window):
 
         vbox = Gtk.VBox(False, 2)
         vbox.pack_start(plugin_select_row, False, False, 0)
-        vbox.pack_start(values_row, False, False, 0)
+        vbox.pack_start(values_row, True, True, 0)
         vbox.pack_start(buttons_row, False, False, 0)
         
         alignment = guiutils.set_margins(vbox, 8, 8, 12, 12)
@@ -391,17 +388,19 @@ class AddMediaPluginWindow(Gtk.Window):
         if _selected_plugin == None:
             return
 
-        cr.set_source_surface(_current_screenshot_surface, 0, 0)
+        #x, y, w, h = self._get_monitor_image_rect()
+        
+        cr.set_source_surface(_current_screenshot_surface, x, y)
         cr.paint()
         
         w, y, w, h = allocation
         cr.set_source_rgb(0, 0, 0)
         cr.set_line_width(1.0)
-        cr.move_to(0.5, 0.5)
-        cr.line_to(w - 0.5, 0.5)
-        cr.line_to(w - 0.5, h - 0.5)
-        cr.line_to(0.5, h - 0.5)
-        cr.line_to(0.5, 0.5)
+        cr.move_to(x + 0.5, y + 0.5)
+        cr.line_to(x + w - 0.5, y + 0.5)
+        cr.line_to(x + w - 0.5, y + h - 0.5)
+        cr.line_to(x + 0.5, y + h - 0.5)
+        cr.line_to(x + 0.5, y + 0.5)
         cr.stroke()
                             
     def _plugin_selection_changed(self, combo):
@@ -429,16 +428,39 @@ class AddMediaPluginWindow(Gtk.Window):
         self.show_all()
 
     def _create_preview_surface(self, rendered_surface):
-        scaled_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, MONITOR_WIDTH, MONITOR_HEIGHT)
+        x, y, w, h = self._get_monitor_image_rect()
+        
+        scaled_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(w), int(h))
         cr = cairo.Context(scaled_surface)
         cr.save()
-        cr.scale(float(MONITOR_WIDTH) / float(rendered_surface.get_width()), float(MONITOR_HEIGHT) / float(rendered_surface.get_height()))
+        cr.scale(w / rendered_surface.get_width(), h / rendered_surface.get_height())
         cr.set_source_surface(rendered_surface, 0, 0)
         cr.paint()
         cr.restore()
 
         return scaled_surface
+
+    def _get_monitor_image_rect(self):
+        rect = self.screenshot_canvas.get_allocation()
+        mw, mh = rect.width, rect.height
+        
+        canv_aspect = mw / mh
+        img_aspect = current_sequence().profile.width() / current_sequence().profile.height() 
+        print(rect.x, rect.y, mw, mh, canv_aspect, img_aspect)
+        
+        if canv_aspect > img_aspect:
+            y = 0
+            h = mh
+            w = h * img_aspect
+            x = mw / 2 - w / 2
+        else:
+            x = 0
+            w = mh
+            h = w / img_aspect
+            y = mh / 2 - h / 2 
     
+        return (x, y, w, h)
+
     def _show_preview(self):
         global _selected_plugin, _current_screenshot_surface
 
