@@ -107,12 +107,18 @@ class FluxityScriptEditorPanel:
 
         editors_v_panel = Gtk.VBox(False, 2)
         count = 0
+        if len(groups.keys()) > 0:
+            notebook = Gtk.Notebook()
+        else:
+            notebook = None
         for w in self.editor_widgets:
             try:
                 group_name = groups[count]
                 group_label = guiutils.bold_label(translations.plugin_editor_groups[group_name])
-                guiutils.set_margins(group_label, 16, 8, 0, 0)
-                editors_v_panel.pack_start(group_label, False, False, 0)
+                editors_v_panel = Gtk.VBox(False, 2)
+                notebook.append_page(editors_v_panel, group_label)
+                #guiutils.set_margins(group_label, 16, 8, 0, 0)
+                #editors_v_panel.pack_start(group_label, False, False, 0)
             except:
                 pass # no group in this index
                 
@@ -122,7 +128,11 @@ class FluxityScriptEditorPanel:
         pane = Gtk.VBox(False, 2)
         pane.pack_start(name_box, False, False, 0)
         if len(self.editor_widgets) != 0:
-            pane.pack_start(editors_v_panel, False, False, 0)
+            if notebook != None:
+                editors_panel = notebook
+            else:
+                editors_panel = editors_v_panel
+            pane.pack_start(editors_panel, False, False, 0)
         else:
             pane.pack_start(Gtk.Label(label=_("No Editors for this script")), False, False, 0)
             
@@ -164,12 +174,18 @@ class AddMediaPluginEditors:
 
         editors_v_panel = Gtk.VBox(False, 2)
         count = 0
+        if len(groups.keys()) > 0:
+            notebook = Gtk.Notebook()
+        else:
+            notebook = None
         for w in self.editor_widgets:
             try:
                 group_name = groups[str(count)]
                 group_label = guiutils.bold_label(translations.plugin_editor_groups[group_name])
-                guiutils.set_margins(group_label, 16, 8, 0, 0)
-                editors_v_panel.pack_start(group_label, False, False, 0)
+                editors_v_panel = Gtk.VBox(False, 2)
+                notebook.append_page(editors_v_panel, group_label)
+                #guiutils.set_margins(group_label, 16, 8, 0, 0)
+                #editors_v_panel.pack_start(group_label, False, False, 0)
             except:
                 pass # no group in this index
                 
@@ -179,7 +195,11 @@ class AddMediaPluginEditors:
 
         pane = Gtk.VBox(False, 2)
         if len(self.editor_widgets) != 0:
-            pane.pack_start(editors_v_panel, False, False, 0)
+            if notebook != None:
+                editors_panel = notebook
+            else:
+                editors_panel = editors_v_panel
+            pane.pack_start(editors_panel, False, False, 0)
         else:
             pane.pack_start(Gtk.Label(label=_("No Editors for this script")), False, False, 0)
             
