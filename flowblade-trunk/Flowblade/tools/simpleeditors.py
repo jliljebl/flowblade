@@ -117,8 +117,6 @@ class FluxityScriptEditorPanel:
                 group_label = guiutils.bold_label(translations.plugin_editor_groups[group_name])
                 editors_v_panel = Gtk.VBox(False, 2)
                 notebook.append_page(editors_v_panel, group_label)
-                #guiutils.set_margins(group_label, 16, 8, 0, 0)
-                #editors_v_panel.pack_start(group_label, False, False, 0)
             except:
                 pass # no group in this index
                 
@@ -132,6 +130,7 @@ class FluxityScriptEditorPanel:
                 editors_panel = notebook
             else:
                 editors_panel = editors_v_panel
+            editors_panel.set_margin_top(4)
             pane.pack_start(editors_panel, False, False, 0)
         else:
             pane.pack_start(Gtk.Label(label=_("No Editors for this script")), False, False, 0)
@@ -184,8 +183,6 @@ class AddMediaPluginEditors:
                 group_label = guiutils.bold_label(translations.plugin_editor_groups[group_name])
                 editors_v_panel = Gtk.VBox(False, 2)
                 notebook.append_page(editors_v_panel, group_label)
-                #guiutils.set_margins(group_label, 16, 8, 0, 0)
-                #editors_v_panel.pack_start(group_label, False, False, 0)
             except:
                 pass # no group in this index
                 
@@ -199,6 +196,7 @@ class AddMediaPluginEditors:
                 editors_panel = notebook
             else:
                 editors_panel = editors_v_panel
+            editors_panel.set_margin_top(4)
             pane.pack_start(editors_panel, False, False, 0)
         else:
             pane.pack_start(Gtk.Label(label=_("No Editors for this script")), False, False, 0)
@@ -299,8 +297,15 @@ class AbstractSimpleEditor(Gtk.HBox):
         internal_box.pack_start(Gtk.Label(), True, True, 0)
         internal_box.pack_start(widget, False, False, 0)
 
+        self.set_margins(internal_box)
+
         self.pack_start(internal_box, True, True, 0)
 
+    def set_margins(self, editor_panel):
+        editor_panel.set_margin_top(2)
+        editor_panel.set_margin_left(4)
+        editor_panel.set_margin_right(4)
+        
 class TextEditor(AbstractSimpleEditor):
 
     def __init__(self, id_data, label_text, value, tooltip):
@@ -847,6 +852,9 @@ class TextAreaEditor(AbstractSimpleEditor):
 
     def __init__(self, id_data, label_text, value, tooltip):
         AbstractSimpleEditor.__init__(self, id_data, tooltip)
+
+        editor_label = Gtk.Label(label=translations.get_param_name(label_text))
+        editor_label.set_margin_right(12)
         
         self.text_view = Gtk.TextView()
         self.text_view.set_pixels_above_lines(2)
@@ -860,8 +868,19 @@ class TextAreaEditor(AbstractSimpleEditor):
 
         self.scroll_frame = Gtk.Frame()
         self.scroll_frame.add(self.sw)
+
+        widget = self.scroll_frame
+        widget.set_tooltip_text (self.tooltip)
+        widget.set_size_request(SIMPLE_EDITOR_RIGHT_WIDTH, guiutils.TWO_COLUMN_BOX_HEIGHT)
+
+        internal_box = Gtk.HBox(0, False)
+        internal_box.pack_start(editor_label, False, False, 0)
+        internal_box.pack_start(widget, True, True, 0)
+
+        self.set_margins(internal_box)
+
+        self.pack_start(internal_box, True, True, 0)
         
-        self.build_editor(label_text, self.scroll_frame)
         self.editor_type = SIMPLE_EDITOR_TEXT_AREA
 
     def get_value(self):
