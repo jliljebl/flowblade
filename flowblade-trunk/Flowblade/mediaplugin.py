@@ -331,7 +331,7 @@ class AddMediaPluginWindow(Gtk.Window):
         right_column_panel.pack_start(encoding_row, False, False, 0)
 
         values_row = Gtk.HBox(False, 8)
-        values_row.pack_start(self.editors_box, True, True, 0)
+        values_row.pack_start(self.editors_box, False, False, 0)
         values_row.pack_start(right_column_panel, True, True, 0)
         
         close_button = guiutils.get_sized_button(_("Close"), 150, 32)
@@ -388,21 +388,33 @@ class AddMediaPluginWindow(Gtk.Window):
         if _selected_plugin == None:
             return
 
-        #x, y, w, h = self._get_monitor_image_rect()
-        
-        cr.set_source_surface(_current_screenshot_surface, x, y)
+        mx, my, mw, mh = self._get_monitor_image_rect()
+        x, y, w, h = allocation
+
+        cr.rectangle(0, 0, w, h)
+        cr.set_source_rgb(0, 0, 0)
+        cr.fill()
+
+        scaled_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(mw), int(mh))
+        crs = cairo.Context(scaled_surface)
+        crs.save()
+        crs.scale(mw / _current_screenshot_surface.get_width(), mh / _current_screenshot_surface.get_height())
+        crs.set_source_surface(_current_screenshot_surface, 0, 0)
+        crs.paint()
+        crs.restore()
+    
+        cr.set_source_surface(scaled_surface, mx, my)
         cr.paint()
         
-        w, y, w, h = allocation
-        cr.set_source_rgb(0, 0, 0)
+        cr.set_source_rgb(0.2, 0.2, 0.2)
         cr.set_line_width(1.0)
-        cr.move_to(x + 0.5, y + 0.5)
-        cr.line_to(x + w - 0.5, y + 0.5)
-        cr.line_to(x + w - 0.5, y + h - 0.5)
-        cr.line_to(x + 0.5, y + h - 0.5)
-        cr.line_to(x + 0.5, y + 0.5)
+        cr.move_to(mx + 0.5, my + 0.5)
+        cr.line_to(mx + mw - 0.5, my + 0.5)
+        cr.line_to(mx + mw - 0.5, my + mh - 0.5)
+        cr.line_to(mx + 0.5, my + mh - 0.5)
+        cr.line_to(mx + 0.5, my + 0.5)
         cr.stroke()
-                            
+        
     def _plugin_selection_changed(self, combo):
         name, new_selected_plugin = self.plugin_select.get_selected()
         
@@ -413,7 +425,7 @@ class AddMediaPluginWindow(Gtk.Window):
         global _selected_plugin, _current_screenshot_surface, _current_plugin_data_object
         _selected_plugin = new_selected_plugin
         _current_plugin_data_object = script_data_object
-        _current_screenshot_surface = self._create_preview_surface(new_selected_plugin.get_screenshot_surface())
+        _current_screenshot_surface = new_selected_plugin.get_screenshot_surface()
         
         self.screenshot_canvas.queue_draw()
     
@@ -426,27 +438,13 @@ class AddMediaPluginWindow(Gtk.Window):
         
         self.editors_box.pack_start(self.plugin_editors.editors_panel, False, False, 0)
         self.show_all()
-
-    def _create_preview_surface(self, rendered_surface):
-        x, y, w, h = self._get_monitor_image_rect()
-        
-        scaled_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(w), int(h))
-        cr = cairo.Context(scaled_surface)
-        cr.save()
-        cr.scale(w / rendered_surface.get_width(), h / rendered_surface.get_height())
-        cr.set_source_surface(rendered_surface, 0, 0)
-        cr.paint()
-        cr.restore()
-
-        return scaled_surface
-
+    
     def _get_monitor_image_rect(self):
-        rect = self.screenshot_canvas.get_allocation()
-        mw, mh = rect.width, rect.height
+        mw = self.screenshot_canvas.get_allocated_width()
+        mh = self.screenshot_canvas.get_allocated_height()
         
         canv_aspect = mw / mh
         img_aspect = current_sequence().profile.width() / current_sequence().profile.height() 
-        print(rect.x, rect.y, mw, mh, canv_aspect, img_aspect)
         
         if canv_aspect > img_aspect:
             y = 0
@@ -455,17 +453,17 @@ class AddMediaPluginWindow(Gtk.Window):
             x = mw / 2 - w / 2
         else:
             x = 0
-            w = mh
+            w = mw
             h = w / img_aspect
             y = mh / 2 - h / 2 
-    
+        
         return (x, y, w, h)
 
     def _show_preview(self):
         global _selected_plugin, _current_screenshot_surface
 
         fctx = self._render_preview(int(self.frame_select.get_value()))
-        _current_screenshot_surface = self._create_preview_surface(fctx.priv_context.frame_surface)
+        _current_screenshot_surface = fctx.priv_context.frame_surface
 
         self.screenshot_canvas.queue_draw()
 
