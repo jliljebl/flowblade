@@ -2048,7 +2048,6 @@ def do_compositing_mode_change(new_compositing_mode):
 
 # --------------------------------------------------------- pop-up menus
 def media_file_popover_mouse_right_pressed(widget, media_file, event):
-    print(type(widget))
     guipopover.media_file_popover_show(media_file, widget, event.x, event.y, media_file_menu_item_selected)
     
 def media_file_menu_item_selected(action, variant, data):

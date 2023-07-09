@@ -1240,7 +1240,6 @@ class MediaPanel():
 
         elif event.button == 3:
             self.clear_selection()
-            print(type(media_object.widget))
             self.media_file_popup_cb(media_object.widget,
                                      media_object.media_file,
                                      event)
