@@ -110,7 +110,6 @@ import shortcutsquickeffects
 import snapping
 import threading
 import titler
-# import tlinerender - feature teporarily disabled.
 import tlinewidgets
 import toolsintegration
 import trimmodes
@@ -291,10 +290,7 @@ class FlowbladeApplication(Gtk.Application):
 
         # We need to test which GPU render options work after profiles are inited because
         # we do the test by doing test renders.
-        #rendergputest.test_gpu_rendering_options(render.update_encoding_selector)
-        
-        # If we have crashed we could have large amount of disk space wasted unless we delete all files here.
-        # tlinerender.app_launch_clean_up() feature teporarily disabled.
+        rendergputest.test_gpu_rendering_options(render.update_encoding_selector)
 
         # Splash screen
         if editorpersistance.prefs.display_splash_screen == True: 
@@ -371,7 +367,6 @@ class FlowbladeApplication(Gtk.Application):
             else:
                 GLib.timeout_add(10, autosaves_many_recovery_dialog)
         else:
-            # tlinerender.init_session() feature teporarily disabled.
             start_autosave()
 
         projectaction.clear_changed_since_last_save_flags()
@@ -444,13 +439,7 @@ def monkeypatch_callbacks():
     
     keyframeeditor._get_current_edited_compositor = compositeeditor.get_compositor
 
-    # Not callbacks but tlinerender needs this data and we do this instead of copypaste.
-    # tlinerender._get_frame_for_x_func = tlinewidgets.get_frame
-    # tlinerender._get_x_for_frame_func = tlinewidgets._get_frame_x
-    # tlinerender._get_last_tline_view_frame_func = tlinewidgets.get_last_tline_view_frame
-
     guicomponents.select_clip_func = movemodes.select_clip
-    #keyframeeditor.add_fade_out_func = compositeeditor._add_fade_out_pressed.
     
     containeractions.set_plugin_to_be_edited_func = mediaplugin.set_plugin_to_be_edited
     containeractions.get_edited_plugin_clip = mediaplugin.get_clip
@@ -597,18 +586,11 @@ def init_sequence_gui():
     """
     # Set correct compositing mode menu item selected.
     gui.editor_window.init_compositing_mode_menu()
-    # gui.editor_window.init_timeline_rendering_menu()
-    # gui.editor_window.tline_render_mode_launcher.set_pixbuf(editorstate.tline_render_mode) 
     gui.comp_mode_launcher.set_pixbuf(editorstate.get_compositing_mode())
 
     # Set initial timeline scale draw params.
     editorstate.current_sequence().update_length()
-    
-    # Handle timeline rendering GUI and data.
-    # tlinerender.init_for_sequence() # feature teporarily disabled.
-    # gui.editor_window.hide_tline_render_strip()
-    # if editorstate.get_tline_rendering_mode() != appconsts.TLINE_RENDERING_OFF: 
-    #    gui.editor_window.show_tline_render_strip()
+
         
     updater.update_pix_per_frame_full_view()
     updater.init_tline_scale()
@@ -675,7 +657,6 @@ def open_project(new_project):
 
     editorstate.project = new_project
     editorstate.media_view_filter = appconsts.SHOW_ALL_FILES
-    editorstate.tline_render_mode = appconsts.TLINE_RENDERING_OFF
     
     # Inits widgets with project data.
     init_project_gui()
@@ -705,7 +686,6 @@ def open_project(new_project):
     editorstate.clear_trim_clip_cache()
     audiomonitoring.init_for_project_load()
 
-    # tlinerender.init_session() feature teporarily disabled.
     start_autosave()
 
     if new_project.update_media_lengths_on_load == True:
@@ -736,8 +716,6 @@ def change_current_sequence(index):
     
     stop_autosave()
     editorstate.project.c_seq = editorstate.project.sequences[index]
-
-    editorstate.tline_render_mode = appconsts.TLINE_RENDERING_OFF
 
     # Inits widgets with current sequence data
     init_sequence_gui()
@@ -790,7 +768,6 @@ def autosave_dialog_callback(dialog, response):
         loaded_autosave_file = autosave_file
         projectaction.actually_load_project(autosave_file, True, False, True)
     else:
-        # tlinerender.init_session()  # feature teporarily disabled.
         os.remove(autosave_file)
         start_autosave()
 
@@ -819,7 +796,6 @@ def autosaves_many_dialog_callback(dialog, response, autosaves_view, autosaves):
         projectaction.actually_load_project(autosave_file, True, False, True)
     else:
         dialog.destroy()
-        # tlinerender.init_session() feature teporarily disabled.
         start_autosave()
 
 def set_instance_autosave_id():
@@ -1066,11 +1042,6 @@ def _shutdown_dialog_callback(dialog, response_id, no_dialog_shutdown=False):
     
     # No more auto saving
     stop_autosave()
-
-    # tlinerender.delete_session() feature teporarily disabled.
-    # clipeffectseditor.shutdown_polling()
-    # compositeeditor.shutdown_polling()
-
     
     # Save window dimensions on exit
     alloc = gui.editor_window.window.get_allocation()

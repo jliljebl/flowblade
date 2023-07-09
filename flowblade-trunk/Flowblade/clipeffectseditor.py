@@ -46,7 +46,6 @@ import mltfilters
 import propertyedit
 import propertyeditorbuilder
 import respaths
-# import tlinerender
 import translations
 import updater
 import utils
@@ -1085,63 +1084,3 @@ class EffectStackSaveData:
         with atomicfile.AtomicFileWriter(save_path, "wb") as afw:
             write_file = afw.get_file()
             pickle.dump(self, write_file)
-
-    
-# ------------------------------------------------------- CHANGE POLLING
-"""
-tlinerendering disabled temporiraly
-def shutdown_polling():
-    global _edit_polling_thread
-    if _edit_polling_thread != None:
-        _edit_polling_thread.shutdown()
-        _edit_polling_thread = None
-
-
-class PropertyChangePollingThread(threading.Thread):
-    
-    def __init__(self):
-        threading.Thread.__init__(self)
-        self.last_properties = None
-        
-    def run(self):
-
-        self.running = True
-        while self.running:
-            
-            if _filter_stack == None:
-                self.shutdown()
-            else:
-                if self.last_properties == None:
-                    self.last_properties = self.get_clip_filters_properties()
-                
-                new_properties = self.get_clip_filters_properties()
-                
-                changed = False
-                for new_filt_props, old_filt_props in zip(new_properties, self.last_properties):
-                        for new_prop, old_prop in zip(new_filt_props, old_filt_props):
-                            if new_prop != old_prop:
-                                changed = True
-
-                if changed:
-                    global filter_changed_since_last_save
-                    filter_changed_since_last_save = True
-                    # tlinerender.get_renderer().timeline_changed()
-
-                self.last_properties = new_properties
-                
-                time.sleep(1.0)
-
-    def get_clip_filters_properties(self):
-        filters_properties = []
-        for filt in _filter_stack.get_filters():
-            filt_props = []
-            for prop in filt.properties:
-                filt_props.append(copy.deepcopy(prop))
-
-            filters_properties.append(filt_props)
-        
-        return filters_properties
-        
-    def shutdown(self):
-        self.running = False
-"""

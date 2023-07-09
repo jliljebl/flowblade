@@ -45,30 +45,19 @@ import mlttransitions
 import propertyeditorbuilder
 import propertyedit
 import propertyparse
-# import tlinerender
 import utils
 
 widgets = utils.EmptyClass()
 
 compositor = None # Compositor being edited.
 
-# Edit polling.
-# We didn't put a layer of indirection to look for and launch events on edits,
-# so now we detect edits by polling. This has no performance impect, n is so small.
-_edit_polling_thread = None
+# Save menuitems handling.
 compositor_changed_since_last_save = False
 
 # This is updated when filter panel is displayed and cleared when removed.
 # Used to update kfeditors with external tline frame position changes.
 keyframe_editor_widgets = []
 
-"""
-def shutdown_polling():
-    global _edit_polling_thread
-    if _edit_polling_thread != None:
-        _edit_polling_thread.shutdown()
-        _edit_polling_thread = None
-"""
 
 def create_widgets():
     """
@@ -127,14 +116,6 @@ def set_compositor(new_compositor):
     editorlayout.show_panel(appconsts.PANEL_MULTI_EDIT)
 
     gui.editor_window.edit_multi.set_visible_child_name(appconsts.EDIT_MULTI_COMPOSITORS)
-
-    #global _edit_polling_thread
-    # Close old polling
-    #if _edit_polling_thread != None:
-    #    _edit_polling_thread.shutdown()
-    # Start new polling
-    #_edit_polling_thread = PropertyChangePollingThread()
-    #_edit_polling_thread.start()
 
 def clear_compositor():
     global compositor
@@ -395,52 +376,6 @@ def _set_fade_length_dialog_callback(dialog, response_id, spin):
         
     dialog.destroy()
 
-"""
-class PropertyChangePollingThread(threading.Thread):
-    
-    def __init__(self):
-        threading.Thread.__init__(self)
-        self.last_properties = None
-        
-    def run(self):
-        self.running = True
-        while self.running:
-            global compositor
-            if compositor == None:
-                self.shutdown()
-            else:
-                if self.last_properties == None:
-                    self.last_properties = self.get_compositor_properties()
-                
-                new_properties = self.get_compositor_properties()
-                
-                changed = False
-                for new_prop, old_prop in zip(new_properties, self.last_properties):
-                    if new_prop != old_prop:
-                        changed = True
-
-                if changed:
-                    global compositor_changed_since_last_save
-                    compositor_changed_since_last_save = True
-                    tlinerender.get_renderer().timeline_changed()
-
-                self.last_properties = new_properties
-                
-                time.sleep(1.0)
-                
-    def get_compositor_properties(self):
-        compositor_properties = []
-
-        for prop in compositor.transition.properties:
-            compositor_properties.append(copy.deepcopy(prop))
-    
-        compositor_properties.append((copy.deepcopy(compositor.clip_in ), copy.deepcopy(compositor.clip_out)))
-        
-        return compositor_properties
-        
-    def shutdown(self):
-        self.running = False
-"""
 
 class CompositorValuesSaveData:
     

@@ -41,7 +41,6 @@ import movemodes
 import mediaplugin
 import resync
 import tlinewidgets
-# import tlinerender
 import trackaction
 import trimmodes
 import undo
@@ -372,8 +371,6 @@ class EditAction:
         _remove_all_trailing_blanks(None)
 
         resync.calculate_and_set_child_clip_sync_states()
-
-        # tlinerender.get_renderer().timeline_changed()
     
         # HACK, see above.
         if self.stop_for_edit:

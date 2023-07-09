@@ -50,7 +50,6 @@ import guiutils
 import respaths
 import sequence
 import snapping
-# import tlinerender
 import trimmodes
 import userfolders
 import utils
@@ -62,7 +61,6 @@ REF_LINE_Y = 250 # Y pos of tracks are relative to this. This is recalculated on
 
 MINIMUM_WIDTH = 430 # No effect on window layout we just want to put something > 0 on start.
 HEIGHT = appconsts.TLINE_HEIGHT # defines window min height together with editorwindow.TOP_ROW_HEIGHT
-# STRIP_HEIGHT = tlinerender.STRIP_HEIGHT # timeline rendering control strip height
 
 # Timeline draw constants
 # Other elements than black outline are not drawn if clip screen size
@@ -2794,40 +2792,6 @@ class TimeLineFrameScale:
         
         return grad
 
-"""
-class TimeLineRenderingControlStrip:
-
-    # GUI component that passes draw and mouse events to tlinerender module with some added data.
-
-    def __init__(self):
-        self.widget = cairoarea.CairoDrawableArea2( MINIMUM_WIDTH, 
-                                                    STRIP_HEIGHT, 
-                                                    self._draw)
-        self.widget.press_func = self._press_event
-        self.widget.motion_notify_func = self._motion_notify_event
-        self.widget.release_func = self._release_event
-        self.widget.add_events(Gdk.EventMask.FOCUS_CHANGE_MASK)
-        self.widget.connect("focus-out-event", self._focus_out_event)
-    # --------------------------------------------- DRAW
-    def _draw(self, event, cr, allocation):
-        # Callback for repaint from CairoDrawableArea.
-        # We get cairo context and allocation.
-        tlinerender.get_renderer().draw(event, cr, allocation, pos, pix_per_frame)
-
-        
-    # --------------------------------------------- MOUSE EVENTS    
-    def _press_event(self, event):
-        tlinerender.get_renderer().press_event(event)
-
-    def _motion_notify_event(self, x, y, state):
-        tlinerender.get_renderer().motion_notify_event(x, y, state)
-                
-    def _release_event(self, event):
-        tlinerender.get_renderer().release_event(event)
-        
-    def _focus_out_event(self, widget, event):
-        tlinerender.get_renderer().focus_out()
-"""
 
 class KFToolFrameScale:
     
