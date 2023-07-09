@@ -1253,16 +1253,20 @@ def unused_media():
         unused.append(media_item)
     return unused
 
-def media_filtering_select_pressed(widget, event):
-    guicomponents.get_file_filter_popup_menu(widget, event, _media_filtering_selector_item_activated)
+def media_filtering_select_pressed(launcher, widget, event):
+    guipopover.file_filter_popover_show(launcher, widget,  _media_filtering_selector_item_activated)
 
-def _media_filtering_selector_item_activated(selector, index):
+def _media_filtering_selector_item_activated(action, new_value_variant):
+    index = int( new_value_variant.get_string())
     gui.media_view_filter_selector.set_pixbuf(index)
     
-    # Const value correspond with indexes here
+    # Const values at appconst,py correspond with indexes here.
     editorstate.media_view_filter = index
     gui.media_list_view.fill_data_model()
 
+    action.set_state(new_value_variant)
+    guipopover._file_filter_popover.hide()
+    
 def columns_count_launch_pressed(launcher, widget, event):
     guipopover.columns_count_popupover_show(launcher, widget, _columns_count_item_selected)
     

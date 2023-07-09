@@ -60,7 +60,10 @@ _media_panel_hamburger_popover = None
 _media_panel_hamburger_menu = None
 _columns_popover = None
 _columns_menu = None
- 
+_file_filter_popover = None
+_file_filter_menu = None
+
+
 # -------------------------------------------------- menuitems builder fuctions
 def add_menu_action(menu, label, item_id, msg_str, callback):
     menu.append(label, "app." + item_id) 
@@ -390,7 +393,7 @@ def _build_bins_panel_menu(menu, callback):
 def media_hamburger_popover_show(launcher, widget, callback):
     global _media_panel_hamburger_popover, _media_panel_hamburger_menu
 
-    _media_panel_hamburger_menu = menu_clear_or_create(_markers_menu)
+    _media_panel_hamburger_menu = menu_clear_or_create(_media_panel_hamburger_menu)
     
     proxy_section = Gio.Menu.new()
     add_menu_action(proxy_section, _("Render Proxy Files For Selected Media"), "mediapanel.proxyrender", "render proxies", callback)
@@ -428,7 +431,7 @@ def media_hamburger_popover_show(launcher, widget, callback):
 def columns_count_popupover_show(launcher, widget, callback):
     global _columns_popover, _columns_menu
 
-    _columns_menu = menu_clear_or_create(_markers_menu)
+    _columns_menu = menu_clear_or_create(_columns_menu)
 
     items_data =[(_("2 Columns"), "2"), (_("3 Columns"), "3"), \
                 (_("4 Columns"), "4"), (_("5 Columns"), "5"), (_("6 Columns"), "6"), \
@@ -439,3 +442,20 @@ def columns_count_popupover_show(launcher, widget, callback):
     _columns_menu.append_section(None, radio_section)
 
     _columns_popover = new_popover(widget, _columns_menu, launcher)
+    
+
+def file_filter_popover_show(launcher, widget, callback):
+    global _file_filter_popover, _file_filter_menu
+
+    _file_filter_menu = menu_clear_or_create(_file_filter_menu)
+    items_data =[( _("All Files"), "0"), (_("Video Files"), "1"), \
+                ( _("Audio Files"), "2"), (_("Graphics Files"), "3"), ( _("Image Sequences"), "4"), \
+                (_("Pattern Producers"), "6"), (_("Unused Files"), "7")]
+                
+    active_index = editorstate.media_view_filter
+    radio_section = Gio.Menu.new()
+    add_menu_action_all_items_radio(radio_section, items_data, "mediapanel.fileview", active_index, callback)
+    _file_filter_menu.append_section(None, radio_section)
+
+    _file_filter_popover = new_popover(widget, _file_filter_menu, launcher)
+
